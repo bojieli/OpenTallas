@@ -1,0 +1,159 @@
+{
+  "name": "s81lk_kp4_dsyn",
+  "top": "ot_s81_kp4_dsyn",
+  "kind": "tile",
+  "sources": [
+    "rtl/dsrom_sys/s81_link/ot_s81_kp4_common.sv",
+    "rtl/dsrom_sys/s81_link/ot_s81_kp4_bm.sv",
+    "rtl/dsrom_sys/s81_link/ot_s81_kp4_dsyn.sv"
+  ],
+  "macros": [],
+  "pins": {
+    "W": [
+      "p_v",
+      "p_d"
+    ],
+    "N": [
+      "x_q"
+    ],
+    "E": [
+      "k_v",
+      "k_lo",
+      "k_L",
+      "k_any"
+    ],
+    "S": [
+      "lock",
+      "rst_n",
+      "clk",
+      "n_relock"
+    ]
+  },
+  "pin_ranges": {
+    "p_d": [
+      4.32,
+      207.36
+    ],
+    "p_v": [
+      209.52,
+      210.6
+    ],
+    "x_q": [
+      4.32,
+      118.8
+    ],
+    "k_lo": [
+      4.32,
+      178.2
+    ],
+    "k_v": [
+      180.36,
+      182.52
+    ],
+    "k_L": [
+      184.68,
+      187.92
+    ],
+    "k_any": [
+      190.08,
+      191.16
+    ],
+    "lock": [
+      79.92,
+      81.0
+    ],
+    "rst_n": [
+      87.48,
+      88.56
+    ],
+    "clk": [
+      95.04,
+      96.12
+    ],
+    "n_relock": [
+      102.6,
+      137.16
+    ]
+  },
+  "params": {},
+  "orfs_vars": {
+    "VERILOG_INCLUDE_DIRS": "/src/rtl/dsrom_sys/s81_link"
+  },
+  "clock_port": "clk",
+  "reset_ports": [
+    "rst_n"
+  ],
+  "outline": {
+    "w": 216.0,
+    "h": 216.0,
+    "exact": true
+  },
+  "layer_cap": "M5",
+  "recipe": 4,
+  "route": {
+    "pd": 0.3,
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "pin_balance": {
+      "group_max": 1,
+      "h": "M4",
+      "v": "M5"
+    }
+  },
+  "structural_change": "S81-TILES2 10-17: four-tile re-split of the KP4 decoder cluster ot_s81_kp4_dec (replaces s81lk_kp4_deca / decb, REJECTED at their CTS gates: 259.2 um tiles, SRAM in the middle, clock on the S face; TT insertion 307-455 / 295-417 ps, spread 148 / 122 ps).  Cluster 2 x 2: dsyn SW (PMA in W), ddly NW, dchn SE, dout NE (beats out E); every seam registered at both pins.  Bit-exact vs the 33a35eb7d two-tile decoder on every output and cycle (tb_s81_kp4_eq: RTL same cycle, hardware view with all tile pin registers = reference + 2 cycles; mutants DMUT 2 / 3 and a one-short word seam FAIL).  dsyn: alignment on registered am_ok / p_v, syndromes on the arriving stream, 3 RiBM key-equation units and the 3:1 result select; no macro; 172.8 um square (deca std ~15.6k um2 less the SRAM -> util ~0.55; enc's 7k-sink 151-194 um tiles measured TT insertion 192-243 ps, spread 32); p_d full W face (3.3/um), x_q full N face to ddly, k_* full E face to dchn, clk S centre (cluster outer face). S81-TILES3 10-17 PARENT PITCH (coordinator 0co: 2x2 parent with aligned pitch, no gaps on link paths): hard children sit on the 43.2-um child lattice with >= 20-um channels, so every seam tile edge is a lattice multiple minus 21.6 um. dsyn 172.8 -> 194.4 square (4.5 x 43.2; util ~0.55 -> ~0.43): 21.6-um channels to ddly (N) and dchn (E) instead of 43.2. x_q now 4.32-118.8 = ddly w_d exactly (4.75/um), k_* = dchn's W-face ranges exactly, so both seams are straight 21.6-um hops; p_d full W face (3.0/um), clk S centre. RTL unchanged. S81-TILES5 10-17 (coordinator: route s81lk_kp4_dsyn-t2-5f0b4a343 EARLY_FAIL_CONGESTION GRT-0116 at 194.4^2 / util 43%): the congestion is NOT diffuse all-to-all XOR wiring (enc k4-1ed8f8336 was: overflow 114,794, M2-M5 91% over the whole core); here total usage is 57% (M2 69% / M3 71%), max overflow 2 tracks, 580 gcells all in ONE L-shaped corridor in the NW quadrant: a horizontal band ~y 80-95 from the W face to x ~75 and vertical bands x 65-95 up to the N face = the 544-b p_d (W, 181 um) -> x_q (N, 4.3-118.8, 4.75/um) pass-through turning the NW corner on top of the syndrome fan-in. Fix: outline 216 x 216 (5 x 43.2, keeps the 2x2 parent lattice), place density 0.30 (the closed enc recipe), util ~35%: +11% tracks across the corner and a sparser NW. p_d W 4.32-207.36 (2.7/um); x_q, k_* (dchn seam) and S pins unchanged relative to the origin. Parent: dchn / ddly / dout shift +21.6 E / N, outline 600.48 x 540.",
+  "job": {
+    "owner": "Claude:S81-TILES2",
+    "branch": "claude/s81kp4-1017",
+    "tag": "t2",
+    "cycles_added": 2,
+    "purpose": "S81 link KP4 decoder tile dsyn (align, syndromes, 3 RiBM) of the 4-tile cluster ot_s81_kp4_dec, 10-17. Bench = bit-exact equivalence of the cluster vs the 33a35eb7d decoder (+ rs544.py exactness) and the syndrome mutant DMUT 3.",
+    "extra_paths": [
+      "rtl/dsrom_sys/s81_link/ot_s81_gf1024.svh",
+      "rtl/dsrom_sys/s81_link/ot_s81_kp4_enc_mat.svh",
+      "rtl/dsrom_sys/s81_link/ot_s81_kp4_syn_mat.svh",
+      "rtl/dsrom_sys/s81_link/ot_s81_kp4_common.sv",
+      "rtl/dsrom_sys/s81_link/ot_s81_kp4_bm.sv",
+      "rtl/dsrom_sys/s81_link/ot_s81_kp4_enc.sv",
+      "rtl/dsrom_sys/s81_link/ot_s81_kp4_dsyn.sv",
+      "rtl/dsrom_sys/s81_link/ot_s81_kp4_ddly.sv",
+      "rtl/dsrom_sys/s81_link/ot_s81_kp4_dchn.sv",
+      "rtl/dsrom_sys/s81_link/ot_s81_kp4_dout.sv",
+      "rtl/dsrom_sys/s81_link/ot_s81_kp4_dec.sv",
+      "rtl/dsrom_sys/s81_link/ref/ot_s81_kp4_dec_r33.sv",
+      "rtl/dsrom_sys/s81_link/tb_s81_kp4.sv",
+      "rtl/dsrom_sys/s81_link/tb_s81_kp4_eq.sv",
+      "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.v",
+      "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v",
+      "tools/s81_link/rs544.py",
+      "tools/s81_link/run_kp4_leaf_bench.sh",
+      "tools/s81_link/run_kp4_eq_bench.sh"
+    ],
+    "benches": [
+      {
+        "name": "kp4_dec4_eq_base",
+        "cmd": "bash tools/s81_link/run_kp4_eq_bench.sh base {RUN}/bench_base",
+        "expect": "pass",
+        "threads": 8,
+        "peak_ram_gb": 16,
+        "needs": [
+          "verilator"
+        ],
+        "timeout_s": 3600,
+        "pass_regex": "^TB_S81_KP4_EQ PASS$",
+        "min_count_regex": "^TB_S81_KP4_EQ cycles=\\d+ ref_beats=(\\d+) rtl_mismatch=0 hw_mismatch=0 "
+      },
+      {
+        "name": "kp4_dec4_eq_amut",
+        "cmd": "bash tools/s81_link/run_kp4_eq_bench.sh amut {RUN}/bench_amut",
+        "expect": "fail",
+        "threads": 8,
+        "peak_ram_gb": 16,
+        "needs": [
+          "verilator"
+        ],
+        "timeout_s": 3600,
+        "fail_regex": "^TB_S81_KP4_EQ FAIL$"
+      }
+    ]
+  }
+}

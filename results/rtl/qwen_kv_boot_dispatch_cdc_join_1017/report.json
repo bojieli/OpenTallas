@@ -1,0 +1,29 @@
+{
+ "schema": "opentallas.qwen-kvj-a.boot-dispatch-cdc-join.v1",
+ "status": "PASS_COMPONENT_ONLY",
+ "change": "qkd_static_kv_boot_dispatch successor: front_last[31:0] (last target-5 word of each group) and 8-bit controller_addr; kv_static_boot_join.boot_cdc_join adds 32 front (HAS_SEAL0) + 128 controller (HAS_SEAL1) qkd_static_kv_boot_cdc and qkd_static_kv_boot_observe, binding fcal cfg x32, pc_path cal_cfg/cal_seal x128, dispatcher sink_applied/sink_fault (1253 inputs)",
+ "base_commit": "73d265953",
+ "runs": {
+  "lockstep_m0.log": "PASS dispatcher lockstep vs 73d265953 replays60 edges625878 setup_edges72 faulted_replays15 front_last_pulses1440 diffs0",
+  "lockstep_m4.log": "PASS observed negative MUT4 front_last_bad1440",
+  "cdc_m0.log": "PASS dispatcher+160 boot_cdc+observe: setup_ready after 15 core edges, 4288 HBM sink words exact, 128 seals, 32 front applied without seal",
+  "cdc_m4.log": "FATAL: /home/ubuntu/wt/kvj-a-1017/rtl/test/qwen_static_kv/tb_static_boot_dispatch_cdc.sv:72: MUT4: setup never rose (front CDCs applied 0/32)"
+ },
+ "unit": "unit_receipt.json (run_boot_dispatch.py, MUT4 added: front_last check fails)",
+ "mutant_MUT4": "pre-successor behaviour: lockstep invariant breaks; with the real CDCs setup_ready never rises (front applied 0/32)",
+ "open_after": "clock/reset entries of all instances; dispatcher HOST inputs (item 3); local_configured; execution_active",
+ "source_sha256": {
+  "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_dispatch.sv": "9e1f83073eb31330a04d8f3b694bb8bee461a42985443463e25e33a798fa4f50",
+  "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_cdc.sv": "da3f8210eeb2d8407d36024d1dc238d0bacf61eb79d46cf8d22aee321d0bb453",
+  "rtl/lib/ot_async_fifo.sv": "22c5e15fc205c1585be1a3cf1cefa58550ddf546e3fe56945ec3282f276948bc",
+  "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+  "rtl/test/qwen_static_kv/tb_static_boot_dispatch.sv": "47618ac6c43930334bc3dfd3536e9deee89fc3e3fcce7040f75f68ddf5331d3d",
+  "rtl/test/qwen_static_kv/tb_static_boot_dispatch_lockstep.sv": "9efb58802cf9647746a9dbb64e7cb10bae7a7d16ebf901659c9fd19321af0fb6",
+  "rtl/test/qwen_static_kv/tb_static_boot_dispatch_cdc.sv": "a216e4805aa811e27dedfa84205d554a7eafd568a521bf8ffc68a9e9861b9306",
+  "tools/qwen_static_kv/run_boot_dispatch.py": "879e69d1d5ab16b979dde11317964640f5dcc77fb14cb048dc7aedf3674ac071",
+  "tools/qwen_kv_die/kv_static_boot_join.py": "712a336ec2d60f49ee11a04bf1abb7de92f99c8fb0d7b66cad3e5c25e0814cc1",
+  "tools/qwen_kv_die/test_kv_static_boot_join.py": "3d15f04b3aa91442f125435f8841bac6b62fe558310aba4b86a7dc6fa4ec4142"
+ },
+ "production_qualified": false,
+ "physical_qualified": false
+}

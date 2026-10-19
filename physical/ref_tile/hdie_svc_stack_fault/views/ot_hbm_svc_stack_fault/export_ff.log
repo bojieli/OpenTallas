@@ -1,0 +1,69 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9184, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9217, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9250, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9283, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9316, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9349, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9382, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10518, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10551, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10584, timing group from output port.
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_hbm can not be propagated.
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_hbm can not be propagated.
+OT_HYBRID CTS_MEASURE ff stream_clk sinks=76 reference_scope=boundary boundary_sinks=27 min=47.27079857561855 mean=48.53585094394897 max=49.48470472621076 all_mean=47.97977175467073
+OT_HYBRID CTS_MEASURE ff hbm_clk sinks=177 reference_scope=boundary boundary_sinks=130 min=61.02651741684061 mean=63.58512620063298 max=65.19205340519714 all_mean=63.27631813251742
+OT_ENTRIES LEVEL stream_clk deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
+OT_ENTRIES COMP ff stream_clk -> cl$_DFFE_PN0P_/CLK wire=0 R=48.53585094394897 latency=15.049275256684005 phi=63.58512620063298
+OT_ENTRIES LEVEL hbm_clk deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
+OT_ENTRIES COMP ff hbm_clk -> ca$_DFFE_PN0P_/CLK wire=0 R=63.58512620063298 latency=0.0 phi=63.58512620063298
+OT_ENTRIES DOMAIN core 833.333008ps IO18/8 boundary=62.320073832302555..64.53397998289476
+OT_ENTRIES DOMAIN hbm 1024.000000ps IO129/0 boundary=61.02651741684061..65.19205340519716
+OT_ASYNC_GRAY BOUNDED reset u_hrst.reset_pipe[1]$_DFF_PN0_/CLK -> u_ca.u_dst_reset.reset_pipe[1]$_DFF_PN0_/RESETN
+OT_ASYNC_GRAY BOUNDED reset u_srst.reset_pipe[1]$_DFF_PN0_/CLK -> u_ca.u_src_reset.reset_pipe[1]$_DFF_PN0_/RESETN
+OT_ASYNC_GRAY BOUNDED u_ca.u_status.rd_gray[0]$_DFFE_PN0P_ -> u_ca.u_status.rd_gray_w1[0]$_DFF_PN0_
+OT_ASYNC_GRAY BOUNDED u_ca.u_status.rd_gray[1]$_DFFE_PN0P_ -> u_ca.u_status.rd_gray_w1[1]$_DFF_PN0_
+OT_ASYNC_GRAY BOUNDED u_ca.u_status.rd_gray[2]$_DFFE_PN0P_ -> u_ca.u_status.rd_gray_w1[2]$_DFF_PN0_
+OT_ASYNC_GRAY BOUNDED u_ca.u_status.rd_online$_DFF_PN0_ -> u_ca.u_status.rd_online_w1$_DFF_PN0_
+OT_ASYNC_GRAY BOUNDED u_ca.u_status.wr_gray[0]$_DFFE_PN0P_ -> u_ca.u_status.wr_gray_r1[0]$_DFF_PN0_
+OT_ASYNC_GRAY BOUNDED u_ca.u_status.wr_gray[1]$_DFFE_PN0P_ -> u_ca.u_status.wr_gray_r1[1]$_DFF_PN0_
+OT_ASYNC_GRAY BOUNDED u_ca.u_status.wr_bin[2]$_DFFE_PN0P_ -> u_ca.u_status.wr_gray_r1[2]$_DFF_PN0_
+OT_ASYNC_GRAY BOUNDED u_ca.u_status.wr_online$_DFF_PN0_ -> u_ca.u_status.wr_online_r1$_DFF_PN0_
+OT_ASYNC_GRAY BOUNDED reset u_hrst.reset_pipe[1]$_DFF_PN0_/CLK -> u_ow.u_dst_reset.reset_pipe[0]$_DFF_PN0_/RESETN
+OT_ASYNC_GRAY BOUNDED reset u_srst.reset_pipe[1]$_DFF_PN0_/CLK -> u_ow.u_src_reset.reset_pipe[0]$_DFF_PN0_/RESETN
+OT_ASYNC_GRAY BOUNDED u_ow.u_status.rd_gray[0]$_DFFE_PN0P_ -> u_ow.u_status.rd_gray_w1[0]$_DFF_PN0_
+OT_ASYNC_GRAY BOUNDED u_ow.u_status.rd_gray[1]$_DFFE_PN0P_ -> u_ow.u_status.rd_gray_w1[1]$_DFF_PN0_
+OT_ASYNC_GRAY BOUNDED u_ow.u_status.rd_gray[2]$_DFFE_PN0P_ -> u_ow.u_status.rd_gray_w1[2]$_DFF_PN0_
+OT_ASYNC_GRAY BOUNDED u_ow.u_status.wr_gray[0]$_DFFE_PN0P_ -> u_ow.u_status.wr_gray_r1[0]$_DFF_PN0_
+OT_ASYNC_GRAY BOUNDED u_ow.u_status.wr_gray[1]$_DFFE_PN0P_ -> u_ow.u_status.wr_gray_r1[1]$_DFF_PN0_
+OT_ASYNC_GRAY BOUNDED u_ow.u_status.wr_gray[2]$_DFFE_PN0P_ -> u_ow.u_status.wr_gray_r1[2]$_DFF_PN0_
+OT_ASYNC_GRAY BOUNDED u_pc.u_status.rd_gray[0]$_DFFE_PN0P_ -> u_pc.u_status.rd_gray_w1[0]$_DFF_PN0_
+OT_ASYNC_GRAY BOUNDED u_pc.u_status.rd_gray[1]$_DFFE_PN0P_ -> u_pc.u_status.rd_gray_w1[1]$_DFF_PN0_
+OT_ASYNC_GRAY BOUNDED u_pc.u_status.rd_bin[2]$_DFFE_PN0P_ -> u_pc.u_status.rd_gray_w1[2]$_DFF_PN0_
+OT_ASYNC_GRAY BOUNDED u_pc.u_status.wr_gray[0]$_DFFE_PN0P_ -> u_pc.u_status.wr_gray_r1[0]$_DFF_PN0_
+OT_ASYNC_GRAY BOUNDED u_pc.u_status.wr_gray[1]$_DFFE_PN0P_ -> u_pc.u_status.wr_gray_r1[1]$_DFF_PN0_
+OT_ASYNC_GRAY BOUNDED u_pc.u_status.wr_gray[2]$_DFFE_PN0P_ -> u_pc.u_status.wr_gray_r1[2]$_DFF_PN0_
+OT_ASYNC_GRAY MERGED_ONLINE u_ow.u_status wr_online -> u_ca.u_status
+OT_ASYNC_GRAY MERGED_ONLINE u_ow.u_status rd_online -> u_ca.u_status
+OT_ASYNC_GRAY MERGED_ONLINE u_pc.u_status wr_online -> u_ca.u_status
+OT_ASYNC_GRAY MERGED_ONLINE u_pc.u_status rd_online -> u_ca.u_status
+OT_ASYNC_GRAY STRUCTURAL_PASS {u_ca.u_status rd_gray} 3 {u_ca.u_status rd_online} 1 {u_ca.u_status wr_gray} 3 {u_ca.u_status wr_online} 1 {u_ow.u_status rd_gray} 3 {u_ow.u_status wr_gray} 3 {u_pc.u_status rd_gray} 3 {u_pc.u_status wr_gray} 3 reset_sync_inputs=core 2 hbm 2 (bounded CDC; no physical closure claim)
+OT_MULTI_ROOT OWNERSHIP PASS roots=2 registers=253 inputs=147 outputs=8 async_control_pins=208
+OT_ENTRIES COMP DONE ff 2 entries phi=63.58512620063298 boundary=61.02651741684061..65.19205340519716
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_hbm can not be propagated.
+OT_IOREF clock-port stream_clk (ot_entry_0): data input delays dropped
+OT_IOREF clock-port hbm_clk (ot_entry_1): data input delays dropped
+OT_IOREF_EDGE ot_entry_0 boundary 27 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_1 boundary 130 negedge 0 noarc 0 inverted 0
+OT_IOREF keep core_clk (not an insertion-reference clock)
+OT_IOREF keep ot_io_hbm (not an insertion-reference clock)
+OT_WS max 3.971889483977975e-10 min 7.328367079839637e-12
+OT_EXPORT_DONE

@@ -22,8 +22,11 @@ validate_case() {
 say() { echo "$(date '+%F %T %Z') $*" >> $R/STATUS.log; }
 case $DIE in kv) P1=20; P2=80; P3=60; P4=40;; r22k) P1=40; P2=130; P3=160; P4=110;; *) echo bad die; exit 2;; esac
 say "chain start die=$DIE src=$(cat $C/SOURCE_COMMIT 2>/dev/null) from=${OT_FROM:-case}"
-# ROOT RELAY-SCHEMA 10-16: die relay stages vs the compiled schedule (OT_RELAY_SCHEDULE; SKIPPED when unset)
+# ROOT RELAY-SCHEMA 10-16: die relay stages vs the compiled schedule (OT_RELAY_SCHEDULE; SKIPPED when unset).  The KV die
+# runs it after the strict bind below (QXF-SEAMK 10-18: netlist-walk export + the compiler's schedule for THIS die)
+if [ "$DIE" != kv ]; then
 RCL=$(bash "$SRC/tools/die_relay_chain_step.sh" "$C/relay_stages.json" "${OT_RELAY_SCHEDULE:-}" "$R/relay_check.json") && RCR=0 || RCR=$?; say "$RCL"; [ "$RCR" = 0 ] || exit 1
+fi
 # Owner no-stubs rule: audit the actual die.v against this run's real RTL at
 # every launch, including preserved-case resumes. HARD_PHY still needs real ports.
 if [ "$DIE" = kv ]; then
@@ -48,12 +51,36 @@ if [ "$DIE" = kv ]; then
   bash "$SRC/tools/qwen_kv_die/kv_port_bind_v2.sh" "$C/die.v" "$R/port_bind_v2" "$C/qkd_kv_relays.sv" "$R/expand.json" \
     > "$R/port_bind_v2.log" 2>&1
   say "STRICT PORT BIND v2: $(tail -1 $R/port_bind_v2.log | cut -c1-400)"
+  # QXF-SEAMK 10-18 (TOKEN-XDIE-QWEN F6: kvs14c logged 'RELAY_CHECK SKIPPED no compiled schedule' while its d2d <-> kvs_attn
+  # record bundles were torn 9/11, 8/9, 6/11): the die-run table is walked from the bound GEN netlist
+  # (RUN/relay_stages_netlist.json, tools/qwen_layerbench/netlist_relay_stages.py), the schedule is the calendar compiler
+  # run against THIS die (tools/qwen_layerbench/layer_compile.py -> RUN/layer_compile/, the D2D calendars + TXDP + KV
+  # programme the RTL loads), and tools/die_relay_check.py FAILS any stage difference AND any torn record bundle
+  # (tools/die_record_bundles.py).  OT_RELAY_SCHEDULE=<table> checks against a given compiled table instead (e.g.
+  # results/rtl/qwen_layer_tput_1018/compiled_L1/relay_schedule/kv_compiled.json.gz for the kvs14c netlist itself);
+  # OT_RELAY_SCHEDULE=skip is the only way to skip (stamped).  A FAIL stops the chain unless OT_BIND_DIAGNOSTIC=1.
+  bash "$SRC/tools/qwen_kv_die/kv_relay_check.sh" "$R" "$SRC" > "$R/relay_check.log" 2>&1 && RCR=0 || RCR=$?
+  say "$(grep -E '^RELAY_CHECK ' $R/relay_check.log | tail -1 | cut -c1-600)"
+  if [ "$RCR" != 0 ]; then
+    if [ "${OT_BIND_DIAGNOSTIC:-0}" = 1 ]; then
+      say "RELAY_CHECK FAIL ($R/relay_check.log): DIAGNOSTIC PATHFINDING ONLY -- NOT A DIE RESULT"
+      echo "RELAY_CHECK_FAIL_DIAGNOSTIC_ONLY" >> "$R/NOT_A_DIE_RESULT"
+    else
+      say "RELAY_CHECK FAIL ($R/relay_check.log): no die job launched"; exit 1
+    fi
+  fi
 fi
 # Q-COMPUTE-DIE 2026-10-15: OT_PG_OPEN_DIAG=1 lets a DIAGNOSTIC chain reach GRT/STA when pdngen PASSED and only
 # check_power_grid failed (islands listed by master class); run_pdn.tcl must have written floorplan_pdn_prepg.odb.
 # The PDN stays FAIL in STATUS; nothing about the PG verdict is relaxed (like OT_PDN=skip, timing-only evidence).
 pg_open_diag() {
   [ "${OT_PG_OPEN_DIAG:-0}" = 1 ] && grep -q '^OT_PDN PASS' $C/run_pdn.log && [ -s $C/floorplan_pdn_prepg.odb ] || return 1
+  # A killed or incomplete PG check is not a measured connectivity failure. Require both the process verdict
+  # and an explicit completed check failure before taking the diagnostic continuation (Qwen recovery 10-18).
+  local pg_process_rc
+  pg_process_rc=$(cat "$C/run_pdn.log.process_exit" 2>/dev/null) || return 1
+  case "$pg_process_rc" in 0|1) ;; *) return 1;; esac
+  grep -Eq '^OT_PGCHECK (VDD|VSS) FAIL ' "$C/run_pdn.log" || return 1
   grep -E '^(OT_.*FAIL|Error:|\[ERROR)' $C/run_pdn.log | grep -v -E 'OT_PGCHECK (VDD|VSS) FAIL|PSM-0069|run_pdn.tcl, [0-9]+ PSM-0069' | grep -q . && return 1
   ln -f $C/floorplan_pdn_prepg.odb $C/floorplan_pdn.odb
   say "PDN PG OPEN -- DIAGNOSTIC ONLY (GRT/STA continue): islands by class: $(grep PSM-0039 $C/run_pdn.log | sed -E 's/.*instance ([^ /]+)\/.*/\1/; s/(_[0-9]+)+$//' | sort | uniq -c | sort -rn | awk '{printf "%s=%s ",$2,$1}')"
@@ -91,6 +118,9 @@ if [ "${OT_DIE_REPAIR:-0}" = 1 ]; then
     [ -f "$f" ] && cp "$f" $G/libs/ && echo /work/libs/$(basename $f) >> $G/libs_tt.txt; done
   [ -s $G/libs_tt.txt ] || { say "DIE_REPAIR FAIL: no TT element libs in $R/libs (the resizer would not see the element pins)"; exit 1; }
   RD=qwen_compute; [ "$DIE" = kv ] && RD=qwen_kv
+  # Q-DIE12 10-18: a die with forwarded lanes (n_fck_* lane clocks) repeats them with their data (step.py *_fwd)
+  grep -q 'n_fck_' $C/die.v 2>/dev/null && RD=${RD}_fwd
+  RD=${OT_DIE_REPAIR_DESIGN:-$RD}; say "DIE_REPAIR design $RD"
   RS=(--skip 'n_rst_*'); [ "${OT_ROUTE_RESET:-0}" = 1 ] && RS=()   # routed registered reset hops are ordinary die nets: repeated
   python3 $SRC/tools/die_repeaters/step.py copy $G > /dev/null && \
   python3 $SRC/tools/die_repeaters/step.py tcl --design $RD --report /work/die_repeaters.json --libs-file /work/libs_tt.txt \
@@ -130,6 +160,19 @@ for c in $corners; do D=$R/sta_${DIE}_$c; mkdir -p $D/libs
     cp "$SRC/tools/die_clock_check.tcl" $D/die_clock_check.tcl
     printf '%s\n' 'if {[catch {set ::env(OT_DCC_OUT) /work/die_clock_dump.tsv; source /work/die_clock_check.tcl} err]} { puts "OT_DCC_FAIL $err" } else { puts OT_DCC_DONE }' >> $D/grt_$c.tcl
   fi
+  # Q-DIE12 10-18: forwarded-lane landing slacks per lane (tools/qwen_split/fwd_land_plan.py tcl) in every corner, so one
+  # chain yields the land plan (E per link) for the next GEN (OT_SPLIT_LAND_PLAN) without a second STA session
+  if [ -s $C/fwd_lanes.json ] && [ "${OT_FWD_LAND_DUMP:-1}" = 1 ]; then
+    python3 $SRC/tools/qwen_split/fwd_land_plan.py tcl --lanes $C/fwd_lanes.json --corner $c --out $D/land_$c.tcl > /dev/null && \
+      printf 'if {[catch {source /work/land_%s.tcl} err]} { puts "OT_LAND_FAIL $err" }\n' $c >> $D/grt_$c.tcl
+  fi
+  # KV-LANDSLOT 10-18: reset release window of the cross-tree reset root hops (OT_RST_WINDOW_HOPS = kv_rst_window.py
+  # hops json): MCP setup E_r / hold E_r-1 per hop, worst path per hop net -> rst_window_<c>.tsv (after the reports)
+  if [ -n "${OT_RST_WINDOW_HOPS:-}" ] && [ -s "$OT_RST_WINDOW_HOPS" ]; then
+    python3 "$SRC/tools/qwen_kv_die/kv_rst_window.py" tcl --hops "$OT_RST_WINDOW_HOPS" --corner $c --out $D/rst_window.tcl \
+      && printf '%s\n' 'if {[catch {source /work/rst_window.tcl} err]} { puts "OT_RST_WINDOW_FAIL $err" }' >> $D/grt_$c.tcl \
+      || say "RST WINDOW $c: Tcl generation FAIL"
+  fi
   # DIE-FLOW 10-17: post-GRT slew/cap audit of the repeated die nets (TT session; GRT detours are invisible pre-GRT)
   if [ "${OT_DIE_REPAIR:-0}" = 1 ] && [ "$c" = tt ] && [ -f $G/die_repeaters.tcl ]; then
     cp $G/die_repeaters.tcl $G/die_repeaters.skip_nets.txt $D/ 2>/dev/null
@@ -147,7 +190,17 @@ for c in $corners; do D=$R/sta_${DIE}_$c; mkdir -p $D/libs
       && say "DIE CLOCK CHECK $c: $D/die_clock_check.txt" || say "DIE CLOCK CHECK $c report FAIL (see $D/die_clock_check.txt)"
   elif [ "$DCC" = 1 ]; then say "DIE CLOCK CHECK $c: no dump ($(grep -m1 OT_DCC_FAIL $D/grt_$c.log))"; fi
 done
+if [ -n "${OT_RST_WINDOW_HOPS:-}" ] && [ -s "$OT_RST_WINDOW_HOPS" ]; then
+  RWD=$R/dieclk; say "$(python3 "$SRC/tools/qwen_kv_die/kv_rst_window.py" report --hops "$OT_RST_WINDOW_HOPS" \
+    --tt $R/sta_${DIE}_tt/rst_window_tt.tsv --ff $R/sta_${DIE}_ff/rst_window_ff.tsv \
+    $( [ -s $RWD/dump_tt.tsv ] && echo --dump-tt $RWD/dump_tt.tsv ) $( [ -s $RWD/dump_ff.tsv ] && echo --dump-ff $RWD/dump_ff.tsv ) \
+    --out $R/rst_window.json 2>&1 | tail -1)"
+fi
 [ "$sta_failed" = 0 ] || { say "chain FAIL: one or more STA corners did not complete"; exit 1; }
+if [ -s $C/fwd_lanes.json ] && [ "${OT_FWD_LAND_DUMP:-1}" = 1 ]; then
+  LG=(); for c in tt ff; do [ -s $R/sta_${DIE}_$c/grt_$c.log ] && LG+=($R/sta_${DIE}_$c/grt_$c.log); done
+  [ ${#LG[@]} -gt 0 ] && say "LAND PLAN: $(python3 $SRC/tools/qwen_split/fwd_land_plan.py plan --lanes $C/fwd_lanes.json --logs "${LG[@]}" --out $R/land_plan.json 2>&1 | tail -1)"
+fi
 # DIE-FLOW 2026-10-17 (FLOW-HOLD D1-D3, OT_HOLD_BUDGET=die: die_sta_libs.py U 25 + sta_tcl.py FF hold dump): per-link
 # classifier -- launch-min from the bound ETMs, delta <= 80, ASSUMED single-flop masters = hold DIAGNOSTIC links
 if [ "${OT_HOLD_BUDGET:-tile}" = die ]; then

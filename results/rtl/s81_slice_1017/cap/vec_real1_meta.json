@@ -1,0 +1,85 @@
+{
+ "case": "real",
+ "seed": 1,
+ "edges": 10825,
+ "words": 7446,
+ "rows_written": 1280,
+ "phases": [
+  {
+   "rows": 320,
+   "np": 0,
+   "words": 1601,
+   "slots": 2220,
+   "cfg": {
+    "obase": 0,
+    "ops": 320,
+    "np": 0,
+    "fmt": 1,
+    "rbase": 1600,
+    "rcnt": 320,
+    "rsplit": 1668,
+    "lo32": 1,
+    "hi32": 1
+   },
+   "first_arr": 135,
+   "last_arr": 2210,
+   "last_write": 2283,
+   "merges_tree": null
+  },
+  {
+   "rows": 320,
+   "np": 0,
+   "words": 1906,
+   "slots": 2782,
+   "cfg": {
+    "obase": 1024,
+    "ops": 320,
+    "np": 0,
+    "fmt": 2,
+    "rbase": 1600,
+    "rcnt": 320,
+    "rsplit": 1760,
+    "lo32": 0,
+    "hi32": 0
+   },
+   "first_arr": 2377,
+   "last_arr": 5005,
+   "last_write": 5088,
+   "merges_tree": null
+  },
+  {
+   "rows": 320,
+   "np": 1,
+   "words": 3939,
+   "slots": 5654,
+   "cfg": {
+    "obase": 2048,
+    "ops": 320,
+    "np": 1,
+    "fmt": 1,
+    "rbase": 1600,
+    "rcnt": 320,
+    "rsplit": 1853,
+    "lo32": 1,
+    "hi32": 1
+   },
+   "first_arr": 5182,
+   "last_arr": 10691,
+   "last_write": 10765,
+   "merges_tree": null
+  }
+ ],
+ "lat_last_arr_to_write": {
+  "min": 43,
+  "max": 84,
+  "mean": 60.440625
+ },
+ "constants": {
+  "WIN": 2,
+  "RST": 1,
+  "C_NODE": 13,
+  "RE": 10,
+  "WR": 4,
+  "LL": 16
+ }
+}

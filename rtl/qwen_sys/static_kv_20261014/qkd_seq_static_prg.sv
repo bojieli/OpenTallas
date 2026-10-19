@@ -12,14 +12,17 @@
 //
 // Cluster (wires-only parent qkd_seq_static_p over hardened leaves):
 //   qkd_seq_core_static_p x 1  control leaf (successor of qkd_seq_core_static)
-//   qkd_seq_xd_sel        x 4  NEW 128-b store-data select (one per store slice): x_d <= q_v ? q_d : kvn_d  (registered)
+//   qkd_seq_xd_sel_r      x 4  128-b store-data select (one per store slice), KV-NATIVE 10-17 successor of qkd_seq_xd_sel
+//                              (history): pin flops on q_v (8 select copies) / q_d / k_d, then x_d <= q_v ? q_d : kvn_d;
+//                              +1 edge on Q and KVN store data, and the core's x_v / x_cls pass through it (+1) to stay aligned
 //   qkd_seq_xs_tp8        x 4  UNCHANGED store slices (closed view)
 //   qkd_seq_fan           x 4  UNCHANGED quadrant pin registers (closed views)
 // Timeline, E = the edge of the CMD RX event at the D2D end (programme rx_event and the old att_rx_v are the same edge):
 //   programme request_valid E+1 -> core pin E+2 = a 0 at E+3; Q beat n: programme q_* E+3+n, xd_sel out / store push E+4+n
 //   (old: E+2+n, +2: programme Q register + select register).  KVN word: kvn_word_* E+35..38 (unchanged), xd_sel out /
 //   store push E+36..39 (old E+35..38, +1).  KP0 = 36 (old 37) keeps every pop / aq start / Q beat / posted row / hs at
-//   the SAME absolute edge as qkd_seq_static: aq and kvn faces are cycle-identical.  The stream descriptor (kc face) is
+//   the SAME absolute edge as qkd_seq_static: aq and kvn faces are cycle-identical.  KV-NATIVE 10-17 (qkd_seq_xd_sel_r): store
+//   push +1 more (Q E+5+n, KVN E+37..40); every pop / face edge is unchanged (absorbed: first K pop E+39, first Q pop later).  The stream descriptor (kc face) is
 //   launched by the CMD event and leaves +1 edge later than qkd_seq_static (priced in the KVE-2-SEQ lane record).
 // MUT (bench only): 1 Q beats 0/1 swapped; 2 posted rows' t = T; 3 aq start one edge late; 4 KVN push one edge early;
 //   5 (xd_sel) the select ignores q_v (Q data replaced by the KVN wires).
@@ -237,6 +240,39 @@ module qkd_seq_xd_sel #(parameter integer W = 128, parameter integer MUT = 0) (
     always @(posedge ck) x_d <= (q_v && MUT != 5) ? q_d : k_d;
 endmodule
 
+// KV-NATIVE 10-17 successor of qkd_seq_xd_sel (routed native audit, claude/native-batch-1017 029f539c5: q_v capture 230.8 >
+// 190 ps -- the bare q_v pin fanned out to all 128 mux selects ahead of the x_d flops).  Every input is now a pin flop:
+//   stage 1 (at the N pins): NS replicated q_v select copies (each a kept flop of the q_v pin, one per W/NS-bit group),
+//                            q_d / k_d pin flops, x_vi / x_ci pin flops (the core's store-push control, passed through);
+//   stage 2 (at the S pins):  x_d <= qv_p[g] ? qd_p : kd_p per group; x_vo / x_co = the stage-1 control flops.
+// Data latency 2 edges (was 1); the store-push control (x_v / x_cls from qkd_seq_core_static_p) now goes through this tile
+// with +1 edge so it stays aligned with x_d at every qkd_seq_xs_tp8.  No reset (pure pipeline; the core's x_v is reset).
+// MUT (bench only): 5 the select ignores q_v (as qkd_seq_xd_sel); 6 the last select copy ignores q_v (one group of W/NS bits).
+module qkd_seq_xd_sel_r #(parameter integer W = 128, parameter integer NS = 8, parameter integer MUT = 0) (
+    input  wire          ck,
+    input  wire          q_v,
+    input  wire [W-1:0]  q_d,
+    input  wire [W-1:0]  k_d,
+    input  wire          x_vi,
+    input  wire [2:0]    x_ci,
+    output reg  [W-1:0]  x_d,
+    output reg           x_vo,
+    output reg  [2:0]    x_co
+);
+    localparam integer G = W / NS;
+    (* keep = "true", dont_touch = "true" *) reg [NS-1:0] qv_p;
+    reg [W-1:0] qd_p, kd_p;
+    always @(posedge ck) begin
+        qv_p <= {NS{q_v}}; qd_p <= q_d; kd_p <= k_d;
+        x_vo <= x_vi; x_co <= x_ci;
+    end
+    genvar g;
+    generate for (g = 0; g < NS; g = g + 1) begin : g_sel
+        wire sel = qv_p[g] && MUT != 5 && !(MUT == 6 && g == NS - 1);
+        always @(posedge ck) x_d[G*g +: G] <= sel ? qd_p[G*g +: G] : kd_p[G*g +: G];
+    end endgenerate
+endmodule
+
 // wires-only parent on the contract slot `seq` (successor of qkd_seq_static): no cell, no flop of its own
 module qkd_seq_static_p #(parameter integer MUT = 0) (
     input  wire          ck,
@@ -275,6 +311,8 @@ module qkd_seq_static_p #(parameter integer MUT = 0) (
     wire [255:0]  sq  [0:3];
     wire [511:0]  skw [0:3];
     wire [127:0]  xd  [0:3];
+    wire [3:0]    xv;                              // store-push control per slice, +1 edge through qkd_seq_xd_sel_r
+    wire [2:0]    xc  [0:3];
     // hard children carry no #() under the hard define (closed views are the MUT 0 build)
 `ifdef OT_QKD_SEQ_STATIC_P_HARD
     qkd_seq_core_static_p u_core (
@@ -292,13 +330,13 @@ module qkd_seq_static_p #(parameter integer MUT = 0) (
     genvar s, k;
     generate for (s = 0; s < 4; s = s + 1) begin : g_xs
 `ifdef OT_QKD_SEQ_STATIC_P_HARD
-        qkd_seq_xd_sel u_xd (.ck(ck), .q_v(prg_q_v), .q_d(prg_q_data[128*s +: 128]),
-            .k_d(kvn_word_data[128*s +: 128]), .x_d(xd[s]));
+        qkd_seq_xd_sel_r u_xd (.ck(ck), .q_v(prg_q_v), .q_d(prg_q_data[128*s +: 128]),
+            .k_d(kvn_word_data[128*s +: 128]), .x_vi(x_v), .x_ci(x_cls), .x_d(xd[s]), .x_vo(xv[s]), .x_co(xc[s]));
 `else
-        qkd_seq_xd_sel #(.MUT(MUT)) u_xd (.ck(ck), .q_v(prg_q_v), .q_d(prg_q_data[128*s +: 128]),
-            .k_d(kvn_word_data[128*s +: 128]), .x_d(xd[s]));
+        qkd_seq_xd_sel_r #(.MUT(MUT)) u_xd (.ck(ck), .q_v(prg_q_v), .q_d(prg_q_data[128*s +: 128]),
+            .k_d(kvn_word_data[128*s +: 128]), .x_vi(x_v), .x_ci(x_cls), .x_d(xd[s]), .x_vo(xv[s]), .x_co(xc[s]));
 `endif
-        qkd_seq_xs_tp8 u_xs (.ck(ck), .rst_n(rst_n), .x_v(x_v), .x_cls(x_cls), .x_d(xd[s]),
+        qkd_seq_xs_tp8 u_xs (.ck(ck), .rst_n(rst_n), .x_v(xv[s]), .x_cls(xc[s]), .x_d(xd[s]),
             .qpop(s_qpop), .kpop(s_kpop), .kidx(s_kidx), .kwgo(s_kwgo), .kwn(s_kwn), .q_w(sq[s][127:0]), .q_e(sq[s][255:128]),
             .kw_w(skw[s][255:0]), .kw_e(skw[s][511:256]));
     end endgenerate

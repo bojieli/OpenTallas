@@ -96,6 +96,7 @@ for s in rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv rtl/v41rom/ot_v41_rom_elem_qx_
   rtl/v41rom/ot_v41_fadd.sv rtl/common/ot_prefix.sv rtl/v41rom/ot_v41_bterm2_w10.sv rtl/v41rom/ot_v41_chain2.sv \
   rtl/v41rom/ot_v41_segtree2.sv rtl/v41rom/ot_v41_bf16_lanes2.sv rtl/v41rom/ot_v41_bterm3_w10.sv rtl/v41rom/ot_v41_bterm4_w10.sv rtl/v41rom/ot_v41_bterm5_w10.sv rtl/v41rom/ot_v41_segtree3.sv rtl/v41rom/ot_v41_segtree4.sv rtl/v41rom/ot_v41_segtree5.sv rtl/v41rom/ot_v41_segtree6.sv \
   physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_bb.v; do SRCS="$SRCS --source $s"; done
+# RSTP (QXPQ-RST 2026-10-17, unset = unchanged): the synchronous reset relay flop at the rst_n pin (RTL param RSTP).
 EXTRA=(); [ -n "${CTSA:-}" ] && EXTRA=(--orfs-var "CTS_ARGS=$CTSA")
 # OT_Q_EF_SOUTH=1 (cont-takeover 2026-10-09, default off): the PQ loader handshake outputs bank_free / sh_free go to the
 # S face beside go / go_tag.  Their only consumer is the pair's ot_s81_cfg7_seq in the cfg band below the q frame (seq ef
@@ -115,6 +116,6 @@ exec python3 tools/run_abi3_physical_aligned.py --macro-track-gate --macro-track
  --macro-view ot_rom_4096x274_m8=physical/asap7_memory_macros/ot_rom_4096x274_m8 \
  --param MTP=1 --param EARLY=1 --param NB=2 --param FAST=1 --param PP=1 --param QTIMING_FIX=1 \
  --param QPIPE=1 --param QP_XS=1 --param QP_CAP=$CAP --param QP_P1=1 --param QP_CSAM=10 \
- --param QZ=1 --param QZ_NS=8 --param QZ_NE=4 --param QY=1 --param QX=${QX:-5} --param PQ=${PQ:-1} --param QW=${QW:-0} --param QM=${QM:-1} --param QS=${QS:-0} --orfs-var ROUTING_LAYER_ADJUSTMENT=${RLA:-0.22} --orfs-var SETUP_SLACK_MARGIN=${SM:-15} --orfs-var CTS_CLUSTER_SIZE=${CS:-30} --orfs-var CTS_CLUSTER_DIAMETER=${CD:-50} --orfs-var CTS_BUF_DISTANCE=${BD:-60} --hold-corners WC,BC \
+ --param QZ=1 --param QZ_NS=8 --param QZ_NE=4 --param QY=1 --param QX=${QX:-5} --param PQ=${PQ:-1} --param QW=${QW:-0} --param QM=${QM:-1} --param QS=${QS:-0} ${RSTP:+--param RSTP=$RSTP} --orfs-var ROUTING_LAYER_ADJUSTMENT=${RLA:-0.22} --orfs-var SETUP_SLACK_MARGIN=${SM:-15} --orfs-var CTS_CLUSTER_SIZE=${CS:-30} --orfs-var CTS_CLUSTER_DIAMETER=${CD:-50} --orfs-var CTS_BUF_DISTANCE=${BD:-60} --hold-corners WC,BC \
  --pnr-stop-after $STOP --orfs-corner WC --clock-uncertainty-hold-ns 0.025 \
  --core-input-delay-min-ns 0.36 --core-input-delay-max-ns ${INMAX:-$(python3 -c "print(round(${PER:-0.770}-0.106,3))")} --output-delay-min-ns -0.322 --output-delay-max-ns -0.193 "${EXTRA[@]}" > $J/launch.log 2>&1

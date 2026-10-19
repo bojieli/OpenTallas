@@ -9,39 +9,11 @@
   "rtl/hdc/nearhbm/ot_nhb_tiles_bb.v",
   "rtl/hdc/nearhbm/ot_qkh_recip_leaf_bb.v"
  ],
- "params": {},
- "clock": "hybrid_entries",
- "clock_port": "ck_core",
- "clock_ports": [
-  "ck_core",
-  "ck_zh[0]",
-  "ck_zh[1]",
-  "ck_zh[2]",
-  "ck_zh[3]",
-  "ck_recip",
-  "ck_pbst[0]",
-  "ck_pbst[1]",
-  "ck_pbst[2]",
-  "ck_pbst[3]",
-  "ck_pvlg[0]",
-  "ck_pvlg[1]",
-  "ck_pvlg[2]",
-  "ck_pvlg[3]",
-  "ck_sr[0]",
-  "ck_sr[1]",
-  "ck_sr[2]",
-  "ck_sr[3]",
-  "ck_rx",
-  "ck_ry"
- ],
- "clock_cts_roots": [
-  "ck_sr[0]",
-  "ck_sr[1]",
-  "ck_sr[2]",
-  "ck_sr[3]",
-  "ck_rx",
-  "ck_ry"
- ],
+ "params": {
+  "SI_RLY": 1
+ },
+ "clock": "spine",
+ "clock_port": "ck",
  "reset_ports": [
   "rst_n"
  ],
@@ -58,7 +30,9 @@
    "pi_valid",
    "pi_g",
    "pi_beat",
-   "pi_data"
+   "pi_data",
+   "ck",
+   "rst_n"
   ],
   "N": [
    "am",
@@ -67,21 +41,10 @@
    "out_beat",
    "out_data",
    "fault",
-   "ev",
-   "ck_core",
-   "ck_zh",
-   "ck_recip"
+   "ev"
   ],
-  "W": [
-   "rst_n",
-   "ck_pbst"
-  ],
-  "E": [
-   "ck_pvlg",
-   "ck_sr",
-   "ck_rx",
-   "ck_ry"
-  ]
+  "W": [],
+  "E": []
  },
  "outline": {
   "w": 1175.04,
@@ -96,8 +59,8 @@
    "count": 1,
    "inst": "*g_s?0?*u_pbst",
    "at": [
-    43.2,
-    43.2
+    172.8,
+    86.4
    ],
    "orient": "R0"
   },
@@ -106,8 +69,8 @@
    "count": 1,
    "inst": "*g_s?1?*u_pbst",
    "at": [
-    259.2,
-    43.2
+    345.6,
+    86.4
    ],
    "orient": "R0"
   },
@@ -116,8 +79,8 @@
    "count": 1,
    "inst": "*g_s?2?*u_pbst",
    "at": [
-    756.0,
-    43.2
+    561.6,
+    86.4
    ],
    "orient": "R0"
   },
@@ -126,8 +89,8 @@
    "count": 1,
    "inst": "*g_s?3?*u_pbst",
    "at": [
-    972.0,
-    43.2
+    734.4,
+    86.4
    ],
    "orient": "R0"
   },
@@ -136,8 +99,8 @@
    "count": 1,
    "inst": "*g_pv?0?*u_pv",
    "at": [
-    43.2,
-    302.4
+    172.8,
+    345.6
    ],
    "orient": "R0"
   },
@@ -146,8 +109,8 @@
    "count": 1,
    "inst": "*g_pv?1?*u_pv",
    "at": [
-    259.2,
-    302.4
+    345.6,
+    345.6
    ],
    "orient": "R0"
   },
@@ -156,8 +119,8 @@
    "count": 1,
    "inst": "*g_pv?2?*u_pv",
    "at": [
-    756.0,
-    302.4
+    561.6,
+    345.6
    ],
    "orient": "R0"
   },
@@ -166,8 +129,8 @@
    "count": 1,
    "inst": "*g_pv?3?*u_pv",
    "at": [
-    972.0,
-    302.4
+    734.4,
+    345.6
    ],
    "orient": "R0"
   },
@@ -186,7 +149,7 @@
    "count": 1,
    "inst": "*g_zh?1?*u_zh",
    "at": [
-    259.2,
+    216.0,
     561.6
    ],
    "orient": "R0"
@@ -196,7 +159,7 @@
    "count": 1,
    "inst": "*g_zh?2?*u_zh",
    "at": [
-    756.0,
+    648.0,
     561.6
    ],
    "orient": "R0"
@@ -206,7 +169,7 @@
    "count": 1,
    "inst": "*g_zh?3?*u_zh",
    "at": [
-    972.0,
+    820.8,
     561.6
    ],
    "orient": "R0"
@@ -216,8 +179,8 @@
    "count": 1,
    "inst": "u_recip",
    "at": [
-    475.2,
-    259.2
+    907.2,
+    302.4
    ],
    "orient": "R0"
   },
@@ -226,7 +189,7 @@
    "count": 1,
    "inst": "u_core",
    "at": [
-    518.4,
+    432.0,
     561.6
    ],
    "orient": "R0"
@@ -237,7 +200,7 @@
  "recipe": 3,
  "pin_regs": {
   "enable": false,
-  "reason": "ot_qkd_ahub_die is the die composition: every hub port lands on a CLOSED leaf pin flop (core native pin form, tiles' own pin flops); parent flops are only the composition's relay stations (u_sr SR_RLY 1, u_rxi RX_RLY 1, u_ryo RY_RLY 1) on their CTS roots"
+  "reason": "ot_qkd_ahub_die is the die composition: every hub port lands on a CLOSED leaf pin flop (core native pin form, tiles' own pin flops) or on a parent relay station (u_si / u_pi SI_RLY 1, u_sr SR_RLY 1, u_rxi / u_ryo, reset synchroniser u_rp); all on the one spine root ck"
  },
  "route": {
   "pd": 0.5,
@@ -247,12 +210,12 @@
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4
  },
- "floorplan_note": "Q-KVSYS-STRIP 2026-10-16 (VIS-ROM QKV-07): the hub parent over its 14 CLOSED leaves on its own clock entries (no cluster clock over hard tiles: the q8/q13 failure). Rows: pbst S (y 43.2, next to the S stack inputs pi_data), pvlg middle (302.4), zh N (561.6); columns 43.2 / 259.2 | centre 475.2-691.2 | 756 / 972 (64.8-um channels). Centre column: the reciprocal leaf (216^2, y 259.2) under the core (151.2^2, x 518.4, y 561.6) which sits IN the Z row between zh1 and zh2: core hd3 faces W (zw_*) -> zh0/zh1, E (ze_*, rc_*) -> zh2/zh3 + recip, N -> hub outputs, S -> stack inputs + pvlg/pbst.",
+ "floorplan_note": "KV-AHUB hp4 2026-10-17 re-plan (hp3 FAIL: GRT 11, setup -845, entry arrivals 11-2,424 ps): dataflow columns. Lanes g=0..3 at x 172.8 / 345.6 | 561.6 / 734.4 (21.6 um gaps, 64.8 um centre channel 496.8-561.6 under the si pins): pbst row y 86.4 right above its pi_data[g] S-face pins, 108 um sr crossbar channel (u_sr relays, pbst[g] -> all four pvlg, span 713 um -> 2 hops), pvlg row y 345.6, core row y 561.6: zh0 43.2 / zh1 216 | core 432 (S face over the pvlg row: pl_y / rz / ra) | zh2 648 / zh3 820.8; reciprocal leaf R0 at 907.2,302.4 beside pvlg3 under zh3 (u_rxi / u_ryo relays, <= ~400 um hops). Outputs N face over the core. One clock entry ck (S face centre beside the relay mass) -> one balanced spine (H-tree) to all 14 child clock pins + relays, leaf targets = routed boundary insertion (pbst 313 / zh 247 / recip 239 / core 213 / pvlg 193 ps). hp4c: rows +43.2 so the core N edge (712.8) leaves 0.47 of its GRT gcell free (518.4 row: 0.26 free -> pin-access overflow 70-89 at the core N face); outputs unconstrained on N.",
  "job": {
-  "owner": "Claude:Q-KVSYS-STRIP",
-  "branch": "claude/qkvsys-seg",
-  "tag": "hp1",
-  "purpose": "KV/system die attention hub PARENT ot_qkd_ahub_die (VIS-ROM QKV-07): core hd3 + 4 ot_nhb_zh + 4 ot_nhb_pbst + 4 ot_nhb_pvlg + ot_qkh_recip_leaf (all CLOSED), 14 clock entries (6 CTS roots carry the composition's relay flops), slot 1,175.04 x 760.32 unchanged",
+  "owner": "Claude:KV-AHUB lane 10-17",
+  "branch": "claude/kvtc-1017",
+  "tag": "hp4",
+  "purpose": "KV-AHUB hp4: ot_qkd_ahub_die parent re-plan: one clock entry + spine H-tree over the 14 closed children, regional reset pipe, dataflow-column floorplan",
   "benches": [
    {
     "name": "qkd_ahub_d_eq_exact",
@@ -287,11 +250,12 @@
    "physical/ref_tile/ot_nhb_zh_m5",
    "physical/ref_tile/qkh_recip_ref",
    "physical/ref_tile/qkd_ahub_core"
-  ]
+  ],
+  "cycles_added": 1
  },
- "structural_change": "new parent kit (the hub parent was never hardened: q8 EARLY_FAIL_HOLD with one cluster clock over 12 hard tiles); per-child clock entries, core in the Z row centre",
+ "structural_change": "hp4 (KV-AHUB 10-17): hp3 gate FAIL (GRT ov 11; pre-route setup -845 = rst_n port -> pbst rst_n, reg->pbst ra -302 over ~915 um, u_sr -165; 21 clock entries with unbuffered entry wires: child pin arrivals 11-2,424 ps, slew up to 7.7 ns; ck_si 492/98.5). Structural: (1) ONE regional clock entry ck + balanced spine H-tree with child-insertion leaf targets over all 14 hard children and the relay flops (RTL define QKD_AHUB_ONE_CK, 0 cycles): the zero-relay core<->zh/pvlg/pbst hops fixed by the closed core's latency parameters are timed on one propagated tree instead of paying the per-entry die-skew reserve (150-210 setup / 100 hold); (2) regional reset ot_rst_pipe 14 regions x 3 stages (equal release edge for every child); (3) re-placed children in dataflow columns: lanes contiguous (crossbar span 1,080 -> 713 um), core over the pvlg row centre, worst unregistered core->child hop ~650 um (was ~915).",
  "defines": [
-  "QKD_AHUB_RLY_CLK"
+  "QKD_AHUB_ONE_CK"
  ],
  "io_flop_at_pins": {
   "cols": 4,
@@ -304,5 +268,65 @@
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
  },
- "hard_define": "QKD_AHUB_RLY_CLK"
+ "hard_define": "QKD_AHUB_ONE_CK",
+ "pin_ranges": {
+  "start": [
+   498.0,
+   526.0
+  ],
+  "si_valid": [
+   498.0,
+   526.0
+  ],
+  "si_type": [
+   498.0,
+   526.0
+  ],
+  "si_g": [
+   498.0,
+   526.0
+  ],
+  "si_hh": [
+   498.0,
+   526.0
+  ],
+  "si_k": [
+   498.0,
+   526.0
+  ],
+  "si_any": [
+   498.0,
+   526.0
+  ],
+  "pi_valid": [
+   498.0,
+   526.0
+  ],
+  "pi_g": [
+   498.0,
+   526.0
+  ],
+  "si_data": [
+   532.0,
+   560.0
+  ],
+  "ck": [
+   528.5,
+   530.5
+  ],
+  "rst_n": [
+   562.0,
+   566.0
+  ],
+  "pi_data": [
+   172.8,
+   885.6
+  ],
+  "pi_beat": [
+   172.8,
+   885.6
+  ]
+ },
+ "cycle_cost": "+1 edge hub input -> output (SI_RLY 1, unchanged from hp3); reset release +5 edges after rst_n (no consumer counts from the port)",
+ "child_clock_ref": "boundary"
 }

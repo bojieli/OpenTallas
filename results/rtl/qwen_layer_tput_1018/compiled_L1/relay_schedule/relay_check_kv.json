@@ -1,0 +1,124 @@
+{
+ "schema": "opentallas.die_relay_check.v1",
+ "verdict": "FAIL",
+ "design": "qwen_kv",
+ "die_run": {
+  "plan": {
+   "id": "kvs14c-netlist",
+   "commit": "f05f9338f",
+   "generator": "tools/qwen_layerbench/netlist_relay_stages.py",
+   "sources": [
+    "/home/ubuntu/scratch/layerbench-qwen/in/k/die_bound.v",
+    "git:f05f9338f:physical/qwen_missing_phy/ot_qfd_serdes_112g_x12_phy/ot_qfd_serdes_112g_x12_phy_bb.v",
+    "git:f05f9338f:rtl/hdc/nearhbm/ot_qkh_subtiles.sv",
+    "git:f05f9338f:rtl/hdc/nearhbm/qkd_ahub_static_dw.sv",
+    "git:f05f9338f:rtl/qwen_split/qfd_link_slots.sv",
+    "git:f05f9338f:rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv",
+    "git:f05f9338f:rtl/qwen_sys/d2d_static_20261015/qkd_d2d_cal_seq_pin.sv",
+    "git:f05f9338f:rtl/qwen_sys/kv_die_20261009/qkd_ctrl_strip.sv",
+    "git:f05f9338f:rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv",
+    "git:f05f9338f:rtl/qwen_sys/split_20261014/ot_qkh_head_native.sv",
+    "git:f05f9338f:rtl/qwen_sys/split_20261014/ot_qkh_head_native_r3.sv",
+    "git:f05f9338f:rtl/qwen_sys/split_20261014/ot_qkh_head_native_r4.sv",
+    "git:f05f9338f:rtl/qwen_sys/split_20261014/qkd_astk_strip_er_die.sv",
+    "git:f05f9338f:rtl/qwen_sys/split_20261014/qkd_host_pc_slice_die.sv",
+    "git:f05f9338f:rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv",
+    "git:f05f9338f:rtl/qwen_sys/split_20261014/qkd_pll_analog_model.sv",
+    "git:f05f9338f:rtl/qwen_sys/split_20261014/qkd_pv_fin_s.sv",
+    "git:f05f9338f:rtl/qwen_sys/split_20261014/qkd_pvw_die_t.sv",
+    "git:f05f9338f:rtl/qwen_sys/split_20261014/qkd_rst_region.sv",
+    "git:f05f9338f:rtl/qwen_sys/split_20261014/qkh_head_gather_stage.sv",
+    "git:f05f9338f:rtl/qwen_sys/split_20261014/qkh_head_stages.sv",
+    "git:f05f9338f:rtl/qwen_sys/static_embedding_20261014/qkd_embgw_boot_s.sv",
+    "git:f05f9338f:rtl/qwen_sys/static_kv_20261014/qkd_pv16_vport.sv",
+    "git:f05f9338f:rtl/qwen_sys/static_kv_20261014/qkd_seq_static_s.sv",
+    "git:f05f9338f:rtl/qwen_sys/static_kv_20261014/qkd_static_ectl_st.sv",
+    "git:f05f9338f:rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv",
+    "local:/home/ubuntu/scratch/layerbench-qwen/in/k/kv_hard_models.sv",
+    "local:/home/ubuntu/scratch/layerbench-qwen/in/k/kv_relays_dir.sv",
+    "local:/home/ubuntu/scratch/layerbench-qwen/in/k/qkd_kv_relays.sv"
+   ],
+   "kind": "GEN netlist walk (die run)"
+  },
+  "digest": "sha256:957ba33f9672035cd1f0bb734e38b6767dda79af334cd0b705217db9c02d10fa",
+  "buses": 45318
+ },
+ "schedule": {
+  "plan": {
+   "id": "kvs14c-netlist",
+   "commit": "f05f9338f",
+   "generator": "tools/qwen_layerbench/netlist_relay_stages.py",
+   "sources": [
+    "/home/ubuntu/scratch/layerbench-qwen/in/k/die_bound.v",
+    "git:f05f9338f:physical/qwen_missing_phy/ot_qfd_serdes_112g_x12_phy/ot_qfd_serdes_112g_x12_phy_bb.v",
+    "git:f05f9338f:rtl/hdc/nearhbm/ot_qkh_subtiles.sv",
+    "git:f05f9338f:rtl/hdc/nearhbm/qkd_ahub_static_dw.sv",
+    "git:f05f9338f:rtl/qwen_split/qfd_link_slots.sv",
+    "git:f05f9338f:rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv",
+    "git:f05f9338f:rtl/qwen_sys/d2d_static_20261015/qkd_d2d_cal_seq_pin.sv",
+    "git:f05f9338f:rtl/qwen_sys/kv_die_20261009/qkd_ctrl_strip.sv",
+    "git:f05f9338f:rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv",
+    "git:f05f9338f:rtl/qwen_sys/split_20261014/ot_qkh_head_native.sv",
+    "git:f05f9338f:rtl/qwen_sys/split_20261014/ot_qkh_head_native_r3.sv",
+    "git:f05f9338f:rtl/qwen_sys/split_20261014/ot_qkh_head_native_r4.sv",
+    "git:f05f9338f:rtl/qwen_sys/split_20261014/qkd_astk_strip_er_die.sv",
+    "git:f05f9338f:rtl/qwen_sys/split_20261014/qkd_host_pc_slice_die.sv",
+    "git:f05f9338f:rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv",
+    "git:f05f9338f:rtl/qwen_sys/split_20261014/qkd_pll_analog_model.sv",
+    "git:f05f9338f:rtl/qwen_sys/split_20261014/qkd_pv_fin_s.sv",
+    "git:f05f9338f:rtl/qwen_sys/split_20261014/qkd_pvw_die_t.sv",
+    "git:f05f9338f:rtl/qwen_sys/split_20261014/qkd_rst_region.sv",
+    "git:f05f9338f:rtl/qwen_sys/split_20261014/qkh_head_gather_stage.sv",
+    "git:f05f9338f:rtl/qwen_sys/split_20261014/qkh_head_stages.sv",
+    "git:f05f9338f:rtl/qwen_sys/static_embedding_20261014/qkd_embgw_boot_s.sv",
+    "git:f05f9338f:rtl/qwen_sys/static_kv_20261014/qkd_pv16_vport.sv",
+    "git:f05f9338f:rtl/qwen_sys/static_kv_20261014/qkd_seq_static_s.sv",
+    "git:f05f9338f:rtl/qwen_sys/static_kv_20261014/qkd_static_ectl_st.sv",
+    "git:f05f9338f:rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv",
+    "local:/home/ubuntu/scratch/layerbench-qwen/in/k/kv_hard_models.sv",
+    "local:/home/ubuntu/scratch/layerbench-qwen/in/k/kv_relays_dir.sv",
+    "local:/home/ubuntu/scratch/layerbench-qwen/in/k/qkd_kv_relays.sv"
+   ],
+   "kind": "GEN netlist walk (die run)"
+  },
+  "role": "compiled_schedule",
+  "digest": "sha256:206ecc8e46c5932df9c43dc8254124c87e52376624ff32bb4b40e8e9d981c3e3",
+  "buses": 45318,
+  "consumer": "tools/qwen_layerbench/layer_compile.py"
+ },
+ "fails": [
+  "5 buses with different relay stage counts, e.g. d2d_kv.att_rx_beat -> kvs_attn.d2d__srx__9_5: die 9 vs sched 11, d2d_kv.att_rx_kind -> kvs_attn.d2d__srx__4_1: die 9 vs sched 11, d2d_kv.att_rx_v -> kvs_attn.d2d__srx__0_0: die 9 vs sched 11"
+ ],
+ "warnings": [],
+ "only_in_die_run": [],
+ "only_in_schedule": [],
+ "stage_diffs": [
+  {
+   "bus": "d2d_kv.att_rx_beat -> kvs_attn.d2d__srx__9_5",
+   "die_run": 9,
+   "schedule": 11
+  },
+  {
+   "bus": "d2d_kv.att_rx_kind -> kvs_attn.d2d__srx__4_1",
+   "die_run": 9,
+   "schedule": 11
+  },
+  {
+   "bus": "d2d_kv.att_rx_v -> kvs_attn.d2d__srx__0_0",
+   "die_run": 9,
+   "schedule": 11
+  },
+  {
+   "bus": "d2d_kv.att_tx_kind -> kvs_attn.d2d__att_tx_kind",
+   "die_run": 8,
+   "schedule": 9
+  },
+  {
+   "bus": "kvs_attn.attn__tx_valid -> d2d_kv.att_tx_v",
+   "die_run": 6,
+   "schedule": 11
+  }
+ ],
+ "width_diffs": [],
+ "domain_diffs": []
+}

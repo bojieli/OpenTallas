@@ -1,0 +1,42 @@
+{
+ "what": "QXPQ-RST pre-route gate: closed recipe (cl_route_qs.sh calibrate cmd, RSTP=1, OT_NATIVE_Q_H1_RST=1, h1r hook) stopped after CTS on ot-epyc4",
+ "source": "claude/qxpq-rst-1017 86727ef86 (RTL sha256 517e501dd6a50587.. and the 4 flow files identical in the gate tree)",
+ "run_dir": "ot-epyc4:/srv/opentallas-scratch/claude/qxpq-rst-1017/gate_run",
+ "netlist": "rst_n port has 1 load: g_rstp.rst_pf (DFFHQNx1, D only); the element's async clears hang off rst_pf",
+ "relay_flop": {
+  "pin_xy": [
+   231.76,
+   0.04
+  ],
+  "flop_xy": [
+   230.31,
+   1.08
+  ],
+  "manhattan_um": 2.48,
+  "pin_to_D_ps": 15.2,
+  "clk_latency_ps": 507.8
+ },
+ "cts_tt": {
+  "sinks": 53106,
+  "all_min": 479.1,
+  "all_max": 554.4,
+  "spread_ps": 75.3,
+  "boundary_mean_R": 510.3,
+  "boundary_min": 488.3,
+  "boundary_max": 539.2,
+  "ff_boundary_mean": 407
+ },
+ "cts_note": "same tree as the closed view (R 510 / 53k sinks on one root, insertion > 300 ps): closed tile stands (owner 10-12); clock-rule waiver is the coordinator's call",
+ "rst_n_hold_tt_min_ps": 31.5,
+ "rst_pf_to_internal_recovery_slack_tt_ps": 331.9,
+ "native_estimate_rst_n": {
+  "capture_ps": "~35 (pin->D 15.2 + setup ~15 - (latency 507.8 - R 510.3)); closed view 239.2; budget 190",
+  "basis": "post-CTS placement parasitics; data pins of the closed view: go 111, xs_v 104, cfg_v 79"
+ },
+ "layout": "identical to the closed qs5f-efs floorplan: 510.84x221.4, four ROM macros in the S corners, S-face input pins x136-375, N outputs; relay flop beside the rst_n pin",
+ "pngs": [
+  "floorplan.png",
+  "density.png",
+  "cts_density.png"
+ ]
+}

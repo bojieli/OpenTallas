@@ -1,0 +1,6 @@
+Verilator 5.050 2026-07-01 rev v5.050
+LEP_MU_STATS A recv 440/280 B recv 240/240 mismatches 400 | latency user identity 1 (A 120 beats, ref 120) | main faults 0110011 | F1 full-slot 1 F2 empty-replay 1 F3 ab-user0 1
+FAIL lep_mu: recv A 440/280 B 240/240 mismatches 400 identity 1 main faults 0110011 F1 1 F2 1 F3 1
+BENCH_FAIL lepmu MUT=LANDCUT seed 1
+rc=1
+# MU-S81b 10-19 ot-run ot-epyc5, source claude/mu-s81b-1019 303afaba4, Verilator 5.050; dies A / B = ot_s81sl_lep_mu_a

@@ -52,6 +52,12 @@ module ot_rom_host_ingest #(
     // sys-takeover 2026-10-09 (opt-in): ENG_TRIM = 1 with QKV_EN = 0 builds the engine without its QKV path (unreachable:
     // a QKV descriptor is failed closed above); APIPE = 1 registers the engine's stream address terms (ot_hdc_kv_ingest).
     parameter integer ENG_TRIM = 0,
+    // APIPE >= 6 (S81U-SEQ6 2026-10-17, dsdv_sh_lk gate5 7b7028b78: u_eng.st_sec -> st_wa add -> ox_w -> u_ox.mem TT
+    // -127.7 ps, 21 levels): the engine runs as APIPE 5, and its request-FIFO write is registered (ox_wr_q / ox_w_q, one
+    // more clk_i edge before the entry lands in u_ox).  Engine ready / the boot-end marker then use a registered free
+    // count ofree (= 2^OFA - requests issued + u_ox wfreed returns; conservative, so the registered write can never meet a
+    // full FIFO) instead of the combinational wfull.  Same requests, same order; each lands one clk_i edge later.
+    // APIPE < 6: unchanged.
     parameter integer APIPE  = 0,
     // QPIPE = 1 (qwen-1010/c 2026-10-10, qfd_io_host): the engine's pipelined, lane-banked QKV path (ot_hdc_kv_ingest
     // QPIPE).  It is write-only, so it implies RMW_EN 0 here (an rmw descriptor fails closed, code 2).  MUT 3 / 4 = the
@@ -174,14 +180,41 @@ module ot_rom_host_ingest #(
     wire         rd_room = outst < (1 << RFA);
     // CSR 2 (boot end): one marker word, in order after every sector of the descriptors before it
     wire         csr_mark = hv_i && !f_any && hcl == 2'd0 && hx_head[7:0] == 8'd2;
-    wire         mark_go = csr_mark && !e_busy && !e_wv && !e_rv && !ox_full;
-    assign e_wrdy = !ox_full;
-    assign e_rrdy = (RMW_EN != 0 && QPIPE == 0) && !e_wv && !ox_full && rd_room;
+    localparam integer OXP = (APIPE >= 6) ? 1 : 0;
+    reg  [OFA:0] ofree;                     // APIPE >= 6: request-FIFO entries free, registered (see the parameter note)
+    wire         ox_room = (OXP != 0) ? (ofree != 0) : !ox_full;
+    wire         mark_go = csr_mark && !e_busy && !e_wv && !e_rv && ox_room;
+    assign e_wrdy = ox_room;
+    assign e_rrdy = (RMW_EN != 0 && QPIPE == 0) && !e_wv && ox_room && rd_room;
     wire         ox_wr = (e_wv && e_wrdy) || (e_rv && e_rrdy) || mark_go;
     // Preserve the optional marker region in bits65:64. Existing markers use
     // zero there and retain their exact low64 payload / RoPE dispatch behavior.
     wire [AW+256:0] ox_w = mark_go ? {1'b1, {AW{1'b1}}, 190'd0, hx_head[129:64]}
                          : e_wv ? {1'b1, e_waddr, e_wdata} : {1'b0, e_raddr, 256'd0};
+    // APIPE >= 6: the request write registered one clk_i edge (ox_w_q is data only: no reset); APIPE < 6: no logic
+    wire            ox_wr_f;
+    wire [AW+256:0] ox_w_f;
+    if (OXP != 0) begin : g_oxp
+        reg             ox_wr_q;
+        reg  [AW+256:0] ox_w_q;
+        always @(posedge clk_i) ox_w_q <= ox_w;
+        always @(posedge clk_i or negedge rn_i)
+            if (!rn_i) begin ox_wr_q <= 1'b0; ofree <= {1'b1, {OFA{1'b0}}}; end
+            else begin
+                ox_wr_q <= ox_wr;
+`ifdef OT_ING_MUT_OXFREE
+                ofree <= ofree + ox_freed;                                      // mutant: issued requests not counted
+`else
+                ofree <= ofree - (ox_wr ? 1'b1 : 1'b0) + ox_freed;
+`endif
+            end
+        assign ox_wr_f = ox_wr_q;
+        assign ox_w_f  = ox_w_q;
+    end else begin : g_oxd
+        always @(*) ofree = '0;
+        assign ox_wr_f = ox_wr;
+        assign ox_w_f  = ox_w;
+    end
     // read returns ck -> clk_i
     wire         rx_full, rx_empty, rx_ovf;
     wire [RFA:0] rx_freed, rx_cnt;
@@ -249,7 +282,7 @@ module ot_rom_host_ingest #(
     // Actual mapped HOST native leaf: the output FIFO rbin[1] drove4631
     // mux loads. Kept local read selectors preserve the same head/cycle.
     ot_link_afifo #(.W(AW + 257), .AW(OFA), .RCOPY(32)) u_ox (
-        .wclk(clk_i), .wrst_n(rn_i), .wr(ox_wr), .wdata(ox_w), .wfull(ox_full), .wfreed(ox_freed), .ovf(ox_ovf),
+        .wclk(clk_i), .wrst_n(rn_i), .wr(ox_wr_f), .wdata(ox_w_f), .wfull(ox_full), .wfreed(ox_freed), .ovf(ox_ovf),
         .rclk(ck), .rrst_n(rn_c), .rd(ox_pop), .rempty(ox_empty), .rdata(ox_head), .rcount(ox_cnt));
     ot_link_afifo #(.W(256), .AW(RFA)) u_rx (
         .wclk(ck), .wrst_n(rn_c), .wr(irv_q), .wdata(ird_q), .wfull(rx_full), .wfreed(rx_freed), .ovf(rx_ovf),

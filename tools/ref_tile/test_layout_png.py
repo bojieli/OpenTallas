@@ -48,7 +48,44 @@ def test_gate_layout_fill_and_trial(tmp_path):
     assert sev["fill"] == "WARN" and sev["trial_route"] == "FAIL"
     g = PG.Gate()
     PG.gate_layout(g, tmp_path, {"name": "leaf", "macros": []}, out)
-    assert {i["check"] for i in g.items} == {"layout_images"}       # a leaf tile: images only
+    sev = {i["check"]: i["severity"] for i in g.items}
+    assert sev == {"layout_images": "INFO", "trial_route": "INFO"}  # a leaf tile: no fill judgement, trial GRT judged
+    assert g.trial_route["overflow"] == 0 and g.trial_route["kind"] == "tile"
+
+
+RPT = ("violation type: Horizontal congestion\n\tsrcs: net:a net:b\n\tcongestion information: capacity:10 usage:13 "
+       "congestion:3\n\tbbox = (40.5, 20.25) - (41.04, 20.79) on Layer M2\n"
+       "violation type: Vertical congestion\n\tsrcs: net:c\n\tcongestion information: capacity:8 usage:9 congestion:1\n"
+       "\tbbox = (10, 60) - (10.54, 60.54) on Layer M3\n")
+
+
+def test_hotspots():
+    h = LP.congestion_hotspots(RPT)
+    assert h["markers"] == 2 and h["worst"]["layer"] == "M2" and h["worst"]["overflow"] == 3
+    assert h["worst"]["bbox"] == [40.5, 20.25, 41.04, 20.79] and h["bbox"] == [10.0, 20.25, 41.04, 60.54]
+    assert h["worst_layer"] == "M2" and h["layers"]["M3"] == {"markers": 1, "overflow": 1}
+    assert LP.congestion_hotspots("")["markers"] == 0
+
+
+def test_single_tile_trial_grt_overflow_fails_with_hotspot(tmp_path):
+    """ROOT-0330-GRT: a single tile (no macros, not a cluster) runs the trial GRT; overflow > 0 FAILs, the message names
+    the worst gcell / layer / bbox, congestion.png is written next to the other gate PNGs, the record carries GRT time"""
+    b = base64.b64encode(zlib.compress(json.dumps(DUMP).encode())).decode()
+    c = base64.b64encode(zlib.compress(RPT.encode())).decode()
+    out = (f"GATE_LAYOUT_B64 floorplan {b}\nGATE_LAYOUT_B64 placed {b}\nGATE_GRT_RC=0 GATE_GRT_S=212\n"
+           "GATE_GRT_LAYER M2  100  113  113.00%  0 /  3 /  3\nGATE_GRT_LAYER M3  100  90  90.00%  0 /  1 /  1\n"
+           f"GATE_GRT_LAYER Total  200  203  101.50%  0 /  4 /  4\nGATE_CONG_B64 {c}\nGATE_DONE\n")
+    g = PG.Gate()
+    PG.gate_layout(g, tmp_path, {"name": "leaf", "macros": []}, out)
+    fail = [i for i in g.items if i["check"] == "trial_route"]
+    assert len(fail) == 1 and fail[0]["severity"] == "FAIL"
+    msg = fail[0]["message"]
+    assert "total overflow 4" in msg and "worst gcell M2" in msg and "(40.5,20.25)-(41.04,20.79)" in msg
+    assert "GRT 212 s" in msg and "congestion.png" in msg
+    assert _png_ok(tmp_path / "gate_layout" / "congestion.png") and _png_ok(tmp_path / "gate_layout" / "density.png")
+    tr = g.trial_route
+    assert tr["overflow"] == 4 and tr["grt_s"] == 212 and tr["hotspot"]["worst"]["layer"] == "M2"
+    assert tr["congestion_png"].endswith("gate_layout/congestion.png")
 
 
 def test_gen_fill_check():

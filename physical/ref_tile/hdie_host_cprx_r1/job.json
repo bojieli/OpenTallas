@@ -1,0 +1,178 @@
+{
+ "name": "hdie_host_cprx_r1-r1-COMMIT",
+ "block": "ot_hbm_host_cp_rx",
+ "ref_tile": true,
+ "owner": "Claude:HBMA-HOST2",
+ "purpose": "HBM die d4f host_cp receive tile (HBMA-HOST2 2026-10-17, coordinator 0dc+ (b)+(d)): host landing FIFO (2 real 256x256 SRAMs, abutted MY stack as landing r1) FOLDED with the static host packet controller; removes the 512-b landing->packet bus and the separate host_cp_packet tile. Packet RXREG=0 (no 512-b rx pin stage), regional reset relays (landing 1, packet 5 regions, +3 edges release). Lockstep-exact vs the separate closed pair (landing r1 + packet r1). Outline 246.24x194.4 = landing r1 slot.",
+ "threads": 8,
+ "peak_ram_gb": 16,
+ "source": {
+  "branch": "claude/hbma-host2-1017",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
+   "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
+   "rtl/hbm_accel/host_static_20261015/ot_hbm_host_static_ingress.sv",
+   "rtl/hbm_accel/host_static_20261015/ot_hbm_static_cfg_collar.sv",
+   "rtl/hbm_accel/host_static_20261015/ot_hbm_status_join.sv",
+   "rtl/hbm_accel/host_static_20261015/run_cp2_one.sh",
+   "rtl/hbm_accel/host_static_20261015/run_host_cp_rx.sh",
+   "rtl/hbm_accel/host_static_20261015/tb_hbm_host_cp_rx_lockstep.sv",
+   "rtl/hbm_accel/host_static_20261015/tb_hbm_host_packet_static.sv",
+   "rtl/hbm_accel/host_static_20261015/tb_hbm_host_phy_adapt.sv",
+   "rtl/hbm_accel/host_static_20261015/tb_hbm_static_cfg_collar.sv",
+   "rtl/hbm_accel/host_static_20261015/tb_static_cmd_target.sv",
+   "rtl/hbm_accel/io_native_20261014/run_host_landing.sh",
+   "rtl/hbm_accel/io_native_20261014/tb_hbm_host_landing256.sv",
+   "rtl/model/hbm_pc40_native_sim_20261003/ot_sram_1r1w_128x256_m1_r2c2_sim.sv"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hbm_host_cp_rx u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/host_static_20261015/ot_hbm_host_cp_rx.sv rtl/hbm_accel/io_native_20261014/ot_hbm_host_landing256.sv rtl/hbm_accel/host_static_20261015/ot_hbm_host_packet_static.sv rtl/lib/ot_rst_relay.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "cprx_lockstep",
+    "cmd": "bash rtl/hbm_accel/host_static_20261015/run_host_cp_rx.sh {RUN}/bench/cprx_lockstep 0",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "HOST_CP_RX_LOCKSTEP_PASS"
+   },
+   {
+    "name": "cprx_mut_rxbit",
+    "cmd": "bash rtl/hbm_accel/host_static_20261015/run_host_cp_rx.sh {RUN}/bench/cprx_mut_rxbit 1",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "HOST_CP_RX_LOCKSTEP_PASS",
+    "fail_regex": "HOST_CP_RX_LOCKSTEP_FAIL mism=[1-9]",
+    "note": "rx word bit 40 flipped inside the fold"
+   },
+   {
+    "name": "cprx_mut_norelay",
+    "cmd": "bash rtl/hbm_accel/host_static_20261015/run_host_cp_rx.sh {RUN}/bench/cprx_mut_norelay 2",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "HOST_CP_RX_LOCKSTEP_PASS",
+    "fail_regex": "HOST_CP_RX_LOCKSTEP_FAIL mism=[1-9]",
+    "note": "packet without its reset relay"
+   },
+   {
+    "name": "landing_pinreg",
+    "cmd": "bash rtl/hbm_accel/io_native_20261014/run_host_landing.sh {RUN}/bench/landing 0 1",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "^HBM_HOST_LANDING_PASS words512",
+    "min_count_regex": "^HBM_HOST_LANDING_PASS words(\\d+)"
+   },
+   {
+    "name": "landing_mut_addr",
+    "cmd": "bash rtl/hbm_accel/io_native_20261014/run_host_landing.sh {RUN}/bench/landing_m1 1 1",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "^HBM_HOST_LANDING_PASS",
+    "fail_regex": "^HBM_HOST_LANDING_FAIL bad\\d+",
+    "note": "SRAM read address off by one"
+   },
+   {
+    "name": "landing_mut_nomirror",
+    "cmd": "bash rtl/hbm_accel/io_native_20261014/run_host_landing.sh {RUN}/bench/landing_m2 2 1",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "^HBM_HOST_LANDING_PASS",
+    "fail_regex": "^HBM_HOST_LANDING_FAIL bad\\d+",
+    "note": "registered out_ready pop ignores the out_v mirror (a word is lost)"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hdie_host_cprx_r1/signoff_ffrepair.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hdie_host_cprx_r1/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 16
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hdie_host_cprx_r1 --out {RUN}/record/views/ot_hbm_host_cp_rx --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/hdie_host_cprx_r1/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/hdie_host_cprx_r1/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/hdie_host_cprx_r1/hdie_host_cprx_r1-r1-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "HBMA-HOST2 10-17: fold of closed landing r1 (f69e97ca0) + packet r1 (00f931598); packet RXREG=0 RRELAY=1, landing behind a 1-region relay"
+}

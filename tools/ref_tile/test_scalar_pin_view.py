@@ -68,6 +68,14 @@ class ScalarPinView(unittest.TestCase):
         self.assertEqual({k: v["ranged"] for k, v in p.items()},
                          {"clk": False, "rst_n": False, "ck": True, "t_d": True, "v": False})
 
+    def test_rtl_attribute_before_port(self):
+        d = Path(tempfile.mkdtemp())
+        f = d / "m.sv"
+        f.write_text('module m (\n input wire clk,\n (* keep = "true", dont_touch = "true" *) output reg [23:0] pb_ra,\n'
+                     ' (* keep = "true" *) output reg v);\n always @(*) begin end\nendmodule\n')
+        p = S.rtl_ports([f], "m")
+        self.assertEqual({k: v["ranged"] for k, v in p.items()}, {"clk": False, "pb_ra": True, "v": False})
+
     def test_export_lint(self):
         d = Path(tempfile.mkdtemp())
         (d / "rtl.sv").write_text("module m (input wire clk, input wire [0:0] ck, output wire [3:0] q);\nendmodule\n")

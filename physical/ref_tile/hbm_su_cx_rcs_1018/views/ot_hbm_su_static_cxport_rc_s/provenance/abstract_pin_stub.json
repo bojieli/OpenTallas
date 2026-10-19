@@ -1,0 +1,102 @@
+{
+  "schema": 1,
+  "kind": "abstract_pin_stub",
+  "status": "PASS",
+  "input": {
+    "path": "provenance/raw/ot_hbm_su_static_cxport_rc_s.lef",
+    "sha256": "87e8432ac42e1ae7b92f0f6c41622649f521859eda109d08feb58c93cf76847c"
+  },
+  "environment": {
+    "OT_OBS_CLOSE": null,
+    "OT_OBS_CLOSE_UM": null
+  },
+  "helper": {
+    "path": "/srv/opentallas-scratch/claude/closure-loop/hbm_su_cx_rcs_1018-x1-7c296a9ce/src/tools/hier_contract/abstract_pin_stub.py",
+    "sha256": "c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05"
+  },
+  "command": [
+    "/usr/bin/python3",
+    "/srv/opentallas-scratch/claude/closure-loop/hbm_su_cx_rcs_1018-x1-7c296a9ce/src/tools/hier_contract/abstract_pin_stub.py",
+    "/srv/opentallas-scratch/claude/closure-loop/hbm_su_cx_rcs_1018-x1-7c296a9ce/record/views/ot_hbm_su_static_cxport_rc_s/provenance/raw/ot_hbm_su_static_cxport_rc_s.lef",
+    "/srv/opentallas-scratch/claude/closure-loop/hbm_su_cx_rcs_1018-x1-7c296a9ce/record/views/ot_hbm_su_static_cxport_rc_s/provenance/ot_hbm_su_static_cxport_rc_s.candidate.lef"
+  ],
+  "returncode": 0,
+  "stdout": "pinstub: 6 OBS rects moved into 6 pins: clk_s, rc_coll, rc_v, rr_v, rst_s_n, sfault_s; pockets: 275 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
+  "stderr": "",
+  "invariants": {
+    "macro_outline": "PASS",
+    "pin_names_directions_uses": "PASS",
+    "original_pin_rectangles_retained": "PASS"
+  },
+  "child_lint": {
+    "schema": "opentallas.hier_contract.child_lint.v1",
+    "lef": "/srv/opentallas-scratch/claude/closure-loop/hbm_su_cx_rcs_1018-x1-7c296a9ce/record/views/ot_hbm_su_static_cxport_rc_s/provenance/ot_hbm_su_static_cxport_rc_s.candidate.lef",
+    "verdict": "PASS",
+    "fails": [],
+    "warns": [],
+    "summary": "ot_hbm_su_static_cxport_rc_s 172.8 x 432.0: PG M5 VDD 32 stripes (97% spread, 100% cov) / VSS 32 stripes (97% spread, 100% cov); strap M6; face pins 3166 blocked-above 0 blocked-same 0; clock clk_s insertion 350 ps; pockets M5 0 (closed)",
+    "info": {
+      "cell": "ot_hbm_su_static_cxport_rc_s",
+      "W": 172.8,
+      "H": 432.0,
+      "pg": {
+        "nets": {
+          "VDD": {
+            "top_layer": "M5",
+            "stripes": 32,
+            "dir": "V",
+            "spread": 0.969,
+            "coverage": 1.0,
+            "shapes_on_top": 32
+          },
+          "VSS": {
+            "top_layer": "M5",
+            "stripes": 32,
+            "dir": "V",
+            "spread": 0.969,
+            "coverage": 1.0,
+            "shapes_on_top": 32
+          }
+        },
+        "top_layer": "M5",
+        "ok": true,
+        "why": []
+      },
+      "pg_layer": "M5",
+      "strap_layer": "M6",
+      "cap": null,
+      "face": {
+        "face_pins": 3166,
+        "blocked_above": 0,
+        "covered_below": 1037,
+        "examples": [],
+        "blocked_same": 0,
+        "same_examples": [],
+        "band_same": 0,
+        "band_examples": []
+      },
+      "clock_insertion": {
+        "clk_s": {
+          "max_ps": 350.36,
+          "min_ps": 269.28
+        }
+      },
+      "pockets": {
+        "layer": "M5",
+        "d_um": 1.536,
+        "marker": {
+          "layer": "M5",
+          "d_um": 1.536,
+          "added": 275
+        },
+        "count": 0,
+        "area_um2": 0,
+        "examples": []
+      }
+    }
+  },
+  "output": {
+    "path": "ot_hbm_su_static_cxport_rc_s.lef",
+    "sha256": "39f998dfd0bddc2fc8f33a8c6cc3fa133bbd44007c0d4e44bfb1a062ee5c46fb"
+  }
+}

@@ -11,13 +11,26 @@ d=rtl/hbm_accel/generic/peers/static
 m=physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v
 cp "$d/ot_hgi_dma_back_static_vp4_banks.sv" "$out/vp.sv"
 cp "$d/ot_hgi_dma_back_static_vp_banks.sv" "$out/banks.sv"   # landing bank leaf ot_hgi_dma_back_landing_bank
+# Icarus 11 workaround (DMA-BENCH 10-17): in the 4-quadrant production elaboration, the continuous assign
+# 'assign bank_write_slot=expect_tag[7];' (unpacked-array word -> net, added by b7482783f) never propagates in
+# vvp (net stays X while expect_tag[7] holds 00,01,..), so every landing write had slot X and the first wd beat
+# read 0. The lockstep bench (one instance) is unaffected. Simulate the identical combinational read as an
+# always @* (no flop, no edge, same netlist); the pinned RTL source stays byte-identical.
+python3 - "$out/vp.sv" <<'PYFIX'
+import pathlib,sys
+p=pathlib.Path(sys.argv[1]);s=p.read_text()
+a='    assign bank_write_slot=(RR_RT==7)?expect_tag[7]:land_tag_rt;'
+assert s.count(a)==1,'bank_write_slot assign not found'
+p.write_text(s.replace(a,'    reg [6:0] bank_write_slot_sim; always @* bank_write_slot_sim=(RR_RT==7)?expect_tag[7]:land_tag_rt; assign bank_write_slot=bank_write_slot_sim;'))
+PYFIX
+cp "$out/vp.sv" "$out/vp_src.sv"
 case "$mut" in
  1) sed -i "s/drain_row_hbm+37'(hbm_stride)/drain_row_hbm+37'(hbm_stride)+37'd256/g" "$out/vp.sv";;
  4) sed -i "s/stk_q<=(MUT==3)?2'd0:stk;/stk_q<=2'd0;/" "$out/vp.sv";;
  3) sed -i "s/wd_payload<={capture_addr,macro_data};/wd_payload<={capture_addr^32'd1,macro_data};/" "$out/banks.sv";;
  2) sed -i "s/wire \[7:0\] a_rows_r={a_mv\[192:186\]==7'd0,a_mv\[192:186\]};/wire [7:0] a_rows_r={a_mv[191:186]==6'd0,1'b0,a_mv[191:186]};/" "$out/vp.sv";;
 esac
-if [ "$mut" != 0 ];then if cmp -s "$out/vp.sv" "$d/ot_hgi_dma_back_static_vp4_banks.sv" && cmp -s "$out/banks.sv" "$d/ot_hgi_dma_back_static_vp_banks.sv";then echo MUTANT_NOT_APPLIED;exit 3;fi;fi
+if [ "$mut" != 0 ];then if cmp -s "$out/vp.sv" "$out/vp_src.sv" && cmp -s "$out/banks.sv" "$d/ot_hgi_dma_back_static_vp_banks.sv";then echo MUTANT_NOT_APPLIED;exit 3;fi;fi
 iverilog -g2012 -s tb_dma_back_vp4_banks_equiv -o "$out/eq.vvp" "$m" "$d/ot_hgi_dma_back_static_cursor.sv" "$out/banks.sv" "$out/vp.sv" "$d/tb_dma_back_vp4_banks_equiv.sv"
 vvp "$out/eq.vvp" > "$out/eq.log" 2>&1 || { cat "$out/eq.log";exit 1; };cat "$out/eq.log";grep -q 'DMA_VP_EQUIV PASS' "$out/eq.log"
 cat > "$out/as_back.sv" <<'SV'

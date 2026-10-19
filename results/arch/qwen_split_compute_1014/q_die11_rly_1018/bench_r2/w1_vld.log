@@ -1,0 +1,14 @@
+FWD_LANE NF=27 CD=4.50 XL=0.00 DOFF=2.00 G=12 R0=11 L=26 K=2
+FWD_LANE NF=8 CD=4.00 XL=0.00 DOFF=2.00 G=10 R0=14 L=8 K=3
+FWD_LANE NF=5 CD=4.40 XL=0.00 DOFF=2.00 G=9 R0=45 L=5 K=0
+FWD_LANE NF=5 CD=4.40 XL=0.00 DOFF=2.00 G=40 R0=9 L=7 K=5
+FWD_LANE NF=5 CD=3.60 XL=0.00 DOFF=2.00 G=10 R0=12 L=7 K=4
+FWD_LANE NF=5 CD=3.60 XL=20.00 DOFF=2.00 G=10 R0=12 L=7 K=4
+FWD_LANE NF=2 CD=3.60 XL=0.00 DOFF=2.00 G=10 R0=12 L=2 K=7
+FWD_LANE NF=1 CD=0.00 XL=0.00 DOFF=2.00 G=10 R0=12 L=2 K=7
+FWD_LANE FAULT lane 4
+FWD_BENCH FAIL 1 errors in 4585 checks (faults 1)
+- /srv/opentallas-scratch/claude/q-die11-bench/w1_vld/tb.sv:108: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 6us; walltime 0.358 s; speed 16.754 us/s
+- Verilator: cpu 0.358 s on 1 threads; allocated 7 MB

@@ -1,0 +1,376 @@
+{
+ "schema": "opentallas.token_compose_xdie.v1.index",
+ "generated_from": "33bd1e1cf",
+ "tool": "tools/token_compose_xdie.py",
+ "clock_hz": 1200000000.0,
+ "formula": "T_token = sum_l n_l C_die(l) + sum_l n_l sum_x max(0, E_meas(x) - O_meas(l,x)); tok/s = f_clk / T (MTP: per accepted token = step / tau)",
+ "grades": [
+  "measured-current-RTL",
+  "measured-old-RTL",
+  "modelled-PHY",
+  "priced"
+ ],
+ "inputs": {
+  "ds_dag_ar": {
+   "path": "results/arch/token_path_20261009/ds_rom.json",
+   "origin": "main",
+   "sha256": "7732ac056dd194f8",
+   "commit": "00888ffb6"
+  },
+  "s81_p4l_layers": {
+   "path": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
+   "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json",
+   "sha256": "e0f42eb04ffd0f57",
+   "commit": "1e4c81449"
+  },
+  "s81_p4l_price": {
+   "path": "results/arch/s81_dv_1016/p4l/price_land.json",
+   "origin": "main (S81-DIE7/PRICE ec38691d6)",
+   "sha256": "35f70818f1138cf9",
+   "commit": "ec38691d6"
+  },
+  "s81_1013": {
+   "path": "results/rtl/s81_layer_tput_1013/record.json",
+   "origin": "main",
+   "sha256": "6f33782f80361adc",
+   "commit": "12b1d766d"
+  },
+  "s81_scand": {
+   "path": "results/arch/s81_scand_1018/scand.json",
+   "origin": "claude/s81-scand-1018 (S81-SCAND: option D, measured 1-stack reader, keys over k = 3 TP4 stages)",
+   "sha256": "7a836e5b56593544",
+   "commit": "29c341723"
+  },
+  "ds_dag_mtp": {
+   "path": "results/arch/token_path_20261009/ds_rom_mtp.json",
+   "origin": "main",
+   "sha256": "165d5ff0f84a0fd2",
+   "commit": "00888ffb6"
+  },
+  "q_1013": {
+   "path": "results/rtl/qwen_layer_tput_1013/record.json",
+   "origin": "main",
+   "sha256": "052562b54c575fa1",
+   "commit": "2caca063c"
+  },
+  "q_1013_terms": {
+   "path": "results/rtl/qwen_layer_tput_1013/die_terms.json",
+   "origin": "main",
+   "sha256": "496b07113255306b",
+   "commit": "e05ded178"
+  },
+  "q_tp8_coll": {
+   "path": "results/rtl/qwen_layer_tput_1013/native_tp8_collective/positive/record.json",
+   "origin": "main",
+   "sha256": "0336e1b11df6a8f7",
+   "commit": "41afe68f7"
+  },
+  "hds_sched": {
+   "path": "results/arch/token_path_1018/inputs/hbm_ds_priced_layers_all.json",
+   "origin": "ot-epyc5 run 10-18 of claude/tokpass-hbmds-1018 tools/hbm_layer_vehicle/priced_layers.py --layers 0,1,2,3,8,14,20,24,28,32,36,head (hgi_sim d4g_price5_1018 e680e506, reproduces 629,775.1 cycles)",
+   "sha256": "599820445224f3b0",
+   "commit": "1e4c81449"
+  },
+  "xdie_hbm": {
+   "path": "results/arch/token_path_1018/inputs/xdie_hbm_record.json",
+   "origin": "snapshot of claude/xdie-hbm-1018 38149e70b:results/rtl/xdie_hbm_1018/record.json",
+   "sha256": "72b02e68cde15cfc",
+   "commit": "1e4c81449"
+  },
+  "hbm_price5": {
+   "path": "results/arch/hbm_d4g_price_1017/price5/summary.json",
+   "origin": "main",
+   "sha256": "f98c349298016149",
+   "commit": "b98e4492e"
+  },
+  "hq_price": {
+   "path": "results/arch/token_path_1018/inputs/hbm_qwen_price_per_layer.json",
+   "origin": "snapshot of claude/tokpass-hbmq-1018 f5c3d8ba9:results/rtl/hbm_qwen_layer_tput_1018/price_per_layer.json",
+   "sha256": "9e5076790913ddfc",
+   "commit": "1e4c81449"
+  },
+  "hq_sched": {
+   "path": "results/arch/token_path_1018/inputs/hbm_qwen_static_schedule.json",
+   "origin": "snapshot of claude/tokpass-hbmq-1018 f5c3d8ba9:results/rtl/hbm_qwen_layer_tput_1018/static_schedule.json",
+   "sha256": "34ebb8098ca21fcf",
+   "commit": "1e4c81449"
+  }
+ },
+ "records_seen": [
+  {
+   "record": "results/arch/hbm_reprice_1019/record.json",
+   "family": "other",
+   "used": true,
+   "n_terms": 42,
+   "why": null
+  },
+  {
+   "record": "results/rtl/hbm_ds_layer_tput_1018/record.json",
+   "family": "pass",
+   "used": false,
+   "n_terms": 0,
+   "why": "no measured layer term yet: SW slice build pending (sw2); the composition keeps the priced terms"
+  },
+  {
+   "record": "results/rtl/hbm_qwen_layer_tput_1018/record.json",
+   "family": "pass",
+   "used": false,
+   "n_terms": 0,
+   "why": "no token_compose block (record not yet in the override format)"
+  },
+  {
+   "record": "results/rtl/qwen_layer_tput_1013/record.json",
+   "family": "pass",
+   "used": false,
+   "n_terms": 0,
+   "why": "no token_compose block (record not yet in the override format)"
+  },
+  {
+   "record": "results/rtl/qwen_layer_tput_1018/record.json",
+   "family": "pass",
+   "used": false,
+   "n_terms": 0,
+   "why": "LAYERBENCH-QWEN 10-18: no term is measured on CURRENT die RTL yet (the die slices only reached reset/idle/programme-load smoke, which fails at die gaps G-C1/G-C2/G-C3); base terms keep their grades."
+  },
+  {
+   "record": "results/rtl/s81_layer_tput_1013/record.json",
+   "family": "pass",
+   "used": false,
+   "n_terms": 0,
+   "why": "no token_compose block (record not yet in the override format)"
+  },
+  {
+   "record": "results/rtl/s81_layer_tput_1018/record.json",
+   "family": "pass",
+   "used": false,
+   "n_terms": 0,
+   "why": "no term measured yet: no representative layer has run bit-exact on p4l RTL (blocked on die gaps G1/G2/G3 in slice_bench/gaps.json, compiler lowering gaps in compiler/summary.json). Grades stay at the priced p4l values."
+  },
+  {
+   "record": "results/rtl/xdie_hbm_1018/record.json",
+   "family": "xdie",
+   "used": true,
+   "n_terms": 8,
+   "why": null
+  },
+  {
+   "record": "results/rtl/xdie_hbm_1019/record.json",
+   "family": "xdie",
+   "used": true,
+   "n_terms": 320,
+   "why": null
+  },
+  {
+   "record": "results/rtl/xdie_qtp8_1018/record.json",
+   "family": "xdie",
+   "used": false,
+   "n_terms": 0,
+   "why": "no token_compose block (record not yet in the override format)"
+  },
+  {
+   "record": "results/rtl/xdie_qwen_1018/pair_r2/record.json",
+   "family": "xdie",
+   "used": true,
+   "n_terms": 2,
+   "why": null
+  },
+  {
+   "record": "results/rtl/xdie_qwen_1018/record.json",
+   "family": "xdie",
+   "used": false,
+   "n_terms": 0,
+   "why": "no token_compose block (record not yet in the override format)"
+  },
+  {
+   "record": "results/rtl/xdie_s81_1018/record.json",
+   "family": "xdie",
+   "used": true,
+   "n_terms": 527,
+   "why": null
+  }
+ ],
+ "designs": {
+  "ds_rom": {
+   "ar": {
+    "title": "DeepSeek-V4.1 ROM, S81 array (p4l DV die), 1M context, AR",
+    "tok_s": 1224.1,
+    "T_token_cycles": 980312.6,
+    "per_accepted_cycles": 980312.6,
+    "tau": null,
+    "pct_measured_current_rtl": 10.18,
+    "banner": "10.2% of token cycles measured on current RTL (60.9% on older RTL, 17.6% modelled PHY, 11.3% priced)",
+    "by_grade": {
+     "measured-current-RTL": 99813.0,
+     "measured-old-RTL": 596814.7,
+     "modelled-PHY": 172975.0,
+     "priced": 110709.9
+    },
+    "price_of_record": {
+     "tok_s": 1342.9,
+     "cycles": 893604.3,
+     "source": "results/arch/s81_dv_1016/p4l/price_land.json dv_base.ar + S81-SCAND option D 1-stack scan (ledger S81.SCAN_STACKS_P4L, not yet in dv_price)",
+     "uncorrected_tok_s": 1365.7,
+     "scan_stacks_correction_cycles": 14934.0
+    },
+    "vs_price_pct": -8.85
+   },
+   "mtp": {
+    "title": "DeepSeek-V4.1 ROM, S81 array (p4l DV die), 1M context, MTP (DSpark, tau 4.159)",
+    "tok_s": 3711.7,
+    "T_token_cycles": 1344614.8,
+    "per_accepted_cycles": 323302.4,
+    "tau": 4.159,
+    "pct_measured_current_rtl": 7.92,
+    "banner": "7.9% of token cycles measured on current RTL (67.4% on older RTL, 14.0% modelled PHY, 10.7% priced)",
+    "by_grade": {
+     "measured-current-RTL": 106512.0,
+     "measured-old-RTL": 906844.8,
+     "modelled-PHY": 187823.6,
+     "priced": 143434.4
+    },
+    "price_of_record": {
+     "tok_s": 3938.8,
+     "cycles": 1267096.5,
+     "source": "results/arch/s81_dv_1016/p4l/price_land.json dv_base.mtp + S81-SCAND option D 1-stack scan (ledger S81.SCAN_STACKS_P4L, not yet in dv_price)",
+     "uncorrected_tok_s": 4045.4,
+     "scan_stacks_correction_cycles": 33399.0
+    },
+    "vs_price_pct": -5.77
+   }
+  },
+  "qwen_rom": {
+   "ar": {
+    "title": "Qwen3-8B ROM (compute dies + KV die + D2D), 8K context, AR",
+    "tok_s": 4766.5,
+    "T_token_cycles": 251759.0,
+    "per_accepted_cycles": 251759.0,
+    "tau": null,
+    "pct_measured_current_rtl": 0.8,
+    "banner": "0.8% of token cycles measured on current RTL (98.4% on older RTL, 0.1% modelled PHY, 0.7% priced)",
+    "by_grade": {
+     "measured-current-RTL": 2016.0,
+     "measured-old-RTL": 247743.0,
+     "modelled-PHY": 360.0,
+     "priced": 1640.0
+    },
+    "price_of_record": {
+     "tok_s": 4810.9,
+     "cycles": 249431.0,
+     "source": "results/rtl/qwen_layer_tput_1013/record.json end_to_end.base_cycles (6,835-cycle production layer)"
+    },
+    "vs_price_pct": -0.92
+   },
+   "mtp": {
+    "available": false,
+    "reason": "AR only (owner 2026-10-05 AR_MODE: DSpark measured below AR on the compute-balanced ROM)"
+   }
+  },
+  "hbm_gen_ds": {
+   "ar": {
+    "title": "HBM d4g GEN2 die, DeepSeek-V4.1 (TP96 x quadrants), 1M context, AR",
+    "tok_s": 1677.2,
+    "T_token_cycles": 715485.2,
+    "per_accepted_cycles": 715485.2,
+    "tau": null,
+    "pct_measured_current_rtl": 20.83,
+    "banner": "20.8% of token cycles measured on current RTL (0.0% on older RTL, 7.2% modelled PHY, 72.0% priced)",
+    "by_grade": {
+     "measured-current-RTL": 149035.8,
+     "measured-old-RTL": 0,
+     "modelled-PHY": 51244.2,
+     "priced": 515205.2
+    },
+    "price_of_record": {
+     "tok_s": 1905.4,
+     "cycles": 629775.1,
+     "source": "results/arch/token_path_1018/inputs/hbm_ds_priced_layers_all.json"
+    },
+    "vs_price_pct": -11.98
+   },
+   "mtp": {
+    "title": "HBM d4g GEN2 die, DeepSeek-V4.1, 1M context, MTP (priced only)",
+    "tok_s": 3258.7,
+    "T_token_cycles": 368245.0,
+    "per_accepted_cycles": 368245.0,
+    "tau": null,
+    "pct_measured_current_rtl": 0.0,
+    "banner": "0.0% of token cycles measured on current RTL (0.0% on older RTL, 0.0% modelled PHY, 100.0% priced)",
+    "by_grade": {
+     "measured-current-RTL": 0,
+     "measured-old-RTL": 0,
+     "modelled-PHY": 0,
+     "priced": 368245.0
+    },
+    "price_of_record": {
+     "tok_s": 3258.7,
+     "cycles": 368245.0,
+     "source": "results/arch/hbm_d4g_price_1017/price5/summary.json"
+    },
+    "vs_price_pct": -0.0
+   }
+  },
+  "hbm_gen_qwen": {
+   "ar": {
+    "title": "HBM d4g GEN2 die, Qwen3-8B (TP8, 8 dies in package), 8K context, AR",
+    "tok_s": 803.1,
+    "T_token_cycles": 1494146.2,
+    "per_accepted_cycles": 1494146.2,
+    "tau": null,
+    "pct_measured_current_rtl": 19.47,
+    "banner": "19.5% of token cycles measured on current RTL (0.0% on older RTL, 0.1% modelled PHY, 80.4% priced)",
+    "by_grade": {
+     "measured-current-RTL": 290953.0,
+     "measured-old-RTL": 0,
+     "modelled-PHY": 1572.2,
+     "priced": 1201621.0
+    },
+    "price_of_record": {
+     "tok_s": 946.2,
+     "cycles": 1268221.8,
+     "source": "results/arch/token_path_1018/inputs/hbm_qwen_price_per_layer.json base.record"
+    },
+    "vs_price_pct": -15.12
+   },
+   "mtp": {
+    "available": false,
+    "reason": "not priced on d4g: owner 10-16/18 HBM MTP parked (recorded, not blocking)"
+   }
+  }
+ },
+ "multi_user": {
+  "ds_rom": {
+   "ar": {
+    "available": true,
+    "users": 46,
+    "fillers": 0,
+    "per_user_tok_s": 1224.1,
+    "aggregate_tok_s": 56309,
+    "slot_cycles": 21313.7,
+    "period_cycles": 980428,
+    "dies": 520,
+    "stacks": 520,
+    "total_mm2": 478504,
+    "model_users": 47,
+    "calendar_per_user_tok_s": 1224.0,
+    "record": "results/arch/mu_s81_1018/calendar_ar.json",
+    "grade": "per-user: this composition; users: modelled calendar"
+   },
+   "mtp": {
+    "available": true,
+    "users": 10,
+    "fillers": 1,
+    "per_user_tok_s": 3711.7,
+    "aggregate_tok_s": 38009,
+    "slot_cycles": 124524,
+    "period_cycles": 1303400,
+    "dies": 520,
+    "stacks": 520,
+    "total_mm2": 478504,
+    "model_users": 10,
+    "calendar_per_user_tok_s": 3829.1,
+    "record": "results/arch/mu_s81_1018/calendar_mtp.json",
+    "grade": "per-user: this composition; users: modelled calendar"
+   }
+  }
+ }
+}

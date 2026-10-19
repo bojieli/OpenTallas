@@ -54,6 +54,32 @@ class ClockSource(unittest.TestCase):
    with mock.patch.object(sys,'argv',argv),mock.patch.object(C.subprocess,'run',side_effect=run):C.main()
    j=json.loads(out.read_text());self.assertEqual(seen,['core_clk','str_clk']);self.assertEqual(set(j['clock_measurements']),{'ck[0]','cks[0]'})
    self.assertIn('4_cts.sdc',j['clock_measurements']['cks[0]']['clock_mapping_basis'])
+class ClockRoot(unittest.TestCase):
+ """ELEM-GAPS/HBMN2 2026-10-18 (hfd_ckgen): PLL-pin clocks forwarded to ports are measured; an unclocked macro pin is skipped."""
+ SDC=('create_clock -name core_clk -period 833.3330 [get_pins {u_pll/clk_stream}]\n'
+      'create_clock -name ck_hbm -period 1024.0000 [get_pins {u_pll/clk_hbm}]\n'
+      'create_clock -name ck_dead -period 1000 [get_pins {u_pll/clk_dead}]\n'
+      'create_generated_clock -name pll_stream_o -source [get_pins {u_pll/clk_stream}] -master_clock [get_clocks {core_clk}] -divide_by 1 [get_ports {pll_stream}]\n'
+      'create_generated_clock -name pll_hbm_o -source [get_pins {u_pll/clk_hbm}] -master_clock [get_clocks {ck_hbm}] -divide_by 1 [get_ports {pll_hbm}]\n')
+ def test_pin_clocks_map_to_their_forwarded_port(self):
+  self.assertEqual(C.pin_sourced_clocks(self.SDC),[('core_clk','pll_stream'),('ck_hbm','pll_hbm')])
+ def test_all_clocks_measures_clock_root_domains(self):
+  with tempfile.TemporaryDirectory() as td:
+   base=pathlib.Path(td);out=base/'insertion.json';(base/'6_final.sdc').write_text(self.SDC);seen=[]
+   def run(cmd,check):
+    name=cmd[cmd.index('--clock')+1];seen.append(name);pathlib.Path(cmd[cmd.index('--output')+1]).write_text(json.dumps({'clock':name,'tt':{'boundary':{'n':1,'mean':15.3}}}))
+   argv=['ck_insertion.py','--base',td,'--routed','--all-clocks','--raw-source','--output',str(out)]
+   with mock.patch.object(sys,'argv',argv),mock.patch.object(C.subprocess,'run',side_effect=run):C.main()
+   j=json.loads(out.read_text());self.assertEqual(seen,['core_clk','ck_hbm']);self.assertEqual(set(j['clock_measurements']),{'pll_stream','pll_hbm'})
+   self.assertIn('clock root',j['clock_measurements']['pll_hbm']['clock_mapping_basis'])
+ def test_unclocked_macro_pin_is_skipped_not_fatal(self):
+  code=('proc all_clocks {} {return {core_clk}}\nproc get_property {p k} {return [expr {$k eq "sources" ? {u_pll/clk_stream} : {}}]}\n'
+        'proc get_full_name {o} {return $o}\n'+C.MACRO_CLOCK_SCOPE_TCL+
+        '\nif {[catch {puts "OWNED [ot_ck_macro_owned u_pll/refclk core_clk]"} e]} {puts stderr $e;exit 1}\n')
+  r=subprocess.run(['tclsh'],input=code,text=True,capture_output=True)
+  self.assertEqual(r.returncode,0,r.stderr);self.assertIn('OT_MC_UNCLOCKED u_pll/refclk (clock source u_pll/clk_stream)',r.stdout);self.assertIn('OWNED 0',r.stdout)
+  r=subprocess.run(['tclsh'],input=code.replace('u_pll/refclk','u_sram/clk'),text=True,capture_output=True)
+  self.assertNotEqual(r.returncode,0);self.assertIn('requires one timing clock',r.stderr)
 class FailedReplay(unittest.TestCase):
  def test_partial_arrivals_do_not_hide_failed_sta(self):
   with tempfile.TemporaryDirectory() as td:

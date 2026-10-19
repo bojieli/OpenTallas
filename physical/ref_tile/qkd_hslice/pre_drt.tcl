@@ -1,2 +1,1 @@
-estimate_parasitics -placement
-source /src/physical/ref_tile/qkd_hslice/clock_entry.sdc
+source /src/physical/qwen_die_masters/pre_ref_skew.tcl

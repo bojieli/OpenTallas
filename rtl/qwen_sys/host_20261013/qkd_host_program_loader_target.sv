@@ -25,9 +25,14 @@ module qkd_host_program_loader_target # (parameter integer MUT=0)(
  // Non-ISA image lengths are part of the external boot ABI, never defaults.
  function automatic [10:0]target_words(input[3:0]t);
   case(t)1:target_words=327;2:target_words=181;3:target_words=4;
-   4,5:target_words=192;6,7,8,9:target_words=1024;default:target_words=0;endcase
+   4,5:target_words=192;6,7,8,9:target_words=1024;
+   // KVJ-G2b 10-17: static KV die dispatcher targets 10 (die cfg 32 + NRST 43 + seal), 11 (link calendar 66),
+   // 12 (PC chain players 1024), 13 (join4 beat calendar 8)
+   // KV-HROOT 10-18 (LB2-QWEN-KV F-K1): the die dispatcher is built DIECAP=1 (word_count 32+NRST+1+1 = 77: die cfg
+   // capability word), so target 10 is 77 words; 76 made the loader refuse every die-cfg image.
+   10:target_words=77;11:target_words=66;12:target_words=1024;13:target_words=8;default:target_words=0;endcase
  endfunction
- wire target_bad=image_target>9||(image_target==0?(dw_count==0||dw_count>8):
+ wire target_bad=image_target>13||(image_target==0?(dw_count==0||dw_count>8):
   (dw_count!=0||pw_count!=target_words(image_target)));
  localparam IDLE=0,LOAD=1,SEALED=2,REPLAY_P=3,REPLAY_D=4,READY=5,REPLAY_W=6;
  reg footer_staged;

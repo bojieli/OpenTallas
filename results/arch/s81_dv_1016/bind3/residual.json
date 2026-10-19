@@ -1,0 +1,170 @@
+{
+ "schema": "opentallas.s81_dv.bind3_residual.v1",
+ "lane": "S81-BIND3",
+ "date": "2026-10-17",
+ "source": "claude/s81-bind3-1017 git archive (bind run at d6e05fe8a; STA case/kits at 0e9394414), table results/arch/s81_dv_1016/bind/bind_table_p4j_b3.json",
+ "before": {
+  "p4j": "unbound 4 / unconnected 8 / undriven 20,528 (hrq 10,912 tv 3,312 lt_lk 4,096 pv 2,208)"
+ },
+ "after": {
+  "summary": {
+   "masters": 36,
+   "instances": 3963,
+   "unbound_masters": 1,
+   "stub_masters": 0,
+   "ambiguous_masters": 0,
+   "port_not_in_rtl": 0,
+   "width_mismatch": 0,
+   "input_unconnected": 26,
+   "input_tied": 0,
+   "unparsed_connections": 0,
+   "duplicate_port_connections": 0,
+   "undriven_net_bits": 7408,
+   "multi_driven_net_bits": 0,
+   "top_assigns": 0,
+   "params_not_in_rtl": 0,
+   "strap_ports": 22,
+   "pad_bits": 20341
+  },
+  "verdict": "FAIL",
+  "undriven_classes": {
+   "w_pv_W_lN_src": {
+    "bits": 1104,
+    "nets": 4,
+    "example": "w_pv_W_l0_src"
+   },
+   "w_pv_E_lN_src": {
+    "bits": 1104,
+    "nets": 4,
+    "example": "w_pv_E_l0_src"
+   },
+   "w_lt_lk_WSN_src": {
+    "bits": 1024,
+    "nets": 2,
+    "example": "w_lt_lk_WS0_src"
+   },
+   "w_lt_lk_WNN_src": {
+    "bits": 1024,
+    "nets": 2,
+    "example": "w_lt_lk_WN0_src"
+   },
+   "w_lt_lk_ESN_src": {
+    "bits": 1024,
+    "nets": 2,
+    "example": "w_lt_lk_ES0_src"
+   },
+   "w_lt_lk_ENN_src": {
+    "bits": 1024,
+    "nets": 2,
+    "example": "w_lt_lk_EN0_src"
+   },
+   "w_tvN_mixN_w_src": {
+    "bits": 276,
+    "nets": 1,
+    "example": "w_tvN_mix4_w_src"
+   },
+   "w_tvN_mixN_e_src": {
+    "bits": 276,
+    "nets": 1,
+    "example": "w_tvN_mix4_e_src"
+   },
+   "w_tvS_mixN_w_src": {
+    "bits": 276,
+    "nets": 1,
+    "example": "w_tvS_mix4_w_src"
+   },
+   "w_tvS_mixN_e_src": {
+    "bits": 276,
+    "nets": 1,
+    "example": "w_tvS_mix4_e_src"
+   }
+  }
+ },
+ "bound_now": [
+  "dsdv_gunit (x1, 9 leaf instances)",
+  "dsdv_seq_host (x1)",
+  "dsdv_svc_rs (x14) + dsdv_svc_rs_entry (rsv_05, rsv_11): rq 682 + rd 562 (split to r_data/r_tag/r_beat/rv/rk/wd/hs per ctrl_rg2 packing, landed)",
+  "dsdv_bk_sel / dsdv_bk_col (vertical cut, PASS)",
+  "hrq 10,912 b now driven by svc_rs rq",
+  "202 landings (116x276, 66x70, 10x682, 10x562)"
+ ],
+ "w_pv_driver": "dsdv_svc_rs_entry.pv_v/pv_d (514 b, rsv_05 W / rsv_11 E) is the only RTL producer; the plan cuts it as 4 x 276 into slice bi -> unbound (format decision owed, row 3)",
+ "checker_fix": "tools/die_port_bind.py: `macro between master and instance name hid dsdv_gunit leaves (false STUB) -- fixed",
+ "rows": [
+  {
+   "kind": "unbound_master",
+   "item": "dsfd_engram_mix4_half x2 (mix4_w, mix4_e)",
+   "bits": 1104,
+   "nets": "w_tv{N,S}_mix4_{w,e}_src (4 x 276 undriven)",
+   "cause": "no RTL module (S81U-MIX verdict: Engram mix NOT covered; built as slice op ENG ot_s81sl_ve on claude/s81u-mix-1017, not a mix4_half block)",
+   "owner": "S81-DIE + S81-SLICE",
+   "fix": "either delete mix4_w/e from the plan (p4k) once slice op ENG (vs op14 feeder + xfin ENG) is wired, or build dsdv_mix4_half over ot_s81sl_ve with vN/vS 276 ports"
+  },
+  {
+   "kind": "missing_producer",
+   "item": "w_lt_lk_{WS,WN,ES,EN}{0,1}_src",
+   "bits": 4096,
+   "nets": "8 x 512 lt_lk (end-slice link tx)",
+   "cause": "dsdv_slice_lep binds ot_s81sl_slice, which has no tx0/tx1/rx0/rx1 ports (plan_only_ports); no branch builds them",
+   "owner": "S81-SLICE",
+   "fix": "end-slice variant ot_s81sl_slice_lep with 2 x 512-b tx/rx (ot_s81ph_link_ep / ot_s81ph_coll_lane reuse), fold stays in slice"
+  },
+  {
+   "kind": "missing_producer + width/format mismatch",
+   "item": "w_pv_{W,E}_l{0..3}_src (driver of w_pv_*)",
+   "bits": 2208,
+   "nets": "8 x 276 pv lanes rsv_05 -> s_3S.bi, rsv_11 -> s_4S.bi",
+   "cause": "the ONLY producer is dsdv_svc_rs_entry (rsv_05 / rsv_11) pv_v + pv_d = ONE 514-b word/cycle (shared 513-b P.V lane, 0cj ~20:10 accepted); the plan cuts it as 4 x 276 V-format lanes into the slice band port bi (4 x 276 = 1104). Not connectable without a format decision",
+   "owner": "S81U-SVC + S81-SLICE (contract) -> S81-DIE (plan)",
+   "fix": "p4k: one 514-b pv lane per half (entry pv -> slice), slice bi accepts the 513-b P.V word (or entry emits 2 x 276 V beats); same for q: slice bo 4 x 276 -> entry q 515"
+  },
+  {
+   "kind": "input_unconnected (plan lane missing)",
+   "item": "dsdv_gunit cw_v/cw_a/cw_d",
+   "bits": 267,
+   "cause": "seq_host -> gunit config write (cw) has no plan link; seq_host cw_* outputs open",
+   "owner": "S81-DIE (plan) + S81U-SEQ",
+   "fix": "p4k: add a 267-b cw lane seqhost -> gunit (both in the column-3/4 void; or TDM on the V rung with a gunit cw decoder)"
+  },
+  {
+   "kind": "input_unconnected (plan lane missing)",
+   "item": "dsdv_seq_host f_host 515 / f_lf 4 / f_ks 53 (in), t_host 77 / t_kd 54 (out)",
+   "bits": 703,
+   "cause": "host link + key-store ports: plan facts.host_job says TDM on existing registered links, RTL has dedicated ports",
+   "owner": "S81-DIE + S81U-SEQ",
+   "fix": "decide one: plan lanes host PHY/kp4 -> seqhost (f_host/t_host, f_ks/t_kd, f_lf) or RTL TDM framer on vi/vo"
+  },
+  {
+   "kind": "input_unconnected (plan lane missing)",
+   "item": "dsdv_seq_host s_j 33 / s_hw 292 (out) <-> svc_rs_entry j / hw (in); entry jd 2 / hc 9 (out) -> seqhost s_jd / s_hc",
+   "bits": 336,
+   "cause": "job + host-write lanes seqhost <-> the two svc entries (rsv_05, rsv_11) have no plan links; ONE seqhost port set vs TWO entries",
+   "owner": "S81-DIE + S81U-SVC + S81U-SEQ",
+   "fix": "p4k: lanes seqhost -> rsv_05 and -> rsv_11 (j+hw 325 b, jd+hc 11 b back) or seq_host x2 job ports; st_rg (2 b) source = ctrl_rg2 status (owner S81-CTRL)"
+  },
+  {
+   "kind": "input_unconnected (seq_host st_rg)",
+   "item": "dsdv_seq_host st_rg[1:0]",
+   "bits": 2,
+   "cause": "region status: no plan producer",
+   "owner": "S81U-SEQ + S81-CTRL",
+   "fix": "reduce ctrl_rg2 hs/{fault,live} along the svc tree (already in svc_rs up stream) and expose at the entry, or strap if static"
+  },
+  {
+   "kind": "width mismatch vs lane contract",
+   "item": "svc_rs tree lanes tq / tp / tr / fc (plan 512 b, 0-stage neighbour links)",
+   "bits": null,
+   "cause": "RTL faces per W/S/E/N: dn 805, up 14, ri/ro 514, sx gather 2132 + v, scatter 1076 + v (results/arch/s81_dv_1016/svc_rs/slice_cluster.json); plan carries 512-b tq/tp/tr/fc lanes. 14 x dn_i/up_i/ri/gi/si + entry q/j/hw unconnected",
+   "owner": "S81-DIE (p4k plan) with S81U-SVC",
+   "fix": "regenerate the svc_rs lanes from the RTL face cut (abutted neighbour faces on the 2 x 8 grid: wide lanes OK if abutted) and bind per face; or S81U-SVC narrows faces to the 512-b plan lanes"
+  },
+  {
+   "kind": "bench-value straps",
+   "item": "gunit sid, seq_host tap_k/sink_k, bk tap_k/sink_k/ik/ek/uid/eg_n",
+   "bits": null,
+   "cause": "die values not in any plan/compiler table; bench values used",
+   "owner": "S81-DIE (compiler strap table)",
+   "fix": "emit per-instance strap values in the plan facts"
+  }
+ ]
+}

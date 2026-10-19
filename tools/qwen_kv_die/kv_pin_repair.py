@@ -46,42 +46,49 @@ def repair(K, m):
             width, height = width + K.SHAVE, max(height + K.SHAVE, bits * .048 + 4 if bits > 512 else 0.0)
             height = K.up(height, K.GY) if height > RS.STD[528][1] + K.SHAVE else height
         initial_ap = ap
-        chain, staged, previous = [], [], (a,pa)
-        # Several registered stages are necessary for a long fault-chain return.
-        # Each stage is chosen in free channel space; a trapped chain is rolled back.
-        for stage in range(math.ceil((abs(ap[0]-bp[0])+abs(ap[1]-bp[1]))/200)+12):
-            cap = 300 if previous[0].startswith('wctl_') and bid.startswith('wencoded_') else (K.HOP_REACH if getattr(K, "HOP", False) else K.PIN_REACH)
-            if abs(ap[0]-bp[0])+abs(ap[1]-bp[1]) <= cap:
-                break
-            distance = abs(ap[0]-bp[0])+abs(ap[1]-bp[1])
-            fraction = min(.5, 350/distance)
-            target = (ap[0]+fraction*(bp[0]-ap[0])-width/2,
-                      ap[1]+fraction*(bp[1]-ap[1])-height/2)
-            grid = K.GRID/2
-            choices = []
-            for x,y in _cands(K, target, grid, 16):
-                c_ = _choice(K, m, staged, x, y, width, height, ap, bp, cap, distance)
-                if c_:
-                    choices.append(c_)
-            if not choices and not widened.get(bid):
-                # Q-KVSYS-HOP 2026-10-16: a pin boxed in by blocks (d2d_kv fwd_* 1-bit pins, ~1,200 um to the first
-                # relay) finds no spot within 16 half-cells; look again up to 40 (only where repair failed before)
-                widened[bid] = True
-                ring = [(x, y) for x, y in _cands(K, target, grid, 40)]
-                for x, y in ring:
-                    # a boxed-in pin may step AROUND its blocker first (bounded detour; later stages must progress)
-                    c_ = _choice(K, m, staged, x, y, width, height, ap, bp, cap, distance, detour=cap)
-                    if c_:
-                        choices.append(c_)
-            if not choices:
-                break
-            remaining,x,y,left,out_x,orient=min(choices)
-            name='rly_pinfix_'+bid.replace('__','_')+'_'+str(stage)
-            it=K.F.Inst(name,f'qkd_rly_{bits}',x,y,width-K.SHAVE,height-K.SHAVE,orient,kind='relay',region='relay')
-            staged.append(it)
-            sbid=bid if not chain else bid+'__pinfix'+str(stage)
-            chain.append((sbid,cls,bits,[previous,(name,'a')]))
-            previous=(name,'b');ap=(out_x,y+height/2)
+        ap0 = ap
+        for attempt in (0, 1):
+          # KV-PLAN3 10-18: attempt 1 (only after attempt 0 left the hop over reach) searches the 40-half-cell ring
+          # with a bounded detour at EVERY stage (crowded group / PC control channels: 2-7 residual hops per plan)
+          ap = ap0
+          chain, staged, previous = [], [], (a,pa)
+          # Several registered stages are necessary for a long fault-chain return.
+          # Each stage is chosen in free channel space; a trapped chain is rolled back.
+          for stage in range(math.ceil((abs(ap[0]-bp[0])+abs(ap[1]-bp[1]))/200)+12):
+              cap = 300 if previous[0].startswith('wctl_') and bid.startswith('wencoded_') else (K.HOP_REACH if getattr(K, "HOP", False) else K.PIN_REACH)
+              if abs(ap[0]-bp[0])+abs(ap[1]-bp[1]) <= cap:
+                  break
+              distance = abs(ap[0]-bp[0])+abs(ap[1]-bp[1])
+              fraction = min(.5, 350/distance)
+              target = (ap[0]+fraction*(bp[0]-ap[0])-width/2,
+                        ap[1]+fraction*(bp[1]-ap[1])-height/2)
+              grid = K.GRID/2
+              choices = []
+              for x,y in _cands(K, target, grid, 16):
+                  c_ = _choice(K, m, staged, x, y, width, height, ap, bp, cap, distance)
+                  if c_:
+                      choices.append(c_)
+              if not choices and (attempt == 1 or not widened.get(bid)):
+                  # Q-KVSYS-HOP 2026-10-16: a pin boxed in by blocks (d2d_kv fwd_* 1-bit pins, ~1,200 um to the first
+                  # relay) finds no spot within 16 half-cells; look again up to 40 (only where repair failed before)
+                  widened[bid] = True
+                  ring = [(x, y) for x, y in _cands(K, target, grid, 40)]
+                  for x, y in ring:
+                      # a boxed-in pin may step AROUND its blocker first (bounded detour; later stages must progress)
+                      c_ = _choice(K, m, staged, x, y, width, height, ap, bp, cap, distance, detour=cap)
+                      if c_:
+                          choices.append(c_)
+              if not choices:
+                  break
+              remaining,x,y,left,out_x,orient=min(choices)
+              name='rly_pinfix_'+bid.replace('__','_')+'_'+str(stage)
+              it=K.F.Inst(name,f'qkd_rly_{bits}',x,y,width-K.SHAVE,height-K.SHAVE,orient,kind='relay',region='relay')
+              staged.append(it)
+              sbid=bid if not chain else bid+'__pinfix'+str(stage)
+              chain.append((sbid,cls,bits,[previous,(name,'a')]))
+              previous=(name,'b');ap=(out_x,y+height/2)
+          if abs(ap[0]-bp[0])+abs(ap[1]-bp[1]) <= (K.HOP_REACH if getattr(K, "HOP", False) else K.PIN_REACH):
+            break
         if abs(ap[0]-bp[0])+abs(ap[1]-bp[1]) > (K.HOP_REACH if getattr(K, "HOP", False) else K.PIN_REACH):
             unresolved.append(dict(bus=bid,um=abs(initial_ap[0]-bp[0])+abs(initial_ap[1]-bp[1])));
             buses.append((bid,cls,bits,eps)); continue

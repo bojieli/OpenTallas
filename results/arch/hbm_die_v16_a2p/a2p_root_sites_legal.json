@@ -1,0 +1,398 @@
+{
+ "schema": "opentallas.die_clock.root_sites.v1",
+ "die": "hbm A2P d4e (2ce1497cf)",
+ "rule": "each site = 60x60 um station-free keepout in a channel at the given point (legalise to the nearest legal std-cell channel within 150 um); one regional root buffer per clock family present in the region",
+ "sites": [
+  {
+   "region": "sm_SW0",
+   "x": 2032.1,
+   "y": 8097.1,
+   "keepout": [
+    2002.1,
+    8067.1,
+    2062.1,
+    8127.1
+   ],
+   "note": "SM column cluster root, E channel beside the front clk/rst pins (F108)"
+  },
+  {
+   "region": "sm_SW1",
+   "x": 4071.8,
+   "y": 8097.1,
+   "keepout": [
+    4041.8,
+    8067.1,
+    4101.8,
+    8127.1
+   ],
+   "note": "SM column cluster root, E channel beside the front clk/rst pins (F108)"
+  },
+  {
+   "region": "sm_SW2",
+   "x": 6111.4,
+   "y": 8097.1,
+   "keepout": [
+    6081.4,
+    8067.1,
+    6141.4,
+    8127.1
+   ],
+   "note": "SM column cluster root, E channel beside the front clk/rst pins (F108)"
+  },
+  {
+   "region": "sm_SW3",
+   "x": 8151.1,
+   "y": 8097.1,
+   "keepout": [
+    8121.1,
+    8067.1,
+    8181.1,
+    8127.1
+   ],
+   "note": "SM column cluster root, E channel beside the front clk/rst pins (F108)"
+  },
+  {
+   "region": "sm_SW4",
+   "x": 10190.8,
+   "y": 8097.1,
+   "keepout": [
+    10160.8,
+    8067.1,
+    10220.8,
+    8127.1
+   ],
+   "note": "SM column cluster root, E channel beside the front clk/rst pins (F108)"
+  },
+  {
+   "region": "sm_SW5",
+   "x": 12230.5,
+   "y": 8097.1,
+   "keepout": [
+    12200.5,
+    8067.1,
+    12260.5,
+    8127.1
+   ],
+   "note": "SM column cluster root, E channel beside the front clk/rst pins (F108)"
+  },
+  {
+   "region": "sm_SW6",
+   "x": 14270.2,
+   "y": 8097.1,
+   "keepout": [
+    14240.2,
+    8067.1,
+    14300.2,
+    8127.1
+   ],
+   "note": "SM column cluster root, E channel beside the front clk/rst pins (F108)"
+  },
+  {
+   "region": "sm_SW7",
+   "x": 16309.8,
+   "y": 8097.1,
+   "keepout": [
+    16279.8,
+    8067.1,
+    16339.8,
+    8127.1
+   ],
+   "note": "SM column cluster root, E channel beside the front clk/rst pins (F108)"
+  },
+  {
+   "region": "sm_NW0",
+   "x": 2032.1,
+   "y": 15997.1,
+   "keepout": [
+    2002.1,
+    15967.1,
+    2062.1,
+    16027.1
+   ],
+   "note": "SM column cluster root, E channel beside the front clk/rst pins (F108)"
+  },
+  {
+   "region": "sm_NW1",
+   "x": 4071.8,
+   "y": 15997.1,
+   "keepout": [
+    4041.8,
+    15967.1,
+    4101.8,
+    16027.1
+   ],
+   "note": "SM column cluster root, E channel beside the front clk/rst pins (F108)"
+  },
+  {
+   "region": "sm_NW2",
+   "x": 6111.4,
+   "y": 15997.1,
+   "keepout": [
+    6081.4,
+    15967.1,
+    6141.4,
+    16027.1
+   ],
+   "note": "SM column cluster root, E channel beside the front clk/rst pins (F108)"
+  },
+  {
+   "region": "sm_NW3",
+   "x": 8151.1,
+   "y": 15997.1,
+   "keepout": [
+    8121.1,
+    15967.1,
+    8181.1,
+    16027.1
+   ],
+   "note": "SM column cluster root, E channel beside the front clk/rst pins (F108)"
+  },
+  {
+   "region": "sm_NW4",
+   "x": 10190.8,
+   "y": 15997.1,
+   "keepout": [
+    10160.8,
+    15967.1,
+    10220.8,
+    16027.1
+   ],
+   "note": "SM column cluster root, E channel beside the front clk/rst pins (F108)"
+  },
+  {
+   "region": "sm_NW5",
+   "x": 12230.5,
+   "y": 15997.1,
+   "keepout": [
+    12200.5,
+    15967.1,
+    12260.5,
+    16027.1
+   ],
+   "note": "SM column cluster root, E channel beside the front clk/rst pins (F108)"
+  },
+  {
+   "region": "sm_NW6",
+   "x": 14270.2,
+   "y": 15997.1,
+   "keepout": [
+    14240.2,
+    15967.1,
+    14300.2,
+    16027.1
+   ],
+   "note": "SM column cluster root, E channel beside the front clk/rst pins (F108)"
+  },
+  {
+   "region": "sm_NW7",
+   "x": 16309.8,
+   "y": 15997.1,
+   "keepout": [
+    16279.8,
+    15967.1,
+    16339.8,
+    16027.1
+   ],
+   "note": "SM column cluster root, E channel beside the front clk/rst pins (F108)"
+  },
+  {
+   "region": "band_SW0",
+   "x": 3070.0,
+   "y": 10247.0,
+   "keepout": [
+    3040.0,
+    10217.0,
+    3100.0,
+    10277.0
+   ],
+   "note": "band region root (VM/SU/SFU/HC/quant blocks); legalise to nearest channel",
+   "legalised_from": [
+    2750.0,
+    10247.0
+   ]
+  },
+  {
+   "region": "band_SW1",
+   "x": 8340.0,
+   "y": 10247.0,
+   "keepout": [
+    8310.0,
+    10217.0,
+    8370.0,
+    10277.0
+   ],
+   "note": "band region root (VM/SU/SFU/HC/quant blocks); legalise to nearest channel",
+   "legalised_from": [
+    8250.0,
+    10247.0
+   ]
+  },
+  {
+   "region": "band_SW2",
+   "x": 13650.0,
+   "y": 10247.0,
+   "keepout": [
+    13620.0,
+    10217.0,
+    13680.0,
+    10277.0
+   ],
+   "note": "band region root (VM/SU/SFU/HC/quant blocks); legalise to nearest channel"
+  },
+  {
+   "region": "band_NW0",
+   "x": 3165.0,
+   "y": 13847.0,
+   "keepout": [
+    3135.0,
+    13817.0,
+    3195.0,
+    13877.0
+   ],
+   "note": "band region root (VM/SU/SFU/HC/quant blocks); legalise to nearest channel",
+   "legalised_from": [
+    2750.0,
+    13847.0
+   ]
+  },
+  {
+   "region": "band_NW1",
+   "x": 8250.0,
+   "y": 13787.0,
+   "keepout": [
+    8220.0,
+    13757.0,
+    8280.0,
+    13817.0
+   ],
+   "note": "band region root (VM/SU/SFU/HC/quant blocks); legalise to nearest channel",
+   "legalised_from": [
+    8250.0,
+    13847.0
+   ]
+  },
+  {
+   "region": "band_NW2",
+   "x": 13715.0,
+   "y": 13847.0,
+   "keepout": [
+    13685.0,
+    13817.0,
+    13745.0,
+    13877.0
+   ],
+   "note": "band region root (VM/SU/SFU/HC/quant blocks); legalise to nearest channel",
+   "legalised_from": [
+    13650.0,
+    13847.0
+   ]
+  },
+  {
+   "region": "ecol_S",
+   "x": 17800,
+   "y": 10450,
+   "keepout": [
+    17770,
+    10420,
+    17830,
+    10480
+   ],
+   "note": "E column S: lk_S/ep_S/hc_eng lower; channel between ep_S and hc_eng"
+  },
+  {
+   "region": "ecol_N",
+   "x": 17800,
+   "y": 13630,
+   "keepout": [
+    17770,
+    13600,
+    17830,
+    13660
+   ],
+   "note": "E column N: lk_N/ep_N/hc_eng upper; channel between hc_eng and ep_N"
+  },
+  {
+   "region": "pc_SWa",
+   "x": 7705,
+   "y": 1668,
+   "keepout": [
+    7675,
+    1638,
+    7735,
+    1698
+   ],
+   "note": "PC row W half (hbm family)"
+  },
+  {
+   "region": "pc_SWb",
+   "x": 12204,
+   "y": 1668,
+   "keepout": [
+    12174,
+    1638,
+    12234,
+    1698
+   ],
+   "note": "PC row E half (hbm family)"
+  },
+  {
+   "region": "pc_NWa",
+   "x": 7705,
+   "y": 22426,
+   "keepout": [
+    7675,
+    22396,
+    7735,
+    22456
+   ],
+   "note": "PC row W half (hbm family)"
+  },
+  {
+   "region": "pc_NWb",
+   "x": 12204,
+   "y": 22426,
+   "keepout": [
+    12174,
+    22396,
+    12234,
+    22456
+   ],
+   "note": "PC row E half (hbm family)"
+  }
+ ],
+ "legalised": {
+  "by": "H-DIE 10-16 20:40 on d4e_a2p compact.P.json (nearest clear 60x60, Manhattan)",
+  "moved": [
+   [
+    "band_SW0",
+    320,
+    0,
+    320
+   ],
+   [
+    "band_SW1",
+    90,
+    0,
+    90
+   ],
+   [
+    "band_NW0",
+    415,
+    0,
+    415
+   ],
+   [
+    "band_NW1",
+    0,
+    -60,
+    60
+   ],
+   [
+    "band_NW2",
+    65,
+    0,
+    65
+   ]
+  ]
+ }
+}

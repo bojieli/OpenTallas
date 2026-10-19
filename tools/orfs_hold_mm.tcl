@@ -173,6 +173,71 @@ proc ot_mm_ws {check scene} {
   return $w
 }
 
+# RC-CAL (ROOT-RST 2026-10-19, s81lk_kp4_dec-p1-e86bf8cae): route-time HOLD repair times the clock trees on the
+# RCX-calibrated upper-layer RC, not on the platform setRC.tcl values.  setRC.tcl (asap7) prices M6 / M7 wire at
+# 0.187 / 0.163 fF/um; OpenRCX extracts an isolated clock trunk on those layers at 0.096-0.108 fF/um and 13.1-14.9
+# ohm/um (kp4_dec BUFx24 spine trunks N147_r1 / N73_r1 / N73_r2 / N73 / N36, smhq spine M6 / M7 medians).  The spine's
+# wire-dominated BUFx24 trunk was therefore estimated ~90 ps LATE at GRT-FF (pin flops p_d__ot_q median 506.8 GRT vs
+# 415.0 routed) while the cell-dominated pad chain to the hard child u_syn tracked (299.9 vs 275.4): the GRT hold repair
+# saw +30 on parent pin flop -> u_syn/p_d paths that signed off at -64.76.  Measured on the same 5_1_grt.odb with these
+# values: p_d__ot_q 440.0 / u_syn 286.7 (pair error 67 -> 14 ps); a TritonCTS block (hcoll_kqs_leaf, no M6 / M7
+# clock) is unchanged.  Scope: ONLY the hold part of repair_timing_helper (setup repair, GRT, and every other stage keep
+# the platform RC; restored right after).  GRT stage (global routes present): set_layer_rc M6 / M7.  CTS stage (placement
+# parasitics): set_wire_rc -clock, and only when a clock spine was built in this session (a TritonCTS tree's low-layer
+# clock wiring is NOT over-estimated: the clock-wide value moved hcoll -16 ps the wrong way).  Data wires on M6 / M7
+# also get the lower C, which only makes them faster under a min-delay check (conservative for hold).
+# Knobs: OT_RC_CAL=0 off; OT_RC_CAL_R / OT_RC_CAL_C in setRC.tcl units (defaults 1.40E-02 = 14 ohm/um, 1.05E-01 fF/um),
+# OT_RC_CAL_LAYERS (default "M6 M7").  asap7 only.  The spine balancing (clock_spine.tcl) uses the same procs.
+proc ot_rc_cal_on {} {
+  expr {(![info exists ::env(OT_RC_CAL)] || $::env(OT_RC_CAL) ne "0") &&
+        [info exists ::env(PLATFORM)] && $::env(PLATFORM) eq "asap7"}
+}
+proc ot_rc_cal_rc {} {
+  set r [expr {[info exists ::env(OT_RC_CAL_R)] && [string is double -strict $::env(OT_RC_CAL_R)] ? $::env(OT_RC_CAL_R) : 1.40E-02}]
+  set c [expr {[info exists ::env(OT_RC_CAL_C)] && [string is double -strict $::env(OT_RC_CAL_C)] ? $::env(OT_RC_CAL_C) : 1.05E-01}]
+  return [list $r $c]
+}
+proc ot_rc_cal_mode {} {
+  # the parasitics the stage estimates: global routes present -> -global_routing, else -placement
+  if {![catch {grt::have_routes} h] && $h} { return "-global_routing" }
+  return "-placement"
+}
+proc ot_rc_cal_spine {} {
+  expr {([info exists ::ot_sp_all_insts] && [llength $::ot_sp_all_insts]) ||
+        ([info exists ::ot_sp_insts] && [llength $::ot_sp_insts])}
+}
+# set the calibrated RC for KIND (hold | spine); returns 1 when anything was changed (the caller re-estimates and later
+# calls ot_rc_cal_restore)
+proc ot_rc_cal_apply {kind} {
+  if {![ot_rc_cal_on]} { return 0 }
+  lassign [ot_rc_cal_rc] r c
+  set mode [ot_rc_cal_mode]
+  if {$mode eq "-global_routing"} {
+    set ls [expr {[info exists ::env(OT_RC_CAL_LAYERS)] ? $::env(OT_RC_CAL_LAYERS) : "M6 M7"}]
+    foreach l $ls { set_layer_rc -layer $l -resistance $r -capacitance $c }
+    puts "OT_RC_CAL $kind: $mode layers $ls R $r C $c (RCX-calibrated upper-layer RC; platform setRC restored after)"
+    return 1
+  }
+  if {$kind ne "spine" && ![ot_rc_cal_spine]} { return 0 }
+  set_wire_rc -clock -resistance $r -capacitance $c
+  puts "OT_RC_CAL $kind: $mode clock wire R $r C $c (spine clock; platform setRC restored after)"
+  return 1
+}
+proc ot_rc_cal_restore {} {
+  source $::env(PLATFORM_DIR)/setRC.tcl
+  puts "OT_RC_CAL restored platform setRC.tcl"
+}
+# run BODY (a script, uplevel 1) with the calibrated hold RC, estimating parasitics before and after
+proc ot_rc_cal_hold {body} {
+  set on [ot_rc_cal_apply hold]
+  if {$on} { estimate_parasitics [ot_rc_cal_mode] }
+  try {
+    return [uplevel 1 $body]
+  } finally {
+    if {$on} { ot_rc_cal_restore; estimate_parasitics [ot_rc_cal_mode] }
+  }
+}
+
 # HOLD-STALL GUARD (unstick 2026-10-08).  repair_timing's hold repair has no progress limit: 138 loop jobs sat 4-25 h in
 # CTS / GRT hold repair (it 10k-65k, ~2 buffers per iteration, WNS frozen for thousands of iterations; BF: 48k endpoints at
 # -200 ps).  A window that wide is an RTL / constraint problem (missing pin register, wrong input-min / H1 SDC), not a
@@ -349,15 +414,21 @@ proc ot_hold_stop {rt_args} {
 }
 proc ot_repair_timing {rt_args} {
   if {![ot_hold_guard_on] || [lsearch -exact $rt_args -setup] >= 0 || [lsearch -exact $rt_args -hold] >= 0} {
-    if {[lsearch -exact $rt_args -setup] < 0} { set rt_args [ot_hm_guard $rt_args] }
-    return [log_cmd repair_timing {*}$rt_args]
+    if {[lsearch -exact $rt_args -setup] >= 0} { return [log_cmd repair_timing {*}$rt_args] }
+    if {[lsearch -exact $rt_args -hold] < 0} { return [log_cmd repair_timing {*}[ot_hm_guard $rt_args]] }
+    # a hold-only call: RC-CAL clock trees
+    return [ot_rc_cal_hold { log_cmd repair_timing {*}[ot_hm_guard $rt_args] }]
   }
+  log_cmd repair_timing {*}$rt_args -setup
+  # RC-CAL: the whole hold part (margin guard statistics, stop cap, chunks) times the RCX-calibrated clock trees
+  return [ot_rc_cal_hold { ot_repair_hold_guarded $rt_args }]
+}
+proc ot_repair_hold_guarded {rt_args} {
   set hm 0.0
   set i [lsearch -exact $rt_args -hold_margin]; if {$i >= 0} { set hm [lindex $rt_args [expr {$i + 1}]] }
   set chunk [expr {int([ot_env_num OT_HOLD_CHUNK 1000])}]
   set mingain [ot_env_num OT_HOLD_MIN_GAIN_PCT 2.0]
   set maxs [expr {[ot_env_num OT_HOLD_MAX_HOURS 3.0] * 3600}]
-  log_cmd repair_timing {*}$rt_args -setup
   set hm_asked $hm
   set rt_args [ot_hm_guard $rt_args]
   if {[ot_hold_stop $rt_args]} { return }

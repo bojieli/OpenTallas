@@ -1,0 +1,106 @@
+{
+ "name": "dsdv_gunit_l3",
+ "top": "dsdv_gunit_l3",
+ "kind": "tile",
+ "sources": [
+  "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fp32_f12.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_norm.sv",
+  "rtl/hdc/v41x/ot_dsrom_divc.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_fdiv_f12.sv",
+  "rtl/dsrom_sys/s81_suhc/ot_s81_su_rw.sv",
+  "rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_pass.sv",
+  "rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l3.sv"
+ ],
+ "params": {},
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "macros": [],
+ "pins": {
+  "N": [
+   "rn_i",
+   "rn_o",
+   "rw_st",
+   "rw_v",
+   "rw_l",
+   "rw_x",
+   "rw_scale",
+   "rw_row",
+   "rw_lm",
+   "rw_sm",
+   "sid_i",
+   "w_v",
+   "w_b",
+   "fault"
+  ],
+  "S": [
+   "vo_s",
+   "vi_s"
+  ],
+  "E": [
+   "clk",
+   "rst_n"
+  ]
+ },
+ "outline": {
+  "w": 345.6,
+  "h": 172.8
+ },
+ "recipe": 4,
+ "clock": "cts",
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03
+ },
+ "structural_change": "S81U-GUNIT2 (10-17): new leaf L3 of the six-leaf dsdv_gunit (S81-DV column-3 G-unit): routing weights (ot_s81_su_rw) + weight CTL rows, s_3S rung face (bottom). Every input lands in a flop, every output leaves a flop; carried buses cross in 2 edges (dsdv_gunit_pass); no ready / credit (static schedule, contract checks are faults).",
+ "job": {
+  "owner": "Claude:S81U-GUNIT2",
+  "branch": "claude/s81u1-1017",
+  "tag": "g1",
+  "purpose": "S81-DV G-unit leaf L3 to closure (TT setup / FF hold / DRC 0 + native audit).",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_dv/unit",
+   "rtl/hdc",
+   "rtl/dsrom_sys/s81_suhc",
+   "tools/hdc_golden_v41.py",
+   "tools/hdc_golden.py",
+   "physical/ref_tile_specs/s81dv"
+  ],
+  "benches": [
+   {
+    "name": "gunit_exact",
+    "cmd": "bash rtl/dsrom_sys/s81_dv/unit/test/run_gunit_bench.sh {RUN}/bench 8 0",
+    "expect": "pass",
+    "pass_regex": "^MUT=0: GUNIT PASS cases=8 ",
+    "threads": 6,
+    "peak_ram_gb": 24
+   },
+   {
+    "name": "gunit_mut4",
+    "cmd": "bash rtl/dsrom_sys/s81_dv/unit/test/run_gunit_bench.sh {RUN}/mut 4 4",
+    "expect": "fail",
+    "fail_regex": "^MUT=4: GUNIT FAIL ",
+    "threads": 6,
+    "peak_ram_gb": 24
+   }
+  ],
+  "views_to": "physical/ref_tile/dsdv_gunit_l3/views",
+  "record_to": "results/rtl/ref_tile/dsdv_gunit_l3"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Source-registered: every input lands in a flop at the pin and every output is a flop (dsdv_gunit_l* input/output flops, dsdv_gunit_pass feedthroughs, ot_dsdv_vstop's own flops); recipe pin_regs would add an unpriced stage on the router's critical path and on every rung hop."
+ },
+ "hold_budget": "die"
+}

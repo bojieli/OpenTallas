@@ -6,20 +6,23 @@
 // Checks: every column s's 512-b y bit-exact at ITS y_valid edge, which must be the old static age shifted by the column's
 // added depth (out_age + COL_D[s] - COL_D[0]), all 32 columns seen, no fault, out_age = column 0's age.
 // Plusargs: +VEC=dir +CTX=T.  Parameters: TRUNK_MUT / FLAG_D_ADJ (negative controls, both must FAIL).
+// KVJ-SMALL 10-17: RL is the boundary round trip (die: RL 95 -> FIRST_INPUT_AGE 96); AGE_ADJ builds the control tile at
+// RL+1+AGE_ADJ (negative control: AGE_ADJ=-1 = the old age-95 view against an RL-95 boundary must FAIL).  Request queues
+// are 256 deep (RL 95 keeps > 64 requests in flight per port).
 module tb_qkd_pvw_die_t;
- parameter integer PAIR=0, RL=19, TRUNK_MUT=0, FLAG_D_ADJ=0, LEAF_RESET_PIN=1, CTL_RESET_PIN=1;
+ parameter integer PAIR=0, RL=19, AGE_ADJ=0, TRUNK_MUT=0, FLAG_D_ADJ=0, LEAF_RESET_PIN=1, CTL_RESET_PIN=1;
  reg clk=0,rst_n=0;always #1 clk=~clk;
  reg start=0;integer CTX;string vec;
  reg [30:0] vh[0:7];reg [127:0] vc[0:7][0:7];reg [511:0] in_e=0;
  wire [14:0] vrq[0:7];wire out_valid,fault,busy;wire [16383:0] out_leaf;wire [15:0] out_epoch,out_age;
- qkd_pvw_die_t #(.PAIR(PAIR),.CTL_RESET_PIN(CTL_RESET_PIN),.LEAF_RESET_PIN(LEAF_RESET_PIN),.FIRST_INPUT_AGE(RL+1),
+ qkd_pvw_die_t #(.PAIR(PAIR),.CTL_RESET_PIN(CTL_RESET_PIN),.LEAF_RESET_PIN(LEAF_RESET_PIN),.FIRST_INPUT_AGE(RL+1+AGE_ADJ),
   .TRUNK_MUT(TRUNK_MUT),.FLAG_D_ADJ(FLAG_D_ADJ)) u(.rst_n(rst_n),.start(start),.col_clk({33{clk}}),.context_len(14'(CTX)),.epoch(16'd23),
   .vh0(vh[0]),.vh1(vh[1]),.vh2(vh[2]),.vh3(vh[3]),.vh4(vh[4]),.vh5(vh[5]),.vh6(vh[6]),.vh7(vh[7]),
 `include "tb_qkd_pvw_die_t_vc.svh"
   .in_e(in_e),.vrq0(vrq[0]),.vrq1(vrq[1]),.vrq2(vrq[2]),.vrq3(vrq[3]),.vrq4(vrq[4]),.vrq5(vrq[5]),.vrq6(vrq[6]),.vrq7(vrq[7]),
   .out_valid(out_valid),.out_leaf(out_leaf),.out_epoch(out_epoch),.fault(fault),.busy(busy),.out_age(out_age));
  reg [1023:0] vr[0:8191];reg [63:0] er[0:8191];reg [31:0] gold[0:511];
- integer due[0:7][0:63],tt[0:7][0:63],wp[0:7],rp[0:7];
+ integer due[0:7][0:255],tt[0:7][0:255],wp[0:7],rp[0:7];
  integer cyc=0,scyc=-1,errors=0,words=0,nreq=0,i,k,n,g,d,seen=0,agebad=0;
  integer ycyc[0:31];
  // per-port presentation pipeline: header now, chunk g after DELTA[g] edges
@@ -45,15 +48,15 @@ module tb_qkd_pvw_die_t;
    vh[k]=0;
    for(d=63;d>0;d=d-1)begin vq[k][d]=vq[k][d-1];vqv[k][d]=vqv[k][d-1];end
    vqv[k][0]=0;vq[k][0]=0;
-   if(rp[k]!=wp[k]&&due[k][rp[k]%64]==cyc)begin
-    n=tt[k][rp[k]%64];rp[k]=rp[k]+1;
+   if(rp[k]!=wp[k]&&due[k][rp[k]%256]==cyc)begin
+    n=tt[k][rp[k]%256];rp[k]=rp[k]+1;
     vh[k]={16'd23,14'(n),1'b1};in_e[64*k+:64]=er[n];vq[k][0]=vr[n];vqv[k][0]=1;
    end
    for(g=0;g<8;g=g+1)vc[k][g]=vq[k][u.DELTA[8*g+:8]][128*g+:128];
   end
   #0.5;
   for(k=0;k<8;k=k+1)if(vrq[k][0])begin
-   due[k][wp[k]%64]=cyc+RL;tt[k][wp[k]%64]=vrq[k][14:1];wp[k]=wp[k]+1;nreq=nreq+1;
+   due[k][wp[k]%256]=cyc+RL;tt[k][wp[k]%256]=vrq[k][14:1];wp[k]=wp[k]+1;nreq=nreq+1;
   end
  end
  genvar s;
@@ -71,9 +74,9 @@ module tb_qkd_pvw_die_t;
  end endgenerate
  initial begin
   #40000;
-  $display("PV_PAIR_T %s T=%0d pair=%0d words=%0d cols=%0d errors=%0d agebad=%0d fault=%0d out_age=%0d col0_age=%0d rows=%0d trunk_d=%0d flag_d=%0d",
+  $display("PV_PAIR_T %s T=%0d pair=%0d words=%0d cols=%0d errors=%0d agebad=%0d fault=%0d out_age=%0d col0_age=%0d rows=%0d trunk_d=%0d flag_d=%0d rl=%0d first_input_age=%0d",
    (errors==0&&words==512&&seen==32&&agebad==0&&!fault)?"PASS":"FAIL",CTX,PAIR,words,seen,errors,agebad,fault,out_age,ycyc[0]-scyc,nreq,
-   u.TRUNK_D,u.FLAG_D);
+   u.TRUNK_D,u.FLAG_D,RL,RL+1+AGE_ADJ);
   $finish;
  end
 endmodule

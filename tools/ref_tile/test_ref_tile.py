@@ -188,6 +188,15 @@ class Abut(unittest.TestCase):
         h = RT.read_view_lef(self.V)["H"]
         self.assertEqual(self.chan([self.blk(0, 100.0, 100.0), self.blk(1, 100.0, 100.0 + h + 0.024)]), [])
 
+    def test_stack_three_high(self):
+        """a 3+ high abutted bank: non-neighbours (macro 0 / macro 2) are one stack, not a sub-20-um channel
+        (KV-PROMPT4 10-18 between_in_stack); a real gap inside the bank still fails"""
+        h = RT.read_view_lef(self.V)["H"]
+        bank = [self.blk(i, 100.0, 100.0 + i * (h + 0.024)) for i in range(4)]
+        self.assertEqual(self.chan(bank), [])
+        gap = [self.blk(0, 100.0, 100.0), self.blk(1, 100.0, 100.0 + h + 0.024), self.blk(2, 100.0, 100.0 + 2 * h + 5.024)]
+        self.assertGreaterEqual(len(self.chan(gap)), 1)
+
     def test_stack_abutted_mirrored(self):
         """MY / MX / R180 banks abut like R0 (touching faces carry no signal pin); a rotated macro keeps the rule"""
         h = RT.read_view_lef(self.V)["H"]
@@ -411,6 +420,24 @@ class Recipe(unittest.TestCase):
         self.assertNotIn("signoff_ffrepair", json.loads(o["job.json"])["stages"]["route"]["cmd"])
         with self.assertRaises(RT.SpecError):
             RT.io_hold_relief_ps({"route": {"hold_margin_ns": 0.01, "io_hold_margin_ns": 0.02}})
+
+    def test_io_flop_through_frac(self):
+        # RLYH0-FIN 2026-10-19: pass-through pin flops on the a -> b L path (lane stations with perpendicular faces)
+        with tempfile.TemporaryDirectory() as a:
+            k = self.kit(a, name="thru_a", inhold=False, outhold=False, io_flop_at_pins={"cols": 4, "through_frac": 0.5})
+            env = k["kit.env"]
+            self.assertIn("PRE_GLOBAL_PLACE=physical/qwen_fwd_lane/lane_flop_thru.tcl", env)
+            self.assertIn("PRE_DETAIL_PLACE=physical/qwen_die_masters/out_flop_release.tcl", env)
+            self.assertEqual(env.count("PRE_GLOBAL_PLACE="), 1)
+            self.assertIn("OT_IOFLOP_THRU_FRAC=0.5", extra_argv(env))
+            ref = json.loads(k["floorplan.json"])["referenced"]
+            self.assertIn("physical/qwen_fwd_lane/lane_flop_thru.tcl", ref)
+            self.assertIn("physical/qwen_die_masters/io_flop_at_pins.tcl", ref)
+            self.assertTrue((RT.ROOT / "physical/qwen_fwd_lane/lane_flop_thru.tcl").is_file())
+            plain = self.kit(a, name="thru_b", inhold=False, outhold=False, io_flop_at_pins={"cols": 4})
+            self.assertNotIn("lane_flop_thru", plain["kit.env"] + plain["floorplan.json"])
+            with self.assertRaises(RT.SpecError):
+                self.kit(a, name="thru_c", inhold=False, outhold=False, io_flop_at_pins={"cols": 4, "through_frac": 1.5})
 
     def test_recipe_2_spec_overrides(self):
         with tempfile.TemporaryDirectory() as a:

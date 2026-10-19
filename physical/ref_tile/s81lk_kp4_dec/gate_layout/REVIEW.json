@@ -1,0 +1,3 @@
+{"schema":"opentallas.tile_visual_review.v1","tile":"s81lk_kp4_dec","reviewer":"coordinator (2026-10-18 ~04:50)","verdict":"APPROVED","time":"2026-10-18T04:50:00-07:00","gate_commit":"2026-10-18T03:13:53-0700","geometry_sha256":"",
+ "checklist":{"lattice":"PASS: 4 closed children (dsyn, dchn, ddly, dout) on the 43.2 lattice","std_cell_band":"PASS: glue in the inter-child channels","pin_spread":"PASS: parent pins unchanged (W bus, E bus, S)","clock_entry":"PASS: S centre, spine spread 22.9 ps","shape":"PASS 622.08x540 (+21.6 for the 64.8-um ddly->dout channel)"},
+ "notes":"2x2 KP4 decoder parent; the 544-b ddly->dout channel is 64.8 um (43.2 is impossible with all children on the lattice). Trial GRT overflow 0, setup +75.2, hold +38.9."}

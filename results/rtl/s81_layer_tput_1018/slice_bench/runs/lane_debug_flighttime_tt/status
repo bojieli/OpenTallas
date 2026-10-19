@@ -1,0 +1,10 @@
+build rc 0
+run rc 0
+rate 28068.7 cyc/s
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:05.76
+	Maximum resident set size (kbytes): 327452
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.01
+	Maximum resident set size (kbytes): 8440
+TB_DV_SLICE SCHEDULE_MISMATCH cycle 110 port 68 got 000000000000000000000000000000000000000000000000000000000000000000000 want 000000000000000000000000000000000000000000000000000000abcdef123456789 mask fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+DV_SLICE cycles=300 in_events=2 out_checks=1 mismatches=1 fault_cycles=261 first_fault=38
+TB_DV_SLICE FAIL

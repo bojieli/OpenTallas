@@ -1,0 +1,10 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job hgi_sm_xl2_ctlx-q1-7af6f4406 bench bench_quad_issuer_late_mutant host ot-epyc4 run /srv/opentallas-scratch2/claude/closure-loop/hgi_sm_xl2_ctlx-q1-7af6f4406 log cl/bench_quad_issuer_late_mutant.a1b1.log captured 2026-10-18T01:56:07-07:00
+# fail_regex '^XQL_QUAD_LOCK FAIL'
+ERR quadrant x-load differs from today's xql at cycle 160 (W en 00/00, E en 00/00)
+ERR quadrant x-load differs from today's xql at cycle 162 (W en 00/00, E en 00/00)
+ERR quadrant x-load differs from today's xql at cycle 163 (W en 00/00, E en 00/00)
+ERR quadrant x-load differs from today's xql at cycle 164 (W en 00/00, E en 00/00)
+ERR quadrant x-load differs from today's xql at cycle 165 (W en 00/00, E en 00/00)
+quadrant vs today's xql (pairs W0,1 = ref 0,1; E0,1 = ref 2,3): 10817 cycles compared, 8032 W beats, 5472 E beats, 4724 differ; W/E distinct beats 1670
+XQL_QUAD_LOCK FAIL 1

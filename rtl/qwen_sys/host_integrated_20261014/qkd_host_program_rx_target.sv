@@ -3,6 +3,8 @@
 // retain their complete existing frame. This is not a RAW HBM-sector encoding.
 // Target ABI v1: BEGIN[42:39], AUTH[91:88], IDs0ISA,1roots,2writer,
 // 3ownership,4landing,5front,6..9controllerWS/WN/ES/EN.
+// KVJ-G2b 10-17: + the static KV die's dispatcher targets 10 die cfg (pre-boot), 11 link calendar,
+// 12 PC chain players, 13 join4 beat calendar (qkd_static_kv_boot_dispatch DIECFG/LINKCFG/ESCFG).
 // Payload op1 BEGIN:epoch[23:8],pw_count[34:24],dw_count[38:35].
 // op2 WORD:desc8,addr[18:9],data[82:19]. op3 SEAL. op4 AUTH:
 // epoch[23:8],digest[87:24]. Remaining payload/header-reserved bits must be0.
@@ -18,7 +20,7 @@ module qkd_host_program_rx_target #(parameter integer MUT=0)(
  reg rv,ncq;reg[527:0]rd;reg[6:0]returns;
  wire is_program=rd[527:524]==8;wire pop=rv&&is_program;
  wire[7:0]op=rd[7:0];
- wire clean=rd[523:512]==0&&((op==1&&rd[511:43]==0&&rd[42:39]<=9)||(op==2&&rd[511:83]==0)||(op==3&&rd[511:8]==0)||(op==4&&rd[511:92]==0&&rd[91:88]<=9));
+ wire clean=rd[523:512]==0&&((op==1&&rd[511:43]==0&&rd[42:39]<=13)||(op==2&&rd[511:83]==0)||(op==3&&rd[511:8]==0)||(op==4&&rd[511:92]==0&&rd[91:88]<=13));
  wire emit=returns!=0;wire[7:0]next_returns={1'b0,returns}+8'(ncq)+8'(pop)-8'(emit);
  always @(posedge ck)begin rd<=rx_d;normal_d<=rd;end
  always @(posedge ck or negedge rst_n)begin

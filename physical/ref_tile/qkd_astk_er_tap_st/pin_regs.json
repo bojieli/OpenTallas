@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qkd_astk_er_tap_st",
+ "enable": false,
+ "reason": "the RTL registers every data input and output at the face itself (KV-ERTAP 2026-10-18): input flops ri_v/ri_a/eso_q/com_q/esi_q, output flops aso/response_v/response_addr/response_data/fault; the flow's extra pin registers would add another edge on each side against the KV static schedule (astk_eread erl 7)."
+}

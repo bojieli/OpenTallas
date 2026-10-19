@@ -88,7 +88,7 @@ class HelperOverlay(unittest.TestCase):
         run = Path(self.tmp.name) / 'run'
         CL.ship_helpers('local', str(run), job)
         before = (run / 'cl/orfs_hold_mm.tcl').read_bytes()
-        self.commit_helper(b'# helper changed after gate and first route ship\n')
+        self.commit_helper(b'set ot_hold_margin 0.05 ;# helper changed after gate and first route ship\n')
         self.assertFalse(SB.validate(binding, self.root, self.daemon, self.tip)[0])
         mtime = (run / 'cl/orfs_hold_mm.tcl').stat().st_mtime_ns
         CL.ship_helpers('local', str(run), job)
@@ -331,7 +331,7 @@ class HelperOverlay(unittest.TestCase):
     def test_explicit_gate_recovery_preserves_old_identity_but_new_submission_stays_current(self):
         staged,binding = self.recovered_gate()
         before = binding['identity'],binding['start_commit'],binding['commit'],binding['manifest_sha256']
-        self.commit_helper(b'# later effective main change\n')
+        self.commit_helper(b'set ot_hold_margin 0.06 ;# later effective main change\n')
         self.assertFalse(SB.validate(binding,self.root,self.daemon,self.tip)[0])
         self.assertTrue(SB.validate(binding,self.root,self.daemon,self.tip,frozen_recovery=True)[0])
         self.assertEqual(before,(binding['identity'],binding['start_commit'],binding['commit'],binding['manifest_sha256']))
@@ -409,6 +409,46 @@ class HelperOverlay(unittest.TestCase):
         self.assertEqual(row['current_sha256'], hashlib.sha256(newest).hexdigest())
         # the executed (re-frozen) plan now verifies in place without mutation
         CL.ship_helpers('local', str(run), job)
+        self.assertFalse(job['helper_overlay_verification']['mutation'])
+
+    def test_publish_helper_drift_to_main_ships_current_bytes(self):
+        _, binding = self.gate()
+        gate_plan = binding['route_overlay_plan']
+        newest = b'# exporter fix on main\n'
+        self.commit_helper(newest)
+        job = {'freeze_helper_overlay': True, 'route_overlay_plan': gate_plan}
+        run = Path(self.tmp.name) / 'publish'
+        with patch.object(HO, 'PUBLISH_ONLY', (self.rel,)), patch.object(CL, 'event'):
+            CL.ship_helpers('local', str(run), job)
+        self.assertEqual((run / 'cl/orfs_hold_mm.tcl').read_bytes(), newest)
+        self.assertEqual(job['helper_overlay_sanctioned'][0]['kind'], 'publish')
+
+    def test_publish_helper_drift_refreshes_installed_run(self):
+        # resume-postroute re-enters a verified installed run dir: the publish helper must still reach cl/
+        _, binding = self.gate()
+        job = {'freeze_helper_overlay': True, 'route_overlay_plan': binding['route_overlay_plan']}
+        run = Path(self.tmp.name) / 'resumed'
+        CL.ship_helpers('local', str(run), job)
+        self.assertEqual((run / 'cl/orfs_hold_mm.tcl').read_bytes(), self.new)
+        newest = b'# exporter fix on main after the route\n'
+        self.commit_helper(newest)
+        (self.daemon / self.rel).write_bytes(newest)
+        with patch.object(HO, 'PUBLISH_ONLY', (self.rel,)), patch.object(CL, 'event'):
+            CL.ship_helpers('local', str(run), job)
+            self.assertEqual((run / 'cl/orfs_hold_mm.tcl').read_bytes(), newest)
+            self.assertEqual(job['helper_overlay_sanctioned'][-1]['kind'], 'publish')
+            self.assertTrue(job['helper_overlay_verification']['mutation'])
+            CL.ship_helpers('local', str(run), job)               # now verified against the refreshed plan
+            self.assertFalse(job['helper_overlay_verification']['mutation'])
+
+    def test_installed_run_non_publish_drift_keeps_frozen_bytes(self):
+        _, binding = self.gate()
+        job = {'freeze_helper_overlay': True, 'route_overlay_plan': binding['route_overlay_plan']}
+        run = Path(self.tmp.name) / 'kept'
+        CL.ship_helpers('local', str(run), job)
+        self.commit_helper(b'# route helper changed on main\n')
+        CL.ship_helpers('local', str(run), job)
+        self.assertEqual((run / 'cl/orfs_hold_mm.tcl').read_bytes(), self.new)
         self.assertFalse(job['helper_overlay_verification']['mutation'])
 
     def test_fleet_run_sanction_refuses_frozen_blob_outside_main_history(self):

@@ -1,0 +1,858 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+
+-- Executing script file `/tmp/r0330_eqv/qkd_seq_core_st_p/out_new/script.ys' --
+
+1. Executing Verilog-2005 frontend: /tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv
+Parsing SystemVerilog input from `/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv' to AST representation.
+Storing AST representation for module `$abstract\qkd_seq_core_static_p'.
+Storing AST representation for module `$abstract\qkd_seq_xd_sel'.
+Storing AST representation for module `$abstract\qkd_seq_static_p'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: /tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv
+Parsing SystemVerilog input from `/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv' to AST representation.
+Storing AST representation for module `$abstract\ot_qkvd_kv_desc'.
+Storing AST representation for module `$abstract\ot_qkvd_kcmd_tap'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: /tmp/r0330_eqv/qkd_seq_core_st_p/src/02_ot_rst_relay.sv
+Parsing SystemVerilog input from `/tmp/r0330_eqv/qkd_seq_core_st_p/src/02_ot_rst_relay.sv' to AST representation.
+Storing AST representation for module `$abstract\ot_rst_relay'.
+Successfully finished Verilog frontend.
+
+4. Executing Verilog-2005 frontend: /tmp/r0330_eqv/qkd_seq_core_st_p/new/ot_hbm_svc_stack_fault.sv
+Parsing SystemVerilog input from `/tmp/r0330_eqv/qkd_seq_core_st_p/new/ot_hbm_svc_stack_fault.sv' to AST representation.
+Storing AST representation for module `$abstract\ot_hbm_svc_stack_fault'.
+Successfully finished Verilog frontend.
+
+5. Executing Verilog-2005 frontend: /tmp/r0330_eqv/qkd_seq_core_st_p/new/ot_hbm_svc_wb_cutthrough_cdc.sv
+Parsing SystemVerilog input from `/tmp/r0330_eqv/qkd_seq_core_st_p/new/ot_hbm_svc_wb_cutthrough_cdc.sv' to AST representation.
+Storing AST representation for module `$abstract\ot_hbm_svc_wb_cutthrough_cdc'.
+Successfully finished Verilog frontend.
+
+6. Executing HIERARCHY pass (managing design hierarchy).
+Parameter \MUT = 0
+
+7. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_seq_core_static_p'.
+Parameter \MUT = 0
+Generating RTLIL representation for module `$paramod\qkd_seq_core_static_p\MUT=s32'00000000000000000000000000000000'.
+Warning: Replacing memory \jc with list of registers. See /tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:135
+
+7.1. Analyzing design hierarchy..
+Top module:  \qkd_seq_core_static_p
+Parameter \REGIONS = 3
+Parameter \SYNC_STAGES = 2
+Parameter \TREE_STAGES = 1
+
+7.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_rst_relay'.
+Parameter \REGIONS = 3
+Parameter \SYNC_STAGES = 2
+Parameter \TREE_STAGES = 1
+Generating RTLIL representation for module `$paramod$b9ab5e8a91f9f9a2ee3d84598e6f253b79f35d5b\ot_rst_relay'.
+Warning: Replacing memory \relay_q with list of registers. See /tmp/r0330_eqv/qkd_seq_core_st_p/src/02_ot_rst_relay.sv:42
+Parameter \NL = 36
+
+7.3. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_qkvd_kv_desc'.
+Parameter \NL = 36
+Generating RTLIL representation for module `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100'.
+
+7.4. Analyzing design hierarchy..
+Top module:  \qkd_seq_core_static_p
+Used module:     $paramod$b9ab5e8a91f9f9a2ee3d84598e6f253b79f35d5b\ot_rst_relay
+Used module:     $paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100
+
+7.5. Analyzing design hierarchy..
+Top module:  \qkd_seq_core_static_p
+Used module:     $paramod$b9ab5e8a91f9f9a2ee3d84598e6f253b79f35d5b\ot_rst_relay
+Used module:     $paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100
+Removing unused module `$paramod\qkd_seq_core_static_p\MUT=s32'00000000000000000000000000000000'.
+Removing unused module `$abstract\ot_hbm_svc_wb_cutthrough_cdc'.
+Removing unused module `$abstract\ot_hbm_svc_stack_fault'.
+Removing unused module `$abstract\ot_rst_relay'.
+Removing unused module `$abstract\ot_qkvd_kcmd_tap'.
+Removing unused module `$abstract\ot_qkvd_kv_desc'.
+Removing unused module `$abstract\qkd_seq_static_p'.
+Removing unused module `$abstract\qkd_seq_xd_sel'.
+Removing unused module `$abstract\qkd_seq_core_static_p'.
+Removed 9 unused modules.
+
+3 modules:
+  $paramod$b9ab5e8a91f9f9a2ee3d84598e6f253b79f35d5b\ot_rst_relay
+  $paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100
+  qkd_seq_core_static_p
+
+8. Executing PROC pass (convert processes to netlists).
+
+8.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 1 empty switch in `$paramod$b9ab5e8a91f9f9a2ee3d84598e6f253b79f35d5b\ot_rst_relay.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/02_ot_rst_relay.sv:40$176'.
+Cleaned up 1 empty switch.
+
+8.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 18 switch rules as full_case in process $proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:84$193 in module $paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.
+Marked 1 switch rules as full_case in process $proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:54$188 in module $paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.
+Marked 1 switch rules as full_case in process $proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/02_ot_rst_relay.sv:40$176 in module $paramod$b9ab5e8a91f9f9a2ee3d84598e6f253b79f35d5b\ot_rst_relay.
+Marked 1 switch rules as full_case in process $proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/02_ot_rst_relay.sv:28$174 in module $paramod$b9ab5e8a91f9f9a2ee3d84598e6f253b79f35d5b\ot_rst_relay.
+Marked 1 switch rules as full_case in process $proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:81$17 in module qkd_seq_core_static_p.
+Marked 5 switch rules as full_case in process $proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:130$60 in module qkd_seq_core_static_p.
+Marked 1 switch rules as full_case in process $proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:199$151 in module qkd_seq_core_static_p.
+Marked 1 switch rules as full_case in process $proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:216$154 in module qkd_seq_core_static_p.
+Removed a total of 0 dead cases.
+
+8.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 51 redundant assignments.
+Promoted 63 assignments to connections.
+
+8.4. Executing PROC_INIT pass (extract init attributes).
+
+8.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_n in `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:84$193'.
+Found async reset \rst_n in `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:54$188'.
+Found async reset \rst_n_in in `$paramod$b9ab5e8a91f9f9a2ee3d84598e6f253b79f35d5b\ot_rst_relay.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/02_ot_rst_relay.sv:40$176'.
+Found async reset \rst_n_in in `$paramod$b9ab5e8a91f9f9a2ee3d84598e6f253b79f35d5b\ot_rst_relay.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/02_ot_rst_relay.sv:28$174'.
+Found async reset \rr in `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:81$17'.
+Found async reset \rr in `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:130$60'.
+Found async reset \rq in `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:199$151'.
+Found async reset \rq in `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:216$154'.
+
+8.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~51 debug messages>
+
+8.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:84$193'.
+     1/209: $8\step.o[2:0]
+     2/209: $12\step.n[1:0]
+     3/209: $15\step.r1[31:0]
+     4/209: $4\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:140$187.$result[31:0]$421
+     5/209: $4\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:140$187.t[13:0]$423
+     6/209: $4\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:140$187.l[5:0]$422
+     7/209: $16\step.r0[31:0]
+     8/209: $4\wdesc$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:140$186.$result[31:0]$418
+     9/209: $4\wdesc$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:140$186.t[13:0]$420
+    10/209: $4\wdesc$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:140$186.l[5:0]$419
+    11/209: $15\step.r0[31:0]
+    12/209: $6\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:136$184.$result[31:0]$408
+    13/209: $6\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:136$184.t[13:0]$410
+    14/209: $6\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:136$184.l[5:0]$409
+    15/209: $6\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:136$185.t[13:0]$413
+    16/209: $6\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:136$185.l[5:0]$412
+    17/209: $6\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:136$185.$result[31:0]$411
+    18/209: $14\step.r1[31:0]
+    19/209: $11\step.n[1:0]
+    20/209: $5\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:136$185.t[13:0]$406
+    21/209: $5\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:136$185.l[5:0]$405
+    22/209: $5\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:136$185.$result[31:0]$404
+    23/209: $5\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:136$184.t[13:0]$403
+    24/209: $5\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:136$184.l[5:0]$402
+    25/209: $5\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:136$184.$result[31:0]$401
+    26/209: $13\step.r1[31:0]
+    27/209: $14\step.r0[31:0]
+    28/209: $4\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:136$185.t[13:0]$399
+    29/209: $4\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:136$185.l[5:0]$398
+    30/209: $4\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:136$185.$result[31:0]$397
+    31/209: $4\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:136$184.t[13:0]$396
+    32/209: $4\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:136$184.l[5:0]$395
+    33/209: $4\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:136$184.$result[31:0]$394
+    34/209: $12\step.r1[31:0]
+    35/209: $13\step.r0[31:0]
+    36/209: $10\step.n[1:0]
+    37/209: $3\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:136$185.t[13:0]$383
+    38/209: $3\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:136$185.l[5:0]$382
+    39/209: $3\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:136$185.$result[31:0]$381
+    40/209: $3\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:136$184.t[13:0]$380
+    41/209: $3\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:136$184.l[5:0]$379
+    42/209: $3\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:136$184.$result[31:0]$378
+    43/209: $11\step.r1[31:0]
+    44/209: $12\step.r0[31:0]
+    45/209: $9\step.n[1:0]
+    46/209: $3\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:140$187.t[13:0]$389
+    47/209: $3\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:140$187.l[5:0]$388
+    48/209: $3\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:140$187.$result[31:0]$387
+    49/209: $3\wdesc$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:140$186.t[13:0]$386
+    50/209: $3\wdesc$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:140$186.l[5:0]$385
+    51/209: $3\wdesc$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:140$186.$result[31:0]$384
+    52/209: $7\step.o[2:0]
+    53/209: $2\step.p[19:0]
+    54/209: $2\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:140$187.t[13:0]$366
+    55/209: $2\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:140$187.l[5:0]$365
+    56/209: $2\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:140$187.$result[31:0]$364
+    57/209: $2\wdesc$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:140$186.t[13:0]$363
+    58/209: $2\wdesc$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:140$186.l[5:0]$362
+    59/209: $2\wdesc$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:140$186.$result[31:0]$361
+    60/209: $2\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:136$185.t[13:0]$360
+    61/209: $2\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:136$185.l[5:0]$359
+    62/209: $2\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:136$185.$result[31:0]$358
+    63/209: $2\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:136$184.t[13:0]$357
+    64/209: $2\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:136$184.l[5:0]$356
+    65/209: $2\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:136$184.$result[31:0]$355
+    66/209: $6\step.o[2:0]
+    67/209: $10\step.r1[31:0]
+    68/209: $11\step.r0[31:0]
+    69/209: $8\step.n[1:0]
+    70/209: $10\step.r0[31:0]
+    71/209: $3\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:122$182.$result[31:0]$348
+    72/209: $3\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:122$182.t[13:0]$350
+    73/209: $3\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:122$182.l[5:0]$349
+    74/209: $3\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:122$183.t[13:0]$353
+    75/209: $3\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:122$183.l[5:0]$352
+    76/209: $3\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:122$183.$result[31:0]$351
+    77/209: $9\step.r1[31:0]
+    78/209: $7\step.n[1:0]
+    79/209: $2\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:122$183.t[13:0]$346
+    80/209: $2\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:122$183.l[5:0]$345
+    81/209: $2\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:122$183.$result[31:0]$344
+    82/209: $2\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:122$182.t[13:0]$343
+    83/209: $2\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:122$182.l[5:0]$342
+    84/209: $2\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:122$182.$result[31:0]$341
+    85/209: $8\step.r1[31:0]
+    86/209: $9\step.r0[31:0]
+    87/209: $8\step.r0[31:0]
+    88/209: $7\step.r1[31:0]
+    89/209: $5\step.o[2:0]
+    90/209: $6\step.n[1:0]
+    91/209: $6\step.r1[31:0]
+    92/209: $7\step.r0[31:0]
+    93/209: $6\step.r0[31:0]
+    94/209: $5\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:108$180.$result[31:0]$301
+    95/209: $5\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:108$180.t[13:0]$303
+    96/209: $5\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:108$180.l[5:0]$302
+    97/209: $5\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:108$181.t[13:0]$306
+    98/209: $5\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:108$181.l[5:0]$305
+    99/209: $5\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:108$181.$result[31:0]$304
+   100/209: $5\step.r1[31:0]
+   101/209: $5\step.n[1:0]
+   102/209: $4\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:108$181.t[13:0]$299
+   103/209: $4\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:108$181.l[5:0]$298
+   104/209: $4\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:108$181.$result[31:0]$297
+   105/209: $4\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:108$180.t[13:0]$296
+   106/209: $4\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:108$180.l[5:0]$295
+   107/209: $4\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:108$180.$result[31:0]$294
+   108/209: $4\step.r1[31:0]
+   109/209: $5\step.r0[31:0]
+   110/209: $4\step.o[2:0]
+   111/209: $4\step.n[1:0]
+   112/209: $3\step.r1[31:0]
+   113/209: $3\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:106$179.$result[31:0]$281
+   114/209: $3\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:106$179.t[13:0]$283
+   115/209: $3\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:106$179.l[5:0]$282
+   116/209: $4\step.r0[31:0]
+   117/209: $3\wdesc$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:106$178.$result[31:0]$278
+   118/209: $3\wdesc$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:106$178.t[13:0]$280
+   119/209: $3\wdesc$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:106$178.l[5:0]$279
+   120/209: $3\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:108$181.t[13:0]$289
+   121/209: $3\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:108$181.l[5:0]$288
+   122/209: $3\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:108$181.$result[31:0]$287
+   123/209: $3\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:108$180.t[13:0]$286
+   124/209: $3\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:108$180.l[5:0]$285
+   125/209: $3\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:108$180.$result[31:0]$284
+   126/209: $2\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:108$181.t[13:0]$273
+   127/209: $2\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:108$181.l[5:0]$272
+   128/209: $2\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:108$181.$result[31:0]$271
+   129/209: $2\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:108$180.t[13:0]$270
+   130/209: $2\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:108$180.l[5:0]$269
+   131/209: $2\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:108$180.$result[31:0]$268
+   132/209: $2\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:106$179.t[13:0]$267
+   133/209: $2\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:106$179.l[5:0]$266
+   134/209: $2\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:106$179.$result[31:0]$265
+   135/209: $2\wdesc$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:106$178.t[13:0]$264
+   136/209: $2\wdesc$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:106$178.l[5:0]$263
+   137/209: $2\wdesc$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:106$178.$result[31:0]$262
+   138/209: $3\step.o[2:0]
+   139/209: $2\step.r1[31:0]
+   140/209: $3\step.r0[31:0]
+   141/209: $3\step.n[1:0]
+   142/209: $2\step.o[2:0]
+   143/209: $2\step.n[1:0]
+   144/209: $2\step.r0[31:0]
+   145/209: $0\outst[2:0]
+   146/209: $0\qn[1:0]
+   147/209: $0\q1[31:0]
+   148/209: $0\q0[31:0]
+   149/209: $1\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:140$187.t[13:0]$254
+   150/209: $1\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:140$187.l[5:0]$253
+   151/209: $1\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:140$187.$result[31:0]$252
+   152/209: $1\wdesc$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:140$186.t[13:0]$251
+   153/209: $1\wdesc$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:140$186.l[5:0]$250
+   154/209: $1\wdesc$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:140$186.$result[31:0]$249
+   155/209: $1\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:136$185.t[13:0]$248
+   156/209: $1\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:136$185.l[5:0]$247
+   157/209: $1\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:136$185.$result[31:0]$246
+   158/209: $1\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:136$184.t[13:0]$245
+   159/209: $1\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:136$184.l[5:0]$244
+   160/209: $1\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:136$184.$result[31:0]$243
+   161/209: $1\step.p[19:0]
+   162/209: $1\step.o[2:0]
+   163/209: $1\step.r1[31:0]
+   164/209: $1\step.r0[31:0]
+   165/209: $1\step.n[1:0]
+   166/209: $1\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:122$183.t[13:0]$242
+   167/209: $1\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:122$183.l[5:0]$241
+   168/209: $1\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:122$183.$result[31:0]$240
+   169/209: $1\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:122$182.t[13:0]$239
+   170/209: $1\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:122$182.l[5:0]$238
+   171/209: $1\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:122$182.$result[31:0]$237
+   172/209: $1\step.post_go[0:0]
+   173/209: $1\step.post_desc[0:0]
+   174/209: $1\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:108$181.t[13:0]$236
+   175/209: $1\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:108$181.l[5:0]$235
+   176/209: $1\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:108$181.$result[31:0]$234
+   177/209: $1\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:108$180.t[13:0]$233
+   178/209: $1\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:108$180.l[5:0]$232
+   179/209: $1\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:108$180.$result[31:0]$231
+   180/209: $1\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:106$179.t[13:0]$230
+   181/209: $1\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:106$179.l[5:0]$229
+   182/209: $1\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:106$179.$result[31:0]$228
+   183/209: $1\wdesc$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:106$178.t[13:0]$227
+   184/209: $1\wdesc$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:106$178.l[5:0]$226
+   185/209: $1\wdesc$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:106$178.$result[31:0]$225
+   186/209: $0\k_v[0:0]
+   187/209: $0\now[19:0]
+   188/209: $0\gw_T[13:0]
+   189/209: $0\gw_l[5:0]
+   190/209: $0\gw_d[0:0]
+   191/209: $0\gw[0:0]
+   192/209: $0\pT[13:0]
+   193/209: $0\pl[5:0]
+   194/209: $0\gposted[0:0]
+   195/209: $0\gtv[0:0]
+   196/209: $0\gtmr[19:0]
+   197/209: $0\posted[0:0]
+   198/209: $0\pred_ok[0:0]
+   199/209: $0\l_last[5:0]
+   200/209: $0\tv[0:0]
+   201/209: $0\last_ok[0:0]
+   202/209: $0\pt_ok[0:0]
+   203/209: $0\pm_ok[0:0]
+   204/209: $0\tmr[19:0]
+   205/209: $0\p_tok[19:0]
+   206/209: $0\p_mid[19:0]
+   207/209: $0\t_last[19:0]
+   208/209: $0\k_d[31:0]
+   209/209: $0\fault[0:0]
+Creating decoders for process `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:56$190'.
+Creating decoders for process `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:54$188'.
+     1/2: $0\d_v[0:0]
+     2/2: $0\a_v[0:0]
+Creating decoders for process `$paramod$b9ab5e8a91f9f9a2ee3d84598e6f253b79f35d5b\ot_rst_relay.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/02_ot_rst_relay.sv:40$176'.
+     1/1: $0\relay_q[0][2:0]
+Creating decoders for process `$paramod$b9ab5e8a91f9f9a2ee3d84598e6f253b79f35d5b\ot_rst_relay.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/02_ot_rst_relay.sv:28$174'.
+     1/1: $0\sync_q[1:0]
+Creating decoders for process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:77$16'.
+Creating decoders for process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:81$17'.
+     1/9: $0\mfq[3:0]
+     2/9: $0\afq[3:0]
+     3/9: $0\crq[3:0]
+     4/9: $0\hfq[0:0]
+     5/9: $0\ov[0:0]
+     6/9: $0\lpr[0:0]
+     7/9: $0\kvv[0:0]
+     8/9: $0\qv[0:0]
+     9/9: $0\rv[0:0]
+Creating decoders for process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:130$60'.
+     1/50: $2\ktag$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:161$14.$result[2:0]$86
+     2/50: $2\ktag$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:161$14.j[1:0]$87
+     3/50: $0\f_row[0:0]
+     4/50: $0\f_pend[0:0]
+     5/50: $1\i[31:0]
+     6/50: $0\jc[3][2:0]
+     7/50: $0\jc[2][2:0]
+     8/50: $0\jc[1][2:0]
+     9/50: $0\jc[0][2:0]
+    10/50: $0\kwq[0:0]
+    11/50: $0\kwc[7:0]
+    12/50: $0\s_kwgo[0:0]
+    13/50: $0\kvw_v[0:0]
+    14/50: $0\a_start[0:0]
+    15/50: $0\a_q_valid[0:0]
+    16/50: $0\s_qpop[0:0]
+    17/50: $1\ktag$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:164$15.$result[2:0]$68
+    18/50: $1\ktag$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:164$15.j[1:0]$69
+    19/50: $0\s_kpop[0:0]
+    20/50: $1\ktag$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:161$14.j[1:0]$67
+    21/50: $1\ktag$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:161$14.$result[2:0]$66
+    22/50: $0\x_v[0:0]
+    23/50: $0\xk[0:0]
+    24/50: $0\f_ovl[0:0]
+    25/50: $0\f_join[0:0]
+    26/50: $0\f_cr[0:0]
+    27/50: $0\f_res[0:0]
+    28/50: $0\f_pos[0:0]
+    29/50: $0\f_lp[0:0]
+    30/50: $0\f_q[0:0]
+    31/50: $0\f_tag[0:0]
+    32/50: $0\f_arr[0:0]
+    33/50: $0\q_seen[6:0]
+    34/50: $0\r_n[6:0]
+    35/50: $0\kvw_layer[5:0]
+    36/50: $0\kvw_t[13:0]
+    37/50: $0\kvw_vg[1:0]
+    38/50: $0\a_q_beat[5:0]
+    39/50: $0\kn_arr[1:0]
+    40/50: $0\lp_seen[0:0]
+    41/50: $0\lp_age[6:0]
+    42/50: $0\lp_hold_t[13:0]
+    43/50: $0\a_T[13:0]
+    44/50: $0\lp_hold_l[5:0]
+    45/50: $0\layer[5:0]
+    46/50: $0\act[0:0]
+    47/50: $0\s_kwn[1:0]
+    48/50: $0\s_kidx[2:0]
+    49/50: $0\x_cls[2:0]
+    50/50: $0\a[7:0]
+Creating decoders for process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:192$150'.
+Creating decoders for process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:199$151'.
+     1/13: $0\hs[0:0]
+     2/13: $0\hsd[2:0]
+     3/13: $0\f_kc_e[32:32]
+     4/13: $0\f_kc_w[32:32]
+     5/13: $0\f_kwm_e[22:22]
+     6/13: $0\f_kwm_w[22:22]
+     7/13: $0\kw1[22:22]
+     8/13: $0\f_aqm_e[6:6]
+     9/13: $1\f_aqm_e[27:27]
+    10/13: $0\f_aqm_w[6:6]
+    11/13: $1\f_aqm_w[27:27]
+    12/13: $0\aq1[6:6]
+    13/13: $1\aq1[27:27]
+Creating decoders for process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:215$153'.
+     1/4: $0\d_cyc[31:0]
+     2/4: $0\d_val[31:0]
+     3/4: $0\d_tok[17:0]
+     4/4: $0\d_gen[1:0]
+Creating decoders for process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:216$154'.
+     1/4: $0\fault[0:0]
+     2/4: $0\cause[8:0]
+     3/4: $0\drn[0:0]
+     4/4: $0\d_done[0:0]
+
+8.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+8.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.\qn' using process `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:84$193'.
+  created $adff cell `$procdff$1707' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.\fault' using process `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:84$193'.
+  created $adff cell `$procdff$1712' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.\k_v' using process `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:84$193'.
+  created $adff cell `$procdff$1717' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.\k_d' using process `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:84$193'.
+  created $adff cell `$procdff$1722' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.\now' using process `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:84$193'.
+  created $adff cell `$procdff$1727' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.\t_last' using process `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:84$193'.
+  created $adff cell `$procdff$1732' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.\p_mid' using process `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:84$193'.
+  created $adff cell `$procdff$1737' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.\p_tok' using process `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:84$193'.
+  created $adff cell `$procdff$1742' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.\tmr' using process `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:84$193'.
+  created $adff cell `$procdff$1747' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.\pm_ok' using process `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:84$193'.
+  created $adff cell `$procdff$1752' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.\pt_ok' using process `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:84$193'.
+  created $adff cell `$procdff$1757' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.\last_ok' using process `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:84$193'.
+  created $adff cell `$procdff$1762' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.\tv' using process `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:84$193'.
+  created $adff cell `$procdff$1767' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.\l_last' using process `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:84$193'.
+  created $adff cell `$procdff$1772' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.\pred_ok' using process `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:84$193'.
+  created $adff cell `$procdff$1777' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.\posted' using process `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:84$193'.
+  created $adff cell `$procdff$1782' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.\gtmr' using process `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:84$193'.
+  created $adff cell `$procdff$1787' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.\gtv' using process `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:84$193'.
+  created $adff cell `$procdff$1792' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.\gposted' using process `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:84$193'.
+  created $adff cell `$procdff$1797' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.\pl' using process `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:84$193'.
+  created $adff cell `$procdff$1802' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.\pT' using process `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:84$193'.
+  created $adff cell `$procdff$1807' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.\outst' using process `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:84$193'.
+  created $adff cell `$procdff$1812' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.\q0' using process `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:84$193'.
+  created $adff cell `$procdff$1817' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.\q1' using process `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:84$193'.
+  created $adff cell `$procdff$1822' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.\gw' using process `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:84$193'.
+  created $adff cell `$procdff$1827' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.\gw_d' using process `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:84$193'.
+  created $adff cell `$procdff$1832' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.\gw_l' using process `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:84$193'.
+  created $adff cell `$procdff$1837' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.\gw_T' using process `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:84$193'.
+  created $adff cell `$procdff$1842' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.\step.n' using process `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:84$193'.
+  created $dff cell `$procdff$1849' with positive edge clock.
+Creating register for signal `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.\step.r0' using process `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:84$193'.
+  created $dff cell `$procdff$1856' with positive edge clock.
+Creating register for signal `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.\step.r1' using process `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:84$193'.
+  created $dff cell `$procdff$1863' with positive edge clock.
+Creating register for signal `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.\step.post_desc' using process `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:84$193'.
+  created $dff cell `$procdff$1870' with positive edge clock.
+Creating register for signal `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.\step.post_go' using process `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:84$193'.
+  created $dff cell `$procdff$1877' with positive edge clock.
+Creating register for signal `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.\step.o' using process `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:84$193'.
+  created $dff cell `$procdff$1884' with positive edge clock.
+Creating register for signal `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.\step.p' using process `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:84$193'.
+  created $dff cell `$procdff$1891' with positive edge clock.
+Creating register for signal `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.\wdesc$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:106$178.$result' using process `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:84$193'.
+  created $adff cell `$procdff$1896' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.\wdesc$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:106$178.l' using process `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:84$193'.
+  created $adff cell `$procdff$1901' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.\wdesc$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:106$178.t' using process `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:84$193'.
+  created $adff cell `$procdff$1906' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:106$179.$result' using process `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:84$193'.
+  created $adff cell `$procdff$1911' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:106$179.l' using process `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:84$193'.
+  created $adff cell `$procdff$1916' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:106$179.t' using process `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:84$193'.
+  created $adff cell `$procdff$1921' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:108$180.$result' using process `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:84$193'.
+  created $adff cell `$procdff$1926' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:108$180.l' using process `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:84$193'.
+  created $adff cell `$procdff$1931' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:108$180.t' using process `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:84$193'.
+  created $adff cell `$procdff$1936' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:108$181.$result' using process `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:84$193'.
+  created $adff cell `$procdff$1941' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:108$181.l' using process `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:84$193'.
+  created $adff cell `$procdff$1946' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:108$181.t' using process `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:84$193'.
+  created $adff cell `$procdff$1951' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:122$182.$result' using process `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:84$193'.
+  created $adff cell `$procdff$1956' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:122$182.l' using process `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:84$193'.
+  created $adff cell `$procdff$1961' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:122$182.t' using process `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:84$193'.
+  created $adff cell `$procdff$1966' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:122$183.$result' using process `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:84$193'.
+  created $adff cell `$procdff$1971' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:122$183.l' using process `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:84$193'.
+  created $adff cell `$procdff$1976' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:122$183.t' using process `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:84$193'.
+  created $adff cell `$procdff$1981' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:136$184.$result' using process `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:84$193'.
+  created $adff cell `$procdff$1986' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:136$184.l' using process `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:84$193'.
+  created $adff cell `$procdff$1991' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:136$184.t' using process `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:84$193'.
+  created $adff cell `$procdff$1996' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:136$185.$result' using process `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:84$193'.
+  created $adff cell `$procdff$2001' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:136$185.l' using process `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:84$193'.
+  created $adff cell `$procdff$2006' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:136$185.t' using process `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:84$193'.
+  created $adff cell `$procdff$2011' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.\wdesc$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:140$186.$result' using process `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:84$193'.
+  created $adff cell `$procdff$2016' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.\wdesc$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:140$186.l' using process `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:84$193'.
+  created $adff cell `$procdff$2021' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.\wdesc$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:140$186.t' using process `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:84$193'.
+  created $adff cell `$procdff$2026' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:140$187.$result' using process `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:84$193'.
+  created $adff cell `$procdff$2031' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:140$187.l' using process `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:84$193'.
+  created $adff cell `$procdff$2036' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.\wgo$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:140$187.t' using process `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:84$193'.
+  created $adff cell `$procdff$2041' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.\a_T' using process `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:56$190'.
+  created $dff cell `$procdff$2042' with positive edge clock.
+Creating register for signal `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.\a_l' using process `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:56$190'.
+  created $dff cell `$procdff$2043' with positive edge clock.
+Creating register for signal `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.\a_v' using process `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:54$188'.
+  created $adff cell `$procdff$2048' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.\d_v' using process `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:54$188'.
+  created $adff cell `$procdff$2053' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$b9ab5e8a91f9f9a2ee3d84598e6f253b79f35d5b\ot_rst_relay.\relay_q[0]' using process `$paramod$b9ab5e8a91f9f9a2ee3d84598e6f253b79f35d5b\ot_rst_relay.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/02_ot_rst_relay.sv:40$176'.
+  created $adff cell `$procdff$2058' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$b9ab5e8a91f9f9a2ee3d84598e6f253b79f35d5b\ot_rst_relay.\sync_q' using process `$paramod$b9ab5e8a91f9f9a2ee3d84598e6f253b79f35d5b\ot_rst_relay.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/02_ot_rst_relay.sv:28$174'.
+  created $adff cell `$procdff$2063' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_static_p.\og' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:77$16'.
+  created $dff cell `$procdff$2064' with positive edge clock.
+Creating register for signal `\qkd_seq_core_static_p.\qb' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:77$16'.
+  created $dff cell `$procdff$2065' with positive edge clock.
+Creating register for signal `\qkd_seq_core_static_p.\rpos' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:77$16'.
+  created $dff cell `$procdff$2066' with positive edge clock.
+Creating register for signal `\qkd_seq_core_static_p.\ktg' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:77$16'.
+  created $dff cell `$procdff$2067' with positive edge clock.
+Creating register for signal `\qkd_seq_core_static_p.\lpl' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:77$16'.
+  created $dff cell `$procdff$2068' with positive edge clock.
+Creating register for signal `\qkd_seq_core_static_p.\ob' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:77$16'.
+  created $dff cell `$procdff$2069' with positive edge clock.
+Creating register for signal `\qkd_seq_core_static_p.\lpt' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:77$16'.
+  created $dff cell `$procdff$2070' with positive edge clock.
+Creating register for signal `\qkd_seq_core_static_p.\sv' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:77$16'.
+  created $dff cell `$procdff$2071' with positive edge clock.
+Creating register for signal `\qkd_seq_core_static_p.\rv' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:81$17'.
+  created $adff cell `$procdff$2076' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_static_p.\qv' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:81$17'.
+  created $adff cell `$procdff$2081' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_static_p.\kvv' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:81$17'.
+  created $adff cell `$procdff$2086' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_static_p.\lpr' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:81$17'.
+  created $adff cell `$procdff$2091' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_static_p.\ov' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:81$17'.
+  created $adff cell `$procdff$2096' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_static_p.\hfq' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:81$17'.
+  created $adff cell `$procdff$2101' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_static_p.\crq' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:81$17'.
+  created $adff cell `$procdff$2106' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_static_p.\afq' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:81$17'.
+  created $adff cell `$procdff$2111' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_static_p.\mfq' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:81$17'.
+  created $adff cell `$procdff$2116' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_static_p.\a' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:130$60'.
+  created $adff cell `$procdff$2121' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_static_p.\i' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:130$60'.
+  created $adff cell `$procdff$2126' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_static_p.\x_v' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:130$60'.
+  created $adff cell `$procdff$2131' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_static_p.\x_cls' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:130$60'.
+  created $dff cell `$procdff$2138' with positive edge clock.
+Creating register for signal `\qkd_seq_core_static_p.\s_qpop' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:130$60'.
+  created $adff cell `$procdff$2143' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_static_p.\s_kpop' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:130$60'.
+  created $adff cell `$procdff$2148' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_static_p.\s_kidx' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:130$60'.
+  created $dff cell `$procdff$2155' with positive edge clock.
+Creating register for signal `\qkd_seq_core_static_p.\s_kwgo' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:130$60'.
+  created $adff cell `$procdff$2160' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_static_p.\s_kwn' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:130$60'.
+  created $dff cell `$procdff$2167' with positive edge clock.
+Creating register for signal `\qkd_seq_core_static_p.\act' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:130$60'.
+  created $adff cell `$procdff$2172' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_static_p.\layer' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:130$60'.
+  created $dff cell `$procdff$2179' with positive edge clock.
+Creating register for signal `\qkd_seq_core_static_p.\lp_hold_l' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:130$60'.
+  created $dff cell `$procdff$2186' with positive edge clock.
+Creating register for signal `\qkd_seq_core_static_p.\a_T' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:130$60'.
+  created $dff cell `$procdff$2193' with positive edge clock.
+Creating register for signal `\qkd_seq_core_static_p.\lp_hold_t' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:130$60'.
+  created $dff cell `$procdff$2200' with positive edge clock.
+Creating register for signal `\qkd_seq_core_static_p.\lp_age' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:130$60'.
+  created $adff cell `$procdff$2205' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_static_p.\lp_seen' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:130$60'.
+  created $adff cell `$procdff$2210' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_static_p.\kn_arr' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:130$60'.
+  created $adff cell `$procdff$2215' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_static_p.\xk' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:130$60'.
+  created $adff cell `$procdff$2220' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_static_p.\a_start' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:130$60'.
+  created $adff cell `$procdff$2225' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_static_p.\a_q_valid' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:130$60'.
+  created $adff cell `$procdff$2230' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_static_p.\kvw_v' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:130$60'.
+  created $adff cell `$procdff$2235' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_static_p.\a_q_beat' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:130$60'.
+  created $dff cell `$procdff$2242' with positive edge clock.
+Creating register for signal `\qkd_seq_core_static_p.\kvw_vg' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:130$60'.
+  created $dff cell `$procdff$2249' with positive edge clock.
+Creating register for signal `\qkd_seq_core_static_p.\kvw_t' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:130$60'.
+  created $dff cell `$procdff$2256' with positive edge clock.
+Creating register for signal `\qkd_seq_core_static_p.\kvw_layer' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:130$60'.
+  created $dff cell `$procdff$2263' with positive edge clock.
+Creating register for signal `\qkd_seq_core_static_p.\r_n' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:130$60'.
+  created $adff cell `$procdff$2268' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_static_p.\q_seen' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:130$60'.
+  created $adff cell `$procdff$2273' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_static_p.\kwc' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:130$60'.
+  created $adff cell `$procdff$2278' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_static_p.\kwq' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:130$60'.
+  created $adff cell `$procdff$2283' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_static_p.\f_arr' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:130$60'.
+  created $adff cell `$procdff$2288' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_static_p.\f_tag' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:130$60'.
+  created $adff cell `$procdff$2293' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_static_p.\f_q' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:130$60'.
+  created $adff cell `$procdff$2298' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_static_p.\f_lp' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:130$60'.
+  created $adff cell `$procdff$2303' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_static_p.\f_pos' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:130$60'.
+  created $adff cell `$procdff$2308' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_static_p.\f_res' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:130$60'.
+  created $adff cell `$procdff$2313' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_static_p.\f_cr' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:130$60'.
+  created $adff cell `$procdff$2318' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_static_p.\f_join' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:130$60'.
+  created $adff cell `$procdff$2323' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_static_p.\f_pend' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:130$60'.
+  created $adff cell `$procdff$2328' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_static_p.\f_row' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:130$60'.
+  created $adff cell `$procdff$2333' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_static_p.\f_ovl' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:130$60'.
+  created $adff cell `$procdff$2338' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_static_p.\ktag$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:161$14.$result' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:130$60'.
+  created $adff cell `$procdff$2343' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_static_p.\ktag$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:161$14.j' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:130$60'.
+  created $adff cell `$procdff$2348' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_static_p.\ktag$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:164$15.$result' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:130$60'.
+  created $adff cell `$procdff$2353' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_static_p.\ktag$func$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:164$15.j' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:130$60'.
+  created $adff cell `$procdff$2358' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_static_p.\jc[0]' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:130$60'.
+  created $adff cell `$procdff$2363' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_static_p.\jc[1]' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:130$60'.
+  created $adff cell `$procdff$2368' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_static_p.\jc[2]' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:130$60'.
+  created $adff cell `$procdff$2373' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_static_p.\jc[3]' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:130$60'.
+  created $adff cell `$procdff$2378' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_static_p.\f_aqm_w [5:0]' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:192$150'.
+  created $dff cell `$procdff$2379' with positive edge clock.
+Creating register for signal `\qkd_seq_core_static_p.\f_aqm_w [26:7]' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:192$150'.
+  created $dff cell `$procdff$2380' with positive edge clock.
+Creating register for signal `\qkd_seq_core_static_p.\f_aqm_e [5:0]' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:192$150'.
+  created $dff cell `$procdff$2381' with positive edge clock.
+Creating register for signal `\qkd_seq_core_static_p.\f_aqm_e [26:7]' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:192$150'.
+  created $dff cell `$procdff$2382' with positive edge clock.
+Creating register for signal `\qkd_seq_core_static_p.\f_kwm_w [21:0]' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:192$150'.
+  created $dff cell `$procdff$2383' with positive edge clock.
+Creating register for signal `\qkd_seq_core_static_p.\f_kwm_e [21:0]' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:192$150'.
+  created $dff cell `$procdff$2384' with positive edge clock.
+Creating register for signal `\qkd_seq_core_static_p.\f_kc_w [31:0]' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:192$150'.
+  created $dff cell `$procdff$2385' with positive edge clock.
+Creating register for signal `\qkd_seq_core_static_p.\f_kc_e [31:0]' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:192$150'.
+  created $dff cell `$procdff$2386' with positive edge clock.
+Creating register for signal `\qkd_seq_core_static_p.\aq1 [5:0]' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:192$150'.
+  created $dff cell `$procdff$2387' with positive edge clock.
+Creating register for signal `\qkd_seq_core_static_p.\aq1 [26:7]' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:192$150'.
+  created $dff cell `$procdff$2388' with positive edge clock.
+Creating register for signal `\qkd_seq_core_static_p.\kw1 [21:0]' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:192$150'.
+  created $dff cell `$procdff$2389' with positive edge clock.
+Creating register for signal `\qkd_seq_core_static_p.\f_aqm_w [6]' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:199$151'.
+  created $adff cell `$procdff$2394' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_static_p.\f_aqm_w [27]' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:199$151'.
+  created $adff cell `$procdff$2399' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_static_p.\f_aqm_e [6]' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:199$151'.
+  created $adff cell `$procdff$2404' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_static_p.\f_aqm_e [27]' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:199$151'.
+  created $adff cell `$procdff$2409' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_static_p.\f_kwm_w [22]' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:199$151'.
+  created $adff cell `$procdff$2414' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_static_p.\f_kwm_e [22]' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:199$151'.
+  created $adff cell `$procdff$2419' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_static_p.\f_kc_w [32]' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:199$151'.
+  created $adff cell `$procdff$2424' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_static_p.\f_kc_e [32]' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:199$151'.
+  created $adff cell `$procdff$2429' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_static_p.\hs' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:199$151'.
+  created $adff cell `$procdff$2434' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_static_p.\aq1 [6]' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:199$151'.
+  created $adff cell `$procdff$2439' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_static_p.\aq1 [27]' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:199$151'.
+  created $adff cell `$procdff$2444' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_static_p.\kw1 [22]' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:199$151'.
+  created $adff cell `$procdff$2449' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_static_p.\hsd' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:199$151'.
+  created $adff cell `$procdff$2454' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_static_p.\d_gen' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:215$153'.
+  created $dff cell `$procdff$2455' with positive edge clock.
+Creating register for signal `\qkd_seq_core_static_p.\d_tok' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:215$153'.
+  created $dff cell `$procdff$2456' with positive edge clock.
+Creating register for signal `\qkd_seq_core_static_p.\d_val' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:215$153'.
+  created $dff cell `$procdff$2457' with positive edge clock.
+Creating register for signal `\qkd_seq_core_static_p.\d_cyc' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:215$153'.
+  created $dff cell `$procdff$2458' with positive edge clock.
+Creating register for signal `\qkd_seq_core_static_p.\d_done' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:216$154'.
+  created $adff cell `$procdff$2463' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_static_p.\drn' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:216$154'.
+  created $adff cell `$procdff$2468' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_static_p.\fault' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:216$154'.
+  created $adff cell `$procdff$2473' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_static_p.\cause' using process `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:216$154'.
+  created $adff cell `$procdff$2478' with positive edge clock and positive level reset.
+
+8.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+8.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 23 empty switches in `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:84$193'.
+Removing empty process `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:84$193'.
+Removing empty process `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:56$190'.
+Removing empty process `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/01_ot_qkvd_kv_desc.sv:54$188'.
+Removing empty process `$paramod$b9ab5e8a91f9f9a2ee3d84598e6f253b79f35d5b\ot_rst_relay.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/02_ot_rst_relay.sv:40$176'.
+Removing empty process `$paramod$b9ab5e8a91f9f9a2ee3d84598e6f253b79f35d5b\ot_rst_relay.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/02_ot_rst_relay.sv:28$174'.
+Removing empty process `qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:77$16'.
+Removing empty process `qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:81$17'.
+Found and cleaned up 26 empty switches in `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:130$60'.
+Removing empty process `qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:130$60'.
+Removing empty process `qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:192$150'.
+Removing empty process `qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:199$151'.
+Found and cleaned up 1 empty switch in `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:215$153'.
+Removing empty process `qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:215$153'.
+Found and cleaned up 1 empty switch in `\qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:216$154'.
+Removing empty process `qkd_seq_core_static_p.$proc$/tmp/r0330_eqv/qkd_seq_core_st_p/src/00_qkd_seq_static_prg.sv:216$154'.
+Cleaned up 51 empty switches.
+
+8.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.
+<suppressed ~152 debug messages>
+Optimizing module $paramod$b9ab5e8a91f9f9a2ee3d84598e6f253b79f35d5b\ot_rst_relay.
+<suppressed ~4 debug messages>
+Optimizing module qkd_seq_core_static_p.
+<suppressed ~170 debug messages>
+
+9. Executing FLATTEN pass (flatten design).
+Deleting now unused module $paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.
+Deleting now unused module $paramod$b9ab5e8a91f9f9a2ee3d84598e6f253b79f35d5b\ot_rst_relay.
+<suppressed ~2 debug messages>
+
+10. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \qkd_seq_core_static_p..
+Removed 429 unused cells and 1411 unused wires.
+<suppressed ~480 debug messages>
+
+11. Printing statistics.
+
+=== qkd_seq_core_static_p ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      567 wires
+     4870 wire bits
+      567 public wires
+     4870 public wire bits
+       36 ports
+      453 port bits
+      563 cells
+       21   $add
+       90   $adff
+       36   $dff
+       17   $eq
+        3   $ge
+        4   $gt
+        2   $le
+       56   $logic_and
+       23   $logic_not
+        9   $logic_or
+        6   $lt
+      236   $mux
+       15   $ne
+        7   $or
+        1   $reduce_and
+       15   $reduce_bool
+        3   $reduce_or
+       19   $sub
+
+12. Executing RTLIL backend.
+Output filename: /tmp/r0330_eqv/qkd_seq_core_st_p/out_new/netlist.il
+
+13. Executing Verilog backend.
+
+13.1. Executing BMUXMAP pass.
+
+13.2. Executing DEMUXMAP pass.
+Dumping module `\qkd_seq_core_static_p'.
+
+Warnings: 2 unique messages, 2 total
+End of script. Logfile hash: ad25d75e19, time: 0.08s, user: 0.09s, system: 0.01s, MEM: 30.29 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 23% 1x hierarchy (0 sec), 19% 1x proc_mux (0 sec), ...

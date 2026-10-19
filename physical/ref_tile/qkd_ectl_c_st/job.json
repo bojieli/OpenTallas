@@ -1,0 +1,136 @@
+{
+ "name": "qkd_ectl_c_st-v1-f7a9a03ed",
+ "block": "qkd_ectl_c_st",
+ "ref_tile": true,
+ "owner": "claude:RTL-BUILD-KV/ASTK",
+ "purpose": "RTL-BUILD-KV/ASTK 2026-10-18 (lanes/RTL-BUILD-KV.md P4 item 2): static ECTL C leaf on the credit-free ASTK ABI = qkd_ectl_c_tp8_direct (STATIC_QK, HXK13) without the node credit input nb_cr (si[633]) and the node-beat / done outputs so[423:412]: si 633 b, so 413 b {fault, so[411:0]} = qkd_astk_strip_st's engine ABI. nb_cr enters the control word as the constant the current strip drives (0); with STATIC_QK the V phase / P.V tree never runs, so the dropped outputs were constant (bench-checked) and A / B (x seam 52 b) are unchanged.  Lockstep qkd_ectl3_kiss_st vs qkd_ectl3_kiss_s PASS; mutants FAIL.  Outline / faces unchanged (24 fewer E pins).",
+ "threads": 8,
+ "peak_ram_gb": 32,
+ "source": {
+  "branch": "claude/rtl-build-kv-astk-1018",
+  "commit": "f7a9a03ed1e3925b737b380f6c3f59b1beb0a364",
+  "extra_paths": [
+   "rtl/test/qwen_static_kv",
+   "rtl/qwen_sys",
+   "rtl/hdc",
+   "rtl/lib/ot_rst_relay.sv",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "tools/qwen_static_kv",
+   "results/rtl/ref_tile/qkd_ectl_c_st/bench_witness_v1/"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qkd_ectl_c_st #(.QK_ISSUE_AGE(34), .ROW_RETURN_LAT(21), .HXK(13)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_sys/static_kv_20261014/qkd_ectl_c_st.sv rtl/hdc/nearhbm/ot_qkd_ectl_parts.sv rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_h.sv rtl/hdc/ot_hdc_delay.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v rtl/lib/ot_rst_relay.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "ectl3_kiss_st_lockstep",
+    "cmd": "bash tools/qwen_static_kv/ectl_st_bench.sh {RUN}/bench/pos 0",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS qkd_ectl3_kiss_st lockstep",
+    "note": "every edge of qkd_ectl3_kiss_st equals qkd_ectl3_kiss_s; dropped outputs constant",
+    "pass_witness": "results/rtl/ref_tile/qkd_ectl_c_st/bench_witness_v1/mut0.log"
+   },
+   {
+    "name": "ectl_c_st_fault_mutant",
+    "cmd": "bash tools/qwen_static_kv/ectl_st_bench.sh {RUN}/bench/neg1 1",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^FAIL qkd_ectl3_kiss_st",
+    "note": "MUT 1: so fault bit from k_done",
+    "fail_witness": "results/rtl/ref_tile/qkd_ectl_c_st/bench_witness_v1/mut1.log"
+   },
+   {
+    "name": "ectl_c_st_q_mutant",
+    "cmd": "bash tools/qwen_static_kv/ectl_st_bench.sh {RUN}/bench/neg2 2",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^FAIL qkd_ectl3_kiss_st",
+    "note": "MUT 2: q word one si bit low",
+    "fail_witness": "results/rtl/ref_tile/qkd_ectl_c_st/bench_witness_v1/mut2.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qkd_ectl_c_st/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qkd_ectl_c_st/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 32
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qkd_ectl_c_st --out {RUN}/record/views/qkd_ectl_c_st  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/qkd_ectl_c_st/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/qkd_ectl_c_st/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/qkd_ectl_c_st/qkd_ectl_c_st-v1-f7a9a03ed"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "RTL-BUILD-KV/ASTK 2026-10-18 (lanes/RTL-BUILD-KV.md P4 item 2): static ECTL C leaf on the credit-free ASTK ABI = qkd_ectl_c_tp8_direct (STATIC_QK, HXK13) without the node credit input nb_cr (si[633]) and the node-beat / done outputs so[423:412]: si 633 b, so 413 b {fault, so[411:0]} = qkd_astk_strip_st's engine ABI. nb_cr enters the control word as the constant the current strip drives (0); with STATIC_QK the V phase / P.V tree never runs, so the dropped outputs were constant (bench-checked) and A / B (x seam 52 b) are unchanged.  Lockstep qkd_ectl3_kiss_st vs qkd_ectl3_kiss_s PASS; mutants FAIL.  Outline / faces unchanged (24 fewer E pins).",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "why": "RTL-BUILD-KV/ASTK 2026-10-18 (lanes/RTL-BUILD-KV.md P4 item 2): static ECTL C leaf on the credit-free ASTK ABI = qkd_ectl_c_tp8_direct (STATIC_QK, HXK13) without the node credit input nb_cr (si[633]) and the node-beat / done outputs so[423:412]: si 633 b, so 413 b {fault, so[411:0]} = qkd_astk_strip_st's engine ABI. nb_cr enters the control word as the constant the current strip drives (0); with STATIC_QK the V phase / P.V tree never runs, so the dropped outputs were constant (bench-checked) and A / B (x seam 52 b) are unchanged.  Lockstep qkd_ectl3_kiss_st vs qkd_ectl3_kiss_s PASS; mutants FAIL.  Outline / faces unchanged (24 fewer E pins)."
+ }
+}

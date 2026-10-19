@@ -230,7 +230,9 @@ def main():
         colm,nl=('cand_dsfd_bf_col_cl',7) if a.column_cl else ('cand_dsfd_bf_col_roots',9)
         files[fn], count=re.subn(r'(?<![\w$])(?:cand_)?dsfd_bf_col #\(', colm+' #(', files[fn])
         assert count==2, count
-        files[fn]=files[fn].replace('e0w (.ck(clk)', 'e0w (.rom_ck0(clk), .rom_ck1(clk), .leaf_ck({%d{clk}}), .ck(clk)'%nl).replace('e0e (.ck(clk)', 'e0e (.rom_ck0(clk), .rom_ck1(clk), .leaf_ck({%d{clk}}), .ck(clk)'%nl)
+        # BFCOL-4: the cl column's lane band entries lane_ckl/lane_cko are tied to the same clock, as the die ties them to leaf_ck[2+g]
+        lt=', .lane_ckl({4{clk}}), .lane_cko({4{clk}})' if a.column_cl else ''
+        files[fn]=files[fn].replace('e0w (.ck(clk)', 'e0w (.rom_ck0(clk), .rom_ck1(clk), .leaf_ck({%d{clk}})%s, .ck(clk)'%(nl,lt)).replace('e0e (.ck(clk)', 'e0e (.rom_ck0(clk), .rom_ck1(clk), .leaf_ck({%d{clk}})%s, .ck(clk)'%(nl,lt))
         if a.column_west_roots:
             pieces=files[fn].split('cand_dsfd_bf_col_roots #(')
             assert len(pieces)==3 and 'e0e' in pieces[2].split(';',1)[0]

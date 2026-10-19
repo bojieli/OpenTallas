@@ -1,0 +1,267 @@
+{
+ "name": "hdie_qdq_host_nw",
+ "top": "ot_hgi_qdq_host_static",
+ "kind": "tile",
+ "sources": [
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+  "rtl/hdc/ot_hdc_fp32_f12.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "physical/hbm_accel_die_views/common/ot_hfd_oreg1.sv",
+  "physical/hbm_accel_die_views/quant/rtl/ot_hfd_actquant_m.sv",
+  "rtl/hbm_accel/generic/ot_hgi_fp4qdq.sv",
+  "rtl/hbm_accel/generic/ot_hgi_quant_decode.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hbm_accel/generic/qw/ot_hgi_qw_dec3.sv",
+  "rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv",
+  "rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_host_static.sv",
+  "rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_record_calendar.sv",
+  "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
+  "rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v"
+ ],
+ "params": {
+  "RL": 7,
+  "WC": 4,
+  "MUT": 0,
+  "COMPACT": 1,
+  "PIN_BOUNDARY": 1,
+  "IO_REGS": 1
+ },
+ "clock_port": "clk_transport",
+ "clock_ports": [
+  "clk_transport",
+  "clk_program",
+  "clk_dxl",
+  "clk_dbq",
+  "clk_daq"
+ ],
+ "clock": "multiple_cts_roots",
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_transport"
+   ],
+   "inputs": [
+    "rr"
+   ],
+   "outputs": [
+    "rq",
+    "wq",
+    "beat_done",
+    "record_done"
+   ]
+  },
+  "program": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_program"
+   ],
+   "inputs": [
+    "rst_n",
+    "cfg_v",
+    "cfg_target",
+    "cfg_addr",
+    "cfg_data",
+    "desc_v",
+    "desc_base",
+    "desc_limit",
+    "desc_loops",
+    "launch_v"
+   ],
+   "outputs": [
+    "program_active",
+    "program_done",
+    "configured",
+    "fault"
+   ]
+  },
+  "dxl": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_dxl"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "dbq": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_dbq"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "daq": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_daq"
+   ],
+   "inputs": [],
+   "outputs": []
+  }
+ },
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 244.08,
+  "h": 244.08,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "recipe": 4,
+ "hold_budget": "die",
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*record_programme.calendar.u_program",
+   "at": [
+    43.2,
+    43.2
+   ]
+  }
+ ],
+ "pins": {
+  "W": [
+   "rq",
+   "wq",
+   "rr"
+  ],
+  "E": [
+   "desc_v",
+   "desc_base",
+   "desc_limit",
+   "desc_loops",
+   "launch_v",
+   "program_active",
+   "program_done",
+   "configured",
+   "beat_done",
+   "record_done",
+   "fault"
+  ],
+  "N": [
+   "clk_transport",
+   "clk_dxl",
+   "clk_dbq",
+   "clk_daq"
+  ],
+  "S": [
+   "clk_program",
+   "rst_n",
+   "cfg_v",
+   "cfg_target",
+   "cfg_addr",
+   "cfg_data"
+  ]
+ },
+ "io_tcl": "physical/hbm_die_pins/qdq_host_nw/pins.tcl",
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "period_ps": 833.333,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.0
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": false,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "pin_regs": {
+  "enable": false,
+  "reason": "HBMA-QDQ 10-17: with PIN_BOUNDARY=1 IO_REGS=1 the RTL registers every pin: rr enters rr_q (transport registered_boundary), cfg/desc/launch enter the F20 target capture flops, rq/wq/beat_done/record_done leave transport registers, program_active/program_done/configured leave calendar/target registers, fault leaves the host fault_q flop, rst_n reaches only two ot_rst_relay collars; a kit flop stage would add a redundant edge to the priced +2 (IO_REGS) schedule"
+ },
+ "children": [],
+ "inter": [],
+ "contract_binding": {
+  "die": "d4f",
+  "contract": "2a2ccaa4e (held, HANDOFF 07:37)",
+  "instance": "hb_quant_NW",
+  "slot": "quant_NW2 grant 245x245 (run6 placement 8996.4,22723.2)",
+  "die_params": "RL7 WC4 COMPACT1 (die binds PIN_BOUNDARY/IO_REGS default 0 until H-NETLIST flips them with this view; nat2 RL flip on HOLD)"
+ },
+ "cycles_added": 2,
+ "structural_change": "HBMA-QDQ 10-17: the die-bound ot_hgi_qdq_host_static (IO_REGS=0) is not flop-first: rr feeds the expected-return check (fault) and the 8:1 lane select before any register, fault is a 4-way OR of child registers, rst_n fans out asynchronously to the calendar/transport/decoder. Opt-in PIN_BOUNDARY=1 (two ot_rst_relay collars, sticky fault_q) + IO_REGS=1 (registered rr/y, constant-index lane select; 3e0c10191 priced +2 edges): VM write reservation t+35 -> t+37, read unchanged, LCP->commit 157 -> 159 vs immutable 168. Exact current-RG5-NW bench run_qdq_compact_host_pin_boundary.sh m0 PASS, m1..m7 killed (m7 stale t+35 VM programme -> bank fault). Pins: per-bank faces toward the d4f NW bank peers (io_tcl), program SRAM on the 43.2 lattice, five related roots as bound.",
+ "job": {
+  "owner": "Claude:HBMA-QDQ",
+  "branch": "claude/hbma-qdq-1017",
+  "tag": "q1",
+  "purpose": "HBMA-QDQ 10-17: first hardened view of die instance hb_quant_NW (d4f slot quant_NW2) with the RTL pin boundary (PIN_BOUNDARY=1 IO_REGS=1, +2 priced edges) and per-bank face pins.",
+  "views_to": "physical/ref_tile/hdie_qdq_host_nw/views",
+  "record_to": "results/rtl/ref_tile/hdie_qdq_host_nw",
+  "extra_paths": [
+   "rtl/hdc",
+   "rtl/lib",
+   "rtl/hbm_accel/generic",
+   "rtl/test/hbm_accel/generic",
+   "physical/hbm_accel_die_views/common",
+   "physical/hbm_accel_die_views/quant",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "physical/hbm_die_pins/qdq_host_nw",
+   "tools/hgi_unit_tput",
+   "results/hbm_static_quant_1015/compact_fixture.hex",
+   "results/hbm_static_quant_1015/nw_pin_boundary"
+  ],
+  "benches": [
+   {
+    "name": "qdq_nw_pin_boundary_exact",
+    "cmd": "IO_REGS=1 PIN_BOUNDARY=1 bash tools/hgi_unit_tput/run_qdq_compact_host_pin_boundary.sh {RUN}/bench && cat {RUN}/bench/m0.log",
+    "expect": "pass",
+    "pass_regex": "PASS HGI_QDQ_COMPACT_PIN_BOUNDARY_NW RG5_WG3 IO_REGS=1 PIN_BOUNDARY=1",
+    "min_count_regex": "PASS HGI_QDQ_COMPACT_PIN_BOUNDARY_NW .* beats=(\\d+)",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "qdq_nw_stale_write_slot_mutant",
+    "cmd": "IO_REGS=1 PIN_BOUNDARY=1 bash tools/hgi_unit_tput/run_qdq_compact_host_pin_boundary.sh {RUN}/bench_m && {RUN}/bench_m/m7.obj/sim +DIR=tools/hgi_unit_tput/vectors/qdqvec +PROGRAM=results/hbm_static_quant_1015/compact_fixture.hex +VM_PROGRAM=results/hbm_static_quant_1015/nw_pin_boundary/nw_compact_program_rg5_io0.hex",
+    "expect": "fail",
+    "fail_regex": "bank fault|fixed done differs|unexpected bank write",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ]
+ }
+}

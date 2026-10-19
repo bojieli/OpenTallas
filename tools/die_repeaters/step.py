@@ -54,6 +54,15 @@ DESIGNS = {
                 buffers=('BUFx8_ASAP7_75t_R',), fclk_audit=1),
     'qwen_compute': dict(reach='qwen_compute', skip=('n_clk_*', 'n_fck_*')),   # + n_rst_* unless OT_ROUTE_RESET=1
     'qwen_kv': dict(reach='qwen_kv', skip=('n_clk_*', 'n_fck_*')),
+    # Q-DIE12 10-18 (dv2f14bn TT: ~38k half-cycle hop bits -56..-77 ps): a forwarded-lane die (OT_SPLIT_FWD_LANES, n_fck_*
+    # nets) left its lane clocks unrepeated while the data bits got 1-2 repeaters, so the capture clock arrived ~42 ps
+    # after launch and the data ~213 ps: the forwarded clock did not track its data.  The *_fwd designs repeat the lane
+    # clocks WITH their data (same max wire, one buffer cell -> matched stage counts, as S81) and audit fclk vs data
+    # depth (+-1, reported; OT_DIE_REPAIR_FCLK_POLICY=fail to gate).  die_chain.sh picks them when die.v carries n_fck_* nets.
+    'qwen_compute_fwd': dict(reach='qwen_compute', skip=('n_clk_*',), repeat_nets=('n_fck_*',),
+                             buffers=('BUFx8_ASAP7_75t_R',), fclk_audit=1),
+    'qwen_kv_fwd': dict(reach='qwen_kv', skip=('n_clk_*',), repeat_nets=('n_fck_*',),
+                        buffers=('BUFx8_ASAP7_75t_R',), fclk_audit=1),
     'hbm': dict(reach='hbm', skip=('dk?_*', 'n_dk?_*', 'ckg_*')),
     'cluster': dict(reach=None, skip=('clk_*', 'rst_*')),
 }
@@ -80,7 +89,7 @@ def config(design, report, **kw):
         raise SystemExit(f'die_repeaters: unknown design {design!r} (known: {sorted(DESIGNS)})')
     c = dict(DEFAULTS, design=design, report=report, reach_um=_reach(design),
              skip_nets=list(DESIGNS[design]['skip']))
-    for k_ in ('buffers', 'fclk_audit'):
+    for k_ in ('buffers', 'fclk_audit', 'repeat_nets', 'fclk_policy'):
         if k_ in DESIGNS[design]:
             v_ = DESIGNS[design][k_]
             c[k_] = list(v_) if isinstance(v_, tuple) else v_
@@ -154,7 +163,7 @@ def tcl_call(design, report, tcl_dir='/work', fail_exit=3, **kw):
         post = (f'set ot_die_rep_fb [ot_die_rep_fclk_audit {{{prefix}}} {_tcl_list(fg)} {_tcl_list(bufs)}]\n'
                 f'set ::ot_die_rep_fclk_args [list {{{prefix}.post_grt}} {_tcl_list(fg)} {_tcl_list(bufs)}]\n'
                 + (f'if {{$ot_die_rep_fb != 0}} {{ puts "OT_DIE_REP FAIL fclk_mismatch_hops=$ot_die_rep_fb"; flush stdout; '
-                   f'exit {fail_exit} }}\n' if fp == 'fail' else ''))
+                   f'write_db {{{prefix}.fail.odb}}; exit {fail_exit} }}\n' if fp == 'fail' else ''))
     return (f'# shared die-net repeater step (tools/die_repeaters/step.py, design {design})\n'
             f'source {tcl_dir}/die_repeaters.tcl\n' + pre +
             f'set ot_die_rep_v [ot_die_repeaters [dict create {" ".join(parts)}]]\n'
@@ -183,6 +192,8 @@ def check(report):
          f"resized={r.get('resized')} non_buffer={r.get('non_buffer_inserted')} skip_nets={r.get('skip_nets')} "
          f"longest={r.get('longest_um')} over_reach({r.get('reach_um')})={r.get('over_reach_nets')} "
          f"post_slew={r.get('post_slew_violators')} post_cap={r.get('post_cap_violators')} legalize={r.get('legalize')!r}")
+    if r.get('warnings'):     # warn, never fail (e.g. spread displacement > max_wire/2: a lane over a block)
+        s += f" WARN({len(r['warnings'])}) max_disp={r.get('spread_max_disp_um')}: " + '; '.join(r['warnings'])
     return ok, s
 
 

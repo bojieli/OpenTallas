@@ -1,0 +1,18 @@
+read_verilog -defer -sv -DSYNTHESIS  /tmp/r0330_eqv/qkd_static_ectla_k3/src/00_qkd_static_ectla_kiss.sv
+read_verilog -defer -sv -DSYNTHESIS  /tmp/r0330_eqv/qkd_static_ectla_k3/src/01_qkd_static_k_issuer.sv
+read_verilog -defer -sv -DSYNTHESIS  /tmp/r0330_eqv/qkd_static_ectla_k3/src/02_qkd_ectl_native_direct_tp8.sv
+read_verilog -defer -sv -DSYNTHESIS  /tmp/r0330_eqv/qkd_static_ectla_k3/src/03_ot_qkd_ectl_parts.sv
+read_verilog -defer -sv -DSYNTHESIS  /tmp/r0330_eqv/qkd_static_ectla_k3/src/04_ot_qwen_nearhbm_attn_stack_h.sv
+read_verilog -defer -sv -DSYNTHESIS  /tmp/r0330_eqv/qkd_static_ectla_k3/src/05_ot_hdc_delay.sv
+read_verilog -defer -sv -DSYNTHESIS  /tmp/r0330_eqv/qkd_static_ectla_k3/src/06_ot_sram_1r1w_128x256_m1_r2c2_bb.v
+read_verilog -defer -sv -DSYNTHESIS  /tmp/r0330_eqv/qkd_static_ectla_k3/src/07_ot_rst_relay.sv
+read_verilog -defer -sv -DSYNTHESIS  /tmp/r0330_eqv/qkd_static_ectla_k3/old/ot_hbm_svc_stack_fault.sv
+read_verilog -defer -sv -DSYNTHESIS  /tmp/r0330_eqv/qkd_static_ectla_k3/old/ot_hbm_svc_wb_cutthrough_cdc.sv
+read_verilog -defer -sv -DSYNTHESIS  /tmp/r0330_eqv/qkd_static_ectla_k3/old/qkd_pvw_die_t.sv
+hierarchy -top qkd_static_ectla_kiss -chparam RESPONSE_LAT 14 -chparam QK_ISSUE_AGE 34 -chparam HXK 13 -chparam MUT 0
+tee -o /tmp/r0330_eqv/qkd_static_ectla_k3/out_old/modules.txt ls
+proc; flatten; opt_clean -purge
+rename -enumerate
+tee -o /tmp/r0330_eqv/qkd_static_ectla_k3/out_old/stat.txt stat
+write_rtlil /tmp/r0330_eqv/qkd_static_ectla_k3/out_old/netlist.il
+write_verilog -noattr /tmp/r0330_eqv/qkd_static_ectla_k3/out_old/netlist.v

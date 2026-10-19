@@ -1,0 +1,141 @@
+{
+ "name": "s81coll_cfifo_crs4-c4a-COMMIT",
+ "block": "dsfd_cfifo_crs4",
+ "ref_tile": true,
+ "owner": "Claude:S81-DIE7/CRS4",
+ "purpose": "hardened view of the _l4 frame column FIFO dsfd_cfifo_crs4 (per-lane landings, reset read epoch)",
+ "threads": 8,
+ "peak_ram_gb": 16,
+ "source": {
+  "branch": "claude/s81-die7-crs4-1018",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_dv/land",
+   "tools/s81_dv/crs4_gate.sh",
+   "tools/s81_dv/crs4_bench.py",
+   "physical/s81_die_pins/cfifo_crs4",
+   "rtl/dsrom_sys/s81_die_bind",
+   "rtl/hdc",
+   "results/arch/s81_dv_1016/landing/witness_crs4"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; dsfd_cfifo_crs4 u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-PINMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/dsrom_sys/s81_dv/land/dsfd_cfifo_crs4.sv rtl/dsrom_sys/s81_dv/land/ot_s81_land.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "exact_lanes_vs_crs",
+    "cmd": "bash tools/s81_dv/crs4_gate.sh pass {RUN}/bench_pass",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "CRS4_BENCH PASS base sweep 20/20 slip-fault 8/8",
+    "min_count_regex": "CRS4_BENCH PASS base sweep (\\d+)/20"
+   },
+   {
+    "name": "neighbour_lane_clock_mutant",
+    "cmd": "bash tools/s81_dv/crs4_gate.sh mut_nbr {RUN}/bench_mut_nbr",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "CRS4_BENCH FAIL mut_nbr",
+    "fail_witness": "results/arch/s81_dv_1016/landing/witness_crs4/crs4_mut_nbr.log"
+   },
+   {
+    "name": "read_slot_late_mutant",
+    "cmd": "bash tools/s81_dv/crs4_gate.sh mut_sel {RUN}/bench_mut_sel",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "CRS4_BENCH FAIL mut_sel",
+    "fail_witness": "results/arch/s81_dv_1016/landing/witness_crs4/crs4_mut_sel.log"
+   },
+   {
+    "name": "naive_retime_mutant",
+    "cmd": "bash tools/s81_dv/crs4_gate.sh mut_naive {RUN}/bench_mut_naive",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "CRS4_BENCH FAIL mut_naive",
+    "fail_witness": "results/arch/s81_dv_1016/landing/witness_crs4/crs4_mut_naive.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/s81coll_cfifo_crs4/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/s81coll_cfifo_crs4/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 16
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/s81coll_cfifo_crs4 --out {RUN}/record/views/dsfd_cfifo_crs4  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/s81coll_cfifo_crs4/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/s81coll_cfifo_crs4/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/s81coll_cfifo_crs4/s81coll_cfifo_crs4-c4a-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "S81-DIE7/CRS4 10-18: NEW top dsfd_cfifo_crs4 (S81-LAND2 successor of the closed dsfd_cfifo_crs, member of every _l4 frame col_h9_l4 / col_h10_l4 / col_h9_MX_l4). Structural change vs s81coll_cfifo_crs: (1) the two column ingress blocks (ot_s81_static_column_ingress_hr + lane_cross_hr: xd on xf = xk[1], xd2 on xf2 = xk[2], 2-flop marker-sampled read epoch on cr_s, half-cycle h stage) are replaced by FOUR ot_s81_land rings (W 276, D 4), one per lane, each written on ITS OWN forwarded clock xk[k] and read on cr from the frame reset release (contract L1-L7, K = lk[3k+:3] identity strap); (2) ports: xd[565:0] / xd2[537:0] / xf / xf2 -> xl0..xl3[275:0] (same bits, same S positions) + xk[3:0] + lk[11:0] (W face); (3) CTS roots cr, cr_s, xk[0..3] (6; crs: cr, cr_s, xf, xf2). xa/xb/cc/x2 on cr and ri -> rr -> rd on cr_s are crs's. Same frame slot 280.8 x 69.12, same N face, same S data order (io_tcl derived from dsfd_cfifo_crs_nspread.tcl by physical/s81_die_pins/cfifo_crs4/mk_pins.py). The crs epoch-Gray hold hook (gray_hold.tcl) does not apply (no u_cross). No closed view of this top exists: first route."
+}

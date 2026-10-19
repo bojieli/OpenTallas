@@ -265,6 +265,49 @@ def congestion_grid(d, rpt_text, n=64):
     return {"nx": nx, "ny": ny, "grid": [0.25 + 0.75 * v / mx if v else 0.0 for v in grid], "markers": hits}
 
 
+def congestion_hotspots(rpt_text, top=5):
+    """GRT congestion report (5_1_grt congestion.rpt: 'violation type: <dir>' / 'srcs: net:..' / 'capacity:C usage:U
+    congestion:O' / 'bbox = (x0, y0) - (x1, y1) on Layer Mn') -> the hotspot summary the gate reports: worst gcell
+    (overflow, layer, bbox), per-layer marker / overflow counts, the bbox spanning all markers, the top gcells."""
+    rows = []
+    for chunk in re.split(r"(?m)(?=^\s*violation type:)", rpt_text or ""):
+        m = re.search(r"violation type:\s*(.+)", chunk)
+        bb = re.search(r"\(\s*([-\d.]+)\s*,\s*([-\d.]+)\s*\)\s*-\s*\(\s*([-\d.]+)\s*,\s*([-\d.]+)\s*\)", chunk)
+        if not m or not bb:
+            continue
+        cu = re.search(r"capacity:\s*(-?\d+)\s*usage:\s*(-?\d+)(?:\s*(?:congestion|overflow):\s*(-?\d+))?", chunk)
+        ly = re.search(r"on [Ll]ayer\s+(\S+)", chunk)
+        cap, use = (int(cu.group(1)), int(cu.group(2))) if cu else (None, None)
+        ovf = int(cu.group(3)) if cu and cu.group(3) is not None else (use - cap if cu else 1)
+        rows.append(dict(direction=m.group(1).strip(), layer=ly.group(1) if ly else "?", capacity=cap, usage=use,
+                         overflow=ovf, bbox=[round(float(v), 3) for v in bb.groups()]))
+    if not rows:
+        return {"markers": 0}
+    layers = {}
+    for r in rows:
+        x = layers.setdefault(r["layer"], {"markers": 0, "overflow": 0})
+        x["markers"] += 1
+        x["overflow"] += r["overflow"]
+    rows.sort(key=lambda r: (-r["overflow"], r["bbox"]))
+    span = [min(r["bbox"][0] for r in rows), min(r["bbox"][1] for r in rows),
+            max(r["bbox"][2] for r in rows), max(r["bbox"][3] for r in rows)]
+    worst_layer = max(layers, key=lambda k: (layers[k]["overflow"], layers[k]["markers"]))
+    return {"markers": len(rows), "worst": rows[0], "worst_layer": worst_layer, "layers": layers, "bbox": span,
+            "top": rows[:top]}
+
+
+def hotspot_text(h):
+    """one line for the gate report"""
+    if not h or not h.get("markers"):
+        return "no congestion markers in the report"
+    w, b = h["worst"], h["bbox"]
+    two_d = w["layer"] in ("-", "?")          # ORFS 5_1_grt congestion.rpt is 2D: "on Layer -"
+    return (f"worst gcell {'' if two_d else w['layer'] + ' '}{w['direction']} overflow {w['overflow']} (cap "
+            f"{w['capacity']} use {w['usage']}) at ({w['bbox'][0]:g},{w['bbox'][1]:g})-({w['bbox'][2]:g},{w['bbox'][3]:g}) um"
+            + ("" if two_d else f"; worst layer {h['worst_layer']} ({h['layers'][h['worst_layer']]['markers']} markers)")
+            + f"; {h['markers']} markers span ({b[0]:g},{b[1]:g})-({b[2]:g},{b[3]:g}) um")
+
+
 def render_tile(dump, outdir, rpt=None, title=""):
     d = json.loads(Path(dump).read_text()) if not isinstance(dump, dict) else dump
     outdir = Path(outdir)

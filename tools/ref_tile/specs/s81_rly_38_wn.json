@@ -1,0 +1,91 @@
+{
+ "name": "s81_rly_38_wn",
+ "top": "dsfd_rly_38_WN",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_glue/ot_s81_rly.sv",
+  "rtl/dsrom_sys/s81_dv/frame/dsfd_rly_frame_exact.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rs"
+ ],
+ "outline": {
+  "w": 12.96,
+  "h": 12.96
+ },
+ "macros": [],
+ "pins": {
+  "N": [
+   "o"
+  ],
+  "S": [
+   "ck",
+   "rs"
+  ],
+  "W": [
+   "i"
+  ]
+ },
+ "route": {
+  "pd": 0.45,
+  "threads": 4,
+  "peak_ram_gb": 8,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.0,
+  "m5_pg_pitch": 2.7
+ },
+ "job": {
+  "owner": "Claude:S81U-3F2-D3",
+  "branch": "claude/s81u3-rly38-1017",
+  "tag": "x1",
+  "purpose": "S81-DV frame relay master dsfd_rly_38_WN (exact-width f_prog relay of the col_h9/col_h10 frames): real hard tile, 38 b in W / out N, ck+rs S, scalar ck/rs, M5 cap, one register stage, reset pin register, recipe 4 flop-first with die hold budget",
+  "benches": [
+   {
+    "name": "exact_words",
+    "cmd": "OT_RLY_EXTRA_SRC=rtl/dsrom_sys/s81_dv/frame/dsfd_rly_frame_exact.sv bash rtl/dsrom_sys/s81_glue/test/bench_rly.sh pass dsfd_rly_38_WN 38 {RUN}/bench_p 1",
+    "expect": "pass",
+    "pass_regex": "RLY_BENCH PASS 0 errors in 20000 words",
+    "threads": 2,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "neg_bit0_mutant",
+    "cmd": "OT_RLY_EXTRA_SRC=rtl/dsrom_sys/s81_dv/frame/dsfd_rly_frame_exact.sv bash rtl/dsrom_sys/s81_glue/test/bench_rly.sh mut dsfd_rly_38_WN 38 {RUN}/bench_m 1",
+    "expect": "fail",
+    "fail_regex": "RLY_BENCH FAIL",
+    "threads": 2,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "reset_register_bypass_mutant",
+    "cmd": "OT_RLY_EXTRA_SRC=rtl/dsrom_sys/s81_dv/frame/dsfd_rly_frame_exact.sv bash rtl/dsrom_sys/s81_glue/test/bench_rly.sh rsmut dsfd_rly_38_WN 38 {RUN}/bench_r 1",
+    "expect": "fail",
+    "fail_regex": "RLY_BENCH FAIL",
+    "threads": 2,
+    "peak_ram_gb": 4
+   }
+  ],
+  "views_to": "physical/ref_tile/s81_rly_38_wn/views",
+  "record_to": "results/rtl/ref_tile/s81_rly_38_wn",
+  "structural_change": "S81U-3F2-D3 10-17: new exact-width S81-DV frame relay (f_prog path, 7 per h9+h10 frame pair: col_h9 x3, col_h10 x4) replacing the dsfd_rly_63_WN instances c26l padded with 25 constant bits (owner 10-17 no-ties rule). Same body as the CLOSED dsfd_rly_63_WN r4 (ot_s81_rly RSREG=1, one register stage, reset pin register) and the same faces (i W / o N / ck+rs S); flow = the native-PASS successor form of the relay family (recipe 4 flop-first, hold_budget die, no outhold/inhold pads, as dsfd_rly_266_EW r4n / dsfd_dvrly_276). Outline 12.96 x 12.96 (smallest square on the 2.16 grid that gives >= 2 M5 PG stripes per net over > 50% of the outline at m5_pg_pitch 2.7; 10.8 fails pg_spread; 63_WN is 15.12)."
+ },
+ "children": [],
+ "inter": [],
+ "recipe": 4,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": false,
+ "pin_regs": {
+  "enable": false,
+  "reason": "OWNER RULE 19:50 opt-out (coordinator APPROVED 2026-10-15): this relay IS one flip-flop per bit between its input and output pins (ot_s81_rly: i -> r -> o, no logic); a flow pin register would add a second stage per bit and a cycle the die calendar does not price"
+ },
+ "keep_pin_regs": true,
+ "hold_budget": "die",
+ "outhold": false,
+ "structural_change": "S81U-3F2-D3 10-17: new exact-width S81-DV frame relay (f_prog path, 7 per h9+h10 frame pair: col_h9 x3, col_h10 x4) replacing the dsfd_rly_63_WN instances c26l padded with 25 constant bits (owner 10-17 no-ties rule). Same body as the CLOSED dsfd_rly_63_WN r4 (ot_s81_rly RSREG=1, one register stage, reset pin register) and the same faces (i W / o N / ck+rs S); flow = the native-PASS successor form of the relay family (recipe 4 flop-first, hold_budget die, no outhold/inhold pads, as dsfd_rly_266_EW r4n / dsfd_dvrly_276). Outline 12.96 x 12.96 (smallest square on the 2.16 grid that gives >= 2 M5 PG stripes per net over > 50% of the outline at m5_pg_pitch 2.7; 10.8 fails pg_spread; 63_WN is 15.12)."
+}

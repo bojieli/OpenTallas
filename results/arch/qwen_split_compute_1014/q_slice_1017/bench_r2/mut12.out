@@ -1,0 +1,3 @@
+bench2 (j) MUT=12: FAIL 1/3
+    slice 0: gather tokens [517, 5007] value 04248000, want last 2007 (rank 2)
+    slice 1: gather tokens [517, 5007] value 04248000, want last 2007 (rank 2)

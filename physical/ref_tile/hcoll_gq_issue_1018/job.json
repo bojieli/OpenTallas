@@ -1,0 +1,183 @@
+{
+ "name": "hcoll_gq_issue_1018-r1-b37983006",
+ "block": "ot_hgi_coll_gq_issue",
+ "ref_tile": true,
+ "owner": "Claude:HBM-COLLQ",
+ "purpose": "d4g plan (b) per-quadrant COLL gather master, ISSUE leaf: F20 target + descriptor calendar, static two-ring gather schedule, VM reads (COLL read share), 2 flat quantisers (QBG, = closed ot_hbm_xp_aq_tree13 RTL), payload, ring-A merge register (ISA +2 edges) and ring-B commands; new element, no closed view",
+ "threads": 8,
+ "peak_ram_gb": 24,
+ "source": {
+  "branch": "claude/hbm-collq-1018",
+  "commit": "b37983006",
+  "extra_paths": [
+   "rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_gq.sv",
+   "rtl/hbm_accel/generic/collective/p2p/run_coll_gq_bench.sh",
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ring_ag.sv",
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ring_ag_lane.sv",
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ring_b_stop.sv",
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv",
+   "rtl/hbm_accel/index/quad_1017/ot_hbm_idx_vm_share2_static.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "tools/hgi_sim/collq_gather_1018.py",
+   "tools/hdc_golden.py",
+   "tools/hdc_golden_v41.py",
+   "results/rtl/hbm_collq_1018"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hgi_coll_gq_issue u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv rtl/lib/ot_rst_relay.sv physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_tree13.sv physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_scale13.sv rtl/hdc/v41/ot_hdc_actquant.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/hdc/ot_hdc_delay.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "coll_gq_exact",
+    "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_bench.sh {RUN}/bench/gq",
+    "expect": "pass",
+    "min_count_regex": "COLLQ BENCH PASS mutants_rejected=(6)",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "coll_gq_mut_m1",
+    "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_bench.sh {RUN}/bench/mut_m1 m1",
+    "expect": "fail",
+    "fail_regex": "COLLQ (FAIL errors=|FAULT ESCAPED)",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/hbm_collq_1018/bench_witness/coll_gq_mut_m1.log"
+   },
+   {
+    "name": "coll_gq_mut_m2",
+    "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_bench.sh {RUN}/bench/mut_m2 m2",
+    "expect": "fail",
+    "fail_regex": "COLLQ (FAIL errors=|FAULT ESCAPED)",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/hbm_collq_1018/bench_witness/coll_gq_mut_m2.log"
+   },
+   {
+    "name": "coll_gq_mut_m3",
+    "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_bench.sh {RUN}/bench/mut_m3 m3",
+    "expect": "fail",
+    "fail_regex": "COLLQ (FAIL errors=|FAULT ESCAPED)",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/hbm_collq_1018/bench_witness/coll_gq_mut_m3.log"
+   },
+   {
+    "name": "coll_gq_mut_m4",
+    "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_bench.sh {RUN}/bench/mut_m4 m4",
+    "expect": "fail",
+    "fail_regex": "COLLQ (FAIL errors=|FAULT ESCAPED)",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/hbm_collq_1018/bench_witness/coll_gq_mut_m4.log"
+   },
+   {
+    "name": "coll_gq_mut_m5",
+    "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_bench.sh {RUN}/bench/mut_m5 m5",
+    "expect": "fail",
+    "fail_regex": "COLLQ (FAIL errors=|FAULT ESCAPED)",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/hbm_collq_1018/bench_witness/coll_gq_mut_m5.log"
+   },
+   {
+    "name": "coll_gq_mut_kq1",
+    "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_bench.sh {RUN}/bench/mut_kq1 kq1",
+    "expect": "fail",
+    "fail_regex": "COLLQ (FAIL errors=|FAULT ESCAPED)",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/hbm_collq_1018/bench_witness/coll_gq_mut_kq1.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hcoll_gq_issue_1018/signoff_ffrepair.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hcoll_gq_issue_1018/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 24
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hcoll_gq_issue_1018 --out {RUN}/record/views/ot_hgi_coll_gq_issue  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/hcoll_gq_issue_1018/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/hcoll_gq_issue_1018/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/arch/hbm_die_d4g/collq/route_hcoll_gq_issue_1018/hcoll_gq_issue_1018-r1-b37983006"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null
+}

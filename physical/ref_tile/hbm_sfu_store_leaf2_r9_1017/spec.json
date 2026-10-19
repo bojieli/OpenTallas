@@ -1,0 +1,285 @@
+{
+ "name": "hbm_sfu_store_leaf2_r9_1017",
+ "top": "ot_hgi_sfu_store_leaf2_r9",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/peers/ot_hgi_sfu_store_leaf_r9.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [],
+ "params": {
+  "PAGE_AW": 1
+ },
+ "outline": {
+  "w": 425.52,
+  "h": 194.4,
+  "exact": true
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*g_stripe?0?.u_program.g_page?0?.u_program",
+   "at": [
+    22.464,
+    25.92
+   ],
+   "at_exact": true,
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*g_stripe?0?.u_program.g_page?1?.u_program",
+   "at": [
+    228.528,
+    25.92
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*g_stripe?1?.u_program.g_page?0?.u_program",
+   "at": [
+    22.464,
+    96.432
+   ],
+   "at_exact": true,
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*g_stripe?1?.u_program.g_page?1?.u_program",
+   "at": [
+    228.528,
+    96.432
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  }
+ ],
+ "pins": {
+  "W": [
+   "out_cal0",
+   "in_data",
+   "out_cal1",
+   "clk",
+   "rst_a",
+   "in_we",
+   "in_addr",
+   "in_start_v",
+   "in_start_base",
+   "in_legal",
+   "in_span",
+   "in_loops",
+   "in_loops_one",
+   "out_v",
+   "out_active",
+   "out_done",
+   "out_fault",
+   "out_ord",
+   "out_mm"
+  ]
+ },
+ "pin_ranges": {
+  "out_cal0": [
+   2.0,
+   52.929
+  ],
+  "in_data": [
+   52.929,
+   111.659
+  ],
+  "out_cal1": [
+   111.659,
+   162.588
+  ],
+  "clk": [
+   162.588,
+   163.588
+  ],
+  "rst_a": [
+   163.588,
+   164.588
+  ],
+  "in_we": [
+   164.588,
+   165.588
+  ],
+  "in_addr": [
+   165.588,
+   168.112
+  ],
+  "in_start_v": [
+   168.112,
+   169.112
+  ],
+  "in_start_base": [
+   169.112,
+   171.635
+  ],
+  "in_legal": [
+   171.635,
+   172.635
+  ],
+  "in_span": [
+   172.635,
+   175.388
+  ],
+  "in_loops": [
+   175.388,
+   179.059
+  ],
+  "in_loops_one": [
+   179.059,
+   180.059
+  ],
+  "out_v": [
+   180.059,
+   181.059
+  ],
+  "out_active": [
+   181.059,
+   182.059
+  ],
+  "out_done": [
+   182.059,
+   183.059
+  ],
+  "out_fault": [
+   183.059,
+   184.059
+  ],
+  "out_ord": [
+   184.059,
+   191.4
+  ],
+  "out_mm": [
+   191.4,
+   192.4
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 4,
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 8,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_h": "M4",
+  "pin_v": "M3 M5",
+  "pin_balance": {
+   "h": "M4",
+   "v": "M3 M5",
+   "group_max": 1
+  },
+  "io_hold_margin_ns": 0.0
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": false,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "pin_regs": {
+  "enable": false,
+  "reason": "the leaf RTL registers every input at the pin (pure flops: rb/we_q/addr_q/data_q/start_*_q) and every output is a stripe register (calendar/valid/active/done/fault/ordinal/mm); a kit flop stage would add an edge to the priced r9 schedule"
+ },
+ "children": [],
+ "inter": [],
+ "structural_change": "r9 (SFU-STORE-9 10-17; coordinator decision after r7c4 CLOSED + native FAIL capture 222.0 ps on cfg_we): the flat 22-SRAM store is replaced by ONE replicated bank leaf (this kit: 2 stripes = 4 SRAMs, 2 columns x 2-high abutted stacks (pitch 70.512), W MY / E R0 with rd_out/wd_in facing a 31 um centre channel, >= 20 um pin gutter W / 20 um E), own clock root (default CTS), flop-first pins (pin -> plain flop; reset qualification and launch legality folded into the top in front of the leaf pins), stage-B synchronous reset relay per stripe, registered cfg we/addr/data copy inside the leaf (no control net leaves the leaf), recipe 4 / hold_budget die. All pins on the W face (M4, 4.4 pins/um; N/S faces hold ~0.5-1 slot/um under the M3/M5 straps, r7c4 r5 lesson); stripe words reach the W gutter through the ~25-33 um N/S margins (M2/M4) and the W gutter (M3/M5). Cycles vs r7c: datapath D=4/status 2/reset 4 unchanged; +1 edge on configuration writes only (per-leaf hop in the top).",
+ "job": {
+  "owner": "Claude:SFU-STORE-9",
+  "branch": "claude/sfustore-r9-1017",
+  "tag": "r9",
+  "purpose": "SFU programme store r9 bank leaf (2 stripes, 4 SRAMs) for ot_hgi_sfu_programme_store_r9 (cluster sfus_<q>: 3x leaf3 + 1x leaf2). NOT for submission until the coordinator reviews the gate (critical tile).",
+  "views_to": "physical/ref_tile/hbm_sfu_store_leaf2_r9_1017/views",
+  "record_to": "results/rtl/ref_tile/hbm_sfu_store_leaf2_r9_1017",
+  "extra_paths": [
+   "results/arch/hbm_native_1013/sfu_native_quarter",
+   "results/rtl/hbm_hc_sfu_static_1015/qswiglu",
+   "rtl/test/hbm_accel/generic",
+   "rtl/hbm_accel/generic/vm/static",
+   "physical/asap7_memory_macros",
+   "rtl/hbm_accel/generic/peers",
+   "physical/ref_tile/sfu_lane_ring3_rt/src",
+   "tools/hbm_static"
+  ],
+  "benches": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_hgi_sfu_programme_store_r9 rtl/hbm_accel/generic/peers/ot_hgi_sfu_store_leaf_r9.sv rtl/hbm_accel/generic/peers/ot_hgi_sfu_programme_store_r9.sv physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "split_equiv_exact",
+    "cmd": "OUT={RUN}/bench/pos SFU_LG_R=23 STORE9=1 bash tools/hbm_static/run_sfu_split_equiv.sh",
+    "expect": "pass",
+    "pass_regex": "SFU_SPLIT_GATE POSITIVE PASS",
+    "min_count_regex": "SFU_SPLIT_EQUIV PASS edges=(\\d+)",
+    "threads": 8,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "split_mutant_flip",
+    "cmd": "OUT={RUN}/bench/flip SFU_LG_R=23 STORE9=1 EQ_MUT=flip bash tools/hbm_static/run_sfu_split_equiv.sh; cat {RUN}/bench/flip/run.log; exit 1",
+    "expect": "fail",
+    "fail_regex": "SFU_SPLIT_EQUIV_MISMATCH|SFU_SPLIT_EQUIV FAIL|SFU_SPLIT_FAULT",
+    "threads": 8,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "split_mutant_skip_pinreg",
+    "cmd": "OUT={RUN}/bench/skip SFU_LG_R=23 STORE9=1 EQ_MUT=skip bash tools/hbm_static/run_sfu_split_equiv.sh; cat {RUN}/bench/skip/run.log; exit 1",
+    "expect": "fail",
+    "fail_regex": "SFU_SPLIT_EQUIV_MISMATCH|SFU_SPLIT_EQUIV FAIL|SFU_SPLIT_FAULT",
+    "threads": 8,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "split_mutant_early_cfg",
+    "cmd": "OUT={RUN}/bench/early SFU_LG_R=23 STORE9=1 EQ_MUT=early bash tools/hbm_static/run_sfu_split_equiv.sh; cat {RUN}/bench/early/run.log; exit 1",
+    "expect": "fail",
+    "fail_regex": "SFU_SPLIT_EQUIV_MISMATCH|SFU_SPLIT_EQUIV FAIL|SFU_SPLIT_FAULT",
+    "threads": 8,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "split_mutant_leaf_cfg_drop",
+    "cmd": "OUT={RUN}/bench/cfgdrop SFU_LG_R=23 STORE9=1 EQ_MUT=cfgdrop bash tools/hbm_static/run_sfu_split_equiv.sh; cat {RUN}/bench/cfgdrop/run.log; exit 1",
+    "expect": "fail",
+    "fail_regex": "SFU_SPLIT_EQUIV_MISMATCH|SFU_SPLIT_EQUIV FAIL|SFU_SPLIT_FAULT",
+    "threads": 8,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ]
+ },
+ "orfs_vars": {},
+ "hold_budget": "die"
+}

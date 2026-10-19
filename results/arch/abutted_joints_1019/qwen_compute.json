@@ -1,0 +1,5137 @@
+{
+ "schema": "opentallas.abutted_joint_audit.v1",
+ "tool": "tools/hier_contract/abutted_joint_audit.py",
+ "die": "qwen_compute",
+ "source": {
+  "label": "Qwen compute dv2f14bn chain/case_r22k (die_sources current; dv2f16 GEN running)",
+  "verilog": "/home/ubuntu/scratch/root-pinorder-audit/qwen/die.v",
+  "place": [
+   "/home/ubuntu/scratch/root-pinorder-audit/qwen/place.tcl"
+  ],
+  "lef": [
+   "/home/ubuntu/scratch/root-pinorder-audit/qwen/elements.lef",
+   "/home/ubuntu/scratch/root-pinorder-audit/qwen/phy_ew.lef"
+  ],
+  "status": "lef_comments",
+  "orig_netlist": "",
+  "kit_rev": "5b5e8de001552917919c7d49c474a7f74e29037c",
+  "notes": [
+   "ot-epyc4:/srv/opentallas-scratch/claude/qwen-split-compute/dv2f14bn/chain/case_r22k"
+  ]
+ },
+ "params": {
+  "gap_um": 5.0,
+  "face_tol_um": 3.0,
+  "tol_um": 2.0,
+  "min_bits": 33
+ },
+ "counts": {
+  "instances": 3053,
+  "hard_children": 3053,
+  "macros": 230,
+  "placed": 3053,
+  "routed_masters": 4,
+  "kits": 2282
+ },
+ "complete": true,
+ "missing_counts": {
+  "no_lef": 0,
+  "no_place": 0,
+  "width_mismatch": 19,
+  "no_kit": 157,
+  "port_not_in_kit": 0
+ },
+ "missing": {
+  "no_lef": {},
+  "no_place": [],
+  "width_mismatch": [
+   [
+    "clk_rx",
+    "pll_r55",
+    0,
+    1
+   ],
+   [
+    "clk_rx",
+    "pll_r89",
+    0,
+    1
+   ],
+   [
+    "clk_rx",
+    "pll_r90",
+    0,
+    1
+   ],
+   [
+    "clk_rx",
+    "pll_r91",
+    0,
+    1
+   ],
+   [
+    "clk_rx",
+    "pll_r92",
+    0,
+    1
+   ],
+   [
+    "clk_rx",
+    "pll_r93",
+    0,
+    1
+   ],
+   [
+    "clk_rx",
+    "pll_r94",
+    0,
+    1
+   ],
+   [
+    "clk_rx",
+    "pll_r95",
+    0,
+    1
+   ],
+   [
+    "clk_rx",
+    "pll_r96",
+    0,
+    1
+   ],
+   [
+    "clk_rx",
+    "pll_r97",
+    0,
+    1
+   ],
+   [
+    "clk_rx",
+    "pll_r98",
+    0,
+    1
+   ],
+   [
+    "clk_rx",
+    "pll_r99",
+    0,
+    1
+   ],
+   [
+    "clk_rx",
+    "pll_r100",
+    0,
+    1
+   ],
+   [
+    "clk_rx",
+    "pll_r101",
+    0,
+    1
+   ],
+   [
+    "clk_rx",
+    "pll_r102",
+    0,
+    1
+   ],
+   [
+    "clk_rx",
+    "pll_r103",
+    0,
+    1
+   ],
+   [
+    "clk_rx",
+    "pll_r104",
+    0,
+    1
+   ],
+   [
+    "clk_rx",
+    "pll_r105",
+    0,
+    1
+   ],
+   [
+    "clk_rx",
+    "pll_r106",
+    0,
+    1
+   ]
+  ],
+  "no_kit": {
+   "qfd_collective_static_io_production": "io_collective",
+   "ot_qfd_ucie_x64_phy": "io_ucie",
+   "ot_qfd_serdes_112g_x12_phy_s597": "io_serdes",
+   "ot_qkvd_ucie_x64_phy": "ucie_kv",
+   "qfd_clkrx": "clk_rx",
+   "qfd_ckbump": "ckb_rom",
+   "qfd_tt_ctlm_dv": "tt_ctlm",
+   "qfd_sigbump": "bump_fwd_epoch",
+   "qfd_dv_slice2_w": "dvs_W0",
+   "qfd_dv_slice2_e": "dvs_E0",
+   "qfd_rly_1_NS_65x30": "rly_rst_d2d_0",
+   "qfd_rly_1_NW_65x30": "rly_rst_d2d_2",
+   "qfd_rly_1_EW_65x30": "rly_rst_d2d_3",
+   "qfd_rly_597_SN_104x60": "rly_serdes0_tx_0",
+   "qfd_rly_1_SN_65x30": "rly_serdes0_txv_0",
+   "qfd_rly_597_NS_104x60": "rly_serdes0_rx_0",
+   "qfd_rly_597_NW_104x60": "rly_serdes2_tx_6",
+   "qfd_rly_597_EW_104x60": "rly_serdes2_tx_7",
+   "qfd_rly_1_ES_65x30": "rly_serdes2_txv_8",
+   "qfd_rly_1_WS_65x30": "rly_serdes2_txv_9",
+   "qfd_rly_597_WE_104x60": "rly_serdes2_rx_0",
+   "qfd_rly_597_WN_104x60": "rly_serdes2_rx_2",
+   "qfd_rly_1_WE_65x30": "rly_serdes2_rxv_0",
+   "qfd_rly_1_WN_65x30": "rly_serdes2_rxv_1",
+   "qfd_landh0_18_WN_65x30": "rly_ng_tt_native_tok_0__fo1_0",
+   "qfd_landh0_1_SN_65x30": "rly_ng_tt_layer_context_v_0__fo1_0",
+   "qfd_landh0_6_SN_65x30": "rly_ng_tt_command_stage_0__fo1_0",
+   "qfd_landh0_4_NE_65x30": "rly_lnk_native_tx_slot_kind_0",
+   "qfd_landh0_5_NE_65x30": "rly_lnk_native_tx_slot_beat_0",
+   "qfd_landh0_548_NE_95x60": "rly_lnk_rx_payload_0",
+   "qfd_rlyh0_548_WE_95x60": "rly_lnk_rx_payload__fo1_0",
+   "qfd_landh_548_WS_95x60": "rly_lnk_rx_payload__fo1_1",
+   "qfd_landh0_524_EN_92x60": "rly_lnk_x3_0",
+   "qfd_landh0_59_EN_65x30": "rly_lnk_x3_identity_0",
+   "qfd_landh0_2_EW_65x30": "rly_lnk_x3_generation_0",
+   "qfd_rlyh0_1_SN_65x30": "rly_sf_cfg_tx_we_0",
+   "qfd_rlyh_1_SW_65x30": "rly_sf_cfg_tx_we_1",
+   "qfd_rlyh0_6_SW_65x30": "rly_sf_cfg_addr_0",
+   "qfd_landh_6_EW_65x30": "rly_sf_cfg_addr_1",
+   "qfd_rlyh0_32_SW_65x30": "rly_sf_cfg_data_0",
+   "qfd_landh_32_EW_65x30": "rly_sf_cfg_data_1",
+   "qfd_rlyh0_16_EW_65x30": "rly_sf_status_epoch16_0",
+   "qfd_landh_16_EW_65x30": "rly_sf_status_epoch16_1",
+   "qfd_landh_1_ES_65x30": "rly_sf_collective_busy_3",
+   "qfd_rlyh0_4_SW_65x30": "rly_sf_result_cause_0",
+   "qfd_rlyh_4_EN_65x30": "rly_sf_result_cause_1",
+   "qfd_rlyh_4_SW_65x30": "rly_sf_result_cause_2",
+   "qfd_landh_4_ES_65x30": "rly_sf_result_cause_3",
+   "qfd_rlyh0_59_SN_65x30": "rly_sf_result_tag_0",
+   "qfd_rlyh_59_SW_65x30": "rly_sf_result_tag_1",
+   "qfd_rlyh_59_EW_65x30": "rly_sf_result_tag_2",
+   "qfd_rlyh_59_ES_65x30": "rly_sf_result_tag_3",
+   "qfd_landh_59_NS_65x30": "rly_sf_result_tag_4",
+   "qfd_rlyh0_2_EW_65x30": "rly_sf_result_gen_0",
+   "qfd_rlyh_2_EN_65x30": "rly_sf_result_gen_1",
+   "qfd_rlyh_2_SW_65x30": "rly_sf_result_gen_2",
+   "qfd_landh_2_ES_65x30": "rly_sf_result_gen_3",
+   "qfd_rlyh0_18_SW_65x30": "rly_sf_result_token_0",
+   "qfd_rlyh_18_EW_65x30": "rly_sf_result_token_1",
+   "qfd_landh_18_ES_65x30": "rly_sf_result_token_3",
+   "qfd_rlyh_32_EW_65x30": "rly_sf_result_value_1",
+   "qfd_landh_32_ES_65x30": "rly_sf_result_value_3",
+   "qfd_rlyh0_32_NW_65x30": "rly_sf_result_cycles_0",
+   "qfd_rlyh_32_SW_65x30": "rly_sf_result_cycles_1",
+   "qfd_rlyh_32_EN_65x30": "rly_sf_result_cycles_2",
+   "qfd_landh0_548_EW_95x60": "rly_sf_prog_tx_record_0",
+   "qfd_rlyh0_1_WE_65x30": "rly_sf_prog_rx_v_0",
+   "qfd_landh_1_WS_65x30": "rly_sf_prog_rx_v_1",
+   "qfd_rlyh0_1_ES_65x30": "rly_sf_prog_witness_slot_0",
+   "qfd_rlyh_1_NS_65x30": "rly_sf_prog_witness_slot_1",
+   "qfd_rlyh_1_WE_65x30": "rly_sf_prog_witness_slot_3",
+   "qfd_landh_1_WN_65x30": "rly_sf_prog_witness_slot_4",
+   "qfd_rlyh_1_SE_65x30": "rly_sf_prog_auth_slot_1",
+   "qfd_rlyh_1_WS_65x30": "rly_sf_prog_auth_slot_3",
+   "qfd_rlyh0_1_WS_65x30": "rly_sf_emb_rx_v_0",
+   "qfd_landh_1_NW_65x30": "rly_sf_emb_rx_slot_2",
+   "qfd_rlyh_1_ES_65x30": "rly_sf_d2d_epoch_abort_1",
+   "qfd_rlyh_1_WN_65x30": "rly_sf_d2d_epoch_abort_4",
+   "qfd_landh_1_SN_65x30": "rly_sf_d2d_epoch_abort_5",
+   "qfd_rlyh0_76_SN_65x30": "rly_sf_tt_program_obs_0",
+   "qfd_landh_76_SN_65x30": "rly_sf_tt_program_obs_1",
+   "qfd_landh0_75_NW_65x30": "rly_sf_tt_pw_0",
+   "qfd_landh0_1_NW_65x30": "rly_sf_tt_kok_0",
+   "qfd_landh0_512_NS_89x30": "rly_sf_emb_word_data_0",
+   "qfd_landh0_18_NS_65x30": "rly_sf_emb_word_token_0",
+   "qfd_landh0_6_NS_65x30": "rly_sf_emb_word_index_0",
+   "qfd_landh0_16_NS_65x30": "rly_sf_emb_word_epoch_0",
+   "qfd_landh0_6_NE_65x30": "rly_sf_emb_expected_word_0",
+   "qfd_rlyh0_16_NS_65x30": "rly_sf_emb_fill_epoch_0",
+   "qfd_landh_16_NS_65x30": "rly_sf_emb_fill_epoch_1",
+   "qfd_landh0_32_EW_65x30": "rly_dv_x0_ar_art_0",
+   "qfd_landh0_512_SW_89x30": "rly_dv_x0_ar_ard_0",
+   "qfd_landh0_548_SW_95x60": "rly_dv_x0_dd_dd_0",
+   "qfd_landh0_1_WE_65x30": "rly_dv_x0_rt_rv_0",
+   "qfd_landh0_3_WE_65x30": "rly_dv_x0_rt_rr_0",
+   "qfd_landh0_1_SE_65x30": "rly_dv_x0_rt_rl_0",
+   "qfd_landh0_512_WS_89x30": "rly_dv_x0_rt_rd_0",
+   "qfd_landh0_520_WE_91x30": "rly_dv_x0_dr_dr_0",
+   "qfd_landh0_10_EW_65x30": "rly_dv_x0_ag_ag_0",
+   "qfd_rlyh0_512_EN_89x30": "rly_dvw_ard_wo_0",
+   "qfd_rlyh_512_SW_89x30": "rly_dvw_ard_wo_1",
+   "qfd_landh_512_ES_89x30": "rly_dvw_ard_wo_2",
+   "qfd_rlyh0_32_EN_65x30": "rly_dvw_art_wo_0",
+   "qfd_landh_32_SW_65x30": "rly_dvw_art_wo_1",
+   "qfd_landh0_512_NE_89x30": "rly_dvw_rd_wi_0",
+   "qfd_rlyh0_3_NE_65x30": "rly_dvw_rr_wi_0",
+   "qfd_landh_3_WE_65x30": "rly_dvw_rr_wi_1",
+   "qfd_rlyh0_1_NE_65x30": "rly_dvw_re_wi_0",
+   "qfd_landh_1_WE_65x30": "rly_dvw_re_wi_1",
+   "qfd_landh0_16_EW_65x30": "rly_dvw_ccw_wo_0",
+   "qfd_rlyh0_548_EN_95x60": "rly_dvw_dd_wo_0",
+   "qfd_rlyh_548_SN_95x60": "rly_dvw_dd_wo_1",
+   "qfd_rlyh_548_SW_95x60": "rly_dvw_dd_wo_23",
+   "qfd_rlyh_548_EW_95x60": "rly_dvw_dd_wo_24",
+   "qfd_landh_548_EN_95x60": "rly_dvw_dd_wo_25",
+   "qfd_rlyh0_520_NE_91x30": "rly_dvw_dr_wi_0",
+   "qfd_rlyh_520_WE_91x30": "rly_dvw_dr_wi_1",
+   "qfd_rlyh_520_WS_91x30": "rly_dvw_dr_wi_2",
+   "qfd_rlyh_520_NS_91x30": "rly_dvw_dr_wi_3",
+   "qfd_rlyh_520_NE_91x30": "rly_dvw_dr_wi_25",
+   "qfd_landh_520_WS_91x30": "rly_dvw_dr_wi_26",
+   "qfd_rlyh0_453_WE_80x30": "rly_dvw_hr_wi_0",
+   "qfd_rlyh_453_WS_80x30": "rly_dvw_hr_wi_1",
+   "qfd_rlyh_453_NS_80x30": "rly_dvw_hr_wi_2",
+   "qfd_rlyh_453_NE_80x30": "rly_dvw_hr_wi_6",
+   "qfd_landh_453_NE_80x30": "rly_dvw_hr_wi_24",
+   "qfd_rlyh0_116_NE_65x30": "rly_dvw_cmd_wi_0",
+   "qfd_rlyh_116_WS_65x30": "rly_dvw_cmd_wi_1",
+   "qfd_rlyh_116_NS_65x30": "rly_dvw_cmd_wi_2",
+   "qfd_rlyh_116_NE_65x30": "rly_dvw_cmd_wi_6",
+   "qfd_landh_116_WS_65x30": "rly_dvw_cmd_wi_24",
+   "qfd_rlyh0_107_SW_65x30": "rly_dvw_ss_wo_0",
+   "qfd_rlyh_107_EN_65x30": "rly_dvw_ss_wo_1",
+   "qfd_rlyh_107_SN_65x30": "rly_dvw_ss_wo_2",
+   "qfd_rlyh_107_SW_65x30": "rly_dvw_ss_wo_19",
+   "qfd_rlyh_107_EW_65x30": "rly_dvw_ss_wo_20",
+   "qfd_landh_107_EN_65x30": "rly_dvw_ss_wo_21",
+   "qfd_rlyh0_10_SN_65x30": "rly_dvw_ag_wo_0",
+   "qfd_rlyh_10_SN_65x30": "rly_dvw_ag_wo_1",
+   "qfd_rlyh_10_SW_65x30": "rly_dvw_ag_wo_14",
+   "qfd_rlyh_10_EN_65x30": "rly_dvw_ag_wo_15",
+   "qfd_rlyh_10_EW_65x30": "rly_dvw_ag_wo_20",
+   "qfd_landh_10_EN_65x30": "rly_dvw_ag_wo_21",
+   "qfd_landh0_24_NS_65x30": "rly_dvw_native59_emb_code_addr_0",
+   "qfd_landh0_18_NE_65x30": "rly_dvw_native59_emb_scale_addr_0",
+   "qfd_rlyh0_512_WN_89x30": "rly_dvw_embed_prov_embed_code_q_0",
+   "qfd_landh_512_SW_89x30": "rly_dvw_embed_prov_embed_code_q_1",
+   "qfd_landh0_16_SW_65x30": "rly_dvw_embed_prov_embed_scale_q_0",
+   "qfd_landh0_187_ES_65x30": "rly_dvw_sys_face_seq_dh_0",
+   "qfd_rlyh0_76_SE_65x30": "rly_dvw_tt_ctlm_cal_program_obs_0",
+   "qfd_landh_76_WN_65x30": "rly_dvw_tt_ctlm_cal_program_obs_1",
+   "qfd_rlyh0_69_NE_65x30": "rly_dvw_tt_ctlm_cal_descriptor_obs_0",
+   "qfd_rlyh_69_WN_65x30": "rly_dvw_tt_ctlm_cal_descriptor_obs_1",
+   "qfd_rlyh_69_SN_65x30": "rly_dvw_tt_ctlm_cal_descriptor_obs_2",
+   "qfd_landh_69_SW_65x30": "rly_dvw_tt_ctlm_cal_descriptor_obs_3",
+   "qfd_landh0_56_SN_65x30": "rly_dvw_tt_ctlm_dc_0",
+   "qfd_landh_1_SW_65x30": "rly_ng_embed_fault_0_1"
+  },
+  "port_not_in_kit": {}
+ },
+ "summary": {
+  "joints": 34,
+  "joints_gt32": 10,
+  "verdicts": {
+   "undefined": 10
+  },
+  "order_undefined": 10,
+  "reversed": 0,
+  "mirrored": 0,
+  "needs_work": 10,
+  "bits_gt32": 52924
+ },
+ "conflicts": [],
+ "joints": [
+  {
+   "a": {
+    "inst": "dvs_E0",
+    "master": "qfd_dv_slice2_e",
+    "module": "qfd_dv_slice2_e",
+    "kit": null,
+    "kit_candidates": 0,
+    "orient": "MY",
+    "master_face": "W",
+    "die_face": "E",
+    "source": [
+     "standin_lef"
+    ],
+    "routed": false,
+    "order_defined": false,
+    "pin_balance": false,
+    "master_instances": 6
+   },
+   "b": {
+    "inst": "dvs_E1",
+    "master": "qfd_dv_slice2_e",
+    "module": "qfd_dv_slice2_e",
+    "kit": null,
+    "kit_candidates": 0,
+    "orient": "MY",
+    "master_face": "E",
+    "die_face": "W",
+    "source": [
+     "standin_lef"
+    ],
+    "routed": false,
+    "order_defined": false,
+    "pin_balance": false,
+    "master_instances": 6
+   },
+   "axis": "y",
+   "gap_um": 0.024,
+   "bits": 5498,
+   "off_face_bits": 0,
+   "ports": [
+    [
+     "ag_wi",
+     "ag_eo",
+     10
+    ],
+    [
+     "ard_wi",
+     "ard_eo",
+     512
+    ],
+    [
+     "arl_wi",
+     "arl_eo",
+     1
+    ],
+    [
+     "arm_wi",
+     "arm_eo",
+     1
+    ],
+    [
+     "art_wi",
+     "art_eo",
+     32
+    ],
+    [
+     "arv_wi",
+     "arv_eo",
+     1
+    ],
+    [
+     "cmd_wo",
+     "cmd_ei",
+     116
+    ],
+    [
+     "dd_wi",
+     "dd_eo",
+     548
+    ],
+    [
+     "dr_wo",
+     "dr_ei",
+     520
+    ],
+    [
+     "hr_wo",
+     "hr_ei",
+     453
+    ],
+    [
+     "l9_wi",
+     "l9_eo",
+     514
+    ],
+    [
+     "rd_wo",
+     "rd_ei",
+     512
+    ],
+    [
+     "re_wo",
+     "re_ei",
+     1
+    ],
+    [
+     "rl_wo",
+     "rl_ei",
+     1
+    ],
+    [
+     "rr_wo",
+     "rr_ei",
+     3
+    ],
+    [
+     "rv_wo",
+     "rv_ei",
+     1
+    ],
+    [
+     "sc_wi",
+     "sc_eo",
+     48
+    ],
+    [
+     "sc_wo",
+     "sc_ei",
+     48
+    ],
+    [
+     "st_wi",
+     "st_eo",
+     1088
+    ],
+    [
+     "st_wo",
+     "st_ei",
+     1088
+    ]
+   ],
+   "identity": true,
+   "moved_bits": 0,
+   "name_wired_crossings": 0,
+   "max_crossings": 15111253,
+   "reversed": false,
+   "max_offset_um": 0.0,
+   "mirrored": false,
+   "order_defined": false,
+   "verdict": "undefined",
+   "fix": {
+    "side": "b",
+    "inst": "dvs_E1",
+    "master": "qfd_dv_slice2_e",
+    "module": "qfd_dv_slice2_e",
+    "kit": null,
+    "master_instances": 6,
+    "prescription_usable": false,
+    "routed": false,
+    "ports": {
+     "ag_eo": {
+      "bits": 10,
+      "pin_range": [
+       1165.644,
+       1167.564
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "ard_eo": {
+      "bits": 512,
+      "pin_range": [
+       732.492,
+       830.796
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "arl_eo": {
+      "bits": 1,
+      "pin_range": [
+       728.104,
+       729.104
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "arm_eo": {
+      "bits": 1,
+      "pin_range": [
+       724.12,
+       725.12
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "art_eo": {
+      "bits": 32,
+      "pin_range": [
+       714.588,
+       720.732
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "arv_eo": {
+      "bits": 1,
+      "pin_range": [
+       710.2,
+       711.2
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "cmd_ei": {
+      "bits": 116,
+      "pin_range": [
+       142.38,
+       164.652
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "dd_eo": {
+      "bits": 548,
+      "pin_range": [
+       834.588,
+       939.804
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "dr_ei": {
+      "bits": 520,
+      "pin_range": [
+       1062.012,
+       1161.852
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "hr_ei": {
+      "bits": 453,
+      "pin_range": [
+       168.444,
+       255.42
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "l9_eo": {
+      "bits": 514,
+      "pin_range": [
+       39.9,
+       138.588
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "rd_ei": {
+      "bits": 512,
+      "pin_range": [
+       959.916,
+       1058.22
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "re_ei": {
+      "bits": 1,
+      "pin_range": [
+       947.176,
+       948.176
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "rl_ei": {
+      "bits": 1,
+      "pin_range": [
+       955.528,
+       956.528
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "rr_ei": {
+      "bits": 3,
+      "pin_range": [
+       951.564,
+       952.14
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "rv_ei": {
+      "bits": 1,
+      "pin_range": [
+       943.192,
+       944.192
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "sc_ei": {
+      "bits": 48,
+      "pin_range": [
+       697.596,
+       706.812
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "sc_eo": {
+      "bits": 48,
+      "pin_range": [
+       684.588,
+       693.804
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "st_ei": {
+      "bits": 1088,
+      "pin_range": [
+       471.9,
+       680.796
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "st_eo": {
+      "bits": 1088,
+      "pin_range": [
+       259.212,
+       468.108
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     }
+    },
+    "own_order_monotonic": {
+     "a": true,
+     "b": true
+    },
+    "actions": [
+     "a: kit <no kit: qfd_dv_slice2_e> add route.pin_balance (order undefined)",
+     "b: kit <no kit: qfd_dv_slice2_e> add route.pin_balance (order undefined)"
+    ]
+   }
+  },
+  {
+   "a": {
+    "inst": "dvs_E2",
+    "master": "qfd_dv_slice2_e",
+    "module": "qfd_dv_slice2_e",
+    "kit": null,
+    "kit_candidates": 0,
+    "orient": "MY",
+    "master_face": "W",
+    "die_face": "E",
+    "source": [
+     "standin_lef"
+    ],
+    "routed": false,
+    "order_defined": false,
+    "pin_balance": false,
+    "master_instances": 6
+   },
+   "b": {
+    "inst": "dvs_E3",
+    "master": "qfd_dv_slice2_e",
+    "module": "qfd_dv_slice2_e",
+    "kit": null,
+    "kit_candidates": 0,
+    "orient": "MY",
+    "master_face": "E",
+    "die_face": "W",
+    "source": [
+     "standin_lef"
+    ],
+    "routed": false,
+    "order_defined": false,
+    "pin_balance": false,
+    "master_instances": 6
+   },
+   "axis": "y",
+   "gap_um": 0.024,
+   "bits": 5498,
+   "off_face_bits": 0,
+   "ports": [
+    [
+     "ag_wi",
+     "ag_eo",
+     10
+    ],
+    [
+     "ard_wi",
+     "ard_eo",
+     512
+    ],
+    [
+     "arl_wi",
+     "arl_eo",
+     1
+    ],
+    [
+     "arm_wi",
+     "arm_eo",
+     1
+    ],
+    [
+     "art_wi",
+     "art_eo",
+     32
+    ],
+    [
+     "arv_wi",
+     "arv_eo",
+     1
+    ],
+    [
+     "cmd_wo",
+     "cmd_ei",
+     116
+    ],
+    [
+     "dd_wi",
+     "dd_eo",
+     548
+    ],
+    [
+     "dr_wo",
+     "dr_ei",
+     520
+    ],
+    [
+     "hr_wo",
+     "hr_ei",
+     453
+    ],
+    [
+     "l9_wi",
+     "l9_eo",
+     514
+    ],
+    [
+     "rd_wo",
+     "rd_ei",
+     512
+    ],
+    [
+     "re_wo",
+     "re_ei",
+     1
+    ],
+    [
+     "rl_wo",
+     "rl_ei",
+     1
+    ],
+    [
+     "rr_wo",
+     "rr_ei",
+     3
+    ],
+    [
+     "rv_wo",
+     "rv_ei",
+     1
+    ],
+    [
+     "sc_wi",
+     "sc_eo",
+     48
+    ],
+    [
+     "sc_wo",
+     "sc_ei",
+     48
+    ],
+    [
+     "st_wi",
+     "st_eo",
+     1088
+    ],
+    [
+     "st_wo",
+     "st_ei",
+     1088
+    ]
+   ],
+   "identity": true,
+   "moved_bits": 0,
+   "name_wired_crossings": 0,
+   "max_crossings": 15111253,
+   "reversed": false,
+   "max_offset_um": 0.0,
+   "mirrored": false,
+   "order_defined": false,
+   "verdict": "undefined",
+   "fix": {
+    "side": "b",
+    "inst": "dvs_E3",
+    "master": "qfd_dv_slice2_e",
+    "module": "qfd_dv_slice2_e",
+    "kit": null,
+    "master_instances": 6,
+    "prescription_usable": false,
+    "routed": false,
+    "ports": {
+     "ag_eo": {
+      "bits": 10,
+      "pin_range": [
+       1165.644,
+       1167.564
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "ard_eo": {
+      "bits": 512,
+      "pin_range": [
+       732.492,
+       830.796
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "arl_eo": {
+      "bits": 1,
+      "pin_range": [
+       728.104,
+       729.104
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "arm_eo": {
+      "bits": 1,
+      "pin_range": [
+       724.12,
+       725.12
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "art_eo": {
+      "bits": 32,
+      "pin_range": [
+       714.588,
+       720.732
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "arv_eo": {
+      "bits": 1,
+      "pin_range": [
+       710.2,
+       711.2
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "cmd_ei": {
+      "bits": 116,
+      "pin_range": [
+       142.38,
+       164.652
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "dd_eo": {
+      "bits": 548,
+      "pin_range": [
+       834.588,
+       939.804
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "dr_ei": {
+      "bits": 520,
+      "pin_range": [
+       1062.012,
+       1161.852
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "hr_ei": {
+      "bits": 453,
+      "pin_range": [
+       168.444,
+       255.42
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "l9_eo": {
+      "bits": 514,
+      "pin_range": [
+       39.9,
+       138.588
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "rd_ei": {
+      "bits": 512,
+      "pin_range": [
+       959.916,
+       1058.22
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "re_ei": {
+      "bits": 1,
+      "pin_range": [
+       947.176,
+       948.176
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "rl_ei": {
+      "bits": 1,
+      "pin_range": [
+       955.528,
+       956.528
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "rr_ei": {
+      "bits": 3,
+      "pin_range": [
+       951.564,
+       952.14
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "rv_ei": {
+      "bits": 1,
+      "pin_range": [
+       943.192,
+       944.192
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "sc_ei": {
+      "bits": 48,
+      "pin_range": [
+       697.596,
+       706.812
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "sc_eo": {
+      "bits": 48,
+      "pin_range": [
+       684.588,
+       693.804
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "st_ei": {
+      "bits": 1088,
+      "pin_range": [
+       471.9,
+       680.796
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "st_eo": {
+      "bits": 1088,
+      "pin_range": [
+       259.212,
+       468.108
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     }
+    },
+    "own_order_monotonic": {
+     "a": true,
+     "b": true
+    },
+    "actions": [
+     "a: kit <no kit: qfd_dv_slice2_e> add route.pin_balance (order undefined)",
+     "b: kit <no kit: qfd_dv_slice2_e> add route.pin_balance (order undefined)"
+    ]
+   }
+  },
+  {
+   "a": {
+    "inst": "dvs_E4",
+    "master": "qfd_dv_slice2_e",
+    "module": "qfd_dv_slice2_e",
+    "kit": null,
+    "kit_candidates": 0,
+    "orient": "MY",
+    "master_face": "W",
+    "die_face": "E",
+    "source": [
+     "standin_lef"
+    ],
+    "routed": false,
+    "order_defined": false,
+    "pin_balance": false,
+    "master_instances": 6
+   },
+   "b": {
+    "inst": "dvs_E5",
+    "master": "qfd_dv_slice2_e",
+    "module": "qfd_dv_slice2_e",
+    "kit": null,
+    "kit_candidates": 0,
+    "orient": "MY",
+    "master_face": "E",
+    "die_face": "W",
+    "source": [
+     "standin_lef"
+    ],
+    "routed": false,
+    "order_defined": false,
+    "pin_balance": false,
+    "master_instances": 6
+   },
+   "axis": "y",
+   "gap_um": 0.024,
+   "bits": 5498,
+   "off_face_bits": 0,
+   "ports": [
+    [
+     "ag_wi",
+     "ag_eo",
+     10
+    ],
+    [
+     "ard_wi",
+     "ard_eo",
+     512
+    ],
+    [
+     "arl_wi",
+     "arl_eo",
+     1
+    ],
+    [
+     "arm_wi",
+     "arm_eo",
+     1
+    ],
+    [
+     "art_wi",
+     "art_eo",
+     32
+    ],
+    [
+     "arv_wi",
+     "arv_eo",
+     1
+    ],
+    [
+     "cmd_wo",
+     "cmd_ei",
+     116
+    ],
+    [
+     "dd_wi",
+     "dd_eo",
+     548
+    ],
+    [
+     "dr_wo",
+     "dr_ei",
+     520
+    ],
+    [
+     "hr_wo",
+     "hr_ei",
+     453
+    ],
+    [
+     "l9_wi",
+     "l9_eo",
+     514
+    ],
+    [
+     "rd_wo",
+     "rd_ei",
+     512
+    ],
+    [
+     "re_wo",
+     "re_ei",
+     1
+    ],
+    [
+     "rl_wo",
+     "rl_ei",
+     1
+    ],
+    [
+     "rr_wo",
+     "rr_ei",
+     3
+    ],
+    [
+     "rv_wo",
+     "rv_ei",
+     1
+    ],
+    [
+     "sc_wi",
+     "sc_eo",
+     48
+    ],
+    [
+     "sc_wo",
+     "sc_ei",
+     48
+    ],
+    [
+     "st_wi",
+     "st_eo",
+     1088
+    ],
+    [
+     "st_wo",
+     "st_ei",
+     1088
+    ]
+   ],
+   "identity": true,
+   "moved_bits": 0,
+   "name_wired_crossings": 0,
+   "max_crossings": 15111253,
+   "reversed": false,
+   "max_offset_um": 0.0,
+   "mirrored": false,
+   "order_defined": false,
+   "verdict": "undefined",
+   "fix": {
+    "side": "b",
+    "inst": "dvs_E5",
+    "master": "qfd_dv_slice2_e",
+    "module": "qfd_dv_slice2_e",
+    "kit": null,
+    "master_instances": 6,
+    "prescription_usable": false,
+    "routed": false,
+    "ports": {
+     "ag_eo": {
+      "bits": 10,
+      "pin_range": [
+       1165.644,
+       1167.564
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "ard_eo": {
+      "bits": 512,
+      "pin_range": [
+       732.492,
+       830.796
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "arl_eo": {
+      "bits": 1,
+      "pin_range": [
+       728.104,
+       729.104
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "arm_eo": {
+      "bits": 1,
+      "pin_range": [
+       724.12,
+       725.12
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "art_eo": {
+      "bits": 32,
+      "pin_range": [
+       714.588,
+       720.732
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "arv_eo": {
+      "bits": 1,
+      "pin_range": [
+       710.2,
+       711.2
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "cmd_ei": {
+      "bits": 116,
+      "pin_range": [
+       142.38,
+       164.652
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "dd_eo": {
+      "bits": 548,
+      "pin_range": [
+       834.588,
+       939.804
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "dr_ei": {
+      "bits": 520,
+      "pin_range": [
+       1062.012,
+       1161.852
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "hr_ei": {
+      "bits": 453,
+      "pin_range": [
+       168.444,
+       255.42
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "l9_eo": {
+      "bits": 514,
+      "pin_range": [
+       39.9,
+       138.588
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "rd_ei": {
+      "bits": 512,
+      "pin_range": [
+       959.916,
+       1058.22
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "re_ei": {
+      "bits": 1,
+      "pin_range": [
+       947.176,
+       948.176
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "rl_ei": {
+      "bits": 1,
+      "pin_range": [
+       955.528,
+       956.528
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "rr_ei": {
+      "bits": 3,
+      "pin_range": [
+       951.564,
+       952.14
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "rv_ei": {
+      "bits": 1,
+      "pin_range": [
+       943.192,
+       944.192
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "sc_ei": {
+      "bits": 48,
+      "pin_range": [
+       697.596,
+       706.812
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "sc_eo": {
+      "bits": 48,
+      "pin_range": [
+       684.588,
+       693.804
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "st_ei": {
+      "bits": 1088,
+      "pin_range": [
+       471.9,
+       680.796
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "st_eo": {
+      "bits": 1088,
+      "pin_range": [
+       259.212,
+       468.108
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     }
+    },
+    "own_order_monotonic": {
+     "a": true,
+     "b": true
+    },
+    "actions": [
+     "a: kit <no kit: qfd_dv_slice2_e> add route.pin_balance (order undefined)",
+     "b: kit <no kit: qfd_dv_slice2_e> add route.pin_balance (order undefined)"
+    ]
+   }
+  },
+  {
+   "a": {
+    "inst": "dvs_W0",
+    "master": "qfd_dv_slice2_w",
+    "module": "qfd_dv_slice2_w",
+    "kit": null,
+    "kit_candidates": 0,
+    "orient": "R0",
+    "master_face": "W",
+    "die_face": "W",
+    "source": [
+     "standin_lef"
+    ],
+    "routed": false,
+    "order_defined": false,
+    "pin_balance": false,
+    "master_instances": 6
+   },
+   "b": {
+    "inst": "dvs_W1",
+    "master": "qfd_dv_slice2_w",
+    "module": "qfd_dv_slice2_w",
+    "kit": null,
+    "kit_candidates": 0,
+    "orient": "R0",
+    "master_face": "E",
+    "die_face": "E",
+    "source": [
+     "standin_lef"
+    ],
+    "routed": false,
+    "order_defined": false,
+    "pin_balance": false,
+    "master_instances": 6
+   },
+   "axis": "y",
+   "gap_um": 0.024,
+   "bits": 5498,
+   "off_face_bits": 0,
+   "ports": [
+    [
+     "ag_wo",
+     "ag_ei",
+     10
+    ],
+    [
+     "ard_wo",
+     "ard_ei",
+     512
+    ],
+    [
+     "arl_wo",
+     "arl_ei",
+     1
+    ],
+    [
+     "arm_wo",
+     "arm_ei",
+     1
+    ],
+    [
+     "art_wo",
+     "art_ei",
+     32
+    ],
+    [
+     "arv_wo",
+     "arv_ei",
+     1
+    ],
+    [
+     "cmd_wi",
+     "cmd_eo",
+     116
+    ],
+    [
+     "dd_wo",
+     "dd_ei",
+     548
+    ],
+    [
+     "dr_wi",
+     "dr_eo",
+     520
+    ],
+    [
+     "hr_wi",
+     "hr_eo",
+     453
+    ],
+    [
+     "l9_wi",
+     "l9_eo",
+     514
+    ],
+    [
+     "rd_wi",
+     "rd_eo",
+     512
+    ],
+    [
+     "re_wi",
+     "re_eo",
+     1
+    ],
+    [
+     "rl_wi",
+     "rl_eo",
+     1
+    ],
+    [
+     "rr_wi",
+     "rr_eo",
+     3
+    ],
+    [
+     "rv_wi",
+     "rv_eo",
+     1
+    ],
+    [
+     "sc_wi",
+     "sc_eo",
+     48
+    ],
+    [
+     "sc_wo",
+     "sc_ei",
+     48
+    ],
+    [
+     "st_wi",
+     "st_eo",
+     1088
+    ],
+    [
+     "st_wo",
+     "st_ei",
+     1088
+    ]
+   ],
+   "identity": true,
+   "moved_bits": 0,
+   "name_wired_crossings": 0,
+   "max_crossings": 15111253,
+   "reversed": false,
+   "max_offset_um": 0.0,
+   "mirrored": false,
+   "order_defined": false,
+   "verdict": "undefined",
+   "fix": {
+    "side": "b",
+    "inst": "dvs_W1",
+    "master": "qfd_dv_slice2_w",
+    "module": "qfd_dv_slice2_w",
+    "kit": null,
+    "master_instances": 6,
+    "prescription_usable": false,
+    "routed": false,
+    "ports": {
+     "ag_ei": {
+      "bits": 10,
+      "pin_range": [
+       1165.644,
+       1167.564
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "ard_ei": {
+      "bits": 512,
+      "pin_range": [
+       732.492,
+       830.796
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "arl_ei": {
+      "bits": 1,
+      "pin_range": [
+       728.104,
+       729.104
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "arm_ei": {
+      "bits": 1,
+      "pin_range": [
+       724.12,
+       725.12
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "art_ei": {
+      "bits": 32,
+      "pin_range": [
+       714.588,
+       720.732
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "arv_ei": {
+      "bits": 1,
+      "pin_range": [
+       710.2,
+       711.2
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "cmd_eo": {
+      "bits": 116,
+      "pin_range": [
+       142.38,
+       164.652
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "dd_ei": {
+      "bits": 548,
+      "pin_range": [
+       834.588,
+       939.804
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "dr_eo": {
+      "bits": 520,
+      "pin_range": [
+       1062.012,
+       1161.852
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "hr_eo": {
+      "bits": 453,
+      "pin_range": [
+       168.444,
+       255.42
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "l9_eo": {
+      "bits": 514,
+      "pin_range": [
+       39.9,
+       138.588
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "rd_eo": {
+      "bits": 512,
+      "pin_range": [
+       959.916,
+       1058.22
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "re_eo": {
+      "bits": 1,
+      "pin_range": [
+       947.176,
+       948.176
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "rl_eo": {
+      "bits": 1,
+      "pin_range": [
+       955.528,
+       956.528
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "rr_eo": {
+      "bits": 3,
+      "pin_range": [
+       951.564,
+       952.14
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "rv_eo": {
+      "bits": 1,
+      "pin_range": [
+       943.192,
+       944.192
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "sc_ei": {
+      "bits": 48,
+      "pin_range": [
+       684.588,
+       693.804
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "sc_eo": {
+      "bits": 48,
+      "pin_range": [
+       697.596,
+       706.812
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "st_ei": {
+      "bits": 1088,
+      "pin_range": [
+       259.212,
+       468.108
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "st_eo": {
+      "bits": 1088,
+      "pin_range": [
+       471.9,
+       680.796
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     }
+    },
+    "own_order_monotonic": {
+     "a": true,
+     "b": true
+    },
+    "actions": [
+     "a: kit <no kit: qfd_dv_slice2_w> add route.pin_balance (order undefined)",
+     "b: kit <no kit: qfd_dv_slice2_w> add route.pin_balance (order undefined)"
+    ]
+   }
+  },
+  {
+   "a": {
+    "inst": "dvs_W2",
+    "master": "qfd_dv_slice2_w",
+    "module": "qfd_dv_slice2_w",
+    "kit": null,
+    "kit_candidates": 0,
+    "orient": "R0",
+    "master_face": "W",
+    "die_face": "W",
+    "source": [
+     "standin_lef"
+    ],
+    "routed": false,
+    "order_defined": false,
+    "pin_balance": false,
+    "master_instances": 6
+   },
+   "b": {
+    "inst": "dvs_W3",
+    "master": "qfd_dv_slice2_w",
+    "module": "qfd_dv_slice2_w",
+    "kit": null,
+    "kit_candidates": 0,
+    "orient": "R0",
+    "master_face": "E",
+    "die_face": "E",
+    "source": [
+     "standin_lef"
+    ],
+    "routed": false,
+    "order_defined": false,
+    "pin_balance": false,
+    "master_instances": 6
+   },
+   "axis": "y",
+   "gap_um": 0.024,
+   "bits": 5498,
+   "off_face_bits": 0,
+   "ports": [
+    [
+     "ag_wo",
+     "ag_ei",
+     10
+    ],
+    [
+     "ard_wo",
+     "ard_ei",
+     512
+    ],
+    [
+     "arl_wo",
+     "arl_ei",
+     1
+    ],
+    [
+     "arm_wo",
+     "arm_ei",
+     1
+    ],
+    [
+     "art_wo",
+     "art_ei",
+     32
+    ],
+    [
+     "arv_wo",
+     "arv_ei",
+     1
+    ],
+    [
+     "cmd_wi",
+     "cmd_eo",
+     116
+    ],
+    [
+     "dd_wo",
+     "dd_ei",
+     548
+    ],
+    [
+     "dr_wi",
+     "dr_eo",
+     520
+    ],
+    [
+     "hr_wi",
+     "hr_eo",
+     453
+    ],
+    [
+     "l9_wi",
+     "l9_eo",
+     514
+    ],
+    [
+     "rd_wi",
+     "rd_eo",
+     512
+    ],
+    [
+     "re_wi",
+     "re_eo",
+     1
+    ],
+    [
+     "rl_wi",
+     "rl_eo",
+     1
+    ],
+    [
+     "rr_wi",
+     "rr_eo",
+     3
+    ],
+    [
+     "rv_wi",
+     "rv_eo",
+     1
+    ],
+    [
+     "sc_wi",
+     "sc_eo",
+     48
+    ],
+    [
+     "sc_wo",
+     "sc_ei",
+     48
+    ],
+    [
+     "st_wi",
+     "st_eo",
+     1088
+    ],
+    [
+     "st_wo",
+     "st_ei",
+     1088
+    ]
+   ],
+   "identity": true,
+   "moved_bits": 0,
+   "name_wired_crossings": 0,
+   "max_crossings": 15111253,
+   "reversed": false,
+   "max_offset_um": 0.0,
+   "mirrored": false,
+   "order_defined": false,
+   "verdict": "undefined",
+   "fix": {
+    "side": "b",
+    "inst": "dvs_W3",
+    "master": "qfd_dv_slice2_w",
+    "module": "qfd_dv_slice2_w",
+    "kit": null,
+    "master_instances": 6,
+    "prescription_usable": false,
+    "routed": false,
+    "ports": {
+     "ag_ei": {
+      "bits": 10,
+      "pin_range": [
+       1165.644,
+       1167.564
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "ard_ei": {
+      "bits": 512,
+      "pin_range": [
+       732.492,
+       830.796
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "arl_ei": {
+      "bits": 1,
+      "pin_range": [
+       728.104,
+       729.104
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "arm_ei": {
+      "bits": 1,
+      "pin_range": [
+       724.12,
+       725.12
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "art_ei": {
+      "bits": 32,
+      "pin_range": [
+       714.588,
+       720.732
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "arv_ei": {
+      "bits": 1,
+      "pin_range": [
+       710.2,
+       711.2
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "cmd_eo": {
+      "bits": 116,
+      "pin_range": [
+       142.38,
+       164.652
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "dd_ei": {
+      "bits": 548,
+      "pin_range": [
+       834.588,
+       939.804
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "dr_eo": {
+      "bits": 520,
+      "pin_range": [
+       1062.012,
+       1161.852
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "hr_eo": {
+      "bits": 453,
+      "pin_range": [
+       168.444,
+       255.42
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "l9_eo": {
+      "bits": 514,
+      "pin_range": [
+       39.9,
+       138.588
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "rd_eo": {
+      "bits": 512,
+      "pin_range": [
+       959.916,
+       1058.22
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "re_eo": {
+      "bits": 1,
+      "pin_range": [
+       947.176,
+       948.176
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "rl_eo": {
+      "bits": 1,
+      "pin_range": [
+       955.528,
+       956.528
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "rr_eo": {
+      "bits": 3,
+      "pin_range": [
+       951.564,
+       952.14
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "rv_eo": {
+      "bits": 1,
+      "pin_range": [
+       943.192,
+       944.192
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "sc_ei": {
+      "bits": 48,
+      "pin_range": [
+       684.588,
+       693.804
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "sc_eo": {
+      "bits": 48,
+      "pin_range": [
+       697.596,
+       706.812
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "st_ei": {
+      "bits": 1088,
+      "pin_range": [
+       259.212,
+       468.108
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "st_eo": {
+      "bits": 1088,
+      "pin_range": [
+       471.9,
+       680.796
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     }
+    },
+    "own_order_monotonic": {
+     "a": true,
+     "b": true
+    },
+    "actions": [
+     "a: kit <no kit: qfd_dv_slice2_w> add route.pin_balance (order undefined)",
+     "b: kit <no kit: qfd_dv_slice2_w> add route.pin_balance (order undefined)"
+    ]
+   }
+  },
+  {
+   "a": {
+    "inst": "dvs_W4",
+    "master": "qfd_dv_slice2_w",
+    "module": "qfd_dv_slice2_w",
+    "kit": null,
+    "kit_candidates": 0,
+    "orient": "R0",
+    "master_face": "W",
+    "die_face": "W",
+    "source": [
+     "standin_lef"
+    ],
+    "routed": false,
+    "order_defined": false,
+    "pin_balance": false,
+    "master_instances": 6
+   },
+   "b": {
+    "inst": "dvs_W5",
+    "master": "qfd_dv_slice2_w",
+    "module": "qfd_dv_slice2_w",
+    "kit": null,
+    "kit_candidates": 0,
+    "orient": "R0",
+    "master_face": "E",
+    "die_face": "E",
+    "source": [
+     "standin_lef"
+    ],
+    "routed": false,
+    "order_defined": false,
+    "pin_balance": false,
+    "master_instances": 6
+   },
+   "axis": "y",
+   "gap_um": 0.024,
+   "bits": 5498,
+   "off_face_bits": 0,
+   "ports": [
+    [
+     "ag_wo",
+     "ag_ei",
+     10
+    ],
+    [
+     "ard_wo",
+     "ard_ei",
+     512
+    ],
+    [
+     "arl_wo",
+     "arl_ei",
+     1
+    ],
+    [
+     "arm_wo",
+     "arm_ei",
+     1
+    ],
+    [
+     "art_wo",
+     "art_ei",
+     32
+    ],
+    [
+     "arv_wo",
+     "arv_ei",
+     1
+    ],
+    [
+     "cmd_wi",
+     "cmd_eo",
+     116
+    ],
+    [
+     "dd_wo",
+     "dd_ei",
+     548
+    ],
+    [
+     "dr_wi",
+     "dr_eo",
+     520
+    ],
+    [
+     "hr_wi",
+     "hr_eo",
+     453
+    ],
+    [
+     "l9_wi",
+     "l9_eo",
+     514
+    ],
+    [
+     "rd_wi",
+     "rd_eo",
+     512
+    ],
+    [
+     "re_wi",
+     "re_eo",
+     1
+    ],
+    [
+     "rl_wi",
+     "rl_eo",
+     1
+    ],
+    [
+     "rr_wi",
+     "rr_eo",
+     3
+    ],
+    [
+     "rv_wi",
+     "rv_eo",
+     1
+    ],
+    [
+     "sc_wi",
+     "sc_eo",
+     48
+    ],
+    [
+     "sc_wo",
+     "sc_ei",
+     48
+    ],
+    [
+     "st_wi",
+     "st_eo",
+     1088
+    ],
+    [
+     "st_wo",
+     "st_ei",
+     1088
+    ]
+   ],
+   "identity": true,
+   "moved_bits": 0,
+   "name_wired_crossings": 0,
+   "max_crossings": 15111253,
+   "reversed": false,
+   "max_offset_um": 0.0,
+   "mirrored": false,
+   "order_defined": false,
+   "verdict": "undefined",
+   "fix": {
+    "side": "b",
+    "inst": "dvs_W5",
+    "master": "qfd_dv_slice2_w",
+    "module": "qfd_dv_slice2_w",
+    "kit": null,
+    "master_instances": 6,
+    "prescription_usable": false,
+    "routed": false,
+    "ports": {
+     "ag_ei": {
+      "bits": 10,
+      "pin_range": [
+       1165.644,
+       1167.564
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "ard_ei": {
+      "bits": 512,
+      "pin_range": [
+       732.492,
+       830.796
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "arl_ei": {
+      "bits": 1,
+      "pin_range": [
+       728.104,
+       729.104
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "arm_ei": {
+      "bits": 1,
+      "pin_range": [
+       724.12,
+       725.12
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "art_ei": {
+      "bits": 32,
+      "pin_range": [
+       714.588,
+       720.732
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "arv_ei": {
+      "bits": 1,
+      "pin_range": [
+       710.2,
+       711.2
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "cmd_eo": {
+      "bits": 116,
+      "pin_range": [
+       142.38,
+       164.652
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "dd_ei": {
+      "bits": 548,
+      "pin_range": [
+       834.588,
+       939.804
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "dr_eo": {
+      "bits": 520,
+      "pin_range": [
+       1062.012,
+       1161.852
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "hr_eo": {
+      "bits": 453,
+      "pin_range": [
+       168.444,
+       255.42
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "l9_eo": {
+      "bits": 514,
+      "pin_range": [
+       39.9,
+       138.588
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "rd_eo": {
+      "bits": 512,
+      "pin_range": [
+       959.916,
+       1058.22
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "re_eo": {
+      "bits": 1,
+      "pin_range": [
+       947.176,
+       948.176
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "rl_eo": {
+      "bits": 1,
+      "pin_range": [
+       955.528,
+       956.528
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "rr_eo": {
+      "bits": 3,
+      "pin_range": [
+       951.564,
+       952.14
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "rv_eo": {
+      "bits": 1,
+      "pin_range": [
+       943.192,
+       944.192
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "sc_ei": {
+      "bits": 48,
+      "pin_range": [
+       684.588,
+       693.804
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "sc_eo": {
+      "bits": 48,
+      "pin_range": [
+       697.596,
+       706.812
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "st_ei": {
+      "bits": 1088,
+      "pin_range": [
+       259.212,
+       468.108
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "st_eo": {
+      "bits": 1088,
+      "pin_range": [
+       471.9,
+       680.796
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     }
+    },
+    "own_order_monotonic": {
+     "a": true,
+     "b": true
+    },
+    "actions": [
+     "a: kit <no kit: qfd_dv_slice2_w> add route.pin_balance (order undefined)",
+     "b: kit <no kit: qfd_dv_slice2_w> add route.pin_balance (order undefined)"
+    ]
+   }
+  },
+  {
+   "a": {
+    "inst": "dvs_E1",
+    "master": "qfd_dv_slice2_e",
+    "module": "qfd_dv_slice2_e",
+    "kit": null,
+    "kit_candidates": 0,
+    "orient": "MY",
+    "master_face": "W",
+    "die_face": "E",
+    "source": [
+     "standin_lef"
+    ],
+    "routed": false,
+    "order_defined": false,
+    "pin_balance": false,
+    "master_instances": 6
+   },
+   "b": {
+    "inst": "dvs_E2",
+    "master": "qfd_dv_slice2_e",
+    "module": "qfd_dv_slice2_e",
+    "kit": null,
+    "kit_candidates": 0,
+    "orient": "MY",
+    "master_face": "E",
+    "die_face": "W",
+    "source": [
+     "standin_lef"
+    ],
+    "routed": false,
+    "order_defined": false,
+    "pin_balance": false,
+    "master_instances": 6
+   },
+   "axis": "y",
+   "gap_um": 0.024,
+   "bits": 4984,
+   "off_face_bits": 0,
+   "ports": [
+    [
+     "ag_wi",
+     "ag_eo",
+     10
+    ],
+    [
+     "ard_wi",
+     "ard_eo",
+     512
+    ],
+    [
+     "arl_wi",
+     "arl_eo",
+     1
+    ],
+    [
+     "arm_wi",
+     "arm_eo",
+     1
+    ],
+    [
+     "art_wi",
+     "art_eo",
+     32
+    ],
+    [
+     "arv_wi",
+     "arv_eo",
+     1
+    ],
+    [
+     "cmd_wo",
+     "cmd_ei",
+     116
+    ],
+    [
+     "dd_wi",
+     "dd_eo",
+     548
+    ],
+    [
+     "dr_wo",
+     "dr_ei",
+     520
+    ],
+    [
+     "hr_wo",
+     "hr_ei",
+     453
+    ],
+    [
+     "rd_wo",
+     "rd_ei",
+     512
+    ],
+    [
+     "re_wo",
+     "re_ei",
+     1
+    ],
+    [
+     "rl_wo",
+     "rl_ei",
+     1
+    ],
+    [
+     "rr_wo",
+     "rr_ei",
+     3
+    ],
+    [
+     "rv_wo",
+     "rv_ei",
+     1
+    ],
+    [
+     "sc_wi",
+     "sc_eo",
+     48
+    ],
+    [
+     "sc_wo",
+     "sc_ei",
+     48
+    ],
+    [
+     "st_wi",
+     "st_eo",
+     1088
+    ],
+    [
+     "st_wo",
+     "st_ei",
+     1088
+    ]
+   ],
+   "identity": true,
+   "moved_bits": 0,
+   "name_wired_crossings": 0,
+   "max_crossings": 12417636,
+   "reversed": false,
+   "max_offset_um": 0.0,
+   "mirrored": false,
+   "order_defined": false,
+   "verdict": "undefined",
+   "fix": {
+    "side": "b",
+    "inst": "dvs_E2",
+    "master": "qfd_dv_slice2_e",
+    "module": "qfd_dv_slice2_e",
+    "kit": null,
+    "master_instances": 6,
+    "prescription_usable": false,
+    "routed": false,
+    "ports": {
+     "ag_eo": {
+      "bits": 10,
+      "pin_range": [
+       1165.644,
+       1167.564
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "ard_eo": {
+      "bits": 512,
+      "pin_range": [
+       732.492,
+       830.796
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "arl_eo": {
+      "bits": 1,
+      "pin_range": [
+       728.104,
+       729.104
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "arm_eo": {
+      "bits": 1,
+      "pin_range": [
+       724.12,
+       725.12
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "art_eo": {
+      "bits": 32,
+      "pin_range": [
+       714.588,
+       720.732
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "arv_eo": {
+      "bits": 1,
+      "pin_range": [
+       710.2,
+       711.2
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "cmd_ei": {
+      "bits": 116,
+      "pin_range": [
+       142.38,
+       164.652
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "dd_eo": {
+      "bits": 548,
+      "pin_range": [
+       834.588,
+       939.804
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "dr_ei": {
+      "bits": 520,
+      "pin_range": [
+       1062.012,
+       1161.852
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "hr_ei": {
+      "bits": 453,
+      "pin_range": [
+       168.444,
+       255.42
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "rd_ei": {
+      "bits": 512,
+      "pin_range": [
+       959.916,
+       1058.22
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "re_ei": {
+      "bits": 1,
+      "pin_range": [
+       947.176,
+       948.176
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "rl_ei": {
+      "bits": 1,
+      "pin_range": [
+       955.528,
+       956.528
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "rr_ei": {
+      "bits": 3,
+      "pin_range": [
+       951.564,
+       952.14
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "rv_ei": {
+      "bits": 1,
+      "pin_range": [
+       943.192,
+       944.192
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "sc_ei": {
+      "bits": 48,
+      "pin_range": [
+       697.596,
+       706.812
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "sc_eo": {
+      "bits": 48,
+      "pin_range": [
+       684.588,
+       693.804
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "st_ei": {
+      "bits": 1088,
+      "pin_range": [
+       471.9,
+       680.796
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "st_eo": {
+      "bits": 1088,
+      "pin_range": [
+       259.212,
+       468.108
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     }
+    },
+    "own_order_monotonic": {
+     "a": true,
+     "b": true
+    },
+    "actions": [
+     "a: kit <no kit: qfd_dv_slice2_e> add route.pin_balance (order undefined)",
+     "b: kit <no kit: qfd_dv_slice2_e> add route.pin_balance (order undefined)"
+    ]
+   }
+  },
+  {
+   "a": {
+    "inst": "dvs_E3",
+    "master": "qfd_dv_slice2_e",
+    "module": "qfd_dv_slice2_e",
+    "kit": null,
+    "kit_candidates": 0,
+    "orient": "MY",
+    "master_face": "W",
+    "die_face": "E",
+    "source": [
+     "standin_lef"
+    ],
+    "routed": false,
+    "order_defined": false,
+    "pin_balance": false,
+    "master_instances": 6
+   },
+   "b": {
+    "inst": "dvs_E4",
+    "master": "qfd_dv_slice2_e",
+    "module": "qfd_dv_slice2_e",
+    "kit": null,
+    "kit_candidates": 0,
+    "orient": "MY",
+    "master_face": "E",
+    "die_face": "W",
+    "source": [
+     "standin_lef"
+    ],
+    "routed": false,
+    "order_defined": false,
+    "pin_balance": false,
+    "master_instances": 6
+   },
+   "axis": "y",
+   "gap_um": 0.024,
+   "bits": 4984,
+   "off_face_bits": 0,
+   "ports": [
+    [
+     "ag_wi",
+     "ag_eo",
+     10
+    ],
+    [
+     "ard_wi",
+     "ard_eo",
+     512
+    ],
+    [
+     "arl_wi",
+     "arl_eo",
+     1
+    ],
+    [
+     "arm_wi",
+     "arm_eo",
+     1
+    ],
+    [
+     "art_wi",
+     "art_eo",
+     32
+    ],
+    [
+     "arv_wi",
+     "arv_eo",
+     1
+    ],
+    [
+     "cmd_wo",
+     "cmd_ei",
+     116
+    ],
+    [
+     "dd_wi",
+     "dd_eo",
+     548
+    ],
+    [
+     "dr_wo",
+     "dr_ei",
+     520
+    ],
+    [
+     "hr_wo",
+     "hr_ei",
+     453
+    ],
+    [
+     "rd_wo",
+     "rd_ei",
+     512
+    ],
+    [
+     "re_wo",
+     "re_ei",
+     1
+    ],
+    [
+     "rl_wo",
+     "rl_ei",
+     1
+    ],
+    [
+     "rr_wo",
+     "rr_ei",
+     3
+    ],
+    [
+     "rv_wo",
+     "rv_ei",
+     1
+    ],
+    [
+     "sc_wi",
+     "sc_eo",
+     48
+    ],
+    [
+     "sc_wo",
+     "sc_ei",
+     48
+    ],
+    [
+     "st_wi",
+     "st_eo",
+     1088
+    ],
+    [
+     "st_wo",
+     "st_ei",
+     1088
+    ]
+   ],
+   "identity": true,
+   "moved_bits": 0,
+   "name_wired_crossings": 0,
+   "max_crossings": 12417636,
+   "reversed": false,
+   "max_offset_um": 0.0,
+   "mirrored": false,
+   "order_defined": false,
+   "verdict": "undefined",
+   "fix": {
+    "side": "b",
+    "inst": "dvs_E4",
+    "master": "qfd_dv_slice2_e",
+    "module": "qfd_dv_slice2_e",
+    "kit": null,
+    "master_instances": 6,
+    "prescription_usable": false,
+    "routed": false,
+    "ports": {
+     "ag_eo": {
+      "bits": 10,
+      "pin_range": [
+       1165.644,
+       1167.564
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "ard_eo": {
+      "bits": 512,
+      "pin_range": [
+       732.492,
+       830.796
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "arl_eo": {
+      "bits": 1,
+      "pin_range": [
+       728.104,
+       729.104
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "arm_eo": {
+      "bits": 1,
+      "pin_range": [
+       724.12,
+       725.12
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "art_eo": {
+      "bits": 32,
+      "pin_range": [
+       714.588,
+       720.732
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "arv_eo": {
+      "bits": 1,
+      "pin_range": [
+       710.2,
+       711.2
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "cmd_ei": {
+      "bits": 116,
+      "pin_range": [
+       142.38,
+       164.652
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "dd_eo": {
+      "bits": 548,
+      "pin_range": [
+       834.588,
+       939.804
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "dr_ei": {
+      "bits": 520,
+      "pin_range": [
+       1062.012,
+       1161.852
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "hr_ei": {
+      "bits": 453,
+      "pin_range": [
+       168.444,
+       255.42
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "rd_ei": {
+      "bits": 512,
+      "pin_range": [
+       959.916,
+       1058.22
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "re_ei": {
+      "bits": 1,
+      "pin_range": [
+       947.176,
+       948.176
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "rl_ei": {
+      "bits": 1,
+      "pin_range": [
+       955.528,
+       956.528
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "rr_ei": {
+      "bits": 3,
+      "pin_range": [
+       951.564,
+       952.14
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "rv_ei": {
+      "bits": 1,
+      "pin_range": [
+       943.192,
+       944.192
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "sc_ei": {
+      "bits": 48,
+      "pin_range": [
+       697.596,
+       706.812
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "sc_eo": {
+      "bits": 48,
+      "pin_range": [
+       684.588,
+       693.804
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "st_ei": {
+      "bits": 1088,
+      "pin_range": [
+       471.9,
+       680.796
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "st_eo": {
+      "bits": 1088,
+      "pin_range": [
+       259.212,
+       468.108
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     }
+    },
+    "own_order_monotonic": {
+     "a": true,
+     "b": true
+    },
+    "actions": [
+     "a: kit <no kit: qfd_dv_slice2_e> add route.pin_balance (order undefined)",
+     "b: kit <no kit: qfd_dv_slice2_e> add route.pin_balance (order undefined)"
+    ]
+   }
+  },
+  {
+   "a": {
+    "inst": "dvs_W1",
+    "master": "qfd_dv_slice2_w",
+    "module": "qfd_dv_slice2_w",
+    "kit": null,
+    "kit_candidates": 0,
+    "orient": "R0",
+    "master_face": "W",
+    "die_face": "W",
+    "source": [
+     "standin_lef"
+    ],
+    "routed": false,
+    "order_defined": false,
+    "pin_balance": false,
+    "master_instances": 6
+   },
+   "b": {
+    "inst": "dvs_W2",
+    "master": "qfd_dv_slice2_w",
+    "module": "qfd_dv_slice2_w",
+    "kit": null,
+    "kit_candidates": 0,
+    "orient": "R0",
+    "master_face": "E",
+    "die_face": "E",
+    "source": [
+     "standin_lef"
+    ],
+    "routed": false,
+    "order_defined": false,
+    "pin_balance": false,
+    "master_instances": 6
+   },
+   "axis": "y",
+   "gap_um": 0.024,
+   "bits": 4984,
+   "off_face_bits": 0,
+   "ports": [
+    [
+     "ag_wo",
+     "ag_ei",
+     10
+    ],
+    [
+     "ard_wo",
+     "ard_ei",
+     512
+    ],
+    [
+     "arl_wo",
+     "arl_ei",
+     1
+    ],
+    [
+     "arm_wo",
+     "arm_ei",
+     1
+    ],
+    [
+     "art_wo",
+     "art_ei",
+     32
+    ],
+    [
+     "arv_wo",
+     "arv_ei",
+     1
+    ],
+    [
+     "cmd_wi",
+     "cmd_eo",
+     116
+    ],
+    [
+     "dd_wo",
+     "dd_ei",
+     548
+    ],
+    [
+     "dr_wi",
+     "dr_eo",
+     520
+    ],
+    [
+     "hr_wi",
+     "hr_eo",
+     453
+    ],
+    [
+     "rd_wi",
+     "rd_eo",
+     512
+    ],
+    [
+     "re_wi",
+     "re_eo",
+     1
+    ],
+    [
+     "rl_wi",
+     "rl_eo",
+     1
+    ],
+    [
+     "rr_wi",
+     "rr_eo",
+     3
+    ],
+    [
+     "rv_wi",
+     "rv_eo",
+     1
+    ],
+    [
+     "sc_wi",
+     "sc_eo",
+     48
+    ],
+    [
+     "sc_wo",
+     "sc_ei",
+     48
+    ],
+    [
+     "st_wi",
+     "st_eo",
+     1088
+    ],
+    [
+     "st_wo",
+     "st_ei",
+     1088
+    ]
+   ],
+   "identity": true,
+   "moved_bits": 0,
+   "name_wired_crossings": 0,
+   "max_crossings": 12417636,
+   "reversed": false,
+   "max_offset_um": 0.0,
+   "mirrored": false,
+   "order_defined": false,
+   "verdict": "undefined",
+   "fix": {
+    "side": "b",
+    "inst": "dvs_W2",
+    "master": "qfd_dv_slice2_w",
+    "module": "qfd_dv_slice2_w",
+    "kit": null,
+    "master_instances": 6,
+    "prescription_usable": false,
+    "routed": false,
+    "ports": {
+     "ag_ei": {
+      "bits": 10,
+      "pin_range": [
+       1165.644,
+       1167.564
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "ard_ei": {
+      "bits": 512,
+      "pin_range": [
+       732.492,
+       830.796
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "arl_ei": {
+      "bits": 1,
+      "pin_range": [
+       728.104,
+       729.104
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "arm_ei": {
+      "bits": 1,
+      "pin_range": [
+       724.12,
+       725.12
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "art_ei": {
+      "bits": 32,
+      "pin_range": [
+       714.588,
+       720.732
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "arv_ei": {
+      "bits": 1,
+      "pin_range": [
+       710.2,
+       711.2
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "cmd_eo": {
+      "bits": 116,
+      "pin_range": [
+       142.38,
+       164.652
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "dd_ei": {
+      "bits": 548,
+      "pin_range": [
+       834.588,
+       939.804
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "dr_eo": {
+      "bits": 520,
+      "pin_range": [
+       1062.012,
+       1161.852
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "hr_eo": {
+      "bits": 453,
+      "pin_range": [
+       168.444,
+       255.42
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "rd_eo": {
+      "bits": 512,
+      "pin_range": [
+       959.916,
+       1058.22
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "re_eo": {
+      "bits": 1,
+      "pin_range": [
+       947.176,
+       948.176
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "rl_eo": {
+      "bits": 1,
+      "pin_range": [
+       955.528,
+       956.528
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "rr_eo": {
+      "bits": 3,
+      "pin_range": [
+       951.564,
+       952.14
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "rv_eo": {
+      "bits": 1,
+      "pin_range": [
+       943.192,
+       944.192
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "sc_ei": {
+      "bits": 48,
+      "pin_range": [
+       684.588,
+       693.804
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "sc_eo": {
+      "bits": 48,
+      "pin_range": [
+       697.596,
+       706.812
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "st_ei": {
+      "bits": 1088,
+      "pin_range": [
+       259.212,
+       468.108
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "st_eo": {
+      "bits": 1088,
+      "pin_range": [
+       471.9,
+       680.796
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     }
+    },
+    "own_order_monotonic": {
+     "a": true,
+     "b": true
+    },
+    "actions": [
+     "a: kit <no kit: qfd_dv_slice2_w> add route.pin_balance (order undefined)",
+     "b: kit <no kit: qfd_dv_slice2_w> add route.pin_balance (order undefined)"
+    ]
+   }
+  },
+  {
+   "a": {
+    "inst": "dvs_W3",
+    "master": "qfd_dv_slice2_w",
+    "module": "qfd_dv_slice2_w",
+    "kit": null,
+    "kit_candidates": 0,
+    "orient": "R0",
+    "master_face": "W",
+    "die_face": "W",
+    "source": [
+     "standin_lef"
+    ],
+    "routed": false,
+    "order_defined": false,
+    "pin_balance": false,
+    "master_instances": 6
+   },
+   "b": {
+    "inst": "dvs_W4",
+    "master": "qfd_dv_slice2_w",
+    "module": "qfd_dv_slice2_w",
+    "kit": null,
+    "kit_candidates": 0,
+    "orient": "R0",
+    "master_face": "E",
+    "die_face": "E",
+    "source": [
+     "standin_lef"
+    ],
+    "routed": false,
+    "order_defined": false,
+    "pin_balance": false,
+    "master_instances": 6
+   },
+   "axis": "y",
+   "gap_um": 0.024,
+   "bits": 4984,
+   "off_face_bits": 0,
+   "ports": [
+    [
+     "ag_wo",
+     "ag_ei",
+     10
+    ],
+    [
+     "ard_wo",
+     "ard_ei",
+     512
+    ],
+    [
+     "arl_wo",
+     "arl_ei",
+     1
+    ],
+    [
+     "arm_wo",
+     "arm_ei",
+     1
+    ],
+    [
+     "art_wo",
+     "art_ei",
+     32
+    ],
+    [
+     "arv_wo",
+     "arv_ei",
+     1
+    ],
+    [
+     "cmd_wi",
+     "cmd_eo",
+     116
+    ],
+    [
+     "dd_wo",
+     "dd_ei",
+     548
+    ],
+    [
+     "dr_wi",
+     "dr_eo",
+     520
+    ],
+    [
+     "hr_wi",
+     "hr_eo",
+     453
+    ],
+    [
+     "rd_wi",
+     "rd_eo",
+     512
+    ],
+    [
+     "re_wi",
+     "re_eo",
+     1
+    ],
+    [
+     "rl_wi",
+     "rl_eo",
+     1
+    ],
+    [
+     "rr_wi",
+     "rr_eo",
+     3
+    ],
+    [
+     "rv_wi",
+     "rv_eo",
+     1
+    ],
+    [
+     "sc_wi",
+     "sc_eo",
+     48
+    ],
+    [
+     "sc_wo",
+     "sc_ei",
+     48
+    ],
+    [
+     "st_wi",
+     "st_eo",
+     1088
+    ],
+    [
+     "st_wo",
+     "st_ei",
+     1088
+    ]
+   ],
+   "identity": true,
+   "moved_bits": 0,
+   "name_wired_crossings": 0,
+   "max_crossings": 12417636,
+   "reversed": false,
+   "max_offset_um": 0.0,
+   "mirrored": false,
+   "order_defined": false,
+   "verdict": "undefined",
+   "fix": {
+    "side": "b",
+    "inst": "dvs_W4",
+    "master": "qfd_dv_slice2_w",
+    "module": "qfd_dv_slice2_w",
+    "kit": null,
+    "master_instances": 6,
+    "prescription_usable": false,
+    "routed": false,
+    "ports": {
+     "ag_ei": {
+      "bits": 10,
+      "pin_range": [
+       1165.644,
+       1167.564
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "ard_ei": {
+      "bits": 512,
+      "pin_range": [
+       732.492,
+       830.796
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "arl_ei": {
+      "bits": 1,
+      "pin_range": [
+       728.104,
+       729.104
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "arm_ei": {
+      "bits": 1,
+      "pin_range": [
+       724.12,
+       725.12
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "art_ei": {
+      "bits": 32,
+      "pin_range": [
+       714.588,
+       720.732
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "arv_ei": {
+      "bits": 1,
+      "pin_range": [
+       710.2,
+       711.2
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "cmd_eo": {
+      "bits": 116,
+      "pin_range": [
+       142.38,
+       164.652
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "dd_ei": {
+      "bits": 548,
+      "pin_range": [
+       834.588,
+       939.804
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "dr_eo": {
+      "bits": 520,
+      "pin_range": [
+       1062.012,
+       1161.852
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "hr_eo": {
+      "bits": 453,
+      "pin_range": [
+       168.444,
+       255.42
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "rd_eo": {
+      "bits": 512,
+      "pin_range": [
+       959.916,
+       1058.22
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "re_eo": {
+      "bits": 1,
+      "pin_range": [
+       947.176,
+       948.176
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "rl_eo": {
+      "bits": 1,
+      "pin_range": [
+       955.528,
+       956.528
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "rr_eo": {
+      "bits": 3,
+      "pin_range": [
+       951.564,
+       952.14
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "rv_eo": {
+      "bits": 1,
+      "pin_range": [
+       943.192,
+       944.192
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "sc_ei": {
+      "bits": 48,
+      "pin_range": [
+       684.588,
+       693.804
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "sc_eo": {
+      "bits": 48,
+      "pin_range": [
+       697.596,
+       706.812
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "st_ei": {
+      "bits": 1088,
+      "pin_range": [
+       259.212,
+       468.108
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     },
+     "st_eo": {
+      "bits": 1088,
+      "pin_range": [
+       471.9,
+       680.796
+      ],
+      "pin_order_desc": false,
+      "monotonic": true
+     }
+    },
+    "own_order_monotonic": {
+     "a": true,
+     "b": true
+    },
+    "actions": [
+     "a: kit <no kit: qfd_dv_slice2_w> add route.pin_balance (order undefined)",
+     "b: kit <no kit: qfd_dv_slice2_w> add route.pin_balance (order undefined)"
+    ]
+   }
+  },
+  {
+   "a": {
+    "inst": "io_collective",
+    "master": "qfd_collective_static_io_production",
+    "module": "qfd_collective_static_io_production",
+    "kit": null,
+    "kit_candidates": 0,
+    "orient": "R0",
+    "master_face": "E",
+    "die_face": "E",
+    "source": [
+     "standin_lef"
+    ],
+    "routed": false,
+    "order_defined": false,
+    "pin_balance": false,
+    "master_instances": 1
+   },
+   "b": {
+    "inst": "rly_dvw_arv_wo_2",
+    "master": "qfd_landh_1_EN_65x30",
+    "module": "qfd_landh_1_EN_65x30",
+    "kit": "qfwd_landh_1_en_65x30",
+    "kit_candidates": 1,
+    "orient": "R0",
+    "master_face": "W",
+    "die_face": "W",
+    "source": [
+     "kit_plan"
+    ],
+    "routed": false,
+    "order_defined": false,
+    "pin_balance": false,
+    "master_instances": 4
+   },
+   "axis": "y",
+   "gap_um": 3.912,
+   "bits": 1,
+   "off_face_bits": 1,
+   "ports": [
+    [
+     "rst_n",
+     "rs",
+     1
+    ]
+   ],
+   "identity": true,
+   "moved_bits": 0,
+   "name_wired_crossings": 0,
+   "max_crossings": 0,
+   "reversed": false,
+   "max_offset_um": 36.53,
+   "mirrored": false,
+   "order_defined": false,
+   "verdict": "small"
+  },
+  {
+   "a": {
+    "inst": "io_serdes_2",
+    "master": "ot_qfd_serdes_112g_x12_phy_s597",
+    "module": "ot_qfd_serdes_112g_x12_phy_s597",
+    "kit": null,
+    "kit_candidates": 0,
+    "orient": "R0",
+    "master_face": "N",
+    "die_face": "N",
+    "source": [
+     "standin_lef"
+    ],
+    "routed": false,
+    "order_defined": false,
+    "pin_balance": false,
+    "master_instances": 3
+   },
+   "b": {
+    "inst": "rly_serdes2_txv_9",
+    "master": "qfd_rly_1_WS_65x30",
+    "module": "qfd_rly_1_WS_65x30",
+    "kit": null,
+    "kit_candidates": 0,
+    "orient": "R0",
+    "master_face": "S",
+    "die_face": "S",
+    "source": [
+     "standin_lef"
+    ],
+    "routed": false,
+    "order_defined": false,
+    "pin_balance": false,
+    "master_instances": 1
+   },
+   "axis": "x",
+   "gap_um": 1.284,
+   "bits": 1,
+   "off_face_bits": 0,
+   "ports": [
+    [
+     "tx_v",
+     "b",
+     1
+    ]
+   ],
+   "identity": true,
+   "moved_bits": 0,
+   "name_wired_crossings": 0,
+   "max_crossings": 0,
+   "reversed": false,
+   "max_offset_um": 182.082,
+   "mirrored": false,
+   "order_defined": false,
+   "verdict": "small"
+  },
+  {
+   "a": {
+    "inst": "rs_bump",
+    "master": "qfd_rstsync",
+    "module": "qfd_rstsync",
+    "kit": "qfd_rstsync",
+    "kit_candidates": 1,
+    "orient": "R0",
+    "master_face": "E",
+    "die_face": "E",
+    "source": [
+     "kit_plan"
+    ],
+    "routed": false,
+    "order_defined": false,
+    "pin_balance": false,
+    "master_instances": 1
+   },
+   "b": {
+    "inst": "rstt_rst_fwd_s_1",
+    "master": "qfd_rst_rep",
+    "module": "qfd_rst_rep",
+    "kit": "qfd_rst_rep",
+    "kit_candidates": 1,
+    "orient": "R0",
+    "master_face": "W",
+    "die_face": "W",
+    "source": [
+     "kit_plan"
+    ],
+    "routed": false,
+    "order_defined": false,
+    "pin_balance": false,
+    "master_instances": 1624
+   },
+   "axis": "y",
+   "gap_um": 2.448,
+   "bits": 1,
+   "off_face_bits": 0,
+   "ports": [
+    [
+     "rso_f",
+     "d",
+     1
+    ]
+   ],
+   "identity": true,
+   "moved_bits": 0,
+   "name_wired_crossings": 0,
+   "max_crossings": 0,
+   "reversed": false,
+   "max_offset_um": 5.56,
+   "mirrored": false,
+   "order_defined": false,
+   "verdict": "small"
+  },
+  {
+   "a": {
+    "inst": "rstseq_rom",
+    "master": "qfd_rstseq",
+    "module": "qfd_rstseq",
+    "kit": "qfd_rstseq",
+    "kit_candidates": 1,
+    "orient": "R0",
+    "master_face": "E",
+    "die_face": "E",
+    "source": [
+     "kit_plan"
+    ],
+    "routed": false,
+    "order_defined": false,
+    "pin_balance": false,
+    "master_instances": 1
+   },
+   "b": {
+    "inst": "rstt_rst_field_72",
+    "master": "qfd_rst_rep",
+    "module": "qfd_rst_rep",
+    "kit": "qfd_rst_rep",
+    "kit_candidates": 1,
+    "orient": "R0",
+    "master_face": "W",
+    "die_face": "W",
+    "source": [
+     "kit_plan"
+    ],
+    "routed": false,
+    "order_defined": false,
+    "pin_balance": false,
+    "master_instances": 1624
+   },
+   "axis": "y",
+   "gap_um": 2.592,
+   "bits": 1,
+   "off_face_bits": 0,
+   "ports": [
+    [
+     "rso_f",
+     "d",
+     1
+    ]
+   ],
+   "identity": true,
+   "moved_bits": 0,
+   "name_wired_crossings": 0,
+   "max_crossings": 0,
+   "reversed": false,
+   "max_offset_um": 3.248,
+   "mirrored": false,
+   "order_defined": false,
+   "verdict": "small"
+  },
+  {
+   "a": {
+    "inst": "rstseq_rom",
+    "master": "qfd_rstseq",
+    "module": "qfd_rstseq",
+    "kit": "qfd_rstseq",
+    "kit_candidates": 1,
+    "orient": "R0",
+    "master_face": "W",
+    "die_face": "W",
+    "source": [
+     "kit_plan"
+    ],
+    "routed": false,
+    "order_defined": false,
+    "pin_balance": false,
+    "master_instances": 1
+   },
+   "b": {
+    "inst": "rstt_rst_fwd_s_0",
+    "master": "qfd_rst_rep",
+    "module": "qfd_rst_rep",
+    "kit": "qfd_rst_rep",
+    "kit_candidates": 1,
+    "orient": "R0",
+    "master_face": "E",
+    "die_face": "E",
+    "source": [
+     "kit_plan"
+    ],
+    "routed": false,
+    "order_defined": false,
+    "pin_balance": false,
+    "master_instances": 1624
+   },
+   "axis": "y",
+   "gap_um": 2.592,
+   "bits": 1,
+   "off_face_bits": 0,
+   "ports": [
+    [
+     "rsi",
+     "q0",
+     1
+    ]
+   ],
+   "identity": true,
+   "moved_bits": 0,
+   "name_wired_crossings": 0,
+   "max_crossings": 0,
+   "reversed": false,
+   "max_offset_um": 3.468,
+   "mirrored": false,
+   "order_defined": false,
+   "verdict": "small"
+  },
+  {
+   "a": {
+    "inst": "rstseq_rom",
+    "master": "qfd_rstseq",
+    "module": "qfd_rstseq",
+    "kit": "qfd_rstseq",
+    "kit_candidates": 1,
+    "orient": "R0",
+    "master_face": "E",
+    "die_face": "E",
+    "source": [
+     "kit_plan"
+    ],
+    "routed": false,
+    "order_defined": false,
+    "pin_balance": false,
+    "master_instances": 1
+   },
+   "b": {
+    "inst": "rstt_rst_seq_10",
+    "master": "qfd_rst_rep",
+    "module": "qfd_rst_rep",
+    "kit": "qfd_rst_rep",
+    "kit_candidates": 1,
+    "orient": "R0",
+    "master_face": "W",
+    "die_face": "W",
+    "source": [
+     "kit_plan"
+    ],
+    "routed": false,
+    "order_defined": false,
+    "pin_balance": false,
+    "master_instances": 1624
+   },
+   "axis": "y",
+   "gap_um": 2.592,
+   "bits": 1,
+   "off_face_bits": 0,
+   "ports": [
+    [
+     "rso_seq",
+     "d",
+     1
+    ]
+   ],
+   "identity": true,
+   "moved_bits": 0,
+   "name_wired_crossings": 0,
+   "max_crossings": 0,
+   "reversed": false,
+   "max_offset_um": 8.528,
+   "mirrored": false,
+   "order_defined": false,
+   "verdict": "small"
+  },
+  {
+   "a": {
+    "inst": "rstseq_rom",
+    "master": "qfd_rstseq",
+    "module": "qfd_rstseq",
+    "kit": "qfd_rstseq",
+    "kit_candidates": 1,
+    "orient": "R0",
+    "master_face": "E",
+    "die_face": "E",
+    "source": [
+     "kit_plan"
+    ],
+    "routed": false,
+    "order_defined": false,
+    "pin_balance": false,
+    "master_instances": 1
+   },
+   "b": {
+    "inst": "rstt_rst_seq_ctlm_10",
+    "master": "qfd_rst_rep",
+    "module": "qfd_rst_rep",
+    "kit": "qfd_rst_rep",
+    "kit_candidates": 1,
+    "orient": "R0",
+    "master_face": "W",
+    "die_face": "W",
+    "source": [
+     "kit_plan"
+    ],
+    "routed": false,
+    "order_defined": false,
+    "pin_balance": false,
+    "master_instances": 1624
+   },
+   "axis": "y",
+   "gap_um": 2.592,
+   "bits": 1,
+   "off_face_bits": 0,
+   "ports": [
+    [
+     "rso_ctlm",
+     "d",
+     1
+    ]
+   ],
+   "identity": true,
+   "moved_bits": 0,
+   "name_wired_crossings": 0,
+   "max_crossings": 0,
+   "reversed": false,
+   "max_offset_um": 13.632,
+   "mirrored": false,
+   "order_defined": false,
+   "verdict": "small"
+  },
+  {
+   "a": {
+    "inst": "rstt_rst_d2d__fo1__r3_39",
+    "master": "qfd_rst_rep",
+    "module": "qfd_rst_rep",
+    "kit": "qfd_rst_rep",
+    "kit_candidates": 1,
+    "orient": "R0",
+    "master_face": "E",
+    "die_face": "E",
+    "source": [
+     "kit_plan"
+    ],
+    "routed": false,
+    "order_defined": false,
+    "pin_balance": false,
+    "master_instances": 1624
+   },
+   "b": {
+    "inst": "rstt_rst_d2d__fo1__r3_9",
+    "master": "qfd_rst_rep",
+    "module": "qfd_rst_rep",
+    "kit": "qfd_rst_rep",
+    "kit_candidates": 1,
+    "orient": "R0",
+    "master_face": "W",
+    "die_face": "W",
+    "source": [
+     "kit_plan"
+    ],
+    "routed": false,
+    "order_defined": false,
+    "pin_balance": false,
+    "master_instances": 1624
+   },
+   "axis": "y",
+   "gap_um": 2.592,
+   "bits": 1,
+   "off_face_bits": 0,
+   "ports": [
+    [
+     "q0",
+     "d",
+     1
+    ]
+   ],
+   "identity": true,
+   "moved_bits": 0,
+   "name_wired_crossings": 0,
+   "max_crossings": 0,
+   "reversed": false,
+   "max_offset_um": 0.04,
+   "mirrored": false,
+   "order_defined": false,
+   "verdict": "small"
+  },
+  {
+   "a": {
+    "inst": "rstt_rst_d2d__fo1__r3_48",
+    "master": "qfd_rst_rep",
+    "module": "qfd_rst_rep",
+    "kit": "qfd_rst_rep",
+    "kit_candidates": 1,
+    "orient": "R0",
+    "master_face": "E",
+    "die_face": "E",
+    "source": [
+     "kit_plan"
+    ],
+    "routed": false,
+    "order_defined": false,
+    "pin_balance": false,
+    "master_instances": 1624
+   },
+   "b": {
+    "inst": "rstt_rst_d2d__fo1__r3_5",
+    "master": "qfd_rst_rep",
+    "module": "qfd_rst_rep",
+    "kit": "qfd_rst_rep",
+    "kit_candidates": 1,
+    "orient": "R0",
+    "master_face": "W",
+    "die_face": "W",
+    "source": [
+     "kit_plan"
+    ],
+    "routed": false,
+    "order_defined": false,
+    "pin_balance": false,
+    "master_instances": 1624
+   },
+   "axis": "y",
+   "gap_um": 2.592,
+   "bits": 1,
+   "off_face_bits": 0,
+   "ports": [
+    [
+     "q0",
+     "d",
+     1
+    ]
+   ],
+   "identity": true,
+   "moved_bits": 0,
+   "name_wired_crossings": 0,
+   "max_crossings": 0,
+   "reversed": false,
+   "max_offset_um": 0.04,
+   "mirrored": false,
+   "order_defined": false,
+   "verdict": "small"
+  },
+  {
+   "a": {
+    "inst": "rstt_rst_d2d__fo2__r3_10",
+    "master": "qfd_rst_rep",
+    "module": "qfd_rst_rep",
+    "kit": "qfd_rst_rep",
+    "kit_candidates": 1,
+    "orient": "R0",
+    "master_face": "W",
+    "die_face": "W",
+    "source": [
+     "kit_plan"
+    ],
+    "routed": false,
+    "order_defined": false,
+    "pin_balance": false,
+    "master_instances": 1624
+   },
+   "b": {
+    "inst": "rstt_rst_d2d__fo2__r3_21",
+    "master": "qfd_rst_rep",
+    "module": "qfd_rst_rep",
+    "kit": "qfd_rst_rep",
+    "kit_candidates": 1,
+    "orient": "R0",
+    "master_face": "E",
+    "die_face": "E",
+    "source": [
+     "kit_plan"
+    ],
+    "routed": false,
+    "order_defined": false,
+    "pin_balance": false,
+    "master_instances": 1624
+   },
+   "axis": "y",
+   "gap_um": 2.592,
+   "bits": 1,
+   "off_face_bits": 0,
+   "ports": [
+    [
+     "d",
+     "q0",
+     1
+    ]
+   ],
+   "identity": true,
+   "moved_bits": 0,
+   "name_wired_crossings": 0,
+   "max_crossings": 0,
+   "reversed": false,
+   "max_offset_um": 0.04,
+   "mirrored": false,
+   "order_defined": false,
+   "verdict": "small"
+  },
+  {
+   "a": {
+    "inst": "rstt_rst_d2d__fo2__r3_11",
+    "master": "qfd_rst_rep",
+    "module": "qfd_rst_rep",
+    "kit": "qfd_rst_rep",
+    "kit_candidates": 1,
+    "orient": "R0",
+    "master_face": "W",
+    "die_face": "W",
+    "source": [
+     "kit_plan"
+    ],
+    "routed": false,
+    "order_defined": false,
+    "pin_balance": false,
+    "master_instances": 1624
+   },
+   "b": {
+    "inst": "rstt_rst_d2d__fo2__r3_24",
+    "master": "qfd_rst_rep",
+    "module": "qfd_rst_rep",
+    "kit": "qfd_rst_rep",
+    "kit_candidates": 1,
+    "orient": "R0",
+    "master_face": "E",
+    "die_face": "E",
+    "source": [
+     "kit_plan"
+    ],
+    "routed": false,
+    "order_defined": false,
+    "pin_balance": false,
+    "master_instances": 1624
+   },
+   "axis": "y",
+   "gap_um": 2.592,
+   "bits": 1,
+   "off_face_bits": 0,
+   "ports": [
+    [
+     "d",
+     "q0",
+     1
+    ]
+   ],
+   "identity": true,
+   "moved_bits": 0,
+   "name_wired_crossings": 0,
+   "max_crossings": 0,
+   "reversed": false,
+   "max_offset_um": 0.04,
+   "mirrored": false,
+   "order_defined": false,
+   "verdict": "small"
+  },
+  {
+   "a": {
+    "inst": "rstt_rst_d2d__fo2__r3_14",
+    "master": "qfd_rst_rep",
+    "module": "qfd_rst_rep",
+    "kit": "qfd_rst_rep",
+    "kit_candidates": 1,
+    "orient": "R0",
+    "master_face": "W",
+    "die_face": "W",
+    "source": [
+     "kit_plan"
+    ],
+    "routed": false,
+    "order_defined": false,
+    "pin_balance": false,
+    "master_instances": 1624
+   },
+   "b": {
+    "inst": "rstt_rst_d2d__fo2__r3_25",
+    "master": "qfd_rst_rep",
+    "module": "qfd_rst_rep",
+    "kit": "qfd_rst_rep",
+    "kit_candidates": 1,
+    "orient": "R0",
+    "master_face": "E",
+    "die_face": "E",
+    "source": [
+     "kit_plan"
+    ],
+    "routed": false,
+    "order_defined": false,
+    "pin_balance": false,
+    "master_instances": 1624
+   },
+   "axis": "y",
+   "gap_um": 2.592,
+   "bits": 1,
+   "off_face_bits": 0,
+   "ports": [
+    [
+     "d",
+     "q0",
+     1
+    ]
+   ],
+   "identity": true,
+   "moved_bits": 0,
+   "name_wired_crossings": 0,
+   "max_crossings": 0,
+   "reversed": false,
+   "max_offset_um": 0.04,
+   "mirrored": false,
+   "order_defined": false,
+   "verdict": "small"
+  },
+  {
+   "a": {
+    "inst": "rstt_rst_d2d__fo2__r3_31",
+    "master": "qfd_rst_rep",
+    "module": "qfd_rst_rep",
+    "kit": "qfd_rst_rep",
+    "kit_candidates": 1,
+    "orient": "R0",
+    "master_face": "E",
+    "die_face": "E",
+    "source": [
+     "kit_plan"
+    ],
+    "routed": false,
+    "order_defined": false,
+    "pin_balance": false,
+    "master_instances": 1624
+   },
+   "b": {
+    "inst": "rstt_rst_d2d__fo2__r3_9",
+    "master": "qfd_rst_rep",
+    "module": "qfd_rst_rep",
+    "kit": "qfd_rst_rep",
+    "kit_candidates": 1,
+    "orient": "R0",
+    "master_face": "W",
+    "die_face": "W",
+    "source": [
+     "kit_plan"
+    ],
+    "routed": false,
+    "order_defined": false,
+    "pin_balance": false,
+    "master_instances": 1624
+   },
+   "axis": "y",
+   "gap_um": 2.592,
+   "bits": 1,
+   "off_face_bits": 0,
+   "ports": [
+    [
+     "q0",
+     "d",
+     1
+    ]
+   ],
+   "identity": true,
+   "moved_bits": 0,
+   "name_wired_crossings": 0,
+   "max_crossings": 0,
+   "reversed": false,
+   "max_offset_um": 0.04,
+   "mirrored": false,
+   "order_defined": false,
+   "verdict": "small"
+  },
+  {
+   "a": {
+    "inst": "rstt_rst_field_1090",
+    "master": "qfd_rst_rep",
+    "module": "qfd_rst_rep",
+    "kit": "qfd_rst_rep",
+    "kit_candidates": 1,
+    "orient": "R0",
+    "master_face": "E",
+    "die_face": "E",
+    "source": [
+     "kit_plan"
+    ],
+    "routed": false,
+    "order_defined": false,
+    "pin_balance": false,
+    "master_instances": 1624
+   },
+   "b": {
+    "inst": "rstt_rst_field_67",
+    "master": "qfd_rst_rep",
+    "module": "qfd_rst_rep",
+    "kit": "qfd_rst_rep",
+    "kit_candidates": 1,
+    "orient": "R0",
+    "master_face": "W",
+    "die_face": "W",
+    "source": [
+     "kit_plan"
+    ],
+    "routed": false,
+    "order_defined": false,
+    "pin_balance": false,
+    "master_instances": 1624
+   },
+   "axis": "y",
+   "gap_um": 2.592,
+   "bits": 1,
+   "off_face_bits": 0,
+   "ports": [
+    [
+     "q0",
+     "d",
+     1
+    ]
+   ],
+   "identity": true,
+   "moved_bits": 0,
+   "name_wired_crossings": 0,
+   "max_crossings": 0,
+   "reversed": false,
+   "max_offset_um": 0.04,
+   "mirrored": false,
+   "order_defined": false,
+   "verdict": "small"
+  },
+  {
+   "a": {
+    "inst": "rstt_rst_field_1464",
+    "master": "qfd_rst_rep",
+    "module": "qfd_rst_rep",
+    "kit": "qfd_rst_rep",
+    "kit_candidates": 1,
+    "orient": "R0",
+    "master_face": "E",
+    "die_face": "E",
+    "source": [
+     "kit_plan"
+    ],
+    "routed": false,
+    "order_defined": false,
+    "pin_balance": false,
+    "master_instances": 1624
+   },
+   "b": {
+    "inst": "rstt_rst_field_8",
+    "master": "qfd_rst_rep",
+    "module": "qfd_rst_rep",
+    "kit": "qfd_rst_rep",
+    "kit_candidates": 1,
+    "orient": "R0",
+    "master_face": "W",
+    "die_face": "W",
+    "source": [
+     "kit_plan"
+    ],
+    "routed": false,
+    "order_defined": false,
+    "pin_balance": false,
+    "master_instances": 1624
+   },
+   "axis": "y",
+   "gap_um": 2.592,
+   "bits": 1,
+   "off_face_bits": 0,
+   "ports": [
+    [
+     "q0",
+     "d",
+     1
+    ]
+   ],
+   "identity": true,
+   "moved_bits": 0,
+   "name_wired_crossings": 0,
+   "max_crossings": 0,
+   "reversed": false,
+   "max_offset_um": 0.04,
+   "mirrored": false,
+   "order_defined": false,
+   "verdict": "small"
+  },
+  {
+   "a": {
+    "inst": "rstt_rst_field_1833",
+    "master": "qfd_rst_rep",
+    "module": "qfd_rst_rep",
+    "kit": "qfd_rst_rep",
+    "kit_candidates": 1,
+    "orient": "R0",
+    "master_face": "E",
+    "die_face": "E",
+    "source": [
+     "kit_plan"
+    ],
+    "routed": false,
+    "order_defined": false,
+    "pin_balance": false,
+    "master_instances": 1624
+   },
+   "b": {
+    "inst": "rstt_rst_field_36",
+    "master": "qfd_rst_rep",
+    "module": "qfd_rst_rep",
+    "kit": "qfd_rst_rep",
+    "kit_candidates": 1,
+    "orient": "R0",
+    "master_face": "W",
+    "die_face": "W",
+    "source": [
+     "kit_plan"
+    ],
+    "routed": false,
+    "order_defined": false,
+    "pin_balance": false,
+    "master_instances": 1624
+   },
+   "axis": "y",
+   "gap_um": 2.592,
+   "bits": 1,
+   "off_face_bits": 0,
+   "ports": [
+    [
+     "q0",
+     "d",
+     1
+    ]
+   ],
+   "identity": true,
+   "moved_bits": 0,
+   "name_wired_crossings": 0,
+   "max_crossings": 0,
+   "reversed": false,
+   "max_offset_um": 0.04,
+   "mirrored": false,
+   "order_defined": false,
+   "verdict": "small"
+  },
+  {
+   "a": {
+    "inst": "rstt_rst_field_1892",
+    "master": "qfd_rst_rep_p8",
+    "module": "qfd_rst_rep_p8",
+    "kit": "qfd_rst_rep_p8",
+    "kit_candidates": 1,
+    "orient": "R0",
+    "master_face": "E",
+    "die_face": "E",
+    "source": [
+     "kit_plan"
+    ],
+    "routed": false,
+    "order_defined": false,
+    "pin_balance": false,
+    "master_instances": 834
+   },
+   "b": {
+    "inst": "rstt_rst_field_1893",
+    "master": "qfd_rst_rep_p8",
+    "module": "qfd_rst_rep_p8",
+    "kit": "qfd_rst_rep_p8",
+    "kit_candidates": 1,
+    "orient": "R0",
+    "master_face": "W",
+    "die_face": "W",
+    "source": [
+     "kit_plan"
+    ],
+    "routed": false,
+    "order_defined": false,
+    "pin_balance": false,
+    "master_instances": 834
+   },
+   "axis": "y",
+   "gap_um": 2.592,
+   "bits": 1,
+   "off_face_bits": 0,
+   "ports": [
+    [
+     "q0",
+     "d",
+     1
+    ]
+   ],
+   "identity": true,
+   "moved_bits": 0,
+   "name_wired_crossings": 0,
+   "max_crossings": 0,
+   "reversed": false,
+   "max_offset_um": 0.04,
+   "mirrored": false,
+   "order_defined": false,
+   "verdict": "small"
+  },
+  {
+   "a": {
+    "inst": "rstt_rst_field_1896",
+    "master": "qfd_rst_rep_p8",
+    "module": "qfd_rst_rep_p8",
+    "kit": "qfd_rst_rep_p8",
+    "kit_candidates": 1,
+    "orient": "R0",
+    "master_face": "E",
+    "die_face": "E",
+    "source": [
+     "kit_plan"
+    ],
+    "routed": false,
+    "order_defined": false,
+    "pin_balance": false,
+    "master_instances": 834
+   },
+   "b": {
+    "inst": "rstt_rst_field_1897",
+    "master": "qfd_rst_rep_p8",
+    "module": "qfd_rst_rep_p8",
+    "kit": "qfd_rst_rep_p8",
+    "kit_candidates": 1,
+    "orient": "R0",
+    "master_face": "W",
+    "die_face": "W",
+    "source": [
+     "kit_plan"
+    ],
+    "routed": false,
+    "order_defined": false,
+    "pin_balance": false,
+    "master_instances": 834
+   },
+   "axis": "y",
+   "gap_um": 2.592,
+   "bits": 1,
+   "off_face_bits": 0,
+   "ports": [
+    [
+     "q0",
+     "d",
+     1
+    ]
+   ],
+   "identity": true,
+   "moved_bits": 0,
+   "name_wired_crossings": 0,
+   "max_crossings": 0,
+   "reversed": false,
+   "max_offset_um": 0.04,
+   "mirrored": false,
+   "order_defined": false,
+   "verdict": "small"
+  },
+  {
+   "a": {
+    "inst": "rstt_rst_field_2037",
+    "master": "qfd_rst_rep_p8",
+    "module": "qfd_rst_rep_p8",
+    "kit": "qfd_rst_rep_p8",
+    "kit_candidates": 1,
+    "orient": "R0",
+    "master_face": "E",
+    "die_face": "E",
+    "source": [
+     "kit_plan"
+    ],
+    "routed": false,
+    "order_defined": false,
+    "pin_balance": false,
+    "master_instances": 834
+   },
+   "b": {
+    "inst": "rstt_rst_field_66",
+    "master": "qfd_rst_rep",
+    "module": "qfd_rst_rep",
+    "kit": "qfd_rst_rep",
+    "kit_candidates": 1,
+    "orient": "R0",
+    "master_face": "W",
+    "die_face": "W",
+    "source": [
+     "kit_plan"
+    ],
+    "routed": false,
+    "order_defined": false,
+    "pin_balance": false,
+    "master_instances": 1624
+   },
+   "axis": "y",
+   "gap_um": 2.592,
+   "bits": 1,
+   "off_face_bits": 0,
+   "ports": [
+    [
+     "q0",
+     "d",
+     1
+    ]
+   ],
+   "identity": true,
+   "moved_bits": 0,
+   "name_wired_crossings": 0,
+   "max_crossings": 0,
+   "reversed": false,
+   "max_offset_um": 0.04,
+   "mirrored": false,
+   "order_defined": false,
+   "verdict": "small"
+  },
+  {
+   "a": {
+    "inst": "rstt_rst_field_2064",
+    "master": "qfd_rst_rep",
+    "module": "qfd_rst_rep",
+    "kit": "qfd_rst_rep",
+    "kit_candidates": 1,
+    "orient": "R0",
+    "master_face": "E",
+    "die_face": "E",
+    "source": [
+     "kit_plan"
+    ],
+    "routed": false,
+    "order_defined": false,
+    "pin_balance": false,
+    "master_instances": 1624
+   },
+   "b": {
+    "inst": "rstt_rst_field_971",
+    "master": "qfd_rst_rep",
+    "module": "qfd_rst_rep",
+    "kit": "qfd_rst_rep",
+    "kit_candidates": 1,
+    "orient": "R0",
+    "master_face": "W",
+    "die_face": "W",
+    "source": [
+     "kit_plan"
+    ],
+    "routed": false,
+    "order_defined": false,
+    "pin_balance": false,
+    "master_instances": 1624
+   },
+   "axis": "y",
+   "gap_um": 2.592,
+   "bits": 1,
+   "off_face_bits": 0,
+   "ports": [
+    [
+     "q0",
+     "d",
+     1
+    ]
+   ],
+   "identity": true,
+   "moved_bits": 0,
+   "name_wired_crossings": 0,
+   "max_crossings": 0,
+   "reversed": false,
+   "max_offset_um": 0.04,
+   "mirrored": false,
+   "order_defined": false,
+   "verdict": "small"
+  },
+  {
+   "a": {
+    "inst": "rstt_rst_field_2099",
+    "master": "qfd_rst_rep_p8",
+    "module": "qfd_rst_rep_p8",
+    "kit": "qfd_rst_rep_p8",
+    "kit_candidates": 1,
+    "orient": "R0",
+    "master_face": "E",
+    "die_face": "E",
+    "source": [
+     "kit_plan"
+    ],
+    "routed": false,
+    "order_defined": false,
+    "pin_balance": false,
+    "master_instances": 834
+   },
+   "b": {
+    "inst": "rstt_rst_field_65",
+    "master": "qfd_rst_rep",
+    "module": "qfd_rst_rep",
+    "kit": "qfd_rst_rep",
+    "kit_candidates": 1,
+    "orient": "R0",
+    "master_face": "W",
+    "die_face": "W",
+    "source": [
+     "kit_plan"
+    ],
+    "routed": false,
+    "order_defined": false,
+    "pin_balance": false,
+    "master_instances": 1624
+   },
+   "axis": "y",
+   "gap_um": 2.592,
+   "bits": 1,
+   "off_face_bits": 0,
+   "ports": [
+    [
+     "q0",
+     "d",
+     1
+    ]
+   ],
+   "identity": true,
+   "moved_bits": 0,
+   "name_wired_crossings": 0,
+   "max_crossings": 0,
+   "reversed": false,
+   "max_offset_um": 0.04,
+   "mirrored": false,
+   "order_defined": false,
+   "verdict": "small"
+  },
+  {
+   "a": {
+    "inst": "rstt_rst_seq_2",
+    "master": "qfd_rst_rep",
+    "module": "qfd_rst_rep",
+    "kit": "qfd_rst_rep",
+    "kit_candidates": 1,
+    "orient": "R0",
+    "master_face": "W",
+    "die_face": "W",
+    "source": [
+     "kit_plan"
+    ],
+    "routed": false,
+    "order_defined": false,
+    "pin_balance": false,
+    "master_instances": 1624
+   },
+   "b": {
+    "inst": "rstt_rst_seq_53",
+    "master": "qfd_rst_rep",
+    "module": "qfd_rst_rep",
+    "kit": "qfd_rst_rep",
+    "kit_candidates": 1,
+    "orient": "R0",
+    "master_face": "E",
+    "die_face": "E",
+    "source": [
+     "kit_plan"
+    ],
+    "routed": false,
+    "order_defined": false,
+    "pin_balance": false,
+    "master_instances": 1624
+   },
+   "axis": "y",
+   "gap_um": 2.592,
+   "bits": 1,
+   "off_face_bits": 0,
+   "ports": [
+    [
+     "d",
+     "q0",
+     1
+    ]
+   ],
+   "identity": true,
+   "moved_bits": 0,
+   "name_wired_crossings": 0,
+   "max_crossings": 0,
+   "reversed": false,
+   "max_offset_um": 0.04,
+   "mirrored": false,
+   "order_defined": false,
+   "verdict": "small"
+  },
+  {
+   "a": {
+    "inst": "rstt_rst_seq_46",
+    "master": "qfd_rst_rep",
+    "module": "qfd_rst_rep",
+    "kit": "qfd_rst_rep",
+    "kit_candidates": 1,
+    "orient": "R0",
+    "master_face": "E",
+    "die_face": "E",
+    "source": [
+     "kit_plan"
+    ],
+    "routed": false,
+    "order_defined": false,
+    "pin_balance": false,
+    "master_instances": 1624
+   },
+   "b": {
+    "inst": "rstt_rst_seq_5",
+    "master": "qfd_rst_rep",
+    "module": "qfd_rst_rep",
+    "kit": "qfd_rst_rep",
+    "kit_candidates": 1,
+    "orient": "R0",
+    "master_face": "W",
+    "die_face": "W",
+    "source": [
+     "kit_plan"
+    ],
+    "routed": false,
+    "order_defined": false,
+    "pin_balance": false,
+    "master_instances": 1624
+   },
+   "axis": "y",
+   "gap_um": 2.592,
+   "bits": 1,
+   "off_face_bits": 0,
+   "ports": [
+    [
+     "q0",
+     "d",
+     1
+    ]
+   ],
+   "identity": true,
+   "moved_bits": 0,
+   "name_wired_crossings": 0,
+   "max_crossings": 0,
+   "reversed": false,
+   "max_offset_um": 0.04,
+   "mirrored": false,
+   "order_defined": false,
+   "verdict": "small"
+  },
+  {
+   "a": {
+    "inst": "rstt_rst_seq_ctlm_44",
+    "master": "qfd_rst_rep",
+    "module": "qfd_rst_rep",
+    "kit": "qfd_rst_rep",
+    "kit_candidates": 1,
+    "orient": "R0",
+    "master_face": "E",
+    "die_face": "E",
+    "source": [
+     "kit_plan"
+    ],
+    "routed": false,
+    "order_defined": false,
+    "pin_balance": false,
+    "master_instances": 1624
+   },
+   "b": {
+    "inst": "rstt_rst_seq_ctlm_6",
+    "master": "qfd_rst_rep",
+    "module": "qfd_rst_rep",
+    "kit": "qfd_rst_rep",
+    "kit_candidates": 1,
+    "orient": "R0",
+    "master_face": "W",
+    "die_face": "W",
+    "source": [
+     "kit_plan"
+    ],
+    "routed": false,
+    "order_defined": false,
+    "pin_balance": false,
+    "master_instances": 1624
+   },
+   "axis": "y",
+   "gap_um": 2.592,
+   "bits": 1,
+   "off_face_bits": 0,
+   "ports": [
+    [
+     "q0",
+     "d",
+     1
+    ]
+   ],
+   "identity": true,
+   "moved_bits": 0,
+   "name_wired_crossings": 0,
+   "max_crossings": 0,
+   "reversed": false,
+   "max_offset_um": 0.04,
+   "mirrored": false,
+   "order_defined": false,
+   "verdict": "small"
+  }
+ ]
+}

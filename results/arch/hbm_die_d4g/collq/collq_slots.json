@@ -1,0 +1,443 @@
+{
+ "schema": "opentallas.hbm_d4g.slot_request.v1",
+ "lane": "HBM-COLLQ",
+ "date": "2026-10-18",
+ "basis": "results/arch/hbm_die_d4g/plan/d4g_phy/compact.P.json + grants_d4g.json (wt/hd4g @ H-D4G5); 21.6 um halo; 0.432 grid",
+ "rule": "the two gather tiles abut coll_<q> (min gap, 21.6 halo, free of every compact.P / grants slot); the issue tile is the one nearer the quadrant bank centroid; orientation mirrors x when the tile centre is E of the coll centre (E ring/ra face toward coll_<q>) and y in the N quadrants (S VM face toward the banks)",
+ "slots": [
+  {
+   "name": "collgi_SW",
+   "inst": "hcollgi_SW",
+   "cell": "ot_hgi_coll_gq_issue",
+   "origin": {
+    "x": 5898.96,
+    "y": 14812.416,
+    "orient": "R0"
+   },
+   "outline": {
+    "w": 237.6,
+    "h": 237.6
+   },
+   "note": "kit hcoll_gq_issue_1018 (237.6^2); next to coll_SW on its bank side"
+  },
+  {
+   "name": "collgl_SW",
+   "inst": "hcollgl_SW",
+   "cell": "ot_hgi_coll_gq_land",
+   "origin": {
+    "x": 6158.16,
+    "y": 14812.416,
+    "orient": "R0"
+   },
+   "outline": {
+    "w": 237.6,
+    "h": 237.6
+   },
+   "note": "kit hcoll_gq_land_1018 (237.6^2); next to coll_SW on its bank side"
+  },
+  {
+   "name": "collgi_SE",
+   "inst": "hcollgi_SE",
+   "cell": "ot_hgi_coll_gq_issue",
+   "origin": {
+    "x": 12724.128,
+    "y": 13897.872,
+    "orient": "R0"
+   },
+   "outline": {
+    "w": 237.6,
+    "h": 237.6
+   },
+   "note": "kit hcoll_gq_issue_1018 (237.6^2); next to coll_SE on its bank side"
+  },
+  {
+   "name": "collgl_SE",
+   "inst": "hcollgl_SE",
+   "cell": "ot_hgi_coll_gq_land",
+   "origin": {
+    "x": 12724.128,
+    "y": 14157.072,
+    "orient": "R0"
+   },
+   "outline": {
+    "w": 237.6,
+    "h": 237.6
+   },
+   "note": "kit hcoll_gq_land_1018 (237.6^2); next to coll_SE on its bank side"
+  },
+  {
+   "name": "collgi_NW",
+   "inst": "hcollgi_NW",
+   "cell": "ot_hgi_coll_gq_issue",
+   "origin": {
+    "x": 7427.376,
+    "y": 16554.24,
+    "orient": "R180"
+   },
+   "outline": {
+    "w": 237.6,
+    "h": 237.6
+   },
+   "note": "kit hcoll_gq_issue_1018 (237.6^2); next to coll_NW on its bank side"
+  },
+  {
+   "name": "collgl_NW",
+   "inst": "hcollgl_NW",
+   "cell": "ot_hgi_coll_gq_land",
+   "origin": {
+    "x": 7427.376,
+    "y": 16295.04,
+    "orient": "R180"
+   },
+   "outline": {
+    "w": 237.6,
+    "h": 237.6
+   },
+   "note": "kit hcoll_gq_land_1018 (237.6^2); next to coll_NW on its bank side"
+  },
+  {
+   "name": "collgi_NE",
+   "inst": "hcollgi_NE",
+   "cell": "ot_hgi_coll_gq_issue",
+   "origin": {
+    "x": 12724.128,
+    "y": 17094.24,
+    "orient": "MX"
+   },
+   "outline": {
+    "w": 237.6,
+    "h": 237.6
+   },
+   "note": "kit hcoll_gq_issue_1018 (237.6^2); next to coll_NE on its bank side"
+  },
+  {
+   "name": "collgl_NE",
+   "inst": "hcollgl_NE",
+   "cell": "ot_hgi_coll_gq_land",
+   "origin": {
+    "x": 12724.128,
+    "y": 16835.04,
+    "orient": "MX"
+   },
+   "outline": {
+    "w": 237.6,
+    "h": 237.6
+   },
+   "note": "kit hcoll_gq_land_1018 (237.6^2); next to coll_NE on its bank side"
+  }
+ ],
+ "soft": [
+  {
+   "inst": "hcollrs_SW",
+   "cell": "ot_hbm_idx_vm_share2_static",
+   "kind": "soft wires-only parent, 4 bank-pair leaves (clk_pair[p])",
+   "leaves": [
+    {
+     "leaf": 0,
+     "banks": [
+      "vmb_SW0",
+      "vmb_SW1"
+     ],
+     "place": "beside vmb_SW0/vmb_SW1 (their shared long edge), as hb_idx__nwsh"
+    },
+    {
+     "leaf": 1,
+     "banks": [
+      "vmb_SW2",
+      "vmb_SW3"
+     ],
+     "place": "beside vmb_SW2/vmb_SW3 (their shared long edge), as hb_idx__nwsh"
+    },
+    {
+     "leaf": 2,
+     "banks": [
+      "vmb_SW4",
+      "vmb_SW5"
+     ],
+     "place": "beside vmb_SW4/vmb_SW5 (their shared long edge), as hb_idx__nwsh"
+    },
+    {
+     "leaf": 3,
+     "banks": [
+      "vmb_SW6",
+      "vmb_SW7"
+     ],
+     "place": "beside vmb_SW6/vmb_SW7 (their shared long edge), as hb_idx__nwsh"
+    }
+   ]
+  },
+  {
+   "inst": "hcollks_SW",
+   "cell": "ot_hgi_coll_kq_share2",
+   "kind": "soft wires-only parent, 4 bank-pair leaves (clk_pair[p])",
+   "leaves": [
+    {
+     "leaf": 0,
+     "banks": [
+      "vmb_SW0",
+      "vmb_SW1"
+     ],
+     "place": "beside vmb_SW0/vmb_SW1 (their shared long edge), as hb_idx__nwsh"
+    },
+    {
+     "leaf": 1,
+     "banks": [
+      "vmb_SW2",
+      "vmb_SW3"
+     ],
+     "place": "beside vmb_SW2/vmb_SW3 (their shared long edge), as hb_idx__nwsh"
+    },
+    {
+     "leaf": 2,
+     "banks": [
+      "vmb_SW4",
+      "vmb_SW5"
+     ],
+     "place": "beside vmb_SW4/vmb_SW5 (their shared long edge), as hb_idx__nwsh"
+    },
+    {
+     "leaf": 3,
+     "banks": [
+      "vmb_SW6",
+      "vmb_SW7"
+     ],
+     "place": "beside vmb_SW6/vmb_SW7 (their shared long edge), as hb_idx__nwsh"
+    }
+   ]
+  },
+  {
+   "inst": "hcollrs_SE",
+   "cell": "ot_hbm_idx_vm_share2_static",
+   "kind": "soft wires-only parent, 4 bank-pair leaves (clk_pair[p])",
+   "leaves": [
+    {
+     "leaf": 0,
+     "banks": [
+      "vmb_SE0",
+      "vmb_SE1"
+     ],
+     "place": "beside vmb_SE0/vmb_SE1 (their shared long edge), as hb_idx__nwsh"
+    },
+    {
+     "leaf": 1,
+     "banks": [
+      "vmb_SE2",
+      "vmb_SE3"
+     ],
+     "place": "beside vmb_SE2/vmb_SE3 (their shared long edge), as hb_idx__nwsh"
+    },
+    {
+     "leaf": 2,
+     "banks": [
+      "vmb_SE4",
+      "vmb_SE5"
+     ],
+     "place": "beside vmb_SE4/vmb_SE5 (their shared long edge), as hb_idx__nwsh"
+    },
+    {
+     "leaf": 3,
+     "banks": [
+      "vmb_SE6",
+      "vmb_SE7"
+     ],
+     "place": "beside vmb_SE6/vmb_SE7 (their shared long edge), as hb_idx__nwsh"
+    }
+   ]
+  },
+  {
+   "inst": "hcollks_SE",
+   "cell": "ot_hgi_coll_kq_share2",
+   "kind": "soft wires-only parent, 4 bank-pair leaves (clk_pair[p])",
+   "leaves": [
+    {
+     "leaf": 0,
+     "banks": [
+      "vmb_SE0",
+      "vmb_SE1"
+     ],
+     "place": "beside vmb_SE0/vmb_SE1 (their shared long edge), as hb_idx__nwsh"
+    },
+    {
+     "leaf": 1,
+     "banks": [
+      "vmb_SE2",
+      "vmb_SE3"
+     ],
+     "place": "beside vmb_SE2/vmb_SE3 (their shared long edge), as hb_idx__nwsh"
+    },
+    {
+     "leaf": 2,
+     "banks": [
+      "vmb_SE4",
+      "vmb_SE5"
+     ],
+     "place": "beside vmb_SE4/vmb_SE5 (their shared long edge), as hb_idx__nwsh"
+    },
+    {
+     "leaf": 3,
+     "banks": [
+      "vmb_SE6",
+      "vmb_SE7"
+     ],
+     "place": "beside vmb_SE6/vmb_SE7 (their shared long edge), as hb_idx__nwsh"
+    }
+   ]
+  },
+  {
+   "inst": "hcollrs_NW",
+   "cell": "ot_hbm_idx_vm_share2_static",
+   "kind": "soft wires-only parent, 4 bank-pair leaves (clk_pair[p])",
+   "leaves": [
+    {
+     "leaf": 0,
+     "banks": [
+      "vmb_NW0",
+      "vmb_NW1"
+     ],
+     "place": "beside vmb_NW0/vmb_NW1 (their shared long edge), as hb_idx__nwsh"
+    },
+    {
+     "leaf": 1,
+     "banks": [
+      "vmb_NW2",
+      "vmb_NW3"
+     ],
+     "place": "beside vmb_NW2/vmb_NW3 (their shared long edge), as hb_idx__nwsh"
+    },
+    {
+     "leaf": 2,
+     "banks": [
+      "vmb_NW4",
+      "vmb_NW5"
+     ],
+     "place": "beside vmb_NW4/vmb_NW5 (their shared long edge), as hb_idx__nwsh"
+    },
+    {
+     "leaf": 3,
+     "banks": [
+      "vmb_NW6",
+      "vmb_NW7"
+     ],
+     "place": "beside vmb_NW6/vmb_NW7 (their shared long edge), as hb_idx__nwsh"
+    }
+   ]
+  },
+  {
+   "inst": "hcollks_NW",
+   "cell": "ot_hgi_coll_kq_share2",
+   "kind": "soft wires-only parent, 4 bank-pair leaves (clk_pair[p])",
+   "leaves": [
+    {
+     "leaf": 0,
+     "banks": [
+      "vmb_NW0",
+      "vmb_NW1"
+     ],
+     "place": "beside vmb_NW0/vmb_NW1 (their shared long edge), as hb_idx__nwsh"
+    },
+    {
+     "leaf": 1,
+     "banks": [
+      "vmb_NW2",
+      "vmb_NW3"
+     ],
+     "place": "beside vmb_NW2/vmb_NW3 (their shared long edge), as hb_idx__nwsh"
+    },
+    {
+     "leaf": 2,
+     "banks": [
+      "vmb_NW4",
+      "vmb_NW5"
+     ],
+     "place": "beside vmb_NW4/vmb_NW5 (their shared long edge), as hb_idx__nwsh"
+    },
+    {
+     "leaf": 3,
+     "banks": [
+      "vmb_NW6",
+      "vmb_NW7"
+     ],
+     "place": "beside vmb_NW6/vmb_NW7 (their shared long edge), as hb_idx__nwsh"
+    }
+   ]
+  },
+  {
+   "inst": "hcollrs_NE",
+   "cell": "ot_hbm_idx_vm_share2_static",
+   "kind": "soft wires-only parent, 4 bank-pair leaves (clk_pair[p])",
+   "leaves": [
+    {
+     "leaf": 0,
+     "banks": [
+      "vmb_NE0",
+      "vmb_NE1"
+     ],
+     "place": "beside vmb_NE0/vmb_NE1 (their shared long edge), as hb_idx__nwsh"
+    },
+    {
+     "leaf": 1,
+     "banks": [
+      "vmb_NE2",
+      "vmb_NE3"
+     ],
+     "place": "beside vmb_NE2/vmb_NE3 (their shared long edge), as hb_idx__nwsh"
+    },
+    {
+     "leaf": 2,
+     "banks": [
+      "vmb_NE4",
+      "vmb_NE5"
+     ],
+     "place": "beside vmb_NE4/vmb_NE5 (their shared long edge), as hb_idx__nwsh"
+    },
+    {
+     "leaf": 3,
+     "banks": [
+      "vmb_NE6",
+      "vmb_NE7"
+     ],
+     "place": "beside vmb_NE6/vmb_NE7 (their shared long edge), as hb_idx__nwsh"
+    }
+   ]
+  },
+  {
+   "inst": "hcollks_NE",
+   "cell": "ot_hgi_coll_kq_share2",
+   "kind": "soft wires-only parent, 4 bank-pair leaves (clk_pair[p])",
+   "leaves": [
+    {
+     "leaf": 0,
+     "banks": [
+      "vmb_NE0",
+      "vmb_NE1"
+     ],
+     "place": "beside vmb_NE0/vmb_NE1 (their shared long edge), as hb_idx__nwsh"
+    },
+    {
+     "leaf": 1,
+     "banks": [
+      "vmb_NE2",
+      "vmb_NE3"
+     ],
+     "place": "beside vmb_NE2/vmb_NE3 (their shared long edge), as hb_idx__nwsh"
+    },
+    {
+     "leaf": 2,
+     "banks": [
+      "vmb_NE4",
+      "vmb_NE5"
+     ],
+     "place": "beside vmb_NE4/vmb_NE5 (their shared long edge), as hb_idx__nwsh"
+    },
+    {
+     "leaf": 3,
+     "banks": [
+      "vmb_NE6",
+      "vmb_NE7"
+     ],
+     "place": "beside vmb_NE6/vmb_NE7 (their shared long edge), as hb_idx__nwsh"
+    }
+   ]
+  }
+ ]
+}

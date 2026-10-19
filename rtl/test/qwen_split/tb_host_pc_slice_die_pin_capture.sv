@@ -33,7 +33,7 @@ module tb_host_pc_slice_die_pin_capture;
    .boot_go(bg_k),.lpc(lpc_of(k)),.fi(rf[k*291+:291]),.fo(rf[(k+1)*291+:291]),.ci(rc[(k+1)*32+:32]),.co(rc[k*32+:32]),.ai(ra[(k+1)*32+:32]),.ao(ra[k*32+:32]),.fault_i(rfl[k+1]),.fault_o(rfl[k]),
    .land_es(land_es[k*288+:288]),.land_er(r_land_er[k*261+:261]),.ctrl_es(r_ctrl_es[k*288+:288]),.ctrl_er(ctrl_er[k*261+:261]),
    .ctrl_completion_v(cmp_v[k]),.ctrl_completion_we(cmp_we[k]),.all_ack(r_ack[k]),.boot_done(r_bd[k]),.boot_ok(r_bo[k]),.boot_fault(r_bf[k]));
-  qkd_host_pc_slice_die #(.MUT(`ifdef OT_SLICE_BOOT_MUT 2 `elsif OT_SLICE_DIE_MUT 1 `else 0 `endif)) u_dut(.ck_station(ck),.ck_static(ck),.ck_boot(ck),.ck_boot_test(ck),
+  qkd_host_pc_slice_die #(.MUT(`ifdef OT_SLICE_BOOT_MUT 2 `elsif OT_SLICE_DIE_MUT 1 `else 0 `endif)) u_dut(.ck(ck),
    .host_rst_n(rst_n),.hbm_rst_n(hbm_rst_n),.lpc(lpc_of(k)),.bgi(dbg[k]),.bgo(dbg[k+1]),
    .fi(df[k*291+:291]),.fo(df[(k+1)*291+:291]),.ci(dc[(k+1)*32+:32]),.co(dc[k*32+:32]),.ai(da[(k+1)*32+:32]),.ao(da[k*32+:32]),.fault_i(dfl[k+1]),.fault_o(dfl[k]),
    .land_es(land_es[k*288+:288]),.land_er(d_land_er[k*261+:261]),.ctrl_es(d_ctrl_es[k*288+:288]),.ctrl_er(ctrl_er[k*261+:261]),

@@ -1,0 +1,26 @@
+{
+ "cell": "ot_s81_kp4_enc",
+ "view": "physical/ref_tile/s81lk_kp4_enc/views/ot_s81_kp4_enc",
+ "lib_cell": "ot_s81_kp4_enc",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 286.4,
+ "spread_ps": 57.2,
+ "outputs": 546,
+ "inputs": 514,
+ "launch_ps": 122.3,
+ "launch_pin": "p_d[67]",
+ "capture_ps": 103.5,
+ "capture_pin": "tx_d[471]",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "ff_launch_min_ps": 47.4,
+ "ff_hold_need_ps": -16.4,
+ "pass": true,
+ "fail_why": "",
+ "audited_by": "LANE S81-DIE2 2026-10-17 tools/hier_contract/native_pin_audit.py audit_one @ origin/main 708fc1938 (merged into claude/s81dv-p4i-1017 f4bb39520)"
+}

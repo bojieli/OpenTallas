@@ -1,0 +1,154 @@
+{
+ "errors": [],
+ "fields": {
+  "go": {
+   "cmd380": 0,
+   "hr": 452,
+   "width": 1
+  },
+  "nout": {
+   "cmd380": 1,
+   "hr": 434,
+   "width": 18
+  },
+  "tiles": {
+   "cmd380": 19,
+   "hr": 416,
+   "width": 18
+  },
+  "k": {
+   "cmd380": 37,
+   "hr": 398,
+   "width": 18
+  },
+  "wsrc": {
+   "cmd380": 55,
+   "hr": 397,
+   "width": 1
+  },
+  "wbase": {
+   "cmd380": 56,
+   "hr": 373,
+   "width": 24
+  },
+  "ts": {
+   "cmd380": 80,
+   "hr": 349,
+   "width": 24
+  },
+  "ks": {
+   "cmd380": 104,
+   "hr": 325,
+   "width": 24
+  },
+  "js": {
+   "cmd380": 128,
+   "hr": 301,
+   "width": 24
+  },
+  "xbase": {
+   "cmd380": 152,
+   "hr": 277,
+   "width": 24
+  },
+  "xks": {
+   "cmd380": 176,
+   "hr": 253,
+   "width": 24
+  },
+  "xjs": {
+   "cmd380": 200,
+   "hr": 229,
+   "width": 24
+  },
+  "xcs": {
+   "cmd380": 224,
+   "hr": 205,
+   "width": 24
+  },
+  "jsh": {
+   "cmd380": 248,
+   "hr": 202,
+   "width": 3
+  },
+  "split": {
+   "cmd380": 251,
+   "hr": 198,
+   "width": 4
+  },
+  "wcs": {
+   "cmd380": 255,
+   "hr": 174,
+   "width": 24
+  },
+  "round": {
+   "cmd380": 279,
+   "hr": 173,
+   "width": 1
+  },
+  "obase": {
+   "cmd380": 280,
+   "hr": 149,
+   "width": 24
+  },
+  "ots": {
+   "cmd380": 304,
+   "hr": 125,
+   "width": 24
+  },
+  "ojs": {
+   "cmd380": 328,
+   "hr": 101,
+   "width": 24
+  },
+  "mmode": {
+   "cmd380": 352,
+   "hr": 100,
+   "width": 1
+  },
+  "oen": {
+   "cmd380": 353,
+   "hr": 99,
+   "width": 1
+  },
+  "amax": {
+   "cmd380": 354,
+   "hr": 98,
+   "width": 1
+  },
+  "rmax": {
+   "cmd380": 355,
+   "hr": 97,
+   "width": 1
+  },
+  "mbase": {
+   "cmd380": 356,
+   "hr": 73,
+   "width": 24
+  }
+ },
+ "ctlm": {
+  "rtl/qwen_dv/qfd_tt_ctlm_dv.sv": {
+   "hr_top": "ib_hr",
+   "packed": true,
+   "misplaced": []
+  }
+ },
+ "die_hr_path": {
+  "relay_hops": 26,
+  "slices": [
+   "dvs_W5",
+   "dvs_W4",
+   "dvs_W3",
+   "dvs_W2",
+   "dvs_W1",
+   "dvs_W0",
+   "dvs_E0",
+   "dvs_E1",
+   "dvs_E2",
+   "dvs_E3",
+   "dvs_E4",
+   "dvs_E5"
+  ]
+ }
+}

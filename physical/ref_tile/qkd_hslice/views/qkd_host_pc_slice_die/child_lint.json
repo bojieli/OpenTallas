@@ -1,10 +1,10 @@
 {
  "schema": "opentallas.hier_contract.child_lint.v1",
- "lef": "/srv/opentallas-scratch2/claude/closure-loop/qkd_hslice-pc1-5fd00e3ad/record/views/qkd_host_pc_slice_die/provenance/qkd_host_pc_slice_die.candidate.lef",
+ "lef": "/srv/opentallas-scratch2/claude/closure-loop/qkd_hslice-es2-3ba5662d3/record/views/qkd_host_pc_slice_die/provenance/qkd_host_pc_slice_die.candidate.lef",
  "verdict": "PASS",
  "fails": [],
  "warns": [],
- "summary": "qkd_host_pc_slice_die 129.576 x 345.576: PG M5 VDD 24 stripes (96% spread, 100% cov) / VSS 24 stripes (96% spread, 100% cov); strap M6; face pins 2081 blocked-above 0 blocked-same 0; clock ck_boot insertion 263 ps; clock ck_boot_test insertion 71 ps; clock ck_static insertion 275 ps; clock ck_station insertion 224 ps; pockets M5 0 (closed)",
+ "summary": "qkd_host_pc_slice_die 129.576 x 345.576: PG M5 VDD 24 stripes (96% spread, 100% cov) / VSS 24 stripes (96% spread, 100% cov); strap M6; face pins 2078 blocked-above 0 blocked-same 0; clock ck insertion 317 ps; pockets M5 0 (closed)",
  "info": {
   "cell": "qkd_host_pc_slice_die",
   "W": 129.576,
@@ -36,9 +36,9 @@
   "strap_layer": "M6",
   "cap": null,
   "face": {
-   "face_pins": 2081,
+   "face_pins": 2078,
    "blocked_above": 0,
-   "covered_below": 2,
+   "covered_below": 0,
    "examples": [],
    "blocked_same": 0,
    "same_examples": [],
@@ -46,21 +46,9 @@
    "band_examples": []
   },
   "clock_insertion": {
-   "ck_boot": {
-    "max_ps": 262.91,
-    "min_ps": 205.26
-   },
-   "ck_boot_test": {
-    "max_ps": 70.62,
-    "min_ps": 60.71
-   },
-   "ck_static": {
-    "max_ps": 275.48,
-    "min_ps": 187.88
-   },
-   "ck_station": {
-    "max_ps": 223.79,
-    "min_ps": 169.19
+   "ck": {
+    "max_ps": 316.69,
+    "min_ps": 208.55
    }
   },
   "pockets": {
@@ -69,7 +57,7 @@
    "marker": {
     "layer": "M5",
     "d_um": 1.536,
-    "added": 867
+    "added": 976
    },
    "count": 0,
    "area_um2": 0,

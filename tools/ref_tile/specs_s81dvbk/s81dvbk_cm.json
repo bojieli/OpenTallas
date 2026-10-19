@@ -1,0 +1,141 @@
+{
+ "name": "s81dvbk_cm",
+ "top": "dsdv_bkcol_m",
+ "kind": "tile",
+ "sources": [
+  "rtl/link/ot_fifo_sram_fwft.sv",
+  "rtl/common/ot_fwd_link_stage.sv",
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_col_tile.sv",
+  "rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bkcol_leaves.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst"
+ ],
+ "outline": {
+  "w": 216.0,
+  "h": 108.0
+ },
+ "pins": {
+  "S": [
+   "f_w_s",
+   "f_f_s",
+   "t_cr_s"
+  ],
+  "N": [
+   "f_w_n",
+   "f_f_n",
+   "t_cr_n"
+  ],
+  "E": [
+   "vd",
+   "ck",
+   "rst"
+  ]
+ },
+ "pin_ranges": {
+  "f_w_s": [
+   4,
+   206
+  ],
+  "f_f_s": [
+   206,
+   210
+  ],
+  "t_cr_s": [
+   210,
+   212
+  ],
+  "f_w_n": [
+   4,
+   206
+  ],
+  "f_f_n": [
+   206,
+   210
+  ],
+  "t_cr_n": [
+   210,
+   212
+  ],
+  "vd": [
+   4,
+   96
+  ],
+  "ck": [
+   97,
+   100
+  ],
+  "rst": [
+   100,
+   103
+  ]
+ },
+ "macros": [],
+ "layer_cap": "M5",
+ "recipe": 2,
+ "hold_budget": "die",
+ "pin_regs": {
+  "enable": false,
+  "reason": "Source-registered: dsfd_colt_mrg (the closed merger RTL, unchanged) lands f_w / f_f in its pin flops and launches t_cr / vd from flops."
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  }
+ },
+ "structural_change": "S81U-BK3 VERTICAL CUT (coordinator 0cj (b), 10-17 ~20:10): the bk clusters were ~1,160 um wide (the closed tiles' lane faces point away from the merger / control); they now stack inside the 680-um column (plan results/rtl/s81_dv_1016/bk_units_bk2/vcut_plan.json): S row 2 tiles, middle row merger-or-control + glue, N row 2 tiles (MX). Re-pinned top-down for the new neighbours; square-ish re-cut; the lane relays are gone (every hop <= ~405 um). Merger (216 x 108, util ~0.5: the 216 x 172.8 trial measured 19,547 sinks TT 286.1 / spread 20.0 ps at util 31%): S face lanes 0 / 1, N face lanes 2 / 3, E face vd (to the glue's N face) + clock.",
+ "job": {
+  "owner": "Claude:S81U-BK3",
+  "branch": "claude/s81u2-bk-1017",
+  "tag": "m1",
+  "purpose": "S81-DV bk_col merger tile, vertical cut (dsfd_colt_mrg DM 8 / PACE 2 re-pinned; lane S81U-BK3): closure.",
+  "benches": [
+   {
+    "name": "dsdv_bk_col_exact",
+    "cmd": "bash rtl/dsrom_sys/s81_dv/unit/bk/test/run_bk_bench.sh col {RUN}/col 0",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "pass",
+    "pass_regex": "^DSDV_BK_COL PASS mut=0$",
+    "min_count_regex": "egress words (\\d+)"
+   },
+   {
+    "name": "dsdv_bk_col_mut_lateodd",
+    "cmd": "bash rtl/dsrom_sys/s81_dv/unit/bk/test/run_bk_bench.sh col {RUN}/colm3 3 gold5_odd",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "^DSDV_BK_COL FAIL mut=3$",
+    "fail_witness": "results/rtl/s81_dv_1016/bk_units_bk3/col_mut3.txt"
+   }
+  ],
+  "extra_paths": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "results/rtl/s81_dv_1016/bk_units",
+   "results/rtl/s81_dv_1016/bk_units_bk2",
+   "rtl/common",
+   "rtl/dsrom_sys/s81_dv/unit",
+   "rtl/dsrom_sys/s81_ph",
+   "rtl/hdc",
+   "rtl/link"
+  ],
+  "views_to": "physical/ref_tile/s81dvbk_cm/views",
+  "record_to": "results/rtl/ref_tile/s81dvbk_cm"
+ }
+}

@@ -111,7 +111,7 @@
  "recipe": 3,
  "pin_regs": {
   "enable": false,
-  "reason": "native EP e-read ABI: the service is combinational on SO (read request field so[12:0]) and on SI (e_rdq mux); ERL 3 = the EP's own three read stages, compiled into the PV calendar. A pin register would move every e-read and response edge against that calendar (qkd_astk_native_er_service_w has none). Only tag / valid / fault are registered, as in the service."
+  "reason": "every port is already a flop at its pin in RTL (ECTLA-2 2026-10-17); synthesis pin registers would add a second edge the bench and TAP_RL = 7 do not count."
  },
  "io_flop_at_pins": {
   "cols": 4,
@@ -126,15 +126,15 @@
  },
  "children": [],
  "inter": [],
- "purpose": "KVJ-D 2026-10-17 (kv_static_join_plan item 7): ASTK e-read qkd_astk_native_er_service_w (N=4) folded into the ASTK strip as an inline leaf on its SO/SI bus (wires-only successor qkd_astk_strip_er_s): the leaf carries only the bits the service touches (8 x so[12:0] out, 8 x so[0] in, 8 x si[632:569] in, 4 read ports, 4 responses: 979 pins) instead of the ~17k pass-through pins of a standalone service tile; so[424:13] and si stay parent nets. Cycle-exact replica (ERL 3, same fault law), lockstep-proved against the service on the full bus. Pins: S = owners 0..3 (strip rows 0-1), N = owners 4..7 (rows 2-3), W = the PV read ports + response tags + ck, E = response data.",
- "structural_change": "KVJ-D 2026-10-17 (kv_static_join_plan item 7): ASTK e-read qkd_astk_native_er_service_w (N=4) folded into the ASTK strip as an inline leaf on its SO/SI bus (wires-only successor qkd_astk_strip_er_s): the leaf carries only the bits the service touches (8 x so[12:0] out, 8 x so[0] in, 8 x si[632:569] in, 4 read ports, 4 responses: 979 pins) instead of the ~17k pass-through pins of a standalone service tile; so[424:13] and si stay parent nets. Cycle-exact replica (ERL 3, same fault law), lockstep-proved against the service on the full bus. Pins: S = owners 0..3 (strip rows 0-1), N = owners 4..7 (rows 2-3), W = the PV read ports + response tags + ck, E = response data.",
+ "purpose": "ECTLA-2 2026-10-17 (coordinator 0co (3): in->out combinational e-read REJECTED): qkd_astk_er_tap re-designed with a pin register on EVERY input and output (read_v/read_addr/eso_v/esi in, aso/response/fault out); no input reaches an output. Read latency TAP_RL = ERL 3 + 4 = 7 edges (request +2: read pin flop + aso pin flop; response +2: esi pin flop + response pin flop), written to kv_static_join_plan.md for KVJ-E to price in the PV calendar. Lockstep-exact vs qkd_astk_native_er_service_w with the request delayed 2 and the response delayed 2 (tb_qkd_astk_er_tap, 20k cycles, both fault laws at +2); same 979 pins, faces, outline. Inline leaf of the wires-only ASTK strip successor qkd_astk_strip_er_s (8 x so[12:0] out, 8 x so[0] in, 8 x si[632:569] in, 4 read ports, 4 responses).",
+ "structural_change": "ECTLA-2 2026-10-17 (coordinator 0co (3): in->out combinational e-read REJECTED): qkd_astk_er_tap re-designed with a pin register on EVERY input and output (read_v/read_addr/eso_v/esi in, aso/response/fault out); no input reaches an output. Read latency TAP_RL = ERL 3 + 4 = 7 edges (request +2: read pin flop + aso pin flop; response +2: esi pin flop + response pin flop), written to kv_static_join_plan.md for KVJ-E to price in the PV calendar. Lockstep-exact vs qkd_astk_native_er_service_w with the request delayed 2 and the response delayed 2 (tb_qkd_astk_er_tap, 20k cycles, both fault laws at +2); same 979 pins, faces, outline. Inline leaf of the wires-only ASTK strip successor qkd_astk_strip_er_s (8 x so[12:0] out, 8 x so[0] in, 8 x si[632:569] in, 4 read ports, 4 responses).",
  "slot_change_request": "KVJ-D 2026-10-17: new inline e-read leaf 64.8 x 43.2 inside the ASTK strip (qkd_astk_strip_er_s), one per strip (2 per pvw), at the strip's row-1/row-2 boundary so owners 0..3 reach the S face and 4..7 the N face; W/E face the pvw read / response side. Die lead / Q-KVSYS-DIE to assign the in-strip site (ASTK_W reservation).",
  "job": {
-  "owner": "claude:KVJ-D",
-  "branch": "claude/kvj-d-1017",
-  "tag": "e1",
-  "purpose": "KVJ-D 2026-10-17 (kv_static_join_plan item 7): ASTK e-read qkd_astk_native_er_service_w (N=4) folded into the ASTK strip as an inline leaf on its SO/SI bus (wires-only successor qkd_astk_strip_er_s): the leaf carries only the bits the service touches (8 x so[12:0] out, 8 x so[0] in, 8 x si[632:569] in, 4 read ports, 4 responses: 979 pins) instead of the ~17k pass-through pins of a standalone service tile; so[424:13] and si stay parent nets. Cycle-exact replica (ERL 3, same fault law), lockstep-proved against the service on the full bus. Pins: S = owners 0..3 (strip rows 0-1), N = owners 4..7 (rows 2-3), W = the PV read ports + response tags + ck, E = response data.",
-  "structural_change": "KVJ-D 2026-10-17 (kv_static_join_plan item 7): ASTK e-read qkd_astk_native_er_service_w (N=4) folded into the ASTK strip as an inline leaf on its SO/SI bus (wires-only successor qkd_astk_strip_er_s): the leaf carries only the bits the service touches (8 x so[12:0] out, 8 x so[0] in, 8 x si[632:569] in, 4 read ports, 4 responses: 979 pins) instead of the ~17k pass-through pins of a standalone service tile; so[424:13] and si stay parent nets. Cycle-exact replica (ERL 3, same fault law), lockstep-proved against the service on the full bus. Pins: S = owners 0..3 (strip rows 0-1), N = owners 4..7 (rows 2-3), W = the PV read ports + response tags + ck, E = response data.",
+  "owner": "claude:ECTLA-2",
+  "branch": "claude/ectla2-1017",
+  "tag": "e2",
+  "purpose": "ECTLA-2 2026-10-17 (coordinator 0co (3): in->out combinational e-read REJECTED): qkd_astk_er_tap re-designed with a pin register on EVERY input and output (read_v/read_addr/eso_v/esi in, aso/response/fault out); no input reaches an output. Read latency TAP_RL = ERL 3 + 4 = 7 edges (request +2: read pin flop + aso pin flop; response +2: esi pin flop + response pin flop), written to kv_static_join_plan.md for KVJ-E to price in the PV calendar. Lockstep-exact vs qkd_astk_native_er_service_w with the request delayed 2 and the response delayed 2 (tb_qkd_astk_er_tap, 20k cycles, both fault laws at +2); same 979 pins, faces, outline. Inline leaf of the wires-only ASTK strip successor qkd_astk_strip_er_s (8 x so[12:0] out, 8 x so[0] in, 8 x si[632:569] in, 4 read ports, 4 responses).",
+  "structural_change": "ECTLA-2 2026-10-17 (coordinator 0co (3): in->out combinational e-read REJECTED): qkd_astk_er_tap re-designed with a pin register on EVERY input and output (read_v/read_addr/eso_v/esi in, aso/response/fault out); no input reaches an output. Read latency TAP_RL = ERL 3 + 4 = 7 edges (request +2: read pin flop + aso pin flop; response +2: esi pin flop + response pin flop), written to kv_static_join_plan.md for KVJ-E to price in the PV calendar. Lockstep-exact vs qkd_astk_native_er_service_w with the request delayed 2 and the response delayed 2 (tb_qkd_astk_er_tap, 20k cycles, both fault laws at +2); same 979 pins, faces, outline. Inline leaf of the wires-only ASTK strip successor qkd_astk_strip_er_s (8 x so[12:0] out, 8 x so[0] in, 8 x si[632:569] in, 4 read ports, 4 responses).",
   "benches": [
    {
     "name": "er_tap_lockstep",
@@ -151,6 +151,17 @@
    {
     "name": "er_tap_erdq_mutant",
     "cmd": "bash tools/qwen_static_kv/er_tap_bench.sh {RUN}/bench/e1 1",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "response differs"
+   },
+   {
+    "name": "er_tap_early_compare_mutant",
+    "cmd": "bash tools/qwen_static_kv/er_tap_bench.sh {RUN}/bench/e2 2",
     "expect": "fail",
     "threads": 2,
     "peak_ram_gb": 4,

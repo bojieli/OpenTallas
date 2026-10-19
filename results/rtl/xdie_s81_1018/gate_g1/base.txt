@@ -1,0 +1,9 @@
+LATE dst 0 src 13 k 256 land 13775 deadline 13437
+LATE dst 1 src 4 k 256 land 13775 deadline 13437
+LATE dst 2 src 11 k 256 land 13775 deadline 13437
+LATE dst 4 src 1 k 256 land 13775 deadline 13437
+LATE dst 5 src 8 k 256 land 13775 deadline 13437
+XDIE_STATS beats 12096 landed 12096 mismatches 0 late 1216 maxlate 338 extra 0 faults 0000000000000000 live 32/32 last_cycle 18937
+FAIL xdie_s81: landed 12096/12096 mismatches 0 late 1216 extra 0 faults 0000000000000000 live 32/32
+BENCH_FAIL base
+EXIT 1

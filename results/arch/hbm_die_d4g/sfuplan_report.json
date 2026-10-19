@@ -1,0 +1,444 @@
+{
+ "tag": "SFUPLAN 10-18 (HANDOFF 0gj)",
+ "moves": {
+  "sfup_SW": {
+   "old": [
+    7178.328,
+    11082.312
+   ],
+   "new": [
+    7184.96,
+    11002.304
+   ],
+   "orient": "R0"
+  },
+  "cij_SW": {
+   "old": [
+    8148.168,
+    10840.392
+   ],
+   "new": [
+    8286.968,
+    10840.392
+   ],
+   "orient": "R0"
+  },
+  "sfup_SE": {
+   "old": [
+    12072.96,
+    11201.88
+   ],
+   "new": [
+    11934.928,
+    11003.6
+   ],
+   "orient": "MY"
+  },
+  "cij_SE": {
+   "old": [
+    12321.72,
+    11043.648
+   ],
+   "new": [
+    12384.92,
+    10845.36
+   ],
+   "orient": "R0"
+  },
+  "sfup_NW": {
+   "old": [
+    7367.328,
+    19734.408
+   ],
+   "new": [
+    7374.176,
+    19820.68
+   ],
+   "orient": "MX"
+  },
+  "cij_NW": {
+   "old": [
+    7959.384,
+    20751.552
+   ],
+   "new": [
+    7959.384,
+    20791.08
+   ],
+   "orient": "R0"
+  },
+  "sfup_NE": {
+   "old": [
+    12072.96,
+    19621.08
+   ],
+   "new": [
+    11934.928,
+    19819.384
+   ],
+   "orient": "R180"
+  },
+  "cij_NE": {
+   "old": [
+    12321.72,
+    20591.496
+   ],
+   "new": [
+    12384.92,
+    20789.784
+   ],
+   "orient": "R0"
+  }
+ },
+ "links": {
+  "SW": {
+   "store_core_gap_um": 20.0,
+   "store_core_gap_hbmcrit_um": 350,
+   "store_core_x_overlap_um": 550.0,
+   "store_out_vs_core_pin_window_overlap_um": 528.4,
+   "store_out_die_x": [
+    7206.56,
+    7773.76
+   ],
+   "core_su1_gap_um": 49.9,
+   "core_face_to_su1": "W",
+   "cij_sucore_centre_manhattan_um": [
+    2180.1,
+    2318.9
+   ],
+   "cij_coll_centre_manhattan_um": [
+    5144.9,
+    5283.7
+   ]
+  },
+  "SE": {
+   "store_core_gap_um": 21.3,
+   "store_core_gap_hbmcrit_um": 250,
+   "store_core_x_overlap_um": 550.0,
+   "store_out_vs_core_pin_window_overlap_um": 528.4,
+   "store_out_die_x": [
+    12426.13,
+    12993.33
+   ],
+   "core_su1_gap_um": 50.11,
+   "core_face_to_su1": "W (mirrored to die E)",
+   "cij_sucore_centre_manhattan_um": [
+    2210.5,
+    2075.5
+   ],
+   "cij_coll_centre_manhattan_um": [
+    4734.0,
+    4869.1
+   ]
+  },
+  "NW": {
+   "store_core_gap_um": 20.0,
+   "store_core_gap_hbmcrit_um": 100,
+   "store_core_x_overlap_um": 550.0,
+   "store_out_vs_core_pin_window_overlap_um": 528.4,
+   "store_out_die_x": [
+    7395.78,
+    7962.98
+   ],
+   "core_su1_gap_um": 50.11,
+   "core_face_to_su1": "W",
+   "cij_sucore_centre_manhattan_um": [
+    1871.2,
+    1831.7
+   ],
+   "cij_coll_centre_manhattan_um": [
+    4829.2,
+    4868.7
+   ]
+  },
+  "NE": {
+   "store_core_gap_um": 21.3,
+   "store_core_gap_hbmcrit_um": 250,
+   "store_core_x_overlap_um": 550.0,
+   "store_out_vs_core_pin_window_overlap_um": 528.4,
+   "store_out_die_x": [
+    12426.13,
+    12993.33
+   ],
+   "core_su1_gap_um": 50.11,
+   "core_face_to_su1": "W (mirrored to die E)",
+   "cij_sucore_centre_manhattan_um": [
+    2923.3,
+    2788.3
+   ],
+   "cij_coll_centre_manhattan_um": [
+    4733.9,
+    4869.0
+   ]
+  }
+ },
+ "clearance": {
+  "sfup_SW": [
+   [
+    20.0,
+    "sfucore_SW"
+   ],
+   [
+    22.01,
+    "cij_SW"
+   ],
+   [
+    28.4,
+    "sfus_SW"
+   ]
+  ],
+  "cij_SW": [
+   [
+    20.0,
+    "hc_SW"
+   ],
+   [
+    22.01,
+    "sfup_SW"
+   ],
+   [
+    329.83,
+    "calendar_SW"
+   ]
+  ],
+  "sfup_SE": [
+   [
+    20.0,
+    "cij_SE"
+   ],
+   [
+    20.0,
+    "hc_SE"
+   ],
+   [
+    21.3,
+    "sfucore_SE"
+   ]
+  ],
+  "cij_SE": [
+   [
+    20.0,
+    "hc_SE"
+   ],
+   [
+    20.0,
+    "sfup_SE"
+   ],
+   [
+    36.81,
+    "sfucore_SE"
+   ]
+  ],
+  "sfup_NW": [
+   [
+    20.0,
+    "cij_NW"
+   ],
+   [
+    20.0,
+    "sfucore_NW"
+   ],
+   [
+    28.4,
+    "sfus_NW"
+   ]
+  ],
+  "cij_NW": [
+   [
+    20.0,
+    "sfup_NW"
+   ],
+   [
+    21.6,
+    "hc_NW"
+   ],
+   [
+    35.21,
+    "sfucore_NW"
+   ]
+  ],
+  "sfup_NE": [
+   [
+    20.0,
+    "cij_NE"
+   ],
+   [
+    20.0,
+    "hc_NE"
+   ],
+   [
+    21.3,
+    "sfucore_NE"
+   ]
+  ],
+  "cij_NE": [
+   [
+    20.0,
+    "hc_NE"
+   ],
+   [
+    20.0,
+    "sfup_NE"
+   ],
+   [
+    36.81,
+    "sfucore_NE"
+   ]
+  ],
+  "sfucore_SW": [
+   [
+    20.0,
+    "sfup_SW"
+   ],
+   [
+    21.17,
+    "sucore_SW"
+   ],
+   [
+    49.9,
+    "su_SW1"
+   ]
+  ],
+  "sfucore_SE": [
+   [
+    21.3,
+    "sfup_SE"
+   ],
+   [
+    36.81,
+    "cij_SE"
+   ],
+   [
+    50.11,
+    "su_SE1"
+   ]
+  ],
+  "sfucore_NW": [
+   [
+    20.0,
+    "sfup_NW"
+   ],
+   [
+    21.17,
+    "sucore_NW"
+   ],
+   [
+    35.21,
+    "cij_NW"
+   ]
+  ],
+  "sfucore_NE": [
+   [
+    12.96,
+    "pgp_NE"
+   ],
+   [
+    21.3,
+    "sfup_NE"
+   ],
+   [
+    36.81,
+    "cij_NE"
+   ]
+  ]
+ },
+ "pin_grant": {
+  "SW": {
+   "face": "N",
+   "core_local_x": [
+    1040.0,
+    1598.4
+   ],
+   "pins": 2284,
+   "density_per_um": 4.09,
+   "signals": [
+    "io_word",
+    "compiler_control",
+    "fault"
+   ],
+   "peer": "sfup_SW",
+   "orient": "R0",
+   "die_face": "N",
+   "die_x": [
+    7176.56,
+    7734.96
+   ],
+   "die_y": 10982.304,
+   "status": "PLAN GRANT (HANDOFF 0gj); kit SFU-K9PIN not committed at write time: the k9 kit pin regions must match this window",
+   "was": "E face (k9 kit hbm_sfucore_k9 15beb5d90)"
+  },
+  "SE": {
+   "face": "N",
+   "core_local_x": [
+    1040.0,
+    1598.4
+   ],
+   "pins": 2284,
+   "density_per_um": 4.09,
+   "signals": [
+    "io_word",
+    "compiler_control",
+    "fault"
+   ],
+   "peer": "sfup_SE",
+   "orient": "MY",
+   "die_face": "N",
+   "die_x": [
+    12464.928,
+    13023.328
+   ],
+   "die_y": 10982.304,
+   "status": "PLAN GRANT (HANDOFF 0gj); kit SFU-K9PIN not committed at write time: the k9 kit pin regions must match this window",
+   "was": "E face (k9 kit hbm_sfucore_k9 15beb5d90)"
+  },
+  "NW": {
+   "face": "N",
+   "core_local_x": [
+    1040.0,
+    1598.4
+   ],
+   "pins": 2284,
+   "density_per_um": 4.09,
+   "signals": [
+    "io_word",
+    "compiler_control",
+    "fault"
+   ],
+   "peer": "sfup_NW",
+   "orient": "MX",
+   "die_face": "S",
+   "die_x": [
+    7365.776,
+    7924.176
+   ],
+   "die_y": 20791.08,
+   "status": "PLAN GRANT (HANDOFF 0gj); kit SFU-K9PIN not committed at write time: the k9 kit pin regions must match this window",
+   "was": "E face (k9 kit hbm_sfucore_k9 15beb5d90)"
+  },
+  "NE": {
+   "face": "N",
+   "core_local_x": [
+    1040.0,
+    1598.4
+   ],
+   "pins": 2284,
+   "density_per_um": 4.09,
+   "signals": [
+    "io_word",
+    "compiler_control",
+    "fault"
+   ],
+   "peer": "sfup_NE",
+   "orient": "R180",
+   "die_face": "S",
+   "die_x": [
+    12464.928,
+    13023.328
+   ],
+   "die_y": 20791.08,
+   "status": "PLAN GRANT (HANDOFF 0gj); kit SFU-K9PIN not committed at write time: the k9 kit pin regions must match this window",
+   "was": "E face (k9 kit hbm_sfucore_k9 15beb5d90)"
+  }
+ },
+ "violations": []
+}

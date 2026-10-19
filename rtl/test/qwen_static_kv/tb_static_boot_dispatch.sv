@@ -4,8 +4,8 @@ module tb_static_boot_dispatch #(parameter integer MUT=0,NEG=0);
  reg rst=0;reg[142:0]pr=0;reg[3:0]target=1;reg ready=0,source_fault=0,active=0;
  reg[15:0]epoch=123;reg[63:0]digest=0;reg[159:0]applied=0;reg[2:0]configured=0;
  wire lw,ww,ow;wire[8:0]la;wire[7:0]wa,ga;wire[1:0]oa;wire[63:0]ld,wd,gd,cd;wire[31:0]od,lwe,fwe;
- wire[127:0]cwe,last;wire[4:0]ca;wire setup,fault;wire[7:0]code;wire[15:0]ie;wire[63:0]id;
- qkd_static_kv_boot_dispatch #(.MUT(MUT))dut(.ck(ck),.rst_n(rst),.boot_pr(pr),.boot_image_target(target),.boot_image_ready(ready),.boot_image_fault(source_fault),.boot_image_epoch(epoch),.boot_image_digest(digest),.execution_active(active),.sink_applied(applied),.local_configured(configured),.sink_fault(1'b0),.layer_we(lw),.layer_addr(la),.layer_data(ld),.writer_we(ww),.writer_addr(wa),.writer_data(wd),.ownership_we(ow),.ownership_addr(oa),.ownership_data(od),.landing_we(lwe),.front_we(fwe),.group_addr(ga),.group_data(gd),.controller_we(cwe),.controller_addr(ca),.controller_data(cd),.controller_last(last),.setup_ready(setup),.fault(fault),.fault_code(code),.installed_epoch(ie),.installed_isa_digest(id));
+ wire[127:0]cwe,last;wire[7:0]ca;wire[31:0]flast;wire setup,fault;wire[7:0]code;wire[15:0]ie;wire[63:0]id;
+ qkd_static_kv_boot_dispatch #(.MUT(MUT))dut(.ck(ck),.rst_n(rst),.boot_pr(pr),.boot_image_target(target),.boot_image_ready(ready),.boot_image_fault(source_fault),.boot_image_epoch(epoch),.boot_image_digest(digest),.execution_active(active),.sink_applied(applied),.local_configured(configured),.sink_fault(1'b0),.layer_we(lw),.layer_addr(la),.layer_data(ld),.writer_we(ww),.writer_addr(wa),.writer_data(wd),.ownership_we(ow),.ownership_addr(oa),.ownership_data(od),.landing_we(lwe),.front_we(fwe),.group_addr(ga),.group_data(gd),.controller_we(cwe),.controller_addr(ca),.controller_data(cd),.controller_last(last),.front_last(flast),.setup_ready(setup),.fault(fault),.fault_code(code),.installed_epoch(ie),.installed_isa_digest(id));
  integer t,a,n,total=0;reg[31:0]group_gold;reg[127:0]pc_gold;
  function automatic[63:0]value(input integer t,input integer a);value=(t==3)?64'(a):64'h1234567800000000^(64'(t)<<32)^64'(a);endfunction
  task tick;begin @(posedge ck);#1;end endtask
@@ -15,7 +15,8 @@ module tb_static_boot_dispatch #(parameter integer MUT=0,NEG=0);
   if(t==2&&(wa!=8'(a)||wd!=value(t,a)))$fatal(1,"writer data differs");
   if(t==3&&(oa!=2'(a)||od!=32'(value(t,a))))$fatal(1,"ownership data differs");
   if(t==4||t==5)begin group_gold=32'b1<<(a/6);if((t==4?lwe:fwe)!=group_gold||ga!=8'(a%6)||gd!=value(t,a))$fatal(1,"actual group/local address differs");end
-  if(t>=6)begin pc_gold=128'b1<<(32*(t-6)+a/32);if(cwe!=pc_gold||ca!=5'(a%32)||cd!=value(t,a)||last!=((a%32==31)?pc_gold:128'd0))$fatal(1,"actual PC/local address/seal differs");end
+  if(flast!==((t==5&&a%6==5)?group_gold:32'd0))$fatal(1,"front_last differs from the group's last word");
+  if(t>=6)begin pc_gold=128'b1<<(32*(t-6)+a/32);if(cwe!=pc_gold||ca!=8'(a%32)||cd!=value(t,a)||last!=((a%32==31)?pc_gold:128'd0))$fatal(1,"actual PC/local address/seal differs");end
   total=total+1;
  end endtask
  initial begin
@@ -46,7 +47,7 @@ module tb_static_boot_dispatch #(parameter integer MUT=0,NEG=0);
   @(negedge ck);applied={160{1'b1}};tick();if(!setup||ie!=123||id!=digest)$fatal(1,"actual authorized setup failed");
   @(negedge ck);ready=0;tick();if(setup)$fatal(1,"new BEGIN did not revoke setup");
   source_fault=1;tick();if(!fault)$fatal(1,"HOST source fault lost");
-  $display("PASS actual boot dispatch nine configuration images %0d writes, all128PC/32group targets, actual application guard",total);$finish;
+  $display("PASS actual boot dispatch nine configuration images %0d writes, all128PC/32group targets, front_last+8b controller addr, actual application guard",total);$finish;
  end
  initial begin #100000;$fatal(1,"timeout");end
 endmodule

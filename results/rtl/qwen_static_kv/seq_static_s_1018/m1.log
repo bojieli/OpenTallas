@@ -1,0 +1,10 @@
+SEQ_GOLD G_CMD=617 G_Q0=618 G_KV0=652 G_LPRUN=1 G_AQ=47
+ERR aq q0 cyc 2665
+ERR aq q1 cyc 2665
+ERR aq q2 cyc 2665
+ERR aq q3 cyc 2665
+ERR aq q0 cyc 2666
+ERR aq q1 cyc 2666
+ERR aq q2 cyc 2666
+DIE_CR0 qkd_seq_static_p with kvn_<q>_cr=0: first fault cyc 16334 = layer 2 rel 662 kst 1000100000
+SEQ_S FAIL layers=36 aq=4752 kc=288 hs=36 drn_toggles=73 errors=288 mut=1 lockstep_vs_p=every_edge

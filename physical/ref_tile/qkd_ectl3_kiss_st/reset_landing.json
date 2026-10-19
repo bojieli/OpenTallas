@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "qkd_ectl3_kiss_st",
+ "enable": false,
+ "reason": "KV-ECTL6 2026-10-19 (ROOT-RST reset_landing): wires-only multi-clock parent (ck[0] A, ck[1] B, ck[2] C); rst_n reaches exactly 3 sinks, one rst_n pin per hard child, and each child lands its own reset in its own clock domain at its face: A qkd_static_ectla_kiss pin flops rst_q (ECTL A body relay) and rn (k_issuer), both on ck; B qkd_ectl_b_tp8_direct and C qkd_ectl_c_st ot_rst_relay u_rpin (2 sync + 1 tree stage at the rst_n pin, ot_qkd_ectl_parts.sv). A parent landing would sit in ONE of the three clock domains and feed the other two children across domains, and would add parent std cells to a wires-only frame. Judged at max_sinks 3 (the 3 child pins), not waived."
+}

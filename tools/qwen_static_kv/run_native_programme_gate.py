@@ -70,10 +70,14 @@ def main():
              ROOT/'rtl/physical/ot_qkd_kv_static_writer_native.sv',
              ROOT/'rtl/test/qwen_static_kv/tb_qkd_kv_native_programme.sv']
     runs=[];top='tb_qkd_kv_native_programme'
-    for mut,bad in [(0,0),(1,0),(2,0),(3,0),(4,0),(5,0),(6,0),(0,1),(0,2),(0,3)]:
-        name=f'm{mut}_b{bad}'
+    # KVJ-A 10-17: VMAP=1 (writer PV16 V map, the production parameter) carries every negative plus MUT7 and the
+    # programme/writer map-mismatch controls; VMAP=0 keeps the historical PASS row.
+    cases=[(0,0,0,0)]+[(m,b,1,1) for m,b in [(0,0),(1,0),(2,0),(3,0),(4,0),(5,0),(6,0),(7,0),(0,1),(0,2),(0,3)]]+[(0,0,0,1),(0,0,1,0)]
+    for mut,bad,vmap,wvmap in cases:
+        name=f'm{mut}_b{bad}_v{vmap}_w{wvmap}'
         binary=a.out/(name+'.sim')
-        cmd=['iverilog','-g2012','-s',top,f'-P{top}.MUT={mut}',f'-P{top}.BAD={bad}','-o',str(binary.resolve())]+[str(p) for p in sources]
+        cmd=['iverilog','-g2012','-s',top,f'-P{top}.MUT={mut}',f'-P{top}.BAD={bad}',f'-P{top}.VMAP={vmap}',f'-P{top}.WVMAP={wvmap}',
+             '-o',str(binary.resolve())]+[str(p) for p in sources]
         result=subprocess.run(cmd,capture_output=True,text=True)
         (a.out/(name+'.compile.log')).write_text(result.stdout+result.stderr)
         if result.returncode:raise RuntimeError('compile failed: '+name)
@@ -84,7 +88,7 @@ def main():
         runs.append(dict(name=name,exit=result.returncode,log=name+'.log'))
         binary.unlink()
     netlist=a.out/'pin_netlist.json'
-    yosys=['yosys','-Q','-T','-p',f'read_verilog -sv {ROOT/PRODUCER}; hierarchy -top qkd_kv_native_programme; proc; memory_map; opt_clean; write_json {netlist.resolve()}']
+    yosys=['yosys','-Q','-T','-p',f'read_verilog -sv {ROOT/PRODUCER}; hierarchy -top qkd_kv_native_programme -chparam VMAP 1; proc; memory_map; opt_clean; write_json {netlist.resolve()}']
     result=subprocess.run(yosys,capture_output=True,text=True)
     (a.out/'pin_capture.yosys.log').write_text(result.stdout+result.stderr)
     if result.returncode:raise RuntimeError('pin FF elaboration failed')

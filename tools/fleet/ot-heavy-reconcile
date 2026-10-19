@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""ot-heavy-reconcile v6: keep ot-heavy reservations at MEASURED memory use, and learn sizes per command class.
+"""ot-heavy-reconcile v9: keep ot-heavy reservations at MEASURED memory use, and learn sizes per command class.
 
 ot-heavy charges every running job `reservation - current use` of future growth.  This pass (cron, every 5 min, all
 hosts) lowers a reservation to ceil(max(peak * 1.25, peak + 4 GB)) once the job is provably past its memory peak:
@@ -65,8 +65,22 @@ tasks as soon as possible"):
   fallback for when this script cannot answer).  admit_gb (--free, ot-run) is the largest DECLARED request admitted now.
   Config (/etc/ot-heavy.conf, KEY=value; the environment overrides):  GROWTH_FACTOR=0.5  NEED_FACTOR=0.7
   MIN_AVAIL_FRAC=0.05 (just above earlyoom's 3 % kill line; REAL_FLOOR_GB=<GB> overrides it absolutely).
+  v10 LIGHT GROWTH (FLEET-PLACE 2026-10-19): the growth charged is capped at GROWTH_CAP_FRAC x RAM (default 0.10), see
+  charged_growth(); swap + earlyoom + per-job MemoryMax remain the safety net.
   Safety stays with the per-job caps (scope MemoryMax, docker --memory via ot-heavy-docker), swap and earlyoom.
   DIE-FIRST unchanged: a waiting die trial's request is held free against non-die requests.
+
+v9 (owner 2026-10-18 ~01:05 "NEVER hold jobs on CPU load; keep the fleet busy; never hold important jobs"; memory 10-08:
+priority must never leave a host idle):
+  DIE-FIRST v2 = ORDER, not reservation: a non-die request yields only to a waiting die job that the host admits NOW
+  (charge <= its admissible; it starts on its next attempt, ot-heavy re-tries die waiters every 5 s).  A die job is
+  admitted on CURRENT memory alone (MemAvailable - NEED_FACTOR x request >= floor; running units' growth is not charged:
+  owner 10-17 "admit as soon as current memory suffices; swap is the safety net", 10-18 "never hold important jobs").  A die job that does
+  not fit now holds nothing, so small jobs keep running (v8 held a 48 GB die charge on AGIdock while 75 waiters sat at
+  load 13/64).  Die-level = OT_HEAVY_PRIO=die, or the command / its cwd matches DIE_RE or a line of PRIO_FILE
+  (/var/tmp/ot-heavy/prio_die.re, one regex per line: marks waiters already queued, read on every attempt).
+  --free reports load as cpu_load1 (ot-run v6 orders by it and never holds; the v5 hold read "load1", so v5 clients
+  still running stop holding once this is deployed).
 
 usage: ot-heavy-reconcile [--dry-run] [--verbose]     one pass
        ot-heavy-reconcile --units                      table: request, charge, growth, now, peak, class peak, age per unit
@@ -534,7 +548,8 @@ def read_units():
 
 
 YOUNG_S, MID_S, PLENTY, GONE_S = 300, 1800, 0.35, 20
-DEFAULTS = dict(GROWTH_FACTOR=0.5, NEED_FACTOR=0.7, MIN_AVAIL_FRAC=0.05)     # v8 (owner 2026-10-17), see the module text
+DEFAULTS = dict(GROWTH_FACTOR=0.5, NEED_FACTOR=0.7, MIN_AVAIL_FRAC=0.05,     # v8 (owner 2026-10-17), see the module text
+                GROWTH_CAP_FRAC=0.10)                                         # v10 (FLEET-PLACE 2026-10-19)
 
 
 def conf(key):
@@ -596,11 +611,18 @@ def floor_gb(total):
         return conf("MIN_AVAIL_FRAC") * total
 
 
+def charged_growth(b, total):
+    """v10 LIGHT GROWTH (FLEET-PLACE 2026-10-19, owner 10-17 "admit as soon as current memory suffices; swap is the safety
+    net"): the growth the host's admission charges is capped at GROWTH_CAP_FRAC x RAM (0.10: 113 GB on a 1.1 TB EPYC).
+    ot-epyc6 showed 564 GB available but admitted only 215 GB because 414 GB of possible growth was charged."""
+    return min(b["grow"], conf("GROWTH_CAP_FRAC") * total)
+
+
 def admissible(total, avail, b, floor, need=None):
     """v8: the largest DECLARED request (charge) the host admits now (GB, may be negative): NEED_FACTOR x it must fit in
-    MemAvailable - growth charged, and leave MemAvailable above the floor"""
+    MemAvailable - growth charged (v10: capped, charged_growth), and leave MemAvailable above the floor"""
     need = conf("NEED_FACTOR") if need is None else need
-    return min(avail - b["grow"], avail - floor) / need
+    return min(avail - charged_growth(b, total), avail - floor) / need
 
 
 def gate(mem, argv):
@@ -621,13 +643,39 @@ def gate(mem, argv):
     b = books(rows, total, avail, table)
     floor, need = floor_gb(total), conf("NEED_FACTOR")
     can = admissible(total, avail, b, floor, need)
-    ok = can >= res
-    held = die_hold(total, can, floor, table, need) if ok and os.environ.get("OT_HEAVY_PRIO") != "die" else 0
+    can_die = max(can, (avail - floor) / need)          # v9: a die job is admitted on current memory alone
+    me_die = os.environ.get("OT_HEAVY_PRIO") == "die" or die_like(argv, os.getcwd())
+    if me_die and can < res <= can_die:
+        note = (note + "; " if note else "") + f"DIE: admitted on current memory ({avail:.0f} GB available, growth not charged)"
+    ok = (can_die if me_die else can) >= res
+    held = die_hold(total, can_die, floor, table, need) if ok and not me_die else 0
     if held and can - res < held:
         ok, note = False, (note + "; " if note else "") + f"DIE-FIRST: {held:.0f} GB held for a waiting die trial"
     print(f"{'OK' if ok else 'NO'} {res} {cls} | need {need:g} x {res} = {need * res:.0f} GB, admissible {can:.0f} GB: "
-          f"available {avail:.0f} GB, growth charged {b['grow']:.0f} GB (x{conf('GROWTH_FACTOR'):g}), young {b['young']:.0f} GB, "
+          f"available {avail:.0f} GB, growth charged {charged_growth(b, total):.0f} GB (x{conf('GROWTH_FACTOR'):g}, cap {conf('GROWTH_CAP_FRAC'):g} x RAM), young {b['young']:.0f} GB, "
           f"floor {floor:.0f} GB" + (f"; {note}" if note else ""))
+
+
+DIE_RE = re.compile(r"(?i)(die[_-]?(sta|gen\d*|grt\d*|chain|trial|place|bind)|(sta|gen\d*|grt\d*)[_-]die\b)")
+PRIO_FILE = f"{D}/prio_die.re"
+
+
+def die_like(argv, cwd="", environ=()):
+    """die-level job: OT_HEAVY_PRIO=die, or DIE_RE / a PRIO_FILE regex on its command line or working directory"""
+    if "OT_HEAVY_PRIO=die" in environ:
+        return True
+    text = " ".join(argv) + " " + cwd
+    if DIE_RE.search(text):
+        return True
+    for ln in rd(PRIO_FILE).splitlines():
+        ln = ln.strip()
+        if ln and not ln.startswith("#"):
+            try:
+                if re.search(ln, text):
+                    return True
+            except re.error:
+                pass
+    return False
 
 
 def prio_waiters(table, skip=()):
@@ -641,7 +689,11 @@ def prio_waiters(table, skip=()):
         a = rd(f"/proc/{p}/cmdline").split("\0")[:-1]
         if not (len(a) > 3 and a[1:2] == ["/usr/local/bin/ot-heavy"] and "--mem" in a[:8] and "--" in a):
             continue
-        if "OT_HEAVY_PRIO=die" not in rd(f"/proc/{p}/environ").split("\0"):
+        try:
+            cwd = os.readlink(f"/proc/{p}/cwd")
+        except OSError:
+            cwd = ""
+        if not die_like(a[a.index("--") + 1:], cwd, rd(f"/proc/{p}/environ").split("\0")):
             continue
         m = int(a[a.index("--mem") + 1])
         try:
@@ -653,16 +705,16 @@ def prio_waiters(table, skip=()):
 
 
 def die_hold(total, can, floor, table, need=None):
-    """GB a non-die request must leave free: the oldest waiting die trial's charge, when it could ever start here
-    (NEED_FACTOR x charge <= RAM - floor) and cannot start now (else it is admitted on its next 20 s attempt)"""
-    need = conf("NEED_FACTOR") if need is None else need
+    """DIE-FIRST v2 (2026-10-18): GB a non-die request must leave free = the charge of the oldest waiting die job that the
+    host admits NOW (charge <= can); it starts on its next attempt.  A die job that does not fit now holds nothing: priority
+    orders the queue and never leaves memory idle.  (total, floor, need kept for the call signature.)"""
     me = {os.getpid(), os.getppid()}
     try:
         me.add(int(rd(f"/proc/{os.getppid()}/stat").rsplit(")", 1)[1].split()[1]))
     except (IndexError, ValueError):
         pass
     for _, charge in prio_waiters(table, skip=me):
-        if need * charge <= total - floor:
+        if charge <= can:
             return charge
     return 0
 
@@ -692,9 +744,10 @@ def free(path):
     except OSError:
         disk = -1
     print(json.dumps(dict(host=os.uname().nodename, total_gb=round(total), avail_gb=round(avail), used_gb=round(b["used"]),
-                          charged_gb=round(b["used"] + b["grow"]), reserved_gb=b["reserved"], growth_gb=round(b["grow"]),
+                          charged_gb=round(b["used"] + b["grow"]), reserved_gb=b["reserved"], growth_gb=round(charged_growth(b, total)),
+                          growth_raw_gb=round(b["grow"]),
                           young_gb=round(b["young"]), plenty=b["plenty"], headroom_gb=head, floor_gb=round(floor),
-                          load1=float(open("/proc/loadavg").read().split()[0]), ncpu=os.cpu_count(), running=b["running"],
+                          cpu_load1=float(open("/proc/loadavg").read().split()[0]), ncpu=os.cpu_count(), running=b["running"],
                           fresh=b["fresh"], waiting=len(wait), waiting_gb=sum(wait), waiting_req_gb=sum(req), disk_gb=disk,
                           admit_gb=round(can), free_gb=round(can) - sum(wait))))
 
@@ -752,10 +805,13 @@ def selftest():
     b = books(e1, 1133, 592, tab, 0.5)
     chk("EPYC1 17:47: six 110 GB requests at 42 GB (peak 57), growth", b["grow"], 6 * 21)
     # v8 admission: NEED_FACTOR x request <= MemAvailable - growth charged, above the floor
-    chk("growth charged decides", admissible(T, 400, dict(grow=260.0, young=0.0), 50, 0.7), 200)
+    chk("growth charged decides", admissible(T, 400, dict(grow=60.0, young=0.0), 50, 0.7), 485.71)
+    chk("v10: growth charged is capped at 10 % of RAM", admissible(T, 400, dict(grow=260.0, young=0.0), 50, 0.7), 428.57)
+    chk("v10 epyc6 10-19: 564 available, 414 GB growth -> 644 GB declared (was 215)",
+        admissible(1133, 564, dict(grow=414.0, young=0.0), 56.65, 0.7), 643.86)
     chk("the floor is the stop", admissible(T, 100, dict(grow=0.0, young=0.0), 50, 0.7), 71.43)
-    chk("AGIdock 10-17: 65 GB available, 68 GB growth -> nothing", admissible(128, 65, dict(grow=68.0, young=0.0), 6.4, 0.7), -4.29)
-    chk("EPYC4 10-17: 539 available, 119 GB charged -> 600 GB declared", admissible(1133, 539, dict(grow=119.0, young=0.0), 56.65, 0.7), 600)
+    chk("AGIdock 10-17: 65 GB available, 68 GB growth -> v10 capped 12.8", admissible(128, 65, dict(grow=68.0, young=0.0), 6.4, 0.7), 74.57)
+    chk("EPYC4 10-17: 539 available, 119 GB charged -> v10 capped 113.3", admissible(1133, 539, dict(grow=119.0, young=0.0), 56.65, 0.7), 608.14)
     for m in bad:
         print("FAIL " + m)
     print(f"ot-heavy-reconcile selftest: {'FAIL' if bad else 'PASS'} ({n[0]} checks)")

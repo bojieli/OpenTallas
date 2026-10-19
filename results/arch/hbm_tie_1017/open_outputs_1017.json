@@ -1,0 +1,1702 @@
+{
+ "schema": "opentallas.hbm.open-outputs-1017.v1",
+ "contract": "results/arch/hbm_tie_1017/contract_d4f_tp192_tie.json.gz",
+ "total_ports": 691,
+ "by_class": {
+  "MISSING": {
+   "ports": 136,
+   "bits": 157
+  },
+  "OBS": {
+   "ports": 405,
+   "bits": 58744
+  },
+  "ROLE": {
+   "ports": 150,
+   "bits": 4318
+  }
+ },
+ "rows": [
+  {
+   "instances": [
+    "lg_SW_0_b0",
+    "lg_SW_0_b1",
+    "lg_SW_0_b2",
+    "lg_SW_0_b3",
+    "lg_SW_0_b4",
+    "lg_SW_0_b5",
+    "lg_SW_0_b6",
+    "lg_SW_0_b7",
+    "lg_SW_1_b0",
+    "lg_SW_1_b1",
+    "lg_SW_1_b2",
+    "lg_SW_1_b3",
+    "lg_SW_1_b4",
+    "lg_SW_1_b5",
+    "lg_SW_1_b6",
+    "lg_SW_1_b7",
+    "lg_SE_0_b0",
+    "lg_SE_0_b1",
+    "lg_SE_0_b2",
+    "lg_SE_0_b3",
+    "lg_SE_0_b4",
+    "lg_SE_0_b5",
+    "lg_SE_0_b6",
+    "lg_SE_0_b7",
+    "lg_SE_1_b0",
+    "lg_SE_1_b1",
+    "lg_SE_1_b2",
+    "lg_SE_1_b3",
+    "lg_SE_1_b4",
+    "lg_SE_1_b5",
+    "lg_SE_1_b6",
+    "lg_SE_1_b7",
+    "lg_NW_0_b0",
+    "lg_NW_0_b1",
+    "lg_NW_0_b2",
+    "lg_NW_0_b3",
+    "lg_NW_0_b4",
+    "lg_NW_0_b5",
+    "lg_NW_0_b6",
+    "lg_NW_0_b7",
+    "lg_NW_1_b0",
+    "lg_NW_1_b1",
+    "lg_NW_1_b2",
+    "lg_NW_1_b3",
+    "lg_NW_1_b4",
+    "lg_NW_1_b5",
+    "lg_NW_1_b6",
+    "lg_NW_1_b7",
+    "lg_NE_0_b0",
+    "lg_NE_0_b1",
+    "lg_NE_0_b2",
+    "lg_NE_0_b3",
+    "lg_NE_0_b4",
+    "lg_NE_0_b5",
+    "lg_NE_0_b6",
+    "lg_NE_0_b7",
+    "lg_NE_1_b0",
+    "lg_NE_1_b1",
+    "lg_NE_1_b2",
+    "lg_NE_1_b3",
+    "lg_NE_1_b4",
+    "lg_NE_1_b5",
+    "lg_NE_1_b6",
+    "lg_NE_1_b7"
+   ],
+   "bits": 64,
+   "master": "ot_hbm_vm_lg_static_bank",
+   "port": "fault",
+   "cls": "MISSING",
+   "why": "fault / cause / retry with no consumer: must reach the host status join (G-CIL-COLLSTAT) or the stack fault join; a fault the host cannot see is a real gap"
+  },
+  {
+   "instances": [
+    "lg_SW_2_b0",
+    "lg_SW_2_b1",
+    "lg_SW_2_b2",
+    "lg_SW_2_b3",
+    "lg_SW_2_b4",
+    "lg_SW_2_b5",
+    "lg_SW_2_b6",
+    "lg_SW_2_b7",
+    "lg_SE_2_b0",
+    "lg_SE_2_b1",
+    "lg_SE_2_b2",
+    "lg_SE_2_b3",
+    "lg_SE_2_b4",
+    "lg_SE_2_b5",
+    "lg_SE_2_b6",
+    "lg_SE_2_b7",
+    "lg_NW_2_b0",
+    "lg_NW_2_b1",
+    "lg_NW_2_b2",
+    "lg_NW_2_b3",
+    "lg_NW_2_b4",
+    "lg_NW_2_b5",
+    "lg_NW_2_b6",
+    "lg_NW_2_b7",
+    "lg_NE_2_b0",
+    "lg_NE_2_b1",
+    "lg_NE_2_b2",
+    "lg_NE_2_b3",
+    "lg_NE_2_b4",
+    "lg_NE_2_b5",
+    "lg_NE_2_b6",
+    "lg_NE_2_b7"
+   ],
+   "bits": 32,
+   "master": "ot_hbm_vm_lg_static_bank_term",
+   "port": "fault",
+   "cls": "MISSING",
+   "why": "fault / cause / retry with no consumer: must reach the host status join (G-CIL-COLLSTAT) or the stack fault join; a fault the host cannot see is a real gap"
+  },
+  {
+   "instances": [
+    "su_SW0",
+    "su_SW1",
+    "su_SW2",
+    "su_SW3",
+    "su_SE0",
+    "su_SE1",
+    "su_SE2",
+    "su_SE3",
+    "su_NW0",
+    "su_NW1",
+    "su_NW2",
+    "su_NW3",
+    "su_NE0",
+    "su_NE1",
+    "su_NE2",
+    "su_NE3"
+   ],
+   "bits": 16,
+   "master": "ot_hbm_su_static_pgslice",
+   "port": "fault",
+   "cls": "MISSING",
+   "why": "fault / cause / retry with no consumer: must reach the host status join (G-CIL-COLLSTAT) or the stack fault join; a fault the host cannot see is a real gap"
+  },
+  {
+   "instances": [
+    "sfault_SW",
+    "sfault_NW"
+   ],
+   "bits": 14,
+   "master": "ot_hbm_svc_stack_fault",
+   "port": "status",
+   "cls": "MISSING",
+   "why": "fault / cause / retry with no consumer: must reach the host status join (G-CIL-COLLSTAT) or the stack fault join; a fault the host cannot see is a real gap"
+  },
+  {
+   "instances": [
+    "subr_SW",
+    "subr_SE",
+    "subr_NW",
+    "subr_NE"
+   ],
+   "bits": 4,
+   "master": "ot_hbm_su_bridge_release",
+   "port": "fault",
+   "cls": "MISSING",
+   "why": "fault / cause / retry with no consumer: must reach the host status join (G-CIL-COLLSTAT) or the stack fault join; a fault the host cannot see is a real gap"
+  },
+  {
+   "instances": [
+    "sucore_SW",
+    "sucore_SE",
+    "sucore_NW",
+    "sucore_NE"
+   ],
+   "bits": 4,
+   "master": "ot_hbm_su_static_qcore",
+   "port": "fault",
+   "cls": "MISSING",
+   "why": "fault / cause / retry with no consumer: must reach the host status join (G-CIL-COLLSTAT) or the stack fault join; a fault the host cannot see is a real gap"
+  },
+  {
+   "instances": [
+    "hb_vms_SW"
+   ],
+   "bits": 3,
+   "master": "hfd_hgi_vms_static_SW_glue",
+   "port": "ring_fault",
+   "cls": "MISSING",
+   "why": "fault / cause / retry with no consumer: must reach the host status join (G-CIL-COLLSTAT) or the stack fault join; a fault the host cannot see is a real gap"
+  },
+  {
+   "instances": [
+    "hb_vms_SE"
+   ],
+   "bits": 3,
+   "master": "hfd_hgi_vms_static_SE_glue",
+   "port": "ring_fault",
+   "cls": "MISSING",
+   "why": "fault / cause / retry with no consumer: must reach the host status join (G-CIL-COLLSTAT) or the stack fault join; a fault the host cannot see is a real gap"
+  },
+  {
+   "instances": [
+    "hb_vms_NW"
+   ],
+   "bits": 3,
+   "master": "hfd_hgi_vms_static_NW_glue",
+   "port": "ring_fault",
+   "cls": "MISSING",
+   "why": "fault / cause / retry with no consumer: must reach the host status join (G-CIL-COLLSTAT) or the stack fault join; a fault the host cannot see is a real gap"
+  },
+  {
+   "instances": [
+    "hb_vms_NE"
+   ],
+   "bits": 3,
+   "master": "hfd_hgi_vms_static_NE_glue",
+   "port": "ring_fault",
+   "cls": "MISSING",
+   "why": "fault / cause / retry with no consumer: must reach the host status join (G-CIL-COLLSTAT) or the stack fault join; a fault the host cannot see is a real gap"
+  },
+  {
+   "instances": [
+    "hb_coll_SE",
+    "hb_coll_NW",
+    "hb_coll_NE"
+   ],
+   "bits": 3,
+   "master": "ot_hfd_coll_q2_hard_v5",
+   "port": "retry_requested",
+   "cls": "MISSING",
+   "why": "fault / cause / retry with no consumer: must reach the host status join (G-CIL-COLLSTAT) or the stack fault join; a fault the host cannot see is a real gap"
+  },
+  {
+   "instances": [
+    "hb_coll_SW"
+   ],
+   "bits": 2,
+   "master": "ot_hfd_coll_q3_hard_v7x",
+   "port": "retry_requested",
+   "cls": "MISSING",
+   "why": "fault / cause / retry with no consumer: must reach the host status join (G-CIL-COLLSTAT) or the stack fault join; a fault the host cannot see is a real gap"
+  },
+  {
+   "instances": [
+    "hb_dbk_SW",
+    "hb_dbk_NW"
+   ],
+   "bits": 2,
+   "master": "ot_hgi_dma_back_static_vp4_banks_cp",
+   "port": "mv_fault",
+   "cls": "MISSING",
+   "why": "fault / cause / retry with no consumer: must reach the host status join (G-CIL-COLLSTAT) or the stack fault join; a fault the host cannot see is a real gap"
+  },
+  {
+   "instances": [
+    "sfault_SW",
+    "sfault_NW"
+   ],
+   "bits": 2,
+   "master": "ot_hbm_svc_stack_fault",
+   "port": "fault",
+   "cls": "MISSING",
+   "why": "fault / cause / retry with no consumer: must reach the host status join (G-CIL-COLLSTAT) or the stack fault join; a fault the host cannot see is a real gap"
+  },
+  {
+   "instances": [
+    "hb_argmax"
+   ],
+   "bits": 1,
+   "master": "ot_hbm_argmax_static_sw_vm",
+   "port": "nan_flag",
+   "cls": "MISSING",
+   "why": "fault / cause / retry with no consumer: must reach the host status join (G-CIL-COLLSTAT) or the stack fault join; a fault the host cannot see is a real gap"
+  },
+  {
+   "instances": [
+    "cij_SW"
+   ],
+   "bits": 1,
+   "master": "ot_hgi_coll_inj_idx_join",
+   "port": "fault",
+   "cls": "MISSING",
+   "why": "fault / cause / retry with no consumer: must reach the host status join (G-CIL-COLLSTAT) or the stack fault join; a fault the host cannot see is a real gap"
+  },
+  {
+   "instances": [
+    "svg_SW0",
+    "svg_SW1",
+    "svg_SW2",
+    "svg_SW3",
+    "svg_SW4",
+    "svg_SW5",
+    "svg_SW6",
+    "svg_SW7",
+    "svg_NW0",
+    "svg_NW1",
+    "svg_NW2",
+    "svg_NW3",
+    "svg_NW4",
+    "svg_NW5",
+    "svg_NW6",
+    "svg_NW7"
+   ],
+   "bits": 17312,
+   "master": "ot_hbm_svc_sm_group_id",
+   "port": "lt0",
+   "cls": "OBS",
+   "why": "S1 consumer copy observation bus of the feed (module header: \"kept for benches\")"
+  },
+  {
+   "instances": [
+    "svg_SW0",
+    "svg_SW1",
+    "svg_SW2",
+    "svg_SW3",
+    "svg_SW4",
+    "svg_SW5",
+    "svg_SW6",
+    "svg_SW7",
+    "svg_NW0",
+    "svg_NW1",
+    "svg_NW2",
+    "svg_NW3",
+    "svg_NW4",
+    "svg_NW5",
+    "svg_NW6",
+    "svg_NW7"
+   ],
+   "bits": 17312,
+   "master": "ot_hbm_svc_sm_group_id",
+   "port": "lt1",
+   "cls": "OBS",
+   "why": "S1 consumer copy observation bus (bench)"
+  },
+  {
+   "instances": [
+    "svg_SW0",
+    "svg_SW1",
+    "svg_SW2",
+    "svg_SW3",
+    "svg_SW4",
+    "svg_SW5",
+    "svg_SW6",
+    "svg_SW7",
+    "svg_NW0",
+    "svg_NW1",
+    "svg_NW2",
+    "svg_NW3",
+    "svg_NW4",
+    "svg_NW5",
+    "svg_NW6",
+    "svg_NW7"
+   ],
+   "bits": 9120,
+   "master": "ot_hbm_svc_sm_group_id",
+   "port": "lb0",
+   "cls": "OBS",
+   "why": "S1 consumer copy observation bus (bench)"
+  },
+  {
+   "instances": [
+    "svg_SW0",
+    "svg_SW1",
+    "svg_SW2",
+    "svg_SW3",
+    "svg_SW4",
+    "svg_SW5",
+    "svg_SW6",
+    "svg_SW7",
+    "svg_NW0",
+    "svg_NW1",
+    "svg_NW2",
+    "svg_NW3",
+    "svg_NW4",
+    "svg_NW5",
+    "svg_NW6",
+    "svg_NW7"
+   ],
+   "bits": 9120,
+   "master": "ot_hbm_svc_sm_group_id",
+   "port": "lb1",
+   "cls": "OBS",
+   "why": "S1 consumer copy observation bus (bench)"
+  },
+  {
+   "instances": [
+    "hb_idx__selector"
+   ],
+   "bits": 2368,
+   "master": "ot_hbm_idx_selector_static",
+   "port": "out_line",
+   "cls": "OBS",
+   "why": "op-8 emit read-back of the compacted lines; the TOPK link consumes selected_line during compaction (ingest_v = &selected_v)"
+  },
+  {
+   "instances": [
+    "svg_SW0",
+    "svg_SW1",
+    "svg_SW2",
+    "svg_SW3",
+    "svg_SW4",
+    "svg_SW5",
+    "svg_SW6",
+    "svg_SW7",
+    "svg_NW0",
+    "svg_NW1",
+    "svg_NW2",
+    "svg_NW3",
+    "svg_NW4",
+    "svg_NW5",
+    "svg_NW6",
+    "svg_NW7"
+   ],
+   "bits": 688,
+   "master": "ot_hbm_svc_sm_group_id",
+   "port": "expected_request",
+   "cls": "OBS",
+   "why": "feed-side expected SM request: bench comparand of smh_attn.request (static schedule: SM never requests)"
+  },
+  {
+   "instances": [
+    "sm_SW0",
+    "sm_SW1",
+    "sm_SW2",
+    "sm_SW3",
+    "sm_SW4",
+    "sm_SW5",
+    "sm_SW6",
+    "sm_SW7",
+    "sm_NW0",
+    "sm_NW1",
+    "sm_NW2",
+    "sm_NW3",
+    "sm_NW4",
+    "sm_NW5",
+    "sm_NW6",
+    "sm_NW7"
+   ],
+   "bits": 688,
+   "master": "ot_hbm_accel_smh_attn",
+   "port": "request",
+   "cls": "OBS",
+   "why": "SM request observation; the feed is calendar-driven (static), so no consumer exists by design"
+  },
+  {
+   "instances": [
+    "cp_svg_SW0",
+    "cp_svg_SW1",
+    "cp_svg_SW2",
+    "cp_svg_SW3",
+    "cp_svg_SW4",
+    "cp_svg_SW5",
+    "cp_svg_SW6",
+    "cp_svg_SW7",
+    "cp_svg_NW0",
+    "cp_svg_NW1",
+    "cp_svg_NW2",
+    "cp_svg_NW3",
+    "cp_svg_NW4",
+    "cp_svg_NW5",
+    "cp_svg_NW6",
+    "cp_svg_NW7"
+   ],
+   "bits": 512,
+   "master": "ot_static_cmd_target",
+   "port": "cycle",
+   "cls": "OBS",
+   "why": "free-running launch cycle counter export (MODE 1 DMA clock); MODE 0 instances have no consumer"
+  },
+  {
+   "instances": [
+    "calendar_SW",
+    "calendar_SE",
+    "calendar_NW",
+    "calendar_NE",
+    "epcal_SW",
+    "epcal_SE",
+    "epcal_NW",
+    "epcal_NE",
+    "vmfc_SW",
+    "vmfc_SE",
+    "vmfc_NW",
+    "vmfc_NE"
+   ],
+   "bits": 384,
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "ordinal",
+   "cls": "OBS",
+   "why": "calendar word ordinal (bench)"
+  },
+  {
+   "instances": [
+    "svg_SW0",
+    "svg_SW1",
+    "svg_SW2",
+    "svg_SW3",
+    "svg_SW4",
+    "svg_SW5",
+    "svg_SW6",
+    "svg_SW7",
+    "svg_NW0",
+    "svg_NW1",
+    "svg_NW2",
+    "svg_NW3",
+    "svg_NW4",
+    "svg_NW5",
+    "svg_NW6",
+    "svg_NW7"
+   ],
+   "bits": 192,
+   "master": "ot_hbm_svc_sm_group_id",
+   "port": "fm",
+   "cls": "OBS",
+   "why": "S1 consumer copy observation (bench)"
+  },
+  {
+   "instances": [
+    "sfup_SW",
+    "sfup_SE",
+    "sfup_NW",
+    "sfup_NE"
+   ],
+   "bits": 128,
+   "master": "ot_hgi_sfu_programme_store",
+   "port": "programme_ordinal",
+   "cls": "OBS",
+   "why": "ordinal (bench)"
+  },
+  {
+   "instances": [
+    "sfup_SW",
+    "sfup_SE",
+    "sfup_NW",
+    "sfup_NE"
+   ],
+   "bits": 128,
+   "master": "ot_hgi_sfu_programme_store",
+   "port": "io_ordinal",
+   "cls": "OBS",
+   "why": "ordinal (bench)"
+  },
+  {
+   "instances": [
+    "hb_coll_SE",
+    "hb_coll_NW",
+    "hb_coll_NE"
+   ],
+   "bits": 96,
+   "master": "ot_hfd_coll_q2_hard_v5",
+   "port": "inj_idx",
+   "cls": "OBS",
+   "why": "inject index observe (static inject calendar)"
+  },
+  {
+   "instances": [
+    "hb_coll_SE",
+    "hb_coll_NW",
+    "hb_coll_NE"
+   ],
+   "bits": 96,
+   "master": "ot_hfd_coll_q2_hard_v5",
+   "port": "stat_cycles",
+   "cls": "OBS",
+   "why": "statistics counter"
+  },
+  {
+   "instances": [
+    "hb_idx__selector"
+   ],
+   "bits": 56,
+   "master": "ot_hbm_idx_selector_static",
+   "port": "selected_observe",
+   "cls": "OBS",
+   "why": "per-quarter selected counts (bench); the core faults on >512 internally"
+  },
+  {
+   "instances": [
+    "ep_S0",
+    "ep_S1",
+    "ep_S3",
+    "ep_N0",
+    "ep_N2"
+   ],
+   "bits": 55,
+   "master": "hfd_ep_static",
+   "port": "fault_cause",
+   "cls": "OBS",
+   "why": "fault cause detail; the summary fault of the same instance is connected to the status path"
+  },
+  {
+   "instances": [
+    "hb_coll_SE",
+    "hb_coll_NW",
+    "hb_coll_NE"
+   ],
+   "bits": 48,
+   "master": "ot_hfd_coll_q2_hard_v5",
+   "port": "fault_cause",
+   "cls": "OBS",
+   "why": "fault cause detail; the summary fault of the same instance is connected to the status path"
+  },
+  {
+   "instances": [
+    "hb_coll_SW"
+   ],
+   "bits": 32,
+   "master": "ot_hfd_coll_q3_hard_v7x",
+   "port": "stat_cycles",
+   "cls": "OBS",
+   "why": "statistics counter"
+  },
+  {
+   "instances": [
+    "vmdel_SW0",
+    "vmdel_SW1",
+    "vmdel_SW2",
+    "vmdel_SW3",
+    "vmdel_SW4",
+    "vmdel_SW5",
+    "vmdel_SW6",
+    "vmdel_SW7",
+    "vmdel_NW0",
+    "vmdel_NW1",
+    "vmdel_NW2",
+    "vmdel_NW3",
+    "vmdel_NW4",
+    "vmdel_NW5",
+    "vmdel_NW6",
+    "vmdel_NW7"
+   ],
+   "bits": 32,
+   "master": "ot_hbm_svc_vmdel_lane",
+   "port": "block_ready",
+   "cls": "OBS",
+   "why": "completion / busy pulse of a statically scheduled engine; programme activity reaches the host through the collar/target active/ready"
+  },
+  {
+   "instances": [
+    "tkm_SW"
+   ],
+   "bits": 32,
+   "master": "ot_hgi_coll_tkm_m_tp192",
+   "port": "stat_cycles",
+   "cls": "OBS",
+   "why": "statistics counter"
+  },
+  {
+   "instances": [
+    "vmfc_SE",
+    "vmfc_NE"
+   ],
+   "bits": 20,
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "client_seq",
+   "cls": "OBS",
+   "why": "sequence observe"
+  },
+  {
+   "instances": [
+    "vmfc_SE",
+    "vmfc_NE"
+   ],
+   "bits": 20,
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "response_seq",
+   "cls": "OBS",
+   "why": "sequence observe"
+  },
+  {
+   "instances": [
+    "vm_status4"
+   ],
+   "bits": 19,
+   "master": "ot_vms_status4_static",
+   "port": "vmstat",
+   "cls": "OBS",
+   "why": "VM status word observe (faults also leave on the fault path)"
+  },
+  {
+   "instances": [
+    "hb_coll_SW"
+   ],
+   "bits": 16,
+   "master": "ot_hfd_coll_q3_hard_v7x",
+   "port": "fault_cause",
+   "cls": "OBS",
+   "why": "fault cause detail; the summary fault of the same instance is connected to the status path"
+  },
+  {
+   "instances": [
+    "svg_SW0",
+    "svg_SW1",
+    "svg_SW2",
+    "svg_SW3",
+    "svg_SW4",
+    "svg_SW5",
+    "svg_SW6",
+    "svg_SW7",
+    "svg_NW0",
+    "svg_NW1",
+    "svg_NW2",
+    "svg_NW3",
+    "svg_NW4",
+    "svg_NW5",
+    "svg_NW6",
+    "svg_NW7"
+   ],
+   "bits": 16,
+   "master": "ot_hbm_svc_sm_group_id",
+   "port": "run_done",
+   "cls": "OBS",
+   "why": "run completion pulse; program_active/running carry the state"
+  },
+  {
+   "instances": [
+    "xc_SW0",
+    "xc_SW1",
+    "xc_SW2",
+    "xc_SW3",
+    "xc_SW4",
+    "xc_SW5",
+    "xc_SW6",
+    "xc_SW7",
+    "xc_NW0",
+    "xc_NW1",
+    "xc_NW2",
+    "xc_NW3",
+    "xc_NW4",
+    "xc_NW5",
+    "xc_NW6",
+    "xc_NW7"
+   ],
+   "bits": 16,
+   "master": "ot_hbm_svc_sm_xcal_t",
+   "port": "done",
+   "cls": "OBS",
+   "why": "completion / busy pulse of a statically scheduled engine; programme activity reaches the host through the collar/target active/ready"
+  },
+  {
+   "instances": [
+    "su_prog"
+   ],
+   "bits": 16,
+   "master": "ot_hbm_su_programme",
+   "port": "edge_index",
+   "cls": "OBS",
+   "why": "programme edge index (bench)"
+  },
+  {
+   "instances": [
+    "vmdel_SW0",
+    "vmdel_SW1",
+    "vmdel_SW2",
+    "vmdel_SW3",
+    "vmdel_SW4",
+    "vmdel_SW5",
+    "vmdel_SW6",
+    "vmdel_SW7",
+    "vmdel_NW0",
+    "vmdel_NW1",
+    "vmdel_NW2",
+    "vmdel_NW3",
+    "vmdel_NW4",
+    "vmdel_NW5",
+    "vmdel_NW6",
+    "vmdel_NW7"
+   ],
+   "bits": 16,
+   "master": "ot_hbm_svc_vmdel_lane",
+   "port": "busy",
+   "cls": "OBS",
+   "why": "completion / busy pulse of a statically scheduled engine; programme activity reaches the host through the collar/target active/ready"
+  },
+  {
+   "instances": [
+    "vmb_SW0",
+    "vmb_SW1",
+    "vmb_SW2",
+    "vmb_SW3",
+    "vmb_SW4",
+    "vmb_SW5",
+    "vmb_SW6",
+    "vmb_SW7",
+    "vmb_NW0",
+    "vmb_NW1",
+    "vmb_NW2",
+    "vmb_NW3",
+    "vmb_NW4",
+    "vmb_NW5",
+    "vmb_NW6",
+    "vmb_NW7"
+   ],
+   "bits": 16,
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "dq_done",
+   "cls": "OBS",
+   "why": "completion / busy pulse of a statically scheduled engine; programme activity reaches the host through the collar/target active/ready"
+  },
+  {
+   "instances": [
+    "vmb_SW0",
+    "vmb_SW1",
+    "vmb_SW2",
+    "vmb_SW3",
+    "vmb_SW4",
+    "vmb_SW5",
+    "vmb_SW6",
+    "vmb_SW7",
+    "vmb_NW0",
+    "vmb_NW1",
+    "vmb_NW2",
+    "vmb_NW3",
+    "vmb_NW4",
+    "vmb_NW5",
+    "vmb_NW6",
+    "vmb_NW7"
+   ],
+   "bits": 16,
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "kq_done",
+   "cls": "OBS",
+   "why": "completion / busy pulse of a statically scheduled engine; programme activity reaches the host through the collar/target active/ready"
+  },
+  {
+   "instances": [
+    "vmb_SE0",
+    "vmb_SE1",
+    "vmb_SE2",
+    "vmb_SE3",
+    "vmb_SE4",
+    "vmb_SE5",
+    "vmb_SE6",
+    "vmb_SE7",
+    "vmb_NE0",
+    "vmb_NE1",
+    "vmb_NE2",
+    "vmb_NE3",
+    "vmb_NE4",
+    "vmb_NE5",
+    "vmb_NE6",
+    "vmb_NE7"
+   ],
+   "bits": 16,
+   "master": "hfd_vms_bank_native_q1_core_pr",
+   "port": "kq_done",
+   "cls": "OBS",
+   "why": "completion / busy pulse of a statically scheduled engine; programme activity reaches the host through the collar/target active/ready"
+  },
+  {
+   "instances": [
+    "hb_idx__selector"
+   ],
+   "bits": 16,
+   "master": "ot_hbm_idx_selector_static",
+   "port": "threshold_observe",
+   "cls": "OBS",
+   "why": "radix threshold observe bus (bench)"
+  },
+  {
+   "instances": [
+    "calendar_SW",
+    "calendar_SE",
+    "calendar_NW",
+    "calendar_NE",
+    "epcal_SW",
+    "epcal_SE",
+    "epcal_NW",
+    "epcal_NE",
+    "vmfc_SW",
+    "vmfc_SE",
+    "vmfc_NW",
+    "vmfc_NE"
+   ],
+   "bits": 12,
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "calendar_v",
+   "cls": "OBS",
+   "why": "completion / busy pulse of a statically scheduled engine; programme activity reaches the host through the collar/target active/ready"
+  },
+  {
+   "instances": [
+    "calendar_SW",
+    "calendar_SE",
+    "calendar_NW",
+    "calendar_NE",
+    "epcal_SW",
+    "epcal_SE",
+    "epcal_NW",
+    "epcal_NE",
+    "vmfc_SW",
+    "vmfc_SE",
+    "vmfc_NW",
+    "vmfc_NE"
+   ],
+   "bits": 12,
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "done",
+   "cls": "OBS",
+   "why": "completion / busy pulse of a statically scheduled engine; programme activity reaches the host through the collar/target active/ready"
+  },
+  {
+   "instances": [
+    "ep_S0",
+    "ep_S1",
+    "ep_S3",
+    "ep_N0",
+    "ep_N2"
+   ],
+   "bits": 10,
+   "master": "hfd_ep_static",
+   "port": "rx_block_ready",
+   "cls": "OBS",
+   "why": "completion / busy pulse of a statically scheduled engine; programme activity reaches the host through the collar/target active/ready"
+  },
+  {
+   "instances": [
+    "hb_idx__link"
+   ],
+   "bits": 10,
+   "master": "ot_hbm_idx_topk_link_static",
+   "port": "selected_count",
+   "cls": "OBS",
+   "why": "count observe (bench)"
+  },
+  {
+   "instances": [
+    "xq_SW_p0_eg",
+    "xq_SW_p1_eg",
+    "xq_SW_p2_eg",
+    "xq_SW_p3_eg",
+    "xq_NW_p0_eg",
+    "xq_NW_p1_eg",
+    "xq_NW_p2_eg",
+    "xq_NW_p3_eg"
+   ],
+   "bits": 8,
+   "master": "ot_hgi_sm_xload_xq_pegress",
+   "port": "x_done",
+   "cls": "OBS",
+   "why": "completion / busy pulse of a statically scheduled engine; programme activity reaches the host through the collar/target active/ready"
+  },
+  {
+   "instances": [
+    "xq_SW_p0_eg",
+    "xq_SW_p1_eg",
+    "xq_SW_p2_eg",
+    "xq_SW_p3_eg",
+    "xq_NW_p0_eg",
+    "xq_NW_p1_eg",
+    "xq_NW_p2_eg",
+    "xq_NW_p3_eg"
+   ],
+   "bits": 8,
+   "master": "ot_hgi_sm_xload_xq_pegress",
+   "port": "xw_last",
+   "cls": "OBS",
+   "why": "completion / busy pulse of a statically scheduled engine; programme activity reaches the host through the collar/target active/ready"
+  },
+  {
+   "instances": [
+    "vmb_SW0",
+    "vmb_SW1",
+    "vmb_SW2",
+    "vmb_SW3",
+    "vmb_SW4",
+    "vmb_SW5",
+    "vmb_SW6",
+    "vmb_SW7"
+   ],
+   "bits": 8,
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "wq_done1",
+   "cls": "OBS",
+   "why": "completion / busy pulse of a statically scheduled engine; programme activity reaches the host through the collar/target active/ready"
+  },
+  {
+   "instances": [
+    "vmm_NW0",
+    "vmm_NW1",
+    "vmm_NW2",
+    "vmm_NW3",
+    "vmm_NW4",
+    "vmm_NW5",
+    "vmm_NW6",
+    "vmm_NW7"
+   ],
+   "bits": 8,
+   "master": "hfd_vms_wq2_merge",
+   "port": "wq_done1",
+   "cls": "OBS",
+   "why": "completion / busy pulse of a statically scheduled engine; programme activity reaches the host through the collar/target active/ready"
+  },
+  {
+   "instances": [
+    "vmm_NW0",
+    "vmm_NW1",
+    "vmm_NW2",
+    "vmm_NW3",
+    "vmm_NW4",
+    "vmm_NW5",
+    "vmm_NW6",
+    "vmm_NW7"
+   ],
+   "bits": 8,
+   "master": "hfd_vms_wq2_merge",
+   "port": "wq_done2",
+   "cls": "OBS",
+   "why": "completion / busy pulse of a statically scheduled engine; programme activity reaches the host through the collar/target active/ready"
+  },
+  {
+   "instances": [
+    "hc_SW",
+    "hc_SE",
+    "hc_NW",
+    "hc_NE"
+   ],
+   "bits": 4,
+   "master": "ot_hbm_hc_q_static",
+   "port": "residual_done",
+   "cls": "OBS",
+   "why": "completion / busy pulse of a statically scheduled engine; programme activity reaches the host through the collar/target active/ready"
+  },
+  {
+   "instances": [
+    "hc_SW",
+    "hc_SE",
+    "hc_NW",
+    "hc_NE"
+   ],
+   "bits": 4,
+   "master": "ot_hbm_hc_q_static",
+   "port": "gather_done",
+   "cls": "OBS",
+   "why": "completion / busy pulse of a statically scheduled engine; programme activity reaches the host through the collar/target active/ready"
+  },
+  {
+   "instances": [
+    "hc_SW",
+    "hc_SE",
+    "hc_NW",
+    "hc_NE"
+   ],
+   "bits": 4,
+   "master": "ot_hbm_hc_q_static",
+   "port": "program_done",
+   "cls": "OBS",
+   "why": "completion / busy pulse of a statically scheduled engine; programme activity reaches the host through the collar/target active/ready"
+  },
+  {
+   "instances": [
+    "sfup_SW",
+    "sfup_SE",
+    "sfup_NW",
+    "sfup_NE"
+   ],
+   "bits": 4,
+   "master": "ot_hgi_sfu_programme_store",
+   "port": "programme_done",
+   "cls": "OBS",
+   "why": "completion / busy pulse of a statically scheduled engine; programme activity reaches the host through the collar/target active/ready"
+  },
+  {
+   "instances": [
+    "hb_idx__selector"
+   ],
+   "bits": 4,
+   "master": "ot_hbm_idx_selector_static",
+   "port": "out_v",
+   "cls": "OBS",
+   "why": "valid of the emit read-back (see out_line)"
+  },
+  {
+   "instances": [
+    "hb_coll_SE",
+    "hb_coll_NW",
+    "hb_coll_NE"
+   ],
+   "bits": 3,
+   "master": "ot_hfd_coll_q2_hard_v5",
+   "port": "program_init_busy",
+   "cls": "OBS",
+   "why": "completion / busy pulse of a statically scheduled engine; programme activity reaches the host through the collar/target active/ready"
+  },
+  {
+   "instances": [
+    "hb_coll_SE",
+    "hb_coll_NW",
+    "hb_coll_NE"
+   ],
+   "bits": 3,
+   "master": "ot_hfd_coll_q2_hard_v5",
+   "port": "hgi_done",
+   "cls": "OBS",
+   "why": "completion / busy pulse of a statically scheduled engine; programme activity reaches the host through the collar/target active/ready"
+  },
+  {
+   "instances": [
+    "hb_coll_SE",
+    "hb_coll_NW",
+    "hb_coll_NE"
+   ],
+   "bits": 3,
+   "master": "ot_hfd_coll_q2_hard_v5",
+   "port": "done",
+   "cls": "OBS",
+   "why": "completion / busy pulse of a statically scheduled engine; programme activity reaches the host through the collar/target active/ready"
+  },
+  {
+   "instances": [
+    "hb_vms_SW"
+   ],
+   "bits": 2,
+   "master": "hfd_hgi_vms_static_SW_glue",
+   "port": "mirror_busy",
+   "cls": "OBS",
+   "why": "completion / busy pulse of a statically scheduled engine; programme activity reaches the host through the collar/target active/ready"
+  },
+  {
+   "instances": [
+    "hb_vms_SE"
+   ],
+   "bits": 2,
+   "master": "hfd_hgi_vms_static_SE_glue",
+   "port": "mirror_busy",
+   "cls": "OBS",
+   "why": "completion / busy pulse of a statically scheduled engine; programme activity reaches the host through the collar/target active/ready"
+  },
+  {
+   "instances": [
+    "hb_vms_NW"
+   ],
+   "bits": 2,
+   "master": "hfd_hgi_vms_static_NW_glue",
+   "port": "mirror_busy",
+   "cls": "OBS",
+   "why": "completion / busy pulse of a statically scheduled engine; programme activity reaches the host through the collar/target active/ready"
+  },
+  {
+   "instances": [
+    "hb_vms_NE"
+   ],
+   "bits": 2,
+   "master": "hfd_hgi_vms_static_NE_glue",
+   "port": "mirror_busy",
+   "cls": "OBS",
+   "why": "completion / busy pulse of a statically scheduled engine; programme activity reaches the host through the collar/target active/ready"
+  },
+  {
+   "instances": [
+    "hb_dbk_SW",
+    "hb_dbk_NW"
+   ],
+   "bits": 2,
+   "master": "ot_hgi_dma_back_static_vp4_banks_cp",
+   "port": "mv_src",
+   "cls": "OBS",
+   "why": "completion / busy pulse of a statically scheduled engine; programme activity reaches the host through the collar/target active/ready"
+  },
+  {
+   "instances": [
+    "hb_dbk_SW",
+    "hb_dbk_NW"
+   ],
+   "bits": 2,
+   "master": "ot_hgi_dma_back_static_vp4_banks_cp",
+   "port": "mv_done",
+   "cls": "OBS",
+   "why": "completion / busy pulse of a statically scheduled engine; programme activity reaches the host through the collar/target active/ready"
+  },
+  {
+   "instances": [
+    "hb_dbk_SW",
+    "hb_dbk_NW"
+   ],
+   "bits": 2,
+   "master": "ot_hgi_dma_back_static_vp4_banks_cp",
+   "port": "quiet",
+   "cls": "OBS",
+   "why": "completion / busy pulse of a statically scheduled engine; programme activity reaches the host through the collar/target active/ready"
+  },
+  {
+   "instances": [
+    "hb_dbk_SW",
+    "hb_dbk_NW"
+   ],
+   "bits": 2,
+   "master": "ot_hgi_dma_back_static_vp4_banks_cp",
+   "port": "busy",
+   "cls": "OBS",
+   "why": "completion / busy pulse of a statically scheduled engine; programme activity reaches the host through the collar/target active/ready"
+  },
+  {
+   "instances": [
+    "hb_argmax"
+   ],
+   "bits": 2,
+   "master": "ot_hbm_argmax_static_sw_vm",
+   "port": "cq_seq",
+   "cls": "OBS",
+   "why": "completion / busy pulse of a statically scheduled engine; programme activity reaches the host through the collar/target active/ready"
+  },
+  {
+   "instances": [
+    "hb_idx__ctl"
+   ],
+   "bits": 2,
+   "master": "ot_hbm_idx_ctl_static",
+   "port": "cq_seq",
+   "cls": "OBS",
+   "why": "completion / busy pulse of a statically scheduled engine; programme activity reaches the host through the collar/target active/ready"
+  },
+  {
+   "instances": [
+    "hb_coll_SW"
+   ],
+   "bits": 1,
+   "master": "ot_hfd_coll_q3_hard_v7x",
+   "port": "program_init_busy",
+   "cls": "OBS",
+   "why": "completion / busy pulse of a statically scheduled engine; programme activity reaches the host through the collar/target active/ready"
+  },
+  {
+   "instances": [
+    "hb_coll_SW"
+   ],
+   "bits": 1,
+   "master": "ot_hfd_coll_q3_hard_v7x",
+   "port": "hgi_done",
+   "cls": "OBS",
+   "why": "completion / busy pulse of a statically scheduled engine; programme activity reaches the host through the collar/target active/ready"
+  },
+  {
+   "instances": [
+    "hb_coll_SW"
+   ],
+   "bits": 1,
+   "master": "ot_hfd_coll_q3_hard_v7x",
+   "port": "done",
+   "cls": "OBS",
+   "why": "completion / busy pulse of a statically scheduled engine; programme activity reaches the host through the collar/target active/ready"
+  },
+  {
+   "instances": [
+    "hb_argmax"
+   ],
+   "bits": 1,
+   "master": "ot_hbm_argmax_static_sw_vm",
+   "port": "done",
+   "cls": "OBS",
+   "why": "completion / busy pulse of a statically scheduled engine; programme activity reaches the host through the collar/target active/ready"
+  },
+  {
+   "instances": [
+    "hb_quant_NW"
+   ],
+   "bits": 1,
+   "master": "ot_hgi_qdq_host_static",
+   "port": "program_done",
+   "cls": "OBS",
+   "why": "completion / busy pulse of a statically scheduled engine; programme activity reaches the host through the collar/target active/ready"
+  },
+  {
+   "instances": [
+    "hb_quant_NW"
+   ],
+   "bits": 1,
+   "master": "ot_hgi_qdq_host_static",
+   "port": "beat_done",
+   "cls": "OBS",
+   "why": "completion / busy pulse of a statically scheduled engine; programme activity reaches the host through the collar/target active/ready"
+  },
+  {
+   "instances": [
+    "hb_quant_NW"
+   ],
+   "bits": 1,
+   "master": "ot_hgi_qdq_host_static",
+   "port": "record_done",
+   "cls": "OBS",
+   "why": "completion / busy pulse of a statically scheduled engine; programme activity reaches the host through the collar/target active/ready"
+  },
+  {
+   "instances": [
+    "hc_eng"
+   ],
+   "bits": 1,
+   "master": "ot_hbm_hc_eng_static",
+   "port": "program_done",
+   "cls": "OBS",
+   "why": "completion / busy pulse of a statically scheduled engine; programme activity reaches the host through the collar/target active/ready"
+  },
+  {
+   "instances": [
+    "hb_idx__ctl"
+   ],
+   "bits": 1,
+   "master": "ot_hbm_idx_ctl_static",
+   "port": "topk_done",
+   "cls": "OBS",
+   "why": "completion / busy pulse of a statically scheduled engine; programme activity reaches the host through the collar/target active/ready"
+  },
+  {
+   "instances": [
+    "xl_SW_aqlo",
+    "xl_SW_aqhi",
+    "xl_NW_aqlo",
+    "xl_NW_aqhi"
+   ],
+   "bits": 2048,
+   "master": "ot_hbm_xp_aq_tree13_fmt",
+   "port": "y",
+   "cls": "ROLE",
+   "why": "qdq (dequantised) result of the closed quantiser tile; the x-load consumes only q/e (FP8 codes + exponent)"
+  },
+  {
+   "instances": [
+    "col_su",
+    "col_sfu_SW",
+    "col_sfu_SE",
+    "col_sfu_NW",
+    "col_sfu_NE"
+   ],
+   "bits": 1105,
+   "master": "ot_hbm_static_cfg_collar",
+   "port": "rec",
+   "cls": "ROLE",
+   "why": "record payload of collars with NREC=0 (SU, SFU x4): constant, no records exist"
+  },
+  {
+   "instances": [
+    "epcal_SW",
+    "epcal_SE",
+    "epcal_NW",
+    "epcal_NE",
+    "vmfc_SW",
+    "vmfc_SE",
+    "vmfc_NW",
+    "vmfc_NE"
+   ],
+   "bits": 192,
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "wslot",
+   "cls": "ROLE",
+   "why": "universal VM calendar: output of a role (LG / ring / replay / slot) this calendar instance does not play"
+  },
+  {
+   "instances": [
+    "epcal_SW",
+    "epcal_SE",
+    "epcal_NW",
+    "epcal_NE",
+    "vmfc_SW",
+    "vmfc_SE",
+    "vmfc_NW",
+    "vmfc_NE"
+   ],
+   "bits": 192,
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "lg_local_read",
+   "cls": "ROLE",
+   "why": "universal VM calendar: output of a role (LG / ring / replay / slot) this calendar instance does not play"
+  },
+  {
+   "instances": [
+    "epcal_SW",
+    "epcal_SE",
+    "epcal_NW",
+    "epcal_NE",
+    "vmfc_SW",
+    "vmfc_SE",
+    "vmfc_NW",
+    "vmfc_NE"
+   ],
+   "bits": 192,
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "lg_local_write",
+   "cls": "ROLE",
+   "why": "universal VM calendar: output of a role (LG / ring / replay / slot) this calendar instance does not play"
+  },
+  {
+   "instances": [
+    "epcal_SW",
+    "epcal_SE",
+    "epcal_NW",
+    "epcal_NE",
+    "vmfc_SE",
+    "vmfc_NE"
+   ],
+   "bits": 144,
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "rslot",
+   "cls": "ROLE",
+   "why": "universal VM calendar: output of a role (LG / ring / replay / slot) this calendar instance does not play"
+  },
+  {
+   "instances": [
+    "epcal_SE",
+    "epcal_NW",
+    "epcal_NE",
+    "vmfc_SE",
+    "vmfc_NE"
+   ],
+   "bits": 120,
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "bank_client",
+   "cls": "ROLE",
+   "why": "universal VM calendar: output of a role (LG / ring / replay / slot) this calendar instance does not play"
+  },
+  {
+   "instances": [
+    "epcal_SW",
+    "epcal_SE",
+    "epcal_NW",
+    "epcal_NE",
+    "vmfc_SE",
+    "vmfc_NE"
+   ],
+   "bits": 48,
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "rslot_v",
+   "cls": "ROLE",
+   "why": "universal VM calendar: output of a role (LG / ring / replay / slot) this calendar instance does not play"
+  },
+  {
+   "instances": [
+    "epcal_SW",
+    "epcal_SE",
+    "epcal_NW",
+    "epcal_NE",
+    "vmfc_SE",
+    "vmfc_NE"
+   ],
+   "bits": 48,
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "wslot_v",
+   "cls": "ROLE",
+   "why": "universal VM calendar: output of a role (LG / ring / replay / slot) this calendar instance does not play"
+  },
+  {
+   "instances": [
+    "epcal_SW",
+    "epcal_SE",
+    "epcal_NW",
+    "epcal_NE",
+    "vmfc_SW",
+    "vmfc_SE",
+    "vmfc_NW",
+    "vmfc_NE"
+   ],
+   "bits": 48,
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "ring_tx_source",
+   "cls": "ROLE",
+   "why": "universal VM calendar: output of a role (LG / ring / replay / slot) this calendar instance does not play"
+  },
+  {
+   "instances": [
+    "epcal_SE",
+    "epcal_NW",
+    "epcal_NE",
+    "vmfc_SE",
+    "vmfc_NE"
+   ],
+   "bits": 40,
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "bank_enable",
+   "cls": "ROLE",
+   "why": "universal VM calendar: output of a role (LG / ring / replay / slot) this calendar instance does not play"
+  },
+  {
+   "instances": [
+    "epcal_SW",
+    "epcal_SE",
+    "epcal_NW",
+    "epcal_NE",
+    "vmfc_SE",
+    "vmfc_NE"
+   ],
+   "bits": 36,
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "hub_ring_client",
+   "cls": "ROLE",
+   "why": "universal VM calendar: output of a role (LG / ring / replay / slot) this calendar instance does not play"
+  },
+  {
+   "instances": [
+    "cp_svg_SW0",
+    "cp_svg_SW1",
+    "cp_svg_SW2",
+    "cp_svg_SW3",
+    "cp_svg_SW4",
+    "cp_svg_SW5",
+    "cp_svg_SW6",
+    "cp_svg_SW7",
+    "cp_svg_NW0",
+    "cp_svg_NW1",
+    "cp_svg_NW2",
+    "cp_svg_NW3",
+    "cp_svg_NW4",
+    "cp_svg_NW5",
+    "cp_svg_NW6",
+    "cp_svg_NW7"
+   ],
+   "bits": 16,
+   "master": "ot_static_cmd_target",
+   "port": "cmd_v",
+   "cls": "ROLE",
+   "why": "MODE 0 (RUN) instances: the SEQ command port is never driven (constant 0)"
+  },
+  {
+   "instances": [
+    "cp_svg_SW0",
+    "cp_svg_SW1",
+    "cp_svg_SW2",
+    "cp_svg_SW3",
+    "cp_svg_SW4",
+    "cp_svg_SW5",
+    "cp_svg_SW6",
+    "cp_svg_SW7",
+    "cp_svg_NW0",
+    "cp_svg_NW1",
+    "cp_svg_NW2",
+    "cp_svg_NW3",
+    "cp_svg_NW4",
+    "cp_svg_NW5",
+    "cp_svg_NW6",
+    "cp_svg_NW7"
+   ],
+   "bits": 16,
+   "master": "ot_static_cmd_target",
+   "port": "cmd",
+   "cls": "ROLE",
+   "why": "MODE 0 (RUN) instances: SEQ payload, constant 0"
+  },
+  {
+   "instances": [
+    "epcal_SW",
+    "epcal_SE",
+    "epcal_NW",
+    "epcal_NE",
+    "vmfc_SW",
+    "vmfc_SE",
+    "vmfc_NW",
+    "vmfc_NE"
+   ],
+   "bits": 16,
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "ring_tx_enable",
+   "cls": "ROLE",
+   "why": "universal VM calendar: output of a role (LG / ring / replay / slot) this calendar instance does not play"
+  },
+  {
+   "instances": [
+    "epcal_SW",
+    "epcal_SE",
+    "epcal_NW",
+    "epcal_NE",
+    "vmfc_SE",
+    "vmfc_NE"
+   ],
+   "bits": 12,
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "hub_ring_enable",
+   "cls": "ROLE",
+   "why": "universal VM calendar: output of a role (LG / ring / replay / slot) this calendar instance does not play"
+  },
+  {
+   "instances": [
+    "vmfc_SE",
+    "vmfc_NE"
+   ],
+   "bits": 10,
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "response_enable",
+   "cls": "ROLE",
+   "why": "universal VM calendar: output of a role (LG / ring / replay / slot) this calendar instance does not play"
+  },
+  {
+   "instances": [
+    "epcal_SW",
+    "epcal_SE",
+    "epcal_NW",
+    "epcal_NE",
+    "vmfc_SW",
+    "vmfc_SE",
+    "vmfc_NW",
+    "vmfc_NE"
+   ],
+   "bits": 8,
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "replay_enable",
+   "cls": "ROLE",
+   "why": "universal VM calendar: output of a role (LG / ring / replay / slot) this calendar instance does not play"
+  },
+  {
+   "instances": [
+    "epcal_SW",
+    "epcal_SE",
+    "epcal_NW",
+    "epcal_NE",
+    "vmfc_SW",
+    "vmfc_SE",
+    "vmfc_NW",
+    "vmfc_NE"
+   ],
+   "bits": 8,
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "replay_source",
+   "cls": "ROLE",
+   "why": "universal VM calendar: output of a role (LG / ring / replay / slot) this calendar instance does not play"
+  },
+  {
+   "instances": [
+    "col_su",
+    "col_sfu_SW",
+    "col_sfu_SE",
+    "col_sfu_NW",
+    "col_sfu_NE"
+   ],
+   "bits": 5,
+   "master": "ot_hbm_static_cfg_collar",
+   "port": "go",
+   "cls": "ROLE",
+   "why": "record go of collars with NREC=0: constant 0"
+  },
+  {
+   "instances": [
+    "hb_vms_SW"
+   ],
+   "bits": 3,
+   "master": "hfd_hgi_vms_static_SW_glue",
+   "port": "hub_status",
+   "cls": "ROLE",
+   "why": "hub status observe of the VMS glue (bench)"
+  },
+  {
+   "instances": [
+    "hb_vms_SE"
+   ],
+   "bits": 3,
+   "master": "hfd_hgi_vms_static_SE_glue",
+   "port": "hub_status",
+   "cls": "ROLE",
+   "why": "hub status observe"
+  },
+  {
+   "instances": [
+    "hb_vms_NW"
+   ],
+   "bits": 3,
+   "master": "hfd_hgi_vms_static_NW_glue",
+   "port": "hub_status",
+   "cls": "ROLE",
+   "why": "hub status observe"
+  },
+  {
+   "instances": [
+    "hb_vms_NE"
+   ],
+   "bits": 3,
+   "master": "hfd_hgi_vms_static_NE_glue",
+   "port": "hub_status",
+   "cls": "ROLE",
+   "why": "hub status observe"
+  },
+  {
+   "instances": [
+    "hb_ckgen"
+   ],
+   "bits": 1,
+   "master": "hfd_ckgen",
+   "port": "pll_link",
+   "cls": "ROLE",
+   "why": "link-domain PLL root: no d4f block is clocked in the link domain (die links run in the stream domain); VERIFY with H-DIE"
+  },
+  {
+   "instances": [
+    "hb_ckgen"
+   ],
+   "bits": 1,
+   "master": "hfd_ckgen",
+   "port": "por_link",
+   "cls": "ROLE",
+   "why": "link-domain reset (see pll_link)"
+  }
+ ]
+}

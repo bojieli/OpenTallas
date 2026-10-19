@@ -1,0 +1,77 @@
+ot-run: ot-epyc4       admits   301 GB (avail 472, growth 261, headroom 0, waiters 0/0 GB) load 155/128 running 48 disk 259 GB 
+ot-run: -> ot-epyc4
+ot-heavy: request 48G is charged 11G (class 'su_programme_pgcol_run.sh' measured peak 2.6G, n=2+0 proved); the cap stays 48G
+ot-heavy: admitted on regular-crane as oth-ubuntu-2522015-1792309807 after 1 s
+[positive q0] SU_PROGRAMME_PGCOL PASS edges=7111 active=21333 checked=21558 cols=10 ref_macros=98 fault_cases=3
+[positive q0] rc=0
+[positive q1] SU_PROGRAMME_PGCOL PASS edges=7111 active=21333 checked=21558 cols=10 ref_macros=98 fault_cases=3
+[positive q1] rc=0
+[positive q2] SU_PROGRAMME_PGCOL PASS edges=7111 active=21333 checked=21558 cols=10 ref_macros=98 fault_cases=3
+[positive q2] rc=0
+[positive q3] SU_PROGRAMME_PGCOL PASS edges=7111 active=21333 checked=21558 cols=10 ref_macros=98 fault_cases=3
+[positive q3] rc=0
+[cfg q0] SU_PROGRAMME_PGCOL_MISMATCH t=201507000 valid=1/1 edge=0/0 done=0/0 busy=1/1 fault=0/0 cmd_eq=0
+[cfg q0] SU_PROGRAMME_PGCOL_MISMATCH t=211897000 valid=1/1 edge=1039/1039 done=0/0 busy=1/1 fault=0/0 cmd_eq=0
+[cfg q0] SU_PROGRAMME_PGCOL_MISMATCH t=211987000 valid=1/1 edge=1048/1048 done=0/0 busy=1/1 fault=0/0 cmd_eq=0
+[cfg q0] SU_PROGRAMME_PGCOL_MISMATCH t=211997000 valid=1/1 edge=1049/1049 done=0/0 busy=1/1 fault=0/0 cmd_eq=0
+[cfg q0] [417046000] %Fatal: tb_hbm_su_programme_pgcol.sv:120: Assertion failed in tb_hbm_su_programme_pgcol: SU_PROGRAMME_PGCOL FAIL mismatches=6342 active=21333 checked=21558
+[cfg q0] rc=1
+SU_PROGRAMME_PGCOL MUTANT cfg REJECTED (expected)
+[phase q0] SU_PROGRAMME_PGCOL_MISMATCH t=201507000 valid=1/1 edge=0/0 done=0/0 busy=1/1 fault=0/0 cmd_eq=0
+[phase q0] SU_PROGRAMME_PGCOL_MISMATCH t=201517000 valid=1/1 edge=1/1 done=0/0 busy=1/1 fault=0/0 cmd_eq=0
+[phase q0] SU_PROGRAMME_PGCOL_MISMATCH t=201527000 valid=1/1 edge=2/2 done=0/0 busy=1/1 fault=0/0 cmd_eq=0
+[phase q0] SU_PROGRAMME_PGCOL_MISMATCH t=201537000 valid=1/1 edge=3/3 done=0/0 busy=1/1 fault=0/0 cmd_eq=0
+[phase q0] SU_PROGRAMME_PGCOL unexpected fault m=0 p=1
+[phase q0] [417046000] %Fatal: tb_hbm_su_programme_pgcol.sv:120: Assertion failed in tb_hbm_su_programme_pgcol: SU_PROGRAMME_PGCOL FAIL mismatches=19559 active=21333 checked=21558
+[phase q0] rc=1
+SU_PROGRAMME_PGCOL MUTANT phase REJECTED (expected)
+[cfgany q0] SU_PROGRAMME_PGCOL_MISMATCH t=416167000 valid=0/0 edge=0/0 done=0/0 busy=1/0 fault=1/1 cmd_eq=1
+[cfgany q0] SU_PROGRAMME_PGCOL_MISMATCH t=416177000 valid=0/0 edge=0/0 done=0/0 busy=1/0 fault=1/1 cmd_eq=1
+[cfgany q0] SU_PROGRAMME_PGCOL_MISMATCH t=416187000 valid=0/0 edge=0/0 done=0/0 busy=1/0 fault=1/1 cmd_eq=1
+[cfgany q0] SU_PROGRAMME_PGCOL_MISMATCH t=416197000 valid=1/0 edge=0/0 done=0/0 busy=1/0 fault=1/1 cmd_eq=0
+[cfgany q0] SU_PROGRAMME_PGCOL case a: busy
+[cfgany q0] [417046000] %Fatal: tb_hbm_su_programme_pgcol.sv:120: Assertion failed in tb_hbm_su_programme_pgcol: SU_PROGRAMME_PGCOL FAIL mismatches=37 active=21333 checked=21558
+[cfgany q0] rc=1
+SU_PROGRAMME_PGCOL MUTANT cfgany REJECTED (expected)
+[stale q0] SU_PROGRAMME_PGCOL_MISMATCH t=204057000 valid=1/1 edge=255/255 done=0/0 busy=1/1 fault=0/0 cmd_eq=0
+[stale q0] SU_PROGRAMME_PGCOL_MISMATCH t=206617000 valid=1/1 edge=511/511 done=0/0 busy=1/1 fault=0/0 cmd_eq=0
+[stale q0] SU_PROGRAMME_PGCOL_MISMATCH t=209177000 valid=1/1 edge=767/767 done=0/0 busy=1/1 fault=0/0 cmd_eq=0
+[stale q0] SU_PROGRAMME_PGCOL_MISMATCH t=211737000 valid=1/1 edge=1023/1023 done=0/0 busy=1/1 fault=0/0 cmd_eq=0
+[stale q0] [417046000] %Fatal: tb_hbm_su_programme_pgcol.sv:120: Assertion failed in tb_hbm_su_programme_pgcol: SU_PROGRAMME_PGCOL FAIL mismatches=12 active=21333 checked=21558
+[stale q0] rc=1
+SU_PROGRAMME_PGCOL MUTANT stale REJECTED (expected)
+[rstrelay q0] SU_PROGRAMME_PGCOL reset release col0=1 col1=1 head=3 edges (expected 3)
+[rstrelay q0] SU_PROGRAMME_PGCOL reset release col0=1 col1=1 head=3 edges (expected 3)
+[rstrelay q0] SU_PROGRAMME_PGCOL reset release col0=1 col1=1 head=3 edges (expected 3)
+[rstrelay q0] [417046000] %Fatal: tb_hbm_su_programme_pgcol.sv:120: Assertion failed in tb_hbm_su_programme_pgcol: SU_PROGRAMME_PGCOL FAIL mismatches=3 active=21333 checked=21558
+[rstrelay q0] rc=1
+SU_PROGRAMME_PGCOL MUTANT rstrelay REJECTED (expected)
+[cpin q0] SU_PROGRAMME_PGCOL_MISMATCH t=202777000 valid=1/1 edge=127/127 done=0/0 busy=1/1 fault=0/0 cmd_eq=0
+[cpin q0] SU_PROGRAMME_PGCOL_MISMATCH t=204057000 valid=1/1 edge=255/255 done=0/0 busy=1/1 fault=0/0 cmd_eq=0
+[cpin q0] SU_PROGRAMME_PGCOL_MISMATCH t=205337000 valid=1/1 edge=383/383 done=0/0 busy=1/1 fault=0/0 cmd_eq=0
+[cpin q0] SU_PROGRAMME_PGCOL_MISMATCH t=206617000 valid=1/1 edge=511/511 done=0/0 busy=1/1 fault=0/0 cmd_eq=0
+[cpin q0] SU_PROGRAMME_PGCOL case a: busy
+[cpin q0] [417046000] %Fatal: tb_hbm_su_programme_pgcol.sv:120: Assertion failed in tb_hbm_su_programme_pgcol: SU_PROGRAMME_PGCOL FAIL mismatches=17513 active=21333 checked=21558
+[cpin q0] rc=1
+SU_PROGRAMME_PGCOL MUTANT cpin REJECTED (expected)
+[oreg q0] SU_PROGRAMME_PGCOL_MISMATCH t=201507000 valid=1/1 edge=0/0 done=0/0 busy=1/1 fault=0/0 cmd_eq=0
+[oreg q0] SU_PROGRAMME_PGCOL_MISMATCH t=201517000 valid=1/1 edge=1/1 done=0/0 busy=1/1 fault=0/0 cmd_eq=0
+[oreg q0] SU_PROGRAMME_PGCOL_MISMATCH t=201527000 valid=1/1 edge=2/2 done=0/0 busy=1/1 fault=0/0 cmd_eq=0
+[oreg q0] SU_PROGRAMME_PGCOL_MISMATCH t=201537000 valid=1/1 edge=3/3 done=0/0 busy=1/1 fault=0/0 cmd_eq=0
+[oreg q0] SU_PROGRAMME_PGCOL case a: busy
+[oreg q0] [417046000] %Fatal: tb_hbm_su_programme_pgcol.sv:120: Assertion failed in tb_hbm_su_programme_pgcol: SU_PROGRAMME_PGCOL FAIL mismatches=12145 active=21333 checked=21558
+[oreg q0] rc=1
+SU_PROGRAMME_PGCOL MUTANT oreg REJECTED (expected)
+[freg q0] SU_PROGRAMME_PGCOL_MISMATCH t=344917000 valid=1/1 edge=97/97 done=0/0 busy=1/1 fault=1/0 cmd_eq=1
+[freg q0] SU_PROGRAMME_PGCOL_MISMATCH t=416157000 valid=0/0 edge=0/0 done=0/0 busy=0/0 fault=1/0 cmd_eq=1
+[freg q0] [417046000] %Fatal: tb_hbm_su_programme_pgcol.sv:120: Assertion failed in tb_hbm_su_programme_pgcol: SU_PROGRAMME_PGCOL FAIL mismatches=2 active=21333 checked=21558
+[freg q0] rc=1
+SU_PROGRAMME_PGCOL MUTANT freg REJECTED (expected)
+[hrelay q0] SU_PROGRAMME_PGCOL reset release col0=3 col1=3 head=1 edges (expected 3)
+[hrelay q0] SU_PROGRAMME_PGCOL reset release col0=3 col1=3 head=1 edges (expected 3)
+[hrelay q0] SU_PROGRAMME_PGCOL reset release col0=3 col1=3 head=1 edges (expected 3)
+[hrelay q0] [417046000] %Fatal: tb_hbm_su_programme_pgcol.sv:120: Assertion failed in tb_hbm_su_programme_pgcol: SU_PROGRAMME_PGCOL FAIL mismatches=3 active=21333 checked=21558
+[hrelay q0] rc=1
+SU_PROGRAMME_PGCOL MUTANT hrelay REJECTED (expected)
+SU_PROGRAMME_PGCOL_GATE PASS
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-2522015-1792309807): exit 0

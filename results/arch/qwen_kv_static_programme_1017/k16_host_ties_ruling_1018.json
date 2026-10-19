@@ -1,0 +1,32 @@
+{
+  "item": "K-16 (stub_audit_1017.md) / RTL-BUILD-KV F3",
+  "lane": "KV-INTEG",
+  "date": "2026-10-18",
+  "source_commit": "61a9f03e7 (origin/claude/kvj-g2-1017)",
+  "rule": "0da (COORD 10-17 ~10:20): a identity, b spare unread, c provably unused mode, d functional -> real producer",
+  "site": "rtl/qwen_sys/host_integrated_20261014/qkd_host_fullcontrol_observed.sv:170-172 (u_host = qkd_host_if_pins_observed #(.MODE(0)))",
+  "die_path": "qkd_host_root -> qkd_host_control_{packet_admission,packet_observed} -> qkd_host_control_prompt_observed -> qkd_host_fullcontrol_observed -> qkd_host_if_pins_observed (pin regs) -> ot_host_if_pb2_observed u_core",
+  "mode_proof": [
+    "fullcontrol_observed instantiates u_host with literal .MODE(0) (one decode core); MODE 1 = SOURCE package of a ROM array (ot_rom_pkg_ctrl), not present on the KV die",
+    "qkd_host_if_pins_observed.sv:109 elaboration check: initial if(MODE!=0 || NSLOT!=1 || ...) $fatal -> the leaf cannot be built in MODE 1",
+    "ot_host_if_pb2_observed.sv: every read of the tied inputs is under a constant MODE==1 term: t_ok (345, '(MODE == 1) && ...'), t_gen/t_eos/t_last/t_stat (346-350) consumed only under t_ok (645-651) or 'MODE == 1 && t_ok' (666-670), arr_fault fault arm 'MODE == 1 && arr_fault' (571), users_done in the MODE 1 batch block (621-660, line 638), pr_re/pr_user/pr_pos in 'if (MODE == 1)' of the prompt-buffer read mux (678-680; MODE 0 uses the step issue address)",
+    "the only other path is the 1-flop pin register in qkd_host_if_pins_observed (279-305), whose outputs feed only those MODE-1 terms -> constant-folded, unread"
+  ],
+  "ties": [
+    {"port": "pr_re", "bits": 1, "class": "c", "ruling": "ACCEPT provably unused mode (MODE 1 package prompt read)"},
+    {"port": "pr_user", "bits": 8, "class": "c", "ruling": "ACCEPT"},
+    {"port": "pr_pos", "bits": 18, "class": "c", "ruling": "ACCEPT"},
+    {"port": "tok_valid", "bits": 1, "class": "c", "ruling": "ACCEPT provably unused mode (MODE 1 array token return)"},
+    {"port": "tok_user", "bits": 8, "class": "c", "ruling": "ACCEPT"},
+    {"port": "tok_pos", "bits": 18, "class": "c", "ruling": "ACCEPT"},
+    {"port": "tok_id", "bits": 18, "class": "c", "ruling": "ACCEPT"},
+    {"port": "users_done", "bits": 8, "class": "c", "ruling": "ACCEPT provably unused mode (MODE 1 batch completion)"},
+    {"port": "arr_fault", "bits": 1, "class": "c", "ruling": "ACCEPT provably unused mode (MODE 1 array fault). The KV die's real faults reach the host via eng_fault / ctrl_completion_fault / the P7 attention fault tree, not this port"}
+  ],
+  "open_outputs": [
+    {"port": "arr_rst_n, cfg_users, cfg_prompt_len, cfg_gen_len", "class": "c", "ruling": "ACCEPT unread MODE-1 package outputs: written only in the MODE 1 batch block (626-634), reset constants in MODE 0; no consumer on a single-core die"}
+  ],
+  "functional_ties": 0,
+  "producers_built": "none needed",
+  "strap_manifest_entry": "KV die strap manifest: list these 81 input bits + 4 open outputs as class (c) unused-mode, reason = host leaf MODE 0 single-core (elaboration-checked)"
+}

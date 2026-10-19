@@ -1,0 +1,22 @@
+/usr/bin/iverilog
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/s81die5/pvrd
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81die5/pvrd
+ot-run: ot-agidock128  admits    39 GB (avail 68, growth 40, headroom 0, waiters 72/1389 GB) load 15/64 running 8 disk 275 GB 
+ot-run: -> ot-agidock128
+ot-heavy: waiting for memory on vm-xry57mhfyn: need 0.7 x 2 = 1 GB, admissible 39 GB: available 68 GB, growth charged 40 GB (x0.5), young 39 GB, floor 6 GB; DIE-FIRST: 48 GB held for a waiting die trial
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-4152205-1792308295 after 361 s
+base DL=300 K=2
+OT_PVRD sent=30 recv=30 mism=0 lat=5 latbad=0 fault=0
+base DL=700 K=2
+OT_PVRD sent=30 recv=30 mism=0 lat=6 latbad=0 fault=0
+base DL=1100 K=3
+OT_PVRD sent=30 recv=30 mism=0 lat=7 latbad=0 fault=0
+base DL=300 K=2 NW=160
+OT_PVRD sent=480 recv=480 mism=0 lat=5 latbad=0 fault=0
+slip
+OT_PVRD sent=30 recv=30 mism=0 lat=5 latbad=0 fault=1
+mut1 (expect FAIL)
+OT_PVRD sent=30 recv=30 mism=30 lat=5 latbad=0 fault=0
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-4152205-1792308295): exit 0
+
+[exited with code 0]

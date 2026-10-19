@@ -1,0 +1,11 @@
+MISMATCH t=135000000 idle new=1 ref(prev)=0 fo new=0 ref(prev)=0 po_eq=1 same_eq=1
+MISMATCH t=240000000 idle new=1 ref(prev)=0 fo new=0 ref(prev)=0 po_eq=1 same_eq=1
+MISMATCH t=247000000 idle new=1 ref(prev)=0 fo new=0 ref(prev)=0 po_eq=1 same_eq=1
+MISMATCH t=270000000 idle new=1 ref(prev)=0 fo new=0 ref(prev)=0 po_eq=1 same_eq=1
+MISMATCH t=404000000 idle new=1 ref(prev)=0 fo new=0 ref(prev)=0 po_eq=1 same_eq=1
+MISMATCH t=420000000 idle new=1 ref(prev)=0 fo new=0 ref(prev)=0 po_eq=1 same_eq=1
+FAIL sched pinreg equiv: 2776 mismatching samples of 329391
+- rtl/test/qwen_static_kv/tb_sched_pinreg_equiv.sv:151: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 274us; walltime 0.950 s; speed 288.521 us/s
+- Verilator: cpu 0.951 s on 1 threads; alloced 1017 MB

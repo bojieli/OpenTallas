@@ -121,7 +121,7 @@ module tb_hbm_hc_q_static;
         prog[700][22]=1;prog[700][26:23]=GNPOS;prog[700][42:27]=GBASE;prog[700][58:43]=GSTRIDE;
         for(integer p=0;p<4;p=p+1)begin prog[860+p*2][59]=1;prog[860+p*2][75:60]=SBASE;prog[860+p*2][78:76]=3'(p);end
         n_words=900;
-        repeat(5)@(negedge clk);rst_n=1;repeat(3)@(negedge clk);
+        repeat(5)@(negedge clk);rst_n=1;repeat(6)@(negedge clk); // +3: hc_q regional reset relay release
         for(integer i=0;i<n_words;i=i+1)f20_cfg(8'd108,12'(i),word(i,prog[i]));
         f20_cfg(8'd109,12'd0,word(0,79'd1)); // another target: must be ignored
         @(negedge clk);desc_v=1;cfg_target=8'd108;desc_base=0;desc_limit=13'(n_words);desc_loops=1;@(negedge clk);desc_v=0;

@@ -25,14 +25,15 @@ Run it from the worktree that holds the spec's source commit.  Steps:
     that commit, re-check;
  6. PRE-ROUTE VISUAL REVIEW: an element on critical_tiles.txt (block or kit name) or with >= 2 earlier non-CLOSED routes
     needs a committed <kit>/gate_layout/REVIEW.json {reviewer (= the coordinator lock holder: 'coordinator ...' when
-    Claude holds COORDINATOR.lock, 'codex ...' when Codex does), time, gate_commit (= the kit gate's commit), verdict
+    Claude holds COORDINATOR.lock, 'codex ...' when Codex does), time, gate_commit (= the kit gate's commit; or
+    geometry_sha256 from --geometry: a re-gate with the same geometry keeps the review), verdict
     APPROVED|CHANGES, checklist {lattice, std_cell_band, pin_spread, clock_entry, shape}}; else REVIEW_REQUIRED + PNGs;
  7. drop the spec atomically into the closure-loop drop dir (only after a PASS/WARN).
 BENCH EVIDENCE (ROOT-2345 2026-10-17): before anything else, refuse locally what the daemon would mark INVALID / REFUSED
 after the gate: a closure candidate (not hold_merge / auto_merge false) needs a behavioural expect=pass bench and an
-expect=fail mutant (stages.bench, or benched_by a composition gate), and every expect=fail bench needs a fail_regex and
-a committed fail_witness (the captured real mutant log the regex matches; bench_lint checks the match).  A spec that
-must route without a witness says why in "fail_witness_waiver" (or pass --allow-missing-witness: WARN only).
+expect=fail mutant (stages.bench, or benched_by a composition gate), and every expect=fail bench needs a fail_regex.
+A committed fail_witness (the captured real mutant log; bench_lint checks the regex matches it) is optional since
+GATE-FRICTION 2026-10-18: without one this WARNs and the loop captures + commits the real mutant log itself.
 Exit 0 submitted (or dry-run PASS), 1 refused locally, 2 usage/git error.
 """
 import argparse
@@ -83,11 +84,31 @@ def move_spec(spec, commit):
     return spec
 
 
+GENERATED_RE = re.compile(r"(?:^|/)(?:gate_result\.json|source_snapshot\.json|source_binding_history/.*|gate_layout/.*)$")
+
+
+def generated_only(paths):
+    return bool(paths) and all(GENERATED_RE.search(p) for p in paths)
+
+
+def gate_file_ok(root, path):
+    """an uncommitted gate_result.json is committed automatically only when its verdict is PASS / WARN"""
+    if not path.endswith("gate_result.json"):
+        return True
+    try:
+        return json.loads((Path(root) / path).read_text()).get("verdict") in ("PASS", "WARN")
+    except (OSError, ValueError):
+        return False
+
+
 def dirty(root, commit, paths):
     """(uncommitted, differs-from-commit) consumed paths"""
-    # gate_layout/ (pre_route_gate layout PNGs) is never shipped nor gate-bound: an untracked copy is not a dirty kit
+    # gate_layout/ (pre_route_gate layout PNGs) is never shipped nor gate-bound: an untracked copy is not a dirty kit.
+    # An untracked lint_receipt.json (tools/ref_tile/lint_receipt.py) is a cache of the kit CDC lint written by the
+    # gate's regeneration: the daemon re-derives (or re-runs on the fleet) the same lint at the commit, so it is not dirt.
     unc = [ln.split(None, 1)[1] for ln in git(root, "status", "--porcelain", "--", *paths).splitlines()
-           if ln.strip() and not (ln.startswith("??") and "/gate_layout/" in "/" + ln.split(None, 1)[1])]
+           if ln.strip() and not (ln.startswith("??") and ("/gate_layout/" in "/" + ln.split(None, 1)[1]
+                                                          or ln.split(None, 1)[1].endswith("/lint_receipt.json")))]
     head = git(root, "rev-parse", "HEAD")
     diff = git(root, "diff", "--name-only", commit, head, "--", *paths).splitlines() if not head.startswith(commit) else []
     return unc, [d for d in diff if d]
@@ -131,13 +152,36 @@ def referenced_commits(root, commit, kit):
     return found
 
 
-def origin_problems(root, commit, spec, kit):
+def ff_push(root, commit, branch, dry=False):
+    """HOUSEKEEPING (GATE-FRICTION 2026-10-18): push commit to origin/<branch> when that is a fast-forward (or the branch
+    does not exist on origin yet).  Never forces.  Returns the text of what happened, or None when not safe."""
+    exists = bool(git(root, "ls-remote", "--heads", "origin", branch, check=False))
+    if exists and subprocess.run(["git", "-C", str(root), "merge-base", "--is-ancestor", f"origin/{branch}", commit],
+                                 capture_output=True).returncode:
+        return None
+    if dry:
+        return f"(dry run) would fast-forward push {commit[:9]} to origin/{branch}"
+    p = subprocess.run(["git", "-C", str(root), "push", "-q", "origin", f"{commit}:refs/heads/{branch}"],
+                       capture_output=True, text=True, timeout=600)
+    if p.returncode:
+        return None
+    git(root, "fetch", "-q", "origin", branch, check=False)
+    return f"fast-forward pushed {commit[:9]} to origin/{branch}" + ("" if exists else " (new branch)")
+
+
+def origin_problems(root, commit, spec, kit, push=True, dry=False):
     out = []
     branch = (spec.get("source") or {}).get("branch")
     if not branch:
         out.append("spec source.branch missing")
     elif not on_origin(root, commit, branch):
-        out.append(f"source commit {commit[:12]} is not on origin/{branch} (push it: --push)")
+        done = ff_push(root, commit, branch, dry) if push else None
+        if done:
+            print(f"HOUSEKEEPING: {done}")
+        else:
+            out.append(f"source commit {commit[:12]} is not on origin/{branch} and origin/{branch} is not its ancestor "
+                       f"(no fast-forward possible: merge origin/{branch} first, or fix source.branch)"
+                       if push else f"source commit {commit[:12]} is not on origin/{branch} (push it: drop --no-push)")
     for c, where in sorted(referenced_commits(root, commit, kit).items()) if kit else ():
         if subprocess.run(["git", "-C", str(root), "cat-file", "-e", c + "^{commit}"], capture_output=True).returncode:
             out.append(f"referenced commit {c} ({where}) does not exist")
@@ -271,13 +315,70 @@ def reviewer_allowed(reviewer):
     return None
 
 
-def review_check(root, commit, kit, show=None):
-    """None when the committed REVIEW.json approves THIS gate, else the refusal text."""
+# GEOMETRY-BOUND REVIEW (GATE-FRICTION 2026-10-18, owner 0eg): the coordinator reviews the GEOMETRY (outline, macro
+# placements, pin assignment, clock entry), so the receipt binds to a hash of exactly that, read from the kit
+# (floorplan.json + spec.json + the pin / clock-entry files they name).  A re-gate with the same geometry keeps the review
+# valid.  REVIEW.json "geometry_sha256" (submit_exact.py --geometry KIT prints it) is checked first; a receipt without
+# it falls back to its gate_commit: valid when it names the kit's gate, or when the kit geometry at that commit equals
+# the geometry now.
+GEOMETRY_SCHEMA = "opentallas.ref_tile.review_geometry.v1"
+_FP_OUTLINE, _FP_PINS, _FP_CLOCK = ("die", "core"), ("pins",), ("clock_port", "clock_ports", "clock_cts_roots")
+_SPEC_OUTLINE, _SPEC_PINS = ("outline", "macros"), ("pins", "pin_regs", "io_flop_at_pins", "pin_reg_split")
+_SPEC_CLOCK = ("clock", "clock_port", "clock_ports", "clock_entry_domains", "clock_cts_roots", "clock_relationship")
+
+
+def _h(x):
+    import hashlib
+    return hashlib.sha256(json.dumps(x, sort_keys=True, separators=(",", ":"), default=str).encode()).hexdigest()
+
+
+def geometry_record(rd, kit, legacy=False):
+    """{schema, sha256, components{outline, macros, pins, clock_entry}} of the kit geometry, rd(path) -> text or None;
+    None when the kit has neither floorplan.json nor spec.json.
+    ROOT 10-19 (HKV-D2D18): the pin / clock-entry files are keyed by their BASENAME (their role), not their path, which
+    carries the kit name: a byte-identical layout under a new kit name (qkd_d2d_static_r7u -> r7v) hashes the same.
+    legacy=True gives the pre-10-19 path-keyed hash, still accepted in REVIEW.json during the transition."""
+    def js(p):
+        try:
+            t = rd(p)
+            return json.loads(t) if t else None
+        except ValueError:
+            return None
+    fp, sp = js(f"{kit}/floorplan.json"), js(f"{kit}/spec.json")
+    if not isinstance(fp, dict) and not isinstance(sp, dict):
+        return None
+    fp, sp = fp if isinstance(fp, dict) else {}, sp if isinstance(sp, dict) else {}
+    blocks = sorted(([b.get(k) for k in ("inst", "master", "x", "y", "w", "h", "orient")] for b in fp.get("blocks") or []
+                     if isinstance(b, dict)), key=str)
+    files = {}
+    for ref in (sp.get("io_tcl"), f"{kit}/clock_entry.sdc", f"{kit}/io.tcl", f"{kit}/pins.tcl"):
+        if isinstance(ref, str) and ref:
+            for cand in (ref, f"{kit}/{ref}"):
+                t = rd(cand)
+                if t is not None:
+                    files[ref if legacy else ref.rsplit("/", 1)[-1]] = _h(t)
+                    break
+    comp = dict(outline=_h([{k: fp.get(k) for k in _FP_OUTLINE}, {k: sp.get(k) for k in _SPEC_OUTLINE if k != "macros"}]),
+                macros=_h([blocks, sp.get("macros")]),
+                pins=_h([{k: fp.get(k) for k in _FP_PINS}, {k: sp.get(k) for k in _SPEC_PINS},
+                         {k: v for k, v in files.items() if not k.endswith("clock_entry.sdc")}]),
+                clock_entry=_h([{k: fp.get(k) for k in _FP_CLOCK}, {k: sp.get(k) for k in _SPEC_CLOCK},
+                                {k: v for k, v in files.items() if k.endswith("clock_entry.sdc")}]))
+    return dict(schema=GEOMETRY_SCHEMA, sha256=_h(comp), components=comp)
+
+
+def review_check(root, commit, kit, show=None, show_at=None):
+    """None when the committed REVIEW.json approves THIS gate (or this geometry), else the refusal text."""
+    def at(c, p):
+        if show_at:
+            return show_at(c, p)
+        r = subprocess.run(["git", "-C", str(root), "show", f"{c}:{p}"], capture_output=True, text=True)
+        return r.stdout if r.returncode == 0 else None
+
     def rd(p):
         if show:
             return show(p)
-        r = subprocess.run(["git", "-C", str(root), "show", f"{commit}:{p}"], capture_output=True, text=True)
-        return r.stdout if r.returncode == 0 else None
+        return at(commit, p)
     pngs = [str(root / kit / "gate_layout" / n) for n in ("floorplan.png", "density.png", "placed.png", "cts.png")
             if (root / kit / "gate_layout" / n).exists()]
     tail = " -- review these and commit physical/ref_tile/<kit>/gate_layout/REVIEW.json: " + (", ".join(pngs) or
@@ -295,8 +396,23 @@ def review_check(root, commit, kit, show=None):
     gc = str(rev["gate_commit"])
     ids = [str(x) for x in ((gate or {}).get("commit"), ((gate or {}).get("source_binding") or {}).get("commit"),
                             (gate or {}).get("generated")) if x]
-    if not ids or not any(i.startswith(gc) or gc.startswith(i) for i in ids if len(gc) >= 7 or i == gc):
-        return f"REVIEW_REQUIRED: REVIEW.json gate_commit {gc} does not match the kit's gate ({', '.join(ids) or 'none'})" + tail
+    now = geometry_record(rd, kit)
+    now_legacy = geometry_record(rd, kit, legacy=True)      # transition: receipts hashed with path-keyed files
+    tail = (f" -- geometry_sha256 now {now['sha256']}" if now else "") + tail
+    if rev.get("geometry_sha256"):
+        if not now or rev["geometry_sha256"] not in (now["sha256"], (now_legacy or {}).get("sha256")):
+            was = (rev.get("geometry") or {}).get("components") or {}
+            moved = [k for k, v in (now or {}).get("components", {}).items() if was and was.get(k) != v]
+            return (f"REVIEW_REQUIRED: the kit geometry changed since the review (geometry_sha256 "
+                    f"{str(rev['geometry_sha256'])[:12]} -> {(now or {}).get('sha256', 'none')[:12]}"
+                    + (f"; changed: {', '.join(moved)}" if moved else "") + ")" + tail)
+    elif not ids or not any(i.startswith(gc) or gc.startswith(i) for i in ids if len(gc) >= 7 or i == gc):
+        then = geometry_record(lambda p: at(gc, p), kit) if re.fullmatch(r"[0-9a-f]{7,40}", gc) else None
+        if not (now and then and now["sha256"] == then["sha256"]):
+            return (f"REVIEW_REQUIRED: REVIEW.json gate_commit {gc} does not match the kit's gate "
+                    f"({', '.join(ids) or 'none'})" + ("" if then else " and its geometry is unreadable")
+                    + ("; the geometry changed since the review" if then and now else "") + tail)
+        print(f"visual review: gate re-run since review {gc}, geometry unchanged ({now['sha256'][:12]}): receipt stands")
     cl = rev["checklist"] if isinstance(rev["checklist"], dict) else {}
     absent = [k for k in REVIEW_CHECKLIST if k not in cl]
     if absent:
@@ -337,18 +453,22 @@ def bench_evidence_problems(spec, allow_missing_witness=False):
             errs.append("no behavioural expect=pass bench (lint alone is not exactness)")
         if not any(b.get("expect") == "fail" for b in benches):
             errs.append("no expect=fail mutant bench (the daemon marks the job INVALID after the gate)")
+    # GATE-FRICTION 2026-10-18 (owner 0eg): a missing committed fail_witness is a WARN, not a refusal.  The loop's bench
+    # track captures the real mutant output, checks the fail_regex against it and commits it with the record
+    # (closure_loop.capture_fail_witness); a mutant that does not fail is still NEEDS_RTL there.  The fail_regex stays
+    # required: without it a crash reads as a detected mutant and nothing can be captured.
     waiver = spec.get("fail_witness_waiver")
+    waived = (isinstance(waiver, str) and waiver.strip()) or allow_missing_witness
     for b in benches:
         if b.get("expect") != "fail":
             continue
-        miss = [k for k in ("fail_regex", "fail_witness") if not b.get(k)]
-        if miss:
-            msg = (f"bench {b.get('name')}: expect=fail without {' and '.join(miss)} -- commit the captured real mutant "
-                   f"log and name it in fail_witness (the fail_regex must match it)")
-            if (isinstance(waiver, str) and waiver.strip()) or allow_missing_witness:
-                warns.append(msg + " [waived]")
-            else:
-                errs.append(msg)
+        if not b.get("fail_regex"):
+            msg = (f"bench {b.get('name')}: expect=fail without fail_regex -- set it to the mutant's real verdict line "
+                   f"(any rc != 0, a crash or a missing file, would read as a detected mutant)")
+            (warns.append(msg + " [waived]") if waived else errs.append(msg))
+        elif not b.get("fail_witness"):
+            warns.append(f"bench {b.get('name')}: no committed fail_witness -- the closure loop captures the real mutant "
+                         f"log, checks fail_regex against it and commits it with the record")
     return errs, warns
 
 
@@ -383,7 +503,59 @@ def use_daemon_code(daemon):
             del sys.modules[m]
 
 
+MAIN_TOOLS_CACHE = Path(os.environ.get("OT_SUBMIT_EXACT_CACHE", str(Path.home() / ".cache/ot-submit-exact")))
+
+
+def main_tools_reexec(argv):
+    """HOUSEKEEPING (GATE-FRICTION 2026-10-18): run origin/main's tools/closure_loop, not this worktree's copy.  When any
+    file of this copy differs from origin/main's, extract main's tools/closure_loop (+ composition_gates.json) once per
+    main commit into MAIN_TOOLS_CACHE and re-exec it with the same argv.  Returns the exit code, or None to go on here
+    (already main's code, OT_SUBMIT_EXACT_MAIN set, or git unavailable)."""
+    import hashlib
+    if os.environ.get("OT_SUBMIT_EXACT_MAIN") or "--local-tools" in (argv or sys.argv[1:]):
+        return None
+    try:
+        root = git(Path.cwd(), "rev-parse", "--show-toplevel")
+        git(root, "fetch", "-q", "origin", "main", check=False)
+        head = git(root, "rev-parse", "origin/main")
+        rows = [ln.split(None, 3) for ln in git(root, "ls-tree", "origin/main", "tools/closure_loop/").splitlines()]
+    except SystemExit:
+        return None
+    stale = []
+    for mode, kind, blob, path in rows:
+        f = HERE / Path(path).name
+        if kind != "blob":
+            continue
+        data = f.read_bytes() if f.is_file() else None
+        if data is None or hashlib.sha1(b"blob %d\0" % len(data) + data).hexdigest() != blob:
+            stale.append(Path(path).name)
+    if not stale:
+        return None
+    dest = MAIN_TOOLS_CACHE / head[:12]
+    if not (dest / "tools/closure_loop/submit_exact.py").is_file():
+        tmp = MAIN_TOOLS_CACHE / f".{head[:12]}.{os.getpid()}"
+        tmp.mkdir(parents=True, exist_ok=True)
+        a = subprocess.run(f"git -C {shlex.quote(root)} archive origin/main tools/closure_loop "
+                           f"tools/ref_tile/composition_gates.json | tar -x -C {shlex.quote(str(tmp))}",
+                           shell=True, capture_output=True, text=True, timeout=600)
+        if a.returncode or not (tmp / "tools/closure_loop/submit_exact.py").is_file():
+            print(f"submit_exact: WARN could not extract origin/main tools ({a.stderr.strip()[:200]}); using this copy")
+            return None
+        try:
+            os.replace(tmp, dest)
+        except OSError:
+            subprocess.run(["rm", "-rf", str(tmp)])
+    print(f"HOUSEKEEPING: this copy of tools/closure_loop differs from origin/main {head[:9]} "
+          f"({', '.join(stale[:4])}{' ...' if len(stale) > 4 else ''}); running main's submit_exact", flush=True)
+    env = dict(os.environ, OT_SUBMIT_EXACT_MAIN=head)
+    return subprocess.run([sys.executable, str(dest / "tools/closure_loop/submit_exact.py"), *(argv or sys.argv[1:])],
+                          env=env).returncode
+
+
 def main(argv=None):
+    rc = main_tools_reexec(argv)
+    if rc is not None:
+        return rc
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("spec")
     ap.add_argument("--commit-paths", nargs="+", help="commit exactly these paths first (git add -- <paths>)")
@@ -395,11 +567,22 @@ def main(argv=None):
                     help="do not push HEAD to origin/<source.branch> (default: push after every commit, before the gate)")
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--allow-missing-witness", action="store_true",
-                    help="expect=fail benches without fail_regex/fail_witness WARN instead of refusing")
+                    help="expect=fail benches without fail_regex WARN instead of refusing (a missing fail_witness always only WARNs)")
+    ap.add_argument("--local-tools", action="store_true",
+                    help="run this copy of tools/closure_loop even when it differs from origin/main (default: re-exec main's)")
+    ap.add_argument("--geometry", action="store_true",
+                    help="print the review geometry record (geometry_sha256 for REVIEW.json) of the spec's kit at HEAD; "
+                         "SPEC may also be the kit directory")
     ap.add_argument("--daemon-tree", default=os.environ.get("OT_CLOSURE_DAEMON_TREE", "/home/ubuntu/wt-claude-closure-daemon-1010"))
     a = ap.parse_args(argv)
     use_daemon_code(a.daemon_tree)
     root = Path(git(Path.cwd(), "rev-parse", "--show-toplevel"))
+    if a.geometry:
+        kp = Path(a.spec)
+        kit = (str(kp.resolve().relative_to(root)) if kp.is_dir() else kit_of(json.loads(kp.read_text())))
+        rec = geometry_record(lambda p: (root / p).read_text() if (root / p).is_file() else None, kit)
+        print(json.dumps(dict(kit=kit, geometry_sha256=(rec or {}).get("sha256"), geometry=rec), indent=1))
+        return 0 if rec else 2
     spec_path = Path(a.spec)
     spec = json.loads(spec_path.read_text())
     if a.commit_paths:
@@ -450,6 +633,27 @@ def main(argv=None):
         commit = git(root, "rev-parse", f"{spec['source']['commit']}^{{commit}}")
         paths = consumed_paths(spec)
         unc, diff = dirty(root, commit, paths)
+        # HOUSEKEEPING (GATE-FRICTION 2026-10-18): generated gate files (gate_result.json of a PASS/WARN gate,
+        # source_binding_history/, gate_layout/) are committed by path and the spec follows HEAD, instead of refusing
+        if unc and generated_only(unc) and all(gate_file_ok(root, u) for u in unc) and not a.dry_run:
+            gen = sorted({str(Path(u)) for u in unc})
+            git(root, "add", "--", *gen)
+            if git(root, "diff", "--cached", "--name-only", "--", *gen):
+                git(root, "commit", "-m", a.message or f"{kit_of(spec)}: generated gate files (submit_exact housekeeping)",
+                    "--", *gen)
+                print(f"HOUSEKEEPING: committed generated gate files {', '.join(gen[:6])}")
+            spec = move_spec(spec, git(root, "rev-parse", "HEAD"))
+            push()
+            commit = git(root, "rev-parse", f"{spec['source']['commit']}^{{commit}}")
+            unc, diff = dirty(root, commit, paths)
+        elif unc and generated_only(unc) and a.dry_run:
+            print("HOUSEKEEPING (dry run): would commit generated gate files " + ", ".join(unc[:6]))
+            unc = []
+        if diff and not unc and generated_only(diff):
+            print(f"HOUSEKEEPING: HEAD differs from the spec commit only in generated gate files; spec follows HEAD")
+            spec = move_spec(spec, git(root, "rev-parse", "HEAD"))
+            commit = git(root, "rev-parse", f"{spec['source']['commit']}^{{commit}}")
+            unc, diff = dirty(root, commit, paths)
         if unc or diff:
             print("REFUSED LOCALLY (SUBMIT ORDER): consumed paths are not exactly the spec commit "
                   f"{commit[:9]} -- commit first, then gate on that commit:")
@@ -458,7 +662,7 @@ def main(argv=None):
             for x in diff:
                 print(f"  HEAD differs from spec commit: {x}")
             return 1
-        bad = origin_problems(root, commit, spec, kit_of(spec))
+        bad = origin_problems(root, commit, spec, kit_of(spec), push=a.push, dry=a.dry_run)
         if bad:
             print("REFUSED LOCALLY (not on origin): " + "; ".join(bad))
             return 1

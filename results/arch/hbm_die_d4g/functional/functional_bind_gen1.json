@@ -1,0 +1,2577 @@
+{
+ "schema": "opentallas.d4g_functional_bind.v1",
+ "contract": "/home/ubuntu/artifacts/hdie-d4/d4g_gen1/compose/pre_relay.json.gz",
+ "verdict": "FAIL",
+ "classes": {
+  "INJ": {
+   "paths": 200,
+   "bits": 39296,
+   "fail": 102,
+   "relay_stages": [
+    0
+   ]
+  },
+  "DEL": {
+   "paths": 96,
+   "bits": 26080,
+   "fail": 0,
+   "relay_stages": [
+    0
+   ]
+  },
+  "RC": {
+   "paths": 84,
+   "bits": 5628,
+   "fail": 0,
+   "relay_stages": [
+    0
+   ]
+  },
+  "SFUJ": {
+   "paths": 64,
+   "bits": 2048,
+   "fail": 0,
+   "relay_stages": [
+    0
+   ]
+  },
+  "DMA": {
+   "paths": 44,
+   "bits": 9620,
+   "fail": 0,
+   "relay_stages": [
+    0
+   ]
+  },
+  "HC": {
+   "paths": 376,
+   "bits": 82452,
+   "fail": 0,
+   "relay_stages": [
+    0
+   ]
+  },
+  "XCMD": {
+   "paths": 296,
+   "bits": 124816,
+   "fail": 0,
+   "relay_stages": [
+    0
+   ]
+  }
+ },
+ "stale_gaps": [
+  "G-CIL-DEL",
+  "G-CIL-RC",
+  "G-DMA-WB",
+  "G-HC-ENG",
+  "G-SFU-OPERAND-JOIN-NE",
+  "G-SFU-OPERAND-JOIN-NW",
+  "G-SFU-OPERAND-JOIN-SE",
+  "G-SFU-OPERAND-JOIN-SW",
+  "G-SMVM-XCMD"
+ ],
+ "open_gaps": [
+  "G-CIL-INJ"
+ ],
+ "unlisted_open_gaps": [],
+ "fails": [
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "cmd",
+   "src": [
+    "cic_SE",
+    "inj_rd_o",
+    0
+   ],
+   "dst": [
+    "cij_SE",
+    "inj_rd",
+    0
+   ],
+   "w": 2,
+   "slot": "P+1 (INJ_COPY_EDGES 1)",
+   "note": "",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_SE missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "cmd",
+   "src": [
+    "cic_SE",
+    "inj_rd_o",
+    0
+   ],
+   "dst": [
+    "cij_SE",
+    "inj_rd_r1",
+    0
+   ],
+   "w": 2,
+   "slot": "P+1 (INJ_COPY_EDGES 1)",
+   "note": "",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_SE missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "cmd",
+   "src": [
+    "cic_SE",
+    "inj_addr_o",
+    0
+   ],
+   "dst": [
+    "cij_SE",
+    "inj_addr",
+    0
+   ],
+   "w": 160,
+   "slot": "P+1",
+   "note": "",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_SE missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "cmd",
+   "src": [
+    "cic_SE",
+    "inj_addr_o",
+    0
+   ],
+   "dst": [
+    "cij_SE",
+    "inj_addr_r1",
+    0
+   ],
+   "w": 160,
+   "slot": "P+1",
+   "note": "",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_SE missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "cmd",
+   "src": [
+    "hb_coll_SE",
+    "inj_idx",
+    0
+   ],
+   "dst": [
+    "cij_SE",
+    "inj_idx",
+    0
+   ],
+   "w": 32,
+   "slot": "P",
+   "note": "",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_SE missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "cmd",
+   "src": [
+    "hb_coll_SE",
+    "inj_idx",
+    0
+   ],
+   "dst": [
+    "cij_SE",
+    "inj_idx_r1",
+    0
+   ],
+   "w": 32,
+   "slot": "P",
+   "note": "",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_SE missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "data",
+   "src": [
+    "cxij_SE",
+    "inj_d",
+    0
+   ],
+   "dst": [
+    "cij_SE",
+    "su_inj_d_r0",
+    0
+   ],
+   "w": 256,
+   "slot": "SU answer (cxij INJ_RET 9)",
+   "note": "region split r<r>[j*256+:256] = d[512j+256r+:256]",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_SE missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "data",
+   "src": [
+    "cij_SE",
+    "inj_d_r0",
+    0
+   ],
+   "dst": [
+    "hb_coll_SE",
+    "inj_d",
+    0
+   ],
+   "w": 256,
+   "slot": "P+INJLAT 12",
+   "note": "region split",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "producer instance cij_SE missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "data",
+   "src": [
+    "cxij_SE",
+    "inj_d",
+    512
+   ],
+   "dst": [
+    "cij_SE",
+    "su_inj_d_r0",
+    256
+   ],
+   "w": 256,
+   "slot": "SU answer (cxij INJ_RET 9)",
+   "note": "region split r<r>[j*256+:256] = d[512j+256r+:256]",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_SE missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "data",
+   "src": [
+    "cij_SE",
+    "inj_d_r0",
+    256
+   ],
+   "dst": [
+    "hb_coll_SE",
+    "inj_d",
+    512
+   ],
+   "w": 256,
+   "slot": "P+INJLAT 12",
+   "note": "region split",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "producer instance cij_SE missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "data",
+   "src": [
+    "cxij_SE",
+    "inj_d",
+    256
+   ],
+   "dst": [
+    "cij_SE",
+    "su_inj_d_r1",
+    0
+   ],
+   "w": 256,
+   "slot": "SU answer (cxij INJ_RET 9)",
+   "note": "region split r<r>[j*256+:256] = d[512j+256r+:256]",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_SE missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "data",
+   "src": [
+    "cij_SE",
+    "inj_d_r1",
+    0
+   ],
+   "dst": [
+    "hb_coll_SE",
+    "inj_d",
+    256
+   ],
+   "w": 256,
+   "slot": "P+INJLAT 12",
+   "note": "region split",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "producer instance cij_SE missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "data",
+   "src": [
+    "cxij_SE",
+    "inj_d",
+    768
+   ],
+   "dst": [
+    "cij_SE",
+    "su_inj_d_r1",
+    256
+   ],
+   "w": 256,
+   "slot": "SU answer (cxij INJ_RET 9)",
+   "note": "region split r<r>[j*256+:256] = d[512j+256r+:256]",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_SE missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "data",
+   "src": [
+    "cij_SE",
+    "inj_d_r1",
+    256
+   ],
+   "dst": [
+    "hb_coll_SE",
+    "inj_d",
+    768
+   ],
+   "w": 256,
+   "slot": "P+INJLAT 12",
+   "note": "region split",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "producer instance cij_SE missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "data",
+   "src": [
+    "hb_idx__link",
+    "tx",
+    0
+   ],
+   "dst": [
+    "cij_SE",
+    "idx_tx_r0",
+    0
+   ],
+   "w": 256,
+   "slot": "IDX tx flit a",
+   "note": "idx_tx_r<r>[a*256+:256] = tx[a*545+256r+:256]",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_SE missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "data",
+   "src": [
+    "hb_idx__link",
+    "tx",
+    256
+   ],
+   "dst": [
+    "cij_SE",
+    "idx_tx_r1",
+    0
+   ],
+   "w": 256,
+   "slot": "IDX tx flit a",
+   "note": "idx_tx_r<r>[a*256+:256] = tx[a*545+256r+:256]",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_SE missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "cmd",
+   "src": [
+    "hb_idx__link",
+    "tx",
+    512
+   ],
+   "dst": [
+    "cij_SE",
+    "idx_tx_h",
+    0
+   ],
+   "w": 33,
+   "slot": "IDX tx header",
+   "note": "",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_SE missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "cmd",
+   "src": [
+    "hb_idx__link",
+    "tx",
+    512
+   ],
+   "dst": [
+    "cij_SE",
+    "idx_tx_h_r1",
+    0
+   ],
+   "w": 33,
+   "slot": "IDX tx header",
+   "note": "",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_SE missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "data",
+   "src": [
+    "hb_idx__link",
+    "tx",
+    545
+   ],
+   "dst": [
+    "cij_SE",
+    "idx_tx_r0",
+    256
+   ],
+   "w": 256,
+   "slot": "IDX tx flit a",
+   "note": "idx_tx_r<r>[a*256+:256] = tx[a*545+256r+:256]",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_SE missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "data",
+   "src": [
+    "hb_idx__link",
+    "tx",
+    801
+   ],
+   "dst": [
+    "cij_SE",
+    "idx_tx_r1",
+    256
+   ],
+   "w": 256,
+   "slot": "IDX tx flit a",
+   "note": "idx_tx_r<r>[a*256+:256] = tx[a*545+256r+:256]",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_SE missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "cmd",
+   "src": [
+    "hb_idx__link",
+    "tx",
+    1057
+   ],
+   "dst": [
+    "cij_SE",
+    "idx_tx_h",
+    33
+   ],
+   "w": 33,
+   "slot": "IDX tx header",
+   "note": "",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_SE missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "cmd",
+   "src": [
+    "hb_idx__link",
+    "tx",
+    1057
+   ],
+   "dst": [
+    "cij_SE",
+    "idx_tx_h_r1",
+    33
+   ],
+   "w": 33,
+   "slot": "IDX tx header",
+   "note": "",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_SE missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "data",
+   "src": [
+    "hb_idx__link",
+    "tx",
+    1090
+   ],
+   "dst": [
+    "cij_SE",
+    "idx_tx_r0",
+    512
+   ],
+   "w": 256,
+   "slot": "IDX tx flit a",
+   "note": "idx_tx_r<r>[a*256+:256] = tx[a*545+256r+:256]",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_SE missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "data",
+   "src": [
+    "hb_idx__link",
+    "tx",
+    1346
+   ],
+   "dst": [
+    "cij_SE",
+    "idx_tx_r1",
+    512
+   ],
+   "w": 256,
+   "slot": "IDX tx flit a",
+   "note": "idx_tx_r<r>[a*256+:256] = tx[a*545+256r+:256]",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_SE missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "cmd",
+   "src": [
+    "hb_idx__link",
+    "tx",
+    1602
+   ],
+   "dst": [
+    "cij_SE",
+    "idx_tx_h",
+    66
+   ],
+   "w": 33,
+   "slot": "IDX tx header",
+   "note": "",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_SE missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "cmd",
+   "src": [
+    "hb_idx__link",
+    "tx",
+    1602
+   ],
+   "dst": [
+    "cij_SE",
+    "idx_tx_h_r1",
+    66
+   ],
+   "w": 33,
+   "slot": "IDX tx header",
+   "note": "",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_SE missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "data",
+   "src": [
+    "hb_idx__link",
+    "tx",
+    1635
+   ],
+   "dst": [
+    "cij_SE",
+    "idx_tx_r0",
+    768
+   ],
+   "w": 256,
+   "slot": "IDX tx flit a",
+   "note": "idx_tx_r<r>[a*256+:256] = tx[a*545+256r+:256]",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_SE missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "data",
+   "src": [
+    "hb_idx__link",
+    "tx",
+    1891
+   ],
+   "dst": [
+    "cij_SE",
+    "idx_tx_r1",
+    768
+   ],
+   "w": 256,
+   "slot": "IDX tx flit a",
+   "note": "idx_tx_r<r>[a*256+:256] = tx[a*545+256r+:256]",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_SE missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "cmd",
+   "src": [
+    "hb_idx__link",
+    "tx",
+    2147
+   ],
+   "dst": [
+    "cij_SE",
+    "idx_tx_h",
+    99
+   ],
+   "w": 33,
+   "slot": "IDX tx header",
+   "note": "",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_SE missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "cmd",
+   "src": [
+    "hb_idx__link",
+    "tx",
+    2147
+   ],
+   "dst": [
+    "cij_SE",
+    "idx_tx_h_r1",
+    99
+   ],
+   "w": 33,
+   "slot": "IDX tx header",
+   "note": "",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_SE missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "cmd",
+   "src": [
+    "hb_idx__link",
+    "tx_v",
+    0
+   ],
+   "dst": [
+    "cij_SE",
+    "idx_tx_v",
+    0
+   ],
+   "w": 4,
+   "slot": "IDX tx valid",
+   "note": "",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_SE missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "cmd",
+   "src": [
+    "hb_idx__link",
+    "tx_v",
+    0
+   ],
+   "dst": [
+    "cij_SE",
+    "idx_tx_v_r1",
+    0
+   ],
+   "w": 4,
+   "slot": "IDX tx valid",
+   "note": "",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_SE missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "cmd",
+   "src": [
+    "cic_NW",
+    "inj_rd_o",
+    0
+   ],
+   "dst": [
+    "cij_NW",
+    "inj_rd",
+    0
+   ],
+   "w": 2,
+   "slot": "P+1 (INJ_COPY_EDGES 1)",
+   "note": "",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_NW missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "cmd",
+   "src": [
+    "cic_NW",
+    "inj_rd_o",
+    0
+   ],
+   "dst": [
+    "cij_NW",
+    "inj_rd_r1",
+    0
+   ],
+   "w": 2,
+   "slot": "P+1 (INJ_COPY_EDGES 1)",
+   "note": "",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_NW missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "cmd",
+   "src": [
+    "cic_NW",
+    "inj_addr_o",
+    0
+   ],
+   "dst": [
+    "cij_NW",
+    "inj_addr",
+    0
+   ],
+   "w": 160,
+   "slot": "P+1",
+   "note": "",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_NW missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "cmd",
+   "src": [
+    "cic_NW",
+    "inj_addr_o",
+    0
+   ],
+   "dst": [
+    "cij_NW",
+    "inj_addr_r1",
+    0
+   ],
+   "w": 160,
+   "slot": "P+1",
+   "note": "",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_NW missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "cmd",
+   "src": [
+    "hb_coll_NW",
+    "inj_idx",
+    0
+   ],
+   "dst": [
+    "cij_NW",
+    "inj_idx",
+    0
+   ],
+   "w": 32,
+   "slot": "P",
+   "note": "",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_NW missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "cmd",
+   "src": [
+    "hb_coll_NW",
+    "inj_idx",
+    0
+   ],
+   "dst": [
+    "cij_NW",
+    "inj_idx_r1",
+    0
+   ],
+   "w": 32,
+   "slot": "P",
+   "note": "",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_NW missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "data",
+   "src": [
+    "cxij_NW",
+    "inj_d",
+    0
+   ],
+   "dst": [
+    "cij_NW",
+    "su_inj_d_r0",
+    0
+   ],
+   "w": 256,
+   "slot": "SU answer (cxij INJ_RET 9)",
+   "note": "region split r<r>[j*256+:256] = d[512j+256r+:256]",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_NW missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "data",
+   "src": [
+    "cij_NW",
+    "inj_d_r0",
+    0
+   ],
+   "dst": [
+    "hb_coll_NW",
+    "inj_d",
+    0
+   ],
+   "w": 256,
+   "slot": "P+INJLAT 12",
+   "note": "region split",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "producer instance cij_NW missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "data",
+   "src": [
+    "cxij_NW",
+    "inj_d",
+    512
+   ],
+   "dst": [
+    "cij_NW",
+    "su_inj_d_r0",
+    256
+   ],
+   "w": 256,
+   "slot": "SU answer (cxij INJ_RET 9)",
+   "note": "region split r<r>[j*256+:256] = d[512j+256r+:256]",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_NW missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "data",
+   "src": [
+    "cij_NW",
+    "inj_d_r0",
+    256
+   ],
+   "dst": [
+    "hb_coll_NW",
+    "inj_d",
+    512
+   ],
+   "w": 256,
+   "slot": "P+INJLAT 12",
+   "note": "region split",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "producer instance cij_NW missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "data",
+   "src": [
+    "cxij_NW",
+    "inj_d",
+    256
+   ],
+   "dst": [
+    "cij_NW",
+    "su_inj_d_r1",
+    0
+   ],
+   "w": 256,
+   "slot": "SU answer (cxij INJ_RET 9)",
+   "note": "region split r<r>[j*256+:256] = d[512j+256r+:256]",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_NW missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "data",
+   "src": [
+    "cij_NW",
+    "inj_d_r1",
+    0
+   ],
+   "dst": [
+    "hb_coll_NW",
+    "inj_d",
+    256
+   ],
+   "w": 256,
+   "slot": "P+INJLAT 12",
+   "note": "region split",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "producer instance cij_NW missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "data",
+   "src": [
+    "cxij_NW",
+    "inj_d",
+    768
+   ],
+   "dst": [
+    "cij_NW",
+    "su_inj_d_r1",
+    256
+   ],
+   "w": 256,
+   "slot": "SU answer (cxij INJ_RET 9)",
+   "note": "region split r<r>[j*256+:256] = d[512j+256r+:256]",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_NW missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "data",
+   "src": [
+    "cij_NW",
+    "inj_d_r1",
+    256
+   ],
+   "dst": [
+    "hb_coll_NW",
+    "inj_d",
+    768
+   ],
+   "w": 256,
+   "slot": "P+INJLAT 12",
+   "note": "region split",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "producer instance cij_NW missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "data",
+   "src": [
+    "hb_idx__link",
+    "tx",
+    0
+   ],
+   "dst": [
+    "cij_NW",
+    "idx_tx_r0",
+    0
+   ],
+   "w": 256,
+   "slot": "IDX tx flit a",
+   "note": "idx_tx_r<r>[a*256+:256] = tx[a*545+256r+:256]",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_NW missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "data",
+   "src": [
+    "hb_idx__link",
+    "tx",
+    256
+   ],
+   "dst": [
+    "cij_NW",
+    "idx_tx_r1",
+    0
+   ],
+   "w": 256,
+   "slot": "IDX tx flit a",
+   "note": "idx_tx_r<r>[a*256+:256] = tx[a*545+256r+:256]",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_NW missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "cmd",
+   "src": [
+    "hb_idx__link",
+    "tx",
+    512
+   ],
+   "dst": [
+    "cij_NW",
+    "idx_tx_h",
+    0
+   ],
+   "w": 33,
+   "slot": "IDX tx header",
+   "note": "",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_NW missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "cmd",
+   "src": [
+    "hb_idx__link",
+    "tx",
+    512
+   ],
+   "dst": [
+    "cij_NW",
+    "idx_tx_h_r1",
+    0
+   ],
+   "w": 33,
+   "slot": "IDX tx header",
+   "note": "",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_NW missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "data",
+   "src": [
+    "hb_idx__link",
+    "tx",
+    545
+   ],
+   "dst": [
+    "cij_NW",
+    "idx_tx_r0",
+    256
+   ],
+   "w": 256,
+   "slot": "IDX tx flit a",
+   "note": "idx_tx_r<r>[a*256+:256] = tx[a*545+256r+:256]",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_NW missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "data",
+   "src": [
+    "hb_idx__link",
+    "tx",
+    801
+   ],
+   "dst": [
+    "cij_NW",
+    "idx_tx_r1",
+    256
+   ],
+   "w": 256,
+   "slot": "IDX tx flit a",
+   "note": "idx_tx_r<r>[a*256+:256] = tx[a*545+256r+:256]",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_NW missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "cmd",
+   "src": [
+    "hb_idx__link",
+    "tx",
+    1057
+   ],
+   "dst": [
+    "cij_NW",
+    "idx_tx_h",
+    33
+   ],
+   "w": 33,
+   "slot": "IDX tx header",
+   "note": "",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_NW missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "cmd",
+   "src": [
+    "hb_idx__link",
+    "tx",
+    1057
+   ],
+   "dst": [
+    "cij_NW",
+    "idx_tx_h_r1",
+    33
+   ],
+   "w": 33,
+   "slot": "IDX tx header",
+   "note": "",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_NW missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "data",
+   "src": [
+    "hb_idx__link",
+    "tx",
+    1090
+   ],
+   "dst": [
+    "cij_NW",
+    "idx_tx_r0",
+    512
+   ],
+   "w": 256,
+   "slot": "IDX tx flit a",
+   "note": "idx_tx_r<r>[a*256+:256] = tx[a*545+256r+:256]",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_NW missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "data",
+   "src": [
+    "hb_idx__link",
+    "tx",
+    1346
+   ],
+   "dst": [
+    "cij_NW",
+    "idx_tx_r1",
+    512
+   ],
+   "w": 256,
+   "slot": "IDX tx flit a",
+   "note": "idx_tx_r<r>[a*256+:256] = tx[a*545+256r+:256]",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_NW missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "cmd",
+   "src": [
+    "hb_idx__link",
+    "tx",
+    1602
+   ],
+   "dst": [
+    "cij_NW",
+    "idx_tx_h",
+    66
+   ],
+   "w": 33,
+   "slot": "IDX tx header",
+   "note": "",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_NW missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "cmd",
+   "src": [
+    "hb_idx__link",
+    "tx",
+    1602
+   ],
+   "dst": [
+    "cij_NW",
+    "idx_tx_h_r1",
+    66
+   ],
+   "w": 33,
+   "slot": "IDX tx header",
+   "note": "",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_NW missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "data",
+   "src": [
+    "hb_idx__link",
+    "tx",
+    1635
+   ],
+   "dst": [
+    "cij_NW",
+    "idx_tx_r0",
+    768
+   ],
+   "w": 256,
+   "slot": "IDX tx flit a",
+   "note": "idx_tx_r<r>[a*256+:256] = tx[a*545+256r+:256]",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_NW missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "data",
+   "src": [
+    "hb_idx__link",
+    "tx",
+    1891
+   ],
+   "dst": [
+    "cij_NW",
+    "idx_tx_r1",
+    768
+   ],
+   "w": 256,
+   "slot": "IDX tx flit a",
+   "note": "idx_tx_r<r>[a*256+:256] = tx[a*545+256r+:256]",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_NW missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "cmd",
+   "src": [
+    "hb_idx__link",
+    "tx",
+    2147
+   ],
+   "dst": [
+    "cij_NW",
+    "idx_tx_h",
+    99
+   ],
+   "w": 33,
+   "slot": "IDX tx header",
+   "note": "",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_NW missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "cmd",
+   "src": [
+    "hb_idx__link",
+    "tx",
+    2147
+   ],
+   "dst": [
+    "cij_NW",
+    "idx_tx_h_r1",
+    99
+   ],
+   "w": 33,
+   "slot": "IDX tx header",
+   "note": "",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_NW missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "cmd",
+   "src": [
+    "hb_idx__link",
+    "tx_v",
+    0
+   ],
+   "dst": [
+    "cij_NW",
+    "idx_tx_v",
+    0
+   ],
+   "w": 4,
+   "slot": "IDX tx valid",
+   "note": "",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_NW missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "cmd",
+   "src": [
+    "hb_idx__link",
+    "tx_v",
+    0
+   ],
+   "dst": [
+    "cij_NW",
+    "idx_tx_v_r1",
+    0
+   ],
+   "w": 4,
+   "slot": "IDX tx valid",
+   "note": "",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_NW missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "cmd",
+   "src": [
+    "cic_NE",
+    "inj_rd_o",
+    0
+   ],
+   "dst": [
+    "cij_NE",
+    "inj_rd",
+    0
+   ],
+   "w": 2,
+   "slot": "P+1 (INJ_COPY_EDGES 1)",
+   "note": "",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_NE missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "cmd",
+   "src": [
+    "cic_NE",
+    "inj_rd_o",
+    0
+   ],
+   "dst": [
+    "cij_NE",
+    "inj_rd_r1",
+    0
+   ],
+   "w": 2,
+   "slot": "P+1 (INJ_COPY_EDGES 1)",
+   "note": "",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_NE missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "cmd",
+   "src": [
+    "cic_NE",
+    "inj_addr_o",
+    0
+   ],
+   "dst": [
+    "cij_NE",
+    "inj_addr",
+    0
+   ],
+   "w": 160,
+   "slot": "P+1",
+   "note": "",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_NE missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "cmd",
+   "src": [
+    "cic_NE",
+    "inj_addr_o",
+    0
+   ],
+   "dst": [
+    "cij_NE",
+    "inj_addr_r1",
+    0
+   ],
+   "w": 160,
+   "slot": "P+1",
+   "note": "",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_NE missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "cmd",
+   "src": [
+    "hb_coll_NE",
+    "inj_idx",
+    0
+   ],
+   "dst": [
+    "cij_NE",
+    "inj_idx",
+    0
+   ],
+   "w": 32,
+   "slot": "P",
+   "note": "",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_NE missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "cmd",
+   "src": [
+    "hb_coll_NE",
+    "inj_idx",
+    0
+   ],
+   "dst": [
+    "cij_NE",
+    "inj_idx_r1",
+    0
+   ],
+   "w": 32,
+   "slot": "P",
+   "note": "",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_NE missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "data",
+   "src": [
+    "cxij_NE",
+    "inj_d",
+    0
+   ],
+   "dst": [
+    "cij_NE",
+    "su_inj_d_r0",
+    0
+   ],
+   "w": 256,
+   "slot": "SU answer (cxij INJ_RET 9)",
+   "note": "region split r<r>[j*256+:256] = d[512j+256r+:256]",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_NE missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "data",
+   "src": [
+    "cij_NE",
+    "inj_d_r0",
+    0
+   ],
+   "dst": [
+    "hb_coll_NE",
+    "inj_d",
+    0
+   ],
+   "w": 256,
+   "slot": "P+INJLAT 12",
+   "note": "region split",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "producer instance cij_NE missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "data",
+   "src": [
+    "cxij_NE",
+    "inj_d",
+    512
+   ],
+   "dst": [
+    "cij_NE",
+    "su_inj_d_r0",
+    256
+   ],
+   "w": 256,
+   "slot": "SU answer (cxij INJ_RET 9)",
+   "note": "region split r<r>[j*256+:256] = d[512j+256r+:256]",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_NE missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "data",
+   "src": [
+    "cij_NE",
+    "inj_d_r0",
+    256
+   ],
+   "dst": [
+    "hb_coll_NE",
+    "inj_d",
+    512
+   ],
+   "w": 256,
+   "slot": "P+INJLAT 12",
+   "note": "region split",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "producer instance cij_NE missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "data",
+   "src": [
+    "cxij_NE",
+    "inj_d",
+    256
+   ],
+   "dst": [
+    "cij_NE",
+    "su_inj_d_r1",
+    0
+   ],
+   "w": 256,
+   "slot": "SU answer (cxij INJ_RET 9)",
+   "note": "region split r<r>[j*256+:256] = d[512j+256r+:256]",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_NE missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "data",
+   "src": [
+    "cij_NE",
+    "inj_d_r1",
+    0
+   ],
+   "dst": [
+    "hb_coll_NE",
+    "inj_d",
+    256
+   ],
+   "w": 256,
+   "slot": "P+INJLAT 12",
+   "note": "region split",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "producer instance cij_NE missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "data",
+   "src": [
+    "cxij_NE",
+    "inj_d",
+    768
+   ],
+   "dst": [
+    "cij_NE",
+    "su_inj_d_r1",
+    256
+   ],
+   "w": 256,
+   "slot": "SU answer (cxij INJ_RET 9)",
+   "note": "region split r<r>[j*256+:256] = d[512j+256r+:256]",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_NE missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "data",
+   "src": [
+    "cij_NE",
+    "inj_d_r1",
+    256
+   ],
+   "dst": [
+    "hb_coll_NE",
+    "inj_d",
+    768
+   ],
+   "w": 256,
+   "slot": "P+INJLAT 12",
+   "note": "region split",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "producer instance cij_NE missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "data",
+   "src": [
+    "hb_idx__link",
+    "tx",
+    0
+   ],
+   "dst": [
+    "cij_NE",
+    "idx_tx_r0",
+    0
+   ],
+   "w": 256,
+   "slot": "IDX tx flit a",
+   "note": "idx_tx_r<r>[a*256+:256] = tx[a*545+256r+:256]",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_NE missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "data",
+   "src": [
+    "hb_idx__link",
+    "tx",
+    256
+   ],
+   "dst": [
+    "cij_NE",
+    "idx_tx_r1",
+    0
+   ],
+   "w": 256,
+   "slot": "IDX tx flit a",
+   "note": "idx_tx_r<r>[a*256+:256] = tx[a*545+256r+:256]",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_NE missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "cmd",
+   "src": [
+    "hb_idx__link",
+    "tx",
+    512
+   ],
+   "dst": [
+    "cij_NE",
+    "idx_tx_h",
+    0
+   ],
+   "w": 33,
+   "slot": "IDX tx header",
+   "note": "",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_NE missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "cmd",
+   "src": [
+    "hb_idx__link",
+    "tx",
+    512
+   ],
+   "dst": [
+    "cij_NE",
+    "idx_tx_h_r1",
+    0
+   ],
+   "w": 33,
+   "slot": "IDX tx header",
+   "note": "",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_NE missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "data",
+   "src": [
+    "hb_idx__link",
+    "tx",
+    545
+   ],
+   "dst": [
+    "cij_NE",
+    "idx_tx_r0",
+    256
+   ],
+   "w": 256,
+   "slot": "IDX tx flit a",
+   "note": "idx_tx_r<r>[a*256+:256] = tx[a*545+256r+:256]",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_NE missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "data",
+   "src": [
+    "hb_idx__link",
+    "tx",
+    801
+   ],
+   "dst": [
+    "cij_NE",
+    "idx_tx_r1",
+    256
+   ],
+   "w": 256,
+   "slot": "IDX tx flit a",
+   "note": "idx_tx_r<r>[a*256+:256] = tx[a*545+256r+:256]",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_NE missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "cmd",
+   "src": [
+    "hb_idx__link",
+    "tx",
+    1057
+   ],
+   "dst": [
+    "cij_NE",
+    "idx_tx_h",
+    33
+   ],
+   "w": 33,
+   "slot": "IDX tx header",
+   "note": "",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_NE missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "cmd",
+   "src": [
+    "hb_idx__link",
+    "tx",
+    1057
+   ],
+   "dst": [
+    "cij_NE",
+    "idx_tx_h_r1",
+    33
+   ],
+   "w": 33,
+   "slot": "IDX tx header",
+   "note": "",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_NE missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "data",
+   "src": [
+    "hb_idx__link",
+    "tx",
+    1090
+   ],
+   "dst": [
+    "cij_NE",
+    "idx_tx_r0",
+    512
+   ],
+   "w": 256,
+   "slot": "IDX tx flit a",
+   "note": "idx_tx_r<r>[a*256+:256] = tx[a*545+256r+:256]",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_NE missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "data",
+   "src": [
+    "hb_idx__link",
+    "tx",
+    1346
+   ],
+   "dst": [
+    "cij_NE",
+    "idx_tx_r1",
+    512
+   ],
+   "w": 256,
+   "slot": "IDX tx flit a",
+   "note": "idx_tx_r<r>[a*256+:256] = tx[a*545+256r+:256]",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_NE missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "cmd",
+   "src": [
+    "hb_idx__link",
+    "tx",
+    1602
+   ],
+   "dst": [
+    "cij_NE",
+    "idx_tx_h",
+    66
+   ],
+   "w": 33,
+   "slot": "IDX tx header",
+   "note": "",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_NE missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "cmd",
+   "src": [
+    "hb_idx__link",
+    "tx",
+    1602
+   ],
+   "dst": [
+    "cij_NE",
+    "idx_tx_h_r1",
+    66
+   ],
+   "w": 33,
+   "slot": "IDX tx header",
+   "note": "",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_NE missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "data",
+   "src": [
+    "hb_idx__link",
+    "tx",
+    1635
+   ],
+   "dst": [
+    "cij_NE",
+    "idx_tx_r0",
+    768
+   ],
+   "w": 256,
+   "slot": "IDX tx flit a",
+   "note": "idx_tx_r<r>[a*256+:256] = tx[a*545+256r+:256]",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_NE missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "data",
+   "src": [
+    "hb_idx__link",
+    "tx",
+    1891
+   ],
+   "dst": [
+    "cij_NE",
+    "idx_tx_r1",
+    768
+   ],
+   "w": 256,
+   "slot": "IDX tx flit a",
+   "note": "idx_tx_r<r>[a*256+:256] = tx[a*545+256r+:256]",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_NE missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "cmd",
+   "src": [
+    "hb_idx__link",
+    "tx",
+    2147
+   ],
+   "dst": [
+    "cij_NE",
+    "idx_tx_h",
+    99
+   ],
+   "w": 33,
+   "slot": "IDX tx header",
+   "note": "",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_NE missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "cmd",
+   "src": [
+    "hb_idx__link",
+    "tx",
+    2147
+   ],
+   "dst": [
+    "cij_NE",
+    "idx_tx_h_r1",
+    99
+   ],
+   "w": 33,
+   "slot": "IDX tx header",
+   "note": "",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_NE missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "cmd",
+   "src": [
+    "hb_idx__link",
+    "tx_v",
+    0
+   ],
+   "dst": [
+    "cij_NE",
+    "idx_tx_v",
+    0
+   ],
+   "w": 4,
+   "slot": "IDX tx valid",
+   "note": "",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_NE missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "kind": "cmd",
+   "src": [
+    "hb_idx__link",
+    "tx_v",
+    0
+   ],
+   "dst": [
+    "cij_NE",
+    "idx_tx_v_r1",
+    0
+   ],
+   "w": 4,
+   "slot": "IDX tx valid",
+   "note": "",
+   "stages": null,
+   "status": "FAIL",
+   "relay_stages": null,
+   "bad": [
+    "consumer instance cij_NE missing"
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "id": "INJ_RET.SE",
+   "inst": "cxij_SE",
+   "param": "INJ_RET",
+   "expect": [
+    "cij",
+    "cij_SE",
+    "INJLAT",
+    -3
+   ],
+   "why": "ot_hgi_coll_inj_idx_join: the SU must update its inj_d register at P+INJLAT-3 (P+9 for INJLAT 12)",
+   "status": "FAIL",
+   "bad": [
+    "cxij_SE.INJ_RET = 11, slot needs None (ot_hgi_coll_inj_idx_join: the SU must update its inj_d register at P+INJLAT-3 (P+9 for INJLAT 12))"
+   ],
+   "have": 11,
+   "want": null,
+   "src": [
+    "cxij_SE",
+    "INJ_RET",
+    0
+   ],
+   "dst": [
+    "cxij_SE",
+    "INJ_RET",
+    0
+   ],
+   "w": 0,
+   "relay_stages": [],
+   "kind": "slot"
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "id": "B39_NOOP.SE",
+   "inst": "cxij_SE",
+   "param": "B39_NOOP",
+   "expect": [
+    "const",
+    1
+   ],
+   "why": "addr_lo[39]=1 selects the cij IDX staging; bit 39 is reserved in the SU space (no SU read, no fault)",
+   "status": "FAIL",
+   "bad": [
+    "cxij_SE.B39_NOOP = 0, slot needs 1 (addr_lo[39]=1 selects the cij IDX staging; bit 39 is reserved in the SU space (no SU read, no fault))"
+   ],
+   "have": 0,
+   "want": 1,
+   "src": [
+    "cxij_SE",
+    "B39_NOOP",
+    0
+   ],
+   "dst": [
+    "cxij_SE",
+    "B39_NOOP",
+    0
+   ],
+   "w": 0,
+   "relay_stages": [],
+   "kind": "slot"
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "id": "INJ_RET.NW",
+   "inst": "cxij_NW",
+   "param": "INJ_RET",
+   "expect": [
+    "cij",
+    "cij_NW",
+    "INJLAT",
+    -3
+   ],
+   "why": "ot_hgi_coll_inj_idx_join: the SU must update its inj_d register at P+INJLAT-3 (P+9 for INJLAT 12)",
+   "status": "FAIL",
+   "bad": [
+    "cxij_NW.INJ_RET = 11, slot needs None (ot_hgi_coll_inj_idx_join: the SU must update its inj_d register at P+INJLAT-3 (P+9 for INJLAT 12))"
+   ],
+   "have": 11,
+   "want": null,
+   "src": [
+    "cxij_NW",
+    "INJ_RET",
+    0
+   ],
+   "dst": [
+    "cxij_NW",
+    "INJ_RET",
+    0
+   ],
+   "w": 0,
+   "relay_stages": [],
+   "kind": "slot"
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "id": "B39_NOOP.NW",
+   "inst": "cxij_NW",
+   "param": "B39_NOOP",
+   "expect": [
+    "const",
+    1
+   ],
+   "why": "addr_lo[39]=1 selects the cij IDX staging; bit 39 is reserved in the SU space (no SU read, no fault)",
+   "status": "FAIL",
+   "bad": [
+    "cxij_NW.B39_NOOP = 0, slot needs 1 (addr_lo[39]=1 selects the cij IDX staging; bit 39 is reserved in the SU space (no SU read, no fault))"
+   ],
+   "have": 0,
+   "want": 1,
+   "src": [
+    "cxij_NW",
+    "B39_NOOP",
+    0
+   ],
+   "dst": [
+    "cxij_NW",
+    "B39_NOOP",
+    0
+   ],
+   "w": 0,
+   "relay_stages": [],
+   "kind": "slot"
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "id": "INJ_RET.NE",
+   "inst": "cxij_NE",
+   "param": "INJ_RET",
+   "expect": [
+    "cij",
+    "cij_NE",
+    "INJLAT",
+    -3
+   ],
+   "why": "ot_hgi_coll_inj_idx_join: the SU must update its inj_d register at P+INJLAT-3 (P+9 for INJLAT 12)",
+   "status": "FAIL",
+   "bad": [
+    "cxij_NE.INJ_RET = 11, slot needs None (ot_hgi_coll_inj_idx_join: the SU must update its inj_d register at P+INJLAT-3 (P+9 for INJLAT 12))"
+   ],
+   "have": 11,
+   "want": null,
+   "src": [
+    "cxij_NE",
+    "INJ_RET",
+    0
+   ],
+   "dst": [
+    "cxij_NE",
+    "INJ_RET",
+    0
+   ],
+   "w": 0,
+   "relay_stages": [],
+   "kind": "slot"
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "id": "B39_NOOP.NE",
+   "inst": "cxij_NE",
+   "param": "B39_NOOP",
+   "expect": [
+    "const",
+    1
+   ],
+   "why": "addr_lo[39]=1 selects the cij IDX staging; bit 39 is reserved in the SU space (no SU read, no fault)",
+   "status": "FAIL",
+   "bad": [
+    "cxij_NE.B39_NOOP = 0, slot needs 1 (addr_lo[39]=1 selects the cij IDX staging; bit 39 is reserved in the SU space (no SU read, no fault))"
+   ],
+   "have": 0,
+   "want": 1,
+   "src": [
+    "cxij_NE",
+    "B39_NOOP",
+    0
+   ],
+   "dst": [
+    "cxij_NE",
+    "B39_NOOP",
+    0
+   ],
+   "w": 0,
+   "relay_stages": [],
+   "kind": "slot"
+  }
+ ],
+ "paths": 1160
+}

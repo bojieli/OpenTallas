@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "hbfd_land_136_EW",
+ "enable": false,
+ "reason": "OWNER RULE 19:50 opt-out (as the coordinator-approved S81 relays and Qwen qfwd frames): a lane station is one flip-flop per bit between its pins, a landing is the ring + its registered output; a flow pin register would add a stage the die calendar does not price"
+}

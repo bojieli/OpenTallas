@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hbm_su_static_sfustore_hw",
+ "enable": false,
+ "reason": "the RTL registers every pin: data/address/valid inputs land in the pinned bank's pin flops (a_pin/r_pin/wa_pin/wd_pin/w_pin) and the identity-check flops (re_q/we_q/ra_q/wa_q), qid in qid_q, rst_n drives only ot_rst_relay, vi_q is the bank read_data flop and fault a flop; a kit stage would add an unpriced edge to the n+2 read schedule"
+}

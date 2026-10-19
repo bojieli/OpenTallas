@@ -1,0 +1,13 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job qfd_rst_rep-a1-cddafbdcc bench bench_rstrep_mut_q1_early host ot-agidock128 run /srv/opentallas-scratch/claude/closure-loop/qfd_rst_rep-a1-cddafbdcc log cl/bench_rstrep_mut_q1_early.a1b1.log captured 2026-10-18T06:51:04-07:00
+# fail_regex 'RSTREP_BENCH FAIL'
+ERR edge 6: d(t-2)=0 q0=0 q1=1
+ERR edge 8: d(t-2)=1 q0=1 q1=0
+ERR edge 10: d(t-2)=0 q0=0 q1=1
+ERR edge 14: d(t-2)=1 q0=1 q1=0
+ERR edge 16: d(t-2)=0 q0=0 q1=1
+RSTREP_BENCH FAIL 4224 errors in 19997 checks (qfd_rst_rep)
+- /srv/opentallas-scratch/claude/closure-loop/qfd_rst_rep-a1-cddafbdcc/bench_m/tb.sv:27: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 200us; walltime 0.010 s; speed 19.443 ms/s
+- Verilator: cpu 0.010 s on 1 threads; allocated 7 MB

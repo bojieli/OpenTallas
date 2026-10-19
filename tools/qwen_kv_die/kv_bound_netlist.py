@@ -60,6 +60,8 @@ CONST_CLASSES = [
     (r'^wtail_\w+$', 'chain_terminator', 'write-lane chain tail (kv_die)'),
     (r'^rdly_\w+$', 'reset_delay_strap', 'reset-region release delay dly = D - d_r (kv_die reset_region_calendar)'),
     (r'^ht\w+_(WS|WN|ES|EN)$', 'chain_terminator', 'HOST slice chain terminator (the source parent assigns 0)'),
+    (r'^kvsid_\w+$', 'identity_strap', 'KVJ-G2 static tile identity strap (landing stack / group, PC index, stack)'),
+    (r'^kcf0_(WS|WN|ES|EN)$', 'chain_terminator', 'PC fault chain terminator (the strip parent assigned 0)'),
 ]
 
 
@@ -157,6 +159,12 @@ def main(argv=None):
     out = Path(a.out_dir)
     out.mkdir(parents=True, exist_ok=True)
     nets, tin, tout, insts = PB.parse_die(a.die_v, a.top)
+    # KVJ-G2 (kv_die OT_KV_STATIC_DIE): per-instance parameters the plan priced (ECTL kiss RESPONSE_LAT), a sidecar of die.v
+    _pj = Path(a.die_v + '.params.json')
+    if _pj.exists():
+        _ip = json.loads(_pj.read_text())
+        insts = [(mst_, inst_, dict(params_ or {}, **{k_: str(v_) for k_, v_ in _ip.get(inst_, {}).items()}), cm_)
+                 if mst_ != '__assign__' else (mst_, inst_, params_, cm_) for mst_, inst_, params_, cm_ in insts]
     top = a.top or re.search(r'^\s*module\s+(\w+)', Path(a.die_v).read_text(), re.M).group(1)
     files = [str(ROOT / b['file']) for b in K.BINDINGS.values() if (ROOT / b['file']).exists()]
     files += [a.relay_rtl] if a.relay_rtl else []

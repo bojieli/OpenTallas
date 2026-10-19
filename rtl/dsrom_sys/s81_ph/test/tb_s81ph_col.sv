@@ -22,8 +22,14 @@ module tb_s81ph_col;
 
     reg  [514:0] d_in [0:Q-1];      // 0 SW, 1 SE, 2 NW, 3 NE
     wire [513:0] vd; wire vf;
+`ifdef OT_DSDV_BK
+    // S81U-BK: the S81-DV unit dsdv_bk_col behind its V rung (rtl/dsrom_sys/s81_dv/unit/bk/test/tb_dsdv_bk_wrap.sv)
+    tb_dsdv_bk_wrap #(.UNIT(1), .MUT(`OT_DSDV_BK)) u_dut (.ck(clk), .rst(rst_n), .l0(d_in[0]), .l1(d_in[1]), .l2(d_in[2]),
+        .l3(d_in[3]), .vd(vd), .vf(vf));
+`else
     dsfd_bk_collector #(.PACE(PACE)) u_dut (.ck(clk), .cNE(d_in[3]), .cNW(d_in[2]), .cSE(d_in[1]), .cSW(d_in[0]),
         .rst(rst_n), .vd(vd), .vf(vf));
+`endif
 
     int seed, njobs, bub, mode;
     int errors = 0;
@@ -266,7 +272,13 @@ module tb_s81ph_col;
             bub = 0;
             expbit = (mode == 1) ? 11 : (mode == 2) ? 12 : (mode == 3) ? 13 : (mode == 4) ? 14 : 15;
             case (mode)
-                1: begin lq[0].delete(); for (int i = 0; i < 700; i++) lq[0].push_back(hdr(1, jtag, 0, 0, 0, 0, i + 1)); end
+                1: begin lq[0].delete(); for (int i = 0; i < 700; i++) lq[0].push_back(hdr(1, jtag, 0, 0, 0, 0, i + 1));
+`ifdef OT_DSDV_BK
+                   // S81-DV: one lane's V ingress is at most one word / 2 cycles (= the merger's whole rate), so the flood
+                   // needs a second lane on the other rung direction to outrun the merger (lane 1 arrives on B, +lmap=1)
+                   lq[1].delete(); for (int i = 0; i < 700; i++) lq[1].push_back(hdr(1, jtag, 0, 0, 0, 1, i + 1));
+`endif
+                end
                 2: begin x = hdr(7, jtag, 0, 0, 0, 1, 1); lq[1].push_front(x); end
                 3: begin x = lq[2][$]; x[507:500] = jtag ^ 8'h5A; lq[2][$] = x; end
                 4: begin fault_lane = 3; fault_at = lq[3].size() / 2 + 1; end

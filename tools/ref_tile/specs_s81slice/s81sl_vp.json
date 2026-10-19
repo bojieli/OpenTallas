@@ -1,0 +1,478 @@
+{
+  "name": "s81sl_vp",
+  "top": "ot_s81sl_vp",
+  "kind": "cluster",
+  "defines": [
+    "OT_S81SL_VP_HARD"
+  ],
+  "sources": [
+    "rtl/lib/ot_rst_relay.sv",
+    "rtl/hdc/ot_hdc_delay.sv",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vp.sv"
+  ],
+  "params": {},
+  "clock_port": "clk",
+  "reset_ports": [
+    "rst_n"
+  ],
+  "macros": [
+    {
+      "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+      "inst": "u_b0",
+      "count": 1,
+      "at": [
+        43.2,
+        604.8
+      ],
+      "orient": "R0"
+    },
+    {
+      "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+      "inst": "u_b1",
+      "count": 1,
+      "at": [
+        345.6,
+        604.8
+      ],
+      "orient": "R0"
+    }
+  ],
+  "children": [
+    {
+      "view": "physical/ref_tile/s81sl_hcpl/views/ot_dsrom_su_hcpost_lane_pr",
+      "count": 1,
+      "inst": "*g_ln?0?.u_l",
+      "at": [
+        43.2,
+        43.2
+      ]
+    },
+    {
+      "view": "physical/ref_tile/s81sl_hcpl/views/ot_dsrom_su_hcpost_lane_pr",
+      "count": 1,
+      "inst": "*g_ln?1?.u_l",
+      "at": [
+        172.8,
+        43.2
+      ]
+    },
+    {
+      "view": "physical/ref_tile/s81sl_hcpl/views/ot_dsrom_su_hcpost_lane_pr",
+      "count": 1,
+      "inst": "*g_ln?2?.u_l",
+      "at": [
+        302.4,
+        43.2
+      ]
+    },
+    {
+      "view": "physical/ref_tile/s81sl_hcpl/views/ot_dsrom_su_hcpost_lane_pr",
+      "count": 1,
+      "inst": "*g_ln?3?.u_l",
+      "at": [
+        432.0,
+        43.2
+      ]
+    },
+    {
+      "view": "physical/ref_tile/s81sl_hcpl/views/ot_dsrom_su_hcpost_lane_pr",
+      "count": 1,
+      "inst": "*g_ln?4?.u_l",
+      "at": [
+        43.2,
+        172.8
+      ]
+    },
+    {
+      "view": "physical/ref_tile/s81sl_hcpl/views/ot_dsrom_su_hcpost_lane_pr",
+      "count": 1,
+      "inst": "*g_ln?5?.u_l",
+      "at": [
+        172.8,
+        172.8
+      ]
+    },
+    {
+      "view": "physical/ref_tile/s81sl_hcpl/views/ot_dsrom_su_hcpost_lane_pr",
+      "count": 1,
+      "inst": "*g_ln?6?.u_l",
+      "at": [
+        302.4,
+        172.8
+      ]
+    },
+    {
+      "view": "physical/ref_tile/s81sl_hcpl/views/ot_dsrom_su_hcpost_lane_pr",
+      "count": 1,
+      "inst": "*g_ln?7?.u_l",
+      "at": [
+        432.0,
+        172.8
+      ]
+    },
+    {
+      "view": "physical/ref_tile/s81sl_hcpl/views/ot_dsrom_su_hcpost_lane_pr",
+      "count": 1,
+      "inst": "*g_ln?8?.u_l",
+      "at": [
+        43.2,
+        302.4
+      ]
+    },
+    {
+      "view": "physical/ref_tile/s81sl_hcpl/views/ot_dsrom_su_hcpost_lane_pr",
+      "count": 1,
+      "inst": "*g_ln?9?.u_l",
+      "at": [
+        172.8,
+        302.4
+      ]
+    },
+    {
+      "view": "physical/ref_tile/s81sl_hcpl/views/ot_dsrom_su_hcpost_lane_pr",
+      "count": 1,
+      "inst": "*g_ln?10?.u_l",
+      "at": [
+        302.4,
+        302.4
+      ]
+    },
+    {
+      "view": "physical/ref_tile/s81sl_hcpl/views/ot_dsrom_su_hcpost_lane_pr",
+      "count": 1,
+      "inst": "*g_ln?11?.u_l",
+      "at": [
+        432.0,
+        302.4
+      ]
+    },
+    {
+      "view": "physical/ref_tile/s81sl_hcpl/views/ot_dsrom_su_hcpost_lane_pr",
+      "count": 1,
+      "inst": "*g_ln?12?.u_l",
+      "at": [
+        43.2,
+        432.0
+      ]
+    },
+    {
+      "view": "physical/ref_tile/s81sl_hcpl/views/ot_dsrom_su_hcpost_lane_pr",
+      "count": 1,
+      "inst": "*g_ln?13?.u_l",
+      "at": [
+        172.8,
+        432.0
+      ]
+    },
+    {
+      "view": "physical/ref_tile/s81sl_hcpl/views/ot_dsrom_su_hcpost_lane_pr",
+      "count": 1,
+      "inst": "*g_ln?14?.u_l",
+      "at": [
+        302.4,
+        432.0
+      ]
+    },
+    {
+      "view": "physical/ref_tile/s81sl_hcpl/views/ot_dsrom_su_hcpost_lane_pr",
+      "count": 1,
+      "inst": "*g_ln?15?.u_l",
+      "at": [
+        432.0,
+        432.0
+      ]
+    }
+  ],
+  "pins": {
+    "N": [
+      "c_v",
+      "c_d",
+      "sw_v",
+      "sw_a",
+      "sw_m",
+      "sw_d",
+      "clk",
+      "rst_n",
+      "fault",
+      "lo_v",
+      "lo_d",
+      "cw_v",
+      "cw_a",
+      "cw_d"
+    ],
+    "E": [
+      "hw_v",
+      "hw_j",
+      "hw_hf",
+      "hw_d",
+      "hr_v",
+      "hr_j",
+      "hr_hf",
+      "hq_v",
+      "hq_d",
+      "n_go",
+      "n_pre",
+      "m_v",
+      "m_q",
+      "m_b",
+      "m_i",
+      "wl_v",
+      "wl_i",
+      "wl_d"
+    ],
+    "W": [
+      "s_v",
+      "s_d",
+      "x_rv",
+      "x_ra",
+      "x_qv",
+      "x_qd",
+      "x_wv",
+      "x_wa",
+      "x_wm",
+      "x_wd"
+    ],
+    "S": []
+  },
+  "recipe": 4,
+  "layer_cap": "M5",
+  "util": 0.5,
+  "outline": {
+    "w": 604.8,
+    "h": 734.4
+  },
+  "route": {
+    "pd": 0.4,
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "hold_margin_ns": 0.03
+  },
+  "structural_change": "S81-SLICE (stream 0cm): beat-leaf store + hc_post sub-leaf of the DV slice: command sequencer, 2 x 512x128 leaf-store banks, 16 hard s81sl_hcpl lanes (closed lane_pr re-kit).",
+  "job": {
+    "owner": "Claude:S81-SLICE",
+    "branch": "claude/owners-s81-vp-1018",
+    "tag": "s81sl_vp",
+    "purpose": "S81-SLICE deliverable 3: beat-leaf sub-leaf to closure (TT setup / FF hold / DRC 0 + native audit).",
+    "extra_paths": [
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+      "physical/hbm_norm_split_20261008",
+      "results/rtl/hbm_norm_engine_view_20261006",
+      "results/rtl/s81_slice_1017/beat",
+      "rtl/dsrom_sys/s81_dv/slice",
+      "rtl/hdc/v41x",
+      "tools/dsrom_su_hcpost.py",
+      "tools/hdc_golden.py",
+      "tools/hdc_golden_v41.py",
+      "tools/rtl_hdc_v41_blockdot_campaign.py",
+      "tools/s81_slice",
+      "tools/s81_suhc/fixtures/su_cases_v2_ildr.pkl",
+      "tools/s81_suhc/hc_gate.py"
+    ],
+    "benches": [
+      {
+        "name": "slbeat_exact",
+        "cmd": "bash tools/s81_slice/beat_bench.sh {RUN}/slbeat_exact base 37 L0",
+        "expect": "pass",
+        "pass_regex": "^PASS beat base B=37 L0$",
+        "threads": 4,
+        "peak_ram_gb": 6
+      },
+      {
+        "name": "slbeat_muttree",
+        "cmd": "bash tools/s81_slice/beat_bench.sh {RUN}/slbeat_muttree muttree 37 L0 raw",
+        "expect": "fail",
+        "fail_regex": "^SLBEAT beat=37 .* err=[1-9][0-9]* ",
+        "fail_witness": "results/rtl/s81_slice_1017/beat/g_mt/run.log",
+        "threads": 4,
+        "peak_ram_gb": 6
+      },
+      {
+        "name": "slbeat_mutcoef",
+        "cmd": "bash tools/s81_slice/beat_bench.sh {RUN}/slbeat_mutcoef mutcoef 37 L0 raw",
+        "expect": "fail",
+        "fail_regex": "^SLBEAT beat=37 .* err=[1-9][0-9]* ",
+        "fail_witness": "results/rtl/s81_slice_1017/beat/g_mc/run.log",
+        "threads": 4,
+        "peak_ram_gb": 6
+      }
+    ],
+    "views_to": "physical/ref_tile/s81sl_vp/views",
+    "record_to": "results/rtl/ref_tile/s81sl_vp"
+  },
+  "pin_regs": {
+    "enable": false,
+    "reason": "Source-registered (S81-SLICE): every data input lands in a flop at the pin and every output is a flop."
+  },
+  "pin_ranges": {
+    "c_v": [
+      6.48,
+      8.64
+    ],
+    "c_d": [
+      8.64,
+      127.246
+    ],
+    "sw_v": [
+      127.246,
+      129.406
+    ],
+    "sw_a": [
+      129.406,
+      136.819
+    ],
+    "sw_m": [
+      136.819,
+      142.749
+    ],
+    "sw_d": [
+      142.749,
+      332.518
+    ],
+    "clk": [
+      332.518,
+      334.678
+    ],
+    "rst_n": [
+      334.678,
+      336.838
+    ],
+    "fault": [
+      336.838,
+      338.998
+    ],
+    "lo_v": [
+      338.998,
+      341.158
+    ],
+    "lo_d": [
+      341.158,
+      530.927
+    ],
+    "cw_v": [
+      530.927,
+      533.087
+    ],
+    "cw_a": [
+      533.087,
+      550.878
+    ],
+    "cw_d": [
+      550.878,
+      598.32
+    ],
+    "hw_v": [
+      6.48,
+      8.64
+    ],
+    "hw_j": [
+      8.64,
+      10.8
+    ],
+    "hw_hf": [
+      10.8,
+      12.96
+    ],
+    "hw_d": [
+      12.96,
+      209.31
+    ],
+    "hr_v": [
+      209.31,
+      211.47
+    ],
+    "hr_j": [
+      211.47,
+      213.63
+    ],
+    "hr_hf": [
+      213.63,
+      215.79
+    ],
+    "hq_v": [
+      215.79,
+      217.95
+    ],
+    "hq_d": [
+      217.95,
+      414.299
+    ],
+    "n_go": [
+      414.299,
+      416.459
+    ],
+    "n_pre": [
+      416.459,
+      514.634
+    ],
+    "m_v": [
+      514.634,
+      516.794
+    ],
+    "m_q": [
+      516.794,
+      518.954
+    ],
+    "m_b": [
+      518.954,
+      521.114
+    ],
+    "m_i": [
+      521.114,
+      527.25
+    ],
+    "wl_v": [
+      527.25,
+      529.41
+    ],
+    "wl_i": [
+      529.41,
+      531.57
+    ],
+    "wl_d": [
+      531.57,
+      727.92
+    ],
+    "s_v": [
+      6.48,
+      8.64
+    ],
+    "s_d": [
+      8.64,
+      171.566
+    ],
+    "x_rv": [
+      171.566,
+      173.726
+    ],
+    "x_ra": [
+      173.726,
+      183.909
+    ],
+    "x_qv": [
+      183.909,
+      186.069
+    ],
+    "x_qd": [
+      186.069,
+      446.75
+    ],
+    "x_wv": [
+      446.75,
+      448.91
+    ],
+    "x_wa": [
+      448.91,
+      459.093
+    ],
+    "x_wm": [
+      459.093,
+      467.239
+    ],
+    "x_wd": [
+      467.239,
+      727.92
+    ]
+  },
+  "kit_note": "OWNERS-S81/VP 10-18 (kit spec, gate only after the s81sl_hcpl view closes): 16 hard hcpl lanes on a 129.6 um pitch (43.2 lattice, 15.12 um channels) in the lower 4x4 grid y 43.2..546.5; the 2 leaf-store SRAMs on the 43.2 lattice in the top band (y 604.8, x 43.2 / 345.6, pins N toward the centre-facing face, 128 um channel between them down to the lanes); one contiguous std-cell band y 546.5..734.4 (sequencer, bank ports, lane feed) plus the face pin-flop ring; every port on a full face, ranges proportional to bits (N 783 / E 923 / W 704 pins: <=1.3 pins/um); clk / rst_n at the N-face centre, beside the sequencer + bank-port register mass. N = slice centre (c, sw, cw, lo), E = vn seam, W = vs seam."
+}

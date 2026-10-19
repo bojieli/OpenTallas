@@ -6,7 +6,11 @@
 // N_Q (A2P half die, 2026-10-16): number of KV quadrants whose key lines this client scores (one scorer each, slot
 // i = key_lines[i*8792+:8792], key ordinals compacted: slot i holds ordinals i*2736.. ). 4 = the full die (unchanged);
 // 2 = A2P (SW, NW). Absent scorer slots feed the 4-group selector no valid lane (kv 0).
-module ot_hbm_idx_client_static_sw #(parameter integer N_Q=4,TP=96,RANK_W=(TP<=1?1:$clog2(TP)))(
+// AM_MERGE (HBM-SU3 2026-10-17, default 0 = unchanged; d4f binds 1 with the argmax successor ot_hbm_argmax_static_sw_vm_r2):
+//   the VM share is ot_hbm_idx_vm_share_static_am, whose four bank-pair leaves do the ARGMAX 8:1 sector select and merge
+//   the lanes on a p = 0 -> 3 register chain: argmax_rr is ONE 264-bit word {lane valid8, data256}, 4 edges after the
+//   leaves' steer (argmax VMX = 4 + its pin register = 5). INDEX / TOPK faces and edges unchanged.
+module ot_hbm_idx_client_static_sw #(parameter integer N_Q=4,TP=96,RANK_W=(TP<=1?1:$clog2(TP)),AM_MERGE=0)(
  input wire clk_program,clk_program_mem,
  input wire program_we,input wire[7:0]program_addr,input wire[255:0]program_data,
  input wire start,input wire[11:0]length,
@@ -27,9 +31,9 @@ module ot_hbm_idx_client_static_sw #(parameter integer N_Q=4,TP=96,RANK_W=(TP<=1
  output wire[337:0]cq,output wire[1:0]cq_seq,input wire[273:0]cr,
  output wire topk_busy,topk_done,topk_fault,output wire share_fault,
  // third owner of the SW IDX read group: the static ARGMAX.LOCAL VM reader (ot_hbm_argmax_static, separate unit)
- input wire[135:0]argmax_rq,output wire[2055:0]argmax_rr
+ input wire[135:0]argmax_rq,output wire[(AM_MERGE!=0?264:2056)-1:0]argmax_rr
 );
  localparam [1:0] SID = 2'd0;
- ot_hbm_idx_client_static #(.N_Q(N_Q),.TP(TP)) implementation(.sid(SID), .*);
+ ot_hbm_idx_client_static #(.N_Q(N_Q),.TP(TP),.AM_MERGE(AM_MERGE)) implementation(.sid(SID), .*);
 endmodule
 `default_nettype wire

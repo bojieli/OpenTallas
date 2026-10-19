@@ -84,7 +84,8 @@ module tb_hgi_coll_q_hard_v5;
  end
  wire [1023:0] inj_data={512'd0,source_rd[SUL-1]?source_word(source_index[SUL-1]):512'd0};
  // hard parent: its own SU boundary (driven by its own requests) and the same stimuli 2 edges later
- localparam integer SH=4,SHP=1;  // V6 issue path +4 (frame capture +1, uop delay +3); programme target +1
+ // COLLPIN 10-18: issuer input pin registers (+1): issue path +5 (frame capture +1, issuer pin stage +1, uop delay +3)
+ localparam integer SH=5,SHP=1;  // programme target +1
  reg [15:0] n_source_index[0:SUL-1];reg n_source_rd[0:SUL-1];
  always @(posedge clk)begin
   n_source_index[0]<=n_iidx[15:0];n_source_rd[0]<=n_ird[0];
@@ -214,6 +215,7 @@ module tb_hgi_coll_q_hard_v5;
    4:begin exp_delta=1;exp_bit=3;code[20][2+NPT]=1;end
    5:begin exp_delta=-1;exp_bit=12;code[20][NPT+7]=1;end   // q2 arg capture slot = NPT+7 (9 at NLINK 2)
    6:begin exp_delta=0;exp_bit=0;end
+   8:begin exp_delta=0;exp_bit=0;end   // COLLPIN: frame on an issuer-occupied edge (pin-stage busy cover)
    default:;
   endcase
 `ifdef Q3
@@ -241,6 +243,11 @@ module tb_hgi_coll_q_hard_v5;
    @(negedge clk);launch=0;
    rxv=(scen==1 && c==20)?{{(NPT-1){1'b0}},1'b1}:'0;
    rcv=(scen==2 && c==20);
+   // COLLPIN scen8: a legal-looking frame (unloaded row NR, segment 0) whose only fault is occupancy. The hard
+   // programme target evaluates it on the edge where the issuer's pin stage holds start (exported busy = busy |
+   // start_q): the reference faults (issuer busy), so must the hard parent, SHP later.
+   if(scen==8 && c==3)begin cv=1;cfg_target=TGT;cfg_addr=12'(NR*8);cfg_data=256'd0;end
+   if(scen==8 && c==4)cv=0;
    @(posedge clk);#1;
    if(scen==0 || scen==7)begin
     if(r_fault)$fatal(1,"reference fault in normal programme at cycle%0d",c);
@@ -266,7 +273,7 @@ module tb_hgi_coll_q_hard_v5;
    if(n_cause!=0)$fatal(1,"fault_cause nonzero without fault");
   end else begin
    if(rf<0 || nf<0)$fatal(1,"scenario%0d fault missing: ref%0d hard%0d cause%h",scen,rf,nf,n_cause);
-   if(nf-rf!=exp_delta+(scen==6?SHP:SH+1))$fatal(1,"scenario%0d fault edge: ref%0d hard%0d delta%0d expected%0d(+%0d issue shift)",scen,rf,nf,nf-rf,exp_delta,scen==6?SHP:SH+1);
+   if(nf-rf!=exp_delta+((scen==6||scen==8)?SHP:SH+1))$fatal(1,"scenario%0d fault edge: ref%0d hard%0d delta%0d expected%0d(+%0d issue shift)",scen,rf,nf,nf-rf,exp_delta,(scen==6||scen==8)?SHP:SH+1);
    if(!first_cause[exp_bit])$fatal(1,"scenario%0d visibility: first cause %h lacks bit%0d",scen,first_cause,exp_bit);
   end
   $display("HCOLL_VM_COVERAGE outputs%0d bank0_to_low_bank7_to_high",vm_outputs);

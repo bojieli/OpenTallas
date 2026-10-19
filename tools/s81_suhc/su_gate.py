@@ -64,6 +64,13 @@ HIER = ["rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_hctl.sv", "rtl/dsrom_sys/s81_suhc
         "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v",
         "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_cn_ik.sv", "rtl/hbm_accel/generic/ot_hgi_fp4qdq.sv",
         "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_rxt.sv", "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_rxh.sv", "rtl/dsrom_sys/s81_suhc/hier/dsfd_sp_su_h.sv"]
+# S81U-2 (2026-10-17): --smu builds the hierarchical slab with every SM head subtree as the per-head master
+# ot_s81_su_smh (S81-DV p4h regional service slice share), -DSU_SMU in dsfd_sp_su_h
+SMU = ["rtl/dsrom_sys/s81_dv/su_sm/ot_s81_su_smh.sv"]
+# S81U-SMH2: with OT_SU_VDEFS=-DSU_SMU_T the heads are the hardened regional-cluster composition dsfd_su_t_smh
+# (4 lane quads + root over the hard leaf tops)
+SMU_T = ["rtl/dsrom_sys/s81_dv/su_sm/dsfd_su_t_smh.sv", "rtl/dsrom_sys/s81_dv/su_sm/dsfd_su_t_smhq.sv",
+         "rtl/dsrom_sys/s81_dv/su_sm/dsfd_su_t_smhr.sv", "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_sm.sv"]
 u32, f32, pack, bf16bits = H.u32, H.f32, H.pack, H.bf16bits
 
 
@@ -469,8 +476,13 @@ JOB = re.compile(r"SUJ op=(\d+) kind=(\d+) start=(-?\d+) done=(-?\d+)")
 def cmd_run(a):
     sh = SHAPES[a.shape]
     out = Path(a.out)
-    tag = f"{a.shape}_{a.fp}_m{a.mut}_a{a.amut}" + (f"_x{a.xmut}" if a.xmut else "") + ("_h" if a.hier else "") + ("_t" if a.tiles else "") + (f"_lvm{a.lvm}" if a.lvm else "")
-    rtl = RTL + (HIER if a.hier else [])
+    tag = f"{a.shape}_{a.fp}_m{a.mut}_a{a.amut}" + (f"_x{a.xmut}" if a.xmut else "") + ("_h" if a.hier else "") + ("_t" if a.tiles else "") + (f"_lvm{a.lvm}" if a.lvm else "") + ("_smu" if a.smu else "")
+    rtl = RTL + (HIER if a.hier else []) + (SMU if a.smu else [])
+    if a.smu and "-DSU_SMU_T" in os.environ.get("OT_SU_VDEFS", "").split():
+        rtl += SMU_T
+        tag += "_smht"
+    if a.smu and not a.hier:
+        sys.exit("--smu needs --hier (it replaces the hierarchical slab's SM head subtrees)")
     gen = []
     if a.tiles:        # gate s81su_tiles: the slab with the ROUTED tops dsfd_su_t_<x> in place of the cores (su_tile_tops.py)
         import su_tile_tops as TT
@@ -498,7 +510,7 @@ def cmd_run(a):
             srcs = H.dpi_rest(obj) + srcs
         cmd = [H.VERILATOR, "--binary", "--timing", "-O2", "-Wno-fatal", "-Wno-WIDTH", "--top-module", "tb_s81_su_master",
                "-Mdir", str(obj), "-j", "16", "--unroll-count", "4", "-fno-dfg", *[f"-G{k}={v}" for k, v in sh.items()],
-               f"-GMUT={a.mut}", f"-GAMUT={a.amut}", *([f"-GXMUT={a.xmut}"] if a.xmut else []), *([f"-GLVM={a.lvm}"] if a.lvm else []), *(["-DSU_HIER"] if a.hier else []), *(["-DSU_TILE_TOPS"] if a.tiles else []), *os.environ.get("OT_SU_VDEFS", "").split(), *map(str, srcs), "-CFLAGS", "-O1"]
+               f"-GMUT={a.mut}", f"-GAMUT={a.amut}", *([f"-GXMUT={a.xmut}"] if a.xmut else []), *([f"-GLVM={a.lvm}"] if a.lvm else []), *(["-DSU_HIER"] if a.hier else []), *(["-DSU_TILE_TOPS"] if a.tiles else []), *(["-DSU_SMU"] if a.smu else []), *os.environ.get("OT_SU_VDEFS", "").split(), *map(str, srcs), "-CFLAGS", "-O1"]
         rr = subprocess.run(cmd, capture_output=True, text=True)
         (out / f"build_{tag}.log").write_text(" ".join(cmd) + "\n" + rr.stdout + rr.stderr)
         if rr.returncode != 0:
@@ -529,7 +541,7 @@ def cmd_run(a):
               row["jobs"], "fault", row["fault"], row["fault_code"], "cyc", row["cycles"],
               "early", row["early_done_rows"], flush=True)
     rec = dict(schema="opentallas.s81_suhc.su_gate.run.v1", generated_utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),
-               shape=a.shape, params=sh, fp=a.fp, mut=a.mut, amut=a.amut, xmut=a.xmut, hier=bool(a.hier), lvm=(a.lvm or 10), runs=res,
+               shape=a.shape, params=sh, fp=a.fp, mut=a.mut, amut=a.amut, xmut=a.xmut, hier=bool(a.hier), smu=bool(a.smu), lvm=(a.lvm or 10), runs=res,
                status="pass" if res and all(x["ok"] for x in res) else "fail",
                source_sha256=source_pins, build_cache_source_bound=True)
     if a.tiles:
@@ -557,6 +569,7 @@ def main():
     p.add_argument("--mut", type=int, default=0)
     p.add_argument("--amut", type=int, default=0)
     p.add_argument("--hier", action="store_true", help="the hierarchical slab dsfd_sp_su_h")
+    p.add_argument("--smu", action="store_true", help="with --hier: SM heads as ot_s81_su_smh (-DSU_SMU)")
     p.add_argument("--tiles", action="store_true", help="the slab built from the ROUTED tile tops dsfd_su_t_<x> (su_tile_tops.py)")
     p.add_argument("--lvm", type=int, default=0, help="VM read latency of the bench VM (tb LVM; 0 = the bench default 10): "
                    "measures how many serial VM read round trips a job class holds")

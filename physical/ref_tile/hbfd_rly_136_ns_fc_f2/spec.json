@@ -1,0 +1,162 @@
+{
+ "name": "hbfd_rly_136_ns_fc_f2",
+ "top": "hbfd_rly_136_NS_fc_f2",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hbm_accel/die_glue/ot_hbm_rly.sv",
+  "rtl/hbm_accel/die_glue/ot_hbm_rly_fc.sv",
+  "rtl/hbm_accel/die_glue/ot_hbm_rly_fcf.sv",
+  "rtl/hbm_accel/die_glue/hbfd_rly_fcf_masters.sv"
+ ],
+ "params": {},
+ "clock_port": "clk_in",
+ "reset_ports": [
+  "rs"
+ ],
+ "boundary_tcl": [
+  "physical/hbm_rly_fc/fcf_clock.tcl"
+ ],
+ "sdc_extra": [
+  "physical/hbm_rly_fc/fcf_clock.tcl"
+ ],
+ "pre_cts_extra": [
+  "physical/hbm_rly_fc/fcf_pre_cts.tcl"
+ ],
+ "outline": {
+  "w": 56.16,
+  "h": 21.6,
+  "exact": true
+ },
+ "macros": [],
+ "layer_cap": "M5",
+ "pins": {
+  "N": [
+   "i",
+   "clk_in"
+  ],
+  "S": [
+   "o0",
+   "clk_out0",
+   "o1",
+   "clk_out1"
+  ],
+  "W": [
+   "rs"
+  ]
+ },
+ "io_tcl": "physical/hbm_rly_fc/pins/hbfd_rly_136_NS_fc_f2.tcl",
+ "recipe": 3,
+ "inhold": false,
+ "outhold": false,
+ "pin_regs": {
+  "enable": false,
+  "reason": "F1 relay = ONE register stage at the pins by definition: i is captured by the stage register, o leaves it through the matched forwarding buffer; a pin register would add a cycle per hop and break the clk_out / o driver match (DIE-CLOCK F1)"
+ },
+ "orfs_vars": {
+  "PRE_FLOORPLAN_TCL": "/src/physical/hbm_rly_fc/fc_dont_touch.tcl"
+ },
+ "route": {
+  "pd": 0.45,
+  "threads": 4,
+  "peak_ram_gb": 8,
+  "m5_pg_pitch": 2.7,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "structural_change": "NATIVE-FIX3 rr1 (2026-10-18): rs -> ot_hbm_rly RS_RELAY=1 = registered reset relay (rtl/lib/ot_rst_relay.sv, 2 sync + 1 relay flop) so the W-face rs pin drives 3 flops instead of the async clear of all 136 stage flops (closed hbfd_rly_136_ns_fc_f2-ff1-02fc2ee56: routed native capture rs 211.1 ps > 190, NATIVE-3). Data path, outline, pin plan (rs on W) unchanged; stage release 3 clock edges after rs (as the > 256 b classes), assert async/immediate; 0 data cycles. Was: F1 forwarded-clock FORK variant (DIE-CLOCK rule: fork = relay tile with 2 branches, each with its own kept clk_out<k> buffer off the CTS tree + matched o<k> buffers on its face); same ot_hbm_rly stage; faces N: ['i'], S: [0, 1]; outline 56.16 x 21.6 um",
+ "job": {
+  "owner": "Claude:NATIVE-FIX3/rly",
+  "branch": "claude/nf3-rly-1018",
+  "tag": "rr1",
+  "purpose": "HBM die F1 forwarded-clock fork relay hbfd_rly_136_NS_fc_f2: register on clk_in, 2 branches (clk_out<k> = one kept BUFx12f from the clk_in root, o<k> through the same cell beside it); 56.16 x 21.6 um, M5 cap",
+  "extra_paths": [
+   "physical/hbm_rly_fc",
+   "rtl/hbm_accel/die_glue/test/bench_rly_fcf.sh",
+   "rtl/hbm_accel/die_glue/test/bench_rly_fc.sh",
+   "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv",
+   "rtl/hbm_accel/die_glue/hbfd_rly_fc_masters.sv"
+  ],
+  "benches": [
+   {
+    "name": "fcf_words",
+    "cmd": "bash rtl/hbm_accel/die_glue/test/bench_rly_fcf.sh pass 136 NS 2 {RUN}/bench_p 3",
+    "expect": "pass",
+    "pass_regex": "RLY_FCF_BENCH PASS 0 errors 0 clock_errors 0 chain_errors in 20000 words .* release_edges=3 window_words=[1-9]",
+    "min_count_regex": "RLY_FCF_BENCH PASS 0 errors 0 clock_errors 0 chain_errors in (\\d+) words",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "pass_witness": "results/rtl/hbm_rly_nf3_1018/f2_NS_pass.log"
+   },
+   {
+    "name": "neg_bit0_mutant",
+    "cmd": "bash rtl/hbm_accel/die_glue/test/bench_rly_fcf.sh mut 136 NS 2 {RUN}/bench_m 3",
+    "expect": "fail",
+    "fail_regex": "RLY_FCF_BENCH FAIL [1-9]",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/hbm_rly_nf3_1018/f2_NS_mut.log"
+   },
+   {
+    "name": "neg_clkout0_mutant",
+    "cmd": "bash rtl/hbm_accel/die_glue/test/bench_rly_fcf.sh ckmut0 136 NS 2 {RUN}/bench_c0 3",
+    "expect": "fail",
+    "fail_regex": "RLY_FCF_BENCH FAIL \\d+ errors [1-9]\\d* clock_errors",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/hbm_rly_nf3_1018/f2_NS_ckmut0.log"
+   },
+   {
+    "name": "neg_clkout1_mutant",
+    "cmd": "bash rtl/hbm_accel/die_glue/test/bench_rly_fcf.sh ckmut1 136 NS 2 {RUN}/bench_c1 3",
+    "expect": "fail",
+    "fail_regex": "RLY_FCF_BENCH FAIL \\d+ errors [1-9]\\d* clock_errors",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/hbm_rly_nf3_1018/f2_NS_ckmut1.log"
+   },
+   {
+    "name": "neg_reset_relay_bypass_mutant",
+    "cmd": "bash rtl/hbm_accel/die_glue/test/bench_rly_fcf.sh rrmut 136 NS 2 {RUN}/bench_r 3",
+    "expect": "fail",
+    "fail_regex": "RLY_FCF_BENCH FAIL [1-9]\\d* errors 0 clock_errors 0 chain_errors in 20000 words .* release_edges=3",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/hbm_rly_nf3_1018/f2_NS_rrmut.log"
+   }
+  ],
+  "views_to": "physical/ref_tile/hbfd_rly_136_ns_fc_f2/views",
+  "record_to": "results/rtl/ref_tile/hbfd_rly_136_ns_fc_f2",
+  "cycles_added": 0
+ },
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "source": "results/arch/native_3_1017/native_3_audit.json",
+  "cell": "hbfd_rly_136_NS_fc_f2",
+  "capture_ps": 211.1,
+  "fix": "ot_hbm_rly RS_RELAY=1 in this master only (default 0 elsewhere): rs drives the 3-flop registered reset relay beside the W face, the relay drives the 136 stage clears; release +3 edges (bench REL 3 expected-o model, reset-relay-bypass mutant FAILs)",
+  "why_route": "NATIVE-3 audit (claude/native-3-1017 73adc87ea, lanes/NATIVE-3.md): hbfd_rly_136_NS_fc_f2 rs capture 211.1 ps > 190 (one pin, rs = async clear of all 136 stage flops) in CLOSED hbfd_rly_136_ns_fc_f2-ff1-02fc2ee56; relative re-audit vs neighbour relays still FAIL (lanes/NATIVE-FIX3.md step 1). kind rtl_change: the master's RTL changes (RS_RELAY=1), so native_capture (same-RTL re-kit) does not apply."
+ },
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true
+}

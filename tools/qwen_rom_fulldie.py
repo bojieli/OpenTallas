@@ -912,6 +912,9 @@ def _corner_keep(poss, along, step, cr, off, p, label):
     return out
 
 
+MX_AREA = set()     # masters placed MX whose M8 area pins snap to the mirrored track grid (opt-in, kv_die)
+
+
 def pin_rects(mst, k, wmap):
     """[(pin name, layer, (x0, y0, x1, y1))] for one master.  wmap: port -> width actually emitted."""
     out = []
@@ -930,7 +933,14 @@ def pin_rects(mst, k, wmap):
             _, _, x, yc, pitch = spec
             off, p = TRK['M8']
             step = p * k * pitch
-            y = off * k + round((yc - n * step / 2 - off * k) / (p * k)) * p * k
+            if mst.name in MX_AREA:
+                # KV-CLOCK 10-18 (kvs14b real case 'qkd_pvw_n MX y: site grid never meets the legal residues mod 240'):
+                # a master the die places MX puts its M8 area pins on the MIRRORED track grid, H - (off + j p), so the
+                # 270-nm row origin can meet the M8 tracks (an n x 2.16 - 0.024 frame never does with R0-grid pins)
+                base = mst.h - off * k
+                y = base + round((yc - n * step / 2 - base) / (p * k)) * p * k
+            else:
+                y = off * k + round((yc - n * step / 2 - off * k) / (p * k)) * p * k
             hw = 0.020 * k
             for i, nm in enumerate(names):
                 yy = y + i * step
@@ -1033,11 +1043,27 @@ def lef_text(mst, k, wmap):
             lv = int(layer[1:])
             for i in range(lv, mst.obs_top + 1):
                 holes.setdefault(i, []).append((a - 0.3, b - 0.3, c_ + 0.3, d + 0.3))
+    # Q-DIE11 10-18 (coordinator 0ea item 2; dv2f12 GRT overflow 72,022, all in capacity-0 GCells under the slice S
+    # face): an abstract with pin_window > 0 keeps a pin-access WINDOW free of OBS along every face that carries pins:
+    # a strip `pin_window` um deep from the face, spanning the face's pin clusters (+ pin_window at each end), on the
+    # die signal layers M4..obs_top.  M1-M3 stay obstructed (the block's cells and pin registers sit under the window);
+    # the hardened block must keep the window free on M4..obs_top (recorded with the die case).  Default 0: unchanged.
+    for i, r in pin_windows(mst, pins):
+        holes.setdefault(i, []).append(r)
     for i in range(1, mst.obs_top + 1):
         L += [f'    LAYER M{i} ;']
         L += [f'      RECT {a:.3f} {b:.3f} {c_:.3f} {d:.3f} ;' for a, b, c_, d in _minus(mst.w, mst.h, holes.get(i, []))]
     L += ['  END', f'END {mst.name}', '']
     return '\n'.join(L), len(pins)
+
+
+def pin_windows(mst, pins):
+    """[(layer index, rect)] pin-access windows of a master with pin_window > 0 (see lef_text; shared rule
+    tools/abstract_pin_windows.py).  Pins of one face closer than 2 x pin_window share one window."""
+    import abstract_pin_windows as APW
+    win = float(getattr(mst, 'pin_window', 0.0) or 0.0)
+    lo = int(getattr(mst, 'pin_window_layer_lo', 4))
+    return [(i, r) for i, rs in sorted(APW.windows(mst.w, mst.h, pins, win, lo, mst.obs_top).items()) for r in rs]
 
 
 def _minus(w, h, holes):

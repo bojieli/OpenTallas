@@ -52,7 +52,15 @@ def emit(caldir, out):
     lines.append(f'localparam integer D2D_ADM_OFS = {adm["ofs"]};      // admission cal_start, edges after the epoch strobe')
     lines.append(f'localparam integer D2D_ADM_LEN = {adm["len"]};    // admission run length (all calendars idle)')
     lines.append(f'localparam integer D2D_FIRST_TOKEN = {adm["first_token_ofs"]};  // first token cal_start, edges after the epoch strobe')
-    lines.append(f'localparam integer D2D_TOKEN_PERIOD = {prog["token_period"]};  // compiled token period (token path totals)')
+    lines.append(f'localparam integer D2D_TOKEN_PERIOD = {prog["token_period"]};  // compiled token period (token path totals padded to a 768-edge multiple)')
+    # QXF-LINK 2026-10-18 (F4): the die masters' producer capture latency, compiled with the same program: the die GEN sets
+    # qfd_d2d_static #(.TXDP(D2D_TXDP_C)) / qkd_d2d_static #(.TXDP(D2D_TXDP_K)) from these (no default exists in the RTL)
+    for end in ('C', 'K'):
+        v = cal['txd'][end]
+        assert len(v) == 4 and all(1 <= x < 256 for x in v), (end, v)
+        word = sum(x << (8 * p) for p, x in enumerate(v))
+        lines.append(f"localparam [31:0] D2D_TXDP_{end} = 32'h{word:08x};   // {'compute' if end == 'C' else 'KV'} TXDP ports 0..3 = {v}"
+                     + (f"; die stages {cal['die_stages']}" if cal.get('die_stages') and end == 'C' else ''))
     Path(out).write_text('\n'.join(lines) + '\n')
 
 

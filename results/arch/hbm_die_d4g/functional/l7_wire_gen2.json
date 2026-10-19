@@ -1,0 +1,56 @@
+{
+ "schema": "opentallas.hbm.d4g.gen2_l7_wire.v1",
+ "region": "d4g_gen2_l7_wire",
+ "inp": "/home/ubuntu/scratch/hbm-wire/gen2_pre_relay.json",
+ "fixed": [
+  {
+   "inst": "cxij_SE",
+   "old": {
+    "INJ_RET": 11,
+    "B39_NOOP": 0
+   },
+   "new": {
+    "INJ_RET": 9,
+    "B39_NOOP": 1
+   }
+  },
+  {
+   "inst": "cxij_NW",
+   "old": {
+    "INJ_RET": 11,
+    "B39_NOOP": 0
+   },
+   "new": {
+    "INJ_RET": 9,
+    "B39_NOOP": 1
+   }
+  },
+  {
+   "inst": "cxij_NE",
+   "old": {
+    "INJ_RET": 11,
+    "B39_NOOP": 0
+   },
+   "new": {
+    "INJ_RET": 9,
+    "B39_NOOP": 1
+   }
+  }
+ ],
+ "closed_gaps": [
+  "G-CIL-INJ",
+  "G-CIL-RC",
+  "G-CIL-DEL",
+  "G-DMA-WB",
+  "G-HC-ENG",
+  "G-SMVM-XCMD",
+  "G-SFU-OPERAND-JOIN-SW",
+  "G-SFU-OPERAND-JOIN-SE",
+  "G-SFU-OPERAND-JOIN-NW",
+  "G-SFU-OPERAND-JOIN-NE"
+ ],
+ "functional_fail": 0,
+ "open_gaps": [],
+ "paths": 1152,
+ "slot_rules": 8
+}

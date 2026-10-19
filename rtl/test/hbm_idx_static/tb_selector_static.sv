@@ -6,7 +6,15 @@ module tb_selector_static;
  reg[2367:0]in_line=0;wire[3:0]out_v;wire[2367:0]out_line;wire fault;
  wire[3:0]selected_v;wire[2367:0]selected_line;
  wire[15:0]threshold_observe;wire[55:0]selected_observe;
- ot_hbm_idx_selector_static_core #(.MUT(MUT)) dut(.clk_ctl(clk),.clk_q({4{clk}}),.clk_mem({12{clk}}),.*);
+ // SHELL=1 (IDX-SMALL 2026-10-18): the die master ot_hbm_idx_selector_static (pin flops +1/+1 edge, 2-flop rst release,
+ // ONE clock root clk_ctl; clk_q/clk_mem driven by a different net that must not matter) under the same stimulus.
+ parameter integer SHELL=0;
+ reg clk_x=0;
+ if(SHELL!=0)begin:g_shell
+  ot_hbm_idx_selector_static #(.MUT(MUT)) dut(.clk_ctl(clk),.clk_q({4{clk_x}}),.clk_mem({12{clk_x}}),.*);
+ end else begin:g_core
+  ot_hbm_idx_selector_static_core #(.MUT(MUT)) dut(.clk_ctl(clk),.clk_q({4{clk}}),.clk_mem({12{clk}}),.*);
+ end
  reg[2367:0]lines[0:170];reg gold[0:10943];reg[15:0]scores[0:10943];reg seen[0:10943];
  integer errors=0,checked=0,frame,cyc=0,firstemit,beginframe;string fn;
  always @(posedge clk)cyc<=cyc+1;
@@ -49,10 +57,10 @@ module tb_selector_static;
    for(integer a=0;a<171;a=a+1)tick(6,a,2);
    tick(0,0,2);tick(0,0,2);tick(7,0,2);tick(0,0,2);
    for(integer a=0;a<32;a=a+1)tick(8,a,2);
-   tick(0,0,2);repeat(3)tick(0,0,2);
+   tick(0,0,2);repeat(3+2*(SHELL!=0))tick(0,0,2); // SHELL: pin flops add +1 in / +1 out edge to the last emit
    for(integer j=0;j<10944;j=j+1)if(gold[j]!==seen[j])errors++;
    if(checked!=512||fault)errors++;
-   $display("IDX_SELECTOR_STATIC MUT%0d frame%0d checked%0d errors%0d fault%0d edges%0d firstemit%0d threshold%h selected%h",MUT,frame,checked,errors,fault,cyc-beginframe,firstemit-beginframe,threshold_observe,selected_observe);
+   $display("IDX_SELECTOR_STATIC SHELL%0d MUT%0d frame%0d checked%0d errors%0d fault%0d edges%0d firstemit%0d threshold%h selected%h",SHELL,MUT,frame,checked,errors,fault,cyc-beginframe,firstemit-beginframe,threshold_observe,selected_observe);
   end
   if(errors)$fatal(1,"fullshape exact selector mismatch");$finish;
  end

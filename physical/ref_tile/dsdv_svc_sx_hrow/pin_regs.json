@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "dsdv_svc_sx_hrow",
+ "enable": false,
+ "reason": "Source-registered (dsdv_svc_sx_hrow header): every input lands in a flop at the pin and every output is a flop; recipe pin_regs would add a second unpriced stage on every lane (the role ROM offsets assume exactly the monolith's 5-cycle hop)."
+}

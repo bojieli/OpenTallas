@@ -189,6 +189,67 @@ def engine_region():
                 drop_v15_edges=[], notes='coordinator region (die_case.py)')
 
 
+def soft_relay_splice(buses, ports, drv, E, problems):
+    """H-DIE-R7 10-17: F1 relay trees for buses touching soft-parent children, applied at bit level after the soft
+    flatten.  Every listed load bit must be driven by its listed driver bit in the flattened netlist (else a problem);
+    it is then re-driven by its last station (the direct bits leave E), and the station edges are bound as usual."""
+    tmp = []
+    st_edges = apply_relay_splice_v2(buses, [], ports, tmp)
+    problems += [x for x in tmp if not x.startswith('relay splice v2:')]
+    cut = set(); bad = 0
+    for b in buses:
+        for (p, k), ls in zip(b['driver_bits'], b['loads']):
+            for (si, sp, sb) in ls:
+                sk = b['sinks'].get(si)
+                if sk is None or (sk['src'][0] is None and not sk['chain']):
+                    continue
+                if drv.get((si, sp, sb)) != (b['driver'], p, k):
+                    bad += 1; continue
+                del drv[(si, sp, sb)]; cut.add((si, sp, sb))
+    if bad:
+        problems.append(f'soft relay splice: {bad} listed load bits not driven by their listed driver bit')
+    newE = []
+    for e in E:
+        si, sp, slo, shi = e['source']; di, dp, dlo, dhi = e['sink']
+        keep = [(di, dp, dlo + k) not in cut for k in range(shi - slo)]
+        if all(keep):
+            newE.append(e); continue
+        k = 0
+        while k < len(keep):
+            if not keep[k]:
+                k += 1; continue
+            k2 = k
+            while k2 + 1 < len(keep) and keep[k2 + 1]:
+                k2 += 1
+            newE.append(dict(e, name=f"{e['name']}__sr{k}", bits=k2 - k + 1, source=[si, sp, slo + k, slo + k2 + 1],
+                             sink=[di, dp, dlo + k, dlo + k2 + 1]))
+            k = k2 + 1
+    for e in st_edges:
+        try:
+            si, sp, slo, shi = rng(e['src'], ports); di, dp, dlo, dhi = rng(e['dst'], ports)
+        except KeyError as x:
+            problems.append(f"soft relay edge {e['name']}: unknown instance/port {x}"); continue
+        if si not in ports or di not in ports or sp not in ports[si] or dp not in ports[di]:
+            problems.append(f"soft relay edge {e['name']}: unknown {si}.{sp} / {di}.{dp}"); continue
+        if ports[si][sp]['direction'] != 'output' or ports[di][dp]['direction'] != 'input':
+            problems.append(f"soft relay edge {e['name']}: not output->input"); continue
+        if shi - slo != dhi - dlo or shi > ports[si][sp]['bits'] or dhi > ports[di][dp]['bits']:
+            problems.append(f"soft relay edge {e['name']}: width mismatch"); continue
+        clash = False
+        for k in range(shi - slo):
+            if (di, dp, dlo + k) in drv and drv[(di, dp, dlo + k)] != (si, sp, slo + k):
+                problems.append(f"soft relay edge {e['name']}: {di}.{dp}[{dlo + k}] already driven by {drv[(di, dp, dlo + k)]}")
+                clash = True; break
+        if clash:
+            continue
+        for k in range(shi - slo):
+            drv[(di, dp, dlo + k)] = (si, sp, slo + k)
+        newE.append(dict(name=e['name'], bits=shi - slo, source=[si, sp, slo, shi], sink=[di, dp, dlo, dhi],
+                         clock=e.get('clock'), ready_or_credit=False, allowed_exception=None, basis=e.get('basis', ''),
+                         region=e['region']))
+    E[:] = newE
+
+
 # ------------------------------------------------------------------------------------------------ build
 def rng(ref, ports):
     """[inst, port, lo?, hi?] -> (inst, port, lo, hi) with the whole port when omitted"""
@@ -198,10 +259,121 @@ def rng(ref, ports):
     return i, p, 0, ports[i][p]['bits']
 
 
+def apply_relay_splice_v2(buses, edges, ports, problems):
+    """H-NETLIST 1017 (d4f F1 relay layer, tools/hbm_die_v16/relay_layer_d4f.py): generic relay trees.  Per bus:
+    driver / driver_bits / loads as v1; nodes = [{id, parent, pbranch, names[lane], outs[branch port]}]; sinks =
+    {sink: {src: [node id | None, branch], chain: [[name per lane] per sink-root stage]}}; W = lane width, T = lanes.
+    Lane t carries bus bits [t*W, (t+1)*W); positions >= bits are driven by REAL driver bits (j % bits), never tied."""
+    rmap = {}
+    for b in buses:
+        for j, ((p, k), ls) in enumerate(zip(b['driver_bits'], b['loads'])):
+            for (si, sp, sb) in ls:
+                sk = b['sinks'].get(si)
+                if sk is None or (sk['src'][0] is None and not sk['chain']):
+                    continue
+                rmap[(b['driver'], p, k, si, sp, sb)] = 1
+    drivers = {b['driver'] for b in buses}
+    found = set(); out = []
+    for e in edges:
+        if e['src'][0] not in drivers:
+            out.append(e); continue
+        try:
+            si, sp, slo, shi = rng(e['src'], ports); di, dp, dlo, dhi = rng(e['dst'], ports)
+        except KeyError:
+            out.append(e); continue
+        keep = [(si, sp, slo + k, di, dp, dlo + k) not in rmap for k in range(shi - slo)]
+        if all(keep):
+            out.append(e); continue
+        for k in range(shi - slo):
+            if not keep[k]:
+                found.add((si, sp, slo + k, di, dp, dlo + k))
+        k = 0
+        while k < len(keep):
+            if not keep[k]:
+                k += 1; continue
+            k2 = k
+            while k2 + 1 < len(keep) and keep[k2 + 1]:
+                k2 += 1
+            out.append(dict(e, name=f"{e['name']}__kr{k}", src=[si, sp, slo + k, slo + k2 + 1], dst=[di, dp, dlo + k, dlo + k2 + 1], bits=k2 - k + 1))
+            k = k2 + 1
+    miss = [x for x in rmap if x not in found]
+    if miss:
+        problems.append(f'relay splice v2: {len(miss)} listed load bits not driven by their listed driver bit (e.g. {miss[:3]})')
+    for b in buses:
+        W, T, n, tag, ck = b['width'], b['tiles'], b['bits'], b['bus'], b['domain']
+        bas = f"d4f F1 relay tree {tag} ({b['cls']}, {b['driver']}) -- relay_layer_d4f.py"
+        def E(src, dst, bits, nm):
+            out.append(dict(name=f'{tag}__{nm}', src=src, dst=dst, bits=bits, clock=ck, basis=bas, region='relays_d4f'))
+        def oref(name, o):   # node / stage output: port name, or [port, lo, hi] (fork branch of a lane station, HBM-LANDING)
+            return [name, o] if isinstance(o, str) else [name, o[0], o[1], o[2]]
+
+        def from_driver(names, ip='i'):
+            for t in range(T):
+                run = None
+                for L in range(W):
+                    j = t * W + L
+                    p, k = b['driver_bits'][j if j < n else j % n]
+                    if run and run[0] == p and run[2] + 1 == k and run[4] + 1 == L:
+                        run[2] = k; run[4] = L
+                    else:
+                        if run:
+                            E([b['driver'], run[0], run[1], run[2] + 1], [names[t], ip, run[3], run[4] + 1], run[4] - run[3] + 1, f'drv_{names[t]}_{run[3]}')
+                        run = [p, k, k, L, L]
+                E([b['driver'], run[0], run[1], run[2] + 1], [names[t], ip, run[3], run[4] + 1], run[4] - run[3] + 1, f'drv_{names[t]}_{run[3]}')
+        nodes = {nd['id']: nd for nd in b['nodes']}
+        for nd in b['nodes']:
+            if nd['parent'] is None:
+                from_driver(nd['names'], nd.get('iport', 'i'))
+            else:
+                pn = nodes[nd['parent']]
+                for t in range(T):
+                    E(oref(pn['names'][t], pn['outs'][nd['pbranch']]), [nd['names'][t], nd.get('iport', 'i')], W, f"t_{nd['names'][t]}")
+        for snk, sk in b['sinks'].items():
+            src_node, br = sk['src']
+            prev = None if src_node is None else (nodes[src_node]['names'], nodes[src_node]['outs'][br])
+            cps = sk.get('chain_ports') or [['i', 'o']] * len(sk['chain'])
+            for stage, (ip, op) in zip(sk['chain'], cps):
+                if prev is None:
+                    from_driver(stage, ip)
+                else:
+                    for t in range(T):
+                        E(oref(prev[0][t], prev[1]), [stage[t], ip], W, f't_{stage[t]}')
+                prev = (stage, op)
+            sk['_last'] = prev
+        seq = collections.defaultdict(list)
+        for j, ls in enumerate(b['loads']):
+            for (si, sp, sb) in ls:
+                sk = b['sinks'].get(si)
+                if sk is None or sk.get('_last') is None:
+                    continue
+                seq[si].append((j, sp, sb))
+        for si, lst in seq.items():
+            names, port = b['sinks'][si]['_last']
+            po = 0
+            if not isinstance(port, str):
+                port, po = port[0], port[1]
+            lst.sort(key=lambda x: (x[0] // W, x[1], x[2]))
+            cur = None
+            for j, sp, sb in lst:
+                t, L = divmod(j, W)
+                if cur and cur[0] == t and cur[1] == sp and cur[3] + 1 == L and cur[5] + 1 == sb:
+                    cur[3] = L; cur[5] = sb
+                else:
+                    if cur:
+                        E([names[cur[0]], port, po + cur[2], po + cur[3] + 1], [si, cur[1], cur[4], cur[5] + 1], cur[3] - cur[2] + 1, f'ld_{si}_{cur[1]}_{cur[4]}')
+                    cur = [t, sp, L, L, sb, sb]
+            if cur:
+                E([names[cur[0]], port, po + cur[2], po + cur[3] + 1], [si, cur[1], cur[4], cur[5] + 1], cur[3] - cur[2] + 1, f'ld_{si}_{cur[1]}_{cur[4]}')
+    return out
+
+
 def apply_relay_splice(specs, edges, ports, problems):
     """H-NETLIST/H-ELEM 2026-10-16 (d4b relay stations, tools/hbm_die_v15/relay_contract_d4b.py): rewire every listed
     bus load bit through its registered station chain. A listed load bit must be driven by the listed driver bit in the
     contract as built so far (else a problem: the station list is stale against this netlist)."""
+    v2 = [b for s in specs for b in s.get('relay_splice_v2', [])]
+    if v2:
+        edges = apply_relay_splice_v2(v2, edges, ports, problems)
     buses = [b for s in specs for b in s.get('relay_splice', [])]
     if not buses:
         return edges
@@ -467,6 +639,8 @@ def a2p_remaster(insts, problems):
 
 
 PORT_SPLIT = {}   # instance -> {old port: [(new port, lo, hi)]}  (layer key 'remaster', H-NETLIST 2100)
+HOIST_RM = set()  # instances folded away by layer key 'hoist' (H-DIE-R8b)
+FOLD_INT = set()  # (inst, port) seam ports internal to a fold (layer key 'fold_internal', H-DIE-R8b)
 
 
 def remaster_layers(insts, specs, problems):
@@ -486,6 +660,16 @@ def remaster_layers(insts, specs, problems):
                 i['rtl_deps'] = list(r['rtl_deps'])
             if r.get('port_split'):
                 PORT_SPLIT[n] = {p: [tuple(x) for x in v] for p, v in r['port_split'].items()}
+        # H-DIE-R8b 10-17 layer key 'hoist': {instance: {port: [[new_inst, new_port, lo, hi, off], ...]}}: every edge
+        # end on the instance is re-cut onto other instances (a FOLD: LG taps into their consumer tiles), then the
+        # instance is removed (HOIST_RM).  Ports mapped to [] are fold-internal: their edges must be dropped by the layer.
+        for n, pm in s_.get('hoist', {}).items():
+            if n not in insts:
+                problems.append(f'hoist: {n} is not an instance'); continue
+            PORT_SPLIT[n] = {p: [tuple(x) for x in v] for p, v in pm.items()}
+            HOIST_RM.add(n)
+            FOLD_INT.update((n, p) for p, v in pm.items() if not v)
+        FOLD_INT.update(tuple(x) for x in s_.get('fold_internal', []))
         for n, sl in s_.get('slot_override', {}).items():   # layer key 'slot_override' {instance: slot} (H-DIE grants)
             if n not in insts:
                 problems.append(f'slot_override: {n} is not an instance'); continue
@@ -499,7 +683,15 @@ def remaster_layers(insts, specs, problems):
 
 def port_split_edges(edges, problems):
     out = []
+    n_int = 0
     for e in edges:
+        if FOLD_INT:   # H-DIE-R8b fold seams: both ends internal -> the edge is inside the fold now
+            ia, ib = (e['src'][0], e['src'][1]) in FOLD_INT, (e['dst'][0], e['dst'][1]) in FOLD_INT
+            if ia and ib:
+                n_int += 1
+                continue
+            if ia or ib:
+                problems.append(f"fold: edge {e.get('name')} {e['src'][:2]} -> {e['dst'][:2]} has one fold-internal end")
         parts = [e]
         for side, oth in (('dst', 'src'), ('src', 'dst')):
             nxt = []
@@ -507,20 +699,23 @@ def port_split_edges(edges, problems):
                 end = x[side]; segs = PORT_SPLIT.get(end[0], {}).get(end[1])
                 if not segs:
                     nxt.append(x); continue
-                full = max(sg[-1] for sg in segs)
+                full = max(sg[3] if len(sg) == 5 else sg[-1] for sg in segs)   # 5-tuple: (inst, port, lo, hi, off)
                 lo, hi = (end[2], end[3]) if len(end) >= 4 else (0, full)
                 o = list(x[oth]) if len(x[oth]) >= 4 else list(x[oth][:2]) + [0, hi - lo]
-                for sg in segs:   # (new port, lo, hi) on the same instance or (instance, port, lo, hi): a hoist
-                    ni, np_, slo, shi = sg if len(sg) == 4 else (end[0],) + tuple(sg)
+                for sg in segs:   # (new port, lo, hi) on the same instance or (instance, port, lo, hi[, off]): a hoist
+                    ni, np_, slo, shi = sg[:4] if len(sg) >= 4 else (end[0],) + tuple(sg)
+                    off = sg[4] if len(sg) == 5 else 0   # H-DIE-R8b: new bits start at off (pair taps: bank 1 at 17/281/257)
                     a, b = max(lo, slo), min(hi, shi)
                     if a >= b:
                         continue
-                    y = dict(x, name=f"{x.get('name', 'e')}__{ni}_{np_}")
-                    y[side] = [ni, np_, a - slo, b - slo]
+                    y = dict(x, name=f"{x.get('name', 'e')}__{ni}_{np_}" + (f'_{off}' if off else ''))
+                    y[side] = [ni, np_, a - slo + off, b - slo + off]
                     y[oth] = o[:2] + [o[2] + a - lo, o[2] + b - lo]; y['bits'] = b - a
                     nxt.append(y)
             parts = nxt
         out.extend(parts)
+    if FOLD_INT:
+        print(f'fold: {n_int} seam edges now internal to their fold tiles')
     return out
 
 
@@ -672,6 +867,21 @@ def build(specs_dir, out, extra=(), soft_idx=None):
                             replaces_v15=prev['master'] if prev else None)
             if i.get('rtl_deps'):
                 insts[n]['rtl_deps'] = list(i['rtl_deps'])
+    # H-NETLIST/D4F-RELAY 10-17: layer key 'rehome' {inst: {home: [x, y], master?, why}}: a relay tile keeps its name, ports
+    # and stage position in its chain; only its planned home (die_case reads 'home (x, y) um' from the note) and its flow
+    # letter (same source file, same ports) change
+    for s_ in specs:
+        for n, h in s_.get('rehome', {}).items():
+            if n not in insts:
+                problems.append(f'rehome: {n} is not an instance'); continue
+            i = insts[n]
+            if h.get('master') and h['master'] != i['master']:
+                if not (i['master'].startswith('hbfd_rly_') and h['master'].rsplit('_', 1)[0] == i['master'].rsplit('_', 1)[0]):
+                    problems.append(f"rehome: {n} master {i['master']} -> {h['master']} is not a flow-letter change"); continue
+                i['master'] = h['master']
+            home = f"home ({h['home'][0]}, {h['home'][1]}) um"
+            note = re.sub(r'home \([-\d.]+, [-\d.]+\) um', home, i.get('note', ''))
+            i['note'] = (note if home in note else f'{note}; {home}') + f" | {s_['region']}: re-homed ({h.get('why', '')})"
     # H-NETLIST 0600 (H-DIE option A): a programme target whose only consumer is a universal VM calendar is FOLDED into
     # it (hfd_hgi_vm_calendar_f20 = target + calendar; a standalone ~630-pin collar is pin-bound as its own tile).
     folded = {}       # target instance -> consumer instance
@@ -928,6 +1138,25 @@ def build(specs_dir, out, extra=(), soft_idx=None):
         edges = a2p_edge_remap(edges, problems)
     if PORT_SPLIT:
         edges = port_split_edges(edges, problems)
+    if HOIST_RM:   # H-DIE-R8b: folded instances leave once their edges are re-cut onto the fold
+        left = [e['name'] for e in edges if e['src'][0] in HOIST_RM or e['dst'][0] in HOIST_RM]
+        if left:
+            problems.append(f'hoist: {len(left)} edges still on folded instances, e.g. {left[:4]}')
+        for n in HOIST_RM:
+            insts.pop(n, None); ports.pop(n, None)
+        for s_ in specs:
+            s_['straps'] = [x for x in s_.get('straps', []) if x['inst'] not in HOIST_RM]
+            s_['clocks'] = [c_ for c_ in s_.get('clocks', []) if c_['inst'] not in HOIST_RM]
+    # H-DIE-R7 10-17: relay buses whose driver or a sink is a soft-parent child (hb_idx__*) are spliced after the
+    # soft flatten (the children have no ports yet here); see soft_relay_splice below.
+    soft_buses = []
+    if soft_idx:
+        for s in specs:
+            v2 = s.get('relay_splice_v2') or []
+            keep = [b for b in v2 if not (b['driver'].startswith('hb_idx__') or any(k.startswith('hb_idx__') for k in b['sinks']))]
+            if len(keep) != len(v2):
+                soft_buses += [b for b in v2 if b not in keep]
+                s['relay_splice_v2'] = keep
     edges = apply_relay_splice(specs, edges, ports, problems)
     # ---------------- bit-level driver map
     drv = {}          # (inst, port, bit) -> (inst, port, bit) | ('PIN', name, bit)
@@ -1027,6 +1256,8 @@ def build(specs_dir, out, extra=(), soft_idx=None):
         import soft_parent
         nm = json.loads(Path(soft_idx).read_text())
         soft_rec = soft_parent.soft_flatten('hb_idx', nm, insts, ports, drv, E, clocks, straps, rtl, problems)
+        if soft_buses:
+            soft_relay_splice(soft_buses, ports, drv, E, problems)
         if soft_rec:
             soft_rec['netmap'] = str(soft_idx)
             soft_rec['netmap_sha256'] = sha(Path(soft_idx))

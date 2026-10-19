@@ -20,7 +20,7 @@ EXCLUDED = {"gate_result.json", "source_snapshot.json"}
 CONSUMED_SCHEMA = "opentallas.ref_tile.gate_consumed.v1"
 # working-tree tools the remote gate script runs itself (REMOTE_SH), besides the daemon overlays (SHIP_HELPERS)
 GATE_TOOLS = ("tools/ref_tile/ref_route.sh", "tools/textbook_lint.py", "tools/closure_loop/ck_insertion.py",
-              "tools/ref_tile/path_classes.tcl")
+              "tools/ref_tile/path_classes.tcl", "tools/ref_tile/keep_module_audit.py")
 # Non-Python source read by an imported generator and embedded in its kit.
 PY_DATA = {"tools/ref_tile/direct_macro_clock_entries.py": ("tools/ref_tile/sta_scene_binding.cc",)}
 PY_DIRS = ("tools", "tools/ref_tile", "tools/closure_loop", "tools/w18")
@@ -177,8 +177,18 @@ def consumed_record(paths, entries, basis):
             "digest": canonical_digest(paths)}
 
 
-def validate(binding, root, daemon, commit=None, route_overlay=True, frozen_recovery=False):
-    """Match immutable staged contents against the requested route source and current tool overlay."""
+def validate(binding, root, daemon, commit=None, route_overlay=True, frozen_recovery=False, clock=None, tile=None,
+             gate=None):
+    """Match immutable staged contents against the requested route source and current tool overlay.
+
+    clock: the gate result's "clock" record.  With it, drift made only by RELAXING-ONLY rule commits
+    (helper_overlay.RELAXING_RULE_COMMITS) is tolerated when the gate report meets the relaxed rule's requirement; the
+    use is recorded in binding["relaxing_rule_allowlist"] (the caller copies it into the job).
+    GATE-FRICTION 2026-10-18: every commit on the chain is classified (helper_overlay.rule_span: relaxing / neutral /
+    tightening / unclassified); only a tightening that applies to `tile` (kit / top / block names), or an unclassified
+    change, keeps the strict refusal.
+    gate: the whole gate result (gate_result.json), for requirements judged from more than its clock record
+    (trial_grt: the every-kit trial global route)."""
     if not isinstance(binding, dict) or binding.get("schema") != SCHEMA:
         return False, "missing immutable source snapshot; legacy result is unqualified"
     if frozen_recovery and not route_overlay:
@@ -285,16 +295,98 @@ def validate(binding, root, daemon, commit=None, route_overlay=True, frozen_reco
         lint_ok = []
     overlay_diff = [q for q in overlay_diff if q not in lint_ok]
     source_diff = [q for q in source_diff if q not in lint_ok]
+    # BENCH-ONLY KIT SPEC EDIT (ROOT-0040 2026-10-18): a kit spec.json / job.json that changed since the gate only in its
+    # bench list (stages.bench / job.benches) (a mutant dropped or added) leaves the pre-route gate's inputs unchanged: the gate never runs
+    # benches (submit_exact BENCH-EVIDENCE and the route's bench stage judge them).  Reported, not refused.
+    bench_ok = []
+    try:
+        by_ = {e["path"]: e for e in entries}
+        for q in [q for q in source_diff if q.startswith("physical/ref_tile/") and q.endswith(("/spec.json", "/job.json"))]:
+            new_ = (subprocess.run(["git", "-C", str(root), "cat-file", "blob", tree[q]], capture_output=True,
+                                   timeout=60).stdout if tree is not None and tree.get(q) else
+                    None if tree is not None else (root / q).read_bytes())
+            old_ = subprocess.run(["git", "-C", str(root), "cat-file", "blob", by_[q]["git_blob"]], capture_output=True,
+                                  timeout=60)
+            if new_ and not old_.returncode and spec_change_is_bench_only(old_.stdout, new_):
+                bench_ok.append(q)
+    except Exception:  # noqa: BLE001 -- unresolvable: keep the strict verdict
+        bench_ok = []
+    source_diff = [q for q in source_diff if q not in bench_ok]
+    # RELAXING-ONLY RULE ALLOWLIST (ROOT-0040 2026-10-18, owner 10-17 "rules must never delay closure"): a file whose
+    # every change since the gate's version is an allowlisted relaxing rule commit (0dq: clock FAIL -> WARN) keeps the
+    # gate valid, provided the existing gate report meets the relaxed rule (pin-flop spread <= 80 ps at TT; FF when
+    # reported, else left to the routed audit).  Without the gate's clock record the strict verdict stands.
+    relaxed, relax_why = [], None
+    # rule classification applies to tool / flow files only (a kit or RTL edit is a design change: re-gate)
+    rule_files = [q for q in overlay_diff + source_diff
+                  if q in overlay_diff or q.startswith(("tools/", "physical/common_flow/"))]
+    if rule_files and len(rule_files) == len(overlay_diff) + len(source_diff) and not missing and not frozen_recovery:
+        try:
+            HO_ = overlay_module()
+            heads = [HO_.main_head(root), commit]
+            by = {e["path"]: e for e in entries}
+            rows = []
+            for q in rule_files:
+                if q in overlay_diff and route_overlay:
+                    now = HO_.blob_id(effective[q]) if q in effective else None
+                elif q in overlay_diff:
+                    now = blob_hash((daemon / q).read_bytes())
+                elif tree is not None:
+                    now = tree.get(q)
+                else:
+                    now = blob_hash((root / q).read_bytes())
+                if hasattr(HO_, "rule_span"):
+                    ok_, crow, why_ = HO_.rule_span(root, q, by[q]["git_blob"], now, heads, tile=tile)
+                else:                                                   # pre-GATE-FRICTION daemon helper_overlay
+                    ok_, chain = HO_.relaxing_only_span(root, q, by[q]["git_blob"], now, heads)
+                    crow = [dict(commit=c, kind="relaxing", **HO_.RELAXING_RULE_COMMITS.get(c, {})) for c in chain]
+                    why_ = f"{q}: commit {chain[-1][:9]} is not a relaxing-only rule change" if chain else None
+                if not ok_:
+                    rows = None
+                    relax_why = why_
+                    break
+                rows.append(dict(path=q, gate_git_blob=by[q]["git_blob"], current_git_blob=now,
+                                 commits=[r["commit"] for r in crow],
+                                 classes=[dict(commit=r["commit"], kind=r["kind"], source=r.get("source"),
+                                               rule=r.get("rule"), requires=r.get("requires"), applies=r.get("applies"))
+                                          for r in crow],
+                                 rules=sorted({str(r.get("rule")) for r in crow if r.get("rule")}),
+                                 needs=sorted({r["requires"] for r in crow if r.get("requires")
+                                               and (r["kind"] == "relaxing" or r.get("applies"))})))
+            if rows:
+                needs = sorted({n for r in rows for n in r.pop("needs")})
+                req_ok, req = relaxed_rule_requirement(needs, clock, gate, root=root)
+                if req_ok:
+                    relaxed = rows
+                    binding["relaxing_rule_allowlist"] = dict(
+                        schema="opentallas.ref_tile.relaxing_rule_allowlist.v1", files=rows, requirements=req,
+                        commits=sorted({c for r in rows for c in r["commits"]}), origin_main=heads[0])
+                else:
+                    relax_why = "relaxing-rule allowlist not applicable: " + "; ".join(
+                        x["text"] for x in req if not x["ok"])
+        except Exception as ex:  # noqa: BLE001 -- unresolvable: keep the strict verdict
+            relaxed, relax_why = [], f"relaxing-rule allowlist unresolvable: {type(ex).__name__}: {ex}"[:200]
+    relaxed_paths = {r["path"] for r in relaxed}
+    overlay_diff = [q for q in overlay_diff if q not in relaxed_paths]
+    source_diff = [q for q in source_diff if q not in relaxed_paths]
     if overlay_diff or source_diff or missing:
         parts = ([f"gate-executed daemon overlay changed: {name(overlay_diff)}"] if overlay_diff else []) + \
                 ([f"route source differs from staged snapshot: {name(source_diff)}"] if source_diff else []) + \
                 ([f"staged source missing: {name(missing)}"] if missing else [])
         return False, "; ".join(parts) + (f" (gate-consumed; {len(unconsumed)} unconsumed difference(s) not counted)"
-                                          if unconsumed else "")
+                                          if unconsumed else "") + (f" [{relax_why}]" if relax_why else "")
     notes = [f"{len(unconsumed)} staged file(s) the gate did not consume differ (reported, not refused): {name(unconsumed)}"] \
         if unconsumed else []
     if lint_ok:
         notes.append(f"lint-only drift tolerated (earlier main revision): {name(lint_ok)}")
+    if bench_ok:
+        notes.append(f"bench-only kit spec edit tolerated (bench list): {name(bench_ok)}")
+    if relaxed:
+        rec = binding["relaxing_rule_allowlist"]
+        notes.append("RELAXING-RULE ALLOWLIST used: " + ", ".join(
+            f"{r['path']} {r['gate_git_blob'][:9]}->{str(r['current_git_blob'])[:9]} via "
+            + "+".join(c[:9] for c in r["commits"]) + (f" ({'/'.join(r['rules'])})" if r["rules"] else "")
+            for r in relaxed) + "; " + "; ".join(x["text"] for x in rec["requirements"]))
     if route_overlay and not frozen_recovery and binding.get("route_overlay_plan"):
         drift = route_only_drift(binding["route_overlay_plan"], current, entries)
         if drift:
@@ -303,6 +395,165 @@ def validate(binding, root, daemon, commit=None, route_overlay=True, frozen_reco
             else "gate-consumed source and gate-executed overlays match" if consumed is not None
             else "exact staged source and gate-executed overlays match" if notes else "exact staged source and daemon overlay match")
     return True, "; ".join([head] + notes)
+
+
+def spec_change_is_bench_only(old, new):
+    """True when two kit spec.json / job.json versions differ only in their bench lists: job.json stages.bench
+    (also under "spec"), kit spec.json job.benches."""
+    def norm(data):
+        d = json.loads(data)
+        for x in (d, d.get("spec") if isinstance(d, dict) else None):
+            if isinstance(x, dict) and isinstance(x.get("stages"), dict):
+                x["stages"].pop("bench", None)
+        if isinstance(d, dict) and isinstance(d.get("job"), dict):
+            d["job"].pop("benches", None)
+        return d
+    try:
+        return norm(old) == norm(new)
+    except (ValueError, TypeError, AttributeError):
+        return False
+
+
+CLOCK_PIN_SPREAD_MAX_PS = 80.0     # textbook_lint.CLK_SPREAD_MAX_PS (owner 10-17 0dq)
+
+
+def gate_pin_spreads(clock):
+    """{corner: (spread_ps, basis)} from a gate clock record: "<c>_pin_spread_ps" when recorded, else the boundary
+    (pin-flop) min..max of every measured domain that reports one (pre-0dq records), else the all-register leaf
+    spread "<c>_spread_ps" (conservative)."""
+    out = {}
+    doms = [d for d in (clock or {}).get("clock_measurements") or [] if isinstance(d, dict)]
+    for c in ("tt", "ff"):
+        v = (clock or {}).get(f"{c}_pin_spread_ps")
+        if isinstance(v, (int, float)):
+            out[c] = (float(v), "pin-flop")
+            continue
+        bds = [((d.get(c) or {}).get("boundary") or {}) for d in doms]
+        bds = [b for b in bds if b.get("min") is not None and b.get("max") is not None]
+        if bds:
+            out[c] = (round(max(float(b["max"]) - float(b["min"]) for b in bds), 1), "pin-flop")
+        elif isinstance((clock or {}).get(f"{c}_spread_ps"), (int, float)):
+            out[c] = (float(clock[f"{c}_spread_ps"]), "leaf")
+    return out
+
+
+def child_flop_reference_macros(root, kit):
+    """ROOT-0615 10-18 (dcd8111e5): the kit's macro views that give ck_insertion a CHILD-FLOP reference R (a views
+    insertion.json beside the lib, or a lib with max_clock_tree_path).  None when the kit.env cannot be read."""
+    import shlex
+    env = Path(root) / "physical" / "ref_tile" / str(kit) / "kit.env"
+    try:
+        text = env.read_text()
+    except OSError:
+        return None
+    m = re.search(r"^MACROS=\((.*)\)\s*$", text, re.M)
+    out = []
+    for stem in shlex.split(m.group(1)) if m else []:
+        p = Path(root) / stem
+        libs = [p.parent / f"{p.name}_{c}.lib" for c in ("tt", "ff")]
+        if (p.parent / "insertion.json").is_file() or any(
+                lib.is_file() and "max_clock_tree_path" in lib.read_text(errors="replace") for lib in libs):
+            out.append(stem)
+    return out
+
+
+def relaxed_rule_requirement(needs, clock, gate=None, root=None):
+    """(ok, [{"requires", "ok", "text", ...}]): the relaxed rules' own conditions, judged from the existing gate report.
+    clock_pin_spread (0dq): pin-flop spread <= 80 ps at TT (required); FF too when reported, else left to the routed
+    native audit.
+    trial_grt (ROOT-0330-GRT 10-18, the gate runs a trial global route for EVERY kit): a gate result without a
+    "trial_route" record predates the rule and stays valid (its verdict already holds the parent / cluster trial, which
+    is unchanged); a gate that ran it must show overflow 0.  Without the gate result the strict refusal stands."""
+    rows = []
+    for n in needs:
+        if n == "trial_grt":
+            tr = gate.get("trial_route") if isinstance(gate, dict) else None
+            if not isinstance(gate, dict):
+                rows.append(dict(requires=n, ok=False, text="trial_grt: no gate result to judge"))
+            elif tr is None:
+                rows.append(dict(requires=n, ok=True, predates=True,
+                                 text="trial_grt: gate predates the every-kit trial GRT (no trial_route record): kept"))
+            else:
+                ovf = tr.get("overflow") if isinstance(tr, dict) else None
+                rows.append(dict(requires=n, ok=ovf == 0, overflow=ovf,
+                                 text=f"trial_grt: gate trial GRT overflow {ovf}" + ("" if ovf == 0 else " (FAIL)")))
+            continue
+        if n == "reset_landing":
+            # ROOT-RST 10-19: the gate FAILS a reset input reaching > rst_land_max sinks without a landing register.  A
+            # gate result without a "reset_landing" record predates the rule and stays valid (a fresh gate of the same
+            # kit judges it); a gate that ran it must show no unlanded reset port (or the kit's recorded waiver).
+            rl = gate.get("reset_landing") if isinstance(gate, dict) else None
+            if not isinstance(gate, dict):
+                rows.append(dict(requires=n, ok=False, text="reset_landing: no gate result to judge"))
+            elif rl is None:
+                rows.append(dict(requires=n, ok=True, predates=True,
+                                 text="reset_landing: gate predates the reset-landing rule (no reset_landing record): kept"))
+            else:
+                ok = bool(rl.get("ok")) if isinstance(rl, dict) else False
+                over = (rl.get("over") if isinstance(rl, dict) else None) or []
+                rows.append(dict(requires=n, ok=ok, over=over,
+                                 text="reset_landing: " + ("every reset input landed" if ok and not over else
+                                                           "waived by the kit" if ok else
+                                                           f"unlanded reset input(s) {over[:4]} (FAIL)")))
+            continue
+        if n == "child_flop_basis":
+            bases = [(clock or {}).get(f"{c}_pin_spread_basis") for c in ("tt", "ff")] if isinstance(clock, dict) else []
+            if bases and all(b in ("child_flop", "child_pair") for b in bases):
+                rows.append(dict(requires=n, ok=True, text="child_flop_basis: wires-only parent judged on with_child_flops "
+                                                         f"({'/'.join(bases)}): dcd8111e5 does not change it"))
+                continue
+            refs = child_flop_reference_macros(root or Path(__file__).resolve().parents[2],
+                                               (gate or {}).get("kit") if isinstance(gate, dict) else None)
+            if refs is None:
+                rows.append(dict(requires=n, ok=False, text="child_flop_basis: kit.env unreadable (re-gate)"))
+            else:
+                rows.append(dict(requires=n, ok=not refs, macros=refs,
+                                 text="child_flop_basis: " + ("no macro with an insertion reference: R = 0, verdict "
+                                                              "unchanged" if not refs else
+                                                              f"{len(refs)} referenced macro(s) {refs[:3]}: re-gate")))
+            continue
+        if n == "landed_cluster_roots":
+            # PL-GATE 10-18: per-root child-flop judgement + the unlanded cross-region FAIL apply only to a cluster kit
+            # with children and clock "multiple_cts_roots"; every other gate is unchanged by that commit
+            ck = clock if isinstance(clock, dict) else {}
+            if ck.get("declared_clock") != "multiple_cts_roots" or "landed_child_links" in ck:
+                rows.append(dict(requires=n, ok=True, text="landed_cluster_roots: not a multi-root cluster gate, or "
+                                                          "already judged per root: unchanged"))
+                continue
+            kit = (gate or {}).get("kit") if isinstance(gate, dict) else None
+            try:
+                sp = json.loads((Path(root or Path(__file__).resolve().parents[2]) / "physical" / "ref_tile" / str(kit)
+                                 / "spec.json").read_text())
+                ok = not (sp.get("kind") == "cluster" and sp.get("children"))
+            except (OSError, ValueError, AttributeError):
+                ok = False
+            rows.append(dict(requires=n, ok=ok, text="landed_cluster_roots: " + (
+                "multi-root kit without hard children: unchanged" if ok else
+                "multi-root cluster gated before the per-root child-flop rule (or spec unreadable): re-gate")))
+            continue
+        if n == "clock_pin_spread":
+            sp = gate_pin_spreads(clock if isinstance(clock, dict) else {})
+            tt, ff = sp.get("tt"), sp.get("ff")
+            ok = tt is not None and tt[0] <= CLOCK_PIN_SPREAD_MAX_PS and (ff is None or ff[0] <= CLOCK_PIN_SPREAD_MAX_PS)
+            waived = ""
+            w = clock.get("clock_rule_waiver") if isinstance(clock, dict) else None
+            if not ok and tt is not None and isinstance(w, dict):
+                # S81-DEC5 10-18: the kit job's recorded per-pair waiver (HANDOFF 0ga), the same rule as the gate's
+                import sys
+                sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+                import textbook_lint as TL
+                ok, note, _ = TL.clock_waiver_eval(clock, w)
+                waived = f" -- WAIVED: {note}" if ok else ""
+            text = ("0dq: no TT spread in the gate report" if tt is None else
+                    f"0dq: TT {tt[1]} spread {tt[0]:.1f} ps" + (f", FF {ff[1]} spread {ff[0]:.1f} ps" if ff else
+                                                               ", FF not reported (left to the routed audit)")
+                    + (waived if waived else f" <= {CLOCK_PIN_SPREAD_MAX_PS:.0f}" if ok
+                       else f" (limit {CLOCK_PIN_SPREAD_MAX_PS:.0f}: FAIL)"))
+            rows.append(dict(requires=n, ok=ok, text=text, tt=tt and list(tt), ff=ff and list(ff),
+                             ff_left_to_routed_audit=ff is None))
+        else:
+            rows.append(dict(requires=n, ok=False, text=f"unknown relaxed-rule requirement {n!r}"))
+    return all(r["ok"] for r in rows), rows
 
 
 def gate_overlay_paths(binding):

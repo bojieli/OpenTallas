@@ -7,7 +7,7 @@ import sys
 import tempfile
 import unittest
 
-from v16_fetch import REMOTE_PY, check_direct_master, check_sources, check_etm_signature, check_contract_entry
+from v16_fetch import REMOTE_PY, check_direct_master, check_sources, check_etm_signature, check_contract_entry, expected_memory_macros, check_mapped_memory_resolution
 
 
 class FetchAdmission(unittest.TestCase):
@@ -33,6 +33,38 @@ class FetchAdmission(unittest.TestCase):
                 check_contract_entry(entry, changed)
         with self.assertRaises(ValueError):
             check_contract_entry(dict(entry, params={'N': 4}), contract)
+
+    def test_actual_byte_identical_sram_simulation_is_not_a_mapped_macro(self):
+        path = 'rtl/model/ot_hbm_hc_operand_sram_sim.sv'
+        root = Path(__file__).resolve().parents[2]
+        blob = subprocess.check_output(['git', '-C', str(root), 'show', 'HEAD:' + path])
+        meta = dict(actual_top='parameter_wrapper', actual_macro_declarations=[], actual_library_reads=[],
+                    source_file_sha256={path: hashlib.sha256(blob).hexdigest()})
+        # This is the actual failure class: byte checks pass, but the SRAM's
+        # selected module comes from a simulation array instead of its physical BB.
+        blobs = check_sources(meta, 'HEAD', '.')
+        with self.assertRaisesRegex(ValueError, 'Mapped memory .* resolves to'):
+            check_mapped_memory_resolution(meta, blobs, expected_memory_macros('HEAD'))
+
+    def test_real_mapped_sram_requires_library_read_and_all_corner_models(self):
+        module = 'ot_sram_1r1w_128x256_m1_r2c2'
+        catalog = expected_memory_macros('HEAD')
+        path = catalog[module]; stem = path[:-len('_bb.v')]
+        paths = [path] + [stem + ext for ext in ('.lef', '_tt.lib', '_ff.lib')]
+        root = Path(__file__).resolve().parents[2]
+        blobs = {p: subprocess.check_output(['git', '-C', str(root), 'show', 'HEAD:' + p]) for p in paths}
+        meta = dict(actual_top='parameter_wrapper',
+                    actual_macro_declarations=[dict(module=module, file=path)], actual_library_reads=[path],
+                    source_file_sha256={p: hashlib.sha256(b).hexdigest() for p, b in blobs.items()})
+        checked = check_sources(meta, 'HEAD', '.')
+        self.assertEqual(check_mapped_memory_resolution(meta, checked, catalog), {module: path})
+        for field, value in [('actual_macro_declarations', []), ('actual_library_reads', [])]:
+            with self.subTest(field=field), self.assertRaisesRegex(ValueError, 'physical blackbox library'):
+                check_mapped_memory_resolution(dict(meta, **{field: value}), checked, catalog)
+        for missing in paths[1:]:
+            broken = copy.deepcopy(meta); del broken['source_file_sha256'][missing]
+            with self.subTest(missing=missing), self.assertRaisesRegex(ValueError, 'LEF/TT/FF'):
+                check_mapped_memory_resolution(broken, checked, catalog)
 
     def test_actual_liberty_cell_and_ports_are_checked(self):
         with tempfile.TemporaryDirectory() as tmp:

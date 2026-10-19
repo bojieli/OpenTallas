@@ -1,0 +1,29 @@
+{
+  "reviewer": "S81U-SEQ6 for lead S81-UNITS3 (decision a, 10-17 ~21:55); not a critical tile",
+  "time": "2026-10-17T22:10-07:00",
+  "gate_commit": "3733d51e515c6107375edaaac089a7ea9ee3b0b1",
+  "gate_generated": "2026-10-17T20:36:48-0700",
+  "verdict": "APPROVED",
+  "accepted_clock": {
+    "tt_insertion_ps": "240.2..338.2",
+    "tt_spread_ps": 98.0,
+    "sinks_one_root": 3238,
+    "reason": "Lead decision (a), closure first: the tile has 3.2k flops (one root, far under the 15k-sink rule) and three SRAM macros. Gate9 timing meets (reg->reg +67.5 ps, hold +16.8 ps). 12 CTS / pin variants of the same RTL (SEQ5 sweep: clock-pin position N/W/E, macro clustering on/off, buffer distance 15/20/40, sink clustering off/levels 2/size 24, balance) all measured spread 87..117 ps: the residual is the one-row N pin-band sink strip (NE vo_n / jn leaves on one fo-16 level-4 net), not a deep tree. Accepted above the 300/80 guidance for this small macro tile; the routed native audit decides bindability."
+  },
+  "native_probe": {
+    "tool": "tools/ref_tile/cts_native_probe.py (CTS placement RC, TT)",
+    "launch_ps": 162.2, "launch_pin": "vo_n[264]",
+    "capture_ps": 92.2, "capture_pin": "vi_n[51]",
+    "launch_over_220": 0, "capture_over_190": 0, "comb_pins": 0,
+    "spread_ps": 98.0,
+    "note": "diagnostic_pass false ONLY on spread 98 > 80 (the accepted spread above); pin rules hold: flop-first inputs, flop-driven outputs, rst_n through u_rr ot_rst_relay"
+  },
+  "checklist": {
+    "lattice": "three SRAMs stacked in one column at x 108.0, y 23.76 / 86.4 / 149.04 (21.6-um channels; 21.6 half-lattice x offset so the clk pins face the W register mass) - accepted with the gate9 layout",
+    "std_cell_band": "one std-cell region: W band x 0..108 plus the macro channels; no split bands",
+    "pin_spread": "full faces: S 1,296 bits = 5.7/um, N 837 bits = 3.7/um (<= 6/um); cw at W end of N",
+    "clock_entry": "ck on N at x 101.5, beside the macro column W edge above the register mass",
+    "shape": "226.8 x 213.84 (square-ish); util 27-28% macro-bound (<= 60%), fill_reason in the spec"
+  },
+  "spec_checks": "pass bench seqhost_exact (min_count regex '^SEQHOST seed=1 .* cmds N/S/G/J=72/72/72/72 ' printed by run_s1.log); 4 mutant benches expect=fail with committed fail_witness results/rtl/s81_dv_unit_1017/seqhost/run_mut{1..4}.log (each contains '^SEQHOST FAIL$')"
+}

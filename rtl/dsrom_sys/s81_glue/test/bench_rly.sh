@@ -5,6 +5,8 @@
 # RSREG=1 (5th argument; masters built with ot_s81_rly #(.RSREG(1))): the first ck edge after every rs release is the reset
 # pin register's release edge, so the data register stays cleared on it (expected word 0; the first release edge falls
 # before the stream).
+# OT_RLY_EXTRA_SRC (env, optional): extra source files defining masters outside s81_glue (e.g. the S81-DV frame's
+# exact-width relays in rtl/dsrom_sys/s81_dv/frame/dsfd_rly_frame_exact.sv).
 # rsmut: the RSREG master on the OT_S81_RLY_RSMUT build (reset pin register bypassed) -- must FAIL.
 set -u
 mode=$1; M=$2; W=$3; O=$4; RSR=${5:-0}
@@ -33,6 +35,6 @@ endmodule
 EOT
 DEF=""; [ "$mode" = mut ] && DEF="-DOT_S81_RLY_MUT"; [ "$mode" = rsmut ] && DEF="-DOT_S81_RLY_RSMUT"
 verilator --binary --timing -Wno-fatal -Wno-WIDTH $DEF --top-module tb -Mdir "$O/obj" -o tb \
-  "$O/tb.sv" rtl/dsrom_sys/s81_glue/ot_s81_rly.sv rtl/dsrom_sys/s81_glue/dsfd_rly_masters*.sv > "$O/build.log" 2>&1 || { echo BUILD_FAILED; tail -5 "$O/build.log"; exit 2; }
+  "$O/tb.sv" rtl/dsrom_sys/s81_glue/ot_s81_rly.sv rtl/dsrom_sys/s81_glue/dsfd_rly_masters*.sv ${OT_RLY_EXTRA_SRC:-} > "$O/build.log" 2>&1 || { echo BUILD_FAILED; tail -5 "$O/build.log"; exit 2; }
 "$O/obj/tb" | tee "$O/bench.log" | grep RLY_BENCH
 grep -q 'RLY_BENCH PASS' "$O/bench.log"

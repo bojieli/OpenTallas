@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hgi_xp_aq_bypass13",
+ "enable": false,
+ "reason": "RTL registers every pin: x[263:0] lands in sd[0], q/e/vo/fault/y are flop Q; x[1023:264] and fp4 are unused data bits (fp4 only feeds the fault flop) kept for port identity with ot_hbm_xp_aq_tree13"
+}

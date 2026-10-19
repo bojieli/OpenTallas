@@ -1,0 +1,6 @@
+LEP_STATS sent A->B 1000 recv 1000, B->A 1000 recv 1000, mismatches 0, fault_main 0, overflow_fault 1, lane_flt A 000000 B 000000
+PASS lep: 1000 + 1000 beats bit-exact in order across 2 x 2 UCIe lanes (lane skew 7 PMA cycles, SRAM landing wrapped); overflow flagged
+- rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_lep.sv:105: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 12us; walltime 0.232 s; speed 53.094 us/s
+- Verilator: cpu 0.232 s on 1 threads; allocated 9 MB

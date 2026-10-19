@@ -1,0 +1,38 @@
+{
+ "schema": "opentallas.q_die10.v1", "lane": "Q-DIE10", "date": "2026-10-18",
+ "dv2f12": {
+  "chain": "ot-epyc4 /srv/opentallas-scratch/claude/qwen-split-compute/dv2f12; job Terminated (exit 143) right after STA tt at 20:02 -> STA ff/ss never ran",
+  "repeaters": "PASS 166,246 (BUFx6f 102,876 / BUFx8 63,370), skip_nets 72, skip_nets_modified 0, on_obstacle 26,394, over_reach(425) 917 nets, longest 793.8 um (sys_face/emb_word_*), post_slew 124 (rly_dvw_dd_wo_25/a[*] 342-374 ps), post-GRT slew/cap 0",
+  "grt": {"overflow_total": 72022, "per_layer": {"M4": 28609, "M5": 35991, "M6": 2335, "M7": 4861, "M8": 226, "M9": 0},
+          "usage_pct": 2.44, "class": "ALL sampled overflow (20k entries) in capacity-0 GCells at y 10,800-11,040 = bottom 240 um of the slice row dvs_W*/E* (2375.976 x 2591.976, OBS M1-M8 over the full footprint, 3,095 M5 pins on the S face) -> pin access into a fully obstructed abstract; fix = slice abstract OBS pull-back / pin-access strip on the S face (or the 43.2 channel carrying the S-face nets)"},
+  "sta_tt": {"wns_ps": -348.8, "tns_ps": -1272389.6, "violators": 5694,
+   "classes": [
+    {"class": "io_collective <-> SerDes/UCIe PHY + rly_serdes* (ucie 1000 ps -> stream 833.3 ps, 166.7-ps closest-edge window)", "violators": 5681, "worst": -348.8,
+     "cause": "io_collective is an ASSUMED stand-in (qfd_elements lib relates every input, incl. serdes_rx/shared_rx/serdes_up, to clk[0]); the real RTL captures shared_rx in the six_five gearbox on fdi_rx_ck and serdes_rx in qfd_coll_static_face on rx_wck=face_ck, which native_static_io_bind binds to n_clk_coll for ALL 55 face_ck bits -> SerDes faces are a real ucie->stream crossing with no PHY-side clock. Owner QC/collective: bind PHY-side face clocks (tx_rck/rx_wck) to the PHY clock and give the stand-in per-port related clocks (or harden the collective)."},
+    {"class": "rstseq_rom -> rstt_rst_io (reset relay)", "violators": 1, "worst": -221.5},
+    {"class": "rstt_rst_io -> io_collective.rst_n", "violators": 1, "worst": -146.6},
+    {"class": "rly_rst_d2d -> sys_face.rst_n", "violators": 1, "worst": -24.3},
+    {"class": "sys_face -> rly_sf_emb_word_{data,v,token} (over-reach 720-794 um routed: emb pins on the rs1 view W face, relay beside embed_prov below)", "violators": 11, "worst": -19.7,
+     "fix": "sys_face rs2 kit puts emb_* on the S face facing embed_prov; needs the rs2 view closed (critical tile, coordinator review) before the die can bind it"}
+   ],
+   "note": "die clocks are IDEAL (propagated network delay 0, INSERTION_COMPENSATED source latency); real views 5 masters (d2d_static, embedding provider, rstseq, rstsync, sys_face) + 3 PHY ETMs, everything else assumed"}
+ },
+ "landing_contract": {
+  "forwarded_clock_lanes": 0, "relays": 496, "relay_master": "qfd_rly_<W> (plain ck, no ck_o)",
+  "finding": "the Qwen compute die has NO forwarded-clock lanes: every relay is clocked by a qfd_clkrx regional root (n_clk_r*, clk_coll, clk_ucie, clk_d2d). LANDING-CONTRACT rules L1-L7 (hop-0 ICG epoch, ring, MCP -setup E -hold D-1, price N+2+E) apply to zero lanes, so dv2f13 carries none. Instead the die relies on ideal (zero-skew) regional roots spanning up to 28 mm (r38 28.3x7.9 mm, r1 2.3x15.8, ucie 1.7x16.3, coll 1.9x12.5; r55 drives 160 relays) and on cross-root hops (e.g. sys_face ck=clk_d2d -> relay r55 -> embed_prov r54) timed as same-clock. Under neighbour-relative clocking (owner 10-16) this needs a DECISION: convert inter-region relay lanes to forwarded-clock half-cycle lanes (qfd_rlyf, inverting ck_o) + landings (GEN/relay RTL/die-STA work, new lane), or build + time the die regional trees with propagated clocks."
+ },
+ "dv2f13": {"source": "exact git tree c309799ea (claude/q-die10-1017 = q-stub 6408ed64b + origin/main): staged as hardlinks of dv2f12/src with every differing/missing in-scope file (13,900, 1.41 GB) replaced from the commit and 114 stale extras removed",
+            "plan": "dv2f12 flags unchanged (OT_SPLIT_DV_SLICE_GAP_UM 43.2, OT_HOLD_BUDGET die, OT_DIE_REPAIR 1)",
+            "launch": "ot-run --mem 240 --priority die all.sh (GEN -> chain: bind, PDN, repeaters, GRT, STA tt/ff/ss), log ~/scratch/q-die10/all_dv2f13.log"},
+ "c_b16_cts": {"rule": "owner 0dp/0dq: child-flop spread <=80 ps at TT AND FF",
+   "verdict": "FAIL both variants (CTS done; gates still in post-CTS GRT)",
+   "diagt_tritoncts_htree": "flop spread TT 850-1168 ps, FF 740-1021 ps; flop insertion 1197-2436 TT",
+   "diag_spine": "flop spread TT 152-175 ps, FF 367-558 ps; flop insertion ~2840-3820 TT",
+   "method": "ck.json clock_measurements per root: macro clock-pin arrival + child measured insertion [min,max] (A0 per_pin nk, stations 94-114 TT / 69-89 FF) and soft-flop min/max; c_b16_cts_flop_spread.json",
+   "next": "fallback (a) centre-fed regions / smaller regions per qwen-cluster-clock-option-b (owner condition 1 fails)"},
+ "sys_face_rs2_gate": {"verdict": "WARN (util only)", "pngs": ["physical/ref_tile/qfd_sys_face/gate_layout/floorplan.png", "physical/ref_tile/qfd_sys_face/gate_layout/density.png"],
+   "outline": "302.4 x 216 (exact closed-view slot, 1.4:1)", "util": 0.12, "rom": "ot_rom_4096x72_m8 at (190.08, 129.6): y on the 43.2 lattice, x = 4.4 x 43.2 OFF-lattice",
+   "std_band": "one band (whole core); register mass centred ~(160,100) um, pin regs ring the faces", "pins": "2652 on all four faces (N 36 buses, W 22, S 20 incl. emb_* + emb_prov_fault, E 5), pin_geometry PASS, partial-face clusters on W/E",
+   "clock": "ck on the N face near x~137, ~100 um from the register mass", "clock_tt": "insertion 381.8, spread 94.5 (>80)", "clock_ff": "spread 96.2 (>80)", "clock_ss": "spread 88.6",
+   "timing": "reg->reg +64.2 ps, in->reg +335.2, hold +5.0 ps (TT placement RC)", "critical": "no REVIEW / no submit; coordinator review"}
+}

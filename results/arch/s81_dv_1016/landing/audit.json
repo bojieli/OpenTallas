@@ -1,0 +1,20 @@
+{
+ "schema": "opentallas.s81_land.audit.v1",
+ "question": "does every S81-DV block input fed by a forwarded-clock lane already capture on the lane clock and hand off into the block root at a fixed, compiler-known latency (HANDOFF 0dm)?",
+ "refs": {"die": "claude/s81dv-p4i-1017 c7b541b7e (p4j bind r3)", "slice": "ot_s81sl_slice @57bc4ad63", "frame": "col_h9/h10/MX @99991b051", "cfifo": "dsfd_cfifo_crs (rtl/dsrom_sys/s81_die_bind/glue) + ot_s81_static_column_ingress_hr + ot_s81_static_lane_cross_hr"},
+ "blocks": [
+  {"block": "frame col_h9 / col_h10 / col_h9_MX", "inputs": "x[1103:0] = 4 x 276-b lanes, xk[3:0] lane clocks", "landing": "PRESENT",
+   "how": "dsfd_cfifo_crs: xd captured on xf = xk[1], xd2 on xf2 = xk[2] (ot_s81_static_column_ingress_hr: pin register on the forwarded clock, 8-slot ring OFFSET 4, half-cycle read onto cr); write epoch = in-band marker (the slice's released reset rides the x word)",
+   "gaps": ["lanes 0 and 3 are captured on the NEIGHBOUR lane's clock (xk[1] / xk[2]); xk[0] / xk[3] clock only the xo forward stations: the lane0->xk[1] and lane3->xk[2] arrival hops are cross-lane hops the die STA must time (parallel chains of one bundle, so the skew is small but not zero)",
+            "read epoch = a 2-flop sample of the marker on cr (epoch_reset): the column epoch therefore follows the lane phase; it is fixed only while the marker edge stays out of the sampling aperture at TT and FF. Check pin[0] -> epoch_reset[0] with the window rule, or move the read epoch to the regional reset as in ot_s81_land (LANDING-CONTRACT 4)"],
+   "pilot": "stand-in captured x on root clk = model gap; landing.sdc models the window (E per link)"},
+  {"block": "slice ot_s81sl_slice (dsdv_slice, dsdv_slice_lep)", "inputs": "ri_w / ri_e (xring, 4 x 276 each), vi (xtier 276), bi (attn P.V, 4 x 276, HB=1), rt (8 x 70 frame returns)", "landing": "MISSING",
+   "how": "no clock input exists: rt goes straight into ot_s81sl_rly #(D=DR) on clk; ri/vi/bi go straight into ot_s81sl_xg / xr on clk",
+   "fix": "dsfd_dvland_276 on each ri_w/ri_e/vi/bi lane and dsfd_dvland_70 on each rt lane, abutted to the slice faces (or the same ring inside the slice behind a per-lane ck_in pin: S81-SLICE choice)"},
+  {"block": "dsfd_ctrl_rg2", "inputs": "rq (682 b)", "landing": "MISSING", "how": "rq captured on clk (bind clk = PHY region root)", "fix": "dsfd_dvland_682 at the rq face"},
+  {"block": "dsdv_svc_rs (rsv_*)", "inputs": "hrd (562), q / pv / tr lanes", "landing": "OWED (unbound, S81U-1/SVC)", "fix": "dsfd_dvland_562 / _276 / _512 per input lane; the rsv P.V tree is otherwise static already"},
+  {"block": "gunit, seq_host, mix4_half, bk_selector / bk_collector, slice_lep link endpoint (lt_lk)", "inputs": "tv lanes 276, lt_lk 512", "landing": "OWED (unbound or hub-era RTL)", "fix": "dsfd_dvland_<W> per input lane in each owner's binding"},
+  {"block": "relay stations dsfd_dvrly_<W>_<dir>", "inputs": "-", "landing": "n/a", "how": "pure F1 stations (capture on own ck, forward ck_o); the landing is NOT inside them (each station is relay-to-relay: all hops meet setup in the pilot)"}
+ ],
+ "neighbour_hops_without_landing": "0-stage links (246 of 878 in p4j): source and receiver on their own regional roots, no forwarded clock -> plain neighbour hop (die STA as is, ~80 ps neighbour skew)"
+}

@@ -1,0 +1,124 @@
+{
+  "schema": "opentallas.astk_er_distributed_ages.v1",
+  "scope": "component_native_EP_SRAM; die route and integration unqualified",
+  "source": "rtl/qwen_sys/split_20261014/qkd_astk_er_chain_st.sv",
+  "owner_source": "rtl/qwen_sys/split_20261014/qkd_astk_er_owner_st.sv",
+  "owners": 8,
+  "ports": 4,
+  "request_bits": 48,
+  "response_bits_including_fault": 305,
+  "local_EP_ERL": 3,
+  "local_read_to_as_o_edges": 2,
+  "local_esi_capture_to_response_edges": 2,
+  "local_branch_edges": 7,
+  "forward_request_edges": 2,
+  "forward_response_edges": 2,
+  "total_latency_formula": "7 + 7 * (2 + RL)",
+  "production_RL": 3,
+  "production_latency_edges": 42,
+  "immutable_previous_centralized_latency_edges": 7,
+  "latency_increase_edges": 35,
+  "mode": "fixed compiler schedule; no ready, credits, dynamic arbitration or stall",
+  "throughput": {
+    "reads": 2048,
+    "issue_edges": 512,
+    "reads_per_edge": 4,
+    "owner_conflict_rule": "at most one lane targets each owner in any issue cycle",
+    "actual_EP_instances": 8,
+    "actual_e_SRAM_macros": 32
+  },
+  "sweeps": [
+    {
+      "RL": 1,
+      "latency_edges": 28,
+      "actual_reads": 2048,
+      "verdict": "PASS"
+    },
+    {
+      "RL": 2,
+      "latency_edges": 35,
+      "actual_reads": 2048,
+      "verdict": "PASS"
+    },
+    {
+      "RL": 3,
+      "latency_edges": 42,
+      "actual_reads": 2048,
+      "verdict": "PASS"
+    }
+  ],
+  "production_owner_calendar": [
+    {
+      "owner": 0,
+      "read_pin_offset": 0,
+      "aso_EP_request_pin_offset": 2,
+      "esi_EP_data_pin_offset": 5,
+      "local_response_pin_offset": 7,
+      "remaining_return_forwarding_edges": 35,
+      "final_response_pin_offset": 42
+    },
+    {
+      "owner": 1,
+      "read_pin_offset": 5,
+      "aso_EP_request_pin_offset": 7,
+      "esi_EP_data_pin_offset": 10,
+      "local_response_pin_offset": 12,
+      "remaining_return_forwarding_edges": 30,
+      "final_response_pin_offset": 42
+    },
+    {
+      "owner": 2,
+      "read_pin_offset": 10,
+      "aso_EP_request_pin_offset": 12,
+      "esi_EP_data_pin_offset": 15,
+      "local_response_pin_offset": 17,
+      "remaining_return_forwarding_edges": 25,
+      "final_response_pin_offset": 42
+    },
+    {
+      "owner": 3,
+      "read_pin_offset": 15,
+      "aso_EP_request_pin_offset": 17,
+      "esi_EP_data_pin_offset": 20,
+      "local_response_pin_offset": 22,
+      "remaining_return_forwarding_edges": 20,
+      "final_response_pin_offset": 42
+    },
+    {
+      "owner": 4,
+      "read_pin_offset": 20,
+      "aso_EP_request_pin_offset": 22,
+      "esi_EP_data_pin_offset": 25,
+      "local_response_pin_offset": 27,
+      "remaining_return_forwarding_edges": 15,
+      "final_response_pin_offset": 42
+    },
+    {
+      "owner": 5,
+      "read_pin_offset": 25,
+      "aso_EP_request_pin_offset": 27,
+      "esi_EP_data_pin_offset": 30,
+      "local_response_pin_offset": 32,
+      "remaining_return_forwarding_edges": 10,
+      "final_response_pin_offset": 42
+    },
+    {
+      "owner": 6,
+      "read_pin_offset": 30,
+      "aso_EP_request_pin_offset": 32,
+      "esi_EP_data_pin_offset": 35,
+      "local_response_pin_offset": 37,
+      "remaining_return_forwarding_edges": 5,
+      "final_response_pin_offset": 42
+    },
+    {
+      "owner": 7,
+      "read_pin_offset": 35,
+      "aso_EP_request_pin_offset": 37,
+      "esi_EP_data_pin_offset": 40,
+      "local_response_pin_offset": 42,
+      "remaining_return_forwarding_edges": 0,
+      "final_response_pin_offset": 42
+    }
+  ]
+}

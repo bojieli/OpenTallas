@@ -1,0 +1,1918 @@
+{
+ "schema": "opentallas.qwen_kv.kvjg_gap_list.v1",
+ "die": {
+  "summary": {
+   "masters": 43,
+   "instances": 31281,
+   "unbound_masters": 0,
+   "stub_masters": 0,
+   "ambiguous_masters": 0,
+   "port_not_in_rtl": 0,
+   "width_mismatch": 0,
+   "input_unconnected": 21,
+   "input_tied": 0,
+   "unparsed_connections": 0,
+   "duplicate_port_connections": 0,
+   "undriven_net_bits": 1086,
+   "multi_driven_net_bits": 0,
+   "top_assigns": 0,
+   "params_not_in_rtl": 0,
+   "strap_ports": 23,
+   "pad_bits": 44508
+  },
+  "die_sha256": "891b51e647e82e64d7de8a6ef8c0102043838681889a82c8e46e64948a2d6f34",
+  "input_unconnected": [
+   {
+    "master": "qkd_d2d_static",
+    "port": "att_tx_payload",
+    "instances": 1,
+    "producer": "attention_programme tx_valid/tx_payload (template join exists); attention control tile = programme + qkd_attn_cal_gen + qkd_attn_service_root",
+    "owner": "KVJ-B + KVJ-G2"
+   },
+   {
+    "master": "qkd_d2d_static",
+    "port": "att_tx_v",
+    "instances": 1,
+    "producer": "attention_programme tx_valid/tx_payload (template join exists); attention control tile = programme + qkd_attn_cal_gen + qkd_attn_service_root",
+    "owner": "KVJ-B + KVJ-G2"
+   },
+   {
+    "master": "qkd_d2d_static",
+    "port": "emb_tx_payload",
+    "instances": 1,
+    "producer": "qkd_embedding_row_tx emb_tx_v/emb_tx_payload (RTL merged, KVJ-C 294d90e06); die role + kit",
+    "owner": "KVJ-C2"
+   },
+   {
+    "master": "qkd_d2d_static",
+    "port": "emb_tx_v",
+    "instances": 1,
+    "producer": "qkd_embedding_row_tx emb_tx_v/emb_tx_payload (RTL merged, KVJ-C 294d90e06); die role + kit",
+    "owner": "KVJ-C2"
+   },
+   {
+    "master": "qkd_d2d_static",
+    "port": "kv_active_local",
+    "instances": 1,
+    "producer": "qkd_kv_ownership_obs kv_active/drained/flush_local (RTL in progress, not pushed)",
+    "owner": "KVJ-F"
+   },
+   {
+    "master": "qkd_d2d_static",
+    "port": "kv_drained_local",
+    "instances": 1,
+    "producer": "qkd_kv_ownership_obs kv_active/drained/flush_local (RTL in progress, not pushed)",
+    "owner": "KVJ-F"
+   },
+   {
+    "master": "qkd_d2d_static",
+    "port": "kv_flush_local",
+    "instances": 1,
+    "producer": "qkd_kv_ownership_obs kv_active/drained/flush_local (RTL in progress, not pushed)",
+    "owner": "KVJ-F"
+   },
+   {
+    "master": "qkd_embgw",
+    "port": "r_ea",
+    "instances": 1,
+    "producer": "none: D2 boot-only gateway qkd_embgw_boot + lnk successor ot_qkvd_split_kvlink_se drop the gq/gr bundles (kv_die.py edit in progress, not pushed)",
+    "owner": "KVJ-C2"
+   },
+   {
+    "master": "qkd_host_pc_slice_die",
+    "port": "ctrl_completion_v",
+    "instances": 128,
+    "producer": "pc_path completion_v/we x128 (static pc_path parent, qkd_static_kv_pc_path_emb); die must instantiate pc_path",
+    "owner": "KVJ-C2 + KVJ-G2"
+   },
+   {
+    "master": "qkd_host_pc_slice_die",
+    "port": "ctrl_completion_we",
+    "instances": 128,
+    "producer": "pc_path completion_v/we x128 (static pc_path parent, qkd_static_kv_pc_path_emb); die must instantiate pc_path",
+    "owner": "KVJ-C2 + KVJ-G2"
+   },
+   {
+    "master": "qkd_host_root_pt",
+    "port": "ctrl_completion_fault",
+    "instances": 1,
+    "producer": "as qkd_host_root_admission.ctrl_completion_fault (pre-KVJ-A die.v)",
+    "owner": "KVJ-F"
+   },
+   {
+    "master": "qkd_pv16_vport",
+    "port": "in0_d",
+    "instances": 16,
+    "producer": "landing slg_<st>_<2k|2k+1> rsp_* (static landing_seg, joined in kv_static.template); die must instantiate the 32 landing segments (row_h3 V response regate)",
+    "owner": "KVJ-F + KVJ-G2"
+   },
+   {
+    "master": "qkd_pv16_vport",
+    "port": "in0_epoch",
+    "instances": 16,
+    "producer": "landing slg_<st>_<2k|2k+1> rsp_* (static landing_seg, joined in kv_static.template); die must instantiate the 32 landing segments (row_h3 V response regate)",
+    "owner": "KVJ-F + KVJ-G2"
+   },
+   {
+    "master": "qkd_pv16_vport",
+    "port": "in0_t",
+    "instances": 16,
+    "producer": "landing slg_<st>_<2k|2k+1> rsp_* (static landing_seg, joined in kv_static.template); die must instantiate the 32 landing segments (row_h3 V response regate)",
+    "owner": "KVJ-F + KVJ-G2"
+   },
+   {
+    "master": "qkd_pv16_vport",
+    "port": "in0_valid",
+    "instances": 16,
+    "producer": "landing slg_<st>_<2k|2k+1> rsp_* (static landing_seg, joined in kv_static.template); die must instantiate the 32 landing segments (row_h3 V response regate)",
+    "owner": "KVJ-F + KVJ-G2"
+   },
+   {
+    "master": "qkd_pv16_vport",
+    "port": "in0_vflag",
+    "instances": 16,
+    "producer": "landing slg_<st>_<2k|2k+1> rsp_* (static landing_seg, joined in kv_static.template); die must instantiate the 32 landing segments (row_h3 V response regate)",
+    "owner": "KVJ-F + KVJ-G2"
+   },
+   {
+    "master": "qkd_pv16_vport",
+    "port": "in1_d",
+    "instances": 16,
+    "producer": "landing slg_<st>_<2k|2k+1> rsp_* (static landing_seg, joined in kv_static.template); die must instantiate the 32 landing segments (row_h3 V response regate)",
+    "owner": "KVJ-F + KVJ-G2"
+   },
+   {
+    "master": "qkd_pv16_vport",
+    "port": "in1_epoch",
+    "instances": 16,
+    "producer": "landing slg_<st>_<2k|2k+1> rsp_* (static landing_seg, joined in kv_static.template); die must instantiate the 32 landing segments (row_h3 V response regate)",
+    "owner": "KVJ-F + KVJ-G2"
+   },
+   {
+    "master": "qkd_pv16_vport",
+    "port": "in1_t",
+    "instances": 16,
+    "producer": "landing slg_<st>_<2k|2k+1> rsp_* (static landing_seg, joined in kv_static.template); die must instantiate the 32 landing segments (row_h3 V response regate)",
+    "owner": "KVJ-F + KVJ-G2"
+   },
+   {
+    "master": "qkd_pv16_vport",
+    "port": "in1_valid",
+    "instances": 16,
+    "producer": "landing slg_<st>_<2k|2k+1> rsp_* (static landing_seg, joined in kv_static.template); die must instantiate the 32 landing segments (row_h3 V response regate)",
+    "owner": "KVJ-F + KVJ-G2"
+   },
+   {
+    "master": "qkd_pv16_vport",
+    "port": "in1_vflag",
+    "instances": 16,
+    "producer": "landing slg_<st>_<2k|2k+1> rsp_* (static landing_seg, joined in kv_static.template); die must instantiate the 32 landing segments (row_h3 V response regate)",
+    "owner": "KVJ-F + KVJ-G2"
+   }
+  ],
+  "input_tied": [],
+  "undriven": [
+   {
+    "net_class": "n_pvw_N__in_e",
+    "bits": 1024,
+    "producer": "ASTK e-read qkd_astk_er_tap in the strip successor qkd_astk_strip_er_s (KVJ-D merged); die binding of qkd_astk/qkd_astk_n to the er strip + ASTK credit removal",
+    "owner": "KVE-2 + KVJ-D"
+   },
+   {
+    "net_class": "n_pvw_N__epoch",
+    "bits": 32,
+    "producer": "qkd_attn_service_root ep (KVJ-B be205336f, not pushed)",
+    "owner": "KVJ-B"
+   },
+   {
+    "net_class": "n_pvw_N__context_len",
+    "bits": 28,
+    "producer": "qkd_attn_service_root ctx (KVJ-B, not pushed)",
+    "owner": "KVJ-B"
+   },
+   {
+    "net_class": "n_pvw_N__start",
+    "bits": 2,
+    "producer": "qkd_attn_service_root start_pv (KVJ-B, not pushed)",
+    "owner": "KVJ-B"
+   }
+  ],
+  "straps": [
+   {
+    "strap": "ot_qkh_head_frontq_native:hid",
+    "cls": "a_IDENTITY_or_c_UNUSED_MODE_ACCEPT",
+    "producer": "physical position / mode strap",
+    "owner": "-"
+   },
+   {
+    "strap": "ot_qkh_lane8:bsel",
+    "cls": "a_IDENTITY_or_c_UNUSED_MODE_ACCEPT",
+    "producer": "physical position / mode strap",
+    "owner": "-"
+   },
+   {
+    "strap": "ot_qwen_tp8_pv_wide_ctl_t:pair_id",
+    "cls": "a_IDENTITY_or_c_UNUSED_MODE_ACCEPT",
+    "producer": "physical position / mode strap",
+    "owner": "-"
+   },
+   {
+    "strap": "qkd_astk_strip_s:st",
+    "cls": "a_IDENTITY_or_c_UNUSED_MODE_ACCEPT",
+    "producer": "physical position / mode strap",
+    "owner": "-"
+   },
+   {
+    "strap": "qkd_ctrl_pc:fi",
+    "cls": "a_IDENTITY_or_c_UNUSED_MODE_ACCEPT",
+    "producer": "physical position / mode strap",
+    "owner": "-"
+   },
+   {
+    "strap": "qkd_ctrl_pc:pc",
+    "cls": "a_IDENTITY_or_c_UNUSED_MODE_ACCEPT",
+    "producer": "physical position / mode strap",
+    "owner": "-"
+   },
+   {
+    "strap": "qkd_ectl_a_tp8_epoch_direct:cfg",
+    "cls": "d_FUNCTIONAL_CFG_REJECT",
+    "producer": "boot dispatcher / boot_cdc target",
+    "owner": "KVJ-F"
+   },
+   {
+    "strap": "qkd_ectl_b_tp8_direct:cfg",
+    "cls": "d_FUNCTIONAL_CFG_REJECT",
+    "producer": "boot dispatcher / boot_cdc target",
+    "owner": "KVJ-F"
+   },
+   {
+    "strap": "qkd_ectl_c_tp8_direct:cfg",
+    "cls": "d_FUNCTIONAL_CFG_REJECT",
+    "producer": "boot dispatcher / boot_cdc target",
+    "owner": "KVJ-F"
+   },
+   {
+    "strap": "qkd_host_pc_slice_die:ai",
+    "cls": "a_IDENTITY_or_c_UNUSED_MODE_ACCEPT",
+    "producer": "physical position / mode strap",
+    "owner": "-"
+   },
+   {
+    "strap": "qkd_host_pc_slice_die:ci",
+    "cls": "a_IDENTITY_or_c_UNUSED_MODE_ACCEPT",
+    "producer": "physical position / mode strap",
+    "owner": "-"
+   },
+   {
+    "strap": "qkd_host_pc_slice_die:fault_i",
+    "cls": "a_IDENTITY_or_c_UNUSED_MODE_ACCEPT",
+    "producer": "physical position / mode strap",
+    "owner": "-"
+   },
+   {
+    "strap": "qkd_host_pc_slice_die:lpc",
+    "cls": "a_IDENTITY_or_c_UNUSED_MODE_ACCEPT",
+    "producer": "physical position / mode strap",
+    "owner": "-"
+   },
+   {
+    "strap": "qkd_host_pc_slice_die:sdi",
+    "cls": "a_IDENTITY_or_c_UNUSED_MODE_ACCEPT",
+    "producer": "physical position / mode strap",
+    "owner": "-"
+   },
+   {
+    "strap": "qkd_host_pc_slice_die:sfi",
+    "cls": "a_IDENTITY_or_c_UNUSED_MODE_ACCEPT",
+    "producer": "physical position / mode strap",
+    "owner": "-"
+   },
+   {
+    "strap": "qkd_host_pc_slice_die:ski",
+    "cls": "a_IDENTITY_or_c_UNUSED_MODE_ACCEPT",
+    "producer": "physical position / mode strap",
+    "owner": "-"
+   },
+   {
+    "strap": "qkd_host_pc_slice_die:soi",
+    "cls": "a_IDENTITY_or_c_UNUSED_MODE_ACCEPT",
+    "producer": "physical position / mode strap",
+    "owner": "-"
+   },
+   {
+    "strap": "qkd_kvwq_leaf_s_w129_m:dn",
+    "cls": "a_IDENTITY_or_c_UNUSED_MODE_ACCEPT",
+    "producer": "physical position / mode strap",
+    "owner": "-"
+   },
+   {
+    "strap": "qkd_kvwq_leaf_s_w129_m:lane",
+    "cls": "a_IDENTITY_or_c_UNUSED_MODE_ACCEPT",
+    "producer": "physical position / mode strap",
+    "owner": "-"
+   },
+   {
+    "strap": "qkd_land_strip_s:st",
+    "cls": "a_IDENTITY_or_c_UNUSED_MODE_ACCEPT",
+    "producer": "physical position / mode strap",
+    "owner": "-"
+   },
+   {
+    "strap": "qkd_rlys_296:a",
+    "cls": "a_IDENTITY_or_c_UNUSED_MODE_ACCEPT",
+    "producer": "physical position / mode strap",
+    "owner": "-"
+   },
+   {
+    "strap": "qkd_rlys_36:a",
+    "cls": "a_IDENTITY_or_c_UNUSED_MODE_ACCEPT",
+    "producer": "physical position / mode strap",
+    "owner": "-"
+   },
+   {
+    "strap": "qkd_rst_region:dly",
+    "cls": "d_FUNCTIONAL_CFG_REJECT",
+    "producer": "boot config load (rst_region fq1 registers it at the pin)",
+    "owner": "KVJ-F"
+   }
+  ],
+  "constant_bits_by_class": {
+   "rtl_literal": 4090,
+   "kv_expand_strap": 186,
+   "unclassified": 2576,
+   "lane_strap": 384,
+   "chain_terminator": 804,
+   "host_strap": 640,
+   "reset_delay_strap": 344
+  },
+  "pads_declared": [
+   "qkd_rlys_296:a",
+   "qkd_rlys_36:a",
+   "qkd_rlys_528:a"
+  ],
+  "superseded_present": [
+   {
+    "die_master": "qkd_cdc_wleaf",
+    "module": "ot_qwen_stream4_cdc_pc",
+    "instances": 128,
+    "replacement": "static writer + pc_path es / static landing_seg x32 (die homes owed)",
+    "owner": "KVJ-G2"
+   },
+   {
+    "die_master": "qkd_land",
+    "module": "qkd_land_strip_s",
+    "instances": 2,
+    "replacement": "static writer + pc_path es / static landing_seg x32 (die homes owed)",
+    "owner": "KVJ-G2"
+   },
+   {
+    "die_master": "qkd_land_n",
+    "module": "qkd_land_strip_s",
+    "instances": 2,
+    "replacement": "static writer + pc_path es / static landing_seg x32 (die homes owed)",
+    "owner": "KVJ-G2"
+   },
+   {
+    "die_master": "qkd_kvwq_leaf_s_w129_m",
+    "module": "qkd_kvwq_leaf_s_w129_m",
+    "instances": 128,
+    "replacement": "static writer + pc_path es / static landing_seg x32 (die homes owed)",
+    "owner": "KVJ-G2"
+   },
+   {
+    "die_master": "qkd_kvwq_ctl_bin",
+    "module": "qkd_kvwq_ctl_bin",
+    "instances": 4,
+    "replacement": "static writer + pc_path es / static landing_seg x32 (die homes owed)",
+    "owner": "KVJ-G2"
+   }
+  ],
+  "constant_owner": {
+   "unclassified": "KVJ-F (classify 2,576 b: identity vs functional, 0da)",
+   "reset_delay_strap": "KVJ-F (functional, 0da d)"
+  }
+ },
+ "static_join": {
+  "instances": 669,
+  "clock_reset_entries": {
+   "layer_programme": 2,
+   "attention_programme": 2,
+   "ownership": 2,
+   "writer": 2,
+   "writer_programme": 2,
+   "link": 3,
+   "vport": 32,
+   "landing": 64,
+   "landing_calendar": 64,
+   "front_calendar": 64,
+   "k_issuer": 64,
+   "ectla": 64,
+   "drain_guard": 64,
+   "phase_launch": 128,
+   "pc_path": 1536,
+   "embgw": 2,
+   "emb_join": 2,
+   "row_tx": 2,
+   "emb_return_head": 8,
+   "emb_return_hop": 248,
+   "producer": 648
+  },
+  "clock_reset_owner": "KVJ-G2 (die clock tree)",
+  "functional_open": [
+   {
+    "instances": 1,
+    "role": "attention_programme",
+    "port": "request_ready",
+    "cls": "DIE_JOIN",
+    "producer": "attention service (ahub / seq_static successor, D3)",
+    "owner": "KVE-2"
+   },
+   {
+    "instances": 1,
+    "role": "attention_programme",
+    "port": "result_beat",
+    "cls": "DIE_JOIN",
+    "producer": "attention service result face (ahub / seq_static successor)",
+    "owner": "KVE-2"
+   },
+   {
+    "instances": 1,
+    "role": "attention_programme",
+    "port": "result_data",
+    "cls": "DIE_JOIN",
+    "producer": "attention service result face (ahub / seq_static successor)",
+    "owner": "KVE-2"
+   },
+   {
+    "instances": 1,
+    "role": "attention_programme",
+    "port": "result_done",
+    "cls": "DIE_JOIN",
+    "producer": "attention service result face (ahub / seq_static successor)",
+    "owner": "KVE-2"
+   },
+   {
+    "instances": 1,
+    "role": "attention_programme",
+    "port": "result_epoch",
+    "cls": "DIE_JOIN",
+    "producer": "attention service result face (ahub / seq_static successor)",
+    "owner": "KVE-2"
+   },
+   {
+    "instances": 1,
+    "role": "attention_programme",
+    "port": "result_layer",
+    "cls": "DIE_JOIN",
+    "producer": "attention service result face (ahub / seq_static successor)",
+    "owner": "KVE-2"
+   },
+   {
+    "instances": 1,
+    "role": "attention_programme",
+    "port": "result_valid",
+    "cls": "DIE_JOIN",
+    "producer": "attention service result face (ahub / seq_static successor)",
+    "owner": "KVE-2"
+   },
+   {
+    "instances": 1,
+    "role": "attention_programme",
+    "port": "service_fault",
+    "cls": "DIE_JOIN",
+    "producer": "attention service fault",
+    "owner": "KVE-2"
+   },
+   {
+    "instances": 1,
+    "role": "link",
+    "port": "cfg_addr",
+    "cls": "COMPILER",
+    "producer": "boot dispatcher link-calendar target (no dispatcher target for the d2d cfg yet)",
+    "owner": "KVJ-A follow-up + item 9"
+   },
+   {
+    "instances": 1,
+    "role": "link",
+    "port": "cfg_data",
+    "cls": "COMPILER",
+    "producer": "boot dispatcher link-calendar target (no dispatcher target for the d2d cfg yet)",
+    "owner": "KVJ-A follow-up + item 9"
+   },
+   {
+    "instances": 1,
+    "role": "link",
+    "port": "cfg_rx_we",
+    "cls": "COMPILER",
+    "producer": "boot dispatcher link-calendar target (no dispatcher target for the d2d cfg yet)",
+    "owner": "KVJ-A follow-up + item 9"
+   },
+   {
+    "instances": 1,
+    "role": "link",
+    "port": "cfg_tx_we",
+    "cls": "COMPILER",
+    "producer": "boot dispatcher link-calendar target (no dispatcher target for the d2d cfg yet)",
+    "owner": "KVJ-A follow-up + item 9"
+   },
+   {
+    "instances": 1,
+    "role": "attention_programme",
+    "port": "compiled_calendar",
+    "cls": "NEW_RTL",
+    "producer": "qkd_attn_cal_gen (N1, KVJ-B 58f9ebdbb, not pushed)",
+    "owner": "KVJ-B"
+   },
+   {
+    "instances": 1,
+    "role": "attention_programme",
+    "port": "compiled_end",
+    "cls": "NEW_RTL",
+    "producer": "qkd_attn_cal_gen (N1, KVJ-B 58f9ebdbb, not pushed)",
+    "owner": "KVJ-B"
+   },
+   {
+    "instances": 1,
+    "role": "attention_programme",
+    "port": "compiled_rx_cmd",
+    "cls": "NEW_RTL",
+    "producer": "qkd_attn_cal_gen (N1, KVJ-B 58f9ebdbb, not pushed)",
+    "owner": "KVJ-B"
+   },
+   {
+    "instances": 1,
+    "role": "attention_programme",
+    "port": "compiled_tx_first",
+    "cls": "NEW_RTL",
+    "producer": "qkd_attn_cal_gen (N1, KVJ-B 58f9ebdbb, not pushed)",
+    "owner": "KVJ-B"
+   },
+   {
+    "instances": 128,
+    "role": "pc_path",
+    "port": "es_context",
+    "cls": "NEW_RTL",
+    "producer": "writer es lane -> PC fan-out + es merge (qkd_static_kv_pc_path_emb, KVJ-C merged; ROLES still name qkd_static_kv_pc_path)",
+    "owner": "KVJ-C2"
+   },
+   {
+    "instances": 128,
+    "role": "pc_path",
+    "port": "es_expected_address",
+    "cls": "NEW_RTL",
+    "producer": "writer es lane -> PC fan-out + es merge (qkd_static_kv_pc_path_emb, KVJ-C merged; ROLES still name qkd_static_kv_pc_path)",
+    "owner": "KVJ-C2"
+   },
+   {
+    "instances": 128,
+    "role": "pc_path",
+    "port": "es_expected_identity",
+    "cls": "NEW_RTL",
+    "producer": "writer es lane -> PC fan-out + es merge (qkd_static_kv_pc_path_emb, KVJ-C merged; ROLES still name qkd_static_kv_pc_path)",
+    "owner": "KVJ-C2"
+   },
+   {
+    "instances": 128,
+    "role": "pc_path",
+    "port": "es_expected_pc",
+    "cls": "NEW_RTL",
+    "producer": "writer es lane -> PC fan-out + es merge (qkd_static_kv_pc_path_emb, KVJ-C merged; ROLES still name qkd_static_kv_pc_path)",
+    "owner": "KVJ-C2"
+   },
+   {
+    "instances": 128,
+    "role": "pc_path",
+    "port": "es_expected_stack",
+    "cls": "NEW_RTL",
+    "producer": "writer es lane -> PC fan-out + es merge (qkd_static_kv_pc_path_emb, KVJ-C merged; ROLES still name qkd_static_kv_pc_path)",
+    "owner": "KVJ-C2"
+   },
+   {
+    "instances": 128,
+    "role": "pc_path",
+    "port": "es_expected_valid",
+    "cls": "NEW_RTL",
+    "producer": "writer es lane -> PC fan-out + es merge (qkd_static_kv_pc_path_emb, KVJ-C merged; ROLES still name qkd_static_kv_pc_path)",
+    "owner": "KVJ-C2"
+   },
+   {
+    "instances": 32,
+    "role": "ectla",
+    "port": "x_i",
+    "cls": "DIE_JOIN",
+    "producer": "ECTL B/C ring x face (ectla_kiss tile, KVJ-D merged)",
+    "owner": "KVJ-D"
+   },
+   {
+    "instances": 1,
+    "role": "layer_programme",
+    "port": "authority_epoch",
+    "cls": "DIE_JOIN",
+    "producer": "host root token authority (token_epoch / native_request_*)",
+    "owner": "KVJ-G2"
+   },
+   {
+    "instances": 1,
+    "role": "layer_programme",
+    "port": "authority_generation",
+    "cls": "DIE_JOIN",
+    "producer": "host root token authority (token_epoch / native_request_*)",
+    "owner": "KVJ-G2"
+   },
+   {
+    "instances": 1,
+    "role": "layer_programme",
+    "port": "authority_position",
+    "cls": "DIE_JOIN",
+    "producer": "host root token authority (token_epoch / native_request_*)",
+    "owner": "KVJ-G2"
+   },
+   {
+    "instances": 1,
+    "role": "layer_programme",
+    "port": "authority_token",
+    "cls": "DIE_JOIN",
+    "producer": "host root token authority (token_epoch / native_request_*)",
+    "owner": "KVJ-G2"
+   },
+   {
+    "instances": 1,
+    "role": "layer_programme",
+    "port": "authority_valid",
+    "cls": "DIE_JOIN",
+    "producer": "host root token authority (token_epoch / native_request_*)",
+    "owner": "KVJ-G2"
+   },
+   {
+    "instances": 1,
+    "role": "layer_programme",
+    "port": "programme_authorized",
+    "cls": "DIE_JOIN",
+    "producer": "host root program_authorized_* / program_epoch / program_digest",
+    "owner": "KVJ-G2"
+   },
+   {
+    "instances": 1,
+    "role": "layer_programme",
+    "port": "programme_digest",
+    "cls": "DIE_JOIN",
+    "producer": "host root program_authorized_* / program_epoch / program_digest",
+    "owner": "KVJ-G2"
+   },
+   {
+    "instances": 1,
+    "role": "layer_programme",
+    "port": "programme_epoch",
+    "cls": "DIE_JOIN",
+    "producer": "host root program_authorized_* / program_epoch / program_digest",
+    "owner": "KVJ-G2"
+   },
+   {
+    "instances": 1,
+    "role": "layer_programme",
+    "port": "start",
+    "cls": "DIE_JOIN",
+    "producer": "d2d engine_result_token RESULT (token-run trigger)",
+    "owner": "KVJ-G2"
+   },
+   {
+    "instances": 1,
+    "role": "link",
+    "port": "fdi_rx_flit",
+    "cls": "PHY",
+    "producer": "UCIe x64 PHY FDI (allowed analog model)",
+    "owner": "KVJ-G2"
+   },
+   {
+    "instances": 1,
+    "role": "link",
+    "port": "fdi_rx_v",
+    "cls": "PHY",
+    "producer": "UCIe x64 PHY FDI (allowed analog model)",
+    "owner": "KVJ-G2"
+   },
+   {
+    "instances": 1,
+    "role": "link",
+    "port": "fdi_tx_up",
+    "cls": "PHY",
+    "producer": "UCIe x64 PHY FDI (allowed analog model)",
+    "owner": "KVJ-G2"
+   },
+   {
+    "instances": 1,
+    "role": "link",
+    "port": "host_boot_begin",
+    "cls": "DIE_JOIN",
+    "producer": "host root host_link_reset_req / host_recovery_clear / boot_go / host_interface_idle",
+    "owner": "KVJ-G2"
+   },
+   {
+    "instances": 1,
+    "role": "link",
+    "port": "host_drained_local",
+    "cls": "DIE_JOIN",
+    "producer": "host root host_link_reset_req / host_recovery_clear / boot_go / host_interface_idle",
+    "owner": "KVJ-G2"
+   },
+   {
+    "instances": 1,
+    "role": "link",
+    "port": "host_link_reset_req",
+    "cls": "DIE_JOIN",
+    "producer": "host root host_link_reset_req / host_recovery_clear / boot_go / host_interface_idle",
+    "owner": "KVJ-G2"
+   },
+   {
+    "instances": 1,
+    "role": "link",
+    "port": "host_recovery_clear",
+    "cls": "DIE_JOIN",
+    "producer": "host root host_link_reset_req / host_recovery_clear / boot_go / host_interface_idle",
+    "owner": "KVJ-G2"
+   },
+   {
+    "instances": 1,
+    "role": "link",
+    "port": "record_tx",
+    "cls": "DIE_JOIN",
+    "producer": "host root record_tx_v / record_tx",
+    "owner": "KVJ-G2"
+   },
+   {
+    "instances": 1,
+    "role": "link",
+    "port": "record_tx_observed_v",
+    "cls": "DIE_JOIN",
+    "producer": "host root record_tx_v / record_tx",
+    "owner": "KVJ-G2"
+   },
+   {
+    "instances": 1,
+    "role": "link",
+    "port": "serdes_up",
+    "cls": "PHY",
+    "producer": "SerDes PHY link-up (digital layer in host root)",
+    "owner": "KVJ-G2"
+   },
+   {
+    "instances": 1,
+    "role": "link",
+    "port": "status_epoch16",
+    "cls": "DIE_JOIN",
+    "producer": "host root local_service_epoch",
+    "owner": "KVJ-G2"
+   },
+   {
+    "instances": 128,
+    "role": "pc_path",
+    "port": "ci",
+    "cls": "DIE_JOIN",
+    "producer": "pc_path chain neighbours rsi/ci/pi/ki/fi (host PC slice / ctrl chain)",
+    "owner": "KVJ-G2"
+   },
+   {
+    "instances": 128,
+    "role": "pc_path",
+    "port": "emb_half",
+    "cls": "DIE_JOIN",
+    "producer": "pc_path chain neighbours rsi/ci/pi/ki/fi (host PC slice / ctrl chain)",
+    "owner": "KVJ-G2"
+   },
+   {
+    "instances": 128,
+    "role": "pc_path",
+    "port": "emb_issue_v",
+    "cls": "DIE_JOIN",
+    "producer": "pc_path chain neighbours rsi/ci/pi/ki/fi (host PC slice / ctrl chain)",
+    "owner": "KVJ-G2"
+   },
+   {
+    "instances": 128,
+    "role": "pc_path",
+    "port": "emb_return_slot",
+    "cls": "DIE_JOIN",
+    "producer": "pc_path chain neighbours rsi/ci/pi/ki/fi (host PC slice / ctrl chain)",
+    "owner": "KVJ-G2"
+   },
+   {
+    "instances": 128,
+    "role": "pc_path",
+    "port": "emb_scale",
+    "cls": "DIE_JOIN",
+    "producer": "pc_path chain neighbours rsi/ci/pi/ki/fi (host PC slice / ctrl chain)",
+    "owner": "KVJ-G2"
+   },
+   {
+    "instances": 128,
+    "role": "pc_path",
+    "port": "emb_word_index",
+    "cls": "DIE_JOIN",
+    "producer": "pc_path chain neighbours rsi/ci/pi/ki/fi (host PC slice / ctrl chain)",
+    "owner": "KVJ-G2"
+   },
+   {
+    "instances": 128,
+    "role": "pc_path",
+    "port": "fi",
+    "cls": "DIE_JOIN",
+    "producer": "pc_path chain neighbours rsi/ci/pi/ki/fi (host PC slice / ctrl chain)",
+    "owner": "KVJ-G2"
+   },
+   {
+    "instances": 128,
+    "role": "pc_path",
+    "port": "front_hbm_data",
+    "cls": "PHY",
+    "producer": "HBM3E PHY pi (qkd_hbm3e_phy_pc)",
+    "owner": "KVJ-G2"
+   },
+   {
+    "instances": 128,
+    "role": "pc_path",
+    "port": "ki",
+    "cls": "DIE_JOIN",
+    "producer": "pc_path chain neighbours rsi/ci/pi/ki/fi (host PC slice / ctrl chain)",
+    "owner": "KVJ-G2"
+   },
+   {
+    "instances": 128,
+    "role": "pc_path",
+    "port": "pi",
+    "cls": "DIE_JOIN",
+    "producer": "pc_path chain neighbours rsi/ci/pi/ki/fi (host PC slice / ctrl chain)",
+    "owner": "KVJ-G2"
+   },
+   {
+    "instances": 128,
+    "role": "pc_path",
+    "port": "return_hbm_data",
+    "cls": "PHY",
+    "producer": "HBM3E PHY pi (qkd_hbm3e_phy_pc)",
+    "owner": "KVJ-G2"
+   },
+   {
+    "instances": 128,
+    "role": "pc_path",
+    "port": "rsi",
+    "cls": "DIE_JOIN",
+    "producer": "pc_path chain neighbours rsi/ci/pi/ki/fi (host PC slice / ctrl chain)",
+    "owner": "KVJ-G2"
+   },
+   {
+    "instances": 128,
+    "role": "pc_path",
+    "port": "wes",
+    "cls": "DIE_JOIN",
+    "producer": "pc_path chain neighbours rsi/ci/pi/ki/fi (host PC slice / ctrl chain)",
+    "owner": "KVJ-G2"
+   },
+   {
+    "instances": 1,
+    "role": "producer",
+    "port": "boot_image_digest",
+    "cls": "DIE_JOIN",
+    "producer": "host root boot_pr / boot_image_* (HOST_DIE_JOINS)",
+    "owner": "KVJ-G2"
+   },
+   {
+    "instances": 1,
+    "role": "producer",
+    "port": "boot_image_epoch",
+    "cls": "DIE_JOIN",
+    "producer": "host root boot_pr / boot_image_* (HOST_DIE_JOINS)",
+    "owner": "KVJ-G2"
+   },
+   {
+    "instances": 1,
+    "role": "producer",
+    "port": "boot_image_fault",
+    "cls": "DIE_JOIN",
+    "producer": "host root boot_pr / boot_image_* (HOST_DIE_JOINS)",
+    "owner": "KVJ-G2"
+   },
+   {
+    "instances": 1,
+    "role": "producer",
+    "port": "boot_image_ready",
+    "cls": "DIE_JOIN",
+    "producer": "host root boot_pr / boot_image_* (HOST_DIE_JOINS)",
+    "owner": "KVJ-G2"
+   },
+   {
+    "instances": 1,
+    "role": "producer",
+    "port": "boot_image_target",
+    "cls": "DIE_JOIN",
+    "producer": "host root boot_pr / boot_image_* (HOST_DIE_JOINS)",
+    "owner": "KVJ-G2"
+   },
+   {
+    "instances": 1,
+    "role": "producer",
+    "port": "boot_pr",
+    "cls": "DIE_JOIN",
+    "producer": "host root boot_pr / boot_image_* (HOST_DIE_JOINS)",
+    "owner": "KVJ-G2"
+   },
+   {
+    "instances": 16,
+    "role": "vport",
+    "port": "pr_t",
+    "cls": "DIE_JOIN",
+    "producer": "pvw pair V request (pvrq) words",
+    "owner": "KVJ-G2"
+   },
+   {
+    "instances": 16,
+    "role": "vport",
+    "port": "pr_valid",
+    "cls": "DIE_JOIN",
+    "producer": "pvw pair V request (pvrq) words",
+    "owner": "KVJ-G2"
+   },
+   {
+    "instances": 1,
+    "role": "emb_join",
+    "port": "beat_slot",
+    "cls": "UNCLASSIFIED",
+    "producer": "?",
+    "owner": "UNOWNED"
+   },
+   {
+    "instances": 4,
+    "role": "emb_return_head",
+    "port": "capture_slot",
+    "cls": "UNCLASSIFIED",
+    "producer": "?",
+    "owner": "UNOWNED"
+   },
+   {
+    "instances": 4,
+    "role": "emb_return_head",
+    "port": "transfer_slot",
+    "cls": "UNCLASSIFIED",
+    "producer": "?",
+    "owner": "UNOWNED"
+   },
+   {
+    "instances": 124,
+    "role": "emb_return_hop",
+    "port": "capture_slot",
+    "cls": "UNCLASSIFIED",
+    "producer": "?",
+    "owner": "UNOWNED"
+   },
+   {
+    "instances": 124,
+    "role": "emb_return_hop",
+    "port": "transfer_slot",
+    "cls": "UNCLASSIFIED",
+    "producer": "?",
+    "owner": "UNOWNED"
+   },
+   {
+    "instances": 1,
+    "role": "embgw",
+    "port": "emr_EN",
+    "cls": "UNCLASSIFIED",
+    "producer": "?",
+    "owner": "UNOWNED"
+   },
+   {
+    "instances": 1,
+    "role": "embgw",
+    "port": "emr_EN_cr",
+    "cls": "UNCLASSIFIED",
+    "producer": "?",
+    "owner": "UNOWNED"
+   },
+   {
+    "instances": 1,
+    "role": "embgw",
+    "port": "emr_ES",
+    "cls": "UNCLASSIFIED",
+    "producer": "?",
+    "owner": "UNOWNED"
+   },
+   {
+    "instances": 1,
+    "role": "embgw",
+    "port": "emr_ES_cr",
+    "cls": "UNCLASSIFIED",
+    "producer": "?",
+    "owner": "UNOWNED"
+   },
+   {
+    "instances": 1,
+    "role": "embgw",
+    "port": "emr_WN",
+    "cls": "UNCLASSIFIED",
+    "producer": "?",
+    "owner": "UNOWNED"
+   },
+   {
+    "instances": 1,
+    "role": "embgw",
+    "port": "emr_WN_cr",
+    "cls": "UNCLASSIFIED",
+    "producer": "?",
+    "owner": "UNOWNED"
+   },
+   {
+    "instances": 1,
+    "role": "embgw",
+    "port": "emr_WS",
+    "cls": "UNCLASSIFIED",
+    "producer": "?",
+    "owner": "UNOWNED"
+   },
+   {
+    "instances": 1,
+    "role": "embgw",
+    "port": "emr_WS_cr",
+    "cls": "UNCLASSIFIED",
+    "producer": "?",
+    "owner": "UNOWNED"
+   },
+   {
+    "instances": 1,
+    "role": "embgw",
+    "port": "hb",
+    "cls": "UNCLASSIFIED",
+    "producer": "?",
+    "owner": "UNOWNED"
+   },
+   {
+    "instances": 1,
+    "role": "producer",
+    "port": "host_launch_quiet",
+    "cls": "UNCLASSIFIED",
+    "producer": "?",
+    "owner": "UNOWNED"
+   },
+   {
+    "instances": 1,
+    "role": "producer",
+    "port": "host_upstream_quiet",
+    "cls": "UNCLASSIFIED",
+    "producer": "?",
+    "owner": "UNOWNED"
+   },
+   {
+    "instances": 1,
+    "role": "attention_programme",
+    "port": "fused_program_capability",
+    "cls": "COMPILER",
+    "producer": "boot image capability bit",
+    "owner": "item 9 compiler"
+   },
+   {
+    "instances": 1,
+    "role": "link",
+    "port": "cal_seg",
+    "cls": "COMPILER",
+    "producer": "d2d_link_calendar start/segment from the layer programme",
+    "owner": "item 9 compiler"
+   },
+   {
+    "instances": 1,
+    "role": "link",
+    "port": "cal_start",
+    "cls": "COMPILER",
+    "producer": "d2d_link_calendar start/segment from the layer programme",
+    "owner": "item 9 compiler"
+   }
+  ],
+  "die_joins": [
+   {
+    "consumer": "boot.boot_pr",
+    "producer": "host.boot_pr",
+    "width": 143,
+    "host_master": "rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv:qkd_host_root_admission"
+   },
+   {
+    "consumer": "boot.boot_image_target",
+    "producer": "host.boot_image_target",
+    "width": 4,
+    "host_master": "rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv:qkd_host_root_admission"
+   },
+   {
+    "consumer": "boot.boot_image_ready",
+    "producer": "host.boot_image_ready",
+    "width": 1,
+    "host_master": "rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv:qkd_host_root_admission"
+   },
+   {
+    "consumer": "boot.boot_image_fault",
+    "producer": "host.boot_image_fault",
+    "width": 1,
+    "host_master": "rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv:qkd_host_root_admission"
+   },
+   {
+    "consumer": "boot.boot_image_epoch",
+    "producer": "host.boot_image_epoch",
+    "width": 16,
+    "host_master": "rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv:qkd_host_root_admission"
+   },
+   {
+    "consumer": "boot.boot_image_digest",
+    "producer": "host.boot_image_digest",
+    "width": 64,
+    "host_master": "rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv:qkd_host_root_admission"
+   },
+   {
+    "consumer": "host.static_setup_ready",
+    "producer": "boot.setup_ready",
+    "width": 1,
+    "host_master": "rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv:qkd_host_root_admission"
+   },
+   {
+    "consumer": "host.native_reserved",
+    "producer": "ownership.native_reserved",
+    "width": 1,
+    "host_master": "rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv:qkd_host_root_admission"
+   },
+   {
+    "consumer": "host.ownership_valid",
+    "producer": "ownership.ownership_valid",
+    "width": 1,
+    "host_master": "rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv:qkd_host_root_admission"
+   },
+   {
+    "consumer": "own_obs.host_launch_quiet",
+    "producer": "host.host_launch_quiet",
+    "width": 1,
+    "host_master": "rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv:qkd_host_root_admission",
+    "domain": "HOST clocks: synchronised inside own_obs"
+   },
+   {
+    "consumer": "own_obs.host_upstream_quiet",
+    "producer": "host.host_upstream_quiet",
+    "width": 6,
+    "host_master": "rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv:qkd_host_root_admission",
+    "domain": "HOST clocks: synchronised inside own_obs"
+   },
+   {
+    "consumer": "ectl_b:WS:0.cfg",
+    "producer": "diecfg.ectl_b_cfg",
+    "lo": 0,
+    "width": 5,
+    "note": "ECTL B / C are die instances outside the static graph (kv_die --split)"
+   },
+   {
+    "consumer": "ectl_c:WS:0.cfg",
+    "producer": "diecfg.ectl_c_cfg",
+    "lo": 0,
+    "width": 5,
+    "note": "ECTL B / C are die instances outside the static graph (kv_die --split)"
+   },
+   {
+    "consumer": "ectl_b:WS:1.cfg",
+    "producer": "diecfg.ectl_b_cfg",
+    "lo": 5,
+    "width": 5,
+    "note": "ECTL B / C are die instances outside the static graph (kv_die --split)"
+   },
+   {
+    "consumer": "ectl_c:WS:1.cfg",
+    "producer": "diecfg.ectl_c_cfg",
+    "lo": 5,
+    "width": 5,
+    "note": "ECTL B / C are die instances outside the static graph (kv_die --split)"
+   },
+   {
+    "consumer": "ectl_b:WS:2.cfg",
+    "producer": "diecfg.ectl_b_cfg",
+    "lo": 10,
+    "width": 5,
+    "note": "ECTL B / C are die instances outside the static graph (kv_die --split)"
+   },
+   {
+    "consumer": "ectl_c:WS:2.cfg",
+    "producer": "diecfg.ectl_c_cfg",
+    "lo": 10,
+    "width": 5,
+    "note": "ECTL B / C are die instances outside the static graph (kv_die --split)"
+   },
+   {
+    "consumer": "ectl_b:WS:3.cfg",
+    "producer": "diecfg.ectl_b_cfg",
+    "lo": 15,
+    "width": 5,
+    "note": "ECTL B / C are die instances outside the static graph (kv_die --split)"
+   },
+   {
+    "consumer": "ectl_c:WS:3.cfg",
+    "producer": "diecfg.ectl_c_cfg",
+    "lo": 15,
+    "width": 5,
+    "note": "ECTL B / C are die instances outside the static graph (kv_die --split)"
+   },
+   {
+    "consumer": "ectl_b:WS:4.cfg",
+    "producer": "diecfg.ectl_b_cfg",
+    "lo": 20,
+    "width": 5,
+    "note": "ECTL B / C are die instances outside the static graph (kv_die --split)"
+   },
+   {
+    "consumer": "ectl_c:WS:4.cfg",
+    "producer": "diecfg.ectl_c_cfg",
+    "lo": 20,
+    "width": 5,
+    "note": "ECTL B / C are die instances outside the static graph (kv_die --split)"
+   },
+   {
+    "consumer": "ectl_b:WS:5.cfg",
+    "producer": "diecfg.ectl_b_cfg",
+    "lo": 25,
+    "width": 5,
+    "note": "ECTL B / C are die instances outside the static graph (kv_die --split)"
+   },
+   {
+    "consumer": "ectl_c:WS:5.cfg",
+    "producer": "diecfg.ectl_c_cfg",
+    "lo": 25,
+    "width": 5,
+    "note": "ECTL B / C are die instances outside the static graph (kv_die --split)"
+   },
+   {
+    "consumer": "ectl_b:WS:6.cfg",
+    "producer": "diecfg.ectl_b_cfg",
+    "lo": 30,
+    "width": 5,
+    "note": "ECTL B / C are die instances outside the static graph (kv_die --split)"
+   },
+   {
+    "consumer": "ectl_c:WS:6.cfg",
+    "producer": "diecfg.ectl_c_cfg",
+    "lo": 30,
+    "width": 5,
+    "note": "ECTL B / C are die instances outside the static graph (kv_die --split)"
+   },
+   {
+    "consumer": "ectl_b:WS:7.cfg",
+    "producer": "diecfg.ectl_b_cfg",
+    "lo": 35,
+    "width": 5,
+    "note": "ECTL B / C are die instances outside the static graph (kv_die --split)"
+   },
+   {
+    "consumer": "ectl_c:WS:7.cfg",
+    "producer": "diecfg.ectl_c_cfg",
+    "lo": 35,
+    "width": 5,
+    "note": "ECTL B / C are die instances outside the static graph (kv_die --split)"
+   },
+   {
+    "consumer": "ectl_b:WN:0.cfg",
+    "producer": "diecfg.ectl_b_cfg",
+    "lo": 40,
+    "width": 5,
+    "note": "ECTL B / C are die instances outside the static graph (kv_die --split)"
+   },
+   {
+    "consumer": "ectl_c:WN:0.cfg",
+    "producer": "diecfg.ectl_c_cfg",
+    "lo": 40,
+    "width": 5,
+    "note": "ECTL B / C are die instances outside the static graph (kv_die --split)"
+   },
+   {
+    "consumer": "ectl_b:WN:1.cfg",
+    "producer": "diecfg.ectl_b_cfg",
+    "lo": 45,
+    "width": 5,
+    "note": "ECTL B / C are die instances outside the static graph (kv_die --split)"
+   },
+   {
+    "consumer": "ectl_c:WN:1.cfg",
+    "producer": "diecfg.ectl_c_cfg",
+    "lo": 45,
+    "width": 5,
+    "note": "ECTL B / C are die instances outside the static graph (kv_die --split)"
+   },
+   {
+    "consumer": "ectl_b:WN:2.cfg",
+    "producer": "diecfg.ectl_b_cfg",
+    "lo": 50,
+    "width": 5,
+    "note": "ECTL B / C are die instances outside the static graph (kv_die --split)"
+   },
+   {
+    "consumer": "ectl_c:WN:2.cfg",
+    "producer": "diecfg.ectl_c_cfg",
+    "lo": 50,
+    "width": 5,
+    "note": "ECTL B / C are die instances outside the static graph (kv_die --split)"
+   },
+   {
+    "consumer": "ectl_b:WN:3.cfg",
+    "producer": "diecfg.ectl_b_cfg",
+    "lo": 55,
+    "width": 5,
+    "note": "ECTL B / C are die instances outside the static graph (kv_die --split)"
+   },
+   {
+    "consumer": "ectl_c:WN:3.cfg",
+    "producer": "diecfg.ectl_c_cfg",
+    "lo": 55,
+    "width": 5,
+    "note": "ECTL B / C are die instances outside the static graph (kv_die --split)"
+   },
+   {
+    "consumer": "ectl_b:WN:4.cfg",
+    "producer": "diecfg.ectl_b_cfg",
+    "lo": 60,
+    "width": 5,
+    "note": "ECTL B / C are die instances outside the static graph (kv_die --split)"
+   },
+   {
+    "consumer": "ectl_c:WN:4.cfg",
+    "producer": "diecfg.ectl_c_cfg",
+    "lo": 60,
+    "width": 5,
+    "note": "ECTL B / C are die instances outside the static graph (kv_die --split)"
+   },
+   {
+    "consumer": "ectl_b:WN:5.cfg",
+    "producer": "diecfg.ectl_b_cfg",
+    "lo": 65,
+    "width": 5,
+    "note": "ECTL B / C are die instances outside the static graph (kv_die --split)"
+   },
+   {
+    "consumer": "ectl_c:WN:5.cfg",
+    "producer": "diecfg.ectl_c_cfg",
+    "lo": 65,
+    "width": 5,
+    "note": "ECTL B / C are die instances outside the static graph (kv_die --split)"
+   },
+   {
+    "consumer": "ectl_b:WN:6.cfg",
+    "producer": "diecfg.ectl_b_cfg",
+    "lo": 70,
+    "width": 5,
+    "note": "ECTL B / C are die instances outside the static graph (kv_die --split)"
+   },
+   {
+    "consumer": "ectl_c:WN:6.cfg",
+    "producer": "diecfg.ectl_c_cfg",
+    "lo": 70,
+    "width": 5,
+    "note": "ECTL B / C are die instances outside the static graph (kv_die --split)"
+   },
+   {
+    "consumer": "ectl_b:WN:7.cfg",
+    "producer": "diecfg.ectl_b_cfg",
+    "lo": 75,
+    "width": 5,
+    "note": "ECTL B / C are die instances outside the static graph (kv_die --split)"
+   },
+   {
+    "consumer": "ectl_c:WN:7.cfg",
+    "producer": "diecfg.ectl_c_cfg",
+    "lo": 75,
+    "width": 5,
+    "note": "ECTL B / C are die instances outside the static graph (kv_die --split)"
+   },
+   {
+    "consumer": "ectl_b:ES:0.cfg",
+    "producer": "diecfg.ectl_b_cfg",
+    "lo": 80,
+    "width": 5,
+    "note": "ECTL B / C are die instances outside the static graph (kv_die --split)"
+   },
+   {
+    "consumer": "ectl_c:ES:0.cfg",
+    "producer": "diecfg.ectl_c_cfg",
+    "lo": 80,
+    "width": 5,
+    "note": "ECTL B / C are die instances outside the static graph (kv_die --split)"
+   },
+   {
+    "consumer": "ectl_b:ES:1.cfg",
+    "producer": "diecfg.ectl_b_cfg",
+    "lo": 85,
+    "width": 5,
+    "note": "ECTL B / C are die instances outside the static graph (kv_die --split)"
+   },
+   {
+    "consumer": "ectl_c:ES:1.cfg",
+    "producer": "diecfg.ectl_c_cfg",
+    "lo": 85,
+    "width": 5,
+    "note": "ECTL B / C are die instances outside the static graph (kv_die --split)"
+   },
+   {
+    "consumer": "ectl_b:ES:2.cfg",
+    "producer": "diecfg.ectl_b_cfg",
+    "lo": 90,
+    "width": 5,
+    "note": "ECTL B / C are die instances outside the static graph (kv_die --split)"
+   },
+   {
+    "consumer": "ectl_c:ES:2.cfg",
+    "producer": "diecfg.ectl_c_cfg",
+    "lo": 90,
+    "width": 5,
+    "note": "ECTL B / C are die instances outside the static graph (kv_die --split)"
+   },
+   {
+    "consumer": "ectl_b:ES:3.cfg",
+    "producer": "diecfg.ectl_b_cfg",
+    "lo": 95,
+    "width": 5,
+    "note": "ECTL B / C are die instances outside the static graph (kv_die --split)"
+   },
+   {
+    "consumer": "ectl_c:ES:3.cfg",
+    "producer": "diecfg.ectl_c_cfg",
+    "lo": 95,
+    "width": 5,
+    "note": "ECTL B / C are die instances outside the static graph (kv_die --split)"
+   },
+   {
+    "consumer": "ectl_b:ES:4.cfg",
+    "producer": "diecfg.ectl_b_cfg",
+    "lo": 100,
+    "width": 5,
+    "note": "ECTL B / C are die instances outside the static graph (kv_die --split)"
+   },
+   {
+    "consumer": "ectl_c:ES:4.cfg",
+    "producer": "diecfg.ectl_c_cfg",
+    "lo": 100,
+    "width": 5,
+    "note": "ECTL B / C are die instances outside the static graph (kv_die --split)"
+   },
+   {
+    "consumer": "ectl_b:ES:5.cfg",
+    "producer": "diecfg.ectl_b_cfg",
+    "lo": 105,
+    "width": 5,
+    "note": "ECTL B / C are die instances outside the static graph (kv_die --split)"
+   },
+   {
+    "consumer": "ectl_c:ES:5.cfg",
+    "producer": "diecfg.ectl_c_cfg",
+    "lo": 105,
+    "width": 5,
+    "note": "ECTL B / C are die instances outside the static graph (kv_die --split)"
+   },
+   {
+    "consumer": "ectl_b:ES:6.cfg",
+    "producer": "diecfg.ectl_b_cfg",
+    "lo": 110,
+    "width": 5,
+    "note": "ECTL B / C are die instances outside the static graph (kv_die --split)"
+   },
+   {
+    "consumer": "ectl_c:ES:6.cfg",
+    "producer": "diecfg.ectl_c_cfg",
+    "lo": 110,
+    "width": 5,
+    "note": "ECTL B / C are die instances outside the static graph (kv_die --split)"
+   },
+   {
+    "consumer": "ectl_b:ES:7.cfg",
+    "producer": "diecfg.ectl_b_cfg",
+    "lo": 115,
+    "width": 5,
+    "note": "ECTL B / C are die instances outside the static graph (kv_die --split)"
+   },
+   {
+    "consumer": "ectl_c:ES:7.cfg",
+    "producer": "diecfg.ectl_c_cfg",
+    "lo": 115,
+    "width": 5,
+    "note": "ECTL B / C are die instances outside the static graph (kv_die --split)"
+   },
+   {
+    "consumer": "ectl_b:EN:0.cfg",
+    "producer": "diecfg.ectl_b_cfg",
+    "lo": 120,
+    "width": 5,
+    "note": "ECTL B / C are die instances outside the static graph (kv_die --split)"
+   },
+   {
+    "consumer": "ectl_c:EN:0.cfg",
+    "producer": "diecfg.ectl_c_cfg",
+    "lo": 120,
+    "width": 5,
+    "note": "ECTL B / C are die instances outside the static graph (kv_die --split)"
+   },
+   {
+    "consumer": "ectl_b:EN:1.cfg",
+    "producer": "diecfg.ectl_b_cfg",
+    "lo": 125,
+    "width": 5,
+    "note": "ECTL B / C are die instances outside the static graph (kv_die --split)"
+   },
+   {
+    "consumer": "ectl_c:EN:1.cfg",
+    "producer": "diecfg.ectl_c_cfg",
+    "lo": 125,
+    "width": 5,
+    "note": "ECTL B / C are die instances outside the static graph (kv_die --split)"
+   },
+   {
+    "consumer": "ectl_b:EN:2.cfg",
+    "producer": "diecfg.ectl_b_cfg",
+    "lo": 130,
+    "width": 5,
+    "note": "ECTL B / C are die instances outside the static graph (kv_die --split)"
+   },
+   {
+    "consumer": "ectl_c:EN:2.cfg",
+    "producer": "diecfg.ectl_c_cfg",
+    "lo": 130,
+    "width": 5,
+    "note": "ECTL B / C are die instances outside the static graph (kv_die --split)"
+   },
+   {
+    "consumer": "ectl_b:EN:3.cfg",
+    "producer": "diecfg.ectl_b_cfg",
+    "lo": 135,
+    "width": 5,
+    "note": "ECTL B / C are die instances outside the static graph (kv_die --split)"
+   },
+   {
+    "consumer": "ectl_c:EN:3.cfg",
+    "producer": "diecfg.ectl_c_cfg",
+    "lo": 135,
+    "width": 5,
+    "note": "ECTL B / C are die instances outside the static graph (kv_die --split)"
+   },
+   {
+    "consumer": "ectl_b:EN:4.cfg",
+    "producer": "diecfg.ectl_b_cfg",
+    "lo": 140,
+    "width": 5,
+    "note": "ECTL B / C are die instances outside the static graph (kv_die --split)"
+   },
+   {
+    "consumer": "ectl_c:EN:4.cfg",
+    "producer": "diecfg.ectl_c_cfg",
+    "lo": 140,
+    "width": 5,
+    "note": "ECTL B / C are die instances outside the static graph (kv_die --split)"
+   },
+   {
+    "consumer": "ectl_b:EN:5.cfg",
+    "producer": "diecfg.ectl_b_cfg",
+    "lo": 145,
+    "width": 5,
+    "note": "ECTL B / C are die instances outside the static graph (kv_die --split)"
+   },
+   {
+    "consumer": "ectl_c:EN:5.cfg",
+    "producer": "diecfg.ectl_c_cfg",
+    "lo": 145,
+    "width": 5,
+    "note": "ECTL B / C are die instances outside the static graph (kv_die --split)"
+   },
+   {
+    "consumer": "ectl_b:EN:6.cfg",
+    "producer": "diecfg.ectl_b_cfg",
+    "lo": 150,
+    "width": 5,
+    "note": "ECTL B / C are die instances outside the static graph (kv_die --split)"
+   },
+   {
+    "consumer": "ectl_c:EN:6.cfg",
+    "producer": "diecfg.ectl_c_cfg",
+    "lo": 150,
+    "width": 5,
+    "note": "ECTL B / C are die instances outside the static graph (kv_die --split)"
+   },
+   {
+    "consumer": "ectl_b:EN:7.cfg",
+    "producer": "diecfg.ectl_b_cfg",
+    "lo": 155,
+    "width": 5,
+    "note": "ECTL B / C are die instances outside the static graph (kv_die --split)"
+   },
+   {
+    "consumer": "ectl_c:EN:7.cfg",
+    "producer": "diecfg.ectl_c_cfg",
+    "lo": 155,
+    "width": 5,
+    "note": "ECTL B / C are die instances outside the static graph (kv_die --split)"
+   },
+   {
+    "consumer": "rst_region[0].dly",
+    "producer": "diecfg.rst_dly",
+    "lo": 0,
+    "width": 8,
+    "note": "qkd_rst_region root r of kv_die (its strap rdly_* is replaced); value D - d_r from the plan"
+   },
+   {
+    "consumer": "rst_region[1].dly",
+    "producer": "diecfg.rst_dly",
+    "lo": 8,
+    "width": 8,
+    "note": "qkd_rst_region root r of kv_die (its strap rdly_* is replaced); value D - d_r from the plan"
+   },
+   {
+    "consumer": "rst_region[2].dly",
+    "producer": "diecfg.rst_dly",
+    "lo": 16,
+    "width": 8,
+    "note": "qkd_rst_region root r of kv_die (its strap rdly_* is replaced); value D - d_r from the plan"
+   },
+   {
+    "consumer": "rst_region[3].dly",
+    "producer": "diecfg.rst_dly",
+    "lo": 24,
+    "width": 8,
+    "note": "qkd_rst_region root r of kv_die (its strap rdly_* is replaced); value D - d_r from the plan"
+   },
+   {
+    "consumer": "rst_region[4].dly",
+    "producer": "diecfg.rst_dly",
+    "lo": 32,
+    "width": 8,
+    "note": "qkd_rst_region root r of kv_die (its strap rdly_* is replaced); value D - d_r from the plan"
+   },
+   {
+    "consumer": "rst_region[5].dly",
+    "producer": "diecfg.rst_dly",
+    "lo": 40,
+    "width": 8,
+    "note": "qkd_rst_region root r of kv_die (its strap rdly_* is replaced); value D - d_r from the plan"
+   },
+   {
+    "consumer": "rst_region[6].dly",
+    "producer": "diecfg.rst_dly",
+    "lo": 48,
+    "width": 8,
+    "note": "qkd_rst_region root r of kv_die (its strap rdly_* is replaced); value D - d_r from the plan"
+   },
+   {
+    "consumer": "rst_region[7].dly",
+    "producer": "diecfg.rst_dly",
+    "lo": 56,
+    "width": 8,
+    "note": "qkd_rst_region root r of kv_die (its strap rdly_* is replaced); value D - d_r from the plan"
+   },
+   {
+    "consumer": "rst_region[8].dly",
+    "producer": "diecfg.rst_dly",
+    "lo": 64,
+    "width": 8,
+    "note": "qkd_rst_region root r of kv_die (its strap rdly_* is replaced); value D - d_r from the plan"
+   },
+   {
+    "consumer": "rst_region[9].dly",
+    "producer": "diecfg.rst_dly",
+    "lo": 72,
+    "width": 8,
+    "note": "qkd_rst_region root r of kv_die (its strap rdly_* is replaced); value D - d_r from the plan"
+   },
+   {
+    "consumer": "rst_region[10].dly",
+    "producer": "diecfg.rst_dly",
+    "lo": 80,
+    "width": 8,
+    "note": "qkd_rst_region root r of kv_die (its strap rdly_* is replaced); value D - d_r from the plan"
+   },
+   {
+    "consumer": "rst_region[11].dly",
+    "producer": "diecfg.rst_dly",
+    "lo": 88,
+    "width": 8,
+    "note": "qkd_rst_region root r of kv_die (its strap rdly_* is replaced); value D - d_r from the plan"
+   },
+   {
+    "consumer": "rst_region[12].dly",
+    "producer": "diecfg.rst_dly",
+    "lo": 96,
+    "width": 8,
+    "note": "qkd_rst_region root r of kv_die (its strap rdly_* is replaced); value D - d_r from the plan"
+   },
+   {
+    "consumer": "rst_region[13].dly",
+    "producer": "diecfg.rst_dly",
+    "lo": 104,
+    "width": 8,
+    "note": "qkd_rst_region root r of kv_die (its strap rdly_* is replaced); value D - d_r from the plan"
+   },
+   {
+    "consumer": "rst_region[14].dly",
+    "producer": "diecfg.rst_dly",
+    "lo": 112,
+    "width": 8,
+    "note": "qkd_rst_region root r of kv_die (its strap rdly_* is replaced); value D - d_r from the plan"
+   },
+   {
+    "consumer": "rst_region[15].dly",
+    "producer": "diecfg.rst_dly",
+    "lo": 120,
+    "width": 8,
+    "note": "qkd_rst_region root r of kv_die (its strap rdly_* is replaced); value D - d_r from the plan"
+   },
+   {
+    "consumer": "rst_region[16].dly",
+    "producer": "diecfg.rst_dly",
+    "lo": 128,
+    "width": 8,
+    "note": "qkd_rst_region root r of kv_die (its strap rdly_* is replaced); value D - d_r from the plan"
+   },
+   {
+    "consumer": "rst_region[17].dly",
+    "producer": "diecfg.rst_dly",
+    "lo": 136,
+    "width": 8,
+    "note": "qkd_rst_region root r of kv_die (its strap rdly_* is replaced); value D - d_r from the plan"
+   },
+   {
+    "consumer": "rst_region[18].dly",
+    "producer": "diecfg.rst_dly",
+    "lo": 144,
+    "width": 8,
+    "note": "qkd_rst_region root r of kv_die (its strap rdly_* is replaced); value D - d_r from the plan"
+   },
+   {
+    "consumer": "rst_region[19].dly",
+    "producer": "diecfg.rst_dly",
+    "lo": 152,
+    "width": 8,
+    "note": "qkd_rst_region root r of kv_die (its strap rdly_* is replaced); value D - d_r from the plan"
+   },
+   {
+    "consumer": "rst_region[20].dly",
+    "producer": "diecfg.rst_dly",
+    "lo": 160,
+    "width": 8,
+    "note": "qkd_rst_region root r of kv_die (its strap rdly_* is replaced); value D - d_r from the plan"
+   },
+   {
+    "consumer": "rst_region[21].dly",
+    "producer": "diecfg.rst_dly",
+    "lo": 168,
+    "width": 8,
+    "note": "qkd_rst_region root r of kv_die (its strap rdly_* is replaced); value D - d_r from the plan"
+   },
+   {
+    "consumer": "rst_region[22].dly",
+    "producer": "diecfg.rst_dly",
+    "lo": 176,
+    "width": 8,
+    "note": "qkd_rst_region root r of kv_die (its strap rdly_* is replaced); value D - d_r from the plan"
+   },
+   {
+    "consumer": "rst_region[23].dly",
+    "producer": "diecfg.rst_dly",
+    "lo": 184,
+    "width": 8,
+    "note": "qkd_rst_region root r of kv_die (its strap rdly_* is replaced); value D - d_r from the plan"
+   },
+   {
+    "consumer": "rst_region[24].dly",
+    "producer": "diecfg.rst_dly",
+    "lo": 192,
+    "width": 8,
+    "note": "qkd_rst_region root r of kv_die (its strap rdly_* is replaced); value D - d_r from the plan"
+   },
+   {
+    "consumer": "rst_region[25].dly",
+    "producer": "diecfg.rst_dly",
+    "lo": 200,
+    "width": 8,
+    "note": "qkd_rst_region root r of kv_die (its strap rdly_* is replaced); value D - d_r from the plan"
+   },
+   {
+    "consumer": "rst_region[26].dly",
+    "producer": "diecfg.rst_dly",
+    "lo": 208,
+    "width": 8,
+    "note": "qkd_rst_region root r of kv_die (its strap rdly_* is replaced); value D - d_r from the plan"
+   },
+   {
+    "consumer": "rst_region[27].dly",
+    "producer": "diecfg.rst_dly",
+    "lo": 216,
+    "width": 8,
+    "note": "qkd_rst_region root r of kv_die (its strap rdly_* is replaced); value D - d_r from the plan"
+   },
+   {
+    "consumer": "rst_region[28].dly",
+    "producer": "diecfg.rst_dly",
+    "lo": 224,
+    "width": 8,
+    "note": "qkd_rst_region root r of kv_die (its strap rdly_* is replaced); value D - d_r from the plan"
+   },
+   {
+    "consumer": "rst_region[29].dly",
+    "producer": "diecfg.rst_dly",
+    "lo": 232,
+    "width": 8,
+    "note": "qkd_rst_region root r of kv_die (its strap rdly_* is replaced); value D - d_r from the plan"
+   },
+   {
+    "consumer": "rst_region[30].dly",
+    "producer": "diecfg.rst_dly",
+    "lo": 240,
+    "width": 8,
+    "note": "qkd_rst_region root r of kv_die (its strap rdly_* is replaced); value D - d_r from the plan"
+   },
+   {
+    "consumer": "rst_region[31].dly",
+    "producer": "diecfg.rst_dly",
+    "lo": 248,
+    "width": 8,
+    "note": "qkd_rst_region root r of kv_die (its strap rdly_* is replaced); value D - d_r from the plan"
+   },
+   {
+    "consumer": "rst_region[32].dly",
+    "producer": "diecfg.rst_dly",
+    "lo": 256,
+    "width": 8,
+    "note": "qkd_rst_region root r of kv_die (its strap rdly_* is replaced); value D - d_r from the plan"
+   },
+   {
+    "consumer": "rst_region[33].dly",
+    "producer": "diecfg.rst_dly",
+    "lo": 264,
+    "width": 8,
+    "note": "qkd_rst_region root r of kv_die (its strap rdly_* is replaced); value D - d_r from the plan"
+   },
+   {
+    "consumer": "rst_region[34].dly",
+    "producer": "diecfg.rst_dly",
+    "lo": 272,
+    "width": 8,
+    "note": "qkd_rst_region root r of kv_die (its strap rdly_* is replaced); value D - d_r from the plan"
+   },
+   {
+    "consumer": "rst_region[35].dly",
+    "producer": "diecfg.rst_dly",
+    "lo": 280,
+    "width": 8,
+    "note": "qkd_rst_region root r of kv_die (its strap rdly_* is replaced); value D - d_r from the plan"
+   },
+   {
+    "consumer": "rst_region[36].dly",
+    "producer": "diecfg.rst_dly",
+    "lo": 288,
+    "width": 8,
+    "note": "qkd_rst_region root r of kv_die (its strap rdly_* is replaced); value D - d_r from the plan"
+   },
+   {
+    "consumer": "rst_region[37].dly",
+    "producer": "diecfg.rst_dly",
+    "lo": 296,
+    "width": 8,
+    "note": "qkd_rst_region root r of kv_die (its strap rdly_* is replaced); value D - d_r from the plan"
+   },
+   {
+    "consumer": "rst_region[38].dly",
+    "producer": "diecfg.rst_dly",
+    "lo": 304,
+    "width": 8,
+    "note": "qkd_rst_region root r of kv_die (its strap rdly_* is replaced); value D - d_r from the plan"
+   },
+   {
+    "consumer": "rst_region[39].dly",
+    "producer": "diecfg.rst_dly",
+    "lo": 312,
+    "width": 8,
+    "note": "qkd_rst_region root r of kv_die (its strap rdly_* is replaced); value D - d_r from the plan"
+   },
+   {
+    "consumer": "rst_region[40].dly",
+    "producer": "diecfg.rst_dly",
+    "lo": 320,
+    "width": 8,
+    "note": "qkd_rst_region root r of kv_die (its strap rdly_* is replaced); value D - d_r from the plan"
+   },
+   {
+    "consumer": "rst_region[41].dly",
+    "producer": "diecfg.rst_dly",
+    "lo": 328,
+    "width": 8,
+    "note": "qkd_rst_region root r of kv_die (its strap rdly_* is replaced); value D - d_r from the plan"
+   },
+   {
+    "consumer": "rst_region[42].dly",
+    "producer": "diecfg.rst_dly",
+    "lo": 336,
+    "width": 8,
+    "note": "qkd_rst_region root r of kv_die (its strap rdly_* is replaced); value D - d_r from the plan"
+   }
+  ]
+ },
+ "totals": {
+  "die_input_unconnected": 21,
+  "die_undriven_bits": 1086,
+  "die_unbound_masters": 0,
+  "die_functional_tie_ports": 4,
+  "die_superseded_masters_present": 5,
+  "static_functional_open_ports": 2809,
+  "static_clock_reset_entries": 3003
+ },
+ "case_hold": "KEPT: strict bind not clean (kv_die.py OT_KV_STATIC --mode case refusal unchanged)"
+}

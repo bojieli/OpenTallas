@@ -1,0 +1,682 @@
+{
+ "schema": "opentallas.qwen-host-root-cluster-plan.v1",
+ "root": "qkd_host_root_admission",
+ "frame_um": [
+  777.6,
+  518.4
+ ],
+ "frame_area_um2": 403108,
+ "util": 0.55,
+ "lattice_um": 43.2,
+ "children": {
+  "qkd_hr_phy_adp": {
+   "family": "phy",
+   "members": [
+    "top/u_rank/u_adapter/g_slice[0].u_slice"
+   ],
+   "note": "qfd_link_adp128 hardened ONCE, stepped x8 (one per ck_phy[i] lane); 1 SRAM each",
+   "instances": 8,
+   "std_cells_hier": 6924,
+   "std_cells_flat_est": 5193,
+   "std_area_um2_hier": 915,
+   "flops_hier": 1932,
+   "flops_flat_est": 1430,
+   "macros": {
+    "ot_sram_1r1w_512x128_m4_r2c2": 1
+   },
+   "elab_clock_ports": {
+    "ck_phy[0]": 910
+   },
+   "clock_roots": 1,
+   "outline_est": {
+    "w": 216.0,
+    "h": 64.8
+   },
+   "core_need_um2": 9152,
+   "aspect": 3.33,
+   "pin_bits_upper": {
+    "data_in": 280,
+    "data_out": 279,
+    "clock_ports_elab": [
+     "ck"
+    ],
+    "per_um_full_perimeter": 1.0
+   }
+  },
+  "qkd_hr_phy_pad": {
+   "family": "phy",
+   "members": [
+    "top/u_rank/u_phy/u_pad"
+   ],
+   "note": "qkd_host_rx_pad5 (ck_pad); FDI 1024-b data in -> 546-b W546 word out",
+   "instances": 1,
+   "std_cells_hier": 13017,
+   "std_cells_flat_est": 9763,
+   "std_area_um2_hier": 1925,
+   "flops_hier": 4208,
+   "flops_flat_est": 3114,
+   "macros": {},
+   "elab_clock_ports": {
+    "ck_pad": 1587
+   },
+   "clock_roots": 1,
+   "outline_est": {
+    "w": 86.4,
+    "h": 86.4
+   },
+   "core_need_um2": 3500,
+   "aspect": 1.0,
+   "pin_bits_upper": {
+    "data_in": 1027,
+    "data_out": 549,
+    "clock_ports_elab": [
+     "clk"
+    ],
+    "per_um_full_perimeter": 4.56
+   }
+  },
+  "qkd_hr_core_prompt": {
+   "family": "core",
+   "members": [
+    "top/u_rank/u_control/u_control",
+    "top/u_rank/u_program",
+    "top/u_rank/u_program_rx",
+    "top/u_records"
+   ],
+   "note": "prompt/CSR/ctl/rst services (1 SRAM 1024x256) + program loader (4 SRAM 256x64) + program rx + record port",
+   "instances": 1,
+   "std_cells_hier": 40025,
+   "std_cells_flat_est": 30019,
+   "std_area_um2_hier": 5905,
+   "flops_hier": 11172,
+   "flops_flat_est": 8267,
+   "macros": {
+    "ot_sram_1r1w_1024x256_m2_r2c2": 1,
+    "ot_sram_1rw_256x64_m4_r2c2": 4
+   },
+   "elab_clock_ports": {
+    "ck_csr": 1387,
+    "ck_host": 4408,
+    "ck_ctl": 2260,
+    "ck_rst": 237,
+    "ck_prompt": 332,
+    "ck_program_loader": 866,
+    "ck_program_rx": 1266,
+    "ck_records": 1929
+   },
+   "clock_roots": 1,
+   "outline_est": {
+    "w": 216.0,
+    "h": 172.8
+   },
+   "core_need_um2": 34643,
+   "aspect": 1.25,
+   "pin_bits_upper": {
+    "data_in": 2937,
+    "data_out": 2242,
+    "clock_ports_elab": [
+     "ck",
+     "ck_csr",
+     "ck_ctl",
+     "ck_host",
+     "ck_prompt",
+     "ck_rst"
+    ],
+    "per_um_full_perimeter": 6.66
+   }
+  },
+  "qkd_hr_core_rx": {
+   "family": "core",
+   "members": [
+    "top/u_rank/u_control/u_packet/u_rx"
+   ],
+   "note": "qkd_host_rx_class_admission (rx packet class)",
+   "instances": 1,
+   "std_cells_hier": 49650,
+   "std_cells_flat_est": 37238,
+   "std_area_um2_hier": 6166,
+   "flops_hier": 12431,
+   "flops_flat_est": 9199,
+   "macros": {},
+   "elab_clock_ports": {
+    "ck_rx": 3215
+   },
+   "clock_roots": 1,
+   "outline_est": {
+    "w": 129.6,
+    "h": 129.6
+   },
+   "core_need_um2": 11211,
+   "aspect": 1.0,
+   "pin_bits_upper": {
+    "data_in": 542,
+    "data_out": 1594,
+    "clock_ports_elab": [
+     "ck"
+    ],
+    "per_um_full_perimeter": 4.12
+   }
+  },
+  "qkd_hr_core_tx": {
+   "family": "core",
+   "members": [
+    "top/u_rank/u_control/u_packet/u_tx",
+    "top/u_rank/u_control/u_packet/u_axi",
+    "top/u_rank/u_control/u_packet/u_ctrl"
+   ],
+   "note": "tx class + AXI packet + ctrl/token service packet",
+   "instances": 1,
+   "std_cells_hier": 54742,
+   "std_cells_flat_est": 41056,
+   "std_area_um2_hier": 7839,
+   "flops_hier": 15377,
+   "flops_flat_est": 11379,
+   "macros": {},
+   "elab_clock_ports": {
+    "ck_tx": 1738,
+    "ck_axi": 1670,
+    "ck_ctrl": 3484
+   },
+   "clock_roots": 1,
+   "outline_est": {
+    "w": 172.8,
+    "h": 129.6
+   },
+   "core_need_um2": 14252,
+   "aspect": 1.33,
+   "pin_bits_upper": {
+    "data_in": 1899,
+    "data_out": 2013,
+    "clock_ports_elab": [
+     "ck"
+    ],
+    "per_um_full_perimeter": 6.47
+   }
+  },
+  "qkd_hr_core_guard": {
+   "family": "core",
+   "members": [
+    "top/u_rank/u_guard",
+    "top/u_rank/u_native"
+   ],
+   "note": "service guard (markers FIFO) + native token endpoint",
+   "instances": 1,
+   "std_cells_hier": 47616,
+   "std_cells_flat_est": 35712,
+   "std_area_um2_hier": 6746,
+   "flops_hier": 13582,
+   "flops_flat_est": 10051,
+   "macros": {},
+   "elab_clock_ports": {
+    "ck_guard": 12596,
+    "ck_native": 1061
+   },
+   "clock_roots": 1,
+   "outline_est": {
+    "w": 129.6,
+    "h": 129.6
+   },
+   "core_need_um2": 12266,
+   "aspect": 1.0,
+   "pin_bits_upper": {
+    "data_in": 712,
+    "data_out": 462,
+    "clock_ports_elab": [
+     "ck",
+     "ck_guard"
+    ],
+    "per_um_full_perimeter": 2.26
+   }
+  },
+  "qkd_hr_core_queue": {
+   "family": "core",
+   "members": [
+    "top/u_rank/u_bridge/u_queue",
+    "top/u_rank/u_marker_consumer",
+    "top/u_rank/u_bootbarrier",
+    "glue:qm_core",
+    "glue:fence_core"
+   ],
+   "note": "qm ingress16 service + boot barrier/marker + core side of native_qm and visibility_fence",
+   "instances": 1,
+   "std_cells_hier": 43301,
+   "std_cells_flat_est": 32476,
+   "std_area_um2_hier": 5676,
+   "flops_hier": 11349,
+   "flops_flat_est": 8398,
+   "macros": {},
+   "elab_clock_ports": {
+    "ck_qm_queue": 2117,
+    "ck_bootbarrier": 387
+   },
+   "clock_roots": 1,
+   "outline_est": {
+    "w": 129.6,
+    "h": 86.4
+   },
+   "core_need_um2": 10319,
+   "aspect": 1.5,
+   "pin_bits_upper": {
+    "data_in": 746,
+    "data_out": 723,
+    "clock_ports_elab": [
+     "ck"
+    ],
+    "per_um_full_perimeter": 3.4
+   }
+  },
+  "qkd_hr_core_order": {
+   "family": "core",
+   "members": [
+    "top/u_rank/u_chain",
+    "top/u_rank/u_dispatch"
+   ],
+   "note": "ingest chain (map/sum/order) + boot dispatch/retire order",
+   "instances": 1,
+   "std_cells_hier": 79710,
+   "std_cells_flat_est": 59782,
+   "std_area_um2_hier": 10822,
+   "flops_hier": 17126,
+   "flops_flat_est": 12673,
+   "macros": {},
+   "elab_clock_ports": {
+    "ck_map": 2137,
+    "ck_order": 2791,
+    "ck_sum": 160,
+    "ck_retire": 2792,
+    "ck_dispatch": 938
+   },
+   "clock_roots": 1,
+   "outline_est": {
+    "w": 172.8,
+    "h": 129.6
+   },
+   "core_need_um2": 19676,
+   "aspect": 1.33,
+   "pin_bits_upper": {
+    "data_in": 683,
+    "data_out": 1598,
+    "clock_ports_elab": [
+     "ck",
+     "ck_map",
+     "ck_order",
+     "ck_sum"
+    ],
+    "per_um_full_perimeter": 3.77
+   }
+  },
+  "qkd_hr_core_peer": {
+   "family": "core",
+   "members": [
+    "top/u_rank/u_peer",
+    "top/u_peer_codec",
+    "top/u_root_mux",
+    "top/u_coordinator"
+   ],
+   "note": "board peer link + rank codec + root mux + TP8 coordinator: ONE clock group (direct valid/ready interfaces, no synchroniser: root_mux<->coordinator 2x8x512 b, peer_link->program_rx, coordinator<->rank token request/grant) -> ck_peer/ck_root_mux/ck_coordinator_* = core (HOST_CLK_INFERRED says host for ck_peer/ck_root_mux: inconsistent, owner to confirm)",
+   "instances": 1,
+   "std_cells_hier": 71728,
+   "std_cells_flat_est": 53796,
+   "std_area_um2_hier": 9004,
+   "flops_hier": 13434,
+   "flops_flat_est": 9941,
+   "macros": {},
+   "elab_clock_ports": {
+    "ck_peer": 9380,
+    "ck_root_mux": 517,
+    "ck_coordinator_lifecycle": 317,
+    "ck_coordinator_post": 206,
+    "ck_coordinator_codec": 6047
+   },
+   "clock_roots": 1,
+   "outline_est": {
+    "w": 216.0,
+    "h": 172.8
+   },
+   "core_need_um2": 16372,
+   "aspect": 1.25,
+   "pin_bits_upper": {
+    "data_in": 2855,
+    "data_out": 3045,
+    "clock_ports_elab": [
+     "ck",
+     "ck_codec",
+     "ck_lifecycle",
+     "ck_post"
+    ],
+    "per_um_full_perimeter": 7.59
+   }
+  },
+  "qkd_hr_host_qm": {
+   "family": "host",
+   "members": [
+    "top/u_rank/u_bridge/u_pacer",
+    "glue:qm_host",
+    "glue:fence_host"
+   ],
+   "note": "the whole host family: native_qm host face (between the bridge CDC and the hx/cx CDC) + credit pacer + fence host side",
+   "instances": 1,
+   "std_cells_hier": 4249,
+   "std_cells_flat_est": 3187,
+   "std_area_um2_hier": 554,
+   "flops_hier": 1316,
+   "flops_flat_est": 974,
+   "macros": {},
+   "elab_clock_ports": {
+    "ck_qm_credit": 16
+   },
+   "clock_roots": 1,
+   "outline_est": {
+    "w": 43.2,
+    "h": 43.2
+   },
+   "core_need_um2": 1007,
+   "aspect": 1.0,
+   "pin_bits_upper": {
+    "data_in": 7,
+    "data_out": 2,
+    "clock_ports_elab": [
+     "clk_h"
+    ],
+    "per_um_full_perimeter": 0.05
+   }
+  },
+  "qkd_hr_ingest_eng": {
+   "family": "ingest",
+   "members": [
+    "top/u_rank/u_qm/u_eng",
+    "glue:qm_ingest"
+   ],
+   "note": "native ingest engine (32 SRAM 32x128) + ingest side of native_qm",
+   "instances": 1,
+   "std_cells_hier": 97410,
+   "std_cells_flat_est": 73058,
+   "std_area_um2_hier": 11117,
+   "flops_hier": 16680,
+   "flops_flat_est": 12343,
+   "macros": {
+    "ot_sram_1r1w_32x128_m1": 32
+   },
+   "elab_clock_ports": {
+    "ck_qm_out": 10,
+    "ck_qm_ingest": 7049,
+    "ck_qm_bank[1]": 4288,
+    "ck_qm_bank[0]": 4288
+   },
+   "clock_roots": 1,
+   "outline_est": {
+    "w": 388.8,
+    "h": 345.6
+   },
+   "core_need_um2": 83098,
+   "aspect": 1.12,
+   "pin_bits_upper": {
+    "data_in": 1029,
+    "data_out": 366,
+    "clock_ports_elab": [
+     "clk",
+     "clk_bank",
+     "clk_out"
+    ],
+    "per_um_full_perimeter": 0.95
+   }
+  },
+  "qkd_hr_cdc_pc": {
+   "family": "cdc:phy|core",
+   "members": [
+    "top/u_rank/u_phy/u_rx",
+    "top/u_rank/u_phy/u_tx"
+   ],
+   "note": "two W546 PIPE2 die CDC channels: PHY rx (phy->core), tx (core->phy)",
+   "instances": 1,
+   "std_cells_hier": 76242,
+   "std_cells_flat_est": 57182,
+   "std_area_um2_hier": 9708,
+   "flops_hier": 20904,
+   "flops_flat_est": 15469,
+   "macros": {},
+   "elab_clock_ports": {
+    "ck_phy_rx_r": 2238,
+    "ck_phy_rx_w": 6053,
+    "ck_phy_tx_r": 2238,
+    "ck_phy_tx_w": 6053
+   },
+   "clock_roots": 2,
+   "outline_est": {
+    "w": 172.8,
+    "h": 129.6
+   },
+   "core_need_um2": 17651,
+   "aspect": 1.33,
+   "pin_bits_upper": {
+    "data_in": 1082,
+    "data_out": 1082,
+    "clock_ports_elab": [
+     "rclk",
+     "wclk"
+    ],
+    "per_um_full_perimeter": 3.58
+   }
+  },
+  "qkd_hr_cdc_ch": {
+   "family": "cdc:core|host",
+   "members": [
+    "top/u_rank/u_bridge/u_ing",
+    "top/u_rank/u_bridge/u_done",
+    "glue:fence_sync"
+   ],
+   "note": "qm ingress (core->host) + done (host->core) W546 CDC channels + visibility-fence synchronisers",
+   "instances": 1,
+   "std_cells_hier": 76392,
+   "std_cells_flat_est": 57294,
+   "std_area_um2_hier": 9727,
+   "flops_hier": 20904,
+   "flops_flat_est": 15469,
+   "macros": {},
+   "elab_clock_ports": {
+    "ck_qm_ing_r": 2238,
+    "ck_qm_ing_w": 6053,
+    "ck_qm_done_r": 2238,
+    "ck_qm_done_w": 6053
+   },
+   "clock_roots": 2,
+   "outline_est": {
+    "w": 172.8,
+    "h": 129.6
+   },
+   "core_need_um2": 17686,
+   "aspect": 1.33,
+   "pin_bits_upper": {
+    "data_in": 618,
+    "data_out": 586,
+    "clock_ports_elab": [
+     "rclk",
+     "wclk"
+    ],
+    "per_um_full_perimeter": 1.99
+   }
+  },
+  "qkd_hr_cdc_hi": {
+   "family": "cdc:host|ingest",
+   "members": [
+    "top/u_rank/u_qm/u_hx",
+    "top/u_rank/u_qm/u_cx"
+   ],
+   "note": "native_qm host stream (host->ingest, W514) + completion (ingest->host, W64)",
+   "instances": 1,
+   "std_cells_hier": 37795,
+   "std_cells_flat_est": 28346,
+   "std_area_um2_hier": 4786,
+   "flops_hier": 9346,
+   "flops_flat_est": 6916,
+   "macros": {},
+   "elab_clock_ports": {
+    "ck_qm_ingest": 51,
+    "ck_qm_host": 51
+   },
+   "clock_roots": 2,
+   "outline_est": {
+    "w": 129.6,
+    "h": 86.4
+   },
+   "core_need_um2": 8702,
+   "aspect": 1.5,
+   "pin_bits_upper": {
+    "data_in": 586,
+    "data_out": 587,
+    "clock_ports_elab": [
+     "rclk",
+     "wclk"
+    ],
+    "per_um_full_perimeter": 2.72
+   }
+  },
+  "qkd_hr_cdc_ci": {
+   "family": "cdc:core|ingest",
+   "members": [
+    "top/u_rank/u_qm/u_ox",
+    "top/u_rank/u_qm/u_rx"
+   ],
+   "note": "native_qm HBM write face out (ingest->core) + read return (core->ingest)",
+   "instances": 1,
+   "std_cells_hier": 35764,
+   "std_cells_flat_est": 26823,
+   "std_area_um2_hier": 4523,
+   "flops_hier": 8818,
+   "flops_flat_est": 6525,
+   "macros": {},
+   "elab_clock_ports": {
+    "ck_qm_core": 51,
+    "ck_qm_ingest": 51
+   },
+   "clock_roots": 2,
+   "outline_est": {
+    "w": 129.6,
+    "h": 86.4
+   },
+   "core_need_um2": 8224,
+   "aspect": 1.5,
+   "pin_bits_upper": {
+    "data_in": 553,
+    "data_out": 549,
+    "clock_ports_elab": [
+     "rclk",
+     "wclk"
+    ],
+    "per_um_full_perimeter": 2.55
+   }
+  }
+ },
+ "totals": {
+  "std_cells_hier": 783033,
+  "flops_hier": 192103,
+  "child_outline_area_um2": 487089,
+  "child_area_over_frame": 1.208
+ },
+ "source": {
+  "branch": "claude/kvj-a3-1017",
+  "base": "4d8480387",
+  "census": "census/census_rollup.json (tools/qwen_kv_die/host_cluster/clock_tree_census.py + hier_rollup.py)",
+  "synth": "census/hsyn.ys hierarchical mapped RVT TT (ot-epyc4, ~6 min); elab census/elab.ys",
+  "params": {
+   "ENABLE_SERVICE": 1,
+   "ENABLE_NATIVE": 1,
+   "ENABLE_TOKEN": 1,
+   "NL": 2
+  }
+ },
+ "family_clocks": {
+  "core": "833.3 ps (fixture CORE): every core-family port merges into ONE child clock entry ck_core",
+  "host": "1000 ps (fixture HOST): ck_qm_host, ck_qm_ing_r, ck_qm_credit, ck_qm_done_w, ck_fence_host -> ck_host_fam",
+  "ingest": "1666.7 ps (fixture INGEST): ck_qm_ingest, ck_qm_out, ck_qm_bank[1:0] -> ck_ingest",
+  "phy": "1043 ps (fixture PHY): ck_pad, ck_phy_rx_w, ck_phy_tx_r -> ck_phy_fam; ck_phy[i] -> adp tile i entry (same edge)",
+  "reclassified": {
+   "ck_peer": "core (was INFERRED host)",
+   "ck_root_mux": "core (was INFERRED host)",
+   "reason": "direct valid/ready (no synchroniser): root_mux<->coordinator 2x8x512 b, u_peer.normal_rx -> u_program_rx (ck_program_rx core), coordinator<->rank token request/grant"
+  }
+ },
+ "cdc": {
+  "qkd_hr_cdc_pc": {
+   "modules": [
+    "ot_qwen_die_cdc_ch W546 PIPE2 u_phy.u_rx (wclk ck_phy_rx_w -> rclk ck_phy_rx_r)",
+    "ot_qwen_die_cdc_ch W546 PIPE2 u_phy.u_tx (ck_phy_tx_w core -> ck_phy_tx_r phy)"
+   ],
+   "owner": "own CDC leaf at the phy|core seam (both clocks enter it); hold_budget tile + reason CDC leaf",
+   "neighbours": [
+    "qkd_hr_phy_pad",
+    "qkd_hr_core_rx",
+    "qkd_hr_core_tx"
+   ]
+  },
+  "qkd_hr_cdc_ch": {
+   "modules": [
+    "ot_qwen_die_cdc_ch u_bridge.u_ing (ck_qm_ing_w core -> ck_qm_ing_r host)",
+    "ot_qwen_die_cdc_ch u_bridge.u_done (ck_qm_done_w host -> ck_qm_done_r core)",
+    "visibility_fence crossing synchronisers (RTL re-cut)"
+   ],
+   "owner": "own CDC leaf at the core|host seam",
+   "neighbours": [
+    "qkd_hr_core_queue",
+    "qkd_hr_host_qm"
+   ]
+  },
+  "qkd_hr_cdc_hi": {
+   "modules": [
+    "ot_link_afifo W514 u_qm.u_hx (clk_h -> clk_i)",
+    "ot_link_afifo W64 u_qm.u_cx (clk_i -> clk_h)"
+   ],
+   "owner": "own CDC leaf at the host|ingest seam",
+   "neighbours": [
+    "qkd_hr_host_qm",
+    "qkd_hr_ingest_eng"
+   ]
+  },
+  "qkd_hr_cdc_ci": {
+   "modules": [
+    "ot_link_afifo W(AW+257) u_qm.u_ox (clk_i -> ck)",
+    "ot_link_afifo W256 u_qm.u_rx (ck -> clk_i)"
+   ],
+   "owner": "own CDC leaf at the core|ingest seam",
+   "neighbours": [
+    "qkd_hr_core_queue",
+    "qkd_hr_ingest_eng"
+   ]
+  },
+  "single_bit": "raw_faults (25 b sticky) into qkd_hr_core_guard: already 2-flop synced in qkd_host_service_guard (fm/fs); the pin register adds a 3rd stage"
+ },
+ "rtl_actions": [
+  "A1 qkd_host_native_qm_debt: own logic is mixed (core 586 / host 595 / ingest 352 flops + 3 reset syncs): re-cut into qkd_host_native_qm_core / _host / _ingest faces + the 4 afifos as separate instances; lock-step bench vs current module (cycle-exact)",
+  "A2 qkd_host_visibility_fence: own logic mixed (core 76 / host 696 flops): split into fence_core / fence_host + its crossing synchronisers (to qkd_hr_cdc_ch); lock-step bench",
+  "A3 qkd_host_qm_clock_bridge_service_debt, qkd_host_phy_cdc5, qfd_link_adp512_split, qkd_host_control_packet_admission, qkd_host_packet_bundle_admission: wrappers only (no own flops) -> hierarchy move, no RTL change",
+  "A4 rank/top glue (491 + 14 cells; ck_program_loader 2 flops): distribute every glue cone into the child of its consumer; any cone mixing two families gets a synchroniser in the receiving child (none expected besides faults / resets)",
+  "A5 child wrapper modules qkd_hr_<child> (one per multi-member child): pure instantiation, one family clock port feeding every member clock, one rst relay (regional reset)",
+  "A6 no credits / backpressure added; the existing credit channels are unchanged (PHY + host are off-die boundaries; intra-host v/d/cr channels pre-date the static rule -> coordinator call). Every new intra-family cut adds +1 out +1 in pin-register cycle: check each credit loop covers the +2-cycle RTT (composition bench)",
+  "A7 (option) ot_qwen_die_cdc_ch MEMM=1 on the 4 W546 channels: FIFO body -> dual-clock 1R1W macro (existing opt-in), ~4 x 25k std cells removed from the CDC leaves",
+  "A8 qkd_host_rx_class_admission (qkd_hr_core_rx gate c1): read pointer ir[1:0] of the 16 x 514 ingest queue drives 8,226 / 4,115 loads (textbook high_fanout) -> replicate ir per 64-bit slice (registered copies, 0 cycles) or a registered read mux; timing currently +204 ps TT so not blocking"
+ ],
+ "floorplan_intent": {
+  "frame_now": [
+   777.6,
+   518.4
+  ],
+  "fit": "child outlines (hierarchical sizes, util 0.55) = 487k um2 = 1.21 x the 403k frame -> does NOT fit; flat-synth sizes ~0.9-1.0 x",
+  "proposal": "grow the cluster slot to 950.4 x 648.0 (616k um2, 0.79 child occupancy, 20-um seams) -- die-lead decision; or keep 907.2 x 604.8 (0.89) with MEMM=1 CDC macros",
+  "bands": [
+   "S edge: 8 qkd_hr_phy_adp in 4x2 (864 x 129.6) over the serdes_host FDI (fdi enters S face)",
+   "above PHY: qkd_hr_phy_pad + qkd_hr_cdc_pc centred; qkd_hr_core_rx W of it, qkd_hr_core_tx E of it",
+   "middle: qkd_hr_core_order (chain_f / slice_* on the W/E faces), core_guard, core_prompt, core_queue",
+   "N: qkd_hr_core_peer (peer_tx/rx on N), qkd_hr_ingest_eng NE (388.8 x 345.6) with qkd_hr_cdc_ci (core_queue|ingest) and qkd_hr_cdc_hi + qkd_hr_host_qm + qkd_hr_cdc_ch in a column between core_queue and ingest"
+  ],
+  "macros": "all SRAM origins on the 43.2 lattice; 20-um macro channels; ingest 32 x 32x128 SRAM in 4 cols x 8 rows at 86.4 x 43.2 pitch, std band on the face toward cdc_ci/cdc_hi",
+  "clock_entries": "each child: its family clock pin on the face nearest its register mass (adp: W face beside the flit flops; core children: face toward the cluster centre spine of ck_core)"
+ },
+ "open_decisions": [
+  "D1 cluster slot growth 777.6 x 518.4 -> ~950.4 x 648 (or 907.2 x 604.8 + MEMM=1) -- die lead",
+  "D2 ck_peer / ck_root_mux / ck_coordinator_* family = core (RTL has direct interfaces); HOST_CLK_INFERRED says host -> HOST owner confirm, kv_die.HOST_CLK_INFERRED update",
+  "D3 die drives 4 family clocks (+ 8 ck_phy lane entries) into the cluster instead of 45 ports (fixture drives each family from one edge) -- PLL/die lead",
+  "D4 host family is only the native_qm host face (~4k cells): keep a tiny host tile (43.2 sq) or fold core->host->ingest into one 3-clock CDC leaf / remove the host hop (RTL arch change)",
+  "D5 existing intra-host credit channels (v/d/cr) vs the static-schedule rule (host boundary is off-die -> elastic allowed?)",
+  "D6 die contract fdi: 2,085 bits on a 100-um S-face window (20.8 /um) set by the serdes_host hard IP N face -> adp tiles fan out from that window"
+ ]
+}

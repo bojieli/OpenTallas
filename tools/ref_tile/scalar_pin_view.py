@@ -60,7 +60,10 @@ def single_zero_bases(pins) -> list[str]:
 # ---------------------------------------------------------------- RTL port declarations
 def _strip_comments(t: str) -> str:
     t = re.sub(r"/\*.*?\*/", " ", t, flags=re.S)
-    return re.sub(r"//[^\n]*", "", t)
+    t = re.sub(r"//[^\n]*", "", t)
+    # Verilog attribute instances (* keep = "true" *) before a port declaration hid its range: the port was read as
+    # RTL-scalar and the export lint refused a bus bit x[0] (qkd_ahub_core hd4 collect, 2026-10-18). (*) is not one.
+    return re.sub(r"\(\*(?!\))[^;]*?\*\)", " ", t)
 
 
 def _split_top(s: str) -> list[str]:

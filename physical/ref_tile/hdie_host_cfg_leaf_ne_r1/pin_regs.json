@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hbm_host_cfg_leaf_ne",
+ "enable": false,
+ "reason": "RTL registers every pin: every input lands in a pin flop (payload unreset, valids/status on the synced reset), every output is a flop Q (copy registers / status output flops); a kit flop stage would add a redundant edge"
+}

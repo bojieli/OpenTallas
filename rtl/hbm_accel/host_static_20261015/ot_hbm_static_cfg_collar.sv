@@ -27,8 +27,8 @@
 // (if requested) c_done seen.
 // Pins: every input lands in a pin flop, every output is a flop Q (owner rule 19:50).
 // Fixed latency (XSER=0): launch_v -> start_v = 2 edges; cfg frame -> pw_we = 2 edges; record go = offset+1
-// edges after start_v. XSER=1 adds the rational crossing (stream pin + hold + 2 serial edges), a fixed value
-// for each launch phase of the common 3:4 epoch (the compiler issues F30 on a known phase).
+// edges after start_v. XSER=1 adds the synchronised 3:4 crossing (stream pin + hold + 3 serial edges), a fixed value
+// for every launch issued on a stream phase >= 555 ps before the next serial edge (the compiler issues F30 there).
 module ot_hbm_static_cfg_collar #(
     parameter integer PAGE_W=12,   // page bits per programme space (AW = PAGE_W+11)
     parameter integer NS=2,        // programme spaces (1..4)
@@ -39,7 +39,9 @@ module ot_hbm_static_cfg_collar #(
     parameter integer NF=1,        // client fault inputs
     parameter integer TAIL=4,
     parameter integer XSER=0,      // 1: core clk is the 3:4 serial domain, broadcast pins on clk_in (stream)
-    parameter integer MUT=0,       // bench: 1 skip sequential check, 2 ready ignores need, 3 go one edge early, 4 no event seq check
+    parameter integer MUT=0,       // bench: 1 skip sequential check, 2 ready ignores need, 3 go one edge early, 4 no event seq check,
+                                   //        5 (XSER=1) stream domain left without its reset, 6 (XSER=1) binary event sequence (not Gray),
+                                   //        7 (XSER=1) one synchroniser stage short, 8 (XSER=0) core state without the synchronised reset
     parameter integer AW=PAGE_W+11
 )(
     input  wire clk, clk_in, rst_n,
@@ -69,6 +71,39 @@ module ot_hbm_static_cfg_collar #(
     localparam integer SW = (NS>1) ? $clog2(NS) : 1;
     localparam integer RN = (NREC>0) ? NREC : 1;
     localparam integer RW = (NREC>1) ? $clog2(NREC+1) : 1;
+    // ---------------- per-domain reset (HBMA-HOST2 2026-10-17)
+    // XSER=1: rst_n is a serial-domain (por_serial) pin. It lands in a plain pin flop on clk and a second clk stage;
+    // that Q (rst_c_n) is the core-domain reset (in-domain recovery/removal, full serial period). The stream domain
+    // gets its own reset: rst_c_n is re-timed by two clk_in flops (rs[0] is a synchroniser stage 1, CDC-bounded in
+    // xser_cdc.sdc like the event sequence) and that Q (rst_s_n) clears the clk_in flops. Before this, the raw serial rst_n async-cleared
+    // the clk_in flops directly (pin -> RESETN at the tightest 3:4 edge pair: recovery -129 ps, removal -50 ps).
+    // Release: core +2 serial edges, stream +2 stream edges after that; no datapath latency changes (configuration
+    // events arrive from the elastic host ingress long after power-on reset).
+    // XSER=0 (HBM-NATIVE 2026-10-17): the same 2-flop pin synchroniser as the XSER=1 core path. The native pin audit of
+    // the closed r1 views (col_sfu capture 455.7 ps, col_idx 499.0 ps > 190) found the raw rst_n pin async-clearing every
+    // collar flop; now the pin drives ONE plain clk flop, whose stage-2 Q is the reset of every flop (single domain:
+    // rst_s_n = rst_c_n). Assert and release both take +2 clk edges; no datapath / event latency changes (cycles 0).
+    // MUT 8 (bench): a mid-run reset does not reach the core state (configuration, armed, hwm, records).
+    // XSER=1 elaboration is unchanged (g_rst_sync below, byte-identical text; col_su r3 closed view).
+    wire rst_c_n, rst_s_n;
+    generate if (XSER == 0) begin : g_rst_same
+        reg [1:0] rc;
+        always @(posedge clk) rc <= {rc[0], rst_n};
+        if (MUT == 8) begin : g_mut8   // bench mutant: only the power-on reset reaches the core state
+            reg por_done = 1'b0;
+            always @(posedge clk) if (rc[1] === 1'b1) por_done <= 1'b1;
+            assign rst_c_n = rc[1] | por_done;
+        end else begin : g_rc
+            assign rst_c_n = rc[1];
+        end
+        assign rst_s_n = rc[1];
+    end else begin : g_rst_sync
+        reg [1:0] rc, rs;
+        always @(posedge clk)    rc <= {rc[0], rst_n};
+        always @(posedge clk_in) rs <= {rs[0], rc[1]};
+        assign rst_c_n = rc[1];
+        assign rst_s_n = (MUT == 5) ? 1'b1 : rs[1];
+    end endgenerate
     // ---------------- pin flops
     reg cv, dv, lv, done_q, xfault;
     reg [7:0] ct, tg;
@@ -77,49 +112,72 @@ module ot_hbm_static_cfg_collar #(
     reg [NB-1:0] busy_q;
     reg [NF-1:0] cf_q;
     always @(posedge clk) tg <= tgt;
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin done_q <= 0; busy_q <= 0; cf_q <= 0; end
+    always @(posedge clk or negedge rst_c_n)
+        if (!rst_c_n) begin done_q <= 0; busy_q <= 0; cf_q <= 0; end
         else begin done_q <= c_done; busy_q <= c_busy; cf_q <= c_fault; end
     generate if (XSER == 0) begin : g_same
         // broadcast pins in the core clock (clk_in is the same root)
         always @(posedge clk) begin ct <= cfg_target; ca <= cfg_addr; cd <= cfg_data; end
-        always @(posedge clk or negedge rst_n)
-            if (!rst_n) begin cv <= 0; dv <= 0; lv <= 0; xfault <= 0; end
+        always @(posedge clk or negedge rst_s_n)
+            if (!rst_s_n) begin cv <= 0; dv <= 0; lv <= 0; xfault <= 0; end
             else begin cv <= cfg_v; dv <= desc_v; lv <= launch_v; xfault <= 0; end
     end else begin : g_xser
-        // Rational 3:4 synchronous crossing (common-epoch family, timed by STA at the tightest edge pair):
-        // stream pin flops -> held event register + 2-bit event sequence; the serial core samples sequence and
-        // payload on the same edge and consumes each event exactly once. Broadcast events are >=4 stream
-        // edges apart (each is a separate ingress AXI write), i.e. >=3 serial edges; a skipped sequence
-        // value (event lost) faults.
+        // 3:4 crossing as a SYNCHRONISED boundary (HBM-COLSU 2026-10-17; replaces the flop-to-flop crossing timed at the
+        // tightest edge pair). In the die, clk_in and clk are separate entries of the regional tree (neighbour-relative
+        // clocking): every pair of different entries carries the die-skew reserve (setup 150 / hold 100 ps), so a direct
+        // stream->serial flop arc has to satisfy 278 ps - 150 setup AND >= 100 ps + hold at once. r2 measured it: FF -81.0 ps
+        // on all 282 crossing endpoints (256 h_cd->s_cd, 12 ca, 8 ct, 2 seq, cv/dv/lv, the reset re-timer) and the hold
+        // ECO found every one infeasible. Structure now:
+        //   stream: pin flops -> held event (h_*: payload + cv/dv/lv) and a 2-bit GRAY event sequence, all launched by
+        //           the same stream edge t0; h_* then stays unchanged until the next event (>= 4 stream edges later).
+        //   serial: x1 <- h_seq is the synchroniser stage 1 (the only flop that may sample h_seq mid-change; Gray: one
+        //           bit changes per event, so x1 resolves to the old or the new code, never a third), x2, x3 follow.
+        //           ev = x2 != x3 (synchronised count only, never x1). The capture registers ct/ca/cd/cv/dv/lv load h_*
+        //           ONLY when ev (gated capture, COLSU-2 2026-10-17; replaces the free-running sh_* shadows, -279 flops,
+        //           same latency): the capture edge is >= 2 serial periods after the edge on which x1 could first see the
+        //           code, so h_* has been stable >= 2222 ps - skew and stays so >= 2 more serial edges (events >= 4 stream
+        //           edges apart).
+        //   CDC constraints: ref_tile cdc_synchronizers (spec; tools/ref_tile/cdc_sync_constraints.py lints the Gray
+        //   source, the chain and the gated capture on the elaborated RTL): h_seq -> x1 and rc[1] -> rs[0] bounded
+        //   250 / 0 ps, h_* -> capture bounded 833 / 0 ps (-ignore_clock_latency); every other arc fully timed.
+        // Latency: +1 serial edge over r2 (x1 -> x2 -> x3). It is fixed for every event whose publish edge t0 is >= 2 VCO
+        // ticks (555 ps) before the next serial edge (2 of the 4 stream phases of the common epoch: 250 ps bound + skew +
+        // setup fit); the compiler issues F30 on such a phase. Config frames (cfg/desc) tolerate the +-1 serial edge of
+        // the other phases (the host boundary is elastic; readiness waits for them). A skipped Gray code (events closer
+        // than the serial edges can see) faults, as before.
         reg pv_cv, pv_dv, pv_lv; reg [7:0] p_ct; reg [11:0] p_ca; reg [255:0] p_cd;
         reg [1:0] h_seq; reg h_cv, h_dv, h_lv; reg [7:0] h_ct; reg [11:0] h_ca; reg [255:0] h_cd;
         always @(posedge clk_in) begin p_ct <= cfg_target; p_ca <= cfg_addr; p_cd <= cfg_data; end
-        always @(posedge clk_in or negedge rst_n)
-            if (!rst_n) begin pv_cv <= 0; pv_dv <= 0; pv_lv <= 0; h_seq <= 0; h_cv <= 0; h_dv <= 0; h_lv <= 0; end
+        always @(posedge clk_in or negedge rst_s_n)
+            if (!rst_s_n) begin pv_cv <= 0; pv_dv <= 0; pv_lv <= 0; h_seq <= 0; h_cv <= 0; h_dv <= 0; h_lv <= 0; end
             else begin
                 pv_cv <= cfg_v; pv_dv <= desc_v; pv_lv <= launch_v;
                 if (pv_cv || pv_dv || pv_lv) begin
-                    h_seq <= h_seq + 1'b1; h_cv <= pv_cv; h_dv <= pv_dv; h_lv <= pv_lv;
+                    // Gray increment 00 -> 01 -> 11 -> 10 -> 00 (MUT 6: binary, which the serial Gray decode faults)
+                    h_seq <= (MUT == 6) ? h_seq + 1'b1 : {h_seq[0], ~h_seq[1]};
+                    h_cv <= pv_cv; h_dv <= pv_dv; h_lv <= pv_lv;
                 end
             end
         // held payload: plain enabled flops outside the async-reset block (HBMA-HOST 2026-10-17). Inside it, synthesis
         // folded the serial-domain rst_n into the stream-domain DFFE enable (a reset on the datapath, crossing domains;
-        // OT_MULTI_ROOT). pv_* are cleared by rst_n, so the enable is low under reset exactly as before: bit-identical.
+        // OT_MULTI_ROOT). pv_* are cleared by the stream reset, so the enable is low under reset exactly as before: bit-identical.
         always @(posedge clk_in)
             if (pv_cv || pv_dv || pv_lv) begin h_ct <= p_ct; h_ca <= p_ca; h_cd <= p_cd; end
-        reg [1:0] s_seq, s_prev; reg s_cv, s_dv, s_lv; reg [7:0] s_ct; reg [11:0] s_ca; reg [255:0] s_cd;
-        always @(posedge clk) begin s_ct <= h_ct; s_ca <= h_ca; s_cd <= h_cd; end
-        always @(posedge clk or negedge rst_n)
-            if (!rst_n) begin s_seq <= 0; s_prev <= 0; s_cv <= 0; s_dv <= 0; s_lv <= 0; end
-            else begin s_seq <= h_seq; s_prev <= s_seq; s_cv <= h_cv; s_dv <= h_dv; s_lv <= h_lv; end
-        wire ev = s_seq != s_prev;
-        always @(posedge clk) begin ct <= s_ct; ca <= s_ca; cd <= s_cd; end
-        always @(posedge clk or negedge rst_n)
-            if (!rst_n) begin cv <= 0; dv <= 0; lv <= 0; xfault <= 0; end
+        reg [1:0] x1_seq, x2_seq, x3_seq;
+        always @(posedge clk or negedge rst_c_n)
+            if (!rst_c_n) begin x1_seq <= 0; x2_seq <= 0; x3_seq <= 0; end
+            else begin x1_seq <= h_seq; x2_seq <= x1_seq; x3_seq <= x2_seq; end
+        // MUT 7: one synchroniser stage short: captures on the edge after x1 first saw the code
+        wire [1:0] q_new = (MUT == 7) ? x1_seq : x2_seq;
+        wire [1:0] q_old = (MUT == 7) ? x2_seq : x3_seq;
+        wire ev = q_new != q_old;
+        wire [1:0] b_new = {q_new[1], q_new[1] ^ q_new[0]}, b_old = {q_old[1], q_old[1] ^ q_old[0]};
+        always @(posedge clk) if (ev) begin ct <= h_ct; ca <= h_ca; cd <= h_cd; end
+        always @(posedge clk or negedge rst_c_n)
+            if (!rst_c_n) begin cv <= 0; dv <= 0; lv <= 0; xfault <= 0; end
             else begin
-                cv <= ev && s_cv; dv <= ev && s_dv; lv <= ev && s_lv;
-                xfault <= ev && (s_seq - s_prev) != 2'd1 && MUT != 4;
+                cv <= ev && h_cv; dv <= ev && h_dv; lv <= ev && h_lv;
+                xfault <= ev && (b_new - b_old) != 2'd1 && MUT != 4;
             end
     end endgenerate
     // ---------------- state
@@ -150,8 +208,8 @@ module ot_hbm_static_cfg_collar #(
     wire [31:0] cur_off = r_off[(NREC == 0) ? 0 : rptr];
     wire [31:0] cmp_cnt = (MUT == 3) ? cnt + 1 : cnt;
     integer k;
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin
+    always @(posedge clk or negedge rst_c_n) begin
+        if (!rst_c_n) begin
             pw_we <= 0; start_v <= 0; go <= 0; ready <= 0; active <= 0; fault <= 0;
             sel <= 0; need_set <= 0; wait_mask <= 0; wait_done <= 0; loaded <= 0; armed <= 0; run <= 0;
             cnt <= 0; rptr <= 0; tail <= 0; r_val <= 0;

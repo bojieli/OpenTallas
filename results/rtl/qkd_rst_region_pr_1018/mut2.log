@@ -1,0 +1,14 @@
+ERR original mismatch cyc=447 got=001 want=000
+ERR original mismatch cyc=448 got=001 want=000
+ERR original mismatch cyc=449 got=001 want=000
+ERR original mismatch cyc=450 got=001 want=000
+ERR original mismatch cyc=451 got=001 want=000
+ERR original mismatch cyc=452 got=001 want=000
+ERR early/unflushed release region 0 cyc 452
+ERR original mismatch cyc=453 got=001 want=000
+ERR early/unflushed release region 0 cyc 453
+ERR region 0 not released after re-release
+ERR region 1 not released after re-release
+RST_REGION_PR_FAIL errors=799
+FATAL: rtl/test/qwen_split/tb_qkd_rst_region_pr.sv:69: 
+       Time: 1445000  Scope: tb_qkd_rst_region_pr

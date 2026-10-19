@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qkd_host_pc_slice_die",
+ "enable": false,
+ "reason": "Q-KVFIX 0130: the RTL (PINCAP=1) captures every input at its own flop and drives every output from a flop (station fdq/fvq/cq/aq/ffq, lpc_status, bgi_q, host_rn/hbm_rn, ctrl_er_q, cmp_v_q/cmp_we_q, ski_q/sdi_q/soi_q/sfi_q; outputs fod/fov, co, ao, fault_o, sko/sdo/soo/sfo, bgo, ctrl_es, land_er); io_flop_at_pins allow_none=false anchors each pin's own flop at the face. No recipe-3 wrapper registers. KVE-2 es1: ctrl_es comes from the es_pin stage (unique D, Q -> pin only)."
+}

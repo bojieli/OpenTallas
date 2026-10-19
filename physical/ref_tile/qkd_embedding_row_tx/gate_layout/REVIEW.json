@@ -1,0 +1,16 @@
+{
+ "schema": "opentallas.tile_visual_review.v1",
+ "tile": "qkd_embedding_row_tx",
+ "reviewer": "coordinator (2026-10-17 ~13:35)",
+ "verdict": "APPROVED",
+ "time": "2026-10-17T13:35:00-07:00",
+ "gate_commit": "2026-10-17T12:36:19-0700",
+ "checklist": {
+  "lattice": "PASS: single 64x512 SRAM centred, 6-um edge guard (fixes the M4 shorts)",
+  "std_cell_band": "PASS for an SRAM wrapper: W input pin flops and E output pin flops, sparse",
+  "pin_spread": "PASS: W/E full faces; ck/rst_n at S-face centre",
+  "clock_entry": "PASS: insertion 271.7 / spread 70.5 (r1 325/110)",
+  "shape": "PASS"
+ },
+ "notes": "r2: rst_n through one kept flop (the hold class), macro-edge guard 6.0 um (the DRC class)."
+}
