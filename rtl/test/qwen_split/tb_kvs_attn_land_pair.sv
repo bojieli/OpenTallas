@@ -9,7 +9,8 @@
 //               face result_valid (+ beat / data / epoch / layer) / result_done / service_fault / result_fault
 //   one edge later (the launch flops, priced +1): tx_valid (+ payload), prg_l {request_valid, q_valid (+ fields)},
 //               face hdr_l vs the generated tile's arh = {fin[0], 2'b00, fin[5:1]} = {f_valid, 2'b00, f_beat}
-// MODE 0 legal (A must finish fault-free: 1 request, 32 Q, 33 TX), 1..7 the face bench's result-stream faults, and the
+// MODE 0 legal (A must finish fault-free: 1 request, 32 Q, 33 TX), 1..7 the face bench's result-stream faults (5 = a stray
+// beat one edge before the window: with R in RESULT_AGE the window ends on the root's last running age), and the
 // RX / TX record faults the landing moves: 8 CMD data bit 300 set, 9 Q beat 6 wrong epoch, 10 Q beat 9 missing,
 // 11 an extra RX record after the Q run, 12 TX slot 3 wrong kind, 13 a unit fault during the RESULT run, 14 Q beat 4
 // wrong kind (STATUS on the RX face).  Modes 1..14 must fault A (else the stimulus did not reach the case).
@@ -17,7 +18,7 @@
 module tb_kvs_attn_land_pair;
  parameter integer BMUT=0,FMUT=0;
  localparam [15:0] PV=16'd40,P0=16'd30,P1=16'd31,R=16'd32;
- localparam integer RESULT_AGE=40+32+16;
+ localparam integer RESULT_AGE=40+32+16+1;             // face RESULT_AGE = PV + max(P0, P1, R) + 16 + F_DLY (QXF-FACE law)
  localparam integer REQ_AGE=5;
  localparam integer TXF=REQ_AGE+1+RESULT_AGE+1;
  reg ck=0;always #5 ck=~ck;
@@ -105,7 +106,7 @@ module tb_kvs_attn_land_pair;
     fv=1;fb=5'(sage_a-RESULT_AGE-(mode==1))^((mode==6&&sage_a==RESULT_AGE+5)?5'd1:5'd0);fd=vec[512*fb+:512];
     fe=(mode==2&&sage_a==RESULT_AGE+3)?16'd18:sep_a;
    end
-   if(mode==5&&sage_a==RESULT_AGE+32)begin fv=1;fb=0;fd=0;fe=sep_a;end
+   if(mode==5&&sage_a==RESULT_AGE-1)begin fv=1;fb=0;fd=0;fe=sep_a;end   // a stray beat (the window ends with running)
    if(mode==3&&sage_a==50)uf[6]=1;
    if(mode==13&&sage_a==RESULT_AGE+8)uf[2]=1;
   end

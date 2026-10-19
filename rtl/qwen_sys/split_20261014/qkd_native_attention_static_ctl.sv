@@ -158,7 +158,8 @@ endmodule
 // loads on tx_event & !fault (the original also requires !bad: differs only on the bad edge, after which fault holds
 // and every valid is 0).  No added RX latency: rx_valid / rx fields appear on the original edge.
 // MUT (bench negative controls): 1 / 2 as the original (no time check / no expected compare); 3 = the landed event is
-// checked against the CURRENT expectation (one edge misaligned); 4 = rx_valid not gated by the deferred check.
+// checked against the CURRENT expectation (one edge misaligned); 4 = fault shows the deferred check one edge late
+// (fault = f_r: the gating the landing must preserve).
 module qkd_native_attention_record_ld #(
     parameter integer KV_SIDE=1,
     parameter integer MUT=0
@@ -216,10 +217,10 @@ module qkd_native_attention_record_ld #(
     wire [3:0] bits={rx_record_bad,t_record_bad,rx_time_bad,t_time_bad};
     wire bad=|bits;
     always @* begin
-        fault=f_r|bad;
+        fault=f_r|((MUT==4)?1'b0:bad);
         fault_cause=f_r?c_r:bits;
         tx_valid=txv_r&&!bad;
-        rx_valid=l_ev&&!f_r&&((MUT==4)||!bad);
+        rx_valid=l_ev&&!f_r&&!bad;
         rx_kind=rk;rx_epoch=re;rx_layer=rl;rx_beat=rb;rx_data=l_pl[511:0];
     end
     always @(posedge ck or negedge rst_n)begin
@@ -228,7 +229,7 @@ module qkd_native_attention_record_ld #(
         end else begin
             l_ev<=rx_event;l_exp<=rx_expected;l_ek<=rx_expected_kind;l_ee<=rx_expected_epoch;l_el<=rx_expected_layer;
             l_eb<=rx_expected_beat;t_time_bad<=tx_time_bad;t_record_bad<=tx_record_bad;
-            f_r<=fault;c_r<=fault_cause;txv_r<=tx_event&&!fault;
+            f_r<=f_r|bad;c_r<=fault_cause;txv_r<=tx_event&&!fault;
         end
     end
     // the landing flops (payload) and the TX record register: no reset, no logic before the payload flop
