@@ -1,6 +1,8 @@
 #!/bin/bash
 # HBM-NEXT-UNITS IDXQ 2026-10-19: ot_hnx_idxn_calendar CW=1 (bypass) and CW=2 (no-bypass 3-row ring) vs CW=0 lockstep (tb_hnx_idxn_cw).
-# Fleet (Verilator 5.050), from a bundle root:  tools/hbm_next/hnx_idxn_cw_bench.sh OUT
+# Fleet (Verilator 5.050), from a bundle root:  tools/hbm_next/hnx_idxn_cw_bench.sh OUT [all|pos|m1..m6]
+#  (closure-loop bench stages, IDXQ 10-19: 'pos' = every PASS case, exit 0 iff none unexpected; 'm<N>' = that mutant
+#   only, prints its run.log and exits 1 when it fails as wanted; default 'all' = the whole table, unchanged)
 #  f<N>      compiled IDXN frame (--score-chain 14), N = 1/2/4/6 rows, pitch 232 (the row II)          -> PASS
 #  f6p<P>    frame, 6 rows, pitch 233 / 236 / 300                                                   -> PASS
 #  f8h<H>    frame, 8 rows, pitch 232, start phase H = 0..7 (every phase has one bypass row)         -> PASS
@@ -8,7 +10,7 @@
 #  m1 m2 m3  CW=1 ring bypass off (8 rows 232 phase 3) / ring slot pinned 0 / head row 0 dropped (6 rows 233) -> FAIL
 #  m4 m5 m6  CW=2 ring write slot pinned 0 / shared head rows 0-1 dropped / ring read slot pinned 0 (6 rows 233) -> FAIL
 set -u
-B=$(pwd); O=$(realpath -m "${1:?OUT}"); mkdir -p "$O"
+B=$(pwd); O=$(realpath -m "${1:?OUT}"); MODE=${2:-all}; mkdir -p "$O"
 export PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH
 V(){ echo "$(date -Is) $*" | tee -a "$O/verdict.txt"; }
 V "start host=$(hostname) bundle=$(cat $B/BUNDLE_COMMIT 2>/dev/null) $(verilator --version)"
@@ -38,11 +40,18 @@ run(){ # tag hex len want plusargs...
   V "$t [$ok want $want got $got]: $(grep -h 'IDXN_CW rows\|CWBAD\|CW2BAD' $od/run.log | head -3 | tr '\n' ' ')"; rm -f $od/cal.hex
 }
 F=$O/cal/frame/calendar_instructions.hex
+case $MODE in m[1-6])
+  m=${MODE#m}; if [ $m = 1 ]; then run m1 $F $L FAIL +ROWS=8 +PITCH=232 +PHASE=3 +MUT=1; else run m$m $F $L FAIL +ROWS=6 +PITCH=233 +MUT=$m; fi
+  cat $O/run_m$m/run.log; rm -rf $d
+  if grep -q 'IDXN_CW PASS' $O/run_m$m/run.log; then echo "m$m: IDXN_CW PASS (mutant NOT caught)"; exit 0; fi
+  echo "m$m: IDXN_CW FAIL (mutant caught)"; exit 1;;
+esac
 for n in 1 2 4 6; do run f$n $F $L PASS +ROWS=$n +PITCH=232 & done
 for p in 233 236 300; do run f6p$p $F $L PASS +ROWS=6 +PITCH=$p & done
 for h in 0 1 2 3 4 5 6 7; do run f8h$h $F $L PASS +ROWS=8 +PITCH=232 +PHASE=$h & done
 wait
 i=0; for s in 1 2 3; do for k in r s; do p=$((232 + (i % 3) * 2 + (i % 2))); i=$((i+1)); run $k$s $O/$k$s.hex 2048 PASS +ROWS=6 +PITCH=$p & done; done
+if [ $MODE = pos ]; then wait; rm -rf $d; u=$(grep -c UNEXPECTED $O/verdict.txt); V "SUMMARY pos unexpected=$u"; [ $u = 0 ]; exit $?; fi
 run m1 $F $L FAIL +ROWS=8 +PITCH=232 +PHASE=3 +MUT=1 &
 for m in 2 3 4 5 6; do run m$m $F $L FAIL +ROWS=6 +PITCH=233 +MUT=$m & done
 wait

@@ -1,0 +1,285 @@
+{
+ "kind": "tile",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "layer_cap": "M5",
+ "recipe": 4,
+ "params": {
+  "NP": 4,
+  "RS": 1,
+  "PR": 1
+ },
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true,
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ },
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "name": "hnx_idxq_kb2",
+ "top": "ot_hnx_idxn_keybuf",
+ "sources": [
+  "rtl/hbm_next/idxn/ot_hnx_idxn_keybuf.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v"
+ ],
+ "clock_port": "clk",
+ "outline": {
+  "w": 825.12,
+  "h": 272.16
+ },
+ "pins": {
+  "N": [
+   "rst_n",
+   "clear",
+   "pbase",
+   "live_v",
+   "live_index",
+   "pre_v",
+   "pre_index",
+   "replay_v",
+   "replay_index",
+   "beat_in_v",
+   "beat_in_index",
+   "key_in"
+  ],
+  "S": [
+   "clk",
+   "fault",
+   "beat_out_v",
+   "beat_out_index",
+   "key_out"
+  ],
+  "W": [],
+  "E": []
+ },
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 64,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "h": "M4",
+   "v": "M5",
+   "group_max": 1
+  }
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "gm[0].mem",
+   "at": [
+    43.2,
+    43.2
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "gm[1].mem",
+   "at": [
+    43.2,
+    84.288
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "gm[2].mem",
+   "at": [
+    43.2,
+    125.376
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "gm[3].mem",
+   "at": [
+    43.2,
+    166.464
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "gm[4].mem",
+   "at": [
+    43.2,
+    207.552
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "gm[5].mem",
+   "at": [
+    237.6,
+    43.2
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "gm[6].mem",
+   "at": [
+    237.6,
+    84.288
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "gm[7].mem",
+   "at": [
+    237.6,
+    125.376
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "gm[8].mem",
+   "at": [
+    237.6,
+    166.464
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "gm[9].mem",
+   "at": [
+    432.0,
+    43.2
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "gm[10].mem",
+   "at": [
+    432.0,
+    84.288
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "gm[11].mem",
+   "at": [
+    432.0,
+    125.376
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "gm[12].mem",
+   "at": [
+    432.0,
+    166.464
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "gm[13].mem",
+   "at": [
+    626.4,
+    43.2
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "gm[14].mem",
+   "at": [
+    626.4,
+    84.288
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "gm[15].mem",
+   "at": [
+    626.4,
+    125.376
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "gm[16].mem",
+   "at": [
+    626.4,
+    166.464
+   ],
+   "at_exact": true
+  }
+ ],
+ "pin_regs": {
+  "enable": false,
+  "reason": "PR=1: the RTL registers every input in ONE kept face flop and every output (key_out, fault, beat_out_*) leaves a kept flop (ot_hnx_idxn_keybuf gpr); automatic pin registers would add a third, unpriced edge. The +2 key-path edges are priced: the calendar issues KEY/PRE 2 edges earlier (--kb-pipe 2), scorer core timeline unchanged."
+ },
+ "fill_reason": {
+  "pin_bound": "8,792 key bits (4,396 in N + 4,396 out S) at <= 6 pins/um need >= 733 um faces; 17 macros (120.6k um2) in 4 columns on the 43.2 lattice; total fill (macros + std) / outline ~0.55, std density low by construction (pass-through tile)"
+ },
+ "job": {
+  "owner": "Claude:HBM-NEXT-UNITS",
+  "branch": "claude/hbm-next-units-idxq-1019",
+  "tag": "k2",
+  "purpose": "HBM-NEXT IDXQ quad: idx_kb<q> key replay buffer, STRUCTURAL REDESIGN after gate hnx_idxq_kb FAIL (combinational key_in->key_out 1,202 um, spread 149/132 ps, GRT rc 137): keybuf PR=1 pin-registered (+2 key edges priced by --kb-pipe 2), 17 macros as 4 abutted N-S stacks (pitch 41.088, no pins on N/S faces) based on the 43.2 lattice under their key bit spans, 21.6 um channels + 5.4 halos (macro pins on W/E faces; M5 over macros), N input strip + S output band, clk at S centre",
+  "benches": [],
+  "extra_paths": [
+   "rtl/hbm_next/idxq",
+   "rtl/hbm_next/idxn",
+   "tools/hbm_next/hnx_idxq_bench.sh",
+   "tools/hbm_next/hnx_idxq_vectors.py",
+   "tools/hbm_next/hnx_idxn_calendar.py"
+  ]
+ },
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "pin_ranges": {
+  "clk": [
+   410.5,
+   414.5
+  ]
+ }
+}

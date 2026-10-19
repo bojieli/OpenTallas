@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hnx_idxn_keybuf",
+ "enable": false,
+ "reason": "PR=1: the RTL registers every input in ONE kept face flop and every output (key_out, fault, beat_out_*) leaves a kept flop (ot_hnx_idxn_keybuf gpr); automatic pin registers would add a third, unpriced edge. The +2 key-path edges are priced: the calendar issues KEY/PRE 2 edges earlier (--kb-pipe 2), scorer core timeline unchanged."
+}
