@@ -368,6 +368,12 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
     # Keep each source visible; an external monitor can attribute the failed endpoint.
     fault_masters = set(T.get('endpoint_fault_masters', []))
     endpoint_faults = {b['name']: j for j, b in enumerate(b for b in blocks if b['master'] in fault_masters)}
+    # S81-DIECHAIN 10-19: the other blocks' sticky `fault` outputs (strict OUTPUT_OPEN before) -> die status vector block_fault
+    sf_masters = set(T.get('status_fault_masters', []))
+    _rw = T.get('rtl_widths', {})
+    status_faults = {b['name']: j for j, b in enumerate(
+        b for b in blocks if b['master'] in sf_masters and b['name'] not in endpoint_faults and
+        'fault' in _rw.get(M[b['master']].get('inst_module', {}).get(b['name'], M[b['master']]['module']), {}))}
     # ------------------------------------------------------------------ netlist
     v = ['// S81-DV REAL-VIEW bound die top (tools/s81_dv/dv_bind.py) -- strict die_port_bind gates it',
          'module dv_die (']
@@ -384,6 +390,9 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
     if endpoint_faults:
         io.append(f'  output wire [{len(endpoint_faults) - 1}:0] endpoint_fault')
         top_ports.append('endpoint_fault')
+    if status_faults:
+        io.append(f'  output wire [{len(status_faults) - 1}:0] block_fault')
+        top_ports.append('block_fault')
     # non-ANSI header (the strict checker reads port widths from body declarations)
     names = [x.split()[-1] for x in io]
     v[-1] = f'module dv_die ({", ".join(names)});'
@@ -541,6 +550,9 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
             cs.append(f'.{tp["port"]}({n}_{tp["port"]})')
         if n in endpoint_faults:
             cs.append(f'.fault(endpoint_fault[{endpoint_faults[n]}])')
+        elif n in status_faults:
+            assert 'fault' not in conn[n], (n, 'fault already bound')
+            cs.append(f'.fault(block_fault[{status_faults[n]}])')
         pv = params.get(n) or {}
         ps = f' #({", ".join(f".{k}({vv})" for k, vv in pv.items())})' if pv else ''
         v.append(f'  {mod}{ps} u_{n} ({", ".join(cs)});')
@@ -700,6 +712,15 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
     (out / 'die.v').write_text('\n'.join(v) + '\n')
     (out / 'cells_used.v').write_text(CELL_MODELS)
     (out / 'straps.json').write_text(json.dumps({'straps': straps}, indent=1))
+    if T.get('spare_out_rules'):
+        # S81-DIECHAIN 10-19: provably role-unused output bits -> declared spare outputs (svc_rs role faces, lane
+        # quantisation landing bits, unbuilt forwarded-clock taps); a role-active face left open is a GAP (recorded, not declared)
+        import sys as _sys; _sys.path.insert(0, str(ROOT / 'tools/s81_dv'))
+        import dv_spare_out
+        spare_rec = dv_spare_out.declare(v, pads, ROOT)
+        (out / 'spare_out.json').write_text(json.dumps(spare_rec, indent=1))
+        print('SPARE_OUT', json.dumps(spare_rec['summary']))
+        assert not spare_rec['gaps'], spare_rec['gaps'][:10]
     (out / 'pads.json').write_text(json.dumps({'pads': {}, 'instances': pads}, indent=1))
     frame_rec = frame_contract(T)
     (out / 'frame_contract.json').write_text(json.dumps(frame_rec, indent=1))
@@ -729,7 +750,7 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
                hop0_clock_gates=gate_cells, gate_calendar_stations=len(cal_place),
                abutted_plan_lanes=abut_rows, reset=rst['summary'], straps=straps, mode_unused_pads=pad_rows, views=dict(views),
                frame_contract=dict(verdict=frame_rec['verdict'], members=len(frame_rec['members']), problems=frame_rec['problems']), rtl_extra=extra, top_offchip_ports=top_ports,
-               endpoint_fault_sources=endpoint_faults,
+               endpoint_fault_sources=endpoint_faults, status_fault_sources=status_faults,
                landing_reset_check={k: lrc[k] for k in ('verdict', 'mismatch', 'unresolved', 'unused_keys')},
                landings=dict(count=len(land_rows), land_plan=str(lp) if lp else None,
                              by_master=dict(collections.Counter(r['master'] for r in land_rows)),

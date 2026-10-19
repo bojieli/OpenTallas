@@ -97,6 +97,10 @@ def build(ab):
     # All endpoint faults are sticky RTL outputs; do not leave MU protocol faults unobservable.
     T['endpoint_fault_masters'] = ['dsdv_slice_lepe_mu', 'dsdv_slice_lepe_nh_mus',
                                    'dsdv_slice_lepw_mu', 'dsdv_slice_lepw_mab' if ab else 'dsdv_slice_lepw_mus']
+    # S81-DIECHAIN 10-19: every other block's sticky fault output joins the die status boundary (block_fault vector, one bit
+    # per instance whose RTL module has a `fault` output: plain slices, bk collector/selector, G-unit, svc_rs ENTRY slices)
+    T['status_fault_masters'] = ['dsdv_slice', 'dsfd_bk_collector', 'dsfd_bk_selector', 'dsdv_gunit', 'dsdv_svc_rs']
+    T['spare_out_rules'] = True          # tools/s81_dv/dv_spare_out.py (svc_rs role faces, lane quantisation, clock taps)
     T['rtl_files'] = T['rtl_files'] + ['physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v']   # dsdv_mu_land SRAM 1
     cv = T['child_views']
     cv['dsdv_mu_hslot'] = dict(view='dsdv_mu_hslot-28a8118d5 (CLOSED TT +70.22 / FF +27.30, DRC 0; native PASS L 124.5 / C 88.3 / sp 10.7/11.0; main ccf787d45, audit 7aa582c7a)',

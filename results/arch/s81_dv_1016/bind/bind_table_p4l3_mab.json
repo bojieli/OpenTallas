@@ -6585,6 +6585,14 @@
   "dsdv_slice_lepw_mu",
   "dsdv_slice_lepw_mab"
  ],
+ "status_fault_masters": [
+  "dsdv_slice",
+  "dsfd_bk_collector",
+  "dsfd_bk_selector",
+  "dsdv_gunit",
+  "dsdv_svc_rs"
+ ],
+ "spare_out_rules": true,
  "land_plan_note_mu": "MU lanes (mu_*, rt_0N, lt/lr_lk_WS2/3) are not in landing/p4l3/land_plan.json: landing K 1 default until the die lead re-runs dv_land_pilot on the MU plan",
  "land_views": {
   "dsfd_dvland_276": {
