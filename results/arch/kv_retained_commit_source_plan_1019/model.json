@@ -56,7 +56,9 @@
     "immutable_event_lineage_bits": 992,
     "combined_event_table_indexed_bits": 2848,
     "event_table_requires_SRAM_before_physical": true,
-    "ever_armed_bits": 1
+    "ever_armed_bits": 1,
+    "bridge_CSR_error_record_bits_min": 20,
+    "bridge_error_record_equation": "valid1 + read/write1 + transaction_ID16 + response2; reuses existing tx_data register"
   },
   "qualification": {
     "RTL_changed": false,
