@@ -81,6 +81,11 @@ module qfd_sys_face_mu_dhuser #(
     parameter integer LAST_STAGE = 37,
     parameter         VIAMAP = "",                 // OPSEG: ot_rom_4096x72_m8 via-mask image ($readmemh)
     parameter         INSTANCE = "",               // OPSEG: ROM instance name (+OT_ROM_DIR=<dir>/<INSTANCE>.viamap.hex)
+    parameter integer EXPANDED = 0,                 // opt-in:3 ROMs,14-bit address,23-bit repeating admission period
+    parameter         VIAMAP1 = "",
+    parameter         VIAMAP2 = "",
+    parameter         INSTANCE1 = "",
+    parameter         INSTANCE2 = "",
     parameter integer PINREG = 0                   // OPSEG: 1 = pin flop on dh_run[42:36], compensated (see the header)
 ) (
     input  wire        ck,
@@ -100,30 +105,61 @@ module qfd_sys_face_mu_dhuser #(
 );
     generate if (OPSEG != 0) begin : g_op
         // ------------------------------------------------------------ ROM + header / prefetch
-        reg         rom_ce; reg [11:0] rom_a; wire [71:0] rom_q;
+        localparam integer CW = EXPANDED ? 23 : 22;
+        localparam integer AW = EXPANDED ? 14 : 12;
+        reg rom_ce;
+        reg [AW-1:0] rom_a;
+        wire [71:0] rom_q, bank0;
+        wire ce0 = rom_ce && (!EXPANDED || (rom_a >> 12) == 0);
+
 `ifdef SYNTHESIS
         // OpenROAD's netlist reader rejects instance parameters; the hard macro is content-independent
-        ot_rom_4096x72_m8 u_rom (.clk(ck), .ce_in(rom_ce), .addr_in(rom_a), .rd_out(rom_q));
+        ot_rom_4096x72_m8 u_rom (.clk(ck), .ce_in(ce0), .addr_in(rom_a[11:0]), .rd_out(bank0));
 `else
-        ot_rom_4096x72_m8 #(.VIAMAP(VIAMAP), .INSTANCE(INSTANCE)) u_rom (.clk(ck), .ce_in(rom_ce), .addr_in(rom_a),
-            .rd_out(rom_q));
+        ot_rom_4096x72_m8 #(.VIAMAP(VIAMAP), .INSTANCE(INSTANCE)) u_rom (.clk(ck), .ce_in(ce0), .addr_in(rom_a[11:0]),
+            .rd_out(bank0));
 `endif
+        if (EXPANDED) begin : g_banked
+            wire [71:0] bank1, bank2;
+`ifdef SYNTHESIS
+            ot_rom_4096x72_m8 u_rom1 (.clk(ck), .ce_in(rom_ce && (rom_a >> 12) == 1),
+                .addr_in(rom_a[11:0]), .rd_out(bank1));
+            ot_rom_4096x72_m8 u_rom2 (.clk(ck), .ce_in(rom_ce && (rom_a >> 12) == 2),
+                .addr_in(rom_a[11:0]), .rd_out(bank2));
+`else
+            ot_rom_4096x72_m8 #(.VIAMAP(VIAMAP1), .INSTANCE(INSTANCE1)) u_rom1 (
+                .clk(ck), .ce_in(rom_ce && (rom_a >> 12) == 1), .addr_in(rom_a[11:0]), .rd_out(bank1));
+            ot_rom_4096x72_m8 #(.VIAMAP(VIAMAP2), .INSTANCE(INSTANCE2)) u_rom2 (
+                .clk(ck), .ce_in(rom_ce && (rom_a >> 12) == 2), .addr_in(rom_a[11:0]), .rd_out(bank2));
+`endif
+            genvar q;
+            for (q = 0; q < 3; q = q+1) begin : g_sel
+                wire [1:0] bank;
+                qfd_mu_leaf_banktag #(.COPY_ID(q)) u_tag (
+                    .ck(ck), .enable(rom_ce), .address_bank(2'(rom_a >> 12)), .bank(bank));
+                assign rom_q[24*q +: 24] = ({24{bank == 0}} & bank0[24*q +: 24]) |
+                                           ({24{bank == 1}} & bank1[24*q +: 24]) |
+                                           ({24{bank == 2}} & bank2[24*q +: 24]);
+            end
+        end else begin : g_single
+            assign rom_q = bank0;
+        end
         localparam integer PR = (PINREG != 0) ? 1 : 0;
-        localparam [21:0] A0 = (PINREG != 0 && MUT != 7) ? 22'd1 : 22'd0;   // counter value on the anchor edge
+        localparam [CW-1:0] A0 = (PINREG != 0 && MUT != 7) ? 22'd1 : 22'd0;   // counter value on the anchor edge
         reg  [6:0]  dh_q7;                         // PINREG: {h_start, stage} pin flop
         reg         mu_q;                          // PINREG: registered mu_fault
         reg  [71:0] rq;                            // PINREG: ROM rd_out capture register
         reg         hw;                            // PINREG: header in rq (decode edge)
         reg         rd_p2, rd_nf2;                 // PINREG: the read's data sits in rq (captured into nx this edge)
         reg  [1:0]  bst;                           // 0 read header, 1 header in flight, 2 running, 3 bad header (idle)
-        reg  [21:0] hm1, tm1;                      // H - 1, T - 1
-        reg  [11:0] nent, ptr;                     // ptr = index of the entry in flight / in the prefetch register
+        reg  [CW-1:0] hm1, tm1;                      // H - 1, T - 1
+        reg  [AW-1:0] nent, ptr;                     // ptr = index of the entry in flight / in the prefetch register
         reg         rd_p, rd_nf;                   // a read in flight (captured next edge); it is next frame's entry
         reg         nx_v, nx_nf, nx_f;
-        reg  [21:0] nx_t, prev_t;
+        reg  [CW-1:0] nx_t, prev_t;
         reg  [1:0]  nx_u; reg [5:0] nx_s; reg [9:0] nx_first, nx_cnt;
         reg         anch;
-        reg  [21:0] fc, tc;
+        reg  [CW-1:0] fc, tc;
         reg  [3:0]  seen;
         wire        hs = PR ? dh_q7[6] : dh_run[42];
         wire [5:0]  stg = PR ? dh_q7[5:0] : dh_run[41:36];
@@ -137,20 +173,22 @@ module qfd_sys_face_mu_dhuser #(
         wire        rd_c = PR ? rd_p2 : rd_p;                             // an entry is captured into nx on this edge
         wire        rd_cnf = PR ? rd_nf2 : rd_nf;
         wire [21:0] gapm = PR ? 22'd3 : 22'd2;                            // minimum t_rom spacing
-        wire [15:0] h_magic = rw[71:56];
-        wire [21:0] h_H = rw[55:34], h_T = rw[21:0];
-        wire [11:0] h_n = rw[33:22];
-        wire        h_good = h_magic == 16'h4F50 && h_H != 22'd0 && h_T != 22'd0 && h_T <= h_H && h_n != 12'd0 &&
-                             h_n != 12'hFFF;
+        wire h_magic_good = EXPANDED ? rw[71:59] == 13'h13A9 : rw[71:56] == 16'h4F50;
+        wire [CW-1:0] h_H = EXPANDED ? rw[58:36] : rw[55:34];
+        wire [CW-1:0] h_T = rw[21:0];
+        wire [AW-1:0] h_n = EXPANDED ? rw[35:22] : rw[33:22];
+        wire h_good = h_magic_good && h_H != 0 && h_T != 0 && h_T <= h_H && h_n != 0 &&
+                      (EXPANDED ? h_n < 14'd12288 : h_n != 12'hFFF);
         wire        e_ff = rw[71]; wire [9:0] e_cnt = rw[68:59], e_first = rw[58:49];
-        wire [5:0]  e_s = rw[48:43]; wire [1:0] e_u = rw[42:41]; wire [21:0] e_t = rw[40:19];
+        wire [5:0]  e_s = rw[48:43]; wire [1:0] e_u = rw[42:41];
+        wire [CW-1:0] e_t = EXPANDED ? {rw[69],rw[40:19]} : rw[40:19];
         wire        anchor_now = bst == 2'd2 && !anch && l0;
         wire        act = anch || anchor_now;
-        wire [21:0] fc_now = anch ? fc : A0, tc_now = anch ? tc : A0;
+        wire [CW-1:0] fc_now = anch ? fc : A0, tc_now = anch ? tc : A0;
         wire        wrap = act && fc_now == hm1;
-        wire [21:0] t_hit = (MUT == 4) ? nx_t + 22'd1 : nx_t;
+        wire [CW-1:0] t_hit = (MUT == 4) ? nx_t + 22'd1 : nx_t;
         wire        fire = act && nx_v && fc_now == t_hit;
-        wire [11:0] nptr = (ptr == nent) ? 12'd1 : ptr + 12'd1;
+        wire [AW-1:0] nptr = (ptr == nent) ? 12'd1 : ptr + 12'd1;
         if (PINREG != 0) begin : g_rq
             always @(posedge ck) rq <= rom_q;                                 // data only: no reset needed
             always @(posedge ck or negedge rst_n)
@@ -160,7 +198,7 @@ module qfd_sys_face_mu_dhuser #(
             always @* begin rq = 72'd0; hw = 1'b0; rd_p2 = 1'b0; rd_nf2 = 1'b0; end
         end
         always @* begin
-            rom_ce = 1'b0; rom_a = 12'd0;
+            rom_ce = 1'b0; rom_a = {AW{1'b0}};
             if (bst == 2'd0) rom_ce = 1'b1;                                   // header
             else if (hdec && h_good) begin rom_ce = 1'b1; rom_a = 12'd1; end          // entry 1
             else if (fire) begin rom_ce = 1'b1; rom_a = nptr; end
@@ -199,7 +237,7 @@ module qfd_sys_face_mu_dhuser #(
                     nx_v <= 1'b1; nx_nf <= rd_cnf && !wrap; nx_f <= e_ff; nx_t <= e_t; nx_u <= e_u; nx_s <= e_s;
                     nx_first <= e_first; nx_cnt <= e_cnt; prev_t <= e_t;
                     if (e_u == 2'd0 || {1'b0, e_u} >= 3'(NU) || e_s > LAST_STAGE[5:0] || e_cnt == 10'd0 ||
-                        e_first[1:0] != 2'd0 || e_t > hm1 || (ptr != 12'd1 && e_t < prev_t + gapm))
+                        e_first[1:0] != 2'd0 || (EXPANDED && rw[70]) || e_t > hm1 || (ptr != 12'd1 && e_t < prev_t + gapm))
                         op_fcode[3] <= 1'b1;
                     if (act && !rd_cnf && e_t <= fc_now) op_fcode[2] <= 1'b1;         // its edge has passed
                 end
@@ -265,4 +303,14 @@ module qfd_sys_face_mu_dhuser #(
         for (q = 0; q < NS; q = q + 1)
             if (NU > 1 && USER_SEQ[2*q +: 2] >= NU) $fatal(1, "qfd_sys_face_mu_dhuser: entry %0d user >= NU", q);
     end
+endmodule
+
+// Per24-bit quarter, retained through flatten/opt_merge. The bank tag clocks
+// beside the synchronous ROM outputs; existing rq captures the selected word
+// on the same edge as before. No new prefetch or command edge is introduced.
+(* keep_hierarchy = 1 *)
+module qfd_mu_leaf_banktag #(parameter integer COPY_ID = 0) (
+    input wire ck, enable, input wire [1:0] address_bank, output reg [1:0] bank
+);
+    always @(posedge ck) if (enable) bank <= address_bank;
 endmodule

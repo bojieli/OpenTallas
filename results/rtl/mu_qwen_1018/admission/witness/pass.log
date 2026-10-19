@@ -1,0 +1,6 @@
+TB_DHUSER_EXPANDED info T=251676 H=8053632 anchor=202 end=16147466 drift=0
+TB_DHUSER_EXPANDED PASS MUT=0 drift=0 edges=16147466 starts=16432 per_user=2848/7438/6146 mism=0 ref_fcode=0 dut_fcode=0 drift_edge=-1
+- /srv/opentallas-scratch/claude/mu-ctx-admission/src_expanded/rtl/test/mu_qwen_seq/tb_dhuser_expanded.sv:106: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 16ms; walltime 10.552 s; speed 1.530 ms/s
+- Verilator: cpu 10.552 s on 1 threads; allocated 7 MB

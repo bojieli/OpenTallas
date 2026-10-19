@@ -1,0 +1,7 @@
+TB_DHUSER_EXPANDED info T=251676 H=8053632 anchor=202 end=16147466 drift=0
+TB_DHUSER_EXPANDED mismatch edge 7919723 ref v0 u2 s20 f24 c13 fcc | dut v0 u2 s20 f24 c13 fc0 | fc_q r0 d0 mf d0
+TB_DHUSER_EXPANDED FAIL MUT=0 drift=0 edges=16147466 starts=8216 per_user=1448/3694/3073 mism=26 first=7919723 ref_fcode=c dut_fcode=c drift_edge=-1
+- /srv/opentallas-scratch/claude/mu-ctx-admission/src_expanded/rtl/test/mu_qwen_seq/tb_dhuser_expanded.sv:106: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 16ms; walltime 10.558 s; speed 1.529 ms/s
+- Verilator: cpu 10.557 s on 1 threads; allocated 7 MB

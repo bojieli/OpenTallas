@@ -43,6 +43,12 @@ class OpcalEmbAfterResult(unittest.TestCase):
         lo, hi = M.am_root_window()
         self.assertGreaterEqual(O.tok_slice0_edge(), hi - 1)     # never before the last merge
 
+    def test_safe_root_capture_is_priced_explicitly(self):
+        self.assertEqual(O.result_timing(1), dict(root_capture=1, res_ssq=52, res_bank=53, emb_t=61))
+        c = O.compile_frame(16, p={"am_root_capture": 1}, layers=2)
+        self.assertEqual([t for t,w in c["segs"][0] if O._is_emb(w)], [61])
+        self.assertEqual(c["inputs"]["head_tok_ofs"], 61)
+
     def test_image_emb_after_result(self):
         c = O.compile_frame(16, layers=2)
         seg0 = c["segs"][0]
@@ -82,6 +88,41 @@ class OpcalCtx(unittest.TestCase):
         dw = O.with_ctx([7] * 5 + [0, 0, 0], {1: (1, 2)})
         self.assertEqual(dw[:5], [7] * 5)
         self.assertEqual(dw[7], 0)
+
+class InitialContextImage(unittest.TestCase):
+    def test_serialized_init_keeps_edges_and_ordinary_descriptors(self):
+        segs, _ = O.segments()
+        image = O.initial_context_image(segs)
+        old_pw, old_dw, desc = O.image(segs)
+        self.assertEqual(image["dw"][1:], old_dw[1:])
+        self.assertEqual(image["descriptors"], desc)
+        first = image["initial_range"]["first"]
+        self.assertEqual(first % 4, 0)
+        self.assertEqual(image["initial_range"]["cnt"], len(segs[0]))
+        base = (image["dw"][0] >> 16) & 1023
+        t, decoded = 0, []
+        for i in range(first, first + len(segs[0])):
+            word = image["pw"][base + 2*i] | image["pw"][base + 2*i+1] << 64
+            t += word >> 116
+            decoded.append((t, word & ((1 << 116) - 1)))
+        self.assertEqual([t for t, _ in decoded], [t for t, _ in segs[0]])
+        self.assertFalse(any(O._is_emit(c) for _, c in decoded))
+        self.assertEqual([(t,c) for t,c in decoded if O._is_emb(c)],
+                         [(t,c) for t,c in segs[0] if O._is_emb(c)])
+        for f, cnt in desc.values():
+            self.assertEqual(image["pw"][base+2*f:base+2*(f+cnt)],
+                             old_pw[base+2*f:base+2*(f+cnt)])
+
+    def test_missing_or_repeated_emit_is_rejected(self):
+        segs, _ = O.segments()
+        segs[0] = [(t,c) for t,c in segs[0] if not O._is_emit(c)]
+        with self.assertRaisesRegex(ScheduleError, "exactly one AMAX emit"):
+            O.initial_context_image(segs)
+        segs, _ = O.segments()
+        segs[0].append((O.EMB_T+1, next(c for _,c in segs[0] if O._is_emit(c))))
+        with self.assertRaisesRegex(ScheduleError, "exactly one AMAX emit"):
+            O.initial_context_image(segs)
+
 
 if __name__ == "__main__":
     unittest.main()
