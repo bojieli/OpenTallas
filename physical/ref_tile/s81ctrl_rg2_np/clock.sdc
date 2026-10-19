@@ -76,7 +76,7 @@ set_false_path -from [get_ports rst_n]
 if {[llength [get_ports -quiet ck_o]]} {
   unset_output_delay [get_ports ck_o]
   if {![llength [get_clocks -quiet ck_o_fwd]]} {
-    create_generated_clock -name ck_o_fwd -source [get_ports clk] -divide_by 1 [get_ports ck_o]
+    create_generated_clock -name ck_o_fwd -master_clock core_clk -source [get_ports clk] -divide_by 1 [get_ports ck_o]
   }
 }
 set_input_transition 150 [all_inputs -no_clocks]
