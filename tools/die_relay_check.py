@@ -51,11 +51,15 @@ def check(run, sched, max_list=40, bundles=True):
     R = {b['id']: b for b in run['buses']}
     S = {b['id']: b for b in sched['buses']}
     only_r = sorted(set(R) - set(S)); only_s = sorted(set(S) - set(R))
-    diff, wdiff, ddiff, gdiff = [], [], [], []
+    diff, wdiff, ddiff, gdiff, adiff = [], [], [], [], []
     for k in sorted(set(R) & set(S)):
         r, s = R[k], S[k]
         if r['stages'] != s['stages']:
             diff.append(dict(bus=k, die_run=r['stages'], schedule=s['stages']))
+        if 'age_edges' in r or 'age_edges' in s:
+            ra, sa = r.get('age_edges', '<absent>'), s.get('age_edges', '<absent>')
+            if ra is None or sa is None or ra != sa:
+                adiff.append(dict(bus=k, die_run=ra, schedule=sa))
         if r['width'] != s['width']:
             wdiff.append(dict(bus=k, die_run=r['width'], schedule=s['width']))
         if r.get('domain') != s.get('domain'):
@@ -71,6 +75,8 @@ def check(run, sched, max_list=40, bundles=True):
                      ', '.join(f"{d['bus']}: die {d['die_run']} vs sched {d['schedule']}" for d in diff[:3]))
     if wdiff:
         fails.append(f'{len(wdiff)} buses with different width')
+    if adiff:
+        fails.append(f'{len(adiff)} buses with different or unresolved effective source-to-pin ages')
     if ddiff:
         fails.append(f'{len(ddiff)} buses with different clock domain')
     if gdiff:
@@ -85,7 +91,7 @@ def check(run, sched, max_list=40, bundles=True):
                 schedule=dict(plan=sched['plan'], role=sched['role'], digest=sched['digest'], buses=sched['bus_count'],
                               consumer=(sched.get('compiled') or {}).get('consumer')),
                 fails=fails, warnings=warns, only_in_die_run=only_r[:max_list], only_in_schedule=only_s[:max_list],
-                stage_diffs=diff[:max_list], width_diffs=wdiff[:max_list], domain_diffs=ddiff[:max_list],
+                stage_diffs=diff[:max_list], age_diffs=adiff[:max_list], width_diffs=wdiff[:max_list], domain_diffs=ddiff[:max_list],
                 torn_bundles={n_: r_ for n_, r_ in torn}, bundles_checked=bool(bundles))
 
 
