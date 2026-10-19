@@ -26,30 +26,17 @@
 // MUT (bench negative controls): 3 window ab bit dropped (copy B never selected), 4 replay enable ignored, 5 gap index
 // stuck at 0.
 // Timing: f_ks / f_mc / f_mw / mu_rt land in pin flops; mu_c / mu_rc / t_wf leave flops.  ot_rst_relay reset.
-// MU-S81-2/HWIN (10-19) timing restructure (the REFILL-0730/HWIN gate: binary event pointers pe[e] drove ~3.7k mux
-// loads each and pe -> 47:1 ts mux -> + D -> == tm -> mu_c was a 22-level ~895 ps stage).  Same ports, same outputs on
-// the same edges (zero added output cycles):
-//   * every table pointer (8 event pointers, the retire pointer, the slot / gap-table walkers) is ONE-HOT: a pointer
-//     bit drives only its own entry's ~65 mux leaves (no 3.7k-load select net); the 47:1 reads are AND-OR trees;
-//   * look-ahead heads: each event row keeps a registered copy of the entry under its pointer {ts, pos, user, land, ab}
-//     (h_*), reloaded every edge, with a freshness bit (h_fr: no pointer move and no write at that entry on the last
-//     edge).  In a legal config the pointer rests on an entry >= 2 edges before it is due (D >= nw + 2, slot gaps
-//     >= nw + 2, pointer walk <= nw - 1 edges), so the head is always fresh on the due edge;
-//   * the adders leave the stage: tmd[e] = tm - D[e] and tmr = tm - RL + 1 are registered (tm1 = tm + 1 counter), so
-//     fire = (h_ts == tmd) and due = (h_rts == tmr) are plain 32-bit equalities on flops; mu_c / mu_rc are built from
-//     the fired heads (later event wins on one endpoint, as before; two on one output still fault t_wf[1]);
-//   * the record is staged one edge (rec_q): the start-table write (ts = the start edge's tm), vld set and fd clear
-//     land one edge after the start edge, so udup / col / on_cal -> rec no longer fans into ~3k write enables in the
-//     same stage.  Pointers hold on a start at their entry and on the staged write (no skip past a new entry).  Event
-//     edges are unchanged (ts is the start edge's tm); vld is visible to the RX tag check one edge later (an RX tag
-//     returns >= one round after its start);
-//   * gate 2 (10-19): the head equality / late compares are registered one edge ahead (eqn / ltn vs tm + 1 - D), so
-//     fire is a flop AND (okq = the head's ok one edge earlier: same entry while fresh); gate 3: run-time fault terms
-//     (RX tag / late / output collision) are flopped before the sticky t_wf (+1 edge, faults only); tm2 = tm + 2
-//     counter (tmd2 one subtract); fired flags fd carry no reset (cleared at the staged record, read only on valid entries);
-//   * the gap table stores gap - 1 (the prefetch is a one-hot read, no decrement in the stage).
-// Illegal configs (already t_wf[1] at arming: D < nw + 2 or a gap <= nw + 1) may raise the late-event fault t_wf[0]
-// one edge later than the former RTL; legal configs are edge-exact (MU_HWIN_GATE, SEQHOST_MU_GATE).
+// CODEX HWIN structural successor (10-19): true independent SRAM read ports for each event's
+// precomputed {due=ts+D,pos,user} and attributes, plus separate gap and retirement timestamp SRAMs.
+// The registered read and current/previous-write forwarding preserve the previous head/freshness
+// edge. Event comparison is only due==tm+1 into a registered fire flag; no serialized head prefetch,
+// no new output edge, and original D>=nw+2 / gap>=nw+2 limits are preserved.
+// Per-event one-hot pointers retain the original walk; binary SRAM shadows use exactly the same
+// registered wrap mask, including during boot-time calendar changes. Optional simulation asserts
+// prove correspondence on every edge. Payload copies per<=16 identities have distinct regional
+// resets; event, pointer, time, output and control state have local same-edge reset relays.
+// 16 rows are available in the die master. A row is enabled by its offset bootword; inactive rows
+// do not fire or participate in offset-validity checks. Fault meanings and CSR encoding are unchanged.
 // ---------------------------------------------------------------------------------------------------------------------
 module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, parameter integer NEP = 4,
                       parameter integer NRT = 2, parameter integer MUT = 0) (
@@ -72,14 +59,31 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
     initial if (NSLOT < 2 || NSLOT > 64 || NEV < 1 || NEV > 32) $fatal(1, "dsdv_mu_hwin: NSLOT 2..64, NEV 1..32");
 `endif
     localparam integer ID_C=(NSLOT+15)/16;
-    wire [NEV+ID_C:0] rr; ot_rst_relay #(.REGIONS(NEV+ID_C+1)) u_rr (.clk(ck), .rst_n_in(rst_n), .rst_n(rr)); wire rn = rr[0];
-    // ---- pin flops (valid bits gated by the relayed reset, payload not)
-    reg [52:0] ks_q; reg [25:0] mc_q, mw_q; reg [NRT*32-1:0] rt_q; integer r;
+    localparam integer NC_REC=(NSLOT+23)/24;
+    localparam integer MEM_RBASE=NEV+ID_C+4;
+    wire [MEM_RBASE+NEV*5+3:0] rr; ot_rst_relay #(.REGIONS(MEM_RBASE+NEV*5+4)) u_rr (.clk(ck), .rst_n_in(rst_n), .rst_n(rr)); wire rn = rr[0];
+    // Payload pin flops sample every edge; valid pins are asynchronously held by their
+    // landed reset, so the reset does not enter a synchronous data cone.
+    reg [51:0] ks_payload; reg [24:0] mc_payload, mw_payload;
+    reg ks_valid, mc_valid, mw_valid;
+    reg [NRT*31-1:0] rt_payload; reg [NRT-1:0] rt_valid;
+    wire [52:0] ks_q={ks_valid,ks_payload};
+    wire [25:0] mc_q={mc_valid,mc_payload}, mw_q={mw_valid,mw_payload};
+    wire [NRT*32-1:0] rt_q; integer pr,pv,r;
     always @(posedge ck) begin
-        ks_q <= {rn & f_ks[52], f_ks[51:0]}; mc_q <= {rn & f_mc[25], f_mc[24:0]}; mw_q <= {rn & f_mw[25], f_mw[24:0]};
-        rt_q <= mu_rt;
-        for (r = 0; r < NRT; r = r + 1) rt_q[32*r + 31] <= rn & mu_rt[32*r + 31];
+        ks_payload<=f_ks[51:0]; mc_payload<=f_mc[24:0]; mw_payload<=f_mw[24:0];
+        for(pr=0;pr<NRT;pr=pr+1) rt_payload[31*pr+:31]<=mu_rt[32*pr+:31];
     end
+    always @(posedge ck or negedge rn)
+        if(!rn) begin ks_valid<=1'b0; mc_valid<=1'b0; mw_valid<=1'b0; rt_valid<={NRT{1'b0}}; end
+        else begin
+            ks_valid<=f_ks[52]; mc_valid<=f_mc[25]; mw_valid<=f_mw[25];
+            for(pv=0;pv<NRT;pv=pv+1) rt_valid[pv]<=mu_rt[32*pv+31];
+        end
+    genvar rp_pin;
+    generate for(rp_pin=0;rp_pin<NRT;rp_pin=rp_pin+1) begin:g_rx_pin
+        assign rt_q[32*rp_pin+:32]={rt_valid[rp_pin],rt_payload[31*rp_pin+:31]};
+    end endgenerate
     wire st = ks_q[52]; wire [9:0] su = ks_q[51:42]; wire [20:0] sp = ks_q[20:0];
     // ---- one-hot pointer step: entries wrap at lw (lm = one-hot of lw); a pointer past lw (only while idle, after a
     // config shrink) wraps at NSLOT - 1
@@ -102,8 +106,11 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
     reg [NSLOT-1:0] vld; reg [9:0] eu [0:NSLOT-1]; reg [20:0] ep [0:NSLOT-1]; 
     wire [NSLOT-1:0] ss = armed ? sl : OH0;
     wire on_cal = !armed || ph == 24'd0;
+    wire [9:0] cmp_user [0:NC_REC-1];
+    wire [3:0] id_we [0:NSLOT-1]; wire [NSLOT-1:0] rec_slot;
+    wire [NC_REC-1:0] rec_event [0:NEV-1];
     reg udup; integer i;
-    always @* begin udup = 1'b0; for (i = 0; i < NSLOT; i = i + 1) if (vld[i] && eu[i] == su) udup = 1'b1; end
+    always @* begin udup = 1'b0; for (i = 0; i < NSLOT; i = i + 1) if (vld[i] && eu[i] == cmp_user[i/24]) udup = 1'b1; end
     wire col = |(vld & ss);
     wire [23:0] nw = {{(23-SI){1'b0}}, lw} + 24'd1;     // slot entries in use (= calendar slots per period)
     wire hcfg_bad = gn == 0 || cs < nw || crl <= nw;                     // hslot's own arming rule
@@ -114,25 +121,25 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
     // retire pointer head (registered read of the entry under rp)
     wire [31:0] h_rts; reg h_rfr;
     wire rok = |(rp & vld);
-    wire rhold = (st && |(rp & ss)) || (rec_q && |(rp & ssq));
+    wire rhold = (st && |(rp & ss)) || (|(rp & rec_slot));
     wire due = rok && h_rfr && h_rts == tmr;                             // hslot's return edge: the entry retires
     wire radv = due || (!rok && !rhold);
     wire [NSLOT-1:0] gxn = (MUT == 5 || |(gx & gm)) ? OH0 : {gx[NSLOT-2:0], 1'b0};   // MUT 5: gap table index stuck at 0
-    dsdv_mu_mem #(.W(24),.AW(SI)) u_gap(.ck(ck),.rst_n(rn),
+    dsdv_mu_mem #(.W(24),.AW(SI)) u_gap(.ck(ck),.rst_n(rr[MEM_RBASE +: 2]),
         .we(mc_q[25] && !mc_q[24] && !armed && !(|vld) && gn != SJ'(NSLOT)),
         .wa(gn[SI-1:0]),.wd(mc_q[23:0]-24'd1),.ra(gxb),.q(ng));
-    dsdv_mu_mem #(.W(32),.AW(SI)) u_retire(.ck(ck),.rst_n(rn),
+    dsdv_mu_mem #(.W(32),.AW(SI)) u_retire(.ck(ck),.rst_n(rr[MEM_RBASE+2 +: 2]),
         .we(rec_q),.wa(ssqb),.wd(tsq),.ra(rpb),.q(h_rts));
     always @(posedge ck) tmr <= tm1 - {8'd0,crm};
     // ---- event rows
     reg [NEV-1:0] evld; reg [NEV-1:0] ek; reg [PI-1:0] eep [0:NEV-1]; reg [20:0] eD [0:NEV-1]; reg [EI-1:0] esel;
     // Attributes are in independent registered SRAM banks.                  // {land / replay-en, ab} per event and calendar slot
     reg [NSLOT-1:0] fd [0:NEV-1];                         // fired flags
-    reg [NSLOT-1:0] pe [0:NEV-1];                         // one-hot event pointers
-    reg [SI-1:0] pbi [0:NEV-1]; // binary shadow: drives only SRAM address pins                            // tm - D[e] + 1 (next edge's fire compare value)
+    wire [NSLOT-1:0] pe [0:NEV-1];                         // one-hot event pointers
+    wire [SI-1:0] pbi [0:NEV-1]; // binary shadow: drives only SRAM address pins                            // tm - D[e] + 1 (next edge's fire compare value)
     reg [NEV-1:0] eqn, ltn, okq;                          // registered head compares / head ok, valid on the next edge
     wire [31:0] h_ts [0:NEV-1]; wire [20:0] h_ep [0:NEV-1]; wire [9:0] h_eu [0:NEV-1]; wire [1:0] h_at [0:NEV-1];
-    reg [NEV-1:0] h_fr;
+    wire [NEV-1:0] h_fr;
     integer e, p;
     reg bad_d; reg [NEV-1:0] fire, lt, ok, hold, adv;
     reg [31:0] dl; reg [NEV-1:0] dlm;
@@ -142,7 +149,7 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
             if (evld[e] && ({3'd0, eD[e]} < nw + 24'd2 || {3'd0, eD[e]} + 24'd2 > crl)) bad_d = 1'b1;
         for (e = 0; e < NEV; e = e + 1) begin
             ok[e] = evld[e] && |(pe[e] & vld & ~fd[e]);
-            hold[e] = (st && |(pe[e] & ss)) || (rec_q && |(pe[e] & ssq));
+            hold[e] = (st && |(pe[e] & ss)) || (|(pe[e] & rec_slot));
             fire[e] = okq[e] && h_fr[e] && eqn[e];
             lt[e] = okq[e] && h_fr[e] && ltn[e];
             dl = h_ts[e] - tm1; dlm[e] = dl[31];
@@ -151,7 +158,7 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
     end
     integer e4;
     always @(posedge ck) for (e4 = 0; e4 < NEV; e4 = e4 + 1) begin
-        fd[e4] <= (fd[e4] | (fire[e4] ? pe[e4] : {NSLOT{1'b0}})) & ~(rec_q ? ssq : {NSLOT{1'b0}});   // no reset: cleared at the staged record, read only on valid entries
+        for(integer fs=0;fs<NSLOT;fs=fs+1) fd[e4][fs] <= (fd[e4][fs] || (fire[e4] && pe[e4][fs])) && !(rec_event[e4][fs/24] && ssq[fs]);   // no reset: cleared at the staged record, read only on valid entries
         okq[e4] <= ok[e4];                                  // = ok on the next edge while the head stays fresh (legal config)
         // head compares one edge ahead: h_ts == tm + 1 - D (fire on the next edge) / h_ts - (tm + 1 - D) < 0 (late);
         // used only while the head stays fresh across both edges (h_fr now and next), so the entry is the same
@@ -196,7 +203,11 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
     integer k4;
     // event-row config + entry payload (no reset: written before arming / at the staged record that sets vld)
     always @(posedge ck) begin
-        for (k4 = 0; k4 < NSLOT; k4 = k4 + 1) if (rec_q && ssq[k4]) begin eu[k4] <= id_c[k4/16][30:21]; ep[k4] <= id_c[k4/16][20:0]; end
+        for(k4=0;k4<NSLOT;k4=k4+1) begin
+            if(id_we[k4][0]) eu[k4]<=id_c[k4/16][30:21];
+            if(id_we[k4][1]) ep[k4][10:0]<=id_c[k4/16][10:0];
+            if(id_we[k4][2]) ep[k4][20:11]<=id_c[k4/16][20:11];
+        end
         if (wv && idle)
             case (mw_q[22:21])
                 2'd0: begin esel <= mw_q[EI-1:0]; ek[mw_q[EI-1:0]] <= mw_q[8]; eep[mw_q[EI-1:0]] <= mw_q[9 +: PI]; end
@@ -205,69 +216,113 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
                 default: ;
             endcase
     end
+    genvar ws, wc;
+    generate for(wc=0;wc<NC_REC;wc=wc+1) begin:g_compare_copy
+        (* keep *) reg [9:0] cmp_r; assign cmp_user[wc]=cmp_r;
+        always @(posedge ck or negedge rr[MEM_RBASE+2+wc])
+            if(!rr[MEM_RBASE+2+wc]) cmp_r<=10'd0; else cmp_r<=f_ks[51:42];
+    end endgenerate
+    generate for(ws=0;ws<NSLOT;ws=ws+1) begin:g_write_slot
+        assign rec_slot[ws]=id_we[ws][3];
+        for(wc=0;wc<4;wc=wc+1) begin:g_copy
+            (* keep *) reg we_r; assign id_we[ws][wc]=we_r;
+            always @(posedge ck or negedge rr[MEM_RBASE+4+wc])
+                if(!rr[MEM_RBASE+4+wc]) we_r<=1'b0; else we_r<=rec && ss[ws];
+        end
+    end endgenerate
     // Parallel RX identity fields have one reset-distinct payload copy per <=16 entries.
     // Distinct regional reset pins prevent synthesis from merging these physical fanout copies.
-    (* keep *) reg [30:0] id_c [0:ID_C-1];
+    wire [30:0] id_c [0:ID_C-1];
     genvar ic;
     generate for(ic=0;ic<ID_C;ic=ic+1) begin:g_identity_copy
+        (* keep *) reg [30:0] id_r; assign id_c[ic]=id_r;
         always @(posedge ck or negedge rr[NEV+1+ic])
-            if(!rr[NEV+1+ic]) id_c[ic]<=31'd0; else id_c[ic]<={su,sp};
+            if(!rr[NEV+1+ic]) id_r<=31'd0; else id_r<={su,sp};
     end endgenerate
     // Every event has independent true SRAM read ports for its due/payload and attributes.
     // There is no arbitration or serialized prefetch: original registered-read/freshness edges hold.
-    genvar se;
+    genvar se, rce;
     generate for(se=0;se<NEV;se=se+1) begin:g_event_mem
+        reg [NSLOT-1:0] pe_r; reg [SI-1:0] pb_r; reg fresh_r;
+        assign pe[se]=pe_r; assign pbi[se]=pb_r; assign h_fr[se]=fresh_r;
         always @(posedge ck or negedge rr[se+1])
-            if(!rr[se+1]) begin pe[se]<=OH0; pbi[se]<=SI'(0); h_fr[se]<=1'b0; end
+            if(!rr[se+1]) begin pe_r<=OH0; pb_r<=SI'(0); fresh_r<=1'b0; end
             else begin
-                if(adv[se]) begin pe[se]<=rot(pe[se],lm); pbi[se]<=((|(pe[se]&lm)) || pe[se][NSLOT-1])?SI'(0):pbi[se]+1'b1; end
-                h_fr[se]<=!adv[se] && !(rec_q && |(pe[se]&ssq));
+                if(adv[se]) begin pe_r<=rot(pe_r,lm); pb_r<=((|(pe_r&lm)) || pe_r[NSLOT-1])?SI'(0):pb_r+1'b1; end
+                fresh_r<=!adv[se] && !(|(pe_r&rec_slot));
             end
+        for(rce=0;rce<NC_REC;rce=rce+1) begin:g_record_copy
+            (* keep *) reg rec_r; assign rec_event[se][rce]=rec_r;
+            always @(posedge ck or negedge rr[MEM_RBASE+4+5*se+rce])
+                if(!rr[MEM_RBASE+4+5*se+rce]) rec_r<=1'b0; else rec_r<=rec;
+        end
         wire [62:0] head;
         wire [31:0] due_at_start=tsq+{11'd0,eD[se]};
-        dsdv_mu_mem #(.W(63),.AW(SI)) u_payload(.ck(ck),.rst_n(rn),.we(rec_q),
+        dsdv_mu_mem #(.W(63),.AW(SI)) u_payload(.ck(ck),.rst_n(rr[MEM_RBASE+4+5*se +: 4]),.we(rec_event[se][0]),
             .wa(ssqb),.wd({due_at_start,spq,suq}),.ra(pbi[se]),.q(head));
-        dsdv_mu_mem #(.W(2),.AW(SI)) u_attr(.ck(ck),.rst_n(rn),
+        dsdv_mu_mem #(.W(2),.AW(SI)) u_attr(.ck(ck),.rst_n(rr[MEM_RBASE+8+5*se]),
             .we(wv && idle && mw_q[22:21]==2'd2 && esel==EI'(se)),
             .wa(mw_q[SI-1:0]),.wd(mw_q[11:10]),.ra(pbi[se]),.q(h_at[se]));
         assign h_ts[se]=head[62:31]; assign h_ep[se]=head[30:10]; assign h_eu[se]=head[9:0];
     end endgenerate
-    always @(posedge ck or negedge rn)
-        if (!rn) begin
-            slb<=SI'(0); rpb<=SI'(0); gxb<=SI'(0); tm <= 32'd0; tm1 <= 32'd1; tm2 <= 32'd2; armed <= 1'b0; ph <= 24'd0; sl <= OH0; rp <= OH0; vld <= {NSLOT{1'b0}};
-            cs <= 24'd0; crl <= 24'd0; crm <= 24'hffffff; t_wf <= 2'd0; gn <= {SJ{1'b0}}; gx <= OH0; gm <= {NSLOT{1'b0}};
-            lw <= SI'(NSLOT - 1); lm <= {1'b1, {(NSLOT-1){1'b0}}}; cg <= 24'd0; c_q <= {NEP*34{1'b0}}; rc_q <= {NEP*11{1'b0}};
-            rec_q <= 1'b0; h_rfr <= 1'b0; fq0 <= 1'b0; fq1 <= 1'b0;
+    // The former shared reset drove690flops. Time96, outputs180, pointers~206,
+    // control~213 now have independent same-edge reset relays; no added schedule cycle.
+    wire rtime=rr[NEV+ID_C+1], rptr=rr[NEV+ID_C+2], rout=rr[NEV+ID_C+3];
+    always @(posedge ck or negedge rtime)
+        if(!rtime) begin tm<=32'd0; tm1<=32'd1; tm2<=32'd2; end
+        else begin tm<=tm1; tm1<=tm2; tm2<=tm2+32'd1; end
+    always @(posedge ck or negedge rout)
+        if(!rout) begin c_q<={NEP*34{1'b0}}; rc_q<={NEP*11{1'b0}}; end
+        else begin c_q<=c_n; rc_q<=rc_n; end
+    always @(posedge ck or negedge rptr)
+        if(!rptr) begin
+            slb<=SI'(0); rpb<=SI'(0); gxb<=SI'(0); sl<=OH0; rp<=OH0; vld<={NSLOT{1'b0}};
+            gx<=OH0; gm<={NSLOT{1'b0}}; lm<={1'b1,{(NSLOT-1){1'b0}}};
         end else begin
-            tm <= tm1; tm1 <= tm2; tm2 <= tm2 + 32'd1;
-            lm <= {NSLOT{1'b0}}; lm[lw] <= 1'b1;
-            if (mc_q[25] && idle) begin if (mc_q[24]) begin crl <= mc_q[23:0]; crm <= mc_q[23:0] - 24'd1; end else begin
-                    if (gn != SJ'(NSLOT)) begin
-                        gn <= gn + 1'b1;
-                        gm <= {NSLOT{1'b0}}; gm[gn[SI-1:0]] <= 1'b1;                   // one-hot of the last gap index
-                        if (gn == 0 || mc_q[23:0] < cs) cs <= mc_q[23:0];
-                        lw <= (gn == 0) ? SI'(NSLOT - 1) : gn[SI-1:0];             // nw = n for n >= 2
-                    end
-                end end
-            if (armed) begin
-                if (ph == cg) begin ph <= 24'd0; sl <= rot(sl, lm); slb<=((|(sl&lm)) || sl[NSLOT-1])?SI'(0):slb+1'b1; cg <= ng; gx <= gxn; gxb<=(MUT==5 || {1'b0,gxb}+1'b1>=gn)?SI'(0):gxb+1'b1; end else ph <= ph + 24'd1;
+            lm<={NSLOT{1'b0}}; lm[lw]<=1'b1;
+            if(mc_q[25] && idle && !mc_q[24] && gn!=SJ'(NSLOT)) begin
+                gm<={NSLOT{1'b0}}; gm[gn[SI-1:0]]<=1'b1;
             end
-            if (st && !armed) begin
-                if (bad_d) t_wf[1] <= 1'b1;
-                if (!hcfg_bad) begin armed <= 1'b1; ph <= 24'd1; cg <= ng; gx <= gxn; gxb<=(MUT==5 || {1'b0,gxb}+1'b1>=gn)?SI'(0):gxb+1'b1; end
+            if(armed && ph==cg) begin
+                sl<=rot(sl,lm); slb<=((|(sl&lm)) || sl[NSLOT-1])?SI'(0):slb+1'b1;
+                gx<=gxn; gxb<=(MUT==5 || {1'b0,gxb}+1'b1>=gn)?SI'(0):gxb+1'b1;
             end
-            rec_q <= rec;
-            if (radv) begin rp <= rot(rp, lm); rpb<=((|(rp&lm)) || rp[NSLOT-1])?SI'(0):rpb+1'b1; end
-            h_rfr <= !radv && !(rec_q && |(rp & ssq));
-            vld <= (vld & ~(due ? rp : {NSLOT{1'b0}})) | (rec_q ? ssq : {NSLOT{1'b0}});
-            c_q <= c_n; rc_q <= rc_n;
-            fq0 <= rtbad || (|lt); fq1 <= col_w;                    // run-time fault terms land in a flop first (sticky, +1 edge)
-            if (fq0) t_wf[0] <= 1'b1;
-            if ((wv && (!idle || mw_q[22:21] == 2'd3)) || fq1) t_wf[1] <= 1'b1;
+            if(st && !armed && !hcfg_bad) begin
+                gx<=gxn; gxb<=(MUT==5 || {1'b0,gxb}+1'b1>=gn)?SI'(0):gxb+1'b1;
+            end
+            if(radv) begin rp<=rot(rp,lm); rpb<=((|(rp&lm)) || rp[NSLOT-1])?SI'(0):rpb+1'b1; end
+            vld<=(vld & ~(due?rp:{NSLOT{1'b0}})) | rec_slot;
+        end
+    always @(posedge ck or negedge rn)
+        if(!rn) begin
+            armed<=1'b0; ph<=24'd0; cs<=24'd0; crl<=24'd0; crm<=24'hffffff;
+            t_wf<=2'd0; gn<={SJ{1'b0}}; lw<=SI'(NSLOT-1); cg<=24'd0;
+            rec_q<=1'b0; h_rfr<=1'b0; fq0<=1'b0; fq1<=1'b0;
+        end else begin
+            if(mc_q[25] && idle) begin
+                if(mc_q[24]) begin crl<=mc_q[23:0]; crm<=mc_q[23:0]-24'd1; end
+                else if(gn!=SJ'(NSLOT)) begin
+                    gn<=gn+1'b1;
+                    if(gn==0 || mc_q[23:0]<cs) cs<=mc_q[23:0];
+                    lw<=(gn==0)?SI'(NSLOT-1):gn[SI-1:0];
+                end
+            end
+            if(armed) begin
+                if(ph==cg) begin ph<=24'd0; cg<=ng; end else ph<=ph+24'd1;
+            end
+            if(st && !armed) begin
+                if(bad_d) t_wf[1]<=1'b1;
+                if(!hcfg_bad) begin armed<=1'b1; ph<=24'd1; cg<=ng; end
+            end
+            rec_q<=rec;
+            h_rfr<=!radv && !(|(rp&rec_slot));
+            fq0<=rtbad || (|lt); fq1<=col_w;
+            if(fq0) t_wf[0]<=1'b1;
+            if((wv && (!idle || mw_q[22:21]==2'd3)) || fq1) t_wf[1]<=1'b1;
         end
 `ifdef DSDV_MU_POINTER_ASSERT
     integer ae;
-    always @(posedge ck) if(rn) begin
+    always @(posedge ck or negedge rn) if(!rn) begin end else begin
         if(rp !== (OH0 << rpb)) $fatal(1,"retire SRAM pointer mismatch");
         if(sl !== (OH0 << slb)) $fatal(1,"slot SRAM pointer mismatch");
         if(gx !== (OH0 << gxb)) $fatal(1,"gap SRAM pointer mismatch");
@@ -279,7 +334,7 @@ endmodule
 
 // ---------------------------------------------------------------- MU-S81-2/DIE: parameter-free p4l die master (MU dies)
 // dsdv_seq_host_mux = dsdv_seq_host_mu NSLOT 47 (the CLOSED dsdv_mu_hslot leaf, NSLOT 47 MUT 0, unchanged) + dsdv_mu_hwin
-// (8 window events, 4 end slices: mu_c / mu_rc to s_7N / s_7S / s_0N / s_0S; RX tags back from the 2 N-tier end slices
+// (16 window events, 4 end slices: mu_c / mu_rc to s_7N / s_7S / s_0N / s_0S; RX tags back from the 2 N-tier end slices
 // s_7N / s_0N -- the S-tier tags carry the same {user, pos} and are not returned: column-4 W lane margin, MU-S81/DIE).
 // Boot config rides the host stream as class-0 CSRs decoded from the f_host pin the master already has (0 die wires):
 // 0x15 = hslot word (S / RL; also snooped by hwin), 0x16 = window word.  Neither index is intercepted by sh_lk
