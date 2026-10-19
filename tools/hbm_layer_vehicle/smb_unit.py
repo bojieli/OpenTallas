@@ -57,7 +57,7 @@ MAGIC_ROW, MAGIC_DESC = 0xC7A1, 0x5D15
 # schedule constants (stream edges); LAT_GO = go edge -> first relocated word at the SM (start_v_q, running, macro,
 # capture, calendar, RELOC); OFF = launch event edge -> issuer rc 0
 LAT_GO, OFF = 7, 3
-X_GAP, OP_GAP, DRAIN = 16, 256, 1200
+X_GAP, OP_GAP, DRAIN = 16, int(os.environ.get("SMB_OP_GAP", 256)), 1200
 FIRST_GO = int(os.environ.get('SMB_FIRST_GO', 520))             # first block of a run: HBM first access + copy (elastic boundary, calibrated by the bench)
 PACE_NUM, PACE_DEN, PACE_ADD = (int(os.environ.get(k, d)) for k, d in (('SMB_PACE_NUM', 200), ('SMB_PACE_DEN', 64), ('SMB_PACE_ADD', 4)))
 # >= 1.375 edges / 136-B line (immutable HBM price) + 8; env overrides for calibration probes
@@ -601,6 +601,10 @@ def cmd_run(a):
                rtl="cp_svg ot_static_run_target -> ot_hbm_svc_sm_group_rel_id (issuer_rel + feed_programmed_rel_id, "
                    "2,048-word store) -> 4 controller leaves -> DRAM fixture; xc ot_hbm_svc_sm_xcal_rel_t; SM = "
                    "ot_hbm_accel_smh_attn die master (bundle master_files, DIE_DEFINES); tb_hbm_svg_rel_sm.sv, Verilator 5.050",
+               source_revision=(ROOT / "REV").read_text().strip() if (ROOT / "REV").exists() else "working_tree",
+               static_schedule=dict(first_go=FIRST_GO, op_gap=OP_GAP, x_gap=X_GAP, drain=DRAIN,
+                                    pace_num=PACE_NUM, pace_den=PACE_DEN, pace_add=PACE_ADD, fetch=FETCH,
+                                    expert_first=EXP_FIRST, ids_lag=IDS_LAG, go_latency=LAT_GO, layout=LAYOUT),
                budget=c["budget"], events=n, fault=fault, done=done, runs_done=runs, gos=len(gos), go_slots_exact=go_ok,
                sim_s=round(time.time() - t0, 1), run_rc=r.returncode, run_log_sha256=sha(d / "run.log"), ops=ops,
                verdict="PASS" if ok else "FAIL")

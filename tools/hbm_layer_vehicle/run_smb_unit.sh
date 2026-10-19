@@ -34,9 +34,11 @@ case "$JOB" in
   l14)   J="$T --layers L14:14 --name l14 --out $OUT/out/l14.json" ;;
   # HBM-BW (10-19): multi-row controller leaves (HBM_MR) + bank-set layout (SMB_LAYOUT=bw), go slots paced at the HBM
   # price 1.375 edges / 136-B line (98.9 B/edge/SM): PNUM/64 edges a line, PADD a block, FETCH a routed block
-  bw)    J="export SMB_LAYOUT=bw SMB_PACE_NUM=${PNUM:-88} SMB_PACE_ADD=${PADD:-0} SMB_FETCH=${FETCH:-88}; $T --layers ${LAYERS:-L00:0,L02:2,L14:14,head:0} --define HBM_MR --name ${LOGN:-bw} --out $OUT/out/${LOGN:-bw}.json" ;;
-  bwsafe) J="export SMB_LAYOUT=bw SMB_PACE_NUM=${PNUM:-88} SMB_PACE_ADD=${PADD:-0} SMB_FETCH=${FETCH:-88}; $T --layers ${LAYERS:-L00:0,L02:2,L14:14,head:0} --define HBM_MR,HBM_SAFE --name ${LOGN:-bwsafe} --out $OUT/out/${LOGN:-bwsafe}.json" ;;
-  bwold) J="export SMB_LAYOUT=bw SMB_PACE_NUM=${PNUM:-88} SMB_PACE_ADD=${PADD:-0} SMB_FETCH=${FETCH:-88}; $T --layers ${LAYERS:-L00:0,L02:2,L14:14,head:0} --name ${LOGN:-bwold} --out $OUT/out/${LOGN:-bwold}.json" ;;
+  bw)    J="export SMB_OP_GAP=${OPGAP:-256} SMB_LAYOUT=bw SMB_PACE_NUM=${PNUM:-88} SMB_PACE_ADD=${PADD:-0} SMB_FETCH=${FETCH:-88}; $T --layers ${LAYERS:-L00:0,L02:2,L14:14,head:0} --define HBM_MR --name ${LOGN:-bw} --out $OUT/out/${LOGN:-bw}.json" ;;
+  bwsafe) J="export SMB_OP_GAP=${OPGAP:-256} SMB_LAYOUT=bw SMB_PACE_NUM=${PNUM:-88} SMB_PACE_ADD=${PADD:-0} SMB_FETCH=${FETCH:-88}; $T --layers ${LAYERS:-L00:0,L02:2,L14:14,head:0} --define HBM_MR,HBM_SAFE --name ${LOGN:-bwsafe} --out $OUT/out/${LOGN:-bwsafe}.json" ;;
+  bwsafe_late) J="export SMB_OP_GAP=${OPGAP:-256} SMB_LAYOUT=bw SMB_PACE_NUM=${PNUM:-88} SMB_PACE_ADD=${PADD:-0} SMB_FETCH=${FETCH:-88}; $T --layers L14:14 --define HBM_MR,HBM_SAFE --mut late_ids --name ${LOGN:-bwsafe_late} --out $OUT/out/${LOGN:-bwsafe_late}.json" ;;
+  bwsafe_imut2) J="export SMB_OP_GAP=${OPGAP:-256} SMB_LAYOUT=bw SMB_PACE_NUM=${PNUM:-88} SMB_PACE_ADD=${PADD:-0} SMB_FETCH=${FETCH:-88}; $T --layers L14:14 --define HBM_MR,HBM_SAFE,IMUT=2 --name ${LOGN:-bwsafe_imut2} --out $OUT/out/${LOGN:-bwsafe_imut2}.json" ;;
+  bwold) J="export SMB_OP_GAP=${OPGAP:-256} SMB_LAYOUT=bw SMB_PACE_NUM=${PNUM:-88} SMB_PACE_ADD=${PADD:-0} SMB_FETCH=${FETCH:-88}; $T --layers ${LAYERS:-L00:0,L02:2,L14:14,head:0} --name ${LOGN:-bwold} --out $OUT/out/${LOGN:-bwold}.json" ;;
   late)  J="$T --layers L14:14 --mut late_ids --name late --out $OUT/out/late.json" ;;
   imut1) J="$T --layers L14:14 --define IMUT=1 --name imut1 --out $OUT/out/imut1.json" ;;
   imut2) J="$T --layers L14:14 --define IMUT=2 --name imut2 --out $OUT/out/imut2.json" ;;
