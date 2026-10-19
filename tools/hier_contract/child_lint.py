@@ -35,6 +35,9 @@ A parent may only be submitted when every hard child it instantiates passes this
                  since 2026-10-13): any pocket = FAIL.  A LEF without it (exported before the fix; accepted closed views
                  stand): WARN with the count, the largest pocket and the fix command -- FAIL under --strict-pockets,
                  which a parent that routes on the child's own top layer should use on its children.
+  (i) pin access no signal pin with a same-layer OBS rect (parallel run along the layer direction) closer than the
+                 wide-metal spacing 0.072 um (M4..M7): the parent has no DRC-clean access point (DRT-0073,
+                 qkd_ectl3_kiss_st-e4: one-pitch pocket-fill keep-out on qkd_static_ectla_kiss).  FAIL.
 
 exit 0 = PASS (warnings allowed), 1 = FAIL, 2 = usage / unreadable input.  --json prints the machine record.
 Usage: child_lint.py CHILD.lef [--libs DIR] [--contract DIE.json --slot NAME] [--json] [--skip f,g] [--strict-pockets]
@@ -529,6 +532,25 @@ def lint(lef_path: str, libs: str | None = None, contract: str | None = None, sl
             else:
                 warns.append(msg + f"; view exported before the pocket fix (no OT_OBS_CLOSED marker): a parent routing on "
                              f"{pk['layer']} must lint with --strict-pockets; fix: {POCKET_FIX}")
+    # (i) KV-ECTL5 2026-10-19: pin access spacing (DRT-0073 in the parent)
+    if "i" not in skip and re.search(r"\n[ \t]*OBS[ \t]*(?=\n)", text):
+        try:
+            src = Path(__file__).resolve().parent
+            # never import a copy without the detector (a pre-2026-10-13 copy acts on sys.argv at import time); (h) fails it
+            if "def pin_spacing_violations" not in (src / "abstract_pin_stub.py").read_text(errors="replace"):
+                raise ImportError("abstract_pin_stub.py has no pin_spacing_violations")
+            if str(src) not in sys.path:
+                sys.path.insert(0, str(src))
+            import abstract_pin_stub as APS
+            bad = APS.pin_spacing_violations(text)
+        except Exception as ex:  # noqa: BLE001
+            bad = None
+            fails.append(f"(i) pin access: detector failed ({type(ex).__name__}: {ex})")
+        info["pin_access_violations"] = None if bad is None else len(bad)
+        if bad:
+            fails.append(f"(i) pin access: {len(bad)} signal pins have a same-layer OBS rect closer than the wide-metal "
+                         f"spacing (" + ", ".join(f"{n} {l} {g:g} < {nd:g}" for n, l, g, nd, _ in bad[:4]) + "): no "
+                         f"DRC-clean access point in the parent (DRT-0073); fix: {POCKET_FIX}")
     verdict = "FAIL" if fails else "PASS"
     summ = (f"{cell} {W} x {H}: PG {pg['top_layer']} "
             + " / ".join(f"{n} {e['stripes']} stripes ({e['spread']:.0%} spread, {e['coverage']:.0%} cov)"
