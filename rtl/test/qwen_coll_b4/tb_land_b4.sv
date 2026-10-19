@@ -6,7 +6,11 @@ module b4_land_case #(parameter integer W=150, ORDER=0, PH=0)(
  localparam integer G=16,R0=ORDER?9:25,HREG=2,RREG=2,L=3,RPIPE=1;
  localparam integer K=((L-1-((R0+RREG)-(G+HREG)))%8+8)%8;
  reg cd=0;reg[31:0]ed=0;reg en=0,rs=0;reg[W-1:0]src=0;
- initial begin #(PH);forever #5 cd=~cd;end
+ generate if(PH==0)begin:g_phase0
+  initial forever #5 cd=~cd;
+ end else begin:g_phase
+  initial begin #(PH);forever #5 cd=~cd;end
+ end endgenerate
  always @(posedge cd)ed<=ed+1;
  function automatic[W-1:0]word_of(input integer e);
   integer b;
