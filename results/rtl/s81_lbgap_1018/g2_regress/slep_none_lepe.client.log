@@ -1,0 +1,7 @@
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-1767514-1792350472 after 0 s
+SLEP_STATS A->B 200/200 B->A 200/200 mismatches 0 fault A 0 B 0
+PASS slice_lep: 200 + 200 line beats crossed W-end -> E-end and back through the slice ring stops + UCIe lanes bit-exact
+BENCH_PASS slice_lep
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1767514-1792350472): exit 0
+EXIT 0
