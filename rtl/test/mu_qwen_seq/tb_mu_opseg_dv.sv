@@ -41,7 +41,7 @@ module tb_mu_opseg_dv;
         .prog_rx_v(ctx_slot), .rx_payload(rx_rec), .ctx_x(ctx_x), .ctx_user(xu), .mu_fault(lf_f));
     reg rxf_l = 0;
     qfd_tt_ctlm_dv #(.XPF_TRANSPORT_EDGES(1), .MUT(MUT), .NU(NU), .STAGE_ME(1), .OPSEG(OPSEG), .CTX_SRC(CTX_SRC), .FCTX(FCTX)) dut (.ck(ck), .rst_n(rst_n),
-        .pw(pw), .dh(dh), .dh_user(dh_user), .ctx_x(ctx_x), .kok(1'b0), .kwd(1'b1), .fab(1'b0), .program_obs(pobs),
+        .pw(pw), .dh(dh), .dh_user(dh_user), .mu_fault(1'b0), .ctx_x(ctx_x), .kok(1'b0), .kwd(1'b1), .fab(1'b0), .program_obs(pobs),
         .control_stores_ready(csr), .layer_context_v(lcv), .native_tok(ntk), .native_pos(nps), .command_stage(cst),
         .cal_program_obs(cobs), .cal_descriptor_obs(dobs), .cal_image_ready(cir), .dc(dc), .native_cmd(ncmd),
         .native_ret(95'd0), .hr(hr), .cmd(cmd), .ss5(ss5), .ag5(10'd0), .emb_start(emb_start), .emb_token(emb_token),
@@ -147,8 +147,8 @@ module tb_mu_opseg_dv;
     wire [452:0] l_hr; wire [115:0] l_cmd; wire l_emb_start; wire [17:0] l_emb_token; wire [55:0] l_dc; wire l_cf;
     wire [75:0] l_pobs, l_cobs; wire [68:0] l_dobs; wire l_csr, l_cir, l_lcv; wire [17:0] l_ntk, l_nps; wire [5:0] l_cst;
     wire [379:0] l_ncmd; wire [1087:0] l_tl;
-    qfd_tt_ctlm_dv_lpf_lp #(.XPF_TRANSPORT_EDGES(1), .STAGE_ME(1), .NU(NU), .OPSEG(OPSEG), .MUT(LMUT)) u_lp (.ck_core(ck),
-        .ck_hr(ck), .rst_n(rst_early), .pw(pw_dl[LIN_PW-1]), .dh(dh), .dh_user(dh_user), .kok(1'b0), .kwd(1'b1), .fab(1'b0),
+    qfd_tt_ctlm_dv_lpf_lp #(.XPF_TRANSPORT_EDGES(1), .STAGE_ME(1), .NU(NU), .OPSEG(OPSEG), .CTX_SRC(CTX_SRC), .FCTX(FCTX), .MUT(LMUT)) u_lp (.ck_core(ck),
+        .ck_hr(ck), .rst_n(rst_early), .pw(pw_dl[LIN_PW-1]), .dh(dh), .dh_user(dh_user), .ctx_x(ctx_x), .mu_fault(1'b0), .kok(1'b0), .kwd(1'b1), .fab(1'b0),
         .program_obs(l_pobs), .control_stores_ready(l_csr), .layer_context_v(l_lcv), .native_tok(l_ntk), .native_pos(l_nps),
         .command_stage(l_cst), .cal_program_obs(l_cobs), .cal_descriptor_obs(l_dobs), .cal_image_ready(l_cir), .dc(l_dc),
         .native_cmd(l_ncmd), .native_ret(95'd0), .hr(l_hr), .cmd(l_cmd), .tl(l_tl), .ss5(ss5), .ag5(10'd0),

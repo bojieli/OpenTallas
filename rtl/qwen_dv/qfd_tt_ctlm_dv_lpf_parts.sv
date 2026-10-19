@@ -28,6 +28,8 @@ module qfd_tt_ctlm_dv_gi #(
     parameter integer PIDX_STRIDE = 128,
     parameter integer UTAG_LSB = 6,
     parameter integer OPSEG = 0,
+    parameter integer CTX_SRC = 0, FCTX = 0,
+    parameter [11:0] NCTX_BASE = 12'h010,
     parameter OPSEG_VIAMAP = ""       ,
     parameter OPSEG_INST = "qfd_tt_ctlm_opseg"         
 ) (
@@ -35,6 +37,8 @@ module qfd_tt_ctlm_dv_gi #(
     input  wire          rst_n,
     input  wire [186:0]  dh,
     input  wire [1:0]    dh_user,
+    input  wire [128:0]  ctx_x,
+    input  wire          mu_fault,
     input  wire [106:0]  ss5,
     input  wire [9:0]    ag5,
     input  wire          fab,
@@ -48,6 +52,7 @@ module qfd_tt_ctlm_dv_gi #(
     output wire          s_start,                // head stage start (u_hr stage_start; NU > 1 see hd_start)
     output wire [5:0]    s_stage,
     output wire [48:0]   st,
+    output wire [37:0]   fctx,                   // {context pulse, override hold, tok18, pos18}
     output reg  [1:0]    hu,                     // MU-DQ-D2DUSER: user of the latest head start (-> u_thru native_pos[17:16])
     output wire [15:0]   su_obs_o,
     output wire [23:0]   su_acc_o,
@@ -92,19 +97,30 @@ module qfd_tt_ctlm_dv_gi #(
     wire [1:0]  ss_tu = ss_q[27:26];                // OPSEG: the user of tok_idx when tok_v (MU-QW-AMIX contract)
 
     // OPSEG op starts (leaf) and the boot context record (see qfd_tt_ctlm_dv OPSEG)
-    wire [127:0] c_ctx; wire c_ctxld;
+    wire [127:0] c_ctx_cal; wire c_ctxld_cal;
+    reg [128:0] ctx_q;
+    reg mu_fault_q;
+    always @(posedge ck or negedge rst_n)
+        if (!rst_n) begin ctx_q <= 129'd0; mu_fault_q <= 1'b0; end
+        else begin ctx_q <= (CTX_SRC != 0 && OPS != 0) ? ctx_x : 129'd0; mu_fault_q <= mu_fault; end
+    wire x_ld = (CTX_SRC != 0) && (OPS != 0) && ctx_q[128];
+    wire [127:0] c_ctx = x_ld ? ctx_q[127:0] : c_ctx_cal;
+    wire c_ctxld = c_ctxld_cal || x_ld;
+    wire r_fill; wire [UB-1:0] r_wr;
     wire        l_v = (OPS != 0) && op_v;
     wire [UB-1:0] l_user = op_user[UB-1:0];
     wire        l_start = l_v && !d_start;            // the face start wins a collision
     wire        op_coll = l_v && d_start;
     wire [2:0]  ctx_mask = c_ctx[110:108];
     wire        ctx_ok = c_ctx[127:112] == 16'h4D43 && !c_ctx[111] && (({1'b0, ctx_mask} >> (NU - 1)) == 4'd0);
-    wire        ctx_ld = (OPS != 0) && c_ctxld && ctx_ok;
-    wire        ctx_bad = (OPS != 0) && c_ctxld && !ctx_ok;
+    wire x_hit = x_ld && (c_ctxld_cal || (l_v && !d_start && op_user != 2'd0 && ctx_mask[op_user - 2'd1]) ||
+                                  (r_fill && ss_tu != 2'd0 && ctx_mask[ss_tu - 2'd1]));
+    wire        ctx_ld = (OPS != 0) && c_ctxld && ctx_ok && !x_hit;
+    wire        ctx_bad = (OPS != 0) && c_ctxld && (!ctx_ok || x_hit);
     reg         op_fault;
     always @(posedge ck or negedge rst_n)
         if (!rst_n) op_fault <= 1'b0;
-        else if (((OPS != 0) && op_lfault) || op_coll || ctx_bad) op_fault <= 1'b1;
+        else if (((OPS != 0) && op_lfault) || op_coll || ctx_bad || mu_fault_q) op_fault <= 1'b1;
     wire        u_start = d_start || l_start;
     wire [5:0]  u_stage = l_start ? op_stage : d_stage;
     wire [UB-1:0] u_user = l_start ? l_user : s_user;
@@ -120,7 +136,7 @@ module qfd_tt_ctlm_dv_gi #(
         .loc_seg(c_seg), .loc_base(c_base),
         .su_issue(c_su), .su_pidx(c_pidx), .xc_issue(c_xc), .program_obs(cal_program_obs),
         .descriptor_obs(cal_descriptor_obs), .image_ready(c_ready), .running(c_run), .running_u(c_run_u), .done(c_done),
-        .done_user(c_done_user), .fault(c_fault), .fault_code(c_fcode), .ctx_dw(c_ctx), .ctx_load(c_ctxld));
+        .done_user(c_done_user), .fault(c_fault), .fault_code(c_fcode), .ctx_dw(c_ctx_cal), .ctx_load(c_ctxld_cal));
     wire        c_u0 = (NU == 1) || (c_user == {UB{1'b0}});
     wire        s_u0 = (NU == 1) || (s_user == {UB{1'b0}});
     assign cal_image_ready = c_ready;
@@ -146,8 +162,8 @@ module qfd_tt_ctlm_dv_gi #(
     reg         st_h; reg [17:0] st_tok, st_pos; reg [11:0] st_base;
     reg         start_fault;
     integer     ub_i;
-    wire        r_fill = (OPS != 0) && ss_tokv && ss_tu != 2'd0 && {1'b0, ss_tu} < 3'(NU);   // OPSEG filler result
-    wire [UB-1:0] r_wr = ss_tu[UB-1:0];
+    assign      r_fill = (OPS != 0) && ss_tokv && ss_tu != 2'd0 && {1'b0, ss_tu} < 3'(NU);   // OPSEG filler result
+    assign r_wr = ss_tu[UB-1:0];
     always @(posedge ck or negedge rst_n)
         if (!rst_n) begin
             for (ub_i = 0; ub_i < NU; ub_i = ub_i + 1) begin tok_b[ub_i] <= 18'd0; pos_b[ub_i] <= 18'd0; end
@@ -173,6 +189,22 @@ module qfd_tt_ctlm_dv_gi #(
         if (!rst_n) hu <= 2'd0;
         else if (s_me) hu <= 2'd0;
         else if (c_seg) hu <= (NU > 1) ? 2'(c_user) : 2'd0;
+
+    // Same core-edge copies as the flat controller; cross as one landed record to u_thru.
+    reg [1:0] fcx, fh;
+    reg [17:0] f1_tok, f1_pos, ov_tok, ov_pos;
+    reg ov;
+    wire f0 = (FCTX != 0) && (OPS != 0) && st_h && st_base == NCTX_BASE && hu != 2'd0;
+    always @(posedge ck or negedge rst_n)
+        if (!rst_n) begin
+            fcx <= 2'd0; fh <= 2'd0; f1_tok <= 18'd0; f1_pos <= 18'd0;
+            ov <= 1'b0; ov_tok <= 18'd0; ov_pos <= 18'd0;
+        end else begin
+            fcx <= {fcx[0], f0}; fh <= {fh[0], st_h};
+            f1_tok <= st_tok; f1_pos <= st_pos;
+            if (fh[0]) begin ov <= fcx[0]; if (fcx[0]) begin ov_tok <= f1_tok; ov_pos <= f1_pos; end end
+        end
+    assign fctx = {fcx[1], ov, ov_tok, ov_pos};
 
     reg  [23:0] su_acc;
     reg  [15:0] su_obs;
@@ -291,6 +323,11 @@ module qfd_tt_ctlm_dv_thru (
     input  wire [17:0]   emb_token_i,
     input  wire [379:0]  ib_i,                   // QW-DIEFIX 10-19: the head's registered ROM command (cmd380 order)
     output wire [379:0]  ib_hr,                  //   -> hr[452:73] in the slice layout (qfd_dv_hr_pack, zero logic)
+    input  wire [37:0]   fctx_i,
+    input  wire          lcv_i,
+    input  wire [17:0]   ntok_i,
+    output wire          layer_context_v,
+    output wire [17:0]   native_tok,
     input  wire [1:0]    hu_i,                   // MU-DQ-D2DUSER: u_gi hu (core) -> native_pos[17:16] (one OR, no state;
     input  wire [17:0]   npos_i,                 //   hu_i is 0 at NU = 1)
     output wire [17:0]   native_pos,
@@ -302,7 +339,9 @@ module qfd_tt_ctlm_dv_thru (
     output wire [17:0]   emb_token
 );
     assign cmd = cmd_i;
-    assign native_pos = npos_i | {hu_i, 16'd0};
+    assign layer_context_v = lcv_i | fctx_i[37];
+    assign native_tok = fctx_i[36] ? fctx_i[35:18] : ntok_i;
+    assign native_pos = (fctx_i[36] ? {2'b00, fctx_i[15:0]} : npos_i) | {hu_i, 16'd0};
     assign cal_program_obs = cal_program_obs_i;
     assign cal_descriptor_obs = cal_descriptor_obs_i;
     assign cal_image_ready = cal_image_ready_i;

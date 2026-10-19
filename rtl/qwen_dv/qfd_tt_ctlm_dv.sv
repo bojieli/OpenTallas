@@ -158,6 +158,7 @@ module qfd_tt_ctlm_dv #(
     input  wire [74:0]   pw,
     input  wire [186:0]  dh,
     input  wire [1:0]    dh_user,
+    input  wire          mu_fault,                 // registered observer fault, visible in STATUS
     input  wire [128:0]  ctx_x,                     // CTX_SRC 1: {load, CTX record} from qfd_mu_ctx_rx (else unused)
     input  wire          kok,
     input  wire          kwd,
@@ -228,6 +229,9 @@ module qfd_tt_ctlm_dv #(
     // filler initial context record (CTX_DW, see the header): checked and loaded on the accepted seal edge
     wire [127:0] c_ctx_cal; wire c_ctxld_cal;                        // from u_cal (below): the boot record
     // runtime record (CTX_SRC 1): pin register, then the same record path as the boot record
+    reg mu_fault_q;
+    always @(posedge ck or negedge rst_n)
+        if (!rst_n) mu_fault_q <= 1'b0; else mu_fault_q <= mu_fault;
     reg  [128:0] ctx_q;
     always @(posedge ck or negedge rst_n)
         if (!rst_n) ctx_q <= 129'd0; else ctx_q <= (CTX_SRC != 0 && OPS != 0) ? ctx_x : 129'd0;
@@ -249,7 +253,7 @@ module qfd_tt_ctlm_dv #(
     reg         op_fault;
     always @(posedge ck or negedge rst_n)
         if (!rst_n) op_fault <= 1'b0;
-        else if (l_fault || (op_coll && MUT != 22) || ctx_bad) op_fault <= 1'b1;
+        else if (l_fault || (op_coll && MUT != 22) || ctx_bad || mu_fault_q) op_fault <= 1'b1;
     wire        u_start = s_start || l_start;
     wire [5:0]  u_stage = l_start ? l_stage : s_stage;
     wire [UB-1:0] u_user = l_start ? l_user : s_user;
