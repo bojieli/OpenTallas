@@ -189,10 +189,16 @@ def elaborate(root, top, sources, params, yosys):
 
 
 class Netlist:
-    def __init__(self, document, top, spec):
+    def __init__(self, document, top, spec, macros=None, extended=False):
+        """``extended`` (opt-in, gray_fifo_cdc_constraints extensions only): literal bus-bit clock roots, ``macros``
+        {master: clock pin} of declared hard-macro cells whose outputs become leaves (driver 'macro'), and an iterative
+        cone walk for deep cones. Without it every unmapped cell / non-scalar clock port is refused as before."""
+        self.extended = extended
         m = document['modules'][top]
         self.driver, self.flops, self.consumers = {}, {}, {}
         self.clock_domain = {}
+        self.macros = {}
+        macros = macros or {}
         port_bits = {}
         for name, p in m['ports'].items():
             for b in p['bits']:
@@ -203,6 +209,11 @@ class Netlist:
         for name, d in spec['clock_entry_domains'].items():
             for port in d['ports']:
                 bits = m['ports'].get(port, {}).get('bits', [])
+                bus = re.fullmatch(r'([A-Za-z_][A-Za-z0-9_]*)\[(\d+)\]', port)
+                if not bits and extended and bus and bus.group(1) in m['ports'] and not m['ports'][bus.group(1)].get('upto'):
+                    # literal bus-bit root (extension mode only): bit i of an actual input bus port
+                    p, i = m['ports'][bus.group(1)], int(bus.group(2)) - m['ports'][bus.group(1)].get('offset', 0)
+                    bits = [p['bits'][i]] if p['direction'] == 'input' and 0 <= i < len(p['bits']) else []
                 if len(bits) != 1:
                     raise CdcError(f'cdc_synchronizers clock port {port} is not one actual scalar input')
                 self.clock_domain[bits[0]] = name
@@ -228,6 +239,16 @@ class Netlist:
                     if c.get('port_directions', {}).get(pin) == 'output':
                         for b in bits:
                             self.driver[b] = ('unsupported', cname, t)
+            elif t in macros:
+                dirs = c.get('port_directions', {})
+                if set(dirs) != set(conn) or any(v not in ('input', 'output') for v in dirs.values()):
+                    raise CdcError(f'cdc_synchronizers macro {cname} ({t}) lacks actual port directions')
+                self.macros[cname] = dict(type=t, clock=macros[t], conn=conn, dirs=dirs)
+                for pin, bits in conn.items():
+                    if dirs[pin] == 'output':
+                        for b in bits:
+                            if isinstance(b, int):
+                                self.driver[b] = ('macro', cname)
             else:
                 raise CdcError(f'cdc_synchronizers unexpected unmapped cell {t}')
         for b, name in port_bits.items():
@@ -277,8 +298,10 @@ class Netlist:
             return frozenset()
         if bit in self._cone:
             return self._cone[bit]
+        if self.extended:
+            return self._cone_iterative(bit)
         drv = self.driver.get(bit)
-        if drv is None or drv[0] in ('flop', 'port'):
+        if drv is None or drv[0] in ('flop', 'port', 'macro'):
             res = frozenset([bit]) if drv else frozenset()
         elif drv[0] == 'unsupported':
             raise CdcError(f'cdc_synchronizers unsupported cell {drv[2]} in a crossing cone')
@@ -287,6 +310,33 @@ class Netlist:
             res = frozenset().union(*(self.cone(b) for b in drv[3].values()))
         self._cone[bit] = res
         return res
+
+    def _cone_iterative(self, bit):
+        """cone() without recursion (deep real cones); a combinational loop contributes nothing, as the guard above."""
+        stack, active = [bit], set()
+        while stack:
+            b = stack[-1]
+            if b in self._cone:
+                stack.pop()
+                continue
+            drv = self.driver.get(b)
+            if drv is None or drv[0] in ('flop', 'port', 'macro'):
+                self._cone[b] = frozenset([b]) if drv else frozenset()
+                stack.pop()
+                continue
+            if drv[0] == 'unsupported':
+                raise CdcError(f'cdc_synchronizers unsupported cell {drv[2]} in a crossing cone')
+            ins = [x for x in drv[3].values() if isinstance(x, int)]
+            if b not in active:
+                active.add(b)
+                todo = [x for x in ins if x not in self._cone and x not in active]
+                if todo:
+                    stack.extend(todo)
+                    continue
+            active.discard(b)
+            self._cone[b] = frozenset().union(*(self._cone.get(x, frozenset()) for x in ins))
+            stack.pop()
+        return self._cone[bit]
 
     def evaluate(self, bit, env, memo):
         if not isinstance(bit, int):
@@ -469,7 +519,9 @@ MARKER = '  puts "OT_MULTI_ROOT OWNERSHIP PASS roots='
 
 
 def extend(body, spec, root):
-    record = lint(spec, root)
+    # kit generation binds a receipt-cached lint (lint_receipt.py): never re-elaborated on localhost per gen/gate/submit
+    import lint_receipt
+    record = lint_receipt.record(KEY, lint, CdcError, spec, root, _yosys())
     if body.count(CROSSING) != 1 or body.count(MARKER) != 1:
         raise CdcError('cdc_synchronizers multi-root crossing gate changed; revalidate extension')
     body = body.replace(CROSSING, '          ot_cdc_crossing $start $pin $source $cell $source_domain $expected\n'

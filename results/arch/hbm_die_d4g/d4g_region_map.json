@@ -1,0 +1,3093 @@
+{
+ "schema": "opentallas.die_clock.region_map.v1",
+ "plan": "results/arch/hbm_die_d4g/plan/d4g_phy/compact.P.json",
+ "rule": "d4g (H-D4G): per-quadrant regions -- each SM its own region, the quadrant PC half, the quadrant core band in 3 boxes (<= 4 mm), the IDX corner, the XQL stores of the quadrant; strip W/C/E; PHY its own region; neighbours = outlines within 600.0 um",
+ "instances": {
+  "phy_SW": {
+   "region": "phy_SW",
+   "site": [
+    9850.8,
+    610.2
+   ]
+  },
+  "pc_SW0": {
+   "region": "pc_SW",
+   "site": [
+    7826.4,
+    1537.4
+   ]
+  },
+  "pc_SW1": {
+   "region": "pc_SW",
+   "site": [
+    7826.4,
+    1537.4
+   ]
+  },
+  "pc_SW2": {
+   "region": "pc_SW",
+   "site": [
+    7826.4,
+    1537.4
+   ]
+  },
+  "pc_SW3": {
+   "region": "pc_SW",
+   "site": [
+    7826.4,
+    1537.4
+   ]
+  },
+  "pc_SW4": {
+   "region": "pc_SE",
+   "site": [
+    12373.6,
+    1537.4
+   ]
+  },
+  "pc_SW5": {
+   "region": "pc_SE",
+   "site": [
+    12373.6,
+    1537.4
+   ]
+  },
+  "pc_SW6": {
+   "region": "pc_SE",
+   "site": [
+    12373.6,
+    1537.4
+   ]
+  },
+  "pc_SW7": {
+   "region": "pc_SE",
+   "site": [
+    12373.6,
+    1537.4
+   ]
+  },
+  "sm_SW0": {
+   "region": "sm_SW0",
+   "site": [
+    1931.1,
+    5533.6
+   ]
+  },
+  "sm_SW1": {
+   "region": "sm_SW1",
+   "site": [
+    4410.8,
+    5533.6
+   ]
+  },
+  "sm_SW2": {
+   "region": "sm_SW2",
+   "site": [
+    6450.5,
+    5533.6
+   ]
+  },
+  "sm_SW3": {
+   "region": "sm_SW3",
+   "site": [
+    8930.2,
+    5533.6
+   ]
+  },
+  "sm_SW4": {
+   "region": "sm_SW4",
+   "site": [
+    11269.8,
+    5533.6
+   ]
+  },
+  "sm_SW5": {
+   "region": "sm_SW5",
+   "site": [
+    13749.5,
+    5533.6
+   ]
+  },
+  "sm_SW6": {
+   "region": "sm_SW6",
+   "site": [
+    15789.2,
+    5533.6
+   ]
+  },
+  "sm_SW7": {
+   "region": "sm_SW7",
+   "site": [
+    18268.9,
+    5533.6
+   ]
+  },
+  "xq_SW_p0_eg": {
+   "region": "xq_SW",
+   "site": [
+    5443.1,
+    8270.0
+   ]
+  },
+  "xq_SW_p0_bd": {
+   "region": "xq_SW",
+   "site": [
+    5443.1,
+    8270.0
+   ]
+  },
+  "xq_SW_p0_bfq0": {
+   "region": "xq_SW",
+   "site": [
+    5443.1,
+    8270.0
+   ]
+  },
+  "xq_SW_p0_bfq1": {
+   "region": "xq_SW",
+   "site": [
+    5443.1,
+    8270.0
+   ]
+  },
+  "xq_SW_p0_bfq2": {
+   "region": "xq_SW",
+   "site": [
+    5443.1,
+    8270.0
+   ]
+  },
+  "xq_SW_p0_bfq3": {
+   "region": "xq_SW",
+   "site": [
+    5443.1,
+    8270.0
+   ]
+  },
+  "xq_SW_p1_eg": {
+   "region": "xq_SW",
+   "site": [
+    5443.1,
+    8270.0
+   ]
+  },
+  "xq_SW_p1_bd": {
+   "region": "xq_SW",
+   "site": [
+    5443.1,
+    8270.0
+   ]
+  },
+  "xq_SW_p1_bfq0": {
+   "region": "xq_SW",
+   "site": [
+    5443.1,
+    8270.0
+   ]
+  },
+  "xq_SW_p1_bfq1": {
+   "region": "xq_SW",
+   "site": [
+    5443.1,
+    8270.0
+   ]
+  },
+  "xq_SW_p1_bfq2": {
+   "region": "xq_SW",
+   "site": [
+    5443.1,
+    8270.0
+   ]
+  },
+  "xq_SW_p1_bfq3": {
+   "region": "xq_SW",
+   "site": [
+    5443.1,
+    8270.0
+   ]
+  },
+  "xq_SW_p2_eg": {
+   "region": "xq_SE",
+   "site": [
+    14781.8,
+    8270.0
+   ]
+  },
+  "xq_SW_p2_bd": {
+   "region": "xq_SE",
+   "site": [
+    14781.8,
+    8270.0
+   ]
+  },
+  "xq_SW_p2_bfq0": {
+   "region": "xq_SE",
+   "site": [
+    14781.8,
+    8270.0
+   ]
+  },
+  "xq_SW_p2_bfq1": {
+   "region": "xq_SE",
+   "site": [
+    14781.8,
+    8270.0
+   ]
+  },
+  "xq_SW_p2_bfq2": {
+   "region": "xq_SE",
+   "site": [
+    14781.8,
+    8270.0
+   ]
+  },
+  "xq_SW_p2_bfq3": {
+   "region": "xq_SE",
+   "site": [
+    14781.8,
+    8270.0
+   ]
+  },
+  "xq_SW_p3_eg": {
+   "region": "xq_SE",
+   "site": [
+    14781.8,
+    8270.0
+   ]
+  },
+  "xq_SW_p3_bd": {
+   "region": "xq_SE",
+   "site": [
+    14781.8,
+    8270.0
+   ]
+  },
+  "xq_SW_p3_bfq0": {
+   "region": "xq_SE",
+   "site": [
+    14781.8,
+    8270.0
+   ]
+  },
+  "xq_SW_p3_bfq1": {
+   "region": "xq_SE",
+   "site": [
+    14781.8,
+    8270.0
+   ]
+  },
+  "xq_SW_p3_bfq2": {
+   "region": "xq_SE",
+   "site": [
+    14781.8,
+    8270.0
+   ]
+  },
+  "xq_SW_p3_bfq3": {
+   "region": "xq_SE",
+   "site": [
+    14781.8,
+    8270.0
+   ]
+  },
+  "vmb_SW0": {
+   "region": "band_SW0",
+   "site": [
+    1260.5,
+    11712.7
+   ]
+  },
+  "vmb_SW1": {
+   "region": "band_SW0",
+   "site": [
+    1260.5,
+    11712.7
+   ]
+  },
+  "hc_SW0": {
+   "region": "band_SW0",
+   "site": [
+    1260.5,
+    11712.7
+   ]
+  },
+  "sfu_SW0": {
+   "region": "band_SW0",
+   "site": [
+    1260.5,
+    11712.7
+   ]
+  },
+  "su_SW0": {
+   "region": "band_SW0",
+   "site": [
+    1260.5,
+    11712.7
+   ]
+  },
+  "hc_SW1": {
+   "region": "band_SW0",
+   "site": [
+    1260.5,
+    11712.7
+   ]
+  },
+  "vmb_SW4": {
+   "region": "band_SW0",
+   "site": [
+    1260.5,
+    11712.7
+   ]
+  },
+  "vmb_SW5": {
+   "region": "band_SW0",
+   "site": [
+    1260.5,
+    11712.7
+   ]
+  },
+  "hc_SW2": {
+   "region": "band_SW0",
+   "site": [
+    1260.5,
+    11712.7
+   ]
+  },
+  "sfu_SW2": {
+   "region": "band_SW0",
+   "site": [
+    1260.5,
+    11712.7
+   ]
+  },
+  "su_SW2": {
+   "region": "band_SW0",
+   "site": [
+    1260.5,
+    11712.7
+   ]
+  },
+  "hc_SW3": {
+   "region": "band_SW0",
+   "site": [
+    1260.5,
+    11712.7
+   ]
+  },
+  "vmb_SW2": {
+   "region": "band_SW1",
+   "site": [
+    4556.2,
+    11934.6
+   ]
+  },
+  "vmb_SW3": {
+   "region": "band_SW1",
+   "site": [
+    4556.2,
+    11934.6
+   ]
+  },
+  "sfu_SW1": {
+   "region": "band_SW1",
+   "site": [
+    4556.2,
+    11934.6
+   ]
+  },
+  "su_SW1": {
+   "region": "band_SW1",
+   "site": [
+    4556.2,
+    11934.6
+   ]
+  },
+  "vmb_SW6": {
+   "region": "band_SW1",
+   "site": [
+    4556.2,
+    11934.6
+   ]
+  },
+  "vmb_SW7": {
+   "region": "band_SW1",
+   "site": [
+    4556.2,
+    11934.6
+   ]
+  },
+  "sfu_SW3": {
+   "region": "band_SW1",
+   "site": [
+    4556.2,
+    11934.6
+   ]
+  },
+  "su_SW3": {
+   "region": "band_SW1",
+   "site": [
+    4556.2,
+    11934.6
+   ]
+  },
+  "sfus_SW": {
+   "region": "band_SW1",
+   "site": [
+    4556.2,
+    11934.6
+   ]
+  },
+  "coll_SW": {
+   "region": "band_SW1",
+   "site": [
+    4556.2,
+    11934.6
+   ]
+  },
+  "sfucore_SW": {
+   "region": "band_SW2",
+   "site": [
+    8087.6,
+    10430.1
+   ]
+  },
+  "hce_SW": {
+   "region": "band_SW2",
+   "site": [
+    8087.6,
+    10430.1
+   ]
+  },
+  "sucore_SW": {
+   "region": "band_SW2",
+   "site": [
+    8087.6,
+    10430.1
+   ]
+  },
+  "sucx_SW": {
+   "region": "band_SW2",
+   "site": [
+    8087.6,
+    10430.1
+   ]
+  },
+  "dbk_SW": {
+   "region": "band_SW2",
+   "site": [
+    8087.6,
+    10430.1
+   ]
+  },
+  "hc_SW": {
+   "region": "band_SW2",
+   "site": [
+    8087.6,
+    10430.1
+   ]
+  },
+  "cij_SW": {
+   "region": "band_SW2",
+   "site": [
+    8087.6,
+    10430.1
+   ]
+  },
+  "idxq_SW": {
+   "region": "band_SW2",
+   "site": [
+    8087.6,
+    10430.1
+   ]
+  },
+  "vmh_SW": {
+   "region": "band_SW2",
+   "site": [
+    8087.6,
+    10430.1
+   ]
+  },
+  "pleaf_SW": {
+   "region": "band_SW2",
+   "site": [
+    8087.6,
+    10430.1
+   ]
+  },
+  "idxs_SW": {
+   "region": "idx_SW",
+   "site": [
+    4363.5,
+    1008.8
+   ]
+  },
+  "vmb_SE0": {
+   "region": "band_SE0",
+   "site": [
+    18939.5,
+    11712.7
+   ]
+  },
+  "vmb_SE1": {
+   "region": "band_SE0",
+   "site": [
+    18939.5,
+    11712.7
+   ]
+  },
+  "hc_SE0": {
+   "region": "band_SE0",
+   "site": [
+    18939.5,
+    11712.7
+   ]
+  },
+  "sfu_SE0": {
+   "region": "band_SE0",
+   "site": [
+    18939.5,
+    11712.7
+   ]
+  },
+  "su_SE0": {
+   "region": "band_SE0",
+   "site": [
+    18939.5,
+    11712.7
+   ]
+  },
+  "hc_SE1": {
+   "region": "band_SE0",
+   "site": [
+    18939.5,
+    11712.7
+   ]
+  },
+  "vmb_SE4": {
+   "region": "band_SE0",
+   "site": [
+    18939.5,
+    11712.7
+   ]
+  },
+  "vmb_SE5": {
+   "region": "band_SE0",
+   "site": [
+    18939.5,
+    11712.7
+   ]
+  },
+  "hc_SE2": {
+   "region": "band_SE0",
+   "site": [
+    18939.5,
+    11712.7
+   ]
+  },
+  "sfu_SE2": {
+   "region": "band_SE0",
+   "site": [
+    18939.5,
+    11712.7
+   ]
+  },
+  "su_SE2": {
+   "region": "band_SE0",
+   "site": [
+    18939.5,
+    11712.7
+   ]
+  },
+  "hc_SE3": {
+   "region": "band_SE0",
+   "site": [
+    18939.5,
+    11712.7
+   ]
+  },
+  "vmb_SE2": {
+   "region": "band_SE1",
+   "site": [
+    15643.8,
+    11939.1
+   ]
+  },
+  "vmb_SE3": {
+   "region": "band_SE1",
+   "site": [
+    15643.8,
+    11939.1
+   ]
+  },
+  "sfu_SE1": {
+   "region": "band_SE1",
+   "site": [
+    15643.8,
+    11939.1
+   ]
+  },
+  "su_SE1": {
+   "region": "band_SE1",
+   "site": [
+    15643.8,
+    11939.1
+   ]
+  },
+  "vmb_SE6": {
+   "region": "band_SE1",
+   "site": [
+    15643.8,
+    11939.1
+   ]
+  },
+  "vmb_SE7": {
+   "region": "band_SE1",
+   "site": [
+    15643.8,
+    11939.1
+   ]
+  },
+  "sfu_SE3": {
+   "region": "band_SE1",
+   "site": [
+    15643.8,
+    11939.1
+   ]
+  },
+  "su_SE3": {
+   "region": "band_SE1",
+   "site": [
+    15643.8,
+    11939.1
+   ]
+  },
+  "sfus_SE": {
+   "region": "band_SE1",
+   "site": [
+    15643.8,
+    11939.1
+   ]
+  },
+  "coll_SE": {
+   "region": "band_SE1",
+   "site": [
+    15643.8,
+    11939.1
+   ]
+  },
+  "sfucore_SE": {
+   "region": "band_SE2",
+   "site": [
+    12100.4,
+    10486.1
+   ]
+  },
+  "hce_SE": {
+   "region": "band_SE2",
+   "site": [
+    12100.4,
+    10486.1
+   ]
+  },
+  "sucore_SE": {
+   "region": "band_SE2",
+   "site": [
+    12100.4,
+    10486.1
+   ]
+  },
+  "sucx_SE": {
+   "region": "band_SE2",
+   "site": [
+    12100.4,
+    10486.1
+   ]
+  },
+  "dbk_SE": {
+   "region": "band_SE2",
+   "site": [
+    12100.4,
+    10486.1
+   ]
+  },
+  "hc_SE": {
+   "region": "band_SE2",
+   "site": [
+    12100.4,
+    10486.1
+   ]
+  },
+  "cij_SE": {
+   "region": "band_SE2",
+   "site": [
+    12100.4,
+    10486.1
+   ]
+  },
+  "idxq_SE": {
+   "region": "band_SE2",
+   "site": [
+    12100.4,
+    10486.1
+   ]
+  },
+  "vmh_SE": {
+   "region": "band_SE2",
+   "site": [
+    12100.4,
+    10486.1
+   ]
+  },
+  "pleaf_SE": {
+   "region": "band_SE2",
+   "site": [
+    12100.4,
+    10486.1
+   ]
+  },
+  "idxs_SE": {
+   "region": "idx_SE",
+   "site": [
+    15834.5,
+    1008.8
+   ]
+  },
+  "phy_NW": {
+   "region": "phy_NW",
+   "site": [
+    9850.8,
+    31163.3
+   ]
+  },
+  "pc_NW0": {
+   "region": "pc_NW",
+   "site": [
+    7826.4,
+    30236.1
+   ]
+  },
+  "pc_NW1": {
+   "region": "pc_NW",
+   "site": [
+    7826.4,
+    30236.1
+   ]
+  },
+  "pc_NW2": {
+   "region": "pc_NW",
+   "site": [
+    7826.4,
+    30236.1
+   ]
+  },
+  "pc_NW3": {
+   "region": "pc_NW",
+   "site": [
+    7826.4,
+    30236.1
+   ]
+  },
+  "pc_NW4": {
+   "region": "pc_NE",
+   "site": [
+    12373.6,
+    30236.1
+   ]
+  },
+  "pc_NW5": {
+   "region": "pc_NE",
+   "site": [
+    12373.6,
+    30236.1
+   ]
+  },
+  "pc_NW6": {
+   "region": "pc_NE",
+   "site": [
+    12373.6,
+    30236.1
+   ]
+  },
+  "pc_NW7": {
+   "region": "pc_NE",
+   "site": [
+    12373.6,
+    30236.1
+   ]
+  },
+  "sm_NW0": {
+   "region": "sm_NW0",
+   "site": [
+    1931.1,
+    26239.9
+   ]
+  },
+  "sm_NW1": {
+   "region": "sm_NW1",
+   "site": [
+    4410.8,
+    26239.9
+   ]
+  },
+  "sm_NW2": {
+   "region": "sm_NW2",
+   "site": [
+    6450.5,
+    26239.9
+   ]
+  },
+  "sm_NW3": {
+   "region": "sm_NW3",
+   "site": [
+    8930.2,
+    26239.9
+   ]
+  },
+  "sm_NW4": {
+   "region": "sm_NW4",
+   "site": [
+    11269.8,
+    26239.9
+   ]
+  },
+  "sm_NW5": {
+   "region": "sm_NW5",
+   "site": [
+    13749.5,
+    26239.9
+   ]
+  },
+  "sm_NW6": {
+   "region": "sm_NW6",
+   "site": [
+    15789.2,
+    26239.9
+   ]
+  },
+  "sm_NW7": {
+   "region": "sm_NW7",
+   "site": [
+    18268.9,
+    26239.9
+   ]
+  },
+  "xq_NW_p0_eg": {
+   "region": "xq_NW",
+   "site": [
+    5443.1,
+    23503.6
+   ]
+  },
+  "xq_NW_p0_bd": {
+   "region": "xq_NW",
+   "site": [
+    5443.1,
+    23503.6
+   ]
+  },
+  "xq_NW_p0_bfq0": {
+   "region": "xq_NW",
+   "site": [
+    5443.1,
+    23503.6
+   ]
+  },
+  "xq_NW_p0_bfq1": {
+   "region": "xq_NW",
+   "site": [
+    5443.1,
+    23503.6
+   ]
+  },
+  "xq_NW_p0_bfq2": {
+   "region": "xq_NW",
+   "site": [
+    5443.1,
+    23503.6
+   ]
+  },
+  "xq_NW_p0_bfq3": {
+   "region": "xq_NW",
+   "site": [
+    5443.1,
+    23503.6
+   ]
+  },
+  "xq_NW_p1_eg": {
+   "region": "xq_NW",
+   "site": [
+    5443.1,
+    23503.6
+   ]
+  },
+  "xq_NW_p1_bd": {
+   "region": "xq_NW",
+   "site": [
+    5443.1,
+    23503.6
+   ]
+  },
+  "xq_NW_p1_bfq0": {
+   "region": "xq_NW",
+   "site": [
+    5443.1,
+    23503.6
+   ]
+  },
+  "xq_NW_p1_bfq1": {
+   "region": "xq_NW",
+   "site": [
+    5443.1,
+    23503.6
+   ]
+  },
+  "xq_NW_p1_bfq2": {
+   "region": "xq_NW",
+   "site": [
+    5443.1,
+    23503.6
+   ]
+  },
+  "xq_NW_p1_bfq3": {
+   "region": "xq_NW",
+   "site": [
+    5443.1,
+    23503.6
+   ]
+  },
+  "xq_NW_p2_eg": {
+   "region": "xq_NE",
+   "site": [
+    14781.8,
+    23503.6
+   ]
+  },
+  "xq_NW_p2_bd": {
+   "region": "xq_NE",
+   "site": [
+    14781.8,
+    23503.6
+   ]
+  },
+  "xq_NW_p2_bfq0": {
+   "region": "xq_NE",
+   "site": [
+    14781.8,
+    23503.6
+   ]
+  },
+  "xq_NW_p2_bfq1": {
+   "region": "xq_NE",
+   "site": [
+    14781.8,
+    23503.6
+   ]
+  },
+  "xq_NW_p2_bfq2": {
+   "region": "xq_NE",
+   "site": [
+    14781.8,
+    23503.6
+   ]
+  },
+  "xq_NW_p2_bfq3": {
+   "region": "xq_NE",
+   "site": [
+    14781.8,
+    23503.6
+   ]
+  },
+  "xq_NW_p3_eg": {
+   "region": "xq_NE",
+   "site": [
+    14781.8,
+    23503.6
+   ]
+  },
+  "xq_NW_p3_bd": {
+   "region": "xq_NE",
+   "site": [
+    14781.8,
+    23503.6
+   ]
+  },
+  "xq_NW_p3_bfq0": {
+   "region": "xq_NE",
+   "site": [
+    14781.8,
+    23503.6
+   ]
+  },
+  "xq_NW_p3_bfq1": {
+   "region": "xq_NE",
+   "site": [
+    14781.8,
+    23503.6
+   ]
+  },
+  "xq_NW_p3_bfq2": {
+   "region": "xq_NE",
+   "site": [
+    14781.8,
+    23503.6
+   ]
+  },
+  "xq_NW_p3_bfq3": {
+   "region": "xq_NE",
+   "site": [
+    14781.8,
+    23503.6
+   ]
+  },
+  "vmb_NW0": {
+   "region": "band_NW0",
+   "site": [
+    911.5,
+    20218.6
+   ]
+  },
+  "vmb_NW1": {
+   "region": "band_NW0",
+   "site": [
+    911.5,
+    20218.6
+   ]
+  },
+  "hc_NW0": {
+   "region": "band_NW0",
+   "site": [
+    911.5,
+    20218.6
+   ]
+  },
+  "sfu_NW0": {
+   "region": "band_NW0",
+   "site": [
+    911.5,
+    20218.6
+   ]
+  },
+  "su_NW0": {
+   "region": "band_NW0",
+   "site": [
+    911.5,
+    20218.6
+   ]
+  },
+  "quant_NW0": {
+   "region": "band_NW0",
+   "site": [
+    911.5,
+    20218.6
+   ]
+  },
+  "vmb_NW4": {
+   "region": "band_NW0",
+   "site": [
+    911.5,
+    20218.6
+   ]
+  },
+  "vmb_NW5": {
+   "region": "band_NW0",
+   "site": [
+    911.5,
+    20218.6
+   ]
+  },
+  "hc_NW2": {
+   "region": "band_NW0",
+   "site": [
+    911.5,
+    20218.6
+   ]
+  },
+  "sfu_NW2": {
+   "region": "band_NW0",
+   "site": [
+    911.5,
+    20218.6
+   ]
+  },
+  "su_NW2": {
+   "region": "band_NW0",
+   "site": [
+    911.5,
+    20218.6
+   ]
+  },
+  "quant_NW2": {
+   "region": "band_NW0",
+   "site": [
+    911.5,
+    20218.6
+   ]
+  },
+  "vmb_NW2": {
+   "region": "band_NW1",
+   "site": [
+    4053.2,
+    20218.6
+   ]
+  },
+  "vmb_NW3": {
+   "region": "band_NW1",
+   "site": [
+    4053.2,
+    20218.6
+   ]
+  },
+  "hc_NW1": {
+   "region": "band_NW1",
+   "site": [
+    4053.2,
+    20218.6
+   ]
+  },
+  "sfu_NW1": {
+   "region": "band_NW1",
+   "site": [
+    4053.2,
+    20218.6
+   ]
+  },
+  "su_NW1": {
+   "region": "band_NW1",
+   "site": [
+    4053.2,
+    20218.6
+   ]
+  },
+  "quant_NW1": {
+   "region": "band_NW1",
+   "site": [
+    4053.2,
+    20218.6
+   ]
+  },
+  "vmb_NW6": {
+   "region": "band_NW1",
+   "site": [
+    4053.2,
+    20218.6
+   ]
+  },
+  "vmb_NW7": {
+   "region": "band_NW1",
+   "site": [
+    4053.2,
+    20218.6
+   ]
+  },
+  "hc_NW3": {
+   "region": "band_NW1",
+   "site": [
+    4053.2,
+    20218.6
+   ]
+  },
+  "sfu_NW3": {
+   "region": "band_NW1",
+   "site": [
+    4053.2,
+    20218.6
+   ]
+  },
+  "su_NW3": {
+   "region": "band_NW1",
+   "site": [
+    4053.2,
+    20218.6
+   ]
+  },
+  "quant_NW3": {
+   "region": "band_NW1",
+   "site": [
+    4053.2,
+    20218.6
+   ]
+  },
+  "sfucore_NW": {
+   "region": "band_NW2",
+   "site": [
+    8023.3,
+    20877.2
+   ]
+  },
+  "sfus_NW": {
+   "region": "band_NW2",
+   "site": [
+    8023.3,
+    20877.2
+   ]
+  },
+  "coll_NW": {
+   "region": "band_NW2",
+   "site": [
+    8023.3,
+    20877.2
+   ]
+  },
+  "hce_NW": {
+   "region": "band_NW2",
+   "site": [
+    8023.3,
+    20877.2
+   ]
+  },
+  "sucore_NW": {
+   "region": "band_NW2",
+   "site": [
+    8023.3,
+    20877.2
+   ]
+  },
+  "sucx_NW": {
+   "region": "band_NW2",
+   "site": [
+    8023.3,
+    20877.2
+   ]
+  },
+  "dbk_NW": {
+   "region": "band_NW2",
+   "site": [
+    8023.3,
+    20877.2
+   ]
+  },
+  "hc_NW": {
+   "region": "band_NW2",
+   "site": [
+    8023.3,
+    20877.2
+   ]
+  },
+  "cij_NW": {
+   "region": "band_NW2",
+   "site": [
+    8023.3,
+    20877.2
+   ]
+  },
+  "idxq_NW": {
+   "region": "band_NW2",
+   "site": [
+    8023.3,
+    20877.2
+   ]
+  },
+  "vmh_NW": {
+   "region": "band_NW2",
+   "site": [
+    8023.3,
+    20877.2
+   ]
+  },
+  "pleaf_NW": {
+   "region": "band_NW2",
+   "site": [
+    8023.3,
+    20877.2
+   ]
+  },
+  "idxs_NW": {
+   "region": "idx_NW",
+   "site": [
+    4363.5,
+    30764.7
+   ]
+  },
+  "vmb_NE0": {
+   "region": "band_NE0",
+   "site": [
+    18933.4,
+    20095.4
+   ]
+  },
+  "vmb_NE1": {
+   "region": "band_NE0",
+   "site": [
+    18933.4,
+    20095.4
+   ]
+  },
+  "hc_NE0": {
+   "region": "band_NE0",
+   "site": [
+    18933.4,
+    20095.4
+   ]
+  },
+  "sfu_NE0": {
+   "region": "band_NE0",
+   "site": [
+    18933.4,
+    20095.4
+   ]
+  },
+  "su_NE0": {
+   "region": "band_NE0",
+   "site": [
+    18933.4,
+    20095.4
+   ]
+  },
+  "hc_NE1": {
+   "region": "band_NE0",
+   "site": [
+    18933.4,
+    20095.4
+   ]
+  },
+  "vmb_NE4": {
+   "region": "band_NE0",
+   "site": [
+    18933.4,
+    20095.4
+   ]
+  },
+  "vmb_NE5": {
+   "region": "band_NE0",
+   "site": [
+    18933.4,
+    20095.4
+   ]
+  },
+  "hc_NE2": {
+   "region": "band_NE0",
+   "site": [
+    18933.4,
+    20095.4
+   ]
+  },
+  "sfu_NE2": {
+   "region": "band_NE0",
+   "site": [
+    18933.4,
+    20095.4
+   ]
+  },
+  "su_NE2": {
+   "region": "band_NE0",
+   "site": [
+    18933.4,
+    20095.4
+   ]
+  },
+  "hc_NE3": {
+   "region": "band_NE0",
+   "site": [
+    18933.4,
+    20095.4
+   ]
+  },
+  "vmb_NE2": {
+   "region": "band_NE1",
+   "site": [
+    15636.4,
+    19855.1
+   ]
+  },
+  "vmb_NE3": {
+   "region": "band_NE1",
+   "site": [
+    15636.4,
+    19855.1
+   ]
+  },
+  "sfu_NE1": {
+   "region": "band_NE1",
+   "site": [
+    15636.4,
+    19855.1
+   ]
+  },
+  "su_NE1": {
+   "region": "band_NE1",
+   "site": [
+    15636.4,
+    19855.1
+   ]
+  },
+  "vmb_NE6": {
+   "region": "band_NE1",
+   "site": [
+    15636.4,
+    19855.1
+   ]
+  },
+  "vmb_NE7": {
+   "region": "band_NE1",
+   "site": [
+    15636.4,
+    19855.1
+   ]
+  },
+  "sfu_NE3": {
+   "region": "band_NE1",
+   "site": [
+    15636.4,
+    19855.1
+   ]
+  },
+  "su_NE3": {
+   "region": "band_NE1",
+   "site": [
+    15636.4,
+    19855.1
+   ]
+  },
+  "sfus_NE": {
+   "region": "band_NE1",
+   "site": [
+    15636.4,
+    19855.1
+   ]
+  },
+  "coll_NE": {
+   "region": "band_NE1",
+   "site": [
+    15636.4,
+    19855.1
+   ]
+  },
+  "sfucore_NE": {
+   "region": "band_NE2",
+   "site": [
+    12100.4,
+    21287.4
+   ]
+  },
+  "hce_NE": {
+   "region": "band_NE2",
+   "site": [
+    12100.4,
+    21287.4
+   ]
+  },
+  "sucore_NE": {
+   "region": "band_NE2",
+   "site": [
+    12100.4,
+    21287.4
+   ]
+  },
+  "sucx_NE": {
+   "region": "band_NE2",
+   "site": [
+    12100.4,
+    21287.4
+   ]
+  },
+  "dbk_NE": {
+   "region": "band_NE2",
+   "site": [
+    12100.4,
+    21287.4
+   ]
+  },
+  "hc_NE": {
+   "region": "band_NE2",
+   "site": [
+    12100.4,
+    21287.4
+   ]
+  },
+  "cij_NE": {
+   "region": "band_NE2",
+   "site": [
+    12100.4,
+    21287.4
+   ]
+  },
+  "idxq_NE": {
+   "region": "band_NE2",
+   "site": [
+    12100.4,
+    21287.4
+   ]
+  },
+  "vmh_NE": {
+   "region": "band_NE2",
+   "site": [
+    12100.4,
+    21287.4
+   ]
+  },
+  "pleaf_NE": {
+   "region": "band_NE2",
+   "site": [
+    12100.4,
+    21287.4
+   ]
+  },
+  "idxs_NE": {
+   "region": "idx_NE",
+   "site": [
+    15834.5,
+    30764.7
+   ]
+  },
+  "lk_S0": {
+   "region": "strip_W",
+   "site": [
+    1761.1,
+    15490.6
+   ]
+  },
+  "ep_S0": {
+   "region": "strip_W",
+   "site": [
+    1761.1,
+    15490.6
+   ]
+  },
+  "lk_S1": {
+   "region": "strip_W",
+   "site": [
+    1761.1,
+    15490.6
+   ]
+  },
+  "ep_S1": {
+   "region": "strip_W",
+   "site": [
+    1761.1,
+    15490.6
+   ]
+  },
+  "lk_N0": {
+   "region": "strip_W",
+   "site": [
+    1761.1,
+    15490.6
+   ]
+  },
+  "ep_N0": {
+   "region": "strip_W",
+   "site": [
+    1761.1,
+    15490.6
+   ]
+  },
+  "lk_S3": {
+   "region": "strip_E",
+   "site": [
+    18956.3,
+    15490.6
+   ]
+  },
+  "ep_S3": {
+   "region": "strip_E",
+   "site": [
+    18956.3,
+    15490.6
+   ]
+  },
+  "lk_N2": {
+   "region": "strip_E",
+   "site": [
+    18956.3,
+    15490.6
+   ]
+  },
+  "ep_N2": {
+   "region": "strip_E",
+   "site": [
+    18956.3,
+    15490.6
+   ]
+  },
+  "tkm_SW": {
+   "region": "strip_C",
+   "site": [
+    10680.4,
+    15653.8
+   ]
+  },
+  "idx_sel": {
+   "region": "strip_C",
+   "site": [
+    10680.4,
+    15653.8
+   ]
+  },
+  "idx_link": {
+   "region": "strip_C",
+   "site": [
+    10680.4,
+    15653.8
+   ]
+  },
+  "idx_ctl": {
+   "region": "strip_C",
+   "site": [
+    10680.4,
+    15653.8
+   ]
+  },
+  "idx_op": {
+   "region": "strip_C",
+   "site": [
+    10680.4,
+    15653.8
+   ]
+  },
+  "idx_q": {
+   "region": "strip_C",
+   "site": [
+    10680.4,
+    15653.8
+   ]
+  },
+  "host_cp": {
+   "region": "strip_C",
+   "site": [
+    10680.4,
+    15653.8
+   ]
+  },
+  "hb_dbk_SW": {
+   "region": "band_SW2",
+   "site": [
+    8087.6,
+    10430.1
+   ]
+  },
+  "hb_dbk_NW": {
+   "region": "band_NW2",
+   "site": [
+    8023.3,
+    20877.2
+   ]
+  },
+  "svc_SW_s0": {
+   "region": "pc_SW",
+   "site": [
+    7826.4,
+    1537.4
+   ]
+  },
+  "svc_SW_s1": {
+   "region": "pc_SW",
+   "site": [
+    7826.4,
+    1537.4
+   ]
+  },
+  "svc_SW_s2": {
+   "region": "pc_SW",
+   "site": [
+    7826.4,
+    1537.4
+   ]
+  },
+  "svc_SW_s3": {
+   "region": "pc_SW",
+   "site": [
+    7826.4,
+    1537.4
+   ]
+  },
+  "svc_SW_s4": {
+   "region": "pc_SE",
+   "site": [
+    12373.6,
+    1537.4
+   ]
+  },
+  "svc_SW_s5": {
+   "region": "pc_SE",
+   "site": [
+    12373.6,
+    1537.4
+   ]
+  },
+  "svc_SW_s6": {
+   "region": "pc_SE",
+   "site": [
+    12373.6,
+    1537.4
+   ]
+  },
+  "svc_SW_s7": {
+   "region": "pc_SE",
+   "site": [
+    12373.6,
+    1537.4
+   ]
+  },
+  "svc_NW_s0": {
+   "region": "pc_NW",
+   "site": [
+    7826.4,
+    30236.1
+   ]
+  },
+  "svc_NW_s1": {
+   "region": "pc_NW",
+   "site": [
+    7826.4,
+    30236.1
+   ]
+  },
+  "svc_NW_s2": {
+   "region": "pc_NW",
+   "site": [
+    7826.4,
+    30236.1
+   ]
+  },
+  "svc_NW_s3": {
+   "region": "pc_NW",
+   "site": [
+    7826.4,
+    30236.1
+   ]
+  },
+  "svc_NW_s4": {
+   "region": "pc_NE",
+   "site": [
+    12373.6,
+    30236.1
+   ]
+  },
+  "svc_NW_s5": {
+   "region": "pc_NE",
+   "site": [
+    12373.6,
+    30236.1
+   ]
+  },
+  "svc_NW_s6": {
+   "region": "pc_NE",
+   "site": [
+    12373.6,
+    30236.1
+   ]
+  },
+  "svc_NW_s7": {
+   "region": "pc_NE",
+   "site": [
+    12373.6,
+    30236.1
+   ]
+  },
+  "idx_s0": {
+   "region": "idx_SW",
+   "site": [
+    4363.5,
+    1008.8
+   ]
+  },
+  "idx_s1": {
+   "region": "idx_NW",
+   "site": [
+    4363.5,
+    30764.7
+   ]
+  },
+  "hc_eng": {
+   "region": "idx_SE",
+   "site": [
+    15834.5,
+    1008.8
+   ]
+  },
+  "hb_ckgen": {
+   "region": "strip_C",
+   "site": [
+    10680.4,
+    15653.8
+   ]
+  },
+  "hc_tbl_tgt": {
+   "region": "idx_SE",
+   "site": [
+    15834.5,
+    1008.8
+   ]
+  },
+  "vmm_NW2": {
+   "region": "band_NW1",
+   "site": [
+    4053.2,
+    20218.6
+   ]
+  },
+  "vmm_NW3": {
+   "region": "band_NW1",
+   "site": [
+    4053.2,
+    20218.6
+   ]
+  },
+  "vmm_NW6": {
+   "region": "band_NW1",
+   "site": [
+    4053.2,
+    20218.6
+   ]
+  },
+  "vmm_NW7": {
+   "region": "band_NW1",
+   "site": [
+    4053.2,
+    20218.6
+   ]
+  },
+  "wbk_NW": {
+   "region": "idx_NE",
+   "site": [
+    15834.5,
+    30764.7
+   ]
+  },
+  "sfup_SE": {
+   "region": "band_SE2",
+   "site": [
+    12100.4,
+    10486.1
+   ]
+  },
+  "sfup_NE": {
+   "region": "band_NE2",
+   "site": [
+    12100.4,
+    21287.4
+   ]
+  },
+  "pgp_SW": {
+   "region": "band_SW2",
+   "site": [
+    8087.6,
+    10430.1
+   ]
+  },
+  "fl_SW0": {
+   "region": "band_SW0",
+   "site": [
+    1260.5,
+    11712.7
+   ]
+  },
+  "fl_SW1": {
+   "region": "band_SW1",
+   "site": [
+    4556.2,
+    11934.6
+   ]
+  },
+  "fl_SW2": {
+   "region": "band_SW0",
+   "site": [
+    1260.5,
+    11712.7
+   ]
+  },
+  "fl_SW3": {
+   "region": "band_SW1",
+   "site": [
+    4556.2,
+    11934.6
+   ]
+  },
+  "fl_SE0": {
+   "region": "band_SE0",
+   "site": [
+    18939.5,
+    11712.7
+   ]
+  },
+  "fl_SE1": {
+   "region": "band_SE1",
+   "site": [
+    15643.8,
+    11939.1
+   ]
+  },
+  "fl_SE2": {
+   "region": "band_SE0",
+   "site": [
+    18939.5,
+    11712.7
+   ]
+  },
+  "fl_SE3": {
+   "region": "band_SE1",
+   "site": [
+    15643.8,
+    11939.1
+   ]
+  },
+  "fl_NE0": {
+   "region": "band_NE0",
+   "site": [
+    18933.4,
+    20095.4
+   ]
+  },
+  "fl_NE1": {
+   "region": "band_NE1",
+   "site": [
+    15636.4,
+    19855.1
+   ]
+  },
+  "fl_NE2": {
+   "region": "band_NE0",
+   "site": [
+    18933.4,
+    20095.4
+   ]
+  },
+  "fl_NE3": {
+   "region": "band_NE1",
+   "site": [
+    15636.4,
+    19855.1
+   ]
+  },
+  "fl_NW0": {
+   "region": "band_NW0",
+   "site": [
+    911.5,
+    20218.6
+   ]
+  },
+  "fl_NW2": {
+   "region": "band_NW0",
+   "site": [
+    911.5,
+    20218.6
+   ]
+  },
+  "host_cp_rxs": {
+   "region": "strip_C",
+   "site": [
+    10680.4,
+    15653.8
+   ]
+  }
+ },
+ "regions": {
+  "phy_SW": {
+   "site": [
+    9850.8,
+    610.2
+   ],
+   "members": [
+    "phy_SW"
+   ]
+  },
+  "pc_SW": {
+   "site": [
+    7826.4,
+    1537.4
+   ],
+   "members": [
+    "pc_SW0",
+    "pc_SW1",
+    "pc_SW2",
+    "pc_SW3"
+   ]
+  },
+  "pc_SE": {
+   "site": [
+    12373.6,
+    1537.4
+   ],
+   "members": [
+    "pc_SW4",
+    "pc_SW5",
+    "pc_SW6",
+    "pc_SW7"
+   ]
+  },
+  "sm_SW0": {
+   "site": [
+    1931.1,
+    5533.6
+   ],
+   "members": [
+    "sm_SW0"
+   ]
+  },
+  "sm_SW1": {
+   "site": [
+    4410.8,
+    5533.6
+   ],
+   "members": [
+    "sm_SW1"
+   ]
+  },
+  "sm_SW2": {
+   "site": [
+    6450.5,
+    5533.6
+   ],
+   "members": [
+    "sm_SW2"
+   ]
+  },
+  "sm_SW3": {
+   "site": [
+    8930.2,
+    5533.6
+   ],
+   "members": [
+    "sm_SW3"
+   ]
+  },
+  "sm_SW4": {
+   "site": [
+    11269.8,
+    5533.6
+   ],
+   "members": [
+    "sm_SW4"
+   ]
+  },
+  "sm_SW5": {
+   "site": [
+    13749.5,
+    5533.6
+   ],
+   "members": [
+    "sm_SW5"
+   ]
+  },
+  "sm_SW6": {
+   "site": [
+    15789.2,
+    5533.6
+   ],
+   "members": [
+    "sm_SW6"
+   ]
+  },
+  "sm_SW7": {
+   "site": [
+    18268.9,
+    5533.6
+   ],
+   "members": [
+    "sm_SW7"
+   ]
+  },
+  "xq_SW": {
+   "site": [
+    5443.1,
+    8270.0
+   ],
+   "members": [
+    "xq_SW_p0_bd",
+    "xq_SW_p0_bfq0",
+    "xq_SW_p0_bfq1",
+    "xq_SW_p0_bfq2",
+    "xq_SW_p0_bfq3",
+    "xq_SW_p0_eg",
+    "xq_SW_p1_bd",
+    "xq_SW_p1_bfq0",
+    "xq_SW_p1_bfq1",
+    "xq_SW_p1_bfq2",
+    "xq_SW_p1_bfq3",
+    "xq_SW_p1_eg"
+   ]
+  },
+  "xq_SE": {
+   "site": [
+    14781.8,
+    8270.0
+   ],
+   "members": [
+    "xq_SW_p2_bd",
+    "xq_SW_p2_bfq0",
+    "xq_SW_p2_bfq1",
+    "xq_SW_p2_bfq2",
+    "xq_SW_p2_bfq3",
+    "xq_SW_p2_eg",
+    "xq_SW_p3_bd",
+    "xq_SW_p3_bfq0",
+    "xq_SW_p3_bfq1",
+    "xq_SW_p3_bfq2",
+    "xq_SW_p3_bfq3",
+    "xq_SW_p3_eg"
+   ]
+  },
+  "band_SW0": {
+   "site": [
+    1260.5,
+    11712.7
+   ],
+   "members": [
+    "hc_SW0",
+    "hc_SW1",
+    "hc_SW2",
+    "hc_SW3",
+    "sfu_SW0",
+    "sfu_SW2",
+    "su_SW0",
+    "su_SW2",
+    "vmb_SW0",
+    "vmb_SW1",
+    "vmb_SW4",
+    "vmb_SW5"
+   ]
+  },
+  "band_SW1": {
+   "site": [
+    4556.2,
+    11934.6
+   ],
+   "members": [
+    "coll_SW",
+    "sfu_SW1",
+    "sfu_SW3",
+    "sfus_SW",
+    "su_SW1",
+    "su_SW3",
+    "vmb_SW2",
+    "vmb_SW3",
+    "vmb_SW6",
+    "vmb_SW7"
+   ]
+  },
+  "band_SW2": {
+   "site": [
+    8087.6,
+    10430.1
+   ],
+   "members": [
+    "cij_SW",
+    "dbk_SW",
+    "hc_SW",
+    "hce_SW",
+    "idxq_SW",
+    "pleaf_SW",
+    "sfucore_SW",
+    "sucore_SW",
+    "sucx_SW",
+    "vmh_SW"
+   ]
+  },
+  "idx_SW": {
+   "site": [
+    4363.5,
+    1008.8
+   ],
+   "members": [
+    "idxs_SW"
+   ]
+  },
+  "band_SE0": {
+   "site": [
+    18939.5,
+    11712.7
+   ],
+   "members": [
+    "hc_SE0",
+    "hc_SE1",
+    "hc_SE2",
+    "hc_SE3",
+    "sfu_SE0",
+    "sfu_SE2",
+    "su_SE0",
+    "su_SE2",
+    "vmb_SE0",
+    "vmb_SE1",
+    "vmb_SE4",
+    "vmb_SE5"
+   ]
+  },
+  "band_SE1": {
+   "site": [
+    15643.8,
+    11939.1
+   ],
+   "members": [
+    "coll_SE",
+    "sfu_SE1",
+    "sfu_SE3",
+    "sfus_SE",
+    "su_SE1",
+    "su_SE3",
+    "vmb_SE2",
+    "vmb_SE3",
+    "vmb_SE6",
+    "vmb_SE7"
+   ]
+  },
+  "band_SE2": {
+   "site": [
+    12100.4,
+    10486.1
+   ],
+   "members": [
+    "cij_SE",
+    "dbk_SE",
+    "hc_SE",
+    "hce_SE",
+    "idxq_SE",
+    "pleaf_SE",
+    "sfucore_SE",
+    "sucore_SE",
+    "sucx_SE",
+    "vmh_SE"
+   ]
+  },
+  "idx_SE": {
+   "site": [
+    15834.5,
+    1008.8
+   ],
+   "members": [
+    "idxs_SE"
+   ]
+  },
+  "phy_NW": {
+   "site": [
+    9850.8,
+    31163.3
+   ],
+   "members": [
+    "phy_NW"
+   ]
+  },
+  "pc_NW": {
+   "site": [
+    7826.4,
+    30236.1
+   ],
+   "members": [
+    "pc_NW0",
+    "pc_NW1",
+    "pc_NW2",
+    "pc_NW3"
+   ]
+  },
+  "pc_NE": {
+   "site": [
+    12373.6,
+    30236.1
+   ],
+   "members": [
+    "pc_NW4",
+    "pc_NW5",
+    "pc_NW6",
+    "pc_NW7"
+   ]
+  },
+  "sm_NW0": {
+   "site": [
+    1931.1,
+    26239.9
+   ],
+   "members": [
+    "sm_NW0"
+   ]
+  },
+  "sm_NW1": {
+   "site": [
+    4410.8,
+    26239.9
+   ],
+   "members": [
+    "sm_NW1"
+   ]
+  },
+  "sm_NW2": {
+   "site": [
+    6450.5,
+    26239.9
+   ],
+   "members": [
+    "sm_NW2"
+   ]
+  },
+  "sm_NW3": {
+   "site": [
+    8930.2,
+    26239.9
+   ],
+   "members": [
+    "sm_NW3"
+   ]
+  },
+  "sm_NW4": {
+   "site": [
+    11269.8,
+    26239.9
+   ],
+   "members": [
+    "sm_NW4"
+   ]
+  },
+  "sm_NW5": {
+   "site": [
+    13749.5,
+    26239.9
+   ],
+   "members": [
+    "sm_NW5"
+   ]
+  },
+  "sm_NW6": {
+   "site": [
+    15789.2,
+    26239.9
+   ],
+   "members": [
+    "sm_NW6"
+   ]
+  },
+  "sm_NW7": {
+   "site": [
+    18268.9,
+    26239.9
+   ],
+   "members": [
+    "sm_NW7"
+   ]
+  },
+  "xq_NW": {
+   "site": [
+    5443.1,
+    23503.6
+   ],
+   "members": [
+    "xq_NW_p0_bd",
+    "xq_NW_p0_bfq0",
+    "xq_NW_p0_bfq1",
+    "xq_NW_p0_bfq2",
+    "xq_NW_p0_bfq3",
+    "xq_NW_p0_eg",
+    "xq_NW_p1_bd",
+    "xq_NW_p1_bfq0",
+    "xq_NW_p1_bfq1",
+    "xq_NW_p1_bfq2",
+    "xq_NW_p1_bfq3",
+    "xq_NW_p1_eg"
+   ]
+  },
+  "xq_NE": {
+   "site": [
+    14781.8,
+    23503.6
+   ],
+   "members": [
+    "xq_NW_p2_bd",
+    "xq_NW_p2_bfq0",
+    "xq_NW_p2_bfq1",
+    "xq_NW_p2_bfq2",
+    "xq_NW_p2_bfq3",
+    "xq_NW_p2_eg",
+    "xq_NW_p3_bd",
+    "xq_NW_p3_bfq0",
+    "xq_NW_p3_bfq1",
+    "xq_NW_p3_bfq2",
+    "xq_NW_p3_bfq3",
+    "xq_NW_p3_eg"
+   ]
+  },
+  "band_NW0": {
+   "site": [
+    911.5,
+    20218.6
+   ],
+   "members": [
+    "hc_NW0",
+    "hc_NW2",
+    "quant_NW0",
+    "quant_NW2",
+    "sfu_NW0",
+    "sfu_NW2",
+    "su_NW0",
+    "su_NW2",
+    "vmb_NW0",
+    "vmb_NW1",
+    "vmb_NW4",
+    "vmb_NW5"
+   ]
+  },
+  "band_NW1": {
+   "site": [
+    4053.2,
+    20218.6
+   ],
+   "members": [
+    "hc_NW1",
+    "hc_NW3",
+    "quant_NW1",
+    "quant_NW3",
+    "sfu_NW1",
+    "sfu_NW3",
+    "su_NW1",
+    "su_NW3",
+    "vmb_NW2",
+    "vmb_NW3",
+    "vmb_NW6",
+    "vmb_NW7"
+   ]
+  },
+  "band_NW2": {
+   "site": [
+    8023.3,
+    20877.2
+   ],
+   "members": [
+    "cij_NW",
+    "coll_NW",
+    "dbk_NW",
+    "hc_NW",
+    "hce_NW",
+    "idxq_NW",
+    "pleaf_NW",
+    "sfucore_NW",
+    "sfus_NW",
+    "sucore_NW",
+    "sucx_NW",
+    "vmh_NW"
+   ]
+  },
+  "idx_NW": {
+   "site": [
+    4363.5,
+    30764.7
+   ],
+   "members": [
+    "idxs_NW"
+   ]
+  },
+  "band_NE0": {
+   "site": [
+    18933.4,
+    20095.4
+   ],
+   "members": [
+    "hc_NE0",
+    "hc_NE1",
+    "hc_NE2",
+    "hc_NE3",
+    "sfu_NE0",
+    "sfu_NE2",
+    "su_NE0",
+    "su_NE2",
+    "vmb_NE0",
+    "vmb_NE1",
+    "vmb_NE4",
+    "vmb_NE5"
+   ]
+  },
+  "band_NE1": {
+   "site": [
+    15636.4,
+    19855.1
+   ],
+   "members": [
+    "coll_NE",
+    "sfu_NE1",
+    "sfu_NE3",
+    "sfus_NE",
+    "su_NE1",
+    "su_NE3",
+    "vmb_NE2",
+    "vmb_NE3",
+    "vmb_NE6",
+    "vmb_NE7"
+   ]
+  },
+  "band_NE2": {
+   "site": [
+    12100.4,
+    21287.4
+   ],
+   "members": [
+    "cij_NE",
+    "dbk_NE",
+    "hc_NE",
+    "hce_NE",
+    "idxq_NE",
+    "pleaf_NE",
+    "sfucore_NE",
+    "sucore_NE",
+    "sucx_NE",
+    "vmh_NE"
+   ]
+  },
+  "idx_NE": {
+   "site": [
+    15834.5,
+    30764.7
+   ],
+   "members": [
+    "idxs_NE"
+   ]
+  },
+  "strip_W": {
+   "site": [
+    1761.1,
+    15490.6
+   ],
+   "members": [
+    "ep_N0",
+    "ep_S0",
+    "ep_S1",
+    "lk_N0",
+    "lk_S0",
+    "lk_S1"
+   ]
+  },
+  "strip_E": {
+   "site": [
+    18956.3,
+    15490.6
+   ],
+   "members": [
+    "ep_N2",
+    "ep_S3",
+    "lk_N2",
+    "lk_S3"
+   ]
+  },
+  "strip_C": {
+   "site": [
+    10680.4,
+    15653.8
+   ],
+   "members": [
+    "host_cp",
+    "idx_ctl",
+    "idx_link",
+    "idx_op",
+    "idx_q",
+    "idx_sel",
+    "tkm_SW"
+   ]
+  }
+ },
+ "neighbours": [
+  [
+   "band_NE0",
+   "band_NE1"
+  ],
+  [
+   "band_NE0",
+   "sm_NW6"
+  ],
+  [
+   "band_NE0",
+   "sm_NW7"
+  ],
+  [
+   "band_NE0",
+   "xq_NE"
+  ],
+  [
+   "band_NE1",
+   "band_NE2"
+  ],
+  [
+   "band_NE1",
+   "sm_NW5"
+  ],
+  [
+   "band_NE1",
+   "sm_NW6"
+  ],
+  [
+   "band_NE1",
+   "sm_NW7"
+  ],
+  [
+   "band_NE1",
+   "xq_NE"
+  ],
+  [
+   "band_NE2",
+   "band_NW2"
+  ],
+  [
+   "band_NE2",
+   "sm_NW3"
+  ],
+  [
+   "band_NE2",
+   "sm_NW4"
+  ],
+  [
+   "band_NE2",
+   "sm_NW5"
+  ],
+  [
+   "band_NE2",
+   "xq_NE"
+  ],
+  [
+   "band_NW0",
+   "band_NW1"
+  ],
+  [
+   "band_NW0",
+   "sm_NW0"
+  ],
+  [
+   "band_NW0",
+   "sm_NW1"
+  ],
+  [
+   "band_NW0",
+   "xq_NW"
+  ],
+  [
+   "band_NW1",
+   "band_NW2"
+  ],
+  [
+   "band_NW1",
+   "sm_NW0"
+  ],
+  [
+   "band_NW1",
+   "sm_NW1"
+  ],
+  [
+   "band_NW1",
+   "sm_NW2"
+  ],
+  [
+   "band_NW1",
+   "xq_NW"
+  ],
+  [
+   "band_NW2",
+   "sm_NW2"
+  ],
+  [
+   "band_NW2",
+   "sm_NW3"
+  ],
+  [
+   "band_NW2",
+   "sm_NW4"
+  ],
+  [
+   "band_NW2",
+   "strip_C"
+  ],
+  [
+   "band_NW2",
+   "xq_NW"
+  ],
+  [
+   "band_SE0",
+   "band_SE1"
+  ],
+  [
+   "band_SE0",
+   "sm_SW6"
+  ],
+  [
+   "band_SE0",
+   "sm_SW7"
+  ],
+  [
+   "band_SE0",
+   "strip_E"
+  ],
+  [
+   "band_SE0",
+   "xq_SE"
+  ],
+  [
+   "band_SE1",
+   "band_SE2"
+  ],
+  [
+   "band_SE1",
+   "sm_SW5"
+  ],
+  [
+   "band_SE1",
+   "sm_SW6"
+  ],
+  [
+   "band_SE1",
+   "sm_SW7"
+  ],
+  [
+   "band_SE1",
+   "strip_C"
+  ],
+  [
+   "band_SE1",
+   "xq_SE"
+  ],
+  [
+   "band_SE2",
+   "band_SW2"
+  ],
+  [
+   "band_SE2",
+   "sm_SW3"
+  ],
+  [
+   "band_SE2",
+   "sm_SW4"
+  ],
+  [
+   "band_SE2",
+   "sm_SW5"
+  ],
+  [
+   "band_SE2",
+   "xq_SE"
+  ],
+  [
+   "band_SW0",
+   "band_SW1"
+  ],
+  [
+   "band_SW0",
+   "sm_SW0"
+  ],
+  [
+   "band_SW0",
+   "sm_SW1"
+  ],
+  [
+   "band_SW0",
+   "strip_W"
+  ],
+  [
+   "band_SW0",
+   "xq_SW"
+  ],
+  [
+   "band_SW1",
+   "band_SW2"
+  ],
+  [
+   "band_SW1",
+   "sm_SW0"
+  ],
+  [
+   "band_SW1",
+   "sm_SW1"
+  ],
+  [
+   "band_SW1",
+   "sm_SW2"
+  ],
+  [
+   "band_SW1",
+   "xq_SW"
+  ],
+  [
+   "band_SW2",
+   "sm_SW2"
+  ],
+  [
+   "band_SW2",
+   "sm_SW3"
+  ],
+  [
+   "band_SW2",
+   "sm_SW4"
+  ],
+  [
+   "band_SW2",
+   "xq_SW"
+  ],
+  [
+   "idx_NE",
+   "pc_NE"
+  ],
+  [
+   "idx_NE",
+   "phy_NW"
+  ],
+  [
+   "idx_NE",
+   "sm_NW5"
+  ],
+  [
+   "idx_NE",
+   "sm_NW6"
+  ],
+  [
+   "idx_NE",
+   "sm_NW7"
+  ],
+  [
+   "idx_NW",
+   "pc_NW"
+  ],
+  [
+   "idx_NW",
+   "phy_NW"
+  ],
+  [
+   "idx_NW",
+   "sm_NW0"
+  ],
+  [
+   "idx_NW",
+   "sm_NW1"
+  ],
+  [
+   "idx_NW",
+   "sm_NW2"
+  ],
+  [
+   "idx_SE",
+   "pc_SE"
+  ],
+  [
+   "idx_SE",
+   "phy_SW"
+  ],
+  [
+   "idx_SE",
+   "sm_SW5"
+  ],
+  [
+   "idx_SE",
+   "sm_SW6"
+  ],
+  [
+   "idx_SE",
+   "sm_SW7"
+  ],
+  [
+   "idx_SW",
+   "pc_SW"
+  ],
+  [
+   "idx_SW",
+   "phy_SW"
+  ],
+  [
+   "idx_SW",
+   "sm_SW0"
+  ],
+  [
+   "idx_SW",
+   "sm_SW1"
+  ],
+  [
+   "idx_SW",
+   "sm_SW2"
+  ],
+  [
+   "pc_NE",
+   "pc_NW"
+  ],
+  [
+   "pc_NE",
+   "phy_NW"
+  ],
+  [
+   "pc_NE",
+   "sm_NW3"
+  ],
+  [
+   "pc_NE",
+   "sm_NW4"
+  ],
+  [
+   "pc_NE",
+   "sm_NW5"
+  ],
+  [
+   "pc_NE",
+   "sm_NW6"
+  ],
+  [
+   "pc_NW",
+   "phy_NW"
+  ],
+  [
+   "pc_NW",
+   "sm_NW1"
+  ],
+  [
+   "pc_NW",
+   "sm_NW2"
+  ],
+  [
+   "pc_NW",
+   "sm_NW3"
+  ],
+  [
+   "pc_NW",
+   "sm_NW4"
+  ],
+  [
+   "pc_SE",
+   "pc_SW"
+  ],
+  [
+   "pc_SE",
+   "phy_SW"
+  ],
+  [
+   "pc_SE",
+   "sm_SW3"
+  ],
+  [
+   "pc_SE",
+   "sm_SW4"
+  ],
+  [
+   "pc_SE",
+   "sm_SW5"
+  ],
+  [
+   "pc_SE",
+   "sm_SW6"
+  ],
+  [
+   "pc_SW",
+   "phy_SW"
+  ],
+  [
+   "pc_SW",
+   "sm_SW1"
+  ],
+  [
+   "pc_SW",
+   "sm_SW2"
+  ],
+  [
+   "pc_SW",
+   "sm_SW3"
+  ],
+  [
+   "pc_SW",
+   "sm_SW4"
+  ],
+  [
+   "sm_NW0",
+   "sm_NW1"
+  ],
+  [
+   "sm_NW0",
+   "xq_NW"
+  ],
+  [
+   "sm_NW1",
+   "sm_NW2"
+  ],
+  [
+   "sm_NW1",
+   "xq_NW"
+  ],
+  [
+   "sm_NW2",
+   "sm_NW3"
+  ],
+  [
+   "sm_NW2",
+   "xq_NW"
+  ],
+  [
+   "sm_NW3",
+   "sm_NW4"
+  ],
+  [
+   "sm_NW3",
+   "xq_NW"
+  ],
+  [
+   "sm_NW4",
+   "sm_NW5"
+  ],
+  [
+   "sm_NW4",
+   "xq_NE"
+  ],
+  [
+   "sm_NW5",
+   "sm_NW6"
+  ],
+  [
+   "sm_NW5",
+   "xq_NE"
+  ],
+  [
+   "sm_NW6",
+   "sm_NW7"
+  ],
+  [
+   "sm_NW6",
+   "xq_NE"
+  ],
+  [
+   "sm_NW7",
+   "xq_NE"
+  ],
+  [
+   "sm_SW0",
+   "sm_SW1"
+  ],
+  [
+   "sm_SW0",
+   "xq_SW"
+  ],
+  [
+   "sm_SW1",
+   "sm_SW2"
+  ],
+  [
+   "sm_SW1",
+   "xq_SW"
+  ],
+  [
+   "sm_SW2",
+   "sm_SW3"
+  ],
+  [
+   "sm_SW2",
+   "xq_SW"
+  ],
+  [
+   "sm_SW3",
+   "sm_SW4"
+  ],
+  [
+   "sm_SW3",
+   "xq_SW"
+  ],
+  [
+   "sm_SW4",
+   "sm_SW5"
+  ],
+  [
+   "sm_SW4",
+   "xq_SE"
+  ],
+  [
+   "sm_SW5",
+   "sm_SW6"
+  ],
+  [
+   "sm_SW5",
+   "xq_SE"
+  ],
+  [
+   "sm_SW6",
+   "sm_SW7"
+  ],
+  [
+   "sm_SW6",
+   "xq_SE"
+  ],
+  [
+   "sm_SW7",
+   "xq_SE"
+  ]
+ ]
+}

@@ -2,8 +2,8 @@
 # wrappers physical/qwen_fwd_lane/qfd_fwd_lane_masters.sv), sdc_extra + boundary_tcl of every qfwd_* kit (re-applied
 # after every io_ref switch and at sign-off).
 #   station  qfd_rlyh_*   clock port ckf; ck_o = ~ckf through ONE kept inverter -> generated clock ck_o_fwd INVERTED
-#   hop 0    qfd_rlyh0_*  clock port ck (source root); capture on cko = ICG(~ck) (falling ck edge), ck_o = ~cko -> ck
-#                         gated, generated clock ck_o_fwd NOT inverted
+#   hop 0    qfd_rlyh0_*  clock port ck (source root); capture on cko = ICG(ck) (RISING ck edge, Q-DIE11 10-18 kit fix),
+#                         ck_o = ~cko -> generated clock ck_o_fwd INVERTED (the S81 dsfd_dvrlyh form)
 #   landing  qfd_landh_*  clock port ck (receiving root, read side); ckf = the lane clock (ring write side) -> clock
 #                         lane_ckf, same period; landh0: ck_s (source root, ring written on ICG(~ck_s))
 #   ck_o carries no data budget.  The landing's lane inputs a / ea are captured on the lane clock: their IO budget is
@@ -18,8 +18,8 @@ if {[llength [get_ports -quiet ck_o]]} {
       create_generated_clock -name ck_o_fwd -source [get_ports ckf] -divide_by 1 -invert [get_ports ck_o]
       puts "OT_FWD_LANE: station ck_o = ~ckf (generated ck_o_fwd INVERTED, half-cycle hop)"
     } elseif {[llength [get_ports -quiet ck]]} {
-      create_generated_clock -name ck_o_fwd -source [get_ports ck] -divide_by 1 [get_ports ck_o]
-      puts "OT_FWD_LANE: hop-0 ck_o = ck gated (generated ck_o_fwd), capture on the falling ck edge"
+      create_generated_clock -name ck_o_fwd -source [get_ports ck] -divide_by 1 -invert [get_ports ck_o]
+      puts "OT_FWD_LANE: hop-0 ck_o = ~(ck gated) (generated ck_o_fwd INVERTED), capture on the rising ck edge"
     }
   }
 } else {

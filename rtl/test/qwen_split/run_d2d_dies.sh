@@ -14,7 +14,7 @@ SRC=("$W/lib/ot_rst_pipe.sv" "$W/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv
  "$R/physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v"
  "$W/test/qwen_split/tb_qwen_d2d_dies.sv")
 sha256sum "${SRC[@]}" "$R/tools/qwen_split/d2d_link_calendar.py" > "$OUT/source.sha256"
-iverilog -g2012 -DOT_MEM_NO_INIT -s tb_qwen_d2d_dies -Ptb_qwen_d2d_dies.MUT=$MUT -Ptb_qwen_d2d_dies.PR=${PR:-1} -Ptb_qwen_d2d_dies.TXL=$TXL \
+iverilog -g2012 -I"$OUT/cal" -DOT_MEM_NO_INIT -s tb_qwen_d2d_dies -Ptb_qwen_d2d_dies.MUT=$MUT -Ptb_qwen_d2d_dies.PR=${PR:-1} -Ptb_qwen_d2d_dies.TXL=$TXL \
  -Ptb_qwen_d2d_dies.PHY=$PHY -Ptb_qwen_d2d_dies.CALDIR=\"$OUT/cal\" -o "$OUT/tb.vvp" "${SRC[@]}" > "$OUT/build.log" 2>&1 || { head -30 "$OUT/build.log"; exit 2; }
 vvp -n "$OUT/tb.vvp" > "$OUT/run.log" 2>&1 || true
 grep -E 'D2D_DIES_|RECOVERY|frames' "$OUT/run.log"

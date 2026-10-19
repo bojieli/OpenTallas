@@ -54,8 +54,10 @@ CONSERVATIVE = {
 
 
 def lane_cost(n, E):
+    # Q-DIE11 10-18 kit fix: hop 0 is a full-cycle hop (rising capture), the N - 1 later stations are half-cycle
     N = n - 1
-    return dict(today=n + 1, landed=N / 2 + 1 + E + 1, added=N / 2 + 2 + E - (n + 1))
+    st = (1 + (N - 1) / 2) if N >= 1 else 0
+    return dict(today=n + 1, landed=st + 1 + E + 1, added=st + 2 + E - (n + 1))
 
 
 def main():
@@ -65,7 +67,7 @@ def main():
     ap.add_argument('--out', type=Path)
     a = ap.parse_args()
     fl = json.loads(a.lanes.read_text())
-    lanes = {r['bid']: r for r in fl['lanes']}
+    lanes = {r['bid']: r for r in fl['lanes'] if r.get('lane') != 'reset'}   # reset lanes: reset-time only, no token-path cost
     groups = dict(GROUPS, **(CONSERVATIVE if a.scope == 'conservative' else {}))
     doc = AC.load_path('qwen_rom')
     base, _ = AC.solve(doc['nodes'], doc['edges'])

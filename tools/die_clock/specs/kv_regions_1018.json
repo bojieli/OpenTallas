@@ -1,0 +1,66 @@
+{
+ "die": "qwen_kv_kvs14c_landed_regions_1018",
+ "note": "KV-CLOCK 10-18 (landed-regions standard; CLOCK-AUDIT KV FAILING): five INDEPENDENT core region trees (c, WS, WN, ES, EN), NO balance_group (rt4 balanced all five to one phase: ~24.5 ns insertion, 299 c<->stack pairs TT 249 / FF 311). Only intra-region flop spread / pairs are judged (<= 80 ps TT + FF); every c<->stack data crossing is a forwarded half-cycle lane with a LANDING (tools/qwen_kv_die/kv_fwd_lanes.py), timed by the die STA window (contract L5).",
+ "rc_layer": "M8",
+ "leaf_um": 60,
+ "leaf_max": 12,
+ "trees": [
+  {
+   "name": "c",
+   "root": "pll/pll_c[0]",
+   "period": 833.334,
+   "select": "all"
+  },
+  {
+   "name": "WS",
+   "root": "pll/pll_WS[0]",
+   "period": 833.334,
+   "select": "all"
+  },
+  {
+   "name": "WN",
+   "root": "pll/pll_WN[0]",
+   "period": 833.334,
+   "select": "all"
+  },
+  {
+   "name": "ES",
+   "root": "pll/pll_ES[0]",
+   "period": 833.334,
+   "select": "all"
+  },
+  {
+   "name": "EN",
+   "root": "pll/pll_EN[0]",
+   "period": 833.334,
+   "select": "all"
+  },
+  {
+   "name": "hbm_WS",
+   "root": "pll/pll_hbm_WS[0]",
+   "period": 1024.0,
+   "select": "all"
+  },
+  {
+   "name": "hbm_WN",
+   "root": "pll/pll_hbm_WN[0]",
+   "period": 1024.0,
+   "select": "all"
+  },
+  {
+   "name": "hbm_ES",
+   "root": "pll/pll_hbm_ES[0]",
+   "period": 1024.0,
+   "select": "all"
+  },
+  {
+   "name": "hbm_EN",
+   "root": "pll/pll_hbm_EN[0]",
+   "period": 1024.0,
+   "select": "all"
+  }
+ ],
+ "neighbours": [],
+ "neighbour_budget_ps": 80,
+ "clock_at_root_buffer": true
+}

@@ -18,19 +18,19 @@ Components of this program may be licensed under more restrictive licenses which
 [WARNING STA-0450] virtual clock ot_io_hbm can not be propagated.
 [WARNING STA-0450] virtual clock core_clk can not be propagated.
 [WARNING STA-0450] virtual clock ot_io_hbm can not be propagated.
-OT_HYBRID CTS_MEASURE ss clk sinks=291 reference_scope=boundary boundary_sinks=291 min=109.14352104631581 mean=112.62139919746953 max=115.5679029318128 all_mean=112.62139919746949
-OT_HYBRID CTS_MEASURE ss clk_hbm sinks=3 reference_scope=boundary boundary_sinks=3 min=46.64355031977459 mean=46.70812251022005 max=46.7455624689105 all_mean=46.70812251022005
+OT_HYBRID CTS_MEASURE ss clk sinks=294 reference_scope=boundary boundary_sinks=291 min=108.60982295845814 mean=112.3727039692156 max=114.7195190652616 all_mean=112.39769656925483
+OT_HYBRID CTS_MEASURE ss clk_hbm sinks=3 reference_scope=boundary boundary_sinks=3 min=46.71461153252845 mean=46.7474914814235 max=46.79582781655126 all_mean=46.7474914814235
 OT_ENTRIES LEVEL clk deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
-OT_ENTRIES COMP ss clk -> active$_DFF_PN0_/CLK wire=0 R=112.62139919746953 latency=0.0 phi=112.62139919746953
+OT_ENTRIES COMP ss clk -> active$_DFF_PN0_/CLK wire=0 R=112.3727039692156 latency=0.0 phi=112.3727039692156
 OT_ENTRIES LEVEL clk_hbm deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
-OT_ENTRIES COMP ss clk_hbm -> ls[0]$_DFF_PN0_/CLK wire=0 R=46.70812251022005 latency=65.91327668724948 phi=112.62139919746953
-OT_ENTRIES DOMAIN core 833.333008ps IO286/131 boundary=109.14352104631583..115.56790293181281
-OT_ENTRIES DOMAIN hbm 1024.000000ps IO1/1 boundary=112.55682700702408..112.65883915615998
+OT_ENTRIES COMP ss clk_hbm -> ls[0]$_DFF_PN0_/CLK wire=0 R=46.7474914814235 latency=65.62521248779211 phi=112.3727039692156
+OT_ENTRIES DOMAIN core 833.333008ps IO286/131 boundary=108.60982295845814..114.7195190652616
+OT_ENTRIES DOMAIN hbm 1024.000000ps IO1/1 boundary=112.33982402032055..112.42104030434336
 OT_CDC BOUNDED pc_release source -> sync1 loaded$_DFFE_PN0P_ -> ls[0]$_DFF_PN0_
 OT_CDC BOUNDED release_seen source -> sync1 pc_rst_n$_DFF_PN0_ -> rel_seen_s1$_DFF_PN0_
 OT_CDC STRUCTURAL_PASS {pc_release source 0} 1 {release_seen source 0} 1 (bounded synchroniser crossings only; no physical closure claim)
-OT_MULTI_ROOT OWNERSHIP PASS roots=2 registers=294 inputs=287 outputs=132 async_control_pins=276
-OT_ENTRIES COMP DONE ss 2 entries phi=112.62139919746953 boundary=109.14352104631583..115.56790293181281
+OT_MULTI_ROOT OWNERSHIP PASS roots=2 registers=297 inputs=287 outputs=132 async_control_pins=282
+OT_ENTRIES COMP DONE ss 2 entries phi=112.3727039692156 boundary=108.60982295845814..114.7195190652616
 [WARNING STA-0450] virtual clock core_clk can not be propagated.
 [WARNING STA-0450] virtual clock ot_io_hbm can not be propagated.
 OT_IOREF clock-port clk (ot_entry_0): data input delays dropped
@@ -39,5 +39,5 @@ OT_IOREF_EDGE ot_entry_0 boundary 291 negedge 0 noarc 0 inverted 0
 OT_IOREF_EDGE ot_entry_1 boundary 3 negedge 0 noarc 0 inverted 0
 OT_IOREF keep core_clk (not an insertion-reference clock)
 OT_IOREF keep ot_io_hbm (not an insertion-reference clock)
-OT_WS max -4.0456582528491936e-11 min 5.914820022656642e-11
+OT_WS max -9.762463060170035e-11 min 5.671936531559396e-11
 OT_EXPORT_DONE
