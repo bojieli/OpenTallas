@@ -419,6 +419,7 @@
  "reset_landing": {
   "enable": true,
   "max_sinks": 4,
-  "reason": "gate r1 textbook.reset_landing FAIL: rst_n reached 8 sinks unlanded (the wrapper's rst_q flop + the d4g bank's reset pin logic); land rst_n at the W face in 2 registered stages (rst_l0 -> rst_l1) and fan out at equal depth; reset release +2 edges = a scheduled constant, no functional change"
+  "reason": "gate r1 textbook.reset_landing FAIL: rst_n reached 8 sinks unlanded (the wrapper's rst_q flop + the d4g bank's reset pin logic); land rst_n at the W face in 2 registered stages (rst_l0 -> rst_l1) and fan out at equal depth; reset release +2 edges = a scheduled constant, no functional change",
+  "clock": "clk"
  }
 }
