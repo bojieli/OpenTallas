@@ -1,0 +1,57 @@
+{
+  "top": "qfd_dv_slice2_w_regional_lp",
+  "roots": {
+    "ck_core": "core",
+    "ck_hd": "hd",
+    "ck_ef": "ef",
+    "ck_wf": "wf",
+    "ck_nw": "nw",
+    "ck_nc": "nc",
+    "ck_ne": "ne",
+    "ck_sw": "sw",
+    "ck_sc": "sc",
+    "ck_se": "se",
+    "ck_su0": "su0",
+    "ck_su1": "su1",
+    "ck_su2": "su2",
+    "ck_su3": "su3",
+    "ck_su4": "su4",
+    "ck_su5": "su5",
+    "ck_su6": "su6",
+    "ck_su7": "su7"
+  },
+  "native": {
+    "ot_sram_1r1w_1024x256_m2_r2c2": {
+      "clock": "clk",
+      "edge": "posedge",
+      "outputs": [
+        "rd_out"
+      ],
+      "reset": []
+    },
+    "ot_sram_1r1w_128x256_m1_r2c2": {
+      "clock": "clk",
+      "edge": "posedge",
+      "outputs": [
+        "rd_out"
+      ],
+      "reset": []
+    },
+    "ot_sram_1r1w_256x256_m2_r2c2": {
+      "clock": "clk",
+      "edge": "posedge",
+      "outputs": [
+        "rd_out"
+      ],
+      "reset": []
+    },
+    "ot_sram_1r1w_32x64_m1": {
+      "clock": "clk",
+      "edge": "posedge",
+      "outputs": [
+        "rd_out"
+      ],
+      "reset": []
+    }
+  }
+}

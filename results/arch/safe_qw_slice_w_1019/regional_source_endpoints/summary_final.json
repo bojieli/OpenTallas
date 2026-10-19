@@ -1,0 +1,1418 @@
+{
+  "status": "SOURCE_ENDPOINT_INVENTORY_NOT_NATIVE_TIMING_OR_ADOPTION",
+  "audit_status": "ENDPOINTS_ENUMERATED_NOT_TIMING_QUALIFIED",
+  "issues": [],
+  "top": "qfd_dv_slice2_w_regional_lp",
+  "leaf_cells": 2326303,
+  "endpoint_cells": 57916,
+  "endpoints_per_root": {
+    "core": 16857,
+    "ef": 1844,
+    "hd": 22700,
+    "nc": 501,
+    "ne": 127,
+    "nw": 391,
+    "sc": 501,
+    "se": 127,
+    "su0": 1535,
+    "su1": 1535,
+    "su2": 1535,
+    "su3": 1535,
+    "su4": 1535,
+    "su5": 1535,
+    "su6": 1535,
+    "su7": 1535,
+    "sw": 391,
+    "wf": 2197
+  },
+  "word_endpoint_widths_present": true,
+  "crossings": 4258,
+  "reset_set_crossings": 0,
+  "unconnected_output_ports": 8,
+  "native_memory_expected": 64,
+  "native_memory_exact_matches": 64,
+  "native_memory_binding_issues": [],
+  "native_memory_bindings": [
+    {
+      "instance": "u_c.u_vm.g_rep[0].g_bank[0].u_m",
+      "expected_master": "ot_sram_1r1w_1024x256_m2_r2c2",
+      "actual": {
+        "endpoint": "qfd_dv_slice2_w_regional_lp/u_c/u_vm/g_rep[0].g_bank[0].u_m",
+        "master": "ot_sram_1r1w_1024x256_m2_r2c2"
+      },
+      "source_clock_owner": {
+        "root": "core",
+        "clock_inverted_from_root": 0,
+        "cell_active_edge": "posedge",
+        "active_phase_from_root": 0,
+        "clock_aliases": [
+          "qfd_dv_slice2_w_regional_lp/ck_core[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/g_mu.g_run[0].u_r/ck[0]"
+        ]
+      },
+      "exact_match": true
+    },
+    {
+      "instance": "u_c.u_vm.g_rep[0].g_bank[1].u_m",
+      "expected_master": "ot_sram_1r1w_1024x256_m2_r2c2",
+      "actual": {
+        "endpoint": "qfd_dv_slice2_w_regional_lp/u_c/u_vm/g_rep[0].g_bank[1].u_m",
+        "master": "ot_sram_1r1w_1024x256_m2_r2c2"
+      },
+      "source_clock_owner": {
+        "root": "core",
+        "clock_inverted_from_root": 0,
+        "cell_active_edge": "posedge",
+        "active_phase_from_root": 0,
+        "clock_aliases": [
+          "qfd_dv_slice2_w_regional_lp/ck_core[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/g_mu.g_run[0].u_r/ck[0]"
+        ]
+      },
+      "exact_match": true
+    },
+    {
+      "instance": "u_c.u_vm.g_rep[1].g_bank[0].u_m",
+      "expected_master": "ot_sram_1r1w_1024x256_m2_r2c2",
+      "actual": {
+        "endpoint": "qfd_dv_slice2_w_regional_lp/u_c/u_vm/g_rep[1].g_bank[0].u_m",
+        "master": "ot_sram_1r1w_1024x256_m2_r2c2"
+      },
+      "source_clock_owner": {
+        "root": "core",
+        "clock_inverted_from_root": 0,
+        "cell_active_edge": "posedge",
+        "active_phase_from_root": 0,
+        "clock_aliases": [
+          "qfd_dv_slice2_w_regional_lp/ck_core[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/g_mu.g_run[0].u_r/ck[0]"
+        ]
+      },
+      "exact_match": true
+    },
+    {
+      "instance": "u_c.u_vm.g_rep[1].g_bank[1].u_m",
+      "expected_master": "ot_sram_1r1w_1024x256_m2_r2c2",
+      "actual": {
+        "endpoint": "qfd_dv_slice2_w_regional_lp/u_c/u_vm/g_rep[1].g_bank[1].u_m",
+        "master": "ot_sram_1r1w_1024x256_m2_r2c2"
+      },
+      "source_clock_owner": {
+        "root": "core",
+        "clock_inverted_from_root": 0,
+        "cell_active_edge": "posedge",
+        "active_phase_from_root": 0,
+        "clock_aliases": [
+          "qfd_dv_slice2_w_regional_lp/ck_core[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/g_mu.g_run[0].u_r/ck[0]"
+        ]
+      },
+      "exact_match": true
+    },
+    {
+      "instance": "u_c.u_vm.g_rep[2].g_bank[0].u_m",
+      "expected_master": "ot_sram_1r1w_1024x256_m2_r2c2",
+      "actual": {
+        "endpoint": "qfd_dv_slice2_w_regional_lp/u_c/u_vm/g_rep[2].g_bank[0].u_m",
+        "master": "ot_sram_1r1w_1024x256_m2_r2c2"
+      },
+      "source_clock_owner": {
+        "root": "core",
+        "clock_inverted_from_root": 0,
+        "cell_active_edge": "posedge",
+        "active_phase_from_root": 0,
+        "clock_aliases": [
+          "qfd_dv_slice2_w_regional_lp/ck_core[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/g_mu.g_run[0].u_r/ck[0]"
+        ]
+      },
+      "exact_match": true
+    },
+    {
+      "instance": "u_c.u_vm.g_rep[2].g_bank[1].u_m",
+      "expected_master": "ot_sram_1r1w_1024x256_m2_r2c2",
+      "actual": {
+        "endpoint": "qfd_dv_slice2_w_regional_lp/u_c/u_vm/g_rep[2].g_bank[1].u_m",
+        "master": "ot_sram_1r1w_1024x256_m2_r2c2"
+      },
+      "source_clock_owner": {
+        "root": "core",
+        "clock_inverted_from_root": 0,
+        "cell_active_edge": "posedge",
+        "active_phase_from_root": 0,
+        "clock_aliases": [
+          "qfd_dv_slice2_w_regional_lp/ck_core[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/g_mu.g_run[0].u_r/ck[0]"
+        ]
+      },
+      "exact_match": true
+    },
+    {
+      "instance": "u_c.u_vm.g_crom[0].u_lo",
+      "expected_master": "ot_sram_1r1w_1024x256_m2_r2c2",
+      "actual": {
+        "endpoint": "qfd_dv_slice2_w_regional_lp/u_c/u_vm/g_crom[0].u_lo",
+        "master": "ot_sram_1r1w_1024x256_m2_r2c2"
+      },
+      "source_clock_owner": {
+        "root": "core",
+        "clock_inverted_from_root": 0,
+        "cell_active_edge": "posedge",
+        "active_phase_from_root": 0,
+        "clock_aliases": [
+          "qfd_dv_slice2_w_regional_lp/ck_core[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/g_mu.g_run[0].u_r/ck[0]"
+        ]
+      },
+      "exact_match": true
+    },
+    {
+      "instance": "u_c.u_vm.g_crom[0].u_hi",
+      "expected_master": "ot_sram_1r1w_1024x256_m2_r2c2",
+      "actual": {
+        "endpoint": "qfd_dv_slice2_w_regional_lp/u_c/u_vm/g_crom[0].u_hi",
+        "master": "ot_sram_1r1w_1024x256_m2_r2c2"
+      },
+      "source_clock_owner": {
+        "root": "core",
+        "clock_inverted_from_root": 0,
+        "cell_active_edge": "posedge",
+        "active_phase_from_root": 0,
+        "clock_aliases": [
+          "qfd_dv_slice2_w_regional_lp/ck_core[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/g_mu.g_run[0].u_r/ck[0]"
+        ]
+      },
+      "exact_match": true
+    },
+    {
+      "instance": "u_c.u_vm.g_crom[1].u_lo",
+      "expected_master": "ot_sram_1r1w_1024x256_m2_r2c2",
+      "actual": {
+        "endpoint": "qfd_dv_slice2_w_regional_lp/u_c/u_vm/g_crom[1].u_lo",
+        "master": "ot_sram_1r1w_1024x256_m2_r2c2"
+      },
+      "source_clock_owner": {
+        "root": "core",
+        "clock_inverted_from_root": 0,
+        "cell_active_edge": "posedge",
+        "active_phase_from_root": 0,
+        "clock_aliases": [
+          "qfd_dv_slice2_w_regional_lp/ck_core[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/g_mu.g_run[0].u_r/ck[0]"
+        ]
+      },
+      "exact_match": true
+    },
+    {
+      "instance": "u_c.u_vm.g_crom[1].u_hi",
+      "expected_master": "ot_sram_1r1w_1024x256_m2_r2c2",
+      "actual": {
+        "endpoint": "qfd_dv_slice2_w_regional_lp/u_c/u_vm/g_crom[1].u_hi",
+        "master": "ot_sram_1r1w_1024x256_m2_r2c2"
+      },
+      "source_clock_owner": {
+        "root": "core",
+        "clock_inverted_from_root": 0,
+        "cell_active_edge": "posedge",
+        "active_phase_from_root": 0,
+        "clock_aliases": [
+          "qfd_dv_slice2_w_regional_lp/ck_core[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/g_mu.g_run[0].u_r/ck[0]"
+        ]
+      },
+      "exact_match": true
+    },
+    {
+      "instance": "u_c.u_vm.g_btc[0].g_btb[0].u_m",
+      "expected_master": "ot_sram_1r1w_128x256_m1_r2c2",
+      "actual": {
+        "endpoint": "qfd_dv_slice2_w_regional_lp/u_c/u_vm/g_btc[0].g_btb[0].u_m",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2"
+      },
+      "source_clock_owner": {
+        "root": "core",
+        "clock_inverted_from_root": 0,
+        "cell_active_edge": "posedge",
+        "active_phase_from_root": 0,
+        "clock_aliases": [
+          "qfd_dv_slice2_w_regional_lp/ck_core[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/g_mu.g_run[0].u_r/ck[0]"
+        ]
+      },
+      "exact_match": true
+    },
+    {
+      "instance": "u_c.u_vm.g_btc[0].g_btb[1].u_m",
+      "expected_master": "ot_sram_1r1w_128x256_m1_r2c2",
+      "actual": {
+        "endpoint": "qfd_dv_slice2_w_regional_lp/u_c/u_vm/g_btc[0].g_btb[1].u_m",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2"
+      },
+      "source_clock_owner": {
+        "root": "core",
+        "clock_inverted_from_root": 0,
+        "cell_active_edge": "posedge",
+        "active_phase_from_root": 0,
+        "clock_aliases": [
+          "qfd_dv_slice2_w_regional_lp/ck_core[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/g_mu.g_run[0].u_r/ck[0]"
+        ]
+      },
+      "exact_match": true
+    },
+    {
+      "instance": "u_c.u_vm.g_btc[0].g_btb[2].u_m",
+      "expected_master": "ot_sram_1r1w_128x256_m1_r2c2",
+      "actual": {
+        "endpoint": "qfd_dv_slice2_w_regional_lp/u_c/u_vm/g_btc[0].g_btb[2].u_m",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2"
+      },
+      "source_clock_owner": {
+        "root": "core",
+        "clock_inverted_from_root": 0,
+        "cell_active_edge": "posedge",
+        "active_phase_from_root": 0,
+        "clock_aliases": [
+          "qfd_dv_slice2_w_regional_lp/ck_core[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/g_mu.g_run[0].u_r/ck[0]"
+        ]
+      },
+      "exact_match": true
+    },
+    {
+      "instance": "u_c.u_vm.g_btc[0].g_btb[3].u_m",
+      "expected_master": "ot_sram_1r1w_128x256_m1_r2c2",
+      "actual": {
+        "endpoint": "qfd_dv_slice2_w_regional_lp/u_c/u_vm/g_btc[0].g_btb[3].u_m",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2"
+      },
+      "source_clock_owner": {
+        "root": "core",
+        "clock_inverted_from_root": 0,
+        "cell_active_edge": "posedge",
+        "active_phase_from_root": 0,
+        "clock_aliases": [
+          "qfd_dv_slice2_w_regional_lp/ck_core[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/g_mu.g_run[0].u_r/ck[0]"
+        ]
+      },
+      "exact_match": true
+    },
+    {
+      "instance": "u_c.u_vm.g_btc[1].g_btb[0].u_m",
+      "expected_master": "ot_sram_1r1w_128x256_m1_r2c2",
+      "actual": {
+        "endpoint": "qfd_dv_slice2_w_regional_lp/u_c/u_vm/g_btc[1].g_btb[0].u_m",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2"
+      },
+      "source_clock_owner": {
+        "root": "core",
+        "clock_inverted_from_root": 0,
+        "cell_active_edge": "posedge",
+        "active_phase_from_root": 0,
+        "clock_aliases": [
+          "qfd_dv_slice2_w_regional_lp/ck_core[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/g_mu.g_run[0].u_r/ck[0]"
+        ]
+      },
+      "exact_match": true
+    },
+    {
+      "instance": "u_c.u_vm.g_btc[1].g_btb[1].u_m",
+      "expected_master": "ot_sram_1r1w_128x256_m1_r2c2",
+      "actual": {
+        "endpoint": "qfd_dv_slice2_w_regional_lp/u_c/u_vm/g_btc[1].g_btb[1].u_m",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2"
+      },
+      "source_clock_owner": {
+        "root": "core",
+        "clock_inverted_from_root": 0,
+        "cell_active_edge": "posedge",
+        "active_phase_from_root": 0,
+        "clock_aliases": [
+          "qfd_dv_slice2_w_regional_lp/ck_core[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/g_mu.g_run[0].u_r/ck[0]"
+        ]
+      },
+      "exact_match": true
+    },
+    {
+      "instance": "u_c.u_vm.g_btc[1].g_btb[2].u_m",
+      "expected_master": "ot_sram_1r1w_128x256_m1_r2c2",
+      "actual": {
+        "endpoint": "qfd_dv_slice2_w_regional_lp/u_c/u_vm/g_btc[1].g_btb[2].u_m",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2"
+      },
+      "source_clock_owner": {
+        "root": "core",
+        "clock_inverted_from_root": 0,
+        "cell_active_edge": "posedge",
+        "active_phase_from_root": 0,
+        "clock_aliases": [
+          "qfd_dv_slice2_w_regional_lp/ck_core[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/g_mu.g_run[0].u_r/ck[0]"
+        ]
+      },
+      "exact_match": true
+    },
+    {
+      "instance": "u_c.u_vm.g_btc[1].g_btb[3].u_m",
+      "expected_master": "ot_sram_1r1w_128x256_m1_r2c2",
+      "actual": {
+        "endpoint": "qfd_dv_slice2_w_regional_lp/u_c/u_vm/g_btc[1].g_btb[3].u_m",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2"
+      },
+      "source_clock_owner": {
+        "root": "core",
+        "clock_inverted_from_root": 0,
+        "cell_active_edge": "posedge",
+        "active_phase_from_root": 0,
+        "clock_aliases": [
+          "qfd_dv_slice2_w_regional_lp/ck_core[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/g_mu.g_run[0].u_r/ck[0]"
+        ]
+      },
+      "exact_match": true
+    },
+    {
+      "instance": "u_c.u_vm.g_prog[0].u_lo",
+      "expected_master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "actual": {
+        "endpoint": "qfd_dv_slice2_w_regional_lp/u_c/u_vm/g_prog[0].u_lo",
+        "master": "ot_sram_1r1w_256x256_m2_r2c2"
+      },
+      "source_clock_owner": {
+        "root": "core",
+        "clock_inverted_from_root": 0,
+        "cell_active_edge": "posedge",
+        "active_phase_from_root": 0,
+        "clock_aliases": [
+          "qfd_dv_slice2_w_regional_lp/ck_core[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/g_mu.g_run[0].u_r/ck[0]"
+        ]
+      },
+      "exact_match": true
+    },
+    {
+      "instance": "u_c.u_vm.g_prog[0].u_hi",
+      "expected_master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "actual": {
+        "endpoint": "qfd_dv_slice2_w_regional_lp/u_c/u_vm/g_prog[0].u_hi",
+        "master": "ot_sram_1r1w_256x256_m2_r2c2"
+      },
+      "source_clock_owner": {
+        "root": "core",
+        "clock_inverted_from_root": 0,
+        "cell_active_edge": "posedge",
+        "active_phase_from_root": 0,
+        "clock_aliases": [
+          "qfd_dv_slice2_w_regional_lp/ck_core[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/g_mu.g_run[0].u_r/ck[0]"
+        ]
+      },
+      "exact_match": true
+    },
+    {
+      "instance": "u_c.u_vm.g_prog[1].u_lo",
+      "expected_master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "actual": {
+        "endpoint": "qfd_dv_slice2_w_regional_lp/u_c/u_vm/g_prog[1].u_lo",
+        "master": "ot_sram_1r1w_256x256_m2_r2c2"
+      },
+      "source_clock_owner": {
+        "root": "core",
+        "clock_inverted_from_root": 0,
+        "cell_active_edge": "posedge",
+        "active_phase_from_root": 0,
+        "clock_aliases": [
+          "qfd_dv_slice2_w_regional_lp/ck_core[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/g_mu.g_run[0].u_r/ck[0]"
+        ]
+      },
+      "exact_match": true
+    },
+    {
+      "instance": "u_c.u_vm.g_prog[1].u_hi",
+      "expected_master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "actual": {
+        "endpoint": "qfd_dv_slice2_w_regional_lp/u_c/u_vm/g_prog[1].u_hi",
+        "master": "ot_sram_1r1w_256x256_m2_r2c2"
+      },
+      "source_clock_owner": {
+        "root": "core",
+        "clock_inverted_from_root": 0,
+        "cell_active_edge": "posedge",
+        "active_phase_from_root": 0,
+        "clock_aliases": [
+          "qfd_dv_slice2_w_regional_lp/ck_core[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/g_mu.g_run[0].u_r/ck[0]"
+        ]
+      },
+      "exact_match": true
+    },
+    {
+      "instance": "u_c.u_stn.u_sks.u_m.g_bank[0].u_m",
+      "expected_master": "ot_sram_1r1w_32x64_m1",
+      "actual": {
+        "endpoint": "qfd_dv_slice2_w_regional_lp/u_c/u_stn/u_sks/u_m/g_bank[0].u_m",
+        "master": "ot_sram_1r1w_32x64_m1"
+      },
+      "source_clock_owner": {
+        "root": "core",
+        "clock_inverted_from_root": 0,
+        "cell_active_edge": "posedge",
+        "active_phase_from_root": 0,
+        "clock_aliases": [
+          "qfd_dv_slice2_w_regional_lp/ck_core[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/g_mu.g_run[0].u_r/ck[0]"
+        ]
+      },
+      "exact_match": true
+    },
+    {
+      "instance": "u_c.u_stn.u_sks.u_m.g_bank[1].u_m",
+      "expected_master": "ot_sram_1r1w_32x64_m1",
+      "actual": {
+        "endpoint": "qfd_dv_slice2_w_regional_lp/u_c/u_stn/u_sks/u_m/g_bank[1].u_m",
+        "master": "ot_sram_1r1w_32x64_m1"
+      },
+      "source_clock_owner": {
+        "root": "core",
+        "clock_inverted_from_root": 0,
+        "cell_active_edge": "posedge",
+        "active_phase_from_root": 0,
+        "clock_aliases": [
+          "qfd_dv_slice2_w_regional_lp/ck_core[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/g_mu.g_run[0].u_r/ck[0]"
+        ]
+      },
+      "exact_match": true
+    },
+    {
+      "instance": "u_c.u_stn.u_sks.u_m.g_bank[2].u_m",
+      "expected_master": "ot_sram_1r1w_32x64_m1",
+      "actual": {
+        "endpoint": "qfd_dv_slice2_w_regional_lp/u_c/u_stn/u_sks/u_m/g_bank[2].u_m",
+        "master": "ot_sram_1r1w_32x64_m1"
+      },
+      "source_clock_owner": {
+        "root": "core",
+        "clock_inverted_from_root": 0,
+        "cell_active_edge": "posedge",
+        "active_phase_from_root": 0,
+        "clock_aliases": [
+          "qfd_dv_slice2_w_regional_lp/ck_core[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/g_mu.g_run[0].u_r/ck[0]"
+        ]
+      },
+      "exact_match": true
+    },
+    {
+      "instance": "u_c.u_stn.u_sks.u_m.g_bank[3].u_m",
+      "expected_master": "ot_sram_1r1w_32x64_m1",
+      "actual": {
+        "endpoint": "qfd_dv_slice2_w_regional_lp/u_c/u_stn/u_sks/u_m/g_bank[3].u_m",
+        "master": "ot_sram_1r1w_32x64_m1"
+      },
+      "source_clock_owner": {
+        "root": "core",
+        "clock_inverted_from_root": 0,
+        "cell_active_edge": "posedge",
+        "active_phase_from_root": 0,
+        "clock_aliases": [
+          "qfd_dv_slice2_w_regional_lp/ck_core[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/g_mu.g_run[0].u_r/ck[0]"
+        ]
+      },
+      "exact_match": true
+    },
+    {
+      "instance": "u_c.u_stn.u_sks.u_m.g_bank[4].u_m",
+      "expected_master": "ot_sram_1r1w_32x64_m1",
+      "actual": {
+        "endpoint": "qfd_dv_slice2_w_regional_lp/u_c/u_stn/u_sks/u_m/g_bank[4].u_m",
+        "master": "ot_sram_1r1w_32x64_m1"
+      },
+      "source_clock_owner": {
+        "root": "core",
+        "clock_inverted_from_root": 0,
+        "cell_active_edge": "posedge",
+        "active_phase_from_root": 0,
+        "clock_aliases": [
+          "qfd_dv_slice2_w_regional_lp/ck_core[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/g_mu.g_run[0].u_r/ck[0]"
+        ]
+      },
+      "exact_match": true
+    },
+    {
+      "instance": "u_c.u_stn.u_sks.u_m.g_bank[5].u_m",
+      "expected_master": "ot_sram_1r1w_32x64_m1",
+      "actual": {
+        "endpoint": "qfd_dv_slice2_w_regional_lp/u_c/u_stn/u_sks/u_m/g_bank[5].u_m",
+        "master": "ot_sram_1r1w_32x64_m1"
+      },
+      "source_clock_owner": {
+        "root": "core",
+        "clock_inverted_from_root": 0,
+        "cell_active_edge": "posedge",
+        "active_phase_from_root": 0,
+        "clock_aliases": [
+          "qfd_dv_slice2_w_regional_lp/ck_core[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/g_mu.g_run[0].u_r/ck[0]"
+        ]
+      },
+      "exact_match": true
+    },
+    {
+      "instance": "u_c.u_stn.u_sks.u_m.g_bank[6].u_m",
+      "expected_master": "ot_sram_1r1w_32x64_m1",
+      "actual": {
+        "endpoint": "qfd_dv_slice2_w_regional_lp/u_c/u_stn/u_sks/u_m/g_bank[6].u_m",
+        "master": "ot_sram_1r1w_32x64_m1"
+      },
+      "source_clock_owner": {
+        "root": "core",
+        "clock_inverted_from_root": 0,
+        "cell_active_edge": "posedge",
+        "active_phase_from_root": 0,
+        "clock_aliases": [
+          "qfd_dv_slice2_w_regional_lp/ck_core[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/g_mu.g_run[0].u_r/ck[0]"
+        ]
+      },
+      "exact_match": true
+    },
+    {
+      "instance": "u_c.u_stn.u_sks.u_m.g_bank[7].u_m",
+      "expected_master": "ot_sram_1r1w_32x64_m1",
+      "actual": {
+        "endpoint": "qfd_dv_slice2_w_regional_lp/u_c/u_stn/u_sks/u_m/g_bank[7].u_m",
+        "master": "ot_sram_1r1w_32x64_m1"
+      },
+      "source_clock_owner": {
+        "root": "core",
+        "clock_inverted_from_root": 0,
+        "cell_active_edge": "posedge",
+        "active_phase_from_root": 0,
+        "clock_aliases": [
+          "qfd_dv_slice2_w_regional_lp/ck_core[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/g_mu.g_run[0].u_r/ck[0]"
+        ]
+      },
+      "exact_match": true
+    },
+    {
+      "instance": "u_c.u_stn.u_sks.u_m.g_bank[8].u_m",
+      "expected_master": "ot_sram_1r1w_32x64_m1",
+      "actual": {
+        "endpoint": "qfd_dv_slice2_w_regional_lp/u_c/u_stn/u_sks/u_m/g_bank[8].u_m",
+        "master": "ot_sram_1r1w_32x64_m1"
+      },
+      "source_clock_owner": {
+        "root": "core",
+        "clock_inverted_from_root": 0,
+        "cell_active_edge": "posedge",
+        "active_phase_from_root": 0,
+        "clock_aliases": [
+          "qfd_dv_slice2_w_regional_lp/ck_core[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/g_mu.g_run[0].u_r/ck[0]"
+        ]
+      },
+      "exact_match": true
+    },
+    {
+      "instance": "u_c.u_stn.u_skn.u_m.g_bank[0].u_m",
+      "expected_master": "ot_sram_1r1w_32x64_m1",
+      "actual": {
+        "endpoint": "qfd_dv_slice2_w_regional_lp/u_c/u_stn/u_skn/u_m/g_bank[0].u_m",
+        "master": "ot_sram_1r1w_32x64_m1"
+      },
+      "source_clock_owner": {
+        "root": "core",
+        "clock_inverted_from_root": 0,
+        "cell_active_edge": "posedge",
+        "active_phase_from_root": 0,
+        "clock_aliases": [
+          "qfd_dv_slice2_w_regional_lp/ck_core[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/g_mu.g_run[0].u_r/ck[0]"
+        ]
+      },
+      "exact_match": true
+    },
+    {
+      "instance": "u_c.u_stn.u_skn.u_m.g_bank[1].u_m",
+      "expected_master": "ot_sram_1r1w_32x64_m1",
+      "actual": {
+        "endpoint": "qfd_dv_slice2_w_regional_lp/u_c/u_stn/u_skn/u_m/g_bank[1].u_m",
+        "master": "ot_sram_1r1w_32x64_m1"
+      },
+      "source_clock_owner": {
+        "root": "core",
+        "clock_inverted_from_root": 0,
+        "cell_active_edge": "posedge",
+        "active_phase_from_root": 0,
+        "clock_aliases": [
+          "qfd_dv_slice2_w_regional_lp/ck_core[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/g_mu.g_run[0].u_r/ck[0]"
+        ]
+      },
+      "exact_match": true
+    },
+    {
+      "instance": "u_c.u_stn.u_skn.u_m.g_bank[2].u_m",
+      "expected_master": "ot_sram_1r1w_32x64_m1",
+      "actual": {
+        "endpoint": "qfd_dv_slice2_w_regional_lp/u_c/u_stn/u_skn/u_m/g_bank[2].u_m",
+        "master": "ot_sram_1r1w_32x64_m1"
+      },
+      "source_clock_owner": {
+        "root": "core",
+        "clock_inverted_from_root": 0,
+        "cell_active_edge": "posedge",
+        "active_phase_from_root": 0,
+        "clock_aliases": [
+          "qfd_dv_slice2_w_regional_lp/ck_core[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/g_mu.g_run[0].u_r/ck[0]"
+        ]
+      },
+      "exact_match": true
+    },
+    {
+      "instance": "u_c.u_stn.u_skn.u_m.g_bank[3].u_m",
+      "expected_master": "ot_sram_1r1w_32x64_m1",
+      "actual": {
+        "endpoint": "qfd_dv_slice2_w_regional_lp/u_c/u_stn/u_skn/u_m/g_bank[3].u_m",
+        "master": "ot_sram_1r1w_32x64_m1"
+      },
+      "source_clock_owner": {
+        "root": "core",
+        "clock_inverted_from_root": 0,
+        "cell_active_edge": "posedge",
+        "active_phase_from_root": 0,
+        "clock_aliases": [
+          "qfd_dv_slice2_w_regional_lp/ck_core[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/g_mu.g_run[0].u_r/ck[0]"
+        ]
+      },
+      "exact_match": true
+    },
+    {
+      "instance": "u_c.u_stn.u_skn.u_m.g_bank[4].u_m",
+      "expected_master": "ot_sram_1r1w_32x64_m1",
+      "actual": {
+        "endpoint": "qfd_dv_slice2_w_regional_lp/u_c/u_stn/u_skn/u_m/g_bank[4].u_m",
+        "master": "ot_sram_1r1w_32x64_m1"
+      },
+      "source_clock_owner": {
+        "root": "core",
+        "clock_inverted_from_root": 0,
+        "cell_active_edge": "posedge",
+        "active_phase_from_root": 0,
+        "clock_aliases": [
+          "qfd_dv_slice2_w_regional_lp/ck_core[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/g_mu.g_run[0].u_r/ck[0]"
+        ]
+      },
+      "exact_match": true
+    },
+    {
+      "instance": "u_c.u_stn.u_skn.u_m.g_bank[5].u_m",
+      "expected_master": "ot_sram_1r1w_32x64_m1",
+      "actual": {
+        "endpoint": "qfd_dv_slice2_w_regional_lp/u_c/u_stn/u_skn/u_m/g_bank[5].u_m",
+        "master": "ot_sram_1r1w_32x64_m1"
+      },
+      "source_clock_owner": {
+        "root": "core",
+        "clock_inverted_from_root": 0,
+        "cell_active_edge": "posedge",
+        "active_phase_from_root": 0,
+        "clock_aliases": [
+          "qfd_dv_slice2_w_regional_lp/ck_core[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/g_mu.g_run[0].u_r/ck[0]"
+        ]
+      },
+      "exact_match": true
+    },
+    {
+      "instance": "u_c.u_stn.u_skn.u_m.g_bank[6].u_m",
+      "expected_master": "ot_sram_1r1w_32x64_m1",
+      "actual": {
+        "endpoint": "qfd_dv_slice2_w_regional_lp/u_c/u_stn/u_skn/u_m/g_bank[6].u_m",
+        "master": "ot_sram_1r1w_32x64_m1"
+      },
+      "source_clock_owner": {
+        "root": "core",
+        "clock_inverted_from_root": 0,
+        "cell_active_edge": "posedge",
+        "active_phase_from_root": 0,
+        "clock_aliases": [
+          "qfd_dv_slice2_w_regional_lp/ck_core[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/g_mu.g_run[0].u_r/ck[0]"
+        ]
+      },
+      "exact_match": true
+    },
+    {
+      "instance": "u_c.u_stn.u_skn.u_m.g_bank[7].u_m",
+      "expected_master": "ot_sram_1r1w_32x64_m1",
+      "actual": {
+        "endpoint": "qfd_dv_slice2_w_regional_lp/u_c/u_stn/u_skn/u_m/g_bank[7].u_m",
+        "master": "ot_sram_1r1w_32x64_m1"
+      },
+      "source_clock_owner": {
+        "root": "core",
+        "clock_inverted_from_root": 0,
+        "cell_active_edge": "posedge",
+        "active_phase_from_root": 0,
+        "clock_aliases": [
+          "qfd_dv_slice2_w_regional_lp/ck_core[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/g_mu.g_run[0].u_r/ck[0]"
+        ]
+      },
+      "exact_match": true
+    },
+    {
+      "instance": "u_c.u_stn.u_skn.u_m.g_bank[8].u_m",
+      "expected_master": "ot_sram_1r1w_32x64_m1",
+      "actual": {
+        "endpoint": "qfd_dv_slice2_w_regional_lp/u_c/u_stn/u_skn/u_m/g_bank[8].u_m",
+        "master": "ot_sram_1r1w_32x64_m1"
+      },
+      "source_clock_owner": {
+        "root": "core",
+        "clock_inverted_from_root": 0,
+        "cell_active_edge": "posedge",
+        "active_phase_from_root": 0,
+        "clock_aliases": [
+          "qfd_dv_slice2_w_regional_lp/ck_core[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/g_mu.g_run[0].u_r/ck[0]"
+        ]
+      },
+      "exact_match": true
+    },
+    {
+      "instance": "u_c.u_stn.u_hb.u_m.g_bank[0].u_m",
+      "expected_master": "ot_sram_1r1w_32x64_m1",
+      "actual": {
+        "endpoint": "qfd_dv_slice2_w_regional_lp/u_c/u_stn/u_hb/u_m/g_bank[0].u_m",
+        "master": "ot_sram_1r1w_32x64_m1"
+      },
+      "source_clock_owner": {
+        "root": "core",
+        "clock_inverted_from_root": 0,
+        "cell_active_edge": "posedge",
+        "active_phase_from_root": 0,
+        "clock_aliases": [
+          "qfd_dv_slice2_w_regional_lp/ck_core[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/g_mu.g_run[0].u_r/ck[0]"
+        ]
+      },
+      "exact_match": true
+    },
+    {
+      "instance": "u_c.u_stn.u_hb.u_m.g_bank[1].u_m",
+      "expected_master": "ot_sram_1r1w_32x64_m1",
+      "actual": {
+        "endpoint": "qfd_dv_slice2_w_regional_lp/u_c/u_stn/u_hb/u_m/g_bank[1].u_m",
+        "master": "ot_sram_1r1w_32x64_m1"
+      },
+      "source_clock_owner": {
+        "root": "core",
+        "clock_inverted_from_root": 0,
+        "cell_active_edge": "posedge",
+        "active_phase_from_root": 0,
+        "clock_aliases": [
+          "qfd_dv_slice2_w_regional_lp/ck_core[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/g_mu.g_run[0].u_r/ck[0]"
+        ]
+      },
+      "exact_match": true
+    },
+    {
+      "instance": "u_c.u_stn.u_hb.u_m.g_bank[2].u_m",
+      "expected_master": "ot_sram_1r1w_32x64_m1",
+      "actual": {
+        "endpoint": "qfd_dv_slice2_w_regional_lp/u_c/u_stn/u_hb/u_m/g_bank[2].u_m",
+        "master": "ot_sram_1r1w_32x64_m1"
+      },
+      "source_clock_owner": {
+        "root": "core",
+        "clock_inverted_from_root": 0,
+        "cell_active_edge": "posedge",
+        "active_phase_from_root": 0,
+        "clock_aliases": [
+          "qfd_dv_slice2_w_regional_lp/ck_core[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/g_mu.g_run[0].u_r/ck[0]"
+        ]
+      },
+      "exact_match": true
+    },
+    {
+      "instance": "u_c.u_stn.u_hb.u_m.g_bank[3].u_m",
+      "expected_master": "ot_sram_1r1w_32x64_m1",
+      "actual": {
+        "endpoint": "qfd_dv_slice2_w_regional_lp/u_c/u_stn/u_hb/u_m/g_bank[3].u_m",
+        "master": "ot_sram_1r1w_32x64_m1"
+      },
+      "source_clock_owner": {
+        "root": "core",
+        "clock_inverted_from_root": 0,
+        "cell_active_edge": "posedge",
+        "active_phase_from_root": 0,
+        "clock_aliases": [
+          "qfd_dv_slice2_w_regional_lp/ck_core[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/g_mu.g_run[0].u_r/ck[0]"
+        ]
+      },
+      "exact_match": true
+    },
+    {
+      "instance": "u_c.u_stn.u_hb.u_m.g_bank[4].u_m",
+      "expected_master": "ot_sram_1r1w_32x64_m1",
+      "actual": {
+        "endpoint": "qfd_dv_slice2_w_regional_lp/u_c/u_stn/u_hb/u_m/g_bank[4].u_m",
+        "master": "ot_sram_1r1w_32x64_m1"
+      },
+      "source_clock_owner": {
+        "root": "core",
+        "clock_inverted_from_root": 0,
+        "cell_active_edge": "posedge",
+        "active_phase_from_root": 0,
+        "clock_aliases": [
+          "qfd_dv_slice2_w_regional_lp/ck_core[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/g_mu.g_run[0].u_r/ck[0]"
+        ]
+      },
+      "exact_match": true
+    },
+    {
+      "instance": "u_c.u_stn.u_hb.u_m.g_bank[5].u_m",
+      "expected_master": "ot_sram_1r1w_32x64_m1",
+      "actual": {
+        "endpoint": "qfd_dv_slice2_w_regional_lp/u_c/u_stn/u_hb/u_m/g_bank[5].u_m",
+        "master": "ot_sram_1r1w_32x64_m1"
+      },
+      "source_clock_owner": {
+        "root": "core",
+        "clock_inverted_from_root": 0,
+        "cell_active_edge": "posedge",
+        "active_phase_from_root": 0,
+        "clock_aliases": [
+          "qfd_dv_slice2_w_regional_lp/ck_core[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/g_mu.g_run[0].u_r/ck[0]"
+        ]
+      },
+      "exact_match": true
+    },
+    {
+      "instance": "u_c.u_stn.u_hb.u_m.g_bank[6].u_m",
+      "expected_master": "ot_sram_1r1w_32x64_m1",
+      "actual": {
+        "endpoint": "qfd_dv_slice2_w_regional_lp/u_c/u_stn/u_hb/u_m/g_bank[6].u_m",
+        "master": "ot_sram_1r1w_32x64_m1"
+      },
+      "source_clock_owner": {
+        "root": "core",
+        "clock_inverted_from_root": 0,
+        "cell_active_edge": "posedge",
+        "active_phase_from_root": 0,
+        "clock_aliases": [
+          "qfd_dv_slice2_w_regional_lp/ck_core[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/g_mu.g_run[0].u_r/ck[0]"
+        ]
+      },
+      "exact_match": true
+    },
+    {
+      "instance": "u_c.u_stn.u_hb.u_m.g_bank[7].u_m",
+      "expected_master": "ot_sram_1r1w_32x64_m1",
+      "actual": {
+        "endpoint": "qfd_dv_slice2_w_regional_lp/u_c/u_stn/u_hb/u_m/g_bank[7].u_m",
+        "master": "ot_sram_1r1w_32x64_m1"
+      },
+      "source_clock_owner": {
+        "root": "core",
+        "clock_inverted_from_root": 0,
+        "cell_active_edge": "posedge",
+        "active_phase_from_root": 0,
+        "clock_aliases": [
+          "qfd_dv_slice2_w_regional_lp/ck_core[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/g_mu.g_run[0].u_r/ck[0]"
+        ]
+      },
+      "exact_match": true
+    },
+    {
+      "instance": "u_c.u_stn.u_h9.u_m.g_bank[0].u_m",
+      "expected_master": "ot_sram_1r1w_32x64_m1",
+      "actual": {
+        "endpoint": "qfd_dv_slice2_w_regional_lp/u_c/u_stn/u_h9/u_m/g_bank[0].u_m",
+        "master": "ot_sram_1r1w_32x64_m1"
+      },
+      "source_clock_owner": {
+        "root": "core",
+        "clock_inverted_from_root": 0,
+        "cell_active_edge": "posedge",
+        "active_phase_from_root": 0,
+        "clock_aliases": [
+          "qfd_dv_slice2_w_regional_lp/ck_core[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/g_mu.g_run[0].u_r/ck[0]"
+        ]
+      },
+      "exact_match": true
+    },
+    {
+      "instance": "u_c.u_stn.u_h9.u_m.g_bank[1].u_m",
+      "expected_master": "ot_sram_1r1w_32x64_m1",
+      "actual": {
+        "endpoint": "qfd_dv_slice2_w_regional_lp/u_c/u_stn/u_h9/u_m/g_bank[1].u_m",
+        "master": "ot_sram_1r1w_32x64_m1"
+      },
+      "source_clock_owner": {
+        "root": "core",
+        "clock_inverted_from_root": 0,
+        "cell_active_edge": "posedge",
+        "active_phase_from_root": 0,
+        "clock_aliases": [
+          "qfd_dv_slice2_w_regional_lp/ck_core[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/g_mu.g_run[0].u_r/ck[0]"
+        ]
+      },
+      "exact_match": true
+    },
+    {
+      "instance": "u_c.u_stn.u_h9.u_m.g_bank[2].u_m",
+      "expected_master": "ot_sram_1r1w_32x64_m1",
+      "actual": {
+        "endpoint": "qfd_dv_slice2_w_regional_lp/u_c/u_stn/u_h9/u_m/g_bank[2].u_m",
+        "master": "ot_sram_1r1w_32x64_m1"
+      },
+      "source_clock_owner": {
+        "root": "core",
+        "clock_inverted_from_root": 0,
+        "cell_active_edge": "posedge",
+        "active_phase_from_root": 0,
+        "clock_aliases": [
+          "qfd_dv_slice2_w_regional_lp/ck_core[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/g_mu.g_run[0].u_r/ck[0]"
+        ]
+      },
+      "exact_match": true
+    },
+    {
+      "instance": "u_c.u_stn.u_h9.u_m.g_bank[3].u_m",
+      "expected_master": "ot_sram_1r1w_32x64_m1",
+      "actual": {
+        "endpoint": "qfd_dv_slice2_w_regional_lp/u_c/u_stn/u_h9/u_m/g_bank[3].u_m",
+        "master": "ot_sram_1r1w_32x64_m1"
+      },
+      "source_clock_owner": {
+        "root": "core",
+        "clock_inverted_from_root": 0,
+        "cell_active_edge": "posedge",
+        "active_phase_from_root": 0,
+        "clock_aliases": [
+          "qfd_dv_slice2_w_regional_lp/ck_core[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/g_mu.g_run[0].u_r/ck[0]"
+        ]
+      },
+      "exact_match": true
+    },
+    {
+      "instance": "u_c.u_stn.u_h9.u_m.g_bank[4].u_m",
+      "expected_master": "ot_sram_1r1w_32x64_m1",
+      "actual": {
+        "endpoint": "qfd_dv_slice2_w_regional_lp/u_c/u_stn/u_h9/u_m/g_bank[4].u_m",
+        "master": "ot_sram_1r1w_32x64_m1"
+      },
+      "source_clock_owner": {
+        "root": "core",
+        "clock_inverted_from_root": 0,
+        "cell_active_edge": "posedge",
+        "active_phase_from_root": 0,
+        "clock_aliases": [
+          "qfd_dv_slice2_w_regional_lp/ck_core[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/g_mu.g_run[0].u_r/ck[0]"
+        ]
+      },
+      "exact_match": true
+    },
+    {
+      "instance": "u_c.u_stn.u_h9.u_m.g_bank[5].u_m",
+      "expected_master": "ot_sram_1r1w_32x64_m1",
+      "actual": {
+        "endpoint": "qfd_dv_slice2_w_regional_lp/u_c/u_stn/u_h9/u_m/g_bank[5].u_m",
+        "master": "ot_sram_1r1w_32x64_m1"
+      },
+      "source_clock_owner": {
+        "root": "core",
+        "clock_inverted_from_root": 0,
+        "cell_active_edge": "posedge",
+        "active_phase_from_root": 0,
+        "clock_aliases": [
+          "qfd_dv_slice2_w_regional_lp/ck_core[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/g_mu.g_run[0].u_r/ck[0]"
+        ]
+      },
+      "exact_match": true
+    },
+    {
+      "instance": "u_c.u_stn.u_h9.u_m.g_bank[6].u_m",
+      "expected_master": "ot_sram_1r1w_32x64_m1",
+      "actual": {
+        "endpoint": "qfd_dv_slice2_w_regional_lp/u_c/u_stn/u_h9/u_m/g_bank[6].u_m",
+        "master": "ot_sram_1r1w_32x64_m1"
+      },
+      "source_clock_owner": {
+        "root": "core",
+        "clock_inverted_from_root": 0,
+        "cell_active_edge": "posedge",
+        "active_phase_from_root": 0,
+        "clock_aliases": [
+          "qfd_dv_slice2_w_regional_lp/ck_core[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/g_mu.g_run[0].u_r/ck[0]"
+        ]
+      },
+      "exact_match": true
+    },
+    {
+      "instance": "u_c.u_stn.u_h9.u_m.g_bank[7].u_m",
+      "expected_master": "ot_sram_1r1w_32x64_m1",
+      "actual": {
+        "endpoint": "qfd_dv_slice2_w_regional_lp/u_c/u_stn/u_h9/u_m/g_bank[7].u_m",
+        "master": "ot_sram_1r1w_32x64_m1"
+      },
+      "source_clock_owner": {
+        "root": "core",
+        "clock_inverted_from_root": 0,
+        "cell_active_edge": "posedge",
+        "active_phase_from_root": 0,
+        "clock_aliases": [
+          "qfd_dv_slice2_w_regional_lp/ck_core[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/g_mu.g_run[0].u_r/ck[0]"
+        ]
+      },
+      "exact_match": true
+    },
+    {
+      "instance": "u_c.u_stn.u_scale_wait.u_m.g_bank[0].u_m",
+      "expected_master": "ot_sram_1r1w_32x64_m1",
+      "actual": {
+        "endpoint": "qfd_dv_slice2_w_regional_lp/u_c/u_stn/u_scale_wait/u_m/g_bank[0].u_m",
+        "master": "ot_sram_1r1w_32x64_m1"
+      },
+      "source_clock_owner": {
+        "root": "core",
+        "clock_inverted_from_root": 0,
+        "cell_active_edge": "posedge",
+        "active_phase_from_root": 0,
+        "clock_aliases": [
+          "qfd_dv_slice2_w_regional_lp/ck_core[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/g_mu.g_run[0].u_r/ck[0]"
+        ]
+      },
+      "exact_match": true
+    },
+    {
+      "instance": "u_c.u_stn.u_scale_wait.u_m.g_bank[1].u_m",
+      "expected_master": "ot_sram_1r1w_32x64_m1",
+      "actual": {
+        "endpoint": "qfd_dv_slice2_w_regional_lp/u_c/u_stn/u_scale_wait/u_m/g_bank[1].u_m",
+        "master": "ot_sram_1r1w_32x64_m1"
+      },
+      "source_clock_owner": {
+        "root": "core",
+        "clock_inverted_from_root": 0,
+        "cell_active_edge": "posedge",
+        "active_phase_from_root": 0,
+        "clock_aliases": [
+          "qfd_dv_slice2_w_regional_lp/ck_core[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/g_mu.g_run[0].u_r/ck[0]"
+        ]
+      },
+      "exact_match": true
+    },
+    {
+      "instance": "u_c.u_stn.u_scale_wait.u_m.g_bank[2].u_m",
+      "expected_master": "ot_sram_1r1w_32x64_m1",
+      "actual": {
+        "endpoint": "qfd_dv_slice2_w_regional_lp/u_c/u_stn/u_scale_wait/u_m/g_bank[2].u_m",
+        "master": "ot_sram_1r1w_32x64_m1"
+      },
+      "source_clock_owner": {
+        "root": "core",
+        "clock_inverted_from_root": 0,
+        "cell_active_edge": "posedge",
+        "active_phase_from_root": 0,
+        "clock_aliases": [
+          "qfd_dv_slice2_w_regional_lp/ck_core[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/g_mu.g_run[0].u_r/ck[0]"
+        ]
+      },
+      "exact_match": true
+    },
+    {
+      "instance": "u_c.u_stn.u_scale_wait.u_m.g_bank[3].u_m",
+      "expected_master": "ot_sram_1r1w_32x64_m1",
+      "actual": {
+        "endpoint": "qfd_dv_slice2_w_regional_lp/u_c/u_stn/u_scale_wait/u_m/g_bank[3].u_m",
+        "master": "ot_sram_1r1w_32x64_m1"
+      },
+      "source_clock_owner": {
+        "root": "core",
+        "clock_inverted_from_root": 0,
+        "cell_active_edge": "posedge",
+        "active_phase_from_root": 0,
+        "clock_aliases": [
+          "qfd_dv_slice2_w_regional_lp/ck_core[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/g_mu.g_run[0].u_r/ck[0]"
+        ]
+      },
+      "exact_match": true
+    },
+    {
+      "instance": "u_c.u_stn.u_scale_wait.u_m.g_bank[4].u_m",
+      "expected_master": "ot_sram_1r1w_32x64_m1",
+      "actual": {
+        "endpoint": "qfd_dv_slice2_w_regional_lp/u_c/u_stn/u_scale_wait/u_m/g_bank[4].u_m",
+        "master": "ot_sram_1r1w_32x64_m1"
+      },
+      "source_clock_owner": {
+        "root": "core",
+        "clock_inverted_from_root": 0,
+        "cell_active_edge": "posedge",
+        "active_phase_from_root": 0,
+        "clock_aliases": [
+          "qfd_dv_slice2_w_regional_lp/ck_core[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/g_mu.g_run[0].u_r/ck[0]"
+        ]
+      },
+      "exact_match": true
+    },
+    {
+      "instance": "u_c.u_stn.u_scale_wait.u_m.g_bank[5].u_m",
+      "expected_master": "ot_sram_1r1w_32x64_m1",
+      "actual": {
+        "endpoint": "qfd_dv_slice2_w_regional_lp/u_c/u_stn/u_scale_wait/u_m/g_bank[5].u_m",
+        "master": "ot_sram_1r1w_32x64_m1"
+      },
+      "source_clock_owner": {
+        "root": "core",
+        "clock_inverted_from_root": 0,
+        "cell_active_edge": "posedge",
+        "active_phase_from_root": 0,
+        "clock_aliases": [
+          "qfd_dv_slice2_w_regional_lp/ck_core[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/g_mu.g_run[0].u_r/ck[0]"
+        ]
+      },
+      "exact_match": true
+    },
+    {
+      "instance": "u_c.u_stn.u_scale_wait.u_m.g_bank[6].u_m",
+      "expected_master": "ot_sram_1r1w_32x64_m1",
+      "actual": {
+        "endpoint": "qfd_dv_slice2_w_regional_lp/u_c/u_stn/u_scale_wait/u_m/g_bank[6].u_m",
+        "master": "ot_sram_1r1w_32x64_m1"
+      },
+      "source_clock_owner": {
+        "root": "core",
+        "clock_inverted_from_root": 0,
+        "cell_active_edge": "posedge",
+        "active_phase_from_root": 0,
+        "clock_aliases": [
+          "qfd_dv_slice2_w_regional_lp/ck_core[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/g_mu.g_run[0].u_r/ck[0]"
+        ]
+      },
+      "exact_match": true
+    },
+    {
+      "instance": "u_c.u_stn.u_scale_wait.u_m.g_bank[7].u_m",
+      "expected_master": "ot_sram_1r1w_32x64_m1",
+      "actual": {
+        "endpoint": "qfd_dv_slice2_w_regional_lp/u_c/u_stn/u_scale_wait/u_m/g_bank[7].u_m",
+        "master": "ot_sram_1r1w_32x64_m1"
+      },
+      "source_clock_owner": {
+        "root": "core",
+        "clock_inverted_from_root": 0,
+        "cell_active_edge": "posedge",
+        "active_phase_from_root": 0,
+        "clock_aliases": [
+          "qfd_dv_slice2_w_regional_lp/ck_core[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/ck[0]",
+          "qfd_dv_slice2_w_regional_lp/u_c/u_amax/g_mu.g_run[0].u_r/ck[0]"
+        ]
+      },
+      "exact_match": true
+    }
+  ],
+  "other_native_memories": {
+    "u_c.u_su.g_lane[0].genblk2.g_tile_dv.u_tile.u_head.u_h.u_lane.g_tls.u_tlm": {
+      "endpoint": "qfd_dv_slice2_w_regional_lp/u_c/u_su/g_lane[0].genblk2.g_tile_dv.u_tile/u_head/u_h/u_lane/g_tls.u_tlm",
+      "master": "ot_sram_1r1w_128x256_m1_r2c2"
+    },
+    "u_c.u_su.g_lane[1].genblk2.g_tile_dv.u_tile.u_head.u_h.u_lane.g_tls.u_tlm": {
+      "endpoint": "qfd_dv_slice2_w_regional_lp/u_c/u_su/g_lane[1].genblk2.g_tile_dv.u_tile/u_head/u_h/u_lane/g_tls.u_tlm",
+      "master": "ot_sram_1r1w_128x256_m1_r2c2"
+    },
+    "u_c.u_su.g_lane[2].genblk2.g_tile_dv.u_tile.u_head.u_h.u_lane.g_tls.u_tlm": {
+      "endpoint": "qfd_dv_slice2_w_regional_lp/u_c/u_su/g_lane[2].genblk2.g_tile_dv.u_tile/u_head/u_h/u_lane/g_tls.u_tlm",
+      "master": "ot_sram_1r1w_128x256_m1_r2c2"
+    },
+    "u_c.u_su.g_lane[3].genblk2.g_tile_dv.u_tile.u_head.u_h.u_lane.g_tls.u_tlm": {
+      "endpoint": "qfd_dv_slice2_w_regional_lp/u_c/u_su/g_lane[3].genblk2.g_tile_dv.u_tile/u_head/u_h/u_lane/g_tls.u_tlm",
+      "master": "ot_sram_1r1w_128x256_m1_r2c2"
+    },
+    "u_c.u_su.g_lane[4].genblk2.g_tile_dv.u_tile.u_head.u_h.u_lane.g_tls.u_tlm": {
+      "endpoint": "qfd_dv_slice2_w_regional_lp/u_c/u_su/g_lane[4].genblk2.g_tile_dv.u_tile/u_head/u_h/u_lane/g_tls.u_tlm",
+      "master": "ot_sram_1r1w_128x256_m1_r2c2"
+    },
+    "u_c.u_su.g_lane[5].genblk2.g_tile_dv.u_tile.u_head.u_h.u_lane.g_tls.u_tlm": {
+      "endpoint": "qfd_dv_slice2_w_regional_lp/u_c/u_su/g_lane[5].genblk2.g_tile_dv.u_tile/u_head/u_h/u_lane/g_tls.u_tlm",
+      "master": "ot_sram_1r1w_128x256_m1_r2c2"
+    },
+    "u_c.u_su.g_lane[6].genblk2.g_tile_dv.u_tile.u_head.u_h.u_lane.g_tls.u_tlm": {
+      "endpoint": "qfd_dv_slice2_w_regional_lp/u_c/u_su/g_lane[6].genblk2.g_tile_dv.u_tile/u_head/u_h/u_lane/g_tls.u_tlm",
+      "master": "ot_sram_1r1w_128x256_m1_r2c2"
+    },
+    "u_c.u_su.g_lane[7].genblk2.g_tile_dv.u_tile.u_head.u_h.u_lane.g_tls.u_tlm": {
+      "endpoint": "qfd_dv_slice2_w_regional_lp/u_c/u_su/g_lane[7].genblk2.g_tile_dv.u_tile/u_head/u_h/u_lane/g_tls.u_tlm",
+      "master": "ot_sram_1r1w_128x256_m1_r2c2"
+    }
+  },
+  "netlist_sha256": "9cf2f3b500d86ce3c6bc8e57f0a61f491670355c452327fc62d77bfa954751a1",
+  "endpoint_report_sha256": "5660ce9f4ed1882c5b113369a493d59b42b3002ad73bc81dc4cfc97e9f69ecbc",
+  "scope": "Exact current-pre-final-source recursive clock/phase bindings only. All18roots represented; allcrossings enumerated withouttiming/landing exceptions. No native clockobject ownership, phase age, TTFF, resetreach, fanout, mappedarea, finalsourceintegration or gate proof."
+}
