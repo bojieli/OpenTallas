@@ -63,7 +63,7 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
     localparam integer MEM_RBASE=NEV+ID_C+4;
     localparam integer COPY_RBASE=MEM_RBASE+NEV*5+4;
     localparam integer SEL_RBASE=COPY_RBASE+NEV*7+NRT*NC_REC;
-    localparam integer COPY_END=SEL_RBASE+NEP*NEV*4+1;
+    localparam integer COPY_END=SEL_RBASE+NEP*NEV*4+NEP;
     wire [COPY_END-1:0] rr; ot_rst_relay #(.REGIONS(COPY_END)) u_rr (.clk(ck), .rst_n_in(rst_n), .rst_n(rr)); wire rn = rr[0];
     // Payload pin flops sample every edge; valid pins are asynchronously held by their
     // landed reset, so the reset does not enter a synchronous data cone.
@@ -199,8 +199,8 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
     wire [33:0] head_word[0:NEV-1];
     wire [NEV-1:0] c_select[0:NEP*3-1], r_select[0:NEP-1];
     wire [NEV-1:0] next_fire;
-    reg next_collision;
-    reg collision_q; assign col_w=collision_q;
+    reg [NEP-1:0] next_collision;
+    wire [NEP-1:0] collision_q; assign col_w=|collision_q;
     genvar oe,op,og;
     generate for(oe=0;oe<NEV;oe=oe+1) begin:g_fire_lookahead
         assign next_fire[oe]=ok[oe] && h_fr[oe] && h_ts[oe]==tm_event[oe]
@@ -232,12 +232,15 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
     end endgenerate
     integer cp,ca,cb;
     always @* begin
-        next_collision=1'b0;
+        next_collision={NEP{1'b0}};
         for(cp=0;cp<NEP;cp=cp+1) for(ca=0;ca<NEV;ca=ca+1) for(cb=ca+1;cb<NEV;cb=cb+1)
-            next_collision=next_collision || (nsc[cp][ca] && nsc[cp][cb]) || (nsr[cp][ca] && nsr[cp][cb]);
+            next_collision[cp]=next_collision[cp] || (nsc[cp][ca] && nsc[cp][cb]) || (nsr[cp][ca] && nsr[cp][cb]);
     end
-    always @(posedge ck or negedge rr[COPY_END-1])
-        if(!rr[COPY_END-1]) collision_q<=1'b0; else collision_q<=next_collision;
+    generate for(op=0;op<NEP;op=op+1) begin:g_collision_region
+        reg collision_r; assign collision_q[op]=collision_r;
+        always @(posedge ck or negedge rr[SEL_RBASE+NEP*NEV*4+op])
+            if(!rr[SEL_RBASE+NEP*NEV*4+op]) collision_r<=1'b0; else collision_r<=next_collision[op];
+    end endgenerate
     wire wv = mw_q[25];
     wire idle = !armed && !(|vld);
     always @(posedge ck or negedge rn)
