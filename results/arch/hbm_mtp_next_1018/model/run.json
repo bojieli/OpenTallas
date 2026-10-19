@@ -99,45 +99,26 @@
   }
  },
  "area": {
-  "src": "PLACEHOLDER (no --area): closed-BDC floor x lanes + ds_mtp_rows item estimates",
+  "src": "results/arch/hbm_mtp_next_1018/area_composed.json",
+  "sha256": "43e14c8fcfc694ecf5279f1f8f2d44e5565bb76d7f50972e0e9d9dd353fcfe4f",
   "by_P": {
    "1": {
-    "total": 0.0,
-    "sm": 0.0,
-    "rows": 0.0,
-    "att": 0.0,
-    "vm": 0.0
+    "total": 0.0
    },
    "2": {
-    "total": 9.58,
-    "sm": 8.2,
-    "rows": 0.42000000000000004,
-    "att": 0.107,
-    "vm": 0.858
+    "total": 34.56
    },
    "4": {
-    "total": 26.09,
-    "sm": 24.59,
-    "rows": 0.42000000000000004,
-    "att": 0.213,
-    "vm": 0.858
+    "total": 101.11
    },
    "6": {
-    "total": 42.59,
-    "sm": 40.99,
-    "rows": 0.42000000000000004,
-    "att": 0.32,
-    "vm": 0.858
+    "total": 167.64
    },
    "8": {
-    "total": 59.44,
-    "sm": 57.39,
-    "rows": 0.42000000000000004,
-    "att": 0.427,
-    "vm": 1.202
+    "total": 234.51
    }
   },
-  "measured": false
+  "measured": true
  },
  "reference_price_of_record": {
   "ds_ar": 1905.4,
@@ -3079,7 +3060,7 @@
   },
   {
    "P": 2,
-   "die_added_mm2": 9.58,
+   "die_added_mm2": 34.56,
    "ds_ar_tok_s": 1905.4,
    "ds_mtp_tok_s": 3142.8,
    "ds_mtp_step_cycles": 1587987.3,
@@ -3107,7 +3088,7 @@
   },
   {
    "P": 4,
-   "die_added_mm2": 26.09,
+   "die_added_mm2": 101.11,
    "ds_ar_tok_s": 1905.4,
    "ds_mtp_tok_s": 3363.5,
    "ds_mtp_step_cycles": 1483826.6,
@@ -3135,7 +3116,7 @@
   },
   {
    "P": 6,
-   "die_added_mm2": 42.59,
+   "die_added_mm2": 167.64,
    "ds_ar_tok_s": 1905.4,
    "ds_mtp_tok_s": 3519.3,
    "ds_mtp_step_cycles": 1418116.1,
@@ -3161,7 +3142,7 @@
   },
   {
    "P": 8,
-   "die_added_mm2": 59.44,
+   "die_added_mm2": 234.51,
    "ds_ar_tok_s": 1905.4,
    "ds_mtp_tok_s": 3519.3,
    "ds_mtp_step_cycles": 1418116.1,

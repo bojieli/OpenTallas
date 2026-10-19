@@ -1,0 +1,55 @@
+{
+ "schema": "opentallas.hbm_mtp_next_1018.area_composed.v1",
+ "rule": "die_added_mm2 = MTP-AREA measured SM (bdc + BF16 column lanes + replicated x store; synth area / util 0.447 x 512 leaves) + the model item estimates for non-SM units (placeholder_area rows + vm). The placeholder attention-slot term is dropped: the measured BF16 column lanes cover it. tcc P6/P8 = linear extrapolation (synthesis pending).",
+ "by_P": {
+  "1": {
+   "sm_measured": 0.0,
+   "non_sm_estimate": 0.0,
+   "tcc_estimated_linear": false,
+   "total": 0.0,
+   "bdc_only_variant_total": 0.0
+  },
+  "2": {
+   "sm_measured": 33.28,
+   "non_sm_estimate": 1.278,
+   "tcc_estimated_linear": false,
+   "total": 34.56,
+   "bdc_only_variant_total": 16.58
+  },
+  "4": {
+   "sm_measured": 99.83,
+   "non_sm_estimate": 1.278,
+   "tcc_estimated_linear": false,
+   "total": 101.11,
+   "bdc_only_variant_total": 47.2
+  },
+  "6": {
+   "sm_measured": 166.36,
+   "non_sm_estimate": 1.278,
+   "tcc_estimated_linear": true,
+   "total": 167.64,
+   "bdc_only_variant_total": 77.79
+  },
+  "8": {
+   "sm_measured": 232.89,
+   "non_sm_estimate": 1.622,
+   "tcc_estimated_linear": true,
+   "total": 234.51,
+   "bdc_only_variant_total": 108.72
+  }
+ },
+ "die_added_mm2": {
+  "1": 0.0,
+  "2": 34.56,
+  "4": 101.11,
+  "6": 167.64,
+  "8": 234.51
+ },
+ "die_added_mm2_bdc_only_variant": {
+  "1": 0.0,
+  "2": 16.58,
+  "4": 47.2,
+  "6": 77.79,
+  "8": 108.72
+ }
+}

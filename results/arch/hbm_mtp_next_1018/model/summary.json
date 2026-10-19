@@ -41,43 +41,23 @@
   "kv_consecutive_measured": false
  },
  "area": {
-  "src": "PLACEHOLDER (no --area): closed-BDC floor x lanes + ds_mtp_rows item estimates",
-  "measured": false,
+  "src": "results/arch/hbm_mtp_next_1018/area_composed.json",
+  "measured": true,
   "by_P": {
    "1": {
-    "total": 0.0,
-    "sm": 0.0,
-    "rows": 0.0,
-    "att": 0.0,
-    "vm": 0.0
+    "total": 0.0
    },
    "2": {
-    "total": 9.58,
-    "sm": 8.2,
-    "rows": 0.42000000000000004,
-    "att": 0.107,
-    "vm": 0.858
+    "total": 34.56
    },
    "4": {
-    "total": 26.09,
-    "sm": 24.59,
-    "rows": 0.42000000000000004,
-    "att": 0.213,
-    "vm": 0.858
+    "total": 101.11
    },
    "6": {
-    "total": 42.59,
-    "sm": 40.99,
-    "rows": 0.42000000000000004,
-    "att": 0.32,
-    "vm": 0.858
+    "total": 167.64
    },
    "8": {
-    "total": 59.44,
-    "sm": 57.39,
-    "rows": 0.42000000000000004,
-    "att": 0.427,
-    "vm": 1.202
+    "total": 234.51
    }
   }
  },
@@ -108,7 +88,7 @@
   },
   {
    "P": 2,
-   "die_added_mm2": 9.58,
+   "die_added_mm2": 34.56,
    "ds_ar_tok_s": 1905.4,
    "ds_mtp_tok_s": 3142.8,
    "ds_mtp_step_cycles": 1587987.3,
@@ -136,7 +116,7 @@
   },
   {
    "P": 4,
-   "die_added_mm2": 26.09,
+   "die_added_mm2": 101.11,
    "ds_ar_tok_s": 1905.4,
    "ds_mtp_tok_s": 3363.5,
    "ds_mtp_step_cycles": 1483826.6,
@@ -164,7 +144,7 @@
   },
   {
    "P": 6,
-   "die_added_mm2": 42.59,
+   "die_added_mm2": 167.64,
    "ds_ar_tok_s": 1905.4,
    "ds_mtp_tok_s": 3519.3,
    "ds_mtp_step_cycles": 1418116.1,
@@ -190,7 +170,7 @@
   },
   {
    "P": 8,
-   "die_added_mm2": 59.44,
+   "die_added_mm2": 234.51,
    "ds_ar_tok_s": 1905.4,
    "ds_mtp_tok_s": 3519.3,
    "ds_mtp_step_cycles": 1418116.1,
@@ -687,7 +667,7 @@
   "DSpark draft at P lanes = R = 5-row records (ds_mtp_draft, stage expert union = no sharing 15); seed overlap = joint S2 schedule with the verify head, nothing after the accept overlaps",
   "Qwen DFlash: dflash.step_program B = 16 (8 info) at pos 8,192 - B, tau published 8.01 (b16) / 5.584 (b8, anchored) and measured cycle-weighted 3.656 / 3.2956; ATT 4-slot groups (16 lanes) are the current record form; P = 1 = every slot re-issues the SM line",
   "multi-user: all users at the same position (DS 1M, Qwen 8K); HBM capacity for P users' 1M KV NOT checked",
-  "area: PLACEHOLDER (closed BDC outline floor x 16 SMs x 32 BDCs a lane + item estimates); the composer re-runs with MTP-AREA"
+  "area: MTP-AREA measured"
  ],
  "rerun": "PYTHONPATH=tools python3 -m hgi_sim.hbm_plane_model --stats results/arch/hbm_mtp_next_1018/stats/summary.json [--area results/arch/hbm_mtp_next_1018/sm_area/summary.json] --out results/arch/hbm_mtp_next_1018/model  (heavy: ~60 S2 schedules, run on the fleet, ~15 min at 24 jobs)",
  "sources_sha256": {

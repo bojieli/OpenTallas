@@ -6,17 +6,17 @@ Price basis: d4g plan (b) price of record: HBM-PRICE5 d4g_2ring_qbg (two rings +
 
 Validation: P = 1 DS AR 1905.4 tok/s vs 1905.4 of record (0.0 %); Qwen AR 946.2 vs 946.2 (0.0 %); the d4g MTP design point re-priced through the same chain: 3258.7 vs 3258.7.
 
-Stats: results/arch/hbm_mtp_next_1018/stats/summary.json. Area: PLACEHOLDER (no --area): closed-BDC floor x lanes + ds_mtp_rows item estimates.
+Stats: results/arch/hbm_mtp_next_1018/stats/summary.json. Area: results/arch/hbm_mtp_next_1018/area_composed.json.
 
 ## tok/s vs P
 
 | P | +mm2 | DS AR | DS MTP (KV upper) | DS MTP kv-lower | DS MTP union p90 | DS users agg / per-user | Qwen AR | Qwen DFlash b16 pub 8.01 / meas 3.656 | Qwen b8 pub / meas | Qwen users agg / per-user |
 |---:|---:|---:|---:|---:|---:|---|---:|---|---|---|
 | 1 | 0.0 | 1905.4 | **1694.3** |  |  | 1905.4 / 1905.4 | 946.2 | 459.5 / 209.7 | 642.8 / 379.4 | 946.2 / 946.2 |
-| 2 | 9.58 | 1905.4 | **3142.8** | 3288.8 | 3063.1 | 3060.3 / 1530.1 | 946.2 | 864.7 / 394.7 | 1198.5 / 707.3 | 1734.2 / 867.1 |
-| 4 | 26.09 | 1905.4 | **3363.5** | 3597.8 | 3272.3 | 4365.3 / 1091.3 | 946.2 | 1460.0 / 666.4 | 2015.3 / 1189.4 | 2971.4 / 742.9 |
-| 6 | 42.59 | 1905.4 | **3519.3** | 3841.7 | 3419.6 | 5153.7 / 858.9 | 946.2 | 1487.4 / 678.9 | 2052.8 / 1211.6 | 3898.6 / 649.8 |
-| 8 | 59.44 | 1905.4 | **3519.3** | 3841.7 | 3419.6 | 5710.4 / 713.8 | 946.2 | 2101.9 / 959.4 | 2888.8 / 1704.9 | 4619.2 / 577.4 |
+| 2 | 34.56 | 1905.4 | **3142.8** | 3288.8 | 3063.1 | 3060.3 / 1530.1 | 946.2 | 864.7 / 394.7 | 1198.5 / 707.3 | 1734.2 / 867.1 |
+| 4 | 101.11 | 1905.4 | **3363.5** | 3597.8 | 3272.3 | 4365.3 / 1091.3 | 946.2 | 1460.0 / 666.4 | 2015.3 / 1189.4 | 2971.4 / 742.9 |
+| 6 | 167.64 | 1905.4 | **3519.3** | 3841.7 | 3419.6 | 5153.7 / 858.9 | 946.2 | 1487.4 / 678.9 | 2052.8 / 1211.6 | 3898.6 / 649.8 |
+| 8 | 234.51 | 1905.4 | **3519.3** | 3841.7 | 3419.6 | 5710.4 / 713.8 | 946.2 | 2101.9 / 959.4 | 2888.8 / 1704.9 | 4619.2 / 577.4 |
 
 DS MTP step terms (cycles):
 
@@ -65,7 +65,7 @@ Compiler per-layer lane choice (best lanes <= P per layer segment, row field on)
 - DSpark draft at P lanes = R = 5-row records (ds_mtp_draft, stage expert union = no sharing 15); seed overlap = joint S2 schedule with the verify head, nothing after the accept overlaps
 - Qwen DFlash: dflash.step_program B = 16 (8 info) at pos 8,192 - B, tau published 8.01 (b16) / 5.584 (b8, anchored) and measured cycle-weighted 3.656 / 3.2956; ATT 4-slot groups (16 lanes) are the current record form; P = 1 = every slot re-issues the SM line
 - multi-user: all users at the same position (DS 1M, Qwen 8K); HBM capacity for P users' 1M KV NOT checked
-- area: PLACEHOLDER (closed BDC outline floor x 16 SMs x 32 BDCs a lane + item estimates); the composer re-runs with MTP-AREA
+- area: MTP-AREA measured
 
 ## Re-run
 
