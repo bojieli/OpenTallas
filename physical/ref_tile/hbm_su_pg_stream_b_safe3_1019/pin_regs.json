@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hbm_su_static_pg_stream_split_safe3",
+ "enable": false,
+ "reason": "SAFE3: every boundary bit has its register in RTL (mapped boundary check c4751: 0 inputs reaching logic, 0 outputs from logic): vmr_cmd/su_wq are captured at the face on clk_ctl (+1 serial edge, priced), su_rr / ij_* / pg_fault are return-region / inject-region / synchroniser flops, the LG tap registers its local/far/near inputs and outputs, inj_rd/inj_addr are captured per inject region on pg_clk (SAFE2 r5). A wrapper stage would move the fixed 3:4 seam calendar (windows 2q..7q) and the release VM 18/15 calendar."
+}
