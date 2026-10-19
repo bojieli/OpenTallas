@@ -81,6 +81,20 @@ def main():
     try:audit(x,'top',roots)
     except ValueError as e:assert 'polarity' in str(e)
     else:raise AssertionError('unknown word clock polarity accepted')
+    # Legal output aliases include wires and repeated constant outputs. They
+    # canonicalize every parent consumer, rather than being treated as inputs.
+    x=deepcopy(d);m=x['modules']['paramod_child']
+    x['modules']['wire_child']={'ports':{'d':{'direction':'input','bits':[2]},
+        'q':{'direction':'output','bits':[2]},'zero':{'direction':'output','bits':['0','0']}},'cells':{},'netnames':{}}
+    m['cells']['wire']={'type':'wire_child','connections':{'d':[5],'q':[9],'zero':[8,10]}}
+    m['cells']['capture']['connections']['D']=[9]
+    r=audit(x,'top',roots)
+    assert not r['issues'] and any(c['sink']=='top/nested/capture' and c['source_root']=='A' for c in r['crossings'])
+    x['modules']['wire_child']['ports']['other']={'direction':'input','bits':[2]}
+    m['cells']['wire']['connections']['other']=[4]
+    try:audit(x,'top',roots)
+    except ValueError as e:assert 'aliased child inputs' in str(e)
+    else:raise AssertionError('conflicting child inputs accepted through output alias')
     # Conflicting actual port aliases and width omissions reject explicitly.
     x=deepcopy(d);x['modules']['top']['ports']['ck_b']['bits']=[10]
     try:audit(x,'top',roots)
@@ -92,6 +106,7 @@ def main():
     else:raise AssertionError('missing vector bit accepted')
     print('PASS nested vector roots, swapped binding, missing root, inverter polarity, clock mux, unknown native leaf, explicit macro contract, alias conflict, width mismatch')
     print('PASS word FF polarity, async reset/enable domains, conservative arithmetic and unknown-polarity rejection')
+    print('PASS repeated constant outputs, input-to-output wire aliases, conflicting child-input rejection')
 
 
 if __name__=='__main__':main()

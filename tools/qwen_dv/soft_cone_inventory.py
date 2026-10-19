@@ -9,7 +9,16 @@ from pathlib import Path
 
 def expand_hierarchy(design, top):
     """Expand kept soft cells with exact elaborated port-bit aliases."""
-    modules=design['modules'];ids={};cells={};nets={}
+    modules=design['modules'];ids={};cells={};nets={};parents={}
+    def canonical(b):
+        if b not in parents:return b
+        parents[b]=canonical(parents[b]);return parents[b]
+    def alias(a,b):
+        a,b=canonical(a),canonical(b)
+        if a==b:return
+        if isinstance(a,str) and isinstance(b,str):raise ValueError('conflicting constant output aliases')
+        if isinstance(a,str):parents[b]=a
+        else:parents[a]=b
     def bit(b,path,mapping):
         if isinstance(b,str):return b
         if b in mapping:return mapping[b]
@@ -26,16 +35,26 @@ def expand_hierarchy(design, top):
             con={p:[bit(b,path,mapping) for b in bs] for p,bs in c['connections'].items()}
             child=modules.get(c['type'])
             if child and not int(child.get('attributes',{}).get('blackbox','0'),2):
-                cm={}
+                cm={};input_maps={}
                 for p,v in child['ports'].items():
                     if p not in con or len(con[p])!=len(v['bits']):raise ValueError('port width '+full+'.'+p)
                     for b,outer in zip(v['bits'],con[p]):
-                        if b in cm and cm[b]!=outer:raise ValueError('port alias conflict '+full+'.'+p)
+                        if isinstance(b,str):
+                            if v['direction']!='output' and outer!=b:raise ValueError('constant input alias '+full+'.'+p)
+                            alias(outer,b);continue
+                        if v['direction']=='input':
+                            if b in input_maps and canonical(input_maps[b])!=canonical(outer):raise ValueError('port alias conflict '+full+'.'+p)
+                            input_maps[b]=outer
+                        if b in cm and canonical(cm[b])!=canonical(outer):
+                            alias(cm[b],outer)
                         cm[b]=outer
                 walk(c['type'],full,cm,stack+[name])
             else:cells[full]=dict(c,connections=con)
     walk(top,'',{},[])
     ports={p:dict(v,bits=[bit(b,'',{}) for b in v['bits']]) for p,v in modules[top]['ports'].items()}
+    for c in cells.values():c['connections']={p:[canonical(b) for b in bs] for p,bs in c['connections'].items()}
+    for n in nets.values():n['bits']=[canonical(b) for b in n['bits']]
+    for p in ports.values():p['bits']=[canonical(b) for b in p['bits']]
     return dict(design,modules=dict(modules,**{top:dict(modules[top],cells=cells,netnames=nets,ports=ports)}))
 
 

@@ -17,7 +17,17 @@ import re
 def audit(design, top, roots, native=None):
     modules = design['modules']
     native = native or {}
-    cells, aliases, issues = {}, defaultdict(list), []
+    cells, aliases, issues, parents = {}, defaultdict(list), [], {}
+    def canonical(b):
+        if b not in parents:return b
+        parents[b]=canonical(parents[b]);return parents[b]
+    def alias(a,b):
+        a,b=canonical(a),canonical(b)
+        if a==b:return
+        ac,bc=a[0]=='constant',b[0]=='constant'
+        if ac and bc:raise ValueError('conflicting constant output aliases')
+        if ac:parents[b]=a
+        else:parents[a]=b
     def key(path, bit, portmap):
         if isinstance(bit, str):
             return ('constant', bit)
@@ -37,13 +47,18 @@ def audit(design, top, roots, native=None):
             child = modules.get(typ)
             blackbox = child and int(child.get('attributes', {}).get('blackbox', '0'), 2)
             if child and not blackbox and typ not in native:
-                mapping = {}
+                mapping = {};input_maps={}
                 for p, spec in child['ports'].items():
                     if p not in con or len(spec['bits']) != len(con[p]):
                         raise ValueError(f'{name}.{p}: missing or mismatched port width')
                     for b, outer in zip(spec['bits'], con[p]):
-                        if b in mapping and mapping[b] != outer:
-                            raise ValueError(f'{name}.{p}: aliased child ports disagree')
+                        if isinstance(b,str):
+                            if spec['direction']!='output' and outer!=('constant',b):raise ValueError(f'{name}.{p}: constant input alias')
+                            alias(outer,('constant',b));continue
+                        if spec['direction']=='input':
+                            if b in input_maps and canonical(input_maps[b])!=canonical(outer):raise ValueError(f'{name}.{p}: aliased child inputs disagree')
+                            input_maps[b]=outer
+                        if b in mapping and canonical(mapping[b])!=canonical(outer):alias(mapping[b],outer)
                         mapping[b] = outer
                 expand(typ, name, mapping, stack + [mod])
             else:
@@ -51,13 +66,19 @@ def audit(design, top, roots, native=None):
                     parameters=cell.get('parameters',{}),
                     directions=cell.get('port_directions', child.get('ports', {}) if child else {}))
     expand(top, top, {}, [])
+    for cell in cells.values():cell['connections']={p:[canonical(b) for b in bs] for p,bs in cell['connections'].items()}
+    resolved_aliases=defaultdict(list)
+    for b,names in aliases.items():resolved_aliases[canonical(b)].extend(names)
+    aliases=resolved_aliases
     def rootbit(pin):
         match = re.fullmatch(r'(.+?)(?:\[(\d+)\])?', pin)
         port, idx = match[1], int(match[2] or 0)
         spec = modules[top]['ports'].get(port)
         if not spec or spec['direction'] != 'input' or idx >= len(spec['bits']):
             raise ValueError('invalid top root pin: ' + pin)
-        return (top, spec['bits'][idx])
+        b=canonical((top, spec['bits'][idx]))
+        if b[0]=='constant':raise ValueError('root clock tied to constant: '+pin)
+        return b
     clocks = {}
     for pin, root in roots.items():
         b = rootbit(pin)
