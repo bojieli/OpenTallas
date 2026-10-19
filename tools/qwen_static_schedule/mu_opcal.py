@@ -46,6 +46,34 @@ AM_EMIT_T = 8               # the token-start segment emits the previous token's
 # slice), its AMI/AMV beats travel <= 11 hops x 2 edges (scalar out register + the top's pin register) + 2 beats to the
 # root; 1 + 11 + 22 + 2 = 36 edges after the emit the last candidate has merged.  48 = 36 + 12 margin.
 AM_ROOT_SPAN = 48
+# MU-OPCAL-EMB 10-19: the token-start segment's LOCAL EMB sends tok_b[user] (qfd_tt_ctlm_dv: emb_token <= tok_b[b_rd] on
+# the edge after the entry's issue edge), so it must issue only once the user's argmax result is IN the bank.  Edges from
+# the AMAX emit's issue edge I (u_cal cmd register), RTL as built:
+AM_CMD_PIN = 1      # I -> W5 slice cmd_q (qfd_dv_slice2 pin register; die bind tt_ctlm.cmd -> dvs_W5.cmd_wi direct,
+                    #     tools/qwen_split/dv_case.W5_PEERS) = e, the am_root_window reference edge
+ST_REG = 1          # W5 scalar tok_v register -> qfd_dv_slice2 st register (st[24] tok_v, st[23:0] tok_idx, st[27:26] user)
+SS_PIN = 1          # st (= ss_wo) -> qfd_tt_ctlm_dv ss_q pin register (die bind dvs_W5.ss_wo -> tt_ctlm.ss5 direct)
+BANK_WR = 1         # ss_q tok_v (r_fill) -> tok_b[u] register
+# (a relay stage the die GEN inserts on cmd or ss5 adds one edge each to AM_CMD_PIN / SS_PIN and moves EMB_T with it)
+
+
+def tok_slice0_edge(n=M.AM_SLICES):
+    """edges after e on which W5's (slice 0's) qfd_dv_scalar2 tok_v register is set, worst case over the root position r.
+    The root's last candidate merges on edge X(r) = max(own 2r + 2, slice k's 2k + 2|k - r| + 3) (mu_calendar
+    am_root_window); on X the root sets tok_v (r = 0: that is W5) and tk_send; its TOK broadcast leaves dn_o on X + 1 and
+    travels 2 edges a hop (neighbour pin register scd_q, then its pass register / tok_v): slice 0 sets tok_v on
+    X + 2r + 1.  n = 12 -> 48 (r = 0: 47; r >= 1: 48)."""
+    worst = 0
+    for r in range(n):
+        x = max([2 * r + 2] + [2 * k + 2 * abs(k - r) + 3 for k in range(n) if k != r])
+        worst = max(worst, x if r == 0 else x + 2 * r + 1)
+    return worst
+
+
+RES_SSQ = AM_CMD_PIN + tok_slice0_edge() + ST_REG + SS_PIN     # 51: ctlm ss_q holds the result (bench ss5 event edge)
+RES_BANK = RES_SSQ + BANK_WR                                    # 52: tok_b[u] written on I + 52
+EMB_T = AM_EMIT_T + RES_BANK    # 60: EMB issue edge S + 60 -> emb_token sampled on S + 61 >= the write edge + 1
+EMB_T_SMOKE = 16                # the pre-fix image (mu_tok_cases smoke segment 0): EMB before the result (stale token)
 UVM, PIDX, UTAG = M.DV_UVM_STRIDE, M.DV_PIDX_STRIDE, M.DV_UTAG_LSB
 LAST_STAGE = C.LAST_STAGE
 CLK = 1.2e9
@@ -143,7 +171,41 @@ def segments(p=None):
     lay, grp = op_layer_image(p)
     s = C.segments(p)
     s[1] = lay
+    emb_t = (p or {}).get("emb_t", EMB_T)
+    s[0] = [(t, c) if not _is_emb(c) else (emb_t, c) for t, c in s[0]]       # MU-OPCAL-EMB: EMB after the result
+    s[0].sort()
     return s, grp
+
+
+def _is_emb(c):
+    return c & 1 and (c >> 112) & 15 == 14 and (c >> 1) & 7 == 1
+
+
+def _is_emit(c):
+    return c & 1 and (c >> 112) & 15 != 14 and (c >> 1) & 7 == 6 and (c >> 5) & 1
+
+
+def check_emb_after_result(cal):
+    """MU-OPCAL-EMB assertion: every user's LOCAL EMB issues on or after the edge its own argmax result is written into
+    tok_b[user] (emit issue edge + RES_BANK), and no other emit of the same user intervenes.  Derived from the image's
+    actual token-start entries (not the constants), for every token-start unit of every user over the frame (cyclic).
+    Raises ScheduleError; returns the number of token starts checked."""
+    seg0 = cal["segs"][0]
+    emits = [t for t, c in seg0 if _is_emit(c)]
+    embs = [t for t, c in seg0 if _is_emb(c)]
+    if len(emits) != 1 or len(embs) != 1:
+        raise ScheduleError(f"token-start segment needs one AMAX emit and one LOCAL EMB (emits {emits}, embs {embs})")
+    n = 0
+    for u, seq in cal["schedule"].items():
+        for name, t0, _ in seq:
+            if name != "head":
+                continue
+            w, e = t0 + emits[0] + RES_BANK, t0 + embs[0]
+            if e < w:
+                raise ScheduleError(f"user {u}: LOCAL EMB at {e} precedes its argmax result in tok_b[{u}] (written on {w}: "
+                                    f"emit {t0 + emits[0]} + RES_BANK {RES_BANK}) -- the EMB would send the previous token")
+            n += 1
+    return n
 
 
 def image(segs):
@@ -187,7 +249,7 @@ def _cp(ent, t_ref, start=None):
     """command-plane windows of entries [(T, cmd)] relative to t_ref: cmd (go entries that leave), stn, done"""
     d = {}
     for t, c in ent:
-        if c & 1 and (c >> 112) & 15 != 14:
+        if c & 1:                                    # LOCAL (dst 14) entries also use the one issue register (i_col)
             d.setdefault("cp.cmd", []).append((t - t_ref, t - t_ref + 1))
         if c & 1 and (c >> 1) & 7 == 2 and (c >> 112) & 15 != 14:
             w = C.STN_LAT + C.RW * C.RW_GAP if (c >> 50) & 1 else 1
@@ -273,6 +335,9 @@ class CyclicRes(M.Reservations):
 def compile_frame(F=16, p=None, layers=36, starts=None):
     """periodic NU-user op-granular calendar over a frame of F latency-user tokens; ScheduleError on any collision"""
     p = M._need(dict(M.SOURCED, users=NU, occupancy="measured", head_chunks=8, **(p or {})))
+    # the embedding request / host return / row fetch consume the NEW token: they start at the EMB edge (mu_calendar
+    # head_blocks tok_ofs), so the token-start block is EMB_T longer than the pre-fix image's (single-user too)
+    p.setdefault("head_tok_ofs", p.get("emb_t", EMB_T))
     P = p["layer_period"]
     segs, grp = segments(p)
     u0 = token_units(p, segs, grp, filler=False, layers=layers)
@@ -340,6 +405,8 @@ def compile_frame(F=16, p=None, layers=36, starts=None):
                            first_start=sched[u][0][1]) for u in range(NU)])
     cal["aggregate_tok_s"] = sum(x["tok_s"] for x in cal["users"])
     check_root_merge(cal)
+    if p.get("check_emb", True):
+        cal["emb_checked"] = check_emb_after_result(cal)
     return cal
 
 
@@ -477,6 +544,11 @@ def receipt(cal, pb=None):
                 group_layout={g: {k: v for k, v in x.items() if k != "ops"} for g, x in cal["grp"].items()},
                 descriptors={str(k): v for k, v in pb["desc"].items()},
                 am_root=dict(span=AM_ROOT_SPAN, emits_per_frame=check_root_merge(cal)),
+                emb=dict(EMB_T=EMB_T, AM_EMIT_T=AM_EMIT_T, RES_SSQ=RES_SSQ, RES_BANK=RES_BANK,
+                         tok_slice0_edge=tok_slice0_edge(), head_tok_ofs=cal["inputs"].get("head_tok_ofs", 0),
+                         token_starts_checked=check_emb_after_result(cal),
+                         path="AMAX issue I -> W5 cmd_q +1 -> root merge + TOK to W5 tok_v +48 -> st +1 -> ctlm ss_q +1 "
+                              "-> tok_b +1 = I + 52; EMB issue >= S + 8 + 52 (emb_token sampled on issue + 1)"),
                 rules=dict(T0_MIN=T0_MIN, MIN_OP_CYC=MIN_OP_CYC, OP_ENTRY_OFS=OP_ENTRY_OFS, LEAF_MIN_GAP=LEAF_MIN_GAP))
 
 

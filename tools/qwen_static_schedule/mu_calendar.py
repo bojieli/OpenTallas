@@ -162,8 +162,12 @@ def head_blocks(p):
         return {r: v for r, v in w.items() if not any(r.startswith(d) for d in drop)}
     out = [(f"head.c{i}", dict(windows=fin({"me": [(0, cuts[i + 1] - cuts[i])], "su": [(0, cuts[i + 1] - cuts[i])]},
                                            "head.c"), length=cuts[i + 1] - cuts[i])) for i in range(n)]
-    out.append(("head", dict(windows=fin({"d2d_o": [(0, p["d2d_record"])], "host": [(0, p["host_return"])]}, "head"),
-                             length=e)))
+    # tok_ofs (MU-OPCAL-EMB 10-19, default 0 = unchanged): the edge, from the token-start block's start, at which the new
+    # token is in the per-user token bank (mu_opcal.EMB_T); the embedding request / host return consume that token, so the
+    # priced embedding window (d2d_o, host, the embed_cycles fetch) starts there and the block grows by it
+    o = p.get("head_tok_ofs", 0)
+    out.append(("head", dict(windows=fin({"d2d_o": [(o, o + p["d2d_record"])], "host": [(o, o + p["host_return"])]},
+                                         "head"), length=o + e)))
     return out
 
 

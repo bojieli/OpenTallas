@@ -27,7 +27,14 @@ Checks (PASS needs all; positive cases):
   C5 filler token / position: every filler LOCAL EMB sends, and every filler LOCAL SEG starts the ME segment with, the
      filler's bank: the bench-preloaded initial context (OPEN item: no hardware path), then tok = the root token and
      pos + 1 at each of the user's results (ss5 tok_v, ss5[27:26] = user);
-  C6 the head running stage after every ME start = that segment's user's stage (per-user stage bank).
+  C6 the head running stage after every ME start = that segment's user's stage (per-user stage bank);
+  C7 (MU-OPCAL-EMB 10-19) every filler's token-start LOCAL EMB sends that user's JUST-COMPUTED token: the root result of
+     the AMAX emit of the same token-start segment.  The result reaches ss5 (the ctlm ss_q capture edge) at the RTL-derived
+     edge mu_opcal.RES_SSQ after the emit's issue edge (W5 cmd_q, root merge + TOK to W5, slice st, ctlm pin register),
+     and tok_b is written mu_opcal.BANK_WR later (exact model; no ambiguity margin).
+Bench witnesses (mut 0 RTL, compiled-model mutants; each must FAIL C7): --emb-t 16 (the pre-fix image: EMB at T = 16,
+compiler assertion bypassed), --res-skew 1 (the result one edge later than derived: the EMB at EMB_T is exactly the first
+edge that sees it).
 Negative cases: the named fault rises on the named edge.
 Mutants (--mut, each must FAIL): 21 range ignored (descriptor plays), 22 collision not flagged, 23 filler result into
 the next filler's bank, 24 leaf entry one edge late, 25 leaf re-anchors on every L0 start (anchor drift), 26 leaf drift
@@ -47,7 +54,9 @@ INST = 'qfd_tt_ctlm_opseg'
 S0 = 1100                       # event cycle of the latency user's first L0 start (frame time 0)
 FULL_TAIL = 30000
 RED_FRAMES = 3
-RES_LAT = O.AM_EMIT_T + 32      # a user's root result (ss5 tok_v) this many edges after its token-start segment start
+C_CAL = 1                       # u_cal issue edge = start event + entry T + C_CAL (measured C of the reference run)
+RES_LAT = O.AM_EMIT_T + C_CAL + O.RES_SSQ    # a user's root result at ctlm ss_q: RTL-derived (MU-OPCAL-EMB; was 8 + 32)
+RES_SKEW = 0                    # bench witness --res-skew
 NU = 4
 PRE = {u: (0x2000 + 0x111 * u, 8186 - 6 * u) for u in range(1, NU)}   # bench-only filler initial context (tok, pos)
 U0 = (0x1100, 8186)
@@ -129,7 +138,7 @@ def model(cal, nfr, ncyc_ev):
     res, nres = [], {u: 0 for u in range(NU)}
     for c, u, stg, rng, f, n in starts:
         if stg == 0:
-            res.append((c + RES_LAT, u, res_tok(u, nres[u]), (0x51 * (u + 1) + nres[u]) & 0xFFFFFF))
+            res.append((c + RES_LAT + RES_SKEW, u, res_tok(u, nres[u]), (0x51 * (u + 1) + nres[u]) & 0xFFFFFF))
             nres[u] += 1
     return pb, L, face, starts, res
 
@@ -188,6 +197,8 @@ def check_case(name, cal, nfr, ncyc_ev, e1, e4, work, romdir, mut, fails, summ):
     t_first = f0[0] + K + ent[f0[4]][0]
     first_cmd = [x for x in sol['cmd'] if x[0] >= S0]
     C = first_cmd[0][0] - t_first if first_cmd else 0
+    if K != 0 or C != C_CAL:
+        fails.append(f'{name} calibration K {K} C {C} != (0, {C_CAL}): the result events assume them')
     st_exp = sorted((c + K, u, stg, rng, f if rng else 0, n if rng else 0) for c, u, stg, rng, f, n in starts if c + K < end_cut)
     st_got = sorted((c, u, stg, rng, f if rng else 0, n if rng else 0) for c, u, stg, rng, f, n in mu['sta'] if c < end_cut)
     st_sol = sorted((c, u, stg, rng, 0, 0) for c, u, stg, rng, f, n in sol['sta'] if c < end_cut)
@@ -205,7 +216,7 @@ def check_case(name, cal, nfr, ncyc_ev, e1, e4, work, romdir, mut, fails, summ):
         fails.append(f'{name} C4 command fires != compiled (got {len(g_cmd)} want {len(w_cmd)}; missing '
                      f'{len(set(w_cmd) - set(g_cmd))} e.g. {str(miss)[:240]}; extra {len(set(g_cmd) - set(w_cmd))} e.g. {str(extra)[:240]})')
     # C5 per-user bank model (fillers; user 0 = its latest face start), result applied RES_APPLY edges after its event
-    RES_APPLY = 3
+    RES_APPLY = O.BANK_WR           # exact: ss_q capture edge c -> tok_b written on c + 1 (read by an EMB / SEG logged >= c + 2)
     rlog = {u: sorted((c + RES_APPLY, tok) for c, uu, tok, val in res if uu == u) for u in range(NU)}
     flog = sorted((c + K, tok, pos) for c, u, stg, tok, pos in face)
 
@@ -216,7 +227,6 @@ def check_case(name, cal, nfr, ncyc_ev, e1, e4, work, romdir, mut, fails, summ):
         tok, pos = PRE[u]
         for rc, rt in rlog[u]:
             if rc <= c: tok, pos = rt, pos + 1
-            if abs(rc - c) < 3: fails.append(f'{name} C5 ambiguous: result of user {u} at {rc} beside a read at {c}')
         return tok, pos
     w_emb = sorted((t, u, bank(u, t - 1)[0]) for t, u, k, b in w_loc if k == 'EMB' and t < end_cut)
     w_seg = sorted((t, u, b) + bank(u, t - 1) for t, u, k, b in w_loc if k == 'SEG' and t < end_cut)
@@ -226,6 +236,19 @@ def check_case(name, cal, nfr, ncyc_ev, e1, e4, work, romdir, mut, fails, summ):
         if g != w:
             miss = [x for x in w if x not in g][:2]; extra = [x for x in g if x not in w][:2]
             fails.append(f'{name} C5 {k} (cycle, user, tok[, pos]) != compiled bank (got {len(g)} want {len(w)}; missing {miss}; extra {extra})')
+    # C7 each filler EMB = its own just-computed token (the result of the same token-start segment's emit)
+    seg0 = [t for t, w in cal['segs'][0] if O._is_emb(w)][0]
+    w7 = sorted((c - RES_LAT - RES_SKEW + K + C + seg0 + 1, u, tok) for c, u, tok, val in res if u != 0)
+    w7 = [x for x in w7 if x[0] < end_cut]
+    g7 = [x for x in g_emb if x[1] != 0]
+    bad7 = [x for x in g7 if x not in set(w7)]
+    if len(g7) != len(w7) or bad7:
+        fails.append(f'{name} C7 filler EMB != its just-computed token ({len(bad7)} of {len(g7)} wrong, want {len(w7)}; '
+                     f'e.g. {bad7[:2]})')
+    u0_emb = [x for x in g_emb if x[1] == 0]
+    u0_res = {c - RES_LAT - RES_SKEW + K + C + seg0 + 1: tok for c, u, tok, val in res if u == 0}
+    c7_u0 = dict(emb=len(u0_emb), equal_just_computed=sum(1 for t, u, tok in u0_emb if u0_res.get(t) == tok),
+                 note='user 0 EMB sends tok_b[0] = the face stage-0 start token (no ss5 result write for user 0)')
     # C2 latency user identity
     fseg = [x[0] for x in mu['seg'] if x[1] != 0]
     hcut = min(fseg) if fseg else 10 ** 12
@@ -264,7 +287,8 @@ def check_case(name, cal, nfr, ncyc_ev, e1, e4, work, romdir, mut, fails, summ):
             meas[u] = dict(tokens=n, tok_s=round(n * O.CLK / H, 1))
     summ[name] = dict(H=H, T=cal['T'], ncyc=ncyc, K=K, C=C, starts=len(st_got), starts_per_user={u: sum(1 for x in st_got if x[1] == u) for u in range(NU)},
                       fires=len(g_cmd), fires_per_user={u: sum(1 for x in g_cmd if x[1] == u) for u in range(NU)},
-                      emb=len(g_emb), seg=len(g_seg), leaf_entries=len(L), head_identity_window=[S0, hcut],
+                      emb=len(g_emb), seg=len(g_seg), c7_filler_emb=len(g7), c7_bad=len(bad7), c7_user0=c7_u0,
+                      emb_t=seg0, res_lat=RES_LAT + RES_SKEW, leaf_entries=len(L), head_identity_window=[S0, hcut],
                       measured_frame1=meas, compiled=[dict(user=x['user'], tokens_per_frame=x['tokens_per_frame'], tok_s=round(x['tok_s'], 1)) for x in cal['users']])
 
 
@@ -298,28 +322,34 @@ def main():
     ap.add_argument('--cases', nargs='+', default=['red', 'neg_drift', 'neg_coll', 'full'])
     ap.add_argument('--full-frames', type=int, default=1)
     ap.add_argument('--verilator', default=os.environ.get('VERILATOR', 'verilator')); ap.add_argument('--jobs', type=int, default=8)
+    ap.add_argument('--emb-t', type=int, default=None, help='witness: image EMB at this T (compiler assertion bypassed)')
+    ap.add_argument('--res-skew', type=int, default=0, help='witness: result events this many edges later than derived')
+    ap.add_argument('--tag', default='')
     a = ap.parse_args()
+    global RES_SKEW
+    RES_SKEW = a.res_skew
+    cp = {} if a.emb_t is None else dict(emb_t=a.emb_t, check_emb=False)
     work = Path(a.work); work.mkdir(parents=True, exist_ok=True)
     m = a.mut
     e1 = build(work, a.verilator, 1, 0, 0, a.jobs)
     e4 = build(work, a.verilator, NU, 1, m, a.jobs)
-    fails, summ = [], dict(mut=m, cases=a.cases)
+    fails, summ = [], dict(mut=m, cases=a.cases, emb_t=a.emb_t, res_skew=a.res_skew)
     cals = {}
 
     def romdir_for(key, cal):
-        d = work / f'rom_{key}'
+        d = work / f'rom_{key}{a.tag}'
         d.mkdir(exist_ok=True)
         (d / f'{INST}.viamap.hex').write_text(O.viamap_hex(O.rom_words(cal)))
         return d
     for case in a.cases:
         if case == 'full':
-            cal = cals.setdefault('full', O.compile_frame(16, layers=36))
+            cal = cals.setdefault('full', O.compile_frame(16, layers=36, p=cp))
             rd = romdir_for('full', cal)
             nfr = a.full_frames + 1
             ncyc = S0 + a.full_frames * cal['H'] + FULL_TAIL
             check_case('full', cal, nfr, ncyc, e1, e4, work, rd, m, fails, summ)
         else:
-            cal = cals.setdefault('red', O.compile_frame(16, layers=2))
+            cal = cals.setdefault('red', O.compile_frame(16, layers=2, p=cp))
             rd = romdir_for('red', cal)
             if case == 'red':
                 check_case('red', cal, RED_FRAMES + 1, S0 + RED_FRAMES * cal['H'] + 2000, e1, e4, work, rd, m, fails, summ)
@@ -328,8 +358,8 @@ def main():
         print(f'case {case} done: {len(fails)} fails so far', flush=True)
     summ['verdict'] = 'PASS' if not fails else 'FAIL'
     summ['fails'] = fails
-    (work / f'summary_m{m}.json').write_text(json.dumps(summ, indent=1, default=str))
-    print(f"MU_OPSEG_{summ['verdict']} mut {m}" + ('' if not fails else ': ' + ' | '.join(fails)))
+    (work / f'summary_m{m}{a.tag}.json').write_text(json.dumps(summ, indent=1, default=str))
+    print(f"MU_OPSEG_{summ['verdict']} mut {m}{a.tag}" + ('' if not fails else ': ' + ' | '.join(fails)))
     print(json.dumps({k: v for k, v in summ.items() if k != 'fails'}, default=str))
     return 0 if not fails else 1
 
