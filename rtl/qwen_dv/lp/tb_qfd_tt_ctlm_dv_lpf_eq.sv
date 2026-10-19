@@ -66,6 +66,7 @@ module tb_qfd_tt_ctlm_dv_lpf_eq;
             if (cyc == 16) rst_n = 1'b1;
             rnd;
             if (OPSEG != 0 && cyc >= 30 && cyc < 30 + 1032) img(cyc - 30, 0);
+            if (OPSEG != 0 && cyc >= 1100 && cyc < 1600) begin dh[42] = 1'b0; dh[118] = 1'b0; dh[186] = 1'b0; end  // quiet: no playhead plays at load 1
             if (OPSEG != 0 && cyc >= 1600 && cyc < 1600 + 1032) img(cyc - 1600, 1);
             if (cyc > 20) begin
                 nc = nc + 1; if (va !== vprev) act = act + 1; if (va[968:589] !== vprev[968:589]) act_nc = act_nc + 1;
