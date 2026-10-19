@@ -44,6 +44,7 @@ sys.path.insert(0, str(HERE.parent / "hier_contract"))
 import check_macro_track_alignment as cmta  # noqa: E402
 import child_lint  # noqa: E402
 import pin_fit  # noqa: E402
+import cdc_fsm_guard  # noqa: E402
 import clock_entry_constraints  # noqa: E402
 import raw_macro_clocks  # noqa: E402
 
@@ -261,6 +262,11 @@ def pin_regs_plan(s: dict) -> dict | None:
             "reset": pr.get("reset", ""), "reason": pr.get("reason", ""),
             "latency_cycles": {"input": 1, "output": 1}, "rule": PIN_REGS_RULE,
             "per_port_table": "$RESULTS_DIR/ot_pin_regs.tsv (route synthesis: port dir width cycles why)"}
+
+
+def ce_generate(s: dict) -> str:
+    """clock_entry_constraints.generate with the CDC fsm_extract guard (cdc_fsm_guard.py) after the CDC bindings."""
+    return cdc_fsm_guard.splice(clock_entry_constraints.generate(s, ROOT), s)
 
 
 def pin_regs_vars(s: dict) -> list:
@@ -1501,7 +1507,7 @@ def gen_sdc(s: dict, period_ps: float) -> str:
             # Extra SDC may declare secondary clocks. Data slew must exclude
             # their sources; explicit source-clock transitions in extra SDC stand.
             + "set_input_transition 150 [all_inputs -no_clocks]\n"
-            + clock_entry_constraints.generate(s, ROOT) + clock_entry_constraints.landed_sdc(s, ROOT))
+            + ce_generate(s) + clock_entry_constraints.landed_sdc(s, ROOT))
 
 
 def sdc_extra(s: dict) -> str:
@@ -1533,7 +1539,7 @@ def gen_signoff(s: dict, refglob: str, inter: str) -> str:
             + f"set ::env(OT_REF_GLOB) {{{refglob}}}\nset ::env(OT_IO_INTER) {{{inter}}}\nset ::env(OT_IO_SKEW_INTER) 150\n"
             + io + sdc_extra(s)
             + ("set ::ot_ce_require_wire 1\n" if s.get("clock") in ("entries", "hybrid_entries", "multiple_cts_roots") else "")
-            + clock_entry_constraints.generate(s, ROOT) + clock_entry_constraints.landed_sdc(s, ROOT)
+            + ce_generate(s) + clock_entry_constraints.landed_sdc(s, ROOT)
             + "\nset_propagated_clock [all_clocks]\n")
 
 
@@ -1685,6 +1691,9 @@ def gen_hooks(s: dict, kd: str) -> dict:
                 pre_cts.append("set ::ot_ce_landed_cluster 1")
             pre_cts.extend(raw_macro_clocks.tcl(raw_bindings))
         pre_cts.append("source /src/physical/common_flow/clock_entries.tcl")
+        # HF-4d 10-19: raw SRAM clock pins of a landed cluster's hard child get their record-signed-off delay AFTER CTS
+        # (wraps clock_entries' CTS; the boundary wrapper below then re-applies clock_entry.sdc = the RAW_PIN verdict)
+        pre_cts.extend(clock_entry_constraints.landed_raw_tcl(s, ROOT))
     if spine:
         pre_cts += ["source /src/physical/common_flow/clock_spine.tcl", f"source /src/{kd}/spine_ins.tcl"]
         ins = child_insertions(s)
@@ -1709,7 +1718,7 @@ def gen_hooks(s: dict, kd: str) -> dict:
     btcl = [f"source /src/{f}" for f in s.get("boundary_tcl", [])
             if not (s.get("clock") in ("entries", "hybrid_entries", "multiple_cts_roots") and "set ::ot_wc_entry_mode 1" in (ROOT / f).read_text())]
     if s.get("clock") in ("entries", "hybrid_entries", "multiple_cts_roots"):
-        files["clock_entry.sdc"] = "set ::ot_ce_require_wire 1\n" + clock_entry_constraints.generate(s, ROOT)
+        files["clock_entry.sdc"] = "set ::ot_ce_require_wire 1\n" + ce_generate(s)
         btcl.append(f"source /src/{kd}/clock_entry.sdc")
     if btcl:
         # pre_cts_skew installs a CTS wrapper that re-reads the single-domain IO
@@ -1928,6 +1937,8 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
     extra += hold_pad_vars(s)
     extra += hold_budget_vars(s)
     extra += pin_regs_vars(s)
+    # reviewed CDC kits: the lint-tagged registers keep their RTL names through yosys fsm (cdc_fsm_guard.py)
+    extra += cdc_fsm_guard.orfs_vars(s, ROOT)
     if s.get("keep_pin_regs"):
         extra.append("--orfs-var OT_KEEP_PIN_REGS=1")
     if s.get("pin_reg_split") and not wrap:
@@ -2068,6 +2079,12 @@ def referenced_paths(s: dict, kd: str) -> list:
         out += [f"{ch['view']}/insertion.json" for ch in s["children"]]
         if clock_entry_constraints.landed_cluster(s):
             out.append(s["landed_record"])
+            raw = clock_entry_constraints.landed_raw_targets(s, ROOT)
+            if raw:
+                # HF-4d: the leaf closed records the raw-pin reference / tolerance are read from, and the tap hook
+                out += ["physical/common_flow/landed_raw_tap.tcl"] + sorted({v["record"] for v in raw.values()})
+                out += sorted({f"{ch['view']}/port_latency.json" for ch in s["children"]})
+                out += sorted({v["verdict"] for v in raw.values()})
     for it in s["macros"] + s["children"]:
         v = it["view"]
         out += [f"{v}/{view_name(v)}.lef"] + [f"{v}/{view_name(v)}_{c}.lib" for c in ("ss", "ff", "tt")]
@@ -2213,6 +2230,13 @@ def gen_job(s: dict, kd: str, commit: str | None, blocks: list) -> dict:
 def gen(spec_path: str, area_um2: float | None = None, commit: str | None = None, out_root: Path = ROOT,
         write: bool = True) -> dict:
     s = load_spec(spec_path)
+    if s.get("face_land"):     # HKV-RSTCAP 10-19: shared reset / late-pin face landing (tools/ref_tile/face_land.py)
+        sys.path.insert(0, str(HERE))
+        import face_land
+        try:
+            face_land.apply(s, write=write, root=ROOT)
+        except face_land.FaceLandError as e:
+            raise SpecError(str(e))
     apply_recipe(s, kit_recipe(s, out_root, spec_path))
     check_hold_budget(s)
     slot = contract_slot(s)
