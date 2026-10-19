@@ -140,6 +140,7 @@ end
 ot_hbm_su_static_pgslice_lg #(.QID({q}),.G({g}),.READ_RETURN(18),.WRITE_RETURN(15),.MLAT(4),.ALAT(3),.LEAF(1),.PIN_REG(1),.MULTIRATE(1),.COLLPORT(1),.RF_LOCAL(1)) s{q}_{g}(.pg_clk(stream),.clk_lane({{256{{clk}}}}),.clk_insert({{128{{clk}}}}),.rst_lane_n({{32{{runrq}}}}),.clk_bcast({{4{{clk}}}}),.rst_bcast_n({{4{{runrq}}}}),.clk_bank({{32{{clk}}}}),.clk_bank_macro({{192{{clk}}}}),.clk_ctl(clk),.clk_side({{6{{clk}}}}),.rst_n(runrq),.bridge_rst_n(br),.control(cmd[{q}][2421:680]),.vmr_cmd(cmd[{q}][{440+60*g}+:60]),.vmw_cmd(cmd[{q}][{128+78*g}+:78]),.rf_bword(rfb),.rf_bcmd(rfbc),.rf_dsec(rfd),.red_sel(12'b0),.inj_rd(2'b0),.inj_addr(160'b0),.dw_v(2'b0),.dw_row(18'b0),.dw_d(1024'b0),.fault(sfault[{q}][{g}]),.lg_fault(lf{q}_{g}),.lg_rq(rq{q}_{g}),.lg_wq(wq{q}_{g}),.lg_rr(rr{q}_{g}),.lg_w_done(dn{q}_{g}),.lg_read(lr{q}[{2*g}+:2]),.lg_write(lw{q}[{2*g}+:2]),.far_rq(34'b0),.far_wq(562'b0));
 ''')
    s.append(f'''always @(posedge clk)if(runrq)begin
+ if(lf{q}_{g})$fatal(1,"NATIVE_LG_FAULT q={q} group={g}");
  if(s{q}_{g}.u_slice.fr_v[0])fillcount++;
  if(s{q}_{g}.u_slice.fr_v[1])fillcount++;
 end
@@ -173,9 +174,10 @@ source_lane #(17,3,{1+p%2},0) {name}rl(stream,runrs,rq{q}_{g}[{17*h}+:17],{name}
 source_lane #(281,3,0,0) {name}wl(stream,runrs,wq{q}_{g}[{281*h}+:281],{name}wq);
 source_lane #(257,{3-p%2},0,{1-p%2}) {name}ret(stream,runrs,{name}rr,rr{q}_{g}[{257*h}+:257]);
 wire {name}ack;source_lane #(1,{3-p%2},0,{1-p%2}) {name}dl(stream,runrs,{name}dn,{name}ack);hbfd_pad #(.W(1),.N({1+p%2})) {name}dp(.ck(stream),.rs(runrs),.i({name}ack),.o(dn{q}_{g}[{h}]));
+wire[17:0] {name}status;always @(posedge stream)if(runrs&&(|{name}status))$fatal(1,"NATIVE_BANK_STATUS q={q} bank={p} status=%h",{name}status);
 reg[280:0] {name}hostw=0;reg[16:0] {name}hostr=0;wire[256:0] {name}hostrr;
 wire {name}hosttime=(st%12000<7900)||(st%12000>=8900);
-hfd_vms_bank_native_q0_faces {name}(.rq0({name}rq),.rr0({name}rr),.rq1({name}hostr),.rr1({name}hostrr),.rq2(17'b0),.rq3(17'b0),.rq4(17'b0),.wq0({name}wq),.wq_done0({name}dn),.wq1({name}hostw),.wq_done1(),.bid(3'd{p}),.sid(2'd{q}),.clk(stream),.clk_n(stream),.clk_s(stream),.clk_e(stream),.clk_w(stream),.clk_macro0(stream),.clk_macro1(stream),.clk_macro2(stream),.rst_n(runrs),.rslot_v({name}hosttime?{name}hostr[16]:rv{q}[{p}]),.rslot({name}hosttime?3'd1:rslot{q}[{3*p}+:3]),.wslot_v({name}hosttime?{name}hostw[280]:wv{q}[{p}]),.wslot({name}hosttime?3'd1:wslot{q}[{3*p}+:3]),.dq(281'b0),.kq(281'b0),.xq(276'b0),.xq2(276'b0),.pq(285'b0));
+hfd_vms_bank_native_q0_faces {name}(.rq0({name}rq),.rr0({name}rr),.rq1({name}hostr),.rr1({name}hostrr),.rq2(17'b0),.rq3(17'b0),.rq4(17'b0),.wq0({name}wq),.wq_done0({name}dn),.wq1({name}hostw),.wq_done1(),.bid(3'd{p}),.sid(2'd{q}),.clk(stream),.clk_n(stream),.clk_s(stream),.clk_e(stream),.clk_w(stream),.clk_macro0(stream),.clk_macro1(stream),.clk_macro2(stream),.rst_n(runrs),.rslot_v({name}hosttime?{name}hostr[16]:rv{q}[{p}]),.rslot({name}hosttime?3'd1:rslot{q}[{3*p}+:3]),.wslot_v({name}hosttime?{name}hostw[280]:wv{q}[{p}]),.wslot({name}hosttime?3'd1:wslot{q}[{3*p}+:3]),.dq(281'b0),.kq(281'b0),.xq(276'b0),.xq2(276'b0),.pq(285'b0),.status({name}status));
 initial begin wait(runrs);
 ''')
     for ep in range(3):
