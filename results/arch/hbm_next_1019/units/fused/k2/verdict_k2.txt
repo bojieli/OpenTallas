@@ -1,0 +1,8 @@
+2026-10-19T02:49:07-07:00 start host=regular-crane bundle=f6d6de957
+2026-10-19T03:20:57-07:00 build k2 rc=0 bin=ok
+2026-10-19T03:21:20-07:00 k2 pre_n4_g256: MISMATCH word 163840: got 3e960000 exp bf630000 MISMATCH word 163841: got 3f7b0000 exp 3f4d0000 MISMATCH word 163842: got 3f280000 exp 3f3d0000 
+2026-10-19T03:21:21-07:00 k2 pre_n4_g0: MISMATCH word 163840: got 3e960000 exp bf630000 MISMATCH word 163841: got 3f7b0000 exp 3f4d0000 MISMATCH word 163842: got 3f280000 exp 3f3d0000 
+2026-10-19T03:21:26-07:00 k2 pre_n4_g64: HNX_FUSED_CYCLES op=pre N=4 rgap=64 KX=2 MUT=0 cycles=840 done=1 fault=0 reads=10884 writes=2560 HNX_FUSED PASS op=pre N=4 words=20480 
+2026-10-19T03:21:33-07:00 k2 pre_n4_g128: HNX_FUSED_CYCLES op=pre N=4 rgap=128 KX=2 MUT=0 cycles=1032 done=1 fault=0 reads=10884 writes=2560 HNX_FUSED PASS op=pre N=4 words=20480 
+2026-10-19T03:21:39-07:00 k2 pre_n4_g192: HNX_FUSED_CYCLES op=pre N=4 rgap=192 KX=2 MUT=0 cycles=1224 done=1 fault=0 reads=10884 writes=2560 HNX_FUSED PASS op=pre N=4 words=20480 
+2026-10-19T03:21:39-07:00 done
