@@ -25,7 +25,10 @@ Unit formats (RTL of record = GEN2 die rev abbf5d21f; SU files byte-identical to
        start col_idx__start_v; 32-b instruction, 8 a 256-b row (ot_hbm_idx_calendar_static.sv:2-5); words from
        tools/hbm_idx_static_calendar.compile_program (INDEX microprogram).  ASSUMED for IDX.TOPK route.top6: that
        compiler is the indexer programme, not parameterised by the MoE-router shape -> flagged.
-  SFU / COLL / HC / DMA / SM / host CP: target ports listed, image format NOT emitted (flag 'format_open'); records
+  HOST CP (transport of every non-SU programme): cp_frames() = F20 frame / F28+F2c descriptor / F30 launch events on
+       the host_cp_ingress__* slice inputs (hleaf_SW relays, CFG_LAT 2); SW target table SW_TARGETS (die.v tgt straps).
+  SFU / COLL / HC / DMA / SM: cp_targets listed per record (SM / DMA row payloads: sm_images.py), others flag
+       'format_open', reason 'payload_open: <compiler>'; records
        BLOCKED by an HBM-WIRE datapath gap carry 'blocked_by' (coverage.json grade).
 ASSUMPTIONS (flagged in the output): serial edge = ceil(3 x stream cycle / 4) (3:4 serial domain, AGENTS.md clock
 domains); the SU quarter-0 VM placement is the compiler's own (quarter-packed, sector s -> bank s mod 8 = store
@@ -91,6 +94,42 @@ def ds_dispatches(prog_json, layer):
     words += SB.C.SV.record(SB.C.SV.header("CTL", "END"),
                             descs={"A": SB.C.SV.mdesc(space=1, fmt=5, base=(1 << 18) - 16, n=1, m=1)})
     trace, _ = SB.C.SV.Ref(words, 0, 0, (1 << 20) - 1, 0, 129280, 1 << 20, {}).run()
+    pc_of, pc = {}, 0
+    for k, r in enumerate(recs):
+        pc_of[pc] = k
+        pc += SR.rec_bytes(r) // 16
+    disp = {}
+    for d in trace:
+        k = pc_of.get(d["rec"])
+        if k is not None and k not in disp:
+            disp[k] = d
+    return [(recs[k], disp.get(k), ent[k]) for k in range(len(recs))]
+
+
+def ds_dispatches_image(per_die_json, rank="0"):
+    """as ds_dispatches, from a fixture's per-rank HGI-1 layer image (ds_layer_fixtures --export-images:
+    ranks[].image_hex + record_tags + dyn) -- the programme ds_native ran, so VM addresses match the fixture."""
+    import ast
+    import su_bench as SB
+    from hgi_sim import records as SR
+    img = json.loads(Path(per_die_json).read_text())
+    rk = img["ranks"] if isinstance(img["ranks"], list) else ast.literal_eval(img["ranks"])
+    rk = [x for x in rk if str(x["rank"]) == str(rank)][0]
+    tags = img["record_tags"] if isinstance(img["record_tags"], list) else ast.literal_eval(img["record_tags"])
+    buf = bytes.fromhex(rk["image_hex"])
+    recs, ent, off = [], [], 0
+    while off < len(buf):
+        r, _ = SR.decode_one(buf, off)
+        n = SR.rec_bytes(r)
+        r.tag = tags[len(recs)] if len(recs) < len(tags) else ""
+        recs.append(r)
+        ent.append(dict(tag=r.tag, hex=buf[off:off + n].hex()))
+        off += n
+    words = [int.from_bytes(buf[q:q + 16], "little") for q in range(0, len(buf), 16)]
+    words += SB.C.SV.record(SB.C.SV.header("CTL", "END"),
+                            descs={"A": SB.C.SV.mdesc(space=1, fmt=5, base=(1 << 18) - 16, n=1, m=1)})
+    dyn = rk.get("dyn") or [0, (1 << 20) - 1, 1 << 20, 0, 0, 0, 0, (1 << 20) - 1]
+    trace, _ = SB.C.SV.Ref(words, 0, int(dyn[3]), int(dyn[1]), int(dyn[5]), 129280, 1 << 20, {}).run()
     pc_of, pc = {}, 0
     for k, r in enumerate(recs):
         pc_of[pc] = k
@@ -196,7 +235,28 @@ class Placement:
         return s.map[lsec]
 
 
-def su_record(raw, q=0, rng=None, data=None, place=None, tag=""):
+# SU reducer ingress (RTL facts, CDS 10-18): each quarter's ot_hbm_su_reduce_static takes ONE external operand per edge,
+# the lane chosen by red_sel = {v, op3, osel, lane7} (pgslice.sv:355-361 -> qcore_r5.sv:103-107 slice_x[e_sl]); a lane's
+# reducer value ro_v/ro_x is live for one edge only (lane.sv:119 "with vm_we timing", :719).  Dependent reducer ops issue
+# >= RED_DEP edges apart, commits/exports +RED_LAT (reduce_static.sv:1-8).  The golden sum (hdc_golden csum: contiguous
+# chunks of 8 summed sequentially from +0, chunk sums by a +0-padded pairwise tree) maps onto 8-op chunk chains + tree ops.
+RED_DEP, RED_LAT, RED_QUARTERS = 10, 9, 4
+
+
+def reducer_bound(words):
+    """lower bound (serial edges) of one SU reduction of `words` lane values on the die's reducers: ingress
+    ceil(words/4) (one operand / edge / quarter), then the last chunk's tail, the quarter chunk-sum tree, export,
+    the 4-quarter join tree (2 levels) and the final export; RF relay / class-4 read edges NOT counted (bound)."""
+    per_q = -(-words // RED_QUARTERS)
+    chunks_q = max(1, -(-per_q // 8))
+    tree_q = (chunks_q - 1).bit_length()
+    tail = RED_DEP * (1 + tree_q) + RED_LAT + RED_DEP * 2 + RED_LAT
+    return dict(words=words, ingress_edges=per_q, chunks_per_quarter=chunks_q, tail_edges=tail,
+                min_serial_edges=per_q + tail,
+                rule="1 reducer operand/edge/quarter (pgslice.sv:355-361, lane.sv:119); DEP 10, LAT 9 (reduce_static.sv)")
+
+
+def su_record(raw, q=0, rng=None, data=None, place=None, tag="", pad_zero=False):
     """lower one SU dispatch for quarter q: control (su_arith_lower), fill/drain calendars, expected VM words.
     Returns dict(status, lines, preload, expect, ...) with explicit reasons when v1 cannot emit a runnable image."""
     import su_arith_lower as L
@@ -215,6 +275,7 @@ def su_record(raw, q=0, rng=None, data=None, place=None, tag=""):
     if sut["red"]:
         res["reasons"].append("reducer_join_calendar_open (su_arith_lower open: scalar_reducer_external_joins; "
                               "golden csum8 tree order must be matched)")
+        res["reducer_bound"] = reducer_bound(int(row["words"]))
     roles = [r for r in "ABCD" if r in desc]
     for r in roles:
         md = desc[r]
@@ -331,10 +392,17 @@ def su_record(raw, q=0, rng=None, data=None, place=None, tag=""):
     res["inputs_placeholder"] = False
     if data is None:
         data = {}
+    pad = 0
     for a_ in logical:
         if a_ not in data:
-            data[a_] = np.float32(rng.standard_normal())
-            res["inputs_placeholder"] = True
+            if pad_zero:        # fixture run: a word of a fetched sector outside every operand = inactive-lane pad
+                data[a_] = np.float32(0)
+                pad += 1
+            else:
+                data[a_] = np.float32(rng.standard_normal())
+                res["inputs_placeholder"] = True
+    if pad:
+        res["pad_words_zero"] = pad
     if not sut["red"] and "O" in desc and not res["reasons"]:
         # elementwise: lane l of group g computes O[addr_O] from A..D at the same lane
         outv = {}
@@ -366,6 +434,50 @@ def column_image(lines, work):
     return man, cfg
 
 
+# ---------------------------------------------------------------------------------------------------- DS fixtures
+def desc_addrs(d):
+    """VM word addresses of a fixture descriptor [base, n, m, stride, istride, space, fmt] in array order
+    (row i of m, column j of n: base + i*stride + j*istride; ds_layer_fixtures flattens row-major)."""
+    base, n, m, st, ist = (int(x) for x in d[:5])
+    return [base + i * st + j * ist for i in range(m) for j in range(n)]
+
+
+def load_fixture(fdir, rank="0"):
+    """priced record i -> dict(vm_in {addr: f32}, vm_out {addr: u32}, k, tag) from a ds_layer_fixtures dir."""
+    recs = json.loads((Path(fdir) / "records.json").read_text())["records"][str(rank)]
+    z = np.load(Path(fdir) / "operands.npz")
+    out = {}
+    for x in recs:
+        ent = dict(k=x["k_layer"], tag=x["tag"], occ=int(x.get("occ", 0)), vm_in={}, vm_out={})
+        for io, key in (("inputs", "vm_in"), ("outputs", "vm_out")):
+            for role, v in x.get(io, {}).items():
+                if v.get("space") != "VM" or v.get("array") not in z:
+                    continue
+                arr = np.asarray(z[v["array"]], np.uint32)
+                ad = desc_addrs(x["desc"][role])
+                assert len(ad) == len(arr), (fdir, x["tag"], role, len(ad), len(arr))
+                for a_, w in zip(ad, arr):
+                    ent[key][a_] = np.uint32(w).view(np.float32) if key == "vm_in" else int(w)
+        for p in x.get("priced", []):
+            out[int(p["i"])] = ent
+    return out
+
+
+def fixture_check(su, fr):
+    """the image compiler's expected O words vs the fixture's post-record VM (bit-exact ds_native)."""
+    n = bad = 0
+    for x in su.get("expect", []):
+        for a_, v in zip(x["words"], x.get("value") or []):
+            if v is None or a_ not in fr["vm_out"]:
+                continue
+            n += 1
+            bad += int(v) != fr["vm_out"][a_]
+    su["fixture"] = dict(matched=True, k_layer=fr["k"], checked_words=n, mismatched_words=bad)
+    if bad:
+        su["reasons"].append(f"golden_mismatch: {bad}/{n} O words differ from the ds_native fixture")
+        su["status"] = "golden_mismatch"
+
+
 # ------------------------------------------------------------------------------------------------------------ main
 UNIT_PORTS = dict(SU=["su_prog__r_we", "su_prog__r_bank", "su_prog__r_row", "su_prog__r_data", "su_prog__r_start",
                       "su_prog__r_len"],
@@ -374,6 +486,132 @@ UNIT_PORTS = dict(SU=["su_prog__r_we", "su_prog__r_bank", "su_prog__r_row", "su_
                   COLL=["host_cp_ingress__cfg_v", "host_cp_ingress__cfg_data", "host_cp_ingress__desc_v",
                         "host_cp_ingress__launch_v", "ep_S0__rx_pin_flit", "ep_S1__rx_pin_flit"],
                   SFU=["host_cp_ingress__cfg_v", "host_cp_ingress__cfg_data"], SM=[], DMA=[], ATT=[], FUSED=[])
+
+
+# Host-CP configuration transport (every non-SU programme of the SW slice; RTL rtl/hbm_accel/host_static_20261015):
+# host_cp_ingress (ot_hbm_host_static_ingress, OUTSIDE the slice) -> hleaf_SW (ot_hbm_host_cfg_leaf_sw, CFG_LAT 2, a/b
+# copy groups) -> the target's own local programme store.  Frame = {cfg_target 8, cfg_addr (row) 12, cfg_data 256}
+# (F20 select + 8 x F24 pieces at the ingress), descriptor {desc_base 12, desc_limit 13 (exclusive), desc_loops 16}
+# (F28 + F2c), launch_v (F30).  The replay drives the ingress OUTPUT pins (= slice inputs host_cp_ingress__*), stream
+# domain, at the rate the ingress can produce them.
+# INGRESS RATE (VEH-FMT-SM 10-18, CONFIRMED against ot_hbm_host_static_ingress.sv:34-80 by a cycle model of its AXI-lite
+# admission, tb_hbm_host_static_ingress write32 protocol): every F2x is ONE AXI write; s_awready / s_wready pulse at most
+# every other edge, land in pin flops, and stay low while the write's B response is pending, so even an ideal master
+# (AW+W together, bready 1) completes one write per AXI_WRITE_EDGES = 5 edges.  A 256-b row = 8 F24 writes = 40 edges
+# (the 16 edges assumed before were 2.5x optimistic); F20 select = 1 write and the row address auto-increments, so
+# consecutive rows of one target need no new F20; descriptor = F28 + F2c (2 writes); launch = F30, which the ingress
+# refuses while its guard (5 after F2c) is non-zero -> one idle write slot between F2c and F30 (launch_ok,
+# ingress.sv:62, :114-117).  Output pins are registered one edge after the write executes (ingress.sv:44-51).
+AXI_WRITE_EDGES = 5
+CP_FRAME_EDGES = 8 * AXI_WRITE_EDGES               # one 256-b row
+CP_DESC_GUARD = AXI_WRITE_EDGES                    # kept for callers: one write slot
+CP_LAUNCH_GUARD = 7                                # ingress launch guard (README): no frame in the 7 edges after F30
+CP_DESC_TO_LAUNCH = 2 * AXI_WRITE_EDGES            # F2c -> F30: guard 5 must be 0 at the F30 execute edge
+CP_SCAN_GUARD = 8                                  # desc -> scan start (leaf CFG_LAT 2 + target capture) + margin
+# SW-slice targets (die.v GEN2 e92f4d03 scan: instances whose cfg_v is hleaf_SW__a/b_cfg_v, tgt strap) per HGI unit.
+# The PAYLOAD (row words) of each target is the target's own ABI (sm_images.py for SM / DMA; sibling lanes for the rest).
+# The SW slice holds 8 SMs, but only sm_SW0..3 are SW-leaf configured: cp_svg_SW4..7 / xc_SW4..7 hang on the SE leaf
+# (slice inputs hleaf_SE__b_* / hleaf_SE__a_*, SE_LEAF_TARGETS) and sm_SW4..7 results leave the slice (smw_SW lanes4
+# serves sm_SW0..3 only, slice.v smw_SW s0..s3) -- VEH-FMT-SM 10-18.
+SW_TARGETS = {
+    "SM": [(f"cp_svg_SW{k}", 64 + k) for k in range(4)] +                                # ot_static_cmd_target MODE 0
+          [("xl_SW_ctl", 100), ("smw_SW", 160)] + [(f"xc_SW{k}", 192 + k) for k in range(4)] +
+          [("calendar_SW", 96), ("refcfg_SW", 126)],
+    "COLL": [("hb_coll_SW", None), ("vmfc_SW", 56), ("epcal_SW", 132)],   # hb_coll_SW: strap inside the hard master
+    "DMA": [("hb_dbk_SW", 104), ("calendar_SW", 96)],
+    "HC": [("hc_SW", 108)],
+    "FUSED": [("hc_SW", 108), ("col_sfu_SW", 116)],
+    "SFU": [("col_sfu_SW", 116)],
+    "ATT": [], "IDX": [("col_idx (outside SW, hleaf_SE)", 120)],
+}
+# targets inside the SW slice configured through OTHER boundary inputs: (instance, tgt, slice input prefix).  A replay
+# that drives hleaf_SE__* stands in for the SE leaf's output pins (its CFG_LAT 2 is then the replay's to model).
+SE_LEAF_TARGETS = [(f"cp_svg_SW{k}", 64 + k, "hleaf_SE__b_") for k in range(4, 8)] + \
+                  [(f"xc_SW{k}", 192 + k, "hleaf_SE__a_") for k in range(4, 8)]
+DIRECT_TARGETS = [("hcollgi_SW", 176, "host_cp_ingress__")]          # COLL gather issue: on the ingress bus itself
+PAYLOAD_COMPILER = {
+    "SM": "sm_images.py (cp_svg feed programme + issuer descriptors, xc ext calendar, xl_SW_ctl x-load table, smw_SW "
+          "writer table, calendar_SW VM calendar, packed136 HBM image)",
+    "COLL": "ALL_GATHER on-die quadrant phase: hbm_layer_vehicle/coll_images.py (hcollgi_SW gq row + calendar_SW + far-end "
+            "ring replay, VEH-FMT-COLL); cross-die / GROUP_REDUCE_MCAST / TOPK_MERGE / ROW_GATHER: hb_coll_SW 1536-b ISA "
+            "rows (ot_hgi_coll_issuer_m) have no production compiler",
+    "DMA": "sm_images.py (hb_dbk_SW command table) + calendar_SW",
+    "HC": "hc_SW (ot_hbm_hc_qhub_static) row ABI",
+    "FUSED": "hc_SW rows + col_sfu_SW collar (2 striped spaces, tools/hbm_static/su_arith_sfu_compile.py lanes)",
+    "SFU": "col_sfu_SW collar (ot_hbm_static_cfg_collar NS 2) <- tools/hbm_static/su_arith_sfu_compile.py",
+    "ATT": "no ATT engine in the SW slice (tools/hbm_attention_static_calendar.py is the engine calendar)",
+    "IDX": "tools/hbm_idx_static_calendar.py (col_idx collar, SE leaf: outside the SW slice)",
+}
+
+
+class CpBus:
+    """the ingress output stream of one replay: AXI-write slots at AXI_WRITE_EDGES, events on the ingress output pins
+    (stream domain).  install() / desc() / launch() append in programme order; .t is the next free write edge."""
+
+    def __init__(s, t=0, src="image:CP"):
+        s.t, s.ev, s.src, s.sel = t, [], src, None
+
+    def _d(s, c, port, v, **kw):
+        s.ev.append(dict(k="D", dom="stream", cyc=c, port=f"host_cp_ingress__{port}", val=f"{v:x}", src=s.src, **kw))
+
+    def _write(s):
+        s.t += AXI_WRITE_EDGES
+        return s.t                                  # output pins change right after this edge
+
+    def install(s, target, rows, base=0, **kw):
+        """rows (256-b ints) at rows base.. of target; returns the edge of the last cfg_v."""
+        if s.sel != (target, base):
+            s._write()                              # F20 select {row base, target}
+        c = None
+        for j, w in enumerate(rows):
+            assert 0 <= w < 1 << 256 and base + j < 1 << 12
+            c = s.t + 7 * AXI_WRITE_EDGES + AXI_WRITE_EDGES     # 8th F24 executes
+            s.t = c
+            s._d(c, "cfg_target", target, **kw)
+            s._d(c, "cfg_addr", base + j, **kw)
+            s._d(c, "cfg_data", w, **kw)
+            s._d(c, "cfg_v", 1, **kw)
+            s._d(c + 1, "cfg_v", 0, **kw)
+        s.sel = (target, base + len(rows))
+        return c
+
+    def desc(s, target, base, limit, loops=1, **kw):
+        if s.sel is None or s.sel[0] != target:
+            s._write()                              # F20 select of the target (row field unused by F28/F2c)
+            s.sel = (target, base)
+        s._write()                                  # F28
+        c = s._write()                              # F2c -> desc_v
+        s._d(c, "cfg_target", target, **kw)
+        s._d(c, "desc_base", base, **kw)
+        s._d(c, "desc_limit", limit, **kw)
+        s._d(c, "desc_loops", loops, **kw)
+        s._d(c, "desc_v", 1, **kw)
+        s._d(c + 1, "desc_v", 0, **kw)
+        s.last_desc = c
+        # VEH-CUTS 10-19: the target scans rows [base, limit) one per edge after the descriptor
+        # (ot_static_program_target.sv: launch while scanning faults, measured on the GEN2b idxtk cut with a 151-row
+        # calendar: hleaf_SW s_fault, no programme start).  The launch waits for the scan of every armed target.
+        s.scan_end = max(getattr(s, "scan_end", -99), c + (limit - base) + CP_SCAN_GUARD)
+        return c
+
+    def launch(s, **kw):
+        c = max(s._write(), getattr(s, "last_desc", -99) + CP_DESC_TO_LAUNCH, getattr(s, "scan_end", -99))
+        s.t = c
+        s._d(c, "launch_v", 1, **kw)
+        s._d(c + 1, "launch_v", 0, **kw)
+        s.t = c + CP_LAUNCH_GUARD
+        return c
+
+
+def cp_frames(target, rows, t, base=0, loops=1, launch=True):
+    """replay D events (stream domain, ingress output pins) installing `rows` (256-b ints) at rows base.. of
+    `target`, then its descriptor and (optionally) the launch, at the ingress rate.  Returns (events, launch_edge,
+    next_free_edge)."""
+    b = CpBus(t)
+    b.install(target, rows, base)
+    b.desc(target, base, base + len(rows), loops)
+    lt = b.launch() if launch else None
+    return b.ev, lt, b.t
 
 
 def main():
@@ -388,6 +626,11 @@ def main():
     ap.add_argument("--quarter", type=int, default=0, help="SU quarter of the slice (SW = 0)")
     ap.add_argument("--load-gap", type=int, default=16, help="serial edges between reset release and layer t0 slack")
     ap.add_argument("--reload-gap", type=int, default=600, help="idle serial edges after which a new SU programme is loaded")
+    ap.add_argument("--fixtures", type=Path, help="DS per-record fixture dir (ds_layer_fixtures.py: records.json + "
+                    "operands.npz, e.g. results/rtl/hbm_ds_layer_tput_1018/fixtures/L02): VM operands = the bit-exact "
+                    "ds_native state before each record, expected O checked against its state after (default: seeded "
+                    "placeholder operands)")
+    ap.add_argument("--rank", default="0", help="fixture rank")
     ap.add_argument("--out", type=Path, required=True)
     a = ap.parse_args()
     if a.design == "qwen":
@@ -402,9 +645,24 @@ def main():
     lay = int(a.layer) if a.layer.isdigit() else None
     if lay is None:
         sys.exit("layer_images: head segment needs the head programme (ds_rank0_program has layers only)")
-    prog = ds_dispatches(a.programme, lay)
     recs = pr["records"]
-    aligned = len(prog) == len([r for r in recs if r["unit"] != "CTL"]) or len(prog) == len(recs)
+    fx = load_fixture(a.fixtures, a.rank) if a.fixtures else {}
+    if fx:
+        # the fixture's own layer image (the programme ds_native ran bit-exact); priced i -> image record k_layer
+        imgs = sorted((a.fixtures / "images").glob("*_per_die.json"))
+        prog_src = imgs[0]
+        prog = ds_dispatches_image(prog_src, a.rank)
+        # k_layer counts DISPATCHED records only (the image also holds the rank's CTL.NOPs): match (tag, occurrence)
+        where = {}
+        for k, (_, _, e) in enumerate(prog):
+            where.setdefault(e["tag"], []).append(k)
+        pk_of = {i: where[f["tag"]][f["occ"]] for i, f in fx.items()
+                 if f["occ"] < len(where.get(f["tag"], []))}
+    else:
+        prog_src = a.programme
+        prog = ds_dispatches(a.programme, lay)
+        aligned = len(prog) == len([r for r in recs if r["unit"] != "CTL"]) or len(prog) == len(recs)
+        pk_of = {r["i"]: r["i"] for r in recs if aligned and r["i"] < len(prog)}
     want = set(int(x) for x in a.records.split(",")) if a.records else None
     a.out.mkdir(parents=True, exist_ok=True)
     events, manifest, t_su_free = [], [], 0
@@ -421,7 +679,7 @@ def main():
                    cls=r["cls"], grade=cov.get(r["i"], {}).get("grade"),
                    blocked_by=cov.get(r["i"], {}).get("datapath_gaps") or [],
                    open_gaps=cov.get(r["i"], {}).get("open_gaps") or [])
-        pk = r["i"] if aligned and r["i"] < len(prog) else None
+        pk = pk_of.get(r["i"])
         if pk is not None and prog[pk][2]["tag"] != r["tag"]:
             ent["programme_tag_mismatch"] = prog[pk][2]["tag"]
         unit = r["orig_op"].split(".")[0]
@@ -429,9 +687,25 @@ def main():
         if unit == "SU" and pk is not None and prog[pk][1] is not None:
             import su_bench as SB
             raw = SB.pack_rec(prog[pk][1])
-            su = su_record(raw, a.quarter, rng, data=vm_data, place=place, tag=r["tag"])
+            fr = fx.get(r["i"])
+            if fr is not None:
+                vm_data.update(fr["vm_in"])           # the record's operands = ds_native VM state before it
+            try:
+                su = su_record(raw, a.quarter, rng, data=vm_data, place=place, tag=r["tag"], pad_zero=fr is not None)
+            except AssertionError as ex:                # su_program_inventory.decode: adapter contract refusal
+                ent.update(status="adapter_refused", reasons=[f"su_record: {ex}"])
+                manifest.append(ent)
+                continue
+            if fr is not None:
+                fixture_check(su, fr)
             ent.update(status=su["status"], reasons=su["reasons"], lowering=su["lowering"],
                        inputs_placeholder=su.get("inputs_placeholder"))
+            if fx:
+                ent["fixture"] = dict(su.get("fixture", dict(matched=False)), pad_words_zero=su.get("pad_words_zero", 0))
+            if su.get("reducer_bound"):
+                rb = dict(su["reducer_bound"], priced_serial_edges=serial(r["end"]) - serial(r["start"]))
+                rb["bound_over_price"] = round(rb["min_serial_edges"] / max(1, rb["priced_serial_edges"]), 2)
+                ent["reducer_bound"] = rb
             if su.get("lines") and su["status"] == "emitted":
                 d = a.out / "images" / f"r{r['i']:03d}_su"
                 d.mkdir(parents=True, exist_ok=True)
@@ -451,6 +725,10 @@ def main():
                 ent.update(status="format_open", reasons=[f"compile_program: {ex!r}"])
         else:
             ent.update(status="format_open", reasons=[f"{unit} programme image format not emitted by v1"])
+            if unit in SW_TARGETS:
+                ent.update(cp_targets=[dict(instance=i, tgt=t_) for i, t_ in SW_TARGETS[unit]],
+                           cp_transport="host_cp_ingress F20 frames -> hleaf_SW (cp_frames)")
+                ent["reasons"].append(f"payload_open: {PAYLOAD_COMPILER[unit]}")
         if ent["blocked_by"]:
             ent["status"] = "blocked:" + ent["status"]
         manifest.append(ent)
@@ -539,6 +817,8 @@ def main():
     for p in {e["port"] for e in events if e["k"] == "D"}:
         assert p in inports, f"replay drives {p}, not a slice input port"
     rep = dict(schema="opentallas.hbm_slice_replay.v1", slice=bnd.get("slice_top", "sw"), design=a.design,
+               scope="component_probe", qualifies_native_layer=False, qualifies_native_chain=False,
+               state_seed_provenance=["released_checkpoint_fixture" if a.fixtures else "seeded_placeholder"],
                layer=a.layer, t0_serial=t0, priced_layer_cycles=pr["cycles"],
                assumptions=["serial = ceil(3*stream/4)", "SU quarter VM placement quarter-packed (compiler's own)",
                             "VM operands as M preload events (no slice VM input port)",
@@ -546,7 +826,10 @@ def main():
                events=events)
     (a.out / "replay.json").write_text(json.dumps(rep) + "\n")
     man = dict(schema="opentallas.hbm_layer_images.v1", design=a.design, layer=a.layer,
-               priced=str(a.priced), programme=str(a.programme), programme_sha256=sha(a.programme.read_bytes()),
+               scope=rep["scope"], qualifies_native_layer=False, qualifies_native_chain=False,
+               state_seed_provenance=rep["state_seed_provenance"],
+               priced=str(a.priced), programme=str(prog_src), programme_sha256=sha(Path(prog_src).read_bytes()),
+               fixtures=str(a.fixtures) if a.fixtures else None,
                boundary=str(a.boundary), records=manifest, placement_conflicts=place.conflicts,
                placed_sectors=len(place.map), su_programmes=cfgs, t0_serial=t0,
                counts={k: sum(1 for m in manifest if m["status"] == k) for k in sorted({m["status"] for m in manifest})})
