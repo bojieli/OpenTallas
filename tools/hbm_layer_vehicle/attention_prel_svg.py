@@ -185,6 +185,15 @@ def run(a):
     log = r.stdout + r.stderr
     (d / 'run.log').write_text(log)
     _, gos, _, fault, done = S.parse(log)
+    if a.mut and (r.returncode or fault):
+        diagnostics = [line for line in log.splitlines() if any(token in line.lower() for token in ('fault', 'error', 'assert'))]
+        doc = dict(pass_=False, mutation=a.mut, rc=r.returncode, fault=fault, done=done,
+                   first_failure=diagnostics[0] if diagnostics else None, causal_review_required=True,
+                   source=src, budget=c['budget'], service_build_revision=a.service_build_revision,
+                   compiler_sha256=S.sha(Path(__file__)), executable_sha256=S.sha(exe),
+                   event_sha256={p.name:S.sha(p) for p in sorted(d.glob('*.hex'))})
+        Path(a.out).write_text(json.dumps(doc, indent=2)+'\n')
+        print(json.dumps(doc, indent=2)); raise SystemExit(1)
     results, pv_nodes, pv_rows = [], [], []
     for b in c['blocks']:
         lo, hi = b['first_abs'], b['end_abs'] + 80
