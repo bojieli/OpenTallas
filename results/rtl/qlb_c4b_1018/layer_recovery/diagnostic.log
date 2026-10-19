@@ -1,0 +1,7 @@
+Recovered original QW-CLAYER source with row-order residual landing.
+Fleet ot-run unit oth-ubuntu-2411166-1792391485 exit 0, Verilator builds untouched.
+PASS test_row_order_windows; PASS test_compose_layer; PASS dv_lower_vec_bench --help --ar-order support.
+Analytic only: layer_latency=5504; chained=5471; L0_cold=5966; calendar entries=390; clashes=0; capacity_fits=False; gaps=7.
+UNMEASURED: no native L0/L1 layer cycles or production qualification.
+Original jobs local397433/397434 still compiling at 23:31 PT; no calibration output.
+Next after saved vec executable exists: run dv_lower_vec_bench.py --mode resid --ar-order row, then --mutant arwin on same executable with preserved 5.050/ages.

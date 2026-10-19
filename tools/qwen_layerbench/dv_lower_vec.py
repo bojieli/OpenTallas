@@ -313,10 +313,14 @@ def span(ages, op):
     return max(ages['d2d'][op]) if op in ages['d2d'] else 0
 
 
-def lower_vec(mode, mutant=None, ages=None, consts=None, prog=PROG):
+def lower_vec(mode, mutant=None, ages=None, consts=None, prog=PROG, ar_order='slice'):
     """mode resid (families 1 + 2), qk (3), silu (4).  Mutants (bench witnesses): resid 'arwin' (PORTS on windows one
     edge early: slice k > 0 also lands the last t word of slice k - 1), 'xslot' (x stream entries without the stream occupancy check); qk 'ropesign' (lo / hi signs swapped);
-    silu 'nor' (the gate/up * r op dropped)."""
+    silu 'nor' (the gate/up * r op dropped).
+    ar_order (QW-CLAYER 10-18): 'slice' = the slice-major AR return calendar (QLB-C4b/3a assumption); 'row' = the
+    io_collective message order (word w = 8 b + j, global row order: what qfd_io_collective_static returns and what
+    dv_lower_mat's o / down AR messages send): per owned block one PORTS arm (ar_base = T + 128 i) entering t_b - s - 1
+    and one disarm entering t_b + 7 - s (t_b = return word 8 b at the dvs_W5 return pin), the stage-0 embedding rule."""
     if mode not in ('resid', 'qk', 'silu'):
         raise LowerError(f'mode {mode}')
     smap, own = D.slice_map(), D.ownership()
@@ -350,19 +354,34 @@ def lower_vec(mode, mutant=None, ages=None, consts=None, prog=PROG):
         t += N + 2
         # AR return calendar (slice-major owned blocks) + PORTS windows
         r0, land = t + N + 2, {}
-        tt = r0
-        for s in range(N):
-            first = tt
-            for b in blocks[s]:
+        if ar_order not in ('slice', 'row'):
+            raise LowerError(f'ar_order {ar_order}')
+        if ar_order == 'row':
+            owner = {b: (s, i) for s in range(N) for i, b in enumerate(blocks[s])}
+            nb = len(owner)
+            for b in range(nb):
+                s, i = owner[b]
+                tb = r0 + 8 * b
                 for w in range(BLOCK // 16):
-                    ar_cal.append(dict(edge=tt, slice=s, block=b, word=w))
-                    tt += 1
-            land[s] = (first, tt - 1)
-        for s in range(N):
-            first, last = land[s]
-            on = first - s - 1 - (1 if mutant == 'arwin' and s else 0)
-            S.cmd(on, D.cmd_ports(s, ar_base=vm['T']['base'], ar_en=1), f'PORTS s{s} AR on (T)')
-            S.cmd(last - s, D.cmd_ports(s, ar_base=vm['T']['base'], ar_en=0), f'PORTS s{s} AR off')
+                    ar_cal.append(dict(edge=tb + w, slice=s, block=b, word=w))
+                on = tb - s - 1 - (1 if mutant == 'arwin' and s else 0)
+                S.cmd(on, D.cmd_ports(s, ar_base=vm['T']['base'] + BLOCK * i, ar_en=1), f'PORTS s{s} AR on (T+{BLOCK * i}) b{b}')
+                S.cmd(tb + 7 - s, D.cmd_ports(s, ar_base=vm['T']['base'] + BLOCK * i, ar_en=0), f'PORTS s{s} AR off b{b}')
+                land[s] = (min(land.get(s, (tb, 0))[0], tb), tb + 7)
+        else:
+            tt = r0
+            for s in range(N):
+                first = tt
+                for b in blocks[s]:
+                    for w in range(BLOCK // 16):
+                        ar_cal.append(dict(edge=tt, slice=s, block=b, word=w))
+                        tt += 1
+                land[s] = (first, tt - 1)
+            for s in range(N):
+                first, last = land[s]
+                on = first - s - 1 - (1 if mutant == 'arwin' and s else 0)
+                S.cmd(on, D.cmd_ports(s, ar_base=vm['T']['base'], ar_en=1), f'PORTS s{s} AR on (T)')
+                S.cmd(last - s, D.cmd_ports(s, ar_base=vm['T']['base'], ar_en=0), f'PORTS s{s} AR off')
         # fused residual add + SSQ: after the slice's last t word landed, collision-free scalar chain
         L = ages['add_psum_out']
         ent = {}
@@ -425,7 +444,7 @@ def lower_vec(mode, mutant=None, ages=None, consts=None, prog=PROG):
         raise LowerError(f'collisions {coll[:3]}')
     return dict(
         schema='opentallas.qwen.dv-lowering-vec.v1', tool='tools/qwen_layerbench/dv_lower_vec.py', mode=mode,
-        mutant=mutant, slice_map=smap, ownership=own, vm=vm, crom=cr, qkv_roles=roles, isa=isa, isa_rmsnorm=isa_n,
+        mutant=mutant, ar_order=ar_order, ar_r0=r0 if mode == 'resid' else None, slice_map=smap, ownership=own, vm=vm, crom=cr, qkv_roles=roles, isa=isa, isa_rmsnorm=isa_n,
         ages=ages, pidx=PIDX,
         prog={s: [f'{w:0115x}' for w in ws] for s, ws in img.items()},
         prog_stream={s: [dict(eaddr=a_, payload=f'{p:0256x}') for a_, p in D.prog_words(ws)] for s, ws in img.items()},

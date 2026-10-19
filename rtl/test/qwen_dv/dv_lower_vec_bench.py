@@ -395,10 +395,10 @@ def run_silu(work, lw, rng, tag):
     return ok, 1, errs, f'act words={len(lw["expected"]["x"])}'
 
 
-def main_run(work, mode, mutant, seed, ages):
+def main_run(work, mode, mutant, seed, ages, ar_order='slice'):
     rng = np.random.default_rng(seed)
     consts = consts_for(rng)
-    lw = V.lower_vec(mode, mutant, ages=ages, consts=consts)
+    lw = V.lower_vec(mode, mutant, ages=ages, consts=consts, ar_order=ar_order)
     (work / f'lowering_{mode}.json' if not mutant else work / f'lowering_{mode}_{mutant}.json').write_text(
         json.dumps(lw, indent=1) + '\n')
     lw['_consts'] = consts
@@ -417,6 +417,8 @@ def main():
     ap.add_argument('--work', required=True)
     ap.add_argument('--mode', required=True, choices=('calibrate', 'resid', 'qk', 'silu'))
     ap.add_argument('--mutant')
+    ap.add_argument('--ar-order', choices=('slice', 'row'), default='slice',
+                    help='residual AR return order; row matches the production collective')
     ap.add_argument('--ages', help='vec_ages.json (default: the committed one)')
     ap.add_argument('--seed', type=int, default=1)
     a = ap.parse_args()
@@ -425,7 +427,7 @@ def main():
     if a.mode == 'calibrate':
         return calibrate(work, a.seed)
     ages = V.load_ages(a.ages) if a.ages else None
-    return main_run(work, a.mode, a.mutant, a.seed, ages)
+    return main_run(work, a.mode, a.mutant, a.seed, ages, a.ar_order)
 
 
 if __name__ == '__main__':
