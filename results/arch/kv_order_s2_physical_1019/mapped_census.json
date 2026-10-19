@@ -1,0 +1,1516 @@
+{
+  "scope": "actual mapped netlist; not timing or safe closure",
+  "sha256": "f763cfdaa3515105cbe73d2204a5ecfd3428369b5e8af6de8d79520ed9e29fba",
+  "top": "qkd_hr_core_order",
+  "cells": 82733,
+  "registers": 17501,
+  "macros": [
+    {
+      "name": "u_ot_pr_core.u_rank__u_chain.u_map.g_sram_fifo.u_payload.g_bank[0].u_mem",
+      "master": "ot_sram_1r1w_32x128_m1_p192"
+    },
+    {
+      "name": "u_ot_pr_core.u_rank__u_chain.u_map.g_sram_fifo.u_payload.g_bank[1].u_mem",
+      "master": "ot_sram_1r1w_32x128_m1_p192"
+    },
+    {
+      "name": "u_ot_pr_core.u_rank__u_chain.u_map.g_sram_fifo.u_payload.g_bank[2].u_mem",
+      "master": "ot_sram_1r1w_32x128_m1_p192"
+    },
+    {
+      "name": "u_ot_pr_core.u_rank__u_dispatch.g_sram_fifo.u_payload.g_bank[0].u_mem",
+      "master": "ot_sram_1r1w_32x128_m1_p192"
+    },
+    {
+      "name": "u_ot_pr_core.u_rank__u_dispatch.g_sram_fifo.u_payload.g_bank[1].u_mem",
+      "master": "ot_sram_1r1w_32x128_m1_p192"
+    },
+    {
+      "name": "u_ot_pr_core.u_rank__u_dispatch.g_sram_fifo.u_payload.g_bank[2].u_mem",
+      "master": "ot_sram_1r1w_32x128_m1_p192"
+    }
+  ],
+  "register_output_count": 17501,
+  "over32_count": 64,
+  "max_register_loads": 580,
+  "over32": [
+    {
+      "cell": "u_ot_pr_core.u_rank__u_dispatch.g_sram_fifo.u_payload.raw$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_dispatch.g_sram_fifo.u_payload.raw$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 580,
+      "flop_loads": 0,
+      "example": null
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_chain.u_map.g_sram_fifo.u_payload.raw$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_chain.u_map.g_sram_fifo.u_payload.raw$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 566,
+      "flop_loads": 0,
+      "example": null
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_chain.u_order.iqpc[0]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_chain.u_order.iqpc[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 268,
+      "flop_loads": 0,
+      "example": null
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_chain.u_order.iqpc[1]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_chain.u_order.iqpc[1]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 268,
+      "flop_loads": 0,
+      "example": null
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_chain.u_order.iqpc[2]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_chain.u_order.iqpc[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 265,
+      "flop_loads": 0,
+      "example": null
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_chain.u_order.iqpc[3]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_chain.u_order.iqpc[3]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 265,
+      "flop_loads": 0,
+      "example": null
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_chain.u_order.iqpc[4]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_chain.u_order.iqpc[4]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 264,
+      "flop_loads": 0,
+      "example": null
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_chain.u_order.iqpc[5]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_chain.u_order.iqpc[5]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 264,
+      "flop_loads": 0,
+      "example": null
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_chain.u_order.iqpc[6]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_chain.u_order.iqpc[6]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 264,
+      "flop_loads": 0,
+      "example": null
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_dispatch.u_order.iqpc[2]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_dispatch.u_order.iqpc[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 264,
+      "flop_loads": 0,
+      "example": null
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_dispatch.u_order.iqpc[3]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_dispatch.u_order.iqpc[3]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 264,
+      "flop_loads": 0,
+      "example": null
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_dispatch.u_order.iqpc[4]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_dispatch.u_order.iqpc[4]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 264,
+      "flop_loads": 0,
+      "example": null
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_dispatch.u_order.iqpc[5]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_dispatch.u_order.iqpc[5]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 264,
+      "flop_loads": 0,
+      "example": null
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_dispatch.u_order.iqpc[6]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_dispatch.u_order.iqpc[6]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 264,
+      "flop_loads": 0,
+      "example": null
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_dispatch.u_order.iqpc[0]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_dispatch.u_order.iqpc[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 263,
+      "flop_loads": 0,
+      "example": null
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_dispatch.u_order.iqpc[1]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_dispatch.u_order.iqpc[1]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 263,
+      "flop_loads": 0,
+      "example": null
+    },
+    {
+      "cell": "host_rst_n__ot_rl1$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "host_rst_n__ot_rl1$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 237,
+      "flop_loads": 237,
+      "example": "hb__ot_pr[0]$_DFF_PN0_"
+    },
+    {
+      "cell": "ot_rrs__host_rst_n__ot_rlv__c1$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "ot_rrs__host_rst_n__ot_rlv__c1$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 237,
+      "flop_loads": 237,
+      "example": "hb__ot_pr[205]$_DFFE_PN0P_"
+    },
+    {
+      "cell": "ot_rrs__host_rst_n__ot_rlv__c10$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "ot_rrs__host_rst_n__ot_rlv__c10$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 237,
+      "flop_loads": 237,
+      "example": "u_ot_pr_core.u_rank__u_dispatch.u_order.outstanding[15][2]$_DFFE_PN0P_"
+    },
+    {
+      "cell": "ot_rrs__host_rst_n__ot_rlv__c11$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "ot_rrs__host_rst_n__ot_rlv__c11$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 237,
+      "flop_loads": 237,
+      "example": "landed__ot_pr[0]$_DFFE_PN0P_"
+    },
+    {
+      "cell": "ot_rrs__host_rst_n__ot_rlv__c12$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "ot_rrs__host_rst_n__ot_rlv__c12$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 237,
+      "flop_loads": 237,
+      "example": "u_ot_pr_core.u_rank__u_dispatch.u_order.fc[0]$_DFFE_PN0P_"
+    },
+    {
+      "cell": "ot_rrs__host_rst_n__ot_rlv__c13$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "ot_rrs__host_rst_n__ot_rlv__c13$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 237,
+      "flop_loads": 237,
+      "example": "physical_ack_n__ot_pr[0]$_DFF_PN0_"
+    },
+    {
+      "cell": "ot_rrs__host_rst_n__ot_rlv__c14$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "ot_rrs__host_rst_n__ot_rlv__c14$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 237,
+      "flop_loads": 237,
+      "example": "u_ot_pr_core.u_rank__u_chain.u_order.outstanding[102][0]$_DFFE_PN0P_"
+    },
+    {
+      "cell": "ot_rrs__host_rst_n__ot_rlv__c15$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "ot_rrs__host_rst_n__ot_rlv__c15$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 237,
+      "flop_loads": 237,
+      "example": "u_ot_pr_core.u_rank__u_chain.u_order.outstanding[108][4]$_DFFE_PN0P_"
+    },
+    {
+      "cell": "ot_rrs__host_rst_n__ot_rlv__c16$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "ot_rrs__host_rst_n__ot_rlv__c16$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 237,
+      "flop_loads": 237,
+      "example": "u_ot_pr_core.u_rank__u_chain.u_order.outstanding[114][7]$_DFFE_PN0P_"
+    },
+    {
+      "cell": "ot_rrs__host_rst_n__ot_rlv__c17$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "ot_rrs__host_rst_n__ot_rlv__c17$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 237,
+      "flop_loads": 237,
+      "example": "u_ot_pr_core.u_rank__u_chain.u_order.outstanding[10][0]$_DFFE_PN0P_"
+    },
+    {
+      "cell": "ot_rrs__host_rst_n__ot_rlv__c18$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "ot_rrs__host_rst_n__ot_rlv__c18$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 237,
+      "flop_loads": 237,
+      "example": "u_ot_pr_core.u_rank__u_chain.u_order.outstanding[127][0]$_DFFE_PN0P_"
+    },
+    {
+      "cell": "ot_rrs__host_rst_n__ot_rlv__c19$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "ot_rrs__host_rst_n__ot_rlv__c19$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 237,
+      "flop_loads": 237,
+      "example": "u_ot_pr_core.u_rank__u_chain.u_order.outstanding[13][0]$_DFFE_PN0P_"
+    },
+    {
+      "cell": "ot_rrs__host_rst_n__ot_rlv__c2$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "ot_rrs__host_rst_n__ot_rlv__c2$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 237,
+      "flop_loads": 237,
+      "example": "u_ot_pr_core.u_rank__kv_ing[120]$_DFFE_PN0P_"
+    },
+    {
+      "cell": "ot_rrs__host_rst_n__ot_rlv__c20$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "ot_rrs__host_rst_n__ot_rlv__c20$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 237,
+      "flop_loads": 237,
+      "example": "u_ot_pr_core.u_rank__u_chain.u_order.outstanding[19][0]$_DFFE_PN0P_"
+    },
+    {
+      "cell": "ot_rrs__host_rst_n__ot_rlv__c21$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "ot_rrs__host_rst_n__ot_rlv__c21$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 237,
+      "flop_loads": 237,
+      "example": "u_ot_pr_core.u_rank__u_chain.prefix_count[0]$_DFFE_PN0P_"
+    },
+    {
+      "cell": "ot_rrs__host_rst_n__ot_rlv__c22$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "ot_rrs__host_rst_n__ot_rlv__c22$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 237,
+      "flop_loads": 237,
+      "example": "u_ot_pr_core.u_rank__u_chain.u_order.fr[0]$_DFFE_PN0P_"
+    },
+    {
+      "cell": "ot_rrs__host_rst_n__ot_rlv__c23$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "ot_rrs__host_rst_n__ot_rlv__c23$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 237,
+      "flop_loads": 237,
+      "example": "u_ot_pr_core.u_rank__u_chain.u_order.fc[0]$_DFFE_PN0P_"
+    },
+    {
+      "cell": "ot_rrs__host_rst_n__ot_rlv__c24$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "ot_rrs__host_rst_n__ot_rlv__c24$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 237,
+      "flop_loads": 237,
+      "example": "u_ot_pr_core.u_rank__kv_issued[0]$_DFFE_PN0P_"
+    },
+    {
+      "cell": "ot_rrs__host_rst_n__ot_rlv__c26$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "ot_rrs__host_rst_n__ot_rlv__c26$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 237,
+      "flop_loads": 237,
+      "example": "u_ot_pr_core.u_rank__kv_landed[0]$_DFFE_PN0N_"
+    },
+    {
+      "cell": "ot_rrs__host_rst_n__ot_rlv__c27$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "ot_rrs__host_rst_n__ot_rlv__c27$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 237,
+      "flop_loads": 237,
+      "example": "chain_f__ot_pr[0]$_DFF_PN0_"
+    },
+    {
+      "cell": "ot_rrs__host_rst_n__ot_rlv__c28$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "ot_rrs__host_rst_n__ot_rlv__c28$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 237,
+      "flop_loads": 237,
+      "example": "chain_f__ot_pr[100]$_DFFE_PN0P_"
+    },
+    {
+      "cell": "ot_rrs__host_rst_n__ot_rlv__c29$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "ot_rrs__host_rst_n__ot_rlv__c29$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 237,
+      "flop_loads": 237,
+      "example": "chain_f__ot_pr[246]$_DFFE_PN0P_"
+    },
+    {
+      "cell": "ot_rrs__host_rst_n__ot_rlv__c3$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "ot_rrs__host_rst_n__ot_rlv__c3$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 237,
+      "flop_loads": 237,
+      "example": "u_ot_pr_core.u_rank__u_dispatch.u_order.outstanding[100][0]$_DFFE_PN0P_"
+    },
+    {
+      "cell": "ot_rrs__host_rst_n__ot_rlv__c30$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "ot_rrs__host_rst_n__ot_rlv__c30$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 237,
+      "flop_loads": 237,
+      "example": "chain_f__ot_pr[483]$_DFFE_PN0P_"
+    },
+    {
+      "cell": "ot_rrs__host_rst_n__ot_rlv__c31$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "ot_rrs__host_rst_n__ot_rlv__c31$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 237,
+      "flop_loads": 237,
+      "example": "chain_f__ot_pr[720]$_DFFE_PN0P_"
+    },
+    {
+      "cell": "ot_rrs__host_rst_n__ot_rlv__c32$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "ot_rrs__host_rst_n__ot_rlv__c32$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 237,
+      "flop_loads": 237,
+      "example": "chain_f__ot_pr[1000]$_DFFE_PN0P_"
+    },
+    {
+      "cell": "ot_rrs__host_rst_n__ot_rlv__c33$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "ot_rrs__host_rst_n__ot_rlv__c33$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 237,
+      "flop_loads": 237,
+      "example": "u_ot_pr_core.u_rank__kv_ing_cr$_DFF_PN0_"
+    },
+    {
+      "cell": "ot_rrs__host_rst_n__ot_rlv__c34$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "ot_rrs__host_rst_n__ot_rlv__c34$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 237,
+      "flop_loads": 237,
+      "example": "u_ot_pr_core.u_rank__order_fault$_DFF_PN0_"
+    },
+    {
+      "cell": "ot_rrs__host_rst_n__ot_rlv__c4$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "ot_rrs__host_rst_n__ot_rlv__c4$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 237,
+      "flop_loads": 237,
+      "example": "u_ot_pr_core.u_rank__u_dispatch.u_order.fw[0]$_DFFE_PN0P_"
+    },
+    {
+      "cell": "ot_rrs__host_rst_n__ot_rlv__c5$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "ot_rrs__host_rst_n__ot_rlv__c5$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 237,
+      "flop_loads": 237,
+      "example": "u_ot_pr_core.u_rank__u_dispatch.u_order.outstanding[112][4]$_DFFE_PN0P_"
+    },
+    {
+      "cell": "ot_rrs__host_rst_n__ot_rlv__c6$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "ot_rrs__host_rst_n__ot_rlv__c6$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 237,
+      "flop_loads": 237,
+      "example": "u_ot_pr_core.u_rank__u_dispatch.u_order.outstanding[119][0]$_DFFE_PN0P_"
+    },
+    {
+      "cell": "ot_rrs__host_rst_n__ot_rlv__c7$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "ot_rrs__host_rst_n__ot_rlv__c7$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 237,
+      "flop_loads": 237,
+      "example": "u_ot_pr_core.u_rank__u_dispatch.u_order.outstanding[10][0]$_DFFE_PN0P_"
+    },
+    {
+      "cell": "ot_rrs__host_rst_n__ot_rlv__c8$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "ot_rrs__host_rst_n__ot_rlv__c8$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 237,
+      "flop_loads": 237,
+      "example": "u_ot_pr_core.u_rank__u_dispatch.u_order.outstanding[17][0]$_DFFE_PN0P_"
+    },
+    {
+      "cell": "ot_rrs__host_rst_n__ot_rlv__c9$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "ot_rrs__host_rst_n__ot_rlv__c9$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 237,
+      "flop_loads": 237,
+      "example": "u_ot_pr_core.u_rank__u_dispatch.u_order.outstanding[13][0]$_DFFE_PN0P_"
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_chain.u_map.hd[5]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_chain.u_map.hd[5]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 233,
+      "flop_loads": 1,
+      "example": "u_ot_pr_core.u_rank__u_chain.issue_pc[1]$_DFF_PN0_"
+    },
+    {
+      "cell": "ot_rrs__host_rst_n__ot_rlv__c25$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "ot_rrs__host_rst_n__ot_rlv__c25$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 230,
+      "flop_loads": 230,
+      "example": "u_ot_pr_core.u_rank__kv_issued[24]$_DFFE_PN0P_"
+    },
+    {
+      "cell": "ot_rrs__host_rst_n__ot_rlv__c35$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "ot_rrs__host_rst_n__ot_rlv__c35$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 207,
+      "flop_loads": 207,
+      "example": "u_ot_pr_core.u_rank__u_dispatch.order_fault$_DFF_PN0_"
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_chain.u_map.hd[4]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_chain.u_map.hd[4]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 171,
+      "flop_loads": 1,
+      "example": "u_ot_pr_core.u_rank__u_chain.issue_pc[0]$_DFF_PN0_"
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_chain.u_map.hd[3]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_chain.u_map.hd[3]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 140,
+      "flop_loads": 1,
+      "example": "u_ot_pr_core.u_rank__u_chain.issue_pc[6]$_DFF_PN0_"
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_chain.u_map.hd[2]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_chain.u_map.hd[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 124,
+      "flop_loads": 1,
+      "example": "u_ot_pr_core.u_rank__u_chain.issue_pc[5]$_DFF_PN0_"
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_chain.u_map.hd[6]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_chain.u_map.hd[6]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 119,
+      "flop_loads": 1,
+      "example": "u_ot_pr_core.u_rank__u_chain.issue_pc[2]$_DFF_PN0_"
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_chain.u_map.hd[8]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_chain.u_map.hd[8]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 117,
+      "flop_loads": 1,
+      "example": "u_ot_pr_core.u_rank__u_chain.issue_pc[4]$_DFF_PN0_"
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_chain.u_map.hd[7]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_chain.u_map.hd[7]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 116,
+      "flop_loads": 1,
+      "example": "u_ot_pr_core.u_rank__u_chain.issue_pc[3]$_DFF_PN0_"
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_chain.u_order.fr[0]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_chain.u_order.fr[0]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 88,
+      "flop_loads": 0,
+      "example": null
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_dispatch.u_order.fr[0]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_dispatch.u_order.fr[0]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 56,
+      "flop_loads": 0,
+      "example": null
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_chain.u_order.fr[1]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_chain.u_order.fr[1]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 46,
+      "flop_loads": 0,
+      "example": null
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_dispatch.u_order.fr[1]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_dispatch.u_order.fr[1]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 39,
+      "flop_loads": 0,
+      "example": null
+    },
+    {
+      "cell": "host_rst_n__ot_rl0$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "host_rst_n__ot_rl0$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 36,
+      "flop_loads": 36,
+      "example": "host_rst_n__ot_rl1$_DFF_P_"
+    }
+  ],
+  "top100": [
+    {
+      "cell": "u_ot_pr_core.u_rank__u_dispatch.g_sram_fifo.u_payload.raw$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_dispatch.g_sram_fifo.u_payload.raw$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 580,
+      "flop_loads": 0,
+      "example": null
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_chain.u_map.g_sram_fifo.u_payload.raw$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_chain.u_map.g_sram_fifo.u_payload.raw$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 566,
+      "flop_loads": 0,
+      "example": null
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_chain.u_order.iqpc[0]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_chain.u_order.iqpc[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 268,
+      "flop_loads": 0,
+      "example": null
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_chain.u_order.iqpc[1]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_chain.u_order.iqpc[1]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 268,
+      "flop_loads": 0,
+      "example": null
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_chain.u_order.iqpc[2]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_chain.u_order.iqpc[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 265,
+      "flop_loads": 0,
+      "example": null
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_chain.u_order.iqpc[3]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_chain.u_order.iqpc[3]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 265,
+      "flop_loads": 0,
+      "example": null
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_chain.u_order.iqpc[4]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_chain.u_order.iqpc[4]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 264,
+      "flop_loads": 0,
+      "example": null
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_chain.u_order.iqpc[5]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_chain.u_order.iqpc[5]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 264,
+      "flop_loads": 0,
+      "example": null
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_chain.u_order.iqpc[6]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_chain.u_order.iqpc[6]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 264,
+      "flop_loads": 0,
+      "example": null
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_dispatch.u_order.iqpc[2]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_dispatch.u_order.iqpc[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 264,
+      "flop_loads": 0,
+      "example": null
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_dispatch.u_order.iqpc[3]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_dispatch.u_order.iqpc[3]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 264,
+      "flop_loads": 0,
+      "example": null
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_dispatch.u_order.iqpc[4]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_dispatch.u_order.iqpc[4]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 264,
+      "flop_loads": 0,
+      "example": null
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_dispatch.u_order.iqpc[5]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_dispatch.u_order.iqpc[5]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 264,
+      "flop_loads": 0,
+      "example": null
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_dispatch.u_order.iqpc[6]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_dispatch.u_order.iqpc[6]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 264,
+      "flop_loads": 0,
+      "example": null
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_dispatch.u_order.iqpc[0]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_dispatch.u_order.iqpc[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 263,
+      "flop_loads": 0,
+      "example": null
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_dispatch.u_order.iqpc[1]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_dispatch.u_order.iqpc[1]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 263,
+      "flop_loads": 0,
+      "example": null
+    },
+    {
+      "cell": "host_rst_n__ot_rl1$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "host_rst_n__ot_rl1$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 237,
+      "flop_loads": 237,
+      "example": "hb__ot_pr[0]$_DFF_PN0_"
+    },
+    {
+      "cell": "ot_rrs__host_rst_n__ot_rlv__c1$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "ot_rrs__host_rst_n__ot_rlv__c1$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 237,
+      "flop_loads": 237,
+      "example": "hb__ot_pr[205]$_DFFE_PN0P_"
+    },
+    {
+      "cell": "ot_rrs__host_rst_n__ot_rlv__c10$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "ot_rrs__host_rst_n__ot_rlv__c10$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 237,
+      "flop_loads": 237,
+      "example": "u_ot_pr_core.u_rank__u_dispatch.u_order.outstanding[15][2]$_DFFE_PN0P_"
+    },
+    {
+      "cell": "ot_rrs__host_rst_n__ot_rlv__c11$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "ot_rrs__host_rst_n__ot_rlv__c11$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 237,
+      "flop_loads": 237,
+      "example": "landed__ot_pr[0]$_DFFE_PN0P_"
+    },
+    {
+      "cell": "ot_rrs__host_rst_n__ot_rlv__c12$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "ot_rrs__host_rst_n__ot_rlv__c12$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 237,
+      "flop_loads": 237,
+      "example": "u_ot_pr_core.u_rank__u_dispatch.u_order.fc[0]$_DFFE_PN0P_"
+    },
+    {
+      "cell": "ot_rrs__host_rst_n__ot_rlv__c13$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "ot_rrs__host_rst_n__ot_rlv__c13$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 237,
+      "flop_loads": 237,
+      "example": "physical_ack_n__ot_pr[0]$_DFF_PN0_"
+    },
+    {
+      "cell": "ot_rrs__host_rst_n__ot_rlv__c14$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "ot_rrs__host_rst_n__ot_rlv__c14$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 237,
+      "flop_loads": 237,
+      "example": "u_ot_pr_core.u_rank__u_chain.u_order.outstanding[102][0]$_DFFE_PN0P_"
+    },
+    {
+      "cell": "ot_rrs__host_rst_n__ot_rlv__c15$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "ot_rrs__host_rst_n__ot_rlv__c15$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 237,
+      "flop_loads": 237,
+      "example": "u_ot_pr_core.u_rank__u_chain.u_order.outstanding[108][4]$_DFFE_PN0P_"
+    },
+    {
+      "cell": "ot_rrs__host_rst_n__ot_rlv__c16$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "ot_rrs__host_rst_n__ot_rlv__c16$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 237,
+      "flop_loads": 237,
+      "example": "u_ot_pr_core.u_rank__u_chain.u_order.outstanding[114][7]$_DFFE_PN0P_"
+    },
+    {
+      "cell": "ot_rrs__host_rst_n__ot_rlv__c17$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "ot_rrs__host_rst_n__ot_rlv__c17$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 237,
+      "flop_loads": 237,
+      "example": "u_ot_pr_core.u_rank__u_chain.u_order.outstanding[10][0]$_DFFE_PN0P_"
+    },
+    {
+      "cell": "ot_rrs__host_rst_n__ot_rlv__c18$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "ot_rrs__host_rst_n__ot_rlv__c18$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 237,
+      "flop_loads": 237,
+      "example": "u_ot_pr_core.u_rank__u_chain.u_order.outstanding[127][0]$_DFFE_PN0P_"
+    },
+    {
+      "cell": "ot_rrs__host_rst_n__ot_rlv__c19$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "ot_rrs__host_rst_n__ot_rlv__c19$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 237,
+      "flop_loads": 237,
+      "example": "u_ot_pr_core.u_rank__u_chain.u_order.outstanding[13][0]$_DFFE_PN0P_"
+    },
+    {
+      "cell": "ot_rrs__host_rst_n__ot_rlv__c2$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "ot_rrs__host_rst_n__ot_rlv__c2$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 237,
+      "flop_loads": 237,
+      "example": "u_ot_pr_core.u_rank__kv_ing[120]$_DFFE_PN0P_"
+    },
+    {
+      "cell": "ot_rrs__host_rst_n__ot_rlv__c20$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "ot_rrs__host_rst_n__ot_rlv__c20$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 237,
+      "flop_loads": 237,
+      "example": "u_ot_pr_core.u_rank__u_chain.u_order.outstanding[19][0]$_DFFE_PN0P_"
+    },
+    {
+      "cell": "ot_rrs__host_rst_n__ot_rlv__c21$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "ot_rrs__host_rst_n__ot_rlv__c21$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 237,
+      "flop_loads": 237,
+      "example": "u_ot_pr_core.u_rank__u_chain.prefix_count[0]$_DFFE_PN0P_"
+    },
+    {
+      "cell": "ot_rrs__host_rst_n__ot_rlv__c22$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "ot_rrs__host_rst_n__ot_rlv__c22$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 237,
+      "flop_loads": 237,
+      "example": "u_ot_pr_core.u_rank__u_chain.u_order.fr[0]$_DFFE_PN0P_"
+    },
+    {
+      "cell": "ot_rrs__host_rst_n__ot_rlv__c23$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "ot_rrs__host_rst_n__ot_rlv__c23$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 237,
+      "flop_loads": 237,
+      "example": "u_ot_pr_core.u_rank__u_chain.u_order.fc[0]$_DFFE_PN0P_"
+    },
+    {
+      "cell": "ot_rrs__host_rst_n__ot_rlv__c24$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "ot_rrs__host_rst_n__ot_rlv__c24$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 237,
+      "flop_loads": 237,
+      "example": "u_ot_pr_core.u_rank__kv_issued[0]$_DFFE_PN0P_"
+    },
+    {
+      "cell": "ot_rrs__host_rst_n__ot_rlv__c26$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "ot_rrs__host_rst_n__ot_rlv__c26$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 237,
+      "flop_loads": 237,
+      "example": "u_ot_pr_core.u_rank__kv_landed[0]$_DFFE_PN0N_"
+    },
+    {
+      "cell": "ot_rrs__host_rst_n__ot_rlv__c27$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "ot_rrs__host_rst_n__ot_rlv__c27$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 237,
+      "flop_loads": 237,
+      "example": "chain_f__ot_pr[0]$_DFF_PN0_"
+    },
+    {
+      "cell": "ot_rrs__host_rst_n__ot_rlv__c28$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "ot_rrs__host_rst_n__ot_rlv__c28$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 237,
+      "flop_loads": 237,
+      "example": "chain_f__ot_pr[100]$_DFFE_PN0P_"
+    },
+    {
+      "cell": "ot_rrs__host_rst_n__ot_rlv__c29$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "ot_rrs__host_rst_n__ot_rlv__c29$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 237,
+      "flop_loads": 237,
+      "example": "chain_f__ot_pr[246]$_DFFE_PN0P_"
+    },
+    {
+      "cell": "ot_rrs__host_rst_n__ot_rlv__c3$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "ot_rrs__host_rst_n__ot_rlv__c3$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 237,
+      "flop_loads": 237,
+      "example": "u_ot_pr_core.u_rank__u_dispatch.u_order.outstanding[100][0]$_DFFE_PN0P_"
+    },
+    {
+      "cell": "ot_rrs__host_rst_n__ot_rlv__c30$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "ot_rrs__host_rst_n__ot_rlv__c30$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 237,
+      "flop_loads": 237,
+      "example": "chain_f__ot_pr[483]$_DFFE_PN0P_"
+    },
+    {
+      "cell": "ot_rrs__host_rst_n__ot_rlv__c31$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "ot_rrs__host_rst_n__ot_rlv__c31$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 237,
+      "flop_loads": 237,
+      "example": "chain_f__ot_pr[720]$_DFFE_PN0P_"
+    },
+    {
+      "cell": "ot_rrs__host_rst_n__ot_rlv__c32$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "ot_rrs__host_rst_n__ot_rlv__c32$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 237,
+      "flop_loads": 237,
+      "example": "chain_f__ot_pr[1000]$_DFFE_PN0P_"
+    },
+    {
+      "cell": "ot_rrs__host_rst_n__ot_rlv__c33$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "ot_rrs__host_rst_n__ot_rlv__c33$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 237,
+      "flop_loads": 237,
+      "example": "u_ot_pr_core.u_rank__kv_ing_cr$_DFF_PN0_"
+    },
+    {
+      "cell": "ot_rrs__host_rst_n__ot_rlv__c34$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "ot_rrs__host_rst_n__ot_rlv__c34$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 237,
+      "flop_loads": 237,
+      "example": "u_ot_pr_core.u_rank__order_fault$_DFF_PN0_"
+    },
+    {
+      "cell": "ot_rrs__host_rst_n__ot_rlv__c4$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "ot_rrs__host_rst_n__ot_rlv__c4$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 237,
+      "flop_loads": 237,
+      "example": "u_ot_pr_core.u_rank__u_dispatch.u_order.fw[0]$_DFFE_PN0P_"
+    },
+    {
+      "cell": "ot_rrs__host_rst_n__ot_rlv__c5$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "ot_rrs__host_rst_n__ot_rlv__c5$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 237,
+      "flop_loads": 237,
+      "example": "u_ot_pr_core.u_rank__u_dispatch.u_order.outstanding[112][4]$_DFFE_PN0P_"
+    },
+    {
+      "cell": "ot_rrs__host_rst_n__ot_rlv__c6$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "ot_rrs__host_rst_n__ot_rlv__c6$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 237,
+      "flop_loads": 237,
+      "example": "u_ot_pr_core.u_rank__u_dispatch.u_order.outstanding[119][0]$_DFFE_PN0P_"
+    },
+    {
+      "cell": "ot_rrs__host_rst_n__ot_rlv__c7$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "ot_rrs__host_rst_n__ot_rlv__c7$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 237,
+      "flop_loads": 237,
+      "example": "u_ot_pr_core.u_rank__u_dispatch.u_order.outstanding[10][0]$_DFFE_PN0P_"
+    },
+    {
+      "cell": "ot_rrs__host_rst_n__ot_rlv__c8$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "ot_rrs__host_rst_n__ot_rlv__c8$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 237,
+      "flop_loads": 237,
+      "example": "u_ot_pr_core.u_rank__u_dispatch.u_order.outstanding[17][0]$_DFFE_PN0P_"
+    },
+    {
+      "cell": "ot_rrs__host_rst_n__ot_rlv__c9$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "ot_rrs__host_rst_n__ot_rlv__c9$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 237,
+      "flop_loads": 237,
+      "example": "u_ot_pr_core.u_rank__u_dispatch.u_order.outstanding[13][0]$_DFFE_PN0P_"
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_chain.u_map.hd[5]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_chain.u_map.hd[5]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 233,
+      "flop_loads": 1,
+      "example": "u_ot_pr_core.u_rank__u_chain.issue_pc[1]$_DFF_PN0_"
+    },
+    {
+      "cell": "ot_rrs__host_rst_n__ot_rlv__c25$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "ot_rrs__host_rst_n__ot_rlv__c25$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 230,
+      "flop_loads": 230,
+      "example": "u_ot_pr_core.u_rank__kv_issued[24]$_DFFE_PN0P_"
+    },
+    {
+      "cell": "ot_rrs__host_rst_n__ot_rlv__c35$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "ot_rrs__host_rst_n__ot_rlv__c35$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 207,
+      "flop_loads": 207,
+      "example": "u_ot_pr_core.u_rank__u_dispatch.order_fault$_DFF_PN0_"
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_chain.u_map.hd[4]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_chain.u_map.hd[4]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 171,
+      "flop_loads": 1,
+      "example": "u_ot_pr_core.u_rank__u_chain.issue_pc[0]$_DFF_PN0_"
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_chain.u_map.hd[3]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_chain.u_map.hd[3]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 140,
+      "flop_loads": 1,
+      "example": "u_ot_pr_core.u_rank__u_chain.issue_pc[6]$_DFF_PN0_"
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_chain.u_map.hd[2]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_chain.u_map.hd[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 124,
+      "flop_loads": 1,
+      "example": "u_ot_pr_core.u_rank__u_chain.issue_pc[5]$_DFF_PN0_"
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_chain.u_map.hd[6]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_chain.u_map.hd[6]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 119,
+      "flop_loads": 1,
+      "example": "u_ot_pr_core.u_rank__u_chain.issue_pc[2]$_DFF_PN0_"
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_chain.u_map.hd[8]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_chain.u_map.hd[8]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 117,
+      "flop_loads": 1,
+      "example": "u_ot_pr_core.u_rank__u_chain.issue_pc[4]$_DFF_PN0_"
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_chain.u_map.hd[7]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_chain.u_map.hd[7]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 116,
+      "flop_loads": 1,
+      "example": "u_ot_pr_core.u_rank__u_chain.issue_pc[3]$_DFF_PN0_"
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_chain.u_order.fr[0]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_chain.u_order.fr[0]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 88,
+      "flop_loads": 0,
+      "example": null
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_dispatch.u_order.fr[0]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_dispatch.u_order.fr[0]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 56,
+      "flop_loads": 0,
+      "example": null
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_chain.u_order.fr[1]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_chain.u_order.fr[1]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 46,
+      "flop_loads": 0,
+      "example": null
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_dispatch.u_order.fr[1]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_dispatch.u_order.fr[1]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 39,
+      "flop_loads": 0,
+      "example": null
+    },
+    {
+      "cell": "host_rst_n__ot_rl0$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "host_rst_n__ot_rl0$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 36,
+      "flop_loads": 36,
+      "example": "host_rst_n__ot_rl1$_DFF_P_"
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_chain.u_order.g_kept_select.stage2_oh[0]$_SDFF_PP0_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_chain.u_order.g_kept_select.stage2_oh[0]$_SDFF_PP0_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 28,
+      "flop_loads": 0,
+      "example": null
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_chain.u_order.g_kept_select.stage2_oh[1]$_SDFF_PP0_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_chain.u_order.g_kept_select.stage2_oh[1]$_SDFF_PP0_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 28,
+      "flop_loads": 0,
+      "example": null
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_chain.u_order.g_kept_select.stage2_oh[2]$_SDFF_PP0_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_chain.u_order.g_kept_select.stage2_oh[2]$_SDFF_PP0_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 28,
+      "flop_loads": 0,
+      "example": null
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_chain.u_order.g_kept_select.stage2_oh[3]$_SDFF_PP0_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_chain.u_order.g_kept_select.stage2_oh[3]$_SDFF_PP0_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 28,
+      "flop_loads": 0,
+      "example": null
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_chain.u_order.g_kept_select.stage2_oh[4]$_SDFF_PN0_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_chain.u_order.g_kept_select.stage2_oh[4]$_SDFF_PN0_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 28,
+      "flop_loads": 0,
+      "example": null
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_chain.u_order.g_kept_select.stage2_oh[5]$_SDFF_PN0_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_chain.u_order.g_kept_select.stage2_oh[5]$_SDFF_PN0_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 28,
+      "flop_loads": 0,
+      "example": null
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_chain.u_order.g_kept_select.stage2_oh[6]$_SDFF_PN0_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_chain.u_order.g_kept_select.stage2_oh[6]$_SDFF_PN0_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 28,
+      "flop_loads": 0,
+      "example": null
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_chain.u_order.g_kept_select.stage2_oh[7]$_SDFF_PN0_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_chain.u_order.g_kept_select.stage2_oh[7]$_SDFF_PN0_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 28,
+      "flop_loads": 0,
+      "example": null
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_chain.u_order.sel2[0]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_chain.u_order.sel2[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 28,
+      "flop_loads": 0,
+      "example": null
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_dispatch.u_order.g_kept_select.stage2_oh[0]$_SDFF_PP0_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_dispatch.u_order.g_kept_select.stage2_oh[0]$_SDFF_PP0_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 28,
+      "flop_loads": 0,
+      "example": null
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_dispatch.u_order.g_kept_select.stage2_oh[1]$_SDFF_PP0_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_dispatch.u_order.g_kept_select.stage2_oh[1]$_SDFF_PP0_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 28,
+      "flop_loads": 0,
+      "example": null
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_dispatch.u_order.g_kept_select.stage2_oh[2]$_SDFF_PP0_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_dispatch.u_order.g_kept_select.stage2_oh[2]$_SDFF_PP0_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 28,
+      "flop_loads": 0,
+      "example": null
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_dispatch.u_order.g_kept_select.stage2_oh[3]$_SDFF_PP0_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_dispatch.u_order.g_kept_select.stage2_oh[3]$_SDFF_PP0_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 28,
+      "flop_loads": 0,
+      "example": null
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_dispatch.u_order.g_kept_select.stage2_oh[4]$_SDFF_PN0_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_dispatch.u_order.g_kept_select.stage2_oh[4]$_SDFF_PN0_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 28,
+      "flop_loads": 0,
+      "example": null
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_dispatch.u_order.g_kept_select.stage2_oh[5]$_SDFF_PN0_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_dispatch.u_order.g_kept_select.stage2_oh[5]$_SDFF_PN0_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 28,
+      "flop_loads": 0,
+      "example": null
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_dispatch.u_order.g_kept_select.stage2_oh[6]$_SDFF_PN0_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_dispatch.u_order.g_kept_select.stage2_oh[6]$_SDFF_PN0_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 28,
+      "flop_loads": 0,
+      "example": null
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_dispatch.u_order.g_kept_select.stage2_oh[7]$_SDFF_PN0_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_dispatch.u_order.g_kept_select.stage2_oh[7]$_SDFF_PN0_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 28,
+      "flop_loads": 0,
+      "example": null
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_dispatch.u_order.sel2[0]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_dispatch.u_order.sel2[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 28,
+      "flop_loads": 0,
+      "example": null
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_chain.u_order.fr[2]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_chain.u_order.fr[2]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 26,
+      "flop_loads": 0,
+      "example": null
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_dispatch.g_sram_fifo.u_payload.rp[1]$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_dispatch.g_sram_fifo.u_payload.rp[1]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 25,
+      "flop_loads": 0,
+      "example": null
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_chain.u_map.g_sram_fifo.u_payload.wp[0]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_chain.u_map.g_sram_fifo.u_payload.wp[0]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 24,
+      "flop_loads": 0,
+      "example": null
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_chain.u_map.addr[31]$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_chain.u_map.addr[31]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 22,
+      "flop_loads": 0,
+      "example": null
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_dispatch.g_sram_fifo.u_payload.wp[0]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_dispatch.g_sram_fifo.u_payload.wp[0]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 22,
+      "flop_loads": 0,
+      "example": null
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_chain.u_map.g_sram_fifo.u_payload.wp[1]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_chain.u_map.g_sram_fifo.u_payload.wp[1]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 21,
+      "flop_loads": 0,
+      "example": null
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_chain.u_map.g_control_head.adv_oh[0]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_chain.u_map.g_control_head.adv_oh[0]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 20,
+      "flop_loads": 0,
+      "example": null
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_chain.u_map.g_control_head.adv_oh[1]$_DFFE_PN1P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_chain.u_map.g_control_head.adv_oh[1]$_DFFE_PN1P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 20,
+      "flop_loads": 0,
+      "example": null
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_chain.u_map.g_control_head.adv_oh[2]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_chain.u_map.g_control_head.adv_oh[2]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 20,
+      "flop_loads": 0,
+      "example": null
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_chain.u_map.g_control_head.adv_oh[3]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_chain.u_map.g_control_head.adv_oh[3]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 20,
+      "flop_loads": 0,
+      "example": null
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_chain.u_map.g_control_head.adv_oh[4]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_chain.u_map.g_control_head.adv_oh[4]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 20,
+      "flop_loads": 0,
+      "example": null
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_chain.u_map.g_control_head.adv_oh[5]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_chain.u_map.g_control_head.adv_oh[5]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 20,
+      "flop_loads": 0,
+      "example": null
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_chain.u_map.g_control_head.adv_oh[6]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_chain.u_map.g_control_head.adv_oh[6]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 20,
+      "flop_loads": 0,
+      "example": null
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_chain.u_map.g_control_head.adv_oh[7]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_chain.u_map.g_control_head.adv_oh[7]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 20,
+      "flop_loads": 0,
+      "example": null
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_dispatch.g_sram_fifo.u_payload.wp[1]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_dispatch.g_sram_fifo.u_payload.wp[1]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 20,
+      "flop_loads": 0,
+      "example": null
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_dispatch.u_order.fw[0]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_dispatch.u_order.fw[0]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 20,
+      "flop_loads": 0,
+      "example": null
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_chain.u_order.fw[0]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_chain.u_order.fw[0]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 19,
+      "flop_loads": 0,
+      "example": null
+    },
+    {
+      "cell": "u_ot_pr_core.u_rank__u_chain.u_order.fw[1]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_ot_pr_core.u_rank__u_chain.u_order.fw[1]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 19,
+      "flop_loads": 0,
+      "example": null
+    }
+  ]
+}
