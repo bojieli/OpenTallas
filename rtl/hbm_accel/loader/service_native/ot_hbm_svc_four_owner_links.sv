@@ -3,6 +3,11 @@
 // Input admission promises target capacity THREE edges later; this is not ready/credit flow.
 // All roots must have qualified common frequency/phase; this component is not an async CDC.
 (* keep_hierarchy = "yes" *)
+module ot_hbm_owner_link_first_reset(input wire clk,rst_n,output reg q);
+ always @(posedge clk or negedge rst_n)if(!rst_n)q<=0;else q<=1;
+endmodule
+
+(* keep_hierarchy = "yes" *)
 module ot_hbm_owner_link_slice #(parameter integer W=6)(
  input wire clk,first_rst_n,input wire [W-1:0] d,
  output reg [W-1:0] q,output wire [W-1:0] preview
@@ -30,9 +35,10 @@ module ot_hbm_owner_pair_link #(parameter integer J=0,MUT=0)(
  output reg out_v,output reg fault
 );
  // Exactly two release edges, with raw reset driving only two first-stage FFs.
- (* keep = "yes" *) reg [1:0] first_rst;
- always @(posedge clk or negedge rst_n)
-  if(!rst_n)first_rst<=0;else first_rst<=2'b11;
+ wire [1:0] first_rst;
+ for(genvar b=0;b<2;b=b+1)begin:g_first_reset
+  ot_hbm_owner_link_first_reset u_first(.clk(clk),.rst_n(rst_n),.q(first_rst[b]));
+ end
  wire [287:0] incoming={target_reserved,in_target,in_packet};
  wire [287:0] outgoing,selected;
  for(genvar k=0;k<48;k=k+1)begin:g_slice

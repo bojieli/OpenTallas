@@ -10,19 +10,19 @@ module ot_hbm_owner_metadata_half #(parameter integer W=12,HALF=0)(
  (* keep = "yes" *) reg [4:0] wa_q,ra_q;
  reg [W-1:0] data_q;
  (* keep = "yes" *) reg [15:0] ws_q,rs_q;
- reg wv_q,wv_d;
+ reg wv_q;
  always @(posedge clk or negedge rst_q)
-  if(!rst_q)begin wv_q<=0;wv_d<=0;end
-  else begin wv_q<=write_v;wv_d<=wv_q;end
+  if(!rst_q)wv_q<=0;else wv_q<=write_v;
  always @(posedge clk)begin wa_q<=write_addr;ra_q<=read_addr;data_q<=write_data;end
  reg [W-1:0] data_d;
  always @(posedge clk)data_d<=data_q;
  reg [W-1:0] words[0:15];
  for(genvar row=0;row<16;row=row+1)begin:g_word
+  always @(posedge clk or negedge rst_q)
+   if(!rst_q)ws_q[row]<=0;else ws_q[row]<=wv_q&&(wa_q==5'(HALF*16+row));
   always @(posedge clk)begin
-   ws_q[row]<=wa_q==5'(HALF*16+row);
    rs_q[row]<=ra_q==5'(HALF*16+row);
-   if(wv_d&&ws_q[row])words[row]<=data_d;
+   if(ws_q[row])words[row]<=data_d;
   end
  end
  reg [W-1:0] read_pick;integer i;
