@@ -134,5 +134,15 @@
     "reset": "identical canonical sticky/AQfault reset signals/releaseedge, no newdomain",
     "proof": "Simulation assertions check everyreplica againstcanonical on eachnegedge includingfaults andresets; mixed6000/identitymutant, AQ64+causalmutants andactualmappedD/CLK/reset/fanout required",
     "status": "modelbeforeRTL"
+  },
+  "column_open_state_successor": {
+    "actual_map4_failure": "globalcolumnresult48 loads spansAQhead/counters andCFGmetadata/counters",
+    "structure": "32real per-bank open_column FF capture same existingcommandedge/D/reset askeptcanonicalopen. Separate complete bankparallelcolumneligibility forCFG usesopen_column; AQ usescanonicalopen. Same otherconditions, no newedge. Two equivalentoutputs asserted everynegedge; copies usedinactualseparatedecisioncones.",
+    "extra_ff": 32,
+    "data_edges_added": 0,
+    "sram_ports_added": 0,
+    "reset": "one additionalFF perexistingbankreset, same reset release; no newroot",
+    "critical_target": "partition48globalcolumnconsumers acrossAQ andCFG cones, actualall-driver census mandatory",
+    "status": "model beforeRTL; exact/copyidentity/timing required"
   }
 }

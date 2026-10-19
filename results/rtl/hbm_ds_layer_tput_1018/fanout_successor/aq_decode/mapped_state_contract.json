@@ -28,7 +28,9 @@
     "blk_valid_regions": 3,
     "look_bank_regions": 105,
     "look_valid_regions": 24,
-    "fault_regions_q": 2
+    "fault_regions_q": 2,
+    "open": 32,
+    "open_column": 32
   },
   "forbidden_families": [
     "c_oh",
@@ -66,7 +68,9 @@
       "command_valid_regions",
       "blk_bank_regions",
       "blk_valid_regions",
-      "look_valid_regions"
+      "look_valid_regions",
+      "open",
+      "open_column"
     ]
   },
   "known_model_limits": "Extra input logic and post-state decode delay unmeasured; standard area and clock resource admission from mapped candidate, not nominal FF estimate.",

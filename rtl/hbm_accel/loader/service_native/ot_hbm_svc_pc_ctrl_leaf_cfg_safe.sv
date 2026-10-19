@@ -78,7 +78,7 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
     localparam integer QW=$clog2(QD);
     reg[QW-1:0]wp,rp,ep;reg[QW:0]count,unposted;
     // Address successors are computed before column eligibility arrives.
-    // cv/posted selects a registered address, never a conditional carry chain.
+    // cv_cfg/posted selects a registered address, never a conditional carry chain.
     (* keep="true",dont_touch="true" *) reg[QW-1:0]rp_plus1,ep_plus1;
     wire[63:0]queue_head,queue_post; // SRAM-backed four-bank metadata, two read replicas
     /*reg[63:0]queue[0:QD-1];*/          // {we,bank[4:0],col[4:0],tag[16:0],beat[3:0],wstrb[31:0]} = bits 319:256
@@ -97,7 +97,8 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
     wire[3:0]length=i_len;
     wire legal;wire raw_legal=length>=1 && length<=4 && (!i_we || length==1) &&
         {1'b0,incoming[1:0]}+length<=4 && incoming_pc==pc_id_q && {1'b0,incoming}+length<=31'd703125000;
-    wire wr,cv,cwe,caq;wire[4:0]cb,cc;
+    wire wr,cv_cfg,cwe,caq;wire[1:0]cv_regions;
+    assign cv_cfg=cv_regions[1];wire[4:0]cb,cc;
     wire[1:0]pc_fault_regions;
     (* keep="true",dont_touch="true" *) reg[1:0]sticky_regions;
     wire[319:0]head={queue_head,head_wdata},push={queue_post,256'b0};
@@ -106,9 +107,9 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
     wire accepted=i_v&&i_rdy;wire posted=enqueue&&wr;
     // One arithmetic cone feeds kept same-edge count captures. At22 regions
     // the shared next-count bus drives23 D pins per bit, including count.
-    wire[QW:0]queue_count_next=count+(accepted?6'(length):6'd0)-(cv?6'd1:6'd0);
+    wire[QW:0]queue_count_next=count+(accepted?6'(length):6'd0)-(cv_cfg?6'd1:6'd0);
     wire posted_read=posted&&push_read;
-    wire column_read=cv&&!cwe;
+    wire column_read=cv_cfg&&!cwe;
     wire j_v,j_rdy;
     wire head_valid_next=response_read?1'b1:response_take?1'b0:head_valid;
     wire response_take=j_v&&j_rdy;
@@ -191,13 +192,13 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
     generate if(OREG!=0)begin:g_oreg
         reg q_rv,q_cv,q_cwe;reg[2:0]q_rop;reg[4:0]q_rbank,q_cb,q_cc;reg[18:0]q_rrow;reg[255:0]q_cd;reg[31:0]q_cs;
         always @(posedge clk or negedge region_rst_n[5])
-            if(!region_rst_n[5])begin q_rv<=0;q_cv<=0;q_cwe<=0;end else begin q_rv<=r_v;q_cv<=cv;q_cwe<=cwe;end
+            if(!region_rst_n[5])begin q_rv<=0;q_cv<=0;q_cwe<=0;end else begin q_rv<=r_v;q_cv<=cv_cfg;q_cwe<=cwe;end
         always @(posedge clk)begin q_rop<=r_op;q_rbank<=r_bank;q_rrow<=r_row;q_cb<=cb;q_cc<=cc;q_cd<=head[255:0];q_cs<=head[287:256];end
         assign row_v=q_rv;assign row_op=q_rop;assign row_bank=q_rbank;assign row_row=q_rrow;
         assign col_v=q_cv;assign col_we=q_cwe;assign col_bank=q_cb;assign col_col=q_cc;assign col_data=q_cd;assign col_strb=q_cs;
     end else begin:g_comb
         assign row_v=r_v;assign row_op=r_op;assign row_bank=r_bank;assign row_row=r_row;
-        assign col_v=cv;assign col_we=cwe;assign col_bank=cb;assign col_col=cc;
+        assign col_v=cv_cfg;assign col_we=cwe;assign col_bank=cb;assign col_col=cc;
         assign col_data=head[255:0];assign col_strb=head[287:256];
     end endgenerate
     // Released H9b diagnostic ABI: six separately registered fault classes.
@@ -208,7 +209,7 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
     else begin
       owner_fault_split<=fault_detail;
       if(i_v&&!legal)fault_detail[0]<=1;
-      if(cv&&(count==0||cwe!=head[319]||cb!=head[318:314]||cc!=head[313:309]||(!cwe&&!caq)||
+      if(cv_cfg&&(count==0||cwe!=head[319]||cb!=head[318:314]||cc!=head[313:309]||(!cwe&&!caq)||
           (WPAY!=0&&cwe&&fresh_v&&fresh_slot==rp)))fault_detail[1]<=1;
       if(column_read&&pending_count>=RQ)fault_detail[2]<=1;
       if(ret_v&&(pending_count==0||(response_count>=RQ&&!response_take)))fault_detail[3]<=1;
@@ -217,7 +218,7 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
     end
     generate if(WPAY!=0)begin:g_wpay
         // write payload SRAM: written once per accepted write (writes are length 1), read every edge at the next head
-        wire[QW-1:0]wpay_raddr=cv?rp_plus1:rp;
+        wire[QW-1:0]wpay_raddr=cv_cfg?rp_plus1:rp;
         ot_sram_1r1w_128x256_m1_r2c2 u_write_payload(
             .clk(clk),.r_ce_in(1'b1),.r_addr_in(7'(wpay_raddr)),.rd_out(head_wdata),
             .w_ce_in(accepted&&i_we),.w_addr_in(7'(wp)),.wd_in(i_wdata),.w_mask_in({256{1'b1}}),
@@ -240,7 +241,7 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
     wire[255:0]qh[0:3],qe[0:3];
     wire[78:0]mf_data[0:3];reg[63:0]mf_fields[0:3];
     wire[3:0]meta_we;wire[QW-3:0]meta_wa[0:3];
-    wire[QW-1:0]next_rp=cv?rp_plus1:rp,next_ep=posted?ep_plus1:ep;
+    wire[QW-1:0]next_rp=cv_cfg?rp_plus1:rp,next_ep=posted?ep_plus1:ep;
     wire[78:0]mh,me;
     // Twenty retained four-bit regions. Each owns pointer selectors and
     // forwarding-address/valid captures on the original metadata edge.
@@ -334,11 +335,11 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
     ot_hbm_r14_aq_pc_safe #(.ROW_REGIONS(8),.WQ(QD),.MRKEY(MRKEY)) controller(
         .clk(clk),.rst_n(region_rst_n[7]),.reset_regions(region_rst_n[71:8]),.slot_parity(pc_id_q[0]),.refresh_reload(refresh_reload_q),
         .row_v(r_v),.row_op(r_op),.row_bank(r_bank),.row_row(r_row),
-        .col_v(cv),.col_bank(cb),.col_col(cc),.ref_fault(pc_fault),.ref_fault_regions(pc_fault_regions),
+        .col_v(),.col_v_regions(cv_regions),.col_bank(cb),.col_col(cc),.ref_fault(pc_fault),.ref_fault_regions(pc_fault_regions),
         .wr_v(enqueue),.wr_bank(push[318:314]),.wr_col(push[313:309]),.wr_row({4'b0,qrow_post}),.wr_row_regions(qrow_post_regions),.wr_rd(push_read),.wr_r(wr),
         .col_we(cwe),.col_aq(caq),.dbg_held());
     wire sticky_next=sticky||(i_v&&!legal)||kfront_fault||
-      (cv&&(count==0||cwe!=head[319]||cb!=head[318:314]||cc!=head[313:309]||(!cwe&&!caq)||
+      (cv_cfg&&(count==0||cwe!=head[319]||cb!=head[318:314]||cc!=head[313:309]||(!cwe&&!caq)||
        (WPAY!=0&&cwe&&fresh_v&&fresh_slot==rp)||(!cwe&&pending_count>=RQ)))||
       (ret_v&&(pending_count==0||(response_count>=RQ&&!response_take)))||
       (response_take&&(read_reserved==0||response_count==0))||
@@ -365,7 +366,7 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
             response_count<=response_count+(ret_v?6'd1:6'd0)-(response_take?6'd1:6'd0);
             if(posted)begin ep<=ep_plus1;ep_plus1<=ep_plus1+1'b1;end
             fresh_v<=accepted&&i_we;fresh_slot<=wp;
-            if(cv)begin
+            if(cv_cfg)begin
                 if(count==0 || cwe!=head[319] || cb!=head[318:314] || cc!=head[313:309] || (!cwe&&!caq))sticky<=1;
                 if(WPAY!=0 && cwe && fresh_v && fresh_slot==rp)sticky<=1;
                 rp<=rp_plus1;rp_plus1<=rp_plus1+1'b1;

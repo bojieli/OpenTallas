@@ -35,7 +35,7 @@ module ot_hbm_r14_aq_pc_safe #(
   input  wire        clk, rst_n, input wire[63:0]reset_regions,
   input  wire        slot_parity, input wire [7:0] refresh_reload,
   output wire        row_v, output wire [2:0] row_op, output wire [4:0] row_bank, output wire [RW_ROW-1:0] row_row,
-  output wire        col_v, output wire [4:0] col_bank, output wire [4:0] col_col,
+  output wire[1:0]col_v_regions, output wire        col_v, output wire [4:0] col_bank, output wire [4:0] col_col,
   output wire        ref_fault, output wire[1:0]ref_fault_regions,
   input  wire        wr_v, input wire [4:0] wr_bank, input wire [4:0] wr_col, input wire [RW_ROW-1:0] wr_row,
   input wire [8*RW_ROW-1:0] wr_row_regions,
@@ -195,7 +195,8 @@ module ot_hbm_r14_aq_pc_safe #(
       else if(wr_v&&(q_n_local[t/2]!=(WQW+1)'(WQ)))tail_set_regions[t]<=wr_bank[4:2];
   end
   // ---- bank / group state ---------------------------------------------------------------
-  reg [31:0] open, refreshed;
+  (* keep="true",dont_touch="true" *) reg[31:0]open,open_column;
+  reg[31:0]refreshed;
   (* keep="true",dont_touch="true" *) reg [4:0] blk_bank;
   (* keep="true",dont_touch="true" *) reg blk_valid;
   wire [31:0] blk;
@@ -428,6 +429,10 @@ module ot_hbm_r14_aq_pc_safe #(
       if(!reset_regions[b])open[b]<=0;
       else if(row_local[b/8][21]&&c_oh[b])open[b]<=1;
       else if(row_local[b/8][20]&&c_oh[b])open[b]<=0;
+    always @(posedge clk or negedge reset_regions[b])
+      if(!reset_regions[b])open_column[b]<=0;
+      else if(row_local[b/8][21]&&c_oh[b])open_column[b]<=1;
+      else if(row_local[b/8][20]&&c_oh[b])open_column[b]<=0;
   end
   // Compare rows locally in parallel instead of selecting a 19-bit word
   // through a 32:1 mux before comparing it. Each head-row bit has 32 loads.
@@ -447,6 +452,16 @@ module ot_hbm_r14_aq_pc_safe #(
   wire head_bank_rdy = q_ne && |(hb_oh & open & head_timer_ready & ~blk & ~pre_fl & head_row_match);
   wire wr_ok = head_bank_rdy && ccdl_z[hb[1:0]] && (hr ? (wtr_c == 0) : (rtw_c == 0));
   assign col_v = wr_ok; assign col_we = wr_ok && !hr; assign col_aq = wr_ok && hr;
+  wire cfg_bank_ready=q_ne&&|(hb_oh&open_column&head_timer_ready&~blk&~pre_fl&head_row_match);
+  assign col_v_regions[0]=wr_ok;
+  assign col_v_regions[1]=cfg_bank_ready&&ccdl_z[hb[1:0]]&&(hr?(wtr_c==0):(rtw_c==0));
+`ifndef SYNTHESIS
+  always @(negedge clk)if(rst_n)begin
+    if(open_column!==open)$fatal(1,"BW_AQ_OPEN_REGION_MISMATCH");
+    if(col_v_regions[1]!==col_v)$fatal(1,"BW_AQ_COLUMN_REGION_MISMATCH");
+  end
+`endif
+
   assign col_bank = hb; assign col_col = hc;
   assign wr_r = q_n != (WQW+1)'(WQ);
   // ---- row command: REFpb due > forced PRE > ACT (oldest queued closed bank) > PRE (open row no entry needs) ----------
