@@ -2993,7 +2993,7 @@ def ship_helpers(host, run, job=None):
                 job.setdefault("helper_overlay_sanctioned", []).extend(dict(r, at=now_iso(), host=host, run=run)
                                                                        for r in sanctioned)
                 for r in sanctioned:
-                    event(job, f"FLEET-RUN SANCTION: {r['path']} frozen {r['frozen_git_blob'][:9]} -> fleet/main "
+                    event(job, f"{'PUBLISH' if r.get('kind') == 'publish' else 'FLEET-RUN'} SANCTION: {r['path']} frozen {r['frozen_git_blob'][:9]} -> fleet/main "
                                f"{r['current_git_blob'][:9]} (sha256 {r['current_sha256'][:16]}, origin/main "
                                f"{str(r['origin_main'])[:9]}); the route runs the fleet copy")
                 job["route_overlay_plan"] = frozen = current
@@ -4998,6 +4998,14 @@ def postroute_crash(j, st, fleet, why):
         j["attempt"] += 1
         j["status"] = "SYNC"
         return
+    # EXPORT-LINT REPEAT (RLYH0-NE 2026-10-19): a collect whose export fails child_lint is not a crash; the same lint
+    # FAIL on the same frozen helpers repeats on every retry (qfwd_rlyh0_128_ne_65x30-f1-fc2236d82: 4 identical
+    # '(i) pin access' collects).  Stop at the first repeat and name the lint.
+    lint = re.search(r"child_lint FAIL[^\n]{0,400}", tail or "")
+    prev = [x for x in j["crashes"][:-1] if x.get("postroute") and x.get("stage") == st["key"]]
+    if lint and prev and lint.group(0)[:200] in (prev[-1].get("tail") or ""):
+        why = f"export {lint.group(0)[:300]} (identical on retry: deterministic, not a crash)"
+        n = POSTROUTE_RETRY_MAX
     if n >= POSTROUTE_RETRY_MAX:
         c = (earlier_closed(j) or [{}])[-1]
         j["lost_closed"] = dict(closed=c, later_status="NEEDS_HUMAN", later_reason=why, at=now_iso(), preserved=where)
