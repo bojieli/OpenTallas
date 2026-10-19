@@ -1,0 +1,265 @@
+[
+  {
+    "origin": 12208,
+    "name": "u_ot_pr_core.fl_land__fin[0]$_DFF_P_",
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "extra_copies": 21,
+    "unreset": true,
+    "self_feedback": false,
+    "upstream_copied_FF": []
+  },
+  {
+    "origin": 12180,
+    "name": "ot_rrs__u_ot_pr_core_g_rrel_rst_n_u_fl_rst_rst_n_rst_n__c2$_DFF_PN0_",
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "extra_copies": 9,
+    "unreset": false,
+    "self_feedback": false,
+    "upstream_copied_FF": [
+      12852
+    ]
+  },
+  {
+    "origin": 12181,
+    "name": "ot_rrs__u_ot_pr_core_g_rrel_rst_n_u_fl_rst_rst_n_rst_n__c3$_DFF_PN0_",
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "extra_copies": 9,
+    "unreset": false,
+    "self_feedback": false,
+    "upstream_copied_FF": [
+      12852
+    ]
+  },
+  {
+    "origin": 12185,
+    "name": "ot_rrs__u_ot_pr_core_g_rrel_rst_n_u_fl_rst_rst_n_rst_n__c7$_DFF_PN0_",
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "extra_copies": 15,
+    "unreset": false,
+    "self_feedback": false,
+    "upstream_copied_FF": [
+      12852
+    ]
+  },
+  {
+    "origin": 12184,
+    "name": "ot_rrs__u_ot_pr_core_g_rrel_rst_n_u_fl_rst_rst_n_rst_n__c6$_DFF_PN0_",
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "extra_copies": 8,
+    "unreset": false,
+    "self_feedback": false,
+    "upstream_copied_FF": [
+      12852
+    ]
+  },
+  {
+    "origin": 12182,
+    "name": "ot_rrs__u_ot_pr_core_g_rrel_rst_n_u_fl_rst_rst_n_rst_n__c4$_DFF_PN0_",
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "extra_copies": 7,
+    "unreset": false,
+    "self_feedback": false,
+    "upstream_copied_FF": [
+      12852
+    ]
+  },
+  {
+    "origin": 12183,
+    "name": "ot_rrs__u_ot_pr_core_g_rrel_rst_n_u_fl_rst_rst_n_rst_n__c5$_DFF_PN0_",
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "extra_copies": 5,
+    "unreset": false,
+    "self_feedback": false,
+    "upstream_copied_FF": [
+      12852
+    ]
+  },
+  {
+    "origin": 12178,
+    "name": "ot_rrs__u_ot_pr_core_g_rrel_rst_n_u_fl_rst_rst_n_rst_n__c0$_DFF_PN0_",
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "extra_copies": 2,
+    "unreset": false,
+    "self_feedback": false,
+    "upstream_copied_FF": [
+      12852
+    ]
+  },
+  {
+    "origin": 16906,
+    "name": "u_ot_pr_core.u_core.u_attn_cal.v6$_DFF_PN0_",
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "extra_copies": 9,
+    "unreset": false,
+    "self_feedback": false,
+    "upstream_copied_FF": [
+      16905
+    ]
+  },
+  {
+    "origin": 16905,
+    "name": "u_ot_pr_core.u_core.u_attn_cal.v5$_DFF_PN0_",
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "extra_copies": 8,
+    "unreset": false,
+    "self_feedback": false,
+    "upstream_copied_FF": [
+      16904
+    ]
+  },
+  {
+    "origin": 12778,
+    "name": "u_ot_pr_core.fl_land__i_ctl[34]$_DFF_P_",
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "extra_copies": 20,
+    "unreset": true,
+    "self_feedback": false,
+    "upstream_copied_FF": []
+  },
+  {
+    "origin": 12179,
+    "name": "ot_rrs__u_ot_pr_core_g_rrel_rst_n_u_fl_rst_rst_n_rst_n__c1$_DFF_PN0_",
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "extra_copies": 1,
+    "unreset": false,
+    "self_feedback": false,
+    "upstream_copied_FF": [
+      12852
+    ]
+  },
+  {
+    "origin": 16901,
+    "name": "u_ot_pr_core.u_core.u_attn_cal.v1$_DFF_PN0_",
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "extra_copies": 7,
+    "unreset": false,
+    "self_feedback": false,
+    "upstream_copied_FF": [
+      12840
+    ]
+  },
+  {
+    "origin": 16904,
+    "name": "u_ot_pr_core.u_core.u_attn_cal.v4$_DFF_PN0_",
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "extra_copies": 5,
+    "unreset": false,
+    "self_feedback": false,
+    "upstream_copied_FF": [
+      16903
+    ]
+  },
+  {
+    "origin": 18861,
+    "name": "u_ot_pr_core.u_core.w_attn_root__start_qk$_DFF_PN0_",
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "extra_copies": 3,
+    "unreset": false,
+    "self_feedback": false,
+    "upstream_copied_FF": []
+  },
+  {
+    "origin": 16902,
+    "name": "u_ot_pr_core.u_core.u_attn_cal.v2$_DFF_PN0_",
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "extra_copies": 8,
+    "unreset": false,
+    "self_feedback": false,
+    "upstream_copied_FF": [
+      16901
+    ]
+  },
+  {
+    "origin": 16908,
+    "name": "u_ot_pr_core.u_core.u_attn_cal.v8$_DFF_PN0_",
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "extra_copies": 14,
+    "unreset": false,
+    "self_feedback": false,
+    "upstream_copied_FF": [
+      16907
+    ]
+  },
+  {
+    "origin": 16907,
+    "name": "u_ot_pr_core.u_core.u_attn_cal.v7$_DFF_PN0_",
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "extra_copies": 12,
+    "unreset": false,
+    "self_feedback": false,
+    "upstream_copied_FF": [
+      16906
+    ]
+  },
+  {
+    "origin": 17093,
+    "name": "u_ot_pr_core.u_core.u_attn_face.cp_ld$_DFF_PN0_",
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "extra_copies": 1,
+    "unreset": false,
+    "self_feedback": false,
+    "upstream_copied_FF": [
+      18861
+    ]
+  },
+  {
+    "origin": 12840,
+    "name": "u_ot_pr_core.fl_land__i_ctl[90]$_DFF_P_",
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "extra_copies": 1,
+    "unreset": true,
+    "self_feedback": false,
+    "upstream_copied_FF": []
+  },
+  {
+    "origin": 16903,
+    "name": "u_ot_pr_core.u_core.u_attn_cal.v3$_DFF_PN0_",
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "extra_copies": 7,
+    "unreset": false,
+    "self_feedback": false,
+    "upstream_copied_FF": [
+      16902
+    ]
+  },
+  {
+    "origin": 16909,
+    "name": "u_ot_pr_core.u_core.u_attn_cal.v9$_DFF_PN0_",
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "extra_copies": 11,
+    "unreset": false,
+    "self_feedback": false,
+    "upstream_copied_FF": [
+      16908
+    ]
+  },
+  {
+    "origin": 12207,
+    "name": "rst_n__ot_rl1$_DFF_P_",
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "extra_copies": 9,
+    "unreset": true,
+    "self_feedback": false,
+    "upstream_copied_FF": []
+  },
+  {
+    "origin": 12852,
+    "name": "u_ot_pr_core.g_rrel_rst_n.u_fl_rst_rst_n.sync_q[1]$_DFF_PN0_",
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "extra_copies": 7,
+    "unreset": false,
+    "self_feedback": false,
+    "upstream_copied_FF": []
+  },
+  {
+    "origin": 12863,
+    "name": "u_ot_pr_core.u_core.u_attn.age[0]$_DFFE_PN0P_",
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "extra_copies": 1,
+    "unreset": false,
+    "self_feedback": true,
+    "upstream_copied_FF": [
+      12863
+    ]
+  }
+]

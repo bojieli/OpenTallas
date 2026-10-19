@@ -4,9 +4,9 @@ import argparse,copy,hashlib,importlib.util,json,pathlib,collections
 p=argparse.ArgumentParser();p.add_argument('source');p.add_argument('--out',required=True);p.add_argument('--limit',type=int,default=24);p.add_argument('--emit',action='store_true');p.add_argument('--size',action='store_true');a=p.parse_args()
 root=pathlib.Path(__file__).resolve().parents[3]
 spec=importlib.util.spec_from_file_location('lint',root/'tools/textbook_lint.py');T=importlib.util.module_from_spec(spec);spec.loader.exec_module(T)
-source=pathlib.Path(a.source);raw=source.read_text();assert hashlib.sha256(raw.encode()).hexdigest()=='5df37e9f0736f57c12a10464caa0820333480804584e74790cb1937bb26c5b25','unsupported source hash';mods=T.parse_verilog(raw);g,top=T.flatten(mods,None);A=T.build(g,None)
-assert top=='qkd_kvs_attn_fl_ba4',('unsupported profile',top)
-assert len(g.cells)==17479,('unsupported source inventory',len(g.cells))
+source=pathlib.Path(a.source);raw=source.read_text();assert hashlib.sha256(raw.encode()).hexdigest() in ('5df37e9f0736f57c12a10464caa0820333480804584e74790cb1937bb26c5b25','32a891ce0f649699d38e03ece227dbe0ba31ccb20c650d9a9d047d4a5a20b2ab'),'unsupported source hash';mods=T.parse_verilog(raw);g,top=T.flatten(mods,None);A=T.build(g,None)
+assert top in ('qkd_kvs_attn_fl_ba4','qkd_kvs_attn_fl_ba5'),('unsupported profile',top)
+assert top!='qkd_kvs_attn_fl_ba4' or len(g.cells)==17479,('unsupported source inventory',len(g.cells))
 assert all(k not in ('macro','icg') for k in A['kind']), 'unmodeled cell'
 clock={x for b,(d,x) in g.ports.items() if b=='ck'}
 base=copy.deepcopy(g.cells);origin=list(range(len(base)));proof=[]
@@ -40,8 +40,22 @@ if a.emit or a.size:
      g.cells[li][2][pn][0]=mapped[x]
     proof.append({'copy':ni,'parent':ci,'origin':origin[ci],'split_net':x,'output':mapped[x],'loads':[list(l) for l in chosen]})
  else:raise AssertionError('no fixedpoint')
-B,after=census();out=pathlib.Path(a.out);out.mkdir(parents=True,exist_ok=True)
-info={'source_sha256':hashlib.sha256(raw.encode()).hexdigest(),'top':top,'limit':a.limit,'before_cells':len(base),'after_cells':len(g.cells),'before_ff':sum(T.FLOP_RE.match(t)!=None for t,n,p in base),'after_ff':sum(k=='ff' for k in B['kind']),'new_cells':len(g.cells)-len(base),'clock_loads':sum(len(B['loads'].get(x,[])) for x in clock),'before_violations':[r for r in before if r['loads']>32],'after_violations':[r for r in after if r['loads']>32],'before':before,'after':after,'iterations':iteration+1 if (a.emit or a.size) else 0,'qualified':False}
+B,after=census()
+collapsed=[]
+for row in after:
+ if row['driver']>=0 and B['kind'][row['driver']]=='buf':continue
+ stack=[row['net']];ends=set();visited=set()
+ while stack:
+  x=stack.pop()
+  if x in visited:continue
+  visited.add(x)
+  for ci,pn,bit in B['loads'].get(x,[]):
+   if B['kind'][ci]=='buf':
+    stack.extend(v for op,bs in g.cells[ci][2].items() if B['pin_dir'][ci][op]=='out' for v in bs)
+   else:ends.add((ci,pn,bit))
+ collapsed.append(dict(row,first_logic_loads=len(ends)))
+out=pathlib.Path(a.out);out.mkdir(parents=True,exist_ok=True)
+info={'source_sha256':hashlib.sha256(raw.encode()).hexdigest(),'top':top,'limit':a.limit,'before_cells':len(base),'after_cells':len(g.cells),'before_ff':sum(T.FLOP_RE.match(t)!=None for t,n,p in base),'after_ff':sum(k=='ff' for k in B['kind']),'new_cells':len(g.cells)-len(base),'clock_loads':sum(len(B['loads'].get(x,[])) for x in clock),'before_violations':[r for r in before if r['loads']>32],'after_violations':[r for r in after if r['loads']>32],'before':before,'after':after,'collapsed':collapsed,'collapsed_violations':[r for r in collapsed if r['first_logic_loads']>32],'iterations':iteration+1 if (a.emit or a.size) else 0,'qualified':False}
 (out/'census.json').write_text(json.dumps(info,indent=2)+'\n')
 if a.emit:
  # Every original/copy retains the exact master equation and pin polarity. Its
@@ -68,4 +82,4 @@ if a.emit:
  for ci,(typ,nm,pins) in enumerate(g.cells):
   lines.append('  (* keep = 1, dont_touch = 1 *) '+typ+f' c{ci} ('+', '.join(f'.{pn}({net(bs[0])})' for pn,bs in pins.items())+');')
  lines.append('endmodule');(out/'qkd_kvs_attn_safe_control.v').write_text('\n'.join(lines)+'\n')
-print(json.dumps({k:info[k] for k in ('source_sha256','before_cells','after_cells','before_ff','after_ff','clock_loads','new_cells','iterations')}));print('remaining>32',info['after_violations'])
+print(json.dumps({k:info[k] for k in ('source_sha256','before_cells','after_cells','before_ff','after_ff','clock_loads','new_cells','iterations')}));print('remaining>32',info['after_violations']);print('collapsed>32',info['collapsed_violations'])
