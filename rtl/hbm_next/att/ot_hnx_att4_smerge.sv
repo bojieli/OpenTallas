@@ -1,6 +1,7 @@
 `timescale 1ns/1ps
 `default_nettype none
 // ---------------------------------------------------------------------------------------------------------------------
+// SRAM-RING recovery 10-19: bulk storage is stationary 1R1W SRAM; old shift-ring comments below describe logical order only.
 // ot_hnx_att4_smerge: SHARED 4-LANE PV MERGE of one BF16 column (HBM-NEXT-ATT4 2026-10-19, risk A1 PRIMARY; PROG decision:
 // do not replicate the per-lane merge).  ONE merge datapath (16 FP32 RNE adders ot_gpu_fadd LAT 7, the release merge's
 // adders) serves the NL query lanes' 8 ring slots each; per-lane state is a FLOP RING of LV levels x 8 slots x 512 b
@@ -138,23 +139,28 @@ module ot_hnx_att4_smerge #(
     reg [2:0]      rp_t   [0:ALAT];
     reg            rp_f   [0:ALAT];
     reg [TAGW-1:0] rp_tag [0:ALAT];
-    wire           ret_v = rp_v[ALAT];
-    wire [1:0]     ret_l = rp_l[ALAT];
-    wire [2:0]     ret_t = rp_t[ALAT];
-    wire           nret_v = rp_v[ALAT-1];                // the result that returns at the NEXT head turn
-    wire [1:0]     nret_l = rp_l[ALAT-1];
-    wire [2:0]     nret_t = rp_t[ALAT-1];
+    wire           ret_v = rp_v[ph];
+    wire [1:0]     ret_l = rp_l[ph];
+    wire [2:0]     ret_t = rp_t[ph];
+    wire           nret_v = rp_v[phn];                // the result that returns at the NEXT head turn
+    wire [1:0]     nret_l = rp_l[phn];
+    wire [2:0]     nret_t = rp_t[phn];
     wire [W-1:0]   my;
 
-    // ---------------- lane rings: LV levels x 8 stages x 512 b; head = stage 0 ----------------
+    // ---------------- stationary SRAM rings: read ph+1, write ph; no shifting storage ----------------
     wire [NW*W-1:0] hw;                                  // head words
     wire [NW*W-1:0] hn;                                  // head next (into stage 7)
     genvar gl, gq;
     generate for (gl = 0; gl < NL; gl = gl + 1) begin : g_lane
         for (gq = 0; gq < LV; gq = gq + 1) begin : g_lv
-            reg [8*W-1:0] rg;
-            always @(posedge clk) rg <= {hn[(gl*LV+gq)*W +: W], rg[8*W-1:W]};
-            assign hw[(gl*LV+gq)*W +: W] = rg[W-1:0];
+            // Each bank needs one read and write per edge; independent banks preserve simultaneous lane events.
+            // Registered SRAM output is the next head. Distinct read/write addresses avoid collision semantics.
+            // MUT 6 reads one residue early: a storage-specific negative control.
+            ot_sram_1r1w_64x512_m1_r2c2 u_ring (
+                .clk(clk), .r_ce_in(1'b1), .r_addr_in({3'b0, (MUT == 6 ? ph : phn)}),
+                .rd_out(hw[(gl*LV+gq)*W +: W]),
+                .w_ce_in(1'b1), .w_addr_in({3'b0, ph}), .wd_in(hn[(gl*LV+gq)*W +: W]),
+                .w_mask_in({W{1'b1}}), .rr_en(2'b0), .rr_addr(12'b0), .cr_en(2'b0), .cr_sel(18'b0));
         end
     end endgenerate
 
@@ -353,9 +359,9 @@ module ot_hnx_att4_smerge #(
                 e_fb[k] <= {LV{1'b0}}; e_n[k] <= {(LV+1){1'b0}};
             end
         end else begin
-            rp_v <= {rp_v[ALAT-1:0], x_iss};
-            pv_v <= ret_v && rp_f[ALAT];
-            if (ret_v && rp_f[ALAT]) node_valid[{ret_l, ph}] <= 1'b1;
+            rp_v[ph] <= x_iss;
+            pv_v <= ret_v && rp_f[ph];
+            if (ret_v && rp_f[ph]) node_valid[{ret_l, ph}] <= 1'b1;
             if ((|mf) || (|x_flt)) m_fault <= 1'b1;
             for (l2 = 0; l2 < NL; l2 = l2 + 1) begin
                 ix2 = {l2[1:0], ph};
@@ -367,11 +373,8 @@ module ot_hnx_att4_smerge #(
     end
     always @(posedge clk) begin
         for (l2 = 0; l2 < NL; l2 = l2 + 1) begin ix3 = {l2[1:0], ph}; e_tag[ix3] <= x_tag[l2]; end
-        rp_l[0] <= x_sel; rp_t[0] <= x_st; rp_f[0] <= x_sf; rp_tag[0] <= x_stag;
-        for (k = 1; k <= ALAT; k = k + 1) begin
-            rp_l[k] <= rp_l[k-1]; rp_t[k] <= rp_t[k-1]; rp_f[k] <= rp_f[k-1]; rp_tag[k] <= rp_tag[k-1];
-        end
-        if (ret_v && rp_f[ALAT]) begin pv_y <= my; pv_tag <= rp_tag[ALAT]; pv_lane <= ret_l; end
+        rp_l[ph] <= x_sel; rp_t[ph] <= x_st; rp_f[ph] <= x_sf; rp_tag[ph] <= x_stag;
+        if (ret_v && rp_f[ph]) begin pv_y <= my; pv_tag <= rp_tag[ph]; pv_lane <= ret_l; end
     end
 
     // ---------------- publication (PUBLISH = 1): node = level LV-1 of entry (pl_q, ph), request through the input reg ----

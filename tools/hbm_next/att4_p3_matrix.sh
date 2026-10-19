@@ -15,6 +15,7 @@ declare -A R=(
   [sh_k500]="--nl 3 --variant shared --sigma 0.3 --topk 500 --p1"
   [sh_k490]="--nl 3 --variant shared --sigma 0.3 --topk 490 --p1"
   [sh_k486]="--nl 3 --variant shared --sigma 0.0 --topk 486 --p1"
+  [sh_smut6]="--nl 3 --variant shared --sigma 0.3 --smut 6 --only p0,p1,p2,p3"
   [sh_smut1]="--nl 3 --variant shared --sigma 0.3 --smut 1 --only p0,p1,p2,p3"
   [sh_smut2]="--nl 3 --variant shared --sigma 0.3 --smut 2 --only p0,p1,p2,p3"
   [sh_smut3]="--nl 3 --variant shared --sigma 0.3 --smut 3 --only p0,p1,p2,p3"
