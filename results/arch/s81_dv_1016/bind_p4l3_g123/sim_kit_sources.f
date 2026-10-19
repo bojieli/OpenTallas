@@ -214,3 +214,4 @@ rtl/dsrom_sys/s81_dv/frame_l4/col_h9_MX_l4.sv
 rtl/dsrom_sys/s81_dv/frame_l4/col_h10_l4.sv
 cells_used.v
 rtl/common/ot_link_credit.sv
+rtl/dsrom_sys/s81_ph/coll/dsfd_coll_split.sv
