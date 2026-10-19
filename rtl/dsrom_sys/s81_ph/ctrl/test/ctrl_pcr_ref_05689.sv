@@ -114,7 +114,7 @@ module ot_s81ph_ctrl_pcr_ref #(
         assign h_pop_g[gq] = ld_g;
         always @(posedge ckh) if (ld_g) h[LO +: WG] <= q_d[LO +: WG];
     end endgenerate
-`ifdef S81PH_MUT_PACK
+`ifdef S81PH_REFERENCE_UNUSED_PACK
     assign {k_wdata, k_wstrb, k_tag, k_len, k_addr, k_we} = h ^ {{(QW-36){1'b0}}, 1'b1, 35'd0};   // mutant: tag bit 0 flipped
 `else
     assign {k_wdata, k_wstrb, k_tag, k_len, k_addr, k_we} = h;
