@@ -2,13 +2,13 @@
  "schema": "opentallas.ref_tile.gate_result.v2",
  "kit": "qfd_tile_nl_romleaf_c1",
  "verdict": "FAIL",
- "generated": "2026-10-18T18:28:30-0700",
+ "generated": "2026-10-18T19:06:45-0700",
  "host": "ot-epyc4",
  "cts": true,
  "commit": null,
  "source_binding": {
   "schema": "opentallas.ref_tile.source_snapshot.v1",
-  "start_commit": "9884719fbcab401408d66320b2d8602a3b32cebf",
+  "start_commit": "a8caac44055eae317956dc2284781daba7ed254c",
   "commit": null,
   "identity": "exact_content_snapshot",
   "daemon_tree": "/home/ubuntu/wt-claude-closure-daemon-1010",
@@ -21,8 +21,8 @@
    "tools/orfs_hold_mm.tcl",
    "tools/textbook_lint.py"
   ],
-  "archive_sha256": "b0a6582c3b37317b194214eed2c45d382c9eccb594d14e88604e64fd914aad11",
-  "manifest_sha256": "c1fc14e300ce7267d9e4b8a966848fd421fb94d053be047ce46726a66e1ebe03",
+  "archive_sha256": "c84bace982f7015a32f00479b5d97b6079413b84840c45ebbd3abf05a21820b7",
+  "manifest_sha256": "a127990f1e6e8bf17716816821556f31cafd36e748c5625571abfa9475fe030b",
   "files": [
    {
     "path": "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.json",
@@ -124811,8 +124811,8 @@
    {
     "path": "tools/qwen_romleaf/parent_regions_nl_c1.tcl",
     "kind": "file",
-    "sha256": "a466a33a8060f3d7d7664afb717e9de0bccbb57ad8d980a4560670dd479b1237",
-    "git_blob": "6e30ac5e64f2928ff12bc7006cbab9778f20f7ec",
+    "sha256": "4e2187964cc529dc53710f9085949f455ac7540b7f3411e5883dc05ed9a1977b",
+    "git_blob": "0f2ed892c1cadfa63a894a279403315adcb8594c",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -168355,14 +168355,14 @@
   ],
   "disk_admission": {
    "reserve_gb": 20,
-   "archive_bytes": 145825991,
+   "archive_bytes": 145826097,
    "unpacked_bytes": 877993984,
    "pick_gb": 22,
    "runtime_gb": 22
   },
   "route_overlay_plan": {
    "schema": "opentallas.closure_loop.helper_overlay_plan.v1",
-   "origin_main": "34c6ece76ff123bc3c86d5abb9ede6e4a9a9b21f",
+   "origin_main": "ffea1a779cc5d3c67909817aeecf41f77fa2791e",
    "content_sha256": "aa6fa78f353554802295d16729a817dc591fe74211730466d8c6778b04cf8e67",
    "files": [
     {
@@ -169062,7 +169062,7 @@
     "tools/qwen_romleaf/parent_regions_nk_c1.tcl": "4a6f754eeca277bd69c99405a90ce5d822efe89c73ebf933a7de18c4c95cc113",
     "tools/qwen_romleaf/parent_regions_nl_b1.tcl": "6bf2fde34cea7e02cf144e00e486e8ad8f8efe51556288a7eb3245f32aed1b5e",
     "tools/qwen_romleaf/parent_regions_nl_b2.tcl": "e2e22a02542236bd0b341dbb63fc5449a321c463142e8ef38a09cd5254521882",
-    "tools/qwen_romleaf/parent_regions_nl_c1.tcl": "a466a33a8060f3d7d7664afb717e9de0bccbb57ad8d980a4560670dd479b1237",
+    "tools/qwen_romleaf/parent_regions_nl_c1.tcl": "4e2187964cc529dc53710f9085949f455ac7540b7f3411e5883dc05ed9a1977b",
     "tools/ref_tile/keep_module_audit.py": "d99f269a508ad9e28d9c523a626c56be3a43ef6d3f4ee7f53705b0f3366b37a8",
     "tools/ref_tile/kit_orfs_vars.py": "1e4348cfaf9e0140d382be94b51b03e4376190552d20f9c507b7c5dd52b8a5bf",
     "tools/ref_tile/layout_dump.tcl": "0fbcf52283a929344d570838c7f22680a5787cbd58b6f5b2bf0267911cdc9093",
@@ -169077,16 +169077,16 @@
    },
    "digest": "3e69f422690370aa90eac9e2683ee56d98ab299b07dd4bec50e16f467a7bc958"
   },
-  "captured": "2026-10-18T18:16:55-0700",
+  "captured": "2026-10-18T18:38:51-0700",
   "route_hold_context": {
    "HM": "0.03",
    "OT_ROUTE_HOLD_CORNERS": "mm",
    "OT_MM_FF_SDC": "physical/ref_tile/qfd_tile_nl_romleaf_c1/signoff.sdc"
   },
-  "remote_script_sha256": "bd959b66f7693d867007869b8398c5cb166d06edc18b939ab46a94b0c5fa0569",
+  "remote_script_sha256": "bba312a8b943ba37b3347445de7d97aca4b7819500a8d81380ae2c87b441b87a",
   "tool_image_requested": "openroad/orfs:latest",
   "remote_host": "ot-epyc4",
-  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/qfd_tile_nl_romleaf_c1-20261018-181547",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/qfd_tile_nl_romleaf_c1-20261018-183810",
   "remote_archive_verified": true,
   "runtime_tool_provenance": [
    "GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=[\"openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29\"]",
@@ -169306,7 +169306,7 @@
   "kind": "parent",
   "skip_incremental_repair": false,
   "rc": "2",
-  "grt_s": 146,
+  "grt_s": 552,
   "layers": [],
   "worst_layer_usage": null,
   "hotspot": null,

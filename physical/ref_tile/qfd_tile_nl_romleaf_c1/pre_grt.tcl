@@ -4,3 +4,4 @@ source /src/physical/qwen_die_masters/pre_ref_skew.tcl
 source /src/physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl
 source /src/physical/common_flow/grt_macro_top_layer.tcl
 source /src/physical/ref_tile/qfd_tile_nl_romleaf_c1/clock_entry.sdc
+source /src/tools/qwen_romleaf/region_adopt.tcl

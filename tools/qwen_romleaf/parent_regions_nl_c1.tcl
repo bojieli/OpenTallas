@@ -34,3 +34,7 @@ source /src/tools/qwen_romleaf/parent_regions.tcl
 # Q-A0KIT c1r9d NL: flush gutter boxes (c1r5) trapped 22 repair_design repeaters (BUFx16f wire*, ungrouped) inside the
 # EXCLUSIVE dw box at x 42-48, y 536-557 -> 3_5 DPL-0033 (gate c1r9c 10-18 18:15 ot-epyc4).  Gutter boxes now use the NK
 # c1r7 inset (W 3.0-45.0, E 413.0-452.5): a 5.76 um repeater channel to the ROM-leaf halo, no coincident boundary.
+# Q-A0FIX c1r9e NL: c1r9d (inset boxes) still DPL-0033 after CTS: clkbuf_0_ck and hold buffers stuck on ungrouped ME
+# cells at the hub-box centre (384, 420), 30 um from every box edge > the 27 um DPL window.  The kit hooks now source
+# tools/qwen_romleaf/region_adopt.tcl: before every detailed_placement each EXCLUSIVE box adopts the movable cells placed
+# inside it (offline on the c1r9d 3_5 odb: hub 12, tx 682 cells adopted; DPL converged at iteration 1, check_placement clean).

@@ -9,3 +9,4 @@ proc clock_tree_synthesis {args} {
   source /src/physical/ref_tile/qfd_tile_nl_romleaf_c1/clock_entry.sdc
 }
 source /src/physical/common_flow/dpl_multipass.tcl
+source /src/tools/qwen_romleaf/region_adopt.tcl
