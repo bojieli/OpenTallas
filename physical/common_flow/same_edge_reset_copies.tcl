@@ -74,7 +74,7 @@ while {$changed} {
     foreach inst [$ot_lpc::block getInsts] {
         if {![ot_lpc::is_reset_stage $inst]} continue
         set master [$inst getMaster]
-        if {![$master isSequential]} {error "OT_LPC reset stage [$inst getName] is not sequential"}
+        if {![$master isSequential]} continue
         foreach op [$inst getITerms] {
             if {![$op isOutputSignal]} continue
             set net [$op getNet]
