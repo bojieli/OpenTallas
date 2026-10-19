@@ -49,3 +49,56 @@ dict for {k v} $cls { lassign $v n w e; puts [format "GATE_PC %-12s %4d paths, w
 puts "GATE_PC setup WNS [sta::worst_slack_cmd max] hold WNS [sta::worst_slack_cmd min]"
 # Same-tile reg->reg crossings between two clocks, under the signoff SDC just read (multi-clock tiles; one clock: scope only)
 ot_xclk_report
+# MAX-SLEW + LONG-NET GATE (S81-CAPC 10-19): routed CAPC a62 closed timing but its final TT electrical report had two
+# max-slew violations (300.71 / 275.63 > 260 ps) on single-load 135-160 um private data nets (BUFx3 -> INVx1, child ETM
+# output -> BUFx3) that every placement / GRT repair had passed with the 30 % slew margin.  The gate now reports, after CTS
+# at TT placement RC: (1) every max-slew violator (GATE_SLEW; pre_route_gate fails any), and (2) every signal net whose
+# single driver is more than OT_GATE_LONGNET_UM (default 120 um) Manhattan from its farthest load (GATE_LONGNET; WARN,
+# FAIL when the spec sets max_signal_net_um).  Clock nets are excluded (CTS owns them).  Diagnostic only: no constraint
+# is changed and nothing is repaired here.
+sta::redirect_string_begin
+catch {report_check_types -max_slew -violators}
+set ot_sl_txt [sta::redirect_string_end]
+set ot_sl_n 0; set ot_sl_w ""; set ot_sl_pin ""
+foreach ot_sl_l [split $ot_sl_txt "\n"] {
+  if {[regexp {^\s*(\S+)\s+([-\d.]+)\s+([-\d.]+)\s+([-\d.]+)\s+\(VIOLATED\)} $ot_sl_l -> p lim sl sk]} {
+    incr ot_sl_n
+    if {$ot_sl_w eq "" || $sk < $ot_sl_w} { set ot_sl_w $sk; set ot_sl_pin "$p slew $sl limit $lim" }
+  }
+}
+puts "GATE_SLEW violations $ot_sl_n worst_slack [expr {$ot_sl_w eq "" ? "none" : $ot_sl_w}] ([expr {$ot_sl_pin eq "" ? "-" : $ot_sl_pin}]) (TT placement RC after CTS)"
+set ot_ln_thr 120.0
+if {[info exists ::env(OT_GATE_LONGNET_UM)] && $::env(OT_GATE_LONGNET_UM) ne ""} { set ot_ln_thr $::env(OT_GATE_LONGNET_UM) }
+set ot_ln_blk [ord::get_db_block]
+set ot_ln_dbu [expr {double([$ot_ln_blk getDbUnitsPerMicron])}]
+set ot_ln {}; set ot_ln_nets 0; set ot_ln_max 0.0
+proc ot_ln_xy {it} {
+  lassign [$it getAvgXY] ok x y
+  if {!$ok} { set bb [[$it getInst] getBBox]; set x [expr {([$bb xMin] + [$bb xMax]) / 2}]; set y [expr {([$bb yMin] + [$bb yMax]) / 2}] }
+  return [list $x $y]
+}
+foreach ot_n [$ot_ln_blk getNets] {
+  if {[$ot_n getSigType] ne "SIGNAL" || [$ot_n isSpecial]} continue
+  set drv {}; set lds {}; set clk 0
+  foreach it [$ot_n getITerms] {
+    set mt [$it getMTerm]
+    if {[$mt getSigType] eq "CLOCK"} { set clk 1; break }
+    if {[$it isOutputSignal]} { lappend drv [list {*}[ot_ln_xy $it] "[[$it getInst] getName]/[$mt getName]" [[$it getInst] getMaster]] } \
+    elseif {[$it isInputSignal]} { lappend lds [ot_ln_xy $it] }
+  }
+  if {$clk} continue
+  foreach bt [$ot_n getBTerms] {
+    set bb [$bt getBBox]; set x [expr {([$bb xMin] + [$bb xMax]) / 2}]; set y [expr {([$bb yMin] + [$bb yMax]) / 2}]
+    if {[$bt getIoType] eq "INPUT"} { lappend drv [list $x $y "port:[$bt getName]" ""] } else { lappend lds [list $x $y] }
+  }
+  if {[llength $drv] != 1 || [llength $lds] == 0} continue
+  incr ot_ln_nets
+  lassign [lindex $drv 0] dx dy dn dm
+  set far 0.0
+  foreach l $lds { lassign $l lx ly; set d [expr {(abs($lx - $dx) + abs($ly - $dy)) / $ot_ln_dbu}]; if {$d > $far} { set far $d } }
+  if {$far > $ot_ln_max} { set ot_ln_max $far }
+  if {$far > $ot_ln_thr} { lappend ot_ln [list $far [$ot_n getName] $dn [expr {$dm eq "" ? "port" : [$dm getName]}] [llength $lds]] }
+}
+set ot_ln [lsort -real -decreasing -index 0 $ot_ln]
+puts [format "GATE_LONGNET count %d threshold_um %.1f max_um %.1f signal_nets %d" [llength $ot_ln] $ot_ln_thr $ot_ln_max $ot_ln_nets]
+foreach e [lrange $ot_ln 0 9] { lassign $e d n dn dm nl; puts [format "GATE_LONGNET_TOP %.1f um net %s driver %s (%s) loads %d" $d $n $dn $dm $nl] }

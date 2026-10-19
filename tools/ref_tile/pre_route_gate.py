@@ -1024,7 +1024,7 @@ if [ "{CTS}" = 1 ]; then
   python3 -c "import json;d=json.load(open('$R/ck.json'));print('GATE_CK '+'; '.join(c+' insertion all '+str(d[c]['all']['min'])+'..'+str(d[c]['all']['max'])+' ps (spread '+str(round(d[c]['all']['max']-d[c]['all']['min'],1))+'), boundary mean '+str(d[c]['boundary']['mean']) for c in ('ss','tt','ff') if isinstance(d.get(c),dict) and d[c].get('all'))+'; macro_clk flag '+str((d.get('macro_clk') or {{}}).get('flag')))" 2>/dev/null
   python3 -c "import json;d=json.load(open('$R/ck.json'));[print('GATE_CK_DOMAIN '+json.dumps({{'source':pin,'clock':r.get('clock'),'tt':r.get('tt'),'ff':{{k:(r.get('ff') or {{}}).get(k) for k in ('boundary','all','child_flop','macros')}}}})) for pin,r in d.get('clock_measurements',{{}}).items()]" 2>/dev/null
   docker run --rm -e OT_GATE_SIGNOFF_SDC=/src/{KIT}/signoff.sdc -v $R/src:/src:ro -v $C:/work {IMG} /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /src/tools/ref_tile/path_classes.tcl > $R/pc.log 2>&1
-  grep -E "^GATE_(PC|XCLK)" $R/pc.log
+  grep -E "^GATE_(PC|XCLK|SLEW|LONGNET)" $R/pc.log
   ot_layout $NB/4_1_cts.odb placed
 fi
 # TRIAL ROUTE (owner rule 20:45 10-15; every kit since ROOT-0330-GRT 10-18, was parent / cluster kits only): place +
@@ -1663,8 +1663,42 @@ def analyse_remote(g: Gate, kd: Path, spec: dict, out: str, cts: bool, binding: 
             g.add("INFO", "clock_spine", line[:300])
         for line in re.findall(r"^GATE_PC (.*)$", out, re.M):
             g.add("INFO", "path_classes", line)
+        check_slew_longnet(g, spec, out, kv)
     check_cross_clock(g, spec, out, cts)
     clock_item(g, clock_record(out, cts, spec))
+
+
+def check_slew_longnet(g: Gate, spec: dict, out: str, kv: dict):
+    """MAX-SLEW + LONG-NET (S81-CAPC 10-19, routed a62 two TT slew violators on 135-160 um single-load nets): after CTS
+    at TT placement RC, any max-slew violator FAILs; a signal net whose single driver is > OT_GATE_LONGNET_UM (120 um)
+    from its farthest load is a WARN, a FAIL when the spec sets max_signal_net_um (a kit that promises repeated wires)."""
+    if kv.get("GATE_CTS_RC") != "0":
+        return
+    m = re.search(r"^GATE_SLEW violations (\d+) worst_slack (\S+) \((.*?)\)", out, re.M)
+    if not m:
+        g.add("WARN", "max_slew", "no GATE_SLEW line from path_classes.tcl (stale tool copy or pc.log error)",
+              "take tools/ref_tile from origin/main and re-gate with --cts")
+    elif int(m.group(1)):
+        g.add("FAIL", "max_slew", f"{m.group(1)} max-slew violators after CTS at TT placement RC, worst slack {m.group(2)} ps "
+              f"({m.group(3)})", "drive the net from a stronger / kept source buffer or shorten it (repeat, re-place, pin "
+              "register); never relax the limit")
+    else:
+        g.add("INFO", "max_slew", "0 max-slew violators after CTS (TT placement RC)")
+    ln = re.search(r"^GATE_LONGNET count (\d+) threshold_um ([\d.]+) max_um ([\d.]+)", out, re.M)
+    if not ln:
+        return
+    n, thr, mx = int(ln.group(1)), float(ln.group(2)), float(ln.group(3))
+    cap = spec.get("max_signal_net_um")
+    top = "; ".join(re.findall(r"^GATE_LONGNET_TOP (.*)$", out, re.M)[:5])
+    if cap is not None and mx > float(cap):
+        g.add("FAIL", "long_net", f"longest single-driver signal net {mx:.1f} um > spec max_signal_net_um {cap} ({n} nets > "
+              f"{thr:g} um): {top}"[:900], "repeat the wire (max-wire repair) or move driver/load together")
+    elif n:
+        g.add("WARN", "long_net", f"{n} single-driver signal nets > {thr:g} um driver-to-load (max {mx:.1f} um); routed RC "
+              f"can exceed the placement slew estimate: {top}"[:900], "repeat long wires (physical/common_flow/"
+              "max_wire_repeat.tcl) and set max_signal_net_um in the spec")
+    else:
+        g.add("INFO", "long_net", f"0 single-driver signal nets > {thr:g} um (max {mx:.1f} um)")
 
 
 CLOCK_RESULT = "gate_result.json"       # <kit>/gate_result.json: the kit's gate result (commit it with the kit)

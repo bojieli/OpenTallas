@@ -1,0 +1,151 @@
+{
+ "schema": "opentallas.ref_tile.floorplan.v1",
+ "name": "s81sl_capc_p1_die_slew",
+ "top": "ot_s81sl_cap_p1",
+ "kind": "cluster",
+ "die": [
+  0,
+  0,
+  345.6,
+  345.6
+ ],
+ "core": [
+  2.16,
+  2.16,
+  343.44,
+  343.44
+ ],
+ "why": "spec outline",
+ "std_area_um2": 600.0,
+ "layer_contract": {
+  "children": {
+   "ot_s81sl_cap_rt": "M5",
+   "ot_s81sl_cap_tr": "M5"
+  },
+  "pg_layer": "M7",
+  "rlayers": [
+   "M2",
+   "M7"
+  ],
+  "strap_layer": "M8"
+ },
+ "pins": {
+  "W": [
+   "rt_w"
+  ],
+  "E": [
+   "rt_e"
+  ],
+  "N": [
+   "cfg_v",
+   "cfg_d",
+   "cw_n_v",
+   "cw_n_a",
+   "cw_n_d"
+  ],
+  "S": [
+   "cw_s_v",
+   "cw_s_a",
+   "cw_s_d",
+   "clk",
+   "rst_n",
+   "fault"
+  ]
+ },
+ "clock_port": "clk",
+ "blocks": [
+  {
+   "kind": "child",
+   "view": "physical/ref_tile/s81sl_cap_rt/views/ot_s81sl_cap_rt",
+   "master": "ot_s81sl_cap_rt",
+   "inst": "u_core.g_hard.u_rt",
+   "idx": 0,
+   "x": 43.2,
+   "y": 43.2,
+   "w": 259.2,
+   "h": 116.64,
+   "orient": "R0",
+   "offtrack": 0
+  },
+  {
+   "kind": "child",
+   "view": "physical/ref_tile/s81sl_cap_tr/views/ot_s81sl_cap_tr",
+   "master": "ot_s81sl_cap_tr",
+   "inst": "u_core.g_hard.u_tw",
+   "idx": 0,
+   "x": 43.2,
+   "y": 216.0,
+   "w": 90.72,
+   "h": 86.4,
+   "orient": "R0",
+   "offtrack": 0
+  },
+  {
+   "kind": "child",
+   "view": "physical/ref_tile/s81sl_cap_tr/views/ot_s81sl_cap_tr",
+   "master": "ot_s81sl_cap_tr",
+   "inst": "u_core.g_hard.u_te",
+   "idx": 0,
+   "x": 216.0,
+   "y": 216.0,
+   "w": 90.72,
+   "h": 86.4,
+   "orient": "R0",
+   "offtrack": 0
+  }
+ ],
+ "findings": [
+  [
+   "WARN",
+   "fill",
+   "fill 39% = (macros/children 45910 + std 600) / outline 119439 um2 < 50%",
+   ""
+  ]
+ ],
+ "referenced": [
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_p1.sv",
+  "physical/ref_tile/s81sl_capc_p1_die_slew/kit.env",
+  "physical/ref_tile/s81sl_capc_p1_die_slew/clock.sdc",
+  "physical/ref_tile/s81sl_capc_p1_die_slew/signoff.sdc",
+  "physical/ref_tile/s81sl_capc_p1_die_slew/pdn.tcl",
+  "physical/ref_tile/s81sl_capc_p1_die_slew/pre_cts.tcl",
+  "physical/ref_tile/s81sl_capc_p1_die_slew/post_cts.tcl",
+  "physical/ref_tile/s81sl_capc_p1_die_slew/post_grt.tcl",
+  "physical/ref_tile/s81sl_capc_p1_die_slew/pre_drt.tcl",
+  "physical/ref_tile/s81sl_capc_p1_die_slew/pre_fill.tcl",
+  "physical/ref_tile/s81sl_capc_p1_die_slew/post_fill.tcl",
+  "physical/ref_tile/s81sl_capc_p1_die_slew/pre_grt.tcl",
+  "physical/ref_tile/s81sl_capc_p1_die_slew/post_drt.tcl",
+  "tools/ref_tile/ref_route.sh",
+  "physical/qwen_die_masters/io_ref_skew.sdc",
+  "physical/qwen_die_masters/io_plain.sdc",
+  "physical/qwen_die_masters/repair_budget.tcl",
+  "physical/qwen_die_masters/pre_cts_skew.tcl",
+  "physical/qwen_die_masters/pre_ref_skew.tcl",
+  "physical/qwen_die_masters/post_plain.tcl",
+  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+  "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/common_flow/max_wire_repeat.tcl",
+  "physical/qwen_die_masters/io_flop_at_pins.tcl",
+  "physical/qwen_die_masters/out_flop_release.tcl",
+  "physical/ref_tile/s81sl_capc_p1_die_slew/pre_gpl.tcl",
+  "physical/ref_tile/s81sl_capc_p1_die_slew/pre_dpl.tcl",
+  "physical/common_flow/pin_reg_split.tcl",
+  "physical/common_flow/clock_spine.tcl",
+  "physical/ref_tile/s81sl_capc_p1_die_slew/spine_ins.tcl",
+  "physical/ref_tile/s81sl_cap_rt/views/ot_s81sl_cap_rt/ot_s81sl_cap_rt.lef",
+  "physical/ref_tile/s81sl_cap_rt/views/ot_s81sl_cap_rt/ot_s81sl_cap_rt_ss.lib",
+  "physical/ref_tile/s81sl_cap_rt/views/ot_s81sl_cap_rt/ot_s81sl_cap_rt_ff.lib",
+  "physical/ref_tile/s81sl_cap_rt/views/ot_s81sl_cap_rt/ot_s81sl_cap_rt_tt.lib",
+  "physical/ref_tile/s81sl_cap_tr/views/ot_s81sl_cap_tr/ot_s81sl_cap_tr.lef",
+  "physical/ref_tile/s81sl_cap_tr/views/ot_s81sl_cap_tr/ot_s81sl_cap_tr_ss.lib",
+  "physical/ref_tile/s81sl_cap_tr/views/ot_s81sl_cap_tr/ot_s81sl_cap_tr_ff.lib",
+  "physical/ref_tile/s81sl_cap_tr/views/ot_s81sl_cap_tr/ot_s81sl_cap_tr_tt.lib",
+  "physical/ref_tile/s81sl_cap_tr/views/ot_s81sl_cap_tr/ot_s81sl_cap_tr.lef",
+  "physical/ref_tile/s81sl_cap_tr/views/ot_s81sl_cap_tr/ot_s81sl_cap_tr_ss.lib",
+  "physical/ref_tile/s81sl_cap_tr/views/ot_s81sl_cap_tr/ot_s81sl_cap_tr_ff.lib",
+  "physical/ref_tile/s81sl_cap_tr/views/ot_s81sl_cap_tr/ot_s81sl_cap_tr_tt.lib",
+  "physical/ref_tile/s81sl_capc_p1_die_slew/place.tcl"
+ ]
+}
