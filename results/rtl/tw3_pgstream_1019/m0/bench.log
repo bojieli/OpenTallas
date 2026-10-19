@@ -4,5 +4,5 @@ ref faults pg=1 lg=1 (sticky; raised during traffic); coverage: serial fill retu
 PG_STREAM_SPLIT PASS checks=7178 windows=9228 MUT=0 RR=10/7
 - rtl/test/hbm_accel/generic/tb_hbm_su_pg_stream_split.sv:146: Verilog $finish
 - S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 4us; walltime 0.016 s; speed 224.725 us/s
+- Verilator: $finish at 4us; walltime 0.016 s; speed 220.032 us/s
 - Verilator: cpu 0.016 s on 1 threads; allocated 7 MB
