@@ -10,11 +10,17 @@ from pathlib import Path
 def block(name):
     # Flattened Yosys names retain full instance paths. Preserve each raw path
     # in the receipt as well; these bins are explanatory, not view waivers.
+    if re.search(r'g_lane\[\d+\].*\.u_head\.',name):
+        return 'new_ML5_head_RTL_unqualified'
+    if re.search(r'g_lane\[\d+\].*\.u_(?:rcp|exp|rsq)\.',name):
+        return 'SFU_candidate_hard_internal_diagnostic'
+    if re.search(r'g_leaf\[\d+\]\.u_leaf\.',name):
+        return 'xs_leaf_RTL_unqualified'
     for token,label in [('u_amax','amax_soft'),('u_scalar','scalar_soft'),
                         ('u_sc.','scalar_soft'),('u_stn','station_soft'),
                         ('u_vm','vm_soft'),('u_stream','stream_soft'),
-                        ('u_str.','stream_soft'),('u_stm.','stream_soft'),('u_su.g_lane','lane_rtl_included'),
-                        ('u_hd','head_rtl_included')]:
+                        ('u_str.','stream_soft'),('u_stm.','stream_soft'),('u_su.g_lane','lane_wrapper_soft'),
+                        ('u_hd','head_controller_soft')]:
         if token in name:return label
     return 'other_soft_or_unclassified'
 
@@ -22,8 +28,14 @@ def block(name):
 def main():
     ap=argparse.ArgumentParser()
     ap.add_argument('netlist');ap.add_argument('--top',default='qfd_dv_slice2_w')
+    ap.add_argument('--expand-kept-hierarchy',action='store_true',
+        help='Include exact aliases and primitive loads inside retained soft modules; no hard-view exclusions.')
     ap.add_argument('--out',required=True);a=ap.parse_args()
-    design=json.loads(Path(a.netlist).read_text());m=design['modules'][a.top]
+    raw=Path(a.netlist).read_bytes();design=json.loads(raw)
+    if a.expand_kept_hierarchy:
+        from soft_cone_inventory import expand_hierarchy
+        design=expand_hierarchy(design,a.top)
+    m=design['modules'][a.top]
     aliases=defaultdict(list)
     for name,n in m['netnames'].items():
         for idx,b in enumerate(n['bits']):
@@ -47,9 +59,12 @@ def main():
                          reset_load_examples=[dict(cell=n,pin=p) for n,p in rs[:40]],
                          all_load_blocks=dict(Counter(block(n) for n,p in loads[b]))))
     rows.sort(key=lambda x:(-x['all_input_pin_loads'],-x['reset_pin_loads']))
+    import hashlib
     result=dict(status='RTL_INVENTORY_NOT_NATIVE_TIMING_SIGNOFF',top=a.top,
+                netlist_sha256=hashlib.sha256(raw).hexdigest(),
+                kept_soft_hierarchy_expanded=a.expand_kept_hierarchy,
                 cells=len(m['cells']),cell_types=dict(types),reset_nets=rows,
-                note='All real lane/head/SFU RTL was flattened; closed hard-child internal loads are included here for diagnosis only. Parent hard-bound load is one pin per matching native instance. New ML5 heads require new closure.',
+                note='No hard internals excluded. Bins preserve actual instance scope: only u_head/rcp/exp/rsq/u_leaf descendants are candidate hard interiors; upstream head controller and lane wrapper remain soft parent obligations. SFU naming alone does not prove native binding. A physical parent hard-bound load is one pin only after matching the actual native instance/view. New ML5 head and xs leaf remain unqualified. Expanded diagnostic bit IDs are not raw netlist IDs; use aliases/source hash.',
                 named_reset_total_load_excess=[dict(bit=b,names=sorted(aliases[b])[:12],loads=len(ls))
                     for b,ls in loads.items() if len(ls)>32 and
                     any(re.search(r'rst|reset|rsafe',n,re.I) for n in aliases[b])])
