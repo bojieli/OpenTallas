@@ -61,7 +61,8 @@
  "findings": [],
  "referenced": [
   "rtl/dsrom_sys/s81_ph/ot_s81ph_afifo.sv",
-  "rtl/dsrom_sys/s81_ph/ot_s81ph_ctrl_pc.sv",
+  "rtl/dsrom_sys/s81_ph/ctrl/ot_s81ph_afifo_g.sv",
+  "rtl/dsrom_sys/s81_ph/ctrl/ot_s81ph_ctrl_pcr.sv",
   "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv",
   "rtl/dsrom_sys/s81_ph/ctrl/dsfd_ctrl_rg2.sv",
   "physical/s81_ctrl_rg2/dsfd_ctrl_rg2_hclk.sdc",
