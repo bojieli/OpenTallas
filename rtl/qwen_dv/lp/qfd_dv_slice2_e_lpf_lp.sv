@@ -3,7 +3,7 @@
 // LANDED PARENT (PARENTS-LANDED 10-18): 10 clock regions (core, hd, ef, wf, nw, nc, ne, sw, sc, se), 42 landed crossings (D 4, E = K = 2, +3 edges each), 2 alignment pads,
 // regional reset runs depth 9 (+ t(child) per child).  Record: results/arch/landed_parent_1018/qfd_dv_slice2_e_lpf/qfd_dv_slice2_e_lpf_lp_record.json
 // MUT (bench only; 0 in every kit): 1 = landing 0 bypassed, 2 = landing 0 read K+1, 3 = pad 0 one stage short,
-//     4 = child reset run of 'u_c' one stage long
+//     4 = child reset run of 'u_hd' one stage long
 module qfd_dv_slice2_e_lpf_lp #(
     parameter integer SL_MUT = 0, parameter integer SU_TLS = 1, parameter integer SU_LT = 1,
     parameter integer MUT = 0
@@ -320,9 +320,9 @@ module qfd_dv_slice2_e_lpf_lp #(
     assign h_s3__l_se = lpl_41_o;
     wire [9:0] c_ag_n__p_u_s;  ot_pl_pad #(.W(((9) - (0) + 1)), .N((MUT == 3) ? 5 : 6)) u_lpp_0 (.ck(ck_core), .d(c_ag_n), .q(c_ag_n__p_u_s));   // align u_s: +6
     wire [106:0] c_st_n__p_u_s;  ot_pl_pad #(.W(((106) - (0) + 1)), .N(6)) u_lpp_1 (.ck(ck_core), .d(c_st_n), .q(c_st_n__p_u_s));   // align u_s: +6
-    wire lpr_c_u_c;  ot_pl_pad #(.W(1), .N((MUT == 4) ? 4 : 3)) u_lprc_u_c (.ck(ck_core), .d(lpr_core), .q(lpr_c_u_c));   // t(u_c) = 3
+    wire lpr_c_u_c;  ot_pl_pad #(.W(1), .N(3)) u_lprc_u_c (.ck(ck_core), .d(lpr_core), .q(lpr_c_u_c));   // t(u_c) = 3
     wire lpr_c_u_s;  ot_pl_pad #(.W(1), .N(9)) u_lprc_u_s (.ck(ck_core), .d(lpr_core), .q(lpr_c_u_s));   // t(u_s) = 9
-    wire lpr_c_u_hd;  ot_pl_pad #(.W(1), .N(6)) u_lprc_u_hd (.ck(ck_hd), .d(lpr_hd), .q(lpr_c_u_hd));   // t(u_hd) = 6
+    wire lpr_c_u_hd;  ot_pl_pad #(.W(1), .N((MUT == 4) ? 7 : 6)) u_lprc_u_hd (.ck(ck_hd), .d(lpr_hd), .q(lpr_c_u_hd));   // t(u_hd) = 6
     wire lpr_c_u_te;  ot_pl_pad #(.W(1), .N(6)) u_lprc_u_te (.ck(ck_ef), .d(lpr_ef), .q(lpr_c_u_te));   // t(u_te) = 6
     wire lpr_c_u_tes;  ot_pl_pad #(.W(1), .N(12)) u_lprc_u_tes (.ck(ck_ef), .d(lpr_ef), .q(lpr_c_u_tes));   // t(u_tes) = 12
     wire lpr_c_u_tw;  ot_pl_pad #(.W(1), .N(6)) u_lprc_u_tw (.ck(ck_wf), .d(lpr_wf), .q(lpr_c_u_tw));   // t(u_tw) = 6

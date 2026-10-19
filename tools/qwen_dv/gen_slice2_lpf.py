@@ -50,8 +50,7 @@ def core():
         "    wire hd_fault = 1'b0;\n"
         "    wire hv = hr_q[0];\n"
         "    assign hd_sid = sid_q;\n"
-        "`ifdef OT_LPF_MUT2\n    assign hd_xpf = hr_q[72:1];                  // MUT 2 (bench only): xpf valid not gated by hr_v\n`else\n"
-        "    assign hd_xpf = {hr_q[72:2], hr_q[1] & hv};\n`endif\n"
+        "    assign hd_xpf = {hr_q[72:2], hr_q[1] & hv};\n"
         "    assign hd_gi = {hr_q[451:73], hr_q[452] & hv};\n"
         "    assign hd_sw_v = xt_v;\n    assign hd_sw_a = xt_a;\n    assign hd_sw_d = xt_f;\n    assign hd_fe = xt_bad;\n") + body[b:]
     a = body.index("    always @(posedge ck or negedge rst)\n        if (!rst) st <= 107'd0;\n")
@@ -121,7 +120,11 @@ module qfd_dv_slice2_lph #(parameter integer MUT = 0) (
         if (!rst_n) begin rs1 <= 1'b0; rst <= 1'b0; end
         else begin rs1 <= 1'b1; rst <= rs1; end
     wire [4*516-1:0] n_d, s_d;
+`ifdef OT_LPF_MUT2
+    assign {cw_n3, cw_n1, cw_n2, cw_n0} = n_d;   // MUT 2 (bench only): corridor words of column heads 1 / 2 swapped
+`else
     assign {cw_n3, cw_n2, cw_n1, cw_n0} = n_d;
+`endif
     assign {cw_s3, cw_s2, cw_s1, cw_s0} = s_d;
 `ifdef OT_DV_SLICE_HARD
     qfd_dv_heads_w130 u_hd (.ck(ck), .rst_n(rst), .sid(sid),
@@ -254,7 +257,9 @@ def tb():
     quiet = {"cmd_ei", "rv_ei", "re_ei", "rr_ei", "rl_ei", "rd_ei", "dr_ei", "arv_wi", "art_wi", "arm_wi", "arl_wi", "ard_wi",
              "dd_wi", "ag_wi", "l9_wi", "rs_n0", "rs_n1", "rs_s0", "rs_s1"}
     o.append("    integer pnz [0:%d];" % (len(outs) - 1))
-    o += ["    integer cyc, bad, nc, nz, k; reg quiet;", "    initial begin", "        bad = 0; nc = 0; nz = 0; quiet = $test$plusargs(\"quiet\");",
+    o += ["    integer cyc, bad, nc, nz, k, nhf, naf; reg quiet, hronly;",
+          "    always @(posedge ck) if (rst_n) begin nhf = nhf + (u_ref.u_core.g_hdw.u_hd.fault ? 1 : 0); naf = naf + (u_ref.u_core.any_fault ? 1 : 0); end",
+          "    initial begin", "        bad = 0; nc = 0; nz = 0; nhf = 0; naf = 0; quiet = $test$plusargs(\"quiet\"); hronly = $test$plusargs(\"hronly\");",
           f"        for (k = 0; k < {len(outs)}; k = k + 1) pnz[k] = 0;"]
     for w, n in ins:
         o.append(f"        {n} = '0;")
@@ -262,16 +267,22 @@ def tb():
           "            if (cyc == 16) rst_n = 1'b1;"]
     for w, n in ins:
         r = '{' + ','.join(['$urandom'] * ((w + 31) // 32)) + '}'
-        o.append(f"            {n} = quiet ? '0 : {r};" if n in quiet else f"            {n} = {r};")
+        if n == "hr_ei":
+            o.append(f"            {n} = {r};")
+        elif n in quiet:
+            o.append(f"            {n} = (quiet || hronly) ? '0 : {r};")
+        else:
+            o.append(f"            {n} = hronly ? '0 : {r};")
     o.append("            if (cyc > 18) begin")
     for w, n in outs:
         o.append(f"                nc = nc + 1; if (|a_{n}) begin nz = nz + 1; pnz[{outs.index((w, n))}] = pnz[{outs.index((w, n))}] + 1; end if (a_{n} !== b_{n}) begin bad = bad + 1; "
                  f"if (bad <= 8) $display(\"LPF_MISMATCH port={n} cycle=%0d ref=%h lpf=%h\", cyc, a_{n}, b_{n}); end")
     o += ["            end", "        end"]
     o += [f"        $display(\"LPF_NZ {n} %0d\", pnz[{i}]);" for i, (w, n) in enumerate(outs)]
+    o += ["        $display(\"LPF_FAULT_CYCLES heads=%0d any=%0d\", nhf, naf);"]
     o += [
-          "        if (bad == 0 && nc > 0) $display(\"LPF_EQ PASS quiet=%0d compared=%0d nonzero=%0d cycles=%0d\", quiet, nc, nz, CYC);",
-          "        else $display(\"LPF_EQ FAIL quiet=%0d mismatches=%0d of %0d\", quiet, bad, nc);", "        $finish;", "    end", "endmodule"]
+          "        if (bad == 0 && nc > 0) $display(\"LPF_EQ PASS quiet=%0d hronly=%0d compared=%0d nonzero=%0d cycles=%0d\", quiet, hronly, nc, nz, CYC);",
+          "        else $display(\"LPF_EQ FAIL quiet=%0d hronly=%0d mismatches=%0d of %0d\", quiet, hronly, bad, nc);", "        $finish;", "    end", "endmodule"]
     return "\n".join(o) + "\n"
 
 

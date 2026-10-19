@@ -65,9 +65,10 @@ module tb_qfd_dv_slice2_e_lpf;
     qfd_dv_slice2_e #(.SU_LT(1), .HD_W130(1)) u_ref (.ck(ck), .rst_n(rst_n), .cmd_ei(cmd_ei), .hr_ei(hr_ei), .st_ei(st_ei), .st_wi(st_wi), .sc_ei(sc_ei), .sc_wi(sc_wi), .arv_wi(arv_wi), .art_wi(art_wi), .arm_wi(arm_wi), .arl_wi(arl_wi), .ard_wi(ard_wi), .dd_wi(dd_wi), .rv_ei(rv_ei), .re_ei(re_ei), .rr_ei(rr_ei), .rl_ei(rl_ei), .rd_ei(rd_ei), .dr_ei(dr_ei), .ag_wi(ag_wi), .l9_wi(l9_wi), .rs_n0(rs_n0), .rs_n1(rs_n1), .rs_s0(rs_s0), .rs_s1(rs_s1), .cmd_wo(a_cmd_wo), .hr_wo(a_hr_wo), .st_eo(a_st_eo), .st_wo(a_st_wo), .sc_eo(a_sc_eo), .sc_wo(a_sc_wo), .arv_eo(a_arv_eo), .art_eo(a_art_eo), .arm_eo(a_arm_eo), .arl_eo(a_arl_eo), .ard_eo(a_ard_eo), .dd_eo(a_dd_eo), .rv_wo(a_rv_wo), .re_wo(a_re_wo), .rr_wo(a_rr_wo), .rl_wo(a_rl_wo), .rd_wo(a_rd_wo), .dr_wo(a_dr_wo), .ag_eo(a_ag_eo), .ss_eo(a_ss_eo), .ccv_eo(a_ccv_eo), .ccm_eo(a_ccm_eo), .ccw_eo(a_ccw_eo), .cct_eo(a_cct_eo), .l9_eo(a_l9_eo), .cw_n0(a_cw_n0), .cw_n1(a_cw_n1), .cw_n2(a_cw_n2), .cw_n3(a_cw_n3), .cw_s0(a_cw_s0), .cw_s1(a_cw_s1), .cw_s2(a_cw_s2), .cw_s3(a_cw_s3));
     qfd_dv_slice2_e_lpf #(.SU_LT(1)) u_lpf (.ck(ck), .rst_n(rst_n), .cmd_ei(cmd_ei), .hr_ei(hr_ei), .st_ei(st_ei), .st_wi(st_wi), .sc_ei(sc_ei), .sc_wi(sc_wi), .arv_wi(arv_wi), .art_wi(art_wi), .arm_wi(arm_wi), .arl_wi(arl_wi), .ard_wi(ard_wi), .dd_wi(dd_wi), .rv_ei(rv_ei), .re_ei(re_ei), .rr_ei(rr_ei), .rl_ei(rl_ei), .rd_ei(rd_ei), .dr_ei(dr_ei), .ag_wi(ag_wi), .l9_wi(l9_wi), .rs_n0(rs_n0), .rs_n1(rs_n1), .rs_s0(rs_s0), .rs_s1(rs_s1), .cmd_wo(b_cmd_wo), .hr_wo(b_hr_wo), .st_eo(b_st_eo), .st_wo(b_st_wo), .sc_eo(b_sc_eo), .sc_wo(b_sc_wo), .arv_eo(b_arv_eo), .art_eo(b_art_eo), .arm_eo(b_arm_eo), .arl_eo(b_arl_eo), .ard_eo(b_ard_eo), .dd_eo(b_dd_eo), .rv_wo(b_rv_wo), .re_wo(b_re_wo), .rr_wo(b_rr_wo), .rl_wo(b_rl_wo), .rd_wo(b_rd_wo), .dr_wo(b_dr_wo), .ag_eo(b_ag_eo), .ss_eo(b_ss_eo), .ccv_eo(b_ccv_eo), .ccm_eo(b_ccm_eo), .ccw_eo(b_ccw_eo), .cct_eo(b_cct_eo), .l9_eo(b_l9_eo), .cw_n0(b_cw_n0), .cw_n1(b_cw_n1), .cw_n2(b_cw_n2), .cw_n3(b_cw_n3), .cw_s0(b_cw_s0), .cw_s1(b_cw_s1), .cw_s2(b_cw_s2), .cw_s3(b_cw_s3));
     integer pnz [0:32];
-    integer cyc, bad, nc, nz, k; reg quiet;
+    integer cyc, bad, nc, nz, k, nhf, naf; reg quiet, hronly;
+    always @(posedge ck) if (rst_n) begin nhf = nhf + (u_ref.u_core.g_hdw.u_hd.fault ? 1 : 0); naf = naf + (u_ref.u_core.any_fault ? 1 : 0); end
     initial begin
-        bad = 0; nc = 0; nz = 0; quiet = $test$plusargs("quiet");
+        bad = 0; nc = 0; nz = 0; nhf = 0; naf = 0; quiet = $test$plusargs("quiet"); hronly = $test$plusargs("hronly");
         for (k = 0; k < 33; k = k + 1) pnz[k] = 0;
         cmd_ei = '0;
         hr_ei = '0;
@@ -96,30 +97,30 @@ module tb_qfd_dv_slice2_e_lpf;
         for (cyc = 0; cyc < CYC; cyc = cyc + 1) begin
             @(negedge ck);
             if (cyc == 16) rst_n = 1'b1;
-            cmd_ei = quiet ? '0 : {$urandom,$urandom,$urandom,$urandom};
+            cmd_ei = (quiet || hronly) ? '0 : {$urandom,$urandom,$urandom,$urandom};
             hr_ei = {$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom};
-            st_ei = {$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom};
-            st_wi = {$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom};
-            sc_ei = {$urandom,$urandom};
-            sc_wi = {$urandom,$urandom};
-            arv_wi = quiet ? '0 : {$urandom};
-            art_wi = quiet ? '0 : {$urandom};
-            arm_wi = quiet ? '0 : {$urandom};
-            arl_wi = quiet ? '0 : {$urandom};
-            ard_wi = quiet ? '0 : {$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom};
-            dd_wi = quiet ? '0 : {$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom};
-            rv_ei = quiet ? '0 : {$urandom};
-            re_ei = quiet ? '0 : {$urandom};
-            rr_ei = quiet ? '0 : {$urandom};
-            rl_ei = quiet ? '0 : {$urandom};
-            rd_ei = quiet ? '0 : {$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom};
-            dr_ei = quiet ? '0 : {$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom};
-            ag_wi = quiet ? '0 : {$urandom};
-            l9_wi = quiet ? '0 : {$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom};
-            rs_n0 = quiet ? '0 : {$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom};
-            rs_n1 = quiet ? '0 : {$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom};
-            rs_s0 = quiet ? '0 : {$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom};
-            rs_s1 = quiet ? '0 : {$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom};
+            st_ei = hronly ? '0 : {$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom};
+            st_wi = hronly ? '0 : {$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom};
+            sc_ei = hronly ? '0 : {$urandom,$urandom};
+            sc_wi = hronly ? '0 : {$urandom,$urandom};
+            arv_wi = (quiet || hronly) ? '0 : {$urandom};
+            art_wi = (quiet || hronly) ? '0 : {$urandom};
+            arm_wi = (quiet || hronly) ? '0 : {$urandom};
+            arl_wi = (quiet || hronly) ? '0 : {$urandom};
+            ard_wi = (quiet || hronly) ? '0 : {$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom};
+            dd_wi = (quiet || hronly) ? '0 : {$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom};
+            rv_ei = (quiet || hronly) ? '0 : {$urandom};
+            re_ei = (quiet || hronly) ? '0 : {$urandom};
+            rr_ei = (quiet || hronly) ? '0 : {$urandom};
+            rl_ei = (quiet || hronly) ? '0 : {$urandom};
+            rd_ei = (quiet || hronly) ? '0 : {$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom};
+            dr_ei = (quiet || hronly) ? '0 : {$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom};
+            ag_wi = (quiet || hronly) ? '0 : {$urandom};
+            l9_wi = (quiet || hronly) ? '0 : {$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom};
+            rs_n0 = (quiet || hronly) ? '0 : {$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom};
+            rs_n1 = (quiet || hronly) ? '0 : {$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom};
+            rs_s0 = (quiet || hronly) ? '0 : {$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom};
+            rs_s1 = (quiet || hronly) ? '0 : {$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom};
             if (cyc > 18) begin
                 nc = nc + 1; if (|a_cmd_wo) begin nz = nz + 1; pnz[0] = pnz[0] + 1; end if (a_cmd_wo !== b_cmd_wo) begin bad = bad + 1; if (bad <= 8) $display("LPF_MISMATCH port=cmd_wo cycle=%0d ref=%h lpf=%h", cyc, a_cmd_wo, b_cmd_wo); end
                 nc = nc + 1; if (|a_hr_wo) begin nz = nz + 1; pnz[1] = pnz[1] + 1; end if (a_hr_wo !== b_hr_wo) begin bad = bad + 1; if (bad <= 8) $display("LPF_MISMATCH port=hr_wo cycle=%0d ref=%h lpf=%h", cyc, a_hr_wo, b_hr_wo); end
@@ -189,8 +190,9 @@ module tb_qfd_dv_slice2_e_lpf;
         $display("LPF_NZ cw_s1 %0d", pnz[30]);
         $display("LPF_NZ cw_s2 %0d", pnz[31]);
         $display("LPF_NZ cw_s3 %0d", pnz[32]);
-        if (bad == 0 && nc > 0) $display("LPF_EQ PASS quiet=%0d compared=%0d nonzero=%0d cycles=%0d", quiet, nc, nz, CYC);
-        else $display("LPF_EQ FAIL quiet=%0d mismatches=%0d of %0d", quiet, bad, nc);
+        $display("LPF_FAULT_CYCLES heads=%0d any=%0d", nhf, naf);
+        if (bad == 0 && nc > 0) $display("LPF_EQ PASS quiet=%0d hronly=%0d compared=%0d nonzero=%0d cycles=%0d", quiet, hronly, nc, nz, CYC);
+        else $display("LPF_EQ FAIL quiet=%0d hronly=%0d mismatches=%0d of %0d", quiet, hronly, bad, nc);
         $finish;
     end
 endmodule

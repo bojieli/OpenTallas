@@ -237,11 +237,7 @@ module qfd_dv_slice2_lpc #(
     wire hd_fault = 1'b0;
     wire hv = hr_q[0];
     assign hd_sid = sid_q;
-`ifdef OT_LPF_MUT2
-    assign hd_xpf = hr_q[72:1];                  // MUT 2 (bench only): xpf valid not gated by hr_v
-`else
     assign hd_xpf = {hr_q[72:2], hr_q[1] & hv};
-`endif
     assign hd_gi = {hr_q[451:73], hr_q[452] & hv};
     assign hd_sw_v = xt_v;
     assign hd_sw_a = xt_a;
@@ -417,7 +413,11 @@ module qfd_dv_slice2_lph #(parameter integer MUT = 0) (
         if (!rst_n) begin rs1 <= 1'b0; rst <= 1'b0; end
         else begin rs1 <= 1'b1; rst <= rs1; end
     wire [4*516-1:0] n_d, s_d;
+`ifdef OT_LPF_MUT2
+    assign {cw_n3, cw_n1, cw_n2, cw_n0} = n_d;   // MUT 2 (bench only): corridor words of column heads 1 / 2 swapped
+`else
     assign {cw_n3, cw_n2, cw_n1, cw_n0} = n_d;
+`endif
     assign {cw_s3, cw_s2, cw_s1, cw_s0} = s_d;
 `ifdef OT_DV_SLICE_HARD
     qfd_dv_heads_w130 u_hd (.ck(ck), .rst_n(rst), .sid(sid),
