@@ -22,3 +22,8 @@ set_load -max -subtract_pin_load 43 [get_nets {y[5]}]
 source /src/test/include.sdc
 set ::scene_count([sta::cmd_mode_name]) [llength [get_scenes -modes [sta::cmd_mode_name] *]]
 set_load [expr {50 + $::scene_count([sta::cmd_mode_name])}] [get_ports {y[7]}]
+# Independent single entries let native serialization expose every rf/mm slot.
+set_load -pin_load -rise -min 61 [get_ports {y[12]}]
+set_load -wire_load -fall -min 62 [get_ports {y[13]}]
+set_load -pin_load -rise -max 63 [get_ports {y[14]}]
+set_load -wire_load -fall -max 64 [get_ports {y[15]}]
