@@ -1,0 +1,20 @@
+{
+  "qwen": {
+    "V4_M4_enclosure_corridor_margin_nm": 13,
+    "old_96nm_external_pitch_refused": true,
+    "new_192nm_external_pitch_passes": true,
+    "extra_48nm_outward_shift_rejected_by_corridor": true,
+    "frozen_internal_reservations_remain_HOLD": true,
+    "pin_only_teleport_refused_by_actual_conductor_containment": true,
+    "M5_parallel_gap_nm": 168
+  },
+  "sc2": {
+    "V4_M4_enclosure_corridor_margin_nm": 13,
+    "old_96nm_external_pitch_refused": true,
+    "new_192nm_external_pitch_passes": true,
+    "extra_48nm_outward_shift_rejected_by_corridor": true,
+    "frozen_internal_reservations_remain_HOLD": true,
+    "pin_only_teleport_refused_by_actual_conductor_containment": true,
+    "M5_parallel_gap_nm": 168
+  }
+}
