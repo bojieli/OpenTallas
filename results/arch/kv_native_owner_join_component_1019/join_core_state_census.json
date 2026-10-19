@@ -1,0 +1,41 @@
+{
+  "source": "private/qkd_host_native_owner_join_rc.sv",
+  "sha256": "8897f2f79cb60592b5a8ee867ac87328d96e4f5338d8c73b9848cd52838fa9a9",
+  "state": {
+    "pending_t": {
+      "fields": {
+        "client": 16,
+        "slot": 8,
+        "position": 18,
+        "input_token": 18,
+        "package_gen": 2,
+        "desc_gen": 2,
+        "phase": 2
+      },
+      "bits": 66
+    },
+    "active_t": {
+      "fields": {
+        "client": 16,
+        "slot": 8,
+        "request_tag": 59,
+        "native_gen": 2,
+        "desc_gen": 2,
+        "valid": 1,
+        "raw_seen": 1,
+        "cert_seen": 1,
+        "terminal_seen": 1,
+        "event_copied": 1,
+        "post_seen": 1,
+        "report_needed": 1,
+        "report_drained": 1
+      },
+      "bits": 95
+    }
+  },
+  "sticky_protocol_fault_bits": 1,
+  "total_register_bits": 162,
+  "next_state_variables": "combinational only; not additional registers",
+  "validation": "Python declaration census only. No HDL compile or simulation run.",
+  "integration_review": "Held accepted VALID, prompt certificate lifetime, raw/terminal certificate witnesses and pre-offer immutable CQ check; no added state"
+}

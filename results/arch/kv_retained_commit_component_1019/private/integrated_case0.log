@@ -1,0 +1,18 @@
+ISSUE edge=104 identity=00000000000246880000
+NATIVE_REQUEST edge=110 die=0 gen=1
+NATIVE_REQUEST edge=110 die=1 gen=1
+NATIVE_REQUEST edge=110 die=2 gen=1
+NATIVE_REQUEST edge=110 die=3 gen=1
+NATIVE_REQUEST edge=110 die=4 gen=1
+NATIVE_REQUEST edge=110 die=5 gen=1
+NATIVE_REQUEST edge=110 die=6 gen=1
+NATIVE_REQUEST edge=110 die=7 gen=1
+DIAG e=118 cut=0 stepdone=1 ep=0 bad=0 identitybad=0 saved=00000 evhead=00000000000000000000000000000
+ACTUAL_PACKAGE_DONE edge=118 fault=0
+DIAG e=167 cut=1 stepdone=0 ep=1 bad=0 identitybad=0 saved=00001 evhead=00000000000000000000000000000
+ACTUAL_CQ_WORD0 edge=179 data=002b000012340025
+INTEGRATED_PASS case=0 edges=209 issues=1 native_requests=8 resultcredits=8 CQwrites=2 success=1 errors=0 measured_response=14 H=64 deadline=48
+- integrated_bench.sv:172: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.001 s; speed 3.633 ms/s
+- Verilator: cpu 0.001 s on 1 threads; allocated 7 MB

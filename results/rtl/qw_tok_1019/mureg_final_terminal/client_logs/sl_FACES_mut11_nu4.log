@@ -1,0 +1,13 @@
+# leg sl_FACES_mut11_nu4 mem 48 threads 8 2026-10-19T12:30:17-07:00
+# cmd: bash results/rtl/mu_qwen_1018/adopt_slice/run_group.sh FONE /srv/opentallas-scratch/claude/refill-1225/QWREG/out/slice_w 11 4
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/refill-1225/QWREG/src
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/refill-1225/QWREG/src
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/refill-1225/QWREG/src
+ot-run: ot-epyc7       admits   753 GB (avail 628, growth 101, headroom 0, waiters 0/0 GB) load 131/96 running 84 disk 6311 GB 
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/refill-1225/QWREG/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/refill-1225/QWREG/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/refill-1225/QWREG/src
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-4144020-1792438218 after 0 s
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-4144020-1792438218): exit 0
+# ot-run rc=0 2026-10-19T13:04:22-07:00

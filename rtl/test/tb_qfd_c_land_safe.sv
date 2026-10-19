@@ -2,24 +2,25 @@
 `timescale 1ns/1ps
 module tb;
  parameter integer MUT=0;
+ parameter integer WD=258;
  reg ck=0; always #5 ck=~ck;
  reg rst=0,ref_rst=0;
- reg [257:0] i=0;
- wire [1031:0] bank,ref_bank;
- wire [257:0] o,ref_o;
+ reg [WD-1:0] i=0;
+ wire [4*WD-1:0] bank,ref_bank;
+ wire [WD-1:0] o,ref_o;
  wire [11:0] epo;
  wire [3:0] vld;wire [43:0] safe_vld;
- qfd_c_land_safe_w #(.W(258)) w(ck,rst,i,bank,safe_vld);
- qfd_c_land_safe_r #(.W(258),.K(MUT?3:2)) r(ck,rst,bank,safe_vld,o);
+ qfd_c_land_safe_w #(.W(WD)) w(ck,rst,i,bank,safe_vld);
+ qfd_c_land_safe_r #(.W(WD),.K(MUT?3:2)) r(ck,rst,bank,safe_vld,o);
  always @(posedge ck) ref_rst<=rst;
- qfd_c_land_w #(.W(258)) rw(ck,ref_rst,i,ref_bank,epo,vld);
- qfd_c_land_r #(.W(258)) rr(ck,ref_rst,ref_bank,epo,vld,ref_o);
+ qfd_c_land_w #(.W(WD)) rw(ck,ref_rst,i,ref_bank,epo,vld);
+ qfd_c_land_r #(.W(WD)) rr(ck,ref_rst,ref_bank,epo,vld,ref_o);
  integer n,k,errors=0;
  initial begin
   for(n=0;n<2000;n=n+1) begin
    @(negedge ck);
    rst=(n>=8 && !(n>=500 && n<508) && !(n>=1500 && n<1510));
-   for(k=0;k<258;k=k+1) i[k]=$random;
+   for(k=0;k<WD;k=k+1) i[k]=$random;
    @(posedge ck); #1;
    if(n>5 && o!==ref_o) begin
     errors=errors+1;

@@ -5,7 +5,11 @@
  "stages": 2,
  "clock": "clk",
  "reset_ports": [
-  "rst_n"
+  "rst_n",
+  "fa_rst_n",
+  "fb_rst_n",
+  "fa_rst_n_o",
+  "fb_rst_n_o"
  ],
  "rule": "ROOT-RST 2026-10-19: every reset input lands at its face in 2 registered stages, then equal-depth fan-out; reset release latency is a scheduled constant",
  "reset_release_cycles": 2

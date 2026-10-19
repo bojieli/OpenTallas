@@ -1,0 +1,113 @@
+{
+  "schema": "opentallas.hbm.r6_component_price.v1",
+  "scope": "Measured private 41-station source-support component only; no full-native, host-calendar, token-rate or physical qualification",
+  "evidence_commit": "875a21ffa",
+  "record_identity": {
+    "image_index": 6,
+    "k_layer": 6,
+    "priced_index": 4,
+    "tag": "q_norm.ss",
+    "occurrence": 0
+  },
+  "component": {
+    "nodes": 41,
+    "genuine_fp_adds_per_episode": 1281,
+    "local_ordered_adds": 1254,
+    "canonical_global_joins": 27,
+    "original_words_per_episode": 1280,
+    "episodes": 2,
+    "roots": [
+      "40a2a1ed",
+      "3fa2a1ed"
+    ],
+    "duration_serial_edges": 591,
+    "actual_serial_period_ps": 1112,
+    "duration_ps": 657192,
+    "duration_ns": "657.192",
+    "clock_basis": "Actual timestamp anchored to the same rising start event; counter592 is a preserved post-NBA observation race, not a different DUT schedule",
+    "fixture_capture_edges": [
+      64,
+      176,
+      288,
+      400
+    ],
+    "capture_binding": "Support actual pin-to-held identity PASS; authentic 512-front native capture binding remains PENDING"
+  },
+  "causal_first_failures": [
+    {
+      "mutant": 1,
+      "predicate": [
+        "ADD_INPUT_ID"
+      ],
+      "cycle": 68
+    },
+    {
+      "mutant": 2,
+      "predicate": [
+        "ADD_INPUT_ID"
+      ],
+      "cycle": 131
+    },
+    {
+      "mutant": 3,
+      "predicate": [
+        "ADD_INPUT_ID"
+      ],
+      "cycle": 77
+    },
+    {
+      "mutant": 4,
+      "predicate": [
+        "EARLY_CAPTURE"
+      ],
+      "cycle": 65
+    },
+    {
+      "mutant": 5,
+      "predicate": [
+        "FRAGMENT_OWNERSHIP"
+      ],
+      "cycle": 147
+    },
+    {
+      "mutant": 6,
+      "predicate": [
+        "UNAVAILABLE_FEEDBACK"
+      ],
+      "cycle": 73
+    }
+  ],
+  "unknowns": {
+    "full_native_front_A_edges": null,
+    "qcore_root_issue_and_retirement_edges": null,
+    "RF_tree_L_edges": null,
+    "parent_H_edges": null,
+    "producer_arrival_ps": null,
+    "host_calendar_ps": null,
+    "full_record_duration_ps": null,
+    "token_rate": null,
+    "achieved_physical_bw": null
+  },
+  "qualification": {
+    "station_support": "PASS",
+    "full_native_capture": "PENDING",
+    "full_native_retirement": "PENDING",
+    "production_R_mode_guard": "UNCHANGED/REFUSES unsupported R mechanism",
+    "coherent_RF_storage": "FUNCTIONAL_ONLY/PHYSICAL_HOLD",
+    "all_other_physical": "HOLD",
+    "global_reprice_or_compose_performed": false
+  },
+  "prior_models_preserved": {
+    "current_master_B_per_SM_stream_edge": "45.03",
+    "successor_B_per_SM_stream_edge": "90.67",
+    "prior_DS_with_banklat_current": "1206.3",
+    "prior_DS_with_banklat_successor": "1406.9",
+    "interpretation": "Existing provisional modeled ledgers; unchanged, not achieved rates or physical adoption. Historical 90\u2013104 B/edge summaries have distinct steady/packed scopes."
+  },
+  "source_sha256": "1e78a854077ab8a96872772fb220384a4c7a13c95a3850d93ca699ac034e8263",
+  "evidence": {
+    "STATION_CAUSAL_AGGREGATE.json": "460b2640c408d1a1e14166f972be93ceca047672890554745f0179954af78e36",
+    "station_M0_time.audit.json": "9dd348f21f81fae54085dc99e313e65f72acd9c967d908df80b87b8b068a0c83"
+  },
+  "next_binding": "Preserve live c7 unit2016975, inspect actual consumed VerFiles then first numerical verdict; repair only confirmed observer checks in a distinct successor while retaining the591-edge schedule. Bind real512-front capture, root/qcore/RF/VM retirement, producer and parent calendar before global token recomposition."
+}

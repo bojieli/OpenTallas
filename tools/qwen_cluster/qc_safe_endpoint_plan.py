@@ -13,8 +13,9 @@ for width in [257,258]:
  for h in 'wr':
   path=base/('safe_child_257_attempt6' if width==257 else 'safe_child_attempt6')/f'native_pins_{h}{width if width==257 else ""}.json'
   d=json.loads((ROOT/path).read_text());master=f'qfd_c_land_{h}{width}_narrow';pinsets[master]=d['pins'];assets[master]=dict(path=str(path),sha256=hashlib.sha256((ROOT/path).read_bytes()).hexdigest(),signal_clock_pins=d['signal_clock_pins'])
+# The exported LEF/Lib cell is TOP, not the distinct kit name ending_safe.
 for width in [514,516]:
- path=base/'station_child_attempt1'/f'native_pins_stn{width}.json';d=json.loads((ROOT/path).read_text());master=f'qfd_c_stn{width}_safe';pinsets[master]=d['pins'];assets[master]=dict(path=str(path),sha256=hashlib.sha256((ROOT/path).read_bytes()).hexdigest(),signal_clock_pins=d['signal_clock_pins'])
+ path=base/'station_child_attempt1'/f'native_pins_stn{width}.json';d=json.loads((ROOT/path).read_text());master=f'qfd_c_stn{width}';pinsets[master]=d['pins'];assets[master]=dict(path=str(path),sha256=hashlib.sha256((ROOT/path).read_bytes()).hexdigest(),signal_clock_pins=d['signal_clock_pins'])
 for master in ['qfd_c_xstn_safe','qfd_c_xstnw_safe']:
  path=base/'xstn_child_attempt1'/f'native_pins_{master}.json';d=json.loads((ROOT/path).read_text());pinsets[master]=d['pins'];assets[master]=dict(path=str(path),sha256=hashlib.sha256((ROOT/path).read_bytes()).hexdigest(),signal_clock_pins=d['signal_clock_pins'])
 def split(n):return g['nodes'].get(n,{}).get('kind')in ['qfd_c_land_w','qfd_c_land_r']
@@ -28,7 +29,7 @@ def endpoint(n,net,lo,hi,output):
  if 'xstn'in kind:
   port=('tap_d'if net==ps['tap_d']else'a_d')if output else'b_d';return dict(inst=n,port=port,range=[lo,hi],master=kind+'_safe',clock_domain=v['region'],reset_face_stages=2,scope='new opt-in source, component diagnostics only; parent binding unqualified')
  width=int(ps.get('W',v['bits']));assert width in [514,516],(n,width)
- return dict(inst=n,port='q'if output else'd',range=[lo,hi],master=f'qfd_c_stn{width}_safe',clock_port='ck',clock_domain=v['region'])
+ return dict(inst=n,port='q'if output else'd',range=[lo,hi],master=f'qfd_c_stn{width}',kit=f'physical/ref_tile/qfd_c_stn{width}_safe',clock_port='ck',clock_domain=v['region'])
 bindings=[]
 for e in g['edges']:
  src,dst=e['src'],e['dst'];bits=e['bits']

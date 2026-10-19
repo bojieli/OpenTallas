@@ -1,0 +1,117 @@
+{
+ "archive_run": "/srv/opentallas-scratch/claude/kv-params-1019/arch/qkd_astk_rly_296_fl/qkd_astk_rly_296-fl1-bd369b99e",
+ "closed": {
+  "commit": "bd369b99ea9bd3847d2b139b847980ffbde476a0",
+  "final_v_sha256": "5a3226ebf5ce6b956bd33b8dbaa4f08d67578936276156a0ea191d366f680459",
+  "job": "qkd_astk_rly_296-fl1-bd369b99e",
+  "lef_sha256": "090db5b33219ed4e0f0585249aca2b0e738a7e97c0839b3b37716f76eace1f8d",
+  "physical_json_sha256": "db151ca3e9622afbd0014bec23b4db37daf21ae959d0b5d1a37d12771e52f257",
+  "spec_params": {},
+  "synth_sources": {
+   "rtl/lib/face_land/qkd_astk_rly_296_fl.sv": "f6e02fd59762f27329eeb539efbfdfd427043faa11721a741d818ecf102a142c",
+   "rtl/lib/ot_pin_land.sv": "5bc60d8c895f48b03d3aee69e82e90770071d51984fda5ff821256c291900a75",
+   "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+   "rtl/qwen_sys/split_20261014/qkd_astk_phys.sv": "5ee9ea58b745976317976492caab21541487c247c7e953733c359f7c9bec18de"
+  },
+  "top": "qkd_astk_rly_296_fl",
+  "view_tie": "view TT/FF liberty bytes == closed final liberty"
+ },
+ "closed_spec_diff": {
+  "MUT": [
+   0,
+   1
+  ]
+ },
+ "equiv": {
+  "cells": 592,
+  "log_sha256": "69a650754be609cec15d9be920e9047695b7e225a3cfcbc73c7650c36c7f2cf7",
+  "method": "equiv_make (ports + routed-flop-name state), equiv_simple -seq 2, equiv_induct",
+  "proven_cells": 0,
+  "rc": 1,
+  "seconds": [
+   0.0,
+   18.4
+  ],
+  "unproven_cells": 592,
+  "unproven_sample": [
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$13617: \\b_gold [295] \\b_gate [295]",
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$13616: \\b_gold [294] \\b_gate [294]",
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$13615: \\b_gold [293] \\b_gate [293]",
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$13614: \\b_gold [292] \\b_gate [292]",
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$13613: \\b_gold [291] \\b_gate [291]",
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$13612: \\b_gold [290] \\b_gate [290]",
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$13611: \\b_gold [289] \\b_gate [289]",
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$13610: \\b_gold [288] \\b_gate [288]",
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$13609: \\b_gold [287] \\b_gate [287]",
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$13608: \\b_gold [286] \\b_gate [286]",
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$13607: \\b_gold [285] \\b_gate [285]",
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$13606: \\b_gold [284] \\b_gate [284]",
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$13605: \\b_gold [283] \\b_gate [283]",
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$13604: \\b_gold [282] \\b_gate [282]",
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$13603: \\b_gold [281] \\b_gate [281]",
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$13602: \\b_gold [280] \\b_gate [280]",
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$13601: \\b_gold [279] \\b_gate [279]",
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$13600: \\b_gold [278] \\b_gate [278]",
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$13599: \\b_gold [277] \\b_gate [277]",
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$13598: \\b_gold [276] \\b_gate [276]"
+  ]
+ },
+ "expect": "fail",
+ "gate": {
+  "flops": 299,
+  "macros": {},
+  "replicas": 0
+ },
+ "identity": {
+  "artifacts": {
+   "abstract.json": "257220800facbfc0238d684f076ff2ae2eccc6686bec4a25d2665a513967f19c",
+   "child_lint.json": "10f419acd8ad132c70e0bdc747e3183b007f59f5d21e210dedd73b4222cc288e",
+   "export_ff.log": "46f4e2f9e753bdc32b19fb44bab901013baed2d9dc27a74545d190de36af266f",
+   "export_ff.tcl": "7b1f0ed03960cf4ceb79d1de7100f0e57beaef5ec9bdb618b391fe1adcf50d10",
+   "export_ss.log": "53c77318a53663774f01a8dec2c34049f94c3d6b76f576e49a2a6a77d507bbaf",
+   "export_ss.tcl": "7316a720266ec31c32d12f003d01b8c72a12f4e3cda580912732f41f80899e92",
+   "export_tt.log": "35c38ae611008b571a203fc621d206b39c82f34357a65340c9e3bc235f8e397c",
+   "export_tt.tcl": "86a3d3eebf1c31e6e6247ae9ced6ef4ea3156743c63ab599906b9cf708d7f77a",
+   "insertion.json": "42338878bd63343a83dfb1637b342593de5852254b6480e6d634eb80014041cd",
+   "provenance/abstract_pin_stub.json": "acde73b79d26371cedcba2361d46d2a7c3407c22c8b6bb470f6bb7e584f1bea9",
+   "provenance/raw/qkd_astk_rly_296_fl.lef": "090db5b33219ed4e0f0585249aca2b0e738a7e97c0839b3b37716f76eace1f8d",
+   "provenance/view_export.abstract.json": "3856414af3fdce4c2fc9d687738983551727e5ccf5e9817c4ee64bf94c353aa6",
+   "qkd_astk_rly_296_fl.lef": "061494c716b15b60667ac01a288df27edef3fa23e28ed6705a9bf442855674e6",
+   "qkd_astk_rly_296_fl_ff.lib": "8fa266bf4bc78a9a7c21338b20e2192065ab81275d6c5d10679730b6db47a55b",
+   "qkd_astk_rly_296_fl_ss.lib": "bb9c36dab588dda574848c1734ebe272e9c78314d09d56f9e59235c9b386a27c",
+   "qkd_astk_rly_296_fl_tt.lib": "985a2753664d1b122546648c405e21de3e4764537513f3c5c92c24880d213e0e"
+  },
+  "rtl": {
+   "path": "rtl/lib/face_land/qkd_astk_rly_296_fl.sv",
+   "sha256": "f6e02fd59762f27329eeb539efbfdfd427043faa11721a741d818ecf102a142c"
+  },
+  "view": "physical/ref_tile/qkd_astk_rly_296/views/qkd_astk_rly_296_fl"
+ },
+ "module": "qkd_astk_rly_296_fl",
+ "parameters": {
+  "MUT": 1
+ },
+ "proven": false,
+ "rtl": "rtl/lib/face_land/qkd_astk_rly_296_fl.sv",
+ "schema": "opentallas.kv_param_native_audit.v1",
+ "sources": {
+  "rtl/lib/face_land/qkd_astk_rly_296_fl.sv": "f6e02fd59762f27329eeb539efbfdfd427043faa11721a741d818ecf102a142c",
+  "rtl/lib/ot_pin_land.sv": "5bc60d8c895f48b03d3aee69e82e90770071d51984fda5ff821256c291900a75",
+  "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+  "rtl/qwen_sys/split_20261014/qkd_astk_phys.sv": "5ee9ea58b745976317976492caab21541487c247c7e953733c359f7c9bec18de"
+ },
+ "sources_changed_since_closure": [],
+ "state": {
+  "gate_only": 3,
+  "gate_only_sample": [
+   "g_rrel_rst_n.u_fl_rst_rst_n.rst_n",
+   "g_rrel_rst_n.u_fl_rst_rst_n.sync_q[0]",
+   "g_rrel_rst_n.u_fl_rst_rst_n.sync_q[1]"
+  ],
+  "gold_only": 0,
+  "gold_only_sample": [],
+  "gold_regs": 296,
+  "paired": 296
+ },
+ "view": "physical/ref_tile/qkd_astk_rly_296/views/qkd_astk_rly_296_fl"
+}

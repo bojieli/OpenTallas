@@ -1,0 +1,134 @@
+
+-- Running command `read_verilog -sv inputs/ot_rst_relay.sv inputs/qkd_astk_phys.sv inputs/qkd_astk_rly_296_fl.sv; chparam -set MUT 0 qkd_astk_rly_296_fl; hierarchy -check -top qkd_astk_rly_296_fl; proc; flatten; opt_clean; write_json out/mut0.json' --
+
+1. Executing Verilog-2005 frontend: inputs/ot_rst_relay.sv
+Parsing SystemVerilog input from `inputs/ot_rst_relay.sv' to AST representation.
+Generating RTLIL representation for module `\ot_rst_relay'.
+Warning: Replacing memory \relay_q with list of registers. See inputs/ot_rst_relay.sv:42
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: inputs/qkd_astk_phys.sv
+Parsing SystemVerilog input from `inputs/qkd_astk_phys.sv' to AST representation.
+Generating RTLIL representation for module `\qkd_astk_rly_296'.
+Generating RTLIL representation for module `\qkd_astk_delay'.
+Generating RTLIL representation for module `\qkd_astk_fault_join'.
+Generating RTLIL representation for module `\qkd_astk_delay_nrst'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: inputs/qkd_astk_rly_296_fl.sv
+Parsing SystemVerilog input from `inputs/qkd_astk_rly_296_fl.sv' to AST representation.
+Generating RTLIL representation for module `\qkd_astk_rly_296_fl'.
+Successfully finished Verilog frontend.
+Parameter \MUT = 0
+
+4. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_astk_rly_296_fl'.
+Parameter \MUT = 0
+Generating RTLIL representation for module `$paramod\qkd_astk_rly_296_fl\MUT=s32'00000000000000000000000000000000'.
+
+5. Executing HIERARCHY pass (managing design hierarchy).
+
+5.1. Analyzing design hierarchy..
+Top module:  \qkd_astk_rly_296_fl
+Used module:     \qkd_astk_rly_296
+Used module:     \ot_rst_relay
+Parameter \REGIONS = 1
+Parameter \SYNC_STAGES = 2
+Parameter \TREE_STAGES = 1
+
+5.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_rst_relay'.
+Parameter \REGIONS = 1
+Parameter \SYNC_STAGES = 2
+Parameter \TREE_STAGES = 1
+Generating RTLIL representation for module `$paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay'.
+Warning: Replacing memory \relay_q with list of registers. See inputs/ot_rst_relay.sv:42
+
+5.3. Analyzing design hierarchy..
+Top module:  \qkd_astk_rly_296_fl
+Used module:     \qkd_astk_rly_296
+Used module:     $paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay
+
+5.4. Analyzing design hierarchy..
+Top module:  \qkd_astk_rly_296_fl
+Used module:     \qkd_astk_rly_296
+Used module:     $paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay
+Removing unused module `\qkd_astk_delay_nrst'.
+Removing unused module `\qkd_astk_fault_join'.
+Removing unused module `\qkd_astk_delay'.
+Removing unused module `\ot_rst_relay'.
+Removed 4 unused modules.
+
+6. Executing PROC pass (convert processes to netlists).
+
+6.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 1 empty switch in `$paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay.$proc$inputs/ot_rst_relay.sv:40$18'.
+Cleaned up 1 empty switch.
+
+6.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 1 switch rules as full_case in process $proc$inputs/ot_rst_relay.sv:40$18 in module $paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay.
+Marked 1 switch rules as full_case in process $proc$inputs/ot_rst_relay.sv:28$16 in module $paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay.
+Marked 1 switch rules as full_case in process $proc$inputs/qkd_astk_phys.sv:6$5 in module qkd_astk_rly_296.
+Removed a total of 0 dead cases.
+
+6.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 3 redundant assignments.
+Promoted 0 assignments to connections.
+
+6.4. Executing PROC_INIT pass (extract init attributes).
+
+6.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_n_in in `$paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay.$proc$inputs/ot_rst_relay.sv:40$18'.
+Found async reset \rst_n_in in `$paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay.$proc$inputs/ot_rst_relay.sv:28$16'.
+Found async reset \rst_n in `\qkd_astk_rly_296.$proc$inputs/qkd_astk_phys.sv:6$5'.
+
+6.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+6.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `$paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay.$proc$inputs/ot_rst_relay.sv:40$18'.
+     1/1: $0\relay_q[0][0:0]
+Creating decoders for process `$paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay.$proc$inputs/ot_rst_relay.sv:28$16'.
+     1/1: $0\sync_q[1:0]
+Creating decoders for process `\qkd_astk_rly_296.$proc$inputs/qkd_astk_phys.sv:6$5'.
+     1/1: $0\b[295:0]
+
+6.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+6.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `$paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay.\relay_q[0]' using process `$paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay.$proc$inputs/ot_rst_relay.sv:40$18'.
+  created $adff cell `$procdff$24' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay.\sync_q' using process `$paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay.$proc$inputs/ot_rst_relay.sv:28$16'.
+  created $adff cell `$procdff$29' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_astk_rly_296.\b' using process `\qkd_astk_rly_296.$proc$inputs/qkd_astk_phys.sv:6$5'.
+  created $adff cell `$procdff$34' with positive edge clock and positive level reset.
+
+6.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+6.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `$paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay.$proc$inputs/ot_rst_relay.sv:40$18'.
+Removing empty process `$paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay.$proc$inputs/ot_rst_relay.sv:28$16'.
+Removing empty process `qkd_astk_rly_296.$proc$inputs/qkd_astk_phys.sv:6$5'.
+Cleaned up 0 empty switches.
+
+6.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay.
+<suppressed ~4 debug messages>
+Optimizing module qkd_astk_rly_296.
+<suppressed ~2 debug messages>
+Optimizing module qkd_astk_rly_296_fl.
+
+7. Executing FLATTEN pass (flatten design).
+Deleting now unused module $paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay.
+Deleting now unused module qkd_astk_rly_296.
+<suppressed ~2 debug messages>
+
+8. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \qkd_astk_rly_296_fl..
+Removed 6 unused cells and 12 unused wires.
+<suppressed ~7 debug messages>
+
+9. Executing JSON backend.
+
+Warnings: 1 unique messages, 2 total
+End of script. Logfile hash: 90286faaa2, time: 0.00s, user: 0.01s, system: 0.00s, MEM: 80.34 MB peak
+Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)
+Time spent: 53% 4x read_verilog (0 sec), 13% 1x opt_clean (0 sec), ...
