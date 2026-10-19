@@ -1,0 +1,3435 @@
+{
+  "status": "MODEL_ONLY_BLOCKED_BEFORE_SOURCE",
+  "inputs": {
+    "summary.json": "cd930944686d86bfb672a2c9c296b4915a8a52c6f2cc28620a3fa8ffd4b22f54",
+    "macros.json": "5fe87ec64f1f29b0bf5e7d955f5498e14e8929af693fde750af560d57095f625",
+    "raw_cells.tsv.gz": "2e7bb886e8257df448f7aa33d73dfb4a3e42f8895e8b7f9975a0076447d37f85",
+    "raw_pins.tsv.gz": "27f770484f845a6549744709a878855cde04ec8f9f052073b343069469c59334",
+    "family/ot_sram_1r1w2c_128x64_m1.lef": "737a650260dfd52a14003b0e0aad97378b81ebc1adb0b6b9383c256c67ea92d6"
+  },
+  "native_std_area_by_role_um2": {
+    "comb": 6821.253000004462,
+    "tie": 224.99856000002984,
+    "FF": 3026.618460000121,
+    "macro": 21386.842559999997
+  },
+  "native_std_area_all_um2": 10072.870020004613,
+  "native_clock_comb_count": 13819,
+  "native_clock_comb_area_um2": 1924.355879999535,
+  "pg": {
+    "required_native_iterms": 185898,
+    "bound_at_4_cts": 130550,
+    "unbound_at_4_cts": 55348,
+    "unbound_examples": [
+      "place14530/VDD",
+      "place14530/VSS",
+      "place14535/VDD",
+      "place14535/VSS",
+      "place14480/VDD",
+      "place14480/VSS",
+      "place14477/VDD",
+      "place14477/VSS",
+      "place14476/VDD",
+      "place14476/VSS",
+      "place14475/VDD",
+      "place14475/VSS"
+    ],
+    "macro_supply_rectangles_per_macro": {
+      "VDD": 36,
+      "VSS": 35
+    },
+    "macro_supply_rectangles_total": 1633,
+    "candidate_existing_plus_2375_ff_required_iterms_floor": 190648,
+    "candidate_final_contact_connectivity": "UNPROVEN; CTS snapshot is not final PG",
+    "candidate_with_boundary_ff_required_iterms_floor": 191208
+  },
+  "geometry": {
+    "outline_um": [
+      345.6,
+      345.6
+    ],
+    "aspect": 1,
+    "band_um": [
+      0,
+      129.6,
+      345.6,
+      194.4
+    ],
+    "band_area_um2": 22394.88,
+    "baseline_plus_known_floor_um2": 10771.193700004613,
+    "baseline_plus_known_floor_band_util": 0.48096679687520594,
+    "extra_area_until_60pct_um2": 2665.7342999953867,
+    "existing_helper_area_is_escrow_not_reusable_tree": true,
+    "minimum_between_macro_edges_x_um": 9.48,
+    "minimum_between_macro_edges_y_um": 15.624,
+    "macro_count": 23,
+    "macro_area_um2": 21386.84256,
+    "macroface_pitch_native_um": 0.096,
+    "macroface_pitch_proposed_new_family_um": 0.192,
+    "proposed_span_um": 19.968,
+    "proposed_occupied_density": 5.258413461538462,
+    "max_native_contact_to_reservation_um": 102.60300000000005,
+    "max_new_contact_to_reservation_um": 102.60300000000004,
+    "boundary_collar": "2.7um outer connected collar reservation; local pin-bound occupancy and exact FF ownership OPEN",
+    "including_boundary_floor_band_util": 0.48461263020853923,
+    "including_boundary_floor_extra_area_until_60pct_um2": 2584.0862999953865
+  },
+  "native_boundary": {
+    "signal_ports": 1228,
+    "inputs": 613,
+    "outputs": 615,
+    "non_FF_or_missing_port_count": 281,
+    "non_FF_or_missing_ports": [
+      {
+        "port": "PORT/k_v",
+        "direction": "INPUT",
+        "native_contacts": [
+          {
+            "pin": "_71259_/B",
+            "master": "AND2x2_ASAP7_75t_R"
+          },
+          {
+            "pin": "_70932_/B",
+            "master": "AND2x2_ASAP7_75t_R"
+          },
+          {
+            "pin": "_71204_/B",
+            "master": "AND2x2_ASAP7_75t_R"
+          },
+          {
+            "pin": "_71245_/B",
+            "master": "AND2x2_ASAP7_75t_R"
+          },
+          {
+            "pin": "_71247_/B",
+            "master": "AND2x2_ASAP7_75t_R"
+          },
+          {
+            "pin": "_71252_/B",
+            "master": "AND2x2_ASAP7_75t_R"
+          },
+          {
+            "pin": "_71258_/B",
+            "master": "AND2x2_ASAP7_75t_R"
+          },
+          {
+            "pin": "_71383_/B",
+            "master": "AND2x2_ASAP7_75t_R"
+          },
+          {
+            "pin": "_70939_/B",
+            "master": "AND2x2_ASAP7_75t_R"
+          },
+          {
+            "pin": "_71328_/B",
+            "master": "AND2x2_ASAP7_75t_R"
+          },
+          {
+            "pin": "_71385_/B",
+            "master": "AND2x2_ASAP7_75t_R"
+          },
+          {
+            "pin": "_71238_/B",
+            "master": "AND2x2_ASAP7_75t_R"
+          },
+          {
+            "pin": "_71265_/B",
+            "master": "AND2x2_ASAP7_75t_R"
+          },
+          {
+            "pin": "_71269_/B",
+            "master": "AND2x2_ASAP7_75t_R"
+          },
+          {
+            "pin": "_71323_/B",
+            "master": "AND2x2_ASAP7_75t_R"
+          },
+          {
+            "pin": "_71344_/B",
+            "master": "AND2x2_ASAP7_75t_R"
+          },
+          {
+            "pin": "_71369_/B",
+            "master": "AND2x2_ASAP7_75t_R"
+          },
+          {
+            "pin": "_71381_/B",
+            "master": "AND2x2_ASAP7_75t_R"
+          },
+          {
+            "pin": "_70935_/B",
+            "master": "AND2x2_ASAP7_75t_R"
+          },
+          {
+            "pin": "_70938_/B",
+            "master": "AND2x2_ASAP7_75t_R"
+          },
+          {
+            "pin": "_71250_/B",
+            "master": "AND2x2_ASAP7_75t_R"
+          },
+          {
+            "pin": "_71257_/B",
+            "master": "AND2x2_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 22
+      },
+      {
+        "port": "PORT/kr_beat[0]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_40453_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_beat[1]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_40448_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_beat[2]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_40443_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_beat[3]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_40438_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[0]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_72115_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[100]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_55079_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[101]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_55074_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[102]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_55069_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[103]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_55064_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[104]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_56098_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[105]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_56093_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[106]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_56088_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[107]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_56083_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[108]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_56078_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[109]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_56073_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[10]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_56698_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[110]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_56068_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[111]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_56063_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[112]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_54803_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[113]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_54798_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[114]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_54793_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[115]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_54788_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[116]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_54783_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[117]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_54778_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[118]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_54773_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[119]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_54768_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[11]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_56693_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[120]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_55507_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[121]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_55502_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[122]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_55497_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[123]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_55492_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[124]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_55487_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[125]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_55482_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[126]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_55477_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[127]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_55472_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[128]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_56804_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[129]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_56799_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[12]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_70128_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[130]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_56794_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[131]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_56789_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[132]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_69565_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[133]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_56784_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[134]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_56779_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[135]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_56774_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[136]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_57245_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[137]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_57240_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[138]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_57235_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[139]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_57230_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[13]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_56688_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[140]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_57225_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[141]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_57220_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[142]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_57215_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[143]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_57210_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[144]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_57391_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[145]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_57386_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[146]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_57381_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[147]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_57376_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[148]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_57371_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[149]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_57366_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[14]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_56683_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[150]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_57361_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[151]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_57356_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[152]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_40509_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[153]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_40504_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[154]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_40499_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[155]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_40494_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[156]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_40489_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[157]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_40484_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[158]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_40479_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[159]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_40474_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[15]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_56678_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[160]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_40808_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[161]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_40803_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[162]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_40798_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[163]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_40793_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[164]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_40788_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[165]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_40783_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[166]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_40778_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[167]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_40773_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[168]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_41088_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[169]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_41083_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[16]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_55462_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[170]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_41078_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[171]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_41073_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[172]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_41068_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[173]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_41063_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[174]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_41058_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[175]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_41053_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[176]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_74347_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[177]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_74367_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[178]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_74352_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[179]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_74372_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[17]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_55457_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[180]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_74357_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[181]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_74377_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[182]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_74362_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[183]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_74382_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[184]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_54099_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[185]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_54094_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[186]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_54089_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[187]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_54084_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[188]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_54079_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[189]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_54074_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[18]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_55452_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[190]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_54069_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[191]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_54064_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[192]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_54442_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[193]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_54437_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[194]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_54432_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[195]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_54427_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[196]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_54422_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[197]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_54417_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[198]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_54412_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[199]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_54407_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[19]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_55447_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[1]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_55160_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[200]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_54599_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[201]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_54594_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[202]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_54589_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[203]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_54584_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[204]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_54579_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[205]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_54574_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[206]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_54569_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[207]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_54564_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[208]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_55008_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[209]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_55003_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[20]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_55442_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[210]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_54998_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[211]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_54993_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[212]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_54988_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[213]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_54983_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[214]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_54978_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[215]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_54973_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[216]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_55413_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[217]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_55408_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[218]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_55403_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[219]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_69997_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[21]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_55437_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[220]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_55398_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[221]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_55393_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[222]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_55388_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[223]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_55383_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[224]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_56142_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[225]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_56137_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[226]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_56132_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[227]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_56127_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[228]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_56122_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[229]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_56117_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[22]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_55432_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[230]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_56112_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[231]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_56107_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[232]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_56892_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[233]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_56887_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[234]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_56882_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[235]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_56877_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[236]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_56872_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[237]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_56867_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[238]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_56862_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[239]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_56857_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[23]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_55427_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[240]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_57201_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[241]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_57196_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[242]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_57191_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[243]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_57186_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[244]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_57137_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[245]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_57132_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[246]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_57127_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[247]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_57122_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[248]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_57345_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[249]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_57340_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[24]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_54850_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[250]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_57335_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[251]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_57330_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[252]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_57325_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[253]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_57320_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[254]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_57315_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[255]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_57310_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[25]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_54845_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[26]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_54840_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[27]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_54835_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[28]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_54830_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[29]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_54825_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[2]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_55155_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[30]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_54820_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[31]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_54815_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[32]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_70103_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[33]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_55633_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[34]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_55628_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[35]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_55623_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[36]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_55618_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[37]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_55613_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[38]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_55608_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[39]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_55603_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[3]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_55150_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[40]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_54963_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[41]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_54958_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[42]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_54953_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[43]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_70031_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[44]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_54948_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[45]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_54943_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[46]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_54938_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[47]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_54933_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[48]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_55981_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[49]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_55976_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[4]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_55145_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[50]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_55971_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[51]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_55966_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[52]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_55961_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[53]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_55956_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[54]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_55951_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[55]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_55946_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[56]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_55052_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[57]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_55047_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[58]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_55042_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[59]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_55037_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[5]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_55140_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[60]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_55032_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[61]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_55027_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[62]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_55022_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[63]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_55017_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[64]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_56027_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[65]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_56022_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[66]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_56017_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[67]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_56012_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[68]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_56007_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[69]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_56002_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[6]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_55135_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[70]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_55997_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[71]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_55992_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[72]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_54756_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[73]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_54751_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[74]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_54746_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[75]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_54741_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[76]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_54736_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[77]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_54731_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[78]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_54726_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[79]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_54721_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[7]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_55130_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[80]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_55551_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[81]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_55546_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[82]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_55541_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[83]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_55536_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[84]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_55531_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[85]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_55526_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[86]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_55521_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[87]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_55516_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[88]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_56848_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[89]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_56843_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[8]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_56708_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[90]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_56838_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[91]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_56833_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[92]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_56828_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[93]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_56823_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[94]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_56818_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[95]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_56813_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[96]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_55099_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[97]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_55094_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[98]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_55089_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[99]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_55084_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_data[9]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_56703_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_rdy",
+        "direction": "INPUT",
+        "native_contacts": [
+          {
+            "pin": "_70011_/A1",
+            "master": "AO21x1_ASAP7_75t_R"
+          },
+          {
+            "pin": "_59569_/A",
+            "master": "OR3x1_ASAP7_75t_R"
+          },
+          {
+            "pin": "_59574_/C",
+            "master": "AND4x1_ASAP7_75t_R"
+          },
+          {
+            "pin": "_59576_/B",
+            "master": "AND3x1_ASAP7_75t_R"
+          },
+          {
+            "pin": "_71446_/B",
+            "master": "AND3x1_ASAP7_75t_R"
+          },
+          {
+            "pin": "_39614_/B",
+            "master": "NAND2x2_ASAP7_75t_R"
+          },
+          {
+            "pin": "_59583_/A1",
+            "master": "AOI21x1_ASAP7_75t_R"
+          },
+          {
+            "pin": "_59584_/A",
+            "master": "AND3x1_ASAP7_75t_R"
+          },
+          {
+            "pin": "_39628_/A",
+            "master": "NAND2x2_ASAP7_75t_R"
+          },
+          {
+            "pin": "_39645_/B",
+            "master": "NAND2x2_ASAP7_75t_R"
+          },
+          {
+            "pin": "_39830_/A",
+            "master": "NAND2x2_ASAP7_75t_R"
+          },
+          {
+            "pin": "_39639_/B",
+            "master": "NAND2x2_ASAP7_75t_R"
+          },
+          {
+            "pin": "_39673_/B",
+            "master": "NAND2x2_ASAP7_75t_R"
+          },
+          {
+            "pin": "_39818_/B",
+            "master": "NAND2x2_ASAP7_75t_R"
+          },
+          {
+            "pin": "_70022_/A1",
+            "master": "AO21x1_ASAP7_75t_R"
+          },
+          {
+            "pin": "_70005_/A1",
+            "master": "AO21x1_ASAP7_75t_R"
+          },
+          {
+            "pin": "_70016_/A1",
+            "master": "AO21x1_ASAP7_75t_R"
+          },
+          {
+            "pin": "_70019_/A1",
+            "master": "AO21x1_ASAP7_75t_R"
+          },
+          {
+            "pin": "_70105_/A1",
+            "master": "AO21x1_ASAP7_75t_R"
+          },
+          {
+            "pin": "_39624_/B",
+            "master": "NAND2x2_ASAP7_75t_R"
+          },
+          {
+            "pin": "_70067_/A1",
+            "master": "AO21x1_ASAP7_75t_R"
+          },
+          {
+            "pin": "_70071_/A1",
+            "master": "AO21x1_ASAP7_75t_R"
+          },
+          {
+            "pin": "_70074_/A1",
+            "master": "AO21x1_ASAP7_75t_R"
+          },
+          {
+            "pin": "_70110_/A1",
+            "master": "AO21x1_ASAP7_75t_R"
+          },
+          {
+            "pin": "_70113_/A1",
+            "master": "AO21x1_ASAP7_75t_R"
+          },
+          {
+            "pin": "_70116_/A1",
+            "master": "AO21x1_ASAP7_75t_R"
+          },
+          {
+            "pin": "_39619_/A",
+            "master": "NAND2x2_ASAP7_75t_R"
+          },
+          {
+            "pin": "_69989_/A1",
+            "master": "AO21x1_ASAP7_75t_R"
+          },
+          {
+            "pin": "_69999_/A1",
+            "master": "AO21x1_ASAP7_75t_R"
+          },
+          {
+            "pin": "_70002_/A1",
+            "master": "AO21x1_ASAP7_75t_R"
+          },
+          {
+            "pin": "_70052_/A1",
+            "master": "AO21x1_ASAP7_75t_R"
+          },
+          {
+            "pin": "_70057_/A1",
+            "master": "AO21x1_ASAP7_75t_R"
+          },
+          {
+            "pin": "_70079_/A1",
+            "master": "AO21x1_ASAP7_75t_R"
+          },
+          {
+            "pin": "_70082_/A1",
+            "master": "AO21x1_ASAP7_75t_R"
+          },
+          {
+            "pin": "_70085_/A1",
+            "master": "AO21x1_ASAP7_75t_R"
+          },
+          {
+            "pin": "_70122_/A1",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 36
+      },
+      {
+        "port": "PORT/kr_tag[0]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_40433_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_tag[10]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_40718_/Y",
+            "master": "AO21x2_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_tag[11]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_40713_/Y",
+            "master": "AO21x2_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_tag[12]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_41024_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_tag[13]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_41019_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_tag[14]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_41014_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_tag[15]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_41009_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_tag[16]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_69986_/Y",
+            "master": "AO21x2_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_tag[1]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_40428_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_tag[2]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_40423_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_tag[3]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_40418_/Y",
+            "master": "AO21x2_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_tag[4]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_40748_/Y",
+            "master": "AO21x2_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_tag[5]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_40743_/Y",
+            "master": "AO21x2_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_tag[6]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_40738_/Y",
+            "master": "AO21x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_tag[7]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_40733_/Y",
+            "master": "AO21x2_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_tag[8]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_40728_/Y",
+            "master": "AO21x2_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_tag[9]",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_40723_/Y",
+            "master": "AO21x2_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/kr_v",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_54712_/Y",
+            "master": "NAND3x1_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      },
+      {
+        "port": "PORT/pc_fault",
+        "direction": "OUTPUT",
+        "native_contacts": [
+          {
+            "pin": "_74494_/Y",
+            "master": "NAND2x2_ASAP7_75t_R"
+          }
+        ],
+        "non_FF_contact_count": 1
+      }
+    ]
+  },
+  "clock": {
+    "source": "only native PORT/clk; no other domain",
+    "root_reservation_um": [
+      172.8,
+      172.8
+    ],
+    "baseline_ff_sinks": 9383,
+    "new_ff_known_floor": 2375,
+    "macro_clock_contacts": 46,
+    "candidate_sink_floor": 11804,
+    "macro_TT_cap_fF": 429.9068,
+    "macro_FF_cap_fF": 477.1672,
+    "new_FF_corner_cap_and_tree_area": null,
+    "new_macro_clock_location": "actual wclk/rclk translated from native MTerms; proposal changes rclk by .096um",
+    "boundary_phase_root_to_native_capture_reference": null,
+    "TT_FF_spread_and_setup_hold": null,
+    "candidate_sink_with_boundary_ff_floor": 12084
+  },
+  "unpriced": [
+    "source-specific named landing owners and all nonmacro crossings",
+    "new mux/collision/ring-pointer controls native cells",
+    "reset new bookkeeping and collar contacts + parent fixed point",
+    "boundary first/last FF moves, semantics and exact local placement",
+    "new family port-lead and internal RC versus macro functionality and PG/OBS",
+    "clock source phase/root delivery and all sink cell caps/tree",
+    "parent footprint/crossing/PG supply and compiler calendars"
+  ],
+  "new_boundary_floor": {
+    "output_ff": 279,
+    "k_v_input_ff": 1,
+    "additional_ff": 280,
+    "additional_ordinary_ff_area_um2": 81.648,
+    "cost_is_floor_excluding_new_control_reset_valid_and_clock": true,
+    "extra_observation_calendar": null
+  }
+}
