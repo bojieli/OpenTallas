@@ -1,0 +1,44 @@
+{
+ "schema": "opentallas.hbm_unread_gen2e2_negatives.v1",
+ "manifest_sha256": "da78841d70e295c26c4c38a261b36b8be22813e1317218e83fb38af7e9cfd537",
+ "review_sha256": "40ac1823834171da5bb38469fdde2aea941a7c4f27024bacc8eca4afad0c0136",
+ "die_sha256": "e953ed7c545d000a65c6459bd070b4402bcbd6962247e69bb75ad719edef9b9f",
+ "verdict": "PASS",
+ "cases": [
+  {
+   "case": "P0",
+   "result": "PASS",
+   "bind_last_line": "DIE_PORT_BIND FAIL masters=101 instances=1223 unbound_masters=0 stub_masters=0 ambiguous_masters=0 port_not_in_rtl=0 width_mismatch=0 input_unconnected=0 input_tied=0 unparsed_connections=0 duplicate_port_connections=0 undriven_net_bits=0 multi_driven_net_bits=0 unread_net_bits=5254 output_open_ports=0 top_assigns=0 params_not_in_rtl=0 strap_ports=46 pad_bits=0 spare_out_bits=0 unresolved_children"
+  },
+  {
+   "case": "N1",
+   "result": "PASS",
+   "bind_last_line": "die_port_bind.py: error: unread review REFUSED: source/contract/die/parameters/options identity drift; renewed semantic review required"
+  },
+  {
+   "case": "N4",
+   "result": "PASS",
+   "bind_last_line": "die_port_bind.py: error: unread review REFUSED: permission is occupied/read, spare, or lacks exactly one driver; renewed semantic review required"
+  },
+  {
+   "case": "N6",
+   "result": "PASS",
+   "bind_last_line": "die_port_bind.py: error: unread review REFUSED: manifest digest differs from explicitly approved digest; renewed semantic review required"
+  },
+  {
+   "case": "N2",
+   "result": "PASS",
+   "bind_last_line": "DIE_PORT_BIND FAIL masters=101 instances=1223 unbound_masters=0 stub_masters=0 ambiguous_masters=0 port_not_in_rtl=0 width_mismatch=0 input_unconnected=0 input_tied=0 unparsed_connections=0 duplicate_port_connections=0 undriven_net_bits=0 multi_driven_net_bits=0 unread_net_bits=5255 output_open_ports=0 top_assigns=0 params_not_in_rtl=0 strap_ports=46 pad_bits=0 spare_out_bits=0 unresolved_children"
+  },
+  {
+   "case": "N3",
+   "result": "PASS",
+   "bind_last_line": "DIE_PORT_BIND FAIL masters=101 instances=1223 unbound_masters=0 stub_masters=0 ambiguous_masters=0 port_not_in_rtl=0 width_mismatch=0 input_unconnected=0 input_tied=0 unparsed_connections=0 duplicate_port_connections=0 undriven_net_bits=0 multi_driven_net_bits=0 unread_net_bits=5255 output_open_ports=0 top_assigns=0 params_not_in_rtl=0 strap_ports=46 pad_bits=0 spare_out_bits=0 unresolved_children"
+  },
+  {
+   "case": "N5",
+   "result": "PASS",
+   "bind_last_line": "die_port_bind.py: error: unread review REFUSED: source/contract/die/parameters/options identity drift; renewed semantic review required"
+  }
+ ]
+}

@@ -1,0 +1,8 @@
+P0 PASS DIE_PORT_BIND FAIL masters=101 instances=1223 unbound_masters=0 stub_masters=0 ambiguous_masters=0 port_not_in_rtl=0 width_mismatch=0 input_unconnected=0 input_tied=0 unparsed_connections=0 duplicate_
+N1 PASS die_port_bind.py: error: unread review REFUSED: source/contract/die/parameters/options identity drift; renewed semantic review required
+N4 PASS die_port_bind.py: error: unread review REFUSED: permission is occupied/read, spare, or lacks exactly one driver; renewed semantic review required
+N6 PASS die_port_bind.py: error: unread review REFUSED: manifest digest differs from explicitly approved digest; renewed semantic review required
+N2 PASS DIE_PORT_BIND FAIL masters=101 instances=1223 unbound_masters=0 stub_masters=0 ambiguous_masters=0 port_not_in_rtl=0 width_mismatch=0 input_unconnected=0 input_tied=0 unparsed_connections=0 duplicate_
+N3 PASS DIE_PORT_BIND FAIL masters=101 instances=1223 unbound_masters=0 stub_masters=0 ambiguous_masters=0 port_not_in_rtl=0 width_mismatch=0 input_unconnected=0 input_tied=0 unparsed_connections=0 duplicate_
+N5 PASS die_port_bind.py: error: unread review REFUSED: source/contract/die/parameters/options identity drift; renewed semantic review required
+NEGATIVES PASS
