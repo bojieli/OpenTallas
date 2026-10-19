@@ -1,0 +1,52 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+Traceback (most recent call last):
+  File "/phase/tools/die_clock/qwen_replay_spine.py", line 112, in <module>
+    main(p.parse_args())
+  File "/phase/tools/die_clock/qwen_replay_spine.py", line 42, in main
+    model=builder.build(source,source_xy,rt.spine_leaves(members,cell_xy))
+  File "/phase/tools/die_clock/qwen_exact_corridor.py", line 167, in build
+    root,pos=self.subtree(leaves);self.connect(('pin',root_pin),root_xy,root,pos)
+  File "/phase/tools/die_clock/qwen_exact_corridor.py", line 161, in subtree
+    children=[self.subtree([leaves[i] for i in ids]) for ids in (order[:half],order[half:])]
+  File "/phase/tools/die_clock/qwen_exact_corridor.py", line 161, in <listcomp>
+    children=[self.subtree([leaves[i] for i in ids]) for ids in (order[:half],order[half:])]
+  File "/phase/tools/die_clock/qwen_exact_corridor.py", line 161, in subtree
+    children=[self.subtree([leaves[i] for i in ids]) for ids in (order[:half],order[half:])]
+  File "/phase/tools/die_clock/qwen_exact_corridor.py", line 161, in <listcomp>
+    children=[self.subtree([leaves[i] for i in ids]) for ids in (order[:half],order[half:])]
+  File "/phase/tools/die_clock/qwen_exact_corridor.py", line 161, in subtree
+    children=[self.subtree([leaves[i] for i in ids]) for ids in (order[:half],order[half:])]
+  File "/phase/tools/die_clock/qwen_exact_corridor.py", line 161, in <listcomp>
+    children=[self.subtree([leaves[i] for i in ids]) for ids in (order[:half],order[half:])]
+  File "/phase/tools/die_clock/qwen_exact_corridor.py", line 161, in subtree
+    children=[self.subtree([leaves[i] for i in ids]) for ids in (order[:half],order[half:])]
+  File "/phase/tools/die_clock/qwen_exact_corridor.py", line 161, in <listcomp>
+    children=[self.subtree([leaves[i] for i in ids]) for ids in (order[:half],order[half:])]
+  File "/phase/tools/die_clock/qwen_exact_corridor.py", line 161, in subtree
+    children=[self.subtree([leaves[i] for i in ids]) for ids in (order[:half],order[half:])]
+  File "/phase/tools/die_clock/qwen_exact_corridor.py", line 161, in <listcomp>
+    children=[self.subtree([leaves[i] for i in ids]) for ids in (order[:half],order[half:])]
+  File "/phase/tools/die_clock/qwen_exact_corridor.py", line 161, in subtree
+    children=[self.subtree([leaves[i] for i in ids]) for ids in (order[:half],order[half:])]
+  File "/phase/tools/die_clock/qwen_exact_corridor.py", line 161, in <listcomp>
+    children=[self.subtree([leaves[i] for i in ids]) for ids in (order[:half],order[half:])]
+  File "/phase/tools/die_clock/qwen_exact_corridor.py", line 161, in subtree
+    children=[self.subtree([leaves[i] for i in ids]) for ids in (order[:half],order[half:])]
+  File "/phase/tools/die_clock/qwen_exact_corridor.py", line 161, in <listcomp>
+    children=[self.subtree([leaves[i] for i in ids]) for ids in (order[:half],order[half:])]
+  File "/phase/tools/die_clock/qwen_exact_corridor.py", line 161, in subtree
+    children=[self.subtree([leaves[i] for i in ids]) for ids in (order[:half],order[half:])]
+  File "/phase/tools/die_clock/qwen_exact_corridor.py", line 161, in <listcomp>
+    children=[self.subtree([leaves[i] for i in ids]) for ids in (order[:half],order[half:])]
+  File "/phase/tools/die_clock/qwen_exact_corridor.py", line 161, in subtree
+    children=[self.subtree([leaves[i] for i in ids]) for ids in (order[:half],order[half:])]
+  File "/phase/tools/die_clock/qwen_exact_corridor.py", line 161, in <listcomp>
+    children=[self.subtree([leaves[i] for i in ids]) for ids in (order[:half],order[half:])]
+  File "/phase/tools/die_clock/qwen_exact_corridor.py", line 163, in subtree
+    for child,cp in children:self.connect(root,pos,child,cp)
+  File "/phase/tools/die_clock/qwen_exact_corridor.py", line 132, in connect
+    raise ValueError('no <=405um exact-bay continuation from '+str(path[cursor]))
+ValueError: no <=405um exact-bay continuation from (447, 560)

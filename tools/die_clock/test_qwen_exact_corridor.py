@@ -26,6 +26,11 @@ def test_region_tree_buffers_after_floorplan_are_obstacles():
     assert before.free((0,0))
     after=ExactBayGrid(30,30,[('rstt_a',(0,0,10,6.48)),('dc_root_new',(0,6.48,10,10))])
     assert not after.free((0,0))
+    # A single small regional buffer forbids its footprint, not the whole cell.
+    partial=ExactBayGrid(30,30,[('dc_root_new',(0,0,1.62,.27))])
+    assert partial.free((0,0))
+    p=partial.reserve((0,0))
+    assert not overlap((*p,p[0]+1.62,p[1]+.27),(0,0,1.62,.27))
 
 
 def test_post_placement_reach_mutant_rejected():

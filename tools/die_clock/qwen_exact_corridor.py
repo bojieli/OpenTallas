@@ -9,6 +9,13 @@ from collections import defaultdict
 import regtree as rt
 from qwen_corridor_audit import bay, overlap, XP, YP
 
+# A reserved origin and its actual library pin can differ by at most the
+#1.62x.27 footprint per endpoint.400um planning leaves5um for both offsets;
+# the placed-pin guard remains405.340um blocked runs also reserve boundary
+# grid steps and the two within-cell endpoint offsets (the old380 did not).
+SPINE_PLAN_REACH=400.0
+SPINE_BLOCKED_RUN=340.0
+
 
 class ExactBayGrid(rt.dct.Grid):
     def __init__(self,width,height,rows):
@@ -16,7 +23,10 @@ class ExactBayGrid(rt.dct.Grid):
         super().__init__(width,height,[r for _,r in rows])
         affected=set()
         for name,(x0,y0,x1,y1) in rows:
-            if name.startswith('rstt_'):
+            # Existing regional/std footprints also leave usable sub-grid
+            # space. Refine their cells instead of making every1.62x.27 cell
+            # consume a whole10x10 obstacle. All rectangles remain forbidden.
+            if name.startswith('rstt_') or (x1-x0<=rt.GRID and y1-y0<=rt.GRID):
                 affected.update((i,j) for i in range(int(x0//rt.GRID),math.ceil(x1/rt.GRID))
                                 for j in range(int(y0//rt.GRID),math.ceil(y1/rt.GRID)))
         self.boxes=defaultdict(list)
@@ -114,13 +124,13 @@ class ExactForwardedBuilder:
         return ('buf',n),p
 
     def connect(self,driver,source,target,dest):
-        path=self.g.route_reserved(self.g.cell(*source),self.g.cell(*dest))
+        path=self.g.route_reserved(self.g.cell(*source),self.g.cell(*dest),SPINE_BLOCKED_RUN)
         cursor=0;at=source;drv=driver
         while cursor<len(path)-1:
             eligible=[]
             for k in range(cursor+1,min(len(path),cursor+42)):
                 p=dest if k==len(path)-1 else self.g.point(path[k])
-                if p is not None and routed_bound(path[cursor:k+1],at,p,self.g)<=405+1e-7:
+                if p is not None and routed_bound(path[cursor:k+1],at,p,self.g)<=SPINE_PLAN_REACH+1e-7:
                     eligible.append((k,p))
             if not eligible:
                 self.failure=dict(cursor=cursor,cell=path[cursor],source=at,target=dest,driver=drv,
@@ -129,7 +139,7 @@ class ExactForwardedBuilder:
                                                   bound=None if self.g.point(path[k]) is None else
                                                   routed_bound(path[cursor:k+1],at,self.g.point(path[k]),self.g))
                                              for k in range(cursor+1,min(len(path),cursor+61))])
-                raise ValueError('no <=405um exact-bay continuation from '+str(path[cursor]))
+                raise ValueError('no <=400um planned exact-bay continuation from '+str(path[cursor]))
             k,p=eligible[-1]
             if k==len(path)-1:load=target
             else:
@@ -173,5 +183,6 @@ class ExactForwardedBuilder:
         if any(len(loads)>2 for _,_,loads in self.nets):raise ValueError('exact forwarded fanout exceeds two')
         return dict(top=root[1],topology='forwarded_exact_bays',leaves=len(leaves),buffers=len(self.bufs),
                     pads=0,region_insertion_compensated=False,max_route_segment_um=405,
+                    planned_route_segment_um=SPINE_PLAN_REACH,blocked_run_um=SPINE_BLOCKED_RUN,
                     max_placed_routed_bound_um=max(e['routed_bound_um'] for e in self.edges),
                     exact_bay_refined_cells=self.g.refined_cells)

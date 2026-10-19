@@ -124,3 +124,13 @@ keeps its partial stations and exact next-bay witness; a placed-pin failure also
 keeps the actual ODB. A completed replay still requires the independent whole
 footprint/net/endpoint/fanout/routed-reach/row audit, physical power and all
 native phase references. It performs no STA or production admission.
+
+The endpoint-trimmed full replay advanced to262 stations, then exposed a second
+39-step gap: origin4477.680,5600.340 to bay4171.500,5510.160um bounds405.680um.
+`physical/spine_endpoints_647` preserves that failure. The planner now reserves
+explicit endpoint/pin margin:400um planned wire,340um blocked run, while the
+actual placed-pin guard remains405um. Two1.620x.270 endpoint footprints can add
+at most3.780um. Small existing standard-cell footprints also gain exact bay
+refinement; they forbid their actual rectangles instead of an entire10um cell.
+The occupied/fully occupied footprint tests and all12 focused tests pass.
+The full regional checkpoint remains immutable during these spine-only replays.

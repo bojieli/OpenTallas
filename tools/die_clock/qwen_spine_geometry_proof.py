@@ -147,6 +147,9 @@ def audit(odb_path,manifest_path,tool_source,row_plan=None,regional_only=False):
         if net is not None:
             fanouts[net.getName()]=sum(p.getIoType()=='INPUT' for p in net.getITerms())
         path=e['route_cells']
+        for actual,c in ((axy,path[0]),(bxy,path[-1])):
+            if not all(c[i]*10-1e-7<=actual[i]<=(c[i]+1)*10+1e-7 for i in (0,1)):
+                errors.append('actual pin outside declared endpoint cell: '+an+' -> '+bn)
         if any(abs(a[0]-b[0])+abs(a[1]-b[1])!=1 for a,b in zip(path,path[1:])):
             errors.append('nonadjacent declared route cells: '+an+' -> '+bn)
         polyline=[axy]+[tuple((v+.5)*10 for v in c) for c in path[1:-1]]+[bxy]
