@@ -1,0 +1,6 @@
+2026-10-19T00:39:14-07:00 start host=regular-crane bundle=00c8e4f22
+2026-10-19T00:39:30-07:00 d_m3: [56350000] %Fatal: tb_hnx_dma_kvwb_ring.sv:124: Assertion failed in tb_hnx_dma_kvwb_ring: KVWB_RING FAIL errors=1408 MUT=3 RUN_RC=1 
+2026-10-19T00:39:32-07:00 d_m2: [55790000] %Fatal: tb_hnx_dma_kvwb_ring.sv:124: Assertion failed in tb_hnx_dma_kvwb_ring: KVWB_RING FAIL errors=384 MUT=2 RUN_RC=1 
+2026-10-19T00:39:32-07:00 d_m1: [56350000] %Fatal: tb_hnx_dma_kvwb_ring.sv:124: Assertion failed in tb_hnx_dma_kvwb_ring: KVWB_RING FAIL errors=704 MUT=1 RUN_RC=1 
+2026-10-19T00:39:33-07:00 d_m0: KVWB_RING PASS n=512 ring=256 vm_stride=1024 die master vp4_banks K=2; first command -> last WB beat: R1@s5/1mv=36 R2@s5/1mv=44 R3@s5/1mv=52 R4@s5/1mv=60 R6@s5/1mv=76 R6@s200/1mv=76 R6@s253/2mv=104 R4@s255/2mv=88 R1@s255/1mv=36 RUN_RC=0 
+2026-10-19T00:39:33-07:00 done

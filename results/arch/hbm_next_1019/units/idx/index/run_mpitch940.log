@@ -1,0 +1,8 @@
+IDX_ROW r0 firstkey315 firsttx1272 lasttx1392 scores10928 records512 errors32
+IDX_ROW r1 firstkey1255 firsttx2212 lasttx2332 scores10928 records512 errors1460
+IDX_ROWS_CYCLES rows2 pitch940 frame1397 record_edges_last_tx2333 done2339
+IDX_HNX_ROWS rows2 mutation0 scores21856 records1024 flits128 errors1492 fault1 faultedge1253 status0
+[28450000000] %Fatal: tb_hnx_idx_rows.sv:151: Assertion failed in tb_hnx_idx_rows.unnamedblk8: IDX_HNX_ROWS FAIL: N-row scheduled INDEX mismatch
+%Error: rtl/hbm_next/idx/tb/tb_hnx_idx_rows.sv:151: Verilog $stop
+Aborting...
+RUN_RC=1

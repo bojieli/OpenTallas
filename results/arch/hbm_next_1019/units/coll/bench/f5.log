@@ -1,0 +1,44 @@
+COLLQ FAULT PASS scenario=5 gq1111 ra0000 rb0000 ks0000
+- rtl/hbm_next/coll/tb/tb_hnx_coll_gq.sv:332: Verilog $finish
+COLLQ unexpected fault gq1111 ra0000 rb0000 rs0000 ks0000
+COLLQ missing write q0 b0 cyc639
+COLLQ missing write q0 b0 cyc646
+COLLQ missing write q0 b0 cyc650
+COLLQ missing write q0 b0 cyc652
+COLLQ missing write q0 b0 cyc654
+COLLQ missing write q0 b0 cyc656
+COLLQ missing write q0 b0 cyc669
+COLLQ missing write q0 b0 cyc676
+COLLQ missing write q0 b0 cyc680
+COLLQ missing write q0 b0 cyc682
+COLLQ missing write q0 b0 cyc684
+COLLQ missing write q0 b0 cyc686
+COLLQ missing write q0 b0 cyc699
+COLLQ missing write q0 b0 cyc706
+COLLQ missing write q0 b0 cyc710
+COLLQ missing write q0 b0 cyc712
+COLLQ missing write q0 b0 cyc714
+COLLQ missing write q0 b0 cyc716
+COLLQ missing write q0 b0 cyc1539
+COLLQ missing write q0 b0 cyc1546
+COLLQ missing write q0 b0 cyc1550
+COLLQ missing write q0 b0 cyc1552
+COLLQ missing write q0 b0 cyc1554
+COLLQ missing write q0 b0 cyc1556
+COLLQ missing write q0 b0 cyc1569
+COLLQ missing write q0 b0 cyc1576
+COLLQ missing write q0 b0 cyc1580
+COLLQ missing write q0 b0 cyc1582
+COLLQ missing write q0 b0 cyc1584
+COLLQ_TRAIN row=0 qbg=0 R=2 F=72 K=36 N=4 rsA=80 rsO=288 span_compiled=255 span_observed=255
+COLLQ_TRAIN row=1 qbg=0 R=1 F=19 K=19 N=3 rsA=-24 rsO=99 span_compiled=125 span_observed=125
+COLLQ_TRAIN row=2 qbg=1 R=2 F=19 K=10 N=6 rsA=72 rsO=100 span_compiled=129 span_observed=129
+COLLQ_TRAIN row=3 qbg=1 R=1 F=9 K=9 N=2 rsA=40 rsO=65 span_compiled=66 span_observed=66
+COLLQ_TRAIN row=4 qbg=1 R=2 F=50 K=25 N=1 rsA=0 rsO=0 span_compiled=77 span_observed=77
+COLLQ_TRAIN row=5 qbg=0 R=2 F=1 K=1 N=5 rsA=1 rsO=34 span_compiled=47 span_observed=47
+COLLQ FAIL set=1 errors=2979
+- rtl/hbm_next/coll/tb/tb_hnx_coll_gq.sv:361: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.192 s; speed 10.620 us/s
+- Verilator: cpu 0.106 s on 1 threads; allocated 16 MB
+RUN_RC=0

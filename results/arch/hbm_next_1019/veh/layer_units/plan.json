@@ -1,0 +1,266 @@
+{
+ "schema": "opentallas.hbm_next_1019.veh.layer_unit_plan.v1",
+ "rule": "HBM-NEXT-VEH (10-19 step 3): per-unit P = 4 layer benches driven by ONE layer's records.\n\nMinimum-component form (AGENTS.md; memory token-pass-release-gate-1018): no P = 4 die netlist exists, so the P = 4 layer\nis measured unit by unit.  This tool\n  records   compiles the DS token on the D1 compiler chain at the next-die point (P = 4, COLL L = 5, HC II 250 =\n            measured hnx, VM grown) and dumps ONE layer's records (MTP verify N = 6 and 4-user N = 4; layers 2 and 3 by\n            default) with unit / op / rows / shapes / priced cost.  Fleet (compile = the hgi_sim model).\n  plan      maps every record of the dumped layer to the landed unit bench that measures it, with the bench parameters\n            the record implies, and says which (unit, shape) points are ALREADY measured on the hnx RTL (no re-run:\n            AGENTS.md \"never duplicate\") and which are new.  Writes plan.json + one fleet script per new bench.\nThe bit-exact layer benches against the CMTP goldens (mtp accept / reject, mu4) need the CMTP BINARY record images\n(emitter + VM allocator, CMTP step 3) and stay in the pending list (p4_intake.json).\n\n    PYTHONPATH=tools python3 tools/hbm_next/vehicle/p4_layer_units.py records --out DIR [--layers 2,3]\n    python3 tools/hbm_next/vehicle/p4_layer_units.py plan --records DIR/layer_records.json --out DIR\n",
+ "measured_laws": {
+  "HC": {
+   "law": "HC_MIX_CYCLES(N) = 998 + 250 (N - 1), production K 20,480 / 24 mix rows / W 256",
+   "points": {
+    "1": 998,
+    "2": 1248,
+    "3": 1498,
+    "4": 1748,
+    "6": 2248,
+    "8": 2748
+   },
+   "src": "results/arch/hbm_next_1019/units/hc/README.md (tb_hnx_hc_eng4, witness/e1_n4.log, e4_n4.log)"
+  },
+  "COLL": {
+   "law": "N-row train: one fire + one 40-edge drain; further row = 3K/2 edges, K = ceil(F / R)",
+   "points": "N 1..6 trains, F < 200 (bench s1/s2)",
+   "src": "results/arch/hbm_next_1019/units/coll/README.md (tb_hnx_coll_gq, witness m6/m7/m8)"
+  },
+  "SM": {
+   "law": "P = 4 leaf span = P = 1 span + 24 (lane p result +8p, +1 front, +1 publish); 1.003x at K 16, 1.012x at K 4 (minimum spacing); bit-exact vs production d4g leaves P1-4",
+   "points": {
+    "K16": [
+     8238,
+     8262
+    ],
+    "K4": [
+     2094,
+     2118
+    ]
+   },
+   "src": "results/arch/hbm_next_1019/sm4/bench_summary.json (tb_hnx_rp4lp4_leaf, MUT1-3 witnesses)"
+  },
+  "ATT": {
+   "law": "4-query KV-line-stationary slice: fixed ~113-127 + 7.8 cycles a union row; bit-exact per lane",
+   "points": "sigma 0 / 0.3 / 1.0 / disjoint (s00 s03 s10 sdj)",
+   "src": "results/arch/hbm_next_1019/att4/bench/throughput.json (tb_hnx_att4, imut1-4 / pvmut1-2 witnesses)"
+  }
+ },
+ "by_case": {
+  "mtp_verify": {
+   "units": {
+    "FUSED": {
+     "records": 10,
+     "priced": 9333.9,
+     "shapes": {
+      "HC_PRE_NORM|N6": 4,
+      "HC_POST|N6": 4,
+      "QDQ_FP8|N6": 2
+     }
+    },
+    "DMA": {
+     "records": 16,
+     "priced": 1982.0,
+     "shapes": {
+      "LOAD|N6": 12,
+      "KVWB_DS|N6": 2,
+      "FENCE|N6": 2
+     }
+    },
+    "CTL": {
+     "records": 29,
+     "priced": 0.0,
+     "shapes": {
+      "NOP|N6": 29
+     }
+    },
+    "COLL": {
+     "records": 69,
+     "priced": 41664.5,
+     "shapes": {
+      "ALL_GATHER|N6|n2304": 52,
+      "ALL_GATHER|N6|n5120": 4,
+      "ALL_GATHER|N6|n1280": 2,
+      "ALL_GATHER|N6|n512": 2,
+      "GROUP_REDUCE_MCAST|N6|n1024": 2,
+      "ALL_GATHER|N6|n384": 2,
+      "ALL_GATHER|N6|n32": 1,
+      "ALL_GATHER|N6|n1024": 1,
+      "ALL_GATHER|N6|n4096": 1,
+      "TOPK_MERGE|N6|n512": 1,
+      "ROW_GATHER|N6|n512": 1
+     }
+    },
+    "SU": {
+     "records": 68,
+     "priced": 7675.3,
+     "shapes": {
+      "VOP|N6": 68
+     }
+    },
+    "SM": {
+     "records": 174,
+     "priced": 24450.6,
+     "shapes": {
+      "N6|K5120|m24": 104,
+      "N6|K2304|m53": 52,
+      "N6|K128|m128": 4,
+      "N6|K5120|m13": 2,
+      "N6|K5120|m5": 2,
+      "N6|K1280|m512": 2,
+      "N6|K512|m1024": 2,
+      "N6|K8192|m53": 2,
+      "N6|K5120|m4": 2,
+      "N6|K5120|m10": 1,
+      "N6|K1280|m42": 1
+     }
+    },
+    "IDX": {
+     "records": 5,
+     "priced": 2763.4,
+     "shapes": {
+      "TOPK|N6": 4,
+      "INDEX|N6": 1
+     }
+    },
+    "HC": {
+     "records": 4,
+     "priced": 9582.5,
+     "shapes": {
+      "HC_MIX|N6": 4
+     }
+    }
+   },
+   "coverage": {
+    "COLL": {
+     "new_points": [],
+     "note": "N <= 6 trains measured (s1/s2); the law is exact in F (check-train proof F < 200)"
+    },
+    "SM": {
+     "new_points": [
+      "N6|K1280|m42",
+      "N6|K1280|m512",
+      "N6|K128|m128",
+      "N6|K2304|m53",
+      "N6|K5120|m10",
+      "N6|K5120|m13",
+      "N6|K5120|m24",
+      "N6|K5120|m4",
+      "N6|K5120|m5",
+      "N6|K512|m1024",
+      "N6|K8192|m53"
+     ],
+     "note": "layer SM shapes -> tb_hnx_rp4lp4_leaf at the record's chunk count (NCHUNK) and spacing; P = 1 reference + MUT1 witness"
+    },
+    "HC": {
+     "new_points": [],
+     "note": "every HC row count of the layer is a measured point of tb_hnx_hc_eng4"
+    }
+   }
+  },
+  "mu4": {
+   "units": {
+    "FUSED": {
+     "records": 10,
+     "priced": 6893.9,
+     "shapes": {
+      "HC_PRE_NORM|N4": 4,
+      "HC_POST|N4": 4,
+      "QDQ_FP8|N4": 2
+     }
+    },
+    "DMA": {
+     "records": 16,
+     "priced": 1910.0,
+     "shapes": {
+      "LOAD|N4": 12,
+      "KVWB_DS|N4": 2,
+      "FENCE|N4": 2
+     }
+    },
+    "CTL": {
+     "records": 29,
+     "priced": 0.0,
+     "shapes": {
+      "NOP|N4": 29
+     }
+    },
+    "COLL": {
+     "records": 63,
+     "priced": 33355.9,
+     "shapes": {
+      "ALL_GATHER|N4|n2304": 46,
+      "ALL_GATHER|N4|n5120": 4,
+      "ALL_GATHER|N4|n1280": 2,
+      "ALL_GATHER|N4|n512": 2,
+      "GROUP_REDUCE_MCAST|N4|n1024": 2,
+      "ALL_GATHER|N4|n384": 2,
+      "ALL_GATHER|N4|n32": 1,
+      "ALL_GATHER|N4|n1024": 1,
+      "ALL_GATHER|N4|n4096": 1,
+      "TOPK_MERGE|N4|n512": 1,
+      "ROW_GATHER|N4|n512": 1
+     }
+    },
+    "SU": {
+     "records": 68,
+     "priced": 7169.3,
+     "shapes": {
+      "VOP|N4": 68
+     }
+    },
+    "SM": {
+     "records": 156,
+     "priced": 18580.2,
+     "shapes": {
+      "N4|K5120|m24": 92,
+      "N4|K2304|m53": 46,
+      "N4|K128|m128": 4,
+      "N4|K5120|m13": 2,
+      "N4|K5120|m5": 2,
+      "N4|K1280|m512": 2,
+      "N4|K512|m1024": 2,
+      "N4|K8192|m53": 2,
+      "N4|K5120|m4": 2,
+      "N4|K5120|m10": 1,
+      "N4|K1280|m42": 1
+     }
+    },
+    "IDX": {
+     "records": 5,
+     "priced": 3792.0,
+     "shapes": {
+      "TOPK|N4": 4,
+      "INDEX|N4": 1
+     }
+    },
+    "HC": {
+     "records": 4,
+     "priced": 7582.5,
+     "shapes": {
+      "HC_MIX|N4": 4
+     }
+    }
+   },
+   "coverage": {
+    "COLL": {
+     "new_points": [],
+     "note": "N <= 6 trains measured (s1/s2); the law is exact in F (check-train proof F < 200)"
+    },
+    "SM": {
+     "new_points": [
+      "N4|K1280|m42",
+      "N4|K1280|m512",
+      "N4|K128|m128",
+      "N4|K2304|m53",
+      "N4|K5120|m10",
+      "N4|K5120|m13",
+      "N4|K5120|m24",
+      "N4|K5120|m4",
+      "N4|K5120|m5",
+      "N4|K512|m1024",
+      "N4|K8192|m53"
+     ],
+     "note": "layer SM shapes -> tb_hnx_rp4lp4_leaf at the record's chunk count (NCHUNK) and spacing; P = 1 reference + MUT1 witness"
+    },
+    "HC": {
+     "new_points": [],
+     "note": "every HC row count of the layer is a measured point of tb_hnx_hc_eng4"
+    }
+   }
+  }
+ }
+}

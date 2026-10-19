@@ -1,0 +1,37 @@
+COLLQ VM q0 b4 unreserved read cyc164 sector 1104 (exp 0 0000)
+COLLQ VM q1 b4 unreserved read cyc164 sector 3104 (exp 0 0000)
+COLLQ VM q2 b4 unreserved read cyc164 sector 5104 (exp 0 0000)
+COLLQ VM q3 b4 unreserved read cyc164 sector 7104 (exp 0 0000)
+COLLQ VM q0 b5 unreserved read cyc165 sector 1105 (exp 0 0000)
+COLLQ VM q1 b5 unreserved read cyc165 sector 3105 (exp 0 0000)
+COLLQ VM q2 b5 unreserved read cyc165 sector 5105 (exp 0 0000)
+COLLQ VM q3 b5 unreserved read cyc165 sector 7105 (exp 0 0000)
+COLLQ VM q0 b6 unreserved read cyc167 sector 1106 (exp 0 0000)
+COLLQ VM q1 b6 unreserved read cyc167 sector 3106 (exp 0 0000)
+COLLQ VM q2 b6 unreserved read cyc167 sector 5106 (exp 0 0000)
+COLLQ VM q3 b6 unreserved read cyc167 sector 7106 (exp 0 0000)
+COLLQ VM q0 b7 unreserved read cyc168 sector 1107 (exp 1 100f)
+COLLQ VM q1 b7 unreserved read cyc168 sector 3107 (exp 1 300f)
+COLLQ VM q2 b7 unreserved read cyc168 sector 5107 (exp 1 500f)
+COLLQ VM q3 b7 unreserved read cyc168 sector 7107 (exp 1 700f)
+COLLQ VM q0 b0 unreserved read cyc170 sector 1108 (exp 1 1010)
+COLLQ VM q1 b0 unreserved read cyc170 sector 3108 (exp 1 3010)
+COLLQ VM q2 b0 unreserved read cyc170 sector 5108 (exp 1 5010)
+COLLQ VM q3 b0 unreserved read cyc170 sector 7108 (exp 1 7010)
+COLLQ FAULT PASS scenario=2 gq1111 ra1111 rb0000 ks0000
+- rtl/hbm_next/coll/tb/tb_hnx_coll_gq.sv:332: Verilog $finish
+COLLQ unexpected fault gq1111 ra1111 rb0000 rs0000 ks0000
+COLLQ_TRAIN row=0 qbg=0 R=2 F=72 K=36 N=1 rsA=0 rsO=0 span_compiled=93 span_observed=88
+COLLQ SPAN mismatch row0
+COLLQ_TRAIN row=1 qbg=0 R=1 F=19 K=19 N=1 rsA=0 rsO=0 span_compiled=68 span_observed=-292
+COLLQ SPAN mismatch row1
+COLLQ_TRAIN row=2 qbg=1 R=2 F=19 K=10 N=1 rsA=0 rsO=0 span_compiled=54 span_observed=54
+COLLQ_TRAIN row=3 qbg=1 R=1 F=9 K=9 N=1 rsA=0 rsO=0 span_compiled=53 span_observed=53
+COLLQ_TRAIN row=4 qbg=1 R=2 F=50 K=25 N=1 rsA=0 rsO=0 span_compiled=77 span_observed=77
+COLLQ_TRAIN row=5 qbg=0 R=2 F=1 K=1 N=1 rsA=0 rsO=0 span_compiled=41 span_observed=41
+COLLQ FAIL set=0 errors=4251
+- rtl/hbm_next/coll/tb/tb_hnx_coll_gq.sv:361: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.107 s; speed 19.032 us/s
+- Verilator: cpu 0.101 s on 1 threads; allocated 16 MB
+RUN_RC=0

@@ -1,0 +1,14 @@
+2026-10-19T06:22:41-07:00 start host=ot-epyc6 bundle=518cde9c9
+2026-10-19T07:12:34-07:00 build e0 rc=0 bin=ok
+2026-10-19T07:12:48-07:00 build e1 rc=0 bin=ok
+2026-10-19T07:15:34-07:00 build f0 rc=0 bin=ok
+2026-10-19T07:15:41-07:00 build f1 rc=0 bin=ok
+2026-10-19T07:15:43-07:00 mu pre_emit: HNX_FUSED_CYCLES op=pre N=4 rgap=0 KX=4 MUT=0 cycles=1 done=0 fault=1 reads=0 writes=0 HNX_FUSED FAIL op=pre N=4 mism=20480 fault=1 done=0 bankerr=0 writes=0 expect_sectors=2560  MISMATCH word 81952: got 00000000 exp 3d430000
+2026-10-19T07:15:43-07:00 mu post_emit: HNX_FUSED_CYCLES op=post N=4 rgap=0 KX=4 MUT=0 cycles=1 done=0 fault=1 reads=0 writes=0 HNX_FUSED FAIL op=post N=4 mism=81920 fault=1 done=0 bankerr=0 writes=0 expect_sectors=10240  MISMATCH word 0: got 00000000 exp 406c0000
+2026-10-19T07:15:53-07:00 mu post_legal_mut1: HNX_FUSED_CYCLES op=post N=4 rgap=0 KX=4 MUT=1 cycles=510 done=1 fault=0 reads=12812 writes=10240 HNX_FUSED FAIL op=post N=4 mism=29327 fault=0 done=1 bankerr=0 writes=10240 expect_sectors=10240  MISMATCH word 20480: got be0b0000 exp be050000
+2026-10-19T07:15:55-07:00 mu pre_legal: HNX_FUSED_CYCLES op=pre N=4 rgap=0 KX=4 MUT=0 cycles=648 done=1 fault=0 reads=10884 writes=2560 HNX_FUSED PASS op=pre N=4 words=20480  
+2026-10-19T07:15:56-07:00 mu post_legal: HNX_FUSED_CYCLES op=post N=4 rgap=0 KX=4 MUT=0 cycles=510 done=1 fault=0 reads=12812 writes=10240 HNX_FUSED PASS op=post N=4 words=81920  
+2026-10-19T07:15:56-07:00 mu pre_legal_mut1: HNX_FUSED_CYCLES op=pre N=4 rgap=0 KX=4 MUT=1 cycles=648 done=1 fault=0 reads=10884 writes=2560 HNX_FUSED FAIL op=pre N=4 mism=9962 fault=0 done=1 bankerr=0 writes=2560 expect_sectors=2560  MISMATCH word 87296: got bd1a0000 exp bcd50000
+2026-10-19T07:16:41-07:00 mu hcmix_mut1: HC_ENG_DONE mode=0 npos=4 mixes=96 mixbad=96 outs=16 outbad=384 TB=1944 last_mix_t=3193 first_out_t=2943 last_out_t=3692 HC_MIX_CYCLES=1748  MIX_MISMATCH pos0 row0 got=c0e32a54 exp=c0cb72fe
+2026-10-19T07:16:41-07:00 mu hcmix: HC_ENG_DONE mode=0 npos=4 mixes=96 mixbad=0 outs=16 outbad=0 TB=1944 last_mix_t=3193 first_out_t=2943 last_out_t=3692 HC_MIX_CYCLES=1748 HC_ENG PASS  
+2026-10-19T07:16:45-07:00 done

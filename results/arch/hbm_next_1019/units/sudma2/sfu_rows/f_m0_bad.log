@@ -1,0 +1,8 @@
+SFU_ROWS round n=6 P=69 Pc=65 DP=4 P0=9 s_rd=75 s_wr=424 arith_starts=6
+SFU_ROWS round n=5 P=59 Pc=55 DP=4 P0=11 s_rd=235 s_wr=272 arith_starts=11
+SFU_ROWS_II row_arith_start_spacing min=59 max=69 (= P of each round; off-P spacings 0) starts=11
+SFU_ROWS edges=4500 mismatching=0 active_io=729 active_ctl=665 fault_edges=2397 MUT=0 DP=4
+[4510000] %Fatal: tb_hnx_sfu_rows.sv:151: Assertion failed in tb_hnx_sfu_rows: SFU_ROWS FAIL mismatching=0 faults=2397 active_io=729 active_ctl=665 MUT=0
+%Error: rtl/hbm_next/su/tb/tb_hnx_sfu_rows.sv:151: Verilog $stop
+Aborting...
+RUN_RC=1

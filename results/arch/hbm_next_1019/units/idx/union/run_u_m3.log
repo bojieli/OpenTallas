@@ -1,0 +1,43 @@
+END_EDGE 49  done
+END_EDGE 98  done
+SLICE STATUS ecnt 106 bank 000000000000000000000000000000020000 hub 000
+SLICE STATUS ecnt 107 bank 000000000000000000000000000000020000 hub 000
+SLICE STATUS ecnt 108 bank 000000000000000000000000000000020000 hub 000
+SLICE STATUS ecnt 109 bank 000000000000000000000000000000020000 hub 000
+SLICE STATUS ecnt 110 bank 000000000000000000000000000000020000 hub 000
+SLICE STATUS ecnt 111 bank 000000000000000000000000000000020000 hub 000
+SLICE STATUS ecnt 112 bank 000000000000000000000000000000020000 hub 000
+SLICE STATUS ecnt 113 bank 000000000000000000000000000000020000 hub 000
+SLICE STATUS ecnt 114 bank 000000000000000000000000000000020000 hub 000
+END_EDGE 166 fault
+END_EDGE 234 fault
+END_EDGE 325 fault
+END_EDGE 416 fault
+END_EDGE 517 fault
+END_EDGE 618 fault
+END_EDGE 760 fault
+END_EDGE 903 fault
+END_EDGE 1197 fault
+END_EDGE 1366 fault
+END_EDGE 1629 fault
+END_EDGE 1969 fault
+END_EDGE 2240 fault
+END_EDGE 2369 fault
+END_EDGE 2462 fault
+END_EDGE 2550 fault
+END_EDGE 2618 fault
+END_EDGE 2622 fault
+IDX_UNION MUT3 records21 dones2 faults18 sectors_checked776 errors8358 schedule_edges2626
+[83730000] %Fatal: tb_hnx_idx_union.sv:140: Assertion failed in tb_hnx_idx_union: IDX_UNION FAIL: union record on actual SW slice mismatch
+%Error: rtl/hbm_next/idx/tb/tb_hnx_idx_union.sv:140: Verilog $stop
+Aborting...
+RUN_RC=1
+... (trimmed)
+END_EDGE 2550 fault
+END_EDGE 2618 fault
+END_EDGE 2622 fault
+IDX_UNION MUT3 records21 dones2 faults18 sectors_checked776 errors8358 schedule_edges2626
+[83730000] %Fatal: tb_hnx_idx_union.sv:140: Assertion failed in tb_hnx_idx_union: IDX_UNION FAIL: union record on actual SW slice mismatch
+%Error: rtl/hbm_next/idx/tb/tb_hnx_idx_union.sv:140: Verilog $stop
+Aborting...
+RUN_RC=1

@@ -1,0 +1,606 @@
+{
+ "schema": "opentallas.hbm_next_1019.veh.value_front.v1",
+ "rule": "HBM-NEXT-VEH (10-19 step 4): VALUE-EXACT P = 4 layer bench, part 1 = the layer front (HC.HC_MIX + FUSED.HC_PRE_NORM\n+ FUSED.HC_POST) of ONE layer of the CMTP whole-token images, on the REAL golden operands, on the hnx N-row RTL.\n\nWhat is real and what is not (stated, not hidden):\n  * records   = the CMTP HGI-1R whole-token images (results/arch/hbm_next_1019/cmtp/emitter/whole/{ar_N1,mtp_N6}),\n                decoded with isa_rows.decode_one; segment L's first FUSED.HC_PRE_NORM, HC.HC_MIX, FUSED.HC_POST (the\n                attention sub-layer's front and back).  Their VM bases / row strides / N / eps (imm_a) drive the benches.\n  * operands  = (users N = 4: the CMTP mu4 golden, 4 independent users at their position 1, u{u}_p1_h{L-1} / pre)\n                the committed CMTP golden ar_mtp_g5 (released DeepSeek-V4.1-Flash checkpoint, real DSpark drafter:\n                draft 1 accepted, draft 2 rejected): the layer-L input h_{p}_{L-1} [4, 5120] and pre_{p}_{L-1} [4] of\n                position p (AR: p = 1, N = 1; MTP verify: p = 1..6, N = 6) + layer L's released weights\n                (hc_attn_fn [24, 20480] / base / scale, attn_norm.weight) read from the snapshot\n                (rtl_v41_fullshape_layer_campaign.Checkpoint, lazy).  Weights are in the case files, not committed.\n  * expected  = hdc_golden_v41 chunk8 Model methods on those operands (build_model, the pinned golden of every DS lane):\n                hc_mixes(h, L, \"attn\") (mixes + sigmoid / exp / Sinkhorn tail), rmsnorm_fold(hc_pre(h, pre), w, eps),\n                hc_post(y, res, post, comb).\n  * HC_POST y = STAND-IN: the attention output of layer L is not in the golden; the bench feeds the layer's own\n                attn-norm x (bf16) as y.  res, post and comb are real.  (Bit-exact arithmetic on real operand\n                distributions; the attention value itself is the ATT / SM part of the layer bench, pending.)\n  * HC_MIX    = tb_hnx_hc_eng4 (ot_hnx_hc_root + 4 qeng rings, production K 20,480 / 24 rows / W 256) with the\n                static programme of tools/rtl_hbm_hc_eng_static_gate.py --split (P = N, RAW0 167, RS 104) and the\n                released eps (norm_eps, patched into the launch word); x / fn / base / scale / expected overwritten.\nCONTRACT CHECK (the FUSED engine's job_ok, ot_hnx_fused_eng.sv): A, B, C, O 8-word aligned, A / B / O one bank phase\n(addr[7:3]), row strides of A / B / O multiples of 256, HC_PRE_NORM gain broadcast (rs_B 0) and in VM.  Each FUSED\nrecord is run twice: 'emit' = the record's operands exactly as emitted (an HBM gain is staged in VM at the A phase;\nnothing else moved) and 'legal' = the smallest relocation that satisfies job_ok (reported per operand).  An emitted\nrecord that breaks job_ok must FAULT on the RTL (contract witness); 'legal' must PASS bit-exact.\n\n    python3 tools/hbm_next/vehicle/p4_value_front.py gen --layer 2 --out CASES        (local: lazy snapshot reads)\n    tools/hbm_next/vehicle/run_value_front.sh CASES OUT                                 (fleet, Verilator 5.050)\n    python3 tools/hbm_next/vehicle/p4_value_front.py collect --cases CASES --runs OUT --out JSON\n",
+ "layer": 2,
+ "golden": "results/arch/hbm_next_1019/cmtp/goldens/ar_mtp_g5/golden_spec.npz",
+ "golden_sha256": "fb69f088f6cc7b0c6c1a9bd6b94cc6c86f20836db1ad40d719506d31cdce517a",
+ "sim": "verilator: /home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator Verilator 5.050 2026-07-01 rev v5.050",
+ "modes": {
+  "ar": {
+   "n": 1,
+   "positions": [
+    1
+   ],
+   "records": {
+    "FUSED.HC_PRE_NORM": {
+     "index_in_segment": 2,
+     "n": 1,
+     "rs": {},
+     "imm_a": 507307272,
+     "desc": {
+      "A": {
+       "space": "VM",
+       "fmt": "FP32",
+       "base": 0,
+       "n": 20480,
+       "m": 1
+      },
+      "B": {
+       "space": "HBM",
+       "fmt": "FP32",
+       "base": 17179869184,
+       "n": 5120,
+       "m": 1
+      },
+      "C": {
+       "space": "VM",
+       "fmt": "FP32",
+       "base": 40960,
+       "n": 4,
+       "m": 1
+      },
+      "O": {
+       "space": "VM",
+       "fmt": "BF16",
+       "base": 41152,
+       "n": 5120,
+       "m": 1
+      }
+     }
+    },
+    "HC.HC_MIX": {
+     "index_in_segment": 58,
+     "n": 1,
+     "rs": {},
+     "imm_a": 0,
+     "desc": {
+      "A": {
+       "space": "VM",
+       "fmt": "FP32",
+       "base": 0,
+       "n": 20480,
+       "m": 1
+      },
+      "B": {
+       "space": "HBM",
+       "fmt": "BF16",
+       "base": 193459216384,
+       "n": 1,
+       "m": 1
+      },
+      "O": {
+       "space": "VM",
+       "fmt": "FP32",
+       "base": 41024,
+       "n": 24,
+       "m": 1
+      }
+     }
+    },
+    "FUSED.HC_POST": {
+     "index_in_segment": 76,
+     "n": 1,
+     "rs": {},
+     "imm_a": 0,
+     "desc": {
+      "A": {
+       "space": "VM",
+       "fmt": "FP32",
+       "base": 82240,
+       "n": 5120,
+       "m": 1
+      },
+      "B": {
+       "space": "VM",
+       "fmt": "FP32",
+       "base": 20480,
+       "n": 20480,
+       "m": 1
+      },
+      "C": {
+       "space": "VM",
+       "fmt": "FP32",
+       "base": 41028,
+       "n": 20,
+       "m": 1
+      },
+      "O": {
+       "space": "VM",
+       "fmt": "FP32",
+       "base": 0,
+       "n": 20480,
+       "m": 1
+      }
+     }
+    }
+   },
+   "pre_emit": {
+    "pass_": false,
+    "fail": true,
+    "cycles": 1,
+    "fault": 1
+   },
+   "pre_legal": {
+    "pass_": true,
+    "fail": false,
+    "cycles": 404,
+    "fault": 0
+   },
+   "post_emit": {
+    "pass_": false,
+    "fail": true,
+    "cycles": 1,
+    "fault": 1
+   },
+   "post_legal": {
+    "pass_": true,
+    "fail": false,
+    "cycles": 196,
+    "fault": 0
+   },
+   "pre_legal_mut1": {
+    "pass_": true,
+    "fail": false,
+    "cycles": 404,
+    "fault": 0
+   },
+   "post_legal_mut1": {
+    "pass_": true,
+    "fail": false,
+    "cycles": 196,
+    "fault": 0
+   },
+   "hcmix": {
+    "pass_": true,
+    "fail": false,
+    "cycles": 998
+   },
+   "hcmix_mut1": {
+    "pass_": false,
+    "fail": true,
+    "cycles": 998
+   },
+   "pre_moved": {
+    "O": [
+     41152,
+     41216
+    ]
+   },
+   "post_moved": {
+    "A": [
+     82240,
+     82432
+    ],
+    "C": [
+     41028,
+     41032
+    ]
+   },
+   "pre_emit_broken": [
+    "bank phase A 0 / B 0 / O 24 differ"
+   ],
+   "post_emit_broken": [
+    "C base 41028 not 8-aligned",
+    "bank phase A 8 / B 0 / O 0 differ"
+   ]
+  },
+  "mtp": {
+   "n": 6,
+   "positions": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "records": {
+    "FUSED.HC_PRE_NORM": {
+     "index_in_segment": 2,
+     "n": 6,
+     "rs": {
+      "A": 20480,
+      "C": 8,
+      "O": 5120
+     },
+     "imm_a": 507307272,
+     "desc": {
+      "A": {
+       "space": "VM",
+       "fmt": "FP32",
+       "base": 0,
+       "n": 20480,
+       "m": 1
+      },
+      "B": {
+       "space": "HBM",
+       "fmt": "FP32",
+       "base": 17179869184,
+       "n": 5120,
+       "m": 1
+      },
+      "C": {
+       "space": "VM",
+       "fmt": "FP32",
+       "base": 122880,
+       "n": 4,
+       "m": 1
+      },
+      "O": {
+       "space": "VM",
+       "fmt": "BF16",
+       "base": 122928,
+       "n": 5120,
+       "m": 1
+      }
+     }
+    },
+    "HC.HC_MIX": {
+     "index_in_segment": 58,
+     "n": 6,
+     "rs": {
+      "A": 20480,
+      "O": 24
+     },
+     "imm_a": 0,
+     "desc": {
+      "A": {
+       "space": "VM",
+       "fmt": "FP32",
+       "base": 0,
+       "n": 20480,
+       "m": 1
+      },
+      "B": {
+       "space": "HBM",
+       "fmt": "BF16",
+       "base": 193459216384,
+       "n": 1,
+       "m": 1
+      },
+      "O": {
+       "space": "VM",
+       "fmt": "FP32",
+       "base": 350640,
+       "n": 24,
+       "m": 1
+      }
+     }
+    },
+    "FUSED.HC_POST": {
+     "index_in_segment": 80,
+     "n": 6,
+     "rs": {
+      "A": 5120,
+      "B": 20480,
+      "C": 24,
+      "O": 20480
+     },
+     "imm_a": 0,
+     "desc": {
+      "A": {
+       "space": "VM",
+       "fmt": "FP32",
+       "base": 319536,
+       "n": 5120,
+       "m": 1
+      },
+      "B": {
+       "space": "VM",
+       "fmt": "FP32",
+       "base": 122928,
+       "n": 20480,
+       "m": 1
+      },
+      "C": {
+       "space": "VM",
+       "fmt": "FP32",
+       "base": 350644,
+       "n": 20,
+       "m": 1
+      },
+      "O": {
+       "space": "VM",
+       "fmt": "FP32",
+       "base": 0,
+       "n": 20480,
+       "m": 1
+      }
+     }
+    }
+   },
+   "pre_emit": {
+    "pass_": false,
+    "fail": true,
+    "cycles": 1,
+    "fault": 1
+   },
+   "pre_legal": {
+    "pass_": true,
+    "fail": false,
+    "cycles": 810,
+    "fault": 0
+   },
+   "post_emit": {
+    "pass_": false,
+    "fail": true,
+    "cycles": 1,
+    "fault": 1
+   },
+   "post_legal": {
+    "pass_": true,
+    "fail": false,
+    "cycles": 716,
+    "fault": 0
+   },
+   "pre_legal_mut1": {
+    "pass_": false,
+    "fail": true,
+    "cycles": 810,
+    "fault": 0
+   },
+   "post_legal_mut1": {
+    "pass_": false,
+    "fail": true,
+    "cycles": 716,
+    "fault": 0
+   },
+   "hcmix": {
+    "pass_": true,
+    "fail": false,
+    "cycles": 2248
+   },
+   "hcmix_mut1": {
+    "pass_": false,
+    "fail": true,
+    "cycles": 2248
+   },
+   "pre_moved": {
+    "O": [
+     122928,
+     123136
+    ]
+   },
+   "post_moved": {
+    "A": [
+     319536,
+     319744
+    ],
+    "B": [
+     122928,
+     123136
+    ],
+    "C": [
+     350644,
+     350648
+    ]
+   },
+   "pre_emit_broken": [
+    "bank phase A 0 / B 0 / O 6 differ"
+   ],
+   "post_emit_broken": [
+    "C base 350644 not 8-aligned",
+    "bank phase A 6 / B 6 / O 0 differ"
+   ]
+  },
+  "mu": {
+   "n": 4,
+   "positions": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "records": {
+    "FUSED.HC_PRE_NORM": {
+     "index_in_segment": 2,
+     "n": 4,
+     "rs": {
+      "A": 20480,
+      "C": 8,
+      "O": 5120
+     },
+     "imm_a": 507307272,
+     "desc": {
+      "A": {
+       "space": "VM",
+       "fmt": "FP32",
+       "base": 0,
+       "n": 20480,
+       "m": 1
+      },
+      "B": {
+       "space": "HBM",
+       "fmt": "FP32",
+       "base": 17179869184,
+       "n": 5120,
+       "m": 1
+      },
+      "C": {
+       "space": "VM",
+       "fmt": "FP32",
+       "base": 81920,
+       "n": 4,
+       "m": 1
+      },
+      "O": {
+       "space": "VM",
+       "fmt": "BF16",
+       "base": 81952,
+       "n": 5120,
+       "m": 1
+      }
+     }
+    },
+    "HC.HC_MIX": {
+     "index_in_segment": 58,
+     "n": 4,
+     "rs": {
+      "A": 20480,
+      "O": 24
+     },
+     "imm_a": 0,
+     "desc": {
+      "A": {
+       "space": "VM",
+       "fmt": "FP32",
+       "base": 0,
+       "n": 20480,
+       "m": 1
+      },
+      "B": {
+       "space": "HBM",
+       "fmt": "BF16",
+       "base": 193459216384,
+       "n": 1,
+       "m": 1
+      },
+      "O": {
+       "space": "VM",
+       "fmt": "FP32",
+       "base": 233888,
+       "n": 24,
+       "m": 1
+      }
+     }
+    },
+    "FUSED.HC_POST": {
+     "index_in_segment": 77,
+     "n": 4,
+     "rs": {
+      "A": 5120,
+      "B": 20480,
+      "C": 24,
+      "O": 20480
+     },
+     "imm_a": 0,
+     "desc": {
+      "A": {
+       "space": "VM",
+       "fmt": "FP32",
+       "base": 213024,
+       "n": 5120,
+       "m": 1
+      },
+      "B": {
+       "space": "VM",
+       "fmt": "FP32",
+       "base": 81952,
+       "n": 20480,
+       "m": 1
+      },
+      "C": {
+       "space": "VM",
+       "fmt": "FP32",
+       "base": 233892,
+       "n": 20,
+       "m": 1
+      },
+      "O": {
+       "space": "VM",
+       "fmt": "FP32",
+       "base": 0,
+       "n": 20480,
+       "m": 1
+      }
+     }
+    }
+   },
+   "pre_emit": {
+    "pass_": false,
+    "fail": true,
+    "cycles": 1,
+    "fault": 1
+   },
+   "pre_legal": {
+    "pass_": true,
+    "fail": false,
+    "cycles": 648,
+    "fault": 0
+   },
+   "post_emit": {
+    "pass_": false,
+    "fail": true,
+    "cycles": 1,
+    "fault": 1
+   },
+   "post_legal": {
+    "pass_": true,
+    "fail": false,
+    "cycles": 510,
+    "fault": 0
+   },
+   "pre_legal_mut1": {
+    "pass_": false,
+    "fail": true,
+    "cycles": 648,
+    "fault": 0
+   },
+   "post_legal_mut1": {
+    "pass_": false,
+    "fail": true,
+    "cycles": 510,
+    "fault": 0
+   },
+   "hcmix": {
+    "pass_": true,
+    "fail": false,
+    "cycles": 1748
+   },
+   "hcmix_mut1": {
+    "pass_": false,
+    "fail": true,
+    "cycles": 1748
+   },
+   "pre_moved": {
+    "O": [
+     81952,
+     82176
+    ]
+   },
+   "post_moved": {
+    "A": [
+     213024,
+     213248
+    ],
+    "B": [
+     81952,
+     82176
+    ],
+    "C": [
+     233892,
+     233896
+    ]
+   },
+   "pre_emit_broken": [
+    "bank phase A 0 / B 0 / O 4 differ"
+   ],
+   "post_emit_broken": [
+    "C base 233892 not 8-aligned",
+    "bank phase A 4 / B 4 / O 0 differ"
+   ]
+  }
+ },
+ "verdict": {
+  "legal_bit_exact": true,
+  "emitted_contract_faults": true,
+  "mutants_caught": true,
+  "cycles": {
+   "ar": {
+    "pre_legal": 404,
+    "hcmix": 998,
+    "post_legal": 196
+   },
+   "mtp": {
+    "pre_legal": 810,
+    "hcmix": 2248,
+    "post_legal": 716
+   },
+   "mu": {
+    "pre_legal": 648,
+    "hcmix": 1748,
+    "post_legal": 510
+   }
+  }
+ }
+}

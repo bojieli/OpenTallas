@@ -1,0 +1,8 @@
+HNX_VM_LOCKSTEP PASS banks=2 cycles=4000 compared_edges=8024 reads=4701 writes=5012 mirror_egress=413 packet_resp=1647 (lower 2^18 + mirror, bit-identical to d4g)
+HNX_VM_UPPER PASS banks=2 words_per_bank=16384 (A0 1024 + A1 1024 rows x 8) mirror_rows=1024 reads=6144 upper=2048 lower=2048 mirror=2048 latency=7 edges (input pin reg + n+6) 1R+1W/cycle
+TB_HNX_VM PASS MUT=0 SEED=1 lockstep_edges=8024 upper_reads=2048 mirror_row10_fault=1
+- rtl/hbm_next/vm/tb/tb_hnx_vm_bank.sv:229: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 107us; walltime 0.127 s; speed 843.343 us/s
+- Verilator: cpu 0.125 s on 1 threads; allocated 9 MB
+RUN_RC=0

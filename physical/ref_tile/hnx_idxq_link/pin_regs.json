@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hnx_idxq_link",
+ "enable": false,
+ "reason": "the IDXN link is the d4g pin-register shell (ot_hnx_idxn_link: one kept flop per data bit in and out); the 4-selector merge (OR of one + collision fault) sits before the shell's input flops; a synthesis wrapper would add an unpriced stage"
+}

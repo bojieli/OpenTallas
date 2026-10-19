@@ -1,0 +1,107 @@
+{
+ "schema": "hnx.die.sm_hbm_cost.v1",
+ "date": "2026-10-19",
+ "lane": "HBM-NEXT-DIE (DIE-P4-4)",
+ "method": "plan evaluator (plan_study_1017): pin-to-pin lane route, stations every 380 um (every hop <= 405 um); SM_HBM = PC -> SM column HBM_K/SM_HBM static lane, fixed latency, no backpressure. Cycle cost: forwarded half-cycle relay hops (landed-regions standard) = 0.5 cycle per station; root-clocked full-cycle relays = 1 cycle per station (upper bound). Paid ONCE per SM record (pipelined static lane: latency, not throughput).",
+ "plans": {
+  "d4g": {
+   "stages_bw": 2.88,
+   "longest_um": 2902,
+   "worst_stations": 8,
+   "max_sm_pc_offset_um": 4190,
+   "delta_vs_d4g": {
+    "stages_bw": 0.0,
+    "worst_stations": 0,
+    "cycles_avg_half": 0.0,
+    "cycles_worst_half": 0.0,
+    "cycles_avg_full": 0.0,
+    "cycles_worst_full": 0
+   }
+  },
+  "f4c_t5": {
+   "stages_bw": 5.25,
+   "longest_um": 4975,
+   "worst_stations": 14,
+   "max_sm_pc_offset_um": 6609,
+   "delta_vs_d4g": {
+    "stages_bw": 2.37,
+    "worst_stations": 6,
+    "cycles_avg_half": 1.19,
+    "cycles_worst_half": 3.0,
+    "cycles_avg_full": 2.37,
+    "cycles_worst_full": 6
+   }
+  },
+  "f4c_t6c": {
+   "stages_bw": 5.25,
+   "longest_um": 4975,
+   "worst_stations": 14,
+   "max_sm_pc_offset_um": 6609,
+   "delta_vs_d4g": {
+    "stages_bw": 2.37,
+    "worst_stations": 6,
+    "cycles_avg_half": 1.19,
+    "cycles_worst_half": 3.0,
+    "cycles_avg_full": 2.37,
+    "cycles_worst_full": 6
+   }
+  },
+  "f4c_t6_Lab": {
+   "stages_bw": 5.12,
+   "longest_um": 4975,
+   "worst_stations": 14,
+   "max_sm_pc_offset_um": 6609,
+   "delta_vs_d4g": {
+    "stages_bw": 2.24,
+    "worst_stations": 6,
+    "cycles_avg_half": 1.12,
+    "cycles_worst_half": 3.0,
+    "cycles_avg_full": 2.24,
+    "cycles_worst_full": 6
+   }
+  },
+  "f4c_t6_Lp3a": {
+   "stages_bw": 5.12,
+   "longest_um": 4975,
+   "worst_stations": 14,
+   "max_sm_pc_offset_um": 6609,
+   "delta_vs_d4g": {
+    "stages_bw": 2.24,
+    "worst_stations": 6,
+    "cycles_avg_half": 1.12,
+    "cycles_worst_half": 3.0,
+    "cycles_avg_full": 2.24,
+    "cycles_worst_full": 6
+   }
+  },
+  "f4c_t6_Lmax": {
+   "stages_bw": 5.88,
+   "longest_um": 5494,
+   "worst_stations": 15,
+   "max_sm_pc_offset_um": 7214,
+   "delta_vs_d4g": {
+    "stages_bw": 3.0,
+    "worst_stations": 7,
+    "cycles_avg_half": 1.5,
+    "cycles_worst_half": 3.5,
+    "cycles_avg_full": 3.0,
+    "cycles_worst_full": 7
+   }
+  },
+  "f4c_t6_La": {
+   "stages_bw": 5.25,
+   "longest_um": 4975,
+   "worst_stations": 14,
+   "max_sm_pc_offset_um": 6609,
+   "delta_vs_d4g": {
+    "stages_bw": 2.37,
+    "worst_stations": 6,
+    "cycles_avg_half": 1.19,
+    "cycles_worst_half": 3.0,
+    "cycles_avg_full": 2.37,
+    "cycles_worst_full": 6
+   }
+  }
+ },
+ "for_cmtp_veh": "Adopted f4c_t6c: SM_HBM +2.37 bit-weighted stations (+1.2 cyc avg / +3 cyc worst at half-cycle hops; +2.4 / +6 at full-cycle relays) per SM record over d4g; schedule the outer SMs (SW0/SW7/NW0/NW7, 6.6 mm from their PC) with the worst-case fixed latency (static lane, every SM uses its own fixed latency)."
+}

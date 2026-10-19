@@ -1,0 +1,42 @@
+ot-run: -> ot-epyc5 (will queue: admits 32 GB < 120 GB)
+ot-heavy: request 120G is charged 12G (class 'compose_grid.py' measured peak 3.2G, n=1+0 proved); the cap stays 120G
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-3592357-1792398860 after 0 s
+OK   D1 AR 629775.1 629775.1
+OK   D1 MTP P4 verify 1338146.6 1338146.6
+OK   D1 MU P4 1099570.6 1099570.6
+OK   P1 coll L5 AR 615483.0 615483.0
+OK   P1 coll L5 MTP P4 verify 1297601.0 1297601.0
+OK   P1 coll L5 MU P4 1071052.5 1071052.5
+OK   P1 hc II4385 MTP P4 verify 2782985.4 2782985.4
+OK   P1 hc II4385 MU P4 1941033.1 1941033.1
+OK   P1 vm asbuilt MTP P4 verify 1375286.3 1375286.3
+OK   P1 vm asbuilt MU P4 1135980.3 1135980.3
+d4g-phys L4 II250 grown: AR 1905.4 MTP 3363.5 MU 4365.3 / 1091.3
+d4g-phys L4 II250 asbuilt: AR 1905.4 MTP 3281.3 MU 4225.4 / 1056.4
+d4g-phys L4 II600 grown: AR 1905.4 MTP 3186.8 MU 4272.5 / 1068.1
+d4g-phys L4 II600 asbuilt: AR 1905.4 MTP 3113.0 MU 4138.3 / 1034.6
+d4g-phys L4 II950 grown: AR 1905.4 MTP 2947.2 MU 4003.1 / 1000.8
+d4g-phys L4 II950 asbuilt: AR 1905.4 MTP 2884.0 MU 3885.1 / 971.3
+d4g-phys L4 II4385 grown: AR 1905.4 MTP 1679.7 MU 2472.9 / 618.2
+d4g-phys L4 II4385 asbuilt: AR 1905.4 MTP 1659.0 MU 2427.4 / 606.8
+d4g-phys L4 IInoHCrows grown: AR 1905.4 MTP 2831.6 MU 3866.8 / 966.7
+d4g-phys L4 IInoHCrows asbuilt: AR 1905.4 MTP 2773.2 MU 3756.6 / 939.2
+d4g-phys L5 II250 grown: AR 1949.7 MTP 3459.9 MU 4481.6 / 1120.4
+d4g-phys L5 II250 asbuilt: AR 1949.7 MTP 3373.1 MU 4334.2 / 1083.6
+d4g-phys L5 II600 grown: AR 1949.7 MTP 3240.8 MU 4344.9 / 1086.2
+d4g-phys L5 II600 asbuilt: AR 1949.7 MTP 3164.5 MU 4206.3 / 1051.6
+d4g-phys L5 II950 grown: AR 1949.7 MTP 2993.3 MU 4066.6 / 1016.7
+d4g-phys L5 II950 asbuilt: AR 1949.7 MTP 2928.1 MU 3945.0 / 986.2
+d4g-phys L5 II4385 grown: AR 1949.7 MTP 1694.6 MU 2497.0 / 624.3
+d4g-phys L5 II4385 asbuilt: AR 1949.7 MTP 1673.5 MU 2450.6 / 612.7
+d4g-phys L5 IInoHCrows grown: AR 1949.7 MTP 2874.2 MU 3926.1 / 981.5
+d4g-phys L5 IInoHCrows asbuilt: AR 1949.7 MTP 2814.0 MU 3812.6 / 953.1
+f4c_t5 L5 II250 grown: AR 1989.9 MTP 3383.7 MU 4373.7 / 1093.4
+f4c_t5 L5 II250 asbuilt: AR 1989.9 MTP 3301.6 MU 4234.8 / 1058.7
+f4c_t5 L5 II600 grown: AR 1989.9 MTP 3173.8 MU 4239.7 / 1059.9
+f4c_t5 L5 II600 asbuilt: AR 1989.9 MTP 3101.4 MU 4109.1 / 1027.3
+f4c_t5_smhbm L5 II250 grown: AR 1944.2 MTP 3288.0 MU 4236.2 / 1059.0
+f4c_t5_smhbm L5 II250 asbuilt: AR 1944.2 MTP 3209.5 MU 4104.3 / 1026.1
+f4c_t5_smhbm L5 II600 grown: AR 1944.2 MTP 3096.7 MU 4117.8 / 1029.4
+f4c_t5_smhbm L5 II600 asbuilt: AR 1944.2 MTP 3026.9 MU 3993.0 / 998.3
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-3592357-1792398860): exit 0

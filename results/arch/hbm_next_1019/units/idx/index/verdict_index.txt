@@ -1,0 +1,19 @@
+2026-10-19T00:32:23-07:00 start host=regular-crane bundle=71e301580
+2026-10-19T00:32:24-07:00 vectors: row 0: top512 threshold score 408c, distinct from row 0: 512 row 1: top512 threshold score 405c, distinct from row 0: 482 row 2: top512 threshold score 40c7, distinct from row 0: 482 row 3: top512 threshold score 410f, distinct from row 0: 476 
+2026-10-19T00:32:24-07:00 calendar: {"F": 1397, "row_ii": 953, "pitch": 953, "binding": "selector", "spans": {"selector": {"first": 309, "last": 1261, "span": 953}, "link": {"first": 1079, "last": 1385, "span": 307}, "array": {"first": 177, "last": 482, "span": 306}, "query_unit": {"first": 0, "last": 224, "span": 225}, "operand": {"first": 0, "last": 144, "span": 145}}, "key0": 315, "tx0": 1272}
+2026-10-19T01:05:29-07:00 build hnx rc=0 bin=ok maxrss_kb=28878956
+2026-10-19T01:29:25-07:00 build d4g rc=0 bin=ok maxrss_kb=28896536
+2026-10-19T01:29:56-07:00 n1 [OK want PASS got PASS rc=0]: IDX_ROWS_CYCLES rows1 pitch953 frame1397 record_edges_last_tx1393 done1399 IDX_HNX_ROWS rows1 mutation0 scores10928 records512 flits64 errors0 fault0 faultedge-1 status0 
+2026-10-19T01:29:57-07:00 d4g_n1 [OK want PASS got PASS rc=0]: IDX_ROWS_CYCLES rows1 pitch0 frame1397 record_edges_last_tx1393 done1399 IDX_HNX_ROWS rows1 mutation0 scores10928 records512 flits64 errors0 fault0 faultedge-1 status0 
+2026-10-19T01:29:57-07:00 n1_d4gprog [OK want PASS got PASS rc=0]: IDX_ROWS_CYCLES rows1 pitch0 frame1397 record_edges_last_tx1393 done1399 IDX_HNX_ROWS rows1 mutation0 scores10928 records512 flits64 errors0 fault0 faultedge-1 status0 
+2026-10-19T01:30:11-07:00 m11 [OK want FAIL got FAIL rc=1]: SCOREBAD row1 ord0 expected3fc0 gotc0a0 SCOREBAD row1 ord1 expectedc04b gotc03f SCOREBAD row1 ord2 expected4064 gotc0ce SCOREBAD row1 ord3 expectedbfda gotc089 SCOREBAD row1 ord4 expectedc036 got3ef4 
+2026-10-19T01:30:12-07:00 m12 [OK want FAIL got FAIL rc=1]: TXBAD row1 edge2225 ord2749 gold0 seen0 TXBAD row1 edge2225 ord8208 gold0 seen0 TXBAD row1 edge2225 ord8209 gold0 seen0 TXBAD row1 edge2225 ord2756 gold0 seen0 TXBAD row1 edge2225 ord33 gold0 seen0 
+2026-10-19T01:30:15-07:00 m13 [OK want FAIL got FAIL rc=1]: IDX_ROWS_CYCLES rows2 pitch953 frame1397 record_edges_last_tx2346 done2352 IDX_HNX_ROWS rows2 mutation13 scores21856 records1024 flits128 errors2048 fault1 faultedge1269 status0 
+2026-10-19T01:30:15-07:00 n2 [OK want PASS got PASS rc=0]: IDX_ROWS_CYCLES rows2 pitch953 frame1397 record_edges_last_tx2346 done2352 IDX_HNX_ROWS rows2 mutation0 scores21856 records1024 flits128 errors0 fault0 faultedge-1 status0 
+2026-10-19T01:30:16-07:00 mstride [OK want FAIL got FAIL rc=1]: SCOREBAD row1 ord0 expected3fc0 got4075 SCOREBAD row1 ord1 expectedc04b gotbf08 SCOREBAD row1 ord2 expected4064 got4024 SCOREBAD row1 ord3 expectedbfda gotc03b SCOREBAD row1 ord4 expectedc036 got3e8c 
+2026-10-19T01:30:18-07:00 mpitch [UNEXPECTED want FAIL got PASS rc=0]: IDX_ROWS_CYCLES rows2 pitch952 frame1397 record_edges_last_tx2345 done2351 IDX_HNX_ROWS rows2 mutation0 scores21856 records1024 flits128 errors0 fault0 faultedge-1 status0 
+2026-10-19T01:30:33-07:00 n3 [OK want PASS got PASS rc=0]: IDX_ROWS_CYCLES rows3 pitch953 frame1397 record_edges_last_tx3299 done3305 IDX_HNX_ROWS rows3 mutation0 scores32784 records1536 flits192 errors0 fault0 faultedge-1 status0 
+2026-10-19T01:30:53-07:00 n4 [OK want PASS got PASS rc=0]: IDX_ROWS_CYCLES rows4 pitch953 frame1397 record_edges_last_tx4252 done4258 IDX_HNX_ROWS rows4 mutation0 scores43712 records2048 flits256 errors0 fault0 faultedge-1 status0 
+2026-10-19T01:30:53-07:00 EQUIV n1_d4gprog == d4g_n1: IDENTICAL (700 score/TX lines)
+2026-10-19T01:30:53-07:00 EQUIV n1 == d4g_n1: IDENTICAL (700 score/TX lines)
+2026-10-19T01:30:53-07:00 done

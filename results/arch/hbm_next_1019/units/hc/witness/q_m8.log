@@ -1,0 +1,90 @@
+XWAVE t=2753 word=0
+XWAVE t=2757 word=1
+XWAVE t=2761 word=2
+XWAVE t=2765 word=3
+XWAVE t=2769 word=4
+XWAVE t=2773 word=5
+XWAVE t=2777 word=6
+XWAVE t=2781 word=7
+XWAVE t=2785 word=8
+XWAVE t=2789 word=9
+XWAVE t=2793 word=10
+XWAVE t=2797 word=11
+XWAVE t=2801 word=12
+XWAVE t=2805 word=13
+XWAVE t=2809 word=14
+XWAVE t=2813 word=15
+XWAVE t=2817 word=16
+XWAVE t=2821 word=17
+XWAVE t=2825 word=18
+XWAVE t=2829 word=19
+XWAVE t=2833 word=20
+XWAVE t=2837 word=21
+XWAVE t=2841 word=22
+XWAVE t=2845 word=23
+XWAVE t=2849 word=24
+XWAVE t=2853 word=25
+XWAVE t=2857 word=26
+XWAVE t=2861 word=27
+XWAVE t=2865 word=28
+XWAVE t=2869 word=29
+XWAVE t=2873 word=30
+XWAVE t=2877 word=31
+XWAVE t=2881 word=32
+XWAVE t=2885 word=33
+XWAVE t=2889 word=34
+XWAVE t=2893 word=35
+XWAVE t=2897 word=36
+XWAVE t=2901 word=37
+XWAVE t=2905 word=38
+XWAVE t=2909 word=39
+XWAVE t=2913 word=40
+XWAVE t=2917 word=41
+XWAVE t=2921 word=42
+XWAVE t=2925 word=43
+XWAVE t=2929 word=44
+XWAVE t=2933 word=45
+XWAVE t=2937 word=46
+XWAVE t=2941 word=47
+XWAVE t=2945 word=48
+XWAVE t=2949 word=49
+XWAVE t=2953 word=50
+XWAVE t=2957 word=51
+XWAVE t=2961 word=52
+XWAVE t=2965 word=53
+XWAVE t=2969 word=54
+XWAVE t=2973 word=55
+XWAVE t=2977 word=56
+XWAVE t=2981 word=57
+XWAVE t=2985 word=58
+XWAVE t=2989 word=59
+XWAVE t=2993 word=60
+XWAVE t=2997 word=61
+XWAVE t=3001 word=62
+XWAVE t=3005 word=63
+XWAVE t=3009 word=64
+XWAVE t=3013 word=65
+XWAVE t=3017 word=66
+XWAVE t=3021 word=67
+XWAVE t=3025 word=68
+XWAVE t=3029 word=69
+XWAVE t=3033 word=70
+XWAVE t=3037 word=71
+XWAVE t=3041 word=72
+XWAVE t=3045 word=73
+XWAVE t=3049 word=74
+XWAVE t=3053 word=75
+XWAVE t=3057 word=76
+XWAVE t=3061 word=77
+XWAVE t=3065 word=78
+XWAVE t=3069 word=79
+store mismatch pos 1 sector 0
+store mismatch pos 1 sector 1
+store mismatch pos 1 sector 2
+store mismatch pos 2 sector 0
+TB_HNX_HC_Q FAIL MUT=8 XWB=4 errors=18
+- rtl/hbm_next/hc/tb/tb_hnx_hc_q.sv:153: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 7us; walltime 0.027 s; speed 275.270 us/s
+- Verilator: cpu 0.015 s on 1 threads; allocated 9 MB
+RUN_RC=0

@@ -1,0 +1,14 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/hnx-cmtp4/opt5
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/hnx-cmtp4/opt5
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/hnx-cmtp4/opt5
+ot-run: ot-epyc7       admits  1152 GB (avail 909, growth 103, headroom 0, waiters 0/0 GB) load 101/96 running 31 disk 6642 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hnx-cmtp4/opt5
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hnx-cmtp4/opt5
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-346026-1792403610 after 0 s
+mtp 0 {"emit": {"rowx_records": 77, "ok": 85, "plain_records": 8, "union_expert_in_loop": 18, "union_slot_group_copies_folded": 76, "note_att_plan_records": 4, "union_K": 7}, "errors": [], "need": 372960, "hw": 350400}
+mtp 1 {"emit": {"rowx_records": 140, "ok": 148, "plain_records": 8, "union_expert_in_loop": 18, "union_slot_group_copies_folded": 76, "note_att_plan_records": 4, "union_K": 7}, "errors": [], "need": 479360, "hw": 456800}
+mtp 2 {"emit": {"rowx_records": 87, "ok": 124, "plain_records": 37, "union_expert_in_loop": 18, "union_slot_group_copies_folded": 76, "note_att_plan_records": 4, "union_K": 7}, "errors": [], "need": 373376, "hw": 350792}
+mtp 3 {"emit": {"rowx_records": 77, "ok": 85, "plain_records": 8, "union_expert_in_loop": 18, "union_slot_group_copies_folded": 76, "note_att_plan_records": 4, "union_K": 7}, "errors": [], "need": 372960, "hw": 350400}
+mtp 14 {"emit": {"plain_records": 37, "ok": 187, "rowx_records": 150, "union_expert_in_loop": 18, "union_slot_group_copies_folded": 76, "note_att_plan_records": 4, "union_K": 7}, "errors": [], "need": 484608, "hw": 462048}
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-346026-1792403610): exit 0

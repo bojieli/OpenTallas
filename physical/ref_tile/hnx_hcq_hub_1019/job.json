@@ -1,0 +1,190 @@
+{
+ "name": "hnx_hcq_hub_1019-n2-COMMIT",
+ "block": "ot_hnx_hc_qhub",
+ "ref_tile": true,
+ "owner": "Claude:HBM-NEXT-UNITS",
+ "purpose": "HBM-NEXT P=4 HC quarter hub (hnx fork of hbm_hcq_hub_1017): hc_<q> with N-row strided residual/result addressing + quarter-engine centre",
+ "threads": 16,
+ "peak_ram_gb": 48,
+ "source": {
+  "branch": "claude/hbm-next-units-1019",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "tools/hbm_next/hnx_hc_bench.sh",
+   "rtl/hbm_next/hc",
+   "tools/rtl_hbm_hc_eng_static_gate.py",
+   "tools/hdc_golden_v41.py",
+   "tools/hdc_golden.py",
+   "tools/rtl_hdc_v41x_hcp_campaign.py",
+   "rtl/hdc",
+   "rtl/lib",
+   "rtl/hbm_accel/generic/vm/static",
+   "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+   "rtl/hbm_accel/die_glue/ot_hbm_rly.sv",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "results/arch/hbm_next_1019/units/hc/witness"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hnx_hc_qhub u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/lib/ot_rst_relay.sv rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv rtl/hbm_next/hc/ot_hnx_hgi_hc_residual_vm.sv rtl/hbm_next/hc/ot_hnx_hgi_hc_result_vm.sv rtl/hbm_next/hc/ot_hnx_hgi_hc_gathered_mix_reader.sv rtl/hbm_next/hc/ot_hnx_hc_xbrep.sv rtl/hbm_next/hc/ot_hnx_hc_q.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v rtl/hbm_next/hc/ot_hnx_hc_qhub.sv rtl/hbm_next/hc/ot_hnx_hc_qcen.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_prefix.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "hnx_hcq_exact",
+    "cmd": "bash tools/hbm_next/hnx_hc_bench.sh {RUN}/bench/q0 q0",
+    "expect": "pass",
+    "pass_regex": "HNX_HC_Q_BENCH PASS 2/2",
+    "min_count_regex": "TB_HNX_HC_Q PASS MUT=0 XWB=4 SPR=80 RNPOS=4 RSTRIDE=1024 SSTRIDE=64 waves=(\\d+)",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "hnx_hcq_mut7",
+    "cmd": "bash tools/hbm_next/hnx_hc_bench.sh {RUN}/bench/qm7 qm7",
+    "expect": "fail",
+    "pass_regex": "TB_HNX_HC_Q PASS MUT=7",
+    "fail_regex": "TB_HNX_HC_Q FAIL MUT=7 ",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "note": "residual reader ignores the row stride",
+    "fail_witness": "results/arch/hbm_next_1019/units/hc/witness/q_m7.log"
+   },
+   {
+    "name": "hnx_hcq_mut8",
+    "cmd": "bash tools/hbm_next/hnx_hc_bench.sh {RUN}/bench/qm8 qm8",
+    "expect": "fail",
+    "pass_regex": "TB_HNX_HC_Q PASS MUT=8",
+    "fail_regex": "TB_HNX_HC_Q FAIL MUT=8 ",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "note": "result store ignores the row stride",
+    "fail_witness": "results/arch/hbm_next_1019/units/hc/witness/q_m8.log"
+   },
+   {
+    "name": "hnx_hcq_mut9",
+    "cmd": "bash tools/hbm_next/hnx_hc_bench.sh {RUN}/bench/qm9 qm9",
+    "expect": "fail",
+    "pass_regex": "TB_HNX_HC_Q PASS MUT=9",
+    "fail_regex": "TB_HNX_HC_Q FAIL MUT=9 ",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "note": "HUBFIX: the E face copy of the x_wave beat-control register is a relay one edge late (every copy is checked against the original each edge)",
+    "fail_witness": "results/arch/hbm_next_1019/units/hc/witness/q_m9.log"
+   },
+   {
+    "name": "hnx_hc_ring_rows",
+    "cmd": "bash tools/hbm_next/hnx_hc_bench.sh {RUN}/bench/e0 e0",
+    "expect": "pass",
+    "pass_regex": "HNX_HC_RING MUT=0 PASS 6/6",
+    "min_count_regex": "HC_ENG_DONE mode=0 npos=4 mixes=(\\d+) mixbad=0",
+    "threads": 16,
+    "peak_ram_gb": 72,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "hnx_hc_ring_mut1",
+    "cmd": "bash tools/hbm_next/hnx_hc_bench.sh {RUN}/bench/e1 e1",
+    "expect": "fail",
+    "pass_regex": "HNX_HC_RING MUT=1 PASS",
+    "fail_regex": "HC_ENG FAIL",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "note": "quarter-0 bank 3 (ring corner) weight slice rotated",
+    "fail_witness": "results/arch/hbm_next_1019/units/hc/witness/e1_n4.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hnx_hcq_hub_1019/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hnx_hcq_hub_1019/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 48
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hnx_hcq_hub_1019 --out {RUN}/record/views/ot_hnx_hc_qhub --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/hnx_hcq_hub_1019/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/hnx_hcq_hub_1019/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/hnx_hcq_hub_1019/hnx_hcq_hub_1019-n2-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "HBM-NEXT-UNITS (P=4 next die, not a release gate): hnx fork of hbm_hcq_hub_1017, same outline/pins/macro. Delta = N-row records: hc_q programme word 79 -> 111 b ([94:79] residual row stride, [110:95] result row stride, sectors; 0 = d4g dense form), residual reader row counter (SPR slots a row, row base += stride), result store base + p*stride. No datapath change; the HC_MIX row II is the engine core (25 accumulations x K/2048 = 250 cycles a row, measured). HUBFIX 10-19 (closure job hnx_hcq_hub_1019-n1-c8a284b41 FLOORPLAN_MARGIN wire_reach: u_q.residual.x_wave_beat[1] 608 um, x_wave_beat[0] 549 um, x_wave_v 530 um from the N/E face pins -- ONE beat-control register fanned to 4 faces, same in the d4g hub): four per-face copies ot_hnx_hc_xbrep (W, N, E, S) loaded on the same edge from the same next-state (zero added cycles, schedule unchanged), kept by name (route.synth_keep_modules) so opt_merge cannot fold them; the original register feeds the centre only.",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "failed_job": "hnx_hcq_hub_1019-n1-c8a284b41",
+  "failure": "FLOORPLAN_MARGIN textbook_lint wire_reach: u_q.residual.x_wave_beat[1] 608 um, x_wave_beat[0] 549 um, x_wave_v 530 um (one beat-control register fanned to the N/E/S/W face pins)",
+  "change": "rtl/hbm_next/hc/ot_hnx_hc_xbrep.sv: four per-face copies of the beat-control register (same edge, same next-state, zero added cycles), kept by name (route.synth_keep_modules); ot_hnx_hgi_hc_residual_vm / ot_hnx_hc_q XFC, ot_hnx_hc_qhub drives xb_v*/xb_beat* from the copies",
+  "bench": "hnx_hcq_exact: tb_hnx_hc_q q_n4s + q_d4g PASS with the per-edge face-copy check (Verilator 5.050, results/arch/hbm_next_1019/units/hc/witness/verdict_q_hubfix.txt, q_n4s_hubfix.log)",
+  "mutant": "hnx_hcq_mut9 (E face copy one edge late) FAIL, committed witness results/arch/hbm_next_1019/units/hc/witness/q_m9.log; mut7/mut8/ring_mut1 witnesses unchanged"
+ }
+}

@@ -1,0 +1,7 @@
+SU_ROWS_EDGES first_vm_read=1 last_vm_write=292 span=292
+SU_ROWS PASS lanes=512 store_banks=512 SRAMs=3072+8 edges=296 fill_reads=4480 vm_writes=3584 MUT=0
+- rtl/hbm_next/su/tb/tb_hnx_su_rows.sv:115: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 30.144 s; speed 113.456 ns/s
+- Verilator: cpu 28.132 s on 1 threads; allocated 317 MB
+RUN_RC=0

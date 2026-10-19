@@ -1,0 +1,24 @@
+2026-10-19T00:44:04-07:00 start host=ot-epyc5 bundle=4803b9c42
+2026-10-19T00:44:05-07:00 golden VM image rows P6 == static P6 (same records, same expected sectors)
+2026-10-19T00:44:22-07:00 build hnx_m2 bin=ok
+2026-10-19T00:44:22-07:00 build d4g_m0 bin=ok
+2026-10-19T00:44:22-07:00 build hnx_m3 bin=ok
+2026-10-19T00:44:26-07:00 build hnx_m1 bin=ok
+2026-10-19T00:44:28-07:00 build hnx_m0 bin=ok
+2026-10-19T00:44:28-07:00 t_m2 [OK want FAIL got FAIL]: IDX_TOPK_ROWS ENGINE1 MUT2 MUTH0 records20 dones9 faults11 sectors_checked139 errors3139 schedule_edges2773 
+2026-10-19T00:44:28-07:00 t_m3 [OK want FAIL got FAIL]: VM MISMATCH sector 1389 got 0000001e0000000a0000003f0000003e0000001c32b61244b9f7d5d4c0d9d0a0 expected 000000200000001e0000003f0000001c0000001432b61244b9f7d5d4c0d9d0a0 VM MISMATCH sector 13b0 got 000000140000000e000000088c211a996a694ccdf9c4f46793759e316a4c4432 expected 0000000e00000007000000068c211a996a694ccdf9c4f46793759e316a4c4432 VM MISMATCH sector 13b1 got 93f006bd182b97bdf01c9440000000200000001d000000120dfca079937786c4 expected 93f006bd182b97bdf01c94400000002000000016000000120dfca079937786c4 
+2026-10-19T00:44:28-07:00 t_hnx_P3 [OK want PASS got PASS]: IDX_TOPK_ROWS ENGINE1 MUT0 MUTH0 records20 dones18 faults2 sectors_checked113 errors0 schedule_edges2179 
+2026-10-19T00:44:28-07:00 t_d4g_P6 [OK want PASS got PASS]: IDX_TOPK_ROWS ENGINE0 MUT0 MUTH0 records20 dones18 faults2 sectors_checked139 errors0 schedule_edges5304 
+   cycles run_t_m2: m1/a_str384/r1: compiled 113 measured 113; m6/a_str384/r1: compiled 359 measured 359; m1/a_str384/r0: compiled 114 measured 114; m6/a_str387/r0: compiled 364 measured 364; m6/a_str384/r1: compiled 358 measured 358; m6/a_str392/r1: compiled 365 measured 365
+   cycles run_t_m3: m1/a_str384/r1: compiled 113 measured 113; m6/a_str384/r1: compiled 359 measured 359; m1/a_str384/r0: compiled 114 measured 114; m6/a_str387/r0: compiled 364 measured 364; m6/a_str384/r1: compiled 358 measured 358; m6/a_str392/r1: compiled 365 measured 365
+2026-10-19T00:44:28-07:00 t_hnx_P2 [OK want PASS got PASS]: IDX_TOPK_ROWS ENGINE1 MUT0 MUTH0 records20 dones18 faults2 sectors_checked104 errors0 schedule_edges1982 
+   cycles run_t_hnx_P3: m1/a_str384/r1: compiled 113 measured 113; m3/a_str384/r1: compiled 212 measured 212; m1/a_str384/r0: compiled 114 measured 114; m3/a_str387/r0: compiled 214 measured 214; m3/a_str384/r1: compiled 211 measured 211; m3/a_str392/r1: compiled 215 measured 215
+   cycles run_t_d4g_P6: m1/a_str384/r1: compiled 153 measured 153; m6/a_str384/r1: compiled 852 measured 852; m1/a_str384/r0: compiled 155 measured 155; m6/a_str387/r0: compiled 860 measured 860; m6/a_str384/r1: compiled 848 measured 848; m6/a_str392/r1: compiled 869 measured 869
+   cycles run_t_hnx_P2: m1/a_str384/r1: compiled 113 measured 113; m2/a_str384/r1: compiled 163 measured 163; m1/a_str384/r0: compiled 114 measured 114; m2/a_str387/r0: compiled 164 measured 164; m2/a_str384/r1: compiled 162 measured 162; m2/a_str392/r1: compiled 166 measured 166
+2026-10-19T00:44:28-07:00 t_m1 [OK want FAIL got FAIL]: VM MISMATCH sector 13db got 000000580000002900000055000000500000000b000000470000003b00000033 expected 00000025000000160000000b0000000600000003000000010000003b00000033 VM MISMATCH sector 1b64 got 68bf62307e8d30c9000000e7000000b20000006a000000590000001000000008 expected 68bf62307e8d30c900000110000000f6000000760000006a0000005900000008 VM MISMATCH sector 1b65 got 16fd07df1685e1600000013400000113000000ff000000d4000000b800000056 expected 16fd07df1685e1600000016e00000155000000ff000000e5000000d400000056 
+2026-10-19T00:44:28-07:00 t_hnx_P4 [OK want PASS got PASS]: IDX_TOPK_ROWS ENGINE1 MUT0 MUTH0 records20 dones18 faults2 sectors_checked122 errors0 schedule_edges2377 
+   cycles run_t_hnx_P4: m1/a_str384/r1: compiled 113 measured 113; m4/a_str384/r1: compiled 260 measured 260; m1/a_str384/r0: compiled 114 measured 114; m4/a_str387/r0: compiled 264 measured 264; m4/a_str384/r1: compiled 260 measured 260; m4/a_str392/r1: compiled 266 measured 266
+   cycles run_t_m1: m1/a_str384/r1: compiled 113 measured 113; m6/a_str384/r1: compiled 359 measured 359; m1/a_str384/r0: compiled 114 measured 114; m6/a_str387/r0: compiled 364 measured 364; m6/a_str384/r1: compiled 358 measured 358; m6/a_str392/r1: compiled 365 measured 365
+2026-10-19T00:44:28-07:00 t_hnx_P6 [OK want PASS got PASS]: IDX_TOPK_ROWS ENGINE1 MUT0 MUTH0 records20 dones18 faults2 sectors_checked139 errors0 schedule_edges2773 
+   cycles run_t_hnx_P6: m1/a_str384/r1: compiled 113 measured 113; m6/a_str384/r1: compiled 359 measured 359; m1/a_str384/r0: compiled 114 measured 114; m6/a_str387/r0: compiled 364 measured 364; m6/a_str384/r1: compiled 358 measured 358; m6/a_str392/r1: compiled 365 measured 365
+2026-10-19T00:44:28-07:00 done

@@ -1,0 +1,15 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/hnx-cmtp-1019/opt
+ot-run: ot-epyc5       admits    37 GB (avail 306, growth 280, headroom 0, waiters 6/764 GB) load 156/128 running 33 disk 1688 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hnx-cmtp-1019/opt
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hnx-cmtp-1019/opt
+ot-run: -> ot-epyc5
+ot-heavy: request 24G is charged 9G (class 'plane_compiler.py:options' measured peak 0.5G, n=1+0 proved); the cap stays 24G
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-3597560-1792398887 after 0 s
+base     die  892.1  AR  1949.7  MTP  3500.1 (verify 1285075, draft 123528)  MU4 agg  4423.1 / user  1105.8  /mm2 MTP 3.923 agg 4.958
+a        die  839.8  AR  1949.7  MTP  3500.1 (verify 1285075, draft 123528)  MU4 agg  4423.1 / user  1105.8  /mm2 MTP 4.168 agg 5.267
+a_norpl  die  839.8  AR  1949.7  MTP  3393.0 (verify 1323318, draft 129818)  MU4 agg  4423.1 / user  1105.8  /mm2 MTP 4.04 agg 5.267
+ab       die  718.7  AR  1949.7  MTP  2738.1 (verify 1647284, draft 158161)  MU4 agg  3731.9 / user   933.0  /mm2 MTP 3.81 agg 5.193
+ab_rows  die  718.7  AR  1949.7  MTP  3020.6 (verify 1485772, draft 149189)  MU4 agg  4038.8 / user  1009.7  /mm2 MTP 4.203 agg 5.62
+P3a_u3   die  743.8  AR  1949.7  MTP  3389.9 (verify 1324686, draft 129818)  MU3 agg  3861.4 / user  1287.1  /mm2 MTP 4.558 agg 5.191
+P3a_u4   die  743.8  AR  1949.7  MTP  3389.9 (verify 1324686, draft 129818)  MU4 agg  4220.2 / user  1055.1  /mm2 MTP 4.558 agg 5.674
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-3597560-1792398887): exit 0

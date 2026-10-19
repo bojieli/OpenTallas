@@ -1,0 +1,15 @@
+LANE e0 die0 q0 lane0 delivered1 first_del53 last_del53
+LANE e0 die0 q0 lane1 delivered0 first_del-4106 last_del-4106
+LANE e0 die0 q0 lane2 delivered0 first_del-4106 last_del-4106
+PARENT e0 die0 q0 first_inj_pin-4106 first_tx_pin-4106 first_rx_pin-4106 done54 done_count1
+LANE e1 die0 q1 lane0 delivered0 first_del-4106 last_del-4106
+LANE e1 die0 q1 lane1 delivered0 first_del-4106 last_del-4106
+PARENT e1 die0 q1 first_inj_pin-4106 first_tx_pin-4106 first_rx_pin-4106 done6 done_count1
+ARGMAX_ROWS_MEASURE P1 launch_to_last_delivery q3=53 positions1/1 data_err0 addr_err0 stray0 fault_first-1
+ROWGATHER_ROWS_MEASURE P1 R623 W453 launch_to_last_delivery q3=53 q2=-1 die=53 delivered1/1 data_err0 addr_err0 stray0 fault_first-1
+   ARGMAX_ROWS PASS P1 R623 W453 parents2 q3x1 q2x1
+- rtl/hbm_next/coll/tb/tb_hnx_coll_rows.sv:267: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4us; walltime 3.121 s; speed 1.336 us/s
+- Verilator: cpu 0.864 s on 1 threads; allocated 19 MB
+RUN_RC=0

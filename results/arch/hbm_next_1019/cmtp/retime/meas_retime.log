@@ -1,0 +1,30 @@
+P3a_u4  priced                                   AR  1949.7 MTP  3389.9 ( +0.00%,        +0 cyc) MU agg  4220.2 ( +0.00%) / user  1055.1
+P3a_u4  idx_index                                AR  1949.7 MTP  3287.9 ( -3.01%,    +45670 cyc) MU agg  4183.2 ( -0.88%) / user  1045.8
+P3a_u4  idx_index_abs                            AR  1949.7 MTP  3323.4 ( -1.96%,    +29454 cyc) MU agg  4210.5 ( -0.23%) / user  1052.6
+P3a_u4  idx_topk                                 AR  1949.7 MTP  3388.8 ( -0.03%,      +466 cyc) MU agg  4219.2 ( -0.02%) / user  1054.8
+P3a_u4  idx_union                                AR  1949.7 MTP  3404.0 ( +0.42%,     -6125 cyc) MU agg  4247.4 ( +0.64%) / user  1061.9
+P3a_u4  su_vop                                   AR  1949.7 MTP  3324.7 ( -1.92%,    +28846 cyc) MU agg  4167.8 ( -1.24%) / user  1041.9
+P3a_u4  kvwb                                     AR  1949.7 MTP  3389.8 ( -0.00%,       +31 cyc) MU agg  4220.2 ( +0.00%) / user  1055.1
+P3a_u4  argmax                                   AR  1949.7 MTP  3389.9 ( +0.00%,        +0 cyc) MU agg  4220.2 ( +0.00%) / user  1055.1
+P3a_u4  coll_rg                                  AR  1949.7 MTP  3466.5 ( +2.26%,    -32566 cyc) MU agg  4294.0 ( +1.75%) / user  1073.5
+P3a_u4  coll_am                                  AR  1949.7 MTP  3389.9 ( +0.00%,        +0 cyc) MU agg  4220.1 ( -0.00%) / user  1055.0
+P3a_u4  att4                                     AR  1949.7 MTP  3397.2 ( +0.22%,     -3200 cyc) MU agg  4232.1 ( +0.28%) / user  1058.0
+P3a_u4  sm4skew                                  AR  1949.7 MTP  3338.6 ( -1.51%,    +22608 cyc) MU agg  4170.9 ( -1.17%) / user  1042.7
+P3a_u4  ALL measured                             AR  1949.7 MTP  3267.6 ( -3.61%,    +55092 cyc) MU agg  4190.4 ( -0.71%) / user  1047.6
+P3a_u4  ALL measured, IDX.INDEX 953 absolute     AR  1949.7 MTP  3302.6 ( -2.58%,    +38876 cyc) MU agg  4217.8 ( -0.06%) / user  1054.4
+P3a_u3  priced                                   AR  1949.7 MTP  3389.9 ( +0.00%,        +0 cyc) MU agg  3861.4 ( +0.00%) / user  1287.1
+P3a_u3  ALL measured                             AR  1949.7 MTP  3267.6 ( -3.61%,    +55092 cyc) MU agg  3810.1 ( -1.33%) / user  1270.0
+P4a     priced                                   AR  1949.7 MTP  3500.1 ( +0.00%,        +0 cyc) MU agg  4423.1 ( +0.00%) / user  1105.8
+P4a     idx_index                                AR  1949.7 MTP  3391.5 ( -3.10%,    +45670 cyc) MU agg  4382.4 ( -0.92%) / user  1095.6
+P4a     idx_index_abs                            AR  1949.7 MTP  3429.3 ( -2.02%,    +29454 cyc) MU agg  4412.4 ( -0.24%) / user  1103.1
+P4a     idx_topk                                 AR  1949.7 MTP  3499.0 ( -0.03%,      +466 cyc) MU agg  4422.0 ( -0.02%) / user  1105.5
+P4a     idx_union                                AR  1949.7 MTP  3515.2 ( +0.43%,     -6125 cyc) MU agg  4452.9 ( +0.67%) / user  1113.2
+P4a     su_vop                                   AR  1949.7 MTP  3427.8 ( -2.07%,    +30096 cyc) MU agg  4359.5 ( -1.44%) / user  1089.9
+P4a     kvwb                                     AR  1949.7 MTP  3500.1 ( +0.00%,       +30 cyc) MU agg  4423.1 ( +0.00%) / user  1105.8
+P4a     argmax                                   AR  1949.7 MTP  3500.1 ( +0.00%,        +0 cyc) MU agg  4423.1 ( +0.00%) / user  1105.8
+P4a     coll_rg                                  AR  1949.7 MTP  3581.9 ( +2.34%,    -32566 cyc) MU agg  4504.2 ( +1.83%) / user  1126.0
+P4a     coll_am                                  AR  1949.7 MTP  3500.1 ( +0.00%,        +0 cyc) MU agg  4423.0 ( -0.00%) / user  1105.7
+P4a     att4                                     AR  1949.7 MTP  3508.0 ( +0.23%,     -3200 cyc) MU agg  4429.6 ( +0.15%) / user  1107.4
+P4a     sm4skew                                  AR  1949.7 MTP  3429.9 ( -2.01%,    +29210 cyc) MU agg  4381.1 ( -0.95%) / user  1095.3
+P4a     ALL measured                             AR  1949.7 MTP  3354.3 ( -4.17%,    +61984 cyc) MU agg  4393.9 ( -0.66%) / user  1098.5
+P4a     ALL measured, IDX.INDEX 953 absolute     AR  1949.7 MTP  3391.3 ( -3.11%,    +45768 cyc) MU agg  4424.0 ( +0.02%) / user  1106.0

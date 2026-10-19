@@ -1,0 +1,16 @@
+ot-run: ot-epyc4       admits   342 GB (avail 518, growth 278, headroom 0, waiters 0/0 GB) load 100/128 running 35 disk 490 GB 
+ot-run: ot-epyc5       admits  1386 GB (avail 1037, growth 67, headroom 0, waiters 0/0 GB) load 127/128 running 14 disk 1434 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/hnx-sudma3-1019/b6c62f23f1
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/hnx-sudma3-1019/b6c62f23f1
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/hnx-sudma3-1019/b6c62f23f1
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hnx-sudma3-1019/b6c62f23f1
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hnx-sudma3-1019/b6c62f23f1
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-2494567-1792415686 after 0 s
+HNX_SU_BANK_WS PASS checks=10760 phases=4 (defer HI0, at-once HI1, wsplit0 = d4g, collision fault) SRAMs=6
+- rtl/hbm_next/su/tb/tb_hnx_su_bank6_ws.sv:90: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 31us; walltime 0.016 s; speed 1.978 ms/s
+- Verilator: cpu 0.016 s on 1 threads; allocated 7 MB
+RC=0
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-2494567-1792415686): exit 0

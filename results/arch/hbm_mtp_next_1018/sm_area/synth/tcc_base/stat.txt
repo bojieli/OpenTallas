@@ -1,0 +1,59 @@
+
+9. Printing statistics.
+
+=== ot_hbm_accel_smh_tcc ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+   149559        - wires
+   149559        - wire bits
+    75891        - public wires
+    75891        - public wire bits
+      583        - ports
+      583        - port bits
+   124059 1.64E+04 cells
+    13499 1.18E+03   AND2x2_ASAP7_75t_R
+     3705  324.113   AND3x1_ASAP7_75t_R
+     1303  132.984   AND4x1_ASAP7_75t_R
+      776   90.513   AND5x1_ASAP7_75t_R
+        6      1.4   AO211x2_ASAP7_75t_R
+    16776 1.47E+03   AO21x1_ASAP7_75t_R
+      370   53.946   AO221x1_ASAP7_75t_R
+       61   10.673   AO222x2_ASAP7_75t_R
+      307   40.285   AO22x1_ASAP7_75t_R
+        7    1.633   AO31x2_ASAP7_75t_R
+      843   98.328   AO32x1_ASAP7_75t_R
+        5    0.729   AO33x2_ASAP7_75t_R
+       77   13.472   AOI211x1_ASAP7_75t_R
+      992  115.707   AOI21x1_ASAP7_75t_R
+        3    0.612   AOI221x1_ASAP7_75t_R
+       41    5.978   AOI22x1_ASAP7_75t_R
+      186   13.559   BUFx2_ASAP7_75t_R
+       96   36.392   DFFASRHQNx1_ASAP7_75t_R
+    26884 7.84E+03   DFFHQNx1_ASAP7_75t_R
+    22298  975.315   INVx1_ASAP7_75t_R
+     2284  299.706   MAJx2_ASAP7_75t_R
+     4218  368.991   NAND2x1_ASAP7_75t_R
+       80    12.83   NAND3x1_ASAP7_75t_R
+     8320  727.834   NOR2x1_ASAP7_75t_R
+       23    3.689   NOR3x1_ASAP7_75t_R
+     1313  153.148   OA211x2_ASAP7_75t_R
+     3187  325.265   OA21x2_ASAP7_75t_R
+        3      0.7   OA221x2_ASAP7_75t_R
+      135    23.62   OA222x2_ASAP7_75t_R
+      168   24.494   OA22x2_ASAP7_75t_R
+       12    2.624   OA31x2_ASAP7_75t_R
+       62     9.04   OA33x2_ASAP7_75t_R
+     2371  276.553   OAI21x1_ASAP7_75t_R
+     1962   286.06   OAI22x1_ASAP7_75t_R
+     2929  256.229   OR2x2_ASAP7_75t_R
+     1601  140.055   OR3x1_ASAP7_75t_R
+      514   52.459   OR4x1_ASAP7_75t_R
+      159   18.546   OR5x1_ASAP7_75t_R
+     4712  755.711   XNOR2x2_ASAP7_75t_R
+     1771  284.033   XOR2x2_ASAP7_75t_R
+
+   Chip area for module '\ot_hbm_accel_smh_tcc': 16425.055260
+     of which used for sequential elements: 7875.766080 (47.95%)
+

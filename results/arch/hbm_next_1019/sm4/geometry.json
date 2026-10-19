@@ -1,0 +1,552 @@
+{
+ "schema": "opentallas.hbm_next_1019.sm4.geometry.v1",
+ "lane": "HBM-NEXT-SM4",
+ "tile": "hnx_rp4lp4",
+ "top": "hnx_rp4lp4_flat_lp",
+ "kit": "physical/ref_tile/hnx_rp4lp4 (spec physical/hbm_next/sm4/hnx_rp4lp4_spec.json, generator tools/hbm_next/sm4/hnx_rp4lp4_kit.py)",
+ "status": "GATE 1 (--cts) running; NOT closed; CRITICAL tile (coordinator PNG review before any route)",
+ "P": 4,
+ "leaves": 2,
+ "lanes_per_leaf": 4,
+ "outline_um": {
+  "w": 889.92,
+  "h": 2160.0,
+  "area_mm2": 1.9222,
+  "aspect": 2.43
+ },
+ "hard_children": 48,
+ "hard_area_um2": 848467,
+ "hard_fill": 0.441,
+ "lane_unit": {
+  "children": "x store smh_xs p45m + block-dot smh_bdc p50 + tct p45 + 2 x tcl p45 (CLOSED d4g views)",
+  "bbox_um": [
+   336.96,
+   401.76
+  ],
+  "hard_um2": 98453
+ },
+ "clock": {
+  "form": "lp.py landed regions, multiple_cts_roots",
+  "roots": {
+   "ck_n": "N face x 444.96 (leaf 0 + row 0 + beat path)",
+   "ck_s": "S face x 444.96 (leaf 1 + row 1 + land_s + gout)"
+  },
+  "landings": "bin_l -> land_s 2,069 b, leaf-0 gather 50 b, pass-through gather 100 b (D4, E=K=2, +3 edges)"
+ },
+ "pins": {
+  "W": {
+   "bin": {
+    "bits": 2069,
+    "span_um": [
+     812.076,
+     1391.148
+    ],
+    "pins_per_um": 3.57
+   },
+   "rin_n": {
+    "bits": 818,
+    "span_um": [
+     1391.436,
+     1617.612
+    ],
+    "pins_per_um": 3.62
+   },
+   "rin_s": {
+    "bits": 818,
+    "span_um": [
+     585.612,
+     811.788
+    ],
+    "pins_per_um": 3.62
+   }
+  },
+  "E": {
+   "bout": {
+    "bits": 2069,
+    "span_um": [
+     812.076,
+     1391.148
+    ],
+    "pins_per_um": 3.57
+   },
+   "rout_n": {
+    "bits": 818,
+    "span_um": [
+     1391.436,
+     1617.612
+    ],
+    "pins_per_um": 3.62
+   },
+   "rout_s": {
+    "bits": 818,
+    "span_um": [
+     585.612,
+     811.788
+    ],
+    "pins_per_um": 3.62
+   }
+  },
+  "S": {
+   "ck_s": {
+    "bits": 1,
+    "span_um": [
+     444.96,
+     444.96
+    ],
+    "pins_per_um": null
+   },
+   "gout": {
+    "bits": 200,
+    "span_um": [
+     180.972,
+     276.492
+    ],
+    "pins_per_um": 2.09
+   },
+   "xss_a1": {
+    "bits": 9,
+    "span_um": [
+     166.908,
+     170.748
+    ],
+    "pins_per_um": 2.34
+   },
+   "xss_a2": {
+    "bits": 7,
+    "span_um": [
+     171.228,
+     174.108
+    ],
+    "pins_per_um": 2.43
+   },
+   "xss_g1": {
+    "bits": 5,
+    "span_um": [
+     174.588,
+     176.508
+    ],
+    "pins_per_um": 2.6
+   },
+   "xss_g2": {
+    "bits": 5,
+    "span_um": [
+     176.988,
+     178.908
+    ],
+    "pins_per_um": 2.6
+   }
+  },
+  "N": {
+   "ck_n": {
+    "bits": 1,
+    "span_um": [
+     444.96,
+     444.96
+    ],
+    "pins_per_um": null
+   },
+   "gin": {
+    "bits": 100,
+    "span_um": [
+     180.972,
+     228.492
+    ],
+    "pins_per_um": 2.1
+   },
+   "rst_n": {
+    "bits": 1,
+    "span_um": [
+     263.532,
+     263.532
+    ],
+    "pins_per_um": null
+   },
+   "xs_a1": {
+    "bits": 9,
+    "span_um": [
+     228.972,
+     232.812
+    ],
+    "pins_per_um": 2.34
+   },
+   "xs_a2": {
+    "bits": 7,
+    "span_um": [
+     242.412,
+     245.292
+    ],
+    "pins_per_um": 2.43
+   },
+   "xs_g1": {
+    "bits": 5,
+    "span_um": [
+     237.612,
+     239.532
+    ],
+    "pins_per_um": 2.6
+   },
+   "xs_g2": {
+    "bits": 5,
+    "span_um": [
+     249.132,
+     251.052
+    ],
+    "pins_per_um": 2.6
+   }
+  }
+ },
+ "bits": {
+  "rin": 1636,
+  "rout": 1636,
+  "bin": 2069,
+  "bout": 2069,
+  "gin": 100,
+  "gout": 200,
+  "xs": 26,
+  "xss": 26,
+  "note": "identical to the d4g rp4lp tile (SM pins/bits unchanged; lane addressing in-band)"
+ },
+ "latency": {
+  "lp_offsets": {
+   "rout_n": 0,
+   "rout_s": 0,
+   "bout": 0,
+   "gout": 3
+  },
+  "lane_fanout_edges": 1,
+  "publish_merge_edges": 1,
+  "lane_slot_edges": "p x 8 (lane p)",
+  "schedule_rules": [
+   "x-write beat with a zero 13-bit beat one-hot = LANE-SELECT: data[3:0] x target mask, data[11:8] active lanes (reset lane 0)",
+   "interleaved row chunks >= P*IL = 32 cycles apart (K >= 4 beats); a lane collision on the gather is published as gf (fault)",
+   "bdc <-> BF16 column switches spaced as on d4g (G1 rule) plus the 24-cycle lane tail"
+  ]
+ },
+ "binding_frame_check": {
+  "phase1_frame_um": [
+   632,
+   1824
+  ],
+  "phase1_area_mm2": 1.153,
+  "hard_fill_in_phase1_frame": 0.736,
+  "verdict": "INFEASIBLE with 8 closed lane units: hard macros alone are 848467 um2 = 74% of the 632 x 1,824 frame (rp4lp: 35%); a 632-um width holds ONE 337-um lane unit across, so 8 units stack to >3,200 um",
+  "die_delta_mm2_at_this_outline": 304.7,
+  "levers": [
+   "(a) P=4, shared 4-lane x store hnx_xs4: ~839.8 mm2",
+   "(a)+(b) P=4 lanes on the block-dot column only, BF16 column 1 lane: ~718.7 mm2",
+   "(P3a) P=3 + shared 3-lane x store: ~743.8 mm2"
+  ]
+ },
+ "lever_table": {
+  "basis": "DIE f4c_t5 frame 693.0 mm2 at tile 630.72 x 1814.4 (1.1444 mm2); die = 693.0 + 256 x (tile - 1.1444); reticle 858, Phase-1 budget 752; tile = tile hard / 0.441 (hard fill of the gated base outline) except base (gated outline). ESTIMATES until gates measure; tok/s requested from HBM-NEXT-CMTP (lane file). Row (a) updated 10-19 02:30 from the floorplanned hnx_rp4lp4x outline.",
+  "rows": [
+   {
+    "option": "base: P=4, 8 separate closed x stores",
+    "leaf_hard_um2": 393814,
+    "tile_hard_um2": 848864,
+    "tile_mm2": 1.922,
+    "die_mm2": 892.1,
+    "fits_reticle_858": false,
+    "within_phase1_752": false,
+    "note": "GATED outline 889.92 x 2160 (gate 1 running)"
+   },
+   {
+    "option": "(a) P=4, shared 4-lane x store hnx_xs4",
+    "leaf_hard_um2": 348128,
+    "tile_hard_um2": 757493,
+    "tile_mm2": 1.446,
+    "die_mm2": 770.3,
+    "fits_reticle_858": true,
+    "within_phase1_752": false,
+    "note": "PROG-adopted base; FLOORPLANNED tile hnx_rp4lp4x 1080.0 x 1339.2 (hard fill 0.523; leaf re-packed around the face-split xs4), not yet gated (needs the closed xs4 view); was 1.718 / 839.8 by the base-fill estimate"
+   },
+   {
+    "option": "(a)+(b) P=4 lanes on the block-dot column only, BF16 column 1 lane",
+    "leaf_hard_um2": 243852,
+    "tile_hard_um2": 548940,
+    "tile_mm2": 1.245,
+    "die_mm2": 718.7,
+    "fits_reticle_858": true,
+    "within_phase1_752": true,
+    "note": "owner decision: drops BF16 multi-query lanes"
+   },
+   {
+    "option": "(P3a) P=3 + shared 3-lane x store",
+    "leaf_hard_um2": 265448,
+    "tile_hard_um2": 592131,
+    "tile_mm2": 1.343,
+    "die_mm2": 743.8,
+    "fits_reticle_858": true,
+    "within_phase1_752": true,
+    "note": "owner decision; xs3 ~0.78 x xs4 (12 macros)"
+   }
+  ]
+ },
+ "lever_a_tile": {
+  "tile": "hnx_rp4lp4x",
+  "top": "hnx_rp4lp4x_flat_lp",
+  "kit": "spec physical/hbm_next/sm4/hnx_rp4lp4x_spec.json (generator tools/hbm_next/sm4/hnx_rp4lp4x_kit.py); ref_tile gen + gate need the CLOSED hnx_xs4 view (physical/ref_tile/hnx_rp4lp4_xs4, gate --cts running; critical prefix -> coordinator review, then route)",
+  "status": "FLOORPLANNED (generator, 0 overlaps, 10.8-um halos), NOT gated: blocked on the closed xs4 view",
+  "outline_um": {
+   "w": 1080.0,
+   "h": 1339.2,
+   "area_mm2": 1.4463,
+   "aspect": 1.24
+  },
+  "leaf": {
+   "bbox_um": [
+    985.0,
+    457.92
+   ],
+   "layout": "hnx_xs4 501.12x289.44 (N: block-dot operands, W/E: BF16 operands, S: landing inputs) + 4 bdc in one row on its N face (+25.92 XREL band) + 4 BF16 lane stacks (tct + 2 tcl, d4g arrangement, 198.72 x 216) beside it: lanes 0-1 W, 2-3 E; 43.2-um operand channels"
+  },
+  "middle_band_um": 259.2,
+  "hard_children": 42,
+  "hard_area_um2": 757096,
+  "hard_fill": 0.523,
+  "die_mm2_on_f4c_t5": 770.3,
+  "frame_note": "wider than the DIE f4c_t5 slot (630.72 x 1814.4): aspect 1.24 vs 2.88. DIE must re-shape the SM slot (or SM4 re-packs the band to a narrower outline) -- input for DIE step 2",
+  "pins": {
+   "E": {
+    "bout": {
+     "bits": 2069,
+     "span_um": [
+      371.436,
+      950.508
+     ],
+     "pins_per_um": 3.57
+    },
+    "rout_n": {
+     "bits": 818,
+     "span_um": [
+      950.796,
+      1176.972
+     ],
+     "pins_per_um": 3.62
+    },
+    "rout_s": {
+     "bits": 818,
+     "span_um": [
+      144.972,
+      371.148
+     ],
+     "pins_per_um": 3.62
+    }
+   },
+   "N": {
+    "ck_n": {
+     "bits": 1,
+     "span_um": [
+      540.0,
+      540.0
+     ],
+     "pins_per_um": null
+    },
+    "gin": {
+     "bits": 100,
+     "span_um": [
+      180.972,
+      228.492
+     ],
+     "pins_per_um": 2.1
+    },
+    "rst_n": {
+     "bits": 1,
+     "span_um": [
+      263.532,
+      263.532
+     ],
+     "pins_per_um": null
+    },
+    "xs_a1": {
+     "bits": 9,
+     "span_um": [
+      228.972,
+      232.812
+     ],
+     "pins_per_um": 2.34
+    },
+    "xs_a2": {
+     "bits": 7,
+     "span_um": [
+      242.412,
+      245.292
+     ],
+     "pins_per_um": 2.43
+    },
+    "xs_g1": {
+     "bits": 5,
+     "span_um": [
+      237.612,
+      239.532
+     ],
+     "pins_per_um": 2.6
+    },
+    "xs_g2": {
+     "bits": 5,
+     "span_um": [
+      249.132,
+      251.052
+     ],
+     "pins_per_um": 2.6
+    }
+   },
+   "S": {
+    "ck_s": {
+     "bits": 1,
+     "span_um": [
+      540.0,
+      540.0
+     ],
+     "pins_per_um": null
+    },
+    "gout": {
+     "bits": 200,
+     "span_um": [
+      180.972,
+      276.492
+     ],
+     "pins_per_um": 2.09
+    },
+    "xss_a1": {
+     "bits": 9,
+     "span_um": [
+      166.908,
+      170.748
+     ],
+     "pins_per_um": 2.34
+    },
+    "xss_a2": {
+     "bits": 7,
+     "span_um": [
+      171.228,
+      174.108
+     ],
+     "pins_per_um": 2.43
+    },
+    "xss_g1": {
+     "bits": 5,
+     "span_um": [
+      174.588,
+      176.508
+     ],
+     "pins_per_um": 2.6
+    },
+    "xss_g2": {
+     "bits": 5,
+     "span_um": [
+      176.988,
+      178.908
+     ],
+     "pins_per_um": 2.6
+    }
+   },
+   "W": {
+    "bin": {
+     "bits": 2069,
+     "span_um": [
+      371.436,
+      950.508
+     ],
+     "pins_per_um": 3.57
+    },
+    "rin_n": {
+     "bits": 818,
+     "span_um": [
+      950.796,
+      1176.972
+     ],
+     "pins_per_um": 3.62
+    },
+    "rin_s": {
+     "bits": 818,
+     "span_um": [
+      144.972,
+      371.148
+     ],
+     "pins_per_um": 3.62
+    }
+   }
+  },
+  "bits": "identical to hnx_rp4lp4 / d4g rp4lp (rin/rout 1,636, bin/bout 2,069, gin 100, gout 200, xs/xss 26)",
+  "latency": "identical to hnx_rp4lp4 (lfx = lf cycle timing; lp offsets as hnx_rp4lp4_flat_lp)",
+  "risks": [
+   "hard fill 52% (base gate 44%, d4g rp4lp 35%): GRT overflow at the 43.2-um operand channels and the bdc row is the gate question",
+   "upper BF16 lane stacks take their x operands (512 b each) up the 43.2-um channel to the tcl N faces (as the d4g unit: tcl inputs on the far face)"
+  ]
+ },
+ "lever_a_narrow_tile": {
+  "tile": "hnx_rp4lp4n",
+  "top": "hnx_rp4lp4x_flat_lp (same RTL as hnx_rp4lp4x; floorplan-only variant)",
+  "kit": "spec physical/hbm_next/sm4/hnx_rp4lp4n_spec.json (generator tools/hbm_next/sm4/hnx_rp4lp4n_kit.py); ref_tile gen + gate need the CLOSED hnx_xs4 view (xs4c1/xs4c2 gates in GRT 10-19 06:15)",
+  "status": "FLOORPLANNED + overlap/10.8-halo checked (generator assert), NOT gated. PROVES the DIE ask: 673.92 wide, <= 2,203 tall, fill >= 0.51",
+  "outline_um": {
+   "w": 673.92,
+   "h": 2181.6,
+   "area_mm2": 1.4702,
+   "aspect": 3.24
+  },
+  "hard_area_um2": 757096,
+  "hard_fill": 0.515,
+  "pad_to_2203.2": {
+   "h": 2203.2,
+   "hard_fill": 0.51,
+   "note": "if DIE needs the 43.2-lattice height 51 x 43.2"
+  },
+  "leaf": {
+   "h_um": 911.52,
+   "layout": "hnx_xs4 at the band (S landing, unchanged), 4 bdc in one row on its N face (+25.92 XREL band, block-dot on the N face as now), 4 BF16 lane stacks (tct + 2 tcl, d4g arrangement) in two rows above the bdc row: lanes 0/1 W column, 2/3 E column, fed from the store's EXISTING W / E faces through 43.2-um operand channels beside the store + bdc row. xs4 face split UNCHANGED -> the xs4c1/c2 gates stay valid"
+  },
+  "middle_band_um": 237.6,
+  "margins_um": 30.24,
+  "floorplan_png": "results/arch/hbm_next_1019/sm4/floorplan/hnx_rp4lp4n_floorplan.png",
+  "pins": "identical to hnx_rp4lp4x (W/E run centred on the band, 3.57-3.62 pins/um; N/S gin/gout/xs* unchanged; ck_n/ck_s at x = W/2)",
+  "risks": [
+   "BF16 operand reach: store W/E face register -> row-2 stack ~594 um Manhattan (row 1 ~367): above the 405-um planning reach, inside the 600-750 measured repeated reach; if the gate misses on it, +1 operand station on the BF16 path (RTL, +1 cycle on the BF16 column only)",
+   "W/E edge zones (43.2 margin + 43.2 channel) carry both the tile W/E pin fan-in to the band children and the BF16 operands: judge GRT there first",
+   "empty ~190 x 458 um centre pocket above each bdc row (leaf ends, not on a link path)"
+  ],
+  "die_hint": "tile 1.4702 mm2 vs 1080x1339.2 1.4463 (+0.024 mm2/tile); DIE prices the die on its lattice"
+ },
+ "p3_tile": {
+  "tile": "hnx_rp3lp3x",
+  "owner_decision": "10-19 0le P3+(a) (supersedes P=4 for the next-release HBM die)",
+  "top": "hnx_rp3lp3x_flat_lp (lp.py from hnx_rp3lp3x_flat, rtl/hbm_next/sm/hnx_rp3lp3.sv; leaf hnx_rp4lp4_lfx #(.P(3)), store hnx_xs3)",
+  "kit": "spec physical/hbm_next/sm4/hnx_rp3lp3x_spec.json (generator tools/hbm_next/sm4/hnx_rp3lp3x_kit.py); ref_tile gen + --cts gate need the hnx_xs3 view (xs3 kit hnx_rp3lp3_xs3 --cts gate running 10-19)",
+  "status": "FLOORPLANNED (lattice + 10.8 halo asserted by the generator), NOT gated (critical: report only)",
+  "outline_um": {
+   "w": 630.72,
+   "h": 2203.2,
+   "area_mm2": 1.3896,
+   "aspect": 3.49,
+   "note": "= DIE P3 SM slot (f4c_t9p3 lever stand-in) exactly; 2 landed regional halves 630.72 x ~1,100"
+  },
+  "hard_children": 34,
+  "hard_area_um2": 690565,
+  "hard_fill": 0.497,
+  "std_area_um2_est": "45-60k (gate synthesis measures it) -> total fill ~0.53",
+  "all_children_on_43p2_lattice": true,
+  "xs3": {
+   "kit": "hnx_rp3lp3_xs3",
+   "outline_um": [
+    561.6,
+    289.44
+   ],
+   "macros": 12,
+   "macro_origins": "43.2+129.6i, 43.2+86.4j (all on 43.2)",
+   "clock": "single root N face, xs4c2 recipe"
+  },
+  "pins": {
+   "W/E": "bin/rin_n/rin_s | bout/rout_n/rout_s, 3,705 per face over y 781-1421 (5.8/um), centred on the band",
+   "N": "gin (x 21.6-40.8, aligned with gout[100+j]), xs_*, rst_n, ck_n (x 315.4)",
+   "S": "gout (x 2.4-40.8), xss_*, ck_s (x 315.4)"
+  },
+  "latency_vs_hnx_rp4lp4x": {
+   "gather pass lanes gin->gout": "+4 (NREL 2 per half)",
+   "leaf-0 lane": "+4",
+   "leaf-1 lane": "+0",
+   "other ports": "as hnx_rp4lp4x (lp record)"
+  },
+  "die_area_mm2": "767.41 (DIE t9p3 with this slot; unchanged since the outline = slot)"
+ }
+}

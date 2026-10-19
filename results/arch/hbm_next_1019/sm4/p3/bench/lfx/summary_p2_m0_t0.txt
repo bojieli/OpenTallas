@@ -1,0 +1,5 @@
+HNX_RP4LP4 P=2 MUT=0 LSKEW=8 chunks=55 words=857 sel_beats=158 lane_bad=0 stream_bad=0 coll_model=0 coll_dut=0
+  lane 0 words 428 bf16_words 200 bf16_nonzero 200 bd_nonzero 142
+  lane 1 words 429 bf16_words 200 bf16_nonzero 200 bd_nonzero 142
+PASS HNX-RP4LP4 P=2
+BENCH PASS p2_m0_t0

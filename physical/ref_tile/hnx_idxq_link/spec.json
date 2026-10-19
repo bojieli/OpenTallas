@@ -1,0 +1,360 @@
+{
+ "kind": "tile",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "layer_cap": "M5",
+ "recipe": 4,
+ "params": {},
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true,
+ "reset_landing": {
+  "enable": true,
+  "stages": 2,
+  "clock": "clk"
+ },
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "name": "hnx_idxq_link",
+ "top": "ot_hnx_idxq_link",
+ "sources": [
+  "rtl/hbm_next/idxq/ot_hnx_idxq_link.sv",
+  "rtl/hbm_next/idxn/ot_hnx_idxn_link.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v"
+ ],
+ "clock_port": "clk",
+ "outline": {
+  "w": 388.8,
+  "h": 820.8
+ },
+ "pins": {
+  "N": [
+   "clk",
+   "rst_n",
+   "clear",
+   "row_clear",
+   "in_slot",
+   "flush",
+   "emit_v",
+   "emit_group",
+   "emit_slot",
+   "rank",
+   "gbase",
+   "tx_v",
+   "tx",
+   "fault",
+   "selected_count",
+   "clk_mem"
+  ],
+  "W": [
+   "sel_v_w",
+   "sel_line_w"
+  ],
+  "E": [
+   "sel_v_e",
+   "sel_line_e"
+  ],
+  "S": []
+ },
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "h": "M4",
+   "v": "M5",
+   "group_max": 1
+  }
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "the IDXN link is the d4g pin-register shell (ot_hnx_idxn_link: one kept flop per data bit in and out); the 4-selector merge (OR of one + collision fault) sits before the shell's input flops; a synthesis wrapper would add an unpriced stage"
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "link.core.gm[0].mem",
+   "at": [
+    108.0,
+    69.12
+   ],
+   "clock_entry": {
+    "port": "clk_mem[0]",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   }
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "link.core.gm[1].mem",
+   "at": [
+    108.0,
+    146.928
+   ],
+   "at_exact": true,
+   "clock_entry": {
+    "port": "clk_mem[1]",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   }
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "link.core.gm[2].mem",
+   "at": [
+    108.0,
+    246.24
+   ],
+   "clock_entry": {
+    "port": "clk_mem[2]",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   }
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "link.core.gm[3].mem",
+   "at": [
+    108.0,
+    324.048
+   ],
+   "at_exact": true,
+   "clock_entry": {
+    "port": "clk_mem[3]",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   }
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "link.core.gm[4].mem",
+   "at": [
+    108.0,
+    423.36
+   ],
+   "clock_entry": {
+    "port": "clk_mem[4]",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   }
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "link.core.gm[5].mem",
+   "at": [
+    108.0,
+    501.168
+   ],
+   "at_exact": true,
+   "clock_entry": {
+    "port": "clk_mem[5]",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   }
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "link.core.gm[6].mem",
+   "at": [
+    108.0,
+    600.48
+   ],
+   "clock_entry": {
+    "port": "clk_mem[6]",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   }
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "link.core.gm[7].mem",
+   "at": [
+    108.0,
+    678.288
+   ],
+   "at_exact": true,
+   "clock_entry": {
+    "port": "clk_mem[7]",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   }
+  }
+ ],
+ "clock": "hybrid_entries",
+ "clock_ports": [
+  "clk",
+  "clk_mem[0]",
+  "clk_mem[1]",
+  "clk_mem[2]",
+  "clk_mem[3]",
+  "clk_mem[4]",
+  "clk_mem[5]",
+  "clk_mem[6]",
+  "clk_mem[7]"
+ ],
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk"
+   ],
+   "inputs": [
+    "rst_n",
+    "clear",
+    "row_clear",
+    "in_slot",
+    "sel_v_w",
+    "sel_line_w",
+    "sel_v_e",
+    "sel_line_e",
+    "flush",
+    "emit_v",
+    "emit_group",
+    "emit_slot",
+    "rank",
+    "gbase"
+   ],
+   "outputs": [
+    "tx_v",
+    "tx",
+    "fault",
+    "selected_count"
+   ]
+  },
+  "mem0": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_mem[0]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "mem1": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_mem[1]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "mem2": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_mem[2]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "mem3": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_mem[3]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "mem4": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_mem[4]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "mem5": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_mem[5]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "mem6": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_mem[6]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "mem7": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_mem[7]"
+   ],
+   "inputs": [],
+   "outputs": []
+  }
+ },
+ "clock_cts_roots": [
+  "clk"
+ ],
+ "inhold": false,
+ "outhold": false,
+ "job": {
+  "owner": "Claude:HBM-NEXT-UNITS",
+  "branch": "claude/hbm-next-units-idxq-1019",
+  "tag": "q1",
+  "purpose": "HBM-NEXT P=4 IDXN quad: idx_link = 4 time-shared selectors merged (2 per W/E face, 2 x 2,368 b) into the IDXN row-slot link (8 row slots in the d4g 64x512 banks); d4g hidx_link_pr macro column",
+  "benches": [],
+  "extra_paths": [
+   "rtl/hbm_next/idxq",
+   "rtl/hbm_next/idxn",
+   "tools/hbm_next/hnx_idxq_bench.sh",
+   "tools/hbm_next/hnx_idxq_vectors.py",
+   "tools/hbm_next/hnx_idxn_calendar.py"
+  ]
+ },
+ "hold_budget": "die"
+}

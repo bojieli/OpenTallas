@@ -1,0 +1,275 @@
+{
+ "mode": "synth",
+ "arith": "chunk8",
+ "heads": 8,
+ "hd": 512,
+ "window": 128,
+ "topk": 512,
+ "ncomp": 2048,
+ "lanes": 4,
+ "seed": 1019,
+ "cases": [
+  {
+   "sigma": 0.0,
+   "union_lines": 643,
+   "lane_lines": [
+    640,
+    640,
+    640,
+    640
+   ],
+   "mean_pair_topk_overlap": 1.0,
+   "union_mism": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "sm_aligned_mism": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "sm_union_lines_max": 35,
+   "sm_union_lines_mean": 32.6,
+   "sm_p1_lines_max": 128,
+   "sm_count": 20,
+   "sm32_balanced_lines_max": 24,
+   "sm32_balanced_lines_mean": 21.5,
+   "sm32_jobs": 80,
+   "sm32_run_div": 4,
+   "sm32_ideal_lines": 20.1,
+   "model_upper_ratio_U4_U1": 3.405,
+   "neg_fixsm_mism": [
+    2258,
+    2409,
+    2516,
+    2607
+   ],
+   "neg_zins_mism": [
+    2623,
+    2734,
+    2899,
+    2909
+   ],
+   "neg_rank_mism": [
+    2763,
+    2749,
+    2754,
+    2889
+   ],
+   "wall_s": 1.2
+  },
+  {
+   "sigma": 0.15,
+   "union_lines": 740,
+   "lane_lines": [
+    640,
+    640,
+    640,
+    640
+   ],
+   "mean_pair_topk_overlap": 0.8988,
+   "union_mism": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "sm_aligned_mism": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "sm_union_lines_max": 48,
+   "sm_union_lines_mean": 41.6,
+   "sm_p1_lines_max": 128,
+   "sm_count": 20,
+   "sm32_balanced_lines_max": 41,
+   "sm32_balanced_lines_mean": 35.38,
+   "sm32_jobs": 80,
+   "sm32_run_div": 4,
+   "sm32_ideal_lines": 23.1,
+   "model_upper_ratio_U4_U1": 3.405,
+   "neg_fixsm_mism": [
+    2663,
+    2710,
+    2743,
+    2563
+   ],
+   "neg_zins_mism": [
+    2677,
+    2718,
+    2780,
+    2947
+   ],
+   "neg_rank_mism": [
+    2887,
+    2799,
+    2831,
+    2909
+   ],
+   "wall_s": 1.1
+  },
+  {
+   "sigma": 0.4,
+   "union_lines": 893,
+   "lane_lines": [
+    640,
+    640,
+    640,
+    640
+   ],
+   "mean_pair_topk_overlap": 0.7507,
+   "union_mism": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "sm_aligned_mism": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "sm_union_lines_max": 80,
+   "sm_union_lines_mean": 58.6,
+   "sm_p1_lines_max": 128,
+   "sm_count": 20,
+   "sm32_balanced_lines_max": 55,
+   "sm32_balanced_lines_mean": 46.72,
+   "sm32_jobs": 52,
+   "sm32_run_div": 2,
+   "sm32_ideal_lines": 27.9,
+   "model_upper_ratio_U4_U1": 3.405,
+   "neg_fixsm_mism": [
+    2817,
+    2774,
+    2901,
+    2848
+   ],
+   "neg_zins_mism": [
+    2521,
+    2787,
+    2902,
+    2856
+   ],
+   "neg_rank_mism": [
+    2561,
+    2910,
+    2821,
+    2811
+   ],
+   "wall_s": 1.1
+  },
+  {
+   "sigma": 1.0,
+   "union_lines": 1199,
+   "lane_lines": [
+    640,
+    640,
+    640,
+    640
+   ],
+   "mean_pair_topk_overlap": 0.4867,
+   "union_mism": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "sm_aligned_mism": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "sm_union_lines_max": 93,
+   "sm_union_lines_mean": 71.7,
+   "sm_p1_lines_max": 128,
+   "sm_count": 20,
+   "sm32_balanced_lines_max": 64,
+   "sm32_balanced_lines_mean": 56.94,
+   "sm32_jobs": 85,
+   "sm32_run_div": 2,
+   "sm32_ideal_lines": 37.5,
+   "model_upper_ratio_U4_U1": 3.405,
+   "neg_fixsm_mism": [
+    2887,
+    2855,
+    2772,
+    2808
+   ],
+   "neg_zins_mism": [
+    2809,
+    2856,
+    2833,
+    2896
+   ],
+   "neg_rank_mism": [
+    2821,
+    2782,
+    2799,
+    2808
+   ],
+   "wall_s": 1.0
+  },
+  {
+   "sigma": -1,
+   "union_lines": 2179,
+   "lane_lines": [
+    640,
+    640,
+    640,
+    640
+   ],
+   "mean_pair_topk_overlap": 0.0,
+   "union_mism": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "sm_aligned_mism": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "sm_union_lines_max": 128,
+   "sm_union_lines_mean": 109.4,
+   "sm_p1_lines_max": 128,
+   "sm_count": 20,
+   "sm32_balanced_lines_max": 72,
+   "sm32_balanced_lines_mean": 69.5,
+   "sm32_jobs": 272,
+   "sm32_run_div": 4,
+   "sm32_ideal_lines": 68.1,
+   "model_upper_ratio_U4_U1": 3.405,
+   "neg_fixsm_mism": [
+    2823,
+    2720,
+    2775,
+    2747
+   ],
+   "neg_zins_mism": [
+    2774,
+    2785,
+    2878,
+    2853
+   ],
+   "neg_rank_mism": [
+    2821,
+    0,
+    0,
+    0
+   ],
+   "wall_s": 1.2
+  }
+ ],
+ "negatives_that_passed": [],
+ "verdict": "PASS"
+}

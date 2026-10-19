@@ -1,0 +1,43 @@
+{
+ "schema": "opentallas.hbm_next.su_red_rows.v1",
+ "n": 6,
+ "m": 128,
+ "row_relative": true,
+ "lat": 1,
+ "s_red": 32,
+ "s_rf": 32,
+ "edges": 985,
+ "bench_cycles": 1010,
+ "first_cmd_edge": 8,
+ "last_event_cycle": 989,
+ "cycles": 981,
+ "row_start_edges": [
+  8,
+  136,
+  274,
+  412,
+  550,
+  688
+ ],
+ "row_start_pitch": [
+  128,
+  138,
+  138,
+  138,
+  138
+ ],
+ "reducer_slots_per_quarter": [
+  858,
+  828,
+  828,
+  828
+ ],
+ "reducer_slots_per_row_q0": 143.0,
+ "red_dict_words": 144,
+ "rf_dict_words": 9,
+ "expected_scalars": 30,
+ "expected_bcast": 24,
+ "expected_drains": 96,
+ "seed": 0,
+ "golden": "hdc_golden add NumPy FP32 RNE in the compiled chain / tree / cross-quarter order"
+}

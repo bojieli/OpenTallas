@@ -1,0 +1,83 @@
+{
+ "length": 1397,
+ "historical_length": 1389,
+ "pins": "registered",
+ "pin_table": {
+  "vmq_in": 1,
+  "vmq_out": 1,
+  "vm_rt": 2,
+  "q_in": 1,
+  "q_out": 1,
+  "sel_in": 1,
+  "sel_out": 1,
+  "link_in": 1,
+  "link_out": 1
+ },
+ "score_chain": 0,
+ "calendar_shift": {
+  "vmq": 0,
+  "q": 4,
+  "s": 6,
+  "sel": 6,
+  "link": 8
+ },
+ "core_shift": {
+  "vmq": 1,
+  "q": 5,
+  "s": 6,
+  "sel": 7,
+  "link": 9
+ },
+ "gap": 100,
+ "marks": {
+  "scan_start": 305,
+  "first_key": 306,
+  "first_emit_historical": 1257
+ },
+ "predicted": {
+  "first_emit_instruction": 1265,
+  "first_tx_from_instruction0": 1269,
+  "scan_start_instruction": 311,
+  "first_key_instruction": 312,
+  "added_edges_scan_to_tx": 4,
+  "added_edges_frame": 8
+ },
+ "scope": "HBM-NEXT-UNITS-IDX row frame (ot_hnx_idx_calendar_rows): d4g programme with the selector clear moved to scan_start - 2 and a link clear before the first compaction slot",
+ "frame_length": 1397,
+ "row_ii": 953,
+ "rgap": 0,
+ "pitch": 953,
+ "binding_unit": "selector",
+ "unit_spans": {
+  "selector": {
+   "first": 309,
+   "last": 1261,
+   "span": 953
+  },
+  "link": {
+   "first": 1079,
+   "last": 1385,
+   "span": 307
+  },
+  "array": {
+   "first": 177,
+   "last": 482,
+   "span": 306
+  },
+  "query_unit": {
+   "first": 0,
+   "last": 224,
+   "span": 225
+  },
+  "operand": {
+   "first": 0,
+   "last": 144,
+   "span": 145
+  }
+ },
+ "selector_clear_instruction": 309,
+ "link_clear_instruction": 1079,
+ "first_key_edge_row0": 315,
+ "first_tx_edge_row0": 1272,
+ "cycles_formula": "record edges(N) = (N - 1) x pitch + last TX of row 0 (measured by tb_hnx_idx_rows)"
+}

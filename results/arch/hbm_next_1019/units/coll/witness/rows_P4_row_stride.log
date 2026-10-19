@@ -1,0 +1,17 @@
+ADDR_MISMATCH e0 lane0 j623 (pos1 flit0) cyc3140 got0040000000 want0040060000
+ADDR_MISMATCH e0 lane1 j623 (pos1 flit0) cyc3140 got0040009bc0 want0040069bc0
+ADDR_MISMATCH e0 lane2 j623 (pos1 flit0) cyc3140 got0040013780 want0040073780
+LANE e0 die0 q0 lane0 delivered2492 first_del491 last_del2982
+LANE e0 die0 q0 lane1 delivered2492 first_del491 last_del2982
+LANE e0 die0 q0 lane2 delivered2492 first_del491 last_del2982
+PARENT e0 die0 q0 first_inj_pin7 first_tx_pin32 first_rx_pin485 done2983 done_count1
+LANE e1 die0 q1 lane0 delivered2492 first_del491 last_del2982
+LANE e1 die0 q1 lane1 delivered2492 first_del491 last_del2982
+PARENT e1 die0 q1 first_inj_pin7 first_tx_pin32 first_rx_pin485 done2983 done_count1
+ROWGATHER_ROWS_MEASURE P4 R623 W453 launch_to_last_delivery q3=2982 q2=2982 die=2982 delivered12460/12460 data_err0 addr_err9345 stray0 fault_first-1
+ROWGATHER_ROWS FAIL P4 errors0 data0 addr9345 stray0 fault_first-1
+- rtl/hbm_next/coll/tb/tb_hnx_coll_rows.sv:267: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 5us; walltime 4.835 s; speed 1.038 us/s
+- Verilator: cpu 1.484 s on 1 threads; allocated 19 MB
+RUN_RC=0

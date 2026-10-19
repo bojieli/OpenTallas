@@ -1,0 +1,56 @@
+
+9. Printing statistics.
+
+=== ot_hbm_accel_smh_bdc ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+    57749        - wires
+    57749        - wire bits
+    16634        - public wires
+    16634        - public wire bits
+     1136        - ports
+     1136        - port bits
+    52584  7161.39 cells
+     3690  322.801   AND2x2_ASAP7_75t_R
+     2160  188.957   AND3x1_ASAP7_75t_R
+      331   33.782   AND4x1_ASAP7_75t_R
+       99   11.547   AND5x1_ASAP7_75t_R
+        2    0.467   AO211x2_ASAP7_75t_R
+     4745  415.093   AO21x1_ASAP7_75t_R
+       32    4.666   AO221x1_ASAP7_75t_R
+        1    0.175   AO222x2_ASAP7_75t_R
+       51    6.692   AO22x1_ASAP7_75t_R
+      152   17.729   AO32x1_ASAP7_75t_R
+        2    0.292   AO33x2_ASAP7_75t_R
+        6     1.05   AOI211x1_ASAP7_75t_R
+      932  108.708   AOI21x1_ASAP7_75t_R
+       29    4.228   AOI22x1_ASAP7_75t_R
+      104    7.582   BUFx2_ASAP7_75t_R
+       86   32.601   DFFASRHQNx1_ASAP7_75t_R
+    10581  3085.42   DFFHQNx1_ASAP7_75t_R
+     7825  342.266   INVx1_ASAP7_75t_R
+     2574   337.76   MAJx2_ASAP7_75t_R
+     1899  166.125   NAND2x1_ASAP7_75t_R
+      230   36.887   NAND3x1_ASAP7_75t_R
+     3332  291.483   NOR2x1_ASAP7_75t_R
+       50    8.019   NOR3x1_ASAP7_75t_R
+      332   38.724   OA211x2_ASAP7_75t_R
+     2713  276.889   OA21x2_ASAP7_75t_R
+        7    1.225   OA222x2_ASAP7_75t_R
+      206   30.035   OA22x2_ASAP7_75t_R
+        1    0.219   OA31x2_ASAP7_75t_R
+        7    1.021   OA33x2_ASAP7_75t_R
+     1610   187.79   OAI21x1_ASAP7_75t_R
+      284   41.407   OAI22x1_ASAP7_75t_R
+     1122   98.153   OR2x2_ASAP7_75t_R
+     1269  111.012   OR3x1_ASAP7_75t_R
+      517   52.765   OR4x1_ASAP7_75t_R
+       18      2.1   OR5x1_ASAP7_75t_R
+     4095  656.756   XNOR2x2_ASAP7_75t_R
+     1490  238.966   XOR2x2_ASAP7_75t_R
+
+   Chip area for module '\ot_hbm_accel_smh_bdc': 7161.389820
+     of which used for sequential elements: 3118.020480 (43.54%)
+

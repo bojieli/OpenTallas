@@ -1,0 +1,20 @@
+LANE MISMATCH cyc 5146 lane 0 dut 3000000000000 ref 3fb38fa420000
+LANE MISMATCH cyc 5146 lane 1 dut 3000000000000 ref 3accfab9e0000
+LANE MISMATCH cyc 5147 lane 0 dut 3927514d50011 ref 3000000000011
+LANE MISMATCH cyc 5147 lane 1 dut 3927514d50011 ref 3468be5fb0011
+STREAM MISMATCH cyc 5147 dut 3000000000000 model 3fb38fa420000
+LANE MISMATCH cyc 5148 lane 0 dut 3dc461bcb0022 ref 3000000000022
+STREAM MISMATCH cyc 5148 dut 3927514d50011 model 3000000000011
+STREAM MISMATCH cyc 5149 dut 3dc461bcb0022 model 3000000000022
+STREAM MISMATCH cyc 5150 dut 3000000000033 model 339a418a50033
+STREAM MISMATCH cyc 5151 dut 3ddff4a600044 model 3000000000044
+HNX_RP4LP4 P=3 MUT=2 LSKEW=8 chunks=61 words=488 sel_beats=149 lane_bad=14190 stream_bad=1383 coll_model=0 coll_dut=0
+  lane 0 words 452 bf16_words 0 bf16_nonzero 0 bd_nonzero 0
+  lane 1 words 0 bf16_words 0 bf16_nonzero 0 bd_nonzero 0
+  lane 2 words 0 bf16_words 0 bf16_nonzero 0 bd_nonzero 0
+LANE MISMATCH count=14190
+STREAM MISMATCH count=1383
+FAIL HNX-RP4LP4 P=3 MUT=2
+[11072000] %Fatal: tb_hnx_rp4lp4_leaf.sv:191: Assertion failed in tb_hnx_rp4lp4_leaf.verdict: bench failed
+%Error: rtl/hbm_next/sm/tb/tb_hnx_rp4lp4_leaf.sv:191: Verilog $stop
+Aborting...

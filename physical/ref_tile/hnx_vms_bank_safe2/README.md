@@ -1,0 +1,7 @@
+# P3 VM safe2 critical structural candidate
+
+Old gate: GRT13 overflow, hot spots at west pin faces x47.3,y190..213, then incremental GRT hung. Keep old evidence. Source RTL/bench unchanged; no data cycle added. Reset landing adds2release edges, priced at reset only. New outline475.2x280.8, 2x2 SRAMs origins(43.2,43.2),(259.2,43.2),(43.2,172.8),(259.2,172.8), one full-width standard-cell band y129.6..151.2. Total synthesized52980um2 includes49268macro =>39.7% total fill,3712std/10264band=>36%.
+
+Safe checklist before gate:1 registered inputs/outputs existing explicit RTL, reset2stage landing;2 planned local routes to centralband<405um, verify extracted reach;3 RTL unchanged, verify fanout lint;4 existing3:1capture, verify <=600ps depth;5 all four SRAMs retained, no flop memory;6 origins43.2lattice, macro pinface415pins/70.488=5.89/um, oneband/fullface externalpins<=4.5/um, aspect1.69;7 existing face/directmacro roots with five face roots besideband, verify TT/FFspread<=80, holdmargin0.03;8 static schedule unchanged, resetrelease+2 only. Automatic physical IO anchor/pads disabled so explicit registered boundaries reside in centralband; all perimeter distances to band<260um, boundary hold repaired by normal flow at0.03ns margin.
+
+REPORT ONLY: critical fork of hfd_vms_bank. No REVIEW.json or submit_exact. Gate result must include floorplan/density PNG, CTS spread, timing, utilization and GRT. Do not bind die before coordinator review and actual fit.

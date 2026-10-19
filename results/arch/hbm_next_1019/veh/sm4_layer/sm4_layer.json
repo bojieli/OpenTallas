@@ -1,0 +1,56 @@
+{
+ "schema": "opentallas.hbm_next_1019.veh.sm4_layer.v1",
+ "sim": "Verilator 5.050",
+ "points": [
+  {
+   "nchunk": 20,
+   "k": 16,
+   "p1_span": 2606,
+   "p4_span": 2630,
+   "ratio": 1.0092,
+   "delta": 24
+  },
+  {
+   "nchunk": 20,
+   "k": 4,
+   "p1_span": 686,
+   "p4_span": 710,
+   "ratio": 1.035,
+   "delta": 24
+  },
+  {
+   "nchunk": 32,
+   "k": 16,
+   "p1_span": 4142,
+   "p4_span": 4166,
+   "ratio": 1.0058,
+   "delta": 24
+  },
+  {
+   "nchunk": 32,
+   "k": 4,
+   "p1_span": 1070,
+   "p4_span": 1094,
+   "ratio": 1.0224,
+   "delta": 24
+  },
+  {
+   "nchunk": 9,
+   "k": 16,
+   "p1_span": 1198,
+   "p4_span": 1222,
+   "ratio": 1.02,
+   "delta": 24
+  },
+  {
+   "nchunk": 9,
+   "k": 4,
+   "p1_span": 334,
+   "p4_span": 358,
+   "ratio": 1.0719,
+   "delta": 24
+  }
+ ],
+ "all_pass": true,
+ "mut1_caught": true
+}

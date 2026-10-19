@@ -1,0 +1,153 @@
+{
+ "schema": "opentallas.hbm_next_1019.hc_ii.v1",
+ "model": "tools/hgi_sim/hbm_plane_model.py (D1, unchanged)",
+ "rule": "HBM-NEXT study (10-19), check (d): the HC row-speed risk.\n\nD1 prices a further HC.HC_MIX row at II 250 (HCP W256 x6 mode, measured).  The static HC engine (codex/hc-static-engine\n-1014 a35449ada, 128 MAC lanes) measured 4,385 cycles a further row (and 9,554 for one row vs the 1,160 price).\nThis re-times DS MTP (N = 6) and DS multi-user (N = P) on the UNCHANGED D1 model with the HC row II set to\nII in {250, 600, 1000, 4385} and with HC rows dropped (per-position HC records: what the compiler falls back to when\nthe row form is slower).  Gives the II a P-lane HC engine must reach.\n\n    PYTHONPATH=tools python3 results/arch/hbm_next_1019/hc_ii.py --out DIR [--jobs N]\n",
+ "hcp_ii_base": 250.0,
+ "cases": {
+  "II250": {
+   "2": {
+    "mtp_verify_cycles": 1429323.9,
+    "ds_mtp_tok_s": 3142.8,
+    "mu_step_cycles": 784246.9,
+    "mu_per_user_tok_s": 1530.1,
+    "mu_agg_tok_s": 3060.3,
+    "hc_busy_mtp": 191652.0,
+    "hc_busy_mu": 111652.0
+   },
+   "4": {
+    "mtp_verify_cycles": 1338146.6,
+    "ds_mtp_tok_s": 3363.5,
+    "mu_step_cycles": 1099570.6,
+    "mu_per_user_tok_s": 1091.3,
+    "mu_agg_tok_s": 4365.3,
+    "hc_busy_mtp": 191652.0,
+    "hc_busy_mu": 151652.0
+   },
+   "6": {
+    "mtp_verify_cycles": 1280713.3,
+    "ds_mtp_tok_s": 3519.3,
+    "mu_step_cycles": 1397058.9,
+    "mu_per_user_tok_s": 858.9,
+    "mu_agg_tok_s": 5153.7,
+    "hc_busy_mtp": 191652.0,
+    "hc_busy_mu": 191652.0
+   }
+  },
+  "II600": {
+   "2": {
+    "mtp_verify_cycles": 1502554.2,
+    "ds_mtp_tok_s": 3004.3,
+    "mu_step_cycles": 787046.9,
+    "mu_per_user_tok_s": 1524.7,
+    "mu_agg_tok_s": 3049.4,
+    "hc_busy_mtp": 331652.0,
+    "hc_busy_mu": 139652.0
+   },
+   "4": {
+    "mtp_verify_cycles": 1420385.4,
+    "ds_mtp_tok_s": 3186.8,
+    "mu_step_cycles": 1123473.1,
+    "mu_per_user_tok_s": 1068.1,
+    "mu_agg_tok_s": 4272.5,
+    "hc_busy_mtp": 331652.0,
+    "hc_busy_mu": 235652.0
+   },
+   "6": {
+    "mtp_verify_cycles": 1368338.7,
+    "ds_mtp_tok_s": 3314.5,
+    "mu_step_cycles": 1473179.7,
+    "mu_per_user_tok_s": 814.6,
+    "mu_agg_tok_s": 4887.4,
+    "hc_busy_mtp": 331652.0,
+    "hc_busy_mu": 331652.0
+   }
+  },
+  "II1000": {
+   "2": {
+    "mtp_verify_cycles": 1646554.2,
+    "ds_mtp_tok_s": 2764.7,
+    "mu_step_cycles": 803026.4,
+    "mu_per_user_tok_s": 1494.3,
+    "mu_agg_tok_s": 2988.7,
+    "hc_busy_mtp": 491652.0,
+    "hc_busy_mu": 171652.0
+   },
+   "4": {
+    "mtp_verify_cycles": 1564385.4,
+    "ds_mtp_tok_s": 2918.5,
+    "mu_step_cycles": 1209873.1,
+    "mu_per_user_tok_s": 991.8,
+    "mu_agg_tok_s": 3967.4,
+    "hc_busy_mtp": 491652.0,
+    "hc_busy_mu": 331652.0
+   },
+   "6": {
+    "mtp_verify_cycles": 1512338.7,
+    "ds_mtp_tok_s": 3025.2,
+    "mu_step_cycles": 1617179.7,
+    "mu_per_user_tok_s": 742.0,
+    "mu_agg_tok_s": 4452.2,
+    "hc_busy_mtp": 491652.0,
+    "hc_busy_mu": 491652.0
+   }
+  },
+  "II4385": {
+   "2": {
+    "mtp_verify_cycles": 2865154.2,
+    "ds_mtp_tok_s": 1650.5,
+    "mu_step_cycles": 1033427.6,
+    "mu_per_user_tok_s": 1161.2,
+    "mu_agg_tok_s": 2322.4,
+    "hc_busy_mtp": 1845652.0,
+    "hc_busy_mu": 442452.0
+   },
+   "4": {
+    "mtp_verify_cycles": 2782985.4,
+    "ds_mtp_tok_s": 1704.1,
+    "mu_step_cycles": 1941033.1,
+    "mu_per_user_tok_s": 618.2,
+    "mu_agg_tok_s": 2472.9,
+    "hc_busy_mtp": 1845652.0,
+    "hc_busy_mu": 1144052.0
+   },
+   "6": {
+    "mtp_verify_cycles": 2730938.7,
+    "ds_mtp_tok_s": 1740.0,
+    "mu_step_cycles": 2835779.7,
+    "mu_per_user_tok_s": 423.2,
+    "mu_agg_tok_s": 2539.0,
+    "hc_busy_mtp": 1845652.0,
+    "hc_busy_mu": 1845652.0
+   }
+  },
+  "noHCrows": {
+   "2": {
+    "mtp_verify_cycles": 1698980.3,
+    "ds_mtp_tok_s": 2686.6,
+    "mu_step_cycles": 808851.5,
+    "mu_per_user_tok_s": 1483.6,
+    "mu_agg_tok_s": 2967.2,
+    "hc_busy_mtp": 549900.0,
+    "hc_busy_mu": 183300.0
+   },
+   "4": {
+    "mtp_verify_cycles": 1616841.6,
+    "ds_mtp_tok_s": 2831.6,
+    "mu_step_cycles": 1241328.7,
+    "mu_per_user_tok_s": 966.7,
+    "mu_agg_tok_s": 3866.8,
+    "hc_busy_mtp": 549900.0,
+    "hc_busy_mu": 366600.0
+   },
+   "6": {
+    "mtp_verify_cycles": 1564794.9,
+    "ds_mtp_tok_s": 2932.0,
+    "mu_step_cycles": 1669635.9,
+    "mu_per_user_tok_s": 718.7,
+    "mu_agg_tok_s": 4312.3,
+    "hc_busy_mtp": 549900.0,
+    "hc_busy_mu": 549900.0
+   }
+  }
+ }
+}

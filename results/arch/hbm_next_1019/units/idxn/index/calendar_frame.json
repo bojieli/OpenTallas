@@ -1,0 +1,90 @@
+{
+ "length": 1301,
+ "historical_length": 1293,
+ "pins": "registered",
+ "pin_table": {
+  "vmq_in": 1,
+  "vmq_out": 1,
+  "vm_rt": 2,
+  "q_in": 1,
+  "q_out": 1,
+  "sel_in": 1,
+  "sel_out": 1,
+  "link_in": 1,
+  "link_out": 1
+ },
+ "score_chain": 0,
+ "calendar_shift": {
+  "vmq": 0,
+  "q": 4,
+  "s": 6,
+  "sel": 6,
+  "link": 8
+ },
+ "core_shift": {
+  "vmq": 1,
+  "q": 5,
+  "s": 6,
+  "sel": 7,
+  "link": 9
+ },
+ "gap": 4,
+ "marks": {
+  "scan_start": 209,
+  "first_key": 210,
+  "first_emit_historical": 1161
+ },
+ "predicted": {
+  "first_emit_instruction": 1169,
+  "first_tx_from_instruction0": 1173,
+  "scan_start_instruction": 215,
+  "first_key_instruction": 216,
+  "added_edges_scan_to_tx": 4,
+  "added_edges_frame": 8
+ },
+ "scope": "HBM-NEXT-UNITS-IDXN row frame (ot_hnx_idxn_calendar): d4g programme at gap G, selector clears before the first ingest, link row clear before the first compaction; rows pipelined, ONE key stream",
+ "frame_length": 1301,
+ "g2": 23,
+ "selectors": 4,
+ "streams": 8,
+ "row_ii": 232,
+ "pitch": 232,
+ "binding_unit": "array",
+ "unit_spans": {
+  "array": {
+   "first": 177,
+   "last": 408,
+   "span": 232
+  },
+  "query_unit": {
+   "first": 0,
+   "last": 224,
+   "span": 225
+  },
+  "operand": {
+   "first": 0,
+   "last": 156,
+   "span": 157
+  },
+  "link_ingest": {
+   "first": 991,
+   "last": 1165,
+   "span": 175
+  },
+  "selector": {
+   "first": 336,
+   "last": 1165,
+   "span": 830,
+   "per_row": 208
+  }
+ },
+ "moved": {
+  "sel_clear": 336,
+  "hist_clear": 337,
+  "link_clear": 983
+ },
+ "collisions_at_pitch": 0,
+ "first_key_edge_row0": 219,
+ "first_tx_edge_row0": 1176,
+ "cycles_formula": "record edges(N) = (N - 1) x pitch + last TX of row 0 (measured by tb_hnx_idxn_rows)"
+}

@@ -1,0 +1,29 @@
+ot-run: ot-epyc4       admits    11 GB (avail 213, growth 205, headroom 0, waiters 15/819 GB) load 139/128 running 39 disk 589 GB 
+ot-run: ot-epyc5       admits    60 GB (avail 359, growth 318, headroom 0, waiters 5/782 GB) load 180/128 running 47 disk 1675 GB 
+ot-run: -> ot-epyc5 (will queue: admits 60 GB < 96 GB)
+ot-heavy: waiting for memory on ot-epyc5: need 0.7 x 96 = 67 GB, admissible 69 GB: available 363 GB, growth charged 315 GB (x0.5), young 126 GB, floor 57 GB
+ot-heavy: NOT RUN: no memory on ot-epyc5 within 300 s (need 0.7 x 96 = 67 GB, admissible 53 GB: available 318 GB, growth charged 281 GB (x0.5), young 9 GB, floor 57 GB): bash out/lpx_bench.sh
+ot-run: REBALANCE: not admitted on ot-epyc5 within 300 s; placing again
+ot-run: -> ot-epyc4 (will queue: admits 29 GB < 96 GB)
+ot-heavy: waiting for memory on regular-crane: need 0.7 x 96 = 67 GB, admissible 14 GB: available 293 GB, growth charged 284 GB (x0.5), young 214 GB, floor 57 GB
+ot-heavy: NOT RUN: no memory on regular-crane within 300 s (need 0.7 x 96 = 67 GB, admissible -9 GB: available 196 GB, growth charged 202 GB (x0.5), young 95 GB, floor 57 GB): bash out/lpx_bench.sh
+ot-run: REBALANCE: not admitted on ot-epyc4 within 300 s; placing again
+ot-run: -> ot-epyc5
+ot-heavy: waiting for memory on ot-epyc5: need 0.7 x 96 = 67 GB, admissible 74 GB: available 358 GB, growth charged 306 GB (x0.5), young 76 GB, floor 57 GB
+ot-heavy: NOT RUN: no memory on ot-epyc5 within 300 s (need 0.7 x 96 = 67 GB, admissible 73 GB: available 382 GB, growth charged 330 GB (x0.5), young 144 GB, floor 57 GB): bash out/lpx_bench.sh
+ot-run: REBALANCE: not admitted on ot-epyc5 within 300 s; placing again
+ot-run: -> ot-epyc5 (will queue: admits 73 GB < 96 GB)
+ot-heavy: waiting for memory on ot-epyc5: need 0.7 x 96 = 67 GB, admissible 73 GB: available 381 GB, growth charged 330 GB (x0.5), young 143 GB, floor 57 GB
+ot-heavy: NOT RUN: no memory on ot-epyc5 within 300 s (need 0.7 x 96 = 67 GB, admissible 6 GB: available 310 GB, growth charged 305 GB (x0.5), young 67 GB, floor 57 GB): bash out/lpx_bench.sh
+ot-run: REBALANCE: not admitted on ot-epyc5 within 300 s; placing again
+ot-run: -> ot-epyc5 (will queue: admits 6 GB < 96 GB)
+ot-heavy: waiting for memory on ot-epyc5: need 0.7 x 96 = 67 GB, admissible 8 GB: available 311 GB, growth charged 305 GB (x0.5), young 67 GB, floor 57 GB
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-3856109-1792400322 after 141 s
+AUDIT PASS
+AUDIT-UNLAND FAIL (expected)
+MUT 0: LP_LOCKSTEP PASS
+MUT 1: LP_LOCKSTEP FAIL
+MUT 2: LP_LOCKSTEP FAIL
+MUT 3: LP_LOCKSTEP FAIL
+BENCH_EXIT 0
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-3856109-1792400322): exit 0

@@ -1,0 +1,15 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/hnx_sm4/src
+ot-run: ot-epyc5       admits   -56 GB (avail 296, growth 336, headroom 0, waiters 10/818 GB) load 345/128 running 55 disk 1782 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hnx_sm4/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hnx_sm4/src
+ot-run: -> ot-epyc5 (will queue: admits -56 GB < 96 GB)
+ot-heavy: waiting for memory on ot-epyc5: need 0.7 x 96 = 67 GB, admissible -57 GB: available 296 GB, growth charged 336 GB (x0.5), young 76 GB, floor 57 GB
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-2799063-1792394277 after 744 s
+AUDIT PASS
+AUDIT-UNLAND FAIL (expected)
+MUT 0: LP_LOCKSTEP PASS
+MUT 1: LP_LOCKSTEP FAIL
+MUT 2: LP_LOCKSTEP FAIL
+MUT 3: LP_LOCKSTEP FAIL
+BENCH_EXIT 0
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-2799063-1792394277): exit 0

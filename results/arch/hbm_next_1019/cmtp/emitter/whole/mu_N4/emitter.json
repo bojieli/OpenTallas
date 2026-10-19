@@ -1,0 +1,6225 @@
+{
+ "schema": "opentallas.hbm_next_1019.cmtp.emitter.v2",
+ "generated_utc": "2026-10-19T13:33:09Z",
+ "rule": "HBM-NEXT-CMTP: object-level VM allocator + HGI-1R binary record emitter (FIRST VERSION, step 2).\n\nInput: the compiled N-row programme (plane_compiler headline knobs; M.ds_compile) and its S2 timeline per layer\nsegment (static_check.schedule_segments).  The compiled records keep the AR descriptors (row 0 addresses of the AR VM\nmap) plus per-position footprints shifted by VM_OFF per position (and SLOT_OFF per union expert slot): the allocator\nturns that bookkeeping into a real VM map; the emitter writes HGI-1R bytes (isa_rows.encode) against it.\n\nALLOCATOR (per layer segment):\n  1. CLUSTERS: AR VM word ranges joined by any footprint interval and by all intervals of one descriptor (so every\n     descriptor addresses exactly one cluster; relocation is one base shift a cluster).\n  2. INSTANCES: word-level liveness as static_check C4 (a word is live from the START of its writer -- the writer\n     owns the words while it runs -- to the END of its last reader before the next write); a cluster copy's live\n     spans are merged into instances (gaps with no live word split them).\n  3. OBJECTS: the per-position copies (p = 0 .. N - 1) of one cluster whose instances overlap in time form ONE ROW\n     ARRAY: N rows at a fixed row stride (cluster size rounded up to 8 words), lifetime = the union -- so an N-row\n     record addresses row rho at base + rho x rs (ROWX rs_k).  Clusters only read in the segment (gains, tables, HC\n     rows) are CONSTANTS: one row, rs = 0 (broadcast).  The entering columns h / PRE are PINNED row arrays at VM 0\n     (live across segments).  Union expert slot j copies are separate objects (one per slot).\n  4. PLACEMENT: first-fit by start time into the address space; the high-water mark is the VM this map needs.  It is\n     >= the C4 word-level peak (C4 = lower bound: no fragmentation, no cluster granularity).\nEMITTER: every record with VM operands in clusters gets its bases relocated (row 0) and, when it carries N > 1\npositions, a ROWX (n = N, slot0 = 0, rs_k = the row stride of operand k's object or 0, SM: rpl = best_rpl, param\n[5:2] = N - 1).  Checked per record: isa_rows.check (legality), encode -> decode round trip identical, expand(): every\nrow's descriptor intervals fall inside that row of the allocated object, rows independent (R2).  AR (N = 1) is the\nidentity: no relocation, no ROWX, bytes == records.Rec.encode.\nNOT YET (next): union expert slots as the IDX.UNION + rsel CTL.LOOP form (emitted here as SKIPPED, counted), the\nIDX.UNION record itself, CTL.USERS banks for the users image, implicit engine state (fixed-address intervals no\ndescriptor names: reported, pinned at their AR address), whole-token image assembly + VEH hand-off.\n\n    PYTHONPATH=tools python3 tools/hbm_next/emitter.py --mode mtp --layers 0,1 --out DIR\n",
+ "mode": "mu",
+ "N": 4,
+ "P": 4,
+ "isa_version": "HGI-1R 1.1 (draft for the P = 4 next die, 2026-10-19: rtab 19 b, hsh, IDX.KVUNION, ATT plan mode)",
+ "segments": {
+  "0": {
+   "values": 369,
+   "objects": {
+    "pinned_column": 2,
+    "row_array": 44,
+    "shared_load": 5
+   },
+   "alloc": {
+    "pinned_words": 98336,
+    "high_water": 249984,
+    "object_bound": 233600,
+    "object_peak_at": 8454.876921675073,
+    "peak_objects": [
+     {
+      "kind": "row_array",
+      "anchor": "0|SU.VOP|attn.res_copy",
+      "rows": 4,
+      "size": 20480,
+      "need": 81920,
+      "ar": [
+       20480,
+       40960
+      ],
+      "t0": 7053.9,
+      "t1": 10379.3,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|COLL.GROUP_REDUCE_MCAST|o-group tree reduce (8 contributors) + multicast",
+      "rows": 4,
+      "size": 12288,
+      "need": 49152,
+      "ar": [
+       69952,
+       82240
+      ],
+      "t0": 7043.9,
+      "t1": 8874.4,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|SM.MATVEC|wo_b",
+      "rows": 4,
+      "size": 5120,
+      "need": 20480,
+      "ar": [
+       82240,
+       87360
+      ],
+      "t0": 8454.9,
+      "t1": 10379.3,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|HC.HC_MIX|hc_attn (mixes + Sinkhorn)",
+      "rows": 4,
+      "size": 24,
+      "need": 96,
+      "ar": [
+       41024,
+       41048
+      ],
+      "t0": 7052.9,
+      "t1": 11605.3,
+      "packed": false
+     }
+    ],
+    "method": "greedy_by_size",
+    "tries": {
+     "first_fit_by_time": 254080,
+     "greedy_by_size": 249984
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 81920
+    }
+   },
+   "c4_peak": 201734,
+   "frag_over_c4": 1.239,
+   "objects_over_c4": 1.158,
+   "aux": {
+    "users.table": [
+     329792,
+     8
+    ],
+    "union.list": [
+     329824,
+     24
+    ],
+    "union.count": [
+     329856,
+     1
+    ],
+    "union.tables": [
+     329888,
+     768
+    ],
+    "kvunion.plan.p0": [
+     330656,
+     10240
+    ],
+    "kvunion.map.p0": [
+     340896,
+     528
+    ]
+   },
+   "vm_need_words": 341440,
+   "fits": {
+    "as_built": false,
+    "grown_412k": true,
+    "vm_2p19": true
+   },
+   "emit": {
+    "rowx_records": 75,
+    "ok": 82,
+    "users_hbm_strided_operands": 1,
+    "plain_records": 7,
+    "union_expert_in_loop": 18,
+    "union_slot_group_copies_folded": 64,
+    "note_att_plan_records": 2,
+    "union_K": 7
+   },
+   "errors": [],
+   "image_bytes": 11616,
+   "livein_words": 0,
+   "livein_top": [],
+   "self_overwritten_read_words": {
+    "COLL.ALL_GATHER": 112992
+   },
+   "c4_self_overwritten": {
+    "COLL.ALL_GATHER": 260448
+   },
+   "image_sha256": "c9374658d8bde74109ba3f46ad42919d2fbae590011fe7f024c93fdf10adcf89"
+  },
+  "1": {
+   "values": 659,
+   "objects": {
+    "shared_load": 7,
+    "row_array": 57,
+    "pinned_column": 2
+   },
+   "alloc": {
+    "pinned_words": 98336,
+    "high_water": 327744,
+    "object_bound": 311360,
+    "object_peak_at": 4858.085362996176,
+    "peak_objects": [
+     {
+      "kind": "row_array",
+      "anchor": "0|SM.MATVEC|engram.wkv",
+      "rows": 4,
+      "size": 25600,
+      "need": 102400,
+      "ar": [
+       116288,
+       141888
+      ],
+      "t0": 4505.9,
+      "t1": 6692.0,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|SU.VOP|engram.hw",
+      "rows": 4,
+      "size": 20480,
+      "need": 81920,
+      "ar": [
+       20480,
+       40960
+      ],
+      "t0": 4858.1,
+      "t1": 6210.6,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|COLL.ALL_GATHER|engram.rows_gather.eg_rows",
+      "rows": 4,
+      "size": 6144,
+      "need": 24576,
+      "ar": [
+       110144,
+       116288
+      ],
+      "t0": 4496.9,
+      "t1": 5325.2,
+      "packed": false
+     },
+     {
+      "kind": "shared_load",
+      "anchor": "0|DMA.LOAD|engram.wgt",
+      "rows": 1,
+      "size": 20480,
+      "need": 20480,
+      "ar": [
+       141888,
+       162368
+      ],
+      "t0": 4507.9,
+      "t1": 5066.3,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|SU.VOP|engram.ssH",
+      "rows": 4,
+      "size": 8,
+      "need": 32,
+      "ar": [
+       168768,
+       168772
+      ],
+      "t0": 4506.9,
+      "t1": 5224.3,
+      "packed": false
+     }
+    ],
+    "method": "first_fit_by_time",
+    "tries": {
+     "first_fit_by_time": 327744,
+     "greedy_by_size": 327744
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 81920
+    }
+   },
+   "c4_peak": 295974,
+   "frag_over_c4": 1.107,
+   "objects_over_c4": 1.052,
+   "aux": {
+    "users.table": [
+     329792,
+     8
+    ],
+    "union.list": [
+     329824,
+     24
+    ],
+    "union.count": [
+     329856,
+     1
+    ],
+    "union.tables": [
+     329888,
+     768
+    ],
+    "kvunion.plan.p0": [
+     330656,
+     10240
+    ],
+    "kvunion.map.p0": [
+     340896,
+     528
+    ]
+   },
+   "vm_need_words": 341440,
+   "fits": {
+    "as_built": false,
+    "grown_412k": true,
+    "vm_2p19": true
+   },
+   "emit": {
+    "rowx_records": 138,
+    "ok": 145,
+    "users_hbm_strided_operands": 1,
+    "plain_records": 7,
+    "union_expert_in_loop": 18,
+    "union_slot_group_copies_folded": 64,
+    "note_att_plan_records": 2,
+    "union_K": 7
+   },
+   "errors": [],
+   "image_bytes": 20784,
+   "livein_words": 0,
+   "livein_top": [],
+   "self_overwritten_read_words": {
+    "COLL.ALL_GATHER": 214328
+   },
+   "c4_self_overwritten": {
+    "COLL.ALL_GATHER": 361784
+   },
+   "image_sha256": "446c075b00b7d46a01360b624b73ddc825abccd0e6c8f4c8f8d0300cec3c6f41"
+  },
+  "2": {
+   "values": 533,
+   "objects": {
+    "row_array": 51,
+    "pinned_column": 2,
+    "shared_load": 5
+   },
+   "alloc": {
+    "pinned_words": 98336,
+    "high_water": 250376,
+    "object_bound": 233992,
+    "object_peak_at": 30498.13347075246,
+    "peak_objects": [
+     {
+      "kind": "row_array",
+      "anchor": "0|SU.VOP|attn.res_copy",
+      "rows": 4,
+      "size": 20480,
+      "need": 81920,
+      "ar": [
+       20480,
+       40960
+      ],
+      "t0": 6896.2,
+      "t1": 32422.6,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|COLL.GROUP_REDUCE_MCAST|o-group tree reduce (8 contributors) + multicast",
+      "rows": 4,
+      "size": 12288,
+      "need": 49152,
+      "ar": [
+       69952,
+       82240
+      ],
+      "t0": 29087.2,
+      "t1": 30917.6,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|SM.MATVEC|wo_b",
+      "rows": 4,
+      "size": 5120,
+      "need": 20480,
+      "ar": [
+       82240,
+       87360
+      ],
+      "t0": 30498.1,
+      "t1": 32422.6,
+      "packed": false
+     },
+     {
+      "kind": "shared_load",
+      "anchor": "0|DMA.LOAD|route.bias",
+      "rows": 1,
+      "size": 384,
+      "need": 384,
+      "ar": [
+       87744,
+       88128
+      ],
+      "t0": 6901.2,
+      "t1": 35902.7,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|HC.HC_MIX|hc_attn (mixes + Sinkhorn)",
+      "rows": 4,
+      "size": 24,
+      "need": 96,
+      "ar": [
+       41024,
+       41048
+      ],
+      "t0": 6895.2,
+      "t1": 33648.5,
+      "packed": false
+     },
+     {
+      "kind": "shared_load",
+      "anchor": "0|DMA.LOAD|route.one",
+      "rows": 1,
+      "size": 8,
+      "need": 8,
+      "ar": [
+       88768,
+       88775
+      ],
+      "t0": 6905.2,
+      "t1": 38231.0,
+      "packed": false
+     }
+    ],
+    "method": "greedy_by_size",
+    "tries": {
+     "first_fit_by_time": 274720,
+     "greedy_by_size": 250376
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 81920
+    }
+   },
+   "c4_peak": 184012,
+   "frag_over_c4": 1.361,
+   "objects_over_c4": 1.272,
+   "aux": {
+    "users.table": [
+     329792,
+     8
+    ],
+    "union.list": [
+     329824,
+     24
+    ],
+    "union.count": [
+     329856,
+     1
+    ],
+    "union.tables": [
+     329888,
+     768
+    ],
+    "kvunion.plan.p0": [
+     330656,
+     10240
+    ],
+    "kvunion.map.p0": [
+     340896,
+     528
+    ]
+   },
+   "vm_need_words": 341440,
+   "fits": {
+    "as_built": false,
+    "grown_412k": true,
+    "vm_2p19": true
+   },
+   "emit": {
+    "rowx_records": 85,
+    "ok": 121,
+    "plain_records": 36,
+    "users_idx_key_store_strides": 1,
+    "users_hbm_strided_operands": 3,
+    "union_expert_in_loop": 18,
+    "union_slot_group_copies_folded": 64,
+    "note_att_plan_records": 2,
+    "union_K": 7
+   },
+   "errors": [],
+   "image_bytes": 13616,
+   "livein_words": 0,
+   "livein_top": [],
+   "self_overwritten_read_words": {
+    "COLL.ALL_GATHER": 133392
+   },
+   "c4_self_overwritten": {
+    "COLL.ALL_GATHER": 280848
+   },
+   "image_sha256": "406cbc783674f5f5a11a5db1c68352215168b7d723beb83ba99eb75aee26f535"
+  },
+  "3": {
+   "values": 369,
+   "objects": {
+    "pinned_column": 2,
+    "row_array": 44,
+    "shared_load": 5
+   },
+   "alloc": {
+    "pinned_words": 98336,
+    "high_water": 249984,
+    "object_bound": 233600,
+    "object_peak_at": 10244.79063785239,
+    "peak_objects": [
+     {
+      "kind": "row_array",
+      "anchor": "0|SU.VOP|attn.res_copy",
+      "rows": 4,
+      "size": 20480,
+      "need": 81920,
+      "ar": [
+       20480,
+       40960
+      ],
+      "t0": 8843.8,
+      "t1": 12169.2,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|COLL.GROUP_REDUCE_MCAST|o-group tree reduce (8 contributors) + multicast",
+      "rows": 4,
+      "size": 12288,
+      "need": 49152,
+      "ar": [
+       69952,
+       82240
+      ],
+      "t0": 8833.8,
+      "t1": 10664.3,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|SM.MATVEC|wo_b",
+      "rows": 4,
+      "size": 5120,
+      "need": 20480,
+      "ar": [
+       82240,
+       87360
+      ],
+      "t0": 10244.8,
+      "t1": 12169.2,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|HC.HC_MIX|hc_attn (mixes + Sinkhorn)",
+      "rows": 4,
+      "size": 24,
+      "need": 96,
+      "ar": [
+       41024,
+       41048
+      ],
+      "t0": 8842.8,
+      "t1": 13395.2,
+      "packed": false
+     }
+    ],
+    "method": "greedy_by_size",
+    "tries": {
+     "first_fit_by_time": 258112,
+     "greedy_by_size": 249984
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 81920
+    }
+   },
+   "c4_peak": 201734,
+   "frag_over_c4": 1.239,
+   "objects_over_c4": 1.158,
+   "aux": {
+    "users.table": [
+     329792,
+     8
+    ],
+    "union.list": [
+     329824,
+     24
+    ],
+    "union.count": [
+     329856,
+     1
+    ],
+    "union.tables": [
+     329888,
+     768
+    ],
+    "kvunion.plan.p0": [
+     330656,
+     10240
+    ],
+    "kvunion.map.p0": [
+     340896,
+     528
+    ]
+   },
+   "vm_need_words": 341440,
+   "fits": {
+    "as_built": false,
+    "grown_412k": true,
+    "vm_2p19": true
+   },
+   "emit": {
+    "rowx_records": 75,
+    "ok": 82,
+    "users_hbm_strided_operands": 1,
+    "plain_records": 7,
+    "union_expert_in_loop": 18,
+    "union_slot_group_copies_folded": 64,
+    "note_att_plan_records": 2,
+    "union_K": 7
+   },
+   "errors": [],
+   "image_bytes": 11680,
+   "livein_words": 0,
+   "livein_top": [],
+   "self_overwritten_read_words": {
+    "COLL.ALL_GATHER": 112992
+   },
+   "c4_self_overwritten": {
+    "COLL.ALL_GATHER": 260448
+   },
+   "image_sha256": "95c39cfc23b3e62c1d0b8ee356bcbfa873c1b2cfb8fac798e733850b7d77a382"
+  },
+  "4": {
+   "values": 369,
+   "objects": {
+    "pinned_column": 2,
+    "row_array": 44,
+    "shared_load": 5
+   },
+   "alloc": {
+    "pinned_words": 98336,
+    "high_water": 249984,
+    "object_bound": 233600,
+    "object_peak_at": 10244.79063785239,
+    "peak_objects": [
+     {
+      "kind": "row_array",
+      "anchor": "0|SU.VOP|attn.res_copy",
+      "rows": 4,
+      "size": 20480,
+      "need": 81920,
+      "ar": [
+       20480,
+       40960
+      ],
+      "t0": 8843.8,
+      "t1": 12169.2,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|COLL.GROUP_REDUCE_MCAST|o-group tree reduce (8 contributors) + multicast",
+      "rows": 4,
+      "size": 12288,
+      "need": 49152,
+      "ar": [
+       69952,
+       82240
+      ],
+      "t0": 8833.8,
+      "t1": 10664.3,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|SM.MATVEC|wo_b",
+      "rows": 4,
+      "size": 5120,
+      "need": 20480,
+      "ar": [
+       82240,
+       87360
+      ],
+      "t0": 10244.8,
+      "t1": 12169.2,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|HC.HC_MIX|hc_attn (mixes + Sinkhorn)",
+      "rows": 4,
+      "size": 24,
+      "need": 96,
+      "ar": [
+       41024,
+       41048
+      ],
+      "t0": 8842.8,
+      "t1": 13395.2,
+      "packed": false
+     }
+    ],
+    "method": "greedy_by_size",
+    "tries": {
+     "first_fit_by_time": 258112,
+     "greedy_by_size": 249984
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 81920
+    }
+   },
+   "c4_peak": 201734,
+   "frag_over_c4": 1.239,
+   "objects_over_c4": 1.158,
+   "aux": {
+    "users.table": [
+     329792,
+     8
+    ],
+    "union.list": [
+     329824,
+     24
+    ],
+    "union.count": [
+     329856,
+     1
+    ],
+    "union.tables": [
+     329888,
+     768
+    ],
+    "kvunion.plan.p0": [
+     330656,
+     10240
+    ],
+    "kvunion.map.p0": [
+     340896,
+     528
+    ]
+   },
+   "vm_need_words": 341440,
+   "fits": {
+    "as_built": false,
+    "grown_412k": true,
+    "vm_2p19": true
+   },
+   "emit": {
+    "rowx_records": 75,
+    "ok": 82,
+    "users_hbm_strided_operands": 1,
+    "plain_records": 7,
+    "union_expert_in_loop": 18,
+    "union_slot_group_copies_folded": 64,
+    "note_att_plan_records": 2,
+    "union_K": 7
+   },
+   "errors": [],
+   "image_bytes": 11680,
+   "livein_words": 0,
+   "livein_top": [],
+   "self_overwritten_read_words": {
+    "COLL.ALL_GATHER": 112992
+   },
+   "c4_self_overwritten": {
+    "COLL.ALL_GATHER": 260448
+   },
+   "image_sha256": "a889bbada24cbcba790b6cc7d6f2e17b9d96e06eab2e7c38e2cb8ab45d135076"
+  },
+  "5": {
+   "values": 369,
+   "objects": {
+    "pinned_column": 2,
+    "row_array": 44,
+    "shared_load": 5
+   },
+   "alloc": {
+    "pinned_words": 98336,
+    "high_water": 249984,
+    "object_bound": 233600,
+    "object_peak_at": 10244.79063785239,
+    "peak_objects": [
+     {
+      "kind": "row_array",
+      "anchor": "0|SU.VOP|attn.res_copy",
+      "rows": 4,
+      "size": 20480,
+      "need": 81920,
+      "ar": [
+       20480,
+       40960
+      ],
+      "t0": 8843.8,
+      "t1": 12169.2,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|COLL.GROUP_REDUCE_MCAST|o-group tree reduce (8 contributors) + multicast",
+      "rows": 4,
+      "size": 12288,
+      "need": 49152,
+      "ar": [
+       69952,
+       82240
+      ],
+      "t0": 8833.8,
+      "t1": 10664.3,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|SM.MATVEC|wo_b",
+      "rows": 4,
+      "size": 5120,
+      "need": 20480,
+      "ar": [
+       82240,
+       87360
+      ],
+      "t0": 10244.8,
+      "t1": 12169.2,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|HC.HC_MIX|hc_attn (mixes + Sinkhorn)",
+      "rows": 4,
+      "size": 24,
+      "need": 96,
+      "ar": [
+       41024,
+       41048
+      ],
+      "t0": 8842.8,
+      "t1": 13395.2,
+      "packed": false
+     }
+    ],
+    "method": "greedy_by_size",
+    "tries": {
+     "first_fit_by_time": 258112,
+     "greedy_by_size": 249984
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 81920
+    }
+   },
+   "c4_peak": 201734,
+   "frag_over_c4": 1.239,
+   "objects_over_c4": 1.158,
+   "aux": {
+    "users.table": [
+     329792,
+     8
+    ],
+    "union.list": [
+     329824,
+     24
+    ],
+    "union.count": [
+     329856,
+     1
+    ],
+    "union.tables": [
+     329888,
+     768
+    ],
+    "kvunion.plan.p0": [
+     330656,
+     10240
+    ],
+    "kvunion.map.p0": [
+     340896,
+     528
+    ]
+   },
+   "vm_need_words": 341440,
+   "fits": {
+    "as_built": false,
+    "grown_412k": true,
+    "vm_2p19": true
+   },
+   "emit": {
+    "rowx_records": 75,
+    "ok": 82,
+    "users_hbm_strided_operands": 1,
+    "plain_records": 7,
+    "union_expert_in_loop": 18,
+    "union_slot_group_copies_folded": 64,
+    "note_att_plan_records": 2,
+    "union_K": 7
+   },
+   "errors": [],
+   "image_bytes": 11680,
+   "livein_words": 0,
+   "livein_top": [],
+   "self_overwritten_read_words": {
+    "COLL.ALL_GATHER": 112992
+   },
+   "c4_self_overwritten": {
+    "COLL.ALL_GATHER": 260448
+   },
+   "image_sha256": "527b7b5b0444c5aff77cdd6d89280cecc14ab188730ac44b7d2adc6a57e08e26"
+  },
+  "6": {
+   "values": 369,
+   "objects": {
+    "pinned_column": 2,
+    "row_array": 44,
+    "shared_load": 5
+   },
+   "alloc": {
+    "pinned_words": 98336,
+    "high_water": 249984,
+    "object_bound": 233600,
+    "object_peak_at": 10244.79063785239,
+    "peak_objects": [
+     {
+      "kind": "row_array",
+      "anchor": "0|SU.VOP|attn.res_copy",
+      "rows": 4,
+      "size": 20480,
+      "need": 81920,
+      "ar": [
+       20480,
+       40960
+      ],
+      "t0": 8843.8,
+      "t1": 12169.2,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|COLL.GROUP_REDUCE_MCAST|o-group tree reduce (8 contributors) + multicast",
+      "rows": 4,
+      "size": 12288,
+      "need": 49152,
+      "ar": [
+       69952,
+       82240
+      ],
+      "t0": 8833.8,
+      "t1": 10664.3,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|SM.MATVEC|wo_b",
+      "rows": 4,
+      "size": 5120,
+      "need": 20480,
+      "ar": [
+       82240,
+       87360
+      ],
+      "t0": 10244.8,
+      "t1": 12169.2,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|HC.HC_MIX|hc_attn (mixes + Sinkhorn)",
+      "rows": 4,
+      "size": 24,
+      "need": 96,
+      "ar": [
+       41024,
+       41048
+      ],
+      "t0": 8842.8,
+      "t1": 13395.2,
+      "packed": false
+     }
+    ],
+    "method": "greedy_by_size",
+    "tries": {
+     "first_fit_by_time": 258112,
+     "greedy_by_size": 249984
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 81920
+    }
+   },
+   "c4_peak": 201734,
+   "frag_over_c4": 1.239,
+   "objects_over_c4": 1.158,
+   "aux": {
+    "users.table": [
+     329792,
+     8
+    ],
+    "union.list": [
+     329824,
+     24
+    ],
+    "union.count": [
+     329856,
+     1
+    ],
+    "union.tables": [
+     329888,
+     768
+    ],
+    "kvunion.plan.p0": [
+     330656,
+     10240
+    ],
+    "kvunion.map.p0": [
+     340896,
+     528
+    ]
+   },
+   "vm_need_words": 341440,
+   "fits": {
+    "as_built": false,
+    "grown_412k": true,
+    "vm_2p19": true
+   },
+   "emit": {
+    "rowx_records": 75,
+    "ok": 82,
+    "users_hbm_strided_operands": 1,
+    "plain_records": 7,
+    "union_expert_in_loop": 18,
+    "union_slot_group_copies_folded": 64,
+    "note_att_plan_records": 2,
+    "union_K": 7
+   },
+   "errors": [],
+   "image_bytes": 11680,
+   "livein_words": 0,
+   "livein_top": [],
+   "self_overwritten_read_words": {
+    "COLL.ALL_GATHER": 112992
+   },
+   "c4_self_overwritten": {
+    "COLL.ALL_GATHER": 260448
+   },
+   "image_sha256": "99e038f3affd4b5b0442827f348231ba2325d712c67620d2321225d2a501f935"
+  },
+  "7": {
+   "values": 369,
+   "objects": {
+    "pinned_column": 2,
+    "row_array": 44,
+    "shared_load": 5
+   },
+   "alloc": {
+    "pinned_words": 98336,
+    "high_water": 249984,
+    "object_bound": 233600,
+    "object_peak_at": 10244.79063785239,
+    "peak_objects": [
+     {
+      "kind": "row_array",
+      "anchor": "0|SU.VOP|attn.res_copy",
+      "rows": 4,
+      "size": 20480,
+      "need": 81920,
+      "ar": [
+       20480,
+       40960
+      ],
+      "t0": 8843.8,
+      "t1": 12169.2,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|COLL.GROUP_REDUCE_MCAST|o-group tree reduce (8 contributors) + multicast",
+      "rows": 4,
+      "size": 12288,
+      "need": 49152,
+      "ar": [
+       69952,
+       82240
+      ],
+      "t0": 8833.8,
+      "t1": 10664.3,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|SM.MATVEC|wo_b",
+      "rows": 4,
+      "size": 5120,
+      "need": 20480,
+      "ar": [
+       82240,
+       87360
+      ],
+      "t0": 10244.8,
+      "t1": 12169.2,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|HC.HC_MIX|hc_attn (mixes + Sinkhorn)",
+      "rows": 4,
+      "size": 24,
+      "need": 96,
+      "ar": [
+       41024,
+       41048
+      ],
+      "t0": 8842.8,
+      "t1": 13395.2,
+      "packed": false
+     }
+    ],
+    "method": "greedy_by_size",
+    "tries": {
+     "first_fit_by_time": 258112,
+     "greedy_by_size": 249984
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 81920
+    }
+   },
+   "c4_peak": 201734,
+   "frag_over_c4": 1.239,
+   "objects_over_c4": 1.158,
+   "aux": {
+    "users.table": [
+     329792,
+     8
+    ],
+    "union.list": [
+     329824,
+     24
+    ],
+    "union.count": [
+     329856,
+     1
+    ],
+    "union.tables": [
+     329888,
+     768
+    ],
+    "kvunion.plan.p0": [
+     330656,
+     10240
+    ],
+    "kvunion.map.p0": [
+     340896,
+     528
+    ]
+   },
+   "vm_need_words": 341440,
+   "fits": {
+    "as_built": false,
+    "grown_412k": true,
+    "vm_2p19": true
+   },
+   "emit": {
+    "rowx_records": 75,
+    "ok": 82,
+    "users_hbm_strided_operands": 1,
+    "plain_records": 7,
+    "union_expert_in_loop": 18,
+    "union_slot_group_copies_folded": 64,
+    "note_att_plan_records": 2,
+    "union_K": 7
+   },
+   "errors": [],
+   "image_bytes": 11680,
+   "livein_words": 0,
+   "livein_top": [],
+   "self_overwritten_read_words": {
+    "COLL.ALL_GATHER": 112992
+   },
+   "c4_self_overwritten": {
+    "COLL.ALL_GATHER": 260448
+   },
+   "image_sha256": "60ada4da7517bef09c9fb098d3e8d756413f4840214841f950659454c9b956a8"
+  },
+  "8": {
+   "values": 533,
+   "objects": {
+    "row_array": 51,
+    "pinned_column": 2,
+    "shared_load": 5
+   },
+   "alloc": {
+    "pinned_words": 98336,
+    "high_water": 250376,
+    "object_bound": 233992,
+    "object_peak_at": 30498.13347075246,
+    "peak_objects": [
+     {
+      "kind": "row_array",
+      "anchor": "0|SU.VOP|attn.res_copy",
+      "rows": 4,
+      "size": 20480,
+      "need": 81920,
+      "ar": [
+       20480,
+       40960
+      ],
+      "t0": 6896.2,
+      "t1": 32422.6,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|COLL.GROUP_REDUCE_MCAST|o-group tree reduce (8 contributors) + multicast",
+      "rows": 4,
+      "size": 12288,
+      "need": 49152,
+      "ar": [
+       69952,
+       82240
+      ],
+      "t0": 29087.2,
+      "t1": 30917.6,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|SM.MATVEC|wo_b",
+      "rows": 4,
+      "size": 5120,
+      "need": 20480,
+      "ar": [
+       82240,
+       87360
+      ],
+      "t0": 30498.1,
+      "t1": 32422.6,
+      "packed": false
+     },
+     {
+      "kind": "shared_load",
+      "anchor": "0|DMA.LOAD|route.bias",
+      "rows": 1,
+      "size": 384,
+      "need": 384,
+      "ar": [
+       87744,
+       88128
+      ],
+      "t0": 6901.2,
+      "t1": 35902.7,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|HC.HC_MIX|hc_attn (mixes + Sinkhorn)",
+      "rows": 4,
+      "size": 24,
+      "need": 96,
+      "ar": [
+       41024,
+       41048
+      ],
+      "t0": 6895.2,
+      "t1": 33648.5,
+      "packed": false
+     },
+     {
+      "kind": "shared_load",
+      "anchor": "0|DMA.LOAD|route.one",
+      "rows": 1,
+      "size": 8,
+      "need": 8,
+      "ar": [
+       88768,
+       88775
+      ],
+      "t0": 6905.2,
+      "t1": 38231.0,
+      "packed": false
+     }
+    ],
+    "method": "greedy_by_size",
+    "tries": {
+     "first_fit_by_time": 274720,
+     "greedy_by_size": 250376
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 81920
+    }
+   },
+   "c4_peak": 184012,
+   "frag_over_c4": 1.361,
+   "objects_over_c4": 1.272,
+   "aux": {
+    "users.table": [
+     329792,
+     8
+    ],
+    "union.list": [
+     329824,
+     24
+    ],
+    "union.count": [
+     329856,
+     1
+    ],
+    "union.tables": [
+     329888,
+     768
+    ],
+    "kvunion.plan.p0": [
+     330656,
+     10240
+    ],
+    "kvunion.map.p0": [
+     340896,
+     528
+    ]
+   },
+   "vm_need_words": 341440,
+   "fits": {
+    "as_built": false,
+    "grown_412k": true,
+    "vm_2p19": true
+   },
+   "emit": {
+    "rowx_records": 85,
+    "ok": 121,
+    "plain_records": 36,
+    "users_idx_key_store_strides": 1,
+    "users_hbm_strided_operands": 3,
+    "union_expert_in_loop": 18,
+    "union_slot_group_copies_folded": 64,
+    "note_att_plan_records": 2,
+    "union_K": 7
+   },
+   "errors": [],
+   "image_bytes": 13616,
+   "livein_words": 0,
+   "livein_top": [],
+   "self_overwritten_read_words": {
+    "COLL.ALL_GATHER": 133392
+   },
+   "c4_self_overwritten": {
+    "COLL.ALL_GATHER": 280848
+   },
+   "image_sha256": "911cc641c371f12b4ae9a2f5ad7001bcf125effc767326a504693b9d2fe9820c"
+  },
+  "9": {
+   "values": 369,
+   "objects": {
+    "pinned_column": 2,
+    "row_array": 44,
+    "shared_load": 5
+   },
+   "alloc": {
+    "pinned_words": 98336,
+    "high_water": 249984,
+    "object_bound": 233600,
+    "object_peak_at": 10244.79063785239,
+    "peak_objects": [
+     {
+      "kind": "row_array",
+      "anchor": "0|SU.VOP|attn.res_copy",
+      "rows": 4,
+      "size": 20480,
+      "need": 81920,
+      "ar": [
+       20480,
+       40960
+      ],
+      "t0": 8843.8,
+      "t1": 12169.2,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|COLL.GROUP_REDUCE_MCAST|o-group tree reduce (8 contributors) + multicast",
+      "rows": 4,
+      "size": 12288,
+      "need": 49152,
+      "ar": [
+       69952,
+       82240
+      ],
+      "t0": 8833.8,
+      "t1": 10664.3,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|SM.MATVEC|wo_b",
+      "rows": 4,
+      "size": 5120,
+      "need": 20480,
+      "ar": [
+       82240,
+       87360
+      ],
+      "t0": 10244.8,
+      "t1": 12169.2,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|HC.HC_MIX|hc_attn (mixes + Sinkhorn)",
+      "rows": 4,
+      "size": 24,
+      "need": 96,
+      "ar": [
+       41024,
+       41048
+      ],
+      "t0": 8842.8,
+      "t1": 13395.2,
+      "packed": false
+     }
+    ],
+    "method": "greedy_by_size",
+    "tries": {
+     "first_fit_by_time": 258112,
+     "greedy_by_size": 249984
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 81920
+    }
+   },
+   "c4_peak": 201734,
+   "frag_over_c4": 1.239,
+   "objects_over_c4": 1.158,
+   "aux": {
+    "users.table": [
+     329792,
+     8
+    ],
+    "union.list": [
+     329824,
+     24
+    ],
+    "union.count": [
+     329856,
+     1
+    ],
+    "union.tables": [
+     329888,
+     768
+    ],
+    "kvunion.plan.p0": [
+     330656,
+     10240
+    ],
+    "kvunion.map.p0": [
+     340896,
+     528
+    ]
+   },
+   "vm_need_words": 341440,
+   "fits": {
+    "as_built": false,
+    "grown_412k": true,
+    "vm_2p19": true
+   },
+   "emit": {
+    "rowx_records": 75,
+    "ok": 82,
+    "users_hbm_strided_operands": 1,
+    "plain_records": 7,
+    "union_expert_in_loop": 18,
+    "union_slot_group_copies_folded": 64,
+    "note_att_plan_records": 2,
+    "union_K": 7
+   },
+   "errors": [],
+   "image_bytes": 11680,
+   "livein_words": 0,
+   "livein_top": [],
+   "self_overwritten_read_words": {
+    "COLL.ALL_GATHER": 112992
+   },
+   "c4_self_overwritten": {
+    "COLL.ALL_GATHER": 260448
+   },
+   "image_sha256": "8b10ebcb20a7d2cf879a4533131688af274fa6369bc15f1b16695ad4b0a51be0"
+  },
+  "10": {
+   "values": 369,
+   "objects": {
+    "pinned_column": 2,
+    "row_array": 44,
+    "shared_load": 5
+   },
+   "alloc": {
+    "pinned_words": 98336,
+    "high_water": 249984,
+    "object_bound": 233600,
+    "object_peak_at": 10244.79063785239,
+    "peak_objects": [
+     {
+      "kind": "row_array",
+      "anchor": "0|SU.VOP|attn.res_copy",
+      "rows": 4,
+      "size": 20480,
+      "need": 81920,
+      "ar": [
+       20480,
+       40960
+      ],
+      "t0": 8843.8,
+      "t1": 12169.2,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|COLL.GROUP_REDUCE_MCAST|o-group tree reduce (8 contributors) + multicast",
+      "rows": 4,
+      "size": 12288,
+      "need": 49152,
+      "ar": [
+       69952,
+       82240
+      ],
+      "t0": 8833.8,
+      "t1": 10664.3,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|SM.MATVEC|wo_b",
+      "rows": 4,
+      "size": 5120,
+      "need": 20480,
+      "ar": [
+       82240,
+       87360
+      ],
+      "t0": 10244.8,
+      "t1": 12169.2,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|HC.HC_MIX|hc_attn (mixes + Sinkhorn)",
+      "rows": 4,
+      "size": 24,
+      "need": 96,
+      "ar": [
+       41024,
+       41048
+      ],
+      "t0": 8842.8,
+      "t1": 13395.2,
+      "packed": false
+     }
+    ],
+    "method": "greedy_by_size",
+    "tries": {
+     "first_fit_by_time": 258112,
+     "greedy_by_size": 249984
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 81920
+    }
+   },
+   "c4_peak": 201734,
+   "frag_over_c4": 1.239,
+   "objects_over_c4": 1.158,
+   "aux": {
+    "users.table": [
+     329792,
+     8
+    ],
+    "union.list": [
+     329824,
+     24
+    ],
+    "union.count": [
+     329856,
+     1
+    ],
+    "union.tables": [
+     329888,
+     768
+    ],
+    "kvunion.plan.p0": [
+     330656,
+     10240
+    ],
+    "kvunion.map.p0": [
+     340896,
+     528
+    ]
+   },
+   "vm_need_words": 341440,
+   "fits": {
+    "as_built": false,
+    "grown_412k": true,
+    "vm_2p19": true
+   },
+   "emit": {
+    "rowx_records": 75,
+    "ok": 82,
+    "users_hbm_strided_operands": 1,
+    "plain_records": 7,
+    "union_expert_in_loop": 18,
+    "union_slot_group_copies_folded": 64,
+    "note_att_plan_records": 2,
+    "union_K": 7
+   },
+   "errors": [],
+   "image_bytes": 11680,
+   "livein_words": 0,
+   "livein_top": [],
+   "self_overwritten_read_words": {
+    "COLL.ALL_GATHER": 112992
+   },
+   "c4_self_overwritten": {
+    "COLL.ALL_GATHER": 260448
+   },
+   "image_sha256": "0bcd81ad47894065157511a88a72c5e4e07ff209994bd2496e2f1c817b7690e1"
+  },
+  "11": {
+   "values": 369,
+   "objects": {
+    "pinned_column": 2,
+    "row_array": 44,
+    "shared_load": 5
+   },
+   "alloc": {
+    "pinned_words": 98336,
+    "high_water": 249984,
+    "object_bound": 233600,
+    "object_peak_at": 10244.79063785239,
+    "peak_objects": [
+     {
+      "kind": "row_array",
+      "anchor": "0|SU.VOP|attn.res_copy",
+      "rows": 4,
+      "size": 20480,
+      "need": 81920,
+      "ar": [
+       20480,
+       40960
+      ],
+      "t0": 8843.8,
+      "t1": 12169.2,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|COLL.GROUP_REDUCE_MCAST|o-group tree reduce (8 contributors) + multicast",
+      "rows": 4,
+      "size": 12288,
+      "need": 49152,
+      "ar": [
+       69952,
+       82240
+      ],
+      "t0": 8833.8,
+      "t1": 10664.3,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|SM.MATVEC|wo_b",
+      "rows": 4,
+      "size": 5120,
+      "need": 20480,
+      "ar": [
+       82240,
+       87360
+      ],
+      "t0": 10244.8,
+      "t1": 12169.2,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|HC.HC_MIX|hc_attn (mixes + Sinkhorn)",
+      "rows": 4,
+      "size": 24,
+      "need": 96,
+      "ar": [
+       41024,
+       41048
+      ],
+      "t0": 8842.8,
+      "t1": 13395.2,
+      "packed": false
+     }
+    ],
+    "method": "greedy_by_size",
+    "tries": {
+     "first_fit_by_time": 258112,
+     "greedy_by_size": 249984
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 81920
+    }
+   },
+   "c4_peak": 201734,
+   "frag_over_c4": 1.239,
+   "objects_over_c4": 1.158,
+   "aux": {
+    "users.table": [
+     329792,
+     8
+    ],
+    "union.list": [
+     329824,
+     24
+    ],
+    "union.count": [
+     329856,
+     1
+    ],
+    "union.tables": [
+     329888,
+     768
+    ],
+    "kvunion.plan.p0": [
+     330656,
+     10240
+    ],
+    "kvunion.map.p0": [
+     340896,
+     528
+    ]
+   },
+   "vm_need_words": 341440,
+   "fits": {
+    "as_built": false,
+    "grown_412k": true,
+    "vm_2p19": true
+   },
+   "emit": {
+    "rowx_records": 75,
+    "ok": 82,
+    "users_hbm_strided_operands": 1,
+    "plain_records": 7,
+    "union_expert_in_loop": 18,
+    "union_slot_group_copies_folded": 64,
+    "note_att_plan_records": 2,
+    "union_K": 7
+   },
+   "errors": [],
+   "image_bytes": 11680,
+   "livein_words": 0,
+   "livein_top": [],
+   "self_overwritten_read_words": {
+    "COLL.ALL_GATHER": 112992
+   },
+   "c4_self_overwritten": {
+    "COLL.ALL_GATHER": 260448
+   },
+   "image_sha256": "caa9af8e7aa530f7679424e0f42181c9a8d6b58fbb7ea0ad8348a63e9a1e189b"
+  },
+  "12": {
+   "values": 369,
+   "objects": {
+    "pinned_column": 2,
+    "row_array": 44,
+    "shared_load": 5
+   },
+   "alloc": {
+    "pinned_words": 98336,
+    "high_water": 249984,
+    "object_bound": 233600,
+    "object_peak_at": 10244.79063785239,
+    "peak_objects": [
+     {
+      "kind": "row_array",
+      "anchor": "0|SU.VOP|attn.res_copy",
+      "rows": 4,
+      "size": 20480,
+      "need": 81920,
+      "ar": [
+       20480,
+       40960
+      ],
+      "t0": 8843.8,
+      "t1": 12169.2,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|COLL.GROUP_REDUCE_MCAST|o-group tree reduce (8 contributors) + multicast",
+      "rows": 4,
+      "size": 12288,
+      "need": 49152,
+      "ar": [
+       69952,
+       82240
+      ],
+      "t0": 8833.8,
+      "t1": 10664.3,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|SM.MATVEC|wo_b",
+      "rows": 4,
+      "size": 5120,
+      "need": 20480,
+      "ar": [
+       82240,
+       87360
+      ],
+      "t0": 10244.8,
+      "t1": 12169.2,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|HC.HC_MIX|hc_attn (mixes + Sinkhorn)",
+      "rows": 4,
+      "size": 24,
+      "need": 96,
+      "ar": [
+       41024,
+       41048
+      ],
+      "t0": 8842.8,
+      "t1": 13395.2,
+      "packed": false
+     }
+    ],
+    "method": "greedy_by_size",
+    "tries": {
+     "first_fit_by_time": 258112,
+     "greedy_by_size": 249984
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 81920
+    }
+   },
+   "c4_peak": 201734,
+   "frag_over_c4": 1.239,
+   "objects_over_c4": 1.158,
+   "aux": {
+    "users.table": [
+     329792,
+     8
+    ],
+    "union.list": [
+     329824,
+     24
+    ],
+    "union.count": [
+     329856,
+     1
+    ],
+    "union.tables": [
+     329888,
+     768
+    ],
+    "kvunion.plan.p0": [
+     330656,
+     10240
+    ],
+    "kvunion.map.p0": [
+     340896,
+     528
+    ]
+   },
+   "vm_need_words": 341440,
+   "fits": {
+    "as_built": false,
+    "grown_412k": true,
+    "vm_2p19": true
+   },
+   "emit": {
+    "rowx_records": 75,
+    "ok": 82,
+    "users_hbm_strided_operands": 1,
+    "plain_records": 7,
+    "union_expert_in_loop": 18,
+    "union_slot_group_copies_folded": 64,
+    "note_att_plan_records": 2,
+    "union_K": 7
+   },
+   "errors": [],
+   "image_bytes": 11680,
+   "livein_words": 0,
+   "livein_top": [],
+   "self_overwritten_read_words": {
+    "COLL.ALL_GATHER": 112992
+   },
+   "c4_self_overwritten": {
+    "COLL.ALL_GATHER": 260448
+   },
+   "image_sha256": "95ba68f23d79f60b819f421b103a7e1ee6d72645a5cf2139ea8f658729a38cd0"
+  },
+  "13": {
+   "values": 369,
+   "objects": {
+    "pinned_column": 2,
+    "row_array": 44,
+    "shared_load": 5
+   },
+   "alloc": {
+    "pinned_words": 98336,
+    "high_water": 249984,
+    "object_bound": 233600,
+    "object_peak_at": 10244.79063785239,
+    "peak_objects": [
+     {
+      "kind": "row_array",
+      "anchor": "0|SU.VOP|attn.res_copy",
+      "rows": 4,
+      "size": 20480,
+      "need": 81920,
+      "ar": [
+       20480,
+       40960
+      ],
+      "t0": 8843.8,
+      "t1": 12169.2,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|COLL.GROUP_REDUCE_MCAST|o-group tree reduce (8 contributors) + multicast",
+      "rows": 4,
+      "size": 12288,
+      "need": 49152,
+      "ar": [
+       69952,
+       82240
+      ],
+      "t0": 8833.8,
+      "t1": 10664.3,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|SM.MATVEC|wo_b",
+      "rows": 4,
+      "size": 5120,
+      "need": 20480,
+      "ar": [
+       82240,
+       87360
+      ],
+      "t0": 10244.8,
+      "t1": 12169.2,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|HC.HC_MIX|hc_attn (mixes + Sinkhorn)",
+      "rows": 4,
+      "size": 24,
+      "need": 96,
+      "ar": [
+       41024,
+       41048
+      ],
+      "t0": 8842.8,
+      "t1": 13395.2,
+      "packed": false
+     }
+    ],
+    "method": "greedy_by_size",
+    "tries": {
+     "first_fit_by_time": 258112,
+     "greedy_by_size": 249984
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 81920
+    }
+   },
+   "c4_peak": 201734,
+   "frag_over_c4": 1.239,
+   "objects_over_c4": 1.158,
+   "aux": {
+    "users.table": [
+     329792,
+     8
+    ],
+    "union.list": [
+     329824,
+     24
+    ],
+    "union.count": [
+     329856,
+     1
+    ],
+    "union.tables": [
+     329888,
+     768
+    ],
+    "kvunion.plan.p0": [
+     330656,
+     10240
+    ],
+    "kvunion.map.p0": [
+     340896,
+     528
+    ]
+   },
+   "vm_need_words": 341440,
+   "fits": {
+    "as_built": false,
+    "grown_412k": true,
+    "vm_2p19": true
+   },
+   "emit": {
+    "rowx_records": 75,
+    "ok": 82,
+    "users_hbm_strided_operands": 1,
+    "plain_records": 7,
+    "union_expert_in_loop": 18,
+    "union_slot_group_copies_folded": 64,
+    "note_att_plan_records": 2,
+    "union_K": 7
+   },
+   "errors": [],
+   "image_bytes": 11680,
+   "livein_words": 0,
+   "livein_top": [],
+   "self_overwritten_read_words": {
+    "COLL.ALL_GATHER": 112992
+   },
+   "c4_self_overwritten": {
+    "COLL.ALL_GATHER": 260448
+   },
+   "image_sha256": "e0a87936e37905d54081ce67e784222fb9221f7dbc44c5e9e01ca800de52939a"
+  },
+  "14": {
+   "values": 823,
+   "objects": {
+    "shared_load": 7,
+    "pinned_column": 2,
+    "row_array": 64
+   },
+   "alloc": {
+    "pinned_words": 98336,
+    "high_water": 329792,
+    "object_bound": 313408,
+    "object_peak_at": 4719.134974010796,
+    "peak_objects": [
+     {
+      "kind": "row_array",
+      "anchor": "0|SM.MATVEC|engram.wkv",
+      "rows": 4,
+      "size": 25600,
+      "need": 102400,
+      "ar": [
+       116288,
+       141888
+      ],
+      "t0": 4507.9,
+      "t1": 6694.0,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|SU.VOP|engram.hw",
+      "rows": 4,
+      "size": 20480,
+      "need": 81920,
+      "ar": [
+       20480,
+       40960
+      ],
+      "t0": 4710.1,
+      "t1": 6212.6,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|COLL.ALL_GATHER|engram.rows_gather.eg_rows",
+      "rows": 4,
+      "size": 6144,
+      "need": 24576,
+      "ar": [
+       110144,
+       116288
+      ],
+      "t0": 4498.9,
+      "t1": 5327.2,
+      "packed": false
+     },
+     {
+      "kind": "shared_load",
+      "anchor": "0|DMA.LOAD|engram.wgt",
+      "rows": 1,
+      "size": 20480,
+      "need": 20480,
+      "ar": [
+       141888,
+       162368
+      ],
+      "t0": 4387.7,
+      "t1": 4918.3,
+      "packed": false
+     },
+     {
+      "kind": "shared_load",
+      "anchor": "0|DMA.LOAD|q_norm.gain",
+      "rows": 1,
+      "size": 1280,
+      "need": 1280,
+      "ar": [
+       48064,
+       49344
+      ],
+      "t0": 4711.1,
+      "t1": 8966.3,
+      "packed": false
+     },
+     {
+      "kind": "shared_load",
+      "anchor": "0|DMA.LOAD|kv_norm.gain",
+      "rows": 1,
+      "size": 512,
+      "need": 512,
+      "ar": [
+       49344,
+       49856
+      ],
+      "t0": 4719.1,
+      "t1": 9519.2,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|DMA.LOAD|kv_rope.table",
+      "rows": 4,
+      "size": 64,
+      "need": 256,
+      "ar": [
+       53312,
+       53376
+      ],
+      "t0": 4715.1,
+      "t1": 33117.6,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|SU.VOP|engram.rH",
+      "rows": 4,
+      "size": 8,
+      "need": 32,
+      "ar": [
+       168832,
+       168836
+      ],
+      "t0": 537.8,
+      "t1": 6261.8,
+      "packed": false
+     }
+    ],
+    "method": "greedy_by_size",
+    "tries": {
+     "first_fit_by_time": 353144,
+     "greedy_by_size": 329792
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 81920
+    }
+   },
+   "c4_peak": 303398,
+   "frag_over_c4": 1.087,
+   "objects_over_c4": 1.033,
+   "aux": {
+    "users.table": [
+     329792,
+     8
+    ],
+    "union.list": [
+     329824,
+     24
+    ],
+    "union.count": [
+     329856,
+     1
+    ],
+    "union.tables": [
+     329888,
+     768
+    ],
+    "kvunion.plan.p0": [
+     330656,
+     10240
+    ],
+    "kvunion.map.p0": [
+     340896,
+     528
+    ]
+   },
+   "vm_need_words": 341440,
+   "fits": {
+    "as_built": false,
+    "grown_412k": true,
+    "vm_2p19": true
+   },
+   "emit": {
+    "plain_records": 36,
+    "ok": 184,
+    "rowx_records": 148,
+    "users_hbm_strided_operands": 3,
+    "users_idx_key_store_strides": 1,
+    "union_expert_in_loop": 18,
+    "union_slot_group_copies_folded": 64,
+    "note_att_plan_records": 2,
+    "union_K": 7
+   },
+   "errors": [],
+   "image_bytes": 22784,
+   "livein_words": 0,
+   "livein_top": [],
+   "self_overwritten_read_words": {
+    "COLL.ALL_GATHER": 234728
+   },
+   "c4_self_overwritten": {
+    "COLL.ALL_GATHER": 382184
+   },
+   "image_sha256": "6d06c6744135daef538bb9783ee01595f8e247dbca9ae654aeb0d1f1d3edf48f"
+  },
+  "15": {
+   "values": 369,
+   "objects": {
+    "pinned_column": 2,
+    "row_array": 44,
+    "shared_load": 5
+   },
+   "alloc": {
+    "pinned_words": 98336,
+    "high_water": 249984,
+    "object_bound": 233600,
+    "object_peak_at": 10244.79063785239,
+    "peak_objects": [
+     {
+      "kind": "row_array",
+      "anchor": "0|SU.VOP|attn.res_copy",
+      "rows": 4,
+      "size": 20480,
+      "need": 81920,
+      "ar": [
+       20480,
+       40960
+      ],
+      "t0": 8843.8,
+      "t1": 12169.2,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|COLL.GROUP_REDUCE_MCAST|o-group tree reduce (8 contributors) + multicast",
+      "rows": 4,
+      "size": 12288,
+      "need": 49152,
+      "ar": [
+       69952,
+       82240
+      ],
+      "t0": 8833.8,
+      "t1": 10664.3,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|SM.MATVEC|wo_b",
+      "rows": 4,
+      "size": 5120,
+      "need": 20480,
+      "ar": [
+       82240,
+       87360
+      ],
+      "t0": 10244.8,
+      "t1": 12169.2,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|HC.HC_MIX|hc_attn (mixes + Sinkhorn)",
+      "rows": 4,
+      "size": 24,
+      "need": 96,
+      "ar": [
+       41024,
+       41048
+      ],
+      "t0": 8842.8,
+      "t1": 13395.2,
+      "packed": false
+     }
+    ],
+    "method": "greedy_by_size",
+    "tries": {
+     "first_fit_by_time": 258112,
+     "greedy_by_size": 249984
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 81920
+    }
+   },
+   "c4_peak": 201734,
+   "frag_over_c4": 1.239,
+   "objects_over_c4": 1.158,
+   "aux": {
+    "users.table": [
+     329792,
+     8
+    ],
+    "union.list": [
+     329824,
+     24
+    ],
+    "union.count": [
+     329856,
+     1
+    ],
+    "union.tables": [
+     329888,
+     768
+    ],
+    "kvunion.plan.p0": [
+     330656,
+     10240
+    ],
+    "kvunion.map.p0": [
+     340896,
+     528
+    ]
+   },
+   "vm_need_words": 341440,
+   "fits": {
+    "as_built": false,
+    "grown_412k": true,
+    "vm_2p19": true
+   },
+   "emit": {
+    "rowx_records": 75,
+    "ok": 82,
+    "users_hbm_strided_operands": 1,
+    "plain_records": 7,
+    "union_expert_in_loop": 18,
+    "union_slot_group_copies_folded": 64,
+    "note_att_plan_records": 2,
+    "union_K": 7
+   },
+   "errors": [],
+   "image_bytes": 11680,
+   "livein_words": 0,
+   "livein_top": [],
+   "self_overwritten_read_words": {
+    "COLL.ALL_GATHER": 112992
+   },
+   "c4_self_overwritten": {
+    "COLL.ALL_GATHER": 260448
+   },
+   "image_sha256": "7de8814c59f2f0116d7996e304a9db0f674fdc5bedf7da924adb2314f239956f"
+  },
+  "16": {
+   "values": 369,
+   "objects": {
+    "pinned_column": 2,
+    "row_array": 44,
+    "shared_load": 5
+   },
+   "alloc": {
+    "pinned_words": 98336,
+    "high_water": 249984,
+    "object_bound": 233600,
+    "object_peak_at": 10244.79063785239,
+    "peak_objects": [
+     {
+      "kind": "row_array",
+      "anchor": "0|SU.VOP|attn.res_copy",
+      "rows": 4,
+      "size": 20480,
+      "need": 81920,
+      "ar": [
+       20480,
+       40960
+      ],
+      "t0": 8843.8,
+      "t1": 12169.2,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|COLL.GROUP_REDUCE_MCAST|o-group tree reduce (8 contributors) + multicast",
+      "rows": 4,
+      "size": 12288,
+      "need": 49152,
+      "ar": [
+       69952,
+       82240
+      ],
+      "t0": 8833.8,
+      "t1": 10664.3,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|SM.MATVEC|wo_b",
+      "rows": 4,
+      "size": 5120,
+      "need": 20480,
+      "ar": [
+       82240,
+       87360
+      ],
+      "t0": 10244.8,
+      "t1": 12169.2,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|HC.HC_MIX|hc_attn (mixes + Sinkhorn)",
+      "rows": 4,
+      "size": 24,
+      "need": 96,
+      "ar": [
+       41024,
+       41048
+      ],
+      "t0": 8842.8,
+      "t1": 13395.2,
+      "packed": false
+     }
+    ],
+    "method": "greedy_by_size",
+    "tries": {
+     "first_fit_by_time": 258112,
+     "greedy_by_size": 249984
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 81920
+    }
+   },
+   "c4_peak": 201734,
+   "frag_over_c4": 1.239,
+   "objects_over_c4": 1.158,
+   "aux": {
+    "users.table": [
+     329792,
+     8
+    ],
+    "union.list": [
+     329824,
+     24
+    ],
+    "union.count": [
+     329856,
+     1
+    ],
+    "union.tables": [
+     329888,
+     768
+    ],
+    "kvunion.plan.p0": [
+     330656,
+     10240
+    ],
+    "kvunion.map.p0": [
+     340896,
+     528
+    ]
+   },
+   "vm_need_words": 341440,
+   "fits": {
+    "as_built": false,
+    "grown_412k": true,
+    "vm_2p19": true
+   },
+   "emit": {
+    "rowx_records": 75,
+    "ok": 82,
+    "users_hbm_strided_operands": 1,
+    "plain_records": 7,
+    "union_expert_in_loop": 18,
+    "union_slot_group_copies_folded": 64,
+    "note_att_plan_records": 2,
+    "union_K": 7
+   },
+   "errors": [],
+   "image_bytes": 11680,
+   "livein_words": 0,
+   "livein_top": [],
+   "self_overwritten_read_words": {
+    "COLL.ALL_GATHER": 112992
+   },
+   "c4_self_overwritten": {
+    "COLL.ALL_GATHER": 260448
+   },
+   "image_sha256": "c7754f3391ce34e494acc883d66b1c03b12b5b879118ffc7cd6345601417a580"
+  },
+  "17": {
+   "values": 369,
+   "objects": {
+    "pinned_column": 2,
+    "row_array": 44,
+    "shared_load": 5
+   },
+   "alloc": {
+    "pinned_words": 98336,
+    "high_water": 249984,
+    "object_bound": 233600,
+    "object_peak_at": 10244.79063785239,
+    "peak_objects": [
+     {
+      "kind": "row_array",
+      "anchor": "0|SU.VOP|attn.res_copy",
+      "rows": 4,
+      "size": 20480,
+      "need": 81920,
+      "ar": [
+       20480,
+       40960
+      ],
+      "t0": 8843.8,
+      "t1": 12169.2,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|COLL.GROUP_REDUCE_MCAST|o-group tree reduce (8 contributors) + multicast",
+      "rows": 4,
+      "size": 12288,
+      "need": 49152,
+      "ar": [
+       69952,
+       82240
+      ],
+      "t0": 8833.8,
+      "t1": 10664.3,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|SM.MATVEC|wo_b",
+      "rows": 4,
+      "size": 5120,
+      "need": 20480,
+      "ar": [
+       82240,
+       87360
+      ],
+      "t0": 10244.8,
+      "t1": 12169.2,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|HC.HC_MIX|hc_attn (mixes + Sinkhorn)",
+      "rows": 4,
+      "size": 24,
+      "need": 96,
+      "ar": [
+       41024,
+       41048
+      ],
+      "t0": 8842.8,
+      "t1": 13395.2,
+      "packed": false
+     }
+    ],
+    "method": "greedy_by_size",
+    "tries": {
+     "first_fit_by_time": 258112,
+     "greedy_by_size": 249984
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 81920
+    }
+   },
+   "c4_peak": 201734,
+   "frag_over_c4": 1.239,
+   "objects_over_c4": 1.158,
+   "aux": {
+    "users.table": [
+     329792,
+     8
+    ],
+    "union.list": [
+     329824,
+     24
+    ],
+    "union.count": [
+     329856,
+     1
+    ],
+    "union.tables": [
+     329888,
+     768
+    ],
+    "kvunion.plan.p0": [
+     330656,
+     10240
+    ],
+    "kvunion.map.p0": [
+     340896,
+     528
+    ]
+   },
+   "vm_need_words": 341440,
+   "fits": {
+    "as_built": false,
+    "grown_412k": true,
+    "vm_2p19": true
+   },
+   "emit": {
+    "rowx_records": 75,
+    "ok": 82,
+    "users_hbm_strided_operands": 1,
+    "plain_records": 7,
+    "union_expert_in_loop": 18,
+    "union_slot_group_copies_folded": 64,
+    "note_att_plan_records": 2,
+    "union_K": 7
+   },
+   "errors": [],
+   "image_bytes": 11680,
+   "livein_words": 0,
+   "livein_top": [],
+   "self_overwritten_read_words": {
+    "COLL.ALL_GATHER": 112992
+   },
+   "c4_self_overwritten": {
+    "COLL.ALL_GATHER": 260448
+   },
+   "image_sha256": "5ca5559421685ec67a82f9b6e3b2e11070a653ead9199fcb1f76ca12dcbff443"
+  },
+  "18": {
+   "values": 369,
+   "objects": {
+    "pinned_column": 2,
+    "row_array": 44,
+    "shared_load": 5
+   },
+   "alloc": {
+    "pinned_words": 98336,
+    "high_water": 249984,
+    "object_bound": 233600,
+    "object_peak_at": 10244.79063785239,
+    "peak_objects": [
+     {
+      "kind": "row_array",
+      "anchor": "0|SU.VOP|attn.res_copy",
+      "rows": 4,
+      "size": 20480,
+      "need": 81920,
+      "ar": [
+       20480,
+       40960
+      ],
+      "t0": 8843.8,
+      "t1": 12169.2,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|COLL.GROUP_REDUCE_MCAST|o-group tree reduce (8 contributors) + multicast",
+      "rows": 4,
+      "size": 12288,
+      "need": 49152,
+      "ar": [
+       69952,
+       82240
+      ],
+      "t0": 8833.8,
+      "t1": 10664.3,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|SM.MATVEC|wo_b",
+      "rows": 4,
+      "size": 5120,
+      "need": 20480,
+      "ar": [
+       82240,
+       87360
+      ],
+      "t0": 10244.8,
+      "t1": 12169.2,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|HC.HC_MIX|hc_attn (mixes + Sinkhorn)",
+      "rows": 4,
+      "size": 24,
+      "need": 96,
+      "ar": [
+       41024,
+       41048
+      ],
+      "t0": 8842.8,
+      "t1": 13395.2,
+      "packed": false
+     }
+    ],
+    "method": "greedy_by_size",
+    "tries": {
+     "first_fit_by_time": 258112,
+     "greedy_by_size": 249984
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 81920
+    }
+   },
+   "c4_peak": 201734,
+   "frag_over_c4": 1.239,
+   "objects_over_c4": 1.158,
+   "aux": {
+    "users.table": [
+     329792,
+     8
+    ],
+    "union.list": [
+     329824,
+     24
+    ],
+    "union.count": [
+     329856,
+     1
+    ],
+    "union.tables": [
+     329888,
+     768
+    ],
+    "kvunion.plan.p0": [
+     330656,
+     10240
+    ],
+    "kvunion.map.p0": [
+     340896,
+     528
+    ]
+   },
+   "vm_need_words": 341440,
+   "fits": {
+    "as_built": false,
+    "grown_412k": true,
+    "vm_2p19": true
+   },
+   "emit": {
+    "rowx_records": 75,
+    "ok": 82,
+    "users_hbm_strided_operands": 1,
+    "plain_records": 7,
+    "union_expert_in_loop": 18,
+    "union_slot_group_copies_folded": 64,
+    "note_att_plan_records": 2,
+    "union_K": 7
+   },
+   "errors": [],
+   "image_bytes": 11680,
+   "livein_words": 0,
+   "livein_top": [],
+   "self_overwritten_read_words": {
+    "COLL.ALL_GATHER": 112992
+   },
+   "c4_self_overwritten": {
+    "COLL.ALL_GATHER": 260448
+   },
+   "image_sha256": "de1ea18e5fe496d37e2abeb2b8d33606efeaff4da1488fb40999f36b7a0ee704"
+  },
+  "19": {
+   "values": 369,
+   "objects": {
+    "pinned_column": 2,
+    "row_array": 44,
+    "shared_load": 5
+   },
+   "alloc": {
+    "pinned_words": 98336,
+    "high_water": 249984,
+    "object_bound": 233600,
+    "object_peak_at": 10244.79063785239,
+    "peak_objects": [
+     {
+      "kind": "row_array",
+      "anchor": "0|SU.VOP|attn.res_copy",
+      "rows": 4,
+      "size": 20480,
+      "need": 81920,
+      "ar": [
+       20480,
+       40960
+      ],
+      "t0": 8843.8,
+      "t1": 12169.2,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|COLL.GROUP_REDUCE_MCAST|o-group tree reduce (8 contributors) + multicast",
+      "rows": 4,
+      "size": 12288,
+      "need": 49152,
+      "ar": [
+       69952,
+       82240
+      ],
+      "t0": 8833.8,
+      "t1": 10664.3,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|SM.MATVEC|wo_b",
+      "rows": 4,
+      "size": 5120,
+      "need": 20480,
+      "ar": [
+       82240,
+       87360
+      ],
+      "t0": 10244.8,
+      "t1": 12169.2,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|HC.HC_MIX|hc_attn (mixes + Sinkhorn)",
+      "rows": 4,
+      "size": 24,
+      "need": 96,
+      "ar": [
+       41024,
+       41048
+      ],
+      "t0": 8842.8,
+      "t1": 13395.2,
+      "packed": false
+     }
+    ],
+    "method": "greedy_by_size",
+    "tries": {
+     "first_fit_by_time": 258112,
+     "greedy_by_size": 249984
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 81920
+    }
+   },
+   "c4_peak": 201734,
+   "frag_over_c4": 1.239,
+   "objects_over_c4": 1.158,
+   "aux": {
+    "users.table": [
+     329792,
+     8
+    ],
+    "union.list": [
+     329824,
+     24
+    ],
+    "union.count": [
+     329856,
+     1
+    ],
+    "union.tables": [
+     329888,
+     768
+    ],
+    "kvunion.plan.p0": [
+     330656,
+     10240
+    ],
+    "kvunion.map.p0": [
+     340896,
+     528
+    ]
+   },
+   "vm_need_words": 341440,
+   "fits": {
+    "as_built": false,
+    "grown_412k": true,
+    "vm_2p19": true
+   },
+   "emit": {
+    "rowx_records": 75,
+    "ok": 82,
+    "users_hbm_strided_operands": 1,
+    "plain_records": 7,
+    "union_expert_in_loop": 18,
+    "union_slot_group_copies_folded": 64,
+    "note_att_plan_records": 2,
+    "union_K": 7
+   },
+   "errors": [],
+   "image_bytes": 11680,
+   "livein_words": 0,
+   "livein_top": [],
+   "self_overwritten_read_words": {
+    "COLL.ALL_GATHER": 112992
+   },
+   "c4_self_overwritten": {
+    "COLL.ALL_GATHER": 260448
+   },
+   "image_sha256": "5104c08db84d0fd4d102b249a47d35bf94df20d96d69c1d6b4f0d388f94d1667"
+  },
+  "20": {
+   "values": 545,
+   "objects": {
+    "row_array": 52,
+    "pinned_column": 3,
+    "shared_load": 5
+   },
+   "alloc": {
+    "pinned_words": 98336,
+    "high_water": 250376,
+    "object_bound": 250376,
+    "object_peak_at": 32311.799981957483,
+    "peak_objects": [
+     {
+      "kind": "row_array",
+      "anchor": "0|SU.VOP|attn.res_copy",
+      "rows": 4,
+      "size": 20480,
+      "need": 81920,
+      "ar": [
+       20480,
+       40960
+      ],
+      "t0": 8896.2,
+      "t1": 34236.3,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|COLL.GROUP_REDUCE_MCAST|o-group tree reduce (8 contributors) + multicast",
+      "rows": 4,
+      "size": 12288,
+      "need": 49152,
+      "ar": [
+       69952,
+       82240
+      ],
+      "t0": 30900.8,
+      "t1": 32731.3,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|SM.MATVEC|wo_b",
+      "rows": 4,
+      "size": 5120,
+      "need": 20480,
+      "ar": [
+       82240,
+       87360
+      ],
+      "t0": 32311.8,
+      "t1": 34236.3,
+      "packed": false
+     },
+     {
+      "kind": "shared_load",
+      "anchor": "0|DMA.LOAD|route.bias",
+      "rows": 1,
+      "size": 384,
+      "need": 384,
+      "ar": [
+       87744,
+       88128
+      ],
+      "t0": 8852.0,
+      "t1": 37716.4,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|HC.HC_MIX|hc_attn (mixes + Sinkhorn)",
+      "rows": 4,
+      "size": 24,
+      "need": 96,
+      "ar": [
+       41024,
+       41048
+      ],
+      "t0": 8849.0,
+      "t1": 35462.2,
+      "packed": false
+     },
+     {
+      "kind": "shared_load",
+      "anchor": "0|DMA.LOAD|route.one",
+      "rows": 1,
+      "size": 8,
+      "need": 8,
+      "ar": [
+       88768,
+       88775
+      ],
+      "t0": 8856.0,
+      "t1": 40044.6,
+      "packed": false
+     }
+    ],
+    "method": "greedy_by_size",
+    "tries": {
+     "first_fit_by_time": 274048,
+     "greedy_by_size": 250376
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 81920,
+     "188864": 81952
+    }
+   },
+   "c4_peak": 187838,
+   "frag_over_c4": 1.333,
+   "objects_over_c4": 1.333,
+   "aux": {
+    "users.table": [
+     329792,
+     8
+    ],
+    "union.list": [
+     329824,
+     24
+    ],
+    "union.count": [
+     329856,
+     1
+    ],
+    "union.tables": [
+     329888,
+     768
+    ],
+    "kvunion.plan.p0": [
+     330656,
+     10240
+    ],
+    "kvunion.map.p0": [
+     340896,
+     528
+    ]
+   },
+   "vm_need_words": 341440,
+   "fits": {
+    "as_built": false,
+    "grown_412k": true,
+    "vm_2p19": true
+   },
+   "emit": {
+    "rowx_records": 86,
+    "ok": 111,
+    "plain_records": 25,
+    "users_idx_key_store_strides": 1,
+    "users_hbm_strided_operands": 3,
+    "union_expert_in_loop": 18,
+    "union_slot_group_copies_folded": 64,
+    "note_att_plan_records": 2,
+    "union_K": 7
+   },
+   "errors": [],
+   "image_bytes": 13648,
+   "livein_words": 0,
+   "livein_top": [],
+   "self_overwritten_read_words": {
+    "COLL.ALL_GATHER": 131364
+   },
+   "c4_self_overwritten": {
+    "COLL.ALL_GATHER": 278820
+   },
+   "image_sha256": "efb0e1418094af93f3930f8c5e78448a76038e51fe144626ac4f6cc43ccc6f80"
+  },
+  "21": {
+   "values": 369,
+   "objects": {
+    "pinned_column": 2,
+    "row_array": 44,
+    "shared_load": 5
+   },
+   "alloc": {
+    "pinned_words": 98336,
+    "high_water": 249984,
+    "object_bound": 233600,
+    "object_peak_at": 10244.79063785239,
+    "peak_objects": [
+     {
+      "kind": "row_array",
+      "anchor": "0|SU.VOP|attn.res_copy",
+      "rows": 4,
+      "size": 20480,
+      "need": 81920,
+      "ar": [
+       20480,
+       40960
+      ],
+      "t0": 8843.8,
+      "t1": 12169.2,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|COLL.GROUP_REDUCE_MCAST|o-group tree reduce (8 contributors) + multicast",
+      "rows": 4,
+      "size": 12288,
+      "need": 49152,
+      "ar": [
+       69952,
+       82240
+      ],
+      "t0": 8833.8,
+      "t1": 10664.3,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|SM.MATVEC|wo_b",
+      "rows": 4,
+      "size": 5120,
+      "need": 20480,
+      "ar": [
+       82240,
+       87360
+      ],
+      "t0": 10244.8,
+      "t1": 12169.2,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|HC.HC_MIX|hc_attn (mixes + Sinkhorn)",
+      "rows": 4,
+      "size": 24,
+      "need": 96,
+      "ar": [
+       41024,
+       41048
+      ],
+      "t0": 8842.8,
+      "t1": 13395.2,
+      "packed": false
+     }
+    ],
+    "method": "greedy_by_size",
+    "tries": {
+     "first_fit_by_time": 258112,
+     "greedy_by_size": 249984
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 81920
+    }
+   },
+   "c4_peak": 201734,
+   "frag_over_c4": 1.239,
+   "objects_over_c4": 1.158,
+   "aux": {
+    "users.table": [
+     329792,
+     8
+    ],
+    "union.list": [
+     329824,
+     24
+    ],
+    "union.count": [
+     329856,
+     1
+    ],
+    "union.tables": [
+     329888,
+     768
+    ],
+    "kvunion.plan.p0": [
+     330656,
+     10240
+    ],
+    "kvunion.map.p0": [
+     340896,
+     528
+    ]
+   },
+   "vm_need_words": 341440,
+   "fits": {
+    "as_built": false,
+    "grown_412k": true,
+    "vm_2p19": true
+   },
+   "emit": {
+    "rowx_records": 75,
+    "ok": 82,
+    "users_hbm_strided_operands": 1,
+    "plain_records": 7,
+    "union_expert_in_loop": 18,
+    "union_slot_group_copies_folded": 64,
+    "note_att_plan_records": 2,
+    "union_K": 7
+   },
+   "errors": [],
+   "image_bytes": 11680,
+   "livein_words": 0,
+   "livein_top": [],
+   "self_overwritten_read_words": {
+    "COLL.ALL_GATHER": 112992
+   },
+   "c4_self_overwritten": {
+    "COLL.ALL_GATHER": 260448
+   },
+   "image_sha256": "0d3db10e1e89082174298f84167b9ededd9c16b9f1a83b79284d935b6985157f"
+  },
+  "22": {
+   "values": 369,
+   "objects": {
+    "pinned_column": 2,
+    "row_array": 44,
+    "shared_load": 5
+   },
+   "alloc": {
+    "pinned_words": 98336,
+    "high_water": 249984,
+    "object_bound": 233600,
+    "object_peak_at": 10244.79063785239,
+    "peak_objects": [
+     {
+      "kind": "row_array",
+      "anchor": "0|SU.VOP|attn.res_copy",
+      "rows": 4,
+      "size": 20480,
+      "need": 81920,
+      "ar": [
+       20480,
+       40960
+      ],
+      "t0": 8843.8,
+      "t1": 12169.2,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|COLL.GROUP_REDUCE_MCAST|o-group tree reduce (8 contributors) + multicast",
+      "rows": 4,
+      "size": 12288,
+      "need": 49152,
+      "ar": [
+       69952,
+       82240
+      ],
+      "t0": 8833.8,
+      "t1": 10664.3,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|SM.MATVEC|wo_b",
+      "rows": 4,
+      "size": 5120,
+      "need": 20480,
+      "ar": [
+       82240,
+       87360
+      ],
+      "t0": 10244.8,
+      "t1": 12169.2,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|HC.HC_MIX|hc_attn (mixes + Sinkhorn)",
+      "rows": 4,
+      "size": 24,
+      "need": 96,
+      "ar": [
+       41024,
+       41048
+      ],
+      "t0": 8842.8,
+      "t1": 13395.2,
+      "packed": false
+     }
+    ],
+    "method": "greedy_by_size",
+    "tries": {
+     "first_fit_by_time": 258112,
+     "greedy_by_size": 249984
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 81920
+    }
+   },
+   "c4_peak": 201734,
+   "frag_over_c4": 1.239,
+   "objects_over_c4": 1.158,
+   "aux": {
+    "users.table": [
+     329792,
+     8
+    ],
+    "union.list": [
+     329824,
+     24
+    ],
+    "union.count": [
+     329856,
+     1
+    ],
+    "union.tables": [
+     329888,
+     768
+    ],
+    "kvunion.plan.p0": [
+     330656,
+     10240
+    ],
+    "kvunion.map.p0": [
+     340896,
+     528
+    ]
+   },
+   "vm_need_words": 341440,
+   "fits": {
+    "as_built": false,
+    "grown_412k": true,
+    "vm_2p19": true
+   },
+   "emit": {
+    "rowx_records": 75,
+    "ok": 82,
+    "users_hbm_strided_operands": 1,
+    "plain_records": 7,
+    "union_expert_in_loop": 18,
+    "union_slot_group_copies_folded": 64,
+    "note_att_plan_records": 2,
+    "union_K": 7
+   },
+   "errors": [],
+   "image_bytes": 11680,
+   "livein_words": 0,
+   "livein_top": [],
+   "self_overwritten_read_words": {
+    "COLL.ALL_GATHER": 112992
+   },
+   "c4_self_overwritten": {
+    "COLL.ALL_GATHER": 260448
+   },
+   "image_sha256": "11f1631d747891d18b4a8f0a613246dd1a16cfb95a12123f3a0c9d41d86990cc"
+  },
+  "23": {
+   "values": 369,
+   "objects": {
+    "pinned_column": 2,
+    "row_array": 44,
+    "shared_load": 5
+   },
+   "alloc": {
+    "pinned_words": 98336,
+    "high_water": 249984,
+    "object_bound": 233600,
+    "object_peak_at": 10244.79063785239,
+    "peak_objects": [
+     {
+      "kind": "row_array",
+      "anchor": "0|SU.VOP|attn.res_copy",
+      "rows": 4,
+      "size": 20480,
+      "need": 81920,
+      "ar": [
+       20480,
+       40960
+      ],
+      "t0": 8843.8,
+      "t1": 12169.2,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|COLL.GROUP_REDUCE_MCAST|o-group tree reduce (8 contributors) + multicast",
+      "rows": 4,
+      "size": 12288,
+      "need": 49152,
+      "ar": [
+       69952,
+       82240
+      ],
+      "t0": 8833.8,
+      "t1": 10664.3,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|SM.MATVEC|wo_b",
+      "rows": 4,
+      "size": 5120,
+      "need": 20480,
+      "ar": [
+       82240,
+       87360
+      ],
+      "t0": 10244.8,
+      "t1": 12169.2,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|HC.HC_MIX|hc_attn (mixes + Sinkhorn)",
+      "rows": 4,
+      "size": 24,
+      "need": 96,
+      "ar": [
+       41024,
+       41048
+      ],
+      "t0": 8842.8,
+      "t1": 13395.2,
+      "packed": false
+     }
+    ],
+    "method": "greedy_by_size",
+    "tries": {
+     "first_fit_by_time": 258112,
+     "greedy_by_size": 249984
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 81920
+    }
+   },
+   "c4_peak": 201734,
+   "frag_over_c4": 1.239,
+   "objects_over_c4": 1.158,
+   "aux": {
+    "users.table": [
+     329792,
+     8
+    ],
+    "union.list": [
+     329824,
+     24
+    ],
+    "union.count": [
+     329856,
+     1
+    ],
+    "union.tables": [
+     329888,
+     768
+    ],
+    "kvunion.plan.p0": [
+     330656,
+     10240
+    ],
+    "kvunion.map.p0": [
+     340896,
+     528
+    ]
+   },
+   "vm_need_words": 341440,
+   "fits": {
+    "as_built": false,
+    "grown_412k": true,
+    "vm_2p19": true
+   },
+   "emit": {
+    "rowx_records": 75,
+    "ok": 82,
+    "users_hbm_strided_operands": 1,
+    "plain_records": 7,
+    "union_expert_in_loop": 18,
+    "union_slot_group_copies_folded": 64,
+    "note_att_plan_records": 2,
+    "union_K": 7
+   },
+   "errors": [],
+   "image_bytes": 11680,
+   "livein_words": 0,
+   "livein_top": [],
+   "self_overwritten_read_words": {
+    "COLL.ALL_GATHER": 112992
+   },
+   "c4_self_overwritten": {
+    "COLL.ALL_GATHER": 260448
+   },
+   "image_sha256": "8a44da8d5f1fadad08f641e6e94bbe0f7757a19fbd8d4ef2c3aa22bbabe18657"
+  },
+  "24": {
+   "values": 529,
+   "objects": {
+    "row_array": 50,
+    "pinned_column": 3,
+    "shared_load": 5
+   },
+   "alloc": {
+    "pinned_words": 98336,
+    "high_water": 250376,
+    "object_bound": 250376,
+    "object_peak_at": 31824.500206290246,
+    "peak_objects": [
+     {
+      "kind": "row_array",
+      "anchor": "0|SU.VOP|attn.res_copy",
+      "rows": 4,
+      "size": 20480,
+      "need": 81920,
+      "ar": [
+       20480,
+       40960
+      ],
+      "t0": 2740.3,
+      "t1": 33749.0,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|COLL.GROUP_REDUCE_MCAST|o-group tree reduce (8 contributors) + multicast",
+      "rows": 4,
+      "size": 12288,
+      "need": 49152,
+      "ar": [
+       69952,
+       82240
+      ],
+      "t0": 30413.5,
+      "t1": 32244.0,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|SM.MATVEC|wo_b",
+      "rows": 4,
+      "size": 5120,
+      "need": 20480,
+      "ar": [
+       82240,
+       87360
+      ],
+      "t0": 31824.5,
+      "t1": 33749.0,
+      "packed": false
+     },
+     {
+      "kind": "shared_load",
+      "anchor": "0|DMA.LOAD|route.bias",
+      "rows": 1,
+      "size": 384,
+      "need": 384,
+      "ar": [
+       87744,
+       88128
+      ],
+      "t0": 2741.3,
+      "t1": 37020.9,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|HC.HC_MIX|hc_attn (mixes + Sinkhorn)",
+      "rows": 4,
+      "size": 24,
+      "need": 96,
+      "ar": [
+       41024,
+       41048
+      ],
+      "t0": 2739.3,
+      "t1": 34974.9,
+      "packed": false
+     },
+     {
+      "kind": "shared_load",
+      "anchor": "0|DMA.LOAD|route.one",
+      "rows": 1,
+      "size": 8,
+      "need": 8,
+      "ar": [
+       88768,
+       88775
+      ],
+      "t0": 4365.1,
+      "t1": 39348.2,
+      "packed": false
+     }
+    ],
+    "method": "greedy_by_size",
+    "tries": {
+     "first_fit_by_time": 290464,
+     "greedy_by_size": 250376
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 81920,
+     "188864": 81952
+    }
+   },
+   "c4_peak": 197522,
+   "frag_over_c4": 1.268,
+   "objects_over_c4": 1.268,
+   "aux": {
+    "users.table": [
+     329792,
+     8
+    ],
+    "union.list": [
+     329824,
+     24
+    ],
+    "union.count": [
+     329856,
+     1
+    ],
+    "union.tables": [
+     329888,
+     768
+    ],
+    "kvunion.plan.p0": [
+     330656,
+     10240
+    ],
+    "kvunion.map.p0": [
+     340896,
+     528
+    ]
+   },
+   "vm_need_words": 341440,
+   "fits": {
+    "as_built": false,
+    "grown_412k": true,
+    "vm_2p19": true
+   },
+   "emit": {
+    "rowx_records": 83,
+    "ok": 91,
+    "plain_records": 8,
+    "users_idx_key_store_strides": 1,
+    "users_hbm_strided_operands": 3,
+    "union_expert_in_loop": 18,
+    "union_slot_group_copies_folded": 64,
+    "note_att_plan_records": 2,
+    "union_K": 7
+   },
+   "errors": [],
+   "image_bytes": 12944,
+   "livein_words": 0,
+   "livein_top": [],
+   "self_overwritten_read_words": {
+    "COLL.ALL_GATHER": 129336
+   },
+   "c4_self_overwritten": {
+    "COLL.ALL_GATHER": 276792
+   },
+   "image_sha256": "53d3abaeb38f6462bdd2b1b19d12d43c0e3ae4be4fcd6f943c5b6037d07a123b"
+  },
+  "25": {
+   "values": 369,
+   "objects": {
+    "pinned_column": 2,
+    "row_array": 44,
+    "shared_load": 5
+   },
+   "alloc": {
+    "pinned_words": 98336,
+    "high_water": 249984,
+    "object_bound": 233600,
+    "object_peak_at": 10244.79063785239,
+    "peak_objects": [
+     {
+      "kind": "row_array",
+      "anchor": "0|SU.VOP|attn.res_copy",
+      "rows": 4,
+      "size": 20480,
+      "need": 81920,
+      "ar": [
+       20480,
+       40960
+      ],
+      "t0": 8843.8,
+      "t1": 12169.2,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|COLL.GROUP_REDUCE_MCAST|o-group tree reduce (8 contributors) + multicast",
+      "rows": 4,
+      "size": 12288,
+      "need": 49152,
+      "ar": [
+       69952,
+       82240
+      ],
+      "t0": 8833.8,
+      "t1": 10664.3,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|SM.MATVEC|wo_b",
+      "rows": 4,
+      "size": 5120,
+      "need": 20480,
+      "ar": [
+       82240,
+       87360
+      ],
+      "t0": 10244.8,
+      "t1": 12169.2,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|HC.HC_MIX|hc_attn (mixes + Sinkhorn)",
+      "rows": 4,
+      "size": 24,
+      "need": 96,
+      "ar": [
+       41024,
+       41048
+      ],
+      "t0": 8842.8,
+      "t1": 13395.2,
+      "packed": false
+     }
+    ],
+    "method": "greedy_by_size",
+    "tries": {
+     "first_fit_by_time": 258112,
+     "greedy_by_size": 249984
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 81920
+    }
+   },
+   "c4_peak": 201734,
+   "frag_over_c4": 1.239,
+   "objects_over_c4": 1.158,
+   "aux": {
+    "users.table": [
+     329792,
+     8
+    ],
+    "union.list": [
+     329824,
+     24
+    ],
+    "union.count": [
+     329856,
+     1
+    ],
+    "union.tables": [
+     329888,
+     768
+    ],
+    "kvunion.plan.p0": [
+     330656,
+     10240
+    ],
+    "kvunion.map.p0": [
+     340896,
+     528
+    ]
+   },
+   "vm_need_words": 341440,
+   "fits": {
+    "as_built": false,
+    "grown_412k": true,
+    "vm_2p19": true
+   },
+   "emit": {
+    "rowx_records": 75,
+    "ok": 82,
+    "users_hbm_strided_operands": 1,
+    "plain_records": 7,
+    "union_expert_in_loop": 18,
+    "union_slot_group_copies_folded": 64,
+    "note_att_plan_records": 2,
+    "union_K": 7
+   },
+   "errors": [],
+   "image_bytes": 11680,
+   "livein_words": 0,
+   "livein_top": [],
+   "self_overwritten_read_words": {
+    "COLL.ALL_GATHER": 112992
+   },
+   "c4_self_overwritten": {
+    "COLL.ALL_GATHER": 260448
+   },
+   "image_sha256": "992335696a39ff90860f2f66170a6fe68c6896e00219d9d1cd5452b5ca146f19"
+  },
+  "26": {
+   "values": 369,
+   "objects": {
+    "pinned_column": 2,
+    "row_array": 44,
+    "shared_load": 5
+   },
+   "alloc": {
+    "pinned_words": 98336,
+    "high_water": 249984,
+    "object_bound": 233600,
+    "object_peak_at": 10244.79063785239,
+    "peak_objects": [
+     {
+      "kind": "row_array",
+      "anchor": "0|SU.VOP|attn.res_copy",
+      "rows": 4,
+      "size": 20480,
+      "need": 81920,
+      "ar": [
+       20480,
+       40960
+      ],
+      "t0": 8843.8,
+      "t1": 12169.2,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|COLL.GROUP_REDUCE_MCAST|o-group tree reduce (8 contributors) + multicast",
+      "rows": 4,
+      "size": 12288,
+      "need": 49152,
+      "ar": [
+       69952,
+       82240
+      ],
+      "t0": 8833.8,
+      "t1": 10664.3,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|SM.MATVEC|wo_b",
+      "rows": 4,
+      "size": 5120,
+      "need": 20480,
+      "ar": [
+       82240,
+       87360
+      ],
+      "t0": 10244.8,
+      "t1": 12169.2,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|HC.HC_MIX|hc_attn (mixes + Sinkhorn)",
+      "rows": 4,
+      "size": 24,
+      "need": 96,
+      "ar": [
+       41024,
+       41048
+      ],
+      "t0": 8842.8,
+      "t1": 13395.2,
+      "packed": false
+     }
+    ],
+    "method": "greedy_by_size",
+    "tries": {
+     "first_fit_by_time": 258112,
+     "greedy_by_size": 249984
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 81920
+    }
+   },
+   "c4_peak": 201734,
+   "frag_over_c4": 1.239,
+   "objects_over_c4": 1.158,
+   "aux": {
+    "users.table": [
+     329792,
+     8
+    ],
+    "union.list": [
+     329824,
+     24
+    ],
+    "union.count": [
+     329856,
+     1
+    ],
+    "union.tables": [
+     329888,
+     768
+    ],
+    "kvunion.plan.p0": [
+     330656,
+     10240
+    ],
+    "kvunion.map.p0": [
+     340896,
+     528
+    ]
+   },
+   "vm_need_words": 341440,
+   "fits": {
+    "as_built": false,
+    "grown_412k": true,
+    "vm_2p19": true
+   },
+   "emit": {
+    "rowx_records": 75,
+    "ok": 82,
+    "users_hbm_strided_operands": 1,
+    "plain_records": 7,
+    "union_expert_in_loop": 18,
+    "union_slot_group_copies_folded": 64,
+    "note_att_plan_records": 2,
+    "union_K": 7
+   },
+   "errors": [],
+   "image_bytes": 11680,
+   "livein_words": 0,
+   "livein_top": [],
+   "self_overwritten_read_words": {
+    "COLL.ALL_GATHER": 112992
+   },
+   "c4_self_overwritten": {
+    "COLL.ALL_GATHER": 260448
+   },
+   "image_sha256": "4c0dcbfdd7d1f6d501e179be82b3ff3038795fdff9b275f4639ead30c1922fe8"
+  },
+  "27": {
+   "values": 369,
+   "objects": {
+    "pinned_column": 2,
+    "row_array": 44,
+    "shared_load": 5
+   },
+   "alloc": {
+    "pinned_words": 98336,
+    "high_water": 249984,
+    "object_bound": 233600,
+    "object_peak_at": 10244.79063785239,
+    "peak_objects": [
+     {
+      "kind": "row_array",
+      "anchor": "0|SU.VOP|attn.res_copy",
+      "rows": 4,
+      "size": 20480,
+      "need": 81920,
+      "ar": [
+       20480,
+       40960
+      ],
+      "t0": 8843.8,
+      "t1": 12169.2,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|COLL.GROUP_REDUCE_MCAST|o-group tree reduce (8 contributors) + multicast",
+      "rows": 4,
+      "size": 12288,
+      "need": 49152,
+      "ar": [
+       69952,
+       82240
+      ],
+      "t0": 8833.8,
+      "t1": 10664.3,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|SM.MATVEC|wo_b",
+      "rows": 4,
+      "size": 5120,
+      "need": 20480,
+      "ar": [
+       82240,
+       87360
+      ],
+      "t0": 10244.8,
+      "t1": 12169.2,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|HC.HC_MIX|hc_attn (mixes + Sinkhorn)",
+      "rows": 4,
+      "size": 24,
+      "need": 96,
+      "ar": [
+       41024,
+       41048
+      ],
+      "t0": 8842.8,
+      "t1": 13395.2,
+      "packed": false
+     }
+    ],
+    "method": "greedy_by_size",
+    "tries": {
+     "first_fit_by_time": 258112,
+     "greedy_by_size": 249984
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 81920
+    }
+   },
+   "c4_peak": 201734,
+   "frag_over_c4": 1.239,
+   "objects_over_c4": 1.158,
+   "aux": {
+    "users.table": [
+     329792,
+     8
+    ],
+    "union.list": [
+     329824,
+     24
+    ],
+    "union.count": [
+     329856,
+     1
+    ],
+    "union.tables": [
+     329888,
+     768
+    ],
+    "kvunion.plan.p0": [
+     330656,
+     10240
+    ],
+    "kvunion.map.p0": [
+     340896,
+     528
+    ]
+   },
+   "vm_need_words": 341440,
+   "fits": {
+    "as_built": false,
+    "grown_412k": true,
+    "vm_2p19": true
+   },
+   "emit": {
+    "rowx_records": 75,
+    "ok": 82,
+    "users_hbm_strided_operands": 1,
+    "plain_records": 7,
+    "union_expert_in_loop": 18,
+    "union_slot_group_copies_folded": 64,
+    "note_att_plan_records": 2,
+    "union_K": 7
+   },
+   "errors": [],
+   "image_bytes": 11680,
+   "livein_words": 0,
+   "livein_top": [],
+   "self_overwritten_read_words": {
+    "COLL.ALL_GATHER": 112992
+   },
+   "c4_self_overwritten": {
+    "COLL.ALL_GATHER": 260448
+   },
+   "image_sha256": "00e823502c12173fefcb8a584a726e31de2da9952c309018d848798d9d9785cb"
+  },
+  "28": {
+   "values": 529,
+   "objects": {
+    "row_array": 50,
+    "pinned_column": 3,
+    "shared_load": 5
+   },
+   "alloc": {
+    "pinned_words": 98336,
+    "high_water": 250376,
+    "object_bound": 250376,
+    "object_peak_at": 34418.93292015642,
+    "peak_objects": [
+     {
+      "kind": "row_array",
+      "anchor": "0|SU.VOP|attn.res_copy",
+      "rows": 4,
+      "size": 20480,
+      "need": 81920,
+      "ar": [
+       20480,
+       40960
+      ],
+      "t0": 2740.3,
+      "t1": 36343.4,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|COLL.GROUP_REDUCE_MCAST|o-group tree reduce (8 contributors) + multicast",
+      "rows": 4,
+      "size": 12288,
+      "need": 49152,
+      "ar": [
+       69952,
+       82240
+      ],
+      "t0": 33008.0,
+      "t1": 34838.4,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|SM.MATVEC|wo_b",
+      "rows": 4,
+      "size": 5120,
+      "need": 20480,
+      "ar": [
+       82240,
+       87360
+      ],
+      "t0": 34418.9,
+      "t1": 36343.4,
+      "packed": false
+     },
+     {
+      "kind": "shared_load",
+      "anchor": "0|DMA.LOAD|route.bias",
+      "rows": 1,
+      "size": 384,
+      "need": 384,
+      "ar": [
+       87744,
+       88128
+      ],
+      "t0": 2741.3,
+      "t1": 39615.3,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|HC.HC_MIX|hc_attn (mixes + Sinkhorn)",
+      "rows": 4,
+      "size": 24,
+      "need": 96,
+      "ar": [
+       41024,
+       41048
+      ],
+      "t0": 2739.3,
+      "t1": 37569.3,
+      "packed": false
+     },
+     {
+      "kind": "shared_load",
+      "anchor": "0|DMA.LOAD|route.one",
+      "rows": 1,
+      "size": 8,
+      "need": 8,
+      "ar": [
+       88768,
+       88775
+      ],
+      "t0": 4365.1,
+      "t1": 41942.6,
+      "packed": false
+     }
+    ],
+    "method": "greedy_by_size",
+    "tries": {
+     "first_fit_by_time": 290464,
+     "greedy_by_size": 250376
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 81920,
+     "188864": 81952
+    }
+   },
+   "c4_peak": 197522,
+   "frag_over_c4": 1.268,
+   "objects_over_c4": 1.268,
+   "aux": {
+    "users.table": [
+     329792,
+     8
+    ],
+    "union.list": [
+     329824,
+     24
+    ],
+    "union.count": [
+     329856,
+     1
+    ],
+    "union.tables": [
+     329888,
+     768
+    ],
+    "kvunion.plan.p0": [
+     330656,
+     10240
+    ],
+    "kvunion.map.p0": [
+     340896,
+     528
+    ]
+   },
+   "vm_need_words": 341440,
+   "fits": {
+    "as_built": false,
+    "grown_412k": true,
+    "vm_2p19": true
+   },
+   "emit": {
+    "rowx_records": 83,
+    "ok": 91,
+    "plain_records": 8,
+    "users_idx_key_store_strides": 1,
+    "users_hbm_strided_operands": 3,
+    "union_expert_in_loop": 18,
+    "union_slot_group_copies_folded": 64,
+    "note_att_plan_records": 2,
+    "union_K": 7
+   },
+   "errors": [],
+   "image_bytes": 12944,
+   "livein_words": 0,
+   "livein_top": [],
+   "self_overwritten_read_words": {
+    "COLL.ALL_GATHER": 129336
+   },
+   "c4_self_overwritten": {
+    "COLL.ALL_GATHER": 276792
+   },
+   "image_sha256": "baa45c4fd37b33736b92635e3089402349358939a6068f8f4d6ed31dd562212f"
+  },
+  "29": {
+   "values": 369,
+   "objects": {
+    "pinned_column": 2,
+    "row_array": 44,
+    "shared_load": 5
+   },
+   "alloc": {
+    "pinned_words": 98336,
+    "high_water": 249984,
+    "object_bound": 233600,
+    "object_peak_at": 10244.79063785239,
+    "peak_objects": [
+     {
+      "kind": "row_array",
+      "anchor": "0|SU.VOP|attn.res_copy",
+      "rows": 4,
+      "size": 20480,
+      "need": 81920,
+      "ar": [
+       20480,
+       40960
+      ],
+      "t0": 8843.8,
+      "t1": 12169.2,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|COLL.GROUP_REDUCE_MCAST|o-group tree reduce (8 contributors) + multicast",
+      "rows": 4,
+      "size": 12288,
+      "need": 49152,
+      "ar": [
+       69952,
+       82240
+      ],
+      "t0": 8833.8,
+      "t1": 10664.3,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|SM.MATVEC|wo_b",
+      "rows": 4,
+      "size": 5120,
+      "need": 20480,
+      "ar": [
+       82240,
+       87360
+      ],
+      "t0": 10244.8,
+      "t1": 12169.2,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|HC.HC_MIX|hc_attn (mixes + Sinkhorn)",
+      "rows": 4,
+      "size": 24,
+      "need": 96,
+      "ar": [
+       41024,
+       41048
+      ],
+      "t0": 8842.8,
+      "t1": 13395.2,
+      "packed": false
+     }
+    ],
+    "method": "greedy_by_size",
+    "tries": {
+     "first_fit_by_time": 258112,
+     "greedy_by_size": 249984
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 81920
+    }
+   },
+   "c4_peak": 201734,
+   "frag_over_c4": 1.239,
+   "objects_over_c4": 1.158,
+   "aux": {
+    "users.table": [
+     329792,
+     8
+    ],
+    "union.list": [
+     329824,
+     24
+    ],
+    "union.count": [
+     329856,
+     1
+    ],
+    "union.tables": [
+     329888,
+     768
+    ],
+    "kvunion.plan.p0": [
+     330656,
+     10240
+    ],
+    "kvunion.map.p0": [
+     340896,
+     528
+    ]
+   },
+   "vm_need_words": 341440,
+   "fits": {
+    "as_built": false,
+    "grown_412k": true,
+    "vm_2p19": true
+   },
+   "emit": {
+    "rowx_records": 75,
+    "ok": 82,
+    "users_hbm_strided_operands": 1,
+    "plain_records": 7,
+    "union_expert_in_loop": 18,
+    "union_slot_group_copies_folded": 64,
+    "note_att_plan_records": 2,
+    "union_K": 7
+   },
+   "errors": [],
+   "image_bytes": 11680,
+   "livein_words": 0,
+   "livein_top": [],
+   "self_overwritten_read_words": {
+    "COLL.ALL_GATHER": 112992
+   },
+   "c4_self_overwritten": {
+    "COLL.ALL_GATHER": 260448
+   },
+   "image_sha256": "0d89d3096508767b0873863fe2d63ba7f1b4dd2e53d8504f9df9c236fbf134fa"
+  },
+  "30": {
+   "values": 369,
+   "objects": {
+    "pinned_column": 2,
+    "row_array": 44,
+    "shared_load": 5
+   },
+   "alloc": {
+    "pinned_words": 98336,
+    "high_water": 249984,
+    "object_bound": 233600,
+    "object_peak_at": 10244.79063785239,
+    "peak_objects": [
+     {
+      "kind": "row_array",
+      "anchor": "0|SU.VOP|attn.res_copy",
+      "rows": 4,
+      "size": 20480,
+      "need": 81920,
+      "ar": [
+       20480,
+       40960
+      ],
+      "t0": 8843.8,
+      "t1": 12169.2,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|COLL.GROUP_REDUCE_MCAST|o-group tree reduce (8 contributors) + multicast",
+      "rows": 4,
+      "size": 12288,
+      "need": 49152,
+      "ar": [
+       69952,
+       82240
+      ],
+      "t0": 8833.8,
+      "t1": 10664.3,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|SM.MATVEC|wo_b",
+      "rows": 4,
+      "size": 5120,
+      "need": 20480,
+      "ar": [
+       82240,
+       87360
+      ],
+      "t0": 10244.8,
+      "t1": 12169.2,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|HC.HC_MIX|hc_attn (mixes + Sinkhorn)",
+      "rows": 4,
+      "size": 24,
+      "need": 96,
+      "ar": [
+       41024,
+       41048
+      ],
+      "t0": 8842.8,
+      "t1": 13395.2,
+      "packed": false
+     }
+    ],
+    "method": "greedy_by_size",
+    "tries": {
+     "first_fit_by_time": 258112,
+     "greedy_by_size": 249984
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 81920
+    }
+   },
+   "c4_peak": 201734,
+   "frag_over_c4": 1.239,
+   "objects_over_c4": 1.158,
+   "aux": {
+    "users.table": [
+     329792,
+     8
+    ],
+    "union.list": [
+     329824,
+     24
+    ],
+    "union.count": [
+     329856,
+     1
+    ],
+    "union.tables": [
+     329888,
+     768
+    ],
+    "kvunion.plan.p0": [
+     330656,
+     10240
+    ],
+    "kvunion.map.p0": [
+     340896,
+     528
+    ]
+   },
+   "vm_need_words": 341440,
+   "fits": {
+    "as_built": false,
+    "grown_412k": true,
+    "vm_2p19": true
+   },
+   "emit": {
+    "rowx_records": 75,
+    "ok": 82,
+    "users_hbm_strided_operands": 1,
+    "plain_records": 7,
+    "union_expert_in_loop": 18,
+    "union_slot_group_copies_folded": 64,
+    "note_att_plan_records": 2,
+    "union_K": 7
+   },
+   "errors": [],
+   "image_bytes": 11680,
+   "livein_words": 0,
+   "livein_top": [],
+   "self_overwritten_read_words": {
+    "COLL.ALL_GATHER": 112992
+   },
+   "c4_self_overwritten": {
+    "COLL.ALL_GATHER": 260448
+   },
+   "image_sha256": "7e77f97844303f77b151ee142290080eac45f623ed10c8a6bce3611c7153b813"
+  },
+  "31": {
+   "values": 369,
+   "objects": {
+    "pinned_column": 2,
+    "row_array": 44,
+    "shared_load": 5
+   },
+   "alloc": {
+    "pinned_words": 98336,
+    "high_water": 249984,
+    "object_bound": 233600,
+    "object_peak_at": 10244.79063785239,
+    "peak_objects": [
+     {
+      "kind": "row_array",
+      "anchor": "0|SU.VOP|attn.res_copy",
+      "rows": 4,
+      "size": 20480,
+      "need": 81920,
+      "ar": [
+       20480,
+       40960
+      ],
+      "t0": 8843.8,
+      "t1": 12169.2,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|COLL.GROUP_REDUCE_MCAST|o-group tree reduce (8 contributors) + multicast",
+      "rows": 4,
+      "size": 12288,
+      "need": 49152,
+      "ar": [
+       69952,
+       82240
+      ],
+      "t0": 8833.8,
+      "t1": 10664.3,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|SM.MATVEC|wo_b",
+      "rows": 4,
+      "size": 5120,
+      "need": 20480,
+      "ar": [
+       82240,
+       87360
+      ],
+      "t0": 10244.8,
+      "t1": 12169.2,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|HC.HC_MIX|hc_attn (mixes + Sinkhorn)",
+      "rows": 4,
+      "size": 24,
+      "need": 96,
+      "ar": [
+       41024,
+       41048
+      ],
+      "t0": 8842.8,
+      "t1": 13395.2,
+      "packed": false
+     }
+    ],
+    "method": "greedy_by_size",
+    "tries": {
+     "first_fit_by_time": 258112,
+     "greedy_by_size": 249984
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 81920
+    }
+   },
+   "c4_peak": 201734,
+   "frag_over_c4": 1.239,
+   "objects_over_c4": 1.158,
+   "aux": {
+    "users.table": [
+     329792,
+     8
+    ],
+    "union.list": [
+     329824,
+     24
+    ],
+    "union.count": [
+     329856,
+     1
+    ],
+    "union.tables": [
+     329888,
+     768
+    ],
+    "kvunion.plan.p0": [
+     330656,
+     10240
+    ],
+    "kvunion.map.p0": [
+     340896,
+     528
+    ]
+   },
+   "vm_need_words": 341440,
+   "fits": {
+    "as_built": false,
+    "grown_412k": true,
+    "vm_2p19": true
+   },
+   "emit": {
+    "rowx_records": 75,
+    "ok": 82,
+    "users_hbm_strided_operands": 1,
+    "plain_records": 7,
+    "union_expert_in_loop": 18,
+    "union_slot_group_copies_folded": 64,
+    "note_att_plan_records": 2,
+    "union_K": 7
+   },
+   "errors": [],
+   "image_bytes": 11680,
+   "livein_words": 0,
+   "livein_top": [],
+   "self_overwritten_read_words": {
+    "COLL.ALL_GATHER": 112992
+   },
+   "c4_self_overwritten": {
+    "COLL.ALL_GATHER": 260448
+   },
+   "image_sha256": "f422580921e2c1fbf06c426d24fd2c302a0a656a3a062bbbcbc846b465305b29"
+  },
+  "32": {
+   "values": 529,
+   "objects": {
+    "row_array": 50,
+    "pinned_column": 3,
+    "shared_load": 5
+   },
+   "alloc": {
+    "pinned_words": 98336,
+    "high_water": 250376,
+    "object_bound": 250376,
+    "object_peak_at": 31824.500206290246,
+    "peak_objects": [
+     {
+      "kind": "row_array",
+      "anchor": "0|SU.VOP|attn.res_copy",
+      "rows": 4,
+      "size": 20480,
+      "need": 81920,
+      "ar": [
+       20480,
+       40960
+      ],
+      "t0": 2740.3,
+      "t1": 33749.0,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|COLL.GROUP_REDUCE_MCAST|o-group tree reduce (8 contributors) + multicast",
+      "rows": 4,
+      "size": 12288,
+      "need": 49152,
+      "ar": [
+       69952,
+       82240
+      ],
+      "t0": 30413.5,
+      "t1": 32244.0,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|SM.MATVEC|wo_b",
+      "rows": 4,
+      "size": 5120,
+      "need": 20480,
+      "ar": [
+       82240,
+       87360
+      ],
+      "t0": 31824.5,
+      "t1": 33749.0,
+      "packed": false
+     },
+     {
+      "kind": "shared_load",
+      "anchor": "0|DMA.LOAD|route.bias",
+      "rows": 1,
+      "size": 384,
+      "need": 384,
+      "ar": [
+       87744,
+       88128
+      ],
+      "t0": 2741.3,
+      "t1": 37020.9,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|HC.HC_MIX|hc_attn (mixes + Sinkhorn)",
+      "rows": 4,
+      "size": 24,
+      "need": 96,
+      "ar": [
+       41024,
+       41048
+      ],
+      "t0": 2739.3,
+      "t1": 34974.9,
+      "packed": false
+     },
+     {
+      "kind": "shared_load",
+      "anchor": "0|DMA.LOAD|route.one",
+      "rows": 1,
+      "size": 8,
+      "need": 8,
+      "ar": [
+       88768,
+       88775
+      ],
+      "t0": 4365.1,
+      "t1": 39348.2,
+      "packed": false
+     }
+    ],
+    "method": "greedy_by_size",
+    "tries": {
+     "first_fit_by_time": 290464,
+     "greedy_by_size": 250376
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 81920,
+     "188864": 81952
+    }
+   },
+   "c4_peak": 197522,
+   "frag_over_c4": 1.268,
+   "objects_over_c4": 1.268,
+   "aux": {
+    "users.table": [
+     329792,
+     8
+    ],
+    "union.list": [
+     329824,
+     24
+    ],
+    "union.count": [
+     329856,
+     1
+    ],
+    "union.tables": [
+     329888,
+     768
+    ],
+    "kvunion.plan.p0": [
+     330656,
+     10240
+    ],
+    "kvunion.map.p0": [
+     340896,
+     528
+    ]
+   },
+   "vm_need_words": 341440,
+   "fits": {
+    "as_built": false,
+    "grown_412k": true,
+    "vm_2p19": true
+   },
+   "emit": {
+    "rowx_records": 83,
+    "ok": 91,
+    "plain_records": 8,
+    "users_idx_key_store_strides": 1,
+    "users_hbm_strided_operands": 3,
+    "union_expert_in_loop": 18,
+    "union_slot_group_copies_folded": 64,
+    "note_att_plan_records": 2,
+    "union_K": 7
+   },
+   "errors": [],
+   "image_bytes": 12944,
+   "livein_words": 0,
+   "livein_top": [],
+   "self_overwritten_read_words": {
+    "COLL.ALL_GATHER": 129336
+   },
+   "c4_self_overwritten": {
+    "COLL.ALL_GATHER": 276792
+   },
+   "image_sha256": "32e1abe1cdae3675a7bc8efe5da4b9eb28823390b7c34c1b74bffce5d80b5776"
+  },
+  "33": {
+   "values": 369,
+   "objects": {
+    "pinned_column": 2,
+    "row_array": 44,
+    "shared_load": 5
+   },
+   "alloc": {
+    "pinned_words": 98336,
+    "high_water": 249984,
+    "object_bound": 233600,
+    "object_peak_at": 10244.79063785239,
+    "peak_objects": [
+     {
+      "kind": "row_array",
+      "anchor": "0|SU.VOP|attn.res_copy",
+      "rows": 4,
+      "size": 20480,
+      "need": 81920,
+      "ar": [
+       20480,
+       40960
+      ],
+      "t0": 8843.8,
+      "t1": 12169.2,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|COLL.GROUP_REDUCE_MCAST|o-group tree reduce (8 contributors) + multicast",
+      "rows": 4,
+      "size": 12288,
+      "need": 49152,
+      "ar": [
+       69952,
+       82240
+      ],
+      "t0": 8833.8,
+      "t1": 10664.3,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|SM.MATVEC|wo_b",
+      "rows": 4,
+      "size": 5120,
+      "need": 20480,
+      "ar": [
+       82240,
+       87360
+      ],
+      "t0": 10244.8,
+      "t1": 12169.2,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|HC.HC_MIX|hc_attn (mixes + Sinkhorn)",
+      "rows": 4,
+      "size": 24,
+      "need": 96,
+      "ar": [
+       41024,
+       41048
+      ],
+      "t0": 8842.8,
+      "t1": 13395.2,
+      "packed": false
+     }
+    ],
+    "method": "greedy_by_size",
+    "tries": {
+     "first_fit_by_time": 258112,
+     "greedy_by_size": 249984
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 81920
+    }
+   },
+   "c4_peak": 201734,
+   "frag_over_c4": 1.239,
+   "objects_over_c4": 1.158,
+   "aux": {
+    "users.table": [
+     329792,
+     8
+    ],
+    "union.list": [
+     329824,
+     24
+    ],
+    "union.count": [
+     329856,
+     1
+    ],
+    "union.tables": [
+     329888,
+     768
+    ],
+    "kvunion.plan.p0": [
+     330656,
+     10240
+    ],
+    "kvunion.map.p0": [
+     340896,
+     528
+    ]
+   },
+   "vm_need_words": 341440,
+   "fits": {
+    "as_built": false,
+    "grown_412k": true,
+    "vm_2p19": true
+   },
+   "emit": {
+    "rowx_records": 75,
+    "ok": 82,
+    "users_hbm_strided_operands": 1,
+    "plain_records": 7,
+    "union_expert_in_loop": 18,
+    "union_slot_group_copies_folded": 64,
+    "note_att_plan_records": 2,
+    "union_K": 7
+   },
+   "errors": [],
+   "image_bytes": 11680,
+   "livein_words": 0,
+   "livein_top": [],
+   "self_overwritten_read_words": {
+    "COLL.ALL_GATHER": 112992
+   },
+   "c4_self_overwritten": {
+    "COLL.ALL_GATHER": 260448
+   },
+   "image_sha256": "d00e9af149b3a7e30623acd79c17d6c7cc869cca5380d4647b5c7ae41697cccd"
+  },
+  "34": {
+   "values": 369,
+   "objects": {
+    "pinned_column": 2,
+    "row_array": 44,
+    "shared_load": 5
+   },
+   "alloc": {
+    "pinned_words": 98336,
+    "high_water": 249984,
+    "object_bound": 233600,
+    "object_peak_at": 10244.79063785239,
+    "peak_objects": [
+     {
+      "kind": "row_array",
+      "anchor": "0|SU.VOP|attn.res_copy",
+      "rows": 4,
+      "size": 20480,
+      "need": 81920,
+      "ar": [
+       20480,
+       40960
+      ],
+      "t0": 8843.8,
+      "t1": 12169.2,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|COLL.GROUP_REDUCE_MCAST|o-group tree reduce (8 contributors) + multicast",
+      "rows": 4,
+      "size": 12288,
+      "need": 49152,
+      "ar": [
+       69952,
+       82240
+      ],
+      "t0": 8833.8,
+      "t1": 10664.3,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|SM.MATVEC|wo_b",
+      "rows": 4,
+      "size": 5120,
+      "need": 20480,
+      "ar": [
+       82240,
+       87360
+      ],
+      "t0": 10244.8,
+      "t1": 12169.2,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|HC.HC_MIX|hc_attn (mixes + Sinkhorn)",
+      "rows": 4,
+      "size": 24,
+      "need": 96,
+      "ar": [
+       41024,
+       41048
+      ],
+      "t0": 8842.8,
+      "t1": 13395.2,
+      "packed": false
+     }
+    ],
+    "method": "greedy_by_size",
+    "tries": {
+     "first_fit_by_time": 258112,
+     "greedy_by_size": 249984
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 81920
+    }
+   },
+   "c4_peak": 201734,
+   "frag_over_c4": 1.239,
+   "objects_over_c4": 1.158,
+   "aux": {
+    "users.table": [
+     329792,
+     8
+    ],
+    "union.list": [
+     329824,
+     24
+    ],
+    "union.count": [
+     329856,
+     1
+    ],
+    "union.tables": [
+     329888,
+     768
+    ],
+    "kvunion.plan.p0": [
+     330656,
+     10240
+    ],
+    "kvunion.map.p0": [
+     340896,
+     528
+    ]
+   },
+   "vm_need_words": 341440,
+   "fits": {
+    "as_built": false,
+    "grown_412k": true,
+    "vm_2p19": true
+   },
+   "emit": {
+    "rowx_records": 75,
+    "ok": 82,
+    "users_hbm_strided_operands": 1,
+    "plain_records": 7,
+    "union_expert_in_loop": 18,
+    "union_slot_group_copies_folded": 64,
+    "note_att_plan_records": 2,
+    "union_K": 7
+   },
+   "errors": [],
+   "image_bytes": 11680,
+   "livein_words": 0,
+   "livein_top": [],
+   "self_overwritten_read_words": {
+    "COLL.ALL_GATHER": 112992
+   },
+   "c4_self_overwritten": {
+    "COLL.ALL_GATHER": 260448
+   },
+   "image_sha256": "eca8ab223b0d898a19efd077e796a1ab5720d2edbc9390d95a2ddbf5fde15237"
+  },
+  "35": {
+   "values": 369,
+   "objects": {
+    "pinned_column": 2,
+    "row_array": 44,
+    "shared_load": 5
+   },
+   "alloc": {
+    "pinned_words": 98336,
+    "high_water": 249984,
+    "object_bound": 233600,
+    "object_peak_at": 10244.79063785239,
+    "peak_objects": [
+     {
+      "kind": "row_array",
+      "anchor": "0|SU.VOP|attn.res_copy",
+      "rows": 4,
+      "size": 20480,
+      "need": 81920,
+      "ar": [
+       20480,
+       40960
+      ],
+      "t0": 8843.8,
+      "t1": 12169.2,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|COLL.GROUP_REDUCE_MCAST|o-group tree reduce (8 contributors) + multicast",
+      "rows": 4,
+      "size": 12288,
+      "need": 49152,
+      "ar": [
+       69952,
+       82240
+      ],
+      "t0": 8833.8,
+      "t1": 10664.3,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|SM.MATVEC|wo_b",
+      "rows": 4,
+      "size": 5120,
+      "need": 20480,
+      "ar": [
+       82240,
+       87360
+      ],
+      "t0": 10244.8,
+      "t1": 12169.2,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|HC.HC_MIX|hc_attn (mixes + Sinkhorn)",
+      "rows": 4,
+      "size": 24,
+      "need": 96,
+      "ar": [
+       41024,
+       41048
+      ],
+      "t0": 8842.8,
+      "t1": 13395.2,
+      "packed": false
+     }
+    ],
+    "method": "greedy_by_size",
+    "tries": {
+     "first_fit_by_time": 258112,
+     "greedy_by_size": 249984
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 81920
+    }
+   },
+   "c4_peak": 201734,
+   "frag_over_c4": 1.239,
+   "objects_over_c4": 1.158,
+   "aux": {
+    "users.table": [
+     329792,
+     8
+    ],
+    "union.list": [
+     329824,
+     24
+    ],
+    "union.count": [
+     329856,
+     1
+    ],
+    "union.tables": [
+     329888,
+     768
+    ],
+    "kvunion.plan.p0": [
+     330656,
+     10240
+    ],
+    "kvunion.map.p0": [
+     340896,
+     528
+    ]
+   },
+   "vm_need_words": 341440,
+   "fits": {
+    "as_built": false,
+    "grown_412k": true,
+    "vm_2p19": true
+   },
+   "emit": {
+    "rowx_records": 75,
+    "ok": 82,
+    "users_hbm_strided_operands": 1,
+    "plain_records": 7,
+    "union_expert_in_loop": 18,
+    "union_slot_group_copies_folded": 64,
+    "note_att_plan_records": 2,
+    "union_K": 7
+   },
+   "errors": [],
+   "image_bytes": 11680,
+   "livein_words": 0,
+   "livein_top": [],
+   "self_overwritten_read_words": {
+    "COLL.ALL_GATHER": 112992
+   },
+   "c4_self_overwritten": {
+    "COLL.ALL_GATHER": 260448
+   },
+   "image_sha256": "fe1268f817ff3818ae740e92a893bb5ceaee802be714ee3bd6f7a02f25863603"
+  },
+  "36": {
+   "values": 529,
+   "objects": {
+    "row_array": 50,
+    "pinned_column": 3,
+    "shared_load": 5
+   },
+   "alloc": {
+    "pinned_words": 98336,
+    "high_water": 250376,
+    "object_bound": 250376,
+    "object_peak_at": 32705.227777578966,
+    "peak_objects": [
+     {
+      "kind": "row_array",
+      "anchor": "0|SU.VOP|attn.res_copy",
+      "rows": 4,
+      "size": 20480,
+      "need": 81920,
+      "ar": [
+       20480,
+       40960
+      ],
+      "t0": 2740.3,
+      "t1": 34629.7,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|COLL.GROUP_REDUCE_MCAST|o-group tree reduce (8 contributors) + multicast",
+      "rows": 4,
+      "size": 12288,
+      "need": 49152,
+      "ar": [
+       69952,
+       82240
+      ],
+      "t0": 31294.3,
+      "t1": 33124.7,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|SM.MATVEC|wo_b",
+      "rows": 4,
+      "size": 5120,
+      "need": 20480,
+      "ar": [
+       82240,
+       87360
+      ],
+      "t0": 32705.2,
+      "t1": 34629.7,
+      "packed": false
+     },
+     {
+      "kind": "shared_load",
+      "anchor": "0|DMA.LOAD|route.bias",
+      "rows": 1,
+      "size": 384,
+      "need": 384,
+      "ar": [
+       87744,
+       88128
+      ],
+      "t0": 2741.3,
+      "t1": 37901.6,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|HC.HC_MIX|hc_attn (mixes + Sinkhorn)",
+      "rows": 4,
+      "size": 24,
+      "need": 96,
+      "ar": [
+       41024,
+       41048
+      ],
+      "t0": 2739.3,
+      "t1": 35855.6,
+      "packed": false
+     },
+     {
+      "kind": "shared_load",
+      "anchor": "0|DMA.LOAD|route.one",
+      "rows": 1,
+      "size": 8,
+      "need": 8,
+      "ar": [
+       88768,
+       88775
+      ],
+      "t0": 4365.1,
+      "t1": 40228.9,
+      "packed": false
+     }
+    ],
+    "method": "greedy_by_size",
+    "tries": {
+     "first_fit_by_time": 290464,
+     "greedy_by_size": 250376
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 81920,
+     "188864": 81952
+    }
+   },
+   "c4_peak": 197522,
+   "frag_over_c4": 1.268,
+   "objects_over_c4": 1.268,
+   "aux": {
+    "users.table": [
+     329792,
+     8
+    ],
+    "union.list": [
+     329824,
+     24
+    ],
+    "union.count": [
+     329856,
+     1
+    ],
+    "union.tables": [
+     329888,
+     768
+    ],
+    "kvunion.plan.p0": [
+     330656,
+     10240
+    ],
+    "kvunion.map.p0": [
+     340896,
+     528
+    ]
+   },
+   "vm_need_words": 341440,
+   "fits": {
+    "as_built": false,
+    "grown_412k": true,
+    "vm_2p19": true
+   },
+   "emit": {
+    "rowx_records": 83,
+    "ok": 91,
+    "plain_records": 8,
+    "users_idx_key_store_strides": 1,
+    "users_hbm_strided_operands": 3,
+    "union_expert_in_loop": 18,
+    "union_slot_group_copies_folded": 64,
+    "note_att_plan_records": 2,
+    "union_K": 7
+   },
+   "errors": [],
+   "image_bytes": 12944,
+   "livein_words": 0,
+   "livein_top": [],
+   "self_overwritten_read_words": {
+    "COLL.ALL_GATHER": 129336
+   },
+   "c4_self_overwritten": {
+    "COLL.ALL_GATHER": 276792
+   },
+   "image_sha256": "851e6e41642848fc470ff6b33b5229b0c8c1e6ea208909cecfc72220a0e869d4"
+  },
+  "37": {
+   "values": 369,
+   "objects": {
+    "pinned_column": 2,
+    "row_array": 44,
+    "shared_load": 5
+   },
+   "alloc": {
+    "pinned_words": 98336,
+    "high_water": 249984,
+    "object_bound": 233600,
+    "object_peak_at": 10244.79063785239,
+    "peak_objects": [
+     {
+      "kind": "row_array",
+      "anchor": "0|SU.VOP|attn.res_copy",
+      "rows": 4,
+      "size": 20480,
+      "need": 81920,
+      "ar": [
+       20480,
+       40960
+      ],
+      "t0": 8843.8,
+      "t1": 12169.2,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|COLL.GROUP_REDUCE_MCAST|o-group tree reduce (8 contributors) + multicast",
+      "rows": 4,
+      "size": 12288,
+      "need": 49152,
+      "ar": [
+       69952,
+       82240
+      ],
+      "t0": 8833.8,
+      "t1": 10664.3,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|SM.MATVEC|wo_b",
+      "rows": 4,
+      "size": 5120,
+      "need": 20480,
+      "ar": [
+       82240,
+       87360
+      ],
+      "t0": 10244.8,
+      "t1": 12169.2,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|HC.HC_MIX|hc_attn (mixes + Sinkhorn)",
+      "rows": 4,
+      "size": 24,
+      "need": 96,
+      "ar": [
+       41024,
+       41048
+      ],
+      "t0": 8842.8,
+      "t1": 13395.2,
+      "packed": false
+     }
+    ],
+    "method": "greedy_by_size",
+    "tries": {
+     "first_fit_by_time": 258112,
+     "greedy_by_size": 249984
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 81920
+    }
+   },
+   "c4_peak": 201734,
+   "frag_over_c4": 1.239,
+   "objects_over_c4": 1.158,
+   "aux": {
+    "users.table": [
+     329792,
+     8
+    ],
+    "union.list": [
+     329824,
+     24
+    ],
+    "union.count": [
+     329856,
+     1
+    ],
+    "union.tables": [
+     329888,
+     768
+    ],
+    "kvunion.plan.p0": [
+     330656,
+     10240
+    ],
+    "kvunion.map.p0": [
+     340896,
+     528
+    ]
+   },
+   "vm_need_words": 341440,
+   "fits": {
+    "as_built": false,
+    "grown_412k": true,
+    "vm_2p19": true
+   },
+   "emit": {
+    "rowx_records": 75,
+    "ok": 82,
+    "users_hbm_strided_operands": 1,
+    "plain_records": 7,
+    "union_expert_in_loop": 18,
+    "union_slot_group_copies_folded": 64,
+    "note_att_plan_records": 2,
+    "union_K": 7
+   },
+   "errors": [],
+   "image_bytes": 11680,
+   "livein_words": 0,
+   "livein_top": [],
+   "self_overwritten_read_words": {
+    "COLL.ALL_GATHER": 112992
+   },
+   "c4_self_overwritten": {
+    "COLL.ALL_GATHER": 260448
+   },
+   "image_sha256": "a058177b9afb0f579fee6f30fff2b350308f2f4317a67bb4883990e151a50f34"
+  },
+  "38": {
+   "values": 369,
+   "objects": {
+    "pinned_column": 2,
+    "row_array": 44,
+    "shared_load": 5
+   },
+   "alloc": {
+    "pinned_words": 98336,
+    "high_water": 249984,
+    "object_bound": 233600,
+    "object_peak_at": 10244.79063785239,
+    "peak_objects": [
+     {
+      "kind": "row_array",
+      "anchor": "0|SU.VOP|attn.res_copy",
+      "rows": 4,
+      "size": 20480,
+      "need": 81920,
+      "ar": [
+       20480,
+       40960
+      ],
+      "t0": 8843.8,
+      "t1": 12169.2,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|COLL.GROUP_REDUCE_MCAST|o-group tree reduce (8 contributors) + multicast",
+      "rows": 4,
+      "size": 12288,
+      "need": 49152,
+      "ar": [
+       69952,
+       82240
+      ],
+      "t0": 8833.8,
+      "t1": 10664.3,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|SM.MATVEC|wo_b",
+      "rows": 4,
+      "size": 5120,
+      "need": 20480,
+      "ar": [
+       82240,
+       87360
+      ],
+      "t0": 10244.8,
+      "t1": 12169.2,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|HC.HC_MIX|hc_attn (mixes + Sinkhorn)",
+      "rows": 4,
+      "size": 24,
+      "need": 96,
+      "ar": [
+       41024,
+       41048
+      ],
+      "t0": 8842.8,
+      "t1": 13395.2,
+      "packed": false
+     }
+    ],
+    "method": "greedy_by_size",
+    "tries": {
+     "first_fit_by_time": 258112,
+     "greedy_by_size": 249984
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 81920
+    }
+   },
+   "c4_peak": 201734,
+   "frag_over_c4": 1.239,
+   "objects_over_c4": 1.158,
+   "aux": {
+    "users.table": [
+     329792,
+     8
+    ],
+    "union.list": [
+     329824,
+     24
+    ],
+    "union.count": [
+     329856,
+     1
+    ],
+    "union.tables": [
+     329888,
+     768
+    ],
+    "kvunion.plan.p0": [
+     330656,
+     10240
+    ],
+    "kvunion.map.p0": [
+     340896,
+     528
+    ]
+   },
+   "vm_need_words": 341440,
+   "fits": {
+    "as_built": false,
+    "grown_412k": true,
+    "vm_2p19": true
+   },
+   "emit": {
+    "rowx_records": 75,
+    "ok": 82,
+    "users_hbm_strided_operands": 1,
+    "plain_records": 7,
+    "union_expert_in_loop": 18,
+    "union_slot_group_copies_folded": 64,
+    "note_att_plan_records": 2,
+    "union_K": 7
+   },
+   "errors": [],
+   "image_bytes": 11680,
+   "livein_words": 0,
+   "livein_top": [],
+   "self_overwritten_read_words": {
+    "COLL.ALL_GATHER": 112992
+   },
+   "c4_self_overwritten": {
+    "COLL.ALL_GATHER": 260448
+   },
+   "image_sha256": "7fb9ed4f17410df9be322ec1dfb3eedc319751d39ea9e401a22e9ea40255abab"
+  },
+  "39": {
+   "values": 369,
+   "objects": {
+    "pinned_column": 2,
+    "row_array": 44,
+    "shared_load": 5
+   },
+   "alloc": {
+    "pinned_words": 98336,
+    "high_water": 249984,
+    "object_bound": 233600,
+    "object_peak_at": 10244.79063785239,
+    "peak_objects": [
+     {
+      "kind": "row_array",
+      "anchor": "0|SU.VOP|attn.res_copy",
+      "rows": 4,
+      "size": 20480,
+      "need": 81920,
+      "ar": [
+       20480,
+       40960
+      ],
+      "t0": 8843.8,
+      "t1": 12169.2,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|COLL.GROUP_REDUCE_MCAST|o-group tree reduce (8 contributors) + multicast",
+      "rows": 4,
+      "size": 12288,
+      "need": 49152,
+      "ar": [
+       69952,
+       82240
+      ],
+      "t0": 8833.8,
+      "t1": 10664.3,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|SM.MATVEC|wo_b",
+      "rows": 4,
+      "size": 5120,
+      "need": 20480,
+      "ar": [
+       82240,
+       87360
+      ],
+      "t0": 10244.8,
+      "t1": 12169.2,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|HC.HC_MIX|hc_attn (mixes + Sinkhorn)",
+      "rows": 4,
+      "size": 24,
+      "need": 96,
+      "ar": [
+       41024,
+       41048
+      ],
+      "t0": 8842.8,
+      "t1": 13395.2,
+      "packed": false
+     }
+    ],
+    "method": "greedy_by_size",
+    "tries": {
+     "first_fit_by_time": 258112,
+     "greedy_by_size": 249984
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 81920
+    }
+   },
+   "c4_peak": 201734,
+   "frag_over_c4": 1.239,
+   "objects_over_c4": 1.158,
+   "aux": {
+    "users.table": [
+     329792,
+     8
+    ],
+    "union.list": [
+     329824,
+     24
+    ],
+    "union.count": [
+     329856,
+     1
+    ],
+    "union.tables": [
+     329888,
+     768
+    ],
+    "kvunion.plan.p0": [
+     330656,
+     10240
+    ],
+    "kvunion.map.p0": [
+     340896,
+     528
+    ]
+   },
+   "vm_need_words": 341440,
+   "fits": {
+    "as_built": false,
+    "grown_412k": true,
+    "vm_2p19": true
+   },
+   "emit": {
+    "rowx_records": 75,
+    "ok": 82,
+    "users_hbm_strided_operands": 1,
+    "plain_records": 7,
+    "union_expert_in_loop": 18,
+    "union_slot_group_copies_folded": 64,
+    "note_att_plan_records": 2,
+    "union_K": 7
+   },
+   "errors": [],
+   "image_bytes": 11680,
+   "livein_words": 0,
+   "livein_top": [],
+   "self_overwritten_read_words": {
+    "COLL.ALL_GATHER": 112992
+   },
+   "c4_self_overwritten": {
+    "COLL.ALL_GATHER": 260448
+   },
+   "image_sha256": "dbf844391de462764b741a1d3cc4bd9573adb7f69bb56efc260debd37b5f6270"
+  },
+  "head": {
+   "values": 20,
+   "objects": {
+    "pinned_column": 2,
+    "row_array": 3
+   },
+   "alloc": {
+    "pinned_words": 98336,
+    "high_water": 118848,
+    "object_bound": 102464,
+    "object_peak_at": 1434.9519999999998,
+    "peak_objects": [
+     {
+      "kind": "row_array",
+      "anchor": "0|FUSED.HC_PRE_NORM|final hc_pre + norm",
+      "rows": 4,
+      "size": 5120,
+      "need": 20480,
+      "ar": [
+       41152,
+       46272
+      ],
+      "t0": 185,
+      "t1": 6481.2,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|ARGMAX.LOCAL|argmax_local",
+      "rows": 4,
+      "size": 8,
+      "need": 32,
+      "ar": [
+       110080,
+       110082
+      ],
+      "t0": 1435.0,
+      "t1": 7355.4,
+      "packed": false
+     }
+    ],
+    "method": "first_fit_by_time",
+    "tries": {
+     "first_fit_by_time": 118848,
+     "greedy_by_size": 118848
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 81920
+    }
+   },
+   "c4_peak": 81936,
+   "frag_over_c4": 1.45,
+   "objects_over_c4": 1.251,
+   "aux": {
+    "users.table": [
+     329792,
+     8
+    ],
+    "tokx": [
+     329824,
+     5
+    ]
+   },
+   "vm_need_words": 329856,
+   "fits": {
+    "as_built": false,
+    "grown_412k": true,
+    "vm_2p19": true
+   },
+   "emit": {
+    "rowx_records": 4,
+    "ok": 4,
+    "tail": {
+     "ok": 6,
+     "rowx_records": 4,
+     "plain_records": 2,
+     "tokx_base": 329824,
+     "accept_base": null
+    }
+   },
+   "errors": [],
+   "image_bytes": 608,
+   "livein_words": 0,
+   "livein_top": [],
+   "self_overwritten_read_words": {},
+   "c4_self_overwritten": {},
+   "image_sha256": "1004006258d85cc084c281bd84ebc582468f88479e71d422e8d6e37eaeaf9e1f"
+  }
+ },
+ "carried": {
+  "carried": [
+   [
+    188864,
+    192960
+   ]
+  ],
+  "host": [],
+  "consumers": [
+   {
+    "segment": "24",
+    "words": 4096,
+    "from_earlier": 4096
+   },
+   {
+    "segment": "28",
+    "words": 4096,
+    "from_earlier": 4096
+   },
+   {
+    "segment": "32",
+    "words": 4096,
+    "from_earlier": 4096
+   },
+   {
+    "segment": "36",
+    "words": 4096,
+    "from_earlier": 4096
+   }
+  ],
+  "pinned": [
+   [
+    0,
+    20480,
+    0
+   ],
+   [
+    40960,
+    40964,
+    81920
+   ],
+   [
+    188864,
+    192960,
+    81952
+   ]
+  ],
+  "pinned_words": 98336,
+  "rule": "AR intervals read before any in-segment writer and written by some segment (outside h / PRE): pinned N-row arrays at one token-wide base, like h / PRE"
+ },
+ "vm_map": {
+  "aux_base": 329792,
+  "largest_high_water": 329792,
+  "note": "pinned columns h / PRE at 0, every segment's aux at aux_base; values a segment reads before its own writer (live-ins, not pinned) are listed in token.liveins: their producer's placement is NOT yet tied to the consumer's (open)"
+ },
+ "users_hbm": {
+  "hsh": 12,
+  "stride_bytes": 1073741824,
+  "collisions_by_stride": {
+   "1073741824": 0
+  }
+ },
+ "users_prologue": {
+  "stats": {
+   "ok": 1,
+   "rowx_records": 1
+  },
+  "errors": [],
+  "sha256": "5d0c1760a38ae9b05cf199111ca41946740ade8ba293e7ad9c2f71418417d6ec",
+  "note": "A = the host-written {token_s, pos_s} table at the image's users.table aux address (the per-segment aux map below); relocated by the whole-token assembler"
+ },
+ "token": {
+  "image": "mu_N4_token.hgi1r",
+  "bytes": 498928,
+  "records": 3595,
+  "sha256": "e64d5c16cab6e859cc7c28af01d5f757e06601723a4d2398b62a83f88174ef9e",
+  "liveins": {},
+  "pinned_bases": {
+   "0": [
+    0
+   ],
+   "40960": [
+    81920
+   ],
+   "188864": [
+    81952
+   ]
+  },
+  "pinned_one_base": true,
+  "host_preloaded": [],
+  "one_vm_map": true,
+  "end_at": [
+   3594
+  ],
+  "end_ok": true,
+  "ctl_ops": {
+   "USERS": 1,
+   "LOOP": 80,
+   "ENDLOOP": 80,
+   "NOP": 109,
+   "TOKX": 1,
+   "END": 1
+  },
+  "segments": [
+   {
+    "segment": "users_prologue",
+    "offset": 0,
+    "bytes": 80
+   },
+   {
+    "segment": "0",
+    "offset": 80,
+    "bytes": 11616,
+    "sha256": "c9374658d8bde74109ba3f46ad42919d2fbae590011fe7f024c93fdf10adcf89"
+   },
+   {
+    "segment": "1",
+    "offset": 11696,
+    "bytes": 20784,
+    "sha256": "446c075b00b7d46a01360b624b73ddc825abccd0e6c8f4c8f8d0300cec3c6f41"
+   },
+   {
+    "segment": "2",
+    "offset": 32480,
+    "bytes": 13616,
+    "sha256": "406cbc783674f5f5a11a5db1c68352215168b7d723beb83ba99eb75aee26f535"
+   },
+   {
+    "segment": "3",
+    "offset": 46096,
+    "bytes": 11680,
+    "sha256": "95c39cfc23b3e62c1d0b8ee356bcbfa873c1b2cfb8fac798e733850b7d77a382"
+   },
+   {
+    "segment": "4",
+    "offset": 57776,
+    "bytes": 11680,
+    "sha256": "a889bbada24cbcba790b6cc7d6f2e17b9d96e06eab2e7c38e2cb8ab45d135076"
+   },
+   {
+    "segment": "5",
+    "offset": 69456,
+    "bytes": 11680,
+    "sha256": "527b7b5b0444c5aff77cdd6d89280cecc14ab188730ac44b7d2adc6a57e08e26"
+   },
+   {
+    "segment": "6",
+    "offset": 81136,
+    "bytes": 11680,
+    "sha256": "99e038f3affd4b5b0442827f348231ba2325d712c67620d2321225d2a501f935"
+   },
+   {
+    "segment": "7",
+    "offset": 92816,
+    "bytes": 11680,
+    "sha256": "60ada4da7517bef09c9fb098d3e8d756413f4840214841f950659454c9b956a8"
+   },
+   {
+    "segment": "8",
+    "offset": 104496,
+    "bytes": 13616,
+    "sha256": "911cc641c371f12b4ae9a2f5ad7001bcf125effc767326a504693b9d2fe9820c"
+   },
+   {
+    "segment": "9",
+    "offset": 118112,
+    "bytes": 11680,
+    "sha256": "8b10ebcb20a7d2cf879a4533131688af274fa6369bc15f1b16695ad4b0a51be0"
+   },
+   {
+    "segment": "10",
+    "offset": 129792,
+    "bytes": 11680,
+    "sha256": "0bcd81ad47894065157511a88a72c5e4e07ff209994bd2496e2f1c817b7690e1"
+   },
+   {
+    "segment": "11",
+    "offset": 141472,
+    "bytes": 11680,
+    "sha256": "caa9af8e7aa530f7679424e0f42181c9a8d6b58fbb7ea0ad8348a63e9a1e189b"
+   },
+   {
+    "segment": "12",
+    "offset": 153152,
+    "bytes": 11680,
+    "sha256": "95ba68f23d79f60b819f421b103a7e1ee6d72645a5cf2139ea8f658729a38cd0"
+   },
+   {
+    "segment": "13",
+    "offset": 164832,
+    "bytes": 11680,
+    "sha256": "e0a87936e37905d54081ce67e784222fb9221f7dbc44c5e9e01ca800de52939a"
+   },
+   {
+    "segment": "14",
+    "offset": 176512,
+    "bytes": 22784,
+    "sha256": "6d06c6744135daef538bb9783ee01595f8e247dbca9ae654aeb0d1f1d3edf48f"
+   },
+   {
+    "segment": "15",
+    "offset": 199296,
+    "bytes": 11680,
+    "sha256": "7de8814c59f2f0116d7996e304a9db0f674fdc5bedf7da924adb2314f239956f"
+   },
+   {
+    "segment": "16",
+    "offset": 210976,
+    "bytes": 11680,
+    "sha256": "c7754f3391ce34e494acc883d66b1c03b12b5b879118ffc7cd6345601417a580"
+   },
+   {
+    "segment": "17",
+    "offset": 222656,
+    "bytes": 11680,
+    "sha256": "5ca5559421685ec67a82f9b6e3b2e11070a653ead9199fcb1f76ca12dcbff443"
+   },
+   {
+    "segment": "18",
+    "offset": 234336,
+    "bytes": 11680,
+    "sha256": "de1ea18e5fe496d37e2abeb2b8d33606efeaff4da1488fb40999f36b7a0ee704"
+   },
+   {
+    "segment": "19",
+    "offset": 246016,
+    "bytes": 11680,
+    "sha256": "5104c08db84d0fd4d102b249a47d35bf94df20d96d69c1d6b4f0d388f94d1667"
+   },
+   {
+    "segment": "20",
+    "offset": 257696,
+    "bytes": 13648,
+    "sha256": "efb0e1418094af93f3930f8c5e78448a76038e51fe144626ac4f6cc43ccc6f80"
+   },
+   {
+    "segment": "21",
+    "offset": 271344,
+    "bytes": 11680,
+    "sha256": "0d3db10e1e89082174298f84167b9ededd9c16b9f1a83b79284d935b6985157f"
+   },
+   {
+    "segment": "22",
+    "offset": 283024,
+    "bytes": 11680,
+    "sha256": "11f1631d747891d18b4a8f0a613246dd1a16cfb95a12123f3a0c9d41d86990cc"
+   },
+   {
+    "segment": "23",
+    "offset": 294704,
+    "bytes": 11680,
+    "sha256": "8a44da8d5f1fadad08f641e6e94bbe0f7757a19fbd8d4ef2c3aa22bbabe18657"
+   },
+   {
+    "segment": "24",
+    "offset": 306384,
+    "bytes": 12944,
+    "sha256": "53d3abaeb38f6462bdd2b1b19d12d43c0e3ae4be4fcd6f943c5b6037d07a123b"
+   },
+   {
+    "segment": "25",
+    "offset": 319328,
+    "bytes": 11680,
+    "sha256": "992335696a39ff90860f2f66170a6fe68c6896e00219d9d1cd5452b5ca146f19"
+   },
+   {
+    "segment": "26",
+    "offset": 331008,
+    "bytes": 11680,
+    "sha256": "4c0dcbfdd7d1f6d501e179be82b3ff3038795fdff9b275f4639ead30c1922fe8"
+   },
+   {
+    "segment": "27",
+    "offset": 342688,
+    "bytes": 11680,
+    "sha256": "00e823502c12173fefcb8a584a726e31de2da9952c309018d848798d9d9785cb"
+   },
+   {
+    "segment": "28",
+    "offset": 354368,
+    "bytes": 12944,
+    "sha256": "baa45c4fd37b33736b92635e3089402349358939a6068f8f4d6ed31dd562212f"
+   },
+   {
+    "segment": "29",
+    "offset": 367312,
+    "bytes": 11680,
+    "sha256": "0d89d3096508767b0873863fe2d63ba7f1b4dd2e53d8504f9df9c236fbf134fa"
+   },
+   {
+    "segment": "30",
+    "offset": 378992,
+    "bytes": 11680,
+    "sha256": "7e77f97844303f77b151ee142290080eac45f623ed10c8a6bce3611c7153b813"
+   },
+   {
+    "segment": "31",
+    "offset": 390672,
+    "bytes": 11680,
+    "sha256": "f422580921e2c1fbf06c426d24fd2c302a0a656a3a062bbbcbc846b465305b29"
+   },
+   {
+    "segment": "32",
+    "offset": 402352,
+    "bytes": 12944,
+    "sha256": "32e1abe1cdae3675a7bc8efe5da4b9eb28823390b7c34c1b74bffce5d80b5776"
+   },
+   {
+    "segment": "33",
+    "offset": 415296,
+    "bytes": 11680,
+    "sha256": "d00e9af149b3a7e30623acd79c17d6c7cc869cca5380d4647b5c7ae41697cccd"
+   },
+   {
+    "segment": "34",
+    "offset": 426976,
+    "bytes": 11680,
+    "sha256": "eca8ab223b0d898a19efd077e796a1ab5720d2edbc9390d95a2ddbf5fde15237"
+   },
+   {
+    "segment": "35",
+    "offset": 438656,
+    "bytes": 11680,
+    "sha256": "fe1268f817ff3818ae740e92a893bb5ceaee802be714ee3bd6f7a02f25863603"
+   },
+   {
+    "segment": "36",
+    "offset": 450336,
+    "bytes": 12944,
+    "sha256": "851e6e41642848fc470ff6b33b5229b0c8c1e6ea208909cecfc72220a0e869d4"
+   },
+   {
+    "segment": "37",
+    "offset": 463280,
+    "bytes": 11680,
+    "sha256": "a058177b9afb0f579fee6f30fff2b350308f2f4317a67bb4883990e151a50f34"
+   },
+   {
+    "segment": "38",
+    "offset": 474960,
+    "bytes": 11680,
+    "sha256": "7fb9ed4f17410df9be322ec1dfb3eedc319751d39ea9e401a22e9ea40255abab"
+   },
+   {
+    "segment": "39",
+    "offset": 486640,
+    "bytes": 11680,
+    "sha256": "dbf844391de462764b741a1d3cc4bd9573adb7f69bb56efc260debd37b5f6270"
+   },
+   {
+    "segment": "head",
+    "offset": 498320,
+    "bytes": 608,
+    "sha256": "1004006258d85cc084c281bd84ebc582468f88479e71d422e8d6e37eaeaf9e1f"
+   }
+  ],
+  "vm_need_words": 341440,
+  "fits_2p19": true,
+  "errors": 0
+ },
+ "sources_sha256": {
+  "tools/hbm_next/emitter.py": "d0a5180ea10b09c4dc14f23473ba291f930165ea8f31bb5628079cc166a60c34",
+  "tools/hbm_next/isa_rows.py": "778e66cf64b07fef7750b8ed97dffdd622670dbb83a98ba97a361afa560cb36b",
+  "tools/hbm_next/plane_compiler.py": "711576142f9c7ad33fc10aeedcc5698c8cb2f213786c5d0ebe74b44cc031fab2",
+  "tools/hbm_next/static_check.py": "49ec67d1effcb578d3e560f3c7e5ce06f85852c758d6702ae8514daf2f492e40"
+ }
+}

@@ -1,0 +1,15 @@
+STREAM MISMATCH cyc 1138 dut 3d6cc4e200022 model 3000000000022
+STREAM MISMATCH cyc 1144 dut 1000000000000 model 3000000000000
+STREAM MISMATCH cyc 1145 dut 1000000000000 model 3000000000011
+STREAM MISMATCH cyc 1146 dut 1000000000000 model 3d6cc4e200022
+STREAM MISMATCH cyc 1147 dut 1000000000000 model 3000000000033
+HNX_RP4LP4 P=4 MUT=3 LSKEW=8 chunks=52 words=1178 sel_beats=114 lane_bad=0 stream_bad=482 coll_model=0 coll_dut=0
+  lane 0 words 393
+  lane 1 words 384
+  lane 2 words 0
+  lane 3 words 369
+STREAM MISMATCH count=482
+FAIL HNX-RP4LP4 P=4 MUT=3
+[6060000] %Fatal: tb_hnx_rp4lp4_leaf.sv:154: Assertion failed in tb_hnx_rp4lp4_leaf.verdict: bench failed
+%Error: rtl/hbm_next/sm/tb/tb_hnx_rp4lp4_leaf.sv:154: Verilog $stop
+Aborting...

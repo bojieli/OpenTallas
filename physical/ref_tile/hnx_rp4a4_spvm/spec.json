@@ -1,0 +1,139 @@
+{
+ "name": "hnx_rp4a4_spvm",
+ "top": "ot_hnx_att4_spvm",
+ "kind": "tile",
+ "sources": [
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/gpu/ot_gpu_fadd.sv",
+  "rtl/hbm_next/att/ot_hnx_att4_smerge.sv",
+  "rtl/hbm_next/att/ot_hnx_att4_spvm.sv"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "macros": [],
+ "pins": {
+  "N": [
+   "clk",
+   "rst_n",
+   "ev",
+   "sum_lo",
+   "tag_lo",
+   "pub_start",
+   "pub_lane",
+   "pub_slot"
+  ],
+  "S": [
+   "sum_hi",
+   "tag_hi",
+   "pub_v",
+   "pub_data",
+   "pub_word",
+   "pub_out_slot",
+   "pub_out_lane",
+   "pub_tag",
+   "fault"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.025,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Claude:HBM-NEXT-ATT4",
+  "branch": "claude/hbm-next-att4-1019",
+  "tag": "g2",
+  "purpose": "HBM-NEXT-ATT4 A1 PRIMARY (next-release HBM die, P = 4; NOT a release element): the SHARED 4-lane PV merge of one BF16 column -- ot_hnx_att4_smerge (one 16-adder FP32 merge datapath, per-lane LV 3 flop rings, events held in the binary counter's free level, residue-static schedule, collision = fault, PUBLISH = 1), every pin registered; STEP 3: turn pre-decoded one cycle ahead (registered one-hot selects per 32-b word, kept copies), reset landed per adder, outline shrunk to util 0.55 of the measured synthesis; STEP 4: decode inputs (ev, tag) LANDED through one more register beside the decode (all inputs +1 edge, uniform retiming) -- the step-3 gate missed SS -167 ps from the N-face ev pin register wire; replaces 4 x hnx_rp4a4_pvm per column. Critical prefix hnx_rp4a4*: gate + COORD review only, no submit.",
+  "extra_paths": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "rtl/gpu",
+   "rtl/hbm_next/att",
+   "rtl/proto",
+   "tools/hbm_next",
+   "tools/hbm_sm_attention",
+   "tools/hdc_golden.py",
+   "tools/hdc_golden_v41.py",
+   "tools/hgi_sim"
+  ],
+  "benches": [
+   {
+    "name": "att4_slice_shared_exact",
+    "cmd": "python3 tools/hbm_next/att4_bench.py run --work {RUN}/bench/pos --out {RUN}/bench/pos.json --variant shared --only q4,p4,q10,p10",
+    "expect": "pass",
+    "pass_regex": "^PASS HNX_ATT4",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "att4_slice_shared_smut1",
+    "cmd": "python3 tools/hbm_next/att4_bench.py run --work {RUN}/bench/neg --out {RUN}/bench/neg.json --variant shared --smut 1 --only p0,p1,p2,p3",
+    "expect": "fail",
+    "fail_regex": "^FAIL HNX_ATT4",
+    "fail_witness": "results/arch/hbm_next_1019/att4/s4/witness/sh_smut1.log",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "att4_spvm_publish_exact",
+    "cmd": "python3 tools/hbm_next/att4_pub_bench.py run --work {RUN}/bench/pub --out {RUN}/bench/pub.json --mut 0",
+    "expect": "pass",
+    "pass_regex": "^PASS HNX_ATT4_PUB",
+    "threads": 16,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "att4_spvm_publish_mut5",
+    "cmd": "python3 tools/hbm_next/att4_pub_bench.py run --work {RUN}/bench/pubneg --out {RUN}/bench/pubneg.json --mut 5",
+    "expect": "fail",
+    "fail_regex": "^FAIL HNX_ATT4",
+    "fail_witness": "results/arch/hbm_next_1019/att4/s4/witness/pub_m5.log",
+    "threads": 16,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "views_to": "physical/ref_tile/hnx_rp4a4_spvm/views",
+  "record_to": "results/arch/hbm_next_1019/att4/tile_spvm"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "the RTL (ot_hnx_att4_spvm) already registers every data input and every output at its pin (one flop each, +1 edge each way, counted in the schedule); the reset lands in one kept register rq. A wrapper flop would add a second cycle per pin."
+ },
+ "std_area_um2": 33000,
+ "util": 0.55,
+ "params": {},
+ "children": [],
+ "inter": [],
+ "recipe": 4,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ },
+ "keep_pin_regs": true
+}

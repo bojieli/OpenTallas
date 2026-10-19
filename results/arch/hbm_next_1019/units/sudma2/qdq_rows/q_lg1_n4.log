@@ -1,0 +1,8 @@
+QDQ_ROWS PRICE_MISS cycles112 price72 (c1 fixed pipeline vs priced ceil(n/32)+8)
+QDQ_ROWS rows=4 beats=64 last_commit=112 price=72 row_beats=16
+PASS HGI_QDQ_STATIC_PROGRAM RG4_WG2 records=4 beats=64 sectors=256 commit_cycles=112 immutable_price=72 historical_wq3_price=184 programme_macros=1 data_macros=24
+- rtl/hbm_next/qdq/tb/tb_hnx_qdq_rows.sv:154: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 6us; walltime 0.020 s; speed 276.203 us/s
+- Verilator: cpu 0.020 s on 1 threads; allocated 10 MB
+RUN_RC=0

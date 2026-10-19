@@ -1,0 +1,9 @@
+PAYLOAD case1 row 1 col 0
+PAYLOAD case1 row 1 col 1
+PAYLOAD case1 row 1 col 2
+PAYLOAD case1 row 1 col 3
+PAYLOAD case1 row 1 col 4
+[56350000] %Fatal: tb_hnx_dma_kvwb_ring.sv:124: Assertion failed in tb_hnx_dma_kvwb_ring: KVWB_RING FAIL errors=1408 MUT=3
+%Error: rtl/hbm_next/dma/tb/tb_hnx_dma_kvwb_ring.sv:124: Verilog $stop
+Aborting...
+RUN_RC=1

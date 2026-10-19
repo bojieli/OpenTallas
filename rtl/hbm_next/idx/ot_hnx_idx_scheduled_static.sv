@@ -1,0 +1,46 @@
+// HBM-NEXT-UNITS-IDX 2026-10-19: copy-fork of rtl/hbm_accel/index/ot_hbm_idx_scheduled_static.sv for N-row IDX.INDEX
+// records: the issuer is ot_hnx_idx_calendar_rows (one row frame in SRAM, row r launched r x row_pitch edges after
+// start; n_rows / row_pitch / the two operand row strides come from the record's ROWX: N = nm1 + 1, pitch = the
+// compiled row II + rgap). Field decode as d4g, plus link clear = [5] & [4] (flush / emit only when the other is 0).
+`default_nettype none
+// Actual microprogram issuer joined to real native INDEX arithmetic and SRAM
+// operand ports. Programload is explicit initialization; start executes exactly
+// length instructions, never waits for data/credits/ready. key_slot/key_index
+// describe the reserved staged-service delivery edge, not a PHY request.
+// N_Q (A2P half die, 2026-10-16): number of KV quadrants whose key lines this client scores (one scorer each, slot
+// i = key_lines[i*8792+:8792], key ordinals compacted: slot i holds ordinals i*2736.. ). 4 = the full die (unchanged);
+// 2 = A2P (SW, NW). Absent scorer slots feed the 4-group selector no valid lane (kv 0).
+module ot_hnx_idx_scheduled_static #(parameter integer N_Q=4,TP=96,RANK_W=(TP<=1?1:$clog2(TP)))(
+ input wire clk_program,clk_program_mem,
+ input wire program_we,input wire[7:0]program_addr,input wire[255:0]program_data,
+ input wire start,input wire[11:0]length,input wire[4:0]n_rows,input wire[11:0]row_pitch,
+ input wire[15:0]weight_row_stride,query_row_stride,
+ input wire clk_operand,clk_query,clk_quant,clk_quant_delay,input wire[3:0]clk_query_bank,
+ input wire[N_Q-1:0]clk_score,input wire[4*N_Q-1:0]clk_engine,clk_meta,clk_tail,
+ input wire[16*N_Q-1:0]clk_chunk,input wire[512*N_Q-1:0]clk_hslice,
+ input wire clk_sel,input wire[3:0]clk_sel_q,input wire[11:0]clk_sel_mem,
+ input wire clk_link,input wire[7:0]clk_link_mem,input wire rst_n,
+ input wire[1:0]sid,input wire[15:0]weight_sector,query_sector,
+ output wire[135:0]vm_rq,input wire[2055:0]vm_rr,
+ input wire[RANK_W-1:0]rank,input wire[7:0]gbase,input wire[13:0]nkeys,input wire keep_en,input wire[342*N_Q-1:0]keep_bitmap,
+ output wire key_slot,output wire[7:0]key_index,input wire[8792*N_Q-1:0]key_lines,
+ output wire[3:0]tx_v,output wire[2179:0]tx,
+ output wire[610*N_Q-1:0]score_observe,output wire done,fault
+);
+ wire issue_v,calendar_fault,parent_fault,row_start;wire[31:0]ins;
+ ot_hnx_idx_calendar_rows calendar(.clk(clk_program),.clk_mem(clk_program_mem),.rst_n(rst_n),
+ .program_we(program_we),.program_addr(program_addr),.program_data(program_data),.start(start),.length(length),
+ .n_rows(n_rows),.pitch(row_pitch),.issue_v(issue_v),.instruction(ins),.row_start(row_start),.done(done),.fault(calendar_fault));
+ wire link_clear=issue_v&&ins[5]&&ins[4];
+ assign key_slot=issue_v&&ins[28];assign key_index=ins[27:20];
+ ot_hnx_idx_parent_static #(.N_Q(N_Q),.TP(TP)) parent(.clk_operand(clk_operand),.clk_query(clk_query),.clk_quant(clk_quant),.clk_quant_delay(clk_quant_delay),.clk_query_bank(clk_query_bank),
+ .clk_score(clk_score),.clk_engine(clk_engine),.clk_meta(clk_meta),.clk_tail(clk_tail),.clk_chunk(clk_chunk),.clk_hslice(clk_hslice),
+ .clk_sel(clk_sel),.clk_sel_q(clk_sel_q),.clk_sel_mem(clk_sel_mem),.clk_link(clk_link),.clk_link_mem(clk_link_mem),.rst_n(rst_n),.sid(sid),.frame_start(start),.row_start(row_start),.link_clear(link_clear),
+ .weight_row_stride(weight_row_stride),.query_row_stride(query_row_stride),
+ .weight_slot(issue_v&&ins[31]),.query_slot(issue_v&&ins[30]),.query_index(ins[26:20]),.weight_sector(weight_sector),.query_sector(query_sector),
+ .vm_rq(vm_rq),.vm_rr(vm_rr),.query_emit(issue_v&&ins[29]),.query_emit_head(ins[24:20]),.rank(rank),.gbase(gbase),.nkeys(nkeys),.keep_en(keep_en),.keep_bitmap(keep_bitmap),
+ .beat_v(key_slot),.beat_index(key_index),.key_lines(key_lines),.sel_op(issue_v?ins[19:16]:4'd0),.sel_pass(ins[15:14]),.sel_addr(ins[13:6]),
+ .link_flush(issue_v&&ins[5]&&!ins[4]),.link_emit(issue_v&&ins[4]&&!ins[5]),.link_group(ins[3:0]),.tx_v(tx_v),.tx(tx),.score_observe(score_observe),.fault(parent_fault));
+ assign fault=calendar_fault|parent_fault;
+endmodule
+`default_nettype wire

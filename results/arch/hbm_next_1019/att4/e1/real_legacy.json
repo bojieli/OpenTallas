@@ -1,0 +1,1372 @@
+{
+ "mode": "real",
+ "arith": "legacy",
+ "prompt": 170,
+ "verify": 6,
+ "layers": 40,
+ "passes": [
+  {
+   "L": 0,
+   "lanes": 4,
+   "union_lines": 131,
+   "lane_lines": [
+    128,
+    128,
+    128,
+    128
+   ],
+   "sel_union": 0,
+   "sel_each": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 0,
+   "lanes": 2,
+   "union_lines": 129,
+   "lane_lines": [
+    128,
+    128
+   ],
+   "sel_union": 0,
+   "sel_each": [
+    0,
+    0
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 1,
+   "lanes": 4,
+   "union_lines": 131,
+   "lane_lines": [
+    128,
+    128,
+    128,
+    128
+   ],
+   "sel_union": 0,
+   "sel_each": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 1,
+   "lanes": 2,
+   "union_lines": 129,
+   "lane_lines": [
+    128,
+    128
+   ],
+   "sel_union": 0,
+   "sel_each": [
+    0,
+    0
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 2,
+   "lanes": 4,
+   "union_lines": 179,
+   "lane_lines": [
+    144,
+    144,
+    144,
+    144
+   ],
+   "sel_union": 48,
+   "sel_each": [
+    16,
+    16,
+    16,
+    16
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 2,
+   "lanes": 2,
+   "union_lines": 159,
+   "lane_lines": [
+    144,
+    144
+   ],
+   "sel_union": 30,
+   "sel_each": [
+    16,
+    16
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 3,
+   "lanes": 4,
+   "union_lines": 179,
+   "lane_lines": [
+    144,
+    144,
+    144,
+    144
+   ],
+   "sel_union": 48,
+   "sel_each": [
+    16,
+    16,
+    16,
+    16
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 3,
+   "lanes": 2,
+   "union_lines": 159,
+   "lane_lines": [
+    144,
+    144
+   ],
+   "sel_union": 30,
+   "sel_each": [
+    16,
+    16
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 4,
+   "lanes": 4,
+   "union_lines": 179,
+   "lane_lines": [
+    144,
+    144,
+    144,
+    144
+   ],
+   "sel_union": 48,
+   "sel_each": [
+    16,
+    16,
+    16,
+    16
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 4,
+   "lanes": 2,
+   "union_lines": 159,
+   "lane_lines": [
+    144,
+    144
+   ],
+   "sel_union": 30,
+   "sel_each": [
+    16,
+    16
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 5,
+   "lanes": 4,
+   "union_lines": 179,
+   "lane_lines": [
+    144,
+    144,
+    144,
+    144
+   ],
+   "sel_union": 48,
+   "sel_each": [
+    16,
+    16,
+    16,
+    16
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 5,
+   "lanes": 2,
+   "union_lines": 159,
+   "lane_lines": [
+    144,
+    144
+   ],
+   "sel_union": 30,
+   "sel_each": [
+    16,
+    16
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 6,
+   "lanes": 4,
+   "union_lines": 179,
+   "lane_lines": [
+    144,
+    144,
+    144,
+    144
+   ],
+   "sel_union": 48,
+   "sel_each": [
+    16,
+    16,
+    16,
+    16
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 6,
+   "lanes": 2,
+   "union_lines": 159,
+   "lane_lines": [
+    144,
+    144
+   ],
+   "sel_union": 30,
+   "sel_each": [
+    16,
+    16
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 7,
+   "lanes": 4,
+   "union_lines": 179,
+   "lane_lines": [
+    144,
+    144,
+    144,
+    144
+   ],
+   "sel_union": 48,
+   "sel_each": [
+    16,
+    16,
+    16,
+    16
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 7,
+   "lanes": 2,
+   "union_lines": 159,
+   "lane_lines": [
+    144,
+    144
+   ],
+   "sel_union": 30,
+   "sel_each": [
+    16,
+    16
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 8,
+   "lanes": 4,
+   "union_lines": 173,
+   "lane_lines": [
+    144,
+    144,
+    144,
+    144
+   ],
+   "sel_union": 42,
+   "sel_each": [
+    16,
+    16,
+    16,
+    16
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 8,
+   "lanes": 2,
+   "union_lines": 160,
+   "lane_lines": [
+    144,
+    144
+   ],
+   "sel_union": 31,
+   "sel_each": [
+    16,
+    16
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 9,
+   "lanes": 4,
+   "union_lines": 173,
+   "lane_lines": [
+    144,
+    144,
+    144,
+    144
+   ],
+   "sel_union": 42,
+   "sel_each": [
+    16,
+    16,
+    16,
+    16
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 9,
+   "lanes": 2,
+   "union_lines": 160,
+   "lane_lines": [
+    144,
+    144
+   ],
+   "sel_union": 31,
+   "sel_each": [
+    16,
+    16
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 10,
+   "lanes": 4,
+   "union_lines": 173,
+   "lane_lines": [
+    144,
+    144,
+    144,
+    144
+   ],
+   "sel_union": 42,
+   "sel_each": [
+    16,
+    16,
+    16,
+    16
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 10,
+   "lanes": 2,
+   "union_lines": 160,
+   "lane_lines": [
+    144,
+    144
+   ],
+   "sel_union": 31,
+   "sel_each": [
+    16,
+    16
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 11,
+   "lanes": 4,
+   "union_lines": 173,
+   "lane_lines": [
+    144,
+    144,
+    144,
+    144
+   ],
+   "sel_union": 42,
+   "sel_each": [
+    16,
+    16,
+    16,
+    16
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 11,
+   "lanes": 2,
+   "union_lines": 160,
+   "lane_lines": [
+    144,
+    144
+   ],
+   "sel_union": 31,
+   "sel_each": [
+    16,
+    16
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 12,
+   "lanes": 4,
+   "union_lines": 173,
+   "lane_lines": [
+    144,
+    144,
+    144,
+    144
+   ],
+   "sel_union": 42,
+   "sel_each": [
+    16,
+    16,
+    16,
+    16
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 12,
+   "lanes": 2,
+   "union_lines": 160,
+   "lane_lines": [
+    144,
+    144
+   ],
+   "sel_union": 31,
+   "sel_each": [
+    16,
+    16
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 13,
+   "lanes": 4,
+   "union_lines": 173,
+   "lane_lines": [
+    144,
+    144,
+    144,
+    144
+   ],
+   "sel_union": 42,
+   "sel_each": [
+    16,
+    16,
+    16,
+    16
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 13,
+   "lanes": 2,
+   "union_lines": 160,
+   "lane_lines": [
+    144,
+    144
+   ],
+   "sel_union": 31,
+   "sel_each": [
+    16,
+    16
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 14,
+   "lanes": 4,
+   "union_lines": 182,
+   "lane_lines": [
+    144,
+    144,
+    144,
+    144
+   ],
+   "sel_union": 51,
+   "sel_each": [
+    16,
+    16,
+    16,
+    16
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 14,
+   "lanes": 2,
+   "union_lines": 160,
+   "lane_lines": [
+    144,
+    144
+   ],
+   "sel_union": 31,
+   "sel_each": [
+    16,
+    16
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 15,
+   "lanes": 4,
+   "union_lines": 182,
+   "lane_lines": [
+    144,
+    144,
+    144,
+    144
+   ],
+   "sel_union": 51,
+   "sel_each": [
+    16,
+    16,
+    16,
+    16
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 15,
+   "lanes": 2,
+   "union_lines": 160,
+   "lane_lines": [
+    144,
+    144
+   ],
+   "sel_union": 31,
+   "sel_each": [
+    16,
+    16
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 16,
+   "lanes": 4,
+   "union_lines": 182,
+   "lane_lines": [
+    144,
+    144,
+    144,
+    144
+   ],
+   "sel_union": 51,
+   "sel_each": [
+    16,
+    16,
+    16,
+    16
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 16,
+   "lanes": 2,
+   "union_lines": 160,
+   "lane_lines": [
+    144,
+    144
+   ],
+   "sel_union": 31,
+   "sel_each": [
+    16,
+    16
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 17,
+   "lanes": 4,
+   "union_lines": 182,
+   "lane_lines": [
+    144,
+    144,
+    144,
+    144
+   ],
+   "sel_union": 51,
+   "sel_each": [
+    16,
+    16,
+    16,
+    16
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 17,
+   "lanes": 2,
+   "union_lines": 160,
+   "lane_lines": [
+    144,
+    144
+   ],
+   "sel_union": 31,
+   "sel_each": [
+    16,
+    16
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 18,
+   "lanes": 4,
+   "union_lines": 182,
+   "lane_lines": [
+    144,
+    144,
+    144,
+    144
+   ],
+   "sel_union": 51,
+   "sel_each": [
+    16,
+    16,
+    16,
+    16
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 18,
+   "lanes": 2,
+   "union_lines": 160,
+   "lane_lines": [
+    144,
+    144
+   ],
+   "sel_union": 31,
+   "sel_each": [
+    16,
+    16
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 19,
+   "lanes": 4,
+   "union_lines": 182,
+   "lane_lines": [
+    144,
+    144,
+    144,
+    144
+   ],
+   "sel_union": 51,
+   "sel_each": [
+    16,
+    16,
+    16,
+    16
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 19,
+   "lanes": 2,
+   "union_lines": 160,
+   "lane_lines": [
+    144,
+    144
+   ],
+   "sel_union": 31,
+   "sel_each": [
+    16,
+    16
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 20,
+   "lanes": 4,
+   "union_lines": 187,
+   "lane_lines": [
+    144,
+    144,
+    144,
+    144
+   ],
+   "sel_union": 56,
+   "sel_each": [
+    16,
+    16,
+    16,
+    16
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 20,
+   "lanes": 2,
+   "union_lines": 161,
+   "lane_lines": [
+    144,
+    144
+   ],
+   "sel_union": 32,
+   "sel_each": [
+    16,
+    16
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 21,
+   "lanes": 4,
+   "union_lines": 187,
+   "lane_lines": [
+    144,
+    144,
+    144,
+    144
+   ],
+   "sel_union": 56,
+   "sel_each": [
+    16,
+    16,
+    16,
+    16
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 21,
+   "lanes": 2,
+   "union_lines": 161,
+   "lane_lines": [
+    144,
+    144
+   ],
+   "sel_union": 32,
+   "sel_each": [
+    16,
+    16
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 22,
+   "lanes": 4,
+   "union_lines": 187,
+   "lane_lines": [
+    144,
+    144,
+    144,
+    144
+   ],
+   "sel_union": 56,
+   "sel_each": [
+    16,
+    16,
+    16,
+    16
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 22,
+   "lanes": 2,
+   "union_lines": 161,
+   "lane_lines": [
+    144,
+    144
+   ],
+   "sel_union": 32,
+   "sel_each": [
+    16,
+    16
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 23,
+   "lanes": 4,
+   "union_lines": 187,
+   "lane_lines": [
+    144,
+    144,
+    144,
+    144
+   ],
+   "sel_union": 56,
+   "sel_each": [
+    16,
+    16,
+    16,
+    16
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 23,
+   "lanes": 2,
+   "union_lines": 161,
+   "lane_lines": [
+    144,
+    144
+   ],
+   "sel_union": 32,
+   "sel_each": [
+    16,
+    16
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 24,
+   "lanes": 4,
+   "union_lines": 185,
+   "lane_lines": [
+    144,
+    144,
+    144,
+    144
+   ],
+   "sel_union": 54,
+   "sel_each": [
+    16,
+    16,
+    16,
+    16
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 24,
+   "lanes": 2,
+   "union_lines": 155,
+   "lane_lines": [
+    144,
+    144
+   ],
+   "sel_union": 26,
+   "sel_each": [
+    16,
+    16
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 25,
+   "lanes": 4,
+   "union_lines": 185,
+   "lane_lines": [
+    144,
+    144,
+    144,
+    144
+   ],
+   "sel_union": 54,
+   "sel_each": [
+    16,
+    16,
+    16,
+    16
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 25,
+   "lanes": 2,
+   "union_lines": 155,
+   "lane_lines": [
+    144,
+    144
+   ],
+   "sel_union": 26,
+   "sel_each": [
+    16,
+    16
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 26,
+   "lanes": 4,
+   "union_lines": 185,
+   "lane_lines": [
+    144,
+    144,
+    144,
+    144
+   ],
+   "sel_union": 54,
+   "sel_each": [
+    16,
+    16,
+    16,
+    16
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 26,
+   "lanes": 2,
+   "union_lines": 155,
+   "lane_lines": [
+    144,
+    144
+   ],
+   "sel_union": 26,
+   "sel_each": [
+    16,
+    16
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 27,
+   "lanes": 4,
+   "union_lines": 185,
+   "lane_lines": [
+    144,
+    144,
+    144,
+    144
+   ],
+   "sel_union": 54,
+   "sel_each": [
+    16,
+    16,
+    16,
+    16
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 27,
+   "lanes": 2,
+   "union_lines": 155,
+   "lane_lines": [
+    144,
+    144
+   ],
+   "sel_union": 26,
+   "sel_each": [
+    16,
+    16
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 28,
+   "lanes": 4,
+   "union_lines": 184,
+   "lane_lines": [
+    144,
+    144,
+    144,
+    144
+   ],
+   "sel_union": 53,
+   "sel_each": [
+    16,
+    16,
+    16,
+    16
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 28,
+   "lanes": 2,
+   "union_lines": 160,
+   "lane_lines": [
+    144,
+    144
+   ],
+   "sel_union": 31,
+   "sel_each": [
+    16,
+    16
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 29,
+   "lanes": 4,
+   "union_lines": 184,
+   "lane_lines": [
+    144,
+    144,
+    144,
+    144
+   ],
+   "sel_union": 53,
+   "sel_each": [
+    16,
+    16,
+    16,
+    16
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 29,
+   "lanes": 2,
+   "union_lines": 160,
+   "lane_lines": [
+    144,
+    144
+   ],
+   "sel_union": 31,
+   "sel_each": [
+    16,
+    16
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 30,
+   "lanes": 4,
+   "union_lines": 184,
+   "lane_lines": [
+    144,
+    144,
+    144,
+    144
+   ],
+   "sel_union": 53,
+   "sel_each": [
+    16,
+    16,
+    16,
+    16
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 30,
+   "lanes": 2,
+   "union_lines": 160,
+   "lane_lines": [
+    144,
+    144
+   ],
+   "sel_union": 31,
+   "sel_each": [
+    16,
+    16
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 31,
+   "lanes": 4,
+   "union_lines": 184,
+   "lane_lines": [
+    144,
+    144,
+    144,
+    144
+   ],
+   "sel_union": 53,
+   "sel_each": [
+    16,
+    16,
+    16,
+    16
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 31,
+   "lanes": 2,
+   "union_lines": 160,
+   "lane_lines": [
+    144,
+    144
+   ],
+   "sel_union": 31,
+   "sel_each": [
+    16,
+    16
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 32,
+   "lanes": 4,
+   "union_lines": 188,
+   "lane_lines": [
+    144,
+    144,
+    144,
+    144
+   ],
+   "sel_union": 57,
+   "sel_each": [
+    16,
+    16,
+    16,
+    16
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 32,
+   "lanes": 2,
+   "union_lines": 161,
+   "lane_lines": [
+    144,
+    144
+   ],
+   "sel_union": 32,
+   "sel_each": [
+    16,
+    16
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 33,
+   "lanes": 4,
+   "union_lines": 188,
+   "lane_lines": [
+    144,
+    144,
+    144,
+    144
+   ],
+   "sel_union": 57,
+   "sel_each": [
+    16,
+    16,
+    16,
+    16
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 33,
+   "lanes": 2,
+   "union_lines": 161,
+   "lane_lines": [
+    144,
+    144
+   ],
+   "sel_union": 32,
+   "sel_each": [
+    16,
+    16
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 34,
+   "lanes": 4,
+   "union_lines": 188,
+   "lane_lines": [
+    144,
+    144,
+    144,
+    144
+   ],
+   "sel_union": 57,
+   "sel_each": [
+    16,
+    16,
+    16,
+    16
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 34,
+   "lanes": 2,
+   "union_lines": 161,
+   "lane_lines": [
+    144,
+    144
+   ],
+   "sel_union": 32,
+   "sel_each": [
+    16,
+    16
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 35,
+   "lanes": 4,
+   "union_lines": 188,
+   "lane_lines": [
+    144,
+    144,
+    144,
+    144
+   ],
+   "sel_union": 57,
+   "sel_each": [
+    16,
+    16,
+    16,
+    16
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 35,
+   "lanes": 2,
+   "union_lines": 161,
+   "lane_lines": [
+    144,
+    144
+   ],
+   "sel_union": 32,
+   "sel_each": [
+    16,
+    16
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 36,
+   "lanes": 4,
+   "union_lines": 184,
+   "lane_lines": [
+    144,
+    144,
+    144,
+    144
+   ],
+   "sel_union": 53,
+   "sel_each": [
+    16,
+    16,
+    16,
+    16
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 36,
+   "lanes": 2,
+   "union_lines": 160,
+   "lane_lines": [
+    144,
+    144
+   ],
+   "sel_union": 31,
+   "sel_each": [
+    16,
+    16
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 37,
+   "lanes": 4,
+   "union_lines": 184,
+   "lane_lines": [
+    144,
+    144,
+    144,
+    144
+   ],
+   "sel_union": 53,
+   "sel_each": [
+    16,
+    16,
+    16,
+    16
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 37,
+   "lanes": 2,
+   "union_lines": 160,
+   "lane_lines": [
+    144,
+    144
+   ],
+   "sel_union": 31,
+   "sel_each": [
+    16,
+    16
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 38,
+   "lanes": 4,
+   "union_lines": 184,
+   "lane_lines": [
+    144,
+    144,
+    144,
+    144
+   ],
+   "sel_union": 53,
+   "sel_each": [
+    16,
+    16,
+    16,
+    16
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 38,
+   "lanes": 2,
+   "union_lines": 160,
+   "lane_lines": [
+    144,
+    144
+   ],
+   "sel_union": 31,
+   "sel_each": [
+    16,
+    16
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 39,
+   "lanes": 4,
+   "union_lines": 184,
+   "lane_lines": [
+    144,
+    144,
+    144,
+    144
+   ],
+   "sel_union": 53,
+   "sel_each": [
+    16,
+    16,
+    16,
+    16
+   ],
+   "attend_out_mism": 0
+  },
+  {
+   "L": 39,
+   "lanes": 2,
+   "union_lines": 160,
+   "lane_lines": [
+    144,
+    144
+   ],
+   "sel_union": 31,
+   "sel_each": [
+    16,
+    16
+   ],
+   "attend_out_mism": 0
+  }
+ ],
+ "golden_run_s": 1424.1,
+ "attend_out_mism_total": 0,
+ "verdict": "PASS"
+}

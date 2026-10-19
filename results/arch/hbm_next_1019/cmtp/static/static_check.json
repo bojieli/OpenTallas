@@ -1,0 +1,3981 @@
+{
+ "schema": "opentallas.hbm_next_1019.cmtp.static_check.v1",
+ "knobs": "rpl1_uh1_m11_L5_hc250_vmG_P4_bf4",
+ "rule": "HBM-NEXT-CMTP: the static-schedule checker.  COLLISION = FAULT.\n\nThe next die has no credits, no ready/valid flow control and no backpressure on the die (owner 10-14): the compiler\nassigns every record (and every row of an N-row record) a start cycle, and the hardware runs that timeline.  This\nchecker takes a compiled programme and its timeline and FAILS on any of:\n\n  C1 unit double-booking   two records on one non-pipelined unit overlap in time ([start, end) intersect), or a\n                           pipelined unit (DMA) issues two records closer than its issue interval.\n  C2 dependence            a record starts before a producer it reads (RAW), overwrites (WAW) or a reader it overwrites\n                           (WAR) has finished, on the exact VM / HBM intervals (the S2 dependence scan), or an indexed\n                           record's I table is overwritten before the dispatcher read it.\n  C3 rows                  an N-row record's row r is placed at start + r (II + rgap) and the rows fit in [start, end);\n                           no row reads what an earlier row of the same record writes (isa_rows R2).\n  C4 VM capacity           the words live at any cycle (values written and still to be read, per-position values x N\n                           copies, constants once) exceed the VM (as built 2^18 words, or the grown VM).\n  C5 KV window ring        the KVWB ring of B.m slots: an N-row append must not overwrite a slot an earlier row's\n                           window still reads (ring >= 128 + N - 1, a power of two), checked slot by slot.\n\nTimeline = the S2 command-processor schedule of the programme (timing.schedule \"S2\"): with fixed unit costs the CP's\ndispatch times are a compile-time function of the programme, so the S2 start / end ARE the static schedule; the checker\nre-verifies them independently of the scheduler (it trusts nothing but the records' intervals and the start / end).\n\n    PYTHONPATH=tools python3 tools/hbm_next/static_check.py --out DIR [--mode mtp|mu|ar] [--layers 0,1,2,14,head]\n",
+ "modes": {
+  "mtp": {
+   "N": 6,
+   "segments": {
+    "0": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 168,
+     "vm": {
+      "peak_words": 300038,
+      "peak_at": 8564.5,
+      "copies": 30,
+      "live_in_const_words": 5126,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 432144
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": false
+       },
+       "grown_D1": {
+        "capacity": 412144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 23783.4
+    },
+    "1": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 231,
+     "vm": {
+      "peak_words": 441398,
+      "peak_at": 6251.2,
+      "copies": 30,
+      "live_in_const_words": 5126,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 584148
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": false
+       },
+       "grown_D1": {
+        "capacity": 412144,
+        "fits": false
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 31499.7
+    },
+    "2": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 207,
+     "vm": {
+      "peak_words": 303664,
+      "peak_at": 50889.9,
+      "copies": 30,
+      "live_in_const_words": 5126,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 462744
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": false
+       },
+       "grown_D1": {
+        "capacity": 412144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 53895.1
+    },
+    "3": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 168,
+     "vm": {
+      "peak_words": 300038,
+      "peak_at": 12111.6,
+      "copies": 30,
+      "live_in_const_words": 5126,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 432144
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": false
+       },
+       "grown_D1": {
+        "capacity": 412144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 27330.4
+    },
+    "4": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 168,
+     "vm": {
+      "peak_words": 300038,
+      "peak_at": 12111.6,
+      "copies": 30,
+      "live_in_const_words": 5126,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 432144
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": false
+       },
+       "grown_D1": {
+        "capacity": 412144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 27330.4
+    },
+    "5": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 168,
+     "vm": {
+      "peak_words": 300038,
+      "peak_at": 12111.6,
+      "copies": 30,
+      "live_in_const_words": 5126,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 432144
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": false
+       },
+       "grown_D1": {
+        "capacity": 412144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 27330.4
+    },
+    "6": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 168,
+     "vm": {
+      "peak_words": 300038,
+      "peak_at": 12111.6,
+      "copies": 30,
+      "live_in_const_words": 5126,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 432144
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": false
+       },
+       "grown_D1": {
+        "capacity": 412144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 27330.4
+    },
+    "7": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 168,
+     "vm": {
+      "peak_words": 300038,
+      "peak_at": 12111.6,
+      "copies": 30,
+      "live_in_const_words": 5126,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 432144
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": false
+       },
+       "grown_D1": {
+        "capacity": 412144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 27330.4
+    },
+    "8": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 207,
+     "vm": {
+      "peak_words": 303664,
+      "peak_at": 50889.9,
+      "copies": 30,
+      "live_in_const_words": 5126,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 462744
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": false
+       },
+       "grown_D1": {
+        "capacity": 412144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 53895.1
+    },
+    "9": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 168,
+     "vm": {
+      "peak_words": 300038,
+      "peak_at": 12111.6,
+      "copies": 30,
+      "live_in_const_words": 5126,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 432144
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": false
+       },
+       "grown_D1": {
+        "capacity": 412144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 27330.4
+    },
+    "10": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 168,
+     "vm": {
+      "peak_words": 300038,
+      "peak_at": 12111.6,
+      "copies": 30,
+      "live_in_const_words": 5126,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 432144
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": false
+       },
+       "grown_D1": {
+        "capacity": 412144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 27330.4
+    },
+    "11": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 168,
+     "vm": {
+      "peak_words": 300038,
+      "peak_at": 12111.6,
+      "copies": 30,
+      "live_in_const_words": 5126,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 432144
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": false
+       },
+       "grown_D1": {
+        "capacity": 412144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 27330.4
+    },
+    "12": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 168,
+     "vm": {
+      "peak_words": 300038,
+      "peak_at": 12111.6,
+      "copies": 30,
+      "live_in_const_words": 5126,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 432144
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": false
+       },
+       "grown_D1": {
+        "capacity": 412144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 27330.4
+    },
+    "13": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 168,
+     "vm": {
+      "peak_words": 300038,
+      "peak_at": 12111.6,
+      "copies": 30,
+      "live_in_const_words": 5126,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 432144
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": false
+       },
+       "grown_D1": {
+        "capacity": 412144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 27330.4
+    },
+    "14": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 270,
+     "vm": {
+      "peak_words": 452534,
+      "peak_at": 6253.2,
+      "copies": 30,
+      "live_in_const_words": 5126,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 614748
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": false
+       },
+       "grown_D1": {
+        "capacity": 412144,
+        "fits": false
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 58772.5
+    },
+    "15": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 168,
+     "vm": {
+      "peak_words": 300038,
+      "peak_at": 12111.6,
+      "copies": 30,
+      "live_in_const_words": 5126,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 432144
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": false
+       },
+       "grown_D1": {
+        "capacity": 412144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 27330.4
+    },
+    "16": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 168,
+     "vm": {
+      "peak_words": 300038,
+      "peak_at": 12111.6,
+      "copies": 30,
+      "live_in_const_words": 5126,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 432144
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": false
+       },
+       "grown_D1": {
+        "capacity": 412144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 27330.4
+    },
+    "17": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 168,
+     "vm": {
+      "peak_words": 300038,
+      "peak_at": 12111.6,
+      "copies": 30,
+      "live_in_const_words": 5126,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 432144
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": false
+       },
+       "grown_D1": {
+        "capacity": 412144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 27330.4
+    },
+    "18": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 168,
+     "vm": {
+      "peak_words": 300038,
+      "peak_at": 12111.6,
+      "copies": 30,
+      "live_in_const_words": 5126,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 432144
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": false
+       },
+       "grown_D1": {
+        "capacity": 412144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 27330.4
+    },
+    "19": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 168,
+     "vm": {
+      "peak_words": 300038,
+      "peak_at": 12111.6,
+      "copies": 30,
+      "live_in_const_words": 5126,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 432144
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": false
+       },
+       "grown_D1": {
+        "capacity": 412144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 27330.4
+    },
+    "20": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 197,
+     "vm": {
+      "peak_words": 303664,
+      "peak_at": 51414.4,
+      "copies": 30,
+      "live_in_const_words": 5126,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 459702
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": false
+       },
+       "grown_D1": {
+        "capacity": 412144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 54419.6
+    },
+    "21": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 168,
+     "vm": {
+      "peak_words": 300038,
+      "peak_at": 12111.6,
+      "copies": 30,
+      "live_in_const_words": 5126,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 432144
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": false
+       },
+       "grown_D1": {
+        "capacity": 412144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 27330.4
+    },
+    "22": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 168,
+     "vm": {
+      "peak_words": 300038,
+      "peak_at": 12111.6,
+      "copies": 30,
+      "live_in_const_words": 5126,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 432144
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": false
+       },
+       "grown_D1": {
+        "capacity": 412144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 27330.4
+    },
+    "23": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 168,
+     "vm": {
+      "peak_words": 300038,
+      "peak_at": 12111.6,
+      "copies": 30,
+      "live_in_const_words": 5126,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 432144
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": false
+       },
+       "grown_D1": {
+        "capacity": 412144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 27330.4
+    },
+    "24": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 177,
+     "vm": {
+      "peak_words": 303330,
+      "peak_at": 49563.7,
+      "copies": 30,
+      "live_in_const_words": 9222,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 456660
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": false
+       },
+       "grown_D1": {
+        "capacity": 412144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 53951.9
+    },
+    "25": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 168,
+     "vm": {
+      "peak_words": 300038,
+      "peak_at": 12111.6,
+      "copies": 30,
+      "live_in_const_words": 5126,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 432144
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": false
+       },
+       "grown_D1": {
+        "capacity": 412144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 27330.4
+    },
+    "26": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 168,
+     "vm": {
+      "peak_words": 300038,
+      "peak_at": 12111.6,
+      "copies": 30,
+      "live_in_const_words": 5126,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 432144
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": false
+       },
+       "grown_D1": {
+        "capacity": 412144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 27330.4
+    },
+    "27": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 168,
+     "vm": {
+      "peak_words": 300038,
+      "peak_at": 12111.6,
+      "copies": 30,
+      "live_in_const_words": 5126,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 432144
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": false
+       },
+       "grown_D1": {
+        "capacity": 412144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 27330.4
+    },
+    "28": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 177,
+     "vm": {
+      "peak_words": 303330,
+      "peak_at": 53441.7,
+      "copies": 30,
+      "live_in_const_words": 9222,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 456660
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": false
+       },
+       "grown_D1": {
+        "capacity": 412144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 57829.9
+    },
+    "29": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 168,
+     "vm": {
+      "peak_words": 300038,
+      "peak_at": 12111.6,
+      "copies": 30,
+      "live_in_const_words": 5126,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 432144
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": false
+       },
+       "grown_D1": {
+        "capacity": 412144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 27330.4
+    },
+    "30": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 168,
+     "vm": {
+      "peak_words": 300038,
+      "peak_at": 12111.6,
+      "copies": 30,
+      "live_in_const_words": 5126,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 432144
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": false
+       },
+       "grown_D1": {
+        "capacity": 412144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 27330.4
+    },
+    "31": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 168,
+     "vm": {
+      "peak_words": 300038,
+      "peak_at": 12111.6,
+      "copies": 30,
+      "live_in_const_words": 5126,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 432144
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": false
+       },
+       "grown_D1": {
+        "capacity": 412144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 27330.4
+    },
+    "32": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 177,
+     "vm": {
+      "peak_words": 303330,
+      "peak_at": 49563.7,
+      "copies": 30,
+      "live_in_const_words": 9222,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 456660
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": false
+       },
+       "grown_D1": {
+        "capacity": 412144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 53951.9
+    },
+    "33": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 168,
+     "vm": {
+      "peak_words": 300038,
+      "peak_at": 12111.6,
+      "copies": 30,
+      "live_in_const_words": 5126,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 432144
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": false
+       },
+       "grown_D1": {
+        "capacity": 412144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 27330.4
+    },
+    "34": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 168,
+     "vm": {
+      "peak_words": 300038,
+      "peak_at": 12111.6,
+      "copies": 30,
+      "live_in_const_words": 5126,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 432144
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": false
+       },
+       "grown_D1": {
+        "capacity": 412144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 27330.4
+    },
+    "35": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 168,
+     "vm": {
+      "peak_words": 300038,
+      "peak_at": 12111.6,
+      "copies": 30,
+      "live_in_const_words": 5126,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 432144
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": false
+       },
+       "grown_D1": {
+        "capacity": 412144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 27330.4
+    },
+    "36": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 177,
+     "vm": {
+      "peak_words": 303330,
+      "peak_at": 50872.3,
+      "copies": 30,
+      "live_in_const_words": 9222,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 456660
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": false
+       },
+       "grown_D1": {
+        "capacity": 412144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 55260.5
+    },
+    "37": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 168,
+     "vm": {
+      "peak_words": 300038,
+      "peak_at": 12111.6,
+      "copies": 30,
+      "live_in_const_words": 5126,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 432144
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": false
+       },
+       "grown_D1": {
+        "capacity": 412144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 27330.4
+    },
+    "38": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 168,
+     "vm": {
+      "peak_words": 300038,
+      "peak_at": 12111.6,
+      "copies": 30,
+      "live_in_const_words": 5126,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 432144
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": false
+       },
+       "grown_D1": {
+        "capacity": 412144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 27330.4
+    },
+    "39": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 168,
+     "vm": {
+      "peak_words": 300038,
+      "peak_at": 12111.6,
+      "copies": 30,
+      "live_in_const_words": 5126,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 432144
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": false
+       },
+       "grown_D1": {
+        "capacity": 412144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 27330.4
+    },
+    "head": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 4,
+     "vm": {
+      "peak_words": 122904,
+      "peak_at": 0.0,
+      "copies": 6,
+      "live_in_const_words": 0,
+      "self_overwritten_read_words": {},
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 412144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 8367.4
+    }
+   },
+   "all_pass": true,
+   "mutants": {
+    "unit_double_book": {
+     "what": "SM: attend.pv moved 553.4 cycles earlier onto attend.qk",
+     "PASS": false,
+     "counts": {
+      "C1": 1,
+      "C2": 1,
+      "C3": 0,
+      "C5": 0
+     },
+     "expected": "FAIL",
+     "witness_ok": true
+    },
+    "raw_early": {
+     "what": "wq_a starts 2 cycles before its producer attn_norm ends",
+     "PASS": false,
+     "counts": {
+      "C1": 0,
+      "C2": 1,
+      "C3": 0,
+      "C5": 0
+     },
+     "expected": "FAIL",
+     "witness_ok": true
+    },
+    "ring128": {
+     "what": "window ring 128 slots with N = 6 rows",
+     "PASS": false,
+     "witness_ok": true,
+     "nbad": 15
+    }
+   },
+   "compile": {
+    "shared": 6992,
+    "per_position": 0,
+    "expert_slots": 25,
+    "union_records": 40,
+    "cmtp": {
+     "sm_shared": 375,
+     "sm_expert": 3000,
+     "x_loads": 443,
+     "m1_cycles": 30565.0,
+     "rpl_saved": 28420.2,
+     "att_single_records": 0,
+     "meas": {}
+    },
+    "att_rows_records": 80,
+    "fused_pre_measured_ii_records": 81,
+    "idx_index_per_user_records": 0,
+    "att_lanes": 4,
+    "meas_post": {}
+   }
+  },
+  "mu": {
+   "N": 4,
+   "segments": {
+    "0": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 156,
+     "vm": {
+      "peak_words": 201734,
+      "peak_at": 8438.9,
+      "copies": 16,
+      "live_in_const_words": 5126,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 260448
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 352144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 21346.0
+    },
+    "1": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 219,
+     "vm": {
+      "peak_words": 295974,
+      "peak_at": 5319.8,
+      "copies": 16,
+      "live_in_const_words": 5126,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 361784
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": false
+       },
+       "grown_D1": {
+        "capacity": 352144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 27877.0
+    },
+    "2": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 195,
+     "vm": {
+      "peak_words": 184012,
+      "peak_at": 40914.2,
+      "copies": 16,
+      "live_in_const_words": 5126,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 280848
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 352144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 43431.8
+    },
+    "3": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 156,
+     "vm": {
+      "peak_words": 201734,
+      "peak_at": 10228.8,
+      "copies": 16,
+      "live_in_const_words": 5126,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 260448
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 352144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 23135.9
+    },
+    "4": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 156,
+     "vm": {
+      "peak_words": 201734,
+      "peak_at": 10228.8,
+      "copies": 16,
+      "live_in_const_words": 5126,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 260448
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 352144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 23135.9
+    },
+    "5": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 156,
+     "vm": {
+      "peak_words": 201734,
+      "peak_at": 10228.8,
+      "copies": 16,
+      "live_in_const_words": 5126,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 260448
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 352144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 23135.9
+    },
+    "6": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 156,
+     "vm": {
+      "peak_words": 201734,
+      "peak_at": 10228.8,
+      "copies": 16,
+      "live_in_const_words": 5126,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 260448
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 352144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 23135.9
+    },
+    "7": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 156,
+     "vm": {
+      "peak_words": 201734,
+      "peak_at": 10228.8,
+      "copies": 16,
+      "live_in_const_words": 5126,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 260448
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 352144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 23135.9
+    },
+    "8": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 195,
+     "vm": {
+      "peak_words": 184012,
+      "peak_at": 40914.2,
+      "copies": 16,
+      "live_in_const_words": 5126,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 280848
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 352144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 43431.8
+    },
+    "9": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 156,
+     "vm": {
+      "peak_words": 201734,
+      "peak_at": 10228.8,
+      "copies": 16,
+      "live_in_const_words": 5126,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 260448
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 352144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 23135.9
+    },
+    "10": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 156,
+     "vm": {
+      "peak_words": 201734,
+      "peak_at": 10228.8,
+      "copies": 16,
+      "live_in_const_words": 5126,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 260448
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 352144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 23135.9
+    },
+    "11": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 156,
+     "vm": {
+      "peak_words": 201734,
+      "peak_at": 10228.8,
+      "copies": 16,
+      "live_in_const_words": 5126,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 260448
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 352144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 23135.9
+    },
+    "12": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 156,
+     "vm": {
+      "peak_words": 201734,
+      "peak_at": 10228.8,
+      "copies": 16,
+      "live_in_const_words": 5126,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 260448
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 352144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 23135.9
+    },
+    "13": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 156,
+     "vm": {
+      "peak_words": 201734,
+      "peak_at": 10228.8,
+      "copies": 16,
+      "live_in_const_words": 5126,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 260448
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 352144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 23135.9
+    },
+    "14": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 258,
+     "vm": {
+      "peak_words": 303398,
+      "peak_at": 5321.8,
+      "copies": 16,
+      "live_in_const_words": 5126,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 382184
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": false
+       },
+       "grown_D1": {
+        "capacity": 352144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 48221.6
+    },
+    "15": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 156,
+     "vm": {
+      "peak_words": 201734,
+      "peak_at": 10228.8,
+      "copies": 16,
+      "live_in_const_words": 5126,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 260448
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 352144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 23135.9
+    },
+    "16": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 156,
+     "vm": {
+      "peak_words": 201734,
+      "peak_at": 10228.8,
+      "copies": 16,
+      "live_in_const_words": 5126,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 260448
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 352144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 23135.9
+    },
+    "17": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 156,
+     "vm": {
+      "peak_words": 201734,
+      "peak_at": 10228.8,
+      "copies": 16,
+      "live_in_const_words": 5126,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 260448
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 352144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 23135.9
+    },
+    "18": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 156,
+     "vm": {
+      "peak_words": 201734,
+      "peak_at": 10228.8,
+      "copies": 16,
+      "live_in_const_words": 5126,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 260448
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 352144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 23135.9
+    },
+    "19": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 156,
+     "vm": {
+      "peak_words": 201734,
+      "peak_at": 10228.8,
+      "copies": 16,
+      "live_in_const_words": 5126,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 260448
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 352144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 23135.9
+    },
+    "20": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 185,
+     "vm": {
+      "peak_words": 187838,
+      "peak_at": 9104.4,
+      "copies": 16,
+      "live_in_const_words": 5126,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 278820
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 352144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 45245.5
+    },
+    "21": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 156,
+     "vm": {
+      "peak_words": 201734,
+      "peak_at": 10228.8,
+      "copies": 16,
+      "live_in_const_words": 5126,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 260448
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 352144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 23135.9
+    },
+    "22": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 156,
+     "vm": {
+      "peak_words": 201734,
+      "peak_at": 10228.8,
+      "copies": 16,
+      "live_in_const_words": 5126,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 260448
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 352144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 23135.9
+    },
+    "23": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 156,
+     "vm": {
+      "peak_words": 201734,
+      "peak_at": 10228.8,
+      "copies": 16,
+      "live_in_const_words": 5126,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 260448
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 352144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 23135.9
+    },
+    "24": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 165,
+     "vm": {
+      "peak_words": 197522,
+      "peak_at": 4544.2,
+      "copies": 16,
+      "live_in_const_words": 9222,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 276792
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 352144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 44773.7
+    },
+    "25": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 156,
+     "vm": {
+      "peak_words": 201734,
+      "peak_at": 10228.8,
+      "copies": 16,
+      "live_in_const_words": 5126,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 260448
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 352144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 23135.9
+    },
+    "26": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 156,
+     "vm": {
+      "peak_words": 201734,
+      "peak_at": 10228.8,
+      "copies": 16,
+      "live_in_const_words": 5126,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 260448
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 352144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 23135.9
+    },
+    "27": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 156,
+     "vm": {
+      "peak_words": 201734,
+      "peak_at": 10228.8,
+      "copies": 16,
+      "live_in_const_words": 5126,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 260448
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 352144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 23135.9
+    },
+    "28": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 165,
+     "vm": {
+      "peak_words": 197522,
+      "peak_at": 4544.2,
+      "copies": 16,
+      "live_in_const_words": 9222,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 276792
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 352144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 47368.1
+    },
+    "29": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 156,
+     "vm": {
+      "peak_words": 201734,
+      "peak_at": 10228.8,
+      "copies": 16,
+      "live_in_const_words": 5126,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 260448
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 352144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 23135.9
+    },
+    "30": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 156,
+     "vm": {
+      "peak_words": 201734,
+      "peak_at": 10228.8,
+      "copies": 16,
+      "live_in_const_words": 5126,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 260448
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 352144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 23135.9
+    },
+    "31": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 156,
+     "vm": {
+      "peak_words": 201734,
+      "peak_at": 10228.8,
+      "copies": 16,
+      "live_in_const_words": 5126,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 260448
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 352144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 23135.9
+    },
+    "32": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 165,
+     "vm": {
+      "peak_words": 197522,
+      "peak_at": 4544.2,
+      "copies": 16,
+      "live_in_const_words": 9222,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 276792
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 352144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 44773.7
+    },
+    "33": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 156,
+     "vm": {
+      "peak_words": 201734,
+      "peak_at": 10228.8,
+      "copies": 16,
+      "live_in_const_words": 5126,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 260448
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 352144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 23135.9
+    },
+    "34": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 156,
+     "vm": {
+      "peak_words": 201734,
+      "peak_at": 10228.8,
+      "copies": 16,
+      "live_in_const_words": 5126,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 260448
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 352144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 23135.9
+    },
+    "35": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 156,
+     "vm": {
+      "peak_words": 201734,
+      "peak_at": 10228.8,
+      "copies": 16,
+      "live_in_const_words": 5126,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 260448
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 352144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 23135.9
+    },
+    "36": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 165,
+     "vm": {
+      "peak_words": 197522,
+      "peak_at": 4544.2,
+      "copies": 16,
+      "live_in_const_words": 9222,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 276792
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 352144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 45654.4
+    },
+    "37": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 156,
+     "vm": {
+      "peak_words": 201734,
+      "peak_at": 10228.8,
+      "copies": 16,
+      "live_in_const_words": 5126,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 260448
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 352144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 23135.9
+    },
+    "38": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 156,
+     "vm": {
+      "peak_words": 201734,
+      "peak_at": 10228.8,
+      "copies": 16,
+      "live_in_const_words": 5126,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 260448
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 352144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 23135.9
+    },
+    "39": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 156,
+     "vm": {
+      "peak_words": 201734,
+      "peak_at": 10228.8,
+      "copies": 16,
+      "live_in_const_words": 5126,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 260448
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 352144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 23135.9
+    },
+    "head": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 4,
+     "vm": {
+      "peak_words": 81936,
+      "peak_at": 0.0,
+      "copies": 4,
+      "live_in_const_words": 0,
+      "self_overwritten_read_words": {},
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 352144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 7355.4
+    }
+   },
+   "all_pass": true,
+   "mutants": {
+    "unit_double_book": {
+     "what": "SM: attend.pv moved 536.4 cycles earlier onto attend.qk",
+     "PASS": false,
+     "counts": {
+      "C1": 1,
+      "C2": 1,
+      "C3": 0,
+      "C5": 0
+     },
+     "expected": "FAIL",
+     "witness_ok": true
+    },
+    "raw_early": {
+     "what": "wq_a starts 2 cycles before its producer attn_norm ends",
+     "PASS": false,
+     "counts": {
+      "C1": 0,
+      "C2": 1,
+      "C3": 0,
+      "C5": 0
+     },
+     "expected": "FAIL",
+     "witness_ok": true
+    },
+    "ring128": {
+     "what": "window ring 128 slots with N = 4 rows",
+     "PASS": false,
+     "witness_ok": true,
+     "nbad": 6
+    }
+   },
+   "compile": {
+    "shared": 6512,
+    "per_position": 0,
+    "expert_slots": 22,
+    "union_records": 40,
+    "cmtp": {
+     "sm_shared": 375,
+     "sm_expert": 2640,
+     "x_loads": 443,
+     "m1_cycles": 17767.9,
+     "rpl_saved": -11.4,
+     "att_single_records": 0,
+     "meas": {}
+    },
+    "att_rows_records": 80,
+    "fused_pre_measured_ii_records": 81,
+    "idx_index_per_user_records": 8,
+    "att_lanes": 4,
+    "meas_post": {}
+   }
+  },
+  "ar": {
+   "N": 1,
+   "segments": {
+    "0": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 91,
+     "vm": {
+      "peak_words": 41984,
+      "peak_at": 5094.0,
+      "copies": 1,
+      "live_in_const_words": 0,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 28248
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 262144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 13136.4
+    },
+    "1": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 154,
+     "vm": {
+      "peak_words": 66572,
+      "peak_at": 5297.7,
+      "copies": 1,
+      "live_in_const_words": 0,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 53582
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 262144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 18999.7
+    },
+    "2": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 130,
+     "vm": {
+      "peak_words": 42946,
+      "peak_at": 3897.7,
+      "copies": 1,
+      "live_in_const_words": 0,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 33348
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 262144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 21371.6
+    },
+    "3": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 91,
+     "vm": {
+      "peak_words": 41984,
+      "peak_at": 5623.1,
+      "copies": 1,
+      "live_in_const_words": 0,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 28248
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 262144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 13665.5
+    },
+    "4": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 91,
+     "vm": {
+      "peak_words": 41984,
+      "peak_at": 5623.1,
+      "copies": 1,
+      "live_in_const_words": 0,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 28248
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 262144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 13665.5
+    },
+    "5": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 91,
+     "vm": {
+      "peak_words": 41984,
+      "peak_at": 5623.1,
+      "copies": 1,
+      "live_in_const_words": 0,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 28248
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 262144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 13665.5
+    },
+    "6": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 91,
+     "vm": {
+      "peak_words": 41984,
+      "peak_at": 5623.1,
+      "copies": 1,
+      "live_in_const_words": 0,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 28248
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 262144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 13665.5
+    },
+    "7": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 91,
+     "vm": {
+      "peak_words": 41984,
+      "peak_at": 5623.1,
+      "copies": 1,
+      "live_in_const_words": 0,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 28248
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 262144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 13665.5
+    },
+    "8": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 130,
+     "vm": {
+      "peak_words": 42946,
+      "peak_at": 3897.7,
+      "copies": 1,
+      "live_in_const_words": 0,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 33348
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 262144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 21371.6
+    },
+    "9": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 91,
+     "vm": {
+      "peak_words": 41984,
+      "peak_at": 5623.1,
+      "copies": 1,
+      "live_in_const_words": 0,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 28248
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 262144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 13665.5
+    },
+    "10": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 91,
+     "vm": {
+      "peak_words": 41984,
+      "peak_at": 5623.1,
+      "copies": 1,
+      "live_in_const_words": 0,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 28248
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 262144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 13665.5
+    },
+    "11": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 91,
+     "vm": {
+      "peak_words": 41984,
+      "peak_at": 5623.1,
+      "copies": 1,
+      "live_in_const_words": 0,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 28248
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 262144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 13665.5
+    },
+    "12": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 91,
+     "vm": {
+      "peak_words": 41984,
+      "peak_at": 5623.1,
+      "copies": 1,
+      "live_in_const_words": 0,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 28248
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 262144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 13665.5
+    },
+    "13": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 91,
+     "vm": {
+      "peak_words": 41984,
+      "peak_at": 5623.1,
+      "copies": 1,
+      "live_in_const_words": 0,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 28248
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 262144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 13665.5
+    },
+    "14": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 193,
+     "vm": {
+      "peak_words": 68813,
+      "peak_at": 5299.7,
+      "copies": 1,
+      "live_in_const_words": 0,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 58682
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 262144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 26719.7
+    },
+    "15": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 91,
+     "vm": {
+      "peak_words": 41984,
+      "peak_at": 5623.1,
+      "copies": 1,
+      "live_in_const_words": 0,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 28248
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 262144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 13665.5
+    },
+    "16": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 91,
+     "vm": {
+      "peak_words": 41984,
+      "peak_at": 5623.1,
+      "copies": 1,
+      "live_in_const_words": 0,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 28248
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 262144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 13665.5
+    },
+    "17": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 91,
+     "vm": {
+      "peak_words": 41984,
+      "peak_at": 5623.1,
+      "copies": 1,
+      "live_in_const_words": 0,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 28248
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 262144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 13665.5
+    },
+    "18": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 91,
+     "vm": {
+      "peak_words": 41984,
+      "peak_at": 5623.1,
+      "copies": 1,
+      "live_in_const_words": 0,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 28248
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 262144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 13665.5
+    },
+    "19": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 91,
+     "vm": {
+      "peak_words": 41984,
+      "peak_at": 5623.1,
+      "copies": 1,
+      "live_in_const_words": 0,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 28248
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 262144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 13665.5
+    },
+    "20": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 120,
+     "vm": {
+      "peak_words": 45678,
+      "peak_at": 4267.9,
+      "copies": 1,
+      "live_in_const_words": 0,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 32841
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 262144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 23728.5
+    },
+    "21": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 91,
+     "vm": {
+      "peak_words": 41984,
+      "peak_at": 5623.1,
+      "copies": 1,
+      "live_in_const_words": 0,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 28248
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 262144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 13665.5
+    },
+    "22": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 91,
+     "vm": {
+      "peak_words": 41984,
+      "peak_at": 5623.1,
+      "copies": 1,
+      "live_in_const_words": 0,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 28248
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 262144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 13665.5
+    },
+    "23": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 91,
+     "vm": {
+      "peak_words": 41984,
+      "peak_at": 5623.1,
+      "copies": 1,
+      "live_in_const_words": 0,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 28248
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 262144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 13665.5
+    },
+    "24": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 100,
+     "vm": {
+      "peak_words": 50662,
+      "peak_at": 2788.2,
+      "copies": 1,
+      "live_in_const_words": 4096,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 32334
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 262144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 21758.6
+    },
+    "25": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 91,
+     "vm": {
+      "peak_words": 41984,
+      "peak_at": 5623.1,
+      "copies": 1,
+      "live_in_const_words": 0,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 28248
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 262144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 13665.5
+    },
+    "26": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 91,
+     "vm": {
+      "peak_words": 41984,
+      "peak_at": 5623.1,
+      "copies": 1,
+      "live_in_const_words": 0,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 28248
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 262144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 13665.5
+    },
+    "27": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 91,
+     "vm": {
+      "peak_words": 41984,
+      "peak_at": 5623.1,
+      "copies": 1,
+      "live_in_const_words": 0,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 28248
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 262144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 13665.5
+    },
+    "28": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 100,
+     "vm": {
+      "peak_words": 50662,
+      "peak_at": 2788.2,
+      "copies": 1,
+      "live_in_const_words": 4096,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 32334
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 262144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 22427.6
+    },
+    "29": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 91,
+     "vm": {
+      "peak_words": 41984,
+      "peak_at": 5623.1,
+      "copies": 1,
+      "live_in_const_words": 0,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 28248
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 262144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 13665.5
+    },
+    "30": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 91,
+     "vm": {
+      "peak_words": 41984,
+      "peak_at": 5623.1,
+      "copies": 1,
+      "live_in_const_words": 0,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 28248
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 262144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 13665.5
+    },
+    "31": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 91,
+     "vm": {
+      "peak_words": 41984,
+      "peak_at": 5623.1,
+      "copies": 1,
+      "live_in_const_words": 0,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 28248
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 262144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 13665.5
+    },
+    "32": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 100,
+     "vm": {
+      "peak_words": 50662,
+      "peak_at": 2788.2,
+      "copies": 1,
+      "live_in_const_words": 4096,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 32334
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 262144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 21758.6
+    },
+    "33": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 91,
+     "vm": {
+      "peak_words": 41984,
+      "peak_at": 5623.1,
+      "copies": 1,
+      "live_in_const_words": 0,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 28248
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 262144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 13665.5
+    },
+    "34": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 91,
+     "vm": {
+      "peak_words": 41984,
+      "peak_at": 5623.1,
+      "copies": 1,
+      "live_in_const_words": 0,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 28248
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 262144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 13665.5
+    },
+    "35": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 91,
+     "vm": {
+      "peak_words": 41984,
+      "peak_at": 5623.1,
+      "copies": 1,
+      "live_in_const_words": 0,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 28248
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 262144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 13665.5
+    },
+    "36": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 100,
+     "vm": {
+      "peak_words": 50662,
+      "peak_at": 2788.2,
+      "copies": 1,
+      "live_in_const_words": 4096,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 32334
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 262144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 21997.5
+    },
+    "37": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 91,
+     "vm": {
+      "peak_words": 41984,
+      "peak_at": 5623.1,
+      "copies": 1,
+      "live_in_const_words": 0,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 28248
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 262144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 13665.5
+    },
+    "38": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 91,
+     "vm": {
+      "peak_words": 41984,
+      "peak_at": 5623.1,
+      "copies": 1,
+      "live_in_const_words": 0,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 28248
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 262144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 13665.5
+    },
+    "39": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 91,
+     "vm": {
+      "peak_words": 41984,
+      "peak_at": 5623.1,
+      "copies": 1,
+      "live_in_const_words": 0,
+      "self_overwritten_read_words": {
+       "COLL.ALL_GATHER": 28248
+      },
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 262144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 13665.5
+    },
+    "head": {
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     },
+     "records": 4,
+     "vm": {
+      "peak_words": 20484,
+      "peak_at": 0.0,
+      "copies": 1,
+      "live_in_const_words": 0,
+      "self_overwritten_read_words": {},
+      "verdicts": {
+       "as_built_2^18": {
+        "capacity": 262144,
+        "fits": true
+       },
+       "grown_D1": {
+        "capacity": 262144,
+        "fits": true
+       }
+      }
+     },
+     "violations": {},
+     "cycles": 6540.3
+    }
+   },
+   "all_pass": true,
+   "mutants": {
+    "unit_double_book": {
+     "what": "SU: kv_norm.rs moved 1.0 cycles earlier onto kv_norm.ss",
+     "PASS": false,
+     "counts": {
+      "C1": 1,
+      "C2": 1,
+      "C3": 0,
+      "C5": 0
+     },
+     "expected": "FAIL",
+     "witness_ok": true
+    },
+    "raw_early": {
+     "what": "wq_a starts 2 cycles before its producer attn_norm ends",
+     "PASS": false,
+     "counts": {
+      "C1": 0,
+      "C2": 1,
+      "C3": 0,
+      "C5": 0
+     },
+     "expected": "FAIL",
+     "witness_ok": true
+    },
+    "ring128": {
+     "what": "window ring 128 slots with N = 1 rows",
+     "PASS": false,
+     "witness_ok": false,
+     "nbad": null
+    }
+   },
+   "compile": {
+    "shared": 3108,
+    "per_position": 844,
+    "expert_slots": 6,
+    "union_records": 0
+   }
+  }
+ },
+ "sources_sha256": {
+  "tools/hbm_next/static_check.py": "49ec67d1effcb578d3e560f3c7e5ce06f85852c758d6702ae8514daf2f492e40",
+  "tools/hbm_next/plane_compiler.py": "711576142f9c7ad33fc10aeedcc5698c8cb2f213786c5d0ebe74b44cc031fab2",
+  "tools/hbm_next/isa_rows.py": "9b549f7df5b72e91846302e576d6d8f8547f4c5d34893dcd0193745454f31277",
+  "tools/hgi_sim/timing.py": "6690caa113e1bb7f5435c001a6a12ca5b0ebe15ad8867376903939a3b096a7b3",
+  "tools/hgi_sim/ds_mtp_verify.py": "35613f56f3f93633e3c5381d2bc3b8c3123734678b038914240078a3c1dff400"
+ }
+}

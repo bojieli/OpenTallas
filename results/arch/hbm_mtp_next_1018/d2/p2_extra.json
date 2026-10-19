@@ -1,0 +1,41 @@
+{
+ "schema": "opentallas.hbm_mtp_next_1018.d2_p2_extra.v1",
+ "model": "tools/hgi_sim/hbm_plane_model.py",
+ "rows_only_noVM": {
+  "verify_cycles": 1871965.8,
+  "step_cycles": 2085380.7,
+  "ds_mtp_tok_s": 2393.2,
+  "draft": {
+   "draft_cycles": 185407.7,
+   "draft_by_kind": {
+    "dsa": 29590.5,
+    "dsb": 113171.0,
+    "dhead": 25268.2,
+    "markov": 15606.5,
+    "demb": 1771.5
+   },
+   "seed_cycles": 20189.2
+  },
+  "unit_busy": {
+   "DMA": 260095.2,
+   "FUSED": 188300.0,
+   "SM": 1038558.0,
+   "COLL": 586264.8,
+   "SU": 157093.1,
+   "HC": 191652.0,
+   "IDX": 34427.9,
+   "CTL": 0.0,
+   "ARGMAX": 4913.2
+  }
+ },
+ "MU": {
+  "cycles": 784246.9,
+  "aggregate_tok_s": 3060.3,
+  "per_user_tok_s": 1530.1
+ },
+ "MU_noVM": {
+  "cycles": 819926.5,
+  "aggregate_tok_s": 2927.1,
+  "per_user_tok_s": 1463.5
+ }
+}

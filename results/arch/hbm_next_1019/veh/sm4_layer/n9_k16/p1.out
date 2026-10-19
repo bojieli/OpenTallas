@@ -1,0 +1,6 @@
+HNX_RP4LP4 P=1 MUT=0 LSKEW=8 chunks=9 words=72 sel_beats=28 lane_bad=0 stream_bad=0 coll_model=0 coll_dut=0
+  lane 0 words 72
+THROUGHPUT P=1 chunks=9 K=16 rows=72 issue_span=1152 first_issue=274 last_pub=1471 publish_span=1198 words=72 words_per_issue_cycle=0.062
+PASS HNX-RP4LP4 P=1
+BENCH PASS p1_m0_t1
+RC=0

@@ -1,0 +1,16 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/hnx-cmtp-1019/opt
+ot-run: ot-epyc5       admits    37 GB (avail 306, growth 280, headroom 0, waiters 6/764 GB) load 156/128 running 33 disk 1688 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hnx-cmtp-1019/opt
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hnx-cmtp-1019/opt
+ot-run: -> ot-epyc5
+ot-heavy: request 24G is charged 9G (class 'plane_compiler.py:retime' measured peak 0.5G, n=1+0 proved); the cap stays 24G
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-3597559-1792398887 after 0 s
+D1 reproduction (L 4, D1 SM rule)             AR  1905.4  MTP  3363.5 (verify 1338147, draft 128338)  MU agg  4365.3 / user  1091.3
+STUDY L5 reproduction                         AR  1949.7  MTP  3459.9 (verify 1297601, draft 127502)  MU agg  4481.6 / user  1120.4
++ union histogram                             AR  1949.7  MTP  3458.0 (verify 1298400, draft 127502)  MU agg  4481.5 / user  1120.4
++ M1 x-load / publish (cost)                  AR  1949.7  MTP  3393.0 (verify 1323318, draft 129818)  MU agg  4423.1 / user  1105.8
+CMTP P4 headline: + rpl (K-/row-split), HC II 250 MEASURED AR  1949.7  MTP  3500.1 (verify 1285075, draft 123528)  MU agg  4423.1 / user  1105.8
+headline, HC II 600 (sensitivity; old UNITS target) AR  1949.7  MTP  3278.0 (verify 1381718, draft 123528)  MU agg  4301.5 / user  1075.4
+headline, HC II 950 (sensitivity; old UNITS gate) AR  1949.7  MTP  3024.5 (verify 1507718, draft 125120)  MU agg  4028.5 / user  1007.1
+headline, VM as built (column swaps)          AR  1949.7  MTP  3411.3 (verify 1322215, draft 123528)  MU agg  4279.5 / user  1069.9
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-3597559-1792398887): exit 0

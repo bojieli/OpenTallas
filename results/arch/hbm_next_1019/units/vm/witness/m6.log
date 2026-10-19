@@ -1,0 +1,6 @@
+HNX_VM_LOCKSTEP PASS banks=2 cycles=4000 compared_edges=8024 reads=4701 writes=5012 mirror_egress=413 packet_resp=1647 (lower 2^18 + mirror, bit-identical to d4g)
+TB_HNX_VM FAIL MUT=6 cycle=7621 DATA bank=0 owner=0 issued=7614 got=53035c5ef0b1c3f65733f79d2c9bf447b2a9aaf714987e34774f5ff4abbf84ac exp=66bcc9bace4bdbb241ac471b0c0c6922acd60c1433e6e9bd3af425ca05fd7ef4
+[76210000] %Fatal: tb_hnx_vm_bank.sv:94: Assertion failed in tb_hnx_vm_bank.fail: TB_HNX_VM FAIL
+%Error: rtl/hbm_next/vm/tb/tb_hnx_vm_bank.sv:94: Verilog $stop
+Aborting...
+RUN_RC=1

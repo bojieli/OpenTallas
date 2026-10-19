@@ -1,0 +1,93 @@
+{
+ "schema": "opentallas.hbm_next_1019.vm_cap.v1",
+ "rule": "HBM-NEXT study (10-19), check (b): VM capacity at P lanes.  DS MTP (N = 6) and DS multi-user (N = P) at P = 2, 4, 6\non the UNCHANGED D1 model with the VM as built (2^18 words: verify / user columns swapped per layer, drop VM) vs grown\n(N resident columns, +(N - 1) x ~30k words; the D1 headline).\n    PYTHONPATH=tools python3 results/arch/hbm_next_1019/vm_cap.py --out DIR\n",
+ "P": {
+  "2": {
+   "mtp_noVM_verify": 1466463.6,
+   "ds_mtp_noVM_tok_s": 3071.0,
+   "mu_noVM_cycles": 819926.5,
+   "mu_noVM_per_user": 1463.5,
+   "mu_noVM_agg": 2927.1,
+   "busy_mtp": {
+    "DMA": 260095.2,
+    "FUSED": 188300.0,
+    "SM": 591654.7,
+    "COLL": 586264.8,
+    "SU": 157093.1,
+    "HC": 191652.0,
+    "IDX": 43688.2,
+    "CTL": 0.0,
+    "ARGMAX": 10702.1
+   },
+   "busy_mu": {
+    "DMA": 119823.3,
+    "FUSED": 89912.0,
+    "SM": 258700.4,
+    "COLL": 348640.6,
+    "SU": 134587.1,
+    "HC": 111652.0,
+    "IDX": 35015.4,
+    "CTL": 0.0,
+    "ARGMAX": 4913.2
+   }
+  },
+  "4": {
+   "mtp_noVM_verify": 1375286.3,
+   "ds_mtp_noVM_tok_s": 3281.3,
+   "mu_noVM_cycles": 1135980.3,
+   "mu_noVM_per_user": 1056.4,
+   "mu_noVM_agg": 4225.4,
+   "busy_mtp": {
+    "DMA": 260095.2,
+    "FUSED": 188300.0,
+    "SM": 487631.3,
+    "COLL": 586264.8,
+    "SU": 157093.1,
+    "HC": 191652.0,
+    "IDX": 43688.2,
+    "CTL": 0.0,
+    "ARGMAX": 7141.3
+   },
+   "busy_mu": {
+    "DMA": 188102.9,
+    "FUSED": 139106.0,
+    "SM": 372925.9,
+    "COLL": 492543.2,
+    "SU": 146187.1,
+    "HC": 151652.0,
+    "IDX": 53802.5,
+    "CTL": 0.0,
+    "ARGMAX": 4913.2
+   }
+  },
+  "6": {
+   "mtp_noVM_verify": 1317853.0,
+   "ds_mtp_noVM_tok_s": 3429.5,
+   "mu_noVM_cycles": 1434198.5,
+   "mu_noVM_per_user": 836.7,
+   "mu_noVM_agg": 5020.2,
+   "busy_mtp": {
+    "DMA": 260095.2,
+    "FUSED": 188300.0,
+    "SM": 420542.4,
+    "COLL": 586264.8,
+    "SU": 157093.1,
+    "HC": 191652.0,
+    "IDX": 43688.2,
+    "CTL": 0.0,
+    "ARGMAX": 4913.2
+   },
+   "busy_mu": {
+    "DMA": 260095.2,
+    "FUSED": 188300.0,
+    "SM": 482803.8,
+    "COLL": 617943.9,
+    "SU": 157093.1,
+    "HC": 191652.0,
+    "IDX": 72589.2,
+    "CTL": 0.0,
+    "ARGMAX": 4913.2
+   }
+  }
+ }
+}

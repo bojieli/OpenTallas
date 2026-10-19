@@ -1,0 +1,14 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/hnx-cmtp4/opt5
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/hnx-cmtp4/opt5
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/hnx-cmtp4/opt5
+ot-run: ot-epyc7       admits  1152 GB (avail 909, growth 103, headroom 0, waiters 0/0 GB) load 101/96 running 31 disk 6642 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hnx-cmtp4/opt5
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hnx-cmtp4/opt5
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-346030-1792403610 after 1 s
+ar 0 {"emit": {"plain_records": 91, "ok": 91}, "errors": [], "need": 58400, "hw": 58400}
+ar 1 {"emit": {"plain_records": 154, "ok": 154}, "errors": [], "need": 93216, "hw": 93200}
+ar 2 {"emit": {"plain_records": 130, "ok": 130}, "errors": [], "need": 58816, "hw": 58792}
+ar 3 {"emit": {"plain_records": 91, "ok": 91}, "errors": [], "need": 58400, "hw": 58400}
+ar 14 {"emit": {"plain_records": 193, "ok": 193}, "errors": [], "need": 95584, "hw": 95568}
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-346030-1792403610): exit 0

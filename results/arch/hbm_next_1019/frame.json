@@ -1,0 +1,119 @@
+{
+ "schema": "opentallas.hbm_next_1019.frame.v1",
+ "rule": "HBM-NEXT study (10-19), check (e): die area and floorplan aspect at P lanes (arithmetic, no tools).\n\nBase: d4g plan (main results/arch/hbm_die_d4g/plan/plan_geometry.json d4g_phy): die 20,200 x 31,773.52 um; two SM\nbands (S, N) of 8 SM columns 1,939.68 x 6,955.2 um; 961 um empty side margins in each SM band; inter-column gaps\n2,760.56 um a band; hub band between them (placed density ~0.56).  Reticle 26 x 33 mm, 500 um margin required\n(eval.json reticle.margin_req_um) -> W <= 25,500, H <= 32,500.\nPer added lane the SM column grows by 345.6 x 6,955.2 um (D2 rp4lp2: +86.4 um a tile x 4 tiles across, measured cells).\n\nFrames:\n  F-A  x-only growth (D2 recommendation at P = 2): W = 20,200 + 8 x 345.6 (P-1) - 1,922 (margins absorbed first).\n  F-C  clean slate: SM column width cw chosen, height = column area / cw; die width = 8 cw + 2,760.56;\n       hub band re-packed to the wider die at the SAME density (hub band 13.35 mm x 20.2 mm -> 13.35 x 20.2 / W).\n       H = 31,773.52 + 2 (ch - 6,955.2) - (13,350 - 13,350 x 20,200 / W).\n",
+ "rows": [
+  {
+   "P": 1,
+   "d1_die_mm2": 641.8,
+   "col_area_mm2": 13.491,
+   "FA": {
+    "W": 20200,
+    "H": 31774,
+    "mm2": 641.8,
+    "fits": true
+   },
+   "FC_best": {
+    "cw": 2030.4,
+    "ch": 6644,
+    "W": 19004,
+    "H": 31992,
+    "mm2": 608.0,
+    "col_aspect": 3.27,
+    "tile_um": [
+     480.6,
+     1520.7
+    ],
+    "tile_aspect": 3.16,
+    "margins_um": [
+     6996,
+     1008
+    ]
+   },
+   "reticle_usable_fraction_of_d1_die": 0.774
+  },
+  {
+   "P": 2,
+   "d1_die_mm2": 676.4,
+   "col_area_mm2": 15.895,
+   "FA": {
+    "W": 21043,
+    "H": 31774,
+    "mm2": 668.6,
+    "fits": true
+   },
+   "FC_best": {
+    "cw": 2203.2,
+    "ch": 7214,
+    "W": 20386,
+    "H": 32170,
+    "mm2": 655.8,
+    "col_aspect": 3.27,
+    "tile_um": [
+     523.8,
+     1663.2
+    ],
+    "tile_aspect": 3.18,
+    "margins_um": [
+     5614,
+     830
+    ]
+   },
+   "reticle_usable_fraction_of_d1_die": 0.816
+  },
+  {
+   "P": 4,
+   "d1_die_mm2": 742.9,
+   "col_area_mm2": 20.702,
+   "FA": {
+    "W": 26572,
+    "H": 31774,
+    "mm2": 844.3,
+    "fits": false
+   },
+   "FC_best": {
+    "cw": 2548.8,
+    "ch": 8122,
+    "W": 23151,
+    "H": 32406,
+    "mm2": 750.2,
+    "col_aspect": 3.19,
+    "tile_um": [
+     610.2,
+     1890.2
+    ],
+    "tile_aspect": 3.1,
+    "margins_um": [
+     2849,
+     594
+    ]
+   },
+   "reticle_usable_fraction_of_d1_die": 0.896
+  },
+  {
+   "P": 6,
+   "d1_die_mm2": 809.5,
+   "col_area_mm2": 25.509,
+   "FA": {
+    "W": 32102,
+    "H": 31774,
+    "mm2": 1020.0,
+    "fits": false
+   },
+   "FC_best": null,
+   "reticle_usable_fraction_of_d1_die": 0.977
+  },
+  {
+   "P": 8,
+   "d1_die_mm2": 876.3,
+   "col_area_mm2": 30.317,
+   "FA": {
+    "W": 37632,
+    "H": 31774,
+    "mm2": 1195.7,
+    "fits": false
+   },
+   "FC_best": null,
+   "reticle_usable_fraction_of_d1_die": 1.057
+  }
+ ]
+}

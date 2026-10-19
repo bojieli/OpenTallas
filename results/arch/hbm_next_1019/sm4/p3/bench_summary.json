@@ -1,0 +1,13 @@
+{
+ "schema": "opentallas.hbm_next_1019.sm4.p3.bench.v1",
+ "lane": "HBM-NEXT-P3-SM 10-19 (owner P3+(a))",
+ "sim": "Verilator 5.050 (fleet ot-epyc8), driver rtl/hbm_next/sm/tb/run_p3_benches.sh, RTL @d8e08bc2f (ring-buffer publish, NREL gather relays, hnx_xs3)",
+ "reference": "P PRODUCTION d4g leaves ot_hbm_accel_smh_leafh + independent lane-select / slot-major publish model (tb_hnx_rp4lp4_leaf.sv, valid straps + full x preload + finite BF16 weights + per-lane coverage)",
+ "leaf_separate_stores_lf": {"P1": "PASS", "P2": "PASS", "P3": "PASS", "P3 MUT1 lane alias": "CAUGHT", "P3 MUT2 lane-select ignored": "CAUGHT", "P3 MUT3 publish slot": "CAUGHT", "logs": "bench/lf/"},
+ "leaf_shared_store_lfx": {"P1 (hnx_xs4 P=1)": "PASS", "P2": "PASS", "P3 (hnx_xs3)": "PASS (1,392 words, 0 lane/stream mismatches, 0 collisions)", "P4 regression": "PASS",
+   "P3 MUT1 x-store lane alias": "CAUGHT", "P3 MUT2": "CAUGHT", "P3 MUT3": "CAUGHT", "P3 MUT4 W-face BF16 weight sign": "CAUGHT", "logs": "bench/lfx/"},
+ "throughput_lfx": [
+   {"shape": "64 chunks x 8 rows x K=16", "P1_publish_span": 8238, "P3_publish_span": 8254, "ratio": 1.002, "P3_results": "3x (1,536 vs 512 words)", "verdict": "PASS (<= 1.10)"},
+   {"shape": "64 chunks x 8 rows x K=4 (min spacing)", "P1_publish_span": 2094, "P3_publish_span": 2110, "ratio": 1.008, "P3_results": "3x, 0.75 words/issue cycle, 0 collisions", "verdict": "PASS"}],
+ "lp_lockstep_hnx_rp3lp3x": {"audit": "PASS", "audit_unland_mutant": "FAIL (expected)", "MUT0": "PASS", "MUT1 landing bypassed": "FAIL (expected)", "MUT2 read K+1": "FAIL (expected)", "MUT3 pad short": "FAIL (expected)", "BENCH_EXIT": 0, "logs": "bench/lp/"}
+}

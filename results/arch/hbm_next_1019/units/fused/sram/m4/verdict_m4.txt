@@ -1,0 +1,5 @@
+2026-10-19T04:45:39-07:00 start host=ot-epyc8 bundle=5e2b4ea95
+2026-10-19T05:22:51-07:00 build m4 rc=0 bin=ok
+2026-10-19T05:22:59-07:00 m4 pre_n4_g0: HNX_FUSED_CYCLES op=pre N=4 rgap=0 KX=4 MUT=4 cycles=471 done=0 fault=1 reads=10884 writes=4160 HNX_FUSED FAIL op=pre N=4 mism=15816 fault=1 done=0 bankerr=0 writes=4160 expect_sectors=2560  MISMATCH word 168192: got 3f900000 exp 3f920000
+2026-10-19T05:23:00-07:00 m4 SUMMARY pass=0 fail=1 noresult=0
+2026-10-19T05:23:00-07:00 done

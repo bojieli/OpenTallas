@@ -1,0 +1,201 @@
+{
+ "schema": "opentallas.hbm_next_1019.cmtp.image_check.v1",
+ "generated_utc": "2026-10-19T14:01:59Z",
+ "rule": "HBM-NEXT-CMTP: static checker for the WHOLE-TOKEN HGI-1R IMAGE form (emitter.py --whole output).\n\nstatic_check.py proves the compiled programme's S2 timeline (C1-C5).  The image adds data-dependent spans and a\ntoken-wide VM map; this checker reads the image bytes (+ its emitter.json) and FAILS on any of:\n\n  I1 decode     every record decodes, re-encodes byte-identical, and is legal (isa_rows.check).\n  I2 frame      exactly one CTL.END, last; users images start with CTL.USERS; MTP ends CTL.ACCEPT -> CTL.TOKX -> END,\n                users / AR end CTL.TOKX -> END; no record after END.\n  I3 union      CTL.LOOP / ENDLOOP balanced, never nested.  Every VM-count loop (param [17]) reads its count at the\n                D[0] word of the LAST IDX.UNION before it in the same segment, and no record between them writes that\n                word.  The bound is structural: the IDX.UNION takes A = N rows x 6 ids, so U <= 6 N (and <= E), and\n                its list O and row table R hold >= 6 N entries -- the loop can never run past the tables, and the\n                calendar reserves U_max = 6 N iterations (plane_compiler meas --union-bound prices that).  Every loop\n                body record is rsel = 1 with rtab = that IDX.UNION's R, ROWX n = N.\n  I4 ATT plan   every IDX.KVUNION: line budget param [24:16] = ATT_BUDGET (128) <= 256, lanes NL <= P, R holds 32 SM\n                blocks of PLAN_WORDS.  Every plan-mode ATT record (rsel = 1, rtab = a KVUNION's R) follows that\n                KVUNION in the same segment.  The static span = fixed + budget beats (a plan over budget = E_RANGE).\n  I5 VM bounds  every VM operand's rows (base + r x rs, r < N, + its descriptor extent) stay below 2^19 words.\n  I6 one map    emitter.json token: every compiled record emitted (0 emit errors), no live-ins, every pinned interval at one base in every segment, no host-preloaded\n                word; aux tables inside 2^19 and disjoint.\n\n    PYTHONPATH=tools python3 tools/hbm_next/image_check.py --dir results/arch/hbm_next_1019/cmtp/emitter/whole/mtp_N6\n    PYTHONPATH=tools python3 tools/hbm_next/image_check.py --selftest DIR      (mutants must FAIL)\n",
+ "isa_version": "HGI-1R 1.1 (draft for the P = 4 next die, 2026-10-19: rtab 19 b, hsh, IDX.KVUNION, ATT plan mode)",
+ "images": {
+  "ar_N1": {
+   "image": "ar_N1_token.hgi1r",
+   "sha256": "09b394e917ba720629f875825fd6f0f067952b6a3a1a09fc570e9f076bbd9ba1",
+   "records": 3954,
+   "mode": "ar",
+   "N": 1,
+   "PASS": true,
+   "violations": [],
+   "n_violations": 0,
+   "union_loops": 0,
+   "union_u_max": [],
+   "kvunion": 0,
+   "carried": [
+    [
+     0,
+     20480,
+     0
+    ],
+    [
+     40960,
+     40964,
+     20480
+    ],
+    [
+     188864,
+     192960,
+     20488
+    ]
+   ]
+  },
+  "mtp_N6": {
+   "image": "mtp_N6_token.hgi1r",
+   "sha256": "fc4429481250b5e1f936896a5fde828e974138c2ed86723542bbf1fdc6690311",
+   "records": 3715,
+   "mode": "mtp",
+   "N": 6,
+   "PASS": true,
+   "violations": [],
+   "n_violations": 0,
+   "union_loops": 80,
+   "union_u_max": [
+    36
+   ],
+   "kvunion": 80,
+   "carried": [
+    [
+     0,
+     20480,
+     0
+    ],
+    [
+     40960,
+     40964,
+     122880
+    ],
+    [
+     188864,
+     192960,
+     122928
+    ]
+   ]
+  },
+  "mu_N1": {
+   "image": "mu_N1_token.hgi1r",
+   "sha256": "ae4ef0c90c26103435cf9101b92eb16c98c8c660bd0e638edc360eab2f505098",
+   "records": 3955,
+   "mode": "mu",
+   "N": 1,
+   "PASS": true,
+   "violations": [],
+   "n_violations": 0,
+   "union_loops": 0,
+   "union_u_max": [],
+   "kvunion": 0,
+   "carried": [
+    [
+     0,
+     20480,
+     0
+    ],
+    [
+     40960,
+     40964,
+     20480
+    ],
+    [
+     188864,
+     192960,
+     20488
+    ]
+   ]
+  },
+  "mu_N2": {
+   "image": "mu_N2_token.hgi1r",
+   "sha256": "c8c3c44d2955e3e6726da6096f05d7c5d0e27d87a4cf22944dd264d94a344f35",
+   "records": 3595,
+   "mode": "mu",
+   "N": 2,
+   "PASS": true,
+   "violations": [],
+   "n_violations": 0,
+   "union_loops": 80,
+   "union_u_max": [
+    12
+   ],
+   "kvunion": 40,
+   "carried": [
+    [
+     0,
+     20480,
+     0
+    ],
+    [
+     40960,
+     40964,
+     40960
+    ],
+    [
+     188864,
+     192960,
+     40976
+    ]
+   ]
+  },
+  "mu_N3": {
+   "image": "mu_N3_token.hgi1r",
+   "sha256": "e807cb37a0f753a823caf7df36291e92bc765ba668bd78363ab40582aadb6704",
+   "records": 3595,
+   "mode": "mu",
+   "N": 3,
+   "PASS": true,
+   "violations": [],
+   "n_violations": 0,
+   "union_loops": 80,
+   "union_u_max": [
+    18
+   ],
+   "kvunion": 40,
+   "carried": [
+    [
+     0,
+     20480,
+     0
+    ],
+    [
+     40960,
+     40964,
+     61440
+    ],
+    [
+     188864,
+     192960,
+     61464
+    ]
+   ]
+  },
+  "mu_N4": {
+   "image": "mu_N4_token.hgi1r",
+   "sha256": "d4bb66ec494bf4e38aa64b500b66afaa11a5d6c7764840aac51d4b660b6f949d",
+   "records": 3715,
+   "mode": "mu",
+   "N": 4,
+   "PASS": true,
+   "violations": [],
+   "n_violations": 0,
+   "union_loops": 80,
+   "union_u_max": [
+    24
+   ],
+   "kvunion": 80,
+   "carried": [
+    [
+     0,
+     20480,
+     0
+    ],
+    [
+     40960,
+     40964,
+     81920
+    ],
+    [
+     188864,
+     192960,
+     81952
+    ]
+   ]
+  }
+ },
+ "PASS": true,
+ "sources_sha256": {
+  "tools/hbm_next/image_check.py": "fd7f9f96db4317bf17a4de68785d9b9dd8d1068120b2b940e771a3f5e73d25e8",
+  "tools/hbm_next/isa_rows.py": "778e66cf64b07fef7750b8ed97dffdd622670dbb83a98ba97a361afa560cb36b"
+ }
+}

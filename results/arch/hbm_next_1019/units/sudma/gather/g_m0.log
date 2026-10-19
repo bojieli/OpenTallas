@@ -1,0 +1,6 @@
+GATHER_ROWS PASS checks=776 cases=24 banks=32 SRAMs=96 fixed_cycles R1=36 R2=37 R3=38 R4=39 R5=40 R6=41 R7=42 R8=43
+- rtl/hbm_next/su/tb/tb_hnx_su_indexed_rows.sv:127: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 8ms; walltime 9.815 s; speed 808.719 us/s
+- Verilator: cpu 9.792 s on 1 threads; allocated 13 MB
+RUN_RC=0

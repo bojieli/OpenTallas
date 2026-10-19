@@ -1,0 +1,43 @@
+END_EDGE 49  done
+END_EDGE 98  done
+END_EDGE 166  done
+END_EDGE 234  done
+END_EDGE 325  done
+END_EDGE 416  done
+END_EDGE 517  done
+END_EDGE 619  done
+END_EDGE 762  done
+END_EDGE 903  done
+END_EDGE 1201  done
+END_EDGE 1366  done
+END_EDGE 1620  done
+END_EDGE 1920  done
+END_EDGE 1970  done
+END_EDGE 2240  done
+END_EDGE 2369  done
+END_EDGE 2462  done
+END_EDGE 2550 fault
+END_EDGE 2619 fault
+END_EDGE 2622 fault
+VM MISMATCH sector 01a4 got 9e059bd00af6125781f3788300000012b9861a5e245885d1931a78c0727b79d4 expected 9e059bd00af6125781f3788300000011b9861a5e245885d1931a78c0727b79d4
+VM MISMATCH sector 01a6 got a883bd19000000186fce1661043abca5f344ac2bf4d978dff7d94d6afa5c5588 expected a883bd19000000116fce1661043abca5f344ac2bf4d978dff7d94d6afa5c5588
+VM MISMATCH sector 01a8 got 64057046cb5b3c9d99d1616e6253679236cc12561ccbaab1c379d54700000024 expected 64057046cb5b3c9d99d1616e6253679236cc12561ccbaab1c379d5470000001a
+VM MISMATCH sector 0e40 got 1788b21ed67330c9ab1435276f8ce87ea95dd49cbf087acb8f9ddb7000000030 expected 1788b21ed67330c9ab1435276f8ce87ea95dd49cbf087acb8f9ddb7000000009
+VM MISMATCH sector 0e42 got 628d265db96f2a79d3812f614542643eb2c1c2531469aad17fc1e2bb00000027 expected 628d265db96f2a79d3812f614542643eb2c1c2531469aad17fc1e2bb0000001e
+VM MISMATCH sector 0e43 got 000000200bd827b81f688c5b9267e5634f7cdd118f249e0b78c914fca08fd5c2 expected 000000090bd827b81f688c5b9267e5634f7cdd118f249e0b78c914fca08fd5c2
+VM MISMATCH sector 0e45 got b925f97492e74e84b79a8a21144bff4a0000002a139b6d902a1271f2f4a7e2c9 expected b925f97492e74e84b79a8a21144bff4a00000029139b6d902a1271f2f4a7e2c9
+VM MISMATCH sector 0e46 got d57c885caed1c0df0a67811d0000000f0f487a97acfbc188ab81cbaba7177e2d expected d57c885caed1c0df0a67811d0000000e0f487a97acfbc188ab81cbaba7177e2d
+IDX_UNION MUT4 records21 dones18 faults3 sectors_checked776 errors8 schedule_edges2626
+[83730000] %Fatal: tb_hnx_idx_union.sv:140: Assertion failed in tb_hnx_idx_union: IDX_UNION FAIL: union record on actual SW slice mismatch
+%Error: rtl/hbm_next/idx/tb/tb_hnx_idx_union.sv:140: Verilog $stop
+Aborting...
+RUN_RC=1
+... (trimmed)
+VM MISMATCH sector 0e43 got 000000200bd827b81f688c5b9267e5634f7cdd118f249e0b78c914fca08fd5c2 expected 000000090bd827b81f688c5b9267e5634f7cdd118f249e0b78c914fca08fd5c2
+VM MISMATCH sector 0e45 got b925f97492e74e84b79a8a21144bff4a0000002a139b6d902a1271f2f4a7e2c9 expected b925f97492e74e84b79a8a21144bff4a00000029139b6d902a1271f2f4a7e2c9
+VM MISMATCH sector 0e46 got d57c885caed1c0df0a67811d0000000f0f487a97acfbc188ab81cbaba7177e2d expected d57c885caed1c0df0a67811d0000000e0f487a97acfbc188ab81cbaba7177e2d
+IDX_UNION MUT4 records21 dones18 faults3 sectors_checked776 errors8 schedule_edges2626
+[83730000] %Fatal: tb_hnx_idx_union.sv:140: Assertion failed in tb_hnx_idx_union: IDX_UNION FAIL: union record on actual SW slice mismatch
+%Error: rtl/hbm_next/idx/tb/tb_hnx_idx_union.sv:140: Verilog $stop
+Aborting...
+RUN_RC=1

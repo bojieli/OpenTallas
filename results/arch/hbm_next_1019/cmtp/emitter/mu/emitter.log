@@ -1,0 +1,14 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/hnx-cmtp4/opt5
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/hnx-cmtp4/opt5
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/hnx-cmtp4/opt5
+ot-run: ot-epyc7       admits  1152 GB (avail 909, growth 103, headroom 0, waiters 0/0 GB) load 101/96 running 31 disk 6642 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hnx-cmtp4/opt5
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hnx-cmtp4/opt5
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-346029-1792403610 after 1 s
+mu 0 {"emit": {"rowx_records": 75, "ok": 82, "users_hbm_strided_operands": 1, "plain_records": 7, "union_expert_in_loop": 18, "union_slot_group_copies_folded": 64, "note_att_plan_records": 2, "union_K": 7}, "errors": [], "need": 245248, "hw": 233600}
+mu 1 {"emit": {"rowx_records": 138, "ok": 145, "users_hbm_strided_operands": 1, "plain_records": 7, "union_expert_in_loop": 18, "union_slot_group_copies_folded": 64, "note_att_plan_records": 2, "union_K": 7}, "errors": [], "need": 323008, "hw": 311360}
+mu 2 {"emit": {"rowx_records": 85, "ok": 121, "plain_records": 36, "users_idx_key_store_strides": 1, "users_hbm_strided_operands": 3, "union_expert_in_loop": 18, "union_slot_group_copies_folded": 64, "note_att_plan_records": 2, "union_K": 7}, "errors": [], "need": 245664, "hw": 233992}
+mu 3 {"emit": {"rowx_records": 75, "ok": 82, "users_hbm_strided_operands": 1, "plain_records": 7, "union_expert_in_loop": 18, "union_slot_group_copies_folded": 64, "note_att_plan_records": 2, "union_K": 7}, "errors": [], "need": 245248, "hw": 233600}
+mu 14 {"emit": {"plain_records": 36, "ok": 184, "rowx_records": 148, "users_hbm_strided_operands": 3, "users_idx_key_store_strides": 1, "union_expert_in_loop": 18, "union_slot_group_copies_folded": 64, "note_att_plan_records": 2, "union_K": 7}, "errors": [], "need": 327104, "hw": 315456}
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-346029-1792403610): exit 0

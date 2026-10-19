@@ -1,0 +1,1413 @@
+{
+ "schema": "opentallas.hbm_next_1019.veh.token_composition.v1",
+ "lane": "HBM-NEXT-VEH",
+ "date": "2026-10-19",
+ "physical_in_schedule": {
+  "rule": "the measured next-die terms run inside the static S2 schedule (hidden where off the critical path): DIE f4c_t5 per-class relay stage delta on the D1 plan_b stage set + SM4 lane latency +2 + 8 (lanes - 1) a SM record; 'f4c_t5_smhbm' moves only SM_HBM (no credit for the shorter SM_X / VM_HUB)",
+  "d4g_class_stages": {
+   "ar_tok_s": 1949.7,
+   "mtp_tok_s": 3459.9,
+   "mu_agg_tok_s": 4481.6,
+   "mu_per_user_tok_s": 1120.4
+  },
+  "f4c_t5": {
+   "ar_tok_s": 1989.9,
+   "mtp_tok_s": 3383.7,
+   "mu_agg_tok_s": 4373.7,
+   "mu_per_user_tok_s": 1093.4,
+   "moved_stages": {
+    "COLL_EP": [
+     9.6,
+     9.8
+    ],
+    "COLL_RING": [
+     9.38,
+     11.13
+    ],
+    "COLL_VM": [
+     14.91,
+     12.16
+    ],
+    "HBM_VM": [
+     18.88,
+     20.26
+    ],
+    "HC_CORE": [
+     15.56,
+     14.45
+    ],
+    "HC_ENG": [
+     5.54,
+     0.5
+    ],
+    "KV_DESC": [
+     8.94,
+     6.88
+    ],
+    "LG_HC": [
+     0.5,
+     2.0
+    ],
+    "LG_SFU": [
+     0.5,
+     1.0
+    ],
+    "LG_SU": [
+     0.09,
+     0.0
+    ],
+    "QUANT_VM": [
+     0.0,
+     2.12
+    ],
+    "SFU_CORE": [
+     9.25,
+     10.17
+    ],
+    "SM_HBM": [
+     4.5,
+     6.87
+    ],
+    "SM_OUT": [
+     9.0,
+     8.07
+    ],
+    "SM_X": [
+     10.16,
+     5.37
+    ],
+    "SU_CORE": [
+     3.67,
+     2.5
+    ],
+    "VM_HBM": [
+     18.69,
+     20.38
+    ],
+    "VM_HUB": [
+     16.41,
+     12.13
+    ],
+    "VM_RING": [
+     9.5,
+     10.0
+    ]
+   },
+   "sm4_latency_cycles_charged": {
+    "mtp": 89830.0,
+    "mu": 80470.0
+   }
+  },
+  "f4c_t5_smhbm": {
+   "ar_tok_s": 1944.2,
+   "mtp_tok_s": 3288.0,
+   "mu_agg_tok_s": 4236.2,
+   "mu_per_user_tok_s": 1059.0,
+   "moved_stages": {
+    "SM_HBM": [
+     4.5,
+     6.87
+    ]
+   },
+   "sm4_latency_cycles_charged": {
+    "mtp": 89830.0,
+    "mu": 80470.0
+   }
+  },
+  "delta_vs_d4g_class_pct": {
+   "f4c_t5": {
+    "ar_tok_s": 2.06,
+    "mtp_tok_s": -2.2,
+    "mu_agg_tok_s": -2.41,
+    "mu_per_user_tok_s": -2.41
+   },
+   "f4c_t5_smhbm": {
+    "ar_tok_s": -0.28,
+    "mtp_tok_s": -4.97,
+    "mu_agg_tok_s": -5.48,
+    "mu_per_user_tok_s": -5.48
+   }
+  }
+ },
+ "cmtp_cross_reference": {
+  "src": "results/arch/hbm_next_1019/cmtp/retime/retime.json",
+  "cmtp": {
+   "ar_tok_s": 1949.7,
+   "mtp_tok_s": 3500.1,
+   "mu_agg_tok_s": 4423.1,
+   "mu_per_user_tok_s": 1105.8
+  },
+  "cmtp_x_phys": {
+   "ar_tok_s": 1989.9,
+   "mtp_tok_s": 3423.0,
+   "mu_agg_tok_s": 4316.6,
+   "mu_per_user_tok_s": 1079.2
+  },
+  "note": "CMTP adds the P = 4 compiler rules (rpl remainder pass, union histogram, M1 x-load / publish) on the same D1 chain; the PHYS factor is VEH's (same point, f4c_t5 vs d4g-class)"
+ },
+ "rule": "HBM-NEXT-VEH (10-19): token composition of the next HBM die (P = 4), priced vs measured.\n\nMethod (AGENTS.md \"simulate the minimum component\"; memory token-pass-release-gate-1018): the token is NEVER simulated\nwhole.  Each layer segment's cycles come from the compiler's static schedule on the D1 timing model\n(tools/hgi_sim/hbm_plane_model.py, re-timed with the next-die knobs by compose_grid.py), and every term that an RTL\nbench has MEASURED replaces or bounds its priced value in the ledger below.  The vehicle's layer runs (forked d4g SW\nslice + P = 4 lanes as SM4 / ATT4 / UNITS RTL lands) fill the per-layer `measured_cycles` column; until then it is null\nand the composition is PRICED, with the measured unit terms applied where they exist.\n\nInter-die traffic is in the schedule: every off-die collective = endpoint 108.6 + one single-tier switch crossing\n(377.6 ns = 453.1 cycles at 1.2 GHz) + tail 0.15 us, = 741.7 cycles fixed + payload over L COLL delivery lanes\n(64 B/lane/cycle), 192 dies on ONE switch plane, each die its own SerDes port (32 x 100G).\n\n    python3 tools/hbm_next/vehicle/token_compose.py --grid compose_grid.json --out results/arch/hbm_next_1019/veh\n",
+ "clk_hz": 1200000000.0,
+ "tau_mtp": 4.159,
+ "targets": {
+  "ds_ar": 1905.4,
+  "ds_mtp": 3363.5,
+  "ds_mu_agg": 4365.3,
+  "ds_mu_per_user_floor": 1000.0
+ },
+ "status": "PRICED composition (D1 compiler chain, static S2 schedule) with the MEASURED unit terms in the schedule (HC II 250 hnx, COLL 3K/2, SM4 lane latency, DIE f4c_t5 stages); NO P = 4 layer measured in RTL yet",
+ "headline": {
+  "point": "f4c_t5|L5|II250|grown",
+  "knobs": "COLL L = 5 (adopted), HC row II 250 (MEASURED hnx), VM grown (>= 412k words, PROG 01:35), DIE f4c_t5 relay stages + SM4 lane latency in the schedule",
+  "ar_tok_s": 1989.9,
+  "mtp_tok_s": 3383.7,
+  "mu_agg_tok_s": 4373.7,
+  "mu_per_user_tok_s": 1093.4,
+  "meets": {
+   "ar": true,
+   "mtp": true,
+   "mu_agg": true,
+   "per_user_floor": true
+  }
+ },
+ "d4g_reproduction": {
+  "model_self_check": [
+   {
+    "name": "D1 AR",
+    "got": 629775.1,
+    "ref": 629775.1,
+    "ok": true
+   },
+   {
+    "name": "D1 MTP P4 verify",
+    "got": 1338146.6,
+    "ref": 1338146.6,
+    "ok": true
+   },
+   {
+    "name": "D1 MU P4",
+    "got": 1099570.6,
+    "ref": 1099570.6,
+    "ok": true
+   },
+   {
+    "name": "P1 coll L5 AR",
+    "got": 615483.0,
+    "ref": 615483.0,
+    "ok": true
+   },
+   {
+    "name": "P1 coll L5 MTP P4 verify",
+    "got": 1297601.0,
+    "ref": 1297601.0,
+    "ok": true
+   },
+   {
+    "name": "P1 coll L5 MU P4",
+    "got": 1071052.5,
+    "ref": 1071052.5,
+    "ok": true
+   },
+   {
+    "name": "P1 hc II4385 MTP P4 verify",
+    "got": 2782985.4,
+    "ref": 2782985.4,
+    "ok": true
+   },
+   {
+    "name": "P1 hc II4385 MU P4",
+    "got": 1941033.1,
+    "ref": 1941033.1,
+    "ok": true
+   },
+   {
+    "name": "P1 vm asbuilt MTP P4 verify",
+    "got": 1375286.3,
+    "ref": 1375286.3,
+    "ok": true
+   },
+   {
+    "name": "P1 vm asbuilt MU P4",
+    "got": 1135980.3,
+    "ref": 1135980.3,
+    "ok": true
+   }
+  ],
+  "ar_repro": {
+   "schema": "opentallas.hbm_next_1019.veh.ar_repro.v1",
+   "lane": "HBM-NEXT-VEH",
+   "rule": "HBM-NEXT-VEH (10-19): the next-die AR layer path must reproduce the d4g AR layer.\n\nSingle-user AR on the P = 4 die issues P = 1 records (STUDY: DS AR 1,905.4 at every P with L = 4), so its RTL path is\nthe d4g path: the forked vehicle (tools/hbm_next/vehicle = 3-way merge of claude/lb2-hbm-cds-1018 @63ef9558e and\ncodex/hbm-vehicle-recovery-1018 @1da79c281 over 128031c2a) must emit BYTE-IDENTICAL slice payloads for the d4g DS L0\nfixture replay.  This tool re-runs the forked compiler (layer_images) + TB generator (gen_slice_tb) on the committed\nreleased-checkpoint fixtures and compares every payload file against the d4g receipt\nresults/rtl/hbm_ds_layer_tput_1018/vehicle_recovery_1018/ds_l0_fixture_replay.json (payload_sha256), fail-closed.\nThe RTL cycles of this replay come from the d4g SW-slice binary (sw5 / sw5e) -- the same binary serves both dies, so\nno second 240 GB build is launched (AGENTS.md: reuse live pinned jobs; simulate the minimum component).\n\n    PYTHONPATH=tools python3 tools/hbm_next/vehicle/ar_repro.py --work DIR --out results/arch/hbm_next_1019/veh/ar_repro.json\n",
+   "verdict": "PASS",
+   "scope": "compiler/TB side of the AR layer path (DS L0, 8 SU.VOP records on released-checkpoint fixtures); RTL cycles = the d4g SW-slice run (pending), not claimed here",
+   "receipt": "results/arch/hbm_next_1019/veh/d4g_receipt/ds_l0_fixture_replay.json",
+   "receipt_sha256": "77f0ba1cb4cc075f28487ea57d8ec58ba020398c0dd4223b4b328fdb6e7bca27",
+   "boundary_sha256": "6a0ba46087894d4fd5f550801183744301b2ef0e6f125a3db1d09e64475ae094",
+   "payload": {
+    "val.mem": {
+     "fork": "1b6d406c38b14a234ec5fa9c5fd670aaf611c0d694663094686914c7780ec022",
+     "d4g": "1b6d406c38b14a234ec5fa9c5fd670aaf611c0d694663094686914c7780ec022",
+     "identical": true
+    },
+    "hdr.mem": {
+     "fork": "a7c29ff58143c60c13abb25f6f4899b499851269c1f731dd11c90a10a85f5002",
+     "d4g": "a7c29ff58143c60c13abb25f6f4899b499851269c1f731dd11c90a10a85f5002",
+     "identical": true
+    },
+    "vm_pre.txt": {
+     "fork": "d6fe35126a15e4796e9330d07f5cc1bd8e2300eb5a14c829c6d8f8dcead80ae7",
+     "d4g": "d6fe35126a15e4796e9330d07f5cc1bd8e2300eb5a14c829c6d8f8dcead80ae7",
+     "identical": true
+    },
+    "msk.mem": {
+     "fork": "1a1df4e8b24b81dacc3eadb960e7d2b1b283788c5ff10263379dc551f9b47bd1",
+     "d4g": "1a1df4e8b24b81dacc3eadb960e7d2b1b283788c5ff10263379dc551f9b47bd1",
+     "identical": true
+    }
+   },
+   "record_counts": {
+    "blocked:format_open": 57,
+    "blocked:unsupported_lowering": 3,
+    "blocked:v1_unsupported": 1,
+    "emitted": 8,
+    "emitted_unparameterised": 1,
+    "unsupported_lowering": 11,
+    "v1_unsupported": 10
+   },
+   "record_counts_equal": true,
+   "index": {
+    "events": 6308,
+    "drives": 4972,
+    "checks": 1336,
+    "vm_preload_words": 1377,
+    "records": [
+     23,
+     31,
+     40,
+     79,
+     82,
+     84,
+     85,
+     87
+    ]
+   },
+   "index_equal": true,
+   "index_json_note": "index.json differs from the receipt only by the scope fields (qualifies_native_* = false, state_seed_provenance) added after the receipt (codex 1da79c281)",
+   "forked_from": {
+    "cds": "claude/lb2-hbm-cds-1018@63ef9558e",
+    "codex": "codex/hbm-vehicle-recovery-1018@1da79c281",
+    "merge_base": "128031c2a"
+   },
+   "fork_sha256": {
+    "__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "ar_repro.py": "59a8b9b0a7d3a8495a84a772905e61ff77dbcb2591262a423eca41e1e3cf4f61",
+    "check_slice_run.py": "5b4a1906f96c29956edbd8c64b6a84676a1d03b4a4cc58182bbf91cc69ae2805",
+    "coll_images.py": "a0f1d94d6a8f299bb2b3292d998927a32bd9e82dabbc2cc20068c0d5938d2c45",
+    "coll_ops_images.py": "e0212efd6267ff6d7806a88c46de261739719d93f1da3324129b18070086f204",
+    "compose_grid.py": "6035704e4576e8fb95af0175cd9365916447e347247aba442b5faf987b0cbf68",
+    "cut_slice.py": "8706f7f7e04ad4bdc1dd8295b1bdfc3a8f7416412c09da49bac763e19887e7af",
+    "die_filelist.py": "88fdd3198b97bb57e414cbd77c7a0d005167b99ffb1356e00d67b97bf15f8851",
+    "ds_layer_fixtures.py": "51629204ed6c3f708e577bba3a2c86e1f7c4d2191cb19faab22f11977515f706",
+    "flatten_masters.py": "93097c5e262edcfb0e293d14a2fbf657111bfb95a80595f335941d1220dba30c",
+    "gen_slice_tb.py": "8164059f5871cbfe9f41f56313ddf511ddfa210e51bf6d91192ef0d3c585f952",
+    "hc_images.py": "3d10344633defc41201fe05913b9daef8266d9c62a4d0c83166eb947d3430f42",
+    "layer_coverage.py": "7d42759493137f28d3b982bd3e537c61b7b3171bd541395834888471a7acabea",
+    "layer_images.py": "74f8bde100912698604302218eeffdd1383d320d81244a890350b7c8948bc06f",
+    "make_bundle.py": "d585ac85624563b0df3f7b40f0ea0a741fbbe3fb2f551addc3beb6e9cf5eb66b",
+    "make_record.py": "aea22e797d360fefe2eac77011b167d583700f25f4c614df9027cb8200c7e390",
+    "priced_layers.py": "9d00b1b1b8a55793240c7e0ee18674e02e0bef90e8b4fd49f5f58192dcfd95d2",
+    "run_die_vehicle.sh": "55b0cb426e92523e25692285e28cfd988bc102fc430ed322d32f91f96237fa56",
+    "run_ds_fixtures.sh": "c77d54f9b1b1b71649e4067378a19edee74d6fd5e4919988c5a99fe188eeae42",
+    "run_slice_vehicle.sh": "85e6c39f6229087da0aadeb6192b524bdb3369f3254cddfa58c4deb8df6f240b",
+    "sfu_images.py": "60e2d94eb666915613ad8bfb3c8cf46a630f05557d3052c1ca87b3460f6ef1d7",
+    "split_replay.py": "337493aab0a93634d39506842fd0b2b3c8f448394dfcc71ec8b0f8151a68988d",
+    "tb_coll_replay.sv": "e9abee5ba1cfe8185080f0e8aa6eaab4f1c3a47e1a28ffe1fea358920a713564",
+    "tb_hc_replay.sv": "07a9935ea286b15a1ab55bd7f10cb24302c4f9a2c9681844cf7c9191100cdeb0",
+    "tb_sfu_collar.sv": "b572fe0403236bce58729fabdedec8e30420a23f29bfa427ea60bd3f8362cc9a",
+    "test_check_slice_run.py": "d6a0abe154cd8b273dc39dcacedb63249eb72b38a161fe3f2877fbd196e52ede",
+    "test_coll_images.py": "01103743e3274fc30fa36306dea0d84cebd0fa3f691c8ee5ad837c306ec5d18e",
+    "test_coll_ops_images.py": "1d0317b1d9db6e741b42e892684051bf587cca727e2cf58703eeab2c6a9dd79e",
+    "test_hc_images.py": "17f788f4972040f61ed07091946d87c5e76d85157d53035dca36394b027c7fb0",
+    "test_layer_images.py": "298dd819616311bf475fdf8acfe3dd8ea9e2a76af208572e0a059307d0713e62",
+    "test_sfu_images.py": "68a3c13c03533a0f9b12c979421794bba0c79414b0e15fb57bf7ac2ce50809fc",
+    "test_split_replay.py": "4a9b86109e5d23892d3633fafcbd533093160d864f53435cba7ae562e2a2ffde",
+    "token_compose.py": "1f8c9c0464ff2d794f1e63f9d3af244d746333f3fc63101b7a6fd4f6e8208fbb"
+   }
+  }
+ },
+ "grid": {
+  "L4|II250|grown": {
+   "ar_tok_s": 1905.4,
+   "mtp_tok_s": 3363.5,
+   "mu_agg_tok_s": 4365.3,
+   "mu_per_user_tok_s": 1091.3,
+   "meets": {
+    "ar": true,
+    "mtp": true,
+    "mu_agg": true,
+    "per_user_floor": true
+   }
+  },
+  "L4|II250|asbuilt": {
+   "ar_tok_s": 1905.4,
+   "mtp_tok_s": 3281.3,
+   "mu_agg_tok_s": 4225.4,
+   "mu_per_user_tok_s": 1056.4,
+   "meets": {
+    "ar": true,
+    "mtp": false,
+    "mu_agg": false,
+    "per_user_floor": true
+   }
+  },
+  "L4|II600|grown": {
+   "ar_tok_s": 1905.4,
+   "mtp_tok_s": 3186.8,
+   "mu_agg_tok_s": 4272.5,
+   "mu_per_user_tok_s": 1068.1,
+   "meets": {
+    "ar": true,
+    "mtp": false,
+    "mu_agg": false,
+    "per_user_floor": true
+   }
+  },
+  "L4|II600|asbuilt": {
+   "ar_tok_s": 1905.4,
+   "mtp_tok_s": 3113.0,
+   "mu_agg_tok_s": 4138.3,
+   "mu_per_user_tok_s": 1034.6,
+   "meets": {
+    "ar": true,
+    "mtp": false,
+    "mu_agg": false,
+    "per_user_floor": true
+   }
+  },
+  "L4|II950|grown": {
+   "ar_tok_s": 1905.4,
+   "mtp_tok_s": 2947.2,
+   "mu_agg_tok_s": 4003.1,
+   "mu_per_user_tok_s": 1000.8,
+   "meets": {
+    "ar": true,
+    "mtp": false,
+    "mu_agg": false,
+    "per_user_floor": true
+   }
+  },
+  "L4|II950|asbuilt": {
+   "ar_tok_s": 1905.4,
+   "mtp_tok_s": 2884.0,
+   "mu_agg_tok_s": 3885.1,
+   "mu_per_user_tok_s": 971.3,
+   "meets": {
+    "ar": true,
+    "mtp": false,
+    "mu_agg": false,
+    "per_user_floor": false
+   }
+  },
+  "L4|II4385|grown": {
+   "ar_tok_s": 1905.4,
+   "mtp_tok_s": 1679.7,
+   "mu_agg_tok_s": 2472.9,
+   "mu_per_user_tok_s": 618.2,
+   "meets": {
+    "ar": true,
+    "mtp": false,
+    "mu_agg": false,
+    "per_user_floor": false
+   }
+  },
+  "L4|II4385|asbuilt": {
+   "ar_tok_s": 1905.4,
+   "mtp_tok_s": 1659.0,
+   "mu_agg_tok_s": 2427.4,
+   "mu_per_user_tok_s": 606.8,
+   "meets": {
+    "ar": true,
+    "mtp": false,
+    "mu_agg": false,
+    "per_user_floor": false
+   }
+  },
+  "L4|IInoHCrows|grown": {
+   "ar_tok_s": 1905.4,
+   "mtp_tok_s": 2831.6,
+   "mu_agg_tok_s": 3866.8,
+   "mu_per_user_tok_s": 966.7,
+   "meets": {
+    "ar": true,
+    "mtp": false,
+    "mu_agg": false,
+    "per_user_floor": false
+   }
+  },
+  "L4|IInoHCrows|asbuilt": {
+   "ar_tok_s": 1905.4,
+   "mtp_tok_s": 2773.2,
+   "mu_agg_tok_s": 3756.6,
+   "mu_per_user_tok_s": 939.2,
+   "meets": {
+    "ar": true,
+    "mtp": false,
+    "mu_agg": false,
+    "per_user_floor": false
+   }
+  },
+  "L5|II250|grown": {
+   "ar_tok_s": 1949.7,
+   "mtp_tok_s": 3459.9,
+   "mu_agg_tok_s": 4481.6,
+   "mu_per_user_tok_s": 1120.4,
+   "meets": {
+    "ar": true,
+    "mtp": true,
+    "mu_agg": true,
+    "per_user_floor": true
+   }
+  },
+  "L5|II250|asbuilt": {
+   "ar_tok_s": 1949.7,
+   "mtp_tok_s": 3373.1,
+   "mu_agg_tok_s": 4334.2,
+   "mu_per_user_tok_s": 1083.6,
+   "meets": {
+    "ar": true,
+    "mtp": true,
+    "mu_agg": false,
+    "per_user_floor": true
+   }
+  },
+  "L5|II600|grown": {
+   "ar_tok_s": 1949.7,
+   "mtp_tok_s": 3240.8,
+   "mu_agg_tok_s": 4344.9,
+   "mu_per_user_tok_s": 1086.2,
+   "meets": {
+    "ar": true,
+    "mtp": false,
+    "mu_agg": false,
+    "per_user_floor": true
+   }
+  },
+  "L5|II600|asbuilt": {
+   "ar_tok_s": 1949.7,
+   "mtp_tok_s": 3164.5,
+   "mu_agg_tok_s": 4206.3,
+   "mu_per_user_tok_s": 1051.6,
+   "meets": {
+    "ar": true,
+    "mtp": false,
+    "mu_agg": false,
+    "per_user_floor": true
+   }
+  },
+  "L5|II950|grown": {
+   "ar_tok_s": 1949.7,
+   "mtp_tok_s": 2993.3,
+   "mu_agg_tok_s": 4066.6,
+   "mu_per_user_tok_s": 1016.7,
+   "meets": {
+    "ar": true,
+    "mtp": false,
+    "mu_agg": false,
+    "per_user_floor": true
+   }
+  },
+  "L5|II950|asbuilt": {
+   "ar_tok_s": 1949.7,
+   "mtp_tok_s": 2928.1,
+   "mu_agg_tok_s": 3945.0,
+   "mu_per_user_tok_s": 986.2,
+   "meets": {
+    "ar": true,
+    "mtp": false,
+    "mu_agg": false,
+    "per_user_floor": false
+   }
+  },
+  "L5|II4385|grown": {
+   "ar_tok_s": 1949.7,
+   "mtp_tok_s": 1694.6,
+   "mu_agg_tok_s": 2497.0,
+   "mu_per_user_tok_s": 624.3,
+   "meets": {
+    "ar": true,
+    "mtp": false,
+    "mu_agg": false,
+    "per_user_floor": false
+   }
+  },
+  "L5|II4385|asbuilt": {
+   "ar_tok_s": 1949.7,
+   "mtp_tok_s": 1673.5,
+   "mu_agg_tok_s": 2450.6,
+   "mu_per_user_tok_s": 612.7,
+   "meets": {
+    "ar": true,
+    "mtp": false,
+    "mu_agg": false,
+    "per_user_floor": false
+   }
+  },
+  "L5|IInoHCrows|grown": {
+   "ar_tok_s": 1949.7,
+   "mtp_tok_s": 2874.2,
+   "mu_agg_tok_s": 3926.1,
+   "mu_per_user_tok_s": 981.5,
+   "meets": {
+    "ar": true,
+    "mtp": false,
+    "mu_agg": false,
+    "per_user_floor": false
+   }
+  },
+  "L5|IInoHCrows|asbuilt": {
+   "ar_tok_s": 1949.7,
+   "mtp_tok_s": 2814.0,
+   "mu_agg_tok_s": 3812.6,
+   "mu_per_user_tok_s": 953.1,
+   "meets": {
+    "ar": true,
+    "mtp": false,
+    "mu_agg": false,
+    "per_user_floor": false
+   }
+  },
+  "f4c_t5|L5|II250|grown": {
+   "ar_tok_s": 1989.9,
+   "mtp_tok_s": 3383.7,
+   "mu_agg_tok_s": 4373.7,
+   "mu_per_user_tok_s": 1093.4,
+   "meets": {
+    "ar": true,
+    "mtp": true,
+    "mu_agg": true,
+    "per_user_floor": true
+   }
+  },
+  "f4c_t5|L5|II250|asbuilt": {
+   "ar_tok_s": 1989.9,
+   "mtp_tok_s": 3301.6,
+   "mu_agg_tok_s": 4234.8,
+   "mu_per_user_tok_s": 1058.7,
+   "meets": {
+    "ar": true,
+    "mtp": false,
+    "mu_agg": false,
+    "per_user_floor": true
+   }
+  },
+  "f4c_t5|L5|II600|grown": {
+   "ar_tok_s": 1989.9,
+   "mtp_tok_s": 3173.8,
+   "mu_agg_tok_s": 4239.7,
+   "mu_per_user_tok_s": 1059.9,
+   "meets": {
+    "ar": true,
+    "mtp": false,
+    "mu_agg": false,
+    "per_user_floor": true
+   }
+  },
+  "f4c_t5|L5|II600|asbuilt": {
+   "ar_tok_s": 1989.9,
+   "mtp_tok_s": 3101.4,
+   "mu_agg_tok_s": 4109.1,
+   "mu_per_user_tok_s": 1027.3,
+   "meets": {
+    "ar": true,
+    "mtp": false,
+    "mu_agg": false,
+    "per_user_floor": true
+   }
+  },
+  "f4c_t5_smhbm|L5|II250|grown": {
+   "ar_tok_s": 1944.2,
+   "mtp_tok_s": 3288.0,
+   "mu_agg_tok_s": 4236.2,
+   "mu_per_user_tok_s": 1059.0,
+   "meets": {
+    "ar": true,
+    "mtp": false,
+    "mu_agg": false,
+    "per_user_floor": true
+   }
+  },
+  "f4c_t5_smhbm|L5|II250|asbuilt": {
+   "ar_tok_s": 1944.2,
+   "mtp_tok_s": 3209.5,
+   "mu_agg_tok_s": 4104.3,
+   "mu_per_user_tok_s": 1026.1,
+   "meets": {
+    "ar": true,
+    "mtp": false,
+    "mu_agg": false,
+    "per_user_floor": true
+   }
+  },
+  "f4c_t5_smhbm|L5|II600|grown": {
+   "ar_tok_s": 1944.2,
+   "mtp_tok_s": 3096.7,
+   "mu_agg_tok_s": 4117.8,
+   "mu_per_user_tok_s": 1029.4,
+   "meets": {
+    "ar": true,
+    "mtp": false,
+    "mu_agg": false,
+    "per_user_floor": true
+   }
+  },
+  "f4c_t5_smhbm|L5|II600|asbuilt": {
+   "ar_tok_s": 1944.2,
+   "mtp_tok_s": 3026.9,
+   "mu_agg_tok_s": 3993.0,
+   "mu_per_user_tok_s": 998.3,
+   "meets": {
+    "ar": true,
+    "mtp": false,
+    "mu_agg": false,
+    "per_user_floor": false
+   }
+  }
+ },
+ "hc_row_cost": {
+  "by_II_L5_grown": {
+   "250": {
+    "mtp_tok_s": 3459.9,
+    "mu_per_user_tok_s": 1120.4,
+    "mu_agg_tok_s": 4481.6,
+    "hc_busy_mu": 151652.0
+   },
+   "600": {
+    "mtp_tok_s": 3240.8,
+    "mu_per_user_tok_s": 1086.2,
+    "mu_agg_tok_s": 4344.9,
+    "hc_busy_mu": 235652.0
+   },
+   "950": {
+    "mtp_tok_s": 2993.3,
+    "mu_per_user_tok_s": 1016.7,
+    "mu_agg_tok_s": 4066.6,
+    "hc_busy_mu": 319652.0
+   },
+   "4385": {
+    "mtp_tok_s": 1694.6,
+    "mu_per_user_tok_s": 624.3,
+    "mu_agg_tok_s": 2497.0,
+    "hc_busy_mu": 1144052.0
+   },
+   "noHCrows": {
+    "mtp_tok_s": 2874.2,
+    "mu_per_user_tok_s": 981.5,
+    "mu_agg_tok_s": 3926.1,
+    "hc_busy_mu": 366600.0
+   }
+  },
+  "mu_step_cycles_per_II_cycle": 216.0,
+  "ii_for_1000_per_user": 1041.0,
+  "mtp_step_cycles_per_II_cycle": 278.7,
+  "ii_for_mtp_target": 398.0
+ },
+ "fifth_coll_lane": {
+  "ar": [
+   1905.4,
+   1949.7
+  ],
+  "mtp_II600": [
+   3186.8,
+   3383.7
+  ],
+  "mu_agg_II600": [
+   4272.5,
+   4373.7
+  ],
+  "note": "[L = 4, L = 5]"
+ },
+ "inter_die": {
+  "dies": 192,
+  "switch_tiers": 1,
+  "crossing_ns": 377.6,
+  "coll_fixed_cycles": 741.7,
+  "coll_lanes": 5,
+  "coll_bytes_per_cycle": 320,
+  "coll_busy_share": {
+   "ar": 0.449,
+   "mtp_verify": 0.405,
+   "mu4": 0.417
+  },
+  "serdes_note": "STUDY (a): at P = 4 MU, COLL busy x full 256 B/cycle <= 34 % of the 400 GB/s raw SerDes; L = 5 (320 B/cycle = 384 GB/s) is the widest the SerDes feeds; the network is not the ceiling"
+ },
+ "ledger": [
+  {
+   "term": "SM P-lane MAC column (bdc + BF16 tcc), P = 1..8",
+   "priced": "P lanes share one weight word; per-line cycles = P = 1 line (D1 sm_mode slots)",
+   "measured": "bit-exact AND cycle-for-cycle equal to the production single-lane column at P = 1, 2, 4, 6, 8; mutant (lane aliasing) caught at P = 2, 4 (Verilator 5.050)",
+   "src": "results/arch/hbm_mtp_next_1018/sm_area/bench/run_p*_m*.log; rtl/hbm_accel/sm/mtp_lanes/ot_hbm_sm_bdc_p.sv",
+   "delta": "+1 latency cycle a record for the registered per-lane-group broadcast tree at P >= 4 (D1 synth); throughput unchanged",
+   "status": "MEASURED (column); tile hnx_rp4lp4 = SM4 lane, not yet"
+  },
+  {
+   "term": "ATT KV-line-stationary 4-query union stream (E1 exactness + 4-query slice)",
+   "priced": "U(N)/U(1) KV union price, top-512 disjoint upper bound (headline)",
+   "measured": "E1 PASS (union stream in golden order exact per lane, reduced ckpt 40 L, N = 6); 4-query slice bit-exact vs 4 single-query goldens, 6 mutants FAIL; span = fixed ~113-127 + 7.8 cycles a union row (4 lanes 401 vs 1,508 serial)",
+   "src": "results/arch/hbm_next_1019/att4/E1.md, att4/bench/throughput.json",
+   "delta": "slice cycles inside the priced union bound; PV merge A1 (shared 4-lane merge) still gating; balanced 32-SM (lane, run) assignment needed (CMTP S1)",
+   "status": "EXACTNESS + SLICE CYCLES"
+  },
+  {
+   "term": "HC.HC_MIX further-row II (hnx N-row engine = the split HC GEN2 binds: root TPRE 6 + 4 qhub + 32 banks)",
+   "priced": "250 (HCP W256 x6 mode, D1)",
+   "measured": "250.0 exactly linear on the hnx RTL: HC_MIX_CYCLES N 1/2/3/4/6/8 = 998/1,248/1,498/1,748/2,248/2,748, lockstep bit-exact vs hdc_golden_v41 chunk8 + tail reference; MUT1/MUT4 FAIL witnesses (Verilator 5.050)",
+   "src": "results/arch/hbm_next_1019/units/hc/README.md (claude/hbm-next-1019@4efc7ebb3); d4g lockstep results/rtl/hbm_hc_split_1017/verdict.json 996/1,246/2,746",
+   "delta": "0: the composition runs at II 250 (grid axis keeps 600 / 950 / 4,385 / per-position as sensitivities)",
+   "status": "MEASURED = priced (UNITS gate #1 PASS; the 4,385 engine is not the bound one)"
+  },
+  {
+   "term": "COLL N-row message train (hnx gather master ot_hnx_coll_gq)",
+   "priced": "COLL.* II = payload x N, fixed part once (CMTP R4)",
+   "measured": "one fire + one 40-edge drain a record, further row 3K/2 edges (K = ceil(F / R)); N = 1 reproduces the d4g bench bit for bit; trains N 1..6 PASS; m6/m7/m8 FAIL witnesses (Verilator 5.050)",
+   "src": "results/arch/hbm_next_1019/units/coll/README.md (claude/hbm-next-units-coll-1019@582620634)",
+   "delta": "0 (= price); the 5th delivery lane L = 5 is a DIE + COLL-body + SU change (in the grid as L5)",
+   "status": "MEASURED = priced (on-die ring all-gather)"
+  },
+  {
+   "term": "SM4 P = 4 leaf / tile hnx_rp4lp4 (lane-select x beats, slot-major publish)",
+   "priced": "P lanes = 1 AR record (c_AR)",
+   "measured": "bit-exact vs production d4g leaves P1-4, MUT1-3 FAIL; 64-chunk span P4 / P1 = 8,262 / 8,238 (K 16, 1.003x) and 2,118 / 2,094 (K 4, 1.012x) = +24 = +1 front +1 publish +8p lane skew; tile lockstep landed vs flat PASS",
+   "src": "results/arch/hbm_next_1019/sm4/bench_summary.json",
+   "delta": "in the PHYS schedule: +2 + 8 (lanes used - 1) cycles on every SM record (AR +2, N >= 4 +26); layer-shape leaf runs (short records, 9-32 chunks) = veh/sm4_layer/",
+   "status": "MEASURED (leaf + tile lockstep); in schedule"
+  },
+  {
+   "term": "DIE f4c_t5 relay stages (stand-in die case GEN_OK, 693 mm2)",
+   "priced": "D1 plan_b stage set (d4g-class)",
+   "measured": "bit-weighted stages per class, f4c_t5 vs DIE's d4g frame: SM_HBM 2.88 -> 5.25, SM_X 11.25 -> 6.46, VM_HUB 16.28 -> 12.0, COLL_VM 15.0 -> 12.25, COLL_RING 8.5 -> 10.25, HBM_VM 19.62 -> 21.0, ... (plan-level geometry, not routed)",
+   "src": "results/arch/hbm_next_1019/die/plan/plan_p4.json per_class; die/README.md",
+   "delta": "PHYS axis: the D1 plan_b stages moved by the per-class delta (f4c_t5) or SM_HBM only (f4c_t5_smhbm)",
+   "status": "PLAN-MEASURED (relays + GRT pending, DIE step 2)"
+  },
+  {
+   "term": "FUSED.HC_PRE_NORM further-row II",
+   "priced": "197",
+   "measured": "197 (LL P6 RTL: (1,451 - 466) / 5)",
+   "src": "results/arch/hbm_mtp_1015/p6_rtl_2330/measurement.json",
+   "delta": "0",
+   "status": "MEASURED = priced"
+  },
+  {
+   "term": "SU reducer ingress (HH-5, d4g as built: 1 reducer operand / edge / quarter)",
+   "priced": "d4g price assumes full-width reducer ingress",
+   "measured": "RTL-as-read bound: DS AR 1,905.4 -> 1,796.6 (-5.71 %), d4g MTP -17.58 %, Qwen -47.76 %; widened W16 -0.14 % / -0.59 %, W32 -0.04 % / -0.19 % (AR / MTP)",
+   "src": "claude/hh5-su-reducer-1018 @714a83601 results/arch/hbm_d4g_price_1017/su_red/price_su_red_w.json",
+   "delta": "next die ASSUMES the widened ingress (W32: <= 0.2 %); as built it would cost >= 5.7 % AR and more at P = 4 (reductions are per row)",
+   "status": "RE-PRICED FROM RTL, d4g WIDEN decision pending"
+  },
+  {
+   "term": "COLL GROUP_REDUCE_MCAST on-die multicast phase",
+   "priced": "1,349 edges incl. the cross-die reduce",
+   "measured": "370 edges launch -> last write, on-die phase only (4/4 slice precheck PASS)",
+   "src": "claude/veh-coll2-coll-1018 (VEH-FMT-COLL2)",
+   "delta": "not comparable until the cross-die phase runs",
+   "status": "PRECHECK (partial)"
+  },
+  {
+   "term": "SFU collar programme install",
+   "priced": "not priced per token (resident)",
+   "measured": "~0.79 M ingress edges an install (stripes padded to 2,048 rows)",
+   "src": "claude/veh-coll2-sfu-1018 (VEH-FMT-COLL2)",
+   "delta": "SFU programmes MUST stay resident across the token; at P = 4 the row stepping must not re-install",
+   "status": "CONSTRAINT"
+  },
+  {
+   "term": "d4g SW-slice DS L0 SU records (8 SU.VOP, released-checkpoint fixtures)",
+   "priced": "compiler commit 10-60 serial edges after the priced end (fill 13 + FO 36 + drain 11)",
+   "measured": null,
+   "src": "pending: ot-epyc4 sw2 (sw5) / ot-epyc5 sw5e SW-slice build (top Verilator pass running)",
+   "delta": "next-die AR layer = this run (identical RTL + byte-identical images, see ar_repro.json)",
+   "status": "PENDING (vehicle)"
+  }
+ ],
+ "per_layer_headline": [
+  {
+   "segment": "0",
+   "representative": "L0 (dense attention window + MoE FFN; slice replay ds_l0)",
+   "ar_priced": 12686.6,
+   "mtp_verify_priced": 24098.6,
+   "mu4_priced": 21138.7,
+   "ar_measured": null,
+   "mtp_verify_measured": null,
+   "mu4_measured": null,
+   "d4g_ar_priced": 13136.4,
+   "ar_priced_d4g_phys": 13014.1,
+   "mtp_verify_priced_d4g_phys": 23302.8,
+   "mu4_priced_d4g_phys": 20477.9
+  },
+  {
+   "segment": "1",
+   "representative": null,
+   "ar_priced": 18456.3,
+   "mtp_verify_priced": 31666.4,
+   "mu4_priced": 27496.4,
+   "ar_measured": null,
+   "mtp_verify_measured": null,
+   "mu4_measured": null,
+   "d4g_ar_priced": 18999.7,
+   "ar_priced_d4g_phys": 18871.0,
+   "mtp_verify_priced_d4g_phys": 31137.0,
+   "mu4_priced_d4g_phys": 26927.9
+  },
+  {
+   "segment": "2",
+   "representative": "L2 (compressed KV + sparse indexer, global KV owner)",
+   "ar_priced": 20063.7,
+   "mtp_verify_priced": 53043.1,
+   "mu4_priced": 42444.1,
+   "ar_measured": null,
+   "mtp_verify_measured": null,
+   "mu4_measured": null,
+   "d4g_ar_priced": 21371.6,
+   "ar_priced_d4g_phys": 20291.8,
+   "mtp_verify_priced_d4g_phys": 52140.8,
+   "mu4_priced_d4g_phys": 41667.1
+  },
+  {
+   "segment": "3",
+   "representative": "L3 (window layer, MoE)",
+   "ar_priced": 13215.6,
+   "mtp_verify_priced": 27645.7,
+   "mu4_priced": 22928.6,
+   "ar_measured": null,
+   "mtp_verify_measured": null,
+   "mu4_measured": null,
+   "d4g_ar_priced": 13665.5,
+   "ar_priced_d4g_phys": 13543.1,
+   "mtp_verify_priced_d4g_phys": 26849.8,
+   "mu4_priced_d4g_phys": 22267.8
+  },
+  {
+   "segment": "4",
+   "representative": null,
+   "ar_priced": 13215.6,
+   "mtp_verify_priced": 27645.7,
+   "mu4_priced": 22928.6,
+   "ar_measured": null,
+   "mtp_verify_measured": null,
+   "mu4_measured": null,
+   "d4g_ar_priced": 13665.5,
+   "ar_priced_d4g_phys": 13543.1,
+   "mtp_verify_priced_d4g_phys": 26849.8,
+   "mu4_priced_d4g_phys": 22267.8
+  },
+  {
+   "segment": "5",
+   "representative": null,
+   "ar_priced": 13215.6,
+   "mtp_verify_priced": 27645.7,
+   "mu4_priced": 22928.6,
+   "ar_measured": null,
+   "mtp_verify_measured": null,
+   "mu4_measured": null,
+   "d4g_ar_priced": 13665.5,
+   "ar_priced_d4g_phys": 13543.1,
+   "mtp_verify_priced_d4g_phys": 26849.8,
+   "mu4_priced_d4g_phys": 22267.8
+  },
+  {
+   "segment": "6",
+   "representative": null,
+   "ar_priced": 13215.6,
+   "mtp_verify_priced": 27645.7,
+   "mu4_priced": 22928.6,
+   "ar_measured": null,
+   "mtp_verify_measured": null,
+   "mu4_measured": null,
+   "d4g_ar_priced": 13665.5,
+   "ar_priced_d4g_phys": 13543.1,
+   "mtp_verify_priced_d4g_phys": 26849.8,
+   "mu4_priced_d4g_phys": 22267.8
+  },
+  {
+   "segment": "7",
+   "representative": null,
+   "ar_priced": 13215.6,
+   "mtp_verify_priced": 27645.7,
+   "mu4_priced": 22928.6,
+   "ar_measured": null,
+   "mtp_verify_measured": null,
+   "mu4_measured": null,
+   "d4g_ar_priced": 13665.5,
+   "ar_priced_d4g_phys": 13543.1,
+   "mtp_verify_priced_d4g_phys": 26849.8,
+   "mu4_priced_d4g_phys": 22267.8
+  },
+  {
+   "segment": "8",
+   "representative": null,
+   "ar_priced": 20063.7,
+   "mtp_verify_priced": 53043.1,
+   "mu4_priced": 42444.1,
+   "ar_measured": null,
+   "mtp_verify_measured": null,
+   "mu4_measured": null,
+   "d4g_ar_priced": 21371.6,
+   "ar_priced_d4g_phys": 20291.8,
+   "mtp_verify_priced_d4g_phys": 52140.8,
+   "mu4_priced_d4g_phys": 41667.1
+  },
+  {
+   "segment": "9",
+   "representative": null,
+   "ar_priced": 13215.6,
+   "mtp_verify_priced": 27645.7,
+   "mu4_priced": 22928.6,
+   "ar_measured": null,
+   "mtp_verify_measured": null,
+   "mu4_measured": null,
+   "d4g_ar_priced": 13665.5,
+   "ar_priced_d4g_phys": 13543.1,
+   "mtp_verify_priced_d4g_phys": 26849.8,
+   "mu4_priced_d4g_phys": 22267.8
+  },
+  {
+   "segment": "10",
+   "representative": null,
+   "ar_priced": 13215.6,
+   "mtp_verify_priced": 27645.7,
+   "mu4_priced": 22928.6,
+   "ar_measured": null,
+   "mtp_verify_measured": null,
+   "mu4_measured": null,
+   "d4g_ar_priced": 13665.5,
+   "ar_priced_d4g_phys": 13543.1,
+   "mtp_verify_priced_d4g_phys": 26849.8,
+   "mu4_priced_d4g_phys": 22267.8
+  },
+  {
+   "segment": "11",
+   "representative": null,
+   "ar_priced": 13215.6,
+   "mtp_verify_priced": 27645.7,
+   "mu4_priced": 22928.6,
+   "ar_measured": null,
+   "mtp_verify_measured": null,
+   "mu4_measured": null,
+   "d4g_ar_priced": 13665.5,
+   "ar_priced_d4g_phys": 13543.1,
+   "mtp_verify_priced_d4g_phys": 26849.8,
+   "mu4_priced_d4g_phys": 22267.8
+  },
+  {
+   "segment": "12",
+   "representative": null,
+   "ar_priced": 13215.6,
+   "mtp_verify_priced": 27645.7,
+   "mu4_priced": 22928.6,
+   "ar_measured": null,
+   "mtp_verify_measured": null,
+   "mu4_measured": null,
+   "d4g_ar_priced": 13665.5,
+   "ar_priced_d4g_phys": 13543.1,
+   "mtp_verify_priced_d4g_phys": 26849.8,
+   "mu4_priced_d4g_phys": 22267.8
+  },
+  {
+   "segment": "13",
+   "representative": null,
+   "ar_priced": 13215.6,
+   "mtp_verify_priced": 27645.7,
+   "mu4_priced": 22928.6,
+   "ar_measured": null,
+   "mtp_verify_measured": null,
+   "mu4_measured": null,
+   "d4g_ar_priced": 13665.5,
+   "ar_priced_d4g_phys": 13543.1,
+   "mtp_verify_priced_d4g_phys": 26849.8,
+   "mu4_priced_d4g_phys": 22267.8
+  },
+  {
+   "segment": "14",
+   "representative": "L14 (Engram home + KV owner)",
+   "ar_priced": 25420.3,
+   "mtp_verify_priced": 57683.7,
+   "mu4_priced": 46958.8,
+   "ar_measured": null,
+   "mtp_verify_measured": null,
+   "mu4_measured": null,
+   "d4g_ar_priced": 26719.7,
+   "ar_priced_d4g_phys": 25721.9,
+   "mtp_verify_priced_d4g_phys": 57213.3,
+   "mu4_priced_d4g_phys": 46424.4
+  },
+  {
+   "segment": "15",
+   "representative": null,
+   "ar_priced": 13215.6,
+   "mtp_verify_priced": 27645.7,
+   "mu4_priced": 22928.6,
+   "ar_measured": null,
+   "mtp_verify_measured": null,
+   "mu4_measured": null,
+   "d4g_ar_priced": 13665.5,
+   "ar_priced_d4g_phys": 13543.1,
+   "mtp_verify_priced_d4g_phys": 26849.8,
+   "mu4_priced_d4g_phys": 22267.8
+  },
+  {
+   "segment": "16",
+   "representative": null,
+   "ar_priced": 13215.6,
+   "mtp_verify_priced": 27645.7,
+   "mu4_priced": 22928.6,
+   "ar_measured": null,
+   "mtp_verify_measured": null,
+   "mu4_measured": null,
+   "d4g_ar_priced": 13665.5,
+   "ar_priced_d4g_phys": 13543.1,
+   "mtp_verify_priced_d4g_phys": 26849.8,
+   "mu4_priced_d4g_phys": 22267.8
+  },
+  {
+   "segment": "17",
+   "representative": null,
+   "ar_priced": 13215.6,
+   "mtp_verify_priced": 27645.7,
+   "mu4_priced": 22928.6,
+   "ar_measured": null,
+   "mtp_verify_measured": null,
+   "mu4_measured": null,
+   "d4g_ar_priced": 13665.5,
+   "ar_priced_d4g_phys": 13543.1,
+   "mtp_verify_priced_d4g_phys": 26849.8,
+   "mu4_priced_d4g_phys": 22267.8
+  },
+  {
+   "segment": "18",
+   "representative": null,
+   "ar_priced": 13215.6,
+   "mtp_verify_priced": 27645.7,
+   "mu4_priced": 22928.6,
+   "ar_measured": null,
+   "mtp_verify_measured": null,
+   "mu4_measured": null,
+   "d4g_ar_priced": 13665.5,
+   "ar_priced_d4g_phys": 13543.1,
+   "mtp_verify_priced_d4g_phys": 26849.8,
+   "mu4_priced_d4g_phys": 22267.8
+  },
+  {
+   "segment": "19",
+   "representative": null,
+   "ar_priced": 13215.6,
+   "mtp_verify_priced": 27645.7,
+   "mu4_priced": 22928.6,
+   "ar_measured": null,
+   "mtp_verify_measured": null,
+   "mu4_measured": null,
+   "d4g_ar_priced": 13665.5,
+   "ar_priced_d4g_phys": 13543.1,
+   "mtp_verify_priced_d4g_phys": 26849.8,
+   "mu4_priced_d4g_phys": 22267.8
+  },
+  {
+   "segment": "20",
+   "representative": null,
+   "ar_priced": 20798.8,
+   "mtp_verify_priced": 53598.2,
+   "mu4_priced": 44257.7,
+   "ar_measured": null,
+   "mtp_verify_measured": null,
+   "mu4_measured": null,
+   "d4g_ar_priced": 23728.5,
+   "ar_priced_d4g_phys": 21015.6,
+   "mtp_verify_priced_d4g_phys": 52690.6,
+   "mu4_priced_d4g_phys": 43480.7
+  },
+  {
+   "segment": "21",
+   "representative": null,
+   "ar_priced": 13215.6,
+   "mtp_verify_priced": 27645.7,
+   "mu4_priced": 22928.6,
+   "ar_measured": null,
+   "mtp_verify_measured": null,
+   "mu4_measured": null,
+   "d4g_ar_priced": 13665.5,
+   "ar_priced_d4g_phys": 13543.1,
+   "mtp_verify_priced_d4g_phys": 26849.8,
+   "mu4_priced_d4g_phys": 22267.8
+  },
+  {
+   "segment": "22",
+   "representative": null,
+   "ar_priced": 13215.6,
+   "mtp_verify_priced": 27645.7,
+   "mu4_priced": 22928.6,
+   "ar_measured": null,
+   "mtp_verify_measured": null,
+   "mu4_measured": null,
+   "d4g_ar_priced": 13665.5,
+   "ar_priced_d4g_phys": 13543.1,
+   "mtp_verify_priced_d4g_phys": 26849.8,
+   "mu4_priced_d4g_phys": 22267.8
+  },
+  {
+   "segment": "23",
+   "representative": null,
+   "ar_priced": 13215.6,
+   "mtp_verify_priced": 27645.7,
+   "mu4_priced": 22928.6,
+   "ar_measured": null,
+   "mtp_verify_measured": null,
+   "mu4_measured": null,
+   "d4g_ar_priced": 13665.5,
+   "ar_priced_d4g_phys": 13543.1,
+   "mtp_verify_priced_d4g_phys": 26849.8,
+   "mu4_priced_d4g_phys": 22267.8
+  },
+  {
+   "segment": "24",
+   "representative": null,
+   "ar_priced": 20466.9,
+   "mtp_verify_priced": 52873.5,
+   "mu4_priced": 43598.2,
+   "ar_measured": null,
+   "mtp_verify_measured": null,
+   "mu4_measured": null,
+   "d4g_ar_priced": 21758.6,
+   "ar_priced_d4g_phys": 20681.2,
+   "mtp_verify_priced_d4g_phys": 52153.7,
+   "mu4_priced_d4g_phys": 42971.5
+  },
+  {
+   "segment": "25",
+   "representative": null,
+   "ar_priced": 13215.6,
+   "mtp_verify_priced": 27645.7,
+   "mu4_priced": 22928.6,
+   "ar_measured": null,
+   "mtp_verify_measured": null,
+   "mu4_measured": null,
+   "d4g_ar_priced": 13665.5,
+   "ar_priced_d4g_phys": 13543.1,
+   "mtp_verify_priced_d4g_phys": 26849.8,
+   "mu4_priced_d4g_phys": 22267.8
+  },
+  {
+   "segment": "26",
+   "representative": null,
+   "ar_priced": 13215.6,
+   "mtp_verify_priced": 27645.7,
+   "mu4_priced": 22928.6,
+   "ar_measured": null,
+   "mtp_verify_measured": null,
+   "mu4_measured": null,
+   "d4g_ar_priced": 13665.5,
+   "ar_priced_d4g_phys": 13543.1,
+   "mtp_verify_priced_d4g_phys": 26849.8,
+   "mu4_priced_d4g_phys": 22267.8
+  },
+  {
+   "segment": "27",
+   "representative": null,
+   "ar_priced": 13215.6,
+   "mtp_verify_priced": 27645.7,
+   "mu4_priced": 22928.6,
+   "ar_measured": null,
+   "mtp_verify_measured": null,
+   "mu4_measured": null,
+   "d4g_ar_priced": 13665.5,
+   "ar_priced_d4g_phys": 13543.1,
+   "mtp_verify_priced_d4g_phys": 26849.8,
+   "mu4_priced_d4g_phys": 22267.8
+  },
+  {
+   "segment": "28",
+   "representative": null,
+   "ar_priced": 21002.2,
+   "mtp_verify_priced": 56617.8,
+   "mu4_priced": 46058.9,
+   "ar_measured": null,
+   "mtp_verify_measured": null,
+   "mu4_measured": null,
+   "d4g_ar_priced": 22427.6,
+   "ar_priced_d4g_phys": 21216.6,
+   "mtp_verify_priced_d4g_phys": 55898.0,
+   "mu4_priced_d4g_phys": 45432.2
+  },
+  {
+   "segment": "29",
+   "representative": null,
+   "ar_priced": 13215.6,
+   "mtp_verify_priced": 27645.7,
+   "mu4_priced": 22928.6,
+   "ar_measured": null,
+   "mtp_verify_measured": null,
+   "mu4_measured": null,
+   "d4g_ar_priced": 13665.5,
+   "ar_priced_d4g_phys": 13543.1,
+   "mtp_verify_priced_d4g_phys": 26849.8,
+   "mu4_priced_d4g_phys": 22267.8
+  },
+  {
+   "segment": "30",
+   "representative": null,
+   "ar_priced": 13215.6,
+   "mtp_verify_priced": 27645.7,
+   "mu4_priced": 22928.6,
+   "ar_measured": null,
+   "mtp_verify_measured": null,
+   "mu4_measured": null,
+   "d4g_ar_priced": 13665.5,
+   "ar_priced_d4g_phys": 13543.1,
+   "mtp_verify_priced_d4g_phys": 26849.8,
+   "mu4_priced_d4g_phys": 22267.8
+  },
+  {
+   "segment": "31",
+   "representative": null,
+   "ar_priced": 13215.6,
+   "mtp_verify_priced": 27645.7,
+   "mu4_priced": 22928.6,
+   "ar_measured": null,
+   "mtp_verify_measured": null,
+   "mu4_measured": null,
+   "d4g_ar_priced": 13665.5,
+   "ar_priced_d4g_phys": 13543.1,
+   "mtp_verify_priced_d4g_phys": 26849.8,
+   "mu4_priced_d4g_phys": 22267.8
+  },
+  {
+   "segment": "32",
+   "representative": null,
+   "ar_priced": 20466.9,
+   "mtp_verify_priced": 52873.5,
+   "mu4_priced": 43598.2,
+   "ar_measured": null,
+   "mtp_verify_measured": null,
+   "mu4_measured": null,
+   "d4g_ar_priced": 21758.6,
+   "ar_priced_d4g_phys": 20681.2,
+   "mtp_verify_priced_d4g_phys": 52153.7,
+   "mu4_priced_d4g_phys": 42971.5
+  },
+  {
+   "segment": "33",
+   "representative": null,
+   "ar_priced": 13215.6,
+   "mtp_verify_priced": 27645.7,
+   "mu4_priced": 22928.6,
+   "ar_measured": null,
+   "mtp_verify_measured": null,
+   "mu4_measured": null,
+   "d4g_ar_priced": 13665.5,
+   "ar_priced_d4g_phys": 13543.1,
+   "mtp_verify_priced_d4g_phys": 26849.8,
+   "mu4_priced_d4g_phys": 22267.8
+  },
+  {
+   "segment": "34",
+   "representative": null,
+   "ar_priced": 13215.6,
+   "mtp_verify_priced": 27645.7,
+   "mu4_priced": 22928.6,
+   "ar_measured": null,
+   "mtp_verify_measured": null,
+   "mu4_measured": null,
+   "d4g_ar_priced": 13665.5,
+   "ar_priced_d4g_phys": 13543.1,
+   "mtp_verify_priced_d4g_phys": 26849.8,
+   "mu4_priced_d4g_phys": 22267.8
+  },
+  {
+   "segment": "35",
+   "representative": null,
+   "ar_priced": 13215.6,
+   "mtp_verify_priced": 27645.7,
+   "mu4_priced": 22928.6,
+   "ar_measured": null,
+   "mtp_verify_measured": null,
+   "mu4_measured": null,
+   "d4g_ar_priced": 13665.5,
+   "ar_priced_d4g_phys": 13543.1,
+   "mtp_verify_priced_d4g_phys": 26849.8,
+   "mu4_priced_d4g_phys": 22267.8
+  },
+  {
+   "segment": "36",
+   "representative": null,
+   "ar_priced": 20658.1,
+   "mtp_verify_priced": 54134.3,
+   "mu4_priced": 44431.1,
+   "ar_measured": null,
+   "mtp_verify_measured": null,
+   "mu4_measured": null,
+   "d4g_ar_priced": 21997.5,
+   "ar_priced_d4g_phys": 20872.4,
+   "mtp_verify_priced_d4g_phys": 53414.5,
+   "mu4_priced_d4g_phys": 43804.5
+  },
+  {
+   "segment": "37",
+   "representative": null,
+   "ar_priced": 13215.6,
+   "mtp_verify_priced": 27645.7,
+   "mu4_priced": 22928.6,
+   "ar_measured": null,
+   "mtp_verify_measured": null,
+   "mu4_measured": null,
+   "d4g_ar_priced": 13665.5,
+   "ar_priced_d4g_phys": 13543.1,
+   "mtp_verify_priced_d4g_phys": 26849.8,
+   "mu4_priced_d4g_phys": 22267.8
+  },
+  {
+   "segment": "38",
+   "representative": null,
+   "ar_priced": 13215.6,
+   "mtp_verify_priced": 27645.7,
+   "mu4_priced": 22928.6,
+   "ar_measured": null,
+   "mtp_verify_measured": null,
+   "mu4_measured": null,
+   "d4g_ar_priced": 13665.5,
+   "ar_priced_d4g_phys": 13543.1,
+   "mtp_verify_priced_d4g_phys": 26849.8,
+   "mu4_priced_d4g_phys": 22267.8
+  },
+  {
+   "segment": "39",
+   "representative": null,
+   "ar_priced": 13215.6,
+   "mtp_verify_priced": 27645.7,
+   "mu4_priced": 22928.6,
+   "ar_measured": null,
+   "mtp_verify_measured": null,
+   "mu4_measured": null,
+   "d4g_ar_priced": 13665.5,
+   "ar_priced_d4g_phys": 13543.1,
+   "mtp_verify_priced_d4g_phys": 26849.8,
+   "mu4_priced_d4g_phys": 22267.8
+  },
+  {
+   "segment": "head",
+   "representative": "MTP/LM head + ARGMAX",
+   "ar_priced": 6507.8,
+   "mtp_verify_priced": 9863.4,
+   "mu4_priced": 7193.9,
+   "ar_measured": null,
+   "mtp_verify_measured": null,
+   "mu4_measured": null,
+   "d4g_ar_priced": 6540.3,
+   "ar_priced_d4g_phys": 6530.8,
+   "mtp_verify_priced_d4g_phys": 9862.3,
+   "mu4_priced_d4g_phys": 7192.9
+  }
+ ],
+ "sources_sha256": {
+  "results/arch/hbm_mtp_next_1018/model/run.json": "31214d67ca44a8352f60101385c3a1c4182bd3b0d14f93cdb09c030ab71b87cd",
+  "results/arch/hbm_next_1019/runs/coll_lanes.json": "eea1847da6c465ac025932629671b191e33661c28b974abf02732de5850065a1",
+  "results/arch/hbm_next_1019/runs/hc_ii.json": "8affdc88dd216dc8538bcfad3b1bf8df1de53bc9eef46f78d5a715c736525e1a",
+  "results/arch/hbm_next_1019/runs/vm_cap.json": "f45909f87b539c526d385b188b91bbeaf631d0856cadbd8b48b994a88b7eb94e"
+ }
+}

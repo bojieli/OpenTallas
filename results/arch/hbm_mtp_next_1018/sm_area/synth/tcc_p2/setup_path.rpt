@@ -1,0 +1,59 @@
+Warning 503: sta.tcl line 1, report_checks -group_count is deprecated. Use -group_path_count instead.
+Startpoint: _353096_ (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: _340630_ (recovery check against rising-edge clock core_clk)
+Path Group: asynchronous
+Path Type: max
+
+    Delay      Time   Description
+-------------------------------------------------------------
+   0.0000    0.0000   clock core_clk (rise edge)
+   0.0000    0.0000   clock network delay (ideal)
+   0.0000    0.0000 ^ _353096_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  49.7959   49.7959 v _353096_/QN (DFFASRHQNx1_ASAP7_75t_R)
+ 341.7800  391.5759 ^ _164952_/Y (INVx1_ASAP7_75t_R)
+   0.0000  391.5759 ^ _340630_/RESETN (DFFASRHQNx1_ASAP7_75t_R)
+           391.5759   data arrival time
+
+ 833.3330  833.3330   clock core_clk (rise edge)
+   0.0000  833.3330   clock network delay (ideal)
+ -60.0000  773.3330   clock uncertainty
+   0.0000  773.3330   clock reconvergence pessimism
+           773.3330 ^ _340630_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  29.9333  803.2664   library recovery time
+           803.2664   data required time
+-------------------------------------------------------------
+           803.2664   data required time
+          -391.5759   data arrival time
+-------------------------------------------------------------
+           411.6904   slack (MET)
+
+
+Startpoint: _352674_ (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: _384840_ (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+
+    Delay      Time   Description
+-------------------------------------------------------------
+   0.0000    0.0000   clock core_clk (rise edge)
+   0.0000    0.0000   clock network delay (ideal)
+   0.0000    0.0000 ^ _352674_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+2158.5010 2158.5010 ^ _352674_/QN (DFFASRHQNx1_ASAP7_75t_R)
+ 334.6423 2493.1433 ^ _336433_/Y (AND2x2_ASAP7_75t_R)
+   0.0000 2493.1433 ^ _384840_/D (DFFHQNx1_ASAP7_75t_R)
+          2493.1433   data arrival time
+
+ 833.3330  833.3330   clock core_clk (rise edge)
+   0.0000  833.3330   clock network delay (ideal)
+ -60.0000  773.3330   clock uncertainty
+   0.0000  773.3330   clock reconvergence pessimism
+           773.3330 ^ _384840_/CLK (DFFHQNx1_ASAP7_75t_R)
+ -29.8821  743.4509   library setup time
+           743.4509   data required time
+-------------------------------------------------------------
+           743.4509   data required time
+          -2493.1433   data arrival time
+-------------------------------------------------------------
+          -1749.6924   slack (VIOLATED)
+
+
