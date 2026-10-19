@@ -10,6 +10,8 @@
 4. DS L2 from the committed ds_native fixture (--fixtures fixtures/L02, its own layer image): every emitted SU record's
    expected O words equal the fixture's post-record VM, no placeholder operand; split_replay parts fit NEV 6309 and
    keep every drive / check at its cycle.
+5. host-CP transport: cp_frames drives only slice inputs within their widths (gen_slice_tb accepts it); SW_TARGETS ==
+   the die.v tgt straps of the instances hleaf_SW configures (when die.v is present).
 """
 import argparse
 import json
@@ -122,6 +124,32 @@ def t_fixture(boundary):
           f"== ds_native; split into {len(parts)} parts")
 
 
+def t_cp(die, boundary):
+    import re
+    bnd = json.loads(Path(boundary).read_text())
+    w = {e["name"]: e["width"] for e in bnd["inputs"]}
+    ev, lt, end = LI.cp_frames(108, [(1 << 255) | 5, 7], 10)
+    assert all(e["port"] in w and int(e["val"], 16) >> w[e["port"]] == 0 for e in ev)
+    assert lt == 10 + 2 * LI.CP_FRAME_EDGES + 2 * LI.CP_DESC_GUARD and end == lt + LI.CP_LAUNCH_GUARD
+    with tempfile.TemporaryDirectory() as d:
+        Path(d, "cp.json").write_text(json.dumps(dict(events=ev)))
+        subprocess.run([sys.executable, str(HERE / "gen_slice_tb.py"), "--boundary", str(boundary), "--out", d,
+                        "--replay", str(Path(d, "cp.json"))], check=True, capture_output=True)
+    if not Path(die).exists():
+        print("cp OK (die.v target scan SKIPPED)")
+        return
+    s = Path(die).read_text()
+    got = {}
+    for m in re.finditer(r"\n  (\w+) (?:#\([^;]*?\) )?(\w+) \(\n(.*?)\n  \);", s, re.S):
+        cv = re.search(r"\.cfg_v\((hleaf_SW__[ab]_cfg_v)", m.group(3))
+        t = re.search(r"\.tgt\(8'd(\d+)\)", m.group(3))
+        if cv:
+            got[m.group(2)] = int(t.group(1)) if t else None
+    want = {i: t for v in LI.SW_TARGETS.values() for i, t in v if not i.startswith("col_idx")}
+    assert all(got.get(i, "missing") == t for i, t in want.items()), {i: (t, got.get(i)) for i, t in want.items()}
+    print(f"cp OK: {len(got)} hleaf_SW targets in die.v, SW_TARGETS ({len(want)}) match")
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--programme", default=str(LI.DS_PROGRAMME))
@@ -135,6 +163,8 @@ def main():
     else:
         print("layer test SKIPPED (programme / boundary not present)")
     t_fixture(HERE.parents[1] / "results/rtl/hbm_ds_layer_tput_1018/slice_sw/boundary.json")
+    t_cp(a.die if Path(a.die).exists() else "/home/ubuntu/artifacts/hdie-d4/d4g_gen2/pb0/die.v",
+         HERE.parents[1] / "results/rtl/hbm_ds_layer_tput_1018/slice_sw/boundary.json")
     print("TEST_LAYER_IMAGES PASS")
 
 

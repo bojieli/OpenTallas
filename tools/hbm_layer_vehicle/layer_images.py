@@ -25,7 +25,10 @@ Unit formats (RTL of record = GEN2 die rev abbf5d21f; SU files byte-identical to
        start col_idx__start_v; 32-b instruction, 8 a 256-b row (ot_hbm_idx_calendar_static.sv:2-5); words from
        tools/hbm_idx_static_calendar.compile_program (INDEX microprogram).  ASSUMED for IDX.TOPK route.top6: that
        compiler is the indexer programme, not parameterised by the MoE-router shape -> flagged.
-  SFU / COLL / HC / DMA / SM / host CP: target ports listed, image format NOT emitted (flag 'format_open'); records
+  HOST CP (transport of every non-SU programme): cp_frames() = F20 frame / F28+F2c descriptor / F30 launch events on
+       the host_cp_ingress__* slice inputs (hleaf_SW relays, CFG_LAT 2); SW target table SW_TARGETS (die.v tgt straps).
+  SFU / COLL / HC / DMA / SM: cp_targets listed per record, row PAYLOAD not emitted (flag 'format_open', reason
+       'payload_open: <compiler>'); records
        BLOCKED by an HBM-WIRE datapath gap carry 'blocked_by' (coverage.json grade).
 ASSUMPTIONS (flagged in the output): serial edge = ceil(3 x stream cycle / 4) (3:4 serial domain, AGENTS.md clock
 domains); the SU quarter-0 VM placement is the compiler's own (quarter-packed, sector s -> bank s mod 8 = store
@@ -485,6 +488,72 @@ UNIT_PORTS = dict(SU=["su_prog__r_we", "su_prog__r_bank", "su_prog__r_row", "su_
                   SFU=["host_cp_ingress__cfg_v", "host_cp_ingress__cfg_data"], SM=[], DMA=[], ATT=[], FUSED=[])
 
 
+# Host-CP configuration transport (every non-SU programme of the SW slice; RTL rtl/hbm_accel/host_static_20261015):
+# host_cp_ingress (ot_hbm_host_static_ingress, OUTSIDE the slice) -> hleaf_SW (ot_hbm_host_cfg_leaf_sw, CFG_LAT 2, a/b
+# copy groups) -> the target's own local programme store.  Frame = {cfg_target 8, cfg_addr (row) 12, cfg_data 256}
+# (F20 select + 8 x F24 pieces at the ingress), descriptor {desc_base 12, desc_limit 13 (exclusive), desc_loops 16}
+# (F28 + F2c), launch_v (F30).  The replay drives the ingress OUTPUT pins (= slice inputs host_cp_ingress__*), stream
+# domain.  Ingress production rate: 8 AXI W beats per frame with W ready pulsed at most every other edge ->
+# >= CP_FRAME_EDGES edges per frame (ASSUMED from the ingress README; the guard edges below are the README's:
+# frame / descriptor guard 4, launch guard 7).
+CP_FRAME_EDGES, CP_DESC_GUARD, CP_LAUNCH_GUARD = 16, 4, 7
+# SW-slice targets (die.v GEN2 e92f4d03 scan: instances whose cfg_v is hleaf_SW__a/b_cfg_v, tgt strap) per HGI unit.
+# The PAYLOAD (row words) of each target is the target's own ABI; the compilers named here produce it for a record
+# shape -- not yet called by this tool (status format_open, reason 'payload_open').
+SW_TARGETS = {
+    "SM": [("cp_svg_SW0", 64), ("cp_svg_SW1", 65), ("cp_svg_SW2", 66), ("cp_svg_SW3", 67),   # ot_static_cmd_target
+           ("xl_SW_ctl", 100), ("smw_SW", 160), ("xc_SW0", 192), ("xc_SW1", 193), ("xc_SW2", 194),
+           ("xc_SW3", 195), ("calendar_SW", 96)],
+    "COLL": [("hb_coll_SW", None), ("vmfc_SW", 56), ("epcal_SW", 132)],   # hb_coll_SW: strap inside the hard master
+    "DMA": [("hb_dbk_SW", 104), ("calendar_SW", 96)],
+    "HC": [("hc_SW", 108)],
+    "FUSED": [("hc_SW", 108), ("col_sfu_SW", 116)],
+    "SFU": [("col_sfu_SW", 116)],
+    "ATT": [], "IDX": [("col_idx (outside SW, hleaf_SE)", 120)],
+}
+PAYLOAD_COMPILER = {
+    "SM": "ot_static_cmd_target rows (cp_svg) + tools/hbm_vm_static_calendar.py (calendar_SW) -- MATVEC shape lowering open",
+    "COLL": "tools/hbm_coll_static_calendar.py (transport reservations) + hb_coll_SW programme ABI",
+    "DMA": "hb_dbk_SW (ot_hgi_dma_back_static_vp4_banks_cp) row ABI + tools/hbm_vm_static_calendar.py",
+    "HC": "hc_SW (ot_hbm_hc_qhub_static) row ABI",
+    "FUSED": "hc_SW rows + col_sfu_SW collar (2 striped spaces, tools/hbm_static/su_arith_sfu_compile.py lanes)",
+    "SFU": "col_sfu_SW collar (ot_hbm_static_cfg_collar NS 2) <- tools/hbm_static/su_arith_sfu_compile.py",
+    "ATT": "no ATT engine in the SW slice (tools/hbm_attention_static_calendar.py is the engine calendar)",
+    "IDX": "tools/hbm_idx_static_calendar.py (col_idx collar, SE leaf: outside the SW slice)",
+}
+
+
+def cp_frames(target, rows, t, base=0, loops=1, launch=True):
+    """replay D events (stream domain, ingress output pins) installing `rows` (256-b ints) at rows base.. of
+    `target`, then its descriptor and (optionally) the launch.  Returns (events, launch_edge, next_free_edge)."""
+    ev = []
+    d = lambda c, port, v: ev.append(dict(k="D", dom="stream", cyc=c, port=f"host_cp_ingress__{port}", val=f"{v:x}",
+                                          src="image:CP"))
+    for j, w in enumerate(rows):
+        c = t + j * CP_FRAME_EDGES
+        assert 0 <= w < 1 << 256 and base + j < 1 << 12
+        d(c, "cfg_target", target)
+        d(c, "cfg_addr", base + j)
+        d(c, "cfg_data", w)
+        d(c, "cfg_v", 1)
+        d(c + 1, "cfg_v", 0)
+    c = t + len(rows) * CP_FRAME_EDGES + CP_DESC_GUARD
+    d(c, "cfg_target", target)
+    d(c, "desc_base", base)
+    d(c, "desc_limit", base + len(rows))
+    d(c, "desc_loops", loops)
+    d(c, "desc_v", 1)
+    d(c + 1, "desc_v", 0)
+    c += CP_DESC_GUARD
+    lt = None
+    if launch:
+        lt = c
+        d(c, "launch_v", 1)
+        d(c + 1, "launch_v", 0)
+        c += CP_LAUNCH_GUARD
+    return ev, lt, c
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--design", choices=["ds", "qwen"], default="ds")
@@ -596,6 +665,10 @@ def main():
                 ent.update(status="format_open", reasons=[f"compile_program: {ex!r}"])
         else:
             ent.update(status="format_open", reasons=[f"{unit} programme image format not emitted by v1"])
+            if unit in SW_TARGETS:
+                ent.update(cp_targets=[dict(instance=i, tgt=t_) for i, t_ in SW_TARGETS[unit]],
+                           cp_transport="host_cp_ingress F20 frames -> hleaf_SW (cp_frames)")
+                ent["reasons"].append(f"payload_open: {PAYLOAD_COMPILER[unit]}")
         if ent["blocked_by"]:
             ent["status"] = "blocked:" + ent["status"]
         manifest.append(ent)
