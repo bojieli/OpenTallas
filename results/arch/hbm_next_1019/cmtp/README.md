@@ -299,7 +299,7 @@ Per unit (P4 (a), vs priced): IDXN −0.32% MTP / 0 users (was −3.10% at 953);
 
 **Goldens:** `goldens/mtp_all5/` DONE (forced drafter: drafts [223, 939, 23, 695, 22] all accepted + bonus 1266; layer-major argmax equal, L0 bit-equal; manifest PASS 21 arrays). `mu4` still running (user 2 of 4 at 03:33; ETA ~04:40, pending_results).
 
-## 10. Pending / next (updated step 6, 10-19 07:30)
+## 10. Pending / next (updated step 6, 10-19 06:50)
 
 1. **Goldens:** DONE (`ar_mtp_g5`, `mtp_all5`, `mu4` CONTROL PASS).
 2. **Whole-token images:** DONE, one VM map (sec. 17); VEH runs them (`emitter/whole/<mode>_N<n>/`).
@@ -307,7 +307,7 @@ Per unit (P4 (a), vs priced): IDXN −0.32% MTP / 0 users (was −3.10% at 953);
 4. **Re-time as redesigns land:** SM4 declined parallel publish (only-significant-gains); M1 measured and the (a) re-pack are DIE inputs; `plane_compiler.py meas --step5 [--union-bound]` on ot-epyc7 `hnx-cmtp4/opt6`.
 5. Remainder split only if SM4 builds the second row word. Engram sub-block groups optional (MTP image needs 506.1k of 524.3k words).
 
-## 17. Step 6 (10-19 07:30): `mu4` golden, one VM map for the whole-token images, image-form static check, reserved-calendar re-time
+## 17. Step 6 (10-19 06:50): `mu4` golden, one VM map for the whole-token images, image-form static check, reserved-calendar re-time
 
 **`mu4` golden** (`goldens/mu4/`): 4 users with 2-token prompts. Position 1 of every user is the users N = 4 step. User 0 reproduces `ar_mtp_g5` bit for bit (160 arrays compared, 0 mismatches, CONTROL PASS). The manifest lists 640 arrays and PASSes; `mu4.npz` sha256 fc19651c... matches `mu4.json`.
 
