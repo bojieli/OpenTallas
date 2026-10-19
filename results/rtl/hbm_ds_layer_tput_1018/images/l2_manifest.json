@@ -2,9 +2,10 @@
  "schema": "opentallas.hbm_layer_images.v1",
  "design": "ds",
  "layer": "2",
- "priced": "results/rtl/hbm_ds_layer_tput_1018/priced_layers.json",
- "programme": "results/arch/hgi_programs_20261010/inputs/ds_rank0_program.json",
- "programme_sha256": "e888a21dddef6881120d1c232174a67a0c2c53a205873f33000d989577376bef",
+ "priced": "/home/ubuntu/wt/lb2-hbm2-rpl-cds/results/rtl/hbm_ds_layer_tput_1018/priced_layers.json",
+ "programme": "results/rtl/hbm_ds_layer_tput_1018/fixtures/L02/images/ds_v41_1M_L02_per_die.json",
+ "programme_sha256": "08f39c9845a798b928b513ceab406b19c7e7170a3735da40b5687090d1691f63",
+ "fixtures": "results/rtl/hbm_ds_layer_tput_1018/fixtures/L02",
  "boundary": "results/rtl/hbm_ds_layer_tput_1018/slice_sw/boundary.json",
  "records": [
   {
@@ -178,7 +179,14 @@
      "production_timing_price"
     ]
    },
-   "inputs_placeholder": true,
+   "inputs_placeholder": false,
+   "fixture": {
+    "matched": true,
+    "k_layer": 6,
+    "checked_words": 32,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   },
    "edges": 42,
    "fill_sectors": 4,
    "drain_sectors": 4,
@@ -342,7 +350,14 @@
      "production_timing_price"
     ]
    },
-   "inputs_placeholder": true,
+   "inputs_placeholder": false,
+   "fixture": {
+    "matched": true,
+    "k_layer": 10,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   },
    "reducer_bound": {
     "words": 1280,
     "ingress_edges": 320,
@@ -390,7 +405,14 @@
      "native_SFU_or_scalar_side_control_calendar"
     ]
    },
-   "inputs_placeholder": null
+   "inputs_placeholder": null,
+   "fixture": {
+    "matched": true,
+    "k_layer": 13,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   }
   },
   {
    "i": 18,
@@ -549,7 +571,14 @@
      "production_timing_price"
     ]
    },
-   "inputs_placeholder": true
+   "inputs_placeholder": false,
+   "fixture": {
+    "matched": true,
+    "k_layer": 14,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   }
   },
   {
    "i": 21,
@@ -620,7 +649,14 @@
      "production_timing_price"
     ]
    },
-   "inputs_placeholder": true,
+   "inputs_placeholder": false,
+   "fixture": {
+    "matched": true,
+    "k_layer": 17,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   },
    "reducer_bound": {
     "words": 512,
     "ingress_edges": 128,
@@ -701,7 +737,14 @@
      "native_SFU_or_scalar_side_control_calendar"
     ]
    },
-   "inputs_placeholder": null
+   "inputs_placeholder": null,
+   "fixture": {
+    "matched": true,
+    "k_layer": 18,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   }
   },
   {
    "i": 25,
@@ -762,7 +805,14 @@
      "production_timing_price"
     ]
    },
-   "inputs_placeholder": true
+   "inputs_placeholder": false,
+   "fixture": {
+    "matched": true,
+    "k_layer": 19,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   }
   },
   {
    "i": 49,
@@ -960,7 +1010,14 @@
      "production_timing_price"
     ]
    },
-   "inputs_placeholder": true
+   "inputs_placeholder": false,
+   "fixture": {
+    "matched": true,
+    "k_layer": 22,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   }
   },
   {
    "i": 51,
@@ -1079,7 +1136,14 @@
      "production_timing_price"
     ]
    },
-   "inputs_placeholder": true
+   "inputs_placeholder": false,
+   "fixture": {
+    "matched": true,
+    "k_layer": 20,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   }
   },
   {
    "i": 54,
@@ -1139,7 +1203,14 @@
      "production_timing_price"
     ]
    },
-   "inputs_placeholder": true
+   "inputs_placeholder": false,
+   "fixture": {
+    "matched": true,
+    "k_layer": 28,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   }
   },
   {
    "i": 55,
@@ -1284,7 +1355,14 @@
      "production_timing_price"
     ]
    },
-   "inputs_placeholder": true,
+   "inputs_placeholder": false,
+   "fixture": {
+    "matched": true,
+    "k_layer": 0,
+    "checked_words": 5120,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   },
    "edges": 122,
    "fill_sectors": 640,
    "drain_sectors": 640,
@@ -1454,7 +1532,14 @@
      "production_timing_price"
     ]
    },
-   "inputs_placeholder": true,
+   "inputs_placeholder": false,
+   "fixture": {
+    "matched": true,
+    "k_layer": 35,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   },
    "reducer_bound": {
     "words": 640,
     "ingress_edges": 160,
@@ -1513,7 +1598,14 @@
      "native_SFU_or_scalar_side_control_calendar"
     ]
    },
-   "inputs_placeholder": null
+   "inputs_placeholder": null,
+   "fixture": {
+    "matched": true,
+    "k_layer": 36,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   }
   },
   {
    "i": 66,
@@ -1556,7 +1648,14 @@
      "production_timing_price"
     ]
    },
-   "inputs_placeholder": true,
+   "inputs_placeholder": false,
+   "fixture": {
+    "matched": true,
+    "k_layer": 38,
+    "checked_words": 256,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   },
    "edges": 46,
    "fill_sectors": 32,
    "drain_sectors": 32,
@@ -1625,7 +1724,14 @@
      "native_SFU_or_scalar_side_control_calendar"
     ]
    },
-   "inputs_placeholder": null
+   "inputs_placeholder": null,
+   "fixture": {
+    "matched": true,
+    "k_layer": 41,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   }
   },
   {
    "i": 69,
@@ -1661,7 +1767,14 @@
      "native_M128_divider_lane_selection_calendar"
     ]
    },
-   "inputs_placeholder": null
+   "inputs_placeholder": null,
+   "fixture": {
+    "matched": true,
+    "k_layer": 43,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   }
   },
   {
    "i": 70,
@@ -1721,7 +1834,14 @@
      "production_timing_price"
     ]
    },
-   "inputs_placeholder": true
+   "inputs_placeholder": false,
+   "fixture": {
+    "matched": true,
+    "k_layer": 44,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   }
   },
   {
    "i": 71,
@@ -1996,7 +2116,14 @@
      "native_SFU_or_scalar_side_control_calendar"
     ]
    },
-   "inputs_placeholder": null
+   "inputs_placeholder": null,
+   "fixture": {
+    "matched": true,
+    "k_layer": 55,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   }
   },
   {
    "i": 80,
@@ -2127,7 +2254,14 @@
      "production_timing_price"
     ]
    },
-   "inputs_placeholder": false
+   "inputs_placeholder": false,
+   "fixture": {
+    "matched": true,
+    "k_layer": 58,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   }
   },
   {
    "i": 84,
@@ -2171,6 +2305,13 @@
     ]
    },
    "inputs_placeholder": false,
+   "fixture": {
+    "matched": true,
+    "k_layer": 54,
+    "checked_words": 5120,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   },
    "edges": 122,
    "fill_sectors": 640,
    "drain_sectors": 640,
@@ -2221,7 +2362,14 @@
      "production_timing_price"
     ]
    },
-   "inputs_placeholder": true,
+   "inputs_placeholder": false,
+   "fixture": {
+    "matched": true,
+    "k_layer": 59,
+    "checked_words": 128,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   },
    "edges": 46,
    "fill_sectors": 32,
    "drain_sectors": 16,
@@ -2293,7 +2441,14 @@
      "MDESC_indexed_scalar_runtime_address_calendar"
     ]
    },
-   "inputs_placeholder": null
+   "inputs_placeholder": null,
+   "fixture": {
+    "matched": true,
+    "k_layer": 62,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   }
   },
   {
    "i": 88,
@@ -2329,7 +2484,14 @@
      "MDESC_indexed_scalar_runtime_address_calendar"
     ]
    },
-   "inputs_placeholder": null
+   "inputs_placeholder": null,
+   "fixture": {
+    "matched": true,
+    "k_layer": 63,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   }
   },
   {
    "i": 89,
@@ -2391,7 +2553,14 @@
      "MDESC_indexed_scalar_runtime_address_calendar"
     ]
    },
-   "inputs_placeholder": null
+   "inputs_placeholder": null,
+   "fixture": {
+    "matched": true,
+    "k_layer": 65,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   }
   },
   {
    "i": 91,
@@ -2427,7 +2596,14 @@
      "MDESC_indexed_scalar_runtime_address_calendar"
     ]
    },
-   "inputs_placeholder": null
+   "inputs_placeholder": null,
+   "fixture": {
+    "matched": true,
+    "k_layer": 66,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   }
   },
   {
    "i": 92,
@@ -2489,7 +2665,14 @@
      "MDESC_indexed_scalar_runtime_address_calendar"
     ]
    },
-   "inputs_placeholder": null
+   "inputs_placeholder": null,
+   "fixture": {
+    "matched": true,
+    "k_layer": 67,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   }
   },
   {
    "i": 94,
@@ -2603,7 +2786,14 @@
      "MDESC_indexed_scalar_runtime_address_calendar"
     ]
    },
-   "inputs_placeholder": null
+   "inputs_placeholder": null,
+   "fixture": {
+    "matched": true,
+    "k_layer": 68,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   }
   },
   {
    "i": 98,
@@ -2726,7 +2916,14 @@
      "production_timing_price"
     ]
    },
-   "inputs_placeholder": true,
+   "inputs_placeholder": false,
+   "fixture": {
+    "matched": true,
+    "k_layer": 70,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 2
+   },
    "reducer_bound": {
     "words": 6,
     "ingress_edges": 2,
@@ -2886,7 +3083,14 @@
      "production_timing_price"
     ]
    },
-   "inputs_placeholder": false
+   "inputs_placeholder": false,
+   "fixture": {
+    "matched": true,
+    "k_layer": 72,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   }
   },
   {
    "i": 107,
@@ -2922,7 +3126,14 @@
      "native_M128_divider_lane_selection_calendar"
     ]
    },
-   "inputs_placeholder": null
+   "inputs_placeholder": null,
+   "fixture": {
+    "matched": true,
+    "k_layer": 74,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   }
   },
   {
    "i": 108,
@@ -2971,7 +3182,14 @@
      "native_SFU_or_scalar_side_control_calendar"
     ]
    },
-   "inputs_placeholder": null
+   "inputs_placeholder": null,
+   "fixture": {
+    "matched": true,
+    "k_layer": 77,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   }
   },
   {
    "i": 109,
@@ -3365,7 +3583,14 @@
      "production_timing_price"
     ]
    },
-   "inputs_placeholder": true,
+   "inputs_placeholder": false,
+   "fixture": {
+    "matched": true,
+    "k_layer": 91,
+    "checked_words": 53,
+    "mismatched_words": 0,
+    "pad_words_zero": 6
+   },
    "edges": 43,
    "fill_sectors": 14,
    "drain_sectors": 7,
@@ -3460,13 +3685,13 @@
    ],
    "status": "emitted",
    "reasons": [
-    "raw_hazard: sector 13120 filled at 15211 < commit 15213",
-    "raw_hazard: sector 13121 filled at 15211 < commit 15213",
-    "raw_hazard: sector 13122 filled at 15211 < commit 15213",
-    "raw_hazard: sector 13123 filled at 15211 < commit 15213",
-    "raw_hazard: sector 13124 filled at 15211 < commit 15213",
-    "raw_hazard: sector 13125 filled at 15211 < commit 15213",
-    "raw_hazard: sector 13126 filled at 15211 < commit 15213"
+    "raw_hazard: sector 11136 filled at 15211 < commit 15213",
+    "raw_hazard: sector 11137 filled at 15211 < commit 15213",
+    "raw_hazard: sector 11138 filled at 15211 < commit 15213",
+    "raw_hazard: sector 11139 filled at 15211 < commit 15213",
+    "raw_hazard: sector 11140 filled at 15211 < commit 15213",
+    "raw_hazard: sector 11141 filled at 15211 < commit 15213",
+    "raw_hazard: sector 11142 filled at 15211 < commit 15213"
    ],
    "lowering": {
     "supported": true,
@@ -3483,7 +3708,14 @@
      "production_timing_price"
     ]
    },
-   "inputs_placeholder": true,
+   "inputs_placeholder": false,
+   "fixture": {
+    "matched": true,
+    "k_layer": 92,
+    "checked_words": 53,
+    "mismatched_words": 0,
+    "pad_words_zero": 6
+   },
    "edges": 44,
    "fill_sectors": 14,
    "drain_sectors": 7,
@@ -3560,7 +3792,14 @@
      "production_timing_price"
     ]
    },
-   "inputs_placeholder": true,
+   "inputs_placeholder": false,
+   "fixture": {
+    "matched": true,
+    "k_layer": 94,
+    "checked_words": 53,
+    "mismatched_words": 0,
+    "pad_words_zero": 6
+   },
    "edges": 44,
    "fill_sectors": 14,
    "drain_sectors": 7,
@@ -3611,7 +3850,14 @@
      "production_timing_price"
     ]
    },
-   "inputs_placeholder": true,
+   "inputs_placeholder": false,
+   "fixture": {
+    "matched": true,
+    "k_layer": 95,
+    "checked_words": 53,
+    "mismatched_words": 0,
+    "pad_words_zero": 3
+   },
    "edges": 43,
    "fill_sectors": 7,
    "drain_sectors": 7,

@@ -2,9 +2,10 @@
  "schema": "opentallas.hbm_layer_images.v1",
  "design": "ds",
  "layer": "14",
- "priced": "results/rtl/hbm_ds_layer_tput_1018/priced_layers.json",
- "programme": "results/arch/hgi_programs_20261010/inputs/ds_rank0_program.json",
- "programme_sha256": "e888a21dddef6881120d1c232174a67a0c2c53a205873f33000d989577376bef",
+ "priced": "/home/ubuntu/wt/lb2-hbm2-rpl-cds/results/rtl/hbm_ds_layer_tput_1018/priced_layers.json",
+ "programme": "results/rtl/hbm_ds_layer_tput_1018/fixtures/L14/images/ds_v41_1M_L14_per_die.json",
+ "programme_sha256": "c4cad8ef0c3a672c9fc8793ae2aef44a4ed60ef99ea6a4469c7d59f85e3c9161",
+ "fixtures": "results/rtl/hbm_ds_layer_tput_1018/fixtures/L14",
  "boundary": "results/rtl/hbm_ds_layer_tput_1018/slice_sw/boundary.json",
  "records": [
   {
@@ -74,7 +75,14 @@
      "production_timing_price"
     ]
    },
-   "inputs_placeholder": true,
+   "inputs_placeholder": false,
+   "fixture": {
+    "matched": true,
+    "k_layer": 2,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   },
    "reducer_bound": {
     "words": 20480,
     "ingress_edges": 5120,
@@ -194,7 +202,14 @@
      "native_SFU_or_scalar_side_control_calendar"
     ]
    },
-   "inputs_placeholder": null
+   "inputs_placeholder": null,
+   "fixture": {
+    "matched": true,
+    "k_layer": 9,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   }
   },
   {
    "i": 11,
@@ -1511,7 +1526,14 @@
      "production_timing_price"
     ]
    },
-   "inputs_placeholder": true
+   "inputs_placeholder": false,
+   "fixture": {
+    "matched": true,
+    "k_layer": 5,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   }
   },
   {
    "i": 57,
@@ -1637,7 +1659,14 @@
      "production_timing_price"
     ]
    },
-   "inputs_placeholder": true,
+   "inputs_placeholder": false,
+   "fixture": {
+    "matched": true,
+    "k_layer": 11,
+    "checked_words": 5120,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   },
    "edges": 199,
    "fill_sectors": 1280,
    "drain_sectors": 640,
@@ -1795,7 +1824,14 @@
      "production_timing_price"
     ]
    },
-   "inputs_placeholder": true,
+   "inputs_placeholder": false,
+   "fixture": {
+    "matched": true,
+    "k_layer": 15,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   },
    "reducer_bound": {
     "words": 20480,
     "ingress_edges": 5120,
@@ -1843,7 +1879,14 @@
      "native_SFU_or_scalar_side_control_calendar"
     ]
    },
-   "inputs_placeholder": null
+   "inputs_placeholder": null,
+   "fixture": {
+    "matched": true,
+    "k_layer": 16,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   }
   },
   {
    "i": 67,
@@ -1889,6 +1932,13 @@
     ]
    },
    "inputs_placeholder": false,
+   "fixture": {
+    "matched": true,
+    "k_layer": 17,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   },
    "reducer_bound": {
     "words": 20480,
     "ingress_edges": 5120,
@@ -1969,7 +2019,14 @@
      "production_timing_price"
     ]
    },
-   "inputs_placeholder": false
+   "inputs_placeholder": false,
+   "fixture": {
+    "matched": true,
+    "k_layer": 19,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   }
   },
   {
    "i": 70,
@@ -2005,7 +2062,14 @@
      "native_SFU_or_scalar_side_control_calendar"
     ]
    },
-   "inputs_placeholder": null
+   "inputs_placeholder": null,
+   "fixture": {
+    "matched": true,
+    "k_layer": 20,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   }
   },
   {
    "i": 71,
@@ -2714,7 +2778,14 @@
      "production_timing_price"
     ]
    },
-   "inputs_placeholder": true
+   "inputs_placeholder": false,
+   "fixture": {
+    "matched": true,
+    "k_layer": 21,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   }
   },
   {
    "i": 73,
@@ -2815,7 +2886,14 @@
      "production_timing_price"
     ]
    },
-   "inputs_placeholder": true,
+   "inputs_placeholder": false,
+   "fixture": {
+    "matched": true,
+    "k_layer": 25,
+    "checked_words": 32,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   },
    "edges": 42,
    "fill_sectors": 4,
    "drain_sectors": 4,
@@ -2953,7 +3031,14 @@
      "production_timing_price"
     ]
    },
-   "inputs_placeholder": true,
+   "inputs_placeholder": false,
+   "fixture": {
+    "matched": true,
+    "k_layer": 30,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   },
    "reducer_bound": {
     "words": 1280,
     "ingress_edges": 320,
@@ -3060,7 +3145,14 @@
      "native_SFU_or_scalar_side_control_calendar"
     ]
    },
-   "inputs_placeholder": null
+   "inputs_placeholder": null,
+   "fixture": {
+    "matched": true,
+    "k_layer": 33,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   }
   },
   {
    "i": 84,
@@ -3186,7 +3278,14 @@
      "production_timing_price"
     ]
    },
-   "inputs_placeholder": true
+   "inputs_placeholder": false,
+   "fixture": {
+    "matched": true,
+    "k_layer": 34,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   }
   },
   {
    "i": 95,
@@ -3257,7 +3356,14 @@
      "production_timing_price"
     ]
    },
-   "inputs_placeholder": true,
+   "inputs_placeholder": false,
+   "fixture": {
+    "matched": true,
+    "k_layer": 37,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   },
    "reducer_bound": {
     "words": 512,
     "ingress_edges": 128,
@@ -3338,7 +3444,14 @@
      "native_SFU_or_scalar_side_control_calendar"
     ]
    },
-   "inputs_placeholder": null
+   "inputs_placeholder": null,
+   "fixture": {
+    "matched": true,
+    "k_layer": 39,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   }
   },
   {
    "i": 100,
@@ -3399,7 +3512,14 @@
      "production_timing_price"
     ]
    },
-   "inputs_placeholder": true
+   "inputs_placeholder": false,
+   "fixture": {
+    "matched": true,
+    "k_layer": 40,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   }
   },
   {
    "i": 114,
@@ -3515,7 +3635,14 @@
      "production_timing_price"
     ]
    },
-   "inputs_placeholder": true
+   "inputs_placeholder": false,
+   "fixture": {
+    "matched": true,
+    "k_layer": 42,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   }
   },
   {
    "i": 117,
@@ -3623,7 +3750,14 @@
      "production_timing_price"
     ]
    },
-   "inputs_placeholder": true
+   "inputs_placeholder": false,
+   "fixture": {
+    "matched": true,
+    "k_layer": 47,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   }
   },
   {
    "i": 120,
@@ -3795,7 +3929,14 @@
      "production_timing_price"
     ]
    },
-   "inputs_placeholder": true
+   "inputs_placeholder": false,
+   "fixture": {
+    "matched": true,
+    "k_layer": 44,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   }
   },
   {
    "i": 121,
@@ -3867,6 +4008,13 @@
     ]
    },
    "inputs_placeholder": false,
+   "fixture": {
+    "matched": true,
+    "k_layer": 43,
+    "checked_words": 5120,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   },
    "edges": 122,
    "fill_sectors": 0,
    "drain_sectors": 640,
@@ -4043,7 +4191,14 @@
      "production_timing_price"
     ]
    },
-   "inputs_placeholder": true,
+   "inputs_placeholder": false,
+   "fixture": {
+    "matched": true,
+    "k_layer": 53,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   },
    "reducer_bound": {
     "words": 640,
     "ingress_edges": 160,
@@ -4102,7 +4257,14 @@
      "native_SFU_or_scalar_side_control_calendar"
     ]
    },
-   "inputs_placeholder": null
+   "inputs_placeholder": null,
+   "fixture": {
+    "matched": true,
+    "k_layer": 54,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   }
   },
   {
    "i": 129,
@@ -4145,7 +4307,14 @@
      "production_timing_price"
     ]
    },
-   "inputs_placeholder": true,
+   "inputs_placeholder": false,
+   "fixture": {
+    "matched": true,
+    "k_layer": 56,
+    "checked_words": 256,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   },
    "edges": 46,
    "fill_sectors": 32,
    "drain_sectors": 32,
@@ -4214,7 +4383,14 @@
      "native_SFU_or_scalar_side_control_calendar"
     ]
    },
-   "inputs_placeholder": null
+   "inputs_placeholder": null,
+   "fixture": {
+    "matched": true,
+    "k_layer": 59,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   }
   },
   {
    "i": 132,
@@ -4250,7 +4426,14 @@
      "native_M128_divider_lane_selection_calendar"
     ]
    },
-   "inputs_placeholder": null
+   "inputs_placeholder": null,
+   "fixture": {
+    "matched": true,
+    "k_layer": 61,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   }
   },
   {
    "i": 133,
@@ -4310,7 +4493,14 @@
      "production_timing_price"
     ]
    },
-   "inputs_placeholder": true
+   "inputs_placeholder": false,
+   "fixture": {
+    "matched": true,
+    "k_layer": 62,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   }
   },
   {
    "i": 134,
@@ -4580,6 +4770,13 @@
     ]
    },
    "inputs_placeholder": false,
+   "fixture": {
+    "matched": true,
+    "k_layer": 72,
+    "checked_words": 5120,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   },
    "edges": 122,
    "fill_sectors": 0,
    "drain_sectors": 640,
@@ -4636,7 +4833,14 @@
      "native_SFU_or_scalar_side_control_calendar"
     ]
    },
-   "inputs_placeholder": null
+   "inputs_placeholder": null,
+   "fixture": {
+    "matched": true,
+    "k_layer": 73,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   }
   },
   {
    "i": 144,
@@ -4767,7 +4971,14 @@
      "production_timing_price"
     ]
    },
-   "inputs_placeholder": false
+   "inputs_placeholder": false,
+   "fixture": {
+    "matched": true,
+    "k_layer": 76,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   }
   },
   {
    "i": 148,
@@ -4810,7 +5021,14 @@
      "production_timing_price"
     ]
    },
-   "inputs_placeholder": true,
+   "inputs_placeholder": false,
+   "fixture": {
+    "matched": true,
+    "k_layer": 77,
+    "checked_words": 128,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   },
    "edges": 46,
    "fill_sectors": 32,
    "drain_sectors": 16,
@@ -4882,7 +5100,14 @@
      "MDESC_indexed_scalar_runtime_address_calendar"
     ]
    },
-   "inputs_placeholder": null
+   "inputs_placeholder": null,
+   "fixture": {
+    "matched": true,
+    "k_layer": 80,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   }
   },
   {
    "i": 151,
@@ -4944,7 +5169,14 @@
      "MDESC_indexed_scalar_runtime_address_calendar"
     ]
    },
-   "inputs_placeholder": null
+   "inputs_placeholder": null,
+   "fixture": {
+    "matched": true,
+    "k_layer": 81,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   }
   },
   {
    "i": 153,
@@ -5003,7 +5235,14 @@
      "MDESC_indexed_scalar_runtime_address_calendar"
     ]
    },
-   "inputs_placeholder": null
+   "inputs_placeholder": null,
+   "fixture": {
+    "matched": true,
+    "k_layer": 83,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   }
   },
   {
    "i": 155,
@@ -5039,7 +5278,14 @@
      "MDESC_indexed_scalar_runtime_address_calendar"
     ]
    },
-   "inputs_placeholder": null
+   "inputs_placeholder": null,
+   "fixture": {
+    "matched": true,
+    "k_layer": 84,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   }
   },
   {
    "i": 156,
@@ -5153,7 +5399,14 @@
      "MDESC_indexed_scalar_runtime_address_calendar"
     ]
    },
-   "inputs_placeholder": null
+   "inputs_placeholder": null,
+   "fixture": {
+    "matched": true,
+    "k_layer": 85,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   }
   },
   {
    "i": 160,
@@ -5267,7 +5520,14 @@
      "MDESC_indexed_scalar_runtime_address_calendar"
     ]
    },
-   "inputs_placeholder": null
+   "inputs_placeholder": null,
+   "fixture": {
+    "matched": true,
+    "k_layer": 86,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   }
   },
   {
    "i": 164,
@@ -5364,7 +5624,14 @@
      "production_timing_price"
     ]
    },
-   "inputs_placeholder": true,
+   "inputs_placeholder": false,
+   "fixture": {
+    "matched": true,
+    "k_layer": 88,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 2
+   },
    "reducer_bound": {
     "words": 6,
     "ingress_edges": 2,
@@ -5498,7 +5765,14 @@
      "production_timing_price"
     ]
    },
-   "inputs_placeholder": false
+   "inputs_placeholder": false,
+   "fixture": {
+    "matched": true,
+    "k_layer": 90,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   }
   },
   {
    "i": 171,
@@ -5534,7 +5808,14 @@
      "native_M128_divider_lane_selection_calendar"
     ]
    },
-   "inputs_placeholder": null
+   "inputs_placeholder": null,
+   "fixture": {
+    "matched": true,
+    "k_layer": 92,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   }
   },
   {
    "i": 172,
@@ -5583,7 +5864,14 @@
      "native_SFU_or_scalar_side_control_calendar"
     ]
    },
-   "inputs_placeholder": null
+   "inputs_placeholder": null,
+   "fixture": {
+    "matched": true,
+    "k_layer": 95,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   }
   },
   {
    "i": 173,
@@ -5954,7 +6242,14 @@
      "production_timing_price"
     ]
    },
-   "inputs_placeholder": true,
+   "inputs_placeholder": false,
+   "fixture": {
+    "matched": true,
+    "k_layer": 109,
+    "checked_words": 53,
+    "mismatched_words": 0,
+    "pad_words_zero": 6
+   },
    "edges": 43,
    "fill_sectors": 14,
    "drain_sectors": 7,
@@ -5990,13 +6285,13 @@
    ],
    "status": "emitted",
    "reasons": [
-    "raw_hazard: sector 13120 filled at 19767 < commit 19784",
-    "raw_hazard: sector 13121 filled at 19767 < commit 19784",
-    "raw_hazard: sector 13122 filled at 19767 < commit 19784",
-    "raw_hazard: sector 13123 filled at 19767 < commit 19784",
-    "raw_hazard: sector 13124 filled at 19767 < commit 19784",
-    "raw_hazard: sector 13125 filled at 19767 < commit 19784",
-    "raw_hazard: sector 13126 filled at 19767 < commit 19784"
+    "raw_hazard: sector 11136 filled at 19767 < commit 19784",
+    "raw_hazard: sector 11137 filled at 19767 < commit 19784",
+    "raw_hazard: sector 11138 filled at 19767 < commit 19784",
+    "raw_hazard: sector 11139 filled at 19767 < commit 19784",
+    "raw_hazard: sector 11140 filled at 19767 < commit 19784",
+    "raw_hazard: sector 11141 filled at 19767 < commit 19784",
+    "raw_hazard: sector 11142 filled at 19767 < commit 19784"
    ],
    "lowering": {
     "supported": true,
@@ -6013,7 +6308,14 @@
      "production_timing_price"
     ]
    },
-   "inputs_placeholder": true,
+   "inputs_placeholder": false,
+   "fixture": {
+    "matched": true,
+    "k_layer": 110,
+    "checked_words": 53,
+    "mismatched_words": 0,
+    "pad_words_zero": 6
+   },
    "edges": 44,
    "fill_sectors": 14,
    "drain_sectors": 7,
@@ -6149,7 +6451,14 @@
      "production_timing_price"
     ]
    },
-   "inputs_placeholder": true,
+   "inputs_placeholder": false,
+   "fixture": {
+    "matched": true,
+    "k_layer": 112,
+    "checked_words": 53,
+    "mismatched_words": 0,
+    "pad_words_zero": 6
+   },
    "edges": 44,
    "fill_sectors": 14,
    "drain_sectors": 7,
@@ -6185,13 +6494,13 @@
    ],
    "status": "emitted",
    "reasons": [
-    "raw_hazard: sector 13120 filled at 19953 < commit 19969",
-    "raw_hazard: sector 13121 filled at 19953 < commit 19969",
-    "raw_hazard: sector 13122 filled at 19953 < commit 19969",
-    "raw_hazard: sector 13123 filled at 19953 < commit 19969",
-    "raw_hazard: sector 13124 filled at 19953 < commit 19969",
-    "raw_hazard: sector 13125 filled at 19953 < commit 19969",
-    "raw_hazard: sector 13126 filled at 19953 < commit 19969"
+    "raw_hazard: sector 11136 filled at 19953 < commit 19969",
+    "raw_hazard: sector 11137 filled at 19953 < commit 19969",
+    "raw_hazard: sector 11138 filled at 19953 < commit 19969",
+    "raw_hazard: sector 11139 filled at 19953 < commit 19969",
+    "raw_hazard: sector 11140 filled at 19953 < commit 19969",
+    "raw_hazard: sector 11141 filled at 19953 < commit 19969",
+    "raw_hazard: sector 11142 filled at 19953 < commit 19969"
    ],
    "lowering": {
     "supported": true,
@@ -6208,7 +6517,14 @@
      "production_timing_price"
     ]
    },
-   "inputs_placeholder": true,
+   "inputs_placeholder": false,
+   "fixture": {
+    "matched": true,
+    "k_layer": 113,
+    "checked_words": 53,
+    "mismatched_words": 0,
+    "pad_words_zero": 3
+   },
    "edges": 43,
    "fill_sectors": 7,
    "drain_sectors": 7,

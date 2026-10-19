@@ -103,6 +103,42 @@ def ds_dispatches(prog_json, layer):
     return [(recs[k], disp.get(k), ent[k]) for k in range(len(recs))]
 
 
+def ds_dispatches_image(per_die_json, rank="0"):
+    """as ds_dispatches, from a fixture's per-rank HGI-1 layer image (ds_layer_fixtures --export-images:
+    ranks[].image_hex + record_tags + dyn) -- the programme ds_native ran, so VM addresses match the fixture."""
+    import ast
+    import su_bench as SB
+    from hgi_sim import records as SR
+    img = json.loads(Path(per_die_json).read_text())
+    rk = img["ranks"] if isinstance(img["ranks"], list) else ast.literal_eval(img["ranks"])
+    rk = [x for x in rk if str(x["rank"]) == str(rank)][0]
+    tags = img["record_tags"] if isinstance(img["record_tags"], list) else ast.literal_eval(img["record_tags"])
+    buf = bytes.fromhex(rk["image_hex"])
+    recs, ent, off = [], [], 0
+    while off < len(buf):
+        r, _ = SR.decode_one(buf, off)
+        n = SR.rec_bytes(r)
+        r.tag = tags[len(recs)] if len(recs) < len(tags) else ""
+        recs.append(r)
+        ent.append(dict(tag=r.tag, hex=buf[off:off + n].hex()))
+        off += n
+    words = [int.from_bytes(buf[q:q + 16], "little") for q in range(0, len(buf), 16)]
+    words += SB.C.SV.record(SB.C.SV.header("CTL", "END"),
+                            descs={"A": SB.C.SV.mdesc(space=1, fmt=5, base=(1 << 18) - 16, n=1, m=1)})
+    dyn = rk.get("dyn") or [0, (1 << 20) - 1, 1 << 20, 0, 0, 0, 0, (1 << 20) - 1]
+    trace, _ = SB.C.SV.Ref(words, 0, int(dyn[3]), int(dyn[1]), int(dyn[5]), 129280, 1 << 20, {}).run()
+    pc_of, pc = {}, 0
+    for k, r in enumerate(recs):
+        pc_of[pc] = k
+        pc += SR.rec_bytes(r) // 16
+    disp = {}
+    for d in trace:
+        k = pc_of.get(d["rec"])
+        if k is not None and k not in disp:
+            disp[k] = d
+    return [(recs[k], disp.get(k), ent[k]) for k in range(len(recs))]
+
+
 # ------------------------------------------------------------------------------------------------------- SU golden
 def vop_golden(sut, ops):
     """elementwise SU.VOP semantics of the lane datapath -- the operator model of su_arith_compile.py:63-85,
@@ -217,7 +253,7 @@ def reducer_bound(words):
                 rule="1 reducer operand/edge/quarter (pgslice.sv:355-361, lane.sv:119); DEP 10, LAT 9 (reduce_static.sv)")
 
 
-def su_record(raw, q=0, rng=None, data=None, place=None, tag=""):
+def su_record(raw, q=0, rng=None, data=None, place=None, tag="", pad_zero=False):
     """lower one SU dispatch for quarter q: control (su_arith_lower), fill/drain calendars, expected VM words.
     Returns dict(status, lines, preload, expect, ...) with explicit reasons when v1 cannot emit a runnable image."""
     import su_arith_lower as L
@@ -353,10 +389,17 @@ def su_record(raw, q=0, rng=None, data=None, place=None, tag=""):
     res["inputs_placeholder"] = False
     if data is None:
         data = {}
+    pad = 0
     for a_ in logical:
         if a_ not in data:
-            data[a_] = np.float32(rng.standard_normal())
-            res["inputs_placeholder"] = True
+            if pad_zero:        # fixture run: a word of a fetched sector outside every operand = inactive-lane pad
+                data[a_] = np.float32(0)
+                pad += 1
+            else:
+                data[a_] = np.float32(rng.standard_normal())
+                res["inputs_placeholder"] = True
+    if pad:
+        res["pad_words_zero"] = pad
     if not sut["red"] and "O" in desc and not res["reasons"]:
         # elementwise: lane l of group g computes O[addr_O] from A..D at the same lane
         outv = {}
@@ -388,6 +431,50 @@ def column_image(lines, work):
     return man, cfg
 
 
+# ---------------------------------------------------------------------------------------------------- DS fixtures
+def desc_addrs(d):
+    """VM word addresses of a fixture descriptor [base, n, m, stride, istride, space, fmt] in array order
+    (row i of m, column j of n: base + i*stride + j*istride; ds_layer_fixtures flattens row-major)."""
+    base, n, m, st, ist = (int(x) for x in d[:5])
+    return [base + i * st + j * ist for i in range(m) for j in range(n)]
+
+
+def load_fixture(fdir, rank="0"):
+    """priced record i -> dict(vm_in {addr: f32}, vm_out {addr: u32}, k, tag) from a ds_layer_fixtures dir."""
+    recs = json.loads((Path(fdir) / "records.json").read_text())["records"][str(rank)]
+    z = np.load(Path(fdir) / "operands.npz")
+    out = {}
+    for x in recs:
+        ent = dict(k=x["k_layer"], tag=x["tag"], occ=int(x.get("occ", 0)), vm_in={}, vm_out={})
+        for io, key in (("inputs", "vm_in"), ("outputs", "vm_out")):
+            for role, v in x.get(io, {}).items():
+                if v.get("space") != "VM" or v.get("array") not in z:
+                    continue
+                arr = np.asarray(z[v["array"]], np.uint32)
+                ad = desc_addrs(x["desc"][role])
+                assert len(ad) == len(arr), (fdir, x["tag"], role, len(ad), len(arr))
+                for a_, w in zip(ad, arr):
+                    ent[key][a_] = np.uint32(w).view(np.float32) if key == "vm_in" else int(w)
+        for p in x.get("priced", []):
+            out[int(p["i"])] = ent
+    return out
+
+
+def fixture_check(su, fr):
+    """the image compiler's expected O words vs the fixture's post-record VM (bit-exact ds_native)."""
+    n = bad = 0
+    for x in su.get("expect", []):
+        for a_, v in zip(x["words"], x.get("value") or []):
+            if v is None or a_ not in fr["vm_out"]:
+                continue
+            n += 1
+            bad += int(v) != fr["vm_out"][a_]
+    su["fixture"] = dict(matched=True, k_layer=fr["k"], checked_words=n, mismatched_words=bad)
+    if bad:
+        su["reasons"].append(f"golden_mismatch: {bad}/{n} O words differ from the ds_native fixture")
+        su["status"] = "golden_mismatch"
+
+
 # ------------------------------------------------------------------------------------------------------------ main
 UNIT_PORTS = dict(SU=["su_prog__r_we", "su_prog__r_bank", "su_prog__r_row", "su_prog__r_data", "su_prog__r_start",
                       "su_prog__r_len"],
@@ -410,6 +497,11 @@ def main():
     ap.add_argument("--quarter", type=int, default=0, help="SU quarter of the slice (SW = 0)")
     ap.add_argument("--load-gap", type=int, default=16, help="serial edges between reset release and layer t0 slack")
     ap.add_argument("--reload-gap", type=int, default=600, help="idle serial edges after which a new SU programme is loaded")
+    ap.add_argument("--fixtures", type=Path, help="DS per-record fixture dir (ds_layer_fixtures.py: records.json + "
+                    "operands.npz, e.g. results/rtl/hbm_ds_layer_tput_1018/fixtures/L02): VM operands = the bit-exact "
+                    "ds_native state before each record, expected O checked against its state after (default: seeded "
+                    "placeholder operands)")
+    ap.add_argument("--rank", default="0", help="fixture rank")
     ap.add_argument("--out", type=Path, required=True)
     a = ap.parse_args()
     if a.design == "qwen":
@@ -424,9 +516,24 @@ def main():
     lay = int(a.layer) if a.layer.isdigit() else None
     if lay is None:
         sys.exit("layer_images: head segment needs the head programme (ds_rank0_program has layers only)")
-    prog = ds_dispatches(a.programme, lay)
     recs = pr["records"]
-    aligned = len(prog) == len([r for r in recs if r["unit"] != "CTL"]) or len(prog) == len(recs)
+    fx = load_fixture(a.fixtures, a.rank) if a.fixtures else {}
+    if fx:
+        # the fixture's own layer image (the programme ds_native ran bit-exact); priced i -> image record k_layer
+        imgs = sorted((a.fixtures / "images").glob("*_per_die.json"))
+        prog_src = imgs[0]
+        prog = ds_dispatches_image(prog_src, a.rank)
+        # k_layer counts DISPATCHED records only (the image also holds the rank's CTL.NOPs): match (tag, occurrence)
+        where = {}
+        for k, (_, _, e) in enumerate(prog):
+            where.setdefault(e["tag"], []).append(k)
+        pk_of = {i: where[f["tag"]][f["occ"]] for i, f in fx.items()
+                 if f["occ"] < len(where.get(f["tag"], []))}
+    else:
+        prog_src = a.programme
+        prog = ds_dispatches(a.programme, lay)
+        aligned = len(prog) == len([r for r in recs if r["unit"] != "CTL"]) or len(prog) == len(recs)
+        pk_of = {r["i"]: r["i"] for r in recs if aligned and r["i"] < len(prog)}
     want = set(int(x) for x in a.records.split(",")) if a.records else None
     a.out.mkdir(parents=True, exist_ok=True)
     events, manifest, t_su_free = [], [], 0
@@ -443,7 +550,7 @@ def main():
                    cls=r["cls"], grade=cov.get(r["i"], {}).get("grade"),
                    blocked_by=cov.get(r["i"], {}).get("datapath_gaps") or [],
                    open_gaps=cov.get(r["i"], {}).get("open_gaps") or [])
-        pk = r["i"] if aligned and r["i"] < len(prog) else None
+        pk = pk_of.get(r["i"])
         if pk is not None and prog[pk][2]["tag"] != r["tag"]:
             ent["programme_tag_mismatch"] = prog[pk][2]["tag"]
         unit = r["orig_op"].split(".")[0]
@@ -451,9 +558,21 @@ def main():
         if unit == "SU" and pk is not None and prog[pk][1] is not None:
             import su_bench as SB
             raw = SB.pack_rec(prog[pk][1])
-            su = su_record(raw, a.quarter, rng, data=vm_data, place=place, tag=r["tag"])
+            fr = fx.get(r["i"])
+            if fr is not None:
+                vm_data.update(fr["vm_in"])           # the record's operands = ds_native VM state before it
+            try:
+                su = su_record(raw, a.quarter, rng, data=vm_data, place=place, tag=r["tag"], pad_zero=fr is not None)
+            except AssertionError as ex:                # su_program_inventory.decode: adapter contract refusal
+                ent.update(status="adapter_refused", reasons=[f"su_record: {ex}"])
+                manifest.append(ent)
+                continue
+            if fr is not None:
+                fixture_check(su, fr)
             ent.update(status=su["status"], reasons=su["reasons"], lowering=su["lowering"],
                        inputs_placeholder=su.get("inputs_placeholder"))
+            if fx:
+                ent["fixture"] = dict(su.get("fixture", dict(matched=False)), pad_words_zero=su.get("pad_words_zero", 0))
             if su.get("reducer_bound"):
                 rb = dict(su["reducer_bound"], priced_serial_edges=serial(r["end"]) - serial(r["start"]))
                 rb["bound_over_price"] = round(rb["min_serial_edges"] / max(1, rb["priced_serial_edges"]), 2)
@@ -572,7 +691,8 @@ def main():
                events=events)
     (a.out / "replay.json").write_text(json.dumps(rep) + "\n")
     man = dict(schema="opentallas.hbm_layer_images.v1", design=a.design, layer=a.layer,
-               priced=str(a.priced), programme=str(a.programme), programme_sha256=sha(a.programme.read_bytes()),
+               priced=str(a.priced), programme=str(prog_src), programme_sha256=sha(Path(prog_src).read_bytes()),
+               fixtures=str(a.fixtures) if a.fixtures else None,
                boundary=str(a.boundary), records=manifest, placement_conflicts=place.conflicts,
                placed_sectors=len(place.map), su_programmes=cfgs, t0_serial=t0,
                counts={k: sum(1 for m in manifest if m["status"] == k) for k in sorted({m["status"] for m in manifest})})
