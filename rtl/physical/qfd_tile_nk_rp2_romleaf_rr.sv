@@ -7,7 +7,8 @@
 // Q-ROMPARENT 10-16 18:40: the eight TX roots ck_tx0..7 are separate compensated entries again (gate3 measured the
 // shared ck root at TT 556..1230 ps over 10,644 sinks); each TX root owns only its LSL's two rungs + reset relay.
 module qfd_tile_nk_rp2_romleaf_rr #(
-    parameter integer G4_ROOTS = 1
+    parameter integer G4_ROOTS = 1,
+    parameter integer REGROOT_MODE = 3
 `ifndef SYNTHESIS
   , parameter integer ROM_TILE = -1
 `endif
@@ -62,9 +63,9 @@ module qfd_tile_nk_rp2_romleaf_rr #(
     output wire [513:0]  n_y
 );
 `ifndef SYNTHESIS
-    qfd_tile_nk_rp2_45 #(.ROM_TILE(ROM_TILE),.RPH(3),.REGROOT(3)) u_g (
+    qfd_tile_nk_rp2_45 #(.ROM_TILE(ROM_TILE),.RPH(3),.REGROOT(REGROOT_MODE)) u_g (
 `else
-    qfd_tile_nk_rp2_45 #(.RPH(3),.REGROOT(3)) u_g (
+    qfd_tile_nk_rp2_45 #(.RPH(3),.REGROOT(REGROOT_MODE)) u_g (
 `endif
         .ck(ck),
         .ck_rp0(ck_rp0),

@@ -777,7 +777,27 @@ end endgenerate
         // values on the same edges (s1b_* <= s1_* on the shared tile clock): 0 cycles, bit-identical.
         wire           wsrc_w, wsrc_e;
         wire [G-1:0]   gm_w, gm_e;
-        if (REGROOT >= 3) begin : g_lsel
+        // REGROOT4: same S1->S1B edge, one select owner per two lanes.
+        // Each FP operand has sixteen variable upper bits, so two lanes
+        // consume at most 32 mux select inputs. No old half-select flops
+        // remain in this branch. S1 wsrc drives exactly 32 copy D pins at
+        // production G=4,W=16; actual mapped primitive census is mandatory.
+        localparam integer CSP = (G * W + 1) / 2;
+        wire [CSP-1:0] wsrc_local, gm_local;
+        if (REGROOT >= 4) begin : g_csel
+            (* keep *) reg [CSP-1:0] wsrc_q, gm_q;
+            for (genvar cp=0; cp<CSP; cp=cp+1) begin : g_cp
+                wire copy_clk = (2*cp < HL) ? ck_reg[2] : ck_reg[3];
+                always @(posedge copy_clk) begin
+                    wsrc_q[cp] <= s1_wsrc;
+                    gm_q[cp] <= s1_gm[(2*cp)/W];
+                end
+            end
+            assign wsrc_local = wsrc_q;
+            assign gm_local = gm_q;
+            assign wsrc_w=1'b0; assign wsrc_e=1'b0;
+            assign gm_w='0; assign gm_e='0;
+        end else if (REGROOT >= 3) begin : g_lsel
             (* keep *) reg           s1b_wsrc_w, s1b_wsrc_e;
             (* keep *) reg [G/2-1:0] s1b_gm_w;
             (* keep *) reg [G-G/2-1:0] s1b_gm_e;
@@ -786,28 +806,30 @@ end endgenerate
             assign wsrc_w = s1b_wsrc_w; assign wsrc_e = s1b_wsrc_e;
             assign gm_w = {{(G-G/2){1'b0}}, s1b_gm_w};
             assign gm_e = {s1b_gm_e, {(G/2){1'b0}}};
+            assign wsrc_local='0; assign gm_local='0;
         end else begin : g_hsel
             assign wsrc_w = s1b_wsrc; assign wsrc_e = s1b_wsrc;
             assign gm_w = s1b_gm; assign gm_e = s1b_gm;
+            assign wsrc_local='0; assign gm_local='0;
         end
         always @(posedge ck_reg[2]) begin
             mq_wrom[0 +: HL*WB] <= wrom_q[0 +: HL*WB];
             for (lw = 0; lw < HL; lw = lw + 1)
                 if (INT8_WEIGHT != 0 && WCONV == 0)
-                    s2_w[32*lw +: 32] <= !gm_w[lw / W] ? 32'd0 : wsrc_w ? mq_kv[32*lw +: 32] :
+                    s2_w[32*lw +: 32] <= !(REGROOT >= 4 ? gm_local[lw/2] : gm_w[lw / W]) ? 32'd0 : (REGROOT >= 4 ? wsrc_local[lw/2] : wsrc_w) ? mq_kv[32*lw +: 32] :
                                               {int8_bf16(mq_wrom[8*lw +: 8]), 16'h0000};
                 else
-                    s2_w[32*lw +: 32] <= !gm_w[lw / W] ? 32'd0 : wsrc_w ? mq_kv[32*lw +: 32] :
+                    s2_w[32*lw +: 32] <= !(REGROOT >= 4 ? gm_local[lw/2] : gm_w[lw / W]) ? 32'd0 : (REGROOT >= 4 ? wsrc_local[lw/2] : wsrc_w) ? mq_kv[32*lw +: 32] :
                                               {mq_wrom[16*lw +: 16], 16'h0000};
         end
         always @(posedge ck_reg[3]) begin
             mq_wrom[HL*WB +: HL*WB] <= wrom_q[HL*WB +: HL*WB];
             for (le = HL; le < G * W; le = le + 1)
                 if (INT8_WEIGHT != 0 && WCONV == 0)
-                    s2_w[32*le +: 32] <= !gm_e[le / W] ? 32'd0 : wsrc_e ? mq_kv[32*le +: 32] :
+                    s2_w[32*le +: 32] <= !(REGROOT >= 4 ? gm_local[le/2] : gm_e[le / W]) ? 32'd0 : (REGROOT >= 4 ? wsrc_local[le/2] : wsrc_e) ? mq_kv[32*le +: 32] :
                                               {int8_bf16(mq_wrom[8*le +: 8]), 16'h0000};
                 else
-                    s2_w[32*le +: 32] <= !gm_e[le / W] ? 32'd0 : wsrc_e ? mq_kv[32*le +: 32] :
+                    s2_w[32*le +: 32] <= !(REGROOT >= 4 ? gm_local[le/2] : gm_e[le / W]) ? 32'd0 : (REGROOT >= 4 ? wsrc_local[le/2] : wsrc_e) ? mq_kv[32*le +: 32] :
                                               {mq_wrom[16*le +: 16], 16'h0000};
         end
         always @(posedge clk) begin
