@@ -30,6 +30,9 @@ module tb_qfd_tt_ctlm_dv_lpf_eq;
     wire [3135:0] vb = {b_tl, b_program_obs, b_csr, b_lcv, b_nt, b_np, b_cs, b_cpo, b_cdo, b_cir, b_dc, b_nc, b_hr, b_cmd, b_es, b_et, b_cf};
     integer cyc, bad, nc, act, act_nc, act_cmd, act_hr, nctx = 0;
     always @(posedge ck) if (OPSEG != 0 && u_a.c_ctxld) nctx = nctx + 1;
+    integer nrt = 0, nrtb = 0, ru;
+    always @(posedge ck) if (OPSEG != 0 && u_a.rt_arm) nrt = nrt + 1;
+    always @(posedge ck) if (OPSEG != 0 && u_a.rt_bad) nrtb = nrtb + 1;
     reg [3135:0] vprev;
     task rnd; begin
         pw = {$urandom, $urandom, $urandom}; dh = {$urandom, $urandom, $urandom, $urandom, $urandom, $urandom};
@@ -71,6 +74,16 @@ module tb_qfd_tt_ctlm_dv_lpf_eq;
             rnd;
             if (OPSEG != 0 && cyc >= 30 && cyc < 30 + 1032) img(cyc - 30, 0);
             if (OPSEG != 0 && cyc >= 1100 && cyc < 1600) begin dh[42] = 1'b0; dh[118] = 1'b0; dh[186] = 1'b0; end  // quiet: no playhead plays at load 1
+            // MU-DQ-BOOTCTX: in the quiet window, sparse filler results and RUNTIME context words (dw_addr 5, tag 'CF', the
+            // flat side's current seq of a filler) -> arm / apply on both sides; a few with a stale seq -> late fault
+            if (OPSEG != 0 && cyc >= 1100 && cyc < 1600) begin
+                ss5[24] = (cyc % 50) == 0;
+                if ((cyc % 50) == 20) begin
+                    ru = 1 + (cyc / 50) % 3;
+                    dh[186:119] = {1'b1, 3'd5, 16'h4346, 2'b00, 8'(u_a.nres[ru] - (((cyc / 50) % 4 == 3) ? 1 : 0)), 2'(ru),
+                                   18'($urandom % 151936), 18'($urandom % 8192)};
+                end
+            end
             if (OPSEG != 0 && cyc >= 1600 && cyc < 1600 + 1032) img(cyc - 1600, 1);
             if (cyc > 20) begin
                 nc = nc + 1; if (va !== vprev) act = act + 1; if (va[968:589] !== vprev[968:589]) act_nc = act_nc + 1;
@@ -84,7 +97,7 @@ module tb_qfd_tt_ctlm_dv_lpf_eq;
                         a_hr[72:0], b_hr[72:0], a_cmd, b_cmd, a_cf, b_cf); end
             end
         end
-        $display("LPF_EQ ACTIVITY output-vector changes %0d of %0d cycles; native_cmd field changes %0d; context seals %0d", act, nc, act_nc, nctx);
+        $display("LPF_EQ ACTIVITY output-vector changes %0d of %0d cycles; native_cmd field changes %0d; context seals %0d; runtime contexts armed %0d rejected %0d", act, nc, act_nc, nctx, nrt, nrtb);
         if (bad == 0 && nc > 0) $display("LPF_EQ PASS DMUT=%0d compared=%0d", DMUT, nc);
         else $display("LPF_EQ FAIL DMUT=%0d mismatches=%0d of %0d", DMUT, bad, nc);
         $finish;

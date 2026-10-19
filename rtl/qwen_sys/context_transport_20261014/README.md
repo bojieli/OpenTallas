@@ -12,7 +12,7 @@ token/image-wide layer sentinel63. They cannot enter the attention1..4 decoder.
 
 | Kind | DATA fields | Actual producer |
 | --- | --- | --- |
-|12 HOST context|TAG59[58:0], generation2[60:59], installed cap61, image epoch[77:62], image digest[141:78], remaining zero|HOST native endpoint request, real HC22 allocator epoch pulse, matching genuine returned image witness|
+|12 HOST context|TAG59[58:0], generation2[60:59], installed cap61, image epoch[77:62], image digest[141:78], FILL 1 only: filler context FC[188:142] = {pos18, tok18, seq8, user2, v} (MU-DQ-BOOTCTX 10-19), remaining zero|HOST native endpoint request, real HC22 allocator epoch pulse, matching genuine returned image witness|
 |13 image BEGIN|subtype1[1:0], expected PW11[12:2]=1024, DW4[16:13]=8, remaining zero|actual class8 decoder BEGIN/counts|
 |13 image AUTH|subtype2[1:0], authorized digest[65:2], remaining zero|actual external authorization accepted by HOST loader|
 |14 image witness|digest[63:0], installed cap64, actual ready65, actual fault66, remaining zero|actual joined TT/SU macro/DW ledgers and all control-store seals|

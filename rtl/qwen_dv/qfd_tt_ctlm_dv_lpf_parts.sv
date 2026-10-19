@@ -19,6 +19,9 @@
 //   qfd_sys_face_mu_dhuser #(OPSEG 1) is g_op.u_leaf in here (its own hard tile, MU-LEAF-KIT), observing dh_q[43:0];
 //   op_fault (leaf fault | start collision | bad context record) rides the dcs start_fault bit (both OR into core_fault,
 //   as in qfd_tt_ctlm_dv).  OPSEG 0: the leaf inputs are tied 0 and every edge is the previous u_gi.
+// MU-DQ-BOOTCTX 10-19 (coordinator 0kg (1)): u_gi also takes qfd_tt_ctlm_dv's RUNTIME filler context loader (u_cal
+//   ctx_rt word from the KV die's kind12 HOST context record via qfd_sys_face FILL_CTX: check, arm per user, apply on
+//   the user's result number seq; bad / late record -> op_fault).  Same registers / edges as qfd_tt_ctlm_dv.
 // =====================================================================================================================
 module qfd_tt_ctlm_dv_gi #(
     parameter integer LAST_STAGE = 37,
@@ -91,7 +94,7 @@ module qfd_tt_ctlm_dv_gi #(
     wire [1:0]  ss_tu = ss_q[27:26];                // OPSEG: the user of tok_idx when tok_v (MU-QW-AMIX contract)
 
     // OPSEG op starts (leaf) and the boot context record (see qfd_tt_ctlm_dv OPSEG)
-    wire [127:0] c_ctx; wire c_ctxld;
+    wire [127:0] c_ctx; wire c_ctxld, c_ctxrt;
     wire        l_v = (OPS != 0) && op_v;
     wire [UB-1:0] l_user = op_user[UB-1:0];
     wire        l_start = l_v && !d_start;            // the face start wins a collision
@@ -100,10 +103,26 @@ module qfd_tt_ctlm_dv_gi #(
     wire        ctx_ok = c_ctx[127:112] == 16'h4D43 && !c_ctx[111] && (({1'b0, ctx_mask} >> (NU - 1)) == 4'd0);
     wire        ctx_ld = (OPS != 0) && c_ctxld && ctx_ok;
     wire        ctx_bad = (OPS != 0) && c_ctxld && !ctx_ok;
+    // runtime context word (MU-DQ-BOOTCTX, see qfd_tt_ctlm_dv): check + arm
+    wire [1:0]  rt_u2 = c_ctx[37:36];
+    wire [7:0]  rt_seq = c_ctx[45:38];
+    wire [17:0] rt_tok = c_ctx[35:18], rt_pos = c_ctx[17:0];
+    reg  [NU-1:0] rt_pend;
+    reg  [17:0] rt_ptok [0:NU-1], rt_ppos [0:NU-1];
+    reg  [7:0]  nres [0:NU-1];
+    wire        r_fill;
+    wire [UB-1:0] r_wr;
+    wire        rt_uok = rt_u2 != 2'd0 && {1'b0, rt_u2} < 3'(NU);
+    wire [UB-1:0] rt_u = rt_u2[UB-1:0];
+    wire        rt_late = rt_uok && (rt_seq != nres[rt_u] || (r_fill && r_wr == rt_u));
+    wire        rt_ok = c_ctx[63:48] == 16'h4346 && c_ctx[47:46] == 2'd0 && rt_uok && !rt_pend[rt_u] &&
+                        rt_tok < 18'd151936 && rt_pos < 18'd8192 && !rt_late;
+    wire        rt_arm = (OPS != 0) && c_ctxrt && rt_ok;
+    wire        rt_bad = (OPS != 0) && c_ctxrt && !rt_ok;
     reg         op_fault;
     always @(posedge ck or negedge rst_n)
         if (!rst_n) op_fault <= 1'b0;
-        else if (((OPS != 0) && op_lfault) || op_coll || ctx_bad) op_fault <= 1'b1;
+        else if (((OPS != 0) && op_lfault) || op_coll || ctx_bad || rt_bad) op_fault <= 1'b1;
     wire        u_start = d_start || l_start;
     wire [5:0]  u_stage = l_start ? op_stage : d_stage;
     wire [UB-1:0] u_user = l_start ? l_user : s_user;
@@ -119,7 +138,7 @@ module qfd_tt_ctlm_dv_gi #(
         .loc_seg(c_seg), .loc_base(c_base),
         .su_issue(c_su), .su_pidx(c_pidx), .xc_issue(c_xc), .program_obs(cal_program_obs),
         .descriptor_obs(cal_descriptor_obs), .image_ready(c_ready), .running(c_run), .running_u(c_run_u), .done(c_done),
-        .done_user(c_done_user), .fault(c_fault), .fault_code(c_fcode), .ctx_dw(c_ctx), .ctx_load(c_ctxld));
+        .done_user(c_done_user), .fault(c_fault), .fault_code(c_fcode), .ctx_dw(c_ctx), .ctx_load(c_ctxld), .ctx_rt(c_ctxrt));
     wire        c_u0 = (NU == 1) || (c_user == {UB{1'b0}});
     wire        s_u0 = (NU == 1) || (s_user == {UB{1'b0}});
     assign cal_image_ready = c_ready;
@@ -145,8 +164,8 @@ module qfd_tt_ctlm_dv_gi #(
     reg         st_h; reg [17:0] st_tok, st_pos; reg [11:0] st_base;
     reg         start_fault;
     integer     ub_i;
-    wire        r_fill = (OPS != 0) && ss_tokv && ss_tu != 2'd0 && {1'b0, ss_tu} < 3'(NU);   // OPSEG filler result
-    wire [UB-1:0] r_wr = ss_tu[UB-1:0];
+    assign      r_fill = (OPS != 0) && ss_tokv && ss_tu != 2'd0 && {1'b0, ss_tu} < 3'(NU);   // OPSEG filler result
+    assign      r_wr = ss_tu[UB-1:0];
     always @(posedge ck or negedge rst_n)
         if (!rst_n) begin
             for (ub_i = 0; ub_i < NU; ub_i = ub_i + 1) begin tok_b[ub_i] <= 18'd0; pos_b[ub_i] <= 18'd0; end
@@ -159,7 +178,10 @@ module qfd_tt_ctlm_dv_gi #(
                         tok_b[ub_i] <= c_ctx[36 * (ub_i - 1) + 18 +: 18]; pos_b[ub_i] <= c_ctx[36 * (ub_i - 1) +: 18];
                     end
             if (d_start) begin tok_b[s_user] <= s_tok; pos_b[s_user] <= s_pos; end
-            if (r_fill) begin tok_b[r_wr] <= ss_tok[17:0]; pos_b[r_wr] <= pos_b[r_wr] + 18'd1; end
+            if (r_fill) begin
+                if (rt_pend[r_wr]) begin tok_b[r_wr] <= rt_ptok[r_wr]; pos_b[r_wr] <= rt_ppos[r_wr]; end   // new request
+                else begin tok_b[r_wr] <= ss_tok[17:0]; pos_b[r_wr] <= pos_b[r_wr] + 18'd1; end
+            end
             st_h <= s_me | c_seg;
             if (s_me) begin st_tok <= s_tok; st_pos <= s_pos; st_base <= 12'd0; end
             else if (c_seg) begin st_tok <= tok_b[c_user]; st_pos <= pos_b[c_user]; st_base <= c_base; end
@@ -167,6 +189,18 @@ module qfd_tt_ctlm_dv_gi #(
             emb_start <= c_emb; emb_token <= tok_b[c_user];
         end
     assign st = {st_h, st_tok, st_pos, st_base};
+    integer     rt_i;
+    always @(posedge ck or negedge rst_n)
+        if (!rst_n) begin
+            rt_pend <= {NU{1'b0}};
+            for (rt_i = 0; rt_i < NU; rt_i = rt_i + 1) begin rt_ptok[rt_i] <= 18'd0; rt_ppos[rt_i] <= 18'd0; nres[rt_i] <= 8'd0; end
+        end else begin
+            if (r_fill) begin nres[r_wr] <= nres[r_wr] + 8'd1; rt_pend[r_wr] <= 1'b0; end
+            if (ctx_ld)
+                for (rt_i = 1; rt_i < NU; rt_i = rt_i + 1)
+                    if (ctx_mask[rt_i - 1]) begin nres[rt_i] <= 8'd0; rt_pend[rt_i] <= 1'b0; end
+            if (rt_arm) begin rt_pend[rt_u] <= 1'b1; rt_ptok[rt_u] <= rt_tok; rt_ppos[rt_u] <= rt_pos; end
+        end
 
     reg  [23:0] su_acc;
     reg  [15:0] su_obs;
