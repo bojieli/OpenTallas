@@ -457,15 +457,22 @@ module ot_hbm_svc_static_sm_packed136_native_safe #(parameter integer PACKED136=
  wire retire_identity_ok=retire_id0||retire_id1;
  ot_cache_safe_bank_meta #(.BANK(0)) u_bankmeta0(.clk(clk),.rst_n({reset_q[9],reset_q[8],reset_q[6],reset_q[3],reset_q[2]}),.open_pred(open_pred),.open_bank(open_bank_q1),.open_epoch(open_epoch_q1),.open_count(open_count_q1),.open_base(open_tag_base_q1),.read_bank_d(read_bank_q1),.retire_bank_d(retire_bank_q1),.read_epoch(read_epoch_q2),.read_row(read_row_q2),.read_tag(read_tag_q2),.retire_epoch(retire_epoch_q2),.epoch(epoch0),.count(count0),.base(base0),.read_id_ok(read_id0),.retire_id_ok(retire_id0));
  ot_cache_safe_bank_meta #(.BANK(1)) u_bankmeta1(.clk(clk),.rst_n({reset_q[11],reset_q[10],reset_q[7],reset_q[5],reset_q[4]}),.open_pred(open_pred),.open_bank(open_bank_q1),.open_epoch(open_epoch_q1),.open_count(open_count_q1),.open_base(open_tag_base_q1),.read_bank_d(read_bank_q1),.retire_bank_d(retire_bank_q1),.read_epoch(read_epoch_q2),.read_row(read_row_q2),.read_tag(read_tag_q2),.retire_epoch(retire_epoch_q2),.epoch(epoch1),.count(count1),.base(base1),.read_id_ok(read_id1),.retire_id_ok(retire_id1));
- wire [8:0] received_index,received_present;
+ wire [8:0] received_index,received_present,received_error;
  ot_cache_safe_rq #(.W(9)) u_received_index(.clk(clk),.rst_n(reset_q[22]),.d(received_d),.q(received_index));
  ot_cache_safe_rq #(.W(9)) u_received_present(.clk(clk),.rst_n(reset_q[22]),.d(received_d),.q(received_present));
+ ot_cache_safe_rq #(.W(9)) u_received_error(.clk(clk),.rst_n(reset_q[22]),.d(received_d),.q(received_error));
  wire [15:0] selected_epoch=read_bank_q2?epoch1:epoch0;
  wire [6:0] selected_count=read_bank_q2?count1:count0;
  wire [9:0] selected_base=read_bank_q2?base1:base0;
  wire [6:0] read_addr={read_bank_q2,read_row_q2};
  wire row_slot=running&&elapsed>=2&&slot_phase!=1&&emitted<load_rows;
- wire open_ok=open_v_q2&&!running&&!owned[open_bank_q2]&&open_count_q2!=0&&open_count_q2<=64&&!sticky&&!(retire_v_q2&&retire_bank_q2==open_bank_q2);
+ wire open_ok,open_ok1,open_ok2,open_ok3,open_ok4;
+ ot_cache_safe_open u_open0(.open_v(open_v_q2),.open_bank(open_bank_q2),.open_count(open_count_q2),.running(running),.owned(owned),.sticky(sticky),.retire_v(retire_v_q2),.retire_bank(retire_bank_q2),.q(open_ok));
+ ot_cache_safe_open u_open1(.open_v(open_v_q2),.open_bank(open_bank_q2),.open_count(open_count_q2),.running(running),.owned(owned),.sticky(sticky),.retire_v(retire_v_q2),.retire_bank(retire_bank_q2),.q(open_ok1));
+ ot_cache_safe_open u_open2(.open_v(open_v_q2),.open_bank(open_bank_q2),.open_count(open_count_q2),.running(running),.owned(owned),.sticky(sticky),.retire_v(retire_v_q2),.retire_bank(retire_bank_q2),.q(open_ok2));
+ ot_cache_safe_open u_open3(.open_v(open_v_q2),.open_bank(open_bank_q2),.open_count(open_count_q2),.running(running),.owned(owned),.sticky(sticky),.retire_v(retire_v_q2),.retire_bank(retire_bank_q2),.q(open_ok3));
+ ot_cache_safe_open u_open4(.open_v(open_v_q2),.open_bank(open_bank_q2),.open_count(open_count_q2),.running(running),.owned(owned),.sticky(sticky),.retire_v(retire_v_q2),.retire_bank(retire_bank_q2),.q(open_ok4));
+
  wire read_ok=read_v_q2&&ready[read_bank_q2]&&(read_id0||read_id1)&&!sticky&&!(retire_v_q2&&retire_bank_q2==read_bank_q2);
  reg complete,error_now;reg [2:0] expected_sectors;reg [7:0] popmask,pushmask;integer j;
  always @* begin
@@ -482,7 +489,7 @@ module ot_hbm_svc_static_sm_packed136_native_safe #(parameter integer PACKED136=
  if(running&&!sticky)begin
  for(j=0;j<4;j=j+1)begin
  if(sector_v_q2[j]!=(j<expected_sectors))error_now=1;
- if(sector_v_q2[j]&&(sector_epoch_q2[j*16+:16]!=load_epoch||sector_index_q2[j*24+:24]!=received_index+j||(present[(received_present+j)%8]&&!popmask[(received_present+j)%8])))error_now=1;
+ if(sector_v_q2[j]&&(sector_epoch_q2[j*16+:16]!=load_epoch||sector_index_q2[j*24+:24]!=received_index+j||(present[(received_error+j)%8]&&!popmask[(received_error+j)%8])))error_now=1;
  end
  if(row_slot&&!complete)error_now=1;
  end else if(!open_v_q2&&|sector_v_q2)error_now=1;
@@ -519,9 +526,12 @@ module ot_hbm_svc_static_sm_packed136_native_safe #(parameter integer PACKED136=
  owned_d[open_bank_q2]=1;ready_d[open_bank_q2]=0;
  if(open_bank_q2)begin epoch1_d=open_epoch_q2;count1_d=open_count_q2;base1_d=open_tag_base_q2;end
  else begin epoch0_d=open_epoch_q2;count0_d=open_count_q2;base0_d=open_tag_base_q2;end
- running_d=1;load_bank_d=open_bank_q2;load_epoch_d=open_epoch_q2;load_rows_d=open_count_q2;emitted_d=0;tag_base_d=open_tag_base_q2;
- received_d=0;total_sectors_d=((open_count_q2*136+127)/128)*4;head_d=0;slot_phase_d=0;elapsed_d=0;record_phase_d=0;present_d=0;
  end
+ if(open_ok1)begin running_d=1;load_bank_d=open_bank_q2;load_epoch_d=open_epoch_q2;tag_base_d=open_tag_base_q2;end
+ if(open_ok2)begin load_rows_d=open_count_q2;emitted_d=0;end
+ if(open_ok3)begin received_d=0;total_sectors_d=((open_count_q2*136+127)/128)*4;head_d=0;end
+ if(open_ok4)begin slot_phase_d=0;elapsed_d=0;record_phase_d=0;present_d=0;end
+
  if(running&&!sticky)begin
  slot_phase_d=slot_phase==4?0:slot_phase+1'b1;elapsed_d=elapsed+1'b1;
  present_d=(present&~popmask)|pushmask;received_d=received+expected_sectors;

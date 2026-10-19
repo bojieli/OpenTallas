@@ -43,4 +43,9 @@ endmodule
  assign read_id_ok=read_bq==BANK&&read_epoch==epoch&&{1'b0,read_row}<count&&read_tag==10'(base+read_row);
  assign retire_id_ok=retire_bq==BANK&&retire_epoch==epoch;
 endmodule
+
+
+(* keep_hierarchy=1 *) module ot_cache_safe_open(input wire open_v,open_bank,input wire[6:0]open_count,input wire running,input wire[1:0]owned,input wire sticky,retire_v,retire_bank,output wire q);
+ assign q=open_v&&!running&&!owned[open_bank]&&open_count!=0&&open_count<=64&&!sticky&&!(retire_v&&retire_bank==open_bank);
+endmodule
 `default_nettype wire
