@@ -50,6 +50,9 @@ def domain(net):
     return 'stream'
 
 
+MEASURED_SRC = ('insertion.json boundary mean', 'insertion.json child_flop boundary mean')
+
+
 def measured_clock_refs(lib_path, insertion_path, corner):
     """Require the bound view's own per-clock boundary measurement, never a lib estimate."""
     if not insertion_path.is_file():
@@ -60,7 +63,9 @@ def measured_clock_refs(lib_path, insertion_path, corner):
     result = {}
     for pin in clocks:
         r = refs.get(pin)
-        if not r or r['src'] != 'insertion.json boundary mean' or not math.isfinite(r['rise']):
+        # QW-GEN2 10-19: a view whose insertion.json carries the NATIVE-REF child_flop record (qfd_d2d_static r9j) is
+        # referenced at its child flops (pinreg_audit.clock_refs): equally a measured boundary mean, never a lib estimate
+        if not r or r['src'] not in MEASURED_SRC or not math.isfinite(r['rise']):
             raise ValueError(f"missing {corner} boundary mean for {lib_path}:{pin}")
         result[pin] = r['rise']
     return result
