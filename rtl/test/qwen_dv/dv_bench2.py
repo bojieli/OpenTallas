@@ -143,7 +143,7 @@ def run_sim2(name, ev, work, mut, ncyc, n=2):
     for line in lgf.read_text().split("\n"):
         if line.strip():
             c, nm, h = line.split()
-            out.setdefault(nm, []).append((int(c), int(h.replace('x', '0').replace('X', '0').replace('z', '0'), 16)))
+            out.setdefault(nm, []).append((int(c) - RESET_WARM, int(h.replace('x', '0').replace('X', '0').replace('z', '0'), 16)))
     # dv_bench names: root words leaving up = S0SC, slice 1's words leaving down = S1SC; D2D of any slice
     out["S0SC"] = [(c, conv48(w)) for c, w in out.get("S0SU", [])]
     out["S1SC"] = [(c, conv48(w)) for c, w in out.get("S1SD", [])]
