@@ -308,7 +308,8 @@ def audit(a):
         gtop, chp = a.module, ' '.join(f'-chparam {k} {v}' for k, v in sorted(params.items()))
     (work / 'gold1.ys').write_text('\n'.join([
         f'read_verilog -sv -DSYNTHESIS {rd}', f'hierarchy -check -top {gtop} {chp}',
-        'proc', 'flatten', 'memory -nomap', 'memory_map', 'opt_clean', f'rename {gtop} gold',
+        'proc', 'setattr -unset keep_hierarchy', 'setattr -mod -unset keep_hierarchy', 'flatten', 'memory -nomap',
+        'memory_map', 'opt_clean', f'rename {gtop} gold',
         'write_json gold1.json', 'write_rtlil gold1.il', '']))
     rc, t1 = run([a.yosys, '-q', '-s', 'gold1.ys'], work, 'gold1.log', a.timeout)
     if rc:
@@ -319,7 +320,8 @@ def audit(a):
     for b_, ns in regs.items():
         for n in ns:
             bit_of[n] = b_
-    pair = {s_: base for s_, (base, _rep) in states.items() if base in bit_of}
+    # older ORFS flattening spells hierarchy with '/', Yosys flatten with '.' (KV-PARAMS ep6 run copy, 10-19 12:30)
+    pair = {s_: base.replace('/', '.') for s_, (base, _rep) in states.items() if base.replace('/', '.') in bit_of}
     hit = {bit_of[b_] for b_ in pair.values()}
     gold_only = sorted(ns[0] if ns else f'bit{b_}' for b_, ns in regs.items() if b_ not in hit)
     gate_only = sorted(base for s_, (base, _rep) in states.items() if s_ not in pair)
