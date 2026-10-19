@@ -211,7 +211,26 @@ MEAS = {
                "LSKEW 8; +24 a 4-lane pass); union experts by the measured lane histogram (1-lane experts: 0)",
 }
 MEAS_ALL = ("idx_index", "idx_topk", "idx_union", "su_vop", "kvwb", "argmax", "coll_rg", "coll_am", "att4", "sm4skew")
+# step 5 (10-19 03:40): the redesigned units' MEASURED row IIs (claude/hbm-next-1019 @5bf6d2d50 / @a42351330 / @e70d3285a)
+MEAS.update({
+    "idxn": "IDX.INDEX further row = c1 x 232 / 658.9 (UNITS-IDXN units/idxn/README.md: key pass once a record, K = 8 "
+            "row streams, 4 time-shared selectors; MEASURED 1,297 + 232 (N - 1), bit-exact N = 1..6; replaces idx_index)",
+    "idx_frame": "IDX.INDEX first row c1 x 1,297 / 658.9 on EVERY record incl. AR (IDXN measured frame; the d4g frame "
+                 "the release AR model prices at 658.9 measures 1,397) -- frame sensitivity, moves AR",
+    "su_vop2": "SU.VOP N-row further row = 2 k ceil(e / 512) (k >= 1; k = 0: ceil(e / 512)) (UNITS-SUDMA2 units/sudma2: "
+               "write-port split, AB 28 / ABC 56 at e = 7,168; replaces su_vop)",
+    "argmax2": "ARGMAX.LOCAL further row 22 (UNITS-SUDMA2 wide ARGMAX ot_hnx_argmax_wide_rows; replaces argmax 169)",
+    "fused": "FUSED.HC_PRE_NORM further row 81 (priced 160) and FUSED.HC_POST 103 (priced 100), KX = 4, rgap 0 "
+             "(UNITS-FUSED units/fused/README.md, bit-exact N = 1/2/3/4/6)",
+    "fused_frame": "FUSED.HC_PRE_NORM / HC_POST first row = MEASURED c1 404 / 196 (absolute, D 5,120) on every record "
+                   "incl. AR -- frame sensitivity, moves AR",
+})
+MEAS_ALL2 = ("idxn", "idx_topk", "idx_union", "su_vop2", "kvwb", "argmax2", "coll_rg", "coll_am", "att4", "sm4skew",
+             "fused")
+IDXN_C1, IDXN_II = 1297.0, 232.0
+FUSED_MEAS = {"FUSED.HC_PRE_NORM": (404.0, 81.0), "FUSED.HC_POST": (196.0, 103.0)}
 IDX_II_MEAS, IDX_FRAME_PRICE = 953.0, 658.9
+MODE5 = [False]
 UNION_MEAS = {1: 48.0, 2: 67.0, 3: 90.0, 4: 101.0, 6: 142.0}
 ROW_GATHER_MEAS, ROW_GATHER_PRICE = 623.0, 1449.0
 LSKEW = 8.0
@@ -252,7 +271,7 @@ def _overlaps(merged, a, b):
     return i >= 0 and merged[i][1] > a
 
 
-def su_meas_ii(r, written, dyn):
+def su_meas_ii(r, written, dyn, wsplit=False):
     from hgi_sim import timing as T
     L = r.layer if isinstance(r.layer, int) else 0
     k = 0
@@ -264,6 +283,8 @@ def su_meas_ii(r, written, dyn):
             k += 1
     _, n, m, _, _ = T.eff(r.desc["A"], dyn, L)
     e = n * max(1, m)
+    if wsplit:
+        return max(1, 2 * k) * math.ceil(e / 512), k, e
     return (2 * k + 1) * math.ceil(e / 512) + 2, k, e
 
 
@@ -278,7 +299,7 @@ def apply_meas(out, N, kn: Knobs, hist, lanes, pe=1.0):
     if not ms or N <= 1:
         return notes
     dyn = T.Dyn(DT.POS)
-    written = _written_vm(out) if "su_vop" in ms else None
+    written = _written_vm(out) if ("su_vop" in ms or "su_vop2" in ms) else None
 
     def add(key, d):
         notes[key] = round(notes.get(key, 0.0) + d, 1)
@@ -292,22 +313,26 @@ def apply_meas(out, N, kn: Knobs, hist, lanes, pe=1.0):
                 c.base_cost = c.c1 + (npos - 1) * 49.2
             elif op == "DMA.KVWB_DS" and "kvwb" in ms:
                 c.base_cost = c.c1 + (npos - 1) * 8.0 + 28.0 * (npos - 1) / 256.0
+            elif op == "ARGMAX.LOCAL" and "argmax2" in ms:
+                c.base_cost = c.c1 + (npos - 1) * 22.0
             elif op == "ARGMAX.LOCAL" and "argmax" in ms:
                 c.base_cost = c.c1 + (npos - 1) * 169.0
+            elif op in FUSED_MEAS and "fused" in ms:
+                c.base_cost = c.c1 + (npos - 1) * FUSED_MEAS[op][1]
             elif op == "COLL.ROW_GATHER" and "coll_rg" in ms:
                 c.base_cost = c.c1 + (npos - 1) * c.ii * ROW_GATHER_MEAS / ROW_GATHER_PRICE
             elif op == "COLL.ARGMAX_MERGE" and "coll_am" in ms:
                 c.base_cost = c.c1 + (npos - 1) * 32.0
         elif kind == "expert_union" and "idx_union" in ms:
             c.base_cost = union_cycles(npos)
-        elif kind == "shared" and op == "SU.VOP" and "su_vop" in ms and "I" not in c.desc:
+        elif kind == "shared" and op == "SU.VOP" and ("su_vop" in ms or "su_vop2" in ms) and "I" not in c.desc:
             L = c.layer if isinstance(c.layer, int) else 0
             r2 = copy.copy(c)
             r2.desc = {k: copy.copy(v) for k, v in c.desc.items()}
             for v in r2.desc.values():
                 v.m = v.m * npos
             c1 = c.base_cost * T.su_cost(c, dyn, L)[0] / T.su_cost(r2, dyn, L)[0]
-            ii, k, e = su_meas_ii(c, written, dyn)
+            ii, k, e = su_meas_ii(c, written, dyn, wsplit="su_vop2" in ms)
             c.base_cost = c1 + (npos - 1) * ii
             c.cmtp_su = dict(c1=round(c1, 1), ii=ii, k=k, e=e)
         elif op == "SM.MATVEC" and kind in ("shared", "expert") and "sm4skew" in ms:
@@ -324,6 +349,32 @@ def apply_meas(out, N, kn: Knobs, hist, lanes, pe=1.0):
     return notes
 
 
+def apply_frames(out, kn: Knobs):
+    """step 5 frame sensitivities (every programme incl. the AR token): the MEASURED first-row cost c1 of IDX.INDEX
+    (x 1,297 / 658.9, scaled like the row II) and FUSED.HC_PRE_NORM / HC_POST (404 / 196 absolute).  Row records keep
+    their further rows ((npos - 1) x II, re-applied by apply_meas / meas_post from the new c1)."""
+    ms = set(kn.meas)
+    notes = {}
+    if not ({"idx_frame", "fused_frame"} & ms):
+        return notes
+    for c in out:
+        op = getattr(c, "orig_op", "")
+        rows = getattr(c, "ii", None) is not None
+        c1 = c.c1 if rows else c.base_cost
+        if op == "IDX.INDEX" and "idx_frame" in ms:
+            n1 = c1 * IDXN_C1 / IDX_FRAME_PRICE
+        elif op in FUSED_MEAS and "fused_frame" in ms:
+            n1 = FUSED_MEAS[op][0]
+        else:
+            continue
+        d = n1 - c1
+        if rows:
+            c.c1 = n1
+        c.base_cost += d
+        notes[op] = round(notes.get(op, 0.0) + d, 1)
+    return notes
+
+
 def meas_post(prog, N, kn: Knobs, lanes):
     """after M.post_pass (it re-costs ATT rows and the users' IDX.INDEX): ATT4 shared merge, measured IDX.INDEX"""
     ms = set(kn.meas)
@@ -336,8 +387,12 @@ def meas_post(prog, N, kn: Knobs, lanes):
         if "att4" in ms and k.startswith("att_B") and k.endswith("_rows") and r.orig_op == "ATT.PV":
             r.base_cost = max(1.0, r.base_cost - 40.0 * math.ceil(N / lanes))
         elif getattr(r, "ii", None) is not None and r.orig_op == "IDX.INDEX" and (
-                "idx_index" in ms or "idx_index_abs" in ms):
-            ii = IDX_II_MEAS if "idx_index_abs" in ms else r.c1 * IDX_II_MEAS / IDX_FRAME_PRICE
+                "idx_index" in ms or "idx_index_abs" in ms or "idxn" in ms):
+            if "idxn" in ms:      # r.c1 is the priced frame (or the measured one under idx_frame: undo that scale)
+                c1p = r.c1 / (IDXN_C1 / IDX_FRAME_PRICE) if "idx_frame" in ms else r.c1
+                ii = c1p * IDXN_II / IDX_FRAME_PRICE
+            else:
+                ii = IDX_II_MEAS if "idx_index_abs" in ms else r.c1 * IDX_II_MEAS / IDX_FRAME_PRICE
             r.base_cost = max(r.base_cost, r.c1 + (N - 1) * ii)
         if r.base_cost != old:
             notes[r.orig_op] = round(notes.get(r.orig_op, 0.0) + r.base_cost - old, 1)
@@ -355,6 +410,9 @@ def install():
     def compile_verify(recs, cf, P, **kw):
         out, st = orig_cv(recs, cf, P, **kw)
         kn = CUR["knobs"]
+        fr = apply_frames(out, kn)
+        if fr:
+            st = dict(st, cmtp_frames=fr)
         if kw.get("sm_mode") == "slots" and P > 1:
             mode = CUR.get("mode")
             hist = None
@@ -574,7 +632,19 @@ MEAS_OPTIONS = [("P4a", "(a) P=4 + shared 4-lane x store (cycle-identical to bas
                 ("P3a_u3", "(P3a) P=3 + shared 3-lane x store, 3 users", Knobs(**HEAD, P=3), 3)]
 
 
+MEAS_OPTIONS += [("P4a_rpl0", "(a) P=4 shared xs4, rpl 0 (no remainder split hardware; SM4 builds rpl 0 first)",
+                  Knobs(**dict(HEAD, rpl=False)), 4)]
+STEP5_CASES = ["priced", "idxn", "su_vop2", "argmax2", "fused", "idx_frame", "fused_frame",
+               "ALL measured v2", "ALL measured v2 + frames"]
+
+
 def meas_cases(key):
+    if MODE5[0]:
+        full = [("priced", ())] + [(m, (m,)) for m in ("idxn", "su_vop2", "argmax2", "fused", "idx_frame",
+                                                         "fused_frame")] + [
+            ("ALL measured v2", MEAS_ALL2), ("ALL measured v2 + frames", MEAS_ALL2 + ("idx_frame", "fused_frame"))]
+        return full
+
     full = [("priced", ())] + [(m, (m,)) for m in MEAS_ALL + ("idx_index_abs",)] + [
         ("ALL measured", MEAS_ALL), ("ALL measured, IDX.INDEX 953 absolute",
                                      tuple(x for x in MEAS_ALL if x != "idx_index") + ("idx_index_abs",))]
@@ -583,6 +653,7 @@ def meas_cases(key):
 
 def meas(a):
     from hgi_sim import hbm_plane_model as M
+    MODE5[0] = bool(getattr(a, "step5", False))
     st = M.load_stats(STATS)
     CUR["hist"] = lane_hists()
     out = dict(schema="opentallas.hbm_next_1019.cmtp.meas_retime.v1", generated_utc=datetime.datetime.now(
@@ -633,6 +704,7 @@ def main():
     q.add_argument("--jobs", type=int, default=4)
     q.add_argument("--only", default="")
     q.add_argument("--cases", default="", help="'|'-separated case names")
+    q.add_argument("--step5", action="store_true", help="step 5 case set (IDXN / SUDMA2 / FUSED + frames, v2 ALL)")
     o = sub.add_parser("options")
     o.add_argument("--out", type=Path, required=True)
     o.add_argument("--jobs", type=int, default=4)
