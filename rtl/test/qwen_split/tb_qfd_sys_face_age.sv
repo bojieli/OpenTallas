@@ -21,6 +21,7 @@
 module tb_qfd_sys_face_age;
     parameter integer MUT = 0;
     parameter integer MU = 0;
+    parameter integer SRAM_CAL = 0;
     parameter IMG = "img";
     reg ck = 0; always #0.4167 ck = ~ck;
     reg rst_n = 0;
@@ -58,7 +59,7 @@ module tb_qfd_sys_face_age;
     // MUT 5 (Q-STUB 10-17): one-edge provider fault pulse after reset -- the face must latch it (face_fault / fab) and FAIL
     wire prov_fault; reg prov_inj = 0; integer rel_cyc = -1;
     always @(posedge ck) begin if (rst_n && rel_cyc < 0) rel_cyc = cyc; prov_inj <= (MUT == 5) && rel_cyc >= 0 && cyc == rel_cyc + 50; end
-    qfd_sys_face #(.MUT((MUT == 4 || MUT == 5 || MUT == 7) ? 0 : MUT), .MU(MU), .GO_OFS(GO_OFS), .START_ADJ(MUT == 4 ? (720'd1 << (20 * 5)) : 720'd0), .ROM_VIAMAP({IMG, "/sys_face_cfg.viamap.hex"})) u_dut (
+    qfd_sys_face #(.MUT((MUT == 4 || MUT == 5 || MUT == 7) ? 0 : MUT), .MU(MU), .SRAM_CAL(SRAM_CAL), .GO_OFS(GO_OFS), .START_ADJ(MUT == 4 ? (720'd1 << (20 * 5)) : 720'd0), .ROM_VIAMAP({IMG, "/sys_face_cfg.viamap.hex"})) u_dut (
         .ck(ck), .rst_n(rst_n),
         .cfg_tx_we(cfg_tx_we), .cfg_rx_we(cfg_rx_we), .cfg_addr(cfg_addr), .cfg_data(cfg_data), .cal_start(cal_start), .cal_seg(cal_seg), .fwd_epoch(fwd_epoch),
         .rx_payload(rx_payload), .prog_rx_v(prog_rx_v), .prog_witness_slot(prog_witness_slot), .prog_auth_slot(prog_auth_slot),

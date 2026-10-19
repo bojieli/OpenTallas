@@ -1,0 +1,9 @@
+COLDAGE epoch77 cold_start2077 ADMdone1
+COLDAGE E_start_sample2080 relative3
+COLDAGE INIT_pin_sample2290 relative213
+COLDAGE FILL_pin_sample2351 relativeE271
+ERR @2352 cold E SEG1 header offset
+SYS_FACE_COLD_FAIL MUT1 errors1 face0 provider0
+[2088000] %Fatal: tb_qfd_sys_face_cold.sv:208: Assertion failed in tb_qfd_sys_face_cold
+%Error: /srv/opentallas-scratch/claude/sysface-cold-selector-v3-1019/rtl/test/qwen_split/tb_qfd_sys_face_cold.sv:208: Verilog $stop
+Aborting...
