@@ -44,10 +44,17 @@ module qkd_native_attention_programme #(parameter integer MUT=0,parameter intege
   capability_q<=fused_program_capability;calendar_q<=compiled_calendar;
   rx_cmd_q<=compiled_rx_cmd;tx_first_q<=compiled_tx_first;end_q<=compiled_end;
  end
+ generate if(LAND!=0)begin:g_pld
+ qkd_native59_descriptor_producer_ld producer(.ck(ck),.rst_n(rst_n),.issue(issue),
+  .authority_valid(authority_valid),.authority_epoch(authority_epoch),.authority_token(authority_token),
+  .authority_position(authority_position),.authority_stage(authority_stage),
+  .descriptor_valid(load),.descriptor(command),.tag(command_tag),.fault(producer_fault));
+ end else begin:g_pcd
  qkd_native59_descriptor_producer producer(.ck(ck),.rst_n(rst_n),.issue(issue),
   .authority_valid(authority_valid),.authority_epoch(authority_epoch),.authority_token(authority_token),
   .authority_position(authority_position),.authority_stage(authority_stage),
   .descriptor_valid(load),.descriptor(command),.tag(command_tag),.fault(producer_fault));
+ end endgenerate
  qkd_native_attention_static_ctl #(.MUT(MUT),.LAND(LAND)) ctl(
   .load(load),.command(command),.command_tag(command_tag),.fault(ctl_fault),
   .ck(ck),
@@ -99,4 +106,35 @@ module qkd_native_attention_programme #(parameter integer MUT=0,parameter intege
  end else begin:g_prgc
   assign prg_l=prg_w;
  end endgenerate
+endmodule
+
+// KV-ATTNKIT 10-18: qkd_native59_descriptor_producer with the authority check behind its pin flops (programme LAND=1; gate
+// g2: i_ctl authority_token -> tag capture enable 7 levels, 56 endpoints).  The original checks authority_valid / token /
+// position / stage on the pins and uses the result as the capture enable of tag / descriptor.  Here the authority pins
+// land in plain flops with the issue edge, tag / descriptor load on issue & !fault, and the check runs on the landed copy:
+//   descriptor_valid = iss_l & !bad_l,  fault = f_r | (iss_l & bad_l)
+// = the original's outputs edge for edge; tag / descriptor differ only on a faulting issue (then fault holds, no load).
+module qkd_native59_descriptor_producer_ld(
+ input wire ck,rst_n,issue,authority_valid,
+ input wire [15:0] authority_epoch,
+ input wire [17:0] authority_token,authority_position,
+ input wire [5:0] authority_stage,
+ output wire descriptor_valid,output reg [379:0] descriptor,
+ output reg [58:0] tag,output wire fault
+);
+ localparam [379:0] NATIVE59={24'd0,1'b0,1'b0,1'b1,1'b1,
+ 24'd1,24'd1,24'd3167,1'b0,24'd0,4'd0,3'd0,
+ 24'd0,24'd0,24'd1,24'd13696,24'd0,24'd0,24'd0,24'd0,
+ 1'b1,18'd128,18'd1,18'd512,1'b1};
+ reg iss_l,f_r,av_l;reg [17:0] tok_l,pos_l;reg [5:0] st_l;
+ wire bad_l=!av_l||tok_l>=151936||pos_l>=8192||st_l<1||st_l>36;
+ assign descriptor_valid=iss_l&&!bad_l;
+ assign fault=f_r||(iss_l&&bad_l);
+ always @(posedge ck or negedge rst_n)
+  if(!rst_n)begin iss_l<=0;f_r<=0;descriptor<=0;tag<=0;end
+  else begin
+   iss_l<=issue&&!fault;f_r<=fault;
+   if(issue&&!fault)begin descriptor<=NATIVE59;tag<={authority_epoch,authority_stage,authority_token,authority_position[12:0],6'd0};end
+  end
+ always @(posedge ck)begin av_l<=authority_valid;tok_l<=authority_token;pos_l<=authority_position;st_l<=authority_stage;end
 endmodule

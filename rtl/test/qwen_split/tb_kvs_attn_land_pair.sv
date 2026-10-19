@@ -13,7 +13,7 @@
 // beat one edge before the window: with R in RESULT_AGE the window ends on the root's last running age), and the
 // RX / TX record faults the landing moves: 8 CMD data bit 300 set, 9 Q beat 6 wrong epoch, 10 Q beat 9 missing,
 // 11 an extra RX record after the Q run, 12 TX slot 3 wrong kind, 13 a unit fault during the RESULT run, 14 Q beat 4
-// wrong kind (STATUS on the RX face).  Modes 1..14 must fault A (else the stimulus did not reach the case).
+// wrong kind (STATUS on the RX face), 15 an out-of-range authority token (descriptor producer fault).  Modes 1..14 must fault A (else the stimulus did not reach the case).
 // One line: KVS_LANDPAIR PASS|FAIL mode=M bmut=B fmut=F checks=N ...
 module tb_kvs_attn_land_pair;
  parameter integer BMUT=0,FMUT=0;
@@ -22,7 +22,7 @@ module tb_kvs_attn_land_pair;
  localparam integer REQ_AGE=5;
  localparam integer TXF=REQ_AGE+1+RESULT_AGE+1;
  reg ck=0;always #5 ck=~ck;
- reg rst_n=0,issue=0,run=0,rx_event=0;integer mode=0;
+ reg rst_n=0,issue=0,run=0,rx_event=0;integer mode=0;reg [17:0] tok=18'd19;
  reg [547:0] payload=0;
  reg slot=0;reg [4:0] sbeat=0;reg [3:0] skind=0;
  reg fv=0;reg [4:0] fb=0;reg [511:0] fd=0;reg [15:0] fe=0;reg [9:0] uf=0;
@@ -33,7 +33,7 @@ module tb_kvs_attn_land_pair;
  wire rv_a,rdone_a,sfault_a,rready_a;wire [4:0] rbeat_a;wire [511:0] rdata_a;wire [15:0] repoch_a;wire [5:0] rlayer_a;
  qkd_native_attention_programme #(.MUT(0),.LAND(0)) u_prog_a(.ck(ck),.rst_n(rst_n),.issue(issue),.run(run),
   .fused_program_capability(1'b1),.authority_valid(1'b1),.authority_epoch(16'd17),
-  .authority_token(18'd19),.authority_position(18'd999),.authority_stage(6'd7),
+  .authority_token(tok),.authority_position(18'd999),.authority_stage(6'd7),
   .compiled_calendar({R,P1,P0,PV,112'd0}),.compiled_rx_cmd(16'd4),.compiled_tx_first(16'(TXF)),.compiled_end(16'(TXF+34)),
   .rx_event(rx_event),.rx_payload(payload),.tx_slot(slot),.tx_slot_kind(skind),.tx_slot_beat(sbeat),
   .tx_valid(txv_a),.tx_payload(txp_a),.request_valid(req_a),.request_ready(rready_a),.request_epoch(rq_ep_a),
@@ -61,7 +61,7 @@ module tb_kvs_attn_land_pair;
  wire rv_b,rdone_b,sfault_b,rready_b;wire [4:0] rbeat_b;wire [511:0] rdata_b;wire [15:0] repoch_b;wire [5:0] rlayer_b;
  qkd_native_attention_programme #(.MUT(BMUT),.LAND(1)) u_prog_b(.ck(ck),.rst_n(rst_n),.issue(issue),.run(run),
   .fused_program_capability(1'b1),.authority_valid(1'b1),.authority_epoch(16'd17),
-  .authority_token(18'd19),.authority_position(18'd999),.authority_stage(6'd7),
+  .authority_token(tok),.authority_position(18'd999),.authority_stage(6'd7),
   .compiled_calendar({R,P1,P0,PV,112'd0}),.compiled_rx_cmd(16'd4),.compiled_tx_first(16'(TXF)),.compiled_end(16'(TXF+34)),
   .rx_event(rx_event),.rx_payload(payload),.tx_slot(slot),.tx_slot_kind(skind),.tx_slot_beat(sbeat),
   .tx_valid(txv_b),.tx_payload(txp_b),.request_valid(req_b),.request_ready(rready_b),.request_epoch(rq_ep_b),
@@ -147,6 +147,7 @@ module tb_kvs_attn_land_pair;
  end
  initial begin
   if($value$plusargs("MODE=%d",mode))begin end
+  if(mode==15)tok=18'd200000;          // authority token out of range: producer fault, no load
   repeat(3)@(negedge ck);rst_n=1;
   repeat(85)@(negedge ck);
   issue=1;@(negedge ck);issue=0;

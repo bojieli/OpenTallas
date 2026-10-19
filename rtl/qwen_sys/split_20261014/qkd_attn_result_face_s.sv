@@ -49,13 +49,15 @@ module qkd_attn_result_face_s #(
  output wire result_valid,output wire [4:0] result_beat,output wire [511:0] result_data,
  output wire [15:0] result_epoch,output wire [5:0] result_layer,
  output wire result_done,output wire service_fault,
- output reg result_fault,
+ output wire result_fault,
  output wire [7:0] hdr_l
 );
  // calendar fields: R [175:160], P1 [159:144], P0 [143:128], PV_START [127:112]
  wire [15:0] c_pv=cal[127:112],c_p0=cal[143:128],c_p1=cal[159:144],c_r=cal[175:160];
  wire [15:0] c_lastp=(c_p0>c_p1)?c_p0:c_p1;
  wire [15:0] c_last=(MUT==4||c_lastp>c_r)?c_lastp:c_r;   // max(P0, P1, R): the stream join waits for R (qkd_pv_fin_s)
+ reg rf;                          // sticky result fault (CAL_PIPE: result_fault = rf | the landed beat check)
+ reg l_win;reg [4:0] l_boff;reg [15:0] l_fe,l_ep;
  reg [15:0] res_t;                // RESULT_AGE of the running command (beat 0 arrival)
  reg [511:0] rdata;reg [4:0] rbeat;reg emitting,done_r;
  reg fv_d;reg [4:0] fb_d;reg [511:0] fd_d;
@@ -68,25 +70,33 @@ module qkd_attn_result_face_s #(
  wire [15:0] boff=age-res_t;
  wire in_win=running&&!start_qk&&(age>=res_t)&&(boff<16'd32);
  always @(posedge ck or negedge rst_n)begin
-  if(!rst_n)begin emitting<=0;rbeat<=0;done_r<=0;result_fault<=0;res_t<=16'hffff;fv_d<=0;cp_sq<=0;end
+  if(!rst_n)begin emitting<=0;rbeat<=0;done_r<=0;rf<=0;l_win<=0;res_t<=16'hffff;fv_d<=0;cp_sq<=0;end
   else begin
    done_r<=0;fv_d<=f_valid;cp_sq<=start_qk&&CAL_PIPE!=0;
    if(CAL_PIPE==0)begin if(start_qk)res_t<=c_pv+c_last+16'd16+16'(F_DLY);end
-   else if(cp_ld)begin res_t<=res_c;if(res_c<16'd2)result_fault<=1;end
-   if(f_valid!=in_win)result_fault<=1;
-   if(f_valid&&(f_beat!=boff[4:0]||f_epoch!=ep))result_fault<=1;
+   else if(cp_ld)begin res_t<=res_c;if(res_c<16'd2)rf<=1;end
+   if(CAL_PIPE==0)begin
+    if(f_valid!=in_win)rf<=1;
+    if(f_valid&&(f_beat!=boff[4:0]||f_epoch!=ep))rf<=1;
+   end else begin
+    l_win<=in_win;if(f_chk)rf<=1;
+   end
    if(fire)begin rbeat<=fbeat;emitting<=1;end
    else if(emitting)begin
     if(rbeat==((MUT==2)?5'd30:5'd31))begin emitting<=0;done_r<=1;end
-    else result_fault<=1;              // a gap inside the 32-beat run
+    else rf<=1;                        // a gap inside the 32-beat run
    end
   end
  end
  always @(posedge ck)begin
-  fb_d<=f_beat;fd_d<=f_data;
+  fb_d<=f_beat;fd_d<=f_data;l_boff<=boff[4:0];l_fe<=f_epoch;l_ep<=ep;
   if(start_qk||MUT==5)begin cp_pv<=c_pv;cp_last<=c_last;end
   if(fire)rdata<=(MUT==1)?fd_d:f_data;
  end
+ // CAL_PIPE: the beat window / index / epoch check on the landed beat header (fv_d, fb_d, l_fe; g2: fin -> result_fault
+ // 8 levels); result_fault = rf | f_chk is the original sticky flop edge for edge
+ wire f_chk=CAL_PIPE!=0&&((fv_d!=l_win)||(fv_d&&(fb_d!=l_boff||l_fe!=l_ep)));
+ assign result_fault=rf|f_chk;
  wire sf=result_fault|root_local_fault|root_io_fault|((MUT==3)?1'b0:(|unit_fault));
  wire [541:0] face={emitting,rbeat[4:0],rdata,ep,layer,done_r,sf};
  generate if(RESULT_RELAY==0)begin:g0

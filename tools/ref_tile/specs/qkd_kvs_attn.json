@@ -99,7 +99,7 @@
  "job": {
   "owner": "Claude:KV-ATTNKIT",
   "branch": "claude/kv-attnkit-1018",
-  "tag": "g2",
+  "tag": "g3",
   "purpose": "KV-INTEG/KITS-A 10-18 (RTL-BUILD-KV M1): kit of the generated singleton static tile qkd_kvs_attn.  Bench: LOCKSTEP of the kit top (one ck) against the die-bound tile of the same design point without OT_KV_TILE_KITS (per-child clock ports, all on the one die trunk), random inputs from reset + a phase with every child output wire forced random; mutants: a dropped child wire (1), two swapped wire slices (2), a missing child (3).",
   "benches": [
    {
@@ -156,7 +156,7 @@
    },
    {
     "name": "attn_land_pair",
-    "cmd": "bash tools/qwen_kv_die/kvs_attn_land_pair_bench.sh {RUN}/bench/land_pair_m0 0 0 \"0 1 2 3 4 5 6 7 8 9 10 11 12 13 14\"",
+    "cmd": "bash tools/qwen_kv_die/kvs_attn_land_pair_bench.sh {RUN}/bench/land_pair_m0 0 0 \"0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15\"",
     "expect": "pass",
     "threads": 2,
     "peak_ram_gb": 4,
