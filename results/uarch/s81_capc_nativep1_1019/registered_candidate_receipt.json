@@ -115,5 +115,13 @@
     "db": "4_1_cts.odb",
     "scope": "placement-estimated-native-STA",
     "adoption_proof": false
+  },
+  "gate_spec": {
+    "path": "physical/ref_tile/s81sl_capc_p1/spec.json",
+    "sha256": "1655bc4d0e8e126f016417c2cf3745d61b11de2357c76b8da8b907bee241c8b5"
+  },
+  "native_binding": {
+    "path": "results/rtl/s81_slice_1017/capc_nativep1_1019/native_probe_binding.json",
+    "sha256": "d867931d1554a2669b8e1a3e8073c2fb2ea9475cf76d0c51cafa366d57e0bf5c"
   }
 }
