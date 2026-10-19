@@ -30,7 +30,14 @@
 // RF_LOCAL (H-SU 2026-10-16, default 0 = unchanged): the slices register rf_bword/rf_bcmd/rf_dsec once more beside their
 //   bank group (ot_hbm_su_static_pgslice RF_LOCAL); the compiler issues classes 0..3 and 5 one edge earlier, so the
 //   class-5 command must precede the RF drain by exactly TWO edges (checked below). Nothing else here changes.
-module ot_hbm_su_static_qcore #(parameter integer MUT=0,COLLPORT=0,RF_LOCAL=0)(
+// ROOT_OPERAND (bounded numerical component, default 0 = unchanged):
+//   root_operand={valid, FP32} has its own clk_ctl pin capture at command edge E.
+//   root_select is captured with red_cmd; at E+1 it overrides only the operand,
+//   leaving the existing command, SFU/COLL, RF and lane paths unchanged otherwise.
+//   The source must present the actual root and LOAD together. A selected LOAD
+//   without that edge's valid root latches FAULT; there is no wait or substitution.
+//   Reset invalidates the capture and command selector, aborting this episode.
+module ot_hbm_su_static_qcore #(parameter integer MUT=0,COLLPORT=0,RF_LOCAL=0,ROOT_OPERAND=0)(
  input wire [63:0] clk_rf,
  input wire clk_ctl,clk_red,rst_n,
  input wire [6*9-1:0] rf_rd_cmd,
@@ -49,7 +56,9 @@ module ot_hbm_su_static_qcore #(parameter integer MUT=0,COLLPORT=0,RF_LOCAL=0)(
  input wire [4:0] rr_wa,
  input wire [255:0] rr_wd,
  input wire [31:0] sfu_x,
- output reg fault
+ output reg fault,
+ input wire [32:0] root_operand,
+ input wire root_select
 );
  wire rf_drain_now=rf_drain_cmd[1]&&(rf_drain_cmd[0]||MUT==16);   // MUT 16 (bench): src bit ignored
  wire [64*6-1:0] rf_rv; wire [64*6*2-1:0] rf_ra; wire [64*6*32-1:0] rf_q;
@@ -98,13 +107,33 @@ module ot_hbm_su_static_qcore #(parameter integer MUT=0,COLLPORT=0,RF_LOCAL=0)(
  reg rc_v; reg [2:0] rc_op; reg [9:0] rc_a,rc_b,rc_d; reg [31:0] rc_tag,rc_x;
  reg [1:0] e_sl; reg e_os,e_sfu; reg [72:8] e_f;
  always @(posedge clk_ctl)begin e_sl<=red_cmd[5:4];e_os<=red_cmd[7];e_sfu<=(COLLPORT!=0)&&red_cmd[6]&&(MUT!=64);e_f<=red_cmd[72:8];end
- // stage E: the command waits one edge with the slices' operand registers; stage E+1: operand chosen + registered
  reg e_v;
+ wire [31:0] rc_operand;
+ wire root_bad;
+ generate if(ROOT_OPERAND!=0)begin:g_root_operand
+  // Private pin capture: validity is from exactly E, never a stale prior root.
+  // Only validity/control need reset; invalid LOAD is faulted.
+  // Added state: 32 payload FF + valid FF + selector FF; no cycle added.
+  // E+1 rc_x reads the E capture; reducer ingress still samples at E+2.
+  reg [31:0] root_x;
+  reg root_v,e_root;
+  always @(posedge clk_ctl)root_x<=root_operand[31:0];
+  always @(posedge clk_ctl or negedge rst_n)
+   if(!rst_n)begin root_v<=1'b0;e_root<=1'b0;end
+   else begin root_v<=root_operand[32];e_root<=root_select;end
+  assign rc_operand=e_root?root_x:(e_os?(e_sfu?sfu_x:rf_word[4]):slice_x[e_sl*32+:32]);
+  assign root_bad=e_v&&e_root&&(e_f[72:70]==3'd0)&&!root_v;
+ end else begin:g_existing_operand
+  // This elaboration has no references to the optional, possibly omitted pins.
+  assign rc_operand=e_os?(e_sfu?sfu_x:rf_word[4]):slice_x[e_sl*32+:32];
+  assign root_bad=1'b0;
+ end endgenerate
+ // stage E: the command waits one edge with the slices' operand registers; stage E+1: operand chosen + registered
  always @(posedge clk_ctl or negedge rst_n)if(!rst_n)e_v<=1'b0; else e_v<=red_cmd[73];
  always @(posedge clk_ctl or negedge rst_n)if(!rst_n)rc_v<=1'b0; else rc_v<=e_v;
  always @(posedge clk_ctl)begin
   rc_op<=e_f[72:70];rc_a<=e_f[69:60];rc_b<=e_f[59:50];rc_d<=e_f[49:40];rc_tag<=e_f[39:8];
-  rc_x<=e_os?(e_sfu?sfu_x:rf_word[4]):slice_x[e_sl*32+:32];
+  rc_x<=rc_operand;
  end
  wire red_fault;
  ot_hbm_su_reduce_static #(.AW(10)) u_red(.clk(clk_red),.rst_n(rst_n),.cmd_valid(rc_v),.cmd_op(rc_op),.cmd_a(rc_a),
@@ -112,6 +141,6 @@ module ot_hbm_su_static_qcore #(parameter integer MUT=0,COLLPORT=0,RF_LOCAL=0)(
   .scalar_fp32(red_x),.scalar_bf16(),.fault(red_fault));
  assign red_rf_v=red_sv&&(red_tag[8]||MUT==32);                    // MUT 32 (bench): tag[8] ignored
  always @(posedge clk_ctl or negedge rst_n)
-  if(!rst_n)fault<=1'b0; else if((|rf_wconf)||dbad||red_fault)fault<=1'b1;
+  if(!rst_n)fault<=1'b0; else if((|rf_wconf)||dbad||red_fault||root_bad)fault<=1'b1;
 endmodule
 `default_nettype wire
