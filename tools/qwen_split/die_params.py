@@ -123,7 +123,7 @@ def seam_txd_c(st):
     """Compute TXD from the same seam stages used by compiler and bind."""
     import d2d_link_calendar as DLC
     full = dict(st, **{k: 0 for k in DLC.STAGE_NAMES if k not in st})
-    return [x + q for x, q in zip(DLC.producer_txd(full)['C'], DLC.PINREG_EXT['C'])]
+    return [x + q for x, q in zip(DLC.producer_txd_c(full), DLC.PINREG_EXT['C'])]
 
 
 def audit(die_v, port_bind, params=None, lanes=None, image=IMAGE, src=ROOT, compiled=None):

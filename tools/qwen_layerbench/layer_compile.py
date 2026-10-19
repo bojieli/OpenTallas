@@ -248,7 +248,7 @@ def compile_stages(ba):
 
 
 def txd_of(S, kv_codec=KV_CODEC):
-    raw_c = L.producer_txd(S)['C']           # the same function DIE_PARAM_AUDIT (e) checks the bound TXDP with
+    raw_c = L.producer_txd_c(S)              # the same function DIE_PARAM_AUDIT (e) checks the bound TXDP with
     raw_k = [S['KS_TXS'] + kv_codec + S['SK_TXP'], 2, 1, 1]
     return dict(C=raw_c, K=raw_k), {e: [x + p for x, p in zip(v, PINREG_EXT[e])] for e, v in (('C', raw_c), ('K', raw_k))}
 
