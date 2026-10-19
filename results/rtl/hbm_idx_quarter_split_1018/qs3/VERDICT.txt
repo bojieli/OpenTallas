@@ -1,0 +1,4 @@
+IDX_QUARTER_SPLIT_GATE_PASS (Codex qs3, src3 ca8a2552b, no poison case; ot-epyc4 unit oth-ubuntu-525606-1792391310, Verilator 5.050).
+INFORMATIONAL: superseded by qs4 (src5 683f0b275, + poison_payload). pos0/pos1 print "IDX_QUARTER_SPLIT PASS" then $finish;
+a second "IDX_QUARTER_SPLIT FAIL" line follows $finish in the pos logs (final-block print; the gate script's verdict is PASS) --
+qs4 owner: check the tb final block so a passing run prints no FAIL line. Mutants keyline/auxearly/rowswap FAIL as required.

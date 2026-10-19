@@ -1,0 +1,8 @@
+LEAF_EXACT_GATE_PASS (leaf_exact5, ot-epyc5 unit oth-ubuntu-3000255-1792395772, Verilator 5.050; collected HH-14 10-19 01:55)
+Source: src5 = claude/own-idxscore-leafrst-1019 @683f0b275 (per-case sources.sha256 in each dir).
+Bench: rtl/test/hbm_idx_static/run_chunk_rt_equiv.sh (tb_idx_chunk_rt_equiv, retimed leaf core vs legacy chunk, cycle-exact).
+  pos  (GAPK=2)  PASS checks 2337, outputs 1063, errors 0
+  gap4 (GAPK=4)  PASS checks 2349, outputs 1063, errors 0
+  qlate1 mutant  FAIL as required (errors 2)      fail regex: MISMATCH|CHUNK_RT_EQUIV FAIL
+  seam   mutant  FAIL as required (errors 965)    fail regex: MISMATCH|CHUNK_RT_EQUIV FAIL
+  swap   mutant  FAIL as required (errors 1063)   fail regex: MISMATCH|CHUNK_RT_EQUIV FAIL
