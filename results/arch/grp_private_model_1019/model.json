@@ -1,0 +1,46 @@
+{
+  "schema": "grp_private_structural_admission_model_v1",
+  "status": "MODEL_HOLD_NO_RTL",
+  "replicas": {
+    "GRP": 28,
+    "GRP_H": 4
+  },
+  "pruning": {
+    "GRP_pins": 80,
+    "GRP_H_pins": 428,
+    "total_pins": 3952,
+    "state_delta": 0,
+    "source_cycle_delta_SU": 0,
+    "source_cycle_delta_MU": 0,
+    "qualified_rate_delta": null
+  },
+  "remaining_abi_bits": {
+    "GRP": 4744,
+    "GRP_H": 4251
+  },
+  "pin_perimeter_lowerbound_square_um_at_6_per_um": {
+    "GRP": 197.66666666666666,
+    "GRP_H": 177.125
+  },
+  "live_EST_consumers": 128,
+  "all35_alias_deletion": "REFUSED_LIVE_EST",
+  "GEN8_final_bound_consumer_proof": null,
+  "source_composition": {
+    "actual_new_FF": null,
+    "all_driver_copy_fixedpoint": null,
+    "reset_native_edges": null,
+    "storage_banks_and_collision": null,
+    "MAC_per_cycle_delta_for_pruning": 0,
+    "memory_bytes_per_cycle_delta_for_pruning": 0,
+    "boundary_bit_rate_delta_for_pruning": 0,
+    "routing_tracks_and_capacity": null,
+    "synthesized_area_um2": null,
+    "outline": null,
+    "SU_token_edges": null,
+    "MU_token_edges": null,
+    "TT_setup_ps": null,
+    "FF_hold_ps": null,
+    "clock_spread_TT_FF_ps": null
+  },
+  "retired_7e6cbb465_census_is_selected_source_census": false
+}
