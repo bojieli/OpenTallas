@@ -1,0 +1,9 @@
+{
+  "source_commit": "c9dcc8b00",
+  "host": "ot-epyc5",
+  "test": "python3 tools/die_clock/test_spine.py",
+  "verdict": "PASS",
+  "r0": "test_spine_r0.log preserves strict 410um rejection; boundary grid allowance fixed without relaxing405um",
+  "physical_diagnostic": "/srv/opentallas-scratch/claude/codex-qwen-dieclk2-1019/forward1",
+  "physical_status": "RUNNING; not adopted"
+}

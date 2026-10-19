@@ -1,0 +1,20 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/codex-qwen-dieclk2-1019/tools/die_clock/test_spine.py", line 86, in <module>
+    f()
+    ~^^
+  File "/srv/opentallas-scratch/claude/codex-qwen-dieclk2-1019/tools/die_clock/test_spine.py", line 50, in test_forwarded_delivery_has_no_seed_compensation_and_bounded_fanout
+    rec = b.build('g/p0', (100.0, 5900.0), rt.spine_leaves(members, xy))
+  File "/srv/opentallas-scratch/claude/codex-qwen-dieclk2-1019/tools/die_clock/regtree.py", line 261, in build
+    top = self.subtree(leaves)
+  File "/srv/opentallas-scratch/claude/codex-qwen-dieclk2-1019/tools/die_clock/regtree.py", line 246, in subtree
+    children = [self.subtree([leaves[i] for i in ids]) for ids in (order[:half], order[half:])]
+                ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch/claude/codex-qwen-dieclk2-1019/tools/die_clock/regtree.py", line 246, in subtree
+    children = [self.subtree([leaves[i] for i in ids]) for ids in (order[:half], order[half:])]
+                ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch/claude/codex-qwen-dieclk2-1019/tools/die_clock/regtree.py", line 252, in subtree
+    drv, delay = self.chain(('buf', branch), route, 'R')
+                 ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch/claude/codex-qwen-dieclk2-1019/tools/die_clock/regtree.py", line 233, in chain
+    raise ValueError(f'forwarded clock corridor needs relay sites: {distance:.1f} um > 405')
+ValueError: forwarded clock corridor needs relay sites: 410.0 um > 405
