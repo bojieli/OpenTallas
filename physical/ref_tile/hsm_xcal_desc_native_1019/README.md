@@ -1,0 +1,20 @@
+# Native XC split prototype — NOT GATE READY
+
+This source-bound proposal separates descriptor/control and programme/RELOC into two physical tiles. It follows two preserved GPL-0305 failures of the previous four-macro aggregate; it is not another outline shuffle. No gate, REVIEW, submit, or physical adoption is authorized by this proposal.
+
+The programme path has two actual additional captures: descriptor sender output, then programme native input. Existing calendar input capture and its SRAM pipeline remain. Descriptor GO compares `rc == e_at-2`; unpayable lead faults. The first command remains launch+29 for the qualified high-PC/descriptor255 fixture. Configuration installation requires two extra settling edges. Return done/fault crosses programme outputQ to descriptor inputQ, then local statusQ. Completion/status are conservatively charged +2 edges. Descriptor outstanding state keeps active asserted through the last programme's returned completion. The same descriptor table and absolute programme command edge remain the contract; no global calendar shift or performance credit is claimed.
+
+The wrapper `ot_hbm_xcal_partition_t` exposes actual `clk_desc` and `clk_prog` ports, each driving its respective native tile, with same frequency and nominal phase0. The parent must implement and time those roots; this is not a generated-clock or SDC exception. Every cross-tile data path has a normal one-edge requirement. No multicycle or false data path is proposed. Put facing boundary captures within100um; longer parent reach needs a separately modeled relay.
+
+## Safe-design checklist
+
+1. PIN REGISTERS: RTL implemented. Host input/output collar, descriptor senderQ and programme native inputQ, calendar outputQ plus RELOC outputQ. No combinational input-to-output pin path. Mapped validation OPEN.
+2. REACH: model bounding diagonals258um descriptor /361um programme, below405um. Final placement and parent100um pin-hop audit OPEN.
+3. FANOUT: native SRAM bank selects are kept copies per16 output bits. Native calendar identity and valid qualification use kept copies feeding <=16 data bits; the identity predicate feeds11 copies. Survival in synthesis and complete critical-net audit OPEN.
+4. DEPTH: descriptor scheduling separated from SRAM programme issue and RELOC; <=600ps/20levels requires synthesis. OPEN.
+5. STORAGE: canonical SRAMs remain2x128x256 and2x1024x256; the added two313bit boundary captures total626bits. No new indexed flop memory or delay line>=3.
+6. FLOORPLAN: origins43.2 lattice; at least20um macro-edge access; full-width band between the two macro rows. These are provisional outlines awaiting measured standard-cell area. Descriptor canonical macro face density W9.990/E10.015pins/um exceeds literal6/um; BLOCKED pending owner scope decision. Programme W5.917/E5.875pins/um. Wide channels do not change intrinsic macro face density.
+7. CLOCK: two explicit actual roots, reset release through two registers per root, nominal phase0. TT/FF spread<=80ps, pair-relative root arrival, and hold margin0.03ns are OPEN until measured.
+8. SCHEDULE: +2 GO crossing compensated by explicit early internal GO only for eligible descriptors; +2 config settling and +2 status completion priced. No credits, dynamic backpressure, or silent late launch. Two-descriptor throughput fixture additionally checks the static next-GO transition.
+
+The model is `tools/hbm_layer_vehicle/xcal_partition_model.py`, integrated through `uarch_model.hbm_xcal_partition_model`. Proof runner is `rtl/test/hbm_accel/svg_rel/run_xcal_partition.sh` (Verilator5.050). Original released XC/collar/calendar sources remain byte-identical.

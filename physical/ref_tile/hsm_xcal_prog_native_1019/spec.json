@@ -1,0 +1,76 @@
+{
+  "name": "hsm_xcal_prog_native_1019",
+  "top": "ot_hbm_xcal_prog_native",
+  "params": {
+    "PAW": 11,
+    "PREL": 1
+  },
+  "sources": [
+    "rtl/hbm_accel/loader/service_native/ot_hbm_xcal_prog_native.sv",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_xcal_calendar_native.sv",
+    "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v"
+  ],
+  "clock_port": "clk",
+  "outline": {
+    "w": 241.92,
+    "h": 267.84,
+    "exact": true
+  },
+  "macros": [
+    {
+      "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+      "count": 1,
+      "at": [
+        43.2,
+        43.2
+      ],
+      "inst": "u_cal.g_m2.u_program_lo"
+    },
+    {
+      "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+      "count": 1,
+      "at": [
+        43.2,
+        172.8
+      ],
+      "inst": "u_cal.g_m2.u_program_hi"
+    }
+  ],
+  "pins": {
+    "W": [
+      "cfg_we",
+      "cfg_addr",
+      "cfg_data",
+      "start_v",
+      "start_base",
+      "start_limit",
+      "start_loops",
+      "start_ctx",
+      "clk",
+      "rst_n"
+    ],
+    "E": [
+      "cmd_ext",
+      "kv_desc"
+    ],
+    "S": [
+      "active",
+      "done",
+      "fault"
+    ]
+  },
+  "kind": "tile",
+  "reset_ports": [
+    "rst_n"
+  ],
+  "prototype_only": true,
+  "route": {
+    "io_hold_margin_ns": 0.03
+  },
+  "review_blockers": [
+    "Parent source/geometry review required before gate",
+    "Measured synthesis area and mapped kept-copy fanout audit OPEN",
+    "Canonical descriptor macro density scope unresolved",
+    "TT/FF pin-flop spread and linked-root phase contract OPEN"
+  ]
+}
