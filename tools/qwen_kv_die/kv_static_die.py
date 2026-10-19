@@ -212,16 +212,22 @@ ATTN_LAND_EDGES = {'K.tx_record': 1, 'ks_prg': 1, 'ks_arh': 1, 'K.rx_record': 0,
 # stack's PV pair in_e lanes: W stacks pvw_<p>.ie = in_e[255:0], E stacks .iee = in_e[511:256]).  ASTK_W re-cut: not done
 # (the frame keeps 220.32 um; the P.V tree columns are gone, so the strip has slack -- follow-up with its kit).
 ASTK_ST = AHUB_STATIC and os.environ.get('OT_KV_ASTK_ST', '1') == '1'
-# Owner-selected physical strip successor: parameters and read ages must move together.
-# Legacy/default sources keep their existing one-edge internal links and centralized e-read.
-ASTK_EXPAND = ASTK_ST and os.environ.get('OT_KV_ASTK_EXPAND', '0') == '1'
-ASTK_RL = int(os.environ.get('OT_KV_ASTK_RL', '3' if ASTK_EXPAND else '1'))
-ASTK_Z_STRIDE = 4     # actual CLOSED qkd_astk_ctl_s parameter; stride-16 benches are separate evidence
-if ASTK_RL < 1 or (not ASTK_EXPAND and ASTK_RL != 1):
-    raise ValueError('kv_static_die: ASTK RL changes require OT_KV_ASTK_EXPAND=1 and positive RTL link latency')
 ASTK_FILE = 'rtl/qwen_sys/split_20261014/qkd_astk_strip_er_die.sv'
 ACAL = ['cal[31:16]', 'cal[47:32]', 'cal[15:0]']            # astk cal = {EXP base, Z start, LMAX start} (LSB first: LMAX)
 ECTL_ST_FILE = 'rtl/qwen_sys/static_kv_20261014/qkd_static_ectl_st.sv'
+# KV-ECTL4 2026-10-18 (coordinator 0gs (d)): ONE K round trip for all 32 ECTL frames.  The hardened children of
+# qkd_ectl3_kiss_st (A qkd_static_ectla_kiss: K issuer ident line RESPONSE_LAT deep; A / B / C: ROW_RETURN_LAT =
+# RESPONSE_LAT + 7 return-slot lines, read slot at QK_ISSUE_AGE - 2) carry these as RTL parameters, so the die cannot bind a
+# per-frame value: kv_k_rt_eq.py pads every frame's K REQUEST chain (38 b, krq) so 8 (landing seg) + krq + krs stages ==
+# ECTLK_RESPONSE_LAT exactly, and the GEN fails when a frame's natural round trip exceeds it.  QK_ISSUE_AGE follows the
+# static_qk_calendar write-before-read rule (kv_static_ages.QK_WRITE_BEFORE_READ = 11): QK_ISSUE_AGE = RESPONSE_LAT + 11.
+# Budget 80: kvs14q-8503e0c89 (648 x 129.6 ECTL slots) measured 8 + krq + krs = 12..70 (worst ES_6 / WS_6); the
+# 725.76 x 261.36 frame adds 131.76 um a row engine; the 10-stage margin keeps the hardened children valid across plan
+# iterations (padding absorbs the rest).  Cost: D_QK 57 vs 28 edges a layer (~0.4 % of the token period).
+import kv_static_ages as _AGES   # noqa: E402
+ECTLK_RESPONSE_LAT = _AGES.K_RT_BUDGET
+ECTLK_QK_ISSUE_AGE = ECTLK_RESPONSE_LAT + _AGES.QK_WRITE_BEFORE_READ
+ECTLK_ROW_RETURN_LAT = ECTLK_RESPONSE_LAT + 7
 FIN = [('out_valid', 1), ('out_beat', 5), ('out_epoch', 16), ('out_data', 512)]    # pvfin fo = kvs_attn fin (LSB first)
 PVFST = ['start_pv', 'ep', 'cal[175:128]']                                        # kvs_attn pvfst = pvfin fs (65 b)
 # per-tile frames (um, ASSUMED until kits close): see place()
@@ -462,7 +468,7 @@ def _d2d_bundles():
     if 'd2db' in _G:
         return _G['d2db']
     s = K.source('rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv', 'qkd_d2d_static')
-    w = K.ports(s, {k: v for k, v in dict(MUT=0, NL=2, NTX=K.d2d_ntx_k(), PR=1, TXDP=K.compiled_txdp()).items() if k in s['parameters']})
+    w = K.ports(s, {k: v for k, v in dict(MUT=0, NL=2, NTX=K.d2d_ntx_k(), PR=1, TXDP=K.d2d_txdp_k()).items() if k in s['parameters']})
     if D2D_LISTS is None:                # standalone (--rtl): kv_die defines the bundles (it does not import us back ON)
         import kv_die as _kd
         D2DS_SVC, SEQST_RX, SEQST_KW = _kd.D2DS_SVC, _kd.SEQST_RX, _kd.SEQST_KW
@@ -1204,7 +1210,7 @@ def bindings():
     # ECTL frame re-bound to the fused A + K issuer composition (qkd_ectl3_kiss_s)
     out['qkd_ectlk'] = dict(module='qkd_ectl3_kiss_st' if ASTK_ST else 'qkd_ectl3_kiss_s',
         file=ECTL_ST_FILE if ASTK_ST else 'rtl/qwen_sys/static_kv_20261014/qkd_static_ectla_kiss.sv',
-        parameters=dict(RESPONSE_LAT=14, QK_ISSUE_AGE=62, HXK=13, MUT=0),
+        parameters=dict(RESPONSE_LAT=ECTLK_RESPONSE_LAT, QK_ISSUE_AGE=ECTLK_QK_ISSUE_AGE, HXK=13, MUT=0),
         ports=dict(si=['si'], so=['so'], t0=['t0'], t1=['t1'], e0=['e0'], e1=['e1'], e2=['e2'], e3=['e3'], s0=['s0'],
                    s1=['s1'], s2=['s2'], s3=['s3'], rq=[f for f, _ in KREQ], rs=list(KRSP), kg=list(KG), cfg=['cfg'],
                    kf=['fault'], ck_a=['ck'], rst_n=['rst_n']),
@@ -1497,7 +1503,7 @@ def _die_joins(m, K, B, add, fk, rec):
                 fk.setdefault(f'pvh_{st}_{k}', []).append((f'astk_{st}', f'vh{k}'))
             bus(f'pve_{st}', 'kv_oneway', 256, [(f'astk_{st}', 'erd'), (f'pvw_{p_}', 'ie' if st[0] == 'W' else 'iee')])
         rec['notes'].append('astk = qkd_astk_strip_er_die (KV-WIRE2 ASTK): e-read request = fork of pvh_<st>_<k> (V header), '
-                            f'e quad -> pvw in_e at ASTK_ERL {ASTK_ERL} after the fork; record astk_eread: fork + ASTK_ERL + pve stages vs the '
+                            'e quad -> pvw in_e at ASTK_ERL (7: ERL 3 + 4 tap pin-register edges, KV-ERTAP) after the fork; record astk_eread: fork + 7 + pve stages vs the '
                             'pair header path (compiler: the pair takes in_e that many edges after vh, or pad)')
     # KV-WIRE2 SEQ: the static sequencer qkd_seq_static_s reads the attention programme and the result stream header
     if SEQ_S and 'seq' in by:
@@ -2052,7 +2058,7 @@ def record(m):
 
 # KV-ERTAP 2026-10-18: qkd_astk_er_tap_st registers every pin (route b18fa696b NEEDS_RTL, I2O hold): read pin -> response
 # pin = the EP's ERL 3 + 2 request-side + 2 response-side pin-register edges.
-ASTK_ERL = 7 + 7 * (2 + ASTK_RL) if ASTK_EXPAND else 7
+ASTK_ERL = 7
 
 
 def astk_eread(m):
@@ -2147,13 +2153,18 @@ def afault_latency(m):
 
 
 def response_lat(m):
-    """per ECTL kiss frame: RESPONSE_LAT = landing seg 8 + K request + K response relay stages (kv_static_ages)"""
+    """per ECTL kiss frame: RESPONSE_LAT = landing seg 8 + K request + K response relay stages (kv_static_ages).
+    KV-ECTL4: every frame must equal ECTLK_RESPONSE_LAT (kv_k_rt_eq pads krq); a frame off the budget is a GEN error."""
     st = m.get('relay_stages', {})
-    out = {}
+    out, bad = {}, []
     for s in STACKS:
         for g in range(8):
-            out[f'ectl_{s}_{ectl_frame(g)}'] = dict(RESPONSE_LAT=8 + st.get(f'krq_{s}_{g}', 0) + st.get(f'krs_{s}_{g}', 0),
-                                        QK_ISSUE_AGE=ins()[f'ectl_a_{s}_{g}']['parameters']['QK_ISSUE_AGE'])
+            r = 8 + st.get(f'krq_{s}_{g}', 0) + st.get(f'krs_{s}_{g}', 0)
+            out[f'ectl_{s}_{ectl_frame(g)}'] = dict(RESPONSE_LAT=r, QK_ISSUE_AGE=ECTLK_QK_ISSUE_AGE)
+            if r != ECTLK_RESPONSE_LAT:
+                bad.append(f'{s}_{g} {r}')
+    if bad and m.get('k_rt_eq'):
+        raise ValueError(f'kv_static_die: K round trip != ECTLK_RESPONSE_LAT {ECTLK_RESPONSE_LAT} after kv_k_rt_eq: {bad}')
     return out
 
 

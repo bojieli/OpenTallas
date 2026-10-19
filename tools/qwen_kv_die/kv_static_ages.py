@@ -38,6 +38,12 @@ LANDING_SEG_LAT = 8      # qkd_static_kv_landing_seg header: request -> response
 ISSUER_RING_EXTRA = 7    # kv_static.validate_native_edges / static_qk_calendar: ECTL ROW_RETURN_LAT = RESPONSE_LAT + 7
 QK_WRITE_BEFORE_READ = 11  # static_qk_calendar.compile_calendar: write 7 + (seg + 2) + s < read age - 1 + s
 QK_ISSUE_AGE_KIT = 34    # template / attn_calendar QK_CONSUME (the bench-measured ECTL A age)
+# KV-ECTL4 2026-10-18 (coordinator 0gs (d)): ONE K round trip for all 32 ECTL frames (qkd_ectl3_kiss_st's hardened
+# children carry RESPONSE_LAT / ROW_RETURN_LAT / QK_ISSUE_AGE as RTL parameters): the die pads each frame's K request
+# chain to K_RT_BUDGET (kv_k_rt_eq.py) and fails when a natural round trip exceeds it.  Budget 80: kvs14q-8503e0c89
+# measured 8 + krq + krs = 12..70 on the 648 x 129.6 slots; the 725.76 x 261.36 frame adds 131.76 um a row engine; the
+# margin keeps the hardened children valid across plan iterations.  QK_ISSUE_AGE = budget + QK_WRITE_BEFORE_READ.
+K_RT_BUDGET = int(__import__('os').environ.get('OT_KV_K_RT', '80'))
 VPORT_RT_LANDING = 9     # qkd_pv16_vport r5/r6: RT = abutted landing seg -> vport 9 (KVJ-F b4d7accd4 tb_static_landing_vport:
                          # 'landing 8 + relays' faults every slot; kv_die VPORT_RT_SEG = 9) + request / return relays
 REACH_WIDE_UM = 340     # kvs13l4 OT_KV_REACH_W 36:400,296:370,100000:340 (words > 296 b)
@@ -89,12 +95,24 @@ def derive(src):
             out['k_issuer'][f'ki_{st}_{g}'] = dict(RESPONSE_LAT=r, request_relays=q, response_relays=s, landing_seg=LANDING_SEG_LAT,
                                                    cls=cls, buses=ids)
     worst = max(rl.values())
+    natural = [min(rl.values()), worst]
+    if worst > K_RT_BUDGET:
+        raise SystemExit(f'K round trip {worst} > K_RT_BUDGET {K_RT_BUDGET}: move the ECTL frames or raise the budget and '
+                         're-harden the qkd_ectl3_kiss_st children')
+    # KV-ECTL4: every frame padded to the budget (kv_k_rt_eq): one RESPONSE_LAT, one ROW_RETURN_LAT, one QK age
+    for k_ in out['k_issuer']:
+        out['k_issuer'][k_].update(RESPONSE_LAT=K_RT_BUDGET, natural_response_lat=out['k_issuer'][k_]['RESPONSE_LAT'],
+                                   request_pad=K_RT_BUDGET - out['k_issuer'][k_]['RESPONSE_LAT'])
+    rl = {k_: K_RT_BUDGET for k_ in rl}
+    worst = K_RT_BUDGET
     qk_age = max(QK_ISSUE_AGE_KIT, worst + QK_WRITE_BEFORE_READ)
     for (st, g), r in rl.items():
         out['ectla'][f'ectl_a_{st}_{g}'] = dict(ROW_RETURN_LAT=r + ISSUER_RING_EXTRA, QK_ISSUE_AGE=qk_age, cls='DERIVED')
-    out['qk'] = dict(response_lat_range=[min(rl.values()), worst], QK_ISSUE_AGE=qk_age, QK_ISSUE_AGE_kit=QK_ISSUE_AGE_KIT,
+    out['qk'] = dict(response_lat_range=[min(rl.values()), worst], natural_response_lat_range=natural, k_rt_budget=K_RT_BUDGET,
+                     QK_ISSUE_AGE=qk_age, QK_ISSUE_AGE_kit=QK_ISSUE_AGE_KIT,
                      row_latency_for_calendar=worst + 2, rule='QK_ISSUE_AGE >= max RESPONSE_LAT + 11 (static_qk_calendar write-before-read); '
-                     'one age for all 32 ECTL A: the slowest group binds the layer anyway, so equal ages cost nothing over it')
+                     'one age for all 32 ECTL A: the slowest group binds the layer anyway, so equal ages cost nothing over it; '
+                     'KV-ECTL4: every frame K round trip padded to K_RT_BUDGET on its request chain (kv_k_rt_eq.py)')
     # ---- PV16 V ports ----
     vt = src['pv144']['vport_timing']
     if not vt.get('r6', {}).get('W_equal'):

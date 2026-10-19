@@ -1,0 +1,7 @@
+Verilator 5.050 2026-07-01 rev v5.050
+TRACE c15 localstart0 rq1 rs0 captured0 slot0
+[180000] %Fatal: tb_qkd_static_k_issuer.sv:124: Assertion failed in tb_qkd_static_k_issuer.unnamedblk4: SRAM row mismatch 0 at93 got00000000 expected4200001f4200001e4200001d4200001c4200001b4200001a420000194200001842000017420000164200001542000014420000134200001242000011420000104200000f4200000e4200000d4200000c4200000b4200000a42000009420000084200000742000006420000054200000442000003420000024200000142000000
+%Error: /srv/opentallas-scratch/claude/kv-ectl4/wt-5236207f0/rtl/test/qwen_static_kv/tb_qkd_static_k_issuer.sv:124: Verilog $stop
+Aborting...
+FAIL ectl_kiss_st_k RL 80 QK 90 mut 0: 0 layers
+rc=1

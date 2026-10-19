@@ -221,8 +221,10 @@ def _place_pads(K, m, staged, prev_pt, sink_pt, n, w, h, cap, grid=10.8, rmax=60
     return out
 
 
-def equalize(K, m, bundles=None):
-    """pad the plan m in place (kv_die module K for geometry helpers); returns m"""
+def equalize(K, m, bundles=None, plan_fn=None, record_key='bundle_eq', rule=None):
+    """pad the plan m in place (kv_die module K for geometry helpers); returns m.
+    plan_fn(name, {member: stages}, walk) -> {member: pads} replaces the bundle-max plan (KV-ECTL4 kv_k_rt_eq: a fixed
+    round-trip target); record_key / rule name the record (default the record-bundle pass)."""
     by = {i.name: i for i in m['insts']}
     M = K.masters(m, 1)
 
@@ -249,7 +251,8 @@ def equalize(K, m, bundles=None):
                 raise ValueError(f'kv_bundle_eq: {name}: {si}.{port} -> {di} lands on {sorted(k[1] for k, _ in hits)} '
                                  f'at depths {sorted({v[0] for _, v in hits})}: one destination pin expected')
             info[(si, port, di)] = hits[0]
-        p = plan({k: v[1][0] for k, v in info.items()}, offs)
+        st_ = {k: v[1][0] for k, v in info.items()}
+        p = plan_fn(name, st_, lambda src: _walk(m, by, src)) if plan_fn else plan(st_, offs)
         rows = {}
         for (si, port, di), ((dinst, dport), (n, _, _)) in info.items():
             k = p[(si, port, di)]
@@ -308,10 +311,10 @@ def equalize(K, m, bundles=None):
             j = next(j for j, (b, _, _, _) in enumerate(m['buses']) if b == 'clk_core_c')
         b_, cl_, w_, eps_ = m['buses'][j]
         m['buses'][j] = (b_, cl_, w_, list(eps_) + [(row['relay'], 'ck')])
-    prev = m.get('bundle_eq') or {}
-    m['bundle_eq'] = dict(bundles={**prev.get('bundles', {}), **rec}, added=prev.get('added', []) + added,
-                          rule='every record bundle member padded to the bundle max (stages + offset) at its sink end '
-                               '(tools/qwen_kv_die/kv_bundle_eq.py)')
+    prev = m.get(record_key) or {}
+    m[record_key] = dict(bundles={**prev.get('bundles', {}), **rec}, added=prev.get('added', []) + added,
+                         rule=rule or 'every record bundle member padded to the bundle max (stages + offset) at its sink '
+                                      'end (tools/qwen_kv_die/kv_bundle_eq.py)')
     return m
 
 
