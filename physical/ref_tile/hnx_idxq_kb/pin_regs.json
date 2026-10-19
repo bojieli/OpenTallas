@@ -2,5 +2,5 @@
  "schema": "opentallas.ref_tile.pin_regs.v1",
  "top": "ot_hnx_idxn_keybuf",
  "enable": false,
- "reason": "key_in -> 2:1 replay mux -> key_out feeds the quarter scorer's kept key pin flops (ot_hbm_idx_score_quarter_static kl_r) on the SAME edge as a live line (IDXN timeline, lockstep-proven); a pin stage here would add an unpriced edge on the key path (+1 to the scorer beat in the calendar if adopted)"
+ "reason": "key_in -> 2:1 replay mux -> key_out feeds the quarter scorer's kept key pin flops (ot_hbm_idx_score_quarter_static kl_r) on the SAME edge as a live line (IDXN timeline, lockstep-proven); a pin stage here would add an unpriced edge on the key path (+1 to the scorer beat in the calendar if adopted). RS=1: the mux select is a registered per-column copy of the PRE strobe (no port -> key_out control path)"
 }

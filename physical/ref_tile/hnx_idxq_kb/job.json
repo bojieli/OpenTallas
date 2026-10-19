@@ -21,7 +21,7 @@
   "bench": [
    {
     "name": "lint",
-    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hnx_idxn_keybuf #(.NP(4)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_next/idxn/ot_hnx_idxn_keybuf.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v && echo lint-ok",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hnx_idxn_keybuf #(.NP(4), .RS(1)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_next/idxn/ot_hnx_idxn_keybuf.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v && echo lint-ok",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,

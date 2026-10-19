@@ -38,15 +38,25 @@ link = dict(COMMON, name="hnx_idxq_link", top="ot_hnx_idxq_link",
             "row-slot link (8 row slots in the d4g 64x512 banks); d4g hidx_link_pr macro column"))
 specs.append(link)
 # ---- idx_kb<q>: quarter key replay buffer, 4 PC key lines x 1,088 b x 171 beats = 17 macros 256x256 (strap pbase = 4 x half)
-kb = dict(COMMON, name="hnx_idxq_kb", top="ot_hnx_idxn_keybuf", params={"NP": 4},
+KBX = [26.568, 225.288, 424.008, 622.728]
+KBY = [(101.52, False), (142.608, True), (207.36, False), (248.448, True)]   # abutted pitch = 41.064 + 0.024
+KBM = [{"view": M256, "count": 1, "inst": "gm[0].mem", "at": [KBX[0], 38.88], "at_exact": True}]
+for c in range(4):
+    for j, (y, ab) in enumerate(KBY):
+        KBM.append({"view": M256, "count": 1, "inst": f"gm[{1 + 4 * c + j}].mem", "at": [KBX[c], y], "at_exact": True})
+kb = dict(COMMON, name="hnx_idxq_kb", top="ot_hnx_idxn_keybuf", params={"NP": 4, "RS": 1},
     sources=["rtl/hbm_next/idxn/ot_hnx_idxn_keybuf.sv", M256 + "/ot_sram_1r1w_256x256_m2_r2c2_bb.v"],
     clock_port="clk", outline={"w": 820.8, "h": 388.8},
     pins={"N": ["clk", "rst_n", "clear", "pbase", "live_v", "live_index", "pre_v", "pre_index", "replay_v", "replay_index", "fault",
                 "key_in"], "S": ["key_out"], "W": [], "E": []},
-    route=ROUTE, macros=[{"view": M256, "count": 17}],
+    # IDXQ 10-19 (gate: 17 macros in a 4 x 4 + 1 grid unrelated to the key bit order, GPL-0305): 4 columns under their
+    # key_in bit spans (column c holds bits 1,280 c .. at ~5.4 pins/um), each 2 abutted N-S pairs (pins on the macro W / E
+    # edges, bare N / S faces touch) + the 17th macro below column 0; >= 20 um channels W / E of every column.
+    route=ROUTE, macros=KBM,
     pin_regs={"enable": False, "reason": "key_in -> 2:1 replay mux -> key_out feeds the quarter scorer's kept key pin flops "
         "(ot_hbm_idx_score_quarter_static kl_r) on the SAME edge as a live line (IDXN timeline, lockstep-proven); a pin stage "
-        "here would add an unpriced edge on the key path (+1 to the scorer beat in the calendar if adopted)"},
+        "here would add an unpriced edge on the key path (+1 to the scorer beat in the calendar if adopted). RS=1: the mux "
+        "select is a registered per-column copy of the PRE strobe (no port -> key_out control path)"},
     fill_reason={"pin_bound": "8,792 key bits (4,396 in N + 4,396 out S) at <= 6 pins/um need >= 733 um faces"},
     job=JOB("q1", "HBM-NEXT P=4 IDXN quad: idx_kb<q> = key replay buffer of one quarter scorer (17 macros 256x256, 4 PC key "
             "lines x 171 beats; row 0 captures the live HBM lines, rows >= 1 replay them; one master, strap pbase)"))

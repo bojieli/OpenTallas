@@ -6,7 +6,8 @@
  "layer_cap": "M5",
  "recipe": 4,
  "params": {
-  "NP": 4
+  "NP": 4,
+  "RS": 1
  },
  "children": [],
  "inter": [],
@@ -77,12 +78,178 @@
  "macros": [
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
-   "count": 17
+   "count": 1,
+   "inst": "gm[0].mem",
+   "at": [
+    26.568,
+    38.88
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "gm[1].mem",
+   "at": [
+    26.568,
+    101.52
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "gm[2].mem",
+   "at": [
+    26.568,
+    142.608
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "gm[3].mem",
+   "at": [
+    26.568,
+    207.36
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "gm[4].mem",
+   "at": [
+    26.568,
+    248.448
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "gm[5].mem",
+   "at": [
+    225.288,
+    101.52
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "gm[6].mem",
+   "at": [
+    225.288,
+    142.608
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "gm[7].mem",
+   "at": [
+    225.288,
+    207.36
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "gm[8].mem",
+   "at": [
+    225.288,
+    248.448
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "gm[9].mem",
+   "at": [
+    424.008,
+    101.52
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "gm[10].mem",
+   "at": [
+    424.008,
+    142.608
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "gm[11].mem",
+   "at": [
+    424.008,
+    207.36
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "gm[12].mem",
+   "at": [
+    424.008,
+    248.448
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "gm[13].mem",
+   "at": [
+    622.728,
+    101.52
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "gm[14].mem",
+   "at": [
+    622.728,
+    142.608
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "gm[15].mem",
+   "at": [
+    622.728,
+    207.36
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "gm[16].mem",
+   "at": [
+    622.728,
+    248.448
+   ],
+   "at_exact": true
   }
  ],
  "pin_regs": {
   "enable": false,
-  "reason": "key_in -> 2:1 replay mux -> key_out feeds the quarter scorer's kept key pin flops (ot_hbm_idx_score_quarter_static kl_r) on the SAME edge as a live line (IDXN timeline, lockstep-proven); a pin stage here would add an unpriced edge on the key path (+1 to the scorer beat in the calendar if adopted)"
+  "reason": "key_in -> 2:1 replay mux -> key_out feeds the quarter scorer's kept key pin flops (ot_hbm_idx_score_quarter_static kl_r) on the SAME edge as a live line (IDXN timeline, lockstep-proven); a pin stage here would add an unpriced edge on the key path (+1 to the scorer beat in the calendar if adopted). RS=1: the mux select is a registered per-column copy of the PRE strobe (no port -> key_out control path)"
  },
  "fill_reason": {
   "pin_bound": "8,792 key bits (4,396 in N + 4,396 out S) at <= 6 pins/um need >= 733 um faces"

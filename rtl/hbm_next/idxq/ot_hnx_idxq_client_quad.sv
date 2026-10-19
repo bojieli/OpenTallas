@@ -71,7 +71,7 @@ module ot_hnx_idxq_client_quad #(parameter integer TP=96,K=8,RANK_W=(TP<=1?1:$cl
   // key stream: row 0 = the live service lines (captured), rows >= 1 = replay (named wires: bench mutants)
   wire live_v=kv&&kr==5'd0,replay_v=kv&&kr!=5'd0;
   wire[4395:0]klines;
-  ot_hnx_idxn_keybuf #(.NP(4)) kbuf(.clk(clk_kb[q]),.rst_n(rst_n),.clear(fs),.pbase(3'(4*H)),.live_v(live_v),.live_index(ki),
+  ot_hnx_idxn_keybuf #(.NP(4),.RS(1)) kbuf(.clk(clk_kb[q]),.rst_n(rst_n),.clear(fs),.pbase(3'(4*H)),.live_v(live_v),.live_index(ki),
    .key_in(key_lines[SQ*8792+H*4396+:4396]),.pre_v(pv),.pre_index(pi),.replay_v(replay_v),.replay_index(ki),
    .key_out(klines),.fault(kbf));
   wire[170:0]kb;
