@@ -1,0 +1,28 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/receiver-z17-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/receiver-z17-1019
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/receiver-z17-1019
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/receiver-z17-1019
+ot-run: ot-epyc8       admits  1330 GB (avail 988, growth 37, headroom 0, waiters 0/0 GB) load 15/128 running 11 disk 103 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/receiver-z17-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/receiver-z17-1019
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-1986707-1792445620 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+KVS_LANDPAIR PASS mode=0 bmut=0 fmut=0 checks=2139 errors=0 fault=0 req=1 Q=32 TX=33
+KVS_LANDPAIR PASS mode=1 bmut=0 fmut=0 checks=2132 errors=0 fault=1 req=1 Q=32 TX=0
+KVS_LANDPAIR PASS mode=2 bmut=0 fmut=0 checks=2108 errors=0 fault=1 req=1 Q=32 TX=2
+KVS_LANDPAIR PASS mode=3 bmut=0 fmut=0 checks=2106 errors=0 fault=1 req=1 Q=32 TX=0
+KVS_LANDPAIR PASS mode=4 bmut=0 fmut=0 checks=2042 errors=0 fault=1 req=1 Q=32 TX=0
+KVS_LANDPAIR PASS mode=5 bmut=0 fmut=0 checks=2108 errors=0 fault=1 req=1 Q=32 TX=0
+KVS_LANDPAIR PASS mode=6 bmut=0 fmut=0 checks=2110 errors=0 fault=1 req=1 Q=32 TX=4
+KVS_LANDPAIR PASS mode=7 bmut=0 fmut=0 checks=2117 errors=0 fault=1 req=1 Q=32 TX=12
+KVS_LANDPAIR PASS mode=8 bmut=0 fmut=0 checks=1976 errors=0 fault=1 req=0 Q=0 TX=0
+KVS_LANDPAIR PASS mode=9 bmut=0 fmut=0 checks=2054 errors=0 fault=1 req=1 Q=6 TX=0
+KVS_LANDPAIR PASS mode=10 bmut=0 fmut=0 checks=2060 errors=0 fault=1 req=1 Q=9 TX=0
+KVS_LANDPAIR PASS mode=11 bmut=0 fmut=0 checks=2106 errors=0 fault=1 req=1 Q=32 TX=0
+KVS_LANDPAIR PASS mode=12 bmut=0 fmut=0 checks=2109 errors=0 fault=1 req=1 Q=32 TX=3
+KVS_LANDPAIR PASS mode=13 bmut=0 fmut=0 checks=2112 errors=0 fault=1 req=1 Q=32 TX=6
+KVS_LANDPAIR PASS mode=14 bmut=0 fmut=0 checks=2050 errors=0 fault=1 req=1 Q=4 TX=0
+KVS_LANDPAIR PASS mode=15 bmut=0 fmut=0 checks=1976 errors=0 fault=1 req=0 Q=0 TX=0
+KVS_LANDPAIR_ALL PASS bmut=0 fmut=0 modes=16 checks=33305
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-1986707-1792445620): exit 0

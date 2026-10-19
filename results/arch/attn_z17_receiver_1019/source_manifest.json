@@ -1,0 +1,24 @@
+{
+  "base": "fe8eac3f2",
+  "flag_convention": "raw OR, nonzero true; Z0=data31:19 Z1=data31:5 Z[z+1]=word z for z=1..15",
+  "scope": "private default-off source only; no physical/native qualification",
+  "files": {
+    "rtl/qwen_sys/split_20261014/qkd_native_attention_programme.sv": {
+      "public_sha256": "6c6f1e0178d6f0def903fd9f85c96c8450e331f78e2399b496516c17eac46acc",
+      "private_path": "rtl/qwen_sys/split_20261014/qkd_native_attention_programme_z17.sv",
+      "private_sha256": "c5f103eaaf561f14d5c2d0898f9f5d509b89e5751c381605c31131bfcfeaab1d"
+    },
+    "rtl/qwen_sys/split_20261014/qkd_native_attention_static_ctl.sv": {
+      "public_sha256": "cdbf22798ae606880ecfcba24ab56220d3c253b3e4148f21ebdd2559ab35113a",
+      "private_path": "rtl/qwen_sys/split_20261014/qkd_native_attention_static_ctl_z17.sv",
+      "private_sha256": "6a0c38ea9cfc6091ffbe67e34e1af44b740d779b904f0c27c63566a61f96c511"
+    }
+  },
+  "constructor_sha256": "3b74cfc2524b9d69c219023010a6578d8ab7541c94686cb1e73f4030184e8183",
+  "public_dependencies": {
+    "qkd_native_attention_record.sv": "8b05cb0bcd886af069d6d62026f05b3229edd568eab38ea97c92879ff6c425c0",
+    "qkd_native_attention_programme.sv": "6c6f1e0178d6f0def903fd9f85c96c8450e331f78e2399b496516c17eac46acc",
+    "qkd_native59_descriptor_producer.sv": "ae0e6f50c68e316271c344f225eb2730bcf54f05fa3d4df4343d684379ca8495",
+    "qkd_native59_command_guard.sv": "d0d111ef6d9ab4d99722279fad879e1e31089a6a553ea9b4dd3863c27348baf9"
+  }
+}

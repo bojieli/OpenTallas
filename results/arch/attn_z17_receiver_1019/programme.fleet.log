@@ -1,0 +1,60 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/receiver-z17-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/receiver-z17-1019
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/receiver-z17-1019
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/receiver-z17-1019
+ot-run: ot-epyc8       admits  1330 GB (avail 988, growth 39, headroom 0, waiters 0/0 GB) load 16/128 running 10 disk 103 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/receiver-z17-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/receiver-z17-1019
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-1985916-1792445598 after 0 s
+REAL_PROGRAMME_SIM_START 2026-10-19T21:33:18+00:00
+KVS_LANDPAIR PASS mode=0 bmut=0 fmut=0 checks=2139 errors=0 fault=0 req=1 Q=32 TX=33
+Z17_PROGRAMME_ALL_OUTPUTS PASS mode=0 checks=250
+tb_programme_z17.sv:198: $finish called at 2500000 (1ps)
+KVS_LANDPAIR PASS mode=1 bmut=0 fmut=0 checks=2132 errors=0 fault=1 req=1 Q=32 TX=0
+Z17_PROGRAMME_ALL_OUTPUTS PASS mode=1 checks=250
+tb_programme_z17.sv:198: $finish called at 2500000 (1ps)
+KVS_LANDPAIR PASS mode=2 bmut=0 fmut=0 checks=2108 errors=0 fault=1 req=1 Q=32 TX=2
+Z17_PROGRAMME_ALL_OUTPUTS PASS mode=2 checks=250
+tb_programme_z17.sv:198: $finish called at 2500000 (1ps)
+KVS_LANDPAIR PASS mode=3 bmut=0 fmut=0 checks=2106 errors=0 fault=1 req=1 Q=32 TX=0
+Z17_PROGRAMME_ALL_OUTPUTS PASS mode=3 checks=250
+tb_programme_z17.sv:198: $finish called at 2500000 (1ps)
+KVS_LANDPAIR PASS mode=4 bmut=0 fmut=0 checks=2042 errors=0 fault=1 req=1 Q=32 TX=0
+Z17_PROGRAMME_ALL_OUTPUTS PASS mode=4 checks=250
+tb_programme_z17.sv:198: $finish called at 2500000 (1ps)
+KVS_LANDPAIR PASS mode=5 bmut=0 fmut=0 checks=2108 errors=0 fault=1 req=1 Q=32 TX=0
+Z17_PROGRAMME_ALL_OUTPUTS PASS mode=5 checks=250
+tb_programme_z17.sv:198: $finish called at 2500000 (1ps)
+KVS_LANDPAIR PASS mode=6 bmut=0 fmut=0 checks=2110 errors=0 fault=1 req=1 Q=32 TX=4
+Z17_PROGRAMME_ALL_OUTPUTS PASS mode=6 checks=250
+tb_programme_z17.sv:198: $finish called at 2500000 (1ps)
+KVS_LANDPAIR PASS mode=7 bmut=0 fmut=0 checks=2117 errors=0 fault=1 req=1 Q=32 TX=12
+Z17_PROGRAMME_ALL_OUTPUTS PASS mode=7 checks=250
+tb_programme_z17.sv:198: $finish called at 2500000 (1ps)
+KVS_LANDPAIR PASS mode=8 bmut=0 fmut=0 checks=1976 errors=0 fault=1 req=0 Q=0 TX=0
+Z17_PROGRAMME_ALL_OUTPUTS PASS mode=8 checks=250
+tb_programme_z17.sv:198: $finish called at 2500000 (1ps)
+KVS_LANDPAIR PASS mode=9 bmut=0 fmut=0 checks=2054 errors=0 fault=1 req=1 Q=6 TX=0
+Z17_PROGRAMME_ALL_OUTPUTS PASS mode=9 checks=250
+tb_programme_z17.sv:198: $finish called at 2500000 (1ps)
+KVS_LANDPAIR PASS mode=10 bmut=0 fmut=0 checks=2060 errors=0 fault=1 req=1 Q=9 TX=0
+Z17_PROGRAMME_ALL_OUTPUTS PASS mode=10 checks=250
+tb_programme_z17.sv:198: $finish called at 2500000 (1ps)
+KVS_LANDPAIR PASS mode=11 bmut=0 fmut=0 checks=2106 errors=0 fault=1 req=1 Q=32 TX=0
+Z17_PROGRAMME_ALL_OUTPUTS PASS mode=11 checks=250
+tb_programme_z17.sv:198: $finish called at 2500000 (1ps)
+KVS_LANDPAIR PASS mode=12 bmut=0 fmut=0 checks=2109 errors=0 fault=1 req=1 Q=32 TX=3
+Z17_PROGRAMME_ALL_OUTPUTS PASS mode=12 checks=250
+tb_programme_z17.sv:198: $finish called at 2500000 (1ps)
+KVS_LANDPAIR PASS mode=13 bmut=0 fmut=0 checks=2112 errors=0 fault=1 req=1 Q=32 TX=6
+Z17_PROGRAMME_ALL_OUTPUTS PASS mode=13 checks=250
+tb_programme_z17.sv:198: $finish called at 2500000 (1ps)
+KVS_LANDPAIR PASS mode=14 bmut=0 fmut=0 checks=2050 errors=0 fault=1 req=1 Q=4 TX=0
+Z17_PROGRAMME_ALL_OUTPUTS PASS mode=14 checks=250
+tb_programme_z17.sv:198: $finish called at 2500000 (1ps)
+KVS_LANDPAIR PASS mode=15 bmut=0 fmut=0 checks=1976 errors=0 fault=1 req=0 Q=0 TX=0
+Z17_PROGRAMME_ALL_OUTPUTS PASS mode=15 checks=250
+tb_programme_z17.sv:198: $finish called at 2500000 (1ps)
+REAL_PROGRAMME_SIM_EXIT 0 2026-10-19T21:33:19+00:00
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-1985916-1792445598): exit 0

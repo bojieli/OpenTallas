@@ -1,0 +1,57 @@
+{
+  "component": {
+    "simulator": "Icarus Verilog version 12.0 (stable) ()",
+    "sides": [
+      0,
+      1
+    ],
+    "cases_per_side": 273,
+    "checks_per_side": 4249,
+    "compared_output_bits": 1098,
+    "wrongflag_differences_per_side": 34,
+    "wrongage_differences_per_side": 34,
+    "fleet_unit": "oth-ubuntu-1980731-1792445552",
+    "exit": 0
+  },
+  "programme": {
+    "modes": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "full_output_checks_per_mode": 250,
+    "full_output_checks_total": 4000,
+    "healthy_mode0": {
+      "requests": 1,
+      "q": 32,
+      "tx": 33
+    },
+    "icarus_unit": "oth-ubuntu-1985916-1792445598",
+    "verilator_unit": "oth-ubuntu-1986707-1792445620",
+    "verilator_legacy_checks_total": 33305,
+    "simulator": "Verilator 5.050 2026-07-01 rev v5.050",
+    "exit": 0
+  },
+  "notes": [
+    "All component outputs compared with case inequality, including invalid data and sticky faults.",
+    "Enabled coherent flags and disabled garbage flags match public receiver.",
+    "Wrong-age witness supplies the actual zero flag vector from the preceding zero-payload idle capture.",
+    "Programme C receives exactly the public LAND1 B inputs; all programme outputs compared unconditionally after every posedge, including reset.",
+    "Original official A/B stimulus and valid-gated legacy comparisons retained.",
+    "Icarus provides four-state evidence; Verilator 5.050 provides pinned common-tool evidence.",
+    "No synthesis, physical closure, full-system schedule or link integration claim."
+  ]
+}

@@ -1,0 +1,152 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/receiver-z17-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/receiver-z17-1019
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/receiver-z17-1019
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/receiver-z17-1019
+ot-run: ot-epyc8       admits  1332 GB (avail 989, growth 39, headroom 0, waiters 0/0 GB) load 16/128 running 11 disk 103 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/receiver-z17-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/receiver-z17-1019
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-1980731-1792445552 after 0 s
+REAL_SIM_START 2026-10-19T21:32:32+00:00
+WITNESS WRONGFLAG side=0 case=256 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGAGE side=0 case=256 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGFLAG side=1 case=256 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGAGE side=1 case=256 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGFLAG side=0 case=256 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGAGE side=0 case=256 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGFLAG side=1 case=256 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGAGE side=1 case=256 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGFLAG side=0 case=257 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGAGE side=0 case=257 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGFLAG side=1 case=257 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGAGE side=1 case=257 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGFLAG side=0 case=257 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGAGE side=0 case=257 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGFLAG side=1 case=257 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGAGE side=1 case=257 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGFLAG side=0 case=258 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGAGE side=0 case=258 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGFLAG side=1 case=258 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGAGE side=1 case=258 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGFLAG side=0 case=258 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGAGE side=0 case=258 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGFLAG side=1 case=258 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGAGE side=1 case=258 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGFLAG side=0 case=259 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGAGE side=0 case=259 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGFLAG side=1 case=259 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGAGE side=1 case=259 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGFLAG side=0 case=259 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGAGE side=0 case=259 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGFLAG side=1 case=259 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGAGE side=1 case=259 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGFLAG side=0 case=260 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGAGE side=0 case=260 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGFLAG side=1 case=260 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGAGE side=1 case=260 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGFLAG side=0 case=260 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGAGE side=0 case=260 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGFLAG side=1 case=260 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGAGE side=1 case=260 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGFLAG side=0 case=261 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGAGE side=0 case=261 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGFLAG side=1 case=261 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGAGE side=1 case=261 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGFLAG side=0 case=261 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGAGE side=0 case=261 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGFLAG side=1 case=261 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGAGE side=1 case=261 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGFLAG side=0 case=262 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGAGE side=0 case=262 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGFLAG side=1 case=262 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGAGE side=1 case=262 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGFLAG side=0 case=262 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGAGE side=0 case=262 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGFLAG side=1 case=262 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGAGE side=1 case=262 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGFLAG side=0 case=263 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGAGE side=0 case=263 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGFLAG side=1 case=263 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGAGE side=1 case=263 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGFLAG side=0 case=263 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGAGE side=0 case=263 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGFLAG side=1 case=263 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGAGE side=1 case=263 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGFLAG side=0 case=264 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGAGE side=0 case=264 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGFLAG side=1 case=264 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGAGE side=1 case=264 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGFLAG side=0 case=264 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGAGE side=0 case=264 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGFLAG side=1 case=264 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGAGE side=1 case=264 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGFLAG side=0 case=265 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGAGE side=0 case=265 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGFLAG side=1 case=265 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGAGE side=1 case=265 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGFLAG side=0 case=265 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGAGE side=0 case=265 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGFLAG side=1 case=265 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGAGE side=1 case=265 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGFLAG side=0 case=266 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGAGE side=0 case=266 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGFLAG side=1 case=266 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGAGE side=1 case=266 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGFLAG side=0 case=266 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGAGE side=0 case=266 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGFLAG side=1 case=266 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGAGE side=1 case=266 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGFLAG side=0 case=267 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGAGE side=0 case=267 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGFLAG side=1 case=267 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGAGE side=1 case=267 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGFLAG side=0 case=267 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGAGE side=0 case=267 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGFLAG side=1 case=267 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGAGE side=1 case=267 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGFLAG side=0 case=268 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGAGE side=0 case=268 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGFLAG side=1 case=268 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGAGE side=1 case=268 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGFLAG side=0 case=268 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGAGE side=0 case=268 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGFLAG side=1 case=268 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGAGE side=1 case=268 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGFLAG side=0 case=269 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGAGE side=0 case=269 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGFLAG side=1 case=269 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGAGE side=1 case=269 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGFLAG side=0 case=269 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGAGE side=0 case=269 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGFLAG side=1 case=269 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGAGE side=1 case=269 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGFLAG side=0 case=270 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGAGE side=0 case=270 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGFLAG side=1 case=270 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGAGE side=1 case=270 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGFLAG side=0 case=270 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGAGE side=0 case=270 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGFLAG side=1 case=270 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGAGE side=1 case=270 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGFLAG side=0 case=271 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGAGE side=0 case=271 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGFLAG side=1 case=271 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGAGE side=1 case=271 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGFLAG side=0 case=271 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGAGE side=0 case=271 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGFLAG side=1 case=271 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGAGE side=1 case=271 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGFLAG side=0 case=272 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGAGE side=0 case=272 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGFLAG side=1 case=272 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGAGE side=1 case=272 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGFLAG side=0 case=272 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGAGE side=0 case=272 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+PASS side=0 cases=273 checks=4249 all_output_bits=1098 wrongflag=34 wrongage=34
+WITNESS WRONGFLAG side=1 case=272 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+WITNESS WRONGAGE side=1 case=272 ref_fault=1 mut_fault=0 ref_valid=0 mut_valid=1
+PASS side=1 cases=273 checks=4249 all_output_bits=1098 wrongflag=34 wrongage=34
+PASS RECEIVER_Z17 FOURSTATE ALL OUTPUTS BOTH SIDES
+tb_receiver_z17.sv:307: $finish called at 4249000 (1ps)
+REAL_SIM_EXIT 0 2026-10-19T21:32:33+00:00
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-1980731-1792445552): exit 0

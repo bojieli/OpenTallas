@@ -1,0 +1,6 @@
+KVS_LANDPAIR PASS mode=11 bmut=0 fmut=0 checks=2106 errors=0 fault=1 req=1 Q=32 TX=0
+Z17_PROGRAMME_ALL_OUTPUTS PASS mode=11 checks=250
+- tb_programme_z17.sv:198: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.001 s; speed 3.502 ms/s
+- Verilator: cpu 0.001 s on 1 threads; allocated 7 MB

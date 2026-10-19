@@ -1,0 +1,17 @@
+# Private ATTN receiver Z17 source
+
+This source-only, default-off family is mechanically derived from fe8eac3f2. Public programme, controller, record, and descriptor producers are unchanged. There is no synthesis, placement, timing, native-binding, or release qualification in this record.
+
+API: `qkd_native_attention_programme_z17` and `qkd_native_attention_static_ctl_z17` add input `[16:0] rx_zero17` and parameter `RX_ZERO17=0`. LAND=1 selects private `qkd_native_attention_record_ld_z17`; LAND=0 retains the public unlanded codec and ignores flags. The private programme retains the original public descriptor producers as dependencies, without duplicate definitions. Include the original programme file when elaborating.
+
+The 17 flags are raw ORs, nonzero true. Z0 = OR(data[31:19]), Z1 = OR(data[31:5]), and Z[z+1] = OR(data[32*z +: 32]) for z=1..15. The codec captures all flags in unreset, unconditional `l_zero17` flops on the exact `l_pl <= rx_payload` edge. CMD reserved-zero reconstructs `~|{l_zero17[16:2],l_zero17[0]}`; STATUS reconstructs `~|l_zero17[16:1]`. Reduction NOR preserves original four-state equality-to-zero semantics. No quiet preamble, initialized flag, or valid-data-only equivalence is assumed.
+
+Only the RX reserved-zero predicate changes when enabled. TX legality, expected epoch/layer/beat comparison, direction, fault priorities and sticky behavior, CMD full-payload comparison, service admission, age and schedule logic are preserved mechanically. Wrong or stale flags intentionally fault differently and are covered by causal witnesses; coherent producer binding remains mandatory. No extra interface latency beyond the original payload landing is introduced; the 17 new input landing flops and upstream transport/state cost must be priced by the parent component model.
+
+Reproduce the complete private files and manifest with `python3 tools/attn_z17/derive_receiver.py`. The constructor refuses changed public source hashes and asserts every edit match count.
+
+The isolated codec bench compares every one of its 1,098 output bits without valid gating. Both KV_SIDE directions each pass 273 cases and 4,249 checks under Icarus four-state simulation. Enabled coherent predicates and disabled garbage predicates match; wrong or previous-record zero predicates each cause 34 visible fault/valid differences per direction. Logs preserve these witnesses.
+
+The full programme miter derives from the existing 16-mode land-pair fixture. A third private LAND=1 instance receives exactly the public LAND=1 instance's inputs, including its service response. Every programme output (also invalid payloads, prg_l, result_reserved, ages and raw faults) is compared after every edge, including reset: 250 checks per mode, 4,000 total. Original A/B fixture checks remain present. The legal mode must remain healthy with one request, 32 Q beats and 33 TX records; malformed and service-fault modes must retain the original faults. This is a component receiver equivalence proof, not an arbitrary-input whole-chain proof.
+
+Run scripts expect a staging directory containing their listed source filenames from rtl/qwen_sys/split_20261014 and the committed testbench. All simulation runs use unpinned ot-run on the fleet; local work only derives source and records evidence. Icarus provides actual X/Z behavior; the same complete programme fixture also runs with the daemon-pinned Verilator 5.050.
