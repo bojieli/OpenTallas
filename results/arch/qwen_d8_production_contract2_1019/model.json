@@ -1,0 +1,162 @@
+{
+  "schema": "opentallas.qwen.d8.production_contract.MODEL.v1",
+  "status": "MODEL_ONLY_SOURCE_AND_PHYSICAL_ADMISSION_REFUSED",
+  "prior_model_commit": "5a266752c",
+  "component_pickup_commit": "16f76334c",
+  "production_source": [
+    {
+      "path": "tools/qwen_split/gen_relay_rtl.py",
+      "commit": "22f53efd97b219b16039486b0638e3c592d37a63",
+      "sha256": "a69006e63a8aca78c0d795a64f05826fc82cbd4623193a97decf6d5aad8953a0"
+    },
+    {
+      "path": "tools/qwen_split/lane_groups.py",
+      "commit": "22f53efd97b219b16039486b0638e3c592d37a63",
+      "sha256": "e5fb530c6a11afe603301b3be7000d46e996d713e915c0593be197e19f0cf8e7"
+    },
+    {
+      "path": "tools/qwen_split/clock_contract.py",
+      "commit": "22f53efd97b219b16039486b0638e3c592d37a63",
+      "sha256": "ebbc7a0172ed664d1a2d12add506b9254f1a805edd986d98f5e81358b1c06d99"
+    }
+  ],
+  "production_binding": {
+    "gated_D8_master": null,
+    "selected_GEN": null,
+    "instance_path": null,
+    "ordered_payload_control_valid_fields": null,
+    "actual_width": null,
+    "four_bit_K_strap": null,
+    "compiled_reset_epoch_manifest": null,
+    "source_PLL_divider_and_root_pair_phase": null,
+    "native_TT_FF_clock_and_memory_arcs": null,
+    "first_use_and_abort_calendar": null,
+    "token_LU_LS_delta": null
+  },
+  "source_findings": [
+    "gen_relay_rtl.py emits D4 masters and three K pins; cannot bind D8 unchanged",
+    "lane_groups.py computes K modulo8 and has hop0 register offset1; D8 needs modulo16 plus actual delayed-read/reset derivation",
+    "clock_contract.py explicitly leaves real PLL/divider and delivery open; related intent is not phase proof"
+  ],
+  "model_assumptions": {
+    "nominal_payload_bits": 600,
+    "depth": 8,
+    "epoch_bits": 4,
+    "stored_validity_bits_per_word": 1,
+    "parent_T_ps": 833.3333333333334,
+    "equal_frequency_stream_roots_required": true,
+    "physical_phase_authority": null,
+    "all_fields_retimed_together": true
+  },
+  "whole_storage": {
+    "write_payload_bits": 4800,
+    "duplicated_read_payload_bits": 4800,
+    "output_payload_ff": 600,
+    "total_payload_ff_in_direct_gated_architecture": 10200,
+    "write_plus_read_epoch_bits": 64,
+    "tile_partition_is_storage_waiver": false,
+    "seven_W96_prior_model_state": 12712,
+    "seven_W96_prior_model_ICGs": 119,
+    "partition_padding_bits": 72,
+    "policy": "Real ring/SRAM required; smaller tile wrappers do not erase coherent indexed storage"
+  },
+  "gated_D8_CLOCK_MODEL": {
+    "write_bank_count": 8,
+    "read_bank_count": 8,
+    "FIRST1_ICG_count": 1,
+    "bank_period_in_parent_T": 8,
+    "counter_modulus": 16,
+    "K_bits": 4,
+    "ICG_master": "ICGx1_ASAP7_75t_R",
+    "pins": {
+      "clock": "CLK",
+      "enable": "ENA",
+      "test": "SE",
+      "output": "GCLK"
+    },
+    "test_value": 0,
+    "enable_requirement": "source-root registers before ICG, true low-phase latch capture; exact edge list for every reset epoch required",
+    "absolute_generated_edge_indices": null,
+    "native_clock_family_receipt": null
+  },
+  "timing_model": {
+    "prior_observed_cases": 384,
+    "old_D4_nonpositive_setup_cases": 64,
+    "old_K_ge2_remaining_failures": 48,
+    "D4_plus1_read_overwrite_cases": 128,
+    "D4_plus1_read_negative_hold_cases": 192,
+    "D8_read_age_T_min": 1.25,
+    "D8_read_age_T_max": 4.125,
+    "D8_read_to_overwrite_gap_T_min": 3.875,
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25,
+    "cross_root_setup_reserve_ps": 150,
+    "cross_root_hold_reserve_ps": 100,
+    "ideal_remaining_setup_ps": 831.6666666666667,
+    "ideal_remaining_hold_ps": 3104.1666666666665,
+    "native_setup_margin_ps": null,
+    "native_hold_margin_ps": null,
+    "qualification": "D8 values are transformed old scenario arithmetic, not new D8 RTL or production phase proof"
+  },
+  "real_SRAM_option_MODEL": {
+    "logical_word_bits": 605,
+    "logical_depth": 8,
+    "logical_bits": 4840,
+    "slice_width": 64,
+    "slice_count": 10,
+    "minimum_physical_depth": 32,
+    "physical_bits": 20480,
+    "unused_width_bits": 35,
+    "unused_depth_rows": 24,
+    "stored_epoch_and_validity_are_not_omitted": true,
+    "macro_geometry_reference": "existing dual-clock32x64 coupon only; exact selected source and views not yet bound",
+    "reference_one_macro_raw_area_um2": 553.589568,
+    "reference_ten_macro_area_um2": 5535.89568,
+    "candidate_macro_grid": {
+      "pitch_um": 43.2,
+      "columns": 5,
+      "rows": 2,
+      "macro_grid_width_um": 216,
+      "macro_grid_height_um": 86.4,
+      "one_full_width_standard_cell_band_height_um": 43.2,
+      "minimum_structural_rectangle_um": [
+        216,
+        129.6
+      ],
+      "actual_outline": null
+    },
+    "required_ports": "Independent write/read clock, real registered synchronous read, complete masks/address/control/PG pins",
+    "candidate_read_edge": "Read macro at intended D8 read-bank edge, preserve following output FF; no extra-edge claim until source/native proof",
+    "mirror_read_bank_FFs_removed_only_if_macro_semantics_proven": 4800,
+    "remaining_input_face_FFs": null,
+    "output_payload_FFs": 600,
+    "selector_reset_control_FFs": null,
+    "clock_pin_count": 20,
+    "ICGs": null,
+    "area_of_standard_cells": null,
+    "latency_increment_vs_D8_model": null,
+    "new_read_collision_validity_reset_proof": null,
+    "actual_native_tt_ff_arcs": null,
+    "validity_alternative": "Resettable per-row valid8 with source-bound epoch lifetime; cannot assume uninitialized SRAM is zero"
+  },
+  "restart_contract_requirements": [
+    "Async assertion clears output validity and both epochs even when either clock stops",
+    "No payload use before all8 rows initialized and actual two-stage receiving qualification completes",
+    "No wait/credit/backpressure: compiler publishes finite source and receiver first-use edges",
+    "Receiver-only warm reset and producer-only abort require proven data invalidation and fixed restart calendar; paired reset assumption needs production authority",
+    "Modulo16 wraps must not alias stale payload during stopped-clock or long receiver/source reset",
+    "Every clock stop/restart must preserve slot order, enable latch state and overwrite exclusion",
+    "Source pulse width, reset recovery/removal and exact inherited reset stages must be native checked"
+  ],
+  "proof_sequence": [
+    "Bind actual source instance/ordered fields/root pair/reset sources and4bitK; fail closed on old D4 ABI",
+    "ROOT choose truthful SRAM architecture and exact macro views or explicit legitimate alternative",
+    "Prove minimum isolated D8 mechanism allK0..15, all old phase classes, FIRST0/1, cold/warm/abort/stopped clocks and arbitrary initial memory",
+    "Preserve D4 negative cases and add causal wrong epoch/slot/earlyuse/overwrite/enable mutants",
+    "Synthesize complete memory+control+pin wrappers; transparent native fanout<=32, depth/reach/allcontacts/full-face PG model",
+    "ROOT personally reviews source/model/PNG before gate; price added edges in actual compiler/token composition"
+  ],
+  "physical_qualification": false,
+  "new_RTL_written": false,
+  "new_heavy_job_started": false
+}
