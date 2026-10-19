@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 // External-interface component bench. No hierarchical force, deposit or setup.
-module native_join_bench;
+module native_join_bench #(parameter integer FIXTURE_WDOG=(1 << 22));
  localparam integer H=512, RESPONSE_DEADLINE=384;
  // All component clock ports deliberately share clk. FUNCTIONAL_ONLY.
 
@@ -101,8 +101,9 @@ reg allow_aw=1,allow_w=1;
  wire[181:0]hc;wire[743:0]tk;wire[119:0]ctl_res;
  wire package_start_v;wire[17:0]package_token,package_pos;wire[1:0]package_gen;
  reg fixture_package_ready=1,fixture_abort=0;
+ reg[7:0]fixture_service_ready=8'hff;
  wire[7:0]service_ready8;wire[127:0]service_epoch8;
- qkd_host_ctl_service_pins_rc #(.ENABLE_SERVICE(1)) ctl(.ck(clk),.rst_n(rst_n),.sys_ready(fixture_package_ready),.pb_fault(prompt_fault),.die_id(3'd0),.req({kv_base,eng_pos,eng_token,eng_start}),.pr(143'd0),.tk(tk),.service_abort(fixture_abort),.service_ready(1'b1),.begin_block(1'b0),.epoch_fault(1'b0),.service_ready8(service_ready8),.hc(hc),.res(ctl_res),.package_start_v(package_start_v),.package_token(package_token),.package_pos(package_pos),.package_gen(package_gen));
+ qkd_host_ctl_service_pins_rc #(.ENABLE_SERVICE(1),.WDOG(FIXTURE_WDOG)) ctl(.ck(clk),.rst_n(rst_n),.sys_ready(fixture_package_ready),.pb_fault(prompt_fault),.die_id(3'd0),.req({kv_base,eng_pos,eng_token,eng_start}),.pr(143'd0),.tk(tk),.service_abort(fixture_abort),.service_ready(1'b1),.begin_block(1'b0),.epoch_fault(1'b0),.service_ready8(service_ready8),.hc(hc),.res(ctl_res),.package_start_v(package_start_v),.package_token(package_token),.package_pos(package_pos),.package_gen(package_gen));
  assign eng_done=ctl_res[0];assign eng_fault=ctl_res[1];assign eng_next_token=ctl_res[19:2];assign eng_cycles=ctl_res[83:52];
  wire cmd_v,cmd_cr,hc_accept_v;wire[181:0]cmd_hc;wire[17:0]hc_token,hc_pos;wire[1:0]hc_gen;
  wire hc_station_fault;
@@ -140,7 +141,7 @@ reg allow_aw=1,allow_w=1;
   qkd_host_ctrl_token_service_packet_collected #(.DIE(d),.ENABLE_SERVICE(1),.ENABLE_TOKEN(1)) ctrl(
    .ck(clk),.rst_n(rst_n),.die_id(3'(d)),.rx_v(ctrl_rx_v[d]),.rx_d(ctrl_rx_d[512*d+:512]),.rx_cr(ctrl_rx_cr[d]),.tx_v(ctrl_tx_v[d]),.tx_d(ctrl_tx_d[512*d+:512]),.tx_cr(ctrl_tx_cr[d]),
    .local_tk(local_tk[d]),.local_kst(10'd0),.local_boot(2'b11),.cmd_v(d==0?cmd_v:1'b0),.cmd_hc(cmd_hc),.cmd_cr(cr_unused),.hc(local_hc[d]),.tk8(ctk),.kst8(),.boot8(),.seen(),.fault(ctrl_fault[d]),
-   .startup_allowed(1'b1),.local_service_ready(1'b1),.local_service_epoch(16'd0),.begin_v(1'b0),.begin_epoch(16'd0),.begin_cr(),.begin_available(),.service_begin_v(),.service_begin_epoch(),.pending_advertised(),.pending_epoch(),.service_ready8(cready),.pending_ack8(),.service_epoch8(cepoch),.ingest_permission(),
+   .startup_allowed(1'b1),.local_service_ready(fixture_service_ready[d]),.local_service_epoch(16'd0),.begin_v(1'b0),.begin_epoch(16'd0),.begin_cr(),.begin_available(),.service_begin_v(),.service_begin_epoch(),.pending_advertised(),.pending_epoch(),.service_ready8(cready),.pending_ack8(),.service_epoch8(cepoch),.ingest_permission(),
    .por_n(raw_por_n),.token_wrap_fence_valid(1'b0),.token_wrap_drained(1'b0),.token_wrap_link_reset_seen(1'b0),.token_wrap_retraining_done(1'b0),.token_allocator_fault(coordinator_fault),.package_abort(eng_fault),.abort_drained({4{fixture_drains[d]}}),
    .token_request_valid(token_request_v[d]),.token_request_ready(d==0?(coordinator_request_ready&&request_allow):1'b0),.token_request_token(token_request_token[d]),.token_request_position(token_request_pos[d]),.token_request_generation(token_request_gen[d]),
    .token_grant_valid(d==0?grant_valid:1'b0),.token_grant_ready(token_grant_ready[d]),.token_grant_epoch(grant_epoch),.token_grant_token(grant_token),.token_grant_position(grant_pos),.token_grant_generation(grant_gen),.token_grant_tag(grant_tag),
@@ -158,7 +159,7 @@ reg allow_aw=1,allow_w=1;
    .request_v(ep_request_v[d]),.request_tag(ep_request_tag[d]),.request_gen(ep_request_gen[d]),.request_trace(ep_trace[d]),.request_token(ep_request_token[d]),.request_pos(ep_request_pos[d]),.request_cr(ep_request_cr[d]),.request_aborted(),
    .cancel_valid(ctrl_cancel_v[d]),.cancel_tag(ctrl_cancel_tag[d]),.cancel_gen(ctrl_cancel_gen[d]),.cancel_done(ctrl_cancel_done[d]),.cancel_fault(ctrl_cancel_fault[d]),.cancel_drained(ctrl_cancel_drained[d]),.cancel_accepted(),.cancel_release_v(cancel_release_v[d]),.cancel_release_tag(release_tag[d]),.cancel_release_gen(release_gen[d]),.cancel_released(ep_cancel_released[d]),
    .result_v(ep_result_v[d]),.result_tag(ep_result_tag[d]),.result_gen(ep_result_gen[d]),.result_done(ep_result_done[d]),.result_fault(ep_result_fault[d]),.result_cause(ep_result_cause[d]),.result_token(ep_result_token[d]),.result_value(ep_result_value[d]),.result_cycles(ep_result_cycles[d]),.result_cr(ep_result_cr[d]),
-   .service_ready(1'b1),.native_ready(fixture_native_ready[d]),.service_epoch(16'd0),.drained({4{fixture_drains[d]}}),.context_owned(ep_owned[d]),.links_drained(1'b1),.link_reset_seen(reset_request[d]),.retrained(retrain_request[d]),.program_ready(1'b1),.program_epoch(16'd0),.program_digest(64'h0123456789abcdef),
+   .service_ready(fixture_service_ready[d]),.native_ready(fixture_native_ready[d]),.service_epoch(16'd0),.drained({4{fixture_drains[d]}}),.context_owned(ep_owned[d]),.links_drained(1'b1),.link_reset_seen(reset_request[d]),.retrained(retrain_request[d]),.program_ready(1'b1),.program_epoch(16'd0),.program_digest(64'h0123456789abcdef),
    .step_retire_native_valid(d==0?step_retire_native_valid:1'b0),.cq_native_valid_observed(d==0?cq_native_valid_observed:1'b0),.step_issue_v(d==0?step_issue_v:1'b0),.step_client_tag(step_client_tag),.step_slot(step_slot),.step_pos(step_pos),
    .step_retire_v(d==0?step_retire_v:1'b0),.step_retire_cq(step_retire_cq),.step_retire_client_tag(step_retire_client_tag),.step_retire_slot(step_retire_slot),.step_retire_pos(step_retire_pos),.step_retire_token(step_retire_token),
    .cq_commit_v(d==0?cq_commit_v:1'b0),.cq_client_tag(cq_client_tag),.cq_slot(cq_slot),.cq_pos(cq_pos),.cq_token(cq_token),
@@ -238,7 +239,7 @@ reg allow_aw=1,allow_w=1;
    expected_missing_binding_fault<=raw_done_v&&!raw_done_native_valid&&!ctl_res[86];
   end
  end
- integer edges=0,issues=0,allocations=0,dispatches=0,raw_completions=0,post_completions=0,certificates=0,event_copies=0,cq_offers=0;
+ integer edges=0,issues=0,allocations=0,dispatches=0,raw_completions=0,post_completions=0,certificates=0,event_copies=0,cq_offers=0,terminal_accepts=0;
  integer request_counts[8],request_returns[8],result_returns[8],releases[8];
  integer response_due=-1,response_step=-1,first_issue_edge=0,max_response=0;
  integer case_id=0;
@@ -267,8 +268,12 @@ reg allow_aw=1,allow_w=1;
     end
     if(ep_request_cr[r])request_returns[r]=request_returns[r]+1;
     if(ep_result_cr[r])result_returns[r]=result_returns[r]+1;
-    if(ep_cancel_released[r])releases[r]=releases[r]+1;
+    if(ep_cancel_released[r])begin
+     if(terminal_accepts==0)$fatal(1,"RELEASE_BEFORE_REAL_TERMINAL rank=%0d",r);
+     releases[r]=releases[r]+1;
+    end
    end
+   if(terminal_accepted)terminal_accepts=terminal_accepts+1;
    if(dispatch_valid)begin
     if(accepted_ranks!=8'hff)$fatal(1,"DISPATCH_MISSING_RANK");
     if(response_due!=-1)$fatal(1,"DUPLICATE_ENGINE_DISPATCH");
@@ -313,7 +318,8 @@ reg allow_aw=1,allow_w=1;
  task automatic tick(input integer n);repeat(n)@(negedge clk);#1;endtask
  initial begin
   if(!$value$plusargs("CASE=%d",case_id))case_id=0;
-  if(case_id<0||(case_id>5&&case_id!=7))$fatal(1,"CASE_NOT_IMPLEMENTED id=%0d",case_id);
+  if(case_id<0||case_id>8)$fatal(1,"CASE_NOT_IMPLEMENTED id=%0d",case_id);
+  if((case_id==6||case_id==8)&&FIXTURE_WDOG!=512)$fatal(1,"CANCELLATION_REQUIRES_SEPARATE_TYPED_WDOG512_BUILD");
   if(case_id==1)allow_aw=0;
   if(case_id==2)allow_w=0;
   if(case_id==5)fixture_package_ready=0;
@@ -328,20 +334,39 @@ reg allow_aw=1,allow_w=1;
   tick(12);fixture_certificate_v=1;tick(1);fixture_certificate_v=0;
   tick(100); // Fixture boot/service packets complete; not an ownership/checker mask.
   memory.csr_write('h010,'h1000);memory.csr_write('h018,4);memory.csr_write('h024,'h2000);memory.csr_write('h02c,4);memory.csr_write('h008,1);memory.csr_write('h01c,case_id==7?3:1);
+  if(case_id==6)begin
+   wait(token_request_v[0]);@(negedge clk);fixture_service_ready=0;
+   wait(allocated_valid);#1;
+   if(allocated_delivered)$fatal(1,"CANCEL_PREGRANT_NOT_ESTABLISHED_ALREADY_DELIVERED");
+   $display("CANCEL_ACCEPTED_UNDELIVERED e=%0d tag=%h",edges,grant_tag);
+   wait(eng_fault);#1;
+   if(allocated_delivered)$fatal(1,"CANCEL_PREGRANT_NOT_ESTABLISHED_DELIVERY_OCCURRED");
+  end
+  if(case_id==8)begin
+   wait(allocated_delivered);@(negedge clk);fixture_drains[7]=0;
+   wait(eng_fault);tick(64);
+   if(terminal_accepted||!ep_owned[7])$fatal(1,"CANCEL_POSTGRANT_DRAIN_BYPASS");
+   fixture_drains[7]=1;
+  end
   if(case_id==4||case_id==7)begin
    if(case_id==7)wait(cq_errors==2);
    else wait(request_counts[0]==1&&request_counts[1]==1&&request_counts[2]==1&&request_counts[3]==1&&request_counts[4]==1&&request_counts[5]==1&&request_counts[6]==1&&request_counts[7]==1);
    @(negedge clk);health_bad_i=1;tick(1);health_bad_i=0;
   end
-  if(case_id==4||case_id==5||case_id==7)begin
-   wait(cq_errors>=(case_id==7?3:1));tick(200);
+  if(case_id==4||case_id==5||case_id==6||case_id==7||case_id==8)begin
+   wait(cq_errors>=(case_id==7?3:1)&&raw_completions!=0);tick(200);
    if(cq_successes!=0||!rc_bad||!bridge_bad||raw_completions==0)$fatal(1,"FAIL_STOP_REPORT_OR_RAWCLEANUP errors=%0d success=%0d raw=%0d rc=%b bridge=%b",cq_errors,cq_successes,raw_completions,rc_bad,bridge_bad);
    if(case_id==5)begin
     if(allocations!=0||dispatches!=0||issues!=1)$fatal(1,"NO_NATIVE_FABRICATED_OWNER");
     for(integer r=0;r<8;r=r+1)if(request_counts[r]!=0)$fatal(1,"NO_NATIVE_REQUEST rank=%0d",r);
+   end else if(case_id==6)begin
+    if(dispatches!=0||result_returns[0]!=0)$fatal(1,"PREGRANT_CANCEL_EXECUTED_ENGINE");
+    for(integer r=0;r<8;r=r+1)if(request_counts[r]!=request_returns[r]||ep_owned[r])$fatal(1,"PREGRANT_CANCEL_RAW_DRAIN rank=%0d requests=%0d returns=%0d owned=%b",r,request_counts[r],request_returns[r],ep_owned[r]);
    end else begin
     for(integer r=0;r<8;r=r+1)if(request_counts[r]!=request_returns[r]||request_counts[r]!=result_returns[r]||ep_owned[r])$fatal(1,"FAILED_NATIVE_RAW_DRAIN rank=%0d request=%0d reqcr=%0d resultcr=%0d owned=%b",r,request_counts[r],request_returns[r],result_returns[r],ep_owned[r]);
    end
+   if(case_id==5&&(post_completions!=0||terminal_accepts!=0))$fatal(1,"NO_NATIVE_FABRICATED_POST");
+   if((case_id==6||case_id==8)&&(raw_completions!=1||allocations!=1||issues!=1))$fatal(1,"CANCEL_LATE_RAW_CLEANUP_COUNT raw=%0d alloc=%0d issues=%0d",raw_completions,allocations,issues);
    if(cq_errors!=(case_id==7?3:1))$fatal(1,"FAILURE_REPORT_EXACT_COUNT got=%0d",cq_errors);
    $display("NATIVE_JOIN_PASS FUNCTIONAL_ONLY case=%0d errors=%0d raw=%0d allocations=%0d NO_NATIVE_conditional=%b",case_id,cq_errors,raw_completions,allocations,case_id==5);
    $finish;

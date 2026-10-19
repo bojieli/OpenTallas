@@ -8,7 +8,10 @@ for r in manifest['sources']:
  if hashlib.sha256((root/r['path']).read_bytes()).hexdigest()!=r['sha256']:raise SystemExit('source hash mismatch '+r['path'])
 if (root/'compile.log').exists():raise SystemExit('preserve earlier compile.log; use new run directory')
 cmd=[os.environ.get('VERILATOR','verilator'),'--binary','--timing','--top-module','native_join_bench','-j','4','--Mdir','obj','--x-initial','unique','--x-assign','unique','-DOT_MEM_NO_INIT','-Wno-fatal','-f','sources.f']
-(root/'command.json').write_text(json.dumps({'command':cmd,'verilator':version,'mem_GB':16,'threads':4,'disk_GB':20,'scope':'FUNCTIONAL_ONLY common-clock fixture; no production calendar'},indent=2)+'\n')
+fixture_wdog=int(os.environ.get('FIXTURE_WDOG',str(1<<22)))
+if fixture_wdog not in (1<<22,512):raise SystemExit('unfrozen watchdog fixture')
+if fixture_wdog==512:cmd.append('-GFIXTURE_WDOG=512')
+(root/'command.json').write_text(json.dumps({'command':cmd,'verilator':version,'mem_GB':16,'threads':4,'disk_GB':20,'fixture_wdog':fixture_wdog,'scope':'FUNCTIONAL_ONLY common-clock fixture; no production calendar'},indent=2)+'\n')
 with (root/'compile.log').open('wb') as log:rc=subprocess.run(['/usr/bin/time','-v']+cmd,stdout=log,stderr=subprocess.STDOUT).returncode
 (root/'compile.rc').write_text(str(rc)+'\n')
 if rc:raise SystemExit(rc)
