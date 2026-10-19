@@ -1,0 +1,207 @@
+{
+  "ot-epyc4": {
+    "rc": 0,
+    "stderr": "",
+    "data": {
+      "source_exists": true,
+      "rows": {},
+      "processes": []
+    }
+  },
+  "ot-epyc5": {
+    "rc": 0,
+    "stderr": "",
+    "data": {
+      "source_exists": true,
+      "rows": {},
+      "processes": []
+    }
+  },
+  "ot-epyc6": {
+    "rc": 0,
+    "stderr": "",
+    "data": {
+      "source_exists": true,
+      "rows": {
+        "ot_hbm_hc_bankq_ft_static": {
+          "files": [
+            "v16w_ot_hbm_hc_bankq_ft_static_synth_tt.lib",
+            "etm_worst_ff.rpt",
+            "etm_worst_tt.rpt",
+            "ot_hbm_hc_bankq_ft_static.log",
+            "etm_ff.tcl",
+            "ot_hbm_hc_bankq_ft_static.docker.log",
+            "ot_hbm_hc_bankq_ft_static.sta.v",
+            "ot_hbm_hc_bankq_ft_static.files.json",
+            "etm.log",
+            "etm_tt.tcl",
+            "v16w_ot_hbm_hc_bankq_ft_static_synth_ff.lib",
+            "ot_hbm_hc_bankq_ft_static.ys",
+            "ot_hbm_hc_bankq_ft_static.hier.stat",
+            "ot_hbm_hc_bankq_ft_static.netlist.v",
+            "ot_hbm_hc_bankq_ft_static.stat"
+          ],
+          "etm_tail": "rs, 9 vias\n[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells\n[INFO ODB-0227] LEF file: /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef, created 1 library cells\n[INFO ODB-0227] LEF file: /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.lef, created 1 library cells\n[WARNING STA-1212] /tmp/lib/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib line 9184, timing group from output port.\n[WARNING STA-1212] /tmp/lib/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib line 9217, timing group from output port.\n[WARNING STA-1212] /tmp/lib/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib line 9250, timing group from output port.\n[WARNING STA-1212] /tmp/lib/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib line 9283, timing group from output port.\n[WARNING STA-1212] /tmp/lib/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib line 9316, timing group from output port.\n[WARNING STA-1212] /tmp/lib/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib line 9349, timing group from output port.\n[WARNING STA-1212] /tmp/lib/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib line 9382, timing group from output port.\n[WARNING STA-1212] /tmp/lib/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib line 10518, timing group from output port.\n[WARNING STA-1212] /tmp/lib/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib line 10551, timing group from output port.\n[WARNING STA-1212] /tmp/lib/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib line 10584, timing group from output port.\nOT_ETM_CLOCKS 1\nOT_ETM_DONE_ff\n"
+        },
+        "ot_hbm_su_static_pgslice_lg__pv1": {
+          "files": [
+            "ot_hbm_su_static_pgslice_lg__pv1.sta.v",
+            "ot_hbm_su_static_pgslice_lg__pv1.log",
+            "ot_hbm_su_static_pgslice_lg__pv1.hier.stat",
+            "etm_worst_tt.rpt",
+            "ot_hbm_su_static_pgslice_lg__pv1.ys",
+            "etm_ff.tcl",
+            "ot_hbm_su_static_pgslice_lg__pv1.netlist.v",
+            "ot_hbm_su_static_pgslice_lg__pv1.stat",
+            "ot_hbm_su_static_pgslice_lg__pv1.docker.log",
+            "etm.log",
+            "etm_tt.tcl",
+            "ot_hbm_su_static_pgslice_lg__pv1.files.json"
+          ],
+          "etm_tail": "estrictive licenses which must be honored.\n[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias\n[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells\n[INFO ODB-0227] LEF file: /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef, created 1 library cells\n[WARNING STA-1212] /tmp/lib/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib line 13178, timing group from output port.\n[WARNING STA-1212] /tmp/lib/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib line 13211, timing group from output port.\n[WARNING STA-1212] /tmp/lib/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib line 13244, timing group from output port.\n[WARNING STA-1212] /tmp/lib/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib line 13277, timing group from output port.\n[WARNING STA-1212] /tmp/lib/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib line 13310, timing group from output port.\n[WARNING STA-1212] /tmp/lib/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib line 13343, timing group from output port.\n[WARNING STA-1212] /tmp/lib/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib line 13376, timing group from output port.\n[WARNING STA-1212] /tmp/lib/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib line 14772, timing group from output port.\n[WARNING STA-1212] /tmp/lib/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib line 14805, timing group from output port.\n[WARNING STA-1212] /tmp/lib/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib line 14838, timing group from output port.\nOT_ETM_CLOCKS 621\n"
+        },
+        "ot_hbm_su_static_pgslice_lg__pv15": {
+          "files": [
+            "etm_worst_ff.rpt",
+            "ot_hbm_su_static_pgslice_lg__pv15.stat",
+            "ot_hbm_su_static_pgslice_lg__pv15.log",
+            "ot_hbm_su_static_pgslice_lg__pv15.sta.v",
+            "etm_worst_tt.rpt",
+            "etm_ff.tcl",
+            "ot_hbm_su_static_pgslice_lg__pv15.hier.stat",
+            "v16w_ot_hbm_su_static_pgslice_lg__pv15_synth_ff.lib",
+            "v16w_ot_hbm_su_static_pgslice_lg__pv15_synth_tt.lib",
+            "ot_hbm_su_static_pgslice_lg__pv15.netlist.v",
+            "etm.log",
+            "ot_hbm_su_static_pgslice_lg__pv15.ys",
+            "etm_tt.tcl",
+            "ot_hbm_su_static_pgslice_lg__pv15.files.json",
+            "ot_hbm_su_static_pgslice_lg__pv15.docker.log"
+          ],
+          "etm_tail": "ve licenses which must be honored.\n[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias\n[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells\n[INFO ODB-0227] LEF file: /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef, created 1 library cells\n[WARNING STA-1212] /tmp/lib/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib line 9184, timing group from output port.\n[WARNING STA-1212] /tmp/lib/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib line 9217, timing group from output port.\n[WARNING STA-1212] /tmp/lib/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib line 9250, timing group from output port.\n[WARNING STA-1212] /tmp/lib/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib line 9283, timing group from output port.\n[WARNING STA-1212] /tmp/lib/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib line 9316, timing group from output port.\n[WARNING STA-1212] /tmp/lib/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib line 9349, timing group from output port.\n[WARNING STA-1212] /tmp/lib/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib line 9382, timing group from output port.\n[WARNING STA-1212] /tmp/lib/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib line 10518, timing group from output port.\n[WARNING STA-1212] /tmp/lib/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib line 10551, timing group from output port.\n[WARNING STA-1212] /tmp/lib/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib line 10584, timing group from output port.\nOT_ETM_CLOCKS 621\nOT_ETM_DONE_ff\n"
+        },
+        "ot_hbm_su_static_pgslice_lg__pv2": {
+          "files": [
+            "v16w_ot_hbm_su_static_pgslice_lg__pv2_synth_ff.lib",
+            "etm_worst_ff.rpt",
+            "v16w_ot_hbm_su_static_pgslice_lg__pv2_synth_tt.lib",
+            "ot_hbm_su_static_pgslice_lg__pv2.log",
+            "ot_hbm_su_static_pgslice_lg__pv2.ys",
+            "etm_worst_tt.rpt",
+            "ot_hbm_su_static_pgslice_lg__pv2.hier.stat",
+            "etm_ff.tcl",
+            "ot_hbm_su_static_pgslice_lg__pv2.sta.v",
+            "ot_hbm_su_static_pgslice_lg__pv2.docker.log",
+            "ot_hbm_su_static_pgslice_lg__pv2.files.json",
+            "etm.log",
+            "ot_hbm_su_static_pgslice_lg__pv2.stat",
+            "etm_tt.tcl",
+            "ot_hbm_su_static_pgslice_lg__pv2.netlist.v"
+          ],
+          "etm_tail": "ve licenses which must be honored.\n[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias\n[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells\n[INFO ODB-0227] LEF file: /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef, created 1 library cells\n[WARNING STA-1212] /tmp/lib/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib line 9184, timing group from output port.\n[WARNING STA-1212] /tmp/lib/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib line 9217, timing group from output port.\n[WARNING STA-1212] /tmp/lib/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib line 9250, timing group from output port.\n[WARNING STA-1212] /tmp/lib/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib line 9283, timing group from output port.\n[WARNING STA-1212] /tmp/lib/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib line 9316, timing group from output port.\n[WARNING STA-1212] /tmp/lib/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib line 9349, timing group from output port.\n[WARNING STA-1212] /tmp/lib/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib line 9382, timing group from output port.\n[WARNING STA-1212] /tmp/lib/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib line 10518, timing group from output port.\n[WARNING STA-1212] /tmp/lib/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib line 10551, timing group from output port.\n[WARNING STA-1212] /tmp/lib/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib line 10584, timing group from output port.\nOT_ETM_CLOCKS 621\nOT_ETM_DONE_ff\n"
+        },
+        "ot_hbm_su_static_pgslice_lg__pv3": {
+          "files": [
+            "v16w_ot_hbm_su_static_pgslice_lg__pv3_synth_tt.lib",
+            "ot_hbm_su_static_pgslice_lg__pv3.stat",
+            "etm_worst_ff.rpt",
+            "ot_hbm_su_static_pgslice_lg__pv3.netlist.v",
+            "etm_worst_tt.rpt",
+            "ot_hbm_su_static_pgslice_lg__pv3.docker.log",
+            "etm_ff.tcl",
+            "v16w_ot_hbm_su_static_pgslice_lg__pv3_synth_ff.lib",
+            "ot_hbm_su_static_pgslice_lg__pv3.sta.v",
+            "ot_hbm_su_static_pgslice_lg__pv3.hier.stat",
+            "ot_hbm_su_static_pgslice_lg__pv3.files.json",
+            "etm.log",
+            "ot_hbm_su_static_pgslice_lg__pv3.ys",
+            "etm_tt.tcl",
+            "ot_hbm_su_static_pgslice_lg__pv3.log"
+          ],
+          "etm_tail": "ve licenses which must be honored.\n[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias\n[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells\n[INFO ODB-0227] LEF file: /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef, created 1 library cells\n[WARNING STA-1212] /tmp/lib/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib line 9184, timing group from output port.\n[WARNING STA-1212] /tmp/lib/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib line 9217, timing group from output port.\n[WARNING STA-1212] /tmp/lib/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib line 9250, timing group from output port.\n[WARNING STA-1212] /tmp/lib/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib line 9283, timing group from output port.\n[WARNING STA-1212] /tmp/lib/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib line 9316, timing group from output port.\n[WARNING STA-1212] /tmp/lib/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib line 9349, timing group from output port.\n[WARNING STA-1212] /tmp/lib/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib line 9382, timing group from output port.\n[WARNING STA-1212] /tmp/lib/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib line 10518, timing group from output port.\n[WARNING STA-1212] /tmp/lib/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib line 10551, timing group from output port.\n[WARNING STA-1212] /tmp/lib/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib line 10584, timing group from output port.\nOT_ETM_CLOCKS 621\nOT_ETM_DONE_ff\n"
+        },
+        "ot_hbm_su_static_pgslice_lg__pv5": {
+          "files": [
+            "ot_hbm_su_static_pgslice_lg__pv5.sta.v",
+            "ot_hbm_su_static_pgslice_lg__pv5.stat",
+            "ot_hbm_su_static_pgslice_lg__pv5.netlist.v",
+            "ot_hbm_su_static_pgslice_lg__pv5.files.json",
+            "etm_worst_tt.rpt",
+            "etm_ff.tcl",
+            "ot_hbm_su_static_pgslice_lg__pv5.log",
+            "ot_hbm_su_static_pgslice_lg__pv5.docker.log",
+            "ot_hbm_su_static_pgslice_lg__pv5.hier.stat",
+            "etm.log",
+            "ot_hbm_su_static_pgslice_lg__pv5.ys",
+            "etm_tt.tcl"
+          ],
+          "etm_tail": "estrictive licenses which must be honored.\n[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias\n[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells\n[INFO ODB-0227] LEF file: /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef, created 1 library cells\n[WARNING STA-1212] /tmp/lib/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib line 13178, timing group from output port.\n[WARNING STA-1212] /tmp/lib/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib line 13211, timing group from output port.\n[WARNING STA-1212] /tmp/lib/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib line 13244, timing group from output port.\n[WARNING STA-1212] /tmp/lib/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib line 13277, timing group from output port.\n[WARNING STA-1212] /tmp/lib/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib line 13310, timing group from output port.\n[WARNING STA-1212] /tmp/lib/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib line 13343, timing group from output port.\n[WARNING STA-1212] /tmp/lib/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib line 13376, timing group from output port.\n[WARNING STA-1212] /tmp/lib/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib line 14772, timing group from output port.\n[WARNING STA-1212] /tmp/lib/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib line 14805, timing group from output port.\n[WARNING STA-1212] /tmp/lib/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib line 14838, timing group from output port.\nOT_ETM_CLOCKS 621\n"
+        },
+        "ot_hbm_su_static_pgslice_lg__pv9": {
+          "files": [
+            "v16w_ot_hbm_su_static_pgslice_lg__pv9_synth_tt.lib",
+            "etm_worst_ff.rpt",
+            "ot_hbm_su_static_pgslice_lg__pv9.log",
+            "ot_hbm_su_static_pgslice_lg__pv9.stat",
+            "etm_worst_tt.rpt",
+            "etm_ff.tcl",
+            "ot_hbm_su_static_pgslice_lg__pv9.netlist.v",
+            "ot_hbm_su_static_pgslice_lg__pv9.ys",
+            "etm.log",
+            "etm_tt.tcl",
+            "v16w_ot_hbm_su_static_pgslice_lg__pv9_synth_ff.lib",
+            "ot_hbm_su_static_pgslice_lg__pv9.sta.v",
+            "ot_hbm_su_static_pgslice_lg__pv9.docker.log",
+            "ot_hbm_su_static_pgslice_lg__pv9.files.json",
+            "ot_hbm_su_static_pgslice_lg__pv9.hier.stat"
+          ],
+          "etm_tail": "ve licenses which must be honored.\n[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias\n[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells\n[INFO ODB-0227] LEF file: /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef, created 1 library cells\n[WARNING STA-1212] /tmp/lib/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib line 9184, timing group from output port.\n[WARNING STA-1212] /tmp/lib/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib line 9217, timing group from output port.\n[WARNING STA-1212] /tmp/lib/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib line 9250, timing group from output port.\n[WARNING STA-1212] /tmp/lib/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib line 9283, timing group from output port.\n[WARNING STA-1212] /tmp/lib/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib line 9316, timing group from output port.\n[WARNING STA-1212] /tmp/lib/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib line 9349, timing group from output port.\n[WARNING STA-1212] /tmp/lib/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib line 9382, timing group from output port.\n[WARNING STA-1212] /tmp/lib/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib line 10518, timing group from output port.\n[WARNING STA-1212] /tmp/lib/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib line 10551, timing group from output port.\n[WARNING STA-1212] /tmp/lib/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib line 10584, timing group from output port.\nOT_ETM_CLOCKS 621\nOT_ETM_DONE_ff\n"
+        }
+      },
+      "processes": [
+        "1474743   16409 bash -c export OT_SCRATCH=$(for r in /srv/opentallas-scratch /srv/opentallas-scratch2; do test -d $r/claude && echo $(df -BG --output=avail $r | tail -1) $r; done | sort -n | tail -1 | awk '{print $2}'); OT_SCRATCH=${OT_SCRATCH:-/srv/opentallas-scratch}; cd /srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1 || { echo OT_RUN_NOCD otrun-ubuntu-2280078-440785587 >&2; exit 96; }; OT_HEAVY_PRIO=die /usr/local/bin/ot-heavy --mem 48 --tag otrun-ubuntu-2280078-440785587 --max-wait 120 -- bash -c 'set -e; test ! -e /srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/ot_hbm_su_static_pgslice_lg__pv1; env MEMG=48 HIER=1 EXTRA=v16w/v16w_ot_hbm_su_static_pgslice_lg__pv1.sv,rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv WTOP=v16w_ot_hbm_su_static_pgslice_lg__pv1 bash /srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/synth_master.sh . /srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/ot_hbm_su_static_pgslice_lg__pv1 ot_hbm_su_static_pgslice_lg__pv1 ot_hbm_su_static_pgslice_lg - - --prefer v16w/prefer_ot_hbm_su_static_pgslice_lg__pv1.txt; env MEMG=48 bash tools/hbm_die_v15/synth_etm.sh . /srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/ot_hbm_su_static_pgslice_lg__pv1 ot_hbm_su_static_pgslice_lg__pv1'; rc=$?; echo \"OT_RUN_EXIT otrun-ubuntu-2280078-440785587 $rc\" >&2; exit $rc",
+        "1474884 1474743 bash tools/hbm_die_v15/synth_etm.sh . /srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/ot_hbm_su_static_pgslice_lg__pv1 ot_hbm_su_static_pgslice_lg__pv1",
+        "1480825 1474884 /usr/bin/docker run --memory-swap=48g --rm --name hdie15-etm-ot_hbm_su_static_pgslice_lg__pv1-1474884 --cpus=2 --memory=48g -v /srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1:/src:ro -v /srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/ot_hbm_su_static_pgslice_lg__pv1:/out -w /out openroad/orfs:asap7lock bash -lc    source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; mkdir -p /tmp/lib   for f in $(ls /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM | grep -E 'RVT_(TT|FF)'); do b=${f%.gz}; case $f in *.gz) zcat /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/$f > /tmp/lib/$b;; *) cp /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/$f /tmp/lib/$b;; esac; done   openroad -no_init -exit /out/etm_tt.tcl > /out/etm.log 2>&1 && openroad -no_init -exit /out/etm_ff.tcl >> /out/etm.log 2>&1",
+        "1482312   16409 bash -c export OT_SCRATCH=$(for r in /srv/opentallas-scratch /srv/opentallas-scratch2; do test -d $r/claude && echo $(df -BG --output=avail $r | tail -1) $r; done | sort -n | tail -1 | awk '{print $2}'); OT_SCRATCH=${OT_SCRATCH:-/srv/opentallas-scratch}; cd /srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1 || { echo OT_RUN_NOCD otrun-ubuntu-2291371-440972600 >&2; exit 96; }; OT_HEAVY_PRIO=die /usr/local/bin/ot-heavy --mem 48 --tag otrun-ubuntu-2291371-440972600 --max-wait 120 -- bash -c 'set -e; test ! -e /srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/ot_hbm_su_static_pgslice_lg__pv5; env MEMG=48 HIER=1 EXTRA=v16w/v16w_ot_hbm_su_static_pgslice_lg__pv5.sv,rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv WTOP=v16w_ot_hbm_su_static_pgslice_lg__pv5 bash /srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/synth_master.sh . /srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/ot_hbm_su_static_pgslice_lg__pv5 ot_hbm_su_static_pgslice_lg__pv5 ot_hbm_su_static_pgslice_lg - - --prefer v16w/prefer_ot_hbm_su_static_pgslice_lg__pv5.txt; env MEMG=48 bash tools/hbm_die_v15/synth_etm.sh . /srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/ot_hbm_su_static_pgslice_lg__pv5 ot_hbm_su_static_pgslice_lg__pv5'; rc=$?; echo \"OT_RUN_EXIT otrun-ubuntu-2291371-440972600 $rc\" >&2; exit $rc",
+        "1482453 1482312 bash tools/hbm_die_v15/synth_etm.sh . /srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/ot_hbm_su_static_pgslice_lg__pv5 ot_hbm_su_static_pgslice_lg__pv5",
+        "1487003 1482453 /usr/bin/docker run --memory-swap=48g --rm --name hdie15-etm-ot_hbm_su_static_pgslice_lg__pv5-1482453 --cpus=2 --memory=48g -v /srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1:/src:ro -v /srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/ot_hbm_su_static_pgslice_lg__pv5:/out -w /out openroad/orfs:asap7lock bash -lc    source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; mkdir -p /tmp/lib   for f in $(ls /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM | grep -E 'RVT_(TT|FF)'); do b=${f%.gz}; case $f in *.gz) zcat /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/$f > /tmp/lib/$b;; *) cp /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/$f /tmp/lib/$b;; esac; done   openroad -no_init -exit /out/etm_tt.tcl > /out/etm.log 2>&1 && openroad -no_init -exit /out/etm_ff.tcl >> /out/etm.log 2>&1"
+      ]
+    }
+  },
+  "ot-epyc7": {
+    "rc": 0,
+    "stderr": "",
+    "data": {
+      "source_exists": false,
+      "rows": {},
+      "processes": []
+    }
+  },
+  "ot-epyc8": {
+    "rc": 0,
+    "stderr": "",
+    "data": {
+      "source_exists": false,
+      "rows": {},
+      "processes": []
+    }
+  },
+  "ot-pve1": {
+    "rc": 0,
+    "stderr": "",
+    "data": {
+      "source_exists": true,
+      "rows": {},
+      "processes": []
+    }
+  },
+  "ot-agidock128": {
+    "rc": 0,
+    "stderr": "",
+    "data": {
+      "source_exists": false,
+      "rows": {},
+      "processes": []
+    }
+  }
+}

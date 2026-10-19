@@ -1,0 +1,607 @@
+{
+  "source": "6f783d0a1",
+  "overlay": "d14c90171:synth_master.sh",
+  "helper_sha256": "f6fb1510b906e4dd7b7095bd8e756466426a7cd38ffbb78a58e22576832dc7e5",
+  "status": "MODEL_NOT_EXECUTED",
+  "failed_only": [
+    {
+      "cell": "ot_hbm_su_static_pgslice_lg__pv3",
+      "row": [
+        "ot_hbm_su_static_pgslice_lg__pv3",
+        "ot_hbm_su_static_pgslice_lg",
+        "v16w_ot_hbm_su_static_pgslice_lg__pv3",
+        "48",
+        "-",
+        ""
+      ],
+      "failure": {
+        "cell": "ot_hbm_su_static_pgslice_lg__pv3",
+        "rounds": [
+          {
+            "round": 0,
+            "rc": 1,
+            "host": "ot-epyc6",
+            "extra": [
+              "v16w/v16w_ot_hbm_su_static_pgslice_lg__pv3.sv",
+              "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv"
+            ],
+            "prefer": [
+              "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv"
+            ],
+            "errors": [
+              "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv:3: ERROR: Re-definition of module `\\ot_hbm_su_static_ins__d4g_pgslice'!"
+            ]
+          }
+        ],
+        "ok": false,
+        "host": "ot-epyc6"
+      }
+    },
+    {
+      "cell": "ot_hbm_su_static_pgslice_lg__pv15",
+      "row": [
+        "ot_hbm_su_static_pgslice_lg__pv15",
+        "ot_hbm_su_static_pgslice_lg",
+        "v16w_ot_hbm_su_static_pgslice_lg__pv15",
+        "48",
+        "-",
+        ""
+      ],
+      "failure": {
+        "cell": "ot_hbm_su_static_pgslice_lg__pv15",
+        "rounds": [
+          {
+            "round": 0,
+            "rc": 1,
+            "host": "ot-epyc6",
+            "extra": [
+              "v16w/v16w_ot_hbm_su_static_pgslice_lg__pv15.sv",
+              "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv"
+            ],
+            "prefer": [
+              "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv"
+            ],
+            "errors": [
+              "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv:3: ERROR: Re-definition of module `\\ot_hbm_su_static_ins__d4g_pgslice'!"
+            ]
+          }
+        ],
+        "ok": false,
+        "host": "ot-epyc6"
+      }
+    },
+    {
+      "cell": "ot_hbm_su_static_pgslice_lg__pv2",
+      "row": [
+        "ot_hbm_su_static_pgslice_lg__pv2",
+        "ot_hbm_su_static_pgslice_lg",
+        "v16w_ot_hbm_su_static_pgslice_lg__pv2",
+        "48",
+        "-",
+        ""
+      ],
+      "failure": {
+        "cell": "ot_hbm_su_static_pgslice_lg__pv2",
+        "rounds": [
+          {
+            "round": 0,
+            "rc": 1,
+            "host": "ot-epyc6",
+            "extra": [
+              "v16w/v16w_ot_hbm_su_static_pgslice_lg__pv2.sv",
+              "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv"
+            ],
+            "prefer": [
+              "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv"
+            ],
+            "errors": [
+              "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv:3: ERROR: Re-definition of module `\\ot_hbm_su_static_ins__d4g_pgslice'!"
+            ]
+          }
+        ],
+        "ok": false,
+        "host": "ot-epyc6"
+      }
+    },
+    {
+      "cell": "ot_hbm_su_static_pgslice_lg__pv9",
+      "row": [
+        "ot_hbm_su_static_pgslice_lg__pv9",
+        "ot_hbm_su_static_pgslice_lg",
+        "v16w_ot_hbm_su_static_pgslice_lg__pv9",
+        "48",
+        "-",
+        ""
+      ],
+      "failure": {
+        "cell": "ot_hbm_su_static_pgslice_lg__pv9",
+        "rounds": [
+          {
+            "round": 0,
+            "rc": 1,
+            "host": "ot-epyc6",
+            "extra": [
+              "v16w/v16w_ot_hbm_su_static_pgslice_lg__pv9.sv",
+              "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv"
+            ],
+            "prefer": [
+              "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv"
+            ],
+            "errors": [
+              "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv:3: ERROR: Re-definition of module `\\ot_hbm_su_static_ins__d4g_pgslice'!"
+            ]
+          }
+        ],
+        "ok": false,
+        "host": "ot-epyc6"
+      }
+    },
+    {
+      "cell": "ot_hbm_su_static_pgslice_lg__pv1",
+      "row": [
+        "ot_hbm_su_static_pgslice_lg__pv1",
+        "ot_hbm_su_static_pgslice_lg",
+        "v16w_ot_hbm_su_static_pgslice_lg__pv1",
+        "48",
+        "-",
+        ""
+      ],
+      "failure": {
+        "cell": "ot_hbm_su_static_pgslice_lg__pv1",
+        "rounds": [
+          {
+            "round": 0,
+            "rc": 1,
+            "host": "ot-epyc6",
+            "extra": [
+              "v16w/v16w_ot_hbm_su_static_pgslice_lg__pv1.sv",
+              "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv"
+            ],
+            "prefer": [
+              "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv"
+            ],
+            "errors": [
+              "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv:3: ERROR: Re-definition of module `\\ot_hbm_su_static_ins__d4g_pgslice'!"
+            ]
+          }
+        ],
+        "ok": false,
+        "host": "ot-epyc6"
+      }
+    },
+    {
+      "cell": "ot_hbm_su_static_pgslice_lg__pv0",
+      "row": [
+        "ot_hbm_su_static_pgslice_lg__pv0",
+        "ot_hbm_su_static_pgslice_lg",
+        "v16w_ot_hbm_su_static_pgslice_lg__pv0",
+        "48",
+        "-",
+        ""
+      ],
+      "failure": {
+        "cell": "ot_hbm_su_static_pgslice_lg__pv0",
+        "rounds": [
+          {
+            "round": 0,
+            "rc": 1,
+            "host": "ot-epyc6",
+            "extra": [
+              "v16w/v16w_ot_hbm_su_static_pgslice_lg__pv0.sv",
+              "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv"
+            ],
+            "prefer": [
+              "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv"
+            ],
+            "errors": [
+              "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv:3: ERROR: Re-definition of module `\\ot_hbm_su_static_ins__d4g_pgslice'!"
+            ]
+          }
+        ],
+        "ok": false,
+        "host": "ot-epyc6"
+      }
+    },
+    {
+      "cell": "ot_hbm_hc_bankq_ft_static",
+      "row": [
+        "ot_hbm_hc_bankq_ft_static",
+        "ot_hbm_hc_bankq_ft_static",
+        "v16w_ot_hbm_hc_bankq_ft_static",
+        "48",
+        "-",
+        ""
+      ],
+      "failure": {
+        "cell": "ot_hbm_hc_bankq_ft_static",
+        "rounds": [
+          {
+            "round": 0,
+            "rc": 1,
+            "host": "ot-epyc6",
+            "extra": [
+              "v16w/v16w_ot_hbm_hc_bankq_ft_static.sv",
+              "rtl/hbm_accel/die_glue/scoped_d4g/hcbft.sv"
+            ],
+            "prefer": [
+              "rtl/hbm_accel/die_glue/scoped_d4g/hcbft.sv"
+            ],
+            "errors": [
+              "rtl/hbm_accel/die_glue/scoped_d4g/hcbft.sv:19: ERROR: Re-definition of module `\\ot_hbm_hc_bank_static__d4g_hcbft'!"
+            ]
+          }
+        ],
+        "ok": false,
+        "host": "ot-epyc6"
+      }
+    },
+    {
+      "cell": "ot_hbm_su_static_pgslice_lg__pv5",
+      "row": [
+        "ot_hbm_su_static_pgslice_lg__pv5",
+        "ot_hbm_su_static_pgslice_lg",
+        "v16w_ot_hbm_su_static_pgslice_lg__pv5",
+        "48",
+        "-",
+        ""
+      ],
+      "failure": {
+        "cell": "ot_hbm_su_static_pgslice_lg__pv5",
+        "rounds": [
+          {
+            "round": 0,
+            "rc": 1,
+            "host": "ot-epyc6",
+            "extra": [
+              "v16w/v16w_ot_hbm_su_static_pgslice_lg__pv5.sv",
+              "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv"
+            ],
+            "prefer": [
+              "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv"
+            ],
+            "errors": [
+              "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv:3: ERROR: Re-definition of module `\\ot_hbm_su_static_ins__d4g_pgslice'!"
+            ]
+          }
+        ],
+        "ok": false,
+        "host": "ot-epyc6"
+      }
+    },
+    {
+      "cell": "ot_hbm_su_static_pgslice_lg__pv4",
+      "row": [
+        "ot_hbm_su_static_pgslice_lg__pv4",
+        "ot_hbm_su_static_pgslice_lg",
+        "v16w_ot_hbm_su_static_pgslice_lg__pv4",
+        "48",
+        "-",
+        ""
+      ],
+      "failure": {
+        "cell": "ot_hbm_su_static_pgslice_lg__pv4",
+        "rounds": [
+          {
+            "round": 0,
+            "rc": 1,
+            "host": "ot-epyc6",
+            "extra": [
+              "v16w/v16w_ot_hbm_su_static_pgslice_lg__pv4.sv",
+              "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv"
+            ],
+            "prefer": [
+              "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv"
+            ],
+            "errors": [
+              "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv:3: ERROR: Re-definition of module `\\ot_hbm_su_static_ins__d4g_pgslice'!"
+            ]
+          }
+        ],
+        "ok": false,
+        "host": "ot-epyc6"
+      }
+    },
+    {
+      "cell": "ot_hgi_sfu_core_split3",
+      "row": [
+        "ot_hgi_sfu_core_split3",
+        "ot_hgi_sfu_core_split3",
+        "v16w_ot_hgi_sfu_core_split3",
+        "48",
+        "-",
+        ""
+      ],
+      "failure": {
+        "cell": "ot_hgi_sfu_core_split3",
+        "rounds": [
+          {
+            "round": 0,
+            "rc": 1,
+            "host": "ot-epyc6",
+            "extra": [
+              "v16w/v16w_ot_hgi_sfu_core_split3.sv",
+              "rtl/hbm_accel/die_glue/scoped_d4g/sfu.sv"
+            ],
+            "prefer": [
+              "rtl/hbm_accel/die_glue/scoped_d4g/sfu.sv"
+            ],
+            "errors": [
+              "rtl/hbm_accel/die_glue/scoped_d4g/sfu.sv:6: ERROR: Re-definition of module `\\ot_hgi_sfu_arithmetic_grid__d4g_sfu'!"
+            ]
+          }
+        ],
+        "ok": false,
+        "host": "ot-epyc6"
+      }
+    },
+    {
+      "cell": "ot_hbm_su_static_pgslice_lg__pv10",
+      "row": [
+        "ot_hbm_su_static_pgslice_lg__pv10",
+        "ot_hbm_su_static_pgslice_lg",
+        "v16w_ot_hbm_su_static_pgslice_lg__pv10",
+        "48",
+        "-",
+        ""
+      ],
+      "failure": {
+        "cell": "ot_hbm_su_static_pgslice_lg__pv10",
+        "rounds": [
+          {
+            "round": 0,
+            "rc": 1,
+            "host": "ot-epyc6",
+            "extra": [
+              "v16w/v16w_ot_hbm_su_static_pgslice_lg__pv10.sv",
+              "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv"
+            ],
+            "prefer": [
+              "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv"
+            ],
+            "errors": [
+              "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv:3: ERROR: Re-definition of module `\\ot_hbm_su_static_ins__d4g_pgslice'!"
+            ]
+          }
+        ],
+        "ok": false,
+        "host": "ot-epyc6"
+      }
+    },
+    {
+      "cell": "ot_hbm_su_static_pgslice_lg__pv11",
+      "row": [
+        "ot_hbm_su_static_pgslice_lg__pv11",
+        "ot_hbm_su_static_pgslice_lg",
+        "v16w_ot_hbm_su_static_pgslice_lg__pv11",
+        "48",
+        "-",
+        ""
+      ],
+      "failure": {
+        "cell": "ot_hbm_su_static_pgslice_lg__pv11",
+        "rounds": [
+          {
+            "round": 0,
+            "rc": 1,
+            "host": "ot-epyc6",
+            "extra": [
+              "v16w/v16w_ot_hbm_su_static_pgslice_lg__pv11.sv",
+              "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv"
+            ],
+            "prefer": [
+              "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv"
+            ],
+            "errors": [
+              "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv:3: ERROR: Re-definition of module `\\ot_hbm_su_static_ins__d4g_pgslice'!"
+            ]
+          }
+        ],
+        "ok": false,
+        "host": "ot-epyc6"
+      }
+    },
+    {
+      "cell": "ot_hbm_su_static_pgslice_lg__pv8",
+      "row": [
+        "ot_hbm_su_static_pgslice_lg__pv8",
+        "ot_hbm_su_static_pgslice_lg",
+        "v16w_ot_hbm_su_static_pgslice_lg__pv8",
+        "48",
+        "-",
+        ""
+      ],
+      "failure": {
+        "cell": "ot_hbm_su_static_pgslice_lg__pv8",
+        "rounds": [
+          {
+            "round": 0,
+            "rc": 1,
+            "host": "ot-epyc6",
+            "extra": [
+              "v16w/v16w_ot_hbm_su_static_pgslice_lg__pv8.sv",
+              "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv"
+            ],
+            "prefer": [
+              "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv"
+            ],
+            "errors": [
+              "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv:3: ERROR: Re-definition of module `\\ot_hbm_su_static_ins__d4g_pgslice'!"
+            ]
+          }
+        ],
+        "ok": false,
+        "host": "ot-epyc6"
+      }
+    },
+    {
+      "cell": "ot_hbm_su_static_pgslice_lg__pv7",
+      "row": [
+        "ot_hbm_su_static_pgslice_lg__pv7",
+        "ot_hbm_su_static_pgslice_lg",
+        "v16w_ot_hbm_su_static_pgslice_lg__pv7",
+        "48",
+        "-",
+        ""
+      ],
+      "failure": {
+        "cell": "ot_hbm_su_static_pgslice_lg__pv7",
+        "rounds": [
+          {
+            "round": 0,
+            "rc": 1,
+            "host": "ot-epyc6",
+            "extra": [
+              "v16w/v16w_ot_hbm_su_static_pgslice_lg__pv7.sv",
+              "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv"
+            ],
+            "prefer": [
+              "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv"
+            ],
+            "errors": [
+              "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv:3: ERROR: Re-definition of module `\\ot_hbm_su_static_ins__d4g_pgslice'!"
+            ]
+          }
+        ],
+        "ok": false,
+        "host": "ot-epyc6"
+      }
+    },
+    {
+      "cell": "ot_hbm_su_static_pgslice_lg__pv13",
+      "row": [
+        "ot_hbm_su_static_pgslice_lg__pv13",
+        "ot_hbm_su_static_pgslice_lg",
+        "v16w_ot_hbm_su_static_pgslice_lg__pv13",
+        "48",
+        "-",
+        ""
+      ],
+      "failure": {
+        "cell": "ot_hbm_su_static_pgslice_lg__pv13",
+        "rounds": [
+          {
+            "round": 0,
+            "rc": 1,
+            "host": "ot-epyc6",
+            "extra": [
+              "v16w/v16w_ot_hbm_su_static_pgslice_lg__pv13.sv",
+              "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv"
+            ],
+            "prefer": [
+              "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv"
+            ],
+            "errors": [
+              "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv:3: ERROR: Re-definition of module `\\ot_hbm_su_static_ins__d4g_pgslice'!"
+            ]
+          }
+        ],
+        "ok": false,
+        "host": "ot-epyc6"
+      }
+    },
+    {
+      "cell": "ot_hbm_su_static_pgslice_lg__pv6",
+      "row": [
+        "ot_hbm_su_static_pgslice_lg__pv6",
+        "ot_hbm_su_static_pgslice_lg",
+        "v16w_ot_hbm_su_static_pgslice_lg__pv6",
+        "48",
+        "-",
+        ""
+      ],
+      "failure": {
+        "cell": "ot_hbm_su_static_pgslice_lg__pv6",
+        "rounds": [
+          {
+            "round": 0,
+            "rc": 1,
+            "host": "ot-epyc6",
+            "extra": [
+              "v16w/v16w_ot_hbm_su_static_pgslice_lg__pv6.sv",
+              "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv"
+            ],
+            "prefer": [
+              "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv"
+            ],
+            "errors": [
+              "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv:3: ERROR: Re-definition of module `\\ot_hbm_su_static_ins__d4g_pgslice'!"
+            ]
+          }
+        ],
+        "ok": false,
+        "host": "ot-epyc6"
+      }
+    },
+    {
+      "cell": "ot_hbm_su_static_pgslice_lg__pv14",
+      "row": [
+        "ot_hbm_su_static_pgslice_lg__pv14",
+        "ot_hbm_su_static_pgslice_lg",
+        "v16w_ot_hbm_su_static_pgslice_lg__pv14",
+        "48",
+        "-",
+        ""
+      ],
+      "failure": {
+        "cell": "ot_hbm_su_static_pgslice_lg__pv14",
+        "rounds": [
+          {
+            "round": 0,
+            "rc": 1,
+            "host": "ot-epyc6",
+            "extra": [
+              "v16w/v16w_ot_hbm_su_static_pgslice_lg__pv14.sv",
+              "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv"
+            ],
+            "prefer": [
+              "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv"
+            ],
+            "errors": [
+              "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv:3: ERROR: Re-definition of module `\\ot_hbm_su_static_ins__d4g_pgslice'!"
+            ]
+          }
+        ],
+        "ok": false,
+        "host": "ot-epyc6"
+      }
+    },
+    {
+      "cell": "ot_hbm_su_static_pgslice_lg__pv12",
+      "row": [
+        "ot_hbm_su_static_pgslice_lg__pv12",
+        "ot_hbm_su_static_pgslice_lg",
+        "v16w_ot_hbm_su_static_pgslice_lg__pv12",
+        "48",
+        "-",
+        ""
+      ],
+      "failure": {
+        "cell": "ot_hbm_su_static_pgslice_lg__pv12",
+        "rounds": [
+          {
+            "round": 0,
+            "rc": 1,
+            "host": "ot-epyc6",
+            "extra": [
+              "v16w/v16w_ot_hbm_su_static_pgslice_lg__pv12.sv",
+              "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv"
+            ],
+            "prefer": [
+              "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv"
+            ],
+            "errors": [
+              "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv:3: ERROR: Re-definition of module `\\ot_hbm_su_static_ins__d4g_pgslice'!"
+            ]
+          }
+        ],
+        "ok": false,
+        "host": "ot-epyc6"
+      }
+    }
+  ],
+  "preserve_live": [
+    "ot_hbm_idx_selector_static",
+    "ot_hbm_idx_score_quarter_static",
+    "ot_hgi_coll_tkm_m_tp192"
+  ]
+}
