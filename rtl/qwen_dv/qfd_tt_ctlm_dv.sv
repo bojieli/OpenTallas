@@ -253,7 +253,7 @@ module qfd_tt_ctlm_dv #(
     reg         op_fault;
     always @(posedge ck or negedge rst_n)
         if (!rst_n) op_fault <= 1'b0;
-        else if (l_fault || (op_coll && MUT != 22) || ctx_bad || mu_fault_q || ctx_write_fault) op_fault <= 1'b1;
+        else if (l_fault || (op_coll && MUT != 22) || ctx_bad || (mu_fault_q && MUT != 37) || ctx_write_fault) op_fault <= 1'b1;
     wire        u_start = s_start || l_start;
     wire [5:0]  u_stage = l_start ? l_stage : s_stage;
     wire [UB-1:0] u_user = l_start ? l_user : s_user;

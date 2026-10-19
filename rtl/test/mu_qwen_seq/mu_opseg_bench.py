@@ -378,7 +378,9 @@ def check_case(name, cal, nfr, ncyc_ev, e1, e4, work, romdir, mut, fails, summ):
 def neg_case(name, cal, e4, work, romdir, fails, summ):
     H, T = cal['H'], cal['T']
     pb, L, face, starts, res = model(cal, 1, S0 + 2 * T + 2000)
-    if name == 'neg_xcoll':
+    if name == 'neg_observer':
+        want_edge = S0 + 500 + 1
+    elif name == 'neg_xcoll':
         # user 1's record loading on the bank-write edge of its own result 1 (result event r -> write edge r + 1)
         pb, L, face, starts, res = model(cal, 2, S0 + 2 * H)
         r1 = sorted(c for c, u, tok, val in res if u == 1)
@@ -401,16 +403,24 @@ def neg_case(name, cal, e4, work, romdir, fails, summ):
         CTX['tag'] = O.CTX_TAG ^ 0x0100
     if name == 'neg_xcoll':
         ncyc = max(ncyc, RT['recs'][0][0] + 3000)
-    r = run(work, e4, name, events_for(pb, face, res, set(range(NU))), ncyc, romdir)
+    events = events_for(pb, face, res, set(range(NU)))
+    if name == 'neg_observer':
+        events.append((S0 + 500, 5, 1))
+    r = run(work, e4, name, events, ncyc, romdir)
     CTX['tag'] = O.CTX_TAG
     RT['recs'] = []
-    if name in ('neg_ctx', 'neg_xcoll'):
+    if name in ('neg_ctx', 'neg_xcoll', 'neg_observer'):
         hit = [x for x in r['opf'] if x[1] == '0000' and x[2] == 0]   # op_fault, no leaf code, no collision
     elif name == 'neg_drift':
         hit = [x for x in r['opf'] if x[1][2] == '1']          # op_fcode[1] (string is MSB first: [3][2][1][0])
     else:
         hit = [x for x in r['opf'] if x[1] == '0000']           # op_fault rose with no leaf fault: the collision
     ok = bool(hit) and abs(hit[0][0] - want_edge) <= 4 and not (name == 'neg_xcoll' and r['xld'])
+    if name == 'neg_observer':
+        status = [(c, v) for c, v in r['dc'] if int(v, 16) & (1 << 52)]
+        cf_seen = any(int(v, 16) & 1 for c, v in r['hd'])
+        ok = ok and bool(status) and cf_seen
+        summ['observer_status'] = dict(core_fault=bool(status), cf=cf_seen, first_status=status[:1])
     if not ok:
         fails.append(f'{name}: required fault not raised at ~{want_edge} (opf log {r["opf"][:4]})')
     summ[name] = dict(want_edge=want_edge, opf=r['opf'][:4], raised=ok)
