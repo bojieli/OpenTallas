@@ -1,0 +1,3004 @@
+{
+ "schema": "opentallas.hbm_su_status_review_1019.v1",
+ "manifest_adopted": false,
+ "bits": 70,
+ "entries": [
+  {
+   "instance": "pgp_NE",
+   "master": "ot_hbm_su_programme_pslice_c5",
+   "port": "done",
+   "net": "pgp_NE__done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 21157,
+   "source": "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme_pgcol.sv",
+   "classification": "su_zero_suppressed_command_observation_review",
+   "reason": "edge_index is registered internal c_e observation; programme producer itself uses c_e for done. Command data is explicitly zeroed outside each per-slice valid copy, so no external valid gate is required. Busy drives actual bridge release and phase check; fault reaches programme root/host. Completion SW export is consumed by collar; other three completion pulses are observations of the same fixed length/start calendar.",
+   "evidence": {
+    "command": [
+     {
+      "instance": "sucore_NE",
+      "port": "rf_rd_cmd",
+      "ranges": [
+       [
+        74,
+        127
+       ]
+      ]
+     },
+     {
+      "instance": "sucore_NE",
+      "port": "red_cmd",
+      "ranges": [
+       [
+        0,
+        73
+       ]
+      ]
+     },
+     {
+      "instance": "sucore_NE",
+      "port": "rf_drain_cmd",
+      "ranges": [
+       [
+        165,
+        166
+       ]
+      ]
+     },
+     {
+      "instance": "su_NE0",
+      "port": "control",
+      "ranges": [
+       [
+        680,
+        2421
+       ]
+      ]
+     },
+     {
+      "instance": "su_NE0",
+      "port": "vmr_cmd",
+      "ranges": [
+       [
+        440,
+        499
+       ]
+      ]
+     },
+     {
+      "instance": "su_NE0",
+      "port": "vmw_cmd",
+      "ranges": [
+       [
+        128,
+        205
+       ]
+      ]
+     },
+     {
+      "instance": "su_NE0",
+      "port": "red_sel",
+      "ranges": [
+       [
+        70,
+        73
+       ]
+      ]
+     },
+     {
+      "instance": "su_NE0",
+      "port": "red_sel",
+      "ranges": [
+       [
+        0,
+        7
+       ]
+      ]
+     },
+     {
+      "instance": "su_NE1",
+      "port": "control",
+      "ranges": [
+       [
+        680,
+        2421
+       ]
+      ]
+     },
+     {
+      "instance": "su_NE1",
+      "port": "vmr_cmd",
+      "ranges": [
+       [
+        500,
+        559
+       ]
+      ]
+     },
+     {
+      "instance": "su_NE1",
+      "port": "vmw_cmd",
+      "ranges": [
+       [
+        206,
+        283
+       ]
+      ]
+     },
+     {
+      "instance": "su_NE1",
+      "port": "red_sel",
+      "ranges": [
+       [
+        70,
+        73
+       ]
+      ]
+     },
+     {
+      "instance": "su_NE1",
+      "port": "red_sel",
+      "ranges": [
+       [
+        0,
+        7
+       ]
+      ]
+     },
+     {
+      "instance": "su_NE2",
+      "port": "control",
+      "ranges": [
+       [
+        680,
+        2421
+       ]
+      ]
+     },
+     {
+      "instance": "su_NE2",
+      "port": "vmr_cmd",
+      "ranges": [
+       [
+        560,
+        619
+       ]
+      ]
+     },
+     {
+      "instance": "su_NE2",
+      "port": "vmw_cmd",
+      "ranges": [
+       [
+        284,
+        361
+       ]
+      ]
+     },
+     {
+      "instance": "su_NE2",
+      "port": "red_sel",
+      "ranges": [
+       [
+        70,
+        73
+       ]
+      ]
+     },
+     {
+      "instance": "su_NE2",
+      "port": "red_sel",
+      "ranges": [
+       [
+        0,
+        7
+       ]
+      ]
+     },
+     {
+      "instance": "su_NE3",
+      "port": "control",
+      "ranges": [
+       [
+        680,
+        2421
+       ]
+      ]
+     },
+     {
+      "instance": "su_NE3",
+      "port": "vmr_cmd",
+      "ranges": [
+       [
+        620,
+        679
+       ]
+      ]
+     },
+     {
+      "instance": "su_NE3",
+      "port": "vmw_cmd",
+      "ranges": [
+       [
+        362,
+        439
+       ]
+      ]
+     },
+     {
+      "instance": "su_NE3",
+      "port": "red_sel",
+      "ranges": [
+       [
+        70,
+        73
+       ]
+      ]
+     },
+     {
+      "instance": "su_NE3",
+      "port": "red_sel",
+      "ranges": [
+       [
+        0,
+        7
+       ]
+      ]
+     },
+     {
+      "instance": "cxrc_NE_q",
+      "port": "red_sel",
+      "ranges": [
+       [
+        70,
+        73
+       ]
+      ]
+     },
+     {
+      "instance": "cxrc_NE_q",
+      "port": "red_sel",
+      "ranges": [
+       [
+        0,
+        7
+       ]
+      ]
+     }
+    ],
+    "busy": [
+     {
+      "instance": "subr_NE",
+      "port": "prog_busy",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "su_prog",
+      "port": "p_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "pgp_NE",
+   "master": "ot_hbm_su_programme_pslice_c5",
+   "port": "edge_index",
+   "net": "pgp_NE__edge_index",
+   "width": 16,
+   "unread_ranges": [
+    [
+     0,
+     15
+    ]
+   ],
+   "bit_count": 16,
+   "die_line": 21157,
+   "source": "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme_pgcol.sv",
+   "classification": "su_zero_suppressed_command_observation_review",
+   "reason": "edge_index is registered internal c_e observation; programme producer itself uses c_e for done. Command data is explicitly zeroed outside each per-slice valid copy, so no external valid gate is required. Busy drives actual bridge release and phase check; fault reaches programme root/host. Completion SW export is consumed by collar; other three completion pulses are observations of the same fixed length/start calendar.",
+   "evidence": {
+    "command": [
+     {
+      "instance": "sucore_NE",
+      "port": "rf_rd_cmd",
+      "ranges": [
+       [
+        74,
+        127
+       ]
+      ]
+     },
+     {
+      "instance": "sucore_NE",
+      "port": "red_cmd",
+      "ranges": [
+       [
+        0,
+        73
+       ]
+      ]
+     },
+     {
+      "instance": "sucore_NE",
+      "port": "rf_drain_cmd",
+      "ranges": [
+       [
+        165,
+        166
+       ]
+      ]
+     },
+     {
+      "instance": "su_NE0",
+      "port": "control",
+      "ranges": [
+       [
+        680,
+        2421
+       ]
+      ]
+     },
+     {
+      "instance": "su_NE0",
+      "port": "vmr_cmd",
+      "ranges": [
+       [
+        440,
+        499
+       ]
+      ]
+     },
+     {
+      "instance": "su_NE0",
+      "port": "vmw_cmd",
+      "ranges": [
+       [
+        128,
+        205
+       ]
+      ]
+     },
+     {
+      "instance": "su_NE0",
+      "port": "red_sel",
+      "ranges": [
+       [
+        70,
+        73
+       ]
+      ]
+     },
+     {
+      "instance": "su_NE0",
+      "port": "red_sel",
+      "ranges": [
+       [
+        0,
+        7
+       ]
+      ]
+     },
+     {
+      "instance": "su_NE1",
+      "port": "control",
+      "ranges": [
+       [
+        680,
+        2421
+       ]
+      ]
+     },
+     {
+      "instance": "su_NE1",
+      "port": "vmr_cmd",
+      "ranges": [
+       [
+        500,
+        559
+       ]
+      ]
+     },
+     {
+      "instance": "su_NE1",
+      "port": "vmw_cmd",
+      "ranges": [
+       [
+        206,
+        283
+       ]
+      ]
+     },
+     {
+      "instance": "su_NE1",
+      "port": "red_sel",
+      "ranges": [
+       [
+        70,
+        73
+       ]
+      ]
+     },
+     {
+      "instance": "su_NE1",
+      "port": "red_sel",
+      "ranges": [
+       [
+        0,
+        7
+       ]
+      ]
+     },
+     {
+      "instance": "su_NE2",
+      "port": "control",
+      "ranges": [
+       [
+        680,
+        2421
+       ]
+      ]
+     },
+     {
+      "instance": "su_NE2",
+      "port": "vmr_cmd",
+      "ranges": [
+       [
+        560,
+        619
+       ]
+      ]
+     },
+     {
+      "instance": "su_NE2",
+      "port": "vmw_cmd",
+      "ranges": [
+       [
+        284,
+        361
+       ]
+      ]
+     },
+     {
+      "instance": "su_NE2",
+      "port": "red_sel",
+      "ranges": [
+       [
+        70,
+        73
+       ]
+      ]
+     },
+     {
+      "instance": "su_NE2",
+      "port": "red_sel",
+      "ranges": [
+       [
+        0,
+        7
+       ]
+      ]
+     },
+     {
+      "instance": "su_NE3",
+      "port": "control",
+      "ranges": [
+       [
+        680,
+        2421
+       ]
+      ]
+     },
+     {
+      "instance": "su_NE3",
+      "port": "vmr_cmd",
+      "ranges": [
+       [
+        620,
+        679
+       ]
+      ]
+     },
+     {
+      "instance": "su_NE3",
+      "port": "vmw_cmd",
+      "ranges": [
+       [
+        362,
+        439
+       ]
+      ]
+     },
+     {
+      "instance": "su_NE3",
+      "port": "red_sel",
+      "ranges": [
+       [
+        70,
+        73
+       ]
+      ]
+     },
+     {
+      "instance": "su_NE3",
+      "port": "red_sel",
+      "ranges": [
+       [
+        0,
+        7
+       ]
+      ]
+     },
+     {
+      "instance": "cxrc_NE_q",
+      "port": "red_sel",
+      "ranges": [
+       [
+        70,
+        73
+       ]
+      ]
+     },
+     {
+      "instance": "cxrc_NE_q",
+      "port": "red_sel",
+      "ranges": [
+       [
+        0,
+        7
+       ]
+      ]
+     }
+    ],
+    "busy": [
+     {
+      "instance": "subr_NE",
+      "port": "prog_busy",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "su_prog",
+      "port": "p_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "pgp_NE",
+   "master": "ot_hbm_su_programme_pslice_c5",
+   "port": "valid",
+   "net": "pgp_NE__valid",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 21157,
+   "source": "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme_pgcol.sv",
+   "classification": "su_zero_suppressed_command_observation_review",
+   "reason": "edge_index is registered internal c_e observation; programme producer itself uses c_e for done. Command data is explicitly zeroed outside each per-slice valid copy, so no external valid gate is required. Busy drives actual bridge release and phase check; fault reaches programme root/host. Completion SW export is consumed by collar; other three completion pulses are observations of the same fixed length/start calendar.",
+   "evidence": {
+    "command": [
+     {
+      "instance": "sucore_NE",
+      "port": "rf_rd_cmd",
+      "ranges": [
+       [
+        74,
+        127
+       ]
+      ]
+     },
+     {
+      "instance": "sucore_NE",
+      "port": "red_cmd",
+      "ranges": [
+       [
+        0,
+        73
+       ]
+      ]
+     },
+     {
+      "instance": "sucore_NE",
+      "port": "rf_drain_cmd",
+      "ranges": [
+       [
+        165,
+        166
+       ]
+      ]
+     },
+     {
+      "instance": "su_NE0",
+      "port": "control",
+      "ranges": [
+       [
+        680,
+        2421
+       ]
+      ]
+     },
+     {
+      "instance": "su_NE0",
+      "port": "vmr_cmd",
+      "ranges": [
+       [
+        440,
+        499
+       ]
+      ]
+     },
+     {
+      "instance": "su_NE0",
+      "port": "vmw_cmd",
+      "ranges": [
+       [
+        128,
+        205
+       ]
+      ]
+     },
+     {
+      "instance": "su_NE0",
+      "port": "red_sel",
+      "ranges": [
+       [
+        70,
+        73
+       ]
+      ]
+     },
+     {
+      "instance": "su_NE0",
+      "port": "red_sel",
+      "ranges": [
+       [
+        0,
+        7
+       ]
+      ]
+     },
+     {
+      "instance": "su_NE1",
+      "port": "control",
+      "ranges": [
+       [
+        680,
+        2421
+       ]
+      ]
+     },
+     {
+      "instance": "su_NE1",
+      "port": "vmr_cmd",
+      "ranges": [
+       [
+        500,
+        559
+       ]
+      ]
+     },
+     {
+      "instance": "su_NE1",
+      "port": "vmw_cmd",
+      "ranges": [
+       [
+        206,
+        283
+       ]
+      ]
+     },
+     {
+      "instance": "su_NE1",
+      "port": "red_sel",
+      "ranges": [
+       [
+        70,
+        73
+       ]
+      ]
+     },
+     {
+      "instance": "su_NE1",
+      "port": "red_sel",
+      "ranges": [
+       [
+        0,
+        7
+       ]
+      ]
+     },
+     {
+      "instance": "su_NE2",
+      "port": "control",
+      "ranges": [
+       [
+        680,
+        2421
+       ]
+      ]
+     },
+     {
+      "instance": "su_NE2",
+      "port": "vmr_cmd",
+      "ranges": [
+       [
+        560,
+        619
+       ]
+      ]
+     },
+     {
+      "instance": "su_NE2",
+      "port": "vmw_cmd",
+      "ranges": [
+       [
+        284,
+        361
+       ]
+      ]
+     },
+     {
+      "instance": "su_NE2",
+      "port": "red_sel",
+      "ranges": [
+       [
+        70,
+        73
+       ]
+      ]
+     },
+     {
+      "instance": "su_NE2",
+      "port": "red_sel",
+      "ranges": [
+       [
+        0,
+        7
+       ]
+      ]
+     },
+     {
+      "instance": "su_NE3",
+      "port": "control",
+      "ranges": [
+       [
+        680,
+        2421
+       ]
+      ]
+     },
+     {
+      "instance": "su_NE3",
+      "port": "vmr_cmd",
+      "ranges": [
+       [
+        620,
+        679
+       ]
+      ]
+     },
+     {
+      "instance": "su_NE3",
+      "port": "vmw_cmd",
+      "ranges": [
+       [
+        362,
+        439
+       ]
+      ]
+     },
+     {
+      "instance": "su_NE3",
+      "port": "red_sel",
+      "ranges": [
+       [
+        70,
+        73
+       ]
+      ]
+     },
+     {
+      "instance": "su_NE3",
+      "port": "red_sel",
+      "ranges": [
+       [
+        0,
+        7
+       ]
+      ]
+     },
+     {
+      "instance": "cxrc_NE_q",
+      "port": "red_sel",
+      "ranges": [
+       [
+        70,
+        73
+       ]
+      ]
+     },
+     {
+      "instance": "cxrc_NE_q",
+      "port": "red_sel",
+      "ranges": [
+       [
+        0,
+        7
+       ]
+      ]
+     }
+    ],
+    "busy": [
+     {
+      "instance": "subr_NE",
+      "port": "prog_busy",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "su_prog",
+      "port": "p_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "pgp_NW",
+   "master": "ot_hbm_su_programme_pslice_c5",
+   "port": "done",
+   "net": "pgp_NW__done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 21141,
+   "source": "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme_pgcol.sv",
+   "classification": "su_zero_suppressed_command_observation_review",
+   "reason": "edge_index is registered internal c_e observation; programme producer itself uses c_e for done. Command data is explicitly zeroed outside each per-slice valid copy, so no external valid gate is required. Busy drives actual bridge release and phase check; fault reaches programme root/host. Completion SW export is consumed by collar; other three completion pulses are observations of the same fixed length/start calendar.",
+   "evidence": {
+    "command": [
+     {
+      "instance": "sucore_NW",
+      "port": "rf_rd_cmd",
+      "ranges": [
+       [
+        74,
+        127
+       ]
+      ]
+     },
+     {
+      "instance": "sucore_NW",
+      "port": "red_cmd",
+      "ranges": [
+       [
+        0,
+        73
+       ]
+      ]
+     },
+     {
+      "instance": "sucore_NW",
+      "port": "rf_drain_cmd",
+      "ranges": [
+       [
+        165,
+        166
+       ]
+      ]
+     },
+     {
+      "instance": "su_NW0",
+      "port": "control",
+      "ranges": [
+       [
+        680,
+        2421
+       ]
+      ]
+     },
+     {
+      "instance": "su_NW0",
+      "port": "vmr_cmd",
+      "ranges": [
+       [
+        440,
+        499
+       ]
+      ]
+     },
+     {
+      "instance": "su_NW0",
+      "port": "vmw_cmd",
+      "ranges": [
+       [
+        128,
+        205
+       ]
+      ]
+     },
+     {
+      "instance": "su_NW0",
+      "port": "red_sel",
+      "ranges": [
+       [
+        70,
+        73
+       ]
+      ]
+     },
+     {
+      "instance": "su_NW0",
+      "port": "red_sel",
+      "ranges": [
+       [
+        0,
+        7
+       ]
+      ]
+     },
+     {
+      "instance": "su_NW1",
+      "port": "control",
+      "ranges": [
+       [
+        680,
+        2421
+       ]
+      ]
+     },
+     {
+      "instance": "su_NW1",
+      "port": "vmr_cmd",
+      "ranges": [
+       [
+        500,
+        559
+       ]
+      ]
+     },
+     {
+      "instance": "su_NW1",
+      "port": "vmw_cmd",
+      "ranges": [
+       [
+        206,
+        283
+       ]
+      ]
+     },
+     {
+      "instance": "su_NW1",
+      "port": "red_sel",
+      "ranges": [
+       [
+        70,
+        73
+       ]
+      ]
+     },
+     {
+      "instance": "su_NW1",
+      "port": "red_sel",
+      "ranges": [
+       [
+        0,
+        7
+       ]
+      ]
+     },
+     {
+      "instance": "su_NW2",
+      "port": "control",
+      "ranges": [
+       [
+        680,
+        2421
+       ]
+      ]
+     },
+     {
+      "instance": "su_NW2",
+      "port": "vmr_cmd",
+      "ranges": [
+       [
+        560,
+        619
+       ]
+      ]
+     },
+     {
+      "instance": "su_NW2",
+      "port": "vmw_cmd",
+      "ranges": [
+       [
+        284,
+        361
+       ]
+      ]
+     },
+     {
+      "instance": "su_NW2",
+      "port": "red_sel",
+      "ranges": [
+       [
+        70,
+        73
+       ]
+      ]
+     },
+     {
+      "instance": "su_NW2",
+      "port": "red_sel",
+      "ranges": [
+       [
+        0,
+        7
+       ]
+      ]
+     },
+     {
+      "instance": "su_NW3",
+      "port": "control",
+      "ranges": [
+       [
+        680,
+        2421
+       ]
+      ]
+     },
+     {
+      "instance": "su_NW3",
+      "port": "vmr_cmd",
+      "ranges": [
+       [
+        620,
+        679
+       ]
+      ]
+     },
+     {
+      "instance": "su_NW3",
+      "port": "vmw_cmd",
+      "ranges": [
+       [
+        362,
+        439
+       ]
+      ]
+     },
+     {
+      "instance": "su_NW3",
+      "port": "red_sel",
+      "ranges": [
+       [
+        70,
+        73
+       ]
+      ]
+     },
+     {
+      "instance": "su_NW3",
+      "port": "red_sel",
+      "ranges": [
+       [
+        0,
+        7
+       ]
+      ]
+     },
+     {
+      "instance": "cxrc_NW_q",
+      "port": "red_sel",
+      "ranges": [
+       [
+        70,
+        73
+       ]
+      ]
+     },
+     {
+      "instance": "cxrc_NW_q",
+      "port": "red_sel",
+      "ranges": [
+       [
+        0,
+        7
+       ]
+      ]
+     }
+    ],
+    "busy": [
+     {
+      "instance": "subr_NW",
+      "port": "prog_busy",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "su_prog",
+      "port": "p_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "pgp_NW",
+   "master": "ot_hbm_su_programme_pslice_c5",
+   "port": "edge_index",
+   "net": "pgp_NW__edge_index",
+   "width": 16,
+   "unread_ranges": [
+    [
+     0,
+     15
+    ]
+   ],
+   "bit_count": 16,
+   "die_line": 21141,
+   "source": "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme_pgcol.sv",
+   "classification": "su_zero_suppressed_command_observation_review",
+   "reason": "edge_index is registered internal c_e observation; programme producer itself uses c_e for done. Command data is explicitly zeroed outside each per-slice valid copy, so no external valid gate is required. Busy drives actual bridge release and phase check; fault reaches programme root/host. Completion SW export is consumed by collar; other three completion pulses are observations of the same fixed length/start calendar.",
+   "evidence": {
+    "command": [
+     {
+      "instance": "sucore_NW",
+      "port": "rf_rd_cmd",
+      "ranges": [
+       [
+        74,
+        127
+       ]
+      ]
+     },
+     {
+      "instance": "sucore_NW",
+      "port": "red_cmd",
+      "ranges": [
+       [
+        0,
+        73
+       ]
+      ]
+     },
+     {
+      "instance": "sucore_NW",
+      "port": "rf_drain_cmd",
+      "ranges": [
+       [
+        165,
+        166
+       ]
+      ]
+     },
+     {
+      "instance": "su_NW0",
+      "port": "control",
+      "ranges": [
+       [
+        680,
+        2421
+       ]
+      ]
+     },
+     {
+      "instance": "su_NW0",
+      "port": "vmr_cmd",
+      "ranges": [
+       [
+        440,
+        499
+       ]
+      ]
+     },
+     {
+      "instance": "su_NW0",
+      "port": "vmw_cmd",
+      "ranges": [
+       [
+        128,
+        205
+       ]
+      ]
+     },
+     {
+      "instance": "su_NW0",
+      "port": "red_sel",
+      "ranges": [
+       [
+        70,
+        73
+       ]
+      ]
+     },
+     {
+      "instance": "su_NW0",
+      "port": "red_sel",
+      "ranges": [
+       [
+        0,
+        7
+       ]
+      ]
+     },
+     {
+      "instance": "su_NW1",
+      "port": "control",
+      "ranges": [
+       [
+        680,
+        2421
+       ]
+      ]
+     },
+     {
+      "instance": "su_NW1",
+      "port": "vmr_cmd",
+      "ranges": [
+       [
+        500,
+        559
+       ]
+      ]
+     },
+     {
+      "instance": "su_NW1",
+      "port": "vmw_cmd",
+      "ranges": [
+       [
+        206,
+        283
+       ]
+      ]
+     },
+     {
+      "instance": "su_NW1",
+      "port": "red_sel",
+      "ranges": [
+       [
+        70,
+        73
+       ]
+      ]
+     },
+     {
+      "instance": "su_NW1",
+      "port": "red_sel",
+      "ranges": [
+       [
+        0,
+        7
+       ]
+      ]
+     },
+     {
+      "instance": "su_NW2",
+      "port": "control",
+      "ranges": [
+       [
+        680,
+        2421
+       ]
+      ]
+     },
+     {
+      "instance": "su_NW2",
+      "port": "vmr_cmd",
+      "ranges": [
+       [
+        560,
+        619
+       ]
+      ]
+     },
+     {
+      "instance": "su_NW2",
+      "port": "vmw_cmd",
+      "ranges": [
+       [
+        284,
+        361
+       ]
+      ]
+     },
+     {
+      "instance": "su_NW2",
+      "port": "red_sel",
+      "ranges": [
+       [
+        70,
+        73
+       ]
+      ]
+     },
+     {
+      "instance": "su_NW2",
+      "port": "red_sel",
+      "ranges": [
+       [
+        0,
+        7
+       ]
+      ]
+     },
+     {
+      "instance": "su_NW3",
+      "port": "control",
+      "ranges": [
+       [
+        680,
+        2421
+       ]
+      ]
+     },
+     {
+      "instance": "su_NW3",
+      "port": "vmr_cmd",
+      "ranges": [
+       [
+        620,
+        679
+       ]
+      ]
+     },
+     {
+      "instance": "su_NW3",
+      "port": "vmw_cmd",
+      "ranges": [
+       [
+        362,
+        439
+       ]
+      ]
+     },
+     {
+      "instance": "su_NW3",
+      "port": "red_sel",
+      "ranges": [
+       [
+        70,
+        73
+       ]
+      ]
+     },
+     {
+      "instance": "su_NW3",
+      "port": "red_sel",
+      "ranges": [
+       [
+        0,
+        7
+       ]
+      ]
+     },
+     {
+      "instance": "cxrc_NW_q",
+      "port": "red_sel",
+      "ranges": [
+       [
+        70,
+        73
+       ]
+      ]
+     },
+     {
+      "instance": "cxrc_NW_q",
+      "port": "red_sel",
+      "ranges": [
+       [
+        0,
+        7
+       ]
+      ]
+     }
+    ],
+    "busy": [
+     {
+      "instance": "subr_NW",
+      "port": "prog_busy",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "su_prog",
+      "port": "p_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "pgp_NW",
+   "master": "ot_hbm_su_programme_pslice_c5",
+   "port": "valid",
+   "net": "pgp_NW__valid",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 21141,
+   "source": "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme_pgcol.sv",
+   "classification": "su_zero_suppressed_command_observation_review",
+   "reason": "edge_index is registered internal c_e observation; programme producer itself uses c_e for done. Command data is explicitly zeroed outside each per-slice valid copy, so no external valid gate is required. Busy drives actual bridge release and phase check; fault reaches programme root/host. Completion SW export is consumed by collar; other three completion pulses are observations of the same fixed length/start calendar.",
+   "evidence": {
+    "command": [
+     {
+      "instance": "sucore_NW",
+      "port": "rf_rd_cmd",
+      "ranges": [
+       [
+        74,
+        127
+       ]
+      ]
+     },
+     {
+      "instance": "sucore_NW",
+      "port": "red_cmd",
+      "ranges": [
+       [
+        0,
+        73
+       ]
+      ]
+     },
+     {
+      "instance": "sucore_NW",
+      "port": "rf_drain_cmd",
+      "ranges": [
+       [
+        165,
+        166
+       ]
+      ]
+     },
+     {
+      "instance": "su_NW0",
+      "port": "control",
+      "ranges": [
+       [
+        680,
+        2421
+       ]
+      ]
+     },
+     {
+      "instance": "su_NW0",
+      "port": "vmr_cmd",
+      "ranges": [
+       [
+        440,
+        499
+       ]
+      ]
+     },
+     {
+      "instance": "su_NW0",
+      "port": "vmw_cmd",
+      "ranges": [
+       [
+        128,
+        205
+       ]
+      ]
+     },
+     {
+      "instance": "su_NW0",
+      "port": "red_sel",
+      "ranges": [
+       [
+        70,
+        73
+       ]
+      ]
+     },
+     {
+      "instance": "su_NW0",
+      "port": "red_sel",
+      "ranges": [
+       [
+        0,
+        7
+       ]
+      ]
+     },
+     {
+      "instance": "su_NW1",
+      "port": "control",
+      "ranges": [
+       [
+        680,
+        2421
+       ]
+      ]
+     },
+     {
+      "instance": "su_NW1",
+      "port": "vmr_cmd",
+      "ranges": [
+       [
+        500,
+        559
+       ]
+      ]
+     },
+     {
+      "instance": "su_NW1",
+      "port": "vmw_cmd",
+      "ranges": [
+       [
+        206,
+        283
+       ]
+      ]
+     },
+     {
+      "instance": "su_NW1",
+      "port": "red_sel",
+      "ranges": [
+       [
+        70,
+        73
+       ]
+      ]
+     },
+     {
+      "instance": "su_NW1",
+      "port": "red_sel",
+      "ranges": [
+       [
+        0,
+        7
+       ]
+      ]
+     },
+     {
+      "instance": "su_NW2",
+      "port": "control",
+      "ranges": [
+       [
+        680,
+        2421
+       ]
+      ]
+     },
+     {
+      "instance": "su_NW2",
+      "port": "vmr_cmd",
+      "ranges": [
+       [
+        560,
+        619
+       ]
+      ]
+     },
+     {
+      "instance": "su_NW2",
+      "port": "vmw_cmd",
+      "ranges": [
+       [
+        284,
+        361
+       ]
+      ]
+     },
+     {
+      "instance": "su_NW2",
+      "port": "red_sel",
+      "ranges": [
+       [
+        70,
+        73
+       ]
+      ]
+     },
+     {
+      "instance": "su_NW2",
+      "port": "red_sel",
+      "ranges": [
+       [
+        0,
+        7
+       ]
+      ]
+     },
+     {
+      "instance": "su_NW3",
+      "port": "control",
+      "ranges": [
+       [
+        680,
+        2421
+       ]
+      ]
+     },
+     {
+      "instance": "su_NW3",
+      "port": "vmr_cmd",
+      "ranges": [
+       [
+        620,
+        679
+       ]
+      ]
+     },
+     {
+      "instance": "su_NW3",
+      "port": "vmw_cmd",
+      "ranges": [
+       [
+        362,
+        439
+       ]
+      ]
+     },
+     {
+      "instance": "su_NW3",
+      "port": "red_sel",
+      "ranges": [
+       [
+        70,
+        73
+       ]
+      ]
+     },
+     {
+      "instance": "su_NW3",
+      "port": "red_sel",
+      "ranges": [
+       [
+        0,
+        7
+       ]
+      ]
+     },
+     {
+      "instance": "cxrc_NW_q",
+      "port": "red_sel",
+      "ranges": [
+       [
+        70,
+        73
+       ]
+      ]
+     },
+     {
+      "instance": "cxrc_NW_q",
+      "port": "red_sel",
+      "ranges": [
+       [
+        0,
+        7
+       ]
+      ]
+     }
+    ],
+    "busy": [
+     {
+      "instance": "subr_NW",
+      "port": "prog_busy",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "su_prog",
+      "port": "p_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "pgp_SE",
+   "master": "ot_hbm_su_programme_pslice_c5",
+   "port": "done",
+   "net": "pgp_SE__done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 21125,
+   "source": "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme_pgcol.sv",
+   "classification": "su_zero_suppressed_command_observation_review",
+   "reason": "edge_index is registered internal c_e observation; programme producer itself uses c_e for done. Command data is explicitly zeroed outside each per-slice valid copy, so no external valid gate is required. Busy drives actual bridge release and phase check; fault reaches programme root/host. Completion SW export is consumed by collar; other three completion pulses are observations of the same fixed length/start calendar.",
+   "evidence": {
+    "command": [
+     {
+      "instance": "sucore_SE",
+      "port": "rf_rd_cmd",
+      "ranges": [
+       [
+        74,
+        127
+       ]
+      ]
+     },
+     {
+      "instance": "sucore_SE",
+      "port": "red_cmd",
+      "ranges": [
+       [
+        0,
+        73
+       ]
+      ]
+     },
+     {
+      "instance": "sucore_SE",
+      "port": "rf_drain_cmd",
+      "ranges": [
+       [
+        165,
+        166
+       ]
+      ]
+     },
+     {
+      "instance": "su_SE0",
+      "port": "control",
+      "ranges": [
+       [
+        680,
+        2421
+       ]
+      ]
+     },
+     {
+      "instance": "su_SE0",
+      "port": "vmr_cmd",
+      "ranges": [
+       [
+        440,
+        499
+       ]
+      ]
+     },
+     {
+      "instance": "su_SE0",
+      "port": "vmw_cmd",
+      "ranges": [
+       [
+        128,
+        205
+       ]
+      ]
+     },
+     {
+      "instance": "su_SE0",
+      "port": "red_sel",
+      "ranges": [
+       [
+        70,
+        73
+       ]
+      ]
+     },
+     {
+      "instance": "su_SE0",
+      "port": "red_sel",
+      "ranges": [
+       [
+        0,
+        7
+       ]
+      ]
+     },
+     {
+      "instance": "su_SE1",
+      "port": "control",
+      "ranges": [
+       [
+        680,
+        2421
+       ]
+      ]
+     },
+     {
+      "instance": "su_SE1",
+      "port": "vmr_cmd",
+      "ranges": [
+       [
+        500,
+        559
+       ]
+      ]
+     },
+     {
+      "instance": "su_SE1",
+      "port": "vmw_cmd",
+      "ranges": [
+       [
+        206,
+        283
+       ]
+      ]
+     },
+     {
+      "instance": "su_SE1",
+      "port": "red_sel",
+      "ranges": [
+       [
+        70,
+        73
+       ]
+      ]
+     },
+     {
+      "instance": "su_SE1",
+      "port": "red_sel",
+      "ranges": [
+       [
+        0,
+        7
+       ]
+      ]
+     },
+     {
+      "instance": "su_SE2",
+      "port": "control",
+      "ranges": [
+       [
+        680,
+        2421
+       ]
+      ]
+     },
+     {
+      "instance": "su_SE2",
+      "port": "vmr_cmd",
+      "ranges": [
+       [
+        560,
+        619
+       ]
+      ]
+     },
+     {
+      "instance": "su_SE2",
+      "port": "vmw_cmd",
+      "ranges": [
+       [
+        284,
+        361
+       ]
+      ]
+     },
+     {
+      "instance": "su_SE2",
+      "port": "red_sel",
+      "ranges": [
+       [
+        70,
+        73
+       ]
+      ]
+     },
+     {
+      "instance": "su_SE2",
+      "port": "red_sel",
+      "ranges": [
+       [
+        0,
+        7
+       ]
+      ]
+     },
+     {
+      "instance": "su_SE3",
+      "port": "control",
+      "ranges": [
+       [
+        680,
+        2421
+       ]
+      ]
+     },
+     {
+      "instance": "su_SE3",
+      "port": "vmr_cmd",
+      "ranges": [
+       [
+        620,
+        679
+       ]
+      ]
+     },
+     {
+      "instance": "su_SE3",
+      "port": "vmw_cmd",
+      "ranges": [
+       [
+        362,
+        439
+       ]
+      ]
+     },
+     {
+      "instance": "su_SE3",
+      "port": "red_sel",
+      "ranges": [
+       [
+        70,
+        73
+       ]
+      ]
+     },
+     {
+      "instance": "su_SE3",
+      "port": "red_sel",
+      "ranges": [
+       [
+        0,
+        7
+       ]
+      ]
+     },
+     {
+      "instance": "cxrc_SE_q",
+      "port": "red_sel",
+      "ranges": [
+       [
+        70,
+        73
+       ]
+      ]
+     },
+     {
+      "instance": "cxrc_SE_q",
+      "port": "red_sel",
+      "ranges": [
+       [
+        0,
+        7
+       ]
+      ]
+     }
+    ],
+    "busy": [
+     {
+      "instance": "subr_SE",
+      "port": "prog_busy",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "su_prog",
+      "port": "p_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "pgp_SE",
+   "master": "ot_hbm_su_programme_pslice_c5",
+   "port": "edge_index",
+   "net": "pgp_SE__edge_index",
+   "width": 16,
+   "unread_ranges": [
+    [
+     0,
+     15
+    ]
+   ],
+   "bit_count": 16,
+   "die_line": 21125,
+   "source": "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme_pgcol.sv",
+   "classification": "su_zero_suppressed_command_observation_review",
+   "reason": "edge_index is registered internal c_e observation; programme producer itself uses c_e for done. Command data is explicitly zeroed outside each per-slice valid copy, so no external valid gate is required. Busy drives actual bridge release and phase check; fault reaches programme root/host. Completion SW export is consumed by collar; other three completion pulses are observations of the same fixed length/start calendar.",
+   "evidence": {
+    "command": [
+     {
+      "instance": "sucore_SE",
+      "port": "rf_rd_cmd",
+      "ranges": [
+       [
+        74,
+        127
+       ]
+      ]
+     },
+     {
+      "instance": "sucore_SE",
+      "port": "red_cmd",
+      "ranges": [
+       [
+        0,
+        73
+       ]
+      ]
+     },
+     {
+      "instance": "sucore_SE",
+      "port": "rf_drain_cmd",
+      "ranges": [
+       [
+        165,
+        166
+       ]
+      ]
+     },
+     {
+      "instance": "su_SE0",
+      "port": "control",
+      "ranges": [
+       [
+        680,
+        2421
+       ]
+      ]
+     },
+     {
+      "instance": "su_SE0",
+      "port": "vmr_cmd",
+      "ranges": [
+       [
+        440,
+        499
+       ]
+      ]
+     },
+     {
+      "instance": "su_SE0",
+      "port": "vmw_cmd",
+      "ranges": [
+       [
+        128,
+        205
+       ]
+      ]
+     },
+     {
+      "instance": "su_SE0",
+      "port": "red_sel",
+      "ranges": [
+       [
+        70,
+        73
+       ]
+      ]
+     },
+     {
+      "instance": "su_SE0",
+      "port": "red_sel",
+      "ranges": [
+       [
+        0,
+        7
+       ]
+      ]
+     },
+     {
+      "instance": "su_SE1",
+      "port": "control",
+      "ranges": [
+       [
+        680,
+        2421
+       ]
+      ]
+     },
+     {
+      "instance": "su_SE1",
+      "port": "vmr_cmd",
+      "ranges": [
+       [
+        500,
+        559
+       ]
+      ]
+     },
+     {
+      "instance": "su_SE1",
+      "port": "vmw_cmd",
+      "ranges": [
+       [
+        206,
+        283
+       ]
+      ]
+     },
+     {
+      "instance": "su_SE1",
+      "port": "red_sel",
+      "ranges": [
+       [
+        70,
+        73
+       ]
+      ]
+     },
+     {
+      "instance": "su_SE1",
+      "port": "red_sel",
+      "ranges": [
+       [
+        0,
+        7
+       ]
+      ]
+     },
+     {
+      "instance": "su_SE2",
+      "port": "control",
+      "ranges": [
+       [
+        680,
+        2421
+       ]
+      ]
+     },
+     {
+      "instance": "su_SE2",
+      "port": "vmr_cmd",
+      "ranges": [
+       [
+        560,
+        619
+       ]
+      ]
+     },
+     {
+      "instance": "su_SE2",
+      "port": "vmw_cmd",
+      "ranges": [
+       [
+        284,
+        361
+       ]
+      ]
+     },
+     {
+      "instance": "su_SE2",
+      "port": "red_sel",
+      "ranges": [
+       [
+        70,
+        73
+       ]
+      ]
+     },
+     {
+      "instance": "su_SE2",
+      "port": "red_sel",
+      "ranges": [
+       [
+        0,
+        7
+       ]
+      ]
+     },
+     {
+      "instance": "su_SE3",
+      "port": "control",
+      "ranges": [
+       [
+        680,
+        2421
+       ]
+      ]
+     },
+     {
+      "instance": "su_SE3",
+      "port": "vmr_cmd",
+      "ranges": [
+       [
+        620,
+        679
+       ]
+      ]
+     },
+     {
+      "instance": "su_SE3",
+      "port": "vmw_cmd",
+      "ranges": [
+       [
+        362,
+        439
+       ]
+      ]
+     },
+     {
+      "instance": "su_SE3",
+      "port": "red_sel",
+      "ranges": [
+       [
+        70,
+        73
+       ]
+      ]
+     },
+     {
+      "instance": "su_SE3",
+      "port": "red_sel",
+      "ranges": [
+       [
+        0,
+        7
+       ]
+      ]
+     },
+     {
+      "instance": "cxrc_SE_q",
+      "port": "red_sel",
+      "ranges": [
+       [
+        70,
+        73
+       ]
+      ]
+     },
+     {
+      "instance": "cxrc_SE_q",
+      "port": "red_sel",
+      "ranges": [
+       [
+        0,
+        7
+       ]
+      ]
+     }
+    ],
+    "busy": [
+     {
+      "instance": "subr_SE",
+      "port": "prog_busy",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "su_prog",
+      "port": "p_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "pgp_SE",
+   "master": "ot_hbm_su_programme_pslice_c5",
+   "port": "valid",
+   "net": "pgp_SE__valid",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 21125,
+   "source": "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme_pgcol.sv",
+   "classification": "su_zero_suppressed_command_observation_review",
+   "reason": "edge_index is registered internal c_e observation; programme producer itself uses c_e for done. Command data is explicitly zeroed outside each per-slice valid copy, so no external valid gate is required. Busy drives actual bridge release and phase check; fault reaches programme root/host. Completion SW export is consumed by collar; other three completion pulses are observations of the same fixed length/start calendar.",
+   "evidence": {
+    "command": [
+     {
+      "instance": "sucore_SE",
+      "port": "rf_rd_cmd",
+      "ranges": [
+       [
+        74,
+        127
+       ]
+      ]
+     },
+     {
+      "instance": "sucore_SE",
+      "port": "red_cmd",
+      "ranges": [
+       [
+        0,
+        73
+       ]
+      ]
+     },
+     {
+      "instance": "sucore_SE",
+      "port": "rf_drain_cmd",
+      "ranges": [
+       [
+        165,
+        166
+       ]
+      ]
+     },
+     {
+      "instance": "su_SE0",
+      "port": "control",
+      "ranges": [
+       [
+        680,
+        2421
+       ]
+      ]
+     },
+     {
+      "instance": "su_SE0",
+      "port": "vmr_cmd",
+      "ranges": [
+       [
+        440,
+        499
+       ]
+      ]
+     },
+     {
+      "instance": "su_SE0",
+      "port": "vmw_cmd",
+      "ranges": [
+       [
+        128,
+        205
+       ]
+      ]
+     },
+     {
+      "instance": "su_SE0",
+      "port": "red_sel",
+      "ranges": [
+       [
+        70,
+        73
+       ]
+      ]
+     },
+     {
+      "instance": "su_SE0",
+      "port": "red_sel",
+      "ranges": [
+       [
+        0,
+        7
+       ]
+      ]
+     },
+     {
+      "instance": "su_SE1",
+      "port": "control",
+      "ranges": [
+       [
+        680,
+        2421
+       ]
+      ]
+     },
+     {
+      "instance": "su_SE1",
+      "port": "vmr_cmd",
+      "ranges": [
+       [
+        500,
+        559
+       ]
+      ]
+     },
+     {
+      "instance": "su_SE1",
+      "port": "vmw_cmd",
+      "ranges": [
+       [
+        206,
+        283
+       ]
+      ]
+     },
+     {
+      "instance": "su_SE1",
+      "port": "red_sel",
+      "ranges": [
+       [
+        70,
+        73
+       ]
+      ]
+     },
+     {
+      "instance": "su_SE1",
+      "port": "red_sel",
+      "ranges": [
+       [
+        0,
+        7
+       ]
+      ]
+     },
+     {
+      "instance": "su_SE2",
+      "port": "control",
+      "ranges": [
+       [
+        680,
+        2421
+       ]
+      ]
+     },
+     {
+      "instance": "su_SE2",
+      "port": "vmr_cmd",
+      "ranges": [
+       [
+        560,
+        619
+       ]
+      ]
+     },
+     {
+      "instance": "su_SE2",
+      "port": "vmw_cmd",
+      "ranges": [
+       [
+        284,
+        361
+       ]
+      ]
+     },
+     {
+      "instance": "su_SE2",
+      "port": "red_sel",
+      "ranges": [
+       [
+        70,
+        73
+       ]
+      ]
+     },
+     {
+      "instance": "su_SE2",
+      "port": "red_sel",
+      "ranges": [
+       [
+        0,
+        7
+       ]
+      ]
+     },
+     {
+      "instance": "su_SE3",
+      "port": "control",
+      "ranges": [
+       [
+        680,
+        2421
+       ]
+      ]
+     },
+     {
+      "instance": "su_SE3",
+      "port": "vmr_cmd",
+      "ranges": [
+       [
+        620,
+        679
+       ]
+      ]
+     },
+     {
+      "instance": "su_SE3",
+      "port": "vmw_cmd",
+      "ranges": [
+       [
+        362,
+        439
+       ]
+      ]
+     },
+     {
+      "instance": "su_SE3",
+      "port": "red_sel",
+      "ranges": [
+       [
+        70,
+        73
+       ]
+      ]
+     },
+     {
+      "instance": "su_SE3",
+      "port": "red_sel",
+      "ranges": [
+       [
+        0,
+        7
+       ]
+      ]
+     },
+     {
+      "instance": "cxrc_SE_q",
+      "port": "red_sel",
+      "ranges": [
+       [
+        70,
+        73
+       ]
+      ]
+     },
+     {
+      "instance": "cxrc_SE_q",
+      "port": "red_sel",
+      "ranges": [
+       [
+        0,
+        7
+       ]
+      ]
+     }
+    ],
+    "busy": [
+     {
+      "instance": "subr_SE",
+      "port": "prog_busy",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "su_prog",
+      "port": "p_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "pgp_SW",
+   "master": "ot_hbm_su_programme_pslice_c5",
+   "port": "edge_index",
+   "net": "pgp_SW__edge_index",
+   "width": 16,
+   "unread_ranges": [
+    [
+     0,
+     15
+    ]
+   ],
+   "bit_count": 16,
+   "die_line": 21109,
+   "source": "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme_pgcol.sv",
+   "classification": "su_zero_suppressed_command_observation_review",
+   "reason": "edge_index is registered internal c_e observation; programme producer itself uses c_e for done. Command data is explicitly zeroed outside each per-slice valid copy, so no external valid gate is required. Busy drives actual bridge release and phase check; fault reaches programme root/host. Completion SW export is consumed by collar; other three completion pulses are observations of the same fixed length/start calendar.",
+   "evidence": {
+    "command": [
+     {
+      "instance": "sucore_SW",
+      "port": "rf_rd_cmd",
+      "ranges": [
+       [
+        74,
+        127
+       ]
+      ]
+     },
+     {
+      "instance": "sucore_SW",
+      "port": "red_cmd",
+      "ranges": [
+       [
+        0,
+        73
+       ]
+      ]
+     },
+     {
+      "instance": "sucore_SW",
+      "port": "rf_drain_cmd",
+      "ranges": [
+       [
+        165,
+        166
+       ]
+      ]
+     },
+     {
+      "instance": "su_SW0",
+      "port": "control",
+      "ranges": [
+       [
+        680,
+        2421
+       ]
+      ]
+     },
+     {
+      "instance": "su_SW0",
+      "port": "vmr_cmd",
+      "ranges": [
+       [
+        440,
+        499
+       ]
+      ]
+     },
+     {
+      "instance": "su_SW0",
+      "port": "vmw_cmd",
+      "ranges": [
+       [
+        128,
+        205
+       ]
+      ]
+     },
+     {
+      "instance": "su_SW0",
+      "port": "red_sel",
+      "ranges": [
+       [
+        70,
+        73
+       ]
+      ]
+     },
+     {
+      "instance": "su_SW0",
+      "port": "red_sel",
+      "ranges": [
+       [
+        0,
+        7
+       ]
+      ]
+     },
+     {
+      "instance": "su_SW1",
+      "port": "control",
+      "ranges": [
+       [
+        680,
+        2421
+       ]
+      ]
+     },
+     {
+      "instance": "su_SW1",
+      "port": "vmr_cmd",
+      "ranges": [
+       [
+        500,
+        559
+       ]
+      ]
+     },
+     {
+      "instance": "su_SW1",
+      "port": "vmw_cmd",
+      "ranges": [
+       [
+        206,
+        283
+       ]
+      ]
+     },
+     {
+      "instance": "su_SW1",
+      "port": "red_sel",
+      "ranges": [
+       [
+        70,
+        73
+       ]
+      ]
+     },
+     {
+      "instance": "su_SW1",
+      "port": "red_sel",
+      "ranges": [
+       [
+        0,
+        7
+       ]
+      ]
+     },
+     {
+      "instance": "su_SW2",
+      "port": "control",
+      "ranges": [
+       [
+        680,
+        2421
+       ]
+      ]
+     },
+     {
+      "instance": "su_SW2",
+      "port": "vmr_cmd",
+      "ranges": [
+       [
+        560,
+        619
+       ]
+      ]
+     },
+     {
+      "instance": "su_SW2",
+      "port": "vmw_cmd",
+      "ranges": [
+       [
+        284,
+        361
+       ]
+      ]
+     },
+     {
+      "instance": "su_SW2",
+      "port": "red_sel",
+      "ranges": [
+       [
+        70,
+        73
+       ]
+      ]
+     },
+     {
+      "instance": "su_SW2",
+      "port": "red_sel",
+      "ranges": [
+       [
+        0,
+        7
+       ]
+      ]
+     },
+     {
+      "instance": "su_SW3",
+      "port": "control",
+      "ranges": [
+       [
+        680,
+        2421
+       ]
+      ]
+     },
+     {
+      "instance": "su_SW3",
+      "port": "vmr_cmd",
+      "ranges": [
+       [
+        620,
+        679
+       ]
+      ]
+     },
+     {
+      "instance": "su_SW3",
+      "port": "vmw_cmd",
+      "ranges": [
+       [
+        362,
+        439
+       ]
+      ]
+     },
+     {
+      "instance": "su_SW3",
+      "port": "red_sel",
+      "ranges": [
+       [
+        70,
+        73
+       ]
+      ]
+     },
+     {
+      "instance": "su_SW3",
+      "port": "red_sel",
+      "ranges": [
+       [
+        0,
+        7
+       ]
+      ]
+     },
+     {
+      "instance": "cxrc_SW_q",
+      "port": "red_sel",
+      "ranges": [
+       [
+        70,
+        73
+       ]
+      ]
+     },
+     {
+      "instance": "cxrc_SW_q",
+      "port": "red_sel",
+      "ranges": [
+       [
+        0,
+        7
+       ]
+      ]
+     }
+    ],
+    "busy": [
+     {
+      "instance": "col_su",
+      "port": "c_busy",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     },
+     {
+      "instance": "subr_SW",
+      "port": "prog_busy",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "su_prog",
+      "port": "p_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  }
+ ],
+ "source_commit": "d517a76ad",
+ "source_sha256": {
+  "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme_pgcol.sv": "de834bcd0dc4e267bad87ea0a5283ee873f30e0ae94ae6fa34a8588965eeb255",
+  "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme.sv": "e1a7343e0253f19e646c9c5aa9eaf370a824d8311078d3f75e863ab55ce977d0",
+  "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_bridge_release_s.sv": "f49291fd08950a1191d1d7937783ac5559fbcea9b0cb4d06065fefee4acbb485"
+ },
+ "validation": "Read-only source proof, not new RTL simulation; all bridge/native timing remains independent physical obligation."
+}
