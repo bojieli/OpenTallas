@@ -1,0 +1,13 @@
+END_EDGE 49  done
+UNION_QUAD_REC done_edge 49 n_rows 1 U 6 lead 26 start_hold q0..3 5 0 0 0
+END_EDGE 280  done
+UNION_QUAD_REC done_edge 280 n_rows 1 U 6 lead 26 start_hold q0..3 5 0 0 0
+END_EDGE 530  done
+UNION_QUAD_REC done_edge 530 n_rows 2 U 12 lead 45 start_hold q0..3 0 0 0 0
+END_EDGE 942  done
+UNION_QUAD_REC done_edge 942 n_rows 2 U 12 lead 45 start_hold q0..3 0 0 0 0
+END_EDGE 1377  done
+UNION_QUAD_REC done_edge 1377 n_rows 3 U 17 lead 64 start_hold q0..3 0 0 0 0
+[91330000] %Fatal: tb_hnx_union_quad.sv:116: Assertion failed in tb_hnx_union_quad: UNION_FACTORED_WRONG_VARIANT q0 launch 89 edge 1577 loop 1 slot 13 c 1 kref 040 expected loop 1 slot 13 c 2 kref 041
+%Error: rtl/hbm_next/control/tb_hnx_union_quad.sv:116: Verilog $stop
+Aborting...

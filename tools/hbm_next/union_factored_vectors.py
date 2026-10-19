@@ -16,6 +16,7 @@ the two U24 equal-U/different-cardinality counterexamples and the three IDX faul
   union_factored_vectors.py OUTDIR [seed=0] [random_count=8]
 Extra files beside the IDX ones: cfg.txt (dispatcher configuration writes), launch.txt (expected launches), factored.json.
 """
+import os
 import json
 import math
 import sys
@@ -33,6 +34,8 @@ from union_variants import counterexample  # noqa: E402
 P = 3                      # next-release die lanes (owner 10-19 P = 3): c rows take ceil(c / P) SM passes
 B1, GMID = 4, 11
 KB1, KB2, KBT = 0x100, 0x200, 0x3ff
+if os.environ.get('OT_UF_KB'):     # UNIONTILE 10-19: kernel bases inside the quadrant kernel-store map (loop1 < 400, loop2 < 503)
+    KB1, KB2, KBT = (int(v, 0) for v in os.environ['OT_UF_KB'].split(','))
 
 
 def d1(c):                 # bench kernel spans (compiler configuration; production spans are hundreds of edges)

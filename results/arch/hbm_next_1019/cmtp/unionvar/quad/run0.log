@@ -1,0 +1,54 @@
+END_EDGE 49  done
+UNION_QUAD_REC done_edge 49 n_rows 1 U 6 lead 26 start_hold q0..3 5 0 0 0
+END_EDGE 280  done
+UNION_QUAD_REC done_edge 280 n_rows 1 U 6 lead 26 start_hold q0..3 5 0 0 0
+END_EDGE 530  done
+UNION_QUAD_REC done_edge 530 n_rows 2 U 12 lead 45 start_hold q0..3 0 0 0 0
+END_EDGE 942  done
+UNION_QUAD_REC done_edge 942 n_rows 2 U 12 lead 45 start_hold q0..3 0 0 0 0
+END_EDGE 1377  done
+UNION_QUAD_REC done_edge 1377 n_rows 3 U 17 lead 64 start_hold q0..3 0 0 0 0
+END_EDGE 1947  done
+UNION_QUAD_REC done_edge 1947 n_rows 3 U 18 lead 64 start_hold q0..3 0 0 0 0
+END_EDGE 2554  done
+UNION_QUAD_REC done_edge 2554 n_rows 4 U 17 lead 76 start_hold q0..3 0 0 0 0
+END_EDGE 3135  done
+UNION_QUAD_REC done_edge 3135 n_rows 4 U 24 lead 76 start_hold q0..3 0 0 0 0
+END_EDGE 3946  done
+UNION_QUAD_REC done_edge 3946 n_rows 6 U 26 lead 114 start_hold q0..3 0 0 0 0
+END_EDGE 4809  done
+UNION_QUAD_REC done_edge 4809 n_rows 6 U 36 lead 114 start_hold q0..3 0 0 0 0
+END_EDGE 6099  done
+UNION_QUAD_REC done_edge 6099 n_rows 8 U 9 lead 265 start_hold q0..3 0 0 0 0
+END_EDGE 6671  done
+UNION_QUAD_REC done_edge 6671 n_rows 8 U 24 lead 136 start_hold q0..3 0 0 0 0
+END_EDGE 7593  done
+UNION_QUAD_REC done_edge 7593 n_rows 13 U 30 lead 216 start_hold q0..3 0 0 0 0
+END_EDGE 8723  done
+UNION_QUAD_REC done_edge 8723 n_rows 16 U 9 lead 263 start_hold q0..3 0 0 0 0
+END_EDGE 9100  done
+UNION_QUAD_REC done_edge 9100 n_rows 2 U 6 lead 26 start_hold q0..3 5 0 0 0
+END_EDGE 9552  done
+UNION_QUAD_REC done_edge 9552 n_rows 14 U 41 lead 235 start_hold q0..3 0 0 0 0
+END_EDGE 10808  done
+UNION_QUAD_REC done_edge 10808 n_rows 15 U 14 lead 93 start_hold q0..3 0 0 0 0
+END_EDGE 11299  done
+UNION_QUAD_REC done_edge 11299 n_rows 9 U 9 lead 63 start_hold q0..3 0 0 0 0
+END_EDGE 11650 fault
+END_EDGE 11719 fault
+END_EDGE 11722 fault
+END_EDGE 11863  done
+UNION_QUAD_REC done_edge 11863 n_rows 6 U 24 lead 114 start_hold q0..3 0 0 0 0
+END_EDGE 12672  done
+UNION_QUAD_REC done_edge 12672 n_rows 6 U 24 lead 114 start_hold q0..3 0 0 0 0
+IDX_UNION MUT0 records23 dones20 faults3 sectors_checked860 errors0 schedule_edges12680
+UNION_QUAD q0 LQ 28 launches 748 kernel_words 6188 aborts 3 metadata_hold_edges 0 start_hold_records 3 max 5
+UNION_QUAD q1 LQ 20 launches 748 kernel_words 6188 aborts 3 metadata_hold_edges 0 start_hold_records 0 max 0
+UNION_QUAD q2 LQ 12 launches 748 kernel_words 6188 aborts 3 metadata_hold_edges 0 start_hold_records 0 max 0
+UNION_QUAD q3 LQ 6 launches 748 kernel_words 6188 aborts 3 metadata_hold_edges 0 start_hold_records 0 max 0
+UNION_QUAD lead_min_tap0_to_S 26
+UNION_QUAD PASS real_IDX_UNION_to_per_quadrant_dispatch+kstore PMUT0 KLAT6
+- rtl/hbm_next/control/tb_hnx_union_quad.sv:280: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 263us; walltime 0.474 s; speed 554.633 us/s
+- Verilator: cpu 0.474 s on 1 threads; allocated 12 MB

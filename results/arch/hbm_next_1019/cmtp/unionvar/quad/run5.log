@@ -1,0 +1,5 @@
+END_EDGE 49  done
+UNION_QUAD_REC done_edge 49 n_rows 1 U 6 lead 26 start_hold q0..3 5 0 0 0
+[77170000] %Fatal: tb_hnx_union_quad.sv:107: Assertion failed in tb_hnx_union_quad: UNION_QUAD_KSTORE_WORD q1 edge 161 word 0 of addr 5104: v 1 first 1 half 0 data 6a474c136b474d80 expected 00000000000000000000000000000000000000000000000029503963285038f0
+%Error: rtl/hbm_next/control/tb_hnx_union_quad.sv:107: Verilog $stop
+Aborting...

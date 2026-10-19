@@ -1,0 +1,17 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/hnx-uniontile-1019/src
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/hnx-uniontile-1019/src
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/hnx-uniontile-1019/src
+ot-run: ot-epyc7       admits   967 GB (avail 778, growth 101, headroom 0, waiters 0/0 GB) load 50/96 running 30 disk 6329 GB 
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/hnx-uniontile-1019/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hnx-uniontile-1019/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hnx-uniontile-1019/src
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-4038291-1792437789 after 0 s
+quad PMUT0 expected exit=0
+quad PMUT1 expected exit=1
+quad PMUT2 expected exit=1
+quad PMUT3 expected exit=1
+quad PMUT4 expected exit=1
+quad PMUT5 expected exit=1
+UNION_QUAD_BENCH ALL EXPECTED 0 1 2 3 4 5
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-4038291-1792437789): exit 0
