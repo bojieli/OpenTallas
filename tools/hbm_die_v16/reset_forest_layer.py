@@ -42,12 +42,12 @@ MAX_PAD = 128  # rtl/hbm_accel/die_glue/hbfd_rrl.sv defines hbfd_rrl_pad2 .. hbf
 
 
 def build(c, manifest, views, relay_views=None, reach=405., fanout=2048, zones='d4b', mut_skew=False, max_root_tries=40,
-          survey=None, relay_rows=False):
+          survey=None, relay_rows=False, overfly=None):
     if reach <= 0 or fanout < 1:
         raise GeometryError('reach and fanout must be positive')
     if any(i['master'].startswith('hbfd_rrl_') for i in c['instances'].values()):
         raise GeometryError('input already contains reset forest instances; use pre-forest contract')
-    g = Geometry(manifest, views, relay_views, reach)
+    g = Geometry(manifest, views, relay_views, reach, overfly=overfly)
     W, H = manifest['die_um']
     tiles, edges, clocks, ports, drop = [], [], [], [], []
     report = dict(schema='opentallas.hbm.reset_forest.v2', reach_um=reach, fanout_cap=fanout,
@@ -367,12 +367,15 @@ def main():
     ap.add_argument('--max-root-tries', type=int, default=40,
                     help='LH-GEN2CD 10-19: regional-root alternative sites tried (rings 0..3240 um, 8 per ring = 57 sites); '
                          'the reach budget of every route is unchanged')
+    ap.add_argument('--overfly-masters', default=None,
+                    help='LH-GEN2CD 10-19: regex of placed masters (<= 64.8 um tiles, e.g. lane-row relays) that reset wires overfly '
+                         '(routing budget) while still blocking homes; default none')
     a = ap.parse_args()
     try:
         survey = [] if a.survey else None
         spec, rep = build(load(a.contract), load(a.manifest), a.views, a.relay_views,
                           a.reach, a.fanout, a.zones, a.mut_skew, max_root_tries=a.max_root_tries, survey=survey,
-                          relay_rows=a.relay_rows)
+                          relay_rows=a.relay_rows, overfly=a.overfly_masters)
     except GeometryError as e:
         a.report.write_text(json.dumps(dict(schema='opentallas.hbm.reset_forest.v2', geometry_gate='FAIL', reach_gate='FAIL',
                                            physical_signoff='OPEN', problems=[str(e)], unhomable=survey or []), indent=2) + '\n')

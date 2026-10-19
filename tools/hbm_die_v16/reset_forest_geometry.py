@@ -25,7 +25,7 @@ class GeometryError(ValueError):
 
 
 class Geometry:
-    def __init__(self, manifest, views, relay_views, reach):
+    def __init__(self, manifest, views, relay_views, reach, overfly=None):
         self.pl = manifest['placement']
         self.W, self.H = manifest['die_um']
         self.expected_hashes = manifest.get('consumed_view_sha256', {})
@@ -42,12 +42,19 @@ class Geometry:
         self.budget = reach - 2 * self.radius - 2 * GRID
         if self.budget < 6 * GRID:
             raise GeometryError('reach too small for relay outlines and conservative grid budget')
-        obstacles = []
+        obstacles, overflown = [], []
+        ofly = re.compile(overfly) if overfly else None
         for n, v in self.pl.items():
             o = v.get('o', 'R0')
             if o not in ('R0', 'MX', 'MY', 'R180'):
                 raise GeometryError(f'{n}: unsupported placement orientation {o}')
-            obstacles.append((v['x'], v['y'], v['x'] + v['w'], v['y'] + v['h']))
+            # LH-GEN2CD 10-19 (opt-in --overfly-masters): placed lane-row relay tiles (21.6 um hbfd_rly/lh/land kits) are
+            # overflown like the forest's own reserved relay tiles -- they block HOMES (self.grid) but not the routing
+            # grid's blocked-run budget (self.rgrid).  Default None = every placed instance blocks both (unchanged).
+            m_ = v.get('m') or v.get('master') or ''
+            (overflown if ofly and ofly.match(m_) and max(v['w'], v['h']) <= 64.8 else obstacles).append(
+                (v['x'], v['y'], v['x'] + v['w'], v['y'] + v['h']))
+        self.overflown_count = len(overflown)
         # spatial bins for the buried-pin check (post-landing cases place ~57k instances x ~31k reset pins)
         self.BIN = 500.0
         self.bins = {}
@@ -70,6 +77,8 @@ class Geometry:
         # Reserved tiles used to close 20 um channels for later trees (GEN2a stream NW pocket).  Budget unchanged.
         self.rgrid = Grid(self.W, self.H, [])
         self.rgrid.blk[:] = self.grid.blk
+        for rect in overflown:   # homes only (empty unless --overfly-masters)
+            self.block_rect(*rect)
 
     def block_rect(self, x0, y0, x1, y1):
         # Mark centers whose complete largest-relay rectangle intersects the
