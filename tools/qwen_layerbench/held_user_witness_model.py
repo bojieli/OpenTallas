@@ -59,6 +59,8 @@ def must_reject(name,fn):
 
 def build(source,certificate):
     events=source['actual_SU_issue_events'];gs=groups(events)
+    group_overlap=max(sum(g['first_w5']<=edge<=g['last_w5'] for g in gs) for edge in range(8192))
+    minimum_group_start_gap=min(b-a for a,b in zip(sorted(g['first_w5'] for g in gs),sorted(g['first_w5'] for g in gs)[1:]))
     accepted=0
     for stage in range(1,37):
       for user in range(4):
@@ -132,6 +134,18 @@ def build(source,certificate):
         expected_template_fits_existing_XPF_records=len(gs)*134<=752,
         possible_native_ROMs4096x266=1,physical_template_ROM_bits=4096*266,
         native_ROM_read_port_age_bound=False,existing_calendar_ROM_extra_read_port_available=False,
+        installation_PW_candidate=dict(first=400,last=438,words=39,words_per_group=3,
+          full_metadata_PW=439,available_programme_PW=976,new_external_wide_bus=False,
+          uses_existing_ascending_PW_input=True,template_indexed_block_bits=1742,
+          dynamic_state_separate_bits=775,aggregate_template_plus_state_lower_bound_bits=2517,
+          atomic_seal_authentication_and_execution_write_guard_required=True,
+          existing_footer_reserved_bits_changed=False,RTL_implemented=False,physical_admission=False),
+        interval_certificate=dict(source_context_max_live_groups=group_overlap,
+          min_group_start_gap_source_edges=minimum_group_start_gap,
+          four_context_worst_aligned_max_live_groups=4*group_overlap,
+          compact_seen_slots=4*group_overlap*12,
+          physical_port_schedule_bound=False,
+          qualifier='current406 source body only; B4/new phase/full production schedule must regenerate'),
         expected_template_storage_and_capture_placement='unselected; no indexed flop/ROM/port implementation approved',
         area_timing_admission=False),
       predecessor_binding=dict(XS3_resid1='candidate gu producer; actual source/read landing must join',

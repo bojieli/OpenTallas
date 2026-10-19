@@ -525,6 +525,31 @@
     "physical_template_ROM_bits": 1089536,
     "native_ROM_read_port_age_bound": false,
     "existing_calendar_ROM_extra_read_port_available": false,
+    "installation_PW_candidate": {
+      "first": 400,
+      "last": 438,
+      "words": 39,
+      "words_per_group": 3,
+      "full_metadata_PW": 439,
+      "available_programme_PW": 976,
+      "new_external_wide_bus": false,
+      "uses_existing_ascending_PW_input": true,
+      "template_indexed_block_bits": 1742,
+      "dynamic_state_separate_bits": 775,
+      "aggregate_template_plus_state_lower_bound_bits": 2517,
+      "atomic_seal_authentication_and_execution_write_guard_required": true,
+      "existing_footer_reserved_bits_changed": false,
+      "RTL_implemented": false,
+      "physical_admission": false
+    },
+    "interval_certificate": {
+      "source_context_max_live_groups": 2,
+      "min_group_start_gap_source_edges": 41,
+      "four_context_worst_aligned_max_live_groups": 8,
+      "compact_seen_slots": 96,
+      "physical_port_schedule_bound": false,
+      "qualifier": "current406 source body only; B4/new phase/full production schedule must regenerate"
+    },
     "expected_template_storage_and_capture_placement": "unselected; no indexed flop/ROM/port implementation approved",
     "area_timing_admission": false
   },

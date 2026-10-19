@@ -38,7 +38,15 @@ expected templates need13×134=1742 bits, exceeding the present four188-bit XPF
 records (752 bits). Candidate state has a775-bit lower bound for four users,
 including624 seen bits, clocks, stage, generation, active/fault and snapshots.
 ROM return/capture, arbitration, physical landing and possible buffering are
-additional. A separate native266-bit ROM would consume1,089,536 physical bits;
+additional. A finite alternative to another ROM is39 unused programme-plane PW
+(three64-bit words per134-bit group), bringing400→439PW below976. The existing
+ascending75-bit PW input already reaches GI. A sealed13×134-bit control block
+would hold1742 bits; the775-bit dynamic state is separate. Aggregate lower-bound
+storage would be2517 bits. This needs explicit atomic seal/authentication and
+execution-write guards and actual mux/capture timing; it is not implemented.
+No reserved footer bits are changed.
+
+A separate native266-bit ROM would consume1,089,536 physical bits;
 there is no assigned spare read port on the existing calendar ROM. Template
 storage/capture and clock assignment are unselected. No indexed flop block,
 ROM, new register chain, API or physical implementation is approved here.
