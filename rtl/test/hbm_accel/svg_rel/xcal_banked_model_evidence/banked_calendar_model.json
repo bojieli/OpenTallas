@@ -84,7 +84,7 @@
     ],
     "parent_bbox_um": [
       241.92,
-      380.16
+      397.44
     ],
     "parent_origins_um": {
       "bank0": [
@@ -97,14 +97,28 @@
       ],
       "bank1": [
         0,
-        241.92
+        259.2
       ]
     },
     "central_hard_top": "Application central wrapper contains the shared calendar-control/select core plus the existing SVG or XC R/C logic and explicit safe-cache command/mirror alignment. Bank request/tuple ports cross real hard boundaries. Do not harden the generic core alone and leave R/C as an unconstrained soft parent.",
     "hierarchy": "Real one-SRAM hard leaves and a separate central hard leaf, not cosmetic keep_hierarchy in one flat GPL region. Each leaf exports native registered pins and a source-bound placement region.",
     "bank_face_plan": "bank0 registered row output N; bank1 output S, each centred over central bus. cfg write-data captures split W136/E120 beside true macro pin faces. Clock beside local FF mass; local tied mask/repair pins on E.",
     "central_face_plan": "bank0 tuple enters S, bank1 tuple N, native input Q first. Per<=16bit selects/qualifiers and output Q remain local; stage control uses same-edge kept copies.",
-    "parent_registered_hop_um": 8.64,
+    "parent_registered_hops_um": [
+      8.64,
+      25.92
+    ],
+    "global_macro_origins_um": [
+      [
+        43.2,
+        43.2
+      ],
+      [
+        43.2,
+        302.4
+      ]
+    ],
+    "lattice_proof": "bank1origin259.2=6*43.2; internalmacro43.2 => global302.4=7*43.2",
     "allocated_bus_face_width_um": 86.4,
     "max_exported_bank_tuple_bits": 252,
     "max_tuple_pin_density_per_um": 2.9166666666666665,
@@ -114,10 +128,10 @@
     "largest_leaf_diagonal_um": 278.6316277811979,
     "central_diagonal_um": 122.18805178903543,
     "summed_leaf_outline_area_um2": 74351.0016,
-    "parent_bbox_area_um2": 91968.3072,
+    "parent_bbox_area_um2": 96148.68479999999,
     "prior_XC_slot_area_um2": 64795.85279999999,
-    "XC_provisional_bbox_delta_um2": 27172.454400000002,
-    "candidate_32_provider_bbox_mm2": 2.9429858304,
+    "XC_provisional_bbox_delta_um2": 31352.831999999995,
+    "candidate_32_provider_bbox_mm2": 3.0767579136,
     "slot_status": "Provisional access/lattice envelopes, not granted physical area. Measured per-leaf synthesis area and actual face/channel capacity required before kit generation/gate.",
     "clock_ports": [
       "clk_bank0",
@@ -319,9 +333,12 @@
     "fixed_GO_policy": "Do not advance GO or change absolute compiler calendar without a separate exact compiler result.",
     "conservative_minimum_GO_gap_added_edges": 2,
     "why_gap": "Until frontend/tail overlap is explicitly proved, extending calendar data/valid/done by2 extends legal busy/tail by2; existing9-gap witness becomes11. Cache-only alignment adds no further provider busy tail unless source requires it.",
-    "serialised_boundary_count_input": 1,
-    "conservative_added_token_stream_edges": 4,
-    "conservative_added_token_ns_at_1p2GHz": 3.3333333333333335,
+    "serialised_boundary_count_input": null,
+    "token_price_status": "No blanket4edge/token claim. Actual critical-path programme boundaries must be enumerated/recomposed; overlapping SVG/XC mirrors are not counted twice.",
+    "configuration_install_settle_added_edges": 1,
+    "configuration_reason": "Central cfg input Q plus bank native cfg Q adds1 before SRAM write versus original calendar cfg Q; install at least4edges before GO in component proof.",
+    "conservative_added_token_stream_edges": null,
+    "conservative_added_token_ns_at_1p2GHz": null,
     "continuous_payload_rate": "1 word per stream edge after fill; +2 is per programme boundary, not per word/loop iteration. Production bench must prove it.",
     "compiler_obligations": [
       "recompile and resimulate fixed SM consume/output dependencies with GO-to-command11",

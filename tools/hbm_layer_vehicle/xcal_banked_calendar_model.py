@@ -2,8 +2,8 @@
 """Model-only structural replacement after ab29e6c2b GPL0305; no RTL adoption."""
 import json,math
 
-def model(serialized_programmes=1):
-    leaf=[241.92,138.24];centre=[86.4,86.4];envelope=[241.92,380.16]
+def model(serialized_programmes=None):
+    leaf=[241.92,138.24];centre=[86.4,86.4];envelope=[241.92,397.44]
     profiles={}
     for name,W,XW in [("SVG",135,46),("XC",173,5)]:
         token=62+XW # PC11 + ordinal32 + ctxXW + iter16 + lastit1 + lastword1 + valid1
@@ -51,12 +51,14 @@ def model(serialized_programmes=1):
         "bank_leaf_outline_um":leaf,"bank_macro_origin_um":[43.2,43.2],
         "bank_leaf_full_width_std_band_y_um":[2.16,37.8],
         "central_leaf_outline_um":centre,
-        "parent_bbox_um":envelope,"parent_origins_um":{"bank0":[0,0],"central":[77.76,146.88],"bank1":[0,241.92]},
+        "parent_bbox_um":envelope,"parent_origins_um":{"bank0":[0,0],"central":[77.76,146.88],"bank1":[0,259.2]},
         "central_hard_top":"Application central wrapper contains the shared calendar-control/select core plus the existing SVG or XC R/C logic and explicit safe-cache command/mirror alignment. Bank request/tuple ports cross real hard boundaries. Do not harden the generic core alone and leave R/C as an unconstrained soft parent.",
         "hierarchy":"Real one-SRAM hard leaves and a separate central hard leaf, not cosmetic keep_hierarchy in one flat GPL region. Each leaf exports native registered pins and a source-bound placement region.",
         "bank_face_plan":"bank0 registered row output N; bank1 output S, each centred over central bus. cfg write-data captures split W136/E120 beside true macro pin faces. Clock beside local FF mass; local tied mask/repair pins on E.",
         "central_face_plan":"bank0 tuple enters S, bank1 tuple N, native input Q first. Per<=16bit selects/qualifiers and output Q remain local; stage control uses same-edge kept copies.",
-        "parent_registered_hop_um":8.64,
+        "parent_registered_hops_um":[8.64,25.92],
+        "global_macro_origins_um":[[43.2,43.2],[43.2,302.4]],
+        "lattice_proof":"bank1origin259.2=6*43.2; internalmacro43.2 => global302.4=7*43.2",
         "allocated_bus_face_width_um":86.4,"max_exported_bank_tuple_bits":252,
         "max_tuple_pin_density_per_um":252/86.4,
         "required_cut_tracks_per_bank":252,"actual_cut_capacity_tracks":None,
@@ -85,8 +87,11 @@ def model(serialized_programmes=1):
         "conservative_minimum_GO_gap_added_edges":2,
         "why_gap":"Until frontend/tail overlap is explicitly proved, extending calendar data/valid/done by2 extends legal busy/tail by2; existing9-gap witness becomes11. Cache-only alignment adds no further provider busy tail unless source requires it.",
         "serialised_boundary_count_input":serialized_programmes,
-        "conservative_added_token_stream_edges":4*serialized_programmes,
-        "conservative_added_token_ns_at_1p2GHz":4*serialized_programmes/1.2,
+        "token_price_status":"No blanket4edge/token claim. Actual critical-path programme boundaries must be enumerated/recomposed; overlapping SVG/XC mirrors are not counted twice.",
+        "configuration_install_settle_added_edges":1,
+        "configuration_reason":"Central cfg input Q plus bank native cfg Q adds1 before SRAM write versus original calendar cfg Q; install at least4edges before GO in component proof.",
+        "conservative_added_token_stream_edges":None if serialized_programmes is None else 4*serialized_programmes,
+        "conservative_added_token_ns_at_1p2GHz":None if serialized_programmes is None else 4*serialized_programmes/1.2,
         "continuous_payload_rate":"1 word per stream edge after fill; +2 is per programme boundary, not per word/loop iteration. Production bench must prove it.",
         "compiler_obligations":["recompile and resimulate fixed SM consume/output dependencies with GO-to-command11","READ+2 and command+4; preserve cache bank/epoch/tag ownership through new retirement tail","pad minimum block/GO spacing+2 until exact overlap proof","XC context/ordinal/magic-format launch and kv_desc mirror the same+4 command edge","run generic highprogramme/bank-boundary/loop/context exact benches with fail witnesses before any physical gate"]},
       "reset_profile":{"scope":"OBSERVED XC BASELINE ONLY, not a proof for new generic leaves or SVG XW46", "observed_programme_raw_sinks":8,"observed_first_stage_D_loads":7,"observed_final_max_loads":28,
