@@ -1,0 +1,245 @@
+{
+  "observed_utc": "2026-10-19T20:19:09.182699+00:00",
+  "runs": [
+    {
+      "run": "qkd_kvs_grp_sq2-20261019-113454",
+      "path": "/srv/opentallas-scratch/claude/ref_gate/qkd_kvs_grp_sq2-20261019-113454",
+      "local_client_pid": 507086,
+      "source_commit": "7e6cbb4658e0fb8a7273b1bb29a7ef8c28fd255d",
+      "manifest_sha256": "c785eefb7028a638efcbbac61d9d26807fb6c64c266cbdf5c4e5923a5f85f29b",
+      "archive_sha256": "31db816618ff76d2383152413d32706b6abd3065ad0b79761b99ff53ba05a101",
+      "container": "gate_cts_qkd_kvs_grp_sq2-20261019-113454",
+      "container_id": "534a26320e7a23757acc0fdf1986edc6566e73164fbad715639c80dba64ef507",
+      "container_pid": 3483679,
+      "mounts": [
+        {
+          "Type": "bind",
+          "Source": "/srv/opentallas-scratch/claude/ref_gate/qkd_kvs_grp_sq2-20261019-113454/src",
+          "Destination": "/src",
+          "Mode": "ro",
+          "RW": false,
+          "Propagation": "rprivate"
+        },
+        {
+          "Type": "bind",
+          "Source": "/srv/opentallas-scratch/claude/ref_gate/qkd_kvs_grp_sq2-20261019-113454/routes/gate/work/orfs",
+          "Destination": "/work",
+          "Mode": "",
+          "RW": true,
+          "Propagation": "rprivate"
+        }
+      ],
+      "processes": "PID                 PPID                ELAPSED             %CPU                COMMAND\n3483679             3483559             01:32:03            0.0                 bash -lc source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; python3 /src/tools/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts >/dev/null && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base cts\n3484295             3483679             01:32:03            0.0                 make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base cts\n3921185             3484295             01:10:00            0.0                 make WORK_HOME=/work DESIGN_CONFIG=/work/config.mk FLOW_VARIANT=base --no-print-directory --file=Makefile DESIGN_CONFIG=/work/config.mk do-4_1_cts\n3921428             3921185             01:10:00            0.0                 bash /OpenROAD-flow-scripts/flow/scripts/flow.sh 4_1_cts cts\n3921433             3921428             01:10:00            0.0                 bash /OpenROAD-flow-scripts/flow/scripts/flow.sh 4_1_cts cts\n3921491             3921433             01:10:00            0.0                 /usr/bin/python3 /OpenROAD-flow-scripts/flow/scripts/run_command.py --log /work/logs/asap7/opentallas_qkd_kvs_grp_asap7_ref_gate/base/4_1_cts.tmp.log --append --tee -- /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 8 -no_splash /OpenROAD-flow-scripts/flow/scripts/cts.tcl -metrics /work/logs/asap7/opentallas_qkd_kvs_grp_asap7_ref_gate/base/4_1_cts.json\n3921504             3921491             01:10:00            105                 /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 8 -no_splash /OpenROAD-flow-scripts/flow/scripts/cts.tcl -metrics /work/logs/asap7/opentallas_qkd_kvs_grp_asap7_ref_gate/base/4_1_cts.json\n",
+      "latest_hold": [
+        "     5910 |       0 |   11642 |            0 |    +3.2% | -74.905 | -2621.571 | y__tep[0]",
+        "     5920 |       0 |   11660 |            0 |    +3.2% | -74.905 | -2621.571 | y__tep[0]",
+        "     5930 |       0 |   11680 |            0 |    +3.2% | -74.905 | -2621.571 | y__tep[0]",
+        "     5940 |       0 |   11700 |            0 |    +3.2% | -74.905 | -2621.571 | y__tep[0]"
+      ],
+      "kit_hashes": {
+        "physical/ref_tile/qkd_kvs_grp_sq2/clock.sdc": "5a6a0ad7733b908f62ac87cd85b864ed127c89821f2f66147015959498c55f0c",
+        "physical/ref_tile/qkd_kvs_grp_sq2/pin_regs.json": "d3eba1eedbc5b08e872d4271045e25dd060b8900ccacb659c25e9e6f3849ec68",
+        "physical/ref_tile/qkd_kvs_grp_sq2/spec.json": "fb5fb1e35d3cb54e70f9c8664c2dccf01f09240b1097f9a0ae9562f21bd8848d",
+        "physical/ref_tile/qkd_kvs_grp_sq2/README.md": "f8d07ab65a6a3b4b3a32402067e9bc5564dbcef8fa22fb255c059b56bb555a3a",
+        "physical/ref_tile/qkd_kvs_grp_sq2/pre_gpl.tcl": "868665071710eb4ce5d4af172b346032f605b49500c67093b5f6f3229928b739",
+        "physical/ref_tile/qkd_kvs_grp_sq2/post_cts.tcl": "d486a8850acae8f0300131ec4499a6180719f46dcf0ce6ed5fc842e6fafac82a",
+        "physical/ref_tile/qkd_kvs_grp_sq2/post_grt.tcl": "d486a8850acae8f0300131ec4499a6180719f46dcf0ce6ed5fc842e6fafac82a",
+        "physical/ref_tile/qkd_kvs_grp_sq2/job.json": "21178e9554dc81355960b0976b292d98532cd3232637eb0b7f2e7497fc4d8241",
+        "physical/ref_tile/qkd_kvs_grp_sq2/spine_ins.tcl": "7f09dba08032c22035f152c98322a9bcf437fae547db0e380e8d807d08355bed",
+        "physical/ref_tile/qkd_kvs_grp_sq2/kit.env": "e4c3c39a3f2af7078c0d18da5e048fb67e022cc0fbfa03a2118344a36cb1ab65",
+        "physical/ref_tile/qkd_kvs_grp_sq2/post_fill.tcl": "d486a8850acae8f0300131ec4499a6180719f46dcf0ce6ed5fc842e6fafac82a",
+        "physical/ref_tile/qkd_kvs_grp_sq2/pre_grt.tcl": "15d1d95cbb263fa78d42df3c3c598a74bf4a55d52fd87a20e7181ea2f732c37c",
+        "physical/ref_tile/qkd_kvs_grp_sq2/pre_dpl.tcl": "c668b3677a80a60029982fd74af121c738a52d3010947134539610b2bde0c8d9",
+        "physical/ref_tile/qkd_kvs_grp_sq2/reset_landing.json": "32d9dffdfa942f380f8ed5267a148524c424443160f552a0601f7992dbd7c155",
+        "physical/ref_tile/qkd_kvs_grp_sq2/signoff.sdc": "78225df6f49b3427b0afa00814e9ee45784673a24ef2de358bba2362d368d5d0",
+        "physical/ref_tile/qkd_kvs_grp_sq2/place.tcl": "1f8594a1a4b28cac1d127328e54a00b439de6b2cf73ba0d876045544991c3841",
+        "physical/ref_tile/qkd_kvs_grp_sq2/floorplan.json": "d92eaa141314f30f0010423ab6b42321a8cda69f8308b51d1e4234caa6840ba9",
+        "physical/ref_tile/qkd_kvs_grp_sq2/pre_fill.tcl": "106e4f95dffc7b8c57a25c31365deb31c21ab4fe405a74fe8da43ebeb5b36a5f",
+        "physical/ref_tile/qkd_kvs_grp_sq2/pdn.tcl": "0361abbe41f2f072c9a0517b79b2b6b467e3dfa7c351ee5dfe36d33d34581e6a",
+        "physical/ref_tile/qkd_kvs_grp_sq2/pre_drt.tcl": "106e4f95dffc7b8c57a25c31365deb31c21ab4fe405a74fe8da43ebeb5b36a5f",
+        "physical/ref_tile/qkd_kvs_grp_sq2/pre_cts.tcl": "9e9d8ed6ab32a72873cbc17734f4feec0551965f1512a0f06f55621e1cab9615",
+        "physical/ref_tile/qkd_kvs_grp_sq2/post_drt.tcl": "d945eb58ee53e61afa182164a8ef6de996565f81ae88f9f8ca364549ec5fdd87"
+      }
+    },
+    {
+      "run": "qkd_kvs_grp_sq3-20261019-113455",
+      "path": "/srv/opentallas-scratch/claude/ref_gate/qkd_kvs_grp_sq3-20261019-113455",
+      "local_client_pid": 507087,
+      "source_commit": "7e6cbb4658e0fb8a7273b1bb29a7ef8c28fd255d",
+      "manifest_sha256": "330c8d06f8d1f264dbcb19ef8bdf945aecab651a90a378c3b9e1b4d1bb7beb3e",
+      "archive_sha256": "5de550994830b5b52fa032e75bd245c7fc590b6224ac4db460d07d3879e2bae6",
+      "container": "gate_cts_qkd_kvs_grp_sq3-20261019-113455",
+      "container_id": "e620f9aa0cc091b2938b591535c30f856add9bb666c1f89de5531982cd4af398",
+      "container_pid": 3439622,
+      "mounts": [
+        {
+          "Type": "bind",
+          "Source": "/srv/opentallas-scratch/claude/ref_gate/qkd_kvs_grp_sq3-20261019-113455/src",
+          "Destination": "/src",
+          "Mode": "ro",
+          "RW": false,
+          "Propagation": "rprivate"
+        },
+        {
+          "Type": "bind",
+          "Source": "/srv/opentallas-scratch/claude/ref_gate/qkd_kvs_grp_sq3-20261019-113455/routes/gate/work/orfs",
+          "Destination": "/work",
+          "Mode": "",
+          "RW": true,
+          "Propagation": "rprivate"
+        }
+      ],
+      "processes": "PID                 PPID                ELAPSED             %CPU                COMMAND\n3439622             3439516             01:32:24            0.0                 bash -lc source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; python3 /src/tools/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts >/dev/null && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base cts\n3439987             3439622             01:32:24            0.0                 make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base cts\n3915468             3439987             01:10:44            0.0                 make WORK_HOME=/work DESIGN_CONFIG=/work/config.mk FLOW_VARIANT=base --no-print-directory --file=Makefile DESIGN_CONFIG=/work/config.mk do-4_1_cts\n3915503             3915468             01:10:43            0.0                 bash /OpenROAD-flow-scripts/flow/scripts/flow.sh 4_1_cts cts\n3915505             3915503             01:10:43            0.0                 bash /OpenROAD-flow-scripts/flow/scripts/flow.sh 4_1_cts cts\n3915516             3915505             01:10:43            0.0                 /usr/bin/python3 /OpenROAD-flow-scripts/flow/scripts/run_command.py --log /work/logs/asap7/opentallas_qkd_kvs_grp_asap7_ref_gate/base/4_1_cts.tmp.log --append --tee -- /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 8 -no_splash /OpenROAD-flow-scripts/flow/scripts/cts.tcl -metrics /work/logs/asap7/opentallas_qkd_kvs_grp_asap7_ref_gate/base/4_1_cts.json\n3915517             3915516             01:10:43            105                 /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 8 -no_splash /OpenROAD-flow-scripts/flow/scripts/cts.tcl -metrics /work/logs/asap7/opentallas_qkd_kvs_grp_asap7_ref_gate/base/4_1_cts.json\n",
+      "latest_hold": [
+        "     6210 |       0 |   12236 |            0 |    +3.4% | -74.905 | -2623.278 | y__tep[0]",
+        "     6220 |       0 |   12256 |            0 |    +3.4% | -74.905 | -2623.278 | y__tep[0]",
+        "     6230 |       0 |   12276 |            0 |    +3.4% | -74.905 | -2623.278 | y__tep[0]",
+        "     6240 |       0 |   12296 |            0 |    +3.4% | -74.905 | -2623.278 | y__tep[0]"
+      ],
+      "kit_hashes": {
+        "physical/ref_tile/qkd_kvs_grp_sq3/clock.sdc": "1321d65f3b74f74653263aa8bb0b382f905c096e6a6b97fcc13c8512092194db",
+        "physical/ref_tile/qkd_kvs_grp_sq3/pin_regs.json": "d3eba1eedbc5b08e872d4271045e25dd060b8900ccacb659c25e9e6f3849ec68",
+        "physical/ref_tile/qkd_kvs_grp_sq3/spec.json": "ef77e50a86faa99c7cb095c43904d8cea1c430bbb9c2c58ad10e4d3ba21534da",
+        "physical/ref_tile/qkd_kvs_grp_sq3/README.md": "2f9a11d2cb0d1070ec62795a7b7e55c5ece25866f67b10630723122e904933e5",
+        "physical/ref_tile/qkd_kvs_grp_sq3/pre_gpl.tcl": "868665071710eb4ce5d4af172b346032f605b49500c67093b5f6f3229928b739",
+        "physical/ref_tile/qkd_kvs_grp_sq3/post_cts.tcl": "d486a8850acae8f0300131ec4499a6180719f46dcf0ce6ed5fc842e6fafac82a",
+        "physical/ref_tile/qkd_kvs_grp_sq3/post_grt.tcl": "d486a8850acae8f0300131ec4499a6180719f46dcf0ce6ed5fc842e6fafac82a",
+        "physical/ref_tile/qkd_kvs_grp_sq3/job.json": "8ce1bd5ae23928647317079a991f3322101a52112d5d906921fc8364b5a5058c",
+        "physical/ref_tile/qkd_kvs_grp_sq3/spine_ins.tcl": "7f09dba08032c22035f152c98322a9bcf437fae547db0e380e8d807d08355bed",
+        "physical/ref_tile/qkd_kvs_grp_sq3/kit.env": "902d1f6e045675188a911c3db41c819459ef8a8d27880c4bc6156bf24ea061ed",
+        "physical/ref_tile/qkd_kvs_grp_sq3/post_fill.tcl": "d486a8850acae8f0300131ec4499a6180719f46dcf0ce6ed5fc842e6fafac82a",
+        "physical/ref_tile/qkd_kvs_grp_sq3/pre_grt.tcl": "15d1d95cbb263fa78d42df3c3c598a74bf4a55d52fd87a20e7181ea2f732c37c",
+        "physical/ref_tile/qkd_kvs_grp_sq3/pre_dpl.tcl": "c668b3677a80a60029982fd74af121c738a52d3010947134539610b2bde0c8d9",
+        "physical/ref_tile/qkd_kvs_grp_sq3/reset_landing.json": "32d9dffdfa942f380f8ed5267a148524c424443160f552a0601f7992dbd7c155",
+        "physical/ref_tile/qkd_kvs_grp_sq3/signoff.sdc": "24cc5c3f8008874033445d163015e92d96b37990d6d4071c9d1a8c9314c5a683",
+        "physical/ref_tile/qkd_kvs_grp_sq3/place.tcl": "63b27bf14d6090cb0d4839069d87469632005ab7d930b462e8f16ceea144cce5",
+        "physical/ref_tile/qkd_kvs_grp_sq3/floorplan.json": "09d69f6a19b834e14f72e8a75e46d5e2af88bf8dd4487e6a2f30ad8dbf0875a3",
+        "physical/ref_tile/qkd_kvs_grp_sq3/pre_fill.tcl": "106e4f95dffc7b8c57a25c31365deb31c21ab4fe405a74fe8da43ebeb5b36a5f",
+        "physical/ref_tile/qkd_kvs_grp_sq3/pdn.tcl": "50046575cfed8a517226132bf4a0ed60289dae3d72ad557183b7f82876d3159c",
+        "physical/ref_tile/qkd_kvs_grp_sq3/pre_drt.tcl": "106e4f95dffc7b8c57a25c31365deb31c21ab4fe405a74fe8da43ebeb5b36a5f",
+        "physical/ref_tile/qkd_kvs_grp_sq3/pre_cts.tcl": "8d48a94b494dd1f56cb16493bbea66447cd2c5282954d65bb5fca98fcb27d661",
+        "physical/ref_tile/qkd_kvs_grp_sq3/post_drt.tcl": "d945eb58ee53e61afa182164a8ef6de996565f81ae88f9f8ca364549ec5fdd87"
+      }
+    },
+    {
+      "run": "qkd_kvs_grp_h_sq2-20261019-113454",
+      "path": "/srv/opentallas-scratch/claude/ref_gate/qkd_kvs_grp_h_sq2-20261019-113454",
+      "local_client_pid": 507085,
+      "source_commit": "7e6cbb4658e0fb8a7273b1bb29a7ef8c28fd255d",
+      "manifest_sha256": "0de6f33a04ffdce4422af2dfb8a65d20f33f6ee2992f2903c3de889682fcb730",
+      "archive_sha256": "d006ebf1f9487b1fcba109bbf6a06c52eb78b114e030de022d6e76305bc66fd4",
+      "container": "gate_cts_qkd_kvs_grp_h_sq2-20261019-113454",
+      "container_id": "9accf7217963aff4a5a424e2035cc4528a628c678fdb832e6df16a77e2980767",
+      "container_pid": 3385699,
+      "mounts": [
+        {
+          "Type": "bind",
+          "Source": "/srv/opentallas-scratch/claude/ref_gate/qkd_kvs_grp_h_sq2-20261019-113454/routes/gate/work/orfs",
+          "Destination": "/work",
+          "Mode": "",
+          "RW": true,
+          "Propagation": "rprivate"
+        },
+        {
+          "Type": "bind",
+          "Source": "/srv/opentallas-scratch/claude/ref_gate/qkd_kvs_grp_h_sq2-20261019-113454/src",
+          "Destination": "/src",
+          "Mode": "ro",
+          "RW": false,
+          "Propagation": "rprivate"
+        }
+      ],
+      "processes": "PID                 PPID                ELAPSED             %CPU                COMMAND\n3385699             3385591             01:32:49            0.0                 bash -lc source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; python3 /src/tools/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts >/dev/null && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base cts\n3386061             3385699             01:32:49            0.0                 make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base cts\n3891589             3386061             01:13:03            0.0                 make WORK_HOME=/work DESIGN_CONFIG=/work/config.mk FLOW_VARIANT=base --no-print-directory --file=Makefile DESIGN_CONFIG=/work/config.mk do-4_1_cts\n3891621             3891589             01:13:02            0.0                 bash /OpenROAD-flow-scripts/flow/scripts/flow.sh 4_1_cts cts\n3891623             3891621             01:13:02            0.0                 bash /OpenROAD-flow-scripts/flow/scripts/flow.sh 4_1_cts cts\n3891634             3891623             01:13:02            0.0                 /usr/bin/python3 /OpenROAD-flow-scripts/flow/scripts/run_command.py --log /work/logs/asap7/opentallas_qkd_kvs_grp_h_asap7_ref_gate/base/4_1_cts.tmp.log --append --tee -- /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 8 -no_splash /OpenROAD-flow-scripts/flow/scripts/cts.tcl -metrics /work/logs/asap7/opentallas_qkd_kvs_grp_h_asap7_ref_gate/base/4_1_cts.json\n3891635             3891634             01:13:02            104                 /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 8 -no_splash /OpenROAD-flow-scripts/flow/scripts/cts.tcl -metrics /work/logs/asap7/opentallas_qkd_kvs_grp_h_asap7_ref_gate/base/4_1_cts.json\n",
+      "latest_hold": [
+        "     6850 |       0 |   13319 |            0 |    +3.7% | -74.905 | -2632.349 | y__tep[12]",
+        "     6860 |       0 |   13339 |            0 |    +3.7% | -74.905 | -2632.349 | y__tep[12]",
+        "     6870 |       0 |   13356 |            0 |    +3.7% | -74.905 | -2632.349 | y__tep[12]",
+        "     6880 |       0 |   13374 |            0 |    +3.7% | -74.905 | -2632.349 | y__tep[12]"
+      ],
+      "kit_hashes": {
+        "physical/ref_tile/qkd_kvs_grp_h_sq2/clock.sdc": "6d005b63f80aa832489d29821049a748438ce1650a55cdaf272127a9a6f3f622",
+        "physical/ref_tile/qkd_kvs_grp_h_sq2/pin_regs.json": "8229943ed20640b3013b66ce5b87400f6654c9a0d3c10816d7e27c5ba46edfea",
+        "physical/ref_tile/qkd_kvs_grp_h_sq2/spec.json": "5b55d9c56409dc85c97c701bd097347f6202fcc2c491727762ccd3fce56a88fc",
+        "physical/ref_tile/qkd_kvs_grp_h_sq2/README.md": "533b55dd422df259b21ce29e960c05daf179635f67443cdd88be67961d1dca69",
+        "physical/ref_tile/qkd_kvs_grp_h_sq2/pre_gpl.tcl": "868665071710eb4ce5d4af172b346032f605b49500c67093b5f6f3229928b739",
+        "physical/ref_tile/qkd_kvs_grp_h_sq2/post_cts.tcl": "4f80c3e528ba3c640e75c9e043e47217b3c4c34d4d54aaa75ef9f007cd7be628",
+        "physical/ref_tile/qkd_kvs_grp_h_sq2/post_grt.tcl": "4f80c3e528ba3c640e75c9e043e47217b3c4c34d4d54aaa75ef9f007cd7be628",
+        "physical/ref_tile/qkd_kvs_grp_h_sq2/job.json": "17e1f36d50482133186e10659e12ba3ccbd446af3dbb6a5d4d04c82f1580fd64",
+        "physical/ref_tile/qkd_kvs_grp_h_sq2/spine_ins.tcl": "7f09dba08032c22035f152c98322a9bcf437fae547db0e380e8d807d08355bed",
+        "physical/ref_tile/qkd_kvs_grp_h_sq2/kit.env": "7b7400d125ef9bdd0ad1e47958e27c54549025c8d0ac81b5914b81087a749f27",
+        "physical/ref_tile/qkd_kvs_grp_h_sq2/post_fill.tcl": "4f80c3e528ba3c640e75c9e043e47217b3c4c34d4d54aaa75ef9f007cd7be628",
+        "physical/ref_tile/qkd_kvs_grp_h_sq2/pre_grt.tcl": "26f0b471c3d009e416931327002b933023722fdf95353168774bef719cd6d698",
+        "physical/ref_tile/qkd_kvs_grp_h_sq2/pre_dpl.tcl": "c668b3677a80a60029982fd74af121c738a52d3010947134539610b2bde0c8d9",
+        "physical/ref_tile/qkd_kvs_grp_h_sq2/reset_landing.json": "0eb39122ca28ca5d6d2935d08696203e187db8d247e2c3fd093cc65eb3bf17d9",
+        "physical/ref_tile/qkd_kvs_grp_h_sq2/signoff.sdc": "bded7175f5ff00171c2344a77a8ac91f57bd6a3039032d3bd4f1efb484728206",
+        "physical/ref_tile/qkd_kvs_grp_h_sq2/place.tcl": "2f7eb26f101e08b240aab53c0b60ac98f4a640b9673a6fa2c6fd4d17a7eee426",
+        "physical/ref_tile/qkd_kvs_grp_h_sq2/floorplan.json": "3414f942d481ca3fca9603e12ffe466d326585dcdf10fc1f83ec483c6e0365b7",
+        "physical/ref_tile/qkd_kvs_grp_h_sq2/pre_fill.tcl": "6635936e3f7a6c6fbe04027571a31f662212e7c7073435f10c0c752ab0f434d3",
+        "physical/ref_tile/qkd_kvs_grp_h_sq2/pdn.tcl": "24970955416f4d361315c4a4d0fb970df1c0f30400e7013a1c1c8c0deaece1f9",
+        "physical/ref_tile/qkd_kvs_grp_h_sq2/pre_drt.tcl": "6635936e3f7a6c6fbe04027571a31f662212e7c7073435f10c0c752ab0f434d3",
+        "physical/ref_tile/qkd_kvs_grp_h_sq2/pre_cts.tcl": "39b34cc756ddf7d4acabf07fd3589d77de61e3edbbb3ee18b9d5d83419d222ec",
+        "physical/ref_tile/qkd_kvs_grp_h_sq2/post_drt.tcl": "8016cdec2f013c857f6da7436bceb46d7b440753b7a036c7c90d8b9f83862707"
+      }
+    },
+    {
+      "run": "qkd_kvs_grp_h_sq3-20261019-113456",
+      "path": "/srv/opentallas-scratch/claude/ref_gate/qkd_kvs_grp_h_sq3-20261019-113456",
+      "local_client_pid": 507088,
+      "source_commit": "7e6cbb4658e0fb8a7273b1bb29a7ef8c28fd255d",
+      "manifest_sha256": "43d833271b0e87bc8d410a184dd68dc14b7acad8e28f9dd215fc188c485028eb",
+      "archive_sha256": "e71726adc6f4095b43217f00fd163ebb46dce0f0bf44ff1e213691502d6638bb",
+      "container": "gate_cts_qkd_kvs_grp_h_sq3-20261019-113456",
+      "container_id": "172c2e4a1495a6ca5d510f6f8322ef22158a05ccfecc54977e0d5e735cf0d55d",
+      "container_pid": 3388028,
+      "mounts": [
+        {
+          "Type": "bind",
+          "Source": "/srv/opentallas-scratch/claude/ref_gate/qkd_kvs_grp_h_sq3-20261019-113456/src",
+          "Destination": "/src",
+          "Mode": "ro",
+          "RW": false,
+          "Propagation": "rprivate"
+        },
+        {
+          "Type": "bind",
+          "Source": "/srv/opentallas-scratch/claude/ref_gate/qkd_kvs_grp_h_sq3-20261019-113456/routes/gate/work/orfs",
+          "Destination": "/work",
+          "Mode": "",
+          "RW": true,
+          "Propagation": "rprivate"
+        }
+      ],
+      "processes": "PID                 PPID                ELAPSED             %CPU                COMMAND\n3388028             3387824             01:32:49            0.0                 bash -lc source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; python3 /src/tools/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts >/dev/null && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base cts\n3388533             3388028             01:32:49            0.0                 make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base cts\n3892549             3388533             01:12:28            0.0                 make WORK_HOME=/work DESIGN_CONFIG=/work/config.mk FLOW_VARIANT=base --no-print-directory --file=Makefile DESIGN_CONFIG=/work/config.mk do-4_1_cts\n3892565             3892549             01:12:28            0.0                 bash /OpenROAD-flow-scripts/flow/scripts/flow.sh 4_1_cts cts\n3892567             3892565             01:12:28            0.0                 bash /OpenROAD-flow-scripts/flow/scripts/flow.sh 4_1_cts cts\n3892578             3892567             01:12:27            0.0                 /usr/bin/python3 /OpenROAD-flow-scripts/flow/scripts/run_command.py --log /work/logs/asap7/opentallas_qkd_kvs_grp_h_asap7_ref_gate/base/4_1_cts.tmp.log --append --tee -- /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 8 -no_splash /OpenROAD-flow-scripts/flow/scripts/cts.tcl -metrics /work/logs/asap7/opentallas_qkd_kvs_grp_h_asap7_ref_gate/base/4_1_cts.json\n3892580             3892578             01:12:27            105                 /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 8 -no_splash /OpenROAD-flow-scripts/flow/scripts/cts.tcl -metrics /work/logs/asap7/opentallas_qkd_kvs_grp_h_asap7_ref_gate/base/4_1_cts.json\n",
+      "latest_hold": [
+        "     6510 |       0 |   12872 |            0 |    +3.6% | -74.905 | -2634.634 | y__tep[12]",
+        "     6520 |       0 |   12892 |            0 |    +3.6% | -74.905 | -2634.634 | y__tep[12]",
+        "     6530 |       0 |   12912 |            0 |    +3.6% | -74.905 | -2634.634 | y__tep[12]",
+        "     6540 |       0 |   12932 |            0 |    +3.6% | -74.905 | -2634.634 | y__tep[12]"
+      ],
+      "kit_hashes": {
+        "physical/ref_tile/qkd_kvs_grp_h_sq3/clock.sdc": "7c1dbb094ff5f3b01e9cb3487d33c26518d1f5532defe45bffa7b838f2620fb4",
+        "physical/ref_tile/qkd_kvs_grp_h_sq3/pin_regs.json": "8229943ed20640b3013b66ce5b87400f6654c9a0d3c10816d7e27c5ba46edfea",
+        "physical/ref_tile/qkd_kvs_grp_h_sq3/spec.json": "2ec05e1703ad8949494e2ddf8e76539cd6185aaf18776c3e879faa4d056f064e",
+        "physical/ref_tile/qkd_kvs_grp_h_sq3/README.md": "40041ab0e9707e4a731daa25a6787a096834d9bf420aa6cc78f9ec6c215fa1fa",
+        "physical/ref_tile/qkd_kvs_grp_h_sq3/pre_gpl.tcl": "868665071710eb4ce5d4af172b346032f605b49500c67093b5f6f3229928b739",
+        "physical/ref_tile/qkd_kvs_grp_h_sq3/post_cts.tcl": "4f80c3e528ba3c640e75c9e043e47217b3c4c34d4d54aaa75ef9f007cd7be628",
+        "physical/ref_tile/qkd_kvs_grp_h_sq3/post_grt.tcl": "4f80c3e528ba3c640e75c9e043e47217b3c4c34d4d54aaa75ef9f007cd7be628",
+        "physical/ref_tile/qkd_kvs_grp_h_sq3/job.json": "dba1d739dae1f3f9d679a73b91e8dd770bd381a47f3f25bd9b6349326fb22bcd",
+        "physical/ref_tile/qkd_kvs_grp_h_sq3/spine_ins.tcl": "7f09dba08032c22035f152c98322a9bcf437fae547db0e380e8d807d08355bed",
+        "physical/ref_tile/qkd_kvs_grp_h_sq3/kit.env": "089762b2bae36e09c09e9c68550fdc47250750b0d54c1be448356df9d8f36470",
+        "physical/ref_tile/qkd_kvs_grp_h_sq3/post_fill.tcl": "4f80c3e528ba3c640e75c9e043e47217b3c4c34d4d54aaa75ef9f007cd7be628",
+        "physical/ref_tile/qkd_kvs_grp_h_sq3/pre_grt.tcl": "26f0b471c3d009e416931327002b933023722fdf95353168774bef719cd6d698",
+        "physical/ref_tile/qkd_kvs_grp_h_sq3/pre_dpl.tcl": "c668b3677a80a60029982fd74af121c738a52d3010947134539610b2bde0c8d9",
+        "physical/ref_tile/qkd_kvs_grp_h_sq3/reset_landing.json": "0eb39122ca28ca5d6d2935d08696203e187db8d247e2c3fd093cc65eb3bf17d9",
+        "physical/ref_tile/qkd_kvs_grp_h_sq3/signoff.sdc": "9a2a5e0ac2f0ec8fb5452925b73454962888d13730dede87776732e6d92541bc",
+        "physical/ref_tile/qkd_kvs_grp_h_sq3/place.tcl": "594eeef1eb2889b7f2c14fa52213c7e88421a1f7efa3e23ff8b385ca0146fe7a",
+        "physical/ref_tile/qkd_kvs_grp_h_sq3/floorplan.json": "9702128091c0ac06a2d30a26d51194fe569e3d3d20aec67735e392f8f9d49b6d",
+        "physical/ref_tile/qkd_kvs_grp_h_sq3/pre_fill.tcl": "6635936e3f7a6c6fbe04027571a31f662212e7c7073435f10c0c752ab0f434d3",
+        "physical/ref_tile/qkd_kvs_grp_h_sq3/pdn.tcl": "f24e7b8a87534d564f6bae308f5db8075b85acc58adfc2d83cd9182781fe1685",
+        "physical/ref_tile/qkd_kvs_grp_h_sq3/pre_drt.tcl": "6635936e3f7a6c6fbe04027571a31f662212e7c7073435f10c0c752ab0f434d3",
+        "physical/ref_tile/qkd_kvs_grp_h_sq3/pre_cts.tcl": "0bdbff73e3d63c8a2372ae06b910dd914d9c166b826dc42b7dcdf3f30e8b7a37",
+        "physical/ref_tile/qkd_kvs_grp_h_sq3/post_drt.tcl": "8016cdec2f013c857f6da7436bceb46d7b440753b7a036c7c90d8b9f83862707"
+      }
+    }
+  ]
+}
