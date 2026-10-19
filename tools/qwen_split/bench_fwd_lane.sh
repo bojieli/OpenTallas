@@ -22,6 +22,10 @@ mode=$1; O=$2; W=${3:-16}
 cd "$(dirname "$0")/../.."; mkdir -p "$O"
 export PATH=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin:$PATH
 DEF=+define+OT_QFD_LAND_SAFE_REG
+if [[ $mode = *_pipe ]]; then
+  mode=${mode%_pipe}
+  DEF="$DEF +define+OT_QFD_LAND_READ_PIPE"
+fi
 case $mode in
   pass) ;; wsel) DEF="$DEF +define+OT_QFD_LAND_MUT_WSEL" ;; rsel) DEF="$DEF +define+OT_QFD_LAND_MUT_RSEL" ;; sel) DEF="$DEF +define+OT_QFD_LAND_MUT_SEL" ;; naive) DEF="$DEF +define+OT_QFD_LAND_MUT_NAIVE" ;;
   vld) DEF="$DEF +define+OT_QFD_LAND_MUT_VLD" ;; full) DEF="$DEF +define+OT_QFD_LANE_MUT_FULL" ;; hop0inv) DEF="$DEF +define+OT_QFD_LANE_MUT_HOP0INV" ;;
@@ -59,7 +63,13 @@ endmodule
 // source release edge G, receiver release edge R0, extra clock lag XL on the last hop
 module lane #(parameter integer W = 16, NF = 5, parameter real CD = 3.6, DD = 1.2, XL = 0.0, DOFF = 2.0,
               parameter integer G = 10, R0 = 12, LADD = 0, KFROM = -1,
-              parameter integer HREG = 2, RREG = 2) (       // hop-0 en registered on the source root (+1 edge): landh0 AND rlyh0
+              parameter integer HREG = 2, RREG = 2,
+`ifdef OT_QFD_LAND_READ_PIPE
+              parameter integer RPIPE = 1
+`else
+              parameter integer RPIPE = 0
+`endif
+              ) (       // hop-0 en registered on the source root (+1 edge): landh0 AND rlyh0
     input wire cks, input wire ckd, input wire [31:0] es, input wire [31:0] ed, output integer err, output integer chk, output wire flt);
     localparam real T = 10.0;
     reg  [W-1:0] src = 0;
@@ -110,9 +120,9 @@ module lane #(parameter integer W = 16, NF = 5, parameter real CD = 3.6, DD = 1.
     always @(negedge ckd) begin
         // o after receiver edge ed - 1 (sampled half a period later): w(ed - 1 - L) once that word was written, else 0
         te_ = ed;
-        te_ = te_ - 1 - L;
+        te_ = te_ - 1 - L - RPIPE;
         ex_ = (te_ >= G + HREG) ? w_of(te_) : {W{1'b0}};
-        if (ed > R0 + RREG + 10) begin
+        if (ed > R0 + RREG + RPIPE + 10) begin
             chk = chk + 1;
             if (o !== ex_) begin
                 err = err + 1;

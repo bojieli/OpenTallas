@@ -152,10 +152,29 @@ module ot_qfd_land_region #(parameter integer W = 24) (
         if (ws[2]) b2 <= i;
         if (ws[3]) b3 <= i;
     end
+`ifdef OT_QFD_LAND_READ_PIPE
+    // Structural read-stage split: the cross-root stage contains ONLY capture
+    // flops. One root cycle later, local select/valid qualifies captured banks.
+    // This adds one steady-state receiver cycle and is compiler-priced separately.
+    reg [W-1:0] r0, r1, r2, r3;
+    reg [3:0] rdsel_q, vld_q;
+    reg warm_pipe;
+    always @(posedge ck) begin
+        r0 <= b0; r1 <= b1; r2 <= b2; r3 <= b3;
+        rdsel_q <= rdsel; vld_q <= vld;
+    end
+    always @(posedge ck or negedge rs1)
+        if (!rs1) warm_pipe <= 1'b0; else warm_pipe <= warm_q;
+    wire [3:0] use_slot = rdsel_q & vld_q & {4{warm_pipe}};
+    always @(posedge ck)
+        o <= ({W{use_slot[0]}} & r0) | ({W{use_slot[1]}} & r1)
+           | ({W{use_slot[2]}} & r2) | ({W{use_slot[3]}} & r3);
+`else
     wire [3:0] use_slot = rdsel & vld & {4{warm_q}};
     always @(posedge ck)
         o <= ({W{use_slot[0]}} & b0) | ({W{use_slot[1]}} & b1)
            | ({W{use_slot[2]}} & b2) | ({W{use_slot[3]}} & b3);
+`endif
 endmodule
 
 `ifdef OT_QFD_LAND_SAFE_REG
