@@ -176,14 +176,28 @@ proc ot_cf_active {p} {
   set key [list [get_property $cell ref_name] [get_property $p lib_pin_name]]
   if {[dict exists $::ot_cf_active_cache $key]} {return [dict get $::ot_cf_active_cache $key]}
   sta::redirect_string_begin
-  catch {report_edges -from $p}
+  set failed [catch {report_edges -from $p} message]
   set report [sta::redirect_string_end]; set on 0; set edges {}
+  if {$failed} {error "OT_CLOCK_FAMILY: active-edge query failed [get_full_name $p]: $message"}
   foreach line [split $report \n] {
     if {[regexp {^\S} $line]} {set on [regexp {(Clk|En) to Q} $line]; continue}
     if {$on && [regexp {^\s+([\^v])\s+->} $line -> edge] && $edge ni $edges} {lappend edges $edge}
   }
-  if {[llength $edges] > 1} {error "OT_CLOCK_FAMILY: ambiguous active edge [get_full_name $p]"}
-  set active [expr {![llength $edges] || [lindex $edges 0] eq "^" ? "rise" : "fall"}]
+  if {![llength $edges] && [llength [info commands ord::get_db]]} {
+    # Check-only hard entries (notably SRAM write clocks) have no clock-to-Q
+    # arc. Only an actual physical BLOCK with unique loaded Liberty clock
+    # timing-check edges is supported; missing soft-register arcs still fail.
+    set master [[ord::get_db] findMaster [get_property $cell ref_name]]
+    if {$master ne "NULL" && [$master isBlock]} {
+      set on 0
+      foreach line [split $report \n] {
+        if {[regexp {^\S} $line]} {set on [regexp { (setup|hold|recovery|removal)$} $line]; continue}
+        if {$on && [regexp {^\s+([\^v])\s+->} $line -> edge] && $edge ni $edges} {lappend edges $edge}
+      }
+    }
+  }
+  if {[llength $edges] != 1} {error "OT_CLOCK_FAMILY: missing unique active clock edge [get_full_name $p] ($edges)"}
+  set active [expr {[lindex $edges 0] eq "^" ? "rise" : "fall"}]
   dict set ::ot_cf_active_cache $key $active
   return $active
 }

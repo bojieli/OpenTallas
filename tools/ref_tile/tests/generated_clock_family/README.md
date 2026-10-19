@@ -19,6 +19,14 @@ search, the tag contains 9 ps. The measurement subtracts the actual generated
 source waveform phase (110 or 310 ps in the probes), retaining those 9 ps.
 No synthetic source insertion is added.
 
+Active-edge queries now fail closed on report errors or missing/multiple clock
+edges. A soft sequential sink requires a unique actual clock-to-Q/enable-to-Q
+arc. A physical hard BLOCK with no clock-to-Q arc (such as an SRAM write clock)
+can instead use a unique clock edge from its loaded Liberty setup/hold/recovery/
+removal checks. This exception is supported by real OpenDB BLOCK classification
+and native timing-graph edges, never by master or pin naming. An absent edge or
+contradictory rising/falling checks still refuses the measurement.
+
 The same Tcl implementation supplies CE, native insertion calibration, and
 routed IO references. The routed file embeds an identical copy so archived and
 flat helper layouts remain self-contained; a test compares the exact bytes.
@@ -35,7 +43,13 @@ supply at least the ordinary 60/25 ps base themselves before CE applies.
 large phase, source compensation, CE/native/routed-reference equality, the
 150/210 + 100 ps reservations, multiple-master rejection, and existing path and
 boundary census tests. `evidence/final_family.log`: eight final family tests
-PASS, adding flat shipped-helper import coverage. The expected rogue-master
+PASS, adding flat shipped-helper import coverage. `evidence/pinned_family.log`
+repeats the final committed implementation and all focused checks: 25 PASS. `evidence/strict_active_family.log`: 12 tests PASS after ROOT review, including
+nested ancestry, a real Liberty mutation that removes clock-to-Q evidence, a
+physical check-only BLOCK positive, and contradictory check-edge rejection.
+`evidence/existing_regression.log`: 33 pre-existing multi-root/landed tests PASS
+(three skip because their pre-existing external artifacts are unavailable).
+The expected rogue-master
 rejection appears as an OpenSTA error in the successful negative-test log.
 
 All native executions used `ot-run`, Docker `openroad/orfs:latest`, pinned

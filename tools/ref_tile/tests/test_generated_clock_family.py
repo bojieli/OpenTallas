@@ -31,12 +31,13 @@ class GeneratedClockFamily(unittest.TestCase):
             spec.loader.exec_module(module)
             self.assertEqual(module.CLOCK_FAMILY_TCL, SHARED.read_text())
 
-    def native(self, extra='', edges='3 4 11', pre=''):
+    def native(self, extra='', edges='3 4 11', pre='', lib_mutation=None, physical=False):
         if os.environ.get('OT_NATIVE_CLOCK_FAMILY') != '1':
             self.skipTest('native probe requires fleet Docker/OpenSTA')
         with tempfile.TemporaryDirectory(dir=FIXTURE) as td:
             p = Path(td)
-            script = f'''read_liberty /fixture/toy.lib
+            script = f'''{"read_lef /fixture/toy.lef" if physical else ""}
+read_liberty /run/toy.lib
 read_verilog /fixture/toy.v
 link_design top
 create_clock -name root -period 100 -waveform {{10 60}} [get_ports ck]
@@ -62,8 +63,27 @@ exit
             (p/'io.tcl').write_text('proc ot_ir_arr {p {cn ""}} {' + io.split('proc ot_ir_arr {p {cn ""}} {')[2].split('\nif {[ot_ir_multi]')[0])
             pair = '  set ot_ce_glue {}' + CE.BODY.split('  set ot_ce_glue {}')[1].split('  # Preserve measured boundary spread:')[0]
             (p/'pairs.tcl').write_text(pair)
+            lib = (FIXTURE/'toy.lib').read_text()
+            if lib_mutation in ('remove_clock_to_q', 'check_only_rising', 'ambiguous_checks'):
+                start = lib.index('timing(){related_pin : "CK"')
+                opening = lib.index('{', start)
+                depth = 1
+                end = opening + 1
+                while depth:
+                    depth += (lib[end] == '{') - (lib[end] == '}')
+                    end += 1
+                lib = lib[:start] + lib[end:]
+                if lib_mutation != 'remove_clock_to_q':
+                    check = ' timing(){related_pin : "CK";timing_type : setup_rising;rise_constraint(ct){values("1");}fall_constraint(ct){values("1");}}'
+                    if lib_mutation == 'ambiguous_checks':
+                        check += check.replace('setup_rising', 'setup_falling')
+                    lib = lib.replace('pin(D){direction : input;capacitance : 0.001;}', 'pin(D){direction : input;capacitance : 0.001;' + check + '}')
+                    lib = lib.replace(' cell(BUF)', ' lu_table_template(ct) {variable_1 : constrained_pin_transition; index_1("1");}\n cell(BUF)')
+            elif lib_mutation:
+                lib = lib.replace(*lib_mutation)
+            (p/'toy.lib').write_text(lib)
             (p/'run.tcl').write_text(script)
-            cmd=['docker','run','--rm','-v',f'{FIXTURE}:/fixture:ro','-v',f'{SHARED.parent}:/shared:ro','-v',f'{p}:/run:ro','openroad/orfs:latest','/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/sta','-exit','/run/run.tcl']
+            cmd=['docker','run','--rm','-v',f'{FIXTURE}:/fixture:ro','-v',f'{SHARED.parent}:/shared:ro','-v',f'{p}:/run:ro','openroad/orfs:latest',f'/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/{"openroad" if physical else "sta"}','-exit','/run/run.tcl']
             run=subprocess.run(cmd,text=True,capture_output=True)
             print(run.stdout, end='')
             return run
@@ -83,6 +103,17 @@ assert_close [ot_cf_wire [get_pins f1/CK] [get_clocks bank]] 9
 lassign [ot_cf_pins [get_clocks other]] foreign ignored
 if {[lmap p $foreign {get_full_name $p}] ne {fo/CK}} {error "foreign root leaked"}
 if {![catch {ot_cf_wire [get_pins f1/CK] [get_clocks root]}]} {error "wrong clock accepted"}
+'''))
+
+    def test_nested_generated_master_is_measured_once(self):
+        self.assert_native_pass(self.native('''
+create_generated_clock -name nested -source [get_pins b1/Y] -master_clock bank -divide_by 1 [get_pins b2/Y]
+set_propagated_clock [all_clocks]
+ot_cf_refresh
+if {[dict get $::ot_cf_master nested] ne "bank" || [ot_cf_root nested] ne "root"} {error "lost nested ancestry"}
+lassign [ot_cf_pins [get_clocks root]] pins owners
+if {[llength $pins] != 2 || [get_full_name [dict get $owners f1/CK]] ne "nested"} {error "nested sink omitted/duplicated"}
+assert_close [ot_cf_wire [get_pins f1/CK] [get_clocks nested]] 9
 '''))
 
     def test_ce_native_and_routed_reference_agree(self):
@@ -131,6 +162,22 @@ foreach highname {{} ot_entry_1} {
 
     def test_source_compensation_is_not_silently_removed(self):
         self.assert_native_pass(self.native('assert_close [ot_cf_wire [get_pins f1/CK] [get_clocks bank]] 32', pre='set_clock_latency -source 23 [get_clocks root]'))
+
+    def test_check_only_physical_block_uses_actual_liberty_check_edge(self):
+        self.assert_native_pass(self.native('assert_close [ot_cf_wire [get_pins f1/CK] [get_clocks bank]] 9',
+                                           lib_mutation='check_only_rising', physical=True))
+
+    def test_ambiguous_physical_block_check_edges_fail_closed(self):
+        run=self.native('ot_cf_wire [get_pins f1/CK] [get_clocks bank]',
+                        lib_mutation='ambiguous_checks', physical=True)
+        self.assertNotEqual(run.returncode,0,run.stdout)
+        self.assertIn('missing unique active clock edge',run.stdout)
+
+    def test_missing_actual_liberty_active_edge_fails_closed(self):
+        run=self.native('ot_cf_wire [get_pins f1/CK] [get_clocks bank]',
+                        lib_mutation='remove_clock_to_q')
+        self.assertNotEqual(run.returncode,0,run.stdout)
+        self.assertIn('missing unique active clock edge',run.stdout)
 
     def test_multiple_master_source_fails_closed(self):
         run=self.native(pre='create_clock -add -name rogue -period 100 [get_ports ck]')
