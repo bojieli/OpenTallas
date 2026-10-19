@@ -12,7 +12,8 @@
 //   frame n-1        the LANDING (ot_qfd_land): its ring slots ARE the last capture (flop-first, written on the lane's
 //                    forwarded clock), read on the RECEIVING block's root ck at slot (rc - K) mod D into o (flop-last),
 //                    o -> the block input is one single-cycle hop on the block root (landing within one reach of the pin).
-//                    n = 1: the landing carries the hop-0 gate itself (ot_qfd_land FIRST=1).
+//                    n = 1: the landing carries the hop-0 gate itself (ot_qfd_land FIRST=1), enabled by en REGISTERED
+//                    on ck_s (QK-LANDEN 10-19: +1 release edge, K + 1; steady-state latency unchanged).
 // No ready, no credit, no occupancy, no training (owner static-schedule rule 10-14): both pointers free-run.
 //
 // WRITE EPOCH (contract L3, in-band form): every station also carries the lane EPOCH bit e = the source's released reset.
@@ -29,7 +30,7 @@
 //   warm-up a WRITTEN read slot whose epoch is not rc - K sets the sticky fault.  Slots never written read as 0 bubbles.
 // Differences to ot_s81_land (rtl/dsrom_sys/s81_dv/land/ot_s81_land.sv): write side cleared by the in-band lane epoch
 //   instead of the block reset (no G >= R0 calendar condition), per-slot written flag (no false fault while the source
-//   is still in reset), K mod 2D.  Bench: tools/qwen_split/bench_fwd_lane.sh (pass + 4 mutants).
+//   is still in reset), K mod 2D.  Bench: tools/qwen_split/bench_fwd_lane.sh (pass + mutants; encomb = en unregistered).
 // ---------------------------------------------------------------------------------------------------------------------
 
 // one kept inverter cell (the ck -> ck_o forward of a half-cycle station; flattened, yosys would fold it into a wire)
@@ -102,8 +103,24 @@ module ot_qfd_land #(
 );
     wire wck, we;                 // ring write clock / write-side epoch
     generate if (FIRST != 0) begin : g_hop0
-        ot_qfd_fwd0 u_fwd0 (.ck(ckf), .en(ea), .cko(wck));
-        assign we = ea;           // en rises after source edge G, half a period before the first gated edge
+        // QK-LANDEN 10-19 (coordinator, Q.STA.LAND600.3 option (b); the ROOT-RST rule: reset-derived inputs are registered
+        // at the face, never timed as exceptions): en (the source's released reset) is registered on ck_s (= ckf here)
+        // BEFORE the clock gate.  One face flop: asynchronous clear by en (assert immediate, also with every clock
+        // stopped), release on the next ck_s edge.  The ICG enable and the ring's write epoch are this flop, never the
+        // input port (closed views: en -> ICG combinational, native capture 351-429 ps > 190).
+        // Calendar: the write epoch moves from source edge G to G + 1 (first gated edge G + 2; the source word launched
+        // at G, still its reset value, is not written).  Every later word is written on the SAME physical edge as before
+        // (same ring age E); only its slot index is one lower, so the die strap is K = (E + (G + 1) - R0) mod 8
+        // (tools/qwen_split/lane_groups.py HOP0_EN_REG, reset_calendar_audit.py finalize_model).
+        (* keep = "true", dont_touch = "true" *) reg en_q;
+`ifdef OT_QFD_LAND_MUT_ENCOMB
+        always @(*) en_q = ea;                                     // bench mutant: en unregistered (the closed-view form)
+`else
+        always @(posedge ckf or negedge ea)
+            if (!ea) en_q <= 1'b0; else en_q <= 1'b1;
+`endif
+        ot_qfd_fwd0 u_fwd0 (.ck(ckf), .en(en_q), .cko(wck));
+        assign we = en_q;         // en_q rises after source edge G + 1, half a period before the first gated edge G + 2
     end else begin : g_lane
         assign wck = ckf;
         assign we = ea;
