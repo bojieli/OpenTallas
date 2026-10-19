@@ -7,18 +7,33 @@
   "payload_slice_bits": 8,
   "queue_depth": 64,
   "queue_count_bits": 7,
-  "extra_register_bits": 252,
+  "extra_register_bits": 280,
   "extra_data_edges": 0,
   "extra_sram": 0,
   "extra_mac_or_boundary_bits": 0,
   "initiation_interval": 1,
   "token_schedule_change": 0,
   "production_contract": "66 operations,154 GO,OP_GAP384 unchanged",
-  "state": "Each K region uses its own existing-edge k_v/prior-ready capture, ring occupancy and consumer count. Consumer count uses local accepted event and original cv. Local readiness retains exact arithmetic widths of the architectural count. Canonical metadata accounting is unchanged.",
-  "physical_cost": "252 additional state bits; retained regional count/capture state, routing estimate pending mapped netlist. No floorplan admission before actual synthesis area/fanout/reset census.",
+  "state": "22 existing-edge K valid/prior-ready captures and22 kept queue-count/ring-count copies feed independent local ready/pop. Canonical7-bit queue count_next and3-bit ring cnt_next drive23 actual D pins per bit, including the canonical count, instead of duplicating cv arithmetic. KR uses18 independent copies of existing head_valid capture state and local admission-valid gates, with the existing18 prior-ready captures. All captures retain their source clock/reset edge.",
+  "physical_cost": "280 additional state bits; retained regional count/capture state, routing estimate pending mapped netlist. No floorplan admission before actual synthesis area/fanout/reset census.",
   "hazards": [
     "Shared fault, legal, length, cv and reset may require same-edge source replicas after mapped census; no delay of registered kill",
     "No kept combinational buffers accepted as register replication",
     "No physical or token qualification from model alone"
-  ]
+  ],
+  "kr_regions": 18,
+  "max_predicted_shared_next_count_d_loads": 23,
+  "max_predicted_shared_head_valid_next_d_loads": 19,
+  "external_bridge": {
+    "width_bits": 277,
+    "regions": 18,
+    "original_state_bits": 976,
+    "added_state_bits_before_canonical_merging": 71,
+    "state_bits_before_canonical_merging": 1047,
+    "payload_bits": 831,
+    "data_latency_hbm_edges": 1,
+    "extra_data_edges": 0,
+    "raw_valid_ready_gates": 18,
+    "state": "18 prior-ready captures and18 canonical-cnt_next occupancy captures; independent local push/pop per16bit region. Reset fanout belongs to parent landing integration."
+  }
 }
