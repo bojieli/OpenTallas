@@ -1,0 +1,101 @@
+--- c7/generated_clockfix/tb.sv
++++ proposal/generated_clockfix/tb.sv
+@@ -22,6 +22,10 @@
+ integer st=-1,qt=-1;
+ always @(posedge stream)if(rs)st=st+1;
+ always @(posedge clk)if(rq)qt=qt+1;
++// Observer only: the next consumer edge has this identity in active and NBA.
++// qt remains the original drive counter; no DUT or stimulus uses this latch.
++integer observed_serial_edge=-1;
++always @(negedge clk)if(rq)observed_serial_edge=qt+1;
+ integer episode=0,mut=0;integer abort_mode=0;initial abort_mode=$test$plusargs("RESET_ABORT");reg launch=0;reg[3:0] we=0;
+ reg[15:0] cb[0:3];reg[6:0] cr[0:3];reg[255:0] cd[0:3];
+ wire[3:0] sfault[0:3];wire[16383:0] lanes_x;wire[511:0] lanes_v;
+@@ -10401,60 +10405,65 @@
+ end
+ default:begin end endcase end
+ integer roots=0,scalars=0,checked=0,fillcount=0,retired=0;integer startqt=0;integer abortfills=0;reg root_seen=0;
++reg observed_start_at_edge=0;
+ always @(posedge clk)begin
+- if(station_start)begin startqt=qt;root_seen=0;
+-  if(qt!=6011+9000*(episode+abort_mode)&&!(abort_mode&&qt==6011))$fatal(1,"CP_FIXED_STARTUP_PHASE");
+-  $display("PROGRAMME_START episode=%0d qt=%0d st=%0d aborted=%0d",episode,qt,st,(abort_mode&&qt==6011));
++ observed_start_at_edge=station_start;
++ if(runrq&&launch)$display("LAUNCH_CONSUMER_EDGE edge=%0d qt_active=%0d realtime_ns=%0.3f busy=%b",observed_serial_edge,qt,$realtime,busy);
++ if(station_start)begin startqt=observed_serial_edge;root_seen=0;
++  $display("PROGRAMME_START_EPOCH episode=%0d edge=%0d qt_active=%0d qt_post_expected=%0d realtime_ns=%0.3f st=%0d launch=%b valid=%b command_edge=%0d",episode,observed_serial_edge,qt,observed_serial_edge,$realtime,st,launch,valid[0],edgeidx[0]);
++  if(observed_serial_edge!=6011+9000*(episode+abort_mode)&&!(abort_mode&&observed_serial_edge==6011))$fatal(1,"CP_FIXED_STARTUP_PHASE");
++  $display("PROGRAMME_START episode=%0d qt=%0d st=%0d aborted=%0d",episode,observed_serial_edge,st,(abort_mode&&observed_serial_edge==6011));
+  end
+  #0.001;
++ if(observed_start_at_edge)$display("PROGRAMME_START_POST_NBA edge=%0d qt_post=%0d realtime_ns=%0.3f",observed_serial_edge,qt,$realtime);
+  if(runrq&&root_v&&!root_seen)begin root_seen=1;
+-  $display("ROOT episode=%0d age=%0d data=%h captures=%0d adds=%0d",episode,qt-startqt,root_x,capture_count,add_count);
+-  if(qt-startqt!=591)$fatal(1,"ROOT_AGE");
++  $display("ROOT episode=%0d age=%0d data=%h captures=%0d adds=%0d",episode,observed_serial_edge-startqt,root_x,capture_count,add_count);
++  if(observed_serial_edge-startqt!=591)$fatal(1,"ROOT_AGE");
+   if(root_x!==gold[episode]||capture_count!=1280||add_count!=1281)$fatal(1,"ROOT_NUMERIC");roots++;
+  end
+  if(runrq&&rsv)begin
+-  $display("SCALAR episode=%0d age=%0d tag=%h data=%h",episode,qt-startqt,rtag,rx);
+-  if(qt-startqt!=613)$fatal(1,"SCALAR_AGE");
++  $display("SCALAR episode=%0d age=%0d tag=%h data=%h",episode,observed_serial_edge-startqt,rtag,rx);
++  if(observed_serial_edge-startqt!=613)$fatal(1,"SCALAR_AGE");
+   if(rx!==gold[episode]||rtag!=32'h100)$fatal(1,"SCALAR_IDENTITY");scalars++;
+  end
+ end
+ always @(posedge clk)if(runrq)begin
+  if(|wv)begin
+-  $display("RF_PIN episode=%0d age=%0d v=%h addr=%h data=%h",episode,qt-startqt,wv,wa,wd);
+-  if(qt-startqt!=646||wv!=1||wa[7:0]!=0||wd[31:0]!==gold[episode])$fatal(1,"RF_WRITE_PIN_ID_AGE");
++  $display("RF_PIN episode=%0d age=%0d v=%h addr=%h data=%h",episode,observed_serial_edge-startqt,wv,wa,wd);
++  if(observed_serial_edge-startqt!=646||wv!=1||wa[7:0]!=0||wd[31:0]!==gold[episode])$fatal(1,"RF_WRITE_PIN_ID_AGE");
+  end
+  if(cmd[0][127])begin
+-  if(qt-startqt!=648||cmd[0][126:119]!=0)$fatal(1,"RF_CLASS5_ID_AGE");
+-  $display("RF_CLASS5 episode=%0d age=%0d",episode,qt-startqt);
++  if(observed_serial_edge-startqt!=648||cmd[0][126:119]!=0)$fatal(1,"RF_CLASS5_ID_AGE");
++  $display("RF_CLASS5 episode=%0d age=%0d",episode,observed_serial_edge-startqt);
+  end
+  if(cmd[0][166])begin
+-  if(qt-startqt!=650||cmd[0][165]!=1||cmd[0][151:136]!=4096||cmd[0][135:128]!=1)$fatal(1,"DRAIN_ID_AGE_MASK");
+-  $display("RF_DRAIN episode=%0d age=%0d",episode,qt-startqt);
++  if(observed_serial_edge-startqt!=650||cmd[0][165]!=1||cmd[0][151:136]!=4096||cmd[0][135:128]!=1)$fatal(1,"DRAIN_ID_AGE_MASK");
++  $display("RF_DRAIN episode=%0d age=%0d",episode,observed_serial_edge-startqt);
+  end
+  #0.001;
+- if(startqt>0&&qt-startqt==651&&core.rf_dsec[31:0]!==gold[episode])$fatal(1,"RF_DSEC_CAPTURE");
++ if(startqt>0&&observed_serial_edge-startqt==651&&core.rf_dsec[31:0]!==gold[episode])$fatal(1,"RF_DSEC_CAPTURE");
+  if(s0_0.u_slice.su_w_done[0])begin
+-  $display("SERIAL_RETIRE episode=%0d age=%0d",episode,qt-startqt);
+-  if(qt-startqt!=670)$fatal(1,"SERIAL_NATIVE_DONE_AGE");retired++;
++  $display("SERIAL_RETIRE episode=%0d age=%0d",episode,observed_serial_edge-startqt);
++  if(observed_serial_edge-startqt!=670)$fatal(1,"SERIAL_NATIVE_DONE_AGE");retired++;
+  end
+ end
+ always @(posedge clk)begin #0.001;
+- if(runrq&&startqt>0&&qt-startqt==647&&core.u_rf.g_bank[0].u_bank.g_replica[0].v0!==gold[episode])$fatal(1,"RF_COHERENT_COMMIT replica=0");
++ if(runrq&&startqt>0&&observed_serial_edge-startqt==647&&core.u_rf.g_bank[0].u_bank.g_replica[0].v0!==gold[episode])$fatal(1,"RF_COHERENT_COMMIT replica=0");
+ end
+ always @(posedge clk)begin #0.001;
+- if(runrq&&startqt>0&&qt-startqt==647&&core.u_rf.g_bank[0].u_bank.g_replica[1].v0!==gold[episode])$fatal(1,"RF_COHERENT_COMMIT replica=1");
++ if(runrq&&startqt>0&&observed_serial_edge-startqt==647&&core.u_rf.g_bank[0].u_bank.g_replica[1].v0!==gold[episode])$fatal(1,"RF_COHERENT_COMMIT replica=1");
+ end
+ always @(posedge clk)begin #0.001;
+- if(runrq&&startqt>0&&qt-startqt==647&&core.u_rf.g_bank[0].u_bank.g_replica[2].v0!==gold[episode])$fatal(1,"RF_COHERENT_COMMIT replica=2");
++ if(runrq&&startqt>0&&observed_serial_edge-startqt==647&&core.u_rf.g_bank[0].u_bank.g_replica[2].v0!==gold[episode])$fatal(1,"RF_COHERENT_COMMIT replica=2");
+ end
+ always @(posedge clk)begin #0.001;
+- if(runrq&&startqt>0&&qt-startqt==647&&core.u_rf.g_bank[0].u_bank.g_replica[3].v0!==gold[episode])$fatal(1,"RF_COHERENT_COMMIT replica=3");
++ if(runrq&&startqt>0&&observed_serial_edge-startqt==647&&core.u_rf.g_bank[0].u_bank.g_replica[3].v0!==gold[episode])$fatal(1,"RF_COHERENT_COMMIT replica=3");
+ end
+ always @(posedge clk)begin #0.001;
+- if(runrq&&startqt>0&&qt-startqt==647&&core.u_rf.g_bank[0].u_bank.g_replica[4].v0!==gold[episode])$fatal(1,"RF_COHERENT_COMMIT replica=4");
++ if(runrq&&startqt>0&&observed_serial_edge-startqt==647&&core.u_rf.g_bank[0].u_bank.g_replica[4].v0!==gold[episode])$fatal(1,"RF_COHERENT_COMMIT replica=4");
+ end
+ always @(posedge clk)begin #0.001;
+- if(runrq&&startqt>0&&qt-startqt==647&&core.u_rf.g_bank[0].u_bank.g_replica[5].v0!==gold[episode])$fatal(1,"RF_COHERENT_COMMIT replica=5");
++ if(runrq&&startqt>0&&observed_serial_edge-startqt==647&&core.u_rf.g_bank[0].u_bank.g_replica[5].v0!==gold[episode])$fatal(1,"RF_COHERENT_COMMIT replica=5");
+ end
+ reg[2421:0] applied0;
+ assign cmd[0]=applied0;
