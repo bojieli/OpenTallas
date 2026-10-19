@@ -13,7 +13,8 @@ class DirectLandingReserve(unittest.TestCase):
         self.assertNotRegex(s,r'set_(?:multicycle_path|false_path|clock_groups|disable_timing)')
         self.assertIn('210.0 + 0.75 * $ot_lp_direct_T',s)
         self.assertIn('hold 175.0',s)
-        self.assertIn('foreach a [get_clocks ot_entry_*]',s)
+        self.assertIn('foreach a $ot_lp_direct_clocks',s)
+        self.assertIn('ot_cf_root [get_full_name $a]',s)
     def test_mutant_direct_record_cannot_fall_back_to_mcp(self):
         rec=self.record();rec['E']=3
         with patch.object(CE,'landed_record',return_value=rec):
