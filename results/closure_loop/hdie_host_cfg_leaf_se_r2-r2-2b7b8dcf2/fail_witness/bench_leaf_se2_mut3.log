@@ -1,0 +1,4 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job hdie_host_cfg_leaf_se_r2-r2-2b7b8dcf2 bench bench_leaf_se2_mut3 host ot-agidock128 run /srv/opentallas-scratch/claude/closure-loop/hdie_host_cfg_leaf_se_r2-r2-2b7b8dcf2 log cl/bench_leaf_se2_mut3.a1b1.log captured 2026-10-18T18:17:18-07:00
+# fail_regex 'HOST_CFG_LEAF_LOCKSTEP_FAIL mism=[1-9]'
+HOST_CFG_LEAF_LOCKSTEP_FAIL mism=13868 c1=4526 c2=4417 c3=4579 c4=345 c5=0 launches=40/20 irq=40/20

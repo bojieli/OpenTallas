@@ -1,0 +1,5 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job hidx_share2r_leaf_1018-r1-984038a3d bench bench_share2r_mut5 host ot-epyc4 run /srv/opentallas-scratch2/claude/closure-loop/hidx_share2r_leaf_1018-r1-984038a3d log cl/bench_share2r_mut5.a1b1.log captured 2026-10-18T18:49:12-07:00
+# fail_regex '^IDX_VM_SHARE2R MUT5 .*errors[1-9][0-9]* \\(rq0 rr0 f[1-9].* dut_fault0 '
+Verilator 5.050 2026-07-01 rev v5.050
+IDX_VM_SHARE2R MUT5 checked2062 a_reads5446 b_reads5427 dbl84 errors1026 (rq0 rr0 f1026 st0) first_err1310 ref_fault1 dut_fault0 leaves4 SRAMs48

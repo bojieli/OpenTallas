@@ -1,0 +1,14 @@
+read_rtlil /tmp/r0330_eqv/hsm_xcal_t224_r1/out_new/netlist.il
+rename ot_hbm_svc_sm_xcal_t gate
+design -stash gatedes
+read_rtlil /tmp/r0330_eqv/hsm_xcal_t224_r1/out_old/netlist.il
+rename ot_hbm_svc_sm_xcal_t gold
+design -copy-from gatedes -as gate gate
+async2sync
+memory_map
+opt_clean
+equiv_make gold gate eq
+hierarchy -top eq
+equiv_simple -seq 5
+equiv_induct -seq 5
+equiv_status -assert

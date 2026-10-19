@@ -154,6 +154,41 @@
    "wall": "27:31",
    "peak_gb": 33.4,
    "note": "p4j plan fix (q/pv entry under the voids, 0 um lane over blocks) restores p4h: 23 post-GRT slew violators worst 349.4 ps (p4h 22 / 349; p4i 1,402 / 973.7); spread max_disp 51 um (p4h 51, p4i 322)"
+  },
+  "die_p4k_r": {
+   "unit": "oth-ubuntu-3131956-1792308984",
+   "host": "ot-pve1",
+   "dir": "/srv/opentallas-scratch/claude/s81die5/case_p4k_r",
+   "exit": 0,
+   "grt_overflow": 0,
+   "M2": 6.38,
+   "M3": 13.5,
+   "M4": 4.86,
+   "M5": 5.79,
+   "repeaters": 2044061,
+   "rep_violations": 0,
+   "spread": {
+    "mean_disp_um": 6.1,
+    "max_disp_um": 63.51,
+    "unplaced": 0
+   },
+   "fclk": {
+    "nets": 2532,
+    "hops": 1897,
+    "judged": 1895,
+    "mismatch_over_1": 0
+   },
+   "post_grt_resized": [
+    48,
+    24
+   ],
+   "post_grt_slew_viol": 25,
+   "worst_slew_ps": 310.38,
+   "wirelength_um": 371982921,
+   "wall": "1:59:28",
+   "peak_gb": 35.5,
+   "pin_window_um": 0,
+   "note": "S81-DIE6 collect: p4k (RTL-width lanes, 2,532 CLOSED dvrlyh) GRT overflow 0, fclk mismatch 0, post-GRT slew 25 / 310.4 ps (p4j 23 / 349.4: same class, frame x_f / hrq station inputs and long wires near stand-in faces), spread max_disp 63.5 um; stand-in abstracts fully obstructed (no pin window) -> the p4l rerun uses OT_ABS_PIN_WINDOW_UM=3. Records: p4k/grt_r/"
   }
  },
  "collected_p4i": "S81-DIE2 10-17 ~17:10 from out/run.log on ot-epyc4",

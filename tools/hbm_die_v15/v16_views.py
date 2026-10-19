@@ -84,15 +84,19 @@ def real_view(m, ports=None, params=None):
     cands = real_views(m)
     if not cands or ports is None:
         return cands[0] if cands else None
+    param_miss = False
     for rv in cands:
         lp = lef_ports(rv[1])
         if any(lp.get(p) != w for p, w in ports.items()):
             continue
         sp = spec_params(rv[0])
         if sp and params is not None and any(str(params.get(k, v)) != str(v) for k, v in sp.items()):
+            param_miss = True
             continue
         return rv
-    return cands[0]
+    # DIE-HBM-LEAD 10-19: a view hardened for OTHER parameter values (equal pins) must never bind (it fell back to
+    # cands[0] and bound e.g. the QID 2 / G 0 cxport dl_s view on all 16 lanes) -> SYNTH of this variant
+    return None if param_miss else cands[0]
 
 
 def sv_val(v):

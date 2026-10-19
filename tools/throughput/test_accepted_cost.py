@@ -1,6 +1,7 @@
 """Tests of the accepted-cost ledger (owner 2026-10-13).   python3 -m pytest tools/throughput/test_accepted_cost.py"""
 import copy
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -258,3 +259,36 @@ def test_annotate_states_the_share_basis_without_touching_numbers(tmp_path):
     assert any("share basis" in b for b in AC.check(led))
     with pytest.raises(AC.LedgerError):
         AC.annotate(led, "s81", "SU.NONE", "measured")
+
+
+def test_superseded_rows_leave_every_total_and_the_table():
+    led = AC.empty_ledger()
+    AC.propose(led, row(unit="VM.READ", loss=4.0))
+    AC.accept(led, "s81", "VM.READ", root=AC.ROOT)
+    AC.propose(led, row(unit="FIELD.X", loss=1.0))
+    with pytest.raises(AC.LedgerError):
+        AC.supersede(led, "s81", r"^VM\.", by="", reason="r")            # the superseding die rev is required
+    hit = AC.supersede(led, "s81", r"^VM\.", by="DV die p4l", reason="retired hub")
+    assert [r["unit"] for r in hit] == ["VM.READ"] and len(led["rows"]) == 2   # kept, never deleted
+    r = AC.find(led, "s81", "VM.READ")
+    assert r["status"] == "superseded" and r["superseded"]["from_status"] == "accepted" and r["e2e_loss_pct"] == 4.0
+    t = AC.totals(led)["s81"]
+    assert (t["accepted_pct"], t["proposed_pct"], t["superseded_rows"], t["superseded_pct_not_counted"]) == (0.0, 1.0, 1, 4.0)
+    assert AC.check(led) == []
+    tab = AC.table(led)
+    assert "VM.READ" not in tab and "FIELD.X" in tab and "1 superseded rows" in tab
+    with pytest.raises(AC.LedgerError, match="superseded"):
+        AC.propose(led, row(unit="VM.READ", loss=1.0))                  # a retired row is not silently replaced
+    del r["superseded"]["by"]
+    assert any("superseded without" in b for b in AC.check(led))
+
+
+def test_committed_s81_total_is_the_dv_die_only():
+    led = AC.load_ledger()
+    s81 = [r for r in led["rows"] if r["design"] == "s81"]
+    live = [r for r in s81 if r["status"] != "superseded"]
+    assert not [r["unit"] for r in live if re.match(r"(VM|SU|HC|MIX4)\.|CAPT\.CD_PINREG$", r["group"])]
+    assert all(r["superseded"]["by"] and r["superseded"]["reason"] for r in s81 if r["status"] == "superseded")
+    ar = sum((r["per_workload"].get("ar") or {}).get("e2e_loss_pct", 0.0) for r in live)
+    landing = sum(r["per_workload"]["ar"]["e2e_loss_pct"] for r in live if r["group"].startswith("S81.DV_LANDING"))
+    assert abs(ar - landing - 0.871) < 1e-6 and abs(ar - 2.775) < 1e-6

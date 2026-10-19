@@ -280,7 +280,8 @@ export async function mountTokenExplorer(el, opts = {}) {
       ...(g ? [stageP] : [h('div', { class: 'kv' }, 'Inspect a stage from the flow graph or the stage list. Select an operator to see its timing, source and hardware mapping.')]),
       selP);
     const evidence = h('details', { class: 'evidence' }, h('summary', {}, 'Timing provenance, accounting and source records'), banner);
-    const content = h('div', { class: 'content' }, flowP, ...(dieP ? [dieP] : []), inspector, ganttP);
+    const compP = compositionPanel(data.composition_1018 || (mtp ? null : arData.composition_1018), mtp);
+    const content = h('div', { class: 'content' }, ...(compP ? [compP] : []), flowP, ...(dieP ? [dieP] : []), inspector, ganttP);
     if (mtp) content.append(hwPanel(data, (n) => openStage(n.group)));
     content.append(shareP, evidence, notes, nativePanel);
     views.forEach((v) => v && v.destroy && v.destroy()); views = [];
@@ -434,6 +435,26 @@ function shareTables(data, p, open) {
     ...cls.map((c) => h('tr', {}, h('td', {}, h('span', { class: 'tp-sw', style: `display:inline-block;margin-right:6px;background:${p.cls[c.cls]?.color}` }), p.cls[c.cls]?.label || c.cls),
       h('td', { class: 'n' }, fmtCyc(c.cycles)), h('td', { class: 'n' }, fmtPct(c.share)))));
   return h('div', { class: 'two' }, h('div', {}, t1, h('div', { class: 'kv', style: 'margin-top:4px' }, `${crit.length} critical stages; top 12 shown (click to open)`)), t2);
+}
+
+/** 10-18 composition banner (tools/token_compose_xdie.py): T = sum n_l C_die(l) + sum n_l sum_x max(0, E - O), every
+ *  term graded; the headline share is the part of the token measured on the CURRENT die RTL. */
+const COMP_COL = { 'measured-current-RTL': '#199e70', 'measured-old-RTL': '#3987e5', 'modelled-PHY': '#9085e9', priced: '#c98500' };
+function compositionPanel(c, mtp) {
+  if (!c) return null;
+  if (!c.available) return h('div', { class: 'panel', role: 'note' }, h('div', { class: 'pt' }, h('b', {}, 'Graded composition (10-18)'), h('span', {}, mtp ? 'MTP' : 'AR')), h('div', { class: 'kv' }, c.reason));
+  const T = c.T_token_cycles, gs = Object.entries(c.by_grade).filter(([, v]) => v > 0);
+  return h('div', { class: 'panel', role: 'note', 'aria-label': 'graded composition' },
+    h('div', { class: 'pt' }, h('b', {}, `${c.pct_measured_current_rtl.toFixed(1)}% of token cycles measured on current RTL`), h('span', {}, 'graded composition 10-18 · ' + (mtp ? 'MTP step' : 'AR token'))),
+    h('div', { class: 'hero' },
+      h('span', {}, h('span', { class: 'big' }, c.tok_s.toLocaleString(undefined, { minimumFractionDigits: 1 })), h('span', { class: 'u' }, ' tok/s composed')),
+      h('span', { class: 'kv' }, 'T ', h('b', {}, fmtCyc(T)), c.tau ? ` · per accepted token ${fmtCyc(c.per_accepted_cycles)} (tau ${c.tau})` : ''),
+      h('span', { class: 'kv' }, 'price of record ', h('b', {}, `${c.price_of_record.tok_s.toLocaleString()} tok/s`), ` (${c.vs_price_pct >= 0 ? '+' : ''}${c.vs_price_pct}%)`)),
+    h('div', { class: 'grade', role: 'img', 'aria-label': 'cycles by grade' },
+      ...gs.map(([k, v]) => h('div', { style: `flex:${v / T};background:${COMP_COL[k] || '#888'}`, title: `${k}: ${fmtCyc(v)}` }))),
+    h('div', { class: 'gl' }, ...Object.entries(c.by_grade).map(([k, v]) => h('span', {}, h('i', { style: `background:${COMP_COL[k] || '#888'}` }), `${k} ${fmtCyc(v)} (${fmtPct(v / T)})`))),
+    h('div', { class: 'kv', style: 'margin-top:4px' }, 'inter-die exposed ', h('b', {}, fmtCyc(c.by_kind.xdie)), ' · ', c.o_rule),
+    h('div', { class: 'tp-src' }, `${c.record} · ${c.tool}`));
 }
 
 /** MTP banner block: the step split into draft / verify / accept, the accepted-token accounting, other BF cases */

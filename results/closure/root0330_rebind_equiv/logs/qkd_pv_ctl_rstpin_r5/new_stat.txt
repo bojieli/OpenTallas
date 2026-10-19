@@ -1,0 +1,36 @@
+
+8. Printing statistics.
+
+=== ot_qwen_tp8_pv_wide_ctl ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      593 wires
+     9515 wire bits
+      593 public wires
+     9515 public wire bits
+       18 ports
+      560 port bits
+      616 cells
+      106   $add
+       25   $adff
+        1   $and
+        7   $dff
+        2   $div
+       35   $eq
+       29   $ge
+        3   $gt
+        2   $le
+       62   $logic_and
+        9   $logic_not
+       11   $logic_or
+       28   $lt
+       86   $mul
+      135   $mux
+       19   $ne
+        8   $not
+        6   $pmux
+        7   $reduce_bool
+        1   $reduce_or
+       34   $sub
+

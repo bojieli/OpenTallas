@@ -211,8 +211,31 @@ def load(f):
     return json.load(gzip.open(f) if str(f).endswith('.gz') else open(f))
 
 
+def resolve_split(c, S):
+    """DIE-HBM-LEAD 10-19 (l9_gen2c_views): a SOFT parent replaced by its halves (contract 'split_parents': parent ->
+    port -> [[child, port], ...]) -- paths written against the parent port resolve to the half wired to it (an input
+    feeding several halves yields one path per half)."""
+    sp = c.get('split_parents') or {}
+    if not sp:
+        return S
+    out = []
+    for x in S:
+        srcs = [x['src']]; dsts = [x['dst']]
+        si, sp_, slo = x['src']
+        if si in sp:
+            srcs = [[ch, cp, slo] for ch, cp in sp[si]['ports'].get(sp_, [[si, sp_]])]
+        di, dp, dlo = x['dst']
+        if di in sp:
+            dsts = [[ch, cp, dlo] for ch, cp in sp[di]['ports'].get(dp, [[di, dp]])]
+        for s_ in srcs:
+            for d_ in dsts:
+                out.append(dict(x, src=s_, dst=d_))
+    return out
+
+
 def check(c, S):
     I = c['instances']
+    S = resolve_split(c, S)
     drv = {}
     for e in c['edges']:
         si, sp, slo, shi = e['source']; ki, kp, klo, khi = e['sink']   # bit ranges are [lo, hi)
@@ -237,7 +260,11 @@ def check(c, S):
             if RELAY.match(m) and sp in THRU:
                 if not m.startswith('hbfd_rly'):
                     landed[0] = True
-                i, p, b = si, THRU[sp], sb; st += 1; continue
+                i, p, b = si, THRU[sp], sb; st += 1
+                w = I[si]['ports'].get(p, {}).get('bits')
+                if w and b >= w:   # fork station (hbfd_lh*_f<N>): b[k*W + j] = a[j] (DIE-HBM-LEAD 10-19)
+                    b %= w
+                continue
             return d, st
     res = []
     for x in S:

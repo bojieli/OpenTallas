@@ -54,12 +54,25 @@ module ot_s81sl_vq #(
     reg yv_c, uv_c; reg [2:0] yi_c, ui_c; reg [255:0] y_c, u_c; reg [3:0] sid_c; reg [2:0] k_c; reg mq, mb, mcol; reg [7:0] mi;
     always @(posedge clk or negedge rs_c) if (!rs_c) begin yv_c <= 1'b0; uv_c <= 1'b0; end else begin yv_c <= y_v; uv_c <= u_v; end
     always @(posedge clk) begin yi_c <= y_i; y_c <= y; ui_c <= u_i; u_c <= u; sid_c <= sid; k_c <= k; end
+    // S81-NATIVE3 (10-17, NATIVE-2 audit: um_v 229.0 / m_v 228.9 / y_v 192.0 ps capture): the mode command lands in
+    // pin flops (mv_c/umv_c + their q/b/i fields) and the mode-register mux and the collision check read only flops.
+    // The mode registers load one edge later than in the closed view (b6d9d4515); every read of mq/mb/mi happens while
+    // a vector is sent (run), >= 18 + 8 edges after the command (quantiser latency + sub-beats), so xf is cycle-identical
+    // (tools/s81_slice/vq_pinreg_eq.sh vs the closed RTL).  fault also ORs the collision of the pin flops directly, so a
+    // collision reaches fault on the same edge as before (mcol keeps it sticky).
+    reg mv_c, umv_c, mq_c, mb_c, umq_c, umb_c; reg [7:0] mi_c, umi_c;
+    always @(posedge clk or negedge rs_c) if (!rs_c) begin mv_c <= 1'b0; umv_c <= 1'b0; end else begin mv_c <= m_v; umv_c <= um_v; end
+`ifdef OT_VQ_MUT_PINREG
+    always @(posedge clk) begin mq_c <= um_q; mb_c <= m_b; mi_c <= m_i; umq_c <= um_q; umb_c <= um_b; umi_c <= um_i; end   // mutant: m_q crossed with um_q
+`else
+    always @(posedge clk) begin mq_c <= m_q; mb_c <= m_b; mi_c <= m_i; umq_c <= um_q; umb_c <= um_b; umi_c <= um_i; end
+`endif
     always @(posedge clk or negedge rs_c)
         if (!rs_c) begin mq <= 1'b1; mb <= 1'b0; mi <= 8'd0; mcol <= 1'b0; end
         else begin
-            if (m_v) begin mq <= m_q; mb <= m_b; mi <= m_i; end
-            else if (um_v) begin mq <= um_q; mb <= um_b; mi <= um_i; end
-            mcol <= mcol | (m_v && um_v) | (y_v && u_v);
+            if (mv_c) begin mq <= mq_c; mb <= mb_c; mi <= mi_c; end
+            else if (umv_c) begin mq <= umq_c; mb <= umb_c; mi <= umi_c; end
+            mcol <= mcol | (mv_c && umv_c) | (yv_c && uv_c);
         end
     // one stream: vn's y or vs's u (never both in a cycle: compiler slots; both = fault)
     wire sv_ = yv_c | uv_c; wire [2:0] si_ = yv_c ? yi_c : ui_c; wire [255:0] sd_ = yv_c ? y_c : u_c;
@@ -135,7 +148,7 @@ module ot_s81sl_vq #(
             else if (run) begin st <= st + 6'd1; if (st == 6'd39) run <= 1'b0; end
             xf_v <= run && ((mq && st[5:2] == {1'b0, k_c}) || (mb && st[5:2] == 4'd5 + {1'b0, k_c}));
             xf_s <= run && ((mq && st == {1'b0, k_c, 2'b00}) || (mb && st == 6'd20 + {1'b0, k_c, 2'b00}));
-            fault <= fault | (vo && af) | ord_f | mcol | (vo && blo && run);
+            fault <= fault | (vo && af) | ord_f | mcol | (mv_c && umv_c) | (yv_c && uv_c) | (vo && blo && run);
         end
     always @(posedge clk) begin
         if (vo && !blo) begin q0 <= q; e0 <= e; end

@@ -8,6 +8,13 @@ pin_balance).  Outline: max(std area / UTIL, the perimeter that keeps <= PIN_PER
 21.6-um grid, aspect <= 1.6.  The die tools re-pin top-down at the parent (owner rule 10-13); these faces are the
 pre-route proposal.  Benches: the cluster composition gate (bench/cluster_gate.py) exact + this child's reset mutant.
 
+Multi-family CDC leaves (qkd_hr_cdc_pc, qkd_hr_cdc_host, qkd_hr_ingest_qm; KV-TILES-D/CDC 10-17): one entry per clock
+family (D3 ck_core / ck_host / ck_ingest / ck_phy_fam), clock "multiple_cts_roots" + clock_data_paths
+"reviewed_gray_fifos" (cdc_leaf_lint.base_spec: sources = the leaf's module closure, synchroniser groups, SRAM macros),
+port families from the committed fleet lint record (CDC_LINT, written by cdc_leaf_lint.py --json; PASS required).  The
+recipe-3 pin register is single-clock: core-family pins are registered on ck_core, the other families' pins are
+excluded (their crossing-side faces are the RTL's own registered credit channels), so hold_budget is "tile" (CDC leaf).
+
 usage: child_specs.py OUTDIR [child ...]
 """
 import json
@@ -26,10 +33,18 @@ CENTROIDS = dict(qkd_hr_phy_adp=(475, 86), qkd_hr_phy_pad=(300, 230), qkd_hr_cdc
                  qkd_hr_core_prompt=(170, 450), qkd_hr_core_guard=(800, 400), qkd_hr_core_queue=(330, 590),
                  qkd_hr_core_order=(110, 600), qkd_hr_cdc_host=(560, 590), qkd_hr_ingest_qm=(800, 560))
 UTIL, PIN_PER_UM = 0.5, 6.0
-MACROS = {'ot_sram_1r1w_1024x256_m2_r2c2': (174.744, 70.470), 'ot_sram_1rw_256x64_m4_r2c2': (66.312, 17.820)}
+MACROS = {'ot_sram_1r1w_1024x256_m2_r2c2': (174.744, 70.470), 'ot_sram_1rw_256x64_m4_r2c2': (66.312, 17.820),
+          'ot_sram_1r1w_32x128_m1': (51.408, 20.790)}
+CDC_LINT = RES / 'cdc/cdc_leaf_lint_cdc2.json'          # fleet run of cdc_leaf_lint.py --json on the KV-CDC2 leaves
+#                                                        (forks + per-family ports); cdc_leaf_lint.json = pre-fix REFUSED x3
+CDC_REVIEW = ('reviewed_gray_fifos (main + the (d) event-synchroniser port of claude/kv-hroot-cdc-1018; macros / chained '
+              'storage through main\'s extension mode) coordinator review PENDING; D3 family clocks, D5 credit channels at the host/PHY off-die boundary')
 FLAT = 1.0                                               # hier census area ~ the route synthesis (queue gate: 7,286 vs 5,415 hier)
 PINFLOP_UM2 = 0.45                                       # one pin register + its anchoring per pin bit
 DIRECT_TOP = {}
+# children whose reset mutant the random stimulus cannot see (benches/cg_mutant_<child>_reset_NOT_DETECTED.log): the
+# mutant inverts this input binding instead
+MUTANT_PORT = {'qkd_hr_cdc_host': 'u_rank__u_bridge__qv'}
 
 
 def inst_of(direct, child):
@@ -68,7 +83,14 @@ def main():
             if l.strip() and not l.startswith('physical/')]
     want = sys.argv[2:] or ['qkd_hr_core_prompt', 'qkd_hr_core_peer', 'qkd_hr_core_guard', 'qkd_hr_core_queue',
                             'qkd_hr_core_order', 'qkd_hr_core_tx']
+    sys.path.insert(0, str(ROOT / 'tools/qwen_kv_die/host_cluster'))
+    import cdc_leaf_lint as L
+    lint = {r['top']: r for r in json.load(open(CDC_LINT))} if CDC_LINT.is_file() else {}
     for child in want:
+        cdc = child in L.LEAVES
+        if cdc and lint.get(child, {}).get('verdict') != 'PASS':
+            print(child, 'SKIPPED: no PASS record in', CDC_LINT.relative_to(ROOT), lint.get(child, {}).get('refusal'))
+            continue
         direct = child in DIRECT_TOP
         mem = part[child]['members']
         area = sum(census[m]['std_area_um2'] for m in mem) * FLAT
@@ -88,6 +110,10 @@ def main():
         else:
             top, params, src = child, {}, [f'{CLUSTER_DIR}/{child}.v'] + srcs
             rows = ports[child]['ports']
+        if cdc:
+            leaf = L.LEAVES[child]
+            fields = L.base_spec(child, leaf, lint[child]['inputs'], lint[child]['outputs'])
+            src = fields['sources']
         bits = sum(r['width'] for r in rows)
         clk = [r['port'] for r in rows if re.match(r'^(ck|clk)', r['port'])]
         rst = [r['port'] for r in rows if r['dir'] == 'input' and re.search(r'(rst_n|^por_n$|^rst$)', r['port'])]
@@ -109,6 +135,8 @@ def main():
             load[f] += r['width']
         # the clock sits on the face with the most data pins (register mass behind the busiest face)
         cf = max(load, key=load.get)
+        if cdc:                                  # primary clock_port is ck_core (core family owns the spec's clock_port)
+            clk = ['ck_core'] + [c for c in clk if c != 'ck_core']
         pins[cf].insert(len(pins[cf]) // 2, clk[0] if clk else 'ck')
         for c in clk[1:]:
             pins[cf].append(c)
@@ -125,9 +153,38 @@ def main():
                                macro_halo_um=5.4, pin_balance=dict(group_max=1, h='M4', v='M5')),
                     pin_regs=dict(enable=True, reset='^(' + '|'.join(rst) + ')$',
                                   reason='literal async reset roles only (data levels such as native_link_reset_seen are registered)'))
+        if cdc:
+            for k in ('clock', 'clock_ports', 'clock_data_paths', 'clock_relationship', 'clock_entry_domains',
+                      'cdc_synchronizers', 'macros', 'reviewed_gray_fifo_extensions'):
+                if k in fields:
+                    spec[k] = fields[k]
+            spec['sources'] = list(dict.fromkeys(src + [f'physical/asap7_memory_macros/{k}/{k}_bb.v' for k in macros]))
+            other = sorted(p for f, v in lint[child]['inputs'].items() if f != 'core' for p in v) + \
+                sorted(p for f, v in lint[child]['outputs'].items() if f != 'core' for p in v)
+            fams = '/'.join(leaf['families'])
+            spec['pin_regs'] = dict(enable=True, clock='ck_core', reset=spec['pin_regs']['reset'],
+                                    **(dict(exclude='^(' + '|'.join(other) + ')$') if other else {}),
+                                    reason=('multi-family CDC leaf (' + fams + '): the recipe-3 pin register is single-clock, '
+                                            'so core-family pins are registered on ck_core and the ' +
+                                            ', '.join(f for f in leaf['families'] if f != 'core') +
+                                            '-family pins (' + (', '.join(other) or 'none') + ') are excluded: '
+                                            'their faces are the RTL credit channels of that family'))
+            spec['hold_budget'] = 'tile'
+            spec['hold_budget_reason'] = ('CDC leaf: ' + fams + ' family pins; the non-core pins cannot take the '
+                                          'single-clock recipe-3 pin register, so the tile repairs its own boundary hold')
+            spec.pop('inhold'), spec.pop('outhold')
+            spec['structural_change'] = (f'KVJ-A3 r2 HOST cluster CDC leaf {child} ({fams} families, one entry per family: '
+                                         + ', '.join(spec['clock_ports']) + '): members '
+                                         + ', '.join(m.split('/')[-1] for m in mem) + ', generated wrapper '
+                                         '(tools/qwen_kv_die/host_cluster/gen_cluster.py); clock_data_paths ' + CDC_REVIEW
+                                         + '; CDC lint record ' + str(CDC_LINT.relative_to(ROOT)) + '. Partition '
+                                         'results/arch/qwen_split_1014/host_root_cluster/partition_r2.json')
         cg = 'python3 tools/qwen_kv_die/host_cluster/bench/cluster_gate.py'
         mut = f'--inst {inst_of(direct, child)}' if direct else f'--child {child[len("qkd_hr_"):]}'
-        spec['job'] = dict(owner='Claude:KV-HOSTCL', branch='claude/kvj-a3-1017', tag='r2',
+        if child in MUTANT_PORT:
+            mut += f' --port {MUTANT_PORT[child]}'
+        spec['job'] = dict(owner='Claude:KV-HROOT-CDC' if cdc else 'Claude:KV-HOSTCL',
+                           branch='claude/kv-hroot-cdc-1018' if cdc else 'claude/kvj-a3-1017', tag='r2',
                            purpose=f'HOST root cluster r2 child {child} (pre-route gate + route; parent qkd_host_root is CRITICAL)',
                            benches=[dict(name='cluster_lockstep', expect='pass', threads=16, peak_ram_gb=24, needs=['verilator'],
                                          cmd=f'{cg} exact --out {{RUN}}/bench/cg_exact',

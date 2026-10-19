@@ -64,8 +64,28 @@ module tb_s81dv_frame;
     wire [1103:0] x = {xw2[1100:565], xw2[0], mk, xw2[564:0], mk};
     // ---------------- DUT
     wire [1103:0] xo; wire [3:0] xok; wire [69:0] ret;
+`ifdef TB_FWD_GATE
+    // LANDFIX-SQ/F (10-18): the die's forwarded lane, as LANDING-CONTRACT L2 builds it -- the source's hop-0 clock gate
+    // opens on the source edge G = the frame's regional reset release (2-flop sync of rst_n, the same edge as the
+    // dsfd_cfifo_crs4 rsync), and the lane (ck_f AND data) reaches the frame TB_LDLY whole periods later (dL = LDLY x T).
+    // With the gate, the landing's write epoch is source-relative, so ret must not move with LDLY inside the window
+    // (E - D) T < dL < E T (E = LK, D = 4).  Without TB_FWD_GATE: xk = the free-running bench clock (old form).
+    localparam integer LDLY = `ifdef TB_LDLY `TB_LDLY `else 0 `endif;
+    reg [1:0] gsy; always @(posedge clk or negedge rst_n) if (!rst_n) gsy <= 2'b00; else gsy <= {gsy[0], 1'b1};
+    reg [1103:0] xl_ [0:LDLY]; reg gl_ [0:LDLY];
+    integer li;
+    always @(*) begin xl_[0] = x; gl_[0] = gsy[1]; end
+    always @(posedge clk) for (li = LDLY; li > 0; li = li - 1) begin xl_[li] <= xl_[li - 1]; gl_[li] <= gl_[li - 1]; end
+    reg gen_l = 1'b0; always @(negedge clk) gen_l <= gl_[LDLY];       // ICG: enable latched while clk is low
+    wire xkg = clk & gen_l;
+    wire [1103:0] xin = xl_[LDLY];
+    `FRAME #(.INSTANCE("f")) dut (.clk(clk), .cr(clk), .cr_s(clk), .rst_n(rst_n), .x(xin), .xk({4{xkg}}), .xo(xo), .xok(xok),
+                                  .ret(ret));
+`else
+    wire [1103:0] xin = x;
     `FRAME #(.INSTANCE("f")) dut (.clk(clk), .cr(clk), .cr_s(clk), .rst_n(rst_n), .x(x), .xk({4{clk}}), .xo(xo), .xok(xok),
                                   .ret(ret));
+`endif
 `ifdef TB_DEBUG
     always @(posedge clk) if (rst_n && edge_n < 400) begin
         if (dut.u_cf.xflt || dut.u_cf.sti != 2'b00 || dut.u_cf.flt)
@@ -77,7 +97,7 @@ module tb_s81dv_frame;
     // ---------------- checks / capture
     reg [1103:0] x_d; reg live = 1'b0; integer xo_checked = 0, nret = 0, nflt = 0;
     always @(posedge clk) begin
-        x_d <= x;
+        x_d <= xin;
         if (rst_n) edge_n <= edge_n + 1;
         if (live) begin
             if (xo !== x_d) begin

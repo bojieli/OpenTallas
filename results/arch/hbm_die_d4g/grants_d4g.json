@@ -4413,7 +4413,7 @@
    "plan_block": "idx_link",
    "pin_status": "FACES_ONLY",
    "grant": "d4f_idx_soft_1017",
-   "notes": "IDX soft-hierarchy child (contract 50de1fe73)"
+   "notes": "IDX soft-hierarchy child (contract 50de1fe73); DIE-HBM-LEAD 10-19 GEN2c idx PAIR: rootctl_am r4 view 475.2 x 259.2, grown W (host_N is E), same y / E edge"
   },
   {
    "name": "idx_q",
@@ -18393,14 +18393,14 @@
   {
    "name": "idx_ctl",
    "parent": "die",
-   "cell": "ot_hbm_idx_ctl_static",
+   "cell": "ot_hbm_idx_rootctl_static_am",
    "kind": "tile",
    "outline": {
-    "w": 300.0,
-    "h": 260.0
+    "w": 475.2,
+    "h": 259.2
    },
    "origin": {
-    "x": 11494.872,
+    "x": 11319.672,
     "y": 15211.8,
     "orient": "R0"
    },
@@ -19796,7 +19796,7 @@
   },
   {
    "name": "hb_argmax",
-   "cell": "ot_hbm_argmax_static_sw_vm",
+   "cell": "ot_hbm_argmax_static_sw_vm_r2",
    "kind": "tile",
    "parent": "die",
    "outline": {

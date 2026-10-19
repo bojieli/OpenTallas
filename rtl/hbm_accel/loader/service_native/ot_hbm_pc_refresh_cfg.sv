@@ -23,6 +23,10 @@
 //   active = loaded & release not yet seen back from the HBM domain, fault = sticky.
 // No ready/credit/backpressure: configuration-time only; the controllers' production schedule is unchanged.
 // Pins: every input lands in a pin flop, every output is a flop Q (owner rule 10-15 19:50).
+// Reset (ELEM-GAPS/HBMN2 2026-10-18, native capture 217.3 > 190 at rst_n on hbm_refcfg_q_1018): the rst_n PORT drives
+// only ot_rst_relay (2 sync flops + 1 relay flop, async assert); every stream-domain flop resets from rs_n. Release
+// takes RST_RELEASE = 3 rising clk edges after the port (compiler/host boot: the first F20 frame to this target may
+// not arrive within 3 stream edges of rst_n release -- boot frames come >= tens of edges later). No other cycle change.
 // MUT (bench only): 1 range check off, 2 release ignores loaded, 3 rewrite after load accepted, 4 PC byte order swapped.
 module ot_hbm_pc_refresh_cfg #(
     parameter integer NPC  = 32,
@@ -42,10 +46,14 @@ module ot_hbm_pc_refresh_cfg #(
     output reg  ready, active, fault
 );
     initial if (NPC < 1 || NPC > 32) $fatal(1, "ot_hbm_pc_refresh_cfg: NPC out of range");
+    // ---- reset relay (the rst_n port net reaches 3 flops only)
+    localparam integer RST_RELEASE = 3;
+    wire rs_n;
+    ot_rst_relay #(.REGIONS(1), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rst(.clk(clk), .rst_n_in(rst_n), .rst_n(rs_n));
     // ---- pin flops
     reg cv; reg [7:0] ct, tg; reg [11:0] ca; reg [255:0] cd;
     always @(posedge clk) begin tg <= tgt; ct <= cfg_target; ca <= cfg_addr; cd <= cfg_data; end
-    always @(posedge clk or negedge rst_n) if (!rst_n) cv <= 1'b0; else cv <= cfg_v;
+    always @(posedge clk or negedge rs_n) if (!rs_n) cv <= 1'b0; else cv <= cfg_v;
     wire hit = cv && ct == tg;
     // ---- row check
     reg in_range; integer p;
@@ -57,8 +65,8 @@ module ot_hbm_pc_refresh_cfg #(
     end
     reg loaded, rel_seen_s1, rel_seen;
     integer b;
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin loaded <= 1'b0; fault <= 1'b0; refresh_reload <= {NPC*8{1'b0}}; end
+    always @(posedge clk or negedge rs_n) begin
+        if (!rs_n) begin loaded <= 1'b0; fault <= 1'b0; refresh_reload <= {NPC*8{1'b0}}; end
         else if (hit) begin
             if (ca != 12'h800 || !in_range || (loaded && MUT != 3)) fault <= 1'b1;
             else begin
@@ -75,8 +83,8 @@ module ot_hbm_pc_refresh_cfg #(
         else begin ls <= {ls[0], (MUT == 2) ? 1'b1 : loaded}; prst <= ls[1]; end
     assign pc_rst_n = prst;
     // ---- status (release observed back in the stream domain)
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin rel_seen_s1 <= 1'b0; rel_seen <= 1'b0; ready <= 1'b0; active <= 1'b0; end
+    always @(posedge clk or negedge rs_n)
+        if (!rs_n) begin rel_seen_s1 <= 1'b0; rel_seen <= 1'b0; ready <= 1'b0; active <= 1'b0; end
         else begin
             rel_seen_s1 <= prst; rel_seen <= rel_seen_s1;
             ready <= loaded && !fault;

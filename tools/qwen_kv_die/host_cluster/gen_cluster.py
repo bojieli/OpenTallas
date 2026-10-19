@@ -31,6 +31,57 @@ TOP = 'qkd_host_root_admission'
 PARAMS = dict(ENABLE_SERVICE=1, ENABLE_NATIVE=1, ENABLE_TOKEN=1, NL=2)
 CENSUS_YS = ROOT / 'results/arch/qwen_split_1014/host_root_cluster/census/elab.ys'
 FAM_PORT = dict(core='ck_core', host='ck_host', ingest='ck_ingest', phy='ck_phy_fam')
+# KV-CDC2 (10-18): leaf-local CDC forks (same ports/parameters) that the CDC leaves instantiate instead of the shared
+# originals; the originals stay unchanged for the closed core children and the flat root
+FORKS = json.loads((ROOT / 'rtl/qwen_sys/host_cluster_cdc_20261018/forks.json').read_text())
+FORKS.pop('_doc', None)
+
+
+def src_clocks(D, mod, bit, memo, depth=0):
+    """the clock bits (as bits of module `mod`) of the registers whose outputs reach `bit` of `mod` through combinational
+    cells; a clock that is not a port bit of `mod` comes back as ('int', bit).  Submodule instances are followed through
+    their port maps."""
+    key = (mod, bit)
+    if key in memo:
+        return memo[key]
+    memo[key] = set()
+    M = D['modules'][mod]
+    X = memo.setdefault(('index', mod), {})
+    if 'drv' not in X:
+        dv = {}
+        for n, c in M['cells'].items():
+            dirs = c.get('port_directions', {})
+            for pn, bb in c['connections'].items():
+                if dirs.get(pn) == 'output':
+                    for k, b in enumerate(bb):
+                        if isinstance(b, int):
+                            dv[b] = (n, pn, k)
+        X['drv'] = dv
+        X['pbit'] = {b: (pn, k) for pn, pd in M['ports'].items() for k, b in enumerate(pd['bits']) if isinstance(b, int)}
+    out = set()
+    if bit in X['drv'] and depth < 64:
+        n, pn, k = X['drv'][bit]
+        c = M['cells'][n]
+        if 'CLK' in c['connections']:
+            cb = c['connections']['CLK'][0]
+            out.add(cb if cb in X['pbit'] else ('int', cb))
+        elif c['type'] in D['modules']:
+            sub = D['modules'][c['type']]
+            for cb in src_clocks(D, c['type'], sub['ports'][pn]['bits'][k], memo, depth + 1):
+                if isinstance(cb, tuple):
+                    out.add(cb)
+                else:
+                    sp, sk = memo[('index', c['type'])]['pbit'][cb]
+                    pb = c['connections'][sp][sk]
+                    out.add(pb if pb in X['pbit'] else ('int', pb))
+        else:
+            for ip, bb in c['connections'].items():
+                if c.get('port_directions', {}).get(ip) != 'output':
+                    for b in bb:
+                        if isinstance(b, int):
+                            out |= src_clocks(D, mod, b, memo, depth + 1)
+    memo[key] = out
+    return out
 
 
 def family():
@@ -297,16 +348,45 @@ def main():
         return re.sub(r'[^A-Za-z0-9_]', '_', nm.replace('.', '__'))
     mods, inst = {}, {}
     children = sorted(set(part['children']) - REPL)
+    # KV-CDC2 (coordinator decision A, 10-18): a multi-family child gets one output port per clock family; every bit of
+    # it comes from registers of that family, and the receiving domain synchronises it (e.g. the core guard's two-flop
+    # fm/fs per raw fault bit) and combines the bits only after that synchronisation
+    fam_bit = {T['ports'][FAM_PORT[f]]['bits'][0]: f for f in FAM_PORT}
+    fam_bit.update({b: 'phy' for b in T['ports']['ck_phy']['bits']})
+    # flat clock nets are aliases of the D3 face bits (an internal clock assign keeps its own bit): resolve each bit
+    # through the wrapper's buffers
+    memo, split_log = {}, {}       # src_clocks memo (also its per-module driver index under ('index', module))
+
+    def bit_family(b):
+        cl = src_clocks(D, 'qkd_hr_cluster_src', b, memo)
+        fams = {fam_bit.get(x) for x in cl}
+        return fams.pop() if len(fams) == 1 and None not in fams else None
     for ch in children:
         mine = [n for n, o in owner.items() if o == ch]
         bits = sorted({b for n in mine for bb in cells[n]['connections'].values() for b in bb if isinstance(b, int)})
         groups = collections.OrderedDict()
+        multi = len({fam_bit[b] for b in bits if b in fam_bit}) > 1
         for b in bits:
             if used[b] - {ch}:
                 dname = drv.get(b)
                 d = 'output' if dname in mine else 'input'
                 nm, i = best[b]
                 groups.setdefault((sname(nm), d), []).append((i, b))
+        if multi:
+            for (nm, d), lst in list(groups.items()):
+                if d != 'output':
+                    continue
+                fl = {b: bit_family(b) for _, b in lst}
+                fams = set(fl.values())
+                if len(fams) < 2:
+                    continue
+                if None in fams:
+                    raise SystemExit(f'{ch}: output {nm} mixes families {sorted(map(str, fams))} and some bit has no '
+                                     'single register family')
+                del groups[(nm, d)]
+                for f in sorted(fams):
+                    groups[(f'{nm}_{f}', d)] = [(i, b) for i, b in lst if fl[b] == f]
+                split_log.setdefault(ch, {})[nm] = {f: sum(1 for b in fl.values() if b == f) for f in sorted(fams)}
         ports, conn, pdir, taken = {}, {}, {}, set()
         for (nm, d), lst in groups.items():
             name = nm if nm not in taken else f'{nm}_{d[0]}'
@@ -382,6 +462,17 @@ def main():
         pp = ', '.join(f'.{k}({v})' for k, v in plist)
         return f'{base} #({pp}) ' if plist else f'{base} '
     txt = re.sub(r'\\(\$paramod\S+) ', fix, txt)
+    # KV-CDC2 (coordinator decision B, 10-18): member instances of a forked module bind the leaf-local CDC fork
+    forked = collections.Counter()
+
+    def fork(m):
+        forked[m.group(2)] += 1
+        return m.group(1) + FORKS[m.group(2)]['fork'] + m.group(3)
+    # the instance name may be escaped (`\\u_root.u_rank.u_fence`) when the member has no parameters (KV-CDC3 10-18:
+    # the visibility fence stayed unforked because `\w` missed the backslash)
+    txt = re.sub(r'(?m)^(\s+)(' + '|'.join(FORKS) + r')(\s+(?:#|\w|\\))', fork, txt)
+    if set(forked) != set(FORKS):
+        raise SystemExit(f'CDC forks not applied: {sorted(set(FORKS) - set(forked))} (forked {dict(forked)})')
     for pv in a.param:                 # member parameter overrides (opt-in RTL levers whose lock-step gate passed)
         m = re.fullmatch(r'(\w+)\.(\w+)=(-?\d+)', pv)
         n0 = len(re.findall(r'\b' + m.group(1) + r' #\(', txt))
@@ -418,7 +509,8 @@ def main():
             f.unlink()
     summary = dict(direct_children=sorted(DIRECT), wrapped_children=children, glue_per_child=dict(collections.Counter(o for n, o in owner.items() if n in glue)),
                    glue_cells=len(glue), glue_assigned=sum(1 for n in glue if n in owner),
-                   glue_left_in_parent=sorted(left)[:200], glue_left_count=len(left))
+                   glue_left_in_parent=sorted(left)[:200], glue_left_count=len(left),
+                   family_split_outputs=split_log, forked_members=dict(forked))
     json.dump(summary, open(out / 'gen_summary.json', 'w'), indent=1)
     print(json.dumps({k: v for k, v in summary.items() if k != 'children'}, indent=1)[:3000])
 

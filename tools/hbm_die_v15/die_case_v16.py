@@ -42,6 +42,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from die_case import synth_lef, entry_cap, ports_of_lib, rect_of, _minus, grant_pins  # noqa: E402
 from view_case import lef_pins, lef_xy  # noqa: E402
 import clock_sites
+import placement_coverage
 import die_clock_tree as dct  # noqa: E402
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import die_reach  # noqa: E402
@@ -352,6 +353,8 @@ def clock_entries(insts, placement, cell_of, pin_xy, tile_pairs):
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--views', required=True, type=Path)
+    ap.add_argument('--require-explicit-placement', action='store_true',
+                    help='refuse absent homes and generic centroid fallback; source-complete release admission')
     ap.add_argument('--out', required=True, type=Path)
     ap.add_argument('--contract', type=Path, default=CONTRACT, help='source contract (default: main); freeze it to the synthesis snapshot')
     ap.add_argument('--die-repeaters', action='store_true',
@@ -1092,6 +1095,13 @@ def main():
                     synth_clock_entry=dict(rule='SYNTH ETM clock pins re-capped to one 2 fF entry buffer', pins_recapped=ecap),
                     routed_view_qualification='All routed candidates are source/native UNBOUND; matching ports alone cannot qualify them.',
                     placement=pl, sm_mx_s_quadrant=sm_mx, carved_feedthrough=carved, in_carved_channel=in_channel, corners='setup TT, hold FF (owner option B); SS not run')
+    placement_gate = placement_coverage.audit(manifest, C)
+    manifest['placement_coverage'] = placement_gate
+    (out / 'placement_coverage.json').write_text(json.dumps(placement_gate, indent=1) + '\n')
+    print('placement_coverage', json.dumps({k: v for k, v in placement_gate.items() if k != 'rows'}), flush=True)
+    if a.require_explicit_placement and placement_gate['verdict'] != 'PASS':
+        (out / 'manifest.json').write_text(json.dumps(manifest, indent=1))
+        raise SystemExit('PLACEMENT_COVERAGE_FAIL: give every actual source instance an explicit legal home')
     # Pin the actual consumed bytes, including generated abstracts and recapped SYNTH ETMs.
     # A source path alone cannot establish lineage after another branch changes a view.
     digest = lambda p: hashlib.sha256(Path(p).read_bytes()).hexdigest()

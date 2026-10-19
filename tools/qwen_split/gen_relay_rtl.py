@@ -30,11 +30,14 @@ The module bodies are behaviour (always blocks), not shells: tools/die_port_bind
 import json, re, sys
 from pathlib import Path
 
-INST = re.compile(r'^\s*(qfd_rly[pf]?_\w+|qfd_rlyh0?_\w+|qfd_landh0?_\w+|qfd_rst_rep\w*|qfd_clkrx)\s+(\w+)\s*\((.*)\);\s*$')
+INST = re.compile(r'^\s*(qfd_rly[pf]?_\w+|qfd_rlyh0?_\w+|qfd_rlyr[0l]?_\w+|qfd_landh0?_\w+|qfd_rst_rep\w*|qfd_clkrx)\s+(\w+)\s*\((.*)\);\s*$')
 # Q-DIE11-RLY: the full port set of each forwarded-lane family (an open output, e.g. fault, is still a real port)
 FWD = {'qfd_rlyh0_': ('ck', 'en', 'a', 'b', 'eb', 'ck_o'), 'qfd_rlyh_': ('ckf', 'ea', 'a', 'b', 'eb', 'ck_o'),
        'qfd_landh_': ('ckf', 'ea', 'a', 'ck', 'rs', 'k0', 'k1', 'k2', 'tie_hi', 'tie_lo', 'b', 'fault'),
-       'qfd_landh0_': ('ck_s', 'en', 'a', 'ck', 'rs', 'k0', 'k1', 'k2', 'tie_hi', 'tie_lo', 'b', 'fault')}
+       'qfd_landh0_': ('ck_s', 'en', 'a', 'ck', 'rs', 'k0', 'k1', 'k2', 'tie_hi', 'tie_lo', 'b', 'fault'),
+       # LANDFIX-SQ 10-18 (OT_SPLIT_FWD_LANES_RST): forwarded RESET lanes (ot_qfd_rlane_st; the landing = one register on
+       # the receiving block's root, no ring: the ring's read epoch would be the very reset the lane carries)
+       'qfd_rlyr0_': ('ck', 'a', 'b', 'ck_o'), 'qfd_rlyr_': ('ckf', 'a', 'b', 'ck_o'), 'qfd_rlyrl_': ('ck', 'a', 'b')}
 FWD_OUT = ('b', 'eb', 'ck_o', 'tie_hi', 'tie_lo', 'fault')
 
 
@@ -102,7 +105,13 @@ def main(die_v, out_sv):
             decl = ', '.join(f'{"output" if p in FWD_OUT else "input"} wire {f"[{W - 1}:0] " if p in ("a", "b") else ""}{p}'
                              for p in allp)
             L += [f'module {mn} ({decl});']
-            if fam in ('qfd_rlyh0_', 'qfd_rlyh_'):
+            if fam in ('qfd_rlyr0_', 'qfd_rlyr_'):
+                L += [f'    ot_qfd_rlane_st #(.W({W})) u_st (.cap({"ck" if fam == "qfd_rlyr0_" else "ckf"}), .a(a), .b(b), .ck_o(ck_o));']
+                kinds['fwd_rst_station'] = kinds.get('fwd_rst_station', 0) + 1
+            elif fam == 'qfd_rlyrl_':
+                L += [f'    ot_qfd_rlane_land #(.W({W})) u_land (.ck(ck), .a(a), .b(b));']
+                kinds['fwd_rst_landing'] = kinds.get('fwd_rst_landing', 0) + 1
+            elif fam in ('qfd_rlyh0_', 'qfd_rlyh_'):
                 ck_, en_ = ('ck', 'en') if fam == 'qfd_rlyh0_' else ('ckf', 'ea')
                 L += [f'    ot_qfd_lane_st #(.W({W}), .FIRST({1 if fam == "qfd_rlyh0_" else 0})) u_st (.ck({ck_}), .en({en_}), '
                       '.a(a), .b(b), .eb(eb), .ck_o(ck_o));']

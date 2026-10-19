@@ -1,0 +1,474 @@
+{
+ "schema": "opentallas.hbm_d4g_l9_gen2c_views.v1",
+ "input": "/tmp/g2cv/contract_l7.json",
+ "cx": [
+  {
+   "parent": "cxdl_NE0",
+   "master": "ot_hbm_su_static_cxport_dl",
+   "children": [
+    "cxdl_NE0_q",
+    "cxdl_NE0_s"
+   ],
+   "seams": 5,
+   "seam_bits": 1065
+  },
+  {
+   "parent": "cxdl_NE1",
+   "master": "ot_hbm_su_static_cxport_dl",
+   "children": [
+    "cxdl_NE1_q",
+    "cxdl_NE1_s"
+   ],
+   "seams": 5,
+   "seam_bits": 1065
+  },
+  {
+   "parent": "cxdl_NE2",
+   "master": "ot_hbm_su_static_cxport_dl",
+   "children": [
+    "cxdl_NE2_q",
+    "cxdl_NE2_s"
+   ],
+   "seams": 5,
+   "seam_bits": 1065
+  },
+  {
+   "parent": "cxdl_NE3",
+   "master": "ot_hbm_su_static_cxport_dl",
+   "children": [
+    "cxdl_NE3_q",
+    "cxdl_NE3_s"
+   ],
+   "seams": 5,
+   "seam_bits": 1065
+  },
+  {
+   "parent": "cxdl_NW0",
+   "master": "ot_hbm_su_static_cxport_dl",
+   "children": [
+    "cxdl_NW0_q",
+    "cxdl_NW0_s"
+   ],
+   "seams": 5,
+   "seam_bits": 1065
+  },
+  {
+   "parent": "cxdl_NW1",
+   "master": "ot_hbm_su_static_cxport_dl",
+   "children": [
+    "cxdl_NW1_q",
+    "cxdl_NW1_s"
+   ],
+   "seams": 5,
+   "seam_bits": 1065
+  },
+  {
+   "parent": "cxdl_NW2",
+   "master": "ot_hbm_su_static_cxport_dl",
+   "children": [
+    "cxdl_NW2_q",
+    "cxdl_NW2_s"
+   ],
+   "seams": 5,
+   "seam_bits": 1065
+  },
+  {
+   "parent": "cxdl_NW3",
+   "master": "ot_hbm_su_static_cxport_dl",
+   "children": [
+    "cxdl_NW3_q",
+    "cxdl_NW3_s"
+   ],
+   "seams": 5,
+   "seam_bits": 1065
+  },
+  {
+   "parent": "cxdl_SE0",
+   "master": "ot_hbm_su_static_cxport_dl",
+   "children": [
+    "cxdl_SE0_q",
+    "cxdl_SE0_s"
+   ],
+   "seams": 5,
+   "seam_bits": 1065
+  },
+  {
+   "parent": "cxdl_SE1",
+   "master": "ot_hbm_su_static_cxport_dl",
+   "children": [
+    "cxdl_SE1_q",
+    "cxdl_SE1_s"
+   ],
+   "seams": 5,
+   "seam_bits": 1065
+  },
+  {
+   "parent": "cxdl_SE2",
+   "master": "ot_hbm_su_static_cxport_dl",
+   "children": [
+    "cxdl_SE2_q",
+    "cxdl_SE2_s"
+   ],
+   "seams": 5,
+   "seam_bits": 1065
+  },
+  {
+   "parent": "cxdl_SE3",
+   "master": "ot_hbm_su_static_cxport_dl",
+   "children": [
+    "cxdl_SE3_q",
+    "cxdl_SE3_s"
+   ],
+   "seams": 5,
+   "seam_bits": 1065
+  },
+  {
+   "parent": "cxdl_SW0",
+   "master": "ot_hbm_su_static_cxport_dl",
+   "children": [
+    "cxdl_SW0_q",
+    "cxdl_SW0_s"
+   ],
+   "seams": 5,
+   "seam_bits": 1065
+  },
+  {
+   "parent": "cxdl_SW1",
+   "master": "ot_hbm_su_static_cxport_dl",
+   "children": [
+    "cxdl_SW1_q",
+    "cxdl_SW1_s"
+   ],
+   "seams": 5,
+   "seam_bits": 1065
+  },
+  {
+   "parent": "cxdl_SW2",
+   "master": "ot_hbm_su_static_cxport_dl",
+   "children": [
+    "cxdl_SW2_q",
+    "cxdl_SW2_s"
+   ],
+   "seams": 5,
+   "seam_bits": 1065
+  },
+  {
+   "parent": "cxdl_SW3",
+   "master": "ot_hbm_su_static_cxport_dl",
+   "children": [
+    "cxdl_SW3_q",
+    "cxdl_SW3_s"
+   ],
+   "seams": 5,
+   "seam_bits": 1065
+  },
+  {
+   "parent": "cxrc_NE",
+   "master": "ot_hbm_su_static_cxport_rc",
+   "children": [
+    "cxrc_NE_q",
+    "cxrc_NE_s"
+   ],
+   "seams": 8,
+   "seam_bits": 2116
+  },
+  {
+   "parent": "cxrc_NW",
+   "master": "ot_hbm_su_static_cxport_rc",
+   "children": [
+    "cxrc_NW_q",
+    "cxrc_NW_s"
+   ],
+   "seams": 8,
+   "seam_bits": 2116
+  },
+  {
+   "parent": "cxrc_SE",
+   "master": "ot_hbm_su_static_cxport_rc",
+   "children": [
+    "cxrc_SE_q",
+    "cxrc_SE_s"
+   ],
+   "seams": 8,
+   "seam_bits": 2116
+  },
+  {
+   "parent": "cxrc_SW",
+   "master": "ot_hbm_su_static_cxport_rc",
+   "children": [
+    "cxrc_SW_q",
+    "cxrc_SW_s"
+   ],
+   "seams": 8,
+   "seam_bits": 2116
+  }
+ ],
+ "idx": {
+  "relay_lanes": {
+   "l0": [
+    "rf0051_s000_l0",
+    "rf0051_s001_l0",
+    "rf0051_s002_l0"
+   ],
+   "l1": [
+    "rf0051_s000_l1",
+    "rf0051_s001_l1",
+    "rf0051_s002_l1"
+   ],
+   "l2": [
+    "rf0051_s000_l2",
+    "rf0051_s001_l2",
+    "rf0051_s002_l2"
+   ],
+   "l3": [
+    "rf0051_s000_l3",
+    "rf0051_s001_l3",
+    "rf0051_s002_l3"
+   ]
+  },
+  "kept_lane": "l0",
+  "removed_relays": [
+   "rf0051_s000_l1",
+   "rf0051_s000_l2",
+   "rf0051_s000_l3",
+   "rf0051_s001_l1",
+   "rf0051_s001_l2",
+   "rf0051_s001_l3",
+   "rf0051_s002_l1",
+   "rf0051_s002_l2",
+   "rf0051_s002_l3"
+  ],
+  "removed_edges": 15,
+  "new_edges": 4,
+  "argmax_bits": 264
+ },
+ "equal_age": [
+  {
+   "sink": "cxrc_NW_q.red_tag",
+   "producer": "sucore_NW.red_tag",
+   "stages": [
+    9,
+    10
+   ],
+   "padded_to": 10,
+   "short_trees": [
+    "rf1277_s008_l0"
+   ]
+  },
+  {
+   "sink": "cxrc_SW_q.red_tag",
+   "producer": "sucore_SW.red_tag",
+   "stages": [
+    9,
+    10
+   ],
+   "padded_to": 10,
+   "short_trees": [
+    "rf1279_s008_l0"
+   ]
+  }
+ ],
+ "equal_age_unpadded": [
+  {
+   "sink": "hb_idx__ctl.topk_o_base",
+   "producer": "col_idx.rec",
+   "stages": [
+    8,
+    13
+   ]
+  },
+  {
+   "sink": "hb_idx__op_NW.vm_rr",
+   "producer": "hb_idx__nwsh.a_rr",
+   "stages": [
+    31,
+    32
+   ]
+  }
+ ],
+ "pads": [
+  {
+   "after": "rf1277_s008_l0",
+   "to": "cxrc_NW_q",
+   "pads": 1,
+   "master": "hbfd_rly_48_NS"
+  },
+  {
+   "after": "rf1279_s008_l0",
+   "to": "cxrc_SW_q",
+   "pads": 1,
+   "master": "hbfd_rly_48_SN"
+  }
+ ],
+ "closed_gaps": [
+  {
+   "id": "G-CIL-INJ",
+   "paths": 200,
+   "evidence": "RELEASE_TREE H.STA.WIRE.1 (SU<->COLL inject cic/cxij/cij wired on GEN2; l7_wire INJ_RET 9 / B39_NOOP 1; GEN2b slice bench 4/4 PASS, 4 mutants FAIL)"
+  },
+  {
+   "id": "G-CIL-RC",
+   "paths": 84,
+   "evidence": "RELEASE_TREE H.STA.WIRE.5 (RC bound); red_tag equal age restored by the l9 pads (was 9/10 stages SW/NW)"
+  },
+  {
+   "id": "G-SMVM-XCMD",
+   "paths": 296,
+   "evidence": "RELEASE_TREE H.STA.WIRE.3 (static x-load issuer xl_<q>_ctl + xcal + xq -> sm on the die, own calendar)"
+  }
+ ],
+ "table": [
+  {
+   "cls": "A",
+   "master": "ot_hbm_su_static_sfustore_hw",
+   "instances": "sfus_<q> x4",
+   "view": "physical/ref_tile/hbm_su_sfustore_hw_1018/views/ot_hbm_su_static_sfustore_hw",
+   "note": "CLOSED f391448a1, native PASS 71.7/64.4"
+  },
+  {
+   "cls": "A",
+   "master": "ot_hbm_svc_stack_fault",
+   "instances": "sfault_<q> x4",
+   "view": "physical/ref_tile/hdie_svc_stack_fault/views/ot_hbm_svc_stack_fault",
+   "note": "CLOSED 014a636f2 (reset-sync fix 5f7d151bc = worktree RTL)"
+  },
+  {
+   "cls": "A",
+   "master": "ot_hgi_coll_gq_land",
+   "instances": "hcollgl_<q> x4",
+   "view": "physical/ref_tile/hcoll_gq_land_1018/views/ot_hgi_coll_gq_land",
+   "note": "n1 record 40936f159 merged (fault FACE register: land_fault +1 edge only); native own-R PASS launch 137.5 / capture 93.7"
+  },
+  {
+   "cls": "A",
+   "master": "ot_hbm_fault_leaf (pv4, pv5)",
+   "instances": "fl/fr x16",
+   "view": "physical/ref_tile/hdie_fault_leaf_n{4,5}_s8_r1/views/ot_hbm_fault_leaf",
+   "note": "Codex native PASS, source = worktree"
+  },
+  {
+   "cls": "A",
+   "master": "ot_hbm_fault_leaf_n8_s0",
+   "instances": "fs_<q> x4",
+   "view": "physical/ref_tile/hdie_fault_leaf_w_n8_s0/views/ot_hbm_fault_leaf_n8_s0",
+   "note": "Codex native PASS"
+  },
+  {
+   "cls": "A",
+   "master": "ot_hbm_host_cfg_leaf_ne2 / _se2",
+   "instances": "hleaf_NE/SE",
+   "view": "physical/ref_tile/hdie_host_cfg_leaf_{ne,se}_r2/views/*",
+   "note": "Codex native PASS"
+  },
+  {
+   "cls": "A",
+   "master": "ot_hbm_idx_query_static",
+   "instances": "hb_idx__q_<q> x4",
+   "view": "physical/ref_tile/hidx_q_r4/views/ot_hbm_idx_query_static",
+   "note": "Codex native PASS"
+  },
+  {
+   "cls": "A",
+   "master": "ot_hbm_idx_xq_node_static (pv0 w297, pv1 w594)",
+   "instances": "hb_idx__xq_S/N/xqr",
+   "view": "physical/ref_tile/hidx_xq_node_w{297,594}/views/ot_hbm_idx_xq_node_static",
+   "note": "native PASS; source = closed (main), differs from GEN2 3ca snapshot"
+  },
+  {
+   "cls": "A",
+   "master": "ot_hbm_pc_refresh_cfg",
+   "instances": "refcfg_<q> x4",
+   "view": "physical/ref_tile/hbm_refcfg_q_1018/views/ot_hbm_pc_refresh_cfg",
+   "note": "native PASS; source = closed (main)"
+  },
+  {
+   "cls": "A",
+   "master": "ot_hbm_svc_wbw_copy",
+   "instances": "wbc_<q> x4",
+   "view": "physical/ref_tile/hdie_svc_wbw_copy/views/ot_hbm_svc_wbw_copy",
+   "note": "Codex native PASS"
+  },
+  {
+   "cls": "A",
+   "master": "ot_hgi_coll_inj_idx_join_rg",
+   "instances": "cij_<q> x4",
+   "view": "physical/ref_tile/hcoll_inj_idx_join_rg_1017/views/ot_hgi_coll_inj_idx_join_rg",
+   "note": "Codex native PASS"
+  },
+  {
+   "cls": "A",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf / _term",
+   "instances": "sfu_/hc_<q><k> x32",
+   "view": "physical/ref_tile/hbm_{sfu,hc}_lg_pair_tap_leaf*_1017/views/*",
+   "note": "native PASS; main RTL adds LOCAL_SPLIT (default 0 = identical)"
+  },
+  {
+   "cls": "A",
+   "master": "hbfd_rrl_sync / hbfd_rrl_hop",
+   "instances": "reset forest (F1 layer)",
+   "view": "physical/ref_tile/hbfd_rrl_{sync,hop}/views/*",
+   "note": "CLOSED c5ebcd5ca / 2a92d027a; bound when the forest layer adds the instances"
+  },
+  {
+   "cls": "B",
+   "master": "ot_hbm_su_static_cxport_dl -> dl_s + dl_q",
+   "instances": "cxdl_<q><g> x16 -> 32",
+   "view": "physical/ref_tile/hbm_su_cx_dl{s,q}_1018/views/*",
+   "note": "CLOSED 246b50404 / 05e11cc8e; own-R native FAIL (dl_q capture 393 on the 1,065 seam pins = die-STA epoch multicycle; dl_s capture 308.9 on del_obase, 231 pins) -> die STA decides"
+  },
+  {
+   "cls": "B",
+   "master": "ot_hbm_su_static_cxport_rc -> rc_s + rc_q",
+   "instances": "cxrc_<q> x4 -> 8",
+   "view": "physical/ref_tile/hbm_su_cx_rc{s,q}_1018/views/*",
+   "note": "CLOSED eabfa196e / 89a824801; own-R native FAIL (rc_s launch 343.8 / capture 501; rc_q capture 496.6) -> die STA decides"
+  },
+  {
+   "cls": "B",
+   "master": "idx PAIR ot_hbm_idx_rootctl_static_am + ot_hbm_argmax_static_sw_vm_r2 #(TP 192)",
+   "instances": "hb_idx__ctl + hb_argmax",
+   "view": "physical/ref_tile/hidx_rootctl_am_1018/views/* + hbm_argmax_swvm_r2_1017/views/*",
+   "note": "rootctl_am CLOSED r4 5187b22f9 (record branch, merged here) but own-R native FAIL launch 478 on 2,012 pins; argmax_r2 CLOSED r3 fc7263bbd native PASS; grants idx_ctl 300x260 -> 475.2x259.2 (grown W, host_N is E)"
+  },
+  {
+   "cls": "C",
+   "master": "ot_hbm_su_static_cxport_ij -> ij_s + ij_q",
+   "instances": "cxij_<q>",
+   "view": "-",
+   "note": "halves not CLOSED (kits gating, claude/hbm-cxij-1018); stays SYNTH unsplit"
+  },
+  {
+   "cls": "C",
+   "master": "ot_hbm_idx_vm_share2_leaf_r (share2r)",
+   "instances": "hb_idx__nwsh / hcollrs",
+   "view": "physical/ref_tile/hidx_share2r_leaf_1018/views/ot_hbm_idx_vm_share2_leaf_r",
+   "note": "r3 CLOSED (8960ed57a) but own-R native FAIL capture 215.1 on 4 b_rq pins; wires-only rebind also needs hb_quant_NW RL 7->9, NW relay removal and calendar +1 (SHARE2 steps 2-4)"
+  },
+  {
+   "cls": "C",
+   "master": "ot_hgi_coll_kq_share2_leaf (kqs)",
+   "instances": "hcollks_<q> -> 16 leaves",
+   "view": "physical/ref_tile/hcoll_kqs_leaf_1018/views/ot_hgi_coll_kq_share2_leaf",
+   "note": "CLOSED + native PASS, but wires-only rebind changes COLL kq write latency +2 and host_status NF 141->153 (compiler) -- not in this brief; next layer"
+  },
+  {
+   "cls": "C",
+   "master": "ot_hgi_qdq_transport_ctl_r3",
+   "instances": "inside hb_quant_NW (soft host_split)",
+   "view": "physical/ref_tile/hgi_qdq_tsplit_ctl_r3/views/ot_hgi_qdq_transport_ctl_r3 (record codex/closure-record-hgi_qdq_tsplit_ctl_r3-ctlr3-14e6fe3a2)",
+   "note": "child of hb_quant_NW: needs the host_split_r2 die expansion (+XR straps, new slots) and program_leaf is not CLOSED"
+  },
+  {
+   "cls": "C",
+   "master": "ot_hgi_coll_ring_ag_ctln",
+   "instances": "inside the COLL quadrant parents",
+   "view": "physical/ref_tile/hcoll_ring_ag_ctln_1018/views/ot_hgi_coll_ring_ag_ctln",
+   "note": "not a die instance: bound by the hcoll q2/q3 parent kits"
+  }
+ ],
+ "functional_fail": 0,
+ "instances_before": 57198,
+ "instances_after": 57211,
+ "problems": [],
+ "verdict": "PASS"
+}

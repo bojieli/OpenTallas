@@ -1,0 +1,10 @@
+{
+ "contract": "GEN2 net/contract.json -> l7_wire -> l9_gen2c_views (local check 10-19)",
+ "functional": "PASS",
+ "fail_paths": 0,
+ "paths": 1160,
+ "stale_gaps": [],
+ "open_gaps": [],
+ "strict_bind": "DIE_PORT_BIND PASS masters=148 instances=57211 input_unconnected=0 input_tied=0 undriven=0 multi_driven=0",
+ "views": "v16_views: 190 cells, SYNTH 125, ROUTED_UNBOUND 65 (GEN2: 188 / 129 / 59)"
+}

@@ -1,0 +1,9 @@
+RING_AG_N LOCK PASS seed=1 edges=6000 fault_edges=5999 v1_first_fault=0
+RING_AG_N RR PASS rr_publishes=596 edges=6000
+RING_AG_N RR HZ PASS native_fault_edge=53
+RING_AG data q0 d0 cyc6 src2/2 tag1/0
+RING_AG data q1 d0 cyc6 src0/0 tag1/0
+RING_AG data q2 d0 cyc6 src3/3 tag1/0
+RING_AG data q3 d0 cyc6 src1/1 tag1/0
+RING_AG unexpected fault cycle7 maskf
+RING_AG_N MUTANT tag FAILED
