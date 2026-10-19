@@ -1,0 +1,190 @@
+{
+ "schema": "opentallas.hbm.d4g.gen1_bindings.v1",
+ "updated": "2026-10-17T23:59",
+ "lane": "H-D4G2",
+ "rule": "GEN1 = GEN0 (d4g plan/grants/regions/reset gate) + 136-b lane relay layer planned on GEN0 case pins + the closed views below bound; units the RTL lanes still change stay OPEN bindings (diagnostic binding, rebind when the lane lands). No stub, no tie: an unused cfg leaf input is a parameter variant, not a strap.",
+ "bind_closed": [
+  {
+   "unit": "lane relays (H-RELAY lane model, LANDING-CONTRACT L1-L7)",
+   "masters": [
+    "hbfd_rly_136_EW",
+    "hbfd_rly_136_EW_fc",
+    "hbfd_rly_136_EW_fc_f2",
+    "hbfd_rly_136_EW_fc_f3",
+    "hbfd_rly_136_EW_fc_f4",
+    "hbfd_rly_136_NS",
+    "hbfd_rly_136_NS_fc",
+    "hbfd_rly_136_NS_fc_f2",
+    "hbfd_rly_136_NS_fc_f3",
+    "hbfd_rly_136_NS_fc_f4",
+    "hbfd_rly_136_SN",
+    "hbfd_rly_136_SN_fc",
+    "hbfd_rly_136_SN_fc_f2",
+    "hbfd_rly_136_SN_fc_f3",
+    "hbfd_rly_136_SN_fc_f4",
+    "hbfd_rly_136_WE",
+    "hbfd_rly_136_WE_fc",
+    "hbfd_rly_136_WE_fc_f2",
+    "hbfd_rly_136_WE_fc_f3",
+    "hbfd_rly_136_WE_fc_f4"
+   ],
+   "views": [
+    "physical/ref_tile/hbfd_rly_136_ew/views/hbfd_rly_136_EW",
+    "physical/ref_tile/hbfd_rly_136_ew_fc/views/hbfd_rly_136_EW_fc",
+    "physical/ref_tile/hbfd_rly_136_ew_fc_f2/views/hbfd_rly_136_EW_fc_f2",
+    "physical/ref_tile/hbfd_rly_136_ew_fc_f3/views/hbfd_rly_136_EW_fc_f3",
+    "physical/ref_tile/hbfd_rly_136_ew_fc_f4/views/hbfd_rly_136_EW_fc_f4",
+    "physical/ref_tile/hbfd_rly_136_ns/views/hbfd_rly_136_NS",
+    "physical/ref_tile/hbfd_rly_136_ns_fc/views/hbfd_rly_136_NS_fc",
+    "physical/ref_tile/hbfd_rly_136_ns_fc_f2/views/hbfd_rly_136_NS_fc_f2",
+    "physical/ref_tile/hbfd_rly_136_ns_fc_f3/views/hbfd_rly_136_NS_fc_f3",
+    "physical/ref_tile/hbfd_rly_136_ns_fc_f4/views/hbfd_rly_136_NS_fc_f4",
+    "physical/ref_tile/hbfd_rly_136_sn/views/hbfd_rly_136_SN",
+    "physical/ref_tile/hbfd_rly_136_sn_fc/views/hbfd_rly_136_SN_fc",
+    "physical/ref_tile/hbfd_rly_136_sn_fc_f2/views/hbfd_rly_136_SN_fc_f2",
+    "physical/ref_tile/hbfd_rly_136_sn_fc_f3/views/hbfd_rly_136_SN_fc_f3",
+    "physical/ref_tile/hbfd_rly_136_sn_fc_f4/views/hbfd_rly_136_SN_fc_f4",
+    "physical/ref_tile/hbfd_rly_136_we/views/hbfd_rly_136_WE",
+    "physical/ref_tile/hbfd_rly_136_we_fc/views/hbfd_rly_136_WE_fc",
+    "physical/ref_tile/hbfd_rly_136_we_fc_f2/views/hbfd_rly_136_WE_fc_f2",
+    "physical/ref_tile/hbfd_rly_136_we_fc_f3/views/hbfd_rly_136_WE_fc_f3",
+    "physical/ref_tile/hbfd_rly_136_we_fc_f4/views/hbfd_rly_136_WE_fc_f4"
+   ],
+   "netlist_step": "relay_layer_d4f.py --fork-lane-width 136 --lane-rows on GEN0 case pins (case_pin_centroids.py) with --region-map results/arch/hbm_die_d4g/d4g_region_map.json; d4g root keepouts from GEN0 manifest clock_regions (d4f_root_sites_r5 does NOT apply); landings per LANDING-CONTRACT on every lane with >=1 station",
+   "status": "views CLOSED on main (20/20); needs GEN0 pins"
+  },
+  {
+   "unit": "host config/status leaves x4 (HBM-B-RTL1 host)",
+   "masters": [
+    "ot_hbm_host_cfg_leaf2"
+   ],
+   "views": [
+    "physical/ref_tile/hdie_host_cfg_leaf_r1/views/ot_hbm_host_cfg_leaf2"
+   ],
+   "instances": [
+    "hleaf_SW",
+    "hleaf_SE",
+    "hleaf_NW",
+    "hleaf_NE"
+   ],
+   "netlist_step": "layer from results/arch/hbm_b_rtl1_host_1017/host_cfg_leaf_map_d4g.json (claude/hbm-b-rtl1-host-1017 5828f1128); per-leaf NT/NF SW 18/29 SE 18/26 NW 19/29 NE 14/23 < master NT20/NF32 -> OPEN coordinator call: per-leaf parameter variants (re-harden) vs one master with spare join ids (= tie, forbidden by no-stubs)",
+   "status": "view CLOSED on main; integration blocked on the NT/NF variant call"
+  },
+  {
+   "unit": "SU 64-b scalar tree (HBM-B-RTL1 su)",
+   "masters": [
+    "ot_hbm_su_stree_leaf",
+    "ot_hbm_su_stree_root"
+   ],
+   "views": [
+    "physical/ref_tile/hbm_su_stree_leaf_1017/views/ot_hbm_su_stree_leaf",
+    "physical/ref_tile/hbm_su_stree_root_1017/views/ot_hbm_su_stree_root"
+   ],
+   "instances": [
+    "stl_SW",
+    "stl_SE",
+    "stl_NW",
+    "stl_NE",
+    "str_C"
+   ],
+   "netlist_step": "ot_hbm_su_static_top RF_TREE=1 (RF_TREE_UP/DN=14 from the GEN0 leg lengths): replace the 576 rfr_* relay chains with 4 leaves + centre root + leg stations (claude/hbm-b-rtl1-su-1017 81eb10546)",
+   "status": "views CLOSED on main; whole-SU RF_TREE=1 bench still owed by HBM-B-RTL1"
+  },
+  {
+   "unit": "SFU programme store, one per quadrant",
+   "masters": [
+    "ot_hgi_sfu_store_stripe_leaf_r10",
+    "ot_hgi_sfu_programme_store_r10 (cluster hbm_sfu_programme_store_r10_cl)"
+   ],
+   "views": [
+    "physical/ref_tile/hbm_sfu_store_stripe_r10_1017/views/ot_hgi_sfu_store_stripe_leaf_r10"
+   ],
+   "instances": [
+    "sfup_SW",
+    "sfup_SE",
+    "sfup_NW",
+    "sfup_NE"
+   ],
+   "netlist_step": "cluster kit physical/ref_tile/hbm_sfu_programme_store_r10_cl binds 11 r10n leaves (layer contract children M5, PG M7); its gate stopped in GRT and the proposal is a centred S-face clk with per-row roots (lanes/SFU-PS-FUND.md sec 5). CRITICAL prefix hbm_sfu_programme_store: coordinator gates/submits, not this lane. Until it closes, GEN1 keeps sfup_<q> SYNTH",
+   "status": "leaf CLOSED (r10n); cluster OPEN (critical; re-gate)"
+  }
+ ],
+ "bind_pending": [
+  {
+   "unit": "pg_lg_tap (HBM-SU5)",
+   "kit": "physical/ref_tile/hbm_su_pg_lgtap_1017",
+   "branch": "claude/hbm-su3-1017",
+   "status": "route hbm_su_pg_lgtap_1017-r1-139da60d3 recorded CLOSED in pending_results but no views on main/branch yet: bind into pgslice_lg when merged"
+  },
+  {
+   "unit": "pgcol_s r5 / pghead r5 (HBM-SU lane)",
+   "kit": [
+    "physical/ref_tile/hbm_su_pgcol_s_r5",
+    "physical/ref_tile/hbm_su_pghead_r5"
+   ],
+   "branch": "claude/hbm-su-lane-1017",
+   "status": "pre-route gate stage; no views: bind when closed"
+  }
+ ],
+ "open_bindings_rtl_lanes": "d4g.open_bindings (VM/SU/host = HBM-B-RTL1, HC/IDX = HBM-B-RTL2, COLL = HBM-B-RTL3): diagnostic binding until each lane lands",
+ "sfu_store_replan": {
+  "rule": "one store per quadrant (4 SMs) directly beside its consumer sfucore_<q>; SE/NE mirror SW/NW about the die centre column",
+  "moves": [
+   {
+    "slot": "sfup_SW",
+    "old": {
+     "x": 7178.328,
+     "y": 10805.832,
+     "orient": "R0"
+    },
+    "new": {
+     "x": 7184.96,
+     "y": 11002.304,
+     "orient": "R0"
+    }
+   },
+   {
+    "slot": "sfup_SE",
+    "old": {
+     "x": 13134.528,
+     "y": 12242.232,
+     "orient": "R0"
+    },
+    "new": {
+     "x": 11934.928,
+     "y": 11003.6,
+     "orient": "MY"
+    }
+   },
+   {
+    "slot": "sfup_NW",
+    "old": {
+     "x": 7367.328,
+     "y": 19457.928,
+     "orient": "R0"
+    },
+    "new": {
+     "x": 7374.176,
+     "y": 19820.68,
+     "orient": "MX"
+    }
+   },
+   {
+    "slot": "sfup_NE",
+    "old": {
+     "x": 13134.528,
+     "y": 18030.6,
+     "orient": "R0"
+    },
+    "new": {
+     "x": 11934.928,
+     "y": 19819.384,
+     "orient": "R180"
+    }
+   }
+  ],
+  "effect": "SE/NE store->sfucore gap 1,536/1,534 um (4 relay stages at 405) -> 220 um (0 stages); SW/NW unchanged (100/106 um)",
+  "caveat": "MY/R180 orientations go straight to place_inst; check compact-pin centroids honour orient in GEN1",
+  "sfuplan_0gj": "SFUPLAN 10-18 (HANDOFF 0gj): store r10 cluster 1080 x 950.4 over the core N-face centre-side corner (550 um overlap), gap ~20 um in every quadrant (HBM-CRIT 350/250/100/250); cores take the store orientation; cij_<q> moved (d4g_sfuplan.py)"
+ }
+}

@@ -67,13 +67,18 @@ module tb_hbm_su_cxport_split;
  reg [31:0] h_sfu_q; reg h_f_q=0; integer sfn=0, flag=0;
  always @(posedge clk_q) if(cmp) begin #2; if((^h_sfu_q)!==1'bx && s_sfu!==h_sfu_q) begin errors=errors+1; if(errors<6) $display("SFU MISMATCH t=%0t %h/%h", $time, s_sfu, h_sfu_q); end
   sfn=sfn+1; h_sfu_q=h_sfu; end else h_sfu_q=h_sfu;
+ // HBM-SU6: a bit the hub leaves X (inject word before the first written slot: the hub's unreset g/b select reads X)
+ // may be defined in the split (its one-hot select is reset); every hub-defined bit must still match exactly.
+ function automatic hub_def_diff(input [6000:0] h, input [6000:0] s);
+  integer b; begin hub_def_diff=0; for(b=0;b<=6000;b=b+1) if(h[b]!==1'bx && h[b]!==s[b]) hub_def_diff=1; end
+ endfunction
  integer checks=0, errors=0, cmp=0, dwn=0, ijn=0, rcn=0, rrn=0, fn=0, legal_f=0;
  always @(posedge clk_s or posedge clk_q) if(cmp) begin
   #1; checks=checks+1; dwn=dwn+((|h_dwv)===1'b1); ijn=ijn+((|h_ij)===1'b1); if(legal && h_f) begin legal_f=legal_f+1; if(legal_f==1) $display("DBG first legal fault t=%0t sfs %b ibad %b dbad %b rbad %b robad %b", $time, hub.sfault_s, hub.ibad, hub.dbad, hub.rbad, hub.ro_bad); end rcn=rcn+h_rcv; rrn=rrn+h_rrv; fn=fn+h_f;
   if(h_f!==s_f && !(h_f===1'b1 && s_f===1'b0 && h_f_q===1'b0)) begin errors=errors+1; if(errors<6) $display("FAULT MISMATCH t=%0t %b/%b", $time, h_f, s_f); end
   else if(h_f!==s_f) flag=flag+1;
   h_f_q=h_f;
-  if(oh!==os) begin errors=errors+1;
+  if(oh!==os && hub_def_diff(oh,os)) begin errors=errors+1;
    if(errors<6) $display("MISMATCH t=%0t ij %0d rc %0d dw %0d/%0d/%0d rr %0d sfu %0d fault %b/%b", $time, h_ij!==s_ij,
     {h_rcv,h_rct,h_rcd}!=={s_rcv,s_rct,s_rcd}, h_dwv!==s_dwv, h_dwr!==s_dwr, h_dwd!==s_dwd, {h_rrv,h_rra,h_rrd}!=={s_rrv,s_rra,s_rrd}, h_sfu!==s_sfu, h_f, s_f); end
  end

@@ -1,0 +1,242 @@
+{
+ "name": "qkd_hr_core_tx",
+ "top": "qkd_hr_core_tx",
+ "sources": [
+  "rtl/qwen_sys/host_cluster_20261017/qkd_hr_core_tx.v",
+  "rtl/qwen_sys/host_20261013/qkd_host_tx_class_rr.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_rst_role_pins.sv",
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv",
+  "rtl/hdc/ingest/ot_hdc_ingest_fp8q.sv",
+  "rtl/lib/ot_async_fifo.sv",
+  "rtl/lib/ot_reset_sync.sv",
+  "rtl/link/ot_link_afifo.sv",
+  "rtl/physical/ot_qfd_link_adp512_split.sv",
+  "rtl/physical/ot_qfd_prompt_sram_capture.sv",
+  "rtl/physical/ot_qkd_host_prompt_capture_pins.sv",
+  "rtl/physical/ot_qwen_async_fifo_w.sv",
+  "rtl/physical/ot_qwen_die_cdc_ch.sv",
+  "rtl/physical/ot_qwen_host_ctl.sv",
+  "rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv",
+  "rtl/qwen_sys/context_transport_20261014/qkd_host_record_port.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_axi_packet.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_boot_dispatch.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_boot_dispatch_debt.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_commit_order.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_commit_order_debt.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_csr_service_pins.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_ctl_service_pins.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_emb_boot_barrier.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_guard_fifo.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_hc_station.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_ingest_chain.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_ingest_map.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_ingest_station.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_ingest_station_debt.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_native_qm.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_native_qm_debt.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_phy_cdc5.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_pin_channel.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_program_loader.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_qm_clock_bridge_service.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_qm_clock_bridge_service_debt.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_qm_credit_pacer.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_qm_ingress16_service.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_qm_ingress16_service_debt.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_rx_class.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_rx_class_admission.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_rx_pad5.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_service_guard.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_static_pc.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_static_pc_emback_debt.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_sys_csr_service.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_tx_class.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_visibility_fence.sv",
+  "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+  "rtl/qwen_sys/host_integrated_20261014/qkd_host_control_packet_admission.sv",
+  "rtl/qwen_sys/host_integrated_20261014/qkd_host_control_packet_observed.sv",
+  "rtl/qwen_sys/host_integrated_20261014/qkd_host_control_prompt_observed.sv",
+  "rtl/qwen_sys/host_integrated_20261014/qkd_host_coordinator_services.sv",
+  "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+  "rtl/qwen_sys/host_integrated_20261014/qkd_host_fullcontrol_observed.sv",
+  "rtl/qwen_sys/host_integrated_20261014/qkd_host_if_pins_observed.sv",
+  "rtl/qwen_sys/host_integrated_20261014/qkd_host_lifecycle_collected.sv",
+  "rtl/qwen_sys/host_integrated_20261014/qkd_host_marker_consumer.sv",
+  "rtl/qwen_sys/host_integrated_20261014/qkd_host_native_token_endpoint_cancel.sv",
+  "rtl/qwen_sys/host_integrated_20261014/qkd_host_packet_bundle_admission.sv",
+  "rtl/qwen_sys/host_integrated_20261014/qkd_host_packet_bundle_collected.sv",
+  "rtl/qwen_sys/host_integrated_20261014/qkd_host_peer_coordinator_codec.sv",
+  "rtl/qwen_sys/host_integrated_20261014/qkd_host_peer_link.sv",
+  "rtl/qwen_sys/host_integrated_20261014/qkd_host_peer_rank_codec.sv",
+  "rtl/qwen_sys/host_integrated_20261014/qkd_host_peer_root_mux.sv",
+  "rtl/qwen_sys/host_integrated_20261014/qkd_host_post_collector.sv",
+  "rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx.sv",
+  "rtl/qwen_sys/host_integrated_20261014/qkd_host_tp8_coordinator.sv",
+  "rtl/qwen_sys/missing_masters_20261007/ot_qfd_link_adapter.sv",
+  "rtl/qwen_sys/ot_qwen_sys_rst_seq.sv",
+  "rtl/qwen_sys/redesign_qwen/ot_qwen_tp8_token_cohort.sv",
+  "rtl/qwen_sys/redesign_qwen/ot_qwen_tp8_token_epoch_allocator.sv",
+  "rtl/qwen_sys/split_20261014/qkd_hbm_boot_pc.sv",
+  "rtl/qwen_sys/split_20261014/qkd_hbm_boot_static.sv",
+  "rtl/qwen_sys/split_20261014/qkd_hbm_boot_static_completion_debt.sv",
+  "rtl/qwen_sys/split_20261014/qkd_host_pc_slice_debt.sv",
+  "rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv",
+  "rtl/qwen_sys/split_20261014/qkd_host_root_pt.sv",
+  "rtl/qwen_sys/split_20261014/qkd_static_completion_ownerdemux.sv",
+  "rtl/qwen_sys/static_kv_20261014/qkd_host_native_quiet.sv",
+  "rtl/qwen_sys/system_20261008/ot_qfd_pkgctl.sv",
+  "rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_program_loader_target.sv"
+ ],
+ "params": {},
+ "clock_port": "ck_core",
+ "reset_ports": [
+  "host_rst_n"
+ ],
+ "outline": {
+  "w": 108.0,
+  "h": 108.0
+ },
+ "macros": [],
+ "pins": {
+  "N": [
+   "u_rank__u_control__u_packet__htd",
+   "u_rank__done_d",
+   "irq",
+   "u_rank__done_cr",
+   "u_rank__done_v"
+  ],
+  "S": [
+   "u_rank__u_control__u_packet__ctd"
+  ],
+  "E": [],
+  "W": [
+   "u_rank__tx_d",
+   "u_rank__u_control__u_packet__credit_return",
+   "u_rank__u_control__u_packet__peer_credit",
+   "host_rst_n",
+   "service_faults",
+   "ck_core",
+   "u_rank__u_control__u_packet__htc",
+   "u_rank__u_control__u_packet__ht",
+   "u_rank__u_control__u_packet__ctc",
+   "u_rank__u_control__u_packet__ct",
+   "u_rank__tx_cr",
+   "u_rank__tx_v"
+  ]
+ },
+ "structural_change": "KVJ-A3 r2 HOST cluster child qkd_hr_core_tx (core family, one ck_core entry): members u_tx + their glue, generated wrapper (tools/qwen_kv_die/host_cluster/gen_cluster.py). Partition results/arch/qwen_split_1014/host_root_cluster/partition_r2.json | rr1 (NATIVE-FIX3/kvhr 10-18): NATIVE-3 audit of the closed view qkd_hr_core_tx-r2-c372bf6fe (claude/native-3-1017 73adc87ea, lanes/NATIVE-3.md, results/arch/native_3_1017/native_3_audit.json): capture FAIL raw host_rst_n 298.4 ps > 190 (launch 100.2, spread 40.4/38.7 pass). The member u_tx is now qkd_host_tx_class_rr (gen_cluster.py --wrap qkd_host_tx_class=qkd_host_tx_class_rr): ot_rst_relay (SYNC_STAGES 2, TREE_STAGES 1, REGIONS 1) at the host_rst_n pin, its kept relay flop is the core reset; qkd_host_tx_class unchanged. Assert immediate; core reset RELEASE +3 ck edges vs host_rst_n (the static schedule issues nothing to the tx before host_rst_n release + 3 edges; datapath latencies unchanged, cycles_added 0). Same outline 108x108, same pin faces.",
+ "kind": "tile",
+ "recipe": 4,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "layer_cap": "M5",
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "pin_h": "M4",
+  "pin_v": "M5",
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  },
+  "io_hold_margin_ns": 0.0
+ },
+ "pin_regs": {
+  "enable": true,
+  "reset": "^(host_rst_n)$",
+  "reason": "literal async reset roles only (data levels such as native_link_reset_seen are registered)"
+ },
+ "job": {
+  "owner": "Claude:NATIVE-FIX3/kvhr",
+  "branch": "claude/nf3-kvhr-1018",
+  "tag": "rr1",
+  "purpose": "HOST cluster child qkd_hr_core_tx rr1: reset relay at host_rst_n (NATIVE-3 capture fix); parent qkd_host_root is CRITICAL",
+  "benches": [
+   {
+    "name": "cluster_lockstep",
+    "expect": "pass",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "python3 tools/qwen_kv_die/host_cluster/bench/cluster_gate.py exact --out {RUN}/bench/cg_exact",
+    "pass_regex": "CLUSTER_GATE PASS exact runs_pass=6/6",
+    "min_count_regex": "CLUSTER_GATE PASS exact runs_pass=6/6 core_cycles=(\\d+)"
+   },
+   {
+    "name": "hr_rr_tx",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "cmd": "bash rtl/test/qwen_host/hr_rr_1018/run_hr_rr.sh {RUN}/bench/hr_rr_tx_m0 tx 0",
+    "pass_regex": "release_errs=0 first_release_err=-1 mismatches=0 first_mismatch=-1 PASS$",
+    "min_count_regex": "resets=(\\d+) ",
+    "min_count": 10,
+    "pass_witness": "results/rtl/kvhr_native_1018/hr_rr_tx_mut0.log",
+    "note": "rr wrapper vs the unchanged module fed the pin reset released 3 ck edges later; every output every edge incl. reset windows; core reset release latency == 3 edges"
+   },
+   {
+    "name": "hr_rr_tx_mutant",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "cmd": "bash rtl/test/qwen_host/hr_rr_1018/run_hr_rr.sh {RUN}/bench/hr_rr_tx_m1 tx 1",
+    "pass_regex": "release_errs=0 first_release_err=-1 mismatches=0 first_mismatch=-1 PASS$",
+    "min_count_regex": "resets=(\\d+) ",
+    "min_count": 10,
+    "fail_regex": "release_errs=[1-9][0-9]* .*mismatches=[1-9][0-9]* .*FAIL$",
+    "fail_witness": "results/rtl/kvhr_native_1018/hr_rr_tx_mut1.log",
+    "note": "relay bypassed (QKD_HR_RR_MUTANT): core reset releases with the pin, 3 edges early"
+   },
+   {
+    "name": "cluster_child_mutant",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "python3 tools/qwen_kv_die/host_cluster/bench/cluster_gate.py mutant --out {RUN}/bench/cg_mut --child core_tx",
+    "fail_regex": "CLUSTER_GATE FAIL mutant",
+    "fail_witness": "results/arch/qwen_split_1014/host_root_cluster/benches/cg_mutant_qkd_hr_core_tx.log"
+   }
+  ],
+  "extra_paths": [
+   "rtl/test/qwen_host/hr_rr_1018",
+   "results/rtl/kvhr_native_1018",
+   "tools/qwen_kv_die/host_cluster",
+   "rtl/qwen_sys/host_cluster_20261017",
+   "rtl/lib/ot_rst_relay.sv"
+  ],
+  "reroute_reason": {
+   "kind": "rtl_change",
+   "vs": "qkd_hr_core_tx-r2-c372bf6fe",
+   "why": "NATIVE-3 audit (claude/native-3-1017 73adc87ea, lanes/NATIVE-3.md, results/arch/native_3_1017/native_3_audit.json): host_rst_n capture 298.4 ps > 190 (raw reset pin async-cleared ~650 tx flops) -> ot_rst_relay at the host_rst_n pin (qkd_host_tx_class_rr), core reset release +3 ck edges",
+   "source": "results/arch/native_3_1017/native_3_audit.json (claude/native-3-1017 73adc87ea)",
+   "cell": "qkd_hr_core_tx",
+   "capture_ps": 298.4,
+   "fix": "host_rst_n pin drives only ot_rst_relay (2 sync flops + 1 kept relay flop); the relay flop is the core reset; bench hr_rr_tx lockstep + release latency, mutant (relay bypassed) FAIL"
+  }
+ },
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true
+}

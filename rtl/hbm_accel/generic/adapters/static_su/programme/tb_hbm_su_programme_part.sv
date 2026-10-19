@@ -11,7 +11,7 @@ module tb_hbm_su_programme_part;
 localparam integer B=PROGRAMME_BITS, N=PART_EDGES, WM=PROGRAMME_WRITES, WP=PART_WRITES;
 parameter integer MUT=0;
 parameter integer PIPE=0;                    // HBM-SU 2026-10-17: producers PIPE 1 (+3 edges): start advance DEPTH+3
-localparam integer LEAD=PART_DEPTH+((PIPE!=0)?3:0);
+localparam integer LEAD=PART_DEPTH+((PIPE==2)?4:(PIPE!=0)?3:0);   // PIPE 2 (HBM-SU r4): +4 edges
 logic clk=0; always #5 clk=~clk;
 logic rst_n=0;
 logic m_we=0, p_we=0, m_start=0, p_start=0;

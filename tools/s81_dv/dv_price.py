@@ -19,6 +19,31 @@ Method (same machinery as the ledger, tools/throughput/accepted_cost.py + tools/
        h transfer:  HC.H_XFER (246, dropped) replaced by ring-to-edge exit + entry on substage_hop0 / head.hop
      Collectives are left unchanged (conservative: ring end slices sit at the edge links, as far as the hub was).
   4. rate = hop_only(stages) * (1 - (kept ledger % + DV DAG loss %)/100), the mtp_ledger_1016 additive rule.
+  5. LANDING (S81-LAND2, lanes/LANDING-CONTRACT.md L4; --land-plan): a forwarded-clock lane costs N stations + 1 ring
+     + E handoff + 1 block flop.  The geometric rules above charge st(um) = ceil(um / hop) ~ N + 1 (stations + the
+     block flop), so each LANDED link traversal on a priced path adds 1 + E (zero-stage links: no landing, +0).
+     Paths are routed on the plan's link graph (blocks = nodes, links = edges weighted stages + 1); each rule takes
+     the worst pair the rule's geometry names (same endpoints), and sums 1 + E over its landed links:
+       field_phase_wire  per phase: worst slice -> frame (all-gather) + worst frame -> slice (ret)
+       norm_tree_full    worst slice -> slice;  norm_tree_q  3 slice columns;  norm_tree_kv  1 slice column
+       attn_q_path       worst slice -> its half's q entry (rsv_05 / rsv_11);  router_tree  worst slice -> gunit
+       h_xfer_ring       2 x worst slice -> nearest end slice (out and back);  hbm_ctrl_rt  worst hrq + hrd pair
+     --half-cycle: half-cycle hops (ck_o = ~ck), each relay station costs T/2: the same paths also credit
+     -stations/2, and E comes from the half-cycle pilot's land_plan.json.
+  6. HOST PLANE (p4l, S81-DIE7/PRICE; --land-plan): the kit start f_ks {start, user, token, pos} and the kit done t_kd
+     {done, next_token} ride the cross-die link's host plane at end slice s_7N and reach dsdv_seq_host over the
+     dedicated lanes hf_7N_l0..2 (in) / ht_7N (out).  The hub DAG has no such lane (the kit sat at the link), and no
+     rule above routes through seqhost, so the lanes are priced here, one traversal =
+        stations (T/2 each with --half-cycle, else T) + 1 block flop [+ 1 + E when landed]
+     + the seq_host fixed latencies (tb_dsdv_seq_host: f_ks capture -> issuer +3, command register +1, V command ->
+       vo pin +7 = 11 in;  issuer KIT -> t_kd pin +3 out).
+     Serial classes (scenarios):
+       host_token  once per token (per MTP wave): the embed stage's start carries the sampled token (in) and the
+                   head stage's done carries next_token (out) -> + in on 'embed', + out on 'head.argmax_merge'.
+       host_stage  sensitivity only: every stage's start waits for its f_ks AFTER the h message has landed (+ in on
+                   every substage_hop / head.hop).  The built protocol hides it: the upstream kit emits its done
+                   before the hop op completes (dsfd_stage_seq_c8 KDX 7: the hop is the kit's hidden hand-off), so the
+                   downstream f_ks travels beside the 40,976-B h message (652 serialization cycles) and lands first.
 """
 import argparse
 import json
@@ -44,6 +69,16 @@ HUB_VM_TO_SVC_STAGES = 50    # c26l sp_vm centre -> svc_SW centre ~20 mm at 405 
 FINISH_SEQ_EXTRA = 234 - 171
 LEAF_PARTIAL_EXTRA = (112 + 4 + 5) - 100
 LEAF_SCALE_EXTRA = (59 + 4 * 4 + 4) - 76
+# RTL-BUILD-S81 (owner 0dv 10-18): mix4_half deleted; the Engram mix is the in-slice op ENG (ve beat sub-leaf + xfin ENG
+# + ot_s81sl_eg scalar finish; results/arch/s81_dv_1016/p4j/engram_mix_verdict.json build_plan.cycle_estimate).  With
+# --eng-slice the eng.* chain nodes are REPLACED (absolute, not a hub delta) by the slice-op terms; ESTIMATES except
+# ve reduce 129 / add 44 (measured tb_s81sl_ve) until the slice composition bench measures them:
+#   eng.hh   = ve reduce 129 (meas.) + partial -> xfin DL 4 + collector 5           = 138
+#   eng.dot  = 0: dd = csum((h*w)*k) is summed in the same ve reduce pass as hh / kk
+#   eng.gate = exchange 111 + finish 270 + scalar chain 175 + gate -> leaves 8      = 564 (est.)
+#   eng.add  = ve add 44 (meas.) + write-back 11                                    = 55
+ENG_SLICE_EST = {'eng.hh': 138.0, 'eng.dot': 0.0, 'eng.gate': 564.0, 'eng.add': 55.0}
+ENG_SLICE = False
 
 
 def hop_only(stages):
@@ -51,7 +86,7 @@ def hop_only(stages):
     return {wl: t * 1e6 / (t * 1e6 / a + add) for wl, (a, t) in ANCHOR.items()}
 
 
-def dv_deltas(doc, g, pinreg=8, su_scale=0.0, basis_scale=1.0, hbm_rt=False):
+def dv_deltas(doc, g, pinreg=8, su_scale=0.0, basis_scale=1.0, hbm_rt=False, host=()):
     """per-node delta (cycles) and a per-rule audit"""
     st = lambda um: math.ceil(um / g['hop_um'])
     xchg = g['scalar_exchange_stages']
@@ -63,9 +98,13 @@ def dv_deltas(doc, g, pinreg=8, su_scale=0.0, basis_scale=1.0, hbm_rt=False):
         r = rules.setdefault(rule, dict(nodes=0, cycles=0.0))
         r['nodes'] += 1; r['cycles'] += v
     r_phase = g['phase_path_stages'] / (BASIS_PHASE * basis_scale)
+    LR = (g.get('landing') or {}).get('rule_cycles')
     for n in doc['nodes']:
         note = n.get('src', {}).get('note', '') or ''
         op, nid, cls = n.get('op', ''), n['id'], n.get('cls')
+        if ENG_SLICE and op in ENG_SLICE_EST:
+            add(nid, 'eng_slice_est', ENG_SLICE_EST[op] - n['cycles'])
+            continue
         if cls == 'su':
             if 'hub in 33 / out 23' in note:
                 add(nid, 'hub_in_out', -56 + pinreg)
@@ -93,6 +132,23 @@ def dv_deltas(doc, g, pinreg=8, su_scale=0.0, basis_scale=1.0, hbm_rt=False):
         m = re.search(r'r8 die wire (\d+(?:\.\d+)?) cyc over (\d+) phase', note)
         if m and cls == 'field':
             add(nid, 'field_phase_wire', float(m.group(1)) * (r_phase - 1.0))
+            if LR:
+                add(nid, 'land_field_phase', int(m.group(2)) * LR['field_phase'])
+        if LR and cls == 'su':
+            if op in ('attn.quant', 'ffn.norm.scale', 'eng.gate') or op.endswith('hc.sumsq'):
+                add(nid, 'land_norm_tree_full', LR['norm_tree_full'])
+            elif op == 'attn.q_quant':
+                add(nid, 'land_norm_tree_q', LR['norm_tree_q'])
+            elif op == 'attn.kv_rope_qdq':
+                add(nid, 'land_norm_tree_kv', LR['norm_tree_kv'])
+        if LR and op == 'attn.q_rope':
+            add(nid, 'land_attn_q_path', LR['attn_q_path'])
+            if hbm_rt and g.get('hbm_rt_stages'):
+                add(nid, 'land_hbm_ctrl_rt', LR['hbm_ctrl_rt'])
+        if LR and op == 'ffn.top6_order':
+            add(nid, 'land_router_tree', LR['router_tree'])
+        if LR and re.search(r'(substage_hop\d+|head\.hop)$', nid):
+            add(nid, 'land_h_xfer_ring', LR['h_xfer_ring'])
         if op == 'attn.q_rope':
             add(nid, 'attn_q_path', st(g['worst_slice_to_attention_um']) - HUB_VM_TO_SVC_STAGES)
         if hbm_rt and op == 'attn.q_rope' and g.get('hbm_rt_stages'):
@@ -121,7 +177,107 @@ def dv_deltas(doc, g, pinreg=8, su_scale=0.0, basis_scale=1.0, hbm_rt=False):
                 add(nid, 'tier_cross', 4 + math.ceil(173 / g['tier_w']) - 1)   # partial flit + unit stops
         if re.search(r'(substage_hop\d+|head\.hop)$', nid):
             add(nid, 'h_xfer_ring', 2 * st(g['worst_slice_to_edge_um']))
+        HP = g.get('host_plane')
+        if HP and 'token' in host and op == 'embed':
+            add(nid, 'host_token_in', HP['in_cycles'])
+        if HP and 'token' in host and op == 'head.argmax_merge':
+            add(nid, 'host_token_out', HP['out_cycles'])
+        if HP and 'stage' in host and re.search(r'(substage_hop\d+|head\.hop)$', nid):
+            add(nid, 'host_stage_in', HP['in_cycles'])
     return d, rules
+
+
+def host_terms(plan, land, half=False, landed=True):
+    """one traversal of the host plane in / out (worst lane), cycles (module docstring item 6)"""
+    E = {l['link']: l['E'] for l in land['links']}
+    lanes = {l['i'].replace('-', '_'): l['s'] for l in plan['links'] if l['i'].startswith(('hf_', 'ht_'))}
+    if not lanes:
+        return None
+    one = lambda nm: (lanes[nm] / 2 if half else lanes[nm]) + 1 + ((1 + E[nm]) if landed else 0)
+    fin = max((nm for nm in lanes if nm.startswith('hf_')), key=one)
+    fout = max((nm for nm in lanes if nm.startswith('ht_')), key=one)
+    SEQ_IN, SEQ_OUT = 3 + 1 + 7, 3
+    return dict(landed=landed, half_cycle=half, in_link=fin, in_stations=lanes[fin], in_E=E[fin],
+                out_link=fout, out_stations=lanes[fout], out_E=E[fout], seq_in=SEQ_IN, seq_out=SEQ_OUT,
+                in_cycles=one(fin) + SEQ_IN, out_cycles=one(fout) + SEQ_OUT,
+                in_landing_cycles=(1 + E[fin]) if landed else 0, out_landing_cycles=(1 + E[fout]) if landed else 0)
+
+
+def land_terms(plan, land, half=False):
+    """per rule: added cycles per traversal (+ sum(1 + E) over landed links, - stations / 2 if half) and the path"""
+    import collections, heapq
+    B = plan['blocks']
+    E = {l['link']: l['E'] for l in land['links']}
+    G = collections.defaultdict(dict)
+    for l in plan['links']:
+        a, b = B[l['e'][0][0]]['name'], B[l['e'][1][0]]['name']
+        nm = l['i'].replace('-', '_')
+        if l['s'] > 0 and nm not in E:
+            raise SystemExit(f'dv_price: landed link {nm} has no E in the land plan')
+        x = (1 + E[nm]) if l['s'] > 0 else 0
+        if b not in G[a] or G[a][b][0] > l['s'] + 1:
+            G[a][b] = (l['s'] + 1, x, l['s'], nm)
+    memo = {}
+
+    def sp(src):
+        if src not in memo:
+            d = {src: (0, 0, 0, ())}
+            q = [(0, src)]
+            while q:
+                w, u = heapq.heappop(q)
+                if d[u][0] < w:
+                    continue
+                for v, (ww, xx, ss, nm) in G[u].items():
+                    if v not in d or d[v][0] > w + ww:
+                        d[v] = (w + ww, d[u][1] + xx, d[u][2] + ss, d[u][3] + (nm,))
+                        heapq.heappush(q, (w + ww, v))
+            memo[src] = d
+        return memo[src]
+
+    def worst(pairs):
+        best = None
+        for a, b in pairs:
+            r = sp(a).get(b)
+            if r is None:
+                continue
+            key = (r[0], r[1])
+            if best is None or key > best[0]:
+                best = (key, dict(src=a, dst=b, edges=r[0], landing=r[1], stations=r[2], links=list(r[3])))
+        return best[1]
+
+    def nearest(a, targets):
+        return min(((sp(a)[t][0], t) for t in targets if t in sp(a)))[1]
+    sl = [b['name'] for b in B if b['kind'] == 'slice']
+    fr = [b['name'] for b in B if b['kind'] == 'frame']
+    ends = [n for n in ('s_0S', 's_0N', 's_7S', 's_7N') if n in sl]
+    entry = [n for n in ('rsv_05', 'rsv_11') if any(x['name'] == n for x in B)]
+    col = lambda n: int(n[2])
+    paths = dict(
+        ag=worst((s_, f) for s_ in sl for f in fr),
+        ret=worst((f, nearest(f, sl)) for f in fr),
+        ss=worst((a, b) for a in sl for b in sl if a != b),
+        q3=worst((a, b) for a in sl for b in sl if a[-1] == b[-1] and abs(col(a) - col(b)) == 3),
+        kv1=worst((a, b) for a in sl for b in sl if a[-1] == b[-1] and abs(col(a) - col(b)) == 1),
+        attn=worst((s_, nearest(s_, entry)) for s_ in sl),
+        gunit=worst((s_, 'gunit') for s_ in sl),
+        edge_out=worst((s_, nearest(s_, ends)) for s_ in sl if s_ not in ends),
+        edge_back=worst((nearest(s_, ends), s_) for s_ in sl if s_ not in ends))
+    hb = {}
+    for l in plan['links']:
+        if l['i'].startswith(('hrq_', 'hrd_')) and l['s'] > 0:
+            k = l['i'][4:]
+            r = hb.setdefault(k, dict(landing=0, stations=0, links=[]))
+            r['landing'] += 1 + E[l['i']]; r['stations'] += l['s']; r['links'].append(l['i'])
+    if hb:
+        paths['hbm'] = max(hb.values(), key=lambda r: (r['stations'], r['landing']))
+    cyc = lambda r: r['landing'] - (r['stations'] / 2 if half else 0.0)
+    for r in paths.values():
+        r['added_cycles'] = cyc(r)
+    rule = dict(field_phase=cyc(paths['ag']) + cyc(paths['ret']), norm_tree_full=cyc(paths['ss']),
+                norm_tree_q=cyc(paths['q3']), norm_tree_kv=cyc(paths['kv1']), attn_q_path=cyc(paths['attn']),
+                router_tree=cyc(paths['gunit']), h_xfer_ring=cyc(paths['edge_out']) + cyc(paths['edge_back']),
+                hbm_ctrl_rt=cyc(paths['hbm']) if 'hbm' in paths else 0.0)
+    return dict(half_cycle=half, rule_cycles=rule, paths=paths, E_hist=land.get('summary', {}).get('E_hist'))
 
 
 def solve_with_wave(doc, delta):
@@ -139,7 +295,8 @@ def solve_with_wave(doc, delta):
     return base, new
 
 
-def ledger_split(path=LEDGER, drop=DROP):
+def ledger_split(path=LEDGER, drop=None):
+    drop = drop if drop is not None else DROP
     led = json.loads(Path(path).read_text())
     kept, dropped = {'ar': 0.0, 'mtp': 0.0}, {'ar': 0.0, 'mtp': 0.0}
     rows = []
@@ -155,8 +312,8 @@ def ledger_split(path=LEDGER, drop=DROP):
     return kept, dropped, rows
 
 
-def price(g, stages=89, pinreg=8, su_scale=0.0, frames=128, drop=DROP, basis_scale=1.0, hbm_rt=False):
-    kept, dropped, rows = ledger_split(drop=drop)
+def price(g, stages=89, pinreg=8, su_scale=0.0, frames=128, drop=None, basis_scale=1.0, hbm_rt=False, host=()):
+    kept, dropped, rows = ledger_split(drop=drop if drop is not None else DROP)
     st_eff = stages * 128 / frames if frames != 128 else stages
     ho = hop_only(89)
     ho_dv = hop_only(math.ceil(st_eff))
@@ -164,7 +321,7 @@ def price(g, stages=89, pinreg=8, su_scale=0.0, frames=128, drop=DROP, basis_sca
                ledger_kept_pct=kept, ledger_dropped_pct=dropped, workloads={})
     for wl, name in (('ar', 'ds_rom'), ('mtp', 'ds_rom_mtp')):
         doc = json.loads((TP / f'{name}.json').read_text())
-        delta, rules = dv_deltas(doc, g, pinreg, su_scale, basis_scale, hbm_rt)
+        delta, rules = dv_deltas(doc, g, pinreg, su_scale, basis_scale, hbm_rt, host)
         base, new = solve_with_wave(doc, delta)
         dv_loss = ac.loss_pct(base, new)
         cur = ho[wl] * (1 - (kept[wl] + dropped[wl]) / 100)
@@ -181,7 +338,14 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--plan', required=True, help='dv_plan.py plan.json (facts)')
     ap.add_argument('--out', required=True)
+    ap.add_argument('--land-plan', default=None, help='dv_land_pilot land_plan.json: price N + 2 + E per landed lane')
+    ap.add_argument('--half-cycle', action='store_true', help='half-cycle hops (stations cost T/2); use the half-cycle land plan')
+    ap.add_argument('--eng-slice', action='store_true', help='0dv: Engram mix = slice op ENG (ENG_SLICE_EST replaces the eng.* chain; MIX4.* ledger rows dropped: the units are deleted)')
     a = ap.parse_args()
+    global ENG_SLICE, DROP
+    if a.eng_slice:
+        ENG_SLICE = True
+        DROP = re.compile(DROP.pattern + r'|^MIX4\.')
     plan = json.loads(Path(a.plan).read_text())
     f = plan['facts']
     B = {b['name']: b for b in plan['blocks']}
@@ -199,6 +363,8 @@ def main():
     # ROM capacity per die scales the stage count (owner-approved lever: fewer ROMs per die, more dies)
     st = math.ceil(89 * f.get('rom_slots_c26l', 1220) / f.get('rom_slots', 1220) - 1e-9)
     g['stages_from_slots'] = st
+    if a.land_plan:
+        g['landing'] = dict(land_terms(plan, json.loads(Path(a.land_plan).read_text()), a.half_cycle), land_plan=a.land_plan)
     res = dict(schema='opentallas.s81_dv.price.v1', geometry=g, status='COMPOSED_NOT_NATIVE',
                scenarios={
                    'dv_base': price(g, stages=st),
@@ -223,6 +389,38 @@ def main():
         res['scenarios']['dv_hbm_rt_unhidden'] = price(g, stages=st, hbm_rt=True)
     if g['hop_um'] < 405:   # reach sensitivity: also price the hub basis on the same hop (today's die degrades too)
         res['scenarios']['dv_base_hub_basis_same_hop'] = price(g, stages=st, basis_scale=405.0 / g['hop_um'])
+    if a.land_plan:
+        g0 = {k: v for k, v in g.items() if k != 'landing'}
+        cmp_ = {}
+        for k, kw in (('dv_base', {}), ('dv_hbm_rt_unhidden', dict(hbm_rt=True))):
+            if k not in res['scenarios']:
+                continue
+            b0 = price(g0, stages=st, **kw)['workloads']
+            b1 = res['scenarios'][k]['workloads']
+            cmp_[k] = {wl: dict(no_landing_tok_s=b0[wl]['dv_tok_s'], landing_tok_s=b1[wl]['dv_tok_s'],
+                                change_pct=round(100 * (b1[wl]['dv_tok_s'] / b0[wl]['dv_tok_s'] - 1), 2),
+                                landing_cycles={r: v for r, v in b1[wl]['rules'].items() if r.startswith('land_')})
+                       for wl in ('ar', 'mtp')}
+        res['landing_vs_no_landing'] = cmp_
+        land = json.loads(Path(a.land_plan).read_text())
+        hp = host_terms(plan, land, a.half_cycle, landed=True)
+        if hp:
+            hp0 = host_terms(plan, land, a.half_cycle, landed=False)
+            g['host_plane'] = hp
+            gu = dict(g, host_plane=hp0)                              # host lanes unlanded (geometry only)
+            g0h = dict(g0, host_plane=hp0)                            # nothing landed, host lanes geometric
+            ref = res['scenarios']['dv_base']['workloads']
+            hs = {}
+            for k, gg, kw in (('host_token', g, dict(host=('token',))),
+                              ('host_token_stage_serial', g, dict(host=('token', 'stage'))),
+                              ('host_token_unlanded', gu, dict(host=('token',))),
+                              ('no_landing_host_token_unlanded', g0h, dict(host=('token',)))):
+                res['scenarios'][k] = price(gg, stages=st, **kw)
+                w = res['scenarios'][k]['workloads']
+                hs[k] = {wl: dict(tok_s=w[wl]['dv_tok_s'], vs_dv_base_landed_pct=round(100 * (w[wl]['dv_tok_s'] / ref[wl]['dv_tok_s'] - 1), 3),
+                                  host_cycles={r: v for r, v in w[wl]['rules'].items() if r.startswith('host_')})
+                         for wl in ('ar', 'mtp')}
+            res['host_plane'] = dict(terms=hp, terms_unlanded=hp0, scenarios=hs)
     Path(a.out).parent.mkdir(parents=True, exist_ok=True)
     Path(a.out).write_text(json.dumps(res, indent=1))
     for k, s in res['scenarios'].items():

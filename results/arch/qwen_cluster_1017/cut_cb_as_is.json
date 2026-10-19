@@ -1,0 +1,125 @@
+{
+ "gen": "q3h_cb16_gen_cb.py",
+ "hosts": "cb16_hosts.json",
+ "dv": "",
+ "corr_w": "",
+ "width_um": 2090.88,
+ "height_um": 5184.0,
+ "base": {
+  "rs_latency": 35,
+  "relay_bits": 33924,
+  "worst_util_proj": 1.792,
+  "cuts": {
+   "corr_L": {
+    "width_um": 32.4,
+    "peak_bits": 517,
+    "at_y": 0,
+    "fam": {
+     "bc": 516,
+     "rst": 1
+    },
+    "util_proj": 0.721,
+    "util_m3": 0.443,
+    "cap_proj": 717
+   },
+   "corr_A": {
+    "width_um": 64.8,
+    "peak_bits": 2570,
+    "at_y": 260,
+    "fam": {
+     "tree": 2056,
+     "rs": 514
+    },
+    "util_proj": 1.792,
+    "util_m3": 1.101,
+    "cap_proj": 1434
+   },
+   "corr_T": {
+    "width_um": 64.8,
+    "peak_bits": 1033,
+    "at_y": 0,
+    "fam": {
+     "bc": 1032,
+     "rst": 1
+    },
+    "util_proj": 0.72,
+    "util_m3": 0.443,
+    "cap_proj": 1434
+   },
+   "corr_B": {
+    "width_um": 64.8,
+    "peak_bits": 2056,
+    "at_y": 1560,
+    "fam": {
+     "tree": 2056
+    },
+    "util_proj": 1.433,
+    "util_m3": 0.881,
+    "cap_proj": 1434
+   },
+   "corr_R": {
+    "width_um": 32.4,
+    "peak_bits": 517,
+    "at_y": 0,
+    "fam": {
+     "bc": 516,
+     "rst": 1
+    },
+    "util_proj": 0.721,
+    "util_m3": 0.443,
+    "cap_proj": 717
+   },
+   "chan_0_y0": {
+    "height_um": 64.8,
+    "peak_bits": 0,
+    "at_x": null,
+    "fam": {},
+    "util_proj": 0.0,
+    "util_m3": 0.0,
+    "cap_proj": 1434
+   },
+   "chan_1_y1231": {
+    "height_um": 129.6,
+    "peak_bits": 514,
+    "at_x": 520,
+    "fam": {
+     "tree": 514
+    },
+    "util_proj": 0.179,
+    "util_m3": 0.11,
+    "cap_proj": 2869
+   },
+   "chan_2_y2527": {
+    "height_um": 129.6,
+    "peak_bits": 514,
+    "at_x": 520,
+    "fam": {
+     "tree": 514
+    },
+    "util_proj": 0.179,
+    "util_m3": 0.11,
+    "cap_proj": 2869
+   },
+   "chan_3_y3823": {
+    "height_um": 129.6,
+    "peak_bits": 514,
+    "at_x": 520,
+    "fam": {
+     "tree": 514
+    },
+    "util_proj": 0.179,
+    "util_m3": 0.11,
+    "cap_proj": 2869
+   },
+   "chan_4_y5119": {
+    "height_um": 64.8,
+    "peak_bits": 0,
+    "at_x": null,
+    "fam": {},
+    "util_proj": 0.0,
+    "util_m3": 0.0,
+    "cap_proj": 1434
+   }
+  }
+ }
+}

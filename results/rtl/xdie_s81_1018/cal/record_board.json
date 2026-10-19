@@ -1,0 +1,695 @@
+{
+ "schema": "opentallas.xdie_s81.record.v1",
+ "config": "cal_board",
+ "verdict": "PASS xdie_s81: 12096 beats of the TP4 calendar landed bit-exact, in order, by their compiled deadlines, no fault",
+ "stats": "XDIE_STATS beats 12096 landed 12096 mismatches 0 late 0 maxlate -1000000 extra 0 faults 0000000000000000 live 32/32 last_cycle 87017",
+ "golden": {
+  "beats": 12096,
+  "gate": false,
+  "lat": {},
+  "per": {}
+ },
+ "collectives": {
+  "argmax_merge": {
+   "kind": "AG",
+   "payload_B": 32,
+   "beats_per_peer": 1,
+   "E": [
+    553,
+    553
+   ],
+   "L_first": [
+    553,
+    553
+   ],
+   "E_last": [
+    553,
+    553
+   ],
+   "drain_per_beat": [
+    0.0,
+    0.0
+   ],
+   "E_meas": 553,
+   "deterministic": true
+  },
+  "router_allgather": {
+   "kind": "AG",
+   "payload_B": 1536,
+   "beats_per_peer": 3,
+   "E": [
+    557,
+    556
+   ],
+   "L_first": [
+    553,
+    553
+   ],
+   "E_last": [
+    555,
+    554
+   ],
+   "drain_per_beat": [
+    2.0,
+    1.5
+   ],
+   "E_meas": 557,
+   "deterministic": false
+  },
+  "a_allgather": {
+   "kind": "AG",
+   "payload_B": 3648,
+   "beats_per_peer": 8,
+   "E": [
+    563,
+    562
+   ],
+   "L_first": [
+    553,
+    553
+   ],
+   "E_last": [
+    556,
+    555
+   ],
+   "drain_per_beat": [
+    1.429,
+    1.286
+   ],
+   "E_meas": 563,
+   "deterministic": false
+  },
+  "eng_rows_allgather": {
+   "kind": "AG",
+   "payload_B": 6336,
+   "beats_per_peer": 13,
+   "E": [
+    569,
+    570
+   ],
+   "L_first": [
+    553,
+    553
+   ],
+   "E_last": [
+    557,
+    558
+   ],
+   "drain_per_beat": [
+    1.333,
+    1.417
+   ],
+   "E_meas": 570,
+   "deterministic": false
+  },
+  "idx_topk_merge": {
+   "kind": "AG",
+   "payload_B": 16384,
+   "beats_per_peer": 32,
+   "E": [
+    596,
+    595
+   ],
+   "L_first": [
+    553,
+    553
+   ],
+   "E_last": [
+    565,
+    564
+   ],
+   "drain_per_beat": [
+    1.387,
+    1.355
+   ],
+   "E_meas": 596,
+   "deterministic": false
+  },
+  "cand_merge": {
+   "kind": "AG",
+   "payload_B": 65536,
+   "beats_per_peer": 128,
+   "E": [
+    722,
+    724
+   ],
+   "L_first": [
+    553,
+    553
+   ],
+   "E_last": [
+    595,
+    597
+   ],
+   "drain_per_beat": [
+    1.331,
+    1.346
+   ],
+   "E_meas": 724,
+   "deterministic": false
+  },
+  "rows_allgather": {
+   "kind": "AG",
+   "payload_B": 67584,
+   "beats_per_peer": 132,
+   "E": [
+    729,
+    728
+   ],
+   "L_first": [
+    553,
+    553
+   ],
+   "E_last": [
+    598,
+    597
+   ],
+   "drain_per_beat": [
+    1.344,
+    1.336
+   ],
+   "E_meas": 729,
+   "deterministic": false
+  },
+  "allreduce_20480": {
+   "kind": "AR",
+   "payload_B": 20480,
+   "beats_per_peer": 40,
+   "E": [
+    1211.0,
+    1211.0
+   ],
+   "E_RS": [
+    605,
+    605
+   ],
+   "E_AG": [
+    606,
+    606
+   ],
+   "L_first": [
+    553,
+    553
+   ],
+   "E_meas": 1211.0,
+   "deterministic": true
+  },
+  "stage_hop": {
+   "kind": "P2P",
+   "payload_B": 40976,
+   "beats_per_peer": 321,
+   "E": [
+    982,
+    981
+   ],
+   "L_first": [
+    553,
+    553
+   ],
+   "E_last": [
+    662,
+    661
+   ],
+   "drain_per_beat": [
+    1.341,
+    1.337
+   ],
+   "E_meas": 982,
+   "deterministic": false
+  }
+ },
+ "instances": {
+  "argmax_merge#0": {
+   "name": "argmax_merge",
+   "kind": "AG",
+   "payload_B": 32,
+   "rep": 0,
+   "beats_per_peer": 1,
+   "streams": 12,
+   "beats": 12,
+   "first_issue": 12000,
+   "last_land": 12553,
+   "L_first": 553,
+   "E_meas": 553,
+   "E_last": 553,
+   "drain_per_beat": 0.0,
+   "L_first_min": 553,
+   "min_deadline_slack": null
+  },
+  "router_allgather#0": {
+   "name": "router_allgather",
+   "kind": "AG",
+   "payload_B": 1536,
+   "rep": 0,
+   "beats_per_peer": 3,
+   "streams": 12,
+   "beats": 36,
+   "first_issue": 16001,
+   "last_land": 16558,
+   "L_first": 553,
+   "E_meas": 557,
+   "E_last": 555,
+   "drain_per_beat": 2.0,
+   "L_first_min": 553,
+   "min_deadline_slack": null
+  },
+  "a_allgather#0": {
+   "name": "a_allgather",
+   "kind": "AG",
+   "payload_B": 3648,
+   "rep": 0,
+   "beats_per_peer": 8,
+   "streams": 12,
+   "beats": 96,
+   "first_issue": 20004,
+   "last_land": 20567,
+   "L_first": 553,
+   "E_meas": 563,
+   "E_last": 556,
+   "drain_per_beat": 1.429,
+   "L_first_min": 553,
+   "min_deadline_slack": null
+  },
+  "eng_rows_allgather#0": {
+   "name": "eng_rows_allgather",
+   "kind": "AG",
+   "payload_B": 6336,
+   "rep": 0,
+   "beats_per_peer": 13,
+   "streams": 12,
+   "beats": 156,
+   "first_issue": 24012,
+   "last_land": 24581,
+   "L_first": 553,
+   "E_meas": 569,
+   "E_last": 557,
+   "drain_per_beat": 1.333,
+   "L_first_min": 553,
+   "min_deadline_slack": null
+  },
+  "idx_topk_merge#0": {
+   "name": "idx_topk_merge",
+   "kind": "AG",
+   "payload_B": 16384,
+   "rep": 0,
+   "beats_per_peer": 32,
+   "streams": 12,
+   "beats": 384,
+   "first_issue": 28025,
+   "last_land": 28621,
+   "L_first": 553,
+   "E_meas": 596,
+   "E_last": 565,
+   "drain_per_beat": 1.387,
+   "L_first_min": 553,
+   "min_deadline_slack": null
+  },
+  "cand_merge#0": {
+   "name": "cand_merge",
+   "kind": "AG",
+   "payload_B": 65536,
+   "rep": 0,
+   "beats_per_peer": 128,
+   "streams": 12,
+   "beats": 1536,
+   "first_issue": 32057,
+   "last_land": 32779,
+   "L_first": 553,
+   "E_meas": 722,
+   "E_last": 595,
+   "drain_per_beat": 1.331,
+   "L_first_min": 553,
+   "min_deadline_slack": null
+  },
+  "rows_allgather#0": {
+   "name": "rows_allgather",
+   "kind": "AG",
+   "payload_B": 67584,
+   "rep": 0,
+   "beats_per_peer": 132,
+   "streams": 12,
+   "beats": 1584,
+   "first_issue": 36185,
+   "last_land": 36914,
+   "L_first": 553,
+   "E_meas": 729,
+   "E_last": 598,
+   "drain_per_beat": 1.344,
+   "L_first_min": 553,
+   "min_deadline_slack": null
+  },
+  "allreduce_20480#0": {
+   "name": "allreduce_20480",
+   "kind": "AR",
+   "payload_B": 20480,
+   "rep": 0,
+   "beats_per_peer": 40,
+   "rs": {
+    "streams": 12,
+    "beats": 480,
+    "first_issue": 40317,
+    "last_land": 40922,
+    "L_first": 553,
+    "E_meas": 605,
+    "E_last": 566,
+    "drain_per_beat": 1.333,
+    "L_first_min": 553,
+    "min_deadline_slack": null
+   },
+   "ag": {
+    "streams": 12,
+    "beats": 480,
+    "first_issue": 41817,
+    "last_land": 42423,
+    "L_first": 553,
+    "E_meas": 606,
+    "E_last": 567,
+    "drain_per_beat": 1.359,
+    "L_first_min": 553,
+    "min_deadline_slack": null
+   },
+   "fold_die": 0.0,
+   "E_meas": 1211.0,
+   "ag_issue_after_rs_land": 895
+  },
+  "stage_hop#0": {
+   "name": "stage_hop",
+   "kind": "P2P",
+   "payload_B": 40976,
+   "rep": 0,
+   "beats_per_peer": 321,
+   "streams": 4,
+   "beats": 1284,
+   "first_issue": 45857,
+   "last_land": 46839,
+   "L_first": 553,
+   "E_meas": 982,
+   "E_last": 662,
+   "drain_per_beat": 1.341,
+   "L_first_min": 553,
+   "min_deadline_slack": null
+  },
+  "argmax_merge#1": {
+   "name": "argmax_merge",
+   "kind": "AG",
+   "payload_B": 32,
+   "rep": 1,
+   "beats_per_peer": 1,
+   "streams": 12,
+   "beats": 12,
+   "first_issue": 50178,
+   "last_land": 50731,
+   "L_first": 553,
+   "E_meas": 553,
+   "E_last": 553,
+   "drain_per_beat": 0.0,
+   "L_first_min": 553,
+   "min_deadline_slack": null
+  },
+  "router_allgather#1": {
+   "name": "router_allgather",
+   "kind": "AG",
+   "payload_B": 1536,
+   "rep": 1,
+   "beats_per_peer": 3,
+   "streams": 12,
+   "beats": 36,
+   "first_issue": 54179,
+   "last_land": 54735,
+   "L_first": 553,
+   "E_meas": 556,
+   "E_last": 554,
+   "drain_per_beat": 1.5,
+   "L_first_min": 553,
+   "min_deadline_slack": null
+  },
+  "a_allgather#1": {
+   "name": "a_allgather",
+   "kind": "AG",
+   "payload_B": 3648,
+   "rep": 1,
+   "beats_per_peer": 8,
+   "streams": 12,
+   "beats": 96,
+   "first_issue": 58182,
+   "last_land": 58744,
+   "L_first": 553,
+   "E_meas": 562,
+   "E_last": 555,
+   "drain_per_beat": 1.286,
+   "L_first_min": 553,
+   "min_deadline_slack": null
+  },
+  "eng_rows_allgather#1": {
+   "name": "eng_rows_allgather",
+   "kind": "AG",
+   "payload_B": 6336,
+   "rep": 1,
+   "beats_per_peer": 13,
+   "streams": 12,
+   "beats": 156,
+   "first_issue": 62190,
+   "last_land": 62760,
+   "L_first": 553,
+   "E_meas": 570,
+   "E_last": 558,
+   "drain_per_beat": 1.417,
+   "L_first_min": 553,
+   "min_deadline_slack": null
+  },
+  "idx_topk_merge#1": {
+   "name": "idx_topk_merge",
+   "kind": "AG",
+   "payload_B": 16384,
+   "rep": 1,
+   "beats_per_peer": 32,
+   "streams": 12,
+   "beats": 384,
+   "first_issue": 66203,
+   "last_land": 66798,
+   "L_first": 553,
+   "E_meas": 595,
+   "E_last": 564,
+   "drain_per_beat": 1.355,
+   "L_first_min": 553,
+   "min_deadline_slack": null
+  },
+  "cand_merge#1": {
+   "name": "cand_merge",
+   "kind": "AG",
+   "payload_B": 65536,
+   "rep": 1,
+   "beats_per_peer": 128,
+   "streams": 12,
+   "beats": 1536,
+   "first_issue": 70235,
+   "last_land": 70959,
+   "L_first": 553,
+   "E_meas": 724,
+   "E_last": 597,
+   "drain_per_beat": 1.346,
+   "L_first_min": 553,
+   "min_deadline_slack": null
+  },
+  "rows_allgather#1": {
+   "name": "rows_allgather",
+   "kind": "AG",
+   "payload_B": 67584,
+   "rep": 1,
+   "beats_per_peer": 132,
+   "streams": 12,
+   "beats": 1584,
+   "first_issue": 74363,
+   "last_land": 75091,
+   "L_first": 553,
+   "E_meas": 728,
+   "E_last": 597,
+   "drain_per_beat": 1.336,
+   "L_first_min": 553,
+   "min_deadline_slack": null
+  },
+  "allreduce_20480#1": {
+   "name": "allreduce_20480",
+   "kind": "AR",
+   "payload_B": 20480,
+   "rep": 1,
+   "beats_per_peer": 40,
+   "rs": {
+    "streams": 12,
+    "beats": 480,
+    "first_issue": 78495,
+    "last_land": 79100,
+    "L_first": 553,
+    "E_meas": 605,
+    "E_last": 566,
+    "drain_per_beat": 1.333,
+    "L_first_min": 553,
+    "min_deadline_slack": null
+   },
+   "ag": {
+    "streams": 12,
+    "beats": 480,
+    "first_issue": 79995,
+    "last_land": 80601,
+    "L_first": 553,
+    "E_meas": 606,
+    "E_last": 567,
+    "drain_per_beat": 1.359,
+    "L_first_min": 553,
+    "min_deadline_slack": null
+   },
+   "fold_die": 0.0,
+   "E_meas": 1211.0,
+   "ag_issue_after_rs_land": 895
+  },
+  "stage_hop#1": {
+   "name": "stage_hop",
+   "kind": "P2P",
+   "payload_B": 40976,
+   "rep": 1,
+   "beats_per_peer": 321,
+   "streams": 4,
+   "beats": 1284,
+   "first_issue": 84035,
+   "last_land": 85016,
+   "L_first": 553,
+   "E_meas": 981,
+   "E_last": 661,
+   "drain_per_beat": 1.337,
+   "L_first_min": 553,
+   "min_deadline_slack": null
+  }
+ },
+ "composition": {
+  "dag": "../ds_rom.json",
+  "dag_total_cycles": 828878.4,
+  "dag_tok_s": 1447.74,
+  "rule": "T_xdie = sum_x n_x * max(0, E(x) - O(x)), E = E_meas (vehicle, incl. 453 modelled a crossing) + 134 priced on-die cycles a crossing; O = 0 on the DAG critical path, cycles + slack off it",
+  "terms": {
+   "attn.a_allgather": {
+    "coll": "a_allgather",
+    "n": 40,
+    "n_critical": 40,
+    "E_meas": 697,
+    "dag_cycles_each": 434.0,
+    "exposed_new": 27880.0,
+    "exposed_dag": 17360.0
+   },
+   "attn.out_allreduce": {
+    "coll": "allreduce_20480",
+    "n": 40,
+    "n_critical": 40,
+    "E_meas": 1479.0,
+    "dag_cycles_each": 827.0,
+    "exposed_new": 59160.0,
+    "exposed_dag": 33080.0
+   },
+   "substage_hop0": {
+    "coll": "stage_hop",
+    "n": 40,
+    "n_critical": 40,
+    "E_meas": 1116,
+    "dag_cycles_each": 1006.0,
+    "exposed_new": 44640.0,
+    "exposed_dag": 40240.0
+   },
+   "ffn.router_allgather": {
+    "coll": "router_allgather",
+    "n": 40,
+    "n_critical": 40,
+    "E_meas": 691,
+    "dag_cycles_each": 421.9,
+    "exposed_new": 27640.0,
+    "exposed_dag": 16875.999999999993
+   },
+   "ffn.combine_allreduce": {
+    "coll": "allreduce_20480",
+    "n": 40,
+    "n_critical": 40,
+    "E_meas": 1479.0,
+    "dag_cycles_each": 827.0,
+    "exposed_new": 59160.0,
+    "exposed_dag": 33080.0
+   },
+   "attn.idx.topk_merge": {
+    "coll": "idx_topk_merge",
+    "n": 8,
+    "n_critical": 8,
+    "E_meas": 730,
+    "dag_cycles_each": 551.0,
+    "exposed_new": 5840.0,
+    "exposed_dag": 4408.0
+   },
+   "attn.rows_allgather": {
+    "coll": "rows_allgather",
+    "n": 40,
+    "n_critical": 8,
+    "E_meas": 863,
+    "dag_cycles_each": 1032.9,
+    "exposed_new": 6904.0,
+    "exposed_dag": 8227.6
+   },
+   "substage_hop1": {
+    "coll": "stage_hop",
+    "n": 17,
+    "n_critical": 17,
+    "E_meas": 1116,
+    "dag_cycles_each": 1006.0,
+    "exposed_new": 18972.0,
+    "exposed_dag": 17102.0
+   },
+   "head.hop": {
+    "coll": "stage_hop",
+    "n": 1,
+    "n_critical": 1,
+    "E_meas": 1116,
+    "dag_cycles_each": 1006.0,
+    "exposed_new": 1116.0,
+    "exposed_dag": 1006.0
+   },
+   "head.argmax_merge": {
+    "coll": "argmax_merge",
+    "n": 1,
+    "n_critical": 1,
+    "E_meas": 687,
+    "dag_cycles_each": 374.9,
+    "exposed_new": 687.0,
+    "exposed_dag": 374.9
+   },
+   "attn.cand.merge": {
+    "coll": "cand_merge",
+    "n": 1,
+    "n_critical": 0,
+    "E_meas": 858,
+    "dag_cycles_each": 1002.0,
+    "exposed_new": 0.0,
+    "exposed_dag": 0.0
+   },
+   "eng.rows_allgather": {
+    "coll": "eng_rows_allgather",
+    "n": 2,
+    "n_critical": 0,
+    "E_meas": 704,
+    "dag_cycles_each": 1422.0,
+    "exposed_new": 0.0,
+    "exposed_dag": 0.0
+   },
+   "unplaced_hops (62 stage hops)": {
+    "coll": "stage_hop",
+    "n": 62,
+    "n_critical": 62,
+    "E_meas": 982,
+    "dag_cycles_each": 1006.0,
+    "exposed_new": 69192,
+    "exposed_dag": 62372.0,
+    "note": "DAG node 'unplaced_hops' = 27 S81 frame hops + 35 HALF-mapping hops at 0.8425 us; priced here as 62 hops at the DAG's placed-hop 1,006 cycles for the delta"
+   }
+  },
+  "T_xdie_new": 321191.0,
+  "T_xdie_dag": 234126.5,
+  "delta_cycles": 87064.5,
+  "tok_s_dag_basis": 1447.74,
+  "tok_s_with_measured_xdie": 1310.13,
+  "pct_change": -9.505
+ }
+}

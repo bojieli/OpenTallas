@@ -13,7 +13,8 @@
 // Function per stripe = ot_hgi_sfu_program_stripe_r9 (= _rc, W=222) with four 512-row pages instead of two 1024-row
 // pages (page = pc[10:9]; same one-edge synchronous read, so identical cycles).
 // Added vs the r9 leaf (moved out of the store top so the top holds no wide register mass):
-//  - configuration CHAIN: out_addr/out_data are the leaf's own pin flops, forwarded to the next leaf of its chain
+//  - configuration CHAIN: out_addr/out_data are dedicated export flops at the out face fed from the in-face pin flops
+//    (r10n2: 2 edges per hop), forwarded to the next leaf of its chain
 //    (neighbour-only, short fat link; no 256-bit broadcast); in_we is this leaf's strobe, delayed by the top to match
 //    the leaf's chain depth;
 //  - relay + output gate (r9 top's io_p/ctl_p + control_v gate): out_cal = cv_q ? relay : 0, cv_q = pin flop of in_cv
@@ -56,8 +57,32 @@ module ot_hgi_sfu_store_stripe_leaf_r10 #(
   start_v_q<=in_start_v;start_base_q<=in_start_base;legal_q<=in_legal;span_q<=in_span;loops_q<=in_loops;
   loops_one_q<=in_loops_one;
  end
- assign out_addr=addr_q;
- assign out_data=data_q;
+ // ---- chain-forward export registers (HBM-NATIVE 2026-10-17, native pin audit of the closed r10-947bd4836 view):
+ // out_data/out_addr were data_q/addr_q, the keep registers that also drive every macro wd_in / w_addr / w_ce compare,
+ // so io_flop_at_pins could not anchor them at the chain-out pins (269 ports not single-flop) and they sat at the in_data
+ // face segment beside the macros: native launch up to 276.8 ps on 73 out_data pins (budget 220). The chain is now
+ // driven by DEDICATED keep flops whose D is the same pin (in_data / in_addr) and whose Q drives ONLY the chain-out pin,
+ // so each is anchored FIRM at its out pin (output ownership wins in io_flop_at_pins) and data_q/addr_q stay at the
+ // in pins as extra captures. Same edge as before: out_data(t) = in_data(t-1) = data_q(t), 0 cycles, bit-identical at
+ // every pin (bench tb_sfu_leaf_r10_fwd_lockstep vs the closed RTL, rtl/test/hbm_accel/generic/ref/..._ref0.sv).
+ // The in -> out traverse (~150 um along the N face: out_data[i] x 8.5-130, in_data[i] x 157-282) moves from the
+ // launch side to the capture side of the leaf boundary (pin -> fwd flop).
+ // r10n2 (KH-NATIVE3 2026-10-17, native audit lanes/NATIVE-2.md of the CLOSED r10n view c010a45fb): r10n's fwd flops took D
+ // straight from the in pin, so every in_data pin drove two captures ~150 um apart (data_q at the in pin + fwd_data_q at
+ // the out pin) and the traverse landed on the capture side: native capture 236.1 ps on 93 in_data pins (budget 190).
+ // Approved fallback: +1 CHAIN STAGE. The in pin is captured ONCE (data_q / addr_q, at the in face); the fwd flops at the
+ // out face take D from data_q / addr_q (an internal reg -> reg leg, a full cycle for the ~150 um traverse), Q only to the
+ // chain-out pin. out_data(t) = in_data(t-2): each chain hop costs 2 edges (was 1); the head doubles the chain part of
+ // every leaf's in_we delay (ot_hgi_sfu_programme_store_r10 depth()).
+ (* keep = "true", dont_touch = "true" *) reg [AW-1:0] fwd_addr_q;
+ (* keep = "true", dont_touch = "true" *) reg [255:0] fwd_data_q;
+`ifdef OT_SFU_LEAF10_MUT_FWD
+ always @(posedge clk)begin fwd_addr_q<=in_addr;fwd_data_q<=in_data; end   // MUTANT: r10n 1-edge forward (from the pin)
+`else
+ always @(posedge clk)begin fwd_addr_q<=addr_q;fwd_data_q<=data_q; end
+`endif
+ assign out_addr=fwd_addr_q;
+ assign out_data=fwd_data_q;
  // ---- stripe body (ot_hgi_sfu_program_stripe_r9, W=222, four 512-row pages)
  localparam integer W=222, PCLO=234-AW;
  reg running,loops_one;

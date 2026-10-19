@@ -1,6 +1,6 @@
 #!/bin/bash
 # el1014-qwen-kvsys-elements: hub-level equivalence of the die-leaf hub (qkd_ahub_core + 13 tiles) against hub_t.
-#   run_qkd_ahub_d_eq.sh pos OUT   three die relay configurations x three seeds x 6 layers, every mo / out word exact
+#   run_qkd_ahub_d_eq.sh pos OUT   five die relay configurations (r3 = SI_RLY 1; r4 = the hp4 kit: SI_RLY 1, RA_RLY 1, PV_RLY 1 (core hd4 defaults), one clock ck + regional reset pipe) x three seeds x 6 layers, every mo / out word exact
 #                                  -> prints "PASS qkd_ahub_d eq all" and exits 0
 #   run_qkd_ahub_d_eq.sh neg OUT   TB_MUT (one pl_rz bit forced at the core) -> prints "FAIL qkd_ahub_d mutant detected"
 #                                  and exits 1 when the mismatch is seen (the loop expects fail)
@@ -28,9 +28,11 @@ if [ "$MODE" = neg ]; then
 fi
 ok=1
 build r0
-build r1 +define+R_ZW=1 +define+R_ZR=1 +define+R_RA=1 +define+R_SR=1 +define+R_PV=1 +define+R_Y=1 +define+R_RX=2 +define+R_PI=1
-build r2 +define+R_ZW=2 +define+R_ZR=1 +define+R_RA=0 +define+R_SR=2 +define+R_PV=1 +define+R_Y=2 +define+R_RX=3 +define+R_PI=3
-for t in r0 r1 r2; do for sd in 1 7 23; do
+build r1 +define+R_ZW=1 +define+R_ZR=1 +define+R_RA=1 +define+R_SR=1 +define+R_PV=1 +define+R_Y=1 +define+R_RX=2 +define+R_PI=1 +define+R_SI=1
+build r2 +define+R_ZW=2 +define+R_ZR=1 +define+R_RA=0 +define+R_SR=2 +define+R_PV=1 +define+R_Y=2 +define+R_RX=3 +define+R_PI=3 +define+R_SI=2
+build r3 +define+R_SI=1
+build r4 +define+R_SI=1 +define+R_RA=1 +define+R_PV=1 +define+QKD_AHUB_ONE_CK
+for t in r0 r1 r2 r3 r4; do for sd in 1 7 23; do
   r=$("$OUT/$t/Vtb" +LAYERS=6 +SEED=$sd 2>&1 | grep -E '^AHUB|^PASS|^FAIL' | tr '\n' ' '); echo "$t seed $sd: $r"
   echo "$r" | grep -q 'PASS ahub_d == hub_t' || ok=0
   echo "$r" | grep -q 'disagree' && ok=0

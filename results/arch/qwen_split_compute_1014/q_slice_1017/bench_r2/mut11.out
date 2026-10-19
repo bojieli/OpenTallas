@@ -1,0 +1,3 @@
+bench2 (i) MUT=11: FAIL 1/3
+    slice 0: cc ['0x21234deadbeef', '0x3ffff80000001'] want ['0x31234deadbeef', '0x2ffff80000001']
+    slice 1: cc ['0x3000700000005', '0x2010000000007'] want ['0x2000700000005', '0x3010000000007']

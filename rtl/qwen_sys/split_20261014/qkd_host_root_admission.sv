@@ -58,7 +58,7 @@ module qkd_host_rank_services_admission #(
  output wire[31:0]fault_src,output wire source_cr,available,
  output wire[282:0]hb,input wire hb_cr,input wire[12:0]est,
  output wire[1163:0]chain_f,input wire[127:0]chain_c,chain_a,input wire[3:0]chain_fault_i,input wire[127:0]slice_ack,slice_boot_done,slice_boot_ok,slice_boot_fault,
- input wire[127:0]ctrl_completion_fault,
+ input wire ctrl_completion_fault,   // KVJ-G2b 10-17: the registered OR of the 128 pc_path completion faults (qkd_kv_cfault_tree root); only its OR was used
  output wire marker_v,output wire[65:0]marker,
  output wire certificate_v,output wire[65:0]certificate,output wire[31:0]certificate_prefix,
  output wire[31:0]issued,landed,output wire[7:0]physical_ack_n,
@@ -311,7 +311,7 @@ module qkd_host_root_admission #(
  input wire hb_cr,
  input wire[12:0] est,
  output wire[1163:0]chain_f,input wire[127:0]chain_c,chain_a,input wire[3:0]chain_fault_i,input wire[127:0]slice_ack,slice_boot_done,slice_boot_ok,slice_boot_fault,
- input wire[127:0] ctrl_completion_fault,
+ input wire ctrl_completion_fault,   // KVJ-G2b 10-17: 1 b = qkd_kv_cfault_tree root (the 128-b per-PC vector was only ORed)
  output wire marker_v,
  output wire[65:0] marker,
  output wire[31:0] issued,

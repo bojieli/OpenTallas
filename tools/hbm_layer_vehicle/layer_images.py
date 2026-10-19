@@ -1,0 +1,558 @@
+#!/usr/bin/env python3
+"""LAYERBENCH-HBM (10-18) piece (a): d4g layer-programme compiler -> per-unit images + slice replay events.
+
+From the compiler's static schedule of one layer (DS: results/rtl/hbm_ds_layer_tput_1018/priced_layers.json
+segments[L].records; Qwen: results/rtl/hbm_qwen_layer_tput_1018/static_schedule.json schedule.<variant>.record.<stage>)
+and the HGI programme those records come from, emit for every record the programme image the die would load, as
+replay events at the SLICE INPUT PORTS whose driver is outside the slice (boundary.json of cut_slice.py).  Images
+never patch on-chip datapath: they enter where the die's own (outside-slice) programme root drives them.
+
+Unit formats (RTL of record = GEN2 die rev abbf5d21f; SU files byte-identical to origin/main):
+  SU   pgp_SW (ot_hbm_su_programme_pslice_c5, ot_hbm_su_programme_pgcol.sv:181-211) is fed by su_prog (outside the
+       slice) on su_prog__r_we[0] / r_bank[15:0] / r_row / r_data / r_start / r_len.  Quarter command line SB 2422 =
+       {control 1742 [2421:680], vmr 8x30 [679:440], vmw 8x39 [439:128], rf 6x9 [127:74], red 74 [73:0]} -- the die
+       wiring (die.v pgp_SW__command slices: su_SW<G>.control/vmr_cmd/vmw_cmd, sucore_SW.rf_rd_cmd/red_cmd) is exactly
+       su_top_compile.py's quarter layout (su_top_compile.py:20-21, 71-80).  CONFIRMED by the die.v slice map.
+       control = su_arith_generate.FIELDS (1742 b, su_arith_generate.py:18-30) lowered by su_arith_lower.lower()
+       (canonical dispatch -> affine N512 issue groups; quarter q owns positions [128q,128q+128), su_arith_lower.py:58-66).
+       vmr {v,sector16,grp4,row9} / vmw {v,src,grp4,row9,sector16,mask8} and their edges: ot_hbm_su_static_pgslice.sv:
+       14-22 (FILL commit E+13; DRAIN LG write E+4, done +7).  Column image: su_programme_compile.lower_columns
+       (config bank = 32 x column + local; 16 edges of 16-b dictionary index per row; leaf caps 3/13).
+       Start -> command line 0 at the consumer = DEPTH(1)+4 = 5 edges (pgcol.sv:16-17 "start advance DEPTH+4");
+       config writes while idle, >= 2 edges before start (pgcol.sv:23-25).  Programme capacity EDGES 7111 a start
+       (pgcol.sv:56): one programme per SU record, reloaded while the producer is idle (load-window conflicts listed).
+  IDX  hb_idx__qctl_SW (ot_hbm_idx_qctl_static.sv) programme bus from col_idx (outside): col_idx__pw_we/pw_addr/pw_data,
+       start col_idx__start_v; 32-b instruction, 8 a 256-b row (ot_hbm_idx_calendar_static.sv:2-5); words from
+       tools/hbm_idx_static_calendar.compile_program (INDEX microprogram).  ASSUMED for IDX.TOPK route.top6: that
+       compiler is the indexer programme, not parameterised by the MoE-router shape -> flagged.
+  SFU / COLL / HC / DMA / SM / host CP: target ports listed, image format NOT emitted (flag 'format_open'); records
+       BLOCKED by an HBM-WIRE datapath gap carry 'blocked_by' (coverage.json grade).
+ASSUMPTIONS (flagged in the output): serial edge = ceil(3 x stream cycle / 4) (3:4 serial domain, AGENTS.md clock
+domains); the SU quarter-0 VM placement is the compiler's own (quarter-packed, sector s -> bank s mod 8 = store
+group s mod 16, pgslice.sv:9-11; sector = q<<13 | row<<4 | hi<<3 | port as su_top_compile.py:113); VM operand words
+enter as 'M' (memory preload) events -- the slice has no VM input port, the bench decides (producer replay or
+image load); reductions (sut.red) need the reducer join calendar su_arith_lower lists as open -> flagged.
+Fixture data: results/rtl/hbm_<d>_layer_tput_1018/fixtures (sibling fork); when absent the operand words are a
+seeded placeholder (field inputs_placeholder true) and the expected words are computed from them with hdc_golden.
+
+  PYTHONPATH=tools python3 -m hbm_layer_vehicle.layer_images --design ds --layer 0 --boundary B.json --out DIR
+      [--records 4,31] [--programme ds_rank0_program.json] [--priced priced_layers.json] [--coverage coverage.json]
+"""
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import math
+import subprocess
+import sys
+from pathlib import Path
+
+import numpy as np
+
+TOOLS = Path(__file__).resolve().parents[1]
+ROOT = TOOLS.parent
+for p in (TOOLS, TOOLS / "hbm_static", TOOLS / "hgi_adapters"):
+    sys.path.insert(0, str(p))
+
+SB_W, Q_W = 2422, dict(control=1742, vmr=240, vmw=312, rf=54, red=74)
+START_ADVANCE, CFG_LEAD, EDGES_MAX = 5, 2, 7111
+FILL_COMMIT, LANE_FETCH, DRAIN_DONE = 13, 3, 11       # pgslice.sv:14-22
+SETUP_TO_EMIT = 8                                       # su_arith_compile.py: ld at cycle 0, emits from cycle 8
+# first lane output after the setup line: su_top_compile FO = 8 + 23 + 4(MLAT-3) + (ALAT-3) + LEAF + 4 PIN_REG with
+# the die's su_<q><g> parameters MLAT 4, ALAT 3, LEAF 1, PIN_REG 0 (die.v su_SW0 #(...))
+FIRST_OUT = 8 + 23 + 4 * (4 - 3) + 0 + 1 + 0
+DS_PROGRAMME = ROOT / "results/arch/hgi_programs_20261010/inputs/ds_rank0_program.json"
+
+
+def serial(stream_cyc):
+    return int(math.ceil(3 * float(stream_cyc) / 4))
+
+
+def sha(b):
+    return hashlib.sha256(b).hexdigest()
+
+
+# --------------------------------------------------------------------------------------------- programme / dispatches
+def ds_dispatches(prog_json, layer):
+    """per programme record index of the layer: (record, effective dispatch dict | None), via the sequencer Ref
+    (su_program_inventory.canonical_dispatches, generalised to any layer and to repeated tags)."""
+    import su_bench as SB
+    from hgi_sim import records as SR
+    program = json.loads(Path(prog_json).read_text())
+    ent = program["layers"][layer]["records"]
+    words, recs = [], []
+    for e in ent:
+        payload = bytes.fromhex(e["hex"])
+        r, _ = SR.decode_one(payload, 0)
+        r.tag = e["tag"]
+        recs.append(r)
+        words += [int.from_bytes(payload[q:q + 16], "little") for q in range(0, len(payload), 16)]
+    words += SB.C.SV.record(SB.C.SV.header("CTL", "END"),
+                            descs={"A": SB.C.SV.mdesc(space=1, fmt=5, base=(1 << 18) - 16, n=1, m=1)})
+    trace, _ = SB.C.SV.Ref(words, 0, 0, (1 << 20) - 1, 0, 129280, 1 << 20, {}).run()
+    pc_of, pc = {}, 0
+    for k, r in enumerate(recs):
+        pc_of[pc] = k
+        pc += SR.rec_bytes(r) // 16
+    disp = {}
+    for d in trace:
+        k = pc_of.get(d["rec"])
+        if k is not None and k not in disp:
+            disp[k] = d
+    return [(recs[k], disp.get(k), ent[k]) for k in range(len(recs))]
+
+
+# ------------------------------------------------------------------------------------------------------- SU golden
+def vop_golden(sut, ops):
+    """elementwise SU.VOP semantics of the lane datapath -- the operator model of su_arith_compile.py:63-85,
+    generalised to the record's immediates (independent NumPy FP32 RNE, hdc_golden)."""
+    from hdc_golden import add, mul, to_bf16
+    f = lambda u: np.uint32(u).view(np.float32)
+    a, b, c, d = (ops.get(k) for k in "ABCD")
+    aa = to_bf16(a) if sut["a_rnd"] else a.copy()
+    if sut["a_relu"]:
+        aa = np.where(np.signbit(aa), np.float32(0), aa).astype(np.float32)
+    if sut["a_min"]:
+        aa = np.minimum(aa, f(sut["imm3"])).astype(np.float32)
+    cc = np.clip(c, -f(sut["imm3"]), f(sut["imm3"])) if (sut["c_clip"] and c is not None) else c
+    x, m = aa.copy(), sut["m1"]
+    if m in (1, 2, 3):
+        x = mul(aa, b if m == 1 else aa if m == 2 else f(sut["imm1"]))
+    if m == 6:
+        x = np.maximum(aa, b).astype(np.float32)
+    if sut["m2"]:
+        x = mul(x, cc if sut["m2"] == 1 else f(sut["imm1"]))
+    if sut["qm"]:
+        n = len(x)
+        neg = (np.ones(n, bool) if sut["qm"] == 2 else np.arange(n) % 2 == 0 if sut["qm"] == 3 else
+               np.arange(n) % 2 == 1 if sut["qm"] == 4 else np.zeros(n, bool))
+        qv = mul(cc, np.where(neg, -d, d))
+    ad = sut["ad"]
+    if ad:
+        x = add(x, qv if ad == 1 else cc if ad == 2 else -b if ad == 3 else f(sut["imm2"]) if ad == 4 else d)
+    e1 = sut["e1"]
+    if e1 in (1, 3):
+        x = mul(x, cc if e1 == 1 else f(sut["imm2"]))
+    if e1 in (2, 4):
+        x = add(x, cc if e1 == 2 else f(sut["imm2"]))
+    if sut["e2"]:
+        x = mul(x, b if sut["e2"] == 1 else f(sut["imm1"]))
+    bits = np.asarray(x, np.float32).view(np.uint32).copy()
+    if sut["rnd"]:
+        bits = ((bits.astype(np.uint64) + 0x7fff + ((bits >> 16) & 1)) & 0xffff0000).astype(np.uint32)
+    return bits
+
+
+# ---------------------------------------------------------------------------------------------- SU quarter programme
+class QLine:
+    """one quarter's command line stream (su_top_compile.Prog layout, one quarter)."""
+
+    def __init__(s):
+        s.f = {k: {} for k in Q_W}
+
+    def put(s, fld, e, sh, w, val):
+        cur = s.f[fld].get(e, 0)
+        assert (cur >> sh) & ((1 << w) - 1) == 0, ("slot busy", fld, e, sh)
+        s.f[fld][e] = cur | (val << sh)
+
+    def vmr(s, e, p, sector, grp, row):
+        s.put("vmr", e, p * 30, 30, (1 << 29) | (sector << 13) | (grp << 9) | row)
+
+    def vmw(s, e, p, src, grp, row, sector, mask):
+        s.put("vmw", e, p * 39, 39, (1 << 38) | (src << 37) | (grp << 33) | (row << 24) | (sector << 8) | mask)
+
+    def lines(s):
+        n = 1 + max([max(d) for d in s.f.values() if d] or [0])
+        out = []
+        for e in range(n):
+            v = s.f["control"].get(e, 0)
+            for k in ("vmr", "vmw", "rf", "red"):
+                v = (v << Q_W[k]) | s.f[k].get(e, 0)
+            out.append(v)
+        return out
+
+
+class Placement:
+    """layer-global quarter VM placement (compiler's own): logical VM sector -> physical sector of quarter q.
+    A 128-lane issue block's group k (lanes 8k..8k+7) must sit in a sector on VM port k mod 8 (pgslice.sv:9-11,
+    vmr 'port p fills store groups p and p+8'); physical sector = q<<13 | row<<3 | port (bank = port).  A logical
+    sector is placed on first touch and keeps its place, so producer -> consumer records chain inside the slice;
+    a later touch on another port is a placement conflict (needs an F2 re-placement copy, counted)."""
+
+    def __init__(s, q):
+        s.q, s.map, s.nxt, s.written, s.conflicts = q, {}, [0] * 8, set(), []
+
+    def get(s, lsec, port, why):
+        if lsec in s.map:
+            ps = s.map[lsec]
+            if ps % 8 != port:
+                s.conflicts.append(dict(logical_sector=lsec, placed_port=ps % 8, wanted_port=port, at=why))
+            return ps
+        row = s.nxt[port]
+        s.nxt[port] += 1
+        assert row < 1 << 10, "quarter VM slice full"
+        s.map[lsec] = (s.q << 13) | (row << 3) | port
+        return s.map[lsec]
+
+
+def su_record(raw, q=0, rng=None, data=None, place=None, tag=""):
+    """lower one SU dispatch for quarter q: control (su_arith_lower), fill/drain calendars, expected VM words.
+    Returns dict(status, lines, preload, expect, ...) with explicit reasons when v1 cannot emit a runnable image."""
+    import su_arith_lower as L
+    import su_program_inventory as I
+    from su_arith_compile import pack, physical_word
+    from su_arith_generate import FIELDS
+    row, sched = L.lower(raw)
+    _, unit, sut, desc = I.decode(raw)
+    res = dict(lowering={k: v for k, v in row.items() if k != "sut"}, sut=sut, reasons=[])
+    if not row["supported"]:
+        res.update(status="unsupported_lowering", reasons=row["reasons"])
+        return res
+    if row.get("empty"):
+        res.update(status="empty")
+        return res
+    if sut["red"]:
+        res["reasons"].append("reducer_join_calendar_open (su_arith_lower open: scalar_reducer_external_joins; "
+                              "golden csum8 tree order must be matched)")
+    roles = [r for r in "ABCD" if r in desc]
+    for r in roles:
+        md = desc[r]
+        if md.ibcast or (md.istride or 1) != 1:
+            res["reasons"].append(f"operand {r} broadcast/strided: needs RF-broadcast (srcs) calendar")
+    off = {n: 0 for n, _ in FIELDS}
+    pos = 0
+    for n, w in reversed(FIELDS):
+        off[n] = pos
+        pos += w
+    get = lambda v, n: (v >> off[n]) & ((1 << dict(FIELDS)[n]) - 1)
+    # per issue group: the quarter's 128 lanes' logical VM word address of every role (vb + lane terms)
+    ls = get(sched[0][q], "ls")
+    terms = get(sched[0][q], "ld_c")
+    lanes = np.arange(128)
+    tsum = lambda s: np.array([sum((terms >> (24 * (s * 10 + k))) & 0xffffff for k in range(7) if l >> k & 1)
+                               for l in lanes], dtype=np.int64)
+    T = {s: tsum(s) for s in range(5)}
+    no, ni = desc["A"].m, raw >> 2176
+    groups = []
+    for g, words in enumerate(sched):
+        w = words[q]
+        vb = get(w, "vb")
+        ov, iv = get(w, "o_v"), get(w, "i_v")
+        act = np.array([(ov + (l >> ls)) < no and (iv + (l & ((1 << ls) - 1))) < ni for l in lanes])
+        addr = {r: ((vb >> (24 * s)) & 0xffffff) + T[s] for s, r in enumerate("ABCDO") if r in desc}
+        groups.append(dict(word=w, act=act, addr=addr))
+    # quarter-packed VM placement (compiler's own) + store rows; fill / issue / drain calendar
+    QL, preload, expect = QLine(), {}, []
+    place = place if place is not None else Placement(q)
+    fills, drains = [], []
+    vals = {}
+    srow = {r: 0 for r in "ABCDO"}
+    fill_e = [0] * 8                         # next free fill edge per VM port (one read sector / bank / edge)
+    e_issue = []
+    rows_used = 0
+    for g, G in enumerate(groups):
+        last_commit = 0
+        for r in roles:
+            st_row = rows_used
+            rows_used += 1
+            G.setdefault("srow", {})[r] = st_row
+            for k in range(16):
+                ln = slice(8 * k, 8 * k + 8)
+                if not G["act"][ln].any():
+                    continue
+                la = G["addr"][r][8 * k:8 * k + 8]
+                p = k % 8
+                if not (la[0] % 8 == 0 and all(int(la[j]) == int(la[0]) + j for j in range(8))):
+                    res["reasons"].append(f"operand {r} group {k} not one aligned VM sector")
+                    continue
+                sec = place.get(int(la[0]) >> 3, p, f"{tag}:{r}")
+                e = fill_e[p]
+                fill_e[p] = e + 1
+                QL.vmr(e, p, sec, k, st_row)
+                fills.append((int(la[0]) >> 3, e))
+                last_commit = max(last_commit, e + FILL_COMMIT)
+                if (int(la[0]) >> 3) not in place.written:
+                    preload[sec] = [int(a) for a in la]      # not produced earlier in this run: enters as an image
+        e_issue.append(last_commit)
+    # control lines: setup (ld) then one emit per issue group (issue edges non-decreasing, after the fills commit)
+    setup = max(0, min(e_issue) - SETUP_TO_EMIT) if e_issue else 0
+    ctl0 = groups[0]["word"]
+    vbmask = ((1 << 120) - 1) << off["vb"]
+
+    def with_vb(w, G):
+        vb = 0
+        for s, r in enumerate("ABCDO"):
+            if r in desc:
+                rr = G["srow"].get(r, G["srow"].get("A", 0)) if r != "O" else G["orow"]
+                vb |= physical_word(q, rr) << (24 * s)
+        return (w & ~vbmask) | (vb << off["vb"])
+
+    out_base = rows_used
+    for g, G in enumerate(groups):
+        G["orow"] = out_base + g
+    QL.f["control"][setup] = (with_vb(ctl0, groups[0]) | (1 << off["ld"])) & ~(1 << off["emit"])
+    e = setup + SETUP_TO_EMIT
+    issue_at = []
+    for g, G in enumerate(groups):
+        e = max(e, e_issue[g] - LANE_FETCH)
+        QL.f["control"][e] = with_vb(G["word"], G)
+        issue_at.append(e)
+        e += 1
+    # drain the O words of every issue group: store row orow -> VM sector (quarter-packed), after the lane write
+    drain_e = [0] * 8
+    commits = []
+    if "O" in desc:
+        for g, G in enumerate(groups):
+            ready = setup + FIRST_OUT + (issue_at[g] - setup - SETUP_TO_EMIT)
+            for k in range(16):
+                ln = slice(8 * k, 8 * k + 8)
+                m = G["act"][ln]
+                if not m.any():
+                    continue
+                p = k % 8
+                de = max(ready, drain_e[p])
+                drain_e[p] = de + 1
+                la = G["addr"]["O"][8 * k:8 * k + 8]
+                if not (la[0] % 8 == 0 and all(int(la[j]) == int(la[0]) + j for j in range(8))):
+                    res["reasons"].append(f"output group {k} not one aligned VM sector")
+                    continue
+                sec = place.get(int(la[0]) >> 3, p, f"{tag}:O")
+                place.written.add(int(la[0]) >> 3)
+                mask = int(sum(1 << j for j in range(8) if m[j]))
+                QL.vmw(de, p, 0, k, G["orow"], sec, mask)
+                commits.append(de + DRAIN_DONE)
+                drains.append((int(la[0]) >> 3, de + DRAIN_DONE))
+                expect.append(dict(sector=sec, mask=mask, edge=de + DRAIN_DONE,
+                                   words=[int(a) for a in G["addr"]["O"][8 * k:8 * k + 8]]))
+    # operand values (fixture or seeded placeholder) and the expected O words (hdc_golden)
+    rng = rng or np.random.default_rng(0)
+    logical = sorted({a for v in preload.values() for a in v})
+    res["inputs_placeholder"] = False
+    if data is None:
+        data = {}
+    for a_ in logical:
+        if a_ not in data:
+            data[a_] = np.float32(rng.standard_normal())
+            res["inputs_placeholder"] = True
+    if not sut["red"] and "O" in desc and not res["reasons"]:
+        # elementwise: lane l of group g computes O[addr_O] from A..D at the same lane
+        outv = {}
+        for g, G in enumerate(groups):
+            idx = np.nonzero(G["act"])[0]
+            ops = {r: np.array([data[int(a)] for a in G["addr"][r][idx]], np.float32) for r in roles}
+            bits = vop_golden(sut, ops)
+            for l, b in zip(idx, bits):
+                outv[int(G["addr"]["O"][l])] = int(b)
+                data[int(G["addr"]["O"][l])] = np.uint32(b).view(np.float32)   # chained consumers read it
+        for x in expect:
+            x["value"] = [outv.get(a) for a in x["words"]]
+    if res["reasons"]:
+        res["status"] = "v1_unsupported"
+    res.update(status=res.get("status", "emitted"), ql=QL, fills=fills, drains=drains, lines=QL.lines(), preload=preload, expect=expect,
+               data={str(a): f"{int(np.float32(data[a]).view(np.uint32)):08x}" for a in logical},
+               setup_edge=setup, issue_edges=issue_at, last_commit=max(commits) if commits else None,
+               fill_sectors=len(preload), drain_sectors=len(expect))
+    return res
+
+
+def column_image(lines, work):
+    """quarter line stream -> pslice_c5 configuration writes (su_programme_compile.lower_columns)."""
+    import su_programme_compile as PC
+    work.mkdir(parents=True, exist_ok=True)
+    (work / "quarter.mem").write_text("".join(f"{v:0{(SB_W + 3) // 4}x}\n" for v in lines))
+    man = PC.lower_columns(work / "quarter.mem", work / "cols", line_bits=SB_W)
+    cfg = [(int(l[:4], 16), int(l[4:6], 16), l[6:]) for l in (work / "cols/config.mem").read_text().split()]
+    return man, cfg
+
+
+# ------------------------------------------------------------------------------------------------------------ main
+UNIT_PORTS = dict(SU=["su_prog__r_we", "su_prog__r_bank", "su_prog__r_row", "su_prog__r_data", "su_prog__r_start",
+                      "su_prog__r_len"],
+                  IDX=["col_idx__pw_we", "col_idx__pw_addr", "col_idx__pw_data", "col_idx__start_v", "col_idx__prm"],
+                  HC=["hc_eng__qi_v", "hc_eng__qi_word", "hc_eng__qd_v", "hc_eng__result"],
+                  COLL=["host_cp_ingress__cfg_v", "host_cp_ingress__cfg_data", "host_cp_ingress__desc_v",
+                        "host_cp_ingress__launch_v", "ep_S0__rx_pin_flit", "ep_S1__rx_pin_flit"],
+                  SFU=["host_cp_ingress__cfg_v", "host_cp_ingress__cfg_data"], SM=[], DMA=[], ATT=[], FUSED=[])
+
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    ap.add_argument("--design", choices=["ds", "qwen"], default="ds")
+    ap.add_argument("--layer", default="0")
+    ap.add_argument("--priced", type=Path, default=ROOT / "results/rtl/hbm_ds_layer_tput_1018/priced_layers.json")
+    ap.add_argument("--coverage", type=Path, default=ROOT / "results/rtl/hbm_ds_layer_tput_1018/coverage.json")
+    ap.add_argument("--programme", type=Path, default=DS_PROGRAMME)
+    ap.add_argument("--boundary", type=Path, required=True)
+    ap.add_argument("--records", help="comma list of priced record indices (default: all)")
+    ap.add_argument("--quarter", type=int, default=0, help="SU quarter of the slice (SW = 0)")
+    ap.add_argument("--load-gap", type=int, default=16, help="serial edges between reset release and layer t0 slack")
+    ap.add_argument("--reload-gap", type=int, default=600, help="idle serial edges after which a new SU programme is loaded")
+    ap.add_argument("--out", type=Path, required=True)
+    a = ap.parse_args()
+    if a.design == "qwen":
+        sys.exit("layer_images: Qwen D4G8 programme source (qwen_d4g_proof program.hgi1) not wired yet -- see lane notes")
+    bnd = json.loads(a.boundary.read_text())
+    inports = {e["name"]: e for e in bnd["inputs"]}
+    pr = json.loads(a.priced.read_text())["segments"][a.layer]
+    cov = {}
+    if a.coverage.exists():
+        cv = json.loads(a.coverage.read_text())
+        cov = {r["i"]: r for r in cv["layers"].get(a.layer, {}).get("rows", [])}
+    lay = int(a.layer) if a.layer.isdigit() else None
+    if lay is None:
+        sys.exit("layer_images: head segment needs the head programme (ds_rank0_program has layers only)")
+    prog = ds_dispatches(a.programme, lay)
+    recs = pr["records"]
+    aligned = len(prog) == len([r for r in recs if r["unit"] != "CTL"]) or len(prog) == len(recs)
+    want = set(int(x) for x in a.records.split(",")) if a.records else None
+    a.out.mkdir(parents=True, exist_ok=True)
+    events, manifest, t_su_free = [], [], 0
+    rng = np.random.default_rng(1018)
+    place, vm_data = Placement(a.quarter), {}
+    # layer t0 (serial): reset relay 3 edges + the first record's whole configuration load + slack
+    pending = []
+    for r in recs:
+        if want is not None and r["i"] not in want:
+            continue
+        if r["unit"] == "CTL":
+            continue
+        ent = dict(i=r["i"], unit=r["unit"], op=r["orig_op"], tag=r["tag"], start=r["start"], end=r["end"],
+                   cls=r["cls"], grade=cov.get(r["i"], {}).get("grade"),
+                   blocked_by=cov.get(r["i"], {}).get("datapath_gaps") or [],
+                   open_gaps=cov.get(r["i"], {}).get("open_gaps") or [])
+        pk = r["i"] if aligned and r["i"] < len(prog) else None
+        if pk is not None and prog[pk][2]["tag"] != r["tag"]:
+            ent["programme_tag_mismatch"] = prog[pk][2]["tag"]
+        unit = r["orig_op"].split(".")[0]
+        ent["target_ports"] = [p for p in UNIT_PORTS.get(unit, []) if p in inports]
+        if unit == "SU" and pk is not None and prog[pk][1] is not None:
+            import su_bench as SB
+            raw = SB.pack_rec(prog[pk][1])
+            su = su_record(raw, a.quarter, rng, data=vm_data, place=place, tag=r["tag"])
+            ent.update(status=su["status"], reasons=su["reasons"], lowering=su["lowering"],
+                       inputs_placeholder=su.get("inputs_placeholder"))
+            if su.get("lines") and su["status"] == "emitted":
+                d = a.out / "images" / f"r{r['i']:03d}_su"
+                d.mkdir(parents=True, exist_ok=True)
+                ent.update(edges=len(su["lines"]), fill_sectors=su["fill_sectors"], drain_sectors=su["drain_sectors"])
+                (d / "record.json").write_text(json.dumps(dict(preload={str(k): v for k, v in su["preload"].items()},
+                                                               expect=su["expect"], data=su["data"]), indent=0))
+                pending.append((r, ent, su))
+        elif unit == "IDX":
+            from hbm_idx_static_calendar import compile_program
+            try:
+                p = compile_program()
+                words = p["program"] if isinstance(p, dict) and "program" in p else p
+                ent.update(status="emitted_unparameterised", reasons=[
+                    "IDX image = hbm_idx_static_calendar INDEX microprogram; not parameterised by the record shape "
+                    f"({r['tag']})"], idx_words=len(words) if hasattr(words, "__len__") else None)
+            except Exception as ex:  # noqa: BLE001
+                ent.update(status="format_open", reasons=[f"compile_program: {ex!r}"])
+        else:
+            ent.update(status="format_open", reasons=[f"{unit} programme image format not emitted by v1"])
+        if ent["blocked_by"]:
+            ent["status"] = "blocked:" + ent["status"]
+        manifest.append(ent)
+    # SU programmes: adjacent SU records share ONE pgp programme (one start) when they fit EDGES 7111 and the gap to
+    # the next is too short to reload; each programme is loaded while the producer is idle, >= CFG_LEAD before start.
+    progs = []
+    for r, ent, su in pending:
+        want0 = serial(r["start"]) - su["setup_edge"]               # desired line-0 edge, relative to t0
+        P = progs[-1] if progs else None
+        if P is None or want0 - P["end"] >= a.reload_gap or want0 - P["base"] + len(su["lines"]) > EDGES_MAX:
+            P = dict(base=want0, end=want0, ql=QLine(), recs=[])
+            progs.append(P)
+        o = max(0, want0 - P["base"])
+        while True:                                                     # first offset without a slot collision
+            clash = any((o + e) in P["ql"].f[fld] and (P["ql"].f[fld][o + e] & v) for fld in Q_W
+                        for e, v in su["ql"].f[fld].items())
+            if not clash:
+                break
+            o += 1
+        for fld in Q_W:
+            for e, v in su["ql"].f[fld].items():
+                P["ql"].f[fld][o + e] = P["ql"].f[fld].get(o + e, 0) | v
+        P["end"] = max(P["end"], P["base"] + o + len(su["lines"]))
+        P["recs"].append((r, ent, su, o))
+    cfgs = []
+    for k, P in enumerate(progs):
+        lines = P["ql"].lines()
+        man, cfg = column_image(lines, a.out / "images" / f"su_prog{k:02d}")
+        P.update(lines=lines, cfg=cfg, man=man)
+    t0 = 3 + (len(progs[0]["cfg"]) if progs else 0) + CFG_LEAD + START_ADVANCE + a.load_gap
+    busy_until, shift, written_at = 3, 0, {}
+    for k, P in enumerate(progs):
+        line0 = t0 + P["base"] + shift
+        s_edge = line0 - START_ADVANCE
+        load0 = s_edge - CFG_LEAD - len(P["cfg"])
+        note = None
+        if load0 < busy_until:
+            d = busy_until - load0
+            note = f"load_window_conflict: programme {k} needs {len(P['cfg'])} idle edges, shifted +{d}"
+            shift += d
+            load0, s_edge, line0 = load0 + d, s_edge + d, line0 + d
+        for j, (b, row, data) in enumerate(P["cfg"]):
+            for port, val in (("su_prog__r_we", 1), ("su_prog__r_bank", b), ("su_prog__r_row", row),
+                              ("su_prog__r_data", int(data, 16))):
+                events.append(dict(k="D", dom="serial", cyc=load0 + j, port=port, val=f"{val:x}", src="image:SU",
+                                   prog=k))
+        events.append(dict(k="D", dom="serial", cyc=load0 + len(P["cfg"]), port="su_prog__r_we", val="0",
+                           src="image:SU", prog=k))
+        events.append(dict(k="D", dom="serial", cyc=s_edge, port="su_prog__r_len", val=f"{len(P['lines']):x}",
+                           src="image:SU", prog=k))
+        events.append(dict(k="D", dom="serial", cyc=s_edge, port="su_prog__r_start", val="1", src="image:SU", prog=k))
+        events.append(dict(k="D", dom="serial", cyc=s_edge + 1, port="su_prog__r_start", val="0", src="image:SU",
+                           prog=k))
+        busy_until = line0 + len(P["lines"])
+        cfgs.append(dict(programme=k, records=[x[0]["i"] for x in P["recs"]], edges=len(P["lines"]),
+                         config_writes=len(P["cfg"]), load_serial=load0, start_serial=s_edge,
+                         image=str((a.out / "images" / f"su_prog{k:02d}/cols/config.mem").relative_to(a.out)),
+                         image_sha256=sha((a.out / "images" / f"su_prog{k:02d}/cols/config.mem").read_bytes()),
+                         columns=P["man"]["columns"], note=note))
+        for r, ent, su, o in P["recs"]:
+            l0 = line0 + o
+            for sec, words in su["preload"].items():
+                events.append(dict(k="M", dom="stream", cyc=0, mem="vm", quarter=a.quarter, sector=sec,
+                                   bank=sec % 8, row=(sec & 0x1fff) >> 3,
+                                   val="".join(su["data"][str(w)] for w in reversed(words)), src="image:VM_preload",
+                                   rec=r["i"]))
+            for x in su["expect"]:
+                if x.get("value") is None or any(v is None for v in x["value"]):
+                    continue
+                val = "".join(f"{v:08x}" for v in reversed(x["value"]))
+                msk = "".join("ffffffff" if (x["mask"] >> j) & 1 else "00000000" for j in reversed(range(8)))
+                events.append(dict(k="C", dom="serial", cyc=l0 + x["edge"], port=f"vm:{x['sector']:x}", val=val,
+                                   mask=msk, src="golden:hdc_golden", rec=r["i"]))
+            for ls_, e in su["fills"]:                  # RAW: a chained operand is filled after its producer's commit
+                w = written_at.get(ls_)
+                if w is not None and l0 + e < w:
+                    ent.setdefault("reasons", []).append(f"raw_hazard: sector {ls_} filled at {l0 + e} < commit {w}")
+            for ls_, e in su["drains"]:
+                written_at[ls_] = l0 + e
+            ent.update(programme=k, line0_serial=l0, compiled_commit_serial=l0 + (su["last_commit"] or 0),
+                       priced_end_serial=t0 + serial(r["end"]))
+            ent["commit_slack_edges"] = ent["priced_end_serial"] - ent["compiled_commit_serial"]
+            if note:
+                ent.setdefault("reasons", []).append(note)
+    events.sort(key=lambda x: (x["dom"], x["cyc"], x["k"]))
+    for p in {e["port"] for e in events if e["k"] == "D"}:
+        assert p in inports, f"replay drives {p}, not a slice input port"
+    rep = dict(schema="opentallas.hbm_slice_replay.v1", slice=bnd.get("slice_top", "sw"), design=a.design,
+               layer=a.layer, t0_serial=t0, priced_layer_cycles=pr["cycles"],
+               assumptions=["serial = ceil(3*stream/4)", "SU quarter VM placement quarter-packed (compiler's own)",
+                            "VM operands as M preload events (no slice VM input port)",
+                            f"start advance {START_ADVANCE}, config lead {CFG_LEAD} (pgcol.sv header)"],
+               events=events)
+    (a.out / "replay.json").write_text(json.dumps(rep) + "\n")
+    man = dict(schema="opentallas.hbm_layer_images.v1", design=a.design, layer=a.layer,
+               priced=str(a.priced), programme=str(a.programme), programme_sha256=sha(a.programme.read_bytes()),
+               boundary=str(a.boundary), records=manifest, placement_conflicts=place.conflicts,
+               placed_sectors=len(place.map), su_programmes=cfgs, t0_serial=t0,
+               counts={k: sum(1 for m in manifest if m["status"] == k) for k in sorted({m["status"] for m in manifest})})
+    (a.out / "manifest.json").write_text(json.dumps(man, indent=1) + "\n")
+    print(json.dumps(dict(records=len(manifest), events=len(events), counts=man["counts"], t0_serial=t0)))
+
+
+if __name__ == "__main__":
+    main()

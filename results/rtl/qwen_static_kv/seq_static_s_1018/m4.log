@@ -1,0 +1,10 @@
+SEQ_GOLD G_CMD=617 G_Q0=618 G_KV0=652 G_LPRUN=1 G_AQ=47
+ERR tk cyc 2654 succ 0912a20c87bcbc9c9e5a3572 ref 0802a20c87bcbc9c9e5a3572
+ERR kst cyc 2654 succ 1100000000 ref 0000000000
+ERR tk cyc 2655 succ 1513dd9dd858c693c1be4f7d ref 1403dd9dd858c693c1be4f7d
+ERR kst cyc 2655 succ 1100000000 ref 0000000000
+ERR tk cyc 2656 succ 151bdd9dd858c693c1be4f7d ref 140bdd9dd858c693c1be4f7d
+ERR kst cyc 2656 succ 1100000000 ref 0000000000
+ERR tk cyc 2657 succ 1517dd9dd858c693c1be4f7d ref 1407dd9dd858c693c1be4f7d
+ERR fault phase: first succ fault cyc 2654 kst 1100001000
+SEQ_S FAIL layers=36 aq=4752 kc=288 hs=36 drn_toggles=73 errors=491291 mut=4 lockstep_vs_p=every_edge

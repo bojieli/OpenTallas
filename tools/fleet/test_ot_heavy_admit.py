@@ -48,15 +48,27 @@ if __name__ == "__main__":
 
 
 class DieFirst(unittest.TestCase):
-    """DIE-FIRST (owner 2026-10-15 23:50): a waiting die trial's charge is held against non-die requests."""
-    def test_hold_only_for_a_die_trial_that_fits_the_host(self):
+    """DIE-FIRST v2 (2026-10-18): only a die job the host admits NOW is held against non-die requests (order, not
+    reservation: a die job that does not fit never leaves memory idle)."""
+    def test_hold_only_for_a_die_job_that_fits_now(self):
         from unittest.mock import patch
         with patch.object(R, "prio_waiters", return_value=[(10, 400), (20, 100)]):
-            self.assertEqual(R.die_hold(1024, 300, 51, {}, 0.7), 400)        # oldest waiter, 0.7 x 400 fits 1024-51
-        with patch.object(R, "prio_waiters", return_value=[(10, 1400), (20, 100)]):
-            self.assertEqual(R.die_hold(1024, 300, 51, {}, 0.7), 100)        # 0.7 x 1400 can never start here: skipped
+            self.assertEqual(R.die_hold(1024, 300, 51, {}, 0.7), 100)        # 400 > admissible 300: skipped
+        with patch.object(R, "prio_waiters", return_value=[(10, 200), (20, 100)]):
+            self.assertEqual(R.die_hold(1024, 300, 51, {}, 0.7), 200)        # oldest that fits
+        with patch.object(R, "prio_waiters", return_value=[(10, 48), (20, 48)]):
+            self.assertEqual(R.die_hold(126, 38, 6, {}, 0.7), 0)             # AGIdock 10-18: 48 GB die waiters, 38 admissible
         with patch.object(R, "prio_waiters", return_value=[]):
             self.assertEqual(R.die_hold(1024, 300, 51, {}, 0.7), 0)
+
+    def test_die_like(self):
+        from unittest.mock import patch
+        self.assertTrue(R.die_like(["bash", "x"], "", ["OT_HEAVY_PRIO=die"]))
+        self.assertTrue(R.die_like(["bash", "run_die_sta.sh"]))
+        self.assertTrue(R.die_like(["bash", "x.sh"], "/srv/s/die_grt0/a"))
+        self.assertFalse(R.die_like(["bash", "tools/s81_slice/leaf_bench.sh"], "/srv/s/s81die5/pvrd"))
+        with patch.object(R, "rd", side_effect=lambda p: "# c\n/s81bind3\n" if p == R.PRIO_FILE else ""):
+            self.assertTrue(R.die_like(["bash", "run_all.sh"], "/srv/opentallas-scratch/claude/s81bind3"))
 
     def test_prio_waiters_reads_environ(self):
         import os

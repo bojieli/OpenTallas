@@ -24,7 +24,10 @@ E = 'rtl/qwen_sys/static_embedding_20261014/'
 # es merge child qkd_static_kv_pc_es_merge); its extra RTL dependencies
 PC_EMB_EXTRA = [E + 'qkd_embedding_static_map.sv', E + 'qkd_static_kv_pc_es_merge.sv', E + 'qkd_static_kv_pc_path_emb.sv',
                 # KVJ-C3 2026-10-17: the per-PC parent successor qkd_static_kv_pc_path_fan adds the chain station
-                E + 'qkd_kv_pc_chain_station.sv', E + 'qkd_static_kv_pc_path_fan.sv']
+                E + 'qkd_kv_pc_chain_station.sv',
+                # KV-PLAN-CI 2026-10-17 (coordinator decision 3): the ci-less successors (no legacy controller word ci on
+                # the static die; lockstep-equal to the originals with ci idle, tools/qwen_kv_die/kvplan_ci_nc_gate.sh)
+                S + 'qkd_ctrl_pc_nc.sv', S + 'qkd_static_kv_pc_path_nc.sv', E + 'qkd_static_kv_pc_path_fan_nc.sv']
 
 
 def pc_emb_sources():
@@ -41,7 +44,8 @@ ROLES = {
     'ownership': (S+'qkd_static_kv_ownership.sv', 'qkd_static_kv_ownership_calendar', 1),
     'drain_guard': (S+'qkd_static_kv_ownership.sv', 'qkd_static_kv_drain_guard4', 32),
     # KVJ-C3 2026-10-17: pc_path_emb + the static PC chain station (writer lane -> PC fan-out tap, embedding slot player)
-    'pc_path': (E+'qkd_static_kv_pc_path_fan.sv', 'qkd_static_kv_pc_path_fan', 128),
+    # KV-PLAN-CI 2026-10-17: ... without the legacy controller word ci (qkd_static_kv_pc_path_fan minus ci)
+    'pc_path': (E+'qkd_static_kv_pc_path_fan_nc.sv', 'qkd_static_kv_pc_path_fan_nc', 128),
     'landing': (S+'qkd_static_kv_landing_seg.sv', 'qkd_static_kv_landing_seg', 32),
     'landing_calendar': (S+'qkd_kv_landing_cal.sv', 'qkd_kv_landing_cal', 32),
     'front_calendar': (S+'qkd_kv_front_cal.sv', 'qkd_kv_front_cal', 32),
@@ -367,6 +371,21 @@ def emit(graph_path,out,root=ROOT):
     return report
 
 
+D2D_CAL_IMAGE = 'rtl/qwen_sys/d2d_static_20261015/d2d_cal_image.svh'
+
+
+def compiled_txdp(name='D2D_TXDP_K', root=ROOT):
+    """QXF-LINK (6ef1a097f): TXDP is a REQUIRED qkd/qfd_d2d_static parameter (no default; PR=1 with a zero byte does not
+    elaborate). The die binds the compiler's value from the committed calendar image, never a literal."""
+    m = re.search(r'localparam\s*\[31:0\]\s*' + name + r"\s*=\s*32'h([0-9a-fA-F]{8})\s*;", (root / D2D_CAL_IMAGE).read_text())
+    if not m:
+        raise ValueError(f'{D2D_CAL_IMAGE}: no {name} (compile it: tools/qwen_split/d2d_cal_image_production.sh)')
+    v = int(m.group(1), 16)
+    if any(((v >> (8 * b)) & 0xff) == 0 for b in range(4)):
+        raise ValueError(f'{name} = {v:#010x}: a zero TX port byte is uncompiled')
+    return v
+
+
 def template(root=ROOT):
     """Populate proven ABI joins; leave every unimplemented producer as null.
 
@@ -383,7 +402,7 @@ def template(root=ROOT):
         'vport':dict(MUT=0,DQ=None,RT=None),
         'ectla':dict(STATIC_QK=1,QK_ISSUE_AGE=34,ROW_RETURN_LAT=None,HXK=13),
         'writer':dict(MUT=0,VMAP=1),'writer_programme':dict(MUT=0,VMAP=1),
-        'link':dict(MUT=0,NL=2,PR=1),
+        'link':dict(MUT=0,NL=2,PR=1,TXDP=compiled_txdp(root=root)),
         'embgw':dict(MUT=0),'emb_return_head':dict(MUT=0),'emb_return_hop':{},'emb_join':dict(MUT=0),'row_tx':dict(MUT=0),
         'es_fan_root':dict(MUT=0),
     }

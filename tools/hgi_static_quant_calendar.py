@@ -156,13 +156,17 @@ def compact_record_words(records, issue_cycles, resident_sid):
 QUANT_READ_GROUP, QUANT_WRITE_GROUP = 3, 2   # native NW group indices (die edges hb_quant_NW rq[408:544], wq[4496:6744])
 
 
-def compact_native_nw_programme(records, issue_cycles, resident_sid, layout):
+def compact_native_nw_programme(records, issue_cycles, resident_sid, layout, io_regs=0):
     """Compile real NW bank slots for timestamped record issue, current zero-station pins.
 
     Relative to LCP, record tick t is consumed by engine at t+7. NW ordinal k
     reaches bank at k+7; hence read ordinal=t+1, write ordinal=t+35. Actual
     physical stations must extend this source-derived calendar, never be hidden.
+    io_regs=1 (host IO_REGS=1 registered rr/y boundary, HBMA-QDQ 10-17): +1 bank-return edge and +1 decoder-result edge
+    move the write reservation to t+37; the read reservation stays t+1.
     """
+    if io_regs not in (0,1):raise ValueError('io_regs must be 0 or 1')
+    write_offset=35+2*io_regs
     compact_record_words(records,issue_cycles,resident_sid)
     # H-NETLIST 0600: current native NW = RG5/WG3 (0253 compaction + 0600 retirement): read groups 0 LG, 1 DMA-back,
     # 2 x-load, 3 QUANT, 4 COLL; write groups 0 LG, 1 SM writer, 2 QUANT. Quant read owner code 3, write owner 2.
@@ -170,12 +174,12 @@ def compact_native_nw_programme(records, issue_cycles, resident_sid, layout):
         raise ValueError('Quant compact NW requires the current native RG5/WG3 universal layout')
     fields={f['name']:f for f in layout['fields']}
     commands=[c for record,tick in zip(records,issue_cycles) for c in lower_record(record,tick,resident_sid)]
-    length=max(c['cycle']+35 for c in commands)+5
+    length=max(c['cycle']+write_offset for c in commands)+5
     if length>1024:
         raise ValueError('Actual NW calendar storage exceeds1024 words; native global VM paging/resident profiles required')
     values=[0]*length
     for c in commands:
-        for offset,key,owner,enabled,selected in [(1,'src',QUANT_READ_GROUP,'rslot_v','rslot'),(35,'dst',QUANT_WRITE_GROUP,'wslot_v','wslot')]:
+        for offset,key,owner,enabled,selected in [(1,'src',QUANT_READ_GROUP,'rslot_v','rslot'),(write_offset,'dst',QUANT_WRITE_GROUP,'wslot_v','wslot')]:
             e,s=fields[enabled],fields[selected]
             for j in range(4):
                 bank=(c[key]+j)&7;i=c['cycle']+offset
@@ -221,6 +225,7 @@ def main():
     ap.add_argument('--nw-layout',type=Path,default=Path('results/hbm_static_quant_1015/nw_layout.json'))
     ap.add_argument('--read-station',type=int,default=0)
     ap.add_argument('--write-station',type=int,default=0)
+    ap.add_argument('--io-regs',type=int,choices=[0,1],default=0,help='compact NW: host IO_REGS=1 registered boundary (+2 write edges)')
     a=ap.parse_args()
     if a.compact_records:
         if not a.compact_out:ap.error('--compact-records requires --compact-out')
@@ -235,7 +240,7 @@ def main():
         a.compact_out.parent.mkdir(parents=True,exist_ok=True)
         a.compact_out.write_text(''.join(f'{w:064x}\n' for w in words))
         if a.nw_out:
-            nw_words=compact_native_nw_programme(records,cycles,native['resident_sid'],json.loads(a.nw_layout.read_text()))
+            nw_words=compact_native_nw_programme(records,cycles,native['resident_sid'],json.loads(a.nw_layout.read_text()),a.io_regs)
             a.nw_out.parent.mkdir(parents=True,exist_ok=True)
             a.nw_out.write_text(''.join(f'{w:064x}\n' for w in nw_words))
         a.out.write_text(json.dumps(dict(schema='opentallas.hbm-quant-compact-source-binding.v1',

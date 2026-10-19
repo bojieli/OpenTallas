@@ -21,6 +21,9 @@ reg io_cfg_we=0,io_start_v=0;
  reg [10:0] io_cfg_addr=0;
  reg [255:0] io_cfg_data=0;
  reg [470:0] io_rows[0:IO_ROWS-1];
+ // store-under-test IO image: = io.hex, except r10 (decision B + SFU-PS-4 relays): arith_start 2 rows earlier (io_store_r10.hex)
+ reg [255:0] s_io_cfg_data=0;
+ reg [470:0] s_io_rows[0:IO_ROWS-1];
  wire io_done;
  reg init=0;
  reg [11:0] init_sector=0;
@@ -101,7 +104,7 @@ reg io_cfg_we=0,io_start_v=0;
 `ifdef SFU_PSTORE_R7B
  localparam integer D=10;  // r7b store: r7 + SRAM pipelining: every calendar +3, programme started by the IO word -> +6
 `elsif SFU_PSTORE_R10
- localparam integer D=4;   // r10 store: 11 one-stripe spine leaves + head; datapath unchanged (cfg chain depth only)
+ localparam integer D=5;   // r10 store (SFU-PS-4 relays): io_word +1 output relay; programme start +2 (decision B + row launch relay) absorbed by io_store_r10.hex (arith_start 2 rows earlier) + output relay -> D=5, status 3 [was D=4 before the relays; old text: arith_start 1 row earlier)
 `elsif SFU_PSTORE_R9
  localparam integer D=4;   // r9 store: 4 hardened bank leaves; datapath unchanged (cfg write +1 only)
 `elsif SFU_PSTORE_R7D
@@ -123,7 +126,7 @@ reg io_cfg_we=0,io_start_v=0;
   .cfg_we(cfg_we),.cfg_stripe(cfg_stripe),.cfg_addr(cfg_addr),.cfg_data(cfg_data),
   .start_base(11'd0),.start_limit(12'(NINST)),.start_loops(16'd1),
   .programme_active(s_pact),.programme_done(s_pdone),.programme_ordinal(s_pord),
-  .io_cfg_we(io_cfg_we),.io_cfg_stripe(io_cfg_stripe),.io_cfg_addr(io_cfg_addr),.io_cfg_data(io_cfg_data),
+  .io_cfg_we(io_cfg_we),.io_cfg_stripe(io_cfg_stripe),.io_cfg_addr(io_cfg_addr),.io_cfg_data(s_io_cfg_data),
   .io_start_v(io_start_v),.io_start_base(11'd0),.io_start_limit(12'(IO_ROWS)),.io_start_loops(16'd1),
   .io_active(s_ioact),.io_done(s_iodone),.io_ordinal(s_ioord),.io_word(s_io),.compiler_control(s_ctl),.fault(s_sfault));
  // reference return streams delayed by D (shift registers on the bench side)
@@ -178,6 +181,8 @@ reg io_cfg_we=0,io_start_v=0;
  reg [OW-1:0] ref_od[0:D-1];
 `ifdef SFU_PSTORE_R7B
  localparam integer DS=8;  // status outputs: r6 2 + 6
+`elsif SFU_PSTORE_R10
+ localparam integer DS=3;  // r10 relays (SFU-PS-4): per-row status pre-combine +1
 `else
  localparam integer DS=2;
 `endif
@@ -225,6 +230,11 @@ reg io_cfg_we=0,io_start_v=0;
  initial begin
   $readmemh(`SFU_IMAGE,controls);
   $readmemh({`SFU_DATA_DIR,"/io.hex"},io_rows);
+`ifdef SFU_PSTORE_R10
+  $readmemh({`SFU_DATA_DIR,"/io_store_r10.hex"},s_io_rows);
+`else
+  $readmemh({`SFU_DATA_DIR,"/io.hex"},s_io_rows);
+`endif
   $readmemh({`SFU_DATA_DIR,"/gate.hex"},gates);
   $readmemh({`SFU_DATA_DIR,"/up.hex"},ups);
   $readmemh({`SFU_DATA_DIR,"/gold.hex"},golds);
@@ -254,17 +264,28 @@ reg io_cfg_we=0,io_start_v=0;
   end
   cfg_we=0;repeat(3)@(negedge clk);
   for(integer p=0;p<IO_ROWS;p++)for(integer st=0;st<3;st++)begin
-   reg [470:0] row;
-   row=io_rows[p];
+   reg [470:0] row,srow;
+   row=io_rows[p];srow=s_io_rows[p];
    // Actual IO calendar mutant: suppress the real scalar VM prefetch request.
-   if($test$plusargs("MUT_IO") && p==`SFU_SCALAR_EDGE)row[7:0]=0;
+   if($test$plusargs("MUT_IO") && p==`SFU_SCALAR_EDGE)begin row[7:0]=0;srow[7:0]=0;end
+   s_io_cfg_data=256'(srow>>(222*st));
+   if(st==2)s_io_cfg_data=(s_io_cfg_data&((256'd1<<27)-1))|(256'hc7a1<<240)|(256'(p)<<223);
+   else s_io_cfg_data=(s_io_cfg_data&((256'd1<<222)-1))|(256'hc7a1<<240)|(256'(p)<<223);
    io_cfg_we=1;io_cfg_addr=11'(p);io_cfg_stripe=2'(st);
    io_cfg_data=256'(row>>(222*st));
    if(st==2)io_cfg_data=(io_cfg_data&((256'd1<<27)-1))|(256'hc7a1<<240)|(256'(p)<<223);
    else io_cfg_data=(io_cfg_data&((256'd1<<222)-1))|(256'hc7a1<<240)|(256'(p)<<223);
    @(negedge clk);
   end
+`ifdef SFU_PSTORE_R10
+  // r10n2 host contract (ot_hgi_sfu_programme_store_r10 header): io_start_v >= 4 IDLE edges after the last configuration
+  // write -- the IO2 leaf write lands depth(4)+1 edges after the head pin flop (2 edges per chain hop). With 3 idle edges
+  // the start reaches IO2 before its last row is written and the store raises an IO disagreement fault (SFU-R10N3 10-18).
+  // One-time per calendar load; per-token cost 0. Reference and store see the same start edge.
+  io_cfg_we=0;repeat(4)@(negedge clk);
+`else
   io_cfg_we=0;repeat(3)@(negedge clk);
+`endif
   io_start_v=1;@(negedge clk);io_start_v=0;
   // One actual hardware start; no runtime status polling or per-lane driving.
   repeat(IO_ROWS+10)begin

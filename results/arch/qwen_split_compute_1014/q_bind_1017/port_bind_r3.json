@@ -1,0 +1,3101 @@
+{
+ "schema": "opentallas.die_port_bind.v2",
+ "die_v": "/srv/opentallas-scratch/claude/qbind1017/die_r3.v",
+ "top": "qfd_die",
+ "verdict": "FAIL",
+ "failing": [
+  "port_not_in_rtl",
+  "width_mismatch",
+  "input_unconnected",
+  "undriven_net_bits"
+ ],
+ "summary": {
+  "masters": 118,
+  "instances": 926,
+  "unbound_masters": 0,
+  "stub_masters": 0,
+  "ambiguous_masters": 0,
+  "port_not_in_rtl": 43,
+  "width_mismatch": 1,
+  "input_unconnected": 57,
+  "input_tied": 0,
+  "unparsed_connections": 0,
+  "duplicate_port_connections": 0,
+  "undriven_net_bits": 1072,
+  "multi_driven_net_bits": 0,
+  "top_assigns": 0,
+  "params_not_in_rtl": 0,
+  "strap_ports": 3,
+  "pad_bits": 0
+ },
+ "masters": {
+  "ot_qfd_serdes_112g_x12_phy_s597": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 3,
+   "rtl": "physical/qwen_missing_phy/nface_tall_1017/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597_bb.v",
+   "kind": "model",
+   "ambiguous_defs": null,
+   "examples": [
+    "io_serdes",
+    "io_serdes_1",
+    "io_serdes_2"
+   ],
+   "param_sets": {
+    "{}": 3
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "ot_qfd_ucie_x64_phy": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "physical/qwen_missing_phy/nface_tall_1017/ot_qfd_ucie_x64_phy/ot_qfd_ucie_x64_phy_bb.v",
+   "kind": "model",
+   "ambiguous_defs": null,
+   "examples": [
+    "io_ucie"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "ot_qkvd_ucie_x64_phy": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ext/ot_qkvd_ucie_x64_phy_bb.v",
+   "kind": "model",
+   "ambiguous_defs": null,
+   "examples": [
+    "ucie_kv"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_c_b16_dv": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 48,
+   "rtl": "rtl/physical/qcluster/qfd_c_b16_dv.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "c16_W0_0",
+    "c16_W0_1",
+    "c16_W0_2"
+   ],
+   "param_sets": {
+    "{}": 48
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [
+    "cid",
+    "far",
+    "rs_i"
+   ],
+   "pad_bits": {},
+   "output_open": [
+    "bco0",
+    "bco1",
+    "bco2",
+    "bco3",
+    "rs_o",
+    "tie_hi",
+    "tie_lo"
+   ],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_ckbump": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "rtl/qwen_split/qfd_link_slots.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "ckb_rom"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_clkrx": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "clk_rx"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_collective_static_io_production": {
+   "verdict": "FAIL",
+   "fails": [
+    "INPUT_UNCONNECTED"
+   ],
+   "instances": 1,
+   "rtl": "rtl/physical/ot_qfd_collective_static_io_production.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "io_collective"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [
+    "cmd_mode",
+    "cmd_tag",
+    "cmd_v",
+    "cmd_words",
+    "in_valid"
+   ],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [
+    "fault_code",
+    "out_last",
+    "transport_abort",
+    "transport_cdc_fault",
+    "transport_fault_cause"
+   ],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_d2d_static": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "d2d_rom"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [
+    "transport_fault"
+   ],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_dv_slice2": {
+   "verdict": "FAIL",
+   "fails": [
+    "PORT_NOT_IN_RTL",
+    "INPUT_UNCONNECTED"
+   ],
+   "instances": 12,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ext/qfd_dv_slice2.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "dvs_W0",
+    "dvs_W1",
+    "dvs_W2"
+   ],
+   "param_sets": {
+    "{}": 12
+   },
+   "die_port_not_in_rtl": [
+    "ch_ei",
+    "ch_eo",
+    "ch_wi",
+    "ch_wo",
+    "cmd_ei",
+    "cmd_eo",
+    "cmd_wi",
+    "cmd_wo",
+    "hr_ei",
+    "hr_eo",
+    "hr_wi",
+    "hr_wo",
+    "l9_eo",
+    "l9_wi",
+    "r_b2_source_me_go",
+    "r_b2_source_me_split",
+    "r_ng_io_cmd_free_0",
+    "r_ng_io_out_data_0",
+    "r_ng_io_out_err_0",
+    "r_ng_io_out_rank_0",
+    "r_ng_io_out_valid_0",
+    "r_ng_native_vm_ar_0",
+    "r_ng_seq_cd_d_0",
+    "r_ng_seq_cd_d_512",
+    "r_ng_seq_cd_d_513",
+    "r_ng_seq_cd_d_514",
+    "r_ng_tt_mee_0",
+    "r_ng_tt_mx_0",
+    "r_ng_vm_fault_0",
+    "r_ng_vm_q_0",
+    "r_ng_vm_q_committed_0",
+    "r_selector_l0_selector_fork_0_sel4",
+    "r_tt_ib__rsi_0",
+    "r_tt_ib__rsi_251",
+    "r_tt_ib__rsi_353",
+    "rs_n0",
+    "rs_n1",
+    "rs_s0",
+    "rs_s1",
+    "st_ei"
+   ],
+   "input_unconnected": [
+    "ch_dn_i",
+    "ch_up_i",
+    "cmd_i",
+    "hr_i",
+    "l9_i",
+    "rs_n",
+    "rs_s",
+    "sc_dn_i",
+    "sc_up_i",
+    "st_dn_i",
+    "st_up_i"
+   ],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [
+    "ch_dn_o",
+    "ch_up_o",
+    "cmd_o",
+    "hr_o",
+    "l9_o",
+    "sc_dn_o",
+    "sc_up_o",
+    "st",
+    "st_dn_o",
+    "st_up_o"
+   ],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_embedding_word_provider": {
+   "verdict": "FAIL",
+   "fails": [
+    "INPUT_UNCONNECTED"
+   ],
+   "instances": 1,
+   "rtl": "rtl/qwen_split/qfd_embedding_word_provider.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "embed_prov"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [
+    "core_start",
+    "core_token",
+    "embed_code_addr",
+    "embed_code_re",
+    "embed_scale_addr",
+    "embed_scale_re"
+   ],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [
+    "embed_code_q",
+    "embed_scale_q",
+    "fault"
+   ],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_native59_compute_service": {
+   "verdict": "FAIL",
+   "fails": [
+    "INPUT_UNCONNECTED"
+   ],
+   "instances": 1,
+   "rtl": "rtl/qwen_split/qfd_native59_compute_service.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "native59"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [
+    "kv_waddr",
+    "kv_wdata",
+    "kv_we",
+    "native_issue",
+    "write_commit_line",
+    "write_commit_mask",
+    "write_commit_v"
+   ],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [
+    "completed",
+    "vm_q_epoch",
+    "vm_q_start"
+   ],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_16_EW_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_status_epoch16_1"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_16_NS_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 3,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_emb_word_epoch_0",
+    "rly_sf_emb_expected_epoch_0",
+    "rly_sf_emb_core_epoch_0"
+   ],
+   "param_sets": {
+    "{}": 3
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_16_SW_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 2,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_status_epoch16_0",
+    "rly_sf_host_epoch_0"
+   ],
+   "param_sets": {
+    "{}": 2
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_16_WS_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_emb_fill_epoch_0"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_18_ES_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_result_token_1"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_18_NE_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 2,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_emb_word_token_0",
+    "rly_sf_emb_expected_token_0"
+   ],
+   "param_sets": {
+    "{}": 2
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_18_SE_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_ng_tt_native_tok_0__fo1_2"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_18_SN_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 13,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_ng_tt_native_tok_0_0",
+    "rly_ng_tt_native_tok_0_1",
+    "rly_ng_tt_native_tok_0_2"
+   ],
+   "param_sets": {
+    "{}": 13
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_18_SW_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 2,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_ng_tt_native_tok_0_3",
+    "rly_sf_result_token_0"
+   ],
+   "param_sets": {
+    "{}": 2
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_18_WN_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_ng_tt_native_tok_0__fo1_3"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_18_WS_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_emb_fill_token_0"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_1_EN_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 8,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_cfg_tx_we_2",
+    "rly_sf_cal_start_2",
+    "rly_sf_host_epoch_valid_0"
+   ],
+   "param_sets": {
+    "{}": 8
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_1_ES_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 14,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_rst_d2d__fo1_0",
+    "rly_rst_d2d__fo1_3",
+    "rly_serdes2_txv_7"
+   ],
+   "param_sets": {
+    "{}": 14
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_1_EW_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 32,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_rst_d2d_3",
+    "rly_rst_d2d_4",
+    "rly_rst_d2d__fo1_2"
+   ],
+   "param_sets": {
+    "{}": 32
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_1_NE_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 16,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_rst_d2d__fo2_3",
+    "rly_lnk_kv_x3_slot_0",
+    "rly_sf_prog_context_slot_1"
+   ],
+   "param_sets": {
+    "{}": 16
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_1_NS_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 110,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_rst_d2d_0",
+    "rly_rst_d2d_1",
+    "rly_rst_d2d__fo2_0"
+   ],
+   "param_sets": {
+    "{}": 110
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_1_NW_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 12,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_rst_d2d_2",
+    "rly_rst_d2d__fo1_1",
+    "rly_serdes0_up_3"
+   ],
+   "param_sets": {
+    "{}": 12
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_1_SE_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 12,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_ng_tt_layer_context_v_0__fo1_0",
+    "rly_sf_prog_rx_v_1",
+    "rly_sf_prog_witness_slot_0"
+   ],
+   "param_sets": {
+    "{}": 12
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_1_SN_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 157,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_serdes0_txv_0",
+    "rly_serdes0_txv_1",
+    "rly_serdes2_rxv_2"
+   ],
+   "param_sets": {
+    "{}": 157
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_1_SW_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 20,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_cfg_rx_we_0",
+    "rly_sf_vm_drained_0",
+    "rly_sf_collective_drained_0"
+   ],
+   "param_sets": {
+    "{}": 20
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_1_WE_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 23,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_serdes2_rxv_0",
+    "rly_serdes2_up_0",
+    "rly_lnk_phy_rst_0"
+   ],
+   "param_sets": {
+    "{}": 23
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_1_WN_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 11,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_serdes2_rxv_1",
+    "rly_serdes2_up_1",
+    "rly_ng_tt_layer_context_v_0__fo1_1"
+   ],
+   "param_sets": {
+    "{}": 11
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_1_WS_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 16,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_prog_rx_v_4",
+    "rly_sf_prog_witness_slot_2",
+    "rly_sf_prog_auth_slot_2"
+   ],
+   "param_sets": {
+    "{}": 16
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_2_ES_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 2,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_host_generation_2",
+    "rly_sf_kv_word_index_3"
+   ],
+   "param_sets": {
+    "{}": 2
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_2_EW_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_result_gen_0"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_2_SN_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_kv_word_index_1"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_2_SW_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 2,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_host_generation_1",
+    "rly_sf_kv_word_index_2"
+   ],
+   "param_sets": {
+    "{}": 2
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_2_WN_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 2,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_host_generation_0",
+    "rly_sf_kv_word_index_0"
+   ],
+   "param_sets": {
+    "{}": 2
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_32_EN_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_cfg_data_2"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_32_ES_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 2,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_result_cycles_1",
+    "rly_dvr_ng_seq_cd_d_514_0"
+   ],
+   "param_sets": {
+    "{}": 2
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_32_EW_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 4,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_cfg_data_0",
+    "rly_sf_cfg_data_1",
+    "rly_sf_result_value_0"
+   ],
+   "param_sets": {
+    "{}": 4
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_32_NS_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_dvr_ng_seq_cd_d_514_1"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_32_SW_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_result_cycles_0"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_380_SN_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 4,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_ng_tt_native_cmd_0_0",
+    "rly_ng_tt_native_cmd_0_1",
+    "rly_ng_tt_native_cmd_0_2"
+   ],
+   "param_sets": {
+    "{}": 4
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_3_SE_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_dvr_ng_io_out_rank_0_0"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_3_WE_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_dvr_ng_io_out_rank_0_1"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_4_ES_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_result_cause_2"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_4_NE_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 7,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_dvr_tt_ib__rsi_251_21",
+    "rly_dvr_b2_source_me_split_8",
+    "rly_dvr_b2_source_me_split_20"
+   ],
+   "param_sets": {
+    "{}": 7
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_4_NS_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 50,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_dvr_tt_ib__rsi_251_1",
+    "rly_dvr_tt_ib__rsi_251_2",
+    "rly_dvr_tt_ib__rsi_251_3"
+   ],
+   "param_sets": {
+    "{}": 50
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_4_SN_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_result_cause_0"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_4_SW_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_result_cause_1"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_4_WE_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 6,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_lnk_native_rx_slot_kind_0",
+    "rly_dvr_b2_source_me_split_0",
+    "rly_dvr_selector_l0_selector_fork_0_sel4_7"
+   ],
+   "param_sets": {
+    "{}": 6
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_4_WS_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 7,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_dvr_tt_ib__rsi_251_0",
+    "rly_dvr_b2_source_me_split_1",
+    "rly_dvr_b2_source_me_split_9"
+   ],
+   "param_sets": {
+    "{}": 7
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_512_ES_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 2,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_dvr_ng_seq_cd_d_0_0",
+    "rly_dvr_ng_seq_cd_d_0_2"
+   ],
+   "param_sets": {
+    "{}": 2
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_512_NE_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_emb_word_data_0"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_512_NW_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_dvr_ng_seq_cd_d_0_1"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_512_SE_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 2,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_dvr_ng_io_out_data_0_0",
+    "rly_dvr_ng_io_out_data_0_2"
+   ],
+   "param_sets": {
+    "{}": 2
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_512_WN_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_dvr_ng_io_out_data_0_1"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_520_NE_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 2,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_dvr_ng_native_vm_ar_0_1",
+    "rly_dvr_ng_native_vm_ar_0_24"
+   ],
+   "param_sets": {
+    "{}": 2
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_520_NS_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 21,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_dvr_ng_native_vm_ar_0_3",
+    "rly_dvr_ng_native_vm_ar_0_4",
+    "rly_dvr_ng_native_vm_ar_0_5"
+   ],
+   "param_sets": {
+    "{}": 21
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_520_WS_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 3,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_dvr_ng_native_vm_ar_0_0",
+    "rly_dvr_ng_native_vm_ar_0_2",
+    "rly_dvr_ng_native_vm_ar_0_25"
+   ],
+   "param_sets": {
+    "{}": 3
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_524_EN_65x60": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_dvr_ng_vm_q_0_0"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_524_EW_65x60": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_dvr_ng_vm_q_0_25"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_524_SN_65x60": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 24,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_lnk_x3_0",
+    "rly_dvr_ng_vm_q_0_1",
+    "rly_dvr_ng_vm_q_0_2"
+   ],
+   "param_sets": {
+    "{}": 24
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_524_SW_65x60": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_dvr_ng_vm_q_0_24"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_548_ES_65x60": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_prog_tx_record_3"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_548_EW_65x60": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 2,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_prog_tx_record_1",
+    "rly_sf_prog_tx_record_2"
+   ],
+   "param_sets": {
+    "{}": 2
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_548_NE_65x60": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_lnk_rx_payload_0"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_548_SW_65x60": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_prog_tx_record_0"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_548_WE_65x60": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 3,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_lnk_rx_payload_1",
+    "rly_lnk_rx_payload__fo1_0",
+    "rly_lnk_rx_payload__fo1_1"
+   ],
+   "param_sets": {
+    "{}": 3
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_553_NE_65x60": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_dvr_ng_tt_mx_0_22"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_553_NS_65x60": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 18,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_dvr_ng_tt_mx_0_4",
+    "rly_dvr_ng_tt_mx_0_5",
+    "rly_dvr_ng_tt_mx_0_6"
+   ],
+   "param_sets": {
+    "{}": 18
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_553_WE_65x60": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 4,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_dvr_ng_tt_mx_0_0",
+    "rly_dvr_ng_tt_mx_0_1",
+    "rly_dvr_ng_tt_mx_0_2"
+   ],
+   "param_sets": {
+    "{}": 4
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_553_WS_65x60": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_dvr_ng_tt_mx_0_3"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_597_ES_65x60": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_serdes2_tx_7"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_597_EW_65x60": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_serdes2_tx_6"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_597_NS_65x60": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 8,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_serdes0_rx_0",
+    "rly_serdes0_rx_1",
+    "rly_serdes0_rx_2"
+   ],
+   "param_sets": {
+    "{}": 8
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_597_NW_65x60": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_serdes2_tx_5"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_597_SN_65x60": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 9,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_serdes0_tx_0",
+    "rly_serdes0_tx_1",
+    "rly_serdes0_tx_2"
+   ],
+   "param_sets": {
+    "{}": 9
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_597_WE_65x60": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_serdes2_rx_0"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_597_WN_65x60": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_serdes2_rx_1"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_59_ES_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_host_tag_2"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_59_EW_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 2,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_result_tag_0",
+    "rly_sf_result_tag_1"
+   ],
+   "param_sets": {
+    "{}": 2
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_59_SN_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_host_tag_0"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_59_SW_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_host_tag_1"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_5_ES_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_q_slot_beat_2"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_5_NS_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_q_slot_beat_3"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_5_SN_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_q_slot_beat_0"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_5_SW_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_q_slot_beat_1"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_5_WE_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_lnk_native_rx_slot_beat_0"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_6_EW_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 2,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_cfg_addr_1",
+    "rly_sf_cfg_addr_2"
+   ],
+   "param_sets": {
+    "{}": 2
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_6_NE_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_emb_word_index_0"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_6_NS_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_emb_expected_word_0"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_6_SN_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 7,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_ng_tt_command_stage_0_0",
+    "rly_ng_tt_command_stage_0_1",
+    "rly_ng_tt_command_stage_0_2"
+   ],
+   "param_sets": {
+    "{}": 7
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_6_SW_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_cfg_addr_0"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_6_WN_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_ng_tt_command_stage_0__fo1_0"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_75_EW_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_tt_pw_5"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_75_NE_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 2,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_tt_pw_0",
+    "rly_sf_tt_pw_2"
+   ],
+   "param_sets": {
+    "{}": 2
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_75_NW_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_tt_pw_4"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_75_WS_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 2,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_tt_pw_1",
+    "rly_sf_tt_pw_3"
+   ],
+   "param_sets": {
+    "{}": 2
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_76_SN_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 3,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_tt_program_obs_2",
+    "rly_sf_tt_program_obs_3",
+    "rly_sf_tt_program_obs_4"
+   ],
+   "param_sets": {
+    "{}": 3
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_76_SW_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_tt_program_obs_5"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_76_WE_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_tt_program_obs_0"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_76_WN_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_tt_program_obs_1"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_95_EW_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_ng_native_native_ret_0_8"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_95_NS_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 4,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_ng_native_native_ret_0_3",
+    "rly_ng_native_native_ret_0_4",
+    "rly_ng_native_native_ret_0_5"
+   ],
+   "param_sets": {
+    "{}": 4
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_95_NW_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_ng_native_native_ret_0_7"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_95_SE_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_ng_native_native_ret_0_0"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_95_WE_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_ng_native_native_ret_0_1"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_95_WS_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_ng_native_native_ret_0_2"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rst_rep": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 121,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rstt_rst_fwd_s_0",
+    "rstt_rst_fwd_s_1",
+    "rstt_rst_fwd_s_4"
+   ],
+   "param_sets": {
+    "{}": 121
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [
+    "q1"
+   ],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rst_rep_p8": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 12,
+   "rtl": "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rstt_rst_io_91",
+    "rstt_rst_io_92",
+    "rstt_rst_io_93"
+   ],
+   "param_sets": {
+    "{}": 12
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [
+    "q1"
+   ],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rstseq": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "rtl/qwen_split/qfd_link_slots.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rstseq_rom"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [
+    "rso_s"
+   ],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rstsync": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "rtl/qwen_split/qfd_link_slots.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rs_bump"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_sigbump": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 5,
+   "rtl": "rtl/qwen_split/qfd_link_slots.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "bump_fwd_epoch",
+    "bump_fwd_lrst",
+    "bump_pkg_s0"
+   ],
+   "param_sets": {
+    "{}": 5
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_sys_face": {
+   "verdict": "FAIL",
+   "fails": [
+    "INPUT_UNCONNECTED"
+   ],
+   "instances": 1,
+   "rtl": "rtl/qwen_split/qfd_sys_face.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "sys_face"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [
+    "crom_fault_code",
+    "res_issue_fault",
+    "seq_cfg_image_ready",
+    "seq_dc",
+    "seq_descriptor_obs",
+    "seq_program_obs"
+   ],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [
+    "fault",
+    "seq_dh"
+   ],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_tt_ctlm_b2": {
+   "verdict": "FAIL",
+   "fails": [
+    "WIDTH_MISMATCH",
+    "INPUT_UNCONNECTED"
+   ],
+   "instances": 1,
+   "rtl": "rtl/qwen_sys/static_schedule_20261014/qfd_tt_ctlm_b2.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "tt_ctlm"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [
+    "am0",
+    "am1",
+    "am2",
+    "am3",
+    "am4",
+    "am5",
+    "b2_status_fault",
+    "cp_active",
+    "ld",
+    "meok",
+    "rf0",
+    "rf1",
+    "rf2",
+    "rf3",
+    "rf4",
+    "rf5",
+    "st",
+    "su_image_ready",
+    "su_observe",
+    "uf",
+    "xflt",
+    "xs"
+   ],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [
+    "cf",
+    "cp",
+    "lc0",
+    "lc1",
+    "lc2",
+    "lc3",
+    "lc4",
+    "lc5",
+    "mer0",
+    "mer1",
+    "mer2",
+    "mer3",
+    "mer4",
+    "mer5",
+    "ovf",
+    "rsi_me_oen",
+    "rsi_me_tiles",
+    "rsi_me_ts",
+    "rsi_tag_last",
+    "rsi_tag_v",
+    "tc0",
+    "tc1",
+    "tc2",
+    "tc3",
+    "tc4",
+    "tc5",
+    "xm",
+    "xpf"
+   ],
+   "width_mismatch": {
+    "ib": [
+     [
+      354,
+      380
+     ]
+    ]
+   },
+   "unparsed_conn": [],
+   "duplicate_port": []
+  }
+ },
+ "undriven_nets": {
+  "n_dvr_ng_vm_q_0": 524,
+  "n_dvr_ng_seq_cd_d_0": 512,
+  "n_dvr_ng_seq_cd_d_514": 32,
+  "n_dvr_ng_vm_q_committed_0": 1,
+  "n_dvr_ng_vm_fault_0": 1,
+  "n_dvr_ng_seq_cd_d_512": 1,
+  "n_dvr_ng_seq_cd_d_513": 1
+ },
+ "undriven_classes": {
+  "n_dvr_ng_seq_cd_d_N": {
+   "bits": 546,
+   "nets": 4,
+   "example": "n_dvr_ng_seq_cd_d_0"
+  },
+  "n_dvr_ng_vm_q_N": {
+   "bits": 524,
+   "nets": 1,
+   "example": "n_dvr_ng_vm_q_0"
+  },
+  "n_dvr_ng_vm_q_committed_N": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_dvr_ng_vm_q_committed_0"
+  },
+  "n_dvr_ng_vm_fault_N": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_dvr_ng_vm_fault_0"
+  }
+ },
+ "multi_driven_classes": {},
+ "multi_driven_nets": {},
+ "top_assigns": [],
+ "params_not_in_rtl": [],
+ "pads_declared": [],
+ "die_sha256": "f19ae6433b1fbc0f16e3874b9544476a395a37f70ef16a3506b042b210e25574",
+ "straps_declared": [
+  "qfd_c_b16_dv:cid",
+  "qfd_c_b16_dv:far",
+  "qfd_c_b16_dv:rs_i"
+ ],
+ "params_file": null,
+ "rtl_roots": [
+  "rtl"
+ ],
+ "rtl_files": [
+  "/srv/opentallas-scratch/claude/qbind1017/ov/relays_r3.sv",
+  "/srv/opentallas-scratch/claude/qbind1017/ext/ot_qkvd_ucie_x64_phy_bb.v",
+  "physical/qwen_missing_phy/nface_tall_1017/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597_bb.v",
+  "physical/qwen_missing_phy/nface_tall_1017/ot_qfd_ucie_x64_phy/ot_qfd_ucie_x64_phy_bb.v",
+  "/srv/opentallas-scratch/claude/qbind1017/ext/qfd_dv_heads.sv",
+  "/srv/opentallas-scratch/claude/qbind1017/ext/qfd_dv_redstn.sv",
+  "/srv/opentallas-scratch/claude/qbind1017/ext/qfd_dv_redstn2.sv",
+  "/srv/opentallas-scratch/claude/qbind1017/ext/qfd_dv_scalar.sv",
+  "/srv/opentallas-scratch/claude/qbind1017/ext/qfd_dv_scalar2.sv",
+  "/srv/opentallas-scratch/claude/qbind1017/ext/qfd_dv_slice.sv",
+  "/srv/opentallas-scratch/claude/qbind1017/ext/qfd_dv_slice2.sv",
+  "/srv/opentallas-scratch/claude/qbind1017/ext/qfd_dv_stream.sv",
+  "/srv/opentallas-scratch/claude/qbind1017/ext/qfd_dv_su8_entries.sv",
+  "/srv/opentallas-scratch/claude/qbind1017/ext/qfd_dv_vm.sv"
+ ],
+ "defines": []
+}

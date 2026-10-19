@@ -1,0 +1,24 @@
+{
+  "schema": "opentallas.tile_visual_review.v1",
+  "tile": "s81dvbk_colv",
+  "reviewer": "PL-BK (PARENTS-LANDED sub-lane), 2026-10-18 ~07:40; not a critical tile",
+  "time": "2026-10-18T07:40:00-07:00",
+  "gate_commit": "7bcdf55c9d428f2e22330cb44dbd001b4239cc65",
+  "gate_generated": "2026-10-18T06:57:20-0700",
+  "verdict": "APPROVED",
+  "accepted_clock": {
+    "tt_insertion_ps": 944.7, "ff_insertion_ps": 780.9,
+    "tt_child_pin_spread_ps": 38.3, "ff_child_pin_spread_ps": 44.9,
+    "sinks_one_root": 6,
+    "reason": "Single-region parent (673.92 x 648 < 1 mm) of 6 closed hard children (4 x bkcol_l, bkcol_m, bk_g; child boundary refs 264.8..269.3 TT): child-pin spread <= 80 at TT and FF (clock rule 10-17). Insertion > 300 is guidance: the die matches the boundary by parent compensation / landing (WARN only)."
+  },
+  "checklist": {
+    "lattice": "x on the 43.2 lattice; u_g y 237.6 and g_l[2]/g_l[3] (MX) y 453.6 sit on the 21.6 half-lattice so the 3.5-pitch-tall lanes keep 43.2-um margins (tops at 604.8 = 14 pitches) and u_g keeps 43.2-um channels both sides; trial GRT overflow 0 (M2 7.3%, M3 5.6%, M4 5.9%) - accepted on measured facts",
+    "std_cell_band": "wires-only parent (synthesized std cells 0); only repeaters/buffers, density PNG blue everywhere (max bin < 0.5)",
+    "pin_spread": "S 558 pins over 269.6 um (2.1/um), N 552 over 113.2 um (4.9/um), E 92 over 23 um; all <= 6/um; S/N segments face the lane rung neighbours (vertical cut)",
+    "clock_entry": "clk on E face mid-height (322-325 um) beside u_g / u_m register mass; child-pin spread 38.3/44.9",
+    "shape": "673.92 x 648 (square), fill 43% macro-bound"
+  },
+  "spec_checks": "pass bench dsdv_bk_col_exact ('^DSDV_BK_COL PASS mut=0$'); mutant dsdv_bk_col_mut_lateodd expect=fail with committed fail_witness results/rtl/s81_dv_1016/bk_units_bk3/col_mut3.txt",
+  "notes": "Child dsdv_bk_g (s81dvbk_g2) is being re-gated by ELEM-GAPS/S81N (pin_reg_split, ports unchanged, 0 cycles): colv uses the current CLOSED g2 view; re-export only if the new g2 view's pins move."
+}

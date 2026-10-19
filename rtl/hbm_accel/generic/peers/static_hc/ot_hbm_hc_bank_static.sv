@@ -21,6 +21,10 @@ module ot_hbm_hc_bank_static #(
     parameter integer LM  = 8,
     parameter integer LA  = 7,
     parameter integer MUT = 0,
+    // HBM-B-RTL2 (2026-10-17, default 0 = unchanged): 1 = the rst_n port drives only an ot_rst_relay at the bank
+    // boundary (synchronous release, +3 edges; the lane leaves' rst_n then comes from a flop inside this tile: the
+    // hc_lanes_ref-r4 native rst_n capture 209.0 fix).  Used by the quarter engine ot_hbm_hc_qeng_static.
+    parameter integer RST_RELAY = 0,
     parameter integer NVW = $clog2(W) + 1
 )(
     input  wire              clk, rst_n,
@@ -42,15 +46,23 @@ module ot_hbm_hc_bank_static #(
 );
     localparam integer NG = W / 8, NX = W / 16, JW = $clog2(W/32);
     initial if (W % 32 != 0 || W < 64) $fatal(1, "bank W must be a multiple of 32, >= 64");
+    wire rn_st, rn_w;
+    if (RST_RELAY != 0) begin : g_rr
+        wire [1:0] rr;
+        ot_rst_relay #(.REGIONS(2)) u_rst (.clk(clk), .rst_n_in(rst_n), .rst_n(rr));
+        assign rn_st = rr[0]; assign rn_w = rr[1];
+    end else begin : g_nrr
+        assign rn_st = rst_n; assign rn_w = rst_n;
+    end
     // ---- write pin registers
     reg wv_q, xv_q; reg [JW-1:0] j_q; reg [9:0] wa_q; reg [1023:0] wd_q;
-    always @(posedge clk or negedge rst_n) if (!rst_n) begin wv_q <= 0; xv_q <= 0; end else begin wv_q <= wv; xv_q <= xv; end
+    always @(posedge clk or negedge rn_w) if (!rn_w) begin wv_q <= 0; xv_q <= 0; end else begin wv_q <= wv; xv_q <= xv; end
     always @(posedge clk) begin j_q <= j; wa_q <= wa; wd_q <= wd; end
     // ---- the lane stage
     wire w_re, x_re; wire [AW-1:0] w_addr, x_addr;
     reg [W*32-1:0] wdat; reg [W*16-1:0] xdat;
     ot_hdc_v41x_hcp_stage #(.W(W), .AW(AW), .ML(2), .NVW(NVW), .LM(LM), .LA(LA), .SOR(1), .LRST(1), .ADRST(0), .LG(8)) u_st (
-        .clk(clk), .rst_n(rst_n), .first(first),
+        .clk(clk), .rst_n(rn_st), .first(first),
         .d_v(d_v), .d_ss(d_ss), .d_nv(d_nv), .d_wa(d_wa), .d_xa(d_xa), .o_v(o_v), .o_ss(o_ss), .o_nv(o_nv), .o_wa(o_wa),
         .o_xa(o_xa), .sum_in(sum_in), .sum_out(sum_out), .f_in(f_in), .f_out(f_out), .w_re(w_re), .w_addr(w_addr),
         .w_data(wdat), .x_re(x_re), .x_addr(x_addr), .x_data(xdat));
