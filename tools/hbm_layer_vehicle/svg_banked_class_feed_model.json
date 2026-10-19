@@ -1,6 +1,6 @@
 {
   "schema": "opentallas.svg-banked-class-feed.v1",
-  "status": "source/model before isolated composition RTL; functional proof pending",
+  "status": "Two-run L00 flagged whole PASS40ops162rows58exactGO; mixed class/attention tests pending",
   "module": "ot_hbm_svc_sm_feed_programmed_rel_banked_class",
   "baseline": "ot_hbm_svc_sm_feed_programmed_rel_sram_id at f35dc08a0",
   "programme": {
@@ -58,5 +58,14 @@
       "CLASS_MUT",
       "ENVELOPE_MUT"
     ]
-  }
+  },
+  "whole_source": "f2a07fb05",
+  "whole_receipt": "results/rtl/hbm_ds_layer_tput_1018/smb_kits_1019/banked_class_two_runs_f2a07fb05.json",
+  "open_scope": [
+    "mode0\u21924\u21920 actual-service transport and arithmeticattention pending",
+    "current frontend native reset/control fail; newowner implementing",
+    "actual TOPK producer/collector deadline not established by fixture IDs",
+    "BW successor controller and KRbridge not selected in this baseline-controller fixture",
+    "dense SRAM native access, physical and die grants OPEN"
+  ]
 }

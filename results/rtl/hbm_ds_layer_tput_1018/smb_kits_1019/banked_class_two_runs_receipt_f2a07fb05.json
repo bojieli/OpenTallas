@@ -1,0 +1,35 @@
+{
+  "schema": "opentallas.banked-class-whole.v1",
+  "source_commit": "f2a07fb050b8dbc253bfd60e48dd853b92c41436",
+  "module_sha256": {
+    "ot_hbm_svc_sm_issuer_rel_class.sv": "33e042c922bcf3a9cef389ef2031c9ef012325b4232a96ac23f3cd1199cfbce3",
+    "ot_hbm_svc_sm_group_rel_banked_class.sv": "e1f60a8363dc91229c9dbf90ceaf1cdd16990a82bb33d80199851569db2f0719",
+    "ot_hbm_svc_sm_feed_programmed_rel_banked_class.sv": "c46ed9018b3ddf5f94fba958b4d0042e632e9e3fbe51b037223c2d4c2eafa3ee",
+    "ot_hbm_svc_sm_xcal_rel_banked.sv": "207bd16d581f189da9f08b8ea95abeb51b43257345e15390c1f84bb4331ab6ff",
+    "ot_hbm_svc_sm_xcal_rel_t_banked.sv": "971971d0cfbbbae921ea7fb102df44755f8ee5415d6f6c34da0f50d5c3af70af",
+    "ot_hbm_svc_command_class_guard.sv": "ffa302ca316b55637230dfcdacdf6cf673893db0983ee34d97c155ff70b34500"
+  },
+  "executable_sha256": "e0ba3ad2cb06567aa591c09be3841604c79cf15266c6544dbf5db87c028a879f",
+  "defines": [
+    "SMB_SRAMFIFO",
+    "SMB_NATIVE_LANDING",
+    "SMB_NATIVE_RETURN",
+    "SMB_NATIVE_CACHE_SAFE",
+    "SMB_BANKED_CLASS"
+  ],
+  "verdict": "PASS",
+  "ops": 40,
+  "go_count": 58,
+  "go_exact": true,
+  "done": "DONE cycles=24674 results=162 gos=58 runs=2 ing=282/282 xw=14352/14352 ids=2/2 dram_reads=11976",
+  "fault": null,
+  "cohort_scope": "ID_COHORT1, fixture matchedrun_cohort increments on actual run_v; two separate L00 resident descriptor sets and two scheduled ID broadcasts. No native TOPK producer deadline claim.",
+  "scope": [
+    "mode0\u21924\u21920 actual-service transport and arithmeticattention pending",
+    "current frontend native reset/control fail; newowner implementing",
+    "actual TOPK producer/collector deadline not established by fixture IDs",
+    "BW successor controller and KRbridge not selected in this baseline-controller fixture",
+    "dense SRAM native access, physical and die grants OPEN"
+  ],
+  "physical_claim": "NONE"
+}
