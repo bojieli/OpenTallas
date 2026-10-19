@@ -34,7 +34,7 @@ def origin(bit,seen=None):
  if transparent(ct):
   ins=[b for p,bs in cells[cn]['connections'].items() if cells[cn]['port_directions'][p]=='input' for b in bs]
   if len(ins)==1:return origin(ins[0],seen|{bit})
- return ('FF_Q' if seq(ct) else 'SRAM_Q' if ct.startswith('ot_sram_') else 'combinational',cn+':'+pt)
+ return ('FF_Q' if seq(ct) else 'SRAM_Q' if ct.startswith('ot_sram_') else 'combinational',cn+':'+pt+':'+str(bit))
 report=[]
 for bit,sinks in list(loads.items()):
  pins,visited=collapse(bit);names=list(dict.fromkeys(x for b in visited for x in aliases[b]));driver_kind,driver=origin(bit)
@@ -45,7 +45,7 @@ over=[v for v in report if v['collapsed_load']>32];unique={}
 for v in over:
  key=(v['kind'],v['driver_kind'],v['origin'])
  if key not in unique or unique[key]['collapsed_load']<v['collapsed_load']:unique[key]=v
-r=dict(mapped_sha256=hashlib.sha256(src.read_bytes()).hexdigest(),rule='455fc9ff4 exact recursive INV/BUF terminal unique physical input pins',physical_claim=False,max_collapsed_nonclock=max(v['collapsed_load'] for v in report if v['kind']!='clock'),over32_by_kind=dict(collections.Counter(v['kind'] for v in over)),unique_over32_by_kind=dict(collections.Counter(v['kind'] for v in unique.values())),over32=over,unique_over32=list(unique.values()),all_driver_class_max={k:max(v['collapsed_load'] for v in report if v['kind']==k) for k in set(v['kind'] for v in report)},qualification='audit only; direct-load max27 is not functional fanout proof')
+r=dict(mapped_sha256=hashlib.sha256(src.read_bytes()).hexdigest(),rule='455fc9ff4 exact recursive INV/BUF terminal unique physical input pins',physical_claim=False,max_collapsed_nonclock=max(v['collapsed_load'] for v in report if v['kind']!='clock'),over32_by_kind=dict(collections.Counter(v['kind'] for v in over)),unique_over32_by_kind=dict(collections.Counter(v['kind'] for v in unique.values())),over32=over,unique_over32=list(unique.values()),all_driver_loads=report,all_driver_class_max={k:max(v['collapsed_load'] for v in report if v['kind']==k) for k in set(v['kind'] for v in report)},qualification='audit only; direct-load max27 is not functional fanout proof')
 if len(sys.argv)>2:pathlib.Path(sys.argv[2]).write_text(json.dumps(r,indent=2)+'\n')
-print(json.dumps({k:v for k,v in r.items() if k not in ['over32','unique_over32']},indent=2))
+print(json.dumps({k:v for k,v in r.items() if k not in ['over32','unique_over32','all_driver_loads']},indent=2))
 for v in unique.values():print('NET',v['kind'],v['driver_kind'],v['collapsed_load'],v['names'][:4],v['drivers'])
