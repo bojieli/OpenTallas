@@ -43,5 +43,6 @@ def model():
         "floorplan":"origins43.2 lattice; macro-pin face clearance>=20um; actual std area OPEN",
         "clock":"OPEN TT/FF <=80ps spread, root boundary matched and >=0.03ns hold margin",
         "canonical_descriptor_face":"BLOCKED: canonical128x256 master W/E 9.99/10.015pins/um exceeds6; preserve abstract pending explicit owner scope decision"},
+      "fanout_revision": {"baseline_std_area_um2":{"descriptor":690.27552,"programme":637.01478},"measured_failure":"wire keep merged Q copies; bank514/157loads and qualifier173loads", "repair":"preserved one-bit FF hierarchy; same-edge input/control copies, unconditional invalid payload updates in native collar", "added_latency_edges":0,"control_storage_budget_bits":128,"actual_final_area":"pending remap"},
       "adoption":"No gate, REVIEW, physical claim, or calendar adoption from this model alone."}
 if __name__ == "__main__": print(json.dumps(model(),indent=2))
