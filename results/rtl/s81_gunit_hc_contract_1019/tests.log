@@ -1,0 +1,15 @@
+test_bad_gate_and_unverified_archive_refused (test_gu_hc_contract.ContractTests) ... ok
+test_changed_source_has_no_legacy_fallback (test_gu_hc_contract.ContractTests) ... ok
+test_compile_options_required_exactly (test_gu_hc_contract.ContractTests) ... ok
+test_different_gate_source_refused (test_gu_hc_contract.ContractTests) ... ok
+test_measured_calendar_blocked_by_default (test_gu_hc_contract.ContractTests) ... ok
+test_missing_source_refused (test_gu_hc_contract.ContractTests) ... ok
+test_native_failures_and_missing_fields_refused (test_gu_hc_contract.ContractTests) ... ok
+test_receipts_required_and_exact (test_gu_hc_contract.ContractTests) ... ok
+test_reviewed_complete_matching_receipts_admit_calendar (test_gu_hc_contract.ContractTests) ... ok
+test_unpinned_pass_file_cannot_unlock (test_gu_hc_contract.ContractTests) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.363s
+
+OK

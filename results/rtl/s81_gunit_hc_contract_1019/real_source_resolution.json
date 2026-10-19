@@ -1,0 +1,25 @@
+{
+  "real_compiled_source_variants": [
+    {
+      "source_id": "safe2_pipelined_hc_975n_973s",
+      "lat_n": 975,
+      "lat_s": 973,
+      "origin": "last HP_N input pin edge",
+      "admitted": false,
+      "blocked_reason": "safe2 native launch FAIL5"
+    },
+    {
+      "source_id": "safe3_pipelined_hc_975n_973s",
+      "lat_n": 975,
+      "lat_s": 973,
+      "origin": "last HP_N input pin edge",
+      "admitted": false,
+      "blocked_reason": "safe3 native result pending; no compiler admission"
+    }
+  ],
+  "lower_gu_changed": false,
+  "legacy_constants": [
+    759,
+    757
+  ]
+}
