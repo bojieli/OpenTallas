@@ -1,6 +1,6 @@
 {
   "schema": "opentallas.svg-processing-stage-composition.v1",
-  "status": "Integrated leaf8 and metadata8; exact whole-group positive/early/late verification pending",
+  "status": "Whole L00 PASS20ops81rows29exactGO with early/late causal mutants expectedFAIL; physical/native frontend OPEN",
   "baseline_whole_source": "a7da66a75",
   "baseline_whole_receipt": "c4ee7b497",
   "baseline_command_latency": 9,
@@ -53,5 +53,15 @@
   ],
   "physical_claim": "NONE",
   "leaf_source": "48fa0a785",
-  "metadata_source_sha256": "d8e207d2f8e66b2b3c765315220f3e54e312f0e3df2f879b466dea2fb6dbf17a"
+  "metadata_source_sha256": "d8e207d2f8e66b2b3c765315220f3e54e312f0e3df2f879b466dea2fb6dbf17a",
+  "whole_source": "f35dc08a0",
+  "whole_receipt": "results/rtl/hbm_ds_layer_tput_1018/smb_kits_1019/processing_mutants_f35dc08a0.json",
+  "observed_final_timing": {
+    "command": 11802,
+    "result": 11914,
+    "delta_vs_cache_only_command": 27,
+    "delta_vs_cache_only_result": 27,
+    "drain_END": 13002,
+    "token_throughput_claim": false
+  }
 }

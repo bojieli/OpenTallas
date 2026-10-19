@@ -4,7 +4,21 @@
   "leaf_source": "48fa0a785",
   "metadata_delay": 8,
   "prefetch_margin": 22,
-  "positive": "pending; standalone negative verdicts do not qualify composition",
+  "positive": {
+    "verdict": "PASS",
+    "ops": 20,
+    "rows": 81,
+    "fixed_go_count": 29,
+    "fixed_go_exact": true,
+    "done": "DONE cycles=13002 results=81 gos=29 runs=1 ing=221/221 xw=7176/7176 ids=1/1 dram_reads=5988",
+    "evidence": "processing_positive_f35dc08a0.json",
+    "last_command": 11802,
+    "last_result": 11914,
+    "cache_only_last_command": 11775,
+    "cache_only_last_result": 11887,
+    "actual_command_delta_vs_cache_only": 27,
+    "actual_result_delta_vs_cache_only": 27
+  },
   "mutants": [
     {
       "name": "early",
@@ -28,5 +42,6 @@
     }
   ],
   "causality": "Both faults occur before first fixed GO. Exact child leaf component records independently show early/late metadata errors; whole monitor reports CDC fault but does not separately print internal alignment/cache/pair sticky bits.",
-  "physical_claim": "NONE"
+  "physical_claim": "NONE",
+  "scope": "Whole L00 leaf8/metadata8/cache-safe composition with frozen historical old issuer/cohort0; banked/class/cohort1 and native physical frontend remain OPEN."
 }
