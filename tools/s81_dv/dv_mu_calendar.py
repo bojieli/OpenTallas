@@ -48,6 +48,17 @@ DUP_LAYER = dict(S002=2, S011=8, S020=14, S029=20, S034=24, S040=28, S046=32, S0
 H_MSG = 652            # stage h message serialisation on the stage-hop link, cycles (ROM-MULTIUSER (3) "link serialisation")
 HOST_TOK = 134         # host plane cycles a token a user (133.5, ROM-MULTIUSER item 6), rounded up
 COPIES = ('A', 'B')
+# MU-S81/TOK 10-19: the start-phase quantum of ot_dsdv_fixed_issue (dsdv_seq_host u_iss): a job is accepted only on the
+# edge where the free-running 2-bit phase_q + 1 == the sealed start_phase (else fault code 5), so on every die user k's
+# start must sit a multiple of 4 edges after user 0's: every shift AND the period (pass p + 1 = pass p + P) must be
+# multiples of PHASE_Q.  --phase-q 4 builds the issuer-feasible calendar (calendar_<mode>_q4.json); the default 1 keeps
+# the original 1-cycle grid (calendar_<mode>.json byte-identical).  Witness: results/rtl/s81_mu_1018 (raw shift 21313 ->
+# fault 5).
+PHASE_Q = 1
+
+
+def qup(x):
+    return -(-x // PHASE_Q) * PHASE_Q
 D_CTX = 1048576
 # per-user HBM regions (modelled default until results/arch/mu_s81_1018/svc_bases.json (lane MU-S81/SVC) exists):
 #   KV window ring: dsdv_svc_att WB + 68 u sectors (built: 64 code sectors + 4 scale sectors a user, 128-slot ring)
@@ -163,16 +174,17 @@ def collisions(st, users, P, col):
 
 # ------------------------------------------------------------------------------------------------ calendars
 def calendar_ar(m, st, d, N=None):
-    P = math.ceil(d['T_ar'])
+    P = qup(math.ceil(d['T_ar']))
     S_nr = max(g['occ'] for g in st if g['copies'] == 1)
     dup_w = {g['id']: g['occ'] for g in st if g['copies'] > 1}
     nmax = math.floor(P / S_nr)
     tried = []
     for n in ([N] if N else range(nmax, 0, -1)):
         S = P / n                         # uniform spacing over the period (>= S_nr when n <= nmax)
-        shifts = [(k * P) // n for k in range(n)]      # integer shifts; every gap is floor(S) or ceil(S)
+        shifts = [(k * (P // PHASE_Q)) // n * PHASE_Q for k in range(n)]   # integer shifts on the phase grid; every
+        # gap is floor(S) or ceil(S) on that grid
         col, why = {}, None
-        if P // n < S_nr:
+        if min(b - a for a, b in zip(shifts, shifts[1:] + [P])) < S_nr:
             why = f'slot {S:.1f} < non-replicated window {S_nr:.1f}'
         else:
             for gid, w in dup_w.items():
@@ -190,8 +202,8 @@ def calendar_ar(m, st, d, N=None):
 
 
 def calendar_mtp(m, st, d, N=None, F=None):
-    P = math.ceil(d['T_mtp'])
-    Sm = max(g['step'] for g in st if g['copies'] == 1)
+    P = qup(math.ceil(d['T_mtp']))
+    Sm = qup(max(g['step'] for g in st if g['copies'] == 1))
     dup_w = {g['id']: g['step'] for g in st if g['copies'] > 1}
     n = N or math.floor(P / Sm)
     shifts = [k * Sm for k in range(n)]
@@ -204,7 +216,7 @@ def calendar_mtp(m, st, d, N=None, F=None):
     users = [dict(user=k, shift=shifts[k], kind='latency' if k == 0 else 'mtp') for k in range(n)]
     # AR fillers in the gap after the last MTP slot: greedy, each placed at the earliest shift (1-cycle grid of the
     # non-replicated AR window) where it collides with nothing on any copy (it may take either copy)
-    S_ar = max(g['occ'] for g in st if g['copies'] == 1)
+    S_ar = qup(math.ceil(max(g['occ'] for g in st if g['copies'] == 1)))
     fills, k = [], n
     t = n * Sm
     limit = F if F is not None else 64
@@ -321,12 +333,15 @@ def main(argv=None):
     ap.add_argument('--fillers', type=int)
     ap.add_argument('--out', default=str(OUT))
     ap.add_argument('--check', action='store_true')
+    ap.add_argument('--phase-q', type=int, default=1, help='shift / period quantum (4 = ot_dsdv_fixed_issue start phase)')
     a = ap.parse_args(argv)
+    global PHASE_Q
+    PHASE_Q = a.phase_q
     modes = [a.mode] if a.mode else ['ar', 'mtp']
     rc = 0
     for mode in modes:
         rec = build(mode, a.users, a.fillers)
-        f = Path(a.out) / f'calendar_{mode}.json'
+        f = Path(a.out) / (f'calendar_{mode}.json' if PHASE_Q == 1 else f'calendar_{mode}_q{PHASE_Q}.json')
         txt = json.dumps(rec, indent=1) + '\n'
         if a.check:
             same = f.exists() and f.read_text() == txt
