@@ -126,9 +126,20 @@ module ot_s81sl_xr #(
     wire [185:0] cp = ce ? pe : cw ? pw : pvv;
     wire [4:0] tgt0 = cp[20:16], lmask0 = cp[25:21];
     wire re = e_rd && mine_e, rw_ = w_rd && mine_w;
+`ifdef OT_S81SL_RD_PAIR
+    // Partner-only typed V word: valid1/kind3/leaf3/even-row10/data256.
+    // Each word is one complete row pair; no partial-message payload buffer.
+    wire v_rd = vv && vb[3:1] == K_RD;
+    wire rdv0 = re || rw_ || b_rd || v_rd;
+`else
     wire rdv0 = re || rw_ || b_rd;
+`endif
     wire [W-1:0] rdb0 = re ? eb : rw_ ? wb : bb;
+`ifdef OT_S81SL_RD_PAIR
+    wire [2:0] rl0 = v_rd ? vb[6:4] : rdb0[37 +: 3];
+`else
     wire [2:0] rl0 = rdb0[37 +: 3];
+`endif
     reg [2:0] nlo0; reg [255:0] lo_sel0;
     always @(*) begin
         nlo0 = 3'd0; lo_sel0 = 256'd0;
@@ -149,11 +160,26 @@ module ot_s81sl_xr #(
                 rwr[k] <= (ce || cw || cv) && tgt0 == 5'd5 && lmask0[k];
             end
             // input-only faults: two CTLs / two RDs / two lo beats in a cycle, an RD to leaf > 4, a CTL target > 5
-            f1 <= ((ce + cw + cv) > 2'd1) || ((re + rw_ + b_rd) > 2'd1) || (nlo0 > 3'd1) || (rdv0 && rl0 > 3'd4) ||
-                  ((ce || cw || cv) && tgt0 > 5'd5);
+            f1 <= ((ce + cw + cv) > 2'd1) || ((re + rw_ + b_rd
+`ifdef OT_S81SL_RD_PAIR
+                     + v_rd
+`endif
+                    ) > 2'd1) || (nlo0 > 3'd1) || (rdv0 && rl0 > 3'd4) ||
+                  ((ce || cw || cv) && tgt0 > 5'd5)
+`ifdef OT_S81SL_RD_PAIR
+                  || (v_rd && (vb[7] || |vb[275:273]))
+`endif
+                  ;
         end
     always @(posedge clk) begin
-        lmask <= lmask0; body <= cp[185:26]; rnp <= rdb0[50 +: 2]; rrow <= rdb0[40 +: 10]; rdat <= rdb0[52 +: 1024];
+        lmask <= lmask0; body <= cp[185:26];
+`ifdef OT_S81SL_RD_PAIR
+        rnp <= v_rd ? 2'd0 : rdb0[50 +: 2];
+        rrow <= v_rd ? vb[16:7] : rdb0[40 +: 10];
+        rdat <= v_rd ? {768'd0,vb[272:17]} : rdb0[52 +: 1024];
+`else
+        rnp <= rdb0[50 +: 2]; rrow <= rdb0[40 +: 10]; rdat <= rdb0[52 +: 1024];
+`endif
         lo_sel <= lo_sel0;
 `ifdef OT_S81SL_XR_MUT_HOPS
         cix <= v_ctl ? vb[V-1:1] :                                       // mutant: re-injected CTL keeps the V hops
@@ -168,15 +194,29 @@ module ot_s81sl_xr #(
     //       [42:41] pairs - 1, [43] SC relay to V
     reg [3:0] s_dir; reg [2:0] s_kind; reg [4:0] s_hops; reg [15:0] s_mask; reg [2:0] s_leaf; reg [9:0] s_row; reg [1:0] s_np;
     reg s_scv;
+`ifdef OT_S81SL_RD_PAIR
+    reg s_local;
+    wire pair_mode = s_dir == 4'b0100 && s_kind == K_RD;
+    wire pair_v = (|lov1) && pair_mode;
+    wire [9:0] pair_row = s_row + {7'd0,pn,1'b0};
+    wire [V-1:0] pair_word = {3'd0,lo_sel,pair_row,s_leaf,K_RD,1'b1};
+`endif
     reg [1023:0] pk; reg [1:0] pn; reg pk_go;
     reg [W-1:0] snd;
     always @(posedge clk or negedge rs_s)
-        if (!rs_s) begin s_dir <= 4'd0; pn <= 2'd0; pk_go <= 1'b0; s_scv <= 1'b0; end
+        if (!rs_s) begin s_dir <= 4'd0; pn <= 2'd0; pk_go <= 1'b0; s_scv <= 1'b0;
+`ifdef OT_S81SL_RD_PAIR
+            s_local <= 1'b0;
+`endif
+        end
         else begin
             pk_go <= 1'b0;
             if (tg[4]) begin
                 s_dir <= body[3:0]; s_kind <= body[6:4]; s_hops <= body[11:7]; s_mask <= body[27:12];
                 s_leaf <= body[30:28]; s_row <= body[40:31]; s_np <= body[42:41]; s_scv <= body[43]; pn <= 2'd0;
+`ifdef OT_S81SL_RD_PAIR
+                s_local <= body[44];
+`endif
             end else if (|lov1) begin
                 pn <= (pn == s_np) ? 2'd0 : pn + 2'd1;
                 pk_go <= pn == s_np;
@@ -195,11 +235,22 @@ module ot_s81sl_xr #(
     always @(posedge clk or negedge rs_s)
         if (!rs_s) begin ci_dir <= 3'd0; ci_v <= 1'b0; end
         else begin
+`ifdef OT_S81SL_RD_PAIR
+            ci_dir <= vct ? 3'b011 : pair_v ? 3'b100 :
+                      (pk_go && !pair_mode) ? (s_local ? 3'b000 : s_dir[2:0]) : sc_rel ? 3'b100 : 3'b000;
+            ci_v <= vct || pair_v || (pk_go && !pair_mode && ((|s_dir[2:0]) || s_local)) || sc_rel;
+`else
             ci_dir <= vct ? 3'b011 : pk_go ? s_dir[2:0] : sc_rel ? 3'b100 : 3'b000;
             ci_v <= vct || (pk_go && |s_dir[2:0]) || sc_rel;
+`endif
         end
     assign ci_b = {ci_r, ci_v};
+`ifdef OT_S81SL_RD_PAIR
+    always @(posedge clk) ci_r <= (pair_v && !vct) ? {{(W-V){1'b0}},pair_word[V-1:1]} :
+                                 (pk_go && !vct) ? snd[W-1:1] : {{(W - V){1'b0}}, cix};
+`else
     always @(posedge clk) ci_r <= (pk_go && !vct) ? snd[W-1:1] : {{(W - V){1'b0}}, cix};
+`endif
     generate if (HB != 0) begin : g_bo
         reg [W-1:0] bo_r;
         always @(posedge clk or negedge rs_s) if (!rs_s) bo_r <= {W{1'b0}}; else bo_r <= (pk_go && s_dir[3]) ? snd : {W{1'b0}};
@@ -308,7 +359,12 @@ module ot_s81sl_xr #(
     // ---------------------------------------------------------------- faults
     always @(posedge clk or negedge rs_o)
         if (!rs_o) fault <= 1'b0;
-        else fault <= fault | f1 | ucol | ((|pv) && pv != 5'b11111) | ((|pv) && prun) | (vct && (pk_go || sc_rel)) |
+        else fault <= fault
+`ifdef OT_S81SL_RD_PAIR
+                      | (pair_v && (vct || sc_rel || s_mask != (16'd1 << (sid_c ^ 4'd1))))
+                      | (s_local && ((|s_dir) || s_kind != K_RD || s_mask != (16'd1 << sid_c)))
+`endif
+                      | f1 | ucol | ((|pv) && pv != 5'b11111) | ((|pv) && prun) | (vct && (pk_go || sc_rel)) |
                       (pk_go && sc_rel) | (s_scv && esc && wsc) | (tg[4] && (|lov1)) |
                       ebad | ((|ev_c) && (erun || prun || (|pv))) | ((|pv) && erun);
 endmodule

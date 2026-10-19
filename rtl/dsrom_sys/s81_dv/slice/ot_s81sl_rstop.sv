@@ -139,6 +139,10 @@ module ot_s81sl_rstop #(
     wire oe = own_v && h_e != 5'd0, ow = own_v && h_w != 5'd0;
     wire ae = asm_v && h_e != 5'd0, aw = asm_v && h_w != 5'd0;
     wire ce = ci_q[0] && cid_q[0], cw = ci_q[0] && cid_q[1];
+`ifdef OT_S81SL_RD_PAIR
+    wire local_rd = ci_q[0] && cid_q == 3'd0 && ci_q[3:1] == 3'd4;
+    wire local_collision = local_rd && iw_v && iw_k != K_XQ && iw_k != K_XB && iw_k != K_NX;
+`endif
     wire [2:0] se = fe + ne + oe + ae + ce, sw_ = fw + nw + ow + aw + cw;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin ro_e <= {W{1'b0}}; ro_w <= {W{1'b0}}; fault <= 1'b0; end
@@ -147,6 +151,9 @@ module ot_s81sl_rstop #(
                     ae ? hdr(asm_b, h_e, sid_c) : ce ? ((ci_q[8:4] == 5'd0) ? hdr(ci_q, h_e, sid_c) : ci_q) : {W{1'b0}};
             ro_w <= fw ? hdr(ie, ie_h - 5'd1, ie[12:9]) : nw ? nxb(nx_pw, sid_c) : ow ? hdr(own, h_w, sid_c) :
                     aw ? hdr(asm_b, h_w, sid_c) : cw ? ((ci_q[8:4] == 5'd0) ? hdr(ci_q, h_w, sid_c) : ci_q) : {W{1'b0}};
+`ifdef OT_S81SL_RD_PAIR
+            if (local_collision) fault <= 1'b1;
+`endif
             if (se > 3'd1 || sw_ > 3'd1 || nown > 3'd1 || sv > 3'd1 || (own_v && asm_v)) fault <= 1'b1;
         end
     // ---------------------------------------------------------------- deliveries (registered)
@@ -161,7 +168,11 @@ module ot_s81sl_rstop #(
         else begin
             g_v <= {ie_v && (ie_k == K_XQ || ie_k == K_XB), iw_v && (iw_k == K_XQ || iw_k == K_XB),
                     (own_v && (own[3:1] == K_XQ || own[3:1] == K_XB)) || asm_v};
-            dl_ev <= iw_v && iw_k != K_XQ && iw_k != K_XB && iw_k != K_NX;
+            dl_ev <= (iw_v && iw_k != K_XQ && iw_k != K_XB && iw_k != K_NX)
+`ifdef OT_S81SL_RD_PAIR
+                     || local_rd
+`endif
+                     ;
             dl_wv <= ie_v && ie_k != K_XQ && ie_k != K_XB && ie_k != K_NX;
             dl_vv <= v_cs;
             nxw_v <= map_w ? v_nx : xw_nx;
@@ -172,7 +183,12 @@ module ot_s81sl_rstop #(
         g_fam <= {ie_k == K_XB, iw_k == K_XB, g0[3:1] == K_XB};
         g_idx <= {ie[19:13], iw[19:13], g0[19:13]};
         g_d <= {ie[21 +: 1024], iw[21 +: 1024], g0[21 +: 1024]};
-        dl_e <= iw; dl_w <= ie; dl_vb <= iv;
+`ifdef OT_S81SL_RD_PAIR
+        dl_e <= local_rd ? ci_q : iw;
+`else
+        dl_e <= iw;
+`endif
+        dl_w <= ie; dl_vb <= iv;
         nxw_d <= map_w ? {iv[7:4], iv[20:13], iv[21 +: 160]} : {xwb[7:4], xwb[20:13], xwb[21 +: 160]};
         nxe_d <= map_e ? {iv[7:4], iv[20:13], iv[21 +: 160]} : {xeb[7:4], xeb[20:13], xeb[21 +: 160]};
     end
