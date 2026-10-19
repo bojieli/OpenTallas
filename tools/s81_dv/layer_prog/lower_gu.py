@@ -66,8 +66,7 @@ NE, NEMAX, K = 384, 448, 6
 #   from the edge the LAST beat is on vi_n (the matching S beat is on vi_s 2 edges later; both reach the stop together)
 HC_LAT_N, HC_LAT_S = 759, 757   # -> first coefficient row on vo_n / vo_s (rows i = 1..5 follow one an edge)
 RT_LAT_N, RT_LAT_S = 67, 65     # -> ids row on vo_n / vo_s
-RW_LAT = None                   # ids row -> first weights row (same port); filled from the bench (see RW_GAP)
-RW_GAP = 300
+RW_GAP = 121                    # ids row -> first weights row on the same port (L3 ot_s81_su_rw, measured)
 GU_ROWS = dict(attn=1000, ffn=1008, router=1016)   # leaf-store rows (default row map; ctx['gu_rows'] overrides)
 SMASK, LMASK = 0xFFFF, 0x1F                        # every slice / every leaf takes the rows
 
