@@ -1,0 +1,92 @@
+{
+ "AR": {
+  "cycles": 629775.1,
+  "per_tag": {
+   "expert_intermediate_gather.s0": {
+    "n": 40,
+    "hidden_cycles": 0.0,
+    "buffer_bytes_per_quadrant_max": 594
+   },
+   "expert_intermediate_gather.s1": {
+    "n": 40,
+    "hidden_cycles": 0.0,
+    "buffer_bytes_per_quadrant_max": 594
+   },
+   "expert_intermediate_gather.s2": {
+    "n": 40,
+    "hidden_cycles": 0.0,
+    "buffer_bytes_per_quadrant_max": 594
+   },
+   "expert_intermediate_gather.s3": {
+    "n": 40,
+    "hidden_cycles": 0.0,
+    "buffer_bytes_per_quadrant_max": 594
+   },
+   "expert_intermediate_gather.s4": {
+    "n": 40,
+    "hidden_cycles": 0.0,
+    "buffer_bytes_per_quadrant_max": 594
+   },
+   "expert_intermediate_gather.s5": {
+    "n": 40,
+    "hidden_cycles": 0.0,
+    "buffer_bytes_per_quadrant_max": 594
+   },
+   "expert_intermediate_gather.s6": {
+    "n": 40,
+    "hidden_cycles": 0.0,
+    "buffer_bytes_per_quadrant_max": 594
+   },
+   "o-group": {
+    "n": 40,
+    "hidden_cycles": 0.0,
+    "buffer_bytes_per_quadrant_max": 264
+   }
+  }
+ },
+ "MTP_design": {
+  "cycles": 1367399.3,
+  "per_tag": {
+   "expert_intermediate_gather.s0": {
+    "n": 160,
+    "hidden_cycles": 0.0,
+    "buffer_bytes_per_quadrant_max": 3564
+   },
+   "expert_intermediate_gather.s1": {
+    "n": 160,
+    "hidden_cycles": 0.0,
+    "buffer_bytes_per_quadrant_max": 3564
+   },
+   "expert_intermediate_gather.s2": {
+    "n": 160,
+    "hidden_cycles": 0.0,
+    "buffer_bytes_per_quadrant_max": 3564
+   },
+   "expert_intermediate_gather.s3": {
+    "n": 160,
+    "hidden_cycles": 0.0,
+    "buffer_bytes_per_quadrant_max": 3564
+   },
+   "expert_intermediate_gather.s4": {
+    "n": 160,
+    "hidden_cycles": 0.0,
+    "buffer_bytes_per_quadrant_max": 3564
+   },
+   "expert_intermediate_gather.s5": {
+    "n": 160,
+    "hidden_cycles": 0.0,
+    "buffer_bytes_per_quadrant_max": 3564
+   },
+   "expert_intermediate_gather.s6": {
+    "n": 40,
+    "hidden_cycles": 0.0,
+    "buffer_bytes_per_quadrant_max": 3564
+   },
+   "o-group": {
+    "n": 40,
+    "hidden_cycles": 90.0,
+    "buffer_bytes_per_quadrant_max": 1584
+   }
+  }
+ }
+}

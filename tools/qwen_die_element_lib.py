@@ -36,12 +36,24 @@ class _Clocks(tuple):
                           'ck_records', 'ck_root_mux', 'ck_coordinator_codec', 'ck_coordinator_lifecycle',
                           'ck_coordinator_post') + tuple(f'ck_phy{i}' for i in range(8)) + ('ck_qm_bank0', 'ck_qm_bank1'))
 
+    # KV-CASE2 10-18: the static KV die's composite tiles (qkd_kvs_*, kv_static_die) name each child's clock entry
+    # <child>__<clock> (pc__ck, bcdc0__hck, pc__pll_hbm ...); the HBM-domain child clocks (kv_static_die HBM_CK)
+    STATIC_SUB = frozenset(('hck', 'pll_hbm', 'pll_hbm_port', 'pll_hbm_ecc', 'pll_hbm_cdc', 'pll_hbm_obs', 'cal_hck',
+                            'front_hck', 'return_hck', 'return_ck'))
+
     def __contains__(self, p):
+        if str(p) == 'hck':                 # OT_KV_TILE_KITS: a kit tile's one HBM-domain clock port
+            return True
+        if '__' in str(p):
+            b_ = str(p).rsplit('__', 1)[1]
+            if b_ and (b_ in self.STATIC_SUB or self.__contains__(b_)):
+                return True
         return tuple.__contains__(self, p) or str(p) in self.HOST_V14 or \
             bool(re.fullmatch(r'(ck|hk)_[a-z]\d{0,2}', str(p)))   # hk_*: v1.2 HBM-clock entries
 
 
-CLOCKS = _Clocks(('ck', 'ckx', 'cks', 'cku', 'ckd', 'clk', 'hclk') + tuple(f'ck{i}' for i in range(9)) + ('ck_pin','ck_head','ck_tree','ck_xpf','ck_me_sched','ck_sched'))   # + per-child clock entries (qwen split compute C5: xcol ck0..8, tt_up4 ck_pin / ck_l0..3)
+# KV-WIRE2 10-18: + 'hck' = the HBM-domain clock port of the OT_KV_TILE_KITS kit tiles (kv_static_die kit_clocks)
+CLOCKS = _Clocks(('ck', 'ckx', 'cks', 'cku', 'ckd', 'clk', 'hclk', 'hck') + tuple(f'ck{i}' for i in range(9)) + ('ck_pin','ck_head','ck_tree','ck_xpf','ck_me_sched','ck_sched'))   # + per-child clock entries (qwen split compute C5: xcol ck0..8, tt_up4 ck_pin / ck_l0..3)
 CORNERS = dict(  # setup, hold, clk->q base, ps/fF output slope, output transition base, ps/fF, input cap fF (ASSUMED)
     ss=dict(setup=30.0, hold=5.0, cq=75.0, k=0.9, tr=25.0, tk=1.6, cin=0.7, volt=0.63, temp=100),
     ff=dict(setup=12.0, hold=12.0, cq=32.0, k=0.35, tr=10.0, tk=0.7, cin=0.6, volt=0.77, temp=0))
@@ -126,18 +138,21 @@ def table(vals_fn, idx1, idx2=None):
 # the RISING root edge, ck_o = ~(ck gated); station: capture on ckf rising, ck_o = ~ckf), so every station hop is timed
 # as the half-cycle hop it is, on routed RC.  The landing is modelled as in the S81-LAND pilot (dv_land_pilot.py): the
 # lane's data / epoch pins are checked against the RECEIVING root ck, with case/landing.sdc's MCP -setup E -hold D-1.
-FWD_RE = re.compile(r'^qfd_(rlyh0|rlyh|landh0|landh)_')
+FWD_RE = re.compile(r'^qfd_(rlyh0|rlyh|landh0|landh|rlyr0|rlyrl|rlyr)_')   # LANDFIX-SQ: + forwarded reset lanes
 FWD_NOT_ROOT = ('ck_o', 'ckf')       # forwarded clock pins: no create_clock (die_sta_libs), propagated through the arcs
 FWD_CK_FWD = dict(ss=40.0, tt=40.0, ff=18.0)     # ASSUMED ck -> ck_o cell delay (one INVx2 / ICG + INV class)
 
 
 def fwd_cell(master, ports, c, pb, cq, trn):
     kind = FWD_RE.match(master).group(1)
-    clk = {'rlyh0': 'ck', 'rlyh': 'ckf', 'landh': 'ck', 'landh0': 'ck'}[kind]
+    clk = {'rlyh0': 'ck', 'rlyh': 'ckf', 'landh': 'ck', 'landh0': 'ck', 'rlyr0': 'ck', 'rlyr': 'ckf', 'rlyrl': 'ck'}[kind]
     edge = 'rising'                     # Q-DIE11 10-18: hop 0 captures on the rising root edge too
-    clocks = {'rlyh0': ('ck',), 'rlyh': ('ckf',), 'landh': ('ckf', 'ck'), 'landh0': ('ck_s', 'ck')}[kind]
-    data_in = {'rlyh0': ('a', 'en'), 'rlyh': ('a', 'ea'), 'landh': ('a', 'ea', 'rs'), 'landh0': ('a', 'rs')}[kind]
-    data_out = {'rlyh0': ('b', 'eb'), 'rlyh': ('b', 'eb'), 'landh': ('b', 'fault'), 'landh0': ('b', 'fault')}[kind]
+    clocks = {'rlyh0': ('ck',), 'rlyh': ('ckf',), 'landh': ('ckf', 'ck'), 'landh0': ('ck_s', 'ck'),
+              'rlyr0': ('ck',), 'rlyr': ('ckf',), 'rlyrl': ('ck',)}[kind]
+    data_in = {'rlyh0': ('a', 'en'), 'rlyh': ('a', 'ea'), 'landh': ('a', 'ea', 'rs'), 'landh0': ('a', 'rs'),
+               'rlyr0': ('a',), 'rlyr': ('a',), 'rlyrl': ('a',)}[kind]
+    data_out = {'rlyh0': ('b', 'eb'), 'rlyh': ('b', 'eb'), 'landh': ('b', 'fault'), 'landh0': ('b', 'fault'),
+                'rlyr0': ('b',), 'rlyr': ('b',), 'rlyrl': ('b',)}[kind]
     fd = FWD_CK_FWD.get(next(k for k, v in CORNERS.items() if v is c), 40.0)
     L = [f'  cell ({master}) {{ area : 0; dont_touch : true; dont_use : true;']
     pn = lambda q: q + '[0]' if (master, q) in IDX else q      # noqa: E731  (LEF pins indexed even at width 1)
@@ -157,7 +172,7 @@ def fwd_cell(master, ports, c, pb, cq, trn):
         if p in clocks:
             body = 'direction : input; clock : true; capacitance : 2.0;'
         elif p == 'ck_o':
-            src = 'ck' if kind == 'rlyh0' else 'ckf'
+            src = 'ck' if kind in ('rlyh0', 'rlyr0') else 'ckf'
             sense = 'negative_unate'    # every forward inverts (hop 0: ck_o = ~gated ck)
             dly = (lambda load, fd=fd: fd + c['k'] * load)
             body = (f'direction : output; max_capacitance : 5000; timing () {{ related_pin : "{pn(src)}"; timing_sense : {sense}; '

@@ -14,7 +14,7 @@ set ::env(OT_IO_HOLD_BUDGET) die
 set ::env(OT_BH_LAUNCH_MIN_PS) 25
 set ::env(OT_BH_TILE_HOLD_UNC_PS) 25
 set ::env(OT_BH_ROUTE_RELIEF_PS) 30
-set ::env(OT_REF_GLOB) {*}
+set ::env(OT_REF_GLOB) {*u_land.rc*}
 set ::env(OT_IO_INTER) {*}
 set ::env(OT_IO_SKEW_INTER) 150
 # Die-context boundary (post-CTS only; OpenROAD 26Q3 crashes on -reference_pin, so it is applied numerically):
@@ -156,8 +156,8 @@ if {[llength [get_ports -quiet tile_id*]]} { set_false_path -from [get_ports til
 # wrappers physical/qwen_fwd_lane/qfd_fwd_lane_masters.sv), sdc_extra + boundary_tcl of every qfwd_* kit (re-applied
 # after every io_ref switch and at sign-off).
 #   station  qfd_rlyh_*   clock port ckf; ck_o = ~ckf through ONE kept inverter -> generated clock ck_o_fwd INVERTED
-#   hop 0    qfd_rlyh0_*  clock port ck (source root); capture on cko = ICG(~ck) (falling ck edge), ck_o = ~cko -> ck
-#                         gated, generated clock ck_o_fwd NOT inverted
+#   hop 0    qfd_rlyh0_*  clock port ck (source root); capture on cko = ICG(ck) (RISING ck edge, Q-DIE11 10-18 kit fix),
+#                         ck_o = ~cko -> generated clock ck_o_fwd INVERTED (the S81 dsfd_dvrlyh form)
 #   landing  qfd_landh_*  clock port ck (receiving root, read side); ckf = the lane clock (ring write side) -> clock
 #                         lane_ckf, same period; landh0: ck_s (source root, ring written on ICG(~ck_s))
 #   ck_o carries no data budget.  The landing's lane inputs a / ea are captured on the lane clock: their IO budget is
@@ -172,22 +172,32 @@ if {[llength [get_ports -quiet ck_o]]} {
       create_generated_clock -name ck_o_fwd -source [get_ports ckf] -divide_by 1 -invert [get_ports ck_o]
       puts "OT_FWD_LANE: station ck_o = ~ckf (generated ck_o_fwd INVERTED, half-cycle hop)"
     } elseif {[llength [get_ports -quiet ck]]} {
-      create_generated_clock -name ck_o_fwd -source [get_ports ck] -divide_by 1 [get_ports ck_o]
-      puts "OT_FWD_LANE: hop-0 ck_o = ck gated (generated ck_o_fwd), capture on the falling ck edge"
+      create_generated_clock -name ck_o_fwd -source [get_ports ck] -divide_by 1 -invert [get_ports ck_o]
+      puts "OT_FWD_LANE: hop-0 ck_o = ~(ck gated) (generated ck_o_fwd INVERTED), capture on the rising ck edge"
     }
   }
 } else {
+  # Q-DIE11b 10-18: idempotent.  The sign-off session reads 6_final.sdc (lane_ckf at the ROUTE period, 770) and then
+  # re-creates core_clk at 833.333 and replaces every input delay on core_clk (unset_input_delay [all_inputs]), so a
+  # skip-if-exists left lane_ckf at the route period and the lane inputs a / ea on core_clk (false-pathed to the ring):
+  # always (re)define lane_ckf at the CURRENT core_clk period and re-apply the lane inputs' budget on it.
   set ot_fl_wp [expr {[llength [get_ports -quiet ckf]] ? "ckf" : "ck_s"}]
-  if {[llength [get_ports -quiet $ot_fl_wp]] && ![llength [get_clocks -quiet lane_ckf]]} {
+  if {[llength [get_ports -quiet $ot_fl_wp]]} {
     create_clock -name lane_ckf -period $ot_fl_T [get_ports $ot_fl_wp]
     set_propagated_clock [get_clocks lane_ckf]
     set ot_fl_in [get_ports -quiet {a[*] ea[*] ea en[*] en}]
     if {[llength $ot_fl_in]} {
-      set_input_delay [expr {0.2 * $ot_fl_T}] -clock lane_ckf $ot_fl_in
+      unset_input_delay $ot_fl_in
+      # max: the tile's 0.2 T outside share; min: the sender's guaranteed launch C + this tile's hold uncertainty U
+      # (OT_BH_LAUNCH_MIN_PS + OT_BH_TILE_HOLD_UNC_PS, 25 + 25; the forwarded edge is the reference, no tree term)
+      set ot_fl_c [expr {[info exists ::env(OT_BH_LAUNCH_MIN_PS)] ? $::env(OT_BH_LAUNCH_MIN_PS) : 25}]
+      set ot_fl_u [expr {[info exists ::env(OT_BH_TILE_HOLD_UNC_PS)] ? $::env(OT_BH_TILE_HOLD_UNC_PS) : 25}]
+      set_input_delay -max [expr {0.2 * $ot_fl_T}] -clock lane_ckf $ot_fl_in
+      set_input_delay -min [expr {$ot_fl_c + $ot_fl_u}] -clock lane_ckf $ot_fl_in
     }
     set_false_path -from [get_clocks lane_ckf] -to $ot_fl_ck
     set_false_path -from $ot_fl_ck -to [get_clocks lane_ckf]
-    puts "OT_FWD_LANE: landing write clock lane_ckf on $ot_fl_wp; ring -> o window = die STA landing MCP"
+    puts "OT_FWD_LANE: landing write clock lane_ckf on $ot_fl_wp (period $ot_fl_T); ring -> o window = die STA landing MCP"
   }
 }
 

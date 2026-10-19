@@ -1,0 +1,77 @@
+{
+ "schema": "opentallas.closure.rtl_rebind_equiv.v1",
+ "lane": "ROOT-0330-EQV",
+ "tile": "qkd_layer_prog_img_r1",
+ "top": "qkd_static_kv_layer_programme_img",
+ "params": [
+  "MUT=0"
+ ],
+ "kit_env_gate_git_blob": "abd139db80595c7b41fc32d5ddbe0d1ddf1b3d23",
+ "change": "ROOT-0300 merge f722b4bbe (from 73cf5c4d4)",
+ "gate_result": "physical/ref_tile/qkd_layer_prog_img_r1/gate_result.json",
+ "srcs": [
+  {
+   "path": "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_layer_programme_rom.sv",
+   "gate_git_blob": "b492b320682936b10361307aeeace90c26a142ec",
+   "file": "00_qkd_static_kv_layer_programme_rom.sv"
+  }
+ ],
+ "includes": [
+  {
+   "path": "rtl/qwen_sys/static_kv_20261014/layer_programme_image.svh",
+   "gate_git_blob": "f4acac929a03467745b9f8183478795556a58037"
+  }
+ ],
+ "changed_files": [
+  {
+   "path": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_stack_fault.sv",
+   "gate_git_blob": "014f7a889b431fe462093de1aa52756166a4db59",
+   "new_git_blob": "8cc5f2311f77a9caf64578debd87a55903df41ae",
+   "in_srcs": false,
+   "included_by_srcs": false,
+   "modules": [
+    "ot_hbm_svc_stack_fault"
+   ],
+   "modules_named_in_srcs": []
+  },
+  {
+   "path": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_cutthrough_cdc.sv",
+   "gate_git_blob": "593322c076c8063f8c1550e47154b012748c4682",
+   "new_git_blob": "775c459d05e436c94692f74fafa6ec6721899a5c",
+   "in_srcs": false,
+   "included_by_srcs": false,
+   "modules": [
+    "ot_hbm_svc_wb_cutthrough_cdc"
+   ],
+   "modules_named_in_srcs": []
+  }
+ ],
+ "method": "flow yosys (docker openroad/orfs:asap7lock) on the fleet: read_verilog -defer -sv -DSYNTHESIS of the gate-bound kit SRCS (+`include files) then the changed file(s) at OLD (gate-bound blob) / NEW (f722b4bbe blob); hierarchy -top TOP -chparam <kit PARAMS>; proc; flatten; opt_clean -purge; rename -enumerate; write_verilog -noattr -> sha256; plus equiv_make/equiv_simple -seq 5/equiv_induct -seq 5/equiv_status -assert (after async2sync; memory_map) of OLD vs NEW flattened top",
+ "old": {
+  "exit": "exit=0",
+  "netlist_sha256": "2e9125e25259c1a78fda3e3a311fe86193f716c0c029c9ca494656ff19999dae",
+  "netlist_rtlil_sha256": "dc3100b4eedd7abf0593bd44645ab8b2fc5d6da714e2a42707485b43604a6592",
+  "modules": [
+   "$paramod$d5f4c6e2a15612d82b1a4394b236a6040f88feb7\\qkd_static_kv_layer_programme_rom",
+   "qkd_static_kv_layer_programme_img"
+  ]
+ },
+ "new": {
+  "exit": "exit=0",
+  "netlist_sha256": "2e9125e25259c1a78fda3e3a311fe86193f716c0c029c9ca494656ff19999dae",
+  "netlist_rtlil_sha256": "dc3100b4eedd7abf0593bd44645ab8b2fc5d6da714e2a42707485b43604a6592",
+  "modules": [
+   "$paramod$d5f4c6e2a15612d82b1a4394b236a6040f88feb7\\qkd_static_kv_layer_programme_rom",
+   "qkd_static_kv_layer_programme_img"
+  ]
+ },
+ "netlist_hash_identical": true,
+ "changed_modules_elaborated": [],
+ "equiv": {
+  "proven": true,
+  "equiv_cells": 3487,
+  "log": "results/closure/root0330_rebind_equiv/logs/qkd_layer_prog_img_r1/equiv.log.xz"
+ },
+ "logs": "results/closure/root0330_rebind_equiv/logs/qkd_layer_prog_img_r1/",
+ "verdict": "EQUAL_NOT_ELABORATED"
+}

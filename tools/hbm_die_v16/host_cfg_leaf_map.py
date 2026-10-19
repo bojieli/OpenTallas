@@ -22,6 +22,24 @@ order is leaf SW, SE, NW, NE (each leaf's bits in d4f index order) -> new TGTS /
 """
 import argparse, json, re
 QS = ('SW', 'SE', 'NW', 'NE')
+# HBM-B-RTL1b 10-17 (coordinator 0ds): one hardened variant per quadrant at its EXACT widths (no tied status input, no
+# spare id); the variant name / kit and the widths it was hardened at (checked against the derived NT / NF below).
+VARIANT = {'SW': ('ot_hbm_host_cfg_leaf_sw', 'hdie_host_cfg_leaf_sw_r1', 18, 29),
+           'SE': ('ot_hbm_host_cfg_leaf_se', 'hdie_host_cfg_leaf_se_r1', 18, 26),
+           'NW': ('ot_hbm_host_cfg_leaf_nw', 'hdie_host_cfg_leaf_nw_r1', 19, 29),
+           'NE': ('ot_hbm_host_cfg_leaf_ne', 'hdie_host_cfg_leaf_ne_r1', 14, 23)}
+
+
+def split_ab(tq, pins_of):
+    """copy A (W face) / copy B (E face): balanced sink pins, deterministic (largest first, ties by name).  Both copies
+    are equal-age (CFG_LAT 2), so the die generator may move a target to the face nearer it without any cycle change."""
+    a, b, na, nb = [], [], 0, 0
+    for n in sorted(tq, key=lambda n: (-pins_of[n], n)):
+        if na <= nb:
+            a.append(n); na += pins_of[n]
+        else:
+            b.append(n); nb += pins_of[n]
+    return sorted(a), sorted(b), na, nb
 HOME_DIE_WIDE = {'col_su': 'SE', 'col_idx': 'SE', 'hc_eng': 'SE'}
 EP = {'ep_S0': 'SW', 'ep_S1': 'SW', 'ep_S3': 'SE', 'ep_N0': 'NW', 'ep_N2': 'NE'}   # plan (b) epq (+ S1 = host link, W)
 
@@ -71,13 +89,26 @@ def main():
         fq = sorted(i for n in tq + sq for i in flt.get(n, []))
         order_r += rq; order_f += fq
         pins = sorted({f'{n}.{p.split("->")[1]}' for n in tq for p in f['cfg'][n]})
-        leaves[q] = dict(instance=f'hleaf_{q}', master='ot_hbm_host_cfg_leaf', NT=len(rq), NF=len(fq),
-                         targets=tq, status_only_sources=sq, sink_pins=len(pins), t_ready_d4f_index=rq, t_fault_d4f_index=fq)
+        pins_of = {n: len({p.split('->')[1] for p in f['cfg'][n]}) for n in tq}
+        ca, cb, na, nb = split_ab(tq, pins_of)
+        mod, kit, vnt, vnf = VARIANT[q]
+        assert (vnt, vnf) == (len(rq), len(fq)), (q, vnt, vnf, len(rq), len(fq))
+        src = lambda x: f'{x[0]}.{x[1]}[{x[2]}]'
+        leaves[q] = dict(instance=f'hleaf_{q}', master=mod, kit=kit, NT=len(rq), NF=len(fq),
+                         targets=tq, copy_a_W_face=ca, copy_b_E_face=cb, copy_sink_pins=[na, nb],
+                         status_only_sources=sq, sink_pins=len(pins),
+                         t_ready_d4f_index=rq, t_fault_d4f_index=fq,
+                         t_ready_order=[[k, i, src(st['t_ready'][i])] for k, i in enumerate(rq)],
+                         t_active_order=[[k, i, src(st['t_active'][i])] for k, i in enumerate(rq)],
+                         t_fault_order=[[k, i, src(st['t_fault'][i])] for k, i in enumerate(fq)])
     nostat = [n for n in targets if n not in rdy and n not in flt]
     unmapped_r = sorted(set(range(nt)) - set(order_r)); unmapped_f = sorted(set(range(nf)) - set(order_f))
     new_tgts = ''.join(f'{tg[i]:02x}' for i in reversed(order_r))
     out = dict(schema='opentallas.hbm_d4g.host_cfg_leaf_map.v1', basis='d4f run8b regen contract (claude/hdie-d4f-r8b-1017)',
                rule=__doc__.split('Leaf rule')[1].split('Status:')[0].strip(), cfg_lat_edges=2, st_lat_edges=2,
+               leaf_bind_note='leaf input t_ready[k] / t_active[k] / t_fault[k] = the source in *_order[k] = [k, d4f index, '
+                              'instance.pin[bit]]; s_* output k = the same bit (order preserved) -> host_status input '
+                              'by join_d4g perm. Every leaf input and output has a real driver / sink (no ties).',
                leaves=leaves, rules_used={n: leaf[n][1] for n in targets + stat_only},
                targets_without_status=nostat,
                status_sources_not_cfg_targets=dict(t_ready=[(i, st['t_ready'][i][0]) for i in unmapped_r],

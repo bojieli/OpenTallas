@@ -6,17 +6,17 @@
  "die": [
   0,
   0,
-  181.44,
-  181.44
+  345.6,
+  345.6
  ],
  "core": [
   2.16,
   2.16,
-  179.28,
-  179.28
+  343.44,
+  343.44
  ],
- "why": "util 0.52 of std 16108 + macros 0 um2",
- "std_area_um2": 16108,
+ "why": "util 0.52 of std 60000 + macros 0 um2",
+ "std_area_um2": 60000,
  "layer_contract": {
   "children": {},
   "pg_layer": "M5",
@@ -54,12 +54,18 @@
    "s_i",
    "s",
    "rb_v",
-   "rb_d"
+   "rb_d",
+   "e_v",
+   "e_c",
+   "e_hh",
+   "e_kk",
+   "e_dd"
   ],
   "S": [
    "clk",
    "rst_n",
    "go",
+   "mode",
    "sid",
    "eps",
    "fault"

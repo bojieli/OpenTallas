@@ -178,7 +178,8 @@ module ot_hbm_su_programme #(
   parameter [32*COLS-1:0] DICT_BANKS={COLS{32'd1}},
   parameter integer MACROS=INDEX_GROUPS*INDEX_BANKS+COLS,
   parameter integer PIPE=0, MUT=0,
-  parameter integer IOG=4, IGRP=4, DOG=2, RS=4, CFGR=4   // PIPE 2 only
+  parameter integer IOG=4, IGRP=4, DOG=2, RS=4, CFGR=4,  // PIPE 2 only
+  parameter integer FADV=0                               // PIPE 2: fault reported FADV edges earlier (pgcol leaf: 1)
 )(input logic clk, rst_n, input logic [MACROS-1:0] clk_macro,
   input logic cfg_we, input logic [15:0] cfg_bank, input logic [6:0] cfg_row,
   input logic [255:0] cfg_data,
@@ -195,14 +196,16 @@ module ot_hbm_su_programme #(
     end
   endfunction
   localparam integer TOTAL_BANKS=dict_base(COLS);
-  localparam integer XI=(PIPE==2)?(2+((IGRP>0)?1:0)):(PIPE!=0)?2:0; // extra index-path edges (pair/og reg [+ group] + indices_r)
+  // PIPE 2 third index stage: the registered funnel group (unpacked, IGRP > 0) or, packed (pgcol leaf), the registered
+  // 16:1 word select of the packed index row
+  localparam integer XSTG=(IGRP>0 || INDEX_PACK>1)?1:0;
+  localparam integer XI=(PIPE==2)?(2+XSTG):(PIPE!=0)?2:0; // extra index-path edges (pair/og reg [+ group] + indices_r)
   localparam integer XD=(PIPE!=0)?1:0;          // extra dictionary-path edges (pair register)
   localparam integer XP=XI+XD;
 `ifndef SYNTHESIS
   initial if(MACROS!=TOTAL_BANKS) $fatal(1,"programme MACROS capacity mismatch");
-`endif
-`ifndef SYNTHESIS
-  initial if(PIPE!=0 && INDEX_PACK!=1) $fatal(1,"programme PIPE requires unpacked indices");
+  initial if(PIPE==1 && INDEX_PACK!=1) $fatal(1,"programme PIPE 1 requires unpacked indices");
+  initial if(FADV<0 || (PIPE!=2 && FADV!=0) || FADV>XP-1) $fatal(1,"programme FADV only with PIPE 2, < XP");
 `endif
   logic issue,v1,v2;
   logic [15:0] pc, count, e1,e2;
@@ -267,8 +270,8 @@ module ot_hbm_su_programme #(
       assign w_data[256*wbg+:256]=wdat_r[(wbg*CFGR)/TOTAL_BANKS];
     end
     for(g=0;g<INDEX_GROUPS;g=g+1) begin:ix
-      ot_hbm_su_programme_mem_r4 #(.BANKS(INDEX_BANKS),.OG(IOG),.GRP(IGRP),.RS(RS),.MUT(MUT==1)) mem(
-        .clk(clk),.clk_macro(clk_macro[g*INDEX_BANKS+:INDEX_BANKS]),.ren(issue),.addr(pc),
+      ot_hbm_su_programme_mem_r4 #(.BANKS(INDEX_BANKS),.OG(IOG),.GRP((INDEX_PACK>1)?0:IGRP),.RS(RS),.MUT(MUT==1)) mem(
+        .clk(clk),.clk_macro(clk_macro[g*INDEX_BANKS+:INDEX_BANKS]),.ren(issue),.addr(pc >> INDEX_SHIFT),
         .w_ce(wce_r[g*INDEX_BANKS+:INDEX_BANKS]),.w_row(w_row[7*g*INDEX_BANKS+:7*INDEX_BANKS]),
         .w_data(w_data[256*g*INDEX_BANKS+:256*INDEX_BANKS]),.data(index_rows[g*256+:256]));
     end
@@ -289,13 +292,21 @@ module ot_hbm_su_programme #(
     logic [INDEX_GROUPS*256-1:0] indices_r;
     (* keep *) logic [COLS-1:0] vi_c;
     (* keep *) logic [COLS*RS-1:0] vd_c;
+    if(INDEX_PACK>1) begin:g_pk
+      // packed (one column): index_rows is the og register AND-OR (aligned with va/ea); the 16-bit word of edge ea is
+      // selected and registered (aligned with vb/eb), then indices_r (vi/ei) as the unpacked path
+      logic [15:0] ixw;
+      always_ff @(posedge clk) begin ixw<=index_rows[16*ea[INDEX_SHIFT-1:0]+:16]; indices_r<={{(INDEX_GROUPS*256-16){1'b0}},ixw}; end
+    end else begin:g_upk
+      always_ff @(posedge clk) indices_r<=indices;
+    end
     always_ff @(posedge clk) begin
-      indices_r<=indices; ea<=e1; ei<=(IGRP>0)?eb:ea; eb<=ea; ed<=e2;
+      ea<=e1; ei<=(XSTG>0)?eb:ea; eb<=ea; ed<=e2;
     end
     always_ff @(posedge clk) if(!rst_n) begin va<=0; vb<=0; vi<=0; vd<=0; vi_c<='0; vd_c<='0; end
       else begin
-        va<=v1; vb<=va; vi<=(IGRP>0)?vb:va; vd<=v2;
-        vi_c<={COLS{(IGRP>0)?vb:va}}; vd_c<={(COLS*RS){v2}};
+        va<=v1; vb<=va; vi<=(XSTG>0)?vb:va; vd<=v2;
+        vi_c<={COLS{(XSTG>0)?vb:va}}; vd_c<={(COLS*RS){v2}};
       end
     assign d_ren=vi; assign d_e=ei; assign d_addr=indices_r; assign d_ren_c=vi_c;
     assign c_v=vd; assign c_e=ed; assign c_v_c=vd_c;
@@ -306,7 +317,7 @@ module ot_hbm_su_programme #(
         busy_q<=(MUT==2)?nb:(nb && busy_d[XP-2]);
       end
     assign busy=busy_q;
-    assign fault=fault_d[XP-1];
+    assign fault=fault_d[XP-1-FADV];
   end else begin:g_p1
     // index path: v1 (index macro data at its pair registers next edge) -> va -> vi (indices_r valid) = d_ren
     logic va, vi, vd; logic [15:0] ea, ei, ed;

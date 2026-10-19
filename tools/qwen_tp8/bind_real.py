@@ -30,7 +30,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-SKIP_RE = re.compile(r'^(q[fk]d_rly|qfd_rst_rep)')
+# Q-DIE13 10-18: qfd_rst_rep / _p8 are CLOSED (979687b41); a case planned with OT_RST_REP_VIEW=closed binds them
+SKIP_RE = re.compile(r'^(q[fk]d_rly)' if os.environ.get('OT_RST_REP_VIEW', '') == 'closed' else r'^(q[fk]d_rly|qfd_rst_rep)')
 PG = ('VDD', 'VSS', 'VDDM', 'VSSM')
 # Slot-name wrappers are identity renames only: pins, geometry and timing stay in the
 # CLOSED source view. tp8b_v5 emits the source RTL ports and preserves the clock pin clk.

@@ -912,6 +912,9 @@ def _corner_keep(poss, along, step, cr, off, p, label):
     return out
 
 
+MX_AREA = set()     # masters placed MX whose M8 area pins snap to the mirrored track grid (opt-in, kv_die)
+
+
 def pin_rects(mst, k, wmap):
     """[(pin name, layer, (x0, y0, x1, y1))] for one master.  wmap: port -> width actually emitted."""
     out = []
@@ -930,7 +933,14 @@ def pin_rects(mst, k, wmap):
             _, _, x, yc, pitch = spec
             off, p = TRK['M8']
             step = p * k * pitch
-            y = off * k + round((yc - n * step / 2 - off * k) / (p * k)) * p * k
+            if mst.name in MX_AREA:
+                # KV-CLOCK 10-18 (kvs14b real case 'qkd_pvw_n MX y: site grid never meets the legal residues mod 240'):
+                # a master the die places MX puts its M8 area pins on the MIRRORED track grid, H - (off + j p), so the
+                # 270-nm row origin can meet the M8 tracks (an n x 2.16 - 0.024 frame never does with R0-grid pins)
+                base = mst.h - off * k
+                y = base + round((yc - n * step / 2 - base) / (p * k)) * p * k
+            else:
+                y = off * k + round((yc - n * step / 2 - off * k) / (p * k)) * p * k
             hw = 0.020 * k
             for i, nm in enumerate(names):
                 yy = y + i * step
