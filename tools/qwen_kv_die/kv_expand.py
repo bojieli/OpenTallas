@@ -78,6 +78,8 @@ VIEWS = dict(
     # of 9 CLOSED leaves -> die-placed (the die is its parent), no hardened cluster view
     qkd_seq_core_static_s=f'{RT}/qkd_seq_core_st_s/views/qkd_seq_core_static_s',
     qkd_seq_xs_s=f'{RT}/qkd_seq_xs_s/views/qkd_seq_xs_s', qkd_seq_fan_s=f'{RT}/qkd_seq_fan_s/views/qkd_seq_fan_s',
+    # AD3-KV-RSHD 10-18: the header's half-local-select successor (pv_trunk_gen --rs-hd f; _r fails native capture 259.9)
+    qkd_pv_rs_hd_f=f'{RT}/qkd_pv_rs_hd_f/views/qkd_pv_rs_hd_f',
 )
 SR = 'rtl/qwen_sys/split_20261014'
 RTL = dict(ot_qkh_head_frontq_native=f'{SR}/ot_qkh_head_native_r4.sv', ot_qkh_head_score4_native=f'{SR}/ot_qkh_head_native_r4.sv',
@@ -92,7 +94,8 @@ RTL = dict(ot_qkh_head_frontq_native=f'{SR}/ot_qkh_head_native_r4.sv', ot_qkh_he
               ('ot_qwen_tp8_pv_slice_t', 'ot_qwen_tp8_pv_join_t', 'ot_qwen_tp8_pv_wide_ctl')},
            ot_qwen_tp8_pv_wide_ctl_t='rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_ctl_t.sv',
            **{f'qkd_rlys_{w_}': 'rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv' for w_ in (1, 36, 296)},
-           **{m_: 'rtl/qwen_sys/split_20261014/qkd_pv_rtrunk.sv' for m_ in ('qkd_rlyi_258', 'qkd_pv_rs_hd', 'qkd_rlyi_258s', 'qkd_pv_rs_hd_r')},
+           **{m_: 'rtl/qwen_sys/split_20261014/qkd_pv_rtrunk.sv' for m_ in ('qkd_rlyi_258', 'qkd_pv_rs_hd', 'qkd_rlyi_258s', 'qkd_pv_rs_hd_r',
+                                                                     'qkd_pv_rs_hd_f')},
            **{m_: 'rtl/qwen_sys/static_kv_20261014/qkd_seq_static_s.sv' for m_ in
               ('qkd_seq_core_static_s', 'qkd_seq_xs_s', 'qkd_seq_fan_s')})
 # v1.4.4: wires-only sub-levels of an expanded parent (flattened with the parent; never a die instance)

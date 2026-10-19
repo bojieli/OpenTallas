@@ -44,6 +44,10 @@ sys.path.insert(0, str(ROOT / 'tools'))
 CELL_MODELS = {  # ASAP7 7.5T RVT library function (asap7sc7p5t_INVBUF_RVT): Y = A / Y = ~A
     'BUFx8_ASAP7_75t_R': 'module BUFx8_ASAP7_75t_R (input A, output Y); assign Y = A; endmodule',
     'INVx2_ASAP7_75t_R': 'module INVx2_ASAP7_75t_R (input A, output Y); assign Y = ~A; endmodule',
+    # S81-LBGAP/G1 hop-0 lane clock gate (asap7sc7p5t_SEQ ICGx4): latch transparent while CLK is low, ANDed with CLK
+    'ICGx4_ASAP7_75t_R': ('module ICGx4_ASAP7_75t_R (input CLK, input ENA, input SE, output GCLK); reg en_l; '
+                          '/* verilator lint_off COMBDLY */ always_latch if (!CLK) en_l = ENA | SE; /* verilator lint_on COMBDLY */ '
+                          'assign GCLK = CLK & en_l; endmodule'),
 }
 DEFAULT_PREFER = ['tools/s81_dv/frame_bench.f', 'tools/s81_dv/svc_rs/rs_files.sh']
 MACRO_DIRS = ['physical/asap7_memory_macros_v2', 'physical/asap7_memory_macros']
@@ -153,7 +157,7 @@ def main(argv=None):
 
     defs = defaultdict(list)         # module -> [(path, Module)]   (parse cache: per ref sha + defines, ~3 min cold)
     import pickle
-    ck = Path.home() / '.cache' / 'dv_rtl_kit' / (sha + '_' + hashlib.sha256(repr((sorted(defines), sorted(texts))).encode()).hexdigest()[:16] + '.pkl')
+    ck = Path.home() / '.cache' / 'dv_rtl_kit' / (sha + '_' + hashlib.sha256(repr((sorted(defines), sorted(texts), texts['cells_used.v'])).encode()).hexdigest()[:16] + '.pkl')
     parsed = None
     if ck.exists():
         try:
@@ -311,6 +315,9 @@ def main(argv=None):
     top_text = Path(a.top_v).read_text(errors='replace') if not a.top_v.endswith('.gz') else \
         __import__('gzip').open(a.top_v, 'rt').read()
     nets, tin, tout, insts = D.parse_die(a.top_v if not a.top_v.endswith('.gz') else _ungz(a.top_v, out), a.top)
+    # bench-side modules defined in the top file itself (dv_slice_cut dv_flight_sim, S81-LBGAP/G1) need no RTL source
+    local_mods = set(re.findall(r'^\s*module\s+(\w+)', top_text, re.M))
+    insts = [i for i in insts if i[0] not in local_mods]
     masters = sorted({i[0] for i in insts if i[0] != '__assign__'})
     pref_of = {}
     for k, (p, lab) in enumerate(pref_order):

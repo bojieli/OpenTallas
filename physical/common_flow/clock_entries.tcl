@@ -57,10 +57,14 @@ if {[info procs clock_tree_synthesis] ne "" && [info procs ot_ce_cts_orig] eq ""
             set inst [sta::sta_to_db_inst [lindex $cell 0]]
             if {[ot_ce_raw_memory_sink $inst $pin $pname]} {continue}
             # PL-KIT 10-18 landed cluster (ref_tile clock_entry_constraints.landed_cluster): a bound hard child's clock
-            # pin is an ordinary sink of its region root (the post-CTS SDC measures it at the child's flops)
+            # pin is an ordinary sink of its region root (the post-CTS SDC measures it at the child's flops); HF-4d 10-19:
+            # so is a bound RAW SRAM clock pin of that child (::ot_ce_landed_raw, leaf closed record; no ETM arcs, judged
+            # post-CTS against its co-timed CTS-root pin)
             if {[info exists ::ot_ce_landed_cluster] && $::ot_ce_landed_cluster && $inst ne "NULL" && [[$inst getMaster] isBlock]
                 && [info exists ::ot_ce_counts] && [dict exists $::ot_ce_counts [[$inst getMaster] getName]]
-                && [get_full_name $pin] in $regnames} {continue}
+                && ([get_full_name $pin] in $regnames
+                    || ([info exists ::ot_ce_landed_raw]
+                        && [dict exists $::ot_ce_landed_raw "[[$inst getMaster] getName]/[get_property $pin lib_pin_name]"]))} {continue}
             if {$inst eq "NULL" || [[$inst getMaster] isBlock] || [get_full_name $pin] ni $regnames} {
               error "OT_HYBRID: CTS source $pname must reach only standard-cell clock pins"
             }
