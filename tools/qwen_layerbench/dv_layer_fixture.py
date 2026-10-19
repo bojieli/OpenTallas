@@ -350,7 +350,7 @@ def run_tp8stages(a):
         np.savez_compressed(p, **arrays)
         stages[name] = dict(file=p.name, sha256=sha(p), keys=sorted(arrays))
 
-    s = {pc: snapshot(n, pc) for pc in (0, 1, 18, 20, 21, 22, 23, 24)}
+    s = {pc: snapshot(n, pc) for pc in (0, 1, 2, 9, 18, 20, 21, 22, 23, 24)}
     x, rx, gu, act, qkv = (vm[k] for k in ('X', 'RX', 'GU', 'ACT', 'QKV'))
     ar = [i for i, seg in enumerate(im.descriptors) if seg['kind'] == P.COLL_ALLREDUCE]
     if len(ar) != 2:
@@ -362,6 +362,23 @@ def run_tp8stages(a):
     ps = im.manifest['post_tp_scale_bases']
     save('resid1', x=s[18][x:x + 4096], t=returns[0], ps1=im.crom[ps[0]:ps[0] + 4096, 0],
          gold_x=s[20][x:x + 4096], gold_r=np.array([s[22][rx]], dtype=F), pos=pos)
+    # Native TP8 has four Q heads and one K head. Pin gains to the
+    # actual source instruction and verify the repeated Q-head gain rows.
+    cb = im.program[6]['c_base']
+    if cb != 4096:
+        raise SystemExit(f'unexpected native QK CROM base {cb}')
+    q_norm = im.crom[cb:cb + 128, 0].copy()
+    for head in range(1, 4):
+        if not np.array_equal(G.bits(q_norm), G.bits(im.crom[cb + head*128:cb + (head+1)*128, 0])):
+            raise SystemExit('native Q norm gains differ by head')
+    k_norm = im.crom[cb + 4*128:cb + 5*128, 0].copy()
+    k_row = recorded_hex(dd / 'new_K_row_fp32.hex')
+    v_row = recorded_hex(dd / 'new_V_row_fp32.hex')
+    if len(k_row) != 128 or len(v_row) != 128:
+        raise SystemExit('native TP8 K/V row has wrong shape')
+    save('qk', qkv=s[1][qkv:qkv + 768], r=np.array([s[2][rx]], dtype=F),
+         q_norm=q_norm, k_norm=k_norm, pos=pos,
+         gold_q=s[9][vm['QR']:vm['QR'] + 512], gold_k=k_row, gold_v=v_row)
     save('silu', gu=s[21][gu:gu + 3072], r=np.array([s[22][rx]], dtype=F),
          gold_act=s[24][act:act + 1536], gu_r=s[23][gu:gu + 3072])
     for name, pc, base, rows, split, xin in (
