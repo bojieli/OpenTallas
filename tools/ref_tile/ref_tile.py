@@ -1689,6 +1689,15 @@ def gen_hooks(s: dict, kd: str) -> dict:
             pre_cts.append("set ::ot_ce_cts_roots {" + " ".join(roots) + "}")
             if clock_entry_constraints.landed_cluster(s):
                 pre_cts.append("set ::ot_ce_landed_cluster 1")
+                # TW-HBM-PSLICE 10-19 (b895c55d9 on claude/pl-pslice-1018): clock_entries.tcl admits a hard child's clock
+                # pin as a region-root sink only when its master is in ::ot_ce_counts; that dict was set only post-CTS
+                # (clock_entry.sdc) and write_sdc drops Tcl variables, so every real landed kit failed "CTS source must
+                # reach only standard-cell clock pins" (pslice_c5_lp real3; the unit test set the dict by hand)
+                lc = {}
+                for ch in s.get("children", []):
+                    m = Path(ch["view"]).name
+                    lc[m] = lc.get(m, 0) + int(ch.get("count", 1))
+                pre_cts.append("set ::ot_ce_counts [dict create " + " ".join(f"{{{m}}} {n}" for m, n in lc.items()) + "]")
             pre_cts.extend(raw_macro_clocks.tcl(raw_bindings))
         pre_cts.append("source /src/physical/common_flow/clock_entries.tcl")
         # HF-4d 10-19: raw SRAM clock pins of a landed cluster's hard child get their record-signed-off delay AFTER CTS
