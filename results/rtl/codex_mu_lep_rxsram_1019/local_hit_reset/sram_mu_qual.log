@@ -1,0 +1,56 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/codex-mu-lep-txscopev4-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-mu-lep-txscopev4-1019
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-mu-lep-txscopev4-1019
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-mu-lep-txscopev4-1019
+ot-run: ot-epyc8       admits  1186 GB (avail 931, growth 101, headroom 0, waiters 0/0 GB) load 30/128 running 22 disk 270 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-mu-lep-txscopev4-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-mu-lep-txscopev4-1019
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-1580278-1792431332 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+LEP_MU_STATS A recv 280/280 B recv 240/240 mismatches 0 | latency user identity 1 (A 120 beats, ref 120) | main faults 0000000 | F1 full-slot 1 F2 empty-replay 1 F3 ab-user0 1 | return P ri 240/240 landed 160/160
+PASS lep_mu: 6 users on the static calendar, copies A/B by the slot bit (user 0 on A), 280 + 240 beats bit-exact with tags, 2 landed + replayed per copy, latency user cycle- and bit-identical to the single-user run (120 beats), F1/F2/F3 faulted; return to the A/B master over pairs A and B: 240 cut-through and 160 landed beats exact
+BENCH_PASS lepmu MUT=none seed 5
+Verilator 5.050 2026-07-01 rev v5.050
+MISMATCH A beat 40 cyc 8338: got 984f383adbc24485.. rt 00000000 exp 984f383adbc24485.. rt 80000064
+MISMATCH A beat 41 cyc 8339: got 1416c739003cfc15.. rt 00000000 exp 1416c739003cfc15.. rt 80000064
+MISMATCH A beat 42 cyc 8340: got bbb523d797012025.. rt 00000000 exp bbb523d797012025.. rt 80000064
+MISMATCH A beat 43 cyc 8342: got f1d65d4d0dd69a65.. rt 00000000 exp f1d65d4d0dd69a65.. rt 80000064
+MISMATCH A beat 44 cyc 8343: got 445d53d0e13a3825.. rt 00000000 exp 445d53d0e13a3825.. rt 80000064
+MISMATCH A beat 45 cyc 8344: got f127a1e928502045.. rt 00000000 exp f127a1e928502045.. rt 80000064
+MISMATCH A beat 46 cyc 8346: got b1b4dc6c0ebbf225.. rt 00000000 exp b1b4dc6c0ebbf225.. rt 80000064
+LEP_MU_STATS A recv 440/280 B recv 240/240 mismatches 960 | latency user identity 0 (A 440 beats, ref 120) | main faults 0110011 | F1 full-slot 1 F2 empty-replay 1 F3 ab-user0 1 | return P ri 400/240 landed 0/160
+FAIL lep_mu: recv A 440/280 B 240/240 mismatches 960 identity 0 main faults 0110011 F1 1 F2 1 F3 1 return P 400/240 L 0/160
+BENCH_FAIL lepmu MUT=TAGDROP seed 1
+MUTANT_DETECTED lepmu TAGDROP
+Verilator 5.050 2026-07-01 rev v5.050
+MISMATCH A beat 120 cyc 10440: got d4975ea63522ea45.. rt 80600067 exp a8d5aaf7608c0625.. rt 80400066
+MISMATCH A beat 121 cyc 10441: got d30dc3952b81e675.. rt 80600067 exp f6c79cbbda6d4a65.. rt 80400066
+MISMATCH A beat 122 cyc 10442: got 7a8d2d86cd729065.. rt 80600067 exp 98a6130af3dd3415.. rt 80400066
+MISMATCH A beat 123 cyc 10444: got 4e841d8c998c8a65.. rt 80600067 exp cb6f35c502162815.. rt 80400066
+MISMATCH A beat 124 cyc 10445: got 8b822f0a9e626845.. rt 80600067 exp b2ca7ce43438aa65.. rt 80400066
+MISMATCH A beat 125 cyc 10446: got 4656bef3cfc69065.. rt 80600067 exp 08ba5bf493431085.. rt 80400066
+MISMATCH A beat 126 cyc 10448: got ab407e141c9daa45.. rt 80600067 exp 02bd16fdca568c65.. rt 80400066
+LEP_MU_STATS A recv 280/280 B recv 0/240 mismatches 80 | latency user identity 1 (A 120 beats, ref 120) | main faults 0110011 | F1 full-slot 1 F2 empty-replay 1 F3 ab-user0 1 | return P ri 240/240 landed 160/160
+FAIL lep_mu: recv A 280/280 B 0/240 mismatches 80 identity 1 main faults 0110011 F1 1 F2 1 F3 1 return P 240/240 L 160/160
+BENCH_FAIL lepmu MUT=WRONGCOPY seed 1
+MUTANT_DETECTED lepmu WRONGCOPY
+Verilator 5.050 2026-07-01 rev v5.050
+MISMATCH B beat 0 cyc 9038: got 9724fda448bc1835.. rt 80200065 exp 0000000000000000.. rt 00000000
+MISMATCH B beat 1 cyc 9039: got 8a76994ee9119c35.. rt 80200065 exp 0000000000000000.. rt 00000000
+MISMATCH B beat 2 cyc 9040: got 2d0b0e64a0626e15.. rt 80200065 exp 0000000000000000.. rt 00000000
+MISMATCH B beat 3 cyc 9042: got 3f8ed397cce1f265.. rt 80200065 exp 0000000000000000.. rt 00000000
+MISMATCH B beat 4 cyc 9043: got 69ab984d7f21be45.. rt 80200065 exp 0000000000000000.. rt 00000000
+MISMATCH B beat 5 cyc 9044: got 283de9e500cbee25.. rt 80200065 exp 0000000000000000.. rt 00000000
+MISMATCH B beat 6 cyc 9048: got e1dd6defb77aec55.. rt 80200065 exp 0000000000000000.. rt 00000000
+LEP_MU_STATS A recv 440/280 B recv 240/240 mismatches 640 | latency user identity 1 (A 120 beats, ref 120) | main faults 0110011 | F1 full-slot 1 F2 empty-replay 1 F3 ab-user0 1 | return P ri 400/240 landed 0/160
+FAIL lep_mu: recv A 440/280 B 240/240 mismatches 640 identity 1 main faults 0110011 F1 1 F2 1 F3 1 return P 400/240 L 0/160
+BENCH_FAIL lepmu MUT=LANDCUT seed 1
+MUTANT_DETECTED lepmu LANDCUT
+Verilator 5.050 2026-07-01 rev v5.050
+LEP_MU_STATS A recv 280/280 B recv 240/240 mismatches 0 | latency user identity 1 (A 120 beats, ref 120) | main faults 0000000 | F1 full-slot 0 F2 empty-replay 1 F3 ab-user0 1 | return P ri 240/240 landed 160/160
+FAIL lep_mu: recv A 280/280 B 240/240 mismatches 0 identity 1 main faults 0000000 F1 0 F2 1 F3 1 return P 240/240 L 160/160
+BENCH_FAIL lepmu MUT=LANDOVR seed 1
+MUTANT_DETECTED lepmu LANDOVR
+SRAM_QUAL_PASS lepmu
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-1580278-1792431332): exit 0
