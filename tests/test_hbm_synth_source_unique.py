@@ -22,5 +22,17 @@ class SourceUniqueTest(unittest.TestCase):
             self.assertEqual(reads, ["read_verilog -sv -DSYNTHESIS rtl/scoped.sv", "read_verilog -sv -DSYNTHESIS v16w/wrap.sv", "read_verilog -sv -DSYNTHESIS rtl/other.sv"])
             self.assertIn("hierarchy -check -top wrap", ys.read_text())
 
+    def test_drop_exact_alias_before_canonical_dedup(self):
+        script = (ROOT / "tools/hbm_die_v15/synth_master.sh").read_text()
+        generator = script.split("<<'PY'\n", 1)[1].split("\nPY\n", 1)[0]
+        with tempfile.TemporaryDirectory() as tmp:
+            td = Path(tmp)
+            inp, ys = td / "files.json", td / "out.ys"
+            inp.write_text(json.dumps({"files": ["rtl/scoped.sv", "rtl/./scoped.sv", "rtl/other.sv"], "macros": []}))
+            args = [str(inp), str(ys), "top", "-", "-", "sample", "0", "1", "", "", "0", "", "rtl/scoped.sv"]
+            subprocess.run([sys.executable, "-", *args], input=generator, text=True, cwd=td, check=True)
+            reads = [x for x in ys.read_text().splitlines() if x.startswith("read_verilog")]
+            self.assertEqual(reads, ["read_verilog -sv -DSYNTHESIS rtl/./scoped.sv", "read_verilog -sv -DSYNTHESIS rtl/other.sv"])
+
 if __name__ == "__main__":
     unittest.main()

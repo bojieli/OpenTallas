@@ -21,6 +21,11 @@ import json,sys
 d=json.load(open(sys.argv[1])); dfs=''.join(f' -D{x}' for x in sys.argv[9].split(',') if x)
 for f in [x for x in sys.argv[10].split(',') if x]:   # EXTRA: files outside the indexed RTL roots (e.g. rtl/model_ready_*)
     d['files'].insert(0, f)
+ys=sys.argv[2]; top=sys.argv[3]; prm=sys.argv[4]; bb=sys.argv[5]; name=sys.argv[6]
+if len(sys.argv) > 12 and sys.argv[12]:   # WTOP: a parameter wrapper (in EXTRA) instantiating TOP with any SV parameter
+    top = sys.argv[12]; prm = '-'          # value (arrays, wide hex); the filelist still walks from the real TOP
+if len(sys.argv) > 13 and sys.argv[13]:   # DROP=f1,f2: files not read (a test bench that only defines a modelled blackbox)
+    d['files'] = [f for f in d['files'] if f not in sys.argv[13].split(',')]
 # A preferred scoped closure can already be in the indexed list AND EXTRA.
 # Read each physical source once; do not suppress distinct files defining conflicting modules.
 from pathlib import Path
@@ -32,11 +37,6 @@ for f in d['files']:
         seen.add(key)
         unique.append(f)
 d['files'] = unique
-ys=sys.argv[2]; top=sys.argv[3]; prm=sys.argv[4]; bb=sys.argv[5]; name=sys.argv[6]
-if len(sys.argv) > 12 and sys.argv[12]:   # WTOP: a parameter wrapper (in EXTRA) instantiating TOP with any SV parameter
-    top = sys.argv[12]; prm = '-'          # value (arrays, wide hex); the filelist still walks from the real TOP
-if len(sys.argv) > 13 and sys.argv[13]:   # DROP=f1,f2: files not read (a test bench that only defines a modelled blackbox)
-    d['files'] = [f for f in d['files'] if f not in sys.argv[13].split(',')]
 L=[]
 if sys.argv[11] == '1':   # LIBCELLS=1: RTL instantiates ASAP7 cells directly (ICG of OT_SMH_CG, HB4 of ot_hdly): read them as cell boxes
     L.append("read_liberty -lib /tmp/lib/all.lib")
