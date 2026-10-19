@@ -28,6 +28,33 @@ MACROS = [  # name, words, bits, mux, spare rows, spare cols, original
 ]
 
 
+DATA = ('rd_out', 'wd_in', 'w_mask_in')
+
+
+def bit_sliced(pins):
+    """_p192_bs pin plan: each face carries COMPLETE bit slices (rd/wd/mask of bit b side by side) -- W = bits
+    [0, W/2) with the control pins (clk/ce/addr) in the middle, E = bits [W/2, W) -- so per-bit logic never crosses
+    the macro (M1-M4 are obstructed and the leaf layer cap is M5).  Spare/repair pins fill the faces to balance."""
+    V = S.Pin
+    data = {p.name: p for p in pins if p.name in DATA}
+    W = data['rd_out'].width
+    ctrl = [p for p in pins if p.name not in DATA and p.name in ('clk', 'wclk', 'rclk', 'r_ce_in', 'r_addr_in', 'w_ce_in', 'w_addr_in')]
+    spare = [p for p in pins if p.name not in DATA and p not in ctrl]
+    one = lambda p, b: V(b, 1, p.direction, p.kind, p.related)
+    sl = lambda lo, hi: [one(data[n], f'{n}[{i}]') for i in range(lo, hi) for n in DATA]
+    cbits = [one(p, b) for p in ctrl for b in p.bits()]
+    sbits = [one(p, b) for p in spare for b in p.bits()]
+    w_data, e_data = sl(0, W // 2), sl(W // 2, W)
+    total = len(w_data) + len(e_data) + len(cbits) + len(sbits)
+    per_edge = math.ceil(total / 2)
+    k = max(0, per_edge - len(w_data) - len(cbits))
+    mid = len(w_data) // 2
+    west = sbits[:k // 2] + w_data[:mid] + cbits + w_data[mid:] + sbits[k // 2:k]
+    east = e_data + sbits[k:]
+    assert len(west) == per_edge and len(west) + len(east) == total, (len(west), len(east), per_edge)
+    return west + east
+
+
 def mirror_outline(cw, ch, pins):
     w, h, info = BASE_OUTLINE(cw, ch, pins)
     hn = math.ceil((round(h * 1000) - 24) / 48) * 48 + 24
@@ -58,12 +85,19 @@ def pin_access_timing(spec, area, cal, corner):
 
 
 def main():
-    only = set(sys.argv[1:])
+    args = sys.argv[1:]
+    bs = '--bit-sliced' in args
+    only = set(a for a in args if not a.startswith('--'))
+    if bs:
+        base_write_lef = S.write_lef
+        S.write_lef = lambda name, w, h, pins, props: base_write_lef(name, w, h, bit_sliced(pins), props)
     asap7.METAL['pin_pitch_um'] = 0.192
     S.timing_model = pin_access_timing
     S.macro_outline = mirror_outline
     out = ROOT / 'physical/asap7_memory_macros'
     for name, words, bits, mux, sr, sc, orig in MACROS:
+        if bs:
+            name = name.replace('_p192_mir', '_p192_bs')
         if only and name not in only:
             continue
         sheet = S.compile_macro(S.SramSpec(name, words, bits, mux, 1, '1r1w', sr, sc), out)
@@ -74,7 +108,7 @@ def main():
                    'calibrated inv4/output-driver R*C added to clk->q/setup/slew, 2x to min period; pin/clock '
                    'cap and read/write energy recomputed; min hold unchanged (conservative)',
             immutable_original=orig, generator='tools/mem_compiler/build_qw_p192_1019.py',
-            recipe='bb61ae67c build_coll_safe_pins_1019.py',
+            recipe='bb61ae67c build_coll_safe_pins_1019.py' + (' + bit-sliced faces (W bits [0,W/2) + ctl, E bits [W/2,W))' if bs else ''),
             claim='Calibrated analytical abstract; no transistor layout or silicon; route access is '
                   'qualified only by the consuming parent gate/route')
         (out / name / (name + '.json')).write_text(json.dumps(sheet, indent=2, sort_keys=True) + '\n')
