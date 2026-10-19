@@ -93,7 +93,7 @@ module ot_s81ph_coll_lane_safe2 #(
     //     kept flops, ~64 mux loads each instead of 4,426 on rp[1]).  0 data cycles; reset release +1 edge in RTL (the
     //     kit's reset_landing adds 2 more at the face).
     parameter integer SAFE = 0,
-    parameter integer RXSRAM = 0, parameter integer RXLOCAL = 0, parameter integer TF_CLEANUP = 0 // opt-in memory-backed credit landing; legacy default unchanged
+    parameter integer RXSRAM = 0, parameter integer RXLOCAL = 0, parameter integer TXSAFE = 0, parameter integer TF_CLEANUP = 0 // opt-in memory-backed credit landing; legacy default unchanged
 ) (
     input  wire          clk,
     input  wire          rs_n,       // stream reset (async assert), synchronised here
@@ -119,10 +119,18 @@ module ot_s81ph_coll_lane_safe2 #(
     wire rst_n, rst_ni, rst_no, rst_ne, rst_ng;  // local / credit rx / credit tx / endpoint / gearbox
     localparam integer HEAD_NS = (W + 1 + 15) / 16;
     wire [HEAD_NS-1:0] head_rst_n;
+    localparam integer MEM_NS=(W+1+7)/8, MEM_NA=(MEM_NS+3)/4, MEM_RST=2*(MEM_NS+MEM_NA);
+    wire [MEM_RST-1:0] mem_rst_n;
     wire [514:0] lr;
     generate if (SAFE != 0) begin : g_safe_rst
-        wire [5+(RXSRAM ? HEAD_NS : 0)-1:0] rr;
-        ot_rst_relay #(.REGIONS(5+(RXSRAM ? HEAD_NS : 0)), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(clk), .rst_n_in(rs_n), .rst_n(rr));
+        wire [5+(RXSRAM ? HEAD_NS : 0)+(TXSAFE ? MEM_RST : 0)-1:0] rr;
+        if(TXSAFE) begin:g_distributed
+          ot_rst_relay_tree3 #(.REGIONS(5+(RXSRAM?HEAD_NS:0)+MEM_RST)) u_rr(.clk(clk),.rst_n_in(rs_n),.rst_n(rr));
+          assign mem_rst_n=rr[5+(RXSRAM?HEAD_NS:0)+:MEM_RST];
+        end else begin:g_original
+          ot_rst_relay #(.REGIONS(5+(RXSRAM ? HEAD_NS : 0)), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(clk), .rst_n_in(rs_n), .rst_n(rr));
+          assign mem_rst_n={MEM_RST{rr[3]}};
+        end
         assign rst_n = rr[0]; assign rst_ni = rr[1]; assign rst_no = rr[2]; assign rst_ne = rr[3]; assign rst_ng = rr[4];
         if(RXSRAM) begin:g_head_rst assign head_rst_n=rr[5+:HEAD_NS]; end
         else begin:g_no_head_rst assign head_rst_n={HEAD_NS{rr[1]}}; end
@@ -135,6 +143,7 @@ module ot_s81ph_coll_lane_safe2 #(
     always @(posedge clk or negedge rs_n) if (!rs_n) rst_s <= 2'b00; else rst_s <= {rst_s[0], 1'b1};
     assign rst_n = rst_s[1]; assign rst_ni = rst_s[1]; assign rst_no = rst_s[1]; assign rst_ne = rst_s[1]; assign rst_ng = rst_s[1];
     assign head_rst_n={HEAD_NS{rst_s[1]}};
+    assign mem_rst_n={MEM_RST{rst_s[1]}};
     reg [514:0] lr_q;
     always @(posedge clk or negedge rst_n) if (!rst_n) lr_q <= 0; else lr_q <= rx;
     assign lr = lr_q;
@@ -169,9 +178,9 @@ module ot_s81ph_coll_lane_safe2 #(
         .out_v(li_v), .out_r(li_r), .out_d(li_d));
     end endgenerate
     wire ftv, rtv, frv, rrv; wire [FFW-1:0] ft, fr; wire [RFW-1:0] rt, rr; wire ep_f, gb_f, gb_l;
-    ot_s81ph_link_ep #(.FLIT_BYTES(FB), .TX_STAGES(2), .RX_STAGES(3), .CHANNEL_CYCLES(CH_UCIE), .CHANNEL_CYCLES_B(CH_BOARD),
-        .CREDITS(CREDITS), .SEQW(SEQW), .PHY_NUM(PNUM), .PHY_DEN(PDEN), .SRAM(SRAM), .PIPE(EPPIPE < 0 ? 1 : EPPIPE), .RXPIPE(EPRX), .TOREG(EPTO), .MWR(EPMW), .DNR(SAFE)) u_ep (
-        .clk(clk), .rst_n(rst_ne), .ch_b(ch_b),
+    ot_s81ph_link_ep_safe2 #(.FLIT_BYTES(FB), .TX_STAGES(2), .RX_STAGES(3), .CHANNEL_CYCLES(CH_UCIE), .CHANNEL_CYCLES_B(CH_BOARD),
+        .CREDITS(CREDITS), .SEQW(SEQW), .PHY_NUM(PNUM), .PHY_DEN(PDEN), .SRAM(SRAM), .PIPE(EPPIPE < 0 ? 1 : EPPIPE), .RXPIPE(EPRX), .TOREG(EPTO), .MWR(EPMW), .DNR(SAFE),.OLDREAD(TXSAFE)) u_ep (
+        .clk(clk), .rst_n(rst_ne), .mem_rst_n(mem_rst_n), .ch_b(ch_b),
         .in_valid(iv && (UPGATE == 0 || up)), .in_ready(ir), .in_data(id), .in_last(il),
         .out_valid(ov), .out_ready(orr), .out_data(od), .out_last(ol),
         .f_tx_v(ftv), .f_tx(ft), .f_rx_v(frv), .f_rx(fr), .r_tx_v(rtv), .r_tx(rt), .r_rx_v(rrv), .r_rx(rr),
@@ -206,14 +215,14 @@ module dsfd_coll_lane_w_safe2 #(parameter integer GFMT = `OT_S81PH_GFMT_DEF, par
     parameter integer LCR = `ifdef OT_S81PH_LANE_CR 1 `else 0 `endif, parameter integer EPRX = `ifdef OT_S81PH_EP_RXPIPE 1 `else 0 `endif,
     parameter integer EPTO = `ifdef OT_S81PH_EP_TOREG 1 `else 0 `endif,
     parameter integer LRXW = `ifdef OT_S81PH_LANE_RXW 1 `else 0 `endif, parameter integer EPMW = `ifdef OT_S81PH_EP_MWR 1 `else 0 `endif,
-    parameter integer CH_BOARD = 700, parameter integer SAFE = 1, parameter integer RXSRAM = `OT_S81PH_RXSRAM_DEF, parameter integer RXLOCAL = `OT_S81PH_RXLOCAL_DEF) (
+    parameter integer CH_BOARD = 700, parameter integer SAFE = 1, parameter integer RXSRAM = `OT_S81PH_RXSRAM_DEF, parameter integer RXLOCAL = `OT_S81PH_RXLOCAL_DEF, parameter integer TXSAFE = 0) (
     input wire [0:0] ck, input wire [0:0] rs, input wire [0:0] chb, input wire [514:0] rx, output wire [511:0] tx,
 `ifndef OT_S81PH_COLL_TF_CLEANUP
     output wire [0:0] tf,
 `endif
     input wire [0:0] lo_v, output wire [0:0] lo_r, input wire [552:0] lo_d,
     output wire [0:0] li_v, input wire [0:0] li_r, output wire [552:0] li_d, output wire [2:0] flt);
-    ot_s81ph_coll_lane_safe2 #(.GFMT(GFMT), .EPPIPE(EPPIPE), .LCR(LCR), .EPRX(EPRX), .EPTO(EPTO), .LRXW(LRXW), .EPMW(EPMW), .CH_BOARD(CH_BOARD), .SAFE(SAFE), .RXSRAM(RXSRAM),.RXLOCAL(RXLOCAL),
+    ot_s81ph_coll_lane_safe2 #(.GFMT(GFMT), .EPPIPE(EPPIPE), .LCR(LCR), .EPRX(EPRX), .EPTO(EPTO), .LRXW(LRXW), .EPMW(EPMW), .CH_BOARD(CH_BOARD), .SAFE(SAFE), .RXSRAM(RXSRAM),.RXLOCAL(RXLOCAL),.TXSAFE(TXSAFE),
 `ifdef OT_S81PH_COLL_TF_CLEANUP
         .TF_CLEANUP(1)
 `else
@@ -232,14 +241,14 @@ module dsfd_coll_lane_e_safe2 #(parameter integer GFMT = `OT_S81PH_GFMT_DEF, par
     parameter integer LCR = `ifdef OT_S81PH_LANE_CR 1 `else 0 `endif, parameter integer EPRX = `ifdef OT_S81PH_EP_RXPIPE 1 `else 0 `endif,
     parameter integer EPTO = `ifdef OT_S81PH_EP_TOREG 1 `else 0 `endif,
     parameter integer LRXW = `ifdef OT_S81PH_LANE_RXW 1 `else 0 `endif, parameter integer EPMW = `ifdef OT_S81PH_EP_MWR 1 `else 0 `endif,
-    parameter integer CH_BOARD = 700, parameter integer SAFE = 1, parameter integer RXSRAM = `OT_S81PH_RXSRAM_DEF, parameter integer RXLOCAL = `OT_S81PH_RXLOCAL_DEF) (
+    parameter integer CH_BOARD = 700, parameter integer SAFE = 1, parameter integer RXSRAM = `OT_S81PH_RXSRAM_DEF, parameter integer RXLOCAL = `OT_S81PH_RXLOCAL_DEF, parameter integer TXSAFE = 0) (
     input wire [0:0] ck, input wire [0:0] rs, input wire [0:0] chb, input wire [514:0] rx, output wire [511:0] tx,
 `ifndef OT_S81PH_COLL_TF_CLEANUP
     output wire [0:0] tf,
 `endif
     input wire [0:0] lo_v, output wire [0:0] lo_r, input wire [552:0] lo_d,
     output wire [0:0] li_v, input wire [0:0] li_r, output wire [552:0] li_d, output wire [2:0] flt);
-    ot_s81ph_coll_lane_safe2 #(.GFMT(GFMT), .EPPIPE(EPPIPE), .LCR(LCR), .EPRX(EPRX), .EPTO(EPTO), .LRXW(LRXW), .EPMW(EPMW), .CH_BOARD(CH_BOARD), .SAFE(SAFE), .RXSRAM(RXSRAM),.RXLOCAL(RXLOCAL),
+    ot_s81ph_coll_lane_safe2 #(.GFMT(GFMT), .EPPIPE(EPPIPE), .LCR(LCR), .EPRX(EPRX), .EPTO(EPTO), .LRXW(LRXW), .EPMW(EPMW), .CH_BOARD(CH_BOARD), .SAFE(SAFE), .RXSRAM(RXSRAM),.RXLOCAL(RXLOCAL),.TXSAFE(TXSAFE),
 `ifdef OT_S81PH_COLL_TF_CLEANUP
         .TF_CLEANUP(1)
 `else
@@ -254,3 +263,4 @@ module dsfd_coll_lane_e_safe2 #(parameter integer GFMT = `OT_S81PH_GFMT_DEF, par
         .lo_v(lo_v[0]),
         .lo_r(lo_r[0]), .lo_d(lo_d), .li_v(li_v[0]), .li_r(li_r[0]), .li_d(li_d), .flt(flt));
 endmodule
+

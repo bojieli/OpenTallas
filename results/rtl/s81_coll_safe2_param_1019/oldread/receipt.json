@@ -1,0 +1,39 @@
+{
+  "status": "FUNCTIONAL_PASS_NOT_PHYSICALLY_QUALIFIED",
+  "source_sha256": {
+    "rtl/lib/ot_sram_oldread_wreg.sv": "67df3246d6cb5648945ca87ef2fd2f46f6e631df622bc19f39432286f97a46f0",
+    "rtl/lib/ot_rst_relay_tree3.sv": "9e1c702bdfaa519b5057e00b495ff6479fe6dea27662946df2fd001d4a7027e7",
+    "rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep_safe2.sv": "f5573b90775bef2f63e080303dfa26c47a356bc45d28795d6bd20b295d379d9c",
+    "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_safe2.sv": "b38031c29a3ed874537f22ee57d3d667904f56c38e10bdb7afa2846c335b5684",
+    "rtl/dsrom_sys/s81_ph/test/tb_coll_safe2_oldread_cycles.sv": "a3f6d8b0bbbc230752d0150481389d60c45aafdf6a6dbf5d31f7dfc403bf040e",
+    "rtl/dsrom_sys/s81_ph/test/tb_coll_safe2_boundary.sv": "f4316bef4fbcf2ab036e542329a919c18aa134468181c274c70ab55c73b85440",
+    "tools/xdie_s81/coll_safe2_oldread_cycles.sh": "3a873e843f6ab1476b1f9b73858a30124a0db3f8a4f0728220ca4eaed28702d6",
+    "tools/xdie_s81/coll_safe2_boundary.sh": "b4cabb95a0b739cb1831b8867d32140f0636bb6fb18b2e1a60150ead1df4d9c7"
+  },
+  "helper_exact_commit": "13148f81a",
+  "helper_qualified_packet_commit": "1ab4ac601",
+  "positive": {
+    "checks": 23996,
+    "accepts": 5210,
+    "returns": 4873,
+    "refills": 138,
+    "fifo_forward_collisions": 1295,
+    "timeouts": 90,
+    "reset_epochs": 2
+  },
+  "forward_disable_mutant_errors": 4992,
+  "full_lane_boundary": {
+    "checks": 27994,
+    "sent": 13700,
+    "received": 13585,
+    "reset_epochs": 2,
+    "tf_consumers": 0,
+    "reset_tree": "exact ot_rst_relay_tree3, same3edge release"
+  },
+  "limitations": [
+    "Replay RAW hits zero at PIPE2 endpoint; helper standalone4518 collision/hold checks cover oldread mechanism",
+    "Standalone helper physical qualification is not complete tile SAFE",
+    "Full canonical mapped driver/reset/area census pending",
+    "Final physical geometry/slot escape and ROOT review owed"
+  ]
+}

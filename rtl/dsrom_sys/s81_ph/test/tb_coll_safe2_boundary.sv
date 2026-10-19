@@ -21,10 +21,10 @@ module tb_coll_safe2_boundary;
     .ck(clk),.rs(rst_n),.chb(1'b1),.rx({1'b0,1'b1,tx[v][0],1'b1}),.tx(tx[v][1]),.tf(),
     .lo_v(lv[1]),.lo_r(cr[v][1]),.lo_d(ld[1]),.li_v(ov[v][1]),.li_r(ret[1]),.li_d(od[v][1]),.flt(flt[v][1]));
   end else begin:safe
-   dsfd_coll_lane_w_safe2 #(.GFMT(1),.EPPIPE(2),.LCR(1),.RXSRAM(1),.RXLOCAL(1),.EPRX(1),.EPTO(1),.EPMW(1)) w(
+   dsfd_coll_lane_w_safe2 #(.GFMT(1),.EPPIPE(2),.LCR(1),.RXSRAM(1),.RXLOCAL(1),.EPRX(1),.EPTO(1),.EPMW(1),.TXSAFE(1)) w(
     .ck(clk),.rs(rst_n),.chb(1'b1),.rx({1'b0,1'b1,tx[v][1],1'b1}),.tx(tx[v][0]),
     .lo_v(lv[0]),.lo_r(cr[v][0]),.lo_d(ld[0]),.li_v(ov[v][0]),.li_r(ret[0]),.li_d(od[v][0]),.flt(flt[v][0]));
-   dsfd_coll_lane_e_safe2 #(.GFMT(1),.EPPIPE(2),.LCR(1),.RXSRAM(1),.RXLOCAL(1),.EPRX(1),.EPTO(1),.EPMW(1)) e(
+   dsfd_coll_lane_e_safe2 #(.GFMT(1),.EPPIPE(2),.LCR(1),.RXSRAM(1),.RXLOCAL(1),.EPRX(1),.EPTO(1),.EPMW(1),.TXSAFE(1)) e(
     .ck(clk),.rs(rst_n),.chb(1'b1),.rx({1'b0,1'b1,tx[v][0],1'b1}),.tx(tx[v][1]),
     .lo_v(lv[1]),.lo_r(cr[v][1]),.lo_d(ld[1]),.li_v(ov[v][1]),.li_r(ret[1]),.li_d(od[v][1]),.flt(flt[v][1]));
   end

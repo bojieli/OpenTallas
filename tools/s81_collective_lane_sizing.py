@@ -112,7 +112,7 @@ def safe2_parameter_model():
     address_groups = math.ceil(slices / 4)
     per_oldread = address_groups * (aw + 1) + width + slices * (aw + 2) + width
     pointer_copies = 4 * (address_groups - 1) * aw
-    relay_copies = 2 * (slices + address_groups)
+    relay_copies = 2 * (slices + address_groups) + 6  # tree3 root/group stages versus prior2 sync FF
     grouped_control_ff = address_groups * (1 + 10 + 1)  # replay ready; FIFO fill/output-valid
     control_ff = 10 + 12  # sequence preclassification + timeout limit/at-limit
     extra_ff = 2 * per_oldread + pointer_copies + relay_copies + control_ff + grouped_control_ff
