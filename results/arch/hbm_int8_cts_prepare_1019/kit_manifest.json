@@ -1,5 +1,5 @@
 {
-  "schema": "opentallas.int8.cts_exact_kit.v2",
+  "schema": "opentallas.int8.cts_exact_kit.v3",
   "source_commit": "da40a2a46037798be54f7a3bc70a52dc430798af",
   "placement_commit": "121b7ec9a243affe1bcaa04ae87aa5899f5c53c7",
   "pg_packet_commit": "47e03369c",
@@ -11,13 +11,13 @@
     "input/netlist.v": "ab5ee0ce1cbef6b233dbab2974585301b625a60d41f8bf96c5ed2c409ce55eed",
     "input/die_constant_cells.tcl": "9d1cd491b0cb3f1d37ed91b3ff985e02ab905bef686faefe661a6e6ba709bcde",
     "input/pdn.tcl": "dda37066c5cfd4a4031bce7a2b8e3972308035b5b7b161e1716beab7a41c4011",
-    "kit/check_results.py": "616366481d9f978af1524e43273885f8a3d79a24c42064f2e1b539eaa21a657d",
+    "kit/check_results.py": "be182ed2f2e7f5989634438c0d900a05c495b7bf638359977403d753b5e64fdb",
     "kit/constraints.sdc": "d192a6f102eca63267c43cc42a07fc89e4db9fe9592502180002f9687e77e53e",
     "kit/cts_only.tcl": "dda368822213e90c03ed20e39948bfc16dc7408e38428fb52d7658ce29824220",
     "kit/dft/__init__.py": "fe1151f8253ee95b4a5ecd66d61b001e25ac8121d82ef94f52c49cf110523204",
     "kit/dft/liberty.py": "debb83069aa0b0461e326e20ad191c3bbd432615829357e94fb8d5227f9a5c99",
     "kit/export_metal.py": "ce9a675284f3c08863ad63ff8a2512857f43d1fa3f713143ccdc6437acb990e8",
-    "kit/export_raw.py": "c4bb0ff44859b44439e7d717443a56b619112d7b6bbaed7240f07eaeeeb8289b",
+    "kit/export_raw.py": "31b5bb6e2a2781bf9649bce8c88f938b7af3bb838b7571a7a09f16c0113417f3",
     "kit/ff_replay.tcl": "295ca31029f483ef2f3ec0c2607aaf78fd16069e7baf3e650a7957872f78a3a7",
     "kit/lib_SHA256SUMS": "6e5afb1a8e1246588bd38d36e70424766b754c5f5c670dfa9a17794db03398d4",
     "kit/libs_FF.tcl": "ec1dfb0ab701e360b30065307ed7227ef3bc6b02976c975e5bc851ef5a467eab",
@@ -26,7 +26,7 @@
     "kit/platform_SHA256SUMS": "7a6a0b430afebfb8796df0b0707b96d9754c1ce93a02322f3b5db4c9cced3944",
     "kit/prove_metal_readonly.py": "416b0d80e9726dde3dabd51c471f466488578395891929df333661f6fa577f34",
     "kit/report_timing.tcl": "5c4ff210584a5ce6f82462cfcd57acee350f9ab997ce9079ad8aa34aba748ad2",
-    "kit/run.sh": "04452dbd5a31acb3b9174c7f7b426a00e011b6e3ac5d244e6749edfbe4ea669a",
+    "kit/run.sh": "f6dd91c0de6dbcd2e8a11b5b6568f0c5d61c3e665b190f7b48148b3f1193c279",
     "kit/validate_inputs.py": "cac1935c8ff4b805207c9411ab9de5b89fb7b85c7d10966c927e989b7b6ee19d",
     "kit/vendor/clock_family.tcl": "84a3ade555f2499aaf327f3f9146cab4f493693fa74a6b3f1361e3dbeca6da78",
     "kit/vendor/clone_export.py": "1d90a47180b4c08610263192a9a321f489271642ecb720c24f6fc726e63ec980",
@@ -44,12 +44,19 @@
     "input/native_libs/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz": "e0c65688e6067ee485b0693651298636ae9ef5a0512154bcd4b7c4914d1a0ac6",
     "input/native_libs/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz": "cc9651e9235bcd29bba0737b7ba7a8afddde7462df3ff48d3870c22d05c86fb3",
     "input/native_libs/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib": "d9b6e75c8720cdd450cff15178528502cc8df34c5ab6b0ffb53fc99d664b5302",
-    "input/native_libs/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz": "0c93d44fcc6a30182d71031997771ea3fc0d09235201e9252f71daf48a1c7a38"
+    "input/native_libs/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz": "0c93d44fcc6a30182d71031997771ea3fc0d09235201e9252f71daf48a1c7a38",
+    "kit/check_signal_identity.py": "d482108c59de50961fdd7b6b174a4468664a091289cb564691556149a5bc2926",
+    "kit/render_density.py": "94840533c48276ab22ed40ab202bbf0af1b3870063fc1b157a8311d66e5fc44b",
+    "kit/render_readonly.sh": "652fd25e980bd0e198919bd04b0e71f4dab46b58b67c2124870fc04d5770914d",
+    "kit/test_signal_identity.py": "d48fa0e415606ceafa578b1a917d548a59c234bccb6de09700a5de8dbf0ecd31"
   },
   "provenance": {
     "conductor_graph": "39021a45e clone_export/prove_metal geometry unchanged; remove clone mutation and old DEF comparison",
     "raw_graph": "39021a45e export_clone_raw.py path parameters only",
     "strict_contract": "121b7ec9a copy of969965293; unchanged",
-    "clock_arrival": "39021a45e clock_family.tcl / ck_insertion ot_cf_wire native API"
-  }
+    "clock_arrival": "39021a45e clock_family.tcl / ck_insertion ot_cf_wire native API",
+    "signal_identity": "independent raw native endpoint partition checker; native Liberty ff clock roles; no name-based clock exemptions",
+    "render": "121b7ec9a plot.py actual-box method expanded to original/new cells, ties, FF centroid, BTerms, rows, die and exact area-intersection bins"
+  },
+  "predecessor_kit_commit": "be1830773"
 }

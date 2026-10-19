@@ -1,0 +1,19 @@
+EXPECTED_REJECTION data signal partition ('I', 'f', 'D')
+EXPECTED_REJECTION reset signal partition ('I', 'f', 'D')
+EXPECTED_REJECTION tie signal partition ('I', 'f', 'D')
+EXPECTED_REJECTION BTerm signal partition ('I', 'f', 'D')
+EXPECTED_REJECTION master pin inventory f
+EXPECTED_REJECTION moved placement/orient f
+EXPECTED_REJECTION orient placement/orient f
+EXPECTED_REJECTION clock_data_mixed signal partition ('I', 'f', 'D')
+EXPECTED_REJECTION new_FF signal partition ('I', 'f', 'D')
+EXPECTED_REJECTION removed removed original cell
+EXPECTED_REJECTION BTerm_geometry BTerm geometry
+EXPECTED_REJECTION net_metadata ordinary net metadata ('I', 'f', 'D')
+EXPECTED_REJECTION clock_cycle clock reconvergence/cycle
+EXPECTED_REJECTION die_geometry die/row geometry
+EXPECTED_REJECTION new_unused_net unexpected unused ordinary nets
+SIGNAL_IDENTITY_FIXTURE_PASS positive=1 negative=15
+PYTHON_SYNTAX_PASS
+SHELL_SYNTAX_PASS
+NO_NATIVE_TOOL_OR_CTS_EXECUTION
