@@ -7236,6 +7236,28 @@ def case_pdn(v, m, work, bump_um, rev='r4'):
     man = v.case_real(m, work)
     M = v.masters(m, 1)
     pw = v.port_widths(m, 1)
+    # DIE-QWEN-LEAD 10-19 (Q-CLK finding on dv2f14bi / dv2f15next): the clock receiver master took its pll_r<k> pins
+    # from the bus list seen when the masters were first built, so the late region trunks (pll_r55, pll_r89..r106) were
+    # in die.v but NOT in the LEF (STA-0201 x19; ~960 clock entry pins undriven physically). Give qfd_clkrx every root
+    # the final netlist connects, at the GEN's stable slot (rom_r22k.py: 3.2 um grid, pll_r<k> -> slot k).
+    cxm = M.get('qfd_clkrx')
+    if cxm is not None:
+        want = set()
+        for _bid, _cl, _bits, eps in m['buses']:
+            for inst, port in eps:
+                if inst == 'clk_rx':
+                    want.add(port.lstrip('*'))
+        added = []
+        for p in sorted(want - set(cxm.ports)):
+            mk_ = re.fullmatch(r'pll_r(\d+)', p)
+            if not mk_:
+                raise SystemExit(f'qfd_clkrx: die.v connects clk_rx.{p} but the master has no such pin (not a pll_r root)')
+            j = int(mk_.group(1))
+            cxm.area(p, 1, min(cxm.w - 1.0, max(1.0, cxm.w / 2 + ((j % 16) - 8) * 3.2)),
+                     min(cxm.h - 1.0, max(1.0, cxm.h / 2 + (j // 16 - 8) * 3.2)), 1)
+            pw.setdefault(('qfd_clkrx', p), 1)
+            added.append(p)
+        print(f'CLKRX_PORTS netlist {len(want)} master {len(cxm.ports)} added {len(added)} {added}', flush=True)
     parts = []
     # r5: the power abstracts take the selected module's pin geometry (tree-column / edge-entry pin_rects live on v,
     # PG.powered_lef reads F, which raised on the b3r7+ 6-field pin specs); r4 keeps its F geometry byte-identical
