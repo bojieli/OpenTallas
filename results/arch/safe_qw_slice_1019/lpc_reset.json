@@ -1,9 +1,10 @@
 {
   "module": "qfd_dv_slice2_lpc",
   "reset": "rst",
-  "leaf_count": 319,
+  "leaf_count": 320,
   "max_data_reset_loads": 32,
   "reset_release_added_edges": 2,
+  "child_reset_loads": "requires synthesis census; not bounded by data assignment partition",
   "leaves": [
     {
       "target": "agu_q",
@@ -1573,32 +1574,44 @@
     {
       "target": "child",
       "bits": null,
-      "lsb": null
+      "lsb": null,
+      "index": 0
     },
     {
       "target": "child",
       "bits": null,
-      "lsb": null
+      "lsb": null,
+      "index": 0
     },
     {
       "target": "child",
       "bits": null,
-      "lsb": null
+      "lsb": null,
+      "index": 0
     },
     {
       "target": "child",
       "bits": null,
-      "lsb": null
+      "lsb": null,
+      "index": 0
     },
     {
       "target": "child",
       "bits": null,
-      "lsb": null
+      "lsb": null,
+      "index": 0
     },
     {
       "target": "child",
       "bits": null,
-      "lsb": null
+      "lsb": null,
+      "index": 0
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 0
     }
   ]
 }

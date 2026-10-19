@@ -2220,7 +2220,7 @@ always @(posedge ck or negedge sr_reset[256])
         okey = v[31] ? ~v : {1'b1, v[30:0]};
     endfunction
     wire am_emit_empty, am_mu_fault, am_stn_pend;
-    qfd_dv_amax_mu #(.NU(MU_NU), .MUT((AM_MUT >= 6) ? 0 : AM_MUT)) u_amax (.ck(ck), .rst(rst), .c_stn(c_stn), .stn_amax_bit(cmd_q[50]), .stn_user(cmd_q[52:51]), .stn_pend(am_stn_pend),
+    qfd_dv_amax_mu #(.NU(MU_NU), .MUT((AM_MUT >= 6) ? 0 : AM_MUT)) u_amax (.ck(ck), .rst(sr_reset[317]), .c_stn(c_stn), .stn_amax_bit(cmd_q[50]), .stn_user(cmd_q[52:51]), .stn_pend(am_stn_pend),
         .r_v(r_v), .r_addr(r_addr), .r_d(r_d), .c_am(go && kind == 3'd6), .am_clr(cmd_q[4]), .am_emit_cmd(cmd_q[5]),
         .am_user(cmd_q[9:8]), .am_v(am_v), .am_idx(am_idx), .am_val(am_val), .am_u(am_u), .emit_empty(am_emit_empty), .mu_fault(am_mu_fault));
                                                                                 
@@ -2230,7 +2230,7 @@ always @(posedge ck or negedge sr_reset[256])
     wire [1:0]  tw_kind;
     wire [23:0] tw_addr;
     wire [1023:0] tw_data;
-    qfd_dv_stream #(.MUT(MUT)) u_stm (.ck(ck), .rst_n(sr_reset[317]), .sid(sid_q),
+    qfd_dv_stream #(.MUT(MUT)) u_stm (.ck(ck), .rst_n(sr_reset[318]), .sid(sid_q),
         .cfg_v(c_stm), .cfg_dir(cmd_q[5:4]), .cfg_tag(cmd_q[33:6]),
         .sw_i(sw_q), .se_i(se_q), .so_e(st_up_o), .so_w(st_dn_o),
         .xw_we(su_x_we), .xw_addr(vm_waddr), .xw_data(vm_wdata),
@@ -2273,7 +2273,7 @@ always @(posedge ck or negedge sr_reset[258])
         else if (c_prt) begin ; em_k[0 +: 8] <= 8'((8'd0) >> 0); end
         else begin if (ar_v) ; if (em_v) em_k[0 +: 8] <= 8'((em_k + 8'd1) >> 0); end
     wire vm_fault;
-    qfd_dv_vm #(.MUT(MUT)) u_vm (.ck(ck), .rst_n(sr_reset[318]),
+    qfd_dv_vm #(.MUT(MUT)) u_vm (.ck(ck), .rst_n(sr_reset[319]),
         .a_re(va_re), .b_re(vb_re), .c_re(vc_re), .a_addr(va_addr), .b_addr(vb_addr), .c_addr(vc_addr),
         .a_q(va_q), .b_q(vb_q), .c_q(vc_q),
         .cr_re(cr_re), .cr_addr(cr_addr), .cr_q(cr_q),
@@ -2683,8 +2683,8 @@ always @(posedge ck or negedge sr_reset[311])
     initial if (HD_W130 != 1) $fatal(1, "qfd_dv_slice2_lpc: the landed re-cut is the HD_W130 = 1 slice");
     initial if (DIR < 0 || DIR > 1) $fatal(1, "qfd_dv_slice2: DIR %0d undefined", DIR);
 
-wire [318:0] sr_reset;
-qfd_dv_reset_tree #(.N(319)) u_safe_reset (.ck(ck),.rst_n(rst),.q(sr_reset));
+wire [319:0] sr_reset;
+qfd_dv_reset_tree #(.N(320)) u_safe_reset (.ck(ck),.rst_n(rst),.q(sr_reset));
 endmodule
 
 

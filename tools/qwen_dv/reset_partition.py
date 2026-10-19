@@ -92,14 +92,14 @@ def partition(text, module, reset='rst', clock='ck'):
     for loop in re.finditer(r'\bfor\s*\(\s*(\w+)\s*=\s*0\s*;\s*\1\s*<\s*(\d+)[^)]*\)\s*begin\b',text):
         stop=text.find('endgenerate',loop.end())
         if stop>=0:loops.append((loop.start(),stop,loop.group(1),int(loop.group(2))))
-    for a in re.finditer(r'\.rst_n\('+reset+r'\)',text):
+    for a in re.finditer(r'\.(rst_n|rst)\('+reset+r'\)',text):
         scope=[x for x in loops if x[0]<a.start()<x[1]]
         if len(scope)>1:raise ValueError('nested child generate reset needs explicit partition')
         var,count=(scope[0][2],scope[0][3]) if scope else (None,1)
         leaf=len(leaves)
         for index in range(count):leaves.append(dict(target='child',bits=None,lsb=None,index=index))
         expr=f'{leaf}+{var}' if var else str(leaf)
-        changes.append((a.start(),a.end(),f'.rst_n(sr_reset[{expr}])'))
+        changes.append((a.start(),a.end(),f'.{a.group(1)}(sr_reset[{expr}])'))
     if not leaves:raise ValueError(f'no reset consumers {module}.{reset}')
     if len(leaves)>1024:raise ValueError('reset tree needs another level')
     header=f'\nwire [{len(leaves)-1}:0] sr_reset;\nqfd_dv_reset_tree #(.N({len(leaves)})) u_safe_reset (.ck({clock}),.rst_n({reset}),.q(sr_reset));\n'
