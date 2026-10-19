@@ -23,7 +23,7 @@ cd "$(dirname "$0")/../.."; mkdir -p "$O"
 export PATH=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin:$PATH
 DEF=
 case $mode in
-  pass) ;; sel) DEF=+define+OT_QFD_LAND_MUT_SEL ;; naive) DEF=+define+OT_QFD_LAND_MUT_NAIVE ;;
+  pass) ;; wsel) DEF=+define+OT_QFD_LAND_MUT_WSEL ;; rsel) DEF=+define+OT_QFD_LAND_MUT_RSEL ;; sel) DEF=+define+OT_QFD_LAND_MUT_SEL ;; naive) DEF=+define+OT_QFD_LAND_MUT_NAIVE ;;
   vld) DEF=+define+OT_QFD_LAND_MUT_VLD ;; full) DEF=+define+OT_QFD_LANE_MUT_FULL ;; hop0inv) DEF=+define+OT_QFD_LANE_MUT_HOP0INV ;;
   encomb) DEF="+define+OT_QFD_LAND_MUT_ENCOMB +define+OT_QFD_LANE_MUT_ENCOMB" ;;
   rlyencomb) DEF=+define+OT_QFD_LANE_MUT_ENCOMB ;;

@@ -105,6 +105,46 @@ module ot_qfd_lane_st #(parameter integer W = 16, parameter integer FIRST = 0) (
 `endif
 endmodule
 
+// SAFE-QW-LAND: one physical select region, at most 24 data loads per kept select.
+// Ring cells are a fixed four-slot buffer, with constant slot addresses; no indexed flop memory.
+(* keep_hierarchy = "yes" *)
+module ot_qfd_land_region #(parameter integer W = 24) (
+    input wire wck, we, ck, rs, warm,
+    input wire [W-1:0] i,
+    input wire [3:0] read_seed, read_next,
+    input wire [3:0] vld,
+    output reg [W-1:0] o
+);
+    (* keep = "true", dont_touch = "true" *) reg [3:0] ws;
+    (* keep = "true", dont_touch = "true" *) reg [3:0] rdsel;
+    always @(posedge wck or negedge we)
+        if (!we) ws <= 4'b0001;
+`ifdef OT_QFD_LAND_MUT_WSEL
+        else ws <= {ws[0], ws[3:1]};
+`else
+        else ws <= {ws[2:0], ws[3]};
+`endif
+    // The straps are captured before the decode. Reset clocks seed the pointer for rc=0;
+    // subsequent clocks load rc+1-K, so the OLD select reads exactly rc-K on this edge.
+    always @(posedge ck)
+`ifdef OT_QFD_LAND_MUT_RSEL
+        rdsel <= rs ? {read_next[2:0],read_next[3]} : read_seed;
+`else
+        rdsel <= rs ? read_next : read_seed;
+`endif
+    reg [W-1:0] b0, b1, b2, b3;
+    always @(posedge wck) begin
+        if (ws[0]) b0 <= i;
+        if (ws[1]) b1 <= i;
+        if (ws[2]) b2 <= i;
+        if (ws[3]) b3 <= i;
+    end
+    wire [3:0] use_slot = rdsel & vld & {4{warm}};
+    always @(posedge ck)
+        o <= ({W{use_slot[0]}} & b0) | ({W{use_slot[1]}} & b1)
+           | ({W{use_slot[2]}} & b2) | ({W{use_slot[3]}} & b3);
+endmodule
+
 // landing (contract L1-L7, in-band write epoch): ring of D slots written on the lane clock, read on the block root.
 module ot_qfd_land #(
     parameter integer W     = 16,
@@ -145,7 +185,23 @@ module ot_qfd_land #(
         assign wck = ckf;
         assign we = ea;
     end endgenerate
-    reg [W-1:0] bank [0:D-1];
+    // k is a static identity strap. The input drives only these AW+1 face flops.
+    (* keep = "true", dont_touch = "true" *) reg [AW:0] k_q;
+    always @(posedge ck) k_q <= k;
+    wire [W-1:0] ring_o;
+    wire [AW:0] seed_exp = -k_q;
+    wire [AW:0] next_exp = rc + 1'b1 - k_q;
+    wire [3:0] read_seed = 4'b0001 << seed_exp[1:0];
+    wire [3:0] read_next = 4'b0001 << next_exp[1:0];
+    localparam integer REGION_BITS = 24;
+    genvar c;
+    generate for (c = 0; c < (W + REGION_BITS - 1) / REGION_BITS; c = c + 1) begin : g_region
+        localparam integer LO = c * REGION_BITS;
+        localparam integer N = (W - LO < REGION_BITS) ? W - LO : REGION_BITS;
+        ot_qfd_land_region #(.W(N)) u_region (
+            .wck(wck), .we(we), .ck(ck), .rs(rs), .warm(warm), .i(i[LO +: N]),
+            .read_seed(read_seed), .read_next(read_next), .vld(vld), .o(ring_o[LO +: N]));
+    end endgenerate
     reg [AW:0]  epo  [0:D-1];
     wire [D-1:0] vld;
     reg [AW:0]  wc, rc;
@@ -156,7 +212,7 @@ module ot_qfd_land #(
         else     wc <= wc + 1'b1;
     genvar s;
     generate for (s = 0; s < D; s = s + 1) begin : g_slot
-        always @(posedge wck) if (wc[AW-1:0] == s) begin bank[s] <= i; epo[s] <= wc; end
+        always @(posedge wck) if (wc[AW-1:0] == s) epo[s] <= wc;
         reg v;                                                     // slot written since the lane epoch began
         always @(posedge wck or negedge we)
             if (!we) v <= 1'b0;
@@ -169,25 +225,25 @@ module ot_qfd_land #(
     end endgenerate
     // ------------------------------------------------------------------ read side (ck)
 `ifdef OT_QFD_LAND_MUT_SEL
-    wire [AW:0] exp_ = rc - k + 1'b1;                              // bench mutant: read slot one late
+    wire [AW:0] exp_ = rc - k_q + 1'b1;                              // bench mutant: read slot one late
 `else
-    wire [AW:0] exp_ = rc - k;
+    wire [AW:0] exp_ = rc - k_q;
 `endif
     wire [AW-1:0] rs_ = exp_[AW-1:0];
     always @(posedge ck or negedge rs)
         if (!rs) begin rc <= {(AW + 1){1'b0}}; warm <= 1'b0; fault <= 1'b0; end
         else begin
             rc <= rc + 1'b1;
-            if (rc == k - 1'b1) warm <= 1'b1;
+            if (rc == k_q - 1'b1) warm <= 1'b1;
             if (warm && vld[rs_] && epo[rs_] != exp_) fault <= 1'b1;
         end
 `ifdef OT_QFD_LAND_MUT_NAIVE
     always @(posedge ck) o <= warm ? i : {W{1'b0}};                // bench mutant: retime register only, no ring
 `else
-    always @(posedge ck) o <= (warm && vld[rs_]) ? bank[rs_] : {W{1'b0}};
+    always @(*) o = ring_o;
 `endif
 `ifndef SYNTHESIS
-    initial if (D < 2 || (D & (D - 1)) != 0) $fatal(1, "ot_qfd_land: D must be a power of two >= 2");
+    initial if (D != 4) $fatal(1, "ot_qfd_land: D must be a power of two >= 2");
 `endif
 endmodule
 `default_nettype wire

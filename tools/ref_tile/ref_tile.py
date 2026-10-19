@@ -317,8 +317,56 @@ def reset_landing_plan(s: dict) -> dict | None:
     ck = pr.get("clock") or rl.get("clock") or (cks[0] if len(cks) == 1 else None)
     if not ck or ck not in cks:
         raise SpecError(f"spec: multi-clock kit ({', '.join(cks)}): name the landing clock in reset_landing.clock")
-    return {"enable": True, "stages": st, "clock": ck, "reset_ports": list(resets), "rule": RESET_LANDING_RULE,
+    plan = {"enable": True, "stages": st, "clock": ck, "reset_ports": list(resets), "rule": RESET_LANDING_RULE,
             "reset_release_cycles": st}
+    cp = rl.get("copies")
+    if cp is not None:
+        # KV-RELAYGEN 2026-10-19: {"<reset port>": N} -> the last landing stage has N KEPT identical copies, spread over the
+        # core's reset loads by reset_relay_split (ot_rst_copies.tcl); latency unchanged (the copies are the last stage)
+        if (not isinstance(cp, dict) or not cp or any(p not in resets for p in cp)
+                or any(not isinstance(n, int) or isinstance(n, bool) or not 1 <= n <= 64 for n in cp.values())):
+            raise SpecError('spec: reset_landing.copies must map declared reset_ports to integers 1..64')
+        if st < 2:
+            raise SpecError("spec: reset_landing.copies needs stages >= 2")
+        if not reset_relay_split_plan(s):
+            raise SpecError('spec: reset_landing.copies needs "reset_relay_split" (the synthesis pass that uses them)')
+        plan["copies"] = dict(cp)
+    return plan
+
+
+RESET_RELAY_SPLIT_RULE = ("KV-RELAYGEN 2026-10-19 / SAFE-DESIGN item 3: a reset relay copy drives <= ~256 loads; the "
+                          "RTL's kept identical relay copies take the loads by region (physical/common_flow/ot_rst_copies.tcl)")
+
+
+def reset_relay_split_plan(s: dict) -> dict | None:
+    """spec "reset_relay_split": {"max_loads": 256[, "re": "<family wire regexp>"]} -> plan, None when absent"""
+    rs = s.get("reset_relay_split")
+    if rs is None:
+        return None
+    if not isinstance(rs, dict):
+        raise SpecError('spec: reset_relay_split must be an object ({"max_loads": 256})')
+    mx = rs.get("max_loads", 256)
+    if not isinstance(mx, int) or isinstance(mx, bool) or not 16 <= mx <= 4096:
+        raise SpecError("spec: reset_relay_split.max_loads must be an integer 16..4096")
+    rx = rs.get("re")
+    if rx is not None:
+        if not isinstance(rx, str) or not rx or any(c in rx for c in "'\"\n"):
+            raise SpecError("spec: reset_relay_split.re must be a plain regexp string")
+        re.compile(rx)
+    return {"max_loads": mx, **({"re": rx} if rx else {})}
+
+
+def reset_relay_split_vars(s: dict) -> list:
+    plan = reset_relay_split_plan(s)
+    if not plan:
+        return []
+    out = [f"--orfs-var OT_RST_COPIES_MAX={plan['max_loads']}"]
+    if plan.get("re"):
+        out.append(f"--orfs-var OT_RST_COPIES_RE={shq(plan['re'])}")
+    rl = reset_landing_plan(s)
+    if rl and rl.get("enable") and rl.get("copies"):
+        out.append("--orfs-var OT_RST_LAND_COPIES=" + ",".join(f"{p}={n}" for p, n in sorted(rl["copies"].items())))
+    return out
 
 
 def reset_landing_vars(s: dict) -> list:
@@ -2038,6 +2086,7 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
     extra += hold_budget_vars(s)
     extra += pin_regs_vars(s)
     extra += reset_landing_vars(s)
+    extra += reset_relay_split_vars(s)
     # reviewed CDC kits: the lint-tagged registers keep their RTL names through yosys fsm (cdc_fsm_guard.py)
     extra += cdc_fsm_guard.orfs_vars(s, ROOT)
     if s.get("keep_pin_regs"):
