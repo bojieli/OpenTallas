@@ -1,0 +1,47 @@
+{
+ "source": "Committed SMB integration evidence results/rtl/hbm_ds_layer_tput_1018/smbudget_1019/pos.json + pos_run_full.log.gz; run_pos ingress/IDs files on ot-epyc5 parsed for arms/launches",
+ "scope": "Current compiler stimulus chronology. IDS event is fixture top6 at router_last_command+modeled200edges; not actual CQ hardware completion proof.",
+ "event_convention": "tb eventlist value changes after numbered stream edge and is sampled nextedge. issuer rc0=global launch event+3. First expert reserve/go are DUT trace edge labels.",
+ "layers": [
+  {
+   "layer": 0,
+   "cp_arm": 630,
+   "xc_arm": 631,
+   "global_launch": 632,
+   "issuer_rc0": 635,
+   "router_last_command": 7933,
+   "ids_event": 8133,
+   "first_expert_descriptor": 16,
+   "first_expert_reserve": 8137,
+   "first_expert_go_trace": 9322,
+   "first_expert_command": 9328
+  },
+  {
+   "layer": 2,
+   "cp_arm": 13851,
+   "xc_arm": 13852,
+   "global_launch": 13853,
+   "issuer_rc0": 13856,
+   "router_last_command": 23028,
+   "ids_event": 23228,
+   "first_expert_descriptor": 48,
+   "first_expert_reserve": 23232,
+   "first_expert_go_trace": 24417,
+   "first_expert_command": 24423
+  },
+  {
+   "layer": 14,
+   "cp_arm": 28946,
+   "xc_arm": 28947,
+   "global_launch": 28948,
+   "issuer_rc0": 28951,
+   "router_last_command": 41282,
+   "ids_event": 41482,
+   "first_expert_descriptor": 87,
+   "first_expert_reserve": 41486,
+   "first_expert_go_trace": 42671,
+   "first_expert_command": 42677
+  }
+ ],
+ "freshness_gap": "Current issuer caches ids_layer/id_valid across runs. A repeated same-layer token could use old IDs before this run router result. Current actual schedule launches beforeIDs. Correct fix must support unused fresh early broadcast if that is an authorized actual protocol, while rejecting reused cached generation; router worker owns epoch/consume proof."
+}
