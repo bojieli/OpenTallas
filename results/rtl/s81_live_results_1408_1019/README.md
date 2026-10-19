@@ -1,0 +1,4 @@
+
+[CODEX S81 LIVE PICKUP 14:07 PT] Existing4diechains: mu2 GRT11/30, mu1 20/30, MAB16/30; mu3c now GRTinit8713macros/444clocknets (nativePID3654923 ~106%CPU/38GB). Three SVC diagnostic synths still FSM_DETECT ~104%CPU/31–32GB (ep7 3743357/3743383,ep6 4069913), not stale source-error JSON. OldHOP base+rtl_tagdrop sims exit0/64286edges but out_checks=0; base_tagdrop PID77367 actual99.9%CPU, trace30963, chain449774 correctly waits, wrongcopy notyetstarted. SHs10w terminalWARN/GRT0 with pinspread46.7/42.2 but depth690ps and original CTSsetup−52.7 preserved; native/PG/SAFE notqualified. s10+s10b actualGRTrepair, TOPKsucc and C199rq CTSrepair. No launches/retries/kills/sourcechanges; nextcollector picks existing terminal receipts only.
+
+Current frozen jobs and result paths remain in pending_results.txt. Prior strict token FAIL1324/2628, strict bind1182/open28, native GUNIT579 and all older failures remain immutable. No component or simulator PASS is token qualification.

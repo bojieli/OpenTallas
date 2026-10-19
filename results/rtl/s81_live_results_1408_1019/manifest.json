@@ -1,0 +1,23 @@
+{
+  "collected": "2026-10-19T14:07:58.674315-07:00",
+  "scope": "Artifact-only terminal status; no source/native/PG/closure or token qualification",
+  "sh_s10w": {
+    "staged_source": "40261329ff8bdcdfb6d8e344937c9f5c9e3a00bb",
+    "verdict": "WARN",
+    "archive_sha256": "36b2f4a76535094f784228602fa7fe8c4abdb1f235fa8d9358a147731ffb507e",
+    "manifest_sha256": "87d4b8513ad09e4e0cb5b79d53803b41f4dbab1b479615a06a9c92079367ce5a",
+    "hold": "Actual CTS setup failure -52.7 ps and 690ps textbook depth; all-root native/source/PG qualification owed"
+  },
+  "hashes": {
+    "README.md": "3a6da2b882f8f8d9c5be8b124dc5c3bbfd033d2ee3cf3490cdc6e3db07df3d43",
+    "sh_s10w/job.json": "cb98e459f9d9e2122cd39aea6738425e6a9ad8c247ad2a0a8236025e3a82d1ce",
+    "sh_s10w/client.log": "ddd7b45a001ac65e17771a1c710232b99fe1e5f9bef3ba22cbc8a86775af5067",
+    "sh_s10w/gate_result.json": "31b1192d7c696573a167ca2fce55f751099ce5bc49ff8961abf6d3f32f9e3c1d",
+    "hop/out_rtl_tagdrop/status": "9171fe71c114b3e6caec6863ee52565272547d8331653bf77a32f1c61a19caf4",
+    "hop/out_rtl_tagdrop/run.log": "72d90463b6e668bf8e5b07f81e5315cada6f927127d5ac12f9c56dac1fc7f5c3",
+    "hop/out_rtl_tagdrop/run.time": "72e96769074b0d89952ba999406c0947c872a1ab414e6b06ee2302198c116bb4",
+    "hop/out_base/status": "fcca38bfb13a7af96580dc9c455fd8f68b46f8f0f4f4089af642c5b4b29ecf55",
+    "hop/out_base/run.log": "cb309d50b6b9b3241d669f1eae2d26baef274f6f1a7ab00607b9a0760802d688",
+    "hop/out_base/run.time": "d66d260864932a5917e6c5600940f5acbe6292d795a3322b15d7dbebb07b05cc"
+  }
+}

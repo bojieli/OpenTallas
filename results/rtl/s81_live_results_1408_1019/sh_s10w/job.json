@@ -1,0 +1,221 @@
+{
+ "name": "dsdv_sh_lk_s10w-dsdv_sh_lk_s10w-COMMIT",
+ "block": "dsdv_sh_lk",
+ "ref_tile": true,
+ "owner": "Claude:S81-SHLK",
+ "purpose": "S81-SHLK s10 structural successor of dsdv_sh_lk (sr9 gate TT -252/-271, spread 178/187, GRT congested) -- wide centre channel variant",
+ "threads": 8,
+ "peak_ram_gb": 24,
+ "source": {
+  "branch": "claude/s81-shlk-s10-1019",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/dsdv_seq_host_pins",
+   "results/rtl/rtl_build_s81_1018/seq",
+   "results/rtl/s81_dv_unit_1017/seqhost",
+   "results/rtl/s81_shlk_1018",
+   "results/rtl/s81sf_sh_1019/seqhost",
+   "rtl/dsrom_sys/s81_dv/unit",
+   "rtl/dsrom_sys/s81_static_control/ot_s81_fixed_issue.sv",
+   "physical/sys_takeover/sh_lk_struct",
+   "rtl/dsrom_sys/s81_dv/unit/host_sram",
+   "results/arch/s81_shlk_struct_1019",
+   "results/rtl/s81_shlk_s10_1019",
+   "physical/sys_takeover/host_native_pipe_bench.py",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_16x257_m1",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_16x289_m1"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; dsdv_sh_lk u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS -DOT_S81_SH_APIPE9 -DOT_S81_SH_APIPE10 -DOT_S81_SH_SRAM -DOT_S81_SH_RSZ --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/lib/ot_rst_relay.sv rtl/lib/ot_async_fifo.sv rtl/lib/ot_reset_sync.sv rtl/link/ot_link_afifo.sv rtl/dsrom_sys/s81_ctrl/ot_s81_secded.sv rtl/hdc/ingest/ot_hdc_ingest_fp8q.sv rtl/hdc/ingest/ot_hdc_kv_ingest.sv rtl/hdc/ingest/ot_rom_host_ingest.sv physical/rom_host_ingest/rtl/dsfd_host.sv rtl/dsrom_sys/s81_ingest/ot_s81_ingest_visibility_fence.sv rtl/dsrom_sys/s81_ingest/dsfd_host_native.sv rtl/dsrom_sys/s81_ingest/dsfd_host_sd.sv rtl/dsrom_sys/s81_dv/unit/dsdv_sh_sd.sv rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv rtl/dsrom_sys/s81_dv/unit/host_sram/ot_dsdv_host_afifo_sram.sv physical/asap7_memory_macros_v2/ot_sram_1r1w2c_16x257_m1/ot_sram_1r1w2c_16x257_m1_bb.v physical/asap7_memory_macros_v2/ot_sram_1r1w2c_16x289_m1/ot_sram_1r1w2c_16x289_m1_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "seqhost_exact",
+    "cmd": "VL_EXTRA=\"-DOT_S81_SH_APIPE9 -DOT_S81_SH_APIPE10 -DOT_S81_SH_SRAM -DOT_S81_SH_RSZ -DTB_HSH=8\" bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_exact '1 2'",
+    "expect": "pass",
+    "pass_regex": "^SEQHOST_GATE PASS$",
+    "min_count_regex": "^SEQHOST seed=\\d+ .* cmds N/S/G/J=(\\d+)/",
+    "threads": 8,
+    "peak_ram_gb": 8
+   },
+   {
+    "name": "seqhost_mutctx",
+    "cmd": "VL_EXTRA=\"-DOT_S81_SH_APIPE9 -DOT_S81_SH_APIPE10 -DOT_S81_SH_SRAM -DOT_S81_SH_RSZ -DTB_HSH=8\" bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut1 1 1",
+    "expect": "fail",
+    "fail_regex": "^SEQHOST FAIL$",
+    "fail_witness": "results/rtl/s81_shlk_s10_1019/seqhost/run_mut1.log",
+    "threads": 8,
+    "peak_ram_gb": 8
+   },
+   {
+    "name": "seqhost_mutsvctag",
+    "cmd": "VL_EXTRA=\"-DOT_S81_SH_APIPE9 -DOT_S81_SH_APIPE10 -DOT_S81_SH_SRAM -DOT_S81_SH_RSZ -DTB_HSH=8\" bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut2 1 2",
+    "expect": "fail",
+    "fail_regex": "^SEQHOST FAIL$",
+    "fail_witness": "results/rtl/s81_shlk_s10_1019/seqhost/run_mut2.log",
+    "threads": 8,
+    "peak_ram_gb": 8
+   },
+   {
+    "name": "seqhost_mutrunghop",
+    "cmd": "VL_EXTRA=\"-DOT_S81_SH_APIPE9 -DOT_S81_SH_APIPE10 -DOT_S81_SH_SRAM -DOT_S81_SH_RSZ -DTB_HSH=8\" bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut3 1 3",
+    "expect": "fail",
+    "fail_regex": "^SEQHOST FAIL$",
+    "fail_witness": "results/rtl/s81_shlk_s10_1019/seqhost/run_mut3.log",
+    "threads": 8,
+    "peak_ram_gb": 8
+   },
+   {
+    "name": "seqhost_mutdonelate",
+    "cmd": "VL_EXTRA=\"-DOT_S81_SH_APIPE9 -DOT_S81_SH_APIPE10 -DOT_S81_SH_SRAM -DOT_S81_SH_RSZ -DTB_HSH=8\" bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut4 1 4",
+    "expect": "fail",
+    "fail_regex": "^SEQHOST FAIL$",
+    "fail_witness": "results/rtl/s81_shlk_s10_1019/seqhost/run_mut4.log",
+    "threads": 8,
+    "peak_ram_gb": 8
+   },
+   {
+    "name": "seqhost_mutwhalf",
+    "cmd": "VL_EXTRA=\"-DOT_S81_SH_APIPE9 -DOT_S81_SH_APIPE10 -DOT_S81_SH_SRAM -DOT_S81_SH_RSZ -DTB_HSH=8\" bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut5 1 5",
+    "expect": "fail",
+    "fail_regex": "^SEQHOST FAIL$",
+    "fail_witness": "results/rtl/s81_shlk_s10_1019/seqhost/run_mut5.log",
+    "threads": 8,
+    "peak_ram_gb": 8
+   },
+   {
+    "name": "seqhost_mutroute",
+    "cmd": "VL_EXTRA=\"-DOT_S81_SH_APIPE9 -DOT_S81_SH_APIPE10 -DOT_S81_SH_SRAM -DOT_S81_SH_RSZ -DTB_HSH=8\" bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut6 1 6",
+    "expect": "fail",
+    "fail_regex": "^SEQHOST FAIL$",
+    "fail_witness": "results/rtl/s81_shlk_s10_1019/seqhost/run_mut6.log",
+    "threads": 8,
+    "peak_ram_gb": 8
+   },
+   {
+    "name": "seqhost_muthregv",
+    "cmd": "VL_EXTRA=\"-DOT_S81_SH_APIPE9 -DOT_S81_SH_APIPE10 -DOT_S81_SH_SRAM -DOT_S81_SH_RSZ -DTB_HSH=8\" bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut7 1 7",
+    "expect": "fail",
+    "fail_regex": "^SEQHOST FAIL$",
+    "fail_witness": "results/rtl/s81_shlk_s10_1019/seqhost/run_mut7.log",
+    "threads": 8,
+    "peak_ram_gb": 8
+   },
+   {
+    "name": "seqhost_mutrac",
+    "cmd": "VL_EXTRA=\"-DOT_S81_SH_APIPE9 -DOT_S81_SH_APIPE10 -DOT_S81_SH_SRAM -DOT_S81_SH_RSZ -DTB_HSH=8\" bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut8 1 8",
+    "expect": "fail",
+    "fail_regex": "^SEQHOST FAIL$",
+    "fail_witness": "results/rtl/s81_shlk_s10_1019/seqhost/run_mut8.log",
+    "threads": 8,
+    "peak_ram_gb": 8
+   },
+   {
+    "name": "seqhost_mutrland",
+    "cmd": "VL_EXTRA=\"-DOT_S81_SH_APIPE9 -DOT_S81_SH_APIPE10 -DOT_S81_SH_SRAM -DOT_S81_SH_RSZ -DTB_HSH=8\" bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut9 1 9",
+    "expect": "fail",
+    "fail_regex": "^SEQHOST FAIL$",
+    "fail_witness": "results/rtl/s81_shlk_s10_1019/seqhost/run_mut9.log",
+    "threads": 8,
+    "peak_ram_gb": 8
+   },
+   {
+    "name": "seqhost_mut10",
+    "cmd": "VL_EXTRA=\"-DOT_S81_SH_APIPE9 -DOT_S81_SH_APIPE10 -DOT_S81_SH_SRAM -DOT_S81_SH_RSZ -DTB_HSH=8\" bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut10 1 10",
+    "expect": "fail",
+    "fail_regex": "^SEQHOST FAIL( |$)",
+    "fail_witness": "results/rtl/s81_shlk_s10_1019/seqhost/run_mut10.log",
+    "threads": 8,
+    "peak_ram_gb": 8
+   },
+   {
+    "name": "seqhost_mutsprh",
+    "cmd": "VL_EXTRA=\"-DOT_S81_SH_APIPE9 -DOT_S81_SH_APIPE10 -DOT_S81_SH_SRAM -DOT_S81_SH_RSZ -DTB_HSH=8\" bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut11 1 11",
+    "expect": "fail",
+    "fail_regex": "^SEQHOST FAIL$",
+    "fail_witness": "results/rtl/s81_shlk_s10_1019/seqhost/run_mut11.log",
+    "threads": 8,
+    "peak_ram_gb": 8
+   },
+   {
+    "name": "seqhost_muthqstale",
+    "cmd": "VL_EXTRA=\"-DOT_S81_SH_APIPE9 -DOT_S81_SH_APIPE10 -DOT_S81_SH_SRAM -DOT_S81_SH_RSZ -DTB_HSH=8\" bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut14 1 14",
+    "expect": "fail",
+    "fail_regex": "^SEQHOST FAIL$",
+    "fail_witness": "results/rtl/s81_shlk_s10_1019/seqhost/run_mut14.log",
+    "threads": 8,
+    "peak_ram_gb": 8
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/dsdv_sh_lk_s10w/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/dsdv_sh_lk_s10w/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 24
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/dsdv_sh_lk_s10w --out {RUN}/record/views/dsdv_sh_lk --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w2c_16x257_m1 --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w2c_16x289_m1 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/dsdv_sh_lk_s10w/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_16x257_m1",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_16x289_m1"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/dsdv_sh_lk_s10w/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/arch/s81_shlk_s10_1019/physical/dsdv_sh_lk_s10w-dsdv_sh_lk_s10w-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "S81-SHLK s10 (one failed route => structural redesign of sr9): APIPE 10 stream pipe (registered 40-byte realigner window, 10 + 8 kept pointer copies, 4-entry credit-issued output FIFO, completion queue; +2 edges a stream sector / done / boot marker), split row product, svc SRAM head register (no macro->logic cone), reset copies sized for <= 32 loads, four right-sized 16x257 / 16x289 dual-clock masters instead of three pin-limited 16x546 macros, 302.4 x 194.4 outline (sr9 518.4 x 280.8). Benches: seqhost HSH 8 lock-step + 12 mutants, hnp pos10 (SRAM + BANK64) + mutants."
+}
