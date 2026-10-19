@@ -11,8 +11,8 @@
 set -euo pipefail
 C=${1:?usage: kvs14r.sh COMMIT}
 B=/srv/opentallas-scratch/claude/qwen-kvsys
-W=$B/wt-kvs14r-$C
-R=$B/kvs14r-$C
+W=$B/wt-kvs14r-$C${KVS14R_TAG:+-$KVS14R_TAG}
+R=$B/kvs14r-$C${KVS14R_TAG:+-$KVS14R_TAG}
 M=/srv/opentallas-scratch/claude/git-mirror/OpenTallas.git
 GH=https://github.com/bojieli/OpenTallas
 mkdir -p $R
