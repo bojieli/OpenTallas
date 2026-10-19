@@ -20,16 +20,16 @@ for i,a in enumerate(children):
         dx=max(x-xx-ww,xx-x-w);dy=max(y-yy-hh,yy-y-h)
         assert dx>=20 or dy>=20,(a['name'],b['name'],dx,dy)
 hard_area=322971.5
-std_area=8756.0
+std_area=6283.16352
 out=dict(schema='opentallas.qwen.a0.safe_model.v1',status='MODEL_ONLY_NO_GATE',
     source='985e49d6e+c980cbe47 / immutable NK c1r9f actual synth area',
     dimensions_um=[W,H],aspect=W/H,area_um2=W*H,
     previous_dimensions_um=[457.92,1166.4],
     parent_area_delta_um2=W*H-457.92*1166.4,
-    hard_area_um2=hard_area,historical_std_area_um2=std_area,
+    hard_area_um2=hard_area,mapped_relay_std_area_um2=std_area,historical_std_plus_reserve_um2=8756.0,
     raw_fill=(hard_area+std_area)/(W*H),
-    full_width_std_band_um=[0,345.6,W,362.88],
-    std_band_fill_historical=std_area/(W*17.28),
+    full_width_std_band_um=[0,345.6,W,358.56],
+    std_band_fill_mapped=std_area/(W*12.96),std_band_fill_with_historical_reserve=8756.0/(W*12.96),
     children=children,
     operand_select_plan=dict(default_off='REGROOT4',lanes=64,bits_per_operand=32,
          variable_bits_per_lane=16,lanes_per_copy=2,max_select_mux_inputs=32,
@@ -50,7 +50,7 @@ out=dict(schema='opentallas.qwen.a0.safe_model.v1',status='MODEL_ONLY_NO_GATE',
     unresolved=['Native ROM/LSL/node pin geometry and PG/via escape on proposed orientations',
         'Source-to-destination static relay epochs and every routed reach <=405um',
         'Synthesized reset tree, operand copies, area and actual register/comb driver census',
-        'Keep all parent standard cells in the modeled full-width17.28um band; historical mass fills41.9%, new mapped mass and clock/repair overhead must be re-sized',
+        'Keep all parent standard cells in the modeled full-width12.96um band; actual mapped mass fills40.08% and historical reserve55.85%, new mapped mass and clock/repair overhead must be re-sized',
         'Native clock pairs, TT setup and FF hold, source reset mutants and numerical production proof',
         'Die slot/area placement changes and compiler age pricing; no parent fit claimed'])
 dest=Path(__file__).resolve().parents[2]/'results/arch/qwen_a0_safe_1019/model.json'

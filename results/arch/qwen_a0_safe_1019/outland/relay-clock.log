@@ -1,0 +1,24 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/qwen-a0-safe-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/qwen-a0-safe-1019
+ot-run: ot-epyc6       admits   813 GB (avail 672, growth 103, headroom 0, waiters 0/0 GB) load 23/128 running 11 disk 6026 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/qwen-a0-safe-1019
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/qwen-a0-safe-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/qwen-a0-safe-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/qwen-a0-safe-1019
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-279178-1792430457 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING ORD-0039] .openroad ignored with -python
+A0_ACTUAL_CENSUS {"cells": 38544, "drivers": 46848, "register_outputs": 15630, "register_outputs_over32": 8, "maximum_register_loads": 415}
+A0_DRIVER u_g.u_tile.u_tile.u_logic.u_me.split_r\[1\]$_DFFE_PP_/QN 415
+A0_DRIVER u_g.u_tile.u_tile.u_logic.u_me.split_r\[0\]$_DFFE_PP_/QN 335
+A0_DRIVER u_g.u_tile.u_tile.u_logic.u_me.split_r\[2\]$_DFFE_PP_/QN 281
+A0_DRIVER u_g.u_tile.u_tile.u_logic.u_me.split_r\[3\]$_DFFE_PP_/QN 235
+A0_DRIVER u_g.reset_q$_DFF_P_/QN 120
+A0_DRIVER u_g.u_tile.u_tile.u_logic.u_me.wsrc_r$_DFFE_PP_/QN 89
+A0_DRIVER u_g.u_tile.u_tile.u_logic.u_me.active_o$_DFFE_PN0P_/QN 82
+A0_DRIVER u_g.u_tile.u_tile.u_logic.u_me.k_last$_DFFE_PP_/QN 62
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-279178-1792430457): exit 0

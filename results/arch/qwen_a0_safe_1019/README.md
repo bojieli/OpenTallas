@@ -36,24 +36,38 @@ Mutants28/29 clear a W/E local group-mask bank; mutant26 holds a real ROM reset
 relay. All three fail the comparison. The first fixture uses round0; it does not
 qualify the rounding-mode control. Its build digest and exact logs are retained.
 
-The followup also copies the S2 round selector per sixteen output bits (+7 FF,
-zero logical edges). It strengthens the native input words to exercise rounding
-and enables round on alternating operations. A new mutant30 disables all local
-round controls. The followup source needs its own complete numerical and mapped
-receipts; v1 evidence does not qualify that later source.
+The `copies_v2` followup copies the S2 round selector per sixteen output
+bits (+7 FF, zero logical edges; +65 FF combined). It enables round on alternating
+operations and uses nontrivial low mantissa bits. Native6399 checks/2560 nonzero
+outputs PASS; bank28/29, reset26, and round-off30 all fail (round30 gives2400
+mismatches). Actual mapped round control loads are22 maximum, operand control
+loads1, common wsrc32. Eight other register roots still exceed32; all nonclock
+above32 inventory records are70. V2 source is `9d9a7140b`.
+
+`REGROOT_MODE=5` implements the owner-authorized output landing:512 data FF on
+the eight existing `ck_tx0..7` roots (64 FF each), and one valid FF. The complete
+tile data/valid return advances exactly one edge; node n_a/n_b→n_y stays on its
+existing edge. No new clock port, backpressure, data mask, or timing exception is
+introduced. `outland` records6399 native comparisons/2560 nonzero outputs PASS
+with exact+1 data/valid matching; missing-relay31 fails6250 comparisons and real
+reset-relay26 fails1200. Actual mapped state increases by513 relative toV2;
+all512 new data FF drive exactly one actual node t_d input. This source is
+`0bfed5970`. The source and clock-owner inventory qualify logical structure;
+physical landing coordinates and native pair closure remain OPEN.
 
 The geometric model has a1209.6×648 outline, aspect1.867, all19 child origins on
-43.2, at least20µm between bodies and boundary, and a continuous17.28µm parent
-standard-cell band. Historical raw mass fills42.3% of the outline and41.9% of
-that band. These are separate honest raw and placement-band measurements, with
-white space reserved for routing. This is a prebuild model, not placement,
-channel capacity, PG, pin-access, native-clock, parent-fit, or route evidence.
+43.2, at least20µm between bodies and boundary, and a continuous12.96µm parent
+standard-cell band. The new actual synthesized standard area6283.16352µm² plus
+actual hard bodies322971.4944µm² fills42.006% of the outline. Standard-cell mass
+fills40.08% of that band; the earlier8756µm² reserve would fill55.85%. These are
+separate raw and placement-band measurements; white space is reserved for
+routing. This is a prebuild model, not placement, channel capacity, PG,
+pin-access, native-clock, parent-fit, or route evidence.
 
-The owner-approved node-path relay costs +1 edge and at least513 data/valid FFs
-per NK occurrence. It has not been implemented or silently charged elsewhere.
-The new geometry needs source-bound endpoint distances and a real local clock
-for that landing. Additional ROM return/reset landing depths and full-token
-cost remain unbound; no zero-cost or implicit-phase claim is made.
+The additional ROM return/reset landing depths and full-token cost remain
+unbound; no zero-cost or implicit-phase claim is made. Eight broad control/reset
+registers and73 nonclock driver records remain above32 after the new landing.
+The source common reset remains one face stage; no reset qualification is claimed.
 
 | Safe checklist | Current evidence / required continuation |
 |---|---|
@@ -64,7 +78,7 @@ cost remain unbound; no zero-cost or implicit-phase claim is made.
 | 5 Storage | Runtime arrays and ≥3 delay lines require source inventory before gate. |
 | 6 Floorplan | Lattice/aspect/body-gap/area model PASS; actual rows, pins, tracks, PG/escape OPEN. |
 | 7 Clock | Native pair TT/FF, <=80ps spread and >=.03ns route repair margin OPEN. |
-| 8 Schedule | Operand/round copies0 edges; node+1 authorized/unimplemented; reset/ROM/full composition OPEN. |
+| 8 Schedule | Operand/round copies0 edges; node+1 source/native component proved; reset/ROM/full composition OPEN. |
 
 No critical gate may start until the failed/open checklist items have actual
 source and model proof. A final native A0 source/LEF/clock-pin packet goes to

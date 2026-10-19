@@ -14,15 +14,17 @@
   ],
   "parent_area_delta_um2": 249702.9119999999,
   "hard_area_um2": 322971.5,
-  "historical_std_area_um2": 8756.0,
-  "raw_fill": 0.42321854689235094,
+  "mapped_relay_std_area_um2": 6283.16352,
+  "historical_std_plus_reserve_um2": 8756.0,
+  "raw_fill": 0.4200636976206807,
   "full_width_std_band_um": [
     0,
     345.6,
     1209.6,
-    362.88
+    358.56
   ],
-  "std_band_fill_historical": 0.4189095262590633,
+  "std_band_fill_mapped": 0.4008035714285714,
+  "std_band_fill_with_historical_reserve": 0.5585460350120844,
   "children": [
     {
       "name": "node",
@@ -280,7 +282,7 @@
     "Native ROM/LSL/node pin geometry and PG/via escape on proposed orientations",
     "Source-to-destination static relay epochs and every routed reach <=405um",
     "Synthesized reset tree, operand copies, area and actual register/comb driver census",
-    "Keep all parent standard cells in the modeled full-width17.28um band; historical mass fills41.9%, new mapped mass and clock/repair overhead must be re-sized",
+    "Keep all parent standard cells in the modeled full-width12.96um band; actual mapped mass fills40.08% and historical reserve55.85%, new mapped mass and clock/repair overhead must be re-sized",
     "Native clock pairs, TT setup and FF hold, source reset mutants and numerical production proof",
     "Die slot/area placement changes and compiler age pricing; no parent fit claimed"
   ]
