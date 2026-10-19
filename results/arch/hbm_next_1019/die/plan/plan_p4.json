@@ -1611,5 +1611,1607 @@
   "grp_side": 259.2,
   "coll_d": 4500.0,
   "coll_x": 1.25
+ },
+ "f4c_t6": {
+  "die_um": [
+   23891.84,
+   29009.6
+  ],
+  "die_mm2": 693.09,
+  "placed_mm2": 527.7,
+  "density": 0.761,
+  "sm_column_um": [
+   2630.88,
+   7819.2
+  ],
+  "sm_column_mm2_need": 19.73,
+  "tile_um": [
+   630.72,
+   1814.4
+  ],
+  "cut_v": {
+   "ratio": 0.484,
+   "x": 13200.0,
+   "y": [
+    16300.0,
+    17300.0
+   ]
+  },
+  "cut_h": {
+   "ratio": 0.414,
+   "y": 18500.0,
+   "x": [
+    15200.0,
+    16200.0
+   ]
+  },
+  "cut_over_060": [],
+  "graph_bit_mm": 690133.7,
+  "stages_bw": 6.168,
+  "per_class": {
+   "HBM_K": {
+    "bits": 35392,
+    "stages_bw": 0.0
+   },
+   "SM_X": {
+    "bits": 34944,
+    "stages_bw": 6.52
+   },
+   "COLL_VM": {
+    "bits": 22208,
+    "stages_bw": 12.0
+   },
+   "SM_HBM": {
+    "bits": 18112,
+    "stages_bw": 5.25
+   },
+   "LG_SFU": {
+    "bits": 17792,
+    "stages_bw": 1.0
+   },
+   "LG_HC": {
+    "bits": 17792,
+    "stages_bw": 2.0
+   },
+   "LG_SU": {
+    "bits": 17792,
+    "stages_bw": 0.0
+   },
+   "HC_CORE": {
+    "bits": 17792,
+    "stages_bw": 14.2
+   },
+   "VM_RING": {
+    "bits": 17792,
+    "stages_bw": 10.0
+   },
+   "VM_HUB": {
+    "bits": 17216,
+    "stages_bw": 11.75
+   },
+   "HC_ENG": {
+    "bits": 11488,
+    "stages_bw": 0.5
+   },
+   "COLL_RING": {
+    "bits": 8256,
+    "stages_bw": 10.25
+   },
+   "COLL_EP": {
+    "bits": 7650,
+    "stages_bw": 9.8
+   },
+   "EP_SERDES": {
+    "bits": 5280,
+    "stages_bw": 0.0
+   },
+   "QUANT_VM": {
+    "bits": 4440,
+    "stages_bw": 2.12
+   },
+   "SM_OUT": {
+    "bits": 4320,
+    "stages_bw": 5.81
+   },
+   "HBM_VM": {
+    "bits": 4096,
+    "stages_bw": 21.25
+   },
+   "VM_HBM": {
+    "bits": 4096,
+    "stages_bw": 20.69
+   },
+   "SU_CORE": {
+    "bits": 3072,
+    "stages_bw": 2.0
+   },
+   "SFU_CORE": {
+    "bits": 3072,
+    "stages_bw": 9.33
+   },
+   "KV_DESC": {
+    "bits": 1024,
+    "stages_bw": 5.5
+   }
+  },
+  "longest_class_um": {
+   "COLL_EP": 5779,
+   "COLL_RING": 9270,
+   "COLL_VM": 9154,
+   "EP_SERDES": 50,
+   "HBM_K": 20,
+   "HBM_VM": 10011,
+   "HC_CORE": 8894,
+   "HC_ENG": 259,
+   "KV_DESC": 6114,
+   "LG_HC": 1394,
+   "LG_SFU": 1074,
+   "LG_SU": 50,
+   "QUANT_VM": 910,
+   "SFU_CORE": 4013,
+   "SM_HBM": 4975,
+   "SM_OUT": 6114,
+   "SM_X": 8460,
+   "SU_CORE": 2476,
+   "VM_HBM": 10011,
+   "VM_HUB": 7732,
+   "VM_RING": 5756
+  },
+  "relay_flops": 1266520.0,
+  "overlaps": 0,
+  "overlap_pairs": [],
+  "outside": [],
+  "reticle": {
+   "short_margin_um": 2108.16,
+   "long_margin_um": 3990.4,
+   "margin_req_um": 500.0,
+   "ok": true
+  },
+  "sm_hbm_offset_um": {
+   "SW0": 6609,
+   "SW1": 4575,
+   "SW2": 2981,
+   "SW3": 947,
+   "SW4": 947,
+   "SW5": 2981,
+   "SW6": 4575,
+   "SW7": 6609,
+   "NW0": 6609,
+   "NW1": 4575,
+   "NW2": 2981,
+   "NW3": 947,
+   "NW4": 947,
+   "NW5": 2981,
+   "NW6": 4575,
+   "NW7": 6609
+  },
+  "vmh": "inner",
+  "grp_side": 259.2,
+  "coll_d": 4500.0,
+  "coll_x": 1.25,
+  "hc": "quad",
+  "vm_dw": 0.0,
+  "vm_dh": 86.4,
+  "hce_um": [
+   1598.4,
+   1598.4
+  ]
+ },
+ "f4c_t6e": {
+  "die_um": [
+   23891.84,
+   29009.6
+  ],
+  "die_mm2": 693.09,
+  "placed_mm2": 529.42,
+  "density": 0.764,
+  "sm_column_um": [
+   2630.88,
+   7819.2
+  ],
+  "sm_column_mm2_need": 19.73,
+  "tile_um": [
+   630.72,
+   1814.4
+  ],
+  "cut_v": {
+   "ratio": 0.478,
+   "x": 10700.0,
+   "y": [
+    16500.0,
+    17500.0
+   ]
+  },
+  "cut_h": {
+   "ratio": 0.4,
+   "y": 10700.0,
+   "x": [
+    7600.0,
+    8600.0
+   ]
+  },
+  "cut_over_060": [],
+  "graph_bit_mm": 687541.7,
+  "stages_bw": 6.19,
+  "per_class": {
+   "HBM_K": {
+    "bits": 35392,
+    "stages_bw": 0.0
+   },
+   "SM_X": {
+    "bits": 34944,
+    "stages_bw": 6.55
+   },
+   "COLL_VM": {
+    "bits": 22208,
+    "stages_bw": 12.03
+   },
+   "SM_HBM": {
+    "bits": 18112,
+    "stages_bw": 5.25
+   },
+   "LG_SFU": {
+    "bits": 17792,
+    "stages_bw": 1.0
+   },
+   "LG_HC": {
+    "bits": 17792,
+    "stages_bw": 2.0
+   },
+   "LG_SU": {
+    "bits": 17792,
+    "stages_bw": 0.0
+   },
+   "HC_CORE": {
+    "bits": 17792,
+    "stages_bw": 14.27
+   },
+   "VM_RING": {
+    "bits": 17792,
+    "stages_bw": 10.0
+   },
+   "VM_HUB": {
+    "bits": 17216,
+    "stages_bw": 11.94
+   },
+   "HC_ENG": {
+    "bits": 11488,
+    "stages_bw": 0.5
+   },
+   "COLL_RING": {
+    "bits": 8256,
+    "stages_bw": 10.25
+   },
+   "COLL_EP": {
+    "bits": 7650,
+    "stages_bw": 9.8
+   },
+   "EP_SERDES": {
+    "bits": 5280,
+    "stages_bw": 0.0
+   },
+   "QUANT_VM": {
+    "bits": 4440,
+    "stages_bw": 1.88
+   },
+   "SM_OUT": {
+    "bits": 4320,
+    "stages_bw": 5.69
+   },
+   "HBM_VM": {
+    "bits": 4096,
+    "stages_bw": 21.25
+   },
+   "VM_HBM": {
+    "bits": 4096,
+    "stages_bw": 20.69
+   },
+   "SU_CORE": {
+    "bits": 3072,
+    "stages_bw": 2.33
+   },
+   "SFU_CORE": {
+    "bits": 3072,
+    "stages_bw": 9.5
+   },
+   "KV_DESC": {
+    "bits": 1024,
+    "stages_bw": 5.44
+   }
+  },
+  "longest_class_um": {
+   "COLL_EP": 5779,
+   "COLL_RING": 9270,
+   "COLL_VM": 9089,
+   "EP_SERDES": 50,
+   "HBM_K": 20,
+   "HBM_VM": 10011,
+   "HC_CORE": 8829,
+   "HC_ENG": 259,
+   "KV_DESC": 6114,
+   "LG_HC": 1394,
+   "LG_SFU": 1074,
+   "LG_SU": 50,
+   "QUANT_VM": 910,
+   "SFU_CORE": 4013,
+   "SM_HBM": 4975,
+   "SM_OUT": 6114,
+   "SM_X": 8460,
+   "SU_CORE": 2476,
+   "VM_HBM": 10011,
+   "VM_HUB": 7732,
+   "VM_RING": 5756
+  },
+  "relay_flops": 1262356.0,
+  "overlaps": 0,
+  "overlap_pairs": [],
+  "outside": [],
+  "reticle": {
+   "short_margin_um": 2108.16,
+   "long_margin_um": 3990.4,
+   "margin_req_um": 500.0,
+   "ok": true
+  },
+  "sm_hbm_offset_um": {
+   "SW0": 6609,
+   "SW1": 4575,
+   "SW2": 2981,
+   "SW3": 947,
+   "SW4": 947,
+   "SW5": 2981,
+   "SW6": 4575,
+   "SW7": 6609,
+   "NW0": 6609,
+   "NW1": 4575,
+   "NW2": 2981,
+   "NW3": 947,
+   "NW4": 947,
+   "NW5": 2981,
+   "NW6": 4575,
+   "NW7": 6609
+  },
+  "vmh": "inner",
+  "grp_side": 259.2,
+  "coll_d": 4500.0,
+  "coll_x": 1.25,
+  "hc": "quad",
+  "vm_dw": 0.0,
+  "vm_dh": 151.2,
+  "hce_um": [
+   1598.4,
+   1598.4
+  ]
+ },
+ "f4c_t6_hccorner": {
+  "die_um": [
+   23891.84,
+   28803.84
+  ],
+  "die_mm2": 688.18,
+  "placed_mm2": 527.31,
+  "density": 0.766,
+  "sm_column_um": [
+   2630.88,
+   7819.2
+  ],
+  "sm_column_mm2_need": 19.73,
+  "tile_um": [
+   630.72,
+   1814.4
+  ],
+  "cut_v": {
+   "ratio": 0.879,
+   "x": 14400.0,
+   "y": [
+    1700.0,
+    2700.0
+   ]
+  },
+  "cut_h": {
+   "ratio": 0.499,
+   "y": 11000.0,
+   "x": [
+    12300.0,
+    13300.0
+   ]
+  },
+  "cut_over_060": [
+   [
+    "v",
+    14200.0,
+    1100.0,
+    0.631
+   ],
+   [
+    "v",
+    14200.0,
+    1200.0,
+    0.631
+   ],
+   [
+    "v",
+    14200.0,
+    1300.0,
+    0.631
+   ],
+   [
+    "v",
+    14200.0,
+    1400.0,
+    0.631
+   ],
+   [
+    "v",
+    14200.0,
+    1500.0,
+    0.631
+   ],
+   [
+    "v",
+    14200.0,
+    1600.0,
+    0.631
+   ],
+   [
+    "v",
+    14200.0,
+    1700.0,
+    0.711
+   ],
+   [
+    "v",
+    14200.0,
+    1800.0,
+    0.711
+   ],
+   [
+    "v",
+    14200.0,
+    1900.0,
+    0.638
+   ],
+   [
+    "v",
+    14200.0,
+    2000.0,
+    0.638
+   ],
+   [
+    "v",
+    14300.0,
+    1100.0,
+    0.78
+   ],
+   [
+    "v",
+    14300.0,
+    1200.0,
+    0.78
+   ],
+   [
+    "v",
+    14300.0,
+    1300.0,
+    0.78
+   ],
+   [
+    "v",
+    14300.0,
+    1400.0,
+    0.78
+   ],
+   [
+    "v",
+    14300.0,
+    1500.0,
+    0.78
+   ],
+   [
+    "v",
+    14300.0,
+    1600.0,
+    0.78
+   ],
+   [
+    "v",
+    14300.0,
+    1700.0,
+    0.86
+   ],
+   [
+    "v",
+    14300.0,
+    1800.0,
+    0.86
+   ],
+   [
+    "v",
+    14300.0,
+    1900.0,
+    0.788
+   ],
+   [
+    "v",
+    14300.0,
+    2000.0,
+    0.788
+   ]
+  ],
+  "graph_bit_mm": 901384.7,
+  "stages_bw": 7.822,
+  "per_class": {
+   "HBM_K": {
+    "bits": 35392,
+    "stages_bw": 0.0
+   },
+   "SM_X": {
+    "bits": 34944,
+    "stages_bw": 6.59
+   },
+   "COLL_VM": {
+    "bits": 22208,
+    "stages_bw": 11.72
+   },
+   "SM_HBM": {
+    "bits": 18112,
+    "stages_bw": 5.44
+   },
+   "LG_SFU": {
+    "bits": 17792,
+    "stages_bw": 1.0
+   },
+   "LG_HC": {
+    "bits": 17792,
+    "stages_bw": 2.0
+   },
+   "LG_SU": {
+    "bits": 17792,
+    "stages_bw": 0.0
+   },
+   "HC_CORE": {
+    "bits": 17792,
+    "stages_bw": 14.1
+   },
+   "VM_RING": {
+    "bits": 17792,
+    "stages_bw": 9.75
+   },
+   "VM_HUB": {
+    "bits": 17216,
+    "stages_bw": 11.59
+   },
+   "HC_ENG": {
+    "bits": 11488,
+    "stages_bw": 40.45
+   },
+   "COLL_RING": {
+    "bits": 8256,
+    "stages_bw": 10.25
+   },
+   "COLL_EP": {
+    "bits": 7650,
+    "stages_bw": 9.8
+   },
+   "EP_SERDES": {
+    "bits": 5280,
+    "stages_bw": 0.0
+   },
+   "QUANT_VM": {
+    "bits": 4440,
+    "stages_bw": 2.5
+   },
+   "SM_OUT": {
+    "bits": 4320,
+    "stages_bw": 6.12
+   },
+   "HBM_VM": {
+    "bits": 4096,
+    "stages_bw": 21.12
+   },
+   "VM_HBM": {
+    "bits": 4096,
+    "stages_bw": 20.69
+   },
+   "SU_CORE": {
+    "bits": 3072,
+    "stages_bw": 2.17
+   },
+   "SFU_CORE": {
+    "bits": 3072,
+    "stages_bw": 9.33
+   },
+   "KV_DESC": {
+    "bits": 1024,
+    "stages_bw": 5.69
+   }
+  },
+  "longest_class_um": {
+   "COLL_EP": 5779,
+   "COLL_RING": 9270,
+   "COLL_VM": 9051,
+   "EP_SERDES": 50,
+   "HBM_K": 20,
+   "HBM_VM": 10011,
+   "HC_CORE": 8894,
+   "HC_ENG": 22840,
+   "KV_DESC": 6114,
+   "LG_HC": 1394,
+   "LG_SFU": 1074,
+   "LG_SU": 50,
+   "QUANT_VM": 910,
+   "SFU_CORE": 4013,
+   "SM_HBM": 4975,
+   "SM_OUT": 6114,
+   "SM_X": 8460,
+   "SU_CORE": 2476,
+   "VM_HBM": 10011,
+   "VM_HUB": 7732,
+   "VM_RING": 5756
+  },
+  "relay_flops": 1690284.0,
+  "overlaps": 0,
+  "overlap_pairs": [],
+  "outside": [],
+  "reticle": {
+   "short_margin_um": 2108.16,
+   "long_margin_um": 4196.16,
+   "margin_req_um": 500.0,
+   "ok": true
+  },
+  "sm_hbm_offset_um": {
+   "SW0": 6609,
+   "SW1": 4575,
+   "SW2": 2981,
+   "SW3": 947,
+   "SW4": 947,
+   "SW5": 2981,
+   "SW6": 4575,
+   "SW7": 6609,
+   "NW0": 6609,
+   "NW1": 4575,
+   "NW2": 2981,
+   "NW3": 947,
+   "NW4": 947,
+   "NW5": 2981,
+   "NW6": 4575,
+   "NW7": 6609
+  },
+  "vmh": "inner",
+  "grp_side": 259.2,
+  "coll_d": 4500.0,
+  "coll_x": 1.25,
+  "hc": "one",
+  "vm_dw": 0.0,
+  "vm_dh": 86.4,
+  "hce_um": [
+   4931.66,
+   1994.4
+  ]
+ },
+ "f4c_t6_La": {
+  "die_um": [
+   23891.84,
+   36612.8
+  ],
+  "die_mm2": 874.75,
+  "placed_mm2": 687.72,
+  "density": 0.786,
+  "sm_column_um": [
+   2630.88,
+   11620.8
+  ],
+  "sm_column_mm2_need": 19.73,
+  "tile_um": [
+   630.72,
+   2764.8
+  ],
+  "cut_v": {
+   "ratio": 0.484,
+   "x": 13200.0,
+   "y": [
+    20100.0,
+    21100.0
+   ]
+  },
+  "cut_h": {
+   "ratio": 0.403,
+   "y": 22300.0,
+   "x": [
+    7600.0,
+    8600.0
+   ]
+  },
+  "cut_over_060": [],
+  "graph_bit_mm": 721276.4,
+  "stages_bw": 6.423,
+  "per_class": {
+   "HBM_K": {
+    "bits": 35392,
+    "stages_bw": 0.0
+   },
+   "SM_X": {
+    "bits": 34944,
+    "stages_bw": 6.46
+   },
+   "COLL_VM": {
+    "bits": 22208,
+    "stages_bw": 12.03
+   },
+   "SM_HBM": {
+    "bits": 18112,
+    "stages_bw": 5.25
+   },
+   "LG_SFU": {
+    "bits": 17792,
+    "stages_bw": 1.0
+   },
+   "LG_HC": {
+    "bits": 17792,
+    "stages_bw": 2.0
+   },
+   "LG_SU": {
+    "bits": 17792,
+    "stages_bw": 0.0
+   },
+   "HC_CORE": {
+    "bits": 17792,
+    "stages_bw": 14.23
+   },
+   "VM_RING": {
+    "bits": 17792,
+    "stages_bw": 10.0
+   },
+   "VM_HUB": {
+    "bits": 17216,
+    "stages_bw": 11.81
+   },
+   "HC_ENG": {
+    "bits": 11488,
+    "stages_bw": 0.5
+   },
+   "COLL_RING": {
+    "bits": 8256,
+    "stages_bw": 10.25
+   },
+   "COLL_EP": {
+    "bits": 7650,
+    "stages_bw": 9.8
+   },
+   "EP_SERDES": {
+    "bits": 5280,
+    "stages_bw": 0.0
+   },
+   "QUANT_VM": {
+    "bits": 4440,
+    "stages_bw": 2.38
+   },
+   "SM_OUT": {
+    "bits": 4320,
+    "stages_bw": 6.12
+   },
+   "HBM_VM": {
+    "bits": 4096,
+    "stages_bw": 29.25
+   },
+   "VM_HBM": {
+    "bits": 4096,
+    "stages_bw": 29.0
+   },
+   "SU_CORE": {
+    "bits": 3072,
+    "stages_bw": 2.0
+   },
+   "SFU_CORE": {
+    "bits": 3072,
+    "stages_bw": 9.25
+   },
+   "KV_DESC": {
+    "bits": 1024,
+    "stages_bw": 6.0
+   }
+  },
+  "longest_class_um": {
+   "COLL_EP": 5779,
+   "COLL_RING": 9270,
+   "COLL_VM": 9154,
+   "EP_SERDES": 50,
+   "HBM_K": 20,
+   "HBM_VM": 13812,
+   "HC_CORE": 8894,
+   "HC_ENG": 259,
+   "KV_DESC": 6114,
+   "LG_HC": 1394,
+   "LG_SFU": 1074,
+   "LG_SU": 50,
+   "QUANT_VM": 910,
+   "SFU_CORE": 4013,
+   "SM_HBM": 4975,
+   "SM_OUT": 6114,
+   "SM_X": 8460,
+   "SU_CORE": 2476,
+   "VM_HBM": 13812,
+   "VM_HUB": 7732,
+   "VM_RING": 5756
+  },
+  "relay_flops": 1330008.0,
+  "overlaps": 0,
+  "overlap_pairs": [],
+  "outside": [],
+  "reticle": {
+   "short_margin_um": 2108.16,
+   "long_margin_um": -3612.8,
+   "margin_req_um": 500.0,
+   "ok": false
+  },
+  "sm_hbm_offset_um": {
+   "SW0": 6609,
+   "SW1": 4575,
+   "SW2": 2981,
+   "SW3": 947,
+   "SW4": 947,
+   "SW5": 2981,
+   "SW6": 4575,
+   "SW7": 6609,
+   "NW0": 6609,
+   "NW1": 4575,
+   "NW2": 2981,
+   "NW3": 947,
+   "NW4": 947,
+   "NW5": 2981,
+   "NW6": 4575,
+   "NW7": 6609
+  },
+  "vmh": "inner",
+  "grp_side": 259.2,
+  "coll_d": 4500.0,
+  "coll_x": 1.25,
+  "hc": "quad",
+  "vm_dw": 0.0,
+  "vm_dh": 86.4,
+  "hce_um": [
+   1598.4,
+   1598.4
+  ]
+ },
+ "f4c_t6_Lab": {
+  "die_um": [
+   23891.84,
+   30392.0
+  ],
+  "die_mm2": 726.12,
+  "placed_mm2": 556.79,
+  "density": 0.767,
+  "sm_column_um": [
+   2630.88,
+   8510.4
+  ],
+  "sm_column_mm2_need": 19.73,
+  "tile_um": [
+   630.72,
+   1987.2
+  ],
+  "cut_v": {
+   "ratio": 0.478,
+   "x": 10700.0,
+   "y": [
+    11700.0,
+    12700.0
+   ]
+  },
+  "cut_h": {
+   "ratio": 0.44,
+   "y": 19200.0,
+   "x": [
+    7600.0,
+    8600.0
+   ]
+  },
+  "cut_over_060": [],
+  "graph_bit_mm": 695796.0,
+  "stages_bw": 6.176,
+  "per_class": {
+   "HBM_K": {
+    "bits": 35392,
+    "stages_bw": 0.0
+   },
+   "SM_X": {
+    "bits": 34944,
+    "stages_bw": 6.42
+   },
+   "COLL_VM": {
+    "bits": 22208,
+    "stages_bw": 12.0
+   },
+   "SM_HBM": {
+    "bits": 18112,
+    "stages_bw": 5.12
+   },
+   "LG_SFU": {
+    "bits": 17792,
+    "stages_bw": 1.0
+   },
+   "LG_HC": {
+    "bits": 17792,
+    "stages_bw": 2.0
+   },
+   "LG_SU": {
+    "bits": 17792,
+    "stages_bw": 0.0
+   },
+   "HC_CORE": {
+    "bits": 17792,
+    "stages_bw": 13.92
+   },
+   "VM_RING": {
+    "bits": 17792,
+    "stages_bw": 10.12
+   },
+   "VM_HUB": {
+    "bits": 17216,
+    "stages_bw": 11.69
+   },
+   "HC_ENG": {
+    "bits": 11488,
+    "stages_bw": 0.5
+   },
+   "COLL_RING": {
+    "bits": 8256,
+    "stages_bw": 10.25
+   },
+   "COLL_EP": {
+    "bits": 7650,
+    "stages_bw": 9.8
+   },
+   "EP_SERDES": {
+    "bits": 5280,
+    "stages_bw": 0.0
+   },
+   "QUANT_VM": {
+    "bits": 4440,
+    "stages_bw": 2.38
+   },
+   "SM_OUT": {
+    "bits": 4320,
+    "stages_bw": 6.12
+   },
+   "HBM_VM": {
+    "bits": 4096,
+    "stages_bw": 22.38
+   },
+   "VM_HBM": {
+    "bits": 4096,
+    "stages_bw": 21.75
+   },
+   "SU_CORE": {
+    "bits": 3072,
+    "stages_bw": 2.0
+   },
+   "SFU_CORE": {
+    "bits": 3072,
+    "stages_bw": 9.42
+   },
+   "KV_DESC": {
+    "bits": 1024,
+    "stages_bw": 5.31
+   }
+  },
+  "longest_class_um": {
+   "COLL_EP": 5779,
+   "COLL_RING": 9270,
+   "COLL_VM": 9154,
+   "EP_SERDES": 50,
+   "HBM_K": 20,
+   "HBM_VM": 10702,
+   "HC_CORE": 8894,
+   "HC_ENG": 259,
+   "KV_DESC": 6114,
+   "LG_HC": 1394,
+   "LG_SFU": 1074,
+   "LG_SU": 50,
+   "QUANT_VM": 910,
+   "SFU_CORE": 4013,
+   "SM_HBM": 4975,
+   "SM_OUT": 6114,
+   "SM_X": 8460,
+   "SU_CORE": 2476,
+   "VM_HBM": 10702,
+   "VM_HUB": 7732,
+   "VM_RING": 5756
+  },
+  "relay_flops": 1278808.0,
+  "overlaps": 0,
+  "overlap_pairs": [],
+  "outside": [],
+  "reticle": {
+   "short_margin_um": 2108.16,
+   "long_margin_um": 2608.0,
+   "margin_req_um": 500.0,
+   "ok": true
+  },
+  "sm_hbm_offset_um": {
+   "SW0": 6609,
+   "SW1": 4575,
+   "SW2": 2981,
+   "SW3": 947,
+   "SW4": 947,
+   "SW5": 2981,
+   "SW6": 4575,
+   "SW7": 6609,
+   "NW0": 6609,
+   "NW1": 4575,
+   "NW2": 2981,
+   "NW3": 947,
+   "NW4": 947,
+   "NW5": 2981,
+   "NW6": 4575,
+   "NW7": 6609
+  },
+  "vmh": "inner",
+  "grp_side": 259.2,
+  "coll_d": 4500.0,
+  "coll_x": 1.25,
+  "hc": "quad",
+  "vm_dw": 0.0,
+  "vm_dh": 86.4,
+  "hce_um": [
+   1598.4,
+   1598.4
+  ]
+ },
+ "f4c_t6_Lp3a": {
+  "die_um": [
+   23891.84,
+   31774.4
+  ],
+  "die_mm2": 759.15,
+  "placed_mm2": 585.89,
+  "density": 0.772,
+  "sm_column_um": [
+   2630.88,
+   9201.6
+  ],
+  "sm_column_mm2_need": 19.73,
+  "tile_um": [
+   630.72,
+   2160.0
+  ],
+  "cut_v": {
+   "ratio": 0.484,
+   "x": 10700.0,
+   "y": [
+    17800.0,
+    18800.0
+   ]
+  },
+  "cut_h": {
+   "ratio": 0.373,
+   "y": 18800.0,
+   "x": [
+    14700.0,
+    15700.0
+   ]
+  },
+  "cut_over_060": [],
+  "graph_bit_mm": 701458.3,
+  "stages_bw": 6.223,
+  "per_class": {
+   "HBM_K": {
+    "bits": 35392,
+    "stages_bw": 0.0
+   },
+   "SM_X": {
+    "bits": 34944,
+    "stages_bw": 6.39
+   },
+   "COLL_VM": {
+    "bits": 22208,
+    "stages_bw": 12.09
+   },
+   "SM_HBM": {
+    "bits": 18112,
+    "stages_bw": 5.12
+   },
+   "LG_SFU": {
+    "bits": 17792,
+    "stages_bw": 1.0
+   },
+   "LG_HC": {
+    "bits": 17792,
+    "stages_bw": 2.0
+   },
+   "LG_SU": {
+    "bits": 17792,
+    "stages_bw": 0.0
+   },
+   "HC_CORE": {
+    "bits": 17792,
+    "stages_bw": 13.88
+   },
+   "VM_RING": {
+    "bits": 17792,
+    "stages_bw": 10.12
+   },
+   "VM_HUB": {
+    "bits": 17216,
+    "stages_bw": 11.78
+   },
+   "HC_ENG": {
+    "bits": 11488,
+    "stages_bw": 0.5
+   },
+   "COLL_RING": {
+    "bits": 8256,
+    "stages_bw": 10.25
+   },
+   "COLL_EP": {
+    "bits": 7650,
+    "stages_bw": 9.8
+   },
+   "EP_SERDES": {
+    "bits": 5280,
+    "stages_bw": 0.0
+   },
+   "QUANT_VM": {
+    "bits": 4440,
+    "stages_bw": 2.12
+   },
+   "SM_OUT": {
+    "bits": 4320,
+    "stages_bw": 6.06
+   },
+   "HBM_VM": {
+    "bits": 4096,
+    "stages_bw": 23.94
+   },
+   "VM_HBM": {
+    "bits": 4096,
+    "stages_bw": 23.31
+   },
+   "SU_CORE": {
+    "bits": 3072,
+    "stages_bw": 2.0
+   },
+   "SFU_CORE": {
+    "bits": 3072,
+    "stages_bw": 9.33
+   },
+   "KV_DESC": {
+    "bits": 1024,
+    "stages_bw": 5.25
+   }
+  },
+  "longest_class_um": {
+   "COLL_EP": 5779,
+   "COLL_RING": 9270,
+   "COLL_VM": 9154,
+   "EP_SERDES": 50,
+   "HBM_K": 20,
+   "HBM_VM": 11393,
+   "HC_CORE": 8894,
+   "HC_ENG": 259,
+   "KV_DESC": 6114,
+   "LG_HC": 1394,
+   "LG_SFU": 1074,
+   "LG_SU": 50,
+   "QUANT_VM": 910,
+   "SFU_CORE": 4013,
+   "SM_HBM": 4975,
+   "SM_OUT": 6114,
+   "SM_X": 8460,
+   "SU_CORE": 2476,
+   "VM_HBM": 11393,
+   "VM_HUB": 7732,
+   "VM_RING": 5756
+  },
+  "relay_flops": 1289048.0,
+  "overlaps": 0,
+  "overlap_pairs": [],
+  "outside": [],
+  "reticle": {
+   "short_margin_um": 2108.16,
+   "long_margin_um": 1225.6,
+   "margin_req_um": 500.0,
+   "ok": true
+  },
+  "sm_hbm_offset_um": {
+   "SW0": 6609,
+   "SW1": 4575,
+   "SW2": 2981,
+   "SW3": 947,
+   "SW4": 947,
+   "SW5": 2981,
+   "SW6": 4575,
+   "SW7": 6609,
+   "NW0": 6609,
+   "NW1": 4575,
+   "NW2": 2981,
+   "NW3": 947,
+   "NW4": 947,
+   "NW5": 2981,
+   "NW6": 4575,
+   "NW7": 6609
+  },
+  "vmh": "inner",
+  "grp_side": 259.2,
+  "coll_d": 4500.0,
+  "coll_x": 1.25,
+  "hc": "quad",
+  "vm_dw": 0.0,
+  "vm_dh": 86.4,
+  "hce_um": [
+   1598.4,
+   1598.4
+  ]
+ },
+ "f4c_t6_Lmax": {
+  "die_um": [
+   25274.24,
+   32120.0
+  ],
+  "die_mm2": 811.81,
+  "placed_mm2": 619.08,
+  "density": 0.763,
+  "sm_column_um": [
+   2803.68,
+   9374.4
+  ],
+  "sm_column_mm2_need": 19.73,
+  "tile_um": [
+   673.92,
+   2203.2
+  ],
+  "cut_v": {
+   "ratio": 0.59,
+   "x": 9100.0,
+   "y": [
+    17200.0,
+    18200.0
+   ]
+  },
+  "cut_h": {
+   "ratio": 0.384,
+   "y": 19000.0,
+   "x": [
+    8100.0,
+    9100.0
+   ]
+  },
+  "cut_over_060": [],
+  "graph_bit_mm": 744201.3,
+  "stages_bw": 6.593,
+  "per_class": {
+   "HBM_K": {
+    "bits": 35392,
+    "stages_bw": 0.0
+   },
+   "SM_X": {
+    "bits": 34944,
+    "stages_bw": 6.81
+   },
+   "COLL_VM": {
+    "bits": 22208,
+    "stages_bw": 13.03
+   },
+   "SM_HBM": {
+    "bits": 18112,
+    "stages_bw": 5.88
+   },
+   "LG_SFU": {
+    "bits": 17792,
+    "stages_bw": 1.0
+   },
+   "LG_HC": {
+    "bits": 17792,
+    "stages_bw": 2.0
+   },
+   "LG_SU": {
+    "bits": 17792,
+    "stages_bw": 0.0
+   },
+   "HC_CORE": {
+    "bits": 17792,
+    "stages_bw": 14.02
+   },
+   "VM_RING": {
+    "bits": 17792,
+    "stages_bw": 11.88
+   },
+   "VM_HUB": {
+    "bits": 17216,
+    "stages_bw": 11.91
+   },
+   "HC_ENG": {
+    "bits": 11488,
+    "stages_bw": 0.5
+   },
+   "COLL_RING": {
+    "bits": 8256,
+    "stages_bw": 10.25
+   },
+   "COLL_EP": {
+    "bits": 7650,
+    "stages_bw": 10.8
+   },
+   "EP_SERDES": {
+    "bits": 5280,
+    "stages_bw": 0.0
+   },
+   "QUANT_VM": {
+    "bits": 4440,
+    "stages_bw": 2.25
+   },
+   "SM_OUT": {
+    "bits": 4320,
+    "stages_bw": 6.12
+   },
+   "HBM_VM": {
+    "bits": 4096,
+    "stages_bw": 24.38
+   },
+   "VM_HBM": {
+    "bits": 4096,
+    "stages_bw": 24.62
+   },
+   "SU_CORE": {
+    "bits": 3072,
+    "stages_bw": 2.17
+   },
+   "SFU_CORE": {
+    "bits": 3072,
+    "stages_bw": 9.08
+   },
+   "KV_DESC": {
+    "bits": 1024,
+    "stages_bw": 6.06
+   }
+  },
+  "longest_class_um": {
+   "COLL_EP": 6470,
+   "COLL_RING": 9270,
+   "COLL_VM": 9845,
+   "EP_SERDES": 50,
+   "HBM_K": 20,
+   "HBM_VM": 12257,
+   "HC_CORE": 8894,
+   "HC_ENG": 259,
+   "KV_DESC": 5942,
+   "LG_HC": 1394,
+   "LG_SFU": 1074,
+   "LG_SU": 50,
+   "QUANT_VM": 910,
+   "SFU_CORE": 4013,
+   "SM_HBM": 5494,
+   "SM_OUT": 5942,
+   "SM_X": 8978,
+   "SU_CORE": 2476,
+   "VM_HBM": 12257,
+   "VM_HUB": 7732,
+   "VM_RING": 7139
+  },
+  "relay_flops": 1376202.0,
+  "overlaps": 0,
+  "overlap_pairs": [],
+  "outside": [],
+  "reticle": {
+   "short_margin_um": 725.76,
+   "long_margin_um": 880.0,
+   "margin_req_um": 500.0,
+   "ok": true
+  },
+  "sm_hbm_offset_um": {
+   "SW0": 7214,
+   "SW1": 5007,
+   "SW2": 3240,
+   "SW3": 1033,
+   "SW4": 1033,
+   "SW5": 3240,
+   "SW6": 5007,
+   "SW7": 7214,
+   "NW0": 7214,
+   "NW1": 5007,
+   "NW2": 3240,
+   "NW3": 1033,
+   "NW4": 1033,
+   "NW5": 3240,
+   "NW6": 5007,
+   "NW7": 7214
+  },
+  "vmh": "inner",
+  "grp_side": 259.2,
+  "coll_d": 4500.0,
+  "coll_x": 1.25,
+  "hc": "quad",
+  "vm_dw": 0.0,
+  "vm_dh": 86.4,
+  "hce_um": [
+   1598.4,
+   1598.4
+  ]
+ },
+ "f4c_t6c": {
+  "die_um": [
+   23891.84,
+   29009.6
+  ],
+  "die_mm2": 693.09,
+  "placed_mm2": 527.7,
+  "density": 0.761,
+  "sm_column_um": [
+   2630.88,
+   7819.2
+  ],
+  "sm_column_mm2_need": 19.73,
+  "tile_um": [
+   630.72,
+   1814.4
+  ],
+  "cut_v": {
+   "ratio": 0.484,
+   "x": 10700.0,
+   "y": [
+    16500.0,
+    17500.0
+   ]
+  },
+  "cut_h": {
+   "ratio": 0.49,
+   "y": 18500.0,
+   "x": [
+    7600.0,
+    8600.0
+   ]
+  },
+  "cut_over_060": [],
+  "graph_bit_mm": 668545.5,
+  "stages_bw": 6.026,
+  "per_class": {
+   "HBM_K": {
+    "bits": 35392,
+    "stages_bw": 0.0
+   },
+   "SM_X": {
+    "bits": 34944,
+    "stages_bw": 6.4
+   },
+   "COLL_VM": {
+    "bits": 24280,
+    "stages_bw": 10.66
+   },
+   "SM_HBM": {
+    "bits": 18112,
+    "stages_bw": 5.25
+   },
+   "LG_SFU": {
+    "bits": 17792,
+    "stages_bw": 1.0
+   },
+   "LG_HC": {
+    "bits": 17792,
+    "stages_bw": 2.0
+   },
+   "LG_SU": {
+    "bits": 17792,
+    "stages_bw": 0.0
+   },
+   "HC_CORE": {
+    "bits": 17792,
+    "stages_bw": 14.11
+   },
+   "VM_RING": {
+    "bits": 17792,
+    "stages_bw": 10.0
+   },
+   "VM_HUB": {
+    "bits": 17216,
+    "stages_bw": 11.78
+   },
+   "HC_ENG": {
+    "bits": 11488,
+    "stages_bw": 0.5
+   },
+   "COLL_RING": {
+    "bits": 6608,
+    "stages_bw": 10.25
+   },
+   "COLL_EP": {
+    "bits": 6120,
+    "stages_bw": 9.4
+   },
+   "EP_SERDES": {
+    "bits": 5280,
+    "stages_bw": 0.0
+   },
+   "QUANT_VM": {
+    "bits": 4440,
+    "stages_bw": 2.25
+   },
+   "SM_OUT": {
+    "bits": 4320,
+    "stages_bw": 6.0
+   },
+   "HBM_VM": {
+    "bits": 4096,
+    "stages_bw": 21.25
+   },
+   "VM_HBM": {
+    "bits": 4096,
+    "stages_bw": 20.69
+   },
+   "SU_CORE": {
+    "bits": 3072,
+    "stages_bw": 2.5
+   },
+   "SFU_CORE": {
+    "bits": 3072,
+    "stages_bw": 9.08
+   },
+   "KV_DESC": {
+    "bits": 1024,
+    "stages_bw": 5.31
+   }
+  },
+  "longest_class_um": {
+   "COLL_EP": 5779,
+   "COLL_RING": 9270,
+   "COLL_VM": 9154,
+   "EP_SERDES": 50,
+   "HBM_K": 20,
+   "HBM_VM": 10011,
+   "HC_CORE": 8894,
+   "HC_ENG": 259,
+   "KV_DESC": 6114,
+   "LG_HC": 1394,
+   "LG_SFU": 1074,
+   "LG_SU": 50,
+   "QUANT_VM": 910,
+   "SFU_CORE": 4013,
+   "SM_HBM": 4975,
+   "SM_OUT": 6114,
+   "SM_X": 8460,
+   "SU_CORE": 2476,
+   "VM_HBM": 10011,
+   "VM_HUB": 7732,
+   "VM_RING": 5756
+  },
+  "relay_flops": 1223168.0,
+  "overlaps": 0,
+  "overlap_pairs": [],
+  "outside": [],
+  "reticle": {
+   "short_margin_um": 2108.16,
+   "long_margin_um": 3990.4,
+   "margin_req_um": 500.0,
+   "ok": true
+  },
+  "sm_hbm_offset_um": {
+   "SW0": 6609,
+   "SW1": 4575,
+   "SW2": 2981,
+   "SW3": 947,
+   "SW4": 947,
+   "SW5": 2981,
+   "SW6": 4575,
+   "SW7": 6609,
+   "NW0": 6609,
+   "NW1": 4575,
+   "NW2": 2981,
+   "NW3": 947,
+   "NW4": 947,
+   "NW5": 2981,
+   "NW6": 4575,
+   "NW7": 6609
+  },
+  "vmh": "inner",
+  "grp_side": 259.2,
+  "coll_d": 4500.0,
+  "coll_x": 1.0,
+  "hc": "quad",
+  "coll_l5": true,
+  "vm_dw": 0.0,
+  "vm_dh": 86.4,
+  "hce_um": [
+   1598.4,
+   1598.4
+  ]
  }
 }

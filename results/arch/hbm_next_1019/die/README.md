@@ -190,3 +190,67 @@ The result is in `case_f4c/` (see the lane file). The input file is `physical/hb
 | `results/arch/hbm_next_1019/die/clock_plan_f4c.json`, `clock_plan_d4g_ref.json` | the clocking plan, and the same accounting for d4g |
 | `physical/hbm_next/die/frame_d4g_copy/` | the copied d4g frame (plan, graph, plan_d4g.py, d4g_sm_frame.py, gen_d4g2.sh, rp4lp pins) |
 | `physical/hbm_next/die/f4c/` | grants, region map, pin plan, `hnx_rp4lp4_pins.tcl` |
+
+## STEP 2 (10-19 ~01:30-02:10, fresh DIE agent): PROG decisions, COLL L=5, SM lever frames, SM_HBM cost, relay/landing chain
+
+All plan numbers: `tools/hbm_next/die/plan_p4.py` (new options `--hc one|quad`, `--vm-dh`, `--vm-dw`, `--coll-l5`), same d4g evaluator; reproduces f4c_t5 exactly (693.09, 0.469/0.399, 0.694 M). Plans + PNGs + flow PNGs in `plan/` (`plan_p4.json`).
+
+**ADOPTED f4c_t6c** = f4c_t5 + VM 412k + ONE HC engine as root + 4 ring quarters in the quadrant slots + COLL L=5 as UNITS-COLL measured it:
+23.89 x 29.01 = **693.09 mm²**, cut **0.484 / 0.490**, bit-mm **0.669 M**, stages_bw **6.03**, longest 10.0 mm, 0 overlaps, reticle margins 2.11 / 3.99 mm.
+
+| plan | mm² | cut v / h | bit-mm | stages_bw | longest | note |
+|---|---:|---|---:|---:|---:|---|
+| f4c_t5 (step 1) | 693.09 | 0.469 / 0.399 | 0.694 M | 6.23 | 10.0 mm | COLL x1.25 on VM/RING/EP |
+| f4c_t6: + VM 412k | 693.09 | 0.484 / 0.414 | 0.690 M | 6.17 | 10.0 mm | VM bank +86.4 um tall (5 macros) |
+| f4c_t6e: VM 524k (Engram ~490k option) | 693.09 | 0.478 / 0.400 | 0.688 M | 6.19 | 10.0 mm | bank +151.2 um (6 macros) |
+| f4c_t6_hccorner: ONE engine at the S-E PHY corner (GEN2 place) | 688.18 | **0.879** / 0.499 | 0.901 M | 7.82 | **22.8 mm** | REJECTED |
+| **f4c_t6c: t6 + COLL L=5 measured** | **693.09** | **0.484 / 0.490** | **0.669 M** | **6.03** | 10.0 mm | ADOPTED |
+
+- **VM >= 412k words (PROG decision 1).** The VM bank holds 3 x ot_sram_1r1w_1024x256 (2^18 words). 412k needs 5 macros (437k), the ~490k Engram option 6 (524k).
+  - The bank slot is pin-perimeter bound (31 % fill), so the extra macros are stacked in one column, keeping the 47-um pin ring. That makes the bank +86.4 um tall (5 macros) or +151.2 um (6).
+  - **Die cost: 0 mm² for both.** The quadrant band's height is set by the HC quarter column (SFU core + HC slot, 3.43 mm), and the taller bank row (rowB +86 / +151) stays under it.
+  - The Engram ~490k delta is therefore a free option in area. Its cost is 32 more macros only (bank fill 47 % -> 57 %).
+- **ONE HC engine (PROG decision 2).** The plan's 4 `hce_*` slots are 4 x 2.555 mm² = the GEN2 split engine's area (5,223 x 1,953 = 10.2 mm²; "hc_eng slot / 4").
+  - Moving the ONE engine to the S-E PHY corner, as GEN2 places it, frees 0.19 mm per band (-4.9 mm² net). But the 4 x 2,100 b HC_ENG links then cross the SM row: HC_ENG 0.5 -> 40.5 bit-weighted stages, longest 22.8 mm, cut 0.879 at x 14.4 mm (> 0.60). **Rejected** (`plan/f4c_t6_hccorner_flow.png`).
+  - ADOPTED form: ONE engine (one root, 2,048 MAC lanes, 250 cyc/row as UNITS measured on hnx RTL) laid out as its **4 ring quarters in the 4 quadrant slots** (the d4g U form that tb_hnx_hc_eng4 benches). The root sits by the centre channel.
+  - **Nothing is released to the SM tile.** The 4 slots already ARE one engine's area, and the corner form, the only one that frees band height, fails the cut rule. "4 quadrant engines" (4 x 10.2 mm²) was never in the plan.
+  - Plan-graph gap: the root <-> quarter ring links are not in the d4g graph (HC_ENG models only hc_q <-> quarter). They are quadrant-adjacent (≤ 5 mm across the centre).
+- **COLL sizing (DIE-P4-2), from UNITS-COLL (units/coll/README.md).** At P = 4, COLL delivery is busy 125-157k of 492.5k cycles (25-32 %). L = 5 adds 586 + 1,044 b per quadrant (hb_coll -> cxdl_<q>4 -> SU), quadrant-local; ring and EP are unchanged.
+  - The plan carries these as +1,630 b COLL_VM per quadrant (coll_<q> -> su_<q>0; the SU landing port is an open UNITS-SUDMA decision). The flow PNG shows that su_<q>3, the inner group, would cut this link from ~4 mm to ~1.5 mm: landing lane 4 there is the DIE recommendation.
+  - **No x2 widening and no COLL outline growth are needed.** The new bits leave on the COLL S/N face toward its own band: 1,630 b over 963 um = 1.7 b/um. The W face is unchanged at 4.67 b/um.
+  - The x2 reserve (0.585) is withdrawn.
+- **SM_HBM (DIE-P4-4)** (`sm_hbm_cost.json`):
+  - d4g: 2.88 bit-weighted stations, worst 8 (2.9 mm).
+  - f4c_t6c: **5.25, worst 14 (5.0 mm; outer SMs 6.6 mm from their PC)**, i.e. +2.37 avg / +6 worst stations.
+  - Cycles per SM record: **+1.2 avg / +3 worst at forwarded half-cycle hops; +2.4 / +6 at full-cycle relays**. This is fixed latency on a static lane, paid once per record (latency, not throughput). Sent to CMTP/VEH.
+
+### SM area levers on the measured frame (DIE-P4-3), basis f4c_t6
+
+**Frame limits.**
+- The SM row is 8 columns of 4 x 4 tiles in the 25.5-mm usable reticle width. The tile width is therefore ≤ 673.92 um, which holds exactly 2 lane units of 336.96 across with no channel.
+- The 32.5-mm usable height limits the tile height to ≤ 2,246 um.
+- The largest tile inside the reticle is 673.92 x 2,203.2 = 1.485 mm² (`f4c_t6_Lmax`, 811.8 mm², cut 0.59 / 0.38, SM_HBM 5.88).
+- SM4's linear lever table (die = 693 + 256 x Δtile) under-counts. Tile growth enlarges the column (4 x Δth) and pushes the band, it does not only add area.
+
+| option (SM4 tile mm² at 0.441 fill) | tile on lattice | die | mm² | reticle | cut v / h | SM_HBM | vs SM4 estimate |
+|---|---|---|---:|---|---|---:|---:|
+| (a) shared xs4, 1.718 | 630.72 x 2,764.8 | 23.89 x 36.61 | **874.8** | **FAILS (36.6 > 32.5)** | 0.484 / 0.403 | 5.25 | 839.8 |
+| (a) at the largest legal tile | 673.92 x 2,203.2 = 1.485 | 25.27 x 32.12 | 811.8 | fits | 0.59 / 0.38 | 5.88 | needs hard fill 0.51 (757k / 1.485M), not 0.441 |
+| (a)+(b), 1.245 | 630.72 x 1,987.2 | 23.89 x 30.39 | **726.1** | fits | 0.478 / 0.44 | 5.12 | 718.7 |
+| P3+(a), 1.343 | 630.72 x 2,160 | 23.89 x 31.77 | **759.2** | fits (0.73 mm long margin) | 0.484 / 0.373 | 5.12 | 743.8 |
+
+(The 673.92-wide variants of (a)+(b) / P3+(a) are 741.9 / 776.9 mm² with cut 0.63 / 0.59; rejected.)
+
+**Verdict for the owner decision.**
+- (a) alone does NOT fit the reticle on this frame unless SM4 packs the (a) tile at ≥ 0.51 hard fill into 673.92 x 2,203 (2 lane units abutted, no channel). SM4 must check that packing before (a) can stand.
+- (a)+(b) fits inside the 752 budget at 726 mm².
+- P3+(a) fits the reticle at 759 mm², 7 mm² over the 752 budget.
+
+### DIE-P4-1: stations / landing layer / GEN / GRT on f4c_t5 (stand-ins), fleet ot-epyc4:/srv/opentallas-scratch/claude/hnx/die_p4
+Chain `physical/hbm_next/die/hnx_p4_chain.sh` (the GEN2 S4..S8 form, forked by copy; normal priority; hnx_ outputs only).
+- **S4.** Root sites + pins + stations at 405: 2,385 buses routed (2,351 relayed, 673,569 b), 68 hop violations (> 405 um, worst 760 um: svg / sfus / idx sinks).
+- **S5.** Lanes: 1,899 rows re-planned, 85 hop violations; 30,772 -> 32,596 stations.
+- **LANDING layer.** 2,107 buses, **1,451 landed links / 2,358 landing tiles** (624: 655, 136: 1,243, 48: 460), 1,065 inter-region buses, 154 fork buses, 28 hops over reach.
+  - It shows 16 problems (svg_<q><i>.fault: no contract bits), the same 16 as GEN2.
+  - NO_E 1,451: there are no per-link E/K for the hnx regions; the d4g land plan is used as given (GEN2 is NO_E 964 too).
+- Splice / bind / lockstep / GEN / GRT: see the lane file + pending_results (running at the time of writing).

@@ -1,0 +1,16 @@
+SU_ROWS ERROR cyc=177 write sector/mask got 12c0 want 13c0
+SU_ROWS ERROR cyc=177 write sector/mask got 12c1 want 13c1
+SU_ROWS ERROR cyc=177 write sector/mask got 12c2 want 13c2
+SU_ROWS ERROR cyc=177 write sector/mask got 12c3 want 13c3
+SU_ROWS ERROR cyc=177 write sector/mask got 12c4 want 13c4
+SU_ROWS ERROR cyc=177 write sector/mask got 12c5 want 13c5
+SU_ROWS ERROR cyc=177 write sector/mask got 12c6 want 13c6
+SU_ROWS ERROR cyc=177 write sector/mask got 12c7 want 13c7
+SU_ROWS ERROR cyc=177 write sector/mask got 32c0 want 33c0
+SU_ROWS ERROR cyc=177 write sector/mask got 32c1 want 33c1
+SU_ROWS ERROR cyc=177 write sector/mask got 32c2 want 33c2
+SU_ROWS ERROR cyc=177 write sector/mask got 32c3 want 33c3
+[3420000] %Fatal: tb_hnx_su_rows.sv:112: Assertion failed in tb_hnx_su_rows.unnamedblk2: SU_ROWS FAIL errors=2688 reads=4480 writes=3584 MUT=3
+%Error: rtl/hbm_next/su/tb/tb_hnx_su_rows.sv:112: Verilog $stop
+Aborting...
+RUN_RC=1

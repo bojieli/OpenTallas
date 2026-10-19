@@ -1,0 +1,6 @@
+2026-10-19T01:43:02-07:00 start host=ot-epyc5 bundle=503d67d376efa578c3e7703fdbe64534c51f9e50
+2026-10-19T01:43:11-07:00 m0: CXDL5 PASS lockstep_checks3060 calendar L4 167 -> L5 135 serial edges (x1.237) collision_fault1
+2026-10-19T01:43:12-07:00 m13: CXDL5 FAIL errors129 checks3060 lockn2818 t4 167 t5 135 collision_fault1
+2026-10-19T01:43:12-07:00 m11: CXDL5 FAIL errors1 checks3060 lockn2818 t4 167 t5 135 collision_fault0
+2026-10-19T01:43:13-07:00 m12: CXDL5 FAIL errors257 checks3060 lockn2818 t4 167 t5 135 collision_fault1
+2026-10-19T01:43:13-07:00 done

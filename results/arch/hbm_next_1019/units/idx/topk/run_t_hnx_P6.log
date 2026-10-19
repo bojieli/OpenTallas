@@ -1,0 +1,35 @@
+END_EDGE 114  done
+END_EDGE 474  done
+END_EDGE 589  done
+END_EDGE 954  done
+END_EDGE 1313  done
+END_EDGE 1679  done
+END_EDGE 1761  done
+END_EDGE 1816  done
+END_EDGE 1933  done
+END_EDGE 1988  done
+END_EDGE 2043  done
+END_EDGE 2120  done
+END_EDGE 2185  done
+END_EDGE 2262  done
+END_EDGE 2381  done
+END_EDGE 2469  done
+END_EDGE 2684  done
+END_EDGE 2763  done
+END_EDGE 2766 fault
+END_EDGE 2769 fault
+IDX_TOPK_ROWS ENGINE1 MUT0 MUTH0 records20 dones18 faults2 sectors_checked139 errors0 schedule_edges2773
+- rtl/hbm_next/idx/tb/tb_hnx_idx_topk_rows.sv:158: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 40us; walltime 0.067 s; speed 596.643 us/s
+- Verilator: cpu 0.033 s on 1 threads; allocated 9 MB
+RUN_RC=0
+... (trimmed)
+END_EDGE 2766 fault
+END_EDGE 2769 fault
+IDX_TOPK_ROWS ENGINE1 MUT0 MUTH0 records20 dones18 faults2 sectors_checked139 errors0 schedule_edges2773
+- rtl/hbm_next/idx/tb/tb_hnx_idx_topk_rows.sv:158: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 40us; walltime 0.067 s; speed 596.643 us/s
+- Verilator: cpu 0.033 s on 1 threads; allocated 9 MB
+RUN_RC=0

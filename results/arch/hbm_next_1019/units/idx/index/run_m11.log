@@ -1,0 +1,15 @@
+SCOREBAD row1 ord0 expected3fc0 gotc0a0
+SCOREBAD row1 ord1 expectedc04b gotc03f
+SCOREBAD row1 ord2 expected4064 gotc0ce
+SCOREBAD row1 ord3 expectedbfda gotc089
+SCOREBAD row1 ord4 expectedc036 got3ef4
+SCOREBAD row1 ord5 expected4078 gotbff1
+SCOREBAD row1 ord6 expected40dd gotbf56
+IDX_ROW r0 firstkey315 firsttx1272 lasttx1392 scores10928 records512 errors0
+IDX_ROW r1 firstkey1268 firsttx2225 lasttx2345 scores10928 records512 errors12406
+IDX_ROWS_CYCLES rows2 pitch953 frame1397 record_edges_last_tx2346 done2352
+IDX_HNX_ROWS rows2 mutation11 scores21856 records1024 flits128 errors12406 fault1 faultedge1003 status0
+[28580000000] %Fatal: tb_hnx_idx_rows.sv:151: Assertion failed in tb_hnx_idx_rows.unnamedblk8: IDX_HNX_ROWS FAIL: N-row scheduled INDEX mismatch
+%Error: rtl/hbm_next/idx/tb/tb_hnx_idx_rows.sv:151: Verilog $stop
+Aborting...
+RUN_RC=1

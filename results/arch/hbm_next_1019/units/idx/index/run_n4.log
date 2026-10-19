@@ -1,0 +1,12 @@
+IDX_ROW r0 firstkey315 firsttx1272 lasttx1392 scores10928 records512 errors0
+IDX_ROW r1 firstkey1268 firsttx2225 lasttx2345 scores10928 records512 errors0
+IDX_ROW r2 firstkey2221 firsttx3178 lasttx3298 scores10928 records512 errors0
+IDX_ROW r3 firstkey3174 firsttx4131 lasttx4251 scores10928 records512 errors0
+IDX_ROWS_CYCLES rows4 pitch953 frame1397 record_edges_last_tx4252 done4258
+IDX_HNX_ROWS rows4 mutation0 scores43712 records2048 flits256 errors0 fault0 faultedge-1 status0
+IDX_HNX_ROWS PASS
+- rtl/hbm_next/idx/tb/tb_hnx_idx_rows.sv:152: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 48us; walltime 86.181 s; speed 552.791 ns/s
+- Verilator: cpu 74.416 s on 66 threads; allocated 89 MB
+RUN_RC=0

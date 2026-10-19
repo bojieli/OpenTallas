@@ -1,0 +1,668 @@
+{
+ "schema": "hcoll.rows.row_gather.v1",
+ "P": 1,
+ "R": 623,
+ "wire": 453,
+ "mutant": null,
+ "shape": {
+  "G": 96,
+  "max_owned_rows": 13,
+  "row_bytes": 288,
+  "rank_flits": 59,
+  "flits_per_position": 5605,
+  "rails_die": 9,
+  "R_production": 623,
+  "flit_bytes": 64,
+  "obase": 1073741824,
+  "position_stride": 393216
+ },
+ "layout_sha256": "1f7c747b17fc1142e655a2aebe03fd4e16b8c0af5830cddabdf101991c208dc1",
+ "parents": {
+  "d0q0": {
+   "N": 623,
+   "P": 1,
+   "R": 623,
+   "wire": 453,
+   "stages": {
+    "REQ": 0,
+    "CAP": 12,
+    "SINK": 13,
+    "WRSEQ": 14,
+    "WR": 15,
+    "RDSEQ": 18,
+    "RD": 19,
+    "RXSEQ": 478,
+    "RXE": 479,
+    "RXCAP": 482,
+    "DSINK": 483,
+    "DADDR": 484,
+    "REQV": 2
+   },
+   "DEL": 485,
+   "last_delivery": 1107,
+   "halt": 1108,
+   "rows": 28,
+   "plan": [
+    {
+     "pc": 0,
+     "start": 0,
+     "visits": 1
+    },
+    {
+     "pc": 1,
+     "start": 1,
+     "visits": 1
+    },
+    {
+     "pc": 2,
+     "start": 2,
+     "visits": 10
+    },
+    {
+     "pc": 3,
+     "start": 12,
+     "visits": 1
+    },
+    {
+     "pc": 4,
+     "start": 13,
+     "visits": 1
+    },
+    {
+     "pc": 5,
+     "start": 14,
+     "visits": 1
+    },
+    {
+     "pc": 6,
+     "start": 15,
+     "visits": 3
+    },
+    {
+     "pc": 7,
+     "start": 18,
+     "visits": 1
+    },
+    {
+     "pc": 8,
+     "start": 19,
+     "visits": 459
+    },
+    {
+     "pc": 9,
+     "start": 478,
+     "visits": 1
+    },
+    {
+     "pc": 10,
+     "start": 479,
+     "visits": 3
+    },
+    {
+     "pc": 11,
+     "start": 482,
+     "visits": 1
+    },
+    {
+     "pc": 12,
+     "start": 483,
+     "visits": 1
+    },
+    {
+     "pc": 13,
+     "start": 484,
+     "visits": 139
+    },
+    {
+     "pc": 14,
+     "start": 623,
+     "visits": 2
+    },
+    {
+     "pc": 15,
+     "start": 625,
+     "visits": 10
+    },
+    {
+     "pc": 16,
+     "start": 635,
+     "visits": 1
+    },
+    {
+     "pc": 17,
+     "start": 636,
+     "visits": 1
+    },
+    {
+     "pc": 18,
+     "start": 637,
+     "visits": 1
+    },
+    {
+     "pc": 19,
+     "start": 638,
+     "visits": 3
+    },
+    {
+     "pc": 20,
+     "start": 641,
+     "visits": 1
+    },
+    {
+     "pc": 21,
+     "start": 642,
+     "visits": 459
+    },
+    {
+     "pc": 22,
+     "start": 1101,
+     "visits": 1
+    },
+    {
+     "pc": 23,
+     "start": 1102,
+     "visits": 3
+    },
+    {
+     "pc": 24,
+     "start": 1105,
+     "visits": 1
+    },
+    {
+     "pc": 25,
+     "start": 1106,
+     "visits": 1
+    },
+    {
+     "pc": 26,
+     "start": 1107,
+     "visits": 1
+    },
+    {
+     "pc": 27,
+     "start": 1108,
+     "visits": 1
+    }
+   ]
+  },
+  "d0q1": {
+   "N": 623,
+   "P": 1,
+   "R": 623,
+   "wire": 453,
+   "stages": {
+    "REQ": 0,
+    "CAP": 12,
+    "SINK": 13,
+    "WRSEQ": 14,
+    "WR": 15,
+    "RDSEQ": 18,
+    "RD": 19,
+    "RXSEQ": 478,
+    "RXE": 479,
+    "RXCAP": 482,
+    "DSINK": 483,
+    "DADDR": 484
+   },
+   "DEL": 485,
+   "last_delivery": 1107,
+   "halt": 1108,
+   "rows": 26,
+   "plan": [
+    {
+     "pc": 0,
+     "start": 0,
+     "visits": 1
+    },
+    {
+     "pc": 1,
+     "start": 1,
+     "visits": 11
+    },
+    {
+     "pc": 2,
+     "start": 12,
+     "visits": 1
+    },
+    {
+     "pc": 3,
+     "start": 13,
+     "visits": 1
+    },
+    {
+     "pc": 4,
+     "start": 14,
+     "visits": 1
+    },
+    {
+     "pc": 5,
+     "start": 15,
+     "visits": 3
+    },
+    {
+     "pc": 6,
+     "start": 18,
+     "visits": 1
+    },
+    {
+     "pc": 7,
+     "start": 19,
+     "visits": 459
+    },
+    {
+     "pc": 8,
+     "start": 478,
+     "visits": 1
+    },
+    {
+     "pc": 9,
+     "start": 479,
+     "visits": 3
+    },
+    {
+     "pc": 10,
+     "start": 482,
+     "visits": 1
+    },
+    {
+     "pc": 11,
+     "start": 483,
+     "visits": 1
+    },
+    {
+     "pc": 12,
+     "start": 484,
+     "visits": 139
+    },
+    {
+     "pc": 13,
+     "start": 623,
+     "visits": 12
+    },
+    {
+     "pc": 14,
+     "start": 635,
+     "visits": 1
+    },
+    {
+     "pc": 15,
+     "start": 636,
+     "visits": 1
+    },
+    {
+     "pc": 16,
+     "start": 637,
+     "visits": 1
+    },
+    {
+     "pc": 17,
+     "start": 638,
+     "visits": 3
+    },
+    {
+     "pc": 18,
+     "start": 641,
+     "visits": 1
+    },
+    {
+     "pc": 19,
+     "start": 642,
+     "visits": 459
+    },
+    {
+     "pc": 20,
+     "start": 1101,
+     "visits": 1
+    },
+    {
+     "pc": 21,
+     "start": 1102,
+     "visits": 3
+    },
+    {
+     "pc": 22,
+     "start": 1105,
+     "visits": 1
+    },
+    {
+     "pc": 23,
+     "start": 1106,
+     "visits": 1
+    },
+    {
+     "pc": 24,
+     "start": 1107,
+     "visits": 1
+    },
+    {
+     "pc": 25,
+     "start": 1108,
+     "visits": 1
+    }
+   ]
+  },
+  "d1q0": {
+   "N": 623,
+   "P": 1,
+   "R": 623,
+   "wire": 453,
+   "stages": {
+    "REQ": 0,
+    "CAP": 12,
+    "SINK": 13,
+    "WRSEQ": 14,
+    "WR": 15,
+    "RDSEQ": 18,
+    "RD": 19,
+    "RXSEQ": 478,
+    "RXE": 479,
+    "RXCAP": 482,
+    "DSINK": 483,
+    "DADDR": 484,
+    "REQV": 2
+   },
+   "DEL": 485,
+   "last_delivery": 1107,
+   "halt": 1108,
+   "rows": 28,
+   "plan": [
+    {
+     "pc": 0,
+     "start": 0,
+     "visits": 1
+    },
+    {
+     "pc": 1,
+     "start": 1,
+     "visits": 1
+    },
+    {
+     "pc": 2,
+     "start": 2,
+     "visits": 10
+    },
+    {
+     "pc": 3,
+     "start": 12,
+     "visits": 1
+    },
+    {
+     "pc": 4,
+     "start": 13,
+     "visits": 1
+    },
+    {
+     "pc": 5,
+     "start": 14,
+     "visits": 1
+    },
+    {
+     "pc": 6,
+     "start": 15,
+     "visits": 3
+    },
+    {
+     "pc": 7,
+     "start": 18,
+     "visits": 1
+    },
+    {
+     "pc": 8,
+     "start": 19,
+     "visits": 459
+    },
+    {
+     "pc": 9,
+     "start": 478,
+     "visits": 1
+    },
+    {
+     "pc": 10,
+     "start": 479,
+     "visits": 3
+    },
+    {
+     "pc": 11,
+     "start": 482,
+     "visits": 1
+    },
+    {
+     "pc": 12,
+     "start": 483,
+     "visits": 1
+    },
+    {
+     "pc": 13,
+     "start": 484,
+     "visits": 139
+    },
+    {
+     "pc": 14,
+     "start": 623,
+     "visits": 2
+    },
+    {
+     "pc": 15,
+     "start": 625,
+     "visits": 10
+    },
+    {
+     "pc": 16,
+     "start": 635,
+     "visits": 1
+    },
+    {
+     "pc": 17,
+     "start": 636,
+     "visits": 1
+    },
+    {
+     "pc": 18,
+     "start": 637,
+     "visits": 1
+    },
+    {
+     "pc": 19,
+     "start": 638,
+     "visits": 3
+    },
+    {
+     "pc": 20,
+     "start": 641,
+     "visits": 1
+    },
+    {
+     "pc": 21,
+     "start": 642,
+     "visits": 459
+    },
+    {
+     "pc": 22,
+     "start": 1101,
+     "visits": 1
+    },
+    {
+     "pc": 23,
+     "start": 1102,
+     "visits": 3
+    },
+    {
+     "pc": 24,
+     "start": 1105,
+     "visits": 1
+    },
+    {
+     "pc": 25,
+     "start": 1106,
+     "visits": 1
+    },
+    {
+     "pc": 26,
+     "start": 1107,
+     "visits": 1
+    },
+    {
+     "pc": 27,
+     "start": 1108,
+     "visits": 1
+    }
+   ]
+  },
+  "d1q1": {
+   "N": 623,
+   "P": 1,
+   "R": 623,
+   "wire": 453,
+   "stages": {
+    "REQ": 0,
+    "CAP": 12,
+    "SINK": 13,
+    "WRSEQ": 14,
+    "WR": 15,
+    "RDSEQ": 18,
+    "RD": 19,
+    "RXSEQ": 478,
+    "RXE": 479,
+    "RXCAP": 482,
+    "DSINK": 483,
+    "DADDR": 484
+   },
+   "DEL": 485,
+   "last_delivery": 1107,
+   "halt": 1108,
+   "rows": 26,
+   "plan": [
+    {
+     "pc": 0,
+     "start": 0,
+     "visits": 1
+    },
+    {
+     "pc": 1,
+     "start": 1,
+     "visits": 11
+    },
+    {
+     "pc": 2,
+     "start": 12,
+     "visits": 1
+    },
+    {
+     "pc": 3,
+     "start": 13,
+     "visits": 1
+    },
+    {
+     "pc": 4,
+     "start": 14,
+     "visits": 1
+    },
+    {
+     "pc": 5,
+     "start": 15,
+     "visits": 3
+    },
+    {
+     "pc": 6,
+     "start": 18,
+     "visits": 1
+    },
+    {
+     "pc": 7,
+     "start": 19,
+     "visits": 459
+    },
+    {
+     "pc": 8,
+     "start": 478,
+     "visits": 1
+    },
+    {
+     "pc": 9,
+     "start": 479,
+     "visits": 3
+    },
+    {
+     "pc": 10,
+     "start": 482,
+     "visits": 1
+    },
+    {
+     "pc": 11,
+     "start": 483,
+     "visits": 1
+    },
+    {
+     "pc": 12,
+     "start": 484,
+     "visits": 139
+    },
+    {
+     "pc": 13,
+     "start": 623,
+     "visits": 12
+    },
+    {
+     "pc": 14,
+     "start": 635,
+     "visits": 1
+    },
+    {
+     "pc": 15,
+     "start": 636,
+     "visits": 1
+    },
+    {
+     "pc": 16,
+     "start": 637,
+     "visits": 1
+    },
+    {
+     "pc": 17,
+     "start": 638,
+     "visits": 3
+    },
+    {
+     "pc": 18,
+     "start": 641,
+     "visits": 1
+    },
+    {
+     "pc": 19,
+     "start": 642,
+     "visits": 459
+    },
+    {
+     "pc": 20,
+     "start": 1101,
+     "visits": 1
+    },
+    {
+     "pc": 21,
+     "start": 1102,
+     "visits": 3
+    },
+    {
+     "pc": 22,
+     "start": 1105,
+     "visits": 1
+    },
+    {
+     "pc": 23,
+     "start": 1106,
+     "visits": 1
+    },
+    {
+     "pc": 24,
+     "start": 1107,
+     "visits": 1
+    },
+    {
+     "pc": 25,
+     "start": 1108,
+     "visits": 1
+    }
+   ]
+  }
+ }
+}

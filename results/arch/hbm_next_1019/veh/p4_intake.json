@@ -8,16 +8,85 @@
   ],
   "CMTP.records_mtp": [],
   "CMTP.records_mu4": [],
-  "CMTP.goldens_mtp": [],
+  "CMTP.goldens_mtp": [
+   "results/arch/hbm_next_1019/cmtp/goldens/ar_mtp_g5/manifest.json"
+  ],
   "CMTP.goldens_mu4": [],
-  "CMTP.static_schedule_checker": [],
-  "SM4.rtl": [],
-  "SM4.bench_pass": [],
-  "ATT4.rtl": [],
-  "ATT4.bench_pass": [],
-  "UNITS.hc_rows": [],
+  "CMTP.binary_images": [],
+  "CMTP.static_schedule_checker": [
+   "results/arch/hbm_next_1019/cmtp/static/static_check.json",
+   "tools/hbm_next/static_check.py"
+  ],
+  "SM4.rtl": [
+   "rtl/hbm_next/sm/hnx_rp4_leafh.sv",
+   "rtl/hbm_next/sm/hnx_rp4l_children.sv",
+   "rtl/hbm_next/sm/hnx_rp4lp4.sv",
+   "rtl/hbm_next/sm/hnx_rp4lp4_leaf.sv",
+   "rtl/hbm_next/sm/hnx_xs4.sv"
+  ],
+  "SM4.bench_pass": [
+   "results/arch/hbm_next_1019/sm4/bench/leaf1/run_p4_m0_t0.log",
+   "results/arch/hbm_next_1019/sm4/bench_summary.json"
+  ],
+  "SM4.layer_shape_bench": [
+   "results/arch/hbm_next_1019/veh/sm4_layer/sm4_layer.json"
+  ],
+  "ATT4.rtl": [
+   "rtl/hbm_next/att/ot_hnx_att4_issue.sv",
+   "rtl/hbm_next/att/ot_hnx_att4_pvm.sv",
+   "rtl/hbm_next/att/ot_hnx_att4_slice.sv",
+   "rtl/hbm_next/att/ot_hnx_att_kv_line.sv",
+   "rtl/hbm_next/att/ot_hnx_att_pv_merge.sv",
+   "rtl/hbm_next/att/ot_hnx_att_tcpv_col.sv",
+   "rtl/hbm_next/att/tb_hnx_att4.sv"
+  ],
+  "ATT4.bench_pass": [
+   "results/arch/hbm_next_1019/att4/bench/s00.log",
+   "results/arch/hbm_next_1019/att4/bench/s03.log",
+   "results/arch/hbm_next_1019/att4/bench/throughput.json"
+  ],
+  "UNITS.hc_rows": [
+   "rtl/hbm_next/hc/ot_hnx_hc_bank.sv",
+   "rtl/hbm_next/hc/ot_hnx_hc_bankq.sv",
+   "rtl/hbm_next/hc/ot_hnx_hc_eng_seq.sv",
+   "rtl/hbm_next/hc/ot_hnx_hc_q.sv",
+   "rtl/hbm_next/hc/ot_hnx_hc_qcen.sv",
+   "rtl/hbm_next/hc/ot_hnx_hc_qeng.sv",
+   "rtl/hbm_next/hc/ot_hnx_hc_qhub.sv",
+   "rtl/hbm_next/hc/ot_hnx_hc_root.sv",
+   "rtl/hbm_next/hc/ot_hnx_hc_tail_unit.sv",
+   "rtl/hbm_next/hc/ot_hnx_hc_xw_rx.sv",
+   "rtl/hbm_next/hc/ot_hnx_hcp_sys1.sv",
+   "rtl/hbm_next/hc/ot_hnx_hgi_hc_gathered_mix_reader.sv",
+   "rtl/hbm_next/hc/ot_hnx_hgi_hc_residual_vm.sv",
+   "rtl/hbm_next/hc/ot_hnx_hgi_hc_result_vm.sv",
+   "rtl/hbm_next/hc/ot_hnx_hgi_hc_tail.sv"
+  ],
+  "UNITS.hc_bench": [
+   "results/arch/hbm_next_1019/units/hc/README.md",
+   "results/arch/hbm_next_1019/units/hc/witness/e0_n1.log",
+   "results/arch/hbm_next_1019/units/hc/witness/e0_n2.log",
+   "results/arch/hbm_next_1019/units/hc/witness/e0_n3.log",
+   "results/arch/hbm_next_1019/units/hc/witness/e0_n4.log",
+   "results/arch/hbm_next_1019/units/hc/witness/e0_n6.log",
+   "results/arch/hbm_next_1019/units/hc/witness/e0_n8.log",
+   "results/arch/hbm_next_1019/units/hc/witness/e1_n4.log",
+   "results/arch/hbm_next_1019/units/hc/witness/e4_n4.log",
+   "results/arch/hbm_next_1019/units/hc/witness/q_d4g.log",
+   "results/arch/hbm_next_1019/units/hc/witness/q_m7.log",
+   "results/arch/hbm_next_1019/units/hc/witness/q_m8.log",
+   "results/arch/hbm_next_1019/units/hc/witness/q_n4s.log"
+  ],
+  "UNITS.coll_bench": [
+   "results/arch/hbm_next_1019/units/coll/README.md",
+   "results/arch/hbm_next_1019/units/coll/witness/m6.log",
+   "results/arch/hbm_next_1019/units/coll/witness/m7.log",
+   "results/arch/hbm_next_1019/units/coll/witness/m8.log"
+  ],
   "UNITS.fused_rows": [],
-  "UNITS.coll_rows": [],
+  "UNITS.coll_rows": [
+   "rtl/hbm_next/coll/ot_hnx_coll_gq.sv"
+  ],
   "UNITS.idx_rows": [],
   "DIE.p4_netlist": []
  },
@@ -31,15 +100,8 @@
    "ready": false,
    "missing": [
     "CMTP.records_mtp",
-    "CMTP.goldens_mtp",
-    "CMTP.static_schedule_checker",
-    "SM4.rtl",
-    "SM4.bench_pass",
-    "ATT4.rtl",
-    "ATT4.bench_pass",
-    "UNITS.hc_rows",
+    "CMTP.binary_images",
     "UNITS.fused_rows",
-    "UNITS.coll_rows",
     "UNITS.idx_rows"
    ],
    "via": "per-unit P = 4 benches driven by one layer's records"
@@ -49,17 +111,16 @@
    "missing": [
     "CMTP.records_mu4",
     "CMTP.goldens_mu4",
-    "CMTP.static_schedule_checker",
-    "SM4.rtl",
-    "SM4.bench_pass",
-    "ATT4.rtl",
-    "ATT4.bench_pass",
-    "UNITS.hc_rows",
+    "CMTP.binary_images",
     "UNITS.fused_rows",
-    "UNITS.coll_rows",
     "UNITS.idx_rows"
    ],
    "via": "per-unit P = 4 benches driven by one layer's records"
+  },
+  "per-unit P = 4 layer benches, cycles (one layer's records: L2/L3 MTP N = 6 + 4-user N = 4)": {
+   "ready": true,
+   "missing": [],
+   "via": "p4_layer_units.py records/plan + run_sm4_layer.sh; cycles in the S2 schedule (compose_grid PHYS axis); value-exact needs CMTP.binary_images"
   },
   "P = 4 quadrant slice (integration smoke, optional)": {
    "ready": false,

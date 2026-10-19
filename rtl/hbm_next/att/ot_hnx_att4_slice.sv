@@ -12,13 +12,18 @@
 // Outputs per lane l: sc_* = the score of the lane's row with ordinal sc_tag[11:3]; pv_* = the lane's run node
 // (4 sub-rows x 16 lanes x 32 b; sub-row q lane j slot b = head dim 8 (16 q + j) + b), pv_tag[2:0] = slot.
 // No credit / ready / stall on any path; every fault is sticky.
+// A1 (2026-10-19): SHARED = 1 replaces the NL per-lane merges of each sub-row column by ONE ot_hnx_att4_smerge (shared
+// adders, per-lane flop rings); STORE = 1 keeps per-lane merges but on flop stacks (the fallback).  Arithmetic identical.
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_hnx_att4_slice #(
     parameter integer NL    = 4,
     parameter integer LV    = 4,
     parameter integer KVMUT = 0,
     parameter integer PVMUT = 0,
-    parameter integer IMUT  = 0
+    parameter integer IMUT  = 0,
+    parameter integer SHARED = 0,       // A1: 1 = ONE shared 4-lane merge a sub-row column (ot_hnx_att4_smerge)
+    parameter integer STORE  = 0,       // A1: per-lane merges (SHARED 0) on 0 = 64x512 macro, 1 = flop stack
+    parameter integer SMUT   = 0        // shared-merge mutant
 ) (
     input  wire                 clk,
     input  wire                 rst_n,
@@ -68,20 +73,50 @@ module ot_hnx_att4_slice #(
     assign c_v_o = c_v; assign c_tag_o = c_tag;
     wire [4*NL-1:0] ov, pvv, cf; wire [128*NL-1:0] y; wire [64*NL-1:0] otag, pvt; wire [2048*NL-1:0] pvy;
     wire [NL-1:0] t_f;
+    wire [4*NL-1:0] mev; wire [512*4*NL-1:0] msum; wire [64*NL-1:0] mtag;
+    wire [3:0] sm_f;
     genvar l, q;
     generate for (l = 0; l < NL; l = l + 1) begin : g_lane
         for (q = 0; q < 4; q = q + 1) begin : g_c
             localparam integer I = 4 * l + q;
-            ot_hnx_att_tcpv_col #(.L(16), .IL(8), .TAGW(16), .ALAT(7), .LV(LV), .MUT(PVMUT)) u_c (.clk(clk), .rst_n(rst_n),
+            wire [511:0] c_pvy; wire [15:0] c_pvt; wire c_pvv;
+            ot_hnx_att_tcpv_col #(.L(16), .IL(8), .TAGW(16), .ALAT(7), .LV(LV), .MUT(PVMUT), .STORE(STORE),
+                .MERGE(SHARED ? 0 : 1)) u_c (.clk(clk), .rst_n(rst_n),
                 .v(c_v[l]), .first(c_first[l]), .last(c_last[l]), .tag(c_tag[16*l +: 16]), .w(c_w[256*q +: 256]),
                 .x(c_x[1024*l + 256*q +: 256]), .ov(ov[I]), .y(y[32*I +: 32]), .otag(otag[16*I +: 16]),
-                .pv_v(pvv[I]), .pv_y(pvy[512*I +: 512]), .pv_tag(pvt[16*I +: 16]), .fault(cf[I]));
+                .pv_v(c_pvv), .pv_y(c_pvy), .pv_tag(c_pvt),
+                .m_ev(mev[I]), .m_sum(msum[512*I +: 512]), .m_tag(mtag[16*I +: 16]), .fault(cf[I]));
+            if (SHARED == 0) begin : g_own
+                assign pvv[I] = c_pvv; assign pvy[512*I +: 512] = c_pvy; assign pvt[16*I +: 16] = c_pvt;
+            end
         end
         ot_gpu_tree #(.N(4), .TAGW(16), .ALAT(7)) u_be (.clk(clk), .rst_n(rst_n), .v(ov[4*l]), .d(y[128*l +: 128]),
             .tag(otag[64*l +: 16]), .ov(sc_v[l]), .y(sc_y[32*l +: 32]), .otag(sc_tag[16*l +: 16]), .fault(t_f[l]));
         assign pv_v[l] = pvv[4*l];
         assign pv_y[2048*l +: 2048] = pvy[2048*l +: 2048];
         assign pv_tag[16*l +: 16] = pvt[64*l +: 16];
+    end endgenerate
+    // A1 PRIMARY: one shared merge per sub-row column q, serving the NL lanes' column q
+    generate if (SHARED != 0) begin : g_shared
+        for (q = 0; q < 4; q = q + 1) begin : g_sm
+            wire [NL-1:0] e; wire [512*NL-1:0] su; wire [16*NL-1:0] tg;
+            wire smv; wire [511:0] smy; wire [15:0] smt; wire [1:0] sml;
+            for (l = 0; l < NL; l = l + 1) begin : g_in
+                assign e[l] = mev[4*l + q]; assign su[512*l +: 512] = msum[512*(4*l + q) +: 512];
+                assign tg[16*l +: 16] = mtag[16*(4*l + q) +: 16];
+            end
+            ot_hnx_att4_smerge #(.NL(NL), .L(16), .TAGW(16), .ALAT(7), .LV(LV), .MUT(SMUT), .PUBLISH(0)) u_sm (
+                .clk(clk), .rst_n(rst_n), .ev(e), .sum(su), .tag_d(tg), .pv_v(smv), .pv_y(smy), .pv_tag(smt),
+                .pv_lane(sml), .pub_start(1'b0), .pub_lane(2'd0), .pub_slot(3'd0), .pub_v(), .pub_data(), .pub_word(),
+                .pub_out_slot(), .pub_out_lane(), .pub_tag(), .fault(sm_f[q]));
+            for (l = 0; l < NL; l = l + 1) begin : g_out
+                assign pvv[4*l + q] = smv && (sml == l);
+                assign pvy[512*(4*l + q) +: 512] = smy;
+                assign pvt[16*(4*l + q) +: 16] = smt;
+            end
+        end
+    end else begin : g_noshared
+        assign sm_f = 4'd0;
     end endgenerate
     // the 4 sub-rows of a lane always finish together (same beats): a misaligned lane is a fault
     reg mis;
@@ -90,6 +125,6 @@ module ot_hnx_att4_slice #(
         if (!rst_n) mis <= 1'b0;
         else for (k = 0; k < NL; k = k + 1)
             if ((pvv[4*k +: 4] != 4'h0 && pvv[4*k +: 4] != 4'hf) || (ov[4*k +: 4] != 4'h0 && ov[4*k +: 4] != 4'hf)) mis <= 1'b1;
-    assign fault = kfault | ifault | (|cf) | (|t_f) | mis;
+    assign fault = kfault | ifault | (|cf) | (|t_f) | mis | (|sm_f);
 endmodule
 `default_nettype wire
