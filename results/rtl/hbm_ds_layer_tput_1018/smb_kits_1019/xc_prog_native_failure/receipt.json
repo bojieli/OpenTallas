@@ -11,6 +11,7 @@
   "timing_delta_um2": 47.86,
   "final_placement_area_um2": 1997.5,
   "reset_landing": "REFUSE raw rst_n reaches8 flop reset pins under literal max2; explicit balanced two-level source proof/tool scope under investigation",
-  "grt_collector": "still active when CTS receipt captured; terminal full gate receipt to follow",
-  "next": "model genuine per-SRAM bank leaves plus registered central select/RELOC; no density-only retry, no approval or physical claim"
+  "grt_collector": "Terminal FAIL; full gate4FAIL/1WARN, trial route repeats GPL0305, no congestion table",
+  "next": "model genuine per-SRAM bank leaves plus registered central select/RELOC; no density-only retry, no approval or physical claim",
+  "floorplan_visual_review": "Viewed native floorplan.png: two wide macros on same x origin43.2 at rows43.2/172.8; connected fullwidth middle band, real perimeter access. Floorplan-only image; no placed/CTS/native-clock evidence."
 }
