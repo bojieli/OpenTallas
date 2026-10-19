@@ -1,4 +1,5 @@
 rtl/qwen_dv/qfd_tt_ctlm_dv.sv
+rtl/qwen_dv/qfd_dv_hr_pack.sv
 rtl/qwen_dv/qfd_dv_cmd_cal.sv
 rtl/qwen_dv/qfd_dv_cmd_cal_mu.sv
 rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv

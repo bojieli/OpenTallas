@@ -1,0 +1,148 @@
+{
+ "name": "s81sl_capc",
+ "top": "ot_s81sl_cap",
+ "kind": "cluster",
+ "sources": [
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap.sv"
+ ],
+ "params": {},
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "children": [
+  {
+   "view": "physical/ref_tile/s81sl_cap_rt/views/ot_s81sl_cap_rt",
+   "count": 1,
+   "inst": "g_hard.u_rt",
+   "at": [
+    43.2,
+    43.2
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81sl_cap_tr/views/ot_s81sl_cap_tr",
+   "count": 1,
+   "inst": "g_hard.u_tw",
+   "at": [
+    43.2,
+    216.0
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81sl_cap_tr/views/ot_s81sl_cap_tr",
+   "count": 1,
+   "inst": "g_hard.u_te",
+   "at": [
+    216.0,
+    216.0
+   ]
+  }
+ ],
+ "pins": {
+  "W": [
+   "rt_w"
+  ],
+  "E": [
+   "rt_e"
+  ],
+  "N": [
+   "cfg_v",
+   "cfg_d",
+   "cw_n_v",
+   "cw_n_a",
+   "cw_n_d"
+  ],
+  "S": [
+   "cw_s_v",
+   "cw_s_a",
+   "cw_s_d",
+   "clk",
+   "rst_n",
+   "fault"
+  ]
+ },
+ "outline": {
+  "w": 345.6,
+  "h": 345.6
+ },
+ "layer_cap": "M5",
+ "clock": "spine",
+ "recipe": 2,
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "structural_change": "S81U-CAP2: the flat s81sl_cap (22,261 sinks / one root, TT insertion 368.5 ps > 300) as a wires-only cluster of 3 hardened leaves with own roots: root leaf s81sl_cap_rt (S), tree leaf s81sl_cap_tr x2 (N; E instance MY). Seams registered both sides (nc RST flop -> n6 P1 flop), no added edge. S81-CAPRT 10-19: children are the CLOSED views (cap_rt c302169ce R 258.7 TT / 210.3 FF; cap_tr R 140.7 / 113.6); child_clock_ref boundary so the spine targets each child's routed boundary R (118 ps TT compensation rt vs tr). cap_rt resets 2 cycles after cap_tr (its 2-stage reset landing); no data crosses before a job starts.",
+ "why_floorplan": "square 345.6 x 345.6 (S81-CAPRT 10-19 gen: closed cap_rt view is 259.2 x 116.64, so the 311 x 302 plan left a 13-um rt/tree seam and rt 6.5 um from the E face; the MY cap_tr LEF is off the M1-M9 tracks, no origin fixes it): u_rt 259.2 x 116.64 at (43.2, 43.2) (SRAM + side columns; clk + cfg / cw_n / tree seams on its N face), u_tw / u_te 90.72 x 86.4 both R0 at (43.2, 216) / (216, 216): 56-um seam channel to u_rt's N face; 82-um channel between the trees carries the clock spine, cfg / cw_n and te's rt bus (te's rt face is W in R0; rt_e enters the E face and crosses te on M6/M7). rt_w enters tw's outer W face; cw_s leaves u_rt's S face. All origins on the 43.2 lattice. A lattice-width cap_tr (MY-able) would restore the 311 x 302 plan.",
+ "job": {
+  "owner": "Claude:S81-CAPRT",
+  "branch": "claude/hs81-caprt-1019",
+  "tag": "s81sl_capc",
+  "purpose": "S81U-CAP2 / S81-CAPRT 10-19: capture root as a wires-only cluster of the CLOSED s81sl_cap_rt (c302169ce) and s81sl_cap_tr views.",
+  "benches": [
+   {
+    "name": "slcap_exact",
+    "cmd": "bash tools/s81_slice/cap_bench.sh {RUN}/slcap_exact {RUN}/slcap_vec 0",
+    "expect": "pass",
+    "pass_regex": "^PASS cap MUT=0 slcap_vec$",
+    "threads": 4,
+    "peak_ram_gb": 6
+   },
+   {
+    "name": "slcap_mut1_sibling",
+    "cmd": "bash tools/s81_slice/cap_bench.sh {RUN}/slcap_m1 {RUN}/slcap_vec 1 raw",
+    "expect": "fail",
+    "fail_regex": "^CAP_MUTANT_DETECTED MUT=1 ",
+    "fail_witness": "results/rtl/s81_slice_1017/cap_caprt1019/mut1_real1_raw.out",
+    "threads": 4,
+    "peak_ram_gb": 6
+   },
+   {
+    "name": "slcap_mut3_leaf",
+    "cmd": "bash tools/s81_slice/cap_bench.sh {RUN}/slcap_m3 {RUN}/slcap_vec 3 raw",
+    "expect": "fail",
+    "fail_regex": "^CAP_MUTANT_DETECTED MUT=3 ",
+    "fail_witness": "results/rtl/s81_slice_1017/cap_caprt1019/mut3_real1_raw.out",
+    "threads": 4,
+    "peak_ram_gb": 6
+   }
+  ],
+  "extra_paths": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "rtl/dsrom_sys/s81_dv/slice",
+   "rtl/dsrom_sys/s81_static_net",
+   "rtl/dsrom_sys/s81_die_bind",
+   "rtl/hdc",
+   "rtl/proto",
+   "rtl/lib",
+   "tools/s81_slice",
+   "tools/s81",
+   "results/rtl/s81_slice_1017/cap",
+   "results/rtl/s81_slice_1017/cap_caprt1019"
+  ],
+  "views_to": "physical/ref_tile/s81sl_capc/views",
+  "record_to": "results/rtl/ref_tile/s81sl_capc"
+ },
+ "child_clock_ref": "boundary",
+ "hard_define": "OT_HARD_CHILDREN",
+ "defines": [
+  "OT_HARD_CHILDREN"
+ ],
+ "macros": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}
