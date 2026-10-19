@@ -9,7 +9,7 @@
     "rtl/qwen_sys/split_20261014/qkd_astk_phys.sv": "5ee9ea58b745976317976492caab21541487c247c7e953733c359f7c9bec18de",
     "rtl/qwen_sys/static_kv_die_20261017/qkd_attn_fault_root.sv": "fd39915dbb763e020efe704a168b132d60227f5e79fe1ab59ec7d47e2bac460f",
     "rtl/qwen_sys/kv_bootage_20261019/qkd_attn_cal_gen_b.sv": "6bd41c4aea6b90fc02faf31878ce8f4cd609ab6679e789474ea2e244e17fa2d8",
-    "rtl/test/qwen_split/tb_kv_retirement.sv": "3e8b9a9b95fac29851b92a89729d7766feb5284330c1d8932991b77a1f197bf8",
+    "rtl/test/qwen_split/tb_kv_retirement.sv": "a0bfd1945744b51af906bba26c80c60813dd7d3cd586d1001b5cca2e372ed8a3",
     "rtl/test/qwen_split/kv_retirement_collector.sv": "edc721b912a208d16746a226a31dddc401511e322fd81e96d6d27d32f2bbc366",
     "rtl/test/qwen_split/tb_kv_retirement_reset.sv": "211a66b394750f41eb4e7820189d71a5a3235aa4ce8b7c1146776a433b9e9ce5",
     "rtl/test/qwen_split/tb_kv_retirement_cal.sv": "cc9cb167f48c35478bb8ca884a91107acb98dccd7ca5ee216762cd9b6f7c3535",
@@ -22,5 +22,7 @@
   "fleet_run": "/srv/opentallas-scratch/claude/codex-kv-retirement-1019",
   "host": "ot-epyc5",
   "unit": "oth-ubuntu-1701725-1792428416",
-  "qualification": "LOGICAL_ONLY"
+  "qualification": "LOGICAL_ONLY",
+  "tested_tb_sha256_before_whitespace_cleanup": "3e8b9a9b95fac29851b92a89729d7766feb5284330c1d8932991b77a1f197bf8",
+  "post_test_change": "Removed trailing spaces only from the retirement bench; no token or RTL behavior changed."
 }

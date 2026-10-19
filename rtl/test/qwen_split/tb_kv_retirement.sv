@@ -9,7 +9,7 @@ module tb_kv_retirement;
  wire req,qv,txv;wire [4:0] qb;wire [511:0] qd;wire [547:0] txp;
  reg rv=0,done=0,slot=0;reg [4:0] beat=0,sbeat=0;reg [3:0] skind=0;
  qkd_native_attention_programme #(.MUT(MUT),.LAND(1),.RETIRE_STATIC(1)) u(.ck(ck),.rst_n(rst_n),.issue(issue),.run(run),
-  
+
   .fused_program_capability(1'b1),.authority_valid(1'b1),.authority_epoch(16'd17),
   .authority_token(18'd19),.authority_position(18'd999),.authority_stage(6'd7),
   .compiled_calendar(176'h123),.compiled_rx_cmd(16'd4),.compiled_tx_first(16'd100),.compiled_end(16'(STATUS+1)),
