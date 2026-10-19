@@ -110,6 +110,7 @@ module ot_s81sl_lep_core #(
     parameter integer MU_EN = 0,       // 1: user-tag windows (TX stamp, RX strip / land / replay merge)
     parameter integer AB_EN = 0,       // 1: second lane pair (copy B static circuit)
     parameter integer NB = 80,         // ring beats per h message per endpoint (40,960 B / 4 end slices / 128 B)
+    parameter integer RX_SRAM = 0,     // opt-in true SRAM RX, same show-ahead edge
     parameter integer TXRP = 1         // 1: TX read pipeline register beside the SRAM column (S81-FIX3; +1 lo edge)
 ) (
     input  wire            clk,
@@ -160,8 +161,12 @@ module ot_s81sl_lep_core #(
     localparam [2:0] K_XQ = 3'd1, K_XB = 3'd2;
     localparam integer TG = 1045;                      // tag field base: [TG] tag, [TG+1] land, user, pos
     // regional reset: the port drives only this relay (own synchroniser on this leaf's clock root); one copy per region
-    wire [3:0] rr;
-    ot_rst_relay #(.REGIONS(4), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rstr (.clk(clk), .rst_n_in(rst_n), .rst_n(rr));
+    localparam integer RX_NS=(H+16)/16;
+    localparam integer NRX_MEMRST=(MU_EN!=0 && RX_SRAM!=0)?NL*RX_NS:0;
+    localparam integer NRX_OUTRST=(MU_EN!=0 && RX_SRAM!=0)?((1103+15)/16):0;
+    localparam integer NRX_RST=NRX_MEMRST+NRX_OUTRST;
+    wire [3+NRX_RST:0] rr;
+    ot_rst_relay #(.REGIONS(4+NRX_RST), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rstr (.clk(clk), .rst_n_in(rst_n), .rst_n(rr));
     wire rn = rr[3];                                   // host plane, outward-port valid, fault collector
     wire rnx = rr[2];                                  // RX landing + re-assembly
     reg [NL-1:0] rxv_r;
@@ -323,6 +328,7 @@ module ot_s81sl_lep_core #(
     localparam integer RREP = 16, SW = (H + 1 + RREP - 1) / RREP;
     wire [3:0] li_v = {li3_v, li2_v, li1_v, li0_v}; wire [4*(H+1)-1:0] li_d = {li3_d, li2_d, li1_d, li0_d};
     wire [NL-1:0] rne, rxf; wire [NL*(H+1)-1:0] rhd; wire [NL-1:0] lir;
+    wire [NL-1:0] rnex, rhkx, rringx, rtagx;
     wire [NL-1:0] rhk;                                 // MU_EN 1: pre-decoded land bit of each lane's head row
     wire [1:0] relp;                                   // pair releases (pair B only at AB_EN 1)
 `ifdef OT_S81SL_LEP_MUT_NOPAIR
@@ -347,6 +353,7 @@ module ot_s81sl_lep_core #(
         wire [AR-1:0] wp_nx = wr ? ((wp == AR'(DR - 1)) ? '0 : wp + 1'b1) : wp;
         wire [AR-1:0] rp_nx = pop ? ((rp == AR'(DR - 1)) ? '0 : rp + 1'b1) : rp;
         wire [AR:0] n_nx = n + (AR+1)'(wr) - (AR+1)'(pop);
+        assign rnex[t]=n_nx!=0;
         integer k;
         always @(posedge clk or negedge rnx)
             if (!rnx) begin wp <= 0; rp <= 0; n <= 0; vq <= 1'b0; nz <= 1'b0; cr <= 1'b0; f <= 1'b0; we <= DR'(1); end
@@ -357,10 +364,11 @@ module ot_s81sl_lep_core #(
                 wp <= wp_nx; rp <= rp_nx; n <= n_nx; nz <= n_nx != 0;
                 for (k = 0; k < DR; k = k + 1) we[k] <= (wp_nx == AR'(k)) && (n_nx != (AR+1)'(DR));
             end
-        integer j;
-        always @(posedge clk) begin
-            dq <= li_d[t * (H + 1) +: H + 1];
-            for (j = 0; j < DR; j = j + 1) if (we[j]) mem[j] <= dq;
+        always @(posedge clk) dq<=li_d[t*(H+1)+:H+1];
+        if(MU_EN==0 || RX_SRAM==0) begin:g_legacy_mem
+            integer j;
+            always @(posedge clk)
+                for(j=0;j<DR;j=j+1) if(we[j]) mem[j]<=dq;
         end
         // MU_EN 0: the head is read combinationally from mem[rpc] (pre-MU structure, unchanged; loop empty at MU_EN 1)
         for (c = 0; c < ((MU_EN != 0) ? 0 : RREP); c = c + 1) begin : g_c
@@ -380,10 +388,19 @@ module ot_s81sl_lep_core #(
         // the head row (stored per row at write): lane 0 of a pair = XB / XQ ring beat, lane 1 = tag && land bits.
         if (MU_EN != 0) begin : g_sa
             wire kd = (t % 2 == 0) ? (dq[0] && (dq[3:1] == K_XB || dq[3:1] == K_XQ)) : (dq[TG - H] && dq[TG + 1 - H]);
-            reg [DR-1:0] mk; reg hk;
+            reg [DR-1:0] mk, mrk, mtk; reg hk;
+            wire rd=(t%2==0)?dq[0]:1'b0;
+            wire td=(t%2!=0)?dq[TG-H]:1'b0;
+            assign rringx[t]=we[rp_nx]?rd:mrk[rp_nx];
+            assign rtagx[t]=we[rp_nx]?td:mtk[rp_nx];
+`ifdef OT_S81SL_LEP_MUT_STALEHD
+            assign rhkx[t]=mk[rp];
+`else
+            assign rhkx[t]=we[rp_nx]?kd:mk[rp_nx];
+`endif
             integer jk;
             always @(posedge clk) begin
-                for (jk = 0; jk < DR; jk = jk + 1) if (we[jk]) mk[jk] <= kd;
+                for(jk=0;jk<DR;jk=jk+1) if(we[jk]) begin mk[jk]<=kd; mrk[jk]<=rd; mtk[jk]<=td; end
 `ifdef OT_S81SL_LEP_MUT_STALEHD
                 hk <= mk[rp];
 `else
@@ -391,6 +408,18 @@ module ot_s81sl_lep_core #(
 `endif
             end
             assign rhk[t] = hk;
+            if(RX_SRAM!=0) begin:g_true_sram
+                wire [H:0] head;
+`ifdef OT_S81SL_LEP_MUT_STALEHD
+                wire [AR-1:0] read_next=rp;
+`else
+                wire [AR-1:0] read_next=rp_nx;
+`endif
+                ot_sram_showahead_1r1w #(.W(H+1),.AW(AR)) u_rx_mem(
+                    .clk(clk),.rst_n(rr[4+t*RX_NS+:RX_NS]),.we(wr),.wa(wp),.wd(dq),
+                    .ra(read_next),.q(head));
+                assign rhd[t*(H+1)+:H+1]=head;
+            end else begin:g_old_head
             for (c = 0; c < RREP; c = c + 1) begin : g_h
                 localparam integer LO = c * SW, HI = ((c + 1) * SW > H + 1) ? H + 1 : (c + 1) * SW;
                 if (LO < H + 1) begin : g_on
@@ -408,6 +437,7 @@ module ot_s81sl_lep_core #(
                     assign rhd[t * (H + 1) + LO +: HI - LO] = hd;
                 end
             end
+            end // g_old_head
         end
         assign rne[t] = nz; assign lir[t] = cr; assign rxf[t] = f;
     end endgenerate
@@ -481,7 +511,7 @@ module ot_s81sl_lep_core #(
     wire rr_dlv = (gA && !ldA) || (gB && !ldB);
     wire [1103:0] db = rr_dlv ? rb : mrd;               // delivered beat (tag fields only: rtq)
     // rid: one AO222 per bit, {sA, sB, sM} duplicated per column group (keep) so each select net drives ~70 bits
-    localparam integer OREP = 16, OW = (1103 + OREP - 1) / OREP;
+    localparam integer OREP = (RX_SRAM!=0)?((1103+15)/16):16, OW = (1103 + OREP - 1) / OREP;
     wire [1103:1] nrid;
     // strip only TAGGED beats (XB / XQ ring beat with the tag bit, SPEC (a)): any other beat is delivered bit-exact.
     // Lane-0 kind is pre-decoded per FIFO row (rhk[0] / rhk[2]); the tag bit is a show-ahead flop; the replay word a pin flop.
@@ -493,14 +523,63 @@ module ot_s81sl_lep_core #(
 `else
     wire [1103:0] sbA = tA ? strip(bA) : bA, sbB = tB ? strip(bB) : bB, sbM = tM ? strip(mrd) : mrd;
 `endif
+    // With SRAM, next-head metadata is available alongside next read address. Register the
+    // delivery selects there, one reset-distinct copy per<=16outputbits. Data still reaches rid
+    // on the original edge; no global1103load select or extra receive stage remains.
+    wire a_rel_next=rnex[0] && rnex[1];
+    wire a_ring_next=a_rel_next && rringx[0];
+    wire b_ring_next;
+    wire b_land_next, b_tag_next;
+    if(NL==4) begin:g_b_lookahead
+        assign b_ring_next=rnex[2] && rnex[3] && !a_rel_next && rringx[2];
+        assign b_land_next=rhkx[2] && rhkx[3];
+        assign b_tag_next=rhkx[2] && rtagx[3];
+    end else begin:g_no_b_lookahead
+        assign b_ring_next=1'b0; assign b_land_next=1'b0; assign b_tag_next=1'b0;
+    end
+`ifdef OT_S81SL_LEP_MUT_LANDCUT
+    wire a_cut_next=a_ring_next, b_cut_next=b_ring_next;
+`else
+    wire a_cut_next=a_ring_next && !(rhkx[0] && rhkx[1]);
+    wire b_cut_next=b_ring_next && !b_land_next;
+`endif
+`ifdef OT_S81SL_LEP_MUT_STRIPALL
+    wire a_tag_next=1'b1, bt_next=1'b1, m_tag_next=1'b1;
+`else
+    wire a_tag_next=rhkx[0] && rtagx[1];
+    wire bt_next=b_tag_next;
+    wire m_tag_next=tagd(ml_rd);
+`endif
     for (c = 0; c < OREP; c = c + 1) begin : g_o
         localparam integer LO = 1 + c * OW, HI = (1 + (c + 1) * OW > 1104) ? 1104 : 1 + (c + 1) * OW;
         if (LO < 1104) begin : g_on
+            if(RX_SRAM!=0) begin:g_registered_select
+                (* keep *) reg sa_r, sb_r, sm_r, ta_r, tb_r, tm_r;
+                wire reset_o=rr[4+NRX_MEMRST+c];
+                always @(posedge clk or negedge reset_o)
+                    if(!reset_o) begin sa_r<=0; sb_r<=0; sm_r<=0; ta_r<=0; tb_r<=0; tm_r<=0; end
+                    else begin
+                        sa_r<=a_cut_next; sb_r<=b_cut_next;
+                        sm_r<=ml_rv && !a_cut_next && !b_cut_next;
+                        ta_r<=a_tag_next; tb_r<=bt_next; tm_r<=m_tag_next;
+                    end
+                genvar ob;
+                for(ob=LO;ob<HI;ob=ob+1) begin:g_bit
+                    wire da, dbit, dm;
+                    if(ob>=TG && ob<TG+33) begin:g_tag
+                        assign da=bA[ob] && !ta_r; assign dbit=bB[ob] && !tb_r; assign dm=mrd[ob] && !tm_r;
+                    end else begin:g_payload
+                        assign da=bA[ob]; assign dbit=bB[ob]; assign dm=mrd[ob];
+                    end
+                    assign nrid[ob]=(sa_r && da) || (sb_r && dbit) || (sm_r && dm);
+                end
+            end else begin:g_old_select
             (* keep = "true" *) wire sA = gA && !ldA;
             (* keep = "true" *) wire sB = gB && !ldB;
             (* keep = "true" *) wire sM = mrv && !(gA && !ldA) && !(gB && !ldB);
             assign nrid[HI-1:LO] = ({(HI - LO){sA}} & sbA[HI-1:LO]) | ({(HI - LO){sB}} & sbB[HI-1:LO])
                                  | ({(HI - LO){sM}} & sbM[HI-1:LO]);
+            end
         end
     end
     always @(posedge clk) begin
@@ -655,7 +734,7 @@ endmodule
 // (the core leaves those ports unread / 0, as ot_s81sl_lep_nh).
 module ot_s81sl_lep_mu #(
     parameter integer DT = 512, parameter integer DR = 8, parameter integer CRED = 8, parameter integer SRAM = 1,
-    parameter integer HOST_EN = 0, parameter integer AB_EN = 1, parameter integer NB = 80
+    parameter integer HOST_EN = 0, parameter integer AB_EN = 1, parameter integer NB = 80, parameter integer RX_SRAM = 0
 ) (
     input  wire            clk,
     input  wire            rst_n,
@@ -692,7 +771,7 @@ module ot_s81sl_lep_mu #(
     input  wire [2:0]      l3_f,
     output wire            fault
 );
-    ot_s81sl_lep_core #(.DT(DT), .DR(DR), .CRED(CRED), .SRAM(SRAM), .HOST_EN(HOST_EN), .MU_EN(1), .AB_EN(AB_EN), .NB(NB)) u (
+    ot_s81sl_lep_core #(.DT(DT), .DR(DR), .CRED(CRED), .SRAM(SRAM), .HOST_EN(HOST_EN), .MU_EN(1), .RX_SRAM(RX_SRAM), .AB_EN(AB_EN), .NB(NB)) u (
         .clk(clk), .rst_n(rst_n), .ro(ro), .ri(ri),
         .lo0_v(lo0_v), .lo0_r(lo0_r), .lo0_d(lo0_d), .lo1_v(lo1_v), .lo1_r(lo1_r), .lo1_d(lo1_d),
         .li0_v(li0_v), .li0_r(li0_r), .li0_d(li0_d), .li1_v(li1_v), .li1_r(li1_r), .li1_d(li1_d), .rxv(rxv),
@@ -711,7 +790,7 @@ endmodule
 // E ring + mu_c / mu_rt.
 module ot_s81sl_lep_mu_ab #(
     parameter integer DT = 512, parameter integer DR = 8, parameter integer CRED = 8, parameter integer SRAM = 1,
-    parameter integer NB = 80
+    parameter integer NB = 80, parameter integer RX_SRAM = 0
 ) (
     input  wire            clk,
     input  wire            rst_n,
@@ -741,7 +820,7 @@ module ot_s81sl_lep_mu_ab #(
     input  wire [2:0]      l3_f,
     output wire            fault
 );
-    ot_s81sl_lep_core #(.DT(DT), .DR(DR), .CRED(CRED), .SRAM(SRAM), .HOST_EN(0), .MU_EN(1), .AB_EN(1), .NB(NB)) u (
+    ot_s81sl_lep_core #(.DT(DT), .DR(DR), .CRED(CRED), .SRAM(SRAM), .HOST_EN(0), .MU_EN(1), .RX_SRAM(RX_SRAM), .AB_EN(1), .NB(NB)) u (
         .clk(clk), .rst_n(rst_n), .ro(ro), .ri(ri),
         .lo0_v(lo0_v), .lo0_r(lo0_r), .lo0_d(lo0_d), .lo1_v(lo1_v), .lo1_r(lo1_r), .lo1_d(lo1_d),
         .li0_v(li0_v), .li0_r(li0_r), .li0_d(li0_d), .li1_v(li1_v), .li1_r(li1_r), .li1_d(li1_d), .rxv(rxv),
@@ -760,7 +839,7 @@ endmodule
 // carries no tied pad and no constant output.  Faces (kit): W lanes A, N landing (dsdv_mu_land), E ring + mu_c / mu_rt.
 module ot_s81sl_lep_mu_a #(
     parameter integer DT = 512, parameter integer DR = 8, parameter integer CRED = 8, parameter integer SRAM = 1,
-    parameter integer NB = 80
+    parameter integer NB = 80, parameter integer RX_SRAM = 0
 ) (
     input  wire            clk,
     input  wire            rst_n,
@@ -783,7 +862,7 @@ module ot_s81sl_lep_mu_a #(
     input  wire            ml_f,
     output wire            fault
 );
-    ot_s81sl_lep_core #(.DT(DT), .DR(DR), .CRED(CRED), .SRAM(SRAM), .HOST_EN(0), .MU_EN(1), .AB_EN(0), .NB(NB)) u (
+    ot_s81sl_lep_core #(.DT(DT), .DR(DR), .CRED(CRED), .SRAM(SRAM), .HOST_EN(0), .MU_EN(1), .RX_SRAM(RX_SRAM), .AB_EN(0), .NB(NB)) u (
         .clk(clk), .rst_n(rst_n), .ro(ro), .ri(ri),
         .lo0_v(lo0_v), .lo0_r(lo0_r), .lo0_d(lo0_d), .lo1_v(lo1_v), .lo1_r(lo1_r), .lo1_d(lo1_d),
         .li0_v(li0_v), .li0_r(li0_r), .li0_d(li0_d), .li1_v(li1_v), .li1_r(li1_r), .li1_d(li1_d), .rxv(rxv),
@@ -803,7 +882,7 @@ endmodule
 // Faces (kit): W lanes A + l*_st, N landing (dsdv_mu_land) + host plane on the NW corner, E ring + mu_c / mu_rt.
 module ot_s81sl_lep_mu_h #(
     parameter integer DT = 512, parameter integer DR = 8, parameter integer CRED = 8, parameter integer SRAM = 1,
-    parameter integer NB = 80
+    parameter integer NB = 80, parameter integer RX_SRAM = 0
 ) (
     input  wire            clk,
     input  wire            rst_n,
@@ -833,7 +912,7 @@ module ot_s81sl_lep_mu_h #(
     input  wire            ml_f,
     output wire            fault
 );
-    ot_s81sl_lep_core #(.DT(DT), .DR(DR), .CRED(CRED), .SRAM(SRAM), .HOST_EN(1), .MU_EN(1), .AB_EN(0), .NB(NB)) u (
+    ot_s81sl_lep_core #(.DT(DT), .DR(DR), .CRED(CRED), .SRAM(SRAM), .HOST_EN(1), .MU_EN(1), .RX_SRAM(RX_SRAM), .AB_EN(0), .NB(NB)) u (
         .clk(clk), .rst_n(rst_n), .ro(ro), .ri(ri),
         .lo0_v(lo0_v), .lo0_r(lo0_r), .lo0_d(lo0_d), .lo1_v(lo1_v), .lo1_r(lo1_r), .lo1_d(lo1_d),
         .li0_v(li0_v), .li0_r(li0_r), .li0_d(li0_d), .li1_v(li1_v), .li1_r(li1_r), .li1_d(li1_d), .rxv(rxv),
