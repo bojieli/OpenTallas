@@ -13,6 +13,10 @@ def block(text, name):
     return text.split(start, 1)[1].split(end, 1)[0]
 
 
+def block_named(text, tag):
+    return text.split(f'# {tag}_BEGIN\n', 1)[1].split(f'# {tag}_END\n', 1)[0]
+
+
 class PgEcoHooks(unittest.TestCase):
     def run_hook(self, name, strict, refuse=False, helper=True):
         text = (ROOT / name).read_text()
@@ -82,6 +86,25 @@ proc global_connect {} {puts global_connect}
                 self.assertIn('extract_parasitics ', after)
                 self.assertIn('write_spef ', after)
                 self.assertLess(text.index('filler_placement $ot_fill'), text.index('# OT_PG_STRICT_FINAL_BEGIN'))
+
+    def test_default_connect_binds_before_final_artifacts(self):
+        for name in ('hold_eco.tcl', 'vtswap_eco.tcl'):
+            with self.subTest(name=name):
+                text = (ROOT / name).read_text()
+                b = block_named(text, 'OT_PG_DEFAULT_CONNECT')
+                pre = 'proc envd {n d} {expr {[info exists ::env($n)] && $::env($n) ne "" ? $::env($n) : $d}}\n'
+                pre += 'proc global_connect {} {puts global_connect}\n'
+                r = subprocess.run(['tclsh'], input=pre + b, text=True, capture_output=True)
+                self.assertEqual(r.returncode, 0, r.stderr)
+                self.assertEqual(r.stdout.splitlines()[0], 'global_connect')
+                off = subprocess.run(['tclsh'], input=pre + 'set ::env(OT_ECO_GLOBAL_CONNECT) 0\n' + b, text=True,
+                                     capture_output=True)
+                self.assertEqual(off.stdout, '')
+                self.assertLess(text.index('# OT_PG_DEFAULT_CONNECT_END'), text.index('# OT_PG_STRICT_FINAL_BEGIN'))
+                self.assertLess(text.index('# OT_PG_DEFAULT_CONNECT_END'), text.rindex('write_db '))
+                if name == 'hold_eco.tcl':
+                    self.assertLess(text.index('filler_placement $ot_fill'), text.index('# OT_PG_DEFAULT_CONNECT_BEGIN'))
+                    self.assertLess(text.index('# OT_PG_DEFAULT_CONNECT_END'), text.rindex('extract_parasitics '))
 
 
 if __name__ == '__main__':
