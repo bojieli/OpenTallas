@@ -7,7 +7,7 @@
 //   "c CMD u hex" (cmd != 0), "c SUI u pidx", "c XCI u", "c EMB u", "c SEG u base", "c DONE u", "c FAULT code" (rise),
 //   "c MISMATCH" (lockstep), and at the end "c END fault code mismatches".
 module tb_mu_cmd_cal;
-    parameter integer NU = 1, MUT = 0, LOCKSTEP = 0, UVM_STRIDE = 16384, PIDX_STRIDE = 64;
+    parameter integer NU = 1, MUT = 0, LOCKSTEP = 0, UVM_STRIDE = 16384, PIDX_STRIDE = 64, BOUNDARY_RELOC = 0;
     localparam integer UB = (NU > 1) ? $clog2(NU) : 1;
     reg ck = 1'b0;
     always #5 ck = ~ck;
@@ -17,7 +17,7 @@ module tb_mu_cmd_cal;
     wire [115:0] cmd; wire [UB-1:0] cmd_user, done_user; wire loc_emb, loc_seg, su_issue, xc_issue, image_ready, running, done, fault;
     wire [1087:0] tl, r_tl;
     wire [11:0] loc_base; wire [8:0] su_pidx; wire [75:0] pobs; wire [68:0] dobs; wire [NU-1:0] running_u; wire [5:0] fcode;
-    qfd_dv_cmd_cal_mu #(.MUT(MUT), .NU(NU), .UVM_STRIDE(UVM_STRIDE), .PIDX_STRIDE(PIDX_STRIDE)) dut (.ck(ck), .rst_n(rst_n),
+    qfd_dv_cmd_cal_mu #(.MUT(MUT), .NU(NU), .BOUNDARY_RELOC(BOUNDARY_RELOC), .UVM_STRIDE(UVM_STRIDE), .PIDX_STRIDE(PIDX_STRIDE)) dut (.ck(ck), .rst_n(rst_n),
         .pw_v(pw_v), .pw_addr(pw_addr), .pw_data(pw_data), .dw_v(dw_v), .dw_addr(dw_addr), .dw_data(dw_data),
         .start(start), .stage(stage), .start_user(start_user), .start_rng(1'b0), .start_first(10'd0), .start_cnt(10'd0), .cmd(cmd), .tl(tl), .cmd_user(cmd_user), .loc_emb(loc_emb),
         .loc_seg(loc_seg), .loc_base(loc_base), .su_issue(su_issue), .su_pidx(su_pidx), .xc_issue(xc_issue),

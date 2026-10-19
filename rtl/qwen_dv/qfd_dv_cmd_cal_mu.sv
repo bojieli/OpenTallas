@@ -75,6 +75,7 @@ module qfd_dv_cmd_cal_mu #(
     parameter integer UVM_STRIDE = 0,               // per-user VM / landing base stride (address-field units)
     parameter integer PIDX_STRIDE = 0,              // per-user SU program-index stride
     parameter integer UTAG_LSB = 6,                 // XC tag bit of the user field
+    parameter integer BOUNDARY_RELOC = 0,         // opt-in actual local ROOT/BTAB/STREAM joins; no XPF qualification
     parameter integer UFOLD = 0,                    // 1: user into STN cmd[52:51] / AMAX cmd[9:8] (NU > 1, UB <= 2)
     parameter integer CTX_DW = 0                    // 1: DW5 / DW6 = the MU context record (ctx_dw / ctx_load)
 ) (
@@ -282,6 +283,10 @@ module qfd_dv_cmd_cal_mu #(
     wire [9:0]    up = (NU > 1 && MUT != 12) ? 10'(ru) * 10'(PIDX_STRIDE) : 10'd0;
     wire [24:0]   r_ar = {1'b0, ic[27:4]} + ub, r_dd = {1'b0, ic[51:28]} + ub, r_em = {1'b0, ic[77:54]} + ub,
                   r_db = {1'b0, ic[49:26]} + ub;
+    wire [24:0] r_ss = {1'b0, ic[34:11]} + ub, r_rx = {1'b0, ic[59:36]} + ub;
+    wire [9:0] bt_offset = ru == 0 ? 10'd0 : ru == 1 ? 10'd272 : ru == 2 ? 10'd344 : 10'd416;
+    wire [9:0] r_bt = {1'b0, ic[23:15]} + ((MUT == 18 || ic[50]) ? 10'd0 : bt_offset);
+    wire [9:0] bt_end = {1'b0, ic[23:15]} + {2'd0,ic[14:7]};
     wire [9:0]    r_px = {1'b0, ic[12:4]} + up;
     reg  [115:0]  rc; reg r_bad;
     always @* begin
@@ -302,6 +307,27 @@ module qfd_dv_cmd_cal_mu #(
                       end
                 default: ;
             endcase
+            // Actual table loader ABI: ROOT addresses are local VM elements;
+            // STN scale addresses are BTAB words. Never truncate a global ME
+            // address into either memory. STREAM tags retain their low op tag.
+            if (BOUNDARY_RELOC != 0) begin
+                if (i_kind == 3'd4 && (ic[27:4] >= UVM_STRIDE || ic[51:28] >= UVM_STRIDE || ic[77:54] >= UVM_STRIDE)) r_bad = 1'b1;
+                if (i_kind == 3'd2 && ic[24] && ic[49:26] >= UVM_STRIDE) r_bad = 1'b1;
+                if (i_kind == 3'd1 && ic[12:4] >= PIDX_STRIDE) r_bad = 1'b1;
+                if (i_kind == 3'd3) begin
+                    if (MUT != 17) begin rc[34:11] = r_ss[23:0]; rc[59:36] = r_rx[23:0]; end
+                    if (ic[34:11] >= UVM_STRIDE || ic[59:36] >= UVM_STRIDE ||
+                        r_ss >= 25'd16384 || r_rx >= 25'd16384) r_bad = 1'b1;
+                end
+                if (i_kind == 3'd2) begin
+                    rc[23:15] = r_bt[8:0];
+                    if (ic[6] || (ic[50] ? (ic[23:15] < 9'd72 || bt_end > 10'd272) : bt_end > 10'd72) || r_bt >= 10'd512) r_bad = 1'b1;
+                end
+                if (i_kind == 3'd5) begin
+                    if (ic[6 + UTAG_LSB +: UB] != {UB{1'b0}}) r_bad = 1'b1;
+                    rc[6 + UTAG_LSB +: UB] = (MUT == 19) ? {UB{1'b0}} : ru;
+                end
+            end
             // STN user (UFOLD): beside the dbase relocation above, any dst
             if (UFOLD != 0 && i_kind == 3'd2) begin
                 if (ic[52:51] != 2'd0) r_bad = 1'b1;
@@ -311,6 +337,10 @@ module qfd_dv_cmd_cal_mu #(
     end
     generate if (UFOLD != 0 && (NU < 2 || UB > 2)) begin : g_ufold_bad
         initial $error("qfd_dv_cmd_cal_mu: UFOLD needs 2 <= NU <= 4");
+    end endgenerate
+
+    generate if (BOUNDARY_RELOC != 0 && (NU < 2 || NU > 4 || UVM_STRIDE != 4096 || PIDX_STRIDE != 128 || UTAG_LSB > 26)) begin : g_boundary_bad
+        initial $error("qfd_dv_cmd_cal_mu: BOUNDARY_RELOC requires actual NU2..4/VM4096/PROG128 ABI");
     end endgenerate
 
     // ================================================================ sequential
