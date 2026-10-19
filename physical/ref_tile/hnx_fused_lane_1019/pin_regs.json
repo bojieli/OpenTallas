@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hnx_fused_lane",
+ "enable": false,
+ "reason": "every lane input is captured by a pin flop (dv_q/dop_q/dx_q/dd_q, rv_q/rd_q, r_vq/r_dq, lid_q) and every output (rq_*, wq_*, up_*, fin, flt) is a flop Q in the RTL; the VM return edge RR+1 is counted from these flops, so automatic pin registers would break the fixed calendar"
+}
