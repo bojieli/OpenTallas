@@ -350,6 +350,17 @@ def spec(S, kind):
                     hck_inputs=[x[0] if len(x) == 2 else f'{x[0]}: {len(x[2])} hck bits' for x in hin],
                     hck_outputs=[x[0] if len(x) == 2 else f'{x[0]}: {len(x[2])} hck bits' for x in hout], mixed_domain_ports=mixed,
                     critical=CRITICAL.get(kind)))
+    if kind in ('grp', 'grp_h') and os.environ.get('OT_KV_GRP_SQUARE', '0') == '1':
+        sp['structural_change'] = ('SAFE 10-19: replace the 220x1186 long strip with a pin-bound 388.8 square; '
+                                   'four 43.2-lattice SRAM origins in a compact lower 2x2 bank leave a full-width '
+                                   'upper standard-cell band. DOMSPLIT retains single-domain PC words. '
+                                   'No RTL latency changes; MU-DIE-KV must reserve the new square slot.')
+        sp['kits_b']['pin_bound_waiver'] = ('E 2169 bits / 388.8 = 5.58 pins/um; synthesis std area ~24,723 um2 '
+                                         'plus four SRAMs ~15,575 um2. Outline cannot shrink to 40% util '
+                                         'without changing the die-facing bus allocation. Coordinator accepted '
+                                         'this pin-bound area waiver for gate review.')
+        sp['route']['peak_ram_gb'] = 64
+        sp['job']['reroute_reason'] = {'kind': 'rtl_change', 'reason': sp['structural_change']}
     if sdc:
         sp['sdc_extra'] = [sdc]
         if kind in ('grp', 'grp_h'):

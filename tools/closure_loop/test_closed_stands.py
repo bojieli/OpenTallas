@@ -81,7 +81,7 @@ class Gate(unittest.TestCase):
     def test_constants(self):
         self.assertEqual(TL.CLOSED_STANDS_KINDS, ("die_window", "slot_change", "param_change", "rtl_change", "evidence_gap",
                                                   "pin_register", "native_launch", "native_capture",
-                                                  "native_spread", "flow_failure"))
+                                                  "native_spread", "flow_failure", "pin_order"))
         self.assertEqual(TL.DIE_WINDOW_CUT_MIN, 0.6)
 
     def test_new_block_and_unclosed_history_pass(self):

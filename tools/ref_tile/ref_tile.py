@@ -317,8 +317,56 @@ def reset_landing_plan(s: dict) -> dict | None:
     ck = pr.get("clock") or rl.get("clock") or (cks[0] if len(cks) == 1 else None)
     if not ck or ck not in cks:
         raise SpecError(f"spec: multi-clock kit ({', '.join(cks)}): name the landing clock in reset_landing.clock")
-    return {"enable": True, "stages": st, "clock": ck, "reset_ports": list(resets), "rule": RESET_LANDING_RULE,
+    plan = {"enable": True, "stages": st, "clock": ck, "reset_ports": list(resets), "rule": RESET_LANDING_RULE,
             "reset_release_cycles": st}
+    cp = rl.get("copies")
+    if cp is not None:
+        # KV-RELAYGEN 2026-10-19: {"<reset port>": N} -> the last landing stage has N KEPT identical copies, spread over the
+        # core's reset loads by reset_relay_split (ot_rst_copies.tcl); latency unchanged (the copies are the last stage)
+        if (not isinstance(cp, dict) or not cp or any(p not in resets for p in cp)
+                or any(not isinstance(n, int) or isinstance(n, bool) or not 1 <= n <= 64 for n in cp.values())):
+            raise SpecError('spec: reset_landing.copies must map declared reset_ports to integers 1..64')
+        if st < 2:
+            raise SpecError("spec: reset_landing.copies needs stages >= 2")
+        if not reset_relay_split_plan(s):
+            raise SpecError('spec: reset_landing.copies needs "reset_relay_split" (the synthesis pass that uses them)')
+        plan["copies"] = dict(cp)
+    return plan
+
+
+RESET_RELAY_SPLIT_RULE = ("KV-RELAYGEN 2026-10-19 / SAFE-DESIGN item 3: a reset relay copy drives <= ~256 loads; the "
+                          "RTL's kept identical relay copies take the loads by region (physical/common_flow/ot_rst_copies.tcl)")
+
+
+def reset_relay_split_plan(s: dict) -> dict | None:
+    """spec "reset_relay_split": {"max_loads": 256[, "re": "<family wire regexp>"]} -> plan, None when absent"""
+    rs = s.get("reset_relay_split")
+    if rs is None:
+        return None
+    if not isinstance(rs, dict):
+        raise SpecError('spec: reset_relay_split must be an object ({"max_loads": 256})')
+    mx = rs.get("max_loads", 256)
+    if not isinstance(mx, int) or isinstance(mx, bool) or not 16 <= mx <= 4096:
+        raise SpecError("spec: reset_relay_split.max_loads must be an integer 16..4096")
+    rx = rs.get("re")
+    if rx is not None:
+        if not isinstance(rx, str) or not rx or any(c in rx for c in "'\"\n"):
+            raise SpecError("spec: reset_relay_split.re must be a plain regexp string")
+        re.compile(rx)
+    return {"max_loads": mx, **({"re": rx} if rx else {})}
+
+
+def reset_relay_split_vars(s: dict) -> list:
+    plan = reset_relay_split_plan(s)
+    if not plan:
+        return []
+    out = [f"--orfs-var OT_RST_COPIES_MAX={plan['max_loads']}"]
+    if plan.get("re"):
+        out.append(f"--orfs-var OT_RST_COPIES_RE={shq(plan['re'])}")
+    rl = reset_landing_plan(s)
+    if rl and rl.get("enable") and rl.get("copies"):
+        out.append("--orfs-var OT_RST_LAND_COPIES=" + ",".join(f"{p}={n}" for p, n in sorted(rl["copies"].items())))
+    return out
 
 
 def reset_landing_vars(s: dict) -> list:
@@ -1090,7 +1138,7 @@ def outline(s: dict, slot: dict | None, area_um2: float | None, blocks: list) ->
     return snap_up(w, og), snap_up(h, og), f"util {util} of std {area:.0f} + macros {mac:.0f} um2"
 
 
-def util_metrics(std_area, blocks, core, halo=HALO_UM):
+def util_metrics(std_area, blocks, core, halo=HALO_UM, halo_x=None):
     """Utilisation of a kit.  Without macros: (std / core), exactly the old (std + 0) / core.  With macros the
     gated number is the standard-cell DENSITY over the placeable area, std / (core - macro footprints - halos), because
     macros never take standard cells; total fill (std + macros) / core is reported and bounded by FILL_MAX."""
@@ -1098,7 +1146,8 @@ def util_metrics(std_area, blocks, core, halo=HALO_UM):
     total = (std_area + mac) / core
     if not blocks:
         return {"util": total, "density": total, "total_fill": total, "macro_um2": 0.0, "placeable_um2": core}
-    keep = min(core, sum((b["w"] + 2 * halo) * (b["h"] + 2 * halo) for b in blocks))
+    hx = halo if halo_x is None else halo_x             # route.macro_halo_x_um: wider halo on the W/E (pin) faces
+    keep = min(core, sum((b["w"] + 2 * hx) * (b["h"] + 2 * halo) for b in blocks))
     placeable = max(core - keep, 1e-9)
     dens = std_area / placeable
     return {"util": dens, "density": dens, "total_fill": total, "macro_um2": mac, "placeable_um2": placeable}
@@ -1448,7 +1497,8 @@ def floorplan_checks(s: dict, W: float, H: float, blocks: list, std_area: float 
     core = (x1c - x0c) * (y1c - y0c)
     if std_area:
         halo = float(s["route"].get("macro_halo_um", HALO_UM)) if s.get("recipe", 1) >= 2 else HALO_UM
-        um = util_metrics(std_area, blocks, core, halo)
+        hx = float(s["route"].get("macro_halo_x_um", halo)) if s.get("recipe", 1) >= 2 else halo
+        um = util_metrics(std_area, blocks, core, halo, hx)
         sev, ok = util_severity(um)
         if not ok:
             msg = (f"utilisation: std-cell density {um['density']:.0%} of placeable {um['placeable_um2']:.0f} um2, total fill "
@@ -1895,7 +1945,10 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
         extra.append(f"--orfs-var MACRO_PLACEMENT_TCL=/src/{kd}/place.tcl")
         extra += [f"--macro-view {view_name(v)}={v}" for v in views]
         h = float(s["route"].get("macro_halo_um", HALO_UM))
-        extra.append(f"--macro-place-halo {h} {h}")
+        # optional route.macro_halo_x_um: a wider W/E halo (MACRO_PLACE_HALO "x y") keeps the pin-escape zone of
+        # macros whose pins sit on their W/E faces free of cells without widening the N/S gaps between stacked macros
+        hx = float(s["route"].get("macro_halo_x_um", h))
+        extra.append(f"--macro-place-halo {hx:g} {h:g}" if hx != h else f"--macro-place-halo {h} {h}")
     if s.get("clock", "spine" if s["kind"] == "cluster" else "cts") == "spine":
         extra.append(f"--orfs-var OT_SPINE_PORT={s['clock_port']}")
         # el1011-q-kvd 2026-10-12: a hard child's clock pin is its OWN spine leaf.  Shared bins balanced the leaf to the
@@ -2033,6 +2086,7 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
     extra += hold_budget_vars(s)
     extra += pin_regs_vars(s)
     extra += reset_landing_vars(s)
+    extra += reset_relay_split_vars(s)
     # reviewed CDC kits: the lint-tagged registers keep their RTL names through yosys fsm (cdc_fsm_guard.py)
     extra += cdc_fsm_guard.orfs_vars(s, ROOT)
     if s.get("keep_pin_regs"):

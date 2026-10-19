@@ -109,6 +109,10 @@ GRP_LEG_CHILDREN = ('bcdc0', 'bcdc1', 'bcdc2', 'bcdc3', 'drain')
 GRP_LCAL_RLY = int(os.environ.get('OT_KV_GRP_LCAL_RLY', '1')) if KITS else 0
 _LCAL_R = re.compile(r'w_lcal__r_\w+(?:\[\d+:\d+\])?')
 _CHILD = re.compile(r'^(\s*\w+(?: #\(.*?\))? u_(\w+) \()(.*)(\);)$')
+DOMSPLIT = os.environ.get('OT_KV_DOMSPLIT', '0') == '1'
+DOMSPLIT_DIR = 'results/arch/qwen_kv_domsplit_1019'
+DOMSPLIT_TABLE = DOMSPLIT_DIR + '/producer_domains.json'
+LVL_LAND_RTL = 'rtl/qwen_sys/static_kv_20261014/qkd_kv_lvl_land.sv'
 RTL_FILE = ('rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles' + ('_hroot' if HROOT else '') + ('_ff' if FANFOLD else '') +
             ('_ep' if os.environ.get('OT_KV_ECTL_PAIR', '0') == '1' else '') + ('_k' if KITS else '') +
             ('_mu' if os.environ.get('OT_KV_MU', '0') == '1' else '') +   # MU-ADOPT-KV 10-19 (kv_static.MU)
