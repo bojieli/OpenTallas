@@ -153,4 +153,47 @@ class ExpansionParameters(unittest.TestCase):
         p.write_text(json.dumps(r))
         with self.assertRaises(ValueError): self.bind(False)
 
+    def test_entire_or_single_ledger_removal_refused(self):
+        self.expand()
+        p=self.run/'expand.json'; original=json.loads(p.read_text())
+        for field in ('all', 'one', 'all_and_leaf_binding'):
+            with self.subTest(field=field):
+                r=copy.deepcopy(original)
+                if field == 'one':
+                    del r['parameter_instances']['f__u0']
+                else:
+                    r.pop('parameter_instances')
+                if field == 'all_and_leaf_binding':
+                    r['leaves']={}
+                    r.pop('frames',None)
+                p.write_text(json.dumps(r))
+                with self.assertRaisesRegex(ValueError,'ledger incomplete'):
+                    self.bind()
+
+    def test_genuinely_parameterless_legacy_leaf_compatible(self):
+        self.expand()
+        report=json.loads((self.run/'expand.json').read_text())
+        side=json.loads((self.run/'case_kv/die.v.params.json').read_text())
+        mod='ot_qwen_tp8_pv_slice_t'; inst='f__u0'
+        (self.root/self.rtl[mod]).write_text(f'module {mod}(input wire a,output wire y); assign y=a; endmodule\n')
+        report['parameter_instances'].pop(inst); side.pop(inst)
+        (self.run/'expand.json').write_text(json.dumps(report))
+        (self.run/'case_kv/die.v.params.json').write_text(json.dumps(side))
+        self.bind()
+
+    def test_dynamic_indexed_leaf_cannot_vanish_with_report(self):
+        self.expand()
+        p=self.run/'expand.json'; report=json.loads(p.read_text())
+        report.pop('parameter_instances'); report['leaves']={}; report.pop('frames',None)
+        p.write_text(json.dumps(report))
+        index={}
+        for mod, file in self.rtl.items():
+            for module in B.PB.parse_modules((self.root/file).read_text(),str(self.root/file)):
+                index[module.name]=module
+        args=[str(self.run/'case_kv/die.v'),'--expanded',str(p),'--out-dir',str(self.root/'bound'),
+              '--diagnostic-parameter-profiles']
+        with patch.object(E,'RTL',{}), patch.object(B.PB,'rtl_index',return_value=(index,{})):
+            with self.assertRaisesRegex(ValueError,'ledger incomplete'):
+                B.main(args)
+
 if __name__=='__main__': unittest.main(verbosity=2)
