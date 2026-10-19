@@ -61,6 +61,29 @@ def main():
                            (prep / 'prep.json', ref['prep_sha256'])):
         if sha(path) != expected:
             raise SystemExit(f'canonical input mismatch: {path}')
+    # The JSON identity alone does not establish that the large weight payloads
+    # it names still match. Check every layer/die and head NPZ before reuse.
+    prep_record = json.loads((prep / 'prep.json').read_text())
+    image_hashes = {}
+    layer_shapes = set()
+    head_dies = set()
+    for image in prep_record['images']:
+        name = image['npz']
+        if Path(name).name != name or name in image_hashes:
+            raise SystemExit('invalid or duplicate checkpoint payload name')
+        actual = sha(prep / name)
+        if actual != image['npz_sha256']:
+            raise SystemExit(f'checkpoint payload mismatch: {name}')
+        image_hashes[name] = actual
+        if image['kind'] == 'layer':
+            layer_shapes.add((image['layer'], image['die']))
+        elif image['kind'] == 'head':
+            head_dies.add(image['die'])
+        else:
+            raise SystemExit('unexpected checkpoint image kind')
+    if (layer_shapes != {(layer, die) for layer in range(36) for die in range(4)}
+            or head_dies != set(range(4)) or len(image_hashes) != 148):
+        raise SystemExit('checkpoint payload coverage is not full 36-layer TP4 + head')
     tokens = [int(t) for t in tokens_path.read_text().split()]
     if len(tokens) != 8192:
         raise SystemExit('expected exactly 8192 canonical prompt tokens')
@@ -97,6 +120,7 @@ def main():
                     common_prefix_sha256=hashlib.sha256(
                         ('\n'.join(map(str, tokens[:-1])) + '\n').encode()).hexdigest(),
                     checkpoint_prep_sha256=ref['prep_sha256'],
+                    checkpoint_payload_sha256=image_hashes,
                     embedding_sha256=ref['embedding_npz_sha256'],
                     arithmetic='released checkpoint TP4, original ISA rounding/reduction order',
                     ownership='each new oracle process owns all layer K/V stores; only immutable pre-divergence history shared',
