@@ -1,0 +1,16 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/codex-mu-hwin-centralv6-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-mu-hwin-centralv6-1019
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-mu-hwin-centralv6-1019
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-mu-hwin-centralv6-1019
+ot-run: ot-epyc8       admits  1264 GB (avail 962, growth 77, headroom 0, waiters 0/0 GB) load 23/128 running 19 disk 275 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-mu-hwin-centralv6-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-mu-hwin-centralv6-1019
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-1532205-1792431030 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+MU_RESET PASS checks 261 regions653 release_edges3 async_assert1
+- rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_mu_reset.sv:14: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 261ns; walltime 0.000 s; speed 1.854 ms/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-1532205-1792431030): exit 0

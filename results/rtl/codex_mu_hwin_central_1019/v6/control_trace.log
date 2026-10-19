@@ -1,0 +1,296 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/codex-mu-hwin-centralv6-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-mu-hwin-centralv6-1019
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-mu-hwin-centralv6-1019
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-mu-hwin-centralv6-1019
+ot-run: ot-epyc8       admits  1225 GB (avail 946, growth 88, headroom 0, waiters 0/0 GB) load 30/128 running 21 disk 271 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-mu-hwin-centralv6-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-mu-hwin-centralv6-1019
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-1576613-1792431292 after 0 s
+[
+ {
+  "net": "_43434_/Y (AND2x2_ASAP7_75t_R)",
+  "loads": 345,
+  "up": [
+   [
+    "ff:u_ot_pr_core.g_live_count.count_r[]/QN",
+    7
+   ]
+  ],
+  "down": [
+   [
+    "ff:u_ot_pr_core.eD[][]/D",
+    330
+   ],
+   [
+    "ff:u_ot_pr_core.g_event_broadcast[].lw_r[]/D",
+    42
+   ],
+   [
+    "ff:u_ot_pr_core.crm[]/D",
+    23
+   ],
+   [
+    "ff:u_ot_pr_core.g_event_broadcast[].g_check_lookahead.invalid_r/D",
+    16
+   ],
+   [
+    "ff:u_ot_pr_core.g_event_broadcast[].rl_r[]/D",
+    15
+   ],
+   [
+    "ff:u_ot_pr_core.crl[]/D",
+    6
+   ],
+   [
+    "ff:u_ot_pr_core.esel[]/D",
+    4
+   ]
+  ]
+ },
+ {
+  "net": "_57797_/Y (AND3x1_ASAP7_75t_R)",
+  "loads": 300,
+  "up": [
+   [
+    "ff:u_ot_pr_core.mw_payload[]/QN",
+    2
+   ],
+   [
+    "ff:u_ot_pr_core.mw_valid/QN",
+    1
+   ]
+  ],
+  "down": [
+   [
+    "ff:u_ot_pr_core.eD[][]/D",
+    330
+   ],
+   [
+    "ff:u_ot_pr_core.g_event_broadcast[].g_check_lookahead.invalid_r/D",
+    16
+   ]
+  ]
+ },
+ {
+  "net": "_43360_/Y (NAND2x2_ASAP7_75t_R)",
+  "loads": 152,
+  "up": [
+   [
+    "ff:u_ot_pr_core.g_live_count.count_r[]/QN",
+    7
+   ]
+  ],
+  "down": [
+   [
+    "ff:u_ot_pr_core.eD[][]/D",
+    336
+   ],
+   [
+    "ff:u_ot_pr_core.g_event_broadcast[].lw_r[]/D",
+    95
+   ],
+   [
+    "ff:u_ot_pr_core.g_event_broadcast[].g_check_lookahead.invalid_r/D",
+    16
+   ]
+  ]
+ },
+ {
+  "net": "_57788_/Y (OR3x1_ASAP7_75t_R)",
+  "loads": 124,
+  "up": [
+   [
+    "ff:u_ot_pr_core.mw_payload[]/QN",
+    2
+   ],
+   [
+    "ff:u_ot_pr_core.mw_valid/QN",
+    1
+   ]
+  ],
+  "down": [
+   [
+    "ff:u_ot_pr_core.eD[][]/D",
+    336
+   ],
+   [
+    "ff:u_ot_pr_core.g_event_broadcast[].g_check_lookahead.invalid_r/D",
+    16
+   ],
+   [
+    "ff:u_ot_pr_core.evld[]/D",
+    16
+   ]
+  ]
+ },
+ {
+  "net": "_64374_/Y (OR3x1_ASAP7_75t_R)",
+  "loads": 65,
+  "up": [
+   [
+    "ff:u_ot_pr_core.g_live_count.count_r[]/QN",
+    7
+   ],
+   [
+    "ff:u_ot_pr_core.armed/QN",
+    1
+   ],
+   [
+    "ff:u_ot_pr_core.mc_valid/QN",
+    1
+   ],
+   [
+    "ff:u_ot_pr_core.mc_payload[]/QN",
+    1
+   ]
+  ],
+  "down": [
+   [
+    "ff:u_ot_pr_core.crl[]/D",
+    24
+   ],
+   [
+    "ff:u_ot_pr_core.crm[]/D",
+    22
+   ]
+  ]
+ },
+ {
+  "net": "_61840_/Y (AND2x2_ASAP7_75t_R)",
+  "loads": 56,
+  "up": [
+   [
+    "ff:u_ot_pr_core.esel[]/QN",
+    2
+   ]
+  ],
+  "down": [
+   [
+    "ff:u_ot_pr_core.eD[][]/D",
+    62
+   ],
+   [
+    "ff:u_ot_pr_core.g_event_broadcast[].g_check_lookahead.invalid_r/D",
+    3
+   ],
+   [
+    "ff:u_ot_pr_core.g_event_mem[].u_attr.wv/D",
+    3
+   ]
+  ]
+ },
+ {
+  "net": "_60827_/Y (OA21x2_ASAP7_75t_R)",
+  "loads": 54,
+  "up": [
+   [
+    "ff:u_ot_pr_core.rp[]/QN",
+    47
+   ],
+   [
+    "ff:u_ot_pr_core.vld[]/QN",
+    47
+   ],
+   [
+    "ff:u_ot_pr_core.g_write_slot[].g_copy[].we_r/QN",
+    47
+   ],
+   [
+    "ff:u_ot_pr_core.sl[]/QN",
+    47
+   ],
+   [
+    "ff:u_ot_pr_core.u_retire.fd[]/QN",
+    32
+   ],
+   [
+    "macro:u_ot_pr_core.u_retire.g_bank[].u_m/rd_out",
+    32
+   ],
+   [
+    "ff:u_ot_pr_core.tmr[]/QN",
+    32
+   ],
+   [
+    "ff:u_ot_pr_core.u_retire.g_select[].hit_r/QN",
+    4
+   ],
+   [
+    "ff:u_ot_pr_core.h_rfr/QN",
+    1
+   ],
+   [
+    "ff:u_ot_pr_core.ks_valid/QN",
+    1
+   ]
+  ],
+  "down": [
+   [
+    "ff:u_ot_pr_core.rp[]/D",
+    47
+   ],
+   [
+    "ff:u_ot_pr_core.rpb[]/D",
+    6
+   ],
+   [
+    "ff:u_ot_pr_core.h_rfr/D",
+    1
+   ]
+  ]
+ },
+ {
+  "net": "_62623_/Y (OR3x1_ASAP7_75t_R)",
+  "loads": 54,
+  "up": [
+   [
+    "ff:u_ot_pr_core.g_event_mem[].fresh_r/QN",
+    1
+   ],
+   [
+    "ff:u_ot_pr_core.eqn[]/QN",
+    1
+   ],
+   [
+    "ff:u_ot_pr_core.okq[]/QN",
+    1
+   ]
+  ],
+  "down": [
+   [
+    "ff:u_ot_pr_core.fd[][]/D",
+    47
+   ],
+   [
+    "ff:u_ot_pr_core.g_output_select[].g_event[].g_slice[].select_r/D",
+    12
+   ],
+   [
+    "ff:u_ot_pr_core.g_event_mem[].g_binary_head.upper_pointer_r[]/D",
+    6
+   ],
+   [
+    "ff:u_ot_pr_core.g_event_mem[].pb_r[]/D",
+    6
+   ],
+   [
+    "ff:u_ot_pr_core.g_output_select[].g_event[].g_collision_raw.rp_r/D",
+    4
+   ],
+   [
+    "ff:u_ot_pr_core.g_output_select[].g_event[].replay_r/D",
+    4
+   ],
+   [
+    "ff:u_ot_pr_core.g_output_select[].g_event[].g_collision_raw.tx_r/D",
+    4
+   ],
+   [
+    "ff:u_ot_pr_core.g_event_mem[].fresh_r/D",
+    1
+   ]
+  ]
+ }
+]
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-1576613-1792431292): exit 0

@@ -1,0 +1,17 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/codex-mu-hwin-centralv6-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-mu-hwin-centralv6-1019
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-mu-hwin-centralv6-1019
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-mu-hwin-centralv6-1019
+ot-run: ot-epyc8       admits  1209 GB (avail 950, growth 104, headroom 0, waiters 0/0 GB) load 27/128 running 22 disk 272 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-mu-hwin-centralv6-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-mu-hwin-centralv6-1019
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-1553634-1792431183 after 1 s
+textbook_lint: WARN dsdv_mu_hwin cells 50,395 flops 9,890 depth 511.8 ps util None reach None um (1.3 s)
+textbook_lint: INFO reset_landing {"max":2,"ports":[{"port":"rst_n","sinks":1,"flops":1,"macros":0}]}
+textbook_lint: INFO clock_roots max_root_sinks=9974 root=port:ck rule=PASS: 9,974 sinks on the largest root; no measured clock tree (no --cts gate evidence)
+textbook_lint: WARN high_fanout: net _43434_/Y (AND2x2_ASAP7_75t_R): 345 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast
+textbook_lint: WARN high_fanout: net _57797_/Y (AND3x1_ASAP7_75t_R): 300 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast
+textbook_lint: WARN high_fanout: net u_ot_pr_core.u_rr.g_local[21].local_r$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R): 205 loads (205 flops, e.g. u_ot_pr_core.gxb[0]$_DFFE_PN0P_) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast
+textbook_lint: WARN high_fanout: net u_ot_pr_core.u_rr.g_local[22].local_r$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R): 180 loads (180 flops, e.g. u_ot_pr_core.mu_c[0]$_DFF_PN0_) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-1553634-1792431183): exit 0

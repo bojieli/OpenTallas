@@ -1,0 +1,17 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/codex-mu-hwin-centralv6-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-mu-hwin-centralv6-1019
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-mu-hwin-centralv6-1019
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-mu-hwin-centralv6-1019
+ot-run: ot-epyc8       admits  1281 GB (avail 964, growth 68, headroom 0, waiters 0/0 GB) load 23/128 running 18 disk 276 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-mu-hwin-centralv6-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-mu-hwin-centralv6-1019
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-1531018-1792431015 after 0 s
+view=asap7 corner=TT block=dsdv_mu_hwin top=dsdv_mu_hwin purpose=characterization
+  pnr:   wirelength=None um vias=None DRC=None antenna_nets=None Fmax=1398.29 MHz
+  drv:   max_slew=None max_cap=None max_fanout=None
+  macro: ot_sram_1r1w_64x16_m1 1024 bits (18.36 x 20.79 um) lef=ot_sram_1r1w_64x16_m1.lef lib=ot_sram_1r1w_64x16_m1_tt.lib
+  halo:  10.8 10.8 um (command line); placed macros=None
+  STATUS: NOT_MET (did not meet in: place_and_route)  <-- failed engineering acceptance
+  wrote /srv/opentallas-scratch/claude/codex-mu-hwin-centralv6-1019/src/../sizing/physical.json
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-1531018-1792431015): exit 0

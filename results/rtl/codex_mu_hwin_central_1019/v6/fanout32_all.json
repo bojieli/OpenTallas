@@ -1,0 +1,534 @@
+{
+ "cells": 50395,
+ "flops": 9890,
+ "icgs": 0,
+ "macros": 84,
+ "findings": {
+  "high_fanout": [
+   "net _43434_/Y (AND2x2_ASAP7_75t_R): 345 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net _57797_/Y (AND3x1_ASAP7_75t_R): 300 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net u_ot_pr_core.u_rr.g_local[21].local_r$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R): 205 loads (205 flops, e.g. u_ot_pr_core.gxb[0]$_DFFE_PN0P_) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net u_ot_pr_core.u_rr.g_local[22].local_r$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R): 180 loads (180 flops, e.g. u_ot_pr_core.mu_c[0]$_DFF_PN0_) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net u_ot_pr_core.u_rr.g_local[0].local_r$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R): 161 loads (161 flops, e.g. u_ot_pr_core.armed$_DFFE_PN0P_) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net _43360_/Y (NAND2x2_ASAP7_75t_R): 152 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net _57788_/Y (OR3x1_ASAP7_75t_R): 124 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net u_ot_pr_core.u_rr.g_local[20].local_r$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R): 96 loads (96 flops, e.g. u_ot_pr_core.tm1[0]$_DFF_PN1_) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net _64374_/Y (OR3x1_ASAP7_75t_R): 65 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net _61840_/Y (AND2x2_ASAP7_75t_R): 56 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net _62623_/Y (OR3x1_ASAP7_75t_R): 54 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net _60827_/Y (OA21x2_ASAP7_75t_R): 54 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net _60220_/Y (OR3x1_ASAP7_75t_R): 53 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net _56870_/Y (OR3x1_ASAP7_75t_R): 53 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net _50694_/Y (OA21x2_ASAP7_75t_R): 53 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net _44695_/Y (OR3x1_ASAP7_75t_R): 53 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net _50692_/Y (OR3x1_ASAP7_75t_R): 52 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net _55713_/Y (OR3x1_ASAP7_75t_R): 51 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net _56564_/Y (OR3x1_ASAP7_75t_R): 50 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net _50763_/Y (NOR3x1_ASAP7_75t_R): 50 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net _43358_/Y (AND5x2_ASAP7_75t_R): 50 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net _64781_/Y (OR3x1_ASAP7_75t_R): 49 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net _64072_/Y (OR3x1_ASAP7_75t_R): 49 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net _63499_/Y (OR3x1_ASAP7_75t_R): 49 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net _59780_/Y (OR3x1_ASAP7_75t_R): 49 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net _59377_/Y (OR3x1_ASAP7_75t_R): 49 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net _58195_/Y (OR3x1_ASAP7_75t_R): 49 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net _57675_/Y (OR3x1_ASAP7_75t_R): 49 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net _55419_/Y (OR3x1_ASAP7_75t_R): 49 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net _43359_/Y (AND2x2_ASAP7_75t_R): 49 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net _67343_/Y (OR2x2_ASAP7_75t_R): 48 loads (1 flops, e.g. u_ot_pr_core.rec_q$_DFF_PN0_) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net _68336_/Y (OR3x1_ASAP7_75t_R): 48 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net _67704_/Y (OR3x1_ASAP7_75t_R): 48 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net _61402_/Y (OR3x1_ASAP7_75t_R): 48 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net _60823_/Y (OAI21x1_ASAP7_75t_R): 48 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net u_ot_pr_core.u_rr.g_local[32].local_r$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R): 47 loads (47 flops, e.g. u_ot_pr_core.g_write_slot[0].g_copy[0].we_r$_DFF_PN0_) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net u_ot_pr_core.u_rr.g_local[33].local_r$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R): 47 loads (47 flops, e.g. u_ot_pr_core.g_write_slot[0].g_copy[1].we_r$_DFF_PN0_) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net u_ot_pr_core.u_rr.g_local[34].local_r$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R): 47 loads (47 flops, e.g. u_ot_pr_core.g_write_slot[0].g_copy[2].we_r$_DFF_PN0_) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net u_ot_pr_core.u_rr.g_local[35].local_r$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R): 47 loads (47 flops, e.g. u_ot_pr_core.g_write_slot[0].g_copy[3].we_r$_DFF_PN0_) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net u_ot_pr_core.u_rr.g_local[216].local_r$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R): 47 loads (47 flops, e.g. u_ot_pr_core.g_event_broadcast[0].lm_r[0]$_DFF_PN0_) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net u_ot_pr_core.u_rr.g_local[223].local_r$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R): 47 loads (47 flops, e.g. u_ot_pr_core.g_event_broadcast[1].lm_r[0]$_DFF_PN0_) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net u_ot_pr_core.u_rr.g_local[230].local_r$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R): 47 loads (47 flops, e.g. u_ot_pr_core.g_event_broadcast[2].lm_r[0]$_DFF_PN0_) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net u_ot_pr_core.u_rr.g_local[237].local_r$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R): 47 loads (47 flops, e.g. u_ot_pr_core.g_event_broadcast[3].lm_r[0]$_DFF_PN0_) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net u_ot_pr_core.u_rr.g_local[244].local_r$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R): 47 loads (47 flops, e.g. u_ot_pr_core.g_event_broadcast[4].lm_r[0]$_DFF_PN0_) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net u_ot_pr_core.u_rr.g_local[251].local_r$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R): 47 loads (47 flops, e.g. u_ot_pr_core.g_event_broadcast[5].lm_r[0]$_DFF_PN0_) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net u_ot_pr_core.u_rr.g_local[258].local_r$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R): 47 loads (47 flops, e.g. u_ot_pr_core.g_event_broadcast[6].lm_r[0]$_DFF_PN0_) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net u_ot_pr_core.u_rr.g_local[265].local_r$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R): 47 loads (47 flops, e.g. u_ot_pr_core.g_event_broadcast[7].lm_r[0]$_DFF_PN0_) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net u_ot_pr_core.u_rr.g_local[272].local_r$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R): 47 loads (47 flops, e.g. u_ot_pr_core.g_event_broadcast[8].lm_r[0]$_DFF_PN0_) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net u_ot_pr_core.u_rr.g_local[279].local_r$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R): 47 loads (47 flops, e.g. u_ot_pr_core.g_event_broadcast[9].lm_r[0]$_DFF_PN0_) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net u_ot_pr_core.u_rr.g_local[286].local_r$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R): 47 loads (47 flops, e.g. u_ot_pr_core.g_event_broadcast[10].lm_r[0]$_DFF_PN0_) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net u_ot_pr_core.u_rr.g_local[293].local_r$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R): 47 loads (47 flops, e.g. u_ot_pr_core.g_event_broadcast[11].lm_r[0]$_DFF_PN0_) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net u_ot_pr_core.u_rr.g_local[300].local_r$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R): 47 loads (47 flops, e.g. u_ot_pr_core.g_event_broadcast[12].lm_r[0]$_DFF_PN0_) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net u_ot_pr_core.u_rr.g_local[307].local_r$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R): 47 loads (47 flops, e.g. u_ot_pr_core.g_event_broadcast[13].lm_r[0]$_DFF_PN0_) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net u_ot_pr_core.u_rr.g_local[314].local_r$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R): 47 loads (47 flops, e.g. u_ot_pr_core.g_event_broadcast[14].lm_r[0]$_DFF_PN0_) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net u_ot_pr_core.u_rr.g_local[321].local_r$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R): 47 loads (47 flops, e.g. u_ot_pr_core.g_event_broadcast[15].lm_r[0]$_DFF_PN0_) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net u_ot_pr_core.g_event_mem[4].pb_r[2]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R): 47 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net _57793_/Y (AND2x2_ASAP7_75t_R): 44 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net _43432_/Y (OR4x1_ASAP7_75t_R): 42 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net u_ot_pr_core.g_event_mem[5].pb_r[2]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R): 42 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net u_ot_pr_core.mw_payload[8]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R): 38 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net _50988_/Y (AND4x1_ASAP7_75t_R): 38 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net u_ot_pr_core.mw_payload[10]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R): 37 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net u_ot_pr_core.mw_payload[9]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R): 36 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net _43469_/Y (AND4x1_ASAP7_75t_R): 36 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net u_ot_pr_core.g_event_mem[9].pb_r[1]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R): 36 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net _46197_/Y (AND4x1_ASAP7_75t_R): 35 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net _43704_/Y (AND4x1_ASAP7_75t_R): 35 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net u_ot_pr_core.g_event_mem[12].pb_r[1]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R): 35 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net u_ot_pr_core.g_event_mem[3].pb_r[2]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R): 35 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net _47854_/Y (AND4x1_ASAP7_75t_R): 34 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net _44862_/Y (AND4x1_ASAP7_75t_R): 34 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net _43452_/Y (AND4x1_ASAP7_75t_R): 33 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net _43355_/Y (AND5x1_ASAP7_75t_R): 33 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast"
+  ]
+ },
+ "refuse": {},
+ "metrics": {
+  "clock_roots": [
+   {
+    "root": "port:ck",
+    "ff": 9890,
+    "icg": 0,
+    "macro_pins": 84,
+    "example": "rst_n__ot_rl0$_DFF_P_"
+   }
+  ],
+  "hier_subblocks": 0,
+  "clock_max_root_sinks": 9974,
+  "clock_max_root": "port:ck",
+  "high_fanout_top": [
+   {
+    "net": "_43434_/Y (AND2x2_ASAP7_75t_R)",
+    "loads": 345,
+    "flops": 0
+   },
+   {
+    "net": "_57797_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 300,
+    "flops": 0
+   },
+   {
+    "net": "u_ot_pr_core.u_rr.g_local[21].local_r$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 205,
+    "flops": 205
+   },
+   {
+    "net": "u_ot_pr_core.u_rr.g_local[22].local_r$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 180,
+    "flops": 180
+   },
+   {
+    "net": "u_ot_pr_core.u_rr.g_local[0].local_r$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 161,
+    "flops": 161
+   },
+   {
+    "net": "_43360_/Y (NAND2x2_ASAP7_75t_R)",
+    "loads": 152,
+    "flops": 0
+   },
+   {
+    "net": "_57788_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 124,
+    "flops": 0
+   },
+   {
+    "net": "u_ot_pr_core.u_rr.g_local[20].local_r$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 96,
+    "flops": 96
+   },
+   {
+    "net": "_64374_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 65,
+    "flops": 0
+   },
+   {
+    "net": "_61840_/Y (AND2x2_ASAP7_75t_R)",
+    "loads": 56,
+    "flops": 0
+   },
+   {
+    "net": "_62623_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 54,
+    "flops": 0
+   },
+   {
+    "net": "_60827_/Y (OA21x2_ASAP7_75t_R)",
+    "loads": 54,
+    "flops": 0
+   },
+   {
+    "net": "_60220_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 53,
+    "flops": 0
+   },
+   {
+    "net": "_56870_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 53,
+    "flops": 0
+   },
+   {
+    "net": "_50694_/Y (OA21x2_ASAP7_75t_R)",
+    "loads": 53,
+    "flops": 0
+   },
+   {
+    "net": "_44695_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 53,
+    "flops": 0
+   },
+   {
+    "net": "_50692_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 52,
+    "flops": 0
+   },
+   {
+    "net": "_55713_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 51,
+    "flops": 0
+   },
+   {
+    "net": "_56564_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 50,
+    "flops": 0
+   },
+   {
+    "net": "_50763_/Y (NOR3x1_ASAP7_75t_R)",
+    "loads": 50,
+    "flops": 0
+   },
+   {
+    "net": "_43358_/Y (AND5x2_ASAP7_75t_R)",
+    "loads": 50,
+    "flops": 0
+   },
+   {
+    "net": "_64781_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 49,
+    "flops": 0
+   },
+   {
+    "net": "_64072_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 49,
+    "flops": 0
+   },
+   {
+    "net": "_63499_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 49,
+    "flops": 0
+   },
+   {
+    "net": "_59780_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 49,
+    "flops": 0
+   },
+   {
+    "net": "_59377_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 49,
+    "flops": 0
+   },
+   {
+    "net": "_58195_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 49,
+    "flops": 0
+   },
+   {
+    "net": "_57675_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 49,
+    "flops": 0
+   },
+   {
+    "net": "_55419_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 49,
+    "flops": 0
+   },
+   {
+    "net": "_43359_/Y (AND2x2_ASAP7_75t_R)",
+    "loads": 49,
+    "flops": 0
+   },
+   {
+    "net": "_67343_/Y (OR2x2_ASAP7_75t_R)",
+    "loads": 48,
+    "flops": 1
+   },
+   {
+    "net": "_68336_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 48,
+    "flops": 0
+   },
+   {
+    "net": "_67704_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 48,
+    "flops": 0
+   },
+   {
+    "net": "_61402_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 48,
+    "flops": 0
+   },
+   {
+    "net": "_60823_/Y (OAI21x1_ASAP7_75t_R)",
+    "loads": 48,
+    "flops": 0
+   },
+   {
+    "net": "u_ot_pr_core.u_rr.g_local[32].local_r$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 47,
+    "flops": 47
+   },
+   {
+    "net": "u_ot_pr_core.u_rr.g_local[33].local_r$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 47,
+    "flops": 47
+   },
+   {
+    "net": "u_ot_pr_core.u_rr.g_local[34].local_r$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 47,
+    "flops": 47
+   },
+   {
+    "net": "u_ot_pr_core.u_rr.g_local[35].local_r$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 47,
+    "flops": 47
+   },
+   {
+    "net": "u_ot_pr_core.u_rr.g_local[216].local_r$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 47,
+    "flops": 47
+   },
+   {
+    "net": "u_ot_pr_core.u_rr.g_local[223].local_r$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 47,
+    "flops": 47
+   },
+   {
+    "net": "u_ot_pr_core.u_rr.g_local[230].local_r$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 47,
+    "flops": 47
+   },
+   {
+    "net": "u_ot_pr_core.u_rr.g_local[237].local_r$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 47,
+    "flops": 47
+   },
+   {
+    "net": "u_ot_pr_core.u_rr.g_local[244].local_r$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 47,
+    "flops": 47
+   },
+   {
+    "net": "u_ot_pr_core.u_rr.g_local[251].local_r$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 47,
+    "flops": 47
+   },
+   {
+    "net": "u_ot_pr_core.u_rr.g_local[258].local_r$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 47,
+    "flops": 47
+   },
+   {
+    "net": "u_ot_pr_core.u_rr.g_local[265].local_r$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 47,
+    "flops": 47
+   },
+   {
+    "net": "u_ot_pr_core.u_rr.g_local[272].local_r$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 47,
+    "flops": 47
+   },
+   {
+    "net": "u_ot_pr_core.u_rr.g_local[279].local_r$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 47,
+    "flops": 47
+   },
+   {
+    "net": "u_ot_pr_core.u_rr.g_local[286].local_r$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 47,
+    "flops": 47
+   },
+   {
+    "net": "u_ot_pr_core.u_rr.g_local[293].local_r$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 47,
+    "flops": 47
+   },
+   {
+    "net": "u_ot_pr_core.u_rr.g_local[300].local_r$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 47,
+    "flops": 47
+   },
+   {
+    "net": "u_ot_pr_core.u_rr.g_local[307].local_r$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 47,
+    "flops": 47
+   },
+   {
+    "net": "u_ot_pr_core.u_rr.g_local[314].local_r$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 47,
+    "flops": 47
+   },
+   {
+    "net": "u_ot_pr_core.u_rr.g_local[321].local_r$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 47,
+    "flops": 47
+   },
+   {
+    "net": "u_ot_pr_core.g_event_mem[4].pb_r[2]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 47,
+    "flops": 0
+   },
+   {
+    "net": "_57793_/Y (AND2x2_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0
+   },
+   {
+    "net": "_43432_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 42,
+    "flops": 0
+   },
+   {
+    "net": "u_ot_pr_core.g_event_mem[5].pb_r[2]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 42,
+    "flops": 0
+   },
+   {
+    "net": "u_ot_pr_core.mw_payload[8]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 38,
+    "flops": 0
+   },
+   {
+    "net": "_50988_/Y (AND4x1_ASAP7_75t_R)",
+    "loads": 38,
+    "flops": 0
+   },
+   {
+    "net": "u_ot_pr_core.mw_payload[10]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 37,
+    "flops": 0
+   },
+   {
+    "net": "u_ot_pr_core.mw_payload[9]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 36,
+    "flops": 0
+   },
+   {
+    "net": "_43469_/Y (AND4x1_ASAP7_75t_R)",
+    "loads": 36,
+    "flops": 0
+   },
+   {
+    "net": "u_ot_pr_core.g_event_mem[9].pb_r[1]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 36,
+    "flops": 0
+   },
+   {
+    "net": "_46197_/Y (AND4x1_ASAP7_75t_R)",
+    "loads": 35,
+    "flops": 0
+   },
+   {
+    "net": "_43704_/Y (AND4x1_ASAP7_75t_R)",
+    "loads": 35,
+    "flops": 0
+   },
+   {
+    "net": "u_ot_pr_core.g_event_mem[12].pb_r[1]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 35,
+    "flops": 0
+   },
+   {
+    "net": "u_ot_pr_core.g_event_mem[3].pb_r[2]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 35,
+    "flops": 0
+   },
+   {
+    "net": "_47854_/Y (AND4x1_ASAP7_75t_R)",
+    "loads": 34,
+    "flops": 0
+   },
+   {
+    "net": "_44862_/Y (AND4x1_ASAP7_75t_R)",
+    "loads": 34,
+    "flops": 0
+   },
+   {
+    "net": "_43452_/Y (AND4x1_ASAP7_75t_R)",
+    "loads": 33,
+    "flops": 0
+   },
+   {
+    "net": "_43355_/Y (AND5x1_ASAP7_75t_R)",
+    "loads": 33,
+    "flops": 0
+   }
+  ],
+  "hf_max_port": 0,
+  "hf_max_reset": 0,
+  "hf_max_net": 345,
+  "reset_landing": [
+   {
+    "port": "rst_n",
+    "sinks": 1,
+    "flops": 1,
+    "macros": 0
+   }
+  ],
+  "in_to_out_bits": 0,
+  "in_to_reg_levels": 1,
+  "reg_to_out_levels": 0,
+  "icg_enable_from_port": 0,
+  "depth_ps": 511.8,
+  "depth_path": [
+   "u_ot_pr_core.g_live_count.count_r[2]$_DFF_PN0_",
+   "u_ot_pr_core.g_event_broadcast[2].g_check_lookahead.invalid_r$_DFF_PN0_/D"
+  ],
+  "depth_levels": 12
+ },
+ "top": "dsdv_mu_hwin",
+ "netlist": "sizing/work/orfs/results/asap7/opentallas_dsdv_mu_hwin_asap7_hwin_central_sizing/base/1_2_yosys.v",
+ "seconds": 1.3,
+ "thresholds": {
+  "clk_sinks_max": 15000,
+  "clk_span_um": 600.0,
+  "clk_span_sinks": 8000,
+  "clk_sinks_refuse": 110000,
+  "hf_report": 32,
+  "hf_max": 32,
+  "hf_port_refuse": 2048,
+  "hf_reset_refuse": 8000,
+  "hf_refuse": 50000,
+  "rst_land_max": 2,
+  "bnd_levels": 3,
+  "bnd_in_levels_refuse": 9,
+  "bnd_out_levels_refuse": 3,
+  "bnd_in_to_out_refuse": 1,
+  "bnd_icg_port_refuse": 1,
+  "depth_scale": 1.667,
+  "depth_ps_warn": 600.0,
+  "depth_ps_max": 700.0,
+  "reach_um": 500.0,
+  "reach_min_count": 1,
+  "util_min": 0.45,
+  "util_max": 0.65,
+  "fill_max": 0.9,
+  "macro_halo_um": 2.16,
+  "channel_um": 20.0
+ },
+ "clock_rule": {
+  "max_root_sinks": 9974,
+  "root": "port:ck",
+  "ok": true,
+  "text": "9,974 sinks on the largest root; no measured clock tree (no --cts gate evidence)",
+  "enforce": false,
+  "closed_stands": false,
+  "limits": {
+   "sinks": 15000,
+   "insertion_ps": 300.0,
+   "spread_ps": 80.0
+  }
+ },
+ "would_refuse": [],
+ "waived": [],
+ "verdict": "WARN",
+ "refusing_checks": [],
+ "summary": "high_fanout: net _43434_/Y (AND2x2_ASAP7_75t_R): 345 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast"
+}

@@ -1,0 +1,42 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/codex-mu-hwin-centralv6-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-mu-hwin-centralv6-1019
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-mu-hwin-centralv6-1019
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-mu-hwin-centralv6-1019
+ot-run: ot-epyc8       admits  1293 GB (avail 964, growth 60, headroom 0, waiters 0/0 GB) load 23/128 running 17 disk 276 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-mu-hwin-centralv6-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-mu-hwin-centralv6-1019
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-1530804-1792431013 after 1 s
+Verilator 5.050 2026-07-01 rev v5.050
+[slots47] MUWIN starts 188 fires 2528 expected 2528 K 2 t_mf 0000 hslot 0000 hwin 00
+[slots47] MUWIN PASS
+[min_d] MUWIN starts 32 fires 432 expected 432 K 2 t_mf 0000 hslot 0000 hwin 00
+[min_d] MUWIN PASS
+[badd] MUWIN starts 32 fires 432 expected 432 K 2 t_mf 1000 hslot 0000 hwin 10
+[badd] MUWIN BADD PASS
+[badd_high] MUWIN starts 32 fires 432 expected 432 K 2 t_mf 1000 hslot 0000 hwin 10
+[badd_high] MUWIN BADD_HIGH PASS
+[base] MUWIN starts 32 fires 432 expected 432 K 2 t_mf 0000 hslot 0000 hwin 00
+[base] MUWIN PASS
+[collision] MUWIN starts 32 fires 400 expected 400 K 2 t_mf 1000 hslot 0000 hwin 10
+[collision] MUWIN COLLISION first 1279 expected 1279
+[collision] MUWIN COLLISION PASS
+[badrt] MUWIN starts 32 fires 432 expected 432 K 2 t_mf 0100 hslot 0000 hwin 01
+[badrt] MUWIN BADRT PASS (fault raised)
+[mut3] MUWIN starts 32 fires 432 expected 432 K 2 t_mf 0000 hslot 0000 hwin 00
+[mut3] MUWIN FAIL errs 176
+mutant 3 detected (FAIL as required)
+[mut4] MUWIN starts 32 fires 512 expected 432 K 2 t_mf 0000 hslot 0000 hwin 00
+[mut4] MUWIN FAIL errs 80
+mutant 4 detected (FAIL as required)
+lint hwin: errors 0
+lint seq_host_mux: errors 0
+lint cl_w_a: errors 0
+lint cl_w_ab: errors 0
+lint cl_e_h: errors 0
+lint cl_e_a: errors 0
+lint masters_mu: errors 0
+lint relays: errors 0
+LEP_MU_DIE_LINT PASS
+MU_HWIN_GATE PASS
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-1530804-1792431013): exit 0
