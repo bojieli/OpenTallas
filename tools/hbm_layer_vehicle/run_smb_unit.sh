@@ -18,7 +18,7 @@ git -C "$WT" archive "$SHA" tools/hbm_layer_vehicle tools/hdc_golden_v41.py tool
   tools/rtl_hdc_v41_blockdot_campaign.py tools/hbm_svc_packed136_image.py tools/w19_payload_loader.py \
   rtl/hbm_accel/loader/service_native rtl/hbm_accel/sm/static rtl/hbm_accel/host_static_20261015/ot_static_run_target.sv \
   rtl/test/hbm_accel/svg_rel rtl/lib/ot_reset_sync.sv rtl/lib/ot_rst_relay.sv rtl/model_ready_hbm_r14 \
-  physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2 physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1 physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2 \
+  physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2 physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1 physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192 physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2 \
   results/rtl/hbm_ds_layer_tput_1018/fixtures/L00 results/rtl/hbm_ds_layer_tput_1018/fixtures/L02 \
   results/rtl/hbm_ds_layer_tput_1018/fixtures/L14 results/rtl/hbm_ds_layer_tput_1018/fixtures/head | ssh "$HOST" "tar -x -C $OUT/src" || exit 2
 echo "$SHA" | ssh "$HOST" "cat > $OUT/src/REV"
@@ -37,6 +37,9 @@ case "$JOB" in
   bw)    J="export SMB_OP_GAP=${OPGAP:-256} SMB_LAYOUT=bw SMB_PACE_NUM=${PNUM:-88} SMB_PACE_ADD=${PADD:-0} SMB_FETCH=${FETCH:-88}; $T --layers ${LAYERS:-L00:0,L02:2,L14:14,head:0} --define HBM_MR --name ${LOGN:-bw} --out $OUT/out/${LOGN:-bw}.json" ;;
   bwsafe) J="export SMB_OP_GAP=${OPGAP:-256} SMB_LAYOUT=bw SMB_PACE_NUM=${PNUM:-88} SMB_PACE_ADD=${PADD:-0} SMB_FETCH=${FETCH:-88}; $T --layers ${LAYERS:-L00:0,L02:2,L14:14,head:0} --define HBM_MR,HBM_SAFE --name ${LOGN:-bwsafe} --out $OUT/out/${LOGN:-bwsafe}.json" ;;
   bwsafe_composed) J="export SMB_OP_GAP=${OPGAP:-256} SMB_LAYOUT=bw SMB_PACE_NUM=${PNUM:-88} SMB_PACE_ADD=${PADD:-0} SMB_FETCH=${FETCH:-88}; $T --layers ${LAYERS:-L00:0,L02:2,L14:14,head:0} --define HBM_MR,HBM_SAFE,HBM_SAFE_COMPOSED --name ${LOGN:-bwsafe} --out $OUT/out/${LOGN:-bwsafe}.json" ;;
+  # L2H-BW (10-19): SAFE face successor (ot_hbm_svc_pc_ctrl_leaf_cfg_safe_face + consumer-side RL1 landing); XDEF adds
+  # mutant/positive-control defines (,FACE_MUT_SAMEEDGE / ,FACE_MUT_P192_OFF)
+  bwsafe_face) J="export SMB_OP_GAP=${OPGAP:-256} SMB_LAYOUT=bw SMB_PACE_NUM=${PNUM:-88} SMB_PACE_ADD=${PADD:-0} SMB_FETCH=${FETCH:-88}; $T --layers ${LAYERS:-L00:0,L02:2,L14:14,head:0} --define HBM_MR,HBM_SAFE,HBM_SAFE_COMPOSED,HBM_SAFE_FACE${XDEF:-} --name ${LOGN:-bwsafe_face} --out $OUT/out/${LOGN:-bwsafe_face}.json" ;;
   bwsafe_late) J="export SMB_OP_GAP=${OPGAP:-256} SMB_LAYOUT=bw SMB_PACE_NUM=${PNUM:-88} SMB_PACE_ADD=${PADD:-0} SMB_FETCH=${FETCH:-88}; $T --layers L14:14 --define HBM_MR,HBM_SAFE --mut late_ids --name ${LOGN:-bwsafe_late} --out $OUT/out/${LOGN:-bwsafe_late}.json" ;;
   bwsafe_imut2) J="export SMB_OP_GAP=${OPGAP:-256} SMB_LAYOUT=bw SMB_PACE_NUM=${PNUM:-88} SMB_PACE_ADD=${PADD:-0} SMB_FETCH=${FETCH:-88}; $T --layers L14:14 --define HBM_MR,HBM_SAFE,IMUT=2 --name ${LOGN:-bwsafe_imut2} --out $OUT/out/${LOGN:-bwsafe_imut2}.json" ;;
   bwold) J="export SMB_OP_GAP=${OPGAP:-256} SMB_LAYOUT=bw SMB_PACE_NUM=${PNUM:-88} SMB_PACE_ADD=${PADD:-0} SMB_FETCH=${FETCH:-88}; $T --layers ${LAYERS:-L00:0,L02:2,L14:14,head:0} --name ${LOGN:-bwold} --out $OUT/out/${LOGN:-bwold}.json" ;;
@@ -47,7 +50,7 @@ case "$JOB" in
   xmut4) J="$T --layers L14:14 --define XMUT=4 --name xmut4 --out $OUT/out/xmut4.json" ;;
   *) echo "unknown JOB $JOB"; exit 2 ;;
 esac
-if [ "$JOB" = bwsafe_composed ]; then
+if [ "$JOB" = bwsafe_composed ] || [ "$JOB" = bwsafe_face ]; then
  J="export SMB_HBM_REF_BASE=${REFBASE:-0} SMB_HBM_CLOCK_OFFSET_PS=${HOFFSET:-173} SMB_HBM_RESET_EXTRA=${HRESET:-0}; $J"
 fi
 /home/ubuntu/bin/ot-run --mem ${MEM:-64} --threads 16 --dir "$OUT" -- bash -c "$J > $OUT/out/${LOGN:-$JOB}.log 2>&1; echo ${JOB}_RC \$?; tail -n 3 $OUT/out/${LOGN:-$JOB}.log"

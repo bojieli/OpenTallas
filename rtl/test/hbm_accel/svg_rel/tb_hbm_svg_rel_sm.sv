@@ -79,6 +79,37 @@ module tb_hbm_svg_rel_sm;
   wire[7:0]rp=8'((hbm_ref_base+p)*118/32%118);
   wire[7:0]reload=8'(118+rp+((rp+118+hbm_ref_base+p)%2));
   assign safe_of[p]=|owner_split;
+`ifdef HBM_SAFE_FACE
+  // L2H-BW SAFE face successor: every PC port is a flop; KR leaves on the RL1 ABI and the CONSUMER lands it in the
+  // 3-slot RL1 ring (same module as the legacy in-PC collar, here on the consumer side, reset by the consumer's own
+  // two landed stages).  Cycle-identical to the legacy top by construction.
+  wire face_v,face_rdy,face_pf,land_pf;wire[16:0]face_tag;wire[3:0]face_beat;wire[255:0]face_data;
+  reg land_r0,land_r1;always @(posedge hbm)begin land_r0<=hrst;land_r1<=land_r0;end
+  assign safe_pf[p]=face_pf|land_pf;
+  ot_hbm_svc_pc_ctrl_leaf_cfg_safe_face #(.RESET_LANDING(2)
+`ifdef FACE_MUT_P192_OFF
+   ,.SRAM_P192(0)
+`endif
+`ifdef FACE_MUT_ID
+   ,.BW_MUT_ID_TAG(1)
+`endif
+  ) u(
+   .clk(hbm),.rst_n(hrst),.pc_id(5'(p)),.refresh_reload(reload),
+   .k_v(kv[p]),.k_rdy(krdy[p]),.k_we(kwe[p]),.k_addr(ka[p*30+:30]),.k_len(kl[p*4+:4]),.k_tag(kt[p*17+:17]),
+   .k_wdata(kw[p*256+:256]),.k_wstrb(ks[p*32+:32]),.kr_v(face_v),.kr_rdy(face_rdy),.kr_tag(face_tag),.kr_beat(face_beat),.kr_data(face_data),
+   .k_wr_done(kdone[p]),.row_v(row_v[p]),.row_op(row_op[p*3+:3]),.row_bank(row_bank[p*5+:5]),.row_row(row_row[p*19+:19]),
+   .col_v(col_v[p]),.col_we(col_we[p]),.col_bank(col_bank[p*5+:5]),.col_col(col_col[p*5+:5]),.col_data(col_data[p*256+:256]),.col_strb(col_strb[p*32+:32]),
+   .dram_rvalid(dram_rvalid[p]),.dram_rdata(dram_rdata[p*256+:256]),.pc_fault(face_pf),.owner_fault_split(owner_split));
+  // FACE_MUT_SAMEEDGE: negative control -- the consumer ring treats kr_v as same-edge (pushes on its CURRENT ready,
+  // ignoring the RL1 contract): must FAIL (lost / duplicated beats or a ring fault).
+  ot_hbm_svc_kr_ready_bridge #(.REGIONAL_VALID(0)
+`ifdef FACE_MUT_SAMEEDGE
+   ,.MUT(1)
+`endif
+  ) u_land(.clk(hbm),.rst_n(land_r1),
+   .in_v(face_v),.in_v_regions({18{face_v}}),.in_rdy(face_rdy),.in_data({face_tag,face_beat,face_data}),
+   .out_v(rv_[p]),.out_rdy(rrdy[p]),.out_data({rt[p*17+:17],rb[p*4+:4],rd[p*256+:256]}),.fault(land_pf),.occupancy());
+`else
   ot_hbm_svc_pc_ctrl_leaf_cfg_safe_legacy #(.RESET_LANDING(2)) u(
    .clk(hbm),.rst_n(hrst),.pc_id(5'(p)),.refresh_reload(reload),
    .k_v(kv[p]),.k_rdy(krdy[p]),.k_we(kwe[p]),.k_addr(ka[p*30+:30]),.k_len(kl[p*4+:4]),.k_tag(kt[p*17+:17]),
@@ -86,6 +117,7 @@ module tb_hbm_svg_rel_sm;
    .k_wr_done(kdone[p]),.row_v(row_v[p]),.row_op(row_op[p*3+:3]),.row_bank(row_bank[p*5+:5]),.row_row(row_row[p*19+:19]),
    .col_v(col_v[p]),.col_we(col_we[p]),.col_bank(col_bank[p*5+:5]),.col_col(col_col[p*5+:5]),.col_data(col_data[p*256+:256]),.col_strb(col_strb[p*32+:32]),
    .dram_rvalid(dram_rvalid[p]),.dram_rdata(dram_rdata[p*256+:256]),.pc_fault(safe_pf[p]),.owner_fault_split(owner_split));
+`endif
 `else
   wire native_v,native_rdy,native_pf,bridge_pf;wire[17:0]native_v_regions;
   wire[16:0]native_tag;wire[3:0]native_beat;wire[255:0]native_data;

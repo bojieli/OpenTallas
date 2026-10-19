@@ -30,7 +30,9 @@ module ot_hbm_r14_aq_pc_safe #(
   parameter integer IDLE0 = 3, IDLE1 = 4, IDLE2 = 2, IDLE3 = 5, IDLE4 = 1, IDLE5 = 6, IDLE6 = 0, IDLE7 = 7,
   parameter integer MRKEY = 1,
   parameter integer PULLIN = 8,
-  parameter integer ROW_REGIONS = 0, BANK_REGIONS = 0
+  parameter integer ROW_REGIONS = 0, BANK_REGIONS = 0,
+  // L2H-BW: 1 = spread-pin p192 macro family (see ot_hbm_svc_sram128_n64)
+  parameter integer SRAM_P192 = 0
 )(
   input  wire        clk, rst_n, input wire[63:0]reset_regions,
   input  wire        slot_parity, input wire [7:0] refresh_reload,
@@ -135,7 +137,7 @@ module ot_hbm_r14_aq_pc_safe #(
   end
   // LH-BW SAFE n64: 30-bit queue word in one 128x64 macro (3.8 pins/um faces) instead of a mostly tied 128x256 r2c2
   wire [29:0] qm30; assign qm={226'b0,qm30};
-  ot_hbm_svc_sram128_n64 #(.W(30)) u_queue(.clk(clk),.r_ce(1'b1),.r_addr(7'(qread)),.rd(qm30),
+  ot_hbm_svc_sram128_n64 #(.W(30),.P192(SRAM_P192)) u_queue(.clk(clk),.r_ce(1'b1),.r_addr(7'(qread)),.rd(qm30),
     .w_ce(qpush),.w_addr(7'(qwp)),.wd({wr_bank,wr_col,wr_row,wr_rd}));
   (* keep="true",dont_touch="true" *) reg [WQW:0] bank_n[0:31];
   (* keep="true",dont_touch="true" *) reg [WQW:0] bank_n_word_local[0:1][0:31];
