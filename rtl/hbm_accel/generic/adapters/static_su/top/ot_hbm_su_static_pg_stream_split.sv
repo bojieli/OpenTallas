@@ -24,7 +24,7 @@
 // Seam: q -> s 2 x (34 + 562) + 2 = 1,194 b; s -> q 2 x 514 + 3 x 41 + 1 = 1,152 b; total 2,346 b (the bridges'
 // write-done return is unused at the slice: its banks are not carried).
 // MUT (bench, must FAIL): 1/3/6 bridge_q (see bridge), 2 bridge_s, 8 inject bank read one bank late (as pg_stream MUT 8),
-//      9 B39 no-op ignored (as pgslice).
+//      9 B39 no-op ignored (as pgslice), 12 request bank read one stream edge early (seam-window mutant, window-only).
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_hbm_su_static_pg_stream_q #(
  parameter integer READ_RETURN=10,WRITE_RETURN=7,MUT=0
@@ -113,7 +113,7 @@ module ot_hbm_su_static_pg_stream_s #(
  wire [33:0] s_rq; wire [561:0] s_wq; wire [513:0] s_rr; wire [1:0] s_done;
  wire [33:0] leaf_rq; wire [561:0] leaf_wq; wire [513:0] leaf_rr; wire [1:0] leaf_done, leaf_fault, bridge_fault;
  for(genvar h=0;h<2;h=h+1)begin:g_leaf
-  ot_hbm_su_multirate_bridge_s #(.READ_RETURN(READ_RETURN),.WRITE_RETURN(WRITE_RETURN),.MUT((MUT==2)?2:0)) u_bs(
+  ot_hbm_su_multirate_bridge_s #(.READ_RETURN(READ_RETURN),.WRITE_RETURN(WRITE_RETURN),.MUT((MUT==2||MUT==12)?MUT:0)) u_bs(
    .stream_clk(pg_clk),.rst_n(bridge_rst_n),
    .rq_b0(rq_b0[h*17+:17]),.rq_b1(rq_b1[h*17+:17]),.wq_b0(wq_b0[h*281+:281]),.wq_b1(wq_b1[h*281+:281]),
    .rr_b0(rr_b0[h*257+:257]),.rr_b1(rr_b1[h*257+:257]),.dn_b0(),.dn_b1(),

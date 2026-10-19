@@ -8,14 +8,21 @@
 //                 pg_fault at DUT k+2 == REF k (+2, synchroniser of a sticky flag).
 //   stream edges: lg_rq, lg_wq, far_rr, far_w_done, lg_fault equal on the same edge.
 //   seam calendar: every bank the readers select (request banks at active stream edges, return banks at the staging
-//                 serial edge, inject banks at every serial edge) must be stable >= WIN ps before the read and must not be
-//                 rewritten < WIN ps after it (WIN = 2q = 556 ps); the measured minimum windows are printed per group.
+//                 serial edge, inject banks at every serial edge) must be stable >= WSU[g] before the read and must not be
+//                 rewritten < WHO[g] after it; the measured minimum windows are printed per group.
+//   HBM-PGSTREAM-B 10-19: per-group windows = EXACTLY the seam_windows the merged tile's gate / route SDC declares
+//                 (physical/ref_tile/hbm_su_pg_stream_b_1019 spec): request 4q / 2q, return 2q / 4q, inject 3q / 7q
+//                 (was one 2q floor for all groups). The request read is taken from the bridge's actual read point
+//                 (rd_v / rd_b), so MUT 12 (request bank read one stream edge early into a pre-stage, functionally equal)
+//                 fails by window only: the bench guards the windows the SDC relies on.
 // Stimulus: two reset epochs (both resets released 100 ps before a coincident edge); per epoch 60 serial edges of zero
 // traffic (no faults), then random serial (vmr_cmd, su_wq) and stream (LG returns, far, inject) inputs -> the sticky
 // faults rise mid-run, so the fault offset is exercised.
 module tb_hbm_su_pg_stream_split;
  parameter integer QID=1, G=2, READ_RETURN=10, WRITE_RETURN=7, MUT=0, EDGES=1500;
- localparam integer Q=278, WIN=2*Q;
+ localparam integer Q=278;
+ localparam integer WSU [0:2] = '{4*Q, 2*Q, 3*Q};   // setup windows: request, return, inject (= seam_windows setup_q)
+ localparam integer WHO [0:2] = '{2*Q, 4*Q, 7*Q};   // rewrite-after-read windows (= seam_windows hold_q)
  reg clk_ctl=0, pg_clk=0, rst_n=0, brst_n=0;
  wire [3:0] pos = {2'(QID), 2'(G)};
  reg [59:0] vmr; reg [561:0] suwq; reg [513:0] lgrr; reg [1:0] lgwd, lgr, lgw, injrd; reg [33:0] farrq; reg [561:0] farwq;
@@ -96,14 +103,14 @@ module tb_hbm_su_pg_stream_split;
  initial for(integer g=0;g<3;g=g+1) begin wsu[g]=1e9; who[g]=1e9; for(integer b=0;b<3;b=b+1) begin tchg[g][b]=-1e9; trd[g][b]=-1e9; end end
  task automatic wchg(input integer g, input integer b); begin
   if(chk && $realtime-trd[g][b] < who[g]) who[g]=$realtime-trd[g][b];
-  if(chk && $realtime-trd[g][b] < WIN*1.0e-3-1e-6) begin werr=werr+1;
+  if(chk && $realtime-trd[g][b] < WHO[g]*1.0e-3-1e-6) begin werr=werr+1;
    if(werr<=6) $display("WINDOW hold group %0d bank %0d rewritten %0.3f ns after its read t=%0t", g, b, $realtime-trd[g][b], $time); end
   tchg[g][b]=$realtime;
  end endtask
  task automatic wrd(input integer g, input integer b); begin
   wchecks=wchecks+1;
   if($realtime-tchg[g][b] < wsu[g]) wsu[g]=$realtime-tchg[g][b];
-  if($realtime-tchg[g][b] < WIN*1.0e-3-1e-6) begin werr=werr+1;
+  if($realtime-tchg[g][b] < WSU[g]*1.0e-3-1e-6) begin werr=werr+1;
    if(werr<=6) $display("WINDOW setup group %0d bank %0d read %0.3f ns after its write t=%0t", g, b, $realtime-tchg[g][b], $time); end
   trd[g][b]=$realtime;
  end endtask
@@ -114,7 +121,7 @@ module tb_hbm_su_pg_stream_split;
  always @(dut.ijb0) wchg(2,0);
  always @(dut.ijb1) wchg(2,1);
  always @(dut.ijb2) wchg(2,2);
- always @(posedge pg_clk) if(chk && dut.u_s.g_leaf[0].u_bs.active) wrd(0, dut.u_s.g_leaf[0].u_bs.lsel);
+ always @(posedge pg_clk) if(chk && dut.u_s.g_leaf[0].u_bs.rd_v) wrd(0, dut.u_s.g_leaf[0].u_bs.rd_b);
  always @(posedge clk_ctl) if(chk) begin
   wrd(1, dut.u_q.g_br[0].u_bq.rsel);
   wrd(2, dut.u_q.ib);

@@ -21,7 +21,9 @@
 // Seam bits per bridge: 2 x (RQ+WQ) out of _q + 2 x (RR+1) out of _s = 1,112 b (the one-tile bridge held 4 slots).
 // MUT (bench, must FAIL): _q 1 = return staging bank parity flipped, 3 = staging removed (read at the output edge: hold
 //                         0 / -1 q, caught by the bench window checker), 6 = request write bank flipped;
-//                         _s 2 = launch bank flipped.
+//                         _s 2 = launch bank flipped; 12 (HBM-PGSTREAM-B seam-window mutant) = request bank read one
+//                         stream edge EARLY into a pre-stage and launched from it at the old edge: same data on the same
+//                         edges, but setup 4q -> 1q (below the declared seam window; caught only by the window checker).
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_hbm_su_multirate_bridge_q #(
  parameter integer RQ_BITS=17,WQ_BITS=281,RR_BITS=257,
@@ -116,8 +118,18 @@ module ot_hbm_su_multirate_bridge_s #(
  wire lsel=lslot[0] ^ (MUT==2);
  wire rsel=rslot[0];
  wire dsel=dslot[0];
- wire [RQ_BITS-1:0] rq_pick = lsel ? rq_b1 : rq_b0;
- wire [WQ_BITS-1:0] wq_pick = lsel ? wq_b1 : wq_b0;
+ wire [RQ_BITS-1:0] rq_sel = lsel ? rq_b1 : rq_b0;
+ wire [WQ_BITS-1:0] wq_sel = lsel ? wq_b1 : wq_b0;
+ // MUT 12 only: pre-stage read one stream edge early (the bank of the NEXT phase); unused (removed) otherwise
+ wire [1:0] nslot=slot_for_phase(phase+4'd1);
+ wire nsel=nslot[0];
+ reg [RQ_BITS-1:0] rq_pre; reg [WQ_BITS-1:0] wq_pre;
+ always @(posedge stream_clk) begin rq_pre <= nsel ? rq_b1 : rq_b0; wq_pre <= nsel ? wq_b1 : wq_b0; end
+ wire [RQ_BITS-1:0] rq_pick = (MUT==12) ? rq_pre : rq_sel;
+ wire [WQ_BITS-1:0] wq_pick = (MUT==12) ? wq_pre : wq_sel;
+ // bench window checker: where the request bank is actually read (stream edge, bank)
+ wire rd_v = (MUT==12) ? (phase[1:0]!=2'd0 && stream_warm>=1) : active;
+ wire rd_b = (MUT==12) ? nsel : lsel;
  // launch registers: no reset (active is 0 while stream_warm is reset)
  always @(posedge stream_clk) begin
   stream_rq<=active ? rq_pick : '0;
