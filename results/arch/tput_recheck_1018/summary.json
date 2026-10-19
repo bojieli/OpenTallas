@@ -1,0 +1,369 @@
+{
+ "schema": "opentallas.tput_recheck_1018.v1",
+ "lane": "TPUT-RECHECK",
+ "date": "2026-10-18",
+ "comparator": "A100 80GB SXM only (owner 10-18 correction: same 7 nm class as ASAP7, same as 09-23 studies)",
+ "designs": {
+  "s81": {
+   "name": "DS ROM array S81 p4l",
+   "model": "DeepSeek-V4.1-Flash",
+   "context": 1048576,
+   "dies": 440,
+   "die_mm2": 799.2,
+   "area_mm2": 351648.0,
+   "stacks": 440,
+   "area_src": "results/arch/s81_dv_1016/p4l/plan.json (799.2 mm2), price_land.json stages_from_slots 97; 4 rank dies a stage + 52 non-layer dies (dsrom_s81_rack_20261006/rack.json, rm5 HANDOFF); 1 HBM3E stack a die (s81_dv_1016/SPEC.md 0b-p4g). Die count derived, grade derived.",
+   "power_w": 38236.0,
+   "power_src": "STALE modelled: 84.1 W busiest saturated layer die (10-04) + 2.8 W/stack idle (dsrom_s81_rack_20261006/rack.json die_w; technology.json). No p4l power exists.",
+   "b1_ar": 1243.0,
+   "b1_ar_src": "results/arch/token_path_1018/ds_rom.json workloads.ar.tok_s",
+   "b1_mtp": 3806.2,
+   "b1_mtp_src": "results/arch/token_path_1018/ds_rom.json workloads.mtp.tok_s",
+   "b1_grade": "composed: 10.3% current RTL, 61.4% older RTL, 17.9% modelled PHY, 10.4% priced (AR)",
+   "supported_inflight_today": 1,
+   "supported_note": "RTL: user/pos/tok tags on start frames, per-user window-ring addressing (dsdv_svc_att), 2 job contexts a die (ot_dsdv_fixed_issue). Missing: a multi-user compiled calendar (dv_layer_compile.py is one token), user-tagged/buffered activation hand-off, per-user index-key base in svc_sx, HBM sizing for N users on p4l.",
+   "agg_bounds": {
+    "stage_occupancy": {
+     "tok_s": 114887.13970715387,
+     "inflight": 92.42465507374718,
+     "formula": "1.2 GHz / busiest stage busy cycles; stage = 615,525 layer-die cycles / 97 x 1.65 imbalance (L20 25,329 / mean 15,388)",
+     "grade": "modelled"
+    },
+    "index_scan_hbm": {
+     "tok_s": 53316.00413602941,
+     "formula": "4 scan dies x 1 stack x 950 GB/s / (68 B x 1M layer-20 index keys a user a token)",
+     "grade": "modelled",
+     "sensitivity_4_stacks_per_scan_die": 213264.01654411765
+    },
+    "kv_capacity_users": {
+     "users": 241,
+     "grade": "modelled",
+     "formula": "22.5 GB stack / ((288+68) B x 1M / 4 dies) on the busiest owner die"
+    }
+   },
+   "agg_tok_s": 1243.0,
+   "agg_modelled_tok_s": 53316.00413602941,
+   "agg_inflight": 42.8917745253619,
+   "agg_bound": "layer-20 index scan (HBM BW per user, no sharing)",
+   "agg_grade": "modelled (needs the missing multi-user calendar)"
+  },
+  "qwen_rom": {
+   "name": "Qwen ROM TP8 (dv2f14 + kvs14)",
+   "model": "Qwen3-8B",
+   "context": 8192,
+   "dies": 16,
+   "area_mm2": 8908.8,
+   "stacks": 32,
+   "area_src": "841 mm2 compute die (official, HANDOFF 1672/1707; 522-575 target not closed) x 8 + kvs13i KV die 272.6 mm2 x 8 (qwen_kv_die_audit_1016/KV_AUDIT_1016.txt); 4 HBM3E stacks a KV die (tools/qwen_kv_die)",
+   "power_w": 7002.418894285859,
+   "power_src": "STALE modelled: 09-28 per-die envelope 435-619 W (power_scenarios.json, mid 527 W) on the 841 mm2 die, KV die scaled by area, + 2.8 W/stack idle + KV traffic at 104.88 pJ/B (A100-measured, technology.json)",
+   "b1_ar": 4769.2,
+   "b1_ar_src": "results/arch/token_path_1018/qwen_rom.json workloads.ar.tok_s",
+   "b1_mtp": null,
+   "b1_mtp_src": "AR only (owner 10-05 AR_MODE)",
+   "b1_grade": "composed: 0.7% current RTL, 98.5% older RTL (TP4 10-13 vehicle + 10-15 KV service), 0.8% priced/PHY",
+   "supported_inflight_today": 1,
+   "supported_note": "qkd_host_if_pins.sv:104 $fatal unless NSLOT==1 && ENG_CTX==1; KV attention static buffer of capacity 1; kv_calendar has no user dimension; ot_qwen_activation_handoff (user tags) is TB-only.",
+   "agg_bounds": {
+    "kv_die_attention": {
+     "tok_s": 21436.227224008573,
+     "formula": "1.2 GHz / (1,555-cycle KV-die service x 36 layers); the service buffer holds one request (tools/qwen_static_schedule/attention.py)",
+     "grade": "modelled from measured service (10-15)"
+    },
+    "matvec_windows": {
+     "tok_s": 22576.760987357015,
+     "formula": "1.2 GHz / 53,152 matvec-window cycles a token (qwen_reuse_1015/reuse.json: weights re-streamed per user, 1 MAC/lane/cycle)",
+     "grade": "modelled from measured windows"
+    },
+    "kv_hbm": {
+     "tok_s": 52981.90646701389,
+     "formula": "32 stacks x 1.0 TB/s / 604 MB a user a token at 8K",
+     "grade": "modelled"
+    },
+    "kv_capacity_users": {
+     "users": 1192,
+     "grade": "modelled"
+    }
+   },
+   "agg_tok_s": 4769.2,
+   "agg_modelled_tok_s": 21436.227224008573,
+   "agg_inflight": 4.49473026080743,
+   "agg_bound": "KV-die attention service (one request at a time, 56k cycles a token)",
+   "agg_grade": "modelled (needs multi-slot host leaf, KV calendar user dimension, compiler interleave)",
+   "cross_check": "TP4 10-09 pricing gave 25,362 tok/s tile-window bound at 4.6 users (qwen_tp8_vs_sysdie_20261009); 10-15 model gave 7,168 at batch 2 (qwen_reuse_1015)"
+  },
+  "hbm_ds": {
+   "name": "HBM d4g (DeepSeek-V4.1-Flash)",
+   "model": "DeepSeek-V4.1-Flash",
+   "context": 1048576,
+   "dies": 192,
+   "die_mm2": 641.83,
+   "area_mm2": 123231.36000000002,
+   "stacks": 384,
+   "area_src": "results/arch/hbm_die_d4g/plan/plan_geometry.json 641.83 mm2 (630.66 + 11.2 SM frame), 16 SMs, 2 HBM3E stacks/45 GB a die; DS TP-192 (hgi_sim/d4g_price5_1018.py), Qwen TP-8 (TOKEN-PASS-HBMQ)",
+   "b1_ar": 1993.8,
+   "b1_ar_src": "results/arch/token_path_1018/hbm_gen_ds.json workloads.ar.tok_s",
+   "b1_grade": "composed: 9.6% current RTL, 8.2% modelled PHY, 82.2% priced (price5 1,905.4)",
+   "b1_mtp": 3258.7,
+   "b1_mtp_src": "price5 summary (priced; HBM MTP parked by owner)",
+   "supported_inflight_today": 1,
+   "supported_note": "ot_hbm_token_loop.sv takes one job {job,tok,pos} with no user field or KV base; ISA/compiler records are single-row. P position lanes (lane HBM-MTP) are a study with no committed result.",
+   "power_w": 12544.0,
+   "power_src": "STALE modelled: HBM DS system 12,544 W AR (energy_silicon_measured, 10-07, older geometry)",
+   "agg_tok_s": 1993.8,
+   "agg_bound": "time-share: one job at a time, so aggregate = single-stream rate",
+   "p_lane_potential": {
+    "rows": [
+     {
+      "P": 1,
+      "step_us": 501.54658333333333,
+      "aggregate_tok_s": 1993.8327430203808,
+      "bound": "token latency",
+      "experts_touched_per_layer": 6.0
+     },
+     {
+      "P": 8,
+      "step_us": 501.54658333333333,
+      "aggregate_tok_s": 15950.661944163046,
+      "bound": "token latency",
+      "experts_touched_per_layer": 44.24176318642492
+     },
+     {
+      "P": 32,
+      "step_us": 501.54658333333333,
+      "aggregate_tok_s": 63802.647776652186,
+      "bound": "token latency",
+      "experts_touched_per_layer": 136.1490853198797
+     },
+     {
+      "P": 128,
+      "step_us": 840.7836940038338,
+      "aggregate_tok_s": 152238.91818175098,
+      "bound": "HBM bandwidth",
+      "experts_touched_per_layer": 243.70168775065437
+     }
+    ],
+    "grade": "modelled, UNBUILT (needs P x MACs a weight word, row-count ISA, multi-query attention, expert-union compiler)",
+    "formula": "step = max(today's token latency, (dense + union(P) experts + P x 0.19 GB KV/index) / (192 x 1.90 TB/s))",
+    "kv_capacity_users": 8711,
+    "older_model": "MICROARCH_MODEL.md:450: V4.1 HBM AR 21,792 tok/s at 32 users (old rev)"
+   },
+   "agg_modelled_tok_s": 15950.661944163046
+  },
+  "hbm_qwen": {
+   "name": "HBM d4g (Qwen3-8B)",
+   "model": "Qwen3-8B",
+   "context": 8192,
+   "dies": 8,
+   "die_mm2": 641.83,
+   "area_mm2": 5134.64,
+   "stacks": 16,
+   "area_src": "results/arch/hbm_die_d4g/plan/plan_geometry.json 641.83 mm2 (630.66 + 11.2 SM frame), 16 SMs, 2 HBM3E stacks/45 GB a die; DS TP-192 (hgi_sim/d4g_price5_1018.py), Qwen TP-8 (TOKEN-PASS-HBMQ)",
+   "b1_ar": 930.9,
+   "b1_ar_src": "results/arch/token_path_1018/hbm_gen_qwen.json workloads.ar.tok_s",
+   "b1_grade": "composed: 6.9% current RTL, 93.0% priced (price5 946.2)",
+   "b1_mtp": null,
+   "b1_mtp_src": null,
+   "supported_inflight_today": 1,
+   "supported_note": "ot_hbm_token_loop.sv takes one job {job,tok,pos} with no user field or KV base; ISA/compiler records are single-row. P position lanes (lane HBM-MTP) are a study with no committed result.",
+   "power_w": 2612.1200000000003,
+   "power_src": "modelled ROUGH: 0.5 W/mm2 (A100 TDP density, technology.json roofline note) + 2.8 W/stack",
+   "agg_tok_s": 930.9,
+   "agg_bound": "time-share: one job at a time, so aggregate = single-stream rate",
+   "p_lane_potential": {
+    "rows": [
+     {
+      "P": 1,
+      "step_us": 1074.17325,
+      "aggregate_tok_s": 930.9485225032369,
+      "bound": "token latency"
+     },
+     {
+      "P": 8,
+      "step_us": 1074.17325,
+      "aggregate_tok_s": 7447.588180025895,
+      "bound": "token latency"
+     },
+     {
+      "P": 16,
+      "step_us": 1174.089621212121,
+      "aggregate_tok_s": 13627.579795383697,
+      "bound": "HBM bandwidth (KV)"
+     },
+     {
+      "P": 64,
+      "step_us": 3080.5914393939393,
+      "aggregate_tok_s": 20775.231399263725,
+      "bound": "HBM bandwidth (KV)"
+     }
+    ],
+    "grade": "modelled, UNBUILT",
+    "kv_bound_tok_s": 25177.001953125,
+    "formula": "step = max(today's token latency, (8.19 GB weights + P x 604 MB KV) / (8 x 1.90 TB/s))",
+    "kv_capacity_users": 582,
+    "older_model": "MICROARCH_MODEL.md:450: Qwen HBM 6,684 tok/s at 16 users (old rev)"
+   },
+   "agg_modelled_tok_s": 7447.588180025895
+  }
+ },
+ "a100": {
+  "qwen_8k": {
+   "system": "1 x A100 80GB, W8 weights + 8-bit KV (matched precision)",
+   "area_mm2": 826.0,
+   "stacks": 5,
+   "power_w": 400.0,
+   "b1": {
+    "batch": 1,
+    "step_s": 0.005778728911931619,
+    "per_user_tok_s": 173.04843595193606,
+    "aggregate_tok_s": 173.04843595193606,
+    "bound": "weight read"
+   },
+   "max_users": 105,
+   "at_max": {
+    "batch": 105,
+    "step_s": 0.04978762452182442,
+    "per_user_tok_s": 20.08531255717271,
+    "aggregate_tok_s": 2108.9578185031346,
+    "bound": "KV read"
+   },
+   "bf16_kv_sensitivity": {
+    "max_users": 52,
+    "at_max": {
+     "batch": 52,
+     "step_s": 0.04936446206403699,
+     "per_user_tok_s": 20.257488042769946,
+     "aggregate_tok_s": 1053.3893782240373,
+     "bound": "KV read"
+    }
+   }
+  },
+  "ds_1m": {
+   "system": "8 x A100 80GB (HGX A100), official-precision weights stored, weight-only dequant",
+   "area_mm2": 6608.0,
+   "stacks": 40,
+   "power_w": 3200.0,
+   "b1": {
+    "batch": 1,
+    "gpus": 8,
+    "step_s": 0.002465059326087718,
+    "per_user_tok_s": 405.66974977721713,
+    "aggregate_tok_s": 405.66974977721713,
+    "bound": "expert-weight read"
+   },
+   "max_users": 70,
+   "at_max": {
+    "batch": 70,
+    "gpus": 8,
+    "step_s": 0.022121379357433683,
+    "per_user_tok_s": 45.2051377015041,
+    "aggregate_tok_s": 3164.359639105287,
+    "bound": "expert-weight read"
+   }
+  },
+  "grade": "modelled roofline, A100 upper bound",
+  "constants": {
+   "area_mm2": 826.0,
+   "hbm_Bps": 2039000000000.0,
+   "hbm_bytes": 80000000000.0,
+   "stacks": 5,
+   "power_w": 400.0,
+   "bf16_flops": 312000000000000.0,
+   "int8_ops": 624000000000000.0,
+   "nvlink_one_way_Bps": 300000000000.0,
+   "src": "configs/hardware/technology.json reference_parts.a100_sxm_80gb (NVIDIA A100 datasheet); INT8 624 TOPS dense from the same datasheet",
+   "eff": {
+    "weight": 0.75,
+    "kv": 0.7,
+    "compute": 0.45,
+    "capacity": 0.9,
+    "src": "configs/hardware/technology_inputs.json runtime_and_cost_assumptions.a100 (assumed)"
+   }
+  },
+  "measured_note": "No measured A100 decode trace exists in the repo (results/DECISION.md:96 lists it Open). Public anchor, short context only: TensorRT-LLM Llama-3-8B ~4,500 output tok/s on one A100 40GB (Modal example, https://modal.com/docs/examples/trtllm_llama). The A100 rows below are a roofline with the repo's assumed efficiencies, i.e. an UPPER bound for the A100."
+ },
+ "ratios": {
+  "s81": {
+   "b1_per_device_x": 3.0640687423270334,
+   "b1_per_mm2_x": 0.0575785053499438,
+   "b1_per_W_x": 0.2564342498024507,
+   "agg_today_per_mm2_x": 0.0073815433521526716,
+   "agg_today_per_W_x": 0.03287477714798628,
+   "agg_today_per_stack_x": 0.03571022667700009,
+   "iso_area_a100_count": 425.72397094430994,
+   "agg_modelled_per_mm2_x": 0.316616569504145,
+   "agg_modelled_per_W_x": 1.4100979520459223,
+   "agg_modelled_per_stack_x": 1.531718900409883,
+   "iso_area_a100_aggregate_tok_s": 168392.9688819758
+  },
+  "qwen_rom": {
+   "b1_per_device_x": 27.55991392678428,
+   "b1_per_mm2_x": 2.5552811718215493,
+   "b1_per_W_x": 1.574308212224997,
+   "agg_today_per_mm2_x": 0.20967105473688366,
+   "agg_today_per_W_x": 0.12917829434122438,
+   "agg_today_per_stack_x": 0.35334395665101936,
+   "iso_area_a100_count": 10.78547215496368,
+   "agg_modelled_per_mm2_x": 0.9424130612340386,
+   "agg_modelled_per_W_x": 0.580620496080757,
+   "agg_modelled_per_stack_x": 1.588182786002157,
+   "iso_area_a100_aggregate_tok_s": 22746.105827458505
+  },
+  "hbm_ds": {
+   "b1_per_device_x": 4.914835284353692,
+   "b1_per_mm2_x": 0.2635468078824188,
+   "b1_per_W_x": 1.2537845113147172,
+   "agg_today_per_mm2_x": 0.03378660449558586,
+   "agg_today_per_W_x": 0.16073471633692157,
+   "agg_today_per_stack_x": 0.06563334250424298,
+   "iso_area_a100_count": 149.1905084745763,
+   "agg_ceiling_tok_s": 152238.91818175098,
+   "agg_potential_tok_s": 15950.661944163046,
+   "agg_potential_P": 8,
+   "agg_potential_per_mm2_x": 0.2702972748270787,
+   "agg_potential_per_W_x": 1.2858988479191378,
+   "agg_modelled_per_mm2_x": 0.2702972748270787,
+   "agg_modelled_per_W_x": 1.2858988479191378,
+   "agg_modelled_per_stack_x": 0.5250753629003146,
+   "iso_area_a100_aggregate_tok_s": 59011.552944318064
+  },
+  "hbm_qwen": {
+   "b1_per_device_x": 5.379418744117144,
+   "b1_per_mm2_x": 0.8653771019274499,
+   "b1_per_W_x": 0.8237628813557024,
+   "agg_today_per_mm2_x": 0.07100765728138331,
+   "agg_today_per_W_x": 0.06759304380731629,
+   "agg_today_per_stack_x": 0.13793839186716175,
+   "iso_area_a100_count": 6.216271186440679,
+   "agg_ceiling_tok_s": 20775.231399263725,
+   "agg_potential_tok_s": 7447.588180025895,
+   "agg_potential_P": 8,
+   "agg_potential_per_mm2_x": 0.5680908680418519,
+   "agg_potential_per_W_x": 0.540772536374843,
+   "agg_modelled_per_mm2_x": 0.5680908680418519,
+   "agg_modelled_per_W_x": 0.540772536374843,
+   "agg_modelled_per_stack_x": 1.1035646544651994,
+   "iso_area_a100_aggregate_tok_s": 13109.853720579826
+  }
+ },
+ "prior_0923": {
+  "qwen_q4_inside_a100": {
+   "b1_x": 14.37,
+   "b256_x": 0.327,
+   "crossover_batch": 16,
+   "src": "results/derived/rom_iso_area_inside_a100_die.json answer (09-23)",
+   "basis": "one 826 mm2 die, q4p25 weights in 596 mm2 ROM, 81 mm2 compute, NO KV term on either side (A100 by_batch goes compute-bound at 20,612 tok/s from b=64 with no KV read or capacity limit)"
+  },
+  "ds_array_vs_gpu": {
+   "best_x": "12.9-15.8",
+   "worst_x": "0.9-1.75",
+   "src": "results/derived/rom_iso_area_against_gpu.json shipped_geometries DSV4-Flash/ROM-N5-native-HBMKV-array-pipeline-x62..x84",
+   "basis": "DSV4-Flash (not V4.1), 50,530-68,460 mm2 analytical arrays, against a B200 cluster modelled as link-latency-bound tensor parallel (its own caveat), roofline both sides"
+  },
+  "wafer_vs_array": {
+   "src": "docs/WAFER_VS_ARRAY_ISO_AREA.md (09-26)",
+   "basis": "array b4096 aggregate 113k-1.35M tok/s at 2-12 wafer-equivalents, analytical"
+  }
+ },
+ "grades_legend": "composed  = token_path_1018 composition (mixed measured / priced terms, see that README for the % split)\n  priced    = analytic price of record\n  modelled  = this file's bound model from cited constants (formula in the row)\n  published = vendor datasheet constant\n  stale     = modelled on an older die revision, kept only because no current figure exists"
+}
