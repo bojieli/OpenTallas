@@ -70,3 +70,6 @@ Slot-written flags:4 per-source-ring flags, same2stage reset epoch; each drives1
 8 FIXED: static continuous ring, no credit/backpressure. Two reset stages shift both landing epochs +1 versus historical halves; normal data latency unchanged K=2. Parent warm-up/compiler reset update required BEFORE binding. New halves remain unbound pending that work.
 
 Slot-written flags:4 kept source-register copies per24bit slice (44flag pins forW258), same2stage reset epoch; each drives one local read mask, <=24 data gates. Prevents stale reset output at +0.1T receiver phase.
+
+## QW-LANDCB16 10-19 (Claude)
+Fresh current-tool gate (tools from origin/main 44efbc63b). Geometry unchanged from reviewed snapshot b25f19be2 (64.8x129.6, no macros, continuous std rows, bank face 4.02 pins/um <=6). ROOT 09:00 approved W/R258 component geometry for parallel component routes; LEAD QW-LANDCB16 extends the same scoped approval to W/R257 (identical outline/pin family, one fewer bit). Benches: primary MUT0 PASS and wrong-K3 mutant FAIL (errors=1968) on Verilator 5.050, witnesses results/arch/qwen_cluster_1017/q_cluster16/bench_land_narrow/w257_{pass,mut}.log. Checklist: SAFE_CHECKLIST.md (items 1-5,7,8 PASS/FIXED; 6 WAIVER pin-bound low util). Component route only; NOT parent adoption.
