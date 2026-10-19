@@ -186,6 +186,13 @@ def intervals(d, dyn, L):
     return [interval(d, dyn, L)]
 
 
+def is_write_operand(r, k):
+    """O / R are written; so is IDX.INDEX D when cand_en (param bit 12): the layer-20 candidate table [ids | block
+    maxima] the frame WRITES (machine.u_idx_index), read next by COLL.TOPK_MERGE (candidate merge).  Before 10-19 the
+    footprint read D, which made the table a live-in of layer 20 (HBM-NEXT-CMTP whole-token images)."""
+    return k in ("O", "R") or (k == "D" and r.unit == "IDX" and r.op == "INDEX" and (r.param >> 12) & 1 == 1)
+
+
 def footprint(r, dyn, L):
     """Descriptor extents, plus the implicit state a native engine reads / writes (r.implicit: VM intervals the
     lowering declares for DS engines whose inputs are not all descriptors)."""
@@ -204,7 +211,7 @@ def footprint(r, dyn, L):
         if half and k in ("B", "D") and not (0 < d.n_sel < 63):
             # b_half: B / D are read at inner index i >> 1 (adjacent-pair tables), so the span is ceil(n / 2)
             d = type(d)(**{**d.__dict__, "n": (d.n + 1) // 2})
-        (writes if k in ("O", "R") else reads).extend(intervals(d, dyn, L))      # I (id table): a read
+        (writes if is_write_operand(r, k) else reads).extend(intervals(d, dyn, L))   # I (id table): a read
     if r.unit == "SU" and r.sut and r.sut.get("c_pair") and "A" in r.desc:
         pass                                             # partner lies inside A's head span (aligned)
     return reads, writes

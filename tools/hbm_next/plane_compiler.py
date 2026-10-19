@@ -496,10 +496,21 @@ def users_union(uu, n):
     return uu[lo] + (uu[hi] - uu[lo]) * (n - lo) / (hi - lo)
 
 
+UNION_BOUND = [False]   # meas --union-bound: the RESERVED static calendar -- every union loop priced at its bound
+
+
 def case_jobs(st, P=4, kn: Knobs = D1, mu_n=None):
+    """UNION_BOUND: the union expert loop is a data-dependent span (U experts, CTL.LOOP count from VM); a static
+    calendar with collision = fault reserves its bound, U = 6 N (verify 36, users 6 x users; draft + seed bodies 36:
+    conservative, the 5-row draft bodies need only 30) instead of the measured mean (MTP-STATS)"""
     u6, uu = st["verify_union"][6]["mean"], st["users_union"]
     sw = None if kn.vm_grown else True
     mu_n = mu_n or P
+    if UNION_BOUND[0]:
+        return [("ds", "AR", "verify", dict(P=1, N=1)),
+                ("ds", "MTP", "verify", dict(P=P, N=6, union=6.0 * 6, kv="upper", swap=sw)),
+                ("ds", "draft", "draft", dict(P=P, overlap=True, union=6.0 * 6)),
+                ("ds", "MU", "verify", dict(P=P, N=mu_n, union=6.0 * mu_n, users=True, swap=sw))]
     return [("ds", "AR", "verify", dict(P=1, N=1)),
             ("ds", "MTP", "verify", dict(P=P, N=6, union=u6, kv="upper", swap=sw)),
             ("ds", "draft", "draft", dict(P=P, overlap=True, union=u6)),
@@ -654,10 +665,12 @@ def meas_cases(key):
 def meas(a):
     from hgi_sim import hbm_plane_model as M
     MODE5[0] = bool(getattr(a, "step5", False))
+    UNION_BOUND[0] = bool(getattr(a, "union_bound", False))
     st = M.load_stats(STATS)
     CUR["hist"] = lane_hists()
     out = dict(schema="opentallas.hbm_next_1019.cmtp.meas_retime.v1", generated_utc=datetime.datetime.now(
-        datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"), rule=__doc__, meas_keys=MEAS, options={})
+        datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"), rule=__doc__, meas_keys=MEAS, options={},
+        union_bound=UNION_BOUND[0])
     for key, label, kn0, mu_n in MEAS_OPTIONS:
         if a.only and key not in a.only.split(","):
             continue
@@ -705,6 +718,8 @@ def main():
     q.add_argument("--only", default="")
     q.add_argument("--cases", default="", help="'|'-separated case names")
     q.add_argument("--step5", action="store_true", help="step 5 case set (IDXN / SUDMA2 / FUSED + frames, v2 ALL)")
+    q.add_argument("--union-bound", action="store_true",
+                   help="reserved static calendar: union loops priced at U = 6 N (draft: no-sharing bound)")
     o = sub.add_parser("options")
     o.add_argument("--out", type=Path, required=True)
     o.add_argument("--jobs", type=int, default=4)

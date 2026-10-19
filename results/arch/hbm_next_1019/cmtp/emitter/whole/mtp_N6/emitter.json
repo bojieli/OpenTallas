@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.hbm_next_1019.cmtp.emitter.v2",
- "generated_utc": "2026-10-19T10:53:05Z",
+ "generated_utc": "2026-10-19T13:33:10Z",
  "rule": "HBM-NEXT-CMTP: object-level VM allocator + HGI-1R binary record emitter (FIRST VERSION, step 2).\n\nInput: the compiled N-row programme (plane_compiler headline knobs; M.ds_compile) and its S2 timeline per layer\nsegment (static_check.schedule_segments).  The compiled records keep the AR descriptors (row 0 addresses of the AR VM\nmap) plus per-position footprints shifted by VM_OFF per position (and SLOT_OFF per union expert slot): the allocator\nturns that bookkeeping into a real VM map; the emitter writes HGI-1R bytes (isa_rows.encode) against it.\n\nALLOCATOR (per layer segment):\n  1. CLUSTERS: AR VM word ranges joined by any footprint interval and by all intervals of one descriptor (so every\n     descriptor addresses exactly one cluster; relocation is one base shift a cluster).\n  2. INSTANCES: word-level liveness as static_check C4 (a word is live from the START of its writer -- the writer\n     owns the words while it runs -- to the END of its last reader before the next write); a cluster copy's live\n     spans are merged into instances (gaps with no live word split them).\n  3. OBJECTS: the per-position copies (p = 0 .. N - 1) of one cluster whose instances overlap in time form ONE ROW\n     ARRAY: N rows at a fixed row stride (cluster size rounded up to 8 words), lifetime = the union -- so an N-row\n     record addresses row rho at base + rho x rs (ROWX rs_k).  Clusters only read in the segment (gains, tables, HC\n     rows) are CONSTANTS: one row, rs = 0 (broadcast).  The entering columns h / PRE are PINNED row arrays at VM 0\n     (live across segments).  Union expert slot j copies are separate objects (one per slot).\n  4. PLACEMENT: first-fit by start time into the address space; the high-water mark is the VM this map needs.  It is\n     >= the C4 word-level peak (C4 = lower bound: no fragmentation, no cluster granularity).\nEMITTER: every record with VM operands in clusters gets its bases relocated (row 0) and, when it carries N > 1\npositions, a ROWX (n = N, slot0 = 0, rs_k = the row stride of operand k's object or 0, SM: rpl = best_rpl, param\n[5:2] = N - 1).  Checked per record: isa_rows.check (legality), encode -> decode round trip identical, expand(): every\nrow's descriptor intervals fall inside that row of the allocated object, rows independent (R2).  AR (N = 1) is the\nidentity: no relocation, no ROWX, bytes == records.Rec.encode.\nNOT YET (next): union expert slots as the IDX.UNION + rsel CTL.LOOP form (emitted here as SKIPPED, counted), the\nIDX.UNION record itself, CTL.USERS banks for the users image, implicit engine state (fixed-address intervals no\ndescriptor names: reported, pinned at their AR address), whole-token image assembly + VEH hand-off.\n\n    PYTHONPATH=tools python3 tools/hbm_next/emitter.py --mode mtp --layers 0,1 --out DIR\n",
  "mode": "mtp",
  "N": 6,
@@ -11,12 +11,12 @@
    "values": 551,
    "objects": {
     "pinned_column": 2,
-    "row_array": 43,
+    "row_array": 44,
     "shared_load": 5
    },
    "alloc": {
-    "pinned_words": 122928,
-    "high_water": 350400,
+    "pinned_words": 147504,
+    "high_water": 374976,
     "object_bound": 350400,
     "object_peak_at": 8580.521884641194,
     "peak_objects": [
@@ -79,44 +79,48 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 356544,
-     "greedy_by_size": 350400
+     "first_fit_by_time": 389344,
+     "greedy_by_size": 374976
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 122880
     }
    },
    "c4_peak": 300038,
-   "frag_over_c4": 1.168,
+   "frag_over_c4": 1.25,
    "objects_over_c4": 1.168,
    "aux": {
     "union.list": [
-     462048,
+     483552,
      36
     ],
     "union.count": [
-     462112,
+     483616,
      1
     ],
     "union.tables": [
-     462144,
+     483648,
      1152
     ],
     "kvunion.plan.p0": [
-     463296,
+     484800,
      10240
     ],
     "kvunion.map.p0": [
-     473536,
+     495040,
      528
     ],
     "kvunion.plan.p4": [
-     474080,
+     495584,
      10240
     ],
     "kvunion.map.p4": [
-     484320,
+     505824,
      272
     ]
    },
-   "vm_need_words": 484608,
+   "vm_need_words": 506112,
    "fits": {
     "as_built": false,
     "grown_412k": false,
@@ -141,18 +145,18 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 432144
    },
-   "image_sha256": "3f969f08fd6aa76bf0f02ad4aab8a53fc7ad7245ab0cefa0acd7ee024cba412f"
+   "image_sha256": "2d0378a2cab8d2db0829357720a6af3e808fc7aadb4dd53072ac3add9ec833a1"
   },
   "1": {
    "values": 985,
    "objects": {
     "shared_load": 7,
-    "row_array": 56,
+    "row_array": 57,
     "pinned_column": 2
    },
    "alloc": {
-    "pinned_words": 122928,
-    "high_water": 456800,
+    "pinned_words": 147504,
+    "high_water": 481376,
     "object_bound": 456800,
     "object_peak_at": 5730.085362996176,
     "peak_objects": [
@@ -229,44 +233,48 @@
     ],
     "method": "first_fit_by_time",
     "tries": {
-     "first_fit_by_time": 456800,
-     "greedy_by_size": 456800
+     "first_fit_by_time": 481376,
+     "greedy_by_size": 481376
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 122880
     }
    },
    "c4_peak": 441398,
-   "frag_over_c4": 1.035,
+   "frag_over_c4": 1.091,
    "objects_over_c4": 1.035,
    "aux": {
     "union.list": [
-     462048,
+     483552,
      36
     ],
     "union.count": [
-     462112,
+     483616,
      1
     ],
     "union.tables": [
-     462144,
+     483648,
      1152
     ],
     "kvunion.plan.p0": [
-     463296,
+     484800,
      10240
     ],
     "kvunion.map.p0": [
-     473536,
+     495040,
      528
     ],
     "kvunion.plan.p4": [
-     474080,
+     495584,
      10240
     ],
     "kvunion.map.p4": [
-     484320,
+     505824,
      272
     ]
    },
-   "vm_need_words": 484608,
+   "vm_need_words": 506112,
    "fits": {
     "as_built": false,
     "grown_412k": false,
@@ -291,18 +299,18 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 584148
    },
-   "image_sha256": "5f9aff193cd232e1bd0f457a3b0e27380b326a7928ebd8a3dc5142e0a869ab5d"
+   "image_sha256": "c15bd523006a4bade67ba2d48ed2fadc034690efe6be433efaefb3f59057bce3"
   },
   "2": {
    "values": 797,
    "objects": {
-    "row_array": 50,
+    "row_array": 51,
     "pinned_column": 2,
     "shared_load": 5
    },
    "alloc": {
-    "pinned_words": 122928,
-    "high_water": 350792,
+    "pinned_words": 147504,
+    "high_water": 375368,
     "object_bound": 350792,
     "object_peak_at": 38251.80452518899,
     "peak_objects": [
@@ -393,44 +401,48 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 385904,
-     "greedy_by_size": 350792
+     "first_fit_by_time": 407408,
+     "greedy_by_size": 375368
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 122880
     }
    },
    "c4_peak": 303664,
-   "frag_over_c4": 1.155,
+   "frag_over_c4": 1.236,
    "objects_over_c4": 1.155,
    "aux": {
     "union.list": [
-     462048,
+     483552,
      36
     ],
     "union.count": [
-     462112,
+     483616,
      1
     ],
     "union.tables": [
-     462144,
+     483648,
      1152
     ],
     "kvunion.plan.p0": [
-     463296,
+     484800,
      10240
     ],
     "kvunion.map.p0": [
-     473536,
+     495040,
      528
     ],
     "kvunion.plan.p4": [
-     474080,
+     495584,
      10240
     ],
     "kvunion.map.p4": [
-     484320,
+     505824,
      272
     ]
    },
-   "vm_need_words": 484608,
+   "vm_need_words": 506112,
    "fits": {
     "as_built": false,
     "grown_412k": false,
@@ -455,18 +467,18 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 462744
    },
-   "image_sha256": "019b35c81fccc4c177ab8c652d2a60d3de518e53bd8979b28ebf403a529156b7"
+   "image_sha256": "9bed0bb20baa1b73b523491ba35783cd04777b2a8d30af4996e67a069f2ff111"
   },
   "3": {
    "values": 551,
    "objects": {
     "pinned_column": 2,
-    "row_array": 43,
+    "row_array": 44,
     "shared_load": 5
    },
    "alloc": {
-    "pinned_words": 122928,
-    "high_water": 350400,
+    "pinned_words": 147504,
+    "high_water": 374976,
     "object_bound": 350400,
     "object_peak_at": 12127.553742729851,
     "peak_objects": [
@@ -529,44 +541,48 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 364768,
-     "greedy_by_size": 350400
+     "first_fit_by_time": 386272,
+     "greedy_by_size": 374976
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 122880
     }
    },
    "c4_peak": 300038,
-   "frag_over_c4": 1.168,
+   "frag_over_c4": 1.25,
    "objects_over_c4": 1.168,
    "aux": {
     "union.list": [
-     462048,
+     483552,
      36
     ],
     "union.count": [
-     462112,
+     483616,
      1
     ],
     "union.tables": [
-     462144,
+     483648,
      1152
     ],
     "kvunion.plan.p0": [
-     463296,
+     484800,
      10240
     ],
     "kvunion.map.p0": [
-     473536,
+     495040,
      528
     ],
     "kvunion.plan.p4": [
-     474080,
+     495584,
      10240
     ],
     "kvunion.map.p4": [
-     484320,
+     505824,
      272
     ]
    },
-   "vm_need_words": 484608,
+   "vm_need_words": 506112,
    "fits": {
     "as_built": false,
     "grown_412k": false,
@@ -591,18 +607,18 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 432144
    },
-   "image_sha256": "0c982cd8590df05ab766f6be0f4384f9dfb1803369380a0cb31b4e36f94c8563"
+   "image_sha256": "5a5856816e2b37e84dc36a0cbb00d3096a51d2211781b07edb3cf12171097ae2"
   },
   "4": {
    "values": 551,
    "objects": {
     "pinned_column": 2,
-    "row_array": 43,
+    "row_array": 44,
     "shared_load": 5
    },
    "alloc": {
-    "pinned_words": 122928,
-    "high_water": 350400,
+    "pinned_words": 147504,
+    "high_water": 374976,
     "object_bound": 350400,
     "object_peak_at": 12127.553742729851,
     "peak_objects": [
@@ -665,44 +681,48 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 364768,
-     "greedy_by_size": 350400
+     "first_fit_by_time": 386272,
+     "greedy_by_size": 374976
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 122880
     }
    },
    "c4_peak": 300038,
-   "frag_over_c4": 1.168,
+   "frag_over_c4": 1.25,
    "objects_over_c4": 1.168,
    "aux": {
     "union.list": [
-     462048,
+     483552,
      36
     ],
     "union.count": [
-     462112,
+     483616,
      1
     ],
     "union.tables": [
-     462144,
+     483648,
      1152
     ],
     "kvunion.plan.p0": [
-     463296,
+     484800,
      10240
     ],
     "kvunion.map.p0": [
-     473536,
+     495040,
      528
     ],
     "kvunion.plan.p4": [
-     474080,
+     495584,
      10240
     ],
     "kvunion.map.p4": [
-     484320,
+     505824,
      272
     ]
    },
-   "vm_need_words": 484608,
+   "vm_need_words": 506112,
    "fits": {
     "as_built": false,
     "grown_412k": false,
@@ -727,18 +747,18 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 432144
    },
-   "image_sha256": "ba9cba29dddd97bb4a1235ed5afc600846a7fcd118b94c6d36e9bb2e73c0b407"
+   "image_sha256": "b22ce9005e64f4741c1b703520f103e4aefa9adcc9efe21f7d2b09dc63a514f6"
   },
   "5": {
    "values": 551,
    "objects": {
     "pinned_column": 2,
-    "row_array": 43,
+    "row_array": 44,
     "shared_load": 5
    },
    "alloc": {
-    "pinned_words": 122928,
-    "high_water": 350400,
+    "pinned_words": 147504,
+    "high_water": 374976,
     "object_bound": 350400,
     "object_peak_at": 12127.553742729851,
     "peak_objects": [
@@ -801,44 +821,48 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 364768,
-     "greedy_by_size": 350400
+     "first_fit_by_time": 386272,
+     "greedy_by_size": 374976
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 122880
     }
    },
    "c4_peak": 300038,
-   "frag_over_c4": 1.168,
+   "frag_over_c4": 1.25,
    "objects_over_c4": 1.168,
    "aux": {
     "union.list": [
-     462048,
+     483552,
      36
     ],
     "union.count": [
-     462112,
+     483616,
      1
     ],
     "union.tables": [
-     462144,
+     483648,
      1152
     ],
     "kvunion.plan.p0": [
-     463296,
+     484800,
      10240
     ],
     "kvunion.map.p0": [
-     473536,
+     495040,
      528
     ],
     "kvunion.plan.p4": [
-     474080,
+     495584,
      10240
     ],
     "kvunion.map.p4": [
-     484320,
+     505824,
      272
     ]
    },
-   "vm_need_words": 484608,
+   "vm_need_words": 506112,
    "fits": {
     "as_built": false,
     "grown_412k": false,
@@ -863,18 +887,18 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 432144
    },
-   "image_sha256": "a927ff25fa4c3d28eacce729f80bd3a452bcf239f8b708f765290f76b00346dd"
+   "image_sha256": "30990a330f3d1f61cacc863bd9b0d04a05a4a9268571c950457325d4e21c06c1"
   },
   "6": {
    "values": 551,
    "objects": {
     "pinned_column": 2,
-    "row_array": 43,
+    "row_array": 44,
     "shared_load": 5
    },
    "alloc": {
-    "pinned_words": 122928,
-    "high_water": 350400,
+    "pinned_words": 147504,
+    "high_water": 374976,
     "object_bound": 350400,
     "object_peak_at": 12127.553742729851,
     "peak_objects": [
@@ -937,44 +961,48 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 364768,
-     "greedy_by_size": 350400
+     "first_fit_by_time": 386272,
+     "greedy_by_size": 374976
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 122880
     }
    },
    "c4_peak": 300038,
-   "frag_over_c4": 1.168,
+   "frag_over_c4": 1.25,
    "objects_over_c4": 1.168,
    "aux": {
     "union.list": [
-     462048,
+     483552,
      36
     ],
     "union.count": [
-     462112,
+     483616,
      1
     ],
     "union.tables": [
-     462144,
+     483648,
      1152
     ],
     "kvunion.plan.p0": [
-     463296,
+     484800,
      10240
     ],
     "kvunion.map.p0": [
-     473536,
+     495040,
      528
     ],
     "kvunion.plan.p4": [
-     474080,
+     495584,
      10240
     ],
     "kvunion.map.p4": [
-     484320,
+     505824,
      272
     ]
    },
-   "vm_need_words": 484608,
+   "vm_need_words": 506112,
    "fits": {
     "as_built": false,
     "grown_412k": false,
@@ -999,18 +1027,18 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 432144
    },
-   "image_sha256": "ba267f991a20309d890eba80fe02a41aa52b07d55ef7aaf7ec7c16234c2de4cf"
+   "image_sha256": "d68466e4f1c508f69942f42807e44646040d4b243885a3501af464a8e28090af"
   },
   "7": {
    "values": 551,
    "objects": {
     "pinned_column": 2,
-    "row_array": 43,
+    "row_array": 44,
     "shared_load": 5
    },
    "alloc": {
-    "pinned_words": 122928,
-    "high_water": 350400,
+    "pinned_words": 147504,
+    "high_water": 374976,
     "object_bound": 350400,
     "object_peak_at": 12127.553742729851,
     "peak_objects": [
@@ -1073,44 +1101,48 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 364768,
-     "greedy_by_size": 350400
+     "first_fit_by_time": 386272,
+     "greedy_by_size": 374976
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 122880
     }
    },
    "c4_peak": 300038,
-   "frag_over_c4": 1.168,
+   "frag_over_c4": 1.25,
    "objects_over_c4": 1.168,
    "aux": {
     "union.list": [
-     462048,
+     483552,
      36
     ],
     "union.count": [
-     462112,
+     483616,
      1
     ],
     "union.tables": [
-     462144,
+     483648,
      1152
     ],
     "kvunion.plan.p0": [
-     463296,
+     484800,
      10240
     ],
     "kvunion.map.p0": [
-     473536,
+     495040,
      528
     ],
     "kvunion.plan.p4": [
-     474080,
+     495584,
      10240
     ],
     "kvunion.map.p4": [
-     484320,
+     505824,
      272
     ]
    },
-   "vm_need_words": 484608,
+   "vm_need_words": 506112,
    "fits": {
     "as_built": false,
     "grown_412k": false,
@@ -1135,18 +1167,18 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 432144
    },
-   "image_sha256": "8111fc66e58abbe3538be0f9b6e26dfc1e98dd288d58dab9cb2fa0171b35f114"
+   "image_sha256": "71c954a98c6536ff90ae63f0847e4422ad22b38658a21d293acbe960ea3aa753"
   },
   "8": {
    "values": 797,
    "objects": {
-    "row_array": 50,
+    "row_array": 51,
     "pinned_column": 2,
     "shared_load": 5
    },
    "alloc": {
-    "pinned_words": 122928,
-    "high_water": 350792,
+    "pinned_words": 147504,
+    "high_water": 375368,
     "object_bound": 350792,
     "object_peak_at": 38251.80452518899,
     "peak_objects": [
@@ -1237,44 +1269,48 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 385904,
-     "greedy_by_size": 350792
+     "first_fit_by_time": 407408,
+     "greedy_by_size": 375368
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 122880
     }
    },
    "c4_peak": 303664,
-   "frag_over_c4": 1.155,
+   "frag_over_c4": 1.236,
    "objects_over_c4": 1.155,
    "aux": {
     "union.list": [
-     462048,
+     483552,
      36
     ],
     "union.count": [
-     462112,
+     483616,
      1
     ],
     "union.tables": [
-     462144,
+     483648,
      1152
     ],
     "kvunion.plan.p0": [
-     463296,
+     484800,
      10240
     ],
     "kvunion.map.p0": [
-     473536,
+     495040,
      528
     ],
     "kvunion.plan.p4": [
-     474080,
+     495584,
      10240
     ],
     "kvunion.map.p4": [
-     484320,
+     505824,
      272
     ]
    },
-   "vm_need_words": 484608,
+   "vm_need_words": 506112,
    "fits": {
     "as_built": false,
     "grown_412k": false,
@@ -1299,18 +1335,18 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 462744
    },
-   "image_sha256": "f0eb1b9cf9c0f27514a60d0f96127bd9b7a5c5eb92bbeca10a248e41ee303985"
+   "image_sha256": "6006624523db3ff940cf0e52ace42d56af514509258cc0bb260af6d04b981685"
   },
   "9": {
    "values": 551,
    "objects": {
     "pinned_column": 2,
-    "row_array": 43,
+    "row_array": 44,
     "shared_load": 5
    },
    "alloc": {
-    "pinned_words": 122928,
-    "high_water": 350400,
+    "pinned_words": 147504,
+    "high_water": 374976,
     "object_bound": 350400,
     "object_peak_at": 12127.553742729851,
     "peak_objects": [
@@ -1373,44 +1409,48 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 364768,
-     "greedy_by_size": 350400
+     "first_fit_by_time": 386272,
+     "greedy_by_size": 374976
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 122880
     }
    },
    "c4_peak": 300038,
-   "frag_over_c4": 1.168,
+   "frag_over_c4": 1.25,
    "objects_over_c4": 1.168,
    "aux": {
     "union.list": [
-     462048,
+     483552,
      36
     ],
     "union.count": [
-     462112,
+     483616,
      1
     ],
     "union.tables": [
-     462144,
+     483648,
      1152
     ],
     "kvunion.plan.p0": [
-     463296,
+     484800,
      10240
     ],
     "kvunion.map.p0": [
-     473536,
+     495040,
      528
     ],
     "kvunion.plan.p4": [
-     474080,
+     495584,
      10240
     ],
     "kvunion.map.p4": [
-     484320,
+     505824,
      272
     ]
    },
-   "vm_need_words": 484608,
+   "vm_need_words": 506112,
    "fits": {
     "as_built": false,
     "grown_412k": false,
@@ -1435,18 +1475,18 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 432144
    },
-   "image_sha256": "7bac9fcaf22af651f803be1f4b4f5a003540853d0b9d56f2d8aaef3bcbd835c2"
+   "image_sha256": "64a5dcd72d139c519dbcf634d2f592a3b16cbcccd1e06a4632a4b00ec12d3890"
   },
   "10": {
    "values": 551,
    "objects": {
     "pinned_column": 2,
-    "row_array": 43,
+    "row_array": 44,
     "shared_load": 5
    },
    "alloc": {
-    "pinned_words": 122928,
-    "high_water": 350400,
+    "pinned_words": 147504,
+    "high_water": 374976,
     "object_bound": 350400,
     "object_peak_at": 12127.553742729851,
     "peak_objects": [
@@ -1509,44 +1549,48 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 364768,
-     "greedy_by_size": 350400
+     "first_fit_by_time": 386272,
+     "greedy_by_size": 374976
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 122880
     }
    },
    "c4_peak": 300038,
-   "frag_over_c4": 1.168,
+   "frag_over_c4": 1.25,
    "objects_over_c4": 1.168,
    "aux": {
     "union.list": [
-     462048,
+     483552,
      36
     ],
     "union.count": [
-     462112,
+     483616,
      1
     ],
     "union.tables": [
-     462144,
+     483648,
      1152
     ],
     "kvunion.plan.p0": [
-     463296,
+     484800,
      10240
     ],
     "kvunion.map.p0": [
-     473536,
+     495040,
      528
     ],
     "kvunion.plan.p4": [
-     474080,
+     495584,
      10240
     ],
     "kvunion.map.p4": [
-     484320,
+     505824,
      272
     ]
    },
-   "vm_need_words": 484608,
+   "vm_need_words": 506112,
    "fits": {
     "as_built": false,
     "grown_412k": false,
@@ -1571,18 +1615,18 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 432144
    },
-   "image_sha256": "0009a0595fc269757dbdaa1d73842afe17a232d171ec93ecb54f99e38fd17bc9"
+   "image_sha256": "0d4a51cac71fb69a8674e874d42e8cf825bb60506c3621116ae2c2a4f01f5f63"
   },
   "11": {
    "values": 551,
    "objects": {
     "pinned_column": 2,
-    "row_array": 43,
+    "row_array": 44,
     "shared_load": 5
    },
    "alloc": {
-    "pinned_words": 122928,
-    "high_water": 350400,
+    "pinned_words": 147504,
+    "high_water": 374976,
     "object_bound": 350400,
     "object_peak_at": 12127.553742729851,
     "peak_objects": [
@@ -1645,44 +1689,48 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 364768,
-     "greedy_by_size": 350400
+     "first_fit_by_time": 386272,
+     "greedy_by_size": 374976
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 122880
     }
    },
    "c4_peak": 300038,
-   "frag_over_c4": 1.168,
+   "frag_over_c4": 1.25,
    "objects_over_c4": 1.168,
    "aux": {
     "union.list": [
-     462048,
+     483552,
      36
     ],
     "union.count": [
-     462112,
+     483616,
      1
     ],
     "union.tables": [
-     462144,
+     483648,
      1152
     ],
     "kvunion.plan.p0": [
-     463296,
+     484800,
      10240
     ],
     "kvunion.map.p0": [
-     473536,
+     495040,
      528
     ],
     "kvunion.plan.p4": [
-     474080,
+     495584,
      10240
     ],
     "kvunion.map.p4": [
-     484320,
+     505824,
      272
     ]
    },
-   "vm_need_words": 484608,
+   "vm_need_words": 506112,
    "fits": {
     "as_built": false,
     "grown_412k": false,
@@ -1707,18 +1755,18 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 432144
    },
-   "image_sha256": "c83580868399b1f66f14b378fd94afe22a0da9f92a7ce7ac0ed85552561e0258"
+   "image_sha256": "e133114b7877e9558791479d41d4539ab3ad3b875bbf74594a2a73759bc745c8"
   },
   "12": {
    "values": 551,
    "objects": {
     "pinned_column": 2,
-    "row_array": 43,
+    "row_array": 44,
     "shared_load": 5
    },
    "alloc": {
-    "pinned_words": 122928,
-    "high_water": 350400,
+    "pinned_words": 147504,
+    "high_water": 374976,
     "object_bound": 350400,
     "object_peak_at": 12127.553742729851,
     "peak_objects": [
@@ -1781,44 +1829,48 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 364768,
-     "greedy_by_size": 350400
+     "first_fit_by_time": 386272,
+     "greedy_by_size": 374976
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 122880
     }
    },
    "c4_peak": 300038,
-   "frag_over_c4": 1.168,
+   "frag_over_c4": 1.25,
    "objects_over_c4": 1.168,
    "aux": {
     "union.list": [
-     462048,
+     483552,
      36
     ],
     "union.count": [
-     462112,
+     483616,
      1
     ],
     "union.tables": [
-     462144,
+     483648,
      1152
     ],
     "kvunion.plan.p0": [
-     463296,
+     484800,
      10240
     ],
     "kvunion.map.p0": [
-     473536,
+     495040,
      528
     ],
     "kvunion.plan.p4": [
-     474080,
+     495584,
      10240
     ],
     "kvunion.map.p4": [
-     484320,
+     505824,
      272
     ]
    },
-   "vm_need_words": 484608,
+   "vm_need_words": 506112,
    "fits": {
     "as_built": false,
     "grown_412k": false,
@@ -1843,18 +1895,18 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 432144
    },
-   "image_sha256": "def883831756f7178c7aeef2597b3635b6b614fd71aa427d55578675a1a35724"
+   "image_sha256": "1cd770b857e98a559c0960d23f53b281b589166aeedb78c55bde24bf61b5e96f"
   },
   "13": {
    "values": 551,
    "objects": {
     "pinned_column": 2,
-    "row_array": 43,
+    "row_array": 44,
     "shared_load": 5
    },
    "alloc": {
-    "pinned_words": 122928,
-    "high_water": 350400,
+    "pinned_words": 147504,
+    "high_water": 374976,
     "object_bound": 350400,
     "object_peak_at": 12127.553742729851,
     "peak_objects": [
@@ -1917,44 +1969,48 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 364768,
-     "greedy_by_size": 350400
+     "first_fit_by_time": 386272,
+     "greedy_by_size": 374976
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 122880
     }
    },
    "c4_peak": 300038,
-   "frag_over_c4": 1.168,
+   "frag_over_c4": 1.25,
    "objects_over_c4": 1.168,
    "aux": {
     "union.list": [
-     462048,
+     483552,
      36
     ],
     "union.count": [
-     462112,
+     483616,
      1
     ],
     "union.tables": [
-     462144,
+     483648,
      1152
     ],
     "kvunion.plan.p0": [
-     463296,
+     484800,
      10240
     ],
     "kvunion.map.p0": [
-     473536,
+     495040,
      528
     ],
     "kvunion.plan.p4": [
-     474080,
+     495584,
      10240
     ],
     "kvunion.map.p4": [
-     484320,
+     505824,
      272
     ]
    },
-   "vm_need_words": 484608,
+   "vm_need_words": 506112,
    "fits": {
     "as_built": false,
     "grown_412k": false,
@@ -1979,19 +2035,19 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 432144
    },
-   "image_sha256": "84d69667b05a2156b1bfe0175c22fcaa26fa9e76509eae1fe11871bd7b1e3b1a"
+   "image_sha256": "e6da4f7097dc654f9340f3e069d54971918d7d4a39785098214bc767c8614765"
   },
   "14": {
    "values": 1231,
    "objects": {
     "shared_load": 7,
     "pinned_column": 2,
-    "row_array": 63
+    "row_array": 64
    },
    "alloc": {
-    "pinned_words": 122928,
-    "high_water": 462048,
-    "object_bound": 462048,
+    "pinned_words": 147504,
+    "high_water": 483552,
+    "object_bound": 458976,
     "object_peak_at": 5487.134974010796,
     "peak_objects": [
      {
@@ -2051,20 +2107,6 @@
       "packed": false
      },
      {
-      "kind": "row_array",
-      "anchor": "0|DMA.LOAD|kv_rope.table",
-      "rows": 6,
-      "size": 576,
-      "need": 3456,
-      "ar": [
-       53312,
-       53888
-      ],
-      "t0": 5483.1,
-      "t1": 40919.1,
-      "packed": false
-     },
-     {
       "kind": "shared_load",
       "anchor": "0|DMA.LOAD|q_norm.gain",
       "rows": 1,
@@ -2094,6 +2136,20 @@
      },
      {
       "kind": "row_array",
+      "anchor": "0|DMA.LOAD|kv_rope.table",
+      "rows": 6,
+      "size": 64,
+      "need": 384,
+      "ar": [
+       53312,
+       53376
+      ],
+      "t0": 5483.1,
+      "t1": 40919.1,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
       "anchor": "0|SU.VOP|engram.rH",
       "rows": 6,
       "size": 8,
@@ -2109,44 +2165,48 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 494888,
-     "greedy_by_size": 462048
+     "first_fit_by_time": 519464,
+     "greedy_by_size": 483552
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 122880
     }
    },
    "c4_peak": 452534,
-   "frag_over_c4": 1.021,
-   "objects_over_c4": 1.021,
+   "frag_over_c4": 1.069,
+   "objects_over_c4": 1.014,
    "aux": {
     "union.list": [
-     462048,
+     483552,
      36
     ],
     "union.count": [
-     462112,
+     483616,
      1
     ],
     "union.tables": [
-     462144,
+     483648,
      1152
     ],
     "kvunion.plan.p0": [
-     463296,
+     484800,
      10240
     ],
     "kvunion.map.p0": [
-     473536,
+     495040,
      528
     ],
     "kvunion.plan.p4": [
-     474080,
+     495584,
      10240
     ],
     "kvunion.map.p4": [
-     484320,
+     505824,
      272
     ]
    },
-   "vm_need_words": 484608,
+   "vm_need_words": 506112,
    "fits": {
     "as_built": false,
     "grown_412k": false,
@@ -2171,18 +2231,18 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 614748
    },
-   "image_sha256": "5ca47df3318b15a0c48cfd2399199786f71340cbfd78189e680fdb591515310e"
+   "image_sha256": "e3e44706d69d1de0e80a2b4d82450e03174f97bf4509119e94dcfeb07b106f24"
   },
   "15": {
    "values": 551,
    "objects": {
     "pinned_column": 2,
-    "row_array": 43,
+    "row_array": 44,
     "shared_load": 5
    },
    "alloc": {
-    "pinned_words": 122928,
-    "high_water": 350400,
+    "pinned_words": 147504,
+    "high_water": 374976,
     "object_bound": 350400,
     "object_peak_at": 12127.553742729851,
     "peak_objects": [
@@ -2245,44 +2305,48 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 364768,
-     "greedy_by_size": 350400
+     "first_fit_by_time": 386272,
+     "greedy_by_size": 374976
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 122880
     }
    },
    "c4_peak": 300038,
-   "frag_over_c4": 1.168,
+   "frag_over_c4": 1.25,
    "objects_over_c4": 1.168,
    "aux": {
     "union.list": [
-     462048,
+     483552,
      36
     ],
     "union.count": [
-     462112,
+     483616,
      1
     ],
     "union.tables": [
-     462144,
+     483648,
      1152
     ],
     "kvunion.plan.p0": [
-     463296,
+     484800,
      10240
     ],
     "kvunion.map.p0": [
-     473536,
+     495040,
      528
     ],
     "kvunion.plan.p4": [
-     474080,
+     495584,
      10240
     ],
     "kvunion.map.p4": [
-     484320,
+     505824,
      272
     ]
    },
-   "vm_need_words": 484608,
+   "vm_need_words": 506112,
    "fits": {
     "as_built": false,
     "grown_412k": false,
@@ -2307,18 +2371,18 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 432144
    },
-   "image_sha256": "745bbfa532e84190a8163d06b7b4fa668f8b05eafcdf02920d6455456842c47e"
+   "image_sha256": "23b0f4ff42a8b0c8ac45538bb9f1bfbf5876cc48f0dd2debce95c32296ec3720"
   },
   "16": {
    "values": 551,
    "objects": {
     "pinned_column": 2,
-    "row_array": 43,
+    "row_array": 44,
     "shared_load": 5
    },
    "alloc": {
-    "pinned_words": 122928,
-    "high_water": 350400,
+    "pinned_words": 147504,
+    "high_water": 374976,
     "object_bound": 350400,
     "object_peak_at": 12127.553742729851,
     "peak_objects": [
@@ -2381,44 +2445,48 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 364768,
-     "greedy_by_size": 350400
+     "first_fit_by_time": 386272,
+     "greedy_by_size": 374976
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 122880
     }
    },
    "c4_peak": 300038,
-   "frag_over_c4": 1.168,
+   "frag_over_c4": 1.25,
    "objects_over_c4": 1.168,
    "aux": {
     "union.list": [
-     462048,
+     483552,
      36
     ],
     "union.count": [
-     462112,
+     483616,
      1
     ],
     "union.tables": [
-     462144,
+     483648,
      1152
     ],
     "kvunion.plan.p0": [
-     463296,
+     484800,
      10240
     ],
     "kvunion.map.p0": [
-     473536,
+     495040,
      528
     ],
     "kvunion.plan.p4": [
-     474080,
+     495584,
      10240
     ],
     "kvunion.map.p4": [
-     484320,
+     505824,
      272
     ]
    },
-   "vm_need_words": 484608,
+   "vm_need_words": 506112,
    "fits": {
     "as_built": false,
     "grown_412k": false,
@@ -2443,18 +2511,18 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 432144
    },
-   "image_sha256": "b147c27005ff22e2bb71aed6430406c51ef77a8adbbbf8056d337542f5ecb3ce"
+   "image_sha256": "cfee074414e3c01c1c3b22fb47886a0fbfbb3aa801c0c7a555a9ea89f2e3a318"
   },
   "17": {
    "values": 551,
    "objects": {
     "pinned_column": 2,
-    "row_array": 43,
+    "row_array": 44,
     "shared_load": 5
    },
    "alloc": {
-    "pinned_words": 122928,
-    "high_water": 350400,
+    "pinned_words": 147504,
+    "high_water": 374976,
     "object_bound": 350400,
     "object_peak_at": 12127.553742729851,
     "peak_objects": [
@@ -2517,44 +2585,48 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 364768,
-     "greedy_by_size": 350400
+     "first_fit_by_time": 386272,
+     "greedy_by_size": 374976
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 122880
     }
    },
    "c4_peak": 300038,
-   "frag_over_c4": 1.168,
+   "frag_over_c4": 1.25,
    "objects_over_c4": 1.168,
    "aux": {
     "union.list": [
-     462048,
+     483552,
      36
     ],
     "union.count": [
-     462112,
+     483616,
      1
     ],
     "union.tables": [
-     462144,
+     483648,
      1152
     ],
     "kvunion.plan.p0": [
-     463296,
+     484800,
      10240
     ],
     "kvunion.map.p0": [
-     473536,
+     495040,
      528
     ],
     "kvunion.plan.p4": [
-     474080,
+     495584,
      10240
     ],
     "kvunion.map.p4": [
-     484320,
+     505824,
      272
     ]
    },
-   "vm_need_words": 484608,
+   "vm_need_words": 506112,
    "fits": {
     "as_built": false,
     "grown_412k": false,
@@ -2579,18 +2651,18 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 432144
    },
-   "image_sha256": "839426646aa8701c21102e6492b2e4afc54d4b96370f31831f5ac6b1b77e965e"
+   "image_sha256": "0f05a76303da879e91f8d51e8d8d8e0a93d849e2adeb0c47cb7e177b407950e5"
   },
   "18": {
    "values": 551,
    "objects": {
     "pinned_column": 2,
-    "row_array": 43,
+    "row_array": 44,
     "shared_load": 5
    },
    "alloc": {
-    "pinned_words": 122928,
-    "high_water": 350400,
+    "pinned_words": 147504,
+    "high_water": 374976,
     "object_bound": 350400,
     "object_peak_at": 12127.553742729851,
     "peak_objects": [
@@ -2653,44 +2725,48 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 364768,
-     "greedy_by_size": 350400
+     "first_fit_by_time": 386272,
+     "greedy_by_size": 374976
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 122880
     }
    },
    "c4_peak": 300038,
-   "frag_over_c4": 1.168,
+   "frag_over_c4": 1.25,
    "objects_over_c4": 1.168,
    "aux": {
     "union.list": [
-     462048,
+     483552,
      36
     ],
     "union.count": [
-     462112,
+     483616,
      1
     ],
     "union.tables": [
-     462144,
+     483648,
      1152
     ],
     "kvunion.plan.p0": [
-     463296,
+     484800,
      10240
     ],
     "kvunion.map.p0": [
-     473536,
+     495040,
      528
     ],
     "kvunion.plan.p4": [
-     474080,
+     495584,
      10240
     ],
     "kvunion.map.p4": [
-     484320,
+     505824,
      272
     ]
    },
-   "vm_need_words": 484608,
+   "vm_need_words": 506112,
    "fits": {
     "as_built": false,
     "grown_412k": false,
@@ -2715,18 +2791,18 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 432144
    },
-   "image_sha256": "7d958c85aece09f7eb67783b12482732b9d0625f4ec12f40c63f622559846c86"
+   "image_sha256": "8c39492d6496ef10bcd2bc6100998ef9b2ce6a4f8d4276131367eecef711a298"
   },
   "19": {
    "values": 551,
    "objects": {
     "pinned_column": 2,
-    "row_array": 43,
+    "row_array": 44,
     "shared_load": 5
    },
    "alloc": {
-    "pinned_words": 122928,
-    "high_water": 350400,
+    "pinned_words": 147504,
+    "high_water": 374976,
     "object_bound": 350400,
     "object_peak_at": 12127.553742729851,
     "peak_objects": [
@@ -2789,44 +2865,48 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 364768,
-     "greedy_by_size": 350400
+     "first_fit_by_time": 386272,
+     "greedy_by_size": 374976
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 122880
     }
    },
    "c4_peak": 300038,
-   "frag_over_c4": 1.168,
+   "frag_over_c4": 1.25,
    "objects_over_c4": 1.168,
    "aux": {
     "union.list": [
-     462048,
+     483552,
      36
     ],
     "union.count": [
-     462112,
+     483616,
      1
     ],
     "union.tables": [
-     462144,
+     483648,
      1152
     ],
     "kvunion.plan.p0": [
-     463296,
+     484800,
      10240
     ],
     "kvunion.map.p0": [
-     473536,
+     495040,
      528
     ],
     "kvunion.plan.p4": [
-     474080,
+     495584,
      10240
     ],
     "kvunion.map.p4": [
-     484320,
+     505824,
      272
     ]
    },
-   "vm_need_words": 484608,
+   "vm_need_words": 506112,
    "fits": {
     "as_built": false,
     "grown_412k": false,
@@ -2851,20 +2931,19 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 432144
    },
-   "image_sha256": "bdf5e55b991b07d2717f0516a150dcf5af19c8a9a33e57f647bb76c1925042b4"
+   "image_sha256": "7d0f81b7b7cc0f8d423208c44480b93e26d46663be06d6db29b2b5b5da1b1f12"
   },
   "20": {
-   "values": 822,
+   "values": 815,
    "objects": {
     "row_array": 52,
-    "pinned_column": 2,
-    "shared_load": 5,
-    "single": 1
+    "pinned_column": 3,
+    "shared_load": 5
    },
    "alloc": {
-    "pinned_words": 122928,
-    "high_water": 350792,
-    "object_bound": 350792,
+    "pinned_words": 147504,
+    "high_water": 375368,
+    "object_bound": 375368,
     "object_peak_at": 38776.3096147566,
     "peak_objects": [
      {
@@ -2954,44 +3033,49 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 383784,
-     "greedy_by_size": 350792
+     "first_fit_by_time": 403504,
+     "greedy_by_size": 375368
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 122880,
+     "188864": 122928
     }
    },
    "c4_peak": 303664,
-   "frag_over_c4": 1.155,
-   "objects_over_c4": 1.155,
+   "frag_over_c4": 1.236,
+   "objects_over_c4": 1.236,
    "aux": {
     "union.list": [
-     462048,
+     483552,
      36
     ],
     "union.count": [
-     462112,
+     483616,
      1
     ],
     "union.tables": [
-     462144,
+     483648,
      1152
     ],
     "kvunion.plan.p0": [
-     463296,
+     484800,
      10240
     ],
     "kvunion.map.p0": [
-     473536,
+     495040,
      528
     ],
     "kvunion.plan.p4": [
-     474080,
+     495584,
      10240
     ],
     "kvunion.map.p4": [
-     484320,
+     505824,
      272
     ]
    },
-   "vm_need_words": 484608,
+   "vm_need_words": 506112,
    "fits": {
     "as_built": false,
     "grown_412k": false,
@@ -3008,111 +3092,26 @@
    },
    "errors": [],
    "image_bytes": 14112,
-   "livein_words": 8388,
-   "livein_top": [
-    [
-     "0|IDX.INDEX|index frame (G18)",
-     0,
-     1366,
-     34848.0,
-     1
-    ],
-    [
-     "0|IDX.INDEX|index frame (G18)",
-     1,
-     1366,
-     34848.0,
-     1
-    ],
-    [
-     "0|IDX.INDEX|index frame (G18)",
-     2,
-     1366,
-     34848.0,
-     1
-    ],
-    [
-     "0|IDX.INDEX|index frame (G18)",
-     3,
-     1366,
-     34848.0,
-     1
-    ],
-    [
-     "0|IDX.INDEX|index frame (G18)",
-     4,
-     1366,
-     34848.0,
-     1
-    ],
-    [
-     "0|IDX.INDEX|index frame (G18)",
-     5,
-     1366,
-     34848.0,
-     1
-    ],
-    [
-     "0|SU.VOP|index_q.rope",
-     0,
-     32,
-     4956.6,
-     1
-    ],
-    [
-     "0|SU.VOP|index_q.rope",
-     1,
-     32,
-     4956.6,
-     1
-    ],
-    [
-     "0|SU.VOP|index_q.rope",
-     2,
-     32,
-     4956.6,
-     1
-    ],
-    [
-     "0|SU.VOP|index_q.rope",
-     3,
-     32,
-     4956.6,
-     1
-    ],
-    [
-     "0|SU.VOP|index_q.rope",
-     4,
-     32,
-     4956.6,
-     1
-    ],
-    [
-     "0|SU.VOP|index_q.rope",
-     5,
-     32,
-     4956.6,
-     1
-    ]
-   ],
+   "livein_words": 0,
+   "livein_top": [],
    "self_overwritten_read_words": {
     "COLL.ALL_GATHER": 197046
    },
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 459702
    },
-   "image_sha256": "fc8ad4db804d0bda73496d663dbc7e0e886d60c68451ebd1ad69c5b3a61d7c5a"
+   "image_sha256": "717a3dbfd8aa38946df13509bf2d7da08147ef6f366ace11c91536ec9358a581"
   },
   "21": {
    "values": 551,
    "objects": {
     "pinned_column": 2,
-    "row_array": 43,
+    "row_array": 44,
     "shared_load": 5
    },
    "alloc": {
-    "pinned_words": 122928,
-    "high_water": 350400,
+    "pinned_words": 147504,
+    "high_water": 374976,
     "object_bound": 350400,
     "object_peak_at": 12127.553742729851,
     "peak_objects": [
@@ -3175,44 +3174,48 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 364768,
-     "greedy_by_size": 350400
+     "first_fit_by_time": 386272,
+     "greedy_by_size": 374976
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 122880
     }
    },
    "c4_peak": 300038,
-   "frag_over_c4": 1.168,
+   "frag_over_c4": 1.25,
    "objects_over_c4": 1.168,
    "aux": {
     "union.list": [
-     462048,
+     483552,
      36
     ],
     "union.count": [
-     462112,
+     483616,
      1
     ],
     "union.tables": [
-     462144,
+     483648,
      1152
     ],
     "kvunion.plan.p0": [
-     463296,
+     484800,
      10240
     ],
     "kvunion.map.p0": [
-     473536,
+     495040,
      528
     ],
     "kvunion.plan.p4": [
-     474080,
+     495584,
      10240
     ],
     "kvunion.map.p4": [
-     484320,
+     505824,
      272
     ]
    },
-   "vm_need_words": 484608,
+   "vm_need_words": 506112,
    "fits": {
     "as_built": false,
     "grown_412k": false,
@@ -3237,18 +3240,18 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 432144
    },
-   "image_sha256": "e20e502f6b0a0604614c481473fe6af23ebd9edea47a1eb5f743bd1a63829b01"
+   "image_sha256": "3f0f184f17e031807e46eb80011efc7664ac481b16155d0a6fe546cfe446ad0b"
   },
   "22": {
    "values": 551,
    "objects": {
     "pinned_column": 2,
-    "row_array": 43,
+    "row_array": 44,
     "shared_load": 5
    },
    "alloc": {
-    "pinned_words": 122928,
-    "high_water": 350400,
+    "pinned_words": 147504,
+    "high_water": 374976,
     "object_bound": 350400,
     "object_peak_at": 12127.553742729851,
     "peak_objects": [
@@ -3311,44 +3314,48 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 364768,
-     "greedy_by_size": 350400
+     "first_fit_by_time": 386272,
+     "greedy_by_size": 374976
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 122880
     }
    },
    "c4_peak": 300038,
-   "frag_over_c4": 1.168,
+   "frag_over_c4": 1.25,
    "objects_over_c4": 1.168,
    "aux": {
     "union.list": [
-     462048,
+     483552,
      36
     ],
     "union.count": [
-     462112,
+     483616,
      1
     ],
     "union.tables": [
-     462144,
+     483648,
      1152
     ],
     "kvunion.plan.p0": [
-     463296,
+     484800,
      10240
     ],
     "kvunion.map.p0": [
-     473536,
+     495040,
      528
     ],
     "kvunion.plan.p4": [
-     474080,
+     495584,
      10240
     ],
     "kvunion.map.p4": [
-     484320,
+     505824,
      272
     ]
    },
-   "vm_need_words": 484608,
+   "vm_need_words": 506112,
    "fits": {
     "as_built": false,
     "grown_412k": false,
@@ -3373,18 +3380,18 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 432144
    },
-   "image_sha256": "244385d8f1ca560c5b2401ca0957536a3a9ef6ffaa20f3097752f2d0b6716b64"
+   "image_sha256": "007570afede0c5f9fbfee146ce9e894666ca5c475d448a142feb53c335cf6e61"
   },
   "23": {
    "values": 551,
    "objects": {
     "pinned_column": 2,
-    "row_array": 43,
+    "row_array": 44,
     "shared_load": 5
    },
    "alloc": {
-    "pinned_words": 122928,
-    "high_water": 350400,
+    "pinned_words": 147504,
+    "high_water": 374976,
     "object_bound": 350400,
     "object_peak_at": 12127.553742729851,
     "peak_objects": [
@@ -3447,44 +3454,48 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 364768,
-     "greedy_by_size": 350400
+     "first_fit_by_time": 386272,
+     "greedy_by_size": 374976
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 122880
     }
    },
    "c4_peak": 300038,
-   "frag_over_c4": 1.168,
+   "frag_over_c4": 1.25,
    "objects_over_c4": 1.168,
    "aux": {
     "union.list": [
-     462048,
+     483552,
      36
     ],
     "union.count": [
-     462112,
+     483616,
      1
     ],
     "union.tables": [
-     462144,
+     483648,
      1152
     ],
     "kvunion.plan.p0": [
-     463296,
+     484800,
      10240
     ],
     "kvunion.map.p0": [
-     473536,
+     495040,
      528
     ],
     "kvunion.plan.p4": [
-     474080,
+     495584,
      10240
     ],
     "kvunion.map.p4": [
-     484320,
+     505824,
      272
     ]
    },
-   "vm_need_words": 484608,
+   "vm_need_words": 506112,
    "fits": {
     "as_built": false,
     "grown_412k": false,
@@ -3509,20 +3520,19 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 432144
    },
-   "image_sha256": "a256eabce8f8d72f10617e9ec19b027c92b2323ccfcd8547a8eda8f9154803c6"
+   "image_sha256": "6f171138f864289b7d32e933dfaf147516a4893bd7d5ace3907b0e3d0c02ea2a"
   },
   "24": {
-   "values": 787,
+   "values": 791,
    "objects": {
-    "row_array": 49,
-    "pinned_column": 2,
-    "shared_load": 5,
-    "constant": 1
+    "row_array": 50,
+    "pinned_column": 3,
+    "shared_load": 5
    },
    "alloc": {
-    "pinned_words": 122928,
-    "high_water": 350792,
-    "object_bound": 350792,
+    "pinned_words": 147504,
+    "high_water": 375368,
+    "object_bound": 375368,
     "object_peak_at": 38439.72976141454,
     "peak_objects": [
      {
@@ -3612,44 +3622,49 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 395312,
-     "greedy_by_size": 350792
+     "first_fit_by_time": 412720,
+     "greedy_by_size": 375368
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 122880,
+     "188864": 122928
     }
    },
    "c4_peak": 303330,
-   "frag_over_c4": 1.156,
-   "objects_over_c4": 1.156,
+   "frag_over_c4": 1.237,
+   "objects_over_c4": 1.237,
    "aux": {
     "union.list": [
-     462048,
+     483552,
      36
     ],
     "union.count": [
-     462112,
+     483616,
      1
     ],
     "union.tables": [
-     462144,
+     483648,
      1152
     ],
     "kvunion.plan.p0": [
-     463296,
+     484800,
      10240
     ],
     "kvunion.map.p0": [
-     473536,
+     495040,
      528
     ],
     "kvunion.plan.p4": [
-     474080,
+     495584,
      10240
     ],
     "kvunion.map.p4": [
-     484320,
+     505824,
      272
     ]
    },
-   "vm_need_words": 484608,
+   "vm_need_words": 506112,
    "fits": {
     "as_built": false,
     "grown_412k": false,
@@ -3674,18 +3689,18 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 456660
    },
-   "image_sha256": "6a5e8620b04610cbcc22dc68f325dc072a1764a021b3d605bd777ceb51ef5e19"
+   "image_sha256": "de2045b4d9e888ca4518d75fe6fc8a55587f96874e660586ae0074077a48b299"
   },
   "25": {
    "values": 551,
    "objects": {
     "pinned_column": 2,
-    "row_array": 43,
+    "row_array": 44,
     "shared_load": 5
    },
    "alloc": {
-    "pinned_words": 122928,
-    "high_water": 350400,
+    "pinned_words": 147504,
+    "high_water": 374976,
     "object_bound": 350400,
     "object_peak_at": 12127.553742729851,
     "peak_objects": [
@@ -3748,44 +3763,48 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 364768,
-     "greedy_by_size": 350400
+     "first_fit_by_time": 386272,
+     "greedy_by_size": 374976
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 122880
     }
    },
    "c4_peak": 300038,
-   "frag_over_c4": 1.168,
+   "frag_over_c4": 1.25,
    "objects_over_c4": 1.168,
    "aux": {
     "union.list": [
-     462048,
+     483552,
      36
     ],
     "union.count": [
-     462112,
+     483616,
      1
     ],
     "union.tables": [
-     462144,
+     483648,
      1152
     ],
     "kvunion.plan.p0": [
-     463296,
+     484800,
      10240
     ],
     "kvunion.map.p0": [
-     473536,
+     495040,
      528
     ],
     "kvunion.plan.p4": [
-     474080,
+     495584,
      10240
     ],
     "kvunion.map.p4": [
-     484320,
+     505824,
      272
     ]
    },
-   "vm_need_words": 484608,
+   "vm_need_words": 506112,
    "fits": {
     "as_built": false,
     "grown_412k": false,
@@ -3810,18 +3829,18 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 432144
    },
-   "image_sha256": "bf6b187ff5aa1640b2c2a765cde0f89bdb1a28eb031218f4c7b92a6798ad6efe"
+   "image_sha256": "2f4121b0717f88e15f5e0f2be35d49a7c69b82f55bbda6f2d0a7dce79960fffd"
   },
   "26": {
    "values": 551,
    "objects": {
     "pinned_column": 2,
-    "row_array": 43,
+    "row_array": 44,
     "shared_load": 5
    },
    "alloc": {
-    "pinned_words": 122928,
-    "high_water": 350400,
+    "pinned_words": 147504,
+    "high_water": 374976,
     "object_bound": 350400,
     "object_peak_at": 12127.553742729851,
     "peak_objects": [
@@ -3884,44 +3903,48 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 364768,
-     "greedy_by_size": 350400
+     "first_fit_by_time": 386272,
+     "greedy_by_size": 374976
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 122880
     }
    },
    "c4_peak": 300038,
-   "frag_over_c4": 1.168,
+   "frag_over_c4": 1.25,
    "objects_over_c4": 1.168,
    "aux": {
     "union.list": [
-     462048,
+     483552,
      36
     ],
     "union.count": [
-     462112,
+     483616,
      1
     ],
     "union.tables": [
-     462144,
+     483648,
      1152
     ],
     "kvunion.plan.p0": [
-     463296,
+     484800,
      10240
     ],
     "kvunion.map.p0": [
-     473536,
+     495040,
      528
     ],
     "kvunion.plan.p4": [
-     474080,
+     495584,
      10240
     ],
     "kvunion.map.p4": [
-     484320,
+     505824,
      272
     ]
    },
-   "vm_need_words": 484608,
+   "vm_need_words": 506112,
    "fits": {
     "as_built": false,
     "grown_412k": false,
@@ -3946,18 +3969,18 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 432144
    },
-   "image_sha256": "8b7284ff235129a3356532227ff750dacbe16af5883884f4580e53be9529c904"
+   "image_sha256": "630d88ca4bd3fb4c417e1bfcc3efa9ff206adf92c0cac2d8a3edb704bfef2119"
   },
   "27": {
    "values": 551,
    "objects": {
     "pinned_column": 2,
-    "row_array": 43,
+    "row_array": 44,
     "shared_load": 5
    },
    "alloc": {
-    "pinned_words": 122928,
-    "high_water": 350400,
+    "pinned_words": 147504,
+    "high_water": 374976,
     "object_bound": 350400,
     "object_peak_at": 12127.553742729851,
     "peak_objects": [
@@ -4020,44 +4043,48 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 364768,
-     "greedy_by_size": 350400
+     "first_fit_by_time": 386272,
+     "greedy_by_size": 374976
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 122880
     }
    },
    "c4_peak": 300038,
-   "frag_over_c4": 1.168,
+   "frag_over_c4": 1.25,
    "objects_over_c4": 1.168,
    "aux": {
     "union.list": [
-     462048,
+     483552,
      36
     ],
     "union.count": [
-     462112,
+     483616,
      1
     ],
     "union.tables": [
-     462144,
+     483648,
      1152
     ],
     "kvunion.plan.p0": [
-     463296,
+     484800,
      10240
     ],
     "kvunion.map.p0": [
-     473536,
+     495040,
      528
     ],
     "kvunion.plan.p4": [
-     474080,
+     495584,
      10240
     ],
     "kvunion.map.p4": [
-     484320,
+     505824,
      272
     ]
    },
-   "vm_need_words": 484608,
+   "vm_need_words": 506112,
    "fits": {
     "as_built": false,
     "grown_412k": false,
@@ -4082,20 +4109,19 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 432144
    },
-   "image_sha256": "fafcae04cee21ce95daebe13fd764ba505fa3d5d7df62c0ad4ba61e7cf8f4e5c"
+   "image_sha256": "956a3d6ac1b6ee8cc57ee0fc95753c404ff7448af1fb2a1fdd7099753944101f"
   },
   "28": {
-   "values": 787,
+   "values": 791,
    "objects": {
-    "row_array": 49,
-    "pinned_column": 2,
-    "shared_load": 5,
-    "constant": 1
+    "row_array": 50,
+    "pinned_column": 3,
+    "shared_load": 5
    },
    "alloc": {
-    "pinned_words": 122928,
-    "high_water": 350792,
-    "object_bound": 350792,
+    "pinned_words": 147504,
+    "high_water": 375368,
+    "object_bound": 375368,
     "object_peak_at": 42317.753832213784,
     "peak_objects": [
      {
@@ -4185,44 +4211,49 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 395312,
-     "greedy_by_size": 350792
+     "first_fit_by_time": 412720,
+     "greedy_by_size": 375368
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 122880,
+     "188864": 122928
     }
    },
    "c4_peak": 303330,
-   "frag_over_c4": 1.156,
-   "objects_over_c4": 1.156,
+   "frag_over_c4": 1.237,
+   "objects_over_c4": 1.237,
    "aux": {
     "union.list": [
-     462048,
+     483552,
      36
     ],
     "union.count": [
-     462112,
+     483616,
      1
     ],
     "union.tables": [
-     462144,
+     483648,
      1152
     ],
     "kvunion.plan.p0": [
-     463296,
+     484800,
      10240
     ],
     "kvunion.map.p0": [
-     473536,
+     495040,
      528
     ],
     "kvunion.plan.p4": [
-     474080,
+     495584,
      10240
     ],
     "kvunion.map.p4": [
-     484320,
+     505824,
      272
     ]
    },
-   "vm_need_words": 484608,
+   "vm_need_words": 506112,
    "fits": {
     "as_built": false,
     "grown_412k": false,
@@ -4247,18 +4278,18 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 456660
    },
-   "image_sha256": "5ad9cb8fae3b50c3457ad9f4bb941fd0ac48a4fb83acdd55af5a33bf026dd52d"
+   "image_sha256": "fdd05a880764caa8a5bb03e74d9e59c751ac879faa245f349bb62414d2462400"
   },
   "29": {
    "values": 551,
    "objects": {
     "pinned_column": 2,
-    "row_array": 43,
+    "row_array": 44,
     "shared_load": 5
    },
    "alloc": {
-    "pinned_words": 122928,
-    "high_water": 350400,
+    "pinned_words": 147504,
+    "high_water": 374976,
     "object_bound": 350400,
     "object_peak_at": 12127.553742729851,
     "peak_objects": [
@@ -4321,44 +4352,48 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 364768,
-     "greedy_by_size": 350400
+     "first_fit_by_time": 386272,
+     "greedy_by_size": 374976
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 122880
     }
    },
    "c4_peak": 300038,
-   "frag_over_c4": 1.168,
+   "frag_over_c4": 1.25,
    "objects_over_c4": 1.168,
    "aux": {
     "union.list": [
-     462048,
+     483552,
      36
     ],
     "union.count": [
-     462112,
+     483616,
      1
     ],
     "union.tables": [
-     462144,
+     483648,
      1152
     ],
     "kvunion.plan.p0": [
-     463296,
+     484800,
      10240
     ],
     "kvunion.map.p0": [
-     473536,
+     495040,
      528
     ],
     "kvunion.plan.p4": [
-     474080,
+     495584,
      10240
     ],
     "kvunion.map.p4": [
-     484320,
+     505824,
      272
     ]
    },
-   "vm_need_words": 484608,
+   "vm_need_words": 506112,
    "fits": {
     "as_built": false,
     "grown_412k": false,
@@ -4383,18 +4418,18 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 432144
    },
-   "image_sha256": "21860957148e05e1dfefd2d00f57e324649db960f7700eedbab62c9672d7db66"
+   "image_sha256": "cad3835f85610f5253a94b98850ea4d47abdca0d281cb5f851daa6b7cc3e5068"
   },
   "30": {
    "values": 551,
    "objects": {
     "pinned_column": 2,
-    "row_array": 43,
+    "row_array": 44,
     "shared_load": 5
    },
    "alloc": {
-    "pinned_words": 122928,
-    "high_water": 350400,
+    "pinned_words": 147504,
+    "high_water": 374976,
     "object_bound": 350400,
     "object_peak_at": 12127.553742729851,
     "peak_objects": [
@@ -4457,44 +4492,48 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 364768,
-     "greedy_by_size": 350400
+     "first_fit_by_time": 386272,
+     "greedy_by_size": 374976
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 122880
     }
    },
    "c4_peak": 300038,
-   "frag_over_c4": 1.168,
+   "frag_over_c4": 1.25,
    "objects_over_c4": 1.168,
    "aux": {
     "union.list": [
-     462048,
+     483552,
      36
     ],
     "union.count": [
-     462112,
+     483616,
      1
     ],
     "union.tables": [
-     462144,
+     483648,
      1152
     ],
     "kvunion.plan.p0": [
-     463296,
+     484800,
      10240
     ],
     "kvunion.map.p0": [
-     473536,
+     495040,
      528
     ],
     "kvunion.plan.p4": [
-     474080,
+     495584,
      10240
     ],
     "kvunion.map.p4": [
-     484320,
+     505824,
      272
     ]
    },
-   "vm_need_words": 484608,
+   "vm_need_words": 506112,
    "fits": {
     "as_built": false,
     "grown_412k": false,
@@ -4519,18 +4558,18 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 432144
    },
-   "image_sha256": "a24d31ad30e15d20e1c75194446cfe62dab45f1106b27cc47a5b354c65d53ec2"
+   "image_sha256": "066e4184b8ccc084400c3fb6f2e7a9bef158daa639aa07e8e90600572f93a98d"
   },
   "31": {
    "values": 551,
    "objects": {
     "pinned_column": 2,
-    "row_array": 43,
+    "row_array": 44,
     "shared_load": 5
    },
    "alloc": {
-    "pinned_words": 122928,
-    "high_water": 350400,
+    "pinned_words": 147504,
+    "high_water": 374976,
     "object_bound": 350400,
     "object_peak_at": 12127.553742729851,
     "peak_objects": [
@@ -4593,44 +4632,48 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 364768,
-     "greedy_by_size": 350400
+     "first_fit_by_time": 386272,
+     "greedy_by_size": 374976
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 122880
     }
    },
    "c4_peak": 300038,
-   "frag_over_c4": 1.168,
+   "frag_over_c4": 1.25,
    "objects_over_c4": 1.168,
    "aux": {
     "union.list": [
-     462048,
+     483552,
      36
     ],
     "union.count": [
-     462112,
+     483616,
      1
     ],
     "union.tables": [
-     462144,
+     483648,
      1152
     ],
     "kvunion.plan.p0": [
-     463296,
+     484800,
      10240
     ],
     "kvunion.map.p0": [
-     473536,
+     495040,
      528
     ],
     "kvunion.plan.p4": [
-     474080,
+     495584,
      10240
     ],
     "kvunion.map.p4": [
-     484320,
+     505824,
      272
     ]
    },
-   "vm_need_words": 484608,
+   "vm_need_words": 506112,
    "fits": {
     "as_built": false,
     "grown_412k": false,
@@ -4655,20 +4698,19 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 432144
    },
-   "image_sha256": "423520c6b3855c83f2cf71aa8c5566cee2fae21bd8e1a483a3b30278f4091556"
+   "image_sha256": "138b1a8a6e037d5174e4f29f873d284846eaade104044e599a2ed0ee70780ca5"
   },
   "32": {
-   "values": 787,
+   "values": 791,
    "objects": {
-    "row_array": 49,
-    "pinned_column": 2,
-    "shared_load": 5,
-    "constant": 1
+    "row_array": 50,
+    "pinned_column": 3,
+    "shared_load": 5
    },
    "alloc": {
-    "pinned_words": 122928,
-    "high_water": 350792,
-    "object_bound": 350792,
+    "pinned_words": 147504,
+    "high_water": 375368,
+    "object_bound": 375368,
     "object_peak_at": 38439.72976141454,
     "peak_objects": [
      {
@@ -4758,44 +4800,49 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 395312,
-     "greedy_by_size": 350792
+     "first_fit_by_time": 412720,
+     "greedy_by_size": 375368
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 122880,
+     "188864": 122928
     }
    },
    "c4_peak": 303330,
-   "frag_over_c4": 1.156,
-   "objects_over_c4": 1.156,
+   "frag_over_c4": 1.237,
+   "objects_over_c4": 1.237,
    "aux": {
     "union.list": [
-     462048,
+     483552,
      36
     ],
     "union.count": [
-     462112,
+     483616,
      1
     ],
     "union.tables": [
-     462144,
+     483648,
      1152
     ],
     "kvunion.plan.p0": [
-     463296,
+     484800,
      10240
     ],
     "kvunion.map.p0": [
-     473536,
+     495040,
      528
     ],
     "kvunion.plan.p4": [
-     474080,
+     495584,
      10240
     ],
     "kvunion.map.p4": [
-     484320,
+     505824,
      272
     ]
    },
-   "vm_need_words": 484608,
+   "vm_need_words": 506112,
    "fits": {
     "as_built": false,
     "grown_412k": false,
@@ -4820,18 +4867,18 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 456660
    },
-   "image_sha256": "2c0260aab4b19f87c7a7193659fdeb56f9c4747f97dc3f8ee51c2ac0d91b24ae"
+   "image_sha256": "796a2850e93caa357523e04aa96ed569650856b96ed83cc93582a372533e465c"
   },
   "33": {
    "values": 551,
    "objects": {
     "pinned_column": 2,
-    "row_array": 43,
+    "row_array": 44,
     "shared_load": 5
    },
    "alloc": {
-    "pinned_words": 122928,
-    "high_water": 350400,
+    "pinned_words": 147504,
+    "high_water": 374976,
     "object_bound": 350400,
     "object_peak_at": 12127.553742729851,
     "peak_objects": [
@@ -4894,44 +4941,48 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 364768,
-     "greedy_by_size": 350400
+     "first_fit_by_time": 386272,
+     "greedy_by_size": 374976
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 122880
     }
    },
    "c4_peak": 300038,
-   "frag_over_c4": 1.168,
+   "frag_over_c4": 1.25,
    "objects_over_c4": 1.168,
    "aux": {
     "union.list": [
-     462048,
+     483552,
      36
     ],
     "union.count": [
-     462112,
+     483616,
      1
     ],
     "union.tables": [
-     462144,
+     483648,
      1152
     ],
     "kvunion.plan.p0": [
-     463296,
+     484800,
      10240
     ],
     "kvunion.map.p0": [
-     473536,
+     495040,
      528
     ],
     "kvunion.plan.p4": [
-     474080,
+     495584,
      10240
     ],
     "kvunion.map.p4": [
-     484320,
+     505824,
      272
     ]
    },
-   "vm_need_words": 484608,
+   "vm_need_words": 506112,
    "fits": {
     "as_built": false,
     "grown_412k": false,
@@ -4956,18 +5007,18 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 432144
    },
-   "image_sha256": "cdbc70bf3c9a7f612f3d1a64284ce249d0f7a1effc50075477e79a54e1b45de4"
+   "image_sha256": "a5d8d476bc3e5e6a8390e050808282542a91a4fae727dc307010dd3c9c870633"
   },
   "34": {
    "values": 551,
    "objects": {
     "pinned_column": 2,
-    "row_array": 43,
+    "row_array": 44,
     "shared_load": 5
    },
    "alloc": {
-    "pinned_words": 122928,
-    "high_water": 350400,
+    "pinned_words": 147504,
+    "high_water": 374976,
     "object_bound": 350400,
     "object_peak_at": 12127.553742729851,
     "peak_objects": [
@@ -5030,44 +5081,48 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 364768,
-     "greedy_by_size": 350400
+     "first_fit_by_time": 386272,
+     "greedy_by_size": 374976
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 122880
     }
    },
    "c4_peak": 300038,
-   "frag_over_c4": 1.168,
+   "frag_over_c4": 1.25,
    "objects_over_c4": 1.168,
    "aux": {
     "union.list": [
-     462048,
+     483552,
      36
     ],
     "union.count": [
-     462112,
+     483616,
      1
     ],
     "union.tables": [
-     462144,
+     483648,
      1152
     ],
     "kvunion.plan.p0": [
-     463296,
+     484800,
      10240
     ],
     "kvunion.map.p0": [
-     473536,
+     495040,
      528
     ],
     "kvunion.plan.p4": [
-     474080,
+     495584,
      10240
     ],
     "kvunion.map.p4": [
-     484320,
+     505824,
      272
     ]
    },
-   "vm_need_words": 484608,
+   "vm_need_words": 506112,
    "fits": {
     "as_built": false,
     "grown_412k": false,
@@ -5092,18 +5147,18 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 432144
    },
-   "image_sha256": "f90c6e9c40dead083e1d115aa8de4be6191cffffc23c31ff09d5d430b4f1002f"
+   "image_sha256": "896923f124708558467fb6c2b77e5f1147a7f3daff6cb005de42cd85722cc0eb"
   },
   "35": {
    "values": 551,
    "objects": {
     "pinned_column": 2,
-    "row_array": 43,
+    "row_array": 44,
     "shared_load": 5
    },
    "alloc": {
-    "pinned_words": 122928,
-    "high_water": 350400,
+    "pinned_words": 147504,
+    "high_water": 374976,
     "object_bound": 350400,
     "object_peak_at": 12127.553742729851,
     "peak_objects": [
@@ -5166,44 +5221,48 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 364768,
-     "greedy_by_size": 350400
+     "first_fit_by_time": 386272,
+     "greedy_by_size": 374976
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 122880
     }
    },
    "c4_peak": 300038,
-   "frag_over_c4": 1.168,
+   "frag_over_c4": 1.25,
    "objects_over_c4": 1.168,
    "aux": {
     "union.list": [
-     462048,
+     483552,
      36
     ],
     "union.count": [
-     462112,
+     483616,
      1
     ],
     "union.tables": [
-     462144,
+     483648,
      1152
     ],
     "kvunion.plan.p0": [
-     463296,
+     484800,
      10240
     ],
     "kvunion.map.p0": [
-     473536,
+     495040,
      528
     ],
     "kvunion.plan.p4": [
-     474080,
+     495584,
      10240
     ],
     "kvunion.map.p4": [
-     484320,
+     505824,
      272
     ]
    },
-   "vm_need_words": 484608,
+   "vm_need_words": 506112,
    "fits": {
     "as_built": false,
     "grown_412k": false,
@@ -5228,20 +5287,19 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 432144
    },
-   "image_sha256": "9b5fbce321db2577544f4f79353090f54bb0c719ace83b491245d684c8002279"
+   "image_sha256": "a2e7a0fddf946d7e9c44769398060109b6787df3fb777c0c259671e29e003f45"
   },
   "36": {
-   "values": 787,
+   "values": 791,
    "objects": {
-    "row_array": 49,
-    "pinned_column": 2,
-    "shared_load": 5,
-    "constant": 1
+    "row_array": 50,
+    "pinned_column": 3,
+    "shared_load": 5
    },
    "alloc": {
-    "pinned_words": 122928,
-    "high_water": 350792,
-    "object_bound": 350792,
+    "pinned_words": 147504,
+    "high_water": 375368,
+    "object_bound": 375368,
     "object_peak_at": 39748.32111834762,
     "peak_objects": [
      {
@@ -5331,44 +5389,49 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 395312,
-     "greedy_by_size": 350792
+     "first_fit_by_time": 412720,
+     "greedy_by_size": 375368
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 122880,
+     "188864": 122928
     }
    },
    "c4_peak": 303330,
-   "frag_over_c4": 1.156,
-   "objects_over_c4": 1.156,
+   "frag_over_c4": 1.237,
+   "objects_over_c4": 1.237,
    "aux": {
     "union.list": [
-     462048,
+     483552,
      36
     ],
     "union.count": [
-     462112,
+     483616,
      1
     ],
     "union.tables": [
-     462144,
+     483648,
      1152
     ],
     "kvunion.plan.p0": [
-     463296,
+     484800,
      10240
     ],
     "kvunion.map.p0": [
-     473536,
+     495040,
      528
     ],
     "kvunion.plan.p4": [
-     474080,
+     495584,
      10240
     ],
     "kvunion.map.p4": [
-     484320,
+     505824,
      272
     ]
    },
-   "vm_need_words": 484608,
+   "vm_need_words": 506112,
    "fits": {
     "as_built": false,
     "grown_412k": false,
@@ -5393,18 +5456,18 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 456660
    },
-   "image_sha256": "71efa694707157dc78119837f411def5d754119d610aa81495d5d7fd35734f3c"
+   "image_sha256": "e0fd833d39b72590589d8f64e58f17f84073f0666d28489ca171413d7f11785b"
   },
   "37": {
    "values": 551,
    "objects": {
     "pinned_column": 2,
-    "row_array": 43,
+    "row_array": 44,
     "shared_load": 5
    },
    "alloc": {
-    "pinned_words": 122928,
-    "high_water": 350400,
+    "pinned_words": 147504,
+    "high_water": 374976,
     "object_bound": 350400,
     "object_peak_at": 12127.553742729851,
     "peak_objects": [
@@ -5467,44 +5530,48 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 364768,
-     "greedy_by_size": 350400
+     "first_fit_by_time": 386272,
+     "greedy_by_size": 374976
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 122880
     }
    },
    "c4_peak": 300038,
-   "frag_over_c4": 1.168,
+   "frag_over_c4": 1.25,
    "objects_over_c4": 1.168,
    "aux": {
     "union.list": [
-     462048,
+     483552,
      36
     ],
     "union.count": [
-     462112,
+     483616,
      1
     ],
     "union.tables": [
-     462144,
+     483648,
      1152
     ],
     "kvunion.plan.p0": [
-     463296,
+     484800,
      10240
     ],
     "kvunion.map.p0": [
-     473536,
+     495040,
      528
     ],
     "kvunion.plan.p4": [
-     474080,
+     495584,
      10240
     ],
     "kvunion.map.p4": [
-     484320,
+     505824,
      272
     ]
    },
-   "vm_need_words": 484608,
+   "vm_need_words": 506112,
    "fits": {
     "as_built": false,
     "grown_412k": false,
@@ -5529,18 +5596,18 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 432144
    },
-   "image_sha256": "0df2421e21bb91e027acdbacac67984d602a48170678f68fd7cd4c7a3e7d467b"
+   "image_sha256": "976989df49a61e1bbf55f1fc5fd7c6c4cb5220e158327f4dda0294c9b64e8550"
   },
   "38": {
    "values": 551,
    "objects": {
     "pinned_column": 2,
-    "row_array": 43,
+    "row_array": 44,
     "shared_load": 5
    },
    "alloc": {
-    "pinned_words": 122928,
-    "high_water": 350400,
+    "pinned_words": 147504,
+    "high_water": 374976,
     "object_bound": 350400,
     "object_peak_at": 12127.553742729851,
     "peak_objects": [
@@ -5603,44 +5670,48 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 364768,
-     "greedy_by_size": 350400
+     "first_fit_by_time": 386272,
+     "greedy_by_size": 374976
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 122880
     }
    },
    "c4_peak": 300038,
-   "frag_over_c4": 1.168,
+   "frag_over_c4": 1.25,
    "objects_over_c4": 1.168,
    "aux": {
     "union.list": [
-     462048,
+     483552,
      36
     ],
     "union.count": [
-     462112,
+     483616,
      1
     ],
     "union.tables": [
-     462144,
+     483648,
      1152
     ],
     "kvunion.plan.p0": [
-     463296,
+     484800,
      10240
     ],
     "kvunion.map.p0": [
-     473536,
+     495040,
      528
     ],
     "kvunion.plan.p4": [
-     474080,
+     495584,
      10240
     ],
     "kvunion.map.p4": [
-     484320,
+     505824,
      272
     ]
    },
-   "vm_need_words": 484608,
+   "vm_need_words": 506112,
    "fits": {
     "as_built": false,
     "grown_412k": false,
@@ -5665,18 +5736,18 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 432144
    },
-   "image_sha256": "1a161763f7885961fad03e9612f82f861a3f559c6e636591cc94e2afca62fc5b"
+   "image_sha256": "edf5e336a66e0c09da01679d8dfc2c6c60fc157f2387cd6739f80d2b75d17030"
   },
   "39": {
    "values": 551,
    "objects": {
     "pinned_column": 2,
-    "row_array": 43,
+    "row_array": 44,
     "shared_load": 5
    },
    "alloc": {
-    "pinned_words": 122928,
-    "high_water": 350400,
+    "pinned_words": 147504,
+    "high_water": 374976,
     "object_bound": 350400,
     "object_peak_at": 12127.553742729851,
     "peak_objects": [
@@ -5739,44 +5810,48 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 364768,
-     "greedy_by_size": 350400
+     "first_fit_by_time": 386272,
+     "greedy_by_size": 374976
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 122880
     }
    },
    "c4_peak": 300038,
-   "frag_over_c4": 1.168,
+   "frag_over_c4": 1.25,
    "objects_over_c4": 1.168,
    "aux": {
     "union.list": [
-     462048,
+     483552,
      36
     ],
     "union.count": [
-     462112,
+     483616,
      1
     ],
     "union.tables": [
-     462144,
+     483648,
      1152
     ],
     "kvunion.plan.p0": [
-     463296,
+     484800,
      10240
     ],
     "kvunion.map.p0": [
-     473536,
+     495040,
      528
     ],
     "kvunion.plan.p4": [
-     474080,
+     495584,
      10240
     ],
     "kvunion.map.p4": [
-     484320,
+     505824,
      272
     ]
    },
-   "vm_need_words": 484608,
+   "vm_need_words": 506112,
    "fits": {
     "as_built": false,
     "grown_412k": false,
@@ -5801,7 +5876,7 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 432144
    },
-   "image_sha256": "9b9e30ce8ebe0d7dfea60c9c565afa92ec91539a98a41e213a77730c4f19ccba"
+   "image_sha256": "cc8eaeeedc955289b601b0e26e82b78607dfaf546a0c5bddd2165fc45d07151a"
   },
   "head": {
    "values": 30,
@@ -5810,8 +5885,8 @@
     "row_array": 3
    },
    "alloc": {
-    "pinned_words": 122928,
-    "high_water": 153696,
+    "pinned_words": 147504,
+    "high_water": 178272,
     "object_bound": 153696,
     "object_peak_at": 1828.9519999999998,
     "peak_objects": [
@@ -5846,24 +5921,28 @@
     ],
     "method": "first_fit_by_time",
     "tries": {
-     "first_fit_by_time": 153696,
-     "greedy_by_size": 153696
+     "first_fit_by_time": 178272,
+     "greedy_by_size": 178272
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 122880
     }
    },
    "c4_peak": 122904,
-   "frag_over_c4": 1.251,
+   "frag_over_c4": 1.45,
    "objects_over_c4": 1.251,
    "aux": {
     "tokx": [
-     462048,
+     483552,
      7
     ],
     "accept.a": [
-     462080,
+     483584,
      1
     ]
    },
-   "vm_need_words": 462112,
+   "vm_need_words": 483616,
    "fits": {
     "as_built": false,
     "grown_412k": false,
@@ -5876,8 +5955,8 @@
      "ok": 7,
      "rowx_records": 4,
      "plain_records": 3,
-     "tokx_base": 462048,
-     "accept_base": 462080
+     "tokx_base": 483552,
+     "accept_base": 483584
     }
    },
    "errors": [],
@@ -5886,55 +5965,84 @@
    "livein_top": [],
    "self_overwritten_read_words": {},
    "c4_self_overwritten": {},
-   "image_sha256": "5d1fc8b32d6b3c6d56b5d6d749659d1b38808d0b8f778003e4ed5c28a5cfefdd"
+   "image_sha256": "656cedad66ef842d6f87e12f7d589de2ac2e237cb4cf829116fa9576af9a89a3"
   }
  },
+ "carried": {
+  "carried": [
+   [
+    188864,
+    192960
+   ]
+  ],
+  "host": [],
+  "consumers": [
+   {
+    "segment": "24",
+    "words": 4096,
+    "from_earlier": 4096
+   },
+   {
+    "segment": "28",
+    "words": 4096,
+    "from_earlier": 4096
+   },
+   {
+    "segment": "32",
+    "words": 4096,
+    "from_earlier": 4096
+   },
+   {
+    "segment": "36",
+    "words": 4096,
+    "from_earlier": 4096
+   }
+  ],
+  "pinned": [
+   [
+    0,
+    20480,
+    0
+   ],
+   [
+    40960,
+    40964,
+    122880
+   ],
+   [
+    188864,
+    192960,
+    122928
+   ]
+  ],
+  "pinned_words": 147504,
+  "rule": "AR intervals read before any in-segment writer and written by some segment (outside h / PRE): pinned N-row arrays at one token-wide base, like h / PRE"
+ },
  "vm_map": {
-  "aux_base": 462048,
-  "largest_high_water": 462048,
+  "aux_base": 483552,
+  "largest_high_water": 483552,
   "note": "pinned columns h / PRE at 0, every segment's aux at aux_base; values a segment reads before its own writer (live-ins, not pinned) are listed in token.liveins: their producer's placement is NOT yet tied to the consumer's (open)"
  },
  "token": {
   "image": "mtp_N6_token.hgi1r",
   "bytes": 516304,
   "records": 3715,
-  "sha256": "15b3d97eecdf6c96efbff1dc212134e85b2a518de25031bd4841f2c44963f901",
-  "liveins": {
-   "20": {
-    "words": 8388,
-    "top": [
-     [
-      "0|IDX.INDEX|index frame (G18)",
-      0,
-      1366,
-      34848.0,
-      1
-     ],
-     [
-      "0|IDX.INDEX|index frame (G18)",
-      1,
-      1366,
-      34848.0,
-      1
-     ],
-     [
-      "0|IDX.INDEX|index frame (G18)",
-      2,
-      1366,
-      34848.0,
-      1
-     ],
-     [
-      "0|IDX.INDEX|index frame (G18)",
-      3,
-      1366,
-      34848.0,
-      1
-     ]
-    ]
-   }
+  "sha256": "9096b5f56cbd9b45b407d413b7e223e1d9134a4288341ebcd749d5b3036e0800",
+  "liveins": {},
+  "pinned_bases": {
+   "0": [
+    0
+   ],
+   "40960": [
+    122880
+   ],
+   "188864": [
+    122928
+   ]
   },
-  "one_vm_map": false,
+  "pinned_one_base": true,
+  "host_preloaded": [],
+  "one_vm_map": true,
   "end_at": [
    3714
   ],
@@ -5952,257 +6060,257 @@
     "segment": "0",
     "offset": 0,
     "bytes": 11984,
-    "sha256": "3f969f08fd6aa76bf0f02ad4aab8a53fc7ad7245ab0cefa0acd7ee024cba412f"
+    "sha256": "2d0378a2cab8d2db0829357720a6af3e808fc7aadb4dd53072ac3add9ec833a1"
    },
    {
     "segment": "1",
     "offset": 11984,
     "bytes": 21152,
-    "sha256": "5f9aff193cd232e1bd0f457a3b0e27380b326a7928ebd8a3dc5142e0a869ab5d"
+    "sha256": "c15bd523006a4bade67ba2d48ed2fadc034690efe6be433efaefb3f59057bce3"
    },
    {
     "segment": "2",
     "offset": 33136,
     "bytes": 14080,
-    "sha256": "019b35c81fccc4c177ab8c652d2a60d3de518e53bd8979b28ebf403a529156b7"
+    "sha256": "9bed0bb20baa1b73b523491ba35783cd04777b2a8d30af4996e67a069f2ff111"
    },
    {
     "segment": "3",
     "offset": 47216,
     "bytes": 12112,
-    "sha256": "0c982cd8590df05ab766f6be0f4384f9dfb1803369380a0cb31b4e36f94c8563"
+    "sha256": "5a5856816e2b37e84dc36a0cbb00d3096a51d2211781b07edb3cf12171097ae2"
    },
    {
     "segment": "4",
     "offset": 59328,
     "bytes": 12112,
-    "sha256": "ba9cba29dddd97bb4a1235ed5afc600846a7fcd118b94c6d36e9bb2e73c0b407"
+    "sha256": "b22ce9005e64f4741c1b703520f103e4aefa9adcc9efe21f7d2b09dc63a514f6"
    },
    {
     "segment": "5",
     "offset": 71440,
     "bytes": 12112,
-    "sha256": "a927ff25fa4c3d28eacce729f80bd3a452bcf239f8b708f765290f76b00346dd"
+    "sha256": "30990a330f3d1f61cacc863bd9b0d04a05a4a9268571c950457325d4e21c06c1"
    },
    {
     "segment": "6",
     "offset": 83552,
     "bytes": 12112,
-    "sha256": "ba267f991a20309d890eba80fe02a41aa52b07d55ef7aaf7ec7c16234c2de4cf"
+    "sha256": "d68466e4f1c508f69942f42807e44646040d4b243885a3501af464a8e28090af"
    },
    {
     "segment": "7",
     "offset": 95664,
     "bytes": 12112,
-    "sha256": "8111fc66e58abbe3538be0f9b6e26dfc1e98dd288d58dab9cb2fa0171b35f114"
+    "sha256": "71c954a98c6536ff90ae63f0847e4422ad22b38658a21d293acbe960ea3aa753"
    },
    {
     "segment": "8",
     "offset": 107776,
     "bytes": 14080,
-    "sha256": "f0eb1b9cf9c0f27514a60d0f96127bd9b7a5c5eb92bbeca10a248e41ee303985"
+    "sha256": "6006624523db3ff940cf0e52ace42d56af514509258cc0bb260af6d04b981685"
    },
    {
     "segment": "9",
     "offset": 121856,
     "bytes": 12112,
-    "sha256": "7bac9fcaf22af651f803be1f4b4f5a003540853d0b9d56f2d8aaef3bcbd835c2"
+    "sha256": "64a5dcd72d139c519dbcf634d2f592a3b16cbcccd1e06a4632a4b00ec12d3890"
    },
    {
     "segment": "10",
     "offset": 133968,
     "bytes": 12112,
-    "sha256": "0009a0595fc269757dbdaa1d73842afe17a232d171ec93ecb54f99e38fd17bc9"
+    "sha256": "0d4a51cac71fb69a8674e874d42e8cf825bb60506c3621116ae2c2a4f01f5f63"
    },
    {
     "segment": "11",
     "offset": 146080,
     "bytes": 12112,
-    "sha256": "c83580868399b1f66f14b378fd94afe22a0da9f92a7ce7ac0ed85552561e0258"
+    "sha256": "e133114b7877e9558791479d41d4539ab3ad3b875bbf74594a2a73759bc745c8"
    },
    {
     "segment": "12",
     "offset": 158192,
     "bytes": 12112,
-    "sha256": "def883831756f7178c7aeef2597b3635b6b614fd71aa427d55578675a1a35724"
+    "sha256": "1cd770b857e98a559c0960d23f53b281b589166aeedb78c55bde24bf61b5e96f"
    },
    {
     "segment": "13",
     "offset": 170304,
     "bytes": 12112,
-    "sha256": "84d69667b05a2156b1bfe0175c22fcaa26fa9e76509eae1fe11871bd7b1e3b1a"
+    "sha256": "e6da4f7097dc654f9340f3e069d54971918d7d4a39785098214bc767c8614765"
    },
    {
     "segment": "14",
     "offset": 182416,
     "bytes": 23248,
-    "sha256": "5ca47df3318b15a0c48cfd2399199786f71340cbfd78189e680fdb591515310e"
+    "sha256": "e3e44706d69d1de0e80a2b4d82450e03174f97bf4509119e94dcfeb07b106f24"
    },
    {
     "segment": "15",
     "offset": 205664,
     "bytes": 12112,
-    "sha256": "745bbfa532e84190a8163d06b7b4fa668f8b05eafcdf02920d6455456842c47e"
+    "sha256": "23b0f4ff42a8b0c8ac45538bb9f1bfbf5876cc48f0dd2debce95c32296ec3720"
    },
    {
     "segment": "16",
     "offset": 217776,
     "bytes": 12112,
-    "sha256": "b147c27005ff22e2bb71aed6430406c51ef77a8adbbbf8056d337542f5ecb3ce"
+    "sha256": "cfee074414e3c01c1c3b22fb47886a0fbfbb3aa801c0c7a555a9ea89f2e3a318"
    },
    {
     "segment": "17",
     "offset": 229888,
     "bytes": 12112,
-    "sha256": "839426646aa8701c21102e6492b2e4afc54d4b96370f31831f5ac6b1b77e965e"
+    "sha256": "0f05a76303da879e91f8d51e8d8d8e0a93d849e2adeb0c47cb7e177b407950e5"
    },
    {
     "segment": "18",
     "offset": 242000,
     "bytes": 12112,
-    "sha256": "7d958c85aece09f7eb67783b12482732b9d0625f4ec12f40c63f622559846c86"
+    "sha256": "8c39492d6496ef10bcd2bc6100998ef9b2ce6a4f8d4276131367eecef711a298"
    },
    {
     "segment": "19",
     "offset": 254112,
     "bytes": 12112,
-    "sha256": "bdf5e55b991b07d2717f0516a150dcf5af19c8a9a33e57f647bb76c1925042b4"
+    "sha256": "7d0f81b7b7cc0f8d423208c44480b93e26d46663be06d6db29b2b5b5da1b1f12"
    },
    {
     "segment": "20",
     "offset": 266224,
     "bytes": 14112,
-    "sha256": "fc8ad4db804d0bda73496d663dbc7e0e886d60c68451ebd1ad69c5b3a61d7c5a"
+    "sha256": "717a3dbfd8aa38946df13509bf2d7da08147ef6f366ace11c91536ec9358a581"
    },
    {
     "segment": "21",
     "offset": 280336,
     "bytes": 12112,
-    "sha256": "e20e502f6b0a0604614c481473fe6af23ebd9edea47a1eb5f743bd1a63829b01"
+    "sha256": "3f0f184f17e031807e46eb80011efc7664ac481b16155d0a6fe546cfe446ad0b"
    },
    {
     "segment": "22",
     "offset": 292448,
     "bytes": 12112,
-    "sha256": "244385d8f1ca560c5b2401ca0957536a3a9ef6ffaa20f3097752f2d0b6716b64"
+    "sha256": "007570afede0c5f9fbfee146ce9e894666ca5c475d448a142feb53c335cf6e61"
    },
    {
     "segment": "23",
     "offset": 304560,
     "bytes": 12112,
-    "sha256": "a256eabce8f8d72f10617e9ec19b027c92b2323ccfcd8547a8eda8f9154803c6"
+    "sha256": "6f171138f864289b7d32e933dfaf147516a4893bd7d5ace3907b0e3d0c02ea2a"
    },
    {
     "segment": "24",
     "offset": 316672,
     "bytes": 13408,
-    "sha256": "6a5e8620b04610cbcc22dc68f325dc072a1764a021b3d605bd777ceb51ef5e19"
+    "sha256": "de2045b4d9e888ca4518d75fe6fc8a55587f96874e660586ae0074077a48b299"
    },
    {
     "segment": "25",
     "offset": 330080,
     "bytes": 12112,
-    "sha256": "bf6b187ff5aa1640b2c2a765cde0f89bdb1a28eb031218f4c7b92a6798ad6efe"
+    "sha256": "2f4121b0717f88e15f5e0f2be35d49a7c69b82f55bbda6f2d0a7dce79960fffd"
    },
    {
     "segment": "26",
     "offset": 342192,
     "bytes": 12112,
-    "sha256": "8b7284ff235129a3356532227ff750dacbe16af5883884f4580e53be9529c904"
+    "sha256": "630d88ca4bd3fb4c417e1bfcc3efa9ff206adf92c0cac2d8a3edb704bfef2119"
    },
    {
     "segment": "27",
     "offset": 354304,
     "bytes": 12112,
-    "sha256": "fafcae04cee21ce95daebe13fd764ba505fa3d5d7df62c0ad4ba61e7cf8f4e5c"
+    "sha256": "956a3d6ac1b6ee8cc57ee0fc95753c404ff7448af1fb2a1fdd7099753944101f"
    },
    {
     "segment": "28",
     "offset": 366416,
     "bytes": 13408,
-    "sha256": "5ad9cb8fae3b50c3457ad9f4bb941fd0ac48a4fb83acdd55af5a33bf026dd52d"
+    "sha256": "fdd05a880764caa8a5bb03e74d9e59c751ac879faa245f349bb62414d2462400"
    },
    {
     "segment": "29",
     "offset": 379824,
     "bytes": 12112,
-    "sha256": "21860957148e05e1dfefd2d00f57e324649db960f7700eedbab62c9672d7db66"
+    "sha256": "cad3835f85610f5253a94b98850ea4d47abdca0d281cb5f851daa6b7cc3e5068"
    },
    {
     "segment": "30",
     "offset": 391936,
     "bytes": 12112,
-    "sha256": "a24d31ad30e15d20e1c75194446cfe62dab45f1106b27cc47a5b354c65d53ec2"
+    "sha256": "066e4184b8ccc084400c3fb6f2e7a9bef158daa639aa07e8e90600572f93a98d"
    },
    {
     "segment": "31",
     "offset": 404048,
     "bytes": 12112,
-    "sha256": "423520c6b3855c83f2cf71aa8c5566cee2fae21bd8e1a483a3b30278f4091556"
+    "sha256": "138b1a8a6e037d5174e4f29f873d284846eaade104044e599a2ed0ee70780ca5"
    },
    {
     "segment": "32",
     "offset": 416160,
     "bytes": 13408,
-    "sha256": "2c0260aab4b19f87c7a7193659fdeb56f9c4747f97dc3f8ee51c2ac0d91b24ae"
+    "sha256": "796a2850e93caa357523e04aa96ed569650856b96ed83cc93582a372533e465c"
    },
    {
     "segment": "33",
     "offset": 429568,
     "bytes": 12112,
-    "sha256": "cdbc70bf3c9a7f612f3d1a64284ce249d0f7a1effc50075477e79a54e1b45de4"
+    "sha256": "a5d8d476bc3e5e6a8390e050808282542a91a4fae727dc307010dd3c9c870633"
    },
    {
     "segment": "34",
     "offset": 441680,
     "bytes": 12112,
-    "sha256": "f90c6e9c40dead083e1d115aa8de4be6191cffffc23c31ff09d5d430b4f1002f"
+    "sha256": "896923f124708558467fb6c2b77e5f1147a7f3daff6cb005de42cd85722cc0eb"
    },
    {
     "segment": "35",
     "offset": 453792,
     "bytes": 12112,
-    "sha256": "9b5fbce321db2577544f4f79353090f54bb0c719ace83b491245d684c8002279"
+    "sha256": "a2e7a0fddf946d7e9c44769398060109b6787df3fb777c0c259671e29e003f45"
    },
    {
     "segment": "36",
     "offset": 465904,
     "bytes": 13408,
-    "sha256": "71efa694707157dc78119837f411def5d754119d610aa81495d5d7fd35734f3c"
+    "sha256": "e0fd833d39b72590589d8f64e58f17f84073f0666d28489ca171413d7f11785b"
    },
    {
     "segment": "37",
     "offset": 479312,
     "bytes": 12112,
-    "sha256": "0df2421e21bb91e027acdbacac67984d602a48170678f68fd7cd4c7a3e7d467b"
+    "sha256": "976989df49a61e1bbf55f1fc5fd7c6c4cb5220e158327f4dda0294c9b64e8550"
    },
    {
     "segment": "38",
     "offset": 491424,
     "bytes": 12112,
-    "sha256": "1a161763f7885961fad03e9612f82f861a3f559c6e636591cc94e2afca62fc5b"
+    "sha256": "edf5e336a66e0c09da01679d8dfc2c6c60fc157f2387cd6739f80d2b75d17030"
    },
    {
     "segment": "39",
     "offset": 503536,
     "bytes": 12112,
-    "sha256": "9b9e30ce8ebe0d7dfea60c9c565afa92ec91539a98a41e213a77730c4f19ccba"
+    "sha256": "cc8eaeeedc955289b601b0e26e82b78607dfaf546a0c5bddd2165fc45d07151a"
    },
    {
     "segment": "head",
     "offset": 515648,
     "bytes": 656,
-    "sha256": "5d1fc8b32d6b3c6d56b5d6d749659d1b38808d0b8f778003e4ed5c28a5cfefdd"
+    "sha256": "656cedad66ef842d6f87e12f7d589de2ac2e237cb4cf829116fa9576af9a89a3"
    }
   ],
-  "vm_need_words": 484608,
+  "vm_need_words": 506112,
   "fits_2p19": true,
   "errors": 0
  },
  "sources_sha256": {
-  "tools/hbm_next/emitter.py": "3666f8980f960cd0e09e4938f622b26111167ab6c829e1e4cbe69ba1f2279cee",
-  "tools/hbm_next/isa_rows.py": "9b549f7df5b72e91846302e576d6d8f8547f4c5d34893dcd0193745454f31277",
-  "tools/hbm_next/plane_compiler.py": "837c2dee3eb60de6997a42b7d05d4788df21079ac8ff71fdfa2c323a9965c6b7",
+  "tools/hbm_next/emitter.py": "d0a5180ea10b09c4dc14f23473ba291f930165ea8f31bb5628079cc166a60c34",
+  "tools/hbm_next/isa_rows.py": "778e66cf64b07fef7750b8ed97dffdd622670dbb83a98ba97a361afa560cb36b",
+  "tools/hbm_next/plane_compiler.py": "711576142f9c7ad33fc10aeedcc5698c8cb2f213786c5d0ebe74b44cc031fab2",
   "tools/hbm_next/static_check.py": "49ec67d1effcb578d3e560f3c7e5ce06f85852c758d6702ae8514daf2f492e40"
  }
 }
