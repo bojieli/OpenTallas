@@ -1,0 +1,8 @@
+CLOCK_STAGE_CASE sparse_singletons sinks=19 min=9 max=14 buffers=67
+CLOCK_STAGE_NONUNIFORM sparse_singletons 9/14
+    while executing
+"error "CLOCK_STAGE_NONUNIFORM $name $mn/$mx""
+    (procedure "run_case" line 16)
+    invoked from within
+"run_case sparse_singletons 19"
+    (file "results/rtl/smhxs_ring_1019/check_clock_stages.tcl" line 45)

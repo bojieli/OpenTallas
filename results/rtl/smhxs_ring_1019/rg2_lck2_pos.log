@@ -1,0 +1,6 @@
+XS_RING_EQUIV cycles=3000 seed=23 mismatches=0 itag_e_toggles=2712 valid_cycles=2028
+XS_RING_EQUIV PASS
+- rtl/hbm_accel/sm/xs_ring/tb_xs_ring_equiv.sv:49: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 6us; walltime 0.051 s; speed 116.588 us/s
+- Verilator: cpu 0.051 s on 1 threads; allocated 7 MB

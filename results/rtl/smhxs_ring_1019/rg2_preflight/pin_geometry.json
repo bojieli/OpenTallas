@@ -1,0 +1,16 @@
+{
+ "schema": "opentallas.fp_pin_geometry.v1",
+ "verdict": "PASS",
+ "fails": [],
+ "metrics": {
+  "signal_clock_pins": 4543,
+  "pin_rectangles": 4543,
+  "pin_track_checked": 4543,
+  "pin_track_inaccessible": 0,
+  "pin_rectangles_outside": 0,
+  "missing_geometry": 0
+ },
+ "dump": "/srv/opentallas-scratch/claude/smhxs-rg2-1019/lck2_audit/lck2c_tt_floorplan/work/orfs/gate_dump.json",
+ "dump_sha256": "cbe55cf663495b6569e7d684fd9427119f42196562e1e3474d39c4c105b0d699",
+ "validator_sha256": "5c0b112365aab653a6790d862cec90ff30a182ce0aeae58e80465b5b68c391a8"
+}

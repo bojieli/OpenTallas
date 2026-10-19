@@ -1,0 +1,17 @@
+{
+  "source_sha256": "40df6306a57b3d3ac7da0df8c8e0d0f13e1ff4c7fa6ab02b0b75b47c09d0358a",
+  "synth_netlist_sha256": "7c83e80a7bd38b47847fa4b6d38ba3ce701afe751060109d25ca8150086f1851",
+  "fleet_host": "ot-agidock128",
+  "run": "/srv/opentallas-scratch/claude/smhxs-rg2-1019/lck2_audit/lck2c_tt_floorplan",
+  "setup": "TT",
+  "hold": "FF",
+  "flow_rc": 0,
+  "pins": "PASS4543/4543 accessible/ontrack/inside",
+  "macros": 8,
+  "clock_stage_proof": "13/13 sparse19 and16/16 synthetic26118; exact physical counts required afterCTS",
+  "safe_checklist": "physical/ref_tile/smh_xs_ring_rg2_1019/README.md",
+  "coordinator_exception": "existing regionalreset33loads accepted; pendingnative/resetmappingaudit",
+  "fill_waiver": "safe432x345.6 lattice/macrochannel outline; synthtotal29.87%",
+  "preflight_only": true,
+  "release_qualified": false
+}

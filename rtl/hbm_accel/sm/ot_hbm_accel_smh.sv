@@ -2599,21 +2599,26 @@ module ot_hbm_accel_smh_leaf #(
     // copies -> one kept copy per 64-bit output chunk of each rotation stage (stage 0, h, l, carry mask) => <= ~64 mux
     // loads a copy, <= 8 / <= 7 flop loads on the tree levels.  The data path latency is UNCHANGED (no beat stage
     // added); the straps settle 3 edges after power-up, long before reset releases the first beat.
-    localparam integer CK  = 64;
+`ifdef OT_SMH_FAN32
+    localparam integer CK = 4, LCK = 2, SMID = 32;
+`else
+    localparam integer CK = 64, LCK = 64, SMID = 8;
+`endif
+    //
     localparam integer N0K = (NBK + 255 + CK - 1) / CK, N0F = (NBF + 255 + CK - 1) / CK;
     localparam integer NHK = (NBK + 63 + CK - 1) / CK,  NHF = (NBF + 63 + CK - 1) / CK;
-    localparam integer NLK = (NBK + CK - 1) / CK,       NLF = (NBF + CK - 1) / CK;
+    localparam integer NLK = (NBK + LCK - 1) / LCK,     NLF = (NBF + LCK - 1) / LCK;
     localparam integer NA1 = N0K + NHK + 2 * NLK, NA2 = N0F + NHF + 2 * NLF;
     (* keep *) reg [10:0] a1p;
     (* keep *) reg [10:0] a2p;
     (* keep *) reg [4:0] g1p;
     (* keep *) reg [4:0] g2p;
     always @(posedge clk) begin a1p <= {xs_a1, {G1S{1'b0}}}; a2p <= {xs_a2, {G2S{1'b0}}}; g1p <= xs_g1; g2p <= xs_g2; end
-    wire [8*11-1:0] a1m, a2m;
+    wire [SMID*11-1:0] a1m, a2m;
     wire [NA1*11-1:0] a1c;
     wire [NA2*11-1:0] a2c;
     genvar sk;
-    generate for (sk = 0; sk < 8; sk = sk + 1) begin : g_sm
+    generate for (sk = 0; sk < SMID; sk = sk + 1) begin : g_sm
         (* keep *) reg [10:0] q1;
         (* keep *) reg [10:0] q2;
         always @(posedge clk) begin q1 <= a1p; q2 <= a2p; end
@@ -2623,15 +2628,15 @@ module ot_hbm_accel_smh_leaf #(
         (* keep *) reg [10:0] q;
 `ifdef OT_SMH_MUT_SFAN
         // negative control: stage-0 chunk 0's copy rotates by one 256-b step too far
-        always @(posedge clk) q <= a1m[(sk % 8)*11 +: 11] + ((sk == 0) ? 11'd256 : 11'd0);
+        always @(posedge clk) q <= a1m[(sk % SMID)*11 +: 11] + ((sk == 0) ? 11'd256 : 11'd0);
 `else
-        always @(posedge clk) q <= a1m[(sk % 8)*11 +: 11];
+        always @(posedge clk) q <= a1m[(sk % SMID)*11 +: 11];
 `endif
         assign a1c[sk*11 +: 11] = q;
     end endgenerate
     generate for (sk = 0; sk < NA2; sk = sk + 1) begin : g_s2
         (* keep *) reg [10:0] q;
-        always @(posedge clk) q <= a2m[(sk % 8)*11 +: 11];
+        always @(posedge clk) q <= a2m[(sk % SMID)*11 +: 11];
         assign a2c[sk*11 +: 11] = q;
     end endgenerate
     wire [4095:0] dd = {b_d, b_d};
@@ -2700,24 +2705,24 @@ module ot_hbm_accel_smh_leaf #(
         wa1  <= wa0;
     end
     // stage l (a[5:0]) and the carry mask (1 where the field bit is in beat g + 1), chunked as stage 0
-    wire [NLK*CK+63:0] blk1x = {{(NLK*CK+64-(NBK+63)){1'b0}}, blk1};
-    wire [NLF*CK+63:0] bf1x  = {{(NLF*CK+64-(NBF+63)){1'b0}}, bf1};
-    wire [NLK*CK-1:0] blk_l, blk_c;
-    wire [NLF*CK-1:0] bf_l, bf_c;
+    wire [NLK*LCK+63:0] blk1x = {{(NLK*LCK+64-(NBK+63)){1'b0}}, blk1};
+    wire [NLF*LCK+63:0] bf1x  = {{(NLF*LCK+64-(NBF+63)){1'b0}}, bf1};
+    wire [NLK*LCK-1:0] blk_l, blk_c;
+    wire [NLF*LCK-1:0] bf_l, bf_c;
     generate for (sk = 0; sk < NLK; sk = sk + 1) begin : g_rlk
         wire [10:0] a = a1c[(N0K + NHK + sk)*11 +: 11];
         wire [10:0] ac = a1c[(N0K + NHK + NLK + sk)*11 +: 11];
-        assign blk_l[sk*CK +: CK] = blk1x[sk*CK + a[RH-1:0] +: CK];
-        for (genvar ci = 0; ci < CK; ci = ci + 1) begin : g_c
-            assign blk_c[sk*CK + ci] = ({21'd0, ac} + 32'(sk*CK + ci)) >= 32'd2048;
+        assign blk_l[sk*LCK +: LCK] = blk1x[sk*LCK + a[RH-1:0] +: LCK];
+        for (genvar ci = 0; ci < LCK; ci = ci + 1) begin : g_c
+            assign blk_c[sk*LCK + ci] = ({21'd0, ac} + 32'(sk*LCK + ci)) >= 32'd2048;
         end
     end endgenerate
     generate for (sk = 0; sk < NLF; sk = sk + 1) begin : g_rlf
         wire [10:0] a = a2c[(N0F + NHF + sk)*11 +: 11];
         wire [10:0] ac = a2c[(N0F + NHF + NLF + sk)*11 +: 11];
-        assign bf_l[sk*CK +: CK] = bf1x[sk*CK + a[RH-1:0] +: CK];
-        for (genvar ci = 0; ci < CK; ci = ci + 1) begin : g_c
-            assign bf_c[sk*CK + ci] = ({21'd0, ac} + 32'(sk*CK + ci)) >= 32'd2048;
+        assign bf_l[sk*LCK +: LCK] = bf1x[sk*LCK + a[RH-1:0] +: LCK];
+        for (genvar ci = 0; ci < LCK; ci = ci + 1) begin : g_c
+            assign bf_c[sk*LCK + ci] = ({21'd0, ac} + 32'(sk*LCK + ci)) >= 32'd2048;
         end
     end endgenerate
     wire [SLW-1:0] wd_n = {bf_l[NBF-1:0], blk_l[NBK-1:0]};

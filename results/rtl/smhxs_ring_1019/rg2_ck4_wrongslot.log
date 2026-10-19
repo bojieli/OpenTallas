@@ -1,0 +1,11 @@
+XS_RING_EQUIV MISMATCH cycle=24 itag_e dut=97fc ref=97fc first_e 1/1 last_e 1/1 other_diff=1
+XS_RING_EQUIV MISMATCH cycle=25 itag_e dut=30e6 ref=30e6 first_e 0/0 last_e 0/0 other_diff=1
+XS_RING_EQUIV MISMATCH cycle=26 itag_e dut=68e5 ref=68e5 first_e 0/0 last_e 0/0 other_diff=1
+XS_RING_EQUIV MISMATCH cycle=27 itag_e dut=1e25 ref=1e25 first_e 1/1 last_e 0/0 other_diff=1
+XS_RING_EQUIV MISMATCH cycle=28 itag_e dut=3a16 ref=3a16 first_e 1/1 last_e 1/1 other_diff=1
+XS_RING_EQUIV cycles=3000 seed=19 mismatches=2712 itag_e_toggles=2712 valid_cycles=2055
+XS_RING_EQUIV FAIL
+- rtl/hbm_accel/sm/xs_ring/tb_xs_ring_equiv.sv:49: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 6us; walltime 0.055 s; speed 109.977 us/s
+- Verilator: cpu 0.055 s on 1 threads; allocated 7 MB
