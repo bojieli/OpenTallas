@@ -1,0 +1,72 @@
+{
+ "summary": {
+  "words": 10,
+  "rows": 4,
+  "complete_rows_at_root": 0,
+  "partial_words": 10,
+  "plan_exact": false,
+  "end": "END edges=1345 ret_words=10 xo_checked=1343 fault=0"
+ },
+ "lockstep": {
+  "D": 321,
+  "compared": 1023,
+  "mismatch": 80,
+  "valid_ref": 82,
+  "valid_xs": 82,
+  "first_ref": 67,
+  "first_xs": 388,
+  "xs_fault_at": -1
+ },
+ "errors": [
+  "MISMATCH edge 724 row 0 lo 0 k 2 got beffdc38/0 want 3e57d0c6/0",
+  "MISMATCH edge 725 row 1 lo 0 k 2 got 3d2a8b4c/0 want bd143e06/0",
+  "MISMATCH edge 728 row 2 lo 0 k 1 got 3da5c9ee/0 want 3b8af558/0",
+  "MISMATCH edge 729 row 3 lo 0 k 1 got bd1190a4/0 want 3d91be1c/0",
+  "MISMATCH edge 734 row 2 lo 2 k 1 got 3e0abd91/0 want 3dadc5e8/0",
+  "MISMATCH edge 735 row 3 lo 2 k 1 got 3d84422c/0 want bd34c8cb/0",
+  "MISMATCH edge 741 row 2 lo 4 k 2 got bc0e1270/0 want bd3e4ff6/0",
+  "MISMATCH edge 742 row 3 lo 4 k 2 got 3befbc50/0 want bd66641d/0",
+  "MISMATCH edge 744 row 0 lo 4 k 2 got 3dfc3400/0 want 3dc15088/0",
+  "MISMATCH edge 745 row 1 lo 4 k 2 got 3ca7bcc8/0 want 3c23a7ce/0",
+  "PLAN_MISMATCH predicted 10 words, got 10; first diff ((724, 0, (0, 2, 5), 1045942470, 0), (724, 0, (0, 2, 5), 3204439096, 0))",
+  "LOCKSTEP D=321 compared=1023 mismatch=80 valid_ref=82 valid_xs=82 first_ref=67 first_xs=388 xs_fault_at=-1",
+  "XSL_MISMATCH xs edge 457 ref edge 136 valid 1/1 cc 0040/0040",
+  "XSL_MISMATCH xs edge 458 ref edge 137 valid 1/1 cc 0040/0040",
+  "XSL_MISMATCH xs edge 459 ref edge 138 valid 1/1 cc 0040/0040",
+  "XSL_MISMATCH xs edge 460 ref edge 139 valid 1/1 cc 0040/0040"
+ ],
+ "xs": {
+  "D": 321,
+  "off": 37,
+  "off_load": 37,
+  "ts": 300,
+  "mutant": null,
+  "tags": "phase",
+  "cal_rows": 90,
+  "stall_edges": 19,
+  "gather_slack": 217,
+  "nbeat_x": 80,
+  "fam": 0,
+  "K": 5120,
+  "nbeat_stream": 80,
+  "sbase": 1040,
+  "end_iter": 620,
+  "launch_row": 103,
+  "cfg_row": 40,
+  "stream_rows": [
+   103,
+   201
+  ],
+  "is_d": {
+   "24": "0000000258000000000000000000000000000000",
+   "150": "0000000001000000000000000000000000000000",
+   "280": "000000000002d000200000000000000000000000",
+   "300": "000000000002d000400000000000000000000000",
+   "323": "0000000000000000000000000000000000000021"
+  },
+  "calendar": "pq_calendar_action/time.viamap.hex (75-b action ABI, tools/s81_static_control/pq_calendar)"
+ },
+ "op": "ffn.shared_gu",
+ "field_phase": 16,
+ "pass_": false
+}
