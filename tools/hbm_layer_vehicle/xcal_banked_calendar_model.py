@@ -5,7 +5,7 @@ import json,math
 def model(serialized_programmes=None):
     leaf=[241.92,138.24];centre=[86.4,86.4];envelope=[241.92,397.44]
     profiles={}
-    for name,W,XW in [("SVG",135,46),("XC",173,5)]:
+    for name,W,XW in [("SVG",135,46),("SVG47",135,47),("XC",173,5)]:
         token=62+XW # PC11 + ordinal32 + ctxXW + iter16 + lastit1 + lastword1 + valid1
         qualifiers=(W+15)//16
         # Explicit planning inventory, not a measured upper/lower area bound.
