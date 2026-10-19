@@ -30,6 +30,19 @@ hfd_ckgen cg(.refclk(refclk),.por_n(por_n),.pll_stream(stream),.pll_serial(clk),
 reg reset_n=0;wire runrs=rs&&reset_n,runrq=rq&&reset_n;
 wire[3:0] busy,valid,pfault,calrun;wire[2421:0] cmd[0:3],rawcmd[0:3];
 ot_hbm_su_bridge_release_s rel(.clk_serial(clk),.rst_n(runrq),.prog_busy(busy[0]),.bridge_rst_n(br),.fault(brfault));
+integer clock_stream=0,clock_serial=0;time last_stream_ps=0,last_serial_ps=0;
+always @(posedge stream)begin
+ clock_stream++;
+ if(clock_stream>1&&($rtoi($realtime*1000+.5)-last_stream_ps)!=834)$fatal(1,"CLOCK_STREAM_PERIOD");
+ last_stream_ps=$rtoi($realtime*1000+.5);
+end
+always @(posedge clk)begin
+ clock_serial++;
+ if(clock_serial>1&&($rtoi($realtime*1000+.5)-last_serial_ps)!=1112)$fatal(1,"CLOCK_SERIAL_PERIOD");
+ last_serial_ps=$rtoi($realtime*1000+.5);
+end
+initial begin #200;if(clock_stream<2||clock_serial<2||!cg.locked||!rs||!rq)$fatal(1,"CLOCK_CAUSAL_GUARD");
+ $display("CLOCK_CAUSAL_PASS stream_half_ps=417 serial_half_ps=556");end
 integer st=-1,qt=-1;
 always @(posedge stream)if(rs)st=st+1;
 always @(posedge clk)if(rq)qt=qt+1;
@@ -80,7 +93,10 @@ end
   s.append('default:begin end endcase end\n')
  s.append('''integer roots=0,scalars=0,checked=0,fillcount=0,retired=0;integer startqt=0;integer abortfills=0;reg root_seen=0;
 always @(posedge clk)begin
- if(station_start)begin startqt=qt;root_seen=0;end
+ if(station_start)begin startqt=qt;root_seen=0;
+  if(qt!=6011+9000*(episode+abort_mode)&&!(abort_mode&&qt==6011))$fatal(1,"CP_FIXED_STARTUP_PHASE");
+  $display("PROGRAMME_START episode=%0d qt=%0d st=%0d aborted=%0d",episode,qt,st,(abort_mode&&qt==6011));
+ end
  #0.001;
  if(runrq&&root_v&&!root_seen)begin root_seen=1;
   $display("ROOT episode=%0d age=%0d data=%h captures=%0d adds=%0d",episode,qt-startqt,root_x,capture_count,add_count);
