@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Materialize ONE source mutant from a frozen manifest; never runs a build."""
 import argparse,hashlib,json,pathlib,re
-p=argparse.ArgumentParser();p.add_argument('--source',required=True);p.add_argument('--out',required=True);p.add_argument('--mutant',required=True,choices=['epoch','epoch_generated','generation','stage','input_next','client_substitution','latest_pending','rank_masks','early_post','raw_cleanup','pin_aw_before','pin_w_before','bridge_duplicate','false_retire_marker','false_cq_marker']);a=p.parse_args()
+p=argparse.ArgumentParser();p.add_argument('--source',required=True);p.add_argument('--out',required=True);p.add_argument('--mutant',required=True,choices=['current_event_guard','epoch','epoch_generated','generation','stage','input_next','client_substitution','latest_pending','rank_masks','early_post','raw_cleanup','pin_aw_before','pin_w_before','bridge_duplicate','false_retire_marker','false_cq_marker']);a=p.parse_args()
 src=pathlib.Path(a.source).resolve();out=pathlib.Path(a.out).resolve()
 if out.exists():raise SystemExit('refuse existing output')
 m=json.loads((src/'source_manifest.json').read_text());out.mkdir(parents=True)
@@ -14,6 +14,8 @@ if a.mutant in ('epoch','epoch_generated','generation','stage','input_next'):
  field={'epoch':(45,16,10),'epoch_generated':(45,16,15),'generation':(0,2,11),'stage':(39,6,12),'input_next':(21,18,13)}[a.mutant]
  lo,width,case=field;mask=((1<<87)-1)^(((1<<width)-1)<<lo)
  path=core;old='certificate_key == expected_key';new=f"(certificate_key&87'h{mask:x})==(expected_key&87'h{mask:x})";fail='MALFORMED_CERTIFICATE_ADVANCED_COMMITTED_OR_EVENT|MISSING_ATOMIC_CERTIFICATE_VETO'
+elif a.mutant=='current_event_guard':
+ path=core;old=' && current_events_valid';new='';case=16;fail='MALFORMED_CERTIFICATE_ADVANCED_COMMITTED_OR_EVENT|MISSING_ATOMIC_CERTIFICATE_VETO';condition='COMPONENT join-input real captured duplicate raw replay; actual cleanup producer untouched'
 elif a.mutant=='client_substitution':
  path=core;old='a_d.request_tag=allocation_tag;';new="a_d.request_tag={43'd0,p_q.client};";fail='BOUND_KEY_IS_NATIVE_TAG59'
 elif a.mutant=='latest_pending':

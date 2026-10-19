@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 // External-interface component bench. No hierarchical force, deposit or setup.
-module native_join_bench #(parameter integer FIXTURE_WDOG=(1 << 22));
- localparam integer H=512, RESPONSE_DEADLINE=384;
+module native_join_bench #(parameter integer FIXTURE_WDOG=(1 << 22), FIXTURE_H=512, FIXTURE_DEADLINE=384);
+ localparam integer H=FIXTURE_H, RESPONSE_DEADLINE=FIXTURE_DEADLINE;
  // All component clock ports deliberately share clk. FUNCTIONAL_ONLY.
 
   reg clk=0; always #5 clk=~clk;
@@ -193,12 +193,27 @@ reg allow_aw=1,allow_w=1;
   if(case_id==12)certificate_key_to_join[44:39]=0;
   if(case_id==13)certificate_key_to_join[38:21]=gold_next(health_step);
  end
+ // COMPONENT-only replay at the join input; genuine source paths remain intact.
+ reg replay_raw_captured=0,replay_terminal_captured=0;
+ reg[15:0]replay_raw_client;reg[7:0]replay_raw_slot;reg[1:0]replay_raw_descgen;
+ reg[17:0]replay_raw_pos;reg replay_raw_unready,replay_raw_needed;
+ reg[58:0]replay_terminal_tag;reg[1:0]replay_terminal_gen;
+ wire replay_raw_now=native_certificate_attempt_v&&health_step==0&&(case_id==16||case_id==17);
+ wire replay_terminal_now=native_certificate_attempt_v&&health_step==0&&(case_id==18||case_id==19);
+ always @(posedge clk)if(raw_por_n)begin
+  if(raw_done_v)begin
+   replay_raw_captured<=1;replay_raw_client<=raw_done_client;replay_raw_slot<=raw_done_slot;
+   replay_raw_descgen<=raw_done_descgen;replay_raw_pos<=raw_done_pos;
+   replay_raw_unready<=raw_done_unready;replay_raw_needed<=raw_done_report_needed;
+  end
+  if(terminal_accepted)begin replay_terminal_captured<=1;replay_terminal_tag<=terminal_accept_tag;replay_terminal_gen<=terminal_accept_gen;end
+ end
  qkd_host_native_owner_join_rc #(.ENABLE_NATIVE_OWNER_JOIN(1)) join_owner(
   .clk(clk),.raw_por_n(raw_por_n),.issue_fire(issue_fire_v),.issue_client(issue_client),.issue_slot(issue_slot),.issue_desc_gen(issue_descgen),.issue_position(issue_pos),.issue_input_token(issue_token),
   .package_accept_v(package_start_v),.package_position(package_pos),.package_input_token(package_token),.package_gen(package_gen),.hc_accept_v(hc_accept_v),.hc_position(hc_pos),.hc_input_token(hc_token),.hc_gen(hc_gen),
   .request_v(token_request_v[0]),.request_position(token_request_pos[0]),.request_input_token(token_request_token[0]),.request_gen(token_request_gen[0]),.allocation_fire(alloc_fire),.allocation_tag(alloc_tag),.allocation_gen(alloc_gen),
-  .terminal_v(terminal_accepted),.terminal_tag(terminal_accept_tag),.terminal_gen(terminal_accept_gen),
-  .raw_done_v(raw_done_v),.raw_client(raw_done_client),.raw_slot(raw_done_slot),.raw_desc_gen(raw_done_descgen),.raw_position(raw_done_pos),.raw_unready(raw_done_unready),.raw_report_needed(raw_done_report_needed),
+  .terminal_v(terminal_accepted||replay_terminal_now),.terminal_tag(replay_terminal_now?(replay_terminal_tag ^ (case_id==19 ? (59'd1 << 43):59'd0)):terminal_accept_tag),.terminal_gen(replay_terminal_now?replay_terminal_gen:terminal_accept_gen),
+  .raw_done_v(raw_done_v||replay_raw_now),.raw_client(replay_raw_now?replay_raw_client:raw_done_client),.raw_slot(replay_raw_now?replay_raw_slot:raw_done_slot),.raw_desc_gen(replay_raw_now?replay_raw_descgen:raw_done_descgen),.raw_position(replay_raw_now?(replay_raw_pos ^ (case_id==17?18'd1:18'd0)):raw_done_pos),.raw_unready(replay_raw_now?replay_raw_unready:raw_done_unready),.raw_report_needed(replay_raw_now?replay_raw_needed:raw_done_report_needed),
   .certificate_v(native_certificate_v),.certificate_health_bound(health_native_valid),.certificate_key(certificate_key_to_join),
   .event_copy_v(event_insert_v&&event_native_valid),.event_key({event_client,event_slot,event_descgen,event_native_tag,event_native_gen}),
   .prompt_retired_v(report_drained_v&&!report_drained_cq&&report_drained_native_valid),.prompt_key({report_drained_client,report_drained_slot,report_drained_descgen,report_drained_tag,report_drained_gen}),
@@ -259,7 +274,8 @@ reg allow_aw=1,allow_w=1;
  reg expected_metadata_fault=0;
  reg malformed_attempt_pending=0;reg[17:0]pre_bad_mirror_pos,pre_bad_mirror_tok,pre_bad_mirror_ngen;
  integer normal_certified_events=0,pre_bad_normal_events=0;
- wire injected_bad_attempt=native_certificate_attempt_v&&((case_id>=10&&case_id<=13&&health_step==0)||(case_id==15&&health_step==1));
+ wire injected_bad_attempt=native_certificate_attempt_v&&((case_id>=10&&case_id<=13&&health_step==0)||(case_id==15&&health_step==1)||(case_id>=16&&case_id<=19&&health_step==0));
+ integer boundary_same_edge_hits=0;
  integer native_cq_retirements=0;
  integer edges=0,issues=0,allocations=0,dispatches=0,raw_completions=0,post_completions=0,certificates=0,event_copies=0,cq_offers=0,terminal_accepts=0;
  integer request_counts[8],request_returns[8],result_returns[8],transport_returns[8],releases[8],raw_cleanup_due[8];
@@ -285,6 +301,14 @@ reg allow_aw=1,allow_w=1;
     if(!rc_bad)$fatal(1,"MISSING_ATOMIC_CERTIFICATE_VETO");
    end
    malformed_attempt_pending<=injected_bad_attempt;
+   if(case_id==20&&native_certificate_attempt_v&&health_step==0)begin
+    if(!raw_done_v||!certificate_key_ok||!native_certificate_v)$fatal(1,"H93_SAME_EDGE_BOUNDARY_NOT_ESTABLISHED raw=%b eligible=%b accepted=%b",raw_done_v,certificate_key_ok,native_certificate_v);
+    boundary_same_edge_hits=boundary_same_edge_hits+1;
+    $display("H93_REAL_SAME_EDGE_BOUNDARY e=%0d H=%0d D=%0d raw=%b attempt=%b eligible=%b accepted=%b",edges,H,RESPONSE_DEADLINE,raw_done_v,native_certificate_attempt_v,certificate_key_ok,native_certificate_v);
+   end
+   if(replay_raw_now&&!replay_raw_captured)$fatal(1,"RAW_REPLAY_NO_GENUINE_CAPTURE");
+   if(replay_terminal_now&&!replay_terminal_captured)$fatal(1,"TERMINAL_REPLAY_NO_GENUINE_CAPTURE");
+   if(replay_raw_now||replay_terminal_now)$display("COMPONENT_JOIN_INPUT_REPLAY case=%0d e=%0d raw=%b terminal=%b genuine_raw_seen=%b genuine_terminal_seen=%b",case_id,edges,replay_raw_now,replay_terminal_now,replay_raw_captured,replay_terminal_captured);
    if(injected_bad_attempt)begin
     if(health_step==0&&(rc_mirror_pos!==0||rc_mirror_tok!==0||rc_mirror_ngen!==0))$fatal(1,"MALFORMED_PROMPT_INITIAL_COMMITTED_STATE_NOT_ZERO");
     if(health_step==1&&(rc_mirror_pos!==1||rc_mirror_tok!==18'd70002||rc_mirror_ngen!==0))$fatal(1,"MALFORMED_GENERATED_PREVIOUS_PROMPT_GOLD");
@@ -350,7 +374,7 @@ reg allow_aw=1,allow_w=1;
    if(native_certificate_v)certificates=certificates+1;
    if(event_insert_v&&event_native_valid)event_copies=event_copies+1;
    if(cq_offer_v&&cq_native_valid)begin
-    if(case_id<=3||case_id==14)begin
+    if(case_id<=3||case_id==14||case_id==20)begin
      if(!native_cq_offer_ok)$fatal(1,"UNCERTIFIED_CQ_SUCCESS_OFFER");
      if(cq_native_tag!=={16'(cq_offers+1),6'd37,gold_input(cq_offers+1),13'(cq_offers+1),6'd0})$fatal(1,"SAVED_CQ_LINEAGE n=%0d tag=%h",cq_offers,cq_native_tag);
     end
@@ -400,7 +424,7 @@ reg allow_aw=1,allow_w=1;
    if(old_out_aw_valid&&!m_awvalid)$display("PIN_AW_OUTPUT_VALID_DROP e=%0d",edges);
    if(old_out_w_valid&&!m_wvalid)$display("PIN_W_OUTPUT_VALID_DROP e=%0d",edges);
    old_mon_aw_valid=mon_aw_source_valid;old_mon_w_valid=mon_w_source_valid;old_out_aw_valid=m_awvalid;old_out_w_valid=m_wvalid;
-   if((case_id<=3||case_id==14)&&(join_fault||coordinator_fault||bridge_fault||hc_station_fault||(|ctrl_fault)||(|rank_fault)||(|ep_protocol_fault)||rc_bad))$fatal(1,"HEALTHY_SOURCE_FAULT e=%0d join=%b coord=%b bridge=%b hc=%b ctrl=%h rank=%h ep=%h rc=%b",edges,join_fault,coordinator_fault,bridge_fault,hc_station_fault,ctrl_fault,rank_fault,ep_protocol_fault,rc_bad);
+   if((case_id<=3||case_id==14||case_id==20)&&(join_fault||coordinator_fault||bridge_fault||hc_station_fault||(|ctrl_fault)||(|rank_fault)||(|ep_protocol_fault)||rc_bad))$fatal(1,"HEALTHY_SOURCE_FAULT e=%0d join=%b coord=%b bridge=%b hc=%b ctrl=%h rank=%h ep=%h rc=%b",edges,join_fault,coordinator_fault,bridge_fault,hc_station_fault,ctrl_fault,rank_fault,ep_protocol_fault,rc_bad);
   end
  end
  always @(negedge clk)begin
@@ -413,8 +437,9 @@ reg allow_aw=1,allow_w=1;
  task automatic tick(input integer n);repeat(n)@(negedge clk);#1;endtask
  initial begin
   if(!$value$plusargs("CASE=%d",case_id))case_id=0;
-  if(case_id<0||case_id==9||case_id>15)$fatal(1,"CASE_NOT_IMPLEMENTED id=%0d",case_id);
+  if(case_id<0||case_id==9||case_id>20)$fatal(1,"CASE_NOT_IMPLEMENTED id=%0d",case_id);
   if((case_id==6||case_id==8)&&FIXTURE_WDOG!=512)$fatal(1,"CANCELLATION_REQUIRES_SEPARATE_TYPED_WDOG512_BUILD");
+  if(case_id==20&&(H!=93||RESPONSE_DEADLINE!=93))$fatal(1,"BOUNDARY_REQUIRES_SEPARATE_H93_D93_BUILD");
   if(case_id==14)hold_rank7_result_return=1;
   if(case_id==1)allow_aw=0;
   if(case_id==2)allow_w=0;
@@ -451,13 +476,13 @@ reg allow_aw=1,allow_w=1;
    if(terminal_accepted||!ep_owned[7])$fatal(1,"CANCEL_POSTGRANT_DRAIN_BYPASS");
    fixture_drains[7]=1;
   end
-  if((case_id>=10&&case_id<=13)||case_id==15)wait(rc_bad||join_fault);
+  if((case_id>=10&&case_id<=13)||case_id==15||(case_id>=16&&case_id<=19))wait(rc_bad||join_fault);
   if(case_id==4||case_id==7)begin
    if(case_id==7)wait(cq_errors==2);
    else wait(request_counts[0]==1&&request_counts[1]==1&&request_counts[2]==1&&request_counts[3]==1&&request_counts[4]==1&&request_counts[5]==1&&request_counts[6]==1&&request_counts[7]==1);
    @(negedge clk);health_bad_i=1;tick(1);health_bad_i=0;
   end
-  if(case_id==4||case_id==5||case_id==6||case_id==7||case_id==8||(case_id>=10&&case_id<=13)||case_id==15)begin
+  if(case_id==4||case_id==5||case_id==6||case_id==7||case_id==8||(case_id>=10&&case_id<=13)||case_id==15||(case_id>=16&&case_id<=19))begin
    wait(cq_errors>=(case_id==7?3:1)&&raw_completions!=0);tick(200);
    if(cq_successes!=0||!rc_bad||!bridge_bad||raw_completions==0)$fatal(1,"FAIL_STOP_REPORT_OR_RAWCLEANUP errors=%0d success=%0d raw=%0d rc=%b bridge=%b",cq_errors,cq_successes,raw_completions,rc_bad,bridge_bad);
    if(case_id==5)begin
@@ -496,7 +521,8 @@ reg allow_aw=1,allow_w=1;
   for(integer r=0;r<8;r=r+1)if(request_counts[r]!=4||request_returns[r]!=4||result_returns[r]!=4||transport_returns[r]!=4||releases[r]!=4)$fatal(1,"RANK_ACCOUNTING rank=%0d request=%0d reqcr=%0d resultcr=%0d release=%0d",r,request_counts[r],request_returns[r],result_returns[r],releases[r]);
   if(ar_accepts!=read_beats||aw_accepts!=write_beats||w_accepts!=write_beats||bridge_aw_captures!=write_beats||bridge_w_captures!=write_beats||read_beats!=5||write_beats!=6)$fatal(1,"DMA_CAPTURE_PACKET_COUNTS AR=%0d Rpackets=%0d AW=%0d W=%0d Wpackets=%0d",ar_accepts,read_beats,aw_accepts,w_accepts,write_beats);
   if(binding_valid||post_pending||(|ep_owned)||join_fault||coordinator_fault||rc_bad)$fatal(1,"FINAL_OWNERSHIP_NOT_DRAINED");
-  $display("NATIVE_JOIN_PASS FUNCTIONAL_ONLY case=%0d edges=%0d H=%0d deadline=%0d extra_age_bits=3 max_response=%0d",case_id,edges,H,RESPONSE_DEADLINE,max_response);
+  if(case_id==20&&boundary_same_edge_hits!=1)$fatal(1,"H93_BOUNDARY_NOT_EXERCISED hits=%0d",boundary_same_edge_hits);
+  $display("NATIVE_JOIN_PASS FUNCTIONAL_ONLY case=%0d edges=%0d H=%0d deadline=%0d age_bits=%0d max_response=%0d",case_id,edges,H,RESPONSE_DEADLINE,$clog2(H+1),max_response);
   $finish;
  end
  // Finite scenario progress bound, not a process/build runtime deadline.
