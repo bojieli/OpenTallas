@@ -1,0 +1,18 @@
+{
+  "kind": "review plan only; no RTL or test executed",
+  "anchor": "cb3ee6029",
+  "paths": {
+    "rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin.sv": "9be6f5e15bc0c89804b565f67c4211b4e1b4dbef30cf3f276a1ecef3421fc971",
+    "rtl/dsrom_sys/s81_dv/unit/dsdv_mu_mem.sv": "6034771d826ddcadf9fdfab3247e92d13e991b66d424316851161cb3b7e91e25",
+    "rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hslot.sv": "f873e75f22462d16fc8fbd9b6c22f07a35db5e0f86c42b11dcd893e5a95a66ba",
+    "rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_mu_hwin.sv": "6b9ca53fa2774f52fd8bafa2d4ebff1bba8b00e993c873a7287853eed9c4653b",
+    "rtl/dsrom_sys/s81_dv/unit/test/run_mu_hwin_bench.sh": "8c07f2b67f03e322938ddce7dc969f5ab1063d19240ffd9b7f914ee680133f15"
+  },
+  "minimum_changed_existing_rtl": 1,
+  "new_rtl_files": 1,
+  "new_validation_files": 3,
+  "added_capture_ff": 1072,
+  "conservative_mux_bits": 1270,
+  "new_capture_reset_pins": 0,
+  "unpriced_reset_control_copy_state": null
+}
