@@ -22,7 +22,7 @@ from pathlib import Path
 name = 'hbm_su_pg_stream_b_1019'
 W, H = 216.0, 259.2
 S_ = 'rtl/hbm_accel/generic/adapters/static_su'
-WIT = 'results/rtl/hbm_pgstream_b_1019'
+WIT = 'results/rtl/hbm_pgstream_cdc_1019'
 BENCH = 'tools/hbm_static/su_pg_stream_split_vl_run.sh'
 B = dict(vmr_cmd=60, su_wq=562, su_rr=514, ij_v=4, ij_row=36, ij_bad=1, pg_fault=1, pos=4,
          lg_rq=34, lg_wq=562, lg_rr=514, lg_w_done=2, lg_read=2, lg_write=2, lg_fault=1,
