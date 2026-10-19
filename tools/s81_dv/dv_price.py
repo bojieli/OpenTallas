@@ -301,12 +301,18 @@ def ledger_split(path=LEDGER, drop=None):
     kept, dropped = {'ar': 0.0, 'mtp': 0.0}, {'ar': 0.0, 'mtp': 0.0}
     rows = []
     for r in led['rows']:
-        if r['design'] != 's81' or r.get('status') not in ('accepted', 'proposed'):
+        # superseded = a retired hub-design row (accepted_cost.py supersede): it is in the current hub-die baseline
+        # (dropped side), never in the DV kept total.  S81.DV_* rows are this tool's own DV terms (landing, ...):
+        # dv_price computes them, so counting the ledger copy too would charge them twice.
+        if r['design'] != 's81' or r.get('status') not in ('accepted', 'proposed', 'superseded'):
             continue
-        tgt = dropped if drop.search(r['group']) else kept
+        if r['group'].startswith('S81.DV_'):
+            continue
+        is_drop = r['status'] == 'superseded' or bool(drop.search(r['group']))
+        tgt = dropped if is_drop else kept
         for wl in ('ar', 'mtp'):
             tgt[wl] += (r.get('per_workload', {}).get(wl) or {}).get('e2e_loss_pct', 0.0) or 0.0
-        rows.append(dict(group=r['group'], status=r['status'], dropped=bool(drop.search(r['group'])),
+        rows.append(dict(group=r['group'], status=r['status'], dropped=is_drop,
                          ar=(r.get('per_workload', {}).get('ar') or {}).get('e2e_loss_pct'),
                          mtp=(r.get('per_workload', {}).get('mtp') or {}).get('e2e_loss_pct')))
     return kept, dropped, rows

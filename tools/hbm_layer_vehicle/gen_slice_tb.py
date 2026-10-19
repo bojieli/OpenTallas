@@ -15,7 +15,8 @@ REPLAY MODEL (the slice's neighbours, at their SCHEDULED cycles).  replay.json (
   fixed-delay schedule, no handshakes).
 TB prints SLICE_CHECK_FAIL / SLICE_REC lines, SLICE_OUT first/last change cycle per output (measured activity span),
 and SLICE_PASS (all checks met, drives applied) or SLICE_FAIL.  Plusargs: +REPLAY=<dir> (mem files), +CYCLES=<n>
-stream edges after reset (default: last event + 64, or 2000 with no replay), +HBM_IMG_DIR=<dir> (DRAM model preload).
+stream edges after reset (default: last event + 64, or 2000 with no replay), +HBM_IMG_DIR=<dir> (DRAM model preload),
++SHOWVAL (each failed check also prints SLICE_CHECK_VAL got/exp/msk; VEH-CUTS 10-19).
 VM image / VM checks (backdoor, the producer records' state): M events {"k":"M","mem":"vm","bank","row","sector","val"}
 (cyc 0 only: preloaded before reset release) write the bank's SRAM macro cells with the bank's own SECDED (39,32) check
 bits (ot_vms_bank_q0_faces_body.sv: sector s -> bank s[2:0], quarter s[14:13], mirror s[15] -> macro C else A, row
@@ -55,6 +56,8 @@ def main():
         ev = r["events"]
         vm = [e for e in ev if e["k"] == "M"]
         ev = [e for e in ev if e["k"] != "M"]
+        if a.nev and len(ev) + 1 > a.nev:
+            sys.exit(f"gen_slice_tb: replay {name} needs {len(ev) + 1} event slots, --nev={a.nev}; split the replay")
         if any(e.get("cyc", 0) != 0 or e.get("mem") != "vm" for e in vm):
             sys.exit("gen_slice_tb: only cyc-0 VM preload (M) events are supported")
         bad = [e for e in ev if not (e["port"] in (iidx if e["k"] == "D" else oidx) or
@@ -96,6 +99,9 @@ def main():
         last = max([e["cyc"] for e in ev if e["dom"] == "stream"] + [0])
         (d / "index.json").write_text(json.dumps({"events": len(ev), "drives": sum(e["k"] == "D" for e in ev),
                                                   "checks": sum(e["k"] == "C" for e in ev), "vm_preload_words": len(vm), "last_stream_cyc": last,
+                                                  "scope": r.get("scope", "unspecified"),
+                                                  "qualifies_native_layer": False, "qualifies_native_chain": False,
+                                                  "state_seed_provenance": r.get("state_seed_provenance", ["unspecified"]),
                                                   "records": sorted({e["rec"] for e in ev if "rec" in e})}, indent=1))
         nev_max = max(nev_max, len(ev) + 1)
     nev = a.nev or nev_max
@@ -125,6 +131,7 @@ def main():
           "    integer cnt [0:2];",
           "    integer ptr [0:2];",
           "    integer drives = 0, checks = 0, fails = 0, rec_ok = 0, rec_fail = 0, cycles = -1, last_ev = 0;",
+          "    integer expected_drives = 0, expected_checks = 0;",
           "    string rdir;",
           "    initial begin : LOAD",
           "        integer i;",
@@ -134,6 +141,8 @@ def main():
           "            $readmemh({rdir, \"/hdr.mem\"}, hdr); $readmemh({rdir, \"/val.mem\"}, val); $readmemh({rdir, \"/msk.mem\"}, msk);",
           "        end",
           "        for (i = NEV - 1; i >= 0; i = i - 1) if (hdr[i][63:62] == 2'd1 || hdr[i][63:62] == 2'd2) begin",
+          "            if (hdr[i][63:62] == 2'd1) expected_drives = expected_drives + 1;",
+          "            else expected_checks = expected_checks + 1;",
           "            ptr[hdr[i][61:60]] = i;",
           "            if (hdr[i][61:60] == 2'd0 && hdr[i][31:0] > last_ev) last_ev = hdr[i][31:0];",
           "        end",
@@ -231,6 +240,7 @@ def main():
           "                if (((got ^ val[p]) & msk[p]) != '0) begin",
           "                    fails = fails + 1;",
           "                    $display(\"SLICE_CHECK_FAIL out=%0d dom=%0d cyc=%0d rec=%0d\", hdr[p][59:44], d, cnt[d], rec);",
+          "                    if ($test$plusargs(\"SHOWVAL\")) $display(\"SLICE_CHECK_VAL out=%0d cyc=%0d got=%h exp=%h msk=%h\", hdr[p][59:44], cnt[d], got, val[p], msk[p]);",
           "                    if (rec >= 0) begin rec_fail = rec_fail + 1; $display(\"SLICE_REC rec=%0d cyc=%0d FAIL\", rec, cnt[d]); end",
           "                end else if (rec >= 0) begin rec_ok = rec_ok + 1; $display(\"SLICE_REC rec=%0d cyc=%0d COMMIT_OK\", rec, cnt[d]); end",
           "            end",
@@ -249,7 +259,11 @@ def main():
     L += ["        if (cnt[0] >= cycles) begin"]
     for k, e in enumerate(outs):
         L.append(f"            if (n{k} > 0) $display(\"SLICE_OUT {e['name']} first=%0d last=%0d changes=%0d\", f{k}, l{k}, n{k});")
-    L += ["            $display(\"SLICE_SUMMARY drives=%0d checks=%0d fails=%0d rec_commit_ok=%0d rec_fail=%0d stream_edges=%0d serial_edges=%0d hbm_edges=%0d\",",
+    L += ["            if (drives != expected_drives || checks != expected_checks) begin",
+          "                $display(\"SLICE_CHECK_FAIL incomplete replay drives=%0d/%0d checks=%0d/%0d\", drives, expected_drives, checks, expected_checks);",
+          "                fails = fails + 1;",
+          "            end",
+          "            $display(\"SLICE_SUMMARY drives=%0d checks=%0d fails=%0d rec_commit_ok=%0d rec_fail=%0d stream_edges=%0d serial_edges=%0d hbm_edges=%0d\",",
           "                     drives, checks, fails, rec_ok, rec_fail, cnt[0], cnt[1], cnt[2]);",
           "            if (fails == 0) $display(\"SLICE_PASS\"); else $display(\"SLICE_FAIL\");",
           "            $finish;",
