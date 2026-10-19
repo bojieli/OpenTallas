@@ -1,6 +1,6 @@
 {
   "schema": "hbm.generic.banked_calendar.model.v1",
-  "status": "MODEL_ONLY_PARENT_ROOT_REVIEW_REQUIRED",
+  "status": "MODEL_SOURCE_PARTITION_APPROVED_COMPONENT_MAPPED_PROVEN_PHYSICAL_REVIEW_OPEN",
   "pinned_failure": {
     "gate_commit": "ab29e6c2b",
     "qualified_RTL_unchanged": "84f67a381",
@@ -57,7 +57,7 @@
   },
   "redesign": {
     "shared_provider": "new generic native banked calendar for SVG W135/XW46 and XC W173/XW5, AW11",
-    "sources_not_yet_written": [
+    "new_opt_in_sources": [
       "generic one-SRAM native bank leaf",
       "central fixed-schedule select/calendar leaf",
       "opt-in SVG and XC provider bindings"
@@ -136,7 +136,7 @@
     "clock_ports": [
       "clk_bank0",
       "clk_bank1",
-      "clk_calendar"
+      "clk_core"
     ],
     "clock_contract": "Same-frequency regional actual roots; nominal phase0, native adjacent outputQ->inputQ crossings, normal1edge TT/FF STA, pair-relative spread<=80ps. No multicycle/false data paths or changed period."
   },
@@ -181,8 +181,67 @@
       "listed_FF_inventory_bits": 3069,
       "listed_FF_area_um2_using_HQ_only": 894.9204000000001,
       "configuration_note": "Two native bank configuration data captures cost512bits; do not reuse only one prior256bit capture in the inventory.",
+      "std_area_after_split_um2": 1892.87766,
+      "area_status": "Actual RVT/TT mapped standard-cell area, source52f37d335; does not price placement repair/CTS/routing. Central application contains core; never add core area twice. SVG47 application semantic integration OPEN.",
+      "mapped_R6": {
+        "bank_std_um2": 437.58954,
+        "core_std_um2": 914.06394,
+        "application_std_um2": 1017.69858,
+        "bank_DFF": 1026,
+        "core_DFF": 2165,
+        "application_DFF": 2370
+      }
+    },
+    "SVG47": {
+      "W": 135,
+      "AW": 11,
+      "XW": 47,
+      "request_token_bits": 109,
+      "token_fields": {
+        "PC": 11,
+        "ordinal": 32,
+        "context": 47,
+        "iteration": 16,
+        "last_iteration": 1,
+        "last_word": 1,
+        "valid": 1
+      },
+      "banks": 2,
+      "canonical_SRAM_per_bank": "ot_sram_1r1w_1024x256_m2_r2c2",
+      "bank_cfg_bits_per_edge": 267,
+      "bank_request_bits_per_edge": 109,
+      "bank_output_bits_per_edge": 253,
+      "metadata_ring_slots_per_bank": 4,
+      "metadata_ring_bits_per_bank": 436,
+      "identity_checked_bits": 121,
+      "bank_payload_Q_bits": 270,
+      "central_input_Q_bits": 270,
+      "planning_register_inventory_bits": {
+        "bank_cfg_capture": 534,
+        "bank_read_address_and_valid": 24,
+        "bank_metadata_rings": 872,
+        "bank_payload_output": 270,
+        "bank_word_ok_output": 18,
+        "central_input_tuples": 506,
+        "calendar_output": 234,
+        "R_C_payload": 270,
+        "controller_state_planning_allowance": 200,
+        "kept_select_control_planning_allowance": 128,
+        "reset_root_branch_planning_allowance": 24
+      },
+      "listed_FF_inventory_bits": 3080,
+      "listed_FF_area_um2_using_HQ_only": 898.128,
+      "configuration_note": "Two native bank configuration data captures cost512bits; do not reuse only one prior256bit capture in the inventory.",
       "std_area_after_split_um2": null,
-      "area_status": "Unreconciled pre-RTL inventory; no upper/lower or std-area claim. HQ-only cell arithmetic excludes async-cell premium, duplicated decode, buffers and actual mapping. Old-state subtraction and all allowances need source/mapped census."
+      "area_status": "Actual RVT/TT mapped standard-cell area, source52f37d335; does not price placement repair/CTS/routing. Central application contains core; never add core area twice. SVG47 application semantic integration OPEN.",
+      "mapped_R6": {
+        "bank_std_um2": 441.20538,
+        "core_std_um2": 919.76472,
+        "application_std_um2": null,
+        "bank_DFF": 1033,
+        "core_DFF": 2177,
+        "application_DFF": null
+      }
     },
     "XC": {
       "W": 173,
@@ -224,8 +283,16 @@
       "listed_FF_inventory_bits": 2892,
       "listed_FF_area_um2_using_HQ_only": 843.3072000000001,
       "configuration_note": "Two native bank configuration data captures cost512bits; do not reuse only one prior256bit capture in the inventory.",
-      "std_area_after_split_um2": null,
-      "area_status": "Unreconciled pre-RTL inventory; no upper/lower or std-area claim. HQ-only cell arithmetic excludes async-cell premium, duplicated decode, buffers and actual mapping. Old-state subtraction and all allowances need source/mapped census."
+      "std_area_after_split_um2": 1555.33608,
+      "area_status": "Actual RVT/TT mapped standard-cell area, source52f37d335; does not price placement repair/CTS/routing. Central application contains core; never add core area twice. SVG47 application semantic integration OPEN.",
+      "mapped_R6": {
+        "bank_std_um2": 341.72604,
+        "core_std_um2": 763.1172,
+        "application_std_um2": 871.884,
+        "bank_DFF": 841,
+        "core_DFF": 1855,
+        "application_DFF": 2183
+      }
     }
   },
   "functional_stages": {
@@ -332,11 +399,11 @@
     "default_opt_in": "off; old qualified source stays unchanged",
     "fixed_GO_policy": "Do not advance GO or change absolute compiler calendar without a separate exact compiler result.",
     "conservative_minimum_GO_gap_added_edges": 2,
-    "why_gap": "Until frontend/tail overlap is explicitly proved, extending calendar data/valid/done by2 extends legal busy/tail by2; existing9-gap witness becomes11. Cache-only alignment adds no further provider busy tail unless source requires it.",
+    "why_gap": "Until frontend/tail overlap is explicitly proved, extending calendar data/valid/done by2 extends legal busy/tail by2; legal minimum becomes N+5 instead of N+3 (4word continuous witness uses9). Cache-only alignment adds no further provider busy tail unless source requires it.",
     "serialised_boundary_count_input": null,
     "token_price_status": "No blanket4edge/token claim. Actual critical-path programme boundaries must be enumerated/recomposed; overlapping SVG/XC mirrors are not counted twice.",
-    "configuration_install_settle_added_edges": 1,
-    "configuration_reason": "Central cfg input Q plus bank native cfg Q adds1 before SRAM write versus original calendar cfg Q; install at least4edges before GO in component proof.",
+    "configuration_install_settle_added_edges": 2,
+    "configuration_reason": "Central cfg input Q, registered bank-write output and bank native cfg Q add2 before SRAM write versus original calendar cfg Q; install at least4edges before GO in component proof.",
     "conservative_added_token_stream_edges": null,
     "conservative_added_token_ns_at_1p2GHz": null,
     "continuous_payload_rate": "1 word per stream edge after fill; +2 is per programme boundary, not per word/loop iteration. Production bench must prove it.",
@@ -359,6 +426,25 @@
       "first": 24,
       "final": 30
     },
+    "application_reset_plan": "Export core reset_branch[0] to application R/C valid/fault flags, at same second-stage release. Adds2 sink loads, no FF/cycle; initial core branch budget27 implies29 underfinal30 pending mapped census.",
+    "native_fault_revision": "SVG combinedfault must be nativeQ: parallelkeptQ captures nextcorefault OR nextinjectionfault at the sameedge as constituentfaultQs. Adds1FF/clock and1branch0resetload, no edge; component+mappedproof required.",
+    "application_control_revision": "Mapped SVG app v124/word25=43 and XC endword34 require same-edge next-state replicas. Export internal combinational calendar next/valid and resetbranches only inside application; capture16 localvalidQ+4 localword25Q+4 localword83Q (24FF); distributevalid reset across sixbranch outputs (max3added each). Preserve local accept AND gates inside hierarchy to prevent mapper factoring common legal/busy predicate into111loads. Add2kept next-endword Qs from nextPC/limit (2FF), no edgechange. These are sourceplans, mappedproof pending.",
+    "SVG47_context_delta": {
+      "token_bits": [
+        108,
+        109
+      ],
+      "ring_PAD_bits": [
+        108,
+        112
+      ],
+      "rings": 3,
+      "source_allocated_FF_delta": 62,
+      "semantic_live_data_bits_delta": 20,
+      "reason": "Each new4bit ring slice allocates16storage+2phaseFF, threecopies54; ctx/token input/output captures8. Constantpadding maymapaway; measured delta required."
+    },
+    "mapped_enable_revision": "First SVG core census found loops decrement enable33loads. Split loops_left into8bit update groups using alreadypriced same-edge run_copy1 and run_copy5; no added FF or edge, new mapped proof required.",
+    "generic_payload_state": "PC/base/limit/loops/issued/ctx/iter data are unreset and initialized by each accepted start before running/valid; only control/valid/root/phase state is reset. This avoids reset fanout on invalid data while preserving all valid outputs. Component miter includes occupied-pipeline reset.",
     "generic_obligation": "Repartition every resettable group to<=24 planned bits before mapping. Never reuse old issued16+ctxXW group for SVG:16+46=62 exceeds the bound. New three-root branch graphs require their own raw/first/final load census and exact2edge proof.",
     "status": "Baseline source matches proposed balanced profile bounds; canonical a9a97ee00/54ceeb3f0/63d26d83c tool/profile review and source-bound proof still required. Old raw2 gate REFUSE is preserved, no bypass or present PASS claim."
   },
@@ -370,5 +456,5 @@
     "source-bound exact+mutant production throughput witnesses",
     "physical slot grant and compiler/calendar recomposition"
   ],
-  "no_actions": "No qualified RTL/spec modifications and no new gate or submission from this model."
+  "no_actions": "No qualified RTL/spec modifications and no physical gate or submission. Opt-in generic/application RTL, exact/mutant proof and mapped/reset/native register reachability proof exist. Mode47 semantics and cache/mirror integration are separate."
 }
