@@ -101,10 +101,16 @@ def main():
           [f'wb_reserve_base[{i}]' for i in range(32)] + ['wb_fill_start', 'wb_ready'] + [f'wa[{i}]' for i in range(12)])
     for n, v in zip(wb, grid(400.0, 430.0, len(wb), avoid['N'])): pins[n] = ('N', v)
     # E face: F20 host bus + tgt + collar status at the leaf, controller strap/status + reset beside them
-    e = (['rst_n', 'stk[0]', 'stk[1]'] + [f'tgt[{i}]' for i in range(8)] + ['cfg_v'] + [f'cfg_target[{i}]' for i in range(8)] +
+    # HBM-KITS-C/DBKCP 10-18: the controller's own E-face pins (stk[1:0] in, busy/quiet out; LEF y 51.4..64.2 on its E
+    # edge x 328.3) leave at the controller row (~280 um straight east).  At the ends of the full-face list they ran
+    # 598 um (stk -> E-face bottom) and 506 um (busy -> top): gate wire_reach FAIL at 90f961852.  Wires only, 0 cycles.
+    cy = CTRL[1] + 57.8
+    for n, v in zip(['busy', 'quiet', 'stk[0]', 'stk[1]'], grid(cy - 4.0, cy + 4.0, 4, avoid['E'])): pins[n] = ('E', v)
+    avoid['E'] = [v for n, (ff, v) in pins.items() if ff == 'E']
+    e = (['rst_n'] + [f'tgt[{i}]' for i in range(8)] + ['cfg_v'] + [f'cfg_target[{i}]' for i in range(8)] +
          [f'cfg_addr[{i}]' for i in range(12)] + [f'cfg_data[{i}]' for i in range(256)] + ['desc_v'] +
          [f'desc_base[{i}]' for i in range(12)] + [f'desc_limit[{i}]' for i in range(13)] + [f'desc_loops[{i}]' for i in range(16)] +
-         ['launch_v', 'cp_configured', 'cp_fault', 'cp_active', 'mv_src', 'mv_done', 'mv_fault', 'quiet', 'busy'])
+         ['launch_v', 'cp_configured', 'cp_fault', 'cp_active', 'mv_src', 'mv_done', 'mv_fault'])
     # OWNERS-HBM/STK 10-18: full E face (was 200..362 beside the leaf: a partial-face cluster); the leaf sits mid-face, so
     # the farthest host pin is <= ~330 um from it (one registered F20 hop, reach 405)
     for n, v in zip(e, grid(2.4, H - 2.4, len(e), avoid['E'])): pins[n] = ('E', v)
@@ -139,7 +145,7 @@ def main():
         pin_regs=dict(enable=False, reason=('Banks, controller and the collar leaf are hard children owning their registered '
             'endpoints (bank/controller pin flops, collar core pin flops); the parent holds only wires and the reset relay '
             'flops (ot_rst_relay on clk_rst). A parent pin flop would add a cycle to rr/wd/rq and the host bus.')),
-        route=dict(pd=0.5, period_ps=833.333, threads=8, peak_ram_gb=16, hold_margin_ns=0.03, macro_halo_um=5.4,
+        route=dict(pd=0.5, period_ps=833.333, threads=8, peak_ram_gb=16, hold_margin_ns=0.03, io_hold_margin_ns=0.03, macro_halo_um=5.4,
                    pin_balance=dict(h='M4', v='M5', group_max=1)),
         params={}, inter=[], io_flop_at_pins=dict(cols=4, allow_none=True), inhold=False, outhold=False,
         keep_pin_regs=True, io_tcl=f'results/arch/hbm_die_v16_d4f/dbk_cpl_1017/assigned_pins.tcl',

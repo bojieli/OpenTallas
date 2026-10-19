@@ -1,5 +1,5 @@
 {
- "name": "hv16_dbk_cpl-q1-2c08ba9a1",
+ "name": "hv16_dbk_cpl-q1-COMMIT",
  "block": "ot_hgi_dma_back_static_vp4_banks_cp",
  "ref_tile": true,
  "owner": "Claude:OWNERS-HBM/STK",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 16,
  "source": {
   "branch": "claude/owners-hbm-1018-stk",
-  "commit": "2c08ba9a1",
+  "commit": "COMMIT",
   "extra_paths": [
    "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
@@ -138,7 +138,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hv16_dbk_cpl/hv16_dbk_cpl-q1-2c08ba9a1"
+   "to": "results/rtl/ref_tile/hv16_dbk_cpl/hv16_dbk_cpl-q1-COMMIT"
   }
  ],
  "cycles_added": 0,

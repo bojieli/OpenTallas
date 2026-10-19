@@ -53,8 +53,10 @@
    "clk",
    "clk_cp",
    "clk_rst",
-   "rst_n",
+   "busy",
+   "quiet",
    "stk",
+   "rst_n",
    "tgt",
    "cfg_v",
    "cfg_target",
@@ -70,9 +72,7 @@
    "cp_active",
    "mv_src",
    "mv_done",
-   "mv_fault",
-   "quiet",
-   "busy"
+   "mv_fault"
   ],
   "ANY": [
    "clk_bank",
@@ -205,6 +205,7 @@
   "threads": 8,
   "peak_ram_gb": 16,
   "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
   "macro_halo_um": 5.4,
   "pin_balance": {
    "h": "M4",

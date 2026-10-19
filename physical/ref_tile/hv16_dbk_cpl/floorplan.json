@@ -52,8 +52,10 @@
    "clk",
    "clk_cp",
    "clk_rst",
-   "rst_n",
+   "busy",
+   "quiet",
    "stk",
+   "rst_n",
    "tgt",
    "cfg_v",
    "cfg_target",
@@ -69,9 +71,7 @@
    "cp_active",
    "mv_src",
    "mv_done",
-   "mv_fault",
-   "quiet",
-   "busy"
+   "mv_fault"
   ],
   "ANY": [
    "clk_bank",
