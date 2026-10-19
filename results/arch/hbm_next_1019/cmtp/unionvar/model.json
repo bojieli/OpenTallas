@@ -1,0 +1,42 @@
+{
+ "schema": "hnx.unionvar.budget.v1",
+ "status": "component only; not installed or physically qualified",
+ "P": 3,
+ "N": 6,
+ "union_range": [
+  6,
+  36
+ ],
+ "selector_cycles": 1,
+ "first_event_min_cycles": 3,
+ "event_issue_interval": 3,
+ "store": {
+  "capacity_words": 16384,
+  "word_bits": 81,
+  "capacity_bits": 1327104,
+  "ports": "one synchronous read / one idle-only configuration write",
+  "ecc": "none added under academic-validation policy"
+ },
+ "boundaries": {
+  "config_bits_per_write": 96,
+  "union_count_bits": 10,
+  "launch_bits": 49
+ },
+ "expert_budget": "each union expert reserves all N rows; no measured histogram may shorten its span",
+ "record_bank": {
+  "bytes": 10158080,
+  "location": "proposed HBM-resident immutable bank",
+  "installed": false
+ },
+ "actual_legacy_cp": {
+  "ring_words": 4096,
+  "ring_bytes": 65536,
+  "HGI_1R": false,
+  "static_calendar": false
+ },
+ "area_mm2": null,
+ "SS_FF_closed": false,
+ "loader_cycles": null,
+ "dispatch_binding": false,
+ "adoption": false
+}
