@@ -10,7 +10,7 @@
 module tb_hbm_bw_pc4;
  parameter integer MAXB=4096;
  reg hbm=0;initial forever #512 hbm=~hbm;
- reg rst_n=0;
+ reg rst_n=0;reg owner_enable=0;
  reg [25:0]blk_m[0:MAXB-1];integer nb,warm;string fb;
  wire[31:0]kv_w,krdy,kwe,kdone,rv_,rrdy;wire[959:0]ka;wire[127:0]kl,rb;wire[543:0]kt,rt;wire[8191:0]kw,rd;wire[1023:0]ks;
  wire[31:0]row_v,col_v,col_we,dram_rvalid;wire[95:0]row_op;wire[159:0]row_bank,col_bank,col_col;wire[607:0]row_row;
@@ -51,7 +51,7 @@ module tb_hbm_bw_pc4;
   begin ts={tt[9:7]|slot,tt[6:0]};mt=full?{ts[9:2],row[1:0]}:ts;db={mt[9:7],mt[1:0]};col=mt[6:2];
    bhi=db[4:2]^row[4:2];blo=db[1:0]^row[1:0];hi5={row[1:0],bhi};addr_of={row,bhi,col,5'(pc)^col^hi5,blo};end
  endfunction
- always @(posedge hbm)if(rst_n)begin:OWN
+ always @(posedge hbm)if(rst_n&&owner_enable)begin:OWN
   reg[14:0]row;reg[2:0]slot;integer w;reg full;
   cyc<=cyc+1;
   for(integer p=0;p<4;p=p+1)begin
@@ -103,16 +103,21 @@ module tb_hbm_bw_pc4;
   for(integer p=0;p<4;p=p+1)begin kv[p]=0;kaddr[p]=0;klen[p]=0;ktag[p]=0;
    for(integer b=0;b<nb;b=b+1)begin blk_need[p][b]=blk_m[b][7:0]/4+blk_m[b][7:0]%4;blk_ret[p][b]=-1;end end
   repeat(5)@(negedge hbm);rst_n=1;
+  // Start traffic after the leaf reset relay and captured PC straps settle.
+  // Offering during reset can appear ready while the skid is held empty.
+  repeat(8)@(negedge hbm);owner_enable=1;
   wait(done_at[0]>=0&&done_at[1]>=0&&done_at[2]>=0&&done_at[3]>=0);
   begin:REP
    integer secs,secw,tot,totw;real cyc_all,cyc_st,bpe,bpe_st;
    secs=0;secw=0;for(integer b=0;b<nb;b=b+1)begin secs=secs+blk_m[b][7:0];if(b>=warm)secw=secw+blk_m[b][7:0];end
+   for(integer p=0;p<4;p=p+1)if(cols[p]!=secs||ret[p]!=secs)
+    $fatal(1,"sector conservation pc%0d wanted%0d cols%0d returns%0d",p,secs,cols[p],ret[p]);
    tot=0;totw=0;for(integer p=0;p<4;p=p+1)begin if(done_at[p]-first_at[p]>tot)tot=done_at[p]-first_at[p];if(done_at[p]-warm_at[p]>totw)totw=done_at[p]-warm_at[p];end
    // bytes per stream edge: 4 PCs x sectors x 32 B over (hbm cycles x 1.024 ns / 0.8333 ns)
    bpe=4.0*secs*32.0/(tot*1.024/0.83333333);bpe_st=4.0*secw*32.0/(totw*1.024/0.83333333);
    $display("BW blocks=%0d sectors_per_pc=%0d hbm_cycles=%0d B_per_edge=%.2f steady_blocks=%0d steady_cycles=%0d steady_B_per_edge=%.2f peak=104.17",
     nb,secs,tot,bpe,nb-warm,totw,bpe_st);
-   for(integer p=0;p<4;p=p+1)$display("PC%0d cols=%0d acts=%0d refs=%0d gaps>8=%0d gap_cycles=%0d first=%0d done=%0d",p,cols[p],acts[p],refs[p],gap_n[p],gap_cyc[p],first_at[p],done_at[p]);
+   for(integer p=0;p<4;p=p+1)$display("PC%0d cols=%0d returns=%0d acts=%0d refs=%0d gaps>8=%0d gap_cycles=%0d first=%0d done=%0d",p,cols[p],ret[p],acts[p],refs[p],gap_n[p],gap_cyc[p],first_at[p],done_at[p]);
    for(integer b=0;b<nb&&b<400;b=b+1)$display("BLK %0d row %0d slot %0d words %0d ret %0d %0d %0d %0d",b,blk_m[b][25:11],blk_m[b][10:8],blk_m[b][7:0],blk_ret[0][b],blk_ret[1][b],blk_ret[2][b],blk_ret[3][b]);
   end
   $display("DONE dram_reads=%0d refreshes=%0d",dram.reads,dram.refreshes);
