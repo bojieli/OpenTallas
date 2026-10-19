@@ -23,7 +23,7 @@ for co in ['TT','FF']:
    if bs:
     t=bs[0][1];tabs[kind]={'x':vec(t,'index_1'),'y':vec(t,'index_2'),'v':vec(t,'values')}
   fn=re.search(r'function\s*:\s*"([^"]+)"',out)
-  lib[n]={'area_um2':scalar(b,'area'),'input_cap_ff':scalar(inp,'capacitance'),'max_cap_ff':scalar(out,'max_capacitance'),'function':fn[1] if fn else None,'tables':tabs,'pin_caps_ff':{pn:scalar(pb,'capacitance') for pn,pb in ps.items()}}
+  lib[n]={'area_um2':scalar(b,'area'),'input_cap_ff':scalar(inp,'capacitance'),'max_cap_ff':scalar(out,'max_capacitance'),'function':fn[1] if fn else None,'tables':tabs,'pin_caps_ff':{pn:scalar(pb,'capacitance') for pn,pb in ps.items()},'input_cap_rise_ff':scalar(inp,'rise_capacitance'),'input_cap_fall_ff':scalar(inp,'fall_capacitance')}
  libs[co]=lib
 def interp(t,x,y):
  # No extrapolation is permitted in this MODEL.

@@ -22,6 +22,39 @@ Combined illustrative INVx6 boundary+reset and two NAND2x2 changes cost+78.61536
 
 The measured FF ordinary hold failure remains -7.12 ps: FF slice13235/QN → INVx1 parse_blif37773/Y → FF slice12201/D. Launch118.92 ps, capture131.62 ps, CQ34.87 ps, inverter5.77 ps, net.02 ps; required166.70 ps includes uncertainty25, CRPR-1.97, nativehold12.05. This path is independent of the illustrative output driver replacement and must receive a separately source-bound structural hold treatment. Do not pad diagnostic IO: output setup -275.41 ps depends on an unqualified parent clock reference. Dedicated drivers address real electrical violations regardless of that reference, but cannot qualify the parent boundary.
 
-Next authorized step is ROOT review of this MODEL and the independent positive identity/PNG/PG packet. A successor requires explicit approval, source-bound genuine-cell mapping, full source/load TT/FF slew and both-arc extraction, legal placement/PG/reach, measured FF hold repair, actual parent clock references, and exactness/negative controls. No new CTS, data ECO, route, gate or submission was launched. The existing 253 CTS cells and110 real clock load outputs are preserved and remain charged; positive clock identity does not waive electrical failure.
+Next authorized step is ROOT review of this MODEL and the independent positive identity/PNG/PG packet. A successor requires explicit approval, source-bound genuine-cell mapping, legal placement/PG/reach, measured FF hold repair, actual parent clock references, and exactness/negative controls. No new CTS, data ECO, route, gate or submission was launched. The existing 253 CTS cells and110 real clock load outputs are preserved and remain charged; positive clock identity does not waive electrical failure.
 
 Checklist: registered IO PASS inherited; reset2 samples PASS inherited; reach MODEL bound367.2/open native successor; transparent fanout existing max24 unchanged; depth/timing OPEN; storage unchanged; floorplan/PG successor legalization OPEN; TT/FF spread existing evidence only, hold FAIL; static schedule unchanged and +0 edges. This packet is not tile closure or parent adoption.
+
+## Actual upstream load and minimum-path follow-through
+
+Read-only source extraction completed for all1080 relevant QN/CLK pins, all1070 boundary sources and all8 changed cones. Native `report_net`, `sta::report_slews`, complete min/max full-clock path reports, and `report_dcalc` ran against the same immutable checkpoint, with original constraints and placement RC. Fleet units `oth-ubuntu-1904545-1792444323` (native source/path reports), `oth-ubuntu-1921963-1792444404` (native table bounds), and `oth-ubuntu-1933067-1792444488` (original native CQ) all exited0. Final ODB digest still equals the pinned digest. No database write, cell swap, clock synthesis, repair or route command is present in these probes. The probe discovery errors involved unsupported reporting flags only and did not change design data.
+
+| All1070 boundary sources | TT | FF |
+|---|---:|---:|
+| Actual original source wire capacitance maximum fF |.23824024|.23824030|
+| Actual source CLK pin slew maximum ps |17.66643715|14.98304462|
+| New INV6 load plus actual original source wire maximum fF |3.72068024|4.10477030|
+| New QN transition maximum ps, native in-range table bound |45.23137595|33.65019972|
+| New CQ maximum ps, native in-range table bound |74.58745388|53.10414146|
+| Added source CQ bounded range ps |16.13102462..18.50486292|11.94357762..13.71770989|
+| INV6 transition maximum ps at114.8 fF and new QN slew |176.38010685|123.19550735|
+
+The new source loads are far below46.08 fF QN max-cap and their computed source transitions are below260 ps. Every new-load evaluation lies within its genuine native table grid. Original tiny loads lie below the table minimum for1070 TT and1067 FF sources: the analytical interpolator correctly refuses those old-load evaluations. Original CQ values instead come from the actual native STA `report_dcalc` result, with both rise/fall and min/max retained. No fabricated native characterisation or custom extrapolation is used. The added CQ ranges conservatively compare new table bounds with measured native original CQ. The INV6 column remains a lumped driver-output transition bound; it excludes distributed output wire waveform/delay, legalization displacement and parent reference obligations, and is not boundary setup closure.
+
+Critically, the stronger reset inverter cannot be selected on slew alone. Each original minimum path's measured CQ and inverter delay was replaced analytically by the conservative native new-load minimum; original wire delays and capture check were held fixed. This isolates a real minimum-delay risk. It does not qualify a changed waveform or removal/hold table.
+
+| Cone net | Existing FF min slack ps | Conditional TT min slack ps | Conditional FF min slack ps |
+|---|---:|---:|---:|
+|5264 RESETN|65.009|11.264|2.465|
+|5260 RESETN|55.711|16.664|7.821|
+|5274 RESETN|55.226|4.961|-3.505|
+|2291 RESETN|62.183|18.455|9.269|
+|5268 RESETN|55.680|17.258|8.744|
+|5270 RESETN|44.033|11.594|3.296|
+|1665 D|89.046|64.323|38.413|
+|1595 D|89.653|67.313|41.272|
+
+The reset paths are native asynchronous recovery/removal checks from the real sampled landing FFs, distinct from `rst_n` input timing. Faster reset delivery consumes their margin; unchanged two-sample age does not preserve physical removal. All six reset candidates miss the30 ps working margin in this conditional model and net5274 goes negative. Thus the illustrative INV6 reset replacement is **REFUSED as a ready successor**. It needs a genuine reset ownership/minimum-delay design with actual assertion/release phase and recovery/removal cost before any build. No +9.75 ps old removal margin is carried forward. The two NAND2x2 candidates retain38.4/41.3 ps only under fixed original wire/check assumptions; their real D slew affects hold checks and must be replayed. Both A/B native NAND arcs are included in this follow-through.
+
+`source_bound_with_native_CQ.json.gz` retains every source load, native original CQ, both-arc new-load table result and actual source-clock slew. `summary.json.gz` retains all per-path conditional minimum-delay calculations. Compressed native TT/FF source and dcalc logs retain the raw evidence. `bound.py`, `source_probe.tcl`, `source_dcalc.tcl`, and `summarize.py` reproduce it. Boundary INV6 remains a plausible function-preserving MODEL candidate with measured upstream cost; reset strengthening is not approved; internal ordinary hold -7.12 and the parent IO reference remain open. Minimum-delay structural repair and reset waveform qualification are required before a successor can be concretely proposed.
