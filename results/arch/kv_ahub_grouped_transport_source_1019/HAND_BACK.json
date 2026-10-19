@@ -1,0 +1,90 @@
+{
+  "status": "HAND_BACK_PARTIAL_SUITE_STILL_LIVE_NO_TERMINAL_VERDICT",
+  "time": "2026-10-19T16:22:44.198125-07:00",
+  "source_commit": "9e14f6a9d",
+  "source_sha256": "f8211325ebd982bccb90083f2c58af6ef2d24c6d1e2d6a5ea6c015a9d5b61b25",
+  "job": "oth-ubuntu-2326353-1792452071",
+  "host": "ot-epyc8",
+  "session": 98616,
+  "remote": "/srv/opentallas-scratch/claude/kv-ahub-grouped-transport-source-1019/attempt1",
+  "completed_positive_logs": [
+    "w268_m0_i0_seed1.log",
+    "w268_m0_i2_seed1.log",
+    "w68_m0_i0_seed31.log",
+    "w268_m0_i2_seed7.log",
+    "w268_m0_i2_seed31.log",
+    "w68_m0_i0_seed7.log",
+    "w268_m0_i0_seed7.log",
+    "default_seed1.log",
+    "w68_m0_i0_seed1.log",
+    "w268_m0_i0_seed31.log",
+    "w268_m0_i1_seed7.log",
+    "w268_m0_i1_seed1.log",
+    "w268_m0_i1_seed31.log"
+  ],
+  "actual_negative_witnesses": [
+    {
+      "file": "w268_m3_i0_seed1.log",
+      "witness": "[205000] %Fatal: tb_grouped_transport.sv:74: Assertion failed in tb_grouped_transport.edge_step: GROUP_FAIL accept_frontier cycle=20 got=1 want=0"
+    },
+    {
+      "file": "w268_m2_i0_seed1.log",
+      "witness": "[205000] %Fatal: tb_grouped_transport.sv:74: Assertion failed in tb_grouped_transport.edge_step: GROUP_FAIL accept_frontier cycle=20 got=1 want=0"
+    },
+    {
+      "file": "w268_m4_i0_seed7.log",
+      "witness": "[246000] %Fatal: tb_grouped_transport.sv:95: Assertion failed in tb_grouped_transport.edge_step: GROUP_FAIL valid_frontier cycle=24 got=1 want=0"
+    },
+    {
+      "file": "w268_m1_i0_seed7.log",
+      "witness": "[1000] %Fatal: tb_grouped_transport.sv:108: Assertion failed in tb_grouped_transport: GROUP_FAIL raw_authority preedge accept=1 valid=1"
+    },
+    {
+      "file": "w268_m3_i0_seed7.log",
+      "witness": "[205000] %Fatal: tb_grouped_transport.sv:74: Assertion failed in tb_grouped_transport.edge_step: GROUP_FAIL accept_frontier cycle=20 got=1 want=0"
+    },
+    {
+      "file": "w268_m2_i0_seed31.log",
+      "witness": "[205000] %Fatal: tb_grouped_transport.sv:74: Assertion failed in tb_grouped_transport.edge_step: GROUP_FAIL accept_frontier cycle=20 got=1 want=0"
+    },
+    {
+      "file": "w268_m1_i0_seed1.log",
+      "witness": "[1000] %Fatal: tb_grouped_transport.sv:108: Assertion failed in tb_grouped_transport: GROUP_FAIL raw_authority preedge accept=1 valid=1"
+    },
+    {
+      "file": "w268_m3_i0_seed31.log",
+      "witness": "[205000] %Fatal: tb_grouped_transport.sv:74: Assertion failed in tb_grouped_transport.edge_step: GROUP_FAIL accept_frontier cycle=20 got=1 want=0"
+    },
+    {
+      "file": "w268_m1_i0_seed31.log",
+      "witness": "[1000] %Fatal: tb_grouped_transport.sv:108: Assertion failed in tb_grouped_transport: GROUP_FAIL raw_authority preedge accept=1 valid=1"
+    },
+    {
+      "file": "w268_m2_i0_seed7.log",
+      "witness": "[205000] %Fatal: tb_grouped_transport.sv:74: Assertion failed in tb_grouped_transport.edge_step: GROUP_FAIL accept_frontier cycle=20 got=1 want=0"
+    },
+    {
+      "file": "w268_m5_i0_seed1.log",
+      "witness": "[256000] %Fatal: tb_grouped_transport.sv:95: Assertion failed in tb_grouped_transport.edge_step: GROUP_FAIL valid_frontier cycle=25 got=0 want=1"
+    },
+    {
+      "file": "w268_m4_i0_seed31.log",
+      "witness": "[246000] %Fatal: tb_grouped_transport.sv:95: Assertion failed in tb_grouped_transport.edge_step: GROUP_FAIL valid_frontier cycle=24 got=1 want=0"
+    },
+    {
+      "file": "w268_m4_i0_seed1.log",
+      "witness": "[246000] %Fatal: tb_grouped_transport.sv:95: Assertion failed in tb_grouped_transport.edge_step: GROUP_FAIL valid_frontier cycle=24 got=1 want=0"
+    },
+    {
+      "file": "w268_m5_i0_seed31.log",
+      "witness": "[256000] %Fatal: tb_grouped_transport.sv:95: Assertion failed in tb_grouped_transport.edge_step: GROUP_FAIL valid_frontier cycle=25 got=0 want=1"
+    },
+    {
+      "file": "w268_m5_i0_seed7.log",
+      "witness": "[256000] %Fatal: tb_grouped_transport.sv:95: Assertion failed in tb_grouped_transport.edge_step: GROUP_FAIL valid_frontier cycle=25 got=0 want=1"
+    }
+  ],
+  "last_phase_observed": "w68_m0_i0_build.log changing; no suite.rc",
+  "next": "Preserve live suite. Fresh collector when terminal: suite.rc/suite.log/bench logs, input SHA checks, source mutant manifest, all planned18V+33mutant+8Icarus+2default statuses. No rerun started. No partial aggregate PASS.",
+  "holds": "native/constants/merging/storage/PG/clock/resetpulse/child arithmetic-health/calendar/SU-MU unchanged"
+}

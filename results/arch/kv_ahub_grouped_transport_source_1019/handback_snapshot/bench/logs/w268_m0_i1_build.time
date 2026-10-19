@@ -1,0 +1,23 @@
+	Command being timed: "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing --top-module tb_grouped_transport --Mdir obj_w268_m0_i1 -j 2 -Wno-fatal --x-initial unique --x-assign unique -I. -GW=268 -GMUT=0 -GINIT_CASE=1 /srv/opentallas-scratch/claude/kv-ahub-grouped-transport-source-1019/attempt1/qkd_ahub_grouped_transport_private.sv /srv/opentallas-scratch/claude/kv-ahub-grouped-transport-source-1019/attempt1/frozen_source_4415ee6cf.sv.txt tb_grouped_transport.sv"
+	User time (seconds): 14.08
+	System time (seconds): 2.16
+	Percent of CPU this job got: 190%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:08.50
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 368816
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 673682
+	Voluntary context switches: 215
+	Involuntary context switches: 53
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 342968
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
