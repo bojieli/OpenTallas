@@ -1,0 +1,99 @@
+{
+  "status": "PROPOSED BEFORE RTL; sourcefanout qualification withdrawn",
+  "baseline_source": "327ef3481",
+  "baseline_rule": "455fc9ff4 recursive BUF/INV unique terminal(cell,type,inputpin), sequential-only clock C exemption",
+  "baseline_max": {
+    "SRAM_Q": 329,
+    "FF_Q": 91,
+    "return_rp_Q": 34,
+    "ports": 11,
+    "combinational": 26,
+    "reset": 19
+  },
+  "options": {
+    "sameedge_shadow": {
+      "array_bits_per_bank": 232,
+      "metadata_read_selector_copies_bits": 160,
+      "other_metadata_read_Q_bits": 19,
+      "total_bits_per_bank": 411,
+      "write_data_load": 8,
+      "onehot_select_load": 29,
+      "readword_to_copies_load_max": 21,
+      "functional": "synchronous parallel shadow read at same macro_raddr; full29b canonicalSRAM metadata compared on valid pop",
+      "physical_open": "HBM-written flop slots to stream readQ introduce walking1024/834ps CDC paths; no falsepath/MCP allowed; no normal single-edge guarantee. Not selected."
+    },
+    "extra_stream_edge": {
+      "selected": true,
+      "processing_payload_bits": 285,
+      "local_field_copies": 20,
+      "bits_per_copy": 11,
+      "capture": "real local FFs capture reserved-valid/LB and packet LB/row at same stream edge; complement encoding allowed but every copy is actual state",
+      "source_Q_fanout_bound": 21,
+      "data_control": "epoch,total,read,stop align through same new edge; reservation/identity order preserved",
+      "error_feedback": "pending invalid stage blocks further FIFO pop before sticky update, preserving old FIFO admission after first bad packet",
+      "storage": "285b processing packet and220b distributed field/control Q; <2kb, one extra edge, no long delay chain"
+    }
+  },
+  "latency": {
+    "HBM_ingress_edges": "unchanged2",
+    "reserve_native_extra_stream": 1,
+    "completion_extra_stream": 1,
+    "read_extra_stream": 1,
+    "leaf_request_to_return": [
+      7,
+      8
+    ],
+    "native_prefetch": [
+      8,
+      9
+    ],
+    "regional_return": "unchanged7",
+    "whole_prefetch": [
+      15,
+      16
+    ],
+    "request_to_final_cache": [
+      10,
+      11
+    ],
+    "first_return_valid_after_reset": [
+      9,
+      10
+    ]
+  },
+  "return_ring": {
+    "payload_bits": 263,
+    "slots": 4,
+    "slice_bits": 6,
+    "slice_count": 44,
+    "last_slice_bits": 5,
+    "valid_local_bit_in_last_slice": 1,
+    "pointer_fanout_expected": 26,
+    "metadata_alignment": "actual4slot4b group ring latency4 (rp1), valid independent of bank read_v"
+  },
+  "reset_expected": {
+    "raw_first": [
+      4,
+      2,
+      2
+    ],
+    "HBM_branch_count": 74,
+    "pair_branch_count": 47,
+    "return_branch_count": 45,
+    "first_branch_max": [
+      19,
+      24,
+      23
+    ],
+    "native_final_expected_max": 15,
+    "FIFO_internal": "unchanged AND+2local synchronization edges and onlineCDC qualification; explicitly separate"
+  },
+  "proof_required": [
+    "all-J exact new8edge proof and oldmaster miter with explicit1edge transaction/reference alignment",
+    "same guard classes and3return mutants",
+    "sourcepacket/read/reserve/control Q copies realmappedstate",
+    "recursive collapsed all-driver loads<=32",
+    "strict native reset shape plus internalFIFO graph",
+    "updated measured area/band and parentprefetch16 integration"
+  ]
+}
