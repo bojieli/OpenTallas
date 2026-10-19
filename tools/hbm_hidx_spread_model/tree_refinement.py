@@ -19,9 +19,7 @@ def point(c,p):
  return (q[0]+dx,q[1]+(nb[1]-ob[1])/u) if oc['orient']==nc['orient'] else (q[0]+dx,(nb[1]+nb[3])/2/u-(q[1]-(ob[1]+ob[3])/2/u))
 libraries={};libfacts={};maxcaps={};used={c['master'] for c in plan.values()}|{'BUFx24_ASAP7_75t_R'}
 for corner in ['TT','FF']:
- base=Path('/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM');files=[]
- for family in ['AO','OA','INVBUF','SIMPLE']:files+=list(base.glob(f'asap7sc7p5t_{family}_RVT_{corner}_*.lib.gz'))
- files+=[base/f'asap7sc7p5t_SEQ_RVT_{corner}_nldm_220123.lib'];assert len(files)==5
+ files=[Path(line.split()[1]) for line in (P/'kit/lib_SHA256SUMS').read_text().splitlines() if '_RVT_'+corner+'_' in line];assert len(files)==5
  libraries[corner]=S.native_cells(files,used_masters=used);assert set(libraries[corner])==used
  libfacts[corner]=[dict(path=str(f),sha256=hashlib.sha256(f.read_bytes()).hexdigest()) for f in files]
  maxcaps[corner]={}
