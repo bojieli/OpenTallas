@@ -3,7 +3,7 @@
  "block": "hnx_xs3",
  "ref_tile": true,
  "owner": "Claude HBM-NEXT-P3-SM",
- "purpose": "NEXT-release HBM die (OWNER 10-19 P3+(a), not a release gate): the SHARED 3-lane x store of the SM P = 3 leaf (hnx_xs4's generator at P = 3); CRITICAL prefix hnx_rp3*: coordinator PNG review before any submit (report only)",
+ "purpose": "NEXT-release HBM die (OWNER 10-19 P3+(a), not a release gate): the SHARED 3-lane x store of the SM P = 3 leaf (hnx_xs4's generator at P = 3); hnx_rp3* is NOT in critical_tiles.txt (LEAD2-HBM D1: normal Claude flow, checklist in README)",
  "threads": 16,
  "peak_ram_gb": 96,
  "source": {
@@ -28,7 +28,62 @@
     "pass_regex": "BENCH PASS p3_m0_t0",
     "threads": 8,
     "peak_ram_gb": 24,
-    "cmd": "bash rtl/hbm_next/sm/tb/run_leaf_bench.sh {RUN}/xs3 3 0 0 -DHNX_XS4"
+    "cmd": "bash rtl/hbm_next/sm/tb/run_leaf_bench.sh {RUN}/xs3 3 0 0 -DHNX_XS4",
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "leaf_xs3_mut1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "purpose": "P3 MUT1 (x-store lane alias) on the shared x store must be caught by the lane/stream model",
+    "cmd": "bash rtl/hbm_next/sm/tb/run_leaf_bench.sh {RUN}/xs3_m1 3 1 0 -DHNX_XS4 > {RUN}/xs3_m1.out 2>&1; cat {RUN}/xs3_m1.out; ! grep -q 'MUTANT CAUGHT p3_m1_t0' {RUN}/xs3_m1.out",
+    "fail_regex": "(LANE|STREAM) MISMATCH",
+    "fail_witness": "results/arch/hbm_next_1019/sm4/p3/bench/lfx/run_p3_m1_t0.log"
+   },
+   {
+    "name": "leaf_xs3_mut2",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "purpose": "P3 MUT2 (lane-select ignored) on the shared x store must be caught by the lane/stream model",
+    "cmd": "bash rtl/hbm_next/sm/tb/run_leaf_bench.sh {RUN}/xs3_m2 3 2 0 -DHNX_XS4 > {RUN}/xs3_m2.out 2>&1; cat {RUN}/xs3_m2.out; ! grep -q 'MUTANT CAUGHT p3_m2_t0' {RUN}/xs3_m2.out",
+    "fail_regex": "(LANE|STREAM) MISMATCH",
+    "fail_witness": "results/arch/hbm_next_1019/sm4/p3/bench/lfx/run_p3_m2_t0.log"
+   },
+   {
+    "name": "leaf_xs3_mut3",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "purpose": "P3 MUT3 (publish slot) on the shared x store must be caught by the lane/stream model",
+    "cmd": "bash rtl/hbm_next/sm/tb/run_leaf_bench.sh {RUN}/xs3_m3 3 3 0 -DHNX_XS4 > {RUN}/xs3_m3.out 2>&1; cat {RUN}/xs3_m3.out; ! grep -q 'MUTANT CAUGHT p3_m3_t0' {RUN}/xs3_m3.out",
+    "fail_regex": "(LANE|STREAM) MISMATCH",
+    "fail_witness": "results/arch/hbm_next_1019/sm4/p3/bench/lfx/run_p3_m3_t0.log"
+   },
+   {
+    "name": "leaf_xs3_mut4",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "purpose": "P3 MUT4 (W-face BF16 weight sign) on the shared x store must be caught by the lane/stream model",
+    "cmd": "bash rtl/hbm_next/sm/tb/run_leaf_bench.sh {RUN}/xs3_m4 3 4 0 -DHNX_XS4 > {RUN}/xs3_m4.out 2>&1; cat {RUN}/xs3_m4.out; ! grep -q 'MUTANT CAUGHT p3_m4_t0' {RUN}/xs3_m4.out",
+    "fail_regex": "(LANE|STREAM) MISMATCH",
+    "fail_witness": "results/arch/hbm_next_1019/sm4/p3/bench/lfx/run_p3_m4_t0.log"
    }
   ],
   "calibrate": {
