@@ -27,6 +27,16 @@ if [ "${OT_KV_STATIC_DIE:-0}" = 1 ]; then
     --root "$R" --existing "$PADS" --out "$O/output_pads.pv.json" > "$O/output_pads.pv.log" 2>&1 \
     || { tail -3 "$O/output_pads.pv.log"; exit 3; }
   PADS="$O/output_pads.pv.json"
+  # KV-FUNC-OPENS 10-19 (OT_KV_FUNC_OPENS=1): relay width-padding + landing ties, then PVW residual roles (exact,
+  # die/source-pinned contracts). The ASTK/head/ECTL role contract needs a first-pass record (second pass below).
+  if [ "${OT_KV_FUNC_OPENS:-0}" = 1 ]; then
+    python3 "$R/tools/qwen_kv_die/kv_relay_zero_tail.py" "$O/die_bound.v" --root "$R" --existing "$PADS" \
+      --out "$O/output_pads.zt.json" > "$O/output_pads.zt.log" 2>&1 || { tail -3 "$O/output_pads.zt.log"; exit 3; }
+    python3 "$R/tools/qwen_kv_die/kv_pvw_residual_roles.py" --die "$O/die_bound.v" --root "$R" \
+      --existing "$O/output_pads.zt.json" --out "$O/output_pads.pvwres.json" > "$O/output_pads.pvwres.log" 2>&1 \
+      || { tail -3 "$O/output_pads.pvwres.log"; exit 3; }
+    PADS="$O/output_pads.pvwres.json"
+  fi
 fi
 F+=(--pad-file "$PADS")
 # relay standards (OT_KV_RLY_STD=1): the qkd_rlys_* replicas bind their real RTL (not a stub)
@@ -47,6 +57,20 @@ python3 $R/tools/die_port_bind.py $O/die_bound.v "${F[@]}" --rtl-file $O/kv_hard
   --allow-model ot_qfd_serdes_112g_x12_phy --allow-model qkd_pll_analog_model \
   --strap-file $O/straps.json --out $O/port_bind_v2.json > $O/port_bind_v2.txt 2>&1
 rc=$?
+if [ "${OT_KV_STATIC_DIE:-0}" = 1 ] && [ "${OT_KV_FUNC_OPENS:-0}" = 1 ]; then
+  # second pass: misc role contract derived against the first-pass master RTL map of the SAME die
+  cp $O/port_bind_v2.json $O/port_bind_v2.pass1.json
+  python3 "$R/tools/qwen_kv_die/kv_misc_unused_roles.py" "$O/die_bound.v" --bind-record $O/port_bind_v2.pass1.json \
+    --root "$R" --existing "$PADS" --out "$O/output_pads.misc.json" > "$O/output_pads.misc.log" 2>&1 \
+    || { tail -3 "$O/output_pads.misc.log"; exit 3; }
+  F2=(); for x in "${F[@]}"; do [ "$x" = "$PADS" ] && x="$O/output_pads.misc.json"; F2+=("$x"); done
+  python3 $R/tools/die_port_bind.py $O/die_bound.v "${F2[@]}" --rtl-file $O/kv_hard_models.sv --rtl-file $O/kv_relays_dir.sv \
+    --rtl-file $R/physical/qwen_missing_phy/ot_qfd_serdes_112g_x12_phy/ot_qfd_serdes_112g_x12_phy_bb.v \
+    --allow-model qkd_hbm3e_phy_pc --allow-model qkd_ckbump --allow-model qkd_fwdbump --allow-model ot_qkvd_ucie_x64_phy \
+    --allow-model ot_qfd_serdes_112g_x12_phy --allow-model qkd_pll_analog_model \
+    --strap-file $O/straps.json --out $O/port_bind_v2.json > $O/port_bind_v2.txt 2>&1
+  rc=$?
+fi
 # per DIE master: its bound RTL module and instance count (tools/die_completeness.py reports the die masters)
 python3 - $O <<'PY'
 import json, sys
