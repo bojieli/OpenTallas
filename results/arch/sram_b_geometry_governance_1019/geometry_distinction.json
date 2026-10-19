@@ -1,0 +1,44 @@
+{
+  "actual_master_and_fixture_geometry": {
+    "qwen": {
+      "fixture_envelope_nm": [
+        138840,
+        107592
+      ],
+      "fixture_margin_each_side_nm": 43200,
+      "instance_origin_nm": [
+        43200,
+        43200
+      ],
+      "master_area_um2": 1111.30848,
+      "master_outline_nm": [
+        52440,
+        21192
+      ]
+    },
+    "sc2": {
+      "fixture_envelope_nm": [
+        303240,
+        130200
+      ],
+      "fixture_margin_each_side_nm": 43200,
+      "instance_origin_nm": [
+        43200,
+        43200
+      ],
+      "master_area_um2": 9497.592,
+      "master_outline_nm": [
+        216840,
+        43800
+      ]
+    }
+  },
+  "checked_all_647_local_pin_rectangles_and_actual_corridors": true,
+  "five_SC2_macro_area_um2": 47487.96000000001,
+  "five_independent_fixture_envelope_area_um2": 197409.24,
+  "geometry_authority": "73b118546 (corrected f25d Spread192)",
+  "historical_B_commit_preserved": "bc77319494d4580be0706935c3095d6a9cba39c8",
+  "original_typed_contract_sha256": "0ef20cbfb3b64a7cc4440aa1b9d6fae877e8b2271d93e153b239b731e8060a65",
+  "pin_rectangle_and_corridor_change_count": 0,
+  "qualification": "NO B/AP/PDN/native import/LEF generation/engine/source/default/Lib activation; real outside endpoints remain NULL/REFUSE"
+}
