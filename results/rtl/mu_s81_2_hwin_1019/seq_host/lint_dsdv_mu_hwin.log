@@ -47,22 +47,22 @@
 %Warning-DECLFILENAME: /home/ubuntu/scratch/mu-s81-2-hwin-1019/src/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hslot.sv:142:8: Filename 'dsdv_mu_hslot' does not match MODULE name: 'dsdv_seq_host_mu'
   142 | module dsdv_seq_host_mu #(parameter integer V = 276, parameter integer STAGE = 0, parameter integer MUT = 0,
       |        ^~~~~~~~~~~~~~~~
-%Warning-DECLFILENAME: /home/ubuntu/scratch/mu-s81-2-hwin-1019/src/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin.sv:257:8: Filename 'dsdv_mu_hwin' does not match MODULE name: 'dsdv_seq_host_mux'
-  257 | module dsdv_seq_host_mux (
+%Warning-DECLFILENAME: /home/ubuntu/scratch/mu-s81-2-hwin-1019/src/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin.sv:264:8: Filename 'dsdv_mu_hwin' does not match MODULE name: 'dsdv_seq_host_mux'
+  264 | module dsdv_seq_host_mux (
       |        ^~~~~~~~~~~~~~~~~
-%Warning-UNUSEDSIGNAL: /home/ubuntu/scratch/mu-s81-2-hwin-1019/src/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin.sv:72:16: Bits of signal are not used: 'ks_q'[41:21]
+%Warning-UNUSEDSIGNAL: /home/ubuntu/scratch/mu-s81-2-hwin-1019/src/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin.sv:74:16: Bits of signal are not used: 'ks_q'[41:21]
                                                                                                                   : ... note: In instance 'dsdv_mu_hwin'
-   72 |     reg [52:0] ks_q; reg [25:0] mc_q, mw_q; reg [NRT*32-1:0] rt_q; integer r;
+   74 |     reg [52:0] ks_q; reg [25:0] mc_q, mw_q; reg [NRT*32-1:0] rt_q; integer r;
       |                ^~~~
                        ... For warning description see https://verilator.org/warn/UNUSEDSIGNAL?v=5.050
                        ... Use "/* verilator lint_off UNUSEDSIGNAL */" and lint_on around source to disable this message.
-%Warning-UNUSEDSIGNAL: /home/ubuntu/scratch/mu-s81-2-hwin-1019/src/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin.sv:72:39: Bits of signal are not used: 'mw_q'[24:23]
+%Warning-UNUSEDSIGNAL: /home/ubuntu/scratch/mu-s81-2-hwin-1019/src/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin.sv:74:39: Bits of signal are not used: 'mw_q'[24:23]
                                                                                                                   : ... note: In instance 'dsdv_mu_hwin'
-   72 |     reg [52:0] ks_q; reg [25:0] mc_q, mw_q; reg [NRT*32-1:0] rt_q; integer r;
+   74 |     reg [52:0] ks_q; reg [25:0] mc_q, mw_q; reg [NRT*32-1:0] rt_q; integer r;
       |                                       ^~~~
-%Warning-UNUSEDSIGNAL: /home/ubuntu/scratch/mu-s81-2-hwin-1019/src/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin.sv:141:16: Bits of signal are not used: 'dl'[30:0]
+%Warning-UNUSEDSIGNAL: /home/ubuntu/scratch/mu-s81-2-hwin-1019/src/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin.sv:144:16: Bits of signal are not used: 'dl'[30:0]
                                                                                                                    : ... note: In instance 'dsdv_mu_hwin'
-  141 |     reg [31:0] dl;
+  144 |     reg [31:0] dl; reg [NEV-1:0] dlm;
       |                ^~
 %Warning-UNUSEDPARAM: /home/ubuntu/scratch/mu-s81-2-hwin-1019/src/rtl/lib/ot_rst_relay.sv:25:24: Parameter is not used: 'RELEASE_CYCLES'
                                                                                                : ... note: In instance 'dsdv_mu_hwin.u_rr'
@@ -80,5 +80,5 @@
                        ... For warning description see https://verilator.org/warn/SYNCASYNCNET?v=5.050
                        ... Use "/* verilator lint_off SYNCASYNCNET */" and lint_on around source to disable this message.
 - V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
-- Verilator: Built from 1.754 MB sources in 31 modules, into 0.818 MB in 4 C++ files needing 0.000 MB
-- Verilator: Walltime 0.419 s (elab=0.026, cvt=0.177, bld=0.000); cpu 0.271 s on 1 threads; allocated 48.387 MB
+- Verilator: Built from 1.754 MB sources in 31 modules, into 0.819 MB in 4 C++ files needing 0.000 MB
+- Verilator: Walltime 0.152 s (elab=0.012, cvt=0.086, bld=0.000); cpu 0.152 s on 1 threads; allocated 48.387 MB

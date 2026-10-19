@@ -1,6 +1,3 @@
-ot-run: ot-epyc8       admits   555 GB (avail 632, growth 244, headroom 0, waiters 0/0 GB) load 33/128 running 25 disk 523 GB 
-ot-run: -> ot-epyc8
-ot-heavy: admitted on ot-epyc8 as oth-ubuntu-1181852-1792415712 after 0 s
 Verilator 5.050 2026-07-01 rev v5.050
 [base] MUWIN starts 32 fires 80 expected 80 K 2 t_mf 0000 hslot 0000 hwin 00
 [base] MUWIN PASS
@@ -22,4 +19,3 @@ lint masters_mu: errors 0
 lint relays: errors 0
 LEP_MU_DIE_LINT PASS
 MU_HWIN_GATE PASS
-ot-run: RAN on ot-epyc8 (unit oth-ubuntu-1181852-1792415712): exit 0

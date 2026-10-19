@@ -43,6 +43,8 @@
 //     same stage.  Pointers hold on a start at their entry and on the staged write (no skip past a new entry).  Event
 //     edges are unchanged (ts is the start edge's tm); vld is visible to the RX tag check one edge later (an RX tag
 //     returns >= one round after its start);
+//   * gate 2 (10-19): the head equality / late compares are registered one edge ahead (eqn / ltn vs tm + 1 - D), so
+//     fire is a flop AND; fired flags fd carry no reset (cleared at the staged record, read only on valid entries);
 //   * the gap table stores gap - 1 (the prefetch is a one-hot read, no decrement in the stage).
 // Illegal configs (already t_wf[1] at arming: D < nw + 2 or a gap <= nw + 1) may raise the late-event fault t_wf[0]
 // one edge later than the former RTL; legal configs are edge-exact (MU_HWIN_GATE, SEQHOST_MU_GATE).
@@ -132,13 +134,14 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 8, p
     reg [1:0] eat [0:NEV-1][0:NSLOT-1];                  // {land / replay-en, ab} per event and calendar slot
     reg [NSLOT-1:0] fd [0:NEV-1];                         // fired flags
     reg [NSLOT-1:0] pe [0:NEV-1];                         // one-hot event pointers
-    reg [31:0] tmd [0:NEV-1];                             // tm - D[e]
+    reg [31:0] tmd2 [0:NEV-1];                            // tm - D[e] + 1 (next edge's fire compare value)
+    reg [NEV-1:0] eqn, ltn;                               // registered head compares, valid on the next edge
     reg [31:0] h_ts [0:NEV-1]; reg [20:0] h_ep [0:NEV-1]; reg [9:0] h_eu [0:NEV-1]; reg [1:0] h_at [0:NEV-1];
     reg [NEV-1:0] h_fr;
     integer e, p;
     reg bad_d; reg [NEV-1:0] fire, lt, ok, hold, adv;
     reg [NEV*32-1:0] hts_r; reg [NEV*21-1:0] hep_r; reg [NEV*10-1:0] heu_r; reg [NEV*2-1:0] hat_r; integer k2;
-    reg [31:0] dl;
+    reg [31:0] dl; reg [NEV-1:0] dlm;
     always @* begin
         bad_d = cs <= nw + 24'd1;
         for (e = 0; e < NEV; e = e + 1)
@@ -146,9 +149,9 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 8, p
         for (e = 0; e < NEV; e = e + 1) begin
             ok[e] = |(pe[e] & vld & ~fd[e]);
             hold[e] = (st && |(pe[e] & ss)) || (rec_q && |(pe[e] & ssq));
-            fire[e] = ok[e] && h_fr[e] && h_ts[e] == tmd[e];
-            dl = h_ts[e] - tmd[e];
-            lt[e] = ok[e] && h_fr[e] && dl[31];
+            fire[e] = ok[e] && h_fr[e] && eqn[e];
+            lt[e] = ok[e] && h_fr[e] && ltn[e];
+            dl = h_ts[e] - tmd2[e]; dlm[e] = dl[31];
             adv[e] = fire[e] || (!ok[e] && !hold[e]);
             hts_r[32*e +: 32] = 32'd0; hep_r[21*e +: 21] = 21'd0; heu_r[10*e +: 10] = 10'd0; hat_r[2*e +: 2] = 2'd0;
             for (k2 = 0; k2 < NSLOT; k2 = k2 + 1) if (pe[e][k2]) begin
@@ -159,8 +162,13 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 8, p
     end
     integer e4;
     always @(posedge ck) for (e4 = 0; e4 < NEV; e4 = e4 + 1) begin
+        fd[e4] <= (fd[e4] | (fire[e4] ? pe[e4] : {NSLOT{1'b0}})) & ~(rec_q ? ssq : {NSLOT{1'b0}});   // no reset: cleared at the staged record, read only on valid entries
         h_ts[e4] <= hts_r[32*e4 +: 32]; h_ep[e4] <= hep_r[21*e4 +: 21]; h_eu[e4] <= heu_r[10*e4 +: 10]; h_at[e4] <= hat_r[2*e4 +: 2];
-        tmd[e4] <= tm1 - {11'd0, eD[e4]};                   // = tm - D on the next edge
+        tmd2[e4] <= tm1 + 32'd1 - {11'd0, eD[e4]};          // = tm - D + 1 on the next edge
+        // head compares one edge ahead: h_ts == tm + 1 - D (fire on the next edge) / h_ts - (tm + 1 - D) < 0 (late);
+        // used only while the head stays fresh across both edges (h_fr now and next), so the entry is the same
+        eqn[e4] <= h_fr[e4] && h_ts[e4] == tmd2[e4];
+        ltn[e4] <= h_fr[e4] && dlm[e4];
     end
     // outputs from the fired heads: on each endpoint the highest-numbered firing event wins (the former loop order)
     reg rtbad, m; reg [NEP*34-1:0] c_n, c_q; reg [NEP*11-1:0] rc_n, rc_q; reg col_w;
@@ -211,7 +219,7 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 8, p
             cs <= 24'd0; crl <= 24'd0; crm <= 24'hffffff; t_wf <= 2'd0; gn <= {SJ{1'b0}}; gx <= OH0; gm <= {NSLOT{1'b0}};
             lw <= SI'(NSLOT - 1); lm <= {1'b1, {(NSLOT-1){1'b0}}}; cg <= 24'd0; c_q <= {NEP*34{1'b0}}; rc_q <= {NEP*11{1'b0}};
             rec_q <= 1'b0; h_rfr <= 1'b0; h_fr <= {NEV{1'b0}};
-            for (e = 0; e < NEV; e = e + 1) begin pe[e] <= OH0; fd[e] <= {NSLOT{1'b0}}; end
+            for (e = 0; e < NEV; e = e + 1) pe[e] <= OH0;
         end else begin
             tm <= tm1; tm1 <= tm1 + 32'd1;
             lm <= {NSLOT{1'b0}}; lm[lw] <= 1'b1;
@@ -236,7 +244,6 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 8, p
             vld <= (vld & ~(due ? rp : {NSLOT{1'b0}})) | (rec_q ? ssq : {NSLOT{1'b0}});
             c_q <= c_n; rc_q <= rc_n;
             for (e = 0; e < NEV; e = e + 1) begin
-                fd[e] <= (fd[e] | (fire[e] ? pe[e] : {NSLOT{1'b0}})) & ~(rec_q ? ssq : {NSLOT{1'b0}});
                 if (adv[e]) pe[e] <= rot(pe[e], lm);
                 h_fr[e] <= !adv[e] && !(rec_q && |(pe[e] & ssq));
             end

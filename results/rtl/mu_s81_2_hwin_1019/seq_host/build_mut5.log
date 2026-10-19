@@ -24,5 +24,5 @@ g++    verilated.o verilated_timing.o verilated_threads.o Vtb_dsdv_seq_host_mu__
 rm Vtb_dsdv_seq_host_mu__ALL.verilator_deplist.tmp
 make: Leaving directory '/home/ubuntu/scratch/mu-s81-2-hwin-1019/seq/obj_mut5'
 - V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
-- Verilator: Built from 1.927 MB sources in 32 modules, into 6.087 MB in 16 C++ files needing 0.015 MB
-- Verilator: Walltime 12.488 s (elab=0.076, cvt=1.381, bld=10.777); cpu 1.701 s on 8 threads; allocated 102.457 MB
+- Verilator: Built from 1.928 MB sources in 32 modules, into 6.088 MB in 16 C++ files needing 0.015 MB
+- Verilator: Walltime 5.268 s (elab=0.045, cvt=0.724, bld=4.385); cpu 0.963 s on 8 threads; allocated 102.453 MB

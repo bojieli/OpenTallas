@@ -47,8 +47,8 @@
 %Warning-DECLFILENAME: /home/ubuntu/scratch/mu-s81-2-hwin-1019/src/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hslot.sv:142:8: Filename 'dsdv_mu_hslot' does not match MODULE name: 'dsdv_seq_host_mu'
   142 | module dsdv_seq_host_mu #(parameter integer V = 276, parameter integer STAGE = 0, parameter integer MUT = 0,
       |        ^~~~~~~~~~~~~~~~
-%Warning-DECLFILENAME: /home/ubuntu/scratch/mu-s81-2-hwin-1019/src/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin.sv:257:8: Filename 'dsdv_mu_hwin' does not match MODULE name: 'dsdv_seq_host_mux'
-  257 | module dsdv_seq_host_mux (
+%Warning-DECLFILENAME: /home/ubuntu/scratch/mu-s81-2-hwin-1019/src/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin.sv:264:8: Filename 'dsdv_mu_hwin' does not match MODULE name: 'dsdv_seq_host_mux'
+  264 | module dsdv_seq_host_mux (
       |        ^~~~~~~~~~~~~~~~~
 %Warning-VARHIDDEN: /home/ubuntu/scratch/mu-s81-2-hwin-1019/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_fixed_issue.sv:82:44: Declaration of signal hides declaration in upper scope: 'e'
    82 |  function automatic [8:0] dsel(input [3:0] e,input [NENG-1:0] v,input [NENG*8-1:0] t);
@@ -586,19 +586,19 @@
                                                                                                       : ... Suggest using delayed assignment '<='
   539 |                         r_by = {pt_s[10:0], 5'd0} + bi * 16;
       |                              ^
-%Warning-UNUSEDSIGNAL: /home/ubuntu/scratch/mu-s81-2-hwin-1019/src/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin.sv:72:16: Bits of signal are not used: 'ks_q'[41:21]
+%Warning-UNUSEDSIGNAL: /home/ubuntu/scratch/mu-s81-2-hwin-1019/src/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin.sv:74:16: Bits of signal are not used: 'ks_q'[41:21]
                                                                                                                   : ... note: In instance 'dsdv_seq_host_mux.u_win'
-   72 |     reg [52:0] ks_q; reg [25:0] mc_q, mw_q; reg [NRT*32-1:0] rt_q; integer r;
+   74 |     reg [52:0] ks_q; reg [25:0] mc_q, mw_q; reg [NRT*32-1:0] rt_q; integer r;
       |                ^~~~
                        ... For warning description see https://verilator.org/warn/UNUSEDSIGNAL?v=5.050
                        ... Use "/* verilator lint_off UNUSEDSIGNAL */" and lint_on around source to disable this message.
-%Warning-UNUSEDSIGNAL: /home/ubuntu/scratch/mu-s81-2-hwin-1019/src/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin.sv:72:39: Bits of signal are not used: 'mw_q'[24:23]
+%Warning-UNUSEDSIGNAL: /home/ubuntu/scratch/mu-s81-2-hwin-1019/src/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin.sv:74:39: Bits of signal are not used: 'mw_q'[24:23]
                                                                                                                   : ... note: In instance 'dsdv_seq_host_mux.u_win'
-   72 |     reg [52:0] ks_q; reg [25:0] mc_q, mw_q; reg [NRT*32-1:0] rt_q; integer r;
+   74 |     reg [52:0] ks_q; reg [25:0] mc_q, mw_q; reg [NRT*32-1:0] rt_q; integer r;
       |                                       ^~~~
-%Warning-UNUSEDSIGNAL: /home/ubuntu/scratch/mu-s81-2-hwin-1019/src/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin.sv:141:16: Bits of signal are not used: 'dl'[30:0]
+%Warning-UNUSEDSIGNAL: /home/ubuntu/scratch/mu-s81-2-hwin-1019/src/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin.sv:144:16: Bits of signal are not used: 'dl'[30:0]
                                                                                                                    : ... note: In instance 'dsdv_seq_host_mux.u_win'
-  141 |     reg [31:0] dl;
+  144 |     reg [31:0] dl; reg [NEV-1:0] dlm;
       |                ^~
 %Warning-UNUSEDSIGNAL: /home/ubuntu/scratch/mu-s81-2-hwin-1019/src/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hslot.sv:163:21: Bits of signal are not used: 'ku'[31]
                                                                                                                     : ... note: In instance 'dsdv_seq_host_mux.u'
@@ -856,5 +856,5 @@
                       ... For warning description see https://verilator.org/warn/MULTIDRIVEN?v=5.050
                       ... Use "/* verilator lint_off MULTIDRIVEN */" and lint_on around source to disable this message.
 - V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
-- Verilator: Built from 1.754 MB sources in 31 modules, into 3.995 MB in 9 C++ files needing 0.000 MB
-- Verilator: Walltime 1.249 s (elab=0.077, cvt=0.957, bld=0.000); cpu 1.162 s on 1 threads; allocated 73.379 MB
+- Verilator: Built from 1.754 MB sources in 31 modules, into 3.996 MB in 8 C++ files needing 0.000 MB
+- Verilator: Walltime 0.738 s (elab=0.045, cvt=0.571, bld=0.000); cpu 0.738 s on 1 threads; allocated 74.387 MB
