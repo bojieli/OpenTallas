@@ -1,0 +1,234 @@
+{
+ "schema": "opentallas.hbm_next.clock_plan.v1",
+ "tag": "d4g",
+ "standard": "landed regions 10-18; reach 405 um planning hop; pin-flop spread <= 80 ps TT+FF per region, neighbour-matched boundary through landings",
+ "regions": 45,
+ "neighbour_pairs": 130,
+ "largest_non_sm_region_um": [
+  0.0,
+  "xq_SW"
+ ],
+ "sm_column_regions": {
+  "n": 16,
+  "inside": "ck_n / ck_s landed regions per rp4 tile (PL-SMT form), 16 tiles x 2 regions; the column parent lands every tile-to-tile and tile-to-front crossing"
+ },
+ "totals": {
+  "links": 482,
+  "landed_links": 357,
+  "landed_bits": 189380,
+  "relay_flops_405": 2240107,
+  "max_hops": 33
+ },
+ "per_class": {
+  "HBM_K": {
+   "links": 16,
+   "bits": 35392,
+   "landed_links": 16,
+   "landed_bits": 35392,
+   "hops_bw": 0.0,
+   "max_hops": 0,
+   "longest_um": 20,
+   "relay_flops": 0
+  },
+  "SM_X": {
+   "links": 128,
+   "bits": 34944,
+   "landed_links": 128,
+   "landed_bits": 34944,
+   "hops_bw": 13.42,
+   "max_hops": 33,
+   "longest_um": 13372,
+   "relay_flops": 469014
+  },
+  "SM_HBM": {
+   "links": 16,
+   "bits": 18112,
+   "landed_links": 16,
+   "landed_bits": 18112,
+   "hops_bw": 3.38,
+   "max_hops": 7,
+   "longest_um": 3015,
+   "relay_flops": 61128
+  },
+  "LG_SU": {
+   "links": 32,
+   "bits": 17792,
+   "landed_links": 0,
+   "landed_bits": 0,
+   "hops_bw": 0.62,
+   "max_hops": 1,
+   "longest_um": 500,
+   "relay_flops": 11120
+  },
+  "LG_SFU": {
+   "links": 32,
+   "bits": 17792,
+   "landed_links": 0,
+   "landed_bits": 0,
+   "hops_bw": 0.5,
+   "max_hops": 1,
+   "longest_um": 565,
+   "relay_flops": 8896
+  },
+  "LG_HC": {
+   "links": 32,
+   "bits": 17792,
+   "landed_links": 12,
+   "landed_bits": 6672,
+   "hops_bw": 0.5,
+   "max_hops": 1,
+   "longest_um": 565,
+   "relay_flops": 8896
+  },
+  "VM_RING": {
+   "links": 8,
+   "bits": 17792,
+   "landed_links": 8,
+   "landed_bits": 17792,
+   "hops_bw": 11.5,
+   "max_hops": 19,
+   "longest_um": 7812,
+   "relay_flops": 204608
+  },
+  "HC_CORE": {
+   "links": 32,
+   "bits": 17792,
+   "landed_links": 32,
+   "landed_bits": 17792,
+   "hops_bw": 18.62,
+   "max_hops": 25,
+   "longest_um": 10448,
+   "relay_flops": 331216
+  },
+  "COLL_VM": {
+   "links": 32,
+   "bits": 17760,
+   "landed_links": 20,
+   "landed_bits": 11100,
+   "hops_bw": 17.97,
+   "max_hops": 25,
+   "longest_um": 10514,
+   "relay_flops": 319125
+  },
+  "VM_HUB": {
+   "links": 32,
+   "bits": 17216,
+   "landed_links": 32,
+   "landed_bits": 17216,
+   "hops_bw": 19.38,
+   "max_hops": 25,
+   "longest_um": 10342,
+   "relay_flops": 333560
+  },
+  "HC_ENG": {
+   "links": 8,
+   "bits": 11488,
+   "landed_links": 0,
+   "landed_bits": 0,
+   "hops_bw": 6.67,
+   "max_hops": 9,
+   "longest_um": 3801,
+   "relay_flops": 76648
+  },
+  "COLL_RING": {
+   "links": 8,
+   "bits": 6608,
+   "landed_links": 8,
+   "landed_bits": 6608,
+   "hops_bw": 10.0,
+   "max_hops": 16,
+   "longest_um": 6766,
+   "relay_flops": 66080
+  },
+  "COLL_EP": {
+   "links": 5,
+   "bits": 6120,
+   "landed_links": 5,
+   "landed_bits": 6120,
+   "hops_bw": 11.4,
+   "max_hops": 13,
+   "longest_um": 5404,
+   "relay_flops": 69768
+  },
+  "EP_SERDES": {
+   "links": 5,
+   "bits": 5280,
+   "landed_links": 0,
+   "landed_bits": 0,
+   "hops_bw": 0.0,
+   "max_hops": 0,
+   "longest_um": 50,
+   "relay_flops": 0
+  },
+  "QUANT_VM": {
+   "links": 8,
+   "bits": 4440,
+   "landed_links": 0,
+   "landed_bits": 0,
+   "hops_bw": 0.0,
+   "max_hops": 0,
+   "longest_um": 173,
+   "relay_flops": 0
+  },
+  "SM_OUT": {
+   "links": 16,
+   "bits": 4320,
+   "landed_links": 16,
+   "landed_bits": 4320,
+   "hops_bw": 8.5,
+   "max_hops": 18,
+   "longest_um": 7571,
+   "relay_flops": 36720
+  },
+  "HBM_VM": {
+   "links": 16,
+   "bits": 4096,
+   "landed_links": 16,
+   "landed_bits": 4096,
+   "hops_bw": 23.44,
+   "max_hops": 26,
+   "longest_um": 10856,
+   "relay_flops": 96000
+  },
+  "VM_HBM": {
+   "links": 16,
+   "bits": 4096,
+   "landed_links": 16,
+   "landed_bits": 4096,
+   "hops_bw": 22.69,
+   "max_hops": 27,
+   "longest_um": 11005,
+   "relay_flops": 92928
+  },
+  "SU_CORE": {
+   "links": 12,
+   "bits": 3072,
+   "landed_links": 8,
+   "landed_bits": 2048,
+   "hops_bw": 4.08,
+   "max_hops": 9,
+   "longest_um": 3771,
+   "relay_flops": 12544
+  },
+  "SFU_CORE": {
+   "links": 12,
+   "bits": 3072,
+   "landed_links": 8,
+   "landed_bits": 2048,
+   "hops_bw": 10.58,
+   "max_hops": 16,
+   "longest_um": 6799,
+   "relay_flops": 32512
+  },
+  "KV_DESC": {
+   "links": 16,
+   "bits": 1024,
+   "landed_links": 16,
+   "landed_bits": 1024,
+   "hops_bw": 9.12,
+   "max_hops": 20,
+   "longest_um": 8162,
+   "relay_flops": 9344
+  }
+ }
+}
