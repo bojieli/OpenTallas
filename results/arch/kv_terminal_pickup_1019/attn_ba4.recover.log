@@ -1,0 +1,20 @@
+GATE INFO pin_regs: pin registers opted out: Generated wires-only parent of the static join: every tile <-> tile / die-master hop is priced in the compiled join ages with the die relays only (kv_relays, die_ages.json); a recipe-3 pin register would add an unpriced edge to every crossing.  The children land / launch their boundary nets in their
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE WARN pins: 1-bit vector ports ['ufs_WS', 'ufs_WN', 'ufs_ES', 'ufs_EN', 'ufh', 'ufp0']: retain declared indices for literal clock entries; check actual mapped pin names for a hand pin list  -> FIX: use the actual RTL and mapped pin names
+GATE INFO source_binding: exact original source and committed executed helpers match; current helpers unchanged
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc8 in 65 s (gate total 0 s)
+GATE INFO floorplan.pin_geometry: actual pin geometry PASS: {'signal_clock_pins': 3284, 'pin_rectangles': 3284, 'pin_track_checked': 3284, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 c70cc5b8b67d04aee3bf590d9a2c94befa9435b00ee086b52dd74c00513afe31
+GATE WARN util: synthesized std area 2783 um2 + macros 0 in core 88852: util 3%  -> FIX: set "std_area_um2": 2783 and drop 'outline' (gen sizes to util 0.52)
+GATE INFO textbook: WARN qkd_kvs_attn_fl_ba4 cells 17,479 flops 5,840 depth 518.4 ps util 0.032 reach 118.8 um (0.4 s)
+GATE WARN textbook.boundary: 1 input->register endpoint(s) > 3 levels (worst d2d__rx_payload[26]->u_ot_pr_core.u_core.u_attn.ctl.g_ld.codec.status_nonzero[0]$_DFF_P_/D 4 lv): register the boundary (pin flops / registered outputs)  -> FIX: register every boundary: pin flop in, flop out; never an ICG enable from a port
+GATE WARN textbook.util_channel: utilisation 3.2% outside 45%-65% (std 2839 + macro 0 um2 in 88852 um2): shrink the outline (long wires / sparse placement)  -> FIX: size the outline to util 0.50-0.55 with >= 20 um macro channels
+GATE INFO cts_calibration: ss insertion all 575.6..633.0 ps (spread 57.4), boundary mean 601.2; tt insertion all 439.0..489.8 ps (spread 50.8), boundary mean 459.4; ff insertion all 353.7..401.4 ps (spread 47.7), boundary mean 372.4; macro_clk flag False
+GATE INFO density: effective global-placement target density 0.500 vs spec PD 0.50
+GATE INFO clock_spine: OT_SPINE iter 0 (coarse) leaves 786 sinks 6205 cells 1572 leaf arrival 331.5..401.8 ps (spread 70.3) pad 60.0 / 14.0 ps
+GATE INFO clock_spine: OT_SPINE iter 1 (fine) leaves 786 sinks 6205 cells 2542 leaf arrival 374.0..403.5 ps (spread 29.5) pad 60.0 / 20.2 ps
+GATE INFO path_classes: constraints signoff /src/physical/ref_tile/qkd_kvs_attn_ba4/signoff.sdc (TT placement RC; diagnostic)
+GATE INFO path_classes: reg->reg      600 paths, worst slack -1.4 ps (e.g. ot_prs_00052_ff/D)
+GATE INFO path_classes: setup WNS -1.4301893003221267e-12 hold WNS -1.6707080163769206e-11
+GATE WARN clock_rule: root port:ck: 5,840 sinks on the largest root; measured TT insertion 489.8 ps, FF insertion 401.4 ps, TT pin-flop spread 50.8 ps, FF pin-flop spread 47.7 ps; WARN: insertion 489.8 ps > 300 (guidance; boundary matched by parent compensation / landing)  -> FIX: guidance only (owner 10-17 0dq): match the boundary by parent compensation or a landed link
+PRE_ROUTE_GATE: WARN (0 fail, 5 warn)
+GATE: qkd_kvs_attn_ba4/gate_result.json written (exact staged source binding; commit it with the kit)

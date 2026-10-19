@@ -1,0 +1,71 @@
+{
+  "items": [
+    {
+      "severity": "INFO",
+      "check": "layout_images",
+      "message": "LOOK at these before submitting: floorplan /home/ubuntu/wt/codex-kv-terminal-pickup-1019/physical/ref_tile/qkd_kvs_attn_ba4/gate_layout/floorplan.png; density /home/ubuntu/wt/codex-kv-terminal-pickup-1019/physical/ref_tile/qkd_kvs_attn_ba4/gate_layout/density.png",
+      "fix": ""
+    },
+    {
+      "severity": "INFO",
+      "check": "trial_route",
+      "message": "trial GRT: total overflow 0; worst layer M2 11.45% used; GRT 156 s",
+      "fix": ""
+    }
+  ],
+  "trial_route": {
+    "schema": "opentallas.ref_tile.trial_route.v1",
+    "overflow": 0,
+    "kind": "tile",
+    "skip_incremental_repair": true,
+    "rc": "0",
+    "grt_s": 156,
+    "layers": [
+      {
+        "layer": "M1",
+        "capacity": 0,
+        "usage": 0,
+        "pct": 0.0,
+        "overflow": 0
+      },
+      {
+        "layer": "M2",
+        "capacity": 2657307,
+        "usage": 304364,
+        "pct": 11.45,
+        "overflow": 0
+      },
+      {
+        "layer": "M3",
+        "capacity": 3048769,
+        "usage": 313465,
+        "pct": 10.28,
+        "overflow": 0
+      },
+      {
+        "layer": "M4",
+        "capacity": 2405247,
+        "usage": 25176,
+        "pct": 1.05,
+        "overflow": 0
+      },
+      {
+        "layer": "M5",
+        "capacity": 2218049,
+        "usage": 86933,
+        "pct": 3.92,
+        "overflow": 0
+      }
+    ],
+    "worst_layer_usage": [
+      "M2",
+      11.45
+    ],
+    "hotspot": null,
+    "congestion_png": null
+  },
+  "layout_images": {
+    "floorplan": "/home/ubuntu/wt/codex-kv-terminal-pickup-1019/physical/ref_tile/qkd_kvs_attn_ba4/gate_layout/floorplan.png",
+    "density": "/home/ubuntu/wt/codex-kv-terminal-pickup-1019/physical/ref_tile/qkd_kvs_attn_ba4/gate_layout/density.png"
+  }
+}
