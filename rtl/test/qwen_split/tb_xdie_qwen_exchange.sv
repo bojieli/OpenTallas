@@ -62,6 +62,7 @@ module tb_xdie_qwen_exchange;
     parameter integer XQ_TXDP_UNSET = 0;   // F4 witness: build the masters without the compiled TXDP (must not elaborate)
     parameter integer C_OVL = 0;           // SAFE-QW-D2D 10-19: 1 = compute end is the MU re-close master qfd_d2d_static_ovl
                                            // (OVL 1, RC 1 reset copies; RX calendar started with the TX one, user 0)
+                                           // 2 = mutant: the OVL RX-start port tied 0 (as the die must NOT bind it)
     parameter CALDIR = "cal";
     localparam integer FW = 548, PW = 583, PR = 1, LEAD = 2 * PR;
     localparam [15:0] EP = 16'd9;
@@ -147,7 +148,7 @@ module tb_xdie_qwen_exchange;
     generate if (C_OVL != 0) begin : g_c_ovl
         qfd_d2d_static_ovl #(.MUT(0), .PR(PR), .TXDP(XQ_TXDP_UNSET ? 32'd0 : P_TXDP_C)) u_c (.ck(ck), .por_n(por_n), .rst_n(rst_n),
             .cfg_tx_we(cfg_c_tx), .cfg_rx_we(cfg_c_rx), .cfg_addr({1'b0, cfg_a}), .cfg_data(cfg_dc), .cal_start(cstart), .cal_seg(1'b0),
-            .cal_start_rx(cstart), .cal_seg_rx(1'b0), .cal_user_tx(2'd0), .cal_user_rx(2'd0), .tx_user(), .rx_user(),
+            .cal_start_rx(C_OVL == 2 ? 1'b0 : cstart), .cal_seg_rx(1'b0), .cal_user_tx(2'd0), .cal_user_rx(2'd0), .tx_user(), .rx_user(),
             .fwd_epoch(bump_ep[2]), .fwd_link_rst_n(bump_lr[2]),
             .native_tx_slot(c_txs0), .native_tx_slot_kind(c_tk), .native_tx_slot_beat(c_tb), .native_tx_v(c_tv0),
             .native_tx_payload(c_tp0), .rx_payload(c_rxp), .native_rx_v(c_rxe0), .native_rx_slot(c_rxs0),
