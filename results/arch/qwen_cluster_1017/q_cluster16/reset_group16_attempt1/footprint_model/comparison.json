@@ -6,11 +6,13 @@
   "inputs": [
     {
       "file": "gate_dump.json",
-      "sha256": "effe42d9df8f69cefefa389b5bc22554a7cb766d56af3aa315e2deb1b3ff83e2"
+      "sha256": "effe42d9df8f69cefefa389b5bc22554a7cb766d56af3aa315e2deb1b3ff83e2",
+      "odb_stage": "3_2_place_iop (geometry only)"
     },
     {
       "file": "gate_layout_placed.json",
-      "sha256": "7da4c5efd8355818873538aad0ffc9b856958f343c625bd00c56d9bbb467f854"
+      "sha256": "7da4c5efd8355818873538aad0ffc9b856958f343c625bd00c56d9bbb467f854",
+      "odb_stage": "5_1_grt"
     }
   ],
   "actual_non_tap_area_um2": 18.0792,
