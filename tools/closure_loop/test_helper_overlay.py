@@ -21,6 +21,9 @@ import source_binding as SB
 
 class HelperOverlay(unittest.TestCase):
     def setUp(self):
+        # Match committed helper modes under any fleet host umask. Python data
+        # tar extraction strips group-write; mode drift tests opt in explicitly.
+        self.addCleanup(os.umask, os.umask(0o022))
         self.tmp = tempfile.TemporaryDirectory()
         self.root = Path(self.tmp.name) / 'repo'
         self.daemon = Path(self.tmp.name) / 'daemon'
@@ -34,6 +37,7 @@ class HelperOverlay(unittest.TestCase):
         self.new = b'# newer main helper\n'
         self.commit_helper(self.old)
         (self.daemon / self.rel).write_bytes(self.old)
+        (self.daemon / self.rel).chmod(0o644)
         self.tip = self.commit_helper(self.new)
         self.stack = []
         for p in (patch.object(CL, 'HERE', self.daemon / 'tools/closure_loop'), patch.object(CL, 'REPO', self.root),
@@ -56,6 +60,7 @@ class HelperOverlay(unittest.TestCase):
 
     def commit_helper(self, data):
         (self.root / self.rel).write_bytes(data)
+        (self.root / self.rel).chmod(0o644)
         self.git('add', self.rel)
         self.git('commit', '-m', 'helper update')
         head = self.git('rev-parse', 'HEAD')
@@ -653,6 +658,7 @@ class HelperOverlay(unittest.TestCase):
         (self.daemon / self.rel).write_bytes(foreign)
         frozen, _ = HO.capture_plan(self.daemon, self.root)          # daemon_only resolution
         (self.daemon / self.rel).write_bytes(self.old)
+        (self.daemon / self.rel).chmod(0o644)
         current, _ = HO.capture_plan(self.daemon, self.root)
         with patch.object(HO, 'FLEET_RUN', (self.rel,)):
             ok, why, rows = HO.compare_plans_sanctioned(frozen, current, self.root)
