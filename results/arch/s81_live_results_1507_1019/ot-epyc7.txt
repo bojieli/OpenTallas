@@ -1,0 +1,202 @@
+TIME 2026-10-19T15:08:47.001204-07:00
+  55684   55683    01:38:23  157 2456900 /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 8 -no_splash /OpenROAD-flow-scripts/flow/scripts/global_route.tcl -metrics /work/logs/asap7/opentallas_dsdv_sh_lk_asap7_ref_gate/base/5_1_grt.json
+ 120653  120652       39:35 99.9 723532 /srv/opentallas-scratch/claude/mu-die-s81-hop/out_base/obj/sim +IN=/srv/opentallas-scratch/claude/mu-die-s81-hop/R/R_cut_7_L0_hop012_wrongcopy/in.txt +OUT=/srv/opentallas-scratch/claude/mu-die-s81-hop/R/R_cut_7_L0_hop012_wrongcopy/out.txt +NCYC=64286 +TRACE=/srv/opentallas-scratch/claude/mu-die-s81-hop/out_base_wrongcopy/trace.txt +EP=/srv/opentallas-scratch/claude/mu-die-s81-hop/out_base_wrongcopy/ep.txt
+2329250 2329248    08:18:01  108 48048792 openroad -threads 16 -no_init -exit /work/run.tcl
+3654923 3654922    03:19:55  110 48036204 openroad -threads 16 -no_init -exit /work/run.tcl
+3743357 3743354    03:14:12  103 31976684 /OpenROAD-flow-scripts/tools/install/yosys/bin/yosys -v 3 -c /OpenROAD-flow-scripts/flow/scripts/synth.tcl
+3743383 3743382    03:14:11  102 32350944 /OpenROAD-flow-scripts/tools/install/yosys/bin/yosys -v 3 -c /OpenROAD-flow-scripts/flow/scripts/synth.tcl
+4043172 4043171    02:44:06  103 3549320 /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 16 -no_splash /OpenROAD-flow-scripts/flow/scripts/cts.tcl -metrics /work/logs/asap7/opentallas_ot_v41_bf_col_asap7_ref_gate/base/4_1_cts.json
+4089104 4089101    02:42:15  114 3859404 /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 16 -no_splash /OpenROAD-flow-scripts/flow/scripts/cts.tcl -metrics /work/logs/asap7/opentallas_dsdv_bksel_q_asap7_ref_gate/base/4_1_cts.json
+
+FILE /srv/opentallas-scratch/claude/mu-die-s81/case_mu2/out/run.log SIZE 26185 MTIME 2026-10-19T14:45:52.919615-07:00
+          Routing      Original      Derated      Resource
+Layer     Direction    Resources     Resources    Reduction (%)
+---------------------------------------------------------------
+M1         Vertical            0             0          0.00%
+M2         Horizontal   30265777      14128532          53.32%
+M3         Vertical     30232571      14638954          51.58%
+M4         Horizontal   398886432      280786984          29.61%
+M5         Vertical     402263354      282314657          29.82%
+M6         Horizontal   304970098      243971192          20.00%
+M7         Vertical     306545163      245214974          20.01%
+M8         Horizontal   1040309171      1040309171          0.00%
+M9         Vertical     1040171815      1040171815          0.00%
+---------------------------------------------------------------
+
+[INFO GRT-0101] Running extra iterations to remove congestion.
+[INFO GRT-0102] Start extra iteration 1/30
+[INFO GRT-0102] Start extra iteration 2/30
+[INFO GRT-0102] Start extra iteration 3/30
+[INFO GRT-0102] Start extra iteration 4/30
+[INFO GRT-0102] Start extra iteration 5/30
+[INFO GRT-0102] Start extra iteration 6/30
+[INFO GRT-0102] Start extra iteration 7/30
+[INFO GRT-0102] Start extra iteration 8/30
+[INFO GRT-0102] Start extra iteration 9/30
+[INFO GRT-0102] Start extra iteration 10/30
+[INFO GRT-0102] Start extra iteration 11/30
+[INFO GRT-0102] Start extra iteration 12/30
+[INFO GRT-0102] Start extra iteration 13/30
+
+
+
+FILE /srv/opentallas-scratch/claude/s81-diechain/mu3c/case_mu3/out/run.log SIZE 25751 MTIME 2026-10-19T14:44:40.840324-07:00
+[INFO GRT-0088] Layer M7      Track-Pitch = 0.0640  line-2-Via Pitch: 0.0640
+[INFO GRT-0088] Layer M8      Track-Pitch = 0.0800  line-2-Via Pitch: 0.0800
+[INFO GRT-0088] Layer M9      Track-Pitch = 0.0800  line-2-Via Pitch: 0.1100
+[INFO GRT-0003] Macros: 8713
+[INFO GRT-0004] Blockages: 5251445
+[INFO GRT-0019] Found 444 clock nets.
+[INFO GRT-0001] Minimum degree: 2
+[INFO GRT-0002] Maximum degree: 7
+
+[INFO GRT-0053] Routing resources analysis:
+          Routing      Original      Derated      Resource
+Layer     Direction    Resources     Resources    Reduction (%)
+---------------------------------------------------------------
+M1         Vertical            0             0          0.00%
+M2         Horizontal   30265327      14128330          53.32%
+M3         Vertical     30232367      14638882          51.58%
+M4         Horizontal   398873917      280778253          29.61%
+M5         Vertical     402259692      282312086          29.82%
+M6         Horizontal   304967023      243968732          20.00%
+M7         Vertical     306545163      245214974          20.01%
+M8         Horizontal   1040309171      1040309171          0.00%
+M9         Vertical     1040171815      1040171815          0.00%
+---------------------------------------------------------------
+
+[INFO GRT-0101] Running extra iterations to remove congestion.
+[INFO GRT-0102] Start extra iteration 1/30
+[INFO GRT-0102] Start extra iteration 2/30
+[INFO GRT-0102] Start extra iteration 3/30
+
+
+
+FILE /srv/opentallas-scratch/claude/mu-die-s81-hop/out_rtl_tagdrop/run.log SIZE 409 MTIME 2026-10-19T13:55:46.306568-07:00
+DV_SLICE_T0=1792438536.625359082
+DV_SLICE_T1=1792443346.267381083
+DV_SLICE cycles=64286 in_events=693 out_checks=0 mismatches=0 fault_cycles=0 first_fault=-1
+TB_DV_SLICE PASS
+- tb/tb_slice_top.sv:833: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 54us; walltime 4862.943 s; speed 11.036 ns/s
+- Verilator: cpu 3475.663 s on 1 threads; allocated 768 MB
+
+
+
+FILE /srv/opentallas-scratch/claude/mu-die-s81-hop/out_base_wrongcopy/run.log SIZE 33 MTIME 2026-10-19T14:29:17.811627-07:00
+DV_SLICE_T0=1792445357.811583350
+
+
+
+FILE /srv/opentallas-scratch/claude/mu-die-s81-hop/out_base/run.log SIZE 409 MTIME 2026-10-19T13:46:27.562648-07:00
+DV_SLICE_T0=1792437994.335223319
+DV_SLICE_T1=1792442787.487552303
+DV_SLICE cycles=64286 in_events=693 out_checks=0 mismatches=0 fault_cycles=0 first_fault=-1
+TB_DV_SLICE PASS
+- tb/tb_slice_top.sv:833: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 54us; walltime 4798.394 s; speed 11.185 ns/s
+- Verilator: cpu 3441.118 s on 1 threads; allocated 768 MB
+
+
+
+FILE /srv/opentallas-scratch/claude/mu-die-s81-hop/out_base_tagdrop/run.log SIZE 409 MTIME 2026-10-19T14:29:11.721518-07:00
+DV_SLICE_T0=1792442793.566849904
+DV_SLICE_T1=1792445351.659273894
+DV_SLICE cycles=64286 in_events=687 out_checks=0 mismatches=0 fault_cycles=0 first_fault=-1
+TB_DV_SLICE PASS
+- tb/tb_slice_top.sv:833: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 54us; walltime 2563.520 s; speed 20.935 ns/s
+- Verilator: cpu 2563.297 s on 1 threads; allocated 768 MB
+
+
+
+FILE /srv/opentallas-scratch/claude/ref_gate/s81dvbk_sq_succ-20261019-113938/execution.log SIZE 1200934 MTIME 2026-10-19T11:59:53.428927-07:00
+GATE_SOURCE_ARCHIVE_SHA256=1d1b78978bc49a6309b9675f41031ebbcb0fff5642001e2f2127973a1250db9e
+GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=["openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29"]
+GATE_TOOL_CTS_MACRO_CLUSTER=
+GATE_FLOW_RC=0 GATE_FLOW_S=1100
+GATE_IOP_RC=0
+GATE_DUMP_RC=0
+GATE_FP fp_margin_lint: PASS actual pin geometry {"signal_clock_pins": 1803, "pin_rectangles": 1803, "pin_track_checked": 1803, "pin_track_inaccessible": 0, "pin_rectangles_outside": 0, "missing_geometry": 0}
+GATE_PIN_GEOMETRY_RC=0
+GATE_PIN_GEOMETRY_RESULT {"schema":"opentallas.fp_pin_geometry.v1","verdict":"PASS","fails":[],"metrics":{"signal_clock_pins":1803,"pin_rectangles":1803,"pin_track_checked":1803,"pin_track_inaccessible":0,"pin_rectangles_outside":0,"missing_geometry":0},"dump":"/srv/opentallas-scratch/claude/ref_gate/s81dvbk_sq_succ-20261019-113938/routes/gate/work/orfs/gate_dump.json","dump_sha256":"ea5fe5cb423de7b9587299756330096fd25c9a3ae2addb164902bc5bfa1b33a7","validator_sha256":"5c0b112365aab653a6790d862cec90ff30a182ce0aeae58e80465b5b68c391a8"}
+GATE_LAYOUT_B64 floorplan eNq0/VvrbkuaJfbd+1M0ed0UMw7PIXS3jWRogytNGxtBY5JSdRUWSqvarpJoIfzd/a6quQ77Yi9YEL+r3PnfyciYMed4n4gRI8bzv//pX/7pv/zpv/l3f/rP//yf/9e//A//0z//w1//8v/507///Pf/8R8+f/5Pz988z/Pv/937H2vuf/uH2P/6l//nv/8//Ls//fO//N2//PPnf/u//+kf/8e//vXzD8/fRO5//+Vf/Oe//N3/9x/+7vOnNdcZf5OfP/4Pf/2nv/+fvv45c838m/q3/7uvfxy1T37g/39fwP/p7//+f/kvf/c///3/9pd//vv/1z/8v7/8+z/903/5h//5X/7ur3/9u3/+m7/+3f/2T//Lv/zNt//V3/yv40//Nqb//Je//4e//vXLuP7Tf/rTX0b1XOsvXx7sP/zt/+O/jr/89n/77f9af6n4l7/8xy9//Ns//+1/96f3Mb8/8P [LONG LINE OMITTED: 1194886 characters]
+GATE_TB textbook_lint: WARN dsdv_bksel_q cells 269,106 flops 40,495 depth 418.4 ps util 0.5765 reach 0.4 um (14.9 s)
+GATE_TB textbook_lint: INFO reset_landing {"max":2,"ports":[{"port":"rst","sinks":1,"flops":1,"macros":0}]}
+GATE_TB textbook_lint: INFO clock_roots max_root_sinks=40511 root=port:ck rule=PASS: 40,511 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 40,511 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate
+GATE_TB textbook_lint: WARN clock_domain: clock root port ck: 40,495 flops > 15,000 on one root (+0 ICGs, 16 macro clock pins; e.g. ot_rrs__u_ot_pr_core_u_q_u_q_quarter_rst__ot_rlv__c0$_DFF_PN0_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine
+GATE_TB textbook_lint: WARN high_fanout: reset u_ot_pr_core.u_q.u_q.u_s.u_ps.g_rst[0].qf[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R): 1,600 loads (1 flops, e.g. u_ot_pr_core.u_q.u_q.u_s.u_ps.g_rst[1].qf[2]$_DFF_P_) > 256: register it and replicate per region (rtl/lib/ot_rst_relay.sv: one relay copy per region)
+GATE_TB textbook_lint: WARN high_fanout: reset u_ot_pr_core.u_q.u_q.u_s.u_pi.g_rst[0].qf[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R): 1,600 loads (1 flops, e.g. u_ot_pr_core.u_q.u_q.u_s.u_pi.g_rst[1].qf[2]$_DFF_P_) > 256: register it and replicate per region (rtl/lib/ot_rst_relay.sv: one relay copy per region)
+GATE_TB textbook_lint: WARN high_fanout: reset u_ot_pr_core.u_q.u_q.u_s.u_ps.g_rst[0].g_r1.u_r1.sh$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R): 1,413 loads (1 flops, e.g. u_ot_pr_core.u_q.u_q.u_s.u_ps.g_rst[0].qf[1]$_DFF_P_) > 256: register it and replicate per region (rtl/lib/ot_rst_relay.sv: one relay copy per region)
+GATE_TB textbook_lint: WARN high_fanout: reset u_ot_pr_core.u_q.u_q.u_s.u_pi.g_rst[0].g_r1.u_r1.sh$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R): 1,413 loads (1 flops, e.g. u_ot_pr_core.u_q.u_q.u_s.u_pi.g_rst[0].qf[1]$_DFF_P_) > 256: register it and replicate per region (rtl/lib/ot_rst_relay.sv: one relay copy per region)
+GATE_TB textbook_lint: WARN util_channel: 14 macro channel(s) narrower than 20 um with placement rows (e.g. u_ot_pr_core.u_q.u_q.g_m2.u_mem.g_b\[0\].g_w\[0\].u_m|u_ot_pr_core.u_q.u_q.g_m2.u_mem.g_b\[0\].g_w\[1\].u_m 0.0 um, u_ot_pr_core.u_q.u_q.g_m2.u_mem.g_b\[0\].g_w\[1\].u_m|u_ot_pr_core.u_q.u_q.g_m2.u_mem.g_b\[0\].g_w\[2\].u_m 0.0 um, u_ot_pr_core.u_q.u_q.g_m2.u_mem.g_b\[0\].g_w\[2\].u_m|u_ot_pr_core.u_q.u_q.u_s.g_ofq_sram.u_q.u_mem.g_bank\[0\].u_m 0.0 um): widen to >= 20 um or block the channel
+GATE_TB textbook_lint: WARN clock_guidance: clock root port:ck: 40,511 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 40,511 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate
+GATE_TB_RC=0
+GATE_PORTS {"ck": [1, false], "rst": [1, false], "lane": [null, true], "f_c": [null, true], "f_cr": [1, false], "t_s": [null, true], "t_o": [null, true]}
+GATE_PORT_RANGES {"lane": [0, 514], "f_c": [0, 65], "t_s": [0, 864], "t_o": [0, 353]}
+GATE_AREA    Chip area for module '\dsdv_bksel_q': 100573.733300
+GATE_KEEPWARN Warning: Selection "ot_sram_1r1w_128x256_m1_r2c2_p192_mir" did not match any module.
+GATE_KEEPWARN Warning: Selection "ot_sram_1r1w_32x128_m1_p192_rc" did not match any module.
+GATE_KEEP_NETLIST {"modules":["dsdv_bksel_q"],"cells":{"INVx1_ASAP7_75t_R":30075,"BUFx2_ASAP7_75t_R":42665,"OR2x2_ASAP7_75t_R":10401,"BUFx3_ASAP7_75t_R":739,"XOR2x2_ASAP7_75t_R":14810,"BUFx4f_ASAP7_75t_R":165,"NOR2x1_ASAP7_75t_R":12477,"XNOR2x2_ASAP7_75t_R":10874,"MAJx2_ASAP7_75t_R":11280,"XNOR2x1_ASAP7_75t_R":516,"AND2x2_ASAP7_75t_R":16789,"OR3x1_ASAP7_75t_R":7855,"AO221x1_ASAP7_75t_R":562,"BUFx6f_ASAP7_75t_R":29,"AO21x1_ASAP7_75t_R":21517,"NAND2x1_ASAP7_75t_R":11976,"NOR3x1_ASAP7_75t_R":426,"AO22x1_ASAP7_75t_R":808,"AND3x4_ASAP7_75t_R":257,"AOI221x1_ASAP7_75t_R":280,"AOI21x1_ASAP7_75t_R":4714,"OA21x2_ASAP7_75t_R":3199,"OAI21x1_ASAP7_75t_R":2052,"AND3x1_ASAP7_75t_R":5693,"OA211x2_ASAP7_75t_R":10817,"AND4x1_ASAP7_75t_R":396,"OR4x1_ASAP7_75t_R":1298,"OAI22x1_ASAP7_75t_R":3419,"OA33x2_ASAP7_75t_R":5,"OA22x2_ASAP7_75t_R":1329,"NAND3x1_ASAP7_75t_R":231,"NOR2x2_ASAP7_75t_R":2,"AOI211x1_ASAP7_75t_R":74,"AND3x2_ASAP7_75t_R":25,"AO31x2_ASAP7_75t_R":8,"AO33x2_ASAP7_75t_R":4,"OA31x2_ASAP7_75t_R":5,"OR2x4_ASAP7_75t_R":1,"NOR3x2_ASAP7_75t_R":59,"AOI22x1_ASAP7_75t_R":135,"OR5x1_ASAP7_75t_R":119,"AO32x1_ASAP7_75t_R":316,"AND5x1_ASAP7_75t_R":81,"OA222x2_ASAP7_75t_R":16,"AO211x2_ASAP7_75t_R":1,"AO21x2_ASAP7_75t_R":1,"AO222x2_ASAP7_75t_R":32,"MAJx3_ASAP7_75t_R":2,"OR4x2_ASAP7_75t_R":1,"XOR2x1_ASAP7_75t_R":1,"INVx2_ASAP7_75t_R":2,"AND4x2_ASAP7_75t_R":1,"BUFx4_ASAP7_75t_R":34,"BUFx5_ASAP7_75t_R":19,"TIEHIx1_ASAP7_75t_R":1,"TIELOx1_ASAP7_75t_R":1,"DFFASRHQNx1_ASAP7_75t_R":9967,"DFFHQNx1_ASAP7_75t_R":30528,"ot_sram_1r1w_128x256_m1_r2c2_p192_mir":6,"ot_sram_1r1w_32x128_m1_p192_rc":10}}
+
+
+
+FILE /srv/opentallas-scratch/claude/ref_gate/dsdv_sh_lk_s10b-20261019-122430/execution.log SIZE 2159157 MTIME 2026-10-19T13:30:20.998591-07:00
+GATE_FP fp_margin_lint: PASS actual pin geometry {"signal_clock_pins": 3107, "pin_rectangles": 3107, "pin_track_checked": 3107, "pin_track_inaccessible": 0, "pin_rectangles_outside": 0, "missing_geometry": 0}
+GATE_PIN_GEOMETRY_RC=0
+GATE_PIN_GEOMETRY_RESULT {"schema":"opentallas.fp_pin_geometry.v1","verdict":"PASS","fails":[],"metrics":{"signal_clock_pins":3107,"pin_rectangles":3107,"pin_track_checked":3107,"pin_track_inaccessible":0,"pin_rectangles_outside":0,"missing_geometry":0},"dump":"/srv/opentallas-scratch/claude/ref_gate/dsdv_sh_lk_s10b-20261019-122430/routes/gate/work/orfs/gate_dump.json","dump_sha256":"5075cb0e7c328430ce5a19e8fbd5cfb393b7b54d937e767a2a5e4afce2254d4d","validator_sha256":"5c0b112365aab653a6790d862cec90ff30a182ce0aeae58e80465b5b68c391a8"}
+GATE_LAYOUT_B64 floorplan eNq83dGuJTl2JuZ7P4XQ8KXQ2CTX4lr0XclSwy1YVULbMhqQBoV2S8IMpj0tjDQDDQy/u3ep4mQWvLPSOIP4zpWqqgUmkzv+IIPxxeL//Yt/+eM//eJ/+pNf/P0///1//f6f//33f/iPv/jT57/9h394/se/ffzy8Xj86Z9c/2c95i/jh38YJ374h3/3p//Dn/zin//ld//yz8//3//7F//4H/7wh+c/PH4Zc//pD//D33//u//8D797/qcza//yPP/b//mHP/7+P77915HV+5f945/29h+zf/iP+//5oek//v73/+Wffveffv/fvv/n3//7f/i/fviff/HHf/qH//Qvv/vDH373z7/8w+/+2x//y7/88tP/1y//6/jFjz36++9//w9/+MMPvfrbv/3F94895lrf//DX+vW3/8e/ju+/+d+++ev6vvJfvv/ND//x2+++/YtfXH/Jz3/d65/Gntc/zf [LONG LINE OMITTED: 369942 characters]
+GATE_TB textbook_lint: WARN dsdv_sh_lk cells 66,629 flops 13,832 depth 810.2 ps util 0.4424 reach 0.2 um (4.8 s)
+GATE_TB textbook_lint: INFO reset_landing {"max":2,"ports":[{"port":"rst_n","sinks":1,"flops":1,"macros":0}]}
+GATE_TB textbook_lint: INFO clock_roots max_root_sinks=13832 root=port:ck rule=PASS: 13,832 sinks on the largest root; no measured clock tree (no --cts gate evidence)
+GATE_TB textbook_lint: WARN logic_depth: reg->reg stage u_ot_pr_core.u_h.host.u_hi.u_eng.st_ph[0]$_DFF_PN0_ -> u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.p_wa[30]$_SDFFCE_PN0P_/D: ~810 ps estimated (23 logic levels) > 600 ps: pipeline / restructure the stage
+GATE_TB_RC=0
+GATE_PORTS {"ck": [1, false], "rst_n": [1, false], "f_host": [null, true], "t_host": [null, true], "f_lf": [null, true], "f_ks": [null, true], "t_kd": [null, true], "s_j": [null, true], "s_jd_w": [null, true], "s_jd_e": [null, true], "s_hw_w": [null, true], "s_hw_e": [null, true], "s_hc_w": [null, true], "s_hc_e": [null, true], "st_rg_w": [null, true], "st_rg_e": [null, true], "vi_s": [null, true], "vo_s": [null, true], "rn_o": [null, true], "rs_i": [null, true], "pw_o": [null, true], "pl_o": [null, true], "tw_o": [null, true], "cf_o": [null, true], "ks_o": [null, true], "kd_i": [null, true], "j_i": [null, true], "jd_o": [null, true], "sq_i": [null, true], "vf_i": [1, false]}
+GATE_PORT_RANGES {"f_host": [0, 514], "t_host": [0, 76], "f_lf": [0, 3], "f_ks": [0, 52], "t_kd": [0, 53], "s_j": [0, 32], "s_jd_w": [0, 1], "s_jd_e": [0, 1], "s_hw_w": [0, 291], "s_hw_e": [0, 291], "s_hc_w": [0, 8], "s_hc_e": [0, 8], "st_rg_w": [0, 1], "st_rg_e": [0, 1], "vi_s": [0, 275], "vo_s": [0, 275], "rn_o": [0, 275], "rs_i": [0, 275], "pw_o": [0, 35], "pl_o": [0, 8], "tw_o": [0, 193], "cf_o": [0, 266], "ks_o": [0, 52], "kd_i": [0, 53], "j_i": [0, 32], "jd_o": [0, 1], "sq_i": [0, 5]}
+GATE_AREA    Chip area for module '\dsdv_sh_lk': 24989.143400
+GATE_KEEPWARN Warning: Selection "ot_sram_1r1w2c_16x257_m1" did not match any module.
+GATE_KEEPWARN Warning: Selection "ot_sram_1r1w2c_16x289_m1" did not match any module.
+GATE_KEEP_NETLIST {"modules":["dsdv_sh_lk"],"cells":{"INVx1_ASAP7_75t_R":6728,"BUFx2_ASAP7_75t_R":5715,"XOR2x2_ASAP7_75t_R":365,"OR5x1_ASAP7_75t_R":35,"OR2x2_ASAP7_75t_R":529,"NOR2x1_ASAP7_75t_R":3838,"AND2x2_ASAP7_75t_R":3165,"AND5x1_ASAP7_75t_R":334,"OR3x1_ASAP7_75t_R":826,"AND3x1_ASAP7_75t_R":1150,"AO21x1_ASAP7_75t_R":4224,"OA21x2_ASAP7_75t_R":4626,"OR4x1_ASAP7_75t_R":378,"XNOR2x2_ASAP7_75t_R":801,"AND4x1_ASAP7_75t_R":1307,"NAND2x1_ASAP7_75t_R":5713,"AO221x1_ASAP7_75t_R":100,"NAND3x1_ASAP7_75t_R":8,"AO22x1_ASAP7_75t_R":136,"OA33x2_ASAP7_75t_R":88,"AO32x1_ASAP7_75t_R":331,"OA211x2_ASAP7_75t_R":1109,"AOI21x1_ASAP7_75t_R":3646,"OAI21x1_ASAP7_75t_R":530,"MAJx2_ASAP7_75t_R":336,"OA22x2_ASAP7_75t_R":5083,"OAI22x1_ASAP7_75t_R":1532,"AO33x2_ASAP7_75t_R":6,"AO31x2_ASAP7_75t_R":13,"NOR3x1_ASAP7_75t_R":4,"AO222x2_ASAP7_75t_R":37,"BUFx6f_ASAP7_75t_R":1,"AOI211x1_ASAP7_75t_R":20,"OA222x2_ASAP7_75t_R":16,"OA31x2_ASAP7_75t_R":10,"OA221x2_ASAP7_75t_R":2,"AOI22x1_ASAP7_75t_R":29,"AO211x2_ASAP7_75t_R":7,"AOI221x1_ASAP7_75t_R":5,"BUFx3_ASAP7_75t_R":7,"XNOR2x1_ASAP7_75t_R":1,"TIEHIx1_ASAP7_75t_R":1,"TIELOx1_ASAP7_75t_R":1,"DFFHQNx1_ASAP7_75t_R":12177,"DFFASRHQNx1_ASAP7_75t_R":1655,"ot_sram_1r1w2c_16x257_m1":2,"ot_sram_1r1w2c_16x289_m1":2}}
+GATE_CTS_RC=0
+GATE_GPLD global_placement -density 0.5 -pad_left 0 -pad_right 0 -routability_driven -timing_driven -force_center_initial_place -min_phi_coef 0.95 -max_phi_coef 1.05
+GATE_GPLD [INFO GPL-0023] Placement target density:       0.5000
+GATE_CK_RC=0
+GATE_CK ss insertion all 440.5..577.9 ps (spread 137.4), boundary mean 486.7; tt insertion all 338.3..462.2 ps (spread 123.9), boundary mean 381.0; ff insertion all 274.8..388.1 ps (spread 113.3), boundary mean 315.0; macro_clk flag False
+GATE_CK_DOMAIN {"source": "ck", "clock": "core_clk", "tt": {"clock_family": {"core_clk": 14338}, "boundary": {"n": 3088, "mean": 381.0, "min": 349.4, "max": 445.4}, "all": {"n": 14338, "mean": 365.4, "min": 338.3, "max": 462.2}, "errors": [], "macros": {"n": 8, "nets": 2, "max_per_net": 4, "reg_mean": 365.4, "max_slew": 103.2, "max_late": -23.8, "pins": [{"pin": "u_ot_pr_core.u_h.host.u_hi.g_hx_sram.u_hx.g_rsz2.u_mem0/wclk", "arr": 341.6, "slew": 103.2, "late": -23.8, "net": "clknet_1_1__leaf_ck"}, {"pin": "u_ot_pr_core.u_h.host.u_hi.g_hx_sram.u_hx.g_rsz2.u_mem0/rclk", "arr": 341.6, "slew": 103.2, "late": -23.8, "net": "clknet_1_1__leaf_ck"}, {"pin": "u_ot_pr_core.u_h.host.u_hi.g_hx_sram.u_hx.g_rsz2.u_mem1/wclk", "arr": 340.6, "slew": 100.4, "late": -24.8, "net": "clknet_1_1__leaf_ck"}, {"pin": "u_ot_pr_core.u_h.host.u_hi.g_hx_sram.u_hx.g_rsz2.u_mem1/rclk", "arr": 340.6, "slew": 100.4, "late": -24.8, "net": "clknet_1_1__leaf_ck"}, {"pin": "u_ot_pr_core.u_h.host.u_hi.g_ox_sram.u_ox.genblk1.g_rsz1.u_mem/wclk", "arr": 338.9, "slew": 96.4, "late": -26.5, "net": "clknet_1_0__leaf_ck"}, {"pin": "u_ot_pr_core.u_h.host.u_hi.g_ox_sram.u_ox.genblk1.g_rsz1.u_mem/rclk", "arr": 338.9, "slew": 96.4, "late": -26.5, "net": "clknet_1_0__leaf_ck"}, {"pin": "u_ot_pr_core.u_sd.u_mem/wclk", "arr": 340.2, "slew": 100.0, "late": -25.2, "net": "clknet_1_0__leaf_ck"}, {"pin": "u_ot_pr_core.u_sd.u_mem/rclk", "arr": 340.2, "slew": 100.0, "late": -25.2, "net": "clknet_1_0__leaf_ck"}]}, "macro_libs": 2, "child_flop": {"boundary": {"n": 3088, "mean": 381.0, "min": 349.4, "max": 445.4}, "all": {"n": 14338, "mean": 365.4, "min": 338.3, "max": 462.2}, "refs": {"ot_sram_1r1w2c_16x257_m1": {"basis": "no reference: raw pin arrival", "ref_ps": 0.0, "pins": 2}, "ot_sram_1r1w2c_16x289_m1": {"basis": "no reference: raw pin arrival", "ref_ps": 0.0, "pins": 2}}, "soft": {"boundary": {"n": 3088, "mean": 381.0, "min": 349.4, "max": 445.4}, "all": {"n": 14334, "mean": 365.4, "min": 338.3, "max": 462.2}}}}, "ff": {"boundary": {"n": 3088, "mean": 315.0, "min": 286.0, "max": 372.6}, "all": {"n": 14338, "mean": 300.5, "min": 274.8, "max": 388.1}, "child_flop": {"boundary": {"n": 3088, "mean": 315.0, "min": 286.0, "max": 372.6}, "all": {"n": 14338, "mean": 300.5, "min": 274.8, "max": 388.1}, "refs": {"ot_sram_1r1w2c_16x257_m1": {"basis": "no reference: raw pin arrival", "ref_ps": 0.0, "pins": 2}, "ot_sram_1r1w2c_16x289_m1": {"basis": "no reference: raw pin arrival", "ref_ps": 0.0, "pins": 2}}, "soft": {"boundary": {"n": 3088, "mean": 315.0, "min": 286.0, "max": 372.6}, "all": {"n": 14334, "mean": 300.5, "min": 274.8, "max": 388.1}}}, "macros": {"n": 8, "nets": 2, "max_per_net": 4, "reg_mean": 300.5, "max_slew": 108.6, "max_late": -20.8, "pins": [{"pin": "u_ot_pr_core.u_h.host.u_hi.g_hx_sram.u_hx.g_rsz2.u_mem0/wclk", "arr": 279.7, "slew": 108.5, "late": -20.8, "net": "clknet_1_1__leaf_ck"}, {"pin": "u_ot_pr_core.u_h.host.u_hi.g_hx_sram.u_hx.g_rsz2.u_mem0/rclk", "arr": 279.7, "slew": 108.6, "late": -20.8, "net": "clknet_1_1__leaf_ck"}, {"pin": "u_ot_pr_core.u_h.host.u_hi.g_hx_sram.u_hx.g_rsz2.u_mem1/wclk", "arr": 278.6, "slew": 105.4, "late": -21.9, "net": "clknet_1_1__leaf_ck"}, {"pin": "u_ot_pr_core.u_h.host.u_hi.g_hx_sram.u_hx.g_rsz2.u_mem1/rclk", "arr": 278.6, "slew": 105.4, "late": -21.9, "net": "clknet_1_1__leaf_ck"}, {"pin": "u_ot_pr_core.u_h.host.u_hi.g_ox_sram.u_ox.genblk1.g_rsz1.u_mem/wclk", "arr": 276.9, "slew": 101.3, "late": -23.6, "net": "clknet_1_0__leaf_ck"}, {"pin": "u_ot_pr_core.u_h.host.u_hi.g_ox_sram.u_ox.genblk1.g_rsz1.u_mem/rclk", "arr": 276.9, "slew": 101.3, "late": -23.6, "net": "clknet_1_0__leaf_ck"}, {"pin": "u_ot_pr_core.u_sd.u_mem/wclk", "arr": 278.3, "slew": 105.3, "late": -22.2, "net": "clknet_1_0__leaf_ck"}, {"pin": "u_ot_pr_core.u_sd.u_mem/rclk", "arr": 278.3, "slew": 105.3, "late": -22.2, "net": "clknet_1_0__leaf_ck"}]}}}
+GATE_PC constraints signoff /src/physical/ref_tile/dsdv_sh_lk_s10b/signoff.sdc (TT placement RC; diagnostic)
+GATE_PC reg->reg      598 paths, worst slack -88.3 ps (e.g. u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.sp_iss[29]$_DFFE_PN0P_/D)
+GATE_PC reg->macro      2 paths, worst slack 1.6 ps (e.g. u_ot_pr_core.u_h.host.u_hi.g_hx_sram.u_hx.g_rsz2.u_mem1/r_ce_in)
+GATE_PC setup WNS -8.829093012252542e-11 hold WNS 3.7938319152885924e-11
+GATE_XCLK_SCOPE clocks=1 names=core_clk exceptions=1
+GATE_XCLK_DONE pairs=0
+GATE_LAYOUT_B64 placed eNqcvd2udTtuJXafpzAKuTQ29P+TO3faRgwEDSNJ58ZufDipOkYX+qRPoarc5UYj7x5yrimKmuLSHstX3mZ9h1OLkiiKGhz8H7/5869/+M3/8le/+d2ffvfffvzpP//45b/85q/p//v9zyT8R/flnPvrv7r/T3ThK/Efvif+4z/99f/0V7/5059/+vOf6N/+j9/88+9/+YX+cF+pxL/m/+F3P376488/kcj7FP0XC/+fX3797X8Rca6tfLXX54YwNxaW/491//rb3/7LH376r7/97z/+9Nv//PP/y//zb379w8//9c8//fLLT3/6+uWn//7rv/z5S/7V13/zv3kN6Xc/fvvzL7/wsP7xH3/zwxUfYvzBv+vv/8P//a/+x9/8n3/zD/VHzX/+8X+w8B/+97/5X//239NfsX1F+l3XT4z5q/nX3yTOLtzi8uUai/nH/9VQngDl9cu3W0l1X7G+dFf6YhJpS [LONG LINE OMITTED: 1779863 characters]
+
+
+
+FILE /srv/opentallas-scratch/claude/ref_gate/s81sf_bfcol_c199rq-20261019-114903/execution.log SIZE 5994788 MTIME 2026-10-19T12:03:41.331434-07:00
+GATE_SOURCE_ARCHIVE_SHA256=4883b4525961d4c5d39cdc15087aed4e407f093bd61257b77c41a24a793a5cfc
+GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=["openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29"]
+GATE_TOOL_CTS_MACRO_CLUSTER=
+GATE_FLOW_RC=0 GATE_FLOW_S=723
+GATE_IOP_RC=0
+GATE_DUMP_RC=0
+GATE_FP fp_margin_lint: PASS actual pin geometry {"signal_clock_pins": 842, "pin_rectangles": 842, "pin_track_checked": 842, "pin_track_inaccessible": 0, "pin_rectangles_outside": 0, "missing_geometry": 0}
+GATE_PIN_GEOMETRY_RC=0
+GATE_PIN_GEOMETRY_RESULT {"schema":"opentallas.fp_pin_geometry.v1","verdict":"PASS","fails":[],"metrics":{"signal_clock_pins":842,"pin_rectangles":842,"pin_track_checked":842,"pin_track_inaccessible":0,"pin_rectangles_outside":0,"missing_geometry":0},"dump":"/srv/opentallas-scratch/claude/ref_gate/s81sf_bfcol_c199rq-20261019-114903/routes/gate/work/orfs/gate_dump.json","dump_sha256":"93fc03b02fd4c4c0bc0aa7b08adde73a07c6a5f063c66233058e3e38502a085b","validator_sha256":"5c0b112365aab653a6790d862cec90ff30a182ce0aeae58e80465b5b68c391a8"}
+GATE_LAYOUT_B64 floorplan eNqcfVuvdUly1Du/YtTPo6O6X3izAUtICFkg82KhVrs9FhaNx2LGli2L/05F7crMtSrPMGGe+Mhp565Tqy5ZmZER//LD73/79z/821/98Nvf//iPJf74V3/z48+//eWHX//qh7/+298s+1+GrxDCr391/p+S0+cfKTb847//+t/86off/f6n3/9u/bf/8sPf/O0vv6x/hK+a2q/xP/z1jz/979/8tEw55/V/0Zfxr3757c//U8yx9t6+8ufnxDjXf7t+5v/A929//vkf/v6nv/v5n3/83c//4zf/66c91L//zd/9/qdffvnpd1+//PTPv/2H33/pf/X1j/GHz5D++seff/PLLxjWX/7lDz/GUXtsP+Lv+o//+b/9U/zxT/7rn/x5/7HX3//4X2D88//0J//uP/z7H/B3ha+Ww+dvnF8jxPPnhq8+0/53XnPR4/njfyXOO+G8hPoVatleWv4qM38mdZ [LONG LINE OMITTED: 5988306 characters]
+GATE_TB textbook_lint: WARN ot_v41_bf_col cells 295,880 flops 52,472 depth 506.8 ps util 0.5423 reach 0.0 um (13.8 s)
+GATE_TB textbook_lint: INFO reset_landing {"max":2,"ports":[{"port":"rst_n_pin","sinks":1,"flops":1,"macros":0}]}
+GATE_TB textbook_lint: INFO clock_roots max_root_sinks=52474 root=port:clk rule=PASS: 52,474 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 52,474 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate
+GATE_TB textbook_lint: WARN clock_domain: clock root port clk: 52,472 flops > 15,000 on one root (+0 ICGs, 2 macro clock pins; e.g. rst_n_pin__ot_rl0$_DFF_P_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine
+GATE_TB textbook_lint: WARN clock_guidance: clock root port:clk: 52,474 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 52,474 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate
+GATE_TB_RC=0
+GATE_PORTS {"clk": [1, false], "rst_n_pin": [1, false], "ze_d": [1, false], "issue": [1, false], "a_ctr": [null, true], "i1_v": [1, false], "i1_bk": [1, false], "i1_bf": [1, false], "i1_t": [null, true], "i2x_q0": [null, true], "i2x_e0": [null, true], "i2x_q1": [null, true], "i2x_e1": [null, true], "so_row": [null, true], "so_idx": [null, true], "so_n": [null, true], "pv": [1, false], "pval": [null, true], "prow": [null, true], "pseg": [null, true], "pnseg": [null, true], "perr": [1, false], "ppos": [null, true], "qy_bkf": [1, false]}
+GATE_PORT_RANGES {"a_ctr": [0, 13], "i1_t": [0, 16], "i2x_q0": [0, 255], "i2x_e0": [0, 9], "i2x_q1": [0, 255], "i2x_e1": [0, 9], "so_row": [0, 127], "so_idx": [0, 39], "so_n": [0, 39], "pval": [0, 31], "prow": [0, 15], "pseg": [0, 4], "pnseg": [0, 4], "ppos": [0, 2]}
+GATE_AREA    Chip area for top module '\ot_v41_bf_col': 52834.012940
+GATE_KEEPWARN Warning: Selection "ot_rom_4096x274_m8" did not match any module.
+GATE_KEEP_NETLIST {"modules":["$paramod$21a88344d105a8503b011471c67d379b7b64f211\\ot_v41_kreg","$paramod$6e7cc5d7dc2ca62d021eef389fc4a101a64ba3a5\\ot_v41_kreg","$paramod$76a541ab0706d204831d5b54b222b5e863826b60\\ot_v41_kreg","$paramod$91e7df627b6cb355816018993d5fc500f1005aed\\ot_v41_kreg","$paramod$958d2d9140b4f963ec41563df8e65b399d784ca6\\ot_v41_kreg","$paramod$9846f62cc2a11dc82dff90ae112799a86191f9d1\\ot_v41_kreg","$paramod$cb344c00d767e0cf72978deb90a560a60971055d\\ot_v41_kreg","$paramod$d41602f9b2cf0a8111e2817a76f98643b5b8faaa\\ot_v41_kreg","$paramod$f329e0165bff4ba89f9002f3e73423717d39469b\\ot_v41_kreg","$paramod\\ot_v41_kreg\\W=s32'00000000000000000000000000000010","$paramod\\ot_v41_kreg\\W=s32'00000000000000000000000000010011","$paramod\\ot_v41_kreg\\W=s32'00000000000000000000000000100000","$paramod\\ot_v41_kreg\\W=s32'00000000000000000000001000010100","ot_v41_bf_col","ot_v41_rst_copy"],"cells":{"INVx1_ASAP7_75t_R":41248,"BUFx2_ASAP7_75t_R":40461,"OA21x2_ASAP7_75t_R":14468,"NAND2x1_ASAP7_75t_R":16246,"BUFx3_ASAP7_75t_R":443,"BUFx6f_ASAP7_75t_R":34,"NOR2x1_ASAP7_75t_R":10631,"AND3x1_ASAP7_75t_R":6880,"OR2x2_ASAP7_75t_R":4593,"XNOR2x2_ASAP7_75t_R":12237,"OA222x2_ASAP7_75t_R":122,"OA211x2_ASAP7_75t_R":7621,"AND4x1_ASAP7_75t_R":1833,"OA22x2_ASAP7_75t_R":777,"OR4x1_ASAP7_75t_R":1509,"AO21x1_ASAP7_75t_R":27968,"OAI21x1_ASAP7_75t_R":2124,"AND2x2_ASAP7_75t_R":25813,"AOI21x1_ASAP7_75t_R":3472,"OR3x1_ASAP7_75t_R":3595,"AO22x1_ASAP7_75t_R":1002,"AO222x2_ASAP7_75t_R":72,"MAJx2_ASAP7_75t_R":7805,"XOR2x2_ASAP7_75t_R":3589,"AO31x2_ASAP7_75t_R":28,"AO32x1_ASAP7_75t_R":1524,"AO221x1_ASAP7_75t_R":562,"AND5x1_ASAP7_75t_R":756,"AOI22x1_ASAP7_75t_R":318,"AO211x2_ASAP7_75t_R":38,"NAND3x1_ASAP7_75t_R":106,"OAI22x1_ASAP7_75t_R":3053,"OA33x2_ASAP7_75t_R":24,"XNOR2x1_ASAP7_75t_R":15,"AOI211x1_ASAP7_75t_R":170,"NOR2x2_ASAP7_75t_R":17,"OR5x1_ASAP7_75t_R":220,"INVx4_ASAP7_75t_R":2,"BUFx4f_ASAP7_75t_R":27,"INVx2_ASAP7_75t_R":48,"OA31x2_ASAP7_75t_R":24,"NAND2x2_ASAP7_75t_R":5,"INVx3_ASAP7_75t_R":1290,"AOI221x1_ASAP7_75t_R":73,"AO21x2_ASAP7_75t_R":9,"NOR3x1_ASAP7_75t_R":45,"OA221x2_ASAP7_75t_R":2,"AND4x2_ASAP7_75t_R":1,"XOR2x1_ASAP7_75t_R":17,"AO33x2_ASAP7_75t_R":18,"AND3x2_ASAP7_75t_R":22,"AND2x4_ASAP7_75t_R":176,"AO22x2_ASAP7_75t_R":2,"BUFx12f_ASAP7_75t_R":1,"AND3x4_ASAP7_75t_R":14,"AND5x2_ASAP7_75t_R":1,"TIEHIx1_ASAP7_75t_R":254,"TIELOx1_ASAP7_75t_R":1,"DFFHQNx1_ASAP7_75t_R":49374,"DFFASRHQNx1_ASAP7_75t_R":3098,"$paramod$cb344c00d767e0cf72978deb90a560a60971055d\\ot_v41_kreg":76,"ot_v41_rst_copy":173,"$paramod\\ot_v41_kreg\\W=s32'00000000000000000000000000000010":8,"$paramod\\ot_v41_kreg\\W=s32'00000000000000000000000000010011":2,"$paramod$d41602f9b2cf0a8111e2817a76f98643b5b8faaa\\ot_v41_kreg":4,"$paramod\\ot_v41_kreg\\W=s32'00000000000000000000001000010100":1,"$paramod$76a541ab0706d204831d5b54b222b5e863826b60\\ot_v41_kreg":1,"$paramod$f329e0165bff4ba89f9002f3e73423717d39469b\\ot_v41_kreg":1,"$paramod$958d2d9140b4f963ec41563df8e65b399d784ca6\\ot_v41_kreg":1,"$paramod$9846f62cc2a11dc82dff90ae112799a86191f9d1\\ot_v41_kreg":2,"$paramod$91e7df627b6cb355816018993d5fc500f1005aed\\ot_v41_kreg":1,"$paramod$21a88344d105a8503b011471c67d379b7b64f211\\ot_v41_kreg":1,"$paramod$6e7cc5d7dc2ca62d021eef389fc4a101a64ba3a5\\ot_v41_kreg":1,"ot_rom_4096x274_m8":2,"$paramod\\ot_v41_kreg\\W=s32'00000000000000000000000000100000":4}}
+
+

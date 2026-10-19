@@ -1,0 +1,39 @@
+FILE /srv/opentallas-scratch/claude/ref_gate/s81dvbk_sq_succ-20261019-113938/routes/gate/work/orfs/config.mk
+export SDC_FILE = /work/constraint.sdc
+export REPORT_CLOCK_SKEW = 1
+export CORNER = WC
+export OT_MM_FF_SDC = /src/physical/ref_tile/s81dvbk_sq_succ/signoff.sdc
+export OT_PIN_REGS_CLOCK = ck
+export QDM_SDC_DIR = /src/physical/qwen_die_masters
+export SDC_FILE = /src/physical/ref_tile/s81dvbk_sq_succ/clock.sdc
+override export WC_NLDM_LIB_FILES = $(TC_NLDM_LIB_FILES)
+export CORNERS = WC BC
+export WC_LIB_FILES = $(WC_NLDM_LIB_FILES) /src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir/ot_sram_1r1w_128x256_m1_r2c2_p192_mir_tt.lib /src/physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc/ot_sram_1r1w_32x128_m1_p192_rc_tt.lib
+export BC_LIB_FILES = $(BC_NLDM_LIB_FILES) /src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir/ot_sram_1r1w_128x256_m1_r2c2_p192_mir_ff.lib /src/physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc/ot_sram_1r1w_32x128_m1_p192_rc_ff.lib
+export ADDITIONAL_LIBS = /src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir/ot_sram_1r1w_128x256_m1_r2c2_p192_mir_tt.lib /src/physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc/ot_sram_1r1w_32x128_m1_p192_rc_tt.lib
+FILE /srv/opentallas-scratch/claude/ref_gate/dsdv_sh_lk_s10b-20261019-122430/routes/gate/work/orfs/config.mk
+export SDC_FILE = /work/constraint.sdc
+export REPORT_CLOCK_SKEW = 1
+export CORNER = WC
+export OT_MM_FF_SDC = /src/physical/ref_tile/dsdv_sh_lk_s10b/signoff.sdc
+export OT_PIN_REGS_CLOCK = ck
+export QDM_SDC_DIR = /src/physical/qwen_die_masters
+export SDC_FILE = /src/physical/ref_tile/dsdv_sh_lk_s10b/clock.sdc
+override export WC_NLDM_LIB_FILES = $(TC_NLDM_LIB_FILES)
+export CORNERS = WC BC
+export WC_LIB_FILES = $(WC_NLDM_LIB_FILES) /src/physical/asap7_memory_macros_v2/ot_sram_1r1w2c_16x257_m1/ot_sram_1r1w2c_16x257_m1_tt.lib /src/physical/asap7_memory_macros_v2/ot_sram_1r1w2c_16x289_m1/ot_sram_1r1w2c_16x289_m1_tt.lib
+export BC_LIB_FILES = $(BC_NLDM_LIB_FILES) /src/physical/asap7_memory_macros_v2/ot_sram_1r1w2c_16x257_m1/ot_sram_1r1w2c_16x257_m1_ff.lib /src/physical/asap7_memory_macros_v2/ot_sram_1r1w2c_16x289_m1/ot_sram_1r1w2c_16x289_m1_ff.lib
+export ADDITIONAL_LIBS = /src/physical/asap7_memory_macros_v2/ot_sram_1r1w2c_16x257_m1/ot_sram_1r1w2c_16x257_m1_tt.lib /src/physical/asap7_memory_macros_v2/ot_sram_1r1w2c_16x289_m1/ot_sram_1r1w2c_16x289_m1_tt.lib
+FILE /srv/opentallas-scratch/claude/ref_gate/s81sf_bfcol_c199rq-20261019-114903/routes/gate/work/orfs/config.mk
+export SDC_FILE = /work/constraint.sdc
+export REPORT_CLOCK_SKEW = 1
+export CORNER = WC
+export OT_MM_FF_SDC = /src/physical/ref_tile/s81sf_bfcol_c199rq/signoff.sdc
+export OT_PIN_REGS_CLOCK = clk
+export QDM_SDC_DIR = /src/physical/qwen_die_masters
+export SDC_FILE = /src/physical/ref_tile/s81sf_bfcol_c199rq/clock.sdc
+override export WC_NLDM_LIB_FILES = $(TC_NLDM_LIB_FILES)
+export CORNERS = WC BC
+export WC_LIB_FILES = $(WC_NLDM_LIB_FILES) /src/physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rom_4096x274_m8_tt.lib
+export BC_LIB_FILES = $(BC_NLDM_LIB_FILES) /src/physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rom_4096x274_m8_ff.lib
+export ADDITIONAL_LIBS = /src/physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rom_4096x274_m8_tt.lib

@@ -1,0 +1,33 @@
+TIME 2026-10-19T15:09:29.482631-07:00
+RUN /srv/opentallas-scratch/claude/ref_gate/dsdv_sh_lk_s10-20261019-115854
+FILE /srv/opentallas-scratch/claude/ref_gate/dsdv_sh_lk_s10-20261019-115854/routes/gate/work/orfs/logs/asap7/opentallas_dsdv_sh_lk_asap7_ref_gate/base/5_1_grt.tmp.log SIZE 219943 MTIME 2026-10-19T14:27:46.568601-07:00
+        5 |         16 |         4 |        12
+        6 |         23 |         5 |        18
+        7 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 7.
+[INFO DPL-0500] Runtime: 2.59s
+Placement Analysis
+---------------------------------
+total displacement       3250.0 u
+average displacement        0.0 u
+max displacement            5.6 u
+original HPWL          937397.4 u
+legalized HPWL         939531.3 u
+delta HPWL                    0 %
+
+check_placement -verbose
+global_route -end_incremental -resistance_aware -congestion_report_file /work/reports/asap7/opentallas_dsdv_sh_lk_asap7_ref_gate/base/congestion_post_repair_timing.rpt
+[WARNING GRT-0297] Disabling NDR for 1 congested nets
+[WARNING GRT-0273] Disabled NDR (to reduce congestion) for net: clknet_2_1_0_ck_regs
+[WARNING GRT-0297] Disabling NDR for 1 congested nets
+[WARNING GRT-0273] Disabled NDR (to reduce congestion) for net: clknet_1_1_0_ck_regs
+
+SHA256 /srv/opentallas-scratch/claude/ref_gate/dsdv_sh_lk_s10-20261019-115854/execution.log d7f12cd7475298842bc2678db3fd0a92e5802873d14c75fdc2c4225e57227040
+GATE_SOURCE_ARCHIVE_SHA256=a5bc886ad0136b86f7f0890265fab0b13283d88e4bda654038a00b4b13af4404
+GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=["openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29"]
+GATE_CTS_RC=0
+GATE_CK_RC=0
+SHA256 /srv/opentallas-scratch/claude/ref_gate/dsdv_sh_lk_s10-20261019-115854/ck.json 2fe20b877330253423d5a60b59e6417851b060fc87de051bd095185ca0ace88c
+CLOCK tt all {'n': 13931, 'mean': 363.6, 'min': 338.2, 'max': 416.3} spread 78.1 soft {'n': 13927, 'mean': 363.6, 'min': 341.9, 'max': 416.3} boundary {'n': 3088, 'mean': 376.8, 'min': 350.5, 'max': 416.3} refs {'ot_sram_1r1w2c_16x257_m1': {'basis': 'no reference: raw pin arrival', 'ref_ps': 0.0, 'pins': 2}, 'ot_sram_1r1w2c_16x289_m1': {'basis': 'no reference: raw pin arrival', 'ref_ps': 0.0, 'pins': 2}}
+CLOCK ff all {'n': 13931, 'mean': 298.9, 'min': 276.1, 'max': 346.4} spread 70.3 soft {'n': 13927, 'mean': 298.9, 'min': 278.7, 'max': 346.4} boundary {'n': 3088, 'mean': 310.8, 'min': 287.1, 'max': 346.4} refs {'ot_sram_1r1w2c_16x257_m1': {'basis': 'no reference: raw pin arrival', 'ref_ps': 0.0, 'pins': 2}, 'ot_sram_1r1w2c_16x289_m1': {'basis': 'no reference: raw pin arrival', 'ref_ps': 0.0, 'pins': 2}}
+CLOCK ss all {'n': 13931, 'mean': 468.0, 'min': 444.3, 'max': 532.9} spread 88.6 soft {'n': 13927, 'mean': 468.0, 'min': 444.3, 'max': 532.9} boundary {'n': 3088, 'mean': 482.5, 'min': 452.7, 'max': 532.6} refs {'ot_sram_1r1w2c_16x257_m1': {'basis': 'no reference: raw pin arrival', 'ref_ps': 0.0, 'pins': 2}, 'ot_sram_1r1w2c_16x289_m1': {'basis': 'no reference: raw pin arrival', 'ref_ps': 0.0, 'pins': 2}}

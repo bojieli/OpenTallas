@@ -1,0 +1,13 @@
+FILE /srv/opentallas-scratch/claude/ref_gate/dsdv_sh_lk_s10-20261019-115854/routes/gate/work/orfs/config.mk
+export SDC_FILE = /work/constraint.sdc
+export REPORT_CLOCK_SKEW = 1
+export CORNER = WC
+export OT_MM_FF_SDC = /src/physical/ref_tile/dsdv_sh_lk_s10/signoff.sdc
+export OT_PIN_REGS_CLOCK = ck
+export QDM_SDC_DIR = /src/physical/qwen_die_masters
+export SDC_FILE = /src/physical/ref_tile/dsdv_sh_lk_s10/clock.sdc
+override export WC_NLDM_LIB_FILES = $(TC_NLDM_LIB_FILES)
+export CORNERS = WC BC
+export WC_LIB_FILES = $(WC_NLDM_LIB_FILES) /src/physical/asap7_memory_macros_v2/ot_sram_1r1w2c_16x257_m1/ot_sram_1r1w2c_16x257_m1_tt.lib /src/physical/asap7_memory_macros_v2/ot_sram_1r1w2c_16x289_m1/ot_sram_1r1w2c_16x289_m1_tt.lib
+export BC_LIB_FILES = $(BC_NLDM_LIB_FILES) /src/physical/asap7_memory_macros_v2/ot_sram_1r1w2c_16x257_m1/ot_sram_1r1w2c_16x257_m1_ff.lib /src/physical/asap7_memory_macros_v2/ot_sram_1r1w2c_16x289_m1/ot_sram_1r1w2c_16x289_m1_ff.lib
+export ADDITIONAL_LIBS = /src/physical/asap7_memory_macros_v2/ot_sram_1r1w2c_16x257_m1/ot_sram_1r1w2c_16x257_m1_tt.lib /src/physical/asap7_memory_macros_v2/ot_sram_1r1w2c_16x289_m1/ot_sram_1r1w2c_16x289_m1_tt.lib

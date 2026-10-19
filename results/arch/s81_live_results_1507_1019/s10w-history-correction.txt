@@ -1,0 +1,31 @@
+FILE /srv/opentallas-scratch/claude/ref_gate/dsdv_sh_lk_s10w-20261019-115854/routes/gate/work/orfs/logs/asap7/opentallas_dsdv_sh_lk_asap7_ref_gate/base/5_1_grt.log SHA 07cfd545537c063f7d616658bcb8c401b4a9baf622ea7b69165c2306bca10300
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /src/physical/asap7_memory_macros_v2/ot_sram_1r1w2c_16x257_m1/ot_sram_1r1w2c_16x257_m1_tt.lib
+read_liberty /src/physical/asap7_memory_macros_v2/ot_sram_1r1w2c_16x289_m1/ot_sram_1r1w2c_16x289_m1_tt.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty /src/physical/asap7_memory_macros_v2/ot_sram_1r1w2c_16x257_m1/ot_sram_1r1w2c_16x257_m1_ff.lib
+read_liberty /src/physical/asap7_memory_macros_v2/ot_sram_1r1w2c_16x289_m1/ot_sram_1r1w2c_16x289_m1_ff.lib
+FILE /srv/opentallas-scratch/claude/ref_gate/dsdv_sh_lk_s10w-20261019-115854/routes/gate/work/orfs/logs/asap7/opentallas_dsdv_sh_lk_asap7_ref_gate/base/5_1_grt.json SHA ffdff8719cf5e6babac836c15fc05b50d9330f35ae3cd788d981651713bccf5d
+{'globalroute__timing__setup__ws': -135.347, 'globalroute__timing__hold__ws': -45.0976}
+FILE /srv/opentallas-scratch/claude/ref_gate/dsdv_sh_lk_s10w-20261019-115854/execution.log SHA d1b04e2be611722c41c1156d99885454484aa448dd7d9959938f051161df16be
+GATE_SOURCE_ARCHIVE_SHA256=36b2f4a76535094f784228602fa7fe8c4abdb1f235fa8d9358a147731ffb507e
+GATE_PC constraints signoff /src/physical/ref_tile/dsdv_sh_lk_s10w/signoff.sdc (TT placement RC; diagnostic)
+GATE_PC reg->reg      598 paths, worst slack -52.7 ps (e.g. u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.sp_iss[30]$_DFFE_PN0P_/D)
+GATE_PC reg->macro      2 paths, worst slack 73.8 ps (e.g. u_ot_pr_core.u_h.host.u_hi.g_hx_sram.u_hx.g_rsz2.u_mem1/r_ce_in)
+GATE_PC setup WNS -5.270306413507342e-11 hold WNS 3.192068831481265e-11
+GATE_GRT_RC=0 GATE_GRT_S=1308
+GATE_DONE
+EXISTING_NATIVE_PG_CANDIDATES
+*native* []
+*pg* []
+*elect* []
+*verdict* []
+*result* []

@@ -1,0 +1,1106 @@
+TIME 2026-10-19T15:09:11.474066-07:00
+    PID    PPID     ELAPSED %CPU   RSS COMMAND
+  55684   55683    01:38:48  157 2457360 /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 8 -no_splash /OpenROAD-flow-scripts/flow/scripts/global_route.tcl -metrics /work/logs/asap7/opentallas_dsdv_sh_lk_asap7_ref_gate/base/5_1_grt.json
+ 120653  120652       39:59 99.9 723532 /srv/opentallas-scratch/claude/mu-die-s81-hop/out_base/obj/sim +IN=/srv/opentallas-scratch/claude/mu-die-s81-hop/R/R_cut_7_L0_hop012_wrongcopy/in.txt +OUT=/srv/opentallas-scratch/claude/mu-die-s81-hop/R/R_cut_7_L0_hop012_wrongcopy/out.txt +NCYC=64286 +TRACE=/srv/opentallas-scratch/claude/mu-die-s81-hop/out_base_wrongcopy/trace.txt +EP=/srv/opentallas-scratch/claude/mu-die-s81-hop/out_base_wrongcopy/ep.txt
+2329250 2329248    08:18:25  108 48048792 openroad -threads 16 -no_init -exit /work/run.tcl
+3654923 3654922    03:20:19  110 48036204 openroad -threads 16 -no_init -exit /work/run.tcl
+3743357 3743354    03:14:36  103 32300448 /OpenROAD-flow-scripts/tools/install/yosys/bin/yosys -v 3 -c /OpenROAD-flow-scripts/flow/scripts/synth.tcl
+3743383 3743382    03:14:36  102 31766340 /OpenROAD-flow-scripts/tools/install/yosys/bin/yosys -v 3 -c /OpenROAD-flow-scripts/flow/scripts/synth.tcl
+4043172 4043171    02:44:31  103 3549656 /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 16 -no_splash /OpenROAD-flow-scripts/flow/scripts/cts.tcl -metrics /work/logs/asap7/opentallas_ot_v41_bf_col_asap7_ref_gate/base/4_1_cts.json
+4089104 4089101    02:42:40  114 3859556 /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 16 -no_splash /OpenROAD-flow-scripts/flow/scripts/cts.tcl -metrics /work/logs/asap7/opentallas_dsdv_bksel_q_asap7_ref_gate/base/4_1_cts.json
+
+    PID    PPID     ELAPSED %CPU   RSS COMMAND
+
+    PID    PPID     ELAPSED %CPU   RSS COMMAND
+
+RUN /srv/opentallas-scratch/claude/ref_gate/s81dvbk_sq_succ-20261019-113938
+JSON /srv/opentallas-scratch/claude/ref_gate/s81dvbk_sq_succ-20261019-113938/pin_geometry.json {
+ "schema": "opentallas.fp_pin_geometry.v1",
+ "verdict": "PASS",
+ "fails": [],
+ "metrics": {
+  "signal_clock_pins": 1803,
+  "pin_rectangles": 1803,
+  "pin_track_checked": 1803,
+  "pin_track_inaccessible": 0,
+  "pin_rectangles_outside": 0,
+  "missing_geometry": 0
+ },
+ "dump": "/srv/opentallas-scratch/claude/ref_gate/s81dvbk_sq_succ-20261019-113938/routes/gate/work/orfs/gate_dump.json",
+ "dump_sha256": "ea5fe5cb423de7b9587299756330096fd25c9a3ae2addb164902bc5bfa1b33a7",
+ "validator_sha256": "5c0b112365aab653a6790d862cec90ff30a182ce0aeae58e80465b5b68c391a8"
+}
+
+JSON /srv/opentallas-scratch/claude/ref_gate/s81dvbk_sq_succ-20261019-113938/textbook.json {
+ "cells": 269106,
+ "flops": 40495,
+ "icgs": 0,
+ "macros": 16,
+ "findings": {
+  "clock_domain": [
+   "clock root port ck: 40,495 flops > 15,000 on one root (+0 ICGs, 16 macro clock pins; e.g. ot_rrs__u_ot_pr_core_u_q_u_q_quarter_rst__ot_rlv__c0$_DFF_PN0_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine"
+  ],
+  "high_fanout": [
+   "reset u_ot_pr_core.u_q.u_q.u_s.u_ps.g_rst[0].qf[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R): 1,600 loads (1 flops, e.g. u_ot_pr_core.u_q.u_q.u_s.u_ps.g_rst[1].qf[2]$_DFF_P_) > 256: register it and replicate per region (rtl/lib/ot_rst_relay.sv: one relay copy per region)",
+   "reset u_ot_pr_core.u_q.u_q.u_s.u_pi.g_rst[0].qf[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R): 1,600 loads (1 flops, e.g. u_ot_pr_core.u_q.u_q.u_s.u_pi.g_rst[1].qf[2]$_DFF_P_) > 256: register it and replicate per region (rtl/lib/ot_rst_relay.sv: one relay copy per region)",
+   "reset u_ot_pr_core.u_q.u_q.u_s.u_ps.g_rst[0].g_r1.u_r1.sh$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R): 1,413 loads (1 flops, e.g. u_ot_pr_core.u_q.u_q.u_s.u_ps.g_rst[0].qf[1]$_DFF_P_) > 256: register it and replicate per region (rtl/lib/ot_rst_relay.sv: one relay copy per region)",
+   "reset u_ot_pr_core.u_q.u_q.u_s.u_pi.g_rst[0].g_r1.u_r1.sh$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R): 1,413 loads (1 flops, e.g. u_ot_pr_core.u_q.u_q.u_s.u_pi.g_rst[0].qf[1]$_DFF_P_) > 256: register it and replicate per region (rtl/lib/ot_rst_relay.sv: one relay copy per region)",
+   "reset u_ot_pr_core.u_q.u_q.u_s.u_ps.g_rst[0].qf[3]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R): 1,410 loads (1 flops, e.g. u_ot_pr_core.u_q.u_q.u_s.u_ps.g_rst[1].qf[3]$_DFF_P_) > 256: register it and replicate per region (rtl/lib/ot_rst_relay.sv: one relay copy per region)",
+   "reset u_ot_pr_core.u_q.u_q.u_s.u_pi.g_rst[0].qf[3]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R): 1,410 loads (1 flops, e.g. u_ot_pr_core.u_q.u_q.u_s.u_pi.g_rst[1].qf[3]$_DFF_P_) > 256: register it and replicate per region (rtl/lib/ot_rst_relay.sv: one relay copy per region)",
+   "reset u_ot_pr_core.u_q.u_q.u_s.u_ps.g_rst[0].u_r0.sh$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R): 1,261 loads (1 flops, e.g. u_ot_pr_core.u_q.u_q.u_s.u_ps.g_rst[0].qf[0]$_DFF_P_) > 256: register it and replicate per region (rtl/lib/ot_rst_relay.sv: one relay copy per region)",
+   "reset u_ot_pr_core.u_q.u_q.u_s.u_pi.g_rst[0].u_r0.sh$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R): 1,261 loads (1 flops, e.g. u_ot_pr_core.u_q.u_q.u_s.u_pi.g_rst[0].qf[0]$_DFF_P_) > 256: register it and replicate per region (rtl/lib/ot_rst_relay.sv: one relay copy per region)"
+  ],
+  "util_channel": [
+   "14 macro channel(s) narrower than 20 um with placement rows (e.g. u_ot_pr_core.u_q.u_q.g_m2.u_mem.g_b\\[0\\].g_w\\[0\\].u_m|u_ot_pr_core.u_q.u_q.g_m2.u_mem.g_b\\[0\\].g_w\\[1\\].u_m 0.0 um, u_ot_pr_core.u_q.u_q.g_m2.u_mem.g_b\\[0\\].g_w\\[1\\].u_m|u_ot_pr_core.u_q.u_q.g_m2.u_mem.g_b\\[0\\].g_w\\[2\\].u_m 0.0 um, u_ot_pr_core.u_q.u_q.g_m2.u_mem.g_b\\[0\\].g_w\\[2\\].u_m|u_ot_pr_core.u_q.u_q.u_s.g_ofq_sram.u_q.u_mem.g_bank\\[0\\].u_m 0.0 um): widen to >= 20 um or block the channel"
+  ],
+  "clock_guidance": [
+   "clock root port:ck: 40,511 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 40,511 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate"
+  ]
+ },
+ "refuse": {},
+ "metrics": {
+  "core_um": [
+   319.7,
+   535.7
+  ],
+  "clock_roots": [
+   {
+    "root": "port:ck",
+    "ff": 40495,
+    "icg": 0,
+    "macro_pins": 16,
+    "example": "ot_rrs__u_ot_pr_core_u_q_u_q_quarter_rst__ot_rlv__c0$_DFF_PN0_"
+   }
+  ],
+  "hier_subblocks": 0,
+  "clock_max_root_sinks": 40511,
+  "clock_max_root": "port:ck",
+  "high_fanout_top": [
+   {
+    "net": "u_ot_pr_core.u_q.u_q.u_s.u_hc.g_xin.r_clr$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 2820,
+    "flops": 0
+   },
+   {
+    "net": "u_ot_pr_core.u_q.u_q.u_s.u_hf.g_xin.r_clr$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 2820,
+    "flops": 0
+   },
+   {
+    "net": "u_ot_pr_core.u_q.u_q.u_s.r_fg[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 2816,
+    "flops": 0
+   },
+   {
+    "net": "u_ot_pr_core.u_q.u_q.u_s.r_cg[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 2816,
+    "flops": 0
+   },
+   {
+    "net": "u_ot_pr_core.u_q.u_q.u_s.u_hf.v2$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 2129,
+    "flops": 0
+   },
+   {
+    "net": "u_ot_pr_core.u_q.u_q.u_s.u_hc.v2$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 2112,
+    "flops": 0
+   },
+   {
+    "net": "u_ot_pr_core.u_q.u_q.u_s.u_ps.g_rst[0].qf[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 1600,
+    "flops": 1
+   },
+   {
+    "net": "u_ot_pr_core.u_q.u_q.u_s.u_pi.g_rst[0].qf[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 1600,
+    "flops": 1
+   }
+  ],
+  "hf_max_port": 0,
+  "hf_max_reset": 1600,
+  "hf_max_net": 2820,
+  "reset_landing": [
+   {
+    "port": "rst",
+    "sinks": 1,
+    "flops": 1,
+    "macros": 0
+   }
+  ],
+  "in_to_out_bits": 0,
+  "in_to_reg_levels": 1,
+  "reg_to_out_levels": 0,
+  "icg_enable_from_port": 0,
+  "depth_ps": 418.4,
+  "depth_path": [
+   "u_ot_pr_core.u_q.u_q.u_s.u_hf.h1_lo[114]$_SDFF_PP0_",
+   "u_ot_pr_core.u_q.u_q.u_s.u_hf.h2[252]$_DFF_P_/D"
+  ],
+  "depth_levels": 11,
+  "reach_worst_um": 0.4,
+  "reach_violations": 0,
+  "util": 0.5765,
+  "std_density": 0.337,
+  "total_fill": 0.5765,
+  "narrow_channels": 14,
+  "narrow_channel_min_um": 0.02
+ },
+ "top": "dsdv_bksel_q",
+ "netlist": "/srv/opentallas-scratch/claude/ref_gate/s81dvbk_sq_succ-20261019-113938/routes/gate/work/orfs/results/asap7/opentallas_dsdv_bksel_q_asap7_ref_gate/base/1_2_yosys.v",
+ "seconds": 14.9,
+ "thresholds": {
+  "clk_sinks_max": 15000,
+  "clk_span_um": 600.0,
+  "clk_span_sinks": 8000,
+  "clk_sinks_refuse": 110000,
+  "hf_report": 256,
+  "hf_max": 3000,
+  "hf_port_refuse": 2048,
+  "hf_reset_refuse": 8000,
+  "hf_refuse": 50000,
+  "rst_land_max": 2,
+  "bnd_levels": 3,
+  "bnd_in_levels_refuse": 9,
+  "bnd_out_levels_refuse": 3,
+  "bnd_in_to_out_refuse": 1,
+  "bnd_icg_port_refuse": 1,
+  "depth_scale": 1.667,
+  "depth_ps_warn": 600.0,
+  "depth_ps_max": 700.0,
+  "reach_um": 500.0,
+  "reach_min_count": 1,
+  "util_min": 0.45,
+  "util_max": 0.65,
+  "fill_max": 0.9,
+  "macro_halo_um": 2.16,
+  "channel_um": 20.0,
+  "reset_ports": "rst"
+ },
+ "clock_rule": {
+  "max_root_sinks": 40511,
+  "root": "port:ck",
+  "ok": true,
+  "text": "40,511 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 40,511 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate",
+  "enforce": false,
+  "closed_stands": false,
+  "limits": {
+   "sinks": 15000,
+   "insertion_ps": 300.0,
+   "spread_ps": 80.0
+  }
+ },
+ "would_refuse": [],
+ "waived": [],
+ "verdict": "WARN",
+ "refusing_checks": [],
+ "summary": "clock_domain: clock root port ck: 40,495 flops > 15,000 on one root (+0 ICGs, 16 macro clock pins; e.g. ot_rrs__u_ot_pr_core_u_q_u_q_quarter_rst__ot_rlv__c0$_DFF_PN0_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine | high_fanout: reset u_ot_pr_core.u_q.u_q.u_s.u_ps.g_rst[0].qf[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R): 1,600 loads (1 flops, e.g. u_ot_pr_core.u_q.u_q.u_s.u_ps.g_rst[1].qf[2]$_DFF_P_) > 256: register it and replicate per region (rtl/lib/ot_rst_relay.sv: one relay copy per region) | util_channel: 14 macro channel(s) narrower than 20 um with placement rows (e.g. u_ot_pr_core.u_q.u_q.g_m2.u_mem.g_b\\[0\\].g_w\\[0\\].u_m|u_ot_pr_core.u_q.u_q.g_m2.u_mem.g_b\\[0\\].g_w\\[1\\].u_m 0.0 um, u_ot_pr_core.u_q.u_q.g_m2.u_mem.g_b\\[0\\].g_w\\[1\\].u_m|u_ot_pr_core.u_q.u_q.g_m2.u_mem.g_b\\[0\\].g_w\\[2\\].u_m 0.0 um, u_ot_pr_core.u_q.u_q.g_m2.u_mem.g_b\\[0\\].g_w\\[2\\].u_m|u_ot_pr_core.u_q.u_q.u_s.g_ofq_sram.u_q.u_mem.g_bank\\[0\\].u_m 0.0 um): widen to >= 20 um or block the channel | clock_guidance: clock root port:ck: 40,511 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 40,511 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate"
+}
+RUN /srv/opentallas-scratch/claude/ref_gate/dsdv_sh_lk_s10b-20261019-122430
+JSON /srv/opentallas-scratch/claude/ref_gate/dsdv_sh_lk_s10b-20261019-122430/ck.json {
+ "schema": "opentallas.closure_loop.ck_insertion.v1",
+ "base": "/srv/opentallas-scratch/claude/ref_gate/dsdv_sh_lk_s10b-20261019-122430/routes/gate/work/orfs/results/asap7/opentallas_dsdv_sh_lk_asap7_ref_gate/base",
+ "db": "4_1_cts.odb",
+ "sdc": "4_cts.sdc",
+ "clock": "core_clk",
+ "parasitics": "placement-estimated",
+ "raw_source": true,
+ "ss": {
+  "clock_family": {
+   "core_clk": 14338
+  },
+  "boundary": {
+   "n": 3088,
+   "mean": 486.7,
+   "min": 452.0,
+   "max": 559.1
+  },
+  "all": {
+   "n": 14338,
+   "mean": 470.0,
+   "min": 440.5,
+   "max": 577.9
+  },
+  "errors": [],
+  "macros": {
+   "n": 8,
+   "nets": 2,
+   "max_per_net": 4,
+   "reg_mean": 470.0,
+   "max_slew": 107.3,
+   "max_late": -20.9,
+   "pins": [
+    {
+     "pin": "u_ot_pr_core.u_h.host.u_hi.g_hx_sram.u_hx.g_rsz2.u_mem0/wclk",
+     "arr": 449.0,
+     "slew": 107.3,
+     "late": -21.0,
+     "net": "clknet_1_1__leaf_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.u_h.host.u_hi.g_hx_sram.u_hx.g_rsz2.u_mem0/rclk",
+     "arr": 449.1,
+     "slew": 107.3,
+     "late": -20.9,
+     "net": "clknet_1_1__leaf_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.u_h.host.u_hi.g_hx_sram.u_hx.g_rsz2.u_mem1/wclk",
+     "arr": 448.0,
+     "slew": 104.8,
+     "late": -22.0,
+     "net": "clknet_1_1__leaf_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.u_h.host.u_hi.g_hx_sram.u_hx.g_rsz2.u_mem1/rclk",
+     "arr": 448.0,
+     "slew": 104.8,
+     "late": -22.0,
+     "net": "clknet_1_1__leaf_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.u_h.host.u_hi.g_ox_sram.u_ox.genblk1.g_rsz1.u_mem/wclk",
+     "arr": 446.4,
+     "slew": 100.9,
+     "late": -23.6,
+     "net": "clknet_1_0__leaf_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.u_h.host.u_hi.g_ox_sram.u_ox.genblk1.g_rsz1.u_mem/rclk",
+     "arr": 446.4,
+     "slew": 100.9,
+     "late": -23.6,
+     "net": "clknet_1_0__leaf_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.u_sd.u_mem/wclk",
+     "arr": 447.7,
+     "slew": 104.1,
+     "late": -22.3,
+     "net": "clknet_1_0__leaf_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.u_sd.u_mem/rclk",
+     "arr": 447.6,
+     "slew": 104.1,
+     "late": -22.4,
+     "net": "clknet_1_0__leaf_ck"
+    }
+   ]
+  },
+  "macro_libs": 2,
+  "child_flop": {
+   "boundary": {
+    "n": 3088,
+    "mean": 486.7,
+    "min": 452.0,
+    "max": 559.1
+   },
+   "all": {
+    "n": 14338,
+    "mean": 470.0,
+    "min": 440.5,
+    "max": 577.9
+   },
+   "refs": {
+    "ot_sram_1r1w2c_16x257_m1": {
+     "basis": "no reference: raw pin arrival",
+     "ref_ps": 0.0,
+     "pins": 2
+    },
+    "ot_sram_1r1w2c_16x289_m1": {
+     "basis": "no reference: raw pin arrival",
+     "ref_ps": 0.0,
+     "pins": 2
+    }
+   },
+   "soft": {
+    "boundary": {
+     "n": 3088,
+     "mean": 486.7,
+     "min": 452.0,
+     "max": 559.1
+    },
+    "all": {
+     "n": 14334,
+     "mean": 470.0,
+     "min": 440.5,
+     "max": 577.9
+    }
+   }
+  }
+ },
+ "tt": {
+  "clock_family": {
+   "core_clk": 14338
+  },
+  "boundary": {
+   "n": 3088,
+   "mean": 381.0,
+   "min": 349.4,
+   "max": 445.4
+  },
+  "all": {
+   "n": 14338,
+   "mean": 365.4,
+   "min": 338.3,
+   "max": 462.2
+  },
+  "errors": [],
+  "macros": {
+   "n": 8,
+   "nets": 2,
+   "max_per_net": 4,
+   "reg_mean": 365.4,
+   "max_slew": 103.2,
+   "max_late": -23.8,
+   "pins": [
+    {
+     "pin": "u_ot_pr_core.u_h.host.u_hi.g_hx_sram.u_hx.g_rsz2.u_mem0/wclk",
+     "arr": 341.6,
+     "slew": 103.2,
+     "late": -23.8,
+     "net": "clknet_1_1__leaf_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.u_h.host.u_hi.g_hx_sram.u_hx.g_rsz2.u_mem0/rclk",
+     "arr": 341.6,
+     "slew": 103.2,
+     "late": -23.8,
+     "net": "clknet_1_1__leaf_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.u_h.host.u_hi.g_hx_sram.u_hx.g_rsz2.u_mem1/wclk",
+     "arr": 340.6,
+     "slew": 100.4,
+     "late": -24.8,
+     "net": "clknet_1_1__leaf_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.u_h.host.u_hi.g_hx_sram.u_hx.g_rsz2.u_mem1/rclk",
+     "arr": 340.6,
+     "slew": 100.4,
+     "late": -24.8,
+     "net": "clknet_1_1__leaf_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.u_h.host.u_hi.g_ox_sram.u_ox.genblk1.g_rsz1.u_mem/wclk",
+     "arr": 338.9,
+     "slew": 96.4,
+     "late": -26.5,
+     "net": "clknet_1_0__leaf_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.u_h.host.u_hi.g_ox_sram.u_ox.genblk1.g_rsz1.u_mem/rclk",
+     "arr": 338.9,
+     "slew": 96.4,
+     "late": -26.5,
+     "net": "clknet_1_0__leaf_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.u_sd.u_mem/wclk",
+     "arr": 340.2,
+     "slew": 100.0,
+     "late": -25.2,
+     "net": "clknet_1_0__leaf_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.u_sd.u_mem/rclk",
+     "arr": 340.2,
+     "slew": 100.0,
+     "late": -25.2,
+     "net": "clknet_1_0__leaf_ck"
+    }
+   ]
+  },
+  "macro_libs": 2,
+  "child_flop": {
+   "boundary": {
+    "n": 3088,
+    "mean": 381.0,
+    "min": 349.4,
+    "max": 445.4
+   },
+   "all": {
+    "n": 14338,
+    "mean": 365.4,
+    "min": 338.3,
+    "max": 462.2
+   },
+   "refs": {
+    "ot_sram_1r1w2c_16x257_m1": {
+     "basis": "no reference: raw pin arrival",
+     "ref_ps": 0.0,
+     "pins": 2
+    },
+    "ot_sram_1r1w2c_16x289_m1": {
+     "basis": "no reference: raw pin arrival",
+     "ref_ps": 0.0,
+     "pins": 2
+    }
+   },
+   "soft": {
+    "boundary": {
+     "n": 3088,
+     "mean": 381.0,
+     "min": 349.4,
+     "max": 445.4
+    },
+    "all": {
+     "n": 14334,
+     "mean": 365.4,
+     "min": 338.3,
+     "max": 462.2
+    }
+   }
+  }
+ },
+ "ff": {
+  "clock_family": {
+   "core_clk": 14338
+  },
+  "boundary": {
+   "n": 3088,
+   "mean": 315.0,
+   "min": 286.0,
+   "max": 372.6
+  },
+  "all": {
+   "n": 14338,
+   "mean": 300.5,
+   "min": 274.8,
+   "max": 388.1
+  },
+  "errors": [],
+  "macros": {
+   "n": 8,
+   "nets": 2,
+   "max_per_net": 4,
+   "reg_mean": 300.5,
+   "max_slew": 108.6,
+   "max_late": -20.8,
+   "pins": [
+    {
+     "pin": "u_ot_pr_core.u_h.host.u_hi.g_hx_sram.u_hx.g_rsz2.u_mem0/wclk",
+     "arr": 279.7,
+     "slew": 108.5,
+     "late": -20.8,
+     "net": "clknet_1_1__leaf_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.u_h.host.u_hi.g_hx_sram.u_hx.g_rsz2.u_mem0/rclk",
+     "arr": 279.7,
+     "slew": 108.6,
+     "late": -20.8,
+     "net": "clknet_1_1__leaf_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.u_h.host.u_hi.g_hx_sram.u_hx.g_rsz2.u_mem1/wclk",
+     "arr": 278.6,
+     "slew": 105.4,
+     "late": -21.9,
+     "net": "clknet_1_1__leaf_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.u_h.host.u_hi.g_hx_sram.u_hx.g_rsz2.u_mem1/rclk",
+     "arr": 278.6,
+     "slew": 105.4,
+     "late": -21.9,
+     "net": "clknet_1_1__leaf_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.u_h.host.u_hi.g_ox_sram.u_ox.genblk1.g_rsz1.u_mem/wclk",
+     "arr": 276.9,
+     "slew": 101.3,
+     "late": -23.6,
+     "net": "clknet_1_0__leaf_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.u_h.host.u_hi.g_ox_sram.u_ox.genblk1.g_rsz1.u_mem/rclk",
+     "arr": 276.9,
+     "slew": 101.3,
+     "late": -23.6,
+     "net": "clknet_1_0__leaf_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.u_sd.u_mem/wclk",
+     "arr": 278.3,
+     "slew": 105.3,
+     "late": -22.2,
+     "net": "clknet_1_0__leaf_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.u_sd.u_mem/rclk",
+     "arr": 278.3,
+     "slew": 105.3,
+     "late": -22.2,
+     "net": "clknet_1_0__leaf_ck"
+    }
+   ]
+  },
+  "macro_libs": 2,
+  "child_flop": {
+   "boundary": {
+    "n": 3088,
+    "mean": 315.0,
+    "min": 286.0,
+    "max": 372.6
+   },
+   "all": {
+    "n": 14338,
+    "mean": 300.5,
+    "min": 274.8,
+    "max": 388.1
+   },
+   "refs": {
+    "ot_sram_1r1w2c_16x257_m1": {
+     "basis": "no reference: raw pin arrival",
+     "ref_ps": 0.0,
+     "pins": 2
+    },
+    "ot_sram_1r1w2c_16x289_m1": {
+     "basis": "no reference: raw pin arrival",
+     "ref_ps": 0.0,
+     "pins": 2
+    }
+   },
+   "soft": {
+    "boundary": {
+     "n": 3088,
+     "mean": 315.0,
+     "min": 286.0,
+     "max": 372.6
+    },
+    "all": {
+     "n": 14334,
+     "mean": 300.5,
+     "min": 274.8,
+     "max": 388.1
+    }
+   }
+  }
+ },
+ "route_corner": null,
+ "macro_clk": {
+  "n": 8,
+  "slew_ps": 120.0,
+  "late_ps": 30.0,
+  "flag": false,
+  "outliers": []
+ },
+ "env": {
+  "CK_SS_MEAN": 487,
+  "CK_SS_ALL_MEAN": 470,
+  "CK_SS_MIN": 452,
+  "CK_SS_ALL_MIN": 440,
+  "CK_SS_MAX": 559,
+  "CK_SS_ALL_MAX": 578,
+  "CK_TT_MEAN": 381,
+  "CK_TT_ALL_MEAN": 365,
+  "CK_TT_MIN": 349,
+  "CK_TT_ALL_MIN": 338,
+  "CK_TT_MAX": 445,
+  "CK_TT_ALL_MAX": 462,
+  "CK_FF_MEAN": 315,
+  "CK_FF_ALL_MEAN": 300,
+  "CK_FF_MIN": 286,
+  "CK_FF_ALL_MIN": 275,
+  "CK_FF_MAX": 373,
+  "CK_FF_ALL_MAX": 388,
+  "CK_ROUTE_REF": "SS"
+ },
+ "lib_clock_pin": "ck",
+ "clock_mapping_basis": "4_cts.sdc create_clock -name core_clk [get_ports {ck}]",
+ "clock_measurements": {
+  "ck": {
+   "schema": "opentallas.closure_loop.ck_insertion.v1",
+   "base": "/srv/opentallas-scratch/claude/ref_gate/dsdv_sh_lk_s10b-20261019-122430/routes/gate/work/orfs/results/asap7/opentallas_dsdv_sh_lk_asap7_ref_gate/base",
+   "db": "4_1_cts.odb",
+   "sdc": "4_cts.sdc",
+   "clock": "core_clk",
+   "parasitics": "placement-estimated",
+   "raw_source": true,
+   "ss": {
+    "clock_family": {
+     "core_clk": 14338
+    },
+    "boundary": {
+     "n": 3088,
+     "mean": 486.7,
+     "min": 452.0,
+     "max": 559.1
+    },
+    "all": {
+     "n": 14338,
+     "mean": 470.0,
+     "min": 440.5,
+     "max": 577.9
+    },
+    "errors": [],
+    "macros": {
+     "n": 8,
+     "nets": 2,
+     "max_per_net": 4,
+     "reg_mean": 470.0,
+     "max_slew": 107.3,
+     "max_late": -20.9,
+     "pins": [
+      {
+       "pin": "u_ot_pr_core.u_h.host.u_hi.g_hx_sram.u_hx.g_rsz2.u_mem0/wclk",
+       "arr": 449.0,
+       "slew": 107.3,
+       "late": -21.0,
+       "net": "clknet_1_1__leaf_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.u_h.host.u_hi.g_hx_sram.u_hx.g_rsz2.u_mem0/rclk",
+       "arr": 449.1,
+       "slew": 107.3,
+       "late": -20.9,
+       "net": "clknet_1_1__leaf_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.u_h.host.u_hi.g_hx_sram.u_hx.g_rsz2.u_mem1/wclk",
+       "arr": 448.0,
+       "slew": 104.8,
+       "late": -22.0,
+       "net": "clknet_1_1__leaf_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.u_h.host.u_hi.g_hx_sram.u_hx.g_rsz2.u_mem1/rclk",
+       "arr": 448.0,
+    
+JSON /srv/opentallas-scratch/claude/ref_gate/dsdv_sh_lk_s10b-20261019-122430/pin_geometry.json {
+ "schema": "opentallas.fp_pin_geometry.v1",
+ "verdict": "PASS",
+ "fails": [],
+ "metrics": {
+  "signal_clock_pins": 3107,
+  "pin_rectangles": 3107,
+  "pin_track_checked": 3107,
+  "pin_track_inaccessible": 0,
+  "pin_rectangles_outside": 0,
+  "missing_geometry": 0
+ },
+ "dump": "/srv/opentallas-scratch/claude/ref_gate/dsdv_sh_lk_s10b-20261019-122430/routes/gate/work/orfs/gate_dump.json",
+ "dump_sha256": "5075cb0e7c328430ce5a19e8fbd5cfb393b7b54d937e767a2a5e4afce2254d4d",
+ "validator_sha256": "5c0b112365aab653a6790d862cec90ff30a182ce0aeae58e80465b5b68c391a8"
+}
+
+JSON /srv/opentallas-scratch/claude/ref_gate/dsdv_sh_lk_s10b-20261019-122430/textbook.json {
+ "cells": 66629,
+ "flops": 13832,
+ "icgs": 0,
+ "macros": 4,
+ "findings": {
+  "logic_depth": [
+   "reg->reg stage u_ot_pr_core.u_h.host.u_hi.u_eng.st_ph[0]$_DFF_PN0_ -> u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.p_wa[30]$_SDFFCE_PN0P_/D: ~810 ps estimated (23 logic levels) > 600 ps: pipeline / restructure the stage"
+  ]
+ },
+ "refuse": {
+  "logic_depth": [
+   "~810 ps > 700 ps (u_ot_pr_core.u_h.host.u_hi.u_eng.st_ph[0]$_DFF_PN0_ -> u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.p_wa[30]$_SDFFCE_PN0P_/D)"
+  ]
+ },
+ "metrics": {
+  "core_um": [
+   298.1,
+   190.1
+  ],
+  "clock_roots": [
+   {
+    "root": "port:ck",
+    "ff": 13832,
+    "icg": 0,
+    "macro_pins": 0,
+    "example": "cf_o[0]$_SDFF_PN0_"
+   }
+  ],
+  "hier_subblocks": 0,
+  "clock_max_root_sinks": 13832,
+  "clock_max_root": "port:ck",
+  "high_fanout_top": [
+   {
+    "net": "_064050_/Y (AO221x1_ASAP7_75t_R)",
+    "loads": 595,
+    "flops": 1
+   },
+   {
+    "net": "_064115_/Y (OR2x2_ASAP7_75t_R)",
+    "loads": 586,
+    "flops": 2
+   },
+   {
+    "net": "_064209_/Y (OR2x2_ASAP7_75t_R)",
+    "loads": 585,
+    "flops": 1
+   },
+   {
+    "net": "_064148_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 584,
+    "flops": 1
+   },
+   {
+    "net": "_103496_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 549,
+    "flops": 0
+   },
+   {
+    "net": "_102854_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 549,
+    "flops": 0
+   },
+   {
+    "net": "_102215_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 549,
+    "flops": 0
+   },
+   {
+    "net": "_099258_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 549,
+    "flops": 0
+   }
+  ],
+  "hf_max_port": 0,
+  "hf_max_reset": 0,
+  "hf_max_net": 595,
+  "reset_landing": [
+   {
+    "port": "rst_n",
+    "sinks": 1,
+    "flops": 1,
+    "macros": 0
+   }
+  ],
+  "in_to_out_bits": 0,
+  "in_to_reg_levels": 1,
+  "reg_to_out_levels": 0,
+  "icg_enable_from_port": 0,
+  "depth_ps": 810.2,
+  "depth_path": [
+   "u_ot_pr_core.u_h.host.u_hi.u_eng.st_ph[0]$_DFF_PN0_",
+   "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.p_wa[30]$_SDFFCE_PN0P_/D"
+  ],
+  "depth_levels": 23,
+  "reach_worst_um": 0.2,
+  "reach_violations": 0,
+  "util": 0.4424,
+  "std_density": 0.2413,
+  "total_fill": 0.4424,
+  "narrow_channels": 0,
+  "narrow_channel_min_um": null
+ },
+ "top": "dsdv_sh_lk",
+ "netlist": "/srv/opentallas-scratch/claude/ref_gate/dsdv_sh_lk_s10b-20261019-122430/routes/gate/work/orfs/results/asap7/opentallas_dsdv_sh_lk_asap7_ref_gate/base/1_2_yosys.v",
+ "seconds": 4.8,
+ "thresholds": {
+  "clk_sinks_max": 15000,
+  "clk_span_um": 600.0,
+  "clk_span_sinks": 8000,
+  "clk_sinks_refuse": 110000,
+  "hf_report": 256,
+  "hf_max": 3000,
+  "hf_port_refuse": 2048,
+  "hf_reset_refuse": 8000,
+  "hf_refuse": 50000,
+  "rst_land_max": 2,
+  "bnd_levels": 3,
+  "bnd_in_levels_refuse": 9,
+  "bnd_out_levels_refuse": 3,
+  "bnd_in_to_out_refuse": 1,
+  "bnd_icg_port_refuse": 1,
+  "depth_scale": 1.667,
+  "depth_ps_warn": 600.0,
+  "depth_ps_max": 700.0,
+  "reach_um": 500.0,
+  "reach_min_count": 1,
+  "util_min": 0.45,
+  "util_max": 0.65,
+  "fill_max": 0.9,
+  "macro_halo_um": 2.16,
+  "channel_um": 20.0,
+  "reset_ports": "rst_n"
+ },
+ "clock_rule": {
+  "max_root_sinks": 13832,
+  "root": "port:ck",
+  "ok": true,
+  "text": "13,832 sinks on the largest root; no measured clock tree (no --cts gate evidence)",
+  "enforce": false,
+  "closed_stands": false,
+  "limits": {
+   "sinks": 15000,
+   "insertion_ps": 300.0,
+   "spread_ps": 80.0
+  }
+ },
+ "would_refuse": [],
+ "waived": [],
+ "verdict": "WARN",
+ "refusing_checks": [],
+ "summary": "logic_depth: reg->reg stage u_ot_pr_core.u_h.host.u_hi.u_eng.st_ph[0]$_DFF_PN0_ -> u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.p_wa[30]$_SDFFCE_PN0P_/D: ~810 ps estimated (23 logic levels) > 600 ps: pipeline / restructure the stage"
+}
+FILE /srv/opentallas-scratch/claude/ref_gate/dsdv_sh_lk_s10b-20261019-122430/routes/gate/work/orfs/logs/asap7/opentallas_dsdv_sh_lk_asap7_ref_gate/base/4_1_cts.log MTIME 1792441551.7512815 SHA256 e776d587c603bbdd01965054237f987c1536d0e365b038d935f831ccc1a90d15
+legalized HPWL         854360.2 u
+delta HPWL                    1 %
+
+Took 8 seconds: detailed_placement
+estimate_parasitics -placement
+Took 9 seconds: estimate_parasitics -placement
+Report metrics stage 4, cts final...
+
+==========================================================================
+cts final report_design_area
+--------------------------------------------------------------------------
+Design area 27373 um^2 48% utilization.
+source /work/hooks/post_cts_post_cts.tcl
+write_db /work/results/asap7/opentallas_dsdv_sh_lk_asap7_ref_gate/base/4_1_cts.odb
+write_sdc -no_timestamp /work/results/asap7/opentallas_dsdv_sh_lk_asap7_ref_gate/base/4_cts.sdc
+Elapsed time: 35:20.58[h:]min:sec. CPU time: user 2153.82 sys 19.12 (102%). Peak memory: 1514644KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+4_1_cts                   .odb         2120           1479 16e9c3a597391d8d41e8
+
+FILE /srv/opentallas-scratch/claude/ref_gate/dsdv_sh_lk_s10b-20261019-122430/routes/gate/work/orfs/logs/asap7/opentallas_dsdv_sh_lk_asap7_ref_gate/base/4_1_cts.json MTIME 1792441551.2932725 SHA256 056b4614de3a82d75b474b1e5db2adf129070b724f088b1dcab54d26d47d0f47
+{
+	"cts__utilization__before__dpl": 46.69,
+	"cts__negotiation__converge__phase_1__iteration": 1,
+	"cts__design__instance__displacement__total": 1069.9,
+	"cts__design__instance__displacement__mean": 0.013,
+	"cts__design__instance__displacement__max": 5.444,
+	"cts__route__wirelength__estimated": 843870,
+	"cts__dpl__hpwl__delta": 296452,
+	"cts__dpl__hpwl__delta__percent": 0,
+	"cts__design__instance__count__setup_buffer": 93,
+	"cts__design__instance__count__hold_buffer": 10685,
+	"cts__design__instance__count__hold_buffer": 1752,
+	"cts__utilization__before__dpl": 48.312,
+	"cts__negotiation__converge__phase_1__iteration": 19,
+	"cts__design__instance__displacement__total": 7343.19,
+	"cts__design__instance__displacement__mean": 0.078,
+	"cts__design__instance__displacement__max": 22.415,
+	"cts__route__wirelength__estimated": 854360,
+	"cts__dpl__hpwl__delta": 6.23882e+06,
+	"cts__dpl__hpwl__delta__percent": 1,
+	"cts__design__violations": 0,
+	"cts__timing__setup__tns": -8657.49,
+	"cts__timing__hold__tns": -14152.1,
+	"cts__timing__setup__ws": -151.624,
+	"cts__timing__hold__ws": -24.2855,
+	"cts__timing__fmax__clock:core_clk": 1.08504e+09,
+	"cts__timing__fmax": 1.08504e+09,
+	"cts__clock__skew__setup": 186.328,
+	"cts__clock__skew__hold": 157.049,
+	"cts__timing__drv__max_slew_limit": 0.000513478,
+	"cts__timing__drv__max_slew": 0,
+	"cts__timing__drv__max_cap_limit": 0.305474,
+	"cts__timing__drv__max_cap": 0,
+	"cts__timing__drv__max_fanout_limit": 32,
+	"cts__timing__drv__max_fanout": 0,
+	"cts__timing__drv__setup_violation_count": 134,
+	"cts__timing__drv__hold_violation_count": 1153,
+	"cts__power__internal__total": 0.0525244,
+	"cts__power__switching__total": 0.0232782,
+	"cts__power__leakage__total": 9.17436e-05,
+	"cts__power__total": 0.0758943,
+	"cts__power__internal__total": 0.0682962,
+	"cts__power__switching__total": 0.030061,
+	"cts__power__leakage__total": 8.74829e-05,
+	"cts__power__total": 0.0984447,
+	"cts__design__io": 3109,
+	"cts__design__nets": 90009,
+	"cts__design__die__area": 58786.6,
+	"cts__design__core__area": 56659,
+	"cts__design__instance__count": 93397,
+	"cts__design__instance__area": 27373.1,
+	"cts__design__instance__count__stdcell": 93393,
+	"cts__design__instance__area__stdcell": 11586.3,
+	"cts__design__instance__count__macros": 4,
+	"cts__design__instance__area__macros": 15786.8,
+	"cts__design__instance__count__padcells": 0,
+	"cts__design__instance__area__padcells": 0,
+	"cts__design__instance__count__cover": 0,
+	"cts__design__instance__area__cover": 0,
+	"cts__design__instance__utilization": 0.48312,
+	"cts__design__instance__utilization__stdcell": 0.283476,
+	"cts__design__rows": 1386,
+	"cts__design__rows:asap7sc7p5t": 1386,
+	"cts__design__sites": 2640416,
+	"cts__design__sites:asap7sc7p5t": 2640416,
+	"cts__flow__warnings__count": 25,
+	"cts__flow__errors__count": 0,
+	"cts__flow__warnings__count:RSZ-0062": 1,
+	"cts__flow__warnings__count:RSZ-0064": 1,
+	"cts__flow__warnings__count:STA-0450": 3,
+	"cts__flow__warnings__count:STA-1212": 1001,
+	"cts__flow__warnings__type_count": 4
+}
+RUN /srv/opentallas-scratch/claude/ref_gate/s81sf_bfcol_c199rq-20261019-114903
+JSON /srv/opentallas-scratch/claude/ref_gate/s81sf_bfcol_c199rq-20261019-114903/pin_geometry.json {
+ "schema": "opentallas.fp_pin_geometry.v1",
+ "verdict": "PASS",
+ "fails": [],
+ "metrics": {
+  "signal_clock_pins": 842,
+  "pin_rectangles": 842,
+  "pin_track_checked": 842,
+  "pin_track_inaccessible": 0,
+  "pin_rectangles_outside": 0,
+  "missing_geometry": 0
+ },
+ "dump": "/srv/opentallas-scratch/claude/ref_gate/s81sf_bfcol_c199rq-20261019-114903/routes/gate/work/orfs/gate_dump.json",
+ "dump_sha256": "93fc03b02fd4c4c0bc0aa7b08adde73a07c6a5f063c66233058e3e38502a085b",
+ "validator_sha256": "5c0b112365aab653a6790d862cec90ff30a182ce0aeae58e80465b5b68c391a8"
+}
+
+JSON /srv/opentallas-scratch/claude/ref_gate/s81sf_bfcol_c199rq-20261019-114903/textbook.json {
+ "cells": 295880,
+ "flops": 52472,
+ "icgs": 0,
+ "macros": 2,
+ "findings": {
+  "clock_domain": [
+   "clock root port clk: 52,472 flops > 15,000 on one root (+0 ICGs, 2 macro clock pins; e.g. rst_n_pin__ot_rl0$_DFF_P_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine"
+  ],
+  "clock_guidance": [
+   "clock root port:clk: 52,474 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 52,474 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate"
+  ]
+ },
+ "refuse": {},
+ "metrics": {
+  "core_um": [
+   427.7,
+   211.7
+  ],
+  "clock_roots": [
+   {
+    "root": "port:clk",
+    "ff": 52472,
+    "icg": 0,
+    "macro_pins": 2,
+    "example": "rst_n_pin__ot_rl0$_DFF_P_"
+   }
+  ],
+  "hier_subblocks": 0,
+  "clock_max_root_sinks": 52474,
+  "clock_max_root": "port:clk",
+  "high_fanout_top": [
+   {
+    "net": "u_ot_pr_core.g_l3.u_l0.u_tag.genblk1.g_line.line[200]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 1060,
+    "flops": 1
+   },
+   {
+    "net": "u_ot_pr_core.g_l3.u_l0.u_tag.genblk1.g_line.line[201]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 532,
+    "flops": 1
+   },
+   {
+    "net": "u_ot_pr_core.g_l3.u_l0.p0_fp4$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 440,
+    "flops": 0
+   },
+   {
+    "net": "_288028_/Y (XNOR2x2_ASAP7_75t_R)",
+    "loads": 330,
+    "flops": 1
+   },
+   {
+    "net": "u_ot_pr_core.g_ch3.u_c0.first_r$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 310,
+    "flops": 0
+   },
+   {
+    "net": "u_ot_pr_core.g_l3.u_l0.u_tag.genblk1.g_line.line[202]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 268,
+    "flops": 1
+   },
+   {
+    "net": "u_ot_pr_core.g_bf.g_fqt.u_bf.g_l[15].t_lr[11]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 267,
+    "flops": 1
+   },
+   {
+    "net": "u_ot_pr_core.g_bf.g_fqt.u_bf.g_l[14].t_lr[11]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 267,
+    "flops": 1
+   }
+  ],
+  "hf_max_port": 0,
+  "hf_max_reset": 0,
+  "hf_max_net": 1060,
+  "reset_landing": [
+   {
+    "port": "rst_n_pin",
+    "sinks": 1,
+    "flops": 1,
+    "macros": 0
+   }
+  ],
+  "in_to_out_bits": 0,
+  "in_to_reg_levels": 0,
+  "reg_to_out_levels": 0,
+  "icg_enable_from_port": 0,
+  "depth_ps": 506.8,
+  "depth_path": [
+   "u_ot_pr_core.g_bf.g_fqt.u_bf.g_l[12].genblk1.g_c4.u_c.u_add.u_c6.g_r.r[1]$_SDFF_PN0_",
+   "u_ot_pr_core.g_bf.g_fqt.u_bf.g_l[12].genblk1.g_c4.u_c.u_add.u_c8.g_r.r[23]$_DFF_P_/D"
+  ],
+  "depth_levels": 13,
+  "reach_worst_um": 0.0,
+  "reach_violations": 0,
+  "util": 0.5423,
+  "std_density": 0.4558,
+  "total_fill": 0.5423,
+  "narrow_channels": 0,
+  "narrow_channel_min_um": null
+ },
+ "top": "ot_v41_bf_col",
+ "netlist": "/srv/opentallas-scratch/claude/ref_gate/s81sf_bfcol_c199rq-20261019-114903/routes/gate/work/orfs/results/asap7/opentallas_ot_v41_bf_col_asap7_ref_gate/base/1_2_yosys.v",
+ "seconds": 13.8,
+ "thresholds": {
+  "clk_sinks_max": 15000,
+  "clk_span_um": 600.0,
+  "clk_span_sinks": 8000,
+  "clk_sinks_refuse": 110000,
+  "hf_report": 256,
+  "hf_max": 3000,
+  "hf_port_refuse": 2048,
+  "hf_reset_refuse": 8000,
+  "hf_refuse": 50000,
+  "rst_land_max": 2,
+  "bnd_levels": 3,
+  "bnd_in_levels_refuse": 9,
+  "bnd_out_levels_refuse": 3,
+  "bnd_in_to_out_refuse": 1,
+  "bnd_icg_port_refuse": 1,
+  "depth_scale": 1.667,
+  "depth_ps_warn": 600.0,
+  "depth_ps_max": 700.0,
+  "reach_um": 500.0,
+  "reach_min_count": 1,
+  "util_min": 0.45,
+  "util_max": 0.65,
+  "fill_max": 0.9,
+  "macro_halo_um": 2.16,
+  "channel_um": 20.0,
+  "reset_ports": "rst_n_pin"
+ },
+ "clock_rule": {
+  "max_root_sinks": 52474,
+  "root": "port:clk",
+  "ok": true,
+  "text": "52,474 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 52,474 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate",
+  "enforce": false,
+  "closed_stands": false,
+  "limits": {
+   "sinks": 15000,
+   "insertion_ps": 300.0,
+   "spread_ps": 80.0
+  }
+ },
+ "would_refuse": [],
+ "waived": [],
+ "verdict": "WARN",
+ "refusing_checks": [],
+ "summary": "clock_domain: clock root port clk: 52,472 flops > 15,000 on one root (+0 ICGs, 2 macro clock pins; e.g. rst_n_pin__ot_rl0$_DFF_P_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine | clock_guidance: clock root port:clk: 52,474 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 52,474 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate"
+}
