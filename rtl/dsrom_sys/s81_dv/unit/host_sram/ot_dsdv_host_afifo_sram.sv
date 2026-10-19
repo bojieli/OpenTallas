@@ -3,11 +3,13 @@
 // Registered SRAM head requires one additional empty-to-nonempty read edge;
 // every nonempty pop still advances one word per read clock. Gray stage2 alone
 // authorizes reads. No first-stage synchronizer output enters functional logic.
-module ot_dsdv_host_afifo_sram #(parameter integer W=514, AW=4, SYNC=2) (
+module ot_dsdv_host_afifo_sram #(parameter integer W=514, AW=4, SYNC=2, EC=1) (
  input wire wclk,wrst_n,wr,input wire [W-1:0] wdata,
  output wire wfull,output reg [AW:0] wfreed,output reg ovf,
  input wire rclk,rrst_n,rd,output wire rempty,
- output wire [W-1:0] rdata,output wire [AW:0] rcount
+ output wire [W-1:0] rdata,output wire [AW:0] rcount,
+ // S81-SHLK s10b: EC kept copies of the empty flag (same D, same edge) for wide consumer enables
+ output wire [EC-1:0] rempty_c
 );
  localparam integer D=1<<AW;
  initial if(W>546||AW>4||AW<2||SYNC<2) $fatal(1,"SH SRAM FIFO unsupported shape");
@@ -45,6 +47,10 @@ module ot_dsdv_host_afifo_sram #(parameter integer W=514, AW=4, SYNC=2) (
    rbin<=rbin_n;rgray<=rgray_n;empty<=!have_next;
   end
  assign rempty=empty;
+ (* keep *) reg [EC-1:0] empty_c;
+ always @(posedge rclk or negedge rrst_n)
+  if(!rrst_n) empty_c<={EC{1'b1}}; else empty_c<={EC{!have_next}};
+ assign rempty_c=empty_c;
  assign rcount=g2b(wgray_r)-rbin;
 `ifdef S81SH_SRAM_MUT_CURRENT
  wire [3:0] ra={{(4-AW){1'b0}},rbin[AW-1:0]};

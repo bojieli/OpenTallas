@@ -35,8 +35,13 @@ bad=0
 # (12 SPKIND / 13 MKD are not exercised by this bench: no partial ROWS tail, no boot marker -- SPKIND is caught by
 # physical/sys_takeover/host_native_pipe_bench.py spkind10; the marker delay has no bench here, see the lane log)
 mdef() { case $1 in 7) echo +define+OT_ING_MUT_HREGV;; 8) echo +define+OT_ING_MUT_RAC;; 11) echo +define+OT_ING_MUT_SPRH;;
-  12) echo +define+OT_ING_MUT_SPKIND;; 13) echo +define+OT_ING_MUT_MKD;; 14) echo +define+OT_S81_SH_MUT_HQSTALE;; *) echo +define+MUT=$1;; esac; }
+  12) echo +define+OT_ING_MUT_SPKIND;; 13) echo +define+OT_ING_MUT_MKD;; 14) echo +define+OT_S81_SH_MUT_HQSTALE;;
+  15) echo +define+OT_ING_MUT_DQC;; 16) echo +define+OT_ING_MUT_HRC;; 17) echo +define+OT_ING_MUT_HPREF;;
+  18) echo +define+OT_ING_MUT_HPHOLD;; 19) echo +define+OT_LINK_AFIFO_MUT_RCOPY;; *) echo +define+MUT=$1;; esac; }
+# S81-SHLK s10b (VL_EXTRA has -DOT_S81_SH_S10B): 15 = descriptor-queue read copy 0 stalls, 16 = hr_v copy 3 never
+# clears, 17 = st_row / st_left hi +- 1 never refreshed, 18 = refresh overwrites a fresh segment load, 19 = u_cx read copy 0 stalls
 MUTS="1 2 3 4 5 6 7 8 9 10"; case "${VL_EXTRA:-}" in *OT_S81_SH_APIPE10*) MUTS="$MUTS 11 14";; esac
+case "${VL_EXTRA:-}" in *OT_S81_SH_S10B*) MUTS="$MUTS 15 16 17 18 19";; esac
 if [ "${3:-}" = base ]; then
   build base || exit 2
   for seed in $SEEDS; do

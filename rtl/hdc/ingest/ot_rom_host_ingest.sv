@@ -121,13 +121,20 @@ module ot_rom_host_ingest #(
     reg          hx_pop;
     wire         hx_rd, hx_fempty;                // FIFO-side pop / empty (= hx_pop / hx_empty when APIPE < 7)
     wire [513:0] hx_fhead;
+    // S81-SHLK s10b (2026-10-19, s10 mapped netlist: the hr_d load enable hx_rd = AND2(u_hx.empty, hr_take) drove 890
+    // loads): with OT_S81_SH_S10B the registered head is HRC slices of HRS bits, each loaded by its own enable from
+    // KEPT copies of hr_v and of the FIFO empty flag (same edge, same values); hx_pop is the only shared term.
+    localparam integer HRS = 16, HRC = (514 + HRS - 1) / HRS;
+    wire [HRC-1:0] hx_fempty_c;
 `ifdef OT_S81_SH_SRAM
     if (APIPE >= 9) begin : g_hx_sram
-        ot_dsdv_host_afifo_sram #(.W(514), .AW(HFA)) u_hx (
+        ot_dsdv_host_afifo_sram #(.W(514), .AW(HFA), .EC(HRC)) u_hx (
         .wclk(clk_h), .wrst_n(rn_h), .wr(hv_q), .wdata({hc_q, hd_q}), .wfull(hx_full), .wfreed(hx_freed), .ovf(hx_ovf),
-        .rclk(clk_i), .rrst_n(rn_i), .rd(hx_rd), .rempty(hx_fempty), .rdata(hx_fhead), .rcount(hx_cnt));
+        .rclk(clk_i), .rrst_n(rn_i), .rd(hx_rd), .rempty(hx_fempty), .rdata(hx_fhead), .rcount(hx_cnt),
+        .rempty_c(hx_fempty_c));
     end else begin : g_hx_legacy
 `endif
+        assign hx_fempty_c = {HRC{hx_fempty}};
         ot_link_afifo #(.W(514), .AW(HFA), .RCOPY(32)) u_hx (
         .wclk(clk_h), .wrst_n(rn_h), .wr(hv_q), .wdata({hc_q, hd_q}), .wfull(hx_full), .wfreed(hx_freed), .ovf(hx_ovf),
         .rclk(clk_i), .rrst_n(rn_i), .rd(hx_rd), .rempty(hx_fempty), .rdata(hx_fhead), .rcount(hx_cnt));
@@ -146,10 +153,31 @@ module ot_rom_host_ingest #(
 `else
             if (!rn_i) hr_v <= 1'b0; else if (hr_take) hr_v <= !hx_fempty;
 `endif
+`ifdef OT_S81_SH_S10B
+        (* keep *) reg [HRC-1:0] hr_vc;   // kept copies of hr_v, one per HRS-bit slice of hr_d
+        genvar hs;
+        for (hs = 0; hs < HRC; hs = hs + 1) begin : g_hrs
+            localparam integer LO = hs * HRS, HI = ((hs + 1) * HRS > 514) ? 514 : (hs + 1) * HRS;
+            wire hr_take_k = !hr_vc[hs] || hx_pop;
+            wire hr_rd_k   = hr_take_k && !hx_fempty_c[hs];
+            always @(posedge clk_i or negedge rn_i)
+`ifdef OT_ING_MUT_HRC
+                if (!rn_i) hr_vc[hs] <= 1'b0; else if (hr_take_k) hr_vc[hs] <= (hs == 3) ? (hr_vc[hs] || !hx_fempty_c[hs]) : !hx_fempty_c[hs];  // mutant: copy 3 never clears
+`else
+                if (!rn_i) hr_vc[hs] <= 1'b0; else if (hr_take_k) hr_vc[hs] <= !hx_fempty_c[hs];
+`endif
+`ifdef OT_ING_MUT_HREG
+            always @(posedge clk_i) if (hr_rd_k && !hx_pop) hr_d[HI-1:LO] <= hx_fhead[HI-1:LO];   // mutant: a pop-and-refill keeps the old word
+`else
+            always @(posedge clk_i) if (hr_rd_k) hr_d[HI-1:LO] <= hx_fhead[HI-1:LO];
+`endif
+        end
+`else
 `ifdef OT_ING_MUT_HREG
         always @(posedge clk_i) if (hx_rd && !hx_pop) hr_d <= hx_fhead;     // mutant: a pop-and-refill keeps the old word
 `else
         always @(posedge clk_i) if (hx_rd) hr_d <= hx_fhead;
+`endif
 `endif
         assign hx_empty = !hr_v;
         assign hx_head  = hr_d;
@@ -358,7 +386,14 @@ module ot_rom_host_ingest #(
     ot_link_afifo #(.W(256), .AW(RFA)) u_rx (
         .wclk(ck), .wrst_n(rn_c), .wr(irv_q), .wdata(ird_q), .wfull(rx_full), .wfreed(rx_freed), .ovf(rx_ovf),
         .rclk(clk_i), .rrst_n(rn_i), .rd(rx_pop), .rempty(rx_empty), .rdata(rx_head), .rcount(rx_cnt));
-    ot_link_afifo #(.W(64), .AW(CFA)) u_cx (
+    // S81-SHLK s10b (2026-10-19, s10 mapped netlist: u_cx.rbin[1] drove 679 read-mux loads): with OT_S81_SH_S10B the
+    // completion head is read through 32 kept read-address copies (2 bits each, ot_link_afifo RCOPY), same edge.
+`ifdef OT_S81_SH_S10B
+    localparam integer CXRC = 32;
+`else
+    localparam integer CXRC = 0;
+`endif
+    ot_link_afifo #(.W(64), .AW(CFA), .RCOPY(CXRC)) u_cx (
         .wclk(clk_i), .wrst_n(rn_i), .wr(cx_wr), .wdata(cx_w), .wfull(cx_full), .wfreed(cx_freed), .ovf(cx_ovf),
         .rclk(clk_h), .rrst_n(rn_h), .rd(cx_pop), .rempty(cx_empty), .rdata(cx_head), .rcount(cx_cnt));
 
