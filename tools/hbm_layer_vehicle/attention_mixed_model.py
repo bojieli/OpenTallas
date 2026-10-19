@@ -16,7 +16,7 @@ def context_model(class_source='mode197', landing_bits=2, queue_depth=4):
     explicit = class_source == 'explicit200'
     issuer_bits = 2 * int(explicit) + 2 * queue_depth + 1
     return dict(
-        status='PROPOSED; root decision before RTL', class_source=class_source,
+        status='root-accepted semantic opt-in; composition and physical gates OPEN', class_source=class_source,
         source_freshness=dict(issuer_commit=ISSUER_COMMIT, main_commit=ISSUER_MAIN,
                               issuer_sha256=ISSUER_SHA256, ID_COHORT=1,
                               retained='cohort validation, freshness clear, layer/id predicates and fixed-slot faults'),
@@ -108,7 +108,7 @@ def model():
                     complete_banked_native_source_ff_delta=89,
                     note='existing aligned valid may be reused only after source audit; no new command edge'),
                 timing=dict(storage=timing_profile(),
-                            native_cache_proven=timing_profile(native_landing=True, native_return=True, native_cache_safe=True),
+                            native_cache_current=timing_profile(native_landing=True, native_return=True, native_cache_safe=True),
                             banked_native_proposed=timing_profile(native_landing=True, native_return=True, native_cache_safe=True, banked_calendar=True)),
                 gates_before_adoption=['root ABI/model decision', 'same-vehicle alternating dense/attention/dense exact+mutants',
                                       'XW47 core and application context exact+census',
