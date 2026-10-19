@@ -1,0 +1,39 @@
+{
+  "mutation": "",
+  "budget": {
+    "literal_modes": [
+      0,
+      4,
+      0
+    ],
+    "distinct_programmes": 2,
+    "resident_words": 2,
+    "descriptors": 3,
+    "sectors": 24,
+    "launch": 30,
+    "run_origin": 33
+  },
+  "expected_go": [
+    [
+      0,
+      1000
+    ],
+    [
+      1,
+      1100
+    ],
+    [
+      0,
+      1200
+    ]
+  ],
+  "event_sha256": {
+    "xw.hex": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "mem.hex": "96ada2019700a1e8112b8c1faa9d48c6d15eb2ed6acb7989e29b3ac7a21f2e7e",
+    "ids.hex": "d3d6ae864989a061a6627f8f0d6f4d95516bf758e684091242e84d9559004f26",
+    "ing.hex": "3e4e1bdd35a0f928a5ebb27d167d9d2748ac922c466828e66534bbb206903359"
+  },
+  "service_build_revision": "f2a07fb05",
+  "compiler_sha256": "66d9cd7112816c32910aa54d01dc19dc75b856c2e05fd1388bf58db9b543ab77",
+  "scope": "three mode-only drained programmes; actual transport qualification only, no arithmetic or general stateful splitting proof"
+}
