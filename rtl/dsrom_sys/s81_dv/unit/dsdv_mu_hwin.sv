@@ -391,9 +391,16 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
             // Decode its current state; the SRAM read and event edges stay fixed.
             localparam integer SPLIT=(NSLOT+1)/2;
             (* keep *) reg [SI-1:0] upper_pointer_r;
-            wire [NSLOT-1:0] lower_decode=OH0 << pb_r;
-            wire [NSLOT-1:0] upper_decode=OH0 << upper_pointer_r;
-            assign pe_r={upper_decode[NSLOT-1:SPLIT],lower_decode[SPLIT-1:0]};
+            if(NSLOT<=48) begin:g_bounded_decode
+                wire [23:0] lower_decode,upper_decode;
+                (* keep=1 *) dsdv_mu_decode24 u_lower(.address(6'(pb_r)),.onehot(lower_decode));
+                (* keep=1 *) dsdv_mu_decode24 u_upper(.address(6'(upper_pointer_r)-6'(SPLIT)),.onehot(upper_decode));
+                assign pe_r={upper_decode[NSLOT-SPLIT-1:0],lower_decode[SPLIT-1:0]};
+            end else begin:g_full_decode
+                wire [NSLOT-1:0] lower_decode=OH0 << pb_r;
+                wire [NSLOT-1:0] upper_decode=OH0 << upper_pointer_r;
+                assign pe_r={upper_decode[NSLOT-1:SPLIT],lower_decode[SPLIT-1:0]};
+            end
             always @(posedge ck or negedge rr[COPY_RBASE+7*se+6])
                 if(!rr[COPY_RBASE+7*se+6]) upper_pointer_r<=SI'(0);
                 else if(adv[se]) upper_pointer_r<=((|(pe_r&lm_event[se])) || pe_r[NSLOT-1])?SI'(0):upper_pointer_r+1'b1;
@@ -709,4 +716,8 @@ endmodule
 
 (* keep_hierarchy=1 *) module dsdv_mu_record(input wire start,on_calendar,collision,duplicate,armed,bad,output wire record);
  assign record=start && on_calendar && !collision && !duplicate && !(!armed && bad);
+endmodule
+
+(* keep_hierarchy=1 *) module dsdv_mu_decode24(input wire [5:0] address,output wire [23:0] onehot);
+ genvar k;generate for(k=0;k<24;k=k+1) begin:g_bit assign onehot[k]=(address==6'(k));end endgenerate
 endmodule
