@@ -1,0 +1,5 @@
+COLD_PROVIDER_LATE_PREFIX_DETECTED raw_INIT=1000 raw_GI_emb_pin=1063 provider_core_sample=1064 head_reference=1063 provider_complete=1337 first_fault=1064
+- /srv/opentallas-scratch/claude/mu-ctx-admission/gi_init_src/rtl/test/mu_qwen_seq/tb_mu_cold_provider.sv:40: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.001 s; speed 1.615 ms/s
+- Verilator: cpu 0.001 s on 1 threads; allocated 7 MB
