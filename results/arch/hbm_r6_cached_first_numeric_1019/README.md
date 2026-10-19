@@ -1,0 +1,13 @@
+# Record 6 cached first numerical launch
+
+Source tip `c7dda512c67625f0e4db6310981d979bacf35a40` completed its full 512-lane, 24-bank, 41-station build. This receipt pins and launches the first actual numerical simulation from that cached binary. No source, benchmark, fixture, compiled object, or generated C++ was changed; no rebuild was performed.
+
+Build completed with exit 0, elapsed 1:06:01 and maximum resident set 132,235,332 KB. Final executable SHA256 is `d33cd9d200d98bd2d7711f7cf26f7a16d9e1b9bf93cfe103ac4a2156049ba987`; final VerFiles SHA256 is `8894adae08f909ef11cd3cf2da5e5bc56a6de83721fcdaa4893168fe60d02410`. Actual consumed-source audit passes 47 inputs against the 53-file selected-source superset, using pinned Verilator 5.050 binary SHA256 `d3f42fa3b523cf1d7e38827134ac8560ac03b52466392eaf0001141ed4d9fe41`.
+
+The preflight inventories all 307 current generated fixture files and the executable, manifests, final VerFiles and build log. Separately, all 1,280 original input words match original fixture binary digest `f2d1351fa018cc6708973313ba3d7fb4ac974ea4156553246faa710e04fd89c5`; original gold is `40a2a1ed`, with distinct second episode gold `3fa2a1ed`. Independent original compiler/calendar digest equality remains pending: current inventory hashes alone do not establish that equality.
+
+The authorized cached command is exactly `cd generated_clockfix; ../obj_r6/Vtb`, invoked through unpinned ot-run with the existing 320 GB memory envelope, one CPU and 10 GB scratch. Measured preflight ep8 MemAvailable was 990 GB and scratch free space 46 GB. Admission selected ep8 unit `oth-ubuntu-2299469-1792450467`; native PID `2299489`, local execution session `79739`. Exclusive lock and permanent STARTED marker prevent a second first run. The runner captures actual native exit, GNU time and SHA256 receipts independently of the client stream, with core dumps disabled to preserve scratch capacity.
+
+Remote directory: `/srv/opentallas-scratch/claude/hbm-record6-implement-1019` on ep8. Collect `positive-FIRST.log`, `FIRST_numeric.time`, `FIRST_numeric.exit`, `FIRST_numeric.STARTED`, `FIRST_numeric.ENDED` and `FIRST_numeric_result.sha256` when terminal. Preserve the first actual verdict. Do not rebuild, repair, restart, or allow an extra timing edge under this grant.
+
+No numerical verdict is claimed in this launch receipt. The c7 observer may expose a one-edge post-sampling discrepancy; preserve any first failure before proposing observer changes. M14's omitted CP SRAM rewrite cannot prove reset invalidation, because its configuration SRAM persists across reset. No synthesis, physical timing, production activation, complete record, or full-token rate qualification is claimed.
