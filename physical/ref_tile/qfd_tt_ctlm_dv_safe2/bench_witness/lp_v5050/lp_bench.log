@@ -1,0 +1,17 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/qw-ctlm-safe2-bench
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/qw-ctlm-safe2-bench
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/qw-ctlm-safe2-bench
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/qw-ctlm-safe2-bench
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/qw-ctlm-safe2-bench
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/qw-ctlm-safe2-bench
+ot-run: ot-agidock128  admits   120 GB (avail 97, growth 13, headroom 0, waiters 0/0 GB) load 15/64 running 8 disk 271 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-1589811-1792434822 after 0 s
+AUDIT PASS
+AUDIT-UNLAND FAIL (expected)
+MUT 0: LP_LOCKSTEP FAIL
+MUT 1: LP_LOCKSTEP FAIL
+MUT 2: LP_LOCKSTEP FAIL
+MUT 4: LP_LOCKSTEP FAIL
+BENCH_EXIT 1
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-1589811-1792434822): exit 1
