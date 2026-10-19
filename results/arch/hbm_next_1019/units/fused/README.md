@@ -162,3 +162,42 @@ container was killed (no gate_result). Benches m0 10/10 + m1..m6 FAIL were PASS 
 | 6 | Floorplan | PASS (local gate): macros on the 43.2 lattice (129.6, 172.8 / 259.2), centred, 45 um channel, std on all sides (one band); outline from synthesis (n3 measured el + lane-local; n4 estimate) at ~0.5; aspect 1.5 (t648 1.9). |
 | 7 | Clock | PASS-pending: ~80k flops on one centre-fed root (WARN guidance > 15k; t648 WARN clock_span); the --cts gate measures pin-flop spread <= 80 TT+FF. io_hold_margin 0.03. |
 | 8 | Static schedule | PASS: no credits/backpressure; +2 PRE c1 edges handed to CMTP (cost model c(N) = c1 + (N-1)(II + rgap)). |
+
+### FUSED csum tree + fus_hub (DIE f4c_t9p3 ask): SAFE-DESIGN review of `ot_hnx_fused_top`, NOT kitted yet
+
+- **Item 5 FAIL:** `scb[0:47]` = 48 x 256 b (12.3 kb) scalar sectors in a runtime-indexed flop array (`scb[l_upx]` write,
+  `scb[wsx]` read) -> must become a 1R1W 64 x 256 SRAM (or the 128 x 256 macro) with a registered read; WGT beat issue
+  then reads one edge earlier (static, calendar-only change).
+- **Item 2/7:** today the top takes all 32 lanes' chunk sums on ONE edge (`c_all`) into a 1,024-b register and a 5-level
+  pairwise tree. On the die (lanes beside their banks, worst lane -> hub 14.5 mm = 37 hops) that must become the DIE's
+  neighbour-hop tree (pair -> g1->g0, g2->g3 -> g0->g3 -> hub), each level a landed crossing, every hop <= 405 um.
+- **Numerics blocker (CMTP):** the golden sums chunk pairs (2c, 2c+1) level by level, and chunk u of a block is lane
+  (u + ph) mod 32 with ph = A's bank phase. A FIXED physical lane tree reproduces the golden order only when
+  ph = 0 (level k needs ph = 0 mod 2^k). Either the compiler places every FUSED operand vector bank-aligned (ph = 0; the
+  VEH->CMTP job_ok bank-phase item) or each lane rotates its sum by ph before the tree (a 32-way static shift at the
+  hub). Recommend ph = 0 in the allocator (no hardware, no numerics change); job_ok then refuses ph != 0.
+- **Item 8:** each tree level adds its hop latency to the r return (DIE: ~+18.5 cycles each way, c1 ~+37/record, II unchanged);
+  the top's `WSC` / `tw_next` constants and the lanes' fixed r edge must be re-derived from the hop counts.
+- **Plan:** (1) RTL `ot_hnx_fused_hub` = job decode + scalar prologue (scb SRAM) + heap + divc + eps + rsqrt + r broadcast,
+  with the 4-group partial sums as its only tree inputs; (2) `ot_hnx_fused_tadd` = one registered FP32 add + landed input
+  pair (the per-level tree node, placed by DIE beside the lane pairs / group corners); (3) top bench = current m0..m6 with
+  ph = 0 vectors + a ph != 0 refusal witness; (4) kits hnx_fused_hub_1019 (432 x 432, SRAM on the lattice) and
+  hnx_fused_tadd_1019. Needs: CMTP decision on ph = 0, DIE hop counts per level.
+
+### HC quadrant hub n2 successor (`hnx_hcq_hub_1019`): SAFE-DESIGN review, NOT rebuilt yet
+
+n2 EARLY_FAIL_HOLD (HUB_N2_SUCCESSOR_BRIEF.md on df784b971): worst hold at the result[721] input pin flop; one clock root
+over a 734.4 um square with 48,778 regs; initial / FF pin-flop spread 151 / 134 ps (> 80), common min 759.5 ps.
+| # | Item | Finding |
+|---|---|---|
+| 1 | Pins | PASS: result (768 b), rr (2,056 b) are one-edge pin captures; reset landed. |
+| 2 | Reach | n1 fixed (per-face beat copies); the 734.4 square still puts face flops > 405 um from the opposite face's consumers -> re-check per region. |
+| 3 | Fanout | n1 xbrep fixed. |
+| 4 | Depth | gather/programme calendar path lint WARN only. |
+| 5 | Storage | PASS: programme 1024 x 256 SRAM; result/rr are single captures; BEATS4 assembly not instantiated. |
+| 6 | Floorplan | FAIL: programme SRAM origin (280.8, 332.64) off the 43.2 lattice (332.64 = 7.7 x 43.2). |
+| 7 | Clock | **FAIL (cause):** one global tree over the whole tile -> 134-151 ps face spread. Needs face clock regions (N/E/S/W capture groups, local roots) + 4-slot landed crossings to the core FP32 tree region, or a hard parent: 4 face-land children + core child, each <= 15k sinks, judged per linked child pair at TT+FF <= 80. |
+| 8 | Schedule | each landed crossing = fixed cycles into the HC calendar (row II 250 stays; c1 + landing). |
+Plan for the successor owner: split `ot_hnx_hc_qhub` into face-capture regions + core (`ot_pin_land`-style captures with
+their own region clock), kit as a cluster parent with the programme SRAM on the lattice; benches q_n4s/q_d4g + mut7/8/9 +
+ring rows at 5.050 with the landing cycles; then --cts gate. This is a multi-hour RTL + kit job (own sub-lane).
