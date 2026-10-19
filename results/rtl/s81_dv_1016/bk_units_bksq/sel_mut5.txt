@@ -1,0 +1,5 @@
+# S81-BKSQ 10-18 witness @7a22036e4 (src /srv/opentallas-scratch/claude/bksq/src_7a22036e4 on ot-epyc5), Verilator 5.050, run_bk_bench.sh sel mut=5
+Verilator 5.050 2026-07-01 rev v5.050
+sel m5 base: RESULT FAIL segments 32 out_beats 592 replays 4 errors 5249 tail_minus_ref max 66633 mean 4566 ref_holds 9 | WRAP_SUMMARY unit 0 thru 0 mir 0 lmap 0: through beats 21526, ingress words 72038, drain CTL 21527, egress words 8189, errors 0
+DSDV_BK_SEL FAIL mut=5
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-2400361-1792374374): exit 1

@@ -96,7 +96,7 @@
    "v": "M3 M5"
   }
  },
- "structural_change": "S81U-BK3 VERTICAL CUT (coordinator 0cj (b), 10-17 ~20:10): the bk clusters were ~1,160 um wide (the closed tiles' lane faces point away from the merger / control); they now stack inside the 680-um column (plan results/rtl/s81_dv_1016/bk_units_bk2/vcut_plan.json): S row 2 tiles, middle row merger-or-control + glue, N row 2 tiles (MX). Re-pinned top-down for the new neighbours; square-ish re-cut; the lane relays are gone (every hop <= ~405 um). Quarter: one master for all 4 quarters (S row R0, N row MX): t_s / f_c on the W part of the N face and t_o on the W face top (to the control), lane on the E part (from the glue).",
+ "structural_change": "S81-BKSQ 10-18 REGIONAL RESET TREE (gate3 @368403ff4 FAIL textbook.high_fanout: rst_s[1] -> 9,751 reset loads > 8,000): dsdv_bksel_q sets dsfd_selt_q2 RSTR 1: 55 (* keep *) copies of the second reset-synchroniser stage, each async-cleared by the rst pin and loading rst_s[0] (same assert / release edges, 0 cycles), each resetting one region of <= ~220 flops (sq / sq1 4 bit groups, oq / oq1 2, slice RSTW 42: own + sweep state, 16 bin groups per histogram, 4 accumulator lane groups per packer). Mutant OT_DSDV_BK 5 holds one copy in reset. Earlier: S81U-BK3 VERTICAL CUT (coordinator 0cj (b), 10-17 ~20:10): the bk clusters were ~1,160 um wide (the closed tiles' lane faces point away from the merger / control); they now stack inside the 680-um column (plan results/rtl/s81_dv_1016/bk_units_bk2/vcut_plan.json): S row 2 tiles, middle row merger-or-control + glue, N row 2 tiles (MX). Re-pinned top-down for the new neighbours; square-ish re-cut; the lane relays are gone (every hop <= ~405 um). Quarter: one master for all 4 quarters (S row R0, N row MX): t_s / f_c on the W part of the N face and t_o on the W face top (to the control), lane on the E part (from the glue).",
  "job": {
   "owner": "Claude:S81U-BK3",
   "branch": "claude/s81u2-bk-1017",
@@ -124,7 +124,19 @@
     ],
     "expect": "fail",
     "fail_regex": "^DSDV_BK_SEL FAIL mut=3$",
-    "fail_witness": "results/rtl/s81_dv_1016/bk_units_t8/sel_mut3.txt"
+    "fail_witness": "results/rtl/s81_dv_1016/bk_units_bksq/sel_mut3.txt"
+   },
+   {
+    "name": "dsdv_bk_sel_mut_rstcopy",
+    "cmd": "bash rtl/dsrom_sys/s81_dv/unit/bk/test/run_bk_bench.sh sel {RUN}/selm5 5 base",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "^DSDV_BK_SEL FAIL mut=5$",
+    "fail_witness": "results/rtl/s81_dv_1016/bk_units_bksq/sel_mut5.txt"
    }
   ],
   "extra_paths": [
