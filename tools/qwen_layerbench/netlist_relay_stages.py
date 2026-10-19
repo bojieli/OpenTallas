@@ -15,6 +15,8 @@ cycles is the K strap, recorded per bus as 'landing_k').  Clock / reset / consta
 generator exporters do (tools/qwen_split/relay_stages_export.py RELAY_SKIP): a pin whose RTL port name is a clock
 (ck*, clk*, *_ck, gclk), the elastic PHY instances of SKIP_INST (--skip-inst), relay control pins (ea/eb/en/k*/tie_*/ck_o/ckf), and
 reset-repeater tree masters (qfd_rst_rep*, qkd_rst_region).
+src_nets (HKV-DIE2 10-19, not part of the digest): the die nets the source pin drives; a generator bus bid drives
+n_<bid> at its source pin, so post-relay / post-station consumers (kv_static_params.py) key the netlist table by bid.
 Domain: the clock net on the source instance's first clock port mapped by --domain-map (default: n_clk_coll* ->
 serial_0p9, everything else on the die core -> stream_1p2, n_clk_hbm* -> hbm_cdc).
 """
@@ -285,8 +287,8 @@ def export(die_v, pb, design, commit, src_prefixes, local_dirs, plan_id, reach=N
                         and getattr(mods[lm], 'source_sha256', None) == PV_TRUNK_ROLE_SHA):
                     logical_port = f'y__{lpos}_{lpos}' if lpos >= 256 else 'y__255_0'
                 r = pairs.setdefault((si, sp, li, logical_port), dict(st=set(), bits=set(), sm=sm, lm=lm, lands=set(),
-                                                           forwarded_paths=set(), plain_counts=set(), effective_ages=set()))
-                r['st'].add(n); r['bits'].add(lpos); r['lands'].add(lands)
+                                                           forwarded_paths=set(), plain_counts=set(), effective_ages=set(), nets=set()))
+                r['st'].add(n); r['bits'].add(lpos); r['lands'].add(lands); r['nets'].add(bit[0])
                 r['forwarded_paths'].add(forwarded); r['plain_counts'].add(plain)
                 r['effective_ages'].add(path_ages[age_key]['age_edges'])
     recs = []
@@ -313,7 +315,7 @@ def export(die_v, pb, design, commit, src_prefixes, local_dirs, plan_id, reach=N
         recs.append(dict(id=bid, src=dict(inst=si, port=sp, master=r['sm']), dst=dict(inst=li, port=dp, master=r['lm']),
                          width=len(r['bits']), stages=max(r['st']), stage_spread=sorted(r['st']) if len(r['st']) > 1 else None,
                          domain=domain_of(inst_clk.get(si) or inst_clk.get(li)) or 'stream_1p2', eq_age_group=None,
-                         **ages))
+                         src_nets=sorted(r['nets']), **ages))
     doc = DRS.make_doc(design, dict(id=plan_id, commit=commit, generator='tools/qwen_layerbench/netlist_relay_stages.py',
                                     sources=[str(die_v)] + sorted(set(srcs.values()))[:400], kind='GEN netlist walk (die run)'),
                        CLOCK_PERIOD_PS, reach, recs, coverage='complete', problems=problems[:200],
