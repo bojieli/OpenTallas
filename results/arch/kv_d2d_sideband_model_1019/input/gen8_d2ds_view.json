@@ -1,0 +1,10 @@
+{
+ "schema": "opentallas.qwen_kv.d2ds_view_select.v1",
+ "mode": "auto",
+ "kit": "qkd_d2d_static_r7v",
+ "bind": null,
+ "die_txdp": "0x03030416",
+ "die_ntx": 3,
+ "decision": "FRAME",
+ "why": "no CLOSED view of qkd_d2d_static_r7v on the branch (missing physical/ref_tile/qkd_d2d_static_r7v/views/qkd_d2d_static/qkd_d2d_static.lef): frame kept"
+}

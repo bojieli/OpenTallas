@@ -1,0 +1,393 @@
+{
+  "verdict": "MODEL_HOLD_BEFORE_RTL_BUILD",
+  "options": {
+    "32": {
+      "bits": 32,
+      "producer_ff": 32,
+      "relay_hops": 11,
+      "relay_ff": 352,
+      "receiver_ff": 32,
+      "ff": 416,
+      "resettable_ff": 0,
+      "reset_set_cap_ff": 0,
+      "added_edges": 0,
+      "producer_gates": {
+        "OR4x1_ASAP7_75t_R": 161,
+        "OR3x1_ASAP7_75t_R": 2,
+        "OR2x2_ASAP7_75t_R": 16
+      },
+      "receiver_gates": {
+        "OR4x1_ASAP7_75t_R": 10
+      },
+      "positive_capture_inv": 416,
+      "positive_capture_inv_area_um2": 18.19584,
+      "positive_capture_inv_input_cap_ff": {
+        "TT": 257.89004800000004,
+        "FF": 284.425856
+      },
+      "stdcell_area_um2": 158.52834000000001,
+      "ff_area_um2": 121.30560000000001,
+      "comb_area_um2": 19.026899999999998,
+      "clock_cap_ff": {
+        "TT": 197.490176,
+        "FF": 217.15616
+      },
+      "ff_d_cap_ff": {
+        "TT": 232.469952,
+        "FF": 258.48159999999996
+      },
+      "comb_input_cap_ff": {
+        "TT": 406.815203,
+        "FF": 451.94806800000003
+      },
+      "max_new_nonclock_logical_loads": 2,
+      "edge_bus_bits": 580,
+      "incremental_bus_fraction": 0.058394160583941604,
+      "external_signal_contacts": 768,
+      "dedicated_face_length_min_um": 5.333333333333333,
+      "metal67_incremental_track_width_um": 2.048,
+      "metal45_incremental_track_width_um": 1.536,
+      "proposed_separate_relay_frame_um": [
+        12.96,
+        12.96
+      ],
+      "proposed_relay_face_signal_density_per_um": 2.4691358024691357,
+      "proposed_relay_bbox_area_um2": 1847.5776000000003,
+      "native_total_area_um2": null,
+      "clock_tree_area_um2": null,
+      "wire_cap_ff": null,
+      "dynamic_power_mw": null
+    },
+    "17": {
+      "bits": 17,
+      "producer_ff": 17,
+      "relay_hops": 11,
+      "relay_ff": 187,
+      "receiver_ff": 17,
+      "ff": 221,
+      "resettable_ff": 0,
+      "reset_set_cap_ff": 0,
+      "added_edges": 0,
+      "producer_gates": {
+        "OR4x1_ASAP7_75t_R": 161,
+        "OR3x1_ASAP7_75t_R": 2,
+        "OR2x2_ASAP7_75t_R": 16
+      },
+      "receiver_gates": {
+        "OR4x1_ASAP7_75t_R": 10
+      },
+      "positive_capture_inv": 221,
+      "positive_capture_inv_area_um2": 9.66654,
+      "positive_capture_inv_input_cap_ff": {
+        "TT": 137.004088,
+        "FF": 151.101236
+      },
+      "stdcell_area_um2": 93.13704,
+      "ff_area_um2": 64.4436,
+      "comb_area_um2": 19.026899999999998,
+      "clock_cap_ff": {
+        "TT": 104.916656,
+        "FF": 115.36421
+      },
+      "ff_d_cap_ff": {
+        "TT": 123.49966200000001,
+        "FF": 137.31834999999998
+      },
+      "comb_input_cap_ff": {
+        "TT": 406.815203,
+        "FF": 451.94806800000003
+      },
+      "max_new_nonclock_logical_loads": 2,
+      "edge_bus_bits": 565,
+      "incremental_bus_fraction": 0.03102189781021898,
+      "external_signal_contacts": 408,
+      "dedicated_face_length_min_um": 2.8333333333333335,
+      "metal67_incremental_track_width_um": 1.088,
+      "metal45_incremental_track_width_um": 0.8160000000000001,
+      "proposed_separate_relay_frame_um": [
+        12.96,
+        12.96
+      ],
+      "proposed_relay_face_signal_density_per_um": 1.3117283950617282,
+      "proposed_relay_bbox_area_um2": 1847.5776000000003,
+      "native_total_area_um2": null,
+      "clock_tree_area_um2": null,
+      "wire_cap_ff": null,
+      "dynamic_power_mw": null
+    }
+  },
+  "cell_only_estimate": {
+    "TT": {
+      "32": {
+        "producer_three_or4_ps": 119.36316465279411,
+        "stages": [
+          {
+            "input_slew_ps": 20.0,
+            "load_ff": 0.596175,
+            "delay_ps": 39.549,
+            "output_slew_ps": 14.0489
+          },
+          {
+            "input_slew_ps": 14.0489,
+            "load_ff": 0.596175,
+            "delay_ps": 38.439476916000004,
+            "output_slew_ps": 14.043528019
+          },
+          {
+            "input_slew_ps": 14.043528019,
+            "load_ff": 1.239856,
+            "delay_ps": 41.374687736794115,
+            "output_slew_ps": 17.765181025272803
+          }
+        ]
+      },
+      "17": {
+        "producer_three_or4_ps": 116.42695227986235,
+        "stages": [
+          {
+            "input_slew_ps": 20.0,
+            "load_ff": 0.596175,
+            "delay_ps": 39.549,
+            "output_slew_ps": 14.0489
+          },
+          {
+            "input_slew_ps": 14.0489,
+            "load_ff": 0.596175,
+            "delay_ps": 38.439476916000004,
+            "output_slew_ps": 14.043528019
+          },
+          {
+            "input_slew_ps": 14.043528019,
+            "load_ff": 0.619928,
+            "delay_ps": 38.43847536386236,
+            "output_slew_ps": 14.04354032083649
+          }
+        ]
+      }
+    },
+    "FF": {
+      "32": {
+        "producer_three_or4_ps": 82.8847411830981,
+        "stages": [
+          {
+            "input_slew_ps": 20.0,
+            "load_ff": 0.65693,
+            "delay_ps": 27.7786,
+            "output_slew_ps": 9.93158
+          },
+          {
+            "input_slew_ps": 9.93158,
+            "load_ff": 0.65693,
+            "delay_ps": 26.261521220000002,
+            "output_slew_ps": 9.914567464120001
+          },
+          {
+            "input_slew_ps": 9.914567464120001,
+            "load_ff": 1.367432,
+            "delay_ps": 28.844619963098104,
+            "output_slew_ps": 13.314153487922814
+          }
+        ]
+      },
+      "17": {
+        "producer_three_or4_ps": 80.29893744679508,
+        "stages": [
+          {
+            "input_slew_ps": 20.0,
+            "load_ff": 0.65693,
+            "delay_ps": 27.7786,
+            "output_slew_ps": 9.93158
+          },
+          {
+            "input_slew_ps": 9.93158,
+            "load_ff": 0.65693,
+            "delay_ps": 26.261521220000002,
+            "output_slew_ps": 9.914567464120001
+          },
+          {
+            "input_slew_ps": 9.914567464120001,
+            "load_ff": 0.683716,
+            "delay_ps": 26.25881622679508,
+            "output_slew_ps": 9.914551914662207
+          }
+        ]
+      }
+    }
+  },
+  "storage": {
+    "candidate_source_commit": "99cbdd49d",
+    "candidate": "ot_sram_1r1w_64x137_m1_r2c2_p192",
+    "banks": 4,
+    "words_per_bank": 64,
+    "useful_width_per_bank": 137,
+    "useful_bits": 35072,
+    "old_physical_bits": 131072,
+    "read_bits_per_edge": 548,
+    "write_bits_per_edge": 548,
+    "read_bytes_per_edge": 68.5,
+    "write_bytes_per_edge": 68.5,
+    "macro_width_um": 57.912,
+    "macro_height_um": 45.672,
+    "macro_area_um2": 10579.827455999999,
+    "signal_contacts": 458,
+    "faces": {
+      "W": {
+        "contacts": 229,
+        "length_um": 45.672,
+        "average_per_um": 5.014012961989841,
+        "min_centroid_gap_um": 0.19199999999999307,
+        "worst_one_um_window": 6
+      },
+      "E": {
+        "contacts": 229,
+        "length_um": 45.672,
+        "average_per_um": 5.014012961989841,
+        "min_centroid_gap_um": 0.19199999999999307,
+        "worst_one_um_window": 6
+      },
+      "N": {
+        "contacts": 0,
+        "length_um": 57.912,
+        "average_per_um": 0.0,
+        "min_centroid_gap_um": null,
+        "worst_one_um_window": 0
+      },
+      "S": {
+        "contacts": 0,
+        "length_um": 57.912,
+        "average_per_um": 0.0,
+        "min_centroid_gap_um": null,
+        "worst_one_um_window": 0
+      }
+    },
+    "pg_abstract_contacts": 118,
+    "clocks": "one shared logical ck, one clk pin per bank; NOT dual-clock CDC",
+    "collision": "same posedge synchronous read-before-write OLD plus existing age0/age1 forwarding; preserve both",
+    "initialization": "no reset; OT_MEM_NO_INIT arbitrary-memory proof required",
+    "historical_source_ff_per_bank": 420,
+    "current_sf_ff_per_bank": 445,
+    "current_sf_ff_all_banks": 1780,
+    "occupancy": "64 publication identities; immediate scheduled read, no credits, no variable replay; preserve slot/read collision checks",
+    "proposed_lattice_origins_um": [
+      [
+        43.2,
+        43.2
+      ],
+      [
+        172.8,
+        43.2
+      ],
+      [
+        43.2,
+        129.6
+      ],
+      [
+        172.8,
+        129.6
+      ]
+    ],
+    "proposed_macro_array_bbox_um": [
+      43.2,
+      43.2,
+      230.712,
+      175.272
+    ],
+    "pg_actual_contact_via_connectivity": null,
+    "obstruction_escape": null,
+    "same_age_native_timing": null,
+    "qualification": "analytical candidate only; no old native view or Qwen gate transferred"
+  },
+  "library_cells": {
+    "TT": {
+      "DFFHQNx1_ASAP7_75t_R": {
+        "area_um2": 0.2916,
+        "input_cap_ff": {
+          "CLK": 0.474736,
+          "D": 0.558822
+        }
+      },
+      "OR4x1_ASAP7_75t_R": {
+        "area_um2": 0.10206,
+        "input_cap_ff": {
+          "A": 0.596175,
+          "B": 0.551855,
+          "C": 0.547777,
+          "D": 0.567232
+        }
+      },
+      "OR3x1_ASAP7_75t_R": {
+        "area_um2": 0.08748,
+        "input_cap_ff": {
+          "A": 0.591509,
+          "B": 0.553062,
+          "C": 0.553348
+        }
+      },
+      "OR2x2_ASAP7_75t_R": {
+        "area_um2": 0.08748,
+        "input_cap_ff": {
+          "A": 0.506717,
+          "B": 0.520764
+        }
+      },
+      "INVx1_ASAP7_75t_R": {
+        "area_um2": 0.04374,
+        "input_cap_ff": {
+          "A": 0.619928
+        }
+      }
+    },
+    "FF": {
+      "DFFHQNx1_ASAP7_75t_R": {
+        "area_um2": 0.2916,
+        "input_cap_ff": {
+          "CLK": 0.52201,
+          "D": 0.62135
+        }
+      },
+      "OR4x1_ASAP7_75t_R": {
+        "area_um2": 0.10206,
+        "input_cap_ff": {
+          "A": 0.65693,
+          "B": 0.613645,
+          "C": 0.612334,
+          "D": 0.630443
+        }
+      },
+      "OR3x1_ASAP7_75t_R": {
+        "area_um2": 0.08748,
+        "input_cap_ff": {
+          "A": 0.653695,
+          "B": 0.613187,
+          "C": 0.646268
+        }
+      },
+      "OR2x2_ASAP7_75t_R": {
+        "area_um2": 0.08748,
+        "input_cap_ff": {
+          "A": 0.574119,
+          "B": 0.572042
+        }
+      },
+      "INVx1_ASAP7_75t_R": {
+        "area_um2": 0.04374,
+        "input_cap_ff": {
+          "A": 0.683716
+        }
+      }
+    }
+  },
+  "source_branch_fixedpoint": {
+    "max_root_before": 2,
+    "max_root_after": 4,
+    "new_copies": 0
+  },
+  "limits": [
+    "No current GEN8 native binding",
+    "Actual first-use/reset/PLL authority open",
+    "No complete receiver timing proof",
+    "No source physical PG/access/clock/spread receipt",
+    "Conditional cell estimates omit launch CQ, old loads and all wire RC",
+    "Existing payload relay528 face density 528/82.08 exceeds6; separate physical redesign required"
+  ]
+}

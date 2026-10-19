@@ -1,0 +1,40 @@
+{
+  "gen8_elements.lef": {
+    "sha256": "bb2c53f16a412e50384a58a82b57c28a71dc5270156dd855fce6c08ca5c459bc",
+    "bytes": 41215934,
+    "source": "ep6 cda v4 case_kv captured 2026-10-19 14:00 PT; extracted subset retained"
+  },
+  "gen8_place.tcl": {
+    "sha256": "51c3cf27b4c3c285b8345cfb869cc1e51a331c43263b70f2c781650e8bc7dc53",
+    "bytes": 3476568,
+    "source": "ep6 cda v4 case_kv captured 2026-10-19 14:00 PT; extracted subset retained"
+  },
+  "asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz": {
+    "sha256": "9e3848d247f9bbc8d405ee55617af98797b6d5be9a1af02988ec5d59ca9dad99",
+    "bytes": 4256548,
+    "uncompressed_sha256": "e6a397c74d65b9e4f30128663e588bcf1192f680c3e86d01da34a328041d85b3",
+    "uncompressed_bytes": 22101389,
+    "retained": "used_native_cell_prices.json; exact full ORFS library recoverable by hash"
+  },
+  "asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz": {
+    "sha256": "fe9f1c18e88ab129d63ad82adc256f3a85c7e38e47dabbe0a96749b41087dea1",
+    "bytes": 4181747,
+    "uncompressed_sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+    "uncompressed_bytes": 22136706,
+    "retained": "used_native_cell_prices.json; exact full ORFS library recoverable by hash"
+  },
+  "asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz": {
+    "sha256": "cc9651e9235bcd29bba0737b7ba7a8afddde7462df3ff48d3870c22d05c86fb3",
+    "bytes": 3829689,
+    "uncompressed_sha256": "13b59dfb321f154bc36f1b95b3942907176b01a0a951cac34a9dcd9c30a91a60",
+    "uncompressed_bytes": 19878242,
+    "retained": "used_native_cell_prices.json; exact full ORFS library recoverable by hash"
+  },
+  "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz": {
+    "sha256": "bbe6d904d58c7367de1ed7639e4eae386c65fa0a5af26ae62dc5e4e2ec52b08b",
+    "bytes": 3765433,
+    "uncompressed_sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+    "uncompressed_bytes": 19915253,
+    "retained": "used_native_cell_prices.json; exact full ORFS library recoverable by hash"
+  }
+}

@@ -1,0 +1,308 @@
+{
+  "source_prices": {
+    "old": {
+      "mapped_sha256": "16d87dc783f74351fc1f7770ea667a6b6d51f170e8efb0645d826837e17f7571",
+      "mapped_cells": 40694,
+      "source_inventory_only": {
+        "TT": {
+          "std_master_area_um2": 5986.78128,
+          "ff_clock_cap_ff": 5241.020165,
+          "all_cell_input_cap_ff": 57363.37015400002,
+          "repair_extra_std_area_um2": 163.50012,
+          "repair_extra_ff_clock_cap_ff": 208.71130899999997,
+          "repair_extra_all_input_cap_ff": 1012.9887249999999,
+          "repair_extra_async_reset_set_cap_ff": 318.367,
+          "macro_masters_excluded": {
+            "ot_sram_1r1w_64x512_m1_r2c2": 4
+          }
+        },
+        "FF": {
+          "std_master_area_um2": 5986.78128,
+          "ff_clock_cap_ff": 5759.606054,
+          "all_cell_input_cap_ff": 63413.34029199999,
+          "repair_extra_std_area_um2": 163.50012,
+          "repair_extra_ff_clock_cap_ff": 228.47229,
+          "repair_extra_all_input_cap_ff": 1116.4443179999998,
+          "repair_extra_async_reset_set_cap_ff": 344.289575,
+          "macro_masters_excluded": {
+            "ot_sram_1r1w_64x512_m1_r2c2": 4
+          }
+        }
+      },
+      "independent_root_lowerbounds": {
+        "FF": 430,
+        "comb": 138,
+        "input": 0,
+        "macro": 0,
+        "constant": 0,
+        "tie": 133
+      },
+      "fixedpoint_iterations": 3,
+      "fixedpoint_extra_cells": 726,
+      "no_unresolved_input_macro_demand": true,
+      "qualification": "Arithmetic model of same-master-D/reset kept copies, not emitted, optimized, simulated or physically qualified"
+    },
+    "current_sfo": {
+      "mapped_sha256": "c5449c82545c3b1a978965e608d8cc31fa546983f71979d5bbec48fbfc78cfe0",
+      "mapped_cells": 37553,
+      "source_inventory_only": {
+        "TT": {
+          "std_master_area_um2": 5977.71252,
+          "ff_clock_cap_ff": 5640.759180999999,
+          "all_cell_input_cap_ff": 54996.50661399999,
+          "repair_extra_std_area_um2": 15.192359999999997,
+          "repair_extra_ff_clock_cap_ff": 3.75054,
+          "repair_extra_all_input_cap_ff": 151.50067599999997,
+          "repair_extra_async_reset_set_cap_ff": 7.27696,
+          "macro_masters_excluded": {
+            "ot_sram_1r1w_64x512_m1_r2c2": 4
+          }
+        },
+        "FF": {
+          "std_master_area_um2": 5977.71252,
+          "ff_clock_cap_ff": 6197.047683999999,
+          "all_cell_input_cap_ff": 60796.63594700002,
+          "repair_extra_std_area_um2": 15.192359999999997,
+          "repair_extra_ff_clock_cap_ff": 4.100648,
+          "repair_extra_all_input_cap_ff": 165.73483000000002,
+          "repair_extra_async_reset_set_cap_ff": 7.869476000000001,
+          "macro_masters_excluded": {
+            "ot_sram_1r1w_64x512_m1_r2c2": 4
+          }
+        }
+      },
+      "independent_root_lowerbounds": {
+        "FF": 7,
+        "comb": 71,
+        "input": 0,
+        "macro": 0,
+        "constant": 0,
+        "tie": 144
+      },
+      "fixedpoint_iterations": 3,
+      "fixedpoint_extra_cells": 223,
+      "no_unresolved_input_macro_demand": true,
+      "qualification": "Arithmetic model of same-master-D/reset kept copies, not emitted, optimized, simulated or physically qualified"
+    },
+    "current_sfo_narrow": {
+      "mapped_sha256": "c5449c82545c3b1a978965e608d8cc31fa546983f71979d5bbec48fbfc78cfe0",
+      "mapped_cells": 37553,
+      "source_inventory_only": {
+        "TT": {
+          "std_master_area_um2": 5977.71252,
+          "ff_clock_cap_ff": 5640.759180999999,
+          "all_cell_input_cap_ff": 54996.50661399999,
+          "repair_extra_std_area_um2": 11.080799999999998,
+          "repair_extra_ff_clock_cap_ff": 3.75054,
+          "repair_extra_all_input_cap_ff": 151.50067599999997,
+          "repair_extra_async_reset_set_cap_ff": 7.27696,
+          "macro_masters_excluded": {
+            "ot_sram_1r1w_64x137_m1_r2c2_p192": 4
+          }
+        },
+        "FF": {
+          "std_master_area_um2": 5977.71252,
+          "ff_clock_cap_ff": 6197.047683999999,
+          "all_cell_input_cap_ff": 60796.63594700002,
+          "repair_extra_std_area_um2": 11.080799999999998,
+          "repair_extra_ff_clock_cap_ff": 4.100648,
+          "repair_extra_all_input_cap_ff": 165.73483000000002,
+          "repair_extra_async_reset_set_cap_ff": 7.869476000000001,
+          "macro_masters_excluded": {
+            "ot_sram_1r1w_64x137_m1_r2c2_p192": 4
+          }
+        }
+      },
+      "independent_root_lowerbounds": {
+        "FF": 7,
+        "comb": 71,
+        "input": 0,
+        "macro": 0,
+        "constant": 0,
+        "tie": 50
+      },
+      "fixedpoint_iterations": 3,
+      "fixedpoint_extra_cells": 129,
+      "no_unresolved_input_macro_demand": true,
+      "qualification": "Arithmetic model of same-master-D/reset kept copies, not emitted, optimized, simulated or physically qualified"
+    }
+  },
+  "new_storage_pin_caps": {
+    "TT": {
+      "per_bank_pin_cap_ff": {
+        "clk": 9.3458,
+        "r_ce_in": 0.6199,
+        "w_ce_in": 0.6199,
+        "r_addr_in": 3.7194,
+        "w_addr_in": 3.7194,
+        "wd_in": 84.92630000000013,
+        "w_mask_in": 84.92630000000013,
+        "rr_en": 1.2398,
+        "rr_addr": 7.438800000000001,
+        "cr_en": 1.2398,
+        "cr_sel": 9.9184
+      },
+      "all_four_clock_cap_ff": 37.3832,
+      "all_four_pin_input_cap_ff": 830.8552000000014
+    },
+    "FF": {
+      "per_bank_pin_cap_ff": {
+        "clk": 10.3732,
+        "r_ce_in": 0.6837,
+        "w_ce_in": 0.6837,
+        "r_addr_in": 4.1022,
+        "w_addr_in": 4.1022,
+        "wd_in": 93.6669000000002,
+        "w_mask_in": 93.6669000000002,
+        "rr_en": 1.3674,
+        "rr_addr": 8.2044,
+        "cr_en": 1.3674,
+        "cr_sel": 10.9392
+      },
+      "all_four_clock_cap_ff": 41.4928,
+      "all_four_pin_input_cap_ff": 916.6287999999938
+    }
+  },
+  "whole_payload_relay_repair": {
+    "17": {
+      "payload_bits": 548,
+      "predicate_bits": 17,
+      "real_bits": 565,
+      "shards": [
+        188,
+        188,
+        189
+      ],
+      "edges_per_stage": 1,
+      "stages": 11,
+      "clock_pins_per_stage": 3,
+      "added_clock_entry_pins_vs_old": 11,
+      "live_ff": 6215,
+      "positive_capture_inv": 6215,
+      "live_ff_area_um2": 1812.294,
+      "positive_ff_and_inv_area_um2": 2084.1381,
+      "live_clock_cap_ff": {
+        "TT": 2950.4842399999998,
+        "FF": 3244.2921499999998
+      },
+      "complete_13capture_payload_plus_flags_ff": 7345,
+      "new_full_outline_sum_um2": 61585.920000000006,
+      "old_two_relay_outline_sum_um2": 21349.785600000003,
+      "additional_outline_sum_um2": 40236.13440000001,
+      "conservative_shard_outline_um": [
+        43.2,
+        43.2
+      ],
+      "maximum_face_density_per_um": 4.375,
+      "minimum_pin_bound_face_length_um": 31.5,
+      "candidate_signal_pin_layer": "M4",
+      "candidate_signal_contact_pitch_um": 0.192,
+      "candidate_signal_contact_first_center_y_um": 2.892,
+      "candidate_signal_contact_last_center_y_um": 38.98800000000001,
+      "candidate_M4_track_y_offset_um": 0.012,
+      "candidate_M4_track_y_pitch_um": 0.048,
+      "all_contact_centers_on_native_track": true,
+      "candidate_signal_contact_shape_um": [
+        0.024,
+        0.024
+      ],
+      "max_contacts_any_one_um": 6,
+      "M4_min_area_um2": 0.002,
+      "required_M4_metal_length_at_width024_um": 0.08333333333333333,
+      "minimum_contact_outward_extension_um": 0.05933333333333333,
+      "PG_clock_access": "Separate S/N clock and PG contacts require actual pin/via/rail inventory; no PG access credit yet",
+      "per_shard_total_ff_clock_and_signal_pin_count": [
+        377,
+        377,
+        379
+      ],
+      "maximum_internal_corner_distance_um": 86.4,
+      "minimum_shard_fill_fraction": 0.029375,
+      "low_fill": "Pin-bound conservative bound, requires ROOT review;43.2 is not mandatory for a standard-cell outline",
+      "route_tracks_per_cross_section": 565,
+      "M6_M7_min_raw_track_width_um": 36.160000000000004,
+      "monolithic_alternative_outline_um": [
+        64.8,
+        108
+      ],
+      "monolithic_outline_sum_um2": 76982.4,
+      "parent_displacement": null,
+      "parent_overlap_check": null,
+      "new_routed_reach": null,
+      "new_clock_spread": null
+    },
+    "32": {
+      "payload_bits": 548,
+      "predicate_bits": 32,
+      "real_bits": 580,
+      "shards": [
+        193,
+        193,
+        194
+      ],
+      "edges_per_stage": 1,
+      "stages": 11,
+      "clock_pins_per_stage": 3,
+      "added_clock_entry_pins_vs_old": 11,
+      "live_ff": 6380,
+      "positive_capture_inv": 6380,
+      "live_ff_area_um2": 1860.4080000000001,
+      "positive_ff_and_inv_area_um2": 2139.4692,
+      "live_clock_cap_ff": {
+        "TT": 3028.81568,
+        "FF": 3330.4238
+      },
+      "complete_13capture_payload_plus_flags_ff": 7540,
+      "new_full_outline_sum_um2": 61585.920000000006,
+      "old_two_relay_outline_sum_um2": 21349.785600000003,
+      "additional_outline_sum_um2": 40236.13440000001,
+      "conservative_shard_outline_um": [
+        43.2,
+        43.2
+      ],
+      "maximum_face_density_per_um": 4.4907407407407405,
+      "minimum_pin_bound_face_length_um": 32.333333333333336,
+      "candidate_signal_pin_layer": "M4",
+      "candidate_signal_contact_pitch_um": 0.192,
+      "candidate_signal_contact_first_center_y_um": 2.892,
+      "candidate_signal_contact_last_center_y_um": 39.948,
+      "candidate_M4_track_y_offset_um": 0.012,
+      "candidate_M4_track_y_pitch_um": 0.048,
+      "all_contact_centers_on_native_track": true,
+      "candidate_signal_contact_shape_um": [
+        0.024,
+        0.024
+      ],
+      "max_contacts_any_one_um": 6,
+      "M4_min_area_um2": 0.002,
+      "required_M4_metal_length_at_width024_um": 0.08333333333333333,
+      "minimum_contact_outward_extension_um": 0.05933333333333333,
+      "PG_clock_access": "Separate S/N clock and PG contacts require actual pin/via/rail inventory; no PG access credit yet",
+      "per_shard_total_ff_clock_and_signal_pin_count": [
+        387,
+        387,
+        389
+      ],
+      "maximum_internal_corner_distance_um": 86.4,
+      "minimum_shard_fill_fraction": 0.03015625,
+      "low_fill": "Pin-bound conservative bound, requires ROOT review;43.2 is not mandatory for a standard-cell outline",
+      "route_tracks_per_cross_section": 580,
+      "M6_M7_min_raw_track_width_um": 37.12,
+      "monolithic_alternative_outline_um": [
+        64.8,
+        108
+      ],
+      "monolithic_outline_sum_um2": 76982.4,
+      "parent_displacement": null,
+      "parent_overlap_check": null,
+      "new_routed_reach": null,
+      "new_clock_spread": null
+    }
+  },
+  "caveats": [
+    "All-cell capacitance sums are inventory loads, not total physical wire/clock power",
+    "Source price changes after optimization, macro swap and fixed-face legalization",
+    "The analytical copy fixedpoint must be rederived after adding new gates/ports",
+    "New sideband first-use and current GEN8 final binding remain unqualified"
+  ]
+}
