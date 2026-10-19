@@ -1,0 +1,67 @@
+{
+  "status": "component semantic PASS; integration held pending explicit coordinator/root acceptance",
+  "source_commit": "fedd69a7c",
+  "bench_commit": "8d22e961b",
+  "source_sha256": "33e042c922bcf3a9cef389ef2031c9ef012325b4232a96ac23f3cd1199cfbce3",
+  "reference_commit": "825607a54",
+  "reference_sha256": "6acb3e9d66d70ceb211c86a317868e10bb15716787fdf9b3815a08b57d407d07",
+  "bench_sha256": "858cd7341189d7bc9a61fe5efaeb9ec0922354f26f440d7d15be07f01e229699",
+  "layout_audit": {
+    "path": "results/rtl/hbm_ds_layer_tput_1018/attention_mixed_guard_1019/issuer_layout_audit.json",
+    "sha256": "a3eb7a8e3bbc9dc5708e5bccbb7161f9aff51a7db3713bcae202843f447e22ba",
+    "pass_": true
+  },
+  "context": {
+    "reference_range": "45:0",
+    "reference_width": 46,
+    "clone_range": "46:0",
+    "clone_width": 47,
+    "new_index": 46,
+    "bit47_exists": false,
+    "unchanged_low_fields": "roff45:34/tag33:24/epoch23:8/bank7/lstep6:3/fl2/mode1:0",
+    "queue_width": 111,
+    "queue_range": "110:0",
+    "class_path": "descriptor197 -> queue110 -> context46",
+    "a_p_width": 200,
+    "reserved": "231:200"
+  },
+  "proof": {
+    "verilator": "5.050",
+    "fleet_host": "ot-epyc6",
+    "unit": "oth-ubuntu-1962974-1792431579",
+    "rc": 0,
+    "cycles": 1007,
+    "miter_samples": 994,
+    "go_events": 17,
+    "complete_valid_runs": 2,
+    "low46_mismatches": 0,
+    "class_mismatches": 0,
+    "oracle": "independent test descriptor mode table, not clone internal signals",
+    "compared": "all original handshakes/status, reserve/start/programme payloads and lower46 context at their valid edges",
+    "cohort_cases": [
+      "same-layer next-token fresh cohort succeeds",
+      "previous-token cohort rejected",
+      "wrong layer rejected",
+      "duplicate result rejected",
+      "absent IDs fault at fixed routed deadline"
+    ]
+  },
+  "mutants": [
+    {
+      "class_mut": 1,
+      "name": "class dropped",
+      "rc": 1,
+      "fail_regex": "ISSUER_CLASS_FAIL independent class oracle mut1",
+      "log": "mut1.log"
+    },
+    {
+      "class_mut": 2,
+      "name": "class read from live A instead of queued descriptor",
+      "rc": 1,
+      "fail_regex": "ISSUER_CLASS_FAIL independent class oracle mut2",
+      "log": "mut2.log"
+    }
+  ],
+  "physical": "UNQUALIFIED; inherits known native frontend control/reset failures, including414load cone; no gate/physical timing claim",
+  "canonical_issuer_edited": false
+}

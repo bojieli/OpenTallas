@@ -1,0 +1,9 @@
+ISSUER_COHORT_REJECT case=1
+ISSUER_COHORT_REJECT case=2
+ISSUER_COHORT_REJECT case=3
+ISSUER_COHORT_REJECT case=4
+ISSUER_CLASS_PASS mut=0 cycles=1007 checks=994 total_go=17 completed=2 low46_mismatches=0 class_mismatches=0
+- rtl/test/hbm_accel/svg_rel/tb_issuer_rel_class.sv:99: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 10us; walltime 0.001 s; speed 10.838 ms/s
+- Verilator: cpu 0.001 s on 1 threads; allocated 7 MB
