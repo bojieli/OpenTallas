@@ -675,13 +675,14 @@ def _spare_port(pads, mst, pn, inst, width, spare_out):
     return False
 
 
-def check(die_v, top, idx, amb, allow_model, mparams=None, max_list=40, straps=frozenset(), pads=None):
+def check(die_v, top, idx, amb, allow_model, mparams=None, max_list=40, straps=frozenset(), pads=None, reviewed_unread=None):
     """straps: {(master, port)} declared STRAP inputs (die constants by contract: tile ids, station indexes, group
     numbers); a constant on one of them is recorded as a strap, not as INPUT_TIED.  pads: {(master, port[, instance]): bit spec}
     declared PAD bits (load_pads): a constant 0 on a declared input bit is a pad bit, not INPUT_TIED; a tie to 1 / 'z, or
     on any undeclared bit, still fails.  Every other tied input fails."""
     pads = pads or {}
     nets, tin, tout, insts = parse_die(die_v, top)
+    reviewed_unread = reviewed_unread or set()
     spare_drv = set()            # (net, bit) driven by a DECLARED spare output bit (pad declaration on an output port)
     spare_out = defaultdict(int)  # (master) -> declared spare output bits seen
     mparams = mparams or {}
@@ -781,6 +782,9 @@ def check(die_v, top, idx, amb, allow_model, mparams=None, max_list=40, straps=f
         for i, c in dc.items():
             if drv_cnt[n].get(i, 0) == 0:
                 drv_cnt[n][i] += c
+    for n, i in reviewed_unread:
+        if i in rd.get(n, ()) or n in tin or (n, i) in spare_drv or drv_cnt.get(n, {}).get(i) != 1:
+            raise ValueError('unread review REFUSED: permission is occupied/read, spare, or lacks exactly one driver; renewed semantic review required')
     undriven, multi, unread = defaultdict(int), defaultdict(int), defaultdict(int)
     for n, bs in rd.items():
         dc = drv_cnt.get(n, {})
@@ -792,7 +796,7 @@ def check(die_v, top, idx, amb, allow_model, mparams=None, max_list=40, straps=f
                 multi[n] += 1
     for n, dc in drv_cnt.items():
         for i, c in dc.items():
-            if i not in rd.get(n, ()) and n not in tin and (n, i) not in spare_drv:
+            if i not in rd.get(n, ()) and n not in tin and (n, i) not in spare_drv and (n, i) not in reviewed_unread:
                 unread[n] += 1
             if c > 1 and i not in rd.get(n, ()):
                 multi[n] += 1
@@ -1066,6 +1070,11 @@ def main(argv=None):
                     'resolves its modules from its spec sources (physical/ref_tile/*/spec.json: the RTL of record of the '
                     'closed view); conflicting tiles are recorded (prefer_conflicts).  Below --prefer-list')
     ap.add_argument('--no-macro-dirs', action='store_true', help=f'do not index the memory macro libraries {MACRO_DIRS}')
+    ap.add_argument('--unread-review', help='exact source-intent review JSON; default off')
+    ap.add_argument('--unread-contract', help='exact reviewed source contract')
+    ap.add_argument('--unread-manifest', help='immutable instance/range manifest approved separately by digest')
+    ap.add_argument('--unread-manifest-sha256', help='explicit approved manifest SHA256; never inferred')
+    ap.add_argument('--unread-proposal-out', help='write a proposal only; no admission or die verdict')
     ap.add_argument('--out')
     a = ap.parse_args(argv)
     a.pad_file = a.pad_file or (a.die_v + '.pads.json' if Path(a.die_v + '.pads.json').exists() else None)
@@ -1117,7 +1126,38 @@ def main(argv=None):
         return 0
     pj = a.params or (a.die_v + '.params.json' if Path(a.die_v + '.params.json').exists() else None)
     mparams = json.loads(Path(pj).read_text()).get('masters', {}) if pj else {}
-    rec = check(a.die_v, a.top, idx, amb, set(a.allow_model), mparams, straps=frozenset(straps), pads=pads)
+    reviewed_unread = None
+    unread_args = (a.unread_review, a.unread_contract, a.unread_manifest, a.unread_manifest_sha256, a.unread_proposal_out)
+    if any(unread_args):
+        import die_bind_unread_manifest as um
+        if not a.unread_review or not a.unread_contract or a.no_child_closure or a.closure:
+            ap.error('unread mode requires review, contract and full child closure')
+        if a.unread_proposal_out and (a.unread_manifest or a.unread_manifest_sha256):
+            ap.error('proposal production and reviewed admission are separate operations')
+        if not a.unread_proposal_out and not (a.unread_manifest and a.unread_manifest_sha256):
+            ap.error('unread admission requires manifest and explicit approved SHA256')
+        options = dict(defines=defines, allow_model=sorted(a.allow_model),
+                       straps=sorted(straps), pads=sorted((list(k), v) for k, v in pads.items()))
+        try:
+            if a.unread_proposal_out:
+                proposal = um.propose(a.unread_review, a.die_v, a.top, a.unread_contract,
+                                      idx, mparams, options, ROOT, parse_die)
+                Path(a.unread_proposal_out).write_text(json.dumps(proposal, indent=2, sort_keys=True) + '\n')
+                print('UNREAD_PROPOSAL_ONLY sha256=' + um.digest(a.unread_proposal_out))
+                return 0
+            reviewed_unread = um.validate(a.unread_manifest, a.unread_manifest_sha256, a.unread_review,
+                                          a.die_v, a.top, a.unread_contract, idx, mparams, options,
+                                          ROOT, parse_die, expr_bits)
+        except (ValueError, KeyError, OSError) as exc:
+            ap.error(str(exc))
+    try:
+        rec = check(a.die_v, a.top, idx, amb, set(a.allow_model), mparams,
+                    straps=frozenset(straps), pads=pads, reviewed_unread=reviewed_unread)
+    except ValueError as exc:
+        ap.error(str(exc))
+    if reviewed_unread is not None:
+        rec['reviewed_unread'] = dict(bits=len(reviewed_unread), manifest_sha256=a.unread_manifest_sha256,
+                                      remaining_unread_bits=rec['summary']['unread_net_bits'])
     if not a.no_child_closure:
         # full RTL child closure (Q-STUB 10-17): every module instantiated anywhere under a die master must resolve
         cseen, traps = set(), {}
