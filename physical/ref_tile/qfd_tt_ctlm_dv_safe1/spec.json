@@ -287,10 +287,10 @@
   }
  },
  "job": {
-  "owner": "Claude:MU-DQ-CTLMCLK",
-  "branch": "claude/mu-dq-ctlmclk-1019",
-  "tag": "clk2",
-  "purpose": "Qwen TT control cluster qfd_tt_ctlm_dv, MU release die (claude/mu-die-qw2-1019 base): landed parent qfd_tt_ctlm_dv_lpf_lp, COORD 0ke clock fix: (a) h16c ck_pm0/1 detached for CTS and re-driven from the ck_head net + record tap, (b) ck_hr port on the S face beside h16c ck_head, ck_core region = u_gi only (every input lands from hr; tl straight from core, COORD 0kg): 21 landings / 4,178 landing flops (was 8,943).",
+  "owner": "CODEX-QW-CTLM-SAFE",
+  "branch": "codex/qw-ctlm-safe-recut-1019",
+  "tag": "safe1",
+  "purpose": "DRAFT: CTLM structural full-cone regional successor with real shared channel and six SRAMs. Gate blocked until unified CALPIPE + ctx_x/FCTX + fault STATUS RTL, source-pinned benches, final synthesis inventory and safe checklist complete.",
   "extra_paths": [
    "rtl/test/qwen_dv",
    "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
@@ -422,8 +422,8 @@
    }
   ],
   "views_to": "physical/ref_tile/qfd_tt_ctlm_dv_safe1/views",
-  "record_to": "results/rtl/ref_tile/qfd_tt_ctlm_dv",
-  "benched_by": "rtl/test/qwen_dv/tt_ctlm_prog_bench.py --hard 1 --landed 1 (compiled image: dut CTLM_PROG PASS 123/123 + LANDED_LOCKSTEP PASS 24912 compares; LMUT 1/2 FAIL); lp bench rtl/qwen_dv/lp/qfd_tt_ctlm_dv_lpf_lp_bench.sh (audit PASS, unland FAIL, MUT 0 PASS, MUT 1/2 FAIL); eq tb_qfd_tt_ctlm_dv_lpf_eq (DMUT 0 PASS, 5/6 FAIL). Witnesses physical/ref_tile/qfd_tt_ctlm_dv/bench_witness/landed/"
+  "record_to": "results/rtl/ref_tile/qfd_tt_ctlm_dv_safe1",
+  "benched_by": "DRAFT: inherited historical witnesses only; final unified RTL benches must replace this readiness note before gate/submission."
  },
  "params_source": "Q-H16C 10-18: XPF_TRANSPORT_EDGES and STAGE_ME are GEN-assigned (tools/qwen_split/die_params.py -> die.v.params.json masters.qfd_tt_ctlm_dv); values = dv2f14bi ot-epyc4:/srv/opentallas-scratch/claude/qwen-split-compute/dv2f14bi/chain/case_r22k/die.v.params.json (XPF 20 = 1 hr pin reg + fwd hr lane E 18 + 1 landing; STAGE_ME 1). Re-take them from the GEN sidecar of the die this cluster is hardened for; never hand-set (the old 15 = QLB-PROG zero-delay dv2f14bn estimate). HARD_HR 1 && STAGE_ME 1 legal from h16c h17 (stage_start/stage ports).",
  "clock": "multiple_cts_roots",
@@ -535,11 +535,31 @@
    "master": "ot_rom_4096x72_m8",
    "clock_pin": "clk",
    "root": "ck_core"
+  },
+  "u_gi.u_cal.g_fifo[0].u_fifo": {
+   "master": "ot_sram_1r1w_64x512_m1_r2c2",
+   "clock_pin": "clk",
+   "root": "ck_core"
+  },
+  "u_gi.u_cal.g_fifo[1].u_fifo": {
+   "master": "ot_sram_1r1w_64x512_m1_r2c2",
+   "clock_pin": "clk",
+   "root": "ck_core"
+  },
+  "u_gi.u_cal.g_fifo[2].u_fifo": {
+   "master": "ot_sram_1r1w_64x512_m1_r2c2",
+   "clock_pin": "clk",
+   "root": "ck_core"
+  },
+  "u_gi.u_cal.g_fifo[3].u_fifo": {
+   "master": "ot_sram_1r1w_64x512_m1_r2c2",
+   "clock_pin": "clk",
+   "root": "ck_core"
   }
  },
- "raw_memory_note": "TW2-QCTLM 10-19: gate 20261019-010025 CTS stopped at 'OT_HYBRID: CTS source ck_core must reach only standard-cell clock pins' = the calendar's 2 raw 64x512 SRAMs (lp region ck_core) were undeclared sinks; now exact raw-memory bindings on region root ck_core (tool: claude/root-landed-rawmem-1019 7729b9de4, landed clusters accept raw sinks of a region root)",
+ "raw_memory_note": "safe1: six raw64x512 SRAMs (two programme,fourper-user FIFO) plus op-start ROM are exact named ck_core sinks; h16c rawclock detach/tap contract unchanged. Source manifest covers all seven raw memory entries.",
  "fill_reason": {
-  "pin_bound": "width 777.6 is the die slot: N face (native59/sys_face, 1066 pins over 574 um) and S face (W5, 766 pins over 588 um) pin x positions are kept to abut the die neighbours (74-76% of each face); height 345.6 = the hard h16c child (222.48 at y 43.2) plus the N-face pin-flop band (21 columns, recipe-2 hold stages) and its escape over the child on the 43.2 lattice; one lattice step less (302.4) leaves 36.7 um for 1066 N pins + their flops. Measured fill 34.1% pre-MU; MU NU4 (claude/mu-adopt-ctlm-1019) adds ~3.7k core flops"
+  "pin_bound": "777.6um external slot width retained;432um height fits three SRAM rows on43.2 lattice with51.84um row channels and N/S51.84/43.2um face bands. Six SRAMs+hard h16c+ROM139975um2 and historicalstd12246um2 give45.3% totalfill; actual successorstd area must replace estimate before finalgate."
  },
  "mu_note": "MU-DQ-CTLMKIT 10-19: (1) leaf ROM u_gi.g_op.u_leaf.g_op.u_rom (38.0 x 62.9) at (43.2, 259.2) R0 on the 43.2 lattice, core region, above the calendar SRAM stack (43.2..198.8; 60.4 um channel, pins on its W face like the SRAMs, facing the calendar glue strip), raw-memory sink of ck_core like the SRAMs; (2) tl[1087:0] (one TLOAD table word, else 0) on the S face x 432.0-655.3 (4.9 pins/um) left of cmd (the die's W5 st_wi beside cmd_wi), landed core->hr like cmd; (3) dh_user[1:0] on the N face x 662.0 (gap between native_cmd and command_stage); die GEN ties it 0 (OPSEG mode). Die obligation: re-place tl / dh_user pins with the die top-down pin assignment.",
  "landed_raw_detach": true,
