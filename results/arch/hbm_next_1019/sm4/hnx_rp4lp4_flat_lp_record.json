@@ -1,0 +1,190 @@
+{
+ "lane": "PARENTS-LANDED",
+ "generator": "tools/landed_parent/lp.py",
+ "generator_copy": "tools/hbm_next/landed_parent/lp.py",
+ "flat": "hnx_rp4lp4_flat",
+ "top": "hnx_rp4lp4_flat_lp",
+ "standard": "landed-regions-standard-1018: local region trees, every cross-region net LANDED, per-region child-flop gate (TT and FF <= 80 ps); 1-bit reset runs are the only plain cross-region hops",
+ "regions": {
+  "n": {
+   "clock_port": "ck_n",
+   "children": [
+    "u_beat_t",
+    "u_beate",
+    "u_gn",
+    "u_land_n",
+    "u_lf0",
+    "u_pb",
+    "u_pr_n",
+    "u_row0",
+    "u_rowe0",
+    "u_sr_n"
+   ]
+  },
+  "s": {
+   "clock_port": "ck_s",
+   "children": [
+    "u_gs",
+    "u_land_s",
+    "u_lf1",
+    "u_pr_s",
+    "u_row1",
+    "u_rowe1",
+    "u_sr_s"
+   ]
+  }
+ },
+ "D": 4,
+ "E": 2,
+ "K": 2,
+ "added_edges_per_landing": 3,
+ "window": "(2 - 4) T + t_hold < dL < 2 T - t_cq - t_setup at TT and FF",
+ "landings": [
+  {
+   "name": "0",
+   "net": "bin_l",
+   "src_region": "n",
+   "dst_region": "s",
+   "src_nodes": [
+    "u_pb"
+   ],
+   "width": 2069,
+   "readers": [
+    "u_land_s.d"
+   ],
+   "ring": "u_lpl_0_w (ck_n)",
+   "read": "u_lpl_0_r (ck_s)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_0_w.* -to u_lpl_0_r.*"
+  },
+  {
+   "name": "1",
+   "net": "g0m",
+   "src_region": "n",
+   "dst_region": "s",
+   "src_nodes": [
+    "u_gn"
+   ],
+   "width": 50,
+   "readers": [
+    "u_gs.g0m"
+   ],
+   "ring": "u_lpl_1_w (ck_n)",
+   "read": "u_lpl_1_r (ck_s)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_1_w.* -to u_lpl_1_r.*"
+  },
+  {
+   "name": "2",
+   "net": "gpm",
+   "src_region": "n",
+   "dst_region": "s",
+   "src_nodes": [
+    "u_gn"
+   ],
+   "width": 100,
+   "readers": [
+    "u_gs.gpm"
+   ],
+   "ring": "u_lpl_2_w (ck_n)",
+   "read": "u_lpl_2_r (ck_s)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_2_w.* -to u_lpl_2_r.*"
+  }
+ ],
+ "pads": [
+  {
+   "net": "rl1_s",
+   "reader": "u_lf1",
+   "stages": 3
+  },
+  {
+   "net": "st_s",
+   "reader": "u_lf1",
+   "stages": 3
+  }
+ ],
+ "reset": {
+  "port": "rst_n",
+  "root_region": "n",
+  "depth": 2,
+  "hops": {
+   "n": 0,
+   "s": 1
+  },
+  "note": "flat reference == landed parent with its reset delayed by depth; child c's reset run is depth + t(c)"
+ },
+ "flops": {
+  "landing": 11134,
+  "pads": 2532,
+  "reset": 12
+ },
+ "communicating_region_pairs": {
+  "landed": [
+   "n-s"
+  ],
+  "reset_hops": [
+   "n-s"
+  ]
+ },
+ "compiler": {
+  "note": "every latency change vs the flat parent; the compiler schedule takes these (static calendar, no runtime flow control)",
+  "child_offset_edges": {
+   "u_sr_n": 0,
+   "u_sr_s": 0,
+   "u_pr_n": 0,
+   "u_pr_s": 0,
+   "u_pb": 0,
+   "u_row0": 0,
+   "u_row1": 0,
+   "u_beat_t": 0,
+   "u_land_n": 0,
+   "u_land_s": 3,
+   "u_rowe0": 0,
+   "u_rowe1": 0,
+   "u_beate": 0,
+   "u_lf0": 0,
+   "u_lf1": 3,
+   "u_gn": 0,
+   "u_gs": 3
+  },
+  "input_port_offset_edges": {
+   "xs_a1": 0,
+   "xs_g1": 0,
+   "xs_a2": 0,
+   "xs_g2": 0,
+   "xss_a1": 0,
+   "xss_g1": 0,
+   "xss_a2": 0,
+   "xss_g2": 0,
+   "rin_n": 0,
+   "rin_s": 0,
+   "bin": 0,
+   "gin": 0
+  },
+  "output_port_offset_edges": {
+   "rout_n": 0,
+   "rout_s": 0,
+   "bout": 0,
+   "gout": 3
+  },
+  "reset_release_added_edges": 2,
+  "max_added_edges": 3
+ },
+ "skipped_mutants": {
+  "4": "as rp4lp: every child's reset only clears valid flags or masks that random stimulus re-writes (lane masks reset to lane 0 and are re-loaded by any select beat); quiet_reset presents no data before release + offsets, so a child released one edge late is not observable. Landing reset alignment is covered by MUT 2."
+ },
+ "warnings": [],
+ "die_obligations": [
+  "drop one clock per region at the region's clock port (ck_<r>); each region builds its own local tree",
+  "communicating regions (landed pairs) need NO phase alignment inside the landing window at TT and FF",
+  "reset-hop pairs ['n-s']: region skew within about +/-400 ps at TT and FF (1-bit single-cycle hops)",
+  "boundary ports are timed against the region in port_regions / the record; die links into them land on THAT clock"
+ ],
+ "audit": {
+  "ok": true,
+  "landings": 3,
+  "reset_hops": 1,
+  "fails": []
+ }
+}

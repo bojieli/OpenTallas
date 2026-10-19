@@ -1689,6 +1689,7 @@ def gen_hooks(s: dict, kd: str) -> dict:
             pre_cts.append("set ::ot_ce_cts_roots {" + " ".join(roots) + "}")
             if clock_entry_constraints.landed_cluster(s):
                 pre_cts.append("set ::ot_ce_landed_cluster 1")
+                pre_cts.append(clock_entry_constraints.landed_counts_tcl(s).rstrip("\n"))   # QO-RP4LP: pre-CTS child admission
             pre_cts.extend(raw_macro_clocks.tcl(raw_bindings))
         pre_cts.append("source /src/physical/common_flow/clock_entries.tcl")
     if spine:
