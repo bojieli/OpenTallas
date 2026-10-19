@@ -29,6 +29,9 @@ module qfd_tt_ctlm_dv_gi #(
     parameter integer UTAG_LSB = 6,
     parameter integer INIT_U0 = 0, INIT_FIRST = -1, INIT_CNT = 0,
     parameter integer OPSEG = 0,
+    parameter integer OPSEG_EXPANDED = 0,
+    parameter OPSEG_VIAMAP1 = "", OPSEG_VIAMAP2 = "",
+    parameter OPSEG_INST1 = "qfd_tt_ctlm_opseg_b1", OPSEG_INST2 = "qfd_tt_ctlm_opseg_b2",
     parameter integer CTX_SRC = 0, FCTX = 0,
     parameter [11:0] NCTX_BASE = 12'h010,
     parameter OPSEG_VIAMAP = ""       ,
@@ -85,7 +88,7 @@ module qfd_tt_ctlm_dv_gi #(
     wire [UB-1:0] s_user = (OPS != 0) ? {UB{1'b0}} : dhu_q[UB-1:0];
     wire        op_v, op_lfault; wire [1:0] op_user; wire [5:0] op_stage; wire [9:0] op_first, op_cnt;
     generate if (OPS != 0) begin : g_op
-        qfd_sys_face_mu_dhuser #(.NU(NU), .OPSEG(1), .LAST_STAGE(LAST_STAGE), .VIAMAP(OPSEG_VIAMAP), .INSTANCE(OPSEG_INST))
+        qfd_sys_face_mu_dhuser #(.NU(NU), .OPSEG(1), .EXPANDED(OPSEG_EXPANDED), .VIAMAP1(OPSEG_VIAMAP1), .VIAMAP2(OPSEG_VIAMAP2), .INSTANCE1(OPSEG_INST1), .INSTANCE2(OPSEG_INST2), .LAST_STAGE(LAST_STAGE), .VIAMAP(OPSEG_VIAMAP), .INSTANCE(OPSEG_INST))
             u_leaf (.ck(ck), .rst_n(rst_n), .dh_run(dh_q[43:0]), .dh_user(), .res_user(), .mu_fault(op_lfault), .op_v(op_v),
             .op_user(op_user), .op_stage(op_stage), .op_first(op_first), .op_cnt(op_cnt), .op_ff(), .op_fcode());
     end else begin : g_no_op
