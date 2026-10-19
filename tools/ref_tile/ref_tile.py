@@ -1683,6 +1683,8 @@ def gen_hooks(s: dict, kd: str) -> dict:
             pre_cts.append("set ::ot_ce_cts_roots {" + " ".join(roots) + "}")
             if clock_entry_constraints.landed_cluster(s):
                 pre_cts.append("set ::ot_ce_landed_cluster 1")
+                if clock_entry_constraints.landed_internal_tcl(s, ROOT):   # arc-less child clock pins (internal roots)
+                    pre_cts.append(clock_entry_constraints.landed_internal_tcl(s, ROOT).rstrip("\n"))
             pre_cts.extend(raw_macro_clocks.tcl(raw_bindings))
         pre_cts.append("source /src/physical/common_flow/clock_entries.tcl")
     if spine:

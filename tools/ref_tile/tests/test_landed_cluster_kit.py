@@ -61,6 +61,20 @@ def view(root):
     return v
 
 
+def internal_child(root):
+    """the fixture child with a second, arc-less clock pin CLK2 (internal flops only: insertion 'all', no boundary)"""
+    v = root / 'hard'
+    for c in CE.CORNERS:
+        lib = v / f'hard_{c}.lib'
+        lib.write_text(lib.read_text().replace('pin(D) {', 'pin(CLK2) { direction : input; clock : true; capacitance : 1; }\n    pin(D) {'))
+    lef = (v / 'hard.lef').read_text()
+    (v / 'hard.lef').write_text(lef.replace('PIN D ', 'PIN CLK2 DIRECTION INPUT ; USE CLOCK ; PORT LAYER M4 ; RECT 0.1 0.7 0.2 0.8 ; END END CLK2\nPIN D ', 1))
+    one = {c: dict(boundary=dict(n=4, min=90, mean=100, max=110)) for c in CE.CORNERS}
+    two = {c: dict(boundary=dict(n=0), all=dict(n=8, min=140, mean=150, max=160)) for c in CE.CORNERS}
+    (v / 'insertion.json').write_text(json.dumps(dict(lib_clock_pin='CLK', clock='ck', **one, clock_measurements=dict(
+        CLK=dict(lib_clock_pin='CLK', **one), CLK2=dict(lib_clock_pin='CLK2', **two)))))
+
+
 def record(root, top='top'):
     rec = dict(lane='PARENTS-LANDED', generator='tools/landed_parent/lp.py', flat='top_flat', top=top,
                regions=dict(ra=dict(clock_port='ck_ra', children=['h']), rb=dict(clock_port='ck_rb', children=[])),
@@ -172,14 +186,18 @@ class LandedClusterOpenroad(unittest.TestCase):
             s['landed_record'] = 'top_lp_record.json'
             if mutant == 'two_children':
                 s['children'][0]['count'] = 2
-            rtl = RTL.replace('u_lpl_0_w.bank_reg', '\\u_lpl_0_w.bank_reg ').replace('u_lpl_0_r.o_reg', '\\u_lpl_0_r.o_reg ')
+            if mutant.startswith('internal_pin'):
+                internal_child(w)
+            rtl = (RTL.replace('hard h(.CLK(ck_ra),', 'hard h(.CLK(ck_ra), .CLK2(%s),' % ('ck_rb' if mutant == 'internal_pin_other_root' else 'ck_ra'))
+                   if mutant.startswith('internal_pin') else RTL)
+            rtl = rtl.replace('u_lpl_0_w.bank_reg', '\\u_lpl_0_w.bank_reg ').replace('u_lpl_0_r.o_reg', '\\u_lpl_0_r.o_reg ')
             (w / 't.v').write_text(rtl)
             entries = 'set ::ot_ce_require_wire 1\n' + CE.generate(s, w) + CE.landed_sdc(s, w)
             if mutant == 'leaf_tile_body':
                 entries = entries.replace(CE.LANDED_BODY, CE.LEAF_BODY).replace('set ::ot_ce_landed_cluster 1\n', '')
             (w / 'clocks.tcl').write_text(CE.clocks(s, 833.333))
             (w / 'entries.tcl').write_text(entries)
-            flag = '' if mutant == 'leaf_tile_body' else 'set ::ot_ce_landed_cluster 1\n'
+            flag = '' if mutant == 'leaf_tile_body' else 'set ::ot_ce_landed_cluster 1\n' + CE.landed_internal_tcl(s, w)
             flow = r'''
 set_thread_count 2
 set P /OpenROAD-flow-scripts/flow/platforms/asap7
@@ -231,8 +249,17 @@ puts "LANDED_RESULT PASS"
         self.assertIn('OT_LP_LAND_SDC 1 of 1 landings constrained', out)
         self.assertIn('LANDED_RESULT PASS', out)
 
+    def test_internal_child_root_reached(self):
+        # a child clock pin with no boundary arc (internal-only child root): not an all_registers clock pin, measured on
+        # its child's root directly (all-flop reference), so every bound pin is reached
+        rc, out = self.run_flow('internal_pin')
+        self.assertEqual(rc, 0, out[-6500:])
+        self.assertRegex(out, r'OT_LANDED CHILD_INTERNAL tt ck_ra h/CLK2 wire=[\d.eE+-]+ R=150(?:\.0)? ')
+        self.assertIn('LANDED_RESULT PASS', out)
+
     def test_mutants_fail_closed(self):
         for mutant, why in (('two_children', 'OT_ENTRIES: bound child count mismatch|OT_LANDED'),
+                            ('internal_pin_other_root', 'missing unique finite propagated clock arrival on h/CLK2'),
                             ('leaf_tile_body', 'OT_HYBRID')):
             with self.subTest(mutant=mutant):
                 rc, out = self.run_flow(mutant)

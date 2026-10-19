@@ -60,7 +60,9 @@ if {[info procs clock_tree_synthesis] ne "" && [info procs ot_ce_cts_orig] eq ""
             # pin is an ordinary sink of its region root (the post-CTS SDC measures it at the child's flops)
             if {[info exists ::ot_ce_landed_cluster] && $::ot_ce_landed_cluster && $inst ne "NULL" && [[$inst getMaster] isBlock]
                 && [info exists ::ot_ce_counts] && [dict exists $::ot_ce_counts [[$inst getMaster] getName]]
-                && [get_full_name $pin] in $regnames} {continue}
+                && ([get_full_name $pin] in $regnames
+                    || ([info exists ::ot_ce_landed_internal] && [dict exists $::ot_ce_landed_internal [[$inst getMaster] getName]]
+                        && [get_property $pin lib_pin_name] in [dict get $::ot_ce_landed_internal [[$inst getMaster] getName]]))} {continue}
             if {$inst eq "NULL" || [[$inst getMaster] isBlock] || [get_full_name $pin] ni $regnames} {
               error "OT_HYBRID: CTS source $pname must reach only standard-cell clock pins"
             }

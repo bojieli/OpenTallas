@@ -151,6 +151,26 @@ def landed_record(spec, root):
     return rec
 
 
+def internal_pins(lib):
+    """clock : true pins of a child ETM with no boundary arc (no related_pin names them): internal-only child roots"""
+    text = Path(lib).read_text()
+    related = set(re.findall(r'related_pin\s*:\s*"?([^";\s]+)"?\s*;', text))
+    return sorted(p for p in child_lint.clock_insertion(text) if p not in related)
+
+
+def landed_internal_tcl(spec, root):
+    """'set ::ot_ce_landed_internal [dict create <master> {<pins>} ..]': the bound arc-less child clock pins of a landed
+    cluster (internal_pins), for clock_entries.tcl (pre-CTS sink check) and the entry SDC; '' when none / not landed"""
+    if not landed_cluster(spec):
+        return ''
+    internal = {}
+    for child in spec.get('children', []):
+        view = Path(root) / child['view']
+        internal.setdefault(view.name, internal_pins(view / f'{view.name}_tt.lib'))
+    rows = ' '.join(f'{{{m}}} {{{" ".join(v)}}}' for m, v in internal.items() if v)
+    return f'set ::ot_ce_landed_internal [dict create {rows}]\n'
+
+
 def landed_sdc(spec, root):
     """Landing multicycles (LANDING-CONTRACT L5, lp.py Pm.sdc): ring u_lpl_<n>_w -> read u_lpl_<n>_r -setup E -hold D-1.
     Cell-based, so they are independent of the root clock names; '' for every non-landed spec (kits byte-identical)."""
@@ -352,6 +372,8 @@ def _generate(spec, root):
                     raise ValueError(f'{lib}: routed/Liberty clock pin association mismatch')
                 data = measured.get(corner, {})
                 b = data.get('boundary', {})
+                if landed_cluster(spec) and pin in internal_pins(lib) and not b.get('n') and (data.get('all') or {}).get('n'):
+                    b = data['all']    # internal-only child root: no boundary flop, its flops are all internal
                 values = [float(b[k]) for k in ('min', 'mean', 'max')]
                 if not b.get('n') or data.get('errors') or not all(math.isfinite(x) for x in values):
                     raise ValueError(f'{view}/{pin}/{corner}: missing real routed boundary reference')
@@ -392,7 +414,8 @@ def _generate(spec, root):
     return (f'# OT_CLOCK_ENTRY_DOMAIN_API_VERSION {ENTRY_DOMAIN_API_VERSION}\n'
             '# AUTO clock entries: bound insertion.json boundary refs; no ETM arc modification.\n'
             + (('set ::ot_ce_leaf_roots 1\nset ::ot_ce_related_data ' + str(int(related_data(spec))) + '\n') if native_leaf(spec) else '')
-            + (f'set ::ot_ce_landed_cluster 1\nset ::ot_ce_landed_child_pins {expected}\n' if landed else '') +
+            + (f'set ::ot_ce_landed_cluster 1\nset ::ot_ce_landed_child_pins {expected}\n'
+               + landed_internal_tcl(spec, root) if landed else '') +
             'set ::ot_ce_refs [dict create ' + ' '.join(rows) + ']\n'
             'set ::ot_ce_counts [dict create ' + ' '.join(f'{{{m}}} {n}' for m, n in counts.items()) + ']\n'
             'set ::ot_ce_domains [dict create ' + ' '.join(domain_rows) + ']\n'
@@ -1042,6 +1065,32 @@ def landed_body():
          '      lassign [dict get $ot_ce_child_ext [get_full_name $pin]] clo chi\n'
          '      set lo [expr {min($lo, $clo)}]; set hi [expr {max($hi, $chi)}]\n'
          '    }\n'),
+        # a bound child clock pin with no boundary arc (an internal-only child root, e.g. e86 clk_r1/clk_r2) is no
+        # all_registers clock pin: measure it directly on the root of its child (same root as the child's arc pins,
+        # else ot_ce_clock_wire finds no path = fail closed), so every bound pin is reached and timed
+        ('      set total [expr {$total + $arrival}]\n    }\n    set arrivals [lsort -real $arrivals]\n'
+         '    set lo [lindex $arrivals 0]; set hi [lindex $arrivals end]\n    set tree_mean',
+         '      set total [expr {$total + $arrival}]\n    }\n'
+         '    dict for {cname cdom} $::ot_ce_landed_owner {\n'
+         '      if {$cdom ne [dict get $::ot_ce_source_domains $name]} continue\n'
+         '      set master [get_property [get_cells $cname] ref_name]\n'
+         '      if {![dict exists $::ot_ce_landed_internal $master]} continue\n'
+         '      foreach lpin [dict get $::ot_ce_landed_internal $master] {\n'
+         '        set pin [get_pins -quiet $cname/$lpin]\n'
+         '        if {![llength $pin]} { error "OT_LANDED: missing internal child clock pin $cname/$lpin" }\n'
+         '        if {[dict exists $measured [get_full_name $pin]]} continue\n'
+         '        set arrival [ot_ce_clock_wire $pin $clock]\n'
+         '        lassign [dict get $::ot_ce_refs $master/$lpin $corner] clo cmean chi\n'
+         '        puts "OT_LANDED CHILD_INTERNAL $corner $name [get_full_name $pin] wire=$arrival R=$cmean min=[expr {$arrival + $clo}] max=[expr {$arrival + $chi}]"\n'
+         '        set arrival [expr {$arrival + $cmean}]\n'
+         '        incr ot_ce_landed_hits\n'
+         '        lappend arrivals $arrival\n'
+         '        dict set measured [get_full_name $pin] $arrival\n'
+         '        set total [expr {$total + $arrival}]\n'
+         '      }\n'
+         '    }\n'
+         '    set arrivals [lsort -real $arrivals]\n'
+         '    set lo [lindex $arrivals 0]; set hi [lindex $arrivals end]\n    set tree_mean'),
         ('  if {[dict size $seen] != [llength $::ot_ce_ports]} { error "OT_ENTRIES: incomplete actual child/source coverage" }\n',
          '  if {$ot_ce_landed_hits != $::ot_ce_landed_child_pins} { error "OT_LANDED: $ot_ce_landed_hits of $::ot_ce_landed_child_pins'
          ' bound hard-child clock pins reached from the region roots" }\n'
