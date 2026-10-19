@@ -17,7 +17,7 @@ source tools/s81_dv/svc_rs/rs_files.sh
 DEF=(); MUTV=0
 case "$V" in
   base) ;; mut1) MUTV=1;; mut2) MUTV=2;; mut3) MUTV=3;; mutgd) DEF=(-DRS_MUT_GD);; mutro) DEF=(-DRS_MUT_RO);;
-  mut4) MUTV=4;; mut5) MUTV=5;; mut6) MUTV=6;; mutpm) PMEM_E=0;;
+  mut4) MUTV=4;; mut5) MUTV=5;; mut6) MUTV=6;; mut7) MUTV=7;; mutpm) PMEM_E=0;;
   *) echo "variant?" >&2; exit 2;;
 esac
 SRAM_MACRO=${SRAM_MACRO:-0}

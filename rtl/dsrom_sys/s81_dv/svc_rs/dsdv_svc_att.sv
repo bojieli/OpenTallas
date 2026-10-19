@@ -69,6 +69,11 @@
 // P.V: kits for the non-owner positions; pointers and fault checks stay); a PMEM 0 slice whose role is a P.V owner is
 // fault 23 (static configuration error).
 // MUT 6 (OT_SVC_LAND_SRAM only): the landing reads copy 0 (PC 0 writes) whatever the live-value table says.
+// SVC2 (10-19, LEAD2-S81/SVC2, safe-design 5): -DOT_SVC_ATT_SRAM (with OT_SVC_LAND_SRAM) puts every runtime-indexed store
+// > 2 kb in SRAM: wq classes 0 / 2, the SEL FIFO sw, the q store and the P.V buffer pvq become dsdv_svc_fmem rings of
+// ot_sram_1r1w_32x128_m1 (registered read at the next-cycle address + one-word write-through = the flop array's
+// combinational read, 0 cycles); the live-value table becomes 3 single-writer written-this-job vectors.
+// MUT 7 (OT_SVC_ATT_SRAM only): no write-through (a word written and read on the same edge reads the old content).
 // ---------------------------------------------------------------------------------------------------------------------
 module dsdv_svc_att #(
     parameter integer MUT = 0,
@@ -185,7 +190,17 @@ module dsdv_svc_att #(
 
     // ------------------------------------------------------------------ write FIFOs per PC: OWN_ROW codes / scales, host
     // depth 8 each (OWN_ROW: 1 code + 1 scale write per 17-word frame; host: <= 8 words in flight on the 8 host credits)
+`ifdef OT_SVC_ATT_SRAM
+    // SVC2 (10-19, safe-design 5): classes 0 (OWN_ROW codes) and 2 (host words) in dsdv_svc_fmem SRAM rings (8 of 32
+    // rows, {data 256, addr 30}: strobe / tag / len are constants of the class); class 1 (OWN_ROW scale byte) is 43 b an
+    // entry {addr 30, byte index 5, byte 8} (2 x 8 x 43 = 688 b of flops).  Heads read at the next-pointer address with
+    // write-through: the issue mux sees the identical word on the identical cycle (0 cycles).
+    reg [42:0] wq1 [0:1][0:7];
+    reg [42:0] wpush_c1;
+`else
     reg [340:0] wq [0:2][0:1][0:7];
+`endif
+    wire [340:0] whead [0:2][0:1];                   // FIFO heads (class, PC)
     reg [3:0] wq_w [0:2][0:1], wq_r [0:2][0:1];
     reg [2:0] wpush; reg [340:0] wpush_d [0:2]; reg [2:0] wpush_pc;   // registered pushes (one per FIFO class)
     reg [6:0] ow_slot; reg [9:0] ow_user;
@@ -205,6 +220,9 @@ module dsdv_svc_att #(
         wpush_d[0] <= wr_req(ow_ring + 30'(ow_slot[6:1]), 32'hffffffff, q_d[255:0], 17'h1fffe);
         wpush_pc[0] <= ow_slot[0];
         wpush_d[1] <= wr_req(ow_ring + 30'd64 + 30'(ow_slot[6]), 32'd1 << ow_by, 256'(q_d[263:256]) << (8 * ow_by), 17'h1fffe);
+`ifdef OT_SVC_ATT_SRAM
+        wpush_c1 <= {ow_ring + 30'd64 + 30'(ow_slot[6]), ow_by, q_d[263:256]};
+`endif
         wpush_pc[1] <= ow_slot[5];
         wpush_d[2] <= wr_req(hw_d[285:256], 32'hffffffff, hw_d[255:0], 17'h1ffff);
         wpush_pc[2] <= hw_pc[0];
@@ -212,24 +230,41 @@ module dsdv_svc_att #(
 
     // ------------------------------------------------------------------ SEL_IDS -> per-rank stack table + own-row fetch
     reg [9:0] s_first; reg [9:0] s_cnt;
+`ifdef OT_SVC_ATT_SRAM
+    // SVC2 (10-19, safe-design 5): the SEL word FIFO (32 x {n 5, base 10, word 512}) in a dsdv_svc_fmem SRAM ring (5 x 32x128),
+    // head read at the next-pointer address with write-through (0 cycles)
+    wire [526:0] sw_h;
+`else
     reg [511:0] sw [0:31]; reg [9:0] sw_base [0:31]; reg [4:0] sw_n [0:31];
+    wire [526:0] sw_h = {sw_n[sw_r[4:0]], sw_base[sw_r[4:0]], sw[sw_r[4:0]]};
+`endif
+    wire [9:0] sw_hb = sw_h[521:512];
+    wire [4:0] sw_hn = sw_h[526:522];
     reg [5:0] sw_w, sw_r; reg [4:0] sw_i;
     always @(posedge clk) if (hdr_mine && h_type == 4'd7) begin s_first <= q_d[9:0]; s_cnt <= q_d[19:10]; end
     wire sel_pay = pay_mine && f_type == 4'd7;
     reg [511:0] sel_held;                            // rank -> the row is this stack's (all 16 tiles arrive)
     // fetch FIFOs per PC {k 4, rank 10, block 12}
     reg [25:0] fq [0:1][0:15]; reg [4:0] fq_w [0:1], fq_r [0:1];
-    wire [511:0] swd = sw[sw_r[4:0]];
+    wire [511:0] swd = sw_h[511:0];
     wire [31:0] sid_g = swd[32*sw_i +: 32];
-    wire [9:0] s_rank = sw_base[sw_r[4:0]] + 10'(sw_i);
+    wire [9:0] s_rank = sw_hb + 10'(sw_i);
     wire sw_have = sw_w != sw_r;
     wire g_own = sid_g[5:4] == 2'(DIE_ID) && sid_g[7:6] == 2'(ST);
     wire f_full = (fq_w[sid_g[8]] - fq_r[sid_g[8]]) >= 5'd16;
     wire sw_step = sw_have && !(g_own && f_full);    // the fetch side waits on the elastic HBM boundary only
+    wire [9:0] sw_wb = 10'(s_first) + 10'(f_idx[5:0]) * 10'd16;
+    wire [4:0] sw_wn = (32'(s_cnt) - 32'(f_idx) * 16 >= 16) ? 5'd16 : 5'(32'(s_cnt) - 32'(f_idx) * 16);
+`ifdef OT_SVC_ATT_SRAM
+    wire [5:0] sw_rn = sw_r + 6'(sw_step && (sw_i == 5'd15 || sw_i + 1'b1 >= sw_hn));   // sw_r of the next cycle
+    dsdv_svc_fmem #(.W(527), .BYP((MUT == 7) ? 0 : 1)) u_swm (.clk(clk), .we(sel_pay), .wa(sw_w[4:0]),
+        .wd({sw_wn, sw_wb, q_d}), .ra(sw_rn[4:0]), .rd(sw_h));
+`else
     always @(posedge clk) if (sel_pay) begin
-        sw[sw_w[4:0]] <= q_d; sw_base[sw_w[4:0]] <= 10'(s_first) + 10'(f_idx[5:0]) * 10'd16;
-        sw_n[sw_w[4:0]] <= (32'(s_cnt) - 32'(f_idx) * 16 >= 16) ? 5'd16 : 5'(32'(s_cnt) - 32'(f_idx) * 16);
+        sw[sw_w[4:0]] <= q_d; sw_base[sw_w[4:0]] <= sw_wb;
+        sw_n[sw_w[4:0]] <= sw_wn;
     end
+`endif
 
     // ------------------------------------------------------------------ window read generators (per PC), scale reads
     reg [7:0] wr_r [0:1]; reg wr_on [0:1]; reg [1:0] sc_n [0:1];
@@ -246,9 +281,9 @@ module dsdv_svc_att #(
         for (p = 0; p < 2; p = p + 1) begin
             nreq[p] = '0; nv[p] = 1'b0; npop[p] = 3'd7; nwin[p] = 1'b0; nsc[p] = 1'b0; nf[p] = 1'b0;
             if (cr[p] != 0) begin
-                if (wq_w[2][p] != wq_r[2][p]) begin nv[p] = 1; nreq[p] = wq[2][p][wq_r[2][p][2:0]]; npop[p] = 3'd2; end
-                else if (wq_w[0][p] != wq_r[0][p]) begin nv[p] = 1; nreq[p] = wq[0][p][wq_r[0][p][2:0]]; npop[p] = 3'd0; end
-                else if (wq_w[1][p] != wq_r[1][p]) begin nv[p] = 1; nreq[p] = wq[1][p][wq_r[1][p][2:0]]; npop[p] = 3'd1; end
+                if (wq_w[2][p] != wq_r[2][p]) begin nv[p] = 1; nreq[p] = whead[2][p]; npop[p] = 3'd2; end
+                else if (wq_w[0][p] != wq_r[0][p]) begin nv[p] = 1; nreq[p] = whead[0][p]; npop[p] = 3'd0; end
+                else if (wq_w[1][p] != wq_r[1][p]) begin nv[p] = 1; nreq[p] = whead[1][p]; npop[p] = 3'd1; end
                 else if (wr_on[p]) begin
                     nv[p] = 1; nwin[p] = 1;
                     nreq[p] = rd_req(ring + 30'(7'(wfirst[6:0] + 7'(wr_r[p])) >> 1), 4'd1, {2'd0, 7'd0, wr_r[p]});
@@ -266,6 +301,27 @@ module dsdv_svc_att #(
             end
         end
     end
+
+    genvar wc, wp;
+    generate for (wc = 0; wc < 3; wc = wc + 1) begin : g_wqh
+        for (wp = 0; wp < 2; wp = wp + 1) begin : g_p
+`ifdef OT_SVC_ATT_SRAM
+            wire [3:0] rn = wq_r[wc][wp] + 4'(nv[wp] && npop[wp] == 3'(wc));               // read pointer of the next cycle
+            if (wc == 1) begin : g_c1
+                wire [42:0] e = wq1[wp][wq_r[1][wp][2:0]];
+                assign whead[wc][wp] = {256'(e[7:0]) << (8 * e[12:8]), 32'd1 << e[12:8], 17'h1fffe, 4'd1, e[42:13], 2'b11};
+            end else begin : g_m
+                wire [285:0] rd;
+                dsdv_svc_fmem #(.W(286), .BYP((MUT == 7) ? 0 : 1)) u_wqm (.clk(clk),
+                    .we(wpush[wc] && wpush_pc[wc] == 3'(wp)), .wa({2'd0, wq_w[wc][wp][2:0]}),
+                    .wd({wpush_d[wc][340:85], wpush_d[wc][31:2]}), .ra({2'd0, rn[2:0]}), .rd(rd));
+                assign whead[wc][wp] = {rd[285:30], 32'hffffffff, (wc == 2) ? 17'h1ffff : 17'h1fffe, 4'd1, rd[29:0], 2'b11};
+            end
+`else
+            assign whead[wc][wp] = wq[wc][wp][wq_r[wc][wp][2:0]];
+`endif
+        end
+    end endgenerate
 
     // ------------------------------------------------------------------ landing (slot-addressed: no overflow)
 `ifndef OT_SVC_LAND_SRAM
@@ -373,8 +429,24 @@ module dsdv_svc_att #(
         if (rows_mine) begin lw_v[2] = 1'b1; lw_a[2] = 10'(wcount) + q_d[9:0]; lw_d[2] = {112'd0, rows_bits}; end
         for (lk = 0; lk < 3; lk = lk + 1) if (lw_a[lk] >= 10'(TR)) lw_v[lk] = 1'b0;   // flop version: out-of-range write dropped
     end
+`ifdef OT_SVC_ATT_SRAM
+    // SVC2 (10-19): the 640 x 2 live-value table (3 runtime writers into one array + 4 reads) becomes 3 single-writer
+    // written-this-job vectors (copy c sets lv[c][row]; cleared with pres at the job start, as pres).  A row has one
+    // writer per job (window row: PC wfirst[0] ^ row[0]; selected row: its fetch PC or ROWS), so the newest copy of a
+    // row the job reads is the one copy whose bit is set (same-cycle priority ROWS > PC 1 > PC 0 kept).
+    reg [TR-1:0] lv0, lv1, lv2;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin lv0 <= '0; lv1 <= '0; lv2 <= '0; end
+        else if (start) begin lv0 <= '0; lv1 <= '0; lv2 <= '0; end
+        else begin
+            if (lw_v[0]) lv0[lw_a[0]] <= 1'b1;
+            if (lw_v[1]) lv1[lw_a[1]] <= 1'b1;
+            if (lw_v[2]) lv2[lw_a[2]] <= 1'b1;
+        end
+`else
     reg [1:0] lvt [0:TR-1];
-    always @(posedge clk) for (lk = 0; lk < 3; lk = lk + 1) if (lw_v[lk]) lvt[lw_a[lk]] <= 2'(lk);
+    always @(posedge clk) for (int wl = 0; wl < 3; wl = wl + 1) if (lw_v[wl]) lvt[lw_a[wl]] <= 2'(wl);
+`endif
     reg [NL*2-1:0] l_sel; reg [NL-1:0] l_win, l_need; reg [NL*8-1:0] l_sc;
     wire [9:0] l_row [0:NL-1];
     genvar lr;
@@ -384,7 +456,11 @@ module dsdv_svc_att #(
     integer lj;
     always @(posedge clk) begin
         for (lj = 0; lj < NL; lj = lj + 1)       // only rows < tjob <= TR reach ekv_w (others: lane mask 0)
+`ifdef OT_SVC_ATT_SRAM
+            l_sel[2*lj +: 2] <= (l_row[lj] >= 10'(TR)) ? 2'd0 : lv2[l_row[lj]] ? 2'd2 : lv1[l_row[lj]] ? 2'd1 : 2'd0;
+`else
             l_sel[2*lj +: 2] <= (l_row[lj] < 10'(TR)) ? lvt[l_row[lj]] : 2'd0;
+`endif
         l_win <= kc_win; l_need <= kc_need; l_sc <= kc_sc;
     end
     wire [8:0] l_ra = 9'(rc - 10'd1);
@@ -408,6 +484,12 @@ module dsdv_svc_att #(
     endgenerate
 `endif
 
+`ifdef OT_SVC_ATT_SRAM
+    // SVC2 (10-19): q store 16 x 512 in a dsdv_svc_fmem (4 x 32x128), read at rc - 1 on the edge (read-old == the legacy
+    // registered eq_w_q read; no write-through, as legacy): 0 cycles
+    dsdv_svc_fmem #(.W(512), .BYP(0)) u_qmm (.clk(clk), .we(q_word), .wa({1'b0, f_hdr[448], f_idx[6:4]}), .wd(q_d),
+        .ra({1'b0, 4'(rc - 10'd1)}), .rd(eq_w));
+`else
     generate if (QMEM_SRAM) begin : g_qmem_sram
         dsdv_svc_qmem8 u_qmem (.clk(clk), .wr_v(q_word),
             .wr_head({f_hdr[448], f_idx[6:4]}), .wr_data(q_d),
@@ -421,6 +503,7 @@ module dsdv_svc_att #(
         end
         assign eq_w = eq_w_q;
     end endgenerate
+`endif
 
     // ------------------------------------------------------------------ p store (SVCB: 2 SRAM banks even / odd, prefetch)
     reg [PFW:0] pw, pr, pw_q;
@@ -483,24 +566,44 @@ module dsdv_svc_att #(
     // ------------------------------------------------------------------ P.V words (owner slices)
     localparam integer PVB = 8 + NT*H*32 + NT*H;
     localparam integer PA = $clog2(PVQ);
+`ifndef OT_SVC_ATT_SRAM
     reg [PVB-1:0] pvq [0:PVQ-1];
+`endif
     reg [PA:0] pvw, pvr;
     reg [2:0] p_i;
     reg [3:0] pv_n;
+`ifdef OT_SVC_ATT_SRAM
+    // SVC2 (10-19): P.V buffer 8 x 2120 in a dsdv_svc_fmem (17 x 32x128) on the P.V owner kits (PMEM 1); head read at the
+    // next pvr with write-through (0 cycles).  PMEM 0 slices never drain (dr_arm needs pvown; pvown there is fault 23).
+    wire [PVB-1:0] pb;
+    wire [PA:0] pvr_n = pvr + (PA+1)'(pvown && dr_on && p_i == 3'd4);
+    generate if (PMEM != 0) begin : g_pvq
+        dsdv_svc_fmem #(.W(PVB), .BYP((MUT == 7) ? 0 : 1)) u_pvm (.clk(clk), .we(pv_v), .wa(5'(pvw[PA-1:0])),
+            .wd({pv_c, pv_y, pv_f}), .ra(5'(pvr_n[PA-1:0])), .rd(pb));
+    end else begin : g_nopvq
+        assign pb = '0;
+    end endgenerate
+`else
     always @(posedge clk) if (pv_v) pvq[pvw[PA-1:0]] <= {pv_c, pv_y, pv_f};
     wire [PVB-1:0] pb = pvq[pvr[PA-1:0]];
+`endif
     always @(posedge clk) if (dr_on)
         pv_od <= (p_i == 0) ? {1'b1, 440'd0, pb[PVB-1 -: 8], pb[NT*H-1:0]} : {1'b0, pb[NT*H + 32'(p_i - 1)*H*32 +: H*32]};
 
     // ------------------------------------------------------------------ sequential
-    integer k;
+    // SVC2 (10-19): block-local loop variables (one shared 'integer k' in the clk and the clk/rst_n blocks was two
+    // conflicting drivers in yosys: a dff and an adff on dsdv_svc_att.k)
     always @(posedge clk) begin
         // write FIFO pushes
-        for (k = 0; k < 3; k = k + 1) if (wpush[k]) wq[k][wpush_pc[k]][wq_w[k][wpush_pc[k]][2:0]] <= wpush_d[k];
+`ifdef OT_SVC_ATT_SRAM
+        if (wpush[1]) wq1[wpush_pc[1]][wq_w[1][wpush_pc[1]][2:0]] <= wpush_c1;
+`else
+        for (int k = 0; k < 3; k = k + 1) if (wpush[k]) wq[k][wpush_pc[k]][wq_w[k][wpush_pc[k]][2:0]] <= wpush_d[k];
+`endif
         // q store
 
         // landing writes: PC responses, ROWS
-        for (k = 0; k < 2; k = k + 1) if (qrv[k]) begin
+        for (int k = 0; k < 2; k = k + 1) if (qrv[k]) begin
             reg [16:0] tg; reg [11:0] o144; reg [511:0] two; reg [9:0] slot;
             tg = qr_tag[17*k +: 17];
             case (tg[16:15])
@@ -527,7 +630,7 @@ module dsdv_svc_att #(
         if (rows_mine) land[10'(wcount) + q_d[9:0]] <= {112'd0, rows_bits};
 `endif
         // fetch FIFO push
-        if (sw_step && sw_i < sw_n[sw_r[4:0]] && g_own)
+        if (sw_step && sw_i < sw_hn && g_own)
             fq[sid_g[8]][fq_w[sid_g[8]][3:0]] <= {sid_g[3:0], s_rank, sid_g[20:9]};
         // SEL words
         // engine program inputs
@@ -537,13 +640,13 @@ module dsdv_svc_att #(
 `endif
         ekv_m <= kc_m;
         // PC request flops
-        for (k = 0; k < 2; k = k + 1) qrq[341*k +: 341] <= nv[k] ? nreq[k] : '0;
+        for (int k = 0; k < 2; k = k + 1) qrq[341*k +: 341] <= nv[k] ? nreq[k] : '0;
     end
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            for (k = 0; k < 3; k = k + 1) begin wq_w[k][0] <= 0; wq_w[k][1] <= 0; wq_r[k][0] <= 0; wq_r[k][1] <= 0; end
-            for (k = 0; k < 2; k = k + 1) begin
+            for (int k = 0; k < 3; k = k + 1) begin wq_w[k][0] <= 0; wq_w[k][1] <= 0; wq_r[k][0] <= 0; wq_r[k][1] <= 0; end
+            for (int k = 0; k < 2; k = k + 1) begin
                 cr[k] <= 4'(DQ); wk_w[k] <= 0; wk_r[k] <= 0; wr_on[k] <= 0; wr_r[k] <= 0; sc_n[k] <= 0;
                 fq_w[k] <= 0; fq_r[k] <= 0;
             end
@@ -556,13 +659,13 @@ module dsdv_svc_att #(
             sm_st <= 0; sm_rv <= 0; sm_rp <= 0; sm_rj <= 0; sm_kind <= 0; sm_jid <= 0; sm_rd <= 0;
         end else begin
             // ---- write FIFO pointers
-            for (k = 0; k < 3; k = k + 1) if (wpush[k]) begin
+            for (int k = 0; k < 3; k = k + 1) if (wpush[k]) begin
                 wq_w[k][wpush_pc[k]] <= wq_w[k][wpush_pc[k]] + 1'b1;
                 if (wq_w[k][wpush_pc[k]] - wq_r[k][wpush_pc[k]] >= 4'd8) fc[0] <= 1'b1;
             end
             // ---- issue
             iss_host <= 0;
-            for (k = 0; k < 2; k = k + 1) begin
+            for (int k = 0; k < 2; k = k + 1) begin
                 cr[k] <= cr[k] - 4'(nv[k]) + 4'(qrk[k]);
                 if (nv[k] && npop[k] != 3'd7) begin
                     wq_r[npop[k]][k] <= wq_r[npop[k]][k] + 1'b1;
@@ -586,7 +689,7 @@ module dsdv_svc_att #(
             hack <= 2'(qwd[0] && wk[0][wk_r[0][3:0]]) + 2'(qwd[1] && wk[1][wk_r[1][3:0]]);
             if (root && hw_v && !hw_sec && !(hw_mark && hw_d[288] && hw_d[290:289] < 2'd2)) fc[3] <= 1'b1;
             // ---- responses
-            for (k = 0; k < 2; k = k + 1) if (qrv[k]) begin
+            for (int k = 0; k < 2; k = k + 1) if (qrv[k]) begin
                 reg [16:0] tg; reg [11:0] o144;
                 tg = qr_tag[17*k +: 17];
                 o144 = 12'(tg[13:10]) * 12'd144;
@@ -602,11 +705,11 @@ module dsdv_svc_att #(
             // ---- SEL words / scanner
             if (sel_pay) begin sw_w <= sw_w + 1'b1; if (sw_w - sw_r >= 6'd32) fc[5] <= 1'b1; end
             if (sw_step) begin
-                if (sw_i < sw_n[sw_r[4:0]]) begin
+                if (sw_i < sw_hn) begin
                     sel_held[s_rank] <= sid_g[7:6] == 2'(ST);
                     if (g_own) fq_w[sid_g[8]] <= fq_w[sid_g[8]] + 1'b1;
                 end
-                if (sw_i == 5'd15 || sw_i + 1'b1 >= sw_n[sw_r[4:0]]) begin sw_i <= 0; sw_r <= sw_r + 1'b1; end
+                if (sw_i == 5'd15 || sw_i + 1'b1 >= sw_hn) begin sw_i <= 0; sw_r <= sw_r + 1'b1; end
                 else sw_i <= sw_i + 1'b1;
             end
             // ---- job start (WIN_LOAD)
@@ -695,4 +798,34 @@ module dsdv_svc_att #(
             if (sc_v && !job_active) fc[18] <= 1'b1;
         end
     end
+endmodule
+
+// ---------------------------------------------------------------------------------------------------------------------
+// SVC2 (10-19): 32-row 1R1W SRAM ring for the dsdv_svc_att FIFOs: ceil(W / 128) x ot_sram_1r1w_32x128_m1 side by side.
+// ra is the address the read samples on the edge (a FIFO passes its NEXT-cycle read pointer); BYP 1 adds the
+// write-through of a word written on that same edge, so rd equals the combinational read of a flop array mem[ra_q]
+// (BYP 0: the registered read-old of mem[ra], as an always @(posedge clk) q <= mem[ra]).
+module dsdv_svc_fmem #(parameter integer W = 128, parameter integer BYP = 1) (
+    input  wire         clk,
+    input  wire         we,
+    input  wire [4:0]   wa,
+    input  wire [W-1:0] wd,
+    input  wire [4:0]   ra,
+    output wire [W-1:0] rd
+);
+    localparam integer NM = (W + 127) / 128;
+    wire [NM*128-1:0] q;
+    wire [NM*128-1:0] wdp = (NM*128)'(wd);
+    genvar b;
+    generate for (b = 0; b < NM; b = b + 1) begin : g_m
+        ot_sram_1r1w_32x128_m1 u_m (.clk(clk), .r_ce_in(1'b1), .r_addr_in(ra), .rd_out(q[128*b +: 128]),
+            .w_ce_in(we), .w_addr_in(wa), .wd_in(wdp[128*b +: 128]), .w_mask_in({128{1'b1}}));
+    end
+    if (BYP != 0) begin : g_byp
+        reg byp; reg [W-1:0] bd;
+        always @(posedge clk) begin byp <= we && wa == ra; if (we) bd <= wd; end
+        assign rd = byp ? bd : q[W-1:0];
+    end else begin : g_nobyp
+        assign rd = q[W-1:0];
+    end endgenerate
 endmodule
