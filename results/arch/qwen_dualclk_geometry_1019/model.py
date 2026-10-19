@@ -97,7 +97,7 @@ dump('hybrid.json',dict(placements=placements,macro_array_reserved_um=[259.2,388
         simultaneous_all_banks_energy_fj=26*t['simultaneous_read_write_plus_clock_access_energy_fj'],
         boundary_clock_driver_energy_fj=26*t['complete_boundary_clock_driver_energy_fj']) for c,t in model['timing'].items()}))
 with (HERE/'contacts.csv').open('w') as handle:
-    writer=csv.writer(handle); writer.writerow(['bank','pin','face','native_anchor_nm','new_terminal_nm','vias','lead_cap_ff','actual_instance','escape','pg_bound'])
+    writer=csv.writer(handle,lineterminator='\n'); writer.writerow(['bank','pin','face','native_anchor_nm','new_terminal_nm','vias','lead_cap_ff','actual_instance','escape','pg_bound'])
     for i in range(26):
         for p in model['paths']:
             writer.writerow([i,p['pin'],p['face'],p['preserved_anchor_nm'],p['terminal_nm'],p['via_count'],p['cap_ff'],'','',''])
