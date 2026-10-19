@@ -19,7 +19,14 @@
 //   LIN  link row clear / flush + row (link ingest side)    LOUT  link emit + group + row (link TX side)
 // QUERY-RELOAD HAZARD (checked, = fault): the hslices hold ONE query and use it up to 27 edges after a key (block 3 at
 // +14, head weight at +27), so a head emit (next row's query) less than G2MIN issue slots after the last key beat FAULTS.
-module ot_hnx_idxn_calendar #(parameter integer K=8,S=4,G2MIN=23)(
+// CW=1 COMPACT WINDOWS (HBM-NEXT-UNITS-QCTL 2026-10-19, opt-in; CW=0 = the structure above, unchanged): the 4-row head
+// copy per stream (8 x 1,024 b + 1,024 b head = 9,216 flops, hnx_idxq_qctl gate: clock pin-flop spread 104 ps > 80) is
+// replaced by ONE shared head row 0 (256 b, read by every stream while pc < 8) and a 2-row ring per stream (512 b):
+// row f (f >= 1) is fetched in the stream's own TDM slot while the stream issues row f - 1 (exactly one slot falls in
+// those 8 edges), into ring slot f mod 2 (row f - 2: finished); a fetch on the last edge of row f - 1 lands on the
+// edge that reads row f's first word, which then reads the SRAM output word directly (bypass). Same instruction on
+// every edge as CW=0 (4,352 flops instead of 9,216; no 1,024-b head copy at launch). Only the read port slots change.
+module ot_hnx_idxn_calendar #(parameter integer K=8,S=4,G2MIN=23,CW=0)(
  input wire clk,clk_mem,rst_n,
  input wire program_we,input wire[7:0]program_addr,input wire[255:0]program_data,
  input wire start,input wire[11:0]length,input wire[4:0]n_rows,input wire[11:0]pitch,
@@ -35,7 +42,14 @@ module ot_hnx_idxn_calendar #(parameter integer K=8,S=4,G2MIN=23)(
 );
  // ---- head rows 0..3 (captured at programme load) and the shared frame SRAM (TDM read port)
  reg[1023:0]head;
- always @(posedge clk)if(program_we&&program_addr<8'd4)head[program_addr[1:0]*256+:256]<=program_data;
+ if(CW==0)begin:ghead
+  always @(posedge clk)if(program_we&&program_addr<8'd4)head[program_addr[1:0]*256+:256]<=program_data;
+ end else begin:ghead0
+  always @(posedge clk)if(program_we&&program_addr==8'd0)head[255:0]<=program_data;   // row 0 only (shared)
+  always @* head[1023:256]=768'd0;
+ end
+ wire[31:0]raw_w[0:7];wire[31:0]head_w[0:7];
+ for(genvar j=0;j<8;j=j+1)begin:gw assign raw_w[j]=raw[j*32+:32];assign head_w[j]=head[j*32+:32];end
  reg[2:0]tdm;
  always @(posedge clk or negedge rst_n)if(!rst_n)tdm<=0;else tdm<=tdm+3'd1;
  wire[K-1:0]want;wire[9*K-1:0]fnext;
@@ -57,26 +71,37 @@ module ot_hnx_idxn_calendar #(parameter integer K=8,S=4,G2MIN=23)(
  wire[3*K-1:0]sel_of=selmap(srow);            // selector of each stream's row (one wire: the bench forces it for MUT 22)
  for(genvar k=0;k<K;k=k+1)begin:gs
   wire go=row_start&&(go_row%K)==k;
-  reg act;reg[11:0]pc,lim;reg[4:0]row;reg[1023:0]win;reg[8:0]f;reg fp;reg[1:0]fslot;
+  reg act;reg[11:0]pc,lim;reg[4:0]row;reg[8:0]f;reg fp;reg[1:0]fslot;
   reg v1,last1;reg[31:0]i1;reg iv,dn;reg[31:0]ins;
-  assign want[k]=act&&f<9'd256&&{f,3'd0}<{1'b0,lim}&&f<{1'b0,pc[11:3]}+9'd4;
+  // CW=0: rows 0..3 from the launch copy, prefetch up to 4 rows ahead; CW=1: row f fetched while issuing row f - 1
+  assign want[k]=act&&f<9'd256&&{f,3'd0}<{1'b0,lim}&&f<{1'b0,pc[11:3]}+(CW==0?9'd4:9'd2);
   assign fnext[k*9+:9]=f;
   always @(posedge clk or negedge rst_n)begin
    if(!rst_n)begin act<=0;pc<=0;lim<=0;row<=0;f<=0;fp<=0;fslot<=0;v1<=0;last1<=0;iv<=0;dn<=0;end
    else begin
     v1<=act;last1<=pc+12'd1==lim;iv<=v1;dn<=v1&&last1;
     fp<=0;
-    if(go)begin act<=1;pc<=0;lim<=length;row<=go_row;f<=9'd4;end
+    if(go)begin act<=1;pc<=0;lim<=length;row<=go_row;f<=(CW==0?9'd4:9'd1);end
     else begin
      if(act)begin pc<=pc+12'd1;if(pc+12'd1==lim)act<=0;end
      if(tdm==3'(k)&&want[k])begin f<=f+9'd1;fp<=1;fslot<=f[1:0];end
     end
    end
   end
-  always @(posedge clk)begin
-   i1<=win[pc[4:3]*256+pc[2:0]*32+:32];ins<=v1?i1:32'd0;
-   if(go)win<=head;
-   else if(fp)win[fslot*256+:256]<=raw;
+  if(CW==0)begin:gwin
+   reg[1023:0]win;
+   always @(posedge clk)begin
+    i1<=win[pc[4:3]*256+pc[2:0]*32+:32];ins<=v1?i1:32'd0;
+    if(go)win<=head;
+    else if(fp)win[fslot*256+:256]<=raw;
+   end
+  end else begin:gring
+   reg[31:0]ring[0:15];                       // 2 rows x 8 words; slot = row parity
+   wire byp=fp&&pc[11:3]==f-9'd1;              // the row landing on this edge is the row read on this edge
+   always @(posedge clk)begin
+    i1<=(pc[11:3]==9'd0)?head_w[pc[2:0]]:byp?raw_w[pc[2:0]]:ring[pc[3:0]];ins<=v1?i1:32'd0;
+    if(fp)for(integer j=0;j<8;j=j+1)if(fslot[0])ring[8+j]<=raw_w[j];else ring[j]<=raw_w[j];
+   end
   end
   assign sbusy[k]=act||v1||iv;
   assign sv[k]=iv;assign si[k*32+:32]=ins;assign sd[k]=dn;assign srow[k*5+:5]=row;

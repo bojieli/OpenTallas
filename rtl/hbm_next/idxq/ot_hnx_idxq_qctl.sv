@@ -10,7 +10,10 @@
 // flop (+1 edge): the timeline is +2 edges after the host start, as the d4g quadrant copy. frame_start (record start:
 // operand row bases, key buffer clear) = start + 2; row_start = start + 2 (row 0) or the launch edge + 1 (rows >= 1).
 // RESET: rst_n drives only ot_rst_relay; calendar/control flops reset, pin flops unreset. STATIC: no ready/credit.
-module ot_hnx_idxq_qctl #(parameter integer K=8,S=4)(
+// CW=1 (HBM-NEXT-UNITS IDXQ 2026-10-19, default): the calendar's compact stream windows (one shared head row + a 2-row
+// ring per stream: 4,352 instead of 9,216 window flops; same instruction on every edge, tb_hnx_idxn_cw + the quad lockstep);
+// gate hnx_idxq_qctl 04:2x failed the clock rule at 9,290 sinks (pin-flop spread 104 ps > 80 TT).
+module ot_hnx_idxq_qctl #(parameter integer K=8,S=4,CW=1)(
  input wire clk_program,clk_program_mem,input wire rst_n,
  input wire slot,
  input wire program_we,input wire[7:0]program_addr,input wire[255:0]program_data,
@@ -35,7 +38,7 @@ module ot_hnx_idxq_qctl #(parameter integer K=8,S=4)(
  end
  wire calendar_fault,done_u,rs,ow,oq,qe,kv,pv,lc,lf,le;wire[6:0]oi;wire[4:0]qh,kr,lr,er;wire[7:0]ki,pi;wire[3:0]eg;
  wire[4*S-1:0]sop;wire[2*S-1:0]sps;wire[8*S-1:0]sad;
- ot_hnx_idxn_calendar #(.K(K),.S(S)) calendar(.clk(clk_program),.clk_mem(clk_program_mem),.rst_n(rst_c),
+ ot_hnx_idxn_calendar #(.K(K),.S(S),.CW(CW)) calendar(.clk(clk_program),.clk_mem(clk_program_mem),.rst_n(rst_c),
   .program_we(pw_r),.program_addr(pa_r),.program_data(pd_r),.start(st_r),.length(ln_r),.n_rows(nr_r),.pitch(pi_r),
   .row_start(rs),.opr_weight(ow),.opr_query(oq),.opr_index(oi),.qem_v(qe),.qem_head(qh),
   .key_v(kv),.key_index(ki),.key_row(kr),.pre_v(pv),.pre_index(pi),.sel_op(sop),.sel_pass(sps),.sel_addr(sad),
