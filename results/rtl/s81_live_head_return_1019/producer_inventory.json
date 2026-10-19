@@ -4630,5 +4630,15 @@
         }
       }
     ]
+  },
+  "head_source_gaps": {
+    "compiler_file": "tools/s81_dv/dv_layer_compile.py",
+    "compiler_sha256": "6cf2fdd2fbeac48dbbe883c6458af3c051e250e85b1287602ab15a332a59f06f",
+    "rules": "GAP_HEAD and OPMAP cover all head.*, draft.*, token.return because p4l DV bind has no head-die netlist. Do not relabel the new component wrapper as a bound production top.",
+    "current_pre_norm_file": "tools/s81_dv/layer_prog/lower_vpx.py",
+    "current_pre_norm_sha256": "0cf486d028198abccee2fa6b013a47667cbdd6bc7a738919446442eebec44dbe",
+    "current_pre_norm_gap": "Previous-sublayer pre-row1008 producer/transfer/lifetime absent; norm compiled on one slice, 16-slice NX/XQ composition absent.",
+    "historical_hc": "dsfd_sp_hc HIER1 HALF1 CSPLIT1 TAIL_SPLIT2 K_NORM YOUT; historical head_prep test and VM-pin fixture boundary, not a bound production final-layer producer.",
+    "coordinator_owner": "/root/s81_coordinator owns structural physical integration; no separate production final head-prep owner has been assigned."
   }
 }
