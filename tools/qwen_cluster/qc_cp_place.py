@@ -10,7 +10,7 @@ from qc_safe_graph import ROOT,extract
 S=1000;GRID=43200;GAP=20000
 
 def main():
- p=argparse.ArgumentParser();p.add_argument('--step',type=float,required=True);p.add_argument('--out',required=True);p.add_argument('--workers',type=int,default=8);p.add_argument('--core',action='store_true');p.add_argument('--full-land',action='store_true');p.add_argument('--paired-land',action='store_true');p.add_argument('--zones',action='store_true');p.add_argument('--native-pins',help='compiled safe endpoint plan; exact local child pin offsets');p.add_argument('--forward-bank',action='store_true');p.add_argument('--forward-read-reach',type=float,default=250);a=p.parse_args();g=extract();assert not g['unresolved'];c=g['contract'];cols=[172.8+i*a.step for i in range(4)];W=math.ceil((cols[-1]+457.92+172.8)/43.2-1e-8)*43.2;H=c['outline_um']['h'];oldx=sorted(set(t['at'][0]for t in c['tiles']))
+ p=argparse.ArgumentParser();p.add_argument('--step',type=float,required=True);p.add_argument('--out',required=True);p.add_argument('--workers',type=int,default=8);p.add_argument('--core',action='store_true');p.add_argument('--soft-reach',action='store_true',help='diagnostic legal packing minimizing sum of405um reach overruns');p.add_argument('--full-land',action='store_true');p.add_argument('--paired-land',action='store_true');p.add_argument('--zones',action='store_true');p.add_argument('--native-pins',help='compiled safe endpoint plan; exact local child pin offsets');p.add_argument('--forward-bank',action='store_true');p.add_argument('--forward-read-reach',type=float,default=250);a=p.parse_args();g=extract();assert not g['unresolved'];c=g['contract'];cols=[172.8+i*a.step for i in range(4)];W=math.ceil((cols[-1]+457.92+172.8)/43.2-1e-8)*43.2;H=c['outline_um']['h'];oldx=sorted(set(t['at'][0]for t in c['tiles']))
  knots=sorted([(0,0),(c['outline_um']['w'],W)]+[(x+d,y+d)for x,y in zip(oldx,cols)for d in [0,457.92]])
  def mx(x):
   for(oa,na),(ob,nb)in zip(knots,knots[1:]):
@@ -71,7 +71,7 @@ def main():
   xs.append(m.new_fixed_size_interval_var(tx,round(457.92*S)+GAP,t['inst']+'_xr'));ys.append(m.new_fixed_size_interval_var(ty,round(1166.4*S)+GAP,t['inst']+'_yr'))
  m.add_no_overlap_2d(xs,ys)
  def center(k):return jobs[k]['center']if k in jobs else fixed[k]
- ee=[];assume={};native_bounds={};native_bits=0
+ ee=[];assume={};native_bounds={};native_bits=0;overruns=[]
  if a.native_pins:
   assert not a.full_land and not a.forward_bank,'native plan is narrow, unforwarded only'
   plan=json.loads(Path(a.native_pins).read_text());assets={}
@@ -106,19 +106,33 @@ def main():
    # Necessary geometric reach condition, including each bank. Corridor path is
    # checked after packing. No multicycle relaxation is used by this solver.
    bounds=native_bounds.get((src,dst));constraints=[]
+   over=m.new_int_var(0,round((W+H)*S),f'over{i}')if a.soft_reach else 0
+   if a.soft_reach:overruns.append(over)
    if bounds is not None:
     ox0,oy0=jobs[src]['x'],jobs[src]['y'];ox1,oy1=jobs[dst]['x'],jobs[dst]['y']
-    for bound,(sx,sy)in zip(bounds,[(1,1),(1,-1),(-1,1),(-1,-1)]):constraints.append(m.add(sx*(ox0-ox1)+sy*(oy0-oy1)+bound<=round(reach*S)))
-   else:constraints.append(m.add(dx+dy<=round(reach*S)))
+    for bound,(sx,sy)in zip(bounds,[(1,1),(1,-1),(-1,1),(-1,-1)]):constraints.append(m.add(sx*(ox0-ox1)+sy*(oy0-oy1)+bound<=round(reach*S)+over))
+   else:constraints.append(m.add(dx+dy<=round(reach*S)+over))
    if a.core:
     active=m.new_bool_var(f'edge{i}_reach')
     for constraint in constraints:constraint.only_enforce_if(active)
     m.add_assumption(active);assume[active.index]=i
    ee.append(dict(e,src=src,dst=dst,reach_target_um=reach,reach_basis='exact native child bit-pin Manhattan'if bounds is not None else'center diagnostic (A0/boundary pins unqualified)'))
+ if a.soft_reach:
+  assert not a.core,'soft-reach cannot produce a hard infeasibility core'
+  m.minimize(sum(overruns))
  solver=cp_model.CpSolver();solver.parameters.num_search_workers=1 if a.core else a.workers;solver.parameters.log_search_progress=True
  print('CP_PLACE_START',a.step,'outline',W,H,'jobs',len(jobs),'edges',len(ee),'native_pairs',len(native_bounds),'native_bits',native_bits,flush=True)
- started=time.time();status=solver.solve(m);name=solver.status_name(status);print('CP_PLACE_STATUS',name,'wall',time.time()-started,flush=True)
- result=dict(schema='opentallas.cb16.cp_place.v1',diagnostic_only=True,source=g['source'],outline_um=dict(w=W,h=H),step_um=a.step,area_mm2=W*H/1e6,area_ratio=W/c['outline_um']['w'],status=name,solver_wall_s=time.time()-started,shape_policy='stations90.72x64.8; xstn90.72x129.6; '+('full103.68x181.44' if a.full_land else 'split64.8x129.6')+'; all pins<=6/um',clock_domain_rule='logical domain unchanged; physical regions may overlap; clock closure unqualified',reset_hardening_remaining=len(g['reset_nodes']),storage_waiver_required=a.full_land,paired_land_restriction=a.paired_land,empty_space_zones=a.zones,forward_bank_stage=a.forward_bank,extra_forward_children=len(extras),extra_forward_state_bits=sum(v["bits"]for v in extras.values()),extra_forward_outline_area_mm2=len(extras)*103.68*129.6/1e6,forward_read_reach_um=a.forward_read_reach,landing_child_profile='full103.68x181.44'if a.full_land else'split64.8x129.6',native_pin_plan=a.native_pins,native_pin_bits_checked=native_bits,native_pin_pairs=len(native_bounds),release_ready=False)
+ started=time.time()
+ class PlacementWitness(cp_model.CpSolverSolutionCallback):
+  def on_solution_callback(self):
+   if not a.soft_reach:return
+   placed=[dict(inst=k,**{v:j[v]for v in ['logical','kind','region','w','h']},at=[self.value(j['x'])/S,self.value(j['y'])/S])for k,j in jobs.items()]
+   violations=[dict(edge=e,overrun_um=self.value(overruns[i])/S)for i,e in enumerate(ee)if self.value(overruns[i])]
+   receipt=dict(schema='opentallas.cb16.softreach_candidate.v1',diagnostic_only=True,release_ready=False,outline_um=dict(w=W,h=H),source=g['source'],native_pin_plan=a.native_pins,placement=placed,edges=ee,reach_violations=violations,total_overrun_um=self.objective_value/S,solver_wall_s=self.wall_time,scope='hard legal packing; reach is SOFT diagnostic, any positive overrun blocks parent adoption; missing A0/boundary pins and clocks/reset/routing remain unqualified')
+   out=Path(a.out+'.best.json');out.parent.mkdir(parents=True,exist_ok=True);out.write_text(json.dumps(receipt,indent=1)+'\n')
+   print('CP_SOFT_WITNESS','overrun_um',receipt['total_overrun_um'],'violations',len(violations),'wall',self.wall_time,flush=True)
+ status=solver.solve(m,PlacementWitness());name=solver.status_name(status);print('CP_PLACE_STATUS',name,'wall',time.time()-started,flush=True)
+ result=dict(schema='opentallas.cb16.cp_place.v1',diagnostic_only=True,source=g['source'],outline_um=dict(w=W,h=H),step_um=a.step,area_mm2=W*H/1e6,area_ratio=W/c['outline_um']['w'],status=name,solver_wall_s=time.time()-started,shape_policy='stations90.72x64.8; xstn90.72x129.6; '+('full103.68x181.44' if a.full_land else 'split64.8x129.6')+'; all pins<=6/um',clock_domain_rule='logical domain unchanged; physical regions may overlap; clock closure unqualified',reset_hardening_remaining=len(g['reset_nodes']),storage_waiver_required=a.full_land,paired_land_restriction=a.paired_land,empty_space_zones=a.zones,forward_bank_stage=a.forward_bank,extra_forward_children=len(extras),extra_forward_state_bits=sum(v["bits"]for v in extras.values()),extra_forward_outline_area_mm2=len(extras)*103.68*129.6/1e6,forward_read_reach_um=a.forward_read_reach,landing_child_profile='full103.68x181.44'if a.full_land else'split64.8x129.6',soft_reach=a.soft_reach,total_overrun_um=(solver.objective_value/S if a.soft_reach and status in [cp_model.OPTIMAL,cp_model.FEASIBLE] else None),native_pin_plan=a.native_pins,native_pin_bits_checked=native_bits,native_pin_pairs=len(native_bounds),release_ready=False)
  if status==cp_model.INFEASIBLE:
   result['infeasible_edge_core']=[ee[assume[i]] for i in solver.sufficient_assumptions_for_infeasibility() if i in assume]
   print('CP_PLACE_CORE',[(e['src'],e['dst'],e['net'])for e in result['infeasible_edge_core']],flush=True)
