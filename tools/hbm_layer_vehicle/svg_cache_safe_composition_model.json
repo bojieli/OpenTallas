@@ -62,6 +62,11 @@
     "measured_cycle_delta": 76,
     "DRAM_beats": 5988,
     "mirror_one_edge_short_mutant": "SM schedule fault cycle804",
-    "scope": "Frozen old-issuer cohort0 baseline with hardened4leaf predating strict reset successor; isolates cache+2 causality. Current cohort1 source, native producer timeline, final reset successor composition and bankedcalendar require separate exact-source proof."
+    "scope": "Frozen old-issuer cohort0 baseline with hardened4leaf predating strict reset successor; isolates cache+2 causality. Current cohort1 source, native producer timeline, final reset successor composition and bankedcalendar require separate exact-source proof.",
+    "baseline_last_result_edge": 11811,
+    "last_result_edge": 11887,
+    "baseline_last_command_edge": 11699,
+    "last_command_edge": 11775,
+    "simulation_END_note": "DONE cycles is compiler END including1200 drain edges; both actual final result and final command move+76, so the schedule delta is observed independently of the drain window. No full-token claim."
   }
 }
