@@ -115,14 +115,15 @@ module ot_qfd_land_region #(parameter integer W = 24) (
     input wire [3:0] vld,
     output reg [W-1:0] o
 );
-    (* keep = "true", dont_touch = "true" *) reg [3:0] ws;
+    (* keep = "true", dont_touch = "true" *) reg [3:0] ws_q;
+    wire [3:0] ws = {ws_q[3:1], ~ws_q[0]};
     (* keep = "true", dont_touch = "true" *) reg [3:0] rdsel;
     always @(posedge wck or negedge we)
-        if (!we) ws <= 4'b0001;
+        if (!we) ws_q <= 4'b0000;
 `ifdef OT_QFD_LAND_MUT_WSEL
-        else ws <= {ws[0], ws[3:1]};
+        else ws_q <= {ws[0], ws[3:2], ~ws[1]};
 `else
-        else ws <= {ws[2:0], ws[3]};
+        else ws_q <= {ws[2:0], ~ws[3]};
 `endif
     // The straps are captured before the decode. Reset clocks seed the pointer for rc=0;
     // subsequent clocks load rc+1-K, so the OLD select reads exactly rc-K on this edge.
