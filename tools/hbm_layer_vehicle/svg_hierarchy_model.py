@@ -48,6 +48,7 @@ def model():
             proposed_additional_return_edges=7,
             selected_total_prefetch_margin_stream_edges=15,
             metadata_delay_stream_edges=7,
+            metadata_storage="two explicit eight-slot35-bit rings (drain labels and cache OPEN), each280bits plus35-bit native output; per16-bit local pointers; no seven-register metadata shift chain",
             source_bound_proof="ot_hbm_svg_return_regional,1632 groups,min=max7edges,threeoccupiedresets,II1; select/rotate/epoch mutants all fail",
             clocks='Separate stream roots for four pairregions and cachehub. Actual4slot fixed-latency landed crossings, no ready path across SM programme boundary. Halfcycle forwarded relay if placed reach exceeds405um.',
             region_to_center_manhattan_um=224.64/2+362.88/2,
