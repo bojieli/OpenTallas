@@ -4,7 +4,8 @@
   python3 tools/qwen_split/test_d2d_txdp.py      (repository root; also collected by pytest)
 
 1. the producer law (d2d_link_calendar.producer_txd + the PR pin flops) on the die seam stages reproduces the
-   LAYERBENCH-QWEN compiled_L1 program's TXD (compute [6,3,1,9], KV [23,4,3,3]); run_r3's [8,3,1,9] is the same law at
+   LAYERBENCH-QWEN compiled_L1 program's TXD (compute [6,3,1,9], KV [24,4,3,3] with the landed attention codec 2,
+   HKV-DIE 10-19; [23,...] at the as-built codec 1); run_r3's [8,3,1,9] is the same law at
    SC_TX = 2 (no dv2f14bn bundle has that age: tx_v + tx_payload are direct);
 2. the generated masters carry TXDP as a parameter with no production default (d2d_pinreg_gen.py) and no hard-wired
    PR vector;
@@ -28,12 +29,13 @@ def pr(txd):
 
 
 def test_producer_law_matches_compiler():
-    got = pr(L.producer_txd(L.parse_stages(DIE)))
-    assert got == {'C': [6, 3, 1, 9], 'K': [23, 4, 3, 3]}, got
+    assert pr(L.producer_txd(L.parse_stages(DIE), kv_codec=1))['K'] == [23, 4, 3, 3]
+    got = pr(L.producer_txd(L.parse_stages(DIE), kv_codec=2))
+    assert got == {'C': [6, 3, 1, 9], 'K': [24, 4, 3, 3]}, got
     assert got == json.loads(PROG.read_text())['txd']
-    r3 = pr(L.producer_txd(L.parse_stages('2,2,2,2,2,2/11,11,9,9,9,11,11')))
+    r3 = pr(L.producer_txd(L.parse_stages('2,2,2,2,2,2/11,11,9,9,9,11,11'), kv_codec=2))
     assert r3['C'] == [8, 3, 1, 9]
-    assert L.txdp_word(got['C']) == 0x09010306 and L.txdp_word(got['K']) == 0x03030417
+    assert L.txdp_word(got['C']) == 0x09010306 and L.txdp_word(got['K']) == 0x03030418
 
 
 def test_masters_take_txdp_parameter():
@@ -54,7 +56,7 @@ def test_committed_image_is_the_compilers():
         assert Path(d, 'd2d_cal_image.svh').read_text() == IMG.read_text()
         assert "QFD_D2D_TXDP = 32'h09010306" in Path(d, 'program', 'txdp.svh').read_text()
     t = IMG.read_text()
-    assert "localparam [31:0] D2D_TXDP_C = 32'h09010306;" in t and "localparam [31:0] D2D_TXDP_K = 32'h03030417;" in t
+    assert "localparam [31:0] D2D_TXDP_C = 32'h09010306;" in t and "localparam [31:0] D2D_TXDP_K = 32'h03030418;" in t
 
 
 if __name__ == '__main__':
