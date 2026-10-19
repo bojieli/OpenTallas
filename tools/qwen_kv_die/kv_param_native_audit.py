@@ -12,8 +12,10 @@ not prove the routed view implements them.  This audit proves it:
            routed flop instance names (`<reg>$_DFF_*_`): each routed flop exposes its captured state as S__<n>, gold
            aliases the same register bit as S__<n>; every other internal name is hidden.  Yosys then proves
            equiv_make / equiv_simple -seq / equiv_induct / equiv_status -assert over every port and paired state bit.
-           Hard macros (no Liberty function) are cut identically on both sides (expose -evert) so their pins are
-           compared as ports.
+           Hard macros (no Liberty function) are the same blackbox (the kit's *_bb.v) on both sides; equiv_make pairs
+           the same-named instances and proves their inputs.  Tap/filler/decap cells (no logical pin) are dropped.
+           When the closed kit landed its resets in the flow (reset_landing.json), gold is that shell
+           (<port>__ot_rl<i> stages, core u_ot_pr_core) around the RTL, so the proof covers shell and core.
   receipt  turns PROVEN audits whose identity still matches the worktree into frozen receipts + a profiles file for
            OT_KV_PARAMETER_PROFILES.  A NOT PROVEN audit never produces a receipt: it is a re-harden for the tile lane.
 """
@@ -41,7 +43,7 @@ SCHEMA = 'opentallas.native_parameter_profile.v1'
 AUDIT_SCHEMA = 'opentallas.kv_param_native_audit.v1'
 FF_TYPES = {'$dff', '$adff', '$dffe', '$adffe', '$sdff', '$sdffe', '$sdffce', '$dffsr', '$dffsre', '$aldff',
             '$aldffe'}
-FLOP_NAME = re.compile(r'^(?P<base>.+)\$_[A-Z0-9]+_(?:_\d+)?$')
+FLOP_NAME = re.compile(r'^(?P<base>[^$]+)\$_[A-Z][A-Z0-9_]*$')
 
 
 def sha(p):
@@ -110,44 +112,84 @@ def prepare_gate(netlist, top, cells, work):
     """Rewrite the routed netlist: every flop instance gets .OT_S(S__<base>); returns (state names, macros)."""
     text = Path(netlist).read_text()
     mod = nl.read_module(Path(netlist), top)
-    used, states, models, macros, unnamed = set(), {}, {}, {}, []
-    edits = []
+    used, models, macros = set(), {}, {}
+    flops, driver, drops = [], {}, []
     for inst in mod.instances:
         c = rvt(inst.cell, cells)
+        if not inst.pins:
+            drops.append(inst.span)          # tap / filler / decap: no logical pin
+            continue
         if c is None:
             macros[inst.name] = inst.cell
             continue
         models[inst.cell] = c
-        if not c.get('ff'):
-            if c.get('latch'):
-                raise ValueError(f'{inst.name}: latch cell {inst.cell} in routed netlist (unsupported by audit)')
-            continue
+        outs = [p for p, i in c['pins'].items() if i['direction'] == 'output']
+        for p in outs:
+            for bit in inst.pins.get(p, []):
+                driver[bit] = (inst, c, p)
+        if c.get('ff'):
+            flops.append((inst, c))
+        elif c.get('latch'):
+            raise ValueError(f'{inst.name}: latch cell {inst.cell} in routed netlist (unsupported by audit)')
+
+    def root(bit):
+        # follow non-inverting buffers (function == single input) back to the logical net
+        seen = 0
+        while bit in driver and seen < 64:
+            inst, c, p = driver[bit]
+            f = c['pins'][p]['function']
+            if c.get('ff') or not f or not re.fullmatch(r'\(?\s*[A-Za-z_]\w*\s*\)?', f.strip()):
+                break
+            bit = inst.pins[f.strip(' ()')][0]
+            seen += 1
+        return bit
+
+    def dkey(inst, c):
+        role = sequential_role(c)
+        return tuple((p, root(inst.pins[p][0]) if inst.pins.get(p) else None)
+                     for p in sorted(role['data_pins'])) + (('ns', str(role['next_state'])),)
+
+    states, named, unnamed, edits = {}, {}, [], []
+    for inst, c in flops:
         m = FLOP_NAME.match(inst.name)
-        if not m:
-            unnamed.append(inst.name)
+        if m:
+            if m['base'] in named:
+                raise ValueError(f'two routed flops for state {m["base"]}')
+            named[m['base']] = inst
+            states[sname(m['base'], used)] = (m['base'], inst, False)
+        else:
+            unnamed.append((inst, c))
+    by_d = {}
+    for base, inst in named.items():
+        by_d.setdefault(dkey(inst, rvt(inst.cell, cells)), base)
+    orphans = []
+    for inst, c in unnamed:
+        # flow-inserted replica (ot_prs_* pin-register split): same logical D as a named register
+        base = by_d.get(dkey(inst, c))
+        if base is None:
+            orphans.append(inst.name)
             continue
-        s = sname(m['base'], used)
-        if m['base'] in states:
-            raise ValueError(f'two routed flops for state {m["base"]}')
-        states[m['base']] = s
-        a, b = inst.span
-        k = text.index('(', text.index(nl.verilog_name(inst.name).rstrip(), a), b)
-        edits.append((k + 1, f'.OT_S({s}), '))
-    if unnamed:
-        raise ValueError(f'routed flops without a register name: {unnamed[:8]} (+{len(unnamed)})')
+        states[sname(base + '__rep__' + inst.name, used)] = (base, inst, True)
+    if orphans:
+        raise ValueError(f'routed flops that are neither named registers nor replicas: {orphans[:8]} (+{len(orphans)})')
+    for s_, (_base, inst, _rep) in states.items():
+        a_, b_ = inst.span
+        k = text.index('(', text.index(nl.verilog_name(inst.name).rstrip(), a_), b_)
+        edits.append((k + 1, k + 1, f'.OT_S({s_}), '))
+    edits += [(a_, b_, '') for a_, b_ in drops]
     out, last = [], 0
-    for k, ins in sorted(edits):
+    for k, e, ins in sorted(edits):
         out += [text[last:k], ins]
-        last = k
+        last = e
     out.append(text[last:])
     text = ''.join(out)
-    decl = ''.join(f'  wire {s};\n' for s in states.values())
+    decl = ''.join(f'  wire {s_};\n' for s_ in states)
     text = text.replace('endmodule', decl + 'endmodule', 1) if text.count('endmodule') == 1 else None
     if text is None:
         raise ValueError('routed netlist must hold exactly one module')
     (work / 'gate.v').write_text(text)
     (work / 'cells.v').write_text('\n'.join(cell_model(n, c) for n, c in sorted(models.items())) + '\n')
-    return states, macros
+    return {s_: (b_, r_) for s_, (b_, _i, r_) in states.items()}, macros, mod
 
 
 def gold_states(js, top):
@@ -188,59 +230,109 @@ def audit(a):
     vd = (root / a.view).resolve()
     res = dict(schema=AUDIT_SCHEMA, module=a.module, rtl=a.rtl, view=a.view, parameters=params,
                expect=a.expect, archive_run=str(arch), proven=False)
-    # 1. the selected view IS this closed run: archived final TT/FF Liberty bytes equal the view's
-    for c in ('tt', 'ff'):
-        v, f = vd / f'{vd.name}_{c}.lib', arch / 'final' / f'{vd.name}_{c}.lib'
-        if not f.is_file() or sha(v) != sha(f):
-            raise SystemExit(f'{a.module}: view {c} lib does not match closed run {arch}')
-    spec = json.loads((arch / 'spec.json').read_text())
+    # 1. the selected view IS this closed run (bytes, not names): either the view's TT/FF Liberty equal the archived
+    #    final libs, or (view re-exported from the same routed odb with another interface SDC) the view's raw abstract
+    #    LEF -- pinned by abstract.json export_provenance -- equals the archived final LEF and abstract.json's orfs_dir
+    #    is that job's route.
+    tie = None
+    libs = [(vd / f'{vd.name}_{c}.lib', arch / 'final' / f'{vd.name}_{c}.lib') for c in ('tt', 'ff')]
+    if all(f.is_file() and sha(v) == sha(f) for v, f in libs):
+        tie = 'view TT/FF liberty bytes == closed final liberty'
+    else:
+        ab = json.loads((vd / 'abstract.json').read_text())
+        fl = arch / 'final' / f'{vd.name}.lef'
+        same_job = f'/{arch.name}/' in ab.get('orfs_dir', '')
+        raw = vd / 'provenance/raw' / f'{vd.name}.lef'
+        man = vd / ab.get('export_provenance', {}).get('raw_manifest', 'missing')
+        if same_job and fl.is_file() and raw.is_file() and sha(raw) == sha(fl) and \
+                man.is_file() and sha(man) == ab['export_provenance'].get('raw_manifest_sha256'):
+            tie = 'view raw abstract LEF bytes == closed final LEF; abstract.json orfs_dir = closed job route'
+        elif same_job and fl.is_file() and sha(vd / f'{vd.name}.lef') == sha(fl):
+            tie = 'view LEF bytes == closed final LEF (libraries re-exported); abstract.json orfs_dir = closed job route'
+    if tie is None:
+        raise SystemExit(f'{a.module}: view {a.view} is not the closed run {arch}')
+    # the closed run's own synthesis record (what ORFS synthesised), not the mutable kit spec
+    phys = sorted(arch.glob('run/routes/*/physical.json'))
+    if len(phys) != 1:
+        raise SystemExit(f'{a.module}: expected one routed physical.json under {arch}, got {phys}')
+    spec = json.loads(phys[0].read_text())['design']
     res['closed'] = dict(job=arch.name, commit=(arch / 'commit.txt').read_text().strip(), top=spec['top'],
-                         spec_params=spec.get('params', {}), pin_regs=spec.get('pin_regs'),
+                         spec_params=spec.get('parameters', {}), physical_json_sha256=sha(phys[0]),
+                         synth_sources={s_['path']: s_['sha256'] for s_ in spec['sources']},
                          final_v_sha256=sha(arch / 'final/6_final.v'),
-                         lib_sha256={c: sha(arch / 'final' / f'{vd.name}_{c}.lib') for c in ('tt', 'ff')})
+                         lef_sha256=sha(arch / 'final' / f'{vd.name}.lef'), view_tie=tie)
     defaults = EP.integer_defaults((root / a.rtl).read_text(), a.module)
-    closed_eff = dict(defaults, **spec.get('params', {}))
+    closed_eff = dict(defaults, **spec.get('parameters', {}))
     res['closed_spec_diff'] = {k: [closed_eff.get(k), v] for k, v in params.items() if closed_eff.get(k) != v}
     res['identity'] = EP.artifact_identity(root, a.view, a.rtl)
-    srcs = sorted(set(spec['sources']) | {a.rtl})
+    srcs = sorted({s_['path'] for s_ in spec['sources']} | {a.rtl})
     res['sources'] = {s: sha(root / s) for s in srcs}
+    res['sources_changed_since_closure'] = sorted(s for s, h in res['closed']['synth_sources'].items()
+                                                  if res['sources'].get(s) != h)
     # 2. gate side
     cells = lib.load_cells(lib.default_asap7_liberty(), work / 'cache')
-    states, macros = prepare_gate(arch / 'final/6_final.v', spec['top'] if spec['top'] == vd.name else vd.name,
+    states, macros, gmod = prepare_gate(arch / 'final/6_final.v', spec['top'],
                                   cells, work)
     res['gate'] = dict(flops=len(states), macros=macros)
     # 3. gold pass 1: elaborate with the exact profile parameters
-    chp = ' '.join(f'-chparam {k} {v}' for k, v in sorted(params.items()))
-    rd = ' '.join(str(root / s) for s in srcs)
+    rd = ' '.join(str(root / s_) for s_ in srcs)
+    bbs = [s_ for s_ in srcs if s_.endswith('_bb.v')]
+    rl = json.loads(Path(a.reset_landing).read_text()) if a.reset_landing else None
+    if rl and rl.get('enable'):
+        # the closed flow's reset landing (physical/common_flow/ot_pin_regs.tcl OT_RST_LAND): every declared reset port
+        # lands in `stages` registered stages <port>__ot_rl<i> at the face; the core is u_ot_pr_core.  Gold rebuilds that
+        # shell around the RTL at the profile parameters; the proof then covers shell AND core.
+        if rl.get('first_copies'):
+            raise SystemExit(f'{a.module}: reset_landing first_copies wrapper not modelled by this audit')
+        ck, st = rl['clock'], int(rl['stages'])
+        W = ['module ot_kvp_wrap (' + ', '.join(gmod.ports) + ');']
+        for p_ in gmod.ports:
+            r_ = gmod.ranges.get(p_)
+            W.append(f'  {gmod.port_dirs[p_]} ' + (f'[{r_[0]}:{r_[1]}] ' if r_ else '') + f'{p_};')
+        conn = {p_: p_ for p_ in gmod.ports}
+        for r_ in rl['reset_ports']:
+            prev = r_
+            for i in range(st):
+                W += [f'  (* keep *) reg {r_}__ot_rl{i};', f'  always @(posedge {ck}) {r_}__ot_rl{i} <= {prev};']
+                prev = f'{r_}__ot_rl{i}'
+            conn[r_] = prev
+        W.append(f'  {a.module} #(' + ', '.join(f'.{k}({v})' for k, v in sorted(params.items())) + ') u_ot_pr_core (' +
+                 ', '.join(f'.{p_}({c_})' for p_, c_ in conn.items()) + ');')
+        W.append('endmodule')
+        (work / 'gold_wrap.v').write_text('\n'.join(W) + '\n')
+        rd += ' ' + str(work / 'gold_wrap.v')
+        gtop, chp = 'ot_kvp_wrap', ''
+        res['wrapper'] = dict(kind='reset_landing', stages=st, clock=ck, reset_ports=rl['reset_ports'],
+                              reset_landing_sha256=sha(a.reset_landing))
+    else:
+        gtop, chp = a.module, ' '.join(f'-chparam {k} {v}' for k, v in sorted(params.items()))
     (work / 'gold1.ys').write_text('\n'.join([
-        f'read_verilog -sv -DSYNTHESIS {rd}', f'hierarchy -check -top {a.module} {chp}',
-        'proc', 'flatten', 'memory -nomap', 'memory_map', 'opt_clean', f'rename {a.module} gold',
+        f'read_verilog -sv -DSYNTHESIS {rd}', f'hierarchy -check -top {gtop} {chp}',
+        'proc', 'flatten', 'memory -nomap', 'memory_map', 'opt_clean', f'rename {gtop} gold',
         'write_json gold1.json', 'write_rtlil gold1.il', '']))
     rc, t1 = run([a.yosys, '-q', '-s', 'gold1.ys'], work, 'gold1.log', a.timeout)
     if rc:
         res['error'] = 'gold elaboration failed: ' + (work / 'gold1.log').read_text()[-1500:]
         return res
     regs = gold_states(json.loads((work / 'gold1.json').read_text()), 'gold')
-    pair, gold_only = {}, []
-    for b, ns in regs.items():
-        hit = [n for n in ns if n in states]
-        if hit:
-            pair[states[hit[0]]] = hit[0]
-        else:
-            gold_only.append(ns[0] if ns else f'bit{b}')
-    gate_only = sorted(set(states) - set(pair.values()))
+    bit_of = {}
+    for b_, ns in regs.items():
+        for n in ns:
+            bit_of[n] = b_
+    pair = {s_: base for s_, (base, _rep) in states.items() if base in bit_of}
+    hit = {bit_of[b_] for b_ in pair.values()}
+    gold_only = sorted(ns[0] if ns else f'bit{b_}' for b_, ns in regs.items() if b_ not in hit)
+    gate_only = sorted(base for s_, (base, _rep) in states.items() if s_ not in pair)
+    res['gate']['replicas'] = sum(1 for _b, r in states.values() if r)
     res['state'] = dict(gold_regs=len(regs), paired=len(pair), gold_only=len(gold_only), gate_only=len(gate_only),
-                        gold_only_sample=sorted(gold_only)[:20], gate_only_sample=gate_only[:20])
+                        gold_only_sample=gold_only[:20], gate_only_sample=gate_only[:20])
     # 4. equivalence: ports + paired state only
-    L = ['read_rtlil gold1.il', 'read_verilog -sv cells.v', 'read_verilog gate.v']
-    L += [f'rename {spec["top"] if spec["top"] == vd.name else vd.name} gate', 'hierarchy -check', 'proc',
-          'flatten gate', 'cd gold']
+    L = ['read_verilog -sv cells.v'] + [f'read_verilog -sv {root / b_}' for b_ in bbs] + ['read_verilog gate.v', f'rename {spec["top"]} gate', 'hierarchy -check -top gate',
+         'proc', 'flatten gate', 'read_rtlil gold1.il', 'cd gold']
     for s, n in sorted(pair.items()):
         L += [f'add -wire {s} 1', f'connect -set {s} {n}']
-    L += ['cd', 'opt_clean']
-    if macros:
-        L += ['expose -evert gold gate']
-    L += ['select -set keep w:S__* %u i:* o:*', 'rename -hide w:* @keep %d', 'opt_clean', 'async2sync',
+    L += ['cd', 'setattr -set keep 1 w:S__*']
+    L += ['select -set keep w:S__* i:* o:*', 'rename -hide w:* @keep %d', 'async2sync',
           'equiv_make gold gate equiv', 'hierarchy -top equiv', f'equiv_simple -seq {a.seq}', 'equiv_induct',
           'equiv_status', 'equiv_status -assert', '']
     (work / 'equiv.ys').write_text('\n'.join(L))
@@ -262,6 +354,7 @@ def audit(a):
 def receipts(a):
     """PROVEN audits -> frozen receipts + profiles (keyed by RTL module, one evaluated parameter set each)."""
     root, out = Path(a.root).resolve(), Path(a.out)
+    out.mkdir(parents=True, exist_ok=True)
     profiles, table = {}, {}
     for p in sorted(Path(a.audits).glob('*.audit.json')):
         r = json.loads(p.read_text())
@@ -278,7 +371,7 @@ def receipts(a):
         rec = dict(schema=SCHEMA, module=mod, identity=ident, parameters=r['parameters'], native_qualified=True,
                    evidence=dict(method=r['equiv']['method'], closed_job=r['closed']['job'],
                                  closed_commit=r['closed']['commit'], final_v_sha256=r['closed']['final_v_sha256'],
-                                 closed_lib_sha256=r['closed']['lib_sha256'], sources=r['sources'],
+                                 closed_lef_sha256=r['closed']['lef_sha256'], view_tie=r['closed']['view_tie'], sources=r['sources'],
                                  equiv_cells=r['equiv']['cells'], equiv_log_sha256=r['equiv']['log_sha256'],
                                  state=r['state'], audit=str(p.name), audit_sha256=sha(p)))
         rp = out / 'receipts' / f'{mod}.json'
@@ -303,6 +396,7 @@ def main(argv=None):
     a1.add_argument('--archive-run', required=True, help='closed_archive/<kit>/<job>')
     a1.add_argument('--work', required=True)
     a1.add_argument('--out', required=True)
+    a1.add_argument('--reset-landing', help="the kit's reset_landing.json at the closed commit (flow landing shell)")
     a1.add_argument('--expect', choices=('pass', 'fail'), default='pass', help='fail = parameter mutant control')
     a1.add_argument('--seq', type=int, default=2)
     a1.add_argument('--timeout', type=int, default=14400)

@@ -1,6 +1,8 @@
 """KV-GEN8 10-19: OT_KV_PARAM_DIAG autoprofile preserves exact parameters, is never qualified, and strict still refuses."""
+import os
 import tempfile
 import unittest
+from unittest import mock
 from pathlib import Path
 
 import kv_expand_parameters as P
@@ -22,6 +24,12 @@ class ParamDiag(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'missing selected parameter profile'):
             P.preserve(self.root, 'leaf', {}, 'rtl/leaf.sv', 'v/leaf', {}, False)
 
+    def test_diagnostic_flag_alone_needs_a_profile(self):
+        with mock.patch.dict(os.environ, {'OT_KV_PARAM_DIAG': '0'}):
+            with self.assertRaisesRegex(ValueError, 'missing selected parameter profile'):
+                P.preserve(self.root, 'leaf', {}, 'rtl/leaf.sv', 'v/leaf', {}, True)
+
+    @mock.patch.dict(os.environ, {'OT_KV_PARAM_DIAG': '1'})
     def test_diagnostic_autoprofile_exact_unqualified(self):
         ov = {'A': format(7, '032b')}
         lit, prof = P.preserve(self.root, 'leaf', ov, 'rtl/leaf.sv', 'v/leaf', {}, True)
