@@ -76,6 +76,33 @@ def test_encoders():
             bits(c, 71, 56), bits(c, 72, 72), bits(c, 73, 73)) == (0xFFF, 0x123, 7, 2, 0xBEEF, 320, 0x1234, 1, 1)
 
 
+def test_previous_pre_source():
+    """Current HC is deliberately late and different: it must never gate/use NORMR."""
+    tree = C.die_tree()
+    die = C.Die(tree)
+    sl = 'u_s_0S'
+    p = C.Prog(die)
+    p.events = [dict(cycle=1481, tag='attn.hc.coef_row0', port='vo_s'),
+                dict(cycle=9000, tag='ffn.hc.coef_row0', port='vo_s')]
+    a = C.lower_norm_smoke(die, p, sl, 3, which='attn')
+    assert a['hc_pre_row'] == 1008 and a['dep_shift'] == 0
+    assert not a['hc_pre_source_bound'] and a['hc_pre_row_land'] is None
+    assert a['hc_pre_source'] == 'entry.previous_ffn.hc.coef_row0'
+    p = C.Prog(die)
+    p.events = [dict(cycle=1481, tag='attn.hc.coef_row0', port='vo_s'),
+                dict(cycle=9000, tag='ffn.hc.coef_row0', port='vo_s')]
+    f = C.lower_norm_smoke(die, p, sl, 3, which='ffn')
+    assert f['hc_pre_row'] == 1000 and f['hc_pre_source_event_present'] and not f['hc_pre_source_bound']
+    assert f['hc_pre_row_land'] < 2000 and f['dep_shift'] < 2000
+    assert f['hc_pre_source'] == 'attn.hc.coef_row0'
+    # The op status must not inherit full-layer qualification from the vp bench.
+    m = dict(C.family_lowerings())['vpx']
+    for op in ('attn.hc_pre', 'ffn.hc_pre'):
+        r = m.lower(die, {'op': op}, {'slice': sl})
+        assert r['status'] == 'PARTIAL' and 'binding is absent' in r['gap']['missing']
+    return {'attn': a, 'ffn': f}
+
+
 def test_compile_l0():
     tree = C.die_tree()
     out = Path(tempfile.mkdtemp(prefix='dvlc_'))
@@ -193,6 +220,8 @@ def test_events_g8():
 
 if __name__ == '__main__':
     test_encoders()
+    test_previous_pre_source()
+    print('test_previous_pre_source PASS')
     print('test_events_g8', test_events_g8())
     r = test_compile_l0()
     print('TEST_DV_LAYER_COMPILE PASS', json.dumps(dict((k, v) for k, v in r.items() if k != 'smoke')))

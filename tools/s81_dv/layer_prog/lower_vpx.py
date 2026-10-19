@@ -172,10 +172,15 @@ def lower(die, op, ctx):
     name = op['op']
     t0 = int(ctx.get('t_issue', 0))
     if name.endswith('hc_pre'):
-        # TOK-S81-GAPS/VP 10-18: vp op 7 NORMR (S81-SLICE, cherry-picked 5043d6876) reads hc_pre from leaf row R, the row the
-        # G-unit L5 writes (lower_gu GU_ROWS); dv_layer_compile.lower_norm_smoke emits NORMR a0 = R as static templates
-        return dict(status='LOWERED', unit='slice vp NORMR (hc_pre = G-unit leaf row R) -> vn n_pre',
-                    insts=[ctx.get('slice')], gap=None, bench=BENCH_VP)
+        # The arithmetic bench proves row reads, not the layer's row producer.
+        # run_layer uses entry pre for attn and attn pre for ffn. Current-block
+        # coefficients are a different value even when their arrival is exact.
+        source = 'attn HC row 1000' if name.startswith('ffn.') else 'entry previous-ffn HC row 1008'
+        return dict(status='PARTIAL', unit='slice vp NORMR (previous-sublayer pre row) -> vn n_pre',
+                    insts=[ctx.get('slice')], bench=BENCH_VP,
+                    gap=dict(module='dv_layer_compile / previous-sublayer pre transfer', port='NORMR a0',
+                             missing=f'{source}: arithmetic is benched, but the full producer/transfer/row-lifetime '
+                                     'binding is absent; current-block hc.coef_row0 is not the pre operand'))
     if re.search(r'\.norm\.(sumsq|rsqrt|scale)$', name):
         return dict(status='PARTIAL', unit='slice vp NORMR + vn / vq / xr / xfin', insts=[ctx.get('slice')], gap=GAP_NORM16,
                     bench=BENCH_VP)

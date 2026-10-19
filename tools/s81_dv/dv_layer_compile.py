@@ -591,10 +591,13 @@ def lower_norm_smoke(die, prog, sl, t0, eps=0x358637BD, r_h=0, r_gain=64, which=
     lat = cp['edges']
     th = prog.template(f'{which}.HLOAD', ctl_payload(smask, 0, 0x1F, vp_cmd(VP['HLOAD'], a0=r_h)))
     tg = prog.template(f'{which}.GAIN', ctl_payload(smask, 0, 0x1F, vp_cmd(VP['GAIN'], a0=r_gain)))
-    # hc_pre: vp op 7 NORMR reads it from leaf row R, the row the G-unit L5 writes the coefficients to (pre 0..3 at
-    # row R; lower_gu GU_ROWS; S81-SLICE 10-18) -> the NORM templates are static (no runtime immediate)
+    # HC pre is produced by the PREVIOUS sublayer, while post/comb are current.
+    # This is the model's delayed-pre contract (run_layer: cx['pre'], then a_pre).
+    # Distinct GU rows retain the previous ffn pre during the next attn HC job.
     GU_ROWS = dict(family_lowerings())['gu'].GU_ROWS
-    r_pre = GU_ROWS['ffn' if which.endswith('ffn') else 'attn']
+    is_ffn = which.endswith('ffn')
+    r_pre = GU_ROWS['attn' if is_ffn else 'ffn']
+    pre_source = 'attn.hc.coef_row0' if is_ffn else 'entry.previous_ffn.hc.coef_row0'
     tn = [prog.template(f'{which}.NORMR.k{k}', ctl_payload(smask, 0, 1 << k, vp_cmd(VP['NORMR'], a0=r_pre, a1=5 * sid + k,
                                                                                    n=3)))
           for k in range(5)]
@@ -608,11 +611,11 @@ def lower_norm_smoke(die, prog, sl, t0, eps=0x358637BD, r_h=0, r_gain=64, which=
     prog.events.append(dict(cycle=t + lat, inst=sl, port=cp['entry_port'], dir='in', kind='CTL', tag=f'{which}.GAIN',
                             payload=f'template {tg}'))
     t += BEAT['gain_slot']
-    # dependency: NORMR reads row R one edge after its command flop, so row R (the G-unit L5 CTL row beat, hc.coef_row0
-    # on vo_n / vo_s) must have landed in the slice's leaf store first.  Row arrival = vo out + the gunit tier link age
-    # (tvN_gunit / tvS_gunit) + the same line path the seq_host V beats take from the column-4 entry (ctl_path minus its
-    # seq_host head).  The NORMR issue moves later when the rows land later than the priced slot (dep_shift).
-    rows_out = [e['cycle'] for e in prog.events if e.get('tag') == f'{which}.hc.coef_row0'
+    # A local ffn consumes attn's emitted coefficient. Attn consumes the entry
+    # previous-ffn row, whose producer/transfer has NOT yet been bound by this
+    # layer compiler. Never wait for current attn HC or call an absent entry
+    # producer ready. The smoke calendar remains diagnostic until it is bound.
+    rows_out = [e['cycle'] for e in prog.events if e.get('tag') == pre_source
                 and e.get('port') == ('vo_n' if sl.endswith('N') else 'vo_s')]
     dep_shift, row_land = 0, None
     if rows_out:
@@ -646,7 +649,9 @@ def lower_norm_smoke(die, prog, sl, t0, eps=0x358637BD, r_h=0, r_gain=64, which=
     prog.events.append(dict(cycle=xq, inst=sl, port='ro_e / ro_w', dir='out', kind='XQ', tag=f'{which}.x_allgather',
                             payload='act-quant x beats of the slice (fixture: golden FP8 codes)', plan_only=True, gap=gap16))
     return dict(slice=sl, sid=sid, ctl_latency=cp, t_issue0=t0, last_partial=last_partial, rstd=rstd, xq_at_ring=xq,
-                end=xq, templates=[th, tg] + tn + [tx], hc_pre_row=r_pre, hc_pre_row_land=row_land, dep_shift=dep_shift)
+                end=xq, templates=[th, tg] + tn + [tx], hc_pre_row=r_pre, hc_pre_row_land=row_land, dep_shift=dep_shift,
+                hc_pre_source=pre_source, hc_pre_source_event_present=bool(rows_out), hc_pre_source_bound=False,
+                qualification='PARTIAL: previous-sublayer pre row must have a source-bound producer and transfer')
 
 
 def row_ctl_events(die, prog):
