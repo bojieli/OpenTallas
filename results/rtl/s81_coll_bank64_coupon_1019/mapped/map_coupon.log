@@ -1,0 +1,17 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/codex-s81-coll-bank64-coupon-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-s81-coll-bank64-coupon-1019
+ot-run: ot-epyc6       admits   815 GB (avail 684, growth 113, headroom 0, waiters 0/0 GB) load 34/128 running 12 disk 6010 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-s81-coll-bank64-coupon-1019
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/codex-s81-coll-bank64-coupon-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-s81-coll-bank64-coupon-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-s81-coll-bank64-coupon-1019
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-1964137-1792431616 after 0 s
+view=asap7 corner=TT block=ot_sram_showahead_bank64_coupon top=ot_sram_showahead_bank64_coupon purpose=characterization
+  pnr:   wirelength=None um vias=None DRC=None antenna_nets=None Fmax=2133.17 MHz
+  drv:   max_slew=None max_cap=None max_fanout=None
+  macro: ot_sram_1r1w2c_32x64_m1 2048 bits (31.992 x 17.304 um) lef=ot_sram_1r1w2c_32x64_m1.lef lib=ot_sram_1r1w2c_32x64_m1_tt.lib
+  halo:  10.8 10.8 um (command line); placed macros=None
+  STATUS: NOT_MET (did not meet in: place_and_route)  <-- failed engineering acceptance
+  wrote /srv/opentallas-scratch/claude/codex-s81-coll-bank64-coupon-1019/src/../mapped/physical.json
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-1964137-1792431616): exit 0

@@ -1,0 +1,130 @@
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz', decompressing using zlib.
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz', decompressing using zlib.
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz', decompressing using zlib.
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz', decompressing using zlib.
+
+17. Printing statistics.
+
+=== ot_sram_showahead_bank64_coupon ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+     3880        -     3820        - wires
+     5070        -     4962        - wire bits
+     1241        -     1217        - public wires
+     2431        -     2359        - public wire bits
+       31        -        7        - ports
+     1221        -     1149        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+     3835 5.59E+03     3793 5.58E+03 cells
+        6    0.612        -        -   AND3x2_ASAP7_75t_R
+        6    0.612        -        -   AND4x1_ASAP7_75t_R
+       99   23.095       99   23.095   AO31x2_ASAP7_75t_R
+      454   52.955      454   52.955   AOI21x1_ASAP7_75t_R
+       28    7.348       28    7.348   BUFx12f_ASAP7_75t_R
+       48    3.499       48    3.499   BUFx2_ASAP7_75t_R
+       81    7.086       81    7.086   BUFx3_ASAP7_75t_R
+       56    8.165       56    8.165   BUFx6f_ASAP7_75t_R
+       71   26.915       71   26.915   DFFASRHQNx1_ASAP7_75t_R
+     1109  323.384     1109  323.384   DFFHQNx1_ASAP7_75t_R
+      596   26.069      596   26.069   INVx1_ASAP7_75t_R
+       31    1.808       31    1.808   INVx2_ASAP7_75t_R
+      553   48.376      553   48.376   NAND2x1_ASAP7_75t_R
+       99    8.661       99    8.661   NOR2x1_ASAP7_75t_R
+      454   52.955      454   52.955   OA211x2_ASAP7_75t_R
+       99    8.661       99    8.661   OR2x2_ASAP7_75t_R
+        1    0.102        1    0.102   OR4x1_ASAP7_75t_R
+        1    0.044        1    0.044   TIEHIx1_ASAP7_75t_R
+        1    0.044        1    0.044   TIELOx1_ASAP7_75t_R
+       24    4.199        -        -   XNOR2x1_ASAP7_75t_R
+        9    1.443        3    0.481   XNOR2x2_ASAP7_75t_R
+        9 4.98E+03        9 4.98E+03   ot_sram_1r1w2c_32x64_m1
+        6    6.386        6        - submodules
+        6    6.386        6        -   ot_sram_showahead_hit5_coupon
+
+   Chip area for module '\ot_sram_showahead_bank64_coupon': 5588.338680
+     of which used for sequential elements: 350.299080 (6.27%)
+
+=== ot_sram_showahead_hit5_coupon ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+       10        -       10        - wires
+       18        -       18        - wire bits
+        4        -        4        - public wires
+       12        -       12        - public wire bits
+        4        -        4        - ports
+       12        -       12        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+        7    1.064        7    1.064 cells
+        1    0.102        1    0.102   AND3x2_ASAP7_75t_R
+        1    0.102        1    0.102   AND4x1_ASAP7_75t_R
+        4      0.7        4      0.7   XNOR2x1_ASAP7_75t_R
+        1     0.16        1     0.16   XNOR2x2_ASAP7_75t_R
+
+   Chip area for module '\ot_sram_showahead_hit5_coupon': 1.064340
+     of which used for sequential elements: 0.000000 (0.00%)
+
+=== design hierarchy ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+     3835 5.59E+03     3793 5.58E+03 ot_sram_showahead_bank64_coupon
+        7    1.064        7    1.064 ot_sram_showahead_hit5_coupon
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+     3880        -     3820        - wires
+     5070        -     4962        - wire bits
+     1241        -     1217        - public wires
+     2431        -     2359        - public wire bits
+       31        -        7        - ports
+     1221        -     1149        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+     3835 5.59E+03     3793 5.58E+03 cells
+        6    0.612        -        -   AND3x2_ASAP7_75t_R
+        6    0.612        -        -   AND4x1_ASAP7_75t_R
+       99   23.095       99   23.095   AO31x2_ASAP7_75t_R
+      454   52.955      454   52.955   AOI21x1_ASAP7_75t_R
+       28    7.348       28    7.348   BUFx12f_ASAP7_75t_R
+       48    3.499       48    3.499   BUFx2_ASAP7_75t_R
+       81    7.086       81    7.086   BUFx3_ASAP7_75t_R
+       56    8.165       56    8.165   BUFx6f_ASAP7_75t_R
+       71   26.915       71   26.915   DFFASRHQNx1_ASAP7_75t_R
+     1109  323.384     1109  323.384   DFFHQNx1_ASAP7_75t_R
+      596   26.069      596   26.069   INVx1_ASAP7_75t_R
+       31    1.808       31    1.808   INVx2_ASAP7_75t_R
+      553   48.376      553   48.376   NAND2x1_ASAP7_75t_R
+       99    8.661       99    8.661   NOR2x1_ASAP7_75t_R
+      454   52.955      454   52.955   OA211x2_ASAP7_75t_R
+       99    8.661       99    8.661   OR2x2_ASAP7_75t_R
+        1    0.102        1    0.102   OR4x1_ASAP7_75t_R
+        1    0.044        1    0.044   TIEHIx1_ASAP7_75t_R
+        1    0.044        1    0.044   TIELOx1_ASAP7_75t_R
+       24    4.199        -        -   XNOR2x1_ASAP7_75t_R
+        9    1.443        3    0.481   XNOR2x2_ASAP7_75t_R
+        9 4.98E+03        9 4.98E+03   ot_sram_1r1w2c_32x64_m1
+        6    6.386        6        - submodules
+        6    6.386        6        -   ot_sram_showahead_hit5_coupon
+
+   Chip area for top module '\ot_sram_showahead_bank64_coupon': 5588.338680
+     of which used for sequential elements: 350.299080 (6.27%)
+

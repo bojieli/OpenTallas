@@ -1,0 +1,29 @@
+{
+  "status": "BOUNDED_COMPONENT_COMPARISON_ONLY_NO_MIGRATION",
+  "source_commit": "9354ec2bf",
+  "netlist_sha256": "cc0531321c3f1ea0616c691941b9f1d3d2d8ce7e7fcc7bda26540760c86b77fd",
+  "canonical_ORFS_keep": true,
+  "macros": 9,
+  "flops": 1180,
+  "cells": 3835,
+  "depth_ps": 121.7,
+  "depth_levels": 3,
+  "max_internal_driver_loads": 32,
+  "max_input_loads": 16,
+  "max_reset_loads": 0,
+  "local_hit_compare_instances": 6,
+  "macro_area_um2": 4982.306112,
+  "yosys_top_area_um2": 5588.33868,
+  "yosys_top_minus_macro_um2": 606.032568,
+  "yosys_helper_submodule_area_separate_um2": 6.386,
+  "baseline_five_bank_helper_std_um2": 641.141,
+  "qualification": [
+    "No >32 critical internal driver in standalone helper; external ports need caller same-edge landed/reset copies",
+    "Input ra max16 still requires actual caller driver census",
+    "Primitive reset port0 reaches3 FF; caller reset landing not standalone qualified",
+    "ROOT separately routed/audited exact single32x64 primitive; final binding receipt pending",
+    "Nine-bank array/control/hook escape remains unproved",
+    "Floorplan-only runner engineering NOT_MET preserved; no CTS/native/routed array claim",
+    "No production migration/gate/REVIEW/submit from coupon"
+  ]
+}
