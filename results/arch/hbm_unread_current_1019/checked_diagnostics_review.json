@@ -1,0 +1,1510 @@
+{
+ "schema": "opentallas.hbm_checked_diagnostics_review_1019.v1",
+ "manifest_adopted": false,
+ "bits": 47,
+ "entries": [
+  {
+   "instance": "ep_N0",
+   "master": "hfd_ep_static",
+   "port": "rx_block_ready",
+   "net": "ep_N0__rx_block_ready",
+   "width": 2,
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "die_line": 13847,
+   "source": "rtl/hbm_accel/tu/ep_static_20261015/hfd_ep_static.sv",
+   "classification": "checked_diagnostic_status_review",
+   "reason": "Registered mirror of internal ping-pong block-ready. Internal release/slot guards fault invalid readiness, PHY arrival when !phy_ready raises early fault. Calendar drives fixed RX arm/release/read slots; no runtime ready flow control.",
+   "evidence": {
+    "fault": [
+     {
+      "instance": "hleaf_NW",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "ep_N2",
+   "master": "hfd_ep_static",
+   "port": "rx_block_ready",
+   "net": "ep_N2__rx_block_ready",
+   "width": 2,
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "die_line": 13870,
+   "source": "rtl/hbm_accel/tu/ep_static_20261015/hfd_ep_static.sv",
+   "classification": "checked_diagnostic_status_review",
+   "reason": "Registered mirror of internal ping-pong block-ready. Internal release/slot guards fault invalid readiness, PHY arrival when !phy_ready raises early fault. Calendar drives fixed RX arm/release/read slots; no runtime ready flow control.",
+   "evidence": {
+    "fault": [
+     {
+      "instance": "hleaf_NE",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "ep_S0",
+   "master": "hfd_ep_static",
+   "port": "rx_block_ready",
+   "net": "ep_S0__rx_block_ready",
+   "width": 2,
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "die_line": 13778,
+   "source": "rtl/hbm_accel/tu/ep_static_20261015/hfd_ep_static.sv",
+   "classification": "checked_diagnostic_status_review",
+   "reason": "Registered mirror of internal ping-pong block-ready. Internal release/slot guards fault invalid readiness, PHY arrival when !phy_ready raises early fault. Calendar drives fixed RX arm/release/read slots; no runtime ready flow control.",
+   "evidence": {
+    "fault": [
+     {
+      "instance": "hleaf_SW",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "ep_S1",
+   "master": "hfd_ep_static",
+   "port": "rx_block_ready",
+   "net": "ep_S1__rx_block_ready",
+   "width": 2,
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "die_line": 13801,
+   "source": "rtl/hbm_accel/tu/ep_static_20261015/hfd_ep_static.sv",
+   "classification": "checked_diagnostic_status_review",
+   "reason": "Registered mirror of internal ping-pong block-ready. Internal release/slot guards fault invalid readiness, PHY arrival when !phy_ready raises early fault. Calendar drives fixed RX arm/release/read slots; no runtime ready flow control.",
+   "evidence": {
+    "fault": [
+     {
+      "instance": "hleaf_SW",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "ep_S3",
+   "master": "hfd_ep_static",
+   "port": "rx_block_ready",
+   "net": "ep_S3__rx_block_ready",
+   "width": 2,
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "die_line": 13824,
+   "source": "rtl/hbm_accel/tu/ep_static_20261015/hfd_ep_static.sv",
+   "classification": "checked_diagnostic_status_review",
+   "reason": "Registered mirror of internal ping-pong block-ready. Internal release/slot guards fault invalid readiness, PHY arrival when !phy_ready raises early fault. Calendar drives fixed RX arm/release/read slots; no runtime ready flow control.",
+   "evidence": {
+    "fault": [
+     {
+      "instance": "hleaf_SE",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "hb_argmax",
+   "master": "ot_hbm_argmax_static_sw_vm_r2",
+   "port": "cq_seq",
+   "net": "hb_argmax__cq_seq",
+   "width": 2,
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "die_line": 7652,
+   "source": "rtl/hbm_accel/generic/ot_hbm_argmax_static_sw_vm_r2.sv",
+   "classification": "checked_diagnostic_status_review",
+   "reason": "cq_seq is internal expected-ACK sequence; the same sequence is already embedded in actual CQ tag low2bits, and returned CR tag/valid/write are checked at fixed ACK age. Done reports successful completion while busy clears; collar consumes actual busy/fault.",
+   "evidence": {
+    "cq": [
+     {
+      "instance": "hb_vms_SW",
+      "port": "cq",
+      "ranges": [
+       [
+        0,
+        337
+       ]
+      ]
+     }
+    ],
+    "busy": [
+     {
+      "instance": "col_idx",
+      "port": "c_busy",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "col_idx",
+      "port": "c_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "hb_argmax",
+   "master": "ot_hbm_argmax_static_sw_vm_r2",
+   "port": "done",
+   "net": "hb_argmax__done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 7652,
+   "source": "rtl/hbm_accel/generic/ot_hbm_argmax_static_sw_vm_r2.sv",
+   "classification": "checked_diagnostic_status_review",
+   "reason": "cq_seq is internal expected-ACK sequence; the same sequence is already embedded in actual CQ tag low2bits, and returned CR tag/valid/write are checked at fixed ACK age. Done reports successful completion while busy clears; collar consumes actual busy/fault.",
+   "evidence": {
+    "cq": [
+     {
+      "instance": "hb_vms_SW",
+      "port": "cq",
+      "ranges": [
+       [
+        0,
+        337
+       ]
+      ]
+     }
+    ],
+    "busy": [
+     {
+      "instance": "col_idx",
+      "port": "c_busy",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "col_idx",
+      "port": "c_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "hb_idx__link",
+   "master": "ot_hbm_idx_topk_link_static",
+   "port": "selected_count",
+   "net": "hb_idx__link__selected_count",
+   "width": 10,
+   "unread_ranges": [
+    [
+     0,
+     9
+    ]
+   ],
+   "bit_count": 10,
+   "die_line": 21173,
+   "source": "rtl/hbm_accel/index/ot_hbm_idx_topk_link_static.sv",
+   "classification": "checked_diagnostic_status_review",
+   "reason": "Export mirrors internal total; overflow and flush require total512/flits64/fill0 and raise actual fault. Selected records already enter actual tx path.",
+   "evidence": {
+    "fault": [
+     {
+      "instance": "hb_idx__ctl",
+      "port": "lf",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "tx_v": [
+     {
+      "instance": "cij_SW",
+      "port": "idx_tx_v",
+      "ranges": [
+       [
+        0,
+        3
+       ]
+      ]
+     },
+     {
+      "instance": "cij_SW",
+      "port": "idx_tx_v_r1",
+      "ranges": [
+       [
+        0,
+        3
+       ]
+      ]
+     },
+     {
+      "instance": "cij_SE",
+      "port": "idx_tx_v",
+      "ranges": [
+       [
+        0,
+        3
+       ]
+      ]
+     },
+     {
+      "instance": "cij_SE",
+      "port": "idx_tx_v_r1",
+      "ranges": [
+       [
+        0,
+        3
+       ]
+      ]
+     },
+     {
+      "instance": "cij_NW",
+      "port": "idx_tx_v",
+      "ranges": [
+       [
+        0,
+        3
+       ]
+      ]
+     },
+     {
+      "instance": "cij_NW",
+      "port": "idx_tx_v_r1",
+      "ranges": [
+       [
+        0,
+        3
+       ]
+      ]
+     },
+     {
+      "instance": "cij_NE",
+      "port": "idx_tx_v",
+      "ranges": [
+       [
+        0,
+        3
+       ]
+      ]
+     },
+     {
+      "instance": "cij_NE",
+      "port": "idx_tx_v_r1",
+      "ranges": [
+       [
+        0,
+        3
+       ]
+      ]
+     }
+    ],
+    "tx": [
+     {
+      "instance": "cij_SW",
+      "port": "idx_tx_h",
+      "ranges": [
+       [
+        2147,
+        2179
+       ]
+      ]
+     },
+     {
+      "instance": "cij_SW",
+      "port": "idx_tx_h",
+      "ranges": [
+       [
+        1602,
+        1634
+       ]
+      ]
+     },
+     {
+      "instance": "cij_SW",
+      "port": "idx_tx_h",
+      "ranges": [
+       [
+        1057,
+        1089
+       ]
+      ]
+     },
+     {
+      "instance": "cij_SW",
+      "port": "idx_tx_h",
+      "ranges": [
+       [
+        512,
+        544
+       ]
+      ]
+     },
+     {
+      "instance": "cij_SW",
+      "port": "idx_tx_h_r1",
+      "ranges": [
+       [
+        2147,
+        2179
+       ]
+      ]
+     },
+     {
+      "instance": "cij_SW",
+      "port": "idx_tx_h_r1",
+      "ranges": [
+       [
+        1602,
+        1634
+       ]
+      ]
+     },
+     {
+      "instance": "cij_SW",
+      "port": "idx_tx_h_r1",
+      "ranges": [
+       [
+        1057,
+        1089
+       ]
+      ]
+     },
+     {
+      "instance": "cij_SW",
+      "port": "idx_tx_h_r1",
+      "ranges": [
+       [
+        512,
+        544
+       ]
+      ]
+     },
+     {
+      "instance": "cij_SW",
+      "port": "idx_tx_r0",
+      "ranges": [
+       [
+        1635,
+        1890
+       ]
+      ]
+     },
+     {
+      "instance": "cij_SW",
+      "port": "idx_tx_r0",
+      "ranges": [
+       [
+        1090,
+        1345
+       ]
+      ]
+     },
+     {
+      "instance": "cij_SW",
+      "port": "idx_tx_r0",
+      "ranges": [
+       [
+        545,
+        800
+       ]
+      ]
+     },
+     {
+      "instance": "cij_SW",
+      "port": "idx_tx_r0",
+      "ranges": [
+       [
+        0,
+        255
+       ]
+      ]
+     },
+     {
+      "instance": "cij_SW",
+      "port": "idx_tx_r1",
+      "ranges": [
+       [
+        1891,
+        2146
+       ]
+      ]
+     },
+     {
+      "instance": "cij_SW",
+      "port": "idx_tx_r1",
+      "ranges": [
+       [
+        1346,
+        1601
+       ]
+      ]
+     },
+     {
+      "instance": "cij_SW",
+      "port": "idx_tx_r1",
+      "ranges": [
+       [
+        801,
+        1056
+       ]
+      ]
+     },
+     {
+      "instance": "cij_SW",
+      "port": "idx_tx_r1",
+      "ranges": [
+       [
+        256,
+        511
+       ]
+      ]
+     },
+     {
+      "instance": "cij_SE",
+      "port": "idx_tx_h",
+      "ranges": [
+       [
+        2147,
+        2179
+       ]
+      ]
+     },
+     {
+      "instance": "cij_SE",
+      "port": "idx_tx_h",
+      "ranges": [
+       [
+        1602,
+        1634
+       ]
+      ]
+     },
+     {
+      "instance": "cij_SE",
+      "port": "idx_tx_h",
+      "ranges": [
+       [
+        1057,
+        1089
+       ]
+      ]
+     },
+     {
+      "instance": "cij_SE",
+      "port": "idx_tx_h",
+      "ranges": [
+       [
+        512,
+        544
+       ]
+      ]
+     },
+     {
+      "instance": "cij_SE",
+      "port": "idx_tx_h_r1",
+      "ranges": [
+       [
+        2147,
+        2179
+       ]
+      ]
+     },
+     {
+      "instance": "cij_SE",
+      "port": "idx_tx_h_r1",
+      "ranges": [
+       [
+        1602,
+        1634
+       ]
+      ]
+     },
+     {
+      "instance": "cij_SE",
+      "port": "idx_tx_h_r1",
+      "ranges": [
+       [
+        1057,
+        1089
+       ]
+      ]
+     },
+     {
+      "instance": "cij_SE",
+      "port": "idx_tx_h_r1",
+      "ranges": [
+       [
+        512,
+        544
+       ]
+      ]
+     },
+     {
+      "instance": "cij_SE",
+      "port": "idx_tx_r0",
+      "ranges": [
+       [
+        1635,
+        1890
+       ]
+      ]
+     },
+     {
+      "instance": "cij_SE",
+      "port": "idx_tx_r0",
+      "ranges": [
+       [
+        1090,
+        1345
+       ]
+      ]
+     },
+     {
+      "instance": "cij_SE",
+      "port": "idx_tx_r0",
+      "ranges": [
+       [
+        545,
+        800
+       ]
+      ]
+     },
+     {
+      "instance": "cij_SE",
+      "port": "idx_tx_r0",
+      "ranges": [
+       [
+        0,
+        255
+       ]
+      ]
+     },
+     {
+      "instance": "cij_SE",
+      "port": "idx_tx_r1",
+      "ranges": [
+       [
+        1891,
+        2146
+       ]
+      ]
+     },
+     {
+      "instance": "cij_SE",
+      "port": "idx_tx_r1",
+      "ranges": [
+       [
+        1346,
+        1601
+       ]
+      ]
+     },
+     {
+      "instance": "cij_SE",
+      "port": "idx_tx_r1",
+      "ranges": [
+       [
+        801,
+        1056
+       ]
+      ]
+     },
+     {
+      "instance": "cij_SE",
+      "port": "idx_tx_r1",
+      "ranges": [
+       [
+        256,
+        511
+       ]
+      ]
+     },
+     {
+      "instance": "cij_NW",
+      "port": "idx_tx_h",
+      "ranges": [
+       [
+        2147,
+        2179
+       ]
+      ]
+     },
+     {
+      "instance": "cij_NW",
+      "port": "idx_tx_h",
+      "ranges": [
+       [
+        1602,
+        1634
+       ]
+      ]
+     },
+     {
+      "instance": "cij_NW",
+      "port": "idx_tx_h",
+      "ranges": [
+       [
+        1057,
+        1089
+       ]
+      ]
+     },
+     {
+      "instance": "cij_NW",
+      "port": "idx_tx_h",
+      "ranges": [
+       [
+        512,
+        544
+       ]
+      ]
+     },
+     {
+      "instance": "cij_NW",
+      "port": "idx_tx_h_r1",
+      "ranges": [
+       [
+        2147,
+        2179
+       ]
+      ]
+     },
+     {
+      "instance": "cij_NW",
+      "port": "idx_tx_h_r1",
+      "ranges": [
+       [
+        1602,
+        1634
+       ]
+      ]
+     },
+     {
+      "instance": "cij_NW",
+      "port": "idx_tx_h_r1",
+      "ranges": [
+       [
+        1057,
+        1089
+       ]
+      ]
+     },
+     {
+      "instance": "cij_NW",
+      "port": "idx_tx_h_r1",
+      "ranges": [
+       [
+        512,
+        544
+       ]
+      ]
+     },
+     {
+      "instance": "cij_NW",
+      "port": "idx_tx_r0",
+      "ranges": [
+       [
+        1635,
+        1890
+       ]
+      ]
+     },
+     {
+      "instance": "cij_NW",
+      "port": "idx_tx_r0",
+      "ranges": [
+       [
+        1090,
+        1345
+       ]
+      ]
+     },
+     {
+      "instance": "cij_NW",
+      "port": "idx_tx_r0",
+      "ranges": [
+       [
+        545,
+        800
+       ]
+      ]
+     },
+     {
+      "instance": "cij_NW",
+      "port": "idx_tx_r0",
+      "ranges": [
+       [
+        0,
+        255
+       ]
+      ]
+     },
+     {
+      "instance": "cij_NW",
+      "port": "idx_tx_r1",
+      "ranges": [
+       [
+        1891,
+        2146
+       ]
+      ]
+     },
+     {
+      "instance": "cij_NW",
+      "port": "idx_tx_r1",
+      "ranges": [
+       [
+        1346,
+        1601
+       ]
+      ]
+     },
+     {
+      "instance": "cij_NW",
+      "port": "idx_tx_r1",
+      "ranges": [
+       [
+        801,
+        1056
+       ]
+      ]
+     },
+     {
+      "instance": "cij_NW",
+      "port": "idx_tx_r1",
+      "ranges": [
+       [
+        256,
+        511
+       ]
+      ]
+     },
+     {
+      "instance": "cij_NE",
+      "port": "idx_tx_h",
+      "ranges": [
+       [
+        2147,
+        2179
+       ]
+      ]
+     },
+     {
+      "instance": "cij_NE",
+      "port": "idx_tx_h",
+      "ranges": [
+       [
+        1602,
+        1634
+       ]
+      ]
+     },
+     {
+      "instance": "cij_NE",
+      "port": "idx_tx_h",
+      "ranges": [
+       [
+        1057,
+        1089
+       ]
+      ]
+     },
+     {
+      "instance": "cij_NE",
+      "port": "idx_tx_h",
+      "ranges": [
+       [
+        512,
+        544
+       ]
+      ]
+     },
+     {
+      "instance": "cij_NE",
+      "port": "idx_tx_h_r1",
+      "ranges": [
+       [
+        2147,
+        2179
+       ]
+      ]
+     },
+     {
+      "instance": "cij_NE",
+      "port": "idx_tx_h_r1",
+      "ranges": [
+       [
+        1602,
+        1634
+       ]
+      ]
+     },
+     {
+      "instance": "cij_NE",
+      "port": "idx_tx_h_r1",
+      "ranges": [
+       [
+        1057,
+        1089
+       ]
+      ]
+     },
+     {
+      "instance": "cij_NE",
+      "port": "idx_tx_h_r1",
+      "ranges": [
+       [
+        512,
+        544
+       ]
+      ]
+     },
+     {
+      "instance": "cij_NE",
+      "port": "idx_tx_r0",
+      "ranges": [
+       [
+        1635,
+        1890
+       ]
+      ]
+     },
+     {
+      "instance": "cij_NE",
+      "port": "idx_tx_r0",
+      "ranges": [
+       [
+        1090,
+        1345
+       ]
+      ]
+     },
+     {
+      "instance": "cij_NE",
+      "port": "idx_tx_r0",
+      "ranges": [
+       [
+        545,
+        800
+       ]
+      ]
+     },
+     {
+      "instance": "cij_NE",
+      "port": "idx_tx_r0",
+      "ranges": [
+       [
+        0,
+        255
+       ]
+      ]
+     },
+     {
+      "instance": "cij_NE",
+      "port": "idx_tx_r1",
+      "ranges": [
+       [
+        1891,
+        2146
+       ]
+      ]
+     },
+     {
+      "instance": "cij_NE",
+      "port": "idx_tx_r1",
+      "ranges": [
+       [
+        1346,
+        1601
+       ]
+      ]
+     },
+     {
+      "instance": "cij_NE",
+      "port": "idx_tx_r1",
+      "ranges": [
+       [
+        801,
+        1056
+       ]
+      ]
+     },
+     {
+      "instance": "cij_NE",
+      "port": "idx_tx_r1",
+      "ranges": [
+       [
+        256,
+        511
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "hb_vms_NE",
+   "master": "hfd_hgi_vms_static_NE_glue",
+   "port": "hub_status",
+   "net": "hb_vms_NE__hub_status",
+   "width": 3,
+   "unread_ranges": [
+    [
+     0,
+     2
+    ]
+   ],
+   "bit_count": 3,
+   "die_line": 6957,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static_glue.sv",
+   "classification": "checked_diagnostic_status_review",
+   "reason": "Raw hub flags already enter internal ot_vms_status_static: protocol/pending flags0/2 OR into vmstat18, maskflag1 into vmstat17. Repaired per-quadrant vmstat[18:16] reaches actual fault leaf; external raw copy redundant.",
+   "evidence": {
+    "vmstat": [
+     {
+      "instance": "vm_status4",
+      "port": "quadrant_status",
+      "ranges": [
+       [
+        0,
+        18
+       ]
+      ]
+     },
+     {
+      "instance": "fr_NE",
+      "port": "in",
+      "ranges": [
+       [
+        16,
+        18
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "hb_vms_NE",
+   "master": "hfd_hgi_vms_static_NE_glue",
+   "port": "mirror_busy",
+   "net": "hb_vms_NE__mirror_busy",
+   "width": 2,
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "die_line": 6957,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static_glue.sv",
+   "classification": "checked_diagnostic_status_review",
+   "reason": "Ring mirror_busy is registered outstanding!=0 observation. Internal outstanding counter checks ACK underflow and commit mask vs xq_done, fault feeds VM fatal path. No external busy handshake in static ring. This does not prove final static schedule drains mirrors; that remains programme/native proof.",
+   "evidence": {
+    "vmstat": [
+     {
+      "instance": "vm_status4",
+      "port": "quadrant_status",
+      "ranges": [
+       [
+        0,
+        18
+       ]
+      ]
+     },
+     {
+      "instance": "fr_NE",
+      "port": "in",
+      "ranges": [
+       [
+        16,
+        18
+       ]
+      ]
+     }
+    ],
+    "ring_fault": [
+     {
+      "instance": "fr_NE",
+      "port": "in",
+      "ranges": [
+       [
+        0,
+        2
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "hb_vms_NW",
+   "master": "hfd_hgi_vms_glue_nw_t",
+   "port": "hub_status",
+   "net": "hb_vms_NW__hub_status",
+   "width": 3,
+   "unread_ranges": [
+    [
+     0,
+     2
+    ]
+   ],
+   "bit_count": 3,
+   "die_line": 6862,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_glue_tiles.sv",
+   "classification": "checked_diagnostic_status_review",
+   "reason": "Raw hub flags already enter internal ot_vms_status_static: protocol/pending flags0/2 OR into vmstat18, maskflag1 into vmstat17. Repaired per-quadrant vmstat[18:16] reaches actual fault leaf; external raw copy redundant.",
+   "evidence": {
+    "vmstat": [
+     {
+      "instance": "vm_status4",
+      "port": "quadrant_status",
+      "ranges": [
+       [
+        0,
+        18
+       ]
+      ]
+     },
+     {
+      "instance": "fr_NW",
+      "port": "in",
+      "ranges": [
+       [
+        16,
+        18
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "hb_vms_NW",
+   "master": "hfd_hgi_vms_glue_nw_t",
+   "port": "mirror_busy",
+   "net": "hb_vms_NW__mirror_busy",
+   "width": 2,
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "die_line": 6862,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_glue_tiles.sv",
+   "classification": "checked_diagnostic_status_review",
+   "reason": "Ring mirror_busy is registered outstanding!=0 observation. Internal outstanding counter checks ACK underflow and commit mask vs xq_done, fault feeds VM fatal path. No external busy handshake in static ring. This does not prove final static schedule drains mirrors; that remains programme/native proof.",
+   "evidence": {
+    "vmstat": [
+     {
+      "instance": "vm_status4",
+      "port": "quadrant_status",
+      "ranges": [
+       [
+        0,
+        18
+       ]
+      ]
+     },
+     {
+      "instance": "fr_NW",
+      "port": "in",
+      "ranges": [
+       [
+        16,
+        18
+       ]
+      ]
+     }
+    ],
+    "ring_fault": [
+     {
+      "instance": "fr_NW",
+      "port": "in",
+      "ranges": [
+       [
+        0,
+        2
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "hb_vms_SE",
+   "master": "hfd_hgi_vms_static_SE_glue",
+   "port": "hub_status",
+   "net": "hb_vms_SE__hub_status",
+   "width": 3,
+   "unread_ranges": [
+    [
+     0,
+     2
+    ]
+   ],
+   "bit_count": 3,
+   "die_line": 6829,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static_glue.sv",
+   "classification": "checked_diagnostic_status_review",
+   "reason": "Raw hub flags already enter internal ot_vms_status_static: protocol/pending flags0/2 OR into vmstat18, maskflag1 into vmstat17. Repaired per-quadrant vmstat[18:16] reaches actual fault leaf; external raw copy redundant.",
+   "evidence": {
+    "vmstat": [
+     {
+      "instance": "vm_status4",
+      "port": "quadrant_status",
+      "ranges": [
+       [
+        0,
+        18
+       ]
+      ]
+     },
+     {
+      "instance": "fr_SE",
+      "port": "in",
+      "ranges": [
+       [
+        16,
+        18
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "hb_vms_SE",
+   "master": "hfd_hgi_vms_static_SE_glue",
+   "port": "mirror_busy",
+   "net": "hb_vms_SE__mirror_busy",
+   "width": 2,
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "die_line": 6829,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static_glue.sv",
+   "classification": "checked_diagnostic_status_review",
+   "reason": "Ring mirror_busy is registered outstanding!=0 observation. Internal outstanding counter checks ACK underflow and commit mask vs xq_done, fault feeds VM fatal path. No external busy handshake in static ring. This does not prove final static schedule drains mirrors; that remains programme/native proof.",
+   "evidence": {
+    "vmstat": [
+     {
+      "instance": "vm_status4",
+      "port": "quadrant_status",
+      "ranges": [
+       [
+        0,
+        18
+       ]
+      ]
+     },
+     {
+      "instance": "fr_SE",
+      "port": "in",
+      "ranges": [
+       [
+        16,
+        18
+       ]
+      ]
+     }
+    ],
+    "ring_fault": [
+     {
+      "instance": "fr_SE",
+      "port": "in",
+      "ranges": [
+       [
+        0,
+        2
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "hb_vms_SW",
+   "master": "hfd_hgi_vms_glue_sw_t",
+   "port": "hub_status",
+   "net": "hb_vms_SW__hub_status",
+   "width": 3,
+   "unread_ranges": [
+    [
+     0,
+     2
+    ]
+   ],
+   "bit_count": 3,
+   "die_line": 6740,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_glue_tiles.sv",
+   "classification": "checked_diagnostic_status_review",
+   "reason": "Raw hub flags already enter internal ot_vms_status_static: protocol/pending flags0/2 OR into vmstat18, maskflag1 into vmstat17. Repaired per-quadrant vmstat[18:16] reaches actual fault leaf; external raw copy redundant.",
+   "evidence": {
+    "vmstat": [
+     {
+      "instance": "vm_status4",
+      "port": "quadrant_status",
+      "ranges": [
+       [
+        0,
+        18
+       ]
+      ]
+     },
+     {
+      "instance": "fr_SW",
+      "port": "in",
+      "ranges": [
+       [
+        16,
+        18
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "hb_vms_SW",
+   "master": "hfd_hgi_vms_glue_sw_t",
+   "port": "mirror_busy",
+   "net": "hb_vms_SW__mirror_busy",
+   "width": 2,
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "die_line": 6740,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_glue_tiles.sv",
+   "classification": "checked_diagnostic_status_review",
+   "reason": "Ring mirror_busy is registered outstanding!=0 observation. Internal outstanding counter checks ACK underflow and commit mask vs xq_done, fault feeds VM fatal path. No external busy handshake in static ring. This does not prove final static schedule drains mirrors; that remains programme/native proof.",
+   "evidence": {
+    "vmstat": [
+     {
+      "instance": "vm_status4",
+      "port": "quadrant_status",
+      "ranges": [
+       [
+        0,
+        18
+       ]
+      ]
+     },
+     {
+      "instance": "fr_SW",
+      "port": "in",
+      "ranges": [
+       [
+        16,
+        18
+       ]
+      ]
+     }
+    ],
+    "ring_fault": [
+     {
+      "instance": "fr_SW",
+      "port": "in",
+      "ranges": [
+       [
+        0,
+        2
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "host_status",
+   "master": "ot_hbm_status_join_fa",
+   "port": "a_cause",
+   "net": "host_status__a_cause",
+   "width": 4,
+   "unread_ranges": [
+    [
+     0,
+     3
+    ]
+   ],
+   "bit_count": 4,
+   "die_line": 12899,
+   "source": "rtl/hbm_accel/host_static_20261015/ot_hbm_status_join_fa.sv",
+   "classification": "checked_diagnostic_status_review",
+   "reason": "Sticky region cause is read internally for die_fault and block_ready containment. External a_cause is unimplemented host detailed read-map observation (source explicitly says ingress follow-up), not the host fault signal.",
+   "evidence": {
+    "die_fault": [
+     {
+      "instance": "host_cp_rxs",
+      "port": "fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "block_ready": [
+     {
+      "instance": "host_cp_ingress",
+      "port": "block_ready",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  }
+ ],
+ "source_commit": "d517a76ad",
+ "source_sha256": {
+  "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_glue_tiles.sv": "486a4ad8a06b5bc32d0b55ac13ee1e1c93d1c5a657cebc146a1e9ef05b851ead",
+  "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static_glue.sv": "33090faa944a5827c7a04031b6aff5f46830e13e2c35643f589abf543f0591f6",
+  "rtl/hbm_accel/generic/vm/static/ot_vms_status_static.sv": "56537844cc350ec0bb3141fa2a7ae866fd9c8c5e8e4040830ae89a4d915679d4",
+  "rtl/hbm_accel/generic/vm/static/ot_vms_rstop_static.sv": "6320eb4fe8d7cd7a0caa7b22bfe818c11c05f9a45bc7ac6b114edd09e496b102",
+  "rtl/hbm_accel/host_static_20261015/ot_hbm_status_join_fa.sv": "c40691e286850538bf7d03f353d332e90aefb35eaf1b04225c58b96c494da851",
+  "rtl/hbm_accel/index/ot_hbm_idx_topk_link_static.sv": "36d3a6a7fbe301f48d390378e58dc72f8b04ca9f790edd9332b48d7c083479d0",
+  "rtl/hbm_accel/tu/ep_static_20261015/hfd_ep_static.sv": "62565a0bc080f3d4127580e59e3430d8b14e1c7c91559bd50dac757c70444e63",
+  "rtl/hbm_accel/tu/ep_static_20261015/ot_hep_rx_store.sv": "a668113a6d91edbd14df6b6da3ed784995f823835f2270550c6a5fd9c316071f",
+  "rtl/hbm_accel/generic/ot_hbm_argmax_static_sw_vm_r2.sv": "2d974b4fba582c2f2a6060306e147900c32034c49f700b2980c03c17207d8f09"
+ },
+ "validation": "Read-only exact source and consumers; VM fatal/host cause functional proof already at ada6. No new RTL mutants for other diagnostics; root review required."
+}
