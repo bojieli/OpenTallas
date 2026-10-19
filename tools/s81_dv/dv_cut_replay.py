@@ -658,8 +658,11 @@ def host_boot_words(a, die, prog, S, words, cut=None):
     the lane-live flags f_lf = 4'b0101 held from cycle 0, and ONE job start on f_ks at bench cycle --ks (word
     --ks-word, default the seqhost bench's {v, user 37, pos 1000, tok 5000}).  The calendar accepts the start only on its
     start phase (ot_dsdv_fixed_issue), a reset-tree artefact of the cut: give --ks, and sweep its residue mod 4 once per
-    build if the first run misses (record the accepted residue).  Layer cycle 0 = KS + 4 (the compiled V command leaves
-    vo at KS + issue + 11 = issue + 7 in layer cycles: dsdv_seq_host header, check_seqhost.py), so --t0 is set to KS + 4."""
+    build if the first run misses (record the accepted residue).  Layer cycle 0 = KS + 5: KS is the f_ks LANDED edge (the
+    lane's last flop), u_seqhost's pin flop captures it one edge later (t = KS + 1), and the compiled V command leaves vo
+    at t + issue + 11 = issue + 7 in layer cycles (dsdv_seq_host header, check_seqhost.py).  TOK-S81-GAPS/CTL 10-19,
+    measured on G8 cut_3S_ctl (ks 2547): vo_n of row 8 (issue 1141) at 3700 = KS + 12 + issue; SVCJ on jw_E / jw_W one
+    edge after a KS + 4 anchor."""
     hs = [int(x, 16) for x in (prog / 'prog/host_boot.memh').read_text().split()]
     live = seqhost_live(die, cut, a.idle_run) if getattr(a, 'idle_run', None) else None
     if live is not None:
@@ -669,7 +672,7 @@ def host_boot_words(a, die, prog, S, words, cut=None):
             raise SystemExit(f'--host-boot {a.host_boot} lands before u_seqhost leaves reset (live at {live["live"]}, '
                              f'idle run {a.idle_run}): the boot header would be dropped; use >= {live["live"] + 2}')
     ks = a.ks if a.ks is not None else a.host_boot + 5 * len(hs) + 64
-    a.t0 = ks + 4
+    a.t0 = ks + 5
     ksw = int(a.ks_word, 16)
     end = int(max([w['cycle_land'] for w in words] + [0]) + a.t0 + 64)
     out = list(words)
