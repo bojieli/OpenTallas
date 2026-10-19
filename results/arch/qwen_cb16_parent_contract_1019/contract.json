@@ -1,0 +1,182 @@
+{
+  "schema": "opentallas.cb16.parent_contract.v1",
+  "model_only": true,
+  "release_ready": false,
+  "candidate_source": "ac8e4c483 standalone diagnostic; no selected successor GEN source",
+  "parent_orientation": "R0 assumption in diagnostic packing; not an adopted DEF",
+  "inputs": {
+    "results/arch/qwen_cluster_1017/q_cluster16/safe_graph_model/safe_endpoint_plan_actual_master.json": "e49dcb89b83af4c0c6cbd7d910d7f5e1c090a9a4fb4c65860d4d707d725ccedb",
+    "16f76334c:results/arch/qwen_cluster_1017/q_cluster16/pickup2/pre_stop.json": "e7c02a8c9c8aa7c68d14b91d69bf47301248331a6bc1987c71ec723ee304e45a",
+    "results/arch/qwen_cluster_1017/q_cluster16/safe_child_257_attempt6/native_pins_w257.json": "30e6d4b12d39fb30c341b337fff13981f865b6f72c9bfb0921a750aed9241eca",
+    "results/arch/qwen_cluster_1017/q_cluster16/safe_child_257_attempt6/native_pins_r257.json": "d9e6f907ee33f2c99e250b39bb75c3a7f18445cea870d23f291beca90f2aecea",
+    "results/arch/qwen_cluster_1017/q_cluster16/safe_child_attempt6/native_pins_w.json": "717effff39edb40d9044d2305d20722a3bd979031e981d21515647cbd0862229",
+    "results/arch/qwen_cluster_1017/q_cluster16/safe_child_attempt6/native_pins_r.json": "e28a05203a1f92ca5b4fa11ab250c9a083aa15c4b752b4c409fa18850d79b1ff",
+    "results/arch/qwen_cluster_1017/q_cluster16/station_child_attempt1/native_pins_stn514.json": "da1ed4b92c89a0badc25478ecfc176b450aa84f96643babf42db9dcf1fbf197f",
+    "results/arch/qwen_cluster_1017/q_cluster16/station_child_attempt1/native_pins_stn516.json": "e2b0a321c5800cc883bd51b120d636ef5b80badcdec930893e36762771fed4c6",
+    "results/arch/qwen_cluster_1017/q_cluster16/xstn_child_attempt1/native_pins_qfd_c_xstn_safe.json": "91084ac1eefec87d5293f4a0783aaabf79a836b76c8cf67ee2d5ad425066ffad",
+    "results/arch/qwen_cluster_1017/q_cluster16/xstn_child_attempt1/native_pins_qfd_c_xstnw_safe.json": "df4e8a3a450f24ce6804953b54a8d7b49b674125eace7eb6fdbb91febf08a7e7"
+  },
+  "source_inputs": {
+    "rtl/physical/qcluster/qfd_c_b16_dv_fabric.sv": {
+      "current_sha256": "e458c1b20293f69edf6e9bd5a5a6f6b7146974fb786c9de099458d304d50dca2",
+      "ac8e4c483_sha256": "e458c1b20293f69edf6e9bd5a5a6f6b7146974fb786c9de099458d304d50dca2",
+      "current_equals_historical": true,
+      "source_revision": "c672ee40ff58ad02d870ee3a540a4dadd9be16f7"
+    },
+    "rtl/physical/qcluster/qfd_c_land_safe.sv": {
+      "current_sha256": "a4182dc989947779317cbef092547de6a4152280dc044989c593dfa131629ea5",
+      "ac8e4c483_sha256": null,
+      "current_equals_historical": false,
+      "source_revision": "c672ee40ff58ad02d870ee3a540a4dadd9be16f7"
+    },
+    "tools/qwen_cluster/qc_safe_graph.py": {
+      "current_sha256": "dd51f58b001577428f4fe4e8fbe6573899ab59d1c71b5ee31631c2247f4ea701",
+      "ac8e4c483_sha256": null,
+      "current_equals_historical": false,
+      "source_revision": "c672ee40ff58ad02d870ee3a540a4dadd9be16f7"
+    }
+  },
+  "physical_children": 413,
+  "final_nonpayload_rectangles_changed": {
+    "qfd_c_land_w257_narrow": [
+      "ck",
+      "rsi",
+      "VDD",
+      "VSS"
+    ],
+    "qfd_c_land_r257_narrow": [
+      "ck",
+      "rsi",
+      "VDD",
+      "VSS"
+    ],
+    "qfd_c_land_w258_narrow": [
+      "ck",
+      "rsi",
+      "VDD",
+      "VSS"
+    ],
+    "qfd_c_land_r258_narrow": [
+      "ck",
+      "rsi",
+      "VDD",
+      "VSS"
+    ]
+  },
+  "packed_bindings": 735,
+  "counts": {
+    "ordinary_data_bits": 155814,
+    "known_bits": 226534,
+    "unqualified_bits": 45152,
+    "over405_known_bits": 68542,
+    "bank_data_bits": 111120,
+    "written_flags_bits": 4752
+  },
+  "incumbent_edges": 519,
+  "packed_reach_debt": [
+    {
+      "region": "same_region",
+      "kind": "ordinary_data",
+      "unit": "bits",
+      "count": 48158
+    },
+    {
+      "region": "same_region",
+      "kind": "ordinary_data",
+      "unit": "buses",
+      "count": 136
+    },
+    {
+      "region": "cross_region",
+      "kind": "bank_data",
+      "unit": "bits",
+      "count": 19548
+    },
+    {
+      "region": "cross_region",
+      "kind": "bank_data",
+      "unit": "buses",
+      "count": 38
+    },
+    {
+      "region": "cross_region",
+      "kind": "written_flags",
+      "unit": "bits",
+      "count": 836
+    },
+    {
+      "region": "cross_region",
+      "kind": "written_flags",
+      "unit": "buses",
+      "count": 19
+    }
+  ],
+  "incumbent_violations": {
+    "unqualified_boundary": 55,
+    "same_region": 136,
+    "cross_region": 19
+  },
+  "distance_only_intermediate_stages": {
+    "unqualified_boundary": 95,
+    "same_region": 175,
+    "cross_region": 22
+  },
+  "violation_families": [
+    {
+      "classification": "unqualified_boundary",
+      "kind": "data",
+      "edges": 55
+    },
+    {
+      "classification": "same_region",
+      "kind": "data",
+      "edges": 136
+    },
+    {
+      "classification": "cross_region",
+      "kind": "bank",
+      "edges": 19
+    }
+  ],
+  "incumbent_overrun_um": 61344.631,
+  "full_native_phase_reset_firstuse_census_qualified": false,
+  "frozen_GEN_cb16": {
+    "source": "0d4c9808f/dv2f18dh2",
+    "links": 264,
+    "payload_bits": 136080,
+    "equivalence_to_standalone": false,
+    "reason": "different hierarchy and inter-macro logical links, not internal half-port pin routes"
+  },
+  "half_ABI": {
+    "257": {
+      "data_input_or_output": 257,
+      "bank_data": 1028,
+      "written_flags": 44,
+      "clock": 1,
+      "reset": 1,
+      "ring_slots": 4,
+      "K": 2,
+      "slices": 11,
+      "writer_ff": 1128,
+      "reader_ff": 346,
+      "coherent_full_record_bits": 514,
+      "full_record_slot_state": 2056,
+      "independent_lane_proof": false
+    },
+    "258": {
+      "data_input_or_output": 258,
+      "bank_data": 1032,
+      "written_flags": 44,
+      "clock": 1,
+      "reset": 1,
+      "ring_slots": 4,
+      "K": 2,
+      "slices": 11,
+      "writer_ff": 1132,
+      "reader_ff": 347,
+      "coherent_full_record_bits": 516,
+      "full_record_slot_state": 2064,
+      "independent_lane_proof": false
+    }
+  }
+}
