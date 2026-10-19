@@ -18,7 +18,7 @@ def model():
         w,h=t["outline_um"]; t["outline_area_um2"]=w*h
         t["worst_diagonal_reach_um"]=math.hypot(w,h)
         t["macro_only_fill"]=t["macro_area_um2"]/(w*h)
-        t["std_area_um2"]=None # measured synthesis, then resize, before gate
+        t["std_area_um2"]=478.04904 if t is tiles["descriptor"] else 658.9431 # fleet source84f67a381
         t["full_width_cell_band_y_um"]=[t["origins_um"][0][1]+t["macro_um"][1],129.6 if t is tiles["descriptor"] else 172.8]
     return {"schema":"hbm.xcal.partition.model.v1","status":"PROTOTYPE_NOT_GATE_READY",
       "replicas_per_sm":1,"sm_per_die":16,"MACs_per_cycle":0,
@@ -38,11 +38,11 @@ def model():
         "pins":"planned registered interfaces; existing programme and RELOC capture retained",
         "reset":"two registered release stages per root; no operation before both roots settled",
         "storage":"all table storage remains canonical SRAM; two313bit register captures=626bits below2kb",
-        "fanout":"OPEN mapped kept-copy audit; RTL bank-select copies16bits and output identity/valid copies16bits; SRAM strobes need audit",
+        "fanout":"PASS mapped source84f67a381: data/control<=32; reset<=27descriptor/28programme; no unmapped cells",
         "depth":"OPEN synthesis <=600ps/20levels; descriptor compare/GO only in control tile",
         "floorplan":"origins43.2 lattice; macro-pin face clearance>=20um; actual std area OPEN",
         "clock":"OPEN TT/FF <=80ps spread, root boundary matched and >=0.03ns hold margin",
         "canonical_descriptor_face":"BLOCKED: canonical128x256 master W/E 9.99/10.015pins/um exceeds6; preserve abstract pending explicit owner scope decision"},
-      "fanout_revision": {"baseline_std_area_um2":{"descriptor":690.27552,"programme":637.01478},"measured_failure":"wire keep merged Q copies; bank514/157loads and qualifier173loads", "repair":"preserved one-bit FF hierarchy; same-edge input/control copies, unconditional invalid payload updates in native collar", "added_latency_edges":0,"control_storage_budget_bits":128,"reset_revision":{"descriptor_branches":7,"programme_branches":6,"collar_branches":5,"branch_q":"raw-async clear, captures original first-stage release on same second-stage edge","extra_release_edges":0,"branch_reset_load_budget":32,"additional_reset_flop_budget":18},"actual_final_area":"pending remap"},
+      "fanout_revision": {"baseline_std_area_um2":{"descriptor":690.27552,"programme":637.01478},"measured_failure":"wire keep merged Q copies; bank514/157loads and qualifier173loads", "repair":"preserved one-bit FF hierarchy; same-edge input/control copies, unconditional invalid payload updates in native collar", "added_latency_edges":0,"control_storage_budget_bits":128,"reset_revision":{"descriptor_branches":7,"programme_branches":6,"collar_branches":5,"branch_q":"raw-async clear, captures original first-stage release on same second-stage edge","extra_release_edges":0,"branch_reset_load_budget":32,"additional_reset_flop_budget":18},"actual_final_area":{"descriptor_um2":478.04904,"programme_um2":658.9431}},
       "adoption":"No gate, REVIEW, physical claim, or calendar adoption from this model alone."}
 if __name__ == "__main__": print(json.dumps(model(),indent=2))

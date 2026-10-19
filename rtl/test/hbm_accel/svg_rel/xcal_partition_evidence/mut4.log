@@ -1,5 +1,5 @@
 Verilator 5.050 2026-07-01 rev v5.050
 XCAL_PARTITION FAIL mut=4 errors=4 words=4 first_delta=27 fault=0
-[1350000] %Fatal: tb_xcal_partition.sv:44: Assertion failed in tb_xcal_partition: XCAL relative mismatch
-%Error: rtl/test/hbm_accel/svg_rel/tb_xcal_partition.sv:44: Verilog $stop
+[1350000] %Fatal: tb_xcal_partition.sv:49: Assertion failed in tb_xcal_partition: XCAL relative mismatch
+%Error: rtl/test/hbm_accel/svg_rel/tb_xcal_partition.sv:49: Verilog $stop
 Aborting...

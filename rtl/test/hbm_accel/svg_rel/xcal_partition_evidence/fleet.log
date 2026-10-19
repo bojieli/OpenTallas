@@ -1,69 +1,69 @@
-ot-run: ot-epyc4       admits   981 GB (avail 800, growth 113, headroom 0, waiters 0/0 GB) load 120/128 running 37 disk 412 GB 
-ot-run: ot-epyc5       admits   911 GB (avail 751, growth 113, headroom 0, waiters 0/0 GB) load 51/128 running 14 disk 564 GB 
-ot-run: ot-epyc6       admits   345 GB (avail 338, growth 96, headroom 0, waiters 0/0 GB) load 33/128 running 15 disk 563 GB 
-ot-run: ot-epyc7       admits   598 GB (avail 519, growth 101, headroom 0, waiters 0/0 GB) load 64/96 running 18 disk 502 GB 
-ot-run: ot-epyc8       admits  1151 GB (avail 909, growth 103, headroom 0, waiters 0/0 GB) load 35/128 running 27 disk 565 GB 
-ot-run: ot-pve1        admits   115 GB (avail 93, growth 13, headroom 0, waiters 0/0 GB) load 52/28 running 6 disk 1198 GB 
-ot-run: ot-agidock128  admits    92 GB (avail 77, growth 13, headroom 0, waiters 0/0 GB) load 13/64 running 7 disk 46 GB 
+ot-run: ot-epyc4       admits  1034 GB (avail 821, growth 97, headroom 0, waiters 0/0 GB) load 81/128 running 32 disk 412 GB 
+ot-run: ot-epyc5       admits   889 GB (avail 736, growth 113, headroom 0, waiters 0/0 GB) load 65/128 running 12 disk 564 GB 
+ot-run: ot-epyc6       admits   318 GB (avail 332, growth 110, headroom 0, waiters 0/0 GB) load 33/128 running 16 disk 563 GB 
+ot-run: ot-epyc7       admits   568 GB (avail 498, growth 101, headroom 0, waiters 0/0 GB) load 59/96 running 17 disk 502 GB 
+ot-run: ot-epyc8       admits  1191 GB (avail 927, growth 93, headroom 0, waiters 0/0 GB) load 38/128 running 26 disk 565 GB 
+ot-run: ot-pve1        admits   111 GB (avail 91, growth 13, headroom 0, waiters 0/0 GB) load 57/28 running 6 disk 1198 GB 
+ot-run: ot-agidock128  admits    90 GB (avail 75, growth 13, headroom 0, waiters 0/0 GB) load 12/64 running 7 disk 46 GB 
 ot-run: -> ot-agidock128
-ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-1172382-1792426666 after 0 s
-RESULT_ROOT=/srv/opentallas-scratch/claude/hbm-xcal-partition-ac7e3a-1019
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-1176602-1792427015 after 0 s
+RESULT_ROOT=/srv/opentallas-scratch/claude/hbm-xcal-partition-84f67a-1019
 Verilator 5.050 2026-07-01 rev v5.050
 XCAL_PARTITION PASS mut=0 errors=0 words=4 first_delta=29 fault=0
-- rtl/test/hbm_accel/svg_rel/tb_xcal_partition.sv:44: Verilog $finish
+- rtl/test/hbm_accel/svg_rel/tb_xcal_partition.sv:49: Verilog $finish
 - S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 1us; walltime 0.000 s; speed 6.040 ms/s
+- Verilator: $finish at 1us; walltime 0.000 s; speed 5.637 ms/s
 - Verilator: cpu 0.000 s on 1 threads; allocated 7 MB
 MUT=0 RC=0
 Verilator 5.050 2026-07-01 rev v5.050
 XCAL_PARTITION FAIL mut=1 errors=4 words=4 first_delta=30 fault=0
-[1350000] %Fatal: tb_xcal_partition.sv:44: Assertion failed in tb_xcal_partition: XCAL relative mismatch
-%Error: rtl/test/hbm_accel/svg_rel/tb_xcal_partition.sv:44: Verilog $stop
+[1350000] %Fatal: tb_xcal_partition.sv:49: Assertion failed in tb_xcal_partition: XCAL relative mismatch
+%Error: rtl/test/hbm_accel/svg_rel/tb_xcal_partition.sv:49: Verilog $stop
 Aborting...
 MUT=1 RC=1
 Verilator 5.050 2026-07-01 rev v5.050
 XCAL_PARTITION FAIL mut=2 errors=4 words=4 first_delta=29 fault=0
-[1350000] %Fatal: tb_xcal_partition.sv:44: Assertion failed in tb_xcal_partition: XCAL relative mismatch
-%Error: rtl/test/hbm_accel/svg_rel/tb_xcal_partition.sv:44: Verilog $stop
+[1350000] %Fatal: tb_xcal_partition.sv:49: Assertion failed in tb_xcal_partition: XCAL relative mismatch
+%Error: rtl/test/hbm_accel/svg_rel/tb_xcal_partition.sv:49: Verilog $stop
 Aborting...
 MUT=2 RC=1
 Verilator 5.050 2026-07-01 rev v5.050
 XCAL_PARTITION FAIL mut=3 errors=1 words=0 first_delta=-56 fault=0
-[1350000] %Fatal: tb_xcal_partition.sv:44: Assertion failed in tb_xcal_partition: XCAL relative mismatch
-%Error: rtl/test/hbm_accel/svg_rel/tb_xcal_partition.sv:44: Verilog $stop
+[1350000] %Fatal: tb_xcal_partition.sv:49: Assertion failed in tb_xcal_partition: XCAL relative mismatch
+%Error: rtl/test/hbm_accel/svg_rel/tb_xcal_partition.sv:49: Verilog $stop
 Aborting...
 MUT=3 RC=1
 Verilator 5.050 2026-07-01 rev v5.050
 XCAL_PARTITION FAIL mut=4 errors=4 words=4 first_delta=27 fault=0
-[1350000] %Fatal: tb_xcal_partition.sv:44: Assertion failed in tb_xcal_partition: XCAL relative mismatch
-%Error: rtl/test/hbm_accel/svg_rel/tb_xcal_partition.sv:44: Verilog $stop
+[1350000] %Fatal: tb_xcal_partition.sv:49: Assertion failed in tb_xcal_partition: XCAL relative mismatch
+%Error: rtl/test/hbm_accel/svg_rel/tb_xcal_partition.sv:49: Verilog $stop
 Aborting...
 MUT=4 RC=1
 Verilator 5.050 2026-07-01 rev v5.050
 XCAL_PARTITION FAIL mut=5 errors=1 words=4 first_delta=29 fault=0
-[1350000] %Fatal: tb_xcal_partition.sv:44: Assertion failed in tb_xcal_partition: XCAL relative mismatch
-%Error: rtl/test/hbm_accel/svg_rel/tb_xcal_partition.sv:44: Verilog $stop
+[1350000] %Fatal: tb_xcal_partition.sv:49: Assertion failed in tb_xcal_partition: XCAL relative mismatch
+%Error: rtl/test/hbm_accel/svg_rel/tb_xcal_partition.sv:49: Verilog $stop
 Aborting...
 MUT=5 RC=1
 Verilator 5.050 2026-07-01 rev v5.050
 XCAL_PARTITION PASS mut=0 errors=0 words=0 first_delta=-56 fault=1
-- rtl/test/hbm_accel/svg_rel/tb_xcal_partition.sv:44: Verilog $finish
+- rtl/test/hbm_accel/svg_rel/tb_xcal_partition.sv:49: Verilog $finish
 - S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 1us; walltime 0.000 s; speed 6.192 ms/s
+- Verilator: $finish at 1us; walltime 0.000 s; speed 5.376 ms/s
 - Verilator: cpu 0.000 s on 1 threads; allocated 7 MB
 early RC=0
 Verilator 5.050 2026-07-01 rev v5.050
 XCAL_PARTITION PASS mut=0 errors=0 words=8 first_delta=29 fault=0
-- rtl/test/hbm_accel/svg_rel/tb_xcal_partition.sv:44: Verilog $finish
+- rtl/test/hbm_accel/svg_rel/tb_xcal_partition.sv:49: Verilog $finish
 - S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 1us; walltime 0.000 s; speed 5.860 ms/s
+- Verilator: $finish at 1us; walltime 0.000 s; speed 5.705 ms/s
 - Verilator: cpu 0.000 s on 1 threads; allocated 7 MB
 multi RC=0
 Verilator 5.050 2026-07-01 rev v5.050
 XCAL_PARTITION PASS mut=0 errors=0 words=8 first_delta=29 fault=0
-- rtl/test/hbm_accel/svg_rel/tb_xcal_partition.sv:44: Verilog $finish
+- rtl/test/hbm_accel/svg_rel/tb_xcal_partition.sv:49: Verilog $finish
 - S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 1us; walltime 0.000 s; speed 5.907 ms/s
+- Verilator: $finish at 1us; walltime 0.000 s; speed 4.808 ms/s
 - Verilator: cpu 0.000 s on 1 threads; allocated 7 MB
 tight RC=0
-ot-run: RAN on ot-agidock128 (unit oth-ubuntu-1172382-1792426666): exit 0
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-1176602-1792427015): exit 0
