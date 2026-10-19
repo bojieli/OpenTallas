@@ -45,8 +45,8 @@ module ot_vms_rstop_lt #(
     parameter integer COMMIT_DELAY=5,
     parameter integer MUT=0,
     parameter [7:0] UPPER=8'b00111100,   // g4: lane bands in the upper half of the ring face (the rest: lower half)
-    parameter integer NLS=35             // g6 reset leaves: 0 header band, 1 control, 2 pointer / outstanding,
-                                         // 3+4b+r band b slices 3r..3r+2 (+ eg_v on r 0)
+    parameter integer NLS=36             // g6 reset leaves: 0 header band, 1 control, 2 commit pointers,
+                                         // 3+4b+r band b slices 3r..3r+2 (+ eg_v on r 0), 35 outstanding
 ) (
     input wire clk,
     input wire [NLS-1:0] rl,
@@ -93,15 +93,12 @@ module ot_vms_rstop_lt #(
     for(genvar k=0;k<5;k=k+1) begin : g_oha
         assign oh_a[k]=a_en && a_src==3'(k);
     end
-    wire [4:0] hm_oh [0:1]; wire hm_own [0:1]; wire [1:0] hm_kind [0:1]; wire [277:0] hm_pi [0:1];
+    wire [277:0] hm_pi [0:1];
     wire [255:0] hm_ri [0:1]; wire [6:0] hm_h7 [0:1];
     for(genvar h=0;h<2;h=h+1) begin : half
-        (* keep = "true", dont_touch = "true" *) reg [4:0] oh_m;
-        (* keep = "true", dont_touch = "true" *) reg own_m;
-        (* keep = "true", dont_touch = "true" *) reg [1:0] kind_m;
         (* keep = "true", dont_touch = "true" *) reg [277:0] pi_m;
-        always @(posedge clk) begin oh_m<=oh_a; own_m<=own_a; kind_m<=a_l[2222:2221]; pi_m<=a_pi[277:0]; end
-        assign hm_oh[h]=oh_m; assign hm_own[h]=own_m; assign hm_kind[h]=kind_m; assign hm_pi[h]=pi_m;
+        always @(posedge clk) pi_m<=a_pi[277:0];
+        assign hm_pi[h]=pi_m;
         if(h==int'(UPPER[0])) begin : g_b0  // band 0 also takes the replay payload and the cco header bits
             (* keep = "true", dont_touch = "true" *) reg [255:0] ri_m;
             (* keep = "true", dont_touch = "true" *) reg [6:0] h7_m;
@@ -160,6 +157,12 @@ module ot_vms_rstop_lt #(
     wire [275:0] lane_q [0:7];
     for(genvar b=0;b<8;b=b+1) begin : band
         localparam integer H=UPPER[b] ? 1 : 0;
+        // g6 r2: the stage-M relay of the one-hot tx select / header decode is a kept copy PER BAND (was per half:
+        // 48 slice loads per bit); same edge, placed between the header band and its band like the half copy
+        (* keep = "true", dont_touch = "true" *) reg [4:0] oh_m;
+        (* keep = "true", dont_touch = "true" *) reg own_m;
+        (* keep = "true", dont_touch = "true" *) reg [1:0] kind_m;
+        always @(posedge clk) begin oh_m<=oh_a; own_m<=own_a; kind_m<=a_l[2222:2221]; end
         reg [275:0] ln_m; reg [275:0] eg_m;
         (* keep = "true", dont_touch = "true" *) reg lv_r;
         (* keep = "true", dont_touch = "true" *) reg ev_r;
@@ -183,8 +186,8 @@ module ot_vms_rstop_lt #(
             always @(posedge clk or negedge rl[RL])
                 if(!rl[RL]) begin sel_q<=0; xo_q<=0; k0_q<=0; cc_q<=0; end
                 else begin
-                    sel_q<={hm_oh[H][3] && b==0, hm_oh[H][2], hm_oh[H][1] && hm_pi[H][277:275]==3'(b), hm_oh[H][0]};
-                    xo_q<=hm_own[H] && hm_kind[H]==2'd1; k0_q<=hm_own[H] && hm_kind[H]==2'd0; cc_q<=hm_own[H] && hm_kind[H]==2'd2;
+                    sel_q<={oh_m[3] && b==0, oh_m[2], oh_m[1] && hm_pi[H][277:275]==3'(b), oh_m[0]};
+                    xo_q<=own_m && kind_m==2'd1; k0_q<=own_m && kind_m==2'd0; cc_q<=own_m && kind_m==2'd2;
                 end
             always @(posedge clk) lv_q<=ln_m[275];
             assign m0[LO+:WD]={WD{sel_q[0]}}; assign m1[LO+:WD]={WD{sel_q[1]}}; assign m2[LO+:WD]={WD{sel_q[2]}};
@@ -260,8 +263,11 @@ module ot_vms_rstop_lt #(
     // COMMIT_DELAY - 1 edges ago (= the historical shift chain's last stage); no flop -> flop hold chain.
     // g6: one-hot pointer (kept, rotates; reset slot 0) and the commit valid stored in the ring (reset 0: = the g5 valid
     // shift chain's reset), so the read is an AND-OR and no pointer bit fans out to the 13 x 11 slot bits.
-    (* keep = "true", dont_touch = "true" *) reg [COMMIT_DELAY-1:0] cp;
-    always @(posedge clk or negedge rl[2]) if(!rl[2]) cp<={{(COMMIT_DELAY-1){1'b0}},1'b1}; else cp<={cp[COMMIT_DELAY-2:0],cp[COMMIT_DELAY-1]};
+    // g6 r2: two identical kept rings, cp (writes) and cq_r (reads): one ring measured 34 loads per bit
+    (* keep = "true", dont_touch = "true" *) reg [COMMIT_DELAY-1:0] cp, cq_r;
+    always @(posedge clk or negedge rl[2])
+        if(!rl[2]) begin cp<={{(COMMIT_DELAY-1){1'b0}},1'b1}; cq_r<={{(COMMIT_DELAY-1){1'b0}},1'b1}; end
+        else begin cp<={cp[COMMIT_DELAY-2:0],cp[COMMIT_DELAY-1]}; cq_r<={cq_r[COMMIT_DELAY-2:0],cq_r[COMMIT_DELAY-1]}; end
     reg [9:0] cring [0:COMMIT_DELAY-1];
     reg [COMMIT_DELAY-1:0] cvr;
     always @(posedge clk) for(integer k=0;k<COMMIT_DELAY;k=k+1) if(cp[k]) cring[k]<={lanes,h_d[8:7]};
@@ -269,10 +275,10 @@ module ot_vms_rstop_lt #(
     reg [9:0] cr_rd; reg cv_rd;
     always @* begin
         cr_rd='0; cv_rd=1'b0;
-        for(integer k=0;k<COMMIT_DELAY;k=k+1) if(cp[k]) begin cr_rd=cr_rd|cring[k]; cv_rd=cv_rd|cvr[k]; end
+        for(integer k=0;k<COMMIT_DELAY;k=k+1) if(cq_r[k]) begin cr_rd=cr_rd|cring[k]; cv_rd=cv_rd|cvr[k]; end
     end
     wire [7:0] commit_mask_o=cr_rd[9:2]; wire [1:0] commit_src_o=cr_rd[1:0];
-    always @(posedge clk or negedge rl[2]) if(!rl[2]) outstanding<=0;
+    always @(posedge clk or negedge rl[35]) if(!rl[35]) outstanding<=0;
         else outstanding<=outstanding + ((fh[15] && source_q==2)?(dr?16'd1:16'd2):16'd0) - (ack_q?16'd1:16'd0);
     always @(posedge clk or negedge rl[1]) begin
         if(!rl[1]) begin
@@ -298,7 +304,7 @@ module ot_vms_rstop_lt #(
     end
 endmodule
 
-// g6: replay select copies per 18-b slice (g4/g5 36-b: 36-39 loads); reset leaves rl[0] control, rl[1] / rl[2] selects
+// g6: replay select copies per 24-b slice (g4/g5 36-b: 36-39 loads); reset leaves rl[0] control, rl[1] / rl[2] selects
 module ot_vms_rcl_lt #(parameter integer MUT=0) (
     input wire clk,
     input wire [2:0] rl,
@@ -322,10 +328,10 @@ module ot_vms_rcl_lt #(parameter integer MUT=0) (
     // g3: the replay select is replicated per 36-b slice of the 288-b rce mux (one copy beside each slice)
     wire [287:0] e;
     // g4: registered one-hot replay select (static schedule replay_source), replicated per 36-b slice: AND-OR, no mux
-    for(genvar i=0;i<16;i=i+1) begin : sel
+    for(genvar i=0;i<12;i=i+1) begin : sel
         (* keep = "true", dont_touch = "true" *) reg sa_q, sb_q;
-        always @(posedge clk or negedge rl[1+i/8]) if(!rl[1+i/8]) begin sa_q<=1; sb_q<=0; end else begin sa_q<=!rx_source; sb_q<=rx_source; end
-        assign e[i*18+:18]=({18{sa_q}}&a[i*18+:18])|({18{sb_q}}&b[i*18+:18]);
+        always @(posedge clk or negedge rl[1+i/6]) if(!rl[1+i/6]) begin sa_q<=1; sb_q<=0; end else begin sa_q<=!rx_source; sb_q<=rx_source; end
+        assign e[i*24+:24]=({24{sa_q}}&a[i*24+:24])|({24{sb_q}}&b[i*24+:24]);
     end
     wire [14:0] sec={e[274]?2'b00:me,e[273:264],e[277:275]};
     wire [31:0] addr={11'b0,e[274],sec,5'b0};
@@ -668,9 +674,20 @@ module ot_vms_hub_lt #(
     // g4: response slot select = REGISTERED ONE-HOT of the static schedule's response_seq (decoded a stage ahead from the
     // g3 landing re_a / rseq_a), kept per (client, slot, 32-b slice); g6: the write flag of the slot on the response edge
     // (writes' next state) is folded in, so writes no longer gates the 256-b data
+    // g6 r2: admission one-hot (qvalid & sq == k) as kept registers per (client, slot) on the qvalid edge / reset class:
+    // adm_t for the tag write, adm_s for the slot state and wr_n (the shared decode measured 36-39 loads)
+    (* keep = "true", dont_touch = "true" *) reg [N*4-1:0] adm_t, adm_s;
+    for(genvar c=0;c<N;c=c+1) begin : g_adm
+        always @(posedge clk or negedge rl[lc(c,8)])
+            if(!rl[lc(c,8)]) begin adm_t[c*4+:4]<='0; adm_s[c*4+:4]<='0; end
+            else for(integer k=0;k<4;k=k+1) begin
+                adm_t[c*4+k]<=cq[c*338+337] && client_seq[c*2+:2]==2'(k);
+                adm_s[c*4+k]<=cq[c*338+337] && client_seq[c*2+:2]==2'(k);
+            end
+    end
     reg wr_n [0:N-1][0:3];
     always @* for(integer c=0;c<N;c=c+1) for(integer k=0;k<4;k=k+1)
-        wr_n[c][k]=(qvalid[c] && int'(sq[c*2+:2])==k) ? qr[c*338+336] : writes[c][k];
+        wr_n[c][k]=adm_s[c*4+k] ? qr[c*338+336] : writes[c][k];
     (* keep = "true", dont_touch = "true" *) reg [N*4*8-1:0] rsel;
     for(genvar c=0;c<N;c=c+1) for(genvar k=0;k<4;k=k+1) begin : g_rsel
         always @(posedge clk or negedge rl[lc(c,2+k/2)])
@@ -773,7 +790,7 @@ module ot_vms_hub_lt #(
             end else begin
                 if(arr_f[(c*4+k)*3+:3]!=0) seen[c][k]<=seen[c][k]+arr_f[(c*4+k)*3+:3];
                 if(re[c] && roh_k[c*4+k]) active[c][k]<=0;
-                if(qvalid[c] && int'(sq[c*2+:2])==k) begin
+                if(adm_s[c*4+k]) begin
                     active[c][k]<=1;
                     seen[c][k]<=0;
                     expected[c][k]<=(qr[c*338+324]&&qr[c*338+336]&&c!=NC)?3'd4:3'd1;
@@ -796,7 +813,7 @@ module ot_vms_hub_lt #(
                 response_data[c][k][j*32+:32]<=response_data[c][k][j*32+:32]|ret_f[(c*4+k)*256+j*32+:32];
             if(clr[(c*4+k)*8+j]) response_data[c][k][j*32+:32]<=32'd0;
         end
-        if(qvalid[c]) tags[c][sq[c*2+:2]]<=qr[c*338+:16];
+        for(integer k=0;k<4;k=k+1) if(adm_t[c*4+k]) tags[c][k]<=qr[c*338+:16];
     end
 endmodule
 
@@ -826,7 +843,7 @@ module ot_vms_rst_forest #(parameter integer NL=24, parameter integer GL=24) (
 endmodule
 
 // ot_vms_slice_static_glue (gen_vms_hoist.py) wiring with the _lt children, ONE tile clock; g6: reset leaves from the
-// forest (hub NLH, CW / CCW stop 35 each, replay 3, status 1).
+// forest (hub NLH, CW / CCW stop 36 each, replay 3, status 1).
 module hfd_vms_glue_core_lt #(
     parameter integer NC=0,
     parameter integer CW=((NC+1)>1)?$clog2(NC+1):1,
@@ -862,7 +879,7 @@ module hfd_vms_glue_core_lt #(
     output wire [18:0] vmstat,
     output wire [2:0] ring_fault
 );
-    localparam integer NLH=3+14*(NC+1), NLS=35;
+    localparam integer NLH=3+14*(NC+1), NLS=36;
     localparam integer OH=0, OC=NLH, OCC=NLH+NLS, OR_=NLH+2*NLS, OS=NLH+2*NLS+3, NL=NLH+2*NLS+4;
     wire [NL-1:0] rl;
     ot_vms_rst_forest #(.NL(NL)) u_rst(.clk(clk),.rst_l0(rst_l0),.rl(rl));
