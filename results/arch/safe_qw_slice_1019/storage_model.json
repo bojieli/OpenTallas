@@ -65,5 +65,15 @@
   "reset_release_added_edges": {
     "core": 2,
     "redstn": 2
-  }
+  },
+  "new_bypass_payload_flops": 1024,
+  "new_storage_control_flops": 128,
+  "reset_tree_allocated_flops": {
+    "core": 338,
+    "station": 130
+  },
+  "estimated_net_std_flop_change": -22500,
+  "std_flop_change_scope": "Logical storage/reset allocation only; mapped total area, child reset sinks and native-clock timing still require whole-kit synthesis. Existing FIFO pointers remain unchanged; no guessed standard-cell area.",
+  "twelve_slice_macro_instances": 60,
+  "twelve_slice_macro_area_mm2": 0.8639524800000001
 }
