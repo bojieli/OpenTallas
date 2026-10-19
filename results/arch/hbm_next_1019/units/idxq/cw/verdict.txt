@@ -1,0 +1,28 @@
+2026-10-19T06:16:50-07:00 start host=regular-crane bundle=cdc33934d Verilator 5.050 2026-07-01 rev v5.050
+2026-10-19T06:17:06-07:00 build rc=0 bin=ok frame length 1315
+2026-10-19T06:17:06-07:00 f1 [OK want PASS got PASS]: IDXN_CW rows1 pitch232 phase0 len1315 mut0 errors0 active_edges1135 row_starts1 dones1 bypass_edges0 fault_cw0 0 fault_cw1 0 
+2026-10-19T06:17:06-07:00 f4 [OK want PASS got PASS]: IDXN_CW rows4 pitch232 phase0 len1315 mut0 errors0 active_edges1835 row_starts4 dones1 bypass_edges0 fault_cw0 0 fault_cw1 0 
+2026-10-19T06:17:06-07:00 f2 [OK want PASS got PASS]: IDXN_CW rows2 pitch232 phase0 len1315 mut0 errors0 active_edges1371 row_starts2 dones1 bypass_edges0 fault_cw0 0 fault_cw1 0 
+2026-10-19T06:17:06-07:00 f6p236 [OK want PASS got PASS]: IDXN_CW rows6 pitch236 phase0 len1315 mut0 errors0 active_edges2319 row_starts6 dones1 bypass_edges164 fault_cw0 0 fault_cw1 0 
+2026-10-19T06:17:06-07:00 f6p233 [OK want PASS got PASS]: IDXN_CW rows6 pitch233 phase0 len1315 mut0 errors0 active_edges2304 row_starts6 dones1 bypass_edges0 fault_cw0 0 fault_cw1 0 
+2026-10-19T06:17:06-07:00 f8h2 [OK want PASS got PASS]: IDXN_CW rows8 pitch232 phase2 len1315 mut0 errors0 active_edges2763 row_starts8 dones1 bypass_edges164 fault_cw0 0 fault_cw1 0 
+2026-10-19T06:17:06-07:00 f8h1 [OK want PASS got PASS]: IDXN_CW rows8 pitch232 phase1 len1315 mut0 errors0 active_edges2763 row_starts8 dones1 bypass_edges164 fault_cw0 0 fault_cw1 0 
+2026-10-19T06:17:06-07:00 f6 [OK want PASS got PASS]: IDXN_CW rows6 pitch232 phase0 len1315 mut0 errors0 active_edges2299 row_starts6 dones1 bypass_edges164 fault_cw0 0 fault_cw1 0 
+2026-10-19T06:17:06-07:00 f6p300 [OK want PASS got PASS]: IDXN_CW rows6 pitch300 phase0 len1315 mut0 errors0 active_edges2639 row_starts6 dones1 bypass_edges164 fault_cw0 0 fault_cw1 0 
+2026-10-19T06:17:06-07:00 f8h7 [OK want PASS got PASS]: IDXN_CW rows8 pitch232 phase7 len1315 mut0 errors0 active_edges2763 row_starts8 dones1 bypass_edges164 fault_cw0 0 fault_cw1 0 
+2026-10-19T06:17:06-07:00 f8h6 [OK want PASS got PASS]: IDXN_CW rows8 pitch232 phase6 len1315 mut0 errors0 active_edges2763 row_starts8 dones1 bypass_edges164 fault_cw0 0 fault_cw1 0 
+2026-10-19T06:17:06-07:00 f8h0 [OK want PASS got PASS]: IDXN_CW rows8 pitch232 phase0 len1315 mut0 errors0 active_edges2763 row_starts8 dones1 bypass_edges164 fault_cw0 0 fault_cw1 0 
+2026-10-19T06:17:06-07:00 f8h4 [OK want PASS got PASS]: IDXN_CW rows8 pitch232 phase4 len1315 mut0 errors0 active_edges2763 row_starts8 dones1 bypass_edges164 fault_cw0 0 fault_cw1 0 
+2026-10-19T06:17:06-07:00 f8h5 [OK want PASS got PASS]: IDXN_CW rows8 pitch232 phase5 len1315 mut0 errors0 active_edges2763 row_starts8 dones1 bypass_edges164 fault_cw0 0 fault_cw1 0 
+2026-10-19T06:17:06-07:00 f8h3 [OK want PASS got PASS]: IDXN_CW rows8 pitch232 phase3 len1315 mut0 errors0 active_edges2763 row_starts8 dones1 bypass_edges164 fault_cw0 0 fault_cw1 0 
+2026-10-19T06:17:06-07:00 m2 [OK want FAIL got FAIL]: CWBAD cyc293 xor 00800000000000000000000000000 CWBAD cyc294 xor 00800000000000000000000000000 CWBAD cyc295 xor 00800000000000000000000000000 
+2026-10-19T06:17:06-07:00 s2 [OK want PASS got PASS]: IDXN_CW rows6 pitch233 phase0 len2048 mut0 errors0 active_edges3205 row_starts6 dones1 bypass_edges0 fault_cw0 1 fault_cw1 1 
+2026-10-19T06:17:06-07:00 m1 [OK want FAIL got FAIL]: CWBAD cyc1923 xor 08700000000000000000000000000 CWBAD cyc1931 xor 08f00000000000000000000000000 CWBAD cyc1939 xor 01000000000000000000000000000 
+2026-10-19T06:17:06-07:00 s3 [OK want PASS got PASS]: IDXN_CW rows6 pitch237 phase0 len2048 mut0 errors0 active_edges3187 row_starts6 dones1 bypass_edges765 fault_cw0 1 fault_cw1 1 
+2026-10-19T06:17:06-07:00 s1 [OK want PASS got PASS]: IDXN_CW rows6 pitch235 phase0 len2048 mut0 errors0 active_edges3241 row_starts6 dones1 bypass_edges255 fault_cw0 1 fault_cw1 1 
+2026-10-19T06:17:06-07:00 m3 [OK want FAIL got FAIL]: CWBAD cyc272 xor 10000000000000000000000000000 CWBAD cyc505 xor 10000000000000000000000000000 CWBAD cyc738 xor 10000000000000000000000000000 
+2026-10-19T06:17:06-07:00 r1 [OK want PASS got PASS]: IDXN_CW rows6 pitch232 phase0 len2048 mut0 errors0 active_edges3247 row_starts6 dones1 bypass_edges255 fault_cw0 1 fault_cw1 1 
+2026-10-19T06:17:06-07:00 r3 [OK want PASS got PASS]: IDXN_CW rows6 pitch234 phase0 len2048 mut0 errors0 active_edges3257 row_starts6 dones1 bypass_edges255 fault_cw0 1 fault_cw1 1 
+2026-10-19T06:17:06-07:00 r2 [OK want PASS got PASS]: IDXN_CW rows6 pitch236 phase0 len2048 mut0 errors0 active_edges3267 row_starts6 dones1 bypass_edges255 fault_cw0 1 fault_cw1 1 
+2026-10-19T06:17:06-07:00 SUMMARY unexpected=0
+2026-10-19T06:17:06-07:00 done
