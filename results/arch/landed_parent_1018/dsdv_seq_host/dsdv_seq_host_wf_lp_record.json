@@ -1,0 +1,145 @@
+{
+ "lane": "PARENTS-LANDED",
+ "generator": "tools/landed_parent/lp.py",
+ "flat": "dsdv_seq_host_wf",
+ "top": "dsdv_seq_host_wf_lp",
+ "standard": "landed-regions-standard-1018: local region trees, every cross-region net LANDED, per-region child-flop gate (TT and FF <= 80 ps); 1-bit reset runs are the only plain cross-region hops",
+ "regions": {
+  "core": {
+   "clock_port": "ck_core",
+   "children": [
+    "u_l0",
+    "u_l1",
+    "u_l2"
+   ]
+  },
+  "n": {
+   "clock_port": "ck_n",
+   "children": [
+    "u_l3",
+    "u_l3#nb",
+    "u_l3#sb",
+    "u_l4",
+    "u_l4#nb",
+    "u_l4#sb"
+   ]
+  }
+ },
+ "D": 4,
+ "E": 2,
+ "K": 2,
+ "added_edges_per_landing": 3,
+ "window": "(2 - 4) T + t_hold < dL < 2 T - t_cq - t_setup at TT and FF",
+ "landings": [
+  {
+   "name": "0",
+   "net": "s32",
+   "src_region": "n",
+   "dst_region": "core",
+   "src_nodes": [
+    "u_l3#sb"
+   ],
+   "width": 276,
+   "readers": [
+    "u_l2.vi_n"
+   ],
+   "ring": "u_lpl_0_w (ck_n)",
+   "read": "u_lpl_0_r (ck_core)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_0_w.* -to u_lpl_0_r.*"
+  },
+  {
+   "name": "1",
+   "net": "n23",
+   "src_region": "core",
+   "dst_region": "n",
+   "src_nodes": [
+    "u_l2"
+   ],
+   "width": 276,
+   "readers": [
+    "u_l3.ni"
+   ],
+   "ring": "u_lpl_1_w (ck_core)",
+   "read": "u_lpl_1_r (ck_n)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_1_w.* -to u_lpl_1_r.*"
+  }
+ ],
+ "pads": [],
+ "reset": {
+  "port": "rst_n",
+  "root_region": "core",
+  "depth": 5,
+  "hops": {
+   "core": 0,
+   "n": 4
+  },
+  "note": "flat reference == landed parent with its reset delayed by depth; child c's reset run is depth + t(c)"
+ },
+ "flops": {
+  "landing": 2786,
+  "pads": 0,
+  "reset": 18
+ },
+ "communicating_region_pairs": {
+  "landed": [
+   "core-n"
+  ],
+  "reset_hops": [
+   "core-n"
+  ]
+ },
+ "compiler": {
+  "note": "every latency change vs the flat parent; the compiler schedule takes these (static calendar, no runtime flow control)",
+  "child_offset_edges": {
+   "u_l0": 3,
+   "u_l1": 3,
+   "u_l2": 3,
+   "u_l3#nb": 6,
+   "u_l3#sb": 0,
+   "u_l4#nb": 6,
+   "u_l4#sb": 0
+  },
+  "input_port_offset_edges": {
+   "vi_s": 3,
+   "vi_n": 0,
+   "f_host": 3,
+   "f_lf": 3,
+   "f_ks": 3,
+   "s_jd_w": 3,
+   "s_jd_e": 3,
+   "s_hc_w": 3,
+   "s_hc_e": 3,
+   "st_rg_w": 3,
+   "st_rg_e": 3
+  },
+  "output_port_offset_edges": {
+   "vo_s": 3,
+   "vo_n": 6,
+   "t_host": 3,
+   "t_kd": 3,
+   "s_j": 3,
+   "s_hw_w": 3,
+   "s_hw_e": 3,
+   "cw_v": 3,
+   "cw_a": 3,
+   "cw_d": 3
+  },
+  "reset_release_added_edges": 5,
+  "max_added_edges": 6
+ },
+ "warnings": [],
+ "die_obligations": [
+  "drop one clock per region at the region's clock port (ck_<r>); each region builds its own local tree",
+  "communicating regions (landed pairs) need NO phase alignment inside the landing window at TT and FF",
+  "reset-hop pairs ['core-n']: region skew within about +/-400 ps at TT and FF (1-bit single-cycle hops)",
+  "boundary ports are timed against the region in port_regions / the record; die links into them land on THAT clock"
+ ],
+ "audit": {
+  "ok": true,
+  "landings": 2,
+  "reset_hops": 1,
+  "fails": []
+ }
+}

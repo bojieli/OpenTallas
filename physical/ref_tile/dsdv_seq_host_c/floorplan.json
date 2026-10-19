@@ -1,0 +1,166 @@
+{
+ "schema": "opentallas.ref_tile.floorplan.v1",
+ "name": "dsdv_seq_host_c",
+ "top": "dsdv_seq_host_c",
+ "kind": "cluster",
+ "die": [
+  0,
+  0,
+  345.6,
+  648.0
+ ],
+ "core": [
+  2.16,
+  2.16,
+  343.44,
+  645.84
+ ],
+ "why": "spec outline (exact: the closed view's sub-slot)",
+ "std_area_um2": null,
+ "layer_contract": {
+  "children": {
+   "dsdv_sh_lk": "M5",
+   "dsdv_sh_sq": "M5",
+   "dsdv_sh_vc": "M5"
+  },
+  "pg_layer": "M7",
+  "rlayers": [
+   "M2",
+   "M7"
+  ],
+  "strap_layer": "M8"
+ },
+ "pins": {
+  "S": [
+   "vi_s",
+   "vo_s",
+   "s_jd_e",
+   "s_hw_e",
+   "s_hc_e",
+   "st_rg_e"
+  ],
+  "N": [
+   "cw_v",
+   "cw_a",
+   "cw_d",
+   "vi_n",
+   "vo_n",
+   "tap_k",
+   "sink_k"
+  ],
+  "W": [
+   "f_host",
+   "t_host",
+   "f_lf"
+  ],
+  "E": [
+   "f_ks",
+   "t_kd",
+   "s_j",
+   "s_jd_w",
+   "s_hw_w",
+   "s_hc_w",
+   "st_rg_w",
+   "ck",
+   "rst_n"
+  ]
+ },
+ "clock_port": "ck",
+ "blocks": [
+  {
+   "kind": "child",
+   "view": "physical/ref_tile/dsdv_seq_host_c/standin/dsdv_sh_lk",
+   "master": "dsdv_sh_lk",
+   "inst": "*u_l0",
+   "idx": 0,
+   "x": 43.2,
+   "y": 43.2,
+   "w": 254.88,
+   "h": 151.2,
+   "orient": "R0",
+   "offtrack": 0
+  },
+  {
+   "kind": "child",
+   "view": "physical/ref_tile/dsdv_sh_sq/views/dsdv_sh_sq",
+   "master": "dsdv_sh_sq",
+   "inst": "*u_l1",
+   "idx": 0,
+   "x": 43.2,
+   "y": 216.0,
+   "w": 254.88,
+   "h": 151.2,
+   "orient": "R0",
+   "offtrack": 0
+  },
+  {
+   "kind": "child",
+   "view": "physical/ref_tile/dsdv_sh_vc/views/dsdv_sh_vc",
+   "master": "dsdv_sh_vc",
+   "inst": "*u_l2",
+   "idx": 0,
+   "x": 43.2,
+   "y": 388.8,
+   "w": 226.8,
+   "h": 213.84,
+   "orient": "R0",
+   "offtrack": 0
+  }
+ ],
+ "findings": [
+  [
+   "WARN",
+   "fill",
+   "parent kit without std_area_um2: fill not computed at gen (the gate measures it)",
+   "pass --area-um2 / std_area_um2 from the synthesis smoke"
+  ]
+ ],
+ "referenced": [
+  "rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host_c.sv",
+  "physical/ref_tile/dsdv_seq_host_c/kit.env",
+  "physical/ref_tile/dsdv_seq_host_c/clock.sdc",
+  "physical/ref_tile/dsdv_seq_host_c/signoff.sdc",
+  "physical/ref_tile/dsdv_seq_host_c/pdn.tcl",
+  "physical/ref_tile/dsdv_seq_host_c/pre_cts.tcl",
+  "physical/ref_tile/dsdv_seq_host_c/post_cts.tcl",
+  "physical/ref_tile/dsdv_seq_host_c/post_grt.tcl",
+  "physical/ref_tile/dsdv_seq_host_c/pre_drt.tcl",
+  "physical/ref_tile/dsdv_seq_host_c/pre_fill.tcl",
+  "physical/ref_tile/dsdv_seq_host_c/post_fill.tcl",
+  "physical/ref_tile/dsdv_seq_host_c/pre_grt.tcl",
+  "physical/ref_tile/dsdv_seq_host_c/post_drt.tcl",
+  "tools/ref_tile/ref_route.sh",
+  "physical/qwen_die_masters/io_ref_skew.sdc",
+  "physical/qwen_die_masters/io_plain.sdc",
+  "physical/qwen_die_masters/repair_budget.tcl",
+  "physical/qwen_die_masters/pre_cts_skew.tcl",
+  "physical/qwen_die_masters/pre_ref_skew.tcl",
+  "physical/qwen_die_masters/post_plain.tcl",
+  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+  "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/qwen_die_masters/io_flop_at_pins.tcl",
+  "physical/qwen_die_masters/out_flop_release.tcl",
+  "physical/dsrom_window_source/leaf_iohold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/dsrom_window_source/leaf_inhold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/ref_tile/dsdv_seq_host_c/pre_gpl.tcl",
+  "physical/ref_tile/dsdv_seq_host_c/pre_dpl.tcl",
+  "physical/common_flow/pin_reg_split.tcl",
+  "physical/common_flow/clock_spine.tcl",
+  "physical/ref_tile/dsdv_seq_host_c/spine_ins.tcl",
+  "physical/ref_tile/dsdv_seq_host_c/standin/dsdv_sh_lk/dsdv_sh_lk.lef",
+  "physical/ref_tile/dsdv_seq_host_c/standin/dsdv_sh_lk/dsdv_sh_lk_ss.lib",
+  "physical/ref_tile/dsdv_seq_host_c/standin/dsdv_sh_lk/dsdv_sh_lk_ff.lib",
+  "physical/ref_tile/dsdv_seq_host_c/standin/dsdv_sh_lk/dsdv_sh_lk_tt.lib",
+  "physical/ref_tile/dsdv_sh_sq/views/dsdv_sh_sq/dsdv_sh_sq.lef",
+  "physical/ref_tile/dsdv_sh_sq/views/dsdv_sh_sq/dsdv_sh_sq_ss.lib",
+  "physical/ref_tile/dsdv_sh_sq/views/dsdv_sh_sq/dsdv_sh_sq_ff.lib",
+  "physical/ref_tile/dsdv_sh_sq/views/dsdv_sh_sq/dsdv_sh_sq_tt.lib",
+  "physical/ref_tile/dsdv_sh_vc/views/dsdv_sh_vc/dsdv_sh_vc.lef",
+  "physical/ref_tile/dsdv_sh_vc/views/dsdv_sh_vc/dsdv_sh_vc_ss.lib",
+  "physical/ref_tile/dsdv_sh_vc/views/dsdv_sh_vc/dsdv_sh_vc_ff.lib",
+  "physical/ref_tile/dsdv_sh_vc/views/dsdv_sh_vc/dsdv_sh_vc_tt.lib",
+  "physical/ref_tile/dsdv_seq_host_c/place.tcl"
+ ]
+}

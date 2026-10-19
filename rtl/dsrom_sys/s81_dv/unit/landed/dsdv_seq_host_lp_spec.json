@@ -1,0 +1,109 @@
+{
+ "_note": "PL-SEQ 10-18: dsdv_seq_host as landed regions. Region plan: core = L0 lk + L1 sq + L2 vc (S end, y 0..1902 um of the 680 x 3171 stack), n = L3 + L4 ft rung hops (y 1902..3171). L0/L1/L2 stay in one region: L1 <-> L2 is a calendar loop (V/gunit commands cn/cs/cg -> completion tags dn; done rows = issue + 5) and L0 folds L1 status (sq/vf) into t_host with the ingest status, so any cut there needs a compiler re-schedule (lp.py refuses the loop). Only the 276-b rung crosses (n23 north, s32 south): 2 landings, +3 edges each direction.",
+ "top": "dsdv_seq_host_wf",
+ "sources": [
+  "rtl/dsrom_sys/s81_dv/unit/landed/dsdv_seq_host_wf.sv"
+ ],
+ "child_sources": [
+  "rtl/lib/ot_async_fifo.sv",
+  "rtl/lib/ot_reset_sync.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/link/ot_link_afifo.sv",
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_secded.sv",
+  "rtl/hdc/ingest/ot_hdc_ingest_fp8q.sv",
+  "rtl/hdc/ingest/ot_hdc_kv_ingest.sv",
+  "rtl/hdc/ingest/ot_rom_host_ingest.sv",
+  "physical/rom_host_ingest/rtl/dsfd_host.sv",
+  "rtl/dsrom_sys/s81_ingest/ot_s81_ingest_visibility_fence.sv",
+  "rtl/dsrom_sys/s81_ingest/dsfd_host_native.sv",
+  "rtl/dsrom_sys/s81_ingest/dsfd_host_sd.sv",
+  "rtl/dsrom_sys/s81_ingest/dsfd_host_c.sv",
+  "rtl/dsrom_sys/s81_static_control/ot_s81_fixed_issue.sv",
+  "rtl/dsrom_sys/s81_dv/unit/ot_dsdv_fixed_issue.sv",
+  "rtl/dsrom_sys/s81_dv/unit/ot_dsdv_vstop.sv",
+  "rtl/dsrom_sys/s81_dv/unit/dsdv_sh_sd.sv",
+  "rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v"
+ ],
+ "defines": [
+  "DSFD_HOST_C_STATIC"
+ ],
+ "params": {
+  "V": 276
+ },
+ "out_dir": "rtl/dsrom_sys/s81_dv/unit/landed",
+ "record_dir": "results/arch/landed_parent_1018/dsdv_seq_host",
+ "clock_ports": [
+  "ck"
+ ],
+ "clock_pins": [
+  "ck",
+  "ck_ih",
+  "ck_ic"
+ ],
+ "reset_port": "rst_n",
+ "reset_pins": [
+  "rst_n"
+ ],
+ "mut_reset_child": "u_l1",
+ "regions": [
+  {
+   "name": "core",
+   "insts": [
+    "u_l0",
+    "u_l1",
+    "u_l2"
+   ],
+   "centre": [
+    340,
+    951
+   ]
+  },
+  {
+   "name": "n",
+   "insts": [
+    "u_l3",
+    "u_l4"
+   ],
+   "centre": [
+    340,
+    2536
+   ]
+  }
+ ],
+ "split_nodes": {
+  "u_l3": {
+   "nb": [
+    "ni",
+    "no"
+   ],
+   "sb": [
+    "si",
+    "so"
+   ]
+  },
+  "u_l4": {
+   "nb": [
+    "ni",
+    "no"
+   ],
+   "sb": [
+    "si",
+    "so"
+   ]
+  }
+ },
+ "static": [
+  "tap_k",
+  "sink_k"
+ ],
+ "tb_static": {
+  "tap_k": "8'd0",
+  "sink_k": "8'd0"
+ },
+ "bench": {
+  "cycles": 3000,
+  "reset_cycles": 16,
+  "sim": "verilator"
+ }
+}

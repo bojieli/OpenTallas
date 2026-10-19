@@ -1,0 +1,258 @@
+{
+ "name": "dsdv_seq_host_c",
+ "top": "dsdv_seq_host_c",
+ "kind": "cluster",
+ "diagnostic": true,
+ "sources": [
+  "rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host_c.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 345.6,
+  "h": 648.0,
+  "exact": true
+ },
+ "children": [
+  {
+   "view": "physical/ref_tile/dsdv_seq_host_c/standin/dsdv_sh_lk",
+   "count": 1,
+   "inst": "*u_l0",
+   "at": [
+    43.2,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/dsdv_sh_sq/views/dsdv_sh_sq",
+   "count": 1,
+   "inst": "*u_l1",
+   "at": [
+    43.2,
+    216.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/dsdv_sh_vc/views/dsdv_sh_vc",
+   "count": 1,
+   "inst": "*u_l2",
+   "at": [
+    43.2,
+    388.8
+   ],
+   "orient": "R0"
+  }
+ ],
+ "macros": [],
+ "pins": {
+  "S": [
+   "vi_s",
+   "vo_s",
+   "s_jd_e",
+   "s_hw_e",
+   "s_hc_e",
+   "st_rg_e"
+  ],
+  "N": [
+   "cw_v",
+   "cw_a",
+   "cw_d",
+   "vi_n",
+   "vo_n",
+   "tap_k",
+   "sink_k"
+  ],
+  "W": [
+   "f_host",
+   "t_host",
+   "f_lf"
+  ],
+  "E": [
+   "f_ks",
+   "t_kd",
+   "s_j",
+   "s_jd_w",
+   "s_hw_w",
+   "s_hc_w",
+   "st_rg_w",
+   "ck",
+   "rst_n"
+  ]
+ },
+ "pin_ranges": {
+  "vi_s": [
+   47.47,
+   126.88
+  ],
+  "vo_s": [
+   126.78,
+   206.18
+  ],
+  "s_jd_e": [
+   206.05,
+   206.76
+  ],
+  "s_hw_e": [
+   206.63,
+   290.66
+  ],
+  "s_hc_e": [
+   290.55,
+   293.25
+  ],
+  "st_rg_e": [
+   293.14,
+   293.82
+  ],
+  "cw_v": [
+   47.44,
+   47.84
+  ],
+  "cw_a": [
+   47.72,
+   50.47
+  ],
+  "cw_d": [
+   50.31,
+   117.17
+  ],
+  "vi_n": [
+   117.03,
+   189.38
+  ],
+  "vo_n": [
+   189.24,
+   261.33
+  ],
+  "tap_k": [
+   261.46,
+   263.66
+  ],
+  "sink_k": [
+   263.52,
+   265.75
+  ],
+  "f_host": [
+   47.88,
+   170.44
+  ],
+  "t_host": [
+   170.28,
+   188.73
+  ],
+  "f_lf": [
+   188.57,
+   189.69
+  ],
+  "f_ks": [
+   48.27,
+   65.08
+  ],
+  "t_kd": [
+   65.02,
+   82.12
+  ],
+  "s_j": [
+   82.01,
+   92.49
+  ],
+  "s_jd_w": [
+   92.43,
+   93.16
+  ],
+  "s_hw_w": [
+   93.05,
+   186.14
+  ],
+  "s_hc_w": [
+   186.08,
+   188.97
+  ],
+  "st_rg_w": [
+   188.91,
+   189.64
+  ],
+  "ck": [
+   300.0,
+   300.3
+  ],
+  "rst_n": [
+   302.4,
+   302.7
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "wires-only cluster: every parent port goes straight to one leaf pin, and every seq_host leaf is flop-first / flop-last at its pins (lk RL 1 rung landed at both faces); a recipe pin register would add an unpriced stage on the rung / host / status paths"
+ },
+ "structural_change": "S81-SHLK/PARENT 10-19 re-kit: sq = CLOSED view dsdv_sh_sq (closure dsdv_sh_sq-dsdv_sh_sq-baa6e2280, record ef5587213; SRAM walker ot_dsdv_walk_issue over 2x ot_sram_1r1w_128x256), slot 254.88x151.2 at (43.2,216.0); the sq-vc gap shrinks 51.84 -> 21.6 (lattice + 20-um channel), outline unchanged 345.6 x 648.0 (vc still at y 388.8, nothing closer on the lattice). lk = DIAGNOSTIC stand-in (254.88x151.2 --cts odb of the RL 1 outline-grow regate; the CLOSED main view ef442ffba is the old RL 0 interface with ck_ih/ck_ic pins and an own-R spread 94/88 fail, so it cannot bind to this RTL); vc = CLOSED view (ce989b78c). PL-SEQ option B (PARENTS-LANDED 10-18 06:22): wires-only compact core {u_l0 lk (S), u_l1 sq, u_l2 vc (N)}, ONE clock region ck (< 0.65 mm, no landings), children pin-abutted at x 43.2. Parent pins = leaf face pins straight out (S lk rung + E-half, W host, E W-half/ks/kd/job + ck/rst_n beside sq at y 300, N vc rung + cw + straps).",
+ "job": {
+  "owner": "Claude:S81-SHLK/PARENT",
+  "branch": "claude/s81-shp-1019",
+  "tag": "shp1",
+  "purpose": "S81-DV dsdv_seq_host_c compact core cluster: DIAGNOSTIC gate with the CLOSED sq (SRAM walker) + vc views and the lk stand-in",
+  "submit": false,
+  "hold_merge": "diagnostic: lk stand-in abstract (lk structural redesign dsdv_sh_lk_sr9 running); real gate + submit after the lk view closes",
+  "views_to": "physical/ref_tile/dsdv_seq_host_c/views",
+  "record_to": "results/rtl/ref_tile/dsdv_seq_host_c",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_dv/unit",
+   "rtl/lib",
+   "rtl/link",
+   "rtl/hdc/ingest",
+   "rtl/dsrom_sys/s81_ctrl",
+   "rtl/dsrom_sys/s81_ingest",
+   "rtl/dsrom_sys/s81_static_control",
+   "physical/rom_host_ingest/rtl",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "results/arch/landed_parent_1018/dsdv_seq_host/core_b"
+  ],
+  "benches": [
+   {
+    "name": "seqhost_c_gate",
+    "cmd": "bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_c_bench.sh {RUN}/seqhost_c",
+    "threads": 16,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "pass",
+    "pass_regex": "^SEQHOST_C_GATE PASS$",
+    "min_count_regex": "^SEQHOST seed=\\d+ .* cmds N/S/G/J=(\\d+)/"
+   }
+  ]
+ },
+ "defines": [
+  "OT_DSDV_SEQHOST_HARD"
+ ],
+ "hard_define": "OT_DSDV_SEQHOST_HARD",
+ "inter": [],
+ "recipe": 4,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ },
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}

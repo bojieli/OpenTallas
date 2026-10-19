@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "dsdv_seq_host_c",
+ "enable": false,
+ "reason": "wires-only cluster: every parent port goes straight to one leaf pin, and every seq_host leaf is flop-first / flop-last at its pins (lk RL 1 rung landed at both faces); a recipe pin register would add an unpriced stage on the rung / host / status paths"
+}

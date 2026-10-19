@@ -1,0 +1,13 @@
+RECORD_OFFSETS MATCH {'vi_s': 3, 'vi_n': 0, 'f_host': 3, 'f_lf': 3, 'f_ks': 3, 's_jd_w': 3, 's_jd_e': 3, 's_hc_w': 3, 's_hc_e': 3, 'st_rg_w': 3, 'st_rg_e': 3} {'vo_s': 3, 'vo_n': 6, 't_host': 3, 't_kd': 3, 's_j': 3, 's_hw_w': 3, 's_hw_e': 3, 'cw_v': 3, 'cw_a': 3, 'cw_d': 3} RB 5
+SEQHOST LP_SHADOW LP_MUT=0 compared=2369 mismatches=0
+SEQHOST seed=1 MUT=0 collide=0 jobs=6 rows=50 cmds N/S/G/J=72/72/72/72 cw=96 kit=6 hw=20 host_cpl=5 arrivals=1633 frag N/S=161/185 mism n/s/j/k/hw/tc/cw=0/0/0/0/0/0/0 unit_st=00000000000 g_fault=0/0 busy=0/0
+SEQHOST LP_SHADOW LP_MUT=0 compared=2369 mismatches=0
+SEQHOST seed=2 MUT=0 collide=0 jobs=6 rows=50 cmds N/S/G/J=72/72/72/72 cw=96 kit=6 hw=20 host_cpl=5 arrivals=1525 frag N/S=168/168 mism n/s/j/k/hw/tc/cw=0/0/0/0/0/0/0 unit_st=00000000000 g_fault=0/0 busy=0/0
+SEQHOST LP_SHADOW LP_MUT=0 compared=2369 mismatches=0
+SEQHOST seed=3 MUT=0 collide=0 jobs=6 rows=50 cmds N/S/G/J=72/72/72/72 cw=96 kit=6 hw=20 host_cpl=5 arrivals=1549 frag N/S=185/171 mism n/s/j/k/hw/tc/cw=0/0/0/0/0/0/0 unit_st=00000000000 g_fault=0/0 busy=0/0
+SEQHOST LP_SHADOW LP_MUT=0 compared=2369 mismatches=0
+SEQHOST seed=4 MUT=0 collide=0 jobs=6 rows=50 cmds N/S/G/J=72/72/72/72 cw=96 kit=6 hw=20 host_cpl=5 arrivals=1549 frag N/S=192/182 mism n/s/j/k/hw/tc/cw=0/0/0/0/0/0/0 unit_st=00000000000 g_fault=0/0 busy=0/0
+LP mutant 1 detected: SEQHOST LP_SHADOW LP_MUT=1 compared=2369 mismatches=2105
+LP mutant 2 detected: SEQHOST LP_SHADOW LP_MUT=2 compared=2369 mismatches=2019
+LP mutant 4 detected: SEQHOST LP_SHADOW LP_MUT=4 compared=2369 mismatches=720
+LPSEQ_GATE PASS
