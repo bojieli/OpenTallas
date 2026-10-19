@@ -3,7 +3,7 @@ set -euo pipefail
 G=$(pwd); SRC=$G/src; RUN=$G/gate_run; O=$G/gate_post
 mkdir -p "$RUN" "$O"
 cd "$SRC"
-export CK_SS_MEAN=841 OT_ORFS_CORNER_OVERRIDE=TC
+export CK_SS_MEAN=594 OT_ORFS_CORNER_OVERRIDE=TC
 export OT_CTS_FIX_HOOKS=physical/s81_native_bf/margin/pinclk_group.tcl
 export OT_MM_FF_SDC=physical/s81_bf_hier/signoff_col.sdc
 export SIGNOFF_SDC=physical/s81_bf_hier/signoff_col.sdc PER=.730
