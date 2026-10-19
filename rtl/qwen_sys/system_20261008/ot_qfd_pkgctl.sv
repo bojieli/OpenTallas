@@ -128,7 +128,25 @@ module ot_qfd_pkgctl #(
     reg [31:0]   val_n [0:3];
     reg [1:0]    gk, gnew;
     reg          f_die, f_dis, f_ovf;
-    integer      d, g;
+    integer      d, e, g;
+    // MU-KV-HCTL2 10-19: the die reports are taken in two stages (qkd_host_ctl-mu1-50169ecef TT -48.75: the 8-die
+    // serial capture/compare chain tk_q -> tok_n -> disagree was 21 levels in one cycle).
+    //   A (edge of the report): new-generation detect, m_last, the in-order/outstanding check and d_fault (f_die, as
+    //     before); an accepted report is registered (r_v/r_g/r_tok/r_val).
+    //   B (next edge): seen / first-token capture / disagreement from the r_* registers, PARALLEL over dies: the first
+    //     reporter of a generation (lowest die index among the edge's reporters when none is captured yet) is captured;
+    //     disagree = some reporter differs from the captured value, or two same-edge reporters of one generation
+    //     differ -- the same verdict as the serial in-die-order chain.
+    // Cost: +1 edge from a die's report to its seen bit, so every retire (and a disagreement fault) is 1 edge later;
+    // the in-order / unknown-generation / die-fault checks keep their edge.  Static, no backpressure: a die may still
+    // report every edge.
+    reg [D-1:0]  r_v;
+    reg [1:0]    r_g  [0:D-1];
+    reg [NW-1:0] r_tok[0:D-1];
+    reg [31:0]   r_val[0:D-1];
+    reg [D-1:0]  hit, first;
+    reg [NW-1:0] cap_tok;
+    reg [31:0]   cap_val;
     wire         fault_any = die_fault || disagree || wdog_fault || start_unready;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
@@ -137,25 +155,39 @@ module ot_qfd_pkgctl #(
             disagree <= 1'b0; wdog_fault <= 1'b0; start_unready <= 1'b0; die_fault <= 1'b0; wd <= 0; n_steps <= 0;
             m_v <= 0; m_old <= 2'd1; m_now <= 0; m_tv <= 0; m_last <= 0;
             for (g = 0; g < 4; g = g + 1) begin m_t0[g] <= 0; m_seen[g] <= 0; m_tok[g] <= 0; m_val[g] <= 0; end
+            r_v <= 0;
+            for (d = 0; d < D; d = d + 1) begin r_g[d] <= 2'd0; r_tok[d] <= 0; r_val[d] <= 0; end
         end else begin
             d_start <= 1'b0; eng_done <= 1'b0; m_now <= m_now + 1;
             v_n = m_v; tv_n = m_tv; f_die = 1'b0; f_dis = 1'b0; f_ovf = 1'b0;
             for (g = 0; g < 4; g = g + 1) begin seen_n[g] = m_seen[g]; tok_n[g] = m_tok[g]; val_n[g] = m_val[g]; end
-            // die reports: a new generation on done && drained, which must be the die's next one and outstanding
+            // stage A -- die reports: a new generation on done && drained, which must be the die's next one and outstanding
             for (d = 0; d < D; d = d + 1) begin
                 gk = d_done_gen[d*2 +: 2];
+                r_v[d] <= 1'b0;
                 if (d_done[d] && d_drained[d] && gk != m_last[d*2 +: 2]) begin
                     m_last[d*2 +: 2] <= gk;
                     if (!m_v[gk] || gk != m_last[d*2 +: 2] + 2'd1) f_die = 1'b1;
                     else begin
-                        seen_n[gk][d] = 1'b1;
+                        r_v[d] <= 1'b1; r_g[d] <= gk;
+                        r_tok[d] <= d_next_token[d*NW +: NW]; r_val[d] <= d_next_val[d*32 +: 32];
                         if (d_fault[d]) f_die = 1'b1;
-                        if (!tv_n[gk]) begin
-                            tv_n[gk] = 1'b1; tok_n[gk] = d_next_token[d*NW +: NW]; val_n[gk] = d_next_val[d*32 +: 32];
-                        end else if (tok_n[gk] != d_next_token[d*NW +: NW] || val_n[gk] != d_next_val[d*32 +: 32])
-                            f_dis = 1'b1;
                     end
                 end
+            end
+            // stage B -- the registered reports: seen, first-token capture, disagreement (parallel over dies)
+            for (g = 0; g < 4; g = g + 1) begin
+                for (d = 0; d < D; d = d + 1) hit[d] = r_v[d] && r_g[d] == g;
+                first = hit & (~hit + 1'b1);
+                cap_tok = 0; cap_val = 0;
+                for (d = 0; d < D; d = d + 1) if (first[d]) begin cap_tok = cap_tok | r_tok[d]; cap_val = cap_val | r_val[d]; end
+                seen_n[g] = seen_n[g] | hit;
+                if (|hit && !m_tv[g]) begin tv_n[g] = 1'b1; tok_n[g] = cap_tok; val_n[g] = cap_val; end
+            end
+            for (d = 0; d < D; d = d + 1) begin
+                if (r_v[d] && m_tv[r_g[d]] && (r_tok[d] != m_tok[r_g[d]] || r_val[d] != m_val[r_g[d]])) f_dis = 1'b1;
+                for (e = d + 1; e < D; e = e + 1)
+                    if (r_v[d] && r_v[e] && r_g[d] == r_g[e] && (r_tok[d] != r_tok[e] || r_val[d] != r_val[e])) f_dis = 1'b1;
             end
             // retire the oldest: every die reported it, or flush under a fault
             if (m_v[m_old] && (fault_any || &m_seen[m_old])) begin
