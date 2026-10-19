@@ -102,20 +102,31 @@ proc ot_gf_launch {start} {
   if {[llength $launch] != 1} {error "OT_GF: missing unique launch register"}
   return $launch
 }
+set ::ot_gf_pending {}
 proc ot_gf_bound {start target bound} {
+  # Constraints are applied here; the finite-path proof runs once all are applied (ot_gf_verify). Interleaving
+  # set_*_delay with find_timing_paths re-searched the whole design per crossing (O(N^2): ~13-50 crossings/min, a
+  # 12.8k-bit storage FIFO leaf ~15 h in synth_odb, HKV-HRADM 10-19).
   set launch [ot_gf_launch $start]
   set_max_delay -ignore_clock_latency $bound -from $launch -to $target
   set_min_delay -ignore_clock_latency 0.0 -from $launch -to $target
-  foreach kind {max min} {
-    set paths [find_timing_paths -from $launch -to $target -path_delay $kind -group_path_count 1 -endpoint_path_count 1]
-    if {![llength $paths] && [info exists ::env(OT_HOLD_MM)] && $::env(OT_HOLD_MM) eq "1" && ![info exists ::ot_mm_active]} {
-      puts "OT_GF PATH_DEFERRED [get_full_name $start] -> [get_full_name $target] $kind (strict at sign-off)"
-      continue
-    }
-    if {![llength $paths] || ![ot_ce_finite [get_property [lindex $paths 0] slack]]} {
-      error "OT_GF: missing finite bounded $kind path [get_full_name $start] -> [get_full_name $target]"
+  lappend ::ot_gf_pending [list $launch $target [get_full_name $start] [get_full_name $target]]
+}
+proc ot_gf_verify {} {
+  foreach item $::ot_gf_pending {
+    lassign $item launch target sname tname
+    foreach kind {max min} {
+      set paths [find_timing_paths -from $launch -to $target -path_delay $kind -group_path_count 1 -endpoint_path_count 1]
+      if {![llength $paths] && [info exists ::env(OT_HOLD_MM)] && $::env(OT_HOLD_MM) eq "1" && ![info exists ::ot_mm_active]} {
+        puts "OT_GF PATH_DEFERRED $sname -> $tname $kind (strict at sign-off)"
+        continue
+      }
+      if {![llength $paths] || ![ot_ce_finite [get_property [lindex $paths 0] slack]]} {
+        error "OT_GF: missing finite bounded $kind path $sname -> $tname"
+      }
     }
   }
+  set ::ot_gf_pending {}
 }
 proc ot_gf_crossing {start pin source target source_domain target_domain} {
   if {[lindex [split [get_full_name $pin] /] end] ne "D" || [get_property $pin direction] ne "input"} {
@@ -172,6 +183,7 @@ proc ot_gf_async {pin cells inputs} {
   }
 }
 proc ot_gf_complete {cells} {
+  ot_gf_verify
   # Every tagged register sits in its tagged family (a tag on a same-family path is refused here).
   dict for {cell domain} $cells {
     lassign [ot_gf_role $cell] k f c i

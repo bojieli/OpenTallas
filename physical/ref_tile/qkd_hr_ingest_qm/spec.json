@@ -286,6 +286,10 @@
  },
  "inhold": true,
  "outhold": true,
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ },
  "keep_pin_regs": true,
  "pin_reg_split": true,
  "hold_pad": {
