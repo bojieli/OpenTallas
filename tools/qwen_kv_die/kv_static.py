@@ -386,6 +386,17 @@ def compiled_txdp(name='D2D_TXDP_K', root=ROOT):
     return v
 
 
+def d2d_ntx_k():
+    """KV-PLAN5 10-18: qkd_d2d_static KV-die TX lane count (S-QTIES QC-12, RTL parameter NTX).  3 = the dead port-3 TX lane
+    removed, the CLOSED view qkd_d2d_static_r7t-r7t-28642e9aa (TT +22.73 / FF +10.31) is built at NTX = 3; OT_KV_D2D_NTX
+    overrides (4 = the r7q port-3-tied-idle build)."""
+    import os
+    n = int(os.environ.get('OT_KV_D2D_NTX', '3'))
+    if n not in (3, 4):
+        raise SystemExit(f'kv_static: OT_KV_D2D_NTX={n} (qkd_d2d_static builds 3 or 4 TX lanes)')
+    return n
+
+
 def template(root=ROOT):
     """Populate proven ABI joins; leave every unimplemented producer as null.
 
@@ -402,7 +413,7 @@ def template(root=ROOT):
         'vport':dict(MUT=0,DQ=None,RT=None),
         'ectla':dict(STATIC_QK=1,QK_ISSUE_AGE=34,ROW_RETURN_LAT=None,HXK=13),
         'writer':dict(MUT=0,VMAP=1),'writer_programme':dict(MUT=0,VMAP=1),
-        'link':dict(MUT=0,NL=2,PR=1,TXDP=compiled_txdp(root=root)),
+        'link':dict(MUT=0,NL=2,NTX=d2d_ntx_k(),PR=1,TXDP=compiled_txdp(root=root)),
         'embgw':dict(MUT=0),'emb_return_head':dict(MUT=0),'emb_return_hop':{},'emb_join':dict(MUT=0),'row_tx':dict(MUT=0),
         'es_fan_root':dict(MUT=0),
     }
