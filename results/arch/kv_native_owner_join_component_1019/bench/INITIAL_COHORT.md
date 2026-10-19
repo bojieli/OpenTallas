@@ -1,0 +1,13 @@
+# Initial real native seam cohort
+
+SOURCE ONLY, not compiled. Common-clock FUNCTIONAL_ONLY, production H/calendar NULL.
+
+Case0 uses actual four-step plen2/max3 descriptor, epoch0 through3, package gen1/2/3/0, wide input/output tokens, real prompt SRAM/capture, actual CSR/DMA packet bridge, all eight actual CTRL transports/endpoints/rank codecs, actual allocator/cohort/codec/lifecycle/POST. Independent gold comes from descriptor and conditional engine fixture. Case1 stalls AW while W accepts; case2 stalls W while AW accepts; case3 holds first generated CQ word0 B64 edges and checks prior active/event key and no next allocation. Same compiled object is reused.
+
+All source events are checked throughout active operation; boot delay is environment setup and never gates checker authority. Host CTRL transport is bounded32 entries/target, one actual receive outstanding per target; credit returns only with actual target rx_cr. Link latency is a deliberately slow component environment, not priced native transport.
+
+Resource proposal: unpinned ot-run --mem16 --threads4 --disk20; exact Verilator5.050. Compile command is run_initial.py command.json array, no local simulator. prepare_sources.py takes explicit reviewed private source revision, exports pinned5f2 baseline33 modules plus private family and exact final60bb bridge/endpoint, hashes all source before compile. No existing run directory/log can be reused or overwritten. Compiler peakRSS/object disk and runtime are distinct receipts.
+
+H512/deadline384 is conditional component fixture, age+3 bits over H64; declared incremental1825/event2912 indexed bits remain functional, SRAM/physical unqualified. H is not measured production health. First actual trace determines whether response bound is valid; no mask, timeout extension or silent negative replacement.
+
+Still owned by native join lane: real typedNO_NATIVE, rawcleanup after health fault, duplicate client/error-owner records, legal cancel before/after delivery, raw POR/reset source cases and all nine causal mutant categories. Cases4+ explicitly refuse until implemented. No mutant caught claim. These require explicit typed real retirement/CQB source payload export or aligned marker source choice before wiring; current valid cannot mask a prior registered observer pulse. The first cohort retains original actual observer path for healthy selected native events.
