@@ -120,6 +120,32 @@
     "pass_regex": "^KVS_TILE PASS tile=grp ",
     "fail_regex": "^KVS_TILE FAIL tile=grp .* mut=6 ",
     "fail_witness": "results/rtl/qwen_kv_die/kvs_kits_grp_1019/grp_m6.log"
+   },
+   {
+    "name": "grp_mut7",
+    "cmd": "KVS_SIM=verilator bash tools/qwen_kv_die/kvs_tile_bench.sh {RUN}/bench/grp_m7 grp 7",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVS_TILE PASS tile=grp ",
+    "fail_regex": "^KVS_TILE FAIL tile=grp .* mut=7 ",
+    "fail_witness": "results/rtl/qwen_kv_die/kvs_kits_grp_1019/grp_m7.log"
+   },
+   {
+    "name": "grp_mut8",
+    "cmd": "KVS_SIM=verilator bash tools/qwen_kv_die/kvs_tile_bench.sh {RUN}/bench/grp_m8 grp 8",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVS_TILE PASS tile=grp ",
+    "fail_regex": "^KVS_TILE FAIL tile=grp .* mut=8 ",
+    "fail_witness": "results/rtl/qwen_kv_die/kvs_kits_grp_1019/grp_m8.log"
    }
   ],
   "calibrate": {

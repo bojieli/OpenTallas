@@ -1,6 +1,6 @@
-MISMATCH t=3 out o_pc0
-MISMATCH t=3 out o_pc1
-MISMATCH t=3 out o_pc2
-MISMATCH t=3 out o_pc3
-MISMATCH t=3 out o_ctl
-KVS_TILE FAIL tile=grp edges=4000 checks=519585 errors=745 mut=6 (core reset relay bypassed)
+MISMATCH t=3 child u_slg.epoch
+MISMATCH t=3 child u_slg.layer
+MISMATCH t=4 child u_slg.arm
+MISMATCH t=4 child u_slg.epoch
+MISMATCH t=4 child u_slg.layer
+KVS_TILE FAIL tile=grp edges=4000 checks=714984 errors=747 mut=6 (core reset relay bypassed)

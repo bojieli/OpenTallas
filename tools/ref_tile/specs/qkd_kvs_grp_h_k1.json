@@ -345,6 +345,32 @@
     "pass_regex": "^KVS_TILE PASS tile=grp_h ",
     "fail_regex": "^KVS_TILE FAIL tile=grp_h .* mut=6 ",
     "fail_witness": "results/rtl/qwen_kv_die/kvs_kits_grp_1019/grp_h_m6.log"
+   },
+   {
+    "name": "grp_h_mut7",
+    "cmd": "KVS_SIM=verilator bash tools/qwen_kv_die/kvs_tile_bench.sh {RUN}/bench/grp_h_m7 grp_h 7",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVS_TILE PASS tile=grp_h ",
+    "fail_regex": "^KVS_TILE FAIL tile=grp_h .* mut=7 ",
+    "fail_witness": "results/rtl/qwen_kv_die/kvs_kits_grp_1019/grp_h_m7.log"
+   },
+   {
+    "name": "grp_h_mut8",
+    "cmd": "KVS_SIM=verilator bash tools/qwen_kv_die/kvs_tile_bench.sh {RUN}/bench/grp_h_m8 grp_h 8",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVS_TILE PASS tile=grp_h ",
+    "fail_regex": "^KVS_TILE FAIL tile=grp_h .* mut=8 ",
+    "fail_witness": "results/rtl/qwen_kv_die/kvs_kits_grp_1019/grp_h_m8.log"
    }
   ],
   "extra_paths": [
@@ -410,6 +436,9 @@
  },
  "sdc_extra": [
   "physical/qkd_kvs_kits/qkd_kvs_grp_h_k1_hck.sdc"
+ ],
+ "boundary_tcl": [
+  "physical/qkd_kvs_kits/qkd_kvs_grp_h_k1_hck_boundary.tcl"
  ],
  "clock": "spine",
  "orfs_vars": {

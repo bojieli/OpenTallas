@@ -13,7 +13,8 @@ random value in both tiles each edge (sparse for the writer's es / expected_vali
 child -> tile-output wire carries random data.
 --mut (applied to the KIT TOP only; must FAIL): 1 = one child-output slice in a tile-output assign replaced by zeros
 (dropped wire); 2 = two equal-width input connections of one child swapped; 3 = the first child whose outputs reach a
-tile output removed (missing child); grp kinds: 4 / 5 (KV-GRPREACH relays), 6 = the core reset relay bypassed.
+tile output removed (missing child); grp kinds: 4 / 5 (KV-GRPREACH relays), 6 = the core reset relay bypassed, 7 = u_bcdc0 legs one stage short,
+8 = the o_pc0 landing-calendar relay bypassed.
     python3 tools/qwen_kv_die/kvs_tile_bench.py --tile ctl|attn|emb [--mut N] [--edges 2000] --out DIR
 Needs (as kv_static_die): OT_KV_STATIC_DIE=1 + the design-point env (kvj-g2-env.sh, OT_KV_HROOT=1 OT_KV_FANFOLD=1).
 One line 'KVS_TILE PASS|FAIL tile=<t> ...'; exit 0 only on PASS.
@@ -99,6 +100,16 @@ def mutate(txt, mut):
         new = re.sub(r'\(w_rrc\[\d+\]\)', '(rst_n)', txt)
         if new != txt:
             return new, None, 'core reset relay bypassed'
+    if mut == 7:                       # TW2-KVGRP: u_bcdc0's input legs one register short
+        for i, ln in enumerate(lines):
+            if ' u_bcdc0 (' in ln and 'w_lgbcdc0__q1' in ln:
+                lines[i] = ln.replace('w_lgbcdc0__q1', 'w_lgbcdc0__q0')
+                return '\n'.join(lines), None, 'u_bcdc0 leg registers one stage short'
+    if mut == 8:                       # TW2-KVGRP: o_pc0's landing-calendar relay bypassed
+        for i, ln in enumerate(lines):
+            if ln.strip().startswith('assign o_pc0 =') and 'w_lro_pc0__q0' in ln:
+                lines[i] = ln.replace('w_lro_pc0__q0', 'w_lro_pc0__a')
+                return '\n'.join(lines), None, 'o_pc0 lcal relay bypassed'
     if mut == 3:
         assigns = '\n'.join(ln for ln in lines if ln.strip().startswith('assign '))
         for i, ln in enumerate(lines):
@@ -218,7 +229,7 @@ def main():
         for hi, lo, D, src in segs:
             o_ = f'o__{p}' if (hi, lo) == (w - 1, 0) else f'o__{p}[{hi}:{lo}]'
             got = f'n__{p}' if (hi, lo) == (w - 1, 0) else f'n__{p}[{hi}:{lo}]'
-            if D and src in frc:
+            if D and src in frc and not str(src).endswith('@post'):
                 # a delayed CHILD-OUTPUT wire is forced (same value, both tiles) in phase B: delayed in A, direct in B
                 L.append(f'        if (!phb) ' + cmp(f'h__{p}_{lo}[{D - 1}]', got, f'out {p}[{hi}:{lo}] D={D}', D).lstrip())
                 L.append(f'        if (phb && t > {a.edges + D + 2}) ' + cmp(o_, got, f'out {p}[{hi}:{lo}] B', 0).lstrip())

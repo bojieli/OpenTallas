@@ -94,6 +94,21 @@ GRP_RST = KITS and os.environ.get('OT_KV_GRP_RST_RELAY', '1') == '1'
 GRP_RST_SYNC, GRP_RST_TREE = 2, 1
 GRP_RST_RELEASE = GRP_RST_SYNC + GRP_RST_TREE if GRP_RST else 0
 RST_RELAY_RTL = 'rtl/qwen_sys/static_kv_20261014/qkd_kv_rst_land.sv'
+# TW2-KVGRP 10-19 (placement STA of the gate b99ab2683, ideal clocks): besides the reset, three wire classes cross the
+# 1,186-um tile unregistered: (a) the boot-cfg broadcast i_ctl -> the write side of the four PC boot CDCs u_bcdc0..3
+# (-432 / -316 / -45 ps: 64-b cfg_data to 4 x 16-entry FIFOs spread over the tile), (b) the drain guard's per-PC legs
+# (i_pc0..3 idle / fault) -> drained / fault (-450), (c) the landing calendar's r_* words -> the 4 PC output ports (u_lcal
+# next-state logic + up to 1 mm into the cloned pin flops: -518).  Under the kit design point:
+#   GRP_LEG (2) registers on EVERY data input of u_bcdc0..3 and u_drain (one copy per child: a pin-side and a child-side
+#     stage), so each child sees all its inputs GRP_LEG edges late and its outputs are an exact GRP_LEG-edge shift
+#     (boot cfg / sealed / applied / fault status, drained: control-plane, no token-path age);
+#   GRP_LCAL_RLY (1) register per PC port on the u_lcal r_sector / r_put / r_layer / r_epoch bits it carries (placed at
+#     the port: lcal -> relay is a plain reg -> reg wire): the landing calendar -> PC words arrive +1 edge.
+GRP_LEG = int(os.environ.get('OT_KV_GRP_LEG', '2')) if KITS else 0
+GRP_LEG_CHILDREN = ('bcdc0', 'bcdc1', 'bcdc2', 'bcdc3', 'drain')
+GRP_LCAL_RLY = int(os.environ.get('OT_KV_GRP_LCAL_RLY', '1')) if KITS else 0
+_LCAL_R = re.compile(r'w_lcal__r_\w+(?:\[\d+:\d+\])?')
+_CHILD = re.compile(r'^(\s*\w+(?: #\(.*?\))? u_(\w+) \()(.*)(\);)$')
 RTL_FILE = ('rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles' + ('_hroot' if HROOT else '') + ('_ff' if FANFOLD else '') +
             ('_ep' if os.environ.get('OT_KV_ECTL_PAIR', '0') == '1' else '') + ('_k' if KITS else '') + '.sv')
 AGES = 'results/arch/qwen_kv_static_programme_1017/die_ages.json'
@@ -828,8 +843,10 @@ def module_text(t, name):
     for pn, w, bname, off in t.get('packed', []):
         L.append(f'    wire [{w - 1}:0] {pn} = {bname}[{off + w - 1}:{off}];')
     xw, xb, xe = _kit_relays(t)
-    L += t['wires'] + xw
-    L += _rst_relay(t, [_cf1_leg_sub(t, x) for x in t['body']] + xb)
+    lw, body, le = _kit_legs(t, [_cf1_leg_sub(t, x) for x in t['body']])
+    xe.update(le)
+    L += t['wires'] + xw + lw
+    L += _rst_relay(t, body + xb)
     for pn, v in t['ports'].items():
         if v['dir'] == 'output':
             L.append(f'    assign {pn} = {xe.get(pn, v["expr"])};')
@@ -849,6 +866,71 @@ def _hops(pre, a, w, n):
 
 
 _CF1 = re.compile(r'(\bu_cf1 \(.*?\.fault_in\()(\{[^()]*\})(\))')
+def _widths(t):
+    wd = {pn: v['width'] for pn, v in t['ports'].items()}
+    for pn, w, _b, _o in t.get('packed', []):
+        wd[pn] = w
+    for x in t['wires']:
+        m_ = re.match(r'\s*wire \[(\d+):0\] (\w+)', x)
+        if m_:
+            wd[m_.group(2)] = int(m_.group(1)) + 1
+    return wd
+
+
+def _leg_plan(t):
+    """TW2-KVGRP GRP_LEG: {child loc: [(pin, expr, width), ...]} of the data inputs that take the leg registers"""
+    if not (GRP_LEG and t['kind'] in ('grp', 'grp_h')):
+        return {}
+    wd, out = _widths(t), {}
+    for x in t['body']:
+        m_ = _CHILD.match(x)
+        if not m_ or m_.group(2) not in GRP_LEG_CHILDREN:
+            continue
+        loc = m_.group(2)
+        out[loc] = [(pn, e, len(_expr_bits(e, wd))) for pn, e in re.findall(r'\.(\w+)\(([^()]*)\)', m_.group(3))
+                    if pn not in ('ck', 'hck', 'rst_n', 'hrst_n') and not e.startswith(f'w_{loc}__')]
+    return out
+
+
+def _kit_legs(t, body):
+    """TW2-KVGRP: GRP_LEG input registers of the leg children + the GRP_LCAL_RLY port relays (wires, body, output exprs)"""
+    xw, xb, xe = [], [], {}
+    if t['kind'] not in ('grp', 'grp_h'):
+        return xw, body, xe
+    plan = _leg_plan(t)
+    out = []
+    for x in body:
+        m_ = _CHILD.match(x)
+        if m_ and m_.group(2) in plan:
+            loc, ins_ = m_.group(2), plan[m_.group(2)]
+            w = sum(k[2] for k in ins_)
+            w_, b_, q = _hops(f'w_lg{loc}', '{' + ', '.join(e for _, e, _w in reversed(ins_)) + '}', w, GRP_LEG)
+            xw += w_
+            xb += b_
+            conn, lo = m_.group(3), 0
+            for pn, e, ww in ins_:
+                conn = conn.replace(f'.{pn}({e})', f'.{pn}({q}[{lo + ww - 1}:{lo}])', 1)
+                lo += ww
+            x = m_.group(1) + conn + m_.group(4)
+        out.append(x)
+    if GRP_LCAL_RLY:
+        wd = _widths(t)
+        for pn, v in t['ports'].items():
+            if v['dir'] != 'output' or not _LCAL_R.search(v['expr']):
+                continue
+            toks = _LCAL_R.findall(v['expr'])
+            ws = [len(_expr_bits(k, wd)) for k in toks]
+            w_, b_, q = _hops(f'w_lr{pn}', '{' + ', '.join(reversed(toks)) + '}', sum(ws), GRP_LCAL_RLY)
+            xw += w_
+            xb += b_
+            e, lo = v['expr'], 0
+            for k, ww in zip(toks, ws):
+                e = e.replace(k, f'{q}[{lo + ww - 1}:{lo}]', 1)
+                lo += ww
+            xe[pn] = e
+    return xw, out + xb, xe
+
+
 _RST_CONN = {'rst_n': 'w_rrc', 'hrst_n': 'w_rrh'}
 
 
@@ -929,13 +1011,21 @@ def kit_delays(t):
             wd[m_.group(2)] = int(m_.group(1)) + 1
     # per-bit edge delay of every output (LSB first): the kit-added registers on its sources
     src_d = {'w_cf1__fault': GRP_CF1_LEG}
+    legs = _leg_plan(t)
+    for loc in legs:                        # TW2-KVGRP: every output of a leg child is a GRP_LEG-edge shift
+        for x in t['wires']:
+            m_ = re.match(rf'\s*wire \[\d+:0\] (w_{loc}__\w+)', x)
+            if m_:
+                src_d[m_.group(1)] = GRP_LEG
     for pn, v in P.items():
         if v['dir'] != 'output':
             continue
         if pn == 'o_dn':
             bits = [(GRP_FT, 'i_ctl')] * v['width']
         else:
-            bits = [(GRP_FT, s) if (s == 'i_up' and GRP_FT) else (src_d.get(s, 0), s) for s in _expr_bits(v['expr'], wd)]
+            bits = [(GRP_FT, s) if (s == 'i_up' and GRP_FT) else
+                    ((GRP_LCAL_RLY, s + '@post') if (GRP_LCAL_RLY and s.startswith('w_lcal__r_')) else (src_d.get(s, 0), s))
+                    for s in _expr_bits(v['expr'], wd)]
             if len(bits) != v['width']:
                 raise ValueError(f'kit_delays: {t["inst"]}.{pn} expands to {len(bits)} bits, port is {v["width"]}')
         segs, lo = [], 0          # [msb, lsb, edges, source] (source: the tile input or the child-output wire delayed)
@@ -948,6 +1038,9 @@ def kit_delays(t):
             out[pn] = segs
     if GRP_CF1_LEG:
         child['cf1.fault_in'] = GRP_CF1_LEG
+    for loc, ins_ in legs.items():
+        for pn, _e, _w in ins_:
+            child[f'{loc}.{pn}'] = GRP_LEG
     return dict(out=out, child=child, rst=rst)
 
 
@@ -1000,6 +1093,11 @@ def grp_chain():
                 added_up_edges_by_chain_pos={j: GRP_FT * j for j in range(8)},
                 chain_pos_to_slot=pos, rtl='rtl/qwen_sys/static_kv_20261014/qkd_static_kv_hop.sv',
                 flops_per_grp=GRP_FT * (271 + 126) + 4 * GRP_CF1_LEG,
+                leg_edges=dict(children=list(GRP_LEG_CHILDREN), edges=GRP_LEG,
+                               note='TW2-KVGRP: every data input of u_bcdc0..3 / u_drain +GRP_LEG edges (boot cfg -> sink / '
+                                    'sealed / applied / fault, PC idle / fault legs -> drained / fault): control plane only')
+                if GRP_LEG else None,
+                lcal_to_pc_edges=GRP_LCAL_RLY or None,
                 rst_relay=dict(rtl=RST_RELAY_RTL, release_edges=GRP_RST_RELEASE, sync=GRP_RST_SYNC, tree=GRP_RST_TREE,
                                note='TW2-KVGRP: rst_n / hrst_n landed in-tile (2-flop async-assert synchroniser in '
                                     'the own domain + one kept copy per child); assert +1 edge, release +3 edges on '

@@ -1,0 +1,6 @@
+MISMATCH t=6 out o_pc0[104:95] D=1
+MISMATCH t=6 out o_pc0[93:88] D=1
+MISMATCH t=6 out o_pc0[87:72] D=1
+MISMATCH t=7 out o_pc0[93:88] D=1
+MISMATCH t=7 out o_pc0[87:72] D=1
+KVS_TILE FAIL tile=grp_h edges=4000 checks=1157712 errors=10705 mut=8 (o_pc0 lcal relay bypassed)

@@ -1,6 +1,6 @@
-MISMATCH t=3 child u_slg.epoch
-MISMATCH t=3 child u_slg.req_epoch
-MISMATCH t=4 child u_slg.epoch
-MISMATCH t=4 child u_slg.req_epoch
-MISMATCH t=5 child u_slg.epoch
-KVS_TILE FAIL tile=grp_h edges=4000 checks=571489 errors=11970 mut=2 (swapped .epoch(w_lcal__l_epoch[15:0]) <-> .req_epoch(kreq[31:16]))
+MISMATCH t=7 child u_drain.ctrl_idle_core D=2
+MISMATCH t=7 child u_drain.ring_idle_core D=2
+MISMATCH t=8 child u_drain.ctrl_idle_core D=2
+MISMATCH t=8 child u_drain.ring_idle_core D=2
+MISMATCH t=9 child u_drain.ctrl_idle_core D=2
+KVS_TILE FAIL tile=grp_h edges=4000 checks=1157712 errors=7450 mut=2 (swapped .ctrl_idle_core(w_lgdrain__q1[3:0]) <-> .ring_idle_core(w_lgdrain__q1[7:4]))
