@@ -9,7 +9,7 @@ module tb_mu_observer_status;
     wire [55:0] dc;
     wire cf;
     qfd_tt_ctlm_dv_gi #(.NU(1), .OPSEG(0)) gi (
-        .ck(ck),.rst_n(rst_n),.dh(187'd0),.dh_user(2'd0),.ctx_x(129'd0),
+        .ck(ck),.rst_n(rst_n),.dh(187'd0),.dh_user(2'd0),.ctx_x(129'd0), .init_u0(1'b0),
         .mu_fault(MUT ? 1'b0 : observer),.ss5(107'd0),.ag5(10'd0),.fab(1'b0),.dcs(dcs));
     qfd_tt_ctlm_dv_go #(.XPF_TRANSPORT_EDGES(1)) go (
         .ck(ck),.rst_n(rst_n),.pw(75'd0),.st(49'd0),.su_obs(16'd0),.me_observe(16'd0),

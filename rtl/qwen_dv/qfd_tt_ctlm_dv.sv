@@ -144,6 +144,7 @@ module qfd_tt_ctlm_dv #(
     parameter integer UVM_STRIDE = 4096,
     parameter integer PIDX_STRIDE = 128,
     parameter integer UTAG_LSB = 6,
+    parameter integer INIT_U0 = 0, INIT_FIRST = -1, INIT_CNT = 0,
     parameter integer OPSEG = 0,
     parameter string  OPSEG_VIAMAP = "",
     parameter string  OPSEG_INST = "qfd_tt_ctlm_opseg",
@@ -159,6 +160,7 @@ module qfd_tt_ctlm_dv #(
     input  wire [186:0]  dh,
     input  wire [1:0]    dh_user,
     input  wire          mu_fault,                 // registered observer fault, visible in STATUS
+    input  wire          init_u0,                  // explicit static admission INIT selector, aligned to DH stage0
     input  wire [128:0]  ctx_x,                     // CTX_SRC 1: {load, CTX record} from qfd_mu_ctx_rx (else unused)
     input  wire          kok,
     input  wire          kwd,
@@ -196,6 +198,12 @@ module qfd_tt_ctlm_dv #(
     always @(posedge ck or negedge rst_n)
         if (!rst_n) begin dh_q <= 187'd0; ss_q <= 107'd0; ag_q <= 10'd0; fab_q <= 1'b0; dhu_q <= 2'd0; end
         else begin dh_q <= dh; ss_q <= ss5; ag_q <= ag5; fab_q <= fab; dhu_q <= (NU > 1) ? dh_user : 2'd0; end
+    reg init_u0_q;
+    always @(posedge ck or negedge rst_n)
+        if (!rst_n) init_u0_q <= 1'b0;
+        else init_u0_q <= (INIT_U0 != 0) ? init_u0 : 1'b0;
+    initial if (INIT_U0 != 0 && (INIT_FIRST < 0 || INIT_FIRST % 4 != 0 || INIT_CNT < 1 || INIT_FIRST + INIT_CNT > 1024))
+        $error("INIT_U0 requires a source-bound aligned INIT_FIRST/INIT_CNT programme range");
     localparam integer UB = (NU > 1) ? $clog2(NU) : 1;
     localparam integer OPS = (OPSEG != 0 && NU > 1) ? 1 : 0;
     wire [UB-1:0] s_user = (OPS != 0) ? {UB{1'b0}} : dhu_q[UB-1:0];
@@ -250,10 +258,12 @@ module qfd_tt_ctlm_dv #(
     wire        ctx_bad = (OPS != 0) && c_ctxld && (!ctx_ok || x_hit);
     wire        l_start = (OPS != 0) && l_v && !(s_start);          // the face start wins a collision
     wire        op_coll = (OPS != 0) && l_v && s_start;
+    wire u0_init_start = (INIT_U0 != 0) && init_u0_q && s_start && s_stage == 6'd0 && s_user == {UB{1'b0}};
+    wire init_u0_bad = init_u0_q && !u0_init_start;
     reg         op_fault;
     always @(posedge ck or negedge rst_n)
         if (!rst_n) op_fault <= 1'b0;
-        else if (l_fault || (op_coll && MUT != 22) || ctx_bad || (mu_fault_q && MUT != 37) || ctx_write_fault) op_fault <= 1'b1;
+        else if (l_fault || (op_coll && MUT != 22) || ctx_bad || (mu_fault_q && MUT != 37) || ctx_write_fault || init_u0_bad) op_fault <= 1'b1;
     wire        u_start = s_start || l_start;
     wire [5:0]  u_stage = l_start ? l_stage : s_stage;
     wire [UB-1:0] u_user = l_start ? l_user : s_user;
@@ -269,8 +279,8 @@ module qfd_tt_ctlm_dv #(
         .ck(ck), .rst_n(rst_n),
         .pw_v(dh_q[118]), .pw_addr(dh_q[117:108]), .pw_data(dh_q[107:44]),
         .dw_v(dh_q[186]), .dw_addr(dh_q[185:183]), .dw_data(dh_q[182:119]),
-        .start(u_start), .stage(u_stage), .start_user(u_user), .start_rng(l_start), .start_first(l_first),
-        .start_cnt(l_cnt), .cmd(cmd), .tl(tl), .cmd_user(c_user), .loc_emb(c_emb),
+        .start(u_start), .stage(u_stage), .start_user(u_user), .start_rng(l_start || u0_init_start), .start_first(u0_init_start ? 10'(INIT_FIRST) : l_first),
+        .start_cnt(u0_init_start ? 10'(INIT_CNT) : l_cnt), .cmd(cmd), .tl(tl), .cmd_user(c_user), .loc_emb(c_emb),
         .loc_seg(c_seg), .loc_base(c_base),
         .su_issue(c_su), .su_pidx(c_pidx), .xc_issue(c_xc), .program_obs(cal_program_obs),
         .descriptor_obs(cal_descriptor_obs), .image_ready(c_ready), .running(c_run), .running_u(c_run_u), .done(c_done),
