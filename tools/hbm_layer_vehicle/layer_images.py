@@ -507,6 +507,7 @@ CP_FRAME_EDGES = 8 * AXI_WRITE_EDGES               # one 256-b row
 CP_DESC_GUARD = AXI_WRITE_EDGES                    # kept for callers: one write slot
 CP_LAUNCH_GUARD = 7                                # ingress launch guard (README): no frame in the 7 edges after F30
 CP_DESC_TO_LAUNCH = 2 * AXI_WRITE_EDGES            # F2c -> F30: guard 5 must be 0 at the F30 execute edge
+CP_SCAN_GUARD = 8                                  # desc -> scan start (leaf CFG_LAT 2 + target capture) + margin
 # SW-slice targets (die.v GEN2 e92f4d03 scan: instances whose cfg_v is hleaf_SW__a/b_cfg_v, tgt strap) per HGI unit.
 # The PAYLOAD (row words) of each target is the target's own ABI (sm_images.py for SM / DMA; sibling lanes for the rest).
 # The SW slice holds 8 SMs, but only sm_SW0..3 are SW-leaf configured: cp_svg_SW4..7 / xc_SW4..7 hang on the SE leaf
@@ -587,10 +588,14 @@ class CpBus:
         s._d(c, "desc_v", 1, **kw)
         s._d(c + 1, "desc_v", 0, **kw)
         s.last_desc = c
+        # VEH-CUTS 10-19: the target scans rows [base, limit) one per edge after the descriptor
+        # (ot_static_program_target.sv: launch while scanning faults, measured on the GEN2b idxtk cut with a 151-row
+        # calendar: hleaf_SW s_fault, no programme start).  The launch waits for the scan of every armed target.
+        s.scan_end = max(getattr(s, "scan_end", -99), c + (limit - base) + CP_SCAN_GUARD)
         return c
 
     def launch(s, **kw):
-        c = max(s._write(), getattr(s, "last_desc", -99) + CP_DESC_TO_LAUNCH)
+        c = max(s._write(), getattr(s, "last_desc", -99) + CP_DESC_TO_LAUNCH, getattr(s, "scan_end", -99))
         s.t = c
         s._d(c, "launch_v", 1, **kw)
         s._d(c + 1, "launch_v", 0, **kw)
