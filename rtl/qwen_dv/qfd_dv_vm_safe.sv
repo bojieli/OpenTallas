@@ -72,14 +72,15 @@ module qfd_dv_vm #(
     // ------------------------------------------------------------------ read-side address check (lane 0 = reference)
     function automatic bad_vec(input [7:0] re, input [8*24-1:0] ad);
         integer k;
+        reg [17:0] bad;
         begin
-            bad_vec = 1'b0;
-            for (k = 0; k < 8; k = k + 1)
-                if (re[k] && (ad[24*k+4 +: 20] != ad[4 +: 20])) bad_vec = 1'b1;   // all lanes in lane 0's 16-el pair
-            for (k = 0; k < 8; k = k + 1)
-                if (re[k] && (ad[24*k+3] != ad[3])) bad_vec = 1'b1;               // ... and in lane 0's 8-el word
-            if (re[0] && (ad[23:14] != 10'd0)) bad_vec = 1'b1;                    // VM window, inside 16,384 elements
-            if (re != 8'd0 && !re[0]) bad_vec = 1'b1;                             // live lanes are a prefix from lane 0
+            for(k=0;k<8;k=k+1) begin
+                bad[k]=re[k] && ad[24*k+4+:20]!=ad[4+:20];
+                bad[8+k]=re[k] && ad[24*k+3]!=ad[3];
+            end
+            bad[16]=re[0] && ad[23:14]!=0;
+            bad[17]=(|re) && !re[0];
+            bad_vec=|bad;
         end
     endfunction
     // ------------------------------------------------------------------ VM: 3 replicas x 2 banks

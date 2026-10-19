@@ -12,6 +12,21 @@ ROOT=Path(__file__).resolve().parents[2]
 
 def generate():
     s=(ROOT/'rtl/qwen_dv/qfd_dv_vm.sv').read_text()
+    a=s.index('    function automatic bad_vec')
+    b=s.index('    endfunction',a)+len('    endfunction')
+    s=s[:a]+r'''    function automatic bad_vec(input [7:0] re, input [8*24-1:0] ad);
+        integer k;
+        reg [17:0] bad;
+        begin
+            for(k=0;k<8;k=k+1) begin
+                bad[k]=re[k] && ad[24*k+4+:20]!=ad[4+:20];
+                bad[8+k]=re[k] && ad[24*k+3]!=ad[3];
+            end
+            bad[16]=re[0] && ad[23:14]!=0;
+            bad[17]=(|re) && !re[0];
+            bad_vec=|bad;
+        end
+    endfunction''' +s[b:]
     a=s.index('    // write merge per bank')
     b=s.index('    // read requests:',a)
     s=s[:a]+r'''
