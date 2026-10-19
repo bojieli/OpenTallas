@@ -153,7 +153,10 @@
   },
   "reset_landing": {
     "enable": true,
-    "stages": 2
+    "stages": 2,
+    "copies": {
+      "rst_n": 12
+    }
   },
   "children": [],
   "inter": [],
@@ -176,5 +179,8 @@
   },
   "pin_hook_before_flops": [
     "physical/ref_tile/smh_pvm_ref_s3/one_north_band.tcl"
-  ]
+  ],
+  "reset_relay_split": {
+    "max_loads": 32
+  }
 }
