@@ -8,7 +8,7 @@
 #    n1_d4gprog  hnx DUT, d4g programme, 1 row                          -> PASS, dump == d4g_n1 dump (bit for bit)
 #    n1..n4      hnx DUT, row frame, pitch = row II, N = 1..4           -> PASS each; IDX_ROWS_CYCLES(N)
 #    m11 m12 m13 hnx N = 2: query seen clear only at record start / link clear stripped / selector row clear stripped -> FAIL
-#    mpitch      hnx N = 2, pitch = row II - 1 (two rows collide)       -> FAIL (calendar collision fault)
+#    mpitch      hnx N = 2, pitch = row II - 13 (two rows collide)      -> FAIL (calendar collision fault)
 #    mstride     hnx N = 2, operand row strides 0 (d4g addressing)      -> FAIL (row 1 scores row 0's query)
 #  topk   : IDX.TOPK rows on the ACTUAL SW VM slice (hfd_hgi_vms_static_SW), route top-6 production shape (n 384, k 6):
 #    t_hnx_P{2,3,4,6}  hnx ot_hnx_idx_topk_rows_static, vectors P = 2,3,4,6 (records m = 1 and m = P + 12 random) -> PASS;
@@ -152,7 +152,8 @@ if [ "$ST" = index ]; then
   run m11 hnx $O/cal/frame FAIL +N=$FL +ROWS=2 +PITCH=$II +MUT=11 +MUT11 &
   run m12 hnx $O/cal/frame FAIL +N=$FL +ROWS=2 +PITCH=$II +MUT=12 &
   run m13 hnx $O/cal/frame FAIL +N=$FL +ROWS=2 +PITCH=$II +MUT=13 &
-  run mpitch hnx $O/cal/frame FAIL +N=$FL +ROWS=2 +PITCH=$((II-1)) &
+  # mpitch: II-13 (= 940): the N=2 sweep (hnx_idx_pitch_sweep.sh, 10-19) PASSES at 950..952 and FAILS (collision fault) at <= 940
+  run mpitch hnx $O/cal/frame FAIL +N=$FL +ROWS=2 +PITCH=$((II-13)) &
   run mstride hnx $O/cal/frame FAIL +N=$FL +ROWS=2 +PITCH=$II +QSTR=0 +WSTR=0 &
   wait
   # N = 1 bit-for-bit equivalence with the d4g parent: every score line and every TX flit at the same edge
