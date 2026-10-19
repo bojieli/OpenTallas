@@ -255,7 +255,7 @@ reg allow_aw=1,allow_w=1;
    expected_missing_binding_fault<=raw_done_v&&!raw_done_native_valid&&!raw_done_unready;
   end
  end
- reg expected_metadata_fault=0;
+ reg expected_metadata_fault=0,malformed_first_prompt_cut=0;
  integer native_cq_retirements=0;
  integer edges=0,issues=0,allocations=0,dispatches=0,raw_completions=0,post_completions=0,certificates=0,event_copies=0,cq_offers=0,terminal_accepts=0;
  integer request_counts[8],request_returns[8],result_returns[8],transport_returns[8],releases[8],raw_cleanup_due[8];
@@ -276,6 +276,12 @@ reg allow_aw=1,allow_w=1;
    if(rank7_return_stalled&&(!rank_tx_valid[7]||rank_tx_data[3584+:512]!==held_rank7_return))$fatal(1,"REAL_RETURN_READY_VALID_PAYLOAD_CHANGED");
    rank7_return_stalled=rank_tx_valid[7]&&!rank_tx_ready[7]&&rank_tx_data[3584+:8]==8'd4;
    held_rank7_return=rank_tx_data[3584+:512];
+   if(malformed_first_prompt_cut&&(rc_mirror_pos!==18'd0||rc_mirror_tok!==18'd0||rc_mirror_ngen!==18'd0))$fatal(1,"MALFORMED_FIRST_PROMPT_CERTIFIED_MIRROR pos=%0d tok=%0d ngen=%0d",rc_mirror_pos,rc_mirror_tok,rc_mirror_ngen);
+   malformed_first_prompt_cut<=native_certificate_v&&case_id>=10&&case_id<=13&&health_step==0;
+   if(native_certificate_v&&case_id>=10&&case_id<=13&&health_step==0)begin
+    if(rc_mirror_pos!==0||rc_mirror_tok!==0||rc_mirror_ngen!==0)$fatal(1,"MALFORMED_PROMPT_INITIAL_COMMITTED_STATE_NOT_ZERO");
+    $display("MALFORMED_FIRST_PROMPT_CERTIFICATE time=%0t key=%h actual=%h mirror=%0d/%0d/%0d",$time,certificate_key_to_join,certificate_key_actual,rc_mirror_pos,rc_mirror_tok,rc_mirror_ngen);
+   end
    if(expected_metadata_fault&&!join_fault)$fatal(1,"CORRUPT_CERTIFICATE_WAS_ACCEPTED case=%0d",case_id);
    expected_metadata_fault<=native_certificate_v&&case_id>=10&&case_id<=13;
    if(binding_valid&&case_id<=3&&bound_request_tag!=={16'(allocations-1),6'd0,gold_input(allocations-1),13'(allocations-1),6'd0})$fatal(1,"BOUND_KEY_IS_NATIVE_TAG59");
