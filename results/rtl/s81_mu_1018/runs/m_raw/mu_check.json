@@ -1,0 +1,31 @@
+{
+ "ok": false,
+ "errs": [
+  "(b) 9 expected events missing (first ('VO S', 21687, '0000000000000000000200003001f7800000000000000000000000001fc0000200801'))",
+  "(c) issuer fault at edge 21676 code 5",
+  "(c) final issuer state PROG FCODE 5 fault 1 jobs 1 (want code 0 fault 0 jobs 2)",
+  "(c) unit status fault t_host[75] = 1"
+ ],
+ "users": 2,
+ "shifts": [
+  0,
+  21313
+ ],
+ "ks": [
+  360,
+  21673
+ ],
+ "user0_identical": true,
+ "user0_events": 9,
+ "events_per_user": 9,
+ "ctx_beats_per_user": 1,
+ "events_total": 9,
+ "missing": 9,
+ "extra": 0,
+ "faults": [
+  {
+   "edge": 21676,
+   "code": 5
+  }
+ ]
+}

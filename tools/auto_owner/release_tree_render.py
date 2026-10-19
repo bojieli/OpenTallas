@@ -348,6 +348,36 @@ def owner_banner():
                 '<details><summary class="mono">UNOWNED / STALE elements (%d)</summary><ul class="el">%s</ul></details>' % (len(rows), items) if rows else ''))
 
 
+TASKS_JSON = BASE / 'TASKS_STALE.json'
+
+
+def task_banner():
+    """TASK-WATCH banner (owner 10-19): liveness of every open release-tree task from tools/release_task_watch.py"""
+    try:
+        d = json.loads(TASKS_JSON.read_text())
+    except Exception as e:
+        return '<section><p class="warn">Release task watch: TASKS_STALE.json unreadable (%s)</p></section>' % E(str(e))
+    c = d.get('counts') or {}
+    old = (datetime.datetime.now().timestamp() - (d.get('generated_t') or 0)) > 5400
+    rows = [x for x in d.get('tasks', []) if x.get('cls') in ('DEAD', 'STALE')]
+    rows.sort(key=lambda x: (x['cls'] != 'DEAD', x['id']))
+    items = ''.join('<li><span class="chip %s">%s</span> <b>%s</b> <span class="mono muted">tree %s · %s</span> <span class="own">%s</span> <span class="why">%s</span></li>' % (
+        'me' if x['cls'] == 'DEAD' else 'wait', x['cls'], E(x['id']), E(x.get('status_text') or ''),
+        E(_age(x.get('last_evidence_min'))), E(x.get('owner') or 'no owner'), E((x.get('why') or '')[:220])) for x in rows)
+    errs = d.get('probe_errors') or {}
+    return ('<section><div class="panel" style="padding:12px 16px"><h2 style="font-size:1.1rem">Release tasks: '
+            '<span class="chip ok">LIVE %s</span> / <span class="chip wait">STALE %s</span> / <span class="chip me">DEAD %s</span></h2>'
+            '<p class="mono muted" style="margin:4px 0">open %s · waits on a live task %s · blocked on the owner %s · needs a fresh agent %s · watch %s%s%s · '
+            'liveness from processes, run dirs, closure jobs, lanes and HANDOFF, never from the status text '
+            '(TASKS_STALE.json, tools/release_task_watch.py, element-owner-watch.timer every 30 min)</p>%s</div></section>' % (
+                c.get('LIVE', '?'), c.get('STALE', '?'), c.get('DEAD', '?'), c.get('open', '?'), c.get('WAITS-OK', '?'),
+                c.get('BLOCKED-ON-OWNER', '?'), c.get('needs_agent', '?'), E(d.get('generated', '?')),
+                ' <b>(stale: the watch has not run for > 90 min)</b>' if old else '',
+                ' <b>(probe failed: %s)</b>' % E(', '.join(sorted(errs))) if errs else '',
+                '<details%s><summary class="mono">DEAD / STALE tasks (%d)</summary><ul class="el">%s</ul></details>' % (
+                    ' open' if any(x['cls'] == 'DEAD' for x in rows) else '', len(rows), items) if rows else ''))
+
+
 def render(md_path, el, el_err, now):
     pre, secs = parse_md(md_path.read_text())
     dies = {s['key']: s for s in secs if s['kind'] == 'DIE'}
@@ -363,6 +393,7 @@ def render(md_path, el, el_err, now):
              '<p class="lede">Release needs two independent sets of gates: the four die gates for every die, and the token-pass gate for every design. '
              'Each task appears once. Done tasks are crossed out and never deleted. Each die also lists every element of its current revision, generated from the live element table.</p>%s</header>'
              % (md_t, now.strftime('%Y-%m-%d %H:%M PT'), gen_s, '<p class="warn">%s</p>' % E(el_err) if el_err else ''))
+    H.append(task_banner())
     H.append(owner_banner())
     H.append('<section><div class="legend"><span>%s finished</span><span>%s agent or fleet job working</span><span>%s blocked by a child task / to do</span>'
              '<span>%s started today</span><span>%s waiting on the coordinator or owner</span></div></section>' % (chip('DONE'), chip('RUNNING'), chip('WAITS'), chip('NEW'), chip('COORD')))
@@ -447,6 +478,13 @@ def summary_text(secs, dies, ecount, el, now):
         u = json.loads(UNOWNED_JSON.read_text()); uc = u.get('counts') or {}
         L.append('element owners (%s): ACTIVE %s / STALE %s / UNOWNED %s; needs a family agent %s' % (
             u.get('generated'), uc.get('ACTIVE'), uc.get('STALE'), uc.get('UNOWNED'), uc.get('needs_agent')))
+    except Exception: pass
+    try:
+        tw = json.loads(TASKS_JSON.read_text()); tc = tw.get('counts') or {}
+        bad = [x for x in tw.get('tasks', []) if x.get('cls') in ('DEAD', 'STALE')]
+        L.append('tasks (%s): LIVE %s / STALE %s / DEAD %s (waits-ok %s, owner %s); DEAD: %s' % (
+            tw.get('generated'), tc.get('LIVE'), tc.get('STALE'), tc.get('DEAD'), tc.get('WAITS-OK'), tc.get('BLOCKED-ON-OWNER'),
+            ', '.join(x['id'] for x in bad if x['cls'] == 'DEAD') or 'none'))
     except Exception: pass
     L.append('waiting on coordinator: %s' % (', '.join(co) or 'none'))
     L.append('waiting on owner: %s' % (', '.join(ow) or 'none'))
