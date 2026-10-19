@@ -1,0 +1,183 @@
+{
+ "name": "hv16_dbk_cpl_s2-s1-COMMIT",
+ "block": "ot_hgi_dma_back_static_vp4_banks_cp",
+ "ref_tile": true,
+ "owner": "Claude:LEAD2-HBM/L2H-HC",
+ "purpose": "HBM die d4g hb_dbk_<q> x4 (per quadrant, master unchanged; F20 tgt 104+QID: SW 104 / SE 105 / NW 106 / NE 107; RBH-STK). Measured reasons (hv15_dbk_cp gate 1f18141cb, 10-16): clk_cp 1,844 sinks TT 421.6 / spread 126.5 (collar flops smeared between the 8 banks), rst_n port -> 793 loads unregistered incl. 8 bank macros + controller (in->macro -296.1), in->reg -170.8 u_cp.cmd[26] with the W face 98% pin-full; children off the 43.2 um lattice; 645.84 x 360.72 (1.79:1).  Why not the d4f slot 560 x 400: on the 43.2 um child lattice three 87.48-um bank rows need y = 43.2/172.8/302.4 (top 389.9, no N channel left in 400) and three 140.4-um columns need x up to 529.2, so 560 x 400 holds at most 2 x 3 = 6 banks; 8 banks + controller + collar leaf = 10 objects, and every bank must stay within ~480 um of BOTH the W face (rr) and the N face (wd) (textbook wire_reach 500 um/stage).  A 3-row ring (controller centre) cannot take the leaf within 1.5:1 (width >= 712 at height 432).  Chosen: 4 rows x 3 columns, 604.8 x 540 (1.12:1):   * col0 (x 86.4, 4 banks; 86.4 um W channel carries their 1,156 wd bits N), col1/col2 (x 259.2/432) banks in rows 0     and 3; the controller in col1 between rows 1-2 (bank star <= ~430 um), the collar leaf in col2 between rows 1-2     (W face -> controller E face 104 um; E face 21.6 um from the cluster E face where the F20 host bus enters);   * channels >= 32.4 um (columns) / 42.1 um (rows), every child on the 43.2 lattice;   * W face: rr per bank row (rq + rr_valid beside the controller row), <= 4.6 pins/um; N face: wd per bank column + wb/wa,     <= 4.5 pins/um; each clk_bank entry on the face point nearest its bank clock pin; clk_cp at the leaf clock pin.",
+ "threads": 8,
+ "peak_ram_gb": 16,
+ "source": {
+  "branch": "claude/l2h-dbkcpl-1019",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/common_flow/assigned_pin_exact.tcl",
+   "physical/common_flow/child_pocket_guard.tcl",
+   "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+   "physical/ref_tile/hv16_dbk_collar/views/ot_hgi_dma_back_cp_collar",
+   "physical/ref_tile/hv16_dbk_vp4_ctl_rt80/views/ot_hgi_dma_back_static_vp4_controller",
+   "results/arch/hbm_die_v16_d4f/dbk_cpl_1017",
+   "results/rtl/ref_tile/hv16_dbk_cpl",
+   "rtl/hbm_accel/generic/peers/static",
+   "rtl/hbm_accel/generic/vm/static",
+   "rtl/hbm_accel/host_static_20261015",
+   "rtl/lib/ot_rst_relay.sv",
+   "tools/hbm_v15_harden"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hgi_dma_back_static_vp4_banks_cp u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS -DOT_DBK_HARD --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks_cp.sv rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_cp_collar.sv rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks.sv rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv rtl/lib/ot_rst_relay.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "cp_fold_exact",
+    "cmd": "bash tools/hbm_v15_harden/bench_dma_vp4_banks_cp.sh {RUN}/bench/cp",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "DMA_CP_FOLD_GATE PASS",
+    "min_count_regex": "CP_FOLD PASS commands=(\\d+)"
+   },
+   {
+    "name": "reset_latency_mutant",
+    "cmd": "bash tools/hbm_v15_harden/bench_dma_vp4_banks_cp.sh {RUN}/bench/rst rst",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "CP_FOLD PASS",
+    "fail_regex": "DMA absolute cycle did not advance by one",
+    "fail_witness": "results/rtl/ref_tile/hv16_dbk_cpl/witness/reset_latency_mutant.log"
+   },
+   {
+    "name": "exact",
+    "cmd": "bash tools/hbm_v15_harden/bench_dma_vp4_banks.sh {RUN}/bench/exact 0",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "DMA_VP4_BANKS_BENCH_PASS"
+   },
+   {
+    "name": "strap_mutant",
+    "cmd": "bash tools/hbm_v15_harden/bench_dma_vp4_banks.sh {RUN}/bench/mut4 4",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "FATAL: .*dispatcher/engine fault at\\d+",
+    "fail_witness": "results/rtl/ref_tile/hv16_dbk_cpl/witness/strap_mutant.log"
+   },
+   {
+    "name": "banklat_rt80",
+    "cmd": "bash tools/hbm_v15_harden/bench_dma_banklat.sh {RUN}/bench/pass pass",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "BANKLAT PASS RR_RT_die=80",
+    "min_count_regex": "checks=(\\d+)"
+   },
+   {
+    "name": "old_latency_mutant",
+    "cmd": "bash tools/hbm_v15_harden/bench_dma_banklat.sh {RUN}/bench/mut_oldlat mut_oldlat",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "BANKLAT FAIL mv_fault",
+    "fail_witness": "tools/hbm_v15_harden/evidence/dma_banklat_1019/mut_oldlat.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hv16_dbk_cpl_s2/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hv16_dbk_cpl_s2/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 16
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hv16_dbk_cpl_s2 --out {RUN}/record/views/ot_hgi_dma_back_static_vp4_banks_cp --macro-view physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank --macro-view physical/ref_tile/hv16_dbk_collar/views/ot_hgi_dma_back_cp_collar --macro-view physical/ref_tile/hv16_dbk_vp4_ctl_rt80/views/ot_hgi_dma_back_static_vp4_controller > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/hv16_dbk_cpl_s2/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+   "physical/ref_tile/hv16_dbk_collar/views/ot_hgi_dma_back_cp_collar",
+   "physical/ref_tile/hv16_dbk_vp4_ctl_rt80/views/ot_hgi_dma_back_static_vp4_controller"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/hv16_dbk_cpl_s2/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/hv16_dbk_cpl_s2/hv16_dbk_cpl_s2-s1-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "L2H-HC 10-19 (H.STA.BLK.12): PARALLEL VARIANT of s1: child halo 5.4 -> 10.8 um (pin-access room at bank/controller faces; 65c2387ab DRC 1 = parent M4 wire in the bank M4 OBS pocket). Classified 65c2387ab (TT -12.30/FF +20.59/DRC 1): reg->reg u_control/bank_read_addr -> far bank L[5] ~457 um U-turn and bank_write_slot W-face star (macro->macro), L[4].wd -> wd port (macro->out), all wire reach between hard children; HH-7 per-face controller copies (3d37f28ac) cut the worst leg to ~343 um: gate 20261019-015514 macro->macro +3.6, macro->out +4.8, in->macro -135.5 pre-CTS (no hard-child insertion credit; routed in->reg was +45.4). Measured reasons (hv15_dbk_cp gate 1f18141cb, 10-16): clk_cp 1,844 sinks TT 421.6 / spread 126.5 (collar flops smeared between the 8 banks), rst_n port -> 793 loads unregistered incl. 8 bank macros + controller (in->macro -296.1), in->reg -170.8 u_cp.cmd[26] with the W face 98% pin-full; children off the 43.2 um lattice; 645.84 x 360.72 (1.79:1).  Why not the d4f slot 560 x 400: on the 43.2 um child lattice three 87.48-um bank rows need y = 43.2/172.8/302.4 (top 389.9, no N channel left in 400) and three 140.4-um columns need x up to 529.2, so 560 x 400 holds at most 2 x 3 = 6 banks; 8 banks + controller + collar leaf = 10 objects, and every bank must stay within ~480 um of BOTH the W face (rr) and the N face (wd) (textbook wire_reach 500 um/stage).  A 3-row ring (controller centre) cannot take the leaf within 1.5:1 (width >= 712 at height 432).  Chosen: 4 rows x 3 columns, 604.8 x 540 (1.12:1):   * col0 (x 86.4, 4 banks; 86.4 um W channel carries their 1,156 wd bits N), col1/col2 (x 259.2/432) banks in rows 0     and 3; the controller in col1 between rows 1-2 (bank star <= ~430 um), the collar leaf in col2 between rows 1-2     (W face -> controller E face 104 um; E face 21.6 um from the cluster E face where the F20 host bus enters);   * channels >= 32.4 um (columns) / 42.1 um (rows), every child on the 43.2 lattice;   * W face: rr per bank row (rq + rr_valid beside the controller row), <= 4.6 pins/um; N face: wd per bank column + wb/wa,     <= 4.5 pins/um; each clk_bank entry on the face point nearest its bank clock pin; clk_cp at the leaf clock pin.",
+ "reroute_reason": {
+  "kind": "structural",
+  "failed_job": "hv16_dbk_cpl-q1-65c2387ab",
+  "failure": "TT -12.30 / DRC 1 (hard-child wire reach; see structural_change)",
+  "why": "PARALLEL VARIANT of s1: child halo 5.4 -> 10.8 um (pin-access room at bank/controller faces; 65c2387ab DRC 1 = parent M4 wire in the bank M4 OBS pocket)"
+ }
+}
