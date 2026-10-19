@@ -1,0 +1,29 @@
+{
+  "tool": "Verilator5.050",
+  "placement": "unpinned ot-run, measured8GB8threads; ep8 selected",
+  "source": "2232bc6a7",
+  "baseline_unit": "oth-ubuntu-1804878-1792442380",
+  "classifier_complete_unit": "oth-ubuntu-1806356-1792442403",
+  "cases_per_seed": 4848,
+  "accepted_words_per_seed": 1468,
+  "seeds": [
+    "default",
+    17,
+    733,
+    65537
+  ],
+  "mutants": [
+    "slot",
+    "epoch",
+    "written",
+    "enable",
+    "metadata",
+    "pending_reset",
+    "K"
+  ],
+  "actual_rejections": [
+    "stale mod16 alias target38 actual22",
+    "same-address simultaneous RW precondition"
+  ],
+  "unchanged_macro_sha256": "2a2a1aa8e015910789e25f178352fb4af6c0255fbbe472708c3a4bd5922bce9e"
+}
