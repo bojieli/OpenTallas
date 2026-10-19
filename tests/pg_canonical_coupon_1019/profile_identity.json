@@ -1,0 +1,19 @@
+{
+  "RTL": "identical single source",
+  "SDCs": "byte-identical770/60/25/100/80",
+  "differing_kit_files": [
+    "floorplan.json",
+    "job.json",
+    "kit.env",
+    "spec.json"
+  ],
+  "default_helpers": 49,
+  "strict_helpers": 53,
+  "new_strict_helpers": [
+    "physical/common_flow/audit_native_pg.tcl",
+    "physical/common_flow/native_pg_binding.tcl",
+    "physical/common_flow/native_pg_bootstrap.tcl",
+    "tools/closure_loop/pg_receipt.py"
+  ],
+  "physical_executions": 0
+}

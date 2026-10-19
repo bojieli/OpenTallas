@@ -1,0 +1,56 @@
+{
+  "outline_um": [
+    43.2,
+    43.2
+  ],
+  "core_um": [
+    2.16,
+    2.16,
+    41.04,
+    41.04
+  ],
+  "band_um": [
+    2.16,
+    20.79,
+    41.04,
+    22.41
+  ],
+  "rows": 6,
+  "row_height_um": 0.27,
+  "band_area_um2": 62.9856,
+  "native_cells": 138,
+  "native_base_area_um2": 25.2963,
+  "native_base_band_fill": 0.40162037037037035,
+  "clock_allowance": {
+    "cell": "BUFx8_ASAP7_75t_R",
+    "count": 16,
+    "area_um2": 2.79936
+  },
+  "hold_allowance": {
+    "cell": "HB4xp67_ASAP7_75t_R",
+    "count": 64,
+    "area_um2": 6.53184
+  },
+  "output_driver_allowance": {
+    "change": "16 INVx1 -> INVx6, same real negative polarity",
+    "area_delta_um2": 1.1664
+  },
+  "priced_upper_area_um2": 35.7939,
+  "priced_upper_band_fill": 0.5682870370370371,
+  "remaining_area_to_60pct_um2": 1.9974599999999967,
+  "whole_core_fill": 0.01673418209876543,
+  "macro_count": 0,
+  "reach_manhattan_upper_um": 86.4,
+  "PG_status": "276nativePGterms allUNBOUND at synthesis; no conductor,PDN,contact,or timing claim",
+  "physical_status": "NOT_EXECUTED",
+  "constraints_ps": {
+    "period": 770,
+    "setup_uncertainty": 60,
+    "hold_uncertainty": 25,
+    "in": 100,
+    "out": 100,
+    "hold_margin": 30
+  },
+  "output_load_fF": 80,
+  "new_architectural_edges_vs_source": 0
+}

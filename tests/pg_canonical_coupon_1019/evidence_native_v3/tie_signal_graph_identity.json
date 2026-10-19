@@ -1,0 +1,10 @@
+{
+  "verdict": "PASS",
+  "scope": "exact nonstatic nativecell/pin identities and all input/output direct-source relationships, treating actual TIEHI H function1 as constants",
+  "nonstatic_cells": 86,
+  "input_and_output_relationships": 271,
+  "FF_state_edges_added": 0,
+  "physical_pg_equivalence": "not_claimed;all276unbound at synthesis",
+  "actual_source_odb_sha256": "a7106ef37a4f76a1649dd03e4a5e72f85f216e58bbdde1076465e7c91416af48",
+  "copied_tie_odb_sha256": "bc9b3d863cf026b558f6e5456affe2af3e48e050cf7f8c2817b6171c14ad6101"
+}

@@ -9,5 +9,6 @@ for i in b.getInsts():
    it=i.findITerm(t.getName()); assert it is not None and it.getMTerm()==t
    pg.append({'name':t.getName(),'role':str(t.getSigType()),'net':it.getNet().getName() if it.getNet() else None})
  rows.append({'instance':i.getName(),'master':m.getName(),'width_um':m.getWidth()/u,'height_um':m.getHeight()/u,'area_um2':m.getWidth()*m.getHeight()/u**2,'native_pg':pg})
-r={'dbu':u,'instances':rows,'area_um2':sum(x['area_um2'] for x in rows),'masters':dict(Counter(x['master'] for x in rows)),'native_pg_terms':sum(len(x['native_pg']) for x in rows)}
+all_masters={m.getName():{'width_um':m.getWidth()/u,'height_um':m.getHeight()/u,'area_um2':m.getWidth()*m.getHeight()/u**2} for lib in db.getLibs() for m in lib.getMasters()}
+r={'all_masters':all_masters,'dbu':u,'instances':rows,'area_um2':sum(x['area_um2'] for x in rows),'masters':dict(Counter(x['master'] for x in rows)),'native_pg_terms':sum(len(x['native_pg']) for x in rows)}
 out.write_text(json.dumps(r,indent=2)+'\n');print(json.dumps({k:v for k,v in r.items() if k!='instances'}))

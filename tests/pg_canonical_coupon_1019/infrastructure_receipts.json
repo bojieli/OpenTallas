@@ -1,0 +1,29 @@
+{
+  "source_map": {
+    "unit": "oth-ubuntu-2224313-1792447681",
+    "host": "ot-epyc6",
+    "synthesis": "exit0",
+    "inventory_wrapper": "exit1 duplicate FF SIMPLE bundles after strict raw FAIL was recorded"
+  },
+  "tie_input_missing": {
+    "unit": "oth-ubuntu-144926-1792447808",
+    "host": "ot-epyc7",
+    "exit": 1,
+    "engine_started": false,
+    "reason": "original native ODB not yet replicated onto this eligible host"
+  },
+  "tie_constructor": {
+    "unit": "oth-ubuntu-145409-1792447824",
+    "host": "ot-epyc7",
+    "constructor": "completed exact real52tie command, wrotenewcopiedODB",
+    "wrapper_exit": 1,
+    "reason": "report-only library copy expected top-level libraries not present on this host"
+  },
+  "finish_readonly_reports": {
+    "unit": "oth-ubuntu-146921-1792447863",
+    "host": "ot-epyc7",
+    "exit": 0,
+    "constructor_rerun": false
+  },
+  "description": "Metadata transcribed from actual admitted command stdout/exit and retained pertool logs; not fabricated positive engine receipts"
+}

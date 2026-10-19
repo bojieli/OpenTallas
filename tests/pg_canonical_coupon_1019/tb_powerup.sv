@@ -22,6 +22,6 @@ module tb_powerup;
      #1 rst_n=0;#1;if(y!==0)$fatal(1,"RUNNING_ASYNC_ASSERT");
      #1 rst_n=1;repeat(5)@(posedge clk);
    end
-   $display("POWERUP_PASS checks=%0d arbitrary51bits=X reset_cases=8 qualified_first_use_edge=3",checks);$finish;
+   $display("POWERUP_PASS checks=%0d data48bits=X resetbits=all8combinations qualified_first_use_edge=3",checks);$finish;
  end
 endmodule

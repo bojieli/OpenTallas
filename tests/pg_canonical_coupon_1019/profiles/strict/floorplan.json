@@ -1,0 +1,82 @@
+{
+ "schema": "opentallas.ref_tile.floorplan.v1",
+ "name": "pg_xor16_canonical_1019",
+ "top": "ot_pg_canonical_xor16_1019",
+ "kind": "tile",
+ "die": [
+  0,
+  0,
+  43.2,
+  43.2
+ ],
+ "core": [
+  2.16,
+  2.16,
+  41.040000000000006,
+  41.040000000000006
+ ],
+ "why": "spec outline (exact: the closed view's sub-slot)",
+ "std_area_um2": 25.2963,
+ "layer_contract": {
+  "children": {},
+  "pg_layer": "M5",
+  "rlayers": [
+   "M2",
+   "M5"
+  ],
+  "strap_layer": "M6",
+  "layer_cap": "M5",
+  "cap_basis": "contract"
+ },
+ "pins": {
+  "W": [
+   "a",
+   "b"
+  ],
+  "E": [
+   "y"
+  ],
+  "N": [
+   "clk",
+   "rst_n"
+  ]
+ },
+ "clock_port": "clk",
+ "blocks": [],
+ "findings": [
+  [
+   "WARN",
+   "util",
+   "utilisation 2% outside 45%-60% (std 25 + macro 0 in core 1512 um2)",
+   "resize the outline to util 0.50-0.55 (drop 'outline', set util)"
+  ]
+ ],
+ "referenced": [
+  "tests/pg_canonical_coupon_1019/coupon.sv",
+  "physical/ref_tile/pg_xor16_canonical_1019/kit.env",
+  "physical/ref_tile/pg_xor16_canonical_1019/clock.sdc",
+  "physical/ref_tile/pg_xor16_canonical_1019/signoff.sdc",
+  "physical/ref_tile/pg_xor16_canonical_1019/pdn.tcl",
+  "physical/ref_tile/pg_xor16_canonical_1019/pre_cts.tcl",
+  "physical/ref_tile/pg_xor16_canonical_1019/post_cts.tcl",
+  "physical/ref_tile/pg_xor16_canonical_1019/post_grt.tcl",
+  "physical/ref_tile/pg_xor16_canonical_1019/pre_drt.tcl",
+  "physical/ref_tile/pg_xor16_canonical_1019/pre_fill.tcl",
+  "physical/ref_tile/pg_xor16_canonical_1019/post_fill.tcl",
+  "physical/ref_tile/pg_xor16_canonical_1019/pre_grt.tcl",
+  "physical/ref_tile/pg_xor16_canonical_1019/post_drt.tcl",
+  "tools/ref_tile/ref_route.sh",
+  "physical/qwen_die_masters/io_ref_skew.sdc",
+  "physical/qwen_die_masters/io_plain.sdc",
+  "physical/qwen_die_masters/repair_budget.tcl",
+  "physical/qwen_die_masters/pre_cts_skew.tcl",
+  "physical/qwen_die_masters/pre_ref_skew.tcl",
+  "physical/qwen_die_masters/post_plain.tcl",
+  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+  "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/common_flow/native_pg_binding.tcl",
+  "physical/common_flow/native_pg_bootstrap.tcl",
+  "physical/common_flow/audit_native_pg.tcl",
+  "tools/closure_loop/pg_receipt.py"
+ ]
+}
