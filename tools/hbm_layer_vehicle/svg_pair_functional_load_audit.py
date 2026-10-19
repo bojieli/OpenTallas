@@ -36,7 +36,8 @@ def origin(bit,seen=None):
   if len(ins)==1:return origin(ins[0],seen|{bit})
  return ('FF_Q' if seq(ct) else 'SRAM_Q' if ct.startswith('ot_sram_') else 'combinational',cn+':'+pt+':'+str(bit))
 report=[]
-for bit,sinks in list(loads.items()):
+for bit in sorted(set(loads)|set(drivers)|set(inputbits)):
+ sinks=loads[bit]
  pins,visited=collapse(bit);names=list(dict.fromkeys(x for b in visited for x in aliases[b]));driver_kind,driver=origin(bit)
  kind='clock' if bit in clockbits or bool(pins) and all(seq(ct) and pt.upper() in ['CLK','CK','C','CLOCK'] for _,ct,pt in pins) else 'reset' if any(re.search(r'rst|reset|phase0',n,re.I) for n in names) else driver_kind
  report.append(dict(bit=bit,kind=kind,driver_kind=driver_kind,origin=driver,names=names,direct_load=len(sinks),collapsed_load=len(pins),drivers=drivers[bit],sinks=sorted(pins)))

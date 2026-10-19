@@ -186,13 +186,13 @@
       86.424,
       129.6
     ],
-    "measured_source_commit": "327ef3481",
-    "measured_local_cell_band_density": 0.5045312500000003,
+    "measured_source_commit": "48fa0a785",
+    "measured_local_cell_band_density": 0.5686860795454549,
     "placement_util_target": [
       0.4,
       0.6
     ],
-    "measured_stdcell_area_um2": 3107.20212,
+    "measured_stdcell_area_um2": 3502.30554,
     "outline_status": "reduced source-legal GEOMETRY CANDIDATE, not smallest SAFE until measured cell area and native access/reach audits",
     "earlier_generous_outline_um": [
       432.0,
@@ -204,8 +204,8 @@
       2463.4367999999986,
       3695.1551999999974
     ],
-    "stdcell_band_height_at_50pct_um": 16.3468125,
-    "stdcell_band_rule": "60 rows of0.27um fullwidth at50.45% measured density; remaining26.976um of macro gap reserved for real routing/clock/PG access; placement/reach OPEN",
+    "stdcell_band_height_at_50pct_um": 18.425428977272727,
+    "stdcell_band_rule": "60 rows of0.27um fullwidth at56.87% measured density; remaining26.976um of macro gap reserved for real routing/clock/PG access; placement/reach OPEN",
     "access_channels_um": {
       "left": 43.2,
       "between_macro_columns": 43.17599999999999,
@@ -327,7 +327,8 @@
       "orientation_bottom": "R0",
       "orientation_top": "MX",
       "utilization": "OPEN: derive placement band from synthesis after assembler storage redesign",
-      "OPEN_STORAGE_BLOCKER": {
+      "legacy_source_storage_audit": {
+        "applicability": "legacy packed136 only; opt-in native cache assembly qualified separately by cache owner; not a native-pair blocker",
         "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_sm_packed136.sv",
         "object": "words[0:15][255:0]",
         "runtime_bits": 4096,
@@ -371,7 +372,7 @@
   },
   "current_macro_count": 25,
   "current_macro_area_um2": 142202.728512,
-  "macro_inventory_warning": "25 describes CURRENT source; resolving4096bit assembler may add macros. Not production-qualified.",
+  "macro_inventory_warning": "25 describes source-bound parent composition; opt-in cache owner owns its native assembly audit. Native pair inventory remains four macros. Not production-qualified.",
   "canonical_pin_access_audit": "OPEN: actual canonical LEFs are~10pins/um on WE M4 faces; 6/um applicability to macro versus external faces awaits owner interpretation. No cosmetic LEF edit or SAFE claim.",
   "fullface_proposal": "real compiler variant: all rd_out North, wd_in+w_mask_in South, controls/repair West; all counted faces<=6/um for these four macros except verify generated periphery timing",
   "regional_clock_trees": {
@@ -381,6 +382,6 @@
     "source_domains": "four pair HBM, four pair stream, four local forwarded cache-phase, one cache core",
     "scope": "landing/return minimum only; payload/program/issuer physical roots remain OPEN"
   },
-  "timing": "return pipeline remains7edges; compiler prefetch15=8native landing+7return. Actual root/source mapping and ordinary nearest-edge timing OPEN before gate",
+  "timing": "regional return remains7edges; native pair request-to-return8edges and conservative compiler prefetch18=11native landing+7regional return; earlier9/16 superseded. Actual root/source mapping and ordinary nearest-edge timing OPEN before gate",
   "qualification": "MODEL/OUTLINE PROPOSAL ONLY; source macro inventory measured, pair mapped area/fanout measured; face placement/reach/clock and other elements synthesis evidence missing; NO gate/submit"
 }
