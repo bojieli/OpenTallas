@@ -488,7 +488,7 @@ def stale_native_cts_sdcs(kd: Path, spec: dict) -> list:
         return []
     expected = {
         "clock.sdc": RT.gen_sdc(spec, float(spec.get("route", {}).get("period_ps", 770))),
-        "clock_entry.sdc": "set ::ot_ce_require_wire 1\n" + RT.clock_entry_constraints.generate(spec, RT.ROOT),
+        "clock_entry.sdc": "set ::ot_ce_require_wire 1\n" + RT.ce_generate(spec),
         "signoff.sdc": RT.gen_signoff(spec, spec.get("refglob", "*"), ",".join(spec.get("inter", [])) or "none_*"),
     }
     return [name for name, text in expected.items()
