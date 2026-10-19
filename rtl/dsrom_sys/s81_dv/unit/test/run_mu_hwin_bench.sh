@@ -14,6 +14,7 @@ run() { n=$1; shift
     --Mdir "$O/obj_$n" -o tb > "$O/build_$n.log" 2>&1 || { echo "BUILD_FAIL $n"; bad=1; return; }
   "$O/obj_$n/tb" > "$O/run_$n.log" 2>&1; grep -E '^MUWIN' "$O/run_$n.log" | sed "s/^/[$n] /"; }
 run slots47 +define+NSLOT_TEST=47 +define+MIN_D=1; grep -q '^MUWIN PASS' "$O/run_slots47.log" || bad=1
+run fast_cfg +define+FAST_CFG=1 +define+MIN_D=1; grep -q '^MUWIN PASS' "$O/run_fast_cfg.log" || bad=1
 run min_d +define+MIN_D=1; grep -q '^MUWIN PASS' "$O/run_min_d.log" || bad=1
 run badd +define+BAD_D=1; grep -q '^MUWIN BADD PASS' "$O/run_badd.log" || bad=1
 run badd_high +define+BAD_D_HIGH=1; grep -q '^MUWIN BADD_HIGH PASS' "$O/run_badd_high.log" || bad=1

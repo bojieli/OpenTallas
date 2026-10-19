@@ -79,7 +79,11 @@ module tb_dsdv_mu_hwin;
     integer stc [0:NU*ROUNDS-1]; integer stu [0:NU*ROUNDS-1]; integer stp [0:NU*ROUNDS-1]; integer nst = 0;
     integer kconst = -1;
     task automatic cfg(input [25:0] w); begin f_mc = w; @(posedge ck); #0.1; f_mc = 0; @(posedge ck); #0.1; end endtask
-    task automatic wcfg(input [25:0] w); begin f_mw = w; @(posedge ck); #0.1; f_mw = 0; @(posedge ck); #0.1; end endtask
+    task automatic wcfg(input [25:0] w); begin f_mw = w; @(posedge ck); #0.1; f_mw = 0;
+`ifndef FAST_CFG
+        @(posedge ck); #0.1;
+`endif
+    end endtask
     always @(posedge ck) cyc <= cyc + 1;
     // ---- monitor: match every output against the starts
     integer s, d, hit, port; reg [1:0] aa; reg [33:0] want_c; reg [10:0] want_r;

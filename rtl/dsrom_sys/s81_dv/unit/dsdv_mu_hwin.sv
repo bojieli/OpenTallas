@@ -400,17 +400,18 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
         (* keep *) reg arm_r;
         // Decode at the existing input landing edge, independently per event.
         // Sharing mc_valid/type AND empty-table produced a 400-load boot enable.
-        (* keep *) reg cfg_gap_r,cfg_rl_r,start_r,cfg_w0_r,cfg_w1_r,cfg_w2_r;
+        (* keep *) reg cfg_gap_r,cfg_rl_r,start_r,cfg_w0_r,cfg_w1_r,cfg_w2_r,cfg_sel_r;
         (* keep *) reg [SI-1:0] cfg_addr_r;
         (* keep *) reg [EI-1:0] cfg_kind_r;
         (* keep *) reg [1:0] cfg_attr_r;
         assign cfg_addr[ce]=cfg_addr_r; assign cfg_attr[ce]=cfg_attr_r;
         assign rec_local[ce]=start_r && on_cal && !col && !udup && !(!armed && hcfg_bad);
         always @(posedge ck or negedge rr[COPY_RBASE+7*ce+6])
-            if(!rr[COPY_RBASE+7*ce+6]) begin cfg_gap_r<=1'b0;cfg_rl_r<=1'b0;start_r<=1'b0;cfg_w0_r<=0;cfg_w1_r<=0;cfg_w2_r<=0;cfg_addr_r<=0;cfg_kind_r<=0;cfg_attr_r<=0;end
-            else begin cfg_w0_r<=f_mw[25] && f_mw[22:21]==2'd0;cfg_w1_r<=f_mw[25] && f_mw[22:21]==2'd1;cfg_w2_r<=f_mw[25] && f_mw[22:21]==2'd2;cfg_gap_r<=f_mc[25] && !f_mc[24];cfg_rl_r<=f_mc[25] && f_mc[24];start_r<=f_ks[52];cfg_addr_r<=f_mw[SI-1:0];cfg_kind_r<=f_mw[EI-1:0];cfg_attr_r<=f_mw[11:10];end
+            if(!rr[COPY_RBASE+7*ce+6]) begin cfg_gap_r<=1'b0;cfg_rl_r<=1'b0;start_r<=1'b0;cfg_w0_r<=0;cfg_w1_r<=0;cfg_w2_r<=0;cfg_sel_r<=0;cfg_addr_r<=0;cfg_kind_r<=0;cfg_attr_r<=0;end
+            else begin cfg_sel_r<=((wv && idle && mw_q[22:21]==2'd0)?mw_q[EI-1:0]:esel)==EI'(ce);cfg_w0_r<=f_mw[25] && f_mw[22:21]==2'd0;cfg_w1_r<=f_mw[25] && f_mw[22:21]==2'd1;cfg_w2_r<=f_mw[25] && f_mw[22:21]==2'd2;cfg_gap_r<=f_mc[25] && !f_mc[24];cfg_rl_r<=f_mc[25] && f_mc[24];start_r<=f_ks[52];cfg_addr_r<=f_mw[SI-1:0];cfg_kind_r<=f_mw[EI-1:0];cfg_attr_r<=f_mw[11:10];end
         wire [6:0] boot_count;
-        wire d_write,d_check,attr_write,kind_write,rl_write,rl_check,gap_write;
+        wire [2:0] d_write,d_check;
+        wire attr_write,kind_write,rl_write,rl_check,gap_write;
         if(LOCAL_BOOT!=0) begin:g_boot_local
             (* keep *) reg [SJ-1:0] count_r;
             always @(posedge ck or negedge rr[RBOOT_BASE+ce])
@@ -421,8 +422,10 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
             always @(posedge ck) if(rr[RBOOT_BASE+ce])
                 if(count_r!==SJ'($countones(vld))) $fatal(1,"event boot count differs event%0d",ce);
 `endif
-            (* keep=1 *) dsdv_mu_boot_enable u_dwrite(.count(boot_count),.armed(arm_r),.valid(cfg_w1_r),.match(esel==EI'(ce)),.en(d_write));
-            (* keep=1 *) dsdv_mu_boot_enable u_dcheck(.count(boot_count),.armed(arm_r),.valid(cfg_w1_r),.match(esel==EI'(ce)),.en(d_check));
+            for(genvar dg=0;dg<3;dg=dg+1) begin:g_d_enable
+                (* keep=1 *) dsdv_mu_boot_enable u_write(.count(boot_count),.armed(arm_r),.valid(cfg_w1_r),.match(cfg_sel_r),.en(d_write[dg]));
+                (* keep=1 *) dsdv_mu_boot_enable u_check(.count(boot_count),.armed(arm_r),.valid(cfg_w1_r),.match(cfg_sel_r),.en(d_check[dg]));
+            end
             (* keep=1 *) dsdv_mu_boot_enable u_attr(.count(boot_count),.armed(arm_r),.valid(cfg_w2_r),.match(esel==EI'(ce)),.en(attr_write));
             (* keep=1 *) dsdv_mu_boot_enable u_kind(.count(boot_count),.armed(arm_r),.valid(cfg_w0_r),.match(cfg_kind_r==EI'(ce)),.en(kind_write));
             (* keep=1 *) dsdv_mu_boot_enable u_rlwrite(.count(boot_count),.armed(arm_r),.valid(cfg_rl_r),.match(1'b1),.en(rl_write));
@@ -430,7 +433,7 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
             (* keep=1 *) dsdv_mu_boot_enable u_gap(.count(boot_count),.armed(arm_r),.valid(cfg_gap_r),.match(gn!=SJ'(NSLOT)),.en(gap_write));
         end else begin:g_boot_direct
             assign boot_count=global_count;
-            assign d_write=wv && idle_event[ce] && mw_q[22:21]==2'd1 && esel==EI'(ce);
+            assign d_write={3{wv && idle_event[ce] && mw_q[22:21]==2'd1 && esel==EI'(ce)}};
             assign d_check=d_write;
             assign attr_write=wv && idle_event[ce] && mw_q[22:21]==2'd2 && esel==EI'(ce);
             assign kind_write=wv && idle_event[ce] && mw_q[22:21]==2'd0 && mw_q[EI-1:0]==EI'(ce);
@@ -439,12 +442,14 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
         end
         assign attr_boot[ce]=attr_write;
         if(CHECK_STAGE!=0) begin:g_check_lookahead
-            wire set_d=d_check;
-            wire [20:0] next_d=set_d?mw_q[20:0]:eD[ce];
+            wire [20:0] next_d;
+            for(genvar db=0;db<21;db=db+1) begin:g_d_mux
+                assign next_d[db]=d_check[db/8]?mw_q[db]:eD[ce][db];
+            end
             wire [SI-1:0] next_lw=(gap_write)?
                 ((gn==0)?SI'(NSLOT-1):gn[SI-1:0]):lw_r;
             wire [23:0] next_rl=(rl_check)?mc_q[23:0]:rl_r;
-            wire next_enabled=evld[ce] || d_check;
+            wire next_enabled=evld[ce] || d_check[0];
             reg invalid_r;
             // The next-state values above are exactly the values the direct
             // checker observes after this edge. Fault remains on first start.
@@ -477,11 +482,17 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
         always @(posedge ck or negedge rr[COPY_RBASE+7*ce+5])
             if(!rr[COPY_RBASE+7*ce+5]) arm_r<=1'b0;
             else if(st && !arm_r && !hcfg_bad) arm_r<=1'b1;
+        for(genvar db=0;db<21;db=db+1) begin:g_d_storage
+            always @(posedge ck) if(d_write[db/8]) eD[ce][db]<=mw_q[db];
+        end
+`ifdef DSDV_MU_POINTER_ASSERT
+        always @(posedge ck) if(rn && LOCAL_BOOT!=0 && cfg_w1_r)
+            if(cfg_sel_r !== (esel==EI'(ce))) $fatal(1,"boot selector lookahead mismatch e%0d",ce);
+`endif
         always @(posedge ck) begin
             if(kind_write) begin
                 ek[ce]<=mw_q[8]; eep[ce]<=mw_q[9+:PI];
             end
-            if(d_write) eD[ce]<=mw_q[20:0];
         end
     end endgenerate
     generate for(rcg=0;rcg<NRT*NC_REC;rcg=rcg+1) begin:g_rx_compare_copy
