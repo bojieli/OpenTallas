@@ -34,7 +34,29 @@ for port, net in outp.items():
     if c is None or not (isff(cells[c][0]) or cells[c][0].startswith('TIE')):
         bad_out.append((port, c, cells[c][0] if c else None))
 clk_net = next(n for n, p in inp.items() if p == 'ck')
-fo = {n: len(l) for n, l in loads.items() if n != clk_net}
+direct_fo = {n: len(l) for n, l in loads.items() if n != clk_net}
+# Count real logical endpoint pins through every transparent BUF/INV chain.
+# Direct counts hid eight reset FF roots with 42..131 native RESETN loads.
+port_loads = collections.defaultdict(set)
+for port, net in outp.items():
+    port_loads[net].add(('PORT', port))
+memo_ends = {}
+def endpoints(net, seen=frozenset()):
+    if net in memo_ends: return memo_ends[net]
+    if net in seen: raise RuntimeError('transparent cycle: ' + net)
+    result = set(port_loads[net])
+    for name, pin in loads.get(net, []):
+        ms, ps = cells[name]
+        if ms.startswith(('BUF', 'INV', 'HB')):
+            ys = [v for p, v in ps.items() if p in OUTS]
+            if len(ys) != 1: raise RuntimeError('unknown transparent cell: ' + name)
+            result.update(endpoints(ys[0], seen | {net}))
+        elif pin not in ('CLK', 'CK'):
+            result.add((name, pin))
+    memo_ends[net] = frozenset(result)
+    return memo_ends[net]
+fo = {n: len(endpoints(n)) for n in set(drv) | set(inp) if n != clk_net}
+over_fo = sorted(((n, count) for n, count in fo.items() if count > 32), key=lambda x: -x[1])
 fo_max = max(fo.values())
 # comb levels: longest path (cells) from FF/port to FF D / port
 memo = {}
@@ -50,7 +72,9 @@ undriven = sorted(n for n in loads if n not in drv and n not in inp and not n.st
 undriven += sorted(n for n in outp.values() if n not in drv and n not in inp)
 res = dict(undriven=len(undriven), undriven_examples=undriven[:10], cells=len(cells), ff=sum(isff(m) for m, _ in cells.values()), bad_inputs=len(bad_in), bad_outputs=len(bad_out),
            bad_input_examples=bad_in[:10], bad_output_examples=bad_out[:10], tie_outputs=sum(1 for p, n in outp.items() if n in drv and cells[drv[n][0]][0].startswith('TIE')),
-           fanout_max_nonclock=fo_max, fanout_max_net=max(fo, key=fo.get), ff_d_levels_max=max(dl)[0], ff_d_levels_worst=sorted(dl)[-5:])
+           fanout_max_nonclock=fo_max, fanout_max_net=max(fo, key=fo.get), fanout_method='all_driver_BUF_INV_transparent_native_pins', fanout_over32=over_fo, direct_fanout_max_nonclock=max(direct_fo.values()), ff_d_levels_max=max(dl)[0], ff_d_levels_worst=sorted(dl)[-5:])
 print(json.dumps(res))
 if len(sys.argv) > 3 and sys.argv[2] == '--json': json.dump(res, open(sys.argv[3], 'w'), indent=1)
-print('CHECK_PINREG', 'PASS' if not bad_in and not bad_out and not undriven else 'FAIL')
+ok = not bad_in and not bad_out and not undriven and not over_fo
+print('CHECK_PINREG', 'PASS' if ok else 'FAIL')
+sys.exit(0 if ok else 1)

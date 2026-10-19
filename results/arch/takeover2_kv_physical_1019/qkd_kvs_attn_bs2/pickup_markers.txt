@@ -1,0 +1,8 @@
+GATE_PIN_GEOMETRY_RC=0
+GATE_PIN_GEOMETRY_RESULT {"schema":"opentallas.fp_pin_geometry.v1","verdict":"PASS","fails":[],"metrics":{"signal_clock_pins":3284,"pin_rectangles":3284,"pin_track_checked":3284,"pin_track_inaccessible":0,"pin_rectangles_outside":0,"missing_geometry":0},"dump":"/srv/opentallas-scratch/claude/ref_gate/qkd_kvs_attn_bs2-20261019-115259/routes/gate/work/orfs/gate_dump.json","dump_sha256":"0df77c4401438bfb0240e524a3744cf3cc1f95424074994002af6f58753d60fb","validator_sha256":"5c0b112365aab653a6790d862cec90ff30a182ce0aeae58e80465b5b68c391a8"}
+GATE_CK_RC=0
+GATE_CK ss insertion all 579.3..640.5 ps (spread 61.2), boundary mean 603.2; tt insertion all 442.5..497.1 ps (spread 54.6), boundary mean 459.8; ff insertion all 356.8..408.3 ps (spread 51.5), boundary mean 372.1; macro_clk flag False
+GATE_CK_DOMAIN {"source": "ck", "clock": "core_clk", "tt": {"clock_family": {"core_clk": 6390}, "boundary": {"n": 2697, "mean": 459.8, "min": 442.5, "max": 479.0}, "all": {"n": 6390, "mean": 459.1, "min": 442.5, "max": 497.1}, "errors": [], "macros": null, "macro_libs": 0}, "ff": {"boundary": {"n": 2697, "mean": 372.1, "min": 356.8, "max": 394.2}, "all": {"n": 6390, "mean": 370.8, "min": 356.8, "max": 408.3}, "child_flop": null, "macros": null}}
+GATE_PC constraints signoff /src/physical/ref_tile/qkd_kvs_attn_bs2/signoff.sdc (TT placement RC; diagnostic)
+GATE_PC reg->reg      600 paths, worst slack -118.1 ps (e.g. u_core.cpo282_ff/D)
+GATE_PC setup WNS -1.1807599342716912e-10 hold WNS 3.794570213599968e-11

@@ -19,7 +19,8 @@ outs = [(n, int(h) - int(l) + 1 if h else 1) for d, h, l, n in ports if d == 'ou
 s = ['`timescale 1ns/1ps', 'module tb_pr;', 'reg ck=0; always #0.416667 ck=~ck;']
 s += [f'reg [{w-1}:0] {n}=0;' for n, w in ins]
 s += [f'wire [{w-1}:0] o_{n}, p_{n};' for n, w in outs]
-for typ, pre in (('qkd_kvs_attn_safe_control', 'o'), ('qkd_kvs_attn_safe_pr', 'p')):
+candidate_top = re.search(r'^module\s+(\w+)', prsrc, re.M).group(1)
+for typ, pre in (('qkd_kvs_attn_safe_control', 'o'), (candidate_top, 'p')):
     s.append(f'{typ} {pre}dut(.ck(ck),' + ','.join(f'.{n}({n})' for n, _ in ins) + ',' + ','.join(f'.{n}({pre}_{n})' for n, _ in outs) + ');')
 s += ["reg [63:0] rng=64'h9e3779b97f4a7c15; integer checks=0, ffchecks=0, mode;",
       'function automatic [31:0] draw; rng=rng^(rng<<13); rng=rng^(rng>>7); rng=rng^(rng<<17); return rng[31:0]; endfunction',
