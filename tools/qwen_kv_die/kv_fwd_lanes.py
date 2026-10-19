@@ -29,6 +29,7 @@ n, source / receiving block and region, planned E, latency today n + 1 vs landed
 """
 import argparse
 import json
+import os
 import math
 import re
 import shutil
@@ -283,6 +284,24 @@ def main(argv=None):
                              reserved_unused_count=len(set(slots) - set(lastst)))
     for s, L in lastst.items():
         L['land_slot'] = s in slots
+    # KV-PLAN5 10-18 OT_KV_FWD_UNLANDED_DIAG=1: a DIAGNOSTIC physical run (never a die result) keeps the lanes whose wide landing
+    # has no reserved frame as their plain relay stations (unlanded crossings: die_chain stamps NOT_A_DIE_RESULT via the
+    # RUN/FWD_UNLANDED_DIAGNOSTIC marker, kv_landed_pairs reports them as GAP) so GRT / STA / die clock evidence of the rest
+    # of the landed die exists while the planner slot fix is owed
+    if os.environ.get('OT_KV_FWD_UNLANDED_DIAG') == '1' and rep['land_slots']['unslotted_wide'] and not a.netlist_only:
+        unl = []
+        for s, L in lastst.items():
+            if s not in slots and L['S'] != 1:
+                for c in L['stations']:
+                    mst_ = new.pop(c, (None,))[0]
+                    if mst_:
+                        rep['per_master'][mst_] -= 1
+                L['unlanded_diagnostic'] = True
+                unl.append(s)
+        rep['land_slots']['unlanded_diagnostic'] = sorted(unl)
+        rep['land_slots']['unslotted_wide'] = 0
+        (a.run / 'FWD_UNLANDED_DIAGNOSTIC').write_text('\n'.join(sorted(unl)) + '\n')
+        print(f'kv_fwd_lanes: DIAGNOSTIC -- {len(unl)} wide lanes left unlanded (no reserved landing frame): {sorted(unl)}')
     rep['skipped'] = dict(skipped)
     rep['skipped_examples'] = {k: v[:40] for k, v in skip_ex.items()}
     rep['totals'] = dict(rep['totals'])
