@@ -4,7 +4,7 @@
 set -euo pipefail
 cd "$(dirname "$0")/../.."
 out=$(realpath -m "$1"); mut=${2:-0}; mkdir -p "$out"
-VL=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
+VL=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}; [ -x "$VL" ] || VL=verilator
 S=rtl/hbm_accel/generic/adapters/static_su
 python3 tools/hbm_static/su_pretree_bench.py "$out" > "$out/gen.log"
 $VL --version | tee "$out/verilator_version.txt"

@@ -2,8 +2,8 @@
 """SU reducer ingress widening: compiler lowering of a reduction onto the per-pgslice pre-tree (HH-6 / HBM-SURED 10-18).
 
 Hardware (rtl/hbm_accel/generic/adapters/static_su/reduction/ot_hbm_su_red_pretree.sv, pgslice PRETREE, qcore_r5
-PRETREE): a quarter's 128 lockstep lanes hold one 128-word issue block on their ro_x at edge E; tree_cmd {v,max,cnt}
-at E turns it into the block's golden csum8 subtree (words >= cnt padding), which the reducer takes as ONE external
+PRETREE): a quarter's 128 lockstep lanes hold one 128-word issue block on their ro_x at edge E; tree_cmd (per slice
+{v,max,cntB5,cntA5}, tree_cmd_word) at E turns it into the block's golden csum8 subtree (words >= cnt padding), which the reducer takes as ONE external
 operand by a red_cmd {osel=1, lane bit5=1} issued at E + PT_RED.  Fixed edges, no stall, no ready.
 
 Lowering of one reduction of n words (block b = words 128b..128b+127, quarter lane w = word w of the block):
@@ -159,6 +159,16 @@ class Schedule:
         assert val == g, ("lowered tree != golden", kind, n, hex(val), hex(g))
         self.exps.append((e, tag, val))
         return t
+
+
+def tree_cmd_word(mx, cnt):
+    """the four slices' tree_cmd {v, max, cntB5, cntA5} (slice G at bits 12G): half A = words 16G..16G+15, B = 64+16G.."""
+    v = 0
+    for g in range(4):
+        ca = min(16, max(0, cnt - 16 * g))
+        cb = min(16, max(0, cnt - 64 - 16 * g))
+        v |= ((1 << 11) | (mx << 10) | (cb << 5) | ca) << (12 * g)
+    return v
 
 
 def red_cmd_word(c):

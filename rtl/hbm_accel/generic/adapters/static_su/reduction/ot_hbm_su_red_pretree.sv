@@ -11,12 +11,14 @@
 // MAX mode uses the reducer's ordered compare (canonical +0) and pushes the winner through the same adder with +0
 // (exact identity), so one FP32 adder serves both modes and both modes have the same fixed latency.
 //   ot_hbm_su_red_pretree_node  one tree node, LAT edges, inputs {v,x} x 2, mode bit carried
-//   ot_hbm_su_red_pretree_s     per pgslice (G): its 32 lanes = quarter words 16G..16G+15 (half A) and 64+16G..+15
+//   ot_hbm_su_red_pretree_s     per pgslice G: its 32 lanes = quarter words 16G..16G+15 (half A) and 64+16G..+15
 //                               (half B): 4 chunk chains (canonical x0 + 7 nodes, lane k skewed (k-1)*LAT) + 1 node per
 //                               half -> two 16-word subtrees, registered at E+1+8*LAT+1 (E+50 at LAT 6)
 //   ot_hbm_su_red_pretree_j     in the quarter core: pin register (+1), 3 node levels over the 8 16-word subtrees in word
 //                               order (k<4: slice k half A, k>=4: slice k-4 half B), output register -> E+3*LAT+2 more
-// tree_cmd {v, max, cnt8} is sampled at the edge E at which the lanes' ro_x hold the block (as red_sel samples one lane).
+// tree_cmd {v, max, cntB5, cntA5} (per slice, compiler-computed: cntA = clamp(cnt-16G,0,16), cntB = clamp(cnt-64-16G,0,16)
+// for a block of cnt valid words; ONE master for all 16 slices of the die) is sampled at the edge E at which the lanes'
+// ro_x hold the block (as red_sel samples one lane).
 // No stall, no ready: every edge can start a block.  FAULT (sticky): a counted lane without ro_v, an adder error.
 // MUT (bench, must FAIL): 1 chunk order x1<->x2; 2 join pairing (s0+s2),(s1+s3); 3 max bit ignored (always add);
 //   4 padding off by one (w <= cnt counted).
@@ -41,27 +43,29 @@ module ot_hbm_su_red_pretree_node #(parameter integer LAT=6)(
  assign mode_out=md[LAT-1]; assign vy=vo; assign err=vo&&(e!=2'd0);
 endmodule
 
-module ot_hbm_su_red_pretree_s #(parameter integer G=0,LAT=6,MUT=0)(
+module ot_hbm_su_red_pretree_s #(parameter integer LAT=6,MUT=0)(
  input wire clk, rst_n,
- input wire [9:0] tree_cmd,            // {v, max, cnt8}
+ input wire [11:0] tree_cmd,           // {v, max, cntB5, cntA5}
  input wire [1023:0] ro_x, input wire [31:0] ro_v,
  output reg [66:0] tree_o,             // {max, vB, xB, vA, xA}
  output reg fault
 );
- function automatic integer wid(input integer n); wid=(n<16)?16*G+n:64+16*G+(n-16); endfunction
  // stage 1: capture the block (edge E)
  reg [31:0] x1 [0:31]; reg [31:0] v1; reg m1; reg bad1; integer n;
  always @(posedge clk) begin
   for(n=0;n<32;n=n+1) x1[n]<=ro_x[n*32+:32];
-  m1<=(MUT==3)?1'b0:tree_cmd[8];
+  m1<=(MUT==3)?1'b0:tree_cmd[10];
  end
  always @(posedge clk or negedge rst_n)
   if(!rst_n) begin v1<=32'd0; bad1<=1'b0; end
   else begin
    bad1<=1'b0;
-   for(n=0;n<32;n=n+1) begin
-    v1[n]<=tree_cmd[9]&&((MUT==4)?(wid(n)<=tree_cmd[7:0]):(wid(n)<tree_cmd[7:0]));
-    if(tree_cmd[9]&&wid(n)<tree_cmd[7:0]&&!ro_v[n]) bad1<=1'b1;
+   for(n=0;n<32;n=n+1) begin : lv
+    reg [4:0] cn; reg on;
+    cn=(n<16)?tree_cmd[4:0]:tree_cmd[9:5];
+    on=tree_cmd[11]&&(5'(n%16)<cn);
+    v1[n]<=(MUT==4)?(tree_cmd[11]&&5'(n%16)<=cn):on;
+    if(on&&!ro_v[n]) bad1<=1'b1;
    end
   end
  // chunk chains: chunk c = lanes 8c..8c+7 (c 0,1 half A; 2,3 half B)

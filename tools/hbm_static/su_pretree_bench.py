@@ -38,14 +38,14 @@ def main():
         t = S.lower(kind, vals(rng, n, kind), 0x200 + i, t)
         t = max(t, max(S.exps[-1][0] - L.PT_RED + 1, t))            # next reduction's arrivals after this export
     ne = max(max(S.red), max(S.tree)) + 40
-    W = 10 + 74 + 128 + 4096
+    W = 48 + 74 + 128 + 4096
     with open(out / "stim.mem", "w") as f:
         for e in range(ne):
             v = 0
             if e in S.tree:
                 mx, cnt, blk = S.tree[e]
                 xs = [int(x) for x in blk] + [int(x) for x in rng.integers(0, 1 << 32, L.BLOCK - len(blk), dtype=np.uint64)]
-                v |= ((1 << 9) | (mx << 8) | cnt) << (W - 10)
+                v |= L.tree_cmd_word(mx, cnt) << (W - 48)
                 v |= ((1 << 128) - 1) << 4096
                 for w, x in enumerate(xs):
                     v |= (x & 0xffffffff) << (32 * w)
