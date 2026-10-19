@@ -254,7 +254,11 @@ reg allow_aw=1,allow_w=1;
  integer request_counts[8],request_returns[8],result_returns[8],releases[8],raw_cleanup_due[8];
  integer response_due=-1,response_step=-1,first_issue_edge=0,max_response=0;
  integer case_id=0;
- reg[63:0]stalled_awaddr,stalled_wdata;reg stalled_aw=0,stalled_w=0;
+ // Selected one-beat pin-channel protocol: first acceptance owns request;
+ // WAIT_DROP may retain VALID through the registered ACK. Not generic AXI.
+ reg aw_seen=0,aw_accepted=0,w_seen=0,w_accepted=0,ar_seen=0,ar_accepted=0;
+ reg[63:0]held_awaddr,held_wdata,held_araddr;
+ integer aw_accepts=0,w_accepts=0,ar_accepts=0;
  reg[86:0]saved_cq_key;reg saved_cq_key_valid=0;
  // These are invariants on true exposed protocol events, not DUT mirror oracles.
  always @(posedge clk)begin
@@ -326,9 +330,27 @@ reg allow_aw=1,allow_w=1;
    if(post_retired)begin
     if(post_completions>=1&&case_id<=3&&native_cq_retirements<post_completions)$fatal(1,"POST_BEFORE_REAL_CQB");
     post_completions=post_completions+1;$display("POST e=%0d tag=%h",edges,post_tag);end
-   if(stalled_aw&&(!m_awvalid||m_awaddr!==stalled_awaddr))$fatal(1,"OFFERED_AW_CHANGED");
-   if(stalled_w&&(!m_wvalid||m_wdata!==stalled_wdata))$fatal(1,"OFFERED_W_CHANGED");
-   stalled_aw=m_awvalid&&!m_awready;stalled_w=m_wvalid&&!m_wready;stalled_awaddr=m_awaddr;stalled_wdata=m_wdata;
+   if(!aw_seen&&m_awvalid)begin
+    aw_seen=1;aw_accepted=m_awready;held_awaddr=m_awaddr;
+    if(m_awready)aw_accepts=aw_accepts+1;
+   end else if(aw_seen&&!aw_accepted)begin
+    if(!m_awvalid||m_awaddr!==held_awaddr)$fatal(1,"OFFERED_AW_CHANGED_BEFORE_ACCEPTANCE");
+    if(m_awready)begin aw_accepted=1;aw_accepts=aw_accepts+1;end
+   end else if(aw_seen&&aw_accepted&&!m_awvalid)begin aw_seen=0;aw_accepted=0;end
+   if(!w_seen&&m_wvalid)begin
+    w_seen=1;w_accepted=m_wready;held_wdata=m_wdata;
+    if(m_wready)w_accepts=w_accepts+1;
+   end else if(w_seen&&!w_accepted)begin
+    if(!m_wvalid||m_wdata!==held_wdata)$fatal(1,"OFFERED_W_CHANGED_BEFORE_ACCEPTANCE");
+    if(m_wready)begin w_accepted=1;w_accepts=w_accepts+1;end
+   end else if(w_seen&&w_accepted&&!m_wvalid)begin w_seen=0;w_accepted=0;end
+   if(!ar_seen&&m_arvalid)begin
+    ar_seen=1;ar_accepted=m_arready;held_araddr=m_araddr;
+    if(m_arready)ar_accepts=ar_accepts+1;
+   end else if(ar_seen&&!ar_accepted)begin
+    if(!m_arvalid||m_araddr!==held_araddr)$fatal(1,"OFFERED_AR_CHANGED_BEFORE_ACCEPTANCE");
+    if(m_arready)begin ar_accepted=1;ar_accepts=ar_accepts+1;end
+   end else if(ar_seen&&ar_accepted&&!m_arvalid)begin ar_seen=0;ar_accepted=0;end
    if(case_id<=3&&(join_fault||coordinator_fault||bridge_fault||hc_station_fault||(|ctrl_fault)||(|rank_fault)||(|ep_protocol_fault)||rc_bad))$fatal(1,"HEALTHY_SOURCE_FAULT e=%0d join=%b coord=%b bridge=%b hc=%b ctrl=%h rank=%h ep=%h rc=%b",edges,join_fault,coordinator_fault,bridge_fault,hc_station_fault,ctrl_fault,rank_fault,ep_protocol_fault,rc_bad);
   end
  end
@@ -414,6 +436,7 @@ reg allow_aw=1,allow_w=1;
   wait(post_completions==4);tick(24);
   if(issues!=4||allocations!=4||dispatches!=4||raw_completions!=4||certificates!=4||event_copies!=3||cq_offers!=3||cq_entries!=3)$fatal(1,"JOIN_FINAL_COUNTS issues=%0d alloc=%0d dispatch=%0d raw=%0d cert=%0d events=%0d offers=%0d CQ=%0d",issues,allocations,dispatches,raw_completions,certificates,event_copies,cq_offers,cq_entries);
   for(integer r=0;r<8;r=r+1)if(request_counts[r]!=4||request_returns[r]!=4||result_returns[r]!=4||releases[r]!=4)$fatal(1,"RANK_ACCOUNTING rank=%0d request=%0d reqcr=%0d resultcr=%0d release=%0d",r,request_counts[r],request_returns[r],result_returns[r],releases[r]);
+  if(ar_accepts!=read_beats||aw_accepts!=write_beats||w_accepts!=write_beats||read_beats!=5||write_beats!=6)$fatal(1,"DMA_CAPTURE_PACKET_COUNTS AR=%0d Rpackets=%0d AW=%0d W=%0d Wpackets=%0d",ar_accepts,read_beats,aw_accepts,w_accepts,write_beats);
   if(binding_valid||post_pending||(|ep_owned)||join_fault||coordinator_fault||rc_bad)$fatal(1,"FINAL_OWNERSHIP_NOT_DRAINED");
   $display("NATIVE_JOIN_PASS FUNCTIONAL_ONLY case=%0d edges=%0d H=%0d deadline=%0d extra_age_bits=3 max_response=%0d",case_id,edges,H,RESPONSE_DEADLINE,max_response);
   $finish;

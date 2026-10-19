@@ -23,4 +23,4 @@ for case in [int(x) for x in os.environ.get("NATIVE_JOIN_CASES","0,1,2,3").split
  receipts.append({'case':case,'exit':rc,'application_pass':passed,'log_sha256':hashlib.sha256((root/f'case{case}.log').read_bytes()).hexdigest()})
  (root/'initial_receipt.json').write_text(json.dumps({'kind':'FUNCTIONAL_ONLY','cases':receipts,'production_H':None,'remaining':'NO_NATIVE, health failure, cancellation, duplicate client errors and nine causal categories pending'},indent=2)+'\n')
  if not passed:raise SystemExit(rc or 1)
-print('INITIAL_COHORT_PASS cases=4; remaining source/causal requirements OPEN')
+print('COHORT_PASS cases='+str(len(receipts))+'; remaining source/causal requirements OPEN')
