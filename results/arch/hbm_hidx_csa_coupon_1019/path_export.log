@@ -1,0 +1,21 @@
+
+-- Running command `read_liberty -lib out/all.lib; read_verilog out/netlist.v; hierarchy -top hidx_coupon1; write_json out/sta_names.json' --
+
+1. Executing Liberty frontend: out/all.lib
+Imported 202 cell types from liberty file.
+
+2. Executing Verilog-2005 frontend: out/netlist.v
+Parsing Verilog input from `out/netlist.v' to AST representation.
+Generating RTLIL representation for module `\hidx_coupon1'.
+Successfully finished Verilog frontend.
+
+3. Executing HIERARCHY pass (managing design hierarchy).
+
+3.1. Analyzing design hierarchy..
+Top module:  \hidx_coupon1
+
+3.2. Analyzing design hierarchy..
+Top module:  \hidx_coupon1
+Removed 0 unused modules.
+
+4. Executing JSON backend.

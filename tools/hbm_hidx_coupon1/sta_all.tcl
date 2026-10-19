@@ -13,6 +13,8 @@ set_clock_uncertainty -hold 25 [get_clocks coupon_clk]
 set_input_delay 0 -clock coupon_clk [get_ports {lane_v* payload*}]
 set_output_delay 0 -clock coupon_clk [get_ports {compacted* pair_select* quad_select*}]
 report_checks -path_delay max -group_count 12 -fields {slew cap fanout input_pin nets} -digits 6
+puts "COUNT_CAPTURE_PATHS"
+report_checks -to [all_registers -data_pins] -path_delay max -group_path_count 12 -fields {slew cap fanout input_pin} -digits 6
 report_check_types -max_slew -max_capacitance
 puts "SLEW_COMMANDS [info commands sta::*slew*]"
 exit

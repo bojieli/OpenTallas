@@ -1,0 +1,1764 @@
+
+-- Running command `read_verilog -formal -sv tools/hbm_hidx_coupon1/coupon.sv tools/hbm_hidx_coupon1/formal.sv; hierarchy -top formal; setattr -mod -unset keep_hierarchy; prep -top formal -flatten; sat -seq 3 -prove-skip 2 -prove bad 0 -verify -show-ports' --
+
+1. Executing Verilog-2005 frontend: tools/hbm_hidx_coupon1/coupon.sv
+Parsing formal SystemVerilog input from `tools/hbm_hidx_coupon1/coupon.sv' to AST representation.
+Generating RTLIL representation for module `\hidx_csa_fa'.
+Generating RTLIL representation for module `\hidx_csa_ha'.
+Generating RTLIL representation for module `\hidx_csa'.
+Generating RTLIL representation for module `\hidx_c1_compact'.
+Generating RTLIL representation for module `\hidx_c1_count'.
+Generating RTLIL representation for module `\hidx_coupon1'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: tools/hbm_hidx_coupon1/formal.sv
+Parsing formal SystemVerilog input from `tools/hbm_hidx_coupon1/formal.sv' to AST representation.
+Generating RTLIL representation for module `\formal'.
+Successfully finished Verilog frontend.
+
+3. Executing HIERARCHY pass (managing design hierarchy).
+
+3.1. Analyzing design hierarchy..
+Top module:  \formal
+Used module:     \hidx_c1_count
+Used module:         \hidx_csa
+Used module:             \hidx_csa_ha
+Used module:             \hidx_csa_fa
+Used module:     \hidx_c1_compact
+Parameter \ID = 2
+
+3.2. Executing AST frontend in derive mode using pre-parsed AST for module `\hidx_csa_ha'.
+Parameter \ID = 2
+Generating RTLIL representation for module `$paramod\hidx_csa_ha\ID=s32'00000000000000000000000000000010'.
+Parameter \ID = 1
+
+3.3. Executing AST frontend in derive mode using pre-parsed AST for module `\hidx_csa_ha'.
+Parameter \ID = 1
+Generating RTLIL representation for module `$paramod\hidx_csa_ha\ID=s32'00000000000000000000000000000001'.
+Parameter \ID = 0
+
+3.4. Executing AST frontend in derive mode using pre-parsed AST for module `\hidx_csa_ha'.
+Parameter \ID = 0
+Generating RTLIL representation for module `$paramod\hidx_csa_ha\ID=s32'00000000000000000000000000000000'.
+Parameter \ID = 3
+Parameter \MUT = 0
+
+3.5. Executing AST frontend in derive mode using pre-parsed AST for module `\hidx_csa_fa'.
+Parameter \ID = 3
+Parameter \MUT = 0
+Generating RTLIL representation for module `$paramod$903ca65e5ffdd560fb04ff75e97e81b4cd834ae7\hidx_csa_fa'.
+Parameter \ID = 2
+Parameter \MUT = 0
+
+3.6. Executing AST frontend in derive mode using pre-parsed AST for module `\hidx_csa_fa'.
+Parameter \ID = 2
+Parameter \MUT = 0
+Generating RTLIL representation for module `$paramod$16933e9e61e764a14bfe878e2f55bad5b7b639ae\hidx_csa_fa'.
+Parameter \ID = 1
+Parameter \MUT = 0
+
+3.7. Executing AST frontend in derive mode using pre-parsed AST for module `\hidx_csa_fa'.
+Parameter \ID = 1
+Parameter \MUT = 0
+Generating RTLIL representation for module `$paramod$8ecb3dbf013950dc2e28a66bd7570b8022bb4dec\hidx_csa_fa'.
+Parameter \ID = 0
+Parameter \MUT = 0
+
+3.8. Executing AST frontend in derive mode using pre-parsed AST for module `\hidx_csa_fa'.
+Parameter \ID = 0
+Parameter \MUT = 0
+Generating RTLIL representation for module `$paramod$67f46713cc2a68da9e0d77e6aba22132060ac72c\hidx_csa_fa'.
+Parameter \ID = 1
+Parameter \N = 8
+Parameter \W = 4
+Parameter \MUT = 0
+
+3.9. Executing AST frontend in derive mode using pre-parsed AST for module `\hidx_csa'.
+Parameter \ID = 1
+Parameter \N = 8
+Parameter \W = 4
+Parameter \MUT = 0
+Generating RTLIL representation for module `$paramod$fcc09425cac65ad413de2ecab39e15eea27ee21c\hidx_csa'.
+Parameter \ID = 0
+Parameter \N = 8
+Parameter \W = 4
+Parameter \MUT = 0
+
+3.10. Executing AST frontend in derive mode using pre-parsed AST for module `\hidx_csa'.
+Parameter \ID = 0
+Parameter \N = 8
+Parameter \W = 4
+Parameter \MUT = 0
+Generating RTLIL representation for module `$paramod$4a5699d6f6346d8d6e7877e8877aaa17d1bca710\hidx_csa'.
+Parameter \ID = 1
+Parameter \N = 16
+Parameter \W = 5
+
+3.11. Executing AST frontend in derive mode using pre-parsed AST for module `\hidx_c1_count'.
+Parameter \ID = 1
+Parameter \N = 16
+Parameter \W = 5
+Generating RTLIL representation for module `$paramod$a45ddedabe632d6c8a7d2b5653dc0448832bd619\hidx_c1_count'.
+Parameter \ID = 0
+Parameter \N = 8
+Parameter \W = 4
+
+3.12. Executing AST frontend in derive mode using pre-parsed AST for module `\hidx_c1_count'.
+Parameter \ID = 0
+Parameter \N = 8
+Parameter \W = 4
+Generating RTLIL representation for module `$paramod$dbeef5c7015caa43cfcfdf6498b4a2356fde3e43\hidx_c1_count'.
+Parameter \ID = 0
+
+3.13. Executing AST frontend in derive mode using pre-parsed AST for module `\hidx_c1_compact'.
+Parameter \ID = 0
+Generating RTLIL representation for module `$paramod\hidx_c1_compact\ID=s32'00000000000000000000000000000000'.
+
+3.14. Analyzing design hierarchy..
+Top module:  \formal
+Used module:     $paramod$a45ddedabe632d6c8a7d2b5653dc0448832bd619\hidx_c1_count
+Used module:         \hidx_csa
+Used module:             $paramod\hidx_csa_ha\ID=s32'00000000000000000000000000000010
+Used module:             $paramod\hidx_csa_ha\ID=s32'00000000000000000000000000000001
+Used module:             $paramod\hidx_csa_ha\ID=s32'00000000000000000000000000000000
+Used module:             $paramod$903ca65e5ffdd560fb04ff75e97e81b4cd834ae7\hidx_csa_fa
+Used module:             $paramod$16933e9e61e764a14bfe878e2f55bad5b7b639ae\hidx_csa_fa
+Used module:             $paramod$8ecb3dbf013950dc2e28a66bd7570b8022bb4dec\hidx_csa_fa
+Used module:             $paramod$67f46713cc2a68da9e0d77e6aba22132060ac72c\hidx_csa_fa
+Used module:     $paramod$dbeef5c7015caa43cfcfdf6498b4a2356fde3e43\hidx_c1_count
+Used module:     $paramod\hidx_c1_compact\ID=s32'00000000000000000000000000000000
+Parameter \ID = 3
+Parameter \N = 16
+Parameter \W = 5
+Parameter \MUT = 0
+
+3.15. Executing AST frontend in derive mode using pre-parsed AST for module `\hidx_csa'.
+Parameter \ID = 3
+Parameter \N = 16
+Parameter \W = 5
+Parameter \MUT = 0
+Generating RTLIL representation for module `$paramod$caede5a07b0afd66cf52fe283368323d7f7c5927\hidx_csa'.
+Parameter \ID = 2
+Parameter \N = 16
+Parameter \W = 5
+Parameter \MUT = 0
+
+3.16. Executing AST frontend in derive mode using pre-parsed AST for module `\hidx_csa'.
+Parameter \ID = 2
+Parameter \N = 16
+Parameter \W = 5
+Parameter \MUT = 0
+Generating RTLIL representation for module `$paramod$89f99e12aa4e1ceca66040cd9e327432d62a50ca\hidx_csa'.
+Parameter \ID = 1
+Parameter \N = 8
+Parameter \W = 4
+Parameter \MUT = 0
+Found cached RTLIL representation for module `$paramod$fcc09425cac65ad413de2ecab39e15eea27ee21c\hidx_csa'.
+Parameter \ID = 0
+Parameter \N = 8
+Parameter \W = 4
+Parameter \MUT = 0
+Found cached RTLIL representation for module `$paramod$4a5699d6f6346d8d6e7877e8877aaa17d1bca710\hidx_csa'.
+
+3.17. Analyzing design hierarchy..
+Top module:  \formal
+Used module:     $paramod$a45ddedabe632d6c8a7d2b5653dc0448832bd619\hidx_c1_count
+Used module:         $paramod$caede5a07b0afd66cf52fe283368323d7f7c5927\hidx_csa
+Used module:             \hidx_csa_ha
+Used module:             \hidx_csa_fa
+Used module:         $paramod$89f99e12aa4e1ceca66040cd9e327432d62a50ca\hidx_csa
+Used module:     $paramod$dbeef5c7015caa43cfcfdf6498b4a2356fde3e43\hidx_c1_count
+Used module:         $paramod$fcc09425cac65ad413de2ecab39e15eea27ee21c\hidx_csa
+Used module:         $paramod$4a5699d6f6346d8d6e7877e8877aaa17d1bca710\hidx_csa
+Used module:     $paramod\hidx_c1_compact\ID=s32'00000000000000000000000000000000
+Parameter \ID = 102
+
+3.18. Executing AST frontend in derive mode using pre-parsed AST for module `\hidx_csa_ha'.
+Parameter \ID = 102
+Generating RTLIL representation for module `$paramod\hidx_csa_ha\ID=s32'00000000000000000000000001100110'.
+Parameter \ID = 101
+
+3.19. Executing AST frontend in derive mode using pre-parsed AST for module `\hidx_csa_ha'.
+Parameter \ID = 101
+Generating RTLIL representation for module `$paramod\hidx_csa_ha\ID=s32'00000000000000000000000001100101'.
+Parameter \ID = 100
+
+3.20. Executing AST frontend in derive mode using pre-parsed AST for module `\hidx_csa_ha'.
+Parameter \ID = 100
+Generating RTLIL representation for module `$paramod\hidx_csa_ha\ID=s32'00000000000000000000000001100100'.
+Parameter \ID = 103
+Parameter \MUT = 0
+
+3.21. Executing AST frontend in derive mode using pre-parsed AST for module `\hidx_csa_fa'.
+Parameter \ID = 103
+Parameter \MUT = 0
+Generating RTLIL representation for module `$paramod$87068f90d34df43d7d9feb3e8c81f4d3cf1e9404\hidx_csa_fa'.
+Parameter \ID = 102
+Parameter \MUT = 0
+
+3.22. Executing AST frontend in derive mode using pre-parsed AST for module `\hidx_csa_fa'.
+Parameter \ID = 102
+Parameter \MUT = 0
+Generating RTLIL representation for module `$paramod$ae5e8854f59ccc72dcc5ddc7c852b26acf524b46\hidx_csa_fa'.
+Parameter \ID = 101
+Parameter \MUT = 0
+
+3.23. Executing AST frontend in derive mode using pre-parsed AST for module `\hidx_csa_fa'.
+Parameter \ID = 101
+Parameter \MUT = 0
+Generating RTLIL representation for module `$paramod$0d187955cd05bc8409a2a0f93dadd098453d3c75\hidx_csa_fa'.
+Parameter \ID = 100
+Parameter \MUT = 0
+
+3.24. Executing AST frontend in derive mode using pre-parsed AST for module `\hidx_csa_fa'.
+Parameter \ID = 100
+Parameter \MUT = 0
+Generating RTLIL representation for module `$paramod$67ef2bb0addff1f5f61b758f69580244165c1b36\hidx_csa_fa'.
+Parameter \ID = 2
+Found cached RTLIL representation for module `$paramod\hidx_csa_ha\ID=s32'00000000000000000000000000000010'.
+Parameter \ID = 1
+Found cached RTLIL representation for module `$paramod\hidx_csa_ha\ID=s32'00000000000000000000000000000001'.
+Parameter \ID = 0
+Found cached RTLIL representation for module `$paramod\hidx_csa_ha\ID=s32'00000000000000000000000000000000'.
+Parameter \ID = 3
+Parameter \MUT = 0
+Found cached RTLIL representation for module `$paramod$903ca65e5ffdd560fb04ff75e97e81b4cd834ae7\hidx_csa_fa'.
+Parameter \ID = 2
+Parameter \MUT = 0
+Found cached RTLIL representation for module `$paramod$16933e9e61e764a14bfe878e2f55bad5b7b639ae\hidx_csa_fa'.
+Parameter \ID = 1
+Parameter \MUT = 0
+Found cached RTLIL representation for module `$paramod$8ecb3dbf013950dc2e28a66bd7570b8022bb4dec\hidx_csa_fa'.
+Parameter \ID = 0
+Parameter \MUT = 0
+Found cached RTLIL representation for module `$paramod$67f46713cc2a68da9e0d77e6aba22132060ac72c\hidx_csa_fa'.
+Parameter \ID = 303
+
+3.25. Executing AST frontend in derive mode using pre-parsed AST for module `\hidx_csa_ha'.
+Parameter \ID = 303
+Generating RTLIL representation for module `$paramod\hidx_csa_ha\ID=s32'00000000000000000000000100101111'.
+Parameter \ID = 302
+
+3.26. Executing AST frontend in derive mode using pre-parsed AST for module `\hidx_csa_ha'.
+Parameter \ID = 302
+Generating RTLIL representation for module `$paramod\hidx_csa_ha\ID=s32'00000000000000000000000100101110'.
+Parameter \ID = 301
+
+3.27. Executing AST frontend in derive mode using pre-parsed AST for module `\hidx_csa_ha'.
+Parameter \ID = 301
+Generating RTLIL representation for module `$paramod\hidx_csa_ha\ID=s32'00000000000000000000000100101101'.
+Parameter \ID = 300
+
+3.28. Executing AST frontend in derive mode using pre-parsed AST for module `\hidx_csa_ha'.
+Parameter \ID = 300
+Generating RTLIL representation for module `$paramod\hidx_csa_ha\ID=s32'00000000000000000000000100101100'.
+Parameter \ID = 310
+Parameter \MUT = 0
+
+3.29. Executing AST frontend in derive mode using pre-parsed AST for module `\hidx_csa_fa'.
+Parameter \ID = 310
+Parameter \MUT = 0
+Generating RTLIL representation for module `$paramod$6b37119bb903b87e1f20ab42fe26e97c1bde4301\hidx_csa_fa'.
+Parameter \ID = 309
+Parameter \MUT = 0
+
+3.30. Executing AST frontend in derive mode using pre-parsed AST for module `\hidx_csa_fa'.
+Parameter \ID = 309
+Parameter \MUT = 0
+Generating RTLIL representation for module `$paramod$28ef2c307f64b498c0ed4ca9adcf940148f14975\hidx_csa_fa'.
+Parameter \ID = 308
+Parameter \MUT = 0
+
+3.31. Executing AST frontend in derive mode using pre-parsed AST for module `\hidx_csa_fa'.
+Parameter \ID = 308
+Parameter \MUT = 0
+Generating RTLIL representation for module `$paramod$416c3e9bc7915e29fa19d9e95aaed263ae0dc352\hidx_csa_fa'.
+Parameter \ID = 307
+Parameter \MUT = 0
+
+3.32. Executing AST frontend in derive mode using pre-parsed AST for module `\hidx_csa_fa'.
+Parameter \ID = 307
+Parameter \MUT = 0
+Generating RTLIL representation for module `$paramod$d8f43f96c6f44b1581c5c7221c0f57c83cc9379f\hidx_csa_fa'.
+Parameter \ID = 306
+Parameter \MUT = 0
+
+3.33. Executing AST frontend in derive mode using pre-parsed AST for module `\hidx_csa_fa'.
+Parameter \ID = 306
+Parameter \MUT = 0
+Generating RTLIL representation for module `$paramod$4db967e8f62795f14df31b45389d2ca7de752eaf\hidx_csa_fa'.
+Parameter \ID = 305
+Parameter \MUT = 0
+
+3.34. Executing AST frontend in derive mode using pre-parsed AST for module `\hidx_csa_fa'.
+Parameter \ID = 305
+Parameter \MUT = 0
+Generating RTLIL representation for module `$paramod$790aabd53d15bf96bcbcf5d22d5b0665e46100f8\hidx_csa_fa'.
+Parameter \ID = 304
+Parameter \MUT = 0
+
+3.35. Executing AST frontend in derive mode using pre-parsed AST for module `\hidx_csa_fa'.
+Parameter \ID = 304
+Parameter \MUT = 0
+Generating RTLIL representation for module `$paramod$63dea5b8c24d1b976efd5ef100c8351b3060a566\hidx_csa_fa'.
+Parameter \ID = 303
+Parameter \MUT = 0
+
+3.36. Executing AST frontend in derive mode using pre-parsed AST for module `\hidx_csa_fa'.
+Parameter \ID = 303
+Parameter \MUT = 0
+Generating RTLIL representation for module `$paramod$59fe35a1f193a1e0640f25ff5fda8d314cd00deb\hidx_csa_fa'.
+Parameter \ID = 302
+Parameter \MUT = 0
+
+3.37. Executing AST frontend in derive mode using pre-parsed AST for module `\hidx_csa_fa'.
+Parameter \ID = 302
+Parameter \MUT = 0
+Generating RTLIL representation for module `$paramod$b98e9f06496fb91946f9cd70cb4b9b548ccd2fad\hidx_csa_fa'.
+Parameter \ID = 301
+Parameter \MUT = 0
+
+3.38. Executing AST frontend in derive mode using pre-parsed AST for module `\hidx_csa_fa'.
+Parameter \ID = 301
+Parameter \MUT = 0
+Generating RTLIL representation for module `$paramod$a3f731803c901ef384022ad0f57124145e572871\hidx_csa_fa'.
+Parameter \ID = 300
+Parameter \MUT = 0
+
+3.39. Executing AST frontend in derive mode using pre-parsed AST for module `\hidx_csa_fa'.
+Parameter \ID = 300
+Parameter \MUT = 0
+Generating RTLIL representation for module `$paramod$1a47e02a7c992059ecb1a52ba7ad98f238a6d4bf\hidx_csa_fa'.
+Parameter \ID = 203
+
+3.40. Executing AST frontend in derive mode using pre-parsed AST for module `\hidx_csa_ha'.
+Parameter \ID = 203
+Generating RTLIL representation for module `$paramod\hidx_csa_ha\ID=s32'00000000000000000000000011001011'.
+Parameter \ID = 202
+
+3.41. Executing AST frontend in derive mode using pre-parsed AST for module `\hidx_csa_ha'.
+Parameter \ID = 202
+Generating RTLIL representation for module `$paramod\hidx_csa_ha\ID=s32'00000000000000000000000011001010'.
+Parameter \ID = 201
+
+3.42. Executing AST frontend in derive mode using pre-parsed AST for module `\hidx_csa_ha'.
+Parameter \ID = 201
+Generating RTLIL representation for module `$paramod\hidx_csa_ha\ID=s32'00000000000000000000000011001001'.
+Parameter \ID = 200
+
+3.43. Executing AST frontend in derive mode using pre-parsed AST for module `\hidx_csa_ha'.
+Parameter \ID = 200
+Generating RTLIL representation for module `$paramod\hidx_csa_ha\ID=s32'00000000000000000000000011001000'.
+Parameter \ID = 210
+Parameter \MUT = 0
+
+3.44. Executing AST frontend in derive mode using pre-parsed AST for module `\hidx_csa_fa'.
+Parameter \ID = 210
+Parameter \MUT = 0
+Generating RTLIL representation for module `$paramod$f88c48e4d078be8a003d8c8e734809f9916a3723\hidx_csa_fa'.
+Parameter \ID = 209
+Parameter \MUT = 0
+
+3.45. Executing AST frontend in derive mode using pre-parsed AST for module `\hidx_csa_fa'.
+Parameter \ID = 209
+Parameter \MUT = 0
+Generating RTLIL representation for module `$paramod$d9bba4ab6a944ae9a0dc084f10ecfb16f75d3c2b\hidx_csa_fa'.
+Parameter \ID = 208
+Parameter \MUT = 0
+
+3.46. Executing AST frontend in derive mode using pre-parsed AST for module `\hidx_csa_fa'.
+Parameter \ID = 208
+Parameter \MUT = 0
+Generating RTLIL representation for module `$paramod$727ae7aed71be60b39277c0ca44937a70447fad2\hidx_csa_fa'.
+Parameter \ID = 207
+Parameter \MUT = 0
+
+3.47. Executing AST frontend in derive mode using pre-parsed AST for module `\hidx_csa_fa'.
+Parameter \ID = 207
+Parameter \MUT = 0
+Generating RTLIL representation for module `$paramod$e65d7188450b0ffa3a99d563758d207c7834c510\hidx_csa_fa'.
+Parameter \ID = 206
+Parameter \MUT = 0
+
+3.48. Executing AST frontend in derive mode using pre-parsed AST for module `\hidx_csa_fa'.
+Parameter \ID = 206
+Parameter \MUT = 0
+Generating RTLIL representation for module `$paramod$adee09d4f03e31e82756478117751ed1db8f504d\hidx_csa_fa'.
+Parameter \ID = 205
+Parameter \MUT = 0
+
+3.49. Executing AST frontend in derive mode using pre-parsed AST for module `\hidx_csa_fa'.
+Parameter \ID = 205
+Parameter \MUT = 0
+Generating RTLIL representation for module `$paramod$19d81e55be8d92facdf7e466d6454fe330d4b064\hidx_csa_fa'.
+Parameter \ID = 204
+Parameter \MUT = 0
+
+3.50. Executing AST frontend in derive mode using pre-parsed AST for module `\hidx_csa_fa'.
+Parameter \ID = 204
+Parameter \MUT = 0
+Generating RTLIL representation for module `$paramod$b7f64f70122896c0655c6e8ae766d85f5a085ef9\hidx_csa_fa'.
+Parameter \ID = 203
+Parameter \MUT = 0
+
+3.51. Executing AST frontend in derive mode using pre-parsed AST for module `\hidx_csa_fa'.
+Parameter \ID = 203
+Parameter \MUT = 0
+Generating RTLIL representation for module `$paramod$d428adc9f146d42ee838bb232bb8ff99745165d0\hidx_csa_fa'.
+Parameter \ID = 202
+Parameter \MUT = 0
+
+3.52. Executing AST frontend in derive mode using pre-parsed AST for module `\hidx_csa_fa'.
+Parameter \ID = 202
+Parameter \MUT = 0
+Generating RTLIL representation for module `$paramod$4ff0be8223f3daef9f86c91bbfb8cdbaa5cda6df\hidx_csa_fa'.
+Parameter \ID = 201
+Parameter \MUT = 0
+
+3.53. Executing AST frontend in derive mode using pre-parsed AST for module `\hidx_csa_fa'.
+Parameter \ID = 201
+Parameter \MUT = 0
+Generating RTLIL representation for module `$paramod$b0d34893b66bd26bf4252ae52706712ba2c1be88\hidx_csa_fa'.
+Parameter \ID = 200
+Parameter \MUT = 0
+
+3.54. Executing AST frontend in derive mode using pre-parsed AST for module `\hidx_csa_fa'.
+Parameter \ID = 200
+Parameter \MUT = 0
+Generating RTLIL representation for module `$paramod$71958e7a0d7a71cae5eacbc729ef974b08759508\hidx_csa_fa'.
+
+3.55. Analyzing design hierarchy..
+Top module:  \formal
+Used module:     $paramod$a45ddedabe632d6c8a7d2b5653dc0448832bd619\hidx_c1_count
+Used module:         $paramod$caede5a07b0afd66cf52fe283368323d7f7c5927\hidx_csa
+Used module:             $paramod\hidx_csa_ha\ID=s32'00000000000000000000000100101111
+Used module:             $paramod\hidx_csa_ha\ID=s32'00000000000000000000000100101110
+Used module:             $paramod\hidx_csa_ha\ID=s32'00000000000000000000000100101101
+Used module:             $paramod\hidx_csa_ha\ID=s32'00000000000000000000000100101100
+Used module:             $paramod$6b37119bb903b87e1f20ab42fe26e97c1bde4301\hidx_csa_fa
+Used module:             $paramod$28ef2c307f64b498c0ed4ca9adcf940148f14975\hidx_csa_fa
+Used module:             $paramod$416c3e9bc7915e29fa19d9e95aaed263ae0dc352\hidx_csa_fa
+Used module:             $paramod$d8f43f96c6f44b1581c5c7221c0f57c83cc9379f\hidx_csa_fa
+Used module:             $paramod$4db967e8f62795f14df31b45389d2ca7de752eaf\hidx_csa_fa
+Used module:             $paramod$790aabd53d15bf96bcbcf5d22d5b0665e46100f8\hidx_csa_fa
+Used module:             $paramod$63dea5b8c24d1b976efd5ef100c8351b3060a566\hidx_csa_fa
+Used module:             $paramod$59fe35a1f193a1e0640f25ff5fda8d314cd00deb\hidx_csa_fa
+Used module:             $paramod$b98e9f06496fb91946f9cd70cb4b9b548ccd2fad\hidx_csa_fa
+Used module:             $paramod$a3f731803c901ef384022ad0f57124145e572871\hidx_csa_fa
+Used module:             $paramod$1a47e02a7c992059ecb1a52ba7ad98f238a6d4bf\hidx_csa_fa
+Used module:         $paramod$89f99e12aa4e1ceca66040cd9e327432d62a50ca\hidx_csa
+Used module:             $paramod\hidx_csa_ha\ID=s32'00000000000000000000000011001011
+Used module:             $paramod\hidx_csa_ha\ID=s32'00000000000000000000000011001010
+Used module:             $paramod\hidx_csa_ha\ID=s32'00000000000000000000000011001001
+Used module:             $paramod\hidx_csa_ha\ID=s32'00000000000000000000000011001000
+Used module:             $paramod$f88c48e4d078be8a003d8c8e734809f9916a3723\hidx_csa_fa
+Used module:             $paramod$d9bba4ab6a944ae9a0dc084f10ecfb16f75d3c2b\hidx_csa_fa
+Used module:             $paramod$727ae7aed71be60b39277c0ca44937a70447fad2\hidx_csa_fa
+Used module:             $paramod$e65d7188450b0ffa3a99d563758d207c7834c510\hidx_csa_fa
+Used module:             $paramod$adee09d4f03e31e82756478117751ed1db8f504d\hidx_csa_fa
+Used module:             $paramod$19d81e55be8d92facdf7e466d6454fe330d4b064\hidx_csa_fa
+Used module:             $paramod$b7f64f70122896c0655c6e8ae766d85f5a085ef9\hidx_csa_fa
+Used module:             $paramod$d428adc9f146d42ee838bb232bb8ff99745165d0\hidx_csa_fa
+Used module:             $paramod$4ff0be8223f3daef9f86c91bbfb8cdbaa5cda6df\hidx_csa_fa
+Used module:             $paramod$b0d34893b66bd26bf4252ae52706712ba2c1be88\hidx_csa_fa
+Used module:             $paramod$71958e7a0d7a71cae5eacbc729ef974b08759508\hidx_csa_fa
+Used module:     $paramod$dbeef5c7015caa43cfcfdf6498b4a2356fde3e43\hidx_c1_count
+Used module:         $paramod$fcc09425cac65ad413de2ecab39e15eea27ee21c\hidx_csa
+Used module:             $paramod\hidx_csa_ha\ID=s32'00000000000000000000000001100110
+Used module:             $paramod\hidx_csa_ha\ID=s32'00000000000000000000000001100101
+Used module:             $paramod\hidx_csa_ha\ID=s32'00000000000000000000000001100100
+Used module:             $paramod$87068f90d34df43d7d9feb3e8c81f4d3cf1e9404\hidx_csa_fa
+Used module:             $paramod$ae5e8854f59ccc72dcc5ddc7c852b26acf524b46\hidx_csa_fa
+Used module:             $paramod$0d187955cd05bc8409a2a0f93dadd098453d3c75\hidx_csa_fa
+Used module:             $paramod$67ef2bb0addff1f5f61b758f69580244165c1b36\hidx_csa_fa
+Used module:         $paramod$4a5699d6f6346d8d6e7877e8877aaa17d1bca710\hidx_csa
+Used module:             $paramod\hidx_csa_ha\ID=s32'00000000000000000000000000000010
+Used module:             $paramod\hidx_csa_ha\ID=s32'00000000000000000000000000000001
+Used module:             $paramod\hidx_csa_ha\ID=s32'00000000000000000000000000000000
+Used module:             $paramod$903ca65e5ffdd560fb04ff75e97e81b4cd834ae7\hidx_csa_fa
+Used module:             $paramod$16933e9e61e764a14bfe878e2f55bad5b7b639ae\hidx_csa_fa
+Used module:             $paramod$8ecb3dbf013950dc2e28a66bd7570b8022bb4dec\hidx_csa_fa
+Used module:             $paramod$67f46713cc2a68da9e0d77e6aba22132060ac72c\hidx_csa_fa
+Used module:     $paramod\hidx_c1_compact\ID=s32'00000000000000000000000000000000
+
+3.56. Analyzing design hierarchy..
+Top module:  \formal
+Used module:     $paramod$a45ddedabe632d6c8a7d2b5653dc0448832bd619\hidx_c1_count
+Used module:         $paramod$caede5a07b0afd66cf52fe283368323d7f7c5927\hidx_csa
+Used module:             $paramod\hidx_csa_ha\ID=s32'00000000000000000000000100101111
+Used module:             $paramod\hidx_csa_ha\ID=s32'00000000000000000000000100101110
+Used module:             $paramod\hidx_csa_ha\ID=s32'00000000000000000000000100101101
+Used module:             $paramod\hidx_csa_ha\ID=s32'00000000000000000000000100101100
+Used module:             $paramod$6b37119bb903b87e1f20ab42fe26e97c1bde4301\hidx_csa_fa
+Used module:             $paramod$28ef2c307f64b498c0ed4ca9adcf940148f14975\hidx_csa_fa
+Used module:             $paramod$416c3e9bc7915e29fa19d9e95aaed263ae0dc352\hidx_csa_fa
+Used module:             $paramod$d8f43f96c6f44b1581c5c7221c0f57c83cc9379f\hidx_csa_fa
+Used module:             $paramod$4db967e8f62795f14df31b45389d2ca7de752eaf\hidx_csa_fa
+Used module:             $paramod$790aabd53d15bf96bcbcf5d22d5b0665e46100f8\hidx_csa_fa
+Used module:             $paramod$63dea5b8c24d1b976efd5ef100c8351b3060a566\hidx_csa_fa
+Used module:             $paramod$59fe35a1f193a1e0640f25ff5fda8d314cd00deb\hidx_csa_fa
+Used module:             $paramod$b98e9f06496fb91946f9cd70cb4b9b548ccd2fad\hidx_csa_fa
+Used module:             $paramod$a3f731803c901ef384022ad0f57124145e572871\hidx_csa_fa
+Used module:             $paramod$1a47e02a7c992059ecb1a52ba7ad98f238a6d4bf\hidx_csa_fa
+Used module:         $paramod$89f99e12aa4e1ceca66040cd9e327432d62a50ca\hidx_csa
+Used module:             $paramod\hidx_csa_ha\ID=s32'00000000000000000000000011001011
+Used module:             $paramod\hidx_csa_ha\ID=s32'00000000000000000000000011001010
+Used module:             $paramod\hidx_csa_ha\ID=s32'00000000000000000000000011001001
+Used module:             $paramod\hidx_csa_ha\ID=s32'00000000000000000000000011001000
+Used module:             $paramod$f88c48e4d078be8a003d8c8e734809f9916a3723\hidx_csa_fa
+Used module:             $paramod$d9bba4ab6a944ae9a0dc084f10ecfb16f75d3c2b\hidx_csa_fa
+Used module:             $paramod$727ae7aed71be60b39277c0ca44937a70447fad2\hidx_csa_fa
+Used module:             $paramod$e65d7188450b0ffa3a99d563758d207c7834c510\hidx_csa_fa
+Used module:             $paramod$adee09d4f03e31e82756478117751ed1db8f504d\hidx_csa_fa
+Used module:             $paramod$19d81e55be8d92facdf7e466d6454fe330d4b064\hidx_csa_fa
+Used module:             $paramod$b7f64f70122896c0655c6e8ae766d85f5a085ef9\hidx_csa_fa
+Used module:             $paramod$d428adc9f146d42ee838bb232bb8ff99745165d0\hidx_csa_fa
+Used module:             $paramod$4ff0be8223f3daef9f86c91bbfb8cdbaa5cda6df\hidx_csa_fa
+Used module:             $paramod$b0d34893b66bd26bf4252ae52706712ba2c1be88\hidx_csa_fa
+Used module:             $paramod$71958e7a0d7a71cae5eacbc729ef974b08759508\hidx_csa_fa
+Used module:     $paramod$dbeef5c7015caa43cfcfdf6498b4a2356fde3e43\hidx_c1_count
+Used module:         $paramod$fcc09425cac65ad413de2ecab39e15eea27ee21c\hidx_csa
+Used module:             $paramod\hidx_csa_ha\ID=s32'00000000000000000000000001100110
+Used module:             $paramod\hidx_csa_ha\ID=s32'00000000000000000000000001100101
+Used module:             $paramod\hidx_csa_ha\ID=s32'00000000000000000000000001100100
+Used module:             $paramod$87068f90d34df43d7d9feb3e8c81f4d3cf1e9404\hidx_csa_fa
+Used module:             $paramod$ae5e8854f59ccc72dcc5ddc7c852b26acf524b46\hidx_csa_fa
+Used module:             $paramod$0d187955cd05bc8409a2a0f93dadd098453d3c75\hidx_csa_fa
+Used module:             $paramod$67ef2bb0addff1f5f61b758f69580244165c1b36\hidx_csa_fa
+Used module:         $paramod$4a5699d6f6346d8d6e7877e8877aaa17d1bca710\hidx_csa
+Used module:             $paramod\hidx_csa_ha\ID=s32'00000000000000000000000000000010
+Used module:             $paramod\hidx_csa_ha\ID=s32'00000000000000000000000000000001
+Used module:             $paramod\hidx_csa_ha\ID=s32'00000000000000000000000000000000
+Used module:             $paramod$903ca65e5ffdd560fb04ff75e97e81b4cd834ae7\hidx_csa_fa
+Used module:             $paramod$16933e9e61e764a14bfe878e2f55bad5b7b639ae\hidx_csa_fa
+Used module:             $paramod$8ecb3dbf013950dc2e28a66bd7570b8022bb4dec\hidx_csa_fa
+Used module:             $paramod$67f46713cc2a68da9e0d77e6aba22132060ac72c\hidx_csa_fa
+Used module:     $paramod\hidx_c1_compact\ID=s32'00000000000000000000000000000000
+Removing unused module `\hidx_coupon1'.
+Removing unused module `\hidx_c1_count'.
+Removing unused module `\hidx_c1_compact'.
+Removing unused module `\hidx_csa'.
+Removing unused module `\hidx_csa_ha'.
+Removing unused module `\hidx_csa_fa'.
+Removed 6 unused modules.
+
+4. Executing PREP pass.
+
+4.1. Executing HIERARCHY pass (managing design hierarchy).
+
+4.1.1. Analyzing design hierarchy..
+Top module:  \formal
+Used module:     $paramod$a45ddedabe632d6c8a7d2b5653dc0448832bd619\hidx_c1_count
+Used module:         $paramod$caede5a07b0afd66cf52fe283368323d7f7c5927\hidx_csa
+Used module:             $paramod\hidx_csa_ha\ID=s32'00000000000000000000000100101111
+Used module:             $paramod\hidx_csa_ha\ID=s32'00000000000000000000000100101110
+Used module:             $paramod\hidx_csa_ha\ID=s32'00000000000000000000000100101101
+Used module:             $paramod\hidx_csa_ha\ID=s32'00000000000000000000000100101100
+Used module:             $paramod$6b37119bb903b87e1f20ab42fe26e97c1bde4301\hidx_csa_fa
+Used module:             $paramod$28ef2c307f64b498c0ed4ca9adcf940148f14975\hidx_csa_fa
+Used module:             $paramod$416c3e9bc7915e29fa19d9e95aaed263ae0dc352\hidx_csa_fa
+Used module:             $paramod$d8f43f96c6f44b1581c5c7221c0f57c83cc9379f\hidx_csa_fa
+Used module:             $paramod$4db967e8f62795f14df31b45389d2ca7de752eaf\hidx_csa_fa
+Used module:             $paramod$790aabd53d15bf96bcbcf5d22d5b0665e46100f8\hidx_csa_fa
+Used module:             $paramod$63dea5b8c24d1b976efd5ef100c8351b3060a566\hidx_csa_fa
+Used module:             $paramod$59fe35a1f193a1e0640f25ff5fda8d314cd00deb\hidx_csa_fa
+Used module:             $paramod$b98e9f06496fb91946f9cd70cb4b9b548ccd2fad\hidx_csa_fa
+Used module:             $paramod$a3f731803c901ef384022ad0f57124145e572871\hidx_csa_fa
+Used module:             $paramod$1a47e02a7c992059ecb1a52ba7ad98f238a6d4bf\hidx_csa_fa
+Used module:         $paramod$89f99e12aa4e1ceca66040cd9e327432d62a50ca\hidx_csa
+Used module:             $paramod\hidx_csa_ha\ID=s32'00000000000000000000000011001011
+Used module:             $paramod\hidx_csa_ha\ID=s32'00000000000000000000000011001010
+Used module:             $paramod\hidx_csa_ha\ID=s32'00000000000000000000000011001001
+Used module:             $paramod\hidx_csa_ha\ID=s32'00000000000000000000000011001000
+Used module:             $paramod$f88c48e4d078be8a003d8c8e734809f9916a3723\hidx_csa_fa
+Used module:             $paramod$d9bba4ab6a944ae9a0dc084f10ecfb16f75d3c2b\hidx_csa_fa
+Used module:             $paramod$727ae7aed71be60b39277c0ca44937a70447fad2\hidx_csa_fa
+Used module:             $paramod$e65d7188450b0ffa3a99d563758d207c7834c510\hidx_csa_fa
+Used module:             $paramod$adee09d4f03e31e82756478117751ed1db8f504d\hidx_csa_fa
+Used module:             $paramod$19d81e55be8d92facdf7e466d6454fe330d4b064\hidx_csa_fa
+Used module:             $paramod$b7f64f70122896c0655c6e8ae766d85f5a085ef9\hidx_csa_fa
+Used module:             $paramod$d428adc9f146d42ee838bb232bb8ff99745165d0\hidx_csa_fa
+Used module:             $paramod$4ff0be8223f3daef9f86c91bbfb8cdbaa5cda6df\hidx_csa_fa
+Used module:             $paramod$b0d34893b66bd26bf4252ae52706712ba2c1be88\hidx_csa_fa
+Used module:             $paramod$71958e7a0d7a71cae5eacbc729ef974b08759508\hidx_csa_fa
+Used module:     $paramod$dbeef5c7015caa43cfcfdf6498b4a2356fde3e43\hidx_c1_count
+Used module:         $paramod$fcc09425cac65ad413de2ecab39e15eea27ee21c\hidx_csa
+Used module:             $paramod\hidx_csa_ha\ID=s32'00000000000000000000000001100110
+Used module:             $paramod\hidx_csa_ha\ID=s32'00000000000000000000000001100101
+Used module:             $paramod\hidx_csa_ha\ID=s32'00000000000000000000000001100100
+Used module:             $paramod$87068f90d34df43d7d9feb3e8c81f4d3cf1e9404\hidx_csa_fa
+Used module:             $paramod$ae5e8854f59ccc72dcc5ddc7c852b26acf524b46\hidx_csa_fa
+Used module:             $paramod$0d187955cd05bc8409a2a0f93dadd098453d3c75\hidx_csa_fa
+Used module:             $paramod$67ef2bb0addff1f5f61b758f69580244165c1b36\hidx_csa_fa
+Used module:         $paramod$4a5699d6f6346d8d6e7877e8877aaa17d1bca710\hidx_csa
+Used module:             $paramod\hidx_csa_ha\ID=s32'00000000000000000000000000000010
+Used module:             $paramod\hidx_csa_ha\ID=s32'00000000000000000000000000000001
+Used module:             $paramod\hidx_csa_ha\ID=s32'00000000000000000000000000000000
+Used module:             $paramod$903ca65e5ffdd560fb04ff75e97e81b4cd834ae7\hidx_csa_fa
+Used module:             $paramod$16933e9e61e764a14bfe878e2f55bad5b7b639ae\hidx_csa_fa
+Used module:             $paramod$8ecb3dbf013950dc2e28a66bd7570b8022bb4dec\hidx_csa_fa
+Used module:             $paramod$67f46713cc2a68da9e0d77e6aba22132060ac72c\hidx_csa_fa
+Used module:     $paramod\hidx_c1_compact\ID=s32'00000000000000000000000000000000
+
+4.1.2. Analyzing design hierarchy..
+Top module:  \formal
+Used module:     $paramod$a45ddedabe632d6c8a7d2b5653dc0448832bd619\hidx_c1_count
+Used module:         $paramod$caede5a07b0afd66cf52fe283368323d7f7c5927\hidx_csa
+Used module:             $paramod\hidx_csa_ha\ID=s32'00000000000000000000000100101111
+Used module:             $paramod\hidx_csa_ha\ID=s32'00000000000000000000000100101110
+Used module:             $paramod\hidx_csa_ha\ID=s32'00000000000000000000000100101101
+Used module:             $paramod\hidx_csa_ha\ID=s32'00000000000000000000000100101100
+Used module:             $paramod$6b37119bb903b87e1f20ab42fe26e97c1bde4301\hidx_csa_fa
+Used module:             $paramod$28ef2c307f64b498c0ed4ca9adcf940148f14975\hidx_csa_fa
+Used module:             $paramod$416c3e9bc7915e29fa19d9e95aaed263ae0dc352\hidx_csa_fa
+Used module:             $paramod$d8f43f96c6f44b1581c5c7221c0f57c83cc9379f\hidx_csa_fa
+Used module:             $paramod$4db967e8f62795f14df31b45389d2ca7de752eaf\hidx_csa_fa
+Used module:             $paramod$790aabd53d15bf96bcbcf5d22d5b0665e46100f8\hidx_csa_fa
+Used module:             $paramod$63dea5b8c24d1b976efd5ef100c8351b3060a566\hidx_csa_fa
+Used module:             $paramod$59fe35a1f193a1e0640f25ff5fda8d314cd00deb\hidx_csa_fa
+Used module:             $paramod$b98e9f06496fb91946f9cd70cb4b9b548ccd2fad\hidx_csa_fa
+Used module:             $paramod$a3f731803c901ef384022ad0f57124145e572871\hidx_csa_fa
+Used module:             $paramod$1a47e02a7c992059ecb1a52ba7ad98f238a6d4bf\hidx_csa_fa
+Used module:         $paramod$89f99e12aa4e1ceca66040cd9e327432d62a50ca\hidx_csa
+Used module:             $paramod\hidx_csa_ha\ID=s32'00000000000000000000000011001011
+Used module:             $paramod\hidx_csa_ha\ID=s32'00000000000000000000000011001010
+Used module:             $paramod\hidx_csa_ha\ID=s32'00000000000000000000000011001001
+Used module:             $paramod\hidx_csa_ha\ID=s32'00000000000000000000000011001000
+Used module:             $paramod$f88c48e4d078be8a003d8c8e734809f9916a3723\hidx_csa_fa
+Used module:             $paramod$d9bba4ab6a944ae9a0dc084f10ecfb16f75d3c2b\hidx_csa_fa
+Used module:             $paramod$727ae7aed71be60b39277c0ca44937a70447fad2\hidx_csa_fa
+Used module:             $paramod$e65d7188450b0ffa3a99d563758d207c7834c510\hidx_csa_fa
+Used module:             $paramod$adee09d4f03e31e82756478117751ed1db8f504d\hidx_csa_fa
+Used module:             $paramod$19d81e55be8d92facdf7e466d6454fe330d4b064\hidx_csa_fa
+Used module:             $paramod$b7f64f70122896c0655c6e8ae766d85f5a085ef9\hidx_csa_fa
+Used module:             $paramod$d428adc9f146d42ee838bb232bb8ff99745165d0\hidx_csa_fa
+Used module:             $paramod$4ff0be8223f3daef9f86c91bbfb8cdbaa5cda6df\hidx_csa_fa
+Used module:             $paramod$b0d34893b66bd26bf4252ae52706712ba2c1be88\hidx_csa_fa
+Used module:             $paramod$71958e7a0d7a71cae5eacbc729ef974b08759508\hidx_csa_fa
+Used module:     $paramod$dbeef5c7015caa43cfcfdf6498b4a2356fde3e43\hidx_c1_count
+Used module:         $paramod$fcc09425cac65ad413de2ecab39e15eea27ee21c\hidx_csa
+Used module:             $paramod\hidx_csa_ha\ID=s32'00000000000000000000000001100110
+Used module:             $paramod\hidx_csa_ha\ID=s32'00000000000000000000000001100101
+Used module:             $paramod\hidx_csa_ha\ID=s32'00000000000000000000000001100100
+Used module:             $paramod$87068f90d34df43d7d9feb3e8c81f4d3cf1e9404\hidx_csa_fa
+Used module:             $paramod$ae5e8854f59ccc72dcc5ddc7c852b26acf524b46\hidx_csa_fa
+Used module:             $paramod$0d187955cd05bc8409a2a0f93dadd098453d3c75\hidx_csa_fa
+Used module:             $paramod$67ef2bb0addff1f5f61b758f69580244165c1b36\hidx_csa_fa
+Used module:         $paramod$4a5699d6f6346d8d6e7877e8877aaa17d1bca710\hidx_csa
+Used module:             $paramod\hidx_csa_ha\ID=s32'00000000000000000000000000000010
+Used module:             $paramod\hidx_csa_ha\ID=s32'00000000000000000000000000000001
+Used module:             $paramod\hidx_csa_ha\ID=s32'00000000000000000000000000000000
+Used module:             $paramod$903ca65e5ffdd560fb04ff75e97e81b4cd834ae7\hidx_csa_fa
+Used module:             $paramod$16933e9e61e764a14bfe878e2f55bad5b7b639ae\hidx_csa_fa
+Used module:             $paramod$8ecb3dbf013950dc2e28a66bd7570b8022bb4dec\hidx_csa_fa
+Used module:             $paramod$67f46713cc2a68da9e0d77e6aba22132060ac72c\hidx_csa_fa
+Used module:     $paramod\hidx_c1_compact\ID=s32'00000000000000000000000000000000
+Removed 0 unused modules.
+
+4.2. Executing PROC pass (convert processes to netlists).
+
+4.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 256 empty switches in `$paramod\hidx_c1_compact\ID=s32'00000000000000000000000000000000.$proc$tools/hbm_hidx_coupon1/coupon.sv:66$1619'.
+Found and cleaned up 16 empty switches in `\formal.$proc$tools/hbm_hidx_coupon1/formal.sv:8$1433'.
+Cleaned up 272 empty switches.
+
+4.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 64 switch rules as full_case in process $proc$tools/hbm_hidx_coupon1/coupon.sv:66$1619 in module $paramod\hidx_c1_compact\ID=s32'00000000000000000000000000000000.
+Marked 16 switch rules as full_case in process $proc$tools/hbm_hidx_coupon1/formal.sv:8$1433 in module formal.
+Marked 8 switch rules as full_case in process $proc$tools/hbm_hidx_coupon1/formal.sv:7$1336 in module formal.
+Removed a total of 0 dead cases.
+
+4.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 596 assignments to connections.
+
+4.2.4. Executing PROC_INIT pass (extract init attributes).
+
+4.2.5. Executing PROC_ARST pass (detect async resets in processes).
+
+4.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~88 debug messages>
+
+4.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `$paramod\hidx_c1_compact\ID=s32'00000000000000000000000000000000.$proc$tools/hbm_hidx_coupon1/coupon.sv:66$1619'.
+     1/256: $256\v[3:0]
+     2/256: $255\v[3:0]
+     3/256: $254\v[3:0]
+     4/256: $253\v[3:0]
+     5/256: $252\v[3:0]
+     6/256: $251\v[3:0]
+     7/256: $250\v[3:0]
+     8/256: $249\v[3:0]
+     9/256: $248\v[3:0]
+    10/256: $247\v[3:0]
+    11/256: $246\v[3:0]
+    12/256: $245\v[3:0]
+    13/256: $244\v[3:0]
+    14/256: $243\v[3:0]
+    15/256: $242\v[3:0]
+    16/256: $241\v[3:0]
+    17/256: $240\v[3:0]
+    18/256: $239\v[3:0]
+    19/256: $238\v[3:0]
+    20/256: $237\v[3:0]
+    21/256: $236\v[3:0]
+    22/256: $235\v[3:0]
+    23/256: $234\v[3:0]
+    24/256: $233\v[3:0]
+    25/256: $232\v[3:0]
+    26/256: $231\v[3:0]
+    27/256: $230\v[3:0]
+    28/256: $229\v[3:0]
+    29/256: $228\v[3:0]
+    30/256: $227\v[3:0]
+    31/256: $226\v[3:0]
+    32/256: $225\v[3:0]
+    33/256: $224\v[3:0]
+    34/256: $223\v[3:0]
+    35/256: $222\v[3:0]
+    36/256: $221\v[3:0]
+    37/256: $220\v[3:0]
+    38/256: $219\v[3:0]
+    39/256: $218\v[3:0]
+    40/256: $217\v[3:0]
+    41/256: $216\v[3:0]
+    42/256: $215\v[3:0]
+    43/256: $214\v[3:0]
+    44/256: $213\v[3:0]
+    45/256: $212\v[3:0]
+    46/256: $211\v[3:0]
+    47/256: $210\v[3:0]
+    48/256: $209\v[3:0]
+    49/256: $208\v[3:0]
+    50/256: $207\v[3:0]
+    51/256: $206\v[3:0]
+    52/256: $205\v[3:0]
+    53/256: $204\v[3:0]
+    54/256: $203\v[3:0]
+    55/256: $202\v[3:0]
+    56/256: $201\v[3:0]
+    57/256: $200\v[3:0]
+    58/256: $199\v[3:0]
+    59/256: $198\v[3:0]
+    60/256: $197\v[3:0]
+    61/256: $196\v[3:0]
+    62/256: $195\v[3:0]
+    63/256: $194\v[3:0]
+    64/256: $193\v[3:0]
+    65/256: $192\v[3:0]
+    66/256: $191\v[3:0]
+    67/256: $190\v[3:0]
+    68/256: $189\v[3:0]
+    69/256: $188\v[3:0]
+    70/256: $187\v[3:0]
+    71/256: $186\v[3:0]
+    72/256: $185\v[3:0]
+    73/256: $184\v[3:0]
+    74/256: $183\v[3:0]
+    75/256: $182\v[3:0]
+    76/256: $181\v[3:0]
+    77/256: $180\v[3:0]
+    78/256: $179\v[3:0]
+    79/256: $178\v[3:0]
+    80/256: $177\v[3:0]
+    81/256: $176\v[3:0]
+    82/256: $175\v[3:0]
+    83/256: $174\v[3:0]
+    84/256: $173\v[3:0]
+    85/256: $172\v[3:0]
+    86/256: $171\v[3:0]
+    87/256: $170\v[3:0]
+    88/256: $169\v[3:0]
+    89/256: $168\v[3:0]
+    90/256: $167\v[3:0]
+    91/256: $166\v[3:0]
+    92/256: $165\v[3:0]
+    93/256: $164\v[3:0]
+    94/256: $163\v[3:0]
+    95/256: $162\v[3:0]
+    96/256: $161\v[3:0]
+    97/256: $160\v[3:0]
+    98/256: $159\v[3:0]
+    99/256: $158\v[3:0]
+   100/256: $157\v[3:0]
+   101/256: $156\v[3:0]
+   102/256: $155\v[3:0]
+   103/256: $154\v[3:0]
+   104/256: $153\v[3:0]
+   105/256: $152\v[3:0]
+   106/256: $151\v[3:0]
+   107/256: $150\v[3:0]
+   108/256: $149\v[3:0]
+   109/256: $148\v[3:0]
+   110/256: $147\v[3:0]
+   111/256: $146\v[3:0]
+   112/256: $145\v[3:0]
+   113/256: $144\v[3:0]
+   114/256: $143\v[3:0]
+   115/256: $142\v[3:0]
+   116/256: $141\v[3:0]
+   117/256: $140\v[3:0]
+   118/256: $139\v[3:0]
+   119/256: $138\v[3:0]
+   120/256: $137\v[3:0]
+   121/256: $136\v[3:0]
+   122/256: $135\v[3:0]
+   123/256: $134\v[3:0]
+   124/256: $133\v[3:0]
+   125/256: $132\v[3:0]
+   126/256: $131\v[3:0]
+   127/256: $130\v[3:0]
+   128/256: $129\v[3:0]
+   129/256: $128\v[3:0]
+   130/256: $127\v[3:0]
+   131/256: $126\v[3:0]
+   132/256: $125\v[3:0]
+   133/256: $124\v[3:0]
+   134/256: $123\v[3:0]
+   135/256: $122\v[3:0]
+   136/256: $121\v[3:0]
+   137/256: $120\v[3:0]
+   138/256: $119\v[3:0]
+   139/256: $118\v[3:0]
+   140/256: $117\v[3:0]
+   141/256: $116\v[3:0]
+   142/256: $115\v[3:0]
+   143/256: $114\v[3:0]
+   144/256: $113\v[3:0]
+   145/256: $112\v[3:0]
+   146/256: $111\v[3:0]
+   147/256: $110\v[3:0]
+   148/256: $109\v[3:0]
+   149/256: $108\v[3:0]
+   150/256: $107\v[3:0]
+   151/256: $106\v[3:0]
+   152/256: $105\v[3:0]
+   153/256: $104\v[3:0]
+   154/256: $103\v[3:0]
+   155/256: $102\v[3:0]
+   156/256: $101\v[3:0]
+   157/256: $100\v[3:0]
+   158/256: $99\v[3:0]
+   159/256: $98\v[3:0]
+   160/256: $97\v[3:0]
+   161/256: $96\v[3:0]
+   162/256: $95\v[3:0]
+   163/256: $94\v[3:0]
+   164/256: $93\v[3:0]
+   165/256: $92\v[3:0]
+   166/256: $91\v[3:0]
+   167/256: $90\v[3:0]
+   168/256: $89\v[3:0]
+   169/256: $88\v[3:0]
+   170/256: $87\v[3:0]
+   171/256: $86\v[3:0]
+   172/256: $85\v[3:0]
+   173/256: $84\v[3:0]
+   174/256: $83\v[3:0]
+   175/256: $82\v[3:0]
+   176/256: $81\v[3:0]
+   177/256: $80\v[3:0]
+   178/256: $79\v[3:0]
+   179/256: $78\v[3:0]
+   180/256: $77\v[3:0]
+   181/256: $76\v[3:0]
+   182/256: $75\v[3:0]
+   183/256: $74\v[3:0]
+   184/256: $73\v[3:0]
+   185/256: $72\v[3:0]
+   186/256: $71\v[3:0]
+   187/256: $70\v[3:0]
+   188/256: $69\v[3:0]
+   189/256: $68\v[3:0]
+   190/256: $67\v[3:0]
+   191/256: $66\v[3:0]
+   192/256: $65\v[3:0]
+   193/256: $64\v[3:0]
+   194/256: $63\v[3:0]
+   195/256: $62\v[3:0]
+   196/256: $61\v[3:0]
+   197/256: $60\v[3:0]
+   198/256: $59\v[3:0]
+   199/256: $58\v[3:0]
+   200/256: $57\v[3:0]
+   201/256: $56\v[3:0]
+   202/256: $55\v[3:0]
+   203/256: $54\v[3:0]
+   204/256: $53\v[3:0]
+   205/256: $52\v[3:0]
+   206/256: $51\v[3:0]
+   207/256: $50\v[3:0]
+   208/256: $49\v[3:0]
+   209/256: $48\v[3:0]
+   210/256: $47\v[3:0]
+   211/256: $46\v[3:0]
+   212/256: $45\v[3:0]
+   213/256: $44\v[3:0]
+   214/256: $43\v[3:0]
+   215/256: $42\v[3:0]
+   216/256: $41\v[3:0]
+   217/256: $40\v[3:0]
+   218/256: $39\v[3:0]
+   219/256: $38\v[3:0]
+   220/256: $37\v[3:0]
+   221/256: $36\v[3:0]
+   222/256: $35\v[3:0]
+   223/256: $34\v[3:0]
+   224/256: $33\v[3:0]
+   225/256: $32\v[3:0]
+   226/256: $31\v[3:0]
+   227/256: $30\v[3:0]
+   228/256: $29\v[3:0]
+   229/256: $28\v[3:0]
+   230/256: $27\v[3:0]
+   231/256: $26\v[3:0]
+   232/256: $25\v[3:0]
+   233/256: $24\v[3:0]
+   234/256: $23\v[3:0]
+   235/256: $22\v[3:0]
+   236/256: $21\v[3:0]
+   237/256: $20\v[3:0]
+   238/256: $19\v[3:0]
+   239/256: $18\v[3:0]
+   240/256: $17\v[3:0]
+   241/256: $16\v[3:0]
+   242/256: $15\v[3:0]
+   243/256: $14\v[3:0]
+   244/256: $13\v[3:0]
+   245/256: $12\v[3:0]
+   246/256: $11\v[3:0]
+   247/256: $10\v[3:0]
+   248/256: $9\v[3:0]
+   249/256: $8\v[3:0]
+   250/256: $7\v[3:0]
+   251/256: $6\v[3:0]
+   252/256: $5\v[3:0]
+   253/256: $4\v[3:0]
+   254/256: $3\v[3:0]
+   255/256: $2\v[3:0]
+   256/256: $1\v[3:0]
+Creating decoders for process `$paramod\hidx_c1_compact\ID=s32'00000000000000000000000000000000.$proc$tools/hbm_hidx_coupon1/coupon.sv:58$1618'.
+Creating decoders for process `$paramod$dbeef5c7015caa43cfcfdf6498b4a2356fde3e43\hidx_c1_count.$proc$tools/hbm_hidx_coupon1/coupon.sv:94$1529'.
+Creating decoders for process `$paramod$dbeef5c7015caa43cfcfdf6498b4a2356fde3e43\hidx_c1_count.$proc$tools/hbm_hidx_coupon1/coupon.sv:89$1528'.
+Creating decoders for process `$paramod$a45ddedabe632d6c8a7d2b5653dc0448832bd619\hidx_c1_count.$proc$tools/hbm_hidx_coupon1/coupon.sv:94$1503'.
+Creating decoders for process `$paramod$a45ddedabe632d6c8a7d2b5653dc0448832bd619\hidx_c1_count.$proc$tools/hbm_hidx_coupon1/coupon.sv:89$1502'.
+Creating decoders for process `\formal.$proc$tools/hbm_hidx_coupon1/formal.sv:9$1458'.
+Creating decoders for process `\formal.$proc$tools/hbm_hidx_coupon1/formal.sv:8$1433'.
+     1/32: $16\qc[4:0]
+     2/32: $15\qc[4:0]
+     3/32: $14\qc[4:0]
+     4/32: $13\qc[4:0]
+     5/32: $12\qc[4:0]
+     6/32: $11\qc[4:0]
+     7/32: $10\qc[4:0]
+     8/32: $9\qc[4:0]
+     9/32: $16\pc[3:0]
+    10/32: $15\pc[3:0]
+    11/32: $8\qc[4:0]
+    12/32: $14\pc[3:0]
+    13/32: $13\pc[3:0]
+    14/32: $7\qc[4:0]
+    15/32: $12\pc[3:0]
+    16/32: $11\pc[3:0]
+    17/32: $6\qc[4:0]
+    18/32: $10\pc[3:0]
+    19/32: $9\pc[3:0]
+    20/32: $5\qc[4:0]
+    21/32: $8\pc[3:0]
+    22/32: $7\pc[3:0]
+    23/32: $4\qc[4:0]
+    24/32: $6\pc[3:0]
+    25/32: $5\pc[3:0]
+    26/32: $3\qc[4:0]
+    27/32: $4\pc[3:0]
+    28/32: $3\pc[3:0]
+    29/32: $2\qc[4:0]
+    30/32: $2\pc[3:0]
+    31/32: $1\pc[3:0]
+    32/32: $1\qc[4:0]
+Creating decoders for process `\formal.$proc$tools/hbm_hidx_coupon1/formal.sv:7$1336'.
+     1/24: $8\s[31:0]
+     2/24: $8\refc[31:0]
+     3/24: $1$bitselwrite$pos$tools/hbm_hidx_coupon1/formal.sv:7$1335[31:0]$1422
+     4/24: $7\s[31:0]
+     5/24: $7\refc[31:0]
+     6/24: $1$bitselwrite$pos$tools/hbm_hidx_coupon1/formal.sv:7$1334[31:0]$1411
+     7/24: $6\s[31:0]
+     8/24: $6\refc[31:0]
+     9/24: $1$bitselwrite$pos$tools/hbm_hidx_coupon1/formal.sv:7$1333[31:0]$1400
+    10/24: $5\s[31:0]
+    11/24: $5\refc[31:0]
+    12/24: $1$bitselwrite$pos$tools/hbm_hidx_coupon1/formal.sv:7$1332[31:0]$1389
+    13/24: $4\s[31:0]
+    14/24: $4\refc[31:0]
+    15/24: $1$bitselwrite$pos$tools/hbm_hidx_coupon1/formal.sv:7$1331[31:0]$1378
+    16/24: $3\s[31:0]
+    17/24: $3\refc[31:0]
+    18/24: $1$bitselwrite$pos$tools/hbm_hidx_coupon1/formal.sv:7$1330[31:0]$1367
+    19/24: $2\s[31:0]
+    20/24: $2\refc[31:0]
+    21/24: $1$bitselwrite$pos$tools/hbm_hidx_coupon1/formal.sv:7$1329[31:0]$1356
+    22/24: $1\s[31:0]
+    23/24: $1\refc[31:0]
+    24/24: $1$bitselwrite$pos$tools/hbm_hidx_coupon1/formal.sv:7$1328[31:0]$1345
+
+4.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `$paramod\hidx_c1_compact\ID=s32'00000000000000000000000000000000.\y' from process `$paramod\hidx_c1_compact\ID=s32'00000000000000000000000000000000.$proc$tools/hbm_hidx_coupon1/coupon.sv:66$1619'.
+No latch inferred for signal `$paramod\hidx_c1_compact\ID=s32'00000000000000000000000000000000.\s' from process `$paramod\hidx_c1_compact\ID=s32'00000000000000000000000000000000.$proc$tools/hbm_hidx_coupon1/coupon.sv:66$1619'.
+No latch inferred for signal `$paramod\hidx_c1_compact\ID=s32'00000000000000000000000000000000.\k' from process `$paramod\hidx_c1_compact\ID=s32'00000000000000000000000000000000.$proc$tools/hbm_hidx_coupon1/coupon.sv:66$1619'.
+No latch inferred for signal `$paramod\hidx_c1_compact\ID=s32'00000000000000000000000000000000.\pref' from process `$paramod\hidx_c1_compact\ID=s32'00000000000000000000000000000000.$proc$tools/hbm_hidx_coupon1/coupon.sv:66$1619'.
+No latch inferred for signal `$paramod\hidx_c1_compact\ID=s32'00000000000000000000000000000000.\v' from process `$paramod\hidx_c1_compact\ID=s32'00000000000000000000000000000000.$proc$tools/hbm_hidx_coupon1/coupon.sv:66$1619'.
+No latch inferred for signal `\formal.\k' from process `\formal.$proc$tools/hbm_hidx_coupon1/formal.sv:8$1433'.
+No latch inferred for signal `\formal.\pc' from process `\formal.$proc$tools/hbm_hidx_coupon1/formal.sv:8$1433'.
+No latch inferred for signal `\formal.\qc' from process `\formal.$proc$tools/hbm_hidx_coupon1/formal.sv:8$1433'.
+No latch inferred for signal `\formal.\s' from process `\formal.$proc$tools/hbm_hidx_coupon1/formal.sv:7$1336'.
+No latch inferred for signal `\formal.\k' from process `\formal.$proc$tools/hbm_hidx_coupon1/formal.sv:7$1336'.
+No latch inferred for signal `\formal.\refc' from process `\formal.$proc$tools/hbm_hidx_coupon1/formal.sv:7$1336'.
+
+4.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `$paramod\hidx_c1_compact\ID=s32'00000000000000000000000000000000.\mask' using process `$paramod\hidx_c1_compact\ID=s32'00000000000000000000000000000000.$proc$tools/hbm_hidx_coupon1/coupon.sv:58$1618'.
+  created $dff cell `$procdff$4002' with positive edge clock.
+Creating register for signal `$paramod\hidx_c1_compact\ID=s32'00000000000000000000000000000000.\pay' using process `$paramod\hidx_c1_compact\ID=s32'00000000000000000000000000000000.$proc$tools/hbm_hidx_coupon1/coupon.sv:58$1618'.
+  created $dff cell `$procdff$4003' with positive edge clock.
+Creating register for signal `$paramod$dbeef5c7015caa43cfcfdf6498b4a2356fde3e43\hidx_c1_count.\c' using process `$paramod$dbeef5c7015caa43cfcfdf6498b4a2356fde3e43\hidx_c1_count.$proc$tools/hbm_hidx_coupon1/coupon.sv:94$1529'.
+  created $dff cell `$procdff$4004' with positive edge clock.
+Creating register for signal `$paramod$dbeef5c7015caa43cfcfdf6498b4a2356fde3e43\hidx_c1_count.\sel' using process `$paramod$dbeef5c7015caa43cfcfdf6498b4a2356fde3e43\hidx_c1_count.$proc$tools/hbm_hidx_coupon1/coupon.sv:94$1529'.
+  created $dff cell `$procdff$4005' with positive edge clock.
+Creating register for signal `$paramod$dbeef5c7015caa43cfcfdf6498b4a2356fde3e43\hidx_c1_count.\mask' using process `$paramod$dbeef5c7015caa43cfcfdf6498b4a2356fde3e43\hidx_c1_count.$proc$tools/hbm_hidx_coupon1/coupon.sv:89$1528'.
+  created $dff cell `$procdff$4006' with positive edge clock.
+Creating register for signal `$paramod$a45ddedabe632d6c8a7d2b5653dc0448832bd619\hidx_c1_count.\c' using process `$paramod$a45ddedabe632d6c8a7d2b5653dc0448832bd619\hidx_c1_count.$proc$tools/hbm_hidx_coupon1/coupon.sv:94$1503'.
+  created $dff cell `$procdff$4007' with positive edge clock.
+Creating register for signal `$paramod$a45ddedabe632d6c8a7d2b5653dc0448832bd619\hidx_c1_count.\sel' using process `$paramod$a45ddedabe632d6c8a7d2b5653dc0448832bd619\hidx_c1_count.$proc$tools/hbm_hidx_coupon1/coupon.sv:94$1503'.
+  created $dff cell `$procdff$4008' with positive edge clock.
+Creating register for signal `$paramod$a45ddedabe632d6c8a7d2b5653dc0448832bd619\hidx_c1_count.\mask' using process `$paramod$a45ddedabe632d6c8a7d2b5653dc0448832bd619\hidx_c1_count.$proc$tools/hbm_hidx_coupon1/coupon.sv:89$1502'.
+  created $dff cell `$procdff$4009' with positive edge clock.
+Creating register for signal `\formal.\refq' using process `\formal.$proc$tools/hbm_hidx_coupon1/formal.sv:9$1458'.
+  created $dff cell `$procdff$4010' with positive edge clock.
+Creating register for signal `\formal.\saved_mask' using process `\formal.$proc$tools/hbm_hidx_coupon1/formal.sv:9$1458'.
+  created $dff cell `$procdff$4011' with positive edge clock.
+Creating register for signal `\formal.\pr' using process `\formal.$proc$tools/hbm_hidx_coupon1/formal.sv:9$1458'.
+  created $dff cell `$procdff$4012' with positive edge clock.
+Creating register for signal `\formal.\qr' using process `\formal.$proc$tools/hbm_hidx_coupon1/formal.sv:9$1458'.
+  created $dff cell `$procdff$4013' with positive edge clock.
+
+4.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+4.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 64 empty switches in `$paramod\hidx_c1_compact\ID=s32'00000000000000000000000000000000.$proc$tools/hbm_hidx_coupon1/coupon.sv:66$1619'.
+Removing empty process `$paramod\hidx_c1_compact\ID=s32'00000000000000000000000000000000.$proc$tools/hbm_hidx_coupon1/coupon.sv:66$1619'.
+Removing empty process `$paramod\hidx_c1_compact\ID=s32'00000000000000000000000000000000.$proc$tools/hbm_hidx_coupon1/coupon.sv:58$1618'.
+Removing empty process `$paramod$dbeef5c7015caa43cfcfdf6498b4a2356fde3e43\hidx_c1_count.$proc$tools/hbm_hidx_coupon1/coupon.sv:94$1529'.
+Removing empty process `$paramod$dbeef5c7015caa43cfcfdf6498b4a2356fde3e43\hidx_c1_count.$proc$tools/hbm_hidx_coupon1/coupon.sv:89$1528'.
+Removing empty process `$paramod$a45ddedabe632d6c8a7d2b5653dc0448832bd619\hidx_c1_count.$proc$tools/hbm_hidx_coupon1/coupon.sv:94$1503'.
+Removing empty process `$paramod$a45ddedabe632d6c8a7d2b5653dc0448832bd619\hidx_c1_count.$proc$tools/hbm_hidx_coupon1/coupon.sv:89$1502'.
+Removing empty process `formal.$proc$tools/hbm_hidx_coupon1/formal.sv:9$1458'.
+Found and cleaned up 16 empty switches in `\formal.$proc$tools/hbm_hidx_coupon1/formal.sv:8$1433'.
+Removing empty process `formal.$proc$tools/hbm_hidx_coupon1/formal.sv:8$1433'.
+Found and cleaned up 8 empty switches in `\formal.$proc$tools/hbm_hidx_coupon1/formal.sv:7$1336'.
+Removing empty process `formal.$proc$tools/hbm_hidx_coupon1/formal.sv:7$1336'.
+Cleaned up 88 empty switches.
+
+4.2.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod$adee09d4f03e31e82756478117751ed1db8f504d\hidx_csa_fa.
+<suppressed ~1 debug messages>
+Optimizing module $paramod$e65d7188450b0ffa3a99d563758d207c7834c510\hidx_csa_fa.
+<suppressed ~1 debug messages>
+Optimizing module $paramod$727ae7aed71be60b39277c0ca44937a70447fad2\hidx_csa_fa.
+<suppressed ~1 debug messages>
+Optimizing module $paramod$d9bba4ab6a944ae9a0dc084f10ecfb16f75d3c2b\hidx_csa_fa.
+<suppressed ~1 debug messages>
+Optimizing module $paramod$f88c48e4d078be8a003d8c8e734809f9916a3723\hidx_csa_fa.
+<suppressed ~1 debug messages>
+Optimizing module $paramod\hidx_csa_ha\ID=s32'00000000000000000000000011001000.
+Optimizing module $paramod\hidx_csa_ha\ID=s32'00000000000000000000000011001001.
+Optimizing module $paramod\hidx_csa_ha\ID=s32'00000000000000000000000011001010.
+Optimizing module $paramod\hidx_csa_ha\ID=s32'00000000000000000000000011001011.
+Optimizing module $paramod$1a47e02a7c992059ecb1a52ba7ad98f238a6d4bf\hidx_csa_fa.
+<suppressed ~1 debug messages>
+Optimizing module $paramod$a3f731803c901ef384022ad0f57124145e572871\hidx_csa_fa.
+<suppressed ~1 debug messages>
+Optimizing module $paramod$b98e9f06496fb91946f9cd70cb4b9b548ccd2fad\hidx_csa_fa.
+<suppressed ~1 debug messages>
+Optimizing module $paramod$59fe35a1f193a1e0640f25ff5fda8d314cd00deb\hidx_csa_fa.
+<suppressed ~1 debug messages>
+Optimizing module $paramod$63dea5b8c24d1b976efd5ef100c8351b3060a566\hidx_csa_fa.
+<suppressed ~1 debug messages>
+Optimizing module $paramod$790aabd53d15bf96bcbcf5d22d5b0665e46100f8\hidx_csa_fa.
+<suppressed ~1 debug messages>
+Optimizing module $paramod$4db967e8f62795f14df31b45389d2ca7de752eaf\hidx_csa_fa.
+<suppressed ~1 debug messages>
+Optimizing module $paramod$d8f43f96c6f44b1581c5c7221c0f57c83cc9379f\hidx_csa_fa.
+<suppressed ~1 debug messages>
+Optimizing module $paramod$416c3e9bc7915e29fa19d9e95aaed263ae0dc352\hidx_csa_fa.
+<suppressed ~1 debug messages>
+Optimizing module $paramod$28ef2c307f64b498c0ed4ca9adcf940148f14975\hidx_csa_fa.
+<suppressed ~1 debug messages>
+Optimizing module $paramod$6b37119bb903b87e1f20ab42fe26e97c1bde4301\hidx_csa_fa.
+<suppressed ~1 debug messages>
+Optimizing module $paramod\hidx_csa_ha\ID=s32'00000000000000000000000100101100.
+Optimizing module $paramod\hidx_csa_ha\ID=s32'00000000000000000000000100101101.
+Optimizing module $paramod\hidx_csa_ha\ID=s32'00000000000000000000000100101110.
+Optimizing module $paramod\hidx_csa_ha\ID=s32'00000000000000000000000100101111.
+Optimizing module $paramod$67ef2bb0addff1f5f61b758f69580244165c1b36\hidx_csa_fa.
+<suppressed ~1 debug messages>
+Optimizing module $paramod$0d187955cd05bc8409a2a0f93dadd098453d3c75\hidx_csa_fa.
+<suppressed ~1 debug messages>
+Optimizing module $paramod$ae5e8854f59ccc72dcc5ddc7c852b26acf524b46\hidx_csa_fa.
+<suppressed ~1 debug messages>
+Optimizing module $paramod$87068f90d34df43d7d9feb3e8c81f4d3cf1e9404\hidx_csa_fa.
+<suppressed ~1 debug messages>
+Optimizing module $paramod\hidx_csa_ha\ID=s32'00000000000000000000000001100100.
+Optimizing module $paramod\hidx_csa_ha\ID=s32'00000000000000000000000001100101.
+Optimizing module $paramod\hidx_csa_ha\ID=s32'00000000000000000000000001100110.
+Optimizing module $paramod$89f99e12aa4e1ceca66040cd9e327432d62a50ca\hidx_csa.
+Optimizing module $paramod$caede5a07b0afd66cf52fe283368323d7f7c5927\hidx_csa.
+Optimizing module $paramod\hidx_c1_compact\ID=s32'00000000000000000000000000000000.
+<suppressed ~322 debug messages>
+Optimizing module $paramod$dbeef5c7015caa43cfcfdf6498b4a2356fde3e43\hidx_c1_count.
+<suppressed ~24 debug messages>
+Optimizing module $paramod$a45ddedabe632d6c8a7d2b5653dc0448832bd619\hidx_c1_count.
+<suppressed ~24 debug messages>
+Optimizing module $paramod$4a5699d6f6346d8d6e7877e8877aaa17d1bca710\hidx_csa.
+Optimizing module $paramod$fcc09425cac65ad413de2ecab39e15eea27ee21c\hidx_csa.
+Optimizing module $paramod$67f46713cc2a68da9e0d77e6aba22132060ac72c\hidx_csa_fa.
+<suppressed ~1 debug messages>
+Optimizing module $paramod$8ecb3dbf013950dc2e28a66bd7570b8022bb4dec\hidx_csa_fa.
+<suppressed ~1 debug messages>
+Optimizing module $paramod$16933e9e61e764a14bfe878e2f55bad5b7b639ae\hidx_csa_fa.
+<suppressed ~1 debug messages>
+Optimizing module $paramod$903ca65e5ffdd560fb04ff75e97e81b4cd834ae7\hidx_csa_fa.
+<suppressed ~1 debug messages>
+Optimizing module $paramod\hidx_csa_ha\ID=s32'00000000000000000000000000000000.
+Optimizing module $paramod\hidx_csa_ha\ID=s32'00000000000000000000000000000001.
+Optimizing module $paramod\hidx_csa_ha\ID=s32'00000000000000000000000000000010.
+Optimizing module formal.
+<suppressed ~12 debug messages>
+Optimizing module $paramod$71958e7a0d7a71cae5eacbc729ef974b08759508\hidx_csa_fa.
+<suppressed ~1 debug messages>
+Optimizing module $paramod$b0d34893b66bd26bf4252ae52706712ba2c1be88\hidx_csa_fa.
+<suppressed ~1 debug messages>
+Optimizing module $paramod$4ff0be8223f3daef9f86c91bbfb8cdbaa5cda6df\hidx_csa_fa.
+<suppressed ~1 debug messages>
+Optimizing module $paramod$d428adc9f146d42ee838bb232bb8ff99745165d0\hidx_csa_fa.
+<suppressed ~1 debug messages>
+Optimizing module $paramod$b7f64f70122896c0655c6e8ae766d85f5a085ef9\hidx_csa_fa.
+<suppressed ~1 debug messages>
+Optimizing module $paramod$19d81e55be8d92facdf7e466d6454fe330d4b064\hidx_csa_fa.
+<suppressed ~1 debug messages>
+
+4.3. Executing FLATTEN pass (flatten design).
+Deleting now unused module $paramod$adee09d4f03e31e82756478117751ed1db8f504d\hidx_csa_fa.
+Deleting now unused module $paramod$e65d7188450b0ffa3a99d563758d207c7834c510\hidx_csa_fa.
+Deleting now unused module $paramod$727ae7aed71be60b39277c0ca44937a70447fad2\hidx_csa_fa.
+Deleting now unused module $paramod$d9bba4ab6a944ae9a0dc084f10ecfb16f75d3c2b\hidx_csa_fa.
+Deleting now unused module $paramod$f88c48e4d078be8a003d8c8e734809f9916a3723\hidx_csa_fa.
+Deleting now unused module $paramod\hidx_csa_ha\ID=s32'00000000000000000000000011001000.
+Deleting now unused module $paramod\hidx_csa_ha\ID=s32'00000000000000000000000011001001.
+Deleting now unused module $paramod\hidx_csa_ha\ID=s32'00000000000000000000000011001010.
+Deleting now unused module $paramod\hidx_csa_ha\ID=s32'00000000000000000000000011001011.
+Deleting now unused module $paramod$1a47e02a7c992059ecb1a52ba7ad98f238a6d4bf\hidx_csa_fa.
+Deleting now unused module $paramod$a3f731803c901ef384022ad0f57124145e572871\hidx_csa_fa.
+Deleting now unused module $paramod$b98e9f06496fb91946f9cd70cb4b9b548ccd2fad\hidx_csa_fa.
+Deleting now unused module $paramod$59fe35a1f193a1e0640f25ff5fda8d314cd00deb\hidx_csa_fa.
+Deleting now unused module $paramod$63dea5b8c24d1b976efd5ef100c8351b3060a566\hidx_csa_fa.
+Deleting now unused module $paramod$790aabd53d15bf96bcbcf5d22d5b0665e46100f8\hidx_csa_fa.
+Deleting now unused module $paramod$4db967e8f62795f14df31b45389d2ca7de752eaf\hidx_csa_fa.
+Deleting now unused module $paramod$d8f43f96c6f44b1581c5c7221c0f57c83cc9379f\hidx_csa_fa.
+Deleting now unused module $paramod$416c3e9bc7915e29fa19d9e95aaed263ae0dc352\hidx_csa_fa.
+Deleting now unused module $paramod$28ef2c307f64b498c0ed4ca9adcf940148f14975\hidx_csa_fa.
+Deleting now unused module $paramod$6b37119bb903b87e1f20ab42fe26e97c1bde4301\hidx_csa_fa.
+Deleting now unused module $paramod\hidx_csa_ha\ID=s32'00000000000000000000000100101100.
+Deleting now unused module $paramod\hidx_csa_ha\ID=s32'00000000000000000000000100101101.
+Deleting now unused module $paramod\hidx_csa_ha\ID=s32'00000000000000000000000100101110.
+Deleting now unused module $paramod\hidx_csa_ha\ID=s32'00000000000000000000000100101111.
+Deleting now unused module $paramod$67ef2bb0addff1f5f61b758f69580244165c1b36\hidx_csa_fa.
+Deleting now unused module $paramod$0d187955cd05bc8409a2a0f93dadd098453d3c75\hidx_csa_fa.
+Deleting now unused module $paramod$ae5e8854f59ccc72dcc5ddc7c852b26acf524b46\hidx_csa_fa.
+Deleting now unused module $paramod$87068f90d34df43d7d9feb3e8c81f4d3cf1e9404\hidx_csa_fa.
+Deleting now unused module $paramod\hidx_csa_ha\ID=s32'00000000000000000000000001100100.
+Deleting now unused module $paramod\hidx_csa_ha\ID=s32'00000000000000000000000001100101.
+Deleting now unused module $paramod\hidx_csa_ha\ID=s32'00000000000000000000000001100110.
+Deleting now unused module $paramod$89f99e12aa4e1ceca66040cd9e327432d62a50ca\hidx_csa.
+Deleting now unused module $paramod$caede5a07b0afd66cf52fe283368323d7f7c5927\hidx_csa.
+Deleting now unused module $paramod\hidx_c1_compact\ID=s32'00000000000000000000000000000000.
+Deleting now unused module $paramod$dbeef5c7015caa43cfcfdf6498b4a2356fde3e43\hidx_c1_count.
+Deleting now unused module $paramod$a45ddedabe632d6c8a7d2b5653dc0448832bd619\hidx_c1_count.
+Deleting now unused module $paramod$4a5699d6f6346d8d6e7877e8877aaa17d1bca710\hidx_csa.
+Deleting now unused module $paramod$fcc09425cac65ad413de2ecab39e15eea27ee21c\hidx_csa.
+Deleting now unused module $paramod$67f46713cc2a68da9e0d77e6aba22132060ac72c\hidx_csa_fa.
+Deleting now unused module $paramod$8ecb3dbf013950dc2e28a66bd7570b8022bb4dec\hidx_csa_fa.
+Deleting now unused module $paramod$16933e9e61e764a14bfe878e2f55bad5b7b639ae\hidx_csa_fa.
+Deleting now unused module $paramod$903ca65e5ffdd560fb04ff75e97e81b4cd834ae7\hidx_csa_fa.
+Deleting now unused module $paramod\hidx_csa_ha\ID=s32'00000000000000000000000000000000.
+Deleting now unused module $paramod\hidx_csa_ha\ID=s32'00000000000000000000000000000001.
+Deleting now unused module $paramod\hidx_csa_ha\ID=s32'00000000000000000000000000000010.
+Deleting now unused module $paramod$71958e7a0d7a71cae5eacbc729ef974b08759508\hidx_csa_fa.
+Deleting now unused module $paramod$b0d34893b66bd26bf4252ae52706712ba2c1be88\hidx_csa_fa.
+Deleting now unused module $paramod$4ff0be8223f3daef9f86c91bbfb8cdbaa5cda6df\hidx_csa_fa.
+Deleting now unused module $paramod$d428adc9f146d42ee838bb232bb8ff99745165d0\hidx_csa_fa.
+Deleting now unused module $paramod$b7f64f70122896c0655c6e8ae766d85f5a085ef9\hidx_csa_fa.
+Deleting now unused module $paramod$19d81e55be8d92facdf7e466d6454fe330d4b064\hidx_csa_fa.
+<suppressed ~51 debug messages>
+
+4.4. Executing FUTURE pass.
+
+4.5. Executing OPT_EXPR pass (perform const folding).
+Optimizing module formal.
+
+4.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \formal..
+Removed 12 unused cells and 1751 unused wires.
+<suppressed ~17 debug messages>
+
+4.7. Executing CHECK pass (checking for obvious problems).
+Checking module formal...
+Found and reported 0 problems.
+
+4.8. Executing OPT pass (performing simple optimizations).
+
+4.8.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module formal.
+
+4.8.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\formal'.
+Computing hashes of 1095 cells of `\formal'.
+Finding duplicate cells in `\formal'.
+Computing hashes of 939 cells of `\formal'.
+Finding duplicate cells in `\formal'.
+Computing hashes of 852 cells of `\formal'.
+Finding duplicate cells in `\formal'.
+Computing hashes of 784 cells of `\formal'.
+Finding duplicate cells in `\formal'.
+Computing hashes of 772 cells of `\formal'.
+Finding duplicate cells in `\formal'.
+Computing hashes of 763 cells of `\formal'.
+Finding duplicate cells in `\formal'.
+Computing hashes of 755 cells of `\formal'.
+Finding duplicate cells in `\formal'.
+Computing hashes of 751 cells of `\formal'.
+Finding duplicate cells in `\formal'.
+Computing hashes of 744 cells of `\formal'.
+Finding duplicate cells in `\formal'.
+Computing hashes of 739 cells of `\formal'.
+Finding duplicate cells in `\formal'.
+Computing hashes of 736 cells of `\formal'.
+Finding duplicate cells in `\formal'.
+Computing hashes of 733 cells of `\formal'.
+Finding duplicate cells in `\formal'.
+Computing hashes of 731 cells of `\formal'.
+Finding duplicate cells in `\formal'.
+Computing hashes of 728 cells of `\formal'.
+Finding duplicate cells in `\formal'.
+Computing hashes of 726 cells of `\formal'.
+Finding duplicate cells in `\formal'.
+<suppressed ~1107 debug messages>
+Removed a total of 369 cells.
+
+4.8.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \formal..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+    dead port 2/2 on $mux $flatten\c.$procmux$3739.
+    dead port 2/2 on $mux $flatten\c.$procmux$3721.
+    dead port 2/2 on $mux $flatten\c.$procmux$3718.
+    dead port 2/2 on $mux $flatten\c.$procmux$3715.
+    dead port 2/2 on $mux $flatten\c.$procmux$3709.
+    dead port 2/2 on $mux $flatten\c.$procmux$3706.
+    dead port 2/2 on $mux $flatten\c.$procmux$3703.
+    dead port 2/2 on $mux $flatten\c.$procmux$3697.
+    dead port 2/2 on $mux $flatten\c.$procmux$3694.
+    dead port 2/2 on $mux $flatten\c.$procmux$3691.
+    dead port 2/2 on $mux $flatten\c.$procmux$3685.
+    dead port 2/2 on $mux $flatten\c.$procmux$3682.
+    dead port 2/2 on $mux $flatten\c.$procmux$3679.
+    dead port 2/2 on $mux $flatten\c.$procmux$3673.
+    dead port 2/2 on $mux $flatten\c.$procmux$3670.
+    dead port 2/2 on $mux $flatten\c.$procmux$3667.
+    dead port 2/2 on $mux $flatten\c.$procmux$3661.
+    dead port 2/2 on $mux $flatten\c.$procmux$3658.
+    dead port 2/2 on $mux $flatten\c.$procmux$3655.
+    dead port 2/2 on $mux $flatten\c.$procmux$3649.
+    dead port 2/2 on $mux $flatten\c.$procmux$3646.
+    dead port 2/2 on $mux $flatten\c.$procmux$3643.
+    dead port 2/2 on $mux $flatten\c.$procmux$3073.
+    dead port 2/2 on $mux $flatten\c.$procmux$3625.
+    dead port 2/2 on $mux $flatten\c.$procmux$3622.
+    dead port 2/2 on $mux $flatten\c.$procmux$3619.
+    dead port 2/2 on $mux $flatten\c.$procmux$3613.
+    dead port 2/2 on $mux $flatten\c.$procmux$3610.
+    dead port 2/2 on $mux $flatten\c.$procmux$3607.
+    dead port 2/2 on $mux $flatten\c.$procmux$3601.
+    dead port 2/2 on $mux $flatten\c.$procmux$3598.
+    dead port 2/2 on $mux $flatten\c.$procmux$3595.
+    dead port 2/2 on $mux $flatten\c.$procmux$3589.
+    dead port 2/2 on $mux $flatten\c.$procmux$3586.
+    dead port 2/2 on $mux $flatten\c.$procmux$3583.
+    dead port 2/2 on $mux $flatten\c.$procmux$3577.
+    dead port 2/2 on $mux $flatten\c.$procmux$3574.
+    dead port 2/2 on $mux $flatten\c.$procmux$3571.
+    dead port 2/2 on $mux $flatten\c.$procmux$3565.
+    dead port 2/2 on $mux $flatten\c.$procmux$3562.
+    dead port 2/2 on $mux $flatten\c.$procmux$3559.
+    dead port 2/2 on $mux $flatten\c.$procmux$3553.
+    dead port 2/2 on $mux $flatten\c.$procmux$3550.
+    dead port 2/2 on $mux $flatten\c.$procmux$3547.
+    dead port 2/2 on $mux $flatten\c.$procmux$3529.
+    dead port 2/2 on $mux $flatten\c.$procmux$3526.
+    dead port 2/2 on $mux $flatten\c.$procmux$3523.
+    dead port 2/2 on $mux $flatten\c.$procmux$3517.
+    dead port 2/2 on $mux $flatten\c.$procmux$3514.
+    dead port 2/2 on $mux $flatten\c.$procmux$3511.
+    dead port 2/2 on $mux $flatten\c.$procmux$3505.
+    dead port 2/2 on $mux $flatten\c.$procmux$3502.
+    dead port 2/2 on $mux $flatten\c.$procmux$3499.
+    dead port 2/2 on $mux $flatten\c.$procmux$3493.
+    dead port 2/2 on $mux $flatten\c.$procmux$3490.
+    dead port 2/2 on $mux $flatten\c.$procmux$3487.
+    dead port 2/2 on $mux $flatten\c.$procmux$3481.
+    dead port 2/2 on $mux $flatten\c.$procmux$3478.
+    dead port 2/2 on $mux $flatten\c.$procmux$3475.
+    dead port 2/2 on $mux $flatten\c.$procmux$3469.
+    dead port 2/2 on $mux $flatten\c.$procmux$3466.
+    dead port 2/2 on $mux $flatten\c.$procmux$3463.
+    dead port 2/2 on $mux $flatten\c.$procmux$3457.
+    dead port 2/2 on $mux $flatten\c.$procmux$3454.
+    dead port 2/2 on $mux $flatten\c.$procmux$3451.
+    dead port 2/2 on $mux $flatten\c.$procmux$3769.
+    dead port 2/2 on $mux $flatten\c.$procmux$3433.
+    dead port 2/2 on $mux $flatten\c.$procmux$3079.
+    dead port 2/2 on $mux $flatten\c.$procmux$3430.
+    dead port 2/2 on $mux $flatten\c.$procmux$3427.
+    dead port 2/2 on $mux $flatten\c.$procmux$3421.
+    dead port 2/2 on $mux $flatten\c.$procmux$3418.
+    dead port 2/2 on $mux $flatten\c.$procmux$3415.
+    dead port 2/2 on $mux $flatten\c.$procmux$3409.
+    dead port 2/2 on $mux $flatten\c.$procmux$3406.
+    dead port 2/2 on $mux $flatten\c.$procmux$3403.
+    dead port 2/2 on $mux $flatten\c.$procmux$3397.
+    dead port 2/2 on $mux $flatten\c.$procmux$3394.
+    dead port 2/2 on $mux $flatten\c.$procmux$3391.
+    dead port 2/2 on $mux $flatten\c.$procmux$3385.
+    dead port 2/2 on $mux $flatten\c.$procmux$3382.
+    dead port 2/2 on $mux $flatten\c.$procmux$3379.
+    dead port 2/2 on $mux $flatten\c.$procmux$3373.
+    dead port 2/2 on $mux $flatten\c.$procmux$3745.
+    dead port 2/2 on $mux $flatten\c.$procmux$3370.
+    dead port 2/2 on $mux $flatten\c.$procmux$3367.
+    dead port 2/2 on $mux $flatten\c.$procmux$3781.
+    dead port 2/2 on $mux $flatten\c.$procmux$3361.
+    dead port 2/2 on $mux $flatten\c.$procmux$3358.
+    dead port 2/2 on $mux $flatten\c.$procmux$3355.
+    dead port 2/2 on $mux $flatten\c.$procmux$3085.
+    dead port 2/2 on $mux $flatten\c.$procmux$3337.
+    dead port 2/2 on $mux $flatten\c.$procmux$3082.
+    dead port 2/2 on $mux $flatten\c.$procmux$3334.
+    dead port 2/2 on $mux $flatten\c.$procmux$3331.
+    dead port 2/2 on $mux $flatten\c.$procmux$3325.
+    dead port 2/2 on $mux $flatten\c.$procmux$3322.
+    dead port 2/2 on $mux $flatten\c.$procmux$3319.
+    dead port 2/2 on $mux $flatten\c.$procmux$3751.
+    dead port 2/2 on $mux $flatten\c.$procmux$3313.
+    dead port 2/2 on $mux $flatten\c.$procmux$3310.
+    dead port 2/2 on $mux $flatten\c.$procmux$3307.
+    dead port 2/2 on $mux $flatten\c.$procmux$3829.
+    dead port 2/2 on $mux $flatten\c.$procmux$3826.
+    dead port 2/2 on $mux $flatten\c.$procmux$3301.
+    dead port 2/2 on $mux $flatten\c.$procmux$3298.
+    dead port 2/2 on $mux $flatten\c.$procmux$3295.
+    dead port 2/2 on $mux $flatten\c.$procmux$3823.
+    dead port 2/2 on $mux $flatten\c.$procmux$3289.
+    dead port 2/2 on $mux $flatten\c.$procmux$3286.
+    dead port 2/2 on $mux $flatten\c.$procmux$3283.
+    dead port 2/2 on $mux $flatten\c.$procmux$3277.
+    dead port 2/2 on $mux $flatten\c.$procmux$3757.
+    dead port 2/2 on $mux $flatten\c.$procmux$3274.
+    dead port 2/2 on $mux $flatten\c.$procmux$3817.
+    dead port 2/2 on $mux $flatten\c.$procmux$3271.
+    dead port 2/2 on $mux $flatten\c.$procmux$3070.
+    dead port 2/2 on $mux $flatten\c.$procmux$3265.
+    dead port 2/2 on $mux $flatten\c.$procmux$3778.
+    dead port 2/2 on $mux $flatten\c.$procmux$3067.
+    dead port 2/2 on $mux $flatten\c.$procmux$3814.
+    dead port 2/2 on $mux $flatten\c.$procmux$3262.
+    dead port 2/2 on $mux $flatten\c.$procmux$3259.
+    dead port 2/2 on $mux $flatten\c.$procmux$3094.
+    dead port 2/2 on $mux $flatten\c.$procmux$3091.
+    dead port 2/2 on $mux $flatten\c.$procmux$3241.
+    dead port 2/2 on $mux $flatten\c.$procmux$3811.
+    dead port 2/2 on $mux $flatten\c.$procmux$3238.
+    dead port 2/2 on $mux $flatten\c.$procmux$3235.
+    dead port 2/2 on $mux $flatten\c.$procmux$3775.
+    dead port 2/2 on $mux $flatten\c.$procmux$3229.
+    dead port 2/2 on $mux $flatten\c.$procmux$3226.
+    dead port 2/2 on $mux $flatten\c.$procmux$3223.
+    dead port 2/2 on $mux $flatten\c.$procmux$3766.
+    dead port 2/2 on $mux $flatten\c.$procmux$3217.
+    dead port 2/2 on $mux $flatten\c.$procmux$3214.
+    dead port 2/2 on $mux $flatten\c.$procmux$3211.
+    dead port 2/2 on $mux $flatten\c.$procmux$3205.
+    dead port 2/2 on $mux $flatten\c.$procmux$3202.
+    dead port 2/2 on $mux $flatten\c.$procmux$3199.
+    dead port 2/2 on $mux $flatten\c.$procmux$3805.
+    dead port 2/2 on $mux $flatten\c.$procmux$3193.
+    dead port 2/2 on $mux $flatten\c.$procmux$3802.
+    dead port 2/2 on $mux $flatten\c.$procmux$3190.
+    dead port 2/2 on $mux $flatten\c.$procmux$3187.
+    dead port 2/2 on $mux $flatten\c.$procmux$3181.
+    dead port 2/2 on $mux $flatten\c.$procmux$3799.
+    dead port 2/2 on $mux $flatten\c.$procmux$3178.
+    dead port 2/2 on $mux $flatten\c.$procmux$3175.
+    dead port 2/2 on $mux $flatten\c.$procmux$3763.
+    dead port 2/2 on $mux $flatten\c.$procmux$3169.
+    dead port 2/2 on $mux $flatten\c.$procmux$3793.
+    dead port 2/2 on $mux $flatten\c.$procmux$3754.
+    dead port 2/2 on $mux $flatten\c.$procmux$3790.
+    dead port 2/2 on $mux $flatten\c.$procmux$3166.
+    dead port 2/2 on $mux $flatten\c.$procmux$3163.
+    dead port 2/2 on $mux $flatten\c.$procmux$3787.
+    dead port 2/2 on $mux $flatten\c.$procmux$3145.
+    dead port 2/2 on $mux $flatten\c.$procmux$3097.
+    dead port 2/2 on $mux $flatten\c.$procmux$3142.
+    dead port 2/2 on $mux $flatten\c.$procmux$3139.
+    dead port 2/2 on $mux $flatten\c.$procmux$3133.
+    dead port 2/2 on $mux $flatten\c.$procmux$3130.
+    dead port 2/2 on $mux $flatten\c.$procmux$3127.
+    dead port 2/2 on $mux $flatten\c.$procmux$3121.
+    dead port 2/2 on $mux $flatten\c.$procmux$3118.
+    dead port 2/2 on $mux $flatten\c.$procmux$3115.
+    dead port 2/2 on $mux $flatten\c.$procmux$3109.
+    dead port 2/2 on $mux $flatten\c.$procmux$3106.
+    dead port 2/2 on $mux $flatten\c.$procmux$3103.
+    dead port 2/2 on $mux $flatten\c.$procmux$3742.
+    dead port 2/2 on $mux $procmux$3922.
+    dead port 2/2 on $mux $procmux$3913.
+    dead port 2/2 on $mux $procmux$3904.
+    dead port 2/2 on $mux $procmux$3895.
+    dead port 2/2 on $mux $procmux$3886.
+    dead port 2/2 on $mux $procmux$3877.
+    dead port 2/2 on $mux $procmux$3868.
+    dead port 2/2 on $mux $procmux$3859.
+Removed 179 multiplexer ports.
+<suppressed ~371 debug messages>
+
+4.8.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \formal.
+Performed a total of 0 changes.
+
+4.8.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\formal'.
+Computing hashes of 547 cells of `\formal'.
+Finding duplicate cells in `\formal'.
+Removed a total of 0 cells.
+
+4.8.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \formal..
+Removed 0 unused cells and 497 unused wires.
+<suppressed ~1 debug messages>
+
+4.8.7. Executing OPT_EXPR pass (perform const folding).
+Optimizing module formal.
+
+4.8.8. Rerunning OPT passes. (Maybe there is more to do..)
+
+4.8.9. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \formal..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~192 debug messages>
+
+4.8.10. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \formal.
+Performed a total of 0 changes.
+
+4.8.11. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\formal'.
+Computing hashes of 547 cells of `\formal'.
+Finding duplicate cells in `\formal'.
+Removed a total of 0 cells.
+
+4.8.12. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \formal..
+
+4.8.13. Executing OPT_EXPR pass (perform const folding).
+Optimizing module formal.
+
+4.8.14. Finished fast OPT passes. (There is nothing left to do.)
+
+4.9. Executing WREDUCE pass (reducing word size of cells).
+Removed top 28 bits (of 32) from port B of cell formal.$mul$tools/hbm_hidx_coupon1/formal.sv:7$1357 ($mul).
+Removed top 31 bits (of 32) from port B of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:7$1358 ($add).
+Removed top 1 bits (of 33) from port A of cell formal.$neg$tools/hbm_hidx_coupon1/formal.sv:7$1363 ($neg).
+Removed top 30 bits (of 32) from port B of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:7$1366 ($add).
+Removed top 28 bits (of 32) from port B of cell formal.$mul$tools/hbm_hidx_coupon1/formal.sv:7$1368 ($mul).
+Removed top 31 bits (of 32) from port B of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:7$1369 ($add).
+Removed top 1 bits (of 33) from port A of cell formal.$neg$tools/hbm_hidx_coupon1/formal.sv:7$1374 ($neg).
+Removed top 30 bits (of 32) from port B of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:7$1377 ($add).
+Removed top 28 bits (of 32) from port B of cell formal.$mul$tools/hbm_hidx_coupon1/formal.sv:7$1379 ($mul).
+Removed top 31 bits (of 32) from port B of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:7$1380 ($add).
+Removed top 1 bits (of 33) from port A of cell formal.$neg$tools/hbm_hidx_coupon1/formal.sv:7$1385 ($neg).
+Removed top 30 bits (of 32) from port B of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:7$1388 ($add).
+Removed top 28 bits (of 32) from port B of cell formal.$mul$tools/hbm_hidx_coupon1/formal.sv:7$1390 ($mul).
+Removed top 31 bits (of 32) from port B of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:7$1391 ($add).
+Removed top 1 bits (of 33) from port A of cell formal.$neg$tools/hbm_hidx_coupon1/formal.sv:7$1396 ($neg).
+Removed top 30 bits (of 32) from port B of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:7$1399 ($add).
+Removed top 28 bits (of 32) from port B of cell formal.$mul$tools/hbm_hidx_coupon1/formal.sv:7$1401 ($mul).
+Removed top 31 bits (of 32) from port B of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:7$1402 ($add).
+Removed top 1 bits (of 33) from port A of cell formal.$neg$tools/hbm_hidx_coupon1/formal.sv:7$1407 ($neg).
+Removed top 30 bits (of 32) from port B of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:7$1410 ($add).
+Removed top 28 bits (of 32) from port B of cell formal.$mul$tools/hbm_hidx_coupon1/formal.sv:7$1412 ($mul).
+Removed top 31 bits (of 32) from port B of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:7$1413 ($add).
+Removed top 1 bits (of 33) from port A of cell formal.$neg$tools/hbm_hidx_coupon1/formal.sv:7$1418 ($neg).
+Removed top 30 bits (of 32) from port B of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:7$1421 ($add).
+Removed top 28 bits (of 32) from port B of cell formal.$mul$tools/hbm_hidx_coupon1/formal.sv:7$1423 ($mul).
+Removed top 31 bits (of 32) from port B of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:7$1424 ($add).
+Removed top 1 bits (of 33) from port A of cell formal.$neg$tools/hbm_hidx_coupon1/formal.sv:7$1429 ($neg).
+Removed top 31 bits (of 32) from port B of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1436 ($add).
+Removed top 27 bits (of 32) from port Y of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1436 ($add).
+Removed top 31 bits (of 32) from port B of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1437 ($add).
+Removed top 28 bits (of 32) from port Y of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1437 ($add).
+Removed top 31 bits (of 32) from port B of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1438 ($add).
+Removed top 27 bits (of 32) from port Y of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1438 ($add).
+Removed top 31 bits (of 32) from port B of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1439 ($add).
+Removed top 28 bits (of 32) from port Y of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1439 ($add).
+Removed top 31 bits (of 32) from port B of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1440 ($add).
+Removed top 27 bits (of 32) from port Y of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1440 ($add).
+Removed top 31 bits (of 32) from port B of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1441 ($add).
+Removed top 28 bits (of 32) from port Y of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1441 ($add).
+Removed top 31 bits (of 32) from port B of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1442 ($add).
+Removed top 27 bits (of 32) from port Y of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1442 ($add).
+Removed top 31 bits (of 32) from port B of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1443 ($add).
+Removed top 28 bits (of 32) from port Y of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1443 ($add).
+Removed top 31 bits (of 32) from port B of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1444 ($add).
+Removed top 27 bits (of 32) from port Y of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1444 ($add).
+Removed top 31 bits (of 32) from port B of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1445 ($add).
+Removed top 28 bits (of 32) from port Y of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1445 ($add).
+Removed top 31 bits (of 32) from port B of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1446 ($add).
+Removed top 27 bits (of 32) from port Y of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1446 ($add).
+Removed top 31 bits (of 32) from port B of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1447 ($add).
+Removed top 28 bits (of 32) from port Y of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1447 ($add).
+Removed top 31 bits (of 32) from port B of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1448 ($add).
+Removed top 27 bits (of 32) from port Y of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1448 ($add).
+Removed top 31 bits (of 32) from port B of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1449 ($add).
+Removed top 28 bits (of 32) from port Y of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1449 ($add).
+Removed top 31 bits (of 32) from port B of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1450 ($add).
+Removed top 27 bits (of 32) from port Y of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1450 ($add).
+Removed top 31 bits (of 32) from port B of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1451 ($add).
+Removed top 27 bits (of 32) from port Y of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1451 ($add).
+Removed top 31 bits (of 32) from port B of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1452 ($add).
+Removed top 27 bits (of 32) from port Y of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1452 ($add).
+Removed top 31 bits (of 32) from port B of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1453 ($add).
+Removed top 27 bits (of 32) from port Y of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1453 ($add).
+Removed top 31 bits (of 32) from port B of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1454 ($add).
+Removed top 27 bits (of 32) from port Y of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1454 ($add).
+Removed top 31 bits (of 32) from port B of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1455 ($add).
+Removed top 27 bits (of 32) from port Y of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1455 ($add).
+Removed top 31 bits (of 32) from port B of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1456 ($add).
+Removed top 27 bits (of 32) from port Y of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1456 ($add).
+Removed top 31 bits (of 32) from port B of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1457 ($add).
+Removed top 27 bits (of 32) from port Y of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1457 ($add).
+Removed top 3 bits (of 4) from mux cell formal.$procmux$3925 ($mux).
+Removed top 4 bits (of 5) from mux cell formal.$procmux$3928 ($mux).
+Removed top 31 bits (of 32) from mux cell formal.$procmux$3994 ($mux).
+Removed top 28 bits (of 32) from mux cell formal.$procmux$3997 ($mux).
+Removed top 1 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:73$2778 ($eq).
+Removed top 1 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:73$2767 ($eq).
+Removed top 1 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:73$2789 ($eq).
+Removed top 1 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:73$2745 ($eq).
+Removed top 1 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:73$2734 ($eq).
+Removed top 1 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:73$2723 ($eq).
+Removed top 1 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:73$2712 ($eq).
+Removed top 1 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:73$2701 ($eq).
+Removed top 1 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:73$2690 ($eq).
+Removed top 1 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:73$2679 ($eq).
+Removed top 1 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:73$2800 ($eq).
+Removed top 1 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:73$2657 ($eq).
+Removed top 1 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:73$2646 ($eq).
+Removed top 1 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:73$2635 ($eq).
+Removed top 1 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:73$2624 ($eq).
+Removed top 1 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:73$2613 ($eq).
+Removed top 1 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:73$2602 ($eq).
+Removed top 1 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:73$2591 ($eq).
+Removed top 1 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:73$2569 ($eq).
+Removed top 1 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:73$2558 ($eq).
+Removed top 1 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:73$2547 ($eq).
+Removed top 1 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:73$2536 ($eq).
+Removed top 1 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:73$2525 ($eq).
+Removed top 1 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:73$2514 ($eq).
+Removed top 1 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:73$2503 ($eq).
+Removed top 1 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:73$2811 ($eq).
+Removed top 2 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:73$2481 ($eq).
+Removed top 2 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:73$2470 ($eq).
+Removed top 2 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:73$2459 ($eq).
+Removed top 2 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:73$2448 ($eq).
+Removed top 2 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:73$2437 ($eq).
+Removed top 2 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:73$2426 ($eq).
+Removed top 2 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:73$2415 ($eq).
+Removed top 2 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:73$2393 ($eq).
+Removed top 2 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:73$2382 ($eq).
+Removed top 2 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:73$2371 ($eq).
+Removed top 2 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:73$2360 ($eq).
+Removed top 2 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:73$2349 ($eq).
+Removed top 2 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:73$2338 ($eq).
+Removed top 1 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:73$2822 ($eq).
+Removed top 2 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:73$2327 ($eq).
+Removed top 3 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:73$2305 ($eq).
+Removed top 3 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:73$2294 ($eq).
+Removed top 3 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:73$2283 ($eq).
+Removed top 3 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:73$2272 ($eq).
+Removed top 3 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:73$2261 ($eq).
+Removed top 3 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:73$2250 ($eq).
+Removed top 3 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:73$2239 ($eq).
+Removed top 1 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:73$2833 ($eq).
+Removed top 1 bits (of 4) from port A of cell formal.$flatten\c.$add$tools/hbm_hidx_coupon1/coupon.sv:63$2216 ($add).
+Removed top 1 bits (of 3) from port A of cell formal.$flatten\c.$add$tools/hbm_hidx_coupon1/coupon.sv:63$2215 ($add).
+Removed top 1 bits (of 2) from port A of cell formal.$flatten\c.$add$tools/hbm_hidx_coupon1/coupon.sv:63$2213 ($add).
+Removed top 1 bits (of 4) from port A of cell formal.$flatten\c.$add$tools/hbm_hidx_coupon1/coupon.sv:63$2205 ($add).
+Removed top 1 bits (of 3) from port A of cell formal.$flatten\c.$add$tools/hbm_hidx_coupon1/coupon.sv:63$2204 ($add).
+Removed top 1 bits (of 2) from port B of cell formal.$flatten\c.$add$tools/hbm_hidx_coupon1/coupon.sv:63$2204 ($add).
+Removed top 1 bits (of 2) from port A of cell formal.$flatten\c.$add$tools/hbm_hidx_coupon1/coupon.sv:63$2201 ($add).
+Removed top 1 bits (of 4) from port A of cell formal.$flatten\c.$add$tools/hbm_hidx_coupon1/coupon.sv:63$2194 ($add).
+Removed top 1 bits (of 3) from port A of cell formal.$flatten\c.$add$tools/hbm_hidx_coupon1/coupon.sv:63$2193 ($add).
+Removed top 1 bits (of 2) from port B of cell formal.$flatten\c.$add$tools/hbm_hidx_coupon1/coupon.sv:63$2193 ($add).
+Removed top 1 bits (of 2) from port A of cell formal.$flatten\c.$add$tools/hbm_hidx_coupon1/coupon.sv:63$2190 ($add).
+Removed top 1 bits (of 4) from port A of cell formal.$flatten\c.$add$tools/hbm_hidx_coupon1/coupon.sv:63$2183 ($add).
+Removed top 2 bits (of 3) from port B of cell formal.$flatten\c.$add$tools/hbm_hidx_coupon1/coupon.sv:63$2183 ($add).
+Removed top 1 bits (of 3) from port A of cell formal.$flatten\c.$add$tools/hbm_hidx_coupon1/coupon.sv:63$2181 ($add).
+Removed top 1 bits (of 2) from port A of cell formal.$flatten\c.$add$tools/hbm_hidx_coupon1/coupon.sv:62$2178 ($add).
+Removed top 1 bits (of 4) from port A of cell formal.$flatten\c.$add$tools/hbm_hidx_coupon1/coupon.sv:63$2172 ($add).
+Removed top 2 bits (of 3) from port B of cell formal.$flatten\c.$add$tools/hbm_hidx_coupon1/coupon.sv:63$2172 ($add).
+Removed top 1 bits (of 3) from port A of cell formal.$flatten\c.$add$tools/hbm_hidx_coupon1/coupon.sv:63$2170 ($add).
+Removed top 1 bits (of 2) from port A of cell formal.$flatten\c.$add$tools/hbm_hidx_coupon1/coupon.sv:62$2167 ($add).
+Removed top 1 bits (of 4) from port A of cell formal.$flatten\c.$add$tools/hbm_hidx_coupon1/coupon.sv:63$2161 ($add).
+Removed top 2 bits (of 3) from port B of cell formal.$flatten\c.$add$tools/hbm_hidx_coupon1/coupon.sv:63$2161 ($add).
+Removed top 1 bits (of 3) from port A of cell formal.$flatten\c.$add$tools/hbm_hidx_coupon1/coupon.sv:63$2159 ($add).
+Removed top 1 bits (of 2) from port B of cell formal.$flatten\c.$add$tools/hbm_hidx_coupon1/coupon.sv:63$2159 ($add).
+Removed top 1 bits (of 2) from port A of cell formal.$flatten\c.$add$tools/hbm_hidx_coupon1/coupon.sv:62$2155 ($add).
+Removed top 1 bits (of 4) from port A of cell formal.$flatten\c.$add$tools/hbm_hidx_coupon1/coupon.sv:63$2150 ($add).
+Removed top 2 bits (of 3) from port B of cell formal.$flatten\c.$add$tools/hbm_hidx_coupon1/coupon.sv:63$2150 ($add).
+Removed top 1 bits (of 3) from port A of cell formal.$flatten\c.$add$tools/hbm_hidx_coupon1/coupon.sv:63$2148 ($add).
+Removed top 1 bits (of 2) from port B of cell formal.$flatten\c.$add$tools/hbm_hidx_coupon1/coupon.sv:63$2148 ($add).
+Removed top 1 bits (of 2) from port A of cell formal.$flatten\c.$add$tools/hbm_hidx_coupon1/coupon.sv:62$2144 ($add).
+Removed top 27 bits (of 32) from wire formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1457_Y.
+Removed top 27 bits (of 32) from wire formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1456_Y.
+Removed top 27 bits (of 32) from wire formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1455_Y.
+Removed top 27 bits (of 32) from wire formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1454_Y.
+Removed top 27 bits (of 32) from wire formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1453_Y.
+Removed top 27 bits (of 32) from wire formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1452_Y.
+Removed top 27 bits (of 32) from wire formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1451_Y.
+Removed top 27 bits (of 32) from wire formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1450_Y.
+Removed top 27 bits (of 32) from wire formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1448_Y.
+Removed top 27 bits (of 32) from wire formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1446_Y.
+Removed top 27 bits (of 32) from wire formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1444_Y.
+Removed top 27 bits (of 32) from wire formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1442_Y.
+Removed top 27 bits (of 32) from wire formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1440_Y.
+Removed top 27 bits (of 32) from wire formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1438_Y.
+Removed top 27 bits (of 32) from wire formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1436_Y.
+Removed top 4 bits (of 5) from wire formal.$1\qc[4:0].
+Removed top 3 bits (of 4) from wire formal.$1\pc[3:0].
+Removed top 28 bits (of 32) from wire formal.$1\refc[31:0].
+Removed top 31 bits (of 32) from wire formal.$1\s[31:0].
+
+4.10. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \formal..
+Removed 0 unused cells and 26 unused wires.
+<suppressed ~1 debug messages>
+
+4.11. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+4.12. Executing OPT pass (performing simple optimizations).
+
+4.12.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module formal.
+
+4.12.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\formal'.
+Computing hashes of 547 cells of `\formal'.
+Finding duplicate cells in `\formal'.
+Computing hashes of 546 cells of `\formal'.
+Finding duplicate cells in `\formal'.
+<suppressed ~3 debug messages>
+Removed a total of 1 cells.
+
+4.12.3. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \formal..
+Removed 0 unused cells and 1 unused wires.
+<suppressed ~1 debug messages>
+
+4.12.4. Finished fast OPT passes.
+
+4.13. Executing SORT pass.
+
+4.14. Printing statistics.
+
+=== formal ===
+
+        +----------Local Count, excluding submodules.
+        | 
+     1217 wires
+     6101 wire bits
+      789 public wires
+     2881 public wire bits
+        4 ports
+       50 port bits
+      546 cells
+       56   $add
+       59   $and
+       10   $dff
+       49   $eq
+       56   $logic_and
+        7   $logic_not
+        2   $logic_or
+        7   $mul
+       95   $mux
+        3   $ne
+        7   $neg
+        7   $not
+       86   $or
+       51   $scopeinfo
+       14   $shift
+       37   $xor
+
+4.15. Executing CHECK pass (checking for obvious problems).
+Checking module formal...
+Found and reported 0 problems.
+
+5. Executing SAT pass (solving SAT problems in the circuit).
+Using SAT solver `minisat`.
+
+Setting up time step 1:
+Final constraint equation: { } = { }
+Imported 546 cells to SAT database.
+No constraints for initial state found.
+
+
+Setting up time step 2:
+Final constraint equation: { } = { }
+Imported 546 cells to SAT database.
+
+Setting up time step 3:
+Final constraint equation: { } = { }
+Imported 546 cells to SAT database.
+Import proof-constraint: \bad = 1'0
+Final proof equation: \bad = 1'0
+Import show expression: \clk
+Import show expression: \mask
+Import show expression: \payload
+Import show expression: \bad
+
+Solving problem with 84166 variables and 230708 clauses..
+SAT proof finished - no model found: SUCCESS!
+
+                  /$$$$$$      /$$$$$$$$     /$$$$$$$    
+                 /$$__  $$    | $$_____/    | $$__  $$   
+                | $$  \ $$    | $$          | $$  \ $$   
+                | $$  | $$    | $$$$$       | $$  | $$   
+                | $$  | $$    | $$__/       | $$  | $$   
+                | $$/$$ $$    | $$          | $$  | $$   
+                |  $$$$$$/ /$$| $$$$$$$$ /$$| $$$$$$$//$$
+                 \____ $$$|__/|________/|__/|_______/|__/
+                       \__/                              
+

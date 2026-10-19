@@ -1,0 +1,28 @@
+{
+  "schema": "opentallas.safe_source_contract.prototype.v1",
+  "scope": "source-prototype-only",
+  "top": "hidx_coupon1",
+  "max_allowed": 32,
+  "verdict": "PASS",
+  "unphysicalized_literals": [],
+  "literal_load_excess": [],
+  "boundary_qualification": "not-qualified; input/output records require owner review",
+  "source_to_netlist_equivalence": "not-proved; hashes identify supplied artifacts only",
+  "max_loads": 27,
+  "max_nonliteral_loads": 27,
+  "violations": [],
+  "counts": {
+    "cells": 8265,
+    "drivers": 8570,
+    "logical_endpoints": 19671,
+    "roles": {
+      "comb": 5649,
+      "ff": 2616,
+      "input": 305
+    }
+  },
+  "disconnected_outputs": [],
+  "physical_load_qualification": "not-qualified; open outputs do not imply zero physical input capacitance",
+  "non_ff_output_count": 288,
+  "input_non_dataff_count": 0
+}
