@@ -80,8 +80,13 @@ ROUNDS=4, T0=1000+32*NS;
     integer miter_edges=0,mi;
     always @(negedge ck) begin
 `ifdef FOUR_STATE_GUARDS
-       if(rst_n && $isunknown({mu_c,mu_rc,wf,anchor_c,anchor_rc,anchor_wf}))
+       if(rst_n && $isunknown({mu_c,mu_rc,wf,anchor_c,anchor_rc,anchor_wf})) begin
+          $display("EARLY_X_TELEMETRY c%0d rst%0b dutrn%0b anchorrn%0b dutrr%h anchorrr%h",cyc,rst_n,dut.rn,anchor.rn,dut.rr,anchor.rr);
+          $display("EARLY_X_TELEMETRY candidate c=%h rc=%h wf=%b unknown=%b%b%b xor=%b%b%b",mu_c,mu_rc,wf,$isunknown(mu_c),$isunknown(mu_rc),$isunknown(wf),^mu_c,^mu_rc,^wf);
+          $display("EARLY_X_TELEMETRY anchor c=%h rc=%h wf=%b unknown=%b%b%b xor=%b%b%b",anchor_c,anchor_rc,anchor_wf,$isunknown(anchor_c),$isunknown(anchor_rc),$isunknown(anchor_wf),^anchor_c,^anchor_rc,^anchor_wf);
+          $display("EARLY_X_TELEMETRY count candidate valid=%h evld=%h rec=%b recq=%b armed=%b anchor valid=%h evld=%h rec=%b recq=%b armed=%b",dut.vld,dut.evld,dut.rec,dut.rec_q,dut.armed,anchor.vld,anchor.evld,anchor.rec,anchor.rec_q,anchor.armed);
           $fatal(1,"EARLY_X observable output/fault after external reset release c%0d",cyc);
+       end
        if(rst_n && dut.rn && $isunknown({dut.vld,dut.evld,dut.ok,dut.fire,dut.adv,dut.due,dut.radv,dut.armed}))
           $fatal(1,"EARLY_X source-qualified control c%0d",cyc);
 `endif
