@@ -78,3 +78,23 @@ certificate, every timed write/read/root/control/reset path, and actual routed
 TT setup / FF hold with native family measurements and the existing reserves.
 The standalone 256-case functional certificate does not establish that physical
 phase contract. No LAND gate or CLOSED record is issued by this work.
+
+## Direct D4/E2 descendant reservation followup
+
+`landed_sdc()` applies its stronger direct timing reserve after `ot_ce_apply`.
+It now enumerates every actual clock whose `ot_cf_root` is a declared entry,
+and applies the unchanged `60 + residual + 0.75*T` setup and `25 + residual`
+hold reservation between different entry families. Equal-root pairs retain
+their existing semantics. There is no additional opt-in key: direct D4/E2
+already explicitly selects this timing contract.
+
+`evidence/direct_reserve.log`: seven focused tests PASS on fleet OpenSTA 3.1.0.
+The native export proves all four rise/fall combinations in both directions
+for primary, generated, and nested-generated clocks at residuals 150/225 ps.
+At T=100 ps those pairs retain setup285/360 and hold175/250 ps, respectively.
+Same-family pairs gain no new inter-clock reservation. The ordinary direct
+case's canonical effective SDC is byte-identical before/after this change.
+The default non-direct emitted SDC remains literally byte-identical.
+`legacy_{direct,default}_d4e2.sdc` were captured from candidate609270c0a before
+this edit; they are regression fixtures, not production closure evidence.
+No timing thresholds, source phases, data exceptions, or schema are changed.
