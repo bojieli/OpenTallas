@@ -1,0 +1,26 @@
+test_absent_module_refuses (test_kv_expand_alias.RealRelayAlias.test_absent_module_refuses) ... ok
+test_actual_alias_diagnostic_positive (test_kv_expand_alias.RealRelayAlias.test_actual_alias_diagnostic_positive) ... ok
+test_changed_master_refuses (test_kv_expand_alias.RealRelayAlias.test_changed_master_refuses) ... ok
+test_changed_mut_refuses (test_kv_expand_alias.RealRelayAlias.test_changed_mut_refuses) ... ok
+test_inherited_alias_override_refuses (test_kv_expand_alias.RealRelayAlias.test_inherited_alias_override_refuses) ... ok
+test_invalid_receipt_refuses (test_kv_expand_alias.RealRelayAlias.test_invalid_receipt_refuses) ... ok
+test_missing_ledger_refuses (test_kv_expand_alias.RealRelayAlias.test_missing_ledger_refuses) ... ok
+test_missing_profile_refuses (test_kv_expand_alias.RealRelayAlias.test_missing_profile_refuses) ... ok
+test_missing_sidecar_refuses (test_kv_expand_alias.RealRelayAlias.test_missing_sidecar_refuses) ... ok
+test_mut_profile_refuses (test_kv_expand_alias.RealRelayAlias.test_mut_profile_refuses) ... ok
+test_stale_rtl_refuses (test_kv_expand_alias.RealRelayAlias.test_stale_rtl_refuses) ... ok
+test_stale_view_refuses (test_kv_expand_alias.RealRelayAlias.test_stale_view_refuses) ... ok
+test_strict_missing_receipt_refuses_atomically (test_kv_expand_alias.RealRelayAlias.test_strict_missing_receipt_refuses_atomically) ... ok
+
+----------------------------------------------------------------------
+Ran 13 tests in 221.225s
+
+OK
+{"removed": 1, "added": 1, "wires": 0, "frames": {"alias_frame": [1, 1, 0]}}
+kv_bound_netlist: 1 instances, 1 masters, 0 rewritten, 0 constant bits folded ({}), 0 strap ports, off-chip [], problems []
+{"removed": 1, "added": 1, "wires": 0, "frames": {"alias_frame": [1, 1, 0]}}
+{"removed": 1, "added": 1, "wires": 0, "frames": {"alias_frame": [1, 1, 0]}}
+{"removed": 1, "added": 1, "wires": 0, "frames": {"alias_frame": [1, 1, 0]}}
+{"removed": 1, "added": 1, "wires": 0, "frames": {"alias_frame": [1, 1, 0]}}
+{"removed": 1, "added": 1, "wires": 0, "frames": {"alias_frame": [1, 1, 0]}}
+{"removed": 1, "added": 1, "wires": 0, "frames": {"alias_frame": [1, 1, 0]}}

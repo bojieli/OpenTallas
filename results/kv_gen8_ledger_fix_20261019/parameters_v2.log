@@ -1,0 +1,44 @@
+test_kv_expand_parameters (unittest.loader._FailedTest.test_kv_expand_parameters) ... ERROR
+
+======================================================================
+ERROR: test_kv_expand_parameters (unittest.loader._FailedTest.test_kv_expand_parameters)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_kv_expand_parameters
+Traceback (most recent call last):
+  File "/usr/lib/python3.14/unittest/loader.py", line 426, in _find_test_path
+    module = self._get_module_from_name(name)
+  File "/usr/lib/python3.14/unittest/loader.py", line 367, in _get_module_from_name
+    __import__(name)
+    ~~~~~~~~~~^^^^^^
+  File "/srv/opentallas-scratch/claude/kv-gen8-ledger-fix-1019/source-v2/tools/qwen_kv_die/test_kv_expand_parameters.py", line 14, in <module>
+    import kv_expand as E
+  File "/srv/opentallas-scratch/claude/kv-gen8-ledger-fix-1019/source-v2/tools/qwen_kv_die/kv_expand.py", line 32, in <module>
+    import kv_die as K  # noqa: E402
+    ^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch/claude/kv-gen8-ledger-fix-1019/source-v2/tools/qwen_kv_die/kv_die.py", line 1048, in <module>
+    qkd_d2ds=_d2ds_binding_dcal())
+             ~~~~~~~~~~~~~~~~~~^^
+  File "/srv/opentallas-scratch/claude/kv-gen8-ledger-fix-1019/source-v2/tools/qwen_kv_die/kv_die.py", line 1040, in _d2ds_binding_dcal
+    b = d2ds_binding()
+  File "/srv/opentallas-scratch/claude/kv-gen8-ledger-fix-1019/source-v2/tools/qwen_kv_die/kv_die.py", line 970, in d2ds_binding
+    return dict(module='qkd_d2d_static', file=D2DS_FILE, parameters=dict(NL=2, NTX=_ks_ntx(), TXDP=d2d_txdp_k()),
+                                                                                                   ~~~~~~~~~~^^
+  File "/srv/opentallas-scratch/claude/kv-gen8-ledger-fix-1019/source-v2/tools/qwen_kv_die/kv_die.py", line 961, in d2d_txdp_k
+    return _ks.d2d_txdp_k()
+           ~~~~~~~~~~~~~~^^
+  File "/srv/opentallas-scratch/claude/kv-gen8-ledger-fix-1019/source-v2/tools/qwen_kv_die/kv_static.py", line 33, in d2d_txdp_k
+    mm = re.search(r"localparam\s*\[31:0\]\s*D2D_TXDP_K\s*=\s*32'h([0-9a-fA-F_]+)\s*;", (ROOT / img).read_text())
+                                                                                        ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 788, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 772, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/srv/opentallas-scratch/claude/kv-gen8-ledger-fix-1019/source-v2/rtl/qwen_sys/d2d_static_20261015/d2d_cal_image.svh'
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.000s
+
+FAILED (errors=1)

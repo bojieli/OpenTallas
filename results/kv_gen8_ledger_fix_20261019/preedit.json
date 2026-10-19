@@ -1,0 +1,22 @@
+{
+  "base": "eccdab9dd",
+  "source_generated": "5f2ce19bc",
+  "driver": "cda9d9f9d",
+  "identity": {
+    "tools/qwen_kv_die/kv_expand.py": "1fb707656faad07afdf0e4b24b7cee377c0b25d2bfbf3bfaf00f14de503ab012",
+    "tools/qwen_kv_die/kv_expand_parameters.py": "b3c41d052e10158ed7bf974254f7e5271223850027f12bb0330e27cf74b6aa73",
+    "rtl/lib/face_land/qkd_astk_rly_296_fl.sv": "f6e02fd59762f27329eeb539efbfdfd427043faa11721a741d818ecf102a142c",
+    "rtl/qwen_sys/split_20261014/qkd_astk_phys.sv": "5ee9ea58b745976317976492caab21541487c247c7e953733c359f7c9bec18de"
+  },
+  "alias": {
+    "original": "qkd_astk_rly_296",
+    "original_parameters": {},
+    "original_overrides": {},
+    "emitted": "qkd_astk_rly_296_fl",
+    "emitted_defaults": {
+      "MUT": 0
+    },
+    "default_behavior_change": false
+  },
+  "scope": "producer identity/absent-module refusal/explicit inherited-parameter refusal only; live v4 untouched"
+}

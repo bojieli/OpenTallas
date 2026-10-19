@@ -1,0 +1,147 @@
+{
+  "schema": "opentallas.offline_ledger_proposal.v1",
+  "status": "PROPOSAL_ONLY_DIAGNOSTIC_NOT_CONTINUATION",
+  "frozen_generated_source": "5f2ce19bc",
+  "frozen_driver": "cda9d9f9d",
+  "helper_commit": "d19b6b77f",
+  "exact_helpers": {
+    "tools/qwen_kv_die/kv_expand.py": "25c252090b1feaace9037cf716cf9aad0d8f877833d7d76c1888017b72ff0bf8",
+    "tools/qwen_kv_die/kv_expand_parameters.py": "f4d5d480baf115b9734a7c1726b1310ec415b74dff5eee0b3758a027aa7b04f9"
+  },
+  "changed_helper_sources": {
+    "tools/qwen_kv_die/kv_expand.py": {
+      "before": "1fb707656faad07afdf0e4b24b7cee377c0b25d2bfbf3bfaf00f14de503ab012",
+      "after": "25c252090b1feaace9037cf716cf9aad0d8f877833d7d76c1888017b72ff0bf8"
+    },
+    "tools/qwen_kv_die/kv_expand_parameters.py": {
+      "before": "b3c41d052e10158ed7bf974254f7e5271223850027f12bb0330e27cf74b6aa73",
+      "after": "f4d5d480baf115b9734a7c1726b1310ec415b74dff5eee0b3758a027aa7b04f9"
+    }
+  },
+  "unchanged_die": {
+    "bytes": 23612586,
+    "sha256": "80b5ef6306f6e9e5e5d0b98c4e4af7e15468eb5a33db31b7a35695f4538bbe89"
+  },
+  "unchanged_output_identity": {
+    "STATUS.log": {
+      "bytes": 4153,
+      "sha256": "89ca242197d65b03c1bee12a087625512a2532ba3d8d7dfd1295a05e99e9fab0"
+    },
+    "prep_v4_resume.log": {
+      "bytes": 5272,
+      "sha256": "5f92fce16f79d20312959e13f17503a133370ab0994a75c3ff463abed323ac61"
+    },
+    "port_bind_v2.log": {
+      "bytes": 65295,
+      "sha256": "cf4e194ae41bb96e9fab81ead5aac6781b409c8635bcb2661beefe393f3c982b"
+    },
+    "relay_check.log": {
+      "bytes": 169,
+      "sha256": "9fe5f94df7870e13cc7d44116ee756274e5e44e6fae3cfd081bb681bbd5986bf"
+    },
+    "case_kv/die.v": {
+      "bytes": 23612586,
+      "sha256": "80b5ef6306f6e9e5e5d0b98c4e4af7e15468eb5a33db31b7a35695f4538bbe89"
+    },
+    "case_kv/die.v.preexp": {
+      "bytes": 3716857,
+      "sha256": "00a3de7cd445198b147af744e5dd3c00f824a3222767b3fb4c8274392dd8b36e"
+    },
+    "continuation.json": {
+      "bytes": 1191,
+      "sha256": "c0c9308edc427e2b61fd6831751c9e39e329e6aa684d9041ec91c3a04d4a16f3"
+    },
+    "dependency_manifest.json": {
+      "bytes": 13826874,
+      "sha256": "eb6288430a5eb0e8b98ece897744fb5749f55eea6737418d8003e9c82833fc78"
+    },
+    "NOT_A_DIE_RESULT": {
+      "bytes": 63,
+      "sha256": "1ec22d99476fa21984685375e89c39d4e675546cad0ef993f026981ad2743fcb"
+    },
+    "port_bind_launch.json": {
+      "bytes": 27912,
+      "sha256": "9a135d4ec7d89239a8203109d50111fd0b20a7441479ed3017078ed1136d7e2e"
+    },
+    "case_kv/place.tcl": {
+      "bytes": 3578899,
+      "sha256": "cc4fd134831891d5e0e4a2d8c4f5dd94d81ff85ef76d3c0efe37ead238bbcdbc"
+    },
+    "case_kv/run.log": {
+      "bytes": 347304,
+      "sha256": "2b4d4007055ccf3196f7bd6b1c48e4d4704766b17344bedfe6f13332bd8f4c9e"
+    },
+    "fwd_lanes.json": {
+      "bytes": 718033,
+      "sha256": "497725676189274ae4e573595d132cc16f39765001c7e61c42422a385c7e621e"
+    },
+    "case_kv/boot_ages.json": {
+      "bytes": 1394,
+      "sha256": "57405f718950941fa241f207e49a7e278e6f8d8c152ecf67ab0bcb1851afafd6"
+    }
+  },
+  "changed_outputs": {
+    "expand.json": {
+      "before": "21392fbfee99341ddf3b21007621baa10ac1394b509ea1d69ef07ab7f1400433",
+      "proposed": "cd8900151d1d7cdc74a278e4d68bbeced19ea856c4b7925f360cfcea6258e28a",
+      "bytes": 15973095,
+      "added_rows": 912,
+      "removed_rows": 0,
+      "changed_existing_rows": 0
+    },
+    "case_kv/die.v.params.json": {
+      "before": "1b356dc9d75d74765b4e7e79381b2bd3bb12749de5cbd3e62bd1ad2c39991921",
+      "proposed": "1bb8efc3b0f3fd0557e3c98ce7f600d019559f174c9f650d4ceab6fc6d5aa8d1",
+      "bytes": 925206,
+      "added_rows": 912,
+      "removed_rows": 0,
+      "changed_existing_rows": 0
+    }
+  },
+  "all_other_source_and_outputs": "UNCHANGED_REQUIRED",
+  "preserved_parameter_rows": 7601,
+  "proposed_parameter_rows": 8513,
+  "preserved_sidecar_rows": 7649,
+  "proposed_sidecar_rows": 8561,
+  "explicit_profile": {
+    "qkd_astk_rly_296_fl": {
+      "parameters": {
+        "MUT": 0
+      },
+      "identity": {
+        "rtl": {
+          "path": "rtl/lib/face_land/qkd_astk_rly_296_fl.sv",
+          "sha256": "f6e02fd59762f27329eeb539efbfdfd427043faa11721a741d818ecf102a142c"
+        },
+        "view": "physical/ref_tile/qkd_astk_rly_296/views/qkd_astk_rly_296_fl",
+        "artifacts": {
+          "abstract.json": "257220800facbfc0238d684f076ff2ae2eccc6686bec4a25d2665a513967f19c",
+          "child_lint.json": "10f419acd8ad132c70e0bdc747e3183b007f59f5d21e210dedd73b4222cc288e",
+          "export_ff.log": "46f4e2f9e753bdc32b19fb44bab901013baed2d9dc27a74545d190de36af266f",
+          "export_ff.tcl": "7b1f0ed03960cf4ceb79d1de7100f0e57beaef5ec9bdb618b391fe1adcf50d10",
+          "export_ss.log": "53c77318a53663774f01a8dec2c34049f94c3d6b76f576e49a2a6a77d507bbaf",
+          "export_ss.tcl": "7316a720266ec31c32d12f003d01b8c72a12f4e3cda580912732f41f80899e92",
+          "export_tt.log": "35c38ae611008b571a203fc621d206b39c82f34357a65340c9e3bc235f8e397c",
+          "export_tt.tcl": "86a3d3eebf1c31e6e6247ae9ced6ef4ea3156743c63ab599906b9cf708d7f77a",
+          "insertion.json": "42338878bd63343a83dfb1637b342593de5852254b6480e6d634eb80014041cd",
+          "provenance/abstract_pin_stub.json": "acde73b79d26371cedcba2361d46d2a7c3407c22c8b6bb470f6bb7e584f1bea9",
+          "provenance/raw/qkd_astk_rly_296_fl.lef": "090db5b33219ed4e0f0585249aca2b0e738a7e97c0839b3b37716f76eace1f8d",
+          "provenance/view_export.abstract.json": "3856414af3fdce4c2fc9d687738983551727e5ccf5e9817c4ee64bf94c353aa6",
+          "qkd_astk_rly_296_fl.lef": "061494c716b15b60667ac01a288df27edef3fa23e28ed6705a9bf442855674e6",
+          "qkd_astk_rly_296_fl_ff.lib": "8fa266bf4bc78a9a7c21338b20e2192065ab81275d6c5d10679730b6db47a55b",
+          "qkd_astk_rly_296_fl_ss.lib": "bb9c36dab588dda574848c1734ebe272e9c78314d09d56f9e59235c9b386a27c",
+          "qkd_astk_rly_296_fl_tt.lib": "985a2753664d1b122546648c405e21de3e4764537513f3c5c92c24880d213e0e"
+        }
+      }
+    }
+  },
+  "native_qualified": false,
+  "strict_result": "REFUSE: native parameter qualification missing",
+  "continuation_authorized": false,
+  "preconditions": [
+    "actual producer/binder fixture PASS",
+    "ROOT review of complete source/output diff",
+    "independent native parameter proof before strict use",
+    "current reset/fanout/contact/PG qualification remains separate"
+  ]
+}

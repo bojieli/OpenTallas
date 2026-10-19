@@ -1,0 +1,15 @@
+{
+  "ParameterDeclarations": {
+    "command": "python3 -m unittest test_kv_expand_parameters.ParameterDeclarations -v",
+    "tests": 5,
+    "verdict": "PASS",
+    "seconds": 0.001
+  },
+  "ParamDiag": {
+    "command": "python3 -m unittest test_kv_param_diag -v",
+    "tests": 5,
+    "verdict": "PASS",
+    "seconds": 0.003
+  },
+  "scope": "Pure Python parsing/profile/refusal only; no local EDA. Existing diagnostic autoprofile behavior is not newly adopted."
+}

@@ -1,0 +1,14 @@
+{
+  "python": "Python 3.14.4",
+  "yosys": "Yosys 0.52 (git sha1 fee39a3284c90249e1d9684cf6944ffbbcbb8f90)",
+  "yosys_path": "/usr/bin/yosys",
+  "yosys_sha256": "30aa795bec7533dac08bad56309edb6ac70dd33f017c28082d3c1dae1012112f",
+  "unit": "oth-ubuntu-3669545-1792446417",
+  "source_commit": "0715caa3d",
+  "admission": {
+    "memory_GB": 8,
+    "threads": 2,
+    "disk_GB": 2,
+    "placement": "unpinned ot-run; exact frozen data locality ep6"
+  }
+}

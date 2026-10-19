@@ -1,0 +1,18 @@
+{
+  "source": "0715caa3d",
+  "fleet_unit": "oth-ubuntu-3669545-1792446417",
+  "alias_cases": 13,
+  "alias_seconds": 221.225,
+  "parameter_cases": 24,
+  "parameter_seconds": 0.358,
+  "verdict": "PASS",
+  "input_exact_helper_fixture_selected_view_hashes": "PASS",
+  "all13_fixture_source_inventories_match_frozen_inputs": "PASS",
+  "qualification": "DIAGNOSTIC_COMPONENT_ONLY",
+  "prior_import_refusals": [
+    "unit3668153 missing qkd_host_root_admission.sv",
+    "unit3669036 missing d2d_cal_image.svh"
+  ],
+  "original_live_v4_modified": false,
+  "native_job_started": false
+}
