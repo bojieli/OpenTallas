@@ -80,7 +80,8 @@ class Gate(unittest.TestCase):
     # ---------------------------------------------------------------- when the gate does not apply
     def test_constants(self):
         self.assertEqual(TL.CLOSED_STANDS_KINDS, ("die_window", "slot_change", "param_change", "rtl_change", "evidence_gap",
-                                                  "pin_register", "native_launch", "native_capture"))
+                                                  "pin_register", "native_launch", "native_capture",
+                                                  "native_spread", "flow_failure", "pin_order"))
         self.assertEqual(TL.DIE_WINDOW_CUT_MIN, 0.6)
 
     def test_new_block_and_unclosed_history_pass(self):
@@ -186,6 +187,39 @@ class Gate(unittest.TestCase):
         self.assertEqual(r["verdict"], "REFUSE")
         self.assertIn("port sets differ", r["message"])
 
+    def test_slot_change_custom_io_vs_pin_regions_still_needs_its_receipt(self):
+        # (ROOT-CIO 2026-10-19, coordinator condition on the RESUB-2 relaxation 820ace57d) a literal custom IO kit
+        # (place_pin without -force_to_die_boundary) is compared per port against a closed pin-region view; a REAL
+        # face change (ck E -> N) is admitted only with its receipt (contract / SLOT CHANGE REQUEST line); with no
+        # receipt it is refused, and the same faces stay refused (closed view stands).
+        regions = "(--pin-region '^(d)(\\[|$)=left' --pin-region '^(ck)(\\[|$)=right')"
+        self.r.put("aaaaaaaaa", pv="M7", rl="M2 M7", pins=regions)
+        self.r.c["a" * 36] = self.r.c["aaaaaaaaa"]
+        tcl = "physical/ref_tile/t/assigned_pins.tcl"
+
+        def custom(commit, ck_xy):
+            self.r.put(commit, pins="()")
+            self.r.c[commit]["physical/ref_tile/t/kit.env"] += (
+                f"EXTRA=('--orfs-var' 'IO_CONSTRAINTS=/src/{tcl}')\n")
+            pins = [("d[0]", 0.0, 10.0), ("d[1]", 0.0, 20.0), ("ck",) + ck_xy]
+            self.r.c[commit][tcl] = "".join(
+                f"place_pin -pin_name {{{n}}} -layer M4 -location {{{x} {y}}} -pin_size {{0.084 0.024}}\n"
+                for n, x, y in pins)
+
+        custom("fffffffff", (8.64, 64.8))        # ck E -> N: a real face change
+        custom("999999999", (17.28, 30.0))       # ck stays E: same faces
+        receipt = {"kind": "slot_change", "slot_change_request": "HF-2 r9j SLOT CHANGE REQUEST: ck E -> N"}
+        r = self.run_(spec(name="t-v3-fffffffff", commit="fffffffff", reroute_reason={"kind": "slot_change"}))
+        self.assertEqual(r["verdict"], "REFUSE", r)
+        self.assertIn("SLOT CHANGE REQUEST", r["message"])
+        r = self.run_(spec(name="t-v3-fffffffff", commit="fffffffff", reroute_reason=receipt))
+        self.assertEqual((r["verdict"], r["kind"]), ("PASS", "slot_change"), r["message"])
+        ev = next(iter(r["facts"]["custom_io_face_comparisons"].values()))
+        self.assertEqual((ev["status"], ev["level"], ev["examples"]), ("changed", "port", {"ck": ["E", "N"]}))
+        r = self.run_(spec(name="t-v3-999999999", commit="999999999", reroute_reason=receipt))
+        self.assertEqual(r["verdict"], "REFUSE", r)
+        self.assertIn("die_window, not slot_change", r["message"])
+
     # ---------------------------------------------------------------- pin_register
     def test_pin_wrapper_changes_are_actual_rtl_changes(self):
         path = 'physical/ref_tile/t/kit.env'
@@ -246,6 +280,13 @@ class Gate(unittest.TestCase):
         r = self.run_(spec(commit="ccccccccc", reroute_reason=ok))                  # RTL changed: not a re-kit
         self.assertEqual(r["verdict"], "REFUSE")
         self.assertIn("rtl_change", r["message"])
+        # (ROOT-0745) ... unless the cited receipt is COMMITTED and records the closed view's FAIL
+        import json as _j
+        self.r.c["ccccccccc"]["results/arch/nl_rc.json"] = _j.dumps({"cell": "ot_t", "launch_ps": 331.4})
+        r = self.run_(spec(commit="ccccccccc", reroute_reason=dict(ok, source="results/arch/nl_rc.json")),
+                      exists=lambda p: True)
+        self.assertEqual((r["verdict"], r["kind"]), ("PASS", "native_launch"), r["message"])
+        self.assertIn("RTL differs", r["message"])
         r = self.run_(spec(commit="eeeeeeeee", reroute_reason=ok))                  # outline moved: slot_change
         self.assertEqual(r["verdict"], "REFUSE")
         self.assertIn("FW", r["message"])
@@ -289,7 +330,16 @@ class Gate(unittest.TestCase):
         self.assertEqual(r["verdict"], "REFUSE")
         self.assertIn("stands", r["message"])
         self.r.c["ccccccccc"][rc] = _j.dumps({"cell": "ot_t", "capture_ps": 230.0})
-        r = self.run_(spec(commit="ccccccccc", reroute_reason=ok), exists=ex)       # RTL changed: not a re-kit
+        # (ROOT-0745) RTL changed, but the COMMITTED receipt records the closed view's FAIL: it cannot bind, admitted
+        r = self.run_(spec(commit="ccccccccc", reroute_reason=ok), exists=ex)
+        self.assertEqual((r["verdict"], r["kind"]), ("PASS", "native_capture"), r["message"])
+        self.assertIn("RTL differs", r["message"])
+        # the same receipt as a local (absolute) file is not committed evidence: RTL changed -> rtl_change
+        import tempfile
+        with tempfile.NamedTemporaryFile("w", suffix=".json", delete=False) as f:
+            f.write(_j.dumps({"cell": "ot_t", "capture_ps": 230.0}))
+        r = self.run_(spec(commit="ccccccccc", reroute_reason=dict(ok, source=f.name)), exists=lambda p: True)
+        os.unlink(f.name)
         self.assertEqual(r["verdict"], "REFUSE")
         self.assertIn("rtl_change", r["message"])
         self.r.c["eeeeeeeee"][rc] = _j.dumps({"cell": "ot_t", "capture_ps": 230.0})
@@ -326,7 +376,76 @@ class Gate(unittest.TestCase):
         self.assertEqual(r["verdict"], "REFUSE")
         self.assertIn("PINS faces (d)", r["message"])
 
+    def test_native_spread(self):
+        """ROOT-0745 10-18 (hsm_smvm_wrq_t4_r1 q5): a closed view whose committed receipt FAILS the TT / FF pin-flop
+        spread may be re-routed even though a shared wrapper's RTL moved (default-off parameter) since it closed"""
+        import json as _j
+        rc = "results/arch/native_rc.json"
+        rec = {"cell": "ot_t", "spread_ps": 88.1, "ff_spread_ps": 83.3, "capture_ps": 126.9, "launch_ps": 150.6}
+        for c in ("bbbbbbbbb", "ccccccccc"):
+            self.r.c[c][rc] = _j.dumps({"records": [rec]})
+        ex = lambda p: p in (rc, "results/arch/cuts.json")  # noqa: E731
+        ok = {"kind": "native_spread", "source": rc, "cell": "ot_t",
+              "fix": "CTS -no_obstruction_aware: clk_l3 branch buffers no longer pushed around the SRAM"}
+        for kind in ("native_spread", "native_capture"):
+            for c in ("bbbbbbbbb", "ccccccccc"):
+                r = self.run_(spec(commit=c, reroute_reason=dict(ok, kind=kind)), exists=ex)
+                self.assertEqual((r["verdict"], r["kind"]), ("PASS", kind), r["message"])
+                self.assertIn("spread_ps 88.1", r["message"])
+                self.assertIn("ff_spread_ps 83.3", r["message"])
+        self.r.c["ccccccccc"][rc] = _j.dumps({"cell": "ot_t", "spread_ps": 70.0, "ff_spread_ps": 81.0})   # FF only
+        r = self.run_(spec(commit="ccccccccc", reroute_reason=ok), exists=ex)
+        self.assertEqual(r["verdict"], "PASS", r["message"])
+        self.r.c["ccccccccc"][rc] = _j.dumps({"cell": "ot_t", "spread_ps": 60.0, "capture_ps": 230.0})   # capture miss
+        r = self.run_(spec(commit="ccccccccc", reroute_reason=ok), exists=ex)
+        self.assertEqual(r["verdict"], "REFUSE")
+        self.assertIn("no TT / FF pin-flop spread", r["message"])
+        self.r.c["ccccccccc"][rc] = _j.dumps({"cell": "ot_t", "spread_ps": 60.0, "ff_spread_ps": 55.0})  # PASS receipt
+        r = self.run_(spec(commit="ccccccccc", reroute_reason=ok), exists=ex)
+        self.assertEqual(r["verdict"], "REFUSE")
+
     # ---------------------------------------------------------------- param_change
+    def test_pin_order(self):
+        # (REFILL-0400/PO-LINK 10-19) closed view chunk-scrambled on an abutted joint -> same RTL / outline / faces
+        # re-kitted with route.pin_balance, citing the committed audit hand-off
+        ho = "results/arch/abutted_joints_1019/handoff_t.md"
+        bal = "export OT_PIN_GROUP_MAX=1\nexport OT_PIN_BALANCE_H='M4'\nexport OT_PIN_BALANCE_V='M3 M5'\n"
+        self.r.put("fffffffff", pv="M7", rl="M2 M7")                       # same kit as the closed one + balance
+        self.r.c["fffffffff"]["physical/ref_tile/t/kit.env"] += bal
+        self.r.c["fffffffff"][ho] = "| 1 | 5 | 512 | t [CLOSED] (R0, E) | ot_t own bit order scrambled on o |"
+        ok = {"kind": "pin_order", "source": ho, "fix": "route.pin_balance + disjoint per-port pin_ranges (ascending)"}
+        r = self.run_(spec(commit="fffffffff", reroute_reason=ok))
+        self.assertEqual((r["verdict"], r["kind"]), ("PASS", "pin_order"), r["message"])
+        for k in ("source", "fix"):
+            self.assertEqual(self.run_(spec(commit="fffffffff", reroute_reason={a: b for a, b in ok.items() if a != k}))
+                             ["verdict"], "REFUSE", k)
+        self.assertEqual(self.run_(spec(commit="fffffffff", reroute_reason=dict(ok, source="/tmp/x.md")))["verdict"],
+                         "REFUSE")                                          # not committed evidence
+        r = self.run_(spec(commit="fffffffff", block="ot_tt", reroute_reason=ok),
+                      [hist(spec=spec("t-v1-aaaaaaaaa", "aaaaaaaaa", block="ot_tt"))])
+        self.assertEqual(r["verdict"], "REFUSE")                            # the audit does not name ot_tt
+        self.assertIn("does not name", r["message"])
+        self.r.c["bbbbbbbbb"][ho] = self.r.c["fffffffff"][ho]
+        r = self.run_(spec(reroute_reason=ok))                              # no ordered layout in the new kit
+        self.assertEqual(r["verdict"], "REFUSE")
+        self.assertIn("no ordered bit layout", r["message"])
+        self.r.c["aaaaaaaaa"]["physical/ref_tile/t/kit.env"] += bal
+        r = self.run_(spec(commit="fffffffff", reroute_reason=ok))          # the closed kit was ordered already
+        self.assertEqual(r["verdict"], "REFUSE")
+        self.assertIn("already had", r["message"])
+        self.r.c["aaaaaaaaa"]["physical/ref_tile/t/kit.env"] = self.r.c["aaaaaaaaa"]["physical/ref_tile/t/kit.env"].replace(bal, "")
+        self.r.put("ggggggggg", fw=34.56)
+        self.r.c["ggggggggg"]["physical/ref_tile/t/kit.env"] += bal
+        self.r.c["ggggggggg"][ho] = self.r.c["fffffffff"][ho]
+        r = self.run_(spec(commit="ggggggggg", reroute_reason=ok))          # outline moved: slot_change
+        self.assertEqual(r["verdict"], "REFUSE")
+        self.assertIn("FW", r["message"])
+        self.r.c["ccccccccc"]["physical/ref_tile/t/kit.env"] += bal
+        self.r.c["ccccccccc"][ho] = self.r.c["fffffffff"][ho]
+        r = self.run_(spec(commit="ccccccccc", reroute_reason=ok))          # RTL changed: rtl_change
+        self.assertEqual(r["verdict"], "REFUSE")
+        self.assertIn("rtl_change", r["message"])
+
     def test_param_change(self):
         rr = {"kind": "param_change", "params": {"W": "512 -> 1024"}}
         r = self.run_(spec(reroute_reason=rr))                                      # same PARAMS in both kits
@@ -336,6 +455,27 @@ class Gate(unittest.TestCase):
         self.assertEqual(self.run_(unreadable)["verdict"], "PASS")
         self.assertEqual(self.run_(spec(kit="physical/ref_tile/missing", reroute_reason={"kind": "param_change"}))["verdict"],
                          "REFUSE")
+
+    # ---------------------------------------------------------------- flow_failure
+    def test_flow_failure_retries_an_admitted_failed_reroute(self):
+        admitted = hist("t-v2-ccccccccc", status="FAILED", commit="ccccccccc", publish=False, t="02:00")
+        admitted["spec"]["reroute_reason"] = {"kind": "rtl_change"}
+        never = hist("t-v0-bbbbbbbbb", status="NEEDS_RTL", commit="bbbbbbbbb", publish=False, t="00:30")
+        busy = hist("t-v2b-ccccccccc", status="RUNNING", commit="ccccccccc", publish=False, t="02:30",
+                    spec=dict(spec("t-v2b-ccccccccc", "ccccccccc"), reroute_reason={"kind": "rtl_change"}))
+        jobs = [hist(), admitted, never, busy]
+        ok = {"kind": "flow_failure", "failed_job": "t-v2-ccccccccc", "failure": "earlyoom killed detail_route"}
+        r = self.run_(spec("t-v3-ccccccccc", "ccccccccc", reroute_reason=ok), jobs)
+        self.assertEqual((r["verdict"], r["kind"]), ("PASS", "flow_failure"), r["message"])
+        self.assertIn("retry of t-v2-ccccccccc", r["message"])
+        for bad, needle in (({"kind": "flow_failure"}, "needs \"failed_job\""),
+                            ({"kind": "flow_failure", "failed_job": "nope-v9"}, "not a job of"),
+                            ({"kind": "flow_failure", "failed_job": "t-v1-aaaaaaaaa"}, "is CLOSED"),
+                            ({"kind": "flow_failure", "failed_job": "t-v2b-ccccccccc"}, "still RUNNING"),
+                            ({"kind": "flow_failure", "failed_job": "t-v0-bbbbbbbbb"}, "never admitted")):
+            r = self.run_(spec("t-v3-ccccccccc", "ccccccccc", reroute_reason=bad), jobs)
+            self.assertEqual(r["verdict"], "REFUSE", bad)
+            self.assertIn(needle, r["message"])
 
     # ---------------------------------------------------------------- rtl_change
     def test_rtl_change_is_verified(self):

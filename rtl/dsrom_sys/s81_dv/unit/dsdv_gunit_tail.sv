@@ -77,12 +77,11 @@ module dsdv_gunit_tail #(
                    p4 ? 5'(age - P4) : p5 ? 5'(age - P5) : p6 ? 5'(age - P6) : 5'(age - P7);
     wire mv = p1 || (p7 && i >= 4), av = p2 || p3 || p5 || (p7 && i < 4);
     // operand registers (one stage in front of every unit)
-    reg mv_q, av_q, ev_q, dv_q; reg [4:0] i_q; reg [31:0] ma_q, mb_q, aa_q, ab_q, ex_q, db_q;
+    reg mv_q, av_q, ev_q, dv_q; reg [31:0] ma_q, mb_q, aa_q, ab_q, ex_q, db_q;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin mv_q <= 1'b0; av_q <= 1'b0; ev_q <= 1'b0; dv_q <= 1'b0; end
         else begin mv_q <= mv; av_q <= av; ev_q <= p4; dv_q <= p6; end
     always @(posedge clk) begin
-        i_q <= i;
         ma_q <= t[i]; mb_q <= p1 ? s[(i < 4) ? 0 : (i < 8) ? 1 : 2] : 32'h40000000;
         aa_q <= t[i];
         ab_q <= p2 ? b[i] : p3 ? (mx[(i - 5'd8) >> 2] ^ 32'h80000000) : p5 ? 32'h3f800000 : (MUT_PRE ? 32'd0 : HC_EPS);
@@ -98,11 +97,19 @@ module dsdv_gunit_tail #(
     assign mo = vm[LM]; assign ao = va[LA];
     assign xe_v = ev_q; assign xe_x = ex_q; assign eo = xe_vo; assign ey = xe_y; assign ef = xe_f;
     assign xd_v = dv_q; assign xd_b = db_q; assign do_ = xd_vo; assign dy = xd_y; assign df = xd_f;
-    wire [4:0] mi, ai, ei, di;
-    ot_hdc_delay #(.W(5), .D(LM)) u_mt (clk, rst_n, i_q, mi);
-    ot_hdc_delay #(.W(5), .D(LA)) u_at (clk, rst_n, i_q, ai);
-    ot_hdc_delay #(.W(5), .D(LE)) u_et (clk, rst_n, i_q, ei);
-    ot_hdc_delay #(.W(5), .D(LD)) u_dt (clk, rst_n, i_q, di);
+    // result index of each unit: the operand index issued 1 + latency edges earlier.  The calendar is a function of age
+    // (age advances one an edge while active), so it is recomputed from age, registered -- no index delay lines (the
+    // 5-bit x 79 / 24 / 5 / 4 shift chains were 560 flop->flop hold chains, SAFE-DESIGN item 5; S81-SAFE-FIX/GUNIT).
+    function automatic [4:0] fidx(input [9:0] x);
+        fidx = (x >= 10'(P1) && x < 10'(P1 + 24)) ? 5'(x - 10'(P1)) : (x >= 10'(P2) && x < 10'(P2 + 24)) ? 5'(x - 10'(P2)) :
+               (x >= 10'(P3) && x < 10'(P3 + 16)) ? 5'(x - 10'(P3) + 10'd8) : (x >= 10'(P4) && x < 10'(P4 + 24)) ? 5'(x - 10'(P4)) :
+               (x >= 10'(P5) && x < 10'(P5 + 8)) ? 5'(x - 10'(P5)) : (x >= 10'(P6) && x < 10'(P6 + 8)) ? 5'(x - 10'(P6)) :
+               5'(x - 10'(P7));
+    endfunction
+    reg [4:0] mi, ai, ei, di;                         // = i of age - 1 - latency (registered from age - latency)
+    always @(posedge clk) begin
+        mi <= fidx(age - 10'(LM)); ai <= fidx(age - 10'(LA)); ei <= fidx(age - 10'(LE)); di <= fidx(age - 10'(LD));
+    end
     function automatic greater(input [31:0] a, c);
         if (a[30:0] == 0 && c[30:0] == 0) greater = 0;
         else if (a[31] != c[31]) greater = !a[31];

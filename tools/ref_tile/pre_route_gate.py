@@ -24,9 +24,9 @@ REMOTE (--remote HOST, minutes, on the fleet via ot-heavy): the real ORFS synthe
 fails here, not after hours), floorplan + PDN + IO placement of the kit (PDN-0217/0233/0006, PPL-0061 surface here),
 then the netlist textbook lint (clock root size / span, high fanout + reset on datapath, logic behind pins, ICG enable
 from a port, logic depth, > 500 um wire per stage) on the synthesized netlist + the placed-IO floorplan, and the pin
-plan against the SYNTHESIZED port names.  MEASURED CLOCK RULE (owner 2026-10-13, constants in tools/textbook_lint.py):
-> 15,000 sinks on one clock root FAILs unless this run's --cts measured TT insertion <= 300 ps and leaf spread <= 80 ps;
-a declared spine does not waive it.  A --remote run writes <kit>/gate_result.json (commit it: the submit gate reads it).  --cts continues through CTS and reports clock insertion spread (ck_insertion)
+plan against the SYNTHESIZED port names.  MEASURED CLOCK RULE (owner 2026-10-17 0dq, textbook_lint.clock_rule_eval):
+FAIL only on a pin-flop (child-flop per linked pair for a parent) spread > 80 ps at TT or FF, or a neighbour-boundary
+mismatch (native_pin_audit --relative-to); > 15,000 sinks on one root or insertion > 300 ps is a WARN (guidance).  A --remote run writes <kit>/gate_result.json (commit it: the submit gate reads it).  --cts continues through CTS and reports clock insertion spread (ck_insertion)
 and the worst-path classes.
 Exit 0 PASS / WARN, 1 FAIL, 2 usage.
 """
@@ -53,12 +53,16 @@ import child_lint  # noqa: E402
 import textbook_lint as TL  # noqa: E402
 import pin_fit as PF  # noqa: E402
 import source_binding as SB  # noqa: E402
+import clock_entry_constraints as CE  # noqa: E402
 import keep_module_audit as KA  # noqa: E402
 HO = SB.overlay_module()
 
 DEFAULT_SRC_PATHS = ("tools", "rtl", "physical", "Makefile")
 # the textbook checks whose refuse tier the gate enforces (calibrated: zero closed-set refusals, see README)
-GATE_REFUSE = ("clock_domain", "high_fanout", "wire_reach")
+# reset_landing (ROOT-RST 2026-10-19, Gate-Rule: tightening requires=reset_landing): a reset input reaching more than
+# rst_land_max (2) sinks without a pin landing register FAILS the gate (textbook_lint reset_landing; kit fix: ref_tile
+# "reset_landing": {"enable": true} inserts the 2-stage landing at synthesis)
+GATE_REFUSE = ("clock_domain", "high_fanout", "wire_reach", "reset_landing")
 RELAUNCH_WAIT_S = int(os.environ.get("OT_GATE_RELAUNCH_WAIT_S", "900"))
 DAEMON_TREE = Path(os.environ.get("OT_CLOSURE_DAEMON_TREE", "/home/ubuntu/wt-claude-closure-daemon-1010"))
 # flow helpers the loop ships into every job snapshot (closure_loop.py ship_fpl / HELPERS); the remote gate does the same
@@ -311,6 +315,52 @@ def check_pin_fit(g: Gate, spec: dict, ports: dict | None, outline, lc: dict | N
     return st, regs
 
 
+# PIN ORDER (ROOT-PINORDER 2026-10-19, HBM-HCRING finding): an ABUTTED bus needs a defined bit order across its face.
+# The route's PPL placement chunks a region into ordered groups of 32 (OT_PIN_GROUP_MAX) and places the groups
+# independently (closed hbfd_rly_1136_WE: 13 descents in its 1,136-b bus), so two abutted tiles meet chunk-scrambled
+# even when both are R0, and an R180 / MX / MY neighbour meets them fully reversed.  A port is ABUTTED when the kit
+# places it at a planned position facing its neighbour (a "pin_ranges" entry) or lists it in "abutted_ports".  Wider
+# than 32 bits, it must be placed in bit order: route.pin_balance (place_pin, bit k at lo + (hi-lo)(k+.5)/n; for a face
+# against a mirrored neighbour also mirror the range and list the port in pin_order_desc) or an exact io_tcl.  A port
+# that really is channel-routed (not abutted) may be named in "pin_order_waiver" {port: reason}.
+PIN_ORDER_MAX_UNORDERED = 32
+PIN_ORDER_FIX = ("add route.pin_balance {group_max 1, h, v} (disjoint per-port pin_ranges on the face); for a face that "
+                 "abuts an R180 / MX / MY neighbour mirror the range and list the port in pin_order_desc; check the die "
+                 "joint with tools/hier_contract/abutted_joint_audit.py; or name a channel-routed port in "
+                 "pin_order_waiver {port: reason}")
+
+
+def check_pin_order(g: Gate, spec: dict, plan):
+    """FAIL when an abutted bus wider than 32 bits has no defined bit order in the route (see PIN ORDER above)."""
+    if not plan:
+        return
+    st, regs = plan
+    if st["exact"] or st["balance"]:
+        return
+    abut = set(spec.get("pin_ranges") or {}) | set(spec.get("abutted_ports") or [])
+    waive = spec.get("pin_order_waiver") or {}
+    if not isinstance(waive, dict) or any(not isinstance(v, str) or len(v.strip()) < 8 for v in waive.values()):
+        g.add("FAIL", "pin_order", "pin_order_waiver must be {port: reason} with a real reason", PIN_ORDER_FIX)
+        return
+    bad, unknown = [], []
+    for r in regs:
+        for n in r["names"]:
+            if n not in abut or n in waive:
+                continue
+            w = r["n"] if len(r["names"]) == 1 else None
+            if w is None:
+                unknown.append(n)
+            elif w > PIN_ORDER_MAX_UNORDERED:
+                bad.append(f"{n} ({w} b, {r['face']} face)")
+    if bad:
+        g.add("FAIL", "pin_order", f"{len(bad)} abutted bus(es) wider than {PIN_ORDER_MAX_UNORDERED} b without a defined "
+              f"bit order (route OT_PIN_GROUP_MAX {st['group_max']} scatters chunks of 32): {', '.join(bad[:6])}"
+              + (", ..." if len(bad) > 6 else ""), PIN_ORDER_FIX)
+    if unknown:
+        g.add("WARN", "pin_order", f"bit order not judged for {len(unknown)} abutted port(s) with an unresolved width "
+              f"({', '.join(unknown[:4])}); the route places them in chunks of {st['group_max']}", PIN_ORDER_FIX)
+
+
 OFLOP_TCL = "physical/qwen_die_masters/io_flop_at_pins.tcl"
 
 
@@ -488,7 +538,7 @@ def stale_native_cts_sdcs(kd: Path, spec: dict) -> list:
         return []
     expected = {
         "clock.sdc": RT.gen_sdc(spec, float(spec.get("route", {}).get("period_ps", 770))),
-        "clock_entry.sdc": "set ::ot_ce_require_wire 1\n" + RT.clock_entry_constraints.generate(spec, RT.ROOT),
+        "clock_entry.sdc": "set ::ot_ce_require_wire 1\n" + RT.ce_generate(spec),
         "signoff.sdc": RT.gen_signoff(spec, spec.get("refglob", "*"), ",".join(spec.get("inter", [])) or "none_*"),
     }
     return [name for name, text in expected.items()
@@ -595,6 +645,67 @@ def check_port_latency(g: Gate, kd: Path, spec: dict, out: str, commit=None, now
     regs = {d: sum(1 for p in rep["ports"].values() if p["dir"] == d and p["register_edges"]) for d in ("input", "output")}
     g.add("INFO", "port_latency", f"elaborated pin registers: {regs['input']} input / {regs['output']} output ports +1 edge; "
           f"{sum(1 for p in rep['ports'].values() if not p['register_edges'])} ports pass through (clock/reset/excluded/inout)")
+
+
+XCLK_RE = re.compile(r"^GATE_XCLK (launch=.*)$", re.M)
+
+
+def check_cross_clock(g: Gate, spec: dict, out: str, cts: bool):
+    """CROSS-CLOCK GATE (CX-IJ-ROOT 2026-10-18; Gate-Rule: tightening, scoped to multi-clock kits).  Same-tile reg->reg
+    paths BETWEEN two clocks of the tile (e.g. clk_s 1.2 GHz stream / clk_q 0.9 GHz serial under related_pll_ratio) are
+    timed by tools/ref_tile/cross_clock_paths.tcl after CTS under the kit's own signoff.sdc, i.e. with the sign-off
+    related edge windows and the distinct-entry reserve that SDC applies (setup 150/210, hold 100 inter-clock
+    uncertainty) -- the margins are read from the generated SDC, never re-stated here.  A crossing covered by an SDC
+    exception (false path / multicycle / max-min delay / clock groups: the declared CDC, epoch or landing rule) is not
+    counted.  An undeclared pair with setup slack < 0 FAILS (HBM SU cxport dl/rc 761317600: gate WARN, route TT -166.7 /
+    -173.4 on the 3:4 crossing inside one leaf); undeclared hold < 0 WARNs (route hold repair).  Kits with one clock
+    (one declared clock port and one register clock in STA) are unchanged: no item at all."""
+    scope = re.search(r"^GATE_XCLK_SCOPE clocks=(\d+)(?: names=(\S*))?", out, re.M)
+    sta_clocks = int(scope.group(1)) if scope else 0
+    ports = ([spec["clock_port"]] if spec.get("clock_port") else []) + list(spec.get("clock_ports") or [])
+    multi = len(dict.fromkeys(ports)) >= 2 or sta_clocks >= 2
+    if not multi:
+        return
+    if not cts:
+        g.add("WARN", "cross_clock", "multi-clock kit: same-tile cross-clock reg->reg paths are timed only by a --cts gate "
+              "(signoff.sdc inter-clock margins after CTS)", "rerun the gate with --cts")
+        return
+    if not re.search(r"^GATE_XCLK_DONE", out, re.M):
+        g.add("WARN", "cross_clock", "multi-clock kit: the cross-clock reg->reg analysis did not complete (see the remote "
+              "pc.log: signoff.sdc read / STA error)", "fix the signoff SDC read and re-gate with --cts")
+        return
+    if sta_clocks < 2:
+        g.add("INFO", "cross_clock", f"{sta_clocks} clock(s) reach registers in STA: no same-tile cross-clock reg->reg path")
+        return
+    fails = []
+    for line in XCLK_RE.findall(out):
+        r = dict(re.findall(r"(\w+)=(\S+)", line))
+        pair = f"{r.get('launch')}->{r.get('capture')}"
+        timed, declared, bad = int(r.get("timed", 0)), int(r.get("declared", 0)), int(r.get("violating", 0))
+        worst = None if r.get("worst_ps", "-") == "-" else float(r["worst_ps"])
+        unc = r.get("uncertainty_ps", "-")
+        capped = " (path cap reached: count is a lower bound)" if r.get("capped") == "1" else ""
+        dk = r.get("declared_kinds", "-")
+        decl = f"; {declared} declared ({dk}) not counted" if declared else ""
+        if r.get("kind") == "max" and worst is not None and worst < 0:
+            fails.append(pair)
+            g.add("FAIL", "cross_clock",
+                  f"{bad} undeclared {pair} reg->reg endpoint(s) fail SETUP at TT under signoff.sdc (inter-clock "
+                  f"uncertainty {unc} ps): worst {worst:.1f} ps {r.get('startpoint')} -> {r.get('endpoint')}{capped}{decl}",
+                  "a direct cross-clock crossing with logic does not close in one leaf (3:4 VCO-tick window minus the "
+                  "distinct-entry reserve): split into one-root halves with a banked seam (S81 x34 / HBM cxdl 1018), "
+                  "move the crossing to an epoch bank (related_pll_dividers), or declare and price a multicycle/landing rule")
+        elif r.get("kind") == "min" and worst is not None and worst < 0:
+            g.add("WARN", "cross_clock",
+                  f"{bad} undeclared {pair} reg->reg endpoint(s) fail HOLD before route repair (inter-clock uncertainty "
+                  f"{unc} ps): worst {worst:.1f} ps at {r.get('endpoint')}{capped}{decl}",
+                  "route hold repair must buffer these; a same-endpoint setup FAIL makes that impossible")
+        elif timed or declared:
+            g.add("INFO", "cross_clock", f"{pair} {r.get('kind')}: {timed} undeclared timed path(s), worst "
+                  f"{'-' if worst is None else f'{worst:.1f}'} ps (uncertainty {unc} ps){decl}")
+    if not fails:
+        g.add("INFO", "cross_clock", f"{sta_clocks} register clocks ({scope.group(2) or ''}): no undeclared cross-clock "
+              "reg->reg setup violation under signoff.sdc")
 
 
 def check_memory_ff(g: Gate, out: str):
@@ -761,6 +872,7 @@ def check_kit(g: Gate, kd: Path, job: dict | None, commit=None):
     check_pins(g, spec, ports)
     # pin plan vs the ROUTE's pin placement (same settings as the route: one source of truth), recipe-2 pin-flop spread
     plan = check_pin_fit(g, spec, strict_widths(spec["sources"], spec["top"], spec.get("params")), fresh["outline"])
+    check_pin_order(g, spec, plan)
     tcl = ROOT / OFLOP_TCL
     check_oflop(g, spec, plan, rtl_ports(spec["sources"], spec["top"], dirs=True, defines=spec.get("defines")), fresh["outline"],
                 tcl.read_text(errors="replace") if tcl.is_file() else None)
@@ -903,7 +1015,7 @@ if [ "{CTS}" = 1 ]; then
   python3 -c "import json;d=json.load(open('$R/ck.json'));print('GATE_CK '+'; '.join(c+' insertion all '+str(d[c]['all']['min'])+'..'+str(d[c]['all']['max'])+' ps (spread '+str(round(d[c]['all']['max']-d[c]['all']['min'],1))+'), boundary mean '+str(d[c]['boundary']['mean']) for c in ('ss','tt','ff') if isinstance(d.get(c),dict) and d[c].get('all'))+'; macro_clk flag '+str((d.get('macro_clk') or {{}}).get('flag')))" 2>/dev/null
   python3 -c "import json;d=json.load(open('$R/ck.json'));[print('GATE_CK_DOMAIN '+json.dumps({{'source':pin,'clock':r.get('clock'),'tt':r.get('tt'),'ff':{{k:(r.get('ff') or {{}}).get(k) for k in ('boundary','all','child_flop','macros')}}}})) for pin,r in d.get('clock_measurements',{{}}).items()]" 2>/dev/null
   docker run --rm -e OT_GATE_SIGNOFF_SDC=/src/{KIT}/signoff.sdc -v $R/src:/src:ro -v $C:/work {IMG} /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /src/tools/ref_tile/path_classes.tcl > $R/pc.log 2>&1
-  grep "^GATE_PC" $R/pc.log
+  grep -E "^GATE_(PC|XCLK)" $R/pc.log
   ot_layout $NB/4_1_cts.odb placed
 fi
 # TRIAL ROUTE (owner rule 20:45 10-15; every kit since ROOT-0330-GRT 10-18, was parent / cluster kits only): place +
@@ -1150,9 +1262,10 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
                           RC=",".join(GATE_REFUSE), TOP=spec["top"], CTS=1 if cts else 0, PGM=PF.ROUTE_PIN_GROUP_MAX,
                           TRIAL=1, GRTX=trial_grt_make_args(spec), CLKS=",".join(RT.declared_clock_ports(spec)),
                           CLK=spec["clock_port"], ARCHIVE_SHA256=binding["archive_sha256"], STEP_CAP=GATE_STEP_CAP_S)   # ck_insertion (9f48f5ed8): --clock = clock name or its source port; the default 'ck' failed every kit whose port is 'clk'
-    if textbook_reset_args(spec):
+    tbx = textbook_reset_args(spec) + reset_landing_args(spec)
+    if tbx:
         tb = f"--refuse-checks {','.join(GATE_REFUSE)} | sed 's/^/GATE_TB /'"
-        sh = sh.replace(tb, tb.replace(" | sed", textbook_reset_args(spec) + " | sed", 1), 1)
+        sh = sh.replace(tb, tb.replace(" | sed", tbx + " | sed", 1), 1)
     sh = gate_route_clock_hooks(sh, spec)
     sh = gate_route_hold_context(sh, spec, str(kd.relative_to(ROOT)))
     binding["route_hold_context"] = RT.route_hold_context(spec, str(kd.relative_to(ROOT)))
@@ -1469,6 +1582,7 @@ def analyse_remote(g: Gate, kd: Path, spec: dict, out: str, cts: bool, binding: 
     check_port_latency(g, kd, spec, out, binding.get("commit"), binding=binding)
     check_memory_ff(g, out)
     check_keep_modules(g, kd, spec, out)
+    g.reset_landing = reset_landing_record(out)      # a gate without this record predates the reset_landing rule
     for line in re.findall(r"^GATE_TB (.*)$", out, re.M):
         if line.startswith("TEXTBOOK_LINT:"):
             continue
@@ -1512,6 +1626,7 @@ def analyse_remote(g: Gate, kd: Path, spec: dict, out: str, cts: bool, binding: 
             g.add("INFO", "clock_spine", line[:300])
         for line in re.findall(r"^GATE_PC (.*)$", out, re.M):
             g.add("INFO", "path_classes", line)
+    check_cross_clock(g, spec, out, cts)
     clock_item(g, clock_record(out, cts, spec))
 
 
@@ -1562,6 +1677,15 @@ def clock_record(out: str, cts: bool, spec: dict | None = None) -> dict:
         actual = [d.get("source") for d in domains]
         issues = []
         per_root = []
+        landed_cluster = spec.get("kind") == "cluster" and bool(spec.get("children"))
+        graph = parent_link_graph(spec) if landed_cluster else None
+        if landed_cluster:
+            if graph is None:
+                issues.append("landed cluster: the parent RTL cannot be read, cross-region links not verified")
+            else:
+                bad, landed = cross_region_links(graph)
+                issues += bad
+                rec["landed_child_links"] = [dict(a=a.lstrip("*"), b=b.lstrip("*"), landing=n) for a, b, n in landed]
         if not cts:
             issues.append("multiple_cts_roots requires actual --cts measurement")
         if len(actual) != len(set(actual)) or set(actual) != expected:
@@ -1574,6 +1698,10 @@ def clock_record(out: str, cts: bool, spec: dict | None = None) -> dict:
                 if n <= 0 or not math.isfinite(lo) or not math.isfinite(hi) or not 0 < lo <= hi:
                     raise ValueError("invalid actual clock population")
                 measured = corner_spreads({}, domain)
+                if landed_cluster:
+                    measured.update(root_child_flops(domain, spec, graph))
+                    if measured.get("raw_pin_fail"):
+                        issues.append(f"{domain.get('source')}: " + "; ".join(measured["raw_pin_fail"]))
                 level, why = TL.clock_rule_eval(n, measured)
                 per_root.append(dict(source=domain.get("source"), sinks=n, **measured,
                                      verdict="REFUSE" if level == "FAIL" else level, text=why))
@@ -1582,6 +1710,18 @@ def clock_record(out: str, cts: bool, spec: dict | None = None) -> dict:
             except (KeyError, TypeError, ValueError, OverflowError):
                 issues.append(f"{domain.get('source')}: missing finite positive actual TT root census")
         rec["per_root"] = per_root
+        if landed_cluster and per_root and not issues:
+            # PL-GATE: the per-root child-flop judgement IS the cluster's clock rule (one root's raw spread is not)
+            lv = [r["verdict"] for r in per_root]
+            rec["verdict"] = "WARN" if "WARN" in lv else "PASS"
+            rec["text"] = "per root: " + "; ".join(f"{r['source']} " + ", ".join(
+                f"{c.upper()} {r.get(c + '_pin_spread_ps')} ps ({r.get(c + '_pin_spread_basis', 'pin-flop')})"
+                for c in ("tt", "ff")) for r in per_root) + f" (limit {TL.CLK_SPREAD_MAX_PS:g} per root)" + "".join(
+                f"; {r['source']} WARN: {r['text'].split('WARN: ', 1)[-1]}" for r in per_root if r["verdict"] == "WARN")
+            for c in ("tt", "ff"):
+                vals = [r[f"{c}_pin_spread_ps"] for r in per_root if r.get(f"{c}_pin_spread_ps") is not None]
+                if vals:
+                    rec[f"{c}_pin_spread_ps"], rec[f"{c}_pin_spread_basis"] = max(vals), "per_root"
         if issues:
             rec["verdict"], rec["text"] = "REFUSE", "; ".join(issues)
     return rec
@@ -1760,6 +1900,252 @@ def child_pair_spreads(rec: dict, domain: dict, spec: dict | None) -> dict:
     return rec
 
 
+LANDING_HALF_RE = re.compile(r"(.+)_([wr])")       # lp.py landing halves u_lpl_<n>_w (source root) / u_lpl_<n>_r (reader root)
+RESET_RUN_RE = re.compile(r"u_lprc?_\w+")          # lp.py regional reset runs (1-bit plain hops; the only legal plain crossing)
+
+
+def parent_link_graph(spec: dict | None) -> dict | None:
+    """PL-GATE 2026-10-18 (landed parents, tools/landed_parent/lp.py): the instance / net graph of a multi-root parent's top
+    module: {inst: {"root": clock port on its clock pins or None, "kid": child spec inst pattern or None}} plus
+    "nets": {net class: set(inst)}.  Nets joined by an assign are one class (lp.py: <net>__l_<r> = lpl_<n>_o); parent
+    ports and clock ports are not links; the bench-only MUT selects elaborate MUT = 0 (as lp.py audit).  None when the
+    RTL cannot be read or a child instance is missing."""
+    import fnmatch
+    spec = spec or {}
+    kids = [ch for ch in spec.get("children") or [] if isinstance(ch, dict) and ch.get("inst")]
+    top, cks = spec.get("top"), set(spec.get("clock_ports") or [])
+    if not kids or not top:
+        return None
+    body = None
+    for src in spec.get("sources") or []:
+        try:
+            text = _vlog_preprocess((ROOT / src).read_text(errors="replace"), spec.get("defines"))
+        except OSError:
+            return None
+        m = re.search(rf"\bmodule\s+{re.escape(top)}\b(.*?)\bendmodule\b", text, re.S)
+        if m:
+            body = re.sub(r"\(MUT == \d+\) \? ([^:;]+?) : ([^;]+?);", r"\2;", m.group(1))
+            break
+    if body is None:
+        return None
+    hdr = re.match(r"\s*(#\s*\((?:[^()]|\([^()]*\))*\))?\s*\((.*?)\)\s*;", body, re.S)
+    ports = set(re.findall(r"\b([A-Za-z_]\w*)\b", hdr.group(2))) - VLOG_KEYWORDS if hdr else set()
+    for decl in re.findall(r"\b(?:input|output|inout)\b([^;]*);", body):
+        ports |= set(re.findall(r"\b([A-Za-z_]\w*)\b", decl)) - VLOG_KEYWORDS
+    ports |= cks
+    ident = re.compile(r"(?<![\w'$])([A-Za-z_]\w*)\b")
+    parent: dict = {}
+
+    def find(x):
+        while parent.setdefault(x, x) != x:
+            parent[x] = parent[parent[x]]
+            x = parent[x]
+        return x
+
+    def balanced(t, i):                     # t[i] == "(": index after its matching ")"
+        d = 0
+        for j in range(i, len(t)):
+            d += {"(": 1, ")": -1}.get(t[j], 0)
+            if d == 0:
+                return j + 1
+        return None
+    stmts = [x.strip() for x in body.split(";")]
+    for st in stmts:
+        m = re.match(r"assign\s+([^=]+)=(.*)$", st, re.S)
+        if m:
+            ids = sorted((set(ident.findall(m[1])) | set(ident.findall(m[2]))) - VLOG_KEYWORDS)
+            if ids and not set(ids) & ports:        # a port assign (z = y2) is the boundary, not a link
+                for a in ids[1:]:
+                    parent[find(a)] = find(ids[0])
+    insts, nets, seen = {}, {}, set()
+    for st in stmts:
+        m = re.match(r"([A-Za-z_]\w*)\s*", st)
+        if not m or m[1] in VLOG_KEYWORDS:
+            continue
+        mod, i = m[1], m.end()
+        if st[i:i + 1] == "#":
+            k = st.index("(", i)
+            i = balanced(st, k)
+            if i is None:
+                continue
+        m = re.match(r"\s*([A-Za-z_]\w*)\s*(?=\()", st[i:])
+        if not m:
+            continue
+        inst, k = m[1], i + m.end()
+        e = balanced(st, k)
+        if e is None or st[e:].strip():
+            continue
+        # top-level names: the pattern without its hierarchy '*' (else "*u0" would claim reset run u_lprc_u0)
+        kid = next((ch["inst"] for ch in kids if fnmatch.fnmatchcase(inst, ch["inst"].lstrip("*"))), None)
+        if kid:
+            seen.add(kid)
+        conns, exprs, j = st[k + 1:e - 1], [], 0
+        while True:
+            pm = re.compile(r"\.\s*\w+\s*\(").search(conns, j)
+            if not pm:
+                break
+            q = balanced(conns, pm.end() - 1)
+            if q is None:
+                break
+            exprs.append(conns[pm.end():q - 1])
+            j = q
+        root = sorted({x.strip() for x in exprs if x.strip() in cks})
+        insts[inst] = dict(kid=kid, root=root[0] if len(root) == 1 else None, module=mod)
+        for expr in exprs:
+            for n in set(ident.findall(expr)) - ports - VLOG_KEYWORDS:
+                nets.setdefault(find(n), set()).add(inst)
+    if seen != {ch["inst"] for ch in kids}:
+        return None
+    return dict(insts=insts, nets=nets)
+
+
+def cross_region_links(graph: dict) -> tuple:
+    """(issues, landed) of a landed parent's link graph: every net class whose instances sit on DIFFERENT clock roots must
+    be a landing (only the two halves u_lpl_<n>_w / u_lpl_<n>_r of one landing on it) or a regional reset run
+    (u_lpr_* / u_lprc_*); anything else is an "unlanded cross-region link".  landed = [(child A, child B, landing)]:
+    hard-child pairs linked through one landing (A -> <n>_w ... <n>_r -> B)."""
+    insts, nets = graph["insts"], graph["nets"]
+    issues, halves = [], {}
+    for net, members in sorted(nets.items()):
+        roots = {insts[i]["root"] for i in members}
+        if len(roots) < 2:
+            continue
+        mm = sorted(members)
+        lh = [LANDING_HALF_RE.fullmatch(i) for i in mm]
+        if len(mm) == 2 and all(lh) and lh[0][1] == lh[1][1] and {x[2] for x in lh} == {"w", "r"}:
+            continue
+        # TW2-PSLICE2 10-19 (lp.py share_rings): ONE ring half read by several read halves (one per reader) -- every member
+        # a landing half (no child, no glue), exactly one ring
+        if len(mm) > 2 and all(lh) and sum(x[2] == "w" for x in lh) == 1 and not any(insts[i]["kid"] for i in mm):
+            continue
+        if any(RESET_RUN_RE.fullmatch(i) for i in mm) and \
+                len({insts[i]["root"] for i in mm if not RESET_RUN_RE.fullmatch(i)}) <= 1:
+            continue                                    # reset run hop: crosses only between reset-run stages
+        issues.append(f"unlanded cross-region link {net}: " + ", ".join(f"{i} ({insts[i]['root']})" for i in mm))
+    ring_of = {}                            # share_rings: read-half base -> its ring's base (net with one w + r halves)
+    for net, members in nets.items():
+        lh = [LANDING_HALF_RE.fullmatch(i) for i in members]
+        if all(lh) and sum(x[2] == "w" for x in lh) == 1:
+            wb = next(x[1] for x in lh if x[2] == "w")
+            for x in lh:
+                if x[2] == "r" and x[1] != wb:
+                    ring_of[x[1]] = wb
+    for net, members in nets.items():
+        for i in members:
+            m = LANDING_HALF_RE.fullmatch(i)
+            if m and not insts[i]["kid"]:
+                for j in members:
+                    if insts[j]["kid"]:
+                        halves.setdefault((m[1], m[2]), set()).add(insts[j]["kid"])
+    landed = sorted({(a, b, base) for (base, side), ks in halves.items() if side == "w"
+                     for a in ks for b in halves.get((base, "r"), ()) if a != b} |
+                    {(a, b, rb) for rb, wb in ring_of.items() for a in halves.get((wb, "w"), ())
+                     for b in halves.get((rb, "r"), ()) if a != b})
+    return issues, landed
+
+
+def root_child_flops(domain: dict, spec: dict | None, graph: dict | None) -> dict:
+    """PL-GATE 2026-10-18 (landed-regions standard: "judge parents per linked child pair at child flops, TT and FF <= 80"):
+    the pin-flop spread of ONE root of a multi-root cluster on the child-flop basis.  Nodes: every hard child on this root
+    (clock-pin arrival + views/<child>/insertion.json <corner>.boundary min..max) and the root's soft (glue: landing
+    halves, pads, reset runs) registers as one group (ck_insertion child_flop.soft.all).  Judged per linked pair on this
+    root (child-child, child-soft from the RTL graph); without a derivable pair the whole-root span.  Returns
+    {<c>_pin_spread_ps, <c>_pin_spread_basis, pairs, children} or {} when this root has no hard child (measured kept)."""
+    import fnmatch
+    kids = [ch for ch in (spec or {}).get("children") or [] if isinstance(ch, dict) and ch.get("view") and ch.get("inst")]
+    src = domain.get("source")
+    out, pairs = {}, []
+    for c in ("tt", "ff"):
+        cr = domain.get(c) or {}
+        pins = ((cr.get("macros") or {}).get("pins")) or []
+        if not pins:
+            continue
+        span, ok, raw_rows, eff, cot_rows = {}, True, [], {}, []
+        for x in pins:
+            inst, lpin = (str(x.get("pin", "")).rsplit("/", 1) + [""])[:2]
+            kid = next((ch for ch in kids if fnmatch.fnmatchcase(inst, ch["inst"].lstrip("*"))
+                        or fnmatch.fnmatchcase(inst, ch["inst"])), None)
+            try:
+                ins = json.loads((ROOT / kid["view"] / "insertion.json").read_text())
+                # HF-4d 10-19: a multi-clock child is referenced per clock pin (clock_measurements[pin]); a RAW SRAM
+                # clock entry (no routed boundary) takes the leaf's own pin -> SRAM wire from its closed record
+                # (clock_entry_constraints.landed_raw_pins) and is judged against its co-timed CTS-root pin below
+                cm = (ins.get("clock_measurements") or {}).get(lpin)
+                b = ((cm or {}).get(c) or {}).get("boundary") if cm else ins[c]["boundary"]
+                if b:
+                    lo, hi = float(x["arr"]) + float(b["min"]), float(x["arr"]) + float(b["max"])
+                    if b.get("mean") is not None:
+                        eff[(inst, lpin)] = float(x["arr"]) + float(b["mean"])
+                    if cm and any(not ((v or {}).get(cc) or {}).get("boundary")
+                                  for v in (ins.get("clock_measurements") or {}).values() for cc in ("tt", "ff", "ss")):
+                        # ROOT-INF21 10-19: a boundary pin of a multi-root child record is co-timed with its ref too
+                        cot = CE.landed_record_pins(ROOT / kid["view"], ROOT)["cotimed"].get(lpin)
+                        if cot:
+                            cot_rows.append((inst, lpin, cot))
+                else:
+                    raw = CE.landed_raw_pins(ROOT / kid["view"], ROOT)[lpin]
+                    rlo, rmean, rhi = raw["refs"][c]
+                    lo, hi = float(x["arr"]) + rlo, float(x["arr"]) + rhi
+                    raw_rows.append((inst, lpin, float(x["arr"]) + rmean, raw))
+            except (TypeError, OSError, ValueError, KeyError, AttributeError):
+                ok = False
+                break
+            plo, phi = span.get(kid["inst"], (math.inf, -math.inf))
+            span[kid["inst"]] = (min(plo, lo), max(phi, hi))
+        for inst, lpin, cot in cot_rows if ok else []:
+            raw_rows.append((inst, lpin, eff[(inst, lpin)], cot))
+        for inst, lpin, e, raw in raw_rows if ok else []:
+            r = eff.get((inst, raw["ref"]))
+            row = dict(root=src, corner=c, pin=f"{inst}/{lpin}", co_timed=f"{inst}/{raw['ref']}", eff=round(e, 1),
+                       eff_ref=None if r is None else round(r, 1), tol=raw["tol"], record=raw["record"])
+            row["skew"] = None if r is None else round(e - r, 1)
+            row["verdict"] = "FAIL" if r is None or abs(e - r) > raw["tol"] else "PASS"
+            out.setdefault("raw_pins", []).append(row)
+            if row["verdict"] == "FAIL":
+                out.setdefault("raw_pin_fail", []).append(
+                    f"{c.upper()} raw child clock pin {row['pin']} " + (f"not co-measured with {row['co_timed']}" if r is None
+                    else f"{row['skew']:+.1f} ps vs {row['co_timed']} (leaf sign-off tolerance {raw['tol']:g})"))
+        if not ok:
+            out[f"{c}_pin_spread_basis_note"] = "a hard child clock pin has no insertion.json boundary: measured kept"
+            continue
+        al = cr.get("all") or {}
+        cf = cr.get("child_flop") or {}
+        soft = (cf.get("soft") or {}).get("all") or None
+        nodes = dict(span)
+        if soft and soft.get("n"):
+            nodes["soft"] = (float(soft["min"]), float(soft["max"]))
+        whole = [v for v in nodes.values()]
+        if "soft" not in nodes and al.get("n") and int(al["n"]) > len(pins):
+            # soft registers measured but not separated (pre-PL-GATE ck record): ck_insertion child_flop.all (soft raw,
+            # child pins + R mean) bounds the same union; else the raw all-register span (conservative)
+            ref = cf.get("all") if (cf.get("all") or {}).get("n") else al
+            whole.append((float(ref["min"]), float(ref["max"])))
+        links = set()
+        if graph is not None and (soft is not None or not (al.get("n") and int(al["n"]) > len(pins))):
+            insts = graph["insts"]
+            for members in graph["nets"].values():
+                here = {(insts[i]["kid"] or "soft") for i in members if insts[i]["root"] == src}
+                here &= set(nodes)
+                links |= {tuple(sorted((a, b))) for a in here for b in here if a < b}
+        lo, hi = min(v[0] for v in whole), max(v[1] for v in whole)
+        if links:
+            worst = None
+            for a, b in sorted(links):
+                (alo, ahi), (blo, bhi) = nodes[a], nodes[b]
+                d = round(max(ahi - blo, bhi - alo), 1)
+                pairs.append(dict(root=src, corner=c, a=a.lstrip("*"), b=b.lstrip("*"), ps=d,
+                                  a_range=[round(alo, 1), round(ahi, 1)], b_range=[round(blo, 1), round(bhi, 1)]))
+                worst = d if worst is None else max(worst, d)
+            out[f"{c}_pin_spread_ps"], out[f"{c}_pin_spread_basis"] = worst, "root_child_pair"
+        else:
+            out[f"{c}_pin_spread_ps"], out[f"{c}_pin_spread_basis"] = round(hi - lo, 1), "root_child_flop"
+        out[f"{c}_root_child_flop_span"] = [round(lo, 1), round(hi, 1)]
+        out["children"] = sorted(k.lstrip("*") for k in span)
+    if pairs:
+        out["pairs"] = pairs
+    return out
+
+
 def corner_spreads(rec: dict, domain: dict) -> dict:
     """TT and FF insertion (latest register arrival), all-register leaf spread and pin-flop (boundary register) spread
     of one ck_insertion clock record (owner 10-17 0dq: the rule is the pin-flop spread at TT AND FF)."""
@@ -1791,6 +2177,18 @@ def clock_item(g: Gate, rec: dict) -> None:
         g.add("INFO", "clock_child_pair", f"{row['corner'].upper()} linked children {row['a']}-{row['b']}: boundary-flop "
               f"arrival difference {row['ps']} ps ({row['a']} {row['a_range'][0]}..{row['a_range'][1]}, "
               f"{row['b']} {row['b_range'][0]}..{row['b_range'][1]}; limit {TL.CLK_SPREAD_MAX_PS:g})")
+    for r in rec.get("per_root") or []:
+        if any(str(r.get(f"{c}_pin_spread_basis", "")).startswith("root_child") for c in ("tt", "ff")):
+            g.add("INFO", "clock_root_child_flop", f"root {r['source']} ({', '.join(r.get('children') or [])} + soft): " +
+                  ", ".join(f"{c.upper()} {r.get(c + '_pin_spread_ps')} ps {r.get(c + '_pin_spread_basis')} span "
+                            f"{(r.get(c + '_root_child_flop_span') or ['-', '-'])[0]}..{(r.get(c + '_root_child_flop_span') or ['-', '-'])[1]}"
+                            for c in ("tt", "ff")) + f"; {r['verdict']} (limit {TL.CLK_SPREAD_MAX_PS:g})")
+        for row in r.get("pairs") or []:
+            g.add("INFO", "clock_child_pair", f"{row['corner'].upper()} root {row['root']} linked {row['a']}-{row['b']}: "
+                  f"boundary-flop arrival difference {row['ps']} ps ({row['a']} {row['a_range'][0]}..{row['a_range'][1]}, "
+                  f"{row['b']} {row['b_range'][0]}..{row['b_range'][1]}; limit {TL.CLK_SPREAD_MAX_PS:g})")
+    for row in rec.get("landed_child_links") or []:
+        g.add("INFO", "clock_landed_link", f"{row['a']} -> {row['b']} crosses regions through landing {row['landing']}_w/_r")
     if rec["verdict"] == "REFUSE":
         g.add("FAIL", "clock_rule", rec["text"] + ("" if rec["cts"] else " -- this gate ran without --cts")
               + (f" (declared clock '{rec['declared_clock']}' does not waive it)" if rec.get("declared_clock") else ""),
@@ -1811,6 +2209,38 @@ def textbook_reset_args(spec):
     gate script stays byte-identical)."""
     names = [str(x) for x in spec.get("reset_ports") or [] if isinstance(x, str) and re.fullmatch(r"[\w$\[\]:.]+", x)]
     return f" --set reset_ports={shlex.quote(','.join(names))}" if names else ""
+
+
+def reset_landing_args(spec):
+    """ROOT-RST 2026-10-19: the kit's reset_landing record -> textbook_lint args.  {"waive": "<reason>"} -> --waive
+    reset_landing (the finding stays a WARN); {"max_sinks": N, "reason": "..."} -> --set rst_land_max=N.  '' otherwise
+    (enable true / false: the netlist itself is judged).  SpecError-free: a malformed record is judged at the default."""
+    rl = spec.get("reset_landing")
+    if not isinstance(rl, dict):
+        return ""
+    out = ""
+    if str(rl.get("waive") or "").strip():
+        out += " --waive reset_landing"
+    n = rl.get("max_sinks")
+    if isinstance(n, int) and not isinstance(n, bool) and n > 0 and str(rl.get("reason") or "").strip():
+        out += f" --set rst_land_max={n}"
+    return out
+
+
+def reset_landing_record(out: str) -> dict | None:
+    """the gate netlist's reset_landing metrics (textbook_lint INFO line), None when the gate's lint predates the check"""
+    m = re.search(r"^GATE_TB textbook_lint: INFO reset_landing (\{.*\})\s*$", out, re.M)
+    if not m:
+        return None
+    try:
+        d = json.loads(m.group(1))
+    except ValueError:
+        return None
+    ports = [p for p in d.get("ports") or [] if isinstance(p, dict)]
+    mx = d.get("max")
+    waived = bool(re.search(r"^GATE_TB textbook_lint: WAIVED reset_landing:", out, re.M))
+    over = [p["port"] for p in ports if isinstance(mx, (int, float)) and p.get("sinks", 0) > mx]
+    return {"max_sinks": mx, "ports": ports, "over": over, "waived": waived, "ok": not over or waived}
 
 
 def kit_gate_evidence(kd: Path, source_commit=None, why: list | None = None, note: list | None = None) -> dict | None:
@@ -1943,6 +2373,9 @@ TEXTBOOK_FIX = {
     "logic_depth": "pipeline to ~700 ps a stage: trees, 2-3 rungs for wide compare / mux / arbitration",
     "wire_reach": "relay flops every <= 500 um, or move the logic next to its pins/macros",
     "util_channel": "size the outline to util 0.50-0.55 with >= 20 um macro channels",
+    "reset_landing": "land every reset input at its face in 2 registered stages, then fan out at equal depth: kit "
+                     "\"reset_landing\": {\"enable\": true} (ref_tile inserts rst_l0 -> rst_l1 at synthesis) or the RTL's own "
+                     "rst_l0 / rst_l1 (one relay copy per region); reset release latency is a scheduled constant",
 }
 
 
@@ -2010,6 +2443,8 @@ def write_gate_result(g: Gate, kd: Path, cts: bool, host: str):
         out["trial_route"] = g.trial_route      # a gate without this record predates the every-kit trial GRT
     if getattr(g, "port_latency", None):
         out["port_latency"] = g.port_latency
+    if getattr(g, "reset_landing", None):
+        out["reset_landing"] = g.reset_landing  # absent: the gate predates the reset_landing rule (ROOT-RST 10-19)
     previous = kd / CLOCK_RESULT
     if previous.exists():
         import hashlib
@@ -2059,6 +2494,9 @@ def _materialise(repo: str, commit: str, kit: str, dst: Path) -> None:
          # pre_dpl_extra (Q-TILE45b 10-16): ref_tile gen checks each pre-DPL hook exists at ROOT exactly like the pin
          # hooks; without it qfd_tile_{nk,nl}_rp2_g4t (reconcile_sink_owners.tcl at the source commit) was REFUSED
          + [x for x in sp.get("pre_dpl_extra", []) if isinstance(x, str)]
+         # boundary_tcl / pre_cts_extra (RH-DBKCPL 10-19): ref_tile gen reads each at ROOT; without them the submit check
+         # of hv16_dbk_cpl (child_pocket_guard.tcl) went SKIP "gate error FileNotFoundError" -- binding never checked
+         + [x for k in ("boundary_tcl", "pre_cts_extra") for x in sp.get(k, []) if isinstance(x, str)]
          # M6 pin-only grant (S-NET+FILL 10-15): ref_tile gen compares io_tcl / post_synth_tcl / orfs_vars .tcl/.sdc at
          # ROOT with the grant's source commit; without them every granted station was REFUSED "source differs"
          + [sp[k].removeprefix("/src/") for k in ("io_tcl", "post_synth_tcl") if isinstance(sp.get(k), str)]

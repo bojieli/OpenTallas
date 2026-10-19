@@ -44,6 +44,7 @@ sys.path.insert(0, str(HERE.parent / "hier_contract"))
 import check_macro_track_alignment as cmta  # noqa: E402
 import child_lint  # noqa: E402
 import pin_fit  # noqa: E402
+import cdc_fsm_guard  # noqa: E402
 import clock_entry_constraints  # noqa: E402
 import raw_macro_clocks  # noqa: E402
 
@@ -92,7 +93,17 @@ FACES = {"N": "top", "S": "bottom", "E": "right", "W": "left"}
 #      leaf tiles: flop-first pins (no inhold / outhold pads), boundary min delays credit the guaranteed launch C, the
 #      link's skew / uncertainty / shortfall are the die's (results/arch/boundary_hold_budget_1016/RULE.md).  A tile that
 #      does not qualify (CDC / async leaf, unregistered pin) opts out with "hold_budget": "tile" + "hold_budget_reason".
+#   RESET LANDING (ROOT-RST 2026-10-19, owner: regional reset with registered relays, pin registers on every pin):
+#      "reset_landing": {"enable": true, "stages": 2} lands every declared reset_ports input at its face in STAGES
+#      registered stages (physical/common_flow/ot_pin_regs.tcl OT_RST_LAND=1: <port>__ot_rl0 -> <port>__ot_rl1 -> core;
+#      plain flops, polarity-agnostic, io_flop_at_pins anchors the first at the pin), so the port net has one sink and
+#      the core fan-out starts at a register (repair_design builds the equal-depth tree).  Reset assertion and release
+#      are delayed by STAGES cycles: a scheduled constant, data latency unchanged.  Default ON for recipe >= 3 kits that
+#      declare reset_ports (tiles and clusters); the pre_route_gate FAILS a reset input reaching > 2 sinks without a
+#      landing (textbook_lint reset_landing).  Opt-out: {"enable": false, "reason": "<the RTL lands it: rst_l0/rst_l1>"}.
 RECIPE_LATEST = 4
+RESET_LANDING_RULE = ("ROOT-RST 2026-10-19: every reset input lands at its face in 2 registered stages, then equal-depth "
+                      "fan-out; reset release latency is a scheduled constant")
 PIN_REGS_RULE = "OWNER RULE 19:50 PT 2026-10-15: every new tile registers every input and every output at its pin"
 RECIPE_HOLD_PAD = "HB2xp67_ASAP7_75t_R"
 HOLD_PAD_STRONG = "HB4xp67_ASAP7_75t_R"
@@ -218,6 +229,8 @@ def apply_recipe(s: dict, recipe: int) -> dict:
             s.setdefault("outhold", True)
     if recipe >= 3 and s.get("kind") == "tile":
         s.setdefault("pin_regs", {"enable": True})
+    if recipe >= 3 and s.get("reset_ports"):
+        s.setdefault("reset_landing", {"enable": True, "stages": 2})
     if s.get("io_flop_at_pins"):
         s.setdefault("keep_pin_regs", True)
         if s.get("inhold") or s.get("outhold"):       # the split runs inside the recipe-2 pin hook (pre_gpl.tcl)
@@ -263,6 +276,11 @@ def pin_regs_plan(s: dict) -> dict | None:
             "per_port_table": "$RESULTS_DIR/ot_pin_regs.tsv (route synthesis: port dir width cycles why)"}
 
 
+def ce_generate(s: dict) -> str:
+    """clock_entry_constraints.generate with the CDC fsm_extract guard (cdc_fsm_guard.py) after the CDC bindings."""
+    return cdc_fsm_guard.splice(clock_entry_constraints.generate(s, ROOT), s)
+
+
 def pin_regs_vars(s: dict) -> list:
     plan = pin_regs_plan(s)
     if not plan or not plan["enable"]:
@@ -273,6 +291,46 @@ def pin_regs_vars(s: dict) -> list:
         out.append(f"--orfs-var OT_PIN_REGS_EXCLUDE={shq(plan['exclude'])}")
     if plan["reset"]:
         out.append(f"--orfs-var OT_PIN_REGS_RESET={shq(plan['reset'])}")
+    return out
+
+
+def reset_landing_plan(s: dict) -> dict | None:
+    """the kit's reset landing plan or None; SpecError on a malformed record or an opt-out without a reason"""
+    rl = s.get("reset_landing")
+    if rl is None:
+        return None
+    if not isinstance(rl, dict):
+        raise SpecError('spec: reset_landing must be an object ({"enable": true, "stages": 2} | {"enable": false, '
+                        '"reason": ...})')
+    if not rl.get("enable"):
+        if not str(rl.get("reason") or rl.get("waive") or "").strip():
+            raise SpecError(f"spec: reset_landing opt-out needs a recorded reason ({RESET_LANDING_RULE})")
+        return {"enable": False, "reason": rl.get("reason") or rl.get("waive")}
+    st = rl.get("stages", 2)
+    if not isinstance(st, int) or isinstance(st, bool) or not 1 <= st <= 4:
+        raise SpecError("spec: reset_landing.stages must be an integer 1..4 (standard 2)")
+    resets = s.get("reset_ports") or []
+    if not resets:
+        raise SpecError("spec: reset_landing needs the literal reset_ports it lands")
+    cks = declared_clock_ports(s)
+    pr = s.get("pin_regs") if isinstance(s.get("pin_regs"), dict) else {}
+    ck = pr.get("clock") or rl.get("clock") or (cks[0] if len(cks) == 1 else None)
+    if not ck or ck not in cks:
+        raise SpecError(f"spec: multi-clock kit ({', '.join(cks)}): name the landing clock in reset_landing.clock")
+    return {"enable": True, "stages": st, "clock": ck, "reset_ports": list(resets), "rule": RESET_LANDING_RULE,
+            "reset_release_cycles": st}
+
+
+def reset_landing_vars(s: dict) -> list:
+    plan = reset_landing_plan(s)
+    if not plan or not plan["enable"]:
+        return []
+    out = ["--orfs-var OT_RST_LAND=1", f"--orfs-var OT_RST_LAND_STAGES={plan['stages']}"]
+    pp = pin_regs_plan(s)
+    if not pp or not pp.get("enable"):
+        # landing only: the wrapper still needs the literal clock / reset roles (data ports pass straight through)
+        out.append(f"--orfs-var OT_PIN_REGS_CLOCK={shq(','.join([plan['clock']] + [c for c in declared_clock_ports(s) if c != plan['clock']]))}")
+        out.append(f"--orfs-var OT_PIN_REGS_RESET_PORTS={shq(','.join(plan['reset_ports']))}")
     return out
 
 
@@ -465,8 +523,10 @@ def load_spec(path: str) -> dict:
         raise SpecError("cdc_synchronizers (reviewed CDC mode, cdc_sync_constraints.py) requires a multiple_cts_roots leaf tile")
     if s.get("clock") in ("entries", "hybrid_entries", "multiple_cts_roots"):
         cps = s.get("clock_ports")
-        if (s.get("clock") == "multiple_cts_roots" and s["kind"] != "tile" or s.get("clock") == "entries" and s["kind"] != "cluster") or not isinstance(cps, list) or not cps or s["clock_port"] != cps[0]:
-            raise SpecError('spec: clock entries/hybrid_entries require kind cluster; multiple_cts_roots requires kind tile; '
+        # PL-KIT 10-18: multiple_cts_roots is also a LANDED cluster (tools/landed_parent/lp.py parents): kind cluster with
+        # hard children whose clock pins sit on their region root (clock_entry_constraints.landed_cluster)
+        if (s.get("clock") == "multiple_cts_roots" and s["kind"] not in ("tile", "cluster") or s.get("clock") == "entries" and s["kind"] != "cluster") or not isinstance(cps, list) or not cps or s["clock_port"] != cps[0]:
+            raise SpecError('spec: clock entries/hybrid_entries require kind cluster; multiple_cts_roots requires kind tile or cluster; '
                             'each requires clock_ports and clock_port == clock_ports[0]')
         if len(set(cps)) != len(cps) or not all(re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*(?:\[\d+\])?", c) for c in cps):
             raise SpecError("spec: clock_ports must be distinct scalar names or literal bus bits")
@@ -475,6 +535,11 @@ def load_spec(path: str) -> dict:
                 raise SpecError("multiple_cts_roots owns the clock relationship and boundary; custom timing/clock hooks are unsupported")
             if s.get("clock_cts_roots") is not None:
                 raise SpecError("multiple_cts_roots derives every CTS root from clock_ports")
+            if s["kind"] == "cluster":
+                try:
+                    clock_entry_constraints.landed_record(s, ROOT)
+                except (ValueError, OSError) as error:
+                    raise SpecError(str(error)) from error
             clock_entry_constraints.domains(s)
         elif s.get("clock") == "hybrid_entries":
             roots = s.get("clock_cts_roots")
@@ -654,7 +719,18 @@ def read_view_lef(view: str) -> dict:
     p = ROOT / view / f"{view_name(view)}.lef"
     if not p.exists():
         raise SpecError(f"view {view}: {p.relative_to(ROOT)} missing")
-    return child_lint.parse_lef(p.read_text(errors="replace"), view_name(view))
+    text = p.read_text(errors="replace")
+    # KV-ECTL5 2026-10-19 (qkd_ectl3_kiss_st-e4-13455b5bb: DRT-0073 No access point for u_a/req_t[10], twice): a child pin
+    # with a same-layer OBS rect closer than the wide-metal spacing has no clean access point in the parent; refuse at gen
+    import abstract_pin_stub as aps
+    if re.search(r"\n[ \t]*OBS[ \t]*(?=\n)", text):
+        bad = aps.pin_spacing_violations(text)
+        if bad:
+            ex = ", ".join(f"{n} {l} gap {g:g} < {need:g}" for n, l, g, need, _ in bad[:4])
+            raise SpecError(f"view {view}: {len(bad)} pins without a DRC-clean access point ({ex}); re-run "
+                            f"tools/hier_contract/abstract_pin_stub.py on provenance/raw/{view_name(view)}.lef (pin keep-out "
+                            f">= wide-metal spacing)")
+    return child_lint.parse_lef(text, view_name(view))
 
 
 def track_macro(view: str) -> dict:
@@ -1014,7 +1090,7 @@ def outline(s: dict, slot: dict | None, area_um2: float | None, blocks: list) ->
     return snap_up(w, og), snap_up(h, og), f"util {util} of std {area:.0f} + macros {mac:.0f} um2"
 
 
-def util_metrics(std_area, blocks, core, halo=HALO_UM):
+def util_metrics(std_area, blocks, core, halo=HALO_UM, halo_x=None):
     """Utilisation of a kit.  Without macros: (std / core), exactly the old (std + 0) / core.  With macros the
     gated number is the standard-cell DENSITY over the placeable area, std / (core - macro footprints - halos), because
     macros never take standard cells; total fill (std + macros) / core is reported and bounded by FILL_MAX."""
@@ -1022,7 +1098,8 @@ def util_metrics(std_area, blocks, core, halo=HALO_UM):
     total = (std_area + mac) / core
     if not blocks:
         return {"util": total, "density": total, "total_fill": total, "macro_um2": 0.0, "placeable_um2": core}
-    keep = min(core, sum((b["w"] + 2 * halo) * (b["h"] + 2 * halo) for b in blocks))
+    hx = halo if halo_x is None else halo_x             # route.macro_halo_x_um: wider halo on the W/E (pin) faces
+    keep = min(core, sum((b["w"] + 2 * hx) * (b["h"] + 2 * halo) for b in blocks))
     placeable = max(core - keep, 1e-9)
     dens = std_area / placeable
     return {"util": dens, "density": dens, "total_fill": total, "macro_um2": mac, "placeable_um2": placeable}
@@ -1372,7 +1449,8 @@ def floorplan_checks(s: dict, W: float, H: float, blocks: list, std_area: float 
     core = (x1c - x0c) * (y1c - y0c)
     if std_area:
         halo = float(s["route"].get("macro_halo_um", HALO_UM)) if s.get("recipe", 1) >= 2 else HALO_UM
-        um = util_metrics(std_area, blocks, core, halo)
+        hx = float(s["route"].get("macro_halo_x_um", halo)) if s.get("recipe", 1) >= 2 else halo
+        um = util_metrics(std_area, blocks, core, halo, hx)
         sev, ok = util_severity(um)
         if not ok:
             msg = (f"utilisation: std-cell density {um['density']:.0%} of placeable {um['placeable_um2']:.0f} um2, total fill "
@@ -1412,7 +1490,22 @@ def kit_dir(s: dict) -> str:
     return f"{KIT_ROOT}/{s['name']}"
 
 
+PIN_WRAPPER_INST = "u_ot_pr_core"
+
+
+def pin_wrapper(s: dict) -> bool:
+    """True when the flow wraps the top (physical/common_flow/ot_pin_regs.tcl): pin registers on, or the 2-stage
+    reset_landing on (a landing-only wrapper); the design's core is then instance u_ot_pr_core of <top>__ot_pr_core"""
+    pr = pin_regs_plan(s)
+    rl = reset_landing_plan(s)
+    return bool((pr and pr.get("enable")) or (rl and rl.get("enable")))
+
+
 def gen_place(s: dict, blocks: list) -> str:
+    # ROOT 10-19 (S81-XG): when the flow wraps the top, every instance path gains the wrapper's core instance
+    # (u_ot_pr_core<sep>); the spec names instances of the DESIGN, so the match also tries the name with that prefix off
+    # (xg: pin_regs off + reset_landing on matched 0 of 31 macros).  Kits without a wrapper: place.tcl byte-identical.
+    wrap_tcl = (f" && ![ot_ref_wrapped_match $sp $n]" if pin_wrapper(s) and any(b.get("inst") for b in blocks) else "")
     lines = [f"# generated by tools/ref_tile/ref_tile.py ({s['name']}): fixed macro / hard-child placement on the asap7",
              "# track lattice (origins from check_macro_track_alignment best shift), >= 20 um channels, no macro at a pin",
              "# face.  Instance names are matched with backslashes stripped on BOTH sides (the db holds g\\[1\\].u or g[1].u",
@@ -1427,6 +1520,9 @@ def gen_place(s: dict, blocks: list) -> str:
              "foreach p [lsort -dictionary -index 0 $ot_ref_l] {",
              "  set i [lindex $p 1]; dict lappend ot_ref_by [[$i getMaster] getName] $i", "}",
              "set ot_ref_used {}",
+             *([f"proc ot_ref_wrapped_match {{sp n}} {{",
+                f"  if {{![regsub {{^{PIN_WRAPPER_INST}[./]}} $n {{}} c]}} {{ return 0 }}",
+                "  return [expr {$sp eq $c || [string match $sp $c]}]", "}"] if wrap_tcl else []),
              "proc ot_ref_pick {by master pat} {",
              "  upvar ot_ref_used used",
              "  if {![dict exists $by $master]} { error \"ref_tile place: no instance of $master in the netlist\" }",
@@ -1435,7 +1531,7 @@ def gen_place(s: dict, blocks: list) -> str:
              "    if {[lsearch -exact $used $n] >= 0} continue",
              "    set sp [ot_ref_strip $pat]",
              "    # exact name first: a generate name g_q[0].u_rq is a glob char class to string match (never matches)",
-             "    if {$pat ne \"\" && $sp ne $n && ![string match $sp $n]} continue",
+             "    if {$pat ne \"\" && $sp ne $n && ![string match $sp $n]" + wrap_tcl + "} continue",
              "    lappend used $n; return $i", "  }",
              "  error \"ref_tile place: no unplaced instance of $master matching '$pat'\"", "}",
              "set ot_ref_n 0"]
@@ -1494,7 +1590,7 @@ def gen_sdc(s: dict, period_ps: float) -> str:
             # Extra SDC may declare secondary clocks. Data slew must exclude
             # their sources; explicit source-clock transitions in extra SDC stand.
             + "set_input_transition 150 [all_inputs -no_clocks]\n"
-            + clock_entry_constraints.generate(s, ROOT))
+            + ce_generate(s) + clock_entry_constraints.landed_sdc(s, ROOT))
 
 
 def sdc_extra(s: dict) -> str:
@@ -1526,7 +1622,8 @@ def gen_signoff(s: dict, refglob: str, inter: str) -> str:
             + f"set ::env(OT_REF_GLOB) {{{refglob}}}\nset ::env(OT_IO_INTER) {{{inter}}}\nset ::env(OT_IO_SKEW_INTER) 150\n"
             + io + sdc_extra(s)
             + ("set ::ot_ce_require_wire 1\n" if s.get("clock") in ("entries", "hybrid_entries", "multiple_cts_roots") else "")
-            + clock_entry_constraints.generate(s, ROOT) + "\nset_propagated_clock [all_clocks]\n")
+            + ce_generate(s) + clock_entry_constraints.landed_sdc(s, ROOT)
+            + "\nset_propagated_clock [all_clocks]\n")
 
 
 def io_hold_relief_ps(s: dict) -> int:
@@ -1673,8 +1770,14 @@ def gen_hooks(s: dict, kd: str) -> dict:
         if s.get("clock") in ("hybrid_entries", "multiple_cts_roots"):
             roots = clock_ports(s) if s.get("clock") == "multiple_cts_roots" else s["clock_cts_roots"]
             pre_cts.append("set ::ot_ce_cts_roots {" + " ".join(roots) + "}")
+            if clock_entry_constraints.landed_cluster(s):
+                pre_cts.append("set ::ot_ce_landed_cluster 1")
+                pre_cts.extend(clock_entry_constraints.landed_pre_cts_tcl(s, ROOT))
             pre_cts.extend(raw_macro_clocks.tcl(raw_bindings))
         pre_cts.append("source /src/physical/common_flow/clock_entries.tcl")
+        # HF-4d 10-19: raw SRAM clock pins of a landed cluster's hard child get their record-signed-off delay AFTER CTS
+        # (wraps clock_entries' CTS; the boundary wrapper below then re-applies clock_entry.sdc = the RAW_PIN verdict)
+        pre_cts.extend(clock_entry_constraints.landed_raw_tcl(s, ROOT))
     if spine:
         pre_cts += ["source /src/physical/common_flow/clock_spine.tcl", f"source /src/{kd}/spine_ins.tcl"]
         ins = child_insertions(s)
@@ -1699,7 +1802,7 @@ def gen_hooks(s: dict, kd: str) -> dict:
     btcl = [f"source /src/{f}" for f in s.get("boundary_tcl", [])
             if not (s.get("clock") in ("entries", "hybrid_entries", "multiple_cts_roots") and "set ::ot_wc_entry_mode 1" in (ROOT / f).read_text())]
     if s.get("clock") in ("entries", "hybrid_entries", "multiple_cts_roots"):
-        files["clock_entry.sdc"] = "set ::ot_ce_require_wire 1\n" + clock_entry_constraints.generate(s, ROOT)
+        files["clock_entry.sdc"] = "set ::ot_ce_require_wire 1\n" + ce_generate(s)
         btcl.append(f"source /src/{kd}/clock_entry.sdc")
     if btcl:
         # pre_cts_skew installs a CTS wrapper that re-reads the single-domain IO
@@ -1794,7 +1897,10 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
         extra.append(f"--orfs-var MACRO_PLACEMENT_TCL=/src/{kd}/place.tcl")
         extra += [f"--macro-view {view_name(v)}={v}" for v in views]
         h = float(s["route"].get("macro_halo_um", HALO_UM))
-        extra.append(f"--macro-place-halo {h} {h}")
+        # optional route.macro_halo_x_um: a wider W/E halo (MACRO_PLACE_HALO "x y") keeps the pin-escape zone of
+        # macros whose pins sit on their W/E faces free of cells without widening the N/S gaps between stacked macros
+        hx = float(s["route"].get("macro_halo_x_um", h))
+        extra.append(f"--macro-place-halo {hx:g} {h:g}" if hx != h else f"--macro-place-halo {h} {h}")
     if s.get("clock", "spine" if s["kind"] == "cluster" else "cts") == "spine":
         extra.append(f"--orfs-var OT_SPINE_PORT={s['clock_port']}")
         # el1011-q-kvd 2026-10-12: a hard child's clock pin is its OWN spine leaf.  Shared bins balanced the leaf to the
@@ -1862,6 +1968,8 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
         if (s.get("outhold") or s.get("inhold")) and not wrap:
             raise SpecError("spec: io_flop_at_pins and outhold/inhold both use PRE_GLOBAL_PLACE (kit recipe 1); "
                             'set "recipe": 2 to combine them through the kit-local pre_gpl.tcl / pre_dpl.tcl')
+        if wrap and s["io_flop_at_pins"].get("through_frac") is not None:
+            raise SpecError("spec: io_flop_at_pins.through_frac is not supported with the recipe-2 pin-hook wrapper")
         if wrap:
             extra.append(f"--step-tcl PRE_GLOBAL_PLACE={kd}/pre_gpl.tcl")
             extra.append(f"--step-tcl PRE_DETAIL_PLACE={kd}/pre_dpl.tcl")
@@ -1869,6 +1977,17 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
             # the <= 3 synthesis INV / BUF (default 4 hops stops inside the stage)
             if pin_hook_wrapper(s):
                 extra.append("--orfs-var OT_OFLOP_HOPS=8")
+        elif s["io_flop_at_pins"].get("through_frac") is not None:
+            # "through_frac": f (RLYH0-FIN 2026-10-19): a pass-through pin flop (input port -> FF -> output port, a lane
+            # station) goes to fraction f of its a -> b L path instead of the input face (physical/qwen_fwd_lane/
+            # lane_flop_thru.tcl sources io_flop_at_pins.tcl first).  600-b lane frames with perpendicular faces: native
+            # launch 231-262 ps > 220 with capture at 74-77 of 190.
+            f = s["io_flop_at_pins"]["through_frac"]
+            if isinstance(f, bool) or not isinstance(f, (int, float)) or not 0.0 <= float(f) <= 1.0:
+                raise SpecError("spec: io_flop_at_pins.through_frac must be a number in 0..1")
+            extra.append("--step-tcl PRE_GLOBAL_PLACE=physical/qwen_fwd_lane/lane_flop_thru.tcl")
+            extra.append("--step-tcl PRE_DETAIL_PLACE=physical/qwen_die_masters/out_flop_release.tcl")
+            extra.append(f"--orfs-var OT_IOFLOP_THRU_FRAC={float(f)}")
         else:
             extra.append("--step-tcl PRE_GLOBAL_PLACE=physical/qwen_die_masters/io_flop_at_pins.tcl")
             extra.append("--step-tcl PRE_DETAIL_PLACE=physical/qwen_die_masters/out_flop_release.tcl")
@@ -1918,6 +2037,9 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
     extra += hold_pad_vars(s)
     extra += hold_budget_vars(s)
     extra += pin_regs_vars(s)
+    extra += reset_landing_vars(s)
+    # reviewed CDC kits: the lint-tagged registers keep their RTL names through yosys fsm (cdc_fsm_guard.py)
+    extra += cdc_fsm_guard.orfs_vars(s, ROOT)
     if s.get("keep_pin_regs"):
         extra.append("--orfs-var OT_KEEP_PIN_REGS=1")
     if s.get("pin_reg_split") and not wrap:
@@ -1933,6 +2055,7 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
         *([f"CLOCK_RLAYERS={shq(' '.join(clock_rlayers(lc)))}"] if clock_rlayers(lc) else []),
         f"KIT=/src/{kd}", f"MACROS=({' '.join(views)})", f"EXTRA=({shell_array(extra)})", *pin_balance_env(r, lc),
         *([f"export OT_PIN_GROUP_MAX={pin_group_max(s)}"] if "pin_group_max" in r else []),
+        *pin_order_desc_env(s),
         *cts_sink_env(r), *([f"RECIPE={int(s['recipe'])}"] if s.get("recipe", 1) >= 2 else []), ""])
 
 
@@ -2002,6 +2125,24 @@ def cts_sink_env(r: dict) -> list:
     return [f"CTSA={shq(base + sz + (' ' + extra if extra else ''))}"]
 
 
+def pin_order_desc_env(s: dict) -> list:
+    """optional "pin_order_desc": [port, ...] (HCRING 10-19): these ranged bus ports are laid out high bit first from the
+    range's low end (run_abi3_physical OT_PIN_ORDER_DESC).  For a face that abuts a neighbour placed R180 (or MX / MY
+    across that face): mirror the port's range AND list it here, so bit i meets bit i (HC ring e0 S -> b5, b7 -> b0 S).
+    Needs route.pin_balance: PPL chunked groups (route default OT_PIN_GROUP_MAX 32) do not keep chunk order, so no
+    bit order across a face is defined without it."""
+    d = s.get("pin_order_desc") or []
+    if not d:
+        return []
+    rng = s.get("pin_ranges") or {}
+    bad = [n for n in d if n not in rng or not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", n)]
+    if bad:
+        raise SpecError(f"spec: pin_order_desc {bad}: each entry must be a port with its own pin_ranges entry")
+    if not s.get("route", {}).get("pin_balance"):
+        raise SpecError("spec: pin_order_desc needs route.pin_balance (an ordered bit layout across the face)")
+    return [f"export OT_PIN_ORDER_DESC={shq(' '.join(d))}"]
+
+
 def pin_balance_env(r: dict, lc: dict | None = None) -> list:
     """optional route.pin_balance {group_max, h, v}: run_abi3_physical's balanced pin placer (place_pin, uniform over each
     port's range, layer alternating every group_max pins) instead of PPL ordered groups, which put a whole port on ONE
@@ -2037,6 +2178,8 @@ def referenced_paths(s: dict, kd: str) -> list:
     out += sorted(str(v) for v in s.get("orfs_vars", {}).values() if not str(v).startswith("/") and (ROOT / str(v)).is_file())
     if s.get("io_flop_at_pins"):
         out += ["physical/qwen_die_masters/io_flop_at_pins.tcl", "physical/qwen_die_masters/out_flop_release.tcl"]
+        if s["io_flop_at_pins"].get("through_frac") is not None:
+            out.append("physical/qwen_fwd_lane/lane_flop_thru.tcl")
     if s.get("outhold"):
         out += ["physical/dsrom_window_source/leaf_iohold.tcl", "physical/dsrom_window_source/leaf_inhold_release.tcl"]
     if s.get("inhold"):
@@ -2056,6 +2199,14 @@ def referenced_paths(s: dict, kd: str) -> list:
     if s.get("clock") in ("entries", "hybrid_entries", "multiple_cts_roots"):
         out += ["physical/common_flow/clock_entries.tcl", f"{kd}/clock_entry.sdc"]
         out += [f"{ch['view']}/insertion.json" for ch in s["children"]]
+        if clock_entry_constraints.landed_cluster(s):
+            out.append(s["landed_record"])
+            raw = clock_entry_constraints.landed_raw_targets(s, ROOT)
+            if raw:
+                # HF-4d: the leaf closed records the raw-pin reference / tolerance are read from, and the tap hook
+                out += ["physical/common_flow/landed_raw_tap.tcl"] + sorted({v["record"] for v in raw.values()})
+                out += sorted({f"{ch['view']}/port_latency.json" for ch in s["children"]})
+                out += sorted({v["verdict"] for v in raw.values()})
     for it in s["macros"] + s["children"]:
         v = it["view"]
         out += [f"{v}/{view_name(v)}.lef"] + [f"{v}/{view_name(v)}_{c}.lib" for c in ("ss", "ff", "tt")]
@@ -2201,6 +2352,13 @@ def gen_job(s: dict, kd: str, commit: str | None, blocks: list) -> dict:
 def gen(spec_path: str, area_um2: float | None = None, commit: str | None = None, out_root: Path = ROOT,
         write: bool = True) -> dict:
     s = load_spec(spec_path)
+    if s.get("face_land"):     # HKV-RSTCAP 10-19: shared reset / late-pin face landing (tools/ref_tile/face_land.py)
+        sys.path.insert(0, str(HERE))
+        import face_land
+        try:
+            face_land.apply(s, write=write, root=ROOT)
+        except face_land.FaceLandError as e:
+            raise SpecError(str(e))
     apply_recipe(s, kit_recipe(s, out_root, spec_path))
     check_hold_budget(s)
     slot = contract_slot(s)
@@ -2273,6 +2431,10 @@ def gen(spec_path: str, area_um2: float | None = None, commit: str | None = None
     if prp is not None:
         files["pin_regs.json"] = json.dumps({"schema": "opentallas.ref_tile.pin_regs.v1", "top": s["top"], **prp},
                                             indent=1) + "\n"
+    rlp = reset_landing_plan(s)
+    if rlp is not None:
+        files["reset_landing.json"] = json.dumps({"schema": "opentallas.ref_tile.reset_landing.v1", "top": s["top"],
+                                                  **rlp}, indent=1) + "\n"
     ffr = gen_signoff_ffrepair(s, s.get("refglob", "*"), ",".join(s["inter"]) or "none_*")
     if ffr:
         files["signoff_ffrepair.sdc"] = ffr

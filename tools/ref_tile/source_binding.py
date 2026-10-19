@@ -478,6 +478,24 @@ def relaxed_rule_requirement(needs, clock, gate=None, root=None):
                 rows.append(dict(requires=n, ok=ovf == 0, overflow=ovf,
                                  text=f"trial_grt: gate trial GRT overflow {ovf}" + ("" if ovf == 0 else " (FAIL)")))
             continue
+        if n == "reset_landing":
+            # ROOT-RST 10-19: the gate FAILS a reset input reaching > rst_land_max sinks without a landing register.  A
+            # gate result without a "reset_landing" record predates the rule and stays valid (a fresh gate of the same
+            # kit judges it); a gate that ran it must show no unlanded reset port (or the kit's recorded waiver).
+            rl = gate.get("reset_landing") if isinstance(gate, dict) else None
+            if not isinstance(gate, dict):
+                rows.append(dict(requires=n, ok=False, text="reset_landing: no gate result to judge"))
+            elif rl is None:
+                rows.append(dict(requires=n, ok=True, predates=True,
+                                 text="reset_landing: gate predates the reset-landing rule (no reset_landing record): kept"))
+            else:
+                ok = bool(rl.get("ok")) if isinstance(rl, dict) else False
+                over = (rl.get("over") if isinstance(rl, dict) else None) or []
+                rows.append(dict(requires=n, ok=ok, over=over,
+                                 text="reset_landing: " + ("every reset input landed" if ok and not over else
+                                                           "waived by the kit" if ok else
+                                                           f"unlanded reset input(s) {over[:4]} (FAIL)")))
+            continue
         if n == "child_flop_basis":
             bases = [(clock or {}).get(f"{c}_pin_spread_basis") for c in ("tt", "ff")] if isinstance(clock, dict) else []
             if bases and all(b in ("child_flop", "child_pair") for b in bases):
@@ -493,6 +511,25 @@ def relaxed_rule_requirement(needs, clock, gate=None, root=None):
                                  text="child_flop_basis: " + ("no macro with an insertion reference: R = 0, verdict "
                                                               "unchanged" if not refs else
                                                               f"{len(refs)} referenced macro(s) {refs[:3]}: re-gate")))
+            continue
+        if n == "landed_cluster_roots":
+            # PL-GATE 10-18: per-root child-flop judgement + the unlanded cross-region FAIL apply only to a cluster kit
+            # with children and clock "multiple_cts_roots"; every other gate is unchanged by that commit
+            ck = clock if isinstance(clock, dict) else {}
+            if ck.get("declared_clock") != "multiple_cts_roots" or "landed_child_links" in ck:
+                rows.append(dict(requires=n, ok=True, text="landed_cluster_roots: not a multi-root cluster gate, or "
+                                                          "already judged per root: unchanged"))
+                continue
+            kit = (gate or {}).get("kit") if isinstance(gate, dict) else None
+            try:
+                sp = json.loads((Path(root or Path(__file__).resolve().parents[2]) / "physical" / "ref_tile" / str(kit)
+                                 / "spec.json").read_text())
+                ok = not (sp.get("kind") == "cluster" and sp.get("children"))
+            except (OSError, ValueError, AttributeError):
+                ok = False
+            rows.append(dict(requires=n, ok=ok, text="landed_cluster_roots: " + (
+                "multi-root kit without hard children: unchanged" if ok else
+                "multi-root cluster gated before the per-root child-flop rule (or spec unreadable): re-gate")))
             continue
         if n == "clock_pin_spread":
             sp = gate_pin_spreads(clock if isinstance(clock, dict) else {})

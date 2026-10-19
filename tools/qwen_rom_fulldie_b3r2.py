@@ -26,6 +26,7 @@ and adds, in this file:
          spine: 35,840 vertical bits cross y = 8.8 mm in the spine against 2,112 link bits (cut census below).
 """
 import argparse
+import collections
 import hashlib
 import importlib.util
 import json
@@ -1111,18 +1112,34 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
         try:
             if os.environ.get('OT_SPLIT_B2', '0') == '1':
                 from qwen_split.b2_graph import apply as apply_b2_graph
+                v._write_netlist_pre_b2 = v.write_netlist      # the dv die (no b2 graph) restores the plain writer
                 apply_b2_graph(v, m)
             if os.environ.get('OT_SPLIT_Q3H', '0') == '1':
                 # Q-DIEPLAN3 2026-10-16: q3h hierarchical die -- 48 x C_B16 clusters replace tiles/stations/heads,
                 # die-top broadcast H-tree replaces the comb (tools/qwen_split/q3h_cluster.py)
                 from qwen_split.q3h_cluster import apply as apply_q3h
                 apply_q3h(v, m)
+                if os.environ.get('OT_SPLIT_DV', '').strip():
+                    # Q-DIEPLAN3 2026-10-17: DIAGNOSTIC dv2r8f2 die case on the q3h model (tools/qwen_split/dv_case.py)
+                    from qwen_split.dv_case import apply_dv
+                    apply_dv(v, m)
+                    if getattr(v, '_write_netlist_pre_b2', None) is not None:
+                        v.write_netlist = v._write_netlist_pre_b2   # the b2 trial writer needs the retired b2 buses
             _late_pin_grant(v)
-            _relays(v, m, relay_pitch)
+            if m.get('dv_gap_route'):
+                _relays_fanout(v, m, relay_pitch)
+            else:
+                _relays(v, m, relay_pitch)
         finally:
             v.CORR = _corr0
         if getattr(v, 'RELAY_REACH_GATE', False):   # tp8b (die timing by construction)
             _reset_tree(v, m)     # after the relays: legalised against the FINAL placement
+            if m.get('fwd_lanes'):
+                # Final reset taps, rather than the pre-tree G=R0 estimate, own the K straps.
+                from qwen_split.reset_calendar_audit import finalize_model
+                _reset_release_path = os.environ.get('OT_SPLIT_RESET_RELEASE')
+                _reset_release = json.loads(Path(_reset_release_path).read_text()) if _reset_release_path else {}
+                finalize_model(m, _reset_release)
         if before_relays is not None:
             _regions_from_placement(m)   # the relays joined region clocks: re-file + split to the measured cap again
     m['b3r2']['r21_relay_pitch_um'] = relay_pitch
@@ -1296,6 +1313,9 @@ def _su_vm_bus(v, m, a_bits=None, q_bits=None):
     SU_VM_A_BITS = a_bits if a_bits is not None else globals()['SU_VM_A_BITS']   # noqa: N806
     SU_VM_Q_BITS = q_bits if q_bits is not None else globals()['SU_VM_Q_BITS']   # noqa: N806
     by = {i.name: i for i in m['insts']}
+    if os.environ.get('OT_SPLIT_DV', '').strip() and 'sp_su64_sfu' not in by and 'sp_vector_memory' not in by:
+        m['b3r2']['su_vm_bus'] = 'none: dv die (distributed vector slices, no central SU/VM)'
+        return
     su, vm = by['sp_su64_sfu'], by['sp_vector_memory']
     # contract v5 (r8): the bit-plane VM region sits N of the tree top; the SU abuts its N face (R0: an MX master's M8
     # clock pins are not mirror-legal): the SU takes va / vq on its S face, the VM sa / sq on N
@@ -1921,7 +1941,38 @@ if _os_reach.environ.get('OT_RELAY_REACH_UM'):
 # The relay masters must meet the reach: o + s <= 683.3 - 0.76 x 490 = 310.9 ps TT (relay element, compute queue).
 import os as _os_r
 P2P_REACH = _os_r.environ.get('OT_RELAY_P2P', '1') != '0'
+# Q-DIEPLAN5 10-17: the planner's pin-to-pin hop measure counts the block pin group's worst bit at chain ends
+# (OT_RELAY_P2P_WORST_BIT=0 restores the centroid measure)
+P2P_WORST_BIT = _os_r.environ.get('OT_RELAY_P2P_WORST_BIT', '1') != '0'
 RELAY_NEVER = ('clock_trunk', 'reset')
+# Q-DIE11-RLY 10-18 (OT_SPLIT_FWD_LANES): reset pins a forwarded lane's hop-0 gate / landing reads (preference order),
+# the reset-lane sink pattern (those chains stay reset relays), and source masters with no clock (pad bumps)
+FWD_RST_PORTS = ('rst_n', 'rs', 'rs_n', 'rst', 'por_n')
+FWD_RST_RX = r'(^|_)(a?rst|rs|por)(_n)?$|rst_n$'
+FWD_NO_ROOT_SRC = ('qfd_sigbump',)
+# LANDFIX-SQ 10-18 (coordinator 0gh: the 87 plain relays of dv2f14bn onto forwarded lanes; default off):
+#   OT_SPLIT_FWD_LANES_RST=1   reset lanes become FORWARDED RESET LANES: hop-0 station on the source root (qfd_rlyr0_*,
+#                              no gate: the reset level must propagate while the source itself is in reset), half-cycle
+#                              stations (qfd_rlyr_*, ck_o = ~ckf), and a RESET-RELEASE LANDING (qfd_rlyrl_*: the level
+#                              re-registered on the receiving block's root, one STA-timed edge).  No data ring: a ring's
+#                              read epoch is the receiver's released reset, which is the very signal the lane carries.
+#   OT_SPLIT_FWD_LANES_BUMP=1  lanes from pad bumps (no clock at the source): hop 0 on the bump-side regional root (the
+#                              root the plain hop-0 relay used), gate enable / lane epoch = the RECEIVER's released reset.
+#   landing.sdc: the MCP is E_sta (the landing's residual edges after the last station's launch, as the die STA counts
+#                them; default 2, or the land plan's E); E (total, for K and the price) = fwd_e_est(n) + E_sta - 2.
+#                dv2f14bn used the total E as the MCP: E 12-14 lanes failed FF hold by up to -7.7 ns (hold edge E - D).
+FWD_LANE_E_STA = 2
+
+
+def fwd_e_est(n):
+    """handoff E of an n-frame forwarded half-cycle lane before the die STA: the S81 p4j half-cycle pilot measured
+    E = ceil(N/2) + 1 for N stations ahead of the landed pin (results/arch/s81_dv_1016/landing/p4j_land2/land_plan.json:
+    N 1..7, 16 -> E 2..9); here the landing is the n-th capture, N = n - 1; at least 2 (the pilot minimum)."""
+    return max(2, math.ceil((n - 1) / 2) + 1)
+# Q-DIEPLAN3 10-17 (coordinator: pass-2 repair = one-by-one BFS over up to 400k sites per chain; q3h GENs > 5 h): the
+# per-search site budget (OT_RELAY_BFS_MAX, default the historical 400,000); a smaller budget fails a hopeless tier
+# fast and moves on to the next tier / rip-up instead of exhausting the die
+BFS_MAX = int(_os_r.environ.get('OT_RELAY_BFS_MAX', '400000'))
 
 
 def _relay_terminal_possible(centers, endpoint, reach_um, is_free, hop_ok=None):
@@ -1935,6 +1986,53 @@ def _relay_terminal_possible(centers, endpoint, reach_um, is_free, hop_ok=None):
                          np.abs(centers[:, 1] - endpoint[1]) <= reach_um)
     return any(is_free(int(i)) and (hop_ok is None or hop_ok(
         (float(centers[i][0]), float(centers[i][1])), endpoint)) for i in ids)
+
+
+def _relays_fanout(v, m, pitch=RELAY_PITCH_UM):
+    """Q-DIEPLAN3 dv (2026-10-17; dv2f6 GEN: 8 multi-sink data nets over reach, e.g. dvr_ng_io_cmd_free_0 collective ->
+    dvs_W5 + sys_face, 11.2 mm): the planner relays 2-point buses only.  A multi-sink bus whose farthest sink is out of
+    reach is split into one 2-point leg per sink (leg 0 keeps the bus name, leg k is <bus>__fo<k>), every leg is planned
+    and relayed on its own, and the legs' first hops are merged back into ONE net on the driver port (driver -> the
+    first relay / sink of every leg).  Each sink keeps a fixed, compiler-known stage count (static schedule)."""
+    if _os_r.environ.get('OT_RELAY_SKIP') == '1':
+        return _relays(v, m, pitch)
+    reach = float(_os_r.environ.get('OT_RELAY_REACH_OK', RELAY_REACH_UM))
+    pos = _pin_pos(v, m)
+    legs, out = {}, []
+    for bid, cl, bits, eps in m['buses']:
+        if len(eps) > 2 and cl not in ('clock_trunk', 'reset') and not bid.endswith('_rdy'):
+            try:
+                P0 = pos(*eps[0])
+                far = max(abs(P0[0] - pos(*e)[0]) + abs(P0[1] - pos(*e)[1]) for e in eps[1:])
+            except Exception:
+                far = 0.0
+            if far > reach:
+                names = []
+                for k, e in enumerate(eps[1:]):
+                    ln = bid if k == 0 else f'{bid}__fo{k}'
+                    out.append((ln, cl, bits, [eps[0], e]))
+                    names.append(ln)
+                legs[bid] = (cl, bits, eps[0], names)
+                continue
+        out.append((bid, cl, bits, eps))
+    m['buses'] = out
+    _relays(v, m, pitch)
+    if not legs:
+        return
+    first = {ln: o for o, (_, _, _, ns) in legs.items() for ln in ns}
+    merged, B = {}, []
+    for bid, cl, bits, eps in m['buses']:
+        if bid in first:
+            merged.setdefault(first[bid], []).append(eps[1:])
+            continue
+        B.append((bid, cl, bits, eps))
+    for o, (cl, bits, src, ns) in legs.items():
+        loads = [e for es in merged.get(o, []) for e in es]
+        if len(merged.get(o, [])) != len(ns):
+            raise ValueError(f'relays fanout: {o}: {len(merged.get(o, []))} of {len(ns)} legs found after planning')
+        B.append((o, cl, bits, [src] + loads))
+    m['buses'] = B
+    m['r21_relays']['fanout_legs'] = {o: ns for o, (_, _, _, ns) in legs.items()}
 
 
 def _relays(v, m, pitch=RELAY_PITCH_UM):
@@ -2013,6 +2111,9 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         return True
     for it in m['insts']:
         add_rect((it.x, it.y, it.x + it.w, it.y + it.h))
+    # Q-DIEPLAN3 q3h5: reserved keep-outs (DIE-CLOCK regional root sites, dedicated lanes): no relay may take them
+    for r_ in m.get('relay_keepouts', ()):
+        add_rect(tuple(r_['rect']))
     die_top = g['y_io']
     # Re-packed tile rows expose real horizontal channels. Derive them from
     # actual placed tile bodies, not the historical TILE_SLOT height. free()
@@ -2380,6 +2481,19 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             yv = Pv[1] + (130.0 if Ph[1] > Pv[1] else -130.0)
             path = [Pv, (Pv[0], yv), (xl, yv), (xl, Ph[1]), Ph]
             return path if Pv is P0 else path[::-1]
+        if m.get('dv_gap_route') and f0 and f1:
+            # Q-DIEPLAN3 dv (2026-10-17): the dv array has no field corridors (clusters / slices abut; the corridor
+            # lanes are the W-column channel), so a field-to-field link whose ends face one band gap / the W|E seam
+            # runs inside that channel (dv2f3: dv_rsi_E4_0 went 25 mm W to the W-column lane and back)
+            sm = m.get('dv_seam')
+            if sm and all(sm[0] - 1.0 <= P[0] <= sm[1] + 1.0 for P in (P0, P1)):
+                xm = round((sm[0] + sm[1]) / 2, 3)
+                return [P0, (xm, P0[1]), (xm, P1[1]), P1] if abs(P0[1] - P1[1]) > 1.0 else [P0, P1]
+            for a_, b_ in legal_row_gaps:
+                if a_ - 1.0 <= P0[1] <= b_ + 1.0 and a_ - 1.0 <= P1[1] <= b_ + 1.0:
+                    ym = round((a_ + b_) / 2, 3)
+                    return [P0, (P0[0], ym), (P1[0], ym), P1] if abs(P0[0] - P1[0]) > 1.0 else [P0, P1]
+            raise ValueError(f'dv: field-to-field link {bid} {P0} -> {P1} faces no band gap / seam (no die corridor)')
         if cl == 'corridor' or (abs(P0[0] - P1[0]) < 1.0 and not (FIELD_ALLOC and f0 and f1 and not cl.startswith('kvn'))):
             # it19: under FIELD_ALLOC a same-x field word goes through field_route too (the straight vertical
             # shortcut stacked 3 x 512-b tree words + a corridor word in one column channel: 0.72 / 0.68 / 0.65)
@@ -2777,6 +2891,26 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         """off-corridor relay frame: faces at one track; <= 512 b fits the 52.68 x 30.24 corridor relay, wider words
         take the face span (a link-spine relay is vertical flow only, N/S faces)."""
         span1 = bits * 0.048 + 4.0
+        # Q-DIE11 10-18 (coordinator, qfwd_landh0_548_ew_65x60 GRT-0116): with OT_SPLIT_FWD_LANES the last frame of a
+        # lane is a LANDING (ring D 4 = 5 W + 14 flops + the 4:1 read mux, ~2.8 um2 per bit), and every frame of a bus is
+        # one size, so a wide bus (> OT_SPLIT_FWD_LAND_BITS, default 136) takes landing-sized frames: every data face
+        # >= bits / 6 um (<= 6 pins/um) and the area >= the landing's std-cell area / 0.55.  Default off (FWD off).
+        if (_os_r.environ.get('OT_SPLIT_FWD_LANES', '0') == '1' and _os_r.environ.get('OT_SPLIT_FWD_LAND_SIZE', '1') == '1'
+                and bits > int(_os_r.environ.get('OT_SPLIT_FWD_LAND_BITS', '136'))):
+            # dv2f14 GEN try 1 (square bits/6 frames) left 3 sys_face / d2d nets without relay sites (over reach 622-666 um):
+            # widen only the N/S face (the corridor flow is vertical), keep the plain frame height, area from the width
+            face = bits / 6.0 + 4.0
+            if _os_r.environ.get('OT_SPLIT_FWD_LAND_SHAPE', 'ns') == 'square':
+                # Q-DIE11b 10-18: the landing kits (qfwd_landh0_548_ew 65x99, landh_548_en 99x99) need <= 6 pins/um on
+                # E/W data faces too; the frame does not know its lane direction here, so every face >= bits / 6 um
+                side = max(face, math.sqrt(2.8 * bits / 0.55))
+                return max(v.up(side, v.GX), v.CORR) - v.SHAVE, max(v.up(side, v.GY), RELAY_V_H) - v.SHAVE
+            w0, h0 = ((v.CORR - v.SHAVE, RELAY_V_H - v.SHAVE) if bits <= RELAY_STD_BITS else
+                      (max(v.up(span1, v.GX), v.CORR) - v.SHAVE,
+                       (RELAY_V_H if cl == 'link_spine' and span1 > BWP_H else max(v.up(span1, v.GY), BWP_H)) - v.SHAVE))
+            w = max(v.up(face, v.GX) - v.SHAVE, w0)
+            h = max(v.up(2.8 * bits / 0.55 / w, v.GY) - v.SHAVE, h0)
+            return w, h
         if bits <= RELAY_STD_BITS:
             return v.CORR - v.SHAVE, RELAY_V_H - v.SHAVE
         w = max(v.up(span1, v.GX), v.CORR) - v.SHAVE
@@ -2844,6 +2978,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
 
     GATE = bool(getattr(v, 'RELAY_REACH_GATE', False))
     PT_EXT = {}          # r10: block pin point -> half extents of its pin group (pos.ext)
+    PT_FACE = {}         # Q-DIEPLAN5: block pin point -> the block face (N/S/E/W) its pin group sits on (pos.face)
 
     def _pt_key(o):
         return (round(o[0], 2), round(o[1], 2))
@@ -2854,6 +2989,21 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         if he is None:
             return 0.0
         return max(0.0, (he[1] if f in 'EW' else he[0]) - bits * 0.048 / 2)
+
+    def _end_worst(o, f, bits, face_len):
+        """Q-DIEPLAN5 10-17 (dv2f7: 5 hops passed the planner at <= 395 um pin to pin on CENTROIDS but their worst
+        bit ran 408-486 um): um the worst bit of a block-pin <-> relay-face hop runs beyond the centroid distance.  The
+        relay face (f) carries the word at one track per bit (half extent r); facing faces on one axis with the order
+        preserved meet bit k to bit k (+ the extent DIFFERENCE, as the direct 'ordered' rule); a corner (nested order)
+        or a u-turn (relay face pointing the same way as the block face) adds both half extents."""
+        he = PT_EXT.get(_pt_key(o))
+        if he is None:
+            return 0.0
+        r = min(bits * 0.048, face_len) / 2
+        rx, ry = (r, 0.0) if f in 'NS' else (0.0, r)
+        if PT_FACE.get(_pt_key(o)) == f:
+            return (he[0] + rx) if f in 'NS' else (he[1] + ry)
+        return abs(he[0] - rx) + abs(he[1] - ry)
 
     def frame_faces(pts, k, fr, bits):
         """(in face, out face) of relay frame k of a chain (pts = P0, frame centres, P1): toward the previous / next
@@ -2940,8 +3090,28 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
     def p2p_hops(pl):
         """pin-to-pin hop lengths of a chain (the audit's measure); the allocator's own measure (hops_of) is centre to
         centre, up to w / 2 + h / 2 a side shorter"""
-        q = pin_pts(pl)
-        return [abs(q[i][0] - q[i + 1][0]) + abs(q[i][1] - q[i + 1][1]) for i in range(0, len(q), 2)]
+        fc = []
+        q = pin_pts(pl, fc)
+        hp = [abs(q[i][0] - q[i + 1][0]) + abs(q[i][1] - q[i + 1][1]) for i in range(0, len(q), 2)]
+        if P2P_WORST_BIT:
+            # Q-DIEPLAN5: the block-pin ends are judged on their worst bit (block pin group extent), not the centroid
+            fr_ = pl['frames']
+            if fr_:
+                f0, fn = fr_[0], fr_[-1]
+                hp[0] += _end_worst(pl['P0'], fc[0], pl['bits'], f0[2] if fc[0] in 'NS' else f0[3])
+                hp[-1] += _end_worst(pl['P1'], fc[-1], pl['bits'], fn[2] if fc[-1] in 'NS' else fn[3])
+            else:
+                hp[0] += _direct_worst(pl['P0'], pl['P1'])
+        return hp
+
+    def _direct_worst(P0, P1):
+        """Q-DIEPLAN5: block pin group to block pin group (no relay): the 'ordered' rule (extent difference per axis;
+        a corner sums by construction) and a u-turn (both groups on the same-named face) sums both extents"""
+        e0_, e1_ = PT_EXT.get(_pt_key(P0)) or (0.0, 0.0), PT_EXT.get(_pt_key(P1)) or (0.0, 0.0)
+        f0_, f1_ = PT_FACE.get(_pt_key(P0)), PT_FACE.get(_pt_key(P1))
+        if f0_ is not None and f0_ == f1_:
+            return e0_[0] + e1_[0] + e0_[1] + e1_[1]
+        return abs(e0_[0] - e1_[0]) + abs(e0_[1] - e1_[1])
 
     def reach_bad(pl):
         return GATE and max(p2p_hops(pl)) > RELAY_REACH_OK
@@ -3002,6 +3172,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
     feedback = []        # it24: (bid, max hop before, after, accepted)
     plans = {}
     import os as _os
+    seam_lane = set(m.get('dv_seam_lane') or ()) if m.get('dv_seam') else set()
     _only = tuple(q for q in _os.environ.get('OT_RELAY_ONLY', '').split(',') if q)   # debug: relay only these buses
     _dbg = set(q for q in _os.environ.get('OT_RELAY_DBG', '').split(',') if q)
     for idx, (bid, cl, bits, eps) in buses:
@@ -3018,9 +3189,42 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             continue
         P0, P1 = pos(*eps[0]), pre_far.get(idx) or pos(*eps[1])
         PT_EXT[_pt_key(P0)] = pos.ext(*eps[0])
+        if hasattr(pos, 'face'):
+            PT_FACE[_pt_key(P0)] = pos.face(*eps[0])
         if idx not in pre_far:
             PT_EXT[_pt_key(P1)] = pos.ext(*eps[1])
+            if hasattr(pos, 'face'):
+                PT_FACE[_pt_key(P1)] = pos.face(*eps[1])
         d = abs(P0[0] - P1[0]) + abs(P0[1] - P1[1])
+        # Q-DIEPLAN3 2026-10-16 (Codex 20:18: 25 q3h hops passed on the centroid but their worst BIT ran 422-444 um > the
+        # measured reach): the direct-wire decision bounds the worst bit by the centroid distance plus both pin groups'
+        # half extents (a bit at one end of a group meets its partner at the other end of the facing group at most that
+        # far off); OT_RELAY_WORST_BIT=0 restores the centroid rule
+        # (face-to-face seams across <= 60 um keep the centroid rule: their pins are per-bit aligned on one track each,
+        # as the seam pin audit proves for the VM/SU channel)
+        _wb = _os.environ.get('OT_RELAY_WORST_BIT', '1')
+        if _wb != '0' and d > 60.0:
+            e0_, e1_ = PT_EXT.get(_pt_key(P0)) or (0.0, 0.0), PT_EXT.get(_pt_key(P1)) or (0.0, 0.0)
+            if _wb == 'ordered':
+                # dv die (Q-DIEPLAN3 10-17): every die bundle is written bit-ascending on both faces with the order
+                # preserved (pin_align 'order preserved' on all of them), so bit k meets bit k: the worst bit is the
+                # centroid distance plus the extent DIFFERENCE.  The per-bit gate (OT_PIN_BIT_REACH_UM) re-measures
+                # every bit after pin assignment and fails the GEN if this ever under-counts.
+                d = d + _direct_worst(P0, P1)
+            else:
+                d = d + e0_[0] + e1_[0] + e0_[1] + e1_[1]
+        if bid in seam_lane:
+            # Q-DIEPLAN6 10-17 (dv_case OT_SPLIT_DV_SEAM_LANE): a W0 | E0 seam chain word takes its own registered lane
+            # station in the seam channel, on its own face rows (one relay, both hops ~ half the seam)
+            xs_, ys_ = (m['dv_seam'][0] + m['dv_seam'][1]) / 2, (P0[1] + P1[1]) / 2
+            w_, h_ = relay_frame(bits, cl)
+            sp_ = place(xs_, ys_, w_ + v.SHAVE, h_ + v.SHAVE, None, 400.0)
+            if sp_ is None:
+                raise ValueError(f'dv seam lane: no free station for {bid} near ({xs_:.0f}, {ys_:.0f})')
+            add_rect((sp_[0], sp_[1], sp_[0] + w_ + v.SHAVE, sp_[1] + h_ + v.SHAVE))
+            plans[idx] = dict(bid=bid, cl=cl, bits=bits, eps=eps, P0=P0, P1=P1, frames=[(sp_[0], sp_[1], w_, h_)], d=d,
+                              path=[P0, (xs_, P0[1]), (xs_, P1[1]), P1])
+            continue
         terminal = getattr(v, 'TERMINAL_TIGHT', {})
         direct_limit = min(terminal.get(tuple(eps[0]), float('inf')), terminal.get(tuple(eps[-1]), float('inf')))
         if _dbg and bid in _dbg:
@@ -3298,7 +3502,11 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         near_cons = near
         def _e_pin(pt, i):            # block pin point -> frame i face (pin to pin estimate)
             dx_, dy_ = abs(ctr[i][0] - pt[0]), abs(ctr[i][1] - pt[1])
-            return dx_ + dy_ - (W / 2 if dx_ >= dy_ else H / 2)
+            e_ = dx_ + dy_ - (W / 2 if dx_ >= dy_ else H / 2)
+            if P2P_WORST_BIT:         # Q-DIEPLAN5: + the worst bit of the block pin group on the face toward it
+                f_ = (('E' if pt[0] > ctr[i][0] else 'W') if dx_ >= dy_ else ('N' if pt[1] > ctr[i][1] else 'S'))
+                e_ += _end_worst(pt, f_, pl["bits"], (H if f_ in 'EW' else W) - v.SHAVE)
+            return e_
 
         def _e_ff(i, j):              # frame i -> frame j, facing faces on the dominant axis
             dx_, dy_ = abs(ctr[i][0] - ctr[j][0]), abs(ctr[i][1] - ctr[j][1])
@@ -3313,7 +3521,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                 hop_chk[0] is None or hop_chk[0](P0, (float(ctr[i][0]), float(ctr[i][1]))))]
             par = {i: -1 for i in start}
             front, hit = start, None
-            while front and hit is None and len(par) < 400000:
+            while front and hit is None and len(par) < BFS_MAX:
                 for i in front:
                     if abs(ctr[i][0] - P1[0]) + abs(ctr[i][1] - P1[1]) <= De and (not p2p_on or _e_pin(P1, i) <= RCH) and (
                             hop_chk[0] is None or hop_chk[0]((float(ctr[i][0]), float(ctr[i][1])), P1)):
@@ -3374,11 +3582,20 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             lims = [1.0, 0.60 / CAP_FRAC, None] if FIELD_ALLOC else [None]
             lim_cur = [None]
 
+            fit_memo = {}          # Q-DIEPLAN3 10-17: the bookings are fixed during one repair call -> memoise
+
             def hop_fits(pa, pb):
                 """one of the two L routes pa -> pb stays within the window caps with this word added"""
                 lim = lim_cur[0]
                 if lim is None:
                     return True
+                key_ = (lim, pa, pb)
+                r_m = fit_memo.get(key_)
+                if r_m is None:
+                    r_m = fit_memo[key_] = _hop_fits(pa, pb, lim)
+                return r_m
+
+            def _hop_fits(pa, pb, lim):
                 (xa_, ya_), (xb_, yb_) = pa, pb
                 if max(hr(ya_, xa_, xb_, bits), vr(xb_, ya_, yb_, bits)) <= lim:
                     return True
@@ -3755,6 +3972,82 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         tpads=equal_age_pads(S_,m.get('relay_equal_groups',{}),tpads)
         m['tp8_inline_pads'] = dict(irep, pads=len(tpads), pad_relays=sum(tpads.values()),
                                   equal_age_groups=len(m.get('relay_equal_groups',{})))
+    # Q-DIE12 10-18 (landed-regions standard): OT_SPLIT_LAND_CROSS=inst[,inst...] -- every zero-stage 2-endpoint data
+    # bus between a named instance (a hard tile with a deep internal clock tree: d2d_rom 343 / sys_face 220 ps FF) and a
+    # block on a DIFFERENT regional clock root gets one station at its sink end; with OT_SPLIT_FWD_LANES it is a
+    # one-frame forwarded lane = a LANDING (landh0: ring written on the source root, read on the sink root at E), so the
+    # two roots need no phase relation (no die-level re-balancing).  Same-root neighbours stay direct (region-local).
+    _lc = {s_ for s_ in _os.environ.get('OT_SPLIT_LAND_CROSS', '').split(',') if s_}
+    if _lc:
+        _ck_of = {}
+        for _b in m['buses']:
+            if _b[1] == 'clock_trunk':
+                for _e in _b[3][1:]:
+                    _ck_of.setdefault(_e[0], _b[0])
+        _lcx = []
+        for idx, (bid, cl, bits, eps) in buses:
+            if len(eps) != 2 or cl in ('clock_trunk', 'constant', 'reset', 'link_spine', 'link_channel') or bid.endswith('_rdy'):
+                continue
+            (s_, _), (d_, _) = eps
+            if not ({s_, d_} & _lc) or (idx in plans and plans[idx]['frames']) or bid in tpads:
+                continue
+            if _ck_of.get(s_) is None or _ck_of.get(d_) is None or _ck_of.get(s_) == _ck_of.get(d_):
+                continue
+            tpads[bid] = 1
+            _lcx.append(dict(bid=bid, cl=cl, bits=bits, src=s_, dst=d_, src_ck=_ck_of[s_], dst_ck=_ck_of[d_]))
+        m['land_cross'] = dict(insts=sorted(_lc), buses=len(_lcx), bits=sum(r_['bits'] for r_ in _lcx), rows=_lcx)
+        print(f'LAND_CROSS {sorted(_lc)}: {len(_lcx)} cross-root buses / {sum(r_["bits"] for r_ in _lcx)} bits get a landing station', flush=True)
+    # QXF-SEAMC 10-18 (TOKEN-XDIE-QWEN F5 + LAYERBENCH-QWEN G-C2): LAND_CROSS and the lane pass worked BUS by bus, so a
+    # record crossed the seam torn: dv2f14bn d2d_rom -> native59 rx_payload a 1-frame landing (K 2, +3 edges) beside
+    # direct native_rx_v / slot / kind / beat (+0) -> rx_record fault at the first RESULT; d2d_rom -> sys_face
+    # prog_auth_slot +5 / prog_witness_slot +4 vs rx_payload / prog_rx_v / prog_context_slot +3 -> slot_fault at HOST
+    # BEGIN.  A RECORD BUNDLE (tools/qwen_split/record_bundles.py: valid + every field of one static record, selected by
+    # endpoint pins as the compiler's OT_RELAY_SCHEDULE does) lands WHOLE: every zero-stage member of a bundle whose other
+    # members carry frames (relays, pads, LAND_CROSS) gets the one-frame landing too (forwarded lanes), or plain relay
+    # pads to the bundle's frame count (no forwarded lanes); the lane pass below then gives the bundle ONE E
+    # (lane_groups.equalize, group = the bundle) and the GEN fails closed if a built bundle still arrives on two edges.
+    sys.path.insert(0, str(ROOT / 'tools' / 'qwen_split'))
+    import record_bundles as _RB
+    _rbm, _rbp = _RB.bundle_map([(bid, eps) for idx, (bid, cl, bits, eps) in buses])
+    if _rbp:
+        raise ValueError('record bundles: ' + '; '.join(_rbp))
+    if _rbm:
+        _bix = {bid: idx for idx, (bid, cl, bits, eps) in buses}
+        _nfr = {b_: (len(plans[_bix[b_]]['frames']) if _bix[b_] in plans else 0) + int(tpads.get(b_, 0)) for b_ in _rbm}
+        if _os.environ.get('OT_SPLIT_FWD_LANES', '0') == '1':
+            _rbadd = _RB.close_zero_stage(_rbm, _nfr)
+            if _rbadd:
+                _lcr = m.setdefault('land_cross', dict(insts=[], buses=0, bits=0, rows=[]))
+                _ckb = {}
+                for _b in m['buses']:
+                    if _b[1] == 'clock_trunk':
+                        for _e in _b[3][1:]:
+                            _ckb.setdefault(_e[0], _b[0])
+                for b_ in _rbadd:
+                    _, cl_, bits_, eps_ = m['buses'][_bix[b_]]
+                    tpads[b_] = 1
+                    _lcr['rows'].append(dict(bid=b_, cl=cl_, bits=bits_, src=eps_[0][0], dst=eps_[1][0],
+                                             src_ck=_ckb.get(eps_[0][0]), dst_ck=_ckb.get(eps_[1][0]),
+                                             why=f'record bundle {_rbm[b_]} (QXF-SEAMC)'))
+                _lcr['buses'] = len(_lcr['rows'])
+                _lcr['bits'] = sum(r_['bits'] for r_ in _lcr['rows'])
+            # members too far behind their bundle's E for the ring wait (E_sta <= D - 1) get extra frames now (sink-end
+            # stations, placed with the pads below); the lane pass takes the rest by ring wait
+            _nfr.update({b_: 1 for b_ in _rbadd})
+            _lpq = json.loads(Path(_os.environ['OT_SPLIT_LAND_PLAN']).read_text()) if _os.environ.get('OT_SPLIT_LAND_PLAN') else {}
+            _esq = {r_['bid']: int(r_['E']) for r_ in _lpq.get('links', []) if r_.get('E') is not None}
+            _rbfp = _RB.frame_pads(_rbm, _nfr, _esq, 4)
+            for b_, p_ in _rbfp.items():
+                tpads[b_] = int(tpads.get(b_, 0)) + p_
+            _rbadd = list(_rbadd) + [f'{b_}+{p_}' for b_, p_ in sorted(_rbfp.items())]
+        else:
+            _rbadd = _RB.plain_pads(_rbm, _nfr)
+            for b_, p_ in _rbadd.items():
+                tpads[b_] = int(tpads.get(b_, 0)) + p_
+        m['record_bundles'] = dict(bundles=sorted(set(_rbm.values())), members=_rbm,
+                                   landed_with_bundle=sorted(_rbadd) if isinstance(_rbadd, list) else _rbadd)
+        print(f'RECORD_BUNDLES {len(set(_rbm.values()))} bundles / {len(_rbm)} members: '
+              f'{len(_rbadd)} members padded or landed with their bundle', flush=True)
     # Reconcile the allocator's mutable occupancy with the exact frames that
     # will be emitted after repair/rip-up/jog/pre-pad trimming. Every inline
     # arrival pad must see ALL surviving frames, not a stale search grid.
@@ -3762,6 +4055,9 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
     grid.clear()
     for it in m['insts']:
         add_rect((it.x, it.y, it.x + it.w, it.y + it.h))
+    # Q-DIEPLAN3 q3h5: reserved keep-outs (DIE-CLOCK regional root sites, dedicated lanes): no relay may take them
+    for r_ in m.get('relay_keepouts', ()):
+        add_rect(tuple(r_['rect']))
     for idx, pl in sorted(plans.items()):
         for fk, f in enumerate(pl['frames']):
             rr = (f[0], f[1], f[0] + f[2] + v.SHAVE, f[1] + f[3] + v.SHAVE)
@@ -3774,6 +4070,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                         print(f'relay collision diagnostic failed: {diagnostic_error}', file=sys.stderr)
                 raise ValueError(f"relay occupancy: {pl['bid']} frame {fk} overlaps a surviving frame before inline pads")
             add_rect(rr)
+    _lc_bids = {r_['bid'] for r_ in (m.get('land_cross') or {}).get('rows', ())}
     pad_done = {}
     pad_hop_centre = {}
     if tpads:
@@ -3811,7 +4108,30 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                 # previous pad to Q (consecutive pads stay together; the walk ends next to Q)
                 fr = 1.0 / (npad - j + 1)
                 qx, qy = px + (Q[0] - px) * fr, py + (Q[1] - py) * fr
-                sp = place(qx, qy, w + v.SHAVE, h + v.SHAVE, cc, 150.0) if cc is not None else None
+                sp = place(qx, qy, w + v.SHAVE, h + v.SHAVE, cc, 150.0) if cc is not None and bid not in _lc_bids else None
+                if sp is None and bid in _lc_bids:
+                    # Q-DIE12 LAND_CROSS: the landing station takes the free site that minimises its LONGER hop
+                    # (source -> station, station -> sink), not the site nearest the midpoint (first try: 17 hops > 405)
+                    best_ = None
+                    W_, H_ = w + v.SHAVE, h + v.SHAVE
+                    for ring in range(0, int(_os.environ.get('OT_SPLIT_LAND_CROSS_RINGS', '150'))):
+                        st = ring * 4 * v.GY
+                        if best_ is not None and st > best_[0]:
+                            break
+                        cands = [(0, 0)] if ring == 0 else \
+                            [(dx, dy) for dx in (-st, st) for dy in [i * 4 * v.GY for i in range(-ring, ring + 1)]] + \
+                            [(dx, dy) for dy in (-st, st) for dx in [i * 4 * v.GY for i in range(-ring + 1, ring)]]
+                        for dx, dy in cands:
+                            x0, y0 = v.dn(qx - W_ / 2 + dx, v.GX), v.dn(qy - H_ / 2 + dy, v.GY)
+                            cx_, cy_ = x0 + W_ / 2, y0 + H_ / 2
+                            sc_ = max(abs(cx_ - Q[0]) + abs(cy_ - Q[1]), abs(cx_ - x1) + abs(cy_ - y1))
+                            if best_ is not None and sc_ >= best_[0]:
+                                continue
+                            if in_field(cx_, cy_) and corr_of(cx_) is None and not contains_frame(legal_row_gaps, y0, H_):
+                                continue
+                            if y0 >= g['y0'] and y0 + H_ <= die_top and free((x0, y0, x0 + W_, y0 + H_)):
+                                best_ = (sc_, (x0, y0))
+                    sp = best_[1] if best_ else None
                 if sp is None and cc is None and not sink_in_field:
                     sp = place(qx, qy, w + v.SHAVE, h + v.SHAVE, None)
                 if sp is None and cc is None and sink_in_field:
@@ -3866,9 +4186,130 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         centre_hops_over_reach=sorted(b_ for b_, h_ in pad_hop_centre.items() if h_ > RELAY_REACH_OK))
     # ---- emit relays and hops
     from qwen_split.relay_clock import assigned_clock, collective_core_clock
+    # Q-DIE11-RLY 2026-10-18 (coordinator HANDOFF 0ea item 1, lanes/LANDING-CONTRACT.md): OT_SPLIT_FWD_LANES=1 turns every
+    # relay chain of n >= 1 frames into a FORWARDED-CLOCK HALF-CYCLE lane (rtl/qwen_split/qfd_fwd_lane.sv): frame 0 =
+    # hop-0 station (inverting ICG on the SOURCE root, opened by the source's released reset), frames 1..n-2 = half-cycle
+    # stations on the lane's own clock (n_fck_* nets, ck_o = ~ckf), frame n-1 = the LANDING (ring D 4 on the lane clock,
+    # read on the RECEIVING block's root at (rc - K) mod 8, K from the instance's own tie cells).  No relay is clocked by a
+    # far regional root any more: only hop-0 stations (beside the source) and landings (beside the sink) touch a root.
+    # The placement, the frames and the data hops are the plain plan's (byte-identical geometry); default off.
+    FWDL = _os_r.environ.get('OT_SPLIT_FWD_LANES', '0') == '1'
+    fwd_kind, fwd_attach, fwd_rows, fwd_skip, fwd_reclass = {}, [], [], [], set()
+    if FWDL:
+        _ckof, _rstof = {}, {}
+        for bid_, cl_, bits_, eps_ in m['buses']:
+            if cl_ == 'clock_trunk':
+                for i_, p_ in eps_:
+                    _ckof.setdefault(i_, []).append((bid_, p_.lstrip('*')))
+            elif bits_ == 1:
+                for i_, p_ in eps_[1:]:
+                    if p_.lstrip('*') in FWD_RST_PORTS:
+                        _rstof.setdefault(i_, {})[p_.lstrip('*')] = bid_
+        _fdi = _os_r.environ.get('OT_SPLIT_FWD_LANES_FDI', '0') == '1'
+        _frst = _os_r.environ.get('OT_SPLIT_FWD_LANES_RST', '0') == '1'
+        _fbump = _os_r.environ.get('OT_SPLIT_FWD_LANES_BUMP', '0') == '1'
+        _lp = json.loads(Path(_os_r.environ['OT_SPLIT_LAND_PLAN']).read_text()) if _os_r.environ.get('OT_SPLIT_LAND_PLAN') else {}
+        _lpE = {r_['bid']: r_ for r_ in _lp.get('links', [])}
+
+        def _fwd_clock(inst):
+            c_ = _ckof.get(inst, [])
+            return next((b_ for b_, p_ in c_ if p_ == 'ck'), None) or next((b_ for b_, p_ in c_ if p_ == 'clk'), None) or \
+                (c_[0][0] if c_ else None)
+
+        def _fwd_rst(inst):
+            r_ = _rstof.get(inst, {})
+            return next((p_ for p_ in FWD_RST_PORTS if p_ in r_), None)
+
+        def _fwd_ok(pl_):
+            bid_, cl_, eps_ = pl_['bid'], pl_['cl'], pl_['eps']
+            if not pl_['frames']:
+                return 'zero-stage link (plain neighbour root -> root hop)'
+            if cl_ in ('link_spine', 'link_channel') or bid_ in pair:
+                return 'link / ready-pair family'
+            if cl_ == 'coll_fdi' and not _fdi:
+                return 'coll_fdi: PHY FDI side, clocked by the PHY (Q-DIE11-COLL owns the face clocks; OT_SPLIT_FWD_LANES_FDI=1 converts)'
+            if len(eps_) != 2:
+                return f'{len(eps_)} endpoints'
+            (si_, sp_), (di_, dp_) = eps_
+            if re.search(FWD_RST_RX, dp_.lstrip('*')) or re.match(r'(a?rst|rs_)', bid_) or '_rst' in bid_ or 'lrst' in bid_:
+                if not _frst:
+                    return 'reset lane (stays a reset relay chain; the reset tree / calendar owns it; OT_SPLIT_FWD_LANES_RST=1 converts)'
+                if _fwd_clock(di_) is None:
+                    return 'reset lane: sink without a clock trunk (no root for the reset-release landing)'
+                return 'RST'
+            if by[si_].master in FWD_NO_ROOT_SRC:
+                if not _fbump:
+                    return f'source {by[si_].master} has no clock (pad bump): no source root to forward (OT_SPLIT_FWD_LANES_BUMP=1 converts)'
+                if _fwd_clock(di_) is None or _fwd_rst(di_) is None:
+                    return f'pad-bump lane: sink without clock / reset pin (dst {_fwd_rst(di_)})'
+                return 'BUMP'
+            if _fwd_clock(si_) is None or _fwd_clock(di_) is None:
+                return 'source or sink without a clock trunk'
+            if _fwd_rst(si_) is None or _fwd_rst(di_) is None:
+                return f'source / sink reset pin not found (src {_fwd_rst(si_)}, dst {_fwd_rst(di_)})'
+            return None
+    fwd_eq = {}
+    if FWDL:
+        # Q-COLLCAL 10-18 (TP8 co-sim bug 2: serdes2_txv E 6 vs serdes2_tx E 5): ONE E per bus group (a valid bus and its
+        # data buses, tools/qwen_split/lane_groups.py; LANDING-CONTRACT L5), the earlier members wait in their ring
+        # (landing MCP E_sta + dE, hold window checked against the land plan's STA when present), and K = (TOTAL E +
+        # G - R0) mod 8 -- the land plan's K is E_sta + calendar (the residual), so only its calendar offset is kept.
+        sys.path.insert(0, str(ROOT / 'tools' / 'qwen_split'))
+        import lane_groups as _LG
+        _pre, _cal, _h0 = [], {}, {}
+        for idx, pl in sorted(plans.items()):
+            if not pl['frames'] or _fwd_ok(pl) not in (None, 'BUMP'):
+                continue
+            n_ = len(pl['frames'])
+            lp_ = _lpE.get(pl['bid'], {})
+            es_ = int(lp_.get('E') or FWD_LANE_E_STA)
+            _pre.append(dict(bid=pl['bid'], src=pl['eps'][0][0], dst=pl['eps'][1][0], n=n_, E_sta=es_,
+                             E=fwd_e_est(n_) + es_ - FWD_LANE_E_STA))
+            if pl['bid'] in _rbm:          # QXF-SEAMC: a record bundle is one group whatever its bus names
+                _pre[-1]['bundle'] = _rbm[pl['bid']]
+            if lp_.get('K') is not None and lp_.get('E') is not None:
+                _cal[pl['bid']] = (int(lp_['K']) - int(lp_['E'])) % 8
+            if lp_.get('h0'):
+                _h0[pl['bid']] = lp_['h0']
+        fwd_groups = _LG.equalize(_pre, 4, _cal, _h0)
+        fwd_eq = {r_['bid']: r_ for r_ in _pre}
     for idx, pl in sorted(plans.items()):
         bid, cl, bits, eps = pl['bid'], pl['cl'], pl['bits'], pl['eps']
         link = cl in ('link_spine', 'link_channel')
+        fwd = None
+        if FWDL and pl['frames']:
+            why_ = _fwd_ok(pl)
+            if why_ in (None, 'RST', 'BUMP'):
+                n_ = len(pl['frames'])
+                (si_, _), (di_, _) = eps
+                es_ = int(_lpE.get(bid, {}).get('E') or FWD_LANE_E_STA)
+                e_ = fwd_e_est(n_) + es_ - FWD_LANE_E_STA
+                k_ = _lpE.get(bid, {}).get('K')
+                k_ = ((e_ + 1) % 8) if k_ is None else int(k_)   # QK-LANDEN / RLYH0-EN: hop-0 en registered (+1, every lane)
+                if bid in fwd_eq:          # Q-COLLCAL: the bus group's E / landing MCP / total-E K
+                    es_, e_, k_ = fwd_eq[bid]['E_sta'], fwd_eq[bid]['E'], fwd_eq[bid]['K']
+                fwd = dict(bid=bid, cl=cl, bits=bits, n=n_, src=si_, dst=di_, src_ck=_fwd_clock(si_), dst_ck=_fwd_clock(di_),
+                           src_rst=[si_, _fwd_rst(si_)], dst_rst=[di_, _fwd_rst(di_)], E=e_, E_sta=es_, K=k_,
+                           lane={'RST': 'reset', 'BUMP': 'bump'}.get(why_, 'data'),
+                           E_basis='land plan (die STA)' if bid in _lpE else 'estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA',
+                           K_basis='land plan' if _lpE.get(bid, {}).get('K') is not None else 'E mod 8 (assumes G = R0); re-derive with the reset calendar',
+                           stations=[], landing=None)
+                if bid in fwd_eq:
+                    fwd.update({k__: fwd_eq[bid][k__] for k__ in ('K_basis', 'cal', 'group', 'E_own', 'hold_E_group', 'bundle') if k__ in fwd_eq[bid]})
+                    if 'E_own' in fwd_eq[bid]:
+                        fwd['E_basis'] += fwd_eq[bid]['E_basis']
+                if why_ == 'BUMP':
+                    # pad bump: no source root / reset -> hop 0 on the bump-side root (set at frame 0), epoch = receiver reset
+                    fwd['src_ck'], fwd['src_rst'] = None, [di_, _fwd_rst(di_)]
+                    fwd['src_basis'] = 'pad bump: hop 0 on the bump-side regional root; gate enable = the receiver released reset'
+                if why_ == 'RST':
+                    if fwd['src_ck'] is None:
+                        fwd['src_basis'] = 'reset source without a clock: hop 0 on the source-side regional root'
+                    fwd.update(E=None, E_sta=None, K=None, E_basis='reset lane: no ring; n-1 half-cycle hops + one STA-timed edge on the block root',
+                               K_basis='n/a (no ring)', src_rst=None, dst_rst=None)
+                fwd_rows.append(fwd)
+            else:
+                fwd_skip.append(dict(bid=bid, cl=cl, bits=bits, n=len(pl['frames']), reason=why_))
         dom = next((by[x].domain for x, _ in eps if by[x].domain != 'cdc'), 'stream_1p2')
         assigned_ck = assigned_clock(m, bid, cl)
         if assigned_ck is None and not link and dom == 'serial_0p9' and (TP8 or {}).get('split') == 'compute':
@@ -3881,6 +4322,19 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             fi, fo, _fp = frame_faces(pts, k, (x0, y0, w, h), bits)       # the one face rule (pin_pts draws the same)
             pr_ = bid in pair
             mn = f'qfd_rly{"f" if link else ("p" if pr_ else "")}_{bits}_{fi}{fo}_{round(w)}x{round(h)}'
+            if fwd is not None:
+                n_ = fwd['n']
+                if fwd['lane'] == 'reset':
+                    kind_ = 'rlyrl' if k == n_ - 1 else ('rlyr0' if k == 0 else 'rlyr')
+                else:
+                    kind_ = ('landh0' if n_ == 1 else 'rlyh0') if k == 0 else ('landh' if k == n_ - 1 else 'rlyh')
+                if k == 0 and fwd['src_ck'] is None:
+                    # pad bump / clockless reset source: the root the plain hop-0 relay of this frame would take
+                    fwd['src_ck'] = assigned_ck if assigned_ck is not None else (
+                        f'clk_r{region_of(x0 + w / 2, y0 + h / 2)}' if dom == 'stream_1p2' else
+                        {'serial_0p9': 'clk_serial', 'link_serdes': 'clk_serdes', 'link_ucie': 'clk_ucie'}.get(dom, f'clk_{dom}'))
+                mn = f'qfd_{kind_}_{bits}_{fi}{fo}_{round(w)}x{round(h)}'
+                fwd_kind[mn] = kind_
             masters_needed[mn] = (bits, fi, fo, w, h, link, pr_)
             nm = f'rly_{bid}_{k}'
             ccx, ccy = x0 + w / 2, y0 + h / 2
@@ -3895,7 +4349,43 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                 rhop = pair[bid] if k == 0 else f'{pair[bid]}__r{k}'
                 rprev = (prev[0], prev[1][:-2] + '_r') if prev[1].endswith('_d') else (prev[0], prev[1] + '_r')
                 rhops.append((rhop, cl, 1, [(nm, 'a_r'), rprev]))
-            if link:
+            if fwd is not None and fwd['lane'] == 'reset':
+                kind_ = fwd_kind[mn]
+                # forwarded RESET lane: hop 0 on the source root, half-cycle stations on the lane clock, the last frame
+                # re-registers the level on the receiving block's root (no epoch bit, no ring, no straps)
+                if kind_ == 'rlyrl':
+                    ck_add.setdefault(fwd['dst_ck'], []).append((nm, 'ck'))
+                    fwd['landing'] = nm
+                else:
+                    if k == 0:
+                        ck_add.setdefault(fwd['src_ck'], []).append((nm, 'ck'))
+                    else:
+                        fck_new.append((f'fck_{bid}__h{k}', 'clock_trunk', 1, [(prev[0], 'ck_o'), (nm, 'ckf')]))
+                    fwd['stations'].append(nm)
+            elif fwd is not None:
+                kind_ = fwd_kind[mn]
+                if k == 0:
+                    # hop 0: the source block's own root at the hop-0 gate; the gate enable / lane epoch = the source's
+                    # released reset (attached to the source's reset net after the plan: the reset tree reaches it)
+                    ck_add.setdefault(fwd['src_ck'], []).append((nm, 'ck' if kind_ == 'rlyh0' else 'ck_s'))
+                    fwd_attach.append((nm, 'en', *fwd['src_rst']))
+                else:
+                    fck_new.append((f'fck_{bid}__h{k}', 'clock_trunk', 1, [(prev[0], 'ck_o'), (nm, 'ckf')]))
+                    hops.append((f'fep_{bid}__r{k}', cl, 1, [(prev[0], 'eb'), (nm, 'ea')]))
+                if kind_ in ('landh', 'landh0'):
+                    # the landing reads on the RECEIVING block's root, from its regional reset; K strap from own ties
+                    ck_add.setdefault(fwd['dst_ck'], []).append((nm, 'ck'))
+                    fwd_attach.append((nm, 'rs', *fwd['dst_rst']))
+                    hi_ = [(nm, f'k{b_}') for b_ in range(3) if (fwd['K'] >> b_) & 1]
+                    lo_ = [(nm, f'k{b_}') for b_ in range(3) if not (fwd['K'] >> b_) & 1]
+                    if hi_:
+                        hops.append((f'ftk_{bid}_hi', 'constant', 1, [(nm, 'tie_hi')] + hi_))
+                    if lo_:
+                        hops.append((f'ftk_{bid}_lo', 'constant', 1, [(nm, 'tie_lo')] + lo_))
+                    fwd['landing'] = nm
+                else:
+                    fwd['stations'].append(nm)
+            elif link:
                 fck_new.append((f'fck_{hop}', 'clock_trunk', 1, [(prev[0], f'fck_{prev[1]}'), (nm, 'fck_a')]))
             elif assigned_ck is not None:
                 ck_add.setdefault(assigned_ck, []).append((nm, 'ck'))
@@ -3939,8 +4429,75 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         if root_ is not None:
             B.append((key, 'clock_trunk', 1, [(root_, 'pll_' + key[4:])] + ck_add.pop(key)))
     missing = sorted(ck_add)
+    if fwd_attach:
+        # Q-DIE11-RLY: hop-0 gate enables on the SOURCE's reset net, landing rs on the RECEIVING block's reset net (the
+        # final hop that reaches the block's reset pin).  A relayed reset hop that gains these sinks becomes class
+        # 'reset', so the registered reset tree (_reset_tree, after the relays) builds it within reach, equal depth,
+        # synchronous to its sinks' root -- the landing rs releases on the block root at a fixed edge (R0).
+        where = {}
+        for j_, (b_, c_, n_, e_) in enumerate(B):
+            if n_ == 1:
+                for i_, p_ in e_[1:]:
+                    where.setdefault((i_, p_.lstrip('*')), j_)
+        for nm_, port_, inst_, rp_ in fwd_attach:
+            j_ = where.get((inst_, rp_))
+            if j_ is None:
+                raise ValueError(f'forwarded lanes: no reset net reaches {inst_}.{rp_} for {nm_}.{port_}')
+            b_, c_, n_, e_ = B[j_]
+            B[j_] = (b_, 'reset', n_, e_ + [(nm_, port_)])
+            if c_ != 'reset':
+                fwd_reclass.add(b_)
     m['buses'] = B + fck_new
     m['r21_stage_of'] = stage_of
+    # QLB-GEN 10-18 (LAYERBENCH G-C1): the compiler-assigned elaboration parameters the die masters trap on --
+    # qfd_tt_ctlm_dv.XPF_TRANSPORT_EDGES = 1 hr pin register + the tt_ctlm.hr lane cycles AS BUILT (forwarded E + 1,
+    # plain n, direct 0) and qfd_d2d_static.TXDP = D2D_TXDP_C of the production image -> die.v.params.json (strict
+    # bind + tools/qwen_split/die_params.py audit re-derive both from die.v and fail closed)
+    sys.path.insert(0, str(ROOT / 'tools' / 'qwen_split'))
+    import die_params as _DP
+    _frow = {r_['bid']: r_ for r_ in fwd_rows if r_.get('E') is not None}
+    _hr = []
+    for pl in plans.values():
+        if (pl['eps'][0][0], pl['eps'][0][1].lstrip('*')) == ('tt_ctlm', _DP.TT_PORT) and \
+                any(by[i_].master == _DP.TT_MASTER for i_, _ in pl['eps'][:1]):
+            _hr.append((pl['bid'], _frow.get(pl['bid']) or (dict(bid=pl['bid'], n=len(pl['frames'])) if pl['frames'] else None)))
+    if not _hr:
+        _hr = [(b_, None) for b_, c_, n_, e_ in m['buses'] if e_ and e_[0][0] == 'tt_ctlm' and e_[0][1].lstrip('*') == _DP.TT_PORT]
+    _dmp, _dpr = _DP.gen_params([(i_.name, i_.master) for i_ in m['insts']], _hr)
+    for mst_, prm_ in _dmp.items():
+        m.setdefault('die_master_params', {})[mst_] = prm_
+    m['die_param_assign'] = _dpr
+    print('DIE_PARAMS ' + ' '.join(f'{k_}.{p_}={v_}' for k_, d_ in _dmp.items() for p_, v_ in d_.items() if not p_.startswith('_')))
+    if FWDL:
+        m['fwd_lanes'] = dict(schema='opentallas.qwen_split.fwd_lanes.v1', contract='lanes/LANDING-CONTRACT.md (Q-DIE11-RLY 10-18)',
+                              D=4, lanes=fwd_rows, skipped=fwd_skip, reclassed_reset_hops=sorted(fwd_reclass),
+                              masters=dict(collections.Counter(fwd_kind.values())),
+                              stations=sum(len(r_['stations']) for r_ in fwd_rows), landings=len(fwd_rows),
+                              plain_relays_left=sum(r_['n'] for r_ in fwd_skip))
+        m['fwd_lanes']['bus_groups'] = fwd_groups
+        # QXF-SEAMC 10-18: fail closed on a torn record bundle as BUILT (a member left a plain relay chain or a direct
+        # wire beside landed members, or two Ks): the compiler's static calendar has one seam age per bundle
+        if _rbm:
+            _rows = {r_['bid']: r_ for r_ in fwd_rows if r_.get('E') is not None}
+            _rows.update({s_['bid']: dict(bid=s_['bid'], n=s_['n'], E=None) for s_ in fwd_skip if s_['bid'] in _rbm})
+            _rba = _RB.audit_rows(_rows, _rbm, source='GEN _relays (OT_SPLIT_FWD_LANES=1)')
+            m['fwd_lanes']['record_bundles'] = _rba
+            if _rba['verdict'] != 'PASS':
+                raise ValueError(f"record bundles torn: {_rba['fails']}")
+        # Q-COLLCAL 10-18 (TP8 co-sim bug 1: the dv2f14 SerDes lanes were not in the collective calendar): the GEN emits
+        # the per-port lane cycles and the io_collective master is elaborated with LX0..2 = TX(peer port) + RX(own)
+        # (die.v.params.json, read by the strict bind; case/coll_lane_latency.json); tools/qwen_split/lane_latency_audit.py
+        # re-derives both from die.v and fails the strict bind on any drift
+        _plain = [dict(bid=pl['bid'], src=pl['eps'][0][0], dst=pl['eps'][-1][0], n=len(pl['frames']))
+                  for pl in plans.values() if pl['bid'] not in fwd_eq]
+        cll = _LG.coll_lane_latency([r_ for r_ in fwd_rows if r_.get('E') is not None], _plain,
+                                    source='GEN tools/qwen_rom_fulldie_b3r2.py _relays_fanout (OT_SPLIT_FWD_LANES=1)')
+        m['coll_lane_latency'] = cll
+        if cll['verdict'] != 'PASS':
+            raise ValueError(f"collective lane latency: {cll['fails']}")
+        if any(i_.name == _LG.COLL_INST and i_.master == _LG.COLL_MASTER for i_ in m['insts']):
+            m.setdefault('die_master_params', {})[_LG.COLL_MASTER] = dict(
+                cll['params'], _source='Q-COLLCAL: GEN lane cycles (case/coll_lane_latency.json), LX_j = TX(peer) + RX(j); Q-COLLCAL3: LS = compiled calendar lane_groups.collective_calendar')
     # achieved hop lengths (pin-centre Manhattan, relay pins at the frame faces)
     m['r21_relays'] = dict(pitch_um=pitch, max_um=RMAX, relays=len(insts), masters=len(masters_needed),
                           classes=stats, clock_nets_missing=missing, repaired=len(repaired),
@@ -3954,6 +4511,27 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
     def masters(model, k=1, port_bits=None):
         o = base(model, k, port_bits)
         for mn, (bits, fi, fo, w, h, link, pr_) in masters_needed.items():
+            kind_ = fwd_kind.get(mn)
+            if kind_:
+                # Q-DIE11-RLY forwarded half-cycle lane frame: data a / b on the faces as every relay, the lane epoch bit
+                # beside them (ea in / eb out), clocks / strap / tie / reset as area pins at the frame centre
+                M = v.Master(mn, w, h, 3, f'die forwarded-clock lane frame ({kind_}, rtl/qwen_split/qfd_fwd_lane.sv): '
+                             f'{bits}-b half-cycle stage, standard cells M1-M3, in {fi} out {fo}')
+                for port, f in (('a', fi), ('b', fo)):
+                    along = w if f in 'NS' else h
+                    pitch_tr = 2 if (bits + 2) * 0.096 + 2.0 <= along else 1
+                    M.face(port, bits, f, 'M5' if f in 'NS' else 'M4', along / 2, pitch_tr)
+                    ep_ = {'a': 'ea', 'b': 'eb'}[port]
+                    if (ep_ == 'ea' and kind_ in ('rlyh', 'landh')) or (ep_ == 'eb' and kind_ in ('rlyh0', 'rlyh')):
+                        M.face(ep_, 1, f, 'M5' if f in 'NS' else 'M4', along / 2 + (bits / 2 + 2) * 0.048 * pitch_tr, pitch_tr)
+                area_ = {'rlyh0': ('ck', 'en', 'ck_o'), 'rlyh': ('ckf', 'ck_o'),
+                         'rlyr0': ('ck', 'ck_o'), 'rlyr': ('ckf', 'ck_o'), 'rlyrl': ('ck',),
+                         'landh': ('ckf', 'ck', 'rs', 'k0', 'k1', 'k2', 'tie_hi', 'tie_lo', 'fault'),
+                         'landh0': ('ck_s', 'en', 'ck', 'rs', 'k0', 'k1', 'k2', 'tie_hi', 'tie_lo', 'fault')}[kind_]
+                for j_, p_ in enumerate(area_):
+                    M.area(p_, 1, w / 2 + (-0.8 if j_ % 2 == 0 else 0.8), h / 2 + 1.62 * (j_ // 2) - 1.62 * ((len(area_) - 1) // 4), 1)
+                o[mn] = M
+                continue
             M = v.Master(mn, w, h, 3, f'die relay: one registered {bits}-b hop (ot_qwen_die_station TAP=0 family), '
                          f'standard cells M1-M3, in {fi} out {fo}' + (' + the 1-b ready hop against the flow' if pr_ else ''))
             for port, f in (('a', fi), ('b', fo)):
@@ -4057,6 +4635,11 @@ RST_REP = 'qfd_rst_rep'          # ot_qwen_rst_rep PAD=0: 1 input flop + 2 regis
 RST_PAD = 'qfd_rst_rep_p8'       # ot_qwen_rst_rep PAD=8: 8 pad flops between the input and the output rank = 10 cycles
 RST_PAD_LV = 5                   # one pad cell = 5 repeater levels (10 cycles)
 RST_W, RST_H = 5.184, 2.16       # 12 GX x 1 GY (<= 5.4 x 2.16: 96 sites x 8 rows), M1-M3
+# Q-DIE13 10-18: OT_RST_REP_VIEW=closed plans the CLOSED qfd_rst_rep / _p8 frames (physical/ref_tile/qfd_rst_rep*,
+# 12.96 x 6.48, clk/d W M4 at y 3.132/3.228, q0 E M4 y 3.228, q1 N M5 x 6.972) so bind_real binds them by name
+RST_CLOSED = os.environ.get('OT_RST_REP_VIEW', '') == 'closed'
+if RST_CLOSED:
+    RST_W, RST_H = 12.96, 6.48
 RST_PITCH_UM = 220.0             # trunk lattice
 RST_LEAF_UM = 200.0              # sinks of one lattice cell share a leaf repeater
 RST_NET_UM = 450.0               # build limit per net (cell centres); the emitted pins are re-checked at RST_OK_UM
@@ -4135,6 +4718,24 @@ class _RstOcc:
                     seen.add(key)
                     heapq.heappush(heap, (abs(nx - tx) + abs(ny - ty), nx, ny))
         return None if best is None else (best[1], best[2])
+
+
+def _reset_reach_gate(errors, rec):
+    """Die standard (regional reset, owner 10-16): a reset net with an unreachable sink / driver (sink_unreachable,
+    driver_unreachable, leaf_no_trunk_cell) FAILS the die build.  ROOT-2105 10-17: OT_RESET_GATE=warn no longer bypasses
+    this (dv2f11 rst_field 34 sink_unreachable was carried as one 44.7-mm net under stage_build's warn); only an explicit
+    OT_RESET_GATE=diag continues, and the record says the gate FAILED (rec['reach_gate'] = 'FAIL_DIAG')."""
+    if not errors:
+        rec['reach_gate'] = 'PASS'
+        return
+    kinds = {}
+    for e in errors:
+        kinds[e.get('kind', '?')] = kinds.get(e.get('kind', '?'), 0) + 1
+    rec['reach_gate'] = 'FAIL_DIAG' if os.environ.get('OT_RESET_GATE') == 'diag' else 'FAIL'
+    rec['reach_gate_kinds'] = kinds
+    if rec['reach_gate'] == 'FAIL':
+        raise ValueError(f'reset tree: reachability gate FAIL, {len(errors)} unbuildable {kinds}: {errors[:8]} '
+                         f'(OT_RESET_GATE=diag continues for diagnosis only)')
 
 
 def _rst_tree_build(nets, rects, W, H, gx, gy, pitch=RST_PITCH_UM):
@@ -4473,9 +5074,9 @@ def _reset_tree(v, m):
     cells, wires, per, errors = _rst_tree_build(nets, rects, m['die']['w'], m['die']['h'], v.GX, v.GY)
     if errors:
         rec.update(errors=errors, per_net=dict(per))
-        if _os.environ.get('OT_RESET_GATE') != 'warn':
-            raise ValueError(f'reset tree: {len(errors)} unbuildable: {errors[:8]}')
-        # diagnosis only (warn): the nets with an unbuildable sink / driver stay single long nets and are reported; Q-COMPUTE-DIE
+    _reset_reach_gate(errors, rec)
+    if errors:
+        # diagnosis only (OT_RESET_GATE=diag): the nets with an unbuildable sink / driver stay single long nets and are reported; Q-COMPUTE-DIE
         # 10-16: every OTHER reset net still gets its tree (r2h2: 3 unreachable pins on rst_spine / rst_io dropped the whole
         # tree, so rst_field reached 1,584 sinks as one 47.5 mm net and die STA read -3.96 us on it)
         if _os.environ.get('OT_RESET_PARTIAL', '1') == '0':
@@ -4507,10 +5108,16 @@ def _reset_tree(v, m):
         for mn, pad in ((RST_REP, 0), (RST_PAD, 8)):
             M = v.Master(mn, RST_W, RST_H, 3, f'reset tree repeater (ot_qwen_rst_rep PAD={pad}): 1 input flop + {pad} pad '
                          f'flops + 2 registered outputs, standard cells M1-M3, clk + d on W, q0 on E, q1 on N')
-            M.face('clk', 1, 'W', 'M4', RST_H * 0.3)
-            M.face('d', 1, 'W', 'M4', RST_H * 0.7)
-            M.face('q0', 1, 'E', 'M4', RST_H / 2)
-            M.face('q1', 1, 'N', 'M5', RST_W / 2)
+            if RST_CLOSED:              # the closed view's own pin centres (bind_real swaps in its LEF)
+                M.face('clk', 1, 'W', 'M4', 3.132)
+                M.face('d', 1, 'W', 'M4', 3.228)
+                M.face('q0', 1, 'E', 'M4', 3.228)
+                M.face('q1', 1, 'N', 'M5', 6.972)
+            else:
+                M.face('clk', 1, 'W', 'M4', RST_H * 0.3)
+                M.face('d', 1, 'W', 'M4', RST_H * 0.7)
+                M.face('q0', 1, 'E', 'M4', RST_H / 2)
+                M.face('q1', 1, 'N', 'M5', RST_W / 2)
             o[mn] = M
         return o
     v.masters = masters
@@ -4542,7 +5149,7 @@ def _reset_tree(v, m):
                cycles_per_token=0)
     if any(len(s) != 1 for s in deps.values()):
         raise ValueError(f'reset tree: unequal leaf depth {rec["depth_cycles"]}')
-    if over and _os.environ.get('OT_RESET_GATE') != 'warn':
+    if over and _os.environ.get('OT_RESET_GATE') not in ('warn', 'diag'):
         raise ValueError(f'reset tree: {len(over)} reset nets over the reach: {over[:8]}')
     return rec
 
@@ -4585,6 +5192,14 @@ def _pin_pos(v, m):
         """r10: half extents (x, y) of the port's pin group (a relay in front of it must leave the difference room)"""
         return ext.get(by[inst].master, {}).get(port.lstrip('*'), (0.0, 0.0))
     pos.ext = pin_ext
+
+    def pin_face(inst, port):
+        """Q-DIEPLAN5 10-17: the instance face (N/S/E/W) the port's pin group sits on (nearest instance edge)"""
+        i = by[inst]
+        x, y = pos(inst, port)
+        dd = {'W': abs(x - i.x), 'E': abs(i.x + i.w - x), 'S': abs(y - i.y), 'N': abs(i.y + i.h - y)}
+        return min(dd, key=dd.get)
+    pos.face = pin_face
     return pos
 
 
