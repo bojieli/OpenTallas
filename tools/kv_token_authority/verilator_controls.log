@@ -1,0 +1,236 @@
+ot-run: ot-epyc4       admits  1125 GB (avail 844, growth 51, headroom 0, waiters 0/0 GB) load 38/128 running 15 disk 412 GB 
+ot-run: ot-epyc5       admits   651 GB (avail 512, growth 16, headroom 0, waiters 0/0 GB) load 38/128 running 6 disk 562 GB 
+ot-run: ot-epyc6       admits  1256 GB (avail 936, growth 56, headroom 0, waiters 0/0 GB) load 25/128 running 17 disk 559 GB 
+ot-run: ot-epyc7       admits   998 GB (avail 756, growth 58, headroom 0, waiters 0/0 GB) load 22/96 running 20 disk 502 GB 
+ot-run: ot-epyc8       admits  1204 GB (avail 899, growth 40, headroom 0, waiters 0/0 GB) load 12/128 running 10 disk 565 GB 
+ot-run: ot-pve1        admits   111 GB (avail 89, growth 2, headroom 0, waiters 0/0 GB) load 5/28 running 1 disk 1210 GB 
+ot-run: ot-agidock128  admits    91 GB (avail 76, growth 13, headroom 0, waiters 0/0 GB) load 10/64 running 8 disk 46 GB 
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-2035864-1792446318 after 0 s
+$ /usr/bin/python3 -m unittest -v test_identity_verdict.py
+test_duplicates_and_order (test_identity_verdict.IdentityControls.test_duplicates_and_order) ... ok
+test_error_status_is_not_success (test_identity_verdict.IdentityControls.test_error_status_is_not_success) ... ok
+test_exact_identity_fields (test_identity_verdict.IdentityControls.test_exact_identity_fields) ... ok
+test_first_known_idle_and_trace_mask_control (test_identity_verdict.IdentityControls.test_first_known_idle_and_trace_mask_control) ... ok
+test_missing_run_or_admission (test_identity_verdict.IdentityControls.test_missing_run_or_admission) ... ok
+test_no_fallback_control (test_identity_verdict.IdentityControls.test_no_fallback_control) ... ok
+test_raw_startup_not_transaction (test_identity_verdict.IdentityControls.test_raw_startup_not_transaction) ... ok
+test_success_requires_actual_programme (test_identity_verdict.IdentityControls.test_success_requires_actual_programme) ... ok
+test_unknown_valid_and_malformed (test_identity_verdict.IdentityControls.test_unknown_valid_and_malformed) ... ok
+test_verdicts (test_identity_verdict.IdentityControls.test_verdicts) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.001s
+
+OK
+MUTANT_CAUGHT trace-mask: first-known idle malformed STATUS hidden
+MUTANT_CAUGHT fallback: wrong identity retired an owned request
+MUTANT_CAUGHT unguarded-startup: pre-authority error ledger mutated
+RETURN_CODE 0
+$ verilator --version
+Verilator 5.050 2026-07-01 rev v5.050
+RETURN_CODE 0
+$ verilator --binary --timing -Wno-fatal --top-module tb --Mdir obj_base -j 2 kva_identity_scoreboard.sv tb_identity_scoreboard.sv
+%Warning-WIDTHTRUNC: kva_identity_scoreboard.sv:132:25: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'REQUIRE_RETIRE' generates 32 bits.
+                                                      : ... note: In instance 'tb.dut'
+  132 |       if(REQUIRE_RETIRE && successful_count!=NPROG) fail("missing successful retirement");
+      |                         ^~
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+make: Entering directory '/tmp/kv-identity-vlt-ha2eg_x6/obj_base'
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_timing.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_timing.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_threads.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_threads.cpp
+python3 /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/bin/verilator_includer -DVL_INCLUDE_OPT=include Vtb.cpp Vtb___024root__0.cpp Vtb__main.cpp Vtb___024root__Slow.cpp Vtb___024root__0__Slow.cpp Vtb__Syms__Slow.cpp > Vtb__ALL.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o Vtb__ALL.o Vtb__ALL.cpp
+g++    verilated.o verilated_timing.o verilated_threads.o Vtb__ALL.a    -pthread -lpthread -latomic   -o Vtb
+rm Vtb__ALL.verilator_deplist.tmp
+make: Leaving directory '/tmp/kv-identity-vlt-ha2eg_x6/obj_base'
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 0.065 MB sources in 3 modules, into 0.135 MB in 6 C++ files needing 0.000 MB
+- Verilator: Walltime 3.763 s (elab=0.002, cvt=0.012, bld=3.741); cpu 0.025 s on 2 threads; allocated 38.434 MB
+RETURN_CODE 0
+$ /tmp/kv-identity-vlt-ha2eg_x6/obj_base/Vtb +CASE=0
+KVA_RAW_STATUS known=1 valid=1 id=03071302
+IDENTITY_CONTROL_PASS case=0 errors=0 success=1
+- tb_identity_scoreboard.sv:60: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 80ps; walltime 0.000 s; speed 1.253 us/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB
+RETURN_CODE 0
+$ /tmp/kv-identity-vlt-ha2eg_x6/obj_base/Vtb +CASE=1
+KVA_RAW_STATUS known=0 valid=1 id=deadbeef
+KVA_RAW_STATUS known=1 valid=1 id=03071302
+IDENTITY_CONTROL_PASS case=1 errors=0 success=1
+- tb_identity_scoreboard.sv:60: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 90ps; walltime 0.000 s; speed 1.649 us/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB
+RETURN_CODE 0
+$ /tmp/kv-identity-vlt-ha2eg_x6/obj_base/Vtb +CASE=2
+KVA_RAW_STATUS known=1 valid=1 id=03071302
+KVA_IDENTITY_ERROR inactive or duplicate STATUS
+IDENTITY_CONTROL_PASS case=2 errors=1 success=0
+- tb_identity_scoreboard.sv:60: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 50ps; walltime 0.000 s; speed 991.375 ns/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB
+RETURN_CODE 0
+$ /tmp/kv-identity-vlt-ha2eg_x6/obj_base/Vtb +CASE=3
+KVA_RAW_STATUS known=1 valid=1 id=deadbeef
+KVA_IDENTITY_ERROR STATUS identity has no fallback
+KVA_RAW_STATUS known=1 valid=1 id=03071302
+KVA_RAW_STATUS known=1 valid=1 id=03071302
+KVA_IDENTITY_ERROR inactive or duplicate STATUS
+IDENTITY_CONTROL_PASS case=3 errors=2 success=1
+- tb_identity_scoreboard.sv:60: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 100ps; walltime 0.000 s; speed 1.159 us/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB
+RETURN_CODE 0
+$ /tmp/kv-identity-vlt-ha2eg_x6/obj_base/Vtb +CASE=4
+KVA_IDENTITY_ERROR PROGRAMME_EXECUTED missing acceptance/run
+IDENTITY_CONTROL_PASS case=4 errors=1 success=0
+- tb_identity_scoreboard.sv:60: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 20ps; walltime 0.000 s; speed 457.289 ns/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB
+RETURN_CODE 0
+$ /tmp/kv-identity-vlt-ha2eg_x6/obj_base/Vtb +CASE=5
+IDENTITY_CONTROL_PASS case=5 errors=0 success=0
+- tb_identity_scoreboard.sv:60: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 40ps; walltime 0.000 s; speed 838.188 ns/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB
+RETURN_CODE 0
+$ /tmp/kv-identity-vlt-ha2eg_x6/obj_base/Vtb +CASE=6
+KVA_RAW_STATUS known=1 valid=1 id=03071302
+KVA_IDENTITY_ERROR source-owned error STATUS
+IDENTITY_CONTROL_PASS case=6 errors=1 success=0
+- tb_identity_scoreboard.sv:60: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 50ps; walltime 0.000 s; speed 998.901 ns/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB
+RETURN_CODE 0
+FOUR_STATE_ONLY case=7 checked in Icarus; two-state Verilator cannot represent X
+$ /tmp/kv-identity-vlt-ha2eg_x6/obj_base/Vtb +CASE=8
+KVA_RAW_STATUS known=1 valid=1 id=03071302
+KVA_RAW_STATUS known=1 valid=1 id=03071302
+KVA_IDENTITY_ERROR inactive or duplicate STATUS
+IDENTITY_CONTROL_PASS case=8 errors=1 success=1
+- tb_identity_scoreboard.sv:60: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 90ps; walltime 0.000 s; speed 795.123 ns/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB
+RETURN_CODE 0
+$ /tmp/kv-identity-vlt-ha2eg_x6/obj_base/Vtb +CASE=9
+KVA_RAW_STATUS known=1 valid=1 id=03071302
+KVA_IDENTITY_ERROR early successful STATUS
+IDENTITY_CONTROL_PASS case=9 errors=1 success=0
+- tb_identity_scoreboard.sv:60: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 50ps; walltime 0.000 s; speed 1.082 us/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB
+RETURN_CODE 0
+$ /tmp/kv-identity-vlt-ha2eg_x6/obj_base/Vtb +CASE=10
+KVA_IDENTITY_ERROR wrong duplicate or unordered RESULT
+IDENTITY_CONTROL_PASS case=10 errors=1 success=0
+- tb_identity_scoreboard.sv:60: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 50ps; walltime 0.000 s; speed 1.063 us/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB
+RETURN_CODE 0
+$ /tmp/kv-identity-vlt-ha2eg_x6/obj_base/Vtb +CASE=11
+KVA_IDENTITY_ERROR admission before monitor authority
+IDENTITY_CONTROL_PASS case=11 errors=1 success=0
+- tb_identity_scoreboard.sv:60: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 50ps; walltime 0.000 s; speed 1.115 us/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB
+RETURN_CODE 0
+FOUR_STATE_ONLY case=12 checked in Icarus; two-state Verilator cannot represent X
+$ verilator --binary --timing -Wno-fatal --top-module tb --Mdir obj_unguarded -j 2 /tmp/kv-identity-vlt-ha2eg_x6/unguarded.sv tb_identity_scoreboard.sv
+%Warning-WIDTHTRUNC: /tmp/kv-identity-vlt-ha2eg_x6/unguarded.sv:132:25: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'REQUIRE_RETIRE' generates 32 bits.
+                                                                      : ... note: In instance 'tb.dut'
+  132 |       if(REQUIRE_RETIRE && successful_count!=NPROG) fail("missing successful retirement");
+      |                         ^~
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+make: Entering directory '/tmp/kv-identity-vlt-ha2eg_x6/obj_unguarded'
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_timing.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_timing.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_threads.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_threads.cpp
+python3 /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/bin/verilator_includer -DVL_INCLUDE_OPT=include Vtb.cpp Vtb___024root__0.cpp Vtb__main.cpp Vtb___024root__Slow.cpp Vtb___024root__0__Slow.cpp Vtb__Syms__Slow.cpp > Vtb__ALL.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o Vtb__ALL.o Vtb__ALL.cpp
+g++    verilated.o verilated_timing.o verilated_threads.o Vtb__ALL.a    -pthread -lpthread -latomic   -o Vtb
+rm Vtb__ALL.verilator_deplist.tmp
+make: Leaving directory '/tmp/kv-identity-vlt-ha2eg_x6/obj_unguarded'
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 0.065 MB sources in 3 modules, into 0.134 MB in 6 C++ files needing 0.000 MB
+- Verilator: Walltime 3.681 s (elab=0.002, cvt=0.012, bld=3.659); cpu 0.025 s on 2 threads; allocated 38.430 MB
+RETURN_CODE 0
+$ /tmp/kv-identity-vlt-ha2eg_x6/obj_unguarded/Vtb +CASE=1
+KVA_RAW_STATUS known=0 valid=1 id=deadbeef
+KVA_IDENTITY_ERROR STATUS identity has no fallback
+[20] %Fatal: tb_identity_scoreboard.sv:27: Assertion failed in tb: STARTUP_AUTHORITY_ORACLE
+%Error: tb_identity_scoreboard.sv:27: Verilog $stop
+Aborting...
+RETURN_CODE 1
+MUTANT_CAUGHT unguarded STARTUP_AUTHORITY_ORACLE
+$ verilator --binary --timing -Wno-fatal --top-module tb --Mdir obj_trace_mask -j 2 /tmp/kv-identity-vlt-ha2eg_x6/trace_mask.sv tb_identity_scoreboard.sv
+%Warning-WIDTHTRUNC: /tmp/kv-identity-vlt-ha2eg_x6/trace_mask.sv:132:25: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'REQUIRE_RETIRE' generates 32 bits.
+                                                                       : ... note: In instance 'tb.dut'
+  132 |       if(REQUIRE_RETIRE && successful_count!=NPROG) fail("missing successful retirement");
+      |                         ^~
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+make: Entering directory '/tmp/kv-identity-vlt-ha2eg_x6/obj_trace_mask'
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_timing.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_timing.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_threads.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_threads.cpp
+python3 /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/bin/verilator_includer -DVL_INCLUDE_OPT=include Vtb.cpp Vtb___024root__0.cpp Vtb__main.cpp Vtb___024root__Slow.cpp Vtb___024root__0__Slow.cpp Vtb__Syms__Slow.cpp > Vtb__ALL.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o Vtb__ALL.o Vtb__ALL.cpp
+g++    verilated.o verilated_timing.o verilated_threads.o Vtb__ALL.a    -pthread -lpthread -latomic   -o Vtb
+rm Vtb__ALL.verilator_deplist.tmp
+make: Leaving directory '/tmp/kv-identity-vlt-ha2eg_x6/obj_trace_mask'
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 0.065 MB sources in 3 modules, into 0.130 MB in 6 C++ files needing 0.000 MB
+- Verilator: Walltime 3.742 s (elab=0.002, cvt=0.011, bld=3.722); cpu 0.023 s on 2 threads; allocated 38.430 MB
+RETURN_CODE 0
+$ /tmp/kv-identity-vlt-ha2eg_x6/obj_trace_mask/Vtb +CASE=2
+KVA_RAW_STATUS known=1 valid=1 id=03071302
+[20] %Fatal: tb_identity_scoreboard.sv:32: Assertion failed in tb: FIRST_KNOWN_IDLE_ORACLE
+%Error: tb_identity_scoreboard.sv:32: Verilog $stop
+Aborting...
+RETURN_CODE 1
+MUTANT_CAUGHT trace_mask FIRST_KNOWN_IDLE_ORACLE
+$ verilator --binary --timing -Wno-fatal --top-module tb --Mdir obj_fallback -j 2 /tmp/kv-identity-vlt-ha2eg_x6/fallback.sv tb_identity_scoreboard.sv
+%Warning-WIDTHTRUNC: /tmp/kv-identity-vlt-ha2eg_x6/fallback.sv:132:25: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'REQUIRE_RETIRE' generates 32 bits.
+                                                                     : ... note: In instance 'tb.dut'
+  132 |       if(REQUIRE_RETIRE && successful_count!=NPROG) fail("missing successful retirement");
+      |                         ^~
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+make: Entering directory '/tmp/kv-identity-vlt-ha2eg_x6/obj_fallback'
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_timing.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_timing.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_threads.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_threads.cpp
+python3 /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/bin/verilator_includer -DVL_INCLUDE_OPT=include Vtb.cpp Vtb___024root__0.cpp Vtb__main.cpp Vtb___024root__Slow.cpp Vtb___024root__0__Slow.cpp Vtb__Syms__Slow.cpp > Vtb__ALL.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o Vtb__ALL.o Vtb__ALL.cpp
+g++    verilated.o verilated_timing.o verilated_threads.o Vtb__ALL.a    -pthread -lpthread -latomic   -o Vtb
+rm Vtb__ALL.verilator_deplist.tmp
+make: Leaving directory '/tmp/kv-identity-vlt-ha2eg_x6/obj_fallback'
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 0.065 MB sources in 3 modules, into 0.135 MB in 6 C++ files needing 0.000 MB
+- Verilator: Walltime 3.724 s (elab=0.002, cvt=0.012, bld=3.701); cpu 0.026 s on 2 threads; allocated 38.430 MB
+RETURN_CODE 0
+$ /tmp/kv-identity-vlt-ha2eg_x6/obj_fallback/Vtb +CASE=3
+KVA_RAW_STATUS known=1 valid=1 id=deadbeef
+[70] %Fatal: tb_identity_scoreboard.sv:37: Assertion failed in tb: WRONG_IDENTITY_ORACLE
+%Error: tb_identity_scoreboard.sv:37: Verilog $stop
+Aborting...
+RETURN_CODE 1
+MUTANT_CAUGHT fallback WRONG_IDENTITY_ORACLE
+ALL_IDENTITY_CONTROLS_PASS
+ARTIFACTS_JSON {"verilator_fallback.fail.log": "KVA_RAW_STATUS known=1 valid=1 id=deadbeef\n[70] %Fatal: tb_identity_scoreboard.sv:37: Assertion failed in tb: WRONG_IDENTITY_ORACLE\n%Error: tb_identity_scoreboard.sv:37: Verilog $stop\nAborting...\nRETURN_CODE 1\n", "verilator_trace_mask.fail.log": "KVA_RAW_STATUS known=1 valid=1 id=03071302\n[20] %Fatal: tb_identity_scoreboard.sv:32: Assertion failed in tb: FIRST_KNOWN_IDLE_ORACLE\n%Error: tb_identity_scoreboard.sv:32: Verilog $stop\nAborting...\nRETURN_CODE 1\n", "verilator_unguarded.fail.log": "KVA_RAW_STATUS known=0 valid=1 id=deadbeef\nKVA_IDENTITY_ERROR STATUS identity has no fallback\n[20] %Fatal: tb_identity_scoreboard.sv:27: Assertion failed in tb: STARTUP_AUTHORITY_ORACLE\n%Error: tb_identity_scoreboard.sv:27: Verilog $stop\nAborting...\nRETURN_CODE 1\n"}
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-2035864-1792446318): exit 0
