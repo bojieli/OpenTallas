@@ -37,13 +37,17 @@ bad=0
 mdef() { case $1 in 7) echo +define+OT_ING_MUT_HREGV;; 8) echo +define+OT_ING_MUT_RAC;; 11) echo +define+OT_ING_MUT_SPRH;;
   12) echo +define+OT_ING_MUT_SPKIND;; 13) echo +define+OT_ING_MUT_MKD;; 14) echo +define+OT_S81_SH_MUT_HQSTALE;;
   15) echo +define+OT_ING_MUT_DQC;; 16) echo +define+OT_ING_MUT_HRC;; 17) echo +define+OT_ING_MUT_HPREF;;
-  18) echo +define+OT_ING_MUT_HPHOLD;; 19) echo +define+OT_LINK_AFIFO_MUT_RCOPY;; *) echo +define+MUT=$1;; esac; }
+  18) echo +define+OT_ING_MUT_HPHOLD;; 19) echo +define+OT_LINK_AFIFO_MUT_RCOPY;;
+  20) echo +define+OT_ING_MUT_S10CWA;; 21) echo +define+OT_ING_MUT_S10CISS;; *) echo +define+MUT=$1;; esac; }
 # S81-SHLK s10b (VL_EXTRA has -DOT_S81_SH_S10B): 15 = descriptor-queue read copy 0 stalls, 16 = hr_v copy 3 never
 # clears, 17 = st_row / st_left hi +- 1 never refreshed, 18 = refresh overwrites a fresh segment load, 19 = u_cx read copy 0 stalls
 MUTS="1 2 3 4 5 6 7 8 9 10"; case "${VL_EXTRA:-}" in *OT_S81_SH_APIPE10*) MUTS="$MUTS 11 14";; esac
 # (15 / 17 / 18 are not exercised here -- seqhost segments start row-aligned and 1 descriptor sits in the queue; they are
 # caught by physical/sys_takeover/host_native_pipe_bench.py dqc10 / hpref10 / hphold10 with HNP_S10B=1)
 case "${VL_EXTRA:-}" in *OT_S81_SH_S10B*) MUTS="$MUTS 16 19";; esac
+# S81-SHLK s10c (VL_EXTRA has -DOT_S81_SH_S10C): 20 = stream address base | offset instead of + (stage O add),
+# 21 = registered issue counter also counts the IKEY scale-capture step (p_sc), so done counts run high
+case "${VL_EXTRA:-}" in *OT_S81_SH_S10C*) MUTS="$MUTS 20 21";; esac
 if [ "${3:-}" = base ]; then
   build base || exit 2
   for seed in $SEEDS; do

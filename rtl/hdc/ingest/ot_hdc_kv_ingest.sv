@@ -440,9 +440,26 @@ module ot_hdc_kv_ingest #(
     reg         st_wv, st_adv;
     reg  [255:0] st_wd;
     reg  [AW-1:0] st_wa;
+`ifdef OT_S81_SH_S10C
+    // S81-SHLK s10c (2026-10-19, s10b gate: st_ph -> p_wa 810 ps / 23 levels = mode/phase mux + 32-b add in one stage):
+    // the stream address is carried into stage P as base + offset (both muxed here, no adder); stage O adds them
+    // (p_wa = p_wb + p_wo) in parallel with the 8:1 head-byte select, before the output FIFO write.  Same value, same
+    // edge as st_wa (no added cycle).  st_wa itself is still formed for the SP = 0 build.
+    reg  [AW-1:0] st_wb, st_wo;
+`endif
     wire [5:0]  k_take = (st_rem > 16'd32) ? 6'd32 : st_rem[5:0];
     always @* begin
         st_pop = 6'd0; st_wv = 1'b0; st_wd = 256'd0; st_wa = {AW{1'b0}}; st_adv = 1'b0; st_kind = 2'd0;
+`ifdef OT_S81_SH_S10C
+        st_wb = {AW{1'b0}}; st_wo = {AW{1'b0}};
+        case (st_mode)
+            M_RAW:  begin st_wb = st_d[47:16]; st_wo = st_row; end
+            M_ROWS: begin st_wb = u_raddr; st_wo = {{(AW-5){1'b0}}, st_sec}; end
+            M_IKEY: if (st_ph < 3'd2) begin st_wb = u_kcode; st_wo = {{(AW-3){1'b0}}, st_ph}; end
+                    else begin st_wb = u_kscal; st_wo = {{(AW-1){1'b0}}, (st_ph == 3'd4)}; end
+            default: ;
+        endcase
+`endif
         if (st_act && !st_pad && ap_go) begin
             case (st_mode)
                 M_RAW: if (ra_n >= 9'd32) begin
@@ -886,7 +903,16 @@ module ot_hdc_kv_ingest #(
         reg  [1:0]    p_kind;
         reg  [5:0]    p_kt;
         reg  [3:0]    p_row;
+`ifdef OT_S81_SH_S10C
+        reg  [AW-1:0] p_wb, p_wo;
+`ifdef OT_ING_MUT_S10CWA
+        wire [AW-1:0] p_wa = p_wb | p_wo;      // mutant: base and offset OR-ed, not added
+`else
+        wire [AW-1:0] p_wa = p_wb + p_wo;      // stage O add (s10c)
+`endif
+`else
         reg  [AW-1:0] p_wa;
+`endif
         reg  [319:0]  p_win;                   // ring bytes 8 * rp[7:3] .. + 39 (the head and its fine offset)
         (* keep *) reg [23:0] p_fo;            // 8 kept copies of the fine byte offset rp[2:0], 4 head bytes each
         // window granule g = ring granule (rp[7:3] + g) mod 32; ring granule k = ra[k / 4][64 (k mod 4) +: 64].
@@ -909,7 +935,11 @@ module ot_hdc_kv_ingest #(
         always @(posedge clk)
             if (st_go) begin
                 p_win <= win; p_fo <= {8{ra_rpc[2:0]}}; p_kind <= st_kind; p_kt <= k_take; p_row <= st_row[3:0];
+`ifdef OT_S81_SH_S10C
+                p_wb <= st_wb; p_wo <= st_wo;
+`else
                 p_wa <= st_wa;
+`endif
             end
         always @(posedge clk or negedge rst_n)
             if (!rst_n) begin p_wv <= 1'b0; p_sc <= 1'b0; end
@@ -977,13 +1007,27 @@ module ot_hdc_kv_ingest #(
         wire [39:0] cq_h = cq[cq_rd];
         wire        cq_go = (cq_n != 0) && (sp_acc >= cq_h[31:0]);
         always @(posedge clk) begin
+`ifdef OT_S81_SH_S10C
+            // s10c: sp_iss counts the registered issue (p_wv), one edge after st_go && st_wv, so sp_iss after edge
+            // t + 1 equals the s10b count after edge t: dq_c2 takes it directly (= the s10b dq_c1 one edge later).
+            dq_t1 <= dtag_r; dq_c1 <= sp_iss; dq_t2 <= dq_t1; dq_c2 <= sp_iss;
+`else
             dq_t1 <= dtag_r; dq_c1 <= sp_iss; dq_t2 <= dq_t1; dq_c2 <= dq_c1;
+`endif
             if (dq_e2) cq[cq_wr] <= {dq_t2, dq_c2};
         end
         always @(posedge clk or negedge rst_n)
             if (!rst_n) begin sp_iss <= 0; sp_acc <= 0; dq_e1 <= 1'b0; dq_e2 <= 1'b0; cq_wr <= 0; cq_rd <= 0; cq_n <= 0; end
             else begin
+`ifdef OT_S81_SH_S10C
+`ifdef OT_ING_MUT_S10CISS
+                if (p_wv || p_sc) sp_iss <= sp_iss + 1;  // mutant: counts every stage-P step incl. the IKEY scale capture
+`else
+                if (p_wv) sp_iss <= sp_iss + 1;      // registered enable (s10b: st_go && st_wv cone + 32-b increment)
+`endif
+`else
                 if (st_go && st_wv) sp_iss <= sp_iss + 1;
+`endif
                 if (fq_pop) sp_acc <= sp_acc + 1;
                 dq_e1 <= done_r; dq_e2 <= dq_e1;
                 if (dq_e2) cq_wr <= cq_wr + 3'd1;
