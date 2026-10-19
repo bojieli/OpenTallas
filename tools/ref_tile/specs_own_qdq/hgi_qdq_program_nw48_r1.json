@@ -148,12 +148,7 @@
    "h": "M4",
    "v": "M5"
   },
-  "io_hold_margin_ns": 0.025,
-  "cts_sink": {
-   "size": 16,
-   "diameter_um": 30,
-   "extra": "-balance_levels"
-  }
+  "io_hold_margin_ns": 0.025
  },
  "slot_change_request": "NEW leaf of the d4g split hb_quant_NW (ot_hgi_qdq_host_split_r2 .program_leaf): no d4g slot yet. Same outline 220.32 x 129.6 and pin faces as the CLOSED SW twin hgi_qdq_program_sw125_r6 (cfg/desc/launch W, command/status E, clk/rst N); home: beside quant_NW_xp W face (command 48 b + command_v to the transport ctl, 0 relays) -> H-D4G-GEN2.",
  "job": {
@@ -220,5 +215,7 @@
  "pin_regs": {
   "enable": false,
   "reason": "RTL registers every pin already (cfg/desc/launch enter the target's capture flops, command/status leave registers, rst_n only the reset collar, fault the sticky flop): the identical SW twin sw125_r6 (recipe 2) is native PASS (launch 199.0, capture 123.1, 0 comb, spread 69.0/60.9). Extra tool pin registers would add edges the split r2 lockstep does not price."
- }
+ },
+ "clock": "spine",
+ "clock_note": "AD3-HBM-QDQ 10-18: TritonCTS H-tree over the centre SRAM macro left a top->bottom latency gradient on the W pin column (gate a 93.0/85.8, gate b clustered+balance 99.5/94.1 TT/FF; data_q[1..8] at y 18 um 321 ps vs data_q[24x] at y 97 um 222 ps, E output column 253-320 ps). Macro-avoiding equal-delay clock spine (common_flow/clock_spine.tcl, padded to measured arrival, as b2_dma_mv_dp7_ref) instead."
 }
