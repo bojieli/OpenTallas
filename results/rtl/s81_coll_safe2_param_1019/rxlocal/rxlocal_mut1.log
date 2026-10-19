@@ -1,0 +1,19 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/codex-s81-coll-safe2-param-1019/src
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-s81-coll-safe2-param-1019/src
+ot-run: ot-epyc6       admits   526 GB (avail 482, growth 113, headroom 0, waiters 0/0 GB) load 29/128 running 15 disk 6039 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-s81-coll-safe2-param-1019/src
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/codex-s81-coll-safe2-param-1019/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-s81-coll-safe2-param-1019/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-s81-coll-safe2-param-1019/src
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-195990-1792429231 after 0 s
+CREDIT_EQ_ERR cycle7 WFREE1 valid1/1 credit0/0 fault0/0
+CREDIT_EQ_ERR cycle7 WFREE2 valid1/1 credit0/0 fault0/0
+CREDIT_EQ_ERR cycle211 WFREE1 valid1/1 credit0/0 fault1/1
+CREDIT_EQ_ERR cycle211 WFREE2 valid1/1 credit0/0 fault1/1
+CREDIT_EQ_ERR cycle212 WFREE1 valid1/1 credit1/1 fault1/1
+CREDIT_EQ_ERR cycle212 WFREE2 valid1/1 credit1/1 fault1/1
+CREDIT_EQ_ERR cycle213 WFREE1 valid1/1 credit1/1 fault1/1
+CREDIT_SRAM_EQ FAIL errors=1766 takes=7113 MUT=1
+- /srv/opentallas-scratch/claude/codex-s81-coll-safe2-param-1019/src/rtl/common/test/sram_head/tb_credit_sram.sv:41: Verilog $finish
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-195990-1792429231): exit 1

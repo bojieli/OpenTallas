@@ -2,6 +2,9 @@
 `ifndef MUT
 `define MUT 0
 `endif
+`ifndef LOCAL_HIT
+`define LOCAL_HIT 0
+`endif
 module tb_credit_sram(input wire clk);
  localparam integer W=553,NS=(W+15)/16;
  reg rst_n=0, lv=0,ready=0; reg [W-1:0] data=0; reg [31:0] seed=32'h81c01155;
@@ -9,7 +12,7 @@ module tb_credit_sram(input wire clk);
  genvar k;generate for(k=0;k<2;k=k+1) begin:g
   ot_link_credit_rx #(.W(W),.DEPTH(8),.WFREE(k+1)) a(.clk(clk),.rst_n(rst_n),
    .l_valid(lv),.l_data(data),.l_credit(ac[k]),.o_valid(av[k]),.o_ready(ready),.o_data(ad[k]),.fault(af[k]));
-  ot_link_credit_rx_sram #(.W(W),.DEPTH(8),.WFREE(k+1),.MUT(`MUT)) b(.clk(clk),.rst_n(rst_n),.head_rst_n({NS{rst_n}}),
+  ot_link_credit_rx_sram #(.W(W),.DEPTH(8),.WFREE(k+1),.MUT(`MUT),.LOCAL_HIT(`LOCAL_HIT)) b(.clk(clk),.rst_n(rst_n),.head_rst_n({NS{rst_n}}),
    .l_valid(lv),.l_data(data),.l_credit(bc[k]),.o_valid(bv[k]),.o_ready(ready),.o_data(bd[k]),.fault(bf[k]));
  end endgenerate
  integer c=0,err=0,ncheck=0,takes=0,fulls=0,b,j;

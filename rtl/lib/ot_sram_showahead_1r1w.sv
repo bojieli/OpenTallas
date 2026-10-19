@@ -5,7 +5,7 @@
 // No reset/storage ECC is added to the SRAM. Two unconditional payload registers
 // avoid a W-bit hit-enable cone; reset-distinct kept flags each select <=16 bits.
 module ot_sram_showahead_1r1w #(
- parameter integer W=553, AW=3, WREG=1, NS=(W+15)/16, MUT=0
+ parameter integer W=553, AW=3, WREG=1, NS=(W+15)/16, MUT=0, LOCAL_HIT=0
 )(input wire clk, input wire [NS-1:0] rst_n,
  input wire we, input wire [AW-1:0] wa, input wire [W-1:0] wd,
  input wire [AW-1:0] ra, output wire [W-1:0] q);
@@ -15,6 +15,20 @@ module ot_sram_showahead_1r1w #(
  always @(posedge clk) begin waddr<=wa; wdata<=wd; prevdata<=wdata; end
  wire current_hit=we && wa==ra;
  wire previous_hit=(WREG!=0) && wv && waddr==ra;
+ localparam integer HG=(NS+15)/16;
+ wire [HG-1:0] local_current_hit,local_previous_hit;
+ genvar h;
+ generate for(h=0;h<HG;h=h+1) begin:g_hit
+  if(LOCAL_HIT) begin:g_local
+   // Fixed width avoids paramod keep-name mismatch. Each output drives <=16
+   // distinct slice flag D pins; no extra clock edge or shared35-load hit.
+   (* keep=1 *) ot_sram_showahead_hit5 u_current(.enable(we),.a(5'(wa)),.b(5'(ra)),.hit(local_current_hit[h]));
+   (* keep=1 *) ot_sram_showahead_hit5 u_previous(.enable((WREG!=0)&&wv),.a(5'(waddr)),.b(5'(ra)),.hit(local_previous_hit[h]));
+  end else begin:g_legacy
+   assign local_current_hit[h]=current_hit;
+   assign local_previous_hit[h]=previous_hit;
+  end
+ end endgenerate
  wire mw=(WREG!=0) ? wv : we;
  wire [AW-1:0] mwa=(WREG!=0) ? waddr : wa;
  wire [W-1:0] mwd=(WREG!=0) ? wdata : wd;
@@ -30,7 +44,7 @@ module ot_sram_showahead_1r1w #(
   (* keep="true" *) reg cur_q, prev_q;
   always @(posedge clk or negedge rst_n[s])
    if(!rst_n[s]) begin cur_q<=1'b0; prev_q<=1'b0; end
-   else begin cur_q<=(MUT==1)?1'b0:current_hit; prev_q<=(MUT==2)?1'b0:previous_hit; end
+   else begin cur_q<=(MUT==1)?1'b0:local_current_hit[s/16]; prev_q<=(MUT==2)?1'b0:local_previous_hit[s/16]; end
   assign q[LO+:SW]=cur_q ? wdata[LO+:SW] : prev_q ? prevdata[LO+:SW] : raw[LO+:SW];
  end endgenerate
 `ifndef SYNTHESIS
@@ -38,4 +52,10 @@ module ot_sram_showahead_1r1w #(
   if(AW>5 || AW<1 || W<1 || NS!=(W+15)/16) $fatal(1,"ot_sram_showahead_1r1w invalid shape");
  end
 `endif
+endmodule
+
+// Unparameterized kept comparator: independent physical copies per <=16 slices.
+(* keep_hierarchy=1 *) module ot_sram_showahead_hit5(
+ input wire enable,input wire [4:0] a,b,output wire hit);
+ assign hit=enable&&(a==b);
 endmodule
