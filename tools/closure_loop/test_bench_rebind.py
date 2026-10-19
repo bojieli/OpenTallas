@@ -112,6 +112,7 @@ class Rebind(unittest.TestCase):
         self.assertIn('string dir', (Path(result['source_path']) / B.TB).read_text())
         self.assertEqual({x.name: x.read_bytes() for x in base.iterdir()}, before)
         self.assertEqual(result['route_files'], result['route_files_after'])
+        self.assertEqual(json.loads((Path(result['source_path']).parent / 'receipt.json').read_text()), result)
         self.assertFalse((self.run / 'bench_bad').exists())
         self.assertEqual((self.run / 'bench_rebind/recovery/previous_outputs/bench_bad/failure.log').read_text(),
                          'original failed bench\n')
