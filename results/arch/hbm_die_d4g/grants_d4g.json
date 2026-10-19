@@ -15516,7 +15516,118 @@
    "strap_layer": "M8",
    "signal_max_layer": "M6",
    "layer_cap": "M6",
-   "pins": [],
+   "pins": [
+    {
+     "name": "refclk",
+     "face": "N",
+     "layer": "M5",
+     "span_um": [
+      52.8,
+      57.6
+     ],
+     "offset": 57.564,
+     "offset_basis": "routed view LEF pin centre"
+    },
+    {
+     "name": "por_n",
+     "face": "N",
+     "layer": "M5",
+     "span_um": [
+      57.6,
+      62.4
+     ],
+     "offset": 62.364,
+     "offset_basis": "routed view LEF pin centre"
+    },
+    {
+     "name": "por_hbm",
+     "face": "S",
+     "layer": "M5",
+     "span_um": [
+      26.4,
+      31.2
+     ],
+     "offset": 31.164,
+     "offset_basis": "routed view LEF pin centre"
+    },
+    {
+     "name": "por_stream",
+     "face": "S",
+     "layer": "M5",
+     "span_um": [
+      31.2,
+      36.0
+     ],
+     "offset": 35.964,
+     "offset_basis": "routed view LEF pin centre"
+    },
+    {
+     "name": "por_serial",
+     "face": "S",
+     "layer": "M5",
+     "span_um": [
+      36.0,
+      40.8
+     ],
+     "offset": 36.252,
+     "offset_basis": "routed view LEF pin centre"
+    },
+    {
+     "name": "por_link",
+     "face": "S",
+     "layer": "M5",
+     "span_um": [
+      40.8,
+      45.6
+     ],
+     "offset": 40.86,
+     "offset_basis": "routed view LEF pin centre"
+    },
+    {
+     "name": "pll_hbm",
+     "face": "S",
+     "layer": "M5",
+     "span_um": [
+      48.0,
+      52.8
+     ],
+     "offset": 48.06,
+     "offset_basis": "routed view LEF pin centre"
+    },
+    {
+     "name": "pll_stream",
+     "face": "S",
+     "layer": "M5",
+     "span_um": [
+      52.8,
+      57.6
+     ],
+     "offset": 52.86,
+     "offset_basis": "routed view LEF pin centre"
+    },
+    {
+     "name": "pll_serial",
+     "face": "S",
+     "layer": "M5",
+     "span_um": [
+      57.6,
+      62.4
+     ],
+     "offset": 57.66,
+     "offset_basis": "routed view LEF pin centre"
+    },
+    {
+     "name": "pll_link",
+     "face": "S",
+     "layer": "M5",
+     "span_um": [
+      62.4,
+      67.2
+     ],
+     "offset": 62.46,
+     "offset_basis": "routed view LEF pin centre"
+    }
+   ],
    "notes": "die clock root: PLL analog core = allowed modelled hard core (owner rule 10-14 08:05); reset release = real RTL; first tree level = four quadrant roots (die CTS, tools/hbm_die_v15/view_case.py --die-clock)",
    "granted": "H-DIE 2026-10-15T17:30-07:00",
    "children": [
@@ -15711,8 +15822,7 @@
     },
     "clock_source": "clocks created at the PLL output pins; generated clocks (divide_by 1) at the four pll_* outputs = die clock-tree roots; por_* timed against their own forwarded clock"
    },
-   "home_rule": "d4f: E column centre above the ep_N row",
-   "pins_d4f_dropped": 10
+   "home_rule": "d4f: E column centre above the ep_N row"
   },
   {
    "name": "quant_NW0_lg",
