@@ -47,6 +47,44 @@ T_PS = 833.333
 C_PS, U_PS = 25.0, 25.0
 CONST_RE = re.compile(r"\b(\d+)'[sS]?[bBhHdDoO][0-9a-fA-F_xXzZ?]+")
 LINK_RE = re.compile(r'^w_(.+)_(src|dst|lnd)$')
+_FULL_CONST = re.compile(r"\s*(\d+)'[sS]?([bBhHdDoO])([0-9a-fA-F_]+)\s*")
+
+
+def const_bits(e):
+    """a full Verilog constant 3'd4 / 12'hb6d -> [bit0, bit1, ...]; anything else (x/z, concatenation, net) -> None"""
+    m = _FULL_CONST.fullmatch(e or '')
+    if not m:
+        return None
+    w, v = int(m.group(1)), int(m.group(3).replace('_', ''), {'b': 2, 'h': 16, 'd': 10, 'o': 8}[m.group(2).lower()])
+    return [(v >> i) & 1 for i in range(w)]
+
+
+def case_strap_sdc(insts, kind, port_bind_json):
+    """NS-CASE: set_case_analysis lines for every declared strap port (strict bind masters[].straps) of every non-stand-in
+    instance whose connection is a full constant.  Guarded with get_pins -quiet (a view lacking the pin is reported in
+    the STA log, never an abort).  Returns the SDC lines (header + one line per bit)."""
+    try:
+        pb = json.load(open(port_bind_json))
+    except (OSError, ValueError):
+        return ['# NS-CASE strap case analysis: no port_bind.json -> none']
+    sp = {m: set(r.get('straps') or []) for m, r in (pb.get('masters') or {}).items()}
+    out, n = [], 0
+    for mst, nm, _, cm in insts:
+        if kind.get(nm) == 'standin' or not sp.get(mst):
+            continue
+        for p in sorted(sp[mst]):
+            bits = const_bits(cm.get(p))
+            if bits is None:
+                continue
+            for i, b in enumerate(bits):
+                pin = f'{nm}/{p}' if len(bits) == 1 else f'{nm}/{p}[{i}]'
+                out.append(f'ot_case {b} {{{pin}}}')
+                n += 1
+    hdr = ['# NS-CASE 10-18: die-constant strap pins (strict-bind straps) case-analysed with the netlist value',
+           'set ::ot_case_n 0; set ::ot_case_miss 0',
+           'proc ot_case {v p} { set q [get_pins -quiet $p]; if {[llength $q]} { set_case_analysis $v $q; incr ::ot_case_n } '
+           'else { incr ::ot_case_miss } }']
+    return hdr + out + ['puts "OT_CASE_STRAPS set $::ot_case_n missing $::ot_case_miss of %d"' % n]
 FCK_RE = re.compile(r'^n(.+)_fck$')
 RST_RE = re.compile(r'^(rs_|rsl_|rst_sync)')
 
@@ -514,6 +552,11 @@ def main():
         link_pins[nm] = pins
         sdc.append(f'set_multicycle_path -setup {r["E"]} -to {pins}')
         sdc.append(f'set_multicycle_path -hold {r["D"] - 1} -to {pins}')
+    # NS-CASE 10-18 (ROOT-2115): the strict bind's declared STRAP ports (port_bind.json masters[].straps: landing k,
+    # pvrd k/nw/rb, col_h* lk) carry die constants; the die STA case-analyses them bit by bit with the netlist's own
+    # value (the tile native audit --case excludes exactly these pins, so die STA must not time them either)
+    case_lines = case_strap_sdc(insts, kind, a.bind_dir / 'port_bind.json')
+    sdc += case_lines
     (out / 'landing.sdc').write_text('\n'.join(sdc) + '\n')
     no_model = [r['link'] for r in LP['links'] if r['link'] not in link_pins and f'ld_{r["link"]}' not in loc]
 
