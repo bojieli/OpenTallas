@@ -839,7 +839,18 @@ def mu_setup(a, prog):
                         calendar_shift=cs, shift=sh, pos=pos, tok=tok, cx=cx, bases={b: r[b] for b in ('wb', 'sb', 'ikb') if b in r},
                         ctx={t: (md, cx) for t, md in ctxmd.items()}))
     gaps = [b['shift'] - x['shift'] for x, b in zip(out, out[1:])]
-    win = json.loads(Path(a.mu_win).read_text()) if a.mu_win else None
+    win = None
+    if a.mu_win:
+        # MU-DIE-S81/MUWIN: 'auto' = the compiler's table (dv_layer_compile --mu-win -> prog/mu_win.json)
+        wp = prog / 'prog/mu_win.json' if a.mu_win == 'auto' else Path(a.mu_win)
+        win = json.loads(wp.read_text())
+        if win.get('schema') == 'opentallas.s81_dv.mu_win.v1':
+            if win['verdict'] != 'PASS':
+                raise SystemExit(f'--mu-win {wp}: compiled table verdict {win["verdict"]} '
+                                 f'({[c["check"] for c in win["checks"] if c["verdict"] != "PASS"]})')
+            if win['copy'] != copy:
+                raise SystemExit(f'--mu-win {wp}: table of copy {win["copy"]}, this replay is copy {copy}')
+            win['path'], win['sha256'] = str(wp), hashlib.sha256(wp.read_bytes()).hexdigest()
     return dict(slots=str(slots), slots_sha256=hashlib.sha256(slots.read_bytes()).hexdigest(), layer=M['layer'],
                 group=M['group'], mode=M['mode'], copy=copy, period=M['period'], slot=M['slot'],
                 **{'pass': a.mu_pass}, users=out, window=min(gaps) if gaps else int(M['slot']),
@@ -848,15 +859,35 @@ def mu_setup(a, prog):
                            'every user on this die (not encoded)')
 
 
+def mu_win_compiled(W, die):
+    """MU-DIE-S81/MUWIN: the compiled table (dv_mu_win.py) as --mu-win rows: edge = the user-0 landed edge at the slice
+    pin (pin_layer), per-user {land, ab} from the copy's slot rows; the lane ages must equal this build's"""
+    for e in W['events']:
+        lk = lane_of_net(die, next(nb[0] for nb in die.port_bits(e['inst'], e['port']) if nb))
+        if lk != e['lane'] or die.links[lk]['age'] != e['age']:
+            raise SystemExit(f'--mu-win: event {e["i"]} lane {e["lane"]} age {e["age"]} != this build '
+                             f'({lk}, age {die.links[lk]["age"] if lk else None}): recompile the programme')
+    return dict(events=[dict(i=e['i'], kind=e['kind'], inst=e['inst'], edge=e['pin_layer']) for e in W['events']],
+                users={str(s['user']): dict(land=s['land'], ab=s['ab']) for s in W['slots']})
+
+
 def mu_win_words(a, die, mu):
     """--mu-win rows {kind: tx | replay, inst, edge} (+ per-user {land, ab}, default land = user != 0, ab 0) -> the
-    dsdv_mu_hslot window / replay commands at the slice's mu_c / mu_rc pin, edge + the user's shift"""
+    dsdv_mu_hslot window / replay commands at the slice's mu_c / mu_rc pin, edge + the user's shift.
+    Mutants (MUWIN): mu-win-shift:<event>:<n> moves one row n edges, mu-win-drop:<event> drops one row"""
     if not mu['win']:
         return []
     W = mu['win']
+    if W.get('schema') == 'opentallas.s81_dv.mu_win.v1':
+        W = mu_win_compiled(W, die)
+    m = parse_mutant(a.mutant)
     att = {int(k): v for k, v in W.get('users', {}).items()}
     out = []
     for i, ev in enumerate(W['events']):
+        if m and m['kind'] == 'mu-win-drop' and m['ev'] == i:
+            continue                                        # MUTANT: the row is never issued
+        if m and m['kind'] == 'mu-win-shift' and m['ev'] == i:
+            ev = dict(ev, edge=ev['edge'] + m['n'])          # MUTANT: the row moved n edges
         port = dict(tx='mu_c', replay='mu_rc')[ev['kind']]
         for u in mu['users']:
             k, at = u['user'], att.get(u['user'], {})
@@ -967,13 +998,21 @@ def host_boot_words(a, die, prog, S, words, cut=None, mu=None):
         if a.host_boot < live['live'] + 2:
             raise SystemExit(f'--host-boot {a.host_boot} lands before u_seqhost leaves reset (live at {live["live"]}, '
                              f'idle run {a.idle_run}): the boot header would be dropped; use >= {live["live"] + 2}')
-    ks = a.ks if a.ks is not None else a.host_boot + 5 * len(hs) + 64
+    mb = []
+    if mu is not None and mu.get('win') and mu['win'].get('schema') == 'opentallas.s81_dv.mu_win.v1':
+        mb = [int(x, 16) for x in (prog / 'prog/mu_boot.memh').read_text().split()]
+    ks = a.ks if a.ks is not None else a.host_boot + 5 * (len(hs) + len(mb)) + 64
     a.t0 = ks + 5
     ksw = int(a.ks_word, 16)
     end = int(max([w['cycle_land'] for w in words] + [0]) + a.t0 + 64)
     out = list(words)
     out += [word_at(die, 'u_seqhost', 'f_host', h, a.host_boot + 5 * i - a.t0, 'HOST', f'host_boot[{i}]')
             for i, h in enumerate(hs)]
+    if mu is not None and mu.get('win') and mu['win'].get('schema') == 'opentallas.s81_dv.mu_win.v1':
+        # MU-DIE-S81/MUWIN: the compiled CSR 0x15 / 0x16 boot words follow the programme on the host lane (boot only:
+        # hslot / hwin take them while idle, before the first start)
+        out += [word_at(die, 'u_seqhost', 'f_host', h, a.host_boot + 5 * (len(hs) + i) - a.t0, 'HOST', f'mu_boot[{i}]')
+                for i, h in enumerate(mb)]
     if mu is None:
         out.append(word_at(die, 'u_seqhost', 'f_ks', ksw, ks - a.t0, 'KS', 'job start'))
     else:
@@ -1012,8 +1051,13 @@ def parse_mutant(s):
         return dict(kind='mu-drop', user=int(f[1]))
     if f[0] == 'mu-offgrid' and len(f) == 3:
         return dict(kind='mu-offgrid', user=int(f[1]), n=int(f[2]))
+    if f[0] == 'mu-win-shift' and len(f) == 3:
+        return dict(kind='mu-win-shift', ev=int(f[1]), n=int(f[2]))
+    if f[0] == 'mu-win-drop' and len(f) == 2:
+        return dict(kind='mu-win-drop', ev=int(f[1]))
     raise SystemExit(f'bad --mutant {s!r}: shift:<link>:<n> | corrupt:<link>[:<bit>] | shift-kind:<KIND>:<n> | '
-                     f'expect-shift:<KIND>:<n> | mu-drop:<user> | mu-offgrid:<user>:<n>')
+                     f'expect-shift:<KIND>:<n> | mu-drop:<user> | mu-offgrid:<user>:<n> | mu-win-shift:<ev>:<n> | '
+                     f'mu-win-drop:<ev>')
 
 
 def trace_sources(die, cut, traces):
@@ -1273,7 +1317,8 @@ def main(argv=None):
     g.add_argument('--copy', default=None, choices=('A', 'B'), help='MU: the group copy this die runs (default: the '
                    'first user\'s)')
     g.add_argument('--mu-pass', type=int, default=0, help='MU: pass index (pos = pos0 + pass x stride)')
-    g.add_argument('--mu-win', default=None, help='MU: dsdv_mu_hslot window / replay rows (JSON); DIAGNOSTIC')
+    g.add_argument('--mu-win', default=None, help='MU: window / replay rows: auto = the compiled prog/mu_win.json '
+                   '(dv_layer_compile --mu-win; PRICED until the hop is lowered), or a hand JSON (DIAGNOSTIC)')
     g = sp.add_parser('check')
     g.add_argument('--replay', required=True)
     g.add_argument('--run', required=True)

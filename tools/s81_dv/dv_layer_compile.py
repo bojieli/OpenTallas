@@ -764,7 +764,8 @@ def finish(prog, stage=0, kit_lead=20):
     return rows, hs, endage
 
 
-def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtures=None, svc_tag=0, mu_ctx=False):
+def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtures=None, svc_tag=0, mu_ctx=False,
+                  mu_win=None):
     out = Path(out)
     (out / 'prog' / 'frame_cfg7').mkdir(parents=True, exist_ok=True)
     die = Die(tree)
@@ -829,7 +830,7 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
         assert len(need) <= 1, f'more than one svc job row ({sorted(need)}): one tag per layer is modelled'
         if need and need != {svc_tag} and prog.svc:
             return compile_layer(layer, out, tree, sl, smoke=smoke, workload=workload, fixtures=fixtures,
-                                 svc_tag=need.pop())
+                                 svc_tag=need.pop(), mu_ctx=mu_ctx, mu_win=mu_win)
         cal = []
         for k, (t0, jp, (rows, hs, endage)) in enumerate(jobs):
             jd = '' if len(jobs) == 1 else f'job{k}/'
@@ -871,6 +872,15 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
                     'edge the producer\'s output register takes it; boundary offdie = beyond the die\'s elastic link '
                     'layer (no fixed-cycle cut word); dir internal = inside one instance, carried_by its CTL template',
         row_ctl_events=n_row_ctl, port_valid=prog.port_valid, links=links), indent=1) + '\n')
+    mu_tab = None
+    if mu_win:
+        # MU-DIE-S81/MUWIN (10-19): the dsdv_mu_hwin / hslot event table + boot config of this layer on this die copy
+        # (tools/s81_dv/dv_mu_win.py; needs --mu-cal, i.e. prog/mu_slots.json, and the calendar written above)
+        import dv_mu_win
+        mu_tab = dv_mu_win.build(json.loads((out / 'schedule.json').read_text()),
+                                 json.loads((out / 'prog/calendar.json').read_text()),
+                                 json.loads((out / 'prog/mu_slots.json').read_text()), die, copy=mu_win)
+        dv_mu_win.write_prog(out, mu_tab)
     ul = die.unlanded()
     die_gaps = [dict(module='results/arch/s81_dv_1016/bind9/die.v (S81 die GEN, lead S81-DIE6/7)',
                      port=', '.join(sorted(x['link'] for x in ul)),
@@ -891,7 +901,10 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
         if p.is_file() and p.name != 'manifest.json':
             man['files'][str(p.relative_to(out))] = sha256(p)
     (out / 'manifest.json').write_text(json.dumps(man, indent=1) + '\n')
-    return dict(layer=layer, ops=len(low), status=stat, rows=len(prog.rows), templates=len(prog.templates), smoke=sub)
+    return dict(layer=layer, ops=len(low), status=stat, rows=len(prog.rows), templates=len(prog.templates), smoke=sub,
+                **({'mu_win': dict(copy=mu_tab['copy'], events=len(mu_tab['events']), nw=mu_tab['nw'], RL=mu_tab['RL'],
+                                   verdict=mu_tab['verdict'], failed=[c['check'] for c in mu_tab['checks']
+                                                                      if c['verdict'] != 'PASS'])} if mu_tab else {}))
 
 
 # ================================================================================================= multi-user (MU-S81)
@@ -937,6 +950,8 @@ def main(argv=None):
     ap.add_argument('--mu-cal', default=None, help='MU-S81: a dv_mu_calendar record -> DIR/prog/mu_slots.json')
     ap.add_argument('--mu-ctx', action='store_true', help='MU-S81/TOK: HLOAD carries the user context (context 1)')
     ap.add_argument('--fixtures', default=None, help='the layer fixture dir (dv_layer_fixtures.py output)')
+    ap.add_argument('--mu-win', default=None, choices=('A', 'B'), help='MU-DIE-S81/MUWIN: emit prog/mu_win.json + '
+                    'mu_cfg.cfg (hwin / hslot window + replay rows, CSR 0x15 / 0x16 boot words) for this die copy')
     a = ap.parse_args(argv)
     if a.mu_cal:
         t = mu_slot_tables(json.loads(Path(a.mu_cal).read_text()), a.layer)
@@ -947,7 +962,10 @@ def main(argv=None):
         if a.layer not in LAYERS:
             return
     tree = die_tree(a.die_ref, a.die_src)
-    r = compile_layer(a.layer, a.out, tree, a.slice, workload=a.workload, fixtures=a.fixtures, mu_ctx=a.mu_ctx)
+    if a.mu_win and not a.mu_cal:
+        ap.error('--mu-win needs --mu-cal (the per-slot rows)')
+    r = compile_layer(a.layer, a.out, tree, a.slice, workload=a.workload, fixtures=a.fixtures, mu_ctx=a.mu_ctx,
+                      mu_win=a.mu_win)
     print(json.dumps(dict((k, v) for k, v in r.items() if k != 'smoke'), indent=None))
     if r['smoke']:
         s = r['smoke']
