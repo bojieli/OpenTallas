@@ -1,0 +1,4217 @@
+{
+ "schema": "opentallas.hbm_status_review_1019.v1",
+ "manifest_adopted": false,
+ "bits": 272,
+ "entries": [
+  {
+   "instance": "hb_coll_NE",
+   "master": "ot_hfd_coll_q2_hard_v8g",
+   "port": "stat_cycles",
+   "net": "hb_coll_NE__stat_cycles",
+   "width": 32,
+   "unread_ranges": [
+    [
+     0,
+     31
+    ]
+   ],
+   "bit_count": 32,
+   "die_line": 7479,
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v8g.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Control leaf output cycles counts hgi_busy and resets hgi_start. Scheduling/protocol uses internal state; this parent export has no scheduling role.",
+   "evidence": {
+    "fault": [
+     {
+      "instance": "hleaf_NE",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "hb_coll_NW",
+   "master": "ot_hfd_coll_q2_hard_v8g",
+   "port": "stat_cycles",
+   "net": "hb_coll_NW__stat_cycles",
+   "width": 32,
+   "unread_ranges": [
+    [
+     0,
+     31
+    ]
+   ],
+   "bit_count": 32,
+   "die_line": 7384,
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v8g.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Control leaf output cycles counts hgi_busy and resets hgi_start. Scheduling/protocol uses internal state; this parent export has no scheduling role.",
+   "evidence": {
+    "fault": [
+     {
+      "instance": "hleaf_NW",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "hb_coll_SE",
+   "master": "ot_hfd_coll_q2_hard_v8g",
+   "port": "stat_cycles",
+   "net": "hb_coll_SE__stat_cycles",
+   "width": 32,
+   "unread_ranges": [
+    [
+     0,
+     31
+    ]
+   ],
+   "bit_count": 32,
+   "die_line": 7289,
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v8g.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Control leaf output cycles counts hgi_busy and resets hgi_start. Scheduling/protocol uses internal state; this parent export has no scheduling role.",
+   "evidence": {
+    "fault": [
+     {
+      "instance": "hleaf_SE",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "hb_coll_SW",
+   "master": "ot_hfd_coll_q3_hard_v8x",
+   "port": "stat_cycles",
+   "net": "hb_coll_SW__stat_cycles",
+   "width": 32,
+   "unread_ranges": [
+    [
+     0,
+     31
+    ]
+   ],
+   "bit_count": 32,
+   "die_line": 7172,
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v8g.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Control leaf output cycles counts hgi_busy and resets hgi_start. Scheduling/protocol uses internal state; this parent export has no scheduling role.",
+   "evidence": {
+    "fault": [
+     {
+      "instance": "hleaf_SW",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "svg_NW0",
+   "master": "ot_hbm_svc_sm_group_rel_id",
+   "port": "run_done",
+   "net": "svg_NW0__run_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 10892,
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_group_rel_id.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Issuer pulses run_done exactly when running clears on final program_done. Host RUN collar consumes actual running/program_active and issuer fault; completion pulse is an unused observation.",
+   "evidence": {
+    "running": [
+     {
+      "instance": "cp_svg_NW0",
+      "port": "tgt_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "program_active": [
+     {
+      "instance": "cp_svg_NW0",
+      "port": "tgt_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "cp_svg_NW0",
+      "port": "tgt_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     },
+     {
+      "instance": "sfault_NW",
+      "port": "svg_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "svg_NW1",
+   "master": "ot_hbm_svc_sm_group_rel_id",
+   "port": "run_done",
+   "net": "svg_NW1__run_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 11015,
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_group_rel_id.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Issuer pulses run_done exactly when running clears on final program_done. Host RUN collar consumes actual running/program_active and issuer fault; completion pulse is an unused observation.",
+   "evidence": {
+    "running": [
+     {
+      "instance": "cp_svg_NW1",
+      "port": "tgt_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "program_active": [
+     {
+      "instance": "cp_svg_NW1",
+      "port": "tgt_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "cp_svg_NW1",
+      "port": "tgt_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     },
+     {
+      "instance": "sfault_NW",
+      "port": "svg_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "svg_NW2",
+   "master": "ot_hbm_svc_sm_group_rel_id",
+   "port": "run_done",
+   "net": "svg_NW2__run_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 11138,
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_group_rel_id.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Issuer pulses run_done exactly when running clears on final program_done. Host RUN collar consumes actual running/program_active and issuer fault; completion pulse is an unused observation.",
+   "evidence": {
+    "running": [
+     {
+      "instance": "cp_svg_NW2",
+      "port": "tgt_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "program_active": [
+     {
+      "instance": "cp_svg_NW2",
+      "port": "tgt_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "cp_svg_NW2",
+      "port": "tgt_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     },
+     {
+      "instance": "sfault_NW",
+      "port": "svg_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "svg_NW3",
+   "master": "ot_hbm_svc_sm_group_rel_id",
+   "port": "run_done",
+   "net": "svg_NW3__run_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 11261,
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_group_rel_id.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Issuer pulses run_done exactly when running clears on final program_done. Host RUN collar consumes actual running/program_active and issuer fault; completion pulse is an unused observation.",
+   "evidence": {
+    "running": [
+     {
+      "instance": "cp_svg_NW3",
+      "port": "tgt_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "program_active": [
+     {
+      "instance": "cp_svg_NW3",
+      "port": "tgt_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "cp_svg_NW3",
+      "port": "tgt_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     },
+     {
+      "instance": "sfault_NW",
+      "port": "svg_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "svg_NW4",
+   "master": "ot_hbm_svc_sm_group_rel_id",
+   "port": "run_done",
+   "net": "svg_NW4__run_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 11384,
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_group_rel_id.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Issuer pulses run_done exactly when running clears on final program_done. Host RUN collar consumes actual running/program_active and issuer fault; completion pulse is an unused observation.",
+   "evidence": {
+    "running": [
+     {
+      "instance": "cp_svg_NW4",
+      "port": "tgt_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "program_active": [
+     {
+      "instance": "cp_svg_NW4",
+      "port": "tgt_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "cp_svg_NW4",
+      "port": "tgt_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     },
+     {
+      "instance": "sfault_NE",
+      "port": "svg_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "svg_NW5",
+   "master": "ot_hbm_svc_sm_group_rel_id",
+   "port": "run_done",
+   "net": "svg_NW5__run_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 11507,
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_group_rel_id.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Issuer pulses run_done exactly when running clears on final program_done. Host RUN collar consumes actual running/program_active and issuer fault; completion pulse is an unused observation.",
+   "evidence": {
+    "running": [
+     {
+      "instance": "cp_svg_NW5",
+      "port": "tgt_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "program_active": [
+     {
+      "instance": "cp_svg_NW5",
+      "port": "tgt_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "cp_svg_NW5",
+      "port": "tgt_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     },
+     {
+      "instance": "sfault_NE",
+      "port": "svg_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "svg_NW6",
+   "master": "ot_hbm_svc_sm_group_rel_id",
+   "port": "run_done",
+   "net": "svg_NW6__run_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 11630,
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_group_rel_id.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Issuer pulses run_done exactly when running clears on final program_done. Host RUN collar consumes actual running/program_active and issuer fault; completion pulse is an unused observation.",
+   "evidence": {
+    "running": [
+     {
+      "instance": "cp_svg_NW6",
+      "port": "tgt_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "program_active": [
+     {
+      "instance": "cp_svg_NW6",
+      "port": "tgt_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "cp_svg_NW6",
+      "port": "tgt_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     },
+     {
+      "instance": "sfault_NE",
+      "port": "svg_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "svg_NW7",
+   "master": "ot_hbm_svc_sm_group_rel_id",
+   "port": "run_done",
+   "net": "svg_NW7__run_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 11753,
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_group_rel_id.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Issuer pulses run_done exactly when running clears on final program_done. Host RUN collar consumes actual running/program_active and issuer fault; completion pulse is an unused observation.",
+   "evidence": {
+    "running": [
+     {
+      "instance": "cp_svg_NW7",
+      "port": "tgt_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "program_active": [
+     {
+      "instance": "cp_svg_NW7",
+      "port": "tgt_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "cp_svg_NW7",
+      "port": "tgt_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     },
+     {
+      "instance": "sfault_NE",
+      "port": "svg_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "svg_SW0",
+   "master": "ot_hbm_svc_sm_group_rel_id",
+   "port": "run_done",
+   "net": "svg_SW0__run_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 8804,
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_group_rel_id.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Issuer pulses run_done exactly when running clears on final program_done. Host RUN collar consumes actual running/program_active and issuer fault; completion pulse is an unused observation.",
+   "evidence": {
+    "running": [
+     {
+      "instance": "cp_svg_SW0",
+      "port": "tgt_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "program_active": [
+     {
+      "instance": "cp_svg_SW0",
+      "port": "tgt_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "cp_svg_SW0",
+      "port": "tgt_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     },
+     {
+      "instance": "sfault_SW",
+      "port": "svg_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "svg_SW1",
+   "master": "ot_hbm_svc_sm_group_rel_id",
+   "port": "run_done",
+   "net": "svg_SW1__run_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 8927,
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_group_rel_id.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Issuer pulses run_done exactly when running clears on final program_done. Host RUN collar consumes actual running/program_active and issuer fault; completion pulse is an unused observation.",
+   "evidence": {
+    "running": [
+     {
+      "instance": "cp_svg_SW1",
+      "port": "tgt_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "program_active": [
+     {
+      "instance": "cp_svg_SW1",
+      "port": "tgt_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "cp_svg_SW1",
+      "port": "tgt_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     },
+     {
+      "instance": "sfault_SW",
+      "port": "svg_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "svg_SW2",
+   "master": "ot_hbm_svc_sm_group_rel_id",
+   "port": "run_done",
+   "net": "svg_SW2__run_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 9050,
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_group_rel_id.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Issuer pulses run_done exactly when running clears on final program_done. Host RUN collar consumes actual running/program_active and issuer fault; completion pulse is an unused observation.",
+   "evidence": {
+    "running": [
+     {
+      "instance": "cp_svg_SW2",
+      "port": "tgt_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "program_active": [
+     {
+      "instance": "cp_svg_SW2",
+      "port": "tgt_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "cp_svg_SW2",
+      "port": "tgt_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     },
+     {
+      "instance": "sfault_SW",
+      "port": "svg_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "svg_SW3",
+   "master": "ot_hbm_svc_sm_group_rel_id",
+   "port": "run_done",
+   "net": "svg_SW3__run_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 9173,
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_group_rel_id.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Issuer pulses run_done exactly when running clears on final program_done. Host RUN collar consumes actual running/program_active and issuer fault; completion pulse is an unused observation.",
+   "evidence": {
+    "running": [
+     {
+      "instance": "cp_svg_SW3",
+      "port": "tgt_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "program_active": [
+     {
+      "instance": "cp_svg_SW3",
+      "port": "tgt_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "cp_svg_SW3",
+      "port": "tgt_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     },
+     {
+      "instance": "sfault_SW",
+      "port": "svg_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "svg_SW4",
+   "master": "ot_hbm_svc_sm_group_rel_id",
+   "port": "run_done",
+   "net": "svg_SW4__run_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 9296,
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_group_rel_id.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Issuer pulses run_done exactly when running clears on final program_done. Host RUN collar consumes actual running/program_active and issuer fault; completion pulse is an unused observation.",
+   "evidence": {
+    "running": [
+     {
+      "instance": "cp_svg_SW4",
+      "port": "tgt_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "program_active": [
+     {
+      "instance": "cp_svg_SW4",
+      "port": "tgt_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "cp_svg_SW4",
+      "port": "tgt_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     },
+     {
+      "instance": "sfault_SE",
+      "port": "svg_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "svg_SW5",
+   "master": "ot_hbm_svc_sm_group_rel_id",
+   "port": "run_done",
+   "net": "svg_SW5__run_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 9419,
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_group_rel_id.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Issuer pulses run_done exactly when running clears on final program_done. Host RUN collar consumes actual running/program_active and issuer fault; completion pulse is an unused observation.",
+   "evidence": {
+    "running": [
+     {
+      "instance": "cp_svg_SW5",
+      "port": "tgt_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "program_active": [
+     {
+      "instance": "cp_svg_SW5",
+      "port": "tgt_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "cp_svg_SW5",
+      "port": "tgt_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     },
+     {
+      "instance": "sfault_SE",
+      "port": "svg_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "svg_SW6",
+   "master": "ot_hbm_svc_sm_group_rel_id",
+   "port": "run_done",
+   "net": "svg_SW6__run_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 9542,
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_group_rel_id.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Issuer pulses run_done exactly when running clears on final program_done. Host RUN collar consumes actual running/program_active and issuer fault; completion pulse is an unused observation.",
+   "evidence": {
+    "running": [
+     {
+      "instance": "cp_svg_SW6",
+      "port": "tgt_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "program_active": [
+     {
+      "instance": "cp_svg_SW6",
+      "port": "tgt_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "cp_svg_SW6",
+      "port": "tgt_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     },
+     {
+      "instance": "sfault_SE",
+      "port": "svg_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "svg_SW7",
+   "master": "ot_hbm_svc_sm_group_rel_id",
+   "port": "run_done",
+   "net": "svg_SW7__run_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 9665,
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_group_rel_id.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Issuer pulses run_done exactly when running clears on final program_done. Host RUN collar consumes actual running/program_active and issuer fault; completion pulse is an unused observation.",
+   "evidence": {
+    "running": [
+     {
+      "instance": "cp_svg_SW7",
+      "port": "tgt_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "program_active": [
+     {
+      "instance": "cp_svg_SW7",
+      "port": "tgt_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "cp_svg_SW7",
+      "port": "tgt_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     },
+     {
+      "instance": "sfault_SE",
+      "port": "svg_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "tkm_SW",
+   "master": "ot_hgi_coll_tkm_m_tp192",
+   "port": "stat_cycles",
+   "net": "tkm_SW__stat_cycles",
+   "width": 32,
+   "unread_ranges": [
+    [
+     0,
+     31
+    ]
+   ],
+   "bit_count": 32,
+   "die_line": 20505,
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v5.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Static TKM output stat_cycles mirrors internal tick+1 while busy. Internal tick schedules captures/writes and faults; external count has no scheduling role.",
+   "evidence": {
+    "fault": [
+     {
+      "instance": "hb_coll_SW",
+      "port": "tkx_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmdel_NE0",
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "port": "block_ready",
+   "net": "vmdel_NE0__block_ready",
+   "width": 2,
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "die_line": 23348,
+   "source": "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_n.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Registered mirror of internal block_ready_c/running. Internal start_ok checks owned/full/epoch/non-running/landing_fault; invalid or overlapping start raises sticky/bad. Static start comes from fixed calendar, never external ready gating.",
+   "evidence": {
+    "dq": [
+     {
+      "instance": "vmb_NE0",
+      "port": "dq",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "sfault_NE",
+      "port": "del_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmdel_NE0",
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "port": "busy",
+   "net": "vmdel_NE0__busy",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 23348,
+   "source": "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_n.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Registered mirror of internal block_ready_c/running. Internal start_ok checks owned/full/epoch/non-running/landing_fault; invalid or overlapping start raises sticky/bad. Static start comes from fixed calendar, never external ready gating.",
+   "evidence": {
+    "dq": [
+     {
+      "instance": "vmb_NE0",
+      "port": "dq",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "sfault_NE",
+      "port": "del_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmdel_NE1",
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "port": "block_ready",
+   "net": "vmdel_NE1__block_ready",
+   "width": 2,
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "die_line": 23375,
+   "source": "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_n.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Registered mirror of internal block_ready_c/running. Internal start_ok checks owned/full/epoch/non-running/landing_fault; invalid or overlapping start raises sticky/bad. Static start comes from fixed calendar, never external ready gating.",
+   "evidence": {
+    "dq": [
+     {
+      "instance": "vmb_NE1",
+      "port": "dq",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "sfault_NE",
+      "port": "del_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmdel_NE1",
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "port": "busy",
+   "net": "vmdel_NE1__busy",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 23375,
+   "source": "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_n.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Registered mirror of internal block_ready_c/running. Internal start_ok checks owned/full/epoch/non-running/landing_fault; invalid or overlapping start raises sticky/bad. Static start comes from fixed calendar, never external ready gating.",
+   "evidence": {
+    "dq": [
+     {
+      "instance": "vmb_NE1",
+      "port": "dq",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "sfault_NE",
+      "port": "del_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmdel_NE2",
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "port": "block_ready",
+   "net": "vmdel_NE2__block_ready",
+   "width": 2,
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "die_line": 23402,
+   "source": "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_n.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Registered mirror of internal block_ready_c/running. Internal start_ok checks owned/full/epoch/non-running/landing_fault; invalid or overlapping start raises sticky/bad. Static start comes from fixed calendar, never external ready gating.",
+   "evidence": {
+    "dq": [
+     {
+      "instance": "vmb_NE2",
+      "port": "dq",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "sfault_NE",
+      "port": "del_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmdel_NE2",
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "port": "busy",
+   "net": "vmdel_NE2__busy",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 23402,
+   "source": "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_n.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Registered mirror of internal block_ready_c/running. Internal start_ok checks owned/full/epoch/non-running/landing_fault; invalid or overlapping start raises sticky/bad. Static start comes from fixed calendar, never external ready gating.",
+   "evidence": {
+    "dq": [
+     {
+      "instance": "vmb_NE2",
+      "port": "dq",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "sfault_NE",
+      "port": "del_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmdel_NE3",
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "port": "block_ready",
+   "net": "vmdel_NE3__block_ready",
+   "width": 2,
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "die_line": 23429,
+   "source": "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_n.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Registered mirror of internal block_ready_c/running. Internal start_ok checks owned/full/epoch/non-running/landing_fault; invalid or overlapping start raises sticky/bad. Static start comes from fixed calendar, never external ready gating.",
+   "evidence": {
+    "dq": [
+     {
+      "instance": "vmb_NE3",
+      "port": "dq",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "sfault_NE",
+      "port": "del_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmdel_NE3",
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "port": "busy",
+   "net": "vmdel_NE3__busy",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 23429,
+   "source": "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_n.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Registered mirror of internal block_ready_c/running. Internal start_ok checks owned/full/epoch/non-running/landing_fault; invalid or overlapping start raises sticky/bad. Static start comes from fixed calendar, never external ready gating.",
+   "evidence": {
+    "dq": [
+     {
+      "instance": "vmb_NE3",
+      "port": "dq",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "sfault_NE",
+      "port": "del_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmdel_NE4",
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "port": "block_ready",
+   "net": "vmdel_NE4__block_ready",
+   "width": 2,
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "die_line": 23456,
+   "source": "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_n.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Registered mirror of internal block_ready_c/running. Internal start_ok checks owned/full/epoch/non-running/landing_fault; invalid or overlapping start raises sticky/bad. Static start comes from fixed calendar, never external ready gating.",
+   "evidence": {
+    "dq": [
+     {
+      "instance": "vmb_NE4",
+      "port": "dq",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "sfault_NE",
+      "port": "del_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmdel_NE4",
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "port": "busy",
+   "net": "vmdel_NE4__busy",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 23456,
+   "source": "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_n.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Registered mirror of internal block_ready_c/running. Internal start_ok checks owned/full/epoch/non-running/landing_fault; invalid or overlapping start raises sticky/bad. Static start comes from fixed calendar, never external ready gating.",
+   "evidence": {
+    "dq": [
+     {
+      "instance": "vmb_NE4",
+      "port": "dq",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "sfault_NE",
+      "port": "del_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmdel_NE5",
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "port": "block_ready",
+   "net": "vmdel_NE5__block_ready",
+   "width": 2,
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "die_line": 23483,
+   "source": "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_n.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Registered mirror of internal block_ready_c/running. Internal start_ok checks owned/full/epoch/non-running/landing_fault; invalid or overlapping start raises sticky/bad. Static start comes from fixed calendar, never external ready gating.",
+   "evidence": {
+    "dq": [
+     {
+      "instance": "vmb_NE5",
+      "port": "dq",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "sfault_NE",
+      "port": "del_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmdel_NE5",
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "port": "busy",
+   "net": "vmdel_NE5__busy",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 23483,
+   "source": "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_n.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Registered mirror of internal block_ready_c/running. Internal start_ok checks owned/full/epoch/non-running/landing_fault; invalid or overlapping start raises sticky/bad. Static start comes from fixed calendar, never external ready gating.",
+   "evidence": {
+    "dq": [
+     {
+      "instance": "vmb_NE5",
+      "port": "dq",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "sfault_NE",
+      "port": "del_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmdel_NE6",
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "port": "block_ready",
+   "net": "vmdel_NE6__block_ready",
+   "width": 2,
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "die_line": 23510,
+   "source": "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_n.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Registered mirror of internal block_ready_c/running. Internal start_ok checks owned/full/epoch/non-running/landing_fault; invalid or overlapping start raises sticky/bad. Static start comes from fixed calendar, never external ready gating.",
+   "evidence": {
+    "dq": [
+     {
+      "instance": "vmb_NE6",
+      "port": "dq",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "sfault_NE",
+      "port": "del_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmdel_NE6",
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "port": "busy",
+   "net": "vmdel_NE6__busy",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 23510,
+   "source": "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_n.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Registered mirror of internal block_ready_c/running. Internal start_ok checks owned/full/epoch/non-running/landing_fault; invalid or overlapping start raises sticky/bad. Static start comes from fixed calendar, never external ready gating.",
+   "evidence": {
+    "dq": [
+     {
+      "instance": "vmb_NE6",
+      "port": "dq",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "sfault_NE",
+      "port": "del_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmdel_NE7",
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "port": "block_ready",
+   "net": "vmdel_NE7__block_ready",
+   "width": 2,
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "die_line": 23537,
+   "source": "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_n.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Registered mirror of internal block_ready_c/running. Internal start_ok checks owned/full/epoch/non-running/landing_fault; invalid or overlapping start raises sticky/bad. Static start comes from fixed calendar, never external ready gating.",
+   "evidence": {
+    "dq": [
+     {
+      "instance": "vmb_NE7",
+      "port": "dq",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "sfault_NE",
+      "port": "del_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmdel_NE7",
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "port": "busy",
+   "net": "vmdel_NE7__busy",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 23537,
+   "source": "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_n.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Registered mirror of internal block_ready_c/running. Internal start_ok checks owned/full/epoch/non-running/landing_fault; invalid or overlapping start raises sticky/bad. Static start comes from fixed calendar, never external ready gating.",
+   "evidence": {
+    "dq": [
+     {
+      "instance": "vmb_NE7",
+      "port": "dq",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "sfault_NE",
+      "port": "del_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmdel_NW0",
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "port": "block_ready",
+   "net": "vmdel_NW0__block_ready",
+   "width": 2,
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "die_line": 23132,
+   "source": "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_n.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Registered mirror of internal block_ready_c/running. Internal start_ok checks owned/full/epoch/non-running/landing_fault; invalid or overlapping start raises sticky/bad. Static start comes from fixed calendar, never external ready gating.",
+   "evidence": {
+    "dq": [
+     {
+      "instance": "vmb_NW0",
+      "port": "dq",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "sfault_NW",
+      "port": "del_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmdel_NW0",
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "port": "busy",
+   "net": "vmdel_NW0__busy",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 23132,
+   "source": "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_n.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Registered mirror of internal block_ready_c/running. Internal start_ok checks owned/full/epoch/non-running/landing_fault; invalid or overlapping start raises sticky/bad. Static start comes from fixed calendar, never external ready gating.",
+   "evidence": {
+    "dq": [
+     {
+      "instance": "vmb_NW0",
+      "port": "dq",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "sfault_NW",
+      "port": "del_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmdel_NW1",
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "port": "block_ready",
+   "net": "vmdel_NW1__block_ready",
+   "width": 2,
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "die_line": 23159,
+   "source": "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_n.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Registered mirror of internal block_ready_c/running. Internal start_ok checks owned/full/epoch/non-running/landing_fault; invalid or overlapping start raises sticky/bad. Static start comes from fixed calendar, never external ready gating.",
+   "evidence": {
+    "dq": [
+     {
+      "instance": "vmb_NW1",
+      "port": "dq",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "sfault_NW",
+      "port": "del_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmdel_NW1",
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "port": "busy",
+   "net": "vmdel_NW1__busy",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 23159,
+   "source": "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_n.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Registered mirror of internal block_ready_c/running. Internal start_ok checks owned/full/epoch/non-running/landing_fault; invalid or overlapping start raises sticky/bad. Static start comes from fixed calendar, never external ready gating.",
+   "evidence": {
+    "dq": [
+     {
+      "instance": "vmb_NW1",
+      "port": "dq",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "sfault_NW",
+      "port": "del_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmdel_NW2",
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "port": "block_ready",
+   "net": "vmdel_NW2__block_ready",
+   "width": 2,
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "die_line": 23186,
+   "source": "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_n.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Registered mirror of internal block_ready_c/running. Internal start_ok checks owned/full/epoch/non-running/landing_fault; invalid or overlapping start raises sticky/bad. Static start comes from fixed calendar, never external ready gating.",
+   "evidence": {
+    "dq": [
+     {
+      "instance": "vmb_NW2",
+      "port": "dq",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "sfault_NW",
+      "port": "del_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmdel_NW2",
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "port": "busy",
+   "net": "vmdel_NW2__busy",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 23186,
+   "source": "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_n.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Registered mirror of internal block_ready_c/running. Internal start_ok checks owned/full/epoch/non-running/landing_fault; invalid or overlapping start raises sticky/bad. Static start comes from fixed calendar, never external ready gating.",
+   "evidence": {
+    "dq": [
+     {
+      "instance": "vmb_NW2",
+      "port": "dq",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "sfault_NW",
+      "port": "del_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmdel_NW3",
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "port": "block_ready",
+   "net": "vmdel_NW3__block_ready",
+   "width": 2,
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "die_line": 23213,
+   "source": "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_n.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Registered mirror of internal block_ready_c/running. Internal start_ok checks owned/full/epoch/non-running/landing_fault; invalid or overlapping start raises sticky/bad. Static start comes from fixed calendar, never external ready gating.",
+   "evidence": {
+    "dq": [
+     {
+      "instance": "vmb_NW3",
+      "port": "dq",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "sfault_NW",
+      "port": "del_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmdel_NW3",
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "port": "busy",
+   "net": "vmdel_NW3__busy",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 23213,
+   "source": "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_n.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Registered mirror of internal block_ready_c/running. Internal start_ok checks owned/full/epoch/non-running/landing_fault; invalid or overlapping start raises sticky/bad. Static start comes from fixed calendar, never external ready gating.",
+   "evidence": {
+    "dq": [
+     {
+      "instance": "vmb_NW3",
+      "port": "dq",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "sfault_NW",
+      "port": "del_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmdel_NW4",
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "port": "block_ready",
+   "net": "vmdel_NW4__block_ready",
+   "width": 2,
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "die_line": 23240,
+   "source": "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_n.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Registered mirror of internal block_ready_c/running. Internal start_ok checks owned/full/epoch/non-running/landing_fault; invalid or overlapping start raises sticky/bad. Static start comes from fixed calendar, never external ready gating.",
+   "evidence": {
+    "dq": [
+     {
+      "instance": "vmb_NW4",
+      "port": "dq",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "sfault_NW",
+      "port": "del_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmdel_NW4",
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "port": "busy",
+   "net": "vmdel_NW4__busy",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 23240,
+   "source": "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_n.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Registered mirror of internal block_ready_c/running. Internal start_ok checks owned/full/epoch/non-running/landing_fault; invalid or overlapping start raises sticky/bad. Static start comes from fixed calendar, never external ready gating.",
+   "evidence": {
+    "dq": [
+     {
+      "instance": "vmb_NW4",
+      "port": "dq",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "sfault_NW",
+      "port": "del_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmdel_NW5",
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "port": "block_ready",
+   "net": "vmdel_NW5__block_ready",
+   "width": 2,
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "die_line": 23267,
+   "source": "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_n.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Registered mirror of internal block_ready_c/running. Internal start_ok checks owned/full/epoch/non-running/landing_fault; invalid or overlapping start raises sticky/bad. Static start comes from fixed calendar, never external ready gating.",
+   "evidence": {
+    "dq": [
+     {
+      "instance": "vmb_NW5",
+      "port": "dq",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "sfault_NW",
+      "port": "del_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmdel_NW5",
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "port": "busy",
+   "net": "vmdel_NW5__busy",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 23267,
+   "source": "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_n.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Registered mirror of internal block_ready_c/running. Internal start_ok checks owned/full/epoch/non-running/landing_fault; invalid or overlapping start raises sticky/bad. Static start comes from fixed calendar, never external ready gating.",
+   "evidence": {
+    "dq": [
+     {
+      "instance": "vmb_NW5",
+      "port": "dq",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "sfault_NW",
+      "port": "del_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmdel_NW6",
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "port": "block_ready",
+   "net": "vmdel_NW6__block_ready",
+   "width": 2,
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "die_line": 23294,
+   "source": "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_n.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Registered mirror of internal block_ready_c/running. Internal start_ok checks owned/full/epoch/non-running/landing_fault; invalid or overlapping start raises sticky/bad. Static start comes from fixed calendar, never external ready gating.",
+   "evidence": {
+    "dq": [
+     {
+      "instance": "vmb_NW6",
+      "port": "dq",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "sfault_NW",
+      "port": "del_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmdel_NW6",
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "port": "busy",
+   "net": "vmdel_NW6__busy",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 23294,
+   "source": "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_n.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Registered mirror of internal block_ready_c/running. Internal start_ok checks owned/full/epoch/non-running/landing_fault; invalid or overlapping start raises sticky/bad. Static start comes from fixed calendar, never external ready gating.",
+   "evidence": {
+    "dq": [
+     {
+      "instance": "vmb_NW6",
+      "port": "dq",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "sfault_NW",
+      "port": "del_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmdel_NW7",
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "port": "block_ready",
+   "net": "vmdel_NW7__block_ready",
+   "width": 2,
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "die_line": 23321,
+   "source": "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_n.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Registered mirror of internal block_ready_c/running. Internal start_ok checks owned/full/epoch/non-running/landing_fault; invalid or overlapping start raises sticky/bad. Static start comes from fixed calendar, never external ready gating.",
+   "evidence": {
+    "dq": [
+     {
+      "instance": "vmb_NW7",
+      "port": "dq",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "sfault_NW",
+      "port": "del_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmdel_NW7",
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "port": "busy",
+   "net": "vmdel_NW7__busy",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 23321,
+   "source": "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_n.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Registered mirror of internal block_ready_c/running. Internal start_ok checks owned/full/epoch/non-running/landing_fault; invalid or overlapping start raises sticky/bad. Static start comes from fixed calendar, never external ready gating.",
+   "evidence": {
+    "dq": [
+     {
+      "instance": "vmb_NW7",
+      "port": "dq",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "sfault_NW",
+      "port": "del_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmdel_SE0",
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "port": "block_ready",
+   "net": "vmdel_SE0__block_ready",
+   "width": 2,
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "die_line": 22916,
+   "source": "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_n.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Registered mirror of internal block_ready_c/running. Internal start_ok checks owned/full/epoch/non-running/landing_fault; invalid or overlapping start raises sticky/bad. Static start comes from fixed calendar, never external ready gating.",
+   "evidence": {
+    "dq": [
+     {
+      "instance": "vmb_SE0",
+      "port": "dq",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "sfault_SE",
+      "port": "del_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmdel_SE0",
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "port": "busy",
+   "net": "vmdel_SE0__busy",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 22916,
+   "source": "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_n.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Registered mirror of internal block_ready_c/running. Internal start_ok checks owned/full/epoch/non-running/landing_fault; invalid or overlapping start raises sticky/bad. Static start comes from fixed calendar, never external ready gating.",
+   "evidence": {
+    "dq": [
+     {
+      "instance": "vmb_SE0",
+      "port": "dq",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "sfault_SE",
+      "port": "del_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmdel_SE1",
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "port": "block_ready",
+   "net": "vmdel_SE1__block_ready",
+   "width": 2,
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "die_line": 22943,
+   "source": "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_n.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Registered mirror of internal block_ready_c/running. Internal start_ok checks owned/full/epoch/non-running/landing_fault; invalid or overlapping start raises sticky/bad. Static start comes from fixed calendar, never external ready gating.",
+   "evidence": {
+    "dq": [
+     {
+      "instance": "vmb_SE1",
+      "port": "dq",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "sfault_SE",
+      "port": "del_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmdel_SE1",
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "port": "busy",
+   "net": "vmdel_SE1__busy",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 22943,
+   "source": "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_n.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Registered mirror of internal block_ready_c/running. Internal start_ok checks owned/full/epoch/non-running/landing_fault; invalid or overlapping start raises sticky/bad. Static start comes from fixed calendar, never external ready gating.",
+   "evidence": {
+    "dq": [
+     {
+      "instance": "vmb_SE1",
+      "port": "dq",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "sfault_SE",
+      "port": "del_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmdel_SE2",
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "port": "block_ready",
+   "net": "vmdel_SE2__block_ready",
+   "width": 2,
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "die_line": 22970,
+   "source": "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_n.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Registered mirror of internal block_ready_c/running. Internal start_ok checks owned/full/epoch/non-running/landing_fault; invalid or overlapping start raises sticky/bad. Static start comes from fixed calendar, never external ready gating.",
+   "evidence": {
+    "dq": [
+     {
+      "instance": "vmb_SE2",
+      "port": "dq",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "sfault_SE",
+      "port": "del_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmdel_SE2",
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "port": "busy",
+   "net": "vmdel_SE2__busy",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 22970,
+   "source": "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_n.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Registered mirror of internal block_ready_c/running. Internal start_ok checks owned/full/epoch/non-running/landing_fault; invalid or overlapping start raises sticky/bad. Static start comes from fixed calendar, never external ready gating.",
+   "evidence": {
+    "dq": [
+     {
+      "instance": "vmb_SE2",
+      "port": "dq",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "sfault_SE",
+      "port": "del_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmdel_SE3",
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "port": "block_ready",
+   "net": "vmdel_SE3__block_ready",
+   "width": 2,
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "die_line": 22997,
+   "source": "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_n.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Registered mirror of internal block_ready_c/running. Internal start_ok checks owned/full/epoch/non-running/landing_fault; invalid or overlapping start raises sticky/bad. Static start comes from fixed calendar, never external ready gating.",
+   "evidence": {
+    "dq": [
+     {
+      "instance": "vmb_SE3",
+      "port": "dq",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "sfault_SE",
+      "port": "del_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmdel_SE3",
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "port": "busy",
+   "net": "vmdel_SE3__busy",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 22997,
+   "source": "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_n.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Registered mirror of internal block_ready_c/running. Internal start_ok checks owned/full/epoch/non-running/landing_fault; invalid or overlapping start raises sticky/bad. Static start comes from fixed calendar, never external ready gating.",
+   "evidence": {
+    "dq": [
+     {
+      "instance": "vmb_SE3",
+      "port": "dq",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "sfault_SE",
+      "port": "del_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmdel_SE4",
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "port": "block_ready",
+   "net": "vmdel_SE4__block_ready",
+   "width": 2,
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "die_line": 23024,
+   "source": "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_n.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Registered mirror of internal block_ready_c/running. Internal start_ok checks owned/full/epoch/non-running/landing_fault; invalid or overlapping start raises sticky/bad. Static start comes from fixed calendar, never external ready gating.",
+   "evidence": {
+    "dq": [
+     {
+      "instance": "vmb_SE4",
+      "port": "dq",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "sfault_SE",
+      "port": "del_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmdel_SE4",
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "port": "busy",
+   "net": "vmdel_SE4__busy",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 23024,
+   "source": "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_n.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Registered mirror of internal block_ready_c/running. Internal start_ok checks owned/full/epoch/non-running/landing_fault; invalid or overlapping start raises sticky/bad. Static start comes from fixed calendar, never external ready gating.",
+   "evidence": {
+    "dq": [
+     {
+      "instance": "vmb_SE4",
+      "port": "dq",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "sfault_SE",
+      "port": "del_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmdel_SE5",
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "port": "block_ready",
+   "net": "vmdel_SE5__block_ready",
+   "width": 2,
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "die_line": 23051,
+   "source": "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_n.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Registered mirror of internal block_ready_c/running. Internal start_ok checks owned/full/epoch/non-running/landing_fault; invalid or overlapping start raises sticky/bad. Static start comes from fixed calendar, never external ready gating.",
+   "evidence": {
+    "dq": [
+     {
+      "instance": "vmb_SE5",
+      "port": "dq",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "sfault_SE",
+      "port": "del_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmdel_SE5",
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "port": "busy",
+   "net": "vmdel_SE5__busy",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 23051,
+   "source": "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_n.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Registered mirror of internal block_ready_c/running. Internal start_ok checks owned/full/epoch/non-running/landing_fault; invalid or overlapping start raises sticky/bad. Static start comes from fixed calendar, never external ready gating.",
+   "evidence": {
+    "dq": [
+     {
+      "instance": "vmb_SE5",
+      "port": "dq",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "sfault_SE",
+      "port": "del_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmdel_SE6",
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "port": "block_ready",
+   "net": "vmdel_SE6__block_ready",
+   "width": 2,
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "die_line": 23078,
+   "source": "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_n.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Registered mirror of internal block_ready_c/running. Internal start_ok checks owned/full/epoch/non-running/landing_fault; invalid or overlapping start raises sticky/bad. Static start comes from fixed calendar, never external ready gating.",
+   "evidence": {
+    "dq": [
+     {
+      "instance": "vmb_SE6",
+      "port": "dq",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "sfault_SE",
+      "port": "del_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmdel_SE6",
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "port": "busy",
+   "net": "vmdel_SE6__busy",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 23078,
+   "source": "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_n.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Registered mirror of internal block_ready_c/running. Internal start_ok checks owned/full/epoch/non-running/landing_fault; invalid or overlapping start raises sticky/bad. Static start comes from fixed calendar, never external ready gating.",
+   "evidence": {
+    "dq": [
+     {
+      "instance": "vmb_SE6",
+      "port": "dq",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "sfault_SE",
+      "port": "del_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmdel_SE7",
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "port": "block_ready",
+   "net": "vmdel_SE7__block_ready",
+   "width": 2,
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "die_line": 23105,
+   "source": "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_n.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Registered mirror of internal block_ready_c/running. Internal start_ok checks owned/full/epoch/non-running/landing_fault; invalid or overlapping start raises sticky/bad. Static start comes from fixed calendar, never external ready gating.",
+   "evidence": {
+    "dq": [
+     {
+      "instance": "vmb_SE7",
+      "port": "dq",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "sfault_SE",
+      "port": "del_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmdel_SE7",
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "port": "busy",
+   "net": "vmdel_SE7__busy",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 23105,
+   "source": "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_n.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Registered mirror of internal block_ready_c/running. Internal start_ok checks owned/full/epoch/non-running/landing_fault; invalid or overlapping start raises sticky/bad. Static start comes from fixed calendar, never external ready gating.",
+   "evidence": {
+    "dq": [
+     {
+      "instance": "vmb_SE7",
+      "port": "dq",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "sfault_SE",
+      "port": "del_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmdel_SW0",
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "port": "block_ready",
+   "net": "vmdel_SW0__block_ready",
+   "width": 2,
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "die_line": 22700,
+   "source": "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_n.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Registered mirror of internal block_ready_c/running. Internal start_ok checks owned/full/epoch/non-running/landing_fault; invalid or overlapping start raises sticky/bad. Static start comes from fixed calendar, never external ready gating.",
+   "evidence": {
+    "dq": [
+     {
+      "instance": "vmb_SW0",
+      "port": "dq",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "sfault_SW",
+      "port": "del_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmdel_SW0",
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "port": "busy",
+   "net": "vmdel_SW0__busy",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 22700,
+   "source": "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_n.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Registered mirror of internal block_ready_c/running. Internal start_ok checks owned/full/epoch/non-running/landing_fault; invalid or overlapping start raises sticky/bad. Static start comes from fixed calendar, never external ready gating.",
+   "evidence": {
+    "dq": [
+     {
+      "instance": "vmb_SW0",
+      "port": "dq",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "sfault_SW",
+      "port": "del_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmdel_SW1",
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "port": "block_ready",
+   "net": "vmdel_SW1__block_ready",
+   "width": 2,
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "die_line": 22727,
+   "source": "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_n.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Registered mirror of internal block_ready_c/running. Internal start_ok checks owned/full/epoch/non-running/landing_fault; invalid or overlapping start raises sticky/bad. Static start comes from fixed calendar, never external ready gating.",
+   "evidence": {
+    "dq": [
+     {
+      "instance": "vmb_SW1",
+      "port": "dq",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "sfault_SW",
+      "port": "del_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmdel_SW1",
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "port": "busy",
+   "net": "vmdel_SW1__busy",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 22727,
+   "source": "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_n.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Registered mirror of internal block_ready_c/running. Internal start_ok checks owned/full/epoch/non-running/landing_fault; invalid or overlapping start raises sticky/bad. Static start comes from fixed calendar, never external ready gating.",
+   "evidence": {
+    "dq": [
+     {
+      "instance": "vmb_SW1",
+      "port": "dq",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "sfault_SW",
+      "port": "del_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmdel_SW2",
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "port": "block_ready",
+   "net": "vmdel_SW2__block_ready",
+   "width": 2,
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "die_line": 22754,
+   "source": "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_n.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Registered mirror of internal block_ready_c/running. Internal start_ok checks owned/full/epoch/non-running/landing_fault; invalid or overlapping start raises sticky/bad. Static start comes from fixed calendar, never external ready gating.",
+   "evidence": {
+    "dq": [
+     {
+      "instance": "vmb_SW2",
+      "port": "dq",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "sfault_SW",
+      "port": "del_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmdel_SW2",
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "port": "busy",
+   "net": "vmdel_SW2__busy",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 22754,
+   "source": "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_n.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Registered mirror of internal block_ready_c/running. Internal start_ok checks owned/full/epoch/non-running/landing_fault; invalid or overlapping start raises sticky/bad. Static start comes from fixed calendar, never external ready gating.",
+   "evidence": {
+    "dq": [
+     {
+      "instance": "vmb_SW2",
+      "port": "dq",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "sfault_SW",
+      "port": "del_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmdel_SW3",
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "port": "block_ready",
+   "net": "vmdel_SW3__block_ready",
+   "width": 2,
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "die_line": 22781,
+   "source": "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_n.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Registered mirror of internal block_ready_c/running. Internal start_ok checks owned/full/epoch/non-running/landing_fault; invalid or overlapping start raises sticky/bad. Static start comes from fixed calendar, never external ready gating.",
+   "evidence": {
+    "dq": [
+     {
+      "instance": "vmb_SW3",
+      "port": "dq",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "sfault_SW",
+      "port": "del_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmdel_SW3",
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "port": "busy",
+   "net": "vmdel_SW3__busy",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 22781,
+   "source": "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_n.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Registered mirror of internal block_ready_c/running. Internal start_ok checks owned/full/epoch/non-running/landing_fault; invalid or overlapping start raises sticky/bad. Static start comes from fixed calendar, never external ready gating.",
+   "evidence": {
+    "dq": [
+     {
+      "instance": "vmb_SW3",
+      "port": "dq",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "sfault_SW",
+      "port": "del_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmdel_SW4",
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "port": "block_ready",
+   "net": "vmdel_SW4__block_ready",
+   "width": 2,
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "die_line": 22808,
+   "source": "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_n.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Registered mirror of internal block_ready_c/running. Internal start_ok checks owned/full/epoch/non-running/landing_fault; invalid or overlapping start raises sticky/bad. Static start comes from fixed calendar, never external ready gating.",
+   "evidence": {
+    "dq": [
+     {
+      "instance": "vmb_SW4",
+      "port": "dq",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "sfault_SW",
+      "port": "del_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmdel_SW4",
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "port": "busy",
+   "net": "vmdel_SW4__busy",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 22808,
+   "source": "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_n.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Registered mirror of internal block_ready_c/running. Internal start_ok checks owned/full/epoch/non-running/landing_fault; invalid or overlapping start raises sticky/bad. Static start comes from fixed calendar, never external ready gating.",
+   "evidence": {
+    "dq": [
+     {
+      "instance": "vmb_SW4",
+      "port": "dq",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "sfault_SW",
+      "port": "del_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmdel_SW5",
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "port": "block_ready",
+   "net": "vmdel_SW5__block_ready",
+   "width": 2,
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "die_line": 22835,
+   "source": "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_n.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Registered mirror of internal block_ready_c/running. Internal start_ok checks owned/full/epoch/non-running/landing_fault; invalid or overlapping start raises sticky/bad. Static start comes from fixed calendar, never external ready gating.",
+   "evidence": {
+    "dq": [
+     {
+      "instance": "vmb_SW5",
+      "port": "dq",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "sfault_SW",
+      "port": "del_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmdel_SW5",
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "port": "busy",
+   "net": "vmdel_SW5__busy",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 22835,
+   "source": "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_n.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Registered mirror of internal block_ready_c/running. Internal start_ok checks owned/full/epoch/non-running/landing_fault; invalid or overlapping start raises sticky/bad. Static start comes from fixed calendar, never external ready gating.",
+   "evidence": {
+    "dq": [
+     {
+      "instance": "vmb_SW5",
+      "port": "dq",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "sfault_SW",
+      "port": "del_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmdel_SW6",
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "port": "block_ready",
+   "net": "vmdel_SW6__block_ready",
+   "width": 2,
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "die_line": 22862,
+   "source": "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_n.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Registered mirror of internal block_ready_c/running. Internal start_ok checks owned/full/epoch/non-running/landing_fault; invalid or overlapping start raises sticky/bad. Static start comes from fixed calendar, never external ready gating.",
+   "evidence": {
+    "dq": [
+     {
+      "instance": "vmb_SW6",
+      "port": "dq",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "sfault_SW",
+      "port": "del_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmdel_SW6",
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "port": "busy",
+   "net": "vmdel_SW6__busy",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 22862,
+   "source": "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_n.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Registered mirror of internal block_ready_c/running. Internal start_ok checks owned/full/epoch/non-running/landing_fault; invalid or overlapping start raises sticky/bad. Static start comes from fixed calendar, never external ready gating.",
+   "evidence": {
+    "dq": [
+     {
+      "instance": "vmb_SW6",
+      "port": "dq",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "sfault_SW",
+      "port": "del_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmdel_SW7",
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "port": "block_ready",
+   "net": "vmdel_SW7__block_ready",
+   "width": 2,
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "die_line": 22889,
+   "source": "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_n.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Registered mirror of internal block_ready_c/running. Internal start_ok checks owned/full/epoch/non-running/landing_fault; invalid or overlapping start raises sticky/bad. Static start comes from fixed calendar, never external ready gating.",
+   "evidence": {
+    "dq": [
+     {
+      "instance": "vmb_SW7",
+      "port": "dq",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "sfault_SW",
+      "port": "del_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmdel_SW7",
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "port": "busy",
+   "net": "vmdel_SW7__busy",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 22889,
+   "source": "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_n.sv",
+   "classification": "internally_guarded_status_observation_review",
+   "reason": "Registered mirror of internal block_ready_c/running. Internal start_ok checks owned/full/epoch/non-running/landing_fault; invalid or overlapping start raises sticky/bad. Static start comes from fixed calendar, never external ready gating.",
+   "evidence": {
+    "dq": [
+     {
+      "instance": "vmb_SW7",
+      "port": "dq",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "sfault_SW",
+      "port": "del_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  }
+ ],
+ "source_commit": "d517a76ad",
+ "source_sha256": {
+  "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_n.sv": "771bf3ef7e5fa654a81791eb5e20ac4de512870dabebf6f87efb0d7c8a53bd92",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_issuer_rel.sv": "6acb3e9d66d70ceb211c86a317868e10bb15716787fdf9b3815a08b57d407d07",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ctl_v5.sv": "ee1d2707287a9acefe01e46d061771b7293a91e5dd1893c3e3f5e29d7df196d4",
+  "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static.sv": "b0c1cb519892223d69201f72106334407b6a132cc5314be28d24bc32a4444634"
+ },
+ "validation": "Read-only exact producer semantics/consumer graph; no new RTL bench. Review required before admission."
+}
