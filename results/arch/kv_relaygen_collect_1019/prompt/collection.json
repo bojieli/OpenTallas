@@ -1,0 +1,60 @@
+{
+  "source_commit": "37318d6a2",
+  "gate_status": "ACTIVE_CTS_HOLD_REPAIR_NOT_FINAL",
+  "original_gate_pid": 3656968,
+  "remote_host": "ot-epyc8",
+  "remote_root": "/srv/opentallas-scratch/claude/ref_gate/qkd_hr_core_prompt-20261019-070702",
+  "stale_gate_result": "local original gate_result is c0312e47c and MUST NOT qualify p7",
+  "reset_copy_groups": [
+    {
+      "family": "u_ot_pr_core.root__u_records.u_rst_relay.rst_n",
+      "copies": "9",
+      "total_loads": "1929",
+      "fixed": "0",
+      "moves": "1714",
+      "group_loads": "215,215,215,215,215,215,215,215,209",
+      "status": "OK",
+      "max_per_copy": 215
+    },
+    {
+      "family": "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_csr.u_rst_relay.rst_n",
+      "copies": "6",
+      "total_loads": "1369",
+      "fixed": "0",
+      "moves": "1140",
+      "group_loads": "229,229,229,229,229,224",
+      "status": "OK",
+      "max_per_copy": 229
+    },
+    {
+      "family": "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_host.u_rst_relay.rst_n",
+      "copies": "3",
+      "total_loads": "688",
+      "fixed": "0",
+      "moves": "458",
+      "group_loads": "230,230,228",
+      "status": "OK",
+      "max_per_copy": 230
+    },
+    {
+      "family": "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_pkg.u_rst_relay.rst_n",
+      "copies": "10",
+      "total_loads": "1516",
+      "fixed": "0",
+      "moves": "1364",
+      "group_loads": "152,152,152,152,152,152,152,152,152,148",
+      "status": "OK",
+      "max_per_copy": 152
+    }
+  ],
+  "reset_limit": 256,
+  "reset_copy_audit": "PASS,max230",
+  "hold_snapshot": {
+    "iteration": 4760,
+    "inserted_buffers": 9552,
+    "wns_ns": -32.474,
+    "tns_ns": -9467.78,
+    "worst_endpoint": "u_rank__u_control__u_packet__htd[157]$_DFF_P_/D"
+  },
+  "next": "Preservelivegate;constraint_auditread-onlyclassificationrequested;collectfinalgate+PNGsandROOTpacketwhencomplete;nosubmit/REVIEW"
+}
