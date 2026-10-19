@@ -1,0 +1,3093 @@
+{
+ "schema": "opentallas.hbm_banklat_su.budget.v1",
+ "contract": "/home/ubuntu/artifacts/hdie-d4/d4g_gen2c/net/contract_pre.json",
+ "budget": {
+  "ot_hbm_su_static_pgslice_lg": {
+   "READ_RETURN": 18,
+   "WRITE_RETURN": 15
+  },
+  "ot_hgi_sfu_lg_pair_tap_leaf": {
+   "READ_RETURN": 24,
+   "WRITE_RETURN": 21
+  },
+  "ot_hgi_sfu_lg_pair_tap_leaf_term": {
+   "READ_RETURN": 32,
+   "WRITE_RETURN": 29
+  }
+ },
+ "note": "HBM-BANKLAT-SU 10-19: LG tap chain budget (SU pgslice_lg / SFU tap_leaf / HC tap_leaf_term) and the die pads it implies.\n    python3 su_sfu_hc_budget.py CONTRACT.json OUT.json      (uses tools/hbm_die_v16/d4g_bank_latency.py check())\nBudget = one scalar value per tap master on every quadrant (one hard view each): SU 18/15 (GEN2c max need 17/14, +1 for\nGEN2d), SFU = SU + 4 + 2 lane edges (GEN2c max su<->sfu 1/1), HC = SFU + 4 + 4 lane edges (GEN2c max sfu<->hc 2/2).\nThe die pads each hop's SHORT direction (narrow side preferred: rq 17 b/bank for reads, w_done 1 b/bank for writes) so\nevery bank's round trip equals the budget; the LAT class then PASSes with the params set to the budget.",
+ "rows": [
+  {
+   "client": "hc_NE0",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "gen2c_have": 18,
+   "gen2c_need": 27,
+   "budget": 32,
+   "pads": [
+    {
+     "bank": "vmb_NE0",
+     "via": "sfu_NE0",
+     "lanes": [
+      2,
+      2
+     ],
+     "rt_now": 23,
+     "pad": 0
+    },
+    {
+     "bank": "vmb_NE1",
+     "via": "sfu_NE0",
+     "lanes": [
+      2,
+      2
+     ],
+     "rt_now": 23,
+     "pad": 0
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "hc_NE0",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "gen2c_have": 15,
+   "gen2c_need": 24,
+   "budget": 29,
+   "pads": [
+    {
+     "bank": "vmb_NE0",
+     "via": "sfu_NE0",
+     "lanes": [
+      2,
+      2
+     ],
+     "rt_now": 20,
+     "pad": 0
+    },
+    {
+     "bank": "vmb_NE1",
+     "via": "sfu_NE0",
+     "lanes": [
+      2,
+      2
+     ],
+     "rt_now": 20,
+     "pad": 0
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "hc_NE1",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "gen2c_have": 18,
+   "gen2c_need": 27,
+   "budget": 32,
+   "pads": [
+    {
+     "bank": "vmb_NE2",
+     "via": "sfu_NE1",
+     "lanes": [
+      2,
+      2
+     ],
+     "rt_now": 23,
+     "pad": 0
+    },
+    {
+     "bank": "vmb_NE3",
+     "via": "sfu_NE1",
+     "lanes": [
+      2,
+      2
+     ],
+     "rt_now": 23,
+     "pad": 0
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "hc_NE1",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "gen2c_have": 15,
+   "gen2c_need": 24,
+   "budget": 29,
+   "pads": [
+    {
+     "bank": "vmb_NE2",
+     "via": "sfu_NE1",
+     "lanes": [
+      2,
+      2
+     ],
+     "rt_now": 20,
+     "pad": 0
+    },
+    {
+     "bank": "vmb_NE3",
+     "via": "sfu_NE1",
+     "lanes": [
+      2,
+      2
+     ],
+     "rt_now": 20,
+     "pad": 0
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "hc_NE2",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "gen2c_have": 18,
+   "gen2c_need": 27,
+   "budget": 32,
+   "pads": [
+    {
+     "bank": "vmb_NE4",
+     "via": "sfu_NE2",
+     "lanes": [
+      2,
+      2
+     ],
+     "rt_now": 23,
+     "pad": 0
+    },
+    {
+     "bank": "vmb_NE5",
+     "via": "sfu_NE2",
+     "lanes": [
+      2,
+      2
+     ],
+     "rt_now": 23,
+     "pad": 0
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "hc_NE2",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "gen2c_have": 15,
+   "gen2c_need": 24,
+   "budget": 29,
+   "pads": [
+    {
+     "bank": "vmb_NE4",
+     "via": "sfu_NE2",
+     "lanes": [
+      2,
+      2
+     ],
+     "rt_now": 20,
+     "pad": 0
+    },
+    {
+     "bank": "vmb_NE5",
+     "via": "sfu_NE2",
+     "lanes": [
+      2,
+      2
+     ],
+     "rt_now": 20,
+     "pad": 0
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "hc_NE3",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "gen2c_have": 18,
+   "gen2c_need": 27,
+   "budget": 32,
+   "pads": [
+    {
+     "bank": "vmb_NE6",
+     "via": "sfu_NE3",
+     "lanes": [
+      2,
+      2
+     ],
+     "rt_now": 23,
+     "pad": 0
+    },
+    {
+     "bank": "vmb_NE7",
+     "via": "sfu_NE3",
+     "lanes": [
+      2,
+      2
+     ],
+     "rt_now": 23,
+     "pad": 0
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "hc_NE3",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "gen2c_have": 15,
+   "gen2c_need": 24,
+   "budget": 29,
+   "pads": [
+    {
+     "bank": "vmb_NE6",
+     "via": "sfu_NE3",
+     "lanes": [
+      2,
+      2
+     ],
+     "rt_now": 20,
+     "pad": 0
+    },
+    {
+     "bank": "vmb_NE7",
+     "via": "sfu_NE3",
+     "lanes": [
+      2,
+      2
+     ],
+     "rt_now": 20,
+     "pad": 0
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "hc_NW0",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "gen2c_have": 18,
+   "gen2c_need": 29,
+   "budget": 32,
+   "pads": [
+    {
+     "bank": "vmb_NW0",
+     "via": "sfu_NW0",
+     "lanes": [
+      1,
+      1
+     ],
+     "rt_now": 25,
+     "pad": 2
+    },
+    {
+     "bank": "vmb_NW1",
+     "via": "sfu_NW0",
+     "lanes": [
+      1,
+      1
+     ],
+     "rt_now": 25,
+     "pad": 2
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "hc_NW0",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "gen2c_have": 15,
+   "gen2c_need": 26,
+   "budget": 29,
+   "pads": [
+    {
+     "bank": "vmb_NW0",
+     "via": "sfu_NW0",
+     "lanes": [
+      1,
+      1
+     ],
+     "rt_now": 22,
+     "pad": 2
+    },
+    {
+     "bank": "vmb_NW1",
+     "via": "sfu_NW0",
+     "lanes": [
+      1,
+      1
+     ],
+     "rt_now": 22,
+     "pad": 2
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "hc_NW1",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "gen2c_have": 18,
+   "gen2c_need": 29,
+   "budget": 32,
+   "pads": [
+    {
+     "bank": "vmb_NW2",
+     "via": "sfu_NW1",
+     "lanes": [
+      1,
+      1
+     ],
+     "rt_now": 25,
+     "pad": 2
+    },
+    {
+     "bank": "vmb_NW3",
+     "via": "sfu_NW1",
+     "lanes": [
+      1,
+      1
+     ],
+     "rt_now": 25,
+     "pad": 2
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "hc_NW1",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "gen2c_have": 15,
+   "gen2c_need": 26,
+   "budget": 29,
+   "pads": [
+    {
+     "bank": "vmb_NW2",
+     "via": "sfu_NW1",
+     "lanes": [
+      1,
+      1
+     ],
+     "rt_now": 22,
+     "pad": 2
+    },
+    {
+     "bank": "vmb_NW3",
+     "via": "sfu_NW1",
+     "lanes": [
+      1,
+      1
+     ],
+     "rt_now": 22,
+     "pad": 2
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "hc_NW2",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "gen2c_have": 18,
+   "gen2c_need": 29,
+   "budget": 32,
+   "pads": [
+    {
+     "bank": "vmb_NW4",
+     "via": "sfu_NW2",
+     "lanes": [
+      1,
+      1
+     ],
+     "rt_now": 25,
+     "pad": 2
+    },
+    {
+     "bank": "vmb_NW5",
+     "via": "sfu_NW2",
+     "lanes": [
+      1,
+      1
+     ],
+     "rt_now": 25,
+     "pad": 2
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "hc_NW2",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "gen2c_have": 15,
+   "gen2c_need": 26,
+   "budget": 29,
+   "pads": [
+    {
+     "bank": "vmb_NW4",
+     "via": "sfu_NW2",
+     "lanes": [
+      1,
+      1
+     ],
+     "rt_now": 22,
+     "pad": 2
+    },
+    {
+     "bank": "vmb_NW5",
+     "via": "sfu_NW2",
+     "lanes": [
+      1,
+      1
+     ],
+     "rt_now": 22,
+     "pad": 2
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "hc_NW3",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "gen2c_have": 18,
+   "gen2c_need": 29,
+   "budget": 32,
+   "pads": [
+    {
+     "bank": "vmb_NW6",
+     "via": "sfu_NW3",
+     "lanes": [
+      1,
+      1
+     ],
+     "rt_now": 25,
+     "pad": 2
+    },
+    {
+     "bank": "vmb_NW7",
+     "via": "sfu_NW3",
+     "lanes": [
+      1,
+      1
+     ],
+     "rt_now": 25,
+     "pad": 2
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "hc_NW3",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "gen2c_have": 15,
+   "gen2c_need": 26,
+   "budget": 29,
+   "pads": [
+    {
+     "bank": "vmb_NW6",
+     "via": "sfu_NW3",
+     "lanes": [
+      1,
+      1
+     ],
+     "rt_now": 22,
+     "pad": 2
+    },
+    {
+     "bank": "vmb_NW7",
+     "via": "sfu_NW3",
+     "lanes": [
+      1,
+      1
+     ],
+     "rt_now": 22,
+     "pad": 2
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "hc_SE0",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "gen2c_have": 18,
+   "gen2c_need": 25,
+   "budget": 32,
+   "pads": [
+    {
+     "bank": "vmb_SE0",
+     "via": "sfu_SE0",
+     "lanes": [
+      1,
+      1
+     ],
+     "rt_now": 21,
+     "pad": 2
+    },
+    {
+     "bank": "vmb_SE1",
+     "via": "sfu_SE0",
+     "lanes": [
+      1,
+      1
+     ],
+     "rt_now": 21,
+     "pad": 2
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "hc_SE0",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "gen2c_have": 15,
+   "gen2c_need": 22,
+   "budget": 29,
+   "pads": [
+    {
+     "bank": "vmb_SE0",
+     "via": "sfu_SE0",
+     "lanes": [
+      1,
+      1
+     ],
+     "rt_now": 18,
+     "pad": 2
+    },
+    {
+     "bank": "vmb_SE1",
+     "via": "sfu_SE0",
+     "lanes": [
+      1,
+      1
+     ],
+     "rt_now": 18,
+     "pad": 2
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "hc_SE1",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "gen2c_have": 18,
+   "gen2c_need": 26,
+   "budget": 32,
+   "pads": [
+    {
+     "bank": "vmb_SE2",
+     "via": "sfu_SE1",
+     "lanes": [
+      2,
+      1
+     ],
+     "rt_now": 22,
+     "pad": 1
+    },
+    {
+     "bank": "vmb_SE3",
+     "via": "sfu_SE1",
+     "lanes": [
+      2,
+      1
+     ],
+     "rt_now": 22,
+     "pad": 1
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "hc_SE1",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "gen2c_have": 15,
+   "gen2c_need": 23,
+   "budget": 29,
+   "pads": [
+    {
+     "bank": "vmb_SE2",
+     "via": "sfu_SE1",
+     "lanes": [
+      2,
+      1
+     ],
+     "rt_now": 19,
+     "pad": 1
+    },
+    {
+     "bank": "vmb_SE3",
+     "via": "sfu_SE1",
+     "lanes": [
+      2,
+      1
+     ],
+     "rt_now": 19,
+     "pad": 1
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "hc_SE2",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "gen2c_have": 18,
+   "gen2c_need": 26,
+   "budget": 32,
+   "pads": [
+    {
+     "bank": "vmb_SE4",
+     "via": "sfu_SE2",
+     "lanes": [
+      2,
+      1
+     ],
+     "rt_now": 22,
+     "pad": 1
+    },
+    {
+     "bank": "vmb_SE5",
+     "via": "sfu_SE2",
+     "lanes": [
+      2,
+      1
+     ],
+     "rt_now": 22,
+     "pad": 1
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "hc_SE2",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "gen2c_have": 15,
+   "gen2c_need": 23,
+   "budget": 29,
+   "pads": [
+    {
+     "bank": "vmb_SE4",
+     "via": "sfu_SE2",
+     "lanes": [
+      2,
+      1
+     ],
+     "rt_now": 19,
+     "pad": 1
+    },
+    {
+     "bank": "vmb_SE5",
+     "via": "sfu_SE2",
+     "lanes": [
+      2,
+      1
+     ],
+     "rt_now": 19,
+     "pad": 1
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "hc_SE3",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "gen2c_have": 18,
+   "gen2c_need": 26,
+   "budget": 32,
+   "pads": [
+    {
+     "bank": "vmb_SE6",
+     "via": "sfu_SE3",
+     "lanes": [
+      2,
+      1
+     ],
+     "rt_now": 22,
+     "pad": 1
+    },
+    {
+     "bank": "vmb_SE7",
+     "via": "sfu_SE3",
+     "lanes": [
+      2,
+      1
+     ],
+     "rt_now": 22,
+     "pad": 1
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "hc_SE3",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "gen2c_have": 15,
+   "gen2c_need": 23,
+   "budget": 29,
+   "pads": [
+    {
+     "bank": "vmb_SE6",
+     "via": "sfu_SE3",
+     "lanes": [
+      2,
+      1
+     ],
+     "rt_now": 19,
+     "pad": 1
+    },
+    {
+     "bank": "vmb_SE7",
+     "via": "sfu_SE3",
+     "lanes": [
+      2,
+      1
+     ],
+     "rt_now": 19,
+     "pad": 1
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "hc_SW0",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "gen2c_have": 18,
+   "gen2c_need": 29,
+   "budget": 32,
+   "pads": [
+    {
+     "bank": "vmb_SW0",
+     "via": "sfu_SW0",
+     "lanes": [
+      1,
+      1
+     ],
+     "rt_now": 25,
+     "pad": 2
+    },
+    {
+     "bank": "vmb_SW1",
+     "via": "sfu_SW0",
+     "lanes": [
+      1,
+      1
+     ],
+     "rt_now": 25,
+     "pad": 2
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "hc_SW0",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "gen2c_have": 15,
+   "gen2c_need": 26,
+   "budget": 29,
+   "pads": [
+    {
+     "bank": "vmb_SW0",
+     "via": "sfu_SW0",
+     "lanes": [
+      1,
+      1
+     ],
+     "rt_now": 22,
+     "pad": 2
+    },
+    {
+     "bank": "vmb_SW1",
+     "via": "sfu_SW0",
+     "lanes": [
+      1,
+      1
+     ],
+     "rt_now": 22,
+     "pad": 2
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "hc_SW1",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "gen2c_have": 18,
+   "gen2c_need": 29,
+   "budget": 32,
+   "pads": [
+    {
+     "bank": "vmb_SW2",
+     "via": "sfu_SW1",
+     "lanes": [
+      1,
+      1
+     ],
+     "rt_now": 25,
+     "pad": 2
+    },
+    {
+     "bank": "vmb_SW3",
+     "via": "sfu_SW1",
+     "lanes": [
+      1,
+      1
+     ],
+     "rt_now": 25,
+     "pad": 2
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "hc_SW1",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "gen2c_have": 15,
+   "gen2c_need": 26,
+   "budget": 29,
+   "pads": [
+    {
+     "bank": "vmb_SW2",
+     "via": "sfu_SW1",
+     "lanes": [
+      1,
+      1
+     ],
+     "rt_now": 22,
+     "pad": 2
+    },
+    {
+     "bank": "vmb_SW3",
+     "via": "sfu_SW1",
+     "lanes": [
+      1,
+      1
+     ],
+     "rt_now": 22,
+     "pad": 2
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "hc_SW2",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "gen2c_have": 18,
+   "gen2c_need": 29,
+   "budget": 32,
+   "pads": [
+    {
+     "bank": "vmb_SW4",
+     "via": "sfu_SW2",
+     "lanes": [
+      1,
+      1
+     ],
+     "rt_now": 25,
+     "pad": 2
+    },
+    {
+     "bank": "vmb_SW5",
+     "via": "sfu_SW2",
+     "lanes": [
+      1,
+      1
+     ],
+     "rt_now": 25,
+     "pad": 2
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "hc_SW2",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "gen2c_have": 15,
+   "gen2c_need": 26,
+   "budget": 29,
+   "pads": [
+    {
+     "bank": "vmb_SW4",
+     "via": "sfu_SW2",
+     "lanes": [
+      1,
+      1
+     ],
+     "rt_now": 22,
+     "pad": 2
+    },
+    {
+     "bank": "vmb_SW5",
+     "via": "sfu_SW2",
+     "lanes": [
+      1,
+      1
+     ],
+     "rt_now": 22,
+     "pad": 2
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "hc_SW3",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "gen2c_have": 18,
+   "gen2c_need": 29,
+   "budget": 32,
+   "pads": [
+    {
+     "bank": "vmb_SW6",
+     "via": "sfu_SW3",
+     "lanes": [
+      1,
+      1
+     ],
+     "rt_now": 25,
+     "pad": 2
+    },
+    {
+     "bank": "vmb_SW7",
+     "via": "sfu_SW3",
+     "lanes": [
+      1,
+      1
+     ],
+     "rt_now": 25,
+     "pad": 2
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "hc_SW3",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "gen2c_have": 15,
+   "gen2c_need": 26,
+   "budget": 29,
+   "pads": [
+    {
+     "bank": "vmb_SW6",
+     "via": "sfu_SW3",
+     "lanes": [
+      1,
+      1
+     ],
+     "rt_now": 22,
+     "pad": 2
+    },
+    {
+     "bank": "vmb_SW7",
+     "via": "sfu_SW3",
+     "lanes": [
+      1,
+      1
+     ],
+     "rt_now": 22,
+     "pad": 2
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "sfu_NE0",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "gen2c_have": 14,
+   "gen2c_need": 19,
+   "budget": 24,
+   "pads": [
+    {
+     "bank": "vmb_NE0",
+     "via": "su_NE0",
+     "lanes": [
+      0,
+      0
+     ],
+     "rt_now": 15,
+     "pad": 2
+    },
+    {
+     "bank": "vmb_NE1",
+     "via": "su_NE0",
+     "lanes": [
+      0,
+      0
+     ],
+     "rt_now": 15,
+     "pad": 2
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "sfu_NE0",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "gen2c_have": 11,
+   "gen2c_need": 16,
+   "budget": 21,
+   "pads": [
+    {
+     "bank": "vmb_NE0",
+     "via": "su_NE0",
+     "lanes": [
+      0,
+      0
+     ],
+     "rt_now": 12,
+     "pad": 2
+    },
+    {
+     "bank": "vmb_NE1",
+     "via": "su_NE0",
+     "lanes": [
+      0,
+      0
+     ],
+     "rt_now": 12,
+     "pad": 2
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "sfu_NE1",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "gen2c_have": 14,
+   "gen2c_need": 19,
+   "budget": 24,
+   "pads": [
+    {
+     "bank": "vmb_NE2",
+     "via": "su_NE1",
+     "lanes": [
+      0,
+      0
+     ],
+     "rt_now": 15,
+     "pad": 2
+    },
+    {
+     "bank": "vmb_NE3",
+     "via": "su_NE1",
+     "lanes": [
+      0,
+      0
+     ],
+     "rt_now": 15,
+     "pad": 2
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "sfu_NE1",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "gen2c_have": 11,
+   "gen2c_need": 16,
+   "budget": 21,
+   "pads": [
+    {
+     "bank": "vmb_NE2",
+     "via": "su_NE1",
+     "lanes": [
+      0,
+      0
+     ],
+     "rt_now": 12,
+     "pad": 2
+    },
+    {
+     "bank": "vmb_NE3",
+     "via": "su_NE1",
+     "lanes": [
+      0,
+      0
+     ],
+     "rt_now": 12,
+     "pad": 2
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "sfu_NE2",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "gen2c_have": 14,
+   "gen2c_need": 19,
+   "budget": 24,
+   "pads": [
+    {
+     "bank": "vmb_NE4",
+     "via": "su_NE2",
+     "lanes": [
+      0,
+      0
+     ],
+     "rt_now": 15,
+     "pad": 2
+    },
+    {
+     "bank": "vmb_NE5",
+     "via": "su_NE2",
+     "lanes": [
+      0,
+      0
+     ],
+     "rt_now": 15,
+     "pad": 2
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "sfu_NE2",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "gen2c_have": 11,
+   "gen2c_need": 16,
+   "budget": 21,
+   "pads": [
+    {
+     "bank": "vmb_NE4",
+     "via": "su_NE2",
+     "lanes": [
+      0,
+      0
+     ],
+     "rt_now": 12,
+     "pad": 2
+    },
+    {
+     "bank": "vmb_NE5",
+     "via": "su_NE2",
+     "lanes": [
+      0,
+      0
+     ],
+     "rt_now": 12,
+     "pad": 2
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "sfu_NE3",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "gen2c_have": 14,
+   "gen2c_need": 19,
+   "budget": 24,
+   "pads": [
+    {
+     "bank": "vmb_NE6",
+     "via": "su_NE3",
+     "lanes": [
+      0,
+      0
+     ],
+     "rt_now": 15,
+     "pad": 2
+    },
+    {
+     "bank": "vmb_NE7",
+     "via": "su_NE3",
+     "lanes": [
+      0,
+      0
+     ],
+     "rt_now": 15,
+     "pad": 2
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "sfu_NE3",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "gen2c_have": 11,
+   "gen2c_need": 16,
+   "budget": 21,
+   "pads": [
+    {
+     "bank": "vmb_NE6",
+     "via": "su_NE3",
+     "lanes": [
+      0,
+      0
+     ],
+     "rt_now": 12,
+     "pad": 2
+    },
+    {
+     "bank": "vmb_NE7",
+     "via": "su_NE3",
+     "lanes": [
+      0,
+      0
+     ],
+     "rt_now": 12,
+     "pad": 2
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "sfu_NW0",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "gen2c_have": 14,
+   "gen2c_need": 23,
+   "budget": 24,
+   "pads": [
+    {
+     "bank": "vmb_NW0",
+     "via": "su_NW0",
+     "lanes": [
+      1,
+      1
+     ],
+     "rt_now": 19,
+     "pad": 0
+    },
+    {
+     "bank": "vmb_NW1",
+     "via": "su_NW0",
+     "lanes": [
+      1,
+      1
+     ],
+     "rt_now": 19,
+     "pad": 0
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "sfu_NW0",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "gen2c_have": 11,
+   "gen2c_need": 20,
+   "budget": 21,
+   "pads": [
+    {
+     "bank": "vmb_NW0",
+     "via": "su_NW0",
+     "lanes": [
+      1,
+      1
+     ],
+     "rt_now": 16,
+     "pad": 0
+    },
+    {
+     "bank": "vmb_NW1",
+     "via": "su_NW0",
+     "lanes": [
+      1,
+      1
+     ],
+     "rt_now": 16,
+     "pad": 0
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "sfu_NW1",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "gen2c_have": 14,
+   "gen2c_need": 23,
+   "budget": 24,
+   "pads": [
+    {
+     "bank": "vmb_NW2",
+     "via": "su_NW1",
+     "lanes": [
+      1,
+      1
+     ],
+     "rt_now": 19,
+     "pad": 0
+    },
+    {
+     "bank": "vmb_NW3",
+     "via": "su_NW1",
+     "lanes": [
+      1,
+      1
+     ],
+     "rt_now": 19,
+     "pad": 0
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "sfu_NW1",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "gen2c_have": 11,
+   "gen2c_need": 20,
+   "budget": 21,
+   "pads": [
+    {
+     "bank": "vmb_NW2",
+     "via": "su_NW1",
+     "lanes": [
+      1,
+      1
+     ],
+     "rt_now": 16,
+     "pad": 0
+    },
+    {
+     "bank": "vmb_NW3",
+     "via": "su_NW1",
+     "lanes": [
+      1,
+      1
+     ],
+     "rt_now": 16,
+     "pad": 0
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "sfu_NW2",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "gen2c_have": 14,
+   "gen2c_need": 23,
+   "budget": 24,
+   "pads": [
+    {
+     "bank": "vmb_NW4",
+     "via": "su_NW2",
+     "lanes": [
+      1,
+      1
+     ],
+     "rt_now": 19,
+     "pad": 0
+    },
+    {
+     "bank": "vmb_NW5",
+     "via": "su_NW2",
+     "lanes": [
+      1,
+      1
+     ],
+     "rt_now": 19,
+     "pad": 0
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "sfu_NW2",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "gen2c_have": 11,
+   "gen2c_need": 20,
+   "budget": 21,
+   "pads": [
+    {
+     "bank": "vmb_NW4",
+     "via": "su_NW2",
+     "lanes": [
+      1,
+      1
+     ],
+     "rt_now": 16,
+     "pad": 0
+    },
+    {
+     "bank": "vmb_NW5",
+     "via": "su_NW2",
+     "lanes": [
+      1,
+      1
+     ],
+     "rt_now": 16,
+     "pad": 0
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "sfu_NW3",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "gen2c_have": 14,
+   "gen2c_need": 23,
+   "budget": 24,
+   "pads": [
+    {
+     "bank": "vmb_NW6",
+     "via": "su_NW3",
+     "lanes": [
+      1,
+      1
+     ],
+     "rt_now": 19,
+     "pad": 0
+    },
+    {
+     "bank": "vmb_NW7",
+     "via": "su_NW3",
+     "lanes": [
+      1,
+      1
+     ],
+     "rt_now": 19,
+     "pad": 0
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "sfu_NW3",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "gen2c_have": 11,
+   "gen2c_need": 20,
+   "budget": 21,
+   "pads": [
+    {
+     "bank": "vmb_NW6",
+     "via": "su_NW3",
+     "lanes": [
+      1,
+      1
+     ],
+     "rt_now": 16,
+     "pad": 0
+    },
+    {
+     "bank": "vmb_NW7",
+     "via": "su_NW3",
+     "lanes": [
+      1,
+      1
+     ],
+     "rt_now": 16,
+     "pad": 0
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "sfu_SE0",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "gen2c_have": 14,
+   "gen2c_need": 19,
+   "budget": 24,
+   "pads": [
+    {
+     "bank": "vmb_SE0",
+     "via": "su_SE0",
+     "lanes": [
+      0,
+      0
+     ],
+     "rt_now": 15,
+     "pad": 2
+    },
+    {
+     "bank": "vmb_SE1",
+     "via": "su_SE0",
+     "lanes": [
+      0,
+      0
+     ],
+     "rt_now": 15,
+     "pad": 2
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "sfu_SE0",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "gen2c_have": 11,
+   "gen2c_need": 16,
+   "budget": 21,
+   "pads": [
+    {
+     "bank": "vmb_SE0",
+     "via": "su_SE0",
+     "lanes": [
+      0,
+      0
+     ],
+     "rt_now": 12,
+     "pad": 2
+    },
+    {
+     "bank": "vmb_SE1",
+     "via": "su_SE0",
+     "lanes": [
+      0,
+      0
+     ],
+     "rt_now": 12,
+     "pad": 2
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "sfu_SE1",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "gen2c_have": 14,
+   "gen2c_need": 19,
+   "budget": 24,
+   "pads": [
+    {
+     "bank": "vmb_SE2",
+     "via": "su_SE1",
+     "lanes": [
+      0,
+      0
+     ],
+     "rt_now": 15,
+     "pad": 2
+    },
+    {
+     "bank": "vmb_SE3",
+     "via": "su_SE1",
+     "lanes": [
+      0,
+      0
+     ],
+     "rt_now": 15,
+     "pad": 2
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "sfu_SE1",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "gen2c_have": 11,
+   "gen2c_need": 16,
+   "budget": 21,
+   "pads": [
+    {
+     "bank": "vmb_SE2",
+     "via": "su_SE1",
+     "lanes": [
+      0,
+      0
+     ],
+     "rt_now": 12,
+     "pad": 2
+    },
+    {
+     "bank": "vmb_SE3",
+     "via": "su_SE1",
+     "lanes": [
+      0,
+      0
+     ],
+     "rt_now": 12,
+     "pad": 2
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "sfu_SE2",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "gen2c_have": 14,
+   "gen2c_need": 19,
+   "budget": 24,
+   "pads": [
+    {
+     "bank": "vmb_SE4",
+     "via": "su_SE2",
+     "lanes": [
+      0,
+      0
+     ],
+     "rt_now": 15,
+     "pad": 2
+    },
+    {
+     "bank": "vmb_SE5",
+     "via": "su_SE2",
+     "lanes": [
+      0,
+      0
+     ],
+     "rt_now": 15,
+     "pad": 2
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "sfu_SE2",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "gen2c_have": 11,
+   "gen2c_need": 16,
+   "budget": 21,
+   "pads": [
+    {
+     "bank": "vmb_SE4",
+     "via": "su_SE2",
+     "lanes": [
+      0,
+      0
+     ],
+     "rt_now": 12,
+     "pad": 2
+    },
+    {
+     "bank": "vmb_SE5",
+     "via": "su_SE2",
+     "lanes": [
+      0,
+      0
+     ],
+     "rt_now": 12,
+     "pad": 2
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "sfu_SE3",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "gen2c_have": 14,
+   "gen2c_need": 19,
+   "budget": 24,
+   "pads": [
+    {
+     "bank": "vmb_SE6",
+     "via": "su_SE3",
+     "lanes": [
+      0,
+      0
+     ],
+     "rt_now": 15,
+     "pad": 2
+    },
+    {
+     "bank": "vmb_SE7",
+     "via": "su_SE3",
+     "lanes": [
+      0,
+      0
+     ],
+     "rt_now": 15,
+     "pad": 2
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "sfu_SE3",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "gen2c_have": 11,
+   "gen2c_need": 16,
+   "budget": 21,
+   "pads": [
+    {
+     "bank": "vmb_SE6",
+     "via": "su_SE3",
+     "lanes": [
+      0,
+      0
+     ],
+     "rt_now": 12,
+     "pad": 2
+    },
+    {
+     "bank": "vmb_SE7",
+     "via": "su_SE3",
+     "lanes": [
+      0,
+      0
+     ],
+     "rt_now": 12,
+     "pad": 2
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "sfu_SW0",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "gen2c_have": 14,
+   "gen2c_need": 23,
+   "budget": 24,
+   "pads": [
+    {
+     "bank": "vmb_SW0",
+     "via": "su_SW0",
+     "lanes": [
+      1,
+      1
+     ],
+     "rt_now": 19,
+     "pad": 0
+    },
+    {
+     "bank": "vmb_SW1",
+     "via": "su_SW0",
+     "lanes": [
+      1,
+      1
+     ],
+     "rt_now": 19,
+     "pad": 0
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "sfu_SW0",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "gen2c_have": 11,
+   "gen2c_need": 20,
+   "budget": 21,
+   "pads": [
+    {
+     "bank": "vmb_SW0",
+     "via": "su_SW0",
+     "lanes": [
+      1,
+      1
+     ],
+     "rt_now": 16,
+     "pad": 0
+    },
+    {
+     "bank": "vmb_SW1",
+     "via": "su_SW0",
+     "lanes": [
+      1,
+      1
+     ],
+     "rt_now": 16,
+     "pad": 0
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "sfu_SW1",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "gen2c_have": 14,
+   "gen2c_need": 23,
+   "budget": 24,
+   "pads": [
+    {
+     "bank": "vmb_SW2",
+     "via": "su_SW1",
+     "lanes": [
+      1,
+      1
+     ],
+     "rt_now": 19,
+     "pad": 0
+    },
+    {
+     "bank": "vmb_SW3",
+     "via": "su_SW1",
+     "lanes": [
+      1,
+      1
+     ],
+     "rt_now": 19,
+     "pad": 0
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "sfu_SW1",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "gen2c_have": 11,
+   "gen2c_need": 20,
+   "budget": 21,
+   "pads": [
+    {
+     "bank": "vmb_SW2",
+     "via": "su_SW1",
+     "lanes": [
+      1,
+      1
+     ],
+     "rt_now": 16,
+     "pad": 0
+    },
+    {
+     "bank": "vmb_SW3",
+     "via": "su_SW1",
+     "lanes": [
+      1,
+      1
+     ],
+     "rt_now": 16,
+     "pad": 0
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "sfu_SW2",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "gen2c_have": 14,
+   "gen2c_need": 23,
+   "budget": 24,
+   "pads": [
+    {
+     "bank": "vmb_SW4",
+     "via": "su_SW2",
+     "lanes": [
+      1,
+      1
+     ],
+     "rt_now": 19,
+     "pad": 0
+    },
+    {
+     "bank": "vmb_SW5",
+     "via": "su_SW2",
+     "lanes": [
+      1,
+      1
+     ],
+     "rt_now": 19,
+     "pad": 0
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "sfu_SW2",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "gen2c_have": 11,
+   "gen2c_need": 20,
+   "budget": 21,
+   "pads": [
+    {
+     "bank": "vmb_SW4",
+     "via": "su_SW2",
+     "lanes": [
+      1,
+      1
+     ],
+     "rt_now": 16,
+     "pad": 0
+    },
+    {
+     "bank": "vmb_SW5",
+     "via": "su_SW2",
+     "lanes": [
+      1,
+      1
+     ],
+     "rt_now": 16,
+     "pad": 0
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "sfu_SW3",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "gen2c_have": 14,
+   "gen2c_need": 23,
+   "budget": 24,
+   "pads": [
+    {
+     "bank": "vmb_SW6",
+     "via": "su_SW3",
+     "lanes": [
+      1,
+      1
+     ],
+     "rt_now": 19,
+     "pad": 0
+    },
+    {
+     "bank": "vmb_SW7",
+     "via": "su_SW3",
+     "lanes": [
+      1,
+      1
+     ],
+     "rt_now": 19,
+     "pad": 0
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "sfu_SW3",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "gen2c_have": 11,
+   "gen2c_need": 20,
+   "budget": 21,
+   "pads": [
+    {
+     "bank": "vmb_SW6",
+     "via": "su_SW3",
+     "lanes": [
+      1,
+      1
+     ],
+     "rt_now": 16,
+     "pad": 0
+    },
+    {
+     "bank": "vmb_SW7",
+     "via": "su_SW3",
+     "lanes": [
+      1,
+      1
+     ],
+     "rt_now": 16,
+     "pad": 0
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "su_NE0",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "gen2c_have": 10,
+   "gen2c_need": 15,
+   "budget": 18,
+   "pads": [
+    {
+     "bank": "vmb_NE0",
+     "via": null,
+     "lanes": [
+      2,
+      1
+     ],
+     "rt_now": 10,
+     "pad": 4
+    },
+    {
+     "bank": "vmb_NE1",
+     "via": null,
+     "lanes": [
+      2,
+      2
+     ],
+     "rt_now": 11,
+     "pad": 3
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "su_NE0",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "gen2c_have": 7,
+   "gen2c_need": 12,
+   "budget": 15,
+   "pads": [
+    {
+     "bank": "vmb_NE0",
+     "via": null,
+     "lanes": [
+      2,
+      1
+     ],
+     "rt_now": 7,
+     "pad": 4
+    },
+    {
+     "bank": "vmb_NE1",
+     "via": null,
+     "lanes": [
+      2,
+      2
+     ],
+     "rt_now": 8,
+     "pad": 3
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "su_NE1",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "gen2c_have": 10,
+   "gen2c_need": 15,
+   "budget": 18,
+   "pads": [
+    {
+     "bank": "vmb_NE2",
+     "via": null,
+     "lanes": [
+      1,
+      1
+     ],
+     "rt_now": 9,
+     "pad": 5
+    },
+    {
+     "bank": "vmb_NE3",
+     "via": null,
+     "lanes": [
+      2,
+      2
+     ],
+     "rt_now": 11,
+     "pad": 3
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "su_NE1",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "gen2c_have": 7,
+   "gen2c_need": 12,
+   "budget": 15,
+   "pads": [
+    {
+     "bank": "vmb_NE2",
+     "via": null,
+     "lanes": [
+      1,
+      1
+     ],
+     "rt_now": 6,
+     "pad": 5
+    },
+    {
+     "bank": "vmb_NE3",
+     "via": null,
+     "lanes": [
+      2,
+      2
+     ],
+     "rt_now": 8,
+     "pad": 3
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "su_NE2",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "gen2c_have": 10,
+   "gen2c_need": 15,
+   "budget": 18,
+   "pads": [
+    {
+     "bank": "vmb_NE4",
+     "via": null,
+     "lanes": [
+      1,
+      1
+     ],
+     "rt_now": 9,
+     "pad": 5
+    },
+    {
+     "bank": "vmb_NE5",
+     "via": null,
+     "lanes": [
+      2,
+      2
+     ],
+     "rt_now": 11,
+     "pad": 3
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "su_NE2",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "gen2c_have": 7,
+   "gen2c_need": 12,
+   "budget": 15,
+   "pads": [
+    {
+     "bank": "vmb_NE4",
+     "via": null,
+     "lanes": [
+      1,
+      1
+     ],
+     "rt_now": 6,
+     "pad": 5
+    },
+    {
+     "bank": "vmb_NE5",
+     "via": null,
+     "lanes": [
+      2,
+      2
+     ],
+     "rt_now": 8,
+     "pad": 3
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "su_NE3",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "gen2c_have": 10,
+   "gen2c_need": 15,
+   "budget": 18,
+   "pads": [
+    {
+     "bank": "vmb_NE6",
+     "via": null,
+     "lanes": [
+      1,
+      1
+     ],
+     "rt_now": 9,
+     "pad": 5
+    },
+    {
+     "bank": "vmb_NE7",
+     "via": null,
+     "lanes": [
+      2,
+      2
+     ],
+     "rt_now": 11,
+     "pad": 3
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "su_NE3",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "gen2c_have": 7,
+   "gen2c_need": 12,
+   "budget": 15,
+   "pads": [
+    {
+     "bank": "vmb_NE6",
+     "via": null,
+     "lanes": [
+      1,
+      1
+     ],
+     "rt_now": 6,
+     "pad": 5
+    },
+    {
+     "bank": "vmb_NE7",
+     "via": null,
+     "lanes": [
+      2,
+      2
+     ],
+     "rt_now": 8,
+     "pad": 3
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "su_NW0",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "gen2c_have": 10,
+   "gen2c_need": 17,
+   "budget": 18,
+   "pads": [
+    {
+     "bank": "vmb_NW0",
+     "via": null,
+     "lanes": [
+      3,
+      2
+     ],
+     "rt_now": 12,
+     "pad": 2
+    },
+    {
+     "bank": "vmb_NW1",
+     "via": null,
+     "lanes": [
+      3,
+      3
+     ],
+     "rt_now": 13,
+     "pad": 1
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "su_NW0",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "gen2c_have": 7,
+   "gen2c_need": 14,
+   "budget": 15,
+   "pads": [
+    {
+     "bank": "vmb_NW0",
+     "via": null,
+     "lanes": [
+      3,
+      2
+     ],
+     "rt_now": 9,
+     "pad": 2
+    },
+    {
+     "bank": "vmb_NW1",
+     "via": null,
+     "lanes": [
+      3,
+      3
+     ],
+     "rt_now": 10,
+     "pad": 1
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "su_NW1",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "gen2c_have": 10,
+   "gen2c_need": 17,
+   "budget": 18,
+   "pads": [
+    {
+     "bank": "vmb_NW2",
+     "via": null,
+     "lanes": [
+      3,
+      2
+     ],
+     "rt_now": 12,
+     "pad": 2
+    },
+    {
+     "bank": "vmb_NW3",
+     "via": null,
+     "lanes": [
+      3,
+      3
+     ],
+     "rt_now": 13,
+     "pad": 1
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "su_NW1",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "gen2c_have": 7,
+   "gen2c_need": 14,
+   "budget": 15,
+   "pads": [
+    {
+     "bank": "vmb_NW2",
+     "via": null,
+     "lanes": [
+      3,
+      2
+     ],
+     "rt_now": 9,
+     "pad": 2
+    },
+    {
+     "bank": "vmb_NW3",
+     "via": null,
+     "lanes": [
+      3,
+      3
+     ],
+     "rt_now": 10,
+     "pad": 1
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "su_NW2",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "gen2c_have": 10,
+   "gen2c_need": 17,
+   "budget": 18,
+   "pads": [
+    {
+     "bank": "vmb_NW4",
+     "via": null,
+     "lanes": [
+      3,
+      2
+     ],
+     "rt_now": 12,
+     "pad": 2
+    },
+    {
+     "bank": "vmb_NW5",
+     "via": null,
+     "lanes": [
+      3,
+      3
+     ],
+     "rt_now": 13,
+     "pad": 1
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "su_NW2",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "gen2c_have": 7,
+   "gen2c_need": 14,
+   "budget": 15,
+   "pads": [
+    {
+     "bank": "vmb_NW4",
+     "via": null,
+     "lanes": [
+      3,
+      2
+     ],
+     "rt_now": 9,
+     "pad": 2
+    },
+    {
+     "bank": "vmb_NW5",
+     "via": null,
+     "lanes": [
+      3,
+      3
+     ],
+     "rt_now": 10,
+     "pad": 1
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "su_NW3",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "gen2c_have": 10,
+   "gen2c_need": 17,
+   "budget": 18,
+   "pads": [
+    {
+     "bank": "vmb_NW6",
+     "via": null,
+     "lanes": [
+      3,
+      2
+     ],
+     "rt_now": 12,
+     "pad": 2
+    },
+    {
+     "bank": "vmb_NW7",
+     "via": null,
+     "lanes": [
+      3,
+      3
+     ],
+     "rt_now": 13,
+     "pad": 1
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "su_NW3",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "gen2c_have": 7,
+   "gen2c_need": 14,
+   "budget": 15,
+   "pads": [
+    {
+     "bank": "vmb_NW6",
+     "via": null,
+     "lanes": [
+      3,
+      2
+     ],
+     "rt_now": 9,
+     "pad": 2
+    },
+    {
+     "bank": "vmb_NW7",
+     "via": null,
+     "lanes": [
+      3,
+      3
+     ],
+     "rt_now": 10,
+     "pad": 1
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "su_SE0",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "gen2c_have": 10,
+   "gen2c_need": 15,
+   "budget": 18,
+   "pads": [
+    {
+     "bank": "vmb_SE0",
+     "via": null,
+     "lanes": [
+      2,
+      2
+     ],
+     "rt_now": 11,
+     "pad": 3
+    },
+    {
+     "bank": "vmb_SE1",
+     "via": null,
+     "lanes": [
+      2,
+      1
+     ],
+     "rt_now": 10,
+     "pad": 4
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "su_SE0",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "gen2c_have": 7,
+   "gen2c_need": 12,
+   "budget": 15,
+   "pads": [
+    {
+     "bank": "vmb_SE0",
+     "via": null,
+     "lanes": [
+      2,
+      2
+     ],
+     "rt_now": 8,
+     "pad": 3
+    },
+    {
+     "bank": "vmb_SE1",
+     "via": null,
+     "lanes": [
+      2,
+      1
+     ],
+     "rt_now": 7,
+     "pad": 4
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "su_SE1",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "gen2c_have": 10,
+   "gen2c_need": 15,
+   "budget": 18,
+   "pads": [
+    {
+     "bank": "vmb_SE2",
+     "via": null,
+     "lanes": [
+      2,
+      2
+     ],
+     "rt_now": 11,
+     "pad": 3
+    },
+    {
+     "bank": "vmb_SE3",
+     "via": null,
+     "lanes": [
+      2,
+      1
+     ],
+     "rt_now": 10,
+     "pad": 4
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "su_SE1",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "gen2c_have": 7,
+   "gen2c_need": 12,
+   "budget": 15,
+   "pads": [
+    {
+     "bank": "vmb_SE2",
+     "via": null,
+     "lanes": [
+      2,
+      2
+     ],
+     "rt_now": 8,
+     "pad": 3
+    },
+    {
+     "bank": "vmb_SE3",
+     "via": null,
+     "lanes": [
+      2,
+      1
+     ],
+     "rt_now": 7,
+     "pad": 4
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "su_SE2",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "gen2c_have": 10,
+   "gen2c_need": 15,
+   "budget": 18,
+   "pads": [
+    {
+     "bank": "vmb_SE4",
+     "via": null,
+     "lanes": [
+      2,
+      2
+     ],
+     "rt_now": 11,
+     "pad": 3
+    },
+    {
+     "bank": "vmb_SE5",
+     "via": null,
+     "lanes": [
+      2,
+      1
+     ],
+     "rt_now": 10,
+     "pad": 4
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "su_SE2",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "gen2c_have": 7,
+   "gen2c_need": 12,
+   "budget": 15,
+   "pads": [
+    {
+     "bank": "vmb_SE4",
+     "via": null,
+     "lanes": [
+      2,
+      2
+     ],
+     "rt_now": 8,
+     "pad": 3
+    },
+    {
+     "bank": "vmb_SE5",
+     "via": null,
+     "lanes": [
+      2,
+      1
+     ],
+     "rt_now": 7,
+     "pad": 4
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "su_SE3",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "gen2c_have": 10,
+   "gen2c_need": 15,
+   "budget": 18,
+   "pads": [
+    {
+     "bank": "vmb_SE6",
+     "via": null,
+     "lanes": [
+      2,
+      2
+     ],
+     "rt_now": 11,
+     "pad": 3
+    },
+    {
+     "bank": "vmb_SE7",
+     "via": null,
+     "lanes": [
+      1,
+      1
+     ],
+     "rt_now": 9,
+     "pad": 5
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "su_SE3",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "gen2c_have": 7,
+   "gen2c_need": 12,
+   "budget": 15,
+   "pads": [
+    {
+     "bank": "vmb_SE6",
+     "via": null,
+     "lanes": [
+      2,
+      2
+     ],
+     "rt_now": 8,
+     "pad": 3
+    },
+    {
+     "bank": "vmb_SE7",
+     "via": null,
+     "lanes": [
+      1,
+      1
+     ],
+     "rt_now": 6,
+     "pad": 5
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "su_SW0",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "gen2c_have": 10,
+   "gen2c_need": 17,
+   "budget": 18,
+   "pads": [
+    {
+     "bank": "vmb_SW0",
+     "via": null,
+     "lanes": [
+      3,
+      3
+     ],
+     "rt_now": 13,
+     "pad": 1
+    },
+    {
+     "bank": "vmb_SW1",
+     "via": null,
+     "lanes": [
+      3,
+      2
+     ],
+     "rt_now": 12,
+     "pad": 2
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "su_SW0",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "gen2c_have": 7,
+   "gen2c_need": 14,
+   "budget": 15,
+   "pads": [
+    {
+     "bank": "vmb_SW0",
+     "via": null,
+     "lanes": [
+      3,
+      3
+     ],
+     "rt_now": 10,
+     "pad": 1
+    },
+    {
+     "bank": "vmb_SW1",
+     "via": null,
+     "lanes": [
+      3,
+      2
+     ],
+     "rt_now": 9,
+     "pad": 2
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "su_SW1",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "gen2c_have": 10,
+   "gen2c_need": 17,
+   "budget": 18,
+   "pads": [
+    {
+     "bank": "vmb_SW2",
+     "via": null,
+     "lanes": [
+      3,
+      3
+     ],
+     "rt_now": 13,
+     "pad": 1
+    },
+    {
+     "bank": "vmb_SW3",
+     "via": null,
+     "lanes": [
+      3,
+      2
+     ],
+     "rt_now": 12,
+     "pad": 2
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "su_SW1",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "gen2c_have": 7,
+   "gen2c_need": 14,
+   "budget": 15,
+   "pads": [
+    {
+     "bank": "vmb_SW2",
+     "via": null,
+     "lanes": [
+      3,
+      3
+     ],
+     "rt_now": 10,
+     "pad": 1
+    },
+    {
+     "bank": "vmb_SW3",
+     "via": null,
+     "lanes": [
+      3,
+      2
+     ],
+     "rt_now": 9,
+     "pad": 2
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "su_SW2",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "gen2c_have": 10,
+   "gen2c_need": 17,
+   "budget": 18,
+   "pads": [
+    {
+     "bank": "vmb_SW4",
+     "via": null,
+     "lanes": [
+      3,
+      3
+     ],
+     "rt_now": 13,
+     "pad": 1
+    },
+    {
+     "bank": "vmb_SW5",
+     "via": null,
+     "lanes": [
+      3,
+      2
+     ],
+     "rt_now": 12,
+     "pad": 2
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "su_SW2",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "gen2c_have": 7,
+   "gen2c_need": 14,
+   "budget": 15,
+   "pads": [
+    {
+     "bank": "vmb_SW4",
+     "via": null,
+     "lanes": [
+      3,
+      3
+     ],
+     "rt_now": 10,
+     "pad": 1
+    },
+    {
+     "bank": "vmb_SW5",
+     "via": null,
+     "lanes": [
+      3,
+      2
+     ],
+     "rt_now": 9,
+     "pad": 2
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "su_SW3",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "gen2c_have": 10,
+   "gen2c_need": 17,
+   "budget": 18,
+   "pads": [
+    {
+     "bank": "vmb_SW6",
+     "via": null,
+     "lanes": [
+      3,
+      3
+     ],
+     "rt_now": 13,
+     "pad": 1
+    },
+    {
+     "bank": "vmb_SW7",
+     "via": null,
+     "lanes": [
+      3,
+      2
+     ],
+     "rt_now": 12,
+     "pad": 2
+    }
+   ],
+   "ok": true
+  },
+  {
+   "client": "su_SW3",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "gen2c_have": 7,
+   "gen2c_need": 14,
+   "budget": 15,
+   "pads": [
+    {
+     "bank": "vmb_SW6",
+     "via": null,
+     "lanes": [
+      3,
+      3
+     ],
+     "rt_now": 10,
+     "pad": 1
+    },
+    {
+     "bank": "vmb_SW7",
+     "via": null,
+     "lanes": [
+      3,
+      2
+     ],
+     "rt_now": 9,
+     "pad": 2
+    }
+   ],
+   "ok": true
+  }
+ ]
+}
