@@ -1,0 +1,53 @@
+{
+  "mutation": "invalid_mode",
+  "budget": {
+    "literal_modes": [
+      0,
+      3,
+      0
+    ],
+    "distinct_programmes": 2,
+    "resident_words": 2,
+    "descriptors": 3,
+    "sectors": 24,
+    "launch": 30,
+    "run_origin": 33,
+    "mutation_target": "Middle literal and both metadata modes3 with matched class0; globally invalid, no class mismatch"
+  },
+  "expected_go": [
+    [
+      0,
+      1000
+    ],
+    [
+      1,
+      1100
+    ],
+    [
+      0,
+      1200
+    ]
+  ],
+  "event_sha256": {
+    "xw.hex": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "mem.hex": "96ada2019700a1e8112b8c1faa9d48c6d15eb2ed6acb7989e29b3ac7a21f2e7e",
+    "ids.hex": "d3d6ae864989a061a6627f8f0d6f4d95516bf758e684091242e84d9559004f26",
+    "ing.hex": "11694e7e60a5200412bf8ff49714e1a4d17c380b62e7e7c274a0bc0c1b0c827d"
+  },
+  "service_build_revision": "f2a07fb050b8dbc253bfd60e48dd853b92c41436",
+  "compiler_sha256": "8adef8d4941d72527a1b8f297761bc3b64b391396bca50d4a09c9d1fd3f4f0ee",
+  "scope": "three mode-only drained programmes; actual transport qualification only, no arithmetic or general stateful splitting proof",
+  "first_fault": "FAULT sm_schedule cycle 1146",
+  "assembled_class_causal": false,
+  "invalid_mode_causal": true,
+  "pass_": false,
+  "rc": 1,
+  "go_exact": false,
+  "go_count": 2,
+  "done": null,
+  "fault": "FAULT sm_schedule cycle 1146",
+  "run_count": 0,
+  "sm_results": 0,
+  "executable_sha256": "e0ba3ad2cb06567aa591c09be3841604c79cf15266c6544dbf5db87c028a879f",
+  "negative_causal_review_required": true
+}

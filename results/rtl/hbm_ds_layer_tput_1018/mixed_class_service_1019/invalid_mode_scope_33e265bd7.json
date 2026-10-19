@@ -1,0 +1,22 @@
+{
+  "schema": "opentallas.actual-service-invalid-mode.v1",
+  "hardware_source": "f2a07fb05",
+  "compiler_source": "33e265bd7",
+  "literal_modes": [
+    0,
+    3,
+    0
+  ],
+  "descriptor_modes": [
+    0,
+    3,
+    0
+  ],
+  "descriptor_and_actual_command_class_at_middle": 0,
+  "observed_first_fault": "FAULT sm_schedule cycle 1146",
+  "result_count": 0,
+  "causal_scope": "Globally invalid literalmode3 in middle otherwise mode-only programme, matching descriptor class0 at SVG and XC; no arithmetic operation or output. First fault is actual SM schedule fault. TB checks schedule before SVG guard, so no independent claim about simultaneous guard state. Selected actual frontend all-mode table independently proves mode3 illegal for both h128 values.",
+  "valid_scope_comparison": "The exact safe0/4/0 variant passed the same hardware binary; mode3 variant deliberately changes middle literal and both matching descriptor modes, with same data/schedule.",
+  "contextual_mode5_7": "Retained separate all-mode actual-frontend probe; selected Qwen HBM fixture still OPEN.",
+  "physical_claim": "NONE"
+}
