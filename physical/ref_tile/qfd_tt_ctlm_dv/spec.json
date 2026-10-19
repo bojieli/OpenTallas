@@ -1,9 +1,11 @@
 {
  "name": "qfd_tt_ctlm_dv",
- "top": "qfd_tt_ctlm_dv",
+ "top": "qfd_tt_ctlm_dv_lpf_lp",
  "kind": "cluster",
  "sources": [
-  "rtl/qwen_dv/qfd_tt_ctlm_dv.sv",
+  "rtl/qwen_dv/lp/qfd_tt_ctlm_dv_lpf_lp.sv",
+  "rtl/qwen_dv/qfd_tt_ctlm_dv_lpf_parts.sv",
+  "rtl/common/landed_parent/ot_pl_land.sv",
   "rtl/qwen_dv/qfd_dv_cmd_cal.sv",
   "rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv",
   "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_dense_pw_loader.sv",
@@ -15,22 +17,24 @@
  "params": {
   "XPF_TRANSPORT_EDGES": 20,
   "STAGE_ME": 1,
-  "HARD_HR": 1
+  "LAST_STAGE": 37,
+  "MUT": 0
  },
- "clock_port": "ck",
+ "clock_port": "ck_core",
  "reset_ports": [
   "rst_n"
  ],
  "outline": {
   "w": 777.6,
-  "h": 345.6
+  "h": 345.6,
+  "exact": true
  },
  "slot_change_request": "dv2f14bn slot 777.6 x 1814.4 (sized for the pre-DV 4.6k-pin tree controller, Q-CTLM) -> 777.6 x 345.6: hard TT head h16c (259.2 x 222.48) + the calendar's 2 x 64x512 SRAMs + XPF / calendar / pin-register glue; W-column width and the N (native59 / sys_face) and S (W5) pin x positions kept",
  "children": [
   {
    "view": "physical/ref_tile/qfd_tt_head_static_h16c/views/ot_qfd_tt_ctlm_static_hr",
    "count": 1,
-   "inst": "*g_hard_hr*u_hr",
+   "inst": "u_hr",
    "at": [
     475.2,
     43.2
@@ -67,7 +71,8 @@
    "emb_token"
   ],
   "N": [
-   "ck",
+   "ck_core",
+   "ck_hr",
    "rst_n",
    "native_ret",
    "native_cmd",
@@ -103,10 +108,6 @@
   "emb_token": [
    324.763,
    327.763
-  ],
-  "ck": [
-   419.119,
-   419.369
   ],
   "rst_n": [
    420.271,
@@ -199,6 +200,14 @@
   "ss5": [
    753.767,
    771.6
+  ],
+  "ck_hr": [
+   419.119,
+   419.369
+  ],
+  "ck_core": [
+   194.4,
+   194.65
   ]
  },
  "pg_layer": "M7",
@@ -210,10 +219,10 @@
   "hold_margin_ns": 0.03
  },
  "job": {
-  "owner": "Claude:S-QWCOL",
-  "branch": "claude/s-qwcol-1018",
-  "tag": "c2",
-  "purpose": "dv2f14 W-column die master qfd_tt_ctlm_dv as a cluster: hard child = the TT head leaf h16c (ot_qfd_tt_ctlm_static_hr, HARD_HR=1, exact edges), soft calendar qfd_dv_cmd_cal with its 2 SRAMs + XPF + pin registers in the parent | c2 params: XPF_TRANSPORT_EDGES 15 = hr register + measured hr lane age 14 (QLB-PROG 3fac5f0ef ctlm_image.json); STAGE_ME 0: the die adopts STAGE_ME 1 (QLB-PROG), but its part (b) running-stage relocation sits inside the hard h16c leaf (ot_qfd_tt_ctlm_static_hr latches loaded_stage from the image CALS word) -> needs h16c RTL (stage port) + re-route before this kit can take STAGE_ME 1",
+  "owner": "Claude:HF-4",
+  "branch": "claude/hf4-1018",
+  "tag": "lp1",
+  "purpose": "Qwen TT control cluster qfd_tt_ctlm_dv as a LANDED parent (HF-4, HARD-FIX 0id, landed-regions-standard-1018): lp.py top qfd_tt_ctlm_dv_lpf_lp, 2 region roots (ck_core: pin regs + calendar + 2 x 64x512 SRAMs; ck_hr: hard TT head h16c/h17 + XPF + dc + output side), 20 landings (3490 flops), uniform +3 edges on every output, inputs on time, reset depth 3; slot 777.6 x 345.6 (not 2.3:1).",
   "extra_paths": [
    "rtl/test/qwen_dv",
    "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
@@ -341,7 +350,75 @@
    }
   ],
   "views_to": "physical/ref_tile/qfd_tt_ctlm_dv/views",
-  "record_to": "results/rtl/ref_tile/qfd_tt_ctlm_dv"
+  "record_to": "results/rtl/ref_tile/qfd_tt_ctlm_dv",
+  "benched_by": "rtl/test/qwen_dv/tt_ctlm_prog_bench.py --hard 1 --landed 1 (compiled image: dut CTLM_PROG PASS 123/123 + LANDED_LOCKSTEP PASS 24912 compares; LMUT 1/2 FAIL); lp bench rtl/qwen_dv/lp/qfd_tt_ctlm_dv_lpf_lp_bench.sh (audit PASS, unland FAIL, MUT 0 PASS, MUT 1/2 FAIL); eq tb_qfd_tt_ctlm_dv_lpf_eq (DMUT 0 PASS, 5/6 FAIL). Witnesses physical/ref_tile/qfd_tt_ctlm_dv/bench_witness/landed/"
  },
- "params_source": "Q-H16C 10-18: XPF_TRANSPORT_EDGES and STAGE_ME are GEN-assigned (tools/qwen_split/die_params.py -> die.v.params.json masters.qfd_tt_ctlm_dv); values = dv2f14bi ot-epyc4:/srv/opentallas-scratch/claude/qwen-split-compute/dv2f14bi/chain/case_r22k/die.v.params.json (XPF 20 = 1 hr pin reg + fwd hr lane E 18 + 1 landing; STAGE_ME 1). Re-take them from the GEN sidecar of the die this cluster is hardened for; never hand-set (the old 15 = QLB-PROG zero-delay dv2f14bn estimate). HARD_HR 1 && STAGE_ME 1 legal from h16c h17 (stage_start/stage ports)."
+ "params_source": "Q-H16C 10-18: XPF_TRANSPORT_EDGES and STAGE_ME are GEN-assigned (tools/qwen_split/die_params.py -> die.v.params.json masters.qfd_tt_ctlm_dv); values = dv2f14bi ot-epyc4:/srv/opentallas-scratch/claude/qwen-split-compute/dv2f14bi/chain/case_r22k/die.v.params.json (XPF 20 = 1 hr pin reg + fwd hr lane E 18 + 1 landing; STAGE_ME 1). Re-take them from the GEN sidecar of the die this cluster is hardened for; never hand-set (the old 15 = QLB-PROG zero-delay dv2f14bn estimate). HARD_HR 1 && STAGE_ME 1 legal from h16c h17 (stage_start/stage ports).",
+ "clock": "multiple_cts_roots",
+ "clock_ports": [
+  "ck_core",
+  "ck_hr"
+ ],
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_core"
+   ],
+   "inputs": [
+    "pw",
+    "dh",
+    "kok",
+    "kwd",
+    "fab",
+    "native_ret",
+    "ss5",
+    "ag5",
+    "rst_n"
+   ],
+   "outputs": []
+  },
+  "hr": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_hr"
+   ],
+   "inputs": [],
+   "outputs": [
+    "program_obs",
+    "control_stores_ready",
+    "layer_context_v",
+    "native_tok",
+    "native_pos",
+    "command_stage",
+    "cal_program_obs",
+    "cal_descriptor_obs",
+    "cal_image_ready",
+    "dc",
+    "native_cmd",
+    "hr",
+    "cmd",
+    "emb_start",
+    "emb_token",
+    "cf"
+   ]
+  }
+ },
+ "landed_record": "results/arch/landed_parent_1018/qfd_tt_ctlm_dv_lpf/qfd_tt_ctlm_dv_lpf_lp_record.json",
+ "landed_note": "HF-4 10-18: die obligations (record die_obligations): two clock ports ck_core / ck_hr (regional, related, same PLL phase); every output +3 edges vs the flat qfd_tt_ctlm_dv, inputs on time -> the GEN must re-derive XPF_TRANSPORT_EDGES (+3 -> 23 if counted from the flat hr register) and lane ages of cmd/hr/dc/native_cmd; lp MUT 4 (u_hr reset one stage late) is NOT observable (PASS) because h16c re-times its own reset stations and its state starts at program load, waived."
 }
