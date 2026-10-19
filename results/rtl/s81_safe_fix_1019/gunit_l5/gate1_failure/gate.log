@@ -1,0 +1,26 @@
+GATE INFO pin_regs: pin registers opted out: Source-registered: every input lands in a flop at the pin and every output is a flop (dsdv_gunit_l* input/output flops, dsdv_gunit_pass feedthroughs, ot_dsdv_vstop's own flops); recipe pin_regs would add an unpriced stage on the router's critical path and on every rung hop.
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO remote: ot-run selected ot-epyc4 for 64 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_dsdv_gunit_l5_20261019-064205.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_dsdv_gunit_l5_20261019-064205.log; host dir ot-epyc4:/srv/opentallas-scratch/claude/ref_gate/dsdv_gunit_l5-20261019-064205
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc4 in 1383 s (gate total 4099 s)
+GATE INFO floorplan.pin_geometry: actual pin geometry PASS: {'signal_clock_pins': 1861, 'pin_rectangles': 1861, 'pin_track_checked': 1861, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 bfc733ff15c407585618f68c56fd672d71f915119df520457d059b8171526e0f
+GATE WARN util: synthesized std area 32844 um2 + macros 0 in core 101729: util 32%  -> FIX: set "std_area_um2": 32844 and drop 'outline' (gen sizes to util 0.52)
+GATE INFO textbook: REFUSE dsdv_gunit_l5 cells 292,624 flops 17,707 depth 785.2 ps util 0.2903 reach 15.2 um (7.3 s)
+GATE WARN textbook.clock_domain: clock root port clk: 17,707 flops > 15,000 on one root (+0 ICGs, 0 macro clock pins; e.g. base_t[0][0]$_DFFE_PP_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine  -> FIX: hardened sub-tiles with local roots and registered seams (kind cluster), <= ~15k sinks / 600 um a root
+GATE FAIL textbook.reset_landing: reset port rst_n: 6 sinks (6 flops, 0 hard-child / macro pins, e.g. u_rst.rst_n[0]$_DFF_PN0_/RESETN) reached without a landing register (> 2): land it at the face in 2 registered stages (ref_tile "reset_landing": {"enable": true}, or RTL rst_l0 -> rst_l1 per region), then fan out at equal depth  -> FIX: land every reset input at its face in 2 registered stages, then fan out at equal depth: kit "reset_landing": {"enable": true} (ref_tile inserts rst_l0 -> rst_l1 at synthesis) or the RTL's own rst_l0 / rst_l1 (one relay copy per region); reset release latency is a scheduled constant
+GATE WARN textbook.logic_depth: reg->reg stage u_tail.u_sinkh.g_row[1].g_dec[0].w[26]$_DFFE_PP_ -> u_tail.u_sinkh.g_row[1].m1_q[20]$_DFF_P_/D: ~785 ps estimated (18 logic levels) > 600 ps: pipeline / restructure the stage  -> FIX: pipeline to ~700 ps a stage: trees, 2-3 rungs for wide compare / mux / arbitration
+GATE WARN textbook.util_channel: utilisation 29.0% outside 45%-65% (std 29534 + macro 0 um2 in 101729 um2): shrink the outline (long wires / sparse placement)  -> FIX: size the outline to util 0.50-0.55 with >= 20 um macro channels
+GATE WARN textbook.clock_guidance: clock root port:clk: 17,707 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 17,707 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate
+GATE INFO cts_calibration: ss insertion all 476.9..586.4 ps (spread 109.5), boundary mean 511.9; tt insertion all 368.0..470.5 ps (spread 102.5), boundary mean 399.7; ff insertion all 301.2..398.8 ps (spread 97.6), boundary mean 331.0; macro_clk flag False
+GATE INFO density: effective global-placement target density 0.500 vs spec PD 0.50
+GATE INFO path_classes: constraints signoff /src/physical/ref_tile/dsdv_gunit_l5/signoff.sdc (TT placement RC; diagnostic)
+GATE INFO path_classes: reg->reg      458 paths, worst slack -54.7 ps (e.g. u_tail.u_sinkh.g_row[2].g_t[0].tm_q[2]$_DFF_P_/D)
+GATE INFO path_classes: in->reg         6 paths, worst slack 403.1 ps (e.g. u_rst.rst_n[2]$_DFF_PN0_/RESETN)
+GATE INFO path_classes: setup WNS -5.4748872102550195e-11 hold WNS 3.292521810749349e-11
+GATE WARN clock_rule: root port:clk: 17,707 sinks on the largest root; measured TT insertion 470.5 ps, FF insertion 398.8 ps, TT pin-flop spread 79.8 ps, FF pin-flop spread 75.1 ps; WARN: 17,707 sinks on one clock root > 15,000 (guidance); insertion 470.5 ps > 300 (guidance; boundary matched by parent compensation / landing)  -> FIX: guidance only (owner 10-17 0dq): match the boundary by parent compensation or a landed link
+GATE INFO layout_images: LOOK at these before submitting: floorplan /home/ubuntu/wt/s81sf-gunit-1019/physical/ref_tile/dsdv_gunit_l5/gate_layout/floorplan.png; density /home/ubuntu/wt/s81sf-gunit-1019/physical/ref_tile/dsdv_gunit_l5/gate_layout/density.png
+GATE INFO trial_route: trial GRT: total overflow 0; worst layer M2 32.52% used; GRT 564 s
+PRE_ROUTE_GATE: FAIL (1 fail, 6 warn)
+GATE: previous result preserved as unqualified evidence: /home/ubuntu/wt/s81sf-gunit-1019/physical/ref_tile/dsdv_gunit_l5/source_binding_history/ba92d54f9bb7e387efed2afc4f936d8b3f58724ed43c15b5002fe67dd10c2f83.json
+GATE: dsdv_gunit_l5/gate_result.json written (exact staged source binding; commit it with the kit)
