@@ -1,0 +1,14 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/lh-bw-n64-rate-1019
+ot-run: ot-epyc5       admits  1072 GB (avail 813, growth 63, headroom 0, waiters 0/0 GB) load 54/128 running 11 disk 972 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/lh-bw-n64-rate-1019
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/lh-bw-n64-rate-1019
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/lh-bw-n64-rate-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/lh-bw-n64-rate-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/lh-bw-n64-rate-1019
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-1926275-1792434754 after 0 s
+{"pattern": "ds", "defines": ["MR", "SAFE"], "rc": 0, "bw": "BW blocks=156 sectors_per_pc=8300 hbm_cycles=9492 B_per_edge=91.09 steady_blocks=148 steady_cycles=8866 steady_B_per_edge=91.62 peak=104.17", "fault": []}
+{"pattern": "ds", "defines": ["MR", "SAFE"], "rc": 0, "bw": "BW blocks=156 sectors_per_pc=8300 hbm_cycles=9385 B_per_edge=92.12 steady_blocks=148 steady_cycles=8759 steady_B_per_edge=92.74 peak=104.17", "fault": []}
+{"pattern": "ds", "defines": ["MR", "SAFE"], "rc": 0, "bw": "BW blocks=156 sectors_per_pc=8300 hbm_cycles=9366 B_per_edge=92.31 steady_blocks=148 steady_cycles=8740 steady_B_per_edge=92.94 peak=104.17", "fault": []}
+{"pattern": "packed", "defines": ["MR", "SAFE"], "rc": 0, "bw": "BW blocks=256 sectors_per_pc=17408 hbm_cycles=17549 B_per_edge=103.33 steady_blocks=248 steady_cycles=16909 steady_B_per_edge=103.89 peak=104.17", "fault": []}
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1926275-1792434754): exit 0
