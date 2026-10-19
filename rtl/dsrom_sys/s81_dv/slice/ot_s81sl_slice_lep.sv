@@ -166,7 +166,9 @@ module ot_s81sl_lep_core #(
     localparam integer NRX_OUTRST=(MU_EN!=0 && RX_SRAM!=0)?((1103+15)/16):0;
     localparam integer TX_NS=(H+8)/8;
     localparam integer FRAME_NS=(2*H+7)/8;
-    localparam integer NTX_MEMRST=(MU_EN!=0 && RX_SRAM!=0)?NL*TX_NS:0;
+    localparam integer TX_NA=(TX_NS+3)/4;
+    localparam integer TX_RST_STRIDE=TX_NS+2*TX_NA;
+    localparam integer NTX_MEMRST=(MU_EN!=0 && RX_SRAM!=0)?NL*TX_RST_STRIDE:0;
     localparam integer NFRAME_RST=(MU_EN!=0 && RX_SRAM!=0)?FRAME_NS:0;
     localparam integer NHOST_RST=(MU_EN!=0 && RX_SRAM!=0 && HOST_EN!=0 )?37:0;
     localparam integer TX_RSTBASE=4+NRX_MEMRST+NRX_OUTRST;
@@ -347,25 +349,28 @@ module ot_s81sl_lep_core #(
                 (* keep="true" *) reg credit_pin_r;
                 assign rd_group[c]=(count_r!=0 && credit_r!=0);
                 assign wr_group[c]=psh && (count_r!=(AT+1)'(DT) || rd_group[c]);
-                always @(posedge clk or negedge rr[TX_RSTBASE+t*TX_NS+GA*c])
-                    if(!rr[TX_RSTBASE+t*TX_NS+GA*c]) begin
-                        wp_r<=0;rp_r<=0;count_r<=0;credit_r<=CW'(CRED);credit_pin_r<=0;
-                    end else begin
+                wire pointer_reset=rr[TX_RSTBASE+t*TX_RST_STRIDE+TX_NS+2*c];
+                wire state_reset=rr[TX_RSTBASE+t*TX_RST_STRIDE+TX_NS+2*c+1];
+                always @(posedge clk or negedge state_reset)
+                    if(!state_reset) begin count_r<=0;credit_r<=CW'(CRED);credit_pin_r<=0; end else begin
                         credit_pin_r<=lo_r[t];
                         credit_r<=credit_r+CW'(credit_pin_r)-CW'(rd_group[c]);
                         count_r<=count_r+(AT+1)'(wr_group[c])-(AT+1)'(rd_group[c]);
+                    end
+                always @(posedge clk or negedge pointer_reset)
+                    if(!pointer_reset) begin wp_r<=0;rp_r<=0; end else begin
                         wp_r<=(wp_r==AT'(DT-1) && wr_group[c])?AT'(0):wp_r+AT'(wr_group[c]);
                         rp_r<=(rp_r==AT'(DT-1) && rd_group[c])?AT'(0):rp_r+AT'(rd_group[c]);
                     end
 `ifdef OT_S81SL_TX_GROUP_ASSERT
-                always @(posedge clk) if(rt && rr[TX_RSTBASE+t*TX_NS+GA*c]) begin
+                always @(posedge clk) if(rt && pointer_reset && state_reset) begin
                     if({wr_group[c],rd_group[c],wp_r,rp_r,count_r,credit_r} !== {wr,iss,wp,rp,n,cnt})
                         $fatal(1,"TX regional state differs lane%0d group%0d",t,c);
                 end
 `endif
                 assign wa_copy[c*AT+:AT]=wp_r;assign ra_copy[c*AT+:AT]=rp_r;
             end
-            ot_sram_oldread_wreg #(.W(H+1),.AW(AT),.SB(8),.GA(GA),.GROUP_IO(1)) u_m(.clk(clk),.rst_n(rr[TX_RSTBASE+t*TX_NS+:TX_NS]),
+            ot_sram_oldread_wreg #(.W(H+1),.AW(AT),.SB(8),.GA(GA),.GROUP_IO(1)) u_m(.clk(clk),.rst_n(rr[TX_RSTBASE+t*TX_RST_STRIDE+:TX_NS]),
                 .we(wr),.we_group(wr_group),.re_group(rd_group),.wa(wa_copy),.wd({sq[t/2],(t%2==0)?hf0:hf1}),.re(iss),.ra(ra_copy),.q(q));
         end else begin:g_legacy_write
         ot_s81ph_mem1r1w #(.W(H + 1), .DEPTH(DT), .SRAM(SRAM), .WREG(1)) u_m (.clk(clk), .rst_n(rt), .we(wr), .wa(wp),
