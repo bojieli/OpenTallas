@@ -81,7 +81,7 @@ class Gate(unittest.TestCase):
     def test_constants(self):
         self.assertEqual(TL.CLOSED_STANDS_KINDS, ("die_window", "slot_change", "param_change", "rtl_change", "evidence_gap",
                                                   "pin_register", "native_launch", "native_capture",
-                                                  "native_spread"))
+                                                  "native_spread", "flow_failure"))
         self.assertEqual(TL.DIE_WINDOW_CUT_MIN, 0.6)
 
     def test_new_block_and_unclosed_history_pass(self):
@@ -381,6 +381,27 @@ class Gate(unittest.TestCase):
         self.assertEqual(self.run_(unreadable)["verdict"], "PASS")
         self.assertEqual(self.run_(spec(kit="physical/ref_tile/missing", reroute_reason={"kind": "param_change"}))["verdict"],
                          "REFUSE")
+
+    # ---------------------------------------------------------------- flow_failure
+    def test_flow_failure_retries_an_admitted_failed_reroute(self):
+        admitted = hist("t-v2-ccccccccc", status="FAILED", commit="ccccccccc", publish=False, t="02:00")
+        admitted["spec"]["reroute_reason"] = {"kind": "rtl_change"}
+        never = hist("t-v0-bbbbbbbbb", status="NEEDS_RTL", commit="bbbbbbbbb", publish=False, t="00:30")
+        busy = hist("t-v2b-ccccccccc", status="RUNNING", commit="ccccccccc", publish=False, t="02:30",
+                    spec=dict(spec("t-v2b-ccccccccc", "ccccccccc"), reroute_reason={"kind": "rtl_change"}))
+        jobs = [hist(), admitted, never, busy]
+        ok = {"kind": "flow_failure", "failed_job": "t-v2-ccccccccc", "failure": "earlyoom killed detail_route"}
+        r = self.run_(spec("t-v3-ccccccccc", "ccccccccc", reroute_reason=ok), jobs)
+        self.assertEqual((r["verdict"], r["kind"]), ("PASS", "flow_failure"), r["message"])
+        self.assertIn("retry of t-v2-ccccccccc", r["message"])
+        for bad, needle in (({"kind": "flow_failure"}, "needs \"failed_job\""),
+                            ({"kind": "flow_failure", "failed_job": "nope-v9"}, "not a job of"),
+                            ({"kind": "flow_failure", "failed_job": "t-v1-aaaaaaaaa"}, "is CLOSED"),
+                            ({"kind": "flow_failure", "failed_job": "t-v2b-ccccccccc"}, "still RUNNING"),
+                            ({"kind": "flow_failure", "failed_job": "t-v0-bbbbbbbbb"}, "never admitted")):
+            r = self.run_(spec("t-v3-ccccccccc", "ccccccccc", reroute_reason=bad), jobs)
+            self.assertEqual(r["verdict"], "REFUSE", bad)
+            self.assertIn(needle, r["message"])
 
     # ---------------------------------------------------------------- rtl_change
     def test_rtl_change_is_verified(self):

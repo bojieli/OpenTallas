@@ -387,6 +387,21 @@ def hbm_qwen():
                               note='TOKEN-PASS-HBMQ proposes re-basing on the compiled D4G8 programme (coordinator decision)'))
 
 
+def default_xdie_records():
+    """the lane-level xdie records plus any sub-run record that carries a token_compose block (ROOT-QLINE 10-18: the
+    paired Qwen record results/rtl/xdie_qwen_1018/pair_r1/record.json sits one level down; sub-runs without a block,
+    e.g. the 75 xdie_qtp8 case records, are not listed)"""
+    top = sorted(glob.glob(str(ROOT / 'results/rtl/xdie_*_1018/record.json')))
+    sub = []
+    for p in sorted(glob.glob(str(ROOT / 'results/rtl/xdie_*_1018/*/record.json'))):
+        try:
+            if json.loads(Path(p).read_text()).get('token_compose'):
+                sub.append(p)
+        except Exception:
+            continue
+    return top + sub
+
+
 # ---------------------------------------------------------------- overrides from higher-grade records
 def overrides(paths):
     seen, ov = [], []
@@ -546,12 +561,13 @@ def patch_page(pd, out):
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--pass-records', nargs='*', default=None, help='TOKEN-PASS records (default: results/rtl/*_layer_tput_1018/record.json)')
-    ap.add_argument('--xdie-records', nargs='*', default=None, help='TOKEN-XDIE records (default: results/rtl/xdie_*_1018/record.json)')
+    ap.add_argument('--xdie-records', nargs='*', default=None, help='TOKEN-XDIE records (default: results/rtl/xdie_*_1018/record.json + every results/rtl/xdie_*_1018/*/record.json '
+                    'that carries a token_compose block, e.g. xdie_qwen_1018/pair_r1)')
     ap.add_argument('--page-data', nargs='*', default=[], help='token page data dirs to patch (banner per design)')
     ap.add_argument('--check', action='store_true', help='recompute; fail if it differs from the committed outputs')
     a = ap.parse_args()
     pr = a.pass_records if a.pass_records is not None else sorted(glob.glob(str(ROOT / 'results/rtl/*_layer_tput_1018/record.json')))
-    xr = a.xdie_records if a.xdie_records is not None else sorted(glob.glob(str(ROOT / 'results/rtl/xdie_*_1018/record.json')))
+    xr = a.xdie_records if a.xdie_records is not None else default_xdie_records()
     out, seen = run(pr, xr)
     if a.check:
         bad = 0

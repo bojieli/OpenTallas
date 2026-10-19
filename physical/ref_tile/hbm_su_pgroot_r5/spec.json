@@ -1,0 +1,236 @@
+{
+ "name": "hbm_su_pgroot_r5",
+ "top": "ot_hbm_su_programme_root_h5",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme_root_h5.sv"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "params": {},
+ "outline": {
+  "w": 86.4,
+  "h": 86.4,
+  "exact": true
+ },
+ "pins": {
+  "W": [
+   "clk",
+   "rst_n",
+   "cfg_we",
+   "cfg_bank",
+   "cfg_row",
+   "cfg_data",
+   "start",
+   "length",
+   "p_fault"
+  ],
+  "E": [
+   "r_start",
+   "r_len",
+   "r_we",
+   "r_bank",
+   "r_row",
+   "r_data",
+   "fault"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 4,
+ "hold_budget": "die",
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.0,
+  "hold_margin_ns": 0.03
+ },
+ "inhold": false,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "ot_hbm_su_programme_root5 is itself the root register stage of the SU programme (root + cluster head pin stage): every output is a register output (r_start/r_len/r_we/r_bank/r_row/r_data/fault), start/length land on the SDLY 2 delay registers, cfg_* on the root register (cfg_bank through the per-part range compare / base subtract, as root_h), p_fault on the fault OR register, rst_n drives only ot_rst_relay (release +3, as the r5 leaves). A kit flop stage would add an edge the start-advance contract does not price."
+ },
+ "children": [],
+ "inter": [],
+ "clock": "cts",
+ "structural_change": "NEW master (HBM-RTL5 2026-10-18): root register su_pgr for the d4g GEN1 per-column programme clusters ot_hbm_su_programme_pslice_c5 (pgp_<q>; NATIVE-FIX3/pgs leaves pgcol_s r5 / pghead r5). ot_hbm_su_programme_root_h5 = ot_hbm_su_programme_root5 PARTS 4, SMACROS 4 x 320 (bank = 320 part + 32 column + local), SDLY 2 (start/length +2 edges so the clusters' +2 configuration edges stay host-invisible: write-on-start pairing and config-before-start rules = r4), RRLY 1 (rst_n -> ot_rst_relay, root releases with the clusters, +3). Every programme output is the r4 output 2 edges later (whole-path bench tb_hbm_su_programme_root5 vs root_h + 4 x pslice_q4). Same ports/outline/pin faces as hbm_su_pgroot_1017 (closed root_h kept for the d4f/GEN0 composition).",
+ "job": {
+  "owner": "Claude:HBM-RTL5/pg",
+  "branch": "claude/hbm-rtl5-pg-1018",
+  "tag": "r5",
+  "purpose": "SU programme root register su_pgr for the r5 per-column clusters (SMACROS 4x320, SDLY 2, RRLY 1)",
+  "views_to": "physical/ref_tile/hbm_su_pgroot_r5/views",
+  "record_to": "results/rtl/ref_tile/hbm_su_pgroot_r5",
+  "extra_paths": [
+   "tools/hbm_static",
+   "tools/hdc_golden.py",
+   "rtl/hbm_accel/generic/adapters/static_su/programme",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "benches": [
+   {
+    "name": "root5_whole_programme_7111",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "OUT={RUN}/bench/pos bash tools/hbm_static/su_programme_root5_run.sh",
+    "expect": "pass",
+    "pass_regex": "SU_PROGRAMME_ROOT5_GATE PASS",
+    "min_count_regex": "SU_PROGRAMME_ROOT5 PASS edges=(\\d+)"
+   },
+   {
+    "name": "root5_mut_sdly0",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "OUT={RUN}/bench/sdly0 ONLY=sdly0 bash tools/hbm_static/su_programme_root5_run.sh",
+    "expect": "fail",
+    "fail_regex": "SU_PROGRAMME_ROOT5 FAIL mismatches=[1-9]",
+    "fail_witness": "results/rtl/hbm_rtl5_pg_1018/bench/run_sdly0.log"
+   },
+   {
+    "name": "root5_mut_decode98",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "OUT={RUN}/bench/decode98 ONLY=decode98 bash tools/hbm_static/su_programme_root5_run.sh",
+    "expect": "fail",
+    "fail_regex": "SU_PROGRAMME_ROOT5 FAIL mismatches=[1-9]",
+    "fail_witness": "results/rtl/hbm_rtl5_pg_1018/bench/run_decode98.log"
+   },
+   {
+    "name": "root5_mut_rrly0",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "OUT={RUN}/bench/rrly0 ONLY=rrly0 bash tools/hbm_static/su_programme_root5_run.sh",
+    "expect": "fail",
+    "fail_regex": "SU_PROGRAMME_ROOT5 FAIL mismatches=[1-9]",
+    "fail_witness": "results/rtl/hbm_rtl5_pg_1018/bench/run_rrly0.log"
+   },
+   {
+    "name": "root5_mut_oorfd0",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "OUT={RUN}/bench/oorfd0 ONLY=oorfd0 bash tools/hbm_static/su_programme_root5_run.sh",
+    "expect": "fail",
+    "fail_regex": "SU_PROGRAMME_ROOT5 FAIL mismatches=[1-9]",
+    "fail_witness": "results/rtl/hbm_rtl5_pg_1018/bench/run_oorfd0.log"
+   },
+   {
+    "name": "root5_mut_oldleaf",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "OUT={RUN}/bench/oldleaf ONLY=oldleaf bash tools/hbm_static/su_programme_root5_run.sh",
+    "expect": "fail",
+    "fail_regex": "SU_PROGRAMME_ROOT5 FAIL mismatches=[1-9]",
+    "fail_witness": "results/rtl/hbm_rtl5_pg_1018/bench/run_oldleaf.log"
+   },
+   {
+    "name": "root5_mut_cfg",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "OUT={RUN}/bench/cfg ONLY=cfg bash tools/hbm_static/su_programme_root5_run.sh",
+    "expect": "fail",
+    "fail_regex": "SU_PROGRAMME_ROOT5 FAIL mismatches=[1-9]",
+    "fail_witness": "results/rtl/hbm_rtl5_pg_1018/bench/run_cfg.log"
+   }
+  ]
+ },
+ "pin_ranges": {
+  "cfg_data": [
+   2.0,
+   58.0
+  ],
+  "cfg_bank": [
+   60.0,
+   68.0
+  ],
+  "cfg_row": [
+   68.5,
+   72.0
+  ],
+  "cfg_we": [
+   72.5,
+   73.5
+  ],
+  "clk": [
+   58.5,
+   59.5
+  ],
+  "rst_n": [
+   74.0,
+   75.0
+  ],
+  "start": [
+   75.5,
+   76.5
+  ],
+  "length": [
+   77.0,
+   82.0
+  ],
+  "p_fault": [
+   82.5,
+   84.0
+  ],
+  "r_data": [
+   2.0,
+   60.0
+  ],
+  "r_bank": [
+   60.5,
+   75.0
+  ],
+  "r_row": [
+   75.5,
+   77.5
+  ],
+  "r_we": [
+   78.0,
+   79.0
+  ],
+  "r_start": [
+   79.5,
+   80.0
+  ],
+  "r_len": [
+   80.5,
+   83.5
+  ],
+  "fault": [
+   83.7,
+   84.2
+  ]
+ },
+ "macros": [],
+ "pin_reg_split": true
+}

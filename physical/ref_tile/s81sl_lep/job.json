@@ -1,0 +1,167 @@
+{
+ "name": "s81sl_lep-s81sl_lep-COMMIT",
+ "block": "ot_s81sl_lep",
+ "ref_tile": true,
+ "owner": "Claude:RTL-BUILD-S81",
+ "purpose": "RTL-BUILD-S81: end-slice link-port leaf (residual row 1) to closure (TT setup / FF hold / DRC 0 + native audit).",
+ "threads": 8,
+ "peak_ram_gb": 24,
+ "source": {
+  "branch": "claude/s81-lepv-1018",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/lib",
+   "rtl/link",
+   "rtl/common",
+   "rtl/dsrom_sys/s81_ph",
+   "rtl/dsrom_sys/s81_link",
+   "rtl/dsrom_sys/s81_dv/slice",
+   "tools/s81_slice",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "results/rtl/s81_lepv_1018"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_s81sl_lep u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/lib/ot_rst_relay.sv rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "lep_exact",
+    "cmd": "bash tools/s81_slice/lep_bench.sh {RUN}/lep_exact none 1",
+    "expect": "pass",
+    "pass_regex": "^BENCH_PASS lep MUT=none seed 1$",
+    "min_count_regex": "^PASS lep: 1000 \\+ 1000 beats",
+    "threads": 2,
+    "peak_ram_gb": 6
+   },
+   {
+    "name": "lep_exact_s7",
+    "cmd": "bash tools/s81_slice/lep_bench.sh {RUN}/lep_exact_s7 none 7",
+    "expect": "pass",
+    "pass_regex": "^BENCH_PASS lep MUT=none seed 7$",
+    "threads": 2,
+    "peak_ram_gb": 6
+   },
+   {
+    "name": "lep_mut_swap",
+    "cmd": "bash tools/s81_slice/lep_bench.sh {RUN}/lep_mut_swap swap 1",
+    "expect": "fail",
+    "fail_regex": "^FAIL lep: mismatches [1-9]",
+    "fail_witness": "results/rtl/s81_lepv_1018/witness_swap.log",
+    "threads": 2,
+    "peak_ram_gb": 6
+   },
+   {
+    "name": "lep_mut_nopair",
+    "cmd": "bash tools/s81_slice/lep_bench.sh {RUN}/lep_mut_nopair nopair 1",
+    "expect": "fail",
+    "fail_regex": "^FAIL lep: mismatches [1-9]",
+    "fail_witness": "results/rtl/s81_lepv_1018/witness_nopair.log",
+    "threads": 2,
+    "peak_ram_gb": 6
+   },
+   {
+    "name": "lep_mut_noovf",
+    "cmd": "bash tools/s81_slice/lep_bench.sh {RUN}/lep_mut_noovf noovf 1",
+    "expect": "fail",
+    "fail_regex": "^FAIL lep: .*overflow_fault 0$",
+    "fail_witness": "results/rtl/s81_lepv_1018/witness_noovf.log",
+    "threads": 2,
+    "peak_ram_gb": 6
+   },
+   {
+    "name": "leph_exact",
+    "cmd": "bash tools/s81_slice/lep_bench.sh {RUN}/leph_exact none 3 lep_host",
+    "expect": "pass",
+    "pass_regex": "^BENCH_PASS lep_host MUT=none seed 3$",
+    "threads": 2,
+    "peak_ram_gb": 6
+   },
+   {
+    "name": "leph_mut_ksoff",
+    "cmd": "bash tools/s81_slice/lep_bench.sh {RUN}/leph_mut_ksoff ksoff 3 lep_host",
+    "expect": "fail",
+    "fail_regex": "^FAIL lep_host:",
+    "fail_witness": "results/rtl/s81_lepv_1018/witness_ksoff.log",
+    "threads": 2,
+    "peak_ram_gb": 6
+   },
+   {
+    "name": "leph_mut_hdrop",
+    "cmd": "bash tools/s81_slice/lep_bench.sh {RUN}/leph_mut_hdrop hdrop 3 lep_host",
+    "expect": "fail",
+    "fail_regex": "^FAIL lep_host:",
+    "fail_witness": "results/rtl/s81_lepv_1018/witness_hdrop.log",
+    "threads": 2,
+    "peak_ram_gb": 6
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/s81sl_lep/signoff_ffrepair.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/s81sl_lep/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 24
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/s81sl_lep --out {RUN}/record/views/ot_s81sl_lep --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/s81sl_lep/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/s81sl_lep/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/s81sl_lep/s81sl_lep-s81sl_lep-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "RTL-BUILD-S81 (owner 0dv 10-18): NEW link-port leaf of the end-slice master (dsdv_slice_lepw/_e = ot_s81sl_slice + this leaf + 2 x dsfd_coll_lane): outward ring-port pin flops, per-lane 512-flit SRAM landing FIFOs (2 x 5 ot_sram_1r1w_512x128, as the coll lane's own replay/receive arrays), RX pair re-assembly, fault collector. Fills residual row 1 (lt_lk 8 x 512 undriven). Host plane (coordinator 10-18): seq_host f_host 515 / f_lf 4 / f_ks 53 out, t_host 77 / t_kd 54 in, as typed non-ring link frames (HOST / KS in, THOST / TKD out). Gate 3eb62a102 FAIL (GPL-0305 divergence): macro columns fronted the W/E pin faces (W band 15 um) with a 0.4-um sliver between the columns' halos and W/E pins at 99% face demand (5.9/um). Re-floorplan: 475.2 square (W/E 4.85/um), two 5-SRAM columns centred with a 21.6-um channel, >=31-um W/E std-cell bands, 119-um N/S bands. S81-RTLB3 (10-18, gate b6bf54dea WARNs): core-side lane faces become CREDIT links (lane LCR = 1, as the die's collective lanes): lo0_r / lo1_r land in one pin flop each (credit pulse; was 556 / 558 loads, 6 levels), RX landing DR 8 with registered one-hot slot enables and 16 replicated read pointers, li_r a registered credit pulse; rst_n -> ot_rst_relay 4 regions (was one flop, 1,232 loads), ri data bits unreset. Edges: ro -> lane endpoint +2, lane -> ri +1, reset release +1. S81-LEPV 10-18: leaf gains HOST_EN (default 1 = this kit, unchanged function); host logic moved into generate blocks; HOST_EN 0 top ot_s81sl_lep_nh = kit s81sl_lepnh (s_0S / s_0N / s_7S). Witnesses re-recorded."
+}
