@@ -1,0 +1,65 @@
+{
+  "base": "143642b6b",
+  "source_predecessor": "4415ee6cf",
+  "private_source": "qkd_ahub_grouped_transport_private.sv",
+  "default": "ENABLE=0 pure combinational predecessor-identical interface bypass; public files untouched",
+  "state": {
+    "indexed_payload": 1344,
+    "payload_ingress_read_landing": 1008,
+    "phase": 86,
+    "slot_valid": 172,
+    "ring_valid": 43,
+    "landing_valid": 43,
+    "group_ingress_valid": 7,
+    "leaf_reset": 344,
+    "root_reset": 28,
+    "total": 3075
+  },
+  "admission": {
+    "experimental_startup_extra_edges": 2,
+    "accepted_word_latency_edges": 4,
+    "production_calendar_change": false
+  },
+  "groups": {
+    "command": [
+      8,
+      8,
+      8,
+      8,
+      2
+    ],
+    "return": [
+      8,
+      1
+    ]
+  },
+  "source_equation_maxloads": {
+    "raw": 21,
+    "root_group_reset": 18,
+    "group_valid": 32,
+    "local_active": 19,
+    "phase_decode": 10,
+    "write_enable": 9
+  },
+  "compile_permission": "HOLD until parent emitted-source graph review",
+  "test_scope": [
+    "arbitrary old Q/raw low before first edge",
+    "partial startup",
+    "common-clock independent reset convergence",
+    "TX drain/RX discard outstanding",
+    "earliest legal release exactly +2",
+    "wrap/sparse/line rate four-edge identities",
+    "no extra output",
+    "owned return fault",
+    "raw/release/group topology/stale valid/read slot/return owner causal mutants"
+  ],
+  "holds": [
+    "native mapped graph",
+    "storage technology even though payload<2kb",
+    "reset pulse glitch/recovery",
+    "clock phase",
+    "area PG pins",
+    "arithmetic health retirement",
+    "production calendar and SU/MU"
+  ]
+}

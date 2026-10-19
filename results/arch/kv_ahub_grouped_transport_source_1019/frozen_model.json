@@ -1,0 +1,104 @@
+{
+  "classification": "MODEL_ONLY_NOT_IMPLEMENTED_NOT_NATIVE_QUALIFIED",
+  "source": "4415ee6cf",
+  "source_sha256": "06225ec687b54ca9021587883785c40ca6a36872fe04438d4d099b6b5336a851",
+  "abi_bits": {
+    "command": 268,
+    "return": 68
+  },
+  "banks": {
+    "command": [
+      8,
+      8,
+      8,
+      8,
+      8,
+      8,
+      8,
+      8,
+      8,
+      8,
+      8,
+      8,
+      8,
+      8,
+      8,
+      8,
+      8,
+      8,
+      8,
+      8,
+      8,
+      8,
+      8,
+      8,
+      8,
+      8,
+      8,
+      8,
+      8,
+      8,
+      8,
+      8,
+      8,
+      4
+    ],
+    "return": [
+      8,
+      8,
+      8,
+      8,
+      8,
+      8,
+      8,
+      8,
+      4
+    ]
+  },
+  "groups_banks": {
+    "command": [
+      8,
+      8,
+      8,
+      8,
+      2
+    ],
+    "return": [
+      8,
+      1
+    ]
+  },
+  "state_bits": {
+    "indexed_payload": 1344,
+    "payload_ingress_ringread_landing": 1008,
+    "phase": 86,
+    "slot_valid": 172,
+    "ring_valid": 43,
+    "landing_valid": 43,
+    "group_ingress_valid": 7,
+    "leaf_reset": 344,
+    "root_reset": 28,
+    "total": 3075,
+    "delta_vs_3083": -8,
+    "nonpayload_array_state": 1731
+  },
+  "intervals": {
+    "accepted_to_output": 4,
+    "extra_reset_release_authority": 2,
+    "earliest_admission_after_raw_release_requires_preedge_recurrence": true
+  },
+  "port_traffic": {
+    "word_bits_per_edge_each_input_and_output": 336,
+    "indexed_read_bits_per_edge": 336,
+    "indexed_write_bits_per_edge": 336,
+    "indexed_banks_read_ports": 43,
+    "indexed_banks_write_ports": 43
+  },
+  "model_all_nonclock_roots_max": 32,
+  "native_all_driver_verdict": "HOLD: proposed explicit bounded equation graph only; no emitted or mapped netlist",
+  "area_um2": null,
+  "clock_spread_ps": null,
+  "PG_contacts": null,
+  "memory_macro_binding": null,
+  "schedule_adoption": false
+}
