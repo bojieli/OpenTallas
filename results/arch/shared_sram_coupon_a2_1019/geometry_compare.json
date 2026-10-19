@@ -1,0 +1,313 @@
+{
+  "status": "PASS_EXACT_C634_GEOMETRY_NO_DIFFERENCES",
+  "cases": [
+    {
+      "case": "qwen_wclk_source",
+      "exact_shapes": 15,
+      "exact_complete_vias": 0,
+      "true_OBS_identities": 5,
+      "translation_mod48": [
+        0,
+        0
+      ],
+      "target_components": 1
+    },
+    {
+      "case": "qwen_r_ce_in_source",
+      "exact_shapes": 19,
+      "exact_complete_vias": 0,
+      "true_OBS_identities": 5,
+      "translation_mod48": [
+        0,
+        0
+      ],
+      "target_components": 1
+    },
+    {
+      "case": "qwen_r_ce_in_via_first",
+      "exact_shapes": 18,
+      "exact_complete_vias": 10,
+      "true_OBS_identities": 5,
+      "translation_mod48": [
+        0,
+        0
+      ],
+      "target_components": 1
+    },
+    {
+      "case": "qwen_r_ce_in_via_last",
+      "exact_shapes": 19,
+      "exact_complete_vias": 11,
+      "true_OBS_identities": 5,
+      "translation_mod48": [
+        0,
+        0
+      ],
+      "target_components": 1
+    },
+    {
+      "case": "qwen_rd_out[0]_source",
+      "exact_shapes": 25,
+      "exact_complete_vias": 0,
+      "true_OBS_identities": 5,
+      "translation_mod48": [
+        0,
+        0
+      ],
+      "target_components": 1
+    },
+    {
+      "case": "qwen_rd_out[0]_via_first",
+      "exact_shapes": 26,
+      "exact_complete_vias": 15,
+      "true_OBS_identities": 5,
+      "translation_mod48": [
+        0,
+        0
+      ],
+      "target_components": 1
+    },
+    {
+      "case": "qwen_rd_out[0]_via_last",
+      "exact_shapes": 16,
+      "exact_complete_vias": 8,
+      "true_OBS_identities": 5,
+      "translation_mod48": [
+        0,
+        0
+      ],
+      "target_components": 1
+    },
+    {
+      "case": "qwen_wd_in[24]_source",
+      "exact_shapes": 18,
+      "exact_complete_vias": 3,
+      "true_OBS_identities": 5,
+      "translation_mod48": [
+        0,
+        0
+      ],
+      "target_components": 1
+    },
+    {
+      "case": "qwen_wd_in[24]_via_first",
+      "exact_shapes": 18,
+      "exact_complete_vias": 6,
+      "true_OBS_identities": 5,
+      "translation_mod48": [
+        0,
+        0
+      ],
+      "target_components": 1
+    },
+    {
+      "case": "qwen_wd_in[24]_via_last",
+      "exact_shapes": 6,
+      "exact_complete_vias": 3,
+      "true_OBS_identities": 5,
+      "translation_mod48": [
+        0,
+        0
+      ],
+      "target_components": 1
+    },
+    {
+      "case": "qwen_wd_in[25]_source",
+      "exact_shapes": 15,
+      "exact_complete_vias": 0,
+      "true_OBS_identities": 5,
+      "translation_mod48": [
+        0,
+        0
+      ],
+      "target_components": 1
+    },
+    {
+      "case": "qwen_w_mask_in[63]_source",
+      "exact_shapes": 18,
+      "exact_complete_vias": 4,
+      "true_OBS_identities": 5,
+      "translation_mod48": [
+        0,
+        0
+      ],
+      "target_components": 1
+    },
+    {
+      "case": "qwen_w_mask_in[63]_via_first",
+      "exact_shapes": 18,
+      "exact_complete_vias": 6,
+      "true_OBS_identities": 5,
+      "translation_mod48": [
+        0,
+        0
+      ],
+      "target_components": 1
+    },
+    {
+      "case": "qwen_w_mask_in[63]_via_last",
+      "exact_shapes": 6,
+      "exact_complete_vias": 3,
+      "true_OBS_identities": 5,
+      "translation_mod48": [
+        0,
+        0
+      ],
+      "target_components": 1
+    },
+    {
+      "case": "sc2_clk_source",
+      "exact_shapes": 15,
+      "exact_complete_vias": 0,
+      "true_OBS_identities": 5,
+      "translation_mod48": [
+        0,
+        0
+      ],
+      "target_components": 1
+    },
+    {
+      "case": "sc2_r_ce_in_source",
+      "exact_shapes": 17,
+      "exact_complete_vias": 0,
+      "true_OBS_identities": 5,
+      "translation_mod48": [
+        0,
+        0
+      ],
+      "target_components": 1
+    },
+    {
+      "case": "sc2_r_ce_in_via_first",
+      "exact_shapes": 20,
+      "exact_complete_vias": 9,
+      "true_OBS_identities": 5,
+      "translation_mod48": [
+        0,
+        0
+      ],
+      "target_components": 1
+    },
+    {
+      "case": "sc2_r_ce_in_via_last",
+      "exact_shapes": 20,
+      "exact_complete_vias": 9,
+      "true_OBS_identities": 5,
+      "translation_mod48": [
+        0,
+        0
+      ],
+      "target_components": 1
+    },
+    {
+      "case": "sc2_rd_out[0]_source",
+      "exact_shapes": 25,
+      "exact_complete_vias": 0,
+      "true_OBS_identities": 5,
+      "translation_mod48": [
+        0,
+        0
+      ],
+      "target_components": 1
+    },
+    {
+      "case": "sc2_rd_out[0]_via_first",
+      "exact_shapes": 25,
+      "exact_complete_vias": 14,
+      "true_OBS_identities": 5,
+      "translation_mod48": [
+        0,
+        0
+      ],
+      "target_components": 1
+    },
+    {
+      "case": "sc2_rd_out[0]_via_last",
+      "exact_shapes": 13,
+      "exact_complete_vias": 5,
+      "true_OBS_identities": 5,
+      "translation_mod48": [
+        0,
+        0
+      ],
+      "target_components": 1
+    },
+    {
+      "case": "sc2_wd_in[69]_source",
+      "exact_shapes": 18,
+      "exact_complete_vias": 3,
+      "true_OBS_identities": 5,
+      "translation_mod48": [
+        0,
+        0
+      ],
+      "target_components": 1
+    },
+    {
+      "case": "sc2_wd_in[69]_via_first",
+      "exact_shapes": 18,
+      "exact_complete_vias": 6,
+      "true_OBS_identities": 5,
+      "translation_mod48": [
+        0,
+        0
+      ],
+      "target_components": 1
+    },
+    {
+      "case": "sc2_wd_in[69]_via_last",
+      "exact_shapes": 6,
+      "exact_complete_vias": 3,
+      "true_OBS_identities": 5,
+      "translation_mod48": [
+        0,
+        0
+      ],
+      "target_components": 1
+    },
+    {
+      "case": "sc2_wd_in[70]_source",
+      "exact_shapes": 15,
+      "exact_complete_vias": 0,
+      "true_OBS_identities": 5,
+      "translation_mod48": [
+        0,
+        0
+      ],
+      "target_components": 1
+    },
+    {
+      "case": "sc2_cr_sel[13]_source",
+      "exact_shapes": 17,
+      "exact_complete_vias": 3,
+      "true_OBS_identities": 5,
+      "translation_mod48": [
+        0,
+        0
+      ],
+      "target_components": 1
+    },
+    {
+      "case": "sc2_cr_sel[13]_via_first",
+      "exact_shapes": 18,
+      "exact_complete_vias": 6,
+      "true_OBS_identities": 5,
+      "translation_mod48": [
+        0,
+        0
+      ],
+      "target_components": 1
+    },
+    {
+      "case": "sc2_cr_sel[13]_via_last",
+      "exact_shapes": 6,
+      "exact_complete_vias": 3,
+      "true_OBS_identities": 5,
+      "translation_mod48": [
+        0,
+        0
+      ],
+      "target_components": 1
+    }
+  ]
+}
