@@ -277,7 +277,8 @@ def landed_record_pins(view, root):
     HBM-PGLG2 10-19: "unused" = the child's routed-netlist-proven UNLOADED input pins (landed_unused_pins),
     in every result; a region root may reach them (clock_entries.tcl ::ot_ce_landed_unused), nothing is measured."""
     view = Path(view)
-    empty = dict(model=None, raw={}, cotimed={}, anchor=None, R={})
+    unused = landed_unused_pins(view, root)
+    empty = dict(model=None, raw={}, cotimed={}, anchor=None, R={}, unused=unused)
     ins = json.loads((view / 'insertion.json').read_text())
     cm = ins.get('clock_measurements') or {}
     raw_like = sorted(p for p, r in cm.items() if any(not (r.get(c) or {}).get('boundary') for c in CORNERS))
@@ -389,7 +390,7 @@ def landed_record_pins(view, root):
                                      f'view reference {R[p][c]}')
     cotimed = {p: dict(ref=ref, tol=tol, record=record, verdict=vrel) for p in bounded if p != ref}
     anchor = max(ports, key=lambda p: (R[p]['tt'], -ports.index(p)))
-    return dict(model='multi_root', raw=out, cotimed=cotimed, anchor=anchor, R=R)
+    return dict(model='multi_root', raw=out, cotimed=cotimed, anchor=anchor, R=R, unused=unused)
 
 
 def landed_raw_targets(spec, root):
