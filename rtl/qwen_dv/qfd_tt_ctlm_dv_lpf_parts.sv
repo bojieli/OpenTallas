@@ -140,9 +140,29 @@ module qfd_tt_ctlm_dv_gi #(
     wire        r_fill = (OPS != 0) && ss_tokv && ss_tu != 2'd0 && {1'b0, ss_tu} < 3'(NU);
     wire [UB-1:0] r_wr = ss_tu[UB-1:0];
     integer     ub_i;
+`ifdef QFD_CTLM_MU_BENCH_PRELOAD
+    // bench-only filler initial context, exactly as qfd_tt_ctlm_dv (+MU_PRE_TOK<u> / +MU_PRE_POS<u>)
+    reg [17:0] pre_tok [0:3], pre_pos [0:3];
+    reg [17:0] pre_v;
+    initial begin
+        for (ub_i = 0; ub_i < 4; ub_i = ub_i + 1) begin pre_tok[ub_i] = 18'd0; pre_pos[ub_i] = 18'd0; end
+        if ($value$plusargs("MU_PRE_TOK1=%h", pre_v)) pre_tok[1] = pre_v;
+        if ($value$plusargs("MU_PRE_POS1=%h", pre_v)) pre_pos[1] = pre_v;
+        if ($value$plusargs("MU_PRE_TOK2=%h", pre_v)) pre_tok[2] = pre_v;
+        if ($value$plusargs("MU_PRE_POS2=%h", pre_v)) pre_pos[2] = pre_v;
+        if ($value$plusargs("MU_PRE_TOK3=%h", pre_v)) pre_tok[3] = pre_v;
+        if ($value$plusargs("MU_PRE_POS3=%h", pre_v)) pre_pos[3] = pre_v;
+    end
+`endif
     always @(posedge ck or negedge rst_n)
         if (!rst_n) begin
-            for (ub_i = 0; ub_i < NU; ub_i = ub_i + 1) begin tok_b[ub_i] <= 18'd0; pos_b[ub_i] <= 18'd0; end
+            for (ub_i = 0; ub_i < NU; ub_i = ub_i + 1) begin
+`ifdef QFD_CTLM_MU_BENCH_PRELOAD
+                tok_b[ub_i] <= pre_tok[ub_i]; pos_b[ub_i] <= pre_pos[ub_i];
+`else
+                tok_b[ub_i] <= 18'd0; pos_b[ub_i] <= 18'd0;
+`endif
+            end
             st_h <= 1'b0; st_tok <= 18'd0; st_pos <= 18'd0; st_base <= 12'd0;
             start_fault <= 1'b0; emb_start <= 1'b0; emb_token <= 18'd0;
         end else begin

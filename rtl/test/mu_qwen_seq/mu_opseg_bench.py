@@ -66,14 +66,23 @@ def tok0(i): return (U0[0] + 7 * i) & 0x3FFFF
 def res_tok(u, n): return (0x1000 * u + 0x35 * n + 3) & 0x3FFFF
 
 
+LANDED = None                   # MU-DQ-CTLMKIT 10-19: --landed: lmut of the landed cluster run in lockstep (TB_LANDED)
+LP_SRCS = ('rtl/qwen_dv/qfd_tt_ctlm_dv_lpf_parts.sv', 'rtl/common/landed_parent/ot_pl_land.sv',
+           'rtl/qwen_dv/lp/qfd_tt_ctlm_dv_lpf_lp.sv')
+LANDED_RES = []
+
+
 def build(work, vl, nu, opseg, mut, jobs):
-    d = work / f'b_nu{nu}_o{opseg}_m{mut}'
+    land = LANDED is not None and nu > 1
+    d = work / (f'b_nu{nu}_o{opseg}_m{mut}' + (f'_l{LANDED}' if land else ''))
     exe = d / 'Vtb_mu_opseg_dv'
     if exe.exists(): return exe
     srcs = [str(ROOT / l.strip()) for l in SRCF.read_text().split('\n') if l.strip()]
+    if land:
+        srcs += [str(ROOT / f) for f in LP_SRCS]
     cmd = [vl, '--binary', '--timing', '-O2', '-j', str(jobs), '-Wno-fatal', '-Wno-lint', '-Wno-style', '-Wno-TIMESCALEMOD',
            '-Wno-WIDTHCONCAT', '--x-assign', '0', '--x-initial', '0', '--top-module', 'tb_mu_opseg_dv',
-           '+define+QFD_CTLM_MU_BENCH_PRELOAD', f'-GNU={nu}', f'-GMUT={mut}', f'-GOPSEG={opseg}', '-Mdir', str(d)] + srcs + [str(TB)]
+           '+define+QFD_CTLM_MU_BENCH_PRELOAD', f'-GNU={nu}', f'-GMUT={mut}', f'-GOPSEG={opseg}', *(['+define+TB_LANDED', f'-GLMUT={LANDED}'] if land else []), '-Mdir', str(d)] + srcs + [str(TB)]
     d.mkdir(parents=True, exist_ok=True)
     r = subprocess.run(cmd, capture_output=True, text=True)
     (d / 'build.log').write_text(r.stdout + r.stderr)
@@ -96,6 +105,8 @@ def run(work, exe, name, events, ncyc, romdir):
         p = ln.split()
         if not p: continue
         c, k = int(p[0]), p[1]
+        if k == 'LANDED_LOCKSTEP': LANDED_RES.append((name, ' '.join(p[1:]))); continue
+        if k == 'LANDED_MISMATCH': continue
         if k == 'CMD': out['cmd'].append((c, int(p[2]), int(p[3], 16)))
         elif k == 'EMB': out['emb'].append((c, int(p[2]), int(p[3], 16)))
         elif k == 'SEG': out['seg'].append((c, int(p[2]), int(p[3], 16), int(p[4], 16), int(p[5], 16)))
@@ -325,8 +336,11 @@ def main():
     ap.add_argument('--emb-t', type=int, default=None, help='witness: image EMB at this T (compiler assertion bypassed)')
     ap.add_argument('--res-skew', type=int, default=0, help='witness: result events this many edges later than derived')
     ap.add_argument('--tag', default='')
+    ap.add_argument('--landed', type=int, default=None, help='LMUT: also run the landed cluster qfd_tt_ctlm_dv_lpf_lp in '
+                    'lockstep with the NU 4 dut (TB_LANDED); 0 must PASS, a landing mutant must FAIL')
     a = ap.parse_args()
-    global RES_SKEW
+    global RES_SKEW, LANDED
+    LANDED = a.landed
     RES_SKEW = a.res_skew
     cp = {} if a.emb_t is None else dict(emb_t=a.emb_t, check_emb=False)
     work = Path(a.work); work.mkdir(parents=True, exist_ok=True)
@@ -356,6 +370,11 @@ def main():
             else:
                 neg_case(case, cal, e4, work, rd, fails, summ)
         print(f'case {case} done: {len(fails)} fails so far', flush=True)
+    if LANDED is not None:
+        ok = bool(LANDED_RES) and all(r.startswith('LANDED_LOCKSTEP PASS') for _, r in LANDED_RES)
+        summ['landed'] = LANDED_RES
+        print(f"LANDED_LOCKSTEP {'PASS' if ok else 'FAIL'} lmut {LANDED} runs={len(LANDED_RES)}: "
+              + ' | '.join(f'{n}: {r}' for n, r in LANDED_RES), flush=True)
     summ['verdict'] = 'PASS' if not fails else 'FAIL'
     summ['fails'] = fails
     (work / f'summary_m{m}{a.tag}.json').write_text(json.dumps(summ, indent=1, default=str))
