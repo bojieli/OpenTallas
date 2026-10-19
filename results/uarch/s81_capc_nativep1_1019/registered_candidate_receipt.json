@@ -1,0 +1,105 @@
+{
+  "schema": 1,
+  "scope": "candidate-only",
+  "source_commit": "aa10fa84d9bd95208dabb41d7bdb868168f1c4f2",
+  "identity": {
+    "top": "ot_s81sl_cap_p1",
+    "sources": [
+      "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap.sv",
+      "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_p1.sv"
+    ],
+    "params": {
+      "PINPIPE": 1
+    },
+    "defines": [
+      "OT_HARD_CHILDREN"
+    ],
+    "hard_define": "OT_HARD_CHILDREN",
+    "children": [
+      {
+        "view": "physical/ref_tile/s81sl_cap_rt/views/ot_s81sl_cap_rt",
+        "count": 1,
+        "inst": "u_core.g_hard.u_rt",
+        "at": [
+          43.2,
+          43.2
+        ]
+      },
+      {
+        "view": "physical/ref_tile/s81sl_cap_tr/views/ot_s81sl_cap_tr",
+        "count": 1,
+        "inst": "u_core.g_hard.u_tw",
+        "at": [
+          43.2,
+          216
+        ]
+      },
+      {
+        "view": "physical/ref_tile/s81sl_cap_tr/views/ot_s81sl_cap_tr",
+        "count": 1,
+        "inst": "u_core.g_hard.u_te",
+        "at": [
+          216,
+          216
+        ]
+      }
+    ],
+    "clock_port": "clk",
+    "reset_ports": [
+      "rst_n"
+    ]
+  },
+  "sources": [
+    {
+      "path": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap.sv",
+      "sha256": "79aa525581808396118c7dec4362d6234263f7fcad75ce9620112ed58ad40f95"
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_p1.sv",
+      "sha256": "4caf66d4125734ec0963bded290f5fd38a668a313b9c810deedecf605743cf0c"
+    }
+  ],
+  "gate": {
+    "path": "physical/ref_tile/s81sl_capc_p1/gate_result.json",
+    "sha256": "5cf6a9e64cda2e612e1aba067601228c8e163b9ac22483c23f92701d3700239e"
+  },
+  "insertion": {
+    "path": "results/rtl/s81_slice_1017/capc_nativep1_1019/native_cts/insertion.json",
+    "sha256": "9867179dc7c2f03213f52823660b1c9840b1f8a2168bac5c73c8ceee6762b0f5"
+  },
+  "tt_lib": {
+    "path": "results/rtl/s81_slice_1017/capc_nativep1_1019/native_cts/probe_tt.lib",
+    "sha256": "a59c39d5c6f17551214609ea18f74a7c7316fda409dafea9c8f1b3ac6baf0340"
+  },
+  "ff_lib": {
+    "path": "results/rtl/s81_slice_1017/capc_nativep1_1019/native_ff/probe_ff.lib",
+    "sha256": "de513b995377c9a2f666df1cfdf9fdd5c90045a074392648b8c2abab020b7ab9"
+  },
+  "reset_stages": 2,
+  "reset_stage_cells": [
+    "g_pin.rst_l0",
+    "g_pin.rst_l1"
+  ],
+  "parent_boundary_budget": {
+    "owner": "MU-DIE-S81",
+    "candidate_only": true,
+    "C_ps": 25,
+    "hold_uncertainty_ps": 25,
+    "setup_uncertainty_ps": 60,
+    "neighbor_skew_max_ps": 80,
+    "native_tt_launch_max_ps": 220,
+    "native_tt_capture_max_ps": 190,
+    "required_die_checks": [
+      "D1",
+      "D2",
+      "D3",
+      "D4"
+    ],
+    "entry_compensation_ps": {
+      "clk": {
+        "tt": -740.6,
+        "ff": -580.7
+      }
+    }
+  }
+}
