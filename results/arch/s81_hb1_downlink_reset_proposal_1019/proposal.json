@@ -1,0 +1,4067 @@
+{
+  "scope": "SOURCE PROPOSAL ONLY, no RTL implementation/execution/EDA",
+  "source_commit": "ceaed19c4",
+  "parent_sha256": "526a95589c304844c5757b257c37b08a8546586ce8ec713a3f50d9eb5eebe28b",
+  "XR_sha256": "cc31c2d1607af9e0ac41357d3afaf19e6665b4f94ce4911e2dcaf078ec1167c3",
+  "source_sha256": {
+    "ot_s81sl_xr.sv": "cc31c2d1607af9e0ac41357d3afaf19e6665b4f94ce4911e2dcaf078ec1167c3",
+    "ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+    "ot_s81sl_vp.sv": "a42280979ba82db0db0ea6753e4213aa155617d5b5d3f18fd40710e723ff21b7",
+    "ot_s81sl_slice.sv": "526a95589c304844c5757b257c37b08a8546586ce8ec713a3f50d9eb5eebe28b",
+    "ot_s81sl_cap_rt.sv": "b4add20455f231ff8597ecf19bb9254ca608efbf0457ac6edeaf96c69e5a9a83",
+    "ot_s81sl_vn.sv": "5a6683229d62201c9da5b1a0e0d132c75906d31afd07b5c3633018048932a69d",
+    "ot_s81sl_vs.sv": "8f5ec8b78ae104de9268e26efcda699669d463bdec510a7f717290aab2d7dab6",
+    "ot_s81sl_cap.sv": "72f97dbdf311a075174fe6a1fc8845c86a159c8fa48180d53414b875cbcce09c"
+  },
+  "prior_model_commit": "e99b83c04",
+  "parent_firstuse_commit": "edd84d4c3",
+  "capacity_provenance_only": "5975a35d7",
+  "source_driver_choice": "reuse five existing VP u_rr regional0 outputs, no new FF",
+  "authority_endpoints": [
+    {
+      "source_state": "lf[0].u_dn.gd.r[0][34]",
+      "native_instance": null,
+      "role": "g_v",
+      "leaf": 0,
+      "stage": 0,
+      "packed_bit": 34,
+      "D_source_equation": "gv_x",
+      "RESETN_owner": "lf[0].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf0_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[0].u_lf.u_vs.gv_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[0].u_dn.gd.r[0][67]",
+      "native_instance": null,
+      "role": "rb_v",
+      "leaf": 0,
+      "stage": 0,
+      "packed_bit": 67,
+      "D_source_equation": "rb_v_x",
+      "RESETN_owner": "lf[0].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf0_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[0].u_lf.u_vn.rb_v_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[0].u_dn.gd.r[0][156]",
+      "native_instance": null,
+      "role": "cw_v[0]",
+      "leaf": 0,
+      "stage": 0,
+      "packed_bit": 156,
+      "D_source_equation": "cw_v_x[0]",
+      "RESETN_owner": "lf[0].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf0_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[0].u_lf.u_vp.cwv_c[0]",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[0].u_dn.gd.r[0][157]",
+      "native_instance": null,
+      "role": "cw_v[1]",
+      "leaf": 0,
+      "stage": 0,
+      "packed_bit": 157,
+      "D_source_equation": "cw_v_x[1]",
+      "RESETN_owner": "lf[0].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf0_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[0].u_lf.u_vp.cwv_c[1]",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[0].u_dn.gd.r[0][432]",
+      "native_instance": null,
+      "role": "sw_v",
+      "leaf": 0,
+      "stage": 0,
+      "packed_bit": 432,
+      "D_source_equation": "sw_v_x[0]",
+      "RESETN_owner": "lf[0].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf0_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[0].u_lf.u_vp.swv_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[0].u_dn.gd.r[0][593]",
+      "native_instance": null,
+      "role": "c_v",
+      "leaf": 0,
+      "stage": 0,
+      "packed_bit": 593,
+      "D_source_equation": "c_v_x[0]",
+      "RESETN_owner": "lf[0].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf0_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[0].u_lf.u_vp.cv_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[0].u_dn.gd.r[1][34]",
+      "native_instance": null,
+      "role": "g_v",
+      "leaf": 0,
+      "stage": 1,
+      "packed_bit": 34,
+      "D_source_equation": "lf[0].u_dn.gd.r[0][34]",
+      "RESETN_owner": "lf[0].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf0_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[0].u_lf.u_vs.gv_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[0].u_dn.gd.r[1][67]",
+      "native_instance": null,
+      "role": "rb_v",
+      "leaf": 0,
+      "stage": 1,
+      "packed_bit": 67,
+      "D_source_equation": "lf[0].u_dn.gd.r[0][67]",
+      "RESETN_owner": "lf[0].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf0_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[0].u_lf.u_vn.rb_v_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[0].u_dn.gd.r[1][156]",
+      "native_instance": null,
+      "role": "cw_v[0]",
+      "leaf": 0,
+      "stage": 1,
+      "packed_bit": 156,
+      "D_source_equation": "lf[0].u_dn.gd.r[0][156]",
+      "RESETN_owner": "lf[0].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf0_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[0].u_lf.u_vp.cwv_c[0]",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[0].u_dn.gd.r[1][157]",
+      "native_instance": null,
+      "role": "cw_v[1]",
+      "leaf": 0,
+      "stage": 1,
+      "packed_bit": 157,
+      "D_source_equation": "lf[0].u_dn.gd.r[0][157]",
+      "RESETN_owner": "lf[0].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf0_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[0].u_lf.u_vp.cwv_c[1]",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[0].u_dn.gd.r[1][432]",
+      "native_instance": null,
+      "role": "sw_v",
+      "leaf": 0,
+      "stage": 1,
+      "packed_bit": 432,
+      "D_source_equation": "lf[0].u_dn.gd.r[0][432]",
+      "RESETN_owner": "lf[0].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf0_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[0].u_lf.u_vp.swv_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[0].u_dn.gd.r[1][593]",
+      "native_instance": null,
+      "role": "c_v",
+      "leaf": 0,
+      "stage": 1,
+      "packed_bit": 593,
+      "D_source_equation": "lf[0].u_dn.gd.r[0][593]",
+      "RESETN_owner": "lf[0].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf0_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[0].u_lf.u_vp.cv_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[0].u_dn.gd.r[2][34]",
+      "native_instance": null,
+      "role": "g_v",
+      "leaf": 0,
+      "stage": 2,
+      "packed_bit": 34,
+      "D_source_equation": "lf[0].u_dn.gd.r[1][34]",
+      "RESETN_owner": "lf[0].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf0_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[0].u_lf.u_vs.gv_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[0].u_dn.gd.r[2][67]",
+      "native_instance": null,
+      "role": "rb_v",
+      "leaf": 0,
+      "stage": 2,
+      "packed_bit": 67,
+      "D_source_equation": "lf[0].u_dn.gd.r[1][67]",
+      "RESETN_owner": "lf[0].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf0_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[0].u_lf.u_vn.rb_v_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[0].u_dn.gd.r[2][156]",
+      "native_instance": null,
+      "role": "cw_v[0]",
+      "leaf": 0,
+      "stage": 2,
+      "packed_bit": 156,
+      "D_source_equation": "lf[0].u_dn.gd.r[1][156]",
+      "RESETN_owner": "lf[0].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf0_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[0].u_lf.u_vp.cwv_c[0]",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[0].u_dn.gd.r[2][157]",
+      "native_instance": null,
+      "role": "cw_v[1]",
+      "leaf": 0,
+      "stage": 2,
+      "packed_bit": 157,
+      "D_source_equation": "lf[0].u_dn.gd.r[1][157]",
+      "RESETN_owner": "lf[0].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf0_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[0].u_lf.u_vp.cwv_c[1]",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[0].u_dn.gd.r[2][432]",
+      "native_instance": null,
+      "role": "sw_v",
+      "leaf": 0,
+      "stage": 2,
+      "packed_bit": 432,
+      "D_source_equation": "lf[0].u_dn.gd.r[1][432]",
+      "RESETN_owner": "lf[0].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf0_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[0].u_lf.u_vp.swv_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[0].u_dn.gd.r[2][593]",
+      "native_instance": null,
+      "role": "c_v",
+      "leaf": 0,
+      "stage": 2,
+      "packed_bit": 593,
+      "D_source_equation": "lf[0].u_dn.gd.r[1][593]",
+      "RESETN_owner": "lf[0].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf0_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[0].u_lf.u_vp.cv_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[0].u_dn.gd.r[3][34]",
+      "native_instance": null,
+      "role": "g_v",
+      "leaf": 0,
+      "stage": 3,
+      "packed_bit": 34,
+      "D_source_equation": "lf[0].u_dn.gd.r[2][34]",
+      "RESETN_owner": "lf[0].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf0_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[0].u_lf.u_vs.gv_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[0].u_dn.gd.r[3][67]",
+      "native_instance": null,
+      "role": "rb_v",
+      "leaf": 0,
+      "stage": 3,
+      "packed_bit": 67,
+      "D_source_equation": "lf[0].u_dn.gd.r[2][67]",
+      "RESETN_owner": "lf[0].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf0_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[0].u_lf.u_vn.rb_v_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[0].u_dn.gd.r[3][156]",
+      "native_instance": null,
+      "role": "cw_v[0]",
+      "leaf": 0,
+      "stage": 3,
+      "packed_bit": 156,
+      "D_source_equation": "lf[0].u_dn.gd.r[2][156]",
+      "RESETN_owner": "lf[0].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf0_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[0].u_lf.u_vp.cwv_c[0]",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[0].u_dn.gd.r[3][157]",
+      "native_instance": null,
+      "role": "cw_v[1]",
+      "leaf": 0,
+      "stage": 3,
+      "packed_bit": 157,
+      "D_source_equation": "lf[0].u_dn.gd.r[2][157]",
+      "RESETN_owner": "lf[0].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf0_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[0].u_lf.u_vp.cwv_c[1]",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[0].u_dn.gd.r[3][432]",
+      "native_instance": null,
+      "role": "sw_v",
+      "leaf": 0,
+      "stage": 3,
+      "packed_bit": 432,
+      "D_source_equation": "lf[0].u_dn.gd.r[2][432]",
+      "RESETN_owner": "lf[0].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf0_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[0].u_lf.u_vp.swv_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[0].u_dn.gd.r[3][593]",
+      "native_instance": null,
+      "role": "c_v",
+      "leaf": 0,
+      "stage": 3,
+      "packed_bit": 593,
+      "D_source_equation": "lf[0].u_dn.gd.r[2][593]",
+      "RESETN_owner": "lf[0].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf0_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[0].u_lf.u_vp.cv_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[1].u_dn.gd.r[0][34]",
+      "native_instance": null,
+      "role": "g_v",
+      "leaf": 1,
+      "stage": 0,
+      "packed_bit": 34,
+      "D_source_equation": "gv_x",
+      "RESETN_owner": "lf[1].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf1_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[1].u_lf.u_vs.gv_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[1].u_dn.gd.r[0][67]",
+      "native_instance": null,
+      "role": "rb_v",
+      "leaf": 1,
+      "stage": 0,
+      "packed_bit": 67,
+      "D_source_equation": "rb_v_x",
+      "RESETN_owner": "lf[1].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf1_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[1].u_lf.u_vn.rb_v_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[1].u_dn.gd.r[0][156]",
+      "native_instance": null,
+      "role": "cw_v[0]",
+      "leaf": 1,
+      "stage": 0,
+      "packed_bit": 156,
+      "D_source_equation": "cw_v_x[2]",
+      "RESETN_owner": "lf[1].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf1_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[1].u_lf.u_vp.cwv_c[0]",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[1].u_dn.gd.r[0][157]",
+      "native_instance": null,
+      "role": "cw_v[1]",
+      "leaf": 1,
+      "stage": 0,
+      "packed_bit": 157,
+      "D_source_equation": "cw_v_x[3]",
+      "RESETN_owner": "lf[1].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf1_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[1].u_lf.u_vp.cwv_c[1]",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[1].u_dn.gd.r[0][432]",
+      "native_instance": null,
+      "role": "sw_v",
+      "leaf": 1,
+      "stage": 0,
+      "packed_bit": 432,
+      "D_source_equation": "sw_v_x[1]",
+      "RESETN_owner": "lf[1].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf1_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[1].u_lf.u_vp.swv_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[1].u_dn.gd.r[0][593]",
+      "native_instance": null,
+      "role": "c_v",
+      "leaf": 1,
+      "stage": 0,
+      "packed_bit": 593,
+      "D_source_equation": "c_v_x[1]",
+      "RESETN_owner": "lf[1].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf1_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[1].u_lf.u_vp.cv_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[1].u_dn.gd.r[1][34]",
+      "native_instance": null,
+      "role": "g_v",
+      "leaf": 1,
+      "stage": 1,
+      "packed_bit": 34,
+      "D_source_equation": "lf[1].u_dn.gd.r[0][34]",
+      "RESETN_owner": "lf[1].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf1_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[1].u_lf.u_vs.gv_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[1].u_dn.gd.r[1][67]",
+      "native_instance": null,
+      "role": "rb_v",
+      "leaf": 1,
+      "stage": 1,
+      "packed_bit": 67,
+      "D_source_equation": "lf[1].u_dn.gd.r[0][67]",
+      "RESETN_owner": "lf[1].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf1_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[1].u_lf.u_vn.rb_v_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[1].u_dn.gd.r[1][156]",
+      "native_instance": null,
+      "role": "cw_v[0]",
+      "leaf": 1,
+      "stage": 1,
+      "packed_bit": 156,
+      "D_source_equation": "lf[1].u_dn.gd.r[0][156]",
+      "RESETN_owner": "lf[1].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf1_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[1].u_lf.u_vp.cwv_c[0]",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[1].u_dn.gd.r[1][157]",
+      "native_instance": null,
+      "role": "cw_v[1]",
+      "leaf": 1,
+      "stage": 1,
+      "packed_bit": 157,
+      "D_source_equation": "lf[1].u_dn.gd.r[0][157]",
+      "RESETN_owner": "lf[1].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf1_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[1].u_lf.u_vp.cwv_c[1]",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[1].u_dn.gd.r[1][432]",
+      "native_instance": null,
+      "role": "sw_v",
+      "leaf": 1,
+      "stage": 1,
+      "packed_bit": 432,
+      "D_source_equation": "lf[1].u_dn.gd.r[0][432]",
+      "RESETN_owner": "lf[1].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf1_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[1].u_lf.u_vp.swv_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[1].u_dn.gd.r[1][593]",
+      "native_instance": null,
+      "role": "c_v",
+      "leaf": 1,
+      "stage": 1,
+      "packed_bit": 593,
+      "D_source_equation": "lf[1].u_dn.gd.r[0][593]",
+      "RESETN_owner": "lf[1].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf1_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[1].u_lf.u_vp.cv_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[1].u_dn.gd.r[2][34]",
+      "native_instance": null,
+      "role": "g_v",
+      "leaf": 1,
+      "stage": 2,
+      "packed_bit": 34,
+      "D_source_equation": "lf[1].u_dn.gd.r[1][34]",
+      "RESETN_owner": "lf[1].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf1_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[1].u_lf.u_vs.gv_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[1].u_dn.gd.r[2][67]",
+      "native_instance": null,
+      "role": "rb_v",
+      "leaf": 1,
+      "stage": 2,
+      "packed_bit": 67,
+      "D_source_equation": "lf[1].u_dn.gd.r[1][67]",
+      "RESETN_owner": "lf[1].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf1_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[1].u_lf.u_vn.rb_v_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[1].u_dn.gd.r[2][156]",
+      "native_instance": null,
+      "role": "cw_v[0]",
+      "leaf": 1,
+      "stage": 2,
+      "packed_bit": 156,
+      "D_source_equation": "lf[1].u_dn.gd.r[1][156]",
+      "RESETN_owner": "lf[1].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf1_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[1].u_lf.u_vp.cwv_c[0]",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[1].u_dn.gd.r[2][157]",
+      "native_instance": null,
+      "role": "cw_v[1]",
+      "leaf": 1,
+      "stage": 2,
+      "packed_bit": 157,
+      "D_source_equation": "lf[1].u_dn.gd.r[1][157]",
+      "RESETN_owner": "lf[1].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf1_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[1].u_lf.u_vp.cwv_c[1]",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[1].u_dn.gd.r[2][432]",
+      "native_instance": null,
+      "role": "sw_v",
+      "leaf": 1,
+      "stage": 2,
+      "packed_bit": 432,
+      "D_source_equation": "lf[1].u_dn.gd.r[1][432]",
+      "RESETN_owner": "lf[1].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf1_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[1].u_lf.u_vp.swv_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[1].u_dn.gd.r[2][593]",
+      "native_instance": null,
+      "role": "c_v",
+      "leaf": 1,
+      "stage": 2,
+      "packed_bit": 593,
+      "D_source_equation": "lf[1].u_dn.gd.r[1][593]",
+      "RESETN_owner": "lf[1].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf1_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[1].u_lf.u_vp.cv_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[1].u_dn.gd.r[3][34]",
+      "native_instance": null,
+      "role": "g_v",
+      "leaf": 1,
+      "stage": 3,
+      "packed_bit": 34,
+      "D_source_equation": "lf[1].u_dn.gd.r[2][34]",
+      "RESETN_owner": "lf[1].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf1_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[1].u_lf.u_vs.gv_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[1].u_dn.gd.r[3][67]",
+      "native_instance": null,
+      "role": "rb_v",
+      "leaf": 1,
+      "stage": 3,
+      "packed_bit": 67,
+      "D_source_equation": "lf[1].u_dn.gd.r[2][67]",
+      "RESETN_owner": "lf[1].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf1_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[1].u_lf.u_vn.rb_v_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[1].u_dn.gd.r[3][156]",
+      "native_instance": null,
+      "role": "cw_v[0]",
+      "leaf": 1,
+      "stage": 3,
+      "packed_bit": 156,
+      "D_source_equation": "lf[1].u_dn.gd.r[2][156]",
+      "RESETN_owner": "lf[1].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf1_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[1].u_lf.u_vp.cwv_c[0]",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[1].u_dn.gd.r[3][157]",
+      "native_instance": null,
+      "role": "cw_v[1]",
+      "leaf": 1,
+      "stage": 3,
+      "packed_bit": 157,
+      "D_source_equation": "lf[1].u_dn.gd.r[2][157]",
+      "RESETN_owner": "lf[1].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf1_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[1].u_lf.u_vp.cwv_c[1]",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[1].u_dn.gd.r[3][432]",
+      "native_instance": null,
+      "role": "sw_v",
+      "leaf": 1,
+      "stage": 3,
+      "packed_bit": 432,
+      "D_source_equation": "lf[1].u_dn.gd.r[2][432]",
+      "RESETN_owner": "lf[1].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf1_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[1].u_lf.u_vp.swv_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[1].u_dn.gd.r[3][593]",
+      "native_instance": null,
+      "role": "c_v",
+      "leaf": 1,
+      "stage": 3,
+      "packed_bit": 593,
+      "D_source_equation": "lf[1].u_dn.gd.r[2][593]",
+      "RESETN_owner": "lf[1].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf1_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[1].u_lf.u_vp.cv_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[2].u_dn.gd.r[0][34]",
+      "native_instance": null,
+      "role": "g_v",
+      "leaf": 2,
+      "stage": 0,
+      "packed_bit": 34,
+      "D_source_equation": "gv_x",
+      "RESETN_owner": "lf[2].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf2_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[2].u_lf.u_vs.gv_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[2].u_dn.gd.r[0][67]",
+      "native_instance": null,
+      "role": "rb_v",
+      "leaf": 2,
+      "stage": 0,
+      "packed_bit": 67,
+      "D_source_equation": "rb_v_x",
+      "RESETN_owner": "lf[2].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf2_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[2].u_lf.u_vn.rb_v_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[2].u_dn.gd.r[0][156]",
+      "native_instance": null,
+      "role": "cw_v[0]",
+      "leaf": 2,
+      "stage": 0,
+      "packed_bit": 156,
+      "D_source_equation": "cw_v_x[4]",
+      "RESETN_owner": "lf[2].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf2_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[2].u_lf.u_vp.cwv_c[0]",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[2].u_dn.gd.r[0][157]",
+      "native_instance": null,
+      "role": "cw_v[1]",
+      "leaf": 2,
+      "stage": 0,
+      "packed_bit": 157,
+      "D_source_equation": "cw_v_x[5]",
+      "RESETN_owner": "lf[2].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf2_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[2].u_lf.u_vp.cwv_c[1]",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[2].u_dn.gd.r[0][432]",
+      "native_instance": null,
+      "role": "sw_v",
+      "leaf": 2,
+      "stage": 0,
+      "packed_bit": 432,
+      "D_source_equation": "sw_v_x[2]",
+      "RESETN_owner": "lf[2].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf2_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[2].u_lf.u_vp.swv_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[2].u_dn.gd.r[0][593]",
+      "native_instance": null,
+      "role": "c_v",
+      "leaf": 2,
+      "stage": 0,
+      "packed_bit": 593,
+      "D_source_equation": "c_v_x[2]",
+      "RESETN_owner": "lf[2].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf2_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[2].u_lf.u_vp.cv_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[2].u_dn.gd.r[1][34]",
+      "native_instance": null,
+      "role": "g_v",
+      "leaf": 2,
+      "stage": 1,
+      "packed_bit": 34,
+      "D_source_equation": "lf[2].u_dn.gd.r[0][34]",
+      "RESETN_owner": "lf[2].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf2_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[2].u_lf.u_vs.gv_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[2].u_dn.gd.r[1][67]",
+      "native_instance": null,
+      "role": "rb_v",
+      "leaf": 2,
+      "stage": 1,
+      "packed_bit": 67,
+      "D_source_equation": "lf[2].u_dn.gd.r[0][67]",
+      "RESETN_owner": "lf[2].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf2_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[2].u_lf.u_vn.rb_v_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[2].u_dn.gd.r[1][156]",
+      "native_instance": null,
+      "role": "cw_v[0]",
+      "leaf": 2,
+      "stage": 1,
+      "packed_bit": 156,
+      "D_source_equation": "lf[2].u_dn.gd.r[0][156]",
+      "RESETN_owner": "lf[2].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf2_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[2].u_lf.u_vp.cwv_c[0]",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[2].u_dn.gd.r[1][157]",
+      "native_instance": null,
+      "role": "cw_v[1]",
+      "leaf": 2,
+      "stage": 1,
+      "packed_bit": 157,
+      "D_source_equation": "lf[2].u_dn.gd.r[0][157]",
+      "RESETN_owner": "lf[2].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf2_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[2].u_lf.u_vp.cwv_c[1]",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[2].u_dn.gd.r[1][432]",
+      "native_instance": null,
+      "role": "sw_v",
+      "leaf": 2,
+      "stage": 1,
+      "packed_bit": 432,
+      "D_source_equation": "lf[2].u_dn.gd.r[0][432]",
+      "RESETN_owner": "lf[2].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf2_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[2].u_lf.u_vp.swv_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[2].u_dn.gd.r[1][593]",
+      "native_instance": null,
+      "role": "c_v",
+      "leaf": 2,
+      "stage": 1,
+      "packed_bit": 593,
+      "D_source_equation": "lf[2].u_dn.gd.r[0][593]",
+      "RESETN_owner": "lf[2].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf2_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[2].u_lf.u_vp.cv_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[2].u_dn.gd.r[2][34]",
+      "native_instance": null,
+      "role": "g_v",
+      "leaf": 2,
+      "stage": 2,
+      "packed_bit": 34,
+      "D_source_equation": "lf[2].u_dn.gd.r[1][34]",
+      "RESETN_owner": "lf[2].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf2_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[2].u_lf.u_vs.gv_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[2].u_dn.gd.r[2][67]",
+      "native_instance": null,
+      "role": "rb_v",
+      "leaf": 2,
+      "stage": 2,
+      "packed_bit": 67,
+      "D_source_equation": "lf[2].u_dn.gd.r[1][67]",
+      "RESETN_owner": "lf[2].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf2_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[2].u_lf.u_vn.rb_v_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[2].u_dn.gd.r[2][156]",
+      "native_instance": null,
+      "role": "cw_v[0]",
+      "leaf": 2,
+      "stage": 2,
+      "packed_bit": 156,
+      "D_source_equation": "lf[2].u_dn.gd.r[1][156]",
+      "RESETN_owner": "lf[2].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf2_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[2].u_lf.u_vp.cwv_c[0]",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[2].u_dn.gd.r[2][157]",
+      "native_instance": null,
+      "role": "cw_v[1]",
+      "leaf": 2,
+      "stage": 2,
+      "packed_bit": 157,
+      "D_source_equation": "lf[2].u_dn.gd.r[1][157]",
+      "RESETN_owner": "lf[2].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf2_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[2].u_lf.u_vp.cwv_c[1]",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[2].u_dn.gd.r[2][432]",
+      "native_instance": null,
+      "role": "sw_v",
+      "leaf": 2,
+      "stage": 2,
+      "packed_bit": 432,
+      "D_source_equation": "lf[2].u_dn.gd.r[1][432]",
+      "RESETN_owner": "lf[2].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf2_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[2].u_lf.u_vp.swv_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[2].u_dn.gd.r[2][593]",
+      "native_instance": null,
+      "role": "c_v",
+      "leaf": 2,
+      "stage": 2,
+      "packed_bit": 593,
+      "D_source_equation": "lf[2].u_dn.gd.r[1][593]",
+      "RESETN_owner": "lf[2].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf2_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[2].u_lf.u_vp.cv_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[2].u_dn.gd.r[3][34]",
+      "native_instance": null,
+      "role": "g_v",
+      "leaf": 2,
+      "stage": 3,
+      "packed_bit": 34,
+      "D_source_equation": "lf[2].u_dn.gd.r[2][34]",
+      "RESETN_owner": "lf[2].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf2_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[2].u_lf.u_vs.gv_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[2].u_dn.gd.r[3][67]",
+      "native_instance": null,
+      "role": "rb_v",
+      "leaf": 2,
+      "stage": 3,
+      "packed_bit": 67,
+      "D_source_equation": "lf[2].u_dn.gd.r[2][67]",
+      "RESETN_owner": "lf[2].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf2_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[2].u_lf.u_vn.rb_v_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[2].u_dn.gd.r[3][156]",
+      "native_instance": null,
+      "role": "cw_v[0]",
+      "leaf": 2,
+      "stage": 3,
+      "packed_bit": 156,
+      "D_source_equation": "lf[2].u_dn.gd.r[2][156]",
+      "RESETN_owner": "lf[2].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf2_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[2].u_lf.u_vp.cwv_c[0]",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[2].u_dn.gd.r[3][157]",
+      "native_instance": null,
+      "role": "cw_v[1]",
+      "leaf": 2,
+      "stage": 3,
+      "packed_bit": 157,
+      "D_source_equation": "lf[2].u_dn.gd.r[2][157]",
+      "RESETN_owner": "lf[2].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf2_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[2].u_lf.u_vp.cwv_c[1]",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[2].u_dn.gd.r[3][432]",
+      "native_instance": null,
+      "role": "sw_v",
+      "leaf": 2,
+      "stage": 3,
+      "packed_bit": 432,
+      "D_source_equation": "lf[2].u_dn.gd.r[2][432]",
+      "RESETN_owner": "lf[2].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf2_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[2].u_lf.u_vp.swv_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[2].u_dn.gd.r[3][593]",
+      "native_instance": null,
+      "role": "c_v",
+      "leaf": 2,
+      "stage": 3,
+      "packed_bit": 593,
+      "D_source_equation": "lf[2].u_dn.gd.r[2][593]",
+      "RESETN_owner": "lf[2].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf2_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[2].u_lf.u_vp.cv_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[3].u_dn.gd.r[0][34]",
+      "native_instance": null,
+      "role": "g_v",
+      "leaf": 3,
+      "stage": 0,
+      "packed_bit": 34,
+      "D_source_equation": "gv_x",
+      "RESETN_owner": "lf[3].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf3_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[3].u_lf.u_vs.gv_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[3].u_dn.gd.r[0][67]",
+      "native_instance": null,
+      "role": "rb_v",
+      "leaf": 3,
+      "stage": 0,
+      "packed_bit": 67,
+      "D_source_equation": "rb_v_x",
+      "RESETN_owner": "lf[3].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf3_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[3].u_lf.u_vn.rb_v_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[3].u_dn.gd.r[0][156]",
+      "native_instance": null,
+      "role": "cw_v[0]",
+      "leaf": 3,
+      "stage": 0,
+      "packed_bit": 156,
+      "D_source_equation": "cw_v_x[6]",
+      "RESETN_owner": "lf[3].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf3_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[3].u_lf.u_vp.cwv_c[0]",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[3].u_dn.gd.r[0][157]",
+      "native_instance": null,
+      "role": "cw_v[1]",
+      "leaf": 3,
+      "stage": 0,
+      "packed_bit": 157,
+      "D_source_equation": "cw_v_x[7]",
+      "RESETN_owner": "lf[3].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf3_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[3].u_lf.u_vp.cwv_c[1]",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[3].u_dn.gd.r[0][432]",
+      "native_instance": null,
+      "role": "sw_v",
+      "leaf": 3,
+      "stage": 0,
+      "packed_bit": 432,
+      "D_source_equation": "sw_v_x[3]",
+      "RESETN_owner": "lf[3].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf3_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[3].u_lf.u_vp.swv_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[3].u_dn.gd.r[0][593]",
+      "native_instance": null,
+      "role": "c_v",
+      "leaf": 3,
+      "stage": 0,
+      "packed_bit": 593,
+      "D_source_equation": "c_v_x[3]",
+      "RESETN_owner": "lf[3].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf3_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[3].u_lf.u_vp.cv_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[3].u_dn.gd.r[1][34]",
+      "native_instance": null,
+      "role": "g_v",
+      "leaf": 3,
+      "stage": 1,
+      "packed_bit": 34,
+      "D_source_equation": "lf[3].u_dn.gd.r[0][34]",
+      "RESETN_owner": "lf[3].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf3_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[3].u_lf.u_vs.gv_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[3].u_dn.gd.r[1][67]",
+      "native_instance": null,
+      "role": "rb_v",
+      "leaf": 3,
+      "stage": 1,
+      "packed_bit": 67,
+      "D_source_equation": "lf[3].u_dn.gd.r[0][67]",
+      "RESETN_owner": "lf[3].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf3_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[3].u_lf.u_vn.rb_v_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[3].u_dn.gd.r[1][156]",
+      "native_instance": null,
+      "role": "cw_v[0]",
+      "leaf": 3,
+      "stage": 1,
+      "packed_bit": 156,
+      "D_source_equation": "lf[3].u_dn.gd.r[0][156]",
+      "RESETN_owner": "lf[3].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf3_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[3].u_lf.u_vp.cwv_c[0]",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[3].u_dn.gd.r[1][157]",
+      "native_instance": null,
+      "role": "cw_v[1]",
+      "leaf": 3,
+      "stage": 1,
+      "packed_bit": 157,
+      "D_source_equation": "lf[3].u_dn.gd.r[0][157]",
+      "RESETN_owner": "lf[3].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf3_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[3].u_lf.u_vp.cwv_c[1]",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[3].u_dn.gd.r[1][432]",
+      "native_instance": null,
+      "role": "sw_v",
+      "leaf": 3,
+      "stage": 1,
+      "packed_bit": 432,
+      "D_source_equation": "lf[3].u_dn.gd.r[0][432]",
+      "RESETN_owner": "lf[3].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf3_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[3].u_lf.u_vp.swv_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[3].u_dn.gd.r[1][593]",
+      "native_instance": null,
+      "role": "c_v",
+      "leaf": 3,
+      "stage": 1,
+      "packed_bit": 593,
+      "D_source_equation": "lf[3].u_dn.gd.r[0][593]",
+      "RESETN_owner": "lf[3].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf3_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[3].u_lf.u_vp.cv_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[3].u_dn.gd.r[2][34]",
+      "native_instance": null,
+      "role": "g_v",
+      "leaf": 3,
+      "stage": 2,
+      "packed_bit": 34,
+      "D_source_equation": "lf[3].u_dn.gd.r[1][34]",
+      "RESETN_owner": "lf[3].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf3_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[3].u_lf.u_vs.gv_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[3].u_dn.gd.r[2][67]",
+      "native_instance": null,
+      "role": "rb_v",
+      "leaf": 3,
+      "stage": 2,
+      "packed_bit": 67,
+      "D_source_equation": "lf[3].u_dn.gd.r[1][67]",
+      "RESETN_owner": "lf[3].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf3_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[3].u_lf.u_vn.rb_v_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[3].u_dn.gd.r[2][156]",
+      "native_instance": null,
+      "role": "cw_v[0]",
+      "leaf": 3,
+      "stage": 2,
+      "packed_bit": 156,
+      "D_source_equation": "lf[3].u_dn.gd.r[1][156]",
+      "RESETN_owner": "lf[3].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf3_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[3].u_lf.u_vp.cwv_c[0]",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[3].u_dn.gd.r[2][157]",
+      "native_instance": null,
+      "role": "cw_v[1]",
+      "leaf": 3,
+      "stage": 2,
+      "packed_bit": 157,
+      "D_source_equation": "lf[3].u_dn.gd.r[1][157]",
+      "RESETN_owner": "lf[3].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf3_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[3].u_lf.u_vp.cwv_c[1]",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[3].u_dn.gd.r[2][432]",
+      "native_instance": null,
+      "role": "sw_v",
+      "leaf": 3,
+      "stage": 2,
+      "packed_bit": 432,
+      "D_source_equation": "lf[3].u_dn.gd.r[1][432]",
+      "RESETN_owner": "lf[3].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf3_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[3].u_lf.u_vp.swv_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[3].u_dn.gd.r[2][593]",
+      "native_instance": null,
+      "role": "c_v",
+      "leaf": 3,
+      "stage": 2,
+      "packed_bit": 593,
+      "D_source_equation": "lf[3].u_dn.gd.r[1][593]",
+      "RESETN_owner": "lf[3].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf3_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[3].u_lf.u_vp.cv_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[3].u_dn.gd.r[3][34]",
+      "native_instance": null,
+      "role": "g_v",
+      "leaf": 3,
+      "stage": 3,
+      "packed_bit": 34,
+      "D_source_equation": "lf[3].u_dn.gd.r[2][34]",
+      "RESETN_owner": "lf[3].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf3_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[3].u_lf.u_vs.gv_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[3].u_dn.gd.r[3][67]",
+      "native_instance": null,
+      "role": "rb_v",
+      "leaf": 3,
+      "stage": 3,
+      "packed_bit": 67,
+      "D_source_equation": "lf[3].u_dn.gd.r[2][67]",
+      "RESETN_owner": "lf[3].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf3_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[3].u_lf.u_vn.rb_v_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[3].u_dn.gd.r[3][156]",
+      "native_instance": null,
+      "role": "cw_v[0]",
+      "leaf": 3,
+      "stage": 3,
+      "packed_bit": 156,
+      "D_source_equation": "lf[3].u_dn.gd.r[2][156]",
+      "RESETN_owner": "lf[3].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf3_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[3].u_lf.u_vp.cwv_c[0]",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[3].u_dn.gd.r[3][157]",
+      "native_instance": null,
+      "role": "cw_v[1]",
+      "leaf": 3,
+      "stage": 3,
+      "packed_bit": 157,
+      "D_source_equation": "lf[3].u_dn.gd.r[2][157]",
+      "RESETN_owner": "lf[3].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf3_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[3].u_lf.u_vp.cwv_c[1]",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[3].u_dn.gd.r[3][432]",
+      "native_instance": null,
+      "role": "sw_v",
+      "leaf": 3,
+      "stage": 3,
+      "packed_bit": 432,
+      "D_source_equation": "lf[3].u_dn.gd.r[2][432]",
+      "RESETN_owner": "lf[3].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf3_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[3].u_lf.u_vp.swv_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[3].u_dn.gd.r[3][593]",
+      "native_instance": null,
+      "role": "c_v",
+      "leaf": 3,
+      "stage": 3,
+      "packed_bit": 593,
+      "D_source_equation": "lf[3].u_dn.gd.r[2][593]",
+      "RESETN_owner": "lf[3].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf3_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[3].u_lf.u_vp.cv_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[4].u_dn.gd.r[0][34]",
+      "native_instance": null,
+      "role": "g_v",
+      "leaf": 4,
+      "stage": 0,
+      "packed_bit": 34,
+      "D_source_equation": "gv_x",
+      "RESETN_owner": "lf[4].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf4_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[4].u_lf.u_vs.gv_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[4].u_dn.gd.r[0][67]",
+      "native_instance": null,
+      "role": "rb_v",
+      "leaf": 4,
+      "stage": 0,
+      "packed_bit": 67,
+      "D_source_equation": "rb_v_x",
+      "RESETN_owner": "lf[4].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf4_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[4].u_lf.u_vn.rb_v_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[4].u_dn.gd.r[0][156]",
+      "native_instance": null,
+      "role": "cw_v[0]",
+      "leaf": 4,
+      "stage": 0,
+      "packed_bit": 156,
+      "D_source_equation": "cw_v_x[8]",
+      "RESETN_owner": "lf[4].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf4_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[4].u_lf.u_vp.cwv_c[0]",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[4].u_dn.gd.r[0][157]",
+      "native_instance": null,
+      "role": "cw_v[1]",
+      "leaf": 4,
+      "stage": 0,
+      "packed_bit": 157,
+      "D_source_equation": "cw_v_x[9]",
+      "RESETN_owner": "lf[4].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf4_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[4].u_lf.u_vp.cwv_c[1]",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[4].u_dn.gd.r[0][432]",
+      "native_instance": null,
+      "role": "sw_v",
+      "leaf": 4,
+      "stage": 0,
+      "packed_bit": 432,
+      "D_source_equation": "sw_v_x[4]",
+      "RESETN_owner": "lf[4].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf4_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[4].u_lf.u_vp.swv_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[4].u_dn.gd.r[0][593]",
+      "native_instance": null,
+      "role": "c_v",
+      "leaf": 4,
+      "stage": 0,
+      "packed_bit": 593,
+      "D_source_equation": "c_v_x[4]",
+      "RESETN_owner": "lf[4].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf4_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[4].u_lf.u_vp.cv_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[4].u_dn.gd.r[1][34]",
+      "native_instance": null,
+      "role": "g_v",
+      "leaf": 4,
+      "stage": 1,
+      "packed_bit": 34,
+      "D_source_equation": "lf[4].u_dn.gd.r[0][34]",
+      "RESETN_owner": "lf[4].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf4_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[4].u_lf.u_vs.gv_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[4].u_dn.gd.r[1][67]",
+      "native_instance": null,
+      "role": "rb_v",
+      "leaf": 4,
+      "stage": 1,
+      "packed_bit": 67,
+      "D_source_equation": "lf[4].u_dn.gd.r[0][67]",
+      "RESETN_owner": "lf[4].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf4_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[4].u_lf.u_vn.rb_v_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[4].u_dn.gd.r[1][156]",
+      "native_instance": null,
+      "role": "cw_v[0]",
+      "leaf": 4,
+      "stage": 1,
+      "packed_bit": 156,
+      "D_source_equation": "lf[4].u_dn.gd.r[0][156]",
+      "RESETN_owner": "lf[4].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf4_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[4].u_lf.u_vp.cwv_c[0]",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[4].u_dn.gd.r[1][157]",
+      "native_instance": null,
+      "role": "cw_v[1]",
+      "leaf": 4,
+      "stage": 1,
+      "packed_bit": 157,
+      "D_source_equation": "lf[4].u_dn.gd.r[0][157]",
+      "RESETN_owner": "lf[4].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf4_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[4].u_lf.u_vp.cwv_c[1]",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[4].u_dn.gd.r[1][432]",
+      "native_instance": null,
+      "role": "sw_v",
+      "leaf": 4,
+      "stage": 1,
+      "packed_bit": 432,
+      "D_source_equation": "lf[4].u_dn.gd.r[0][432]",
+      "RESETN_owner": "lf[4].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf4_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[4].u_lf.u_vp.swv_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[4].u_dn.gd.r[1][593]",
+      "native_instance": null,
+      "role": "c_v",
+      "leaf": 4,
+      "stage": 1,
+      "packed_bit": 593,
+      "D_source_equation": "lf[4].u_dn.gd.r[0][593]",
+      "RESETN_owner": "lf[4].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf4_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[4].u_lf.u_vp.cv_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[4].u_dn.gd.r[2][34]",
+      "native_instance": null,
+      "role": "g_v",
+      "leaf": 4,
+      "stage": 2,
+      "packed_bit": 34,
+      "D_source_equation": "lf[4].u_dn.gd.r[1][34]",
+      "RESETN_owner": "lf[4].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf4_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[4].u_lf.u_vs.gv_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[4].u_dn.gd.r[2][67]",
+      "native_instance": null,
+      "role": "rb_v",
+      "leaf": 4,
+      "stage": 2,
+      "packed_bit": 67,
+      "D_source_equation": "lf[4].u_dn.gd.r[1][67]",
+      "RESETN_owner": "lf[4].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf4_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[4].u_lf.u_vn.rb_v_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[4].u_dn.gd.r[2][156]",
+      "native_instance": null,
+      "role": "cw_v[0]",
+      "leaf": 4,
+      "stage": 2,
+      "packed_bit": 156,
+      "D_source_equation": "lf[4].u_dn.gd.r[1][156]",
+      "RESETN_owner": "lf[4].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf4_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[4].u_lf.u_vp.cwv_c[0]",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[4].u_dn.gd.r[2][157]",
+      "native_instance": null,
+      "role": "cw_v[1]",
+      "leaf": 4,
+      "stage": 2,
+      "packed_bit": 157,
+      "D_source_equation": "lf[4].u_dn.gd.r[1][157]",
+      "RESETN_owner": "lf[4].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf4_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[4].u_lf.u_vp.cwv_c[1]",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[4].u_dn.gd.r[2][432]",
+      "native_instance": null,
+      "role": "sw_v",
+      "leaf": 4,
+      "stage": 2,
+      "packed_bit": 432,
+      "D_source_equation": "lf[4].u_dn.gd.r[1][432]",
+      "RESETN_owner": "lf[4].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf4_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[4].u_lf.u_vp.swv_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[4].u_dn.gd.r[2][593]",
+      "native_instance": null,
+      "role": "c_v",
+      "leaf": 4,
+      "stage": 2,
+      "packed_bit": 593,
+      "D_source_equation": "lf[4].u_dn.gd.r[1][593]",
+      "RESETN_owner": "lf[4].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf4_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[4].u_lf.u_vp.cv_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[4].u_dn.gd.r[3][34]",
+      "native_instance": null,
+      "role": "g_v",
+      "leaf": 4,
+      "stage": 3,
+      "packed_bit": 34,
+      "D_source_equation": "lf[4].u_dn.gd.r[2][34]",
+      "RESETN_owner": "lf[4].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf4_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[4].u_lf.u_vs.gv_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[4].u_dn.gd.r[3][67]",
+      "native_instance": null,
+      "role": "rb_v",
+      "leaf": 4,
+      "stage": 3,
+      "packed_bit": 67,
+      "D_source_equation": "lf[4].u_dn.gd.r[2][67]",
+      "RESETN_owner": "lf[4].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf4_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[4].u_lf.u_vn.rb_v_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[4].u_dn.gd.r[3][156]",
+      "native_instance": null,
+      "role": "cw_v[0]",
+      "leaf": 4,
+      "stage": 3,
+      "packed_bit": 156,
+      "D_source_equation": "lf[4].u_dn.gd.r[2][156]",
+      "RESETN_owner": "lf[4].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf4_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[4].u_lf.u_vp.cwv_c[0]",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[4].u_dn.gd.r[3][157]",
+      "native_instance": null,
+      "role": "cw_v[1]",
+      "leaf": 4,
+      "stage": 3,
+      "packed_bit": 157,
+      "D_source_equation": "lf[4].u_dn.gd.r[2][157]",
+      "RESETN_owner": "lf[4].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf4_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[4].u_lf.u_vp.cwv_c[1]",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[4].u_dn.gd.r[3][432]",
+      "native_instance": null,
+      "role": "sw_v",
+      "leaf": 4,
+      "stage": 3,
+      "packed_bit": 432,
+      "D_source_equation": "lf[4].u_dn.gd.r[2][432]",
+      "RESETN_owner": "lf[4].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf4_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[4].u_lf.u_vp.swv_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "source_state": "lf[4].u_dn.gd.r[3][593]",
+      "native_instance": null,
+      "role": "c_v",
+      "leaf": 4,
+      "stage": 3,
+      "packed_bit": 593,
+      "D_source_equation": "lf[4].u_dn.gd.r[2][593]",
+      "RESETN_owner": "lf[4].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN_owner": "tie_leaf4_new.H",
+      "CLK_source": "ot_s81sl_slice.clk",
+      "first_consumer": "lf[4].u_lf.u_vp.cv_c",
+      "native_clock_binding": null,
+      "mapped_master": null,
+      "proposed_equivalent_master": "DFFASRHQNx1_ASAP7_75t_R"
+    }
+  ],
+  "reset_owners": [
+    {
+      "owner": "lf[0].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "native_instance": null,
+      "D_owner": "lf[0].u_lf.u_vp.u_rr.sync_q[1]",
+      "RESETN_owner": "ot_s81sl_slice.rst_n",
+      "SETN_owner": "tie_leaf0_old.H",
+      "CLK": "ot_s81sl_slice.clk",
+      "inherited_age_edges": 3,
+      "existing_D_loads": [],
+      "existing_RESETN_loads": [
+        {
+          "endpoint": "lf[0].u_lf.u_vp.cv_c.RESETN",
+          "role": "existing_consumer_authority"
+        },
+        {
+          "endpoint": "lf[0].u_lf.u_vp.swv_c.RESETN",
+          "role": "existing_consumer_authority"
+        },
+        {
+          "endpoint": "lf[0].u_lf.u_vp.cwv_c[0].RESETN",
+          "role": "existing_consumer_authority"
+        },
+        {
+          "endpoint": "lf[0].u_lf.u_vp.cwv_c[1].RESETN",
+          "role": "existing_consumer_authority"
+        },
+        {
+          "endpoint": "lf[0].u_lf.u_vp.hqv_c.RESETN",
+          "role": "existing_consumer_authority"
+        },
+        {
+          "endpoint": "lf[0].u_lf.u_vp.xrv_c.RESETN",
+          "role": "existing_consumer_authority"
+        },
+        {
+          "endpoint": "lf[0].u_lf.u_vp.xwv_c.RESETN",
+          "role": "existing_consumer_authority"
+        }
+      ],
+      "existing_SETN_loads": [],
+      "new_RESETN_loads": [
+        {
+          "endpoint": "lf[0].u_dn.gd.r[0][34].RESETN",
+          "role": "g_v"
+        },
+        {
+          "endpoint": "lf[0].u_dn.gd.r[0][67].RESETN",
+          "role": "rb_v"
+        },
+        {
+          "endpoint": "lf[0].u_dn.gd.r[0][156].RESETN",
+          "role": "cw_v[0]"
+        },
+        {
+          "endpoint": "lf[0].u_dn.gd.r[0][157].RESETN",
+          "role": "cw_v[1]"
+        },
+        {
+          "endpoint": "lf[0].u_dn.gd.r[0][432].RESETN",
+          "role": "sw_v"
+        },
+        {
+          "endpoint": "lf[0].u_dn.gd.r[0][593].RESETN",
+          "role": "c_v"
+        },
+        {
+          "endpoint": "lf[0].u_dn.gd.r[1][34].RESETN",
+          "role": "g_v"
+        },
+        {
+          "endpoint": "lf[0].u_dn.gd.r[1][67].RESETN",
+          "role": "rb_v"
+        },
+        {
+          "endpoint": "lf[0].u_dn.gd.r[1][156].RESETN",
+          "role": "cw_v[0]"
+        },
+        {
+          "endpoint": "lf[0].u_dn.gd.r[1][157].RESETN",
+          "role": "cw_v[1]"
+        },
+        {
+          "endpoint": "lf[0].u_dn.gd.r[1][432].RESETN",
+          "role": "sw_v"
+        },
+        {
+          "endpoint": "lf[0].u_dn.gd.r[1][593].RESETN",
+          "role": "c_v"
+        },
+        {
+          "endpoint": "lf[0].u_dn.gd.r[2][34].RESETN",
+          "role": "g_v"
+        },
+        {
+          "endpoint": "lf[0].u_dn.gd.r[2][67].RESETN",
+          "role": "rb_v"
+        },
+        {
+          "endpoint": "lf[0].u_dn.gd.r[2][156].RESETN",
+          "role": "cw_v[0]"
+        },
+        {
+          "endpoint": "lf[0].u_dn.gd.r[2][157].RESETN",
+          "role": "cw_v[1]"
+        },
+        {
+          "endpoint": "lf[0].u_dn.gd.r[2][432].RESETN",
+          "role": "sw_v"
+        },
+        {
+          "endpoint": "lf[0].u_dn.gd.r[2][593].RESETN",
+          "role": "c_v"
+        },
+        {
+          "endpoint": "lf[0].u_dn.gd.r[3][34].RESETN",
+          "role": "g_v"
+        },
+        {
+          "endpoint": "lf[0].u_dn.gd.r[3][67].RESETN",
+          "role": "rb_v"
+        },
+        {
+          "endpoint": "lf[0].u_dn.gd.r[3][156].RESETN",
+          "role": "cw_v[0]"
+        },
+        {
+          "endpoint": "lf[0].u_dn.gd.r[3][157].RESETN",
+          "role": "cw_v[1]"
+        },
+        {
+          "endpoint": "lf[0].u_dn.gd.r[3][432].RESETN",
+          "role": "sw_v"
+        },
+        {
+          "endpoint": "lf[0].u_dn.gd.r[3][593].RESETN",
+          "role": "c_v"
+        }
+      ],
+      "total_nonclock_logical_loads": 31,
+      "physical_phase": null,
+      "clock_reach_removal_slew": null
+    },
+    {
+      "owner": "lf[1].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "native_instance": null,
+      "D_owner": "lf[1].u_lf.u_vp.u_rr.sync_q[1]",
+      "RESETN_owner": "ot_s81sl_slice.rst_n",
+      "SETN_owner": "tie_leaf1_old.H",
+      "CLK": "ot_s81sl_slice.clk",
+      "inherited_age_edges": 3,
+      "existing_D_loads": [],
+      "existing_RESETN_loads": [
+        {
+          "endpoint": "lf[1].u_lf.u_vp.cv_c.RESETN",
+          "role": "existing_consumer_authority"
+        },
+        {
+          "endpoint": "lf[1].u_lf.u_vp.swv_c.RESETN",
+          "role": "existing_consumer_authority"
+        },
+        {
+          "endpoint": "lf[1].u_lf.u_vp.cwv_c[0].RESETN",
+          "role": "existing_consumer_authority"
+        },
+        {
+          "endpoint": "lf[1].u_lf.u_vp.cwv_c[1].RESETN",
+          "role": "existing_consumer_authority"
+        },
+        {
+          "endpoint": "lf[1].u_lf.u_vp.hqv_c.RESETN",
+          "role": "existing_consumer_authority"
+        },
+        {
+          "endpoint": "lf[1].u_lf.u_vp.xrv_c.RESETN",
+          "role": "existing_consumer_authority"
+        },
+        {
+          "endpoint": "lf[1].u_lf.u_vp.xwv_c.RESETN",
+          "role": "existing_consumer_authority"
+        }
+      ],
+      "existing_SETN_loads": [],
+      "new_RESETN_loads": [
+        {
+          "endpoint": "lf[1].u_dn.gd.r[0][34].RESETN",
+          "role": "g_v"
+        },
+        {
+          "endpoint": "lf[1].u_dn.gd.r[0][67].RESETN",
+          "role": "rb_v"
+        },
+        {
+          "endpoint": "lf[1].u_dn.gd.r[0][156].RESETN",
+          "role": "cw_v[0]"
+        },
+        {
+          "endpoint": "lf[1].u_dn.gd.r[0][157].RESETN",
+          "role": "cw_v[1]"
+        },
+        {
+          "endpoint": "lf[1].u_dn.gd.r[0][432].RESETN",
+          "role": "sw_v"
+        },
+        {
+          "endpoint": "lf[1].u_dn.gd.r[0][593].RESETN",
+          "role": "c_v"
+        },
+        {
+          "endpoint": "lf[1].u_dn.gd.r[1][34].RESETN",
+          "role": "g_v"
+        },
+        {
+          "endpoint": "lf[1].u_dn.gd.r[1][67].RESETN",
+          "role": "rb_v"
+        },
+        {
+          "endpoint": "lf[1].u_dn.gd.r[1][156].RESETN",
+          "role": "cw_v[0]"
+        },
+        {
+          "endpoint": "lf[1].u_dn.gd.r[1][157].RESETN",
+          "role": "cw_v[1]"
+        },
+        {
+          "endpoint": "lf[1].u_dn.gd.r[1][432].RESETN",
+          "role": "sw_v"
+        },
+        {
+          "endpoint": "lf[1].u_dn.gd.r[1][593].RESETN",
+          "role": "c_v"
+        },
+        {
+          "endpoint": "lf[1].u_dn.gd.r[2][34].RESETN",
+          "role": "g_v"
+        },
+        {
+          "endpoint": "lf[1].u_dn.gd.r[2][67].RESETN",
+          "role": "rb_v"
+        },
+        {
+          "endpoint": "lf[1].u_dn.gd.r[2][156].RESETN",
+          "role": "cw_v[0]"
+        },
+        {
+          "endpoint": "lf[1].u_dn.gd.r[2][157].RESETN",
+          "role": "cw_v[1]"
+        },
+        {
+          "endpoint": "lf[1].u_dn.gd.r[2][432].RESETN",
+          "role": "sw_v"
+        },
+        {
+          "endpoint": "lf[1].u_dn.gd.r[2][593].RESETN",
+          "role": "c_v"
+        },
+        {
+          "endpoint": "lf[1].u_dn.gd.r[3][34].RESETN",
+          "role": "g_v"
+        },
+        {
+          "endpoint": "lf[1].u_dn.gd.r[3][67].RESETN",
+          "role": "rb_v"
+        },
+        {
+          "endpoint": "lf[1].u_dn.gd.r[3][156].RESETN",
+          "role": "cw_v[0]"
+        },
+        {
+          "endpoint": "lf[1].u_dn.gd.r[3][157].RESETN",
+          "role": "cw_v[1]"
+        },
+        {
+          "endpoint": "lf[1].u_dn.gd.r[3][432].RESETN",
+          "role": "sw_v"
+        },
+        {
+          "endpoint": "lf[1].u_dn.gd.r[3][593].RESETN",
+          "role": "c_v"
+        }
+      ],
+      "total_nonclock_logical_loads": 31,
+      "physical_phase": null,
+      "clock_reach_removal_slew": null
+    },
+    {
+      "owner": "lf[2].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "native_instance": null,
+      "D_owner": "lf[2].u_lf.u_vp.u_rr.sync_q[1]",
+      "RESETN_owner": "ot_s81sl_slice.rst_n",
+      "SETN_owner": "tie_leaf2_old.H",
+      "CLK": "ot_s81sl_slice.clk",
+      "inherited_age_edges": 3,
+      "existing_D_loads": [],
+      "existing_RESETN_loads": [
+        {
+          "endpoint": "lf[2].u_lf.u_vp.cv_c.RESETN",
+          "role": "existing_consumer_authority"
+        },
+        {
+          "endpoint": "lf[2].u_lf.u_vp.swv_c.RESETN",
+          "role": "existing_consumer_authority"
+        },
+        {
+          "endpoint": "lf[2].u_lf.u_vp.cwv_c[0].RESETN",
+          "role": "existing_consumer_authority"
+        },
+        {
+          "endpoint": "lf[2].u_lf.u_vp.cwv_c[1].RESETN",
+          "role": "existing_consumer_authority"
+        },
+        {
+          "endpoint": "lf[2].u_lf.u_vp.hqv_c.RESETN",
+          "role": "existing_consumer_authority"
+        },
+        {
+          "endpoint": "lf[2].u_lf.u_vp.xrv_c.RESETN",
+          "role": "existing_consumer_authority"
+        },
+        {
+          "endpoint": "lf[2].u_lf.u_vp.xwv_c.RESETN",
+          "role": "existing_consumer_authority"
+        }
+      ],
+      "existing_SETN_loads": [],
+      "new_RESETN_loads": [
+        {
+          "endpoint": "lf[2].u_dn.gd.r[0][34].RESETN",
+          "role": "g_v"
+        },
+        {
+          "endpoint": "lf[2].u_dn.gd.r[0][67].RESETN",
+          "role": "rb_v"
+        },
+        {
+          "endpoint": "lf[2].u_dn.gd.r[0][156].RESETN",
+          "role": "cw_v[0]"
+        },
+        {
+          "endpoint": "lf[2].u_dn.gd.r[0][157].RESETN",
+          "role": "cw_v[1]"
+        },
+        {
+          "endpoint": "lf[2].u_dn.gd.r[0][432].RESETN",
+          "role": "sw_v"
+        },
+        {
+          "endpoint": "lf[2].u_dn.gd.r[0][593].RESETN",
+          "role": "c_v"
+        },
+        {
+          "endpoint": "lf[2].u_dn.gd.r[1][34].RESETN",
+          "role": "g_v"
+        },
+        {
+          "endpoint": "lf[2].u_dn.gd.r[1][67].RESETN",
+          "role": "rb_v"
+        },
+        {
+          "endpoint": "lf[2].u_dn.gd.r[1][156].RESETN",
+          "role": "cw_v[0]"
+        },
+        {
+          "endpoint": "lf[2].u_dn.gd.r[1][157].RESETN",
+          "role": "cw_v[1]"
+        },
+        {
+          "endpoint": "lf[2].u_dn.gd.r[1][432].RESETN",
+          "role": "sw_v"
+        },
+        {
+          "endpoint": "lf[2].u_dn.gd.r[1][593].RESETN",
+          "role": "c_v"
+        },
+        {
+          "endpoint": "lf[2].u_dn.gd.r[2][34].RESETN",
+          "role": "g_v"
+        },
+        {
+          "endpoint": "lf[2].u_dn.gd.r[2][67].RESETN",
+          "role": "rb_v"
+        },
+        {
+          "endpoint": "lf[2].u_dn.gd.r[2][156].RESETN",
+          "role": "cw_v[0]"
+        },
+        {
+          "endpoint": "lf[2].u_dn.gd.r[2][157].RESETN",
+          "role": "cw_v[1]"
+        },
+        {
+          "endpoint": "lf[2].u_dn.gd.r[2][432].RESETN",
+          "role": "sw_v"
+        },
+        {
+          "endpoint": "lf[2].u_dn.gd.r[2][593].RESETN",
+          "role": "c_v"
+        },
+        {
+          "endpoint": "lf[2].u_dn.gd.r[3][34].RESETN",
+          "role": "g_v"
+        },
+        {
+          "endpoint": "lf[2].u_dn.gd.r[3][67].RESETN",
+          "role": "rb_v"
+        },
+        {
+          "endpoint": "lf[2].u_dn.gd.r[3][156].RESETN",
+          "role": "cw_v[0]"
+        },
+        {
+          "endpoint": "lf[2].u_dn.gd.r[3][157].RESETN",
+          "role": "cw_v[1]"
+        },
+        {
+          "endpoint": "lf[2].u_dn.gd.r[3][432].RESETN",
+          "role": "sw_v"
+        },
+        {
+          "endpoint": "lf[2].u_dn.gd.r[3][593].RESETN",
+          "role": "c_v"
+        }
+      ],
+      "total_nonclock_logical_loads": 31,
+      "physical_phase": null,
+      "clock_reach_removal_slew": null
+    },
+    {
+      "owner": "lf[3].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "native_instance": null,
+      "D_owner": "lf[3].u_lf.u_vp.u_rr.sync_q[1]",
+      "RESETN_owner": "ot_s81sl_slice.rst_n",
+      "SETN_owner": "tie_leaf3_old.H",
+      "CLK": "ot_s81sl_slice.clk",
+      "inherited_age_edges": 3,
+      "existing_D_loads": [],
+      "existing_RESETN_loads": [
+        {
+          "endpoint": "lf[3].u_lf.u_vp.cv_c.RESETN",
+          "role": "existing_consumer_authority"
+        },
+        {
+          "endpoint": "lf[3].u_lf.u_vp.swv_c.RESETN",
+          "role": "existing_consumer_authority"
+        },
+        {
+          "endpoint": "lf[3].u_lf.u_vp.cwv_c[0].RESETN",
+          "role": "existing_consumer_authority"
+        },
+        {
+          "endpoint": "lf[3].u_lf.u_vp.cwv_c[1].RESETN",
+          "role": "existing_consumer_authority"
+        },
+        {
+          "endpoint": "lf[3].u_lf.u_vp.hqv_c.RESETN",
+          "role": "existing_consumer_authority"
+        },
+        {
+          "endpoint": "lf[3].u_lf.u_vp.xrv_c.RESETN",
+          "role": "existing_consumer_authority"
+        },
+        {
+          "endpoint": "lf[3].u_lf.u_vp.xwv_c.RESETN",
+          "role": "existing_consumer_authority"
+        }
+      ],
+      "existing_SETN_loads": [],
+      "new_RESETN_loads": [
+        {
+          "endpoint": "lf[3].u_dn.gd.r[0][34].RESETN",
+          "role": "g_v"
+        },
+        {
+          "endpoint": "lf[3].u_dn.gd.r[0][67].RESETN",
+          "role": "rb_v"
+        },
+        {
+          "endpoint": "lf[3].u_dn.gd.r[0][156].RESETN",
+          "role": "cw_v[0]"
+        },
+        {
+          "endpoint": "lf[3].u_dn.gd.r[0][157].RESETN",
+          "role": "cw_v[1]"
+        },
+        {
+          "endpoint": "lf[3].u_dn.gd.r[0][432].RESETN",
+          "role": "sw_v"
+        },
+        {
+          "endpoint": "lf[3].u_dn.gd.r[0][593].RESETN",
+          "role": "c_v"
+        },
+        {
+          "endpoint": "lf[3].u_dn.gd.r[1][34].RESETN",
+          "role": "g_v"
+        },
+        {
+          "endpoint": "lf[3].u_dn.gd.r[1][67].RESETN",
+          "role": "rb_v"
+        },
+        {
+          "endpoint": "lf[3].u_dn.gd.r[1][156].RESETN",
+          "role": "cw_v[0]"
+        },
+        {
+          "endpoint": "lf[3].u_dn.gd.r[1][157].RESETN",
+          "role": "cw_v[1]"
+        },
+        {
+          "endpoint": "lf[3].u_dn.gd.r[1][432].RESETN",
+          "role": "sw_v"
+        },
+        {
+          "endpoint": "lf[3].u_dn.gd.r[1][593].RESETN",
+          "role": "c_v"
+        },
+        {
+          "endpoint": "lf[3].u_dn.gd.r[2][34].RESETN",
+          "role": "g_v"
+        },
+        {
+          "endpoint": "lf[3].u_dn.gd.r[2][67].RESETN",
+          "role": "rb_v"
+        },
+        {
+          "endpoint": "lf[3].u_dn.gd.r[2][156].RESETN",
+          "role": "cw_v[0]"
+        },
+        {
+          "endpoint": "lf[3].u_dn.gd.r[2][157].RESETN",
+          "role": "cw_v[1]"
+        },
+        {
+          "endpoint": "lf[3].u_dn.gd.r[2][432].RESETN",
+          "role": "sw_v"
+        },
+        {
+          "endpoint": "lf[3].u_dn.gd.r[2][593].RESETN",
+          "role": "c_v"
+        },
+        {
+          "endpoint": "lf[3].u_dn.gd.r[3][34].RESETN",
+          "role": "g_v"
+        },
+        {
+          "endpoint": "lf[3].u_dn.gd.r[3][67].RESETN",
+          "role": "rb_v"
+        },
+        {
+          "endpoint": "lf[3].u_dn.gd.r[3][156].RESETN",
+          "role": "cw_v[0]"
+        },
+        {
+          "endpoint": "lf[3].u_dn.gd.r[3][157].RESETN",
+          "role": "cw_v[1]"
+        },
+        {
+          "endpoint": "lf[3].u_dn.gd.r[3][432].RESETN",
+          "role": "sw_v"
+        },
+        {
+          "endpoint": "lf[3].u_dn.gd.r[3][593].RESETN",
+          "role": "c_v"
+        }
+      ],
+      "total_nonclock_logical_loads": 31,
+      "physical_phase": null,
+      "clock_reach_removal_slew": null
+    },
+    {
+      "owner": "lf[4].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "native_instance": null,
+      "D_owner": "lf[4].u_lf.u_vp.u_rr.sync_q[1]",
+      "RESETN_owner": "ot_s81sl_slice.rst_n",
+      "SETN_owner": "tie_leaf4_old.H",
+      "CLK": "ot_s81sl_slice.clk",
+      "inherited_age_edges": 3,
+      "existing_D_loads": [],
+      "existing_RESETN_loads": [
+        {
+          "endpoint": "lf[4].u_lf.u_vp.cv_c.RESETN",
+          "role": "existing_consumer_authority"
+        },
+        {
+          "endpoint": "lf[4].u_lf.u_vp.swv_c.RESETN",
+          "role": "existing_consumer_authority"
+        },
+        {
+          "endpoint": "lf[4].u_lf.u_vp.cwv_c[0].RESETN",
+          "role": "existing_consumer_authority"
+        },
+        {
+          "endpoint": "lf[4].u_lf.u_vp.cwv_c[1].RESETN",
+          "role": "existing_consumer_authority"
+        },
+        {
+          "endpoint": "lf[4].u_lf.u_vp.hqv_c.RESETN",
+          "role": "existing_consumer_authority"
+        },
+        {
+          "endpoint": "lf[4].u_lf.u_vp.xrv_c.RESETN",
+          "role": "existing_consumer_authority"
+        },
+        {
+          "endpoint": "lf[4].u_lf.u_vp.xwv_c.RESETN",
+          "role": "existing_consumer_authority"
+        }
+      ],
+      "existing_SETN_loads": [],
+      "new_RESETN_loads": [
+        {
+          "endpoint": "lf[4].u_dn.gd.r[0][34].RESETN",
+          "role": "g_v"
+        },
+        {
+          "endpoint": "lf[4].u_dn.gd.r[0][67].RESETN",
+          "role": "rb_v"
+        },
+        {
+          "endpoint": "lf[4].u_dn.gd.r[0][156].RESETN",
+          "role": "cw_v[0]"
+        },
+        {
+          "endpoint": "lf[4].u_dn.gd.r[0][157].RESETN",
+          "role": "cw_v[1]"
+        },
+        {
+          "endpoint": "lf[4].u_dn.gd.r[0][432].RESETN",
+          "role": "sw_v"
+        },
+        {
+          "endpoint": "lf[4].u_dn.gd.r[0][593].RESETN",
+          "role": "c_v"
+        },
+        {
+          "endpoint": "lf[4].u_dn.gd.r[1][34].RESETN",
+          "role": "g_v"
+        },
+        {
+          "endpoint": "lf[4].u_dn.gd.r[1][67].RESETN",
+          "role": "rb_v"
+        },
+        {
+          "endpoint": "lf[4].u_dn.gd.r[1][156].RESETN",
+          "role": "cw_v[0]"
+        },
+        {
+          "endpoint": "lf[4].u_dn.gd.r[1][157].RESETN",
+          "role": "cw_v[1]"
+        },
+        {
+          "endpoint": "lf[4].u_dn.gd.r[1][432].RESETN",
+          "role": "sw_v"
+        },
+        {
+          "endpoint": "lf[4].u_dn.gd.r[1][593].RESETN",
+          "role": "c_v"
+        },
+        {
+          "endpoint": "lf[4].u_dn.gd.r[2][34].RESETN",
+          "role": "g_v"
+        },
+        {
+          "endpoint": "lf[4].u_dn.gd.r[2][67].RESETN",
+          "role": "rb_v"
+        },
+        {
+          "endpoint": "lf[4].u_dn.gd.r[2][156].RESETN",
+          "role": "cw_v[0]"
+        },
+        {
+          "endpoint": "lf[4].u_dn.gd.r[2][157].RESETN",
+          "role": "cw_v[1]"
+        },
+        {
+          "endpoint": "lf[4].u_dn.gd.r[2][432].RESETN",
+          "role": "sw_v"
+        },
+        {
+          "endpoint": "lf[4].u_dn.gd.r[2][593].RESETN",
+          "role": "c_v"
+        },
+        {
+          "endpoint": "lf[4].u_dn.gd.r[3][34].RESETN",
+          "role": "g_v"
+        },
+        {
+          "endpoint": "lf[4].u_dn.gd.r[3][67].RESETN",
+          "role": "rb_v"
+        },
+        {
+          "endpoint": "lf[4].u_dn.gd.r[3][156].RESETN",
+          "role": "cw_v[0]"
+        },
+        {
+          "endpoint": "lf[4].u_dn.gd.r[3][157].RESETN",
+          "role": "cw_v[1]"
+        },
+        {
+          "endpoint": "lf[4].u_dn.gd.r[3][432].RESETN",
+          "role": "sw_v"
+        },
+        {
+          "endpoint": "lf[4].u_dn.gd.r[3][593].RESETN",
+          "role": "c_v"
+        }
+      ],
+      "total_nonclock_logical_loads": 31,
+      "physical_phase": null,
+      "clock_reach_removal_slew": null
+    }
+  ],
+  "complete_unchanged_local_relay_and_consumer_input_terminals": [
+    {
+      "state": "lf[0].u_lf.u_vp.u_rr.sync_q[0]",
+      "D": "tie_leaf0_old.H",
+      "RESETN": "ot_s81sl_slice.rst_n",
+      "SETN": "tie_leaf0_old.H",
+      "CLK": "ot_s81sl_slice.clk",
+      "native_instance": null
+    },
+    {
+      "state": "lf[0].u_lf.u_vp.u_rr.sync_q[1]",
+      "D": "lf[0].u_lf.u_vp.u_rr.sync_q[0]",
+      "RESETN": "ot_s81sl_slice.rst_n",
+      "SETN": "tie_leaf0_old.H",
+      "CLK": "ot_s81sl_slice.clk",
+      "native_instance": null
+    },
+    {
+      "state": "lf[0].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "D": "lf[0].u_lf.u_vp.u_rr.sync_q[1]",
+      "RESETN": "ot_s81sl_slice.rst_n",
+      "SETN": "tie_leaf0_old.H",
+      "CLK": "ot_s81sl_slice.clk",
+      "native_instance": null
+    },
+    {
+      "state": "lf[0].u_lf.u_vp.u_rr.relay_q[0][1]",
+      "D": "lf[0].u_lf.u_vp.u_rr.sync_q[1]",
+      "RESETN": "ot_s81sl_slice.rst_n",
+      "SETN": "tie_leaf0_old.H",
+      "CLK": "ot_s81sl_slice.clk",
+      "native_instance": null
+    },
+    {
+      "state": "lf[0].u_lf.u_vp.u_rr.relay_q[0][2]",
+      "D": "lf[0].u_lf.u_vp.u_rr.sync_q[1]",
+      "RESETN": "ot_s81sl_slice.rst_n",
+      "SETN": "tie_leaf0_old.H",
+      "CLK": "ot_s81sl_slice.clk",
+      "native_instance": null
+    },
+    {
+      "state": "lf[0].u_lf.u_vp.u_rr.relay_q[0][3]",
+      "D": "lf[0].u_lf.u_vp.u_rr.sync_q[1]",
+      "RESETN": "ot_s81sl_slice.rst_n",
+      "SETN": "tie_leaf0_old.H",
+      "CLK": "ot_s81sl_slice.clk",
+      "native_instance": null
+    },
+    {
+      "state": "lf[0].u_lf.u_vp.cv_c",
+      "D": "c_v",
+      "RESETN": "lf[0].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN": "tie_leaf0_old.H",
+      "CLK": "ot_s81sl_slice.clk",
+      "native_instance": null
+    },
+    {
+      "state": "lf[0].u_lf.u_vp.swv_c",
+      "D": "sw_v",
+      "RESETN": "lf[0].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN": "tie_leaf0_old.H",
+      "CLK": "ot_s81sl_slice.clk",
+      "native_instance": null
+    },
+    {
+      "state": "lf[0].u_lf.u_vp.cwv_c[0]",
+      "D": "cw_v[0]",
+      "RESETN": "lf[0].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN": "tie_leaf0_old.H",
+      "CLK": "ot_s81sl_slice.clk",
+      "native_instance": null
+    },
+    {
+      "state": "lf[0].u_lf.u_vp.cwv_c[1]",
+      "D": "cw_v[1]",
+      "RESETN": "lf[0].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN": "tie_leaf0_old.H",
+      "CLK": "ot_s81sl_slice.clk",
+      "native_instance": null
+    },
+    {
+      "state": "lf[0].u_lf.u_vp.hqv_c",
+      "D": "hq_v",
+      "RESETN": "lf[0].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN": "tie_leaf0_old.H",
+      "CLK": "ot_s81sl_slice.clk",
+      "native_instance": null
+    },
+    {
+      "state": "lf[0].u_lf.u_vp.xrv_c",
+      "D": "x_rv",
+      "RESETN": "lf[0].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN": "tie_leaf0_old.H",
+      "CLK": "ot_s81sl_slice.clk",
+      "native_instance": null
+    },
+    {
+      "state": "lf[0].u_lf.u_vp.xwv_c",
+      "D": "x_wv",
+      "RESETN": "lf[0].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN": "tie_leaf0_old.H",
+      "CLK": "ot_s81sl_slice.clk",
+      "native_instance": null
+    },
+    {
+      "state": "lf[1].u_lf.u_vp.u_rr.sync_q[0]",
+      "D": "tie_leaf1_old.H",
+      "RESETN": "ot_s81sl_slice.rst_n",
+      "SETN": "tie_leaf1_old.H",
+      "CLK": "ot_s81sl_slice.clk",
+      "native_instance": null
+    },
+    {
+      "state": "lf[1].u_lf.u_vp.u_rr.sync_q[1]",
+      "D": "lf[1].u_lf.u_vp.u_rr.sync_q[0]",
+      "RESETN": "ot_s81sl_slice.rst_n",
+      "SETN": "tie_leaf1_old.H",
+      "CLK": "ot_s81sl_slice.clk",
+      "native_instance": null
+    },
+    {
+      "state": "lf[1].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "D": "lf[1].u_lf.u_vp.u_rr.sync_q[1]",
+      "RESETN": "ot_s81sl_slice.rst_n",
+      "SETN": "tie_leaf1_old.H",
+      "CLK": "ot_s81sl_slice.clk",
+      "native_instance": null
+    },
+    {
+      "state": "lf[1].u_lf.u_vp.u_rr.relay_q[0][1]",
+      "D": "lf[1].u_lf.u_vp.u_rr.sync_q[1]",
+      "RESETN": "ot_s81sl_slice.rst_n",
+      "SETN": "tie_leaf1_old.H",
+      "CLK": "ot_s81sl_slice.clk",
+      "native_instance": null
+    },
+    {
+      "state": "lf[1].u_lf.u_vp.u_rr.relay_q[0][2]",
+      "D": "lf[1].u_lf.u_vp.u_rr.sync_q[1]",
+      "RESETN": "ot_s81sl_slice.rst_n",
+      "SETN": "tie_leaf1_old.H",
+      "CLK": "ot_s81sl_slice.clk",
+      "native_instance": null
+    },
+    {
+      "state": "lf[1].u_lf.u_vp.u_rr.relay_q[0][3]",
+      "D": "lf[1].u_lf.u_vp.u_rr.sync_q[1]",
+      "RESETN": "ot_s81sl_slice.rst_n",
+      "SETN": "tie_leaf1_old.H",
+      "CLK": "ot_s81sl_slice.clk",
+      "native_instance": null
+    },
+    {
+      "state": "lf[1].u_lf.u_vp.cv_c",
+      "D": "c_v",
+      "RESETN": "lf[1].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN": "tie_leaf1_old.H",
+      "CLK": "ot_s81sl_slice.clk",
+      "native_instance": null
+    },
+    {
+      "state": "lf[1].u_lf.u_vp.swv_c",
+      "D": "sw_v",
+      "RESETN": "lf[1].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN": "tie_leaf1_old.H",
+      "CLK": "ot_s81sl_slice.clk",
+      "native_instance": null
+    },
+    {
+      "state": "lf[1].u_lf.u_vp.cwv_c[0]",
+      "D": "cw_v[0]",
+      "RESETN": "lf[1].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN": "tie_leaf1_old.H",
+      "CLK": "ot_s81sl_slice.clk",
+      "native_instance": null
+    },
+    {
+      "state": "lf[1].u_lf.u_vp.cwv_c[1]",
+      "D": "cw_v[1]",
+      "RESETN": "lf[1].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN": "tie_leaf1_old.H",
+      "CLK": "ot_s81sl_slice.clk",
+      "native_instance": null
+    },
+    {
+      "state": "lf[1].u_lf.u_vp.hqv_c",
+      "D": "hq_v",
+      "RESETN": "lf[1].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN": "tie_leaf1_old.H",
+      "CLK": "ot_s81sl_slice.clk",
+      "native_instance": null
+    },
+    {
+      "state": "lf[1].u_lf.u_vp.xrv_c",
+      "D": "x_rv",
+      "RESETN": "lf[1].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN": "tie_leaf1_old.H",
+      "CLK": "ot_s81sl_slice.clk",
+      "native_instance": null
+    },
+    {
+      "state": "lf[1].u_lf.u_vp.xwv_c",
+      "D": "x_wv",
+      "RESETN": "lf[1].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN": "tie_leaf1_old.H",
+      "CLK": "ot_s81sl_slice.clk",
+      "native_instance": null
+    },
+    {
+      "state": "lf[2].u_lf.u_vp.u_rr.sync_q[0]",
+      "D": "tie_leaf2_old.H",
+      "RESETN": "ot_s81sl_slice.rst_n",
+      "SETN": "tie_leaf2_old.H",
+      "CLK": "ot_s81sl_slice.clk",
+      "native_instance": null
+    },
+    {
+      "state": "lf[2].u_lf.u_vp.u_rr.sync_q[1]",
+      "D": "lf[2].u_lf.u_vp.u_rr.sync_q[0]",
+      "RESETN": "ot_s81sl_slice.rst_n",
+      "SETN": "tie_leaf2_old.H",
+      "CLK": "ot_s81sl_slice.clk",
+      "native_instance": null
+    },
+    {
+      "state": "lf[2].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "D": "lf[2].u_lf.u_vp.u_rr.sync_q[1]",
+      "RESETN": "ot_s81sl_slice.rst_n",
+      "SETN": "tie_leaf2_old.H",
+      "CLK": "ot_s81sl_slice.clk",
+      "native_instance": null
+    },
+    {
+      "state": "lf[2].u_lf.u_vp.u_rr.relay_q[0][1]",
+      "D": "lf[2].u_lf.u_vp.u_rr.sync_q[1]",
+      "RESETN": "ot_s81sl_slice.rst_n",
+      "SETN": "tie_leaf2_old.H",
+      "CLK": "ot_s81sl_slice.clk",
+      "native_instance": null
+    },
+    {
+      "state": "lf[2].u_lf.u_vp.u_rr.relay_q[0][2]",
+      "D": "lf[2].u_lf.u_vp.u_rr.sync_q[1]",
+      "RESETN": "ot_s81sl_slice.rst_n",
+      "SETN": "tie_leaf2_old.H",
+      "CLK": "ot_s81sl_slice.clk",
+      "native_instance": null
+    },
+    {
+      "state": "lf[2].u_lf.u_vp.u_rr.relay_q[0][3]",
+      "D": "lf[2].u_lf.u_vp.u_rr.sync_q[1]",
+      "RESETN": "ot_s81sl_slice.rst_n",
+      "SETN": "tie_leaf2_old.H",
+      "CLK": "ot_s81sl_slice.clk",
+      "native_instance": null
+    },
+    {
+      "state": "lf[2].u_lf.u_vp.cv_c",
+      "D": "c_v",
+      "RESETN": "lf[2].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN": "tie_leaf2_old.H",
+      "CLK": "ot_s81sl_slice.clk",
+      "native_instance": null
+    },
+    {
+      "state": "lf[2].u_lf.u_vp.swv_c",
+      "D": "sw_v",
+      "RESETN": "lf[2].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN": "tie_leaf2_old.H",
+      "CLK": "ot_s81sl_slice.clk",
+      "native_instance": null
+    },
+    {
+      "state": "lf[2].u_lf.u_vp.cwv_c[0]",
+      "D": "cw_v[0]",
+      "RESETN": "lf[2].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN": "tie_leaf2_old.H",
+      "CLK": "ot_s81sl_slice.clk",
+      "native_instance": null
+    },
+    {
+      "state": "lf[2].u_lf.u_vp.cwv_c[1]",
+      "D": "cw_v[1]",
+      "RESETN": "lf[2].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN": "tie_leaf2_old.H",
+      "CLK": "ot_s81sl_slice.clk",
+      "native_instance": null
+    },
+    {
+      "state": "lf[2].u_lf.u_vp.hqv_c",
+      "D": "hq_v",
+      "RESETN": "lf[2].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN": "tie_leaf2_old.H",
+      "CLK": "ot_s81sl_slice.clk",
+      "native_instance": null
+    },
+    {
+      "state": "lf[2].u_lf.u_vp.xrv_c",
+      "D": "x_rv",
+      "RESETN": "lf[2].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN": "tie_leaf2_old.H",
+      "CLK": "ot_s81sl_slice.clk",
+      "native_instance": null
+    },
+    {
+      "state": "lf[2].u_lf.u_vp.xwv_c",
+      "D": "x_wv",
+      "RESETN": "lf[2].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN": "tie_leaf2_old.H",
+      "CLK": "ot_s81sl_slice.clk",
+      "native_instance": null
+    },
+    {
+      "state": "lf[3].u_lf.u_vp.u_rr.sync_q[0]",
+      "D": "tie_leaf3_old.H",
+      "RESETN": "ot_s81sl_slice.rst_n",
+      "SETN": "tie_leaf3_old.H",
+      "CLK": "ot_s81sl_slice.clk",
+      "native_instance": null
+    },
+    {
+      "state": "lf[3].u_lf.u_vp.u_rr.sync_q[1]",
+      "D": "lf[3].u_lf.u_vp.u_rr.sync_q[0]",
+      "RESETN": "ot_s81sl_slice.rst_n",
+      "SETN": "tie_leaf3_old.H",
+      "CLK": "ot_s81sl_slice.clk",
+      "native_instance": null
+    },
+    {
+      "state": "lf[3].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "D": "lf[3].u_lf.u_vp.u_rr.sync_q[1]",
+      "RESETN": "ot_s81sl_slice.rst_n",
+      "SETN": "tie_leaf3_old.H",
+      "CLK": "ot_s81sl_slice.clk",
+      "native_instance": null
+    },
+    {
+      "state": "lf[3].u_lf.u_vp.u_rr.relay_q[0][1]",
+      "D": "lf[3].u_lf.u_vp.u_rr.sync_q[1]",
+      "RESETN": "ot_s81sl_slice.rst_n",
+      "SETN": "tie_leaf3_old.H",
+      "CLK": "ot_s81sl_slice.clk",
+      "native_instance": null
+    },
+    {
+      "state": "lf[3].u_lf.u_vp.u_rr.relay_q[0][2]",
+      "D": "lf[3].u_lf.u_vp.u_rr.sync_q[1]",
+      "RESETN": "ot_s81sl_slice.rst_n",
+      "SETN": "tie_leaf3_old.H",
+      "CLK": "ot_s81sl_slice.clk",
+      "native_instance": null
+    },
+    {
+      "state": "lf[3].u_lf.u_vp.u_rr.relay_q[0][3]",
+      "D": "lf[3].u_lf.u_vp.u_rr.sync_q[1]",
+      "RESETN": "ot_s81sl_slice.rst_n",
+      "SETN": "tie_leaf3_old.H",
+      "CLK": "ot_s81sl_slice.clk",
+      "native_instance": null
+    },
+    {
+      "state": "lf[3].u_lf.u_vp.cv_c",
+      "D": "c_v",
+      "RESETN": "lf[3].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN": "tie_leaf3_old.H",
+      "CLK": "ot_s81sl_slice.clk",
+      "native_instance": null
+    },
+    {
+      "state": "lf[3].u_lf.u_vp.swv_c",
+      "D": "sw_v",
+      "RESETN": "lf[3].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN": "tie_leaf3_old.H",
+      "CLK": "ot_s81sl_slice.clk",
+      "native_instance": null
+    },
+    {
+      "state": "lf[3].u_lf.u_vp.cwv_c[0]",
+      "D": "cw_v[0]",
+      "RESETN": "lf[3].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN": "tie_leaf3_old.H",
+      "CLK": "ot_s81sl_slice.clk",
+      "native_instance": null
+    },
+    {
+      "state": "lf[3].u_lf.u_vp.cwv_c[1]",
+      "D": "cw_v[1]",
+      "RESETN": "lf[3].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN": "tie_leaf3_old.H",
+      "CLK": "ot_s81sl_slice.clk",
+      "native_instance": null
+    },
+    {
+      "state": "lf[3].u_lf.u_vp.hqv_c",
+      "D": "hq_v",
+      "RESETN": "lf[3].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN": "tie_leaf3_old.H",
+      "CLK": "ot_s81sl_slice.clk",
+      "native_instance": null
+    },
+    {
+      "state": "lf[3].u_lf.u_vp.xrv_c",
+      "D": "x_rv",
+      "RESETN": "lf[3].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN": "tie_leaf3_old.H",
+      "CLK": "ot_s81sl_slice.clk",
+      "native_instance": null
+    },
+    {
+      "state": "lf[3].u_lf.u_vp.xwv_c",
+      "D": "x_wv",
+      "RESETN": "lf[3].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN": "tie_leaf3_old.H",
+      "CLK": "ot_s81sl_slice.clk",
+      "native_instance": null
+    },
+    {
+      "state": "lf[4].u_lf.u_vp.u_rr.sync_q[0]",
+      "D": "tie_leaf4_old.H",
+      "RESETN": "ot_s81sl_slice.rst_n",
+      "SETN": "tie_leaf4_old.H",
+      "CLK": "ot_s81sl_slice.clk",
+      "native_instance": null
+    },
+    {
+      "state": "lf[4].u_lf.u_vp.u_rr.sync_q[1]",
+      "D": "lf[4].u_lf.u_vp.u_rr.sync_q[0]",
+      "RESETN": "ot_s81sl_slice.rst_n",
+      "SETN": "tie_leaf4_old.H",
+      "CLK": "ot_s81sl_slice.clk",
+      "native_instance": null
+    },
+    {
+      "state": "lf[4].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "D": "lf[4].u_lf.u_vp.u_rr.sync_q[1]",
+      "RESETN": "ot_s81sl_slice.rst_n",
+      "SETN": "tie_leaf4_old.H",
+      "CLK": "ot_s81sl_slice.clk",
+      "native_instance": null
+    },
+    {
+      "state": "lf[4].u_lf.u_vp.u_rr.relay_q[0][1]",
+      "D": "lf[4].u_lf.u_vp.u_rr.sync_q[1]",
+      "RESETN": "ot_s81sl_slice.rst_n",
+      "SETN": "tie_leaf4_old.H",
+      "CLK": "ot_s81sl_slice.clk",
+      "native_instance": null
+    },
+    {
+      "state": "lf[4].u_lf.u_vp.u_rr.relay_q[0][2]",
+      "D": "lf[4].u_lf.u_vp.u_rr.sync_q[1]",
+      "RESETN": "ot_s81sl_slice.rst_n",
+      "SETN": "tie_leaf4_old.H",
+      "CLK": "ot_s81sl_slice.clk",
+      "native_instance": null
+    },
+    {
+      "state": "lf[4].u_lf.u_vp.u_rr.relay_q[0][3]",
+      "D": "lf[4].u_lf.u_vp.u_rr.sync_q[1]",
+      "RESETN": "ot_s81sl_slice.rst_n",
+      "SETN": "tie_leaf4_old.H",
+      "CLK": "ot_s81sl_slice.clk",
+      "native_instance": null
+    },
+    {
+      "state": "lf[4].u_lf.u_vp.cv_c",
+      "D": "c_v",
+      "RESETN": "lf[4].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN": "tie_leaf4_old.H",
+      "CLK": "ot_s81sl_slice.clk",
+      "native_instance": null
+    },
+    {
+      "state": "lf[4].u_lf.u_vp.swv_c",
+      "D": "sw_v",
+      "RESETN": "lf[4].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN": "tie_leaf4_old.H",
+      "CLK": "ot_s81sl_slice.clk",
+      "native_instance": null
+    },
+    {
+      "state": "lf[4].u_lf.u_vp.cwv_c[0]",
+      "D": "cw_v[0]",
+      "RESETN": "lf[4].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN": "tie_leaf4_old.H",
+      "CLK": "ot_s81sl_slice.clk",
+      "native_instance": null
+    },
+    {
+      "state": "lf[4].u_lf.u_vp.cwv_c[1]",
+      "D": "cw_v[1]",
+      "RESETN": "lf[4].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN": "tie_leaf4_old.H",
+      "CLK": "ot_s81sl_slice.clk",
+      "native_instance": null
+    },
+    {
+      "state": "lf[4].u_lf.u_vp.hqv_c",
+      "D": "hq_v",
+      "RESETN": "lf[4].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN": "tie_leaf4_old.H",
+      "CLK": "ot_s81sl_slice.clk",
+      "native_instance": null
+    },
+    {
+      "state": "lf[4].u_lf.u_vp.xrv_c",
+      "D": "x_rv",
+      "RESETN": "lf[4].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN": "tie_leaf4_old.H",
+      "CLK": "ot_s81sl_slice.clk",
+      "native_instance": null
+    },
+    {
+      "state": "lf[4].u_lf.u_vp.xwv_c",
+      "D": "x_wv",
+      "RESETN": "lf[4].u_lf.u_vp.u_rr.relay_q[0][0]",
+      "SETN": "tie_leaf4_old.H",
+      "CLK": "ot_s81sl_slice.clk",
+      "native_instance": null
+    }
+  ],
+  "ties": [
+    {
+      "owner": "tie_leaf0_new.H",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "loads": [
+        "lf[0].u_dn.gd.r[0][34].SETN",
+        "lf[0].u_dn.gd.r[0][67].SETN",
+        "lf[0].u_dn.gd.r[0][156].SETN",
+        "lf[0].u_dn.gd.r[0][157].SETN",
+        "lf[0].u_dn.gd.r[0][432].SETN",
+        "lf[0].u_dn.gd.r[0][593].SETN",
+        "lf[0].u_dn.gd.r[1][34].SETN",
+        "lf[0].u_dn.gd.r[1][67].SETN",
+        "lf[0].u_dn.gd.r[1][156].SETN",
+        "lf[0].u_dn.gd.r[1][157].SETN",
+        "lf[0].u_dn.gd.r[1][432].SETN",
+        "lf[0].u_dn.gd.r[1][593].SETN",
+        "lf[0].u_dn.gd.r[2][34].SETN",
+        "lf[0].u_dn.gd.r[2][67].SETN",
+        "lf[0].u_dn.gd.r[2][156].SETN",
+        "lf[0].u_dn.gd.r[2][157].SETN",
+        "lf[0].u_dn.gd.r[2][432].SETN",
+        "lf[0].u_dn.gd.r[2][593].SETN",
+        "lf[0].u_dn.gd.r[3][34].SETN",
+        "lf[0].u_dn.gd.r[3][67].SETN",
+        "lf[0].u_dn.gd.r[3][156].SETN",
+        "lf[0].u_dn.gd.r[3][157].SETN",
+        "lf[0].u_dn.gd.r[3][432].SETN",
+        "lf[0].u_dn.gd.r[3][593].SETN"
+      ],
+      "total": 24
+    },
+    {
+      "owner": "tie_leaf0_old.H",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "loads": [
+        "lf[0].u_lf.u_vp.u_rr.sync_q[0].SETN",
+        "lf[0].u_lf.u_vp.u_rr.sync_q[1].SETN",
+        "lf[0].u_lf.u_vp.u_rr.relay_q[0][0].SETN",
+        "lf[0].u_lf.u_vp.u_rr.relay_q[0][1].SETN",
+        "lf[0].u_lf.u_vp.u_rr.relay_q[0][2].SETN",
+        "lf[0].u_lf.u_vp.u_rr.relay_q[0][3].SETN",
+        "lf[0].u_lf.u_vp.cv_c.SETN",
+        "lf[0].u_lf.u_vp.swv_c.SETN",
+        "lf[0].u_lf.u_vp.cwv_c[0].SETN",
+        "lf[0].u_lf.u_vp.cwv_c[1].SETN",
+        "lf[0].u_lf.u_vp.hqv_c.SETN",
+        "lf[0].u_lf.u_vp.xrv_c.SETN",
+        "lf[0].u_lf.u_vp.xwv_c.SETN",
+        "lf[0].u_lf.u_vp.u_rr.sync_q[0].D"
+      ],
+      "total": 14
+    },
+    {
+      "owner": "tie_leaf1_new.H",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "loads": [
+        "lf[1].u_dn.gd.r[0][34].SETN",
+        "lf[1].u_dn.gd.r[0][67].SETN",
+        "lf[1].u_dn.gd.r[0][156].SETN",
+        "lf[1].u_dn.gd.r[0][157].SETN",
+        "lf[1].u_dn.gd.r[0][432].SETN",
+        "lf[1].u_dn.gd.r[0][593].SETN",
+        "lf[1].u_dn.gd.r[1][34].SETN",
+        "lf[1].u_dn.gd.r[1][67].SETN",
+        "lf[1].u_dn.gd.r[1][156].SETN",
+        "lf[1].u_dn.gd.r[1][157].SETN",
+        "lf[1].u_dn.gd.r[1][432].SETN",
+        "lf[1].u_dn.gd.r[1][593].SETN",
+        "lf[1].u_dn.gd.r[2][34].SETN",
+        "lf[1].u_dn.gd.r[2][67].SETN",
+        "lf[1].u_dn.gd.r[2][156].SETN",
+        "lf[1].u_dn.gd.r[2][157].SETN",
+        "lf[1].u_dn.gd.r[2][432].SETN",
+        "lf[1].u_dn.gd.r[2][593].SETN",
+        "lf[1].u_dn.gd.r[3][34].SETN",
+        "lf[1].u_dn.gd.r[3][67].SETN",
+        "lf[1].u_dn.gd.r[3][156].SETN",
+        "lf[1].u_dn.gd.r[3][157].SETN",
+        "lf[1].u_dn.gd.r[3][432].SETN",
+        "lf[1].u_dn.gd.r[3][593].SETN"
+      ],
+      "total": 24
+    },
+    {
+      "owner": "tie_leaf1_old.H",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "loads": [
+        "lf[1].u_lf.u_vp.u_rr.sync_q[0].SETN",
+        "lf[1].u_lf.u_vp.u_rr.sync_q[1].SETN",
+        "lf[1].u_lf.u_vp.u_rr.relay_q[0][0].SETN",
+        "lf[1].u_lf.u_vp.u_rr.relay_q[0][1].SETN",
+        "lf[1].u_lf.u_vp.u_rr.relay_q[0][2].SETN",
+        "lf[1].u_lf.u_vp.u_rr.relay_q[0][3].SETN",
+        "lf[1].u_lf.u_vp.cv_c.SETN",
+        "lf[1].u_lf.u_vp.swv_c.SETN",
+        "lf[1].u_lf.u_vp.cwv_c[0].SETN",
+        "lf[1].u_lf.u_vp.cwv_c[1].SETN",
+        "lf[1].u_lf.u_vp.hqv_c.SETN",
+        "lf[1].u_lf.u_vp.xrv_c.SETN",
+        "lf[1].u_lf.u_vp.xwv_c.SETN",
+        "lf[1].u_lf.u_vp.u_rr.sync_q[0].D"
+      ],
+      "total": 14
+    },
+    {
+      "owner": "tie_leaf2_new.H",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "loads": [
+        "lf[2].u_dn.gd.r[0][34].SETN",
+        "lf[2].u_dn.gd.r[0][67].SETN",
+        "lf[2].u_dn.gd.r[0][156].SETN",
+        "lf[2].u_dn.gd.r[0][157].SETN",
+        "lf[2].u_dn.gd.r[0][432].SETN",
+        "lf[2].u_dn.gd.r[0][593].SETN",
+        "lf[2].u_dn.gd.r[1][34].SETN",
+        "lf[2].u_dn.gd.r[1][67].SETN",
+        "lf[2].u_dn.gd.r[1][156].SETN",
+        "lf[2].u_dn.gd.r[1][157].SETN",
+        "lf[2].u_dn.gd.r[1][432].SETN",
+        "lf[2].u_dn.gd.r[1][593].SETN",
+        "lf[2].u_dn.gd.r[2][34].SETN",
+        "lf[2].u_dn.gd.r[2][67].SETN",
+        "lf[2].u_dn.gd.r[2][156].SETN",
+        "lf[2].u_dn.gd.r[2][157].SETN",
+        "lf[2].u_dn.gd.r[2][432].SETN",
+        "lf[2].u_dn.gd.r[2][593].SETN",
+        "lf[2].u_dn.gd.r[3][34].SETN",
+        "lf[2].u_dn.gd.r[3][67].SETN",
+        "lf[2].u_dn.gd.r[3][156].SETN",
+        "lf[2].u_dn.gd.r[3][157].SETN",
+        "lf[2].u_dn.gd.r[3][432].SETN",
+        "lf[2].u_dn.gd.r[3][593].SETN"
+      ],
+      "total": 24
+    },
+    {
+      "owner": "tie_leaf2_old.H",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "loads": [
+        "lf[2].u_lf.u_vp.u_rr.sync_q[0].SETN",
+        "lf[2].u_lf.u_vp.u_rr.sync_q[1].SETN",
+        "lf[2].u_lf.u_vp.u_rr.relay_q[0][0].SETN",
+        "lf[2].u_lf.u_vp.u_rr.relay_q[0][1].SETN",
+        "lf[2].u_lf.u_vp.u_rr.relay_q[0][2].SETN",
+        "lf[2].u_lf.u_vp.u_rr.relay_q[0][3].SETN",
+        "lf[2].u_lf.u_vp.cv_c.SETN",
+        "lf[2].u_lf.u_vp.swv_c.SETN",
+        "lf[2].u_lf.u_vp.cwv_c[0].SETN",
+        "lf[2].u_lf.u_vp.cwv_c[1].SETN",
+        "lf[2].u_lf.u_vp.hqv_c.SETN",
+        "lf[2].u_lf.u_vp.xrv_c.SETN",
+        "lf[2].u_lf.u_vp.xwv_c.SETN",
+        "lf[2].u_lf.u_vp.u_rr.sync_q[0].D"
+      ],
+      "total": 14
+    },
+    {
+      "owner": "tie_leaf3_new.H",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "loads": [
+        "lf[3].u_dn.gd.r[0][34].SETN",
+        "lf[3].u_dn.gd.r[0][67].SETN",
+        "lf[3].u_dn.gd.r[0][156].SETN",
+        "lf[3].u_dn.gd.r[0][157].SETN",
+        "lf[3].u_dn.gd.r[0][432].SETN",
+        "lf[3].u_dn.gd.r[0][593].SETN",
+        "lf[3].u_dn.gd.r[1][34].SETN",
+        "lf[3].u_dn.gd.r[1][67].SETN",
+        "lf[3].u_dn.gd.r[1][156].SETN",
+        "lf[3].u_dn.gd.r[1][157].SETN",
+        "lf[3].u_dn.gd.r[1][432].SETN",
+        "lf[3].u_dn.gd.r[1][593].SETN",
+        "lf[3].u_dn.gd.r[2][34].SETN",
+        "lf[3].u_dn.gd.r[2][67].SETN",
+        "lf[3].u_dn.gd.r[2][156].SETN",
+        "lf[3].u_dn.gd.r[2][157].SETN",
+        "lf[3].u_dn.gd.r[2][432].SETN",
+        "lf[3].u_dn.gd.r[2][593].SETN",
+        "lf[3].u_dn.gd.r[3][34].SETN",
+        "lf[3].u_dn.gd.r[3][67].SETN",
+        "lf[3].u_dn.gd.r[3][156].SETN",
+        "lf[3].u_dn.gd.r[3][157].SETN",
+        "lf[3].u_dn.gd.r[3][432].SETN",
+        "lf[3].u_dn.gd.r[3][593].SETN"
+      ],
+      "total": 24
+    },
+    {
+      "owner": "tie_leaf3_old.H",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "loads": [
+        "lf[3].u_lf.u_vp.u_rr.sync_q[0].SETN",
+        "lf[3].u_lf.u_vp.u_rr.sync_q[1].SETN",
+        "lf[3].u_lf.u_vp.u_rr.relay_q[0][0].SETN",
+        "lf[3].u_lf.u_vp.u_rr.relay_q[0][1].SETN",
+        "lf[3].u_lf.u_vp.u_rr.relay_q[0][2].SETN",
+        "lf[3].u_lf.u_vp.u_rr.relay_q[0][3].SETN",
+        "lf[3].u_lf.u_vp.cv_c.SETN",
+        "lf[3].u_lf.u_vp.swv_c.SETN",
+        "lf[3].u_lf.u_vp.cwv_c[0].SETN",
+        "lf[3].u_lf.u_vp.cwv_c[1].SETN",
+        "lf[3].u_lf.u_vp.hqv_c.SETN",
+        "lf[3].u_lf.u_vp.xrv_c.SETN",
+        "lf[3].u_lf.u_vp.xwv_c.SETN",
+        "lf[3].u_lf.u_vp.u_rr.sync_q[0].D"
+      ],
+      "total": 14
+    },
+    {
+      "owner": "tie_leaf4_new.H",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "loads": [
+        "lf[4].u_dn.gd.r[0][34].SETN",
+        "lf[4].u_dn.gd.r[0][67].SETN",
+        "lf[4].u_dn.gd.r[0][156].SETN",
+        "lf[4].u_dn.gd.r[0][157].SETN",
+        "lf[4].u_dn.gd.r[0][432].SETN",
+        "lf[4].u_dn.gd.r[0][593].SETN",
+        "lf[4].u_dn.gd.r[1][34].SETN",
+        "lf[4].u_dn.gd.r[1][67].SETN",
+        "lf[4].u_dn.gd.r[1][156].SETN",
+        "lf[4].u_dn.gd.r[1][157].SETN",
+        "lf[4].u_dn.gd.r[1][432].SETN",
+        "lf[4].u_dn.gd.r[1][593].SETN",
+        "lf[4].u_dn.gd.r[2][34].SETN",
+        "lf[4].u_dn.gd.r[2][67].SETN",
+        "lf[4].u_dn.gd.r[2][156].SETN",
+        "lf[4].u_dn.gd.r[2][157].SETN",
+        "lf[4].u_dn.gd.r[2][432].SETN",
+        "lf[4].u_dn.gd.r[2][593].SETN",
+        "lf[4].u_dn.gd.r[3][34].SETN",
+        "lf[4].u_dn.gd.r[3][67].SETN",
+        "lf[4].u_dn.gd.r[3][156].SETN",
+        "lf[4].u_dn.gd.r[3][157].SETN",
+        "lf[4].u_dn.gd.r[3][432].SETN",
+        "lf[4].u_dn.gd.r[3][593].SETN"
+      ],
+      "total": 24
+    },
+    {
+      "owner": "tie_leaf4_old.H",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "loads": [
+        "lf[4].u_lf.u_vp.u_rr.sync_q[0].SETN",
+        "lf[4].u_lf.u_vp.u_rr.sync_q[1].SETN",
+        "lf[4].u_lf.u_vp.u_rr.relay_q[0][0].SETN",
+        "lf[4].u_lf.u_vp.u_rr.relay_q[0][1].SETN",
+        "lf[4].u_lf.u_vp.u_rr.relay_q[0][2].SETN",
+        "lf[4].u_lf.u_vp.u_rr.relay_q[0][3].SETN",
+        "lf[4].u_lf.u_vp.cv_c.SETN",
+        "lf[4].u_lf.u_vp.swv_c.SETN",
+        "lf[4].u_lf.u_vp.cwv_c[0].SETN",
+        "lf[4].u_lf.u_vp.cwv_c[1].SETN",
+        "lf[4].u_lf.u_vp.hqv_c.SETN",
+        "lf[4].u_lf.u_vp.xrv_c.SETN",
+        "lf[4].u_lf.u_vp.xwv_c.SETN",
+        "lf[4].u_lf.u_vp.u_rr.sync_q[0].D"
+      ],
+      "total": 14
+    }
+  ],
+  "tie_library_sha256": {
+    "TT": {
+      "compressed_sha256": "073ac4b6b08f272b6953b0ad54d1d9743767a7d15a0e2964ed86cf44c3dbe00e",
+      "decoded_sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038"
+    },
+    "FF": {
+      "compressed_sha256": "0c93d44fcc6a30182d71031997771ea3fc0d09235201e9252f71daf48a1c7a38",
+      "decoded_sha256": "8b8959a1e5a0ab6cd5cc001d23abcda45fac637fa8f160831beca81abf0a80bb"
+    }
+  },
+  "cost": {
+    "TT": {
+      "conversion_area_delta_um2": 10.4976,
+      "dedicated_ties": 10,
+      "tie_area_added_conservative_um2": 0.4374,
+      "primitive_plus_dedicated_ties_added_um2": 10.935,
+      "CLK_delta_fF": -1.4204399999999984,
+      "new_reset_cap_per_VP_rs_c_fF": 17.754959999999997,
+      "all31_reset_cap_per_VP_rs_c_fF_if_ASR_mapping": 22.93349,
+      "new120_SETN_cap_fF": 129.534,
+      "retied_existing65_SETN_cap_fF_if_ASR_mapping": 70.16425,
+      "sync0_D_constant_cap_per_leaf_fF_if_ASR_mapping": 0.561679,
+      "old_tie_14_load_cap_per_leaf_fF_if_ASR_mapping": 14.594529,
+      "new_tie_24_load_cap_per_leaf_fF_if_ASR_mapping": 25.9068,
+      "tie_output_electrical_closure": null,
+      "new_pg_terminals": 20,
+      "converted_ff_pg_terminals": 240,
+      "pg_count_delta_from_master_conversion": 0,
+      "post_ECO_total_parent_pg_terminals": null,
+      "physical_wiring_CTS_PG_area": null,
+      "whole_structural_cost": null
+    },
+    "FF": {
+      "conversion_area_delta_um2": 10.4976,
+      "dedicated_ties": 10,
+      "tie_area_added_conservative_um2": 0.4374,
+      "primitive_plus_dedicated_ties_added_um2": 10.935,
+      "CLK_delta_fF": -2.2629599999999916,
+      "new_reset_cap_per_VP_rs_c_fF": 19.269816,
+      "all31_reset_cap_per_VP_rs_c_fF_if_ASR_mapping": 24.890179,
+      "new120_SETN_cap_fF": 139.73520000000002,
+      "retied_existing65_SETN_cap_fF_if_ASR_mapping": 75.68990000000001,
+      "sync0_D_constant_cap_per_leaf_fF_if_ASR_mapping": 0.623429,
+      "old_tie_14_load_cap_per_leaf_fF_if_ASR_mapping": 15.761409,
+      "new_tie_24_load_cap_per_leaf_fF_if_ASR_mapping": 27.94704,
+      "tie_output_electrical_closure": null,
+      "new_pg_terminals": 20,
+      "converted_ff_pg_terminals": 240,
+      "pg_count_delta_from_master_conversion": 0,
+      "post_ECO_total_parent_pg_terminals": null,
+      "physical_wiring_CTS_PG_area": null,
+      "whole_structural_cost": null
+    }
+  },
+  "calendar": [
+    {
+      "leaf": 0,
+      "role": "g_v",
+      "source_publication": "E4 earliest local g_v: egv_c captures real eg_v at E3",
+      "common_clock_lower_bound_publication": 4,
+      "DL_stage0_capture_lower_bound": 5,
+      "DL_stage3_publish_lower_bound": 8,
+      "consumer_pin_capture_lower_bound": 9,
+      "native_source_publication": null,
+      "native_consumer_clock": null,
+      "source_clock_at_parent": "clk",
+      "relay_clock_at_parent": "clk",
+      "VP_VN_VS_clocks_at_parent": "clk",
+      "actual_hardened_phase": null
+    },
+    {
+      "leaf": 0,
+      "role": "rb_v",
+      "source_publication": "E4 earliest local rb_v: rbv captures real x_rbv at E3",
+      "common_clock_lower_bound_publication": 4,
+      "DL_stage0_capture_lower_bound": 5,
+      "DL_stage3_publish_lower_bound": 8,
+      "consumer_pin_capture_lower_bound": 9,
+      "native_source_publication": null,
+      "native_consumer_clock": null,
+      "source_clock_at_parent": "clk",
+      "relay_clock_at_parent": "clk",
+      "VP_VN_VS_clocks_at_parent": "clk",
+      "actual_hardened_phase": null
+    },
+    {
+      "leaf": 0,
+      "role": "cw_v[0]",
+      "source_publication": "CAP root cw_v clears from its own rs_o; earliest source output lower bound E3, exact genuine complete-row publication NULL",
+      "common_clock_lower_bound_publication": 3,
+      "DL_stage0_capture_lower_bound": 4,
+      "DL_stage3_publish_lower_bound": 7,
+      "consumer_pin_capture_lower_bound": 8,
+      "native_source_publication": null,
+      "native_consumer_clock": null,
+      "source_clock_at_parent": "clk",
+      "relay_clock_at_parent": "clk",
+      "VP_VN_VS_clocks_at_parent": "clk",
+      "actual_hardened_phase": null
+    },
+    {
+      "leaf": 0,
+      "role": "cw_v[1]",
+      "source_publication": "CAP root cw_v clears from its own rs_o; earliest source output lower bound E3, exact genuine complete-row publication NULL",
+      "common_clock_lower_bound_publication": 3,
+      "DL_stage0_capture_lower_bound": 4,
+      "DL_stage3_publish_lower_bound": 7,
+      "consumer_pin_capture_lower_bound": 8,
+      "native_source_publication": null,
+      "native_consumer_clock": null,
+      "source_clock_at_parent": "clk",
+      "relay_clock_at_parent": "clk",
+      "VP_VN_VS_clocks_at_parent": "clk",
+      "actual_hardened_phase": null
+    },
+    {
+      "leaf": 0,
+      "role": "sw_v",
+      "source_publication": "E5 earliest CTL row write; rwr at E4; RD unpacker can publish later",
+      "common_clock_lower_bound_publication": 5,
+      "DL_stage0_capture_lower_bound": 6,
+      "DL_stage3_publish_lower_bound": 9,
+      "consumer_pin_capture_lower_bound": 10,
+      "native_source_publication": null,
+      "native_consumer_clock": null,
+      "source_clock_at_parent": "clk",
+      "relay_clock_at_parent": "clk",
+      "VP_VN_VS_clocks_at_parent": "clk",
+      "actual_hardened_phase": null
+    },
+    {
+      "leaf": 0,
+      "role": "c_v",
+      "source_publication": "E5 earliest genuine CTL: input E3, classifier E4, c_v E5",
+      "common_clock_lower_bound_publication": 5,
+      "DL_stage0_capture_lower_bound": 6,
+      "DL_stage3_publish_lower_bound": 9,
+      "consumer_pin_capture_lower_bound": 10,
+      "native_source_publication": null,
+      "native_consumer_clock": null,
+      "source_clock_at_parent": "clk",
+      "relay_clock_at_parent": "clk",
+      "VP_VN_VS_clocks_at_parent": "clk",
+      "actual_hardened_phase": null
+    },
+    {
+      "leaf": 1,
+      "role": "g_v",
+      "source_publication": "E4 earliest local g_v: egv_c captures real eg_v at E3",
+      "common_clock_lower_bound_publication": 4,
+      "DL_stage0_capture_lower_bound": 5,
+      "DL_stage3_publish_lower_bound": 8,
+      "consumer_pin_capture_lower_bound": 9,
+      "native_source_publication": null,
+      "native_consumer_clock": null,
+      "source_clock_at_parent": "clk",
+      "relay_clock_at_parent": "clk",
+      "VP_VN_VS_clocks_at_parent": "clk",
+      "actual_hardened_phase": null
+    },
+    {
+      "leaf": 1,
+      "role": "rb_v",
+      "source_publication": "E4 earliest local rb_v: rbv captures real x_rbv at E3",
+      "common_clock_lower_bound_publication": 4,
+      "DL_stage0_capture_lower_bound": 5,
+      "DL_stage3_publish_lower_bound": 8,
+      "consumer_pin_capture_lower_bound": 9,
+      "native_source_publication": null,
+      "native_consumer_clock": null,
+      "source_clock_at_parent": "clk",
+      "relay_clock_at_parent": "clk",
+      "VP_VN_VS_clocks_at_parent": "clk",
+      "actual_hardened_phase": null
+    },
+    {
+      "leaf": 1,
+      "role": "cw_v[0]",
+      "source_publication": "CAP root cw_v clears from its own rs_o; earliest source output lower bound E3, exact genuine complete-row publication NULL",
+      "common_clock_lower_bound_publication": 3,
+      "DL_stage0_capture_lower_bound": 4,
+      "DL_stage3_publish_lower_bound": 7,
+      "consumer_pin_capture_lower_bound": 8,
+      "native_source_publication": null,
+      "native_consumer_clock": null,
+      "source_clock_at_parent": "clk",
+      "relay_clock_at_parent": "clk",
+      "VP_VN_VS_clocks_at_parent": "clk",
+      "actual_hardened_phase": null
+    },
+    {
+      "leaf": 1,
+      "role": "cw_v[1]",
+      "source_publication": "CAP root cw_v clears from its own rs_o; earliest source output lower bound E3, exact genuine complete-row publication NULL",
+      "common_clock_lower_bound_publication": 3,
+      "DL_stage0_capture_lower_bound": 4,
+      "DL_stage3_publish_lower_bound": 7,
+      "consumer_pin_capture_lower_bound": 8,
+      "native_source_publication": null,
+      "native_consumer_clock": null,
+      "source_clock_at_parent": "clk",
+      "relay_clock_at_parent": "clk",
+      "VP_VN_VS_clocks_at_parent": "clk",
+      "actual_hardened_phase": null
+    },
+    {
+      "leaf": 1,
+      "role": "sw_v",
+      "source_publication": "E5 earliest CTL row write; rwr at E4; RD unpacker can publish later",
+      "common_clock_lower_bound_publication": 5,
+      "DL_stage0_capture_lower_bound": 6,
+      "DL_stage3_publish_lower_bound": 9,
+      "consumer_pin_capture_lower_bound": 10,
+      "native_source_publication": null,
+      "native_consumer_clock": null,
+      "source_clock_at_parent": "clk",
+      "relay_clock_at_parent": "clk",
+      "VP_VN_VS_clocks_at_parent": "clk",
+      "actual_hardened_phase": null
+    },
+    {
+      "leaf": 1,
+      "role": "c_v",
+      "source_publication": "E5 earliest genuine CTL: input E3, classifier E4, c_v E5",
+      "common_clock_lower_bound_publication": 5,
+      "DL_stage0_capture_lower_bound": 6,
+      "DL_stage3_publish_lower_bound": 9,
+      "consumer_pin_capture_lower_bound": 10,
+      "native_source_publication": null,
+      "native_consumer_clock": null,
+      "source_clock_at_parent": "clk",
+      "relay_clock_at_parent": "clk",
+      "VP_VN_VS_clocks_at_parent": "clk",
+      "actual_hardened_phase": null
+    },
+    {
+      "leaf": 2,
+      "role": "g_v",
+      "source_publication": "E4 earliest local g_v: egv_c captures real eg_v at E3",
+      "common_clock_lower_bound_publication": 4,
+      "DL_stage0_capture_lower_bound": 5,
+      "DL_stage3_publish_lower_bound": 8,
+      "consumer_pin_capture_lower_bound": 9,
+      "native_source_publication": null,
+      "native_consumer_clock": null,
+      "source_clock_at_parent": "clk",
+      "relay_clock_at_parent": "clk",
+      "VP_VN_VS_clocks_at_parent": "clk",
+      "actual_hardened_phase": null
+    },
+    {
+      "leaf": 2,
+      "role": "rb_v",
+      "source_publication": "E4 earliest local rb_v: rbv captures real x_rbv at E3",
+      "common_clock_lower_bound_publication": 4,
+      "DL_stage0_capture_lower_bound": 5,
+      "DL_stage3_publish_lower_bound": 8,
+      "consumer_pin_capture_lower_bound": 9,
+      "native_source_publication": null,
+      "native_consumer_clock": null,
+      "source_clock_at_parent": "clk",
+      "relay_clock_at_parent": "clk",
+      "VP_VN_VS_clocks_at_parent": "clk",
+      "actual_hardened_phase": null
+    },
+    {
+      "leaf": 2,
+      "role": "cw_v[0]",
+      "source_publication": "CAP root cw_v clears from its own rs_o; earliest source output lower bound E3, exact genuine complete-row publication NULL",
+      "common_clock_lower_bound_publication": 3,
+      "DL_stage0_capture_lower_bound": 4,
+      "DL_stage3_publish_lower_bound": 7,
+      "consumer_pin_capture_lower_bound": 8,
+      "native_source_publication": null,
+      "native_consumer_clock": null,
+      "source_clock_at_parent": "clk",
+      "relay_clock_at_parent": "clk",
+      "VP_VN_VS_clocks_at_parent": "clk",
+      "actual_hardened_phase": null
+    },
+    {
+      "leaf": 2,
+      "role": "cw_v[1]",
+      "source_publication": "CAP root cw_v clears from its own rs_o; earliest source output lower bound E3, exact genuine complete-row publication NULL",
+      "common_clock_lower_bound_publication": 3,
+      "DL_stage0_capture_lower_bound": 4,
+      "DL_stage3_publish_lower_bound": 7,
+      "consumer_pin_capture_lower_bound": 8,
+      "native_source_publication": null,
+      "native_consumer_clock": null,
+      "source_clock_at_parent": "clk",
+      "relay_clock_at_parent": "clk",
+      "VP_VN_VS_clocks_at_parent": "clk",
+      "actual_hardened_phase": null
+    },
+    {
+      "leaf": 2,
+      "role": "sw_v",
+      "source_publication": "E5 earliest CTL row write; rwr at E4; RD unpacker can publish later",
+      "common_clock_lower_bound_publication": 5,
+      "DL_stage0_capture_lower_bound": 6,
+      "DL_stage3_publish_lower_bound": 9,
+      "consumer_pin_capture_lower_bound": 10,
+      "native_source_publication": null,
+      "native_consumer_clock": null,
+      "source_clock_at_parent": "clk",
+      "relay_clock_at_parent": "clk",
+      "VP_VN_VS_clocks_at_parent": "clk",
+      "actual_hardened_phase": null
+    },
+    {
+      "leaf": 2,
+      "role": "c_v",
+      "source_publication": "E5 earliest genuine CTL: input E3, classifier E4, c_v E5",
+      "common_clock_lower_bound_publication": 5,
+      "DL_stage0_capture_lower_bound": 6,
+      "DL_stage3_publish_lower_bound": 9,
+      "consumer_pin_capture_lower_bound": 10,
+      "native_source_publication": null,
+      "native_consumer_clock": null,
+      "source_clock_at_parent": "clk",
+      "relay_clock_at_parent": "clk",
+      "VP_VN_VS_clocks_at_parent": "clk",
+      "actual_hardened_phase": null
+    },
+    {
+      "leaf": 3,
+      "role": "g_v",
+      "source_publication": "E4 earliest local g_v: egv_c captures real eg_v at E3",
+      "common_clock_lower_bound_publication": 4,
+      "DL_stage0_capture_lower_bound": 5,
+      "DL_stage3_publish_lower_bound": 8,
+      "consumer_pin_capture_lower_bound": 9,
+      "native_source_publication": null,
+      "native_consumer_clock": null,
+      "source_clock_at_parent": "clk",
+      "relay_clock_at_parent": "clk",
+      "VP_VN_VS_clocks_at_parent": "clk",
+      "actual_hardened_phase": null
+    },
+    {
+      "leaf": 3,
+      "role": "rb_v",
+      "source_publication": "E4 earliest local rb_v: rbv captures real x_rbv at E3",
+      "common_clock_lower_bound_publication": 4,
+      "DL_stage0_capture_lower_bound": 5,
+      "DL_stage3_publish_lower_bound": 8,
+      "consumer_pin_capture_lower_bound": 9,
+      "native_source_publication": null,
+      "native_consumer_clock": null,
+      "source_clock_at_parent": "clk",
+      "relay_clock_at_parent": "clk",
+      "VP_VN_VS_clocks_at_parent": "clk",
+      "actual_hardened_phase": null
+    },
+    {
+      "leaf": 3,
+      "role": "cw_v[0]",
+      "source_publication": "CAP root cw_v clears from its own rs_o; earliest source output lower bound E3, exact genuine complete-row publication NULL",
+      "common_clock_lower_bound_publication": 3,
+      "DL_stage0_capture_lower_bound": 4,
+      "DL_stage3_publish_lower_bound": 7,
+      "consumer_pin_capture_lower_bound": 8,
+      "native_source_publication": null,
+      "native_consumer_clock": null,
+      "source_clock_at_parent": "clk",
+      "relay_clock_at_parent": "clk",
+      "VP_VN_VS_clocks_at_parent": "clk",
+      "actual_hardened_phase": null
+    },
+    {
+      "leaf": 3,
+      "role": "cw_v[1]",
+      "source_publication": "CAP root cw_v clears from its own rs_o; earliest source output lower bound E3, exact genuine complete-row publication NULL",
+      "common_clock_lower_bound_publication": 3,
+      "DL_stage0_capture_lower_bound": 4,
+      "DL_stage3_publish_lower_bound": 7,
+      "consumer_pin_capture_lower_bound": 8,
+      "native_source_publication": null,
+      "native_consumer_clock": null,
+      "source_clock_at_parent": "clk",
+      "relay_clock_at_parent": "clk",
+      "VP_VN_VS_clocks_at_parent": "clk",
+      "actual_hardened_phase": null
+    },
+    {
+      "leaf": 3,
+      "role": "sw_v",
+      "source_publication": "E5 earliest CTL row write; rwr at E4; RD unpacker can publish later",
+      "common_clock_lower_bound_publication": 5,
+      "DL_stage0_capture_lower_bound": 6,
+      "DL_stage3_publish_lower_bound": 9,
+      "consumer_pin_capture_lower_bound": 10,
+      "native_source_publication": null,
+      "native_consumer_clock": null,
+      "source_clock_at_parent": "clk",
+      "relay_clock_at_parent": "clk",
+      "VP_VN_VS_clocks_at_parent": "clk",
+      "actual_hardened_phase": null
+    },
+    {
+      "leaf": 3,
+      "role": "c_v",
+      "source_publication": "E5 earliest genuine CTL: input E3, classifier E4, c_v E5",
+      "common_clock_lower_bound_publication": 5,
+      "DL_stage0_capture_lower_bound": 6,
+      "DL_stage3_publish_lower_bound": 9,
+      "consumer_pin_capture_lower_bound": 10,
+      "native_source_publication": null,
+      "native_consumer_clock": null,
+      "source_clock_at_parent": "clk",
+      "relay_clock_at_parent": "clk",
+      "VP_VN_VS_clocks_at_parent": "clk",
+      "actual_hardened_phase": null
+    },
+    {
+      "leaf": 4,
+      "role": "g_v",
+      "source_publication": "E4 earliest local g_v: egv_c captures real eg_v at E3",
+      "common_clock_lower_bound_publication": 4,
+      "DL_stage0_capture_lower_bound": 5,
+      "DL_stage3_publish_lower_bound": 8,
+      "consumer_pin_capture_lower_bound": 9,
+      "native_source_publication": null,
+      "native_consumer_clock": null,
+      "source_clock_at_parent": "clk",
+      "relay_clock_at_parent": "clk",
+      "VP_VN_VS_clocks_at_parent": "clk",
+      "actual_hardened_phase": null
+    },
+    {
+      "leaf": 4,
+      "role": "rb_v",
+      "source_publication": "E4 earliest local rb_v: rbv captures real x_rbv at E3",
+      "common_clock_lower_bound_publication": 4,
+      "DL_stage0_capture_lower_bound": 5,
+      "DL_stage3_publish_lower_bound": 8,
+      "consumer_pin_capture_lower_bound": 9,
+      "native_source_publication": null,
+      "native_consumer_clock": null,
+      "source_clock_at_parent": "clk",
+      "relay_clock_at_parent": "clk",
+      "VP_VN_VS_clocks_at_parent": "clk",
+      "actual_hardened_phase": null
+    },
+    {
+      "leaf": 4,
+      "role": "cw_v[0]",
+      "source_publication": "CAP root cw_v clears from its own rs_o; earliest source output lower bound E3, exact genuine complete-row publication NULL",
+      "common_clock_lower_bound_publication": 3,
+      "DL_stage0_capture_lower_bound": 4,
+      "DL_stage3_publish_lower_bound": 7,
+      "consumer_pin_capture_lower_bound": 8,
+      "native_source_publication": null,
+      "native_consumer_clock": null,
+      "source_clock_at_parent": "clk",
+      "relay_clock_at_parent": "clk",
+      "VP_VN_VS_clocks_at_parent": "clk",
+      "actual_hardened_phase": null
+    },
+    {
+      "leaf": 4,
+      "role": "cw_v[1]",
+      "source_publication": "CAP root cw_v clears from its own rs_o; earliest source output lower bound E3, exact genuine complete-row publication NULL",
+      "common_clock_lower_bound_publication": 3,
+      "DL_stage0_capture_lower_bound": 4,
+      "DL_stage3_publish_lower_bound": 7,
+      "consumer_pin_capture_lower_bound": 8,
+      "native_source_publication": null,
+      "native_consumer_clock": null,
+      "source_clock_at_parent": "clk",
+      "relay_clock_at_parent": "clk",
+      "VP_VN_VS_clocks_at_parent": "clk",
+      "actual_hardened_phase": null
+    },
+    {
+      "leaf": 4,
+      "role": "sw_v",
+      "source_publication": "E5 earliest CTL row write; rwr at E4; RD unpacker can publish later",
+      "common_clock_lower_bound_publication": 5,
+      "DL_stage0_capture_lower_bound": 6,
+      "DL_stage3_publish_lower_bound": 9,
+      "consumer_pin_capture_lower_bound": 10,
+      "native_source_publication": null,
+      "native_consumer_clock": null,
+      "source_clock_at_parent": "clk",
+      "relay_clock_at_parent": "clk",
+      "VP_VN_VS_clocks_at_parent": "clk",
+      "actual_hardened_phase": null
+    },
+    {
+      "leaf": 4,
+      "role": "c_v",
+      "source_publication": "E5 earliest genuine CTL: input E3, classifier E4, c_v E5",
+      "common_clock_lower_bound_publication": 5,
+      "DL_stage0_capture_lower_bound": 6,
+      "DL_stage3_publish_lower_bound": 9,
+      "consumer_pin_capture_lower_bound": 10,
+      "native_source_publication": null,
+      "native_consumer_clock": null,
+      "source_clock_at_parent": "clk",
+      "relay_clock_at_parent": "clk",
+      "VP_VN_VS_clocks_at_parent": "clk",
+      "actual_hardened_phase": null
+    }
+  ],
+  "local_source_counts": {
+    "authority_conversions": 120,
+    "payload_other_unreset": 11760,
+    "preexisting_consumer_ASR_equivalent": 35,
+    "preexisting_VP_relay_ASR_equivalent": 30,
+    "existing_relay_D_loads_sync0_per_leaf": 1,
+    "existing_relay_D_loads_sync1_per_leaf": 4,
+    "existing_raw_reset_RESETS_per_VP_relay": 6,
+    "new_raw_reset_loads": 0,
+    "new_release_state": 0,
+    "new_data_edges": 0,
+    "raw_parent_known_direct_reset_load_lower_bound_XR_plus_five_VP_VN_VS": 96
+  },
+  "conditional_first_word_loss_witness_nonexecuted_not_production": [
+    {
+      "abstract_edge": 0,
+      "source_valid": 1,
+      "VP_owner_high": false,
+      "consumer_eligible": false,
+      "original_pre_q": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "candidate_pre_q": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "original_consumer_word": false,
+      "candidate_consumer_word": false
+    },
+    {
+      "abstract_edge": 1,
+      "source_valid": 0,
+      "VP_owner_high": false,
+      "consumer_eligible": false,
+      "original_pre_q": [
+        1,
+        0,
+        0,
+        0
+      ],
+      "candidate_pre_q": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "original_consumer_word": false,
+      "candidate_consumer_word": false
+    },
+    {
+      "abstract_edge": 2,
+      "source_valid": 0,
+      "VP_owner_high": false,
+      "consumer_eligible": false,
+      "original_pre_q": [
+        0,
+        1,
+        0,
+        0
+      ],
+      "candidate_pre_q": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "original_consumer_word": false,
+      "candidate_consumer_word": false
+    },
+    {
+      "abstract_edge": 3,
+      "source_valid": 0,
+      "VP_owner_high": false,
+      "consumer_eligible": false,
+      "original_pre_q": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "candidate_pre_q": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "original_consumer_word": false,
+      "candidate_consumer_word": false
+    },
+    {
+      "abstract_edge": 4,
+      "source_valid": 0,
+      "VP_owner_high": true,
+      "consumer_eligible": true,
+      "original_pre_q": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "candidate_pre_q": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "original_consumer_word": true,
+      "candidate_consumer_word": false
+    }
+  ],
+  "upstream_root_terminal_expansion": null,
+  "native_polarity_and_instance_join": null,
+  "cold_fourstate_firstuse": null,
+  "actual_parent_reset_pulse_authority": null,
+  "structurally_complete_parent": false,
+  "implementation_admissible": false,
+  "verdict": "LOCAL31_LOAD_ASSIGNMENT_MODEL; FULL_PARENT_FIRST_AUTHORITY_HOLD",
+  "uplink_authority_80": "separate HOLD"
+}
