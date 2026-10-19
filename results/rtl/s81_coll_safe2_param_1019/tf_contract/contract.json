@@ -1,0 +1,57 @@
+{
+  "scope": "exact strict9130 source connectivity, NOT physical parent-clock qualification",
+  "authorization": "ROOT via s81_coordinator10-19: default-off obsolete tf cleanup after exact no-consumer proof; no generated-clock relabel/mask/waiver",
+  "selected_inputs": {
+    "die.v": "0d8c5fc3d02ba895b262ce661a354c21b69bb0e3c7756ff587b5f0806e72c96d",
+    "mu3_table": "776c9dbd73fd019b37fcdd1a1bb3d586ffd2e087ad595d2872f5bb3bb6a11d7b",
+    "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane.sv": "5e08764c7133b47750786567a47deb62419f114996b7641d2f36cc7e3d7159ee",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep_mu.sv": "f8b562223347b5044a96dd3b0d808dcabf6c8b64dd55c8ecc885737b93a9b3c2",
+    "rtl/dsrom_sys/s81_link/col/ot_pdie_serdes_col.sv": "9b0f0e559b253aaad0c1f3d133ea235ea73fb99a0a913ba5be5323a40e400c18"
+  },
+  "saved_root": "ot-epyc7:/srv/opentallas-scratch/claude/codex-s81-dieplace",
+  "source_driver": "ot_s81ph_coll_lane.u_tf: kept ot_s81ph_ckbuf assign y=a, input clk",
+  "production_connections": [
+    "u_ln0.tf -> slice tf[0]",
+    "u_ln1.tf -> slice tf[1]",
+    "all4endpoint die instances omit .tf: u_s_0S/u_s_0N/u_s_7S/u_s_7N",
+    "AB_EN0 current bind; optional AB exports tfb only when AB_EN1",
+    "tx0.o/tx1.o table have no ck=tf mapping",
+    "SerDes_col tx.i has no forwarded-clock receiver port"
+  ],
+  "functional_tf_receivers": [],
+  "bench": "xdie_s81_ep explicitly leaves every lane .tf() unused",
+  "real_clock_network": {
+    "slice_roots": [
+      "ck_cl0S",
+      "ck_cl0N",
+      "ck_cl7S",
+      "ck_cl7N"
+    ],
+    "slice_modules": "u_sl/u_lep/u_land use same slice clk root directly",
+    "link_clock_example": "fwd_lt_lk_WS0 ICG.CLK=ck_cl0S -> nlt_lk_WS0_fck[0] -> st_lt_lk_WS0_0.ck/ck_o -> ... -> ld_lt_lk_WS0.ck_f",
+    "landing": "landing own ck_edge0 west / ck_edge8 east",
+    "SerDesTX": "clk=ck_edge0/8 -> encoder/txl/PMA-TX/rate-match-read/status",
+    "SerDesRX": "pma_rck -> PMA-RX/decoder4roots/rate-match-write",
+    "physical_status": "regional die roots still ideal; native parent clock qualification owed"
+  },
+  "prects_driver_probe": {
+    "source": "07f31b7da immutable W3_place, production092651",
+    "tf": "OUTPUT/SIGNAL driven output4546/Y BUFx2 at2.322,245.43um",
+    "ck": "INPUT/SIGNAL, net12300ITerms",
+    "scope": "preCTS only, finalclock/timing not inferred"
+  },
+  "new_source": "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_safe2.sv",
+  "new_modules": [
+    "dsfd_coll_lane_w_safe2",
+    "dsfd_coll_lane_e_safe2"
+  ],
+  "cleanup_define": "OT_S81PH_COLL_TF_CLEANUP; absent=OFF/tf preserved; present=tf port and u_tf driver absent",
+  "legacy_lane_file_sha256_unchanged": "57993833a04cfeb8d0edda1d187dfa617df7bc30a98919f1c37c31fcf52ca2e9",
+  "constraints_changed": false,
+  "remaining": [
+    "full safe2 data/fault/event/reset boundary miter",
+    "new parent source fork and exact strictbind regeneration",
+    "qualified old-read helper, complete critical-load/reset/area/geometry census",
+    "final CTS/native/ROOTPNG review, actual parent slot/escape"
+  ]
+}

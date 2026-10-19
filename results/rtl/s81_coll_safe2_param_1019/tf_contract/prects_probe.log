@@ -1,0 +1,20 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/codex-s81-coll-tf-contract-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-s81-coll-tf-contract-1019
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-s81-coll-tf-contract-1019
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-s81-coll-tf-contract-1019
+ot-run: ot-epyc8       admits  1171 GB (avail 933, growth 113, headroom 0, waiters 0/0 GB) load 34/128 running 28 disk 298 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-s81-coll-tf-contract-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-s81-coll-tf-contract-1019
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-3888127-1792429691 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+TF_CONTRACT_PORT tf io=OUTPUT signal=SIGNAL net=tf iterms=1 bterms=1
+TF_CONTRACT_PEER_PORT tf io=OUTPUT signal=SIGNAL
+TF_CONTRACT_DRIVER output4546/Y master=BUFx2_ASAP7_75t_R location=2322 245430
+TF_CONTRACT_PORT ck io=INPUT signal=SIGNAL net=ck iterms=12300 bterms=1
+TF_CONTRACT_PEER_PORT ck io=INPUT signal=SIGNAL
+TF_CONTRACT_PRECTS_PROBE_DONE
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-3888127-1792429691): exit 0
