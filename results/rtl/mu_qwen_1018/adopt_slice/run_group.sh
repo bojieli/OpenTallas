@@ -19,6 +19,17 @@ run() { # case env... -- args
     env "${envs[@]}" python3 "$B" "$@"; echo "# exit $?"; } > "$R/$c.out" 2>&1
 }
 case $G in
+ONE)  # one build per ot-run job (a slice2 Verilator build peaks at ~12-16 GB; 4 in one 48 GB unit were OOM-killed)
+  c=$3; shift 3; envs=(); while [ "$1" != "--" ]; do envs+=("$1"); shift; done; shift
+  run "$c" "${envs[@]}" -- "$@" ;;
+FONE)  # one tb_qfd_dv2_faces build: FONE WORK MUT NU
+  m=$3; nu=$4; c=FACES_mut${m}_nu${nu}
+  S=$(python3 -c "import sys; sys.path.insert(0,'rtl/test/qwen_dv'); import dv_bench2 as D; print(' '.join(s for s in D.SRCS2 if not s.endswith('tb_qfd_dv2.sv')))")
+  { echo "# case $c host $(hostname) $(date -Is) commit $(cat SOURCE_COMMIT 2>/dev/null)";
+    verilator --binary --timing -O2 -j 8 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD --x-assign 0 --x-initial 0 \
+      --top-module tb_qfd_dv2_faces -GMUT=$m -GMU_NU=$nu -Mdir "$WORK/$c" -o sim $S rtl/test/qwen_dv/tb_qfd_dv2_faces.sv \
+      > "$WORK/$c.build.log" 2>&1 || { echo BUILD FAIL; tail -30 "$WORK/$c.build.log"; };
+    "$WORK/$c/sim"; echo "# exit $?"; } > "$R/$c.out" 2>&1 ;;
 F0|F1|F2)
   f=${G#F}
   for nu in 1 4; do
