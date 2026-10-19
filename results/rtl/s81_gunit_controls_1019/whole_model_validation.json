@@ -1,0 +1,24 @@
+{
+  "status": "MODEL_ONLY_NO_RTL_BUILD",
+  "copy_model_unit": "oth-ubuntu-2454872-1792432485",
+  "copy_model_exit": 0,
+  "fault_model_unit": "oth-ubuntu-2455765-1792432518",
+  "fault_model_exit": 0,
+  "fault_model_cases": 458752,
+  "source": "12ab196b6",
+  "mapped_evidence": "3ca0d8055",
+  "complete_offenders_reconciled": 1874,
+  "complete_original_flops_reconciled": 19771,
+  "lint_sha256": "1199c260157d377ac824853a7e22829c753312414e5951257df911aa99631677",
+  "failed_model_preparations": [
+    {
+      "unit": "oth-ubuntu-2450625-1792432390",
+      "reason": "initial loader read gz Liberty only; SEQ plain-lib masters missing; no result accepted"
+    },
+    {
+      "unit": "oth-ubuntu-2454103-1792432457",
+      "reason": "assertion included constant/tie roots; useful-root iteration already excluded ties; no result accepted"
+    }
+  ],
+  "orfs_image_id": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29"
+}
