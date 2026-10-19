@@ -317,8 +317,56 @@ def reset_landing_plan(s: dict) -> dict | None:
     ck = pr.get("clock") or rl.get("clock") or (cks[0] if len(cks) == 1 else None)
     if not ck or ck not in cks:
         raise SpecError(f"spec: multi-clock kit ({', '.join(cks)}): name the landing clock in reset_landing.clock")
-    return {"enable": True, "stages": st, "clock": ck, "reset_ports": list(resets), "rule": RESET_LANDING_RULE,
+    plan = {"enable": True, "stages": st, "clock": ck, "reset_ports": list(resets), "rule": RESET_LANDING_RULE,
             "reset_release_cycles": st}
+    cp = rl.get("copies")
+    if cp is not None:
+        # KV-RELAYGEN 2026-10-19: {"<reset port>": N} -> the last landing stage has N KEPT identical copies, spread over the
+        # core's reset loads by reset_relay_split (ot_rst_copies.tcl); latency unchanged (the copies are the last stage)
+        if (not isinstance(cp, dict) or not cp or any(p not in resets for p in cp)
+                or any(not isinstance(n, int) or isinstance(n, bool) or not 1 <= n <= 64 for n in cp.values())):
+            raise SpecError('spec: reset_landing.copies must map declared reset_ports to integers 1..64')
+        if st < 2:
+            raise SpecError("spec: reset_landing.copies needs stages >= 2")
+        if not reset_relay_split_plan(s):
+            raise SpecError('spec: reset_landing.copies needs "reset_relay_split" (the synthesis pass that uses them)')
+        plan["copies"] = dict(cp)
+    return plan
+
+
+RESET_RELAY_SPLIT_RULE = ("KV-RELAYGEN 2026-10-19 / SAFE-DESIGN item 3: a reset relay copy drives <= ~256 loads; the "
+                          "RTL's kept identical relay copies take the loads by region (physical/common_flow/ot_rst_copies.tcl)")
+
+
+def reset_relay_split_plan(s: dict) -> dict | None:
+    """spec "reset_relay_split": {"max_loads": 256[, "re": "<family wire regexp>"]} -> plan, None when absent"""
+    rs = s.get("reset_relay_split")
+    if rs is None:
+        return None
+    if not isinstance(rs, dict):
+        raise SpecError('spec: reset_relay_split must be an object ({"max_loads": 256})')
+    mx = rs.get("max_loads", 256)
+    if not isinstance(mx, int) or isinstance(mx, bool) or not 16 <= mx <= 4096:
+        raise SpecError("spec: reset_relay_split.max_loads must be an integer 16..4096")
+    rx = rs.get("re")
+    if rx is not None:
+        if not isinstance(rx, str) or not rx or any(c in rx for c in "'\"\n"):
+            raise SpecError("spec: reset_relay_split.re must be a plain regexp string")
+        re.compile(rx)
+    return {"max_loads": mx, **({"re": rx} if rx else {})}
+
+
+def reset_relay_split_vars(s: dict) -> list:
+    plan = reset_relay_split_plan(s)
+    if not plan:
+        return []
+    out = [f"--orfs-var OT_RST_COPIES_MAX={plan['max_loads']}"]
+    if plan.get("re"):
+        out.append(f"--orfs-var OT_RST_COPIES_RE={shq(plan['re'])}")
+    rl = reset_landing_plan(s)
+    if rl and rl.get("enable") and rl.get("copies"):
+        out.append("--orfs-var OT_RST_LAND_COPIES=" + ",".join(f"{p}={n}" for p, n in sorted(rl["copies"].items())))
+    return out
 
 
 def reset_landing_vars(s: dict) -> list:
@@ -415,7 +463,7 @@ def pin_hook_wrapper(s: dict) -> bool:
     kits that were valid before regenerate byte-identically (the new cases used to raise SpecError)."""
     if not (s.get("io_flop_at_pins") and s.get("recipe", 1) >= 2):
         return False
-    return bool(s.get("inhold") or s.get("outhold") or s.get("pin_reg_split") or s.get("pin_hook_before_flops"))
+    return bool(s.get("inhold") or s.get("outhold") or s.get("pin_reg_split") or s.get("pin_hook_before_flops") or s.get("pin_hook_after_flops"))
 
 
 def pin_hook_flops_only(s: dict) -> bool:
@@ -477,6 +525,14 @@ def gen_pin_hooks(s: dict) -> dict:
         if not (ROOT / rel).is_file():
             raise SpecError(f"missing pin hook: {rel}")
         pre_gpl.insert(-1, f"source /src/{rel}")
+    # Cone partitions must see the actual fixed pin anchors, rather than adding
+    # those flops to a region before their face locations are known.
+    for rel in s.get("pin_hook_after_flops", []):
+        if not isinstance(rel, str) or rel.startswith("/") or ".." in Path(rel).parts or not re.fullmatch(r"[A-Za-z0-9_./-]+", rel):
+            raise SpecError("pin_hook_after_flops must name safe relative repo Tcl files")
+        if not (ROOT / rel).is_file():
+            raise SpecError(f"missing pin hook: {rel}")
+        pre_gpl.append(f"source /src/{rel}")
     pre_dpl = ["# ref_tile PRE_DETAIL_PLACE (kit recipe 2): release the FIRM hold cells / drivers and the pin flops for DPL",
                "source /src/physical/dsrom_window_source/leaf_inhold_release.tcl",
                f"source /src/{QDM}/out_flop_release.tcl"]
@@ -1166,13 +1222,41 @@ def fill_check(s: dict, W: float, H: float, blocks: list, std_area) -> tuple | N
                 "pass --area-um2 / std_area_um2 from the synthesis smoke")
     mac = sum(b["w"] * b["h"] for b in blocks)
     fill = (mac + float(std_area)) / (W * H)
-    reason = str((s.get("fill_reason") or {}).get("pin_bound", "")).strip()
+    fr = s.get("fill_reason") or {}
+    reason = str(fr.get("pin_bound", "")).strip()
+    reason_kind = "pin-bound"
+    structural = fr.get("lattice_channel_bound")
+    if isinstance(structural, dict) and not reason:
+        # Gate-rule exception: root must approve it; verify the geometry rather
+        # than accepting claimed utilisation/channel numbers as a low-fill escape.
+        band = structural.get("std_band_y_um", [])
+        lattice = 43.2
+        valid = (str(structural.get("why", "")).strip()
+                 and str(structural.get("approved_by", "")).strip()
+                 and len(blocks) >= 4 and len(band) == 2)
+        if valid:
+            lo, hi = map(float, band)
+            density = float(std_area) / ((W - 2 * CORE_MARGIN) * (hi - lo)) if hi > lo else 0
+            valid = (CORE_MARGIN <= lo < hi <= H - CORE_MARGIN and 0.4 <= density <= 0.6)
+            for block in blocks:
+                valid = valid and block.get("kind") == "macro"
+                valid = valid and all(abs(block[axis] / lattice - round(block[axis] / lattice)) < 1e-6
+                                      for axis in ("x", "y"))
+                valid = valid and (block["y"] + block["h"] <= lo or block["y"] >= hi)
+            for i, block in enumerate(blocks):
+                for other in blocks[i + 1:]:
+                    gx = max(block["x"] - other["x"] - other["w"], other["x"] - block["x"] - block["w"])
+                    gy = max(block["y"] - other["y"] - other["h"], other["y"] - block["y"] - block["h"])
+                    valid = valid and max(gx, gy) >= CHANNEL_UM - 1e-6
+        if valid:
+            reason = str(structural["why"]).strip()
+            reason_kind = "lattice/channel-bound gate-rule exception"
     msg = f"fill {fill:.0%} = (macros/children {mac:.0f} + std {float(std_area):.0f}) / outline {W * H:.0f} um2"
     if fill < FILL_FAIL and not reason:
         return ("FAIL", "fill", msg + f" < {FILL_FAIL:.0%}",
                 "shrink the outline / regroup macros, or record fill_reason.pin_bound with the measured pin demand")
     if fill < FILL_WARN:
-        return ("WARN", "fill", msg + (f" (pin-bound: {reason})" if reason else f" < {FILL_WARN:.0%}"), "")
+        return ("WARN", "fill", msg + (f" ({reason_kind}: {reason})" if reason else f" < {FILL_WARN:.0%}"), "")
     return None
 
 
@@ -2038,6 +2122,7 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
     extra += hold_budget_vars(s)
     extra += pin_regs_vars(s)
     extra += reset_landing_vars(s)
+    extra += reset_relay_split_vars(s)
     # reviewed CDC kits: the lint-tagged registers keep their RTL names through yosys fsm (cdc_fsm_guard.py)
     extra += cdc_fsm_guard.orfs_vars(s, ROOT)
     if s.get("keep_pin_regs"):
@@ -2156,7 +2241,7 @@ def pin_balance_env(r: dict, lc: dict | None = None) -> list:
 
 def referenced_paths(s: dict, kd: str) -> list:
     """every repo file the routed flow reads (for the source-sync check of the gate)"""
-    out = [*s["sources"], *s.get("boundary_tcl", []), *s.get("pre_cts_extra", []), *s.get("pin_hook_before_flops", []), *s.get("pre_dpl_extra", []), f"{kd}/kit.env", f"{kd}/clock.sdc", f"{kd}/signoff.sdc", *([f"{kd}/signoff_ffrepair.sdc"] if io_hold_relief_ps(s) else []), f"{kd}/pdn.tcl", f"{kd}/pre_cts.tcl",
+    out = [*s["sources"], *s.get("boundary_tcl", []), *s.get("pre_cts_extra", []), *s.get("pin_hook_before_flops", []), *s.get("pin_hook_after_flops", []), *s.get("pre_dpl_extra", []), f"{kd}/kit.env", f"{kd}/clock.sdc", f"{kd}/signoff.sdc", *([f"{kd}/signoff_ffrepair.sdc"] if io_hold_relief_ps(s) else []), f"{kd}/pdn.tcl", f"{kd}/pre_cts.tcl",
            *[f"{kd}/{f}" for f in ("post_cts.tcl", "post_grt.tcl", "pre_drt.tcl", "pre_fill.tcl", "post_fill.tcl")],
            f"{kd}/pre_grt.tcl", f"{kd}/post_drt.tcl", "tools/ref_tile/ref_route.sh",
            f"{QDM}/io_ref_skew.sdc", f"{QDM}/io_plain.sdc", f"{QDM}/repair_budget.tcl", f"{QDM}/pre_cts_skew.tcl",
