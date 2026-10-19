@@ -75,7 +75,7 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
     localparam integer NBOOT_GROUPS=(NEV+3)/4;
     localparam integer RBOOT_DATA=RBOOT_BASE+((LOCAL_BOOT!=0)?NEV:0);
     localparam integer RPRED_BASE=RBOOT_DATA+((LOCAL_BOOT!=0)?NBOOT_GROUPS:0);
-    localparam integer RESET_REGIONS=RPRED_BASE+((CHECK_STAGE!=0)?2*NEV:0);
+    localparam integer RESET_REGIONS=RPRED_BASE+((CHECK_STAGE!=0)?NEV:0);
     wire [RESET_REGIONS-1:0] rr; dsdv_mu_reset_tree #(.REGIONS(RESET_REGIONS)) u_rr (.clk(ck), .rst_n_in(rst_n), .rst_n(rr)); wire rn = rr[0];
     // Payload pin flops sample every edge; valid pins are asynchronously held by their
     // landed reset, so the reset does not enter a synchronous data cone.
@@ -435,9 +435,9 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
             assign boot_data[bg]=data_r;
         end else begin:g_direct assign boot_data[bg]=mw_q[20:0];end
     end endgenerate
-    wire gap_accept=mc_q[25] && idle && !mc_q[24] && gn!=SJ'(NSLOT);
-    wire [SJ-1:0] gn_pred=gn+SJ'(gap_accept);
-    wire [6:0] min_pred=(gn_pred==0)?7'(NSLOT+2):7'(gn_pred)+7'd3;
+    wire [23:0] mc_limit_word=mc_q[23:0]-24'd2;
+    wire mc_limit_small=mc_q[23:0]<24'd2;
+    wire [6:0] min_word=(gn==0)?7'(NSLOT+2):7'(gn)+7'd3;
     genvar ce, rcg;
     generate for(ce=0;ce<NEV;ce=ce+1) begin:g_event_broadcast
         (* keep *) reg [31:0] ts_r, time_r;
@@ -490,53 +490,29 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
             assign gap_write=cfg_gap_r && idle_event[ce] && gn!=SJ'(NSLOT);
         end
         assign attr_boot[ce]=attr_write;
-        if(CHECK_STAGE!=0) begin:g_check_lookahead
-            reg [23:0] cfg_limit_r,limit_r;
-            reg cfg_small_r,small_r;
-            reg [6:0] cfg_min_r,min_r;
-            wire [2:0] limit_write,limit_check;
-            wire gap_check;
-            always @(posedge ck or negedge rr[RPRED_BASE+2*ce])
-                if(!rr[RPRED_BASE+2*ce]) begin cfg_limit_r<=0;cfg_small_r<=1;cfg_min_r<=7'(NSLOT+2);end
-                else begin cfg_limit_r<=f_mc[23:0]-24'd2;cfg_small_r<=f_mc[23:0]<24'd2;cfg_min_r<=min_pred;end
+        if(CHECK_STAGE!=0) begin:g_check_limits
+            reg [23:0] limit_r;
+            reg small_r;
+            reg [6:0] min_r;
+            wire [2:0] limit_write;
             for(genvar lg=0;lg<3;lg=lg+1) begin:g_limit_enable
                 (* keep=1 *) dsdv_mu_boot_enable u_write(.count(boot_count),.armed(arm_r),.valid(cfg_rl_r),.match(1'b1),.en(limit_write[lg]));
-                (* keep=1 *) dsdv_mu_boot_enable u_check(.count(boot_count),.armed(arm_r),.valid(cfg_rl_r),.match(1'b1),.en(limit_check[lg]));
             end
-            (* keep=1 *) dsdv_mu_boot_enable u_gap_check(.count(boot_count),.armed(arm_r),.valid(cfg_gap_r),.match(gn!=SJ'(NSLOT)),.en(gap_check));
             for(genvar lb=0;lb<24;lb=lb+1) begin:g_limit_storage
-                always @(posedge ck or negedge rr[RPRED_BASE+2*ce+1])
-                    if(!rr[RPRED_BASE+2*ce+1]) limit_r[lb]<=1;
-                    else if(limit_write[lb/8]) limit_r[lb]<=cfg_limit_r[lb];
+                always @(posedge ck or negedge rr[RPRED_BASE+ce])
+                    if(!rr[RPRED_BASE+ce]) limit_r[lb]<=1;
+                    else if(limit_write[lb/8]) limit_r[lb]<=mc_limit_word[lb];
             end
-            always @(posedge ck or negedge rr[RPRED_BASE+2*ce+1])
-                if(!rr[RPRED_BASE+2*ce+1]) begin small_r<=1;min_r<=7'(NSLOT+2);end
+            always @(posedge ck or negedge rr[RPRED_BASE+ce])
+                if(!rr[RPRED_BASE+ce]) begin small_r<=1;min_r<=7'(NSLOT+2);end
                 else begin
-                    if(limit_write[0]) small_r<=cfg_small_r;
-                    if(gap_write) min_r<=cfg_min_r;
+                    if(limit_write[0]) small_r<=mc_limit_small;
+                    if(gap_write) min_r<=min_word;
                 end
-            wire [20:0] next_d;
-            wire [23:0] next_limit;
-            for(genvar db=0;db<21;db=db+1) begin:g_d_mux
-                assign next_d[db]=d_check[db/8]?boot_data[ce/4][db]:eD[ce][db];
-            end
-            for(genvar lb=0;lb<24;lb=lb+1) begin:g_limit_mux
-                assign next_limit[lb]=limit_check[lb/8]?cfg_limit_r[lb]:limit_r[lb];
-            end
-            wire next_small=limit_check[0]?cfg_small_r:small_r;
-            wire [6:0] next_min=gap_check?cfg_min_r:min_r;
-            wire next_enabled=evld[ce] || d_check[0];
-            reg invalid_r;
-            // Predict the exact next config limits at the existing pin landing
-            // edge. CSR writes and first-start fault edges are unchanged.
-            always @(posedge ck or negedge rr[COPY_RBASE+7*ce+6])
-                if(!rr[COPY_RBASE+7*ce+6]) invalid_r<=1'b0;
-                else invalid_r<=next_enabled && ({3'd0,next_d} < {17'd0,next_min} || next_small || {3'd0,next_d} > next_limit);
-            assign invalid_event[ce]=invalid_r;
-`ifdef DSDV_MU_POINTER_ASSERT
-            always @(posedge ck) if(rn && cfg_gap_r && idle_event[ce])
-                if(cfg_min_r !== ((gn==0)?7'(NSLOT+2):7'(gn)+7'd3)) $fatal(1,"minimum config lookahead mismatch event%0d",ce);
-`endif
+            // Limits update at the exact original CSR state edge. The direct
+            // checker then observes that current state, exactly CHECK_STAGE0,
+            // with the constant RL subtraction removed from its start path.
+            assign invalid_event[ce]=evld[ce] && ({3'd0,eD[ce]} < {17'd0,min_r} || small_r || {3'd0,eD[ce]} > limit_r);
         end else begin:g_check_direct
             assign invalid_event[ce]=evld[ce] && ({3'd0,eD[ce]} < (24'(lw_r)+24'd3) || {3'd0,eD[ce]}+24'd2 > rl_r);
         end
