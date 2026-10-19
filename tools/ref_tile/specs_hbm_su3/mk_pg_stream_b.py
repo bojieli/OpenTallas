@@ -22,7 +22,7 @@ from pathlib import Path
 name = 'hbm_su_pg_stream_b_1019'
 W, H = 216.0, 259.2
 S_ = 'rtl/hbm_accel/generic/adapters/static_su'
-WIT = 'results/rtl/hbm_pgstream_cdc_1019'
+WIT = 'results/rtl/hbm_pgstream_cdc_r18_1019'
 BENCH = 'tools/hbm_static/su_pg_stream_split_vl_run.sh'
 B = dict(vmr_cmd=60, su_wq=562, su_rr=514, ij_v=4, ij_row=36, ij_bad=1, pg_fault=1, pos=4,
          lg_rq=34, lg_wq=562, lg_rr=514, lg_w_done=2, lg_read=2, lg_write=2, lg_fault=1,
@@ -56,7 +56,7 @@ core_in = ['pos', 'lg_rr', 'lg_w_done', 'lg_read', 'lg_write', 'far_rq', 'far_wq
 core_out = ['lg_rq', 'lg_wq', 'lg_fault', 'far_rr', 'far_w_done']
 
 
-def bench(nm, sub, mut, rr=10, wr=7, qid=1, why=None):
+def bench(nm, sub, mut, rr=18, wr=15, qid=1, why=None):
     b = dict(name=nm, cmd=f'bash {BENCH} {{RUN}}/bench/{sub} {mut} 1500 {qid} {rr} {wr} 1', threads=4, peak_ram_gb=8,
              needs=['verilator'])
     if why is None:
@@ -69,9 +69,11 @@ def bench(nm, sub, mut, rr=10, wr=7, qid=1, why=None):
 
 benches = [
     bench('pgs_b_lockstep', 'm0', 0),
-    bench('pgs_b_lockstep_rt18', 'rt18', 0, 18, 15),
+    bench('pgs_b_lockstep_rr10_regression', 'rr10', 0, 10, 7),
+    bench('pgs_b_lockstep_qid0', 'qid0', 0, qid=0),
     bench('pgs_b_mut12_seam_window', 'm12', 12, why='seam-window mutant: request bank read one stream edge early into a '
           'pre-stage (same data, same launch edge) -> setup 1q < the declared 4q seam window; window checker only'),
+    bench('pgs_b_mut14_cross_reset', 'm14', 14, why='serial bridge reset must not clear stream-local sticky fault publication'),
     bench('pgs_b_mut13_fault_publish', 'm13', 13, why='registered fault source inverted: independent publication and exact two-stage serial capture scoreboard'),
     bench('pgs_b_mut3', 'm3', 3, why='return staging removed: bank rewritten 0 ps after its read (window checker)'),
     bench('pgs_b_mut2', 'm2', 2, why='stream half reads the wrong request bank'),
@@ -108,7 +110,7 @@ s = dict(
              'rtl/lib/ot_rst_relay.sv', f'{S_}/ot_hbm_su_static_vm_bank_leaf_s.sv', f'{S_}/ot_hbm_su_static_vm_ports.sv',
              'rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv',
              'rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv', 'rtl/hdc/ot_hdc_delay.sv'],
-    params=dict(QID=1, G=2, READ_RETURN=10, WRITE_RETURN=7, STRAP=1, FAULT_REG=1),
+    params=dict(QID=1, G=2, READ_RETURN=18, WRITE_RETURN=15, STRAP=1, FAULT_REG=1),
     clock_port='pg_clk', reset_ports=['rst_n', 'bridge_rst_n'],
     reset_landing=dict(enable=True, stages=3, clock='clk_ctl',
                        why='3 serial stages = one 3:4 epoch (12q): bridge / inject slot counters of both roots release on '
@@ -122,7 +124,7 @@ s = dict(
         'Every boundary bit has its register in RTL: vmr_cmd/su_wq go straight into the request bank flops, su_rr / '
         'ij_* / pg_fault are serial_rr / ijq / synchroniser flops, the LG tap registers its local/far/near inputs and '
         'outputs, inj_rd/inj_addr are decoded into the inject bank flops. A wrapper stage would move the fixed 3:4 seam '
-        'calendar (windows 2q..7q) and the VM 10/7 calendar.')),
+        'calendar (windows 2q..7q) and the release VM 18/15 calendar.')),
     io_flop_at_pins=dict(cols=4, allow_none=True), keep_pin_regs=True, inhold=False, outhold=False,
     std_area_um2=3500, fill_reason=dict(pin_bound=PIN_BOUND),
     structural_change=WHY,

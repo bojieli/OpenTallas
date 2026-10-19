@@ -131,7 +131,7 @@ module ot_hbm_su_static_pg_stream_s #(
  generate if(FAULT_REG!=0) begin:g_pgf_reg
   reg pgf_q;
   always @(posedge pg_clk)
-   if(!leaf_rst_n || !bridge_rst_n) pgf_q<=1'b0;
+   if(!leaf_rst_n || (MUT==14 && !bridge_rst_n)) pgf_q<=1'b0;
    else pgf_q <= (MUT==13) ? !pgf_raw : pgf_raw;
   assign pgf_s=pgf_q;
  end else begin:g_pgf_legacy

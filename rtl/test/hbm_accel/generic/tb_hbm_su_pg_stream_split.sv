@@ -27,7 +27,7 @@ module tb_hbm_su_pg_stream_split;
  wire [3:0] pos = {2'(QID), 2'(G)};
  reg [59:0] vmr; reg [561:0] suwq; reg [513:0] lgrr; reg [1:0] lgwd, lgr, lgw, injrd; reg [33:0] farrq; reg [561:0] farwq;
  reg [159:0] inja;
- reg traffic=0;
+ reg traffic=0, fault_only=0;
  `define PGS_PORTS(N) \
   wire [513:0] N``_surr; wire [3:0] N``_ijv; wire [35:0] N``_ijrow; wire N``_ijbad, N``_pgf; wire [33:0] N``_lgrq; \
   wire [561:0] N``_lgwq; wire [513:0] N``_farrr; wire [1:0] N``_farwd; wire N``_lgf;
@@ -74,7 +74,7 @@ module tb_hbm_su_pg_stream_split;
  // Independent source-publication + two-stage capture reference. Fault
  // reporting adds one stream publication edge; the data calendar is unchanged.
  always @(posedge pg_clk) begin
-  if(!dut.u_s.leaf_rst_n || !brst_n) pgf_source_ref<=0;
+  if(!dut.u_s.leaf_rst_n) pgf_source_ref<=0;
   else pgf_source_ref <= (|dut.u_s.leaf_fault)||(|dut.u_s.bridge_fault);
  end
  always @(posedge clk_ctl or negedge rst_n)
@@ -86,6 +86,12 @@ module tb_hbm_su_pg_stream_split;
  end endtask
  integer cov_rr=0, cov_ij=0, cov_bad=0, cov_lg=0;
  always @(posedge clk_ctl) begin
+  // An independent bridge reset must not clear a still-asserted leaf fault.
+  // The source publication resets only with its stream-domain leaf reset.
+  if(FAULT_REG!=0 && fault_only) begin
+   checks=checks+1;
+   if(d_pgf!==pgf_sync_ref[1]) err("pg_fault bridge reset");
+  end
   if(chk) begin
    checks=checks+1;
    if(r_surr[256]||r_surr[513]) cov_rr=cov_rr+1;
@@ -157,6 +163,14 @@ module tb_hbm_su_pg_stream_split;
    repeat(8) @(posedge clk_ctl);
   end
   chk=0;
+  if(FAULT_REG!=0) begin
+   fault_only=1;
+   @(negedge pg_clk); brst_n=0;
+   repeat(8) @(posedge clk_ctl);
+   brst_n=1;
+   repeat(8) @(posedge clk_ctl);
+   fault_only=0;
+  end
   $display("windows (ns): request setup %0.3f hold %0.3f | return setup %0.3f hold %0.3f | inject setup %0.3f hold %0.3f",
            wsu[0], who[0], wsu[1], who[1], wsu[2], who[2]);
   $display("ref faults pg=%0d lg=%0d (sticky; raised during traffic); coverage: serial fill returns %0d, inject hits %0d (conflicts %0d), LG near requests %0d",

@@ -28,7 +28,7 @@ off in reusable RTL and enabled only in this successor kit. The old failed gate 
 ## SAFE-DESIGN checklist (owner 10-19)
 1 Pins: WAIVED, with the register in RTL. Every boundary bit is a register in RTL: request banks from vmr_cmd/su_wq,
   su_rr/ijq/fault synchroniser flops, LG tap in/out registers, and inject decode into bank flops. io_flop_at_pins (4 cols)
-  places them at the faces. A wrapper stage would move the 3:4 seam calendar and the VM 10/7 calendar. Resets are landed
+  places them at the faces. A wrapper stage would move the 3:4 seam calendar and the release VM 18/15 calendar. Resets are landed
   in 3 clk_ctl stages (one epoch).
 2 Reach: PASS. The tile is 216 x 259.2, so every face-to-face hop is <= 259 um < 405 um.
 3 Fanout: PASS. Bank, launch and output data flops have no reset, which removes the old 5,652-load bridge_rst_n fanout.
@@ -52,9 +52,8 @@ off in reusable RTL and enabled only in this successor kit. The old failed gate 
   TW5-HBM-DIE receive the fault-latency update.
 
 ## Source and verification
-Source 2f31fc84e; component evidence 5afdeefab in results/rtl/hbm_pgstream_cdc_1019.
-Verilator 5.050: legacy default, registered fault, RT18/15, and QID0 all PASS 7,178 exact checks and 9,228 seam checks.
-MUT13 wrong source fault publication FAILS 3,076 checks; window-only MUT12 and MUT3 fail their independent calendar
-checks; wrong-bank MUT2/MUT8 fail values and windows. The fleet lint receipt binds actual source bytes plus all
-seam window/domain declarations and exact CDC source/chain roles. These prove behavior/structure, not physical closure.
-The successor gate still must show no unapproved crossings, TT/FF spread <=80 ps, zero GRT overflow, and geometry review.
+Current production return calendar READ_RETURN18/WRITE_RETURN15 matches the release die. The stream fault publication resets only from its local leaf reset. Serial bridge reset does not enter this stream register D cone; the two serial capture stages and data windows are unchanged.
+
+Source-pinned component evidence in results/rtl/hbm_pgstream_cdc_r18_1019: Verilator5.050 legacy10/7 PASS7178checks; release18/15, registered10/7 andQID0 each PASS7194checks/9228windows. Mut13 invertedfault fails3092checks; Mut14 wrong cross-reset fails8; Mut12/3 failwindowonly3004/3008; Mut2/8 failvaluesandwindows. Historical10/7 evidence and prior pre-floorplan failures remain preserved.
+
+Fresh CDC receipt must bind actual bytes plus all seam/domain/source/chain declarations. Physical CTS/GRT/nativeTTFF and root layout review remain required.
