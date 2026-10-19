@@ -1310,7 +1310,9 @@
    "cost": "56 landings (16 x 1,636 b rin, 16 x 2,069 b bin, 8 x 100 b gather p0->p1, 8 x 29 b be_cmd, 6 x 138 b q chain, 2 x 184 b q -> front): 308,268 landing flops (D 4) + 40,458 pad flops per SM; x16 SMs on d4g ~5.6 M flops. D 2 (LANDING-CONTRACT: valid for 625/632 S81 links) would cut the ring ~40%; decide after die STA dL."
   }
  },
- "skipped_mutants": {},
+ "skipped_mutants": {
+  "4": "not observable (10-18 bench @80f044150, bench/lp_mut4.log: MUT 4 = u_fl reset run one stage long PASSED lockstep): with quiet_reset every input is 0 through reset + offsets, and every child's reset only clears valid / sticky-fault flags that stay 0 under zero inputs (no free-running counters, epochs or phase state), so a child released one edge late is equivalent. Landing reset alignment is covered by MUT 2 (read K+1)."
+ },
  "warnings": [],
  "die_obligations": [
   "drop one clock per region at the region's clock port (ck_<r>); each region builds its own local tree",

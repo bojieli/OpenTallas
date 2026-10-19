@@ -1,0 +1,10 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/hf5c/src-80f044150
+ot-run: ot-epyc5       admits     8 GB (avail 169, growth 164, headroom 0, waiters 0/0 GB) load 134/128 running 23 disk 1812 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hf5c/src-80f044150
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hf5c/src-80f044150
+ot-run: -> ot-epyc5 (will queue: admits 8 GB < 96 GB)
+ot-heavy: waiting for memory on ot-epyc5: need 0.7 x 96 = 67 GB, admissible 8 GB: available 169 GB, growth charged 163 GB (x0.5), young 0 GB, floor 57 GB
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-4135888-1792381953 after 341 s
+EMUT 0: FLAT_EQ PASS
+FLAT_EQ PASS EMUT=0 compared=5982 rv_cycles=3722
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-4135888-1792381953): exit 0

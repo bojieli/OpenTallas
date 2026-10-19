@@ -1,0 +1,10 @@
+LP_MISMATCH port=rv cycle=1501 flat=1 landed=0
+LP_MISMATCH port=rrow cycle=1501 flat=031 landed=33d
+LP_MISMATCH port=rrow cycle=1502 flat=33d landed=030
+LP_MISMATCH port=rv cycle=1503 flat=1 landed=0
+LP_MISMATCH port=rrow cycle=1503 flat=031 landed=eba
+LP_LOCKSTEP FAIL MUT=3 mismatches=6147 of 26994
+- rtl/hbm_accel/sm/attn/flat/lp/tb_ot_hbm_accel_smh_attn_flat_lp.sv:76: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 6us; walltime 132.421 s; speed 45.310 ns/s
+- Verilator: cpu 130.266 s on 1 threads; allocated 117 MB

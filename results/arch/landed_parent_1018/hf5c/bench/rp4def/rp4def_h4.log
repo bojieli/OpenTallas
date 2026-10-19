@@ -1,0 +1,10 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/hf5c/src-7617999eb
+ot-run: ot-epyc5       admits   116 GB (avail 388, growth 306, headroom 0, waiters 0/0 GB) load 138/128 running 31 disk 1799 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hf5c/src-7617999eb
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hf5c/src-7617999eb
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-930690-1792382568 after 0 s
+FAIL {"name": "qk_sm0", "kind": "qk", "rows": 20, "rc": 1, "fault": true, "results": 0, "expected": 20, "mismatches": 3, "result_rows": 0, "first_result": null, "last_result": null, "pass": false}
+PASS {"name": "pv_sm0", "kind": "pv", "rows": 32, "rc": 0, "fault": false, "results": 512, "expected": 512, "mismatches": 0, "result_rows": 64, "first_result": 566, "last_result": 627, "pass": true, "span_first_line_to_last_result": 576}
+FAIL HBM_SM_ELEMENT_ATTENTION {"shape": "ds640", "flat": false, "defines": ["OT_SMH_CG_ENREG", "OT_SMH_XLK", "OT_FP_DATA_NORST", "OT_SMH_DRST0", "OT_SMH_RSTRELAY", "OT_SMH_RSTPIN", "OT_SMH_HIER", "OT_SMH_PTW_OHDLY", "OT_SMH_PINREG", "OT_SMH_XREL", "OT_SMH_PRODUCTION_SHAPE", "OT_SMH_COMPACT_PT", "OT_SMH_GROUP_TRANSPORT", "OT_SMH_WEST_SPLIT", "OT_SMH_TRANSPORT_KEEP", "OT_SMH_RP4_SRST"], "hopd": 4, "ops": 2, "passed": 1, "probe": false, "dmut": 0, "smut": "", "lat": {"req_lead": 8, "qk_first": 63, "qk_land_meas": 70, "qk_land": 78, "qk_clear": 8, "pv_node": 160, "out": 40}, "wall_s": 12.1, "verdict": "FAIL"}
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-930690-1792382568): exit 1

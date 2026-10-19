@@ -1,0 +1,5 @@
+LP_LOCKSTEP PASS MUT=0 compared=26994 cycles=6000 warm=1500
+- rtl/hbm_accel/sm/attn/flat/lp/tb_ot_hbm_accel_smh_attn_flat_lp.sv:76: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 6us; walltime 132.835 s; speed 45.169 ns/s
+- Verilator: cpu 131.417 s on 1 threads; allocated 117 MB

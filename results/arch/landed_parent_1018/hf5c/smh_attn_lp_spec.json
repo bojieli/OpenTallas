@@ -266,7 +266,10 @@
   "sim": "verilator",
   "quiet_reset": true,
   "warm": 1500,
-  "warm_note": "as PL-SMT rp4: tcl/bdc accumulators (no-reset data cuts) take power-up / pre-epoch values until a protocol i_first; landed children see them t(child) edges later, so random stimulus needs a flush window before the compare"
+  "warm_note": "as PL-SMT rp4: tcl/bdc accumulators (no-reset data cuts) take power-up / pre-epoch values until a protocol i_first; landed children see them t(child) edges later, so random stimulus needs a flush window before the compare",
+  "skip_muts": {
+   "4": "not observable (10-18 bench @80f044150, bench/lp_mut4.log: MUT 4 = u_fl reset run one stage long PASSED lockstep): with quiet_reset every input is 0 through reset + offsets, and every child's reset only clears valid / sticky-fault flags that stay 0 under zero inputs (no free-running counters, epochs or phase state), so a child released one edge late is equivalent. Landing reset alignment is covered by MUT 2 (read K+1)."
+  }
  },
  "why": "HF-5c 10-18: HBM SM attention cluster ot_hbm_accel_smh_attn (x16 on d4g) as a LANDED PARENT: 17 regions = front + one per attn tile (each ~1.6 mm tall); BE with its column's row-pair-1 tile. Front split into launch/result nodes so the q return chain is not a loop.",
  "compiler_note": {
