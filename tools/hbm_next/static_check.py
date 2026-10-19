@@ -294,17 +294,17 @@ def driver(a):
     from hgi_sim import hbm_plane_model as M
     st = M.load_stats(PC.STATS)
     PC.CUR["hist"] = PC.lane_hists()
-    kn = PC.Knobs(coll_lanes=5, union_hist=True, m1=True, rpl=True)
+    kn = PC.Knobs(coll_lanes=5, union_hist=True, m1=True, rpl=True, P=a.P)   # P: lanes (owner 0le 10-19: P = 3)
     PC.apply_knobs(kn)
     keys = set(a.layers.split(",")) if a.layers else None
     u6, uu = st["verify_union"][6]["mean"], st["users_union"]
     modes = dict(mtp=(6, dict(union=u6, kv="upper", users=False)), mu=(4, dict(union=uu.get(4), users=True)),
                  ar=(1, {}))
-    out = dict(schema="opentallas.hbm_next_1019.cmtp.static_check.v1", knobs=kn.tag(), rule=__doc__, modes={})
+    out = dict(schema="opentallas.hbm_next_1019.cmtp.static_check.v1", P=a.P, knobs=kn.tag(), rule=__doc__, modes={})
     a.out.mkdir(parents=True, exist_ok=True)
     for mode in a.mode.split(","):
         N, kw = modes[mode]
-        cfg = M.plane_cfg(4 if N > 1 else 1)
+        cfg = M.plane_cfg(a.P if N > 1 else 1)
         PC.CUR["mode"] = "users" if kw.get("users") else "verify"
         prog, stc = M.ds_compile(N, cfg, kw.get("union", 6.0), kw.get("kv", "upper"), kw.get("users", False))
         M.P5._count_slots(prog)
@@ -346,6 +346,7 @@ def main():
     ap.add_argument("--out", type=Path, required=True)
     ap.add_argument("--mode", default="mtp,mu,ar")
     ap.add_argument("--layers", default="")
+    ap.add_argument("--P", type=int, default=4, help="position lanes (next-release die: 3)")
     a = ap.parse_args()
     return driver(a)
 

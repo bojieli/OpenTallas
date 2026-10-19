@@ -1,0 +1,858 @@
+{
+ "schema": "opentallas.hbm_next_1019.cmtp.emitter.v2",
+ "generated_utc": "2026-10-19T13:52:11Z",
+ "rule": "HBM-NEXT-CMTP: object-level VM allocator + HGI-1R binary record emitter (FIRST VERSION, step 2).\n\nInput: the compiled N-row programme (plane_compiler headline knobs; M.ds_compile) and its S2 timeline per layer\nsegment (static_check.schedule_segments).  The compiled records keep the AR descriptors (row 0 addresses of the AR VM\nmap) plus per-position footprints shifted by VM_OFF per position (and SLOT_OFF per union expert slot): the allocator\nturns that bookkeeping into a real VM map; the emitter writes HGI-1R bytes (isa_rows.encode) against it.\n\nALLOCATOR (per layer segment):\n  1. CLUSTERS: AR VM word ranges joined by any footprint interval and by all intervals of one descriptor (so every\n     descriptor addresses exactly one cluster; relocation is one base shift a cluster).\n  2. INSTANCES: word-level liveness as static_check C4 (a word is live from the START of its writer -- the writer\n     owns the words while it runs -- to the END of its last reader before the next write); a cluster copy's live\n     spans are merged into instances (gaps with no live word split them).\n  3. OBJECTS: the per-position copies (p = 0 .. N - 1) of one cluster whose instances overlap in time form ONE ROW\n     ARRAY: N rows at a fixed row stride (cluster size rounded up to 8 words), lifetime = the union -- so an N-row\n     record addresses row rho at base + rho x rs (ROWX rs_k).  Clusters only read in the segment (gains, tables, HC\n     rows) are CONSTANTS: one row, rs = 0 (broadcast).  The entering columns h / PRE are PINNED row arrays at VM 0\n     (live across segments).  Union expert slot j copies are separate objects (one per slot).\n  4. PLACEMENT: first-fit by start time into the address space; the high-water mark is the VM this map needs.  It is\n     >= the C4 word-level peak (C4 = lower bound: no fragmentation, no cluster granularity).\nEMITTER: every record with VM operands in clusters gets its bases relocated (row 0) and, when it carries N > 1\npositions, a ROWX (n = N, slot0 = 0, rs_k = the row stride of operand k's object or 0, SM: rpl = best_rpl, param\n[5:2] = N - 1).  Checked per record: isa_rows.check (legality), encode -> decode round trip identical, expand(): every\nrow's descriptor intervals fall inside that row of the allocated object, rows independent (R2).  AR (N = 1) is the\nidentity: no relocation, no ROWX, bytes == records.Rec.encode.\nNOT YET (next): union expert slots as the IDX.UNION + rsel CTL.LOOP form (emitted here as SKIPPED, counted), the\nIDX.UNION record itself, CTL.USERS banks for the users image, implicit engine state (fixed-address intervals no\ndescriptor names: reported, pinned at their AR address), whole-token image assembly + VEH hand-off.\n\n    PYTHONPATH=tools python3 tools/hbm_next/emitter.py --mode mtp --layers 0,1 --out DIR\n",
+ "mode": "mu",
+ "N": 4,
+ "P": 3,
+ "isa_version": "HGI-1R 1.1 (draft for the P = 4 next die, 2026-10-19: rtab 19 b, hsh, IDX.KVUNION, ATT plan mode)",
+ "segments": {
+  "0": {
+   "values": 369,
+   "objects": {
+    "pinned_column": 2,
+    "row_array": 44,
+    "shared_load": 5
+   },
+   "alloc": {
+    "pinned_words": 81952,
+    "high_water": 233600,
+    "object_bound": 233600,
+    "object_peak_at": 9431.603001675072,
+    "peak_objects": [
+     {
+      "kind": "row_array",
+      "anchor": "0|SU.VOP|attn.res_copy",
+      "rows": 4,
+      "size": 20480,
+      "need": 81920,
+      "ar": [
+       20480,
+       40960
+      ],
+      "t0": 8030.6,
+      "t1": 11502.2,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|COLL.GROUP_REDUCE_MCAST|o-group tree reduce (8 contributors) + multicast",
+      "rows": 4,
+      "size": 12288,
+      "need": 49152,
+      "ar": [
+       69952,
+       82240
+      ],
+      "t0": 8020.6,
+      "t1": 9997.2,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|SM.MATVEC|wo_b",
+      "rows": 4,
+      "size": 5120,
+      "need": 20480,
+      "ar": [
+       82240,
+       87360
+      ],
+      "t0": 9431.6,
+      "t1": 11502.2,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|HC.HC_MIX|hc_attn (mixes + Sinkhorn)",
+      "rows": 4,
+      "size": 24,
+      "need": 96,
+      "ar": [
+       41024,
+       41048
+      ],
+      "t0": 8029.6,
+      "t1": 12728.1,
+      "packed": false
+     }
+    ],
+    "method": "greedy_by_size",
+    "tries": {
+     "first_fit_by_time": 237696,
+     "greedy_by_size": 233600
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 81920
+    }
+   },
+   "c4_peak": 201734,
+   "frag_over_c4": 1.158,
+   "objects_over_c4": 1.158,
+   "aux": {
+    "users.table": [
+     233600,
+     8
+    ],
+    "union.list": [
+     233632,
+     24
+    ],
+    "union.count": [
+     233664,
+     1
+    ],
+    "union.tables": [
+     233696,
+     768
+    ],
+    "kvunion.plan.p0": [
+     234464,
+     10240
+    ],
+    "kvunion.map.p0": [
+     244704,
+     400
+    ],
+    "kvunion.plan.p3": [
+     245120,
+     10240
+    ],
+    "kvunion.map.p3": [
+     255360,
+     144
+    ]
+   },
+   "vm_need_words": 255520,
+   "fits": {
+    "as_built": true,
+    "grown_412k": true,
+    "vm_2p19": true
+   },
+   "emit": {
+    "rowx_records": 77,
+    "ok": 85,
+    "users_hbm_strided_operands": 1,
+    "plain_records": 8,
+    "union_expert_in_loop": 18,
+    "union_slot_group_copies_folded": 64,
+    "note_att_plan_records": 4,
+    "union_K": 7
+   },
+   "errors": [],
+   "image_bytes": 11984,
+   "livein_words": 0,
+   "livein_top": [],
+   "self_overwritten_read_words": {
+    "COLL.ALL_GATHER": 112992
+   },
+   "c4_self_overwritten": {
+    "COLL.ALL_GATHER": 260448
+   },
+   "image_sha256": "684381d1e168d8a8d9bab299fa181b33a10b4eb72b20e232eb40d62c1ba238f0"
+  },
+  "1": {
+   "values": 659,
+   "objects": {
+    "shared_load": 7,
+    "row_array": 57,
+    "pinned_column": 2
+   },
+   "alloc": {
+    "pinned_words": 81952,
+    "high_water": 311360,
+    "object_bound": 311360,
+    "object_peak_at": 4858.085362996176,
+    "peak_objects": [
+     {
+      "kind": "row_array",
+      "anchor": "0|SM.MATVEC|engram.wkv",
+      "rows": 4,
+      "size": 25600,
+      "need": 102400,
+      "ar": [
+       116288,
+       141888
+      ],
+      "t0": 4505.9,
+      "t1": 7028.3,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|SU.VOP|engram.hw",
+      "rows": 4,
+      "size": 20480,
+      "need": 81920,
+      "ar": [
+       20480,
+       40960
+      ],
+      "t0": 4858.1,
+      "t1": 6546.9,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|COLL.ALL_GATHER|engram.rows_gather.eg_rows",
+      "rows": 4,
+      "size": 6144,
+      "need": 24576,
+      "ar": [
+       110144,
+       116288
+      ],
+      "t0": 4496.9,
+      "t1": 5661.5,
+      "packed": false
+     },
+     {
+      "kind": "shared_load",
+      "anchor": "0|DMA.LOAD|engram.wgt",
+      "rows": 1,
+      "size": 20480,
+      "need": 20480,
+      "ar": [
+       141888,
+       162368
+      ],
+      "t0": 4507.9,
+      "t1": 5066.3,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|SU.VOP|engram.ssH",
+      "rows": 4,
+      "size": 8,
+      "need": 32,
+      "ar": [
+       168768,
+       168772
+      ],
+      "t0": 4506.9,
+      "t1": 5224.3,
+      "packed": false
+     }
+    ],
+    "method": "first_fit_by_time",
+    "tries": {
+     "first_fit_by_time": 311360,
+     "greedy_by_size": 311360
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 81920
+    }
+   },
+   "c4_peak": 295974,
+   "frag_over_c4": 1.052,
+   "objects_over_c4": 1.052,
+   "aux": {
+    "users.table": [
+     311360,
+     8
+    ],
+    "union.list": [
+     311392,
+     24
+    ],
+    "union.count": [
+     311424,
+     1
+    ],
+    "union.tables": [
+     311456,
+     768
+    ],
+    "kvunion.plan.p0": [
+     312224,
+     10240
+    ],
+    "kvunion.map.p0": [
+     322464,
+     400
+    ],
+    "kvunion.plan.p3": [
+     322880,
+     10240
+    ],
+    "kvunion.map.p3": [
+     333120,
+     144
+    ]
+   },
+   "vm_need_words": 333280,
+   "fits": {
+    "as_built": false,
+    "grown_412k": true,
+    "vm_2p19": true
+   },
+   "emit": {
+    "rowx_records": 140,
+    "ok": 148,
+    "users_hbm_strided_operands": 1,
+    "plain_records": 8,
+    "union_expert_in_loop": 18,
+    "union_slot_group_copies_folded": 64,
+    "note_att_plan_records": 4,
+    "union_K": 7
+   },
+   "errors": [],
+   "image_bytes": 21152,
+   "livein_words": 0,
+   "livein_top": [],
+   "self_overwritten_read_words": {
+    "COLL.ALL_GATHER": 214328
+   },
+   "c4_self_overwritten": {
+    "COLL.ALL_GATHER": 361784
+   },
+   "image_sha256": "adab6c7555076c1ead542c1cfad80d6130b9afb9f4487723f2bfb088cd8c17fb"
+  },
+  "2": {
+   "values": 533,
+   "objects": {
+    "row_array": 51,
+    "pinned_column": 2,
+    "shared_load": 5
+   },
+   "alloc": {
+    "pinned_words": 81952,
+    "high_water": 233992,
+    "object_bound": 233992,
+    "object_peak_at": 31251.887451928935,
+    "peak_objects": [
+     {
+      "kind": "row_array",
+      "anchor": "0|SU.VOP|attn.res_copy",
+      "rows": 4,
+      "size": 20480,
+      "need": 81920,
+      "ar": [
+       20480,
+       40960
+      ],
+      "t0": 7203.9,
+      "t1": 33322.5,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|COLL.GROUP_REDUCE_MCAST|o-group tree reduce (8 contributors) + multicast",
+      "rows": 4,
+      "size": 12288,
+      "need": 49152,
+      "ar": [
+       69952,
+       82240
+      ],
+      "t0": 29840.9,
+      "t1": 31817.5,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|SM.MATVEC|wo_b",
+      "rows": 4,
+      "size": 5120,
+      "need": 20480,
+      "ar": [
+       82240,
+       87360
+      ],
+      "t0": 31251.9,
+      "t1": 33322.5,
+      "packed": false
+     },
+     {
+      "kind": "shared_load",
+      "anchor": "0|DMA.LOAD|route.bias",
+      "rows": 1,
+      "size": 384,
+      "need": 384,
+      "ar": [
+       87744,
+       88128
+      ],
+      "t0": 7208.9,
+      "t1": 36802.6,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|HC.HC_MIX|hc_attn (mixes + Sinkhorn)",
+      "rows": 4,
+      "size": 24,
+      "need": 96,
+      "ar": [
+       41024,
+       41048
+      ],
+      "t0": 7202.9,
+      "t1": 34548.4,
+      "packed": false
+     },
+     {
+      "kind": "shared_load",
+      "anchor": "0|DMA.LOAD|route.one",
+      "rows": 1,
+      "size": 8,
+      "need": 8,
+      "ar": [
+       88768,
+       88775
+      ],
+      "t0": 7212.9,
+      "t1": 39131.5,
+      "packed": false
+     }
+    ],
+    "method": "greedy_by_size",
+    "tries": {
+     "first_fit_by_time": 258336,
+     "greedy_by_size": 233992
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 81920
+    }
+   },
+   "c4_peak": 184012,
+   "frag_over_c4": 1.272,
+   "objects_over_c4": 1.272,
+   "aux": {
+    "users.table": [
+     234016,
+     8
+    ],
+    "union.list": [
+     234048,
+     24
+    ],
+    "union.count": [
+     234080,
+     1
+    ],
+    "union.tables": [
+     234112,
+     768
+    ],
+    "kvunion.plan.p0": [
+     234880,
+     10240
+    ],
+    "kvunion.map.p0": [
+     245120,
+     400
+    ],
+    "kvunion.plan.p3": [
+     245536,
+     10240
+    ],
+    "kvunion.map.p3": [
+     255776,
+     144
+    ]
+   },
+   "vm_need_words": 255936,
+   "fits": {
+    "as_built": true,
+    "grown_412k": true,
+    "vm_2p19": true
+   },
+   "emit": {
+    "rowx_records": 87,
+    "ok": 124,
+    "plain_records": 37,
+    "users_idx_key_store_strides": 1,
+    "users_hbm_strided_operands": 3,
+    "union_expert_in_loop": 18,
+    "union_slot_group_copies_folded": 64,
+    "note_att_plan_records": 4,
+    "union_K": 7
+   },
+   "errors": [],
+   "image_bytes": 14080,
+   "livein_words": 0,
+   "livein_top": [],
+   "self_overwritten_read_words": {
+    "COLL.ALL_GATHER": 133392
+   },
+   "c4_self_overwritten": {
+    "COLL.ALL_GATHER": 280848
+   },
+   "image_sha256": "bbe28a48a4bb21c0345fc4580d1db2236ccff344c72c0e3a0f98179113247c1a"
+  },
+  "3": {
+   "values": 369,
+   "objects": {
+    "pinned_column": 2,
+    "row_array": 44,
+    "shared_load": 5
+   },
+   "alloc": {
+    "pinned_words": 81952,
+    "high_water": 233600,
+    "object_bound": 233600,
+    "object_peak_at": 11221.516717852392,
+    "peak_objects": [
+     {
+      "kind": "row_array",
+      "anchor": "0|SU.VOP|attn.res_copy",
+      "rows": 4,
+      "size": 20480,
+      "need": 81920,
+      "ar": [
+       20480,
+       40960
+      ],
+      "t0": 9820.6,
+      "t1": 13292.1,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|COLL.GROUP_REDUCE_MCAST|o-group tree reduce (8 contributors) + multicast",
+      "rows": 4,
+      "size": 12288,
+      "need": 49152,
+      "ar": [
+       69952,
+       82240
+      ],
+      "t0": 9810.6,
+      "t1": 11787.1,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|SM.MATVEC|wo_b",
+      "rows": 4,
+      "size": 5120,
+      "need": 20480,
+      "ar": [
+       82240,
+       87360
+      ],
+      "t0": 11221.5,
+      "t1": 13292.1,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|HC.HC_MIX|hc_attn (mixes + Sinkhorn)",
+      "rows": 4,
+      "size": 24,
+      "need": 96,
+      "ar": [
+       41024,
+       41048
+      ],
+      "t0": 9819.6,
+      "t1": 14518.0,
+      "packed": false
+     }
+    ],
+    "method": "greedy_by_size",
+    "tries": {
+     "first_fit_by_time": 241728,
+     "greedy_by_size": 233600
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 81920
+    }
+   },
+   "c4_peak": 201734,
+   "frag_over_c4": 1.158,
+   "objects_over_c4": 1.158,
+   "aux": {
+    "users.table": [
+     233600,
+     8
+    ],
+    "union.list": [
+     233632,
+     24
+    ],
+    "union.count": [
+     233664,
+     1
+    ],
+    "union.tables": [
+     233696,
+     768
+    ],
+    "kvunion.plan.p0": [
+     234464,
+     10240
+    ],
+    "kvunion.map.p0": [
+     244704,
+     400
+    ],
+    "kvunion.plan.p3": [
+     245120,
+     10240
+    ],
+    "kvunion.map.p3": [
+     255360,
+     144
+    ]
+   },
+   "vm_need_words": 255520,
+   "fits": {
+    "as_built": true,
+    "grown_412k": true,
+    "vm_2p19": true
+   },
+   "emit": {
+    "rowx_records": 77,
+    "ok": 85,
+    "users_hbm_strided_operands": 1,
+    "plain_records": 8,
+    "union_expert_in_loop": 18,
+    "union_slot_group_copies_folded": 64,
+    "note_att_plan_records": 4,
+    "union_K": 7
+   },
+   "errors": [],
+   "image_bytes": 12112,
+   "livein_words": 0,
+   "livein_top": [],
+   "self_overwritten_read_words": {
+    "COLL.ALL_GATHER": 112992
+   },
+   "c4_self_overwritten": {
+    "COLL.ALL_GATHER": 260448
+   },
+   "image_sha256": "3b912aa9ee7d4515f68f87583c62ccf23fe9bac0e473b850f6f3cd1952ec1467"
+  },
+  "14": {
+   "values": 823,
+   "objects": {
+    "shared_load": 7,
+    "pinned_column": 2,
+    "row_array": 64
+   },
+   "alloc": {
+    "pinned_words": 81952,
+    "high_water": 313408,
+    "object_bound": 313408,
+    "object_peak_at": 4719.134974010796,
+    "peak_objects": [
+     {
+      "kind": "row_array",
+      "anchor": "0|SM.MATVEC|engram.wkv",
+      "rows": 4,
+      "size": 25600,
+      "need": 102400,
+      "ar": [
+       116288,
+       141888
+      ],
+      "t0": 4507.9,
+      "t1": 7030.3,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|SU.VOP|engram.hw",
+      "rows": 4,
+      "size": 20480,
+      "need": 81920,
+      "ar": [
+       20480,
+       40960
+      ],
+      "t0": 4710.1,
+      "t1": 6548.9,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|COLL.ALL_GATHER|engram.rows_gather.eg_rows",
+      "rows": 4,
+      "size": 6144,
+      "need": 24576,
+      "ar": [
+       110144,
+       116288
+      ],
+      "t0": 4498.9,
+      "t1": 5663.5,
+      "packed": false
+     },
+     {
+      "kind": "shared_load",
+      "anchor": "0|DMA.LOAD|engram.wgt",
+      "rows": 1,
+      "size": 20480,
+      "need": 20480,
+      "ar": [
+       141888,
+       162368
+      ],
+      "t0": 4387.7,
+      "t1": 4918.3,
+      "packed": false
+     },
+     {
+      "kind": "shared_load",
+      "anchor": "0|DMA.LOAD|q_norm.gain",
+      "rows": 1,
+      "size": 1280,
+      "need": 1280,
+      "ar": [
+       48064,
+       49344
+      ],
+      "t0": 4711.1,
+      "t1": 9490.8,
+      "packed": false
+     },
+     {
+      "kind": "shared_load",
+      "anchor": "0|DMA.LOAD|kv_norm.gain",
+      "rows": 1,
+      "size": 512,
+      "need": 512,
+      "ar": [
+       49344,
+       49856
+      ],
+      "t0": 4719.1,
+      "t1": 10085.3,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|DMA.LOAD|kv_rope.table",
+      "rows": 4,
+      "size": 64,
+      "need": 256,
+      "ar": [
+       53312,
+       53376
+      ],
+      "t0": 4715.1,
+      "t1": 33721.8,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
+      "anchor": "0|SU.VOP|engram.rH",
+      "rows": 4,
+      "size": 8,
+      "need": 32,
+      "ar": [
+       168832,
+       168836
+      ],
+      "t0": 537.8,
+      "t1": 6598.1,
+      "packed": false
+     }
+    ],
+    "method": "greedy_by_size",
+    "tries": {
+     "first_fit_by_time": 336760,
+     "greedy_by_size": 313408
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 81920
+    }
+   },
+   "c4_peak": 303398,
+   "frag_over_c4": 1.033,
+   "objects_over_c4": 1.033,
+   "aux": {
+    "users.table": [
+     313408,
+     8
+    ],
+    "union.list": [
+     313440,
+     24
+    ],
+    "union.count": [
+     313472,
+     1
+    ],
+    "union.tables": [
+     313504,
+     768
+    ],
+    "kvunion.plan.p0": [
+     314272,
+     10240
+    ],
+    "kvunion.map.p0": [
+     324512,
+     400
+    ],
+    "kvunion.plan.p3": [
+     324928,
+     10240
+    ],
+    "kvunion.map.p3": [
+     335168,
+     144
+    ]
+   },
+   "vm_need_words": 335328,
+   "fits": {
+    "as_built": false,
+    "grown_412k": true,
+    "vm_2p19": true
+   },
+   "emit": {
+    "plain_records": 37,
+    "ok": 187,
+    "rowx_records": 150,
+    "users_hbm_strided_operands": 3,
+    "users_idx_key_store_strides": 1,
+    "union_expert_in_loop": 18,
+    "union_slot_group_copies_folded": 64,
+    "note_att_plan_records": 4,
+    "union_K": 7
+   },
+   "errors": [],
+   "image_bytes": 23248,
+   "livein_words": 0,
+   "livein_top": [],
+   "self_overwritten_read_words": {
+    "COLL.ALL_GATHER": 234728
+   },
+   "c4_self_overwritten": {
+    "COLL.ALL_GATHER": 382184
+   },
+   "image_sha256": "3169c683b846be3e83df5bef1d2b0090ee7fe88eafaf7d84d21ef4410abb3804"
+  }
+ },
+ "users_hbm": {
+  "hsh": 12,
+  "stride_bytes": 1073741824,
+  "collisions_by_stride": {
+   "1073741824": 0
+  }
+ },
+ "users_prologue": {
+  "stats": {
+   "ok": 1,
+   "rowx_records": 1
+  },
+  "errors": [],
+  "sha256": "7b4c1cb1d02c16afe11fdc6bd8ea1e6cc916398c81cbe59525c9173349eada81",
+  "note": "A = the host-written {token_s, pos_s} table at the image's users.table aux address (the per-segment aux map below); relocated by the whole-token assembler"
+ },
+ "sources_sha256": {
+  "tools/hbm_next/emitter.py": "383350ef8f9a20178be35872f4a18f62e100ef0169519000cf1dc970d2135871",
+  "tools/hbm_next/isa_rows.py": "778e66cf64b07fef7750b8ed97dffdd622670dbb83a98ba97a361afa560cb36b",
+  "tools/hbm_next/plane_compiler.py": "711576142f9c7ad33fc10aeedcc5698c8cb2f213786c5d0ebe74b44cc031fab2",
+  "tools/hbm_next/static_check.py": "37a76e636c696cb885eb9109c39617a3bf73b79088fd6a07d96d64c67e198079"
+ }
+}

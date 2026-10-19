@@ -225,6 +225,10 @@ MEAS.update({
     "fused_frame": "FUSED.HC_PRE_NORM / HC_POST first row = MEASURED c1 404 / 196 (absolute, D 5,120) on every record "
                    "incl. AR -- frame sensitivity, moves AR",
 })
+MEAS["fused_tree"] = ("FUSED die tree latency (P3-DIE f4c_t9p3, claude/hbm-next-1019@9f003920b): worst lane -> fus_hub 37 "
+                      "hops at 405 um ~ +18.5 cycles each way = +37 cycles on the first row of EVERY FUSED record "
+                      "(HC_PRE_NORM / HC_POST, incl. AR); row II unchanged")
+FUSED_TREE_CYC = 37.0
 MEAS_ALL2 = ("idxn", "idx_topk", "idx_union", "su_vop2", "kvwb", "argmax2", "coll_rg", "coll_am", "att4", "sm4skew",
              "fused")
 IDXN_C1, IDXN_II = 1297.0, 232.0
@@ -355,7 +359,7 @@ def apply_frames(out, kn: Knobs):
     their further rows ((npos - 1) x II, re-applied by apply_meas / meas_post from the new c1)."""
     ms = set(kn.meas)
     notes = {}
-    if not ({"idx_frame", "fused_frame"} & ms):
+    if not ({"idx_frame", "fused_frame", "fused_tree"} & ms):
         return notes
     for c in out:
         op = getattr(c, "orig_op", "")
@@ -363,8 +367,8 @@ def apply_frames(out, kn: Knobs):
         c1 = c.c1 if rows else c.base_cost
         if op == "IDX.INDEX" and "idx_frame" in ms:
             n1 = c1 * IDXN_C1 / IDX_FRAME_PRICE
-        elif op in FUSED_MEAS and "fused_frame" in ms:
-            n1 = FUSED_MEAS[op][0]
+        elif op in FUSED_MEAS and ({"fused_frame", "fused_tree"} & ms):
+            n1 = (FUSED_MEAS[op][0] if "fused_frame" in ms else c1) + (FUSED_TREE_CYC if "fused_tree" in ms else 0.0)
         else:
             continue
         d = n1 - c1
@@ -653,7 +657,9 @@ def meas_cases(key):
     if MODE5[0]:
         full = [("priced", ())] + [(m, (m,)) for m in ("idxn", "su_vop2", "argmax2", "fused", "idx_frame",
                                                          "fused_frame")] + [
-            ("ALL measured v2", MEAS_ALL2), ("ALL measured v2 + frames", MEAS_ALL2 + ("idx_frame", "fused_frame"))]
+            ("ALL measured v2", MEAS_ALL2), ("ALL measured v2 + frames", MEAS_ALL2 + ("idx_frame", "fused_frame")),
+            ("ALL measured v2 + die FUSED tree", MEAS_ALL2 + ("fused_tree",)),
+            ("ALL measured v2 + frames + die FUSED tree", MEAS_ALL2 + ("idx_frame", "fused_frame", "fused_tree"))]
         return full
 
     full = [("priced", ())] + [(m, (m,)) for m in MEAS_ALL + ("idx_index_abs",)] + [

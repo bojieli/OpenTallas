@@ -1,0 +1,7 @@
+ar_N1 PASS loops 0 U_max [] kvunion 0 mutants {}
+mtp_N6 PASS loops 80 U_max [36] kvunion 80 mutants {}
+mu_N1 PASS loops 0 U_max [] kvunion 0 mutants {}
+mu_N2 PASS loops 80 U_max [12] kvunion 40 mutants {}
+mu_N3 PASS loops 80 U_max [18] kvunion 40 mutants {}
+mu_N4 PASS loops 80 U_max [24] kvunion 80 mutants {}
+mtp_N6 PASS loops 80 U_max [36] kvunion 80 mutants {"loop_count_word": true, "kv_budget_256": true, "loop_rtab": true, "no_end": true, "vm_past_2p19": true}
