@@ -1,0 +1,54 @@
+{
+  "model32": {
+    "budget": 32,
+    "round_totals": [
+      529,
+      556,
+      557,
+      557
+    ],
+    "extra_by_role": {
+      "ff": 421,
+      "comb": 136,
+      "tie": 0
+    },
+    "area_um2": 175.48487999999878,
+    "max_input_pins": 9
+  },
+  "model24": {
+    "budget": 24,
+    "round_totals": [
+      1043,
+      1116,
+      1119,
+      1119
+    ],
+    "extra_by_role": {
+      "ff": 919,
+      "comb": 199,
+      "tie": 1
+    },
+    "area_um2": 371.1193199999977,
+    "max_input_pins": 16
+  },
+  "storage": {
+    "reachable_lifetime_states": 1296,
+    "reachable_legal_transitions": 16076,
+    "reachable_final_replacement_transitions": 6140,
+    "peak_qualified_parallel_reads": 4,
+    "transitions": 520,
+    "legal_final_pair_replacements": 20,
+    "early_collision_transitions": 60,
+    "independent_destinations": 5,
+    "bits_per_destination": 1024,
+    "aggregate_bits": 5120,
+    "packet_pairs": 4,
+    "pair_bits": 256,
+    "physical_read_lanes": 5,
+    "simultaneous_writes": 1,
+    "first_read_after_write_edges": 1,
+    "read_during_replacement": "OLD",
+    "reset_data_required": false,
+    "source_rtl_equivalence": "OPEN; symbolic transition model only"
+  }
+}
