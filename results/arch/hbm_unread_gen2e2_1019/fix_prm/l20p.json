@@ -1,0 +1,35 @@
+{
+ "layer": "l20p_idx_collar_prm",
+ "changed": true,
+ "instance": "col_idx",
+ "master": "ot_hbm_static_cfg_collar_idx256r",
+ "source": "rtl/hbm_accel/host_static_20261015/ot_hbm_static_cfg_collar_idx256r.sv",
+ "retained_operand_segments": [
+  [
+   0,
+   44
+  ],
+  [
+   51,
+   424
+  ],
+  [
+   766,
+   1108
+  ],
+  [
+   1450,
+   1460
+  ]
+ ],
+ "packed_prm_bits": 769,
+ "removed_prm_bits": 767,
+ "removed_pw_addr_bits": 4,
+ "remapped_edges": 718,
+ "successful_data_added_edges": 0,
+ "state_bits_removed": 767,
+ "predecessor_sha256": "d8d7082102156f3cab8e24a1923e1fed3c160b4b51a99e6b8ed6290781ab1f9d",
+ "successor_sha256": "2e1abae161b2146061cc2938f03ecdddda2d2bfbe6578c065b3933d9a2e1dd0e",
+ "qualification": "SOURCE_ONLY_NEEDS_SYNTH_NATIVE_TTFF_PHYSICAL_REGRANT",
+ "no_hard_view_admitted": true
+}

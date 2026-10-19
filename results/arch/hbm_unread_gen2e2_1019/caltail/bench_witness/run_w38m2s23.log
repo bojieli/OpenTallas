@@ -1,0 +1,7 @@
+MISMATCH t=490000 pay 34d32408a7/34d32408a6 v 1/1 f 0/0
+MISMATCH t=500000 pay 003474c969/003474c968 v 1/1 f 0/0
+MISMATCH t=510000 pay 2d8893c810/2d8893c811 v 1/1 f 0/0
+MISMATCH t=520000 pay 14de310cbd/14de310cbc v 1/1 f 0/0
+CAL_F20_ROLE FAIL W=38 phaseA errors=158 checks=1134 active_edges=158
+FATAL: fill_universal_0600/tb_vm_calendar_f20_role.sv:63: A
+       Time: 11366000  Scope: tb_vm_calendar_f20_role

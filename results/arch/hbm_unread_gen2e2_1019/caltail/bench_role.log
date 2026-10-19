@@ -1,0 +1,19 @@
+W19 MUT0 SEED11 rc=0 CAL_F20_ROLE PASS W=19 checks=1152 active_edges=188 tail_row=7 tail_bit=146 universal_exported_tail=2 role_fault=1
+W19 MUT0 SEED23 rc=0 CAL_F20_ROLE PASS W=19 checks=1236 active_edges=158 tail_row=3 tail_bit=115 universal_exported_tail=1 role_fault=1
+W19 MUT1 SEED11 rc=1 CAL_F20_ROLE FAIL W=19 phaseB tail_seen=2 uni_fault=0 role_fault=0 row_zero=0
+W19 MUT1 SEED23 rc=1 CAL_F20_ROLE FAIL W=19 phaseB tail_seen=1 uni_fault=0 role_fault=0 row_zero=0
+W19 MUT2 SEED11 rc=1 CAL_F20_ROLE FAIL W=19 phaseA errors=188 checks=1050 active_edges=188
+W19 MUT2 SEED23 rc=1 CAL_F20_ROLE FAIL W=19 phaseA errors=158 checks=1134 active_edges=158
+W38 MUT0 SEED11 rc=0 CAL_F20_ROLE PASS W=38 checks=1152 active_edges=188 tail_row=7 tail_bit=40 universal_exported_tail=2 role_fault=1
+W38 MUT0 SEED23 rc=0 CAL_F20_ROLE PASS W=38 checks=1236 active_edges=158 tail_row=3 tail_bit=76 universal_exported_tail=1 role_fault=1
+W38 MUT1 SEED11 rc=1 CAL_F20_ROLE FAIL W=38 phaseB tail_seen=2 uni_fault=0 role_fault=0 row_zero=0
+W38 MUT1 SEED23 rc=1 CAL_F20_ROLE FAIL W=38 phaseB tail_seen=1 uni_fault=0 role_fault=0 row_zero=0
+W38 MUT2 SEED11 rc=1 CAL_F20_ROLE FAIL W=38 phaseA errors=188 checks=1050 active_edges=188
+W38 MUT2 SEED23 rc=1 CAL_F20_ROLE FAIL W=38 phaseA errors=158 checks=1134 active_edges=158
+W89 MUT0 SEED11 rc=0 CAL_F20_ROLE PASS W=89 checks=1152 active_edges=188 tail_row=7 tail_bit=146 universal_exported_tail=2 role_fault=1
+W89 MUT0 SEED23 rc=0 CAL_F20_ROLE PASS W=89 checks=1236 active_edges=158 tail_row=3 tail_bit=157 universal_exported_tail=1 role_fault=1
+W89 MUT1 SEED11 rc=1 CAL_F20_ROLE FAIL W=89 phaseB tail_seen=2 uni_fault=0 role_fault=0 row_zero=0
+W89 MUT1 SEED23 rc=1 CAL_F20_ROLE FAIL W=89 phaseB tail_seen=1 uni_fault=0 role_fault=0 row_zero=0
+W89 MUT2 SEED11 rc=1 CAL_F20_ROLE FAIL W=89 phaseA errors=188 checks=1050 active_edges=188
+W89 MUT2 SEED23 rc=1 CAL_F20_ROLE FAIL W=89 phaseA errors=158 checks=1134 active_edges=158
+CAL_F20_ROLE GATE PASS

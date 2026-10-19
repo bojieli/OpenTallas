@@ -1,0 +1,10 @@
+{"schema":"opentallas.hbm_unread_fix.v1","class":"terminal_chain_control","fix":"structural: chain-terminal bank master without forward-descriptor ports",
+ "instances":["hcb_SW7","hcb_SE7","hcb_NW7","hcb_NE7"],"old_master":"ot_hbm_hc_bankq_static","new_master":"ot_hbm_hc_bankq_term_static",
+ "removed_bits":116,"removed_face_flops":116,"layer":"tools/hbm_die_v16/d4g_layers/l20t_hc_bankq_term.py",
+ "input_contract":{"path":"/home/ubuntu/artifacts/hdie-d4/d4g_gen2e2/net/pre_relay.json","sha256":"fd7492f2dafdd81d1f7d5e974fe30ca6056e39e23e62d694dbfc800dbebffbf7"},
+ "output_contract":{"path":"/home/ubuntu/artifacts/hbm-unread-gen2e2/fix_term/contract_l20t.json","sha256":"59b91eb6726045140053ed06a25762b3964e605079eab74148d9db2630499cf6"},"die_v":{"path":"/home/ubuntu/artifacts/hbm-unread-gen2e2/fix_term/die.v","sha256":"b880fa758c9117982941ec686b76d219bebf7fedcb27e42c0020cf6b98faedd7"},
+ "strict_bind":"structural classes 0; unread_net_bits 70320 -> 70204 (exactly the 20 hcb_<q>7 o_* nets, 116 bits; no other net changed)",
+ "functional_bind":"PASS paths=1284 bits=289940 (identical to GEN2e2 S1, LAT warn as chain)",
+ "bench":{"tool":"tools/hbm_die_v16/hc_bankq_term_bench.sh","verilator":"5.050 fleet ot-epyc6","tmut0":"PASS 4000 cycles, 0 mismatches on sum_out/f_out/wfault vs die canonical scoped hcb.sv","tmut3":"FAIL 3997 mismatches (f_out inverted) = witness"},
+ "safe_design_checklist":{"1_pins":"PASS","2_reach":"PASS (port subset, same slot)","3_fanout":"PASS","4_depth":"PASS (no logic added)","5_storage":"PASS","6_floorplan":"PASS (29 fewer face pins/tile)","7_clock":"PASS (single clk as canonical)","8_schedule":"PASS (0 cycles changed on retained outputs)"},
+ "qualification":"SOURCE_ONLY: needs fresh synthesis of ot_hbm_hc_bankq_term_static in the next GEN (not applied to the running GEN2e2 chain)"}

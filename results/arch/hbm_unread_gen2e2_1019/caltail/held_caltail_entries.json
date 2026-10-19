@@ -1,0 +1,2345 @@
+{
+ "source": "codex-hbm-unread-audit-1019 results/arch/hbm_unread_current_1019/safe_candidates.json (ROOT held class)",
+ "entries": [
+  {
+   "instance": "epcal_NE",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "bank_client",
+   "net": "epcal_NE__bank_client",
+   "width": 24,
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "die_line": 13704,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 19,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "epcal_NE",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "bank_enable",
+   "net": "epcal_NE__bank_enable",
+   "width": 8,
+   "unread_ranges": [
+    [
+     0,
+     7
+    ]
+   ],
+   "bit_count": 8,
+   "die_line": 13704,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 19,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "epcal_NE",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "hub_ring_client",
+   "net": "epcal_NE__hub_ring_client",
+   "width": 6,
+   "unread_ranges": [
+    [
+     0,
+     5
+    ]
+   ],
+   "bit_count": 6,
+   "die_line": 13704,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 19,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "epcal_NE",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "hub_ring_enable",
+   "net": "epcal_NE__hub_ring_enable",
+   "width": 2,
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "die_line": 13704,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 19,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "epcal_NE",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "lg_local_read",
+   "net": "epcal_NE__lg_local_read",
+   "width": 24,
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "die_line": 13704,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 19,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "epcal_NE",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "lg_local_write",
+   "net": "epcal_NE__lg_local_write",
+   "width": 24,
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "die_line": 13704,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 19,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "epcal_NE",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "replay_enable",
+   "net": "epcal_NE__replay_enable",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 13704,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 19,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "epcal_NE",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "replay_source",
+   "net": "epcal_NE__replay_source",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 13704,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 19,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "epcal_NE",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "response_seq",
+   "net": "epcal_NE__response_seq",
+   "width": 10,
+   "unread_ranges": [
+    [
+     4,
+     9
+    ]
+   ],
+   "bit_count": 6,
+   "die_line": 13704,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 19,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "epcal_NE",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "ring_tx_enable",
+   "net": "epcal_NE__ring_tx_enable",
+   "width": 2,
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "die_line": 13704,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 19,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "epcal_NE",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "ring_tx_source",
+   "net": "epcal_NE__ring_tx_source",
+   "width": 6,
+   "unread_ranges": [
+    [
+     0,
+     5
+    ]
+   ],
+   "bit_count": 6,
+   "die_line": 13704,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 19,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "epcal_NE",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "rslot",
+   "net": "epcal_NE__rslot",
+   "width": 24,
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "die_line": 13704,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 19,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "epcal_NE",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "rslot_v",
+   "net": "epcal_NE__rslot_v",
+   "width": 8,
+   "unread_ranges": [
+    [
+     0,
+     7
+    ]
+   ],
+   "bit_count": 8,
+   "die_line": 13704,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 19,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "epcal_NE",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "wslot",
+   "net": "epcal_NE__wslot",
+   "width": 24,
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "die_line": 13704,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 19,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "epcal_NE",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "wslot_v",
+   "net": "epcal_NE__wslot_v",
+   "width": 8,
+   "unread_ranges": [
+    [
+     0,
+     7
+    ]
+   ],
+   "bit_count": 8,
+   "die_line": 13704,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 19,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "epcal_NW",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "bank_client",
+   "net": "epcal_NW__bank_client",
+   "width": 24,
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "die_line": 13663,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 19,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "epcal_NW",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "bank_enable",
+   "net": "epcal_NW__bank_enable",
+   "width": 8,
+   "unread_ranges": [
+    [
+     0,
+     7
+    ]
+   ],
+   "bit_count": 8,
+   "die_line": 13663,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 19,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "epcal_NW",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "hub_ring_client",
+   "net": "epcal_NW__hub_ring_client",
+   "width": 6,
+   "unread_ranges": [
+    [
+     0,
+     5
+    ]
+   ],
+   "bit_count": 6,
+   "die_line": 13663,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 19,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "epcal_NW",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "hub_ring_enable",
+   "net": "epcal_NW__hub_ring_enable",
+   "width": 2,
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "die_line": 13663,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 19,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "epcal_NW",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "lg_local_read",
+   "net": "epcal_NW__lg_local_read",
+   "width": 24,
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "die_line": 13663,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 19,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "epcal_NW",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "lg_local_write",
+   "net": "epcal_NW__lg_local_write",
+   "width": 24,
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "die_line": 13663,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 19,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "epcal_NW",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "replay_enable",
+   "net": "epcal_NW__replay_enable",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 13663,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 19,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "epcal_NW",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "replay_source",
+   "net": "epcal_NW__replay_source",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 13663,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 19,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "epcal_NW",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "response_seq",
+   "net": "epcal_NW__response_seq",
+   "width": 10,
+   "unread_ranges": [
+    [
+     4,
+     9
+    ]
+   ],
+   "bit_count": 6,
+   "die_line": 13663,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 19,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "epcal_NW",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "ring_tx_enable",
+   "net": "epcal_NW__ring_tx_enable",
+   "width": 2,
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "die_line": 13663,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 19,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "epcal_NW",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "ring_tx_source",
+   "net": "epcal_NW__ring_tx_source",
+   "width": 6,
+   "unread_ranges": [
+    [
+     0,
+     5
+    ]
+   ],
+   "bit_count": 6,
+   "die_line": 13663,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 19,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "epcal_NW",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "rslot",
+   "net": "epcal_NW__rslot",
+   "width": 24,
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "die_line": 13663,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 19,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "epcal_NW",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "rslot_v",
+   "net": "epcal_NW__rslot_v",
+   "width": 8,
+   "unread_ranges": [
+    [
+     0,
+     7
+    ]
+   ],
+   "bit_count": 8,
+   "die_line": 13663,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 19,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "epcal_NW",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "wslot",
+   "net": "epcal_NW__wslot",
+   "width": 24,
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "die_line": 13663,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 19,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "epcal_NW",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "wslot_v",
+   "net": "epcal_NW__wslot_v",
+   "width": 8,
+   "unread_ranges": [
+    [
+     0,
+     7
+    ]
+   ],
+   "bit_count": 8,
+   "die_line": 13663,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 19,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "epcal_SE",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "bank_client",
+   "net": "epcal_SE__bank_client",
+   "width": 24,
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "die_line": 13622,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 19,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "epcal_SE",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "bank_enable",
+   "net": "epcal_SE__bank_enable",
+   "width": 8,
+   "unread_ranges": [
+    [
+     0,
+     7
+    ]
+   ],
+   "bit_count": 8,
+   "die_line": 13622,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 19,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "epcal_SE",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "hub_ring_client",
+   "net": "epcal_SE__hub_ring_client",
+   "width": 6,
+   "unread_ranges": [
+    [
+     0,
+     5
+    ]
+   ],
+   "bit_count": 6,
+   "die_line": 13622,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 19,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "epcal_SE",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "hub_ring_enable",
+   "net": "epcal_SE__hub_ring_enable",
+   "width": 2,
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "die_line": 13622,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 19,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "epcal_SE",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "lg_local_read",
+   "net": "epcal_SE__lg_local_read",
+   "width": 24,
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "die_line": 13622,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 19,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "epcal_SE",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "lg_local_write",
+   "net": "epcal_SE__lg_local_write",
+   "width": 24,
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "die_line": 13622,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 19,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "epcal_SE",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "replay_enable",
+   "net": "epcal_SE__replay_enable",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 13622,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 19,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "epcal_SE",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "replay_source",
+   "net": "epcal_SE__replay_source",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 13622,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 19,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "epcal_SE",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "response_seq",
+   "net": "epcal_SE__response_seq",
+   "width": 10,
+   "unread_ranges": [
+    [
+     4,
+     9
+    ]
+   ],
+   "bit_count": 6,
+   "die_line": 13622,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 19,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "epcal_SE",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "ring_tx_enable",
+   "net": "epcal_SE__ring_tx_enable",
+   "width": 2,
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "die_line": 13622,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 19,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "epcal_SE",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "ring_tx_source",
+   "net": "epcal_SE__ring_tx_source",
+   "width": 6,
+   "unread_ranges": [
+    [
+     0,
+     5
+    ]
+   ],
+   "bit_count": 6,
+   "die_line": 13622,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 19,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "epcal_SE",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "rslot",
+   "net": "epcal_SE__rslot",
+   "width": 24,
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "die_line": 13622,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 19,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "epcal_SE",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "rslot_v",
+   "net": "epcal_SE__rslot_v",
+   "width": 8,
+   "unread_ranges": [
+    [
+     0,
+     7
+    ]
+   ],
+   "bit_count": 8,
+   "die_line": 13622,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 19,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "epcal_SE",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "wslot",
+   "net": "epcal_SE__wslot",
+   "width": 24,
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "die_line": 13622,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 19,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "epcal_SE",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "wslot_v",
+   "net": "epcal_SE__wslot_v",
+   "width": 8,
+   "unread_ranges": [
+    [
+     0,
+     7
+    ]
+   ],
+   "bit_count": 8,
+   "die_line": 13622,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 19,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "epcal_SW",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "bank_client",
+   "net": "epcal_SW__bank_client",
+   "width": 24,
+   "unread_ranges": [
+    [
+     5,
+     23
+    ]
+   ],
+   "bit_count": 19,
+   "die_line": 13581,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 38,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "epcal_SW",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "hub_ring_client",
+   "net": "epcal_SW__hub_ring_client",
+   "width": 6,
+   "unread_ranges": [
+    [
+     0,
+     5
+    ]
+   ],
+   "bit_count": 6,
+   "die_line": 13581,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 38,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "epcal_SW",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "hub_ring_enable",
+   "net": "epcal_SW__hub_ring_enable",
+   "width": 2,
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "die_line": 13581,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 38,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "epcal_SW",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "lg_local_read",
+   "net": "epcal_SW__lg_local_read",
+   "width": 24,
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "die_line": 13581,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 38,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "epcal_SW",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "lg_local_write",
+   "net": "epcal_SW__lg_local_write",
+   "width": 24,
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "die_line": 13581,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 38,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "epcal_SW",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "replay_enable",
+   "net": "epcal_SW__replay_enable",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 13581,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 38,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "epcal_SW",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "replay_source",
+   "net": "epcal_SW__replay_source",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 13581,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 38,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "epcal_SW",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "ring_tx_enable",
+   "net": "epcal_SW__ring_tx_enable",
+   "width": 2,
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "die_line": 13581,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 38,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "epcal_SW",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "ring_tx_source",
+   "net": "epcal_SW__ring_tx_source",
+   "width": 6,
+   "unread_ranges": [
+    [
+     0,
+     5
+    ]
+   ],
+   "bit_count": 6,
+   "die_line": 13581,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 38,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "epcal_SW",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "rslot",
+   "net": "epcal_SW__rslot",
+   "width": 24,
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "die_line": 13581,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 38,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "epcal_SW",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "rslot_v",
+   "net": "epcal_SW__rslot_v",
+   "width": 8,
+   "unread_ranges": [
+    [
+     0,
+     7
+    ]
+   ],
+   "bit_count": 8,
+   "die_line": 13581,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 38,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "epcal_SW",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "wslot",
+   "net": "epcal_SW__wslot",
+   "width": 24,
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "die_line": 13581,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 38,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "epcal_SW",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "wslot_v",
+   "net": "epcal_SW__wslot_v",
+   "width": 8,
+   "unread_ranges": [
+    [
+     0,
+     7
+    ]
+   ],
+   "bit_count": 8,
+   "die_line": 13581,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 38,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "vmfc_NE",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "lg_local_read",
+   "net": "vmfc_NE__lg_local_read",
+   "width": 24,
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "die_line": 18108,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 89,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "vmfc_NE",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "lg_local_write",
+   "net": "vmfc_NE__lg_local_write",
+   "width": 24,
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "die_line": 18108,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 89,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "vmfc_NE",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "replay_enable",
+   "net": "vmfc_NE__replay_enable",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 18108,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 89,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "vmfc_NE",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "replay_source",
+   "net": "vmfc_NE__replay_source",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 18108,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 89,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "vmfc_NE",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "ring_tx_enable",
+   "net": "vmfc_NE__ring_tx_enable",
+   "width": 2,
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "die_line": 18108,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 89,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "vmfc_NE",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "ring_tx_source",
+   "net": "vmfc_NE__ring_tx_source",
+   "width": 6,
+   "unread_ranges": [
+    [
+     0,
+     5
+    ]
+   ],
+   "bit_count": 6,
+   "die_line": 18108,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 89,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "vmfc_NE",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "rslot",
+   "net": "vmfc_NE__rslot",
+   "width": 24,
+   "unread_ranges": [
+    [
+     8,
+     23
+    ]
+   ],
+   "bit_count": 16,
+   "die_line": 18108,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 89,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "vmfc_NE",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "wslot",
+   "net": "vmfc_NE__wslot",
+   "width": 24,
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "die_line": 18108,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 89,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "vmfc_NW",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "lg_local_read",
+   "net": "vmfc_NW__lg_local_read",
+   "width": 24,
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "die_line": 18052,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 89,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "vmfc_NW",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "lg_local_write",
+   "net": "vmfc_NW__lg_local_write",
+   "width": 24,
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "die_line": 18052,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 89,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "vmfc_NW",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "replay_enable",
+   "net": "vmfc_NW__replay_enable",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 18052,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 89,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "vmfc_NW",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "replay_source",
+   "net": "vmfc_NW__replay_source",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 18052,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 89,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "vmfc_NW",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "ring_tx_enable",
+   "net": "vmfc_NW__ring_tx_enable",
+   "width": 2,
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "die_line": 18052,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 89,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "vmfc_NW",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "ring_tx_source",
+   "net": "vmfc_NW__ring_tx_source",
+   "width": 6,
+   "unread_ranges": [
+    [
+     0,
+     5
+    ]
+   ],
+   "bit_count": 6,
+   "die_line": 18052,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 89,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "vmfc_NW",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "rslot",
+   "net": "vmfc_NW__rslot",
+   "width": 24,
+   "unread_ranges": [
+    [
+     8,
+     23
+    ]
+   ],
+   "bit_count": 16,
+   "die_line": 18052,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 89,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "vmfc_NW",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "wslot",
+   "net": "vmfc_NW__wslot",
+   "width": 24,
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "die_line": 18052,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 89,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "vmfc_SE",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "lg_local_read",
+   "net": "vmfc_SE__lg_local_read",
+   "width": 24,
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "die_line": 18011,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 89,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "vmfc_SE",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "lg_local_write",
+   "net": "vmfc_SE__lg_local_write",
+   "width": 24,
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "die_line": 18011,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 89,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "vmfc_SE",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "replay_enable",
+   "net": "vmfc_SE__replay_enable",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 18011,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 89,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "vmfc_SE",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "replay_source",
+   "net": "vmfc_SE__replay_source",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 18011,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 89,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "vmfc_SE",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "ring_tx_enable",
+   "net": "vmfc_SE__ring_tx_enable",
+   "width": 2,
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "die_line": 18011,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 89,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "vmfc_SE",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "ring_tx_source",
+   "net": "vmfc_SE__ring_tx_source",
+   "width": 6,
+   "unread_ranges": [
+    [
+     0,
+     5
+    ]
+   ],
+   "bit_count": 6,
+   "die_line": 18011,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 89,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "vmfc_SE",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "rslot",
+   "net": "vmfc_SE__rslot",
+   "width": 24,
+   "unread_ranges": [
+    [
+     8,
+     23
+    ]
+   ],
+   "bit_count": 16,
+   "die_line": 18011,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 89,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "vmfc_SE",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "wslot",
+   "net": "vmfc_SE__wslot",
+   "width": 24,
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "die_line": 18011,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 89,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "vmfc_SW",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "lg_local_read",
+   "net": "vmfc_SW__lg_local_read",
+   "width": 24,
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "die_line": 17955,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 89,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "vmfc_SW",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "lg_local_write",
+   "net": "vmfc_SW__lg_local_write",
+   "width": 24,
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "die_line": 17955,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 89,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "vmfc_SW",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "replay_enable",
+   "net": "vmfc_SW__replay_enable",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 17955,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 89,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "vmfc_SW",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "replay_source",
+   "net": "vmfc_SW__replay_source",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 17955,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 89,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "vmfc_SW",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "ring_tx_enable",
+   "net": "vmfc_SW__ring_tx_enable",
+   "width": 2,
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "die_line": 17955,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 89,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "vmfc_SW",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "ring_tx_source",
+   "net": "vmfc_SW__ring_tx_source",
+   "width": 6,
+   "unread_ranges": [
+    [
+     0,
+     5
+    ]
+   ],
+   "bit_count": 6,
+   "die_line": 17955,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 89,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "vmfc_SW",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "rslot",
+   "net": "vmfc_SW__rslot",
+   "width": 24,
+   "unread_ranges": [
+    [
+     8,
+     23
+    ]
+   ],
+   "bit_count": 16,
+   "die_line": 17955,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 89,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  },
+  {
+   "instance": "vmfc_SW",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "wslot",
+   "net": "vmfc_SW__wslot",
+   "width": 24,
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "die_line": 17955,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_capacity_tail_review",
+   "reason": "Universal187 master reused for smaller custom packed payload. Every active prefix bit consumed; only capacity tail exported unused. Hardware does not reject nonzero unused tail; root review required.",
+   "evidence": [
+    {
+     "active_payload_width": 89,
+     "universal_width": 187
+    },
+    "complete_host_targets_2330.py explicit high outputs unused; vmfc originalW89"
+   ],
+   "allowlist_candidate": true
+  }
+ ]
+}

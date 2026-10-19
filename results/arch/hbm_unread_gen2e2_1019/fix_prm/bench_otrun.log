@@ -1,0 +1,13 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/lhu-prm/src
+ot-run: ot-epyc5       admits   545 GB (avail 464, growth 83, headroom 0, waiters 0/0 GB) load 64/128 running 13 disk 903 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/lhu-prm/src
+ot-run: ot-epyc7       admits   969 GB (avail 779, growth 101, headroom 0, waiters 0/0 GB) load 41/96 running 30 disk 6324 GB 
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/lhu-prm/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/lhu-prm/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/lhu-prm/src
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-4079192-1792437964 after 0 s
+IDX256R_PASS cases=7 reserved_rejects=15 identity_edges=4852 writes=929 launches=12 MUT=0
+[49647000] %Fatal: tb_idx256r.sv:95: Assertion failed in tb_idx256r.unnamedblk8.unnamedblk9.unnamedblk10: IDX256R_FAIL nonzero reserved row0 bit44 accepted MUT12
+IDX256R_BENCH_OK
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-4079192-1792437964): exit 0

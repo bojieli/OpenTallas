@@ -1,0 +1,127 @@
+{
+ "layer": "l20t_hc_bankq_term",
+ "instances": [
+  "hcb_SW7",
+  "hcb_SE7",
+  "hcb_NW7",
+  "hcb_NE7"
+ ],
+ "old_master": "ot_hbm_hc_bankq_static",
+ "master": "ot_hbm_hc_bankq_term_static",
+ "source": "rtl/hbm_accel/die_glue/scoped_d4g/hcbt.sv",
+ "removed_ports": {
+  "o_v": 1,
+  "o_ss": 1,
+  "o_nv": 7,
+  "o_wa": 10,
+  "o_xa": 10
+ },
+ "removed_bits": 116,
+ "open_outputs_dropped": 20,
+ "scoped_family": {
+  "master": "ot_hbm_hc_bankq_term_static",
+  "source": "rtl/hbm_accel/die_glue/scoped_d4g/hcbt.sv",
+  "sources": [
+   {
+    "path": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_bank_static.sv",
+    "sha256": "d3e4c0463bd79e3355361a12ec33121764ed44fd89e59b58ee0f5e01fbec46cd",
+    "scoped_sha256": "8904edd8e76c96a2f4ea1eba04ff880f96eebc3e32c154f1df836274dfc5cdc4"
+   },
+   {
+    "path": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_bankq_term_static.sv",
+    "sha256": "971fe9b04bb7ab910223f7c2144d147e7d8cc6ec5762057408787c5b91aed55c",
+    "scoped_sha256": "530967ed5338f35cdd384c422b50cd8335e68f68e502e87427453154d004c95a"
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fastfp.sv",
+    "sha256": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+    "scoped_sha256": "0a6fc18462194482a461d21b8cb0495f1741ea2f16adc688abcf4b5f320e9e7f"
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+    "sha256": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+    "scoped_sha256": "a4738c4fa21e1115b2f828d5093271c72ecf3c483e34a11d560a4575573a2ead"
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+    "sha256": "ddc4c3bfb4f22788534148049bf381d469053ff5b54c6197548636a3f4aac8e3",
+    "scoped_sha256": "8aedd596bab807a4883eabf7852225574d3dd416471cd964bd5574ed57e2bb8c"
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_prefix.sv",
+    "sha256": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+    "scoped_sha256": "91793784b5a9457a708103c10df746f148ea76361fba3676e8f59e2b224c8ca2"
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_hdc_v41x_hcp.sv",
+    "sha256": "eac33983ff7fb15706851dbc14dc89cb6986bfa0abdfd98c850b3c7379dee474",
+    "scoped_sha256": "d74e1e41e4cc0bf28ec48cb1aa127c0b744908be49e885e41cffc4ba1ec876a6"
+   },
+   {
+    "path": "rtl/lib/ot_rst_relay.sv",
+    "sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+    "scoped_sha256": "fe320f34ba177c59fdf154015883c68189d2d98160b31945d28ef32e0f108c09"
+   },
+   {
+    "path": "rtl/hdc/v41/ot_hdc_fsqrt.sv",
+    "sha256": "9b2a87e62b62bcaf3fc9b901b2dcde63f966d13925126711aa2ebf6b7b1aff8f",
+    "scoped_sha256": "b078fc680f1898f5b16c92b6a8db292edb607b2c8404d14f340b821b363df929"
+   },
+   {
+    "path": "rtl/hdc/v41/ot_hdc_fsqrt_c12.sv",
+    "sha256": "5d09b4df12d1d4da73aa331b3b21cc5af540e289bbf3f45c0773754b489c5584",
+    "scoped_sha256": "2b7ce576d6e956a98c47bc3e9da679631454cc8a42f2b6552e12c896273ab895"
+   }
+  ],
+  "names": {
+   "ot_hdc_qmul": "ot_hdc_qmul__d4g_hcbt",
+   "ot_hdc_fp32_add_lat3": "ot_hdc_fp32_add_lat3__d4g_hcbt",
+   "ot_hdc_fp32_add_lat4i": "ot_hdc_fp32_add_lat4i__d4g_hcbt",
+   "ot_hdc_v41x_hcp_lanes": "ot_hdc_v41x_hcp_lanes__d4g_hcbt",
+   "ot_hdc_fp32_mul_lat9": "ot_hdc_fp32_mul_lat9__d4g_hcbt",
+   "ot_hdc_fsqrt_c12": "ot_hdc_fsqrt_c12__d4g_hcbt",
+   "ot_hdc_ksadd_k": "ot_hdc_ksadd_k__d4g_hcbt",
+   "ot_hdc_mul_kcp48": "ot_hdc_mul_kcp48__d4g_hcbt",
+   "ot_hdc_v41x_vline": "ot_hdc_v41x_vline__d4g_hcbt",
+   "ot_hdc_fp32_add_lat": "ot_hdc_fp32_add_lat__d4g_hcbt",
+   "ot_hdc_v41x_addtree": "ot_hdc_v41x_addtree__d4g_hcbt",
+   "ot_hdc_fsqrt": "ot_hdc_fsqrt__d4g_hcbt",
+   "ot_hdc_v41x_hcp": "ot_hdc_v41x_hcp__d4g_hcbt",
+   "ot_rst_relay": "ot_rst_relay__d4g_hcbt",
+   "ot_hdc_qadd": "ot_hdc_qadd__d4g_hcbt",
+   "ot_hdc_ksa": "ot_hdc_ksa__d4g_hcbt",
+   "ot_hdc_w11_cut": "ot_hdc_w11_cut__d4g_hcbt",
+   "ot_hdc_mul24_sum": "ot_hdc_mul24_sum__d4g_hcbt",
+   "ot_hdc_fp32_mul_fast": "ot_hdc_fp32_mul_fast__d4g_hcbt",
+   "ot_hdc_fp32_mul_lat5i": "ot_hdc_fp32_mul_lat5i__d4g_hcbt",
+   "ot_hdc_fp32_mul_lat4": "ot_hdc_fp32_mul_lat4__d4g_hcbt",
+   "ot_hbm_hc_bankq_term_core": "ot_hbm_hc_bankq_term_core__d4g_hcbt",
+   "ot_hbm_hc_bank_static": "ot_hbm_hc_bank_static__d4g_hcbt",
+   "ot_hdc_fp32_mul_lat7": "ot_hdc_fp32_mul_lat7__d4g_hcbt",
+   "ot_hdc_v41x_hcp_stage": "ot_hdc_v41x_hcp_stage__d4g_hcbt",
+   "ot_hdc_fp32_add_fast": "ot_hdc_fp32_add_fast__d4g_hcbt",
+   "ot_hdc_mul24_rows_k": "ot_hdc_mul24_rows_k__d4g_hcbt",
+   "ot_hdc_fp32_mul_lat5": "ot_hdc_fp32_mul_lat5__d4g_hcbt",
+   "ot_hdc_inc_k": "ot_hdc_inc_k__d4g_hcbt",
+   "ot_hdc_fp32_add_lat5": "ot_hdc_fp32_add_lat5__d4g_hcbt",
+   "ot_hdc_fp32_add_lat7": "ot_hdc_fp32_add_lat7__d4g_hcbt",
+   "ot_hdc_fp32_mul_lat": "ot_hdc_fp32_mul_lat__d4g_hcbt",
+   "ot_hdc_lzc32": "ot_hdc_lzc32__d4g_hcbt",
+   "ot_hdc_mul24_rows": "ot_hdc_mul24_rows__d4g_hcbt",
+   "ot_hdc_fp32_add_lat4": "ot_hdc_fp32_add_lat4__d4g_hcbt",
+   "ot_hdc_fp32_mul_lat6": "ot_hdc_fp32_mul_lat6__d4g_hcbt",
+   "ot_hdc_fp32_add_lat6": "ot_hdc_fp32_add_lat6__d4g_hcbt"
+  },
+  "sha256": "b3a3f4ec9f051ce8c916959f75e645bd4664a54334f79dfd636d735bbc35fb32",
+  "inverse_byte_exact": true
+ },
+ "generic_sha256": "971fe9b04bb7ab910223f7c2144d147e7d8cc6ec5762057408787c5b91aed55c",
+ "retained_outputs": [
+  "sum_out",
+  "f_out",
+  "wfault"
+ ],
+ "added_edges": 0,
+ "cycles_changed": 0,
+ "qualification": "SOURCE_ONLY_NEEDS_SYNTH (no view admitted)"
+}
