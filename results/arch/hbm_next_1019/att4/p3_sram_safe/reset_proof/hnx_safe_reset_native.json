@@ -1,0 +1,214 @@
+{
+  "file": "1_2_yosys.v",
+  "sha256": "f3b3b37e588e53844e49f1e97613157e26c9ba2466bcbb30f186bf88ee87d3da",
+  "resetn_max_loads": 29,
+  "worst_resetn_nets": [
+    [
+      "\\u_sm.rst_ev[1] ",
+      29
+    ],
+    [
+      "\\u_sm.rst_ev[4] ",
+      29
+    ],
+    [
+      "\\u_sm.rst_ev[3] ",
+      29
+    ],
+    [
+      "\\u_sm.rst_ev[12] ",
+      29
+    ],
+    [
+      "\\u_sm.rst_ev[0] ",
+      29
+    ],
+    [
+      "\\u_sm.rst_ev[8] ",
+      29
+    ],
+    [
+      "\\u_sm.rst_ev[10] ",
+      29
+    ],
+    [
+      "\\u_sm.rst_ev[9] ",
+      29
+    ],
+    [
+      "\\u_sm.rst_ev[13] ",
+      29
+    ],
+    [
+      "\\u_sm.rst_ev[14] ",
+      29
+    ],
+    [
+      "\\u_sm.rst_ev[7] ",
+      29
+    ],
+    [
+      "\\u_sm.rst_ev[5] ",
+      29
+    ],
+    [
+      "\\u_sm.rst_ev[2] ",
+      29
+    ],
+    [
+      "\\u_sm.rst_ev[11] ",
+      29
+    ],
+    [
+      "\\u_sm.rst_ev[6] ",
+      29
+    ],
+    [
+      "\\u_sm.rst_ev[15] ",
+      19
+    ],
+    [
+      "\\u_sm.g_madd[0].rst_mv[0] ",
+      7
+    ],
+    [
+      "\\u_sm.g_madd[10].rst_mv[0] ",
+      7
+    ],
+    [
+      "\\u_sm.g_madd[11].rst_mv[0] ",
+      7
+    ],
+    [
+      "\\u_sm.g_madd[12].rst_mv[0] ",
+      7
+    ],
+    [
+      "\\u_sm.g_madd[13].rst_mv[0] ",
+      7
+    ],
+    [
+      "\\u_sm.g_madd[14].rst_mv[0] ",
+      7
+    ],
+    [
+      "\\u_sm.g_madd[15].rst_mv[0] ",
+      7
+    ],
+    [
+      "\\u_sm.g_madd[1].rst_mv[0] ",
+      7
+    ],
+    [
+      "\\u_sm.g_madd[2].rst_mv[0] ",
+      7
+    ]
+  ],
+  "limit": 32,
+  "pass": true,
+  "all_reset_family_port_max": 29,
+  "all_reset_family_worst": [
+    [
+      "\\u_sm.rst_ev[1]",
+      29
+    ],
+    [
+      "\\u_sm.rst_ev[4]",
+      29
+    ],
+    [
+      "\\u_sm.rst_ev[3]",
+      29
+    ],
+    [
+      "\\u_sm.rst_ev[12]",
+      29
+    ],
+    [
+      "\\u_sm.rst_ev[0]",
+      29
+    ],
+    [
+      "\\u_sm.rst_ev[8]",
+      29
+    ],
+    [
+      "\\u_sm.rst_ev[10]",
+      29
+    ],
+    [
+      "\\u_sm.rst_ev[9]",
+      29
+    ],
+    [
+      "\\u_sm.rst_ev[13]",
+      29
+    ],
+    [
+      "\\u_sm.rst_ev[14]",
+      29
+    ],
+    [
+      "\\u_sm.rst_ev[7]",
+      29
+    ],
+    [
+      "\\u_sm.rst_ev[5]",
+      29
+    ],
+    [
+      "\\u_sm.rst_ev[2]",
+      29
+    ],
+    [
+      "\\u_sm.rst_ev[11]",
+      29
+    ],
+    [
+      "\\u_sm.rst_ev[6]",
+      29
+    ],
+    [
+      "\\u_sm.rst_ev[15]",
+      19
+    ],
+    [
+      "\\rqv[0]",
+      10
+    ],
+    [
+      "\\rqv[26]",
+      10
+    ],
+    [
+      "\\rqv[27]",
+      10
+    ],
+    [
+      "\\rqv[28]",
+      10
+    ],
+    [
+      "\\rqv[24]",
+      10
+    ],
+    [
+      "\\rqv[25]",
+      10
+    ],
+    [
+      "\\rqv[8]",
+      10
+    ],
+    [
+      "\\rqv[9]",
+      10
+    ],
+    [
+      "\\rqv[10]",
+      10
+    ]
+  ],
+  "adder_max": 7,
+  "wrapper_max": 10
+}
