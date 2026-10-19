@@ -35,8 +35,8 @@ LAND_VIEWS = {   # master: (record branch, commit, RL)
     'dsfd_dvland_276': ('codex/closure-record-s81dv_land_276-po2-df5c2d585', '4e4a509e266ac84a0ac9f77552936342956f7b21', 2),
     'dsfd_dvland_276l': ('codex/closure-record-s81dv_land_276l-po2-df5c2d585', 'c1f2495df9e5c32462adc0d2a2c0c66d0af76562', 2),
     'dsfd_dvland_70': ('codex/closure-record-s81dv_land_70-po2-df5c2d585', 'e676a75d23d7f728746c3d225dc54c58eab9f00a', 2),
-    'dsfd_dvland_562': ('codex/closure-record-s81dv_land_562-l1-1da4d6aae', '4c846bd0cd6f86699a00ba20515f59cf73d56bc5', 0),   # po2 routing
-    'dsfd_dvland_512': ('codex/closure-record-s81dv_land_512-g3a-7a9c99ef3', '3a39b9392249887e59fee98b9f43199a9be24a61', 0),   # po2 routing
+    'dsfd_dvland_562': ('codex/closure-record-s81dv_land_562-po2-df5c2d585', '23d9cbb8cfecf6303a8b3afe1e51d5127640faa6', 2),
+    'dsfd_dvland_512': ('codex/closure-record-s81dv_land_512-po2-df5c2d585', '306a99997b1bfc28ebc33ea7948003a6a62e1860', 2),
     'dsfd_dvland_682': ('codex/closure-record-s81dv_land_682-l1-1da4d6aae', 'ff575a79ee8ef4f584b625c7b1dfd732aec483ce', 0),
     'dsfd_dvland_pvrd': ('codex/closure-record-s81dv_land_pvrd-p3-b15a4ddad', '3b83f2255f8e17caa8eb4ff7e6354214440b817b', 0),
 }
@@ -94,6 +94,9 @@ def build(ab):
         slice_master('dsdv_slice_lepw', 'dsdv_slice_lepw_mab', 'ot_s81sl_slice_lepw_mab', False, 'ab', ex)
     else:
         slice_master('dsdv_slice_lepw', 'dsdv_slice_lepw_mus', 'ot_s81sl_slice_lepw_mus', False, 'a')
+    # All endpoint faults are sticky RTL outputs; do not leave MU protocol faults unobservable.
+    T['endpoint_fault_masters'] = ['dsdv_slice_lepe_mu', 'dsdv_slice_lepe_nh_mus',
+                                   'dsdv_slice_lepw_mu', 'dsdv_slice_lepw_mab' if ab else 'dsdv_slice_lepw_mus']
     T['rtl_files'] = T['rtl_files'] + ['physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v']   # dsdv_mu_land SRAM 1
     cv = T['child_views']
     cv['dsdv_mu_hslot'] = dict(view='dsdv_mu_hslot-28a8118d5 (CLOSED TT +70.22 / FF +27.30, DRC 0; native PASS L 124.5 / C 88.3 / sp 10.7/11.0; main ccf787d45, audit 7aa582c7a)',

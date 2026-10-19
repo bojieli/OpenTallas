@@ -364,6 +364,10 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
     rst = reset_tree(plan, reg, chains_pts, sdir, master=T.get('reset_master'))
     early = {m.get('master') for m in T.get('frame_members', []) if m.get('reset')}
     fw = set(T.get('frame_wrapper', {}).get('masters', []))
+    # MU endpoint sticky faults share the die status boundary with land_fault.
+    # Keep each source visible; an external monitor can attribute the failed endpoint.
+    fault_masters = set(T.get('endpoint_fault_masters', []))
+    endpoint_faults = {b['name']: j for j, b in enumerate(b for b in blocks if b['master'] in fault_masters)}
     # ------------------------------------------------------------------ netlist
     v = ['// S81-DV REAL-VIEW bound die top (tools/s81_dv/dv_bind.py) -- strict die_port_bind gates it',
          'module dv_die (']
@@ -377,6 +381,9 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
     if landings:
         io.append(f'  output wire [{len(landings) - 1}:0] land_fault')
         top_ports.append('land_fault')
+    if endpoint_faults:
+        io.append(f'  output wire [{len(endpoint_faults) - 1}:0] endpoint_fault')
+        top_ports.append('endpoint_fault')
     # non-ANSI header (the strict checker reads port widths from body declarations)
     names = [x.split()[-1] for x in io]
     v[-1] = f'module dv_die ({", ".join(names)});'
@@ -532,6 +539,8 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
             cs.append(f'.{rp}({{{", ".join(reversed(parts))}}})')
         for tp in m.get('top_ports', []):
             cs.append(f'.{tp["port"]}({n}_{tp["port"]})')
+        if n in endpoint_faults:
+            cs.append(f'.fault(endpoint_fault[{endpoint_faults[n]}])')
         pv = params.get(n) or {}
         ps = f' #({", ".join(f".{k}({vv})" for k, vv in pv.items())})' if pv else ''
         v.append(f'  {mod}{ps} u_{n} ({", ".join(cs)});')
@@ -720,6 +729,7 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
                hop0_clock_gates=gate_cells, gate_calendar_stations=len(cal_place),
                abutted_plan_lanes=abut_rows, reset=rst['summary'], straps=straps, mode_unused_pads=pad_rows, views=dict(views),
                frame_contract=dict(verdict=frame_rec['verdict'], members=len(frame_rec['members']), problems=frame_rec['problems']), rtl_extra=extra, top_offchip_ports=top_ports,
+               endpoint_fault_sources=endpoint_faults,
                landing_reset_check={k: lrc[k] for k in ('verdict', 'mismatch', 'unresolved', 'unused_keys')},
                landings=dict(count=len(land_rows), land_plan=str(lp) if lp else None,
                              by_master=dict(collections.Counter(r['master'] for r in land_rows)),
