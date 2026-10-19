@@ -67,6 +67,7 @@ from hgi_sim.records import MDesc, Rec, decode_program, encode_program  # noqa: 
 F = np.float32
 G_, V_ = W.G, W.V
 TP, HEADS, D, HC = W.TP, W.HEAD_DIES, 5120, 4
+HEAD_RANKS = W.HEAD_RANKS              # dies that run a head (TP-192: 2 replicas a head, W.head_of)
 VARIANT = "oreduce"
 HEAD_ROWS = -(-129280 // TP)          # 1,347: uniform head shards (ARGMAX.LOCAL global id = local + RANK * 1,347)
 CKBASE = 1 << 33                      # per-die compressed-KV row stores (one per KV source), persistent
@@ -124,7 +125,9 @@ class Layout:
         # the span (GALL_NAMES), so it is ordered against all their uses
         self.vm["GALL"] = self.vm["ea"]
         span = self.vm["e6.d"] + D - self.vm["ea"]
-        assert span >= RG_C * TP * 512, span
+        # (only the software form needs it; at TP-192 the 192 x 2 rows do not fit -> --rg-sw is TP-96 only)
+        self.gall_fits = span >= RG_C * TP * 512
+        assert self.gall_fits or TP != 96, span
 
     def V(self, name, n, off=0, m=1, stride=0, istride=0, fmt="FP32", ibcast=0):
         return MDesc(space="VM", fmt=fmt, base=self.vm[name] + off, n=n, m=m, stride=stride, istride=istride,
@@ -448,7 +451,7 @@ class Lower:
         b = Builder(None)
         V = lay.V
         P = m.P(L)
-        head = rank < HEADS
+        head = rank < HEAD_RANKS
 
         def add(rec, rd, wr, run=True):
             if run and rec.unit == "FUSED" and rec.op == "HC_PRE_NORM":
@@ -798,9 +801,9 @@ class Lower:
                         add(Rec("COLL", "ALL_GATHER", desc=dict(A=V(buf, n), O=V(buf, n)), tag=f"{op['tag']}.{buf}",
                                 family="all_gather"), [buf], [buf])
             elif k == "all_reduce":                     # A = the die's o-group slice; O = every sub-group's result
-                q = rank // 8
-                add(Rec("COLL", "GROUP_REDUCE_MCAST", param=8, desc=dict(A=V("zpart", 1024, off=q * 1024),
-                                                                          O=V("z", 12288, fmt="BF16")),
+                q, zr = rank // 8, W.ZROWS               # sub-group q = o-group q // HEAD_REPL, row part q % HEAD_REPL
+                add(Rec("COLL", "GROUP_REDUCE_MCAST", param=8, desc=dict(A=V("zpart", zr, off=q * zr),
+                                                                          O=V("z", (TP // 8) * zr, fmt="BF16")),
                         tag=op["tag"], family="all_reduce"), ["zpart"], ["z"])
             elif k == "topk_merge":
                 what = op["what"]
@@ -828,7 +831,7 @@ class Lower:
                 # collective's posted HBM writes before the attention reads them
                 kk, si = op["elems"] // 512, SOURCES.index(op["src"])
                 hw = (1 << 8) if self.fuse else 0
-                add(Rec("COLL", "ROW_GATHER", param=W.KEY_BLOCK | hw, imm_a=kk, imm_b=HEADS, desc=dict(
+                add(Rec("COLL", "ROW_GATHER", param=W.KEY_BLOCK | hw, imm_a=kk, imm_b=HEAD_RANKS, desc=dict(
                     A=MDesc(space="HBM", fmt="FP32", base=CKBASE + si * CK_CAP[0], n=512, stride=2048),
                     O=MDesc(space="HBM", fmt="FP32", base=SBASE + si * SELB, n=512, stride=2048),
                     I=U32V(lay.vm["SELIDX"], kk)), tag=op["tag"], family="kv_gather"),
@@ -851,6 +854,7 @@ class Lower:
         selected-row store in list order (what ATT C reads).  Head dies only for the last step."""
         V, lay = self.lay.V, self.lay
         kk, si = op["elems"] // 512, SOURCES.index(op["src"])
+        assert self.lay.gall_fits, "software ROW_GATHER gather span does not fit at this TP (use the G25 record)"
         c, me = RG_C, rank % TP
         assert kk % 64 == 0, kk                      # (the chunk-count table holds 64s)
         src = MDesc(space="HBM", fmt="FP32", base=CKBASE + si * CK_CAP[0], n=512, indexed=1, dyn_mul=2048)
@@ -1203,7 +1207,7 @@ def build_tables(m, st, L, pos, rank, region=TBASE):
              (f"{P}attn.q_norm.weight", m.lw(L, "attn.q_norm.weight")),
              (f"{P}attn.kv_norm.weight", m.lw(L, "attn.kv_norm.weight")),
              ("ROPE", np.concatenate([cos, sin])), ("BIAS", m.lw(L, "ffn.gate.bias")),
-             ("SINK", m.lw(L, "attn.attn_sink")[rank:rank + 1] if rank < HEADS else np.zeros(1)),
+             ("SINK", m.lw(L, "attn.attn_sink")[W.head_of(rank):W.head_of(rank) + 1] if rank < HEAD_RANKS else np.zeros(1)),
              ("WIN", np.concatenate([np.asarray(st.win[L], F).reshape(-1), np.zeros(512, F)])),
              ("norm.weight", m.w["norm.weight"]), ("ONE", np.ones(1, F)),
              ("RGCNT", np.full(16, 64, dtype=np.uint32).view(F))]
@@ -1870,6 +1874,7 @@ def main():
                 g_hbm[r] = np.zeros(-(-RG_SLOTS // RG_C) * RG_C * TP * 2048, dtype=np.uint8)
             d.hbm.add(GBASE, g_hbm[r], "GROWS")
         Mach = MC.Machine(dies, units)
+        Mach.cfg["coll_group_size"] = TP            # TP-192: SPEC GAP NAT16-G1 (192 is outside HGI-1 D_LEGAL)
         Mach.row_gather_stats = []
         snaps = {}
         watch = {"attn_norm": ("x", D), "kv_row_qdq": ("win_new", 512), "attn_out_gather.y": ("y", D),
