@@ -19,7 +19,7 @@ case $C in
   audit) bash rtl/test/qwen_dv/run_slice2_e_lpf.sh "$WORK/$C" audit ;;
   b2) python3 rtl/test/qwen_dv/dv_bench2.py f j k m n o --vflags "-GSU_LT=1 -GHD_W130=1 -GMU_NU=4" --work "$WORK/b2" ;;
   faces*) m=${C#faces}
-    S=$(python3 -c "import sys; sys.path.insert(0,'rtl/test/qwen_dv'); import dv_bench2 as D; print(' '.join(s for s in D.SRCS2 + D.XSRCS if not s.endswith('tb_qfd_dv2.sv')))")
+    S=$(python3 -c "import sys; sys.path.insert(0,'rtl/test/qwen_dv'); import dv_bench2 as D; print(' '.join(s for s in D.SRCS2 + D.XSRCS if not s.endswith(('tb_qfd_dv2.sv', 'qfd_dv_slice2_faces.sv'))))")
     verilator --binary --timing -O2 -j 16 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD --x-assign 0 --x-initial 0 \
       --top-module tb_qfd_dv2_faces -GMUT=$m -GMU_NU=4 -GSU_LT=1 -GHD_W130=1 -Mdir "$WORK/$C" -o sim $S rtl/qwen_dv/qfd_dv_slice2_faces.sv \
       rtl/test/qwen_dv/tb_qfd_dv2_faces.sv > "$WORK/$C.build.log" 2>&1 || { echo BUILD FAIL; tail -30 "$WORK/$C.build.log"; }

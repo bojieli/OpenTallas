@@ -33,6 +33,9 @@ SRCS2 = [s for s in B.SRCS if not s.endswith(("qfd_dv_slice.sv", "qfd_dv_redstn.
 # MU-ADOPT-SLICE 10-19 (environment, default = today): DV2_MU_NU users of the LM-head argmax (qfd_dv_slice2 MU_NU);
 # DV2_FACE 0 master qfd_dv_slice2 / 1 qfd_dv_slice2_w / 2 qfd_dv_slice2_e (tb_dv2_slice port map); DV2_AM_MUT bench-only
 # qfd_dv_amax_mu mutant (+define+OT_DV_AMAX_MUT); DV2_GAP edges between an STN op's last data word and the next op (m).
+# MU-DQ-SLICEKC 10-19 (merge of MU-SLICE-GATE c9276ad29 / 4180abc13 with main's FACE wrapper): -GMU_NU=<n> / -GFACE=<f>
+# in --vflags override DV2_MU_NU / DV2_FACE; -GSU_LT=1 / -GHD_W130=1 (the kitted slice) reach every FACE through
+# tb_qfd_dv2 -> tb_dv2_slice and add XSRCS (hard SU lane tile + its lane sources).
 import os  # noqa: E402
 MU_NU = int(os.environ.get("DV2_MU_NU", "1"))
 FACE = int(os.environ.get("DV2_FACE", "0"))
@@ -103,12 +106,8 @@ def conv48(w):
 
 
 VFLAGS: list[str] = []          # S-QSLICE 10-18: --vflags (e.g. -GSU_LT=1 -GHD_W130=1); empty = the original build
-# MU-SLICE-GATE 10-19 (carry of MU-QW-AMIX 95074c8a3 onto the SLICE-E tree): MU_NU follows -GMU_NU=<n> in --vflags
-# (else DV2_MU_NU); this tree's tb_qfd_dv2 has no FACE parameter (master core only: FACE 0); DV2_AM_MUT adds
-# +define+OT_DV_AMAX_MUT=<n> to the build (bench-only qfd_dv_amax_mu / qfd_dv_scalar2 mutants, e.g. 7 = no mixed-merge check).
-MU_NU = int(os.environ.get("DV2_MU_NU", "1"))
-FACE = 0
-AM_MUT = int(os.environ.get("DV2_AM_MUT", "0"))
+# MU-SLICE-GATE 10-19: MU_NU follows -GMU_NU=<n> in --vflags (else DV2_MU_NU), FACE follows -GFACE=<f> (else DV2_FACE);
+# DV2_AM_MUT adds +define+OT_DV_AMAX_MUT=<n> (bench-only qfd_dv_amax_mu / qfd_dv_scalar2 mutants, 7 = no mixed-merge check).
 XSRCS = ["rtl/qwen_dv/qfd_dv_su_lane.sv", "rtl/hdc/ot_hdc_vstream_lane_t.sv", "rtl/hdc/ot_hdc_vstream_sfu_t.sv",
          "rtl/hdc/ot_hdc_fpu.sv", "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
          "rtl/physical/ot_hdc_vstream_lane_clock_entries_candidate.sv"]
@@ -117,7 +116,8 @@ XSRCS = ["rtl/qwen_dv/qfd_dv_su_lane.sv", "rtl/hdc/ot_hdc_vstream_lane_t.sv", "r
 def run_sim2(name, ev, work, mut, ncyc, n=2):
     work.mkdir(parents=True, exist_ok=True)
     evf, lgf = work / f"{name}.ev", work / f"{name}.log"
-    obj = work / f"obj2_n{n}_nu{MU_NU}_f{FACE}_am{AM_MUT}"
+    vtag = "".join(c for c in "_".join(f.lstrip("-+") for f in VFLAGS) if c.isalnum() or c in "_=")
+    obj = work / f"obj2_n{n}_nu{MU_NU}_f{FACE}_am{AM_MUT}" / (vtag or "base")
     exe = obj / "Vtb"
     ev.write(evf)
     if not exe.exists():
@@ -125,7 +125,8 @@ def run_sim2(name, ev, work, mut, ncyc, n=2):
                "-Wno-TIMESCALEMOD", "--x-assign", "0", "--x-initial", "0", "--top-module", "tb_qfd_dv2",
                "--prefix", "Vtb", f"-GMUT={mut}", f"-GN={n}", f"-GMU_NU={MU_NU}", f"-GFACE={FACE}"] + \
               ([f"+define+OT_DV_AMAX_MUT={AM_MUT}"] if AM_MUT else []) + \
-              ["-Mdir", str(obj), str(HERE / "main2.cpp")] + [str(ROOT / s) for s in SRCS2]
+              VFLAGS + ["-Mdir", str(obj), str(HERE / "main2.cpp")] + \
+              [str(ROOT / s) for s in SRCS2 + (XSRCS if VFLAGS else [])]
         subprocess.run(cmd, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     subprocess.run([str(exe), f"+EV={evf}", f"+LOG={lgf}", f"+NCYC={ncyc}"], check=True, stdout=subprocess.DEVNULL)
     out = {}
@@ -746,12 +747,12 @@ def main():
     ap.add_argument("--vflags", default="", help="extra Verilator flags (use a separate --work: objects are cached)")
     a = ap.parse_args()
     VFLAGS[:] = a.vflags.split()
-    global MU_NU
-    for f in VFLAGS:
+    global MU_NU, FACE
+    for f in list(VFLAGS):        # MU_NU / FACE are passed by run_sim2 itself (one -G each)
         if f.startswith("-GMU_NU="):
-            MU_NU = int(f.split("=", 1)[1])
-    if AM_MUT:
-        VFLAGS.append(f"+define+OT_DV_AMAX_MUT={AM_MUT}")
+            MU_NU = int(f.split("=", 1)[1]); VFLAGS.remove(f)
+        elif f.startswith("-GFACE="):
+            FACE = int(f.split("=", 1)[1]); VFLAGS.remove(f)
     install()
     allpass = True
     for b in a.benches:

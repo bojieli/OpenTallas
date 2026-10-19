@@ -123,7 +123,7 @@ def layer_entries(p=None):
     for i, (op, unit, _, _) in enumerate(M.LAYER_WINDOWS):
         a = ops[op][0] + OP_ENTRY_OFS
         if unit == "me":
-            ent.append((a, C.stn(0x100 + 0x40 * i), op))
+            ent.append((a, C.stn(0x100 + 0x40 * i, kc=C.MATVEC_KC[op]), op))
         elif unit == "su":
             ent.append((a, C.su(1 + i), op))
         elif unit == "kv":
