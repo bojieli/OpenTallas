@@ -108,6 +108,8 @@
 //   30 / 31 -> calendar MUT 4 / 5 (TLOAD payload halves swapped / table word one edge late; QLB-C4b's 9 / 10 -- 9 is
 //   HARD_HR's here);  27 context record never loaded (banks start at 0: the pre-0ka hardware); 28 record of user u loaded into user
 //   (u mod (NU-1)) + 1; 29 record not checked (a bad tag loads and does not fault).
+// D2D USER (MU-DQ-D2DUSER 10-19, NU > 1): native_pos[17:16] = the user of the latest head start (see hu below), the
+//   carrier native59 stamps into the D2D CMD / Q epoch[1:0]; no port change, no added edge.  MUT 32 = user not carried.
 // =====================================================================================================================
 module qfd_tt_ctlm_dv #(
     parameter integer XPF_TRANSPORT_EDGES = -1,
@@ -285,6 +287,17 @@ module qfd_tt_ctlm_dv #(
             emb_start <= c_emb; emb_token <= tok_b[b_rd];
         end
     wire [48:0] st = {st_h, st_tok, st_pos, st_base};
+    // MU-DQ-D2DUSER (10-19): the user of the latest head start (0 on the face's dh start, cmd_user on a LOCAL SEG start;
+    // same edge as st) rides on native_pos[17:16] toward native59, which stamps it into the D2D attention records'
+    // epoch[1:0] (positions are < 8192, so bits [17:13] are 0 on every legal head output).  NU = 1: constant 0 (no
+    // change).  MUT 32 (bench only): the user is never carried (bits stay 0).
+    reg  [1:0]  hu;
+    always @(posedge ck or negedge rst_n)
+        if (!rst_n) hu <= 2'd0;
+        else if (s_me) hu <= 2'd0;
+        else if (c_seg) hu <= (NU > 1 && MUT != 32) ? 2'(c_user) : 2'd0;
+    wire [17:0] native_pos_h;
+    assign native_pos = (NU > 1) ? (native_pos_h | {hu, 16'd0}) : native_pos_h;
 
     // ------------------------------------------------------------------ SU observation (was seq_su's xs / su_observe)
     reg  [23:0] su_acc;                       // SU commands issued (the head's other-unit accepted count)
@@ -320,7 +333,7 @@ module qfd_tt_ctlm_dv #(
         ot_qfd_tt_ctlm_static_hr #(.STAGE_ME((STAGE_ME != 0 && MUT != 9) ? 1 : 0)) u_hr (
             .stage_start(hd_start), .stage(hd_stage),
             .rom_ret_i(rom_ret), .cp_active(1'b0), .cp(cp), .me_image_ready(me_image_ready), .program_obs(program_obs),
-            .layer_context_v(layer_context_v), .native_tok(native_tok), .native_pos(native_pos), .rom_cmd(ib_q),
+            .layer_context_v(layer_context_v), .native_tok(native_tok), .native_pos(native_pos_h), .rom_cmd(ib_q),
             .command_stage(command_stage), .native_cmd(native_cmd), .me_observe(actual_me_observe),
             .native_ret(native_ret), .ck_head(ck), .ck_pm0(ck), .ck_pm1(ck), .rst_n(rst_n),
             .h_start(st[48]), .token(st[47:30]), .pos(st[29:12]), .prog_base(st[11:0]),
@@ -355,7 +368,7 @@ module qfd_tt_ctlm_dv #(
         qfd_tt_ctlm_head_static u_head (
             .me_observe(actual_me_observe), .cp_active(1'b0), .cp(cp),
             .me_image_ready(me_image_ready), .program_obs(program_obs),
-            .layer_context_v(layer_context_v), .native_tok(native_tok), .native_pos(native_pos),
+            .layer_context_v(layer_context_v), .native_tok(native_tok), .native_pos(native_pos_h),
             .clk(ck), .ck_sched(ck), .rst_n(rst_n),
             .h_start(st[48]), .token(st[47:30]), .pos(st[29:12]), .prog_base(st[11:0]),
             .pw_v(pw[74]), .pw_addr(pw[73:64]), .pw_data(pw[63:0]),
