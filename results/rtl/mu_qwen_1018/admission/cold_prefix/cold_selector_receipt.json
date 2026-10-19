@@ -1,0 +1,38 @@
+{
+  "source_commit": "07174adb1",
+  "status": "PASS positive/two expected negative mutants",
+  "tool": "Verilator5.050",
+  "fleet": "ot-epyc8",
+  "units": [
+    "oth-ubuntu-1590389-1792427972",
+    "oth-ubuntu-1590392-1792427972",
+    "oth-ubuntu-1590221-1792427972"
+  ],
+  "scope": "Enabled cold user0 selector only; legal synthetic cap1 component programme, no absolute startup phase, no production programme or filler lifecycle. D2D steady lists unused and zero in this component.",
+  "manifest_source": "be5612758",
+  "source_hashes": {
+    "rtl/qwen_split/qfd_sys_face.sv": "0bd5c4948524c78b948f7eb88b09d435d494897228c221e708db142574640ac2",
+    "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_sram.sv": "e5c085a512b0d0ec23f2a3772480c660f2628c4e152d6a444418c6bc1fcfc5b4",
+    "rtl/test/qwen_split/tb_qfd_sys_face_cold.sv": "3c4d00043fbc6def4c44b7d4e08ed1e07cf0abb3c91ab69bb4635ce90e971e73",
+    "rtl/test/qwen_split/build_sysface_cold_fixture.py": "9214f5f4f8a47e2c58b3b9068237d5599d393d9297fafa0226d2a61d1a3da3ed",
+    "results/arch/sysface_sram_players_1019/cold_manifest.json": "a4b4fb3f84c69b89c25376f9e81cffc1b86cc58438ef66b3486a3f3225d19889"
+  },
+  "measured_edges": {
+    "epoch_sample": 77,
+    "cold_T_start_sample": 2077,
+    "E_start_sample": 2080,
+    "INIT_DH_pin_sample": 2290,
+    "INIT_DH_publication": 2289,
+    "init_u0_aligned": true,
+    "FILL_pin_sample": 2290,
+    "FILL_publication": 2289,
+    "header_pin_sample": 2291,
+    "header_publication": 2290
+  },
+  "positive": "one cold INIT stage0, E SEG1, prefix END without steady loop, row64+scale actual SRAM readback",
+  "mutants": {
+    "1": "E SEG1base changed4\u21920 fails exact header age",
+    "2": "INIT stage0\u2192stage1 faults cold selector and fails alignment"
+  },
+  "structural_fix": "row_v now clears on decoded ev_fill, preserving external edges; before fix adjacent FILL/header cleared accepted row and faulted first word"
+}

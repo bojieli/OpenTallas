@@ -21,7 +21,7 @@ class ColdLists(unittest.TestCase):
   for x in m['player_prefix'].values():x['start']+=10
   b=dict(schema='opentallas.mu.list-launch-binding.v1',list_go_reference=m['plan']['head_reference']+10-7,
          raw_L0_minus_steady_anchor=20,reference_start_minus_core_start={c:4 for c in L.CALS},
-         admission_done_to_go_guard=4,source_sha256={'fixture':'declared synthetic phase only'},qualified=False)
+         admission_done_sample=m['admission']['offset']+m['admission']['length']+2,earliest_go_sample=m['admission']['offset']+m['admission']['length']+2,admission_done_to_go_guard=0,source_sha256={'fixture':'declared synthetic phase only'},qualified=False)
   r=L.compile_bound(m,a,b)
   self.assertFalse(r['production_bound']);self.assertFalse(r['absolute_FIRST_selected'])
   for c,t in r['tables'].items():
@@ -30,10 +30,19 @@ class ColdLists(unittest.TestCase):
    ev=L.played(t,2);pref=1 if c in m['player_prefix'] else 0;n=len(a['link_starts'][c])
    self.assertEqual(len(ev),pref+2*n)
    self.assertEqual([y[0]-x[0] for x,y in zip(ev[pref:pref+n],ev[pref+n:])],[a['H']]*n)
+ def test_measured_admission_same_edge_and_prefetch_are_separate(self):
+  c=L.admission_constraint(P/'cold_prefix/admission_launch_receipt.json',offset=72,length=1124)
+  self.assertEqual(c['admission_done_sample'],1198)
+  self.assertEqual(c['earliest_go_sample'],1198)
+  self.assertEqual(c['admission_done_to_go_guard'],0)
+  self.assertEqual(c['first_core_publication_delta'],4)
+  self.assertEqual(c['first_core_pin_sample_delta'],5)
+  with self.assertRaisesRegex(ContractError,'parameters differ'):
+   L.admission_constraint(P/'cold_prefix/admission_launch_receipt.json',offset=72,length=1123)
  def test_nominal_phase_cannot_go_before_admission_done(self):
   m=json.loads((P/'cold_prefix/manifest.json').read_text());a=json.loads((P/'F16_P2/admission.json').read_text())
   b=dict(schema='opentallas.mu.list-launch-binding.v1',list_go_reference=m['plan']['head_reference']-7,
          raw_L0_minus_steady_anchor=20,reference_start_minus_core_start={c:4 for c in L.CALS},
-         admission_done_to_go_guard=4,source_sha256={'fixture':'declared boundary model'},qualified=False)
+         admission_done_sample=m['admission']['offset']+m['admission']['length']+2,earliest_go_sample=m['admission']['offset']+m['admission']['length']+2,admission_done_to_go_guard=0,source_sha256={'fixture':'declared boundary model'},qualified=False)
   with self.assertRaisesRegex(ContractError,'admission completion'):L.compile_bound(m,a,b)
 if __name__=='__main__':unittest.main()

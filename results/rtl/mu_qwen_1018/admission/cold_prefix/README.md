@@ -55,7 +55,7 @@ Fleet validation, Verilator5.050 / Python unittest:
   at core_start1064 before row completion1337. An early-prefetch control completes
   at974 before core_start1064 and reads all64 words exactly. Its input is the
   explicit checked-decoder boundary, not the full FACE/SAFE D2D chain.
-- Five relative-list tests verify literal WRAP_BASE recurrence, halt replay,
+- Six relative-list tests verify literal WRAP_BASE recurrence, halt replay,
   long-gap prefetch spacing, actual-frame capacity and missing/early launch
   rejection. Declared diagnostic phases fit3261 C_TX/K_RX and3262 C_RX/K_TX
   words (AW12). These are not production phase witnesses.
@@ -82,7 +82,7 @@ Reproduce on fleet from the repository root:
 Run the actual provider witness with `run_mu_cold_provider.sh WORK` on fleet.
 
 The relative list encoder `mu_cold_lists.compile_bound` requires a complete
-source launch ledger, including admission-to-go guard and every calendar's
+source launch ledger, including measured admission completion, earliest legal go, and every calendar's
 reference-to-core-start age. It refuses missing ages instead of choosing FIRST.
 The current nominal edge example is deliberately rejected under the older
 +4 launch model: its earliest prefix would need go before admission completes.
@@ -102,3 +102,18 @@ consumer pin sample C+213, and E FILL publication E-start+209 versus consumer
 sample+210 (header+210/+211). Those enabled-component measurements do not bind
 the missing die/LP clock phase. Final source receipts must preserve that
 convention rather than merging publication and downstream sampling silently.
+
+The launch evidence is pinned separately: admission_launch_receipt.json
+(6ab933d23) proves ADM_OFS72/ADM_LEN1124 admits go on the same sampling edge
+as adm_done, at1198. The one-edge-earlier go faults. MIN_DT4 yields core-start
+publication go+4 and consumer sampling go+5; it is not an admission guard.
+The compiler rejects reuse of this parameter-specific receipt for another
+admission length. d2d_start_age_receipt.json (d1cc15095) separately measures
+external SAFE cal-start sample to internal calendar acceptance+1.
+cold_selector_receipt.json (89775f5b5) pins the enabled FACE component proof.
+None of these component receipts supplies the missing complete launch phase.
+
+Current actual FACE cal_start is directly the registered list-player output;
+it has no additional FACE output register. The older declared-boundary launch
+fixture includes an extra register, so its reference-to-core age4 must remain
+an explicit diagnostic binding and must not enter the physical certificate.

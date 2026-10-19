@@ -1,0 +1,21 @@
+{
+  "source_commit": "b30f8454c6db1309ee4ec7a154943f6c737b43f2",
+  "bench_commit": "b1ebea66d",
+  "top": "qfd_d2d_static_ovl",
+  "params": {
+    "PR": 1,
+    "TXDP": "0x0a010308"
+  },
+  "external_cal_start_rx_sample": 200,
+  "internal_calendar_start_sample": 201,
+  "dt20_calendar_event_sample": 222,
+  "emb_rx_pin_sample": 225,
+  "input_start_to_internal_start_age": 1,
+  "calendar_event_to_checked_pin_age": 3,
+  "host": "ot-epyc5",
+  "unit": "oth-ubuntu-1692258-1792428070",
+  "status": "PASS/earlyFDI mutant abort08",
+  "scope": "Actual hard wrapper start and RX latency only; no added FACE/die clock phase binding",
+  "source_hash_receipt": "results/rtl/sysface_d2d_emb_age_1019/receipt.json",
+  "bench_sha256": "f071efd9d1ab167bba23b4c79033433a9c41efec15afefd494ab3ad2dbe09586"
+}
