@@ -1,0 +1,13 @@
+ot-run: ot-epyc5       admits   133 GB (avail 597, growth 504, headroom 0, waiters 0/0 GB) load 140/128 running 32 disk 1985 GB 
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-2599105-1792375361 after 1 s
+bad id10 frame0
+bad id2742 frame0
+bad id5491 frame0
+bad id8216 frame0
+IDX_SELECTOR_STATIC SHELL1 MUT2 frame0 checked512 errors12 fault0 edges874 firstemit842 thresholdc0d6 selected01fc07e020c080
+IDX_SELECTOR_STATIC SHELL1 MUT2 frame1 checked512 errors14 fault0 edges874 firstemit842 thresholdbf80 selected00000000000200
+IDX_SELECTOR_STATIC SHELL1 MUT2 frame2 checked512 errors20 fault0 edges874 firstemit842 thresholdc098 selected000000002bc151
+FATAL: rtl/test/hbm_idx_static/tb_selector_static.sv:65: fullshape exact selector mismatch
+       Time: 26300000  Scope: tb_selector_static
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-2599105-1792375361): exit 1
