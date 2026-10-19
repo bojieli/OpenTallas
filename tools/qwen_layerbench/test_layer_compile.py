@@ -37,6 +37,36 @@ endmodule
 
 
 class NetlistWalk(unittest.TestCase):
+    def test_word_alignment_uses_every_actual_bit_age(self):
+        rtl = RTL + '''
+module dst2(input wire ck, input wire [1:0] i); endmodule
+module qkd_rlysh0_1(input wire ck, a, output wire b); endmodule
+module qkd_rlysh_1(input wire ck, a, output wire b); endmodule
+module qkd_landsh_1(input wire ck, a, k0, k1, k2, output wire b, tie_hi, tie_lo); endmodule
+'''
+        for actual_k, recorded_e, expected in [(3, 3, 4), (2, 3, None), (4, 4, None)]:
+            kports = ', '.join(f'.k{q}({"hi1" if actual_k & (1 << q) else "lo1"})' for q in range(3))
+            die = f'''module die();
+wire n_clk_core_c, a0, a1, a2, b0, b1, hi0, lo0, hi1, lo1; wire [3:0] n_src;
+src s (.ck(n_clk_core_c), .o(n_src));
+qkd_rlysh0_1 h0 (.ck(n_clk_core_c), .a(n_src[0]), .b(a0));
+qkd_landsh_1 l0 (.ck(n_clk_core_c), .a(a0), .b(b0), .k0(hi0), .k1(hi0), .k2(lo0), .tie_hi(hi0), .tie_lo(lo0));
+qkd_rlysh0_1 h1 (.ck(n_clk_core_c), .a(n_src[1]), .b(a1));
+qkd_rlysh_1 mid (.ck(n_clk_core_c), .a(a1), .b(a2));
+qkd_landsh_1 l1 (.ck(n_clk_core_c), .a(a2), .b(b1), {kports}, .tie_hi(hi1), .tie_lo(lo1));
+dst2 d (.ck(n_clk_core_c), .i({{b1,b0}}));
+endmodule'''
+            rows = dict(l0=dict(E=3, K=3, cal=0, n=2, stations=['h0', 'l0']),
+                        l1=dict(E=recorded_e, K=recorded_e, cal=0, n=3, stations=['h1', 'mid', 'l1']))
+            with tempfile.TemporaryDirectory() as t:
+                Path(t, 'm.sv').write_text(rtl)
+                Path(t, 'die.v').write_text(die)
+                pb = dict(masters={m: dict(rtl=f'{t}/m.sv', kind='real')
+                                   for m in ('src', 'dst2', 'qkd_rlysh0_1', 'qkd_rlysh_1', 'qkd_landsh_1')}, defines=[])
+                doc = N.export(f'{t}/die.v', pb, 'qwen_kv', 'HEAD', [], [t], 'bits', land_e=rows)
+            self.assertEqual(doc['buses'][0]['age_edges'], expected)
+            self.assertEqual(doc['problem_count'] == 0, expected is not None, doc['problems'])
+
     def test_native_trunk_inject_has_independent_v_and_token_ages(self):
         trunk = ROOT / 'rtl/qwen_sys/split_20261014/qkd_pv_rtrunk.sv'
         die = '''module die();
