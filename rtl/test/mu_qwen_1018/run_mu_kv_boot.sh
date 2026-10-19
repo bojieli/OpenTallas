@@ -18,7 +18,7 @@ case "$CASE" in
  # the single-user image (seal at 326) on the MU boot path          FAIL: 'layer programme not configured .*lprg fault 04'
  kb_sealwrong) IMG=$K/mut_sealwrong.hex; NW=327;;
  # dispatcher wrapper does not forward the GAP block                  FAIL: 'layer programme not configured .*lprg fault 01'
- kb_gapnot) MF=$TF; FROM='.MU(1), .WMUT(0)) u_boot'; TO='.MU(1), .WMUT(1)) u_boot';;
+ kb_gapnot) MF=$TF; FROM='.MU(1), .WMUT(0)'; TO='.MU(1), .WMUT(1)';;
  # a GAP table with user 0 gap[5] = 7 (not the compiler's)            FAIL: 'user 0 differs from MU 0'
  kb_u0gap) IMG=$K/mut_u0gap.hex;;
  # user 1 stage 1 moved onto a user-0 event edge (no list check: the RTL's own collision fault)

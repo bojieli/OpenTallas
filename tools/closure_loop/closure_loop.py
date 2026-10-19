@@ -5813,7 +5813,16 @@ def routed_ioref(j, m):
             rp = f"{j['run']}/cl/{rbj['rb']}.sdc"
             ssh(j["host"], f"cat > {rp}", input=Path(rbj["sdc"]).read_text(), timeout=60)
             app += f" --append {rp}"
-        r = ssh(j["host"], f"python3 {j['run']}/cl/meas_resta.py --orfs {shlex.quote(orfs)} --src {j['run']}/src "
+        # IOREF-VERDICT-TOOL (ROOT-CORNER 2026-10-19): the routed re-STA is the VERDICT of a finished route, never part of
+        # its execution, so it runs the loop's CURRENT meas_resta.py (= origin/main, as io_ref_routed.sdc above) from
+        # cl_ioref/, not the job's frozen cl/ copy: a frozen-overlay job (freeze_helper_overlay) otherwise re-judged with
+        # the bug it was re-judged for (s81sl_capc d8836674d: frozen pre-fix meas_resta, no OT_PF_MACRO_LIBS -> STILL
+        # FF -158).  cl/ stays byte-identical to the frozen plan; the shipped bytes are recorded in the result.
+        mr_body = (HERE / "meas_resta.py").read_bytes()
+        ssh(j["host"], f"mkdir -p {j['run']}/cl_ioref && cat > {j['run']}/cl_ioref/meas_resta.py",
+            input=mr_body.decode(), timeout=60, check=True)
+        rr["meas_resta_sha256"] = hashlib.sha256(mr_body).hexdigest()
+        r = ssh(j["host"], f"python3 {j['run']}/cl_ioref/meas_resta.py --orfs {shlex.quote(orfs)} --src {j['run']}/src "
                            f"--out {out} {app}", timeout=12000)
     try:
         res = json.loads([x for x in r.stdout.splitlines() if x.startswith("{")][-1])
