@@ -1,0 +1,26 @@
+"""Opt-in public XC banked wrapper composition; model before wrapper RTL."""
+def model():
+ return dict(schema='opentallas.xcal-public-banked.v1',opt_in=True,canonical_unchanged=True,
+  base='f1a223a78',app_dependency='01ceb5ca7/2210ef72c semantic DUT; final owner receipt a1e52e87c',
+  modules=['ot_hbm_svc_sm_xcal_rel_banked','ot_hbm_svc_sm_xcal_rel_t_banked'],
+  defaults=dict(PAW=11,PREL=1,DD=256,DAW=8,CLASS_ENABLE=0,CLASS_MUT=0,MIRROR_MUT=0,MUT=0),
+  roots=['clk_core','clk_bank0','clk_bank1'],reset='clone host reset chronology; bank/app own native reset landings; host/descriptor reset tree physically UNQUALIFIED',
+  macros=dict(program_1024x256=2,descriptor_128x256=2,total=4,stored_bytes=73728),
+  replicas=dict(program_banks=2,central_app=1,cache_mirror=1,target_collar='only _t'),
+  programme_bandwidth=dict(per_bank_read_bytes_per_edge=32,per_bank_write_bytes_per_edge=32,useful_command_word_bits_per_edge=173,public_envelope_bits_per_edge=175),
+  boundaries=dict(request_bits_per_bank=67,row_bits_per_bank=173,word_ok_bits_per_bank=11,row_token_bits_per_bank=67,public_envelope_bits=175,full_KV_bits=64),
+  composition='two ot_smh_calendar_bank_leaf W173/XW5/BANK0,1 with exact native cfg/request/row/ok/token ports; ot_smh_banked_xc_central PREL/CLASS params; explicit full175 mirror2',
+  new_pipeline_state=dict(envelope_bits=350,done_active_fault_tail_bits=6,running_hostfault_prealignment_bits=4,appfault_capture_bits=1,outstanding_counter_bits=9),
+  latency=dict(host_descriptor_GO='unchanged canonical rc init1 and exact e_at slot',banked_calendar_extra=2,existing_R_C='unchanged PREL1 two edges or PREL0 one edge',cache_mirror_extra=2,command_KV_extra_vs_canonical=4,
+   single_GO_status_extra=4,host_status_alignment='running delayed2 before app active OR; host faults delayed2 before OR with captured native app faults; then done/active/fault tail2',
+   configured='target collar chronology unchanged',target_local_config_faults='collar chronology unchanged',shared_model_price='public extension path +4 once; existing calendar+2 and cache mirror+2 are not additional hidden costs'),
+  descriptor_contract=dict(header='5d15',identity='239:232 exact row id',reserved='231:200 ALLzero, including200',programme_base='{189,91:82}',programme_limit='{190,102:92}',loops='118:103',at='142:119',ctx='{197:195,198,199}',literal_commands='preserve all109bits and all64KV bits'),
+  intentional_correction=dict(old_bug='cal_done&&!running may report previous programme complete after final GO while a later programme is still outstanding',
+   recurrence='n_done increments acceptedGO, decrements cal_done; simultaneous events leave count unchanged; initialize0 perrun',
+   final_completion='n_go==0 && n_done==1 && cal_done; exactly one public final completion after mirror tail',run_reject='reject while running or outstanding n_done!=0'),
+  negative_controls=dict(MUT1='rc init0',MUT2='wrong command/KV slices',MUT3='host reset never releases',MUT4='diagnostic-only generic central sharing real banks reconstructs raw calendar to bypass R/C, no extra SRAM',MUT5='_t collar ignores target id',CLASS_MUT1='semantic class mismatch',MIRROR_MUT1='full175 mirror one edge early'),
+  proof=['original counterpart +4 command/KV and singleGO runtime active/done/fault','PREL0/1 and descriptor mode/format association','full64KV and literal commands; reserved200 rejection','tighttwoGO exactone final completion with oldprematuredone witness','target filtering and programme windows0/2 plus descriptorwindow1','legacy mutants1..5 plus class mismatch and earlymirror FAIL','fleet Verilator5.050 only; immutable source hashes and fail logs'],
+  physical='UNQUALIFIED host/descriptor/collar soft composition; child mapped facts do not qualify this wrapper. No gate/submit, no outline/timing/fanout claim; canonical roots/placement/access/depth/load audits OPEN')
+if __name__=='__main__':
+ import json
+ print(json.dumps(model(),indent=2))
