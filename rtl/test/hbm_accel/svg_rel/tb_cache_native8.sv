@@ -4,6 +4,7 @@ module tb_cache_native8 #(parameter MUT=0);
  reg clk=0;always #5 clk=~clk;reg rst_n=0;
  reg open_v=0,open_bank=0;reg [15:0] open_epoch=0;reg [6:0] open_count=0;reg [9:0] open_tag_base=0;
  reg [3:0] sector_v=0;reg [95:0] sector_index=0;reg [63:0] sector_epoch=0;reg [1023:0] sector_data=0;
+ reg [15:0] ep0=16'h1234,ep1=16'h5678;reg [9:0] tag0=100,tag1=1000;
  reg read_v=0,read_bank=0,retire_v=0,retire_bank=0;reg [15:0] read_epoch=0,retire_epoch=0;reg [5:0] read_row=0;reg [9:0] read_tag=0;
  wire [1:0] block_ready,bank_owned;wire busy,fault;wire [1098:0] out_packet;
  ot_hbm_svc_static_sm_packed136_native8 #(.PACKED136(1),.MUT(MUT)) dut(.*);
@@ -56,16 +57,16 @@ module tb_cache_native8 #(parameter MUT=0);
   integer j,off;begin for(j=0;j<32;j=j+1)begin off=s*32+j;sector_for[j*8+:8]=off<rows*136?byte_for(b,off/136,off%136):8'h00;end end
  endfunction
  function automatic [1098:0] packet_for(input integer b,input integer row);integer j;reg [1087:0] data;reg [9:0] tag;
-  begin for(j=0;j<136;j=j+1)data[j*8+:8]=byte_for(b,row,j);tag=(b?1000:100)+row;packet_for={1'b1,tag,data};end
+  begin for(j=0;j<136;j=j+1)data[j*8+:8]=byte_for(b,row,j);tag=(b?tag1:tag0)+row;packet_for={1'b1,tag,data};end
  endfunction
  task tick;begin @(posedge clk);#1;end endtask
  task reset_dut;begin rst_n=0;open_v=0;sector_v=0;read_v=0;retire_v=0;tick;tick;rst_n=1;tick;end endtask
- task set_read(input bit b,input integer r);begin read_v=1;read_bank=b;read_epoch=b?16'h5678:16'h1234;read_row=r;read_tag=(b?1000:100)+r;end endtask
+ task set_read(input bit b,input integer r);begin read_v=1;read_bank=b;read_epoch=b?ep1:ep0;read_row=r;read_tag=(b?tag1:tag0)+r;end endtask
  task check_read(input bit b,input integer r);begin if(out_packet!==packet_for(b,r))$fatal(1,"packed136 cache payload/tag mismatch bank=%0d row=%0d",b,r);read_vectors=read_vectors+1;end endtask
- task open_block(input bit b,input integer rows);begin open_v=1;open_bank=b;open_epoch=b?16'h5678:16'h1234;open_count=rows;open_tag_base=b?1000:100;tick;open_v=0;end endtask
+ task open_block(input bit b,input integer rows);begin open_v=1;open_bank=b;open_epoch=b?ep1:ep0;open_count=rows;open_tag_base=b?tag1:tag0;tick;open_v=0;end endtask
  task set_sectors(input bit b,input integer ordinal,input integer n,input integer rows);integer j;begin
   sector_v=0;sector_index=0;sector_epoch=0;sector_data=0;
-  for(j=0;j<n;j=j+1)begin sector_v[j]=1;sector_index[j*24+:24]=ordinal+j;sector_epoch[j*16+:16]=b?16'h5678:16'h1234;sector_data[j*256+:256]=sector_for(b,ordinal+j,rows);end
+  for(j=0;j<n;j=j+1)begin sector_v[j]=1;sector_index[j*24+:24]=ordinal+j;sector_epoch[j*16+:16]=b?ep1:ep0;sector_data[j*256+:256]=sector_for(b,ordinal+j,rows);end
  end endtask
  task load_block(input bit b,input integer rows,input bit overlap);integer ordinal,phase,n,total,cy,guard;begin
   open_block(b,rows);ordinal=0;phase=0;cy=0;total=((rows*136+127)/128)*4;
@@ -92,18 +93,20 @@ module tb_cache_native8 #(parameter MUT=0);
   // Final block-only 128-byte alignment is exercised independently of the
   // full sixteen/four-phase groups; no record acquires160-byte padding.
   for(c=1;c<=64;c=c+1)begin
-   corner_rows=c;
+   corner_rows=c;ep0=(c*997);ep1=~ep0;tag0=c*17;tag1=~tag0;
    reset_dut;load_block(0,corner_rows,0);
    for(r=0;r<corner_rows;r=r+1)begin set_read(0,r);tick;check_read(0,r);end
    read_v=0;tick;load_block(1,corner_rows,0);
    for(r=0;r<corner_rows;r=r+1)begin set_read(1,r);tick;check_read(1,r);end
    read_v=0;tick;
-   retire_v=1;retire_bank=0;retire_epoch=16'h1234;tick;retire_v=0;
+   retire_v=1;retire_bank=0;retire_epoch=ep0;tick;retire_v=0;
    // Reopen bank zero immediately while retiring the other owned bank.
-   retire_v=1;retire_bank=1;retire_epoch=16'h5678;open_block(0,1);retire_v=0;
+   retire_v=1;retire_bank=1;retire_epoch=ep1;open_block(0,1);retire_v=0;
    reset_dut; // reset an open transaction before its first source edge
   end
-  fault_mode=1;
+  reset_dut;open_block(0,64);set_sectors(0,0,4,64);tick;set_sectors(0,4,4,64);tick;
+  reset_dut;load_block(1,3,0);for(r=0;r<3;r=r+1)begin set_read(1,r);tick;check_read(1,r);end
+  read_v=0;tick;fault_mode=1;
   reset_dut;open_block(0,16);sector_v=0;expect_fault(1); // missing fixed source edge
   reset_dut;open_block(0,16);set_sectors(0,0,4,16);sector_epoch[0+:16]=16'h9999;expect_fault(2);
   reset_dut;open_block(0,16);set_sectors(0,0,4,16);sector_index[24+:24]=0;expect_fault(3);
