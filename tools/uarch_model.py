@@ -17481,7 +17481,15 @@ def hbm_svg_cache_safe_composition_model():
     from pathlib import Path
     import json
     return json.loads((Path(__file__).resolve().parent / "hbm_layer_vehicle/svg_cache_safe_composition_model.json").read_text())
+
+
 def hbm_attention_mixed_context_model():
     """Model-only per-descriptor dense/attention semantics and native timing."""
     from hbm_layer_vehicle.attention_mixed_model import model
+    return model()
+
+
+def hbm_xcal_public_banked_model():
+    """Opt-in public XC wrapper: native bank+2 and full cache envelope+2."""
+    from hbm_layer_vehicle.xcal_public_banked_model import model
     return model()
