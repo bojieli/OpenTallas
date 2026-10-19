@@ -20,7 +20,21 @@
  "write_epoch_extra_cycles_vs_legacy": 1,
  "receiver_reset_extra_cycles_vs_legacy": 2,
  "calendar": "K=(E_total-read_stage1+G_legacy+1-R0_legacy-2)mod8; price outputage separately from sampled ring age.",
- "startup": "Exactly4bankwrites fill.2receiverreset stages release ready; next receiveredge captures selected bank,nextedge publishes registered output. Firstusable=edge(max(warm_set,first_root_strictly_after_fourth_write+1))+2.",
+ "startup": "R_land=R_raw+2. F=first receiver edge strictly after fourth physical bankwrite. Firstready0=max(F,R_land+1),ready1=Firstready0+1; warm=R_land+(K if K!=0 else8). Firstusable=max(ready1,warm)+2. Asynchronous assert propagates through rs0/rs1; rawrs drives exactly2faceflops. Fixed prologue only, no dynamic backpressure.",
  "clocking": "8physicalICGs produce bankclocksperiod4T,pulsewidthT/2. Write/read phaseclasses derive from committed K and post-reset calendar; no inventedrootphase, falsepath ordataMCP.",
- "binding_rule": "TTsetup>=0+FFhold>=0;SSsensitivity only; nativeentryphi-R actualsource references, preserve150/100crossrootreserve."
+ "binding_rule": "TTsetup>=0+FFhold>=0;SSsensitivity only; nativeentryphi-R actualsource references, preserve150/100crossrootreserve.",
+ "rtl_reset_revision": "ff0368257",
+ "state_formula": "FIRST1 upper=9W+5ceil(W/16)+68; FIRST0 upper=FIRST1-2 (one en_q and hop0ICG). W<=180,D4,AW2.",
+ "measured_synthesis_reference": {
+  "rtl": "62708ac8f",
+  "host": "ot-epyc8",
+  "run": "/srv/opentallas-scratch/claude/ref_gate/qfwd_landh0_180_en_48x48_g4-20261019-085926",
+  "W": 180,
+  "area_um2": 616.2237,
+  "flops": 1737,
+  "icgs": 9,
+  "total_state": 1746,
+  "timing_qualified": false,
+  "note": "Root-only synthesis prototype; GRT cancelled, no timing qualification. Rawresetfanout violation structurally corrected in ff0368257; latest synthesis pending."
+ }
 }
