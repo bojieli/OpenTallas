@@ -5376,5 +5376,114 @@
   },
   "view_commit": "fd4fafa02adca40fc78aa9a7fba7da84185fcd5d",
   "view_commit_subject": "closure-loop AUTO-MERGE record qkd_hr_core_queue-fl1-e1880062d (qkd_hr_core_queue_fl CLOSED)"
+ },
+ "qkd_kvs_attn_fl": {
+  "cell": "qkd_kvs_attn_fl",
+  "view": "physical/ref_tile/qkd_kvs_attn/views/qkd_kvs_attn_fl",
+  "lib_cell": "qkd_kvs_attn_fl",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 292.2,
+  "spread_ps": 43.2,
+  "outputs": 1418,
+  "inputs": 1183,
+  "launch_ps": 247.7,
+  "launch_pin": "ahs[0]",
+  "capture_ps": 158.3,
+  "capture_pin": "d2d__rx_payload[22]",
+  "launch_over": 1,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "ff_spread_ps": 39.5,
+  "ff_launch_min_ps": 103.6,
+  "ff_hold_need_ps": -60.6,
+  "pass": false,
+  "fail_why": "launch 247.7411 > 220 (1 pins)",
+  "port_max_capture_ps": {
+   "rst_n": {
+    "pin": "rst_n",
+    "ps": 124.1,
+    "n": 1
+   },
+   "fin": {
+    "pin": "fin[282]",
+    "ps": 149.1,
+    "n": 534
+   },
+   "i_ctl": {
+    "pin": "i_ctl[75]",
+    "ps": 141.9,
+    "n": 77
+   }
+  },
+  "previous_g3_capture_ps": {
+   "rst_n": 383.3,
+   "fin[0]": 372.4,
+   "i_ctl[2]": 338.0
+  },
+  "launch_top": [
+   [
+    "ahs[0]",
+    247.7
+   ],
+   [
+    "pvfst[24]",
+    194.6
+   ],
+   [
+    "pvst[11]",
+    192.1
+   ],
+   [
+    "pvst[30]",
+    191.5
+   ],
+   [
+    "pvst[25]",
+    190.5
+   ]
+  ],
+  "clock_rule": {
+   "clock": "ck",
+   "tt_spread_ps": 43.2,
+   "ff_spread_ps": 39.5,
+   "limit_ps": 80,
+   "pass": true,
+   "insertion_tt": {
+    "n": 2601,
+    "mean": 292.2,
+    "min": 275.8,
+    "max": 319.0
+   },
+   "insertion_ff": {
+    "n": 2601,
+    "mean": 238.0,
+    "min": 222.5,
+    "max": 262.0
+   }
+  },
+  "verdict": "capture PASS (rst_n 124.1 <= 190, was 383.3; fin 149.1, i_ctl 141.9 clear); clock rule PASS (single clock ck, TT/FF pin-flop spread 43.2/39.5 <= 80); guidance launch FAIL on ONE output ahs[0] 247.7 > 220 (= w_attn_root__start_qk, also the internal start strobe of u_attn_face; g3 view 185.6): die STA judges it, no re-route",
+  "launch_classification": {
+   "pin": "ahs[0]",
+   "signal": "u_attn_root.start_qk (assign ahs[0]=w_attn_root__start_qk)",
+   "tt_ck_to_out_ps_at_1.44fF": 539.9,
+   "g3_ps": 466.6,
+   "class": "shared-fanout output: the pin hangs off the start_qk strobe net that also feeds u_attn_face (no dedicated pin flop); the fl1 placement put the pin tap at the tail of that net",
+   "fix_plan": "die STA first (consumer of ahs[0] has 833-247.7 ps); only if die STA names ahs[0]: next attn kit revision adds a dedicated output copy flop for ahs[0] (pin_regs / io_flop_at_pins on output start_qk, 0 cycles if duplicated from the same D) -- no re-route now because the native rule that binds (TT/FF spread <=80) passes and the launch budget is guidance (owner 10-17 0dq)"
+  },
+  "view_sha256": {
+   "qkd_kvs_attn_fl.lef": "62cf17f599e00b5531e5a88e90bb2c9af85f9025dd00548e77afdb1e2acc5a07",
+   "qkd_kvs_attn_fl_ff.lib": "72bd2e4f59d26a157e01e5261034cfbd810025dacdd3374ec95dff3db57168ea",
+   "qkd_kvs_attn_fl_ss.lib": "1ccf1a82406bcd3d0d29ee0a8f30db01e6464289414392a4fcab083f774620f7",
+   "qkd_kvs_attn_fl_tt.lib": "3c8e2def476a6d64921b232518a3c359732b96d3b253a9f647fdc9232e6961d7"
+  },
+  "view_commit": "9b0854b11896a91ec65ccd57842e5c7d711b6b9e",
+  "view_commit_subject": "closure-loop AUTO-MERGE record qkd_kvs_attn-fl1-8e7ae12fb (qkd_kvs_attn_fl CLOSED)",
+  "route": "qkd_kvs_attn-fl1-8e7ae12fb CLOSED TT +11.05 / FF +21.88 ps DRC 0",
+  "audited_at": "7f35a3e4b178f0034f5c6f99f615111632170241",
+  "tool": "tools/hier_contract/native_pin_audit.py --view (own R)"
  }
 }
