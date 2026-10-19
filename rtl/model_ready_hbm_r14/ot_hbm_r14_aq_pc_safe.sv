@@ -64,6 +64,8 @@ module ot_hbm_r14_aq_pc_safe #(
   wire [WQW-1:0] qread=wr_ok ? q_rp_plus2 : q_rp_plus1;
   reg qfresh; reg [WQW-1:0] qfresh_addr; reg [29:0] qfresh_data;
   reg [29:0] qhead;
+  (* keep="true",dont_touch="true" *) reg head_read_global;
+  always @(posedge clk)head_read_global<=head_d[0];
   // Same-edge local head copies: each row bit drives eight comparators and
   // eight look-row capture muxes; each read flag serves eight bank timers.
   (* keep="true",dont_touch="true" *) reg [19:0] head_local[0:7];
@@ -128,14 +130,14 @@ module ot_hbm_r14_aq_pc_safe #(
   always @(posedge clk)begin qfresh_addr<=qwp;qfresh_data<={wr_bank,wr_col,wr_row,wr_rd};end
   always @(posedge clk)begin
     for(integer b=0;b<32;b=b+1)begin
-      if(q_ne&&hb_oh[b])look_row[b]<=head_local[b/4][19:1];
+      if((q_n_local[b/8]!=0)&&hb_oh[b])look_row[b]<=head_local[b/4][19:1];
       else if(qpush&&wr_bank==b&&bank_n[b]==0)look_row[b]<=wr_row;
     end
     for(integer b=0;b<32;b=b+1)
       if(row_word_act_local[b/8]&&c_oh[b])orow[b]<=row_local[b/8][18:0];
   end
   reg [WQW:0] q_n; reg [WQW-1:0] q_rp;
-  wire [4:0] hb=qhead[29:25], hc=qhead[24:20]; wire [RW_ROW-1:0] hrow=qhead[19:1]; wire hr=qhead[0];   // registered head (valid when q_n != 0)
+  wire [4:0] hb=qhead[29:25], hc=qhead[24:20]; wire [RW_ROW-1:0] hrow=qhead[19:1]; wire hr=head_read_global;   // registered head (valid when q_n != 0)
   (* keep="true",dont_touch="true" *) reg [2:0] tail_set_local;
   always @(posedge clk or negedge rst_n)if(!rst_n)tail_set_local<=0;else if(qpush)tail_set_local<=wr_bank[4:2];
   reg [2:0] tail_set;                                   // bank-set of the newest pushed entry
