@@ -42,7 +42,7 @@
 #  q   (SUDMA2 10-19) FUSED.QDQ_* N-row records on the d4g static QDQ engine (ot_hgi_qdq_program_static + 8 real
 #      ot_vms_bank_static pipelines, unchanged; tb_hnx_qdq_rows = d4g tb_hgi_qdq_static with the programme cross-check
 #      reported, not fatal): vectors hnx_qdq_rows_vectors.py; MUT 0 LG 0 and LG 1 TSPLIT 1 (the die's split form):
-#      QDQ_FP8 e 512 N = 1,2,3,4,6 + QDQ_FP4_E4M3 N 4 -> PASS + QDQ_ROWS (cycles(N)); stride witness (programme drops the
+#      (IO_REGS 1 LG 1 TSPLIT 1) QDQ_FP8 e 512 N = 1,2,3,4,6 + QDQ_FP4_E4M3 N 4 -> PASS + QDQ_ROWS (cycles(N)); stride witness (programme drops the
 #      row stride, golden per row) and d4g MUT 1 (sector map) at N 4 -> FAIL (witnesses)
 set -u
 B=$(pwd); O=$(realpath -m "${1:?OUT}"); ST=${2:?STAGE}; mkdir -p "$O"
@@ -165,9 +165,9 @@ if [ "$ST" = q ]; then
   qv(){ local c=$1; shift; python3 tools/hbm_next/hnx_qdq_rows_vectors.py $O/qvec_$c "$@" > $O/qvec_$c.log 2>&1 || V "vector gen $c FAILED"; }
   for n in 1 2 3 4 6; do qv n$n --n $n; done
   qv fp4_n4 --n 4 --op QDQ_FP4_E4M3; qv mstride_n4 --n 4 --mut-stride
-  for b in "m0 0 0 0" "lg1 0 1 1" "m1 1 0 0"; do ( set -- $b
+  for b in "m0 0 0 0 0" "lg1 0 1 1 1" "m1 1 0 0 0"; do ( set -- $b
     d=$O/obj_q$1; rm -rf $d
-    verilator --binary --timing -O2 -j 4 -Wno-fatal -Wno-lint -Wno-style -GMUT=$2 -GLG=$3 -GTSPLIT=$4 --top-module tb_hnx_qdq_rows \
+    verilator --binary --timing -O2 -j 4 -Wno-fatal -Wno-lint -Wno-style -GMUT=$2 -GLG=$3 -GTSPLIT=$4 -GIO_REGS=$5 --top-module tb_hnx_qdq_rows \
       -Mdir $d -o Vq "${QS[@]}" > $O/build_q$1.log 2>&1
     case $1 in m1) CS=n4;; *) CS="n1 n2 n3 n4 n6 fp4_n4 mstride_n4";; esac
     for c in $CS; do
