@@ -11,11 +11,17 @@ V=${VERILATOR:-/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilato
 PHYSICAL_ARGS=(); MUTS="0 8"
 if [[ -n ${2:-} ]]; then PHYSICAL_ARGS=(--physical-reset-ledger "$2"); MUTS="0 8 9"; fi
 python3 tools/qwen_cluster/qc_safe_fabric_model.py "${PHYSICAL_ARGS[@]}" --plan out_safe/safe_reset_plan.json --out "$OUT/model" --safe-xstn || exit 1
+GROUP_SRC=()
+if [[ ${3:-} == group16 ]]; then
+  python3 tools/qwen_cluster/qc_group_reset_model.py "$OUT/model" || exit 1
+  GROUP_SRC=(rtl/physical/qcluster/qfd_c_reset_group16_safe.sv)
+fi
 SRC=(rtl/physical/qcluster/qfd_c_xstn_safe.sv rtl/physical/qcluster/qfd_c_stn.sv rtl/physical/qcluster/qfd_q3h_stn.sv rtl/physical/qcluster/qfd_c_land_safe.sv "$OUT/model/model_helpers.sv" "$OUT/model/safe_fabric_model.sv"
      rtl/qwen_sys/dvm_20261014/ot_qfd_xslice_slots.sv rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv rtl/hdc/ot_hdc_delay.sv
      rtl/physical/ot_qwen_tile_node.sv rtl/lib/ot_rst_relay.sv rtl/hdc/ot_qwen_w12_matvec.sv
      rtl/hdc/ot_hdc_fp32_add_lat_nr.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_prefix.sv rtl/proto/ot_fp32_add_rne_pipe.sv
      rtl/test/tb_q3h_tile_face.sv "$OUT/model/tb_safe_fabric_model.sv")
+SRC+=("${GROUP_SRC[@]}")
 python3 tools/qwen_cluster/vectors.py "$OUT"
 { sha256sum "${SRC[@]}" rtl/test/qcluster_lat.svh rtl/test/q3h_cb16_tbdefs.svh "$0" tools/qwen_cluster/vectors.py; "$V" --version; } > "$OUT/sources.sha256"
 rc=0
