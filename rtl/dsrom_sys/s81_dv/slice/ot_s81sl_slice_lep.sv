@@ -167,7 +167,7 @@ module ot_s81sl_lep_core #(
     localparam integer TX_NS=(H+8)/8;
     localparam integer FRAME_NS=(2*H+7)/8;
     localparam integer TX_NA=(TX_NS+3)/4;
-    localparam integer PUSH_GROUPS=(TX_NA+1)/2;
+    localparam integer PUSH_GROUPS=TX_NA;
     localparam integer TX_RST_STRIDE=TX_NS+2*TX_NA;
     localparam integer NTX_MEMRST=(MU_EN!=0 && RX_SRAM!=0)?NL*TX_RST_STRIDE:0;
     localparam integer NFRAME_RST=(MU_EN!=0 && RX_SRAM!=0)?FRAME_NS:0;
@@ -290,6 +290,7 @@ module ot_s81sl_lep_core #(
     wire stamp = rov && wopen;
     wire bsel = stamp && wab;                          // this frame goes to pair B
     reg [2*H-1:0] fr;
+    wire [FRAME_NS-1:0] frame_host_pending,frame_key_pending;
     genvar fc,fb;
     generate if(MU_EN!=0 && RX_SRAM!=0) begin:g_frame_local
       localparam integer HG=(FRAME_NS+7)/8;
@@ -299,6 +300,7 @@ module ot_s81sl_lep_core #(
       end
       for(fc=0;fc<FRAME_NS;fc=fc+1) begin:g_slice
         (* keep="true" *) reg rov_r,ph_r,pk_r,kevent_r;
+        assign frame_host_pending[fc]=ph_r;assign frame_key_pending[fc]=pk_r;
         wire hp=!rov_r && ph_r, kp=!rov_r && !ph_r && pk_r;
         wire stamp_local;
         if(8*fc<TG+33 && 8*(fc+1)>TG) begin:g_stamp_active
@@ -361,13 +363,13 @@ module ot_s81sl_lep_core #(
         (* keep *) reg ring_r;
         always @(posedge clk or negedge rr[CTRL_RSTBASE+NL+8+pg])
           if(!rr[CTRL_RSTBASE+NL+8+pg]) ring_r<=0;else ring_r<=ro[0];
-        (* keep=1 *) ot_s81sl_lep_tx_push u_push(.ring(ring_r),.host_go(hp_go),.key_go(kp_go),.open(wopen),.pair_b(wab),.pp(push_group[2*pg+:2]));
+        (* keep=1 *) ot_s81sl_lep_tx_push u_push(.ring(ring_r),.host_go(!ring_r && frame_host_pending[pg]),.key_go(!ring_r && !frame_host_pending[pg] && frame_key_pending[pg]),.open(wopen),.pair_b(wab),.pp(push_group[2*pg+:2]));
       end
       for(genvar pl=0;pl<NL;pl=pl+1) begin:g_lane
         (* keep *) reg ring_r;
         always @(posedge clk or negedge rr[CTRL_RSTBASE+NL+8+PUSH_GROUPS+pl])
           if(!rr[CTRL_RSTBASE+NL+8+PUSH_GROUPS+pl]) ring_r<=0;else ring_r<=ro[0];
-        (* keep=1 *) ot_s81sl_lep_tx_push u_push(.ring(ring_r),.host_go(hp_go),.key_go(kp_go),.open(wopen),.pair_b(wab),.pp(push_lane[2*pl+:2]));
+        (* keep=1 *) ot_s81sl_lep_tx_push u_push(.ring(ring_r),.host_go(!ring_r && frame_host_pending[PUSH_GROUPS+pl]),.key_go(!ring_r && !frame_host_pending[PUSH_GROUPS+pl] && frame_key_pending[PUSH_GROUPS+pl]),.open(wopen),.pair_b(wab),.pp(push_lane[2*pl+:2]));
       end
     end endgenerate
     reg [1:0] sq;                                      // frame-sequence parity (TX), per pair
@@ -409,7 +411,7 @@ module ot_s81sl_lep_core #(
                 (* keep="true" *) reg [CW-1:0] credit_r;
                 (* keep="true" *) reg credit_pin_r;
                 assign rd_group[c]=(count_r!=0 && credit_r!=0);
-                assign wr_group[c]=push_group[2*(c/2)+t/2] && (count_r!=(AT+1)'(DT) || rd_group[c]);
+                assign wr_group[c]=push_group[2*c+t/2] && (count_r!=(AT+1)'(DT) || rd_group[c]);
                 wire pointer_reset=rr[TX_RSTBASE+t*TX_RST_STRIDE+TX_NS+2*c];
                 wire state_reset=rr[TX_RSTBASE+t*TX_RST_STRIDE+TX_NS+2*c+1];
                 always @(posedge clk or negedge state_reset)
@@ -1319,11 +1321,16 @@ endmodule
 `ifdef OT_S81SL_LEP_MUT_HDROP
  wire preserve=1'b0;
 `else
- wire preserve=pending && !send_now && old_valid && !valid;
+ wire preserve;
+ (* keep=1 *) ot_s81sl_lep_host_preserve u_preserve(.pending(pending),.send_now(send_now),.old_valid(old_valid),.new_valid(valid),.preserve(preserve));
 `endif
  wire [7:0] merged=new_data ^ ((new_data ^ old_data) & {8{preserve}} & keep_mask);
  assign next_data=(rn && event_h)?merged:old_data;
 endmodule
 (* keep_hierarchy=1 *) module ot_s81sl_lep_key_hold8(input wire rn,valid,input wire [7:0] old_data,new_data,output wire [7:0] next_data);
  assign next_data=(rn && valid)?new_data:old_data;
+endmodule
+
+(* keep_hierarchy=1 *) module ot_s81sl_lep_host_preserve(input wire pending,send_now,old_valid,new_valid,output wire preserve);
+ assign preserve=pending && !send_now && old_valid && !new_valid;
 endmodule

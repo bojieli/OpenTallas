@@ -274,7 +274,8 @@
    "ot_s81sl_lep_host_enable",
    "ot_s81sl_lep_stamp",
    "ot_s81sl_lep_host_hold8",
-   "ot_s81sl_lep_key_hold8"
+   "ot_s81sl_lep_key_hold8",
+   "ot_s81sl_lep_host_preserve"
   ]
  },
  "structural_change": "RX_SRAM=1 structural successor: five32x128 true SRAM RX banks per lane with exact same-edge show-ahead/forwarding; five512x128 true SRAM TX banks per lane with exact original OLD-read/hold semantics. Reset-distinct frame, pointer, forwarding and host-capture regions remove wide control enables; balanced reset retains three-edge local release. Existing TXRP=1 +1 lane edge already priced; no additional data edges. Measured H std6462.29; actual A area pending. New full-width band pruned before tapcell, GPL-only row envelope restores full paid core. All physical acceptance and parent fit remain pending.",
