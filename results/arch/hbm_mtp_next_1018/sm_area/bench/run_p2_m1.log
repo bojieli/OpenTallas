@@ -1,0 +1,11 @@
+LANE MISMATCH bdc lane=1 cyc=167 ov 1/1 y ca43b2d6/4d7b5dcc
+LANE MISMATCH bdc lane=1 cyc=168 ov 1/1 y 4bcdb006/4ce90d95
+LANE MISMATCH bdc lane=1 cyc=169 ov 1/1 y ccc4acde/ca8074d6
+LANE MISMATCH bdc lane=1 cyc=170 ov 1/1 y 4a6b1239/4da6ccc9
+LANE MISMATCH bdc lane=1 cyc=171 ov 1/1 y cc25ae53/cce12b42
+LANE MISMATCH bdc lane=1 cyc=172 ov 1/1 y 4bb38d53/cac7eb5d
+LANE MISMATCH bdc lane=1 cyc=173 ov 1/1 y ccd8453b/cd2a5998
+LANE MISMATCH count bdc=96 tcc=96 expected=192
+[1424000] %Fatal: tb_hbm_sm_bdc_p.sv:99: Assertion failed in tb_hbm_sm_bdc_p: LANE MISMATCH errors=193 P=2 MUT=1
+%Error: rtl/test/hbm_accel/sm_mtp_lanes/tb_hbm_sm_bdc_p.sv:99: Verilog $stop
+Aborting...
