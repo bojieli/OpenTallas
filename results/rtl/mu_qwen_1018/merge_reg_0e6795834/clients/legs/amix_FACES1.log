@@ -9,3 +9,5 @@ ot-run: ot-pve1        admits    65 GB (avail 77, growth 32, headroom 0, waiters
 ot-run: ot-agidock128  admits    51 GB (avail 77, growth 41, headroom 0, waiters 0/0 GB) load 31/64 running 9 disk 291 GB 
 ot-run: -> ot-pve1
 ot-heavy: admitted on ot-pve1 as oth-ubuntu-1045697-1792416155 after 0 s
+ot-run: RAN on ot-pve1 (unit oth-ubuntu-1045697-1792416155): exit 0
+# ot-run rc=0 2026-10-19T10:48:40-07:00

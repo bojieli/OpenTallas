@@ -1,11 +1,11 @@
 {
   "source_commit": "0e6795834",
   "merged_main_commit": "3fd57606f",
-  "collected_at": "2026-10-19T09:29:14-07:00",
+  "collected_at": "2026-10-19T10:49:43-07:00",
   "verilator": "5.050",
   "counts": {
-    "AS EXPECTED": 40,
-    "PENDING": 3,
+    "AS EXPECTED": 41,
+    "PENDING": 2,
     "UNEXPECTED": 1
   },
   "rows": [
@@ -42,9 +42,11 @@
     {
       "leg": "amix_FACES1",
       "expect": "PASS",
-      "status": "PENDING",
-      "actual": "Existing fleet job still active; no terminal behavioral verdict",
-      "evidence": [],
+      "status": "AS EXPECTED",
+      "actual": "FACES_mut0_nu1.out: FACES MUT=0: PASS; # exit 0",
+      "evidence": [
+        "evidence/runs/amix/runs/FACES_mut0_nu1.out"
+      ],
       "client": "clients/legs/amix_FACES1.log"
     },
     {

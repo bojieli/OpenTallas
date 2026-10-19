@@ -1,8 +1,8 @@
 # Qwen MU combined-commit regression
 
-Source `0e6795834` (merged as `3fd57606f`); Verilator 5.050. Snapshot 2026-10-19T09:29:14-07:00.
+Source `0e6795834` (merged as `3fd57606f`); Verilator 5.050. Snapshot 2026-10-19T10:49:43-07:00.
 
-40 / 44 legs have terminal results as expected; 1 unexpected; 3 remain pending. This snapshot is not a full regression PASS.
+41 / 44 legs have terminal results as expected; 1 unexpected; 2 remain pending. This snapshot is not a full regression PASS.
 
 Outer shell exit 0 alone does not validate a mutant. The table checks the behavioral output for nested amix/adopt_slice runs. SIGTERM/143 is infrastructure failure, never expected mutant failure. FACES mutant r3 supersedes r0; collective r2 supersedes the hollow cases=0 r0. Pending output is excluded because the generic collector can otherwise prefer an old completed copy.
 
@@ -13,7 +13,7 @@ Scope excludes OPSEG full2 steady-state rate and the real MU.TOK.QW run gated on
 | [amix_F0](evidence/runs/amix/runs/F0_nu1_ag.out) | PASS | F0_nu1_ag.out: bench2 (j) MUT=0: PASS 3/3; # exit 0 | AS EXPECTED |
 | [amix_F1](evidence/runs/amix/runs/F1_nu1_ag.out) | PASS | F1_nu1_ag.out: bench2 (j) MUT=0: PASS 3/3; # exit 0 | AS EXPECTED |
 | [amix_F2](evidence/runs/amix/runs/F2_nu1_ag.out) | PASS | F2_nu1_ag.out: bench2 (j) MUT=0: PASS 3/3; # exit 0 | AS EXPECTED |
-| [amix_FACES1](clients/legs/amix_FACES1.log) | PASS | Existing fleet job still active; no terminal behavioral verdict | PENDING |
+| [amix_FACES1](evidence/runs/amix/runs/FACES_mut0_nu1.out) | PASS | FACES_mut0_nu1.out: FACES MUT=0: PASS; # exit 0 | AS EXPECTED |
 | [amix_FACES4](evidence/runs/amix/runs/FACES_mut0_nu4.out) | PASS | FACES_mut0_nu4.out: FACES MUT=0: PASS; # exit 0 | AS EXPECTED |
 | [amix_G0](evidence/runs/amix/runs/F0_nu4_ag.out) | PASS | F0_nu4_ag.out: bench2 (j) MUT=0: PASS 3/3; # exit 0; F0_nu4_m_s21.out: bench2 (m) MUT=0: PASS 8/8; # exit 0; F0_nu4_m_s22.out: bench2 (m) MUT=0: PASS 8/8; # exit 0; F0_nu4_n.out: bench2 (n) MUT=0: PASS 2/2; # exit 0 | AS EXPECTED |
 | [amix_G1](evidence/runs/amix/runs/F1_nu4_ag.out) | PASS | F1_nu4_ag.out: bench2 (j) MUT=0: PASS 3/3; # exit 0; F1_nu4_m_s21.out: bench2 (m) MUT=0: PASS 8/8; # exit 0; F1_nu4_m_s22.out: bench2 (m) MUT=0: PASS 8/8; # exit 0; F1_nu4_n.out: bench2 (n) MUT=0: PASS 2/2; # exit 0 | AS EXPECTED |
