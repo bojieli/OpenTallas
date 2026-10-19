@@ -1,0 +1,4 @@
+WARNING: /srv/opentallas-scratch/claude/codex-sysface-ovl-1019/src/rtl/test/qwen_split/tb_qfd_sys_face.sv:38: $readmemh(/srv/opentallas-scratch/claude/codex-sysface-ovl-1019/src/scratch/serial_regression/img/cfg_writes.memh): Not enough words in the file for the requested range [0:255].
+ERR @1254 MU head context faulted the face
+SYS_FACE_FAIL MUT=7 timeout (errors 1, face_fault 1 cal_fault 0)
+/srv/opentallas-scratch/claude/codex-sysface-ovl-1019/src/rtl/test/qwen_split/tb_qfd_sys_face.sv:295: $finish called at 450000000 (1ps)

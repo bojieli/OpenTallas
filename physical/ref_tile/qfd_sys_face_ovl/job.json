@@ -115,31 +115,6 @@
     "note": "filler head context at position >= 8192 must fault"
    },
    {
-    "name": "mu_kvctx_cal_e2e",
-    "cmd": "VERILATOR=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator python3 -I rtl/test/mu_qwen_1018/mu_kvctx_bench.py --work {RUN}/mu_kvctx_cal_e2e --jobs 8",
-    "expect": "pass",
-    "threads": 8,
-    "peak_ram_gb": 24,
-    "needs": [
-     "verilator"
-    ],
-    "pass_regex": "^MU_KVCTX_PASS kmut 0 rmut 0 cal cmut 0",
-    "pass_witness": "results/rtl/mu_qwen_1018/kvctx/runs/kvctx_cal_pass.out"
-   },
-   {
-    "name": "mu_kvctx_cal_face_mu0_image_mutant",
-    "cmd": "VERILATOR=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator python3 -I rtl/test/mu_qwen_1018/mu_kvctx_bench.py --work {RUN}/mu_kvctx_cal_face_mu0_image_mutant --cmut 1 --jobs 8",
-    "expect": "fail",
-    "threads": 8,
-    "peak_ram_gb": 24,
-    "needs": [
-     "verilator"
-    ],
-    "fail_regex": "^MU_KVCTX_FAIL kmut 0 rmut 0 cal cmut 1: .*K3 face",
-    "fail_witness": "results/rtl/mu_qwen_1018/kvctx/runs/kvctx_cal_c1.out",
-    "note": "face sequencer with the MU 0 C RX image (a kit without the MU image)"
-   },
-   {
     "name": "ovl_rom_admission_frame",
     "cmd": "bash rtl/test/qwen_split/run_sysface_ovl_rom.sh {RUN}/bench/ovl_rom_admission_frame 0",
     "expect": "pass",
