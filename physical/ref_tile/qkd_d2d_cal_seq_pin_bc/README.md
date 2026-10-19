@@ -46,3 +46,9 @@ then epoch 2 (SEG2 restore, admission, token run, L1). Witnesses are in `results
 8. Schedule: PASS. Static. Epoch-anchored outputs fall on the pin-tile edges, and the boot path adds no runtime cycle.
 
 Die slot: `DCAL_WH` grows to 18.792 x 34.56 under `OT_KV_DCAL_BC=1` (kv_die.py). That change was sent to MU-DIE-KV2.
+
+## CODEX bc2 admission recovery (2026-10-19)
+
+bc1 stopped at FLOORPLAN_MARGIN before global placement: 265um2 synthesis / 437.63um2 core =60.6%. No route ran. Re-reviewed all eight SAFE items above; input/output registers, reset landing, reach, storage, clock and schedule remain as specified. The 40-load merge-select exception is supported by the original CTS measurement (397ps depth, +173.7ps setup); it is not a critical cone.
+
+The authoritative bc2 outline and DCAL_WH are 21.6 x34.56um, aspect1.60, with one full-width std-cell band and no macros. Core17.28 x30.24 =522.5472um2 sizes measured synthesis265um2 at50.7%, below55%. W/E pin faces retain <=2.3pins/um. No RTL or latency change. Updated gate evidence is required before submission; bc1 failure remains immutable in closure history.

@@ -17,7 +17,7 @@
   "rst_n"
  ],
  "outline": {
-  "w": 18.792,
+  "w": 21.6,
   "h": 34.56,
   "exact": true
  },
@@ -82,7 +82,7 @@
  "job": {
   "owner": "Claude:KV-DCAL-BOOTCFG",
   "branch": "claude/kv-dcal-bootcfg-1019",
-  "tag": "bc1",
+  "tag": "bc2",
   "purpose": "KV link calendar sequencer with the boot cfg merged (KV-DCAL-BOOTCFG 10-19): boot target 11 loads the link-end tables + SEG2 bases through bcfg_*; the MU sequencer (ot_qwen_d2d_cal_seq_dies_mu.sv) keeps writing the runtime segment-1 bases (SEG1 after admission, SEG2 at each epoch) -- on the die today those writes were load-less, so every KV token run replayed the admission segment. One output register stage on every output (inner anchor EP_SKEW-2: epoch-anchored outputs on the pin-tile edges); sticky faults collision / boot-while-running / stale SEG2 / start-before-boot-base. Static, no credits.",
   "extra_paths": [
    "rtl/qwen_sys/d2d_static_20261015",
@@ -174,7 +174,7 @@
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
  },
- "structural_change": "NEW tile (from the _mu kit): qkd_d2d_cal_seq_pin_bc = pin capture + qkd_d2d_cal_seq (MU image) + 40 boot cfg pin registers + one output register stage on every output + the cfg merge / 4 sticky fault checks (251 flops vs 157). Outline grown 18.792 x 28.08 -> 18.792 x 34.56 for the added registers (~40-60% util); +40 E-face input pins (2.3 pins/um).",
+ "structural_change": "Admission-geometry recovery after bc1 FLOORPLAN_MARGIN before global placement (no route ran). Measured synthesis standard-cell area 265 um2 needs >=481.82 um2 core for <=55%; grow 18.792x34.56 to 21.6x34.56: core 17.28x30.24=522.5472 um2, measured utilisation 50.7%, aspect 1.60. Same registered boot/runtime cfg architecture and static schedule; no latency added.",
  "reset_landing": {
   "enable": true,
   "stages": 2
@@ -182,11 +182,12 @@
  "safe_design_checklist": {
   "1_pins": "PASS: every input captured once in RTL (reload/epoch_go/halt/bcfg_*), every output is a tile register; rst_n lands in 2 registered stages (reset_landing) ahead of the RTL release_q",
   "2_reach": "PASS: 18.8 x 34.6 um tile, every wire << 405 um",
-  "3_fanout": "PASS: ~250-flop leaf; the widest cone is the 40-bit cfg merge select (b_we / s_we, 40 loads -> gate high-fanout lint; tool buffers)",
+  "3_fanout": "PASS with explicit noncritical exception: ~253-flop leaf; 40-load cfg merge select exceeds the approximate 32-load guidance, but original CTS gate measured depth 397ps and +173.7ps setup with spread1.7ps; buffering permitted here; no critical high-fanout register cone.",
   "4_depth": "PASS: merge = 2:1 mux + 32-bit equality (stale) + 6-bit decode per stage, the sequencer logic unchanged (ep3/_mu closed at 770 ps route)",
   "5_storage": "PASS: images are compile-time constants / boot words on the link end; no runtime-indexed flop arrays, no delay lines",
-  "6_floorplan": "PASS: no macros; 18.792 x 34.56 (aspect 1.84), outline sized for ~40-60% util of the yosys estimate, full std-cell band; pins 2.3/um on W/E",
+  "6_floorplan": "PASS: no macros; full std-cell band in 21.6x34.56 outline, aspect 1.60. Measured daemon synthesis 265um2 / usable core 522.55um2 = 50.7%. W/E pin faces unchanged, density <=2.3/um.",
   "7_clock": "PASS: single S clock entry (centre-ish, as ep3), ~250 flops; spread checked at the --cts gate (TT/FF <= 80); io_hold_margin 0.03",
   "8_schedule": "PASS: static; epoch-anchored outputs on the same edges as qkd_d2d_cal_seq_pin (bench cycle-equal); the boot path adds no runtime cycle; reset/halt-relative outputs +1 edge (boot constant / exception path, before any epoch)"
- }
+ },
+ "slot_change_request": "MU-DIE-KV2: DCAL_BC slot grows to 21.6x34.56um from18.792x34.56, matching measured 265um2 synthesis at50.7% core utilisation; kv_die.py DCAL_WH updated; no schedule change."
 }

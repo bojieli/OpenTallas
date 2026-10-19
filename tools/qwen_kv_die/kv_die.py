@@ -1018,7 +1018,7 @@ DCAL_BC_GROUPS = dict(btx='bcfg_tx_we', brx='bcfg_rx_we', bad='bcfg_addr', bdt='
 DCAL_BC_LINK = dict(cfg_tx_we='btx', cfg_rx_we='brx', cfg_addr='bad', cfg_data='bdt')         # d2ds cfg port -> dcal group
 if DCAL_BC:
     DCAL_FILE = DCAL_BC_FILE
-    DCAL_WH = (18.792, 34.56)          # the bc kit outline (+94 flops vs ep3 / _mu; MU-DIE-KV2 notified)
+    DCAL_WH = (21.6, 34.56)          # the bc kit outline (+94 flops vs ep3 / _mu; MU-DIE-KV2 notified)
 
 
 def dcal_binding():
