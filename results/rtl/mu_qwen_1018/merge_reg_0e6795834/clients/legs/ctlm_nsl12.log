@@ -10,3 +10,6 @@ ot-run: ot-agidock128  admits    41 GB (avail 80, growth 52, headroom 0, waiters
 ot-run: SPILL: copying /srv/opentallas-scratch/claude/refill-0730 (1.2 GB) ot-pve1 -> ot-epyc7 (no host with --dir admits 96 GB now)
 ot-run: SPILL: copied in 36 s; running on ot-epyc7; written files go back to ot-pve1 after the run
 ot-heavy: admitted on ot-epyc7 as oth-ubuntu-1991638-1792415209 after 0 s
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-1991638-1792415209): exit 0
+ot-run: SPILL: outputs copied back ot-epyc7 -> ot-pve1; RAN on ot-epyc7: exit 0
+# ot-run rc=0 2026-10-19T08:00:43-07:00

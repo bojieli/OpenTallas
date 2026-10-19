@@ -1,11 +1,11 @@
 {
   "source_commit": "0e6795834",
   "merged_main_commit": "3fd57606f",
-  "collected_at": "2026-10-19T07:55:55-07:00",
+  "collected_at": "2026-10-19T08:52:55-07:00",
   "verilator": "5.050",
   "counts": {
-    "AS EXPECTED": 39,
-    "PENDING": 5
+    "AS EXPECTED": 40,
+    "PENDING": 4
   },
   "rows": [
     {
@@ -196,9 +196,11 @@
     {
       "leg": "ctlm_nsl12",
       "expect": "positives PASS; defined mutants FAIL; suite succeeds",
-      "status": "PENDING",
-      "actual": "Existing fleet job still active; no terminal behavioral verdict",
-      "evidence": [],
+      "status": "AS EXPECTED",
+      "actual": "ctlm_nsl12.out: MU_CTLM BENCHES: PASS; # exit 0",
+      "evidence": [
+        "evidence/out/ctlm_nsl12.out"
+      ],
       "client": "clients/legs/ctlm_nsl12.log"
     },
     {
