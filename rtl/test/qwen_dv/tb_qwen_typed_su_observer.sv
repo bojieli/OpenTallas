@@ -24,6 +24,8 @@ module tb_qwen_typed_su_observer;
   $fclose(fd);
   @(negedge ck);issue=0;@(posedge ck);#1;if(typed[15]||legacy[15])$fatal(1,"valid not cleared");
   @(negedge ck);issue=1;slice=12;@(posedge ck);#1;if(!fault||legacy_fault)$fatal(1,"unsupported unicast guard");
-  $display("TYPED_SU_OBSERVER_PASS source_events=%0d typed_users=4 default_legacy_exact=1 register_stages=1 invalid_slice_fault=1",n);$finish;
+  @(negedge ck);rst_n=0;issue=0;repeat(2)@(negedge ck);rst_n=1;issue=1;user_id=1;pc=0;slice=0;
+  @(posedge ck);#1;if(!fault||legacy_fault)$fatal(1,"PIDX/user namespace guard");
+  $display("TYPED_SU_OBSERVER_PASS source_events=%0d typed_users=4 default_legacy_exact=1 register_stages=1 invalid_slice_fault=1 namespace_prefix_fault=1",n);$finish;
  end
 endmodule

@@ -1,5 +1,5 @@
-TYPED_SU_OBSERVER_PASS source_events=16416 typed_users=4 default_legacy_exact=1 register_stages=1 invalid_slice_fault=1
-- ../src/rtl/test/qwen_dv/tb_qwen_typed_su_observer.sv:27: Verilog $finish
+TYPED_SU_OBSERVER_PASS source_events=16416 typed_users=4 default_legacy_exact=1 register_stages=1 invalid_slice_fault=1 namespace_prefix_fault=1
+- ../src/rtl/test/qwen_dv/tb_qwen_typed_su_observer.sv:29: Verilog $finish
 - S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 164us; walltime 0.018 s; speed 8.968 ms/s
-- Verilator: cpu 0.018 s on 1 threads; allocated 7 MB
+- Verilator: $finish at 164us; walltime 0.013 s; speed 12.295 ms/s
+- Verilator: cpu 0.013 s on 1 threads; allocated 7 MB

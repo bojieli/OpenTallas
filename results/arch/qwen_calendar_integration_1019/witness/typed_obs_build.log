@@ -14,5 +14,5 @@ g++    verilated.o verilated_timing.o verilated_threads.o Vtb_qwen_typed_su_obse
 rm Vtb_qwen_typed_su_observer__ALL.verilator_deplist.tmp
 make: Leaving directory '/srv/opentallas-scratch/claude/qwen-calendar-integration-1019/run/typed_obs_obj'
 - V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
-- Verilator: Built from 0.054 MB sources in 3 modules, into 0.050 MB in 6 C++ files needing 0.000 MB
-- Verilator: Walltime 3.011 s (elab=0.001, cvt=0.003, bld=3.004); cpu 0.008 s on 4 threads; allocated 41.434 MB
+- Verilator: Built from 0.054 MB sources in 3 modules, into 0.054 MB in 6 C++ files needing 0.000 MB
+- Verilator: Walltime 2.777 s (elab=0.001, cvt=0.004, bld=2.770); cpu 0.009 s on 4 threads; allocated 41.434 MB

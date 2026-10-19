@@ -16,8 +16,8 @@ module qfd_dv_typed_su_observer #(
   else if(ENABLE==0)observation<={legacy_valid,legacy_valid,2'd2,3'd0,su_pidx};
   else begin
    observation<={su_issue,cmd_user,cmd_slice,su_pidx};
-   // Current source profile contains exact unicast slice IDs0..11 only.
-   if(su_issue&&cmd_slice>=12)fault<=1;
+   // Current profile: unicast slice0..11 and canonical128-instruction user stride.
+   if(su_issue&&(cmd_slice>=12||su_pidx[8:7]!=cmd_user))fault<=1;
   end
  end
 endmodule
