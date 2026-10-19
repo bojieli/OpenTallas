@@ -1,0 +1,14 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+CLOCK_PDN_BEGIN source {/phase/original_pdn_v1/die_tie_rows.tcl}
+{"command": "source {/phase/original_pdn_v1/die_tie_rows.tcl}", "command_sha256": "423712e068c43362762439dcd094e2097184d750bf2fcd22b31f7ad8572def7a", "status": 0, "message": ""}
+CLOCK_PDN_BEGIN set stage_clocks {explicit manifest 42981 cells}
+{"command": "set stage_clocks {explicit manifest 42981 cells}", "command_sha256": "ad5484e49efcb47f20e2f870f35993e9779d88ec207495a32540b5fcca30d19e", "status": 0, "message": "42981 explicit clock cells"}
+Traceback (most recent call last):
+  File "/phase/original_pdn_v1/qwen_clock_pre_pdn.py", line 137, in <module>
+    main(p.parse_args())
+  File "/phase/original_pdn_v1/qwen_clock_pre_pdn.py", line 118, in main
+    if actual!=reference['planned_core_mesh_from_actual_shapes']:raise ValueError('actual generated mesh differs from planned source-bound blueprint')
+ValueError: actual generated mesh differs from planned source-bound blueprint
