@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qfd_sys_face_mu_dhuser",
+ "enable": false,
+ "reason": "the RTL registers every used pin (qfd_sys_face_mu_dhuser PINREG 1): dh_run[42:36] lands in the pin flop dh_q7 with the anchor compensated (fc = tc = 1 on the anchor edge), so op starts stay cycle-identical to PINREG 0 (lockstep tb_dhuser_pinreg.sv, Verilator 5.050: MUT0 PASS, MUT4/5/6/7 FAIL); every output is a flop (op_v/op_user/op_stage/op_first/op_cnt/op_ff/op_fcode, mu_fault = mu_q) or constant 0 (dh_user/res_user); dh_run[43],[35:0] unused. A synthesis wrapper would add 2 unpriced edges."
+}

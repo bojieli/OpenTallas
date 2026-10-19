@@ -1,0 +1,172 @@
+{
+ "name": "qfd_sys_face_mu_dhuser-k1-COMMIT",
+ "block": "qfd_sys_face_mu_dhuser",
+ "ref_tile": true,
+ "owner": "Claude:MU-LEAF-KIT",
+ "purpose": "Qwen ROM 4-user op-start leaf (MU-QW-B1 B1 option 2) as its own hard leaf: ROM + frame counter; lockstep PINREG 1 vs PINREG 0 on the F16 image, 2 frames (8.09M edges, 8,113 starts), +DRIFT fault equivalence, 4 mutants FAIL.",
+ "threads": 4,
+ "peak_ram_gb": 8,
+ "source": {
+  "branch": "claude/mu-leaf-kit-1019",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/qwen_split/mu",
+   "rtl/test/mu_qwen_seq/run_dhuser_pinreg.sh",
+   "rtl/test/mu_qwen_seq/tb_dhuser_pinreg.sv",
+   "results/rtl/mu_qwen_1018/b1/rom",
+   "results/rtl/mu_qwen_1018/b1/runs/kit",
+   "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qfd_sys_face_mu_dhuser #(.NU(4), .OPSEG(1), .LAST_STAGE(37), .PINREG(1)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_split/mu/qfd_sys_face_mu_dhuser.sv physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "pinreg_lockstep",
+    "cmd": "bash rtl/test/mu_qwen_seq/run_dhuser_pinreg.sh {RUN}/pinreg_lockstep 0",
+    "expect": "pass",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^TB_DHUSER_PINREG PASS MUT=0 drift=0 edges=[0-9]+ starts=8113 per_user=1481/3463/3169 mism=0 ",
+    "min_count_regex": "^TB_DHUSER_PINREG PASS MUT=0 .* starts=(\\d+) ",
+    "pass_witness": "results/rtl/mu_qwen_1018/b1/runs/kit/pinreg_m0.log"
+   },
+   {
+    "name": "pinreg_lockstep_drift",
+    "cmd": "bash rtl/test/mu_qwen_seq/run_dhuser_pinreg.sh {RUN}/pinreg_lockstep_drift 0 +DRIFT",
+    "expect": "pass",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^TB_DHUSER_PINREG PASS MUT=0 drift=1 edges=[0-9]+ starts=8113 per_user=1481/3463/3169 mism=0 ",
+    "min_count_regex": "^TB_DHUSER_PINREG PASS MUT=0 .* starts=(\\d+) ",
+    "pass_witness": "results/rtl/mu_qwen_1018/b1/runs/kit/pinreg_m0d.log"
+   },
+   {
+    "name": "entry_late_mutant",
+    "cmd": "bash rtl/test/mu_qwen_seq/run_dhuser_pinreg.sh {RUN}/entry_late_mutant 4",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^TB_DHUSER_PINREG FAIL MUT=4 .* mism=[1-9]",
+    "fail_witness": "results/rtl/mu_qwen_1018/b1/runs/kit/pinreg_m4.log",
+    "note": "entry consumed one edge late"
+   },
+   {
+    "name": "reanchor_mutant",
+    "cmd": "bash rtl/test/mu_qwen_seq/run_dhuser_pinreg.sh {RUN}/reanchor_mutant 5",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^TB_DHUSER_PINREG FAIL MUT=5 .* mism=[1-9]",
+    "fail_witness": "results/rtl/mu_qwen_1018/b1/runs/kit/pinreg_m5.log",
+    "note": "counters re-anchor on every L0 start"
+   },
+   {
+    "name": "drift_check_mutant",
+    "cmd": "bash rtl/test/mu_qwen_seq/run_dhuser_pinreg.sh {RUN}/drift_check_mutant 6 +DRIFT",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^TB_DHUSER_PINREG FAIL MUT=6 .* mism=[1-9]",
+    "fail_witness": "results/rtl/mu_qwen_1018/b1/runs/kit/pinreg_m6d.log",
+    "note": "drift / missing check dropped"
+   },
+   {
+    "name": "pinreg_nocomp_mutant",
+    "cmd": "bash rtl/test/mu_qwen_seq/run_dhuser_pinreg.sh {RUN}/pinreg_nocomp_mutant 7",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^TB_DHUSER_PINREG FAIL MUT=7 .* mism=[1-9]",
+    "fail_witness": "results/rtl/mu_qwen_1018/b1/runs/kit/pinreg_m7.log",
+    "note": "PINREG without the anchor compensation: every op start one edge late"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qfd_sys_face_mu_dhuser/signoff_ffrepair.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qfd_sys_face_mu_dhuser/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 4,
+   "peak_ram_gb": 8
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qfd_sys_face_mu_dhuser --out {RUN}/record/views/qfd_sys_face_mu_dhuser --macro-view physical/asap7_memory_macros_v2/ot_rom_4096x72_m8 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/qfd_sys_face_mu_dhuser/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/qfd_sys_face_mu_dhuser/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/qfd_sys_face_mu_dhuser/qfd_sys_face_mu_dhuser-k1-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "NEW leaf (MU-LEAF-KIT 10-19, MU-QW-B1 4b): the Qwen ROM 4-user op-start observer leaf qfd_sys_face_mu_dhuser NU 4 OPSEG 1 PINREG 1 hardened on its own: one ot_rom_4096x72_m8 (v2 aligned, F16 image rom/qfd_tt_ctlm_opseg.viamap.hex, content-independent macro; ROM instance parameters dropped under SYNTHESIS) 20 um from the E edge (its E face carries PG rects: macro_edge rule) with its W pin edge toward a W std-cell band (~200 flops: fc/tc 44, prefetch entry ~55, outputs 31, header ~56), all pins on the W face, ck mid-face beside the register band. PINREG 1 (opt-in, default 0 unchanged): pin flop on dh_run[42:36], compensated anchor, op starts cycle-identical."
+}
