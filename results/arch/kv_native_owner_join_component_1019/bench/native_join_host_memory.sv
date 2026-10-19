@@ -6,7 +6,7 @@ module native_join_host_memory(
  input wire tx_v,input wire[511:0]tx_d,output reg tx_cr,
  output reg rx_v,output reg[511:0]rx_d,input wire rx_cr,
  input wire hold_dma_b,
- output integer csr_acks,read_beats,write_beats,cq_entries,
+ output integer csr_acks,read_beats,write_beats,cq_entries,cq_successes,cq_errors,
  output reg[63:0]last_cq_w0,last_cq_w1
 );
  reg[63:0]memory[0:2047];
@@ -19,7 +19,7 @@ module native_join_host_memory(
  integer seen_reads[0:2047];
  integer i;
  initial begin
-  tx_cr=0;rx_v=0;rx_d=0;csr_acks=0;read_beats=0;write_beats=0;cq_entries=0;last_cq_w0=0;last_cq_w1=0;
+  tx_cr=0;rx_v=0;rx_d=0;csr_acks=0;read_beats=0;write_beats=0;cq_entries=0;cq_successes=0;cq_errors=0;last_cq_w0=0;last_cq_w1=0;
   for(i=0;i<2048;i=i+1)begin memory[i]=0;seen_reads[i]=0;end
  end
  task automatic descriptor(input integer index,input[15:0]client,input[7:0]op,input[7:0]flags,input[7:0]slot,input[15:0]plen,max_new,input[63:0]prompt_ptr);
@@ -68,6 +68,8 @@ module native_join_host_memory(
        end else begin
         if(!cq_word1_pending)$fatal(1,"CQ_WORD0_BEFORE_WORD1");
         cq_word1_pending=0;last_cq_w0=tx_d[159:96];cq_entries=cq_entries+1;
+        if(tx_d[98:97]==2'd3)cq_errors=cq_errors+1;else cq_successes=cq_successes+1;
+        if(tx_d[127:112]!=16'h91e3)$fatal(1,"CQ_CLIENT_TAG_GOLD got=%h",tx_d[127:112]);
         $display("CQ_PACKET edge=%0d entry=%0d w0=%h w1=%h",edge_count,cq_entries,last_cq_w0,last_cq_w1);
        end
       end
