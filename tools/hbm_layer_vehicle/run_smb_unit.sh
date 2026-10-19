@@ -30,6 +30,7 @@ case "$JOB" in
   smoke) J="$T --layers L00:0 --name smoke --out $OUT/out/smoke.json" ;;
   trace) J="$T --layers L00:0 --define TRACE --name trace --out $OUT/out/trace.json" ;;
   pos)   J="$T --layers L00:0,L02:2,L14:14,head:0 --name pos --out $OUT/out/pos.json" ;;
+  l14)   J="$T --layers L14:14 --name l14 --out $OUT/out/l14.json" ;;
   late)  J="$T --layers L14:14 --mut late_ids --name late --out $OUT/out/late.json" ;;
   imut1) J="$T --layers L14:14 --define IMUT=1 --name imut1 --out $OUT/out/imut1.json" ;;
   imut2) J="$T --layers L14:14 --define IMUT=2 --name imut2 --out $OUT/out/imut2.json" ;;

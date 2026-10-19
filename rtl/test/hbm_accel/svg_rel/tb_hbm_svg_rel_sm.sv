@@ -15,7 +15,7 @@
 // issuer (bad word, late or busy go slot = the static schedule would have stalled), feed / cache / producer, SM fault or
 // schedule_fault (packet/command mismatch), DRAM command timing.  Results are checked bit for bit by smb_unit.py.
 module tb_hbm_svg_rel_sm;
- parameter integer MAXI=8192, MAXX=16384, MAXD=64, NID=6;
+ parameter integer MAXI=8192, MAXX=65536, MAXD=64, NID=6;
  reg stream=0,hbm=0;initial forever begin #416.666 stream=1;#416.667 stream=0;end
  initial begin #173;forever #512 hbm=~hbm;end
  reg srst=0,hrst=0;
@@ -80,7 +80,8 @@ module tb_hbm_svg_rel_sm;
   if(sm_sfault)begin $display("FAULT sm_schedule cycle %0d",cyc);$fatal(1,"sm schedule_fault");end
   if(sm_fault)begin $display("FAULT sm_arith cycle %0d",cyc);$fatal(1,"sm fault");end
   if(svg_fault)begin $display("FAULT svg cycle %0d issuer %0d feed %0d (desc %0d cdc %0d cache %0d prog %0d s1 %0d fl %0d)",cyc,svg.issuer.fault,svg.feed.fault,
-   svg.feed.descriptor_fault,svg.feed.cdc_fault,svg.feed.cache_fault,svg.feed.programme_fault,svg.feed.feed_fault,svg.feed.inj_f);$fatal(1,"svg fault");end
+   svg.feed.descriptor_fault,svg.feed.cdc_fault,svg.feed.cache_fault,svg.feed.programme_fault,svg.feed.feed_fault,svg.feed.inj_f);
+   $display("ISSUER rc %0d sq_n %0d gq_n %0d gh_at %0d go_busy %0d cache_ready %b block_ready %b a_v %0d p_v %0d st_v %0d s_blk %0d rd_q %0d",svg.issuer.rc,svg.issuer.sq_n,svg.issuer.gq_n,svg.issuer.gh_at,svg.issuer.go_busy,svg.issuer.cache_ready,svg.issuer.block_ready,svg.issuer.a_v,svg.issuer.p_v,svg.issuer.st_v,svg.issuer.s_blk,svg.issuer.rd_q);$fatal(1,"svg fault");end
   if(xc_fault)begin $display("FAULT xc cycle %0d",cyc);$fatal(1,"xc fault");end
   if(cp_fault)begin $display("FAULT cp_svg cycle %0d",cyc);$fatal(1,"cp fault");end
  end
