@@ -82,7 +82,8 @@
     "peak_ram_gb": 4,
     "needs": [
      "verilator"
-    ]
+    ],
+    "fail_witness": "results/arch/qwen_kv_die/pv_trunk_t/witness/leaf_qkd_rlyi_258s_mut.log"
    },
    {
     "name": "neg_mutant_sel",
@@ -93,11 +94,15 @@
     "peak_ram_gb": 4,
     "needs": [
      "verilator"
-    ]
+    ],
+    "fail_witness": "results/arch/qwen_kv_die/pv_trunk_t/witness/leaf_qkd_rlyi_258s_smut.log"
    }
   ],
   "views_to": "physical/ref_tile/qkd_rlyi_258s/views",
-  "record_to": "results/rtl/ref_tile/qkd_rlyi_258s"
+  "record_to": "results/rtl/ref_tile/qkd_rlyi_258s",
+  "extra_paths": [
+   "rtl/qwen_sys/split_20261014/test/bench_rtrunk_leaves.sh"
+  ]
  },
  "children": [],
  "inter": [],

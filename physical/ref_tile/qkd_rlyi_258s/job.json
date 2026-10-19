@@ -8,7 +8,10 @@
  "peak_ram_gb": 8,
  "source": {
   "branch": "claude/kv-native-1018",
-  "commit": "COMMIT"
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/qwen_sys/split_20261014/test/bench_rtrunk_leaves.sh"
+  ]
  },
  "stages": {
   "bench": [
@@ -42,7 +45,8 @@
     "peak_ram_gb": 4,
     "needs": [
      "verilator"
-    ]
+    ],
+    "fail_witness": "results/arch/qwen_kv_die/pv_trunk_t/witness/leaf_qkd_rlyi_258s_mut.log"
    },
    {
     "name": "neg_mutant_sel",
@@ -53,7 +57,8 @@
     "peak_ram_gb": 4,
     "needs": [
      "verilator"
-    ]
+    ],
+    "fail_witness": "results/arch/qwen_kv_die/pv_trunk_t/witness/leaf_qkd_rlyi_258s_smut.log"
    }
   ],
   "calibrate": {

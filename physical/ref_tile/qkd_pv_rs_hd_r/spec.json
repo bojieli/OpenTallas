@@ -87,11 +87,15 @@
     "peak_ram_gb": 4,
     "needs": [
      "verilator"
-    ]
+    ],
+    "fail_witness": "results/arch/qwen_kv_die/pv_trunk_t/witness/leaf_qkd_pv_rs_hd_r_mut.log"
    }
   ],
   "views_to": "physical/ref_tile/qkd_pv_rs_hd_r/views",
-  "record_to": "results/rtl/ref_tile/qkd_pv_rs_hd_r"
+  "record_to": "results/rtl/ref_tile/qkd_pv_rs_hd_r",
+  "extra_paths": [
+   "rtl/qwen_sys/split_20261014/test/bench_rtrunk_leaves.sh"
+  ]
  },
  "children": [],
  "inter": [],
