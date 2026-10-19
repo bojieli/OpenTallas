@@ -1,0 +1,11 @@
+# CB16 bounded pickup and A0 composition model
+
+All four submitted 257/258 writer/reader component routes CLOSED and auto-merged. `route_receipts.json` binds their exact jobs, committed LEF hashes, exported final SPEF clock insertion and bench verdicts. `paired_final_pin_correspondence.json` enumerates actual writer-to-reader bank/valid pins from final LEFs and the RTL slot/lane convention. Component results do not qualify the parent. Post-route all-driver census, phase/window matching and parent routes remain open.
+
+The six superseded CP solvers were stopped after matching exact argv, cwd and cgroup to the hand-back packet. `pre_stop.json` preserves identities and the last soft incumbent. All six PIDs are absent. The exact old diagnostic b16 CTS container b5c805fbc07bb58466f2c053fa0dc1edc8b130bbd609beb1d41dc5599e4d6547 was stopped after confirming both bound run paths; OpenROAD PID1087457 is absent. Existing run files remain. No new heavy job was launched.
+
+The last incumbent has210 reach violations:136 within a region,19 across regions,55 involving unqualified boundary/A0 pins. Total overrun61,344.631um. Regional crossings alone cannot repair its within-region distance failures. `model.json` gives distance-only relay lower bounds; these are neither a legal placement nor serial cycle additions. Legacy full-width labels on some split-half edges require exact bit correspondence before area or clock cost.
+
+A0 structural/reset branches contain identical matvec RTL. Reset r3 is instead an isolated specialized native-source transformation of the actual REGROOT5 mapped netlist,15651FF. It retains254 core contexts and asynchronously clears the intended metadata. Seven FF and70 total nonclock roots remain broad. Any RTL recut must regenerate that native candidate and repeat the composed reset/numeric proof; combining branch histories does not prove this. No A0 kit or qualified view exists.
+
+D8 LAND600 is the selected model direction only. Actual overwrite lifetime, arbitrary restart/warm abort, production ICG/clock phases/native arcs and complete compiler cycle pricing precede source adoption or a gate. The17.28x8.64 group16 footprint remains a model candidate; only the older17.28square diagnostic was routed.

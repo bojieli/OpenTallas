@@ -1,0 +1,34 @@
+{
+ "schema": "opentallas.cb16.pickup2.model.v1",
+ "diagnostic_only": true,
+ "release_ready": false,
+ "best_sha256": "ab97982f001077170c7dbc1dc20cee455133cb9aa21b9a925276e7fa97341c6e",
+ "outline_um": {
+  "w": 3153.6000000000004,
+  "h": 5227.2
+ },
+ "violating_edges": 210,
+ "overrun_um": 61344.631,
+ "violations_by_class": {
+  "unqualified_boundary": 55,
+  "same_region": 136,
+  "cross_region": 19
+ },
+ "distance_only_intermediate_stages_by_class": {
+  "unqualified_boundary": 95,
+  "same_region": 175,
+  "cross_region": 22
+ },
+ "cost_not_computed_reason": "Legacy graph labels some split-half edges with full516bit width. Bind exact final LEF bit maps and aliases before bit-stage/area accounting. Manhattan lower bounds do not select routes or serial schedule cycles.",
+ "closed_route_receipts": "route_receipts.json",
+ "A0_composition": {
+  "matvec_source_same_between_structural_and_reset_branch": true,
+  "REGROOT5_source_preserved": true,
+  "reset_candidate_type": "specialized native post-map source, not production RTL merge",
+  "candidate_ff": 15651,
+  "remaining_broad_FF": 7,
+  "remaining_nonclock_broad": 70,
+  "next": "Recut the native specialized candidate preserving canonical state and all async/retained semantics; prove actual terminal pin correspondence. RTL control-copy changes require reset candidate regeneration and full composed source proof."
+ },
+ "D8": "MODEL direction selected; overwrite, arbitrary restart/warm abort, actual production phase/ICG/native arcs and per-edge compiler price OPEN"
+}
