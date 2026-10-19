@@ -1,0 +1,965 @@
+{
+ "name": "qfd_dv_slice2_stn8",
+ "top": "qfd_dv_redstn2_rg8",
+ "kind": "tile",
+ "diagnostic": true,
+ "sources": [
+  "rtl/qwen_dv/qfd_dv_redstn2_rg8.sv",
+  "rtl/qwen_dv/qfd_dv_redstn2_regional.sv",
+  "rtl/qwen_dv/qfd_dv_redstn2_gsafe.sv",
+  "rtl/qwen_dv/qfd_dv_station_math_g.sv",
+  "rtl/qwen_dv/qfd_dv_ring_delay.sv",
+  "rtl/qwen_dv/qfd_dv_reset_tree.sv",
+  "rtl/common/landed_parent/ot_pl_land.sv",
+  "rtl/common/landed_parent/ot_pl_land_physical.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_bb.v"
+ ],
+ "params": {
+  "PIN_IN": 1,
+  "BT_LAT": 1
+ },
+ "clock": "multiple_cts_roots",
+ "clock_port": "ck_r0",
+ "clock_ports": [
+  "ck_r0",
+  "ck_r1",
+  "ck_r2",
+  "ck_r3",
+  "ck_r4",
+  "ck_r5",
+  "ck_r6",
+  "ck_r7"
+ ],
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_r0"
+   ],
+   "inputs": [
+    "rst_n_r0",
+    "cfg_r0",
+    "rs_s_lo_r0",
+    "rs_s_hi_r0",
+    "rs_n_lo_r0",
+    "rs_n_hi_r0",
+    "rs_s_c_r0",
+    "rs_n_c_r0",
+    "nb_d_r0",
+    "nb_c_r0",
+    "bt_q_r0"
+   ],
+   "outputs": [
+    "nb_od_r0",
+    "r_d_r0",
+    "nb_oc",
+    "bt_re",
+    "bt_word",
+    "r_v",
+    "r_idx",
+    "r_last",
+    "fault"
+   ]
+  },
+  "region1": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_r1"
+   ],
+   "inputs": [
+    "rst_n_r1",
+    "cfg_r1",
+    "rs_s_lo_r1",
+    "rs_s_hi_r1",
+    "rs_n_lo_r1",
+    "rs_n_hi_r1",
+    "rs_s_c_r1",
+    "rs_n_c_r1",
+    "nb_d_r1",
+    "nb_c_r1",
+    "bt_q_r1"
+   ],
+   "outputs": [
+    "nb_od_r1",
+    "r_d_r1"
+   ]
+  },
+  "region2": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_r2"
+   ],
+   "inputs": [
+    "rst_n_r2",
+    "cfg_r2",
+    "rs_s_lo_r2",
+    "rs_s_hi_r2",
+    "rs_n_lo_r2",
+    "rs_n_hi_r2",
+    "rs_s_c_r2",
+    "rs_n_c_r2",
+    "nb_d_r2",
+    "nb_c_r2",
+    "bt_q_r2"
+   ],
+   "outputs": [
+    "nb_od_r2",
+    "r_d_r2"
+   ]
+  },
+  "region3": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_r3"
+   ],
+   "inputs": [
+    "rst_n_r3",
+    "cfg_r3",
+    "rs_s_lo_r3",
+    "rs_s_hi_r3",
+    "rs_n_lo_r3",
+    "rs_n_hi_r3",
+    "rs_s_c_r3",
+    "rs_n_c_r3",
+    "nb_d_r3",
+    "nb_c_r3",
+    "bt_q_r3"
+   ],
+   "outputs": [
+    "nb_od_r3",
+    "r_d_r3"
+   ]
+  },
+  "region4": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_r4"
+   ],
+   "inputs": [
+    "rst_n_r4",
+    "cfg_r4",
+    "rs_s_lo_r4",
+    "rs_s_hi_r4",
+    "rs_n_lo_r4",
+    "rs_n_hi_r4",
+    "rs_s_c_r4",
+    "rs_n_c_r4",
+    "nb_d_r4",
+    "nb_c_r4",
+    "bt_q_r4"
+   ],
+   "outputs": [
+    "nb_od_r4",
+    "r_d_r4"
+   ]
+  },
+  "region5": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_r5"
+   ],
+   "inputs": [
+    "rst_n_r5",
+    "cfg_r5",
+    "rs_s_lo_r5",
+    "rs_s_hi_r5",
+    "rs_n_lo_r5",
+    "rs_n_hi_r5",
+    "rs_s_c_r5",
+    "rs_n_c_r5",
+    "nb_d_r5",
+    "nb_c_r5",
+    "bt_q_r5"
+   ],
+   "outputs": [
+    "nb_od_r5",
+    "r_d_r5"
+   ]
+  },
+  "region6": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_r6"
+   ],
+   "inputs": [
+    "rst_n_r6",
+    "cfg_r6",
+    "rs_s_lo_r6",
+    "rs_s_hi_r6",
+    "rs_n_lo_r6",
+    "rs_n_hi_r6",
+    "rs_s_c_r6",
+    "rs_n_c_r6",
+    "nb_d_r6",
+    "nb_c_r6",
+    "bt_q_r6"
+   ],
+   "outputs": [
+    "nb_od_r6",
+    "r_d_r6"
+   ]
+  },
+  "region7": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_r7"
+   ],
+   "inputs": [
+    "rst_n_r7",
+    "cfg_r7",
+    "rs_s_lo_r7",
+    "rs_s_hi_r7",
+    "rs_n_lo_r7",
+    "rs_n_hi_r7",
+    "rs_s_c_r7",
+    "rs_n_c_r7",
+    "nb_d_r7",
+    "nb_c_r7",
+    "bt_q_r7"
+   ],
+   "outputs": [
+    "nb_od_r7",
+    "r_d_r7"
+   ]
+  }
+ },
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "reset_ports": [
+  "rst_n_r0",
+  "rst_n_r1",
+  "rst_n_r2",
+  "rst_n_r3",
+  "rst_n_r4",
+  "rst_n_r5",
+  "rst_n_r6",
+  "rst_n_r7"
+ ],
+ "outline": {
+  "w": 864.0,
+  "h": 432.0
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1",
+   "count": 40
+  }
+ ],
+ "pins": {
+  "N": [
+   "ck_r0",
+   "rst_n_r0",
+   "cfg_r0",
+   "rs_s_lo_r0",
+   "rs_s_hi_r0",
+   "rs_n_lo_r0",
+   "rs_n_hi_r0",
+   "rs_s_c_r0",
+   "rs_n_c_r0",
+   "nb_d_r0",
+   "nb_c_r0",
+   "bt_q_r0",
+   "nb_od_r0",
+   "r_d_r0",
+   "nb_oc",
+   "bt_re",
+   "bt_word",
+   "r_v",
+   "r_idx",
+   "r_last",
+   "fault",
+   "ck_r2",
+   "rst_n_r2",
+   "cfg_r2",
+   "rs_s_lo_r2",
+   "rs_s_hi_r2",
+   "rs_n_lo_r2",
+   "rs_n_hi_r2",
+   "rs_s_c_r2",
+   "rs_n_c_r2",
+   "nb_d_r2",
+   "nb_c_r2",
+   "bt_q_r2",
+   "nb_od_r2",
+   "r_d_r2",
+   "ck_r4",
+   "rst_n_r4",
+   "cfg_r4",
+   "rs_s_lo_r4",
+   "rs_s_hi_r4",
+   "rs_n_lo_r4",
+   "rs_n_hi_r4",
+   "rs_s_c_r4",
+   "rs_n_c_r4",
+   "nb_d_r4",
+   "nb_c_r4",
+   "bt_q_r4",
+   "nb_od_r4",
+   "r_d_r4",
+   "ck_r6",
+   "rst_n_r6",
+   "cfg_r6",
+   "rs_s_lo_r6",
+   "rs_s_hi_r6",
+   "rs_n_lo_r6",
+   "rs_n_hi_r6",
+   "rs_s_c_r6",
+   "rs_n_c_r6",
+   "nb_d_r6",
+   "nb_c_r6",
+   "bt_q_r6",
+   "nb_od_r6",
+   "r_d_r6"
+  ],
+  "S": [
+   "ck_r1",
+   "rst_n_r1",
+   "cfg_r1",
+   "rs_s_lo_r1",
+   "rs_s_hi_r1",
+   "rs_n_lo_r1",
+   "rs_n_hi_r1",
+   "rs_s_c_r1",
+   "rs_n_c_r1",
+   "nb_d_r1",
+   "nb_c_r1",
+   "bt_q_r1",
+   "nb_od_r1",
+   "r_d_r1",
+   "ck_r3",
+   "rst_n_r3",
+   "cfg_r3",
+   "rs_s_lo_r3",
+   "rs_s_hi_r3",
+   "rs_n_lo_r3",
+   "rs_n_hi_r3",
+   "rs_s_c_r3",
+   "rs_n_c_r3",
+   "nb_d_r3",
+   "nb_c_r3",
+   "bt_q_r3",
+   "nb_od_r3",
+   "r_d_r3",
+   "ck_r5",
+   "rst_n_r5",
+   "cfg_r5",
+   "rs_s_lo_r5",
+   "rs_s_hi_r5",
+   "rs_n_lo_r5",
+   "rs_n_hi_r5",
+   "rs_s_c_r5",
+   "rs_n_c_r5",
+   "nb_d_r5",
+   "nb_c_r5",
+   "bt_q_r5",
+   "nb_od_r5",
+   "r_d_r5",
+   "ck_r7",
+   "rst_n_r7",
+   "cfg_r7",
+   "rs_s_lo_r7",
+   "rs_s_hi_r7",
+   "rs_n_lo_r7",
+   "rs_n_hi_r7",
+   "rs_s_c_r7",
+   "rs_n_c_r7",
+   "nb_d_r7",
+   "nb_c_r7",
+   "bt_q_r7",
+   "nb_od_r7",
+   "r_d_r7"
+  ]
+ },
+ "pin_ranges": {
+  "ck_r0": [
+   4.32,
+   13.944
+  ],
+  "rst_n_r0": [
+   14.194,
+   23.819
+  ],
+  "cfg_r0": [
+   24.069,
+   33.693
+  ],
+  "rs_s_lo_r0": [
+   33.943,
+   43.567
+  ],
+  "rs_s_hi_r0": [
+   43.817,
+   53.441
+  ],
+  "rs_n_lo_r0": [
+   53.691,
+   63.316
+  ],
+  "rs_n_hi_r0": [
+   63.566,
+   73.19
+  ],
+  "rs_s_c_r0": [
+   73.44,
+   83.064
+  ],
+  "rs_n_c_r0": [
+   83.314,
+   92.939
+  ],
+  "nb_d_r0": [
+   93.189,
+   102.813
+  ],
+  "nb_c_r0": [
+   103.063,
+   112.687
+  ],
+  "bt_q_r0": [
+   112.937,
+   122.561
+  ],
+  "nb_od_r0": [
+   122.811,
+   132.436
+  ],
+  "r_d_r0": [
+   132.686,
+   142.31
+  ],
+  "nb_oc": [
+   142.56,
+   152.184
+  ],
+  "bt_re": [
+   152.434,
+   162.059
+  ],
+  "bt_word": [
+   162.309,
+   171.933
+  ],
+  "r_v": [
+   172.183,
+   181.807
+  ],
+  "r_idx": [
+   182.057,
+   191.681
+  ],
+  "r_last": [
+   191.931,
+   201.556
+  ],
+  "fault": [
+   201.806,
+   211.43
+  ],
+  "ck_r1": [
+   4.32,
+   18.881
+  ],
+  "rst_n_r1": [
+   19.131,
+   33.693
+  ],
+  "cfg_r1": [
+   33.943,
+   48.504
+  ],
+  "rs_s_lo_r1": [
+   48.754,
+   63.316
+  ],
+  "rs_s_hi_r1": [
+   63.566,
+   78.127
+  ],
+  "rs_n_lo_r1": [
+   78.377,
+   92.939
+  ],
+  "rs_n_hi_r1": [
+   93.189,
+   107.75
+  ],
+  "rs_s_c_r1": [
+   108.0,
+   122.561
+  ],
+  "rs_n_c_r1": [
+   122.811,
+   137.373
+  ],
+  "nb_d_r1": [
+   137.623,
+   152.184
+  ],
+  "nb_c_r1": [
+   152.434,
+   166.996
+  ],
+  "bt_q_r1": [
+   167.246,
+   181.807
+  ],
+  "nb_od_r1": [
+   182.057,
+   196.619
+  ],
+  "r_d_r1": [
+   196.869,
+   211.43
+  ],
+  "ck_r2": [
+   220.32,
+   234.881
+  ],
+  "rst_n_r2": [
+   235.131,
+   249.693
+  ],
+  "cfg_r2": [
+   249.943,
+   264.504
+  ],
+  "rs_s_lo_r2": [
+   264.754,
+   279.316
+  ],
+  "rs_s_hi_r2": [
+   279.566,
+   294.127
+  ],
+  "rs_n_lo_r2": [
+   294.377,
+   308.939
+  ],
+  "rs_n_hi_r2": [
+   309.189,
+   323.75
+  ],
+  "rs_s_c_r2": [
+   324.0,
+   338.561
+  ],
+  "rs_n_c_r2": [
+   338.811,
+   353.373
+  ],
+  "nb_d_r2": [
+   353.623,
+   368.184
+  ],
+  "nb_c_r2": [
+   368.434,
+   382.996
+  ],
+  "bt_q_r2": [
+   383.246,
+   397.807
+  ],
+  "nb_od_r2": [
+   398.057,
+   412.619
+  ],
+  "r_d_r2": [
+   412.869,
+   427.43
+  ],
+  "ck_r3": [
+   220.32,
+   234.881
+  ],
+  "rst_n_r3": [
+   235.131,
+   249.693
+  ],
+  "cfg_r3": [
+   249.943,
+   264.504
+  ],
+  "rs_s_lo_r3": [
+   264.754,
+   279.316
+  ],
+  "rs_s_hi_r3": [
+   279.566,
+   294.127
+  ],
+  "rs_n_lo_r3": [
+   294.377,
+   308.939
+  ],
+  "rs_n_hi_r3": [
+   309.189,
+   323.75
+  ],
+  "rs_s_c_r3": [
+   324.0,
+   338.561
+  ],
+  "rs_n_c_r3": [
+   338.811,
+   353.373
+  ],
+  "nb_d_r3": [
+   353.623,
+   368.184
+  ],
+  "nb_c_r3": [
+   368.434,
+   382.996
+  ],
+  "bt_q_r3": [
+   383.246,
+   397.807
+  ],
+  "nb_od_r3": [
+   398.057,
+   412.619
+  ],
+  "r_d_r3": [
+   412.869,
+   427.43
+  ],
+  "ck_r4": [
+   436.32,
+   450.881
+  ],
+  "rst_n_r4": [
+   451.131,
+   465.693
+  ],
+  "cfg_r4": [
+   465.943,
+   480.504
+  ],
+  "rs_s_lo_r4": [
+   480.754,
+   495.316
+  ],
+  "rs_s_hi_r4": [
+   495.566,
+   510.127
+  ],
+  "rs_n_lo_r4": [
+   510.377,
+   524.939
+  ],
+  "rs_n_hi_r4": [
+   525.189,
+   539.75
+  ],
+  "rs_s_c_r4": [
+   540.0,
+   554.561
+  ],
+  "rs_n_c_r4": [
+   554.811,
+   569.373
+  ],
+  "nb_d_r4": [
+   569.623,
+   584.184
+  ],
+  "nb_c_r4": [
+   584.434,
+   598.996
+  ],
+  "bt_q_r4": [
+   599.246,
+   613.807
+  ],
+  "nb_od_r4": [
+   614.057,
+   628.619
+  ],
+  "r_d_r4": [
+   628.869,
+   643.43
+  ],
+  "ck_r5": [
+   436.32,
+   450.881
+  ],
+  "rst_n_r5": [
+   451.131,
+   465.693
+  ],
+  "cfg_r5": [
+   465.943,
+   480.504
+  ],
+  "rs_s_lo_r5": [
+   480.754,
+   495.316
+  ],
+  "rs_s_hi_r5": [
+   495.566,
+   510.127
+  ],
+  "rs_n_lo_r5": [
+   510.377,
+   524.939
+  ],
+  "rs_n_hi_r5": [
+   525.189,
+   539.75
+  ],
+  "rs_s_c_r5": [
+   540.0,
+   554.561
+  ],
+  "rs_n_c_r5": [
+   554.811,
+   569.373
+  ],
+  "nb_d_r5": [
+   569.623,
+   584.184
+  ],
+  "nb_c_r5": [
+   584.434,
+   598.996
+  ],
+  "bt_q_r5": [
+   599.246,
+   613.807
+  ],
+  "nb_od_r5": [
+   614.057,
+   628.619
+  ],
+  "r_d_r5": [
+   628.869,
+   643.43
+  ],
+  "ck_r6": [
+   652.32,
+   666.881
+  ],
+  "rst_n_r6": [
+   667.131,
+   681.693
+  ],
+  "cfg_r6": [
+   681.943,
+   696.504
+  ],
+  "rs_s_lo_r6": [
+   696.754,
+   711.316
+  ],
+  "rs_s_hi_r6": [
+   711.566,
+   726.127
+  ],
+  "rs_n_lo_r6": [
+   726.377,
+   740.939
+  ],
+  "rs_n_hi_r6": [
+   741.189,
+   755.75
+  ],
+  "rs_s_c_r6": [
+   756.0,
+   770.561
+  ],
+  "rs_n_c_r6": [
+   770.811,
+   785.373
+  ],
+  "nb_d_r6": [
+   785.623,
+   800.184
+  ],
+  "nb_c_r6": [
+   800.434,
+   814.996
+  ],
+  "bt_q_r6": [
+   815.246,
+   829.807
+  ],
+  "nb_od_r6": [
+   830.057,
+   844.619
+  ],
+  "r_d_r6": [
+   844.869,
+   859.43
+  ],
+  "ck_r7": [
+   652.32,
+   666.881
+  ],
+  "rst_n_r7": [
+   667.131,
+   681.693
+  ],
+  "cfg_r7": [
+   681.943,
+   696.504
+  ],
+  "rs_s_lo_r7": [
+   696.754,
+   711.316
+  ],
+  "rs_s_hi_r7": [
+   711.566,
+   726.127
+  ],
+  "rs_n_lo_r7": [
+   726.377,
+   740.939
+  ],
+  "rs_n_hi_r7": [
+   741.189,
+   755.75
+  ],
+  "rs_s_c_r7": [
+   756.0,
+   770.561
+  ],
+  "rs_n_c_r7": [
+   770.811,
+   785.373
+  ],
+  "nb_d_r7": [
+   785.623,
+   800.184
+  ],
+  "nb_c_r7": [
+   800.434,
+   814.996
+  ],
+  "bt_q_r7": [
+   815.246,
+   829.807
+  ],
+  "nb_od_r7": [
+   830.057,
+   844.619
+  ],
+  "r_d_r7": [
+   844.869,
+   859.43
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 32,
+  "peak_ram_gb": 192,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  }
+ },
+ "safe_design_checklist": {
+  "1_pins": "PASS: PIN_IN=1 one pin register on every data/control input; outputs are flop Q; rst_n lands in 2 registered stages (rst_l0/rst_l1) then kept 32-ary trees",
+  "2_reach": "PASS by construction: no region-to-region data; the only crossing (fault ring) is a landed hop (4-slot writer at source clock, K=2 reader at destination) between physical neighbours (folded 0,2,4,6,7,5,3,1)",
+  "3_fanout": "PASS by construction: control replicated per region from per-region input copies; cfg_v 1->24 kept copies, mode/valid copies <=16; reset kept copies <=32 (qfd_dv_reset_tree); gate textbook_lint high_fanout confirms",
+  "4_depth": "inherited R8 bounded math (ADD7/SCALE6 kernels); gate logic_depth WARN/--cts path classes confirm",
+  "5_storage": "PASS: skew/hb/h9/scale-wait in 32x64 SRAM macros (5 per region, 40 total); valid/bad bits in finite 4-slot rings",
+  "6_floorplan": "macros placed by gen on the asap7 lattice; outline from gate synthesis area; 2x4 region grid (stn8), square region (stnrg)",
+  "7_clock": "8 regional CTS roots (stn8: multiple_cts_roots related_same_frequency) / one root per hardened region (stnrg); crossings landed; io_hold_margin 0.03",
+  "8_schedule": "static: PIN_IN +1 edge on every input, BT_LAT +1 on the bt round trip, reset release +2, fault visibility <= 28 edges (sticky diagnostic) -> compiler schedule"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "the RTL registers every data/control input at its pin (PIN_IN=1, in the region's own clock) and every output is flop Q; the flow wrapper would add a second +1 register (single clock)"
+ },
+ "reset_landing": {
+  "enable": false,
+  "reason": "the RTL lands rst_n in 2 registered stages (rst_l0/rst_l1) in each region's own clock, then kept 32-ary trees (qfd_dv_reset_tree)"
+ },
+ "job": {
+  "owner": "Claude:QW-SLICE3",
+  "branch": "claude/qw-slice3-1019",
+  "tag": "g1",
+  "purpose": "QW-SLICE3: slice2 station, 8 regional CTS roots (one per SU-lane region), landed fault ring",
+  "extra_paths": [
+   "rtl/qwen_dv",
+   "rtl/hdc",
+   "rtl/common/landed_parent",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1"
+  ],
+  "benches": [
+   {
+    "name": "station_regional_eq",
+    "cmd": "PIN=1 bash rtl/test/qwen_dv/safe_storage/run_station_regional.sh {RUN}/bench/rg 0 0",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "station_regional_rmut1",
+    "cmd": "PIN=1 bash rtl/test/qwen_dv/safe_storage/run_station_regional.sh {RUN}/bench/rg 0 1",
+    "expect": "fail",
+    "fail_regex": "REGIONAL_STATION_MISMATCH",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "views_to": "physical/ref_tile/qfd_dv_slice2_stn8/views",
+  "record_to": "results/rtl/ref_tile/qfd_dv_slice2_stn8"
+ },
+ "children": [],
+ "inter": [],
+ "recipe": 4,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true
+}
