@@ -1,0 +1,66 @@
+{
+  "status": "MODEL_ONLY_ROOT_REVIEW_REQUIRED_BEFORE_RESET_RTL",
+  "source": "ea591f72d",
+  "actual_native_clock": "all6891FF currentexpanded genericC=clk, all13macroclk +2TLSwclk/rclk same sourceclk; no newcrossing inferred",
+  "current_reset": {
+    "raw_rst_n": "one head rt asynchronous reset pin",
+    "rt_Q_ultimate_sinks": 1603,
+    "release_native_edge": 1,
+    "semantics": "ASYNCassert/SYNCdeassert; all currentreset equations preserved"
+  },
+  "proposed_balanced_reset": {
+    "face_ASR_FF": 2,
+    "branch_ASR_FF": 2,
+    "leaf_ASR_FF": 51,
+    "total_FF": 55,
+    "delta_vs_rt1": 54,
+    "max_raw_reset_load": 1,
+    "max_face0_Q_load": 1,
+    "max_face1_Q_load": 2,
+    "max_branch_Q_load": 26,
+    "max_leaf_Q_load": 32,
+    "local_release_edge": 4,
+    "local_release_delta_edges": 3,
+    "note": "ProvisionalBEFOREusefulcopiesandfiniteholdhelpers; recensusrequiredaftercontrolcopyconstruction. Nativesinks includeresetD/gatesaswellasR, preservealloriginalequations/polarities."
+  },
+  "cohorts": [
+    {
+      "state": "face0",
+      "resume_edge": 1
+    },
+    {
+      "state": "face1",
+      "resume_edge": 2
+    },
+    {
+      "state": "allbranches",
+      "resume_edge": 3
+    },
+    {
+      "state": "allleavesandoriginalpayloadresetconsumers",
+      "resume_edge": 4
+    }
+  ],
+  "parent_boot": {
+    "existing_functional_guard": 18,
+    "composition": "scalar16 +landedSU2; local+3 is NOTautomatically global+3",
+    "first_legal_admission": "UNBOUND untilactualparentck_lane/rst_lane+head rt+firstinputledger",
+    "local_phase": "Independentheadroot resumededgecount; stoppedclock mustassertallleaveswithoutposedge andreleaseonlybyactualnativeedges"
+  },
+  "steady_data_edges_added": 0,
+  "holding_candidates": {
+    "count": 201,
+    "histogram": {
+      "3": 86,
+      "4": 111,
+      "5": 4
+    },
+    "future_contract": "finite exactD storage withusefulkeptreaders, actualhelperresetedges/coldfirstusepriced separately"
+  },
+  "control_copy_model": "82otherunsafeFF/Booleanroots; exactrecursivecopyfixedpointmustincludecopyD/resetandBUF/INVtransparentloads. Sourceboolean mathhelper direct-onlycensus insufficient to authorizeultimatefanout.",
+  "open": [
+    "Root approval of reset source choice after wholecohort ledger",
+    "recursiveusefulcopies andpostcopy1603sinks count",
+    "mappedFF/area/native hardpin/geometry/reach/PG/TTFF"
+  ]
+}

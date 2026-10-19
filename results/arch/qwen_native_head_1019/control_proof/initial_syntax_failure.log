@@ -1,0 +1,38 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/qw-head-controls-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/qw-head-controls-1019
+ot-run: ot-epyc6       admits   827 GB (avail 693, growth 113, headroom 0, waiters 0/0 GB) load 16/128 running 10 disk 5995 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/qw-head-controls-1019
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/qw-head-controls-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/qw-head-controls-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/qw-head-controls-1019
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-2468369-1792432941 after 0 s
+    VERILATOR BUILD FAIL:       | ^~~~~~~~~
+%Error: /srv/opentallas-scratch/claude/qw-head-controls-1019/rtl/qwen_dv/qfd_dv_head_native_b64.sv:790:1: syntax error, unexpected endmodule
+  790 | endmodule
+      | ^~~~~~~~~
+%Error: /srv/opentallas-scratch/claude/qw-head-controls-1019/rtl/qwen_dv/qfd_dv_head_native_b64.sv:807:1: syntax error, unexpected endmodule
+  807 | endmodule
+      | ^~~~~~~~~
+%Error: /srv/opentallas-scratch/claude/qw-head-controls-1019/rtl/qwen_dv/qfd_dv_head_native_b64.sv:813:2: syntax error, unexpected end
+  813 |  end else begin:g_ring
+      |  ^~~
+%Error: /srv/opentallas-scratch/claude/qw-head-controls-1019/rtl/qwen_dv/qfd_dv_head_native_b64.sv:819:2: syntax error, unexpected end
+  819 |  end endgenerate
+      |  ^~~
+%Error: Cannot continue
+        ... This fatal error may be caused by the earlier error(s); resolve those first.
+
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/qw-head-controls-1019/tools/qwen_native_head_1019/run_production.py", line 15, in <module>
+    if __name__=='__main__': B.main()
+                             ~~~~~~^^
+  File "/srv/opentallas-scratch/claude/qw-head-controls-1019/rtl/test/qwen_dv/dv_bench2.py", line 795, in main
+    ok, n, errs = BENCHES[b](Path(a.work) / f"m{a.mut}", a.mut)
+                  ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch/claude/qw-head-controls-1019/rtl/test/qwen_dv/dv_bench.py", line 492, in bench_e
+    log = run_sim("e", ev, work, mut, ev.t + 20)
+  File "/srv/opentallas-scratch/claude/qw-head-controls-1019/rtl/test/qwen_dv/dv_bench2.py", line 157, in run_sim2
+    raise subprocess.CalledProcessError(r.returncode, cmd[:4])
+subprocess.CalledProcessError: Command '['verilator', '--cc', '--exe', '--build']' returned non-zero exit status 1.
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-2468369-1792432941): exit 1

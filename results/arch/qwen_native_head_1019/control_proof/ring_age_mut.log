@@ -1,0 +1,11 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/qw-head-controls-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/qw-head-controls-1019
+ot-run: ot-epyc6       admits   815 GB (avail 684, growth 113, headroom 0, waiters 0/0 GB) load 26/128 running 11 disk 5995 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/qw-head-controls-1019
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/qw-head-controls-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/qw-head-controls-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/qw-head-controls-1019
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-2481923-1792433309 after 0 s
+[10040000] %Fatal: tb_head_valid_pack.sv:33: Assertion failed in tb_head_valid_pack: HEAD_VALID_FIXED_FAIL n=1003
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-2481923-1792433309): exit 0
