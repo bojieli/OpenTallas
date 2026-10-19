@@ -1,0 +1,40 @@
+{
+ "macro_area_um2": {
+  "ot_sram_1r1w_256x256_m2_r2c2": 7091.712,
+  "ot_sram_1r1w_64x512_m1_r2c2": 13319.354880000003
+ },
+ "units": {
+  "cal_d4g": {
+   "cell_area_um2": 64.998,
+   "flops": 65,
+   "macros": {
+    "ot_sram_1r1w_256x256_m2_r2c2": 1
+   },
+   "macro_area_um2": 7091.7
+  },
+  "cal_idxn": {
+   "cell_area_um2": 6858.33,
+   "flops": 10133,
+   "macros": {
+    "ot_sram_1r1w_256x256_m2_r2c2": 1
+   },
+   "macro_area_um2": 7091.7
+  },
+  "keybuf": {
+   "cell_area_um2": 1670.0,
+   "flops": 181,
+   "macros": {
+    "ot_sram_1r1w_256x256_m2_r2c2": 34
+   },
+   "macro_area_um2": 241118.2
+  },
+  "sel": {
+   "cell_area_um2": 25200.0,
+   "flops": 20605,
+   "macros": {
+    "ot_sram_1r1w_256x256_m2_r2c2": 12
+   },
+   "macro_area_um2": 85100.5
+  }
+ }
+}
