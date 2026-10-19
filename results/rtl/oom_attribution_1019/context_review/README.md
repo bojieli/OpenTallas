@@ -1,5 +1,8 @@
 # Kernel companion incarnation lower bound
 
+> Final full validation for unchanged source `38a7dca6b` is recorded in
+> `final_reviewed_38/README.md` (from the parent packet directory).
+
 Independent merger review found that a kernel task_memcg companion could remain
 unconsumed if its killed-process record was absent. A later reused PID with a
 new sampled incarnation could then inherit the old cgroup claim.

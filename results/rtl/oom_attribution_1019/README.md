@@ -1,5 +1,8 @@
 # Stage OOM attribution correction
 
+> Final full validation for unchanged source `38a7dca6b` is recorded in
+> `final_reviewed_38/README.md` (from the parent packet directory).
+
 > This packet records candidate `489ae20ee`. The subsequent kernel companion
 > incarnation lower bound and its focused validation are recorded in
 > `context_review/README.md`; the full-cohort results below apply to `489ae20ee`.
