@@ -2,13 +2,13 @@
  "schema": "opentallas.ref_tile.gate_result.v2",
  "kit": "hv16_dbk_cpl",
  "verdict": "FAIL",
- "generated": "2026-10-18T05:10:22-0700",
+ "generated": "2026-10-18T05:50:06-0700",
  "host": "ot-agidock128",
  "cts": true,
  "commit": null,
  "source_binding": {
   "schema": "opentallas.ref_tile.source_snapshot.v1",
-  "start_commit": "96115fc1b0a8f0e070131950986c074fc30af20d",
+  "start_commit": "90f9618523a1c91e6cbbf7649dd8e3d4b30216ef",
   "commit": null,
   "identity": "exact_content_snapshot",
   "daemon_tree": "/home/ubuntu/wt-claude-closure-daemon-1010",
@@ -21,8 +21,8 @@
    "tools/orfs_hold_mm.tcl",
    "tools/textbook_lint.py"
   ],
-  "archive_sha256": "b92464d458536af430f09dbebec7eda5180e3d6e34f940af9034f35737bff172",
-  "manifest_sha256": "4312f432df62c1c78e9c8d149e72e6d4c81a0220e8b1cf71b76d3ebb9593cc2c",
+  "archive_sha256": "7e8f4033604edb1bb3f2f7fa7267f209ee24f265e13311c0539fc8fe6237d78c",
+  "manifest_sha256": "385cde6dbdc9b0dc0675bd149eef6315273860ae0896c85fc4aca6cec706b529",
   "files": [
    {
     "path": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.json",
@@ -17627,16 +17627,16 @@
    {
     "path": "physical/ref_tile/hv16_dbk_cpl/floorplan.json",
     "kind": "file",
-    "sha256": "fa8f61fa5f7426351bc10cfe4854612805a00939aa73cbe8910dbabb3c849068",
-    "git_blob": "46e8002a284c60d314118fb9ecd9ef1c9dbe4ee4",
+    "sha256": "33cd60422b1c6b3798b81340bcdadb15cb082b874dee7f7163fc25fc4e19a7c6",
+    "git_blob": "2742734feae11909f740b7a4350d79653e47c7b6",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
    {
     "path": "physical/ref_tile/hv16_dbk_cpl/job.json",
     "kind": "file",
-    "sha256": "e293424b505338aae3a9f71d6c4b5cc262b40670026c458fe01d65ccec7d3435",
-    "git_blob": "0b8dcccbc48f84b79648e2802aaf6f75606fec21",
+    "sha256": "a8e9da4d7abaeade9a04dc1063a01d5242dc560dd0ea4793f3cee512b27ef38e",
+    "git_blob": "8db190487c73c774deca7ab29c63d386d5de1244",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -17747,16 +17747,16 @@
    {
     "path": "physical/ref_tile/hv16_dbk_cpl/spec.json",
     "kind": "file",
-    "sha256": "2a1873f1f55a2997075481125fa373f43056f1e7b54e78bab78fa0222a666f2c",
-    "git_blob": "77b1d6b6dfb96008f352760313c4155bd3a63b70",
+    "sha256": "2e8564e1567b7d538fbc140361a0204e980e2efc97306a934dd5e896d21c260f",
+    "git_blob": "d05d359ee04f541d79eef751910ad18c0e0009be",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
    {
     "path": "results/arch/hbm_die_v16_d4f/dbk_cpl_1017/assigned_pins.tcl",
     "kind": "file",
-    "sha256": "01de8c66eceb8a6f7c7137dd34d1d68349f721611563f3756bac7cd905fa32ef",
-    "git_blob": "3c80f1810f712a759b92e4c199fa50e59d4485cc",
+    "sha256": "c35e0b0c7bef565e586db3991e0df8622d350f69e6afb3a2d68c801524cc39f5",
+    "git_blob": "805f960a3f5c41ec4474c5491add4c169577879d",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -61531,8 +61531,8 @@
    {
     "path": "tools/hbm_v15_harden/make_dbk_cpl_parent.py",
     "kind": "file",
-    "sha256": "1a2e054edd93c2f4fa1194daa0bfd58d47c19e72410c43a3d3b6b6af5711029c",
-    "git_blob": "1f8b60dd734f766b169f2133b8b4334cc58e35ef",
+    "sha256": "62d4c311084504e9e65a8db2bdee1c41f563b385a546b9801da9b40de7fc30b1",
+    "git_blob": "dc78104ee43139beb50d861add48a1de3eb5fe36",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -82523,8 +82523,8 @@
    {
     "path": "tools/ref_tile/specs_hbm_d4g/hbm_refcfg_q_1018.json",
     "kind": "file",
-    "sha256": "16a4f7f1898833866abeec46c9101eaf27106260a9da3922f4f0e327a9ddf4cc",
-    "git_blob": "e271a76865b82e744163d2388a11008de6eceefd",
+    "sha256": "9a5b4143b59155ac5a45d67b87b7da62c887f6f1af452a997f419f48c361b679",
+    "git_blob": "9e426c66a076cb067f86c7649160d93e2d178c03",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -119307,14 +119307,14 @@
   ],
   "disk_admission": {
    "reserve_gb": 20,
-   "archive_bytes": 125884122,
+   "archive_bytes": 125883750,
    "unpacked_bytes": 728461312,
    "pick_gb": 22,
    "runtime_gb": 22
   },
   "route_overlay_plan": {
    "schema": "opentallas.closure_loop.helper_overlay_plan.v1",
-   "origin_main": "a039fca0169fad1b326ddca21cfa178811cd0fb6",
+   "origin_main": "610cc761aadac376d35a37de294e3bbb43780163",
    "content_sha256": "4a87d0632ec1f2ae9df4e44b49335baa06539d6aedc31a9b632b931564df58c7",
    "files": [
     {
@@ -120595,7 +120595,7 @@
     "physical/ref_tile/hv16_dbk_collar/views/ot_hgi_dma_back_cp_collar/provenance/view_export.abstract.json": "6ab40d4688b7fe2626afd1f78611bd7d7df35716696642ef932a166bfa5a7df9",
     "physical/ref_tile/hv16_dbk_cpl/clock.sdc": "8cc084afde24da4e15315f21391c9003f6fdc04ffcac86f104de9de31d397b6a",
     "physical/ref_tile/hv16_dbk_cpl/clock_entry.sdc": "5ba336c1b30a1caf19a2d431a3969d2cc2d2ca9dfa1e41157ae096a21d89fa17",
-    "physical/ref_tile/hv16_dbk_cpl/floorplan.json": "fa8f61fa5f7426351bc10cfe4854612805a00939aa73cbe8910dbabb3c849068",
+    "physical/ref_tile/hv16_dbk_cpl/floorplan.json": "33cd60422b1c6b3798b81340bcdadb15cb082b874dee7f7163fc25fc4e19a7c6",
     "physical/ref_tile/hv16_dbk_cpl/kit.env": "1e5c12eb33f51056bc026922f433b3934e5a0777107aaae5099b14bfdc441800",
     "physical/ref_tile/hv16_dbk_cpl/pdn.tcl": "4f13e0786cfa85915485d9ddbbab5064b00e8b7de1d07e30b44eee1d444e8425",
     "physical/ref_tile/hv16_dbk_cpl/pin_regs.json": "b3e80bb2ae3572a6e873ea0b22140d0f6f916d072c6a8197f7b1e8766a2108b3",
@@ -120609,8 +120609,8 @@
     "physical/ref_tile/hv16_dbk_cpl/pre_fill.tcl": "077967e0cb7a3b08cddf029483c9a592c82cc740cf9b9df48cf40e338da789e4",
     "physical/ref_tile/hv16_dbk_cpl/pre_grt.tcl": "831afad52df48402fb78418c308108abad774345c6f3466db3d1fa5334d71995",
     "physical/ref_tile/hv16_dbk_cpl/signoff.sdc": "f1c7d38fe249ecdbdbeea5c52d98a271280f4d45d942468e7cb160473296b30a",
-    "physical/ref_tile/hv16_dbk_cpl/spec.json": "2a1873f1f55a2997075481125fa373f43056f1e7b54e78bab78fa0222a666f2c",
-    "results/arch/hbm_die_v16_d4f/dbk_cpl_1017/assigned_pins.tcl": "01de8c66eceb8a6f7c7137dd34d1d68349f721611563f3756bac7cd905fa32ef",
+    "physical/ref_tile/hv16_dbk_cpl/spec.json": "2e8564e1567b7d538fbc140361a0204e980e2efc97306a934dd5e896d21c260f",
+    "results/arch/hbm_die_v16_d4f/dbk_cpl_1017/assigned_pins.tcl": "c35e0b0c7bef565e586db3991e0df8622d350f69e6afb3a2d68c801524cc39f5",
     "results/arch/hbm_die_v16_d4f/dbk_cpl_1017/collar_cts_native_audit.json": "1608cb28762c18da8c441df08bb32142eeb7c307bf274dc4717fa3eb0173fd4b",
     "rtl/hbm_accel/generic/peers/static/dma_back_static_abi.json": "65d6d2991fe8ca3f3367e08ed49e61dc49c677bbb9787c4c55bb538b8f5f3ecc",
     "rtl/hbm_accel/generic/peers/static/dma_back_static_model.json": "a2344313b33c341c674c11ce8fd571c46fad3485278a9e3c4b8a212a3069513c",
@@ -121148,7 +121148,7 @@
     "tools/hbm_v15_harden/gen_calendar_universal.py": "d3bac1110983c3edc866a4d95d31dcc5d3251c4f6e72ac55ffd47904bdee1bc8",
     "tools/hbm_v15_harden/make_band_specs.py": "ec038dc914c92daa203c0992610856f893b5a5fb7a544ce3198191147702e801",
     "tools/hbm_v15_harden/make_dbk_cp_parent.py": "978906c99584efc4c5e0dde0181d14e441ad2f4adc1214997c74512785c0dae0",
-    "tools/hbm_v15_harden/make_dbk_cpl_parent.py": "1a2e054edd93c2f4fa1194daa0bfd58d47c19e72410c43a3d3b6b6af5711029c",
+    "tools/hbm_v15_harden/make_dbk_cpl_parent.py": "62d4c311084504e9e65a8db2bdee1c41f563b385a546b9801da9b40de7fc30b1",
     "tools/hbm_v15_harden/make_dbk_parent.py": "678a4a900a14d3912a13ddd9e940651b4af57e86a5fa281c2dfa24fc12c5ac58",
     "tools/hbm_v15_harden/make_dbk_specs.py": "49f5ca049da1b8576ed0f62a09c0ce292b7245bc5e5c3448aa83e588a2e352b1",
     "tools/hbm_v15_harden/make_pll_abstract.py": "e684fc7db5c977a683712ae77b15e589b0cf97b99dd16187a44231c13f911ebe",
@@ -121299,16 +121299,16 @@
    },
    "digest": "5928c1874b26abfbb622ad98c24b305e7eab7c69082b5574e2079ff6256d3a64"
   },
-  "captured": "2026-10-18T04:10:00-0700",
+  "captured": "2026-10-18T05:13:08-0700",
   "route_hold_context": {
    "HM": "0.03",
    "OT_ROUTE_HOLD_CORNERS": "mm",
    "OT_MM_FF_SDC": "physical/ref_tile/hv16_dbk_cpl/signoff.sdc"
   },
-  "remote_script_sha256": "6565b1cd25a6958eb5a3e55977ea259575a1247d018dfa27d3e5c6577da217f0",
+  "remote_script_sha256": "fb8fe1fdb83ed979a593e1d60c24cbfb9f89b88ea1bab5c9a71bff5159e0d34a",
   "tool_image_requested": "openroad/orfs:latest",
   "remote_host": "ot-agidock128",
-  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/hv16_dbk_cpl-20261018-040925",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/hv16_dbk_cpl-20261018-051233",
   "remote_archive_verified": true,
   "runtime_tool_provenance": [
    "GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=[\"openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29\"]",
@@ -121319,12 +121319,12 @@
   "max_root_sinks": 13,
   "root": "port:clk_rst",
   "cts": true,
-  "tt_insertion_ps": 280.1,
-  "tt_spread_ps": 15.5,
-  "tt_pin_spread_ps": 15.5,
-  "ff_insertion_ps": 239.1,
-  "ff_spread_ps": 15.4,
-  "ff_pin_spread_ps": 15.4,
+  "tt_insertion_ps": 276.5,
+  "tt_spread_ps": 11.1,
+  "tt_pin_spread_ps": 11.1,
+  "ff_insertion_ps": 235.4,
+  "ff_spread_ps": 10.8,
+  "ff_pin_spread_ps": 10.8,
   "declared_clock": "hybrid_entries",
   "limits": {
    "sinks": 15000,
@@ -121440,15 +121440,15 @@
     "tt": {
      "boundary": {
       "n": 13,
-      "mean": 272.5,
-      "min": 264.6,
-      "max": 280.1
+      "mean": 269.9,
+      "min": 265.4,
+      "max": 276.5
      },
      "all": {
       "n": 13,
-      "mean": 272.5,
-      "min": 264.6,
-      "max": 280.1
+      "mean": 269.9,
+      "min": 265.4,
+      "max": 276.5
      },
      "errors": [],
      "macros": null,
@@ -121457,15 +121457,15 @@
     "ff": {
      "boundary": {
       "n": 13,
-      "mean": 231.6,
-      "min": 223.7,
-      "max": 239.1
+      "mean": 229.1,
+      "min": 224.6,
+      "max": 235.4
      },
      "all": {
       "n": 13,
-      "mean": 231.6,
-      "min": 223.7,
-      "max": 239.1
+      "mean": 229.1,
+      "min": 224.6,
+      "max": 235.4
      }
     }
    },
@@ -121880,7 +121880,7 @@
   ],
   "measured_clock": "ot_entry_2",
   "verdict": "PASS",
-  "text": "13 sinks on the largest root; measured TT insertion 280.1 ps, FF insertion 239.1 ps, TT pin-flop spread 15.5 ps, FF pin-flop spread 15.4 ps (spread <= 80 ps)"
+  "text": "13 sinks on the largest root; measured TT insertion 276.5 ps, FF insertion 235.4 ps, TT pin-flop spread 11.1 ps, FF pin-flop spread 10.8 ps (spread <= 80 ps)"
  },
  "items": [
   {
@@ -121892,43 +121892,43 @@
   {
    "severity": "WARN",
    "check": "pins",
-   "message": "1 port group(s) left to the IO placer (ANY): ['clk_bank']",
+   "message": "2 port group(s) left to the IO placer (ANY): ['clk_bank', 'wd']",
    "fix": "give every bus a face (and an offset range) from the die contract before the die integrates it"
   },
   {
    "severity": "WARN",
    "check": "pins",
-   "message": "1 port group(s) left to the IO placer (ANY): ['clk_bank']",
+   "message": "2 port group(s) left to the IO placer (ANY): ['clk_bank', 'wd']",
    "fix": "give every bus a face (and an offset range) from the die contract before the die integrates it"
   },
   {
    "severity": "FAIL",
    "check": "textbook.wire_reach",
-   "message": "292 stage(s) beyond 500 um reach: insert relay flops",
+   "message": "3 stage(s) beyond 500 um reach: insert relay flops",
    "fix": "relay flops every <= 500 um, or move the logic next to its pins/macros"
   },
   {
    "severity": "FAIL",
    "check": "textbook.wire_reach",
-   "message": "combinational path u_dbk.L[0].u_bank/wd[287] -> pin wd[287]: up to 654 um with no register (> 500 um)",
+   "message": "combinational path pin stk[0] -> u_dbk.u_control/stk[0]: up to 598 um with no register (> 500 um)",
    "fix": "relay flops every <= 500 um, or move the logic next to its pins/macros"
   },
   {
    "severity": "FAIL",
    "check": "textbook.wire_reach",
-   "message": "combinational path u_dbk.L[0].u_bank/wd[286] -> pin wd[286]: up to 654 um with no register (> 500 um)",
+   "message": "combinational path pin stk[1] -> u_dbk.u_control/stk[1]: up to 596 um with no register (> 500 um)",
    "fix": "relay flops every <= 500 um, or move the logic next to its pins/macros"
   },
   {
    "severity": "FAIL",
    "check": "textbook.wire_reach",
-   "message": "combinational path u_dbk.L[0].u_bank/wd[285] -> pin wd[285]: up to 654 um with no register (> 500 um)",
+   "message": "combinational path u_dbk.u_control/busy -> pin busy: up to 506 um with no register (> 500 um)",
    "fix": "relay flops every <= 500 um, or move the logic next to its pins/macros"
   },
   {
    "severity": "WARN",
    "check": "fill",
-   "message": "fill 37% = (hard macros 122630.6 + synthesized std cells 6.5) / outline 329069.4 um2; pin demand per face: S 13 pins over 89.6/607.0 um (15%), N 2408 pins over 599.7/607.0 um (99%), W 2245 pins over 535.0/542.2 um (99%), E 393 pins over 535.8/542.2 um (99%) (< 50%)",
+   "message": "fill 37% = (hard macros 122630.6 + synthesized std cells 6.5) / outline 329069.4 um2; pin demand per face: S 1169 pins over 601.6/607.0 um (99%), N 1252 pins over 601.6/607.0 um (99%), W 2245 pins over 535.0/542.2 um (99%), E 393 pins over 535.8/542.2 um (99%) (< 50%)",
    "fix": ""
   }
  ]
