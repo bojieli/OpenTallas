@@ -93,8 +93,34 @@ def preserve(root, module, overrides, rtl, view, profiles, diagnostic=False):
                           frozen_receipt=receipt)
 
 
-def verify_bound(root, report, sidecar, diagnostic=False):
-    for inst, row in report.get('parameter_instances', {}).items():
+def verify_bound(root, report, sidecar, actual_instances, leaf_sources, diagnostic=False):
+    # The proof ledger is not its own census. Enumerate the physical instances
+    # against independently configured leaf RTL, including modules whose entry
+    # was removed from expand.json. Parameterless legacy leaves need no receipt.
+    sources = dict(leaf_sources)
+    for module, binding in report.get('leaves', {}).items():
+        rtl = binding['rtl']
+        if module in sources and sources[module] != rtl:
+            raise ValueError(f'{module}: expanded leaf source binding changed')
+        sources[module] = rtl
+    required = {}
+    defaults = {}
+    for module, inst, _params, _connections in actual_instances:
+        if module not in sources:
+            continue
+        if module not in defaults:
+            defaults[module] = integer_defaults((root / sources[module]).read_text(), module)
+        if defaults[module]:
+            if inst in required:
+                raise ValueError(f'{inst}: duplicate actual expanded instance')
+            required[inst] = module
+    ledger = report.get('parameter_instances', {})
+    missing, extra = sorted(set(required) - set(ledger)), sorted(set(ledger) - set(required))
+    if missing or extra:
+        raise ValueError(f'expanded parameter ledger incomplete: missing={missing}, extra={extra}')
+    for inst, row in ledger.items():
+        if row['module'] != required[inst]:
+            raise ValueError(f'{inst}: expanded parameter instance/master missing or changed')
         expected = row['literals']
         if sidecar.get(inst) != expected:
             raise ValueError(f'{inst}: expanded sidecar missing/conflicting parameters')

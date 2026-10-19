@@ -163,14 +163,15 @@ def main(argv=None):
     # KVJ-G2 (kv_die OT_KV_STATIC_DIE): per-instance parameters the plan priced (ECTL kiss RESPONSE_LAT), a sidecar of die.v
     _pj = Path(a.die_v + '.params.json')
     _ip = json.loads(_pj.read_text()) if _pj.exists() else {}
+    _expanded = None
     if a.expanded:
         import kv_expand_parameters as EP
+        from kv_expand import RTL as _configured_leaf_sources
         _expanded = json.loads(Path(a.expanded).read_text())
         _actual_masters = {_i: _m for _m, _i, _p, _c in insts}
         for _i, _row in _expanded.get('parameter_instances', {}).items():
             if _actual_masters.get(_i) != _row['module']:
                 raise ValueError(f'{_i}: expanded parameter instance/master missing or changed')
-        EP.verify_bound(ROOT, _expanded, _ip, a.diagnostic_parameter_profiles)
     if _pj.exists():
         for _mst, _inst, _params, _cm in insts:
             for _key, _value in _ip.get(_inst, {}).items():
@@ -182,6 +183,26 @@ def main(argv=None):
     files = [str(ROOT / b['file']) for b in K.BINDINGS.values() if (ROOT / b['file']).exists()]
     files += [a.relay_rtl] if a.relay_rtl else []
     idx, _amb = PB.rtl_index(['rtl'], files, {}, files)
+    if _expanded is not None:
+        _sources = dict(_configured_leaf_sources)
+        _reported = _expanded.get('leaves', {})
+        # Independently indexed by-name RTL also covers dynamically configured
+        # expanded leaf types absent from the static registry. A deleted report
+        # binding must not make such a parameterized module disappear.
+        for _mst, _inst, _params, _connections in insts:
+            if (_mst in _sources or _mst in _reported or _mst in bindings or
+                    _mst in HARD_MODELS or _mst.startswith('qkd_rly')):
+                continue
+            _mod = idx.get(_mst)
+            if _mod is not None:
+                _path = Path(_mod.path)
+                try:
+                    _path = _path.relative_to(ROOT)
+                except ValueError:
+                    pass
+                _sources[_mst] = str(_path)
+        EP.verify_bound(ROOT, _expanded, _ip, insts, _sources,
+                        a.diagnostic_parameter_profiles)
     exp = json.loads(Path(a.expanded).read_text())['leaves'] if a.expanded else {}
     rseg = relay_segments(Path(a.relay_rtl).read_text()) if a.relay_rtl else {}
 
