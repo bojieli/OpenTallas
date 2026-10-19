@@ -28,7 +28,7 @@ module tb_rd_pair;
    if (mut==8 && lateword[0]) changed=lateword;
  end
  assign vi[1]=changed; assign vi[0]=0;
- integer due[0:31]; integer ndue=0,read_seen=0,local_due=0;
+ integer due[0:1023]; integer ndue=0,read_seen=0,local_due=0,stress_np=4,stress_base=0,first_write=0,last_write=0;
  function automatic [255:0] pattern(input integer n);
    integer j; begin for(j=0;j<8;j=j+1) pattern[32*j+:32]=32'hc065a100^(n*32'h1010101)^(j*32'h183a71);end
  endfunction
@@ -50,6 +50,24 @@ module tb_rd_pair;
    cfg[30:28]=1;cfg[40:31]=row_;cfg[42:41]=n-1;cfg[44]=local_;
    issue(4,0,cfg);tick(8);cmd=6|(128<<4)|(n<<24);issue(0,1,cmd);
   end
+ endtask
+ task automatic burst(input integer np,input integer period_,input integer base_);
+   integer slot_,packet;reg[159:0] cfg,cmd;begin
+    stress_np=np;stress_base=base_;writes=0;ndue=0;vseen=0;first_write=0;last_write=0;
+    for(slot_=0;slot_<64*period_+8;slot_=slot_+1)begin
+     line[0]=0;
+     if(slot_%period_==0&&slot_/period_<64)begin cmd=6|(128<<4)|(np<<24);line[0]=ctl(4,0,1,cmd);end
+     if(slot_>=7&&(slot_-7)%period_==0&&(slot_-7)/period_<64)begin
+       packet=(slot_-7)/period_;cfg=0;cfg[3:0]=4;cfg[6:4]=4;cfg[11:7]=1;cfg[27:12]=32;
+       cfg[30:28]=1;cfg[40:31]=base_+2*np*packet;cfg[42:41]=np-1;line[0]=ctl(4,4,0,cfg);
+     end
+     tick(1);
+    end
+    line[0]=0;tick(40);
+    if(writes!=64*np)begin errors=errors+1;$display("BURST_COUNT_FAIL %0d expected%0d",writes,64*np);end
+    $display("BURST np%0d period%0d pairs%0d first%0d last%0d span%0d",np,period_,writes,first_write,last_write,last_write-first_write+1);
+    read_seen=0;readback(2,64*np,base_);if(read_seen!=64*np)errors=errors+1;
+   end
  endtask
  task automatic readback(input integer vp,input integer n,input integer row_);
   integer j; begin
@@ -88,7 +106,7 @@ module tb_rd_pair;
    if(lov[0][0])$display("SOURCE_VP_PAIR %0d %h",cyc,lod[0][0+:256]);
    if(phase==5&&clean[0])begin errors=errors+1;$display("POST_RESET_LEAK %0d",cyc);end
    if(clean[0]) begin
-    if(ndue<32) begin due[ndue]=cyc+6;ndue=ndue+1;end
+    if(ndue<1024) begin due[ndue]=cyc+6;ndue=ndue+1;end
     $display("VPAIR %0d %0d %h",cyc,vseen,clean);previous<=clean;vseen<=vseen+1;
    end
    if(cib[0][0]&&cid[0]==0&&cib[0][3:1]==4) begin
@@ -103,9 +121,15 @@ module tb_rd_pair;
        errors=errors+1;$display("V_DATA_AGE_FAIL cyc%0d row%0d due%0d index%0d",cyc,swa[1][10+:10],due[writes],writes);end
     $display("WRITE %0d %0d %h",cyc,swa[1][10+:10],swd[1][256+:256]);writes=writes+1;
    end
+   if((phase==6||phase==7)&&swv[1][1])begin
+    if(writes==0)first_write=cyc;last_write=cyc;
+    if(swa[1][10+:10]!==stress_base+2*writes||swd[1][256+:256]!==pattern(writes%stress_np)||cyc!==due[writes])begin
+      errors=errors+1;$display("BURST_DATA_AGE_FAIL %0d index%0d row%0d due%0d",cyc,writes,swa[1][10+:10],due[writes]);end
+    writes=writes+1;
+   end
    if(|qv) begin
     if(qv[1]&&qd[1]!==pattern(read_seen)) errors=errors+1;
-    if(qv[2]&&qd[2]!==pattern(read_seen)) errors=errors+1;
+    if(qv[2]&&qd[2]!==pattern((phase==6||phase==7)?read_seen%stress_np:read_seen)) errors=errors+1;
     read_seen=read_seen+1;
    end
   end
@@ -128,6 +152,7 @@ module tb_rd_pair;
   tick(8);rst_n=1;phase=5;tick(32);aborting=0;
   load();phase=2;writes=0;ndue=0;vseen=0;send(0,4,448);tick(70);
   if(writes!=4)errors=errors+1;
+  if(mut==0)begin phase=6;burst(4,5,0);phase=7;burst(2,3,512);end
   tick(10);if((|rf)||(|xf)||(|pf))begin errors=errors+1;$display("FAULT_FAIL r%h x%h p%h",rf,xf,pf);end
   $display("RDPAIR errors=%0d local_packets=%0d mut=%0d",errors,localcount,mut);
   if(errors==0) $display("PASS");else $display("FAIL");$finish;
