@@ -26,7 +26,7 @@ Original BS1 genuine reg→reg TT setup is−15.1502ps at833.333ps/setup60ps/hol
 
 Bounded MODEL identifies exactly old c14562/NOR27(payload[5..31]) retimed onto existing plain RX landing FFs: INV(OR27(INV(landedQN))) equals AND27(landedQN). Every old cone master, leaf state and polarity is explicitly enumerated; only this one pure cone is changed. Eight OR cells and one final INV become a balanced7AND4+2AND3+1AND2 tree. Gate levels6→3 from landed QN, +.08748um², zero FF/clock/serial-edge changes. All27 new leaf input capacitances and exact native TT/FF cell power/cap tables are charged in balanced27_priced_model.json. This is a structural Boolean model, not a routed delay prediction.
 
-`qkd_kvs_attn_safe_pr32b27.v` SHA `ac6af21580867b0e1224c7cf7e6476309d5b036cd2ba558ad5014737fbfeddde`:34,603 native cells/6,403 FF. Independent native census remains FF32/tie30/comb24/input22, no unresolved/multidriver; first/last pin registration remains valid. Exact original/new native pure-cone four-state truth PASS8,410 vectors including216 all-basis four-state cases; wrong final AND→OR causal mutant FAIL. Full unchanged original miter for this candidate is LIVE below. No generalization to the other16 retimed cones was performed.
+`qkd_kvs_attn_safe_pr32b27.v` SHA `ac6af21580867b0e1224c7cf7e6476309d5b036cd2ba558ad5014737fbfeddde`:34,603 native cells/6,403 FF. Independent native census remains FF32/tie30/comb24/input22, no unresolved/multidriver; first/last pin registration remains valid. Exact original/new native pure-cone four-state truth PASS8,410 vectors including216 all-basis four-state cases; wrong final AND→OR causal mutant FAIL. Full unchanged original miter for this candidate PASS8,256 edges/49,857,984 FF-net checks/all11outputs. The entire generated testbench is byte-identical to the reset-only miter after only normalizing the candidate module name; hashes are in balanced27_m0/exact_original_vehicle.json. No generalization to the other16 retimed cones was performed.
 
 ## Preserved original physical facts and holds
 
@@ -36,6 +36,6 @@ Checklist: pins/reset source first/last proof available; reach OPEN (textbookrea
 
 Other live gates preserved diagnostic: AHUB sfa/sfb ep6 postCTS; GRP sq2/sq3 ep7 hold repair; CTL mu5/mu5b ep6 placement. Lead audit independently holds CTL max256 reset copies and128x256 macro faces9.98contacts/um, D2D sf/sfb old64x512 faces10.2contacts/um. No first-WARN submit authority survives these source/geometry blockers.
 
-## Live pickup
+## Completed source proof and physical pickup
 
-Remote ep8 `/srv/opentallas-scratch/claude/takeover2-kv-physical-1019/b27m0`: unit1604802, session49161, Verilator5.050 original full-source miter for ac6af215 compiling. Do not duplicate/restart progressing GCC. All earlier own units terminal. On completion preserve sim/check/build receipts, compare unchanged original8256/6039/11 contract; then source reset/census and placed reach/model/TT+FF/native must be reviewed before any new gate.
+Remote ep8 `/srv/opentallas-scratch/claude/takeover2-kv-physical-1019/b27m0`: unit1604802/session49161 terminal0, Verilator5.050 original full-source miter for ac6af215 PASS. All own units terminal. No progressing own job remains. Next: source reset/census and actual placed reach/model/TT+FF/native and parent before-use contract must be reviewed before any new gate. Preserve the original bs1/bs2 failures; do not treat their clocks/PG/timing as qualification of the new source.
