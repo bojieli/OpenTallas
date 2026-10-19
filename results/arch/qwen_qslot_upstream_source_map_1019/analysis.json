@@ -1,0 +1,121 @@
+{
+  "scope": "SOURCE_EXTRACTION_ONLY",
+  "programme_words": 25,
+  "pw_isa_beats_checked": 400,
+  "pw_400_975_zero": true,
+  "decode_commands": 406,
+  "body_command_counts": {
+    "embed": {
+      "6": 2,
+      "1": 1,
+      "4": 64
+    },
+    "decode": {
+      "1": 114,
+      "2": 90,
+      "5": 40,
+      "4": 136,
+      "0": 2,
+      "3": 24
+    },
+    "head": {
+      "3": 12,
+      "6": 9,
+      "2": 298,
+      "0": 1
+    },
+    "boot": {
+      "7": 1
+    }
+  },
+  "q_contract_seats": 512,
+  "q_contract_words": 64,
+  "q_contract_commands": 8,
+  "actual_connected_seats_observed": null,
+  "source_commands_unchanged": true,
+  "body_old_programme_hash": "fd2668d9a4fb869fe702c88e63e9b0877a100ee0165757f315aab23f9dba3d45",
+  "selected_descriptor_programme_hash": "cc5bc8fc17d4068ac9a49e8bf79f34e74350d56d114dd7fe5cde433d2ac82796",
+  "vector_lowerer_matches_body_receipt": true,
+  "body_dv_layer_source_missing_at_selected_commit": true,
+  "profile_differences": [
+    {
+      "frozen": [
+        631,
+        3,
+        0
+      ],
+      "selected": [
+        632,
+        3,
+        0
+      ]
+    },
+    {
+      "frozen": [
+        632,
+        3,
+        1
+      ],
+      "selected": [
+        633,
+        3,
+        1
+      ]
+    },
+    {
+      "frozen": [
+        633,
+        3,
+        2
+      ],
+      "selected": [
+        634,
+        3,
+        2
+      ]
+    },
+    {
+      "frozen": [
+        634,
+        3,
+        3
+      ],
+      "selected": [
+        635,
+        3,
+        3
+      ]
+    }
+  ],
+  "old_compiler_todo_scope": "dv_lower.py global RMSNorm only; dv_lower_vec.py supplies QK/RoPE arithmetic contract",
+  "calr_local4_preload_entries": 36,
+  "table_payload_installation_observed": null,
+  "complete_connected_compile_inventory": null,
+  "compile_memory_gib": null,
+  "new_QSLOT_dates": null,
+  "native_phase": null,
+  "reset_first_use": null,
+  "four_ME_failures_preserved": [
+    [
+      11,
+      543,
+      672
+    ],
+    [
+      12,
+      2232,
+      2459
+    ],
+    [
+      16,
+      3883,
+      3625
+    ],
+    [
+      20,
+      4567,
+      4447
+    ]
+  ],
+  "full_graph": "UNRESOLVED"
+}

@@ -1,0 +1,268 @@
+[
+  {
+    "rev": "0d4c9808f",
+    "path": "rtl/qwen_dv/qfd_dv_slice2_faces.sv",
+    "copy": "0d4c9808f__rtl__qwen_dv__qfd_dv_slice2_faces.sv",
+    "sha256": "5bcb6c66809fe10ceff9be87cae62b6534976641979d07b36acb49443c628fc5",
+    "bytes": 7978
+  },
+  {
+    "rev": "0d4c9808f",
+    "path": "rtl/qwen_dv/qfd_dv_slice2.sv",
+    "copy": "0d4c9808f__rtl__qwen_dv__qfd_dv_slice2.sv",
+    "sha256": "6f1afb7f43ff5691eef0e3b0bd9f50c77cc7a55600817b0d2f2d467637a81aea",
+    "bytes": 26256
+  },
+  {
+    "rev": "0d4c9808f",
+    "path": "rtl/qwen_dv/qfd_dv_su8_entries.sv",
+    "copy": "0d4c9808f__rtl__qwen_dv__qfd_dv_su8_entries.sv",
+    "sha256": "61e426cf315fc4cdeadc8a859898ac0defc6fac93520182aaab9420d7ceefc98",
+    "bytes": 29160
+  },
+  {
+    "rev": "0d4c9808f",
+    "path": "rtl/qwen_dv/qfd_dv_stream.sv",
+    "copy": "0d4c9808f__rtl__qwen_dv__qfd_dv_stream.sv",
+    "sha256": "83e07fccde5ac05d290c5e9c49190ce3c64a00b01dfafa153f01c3340af51e69",
+    "bytes": 6653
+  },
+  {
+    "rev": "0d4c9808f",
+    "path": "rtl/qwen_dv/qfd_dv_vm.sv",
+    "copy": "0d4c9808f__rtl__qwen_dv__qfd_dv_vm.sv",
+    "sha256": "bbdacf0bb0876d86a86ea2c5af5a1f73b9f9935e8dc799f0d59a9b68c78ddb30",
+    "bytes": 14511
+  },
+  {
+    "rev": "0d4c9808f",
+    "path": "rtl/qwen_dv/qfd_dv_hr_pack.sv",
+    "copy": "0d4c9808f__rtl__qwen_dv__qfd_dv_hr_pack.sv",
+    "sha256": "fcedaa3ec544cfd421b3f742e50a97b830c6c5cb1a55c0a5a7343da98700bb3b",
+    "bytes": 2056
+  },
+  {
+    "rev": "0d4c9808f",
+    "path": "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_static_hr.sv",
+    "copy": "0d4c9808f__rtl__qwen_sys__static_schedule_20261014__ot_qfd_tt_ctlm_static_hr.sv",
+    "sha256": "48304aa32d98b40342c932b9a982a989744a0d9099ad6f131919c422d892a66e",
+    "bytes": 10574
+  },
+  {
+    "rev": "0d4c9808f",
+    "path": "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv",
+    "copy": "0d4c9808f__rtl__qwen_sys__static_schedule_20261014__ot_qwen_rom_core_ctrl_static.sv",
+    "sha256": "66a6712484511eb26fa911f6c3ccc31226894a6a50a1951536d1162fe1229a3d",
+    "bytes": 75222
+  },
+  {
+    "rev": "0d4c9808f",
+    "path": "rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv",
+    "copy": "0d4c9808f__rtl__qwen_sys__static_schedule_20261014__ot_qwen_fixed_issue.sv",
+    "sha256": "8c2e55b9df71313443349381db4b1d4415c6e52277f85aaa33c676ca6b0a6f2a",
+    "bytes": 7403
+  },
+  {
+    "rev": "0d4c9808f",
+    "path": "rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_pw.sv",
+    "copy": "0d4c9808f__rtl__qwen_sys__static_schedule_20261014__ot_qwen_fixed_issue_pw.sv",
+    "sha256": "ac6a83e9856c9257ab0418314017fb2127a30940b6bbdc589c1bc720c2f392af",
+    "bytes": 5483
+  },
+  {
+    "rev": "0d4c9808f",
+    "path": "rtl/qwen_split/qfd_native59_dv_service.sv",
+    "copy": "0d4c9808f__rtl__qwen_split__qfd_native59_dv_service.sv",
+    "sha256": "8c40360594c677b1b416ef50dcd9e7658525e5931cae1d91dd8c8e96dc4a28bb",
+    "bytes": 28349
+  },
+  {
+    "rev": "0d4c9808f",
+    "path": "rtl/qwen_dv/qfd_tt_ctlm_dv.sv",
+    "copy": "0d4c9808f__rtl__qwen_dv__qfd_tt_ctlm_dv.sv",
+    "sha256": "9d5ab14b4ba5bfa09e4aa11160a16f2dde8094d9fab2d4cd52997737ab70d4d2",
+    "bytes": 34307
+  },
+  {
+    "rev": "0d4c9808f",
+    "path": "rtl/qwen_dv/qfd_tt_ctlm_dv_lpf_parts.sv",
+    "copy": "0d4c9808f__rtl__qwen_dv__qfd_tt_ctlm_dv_lpf_parts.sv",
+    "sha256": "f351caf9db765adf8e19d00f539d92af88fcc269d0fd68532b65c5ba2d02cb0c",
+    "bytes": 18981
+  },
+  {
+    "rev": "0d4c9808f",
+    "path": "tools/qwen_layerbench/dv_lower.py",
+    "copy": "0d4c9808f__tools__qwen_layerbench__dv_lower.py",
+    "sha256": "ba65c02d72e91371e315e8b721336ea6cf3158cbb2550b73e299edebfa200d71",
+    "bytes": 22562
+  },
+  {
+    "rev": "0d4c9808f",
+    "path": "tools/qwen_layerbench/ctlm_image.py",
+    "copy": "0d4c9808f__tools__qwen_layerbench__ctlm_image.py",
+    "sha256": "066b33f5a909de0580eb4c64131659e2557e4367909e07402de993933bccacbd",
+    "bytes": 47278
+  },
+  {
+    "rev": "0d4c9808f",
+    "path": "results/rtl/qwen_layer_tput_1018/compiled_L1/compute_programme/sys_face_events.json",
+    "copy": "0d4c9808f__results__rtl__qwen_layer_tput_1018__compiled_L1__compute_programme__sys_face_events.json",
+    "sha256": "787345b9fc1845e9897f6200eaa5fe0ffd31f08a454ef75911bafb1d8a632d23",
+    "bytes": 1788
+  },
+  {
+    "rev": "7e5150af5",
+    "path": "tools/qwen_layerbench/dv_lower.py",
+    "copy": "7e5150af5__tools__qwen_layerbench__dv_lower.py",
+    "sha256": "ba65c02d72e91371e315e8b721336ea6cf3158cbb2550b73e299edebfa200d71",
+    "bytes": 22562
+  },
+  {
+    "rev": "7e5150af5",
+    "path": "tools/qwen_layerbench/dv_lower_vec.py",
+    "copy": "7e5150af5__tools__qwen_layerbench__dv_lower_vec.py",
+    "sha256": "3f01c9a9a217e7ab53de2dce6320f7e2cb29d86c977d53e67714065ecfc5bfff",
+    "bytes": 32417
+  },
+  {
+    "rev": "7e5150af5",
+    "path": "tools/qwen_layerbench/dv_lower_mat.py",
+    "copy": "7e5150af5__tools__qwen_layerbench__dv_lower_mat.py",
+    "sha256": "c35eb8c15aa15c00af8a3e97b28740c11797a1cf049c4ede3317b45923ed81bd",
+    "bytes": 29156
+  },
+  {
+    "rev": "7e5150af5",
+    "path": "tools/qwen_layerbench/ctlm_image.py",
+    "copy": "7e5150af5__tools__qwen_layerbench__ctlm_image.py",
+    "sha256": "066b33f5a909de0580eb4c64131659e2557e4367909e07402de993933bccacbd",
+    "bytes": 47278
+  },
+  {
+    "rev": "7e5150af5",
+    "path": "tools/qwen_layerbench/finite_calendar_body.py",
+    "copy": "7e5150af5__tools__qwen_layerbench__finite_calendar_body.py",
+    "sha256": "2fadcbf569a8d771fe03bf4cecd664dfa811034d850d77d2f7cd42b264f32a61",
+    "bytes": 4169
+  },
+  {
+    "rev": "7e5150af5",
+    "path": "tools/qwen_layerbench/table_user_programme.py",
+    "copy": "7e5150af5__tools__qwen_layerbench__table_user_programme.py",
+    "sha256": "4661462699cc847223cd0bbd3ef8f3e962a93292cd5ba1ccbb89e8f870ed33df",
+    "bytes": 3043
+  },
+  {
+    "rev": "7e5150af5",
+    "path": "tools/qwen_layerbench/model_programme_integration.py",
+    "copy": "7e5150af5__tools__qwen_layerbench__model_programme_integration.py",
+    "sha256": "6fed0587cbcbda97468d9abd0b445f55a269a42921da50e1fdb16d687f181500",
+    "bytes": 10615
+  },
+  {
+    "rev": "7e5150af5",
+    "path": "tools/qwen_layerbench/table_rom_native_fixture.py",
+    "copy": "7e5150af5__tools__qwen_layerbench__table_rom_native_fixture.py",
+    "sha256": "724e07103f2f1f1dd661ffc09b6c55729a6c2bb611c70bd4773dad96509421ff",
+    "bytes": 1208
+  },
+  {
+    "rev": "7e5150af5",
+    "path": "results/arch/qwen_calendar_integration_1019/source_body.py",
+    "copy": "7e5150af5__results__arch__qwen_calendar_integration_1019__source_body.py",
+    "sha256": "9e49c05a10d7e4bc0982e31490eb715f81a0c5dfbf7ec88e46d0074e09c891c6",
+    "bytes": 3023
+  },
+  {
+    "rev": "7e5150af5",
+    "path": "rtl/qwen_dv/qfd_tt_ctlm_dv.sv",
+    "copy": "7e5150af5__rtl__qwen_dv__qfd_tt_ctlm_dv.sv",
+    "sha256": "9d5ab14b4ba5bfa09e4aa11160a16f2dde8094d9fab2d4cd52997737ab70d4d2",
+    "bytes": 34307
+  },
+  {
+    "rev": "7e5150af5",
+    "path": "rtl/qwen_dv/qfd_dv_cmd_cal_mu.sv",
+    "copy": "7e5150af5__rtl__qwen_dv__qfd_dv_cmd_cal_mu.sv",
+    "sha256": "846ff155dfc024d1ab74b727d5050278870cb869dca30da211535cc957638414",
+    "bytes": 32451
+  },
+  {
+    "rev": "7e5150af5",
+    "path": "rtl/qwen_dv/qfd_dv_calendar_rom.sv",
+    "copy": "7e5150af5__rtl__qwen_dv__qfd_dv_calendar_rom.sv",
+    "sha256": "40bcb5c65a08f295ec5be2fe9ad00ab585922e169a1f14870bf149ae2e00dfff",
+    "bytes": 2055
+  },
+  {
+    "rev": "7e5150af5",
+    "path": "rtl/qwen_dv/qfd_tt_ctlm_dv_lpf_parts.sv",
+    "copy": "7e5150af5__rtl__qwen_dv__qfd_tt_ctlm_dv_lpf_parts.sv",
+    "sha256": "f351caf9db765adf8e19d00f539d92af88fcc269d0fd68532b65c5ba2d02cb0c",
+    "bytes": 18981
+  },
+  {
+    "rev": "7e5150af5",
+    "path": "results/arch/qwen_tp8_native_dispatch_1014/actual_fused_layer0/die0/program.hex",
+    "copy": "7e5150af5__results__arch__qwen_tp8_native_dispatch_1014__actual_fused_layer0__die0__program.hex",
+    "sha256": "cc5bc8fc17d4068ac9a49e8bf79f34e74350d56d114dd7fe5cde433d2ac82796",
+    "bytes": 6425
+  },
+  {
+    "rev": "7e5150af5",
+    "path": "results/arch/qwen_tp8_native_dispatch_1014/actual_fused_layer0/die0/lowering.json",
+    "copy": "7e5150af5__results__arch__qwen_tp8_native_dispatch_1014__actual_fused_layer0__die0__lowering.json",
+    "sha256": "85ceb5f54550bd94c4f40c76d033ed436de4888a9c43be5d61ca1b71503777a7",
+    "bytes": 18866
+  },
+  {
+    "rev": "7e5150af5",
+    "path": "results/arch/qwen_calendar_integration_1019/witness/body.json",
+    "copy": "7e5150af5__results__arch__qwen_calendar_integration_1019__witness__body.json",
+    "sha256": "f51cb382222c6f9fff9a6a0a742f70667683a63f8eb7be6d6eb3bdb9681b08a6",
+    "bytes": 58171
+  },
+  {
+    "rev": "7e5150af5",
+    "path": "results/arch/qwen_calendar_integration_1019/witness/descriptor_cap1.json",
+    "copy": "7e5150af5__results__arch__qwen_calendar_integration_1019__witness__descriptor_cap1.json",
+    "sha256": "1271ecf3f99204e35e07cc7d93a54362241b4a5ffe7358e2bc81cdc083a0c5e1",
+    "bytes": 10162
+  },
+  {
+    "rev": "7e5150af5",
+    "path": "results/arch/qwen_calendar_integration_1019/witness/ctlm_metadata_source.json",
+    "copy": "7e5150af5__results__arch__qwen_calendar_integration_1019__witness__ctlm_metadata_source.json",
+    "sha256": "24979d3fc1555becdf14c3e098cec3ca4ff348e190cffe5888e828ff24cb9ce7",
+    "bytes": 35655
+  },
+  {
+    "rev": "7e5150af5",
+    "path": "results/arch/qwen_calendar_integration_1019/witness/pw_metadata.hex",
+    "copy": "7e5150af5__results__arch__qwen_calendar_integration_1019__witness__pw_metadata.hex",
+    "sha256": "a3ee4a0eb1774e3c2dc00ee1bbedb21e723211758e7529bc8466284829d8c07d",
+    "bytes": 17408
+  },
+  {
+    "rev": "7e5150af5",
+    "path": "results/arch/qwen_calendar_integration_1019/witness/composition.json",
+    "copy": "7e5150af5__results__arch__qwen_calendar_integration_1019__witness__composition.json",
+    "sha256": "481388860be6b08ef0582a35f2327b93cb1d240fd3c089845f63b693cf672102",
+    "bytes": 59580
+  },
+  {
+    "rev": "7e5150af5",
+    "path": "results/arch/qwen_calendar_integration_1019/witness/lowerer_sources.json",
+    "copy": "7e5150af5__results__arch__qwen_calendar_integration_1019__witness__lowerer_sources.json",
+    "sha256": "6a503402a36a611666754a33460f4c98380ad5241f66957fce884d04ec8573fa",
+    "bytes": 2023
+  },
+  {
+    "rev": "7e5150af5",
+    "path": "results/rtl/qwen_layer_tput_1018/compiled_L1/compute_programme/sys_face_events.json",
+    "copy": "7e5150af5__results__rtl__qwen_layer_tput_1018__compiled_L1__compute_programme__sys_face_events.json",
+    "sha256": "b8e8121a75d0c12596f250596deb0ece1ef4d4b739d767611a2cb24f1266ad7f",
+    "bytes": 1788
+  }
+]
