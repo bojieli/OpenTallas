@@ -205,7 +205,7 @@ module qfd_tt_ctlm_dv #(
     always @(posedge ck or negedge rst_n)
         if (!rst_n) init_u0_q <= 1'b0;
         else init_u0_q <= (INIT_U0 != 0) ? init_u0 : 1'b0;
-    initial if (INIT_U0 != 0 && (INIT_FIRST < 0 || INIT_FIRST % 4 != 0 || INIT_CNT < 1 || INIT_FIRST + INIT_CNT > 1024))
+    initial if (INIT_U0 != 0 && (INIT_FIRST < 0 || INIT_FIRST % 4 != 0 || INIT_CNT < 1 || INIT_CNT > 1023 || INIT_FIRST + INIT_CNT > 1024))
         $error("INIT_U0 requires a source-bound aligned INIT_FIRST/INIT_CNT programme range");
     localparam integer UB = (NU > 1) ? $clog2(NU) : 1;
     localparam integer OPS = (OPSEG != 0 && NU > 1) ? 1 : 0;
