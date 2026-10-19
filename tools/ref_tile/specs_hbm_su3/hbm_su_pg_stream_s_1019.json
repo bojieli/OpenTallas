@@ -212,6 +212,12 @@
    "ot_hbm_vm_lg_keep_reg"
   ]
  },
+ "orfs_vars": {
+  "GPL_ROUTABILITY_DRIVEN": "0"
+ },
+ "fill_reason": {
+  "pin_bound": "W seam 2,346 b at 5.4/um (abuts q) sets the 432-um height; N far requests + COLL inject 762 b and S far returns 516 b set the 216-um width"
+ },
  "io_flop_at_pins": {
   "cols": 4,
   "allow_none": true

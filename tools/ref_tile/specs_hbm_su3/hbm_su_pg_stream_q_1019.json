@@ -170,6 +170,12 @@
   },
   "io_hold_margin_ns": 0.03
  },
+ "orfs_vars": {
+  "GPL_ROUTABILITY_DRIVEN": "0"
+ },
+ "fill_reason": {
+  "pin_bound": "E seam 2,346 b at 5.4/um and W slice S band 1,178 b set the 432-um height (abuts s); width 86.4 is the minimum for two 4-column pin-flop bands plus the bank muxes"
+ },
  "io_flop_at_pins": {
   "cols": 4,
   "allow_none": true

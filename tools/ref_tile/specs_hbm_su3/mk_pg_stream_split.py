@@ -81,6 +81,19 @@ EXTRA = [BENCH, 'rtl/test/hbm_accel/generic/tb_hbm_su_pg_stream_split.sv', f'{S_
          'rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv', 'rtl/hdc/ot_hdc_delay.sv', WIT]
 
 
+# TW5-PGSTREAM 10-19: gate try 3 (24dac678d, --cts) FAILED both halves in GPL: GPL-0305 RePlAce divergence after the
+# routability loop (q: 930 um2 movable in 35,104 um2, routability inflation +323 %, overflow stuck at 0.137 while the density
+# penalty ran to 1e32; s the same at 0.107). Pin-bound tiles: the seam (2,346 b) sets the 432-um height on both faces and the
+# halves abut, so the outline stays; routability-driven GPL off (precedent dsfd_vm_static_wfc_ctl_r4/r5, smn_fcxr_ref_fa r2,
+# smh_fcxr_ref_p35 lf CLOSED). The trial GRT / route GRT still measure congestion.
+PIN_BOUND = {
+    'hbm_su_pg_stream_q_1019': 'E seam 2,346 b at 5.4/um and W slice S band 1,178 b set the 432-um height (abuts s); '
+                               'width 86.4 is the minimum for two 4-column pin-flop bands plus the bank muxes',
+    'hbm_su_pg_stream_s_1019': 'W seam 2,346 b at 5.4/um (abuts q) sets the 432-um height; N far requests + COLL inject '
+                               '762 b and S far returns 516 b set the 216-um width',
+}
+
+
 def mk(name, top, params, ck, rsts, land, W, pins, pr, std, srcs, why, keep=None):
     route = {'pd': 0.5, 'period_ps': 833.333, 'threads': 8, 'peak_ram_gb': 12, 'hold_margin_ns': 0.03,
              'macro_halo_um': 5.4, 'pin_h': 'M4', 'pin_v': 'M3 M5', 'pin_balance': {'h': 'M4', 'v': 'M3 M5', 'group_max': 1},
@@ -91,7 +104,8 @@ def mk(name, top, params, ck, rsts, land, W, pins, pr, std, srcs, why, keep=None
          'clock_port': ck, 'reset_ports': rsts, 'reset_landing': land,
          'outline': {'w': W, 'h': H, 'exact': True}, 'std_area_um2': std, 'layer_cap': 'M5', 'signal_max_layer': 'M5',
          'pg_layer': 'M5', 'recipe': 4, 'macros': [], 'children': [], 'inter': [], 'pins': pins, 'pin_ranges': pr,
-         'route': route, 'io_flop_at_pins': {'cols': 4, 'allow_none': True}, 'inhold': False, 'outhold': False,
+         'route': route, 'orfs_vars': {'GPL_ROUTABILITY_DRIVEN': '0'},
+         'fill_reason': {'pin_bound': PIN_BOUND[name]}, 'io_flop_at_pins': {'cols': 4, 'allow_none': True}, 'inhold': False, 'outhold': False,
          'keep_pin_regs': True, 'hold_budget': 'die',
          'pin_regs': {'enable': False, 'reason': (
              'Every boundary bit has its register in RTL: request/return/inject banks are written straight from the '
