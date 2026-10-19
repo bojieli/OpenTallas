@@ -1,0 +1,42 @@
+{
+  "status": "PASS",
+  "rows": [
+    {
+      "policy": "default",
+      "flag": false,
+      "helper_count": 49,
+      "shipped_paths": [
+        "physical/common_flow/macro_cts_cluster.tcl",
+        "tools/fp_margin_lint.py",
+        "tools/fp_margin_lint.tcl",
+        "tools/orfs_hold_mm.py",
+        "tools/orfs_hold_mm.tcl",
+        "tools/textbook_lint.py"
+      ],
+      "config_sha256": "85286131766b1b384feb8810ca8b4cc36349a86a4c8a472181ef10ff03fd5899",
+      "policy_via_actual_ref_route": true,
+      "EDA_invoked": false
+    },
+    {
+      "policy": "strict",
+      "flag": true,
+      "helper_count": 53,
+      "shipped_paths": [
+        "physical/common_flow/audit_native_pg.tcl",
+        "physical/common_flow/macro_cts_cluster.tcl",
+        "physical/common_flow/native_pg_binding.tcl",
+        "physical/common_flow/native_pg_bootstrap.tcl",
+        "tools/closure_loop/pg_receipt.py",
+        "tools/fp_margin_lint.py",
+        "tools/fp_margin_lint.tcl",
+        "tools/orfs_hold_mm.py",
+        "tools/orfs_hold_mm.tcl",
+        "tools/textbook_lint.py"
+      ],
+      "config_sha256": "94cc50c93790cf6bd1f71cebed91955ed2d371d8704b8950b33180fef3a98861",
+      "policy_via_actual_ref_route": true,
+      "EDA_invoked": false
+    }
+  ],
+  "old_kit_refused_before_driver": true
+}

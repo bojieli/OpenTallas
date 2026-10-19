@@ -1,0 +1,10 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/kv-native-owner-join-1019/gate-mutant-stage-a8ddbb4c1
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/kv-native-owner-join-1019/gate-mutant-stage-a8ddbb4c1
+ot-run: ot-epyc6       admits  1289 GB (avail 959, growth 31, headroom 0, waiters 0/0 GB) load 13/128 running 10 disk 5722 GB 
+ot-run: ot-epyc7       admits  1097 GB (avail 818, growth 34, headroom 0, waiters 0/0 GB) load 14/96 running 10 disk 6259 GB 
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/kv-native-owner-join-1019/gate-mutant-stage-a8ddbb4c1
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/kv-native-owner-join-1019/gate-mutant-stage-a8ddbb4c1
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/kv-native-owner-join-1019/gate-mutant-stage-a8ddbb4c1
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-170919-1792451091 after 1 s
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-170919-1792451091): exit 1

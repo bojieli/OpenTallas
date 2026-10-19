@@ -1,0 +1,287 @@
+--- canonical60bb
++++ a8ddbb4c1f08b3a215243c8dfea704538e56b712
+@@ -74,6 +74,7 @@
+ // Private COMPONENT fixture only. No generated binding or production calendar.
+ module ot_host_if_pb2_observed_rc #(
+     parameter integer ENABLE_RETAINED_COMMIT = 0,
++    parameter integer ENABLE_NATIVE_OWNER_JOIN = 0,
+     parameter integer HEALTH_CUTOFF_EDGES = 0,
+     parameter integer STEP_RESPONSE_DEADLINE_EDGES = 0,
+     // 1 = explicitly conditional COMPONENT calendar; all other types refused.
+@@ -101,6 +102,50 @@
+     // outstanding is a sticky fault (static schedule: never a stall).
+     parameter integer MU_OUT  = 0
+ ) (
++    // Private common-clock functional join. Descriptor and native namespaces differ.
++    output wire native_certificate_attempt_v,event_certified_v,
++    output wire cq_dma_retired_v,
++    input wire native_certificate_key_ok,
++    input wire native_issue_ready,
++    input wire native_cq_offer_ok,
++    output wire native_cq_prospective_v, native_cq_prospective_native_valid,
++    output wire [86:0] native_cq_prospective_key,
++    input wire native_bound_valid,
++    input wire [58:0] native_bound_tag,
++    input wire [1:0] native_bound_gen, native_bound_descgen,
++    input wire [15:0] native_bound_client,
++    input wire [7:0] native_bound_slot,
++    input wire [17:0] native_bound_pos,
++    input wire native_join_fault,
++    input wire health_native_valid,
++    input wire [58:0] health_native_tag,
++    input wire [1:0] health_native_gen,
++    output wire issue_fire_v,
++    output wire [17:0] issue_token, issue_pos,
++    output wire [15:0] issue_client,
++    output wire [7:0] issue_slot,
++    output wire [1:0] issue_descgen,
++    output wire event_insert_v, event_native_valid,
++    output wire [58:0] event_native_tag,
++    output wire [1:0] event_native_gen, event_descgen,
++    output wire cq_offer_v, cq_native_valid,
++    output wire [58:0] cq_native_tag,
++    output wire [1:0] cq_native_gen, cq_descgen,
++    output wire raw_done_v, raw_done_native_valid, raw_done_report_needed, native_certificate_v,
++    output wire [58:0] raw_done_tag,
++    output wire [1:0] raw_done_gen, raw_done_descgen,
++    output wire [15:0] raw_done_client,
++    output wire [7:0] raw_done_slot,
++    output wire [17:0] raw_done_pos,
++    output wire [58:0] native_certificate_tag,
++    output wire [1:0] native_certificate_gen, native_certificate_descgen,
++    output wire [15:0] native_certificate_client,
++    output wire [7:0] native_certificate_slot,
++    output wire [15:0] event_client, cq_offer_client, report_drained_client,
++    output wire [7:0] event_slot, cq_offer_slot, report_drained_slot,
++    output wire report_drained_v, report_drained_cq, report_drained_native_valid,
++    output wire [58:0] report_drained_tag,
++    output wire [1:0] report_drained_gen, report_drained_descgen,
+     input wire raw_por_n, warm_rst_n, pll_locked_i,
+     input wire health_bad_i, health_armed_i, health_cutoff_i,
+     input wire [79:0] health_identity_i,
+@@ -190,6 +235,7 @@
+     input  wire [NW-1:0]      tok_id,
+     input  wire [7:0]         users_done,
+     input  wire               arr_fault,
++ output reg step_retire_native_valid,cq_native_valid_observed,
+  output reg cq_commit_v,output reg[15:0]cq_client_tag,output reg[7:0]cq_slot,
+  output reg[17:0]cq_pos,cq_token,output reg[1:0]cq_kind,output reg[3:0]cq_status,
+  output reg step_issue_v,output reg[15:0]step_client_tag,output reg[7:0]step_slot,output reg[17:0]step_pos,
+@@ -203,6 +249,8 @@
+          STEP_RESPONSE_DEADLINE_EDGES <= 0 ||
+          STEP_RESPONSE_DEADLINE_EDGES > HEALTH_CUTOFF_EDGES))
+         $fatal(1,"RC_COMPONENT_CONTRACT: selected SU and typed COMPONENT calendar required; production H NULL");
++    initial if (ENABLE_NATIVE_OWNER_JOIN && (!ENABLE_RETAINED_COMMIT || EVQ != 4))
++        $fatal(1,"NATIVE_JOIN_COMPONENT_CONTRACT: retained selected SU and 16 event rows required");
+     localparam integer SB = (NSLOT > 1) ? $clog2(NSLOT) : 1;
+     localparam integer EQD = 1 << EVQ;
+     localparam [31:0] ID = 32'h4F54_4849;               // "OTHI"
+@@ -312,6 +360,11 @@
+     reg [31:0] saved_cycles;
+     reg [61:0] event_lineage [0:EQD-1]; // {TAG59, generation2, certified1}; functional SRAM HOLD.
+     reg event_owner_record [0:EQD-1];
++    // Exactly 3*16 + 3 = 51 new declaration bits; functional indexed SRAM HOLD.
++    reg event_native_valid_q [0:EQD-1];
++    reg [1:0] event_desc_gen [0:EQD-1];
++    reg cq_saved_native_valid;
++    reg [1:0] cq_saved_desc_gen;
+     reg cq_saved_owner_record;
+     reg [EVW-1:0] cq_saved;
+     reg [61:0] cq_saved_lineage;
+@@ -327,13 +380,28 @@
+     wire raw_including_now = pending_raw || step_done;
+     wire cut_now = pending_v && (pending_age + 1'b1 == HEALTH_CUTOFF_EDGES);
+     wire deadline_bad = pending_v && (pending_age + 1'b1 == STEP_RESPONSE_DEADLINE_EDGES) && !raw_including_now;
+-    wire identity_bad = cut_now && (health_identity_i != pending_identity || !health_cutoff_i || !raw_including_now || !armed_q);
++    wire [58:0] pending_request_tag = pending_identity[79:21];
++    wire [1:0] pending_native_gen = pending_identity[20:19];
++    wire pending_native_valid = pending_identity[18];
++    wire [58:0] pending_terminal_tag = {pending_request_tag[58:43],6'd37,pending_request_tag[36:0]};
++    wire bound_matches_owner = native_bound_valid && owner_valid_q &&
++        native_bound_client == owner_tag[15:0] && native_bound_slot == 0 &&
++        native_bound_descgen == owner_gen && native_bound_pos == eng_pos &&
++        native_bound_tag[42:37] == 0 && native_bound_tag[5:0] == 0 &&
++        native_bound_tag[36:19] == eng_token && native_bound_tag[18:6] == eng_pos[12:0] &&
++        eng_pos[17:13] == 0;
++    wire native_identity_bad = !native_certificate_key_ok || !pending_native_valid || !health_native_valid ||
++        health_native_tag != pending_terminal_tag || health_native_gen != pending_native_gen;
++    wire identity_bad = cut_now && ((ENABLE_NATIVE_OWNER_JOIN ? native_identity_bad :
++        health_identity_i != pending_identity) || !health_cutoff_i || !raw_including_now || !armed_q);
+     wire dma_bad = (m_rvalid && m_rresp[1]) || (m_bvalid && m_bresp[1]);
+     wire bad_next = bad_q || loss_now || health_bad_i || deadline_bad || identity_bad ||
++        (ENABLE_NATIVE_OWNER_JOIN && native_join_fault) ||
+         dma_bad || mu_fault || ev_ovf || (step_done && eng_fault) ||
+         (lifecycle_live && (execution_restart_i || role_fault_i));
+     wire admission_ok = !ENABLE_RETAINED_COMMIT || (armed_q && !bad_next && !poison_q && !pending_v);
+     wire issue_fire = i_st == I_GO && admission_ok &&
++        (!ENABLE_NATIVE_OWNER_JOIN || native_issue_ready) &&
+         (!ENABLE_RETAINED_COMMIT || (ev_n + pending_v < EQD - 2));
+     wire certify = ENABLE_RETAINED_COMMIT && cut_now && !bad_next;
+     wire cert_generated = step_done ? d_gen : saved_generated;
+@@ -345,9 +413,15 @@
+     wire [31:0] cert_cycles = step_done ? eng_cycles : saved_cycles;
+     wire failure_insert = ENABLE_RETAINED_COMMIT && failure_pending_q && !report_once_q &&
+         !pending_v && !inflight && ev_n == 0 && d_st == D_IDLE;
++    wire saved_descriptor_matches = cq_saved_owner_record && owner_valid_q &&
++        eh_tag == owner_tag[15:0] && eh_slot8 == 0 && cq_saved_desc_gen == owner_gen;
++    // Saved event key/certificate is authoritative. Never substitute latest allocation.
+     wire word0_cut_ok = !bad_next && armed_q && !poison_q &&
+         ((eh_kind == EV_ERROR && eh_st != ST_FAULT) ||
+-        (cq_saved_owner_record && cq_saved_lineage[0] && cq_saved_lineage[61:3] == owner_tag && cq_saved_lineage[2:1] == owner_gen));
++        (ENABLE_NATIVE_OWNER_JOIN ?
++            (native_cq_offer_ok && saved_descriptor_matches && cq_saved_native_valid && cq_saved_lineage[0] &&
++             cq_saved_lineage[45:40] == 6'd37 && cq_saved_lineage[8:3] == 0) :
++            (cq_saved_owner_record && cq_saved_lineage[0] && cq_saved_lineage[61:3] == owner_tag && cq_saved_lineage[2:1] == owner_gen)));
+     assign rc_bad = ENABLE_RETAINED_COMMIT && bad_q;
+     assign rc_armed = ENABLE_RETAINED_COMMIT && armed_q;
+     assign rc_retained_owned = retained_owned;
+@@ -359,6 +433,56 @@
+     assign rc_identity = pending_identity;
+     assign rc_word0_offer = ENABLE_RETAINED_COMMIT && d_st == D_CQ1_B && m_bvalid;
+     assign rc_response_confirmed = response_confirmed_q;
++
++    assign issue_fire_v = ENABLE_NATIVE_OWNER_JOIN && issue_fire;
++    assign issue_token = eng_token; assign issue_pos = eng_pos;
++    assign issue_client = sl_tag[eng_slot]; assign issue_slot = eng_slot;
++    assign issue_descgen = owner_gen;
++    assign event_insert_v = ENABLE_NATIVE_OWNER_JOIN && (ep_v || (dp_v && dp_ok));
++    wire event_has_native = ep_v && pending_native_valid && native_bound_valid &&
++        native_bound_tag == pending_request_tag && native_bound_gen == pending_native_gen &&
++        native_bound_client == owner_tag[15:0] && native_bound_descgen == owner_gen;
++    assign event_native_valid = event_has_native;
++    assign event_client = ep_v ? sl_tag[0] : q_tag;
++    assign event_slot = ep_v ? 8'd0 : q_slot;
++    assign cq_offer_client = eh_tag; assign cq_offer_slot = eh_slot8;
++    assign report_drained_client = (d_st == D_CQ0_B) ? eh_tag : sl_tag[0];
++    assign report_drained_slot = (d_st == D_CQ0_B) ? eh_slot8 : 8'd0;
++    assign event_native_tag = pending_terminal_tag;
++    assign event_native_gen = pending_native_gen;
++    assign event_descgen = ep_v ? owner_gen : 2'd0;
++    // Prospective key does not depend on eligibility or current certify/fault feedback.
++    // Core validates against its retained prior active identity before word0 offer.
++    assign native_cq_prospective_v = ENABLE_NATIVE_OWNER_JOIN && rc_word0_offer;
++    assign native_cq_prospective_native_valid = cq_saved_native_valid;
++    assign native_cq_prospective_key = {eh_tag,eh_slot8,cq_saved_desc_gen,
++                                      cq_saved_lineage[61:3],cq_saved_lineage[2:1]};
++    assign cq_offer_v = ENABLE_NATIVE_OWNER_JOIN && rc_word0_offer;
++    assign cq_native_valid = cq_saved_native_valid;
++    assign cq_native_tag = cq_saved_lineage[61:3];
++    assign cq_native_gen = cq_saved_lineage[2:1];
++    assign cq_descgen = cq_saved_desc_gen;
++    // Actual raw completion remains unconditional, including fault paths.
++    assign raw_done_v = ENABLE_NATIVE_OWNER_JOIN && step_done;
++    assign raw_done_native_valid = pending_native_valid;
++    assign raw_done_report_needed = d_gen || eng_fault;
++    assign raw_done_tag = pending_request_tag;
++    assign raw_done_gen = pending_native_gen;
++    assign raw_done_client = sl_tag[d_slot]; assign raw_done_slot = d_slot;
++    assign raw_done_pos = d_pos; assign raw_done_descgen = owner_gen;
++    assign native_certificate_tag = pending_terminal_tag;
++    assign native_certificate_gen = pending_native_gen;
++    assign native_certificate_client = sl_tag[0]; assign native_certificate_slot = 0;
++    assign native_certificate_descgen = owner_gen;
++    assign native_certificate_v = ENABLE_NATIVE_OWNER_JOIN && certify;
++    assign report_drained_cq = ENABLE_NATIVE_OWNER_JOIN && d_st == D_CQ0_B;
++    assign report_drained_v = ENABLE_NATIVE_OWNER_JOIN &&
++        ((d_st == D_CQ0_B && m_bvalid && cq_saved_owner_record) ||
++         (certify && !cert_generated));
++    assign report_drained_native_valid = (d_st == D_CQ0_B) ? cq_saved_native_valid : pending_native_valid;
++    assign report_drained_tag = (d_st == D_CQ0_B) ? cq_saved_lineage[61:3] : pending_terminal_tag;
++    assign report_drained_gen = (d_st == D_CQ0_B) ? cq_saved_lineage[2:1] : pending_native_gen;
++    assign report_drained_descgen = (d_st == D_CQ0_B) ? cq_saved_desc_gen : owner_gen;
+ 
+     // -- AXI4-Lite slave -----------------------------------------------------------------
+     wire wr_go = s_awvalid && s_wvalid && !s_bvalid;
+@@ -499,6 +623,7 @@
+             pending_age <= 0; pending_identity <= 0;
+             saved_pos <= 0; saved_tok <= 0; saved_ngen <= 0;
+             saved_last <= 0; saved_generated <= 0; saved_fault <= 0; saved_stat <= 0; saved_cycles <= 0;
++            cq_saved_native_valid <= 0; cq_saved_desc_gen <= 0;
+             cq_saved_owner_record <= 0; cq_saved <= 0; cq_saved_lineage <= 0; cq_saved_addr <= 0; cq_saved_phase <= 0;
+             offered_success_q <= 0; response_confirmed_q <= 0;
+             enable <= 1'b0; sq_base <= 0; cq_base <= 0; msi_addr <= 0; sq_log <= 0; cq_log <= 0;
+@@ -548,8 +673,12 @@
+                 end
+                 if (issue_fire) begin
+                     pending_v <= 1; pending_raw <= 0; pending_age <= 0;
+-                    pending_identity <= {owner_tag,owner_gen,1'b0,eng_pos};
+-                end
++                    pending_identity <= ENABLE_NATIVE_OWNER_JOIN ? 80'd0 : {owner_tag,owner_gen,1'b0,eng_pos};
++                end
++                // Binding follows actual allocation, never guessed at descriptor acceptance.
++                // The existing bound bit prevents any later allocation replacing this key.
++                if (ENABLE_NATIVE_OWNER_JOIN && pending_v && !pending_native_valid && bound_matches_owner)
++                    pending_identity <= {native_bound_tag,native_bound_gen,1'b1,eng_pos};
+                 if (step_done) begin
+                     pending_raw <= 1; saved_pos <= d_pos; saved_tok <= eng_next_token;
+                     saved_ngen <= d_gen ? d_ngen : sl_ngen[d_slot];
+@@ -599,7 +728,13 @@
+             if (ep_v || (dp_v && dp_ok)) begin
+                 evq[ev_w] <= ep_v ? ep_d : dp_d;
+                 if (ENABLE_RETAINED_COMMIT) begin
+-                    event_lineage[ev_w] <= {owner_tag,owner_gen,certify && cert_generated};
++                    event_lineage[ev_w] <= ENABLE_NATIVE_OWNER_JOIN ?
++                        (ep_v ? {pending_terminal_tag,pending_native_gen,certify && cert_generated} : 62'd0) :
++                        {owner_tag,owner_gen,certify && cert_generated};
++                    if (ENABLE_NATIVE_OWNER_JOIN) begin
++                        event_native_valid_q[ev_w] <= event_has_native;
++                        event_desc_gen[ev_w] <= ep_v ? owner_gen : 2'd0;
++                    end
+                     event_owner_record[ev_w] <= ep_v;
+                 end
+                 ev_w <= ev_w + 1'b1;
+@@ -616,7 +751,7 @@
+             case (d_st)
+                 D_IDLE:
+                     if (ev_n != 0 && cq_room && (!ENABLE_RETAINED_COMMIT || !report_once_q)) begin
+-                        if (ENABLE_RETAINED_COMMIT) begin cq_saved_owner_record <= event_owner_record[ev_r]; cq_saved <= evq[ev_r]; cq_saved_lineage <= event_lineage[ev_r]; cq_saved_addr <= cq_entry; cq_saved_phase <= cq_phase; end
++                        if (ENABLE_RETAINED_COMMIT) begin if (ENABLE_NATIVE_OWNER_JOIN) begin cq_saved_native_valid <= event_native_valid_q[ev_r]; cq_saved_desc_gen <= event_desc_gen[ev_r]; end cq_saved_owner_record <= event_owner_record[ev_r]; cq_saved <= evq[ev_r]; cq_saved_lineage <= event_lineage[ev_r]; cq_saved_addr <= cq_entry; cq_saved_phase <= cq_phase; end
+                         // post the head event: w1 first, then w0 with the phase bit
+                         m_awvalid <= 1'b1; m_awaddr <= cq_entry + 64'd8;
+                         m_wvalid <= 1'b1; m_wdata <= cq_w1; m_wstrb <= 8'hFF;
+@@ -656,6 +791,14 @@
+                         if (dp_ok) d_st <= D_IDLE;                       // the error event is pushed below
+                     end else if (admission_ok) begin
+                         if (ENABLE_RETAINED_COMMIT) begin
++                            if (ENABLE_NATIVE_OWNER_JOIN) begin
++                                // Descriptor generation wrap is not the lifetime proof: the old
++                                // descriptor must have released all functional ownership first.
++                                assert (!owner_valid_q && !pending_v && !inflight && ev_n == 0 &&
++                                        !failure_pending_q && sl_st[q_s] == SL_FREE)
++                                    else $fatal(1,"NATIVE_JOIN_DESCRIPTOR_REUSE_BEFORE_DRAIN");
++                                pending_identity <= 0;
++                            end
+                             owner_valid_q <= 1; owner_tag <= {43'd0,q_tag}; owner_gen <= owner_gen + 1'b1;
+                             cm_pos <= 0; cm_tok <= 0; cm_ngen <= 0; cm_state <= SL_FREE;
+                             poison_q <= 0; failure_pending_q <= 0; report_once_q <= 0;
+@@ -707,8 +850,9 @@
+                         end else if (!word0_cut_ok) begin
+                             poison_q <= 1;
+                             // A different accepted descriptor's error is not this owner's report.
+-                            if (owner_valid_q && cq_saved_owner_record &&
+-                                cq_saved_lineage[61:3] == owner_tag && cq_saved_lineage[2:1] == owner_gen) begin
++                            if (ENABLE_NATIVE_OWNER_JOIN ? saved_descriptor_matches :
++                                (owner_valid_q && cq_saved_owner_record &&
++                                 cq_saved_lineage[61:3] == owner_tag && cq_saved_lineage[2:1] == owner_gen)) begin
+                                 failure_pending_q <= 0; report_once_q <= 1;
+                             end
+                         end
+@@ -895,11 +1039,17 @@
+         end
+     end
+ 
++ assign native_certificate_attempt_v=ENABLE_NATIVE_OWNER_JOIN && cut_now;
++ assign event_certified_v=ENABLE_NATIVE_OWNER_JOIN && ep_v && certify && cert_generated;
++ assign cq_dma_retired_v=ENABLE_NATIVE_OWNER_JOIN && ev_pop && m_bresp==0;
+  // Registered observations of actual architectural issue and CQ DMA retirement.
+  // The CQ event is sampled only at the original D_CQ0_B && m_bvalid edge.
+  always @(posedge clk or negedge retained_reset_n)begin
+-  if(!retained_reset_n)begin cq_commit_v<=0;cq_client_tag<=0;cq_slot<=0;cq_pos<=0;cq_token<=0;cq_kind<=0;cq_status<=0;step_issue_v<=0;step_client_tag<=0;step_slot<=0;step_pos<=0;host_idle<=0;host_observer_fault<=0;step_retire_v<=0;step_retire_cq<=0;step_retire_client_tag<=0;step_retire_slot<=0;step_retire_pos<=0;step_retire_token<=0;end
++  if(!retained_reset_n)begin step_retire_native_valid<=0;cq_native_valid_observed<=0;cq_commit_v<=0;cq_client_tag<=0;cq_slot<=0;cq_pos<=0;cq_token<=0;cq_kind<=0;cq_status<=0;step_issue_v<=0;step_client_tag<=0;step_slot<=0;step_pos<=0;host_idle<=0;host_observer_fault<=0;step_retire_v<=0;step_retire_cq<=0;step_retire_client_tag<=0;step_retire_slot<=0;step_retire_pos<=0;step_retire_token<=0;end
+   else begin
++   // Marker and observer tuple sample identical pre-edge source ownership.
++   cq_native_valid_observed<=ENABLE_NATIVE_OWNER_JOIN && cq_saved_native_valid;
++   step_retire_native_valid<=ENABLE_NATIVE_OWNER_JOIN && pending_native_valid;
+    cq_commit_v<=ev_pop&&m_bresp==0;host_observer_fault<=sticky_dma||sticky_fault||ev_ovf;cq_client_tag<=eh_tag;cq_slot<=eh_slot8;cq_pos<=18'(eh_pos);cq_token<=18'(eh_tok);cq_kind<=ENABLE_RETAINED_COMMIT?offered_kind_q:eh_kind;cq_status<=ENABLE_RETAINED_COMMIT?offered_status_q:eh_st;
+    step_retire_v<=step_done&&(MU_OUT!=0||i_st==I_RUN);step_retire_cq<=d_gen||eng_fault;step_retire_client_tag<=sl_tag[d_slot];step_retire_slot<=8'(d_slot);step_retire_pos<=18'(d_pos);step_retire_token<=eng_next_token;
+    step_issue_v<=eng_start;step_client_tag<=sl_tag[eng_slot];step_slot<=8'(eng_slot);step_pos<=18'(eng_pos);

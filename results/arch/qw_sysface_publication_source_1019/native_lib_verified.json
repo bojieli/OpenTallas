@@ -1,0 +1,401 @@
+{
+  "A2O1A1Ixp33_ASAP7_75t_R": {
+    "functions": {
+      "Y": "(!A1 * !B) + (!A2 * !B) + (!C)"
+    },
+    "ff": [],
+    "pg": {
+      "VDD": "primary_power",
+      "VSS": "primary_ground"
+    }
+  },
+  "AND2x2_ASAP7_75t_R": {
+    "functions": {
+      "Y": "(A * B)"
+    },
+    "ff": [],
+    "pg": {
+      "VDD": "primary_power",
+      "VSS": "primary_ground"
+    }
+  },
+  "AND3x1_ASAP7_75t_R": {
+    "functions": {
+      "Y": "(A * B * C)"
+    },
+    "ff": [],
+    "pg": {
+      "VDD": "primary_power",
+      "VSS": "primary_ground"
+    }
+  },
+  "AND4x1_ASAP7_75t_R": {
+    "functions": {
+      "Y": "(A * B * C * D)"
+    },
+    "ff": [],
+    "pg": {
+      "VDD": "primary_power",
+      "VSS": "primary_ground"
+    }
+  },
+  "AND5x1_ASAP7_75t_R": {
+    "functions": {
+      "Y": "(A * B * C * D * E)"
+    },
+    "ff": [],
+    "pg": {
+      "VDD": "primary_power",
+      "VSS": "primary_ground"
+    }
+  },
+  "AO21x1_ASAP7_75t_R": {
+    "functions": {
+      "Y": "(A1 * A2) + (B)"
+    },
+    "ff": [],
+    "pg": {
+      "VDD": "primary_power",
+      "VSS": "primary_ground"
+    }
+  },
+  "AO22x1_ASAP7_75t_R": {
+    "functions": {
+      "Y": "(A1 * A2) + (B1 * B2)"
+    },
+    "ff": [],
+    "pg": {
+      "VDD": "primary_power",
+      "VSS": "primary_ground"
+    }
+  },
+  "AOI211xp5_ASAP7_75t_R": {
+    "functions": {
+      "Y": "(!A1 * !B * !C) + (!A2 * !B * !C)"
+    },
+    "ff": [],
+    "pg": {
+      "VDD": "primary_power",
+      "VSS": "primary_ground"
+    }
+  },
+  "AOI21xp33_ASAP7_75t_R": {
+    "functions": {
+      "Y": "(!A1 * !B) + (!A2 * !B)"
+    },
+    "ff": [],
+    "pg": {
+      "VDD": "primary_power",
+      "VSS": "primary_ground"
+    }
+  },
+  "AOI221xp5_ASAP7_75t_R": {
+    "functions": {
+      "Y": "(!A1 * !B1 * !C) + (!A1 * !B2 * !C) + (!A2 * !B1 * !C) + (!A2 * !B2 * !C)"
+    },
+    "ff": [],
+    "pg": {
+      "VDD": "primary_power",
+      "VSS": "primary_ground"
+    }
+  },
+  "AOI222xp33_ASAP7_75t_R": {
+    "functions": {
+      "Y": "(!A1 * !B1 * !C1) + (!A1 * !B1 * !C2) + (!A1 * !B2 * !C1) + (!A1 * !B2 * !C2) + (!A2 * !B1 * !C1) + (!A2 * !B1 * !C2) + (!A2 * !B2 * !C1) + (!A2 * !B2 * !C2)"
+    },
+    "ff": [],
+    "pg": {
+      "VDD": "primary_power",
+      "VSS": "primary_ground"
+    }
+  },
+  "AOI22xp33_ASAP7_75t_R": {
+    "functions": {
+      "Y": "(!A1 * !B1) + (!A1 * !B2) + (!A2 * !B1) + (!A2 * !B2)"
+    },
+    "ff": [],
+    "pg": {
+      "VDD": "primary_power",
+      "VSS": "primary_ground"
+    }
+  },
+  "AOI31xp33_ASAP7_75t_R": {
+    "functions": {
+      "Y": "(!A1 * !B) + (!A2 * !B) + (!A3 * !B)"
+    },
+    "ff": [],
+    "pg": {
+      "VDD": "primary_power",
+      "VSS": "primary_ground"
+    }
+  },
+  "DFFASRHQNx1_ASAP7_75t_R": {
+    "functions": {
+      "QN": "IQN"
+    },
+    "ff": [
+      {
+        "clear": "!SETN",
+        "preset": "!RESETN",
+        "next_state": "!D",
+        "clocked_on": "CLK",
+        "clear_preset_var1": "L",
+        "clear_preset_var2": "L"
+      }
+    ],
+    "pg": {
+      "VDD": "primary_power",
+      "VSS": "primary_ground"
+    }
+  },
+  "INVx1_ASAP7_75t_R": {
+    "functions": {
+      "Y": "!A"
+    },
+    "ff": [],
+    "pg": {
+      "VDD": "primary_power",
+      "VSS": "primary_ground"
+    }
+  },
+  "NAND2xp33_ASAP7_75t_R": {
+    "functions": {
+      "Y": "(!A) + (!B)"
+    },
+    "ff": [],
+    "pg": {
+      "VDD": "primary_power",
+      "VSS": "primary_ground"
+    }
+  },
+  "NAND3xp33_ASAP7_75t_R": {
+    "functions": {
+      "Y": "(!A) + (!B) + (!C)"
+    },
+    "ff": [],
+    "pg": {
+      "VDD": "primary_power",
+      "VSS": "primary_ground"
+    }
+  },
+  "NAND4xp25_ASAP7_75t_R": {
+    "functions": {
+      "Y": "(!A) + (!B) + (!C) + (!D)"
+    },
+    "ff": [],
+    "pg": {
+      "VDD": "primary_power",
+      "VSS": "primary_ground"
+    }
+  },
+  "NAND5xp2_ASAP7_75t_R": {
+    "functions": {
+      "Y": "(!A) + (!B) + (!C) + (!D) + (!E)"
+    },
+    "ff": [],
+    "pg": {
+      "VDD": "primary_power",
+      "VSS": "primary_ground"
+    }
+  },
+  "NOR2xp33_ASAP7_75t_R": {
+    "functions": {
+      "Y": "(!A * !B)"
+    },
+    "ff": [],
+    "pg": {
+      "VDD": "primary_power",
+      "VSS": "primary_ground"
+    }
+  },
+  "NOR3xp33_ASAP7_75t_R": {
+    "functions": {
+      "Y": "(!A * !B * !C)"
+    },
+    "ff": [],
+    "pg": {
+      "VDD": "primary_power",
+      "VSS": "primary_ground"
+    }
+  },
+  "NOR4xp25_ASAP7_75t_R": {
+    "functions": {
+      "Y": "(!A * !B * !C * !D)"
+    },
+    "ff": [],
+    "pg": {
+      "VDD": "primary_power",
+      "VSS": "primary_ground"
+    }
+  },
+  "NOR5xp2_ASAP7_75t_R": {
+    "functions": {
+      "Y": "(!A * !B * !C * !D * !E)"
+    },
+    "ff": [],
+    "pg": {
+      "VDD": "primary_power",
+      "VSS": "primary_ground"
+    }
+  },
+  "O2A1O1Ixp33_ASAP7_75t_R": {
+    "functions": {
+      "Y": "(!A1 * !A2 * !C) + (!B * !C)"
+    },
+    "ff": [],
+    "pg": {
+      "VDD": "primary_power",
+      "VSS": "primary_ground"
+    }
+  },
+  "OA211x2_ASAP7_75t_R": {
+    "functions": {
+      "Y": "(A1 * B * C) + (A2 * B * C)"
+    },
+    "ff": [],
+    "pg": {
+      "VDD": "primary_power",
+      "VSS": "primary_ground"
+    }
+  },
+  "OA21x2_ASAP7_75t_R": {
+    "functions": {
+      "Y": "(A1 * B) + (A2 * B)"
+    },
+    "ff": [],
+    "pg": {
+      "VDD": "primary_power",
+      "VSS": "primary_ground"
+    }
+  },
+  "OA222x2_ASAP7_75t_R": {
+    "functions": {
+      "Y": "(A1 * B1 * C1) + (A1 * B1 * C2) + (A1 * B2 * C1) + (A1 * B2 * C2) + (A2 * B1 * C1) + (A2 * B1 * C2) + (A2 * B2 * C1) + (A2 * B2 * C2)"
+    },
+    "ff": [],
+    "pg": {
+      "VDD": "primary_power",
+      "VSS": "primary_ground"
+    }
+  },
+  "OA22x2_ASAP7_75t_R": {
+    "functions": {
+      "Y": "(A1 * B1) + (A1 * B2) + (A2 * B1) + (A2 * B2)"
+    },
+    "ff": [],
+    "pg": {
+      "VDD": "primary_power",
+      "VSS": "primary_ground"
+    }
+  },
+  "OAI211xp5_ASAP7_75t_R": {
+    "functions": {
+      "Y": "(!A1 * !A2) + (!B) + (!C)"
+    },
+    "ff": [],
+    "pg": {
+      "VDD": "primary_power",
+      "VSS": "primary_ground"
+    }
+  },
+  "OAI21xp33_ASAP7_75t_R": {
+    "functions": {
+      "Y": "(!A1 * !A2) + (!B)"
+    },
+    "ff": [],
+    "pg": {
+      "VDD": "primary_power",
+      "VSS": "primary_ground"
+    }
+  },
+  "OAI221xp5_ASAP7_75t_R": {
+    "functions": {
+      "Y": "(!A1 * !A2) + (!B1 * !B2) + (!C)"
+    },
+    "ff": [],
+    "pg": {
+      "VDD": "primary_power",
+      "VSS": "primary_ground"
+    }
+  },
+  "OAI222xp33_ASAP7_75t_R": {
+    "functions": {
+      "Y": "(!A1 * !A2) + (!B1 * !B2) + (!C1 * !C2)"
+    },
+    "ff": [],
+    "pg": {
+      "VDD": "primary_power",
+      "VSS": "primary_ground"
+    }
+  },
+  "OAI22xp33_ASAP7_75t_R": {
+    "functions": {
+      "Y": "(!A1 * !A2) + (!B1 * !B2)"
+    },
+    "ff": [],
+    "pg": {
+      "VDD": "primary_power",
+      "VSS": "primary_ground"
+    }
+  },
+  "OAI31xp33_ASAP7_75t_R": {
+    "functions": {
+      "Y": "(!A1 * !A2 * !A3) + (!B)"
+    },
+    "ff": [],
+    "pg": {
+      "VDD": "primary_power",
+      "VSS": "primary_ground"
+    }
+  },
+  "OR3x1_ASAP7_75t_R": {
+    "functions": {
+      "Y": "(A) + (B) + (C)"
+    },
+    "ff": [],
+    "pg": {
+      "VDD": "primary_power",
+      "VSS": "primary_ground"
+    }
+  },
+  "OR4x1_ASAP7_75t_R": {
+    "functions": {
+      "Y": "(A) + (B) + (C) + (D)"
+    },
+    "ff": [],
+    "pg": {
+      "VDD": "primary_power",
+      "VSS": "primary_ground"
+    }
+  },
+  "OR5x1_ASAP7_75t_R": {
+    "functions": {
+      "Y": "(A) + (B) + (C) + (D) + (E)"
+    },
+    "ff": [],
+    "pg": {
+      "VDD": "primary_power",
+      "VSS": "primary_ground"
+    }
+  },
+  "XNOR2xp5_ASAP7_75t_R": {
+    "functions": {
+      "Y": "(A * B) + (!A * !B)"
+    },
+    "ff": [],
+    "pg": {
+      "VDD": "primary_power",
+      "VSS": "primary_ground"
+    }
+  },
+  "XOR2xp5_ASAP7_75t_R": {
+    "functions": {
+      "Y": "(A * !B) + (!A * B)"
+    },
+    "ff": [],
+    "pg": {
+      "VDD": "primary_power",
+      "VSS": "primary_ground"
+    }
+  }
+}

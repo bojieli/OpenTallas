@@ -1,0 +1,13 @@
+{
+  "version": "Verilator 5.050 2026-07-01 rev v5.050",
+  "cases": [
+    {
+      "case": "down_permutation",
+      "source_sha256": "d408dd95255a3e84bdb7c34dc49840349add32533202436f1dd0a0bfa1585d48",
+      "rc": 1,
+      "expected": "PRIVATE_FAIL",
+      "pass_": true,
+      "witness": "PRIVATE_FAIL kind=grp output=o_dn edge=0 mut=0\n[16000] %Fatal: tb.sv:135: Assertion failed in tb\n%Error: tb.sv:135: Verilog $stop\nAborting...\n"
+    }
+  ]
+}

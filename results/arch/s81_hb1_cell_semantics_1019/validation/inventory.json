@@ -1,0 +1,12 @@
+{
+  "projection_sha256": "1957f1306735c46754bfe4207ad14b37c85de0d730c381792ffeb27262596103",
+  "comb_masters": 39,
+  "comb_checks": 506,
+  "sequence_source_target_pairs": 512,
+  "reservation": {
+    "memory_gb": 4,
+    "threads": 2,
+    "disk_gb": 2
+  },
+  "scope": "binary controls; direct original UDP, constant notifier/xcr; no timing wrapper/SDF/X edge equivalence"
+}

@@ -1,0 +1,26 @@
+GATE WARN fill: parent kit without std_area_um2: fill not computed at gen (the gate measures it)  -> FIX: pass --area-um2 / std_area_um2 from the synthesis smoke
+GATE INFO pin_regs: pin registers opted out: RTL registers every pin: explicit generated wrapper (ot_explicit_pin_regs=1) captures every input once (+25 same-edge private copies) and every output once; receipt physical_wrapper=true sha d8b39bd8, cold/legacy/reset correspondence 77fc3afbc
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO pin_fit: pin fit not estimated: the top's port widths are not resolved from its header with the spec parameters (the --remote run places the pins with the route's settings)
+GATE WARN sources: 14 referenced file(s) do not exist: ['rtl/qwen_split/qfd_sys_face.sv', 'rtl/qwen_split/qfd_sys_face_accepted_mu_ctx.sv', 'rtl/qwen_split/qfd_sys_face_record_port.sv', 'rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv', 'rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq.sv', 'rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq_dies_mu.sv']  -> FIX: commit them / fix the path
+GATE INFO remote: ot-run selected ot-epyc8 for 24 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_qfd_sys_face_bc2l_20261019-114348.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_qfd_sys_face_bc2l_20261019-114348.log; host dir ot-epyc8:/srv/opentallas-scratch/claude/ref_gate/qfd_sys_face_bc2l-20261019-114348
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc8 in 6950 s (gate total 9346 s)
+GATE INFO floorplan.pin_geometry: actual pin geometry PASS: {'signal_clock_pins': 2788, 'pin_rectangles': 2788, 'pin_track_checked': 2788, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 8f97d31f5e2063146b056c3f69e1ba7ba9f09f398e712276930632049570b6f7
+GATE INFO util: synthesized std area 5258 um2 + macros 9465 in core 50221: util 16% (std-cell density 15.5% of placeable 33899 um2; total fill 29.3%)
+GATE INFO textbook: WARN qfd_sys_face_control_safe cells 37,664 flops 6,838 depth 833.5 ps util 0.2946 reach 0.0 um (1.6 s)
+GATE WARN textbook.logic_depth: reg->reg stage boundary_100193.Q$_DFF_P_ -> core.f2940.Q$_DFF_PN0_/D: ~834 ps estimated (28 logic levels) > 600 ps: pipeline / restructure the stage  -> FIX: pipeline to ~700 ps a stage: trees, 2-3 rungs for wide compare / mux / arbitration
+GATE INFO cts_calibration: ss insertion all 505.3..562.8 ps (spread 57.5), boundary mean 528.4; tt insertion all 380.7..431.8 ps (spread 51.1), boundary mean 398.3; ff insertion all 305.4..351.8 ps (spread 46.4), boundary mean 319.5; macro_clk flag True
+GATE INFO density: effective global-placement target density 0.500 vs spec PD 0.50
+GATE INFO clock_spine: OT_SPINE iter 0 (coarse) leaves 869 sinks 6846 cells 1738 leaf arrival 304.3..366.6 ps (spread 62.3) pad 60.0 / 14.0 ps
+GATE INFO clock_spine: OT_SPINE iter 1 (fine) leaves 869 sinks 6846 cells 2416 leaf arrival 338.6..366.6 ps (spread 28.0) pad 60.0 / 20.4 ps
+GATE INFO path_classes: constraints signoff /src/physical/ref_tile/qfd_sys_face_bc2l/signoff.sdc (TT placement RC; diagnostic)
+GATE INFO path_classes: reg->reg      600 paths, worst slack -57.9 ps (e.g. core/f2940/Q$_DFF_PN0_/D)
+GATE INFO path_classes: setup WNS -5.792388790837322e-11 hold WNS 3.104461132608094e-11
+GATE WARN clock_rule: root port:ck: 6,847 sinks on the largest root; measured TT insertion 431.8 ps, FF insertion 351.8 ps, TT pin-flop spread 42.0 ps, FF pin-flop spread 37.7 ps; WARN: insertion 431.8 ps > 300 (guidance; boundary matched by parent compensation / landing)  -> FIX: guidance only (owner 10-17 0dq): match the boundary by parent compensation or a landed link
+GATE INFO layout_images: LOOK at these before submitting: floorplan /home/ubuntu/wt/qw-sysface-bc2-1019/physical/ref_tile/qfd_sys_face_bc2l/gate_layout/floorplan.png; density /home/ubuntu/wt/qw-sysface-bc2-1019/physical/ref_tile/qfd_sys_face_bc2l/gate_layout/density.png
+GATE FAIL fill: fill 28% = (hard macros 9465.0 + synthesized std cells 5331.0) / outline 52254.7 um2; pin demand per face: S 700 pins over 300.0/302.4 um (99%), N 1328 pins over 300.2/302.4 um (99%), W 451 pins over 170.4/172.8 um (99%), E 421 pins over 170.4/172.8 um (99%) (< 35%)  -> FIX: shrink the outline / regroup the macros, or record "fill_reason": {"pin_bound": "<why the perimeter, not the area, sets the outline>"} if the pin demand above shows the edges are full
+GATE INFO trial_route: trial GRT: total overflow 0; worst layer M2 23.69% used; GRT 1492 s
+PRE_ROUTE_GATE: FAIL (1 fail, 4 warn)
+GATE: qfd_sys_face_bc2l/gate_result.json written (exact staged source binding; commit it with the kit)

@@ -1,0 +1,240 @@
+{
+ "name": "qkd_d2d_cal_seq_pin_bc4w",
+ "top": "qkd_d2d_cal_seq_pin_bc4",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/d2d_static_20261015/qkd_d2d_cal_seq_bc4.sv",
+  "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq_bc4.sv"
+ ],
+ "params": {
+  "EP_SKEW": 3,
+  "GO_OFS": 0,
+  "MUT": 0
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 28.08,
+  "h": 34.56,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "pins": {
+  "W": [
+   "cfg_tx_we",
+   "cfg_rx_we",
+   "cfg_addr",
+   "cfg_data",
+   "cal_start",
+   "cal_seg",
+   "epoch_go",
+   "halt"
+  ],
+  "E": [
+   "cal_ready",
+   "running",
+   "layer",
+   "adm_done",
+   "tok_start",
+   "fault",
+   "bcfg_tx_we",
+   "bcfg_rx_we",
+   "bcfg_addr",
+   "bcfg_data"
+  ],
+  "S": [
+   "ck",
+   "rst_n",
+   "reload"
+  ]
+ },
+ "io_tcl": "physical/ref_tile/qkd_d2d_cal_seq_pin_bc4w/io_pins.tcl",
+ "orfs_vars": {
+  "VERILOG_INCLUDE_DIRS": "/src/rtl/qwen_sys/d2d_static_20261015"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Explicit RTL pin registers: every functional input (reload, epoch_go, halt, bcfg_*) is captured once at the pin (51 capture flops in 4 reset banks, bcfg_tx/rx_we replicated x4) and every output is a tile output register. A generic extra stage would shift the compiled calendar."
+ },
+ "keep_pin_regs": true,
+ "inhold": true,
+ "outhold": true,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 4,
+  "peak_ram_gb": 8,
+  "pin_min_tracks": 3,
+  "m5_pg_pitch": 2.7,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.03
+ },
+ "job": {
+  "owner": "Claude:KV-DCAL",
+  "branch": "claude/kv-dcal-1019",
+  "tag": "k22w",
+  "purpose": "KV link calendar sequencer for the MU release die on the coherent codec2 K22 image (5ae543bfa): boot target 11 cfg merged with the runtime SEG1/SEG2 base writes (bc2 function), rebuilt structurally safe (bc4 = bc3safe structure): RTL 2-stage reset landing with kept copies (every reset source <= 23 loads), per-use kept selector/control copies (functional max 28), sticky fault (sequencer|COL|RUN|STALE|EARLY) on the E face for the parent fault lane. Static, no credits; zero added runtime cycles. PARALLEL fallback geometry (lower utilisation, different pin pitch).",
+  "extra_paths": [
+   "rtl/qwen_sys/d2d_static_20261015",
+   "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_dispatch.sv",
+   "rtl/test/qwen_static_kv/tb_kv_dcal_bc4.sv",
+   "tools/qwen_static_kv/run_dcal_bc4_production.sh",
+   "tools/qwen_static_kv/run_dcal_bc4.sh",
+   "tools/qwen_static_kv/gen_dcal_bc4.py",
+   "results/arch/kv_dcal_bc3safe_1019/frozen_outer_wrapper.v",
+   "physical/ref_tile/qkd_d2d_cal_seq_pin_bc4w",
+   "results/rtl/qkd_d2d_cal_seq_pin_bc4_1019"
+  ],
+  "benches": [
+   {
+    "name": "boot_cfg_admission_seg2_token_seg1_vs_pin_tile_k22",
+    "cmd": "bash tools/qwen_static_kv/run_dcal_bc4_production.sh {RUN}/p0 0",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "pass",
+    "pass_regex": "DCALBC_PASS mut0"
+   },
+   {
+    "name": "mut1_sequencer_writes_dropped_todays_die",
+    "cmd": "bash tools/qwen_static_kv/run_dcal_bc4_production.sh {RUN}/p1 1",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "token run would replay segment 9",
+    "fail_witness": "results/rtl/qkd_d2d_cal_seq_pin_bc4_1019/run_dcal_bc4_production_m1.log"
+   },
+   {
+    "name": "mut2_stale_nonmu_boot_image",
+    "cmd": "bash tools/qwen_static_kv/run_dcal_bc4_production.sh {RUN}/p2 2",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "stale 1",
+    "fail_witness": "results/rtl/qkd_d2d_cal_seq_pin_bc4_1019/run_dcal_bc4_production_m2.log"
+   },
+   {
+    "name": "mut3_boot_sequencer_collision",
+    "cmd": "bash tools/qwen_static_kv/run_dcal_bc4_production.sh {RUN}/p3 3",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "col 1 run 0 stale 0 early 0",
+    "fail_witness": "results/rtl/qkd_d2d_cal_seq_pin_bc4_1019/run_dcal_bc4_production_m3.log"
+   },
+   {
+    "name": "mut4_boot_write_while_running",
+    "cmd": "bash tools/qwen_static_kv/run_dcal_bc4_production.sh {RUN}/p4 4",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "run 1",
+    "fail_witness": "results/rtl/qkd_d2d_cal_seq_pin_bc4_1019/run_dcal_bc4_production_m4.log"
+   },
+   {
+    "name": "mut5_admission_before_boot_rx_base",
+    "cmd": "bash tools/qwen_static_kv/run_dcal_bc4_production.sh {RUN}/p5 5",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "early 1",
+    "fail_witness": "results/rtl/qkd_d2d_cal_seq_pin_bc4_1019/run_dcal_bc4_production_m5.log"
+   },
+   {
+    "name": "miter_vs_frozen_bc2_wrapper_600k_edges_53_bits",
+    "cmd": "bash tools/qwen_static_kv/run_dcal_bc4.sh {RUN}/x0 0",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "pass",
+    "pass_regex": "BC4_MITER_PASS edges=600000"
+   },
+   {
+    "name": "miter_mut1_reset_landing_stage_dropped",
+    "cmd": "bash tools/qwen_static_kv/run_dcal_bc4.sh {RUN}/x1 1",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "BC4_MITER mismatch",
+    "fail_witness": "results/rtl/qkd_d2d_cal_seq_pin_bc4_1019/run_dcal_bc4_miter_m1.log"
+   },
+   {
+    "name": "miter_mut2_sticky_fault_reset_value",
+    "cmd": "bash tools/qwen_static_kv/run_dcal_bc4.sh {RUN}/x2 2",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "BC4_MITER mismatch",
+    "fail_witness": "results/rtl/qkd_d2d_cal_seq_pin_bc4_1019/run_dcal_bc4_miter_m2.log"
+   },
+   {
+    "name": "miter_mut3_payload_reset_value",
+    "cmd": "bash tools/qwen_static_kv/run_dcal_bc4.sh {RUN}/x3 3",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "BC4_MITER mismatch",
+    "fail_witness": "results/rtl/qkd_d2d_cal_seq_pin_bc4_1019/run_dcal_bc4_miter_m3.log"
+   }
+  ],
+  "views_to": "physical/ref_tile/qkd_d2d_cal_seq_pin_bc4w/views",
+  "record_to": "results/rtl/ref_tile/qkd_d2d_cal_seq_pin_bc4w"
+ },
+ "recipe": 3,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "structural_change": "New safe successor of bc2 (whose native audit found source reset 206/45 loads, an unread fault and E-face pins 2.8 um inside the 21.6 um outline). bc4 = bc3safe structure on the K22 image: 351 FF, source-only synthesis 259 um2 (bc2 same-flow 214 vs daemon 265 => expect ~321 um2). Outline 28.08 x 34.56: core 23.76 x 30.24 = 718.5 um2 -> ~45% util at the expected daemon area, aspect 1.23. Pins regenerated on the real faces (full-face, centred), clock centre of S.",
+ "reset_landing": {
+  "enable": false,
+  "reason": "The RTL owns the 2-stage landing at the face: rst_n -> land0 (1 load) -> 4 kept land1 copies (synchronous assert and release, as the frozen generated landing), then rel0 -> 19 kept rel1 release copies; every reset source drives <= 23 loads (bc3safe census c494be2d7: raw reset 1, outer Q max 23, inner Q max 16). A flow landing would add 2 more release edges to the scheduled constant."
+ },
+ "safe_design_checklist": {
+  "1_pins": "PASS: RTL captures every input once (51 capture flops; bcfg we x4 copies), every output is a tile register; rst_n lands in 2 RTL registered stages at the face (land0 -> 4 kept land1), then 19 kept release copies",
+  "2_reach": "PASS: 28.08 x 34.56 um tile, every wire << 405 um",
+  "3_fanout": "PASS: source census c494be2d7 on this exact structure: functional max 28, zero functional sources > 32; reset raw 1 / outer max 23 / inner max 16; the TIEHI 347 constant is replicated by ORFS repair_tie_fanout (checked on the gate netlist); clock 351 sinks go to CTS",
+  "4_depth": "PASS: per stage a 2:1 merge, 32-bit equality, 6-bit decode; per-use kept selector copies (li_mux x5, ip_img x4) split the image byte muxes; bc2 gate depth 397 ps vs 770 ps",
+  "5_storage": "PASS: compile-time image constants and boot words; no runtime-indexed flop arrays, no delay lines",
+  "6_floorplan": "PASS: no macros, one full std-cell band, aspect 1.23; outline sized from synthesis (expected ~45% util); W/E pins full-face <= 2.08/um on the real faces",
+  "7_clock": "PASS: single S centre clock entry, 351 sinks, local tree; TT/FF pin-flop spread checked at the --cts gate (<= 80); io_hold_margin 0.03",
+  "8_schedule": "PASS: static; cycle-identical to the frozen bc2 wrapper on all 53 public bits (600k-edge miter), so zero added runtime cycles and the KV compiler/die schedule is unchanged"
+ }
+}

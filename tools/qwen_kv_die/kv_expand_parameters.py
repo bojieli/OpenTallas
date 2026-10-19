@@ -1,8 +1,8 @@
 """Fail-closed parameter preservation for expanded hard leaves.
 
-Only signed 32-bit `parameter integer` declarations with decimal defaults are
-supported. Other types/default expressions require an explicit parser extension;
-Yosys binary strings never silently become unsigned Python integers.
+Signed 32-bit `parameter integer` decimal defaults and unsigned `[31:0]`
+literal defaults are supported. Other types/default expressions refuse;
+Yosys binary strings retain the explicitly declared parameter signedness.
 """
 import hashlib
 import json
@@ -29,9 +29,15 @@ def _u32_literal(text):
 
 def integer_defaults(source, module):
     text = re.sub(r'//[^\n]*|/\*.*?\*/', '', source, flags=re.S)
-    m = re.search(r'\bmodule\s+' + re.escape(module) + r'\s*#\s*\((.*?)\)\s*\(', text, re.S)
-    if not m:
+    declaration = re.search(r'\bmodule\s+' + re.escape(module) + r'\b', text)
+    if not declaration:
+        raise ValueError(f'{module}: requested module absent from selected source')
+    header = text[declaration.end():].lstrip()
+    if not header.startswith('#'):
         return {}
+    m = re.match(r'#\s*\((.*?)\)\s*\(', header, re.S)
+    if not m:
+        raise ValueError(f'{module}: unsupported parameter header')
     result = {}
     kind = None
     for field in m[1].split(','):

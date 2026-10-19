@@ -1,0 +1,5 @@
+PASS DEFAULT_IDENTITY 2000 edges all original outputs
+- bridge_default_tb.sv:53: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 20us; walltime 0.002 s; speed 9.049 ms/s
+- Verilator: cpu 0.002 s on 1 threads; allocated 7 MB

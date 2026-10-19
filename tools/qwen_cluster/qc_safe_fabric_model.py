@@ -8,13 +8,17 @@ import argparse, hashlib, json, re
 from pathlib import Path
 from qc_safe_graph import extract, ROOT
 
-p=argparse.ArgumentParser();p.add_argument('--plan',required=True);p.add_argument('--out',required=True);p.add_argument('--safe-xstn',action='store_true');a=p.parse_args()
+p=argparse.ArgumentParser();p.add_argument('--plan',required=True);p.add_argument('--out',required=True);p.add_argument('--safe-xstn',action='store_true');p.add_argument('--physical-reset-ledger');a=p.parse_args()
 out=Path(a.out);out.mkdir(parents=True,exist_ok=True)
-g=extract();plan=json.loads(Path(a.plan).read_text());bydst={e['dst']:e for e in plan['edges']}
+g=extract();plan=json.loads(Path(a.plan).read_text());physical=json.loads(Path(a.physical_reset_ledger).read_text())if a.physical_reset_ledger else None
+if physical:
+ assert physical['all_four_epoch_pass']
+ plan['latest_landing_epoch']=physical['known_consumer_latest_reset_state_edge'];plan['A0_xstn_reset_pin_depth']=physical['core_pin_alignment_lower_bound'];plan['equal_depth_padding_hops']=physical['new_lastmile_relays']+physical['independent_branch_padding_hops'];plan['total_two_stage_relay_hops']=plan['mapped_forward_hops']+plan['equal_depth_padding_hops']
+bydst={e['dst']:e for e in plan['edges']}
 fab=(ROOT/'rtl/physical/qcluster/qfd_c_b16_dv_fabric.sv').read_text()
 # Exact 88 kept source flag copies per full landing, carried across the model.
 fab=re.sub(r'wire \[3:0\] (land_\w+_vld);',r'wire [87:0] \1;',fab)
-fab=re.sub(r'wire \[11:0\] (land_\w+_epo);',r'wire [139:0] \1;',fab)
+fab=re.sub(r'wire \[11:0\] (land_\w+_epo);',lambda m:f'wire [{279 if physical else 139}:0] {m[1]};',fab)
 fab=fab.replace('qfd_c_land_w #','cb16_model_w #').replace('qfd_c_land_r #','cb16_model_r #')
 if a.safe_xstn:
  fab=fab.replace('qfd_c_xstn ', 'qfd_c_xstn_safe ').replace('qfd_c_xstnw ', 'qfd_c_xstnw_safe ')
@@ -30,10 +34,14 @@ fab='\n'.join(lines)+'\n'
 # Consumer padding is a serial capture model, with exact original logical clock.
 # Tile reset ports are renamed only at their producing flop; other consumer pins
 # get a dedicated wire. No padding is omitted from the hardware cost receipt.
-for v in plan['consumers']:
- count=2*v.get('pad_hops',0)
+physical_resets={}
+for v in (physical['consumers']if physical else plan['consumers']):
+ count=2*(v['lastmile_relays']+v['alignment_pad_hops'])if physical else 2*v.get('pad_hops',0)
+ inst=v['logical']if physical else v['inst'];node=g['nodes'].get(inst);wire='model_pad_'+v['inst']
+ if physical and v.get('part')is not None:
+  part=v['part'];physical_resets.setdefault(inst,{})[part]=wire;pin='rsi';net=node['ports'][pin];clock=node['ports']['ck'];mut='+(MUT==9?1:0)'if part==1 and node['kind']=='qfd_c_land_r'and inst=='u_land_'+g['contract']['landings']['list'][0]['name']+'_r'else''
+  padding.append(f'wire {wire}; cb16_model_reset #(.EDGES({count}{mut})) {wire}_u(.ck({clock}),.d({net}),.q({wire}));');continue
  if not count:continue
- inst=v['inst'];node=g['nodes'].get(inst);wire='model_pad_'+inst
  if node:
   pin='rst_n' if 'xstn' in node['kind'] else 'rsi';net=node['ports'][pin];clock=node['ports']['ck']
   pat=r'(\b'+re.escape(inst)+r' \([^\n]*\.'+pin+r'\()'+re.escape(net)+r'(\))'
@@ -49,6 +57,8 @@ for v in plan['consumers']:
   else:
    fab,n=re.subn(r'\.q\('+net+r'\)',f'.q({raw})',fab);assert n==1,(net,n)
    padding.append(f"wire {raw}; cb16_model_reset #(.EDGES({count})) {wire}_u(.ck({clock}),.d({raw}),.q({net}));")
+for inst,pins in physical_resets.items():
+ net=g['nodes'][inst]['ports']['rsi'];pat=r'(\b'+re.escape(inst)+r' \([^\n]*\.rsi\()'+re.escape(net)+r'(\))';fab,n=re.subn(pat,lambda m:m[1]+'{'+pins[1]+','+pins[0]+'}'+m[2],fab);assert n==1,(inst,n)
 pos=fab.rfind('endmodule');fab=fab[:pos]+'\n'.join(padding)+'\n'+fab[pos:]
 (out/'safe_fabric_model.sv').write_text(fab)
 helper=r'''
@@ -91,6 +101,44 @@ module cb16_model_r #(parameter W=516,D=4,K=2)(input ck,rsi,input[4*W-1:0]bank,i
  end
 endmodule
 '''
+if physical:
+ helper=r"""
+`timescale 1ns/1ps
+module cb16_model_reset #(parameter EDGES=2)(input ck,d,output q);
+ wire[EDGES:0]s;assign s[0]=d;
+ genvar j;generate for(j=0;j<EDGES;j=j+1)begin:g reg v;always@(posedge ck)v<=s[j];assign s[j+1]=v;end endgenerate
+ assign q=s[EDGES];
+endmodule
+module cb16_model_hw #(parameter W=258)(input ck,rsi,input[W-1:0]i,output[4*W-1:0]bank,output[139:0]epo,output[43:0]vld);
+ qfd_c_land_safe_w #(.W(W)) a(ck,rsi,i,bank,vld);
+ reg[31:0]cycle=0;always@(posedge ck)cycle<=cycle+1'b1;
+ reg[2:0]wc;reg[2:0]tag[0:3];reg[31:0]born[0:3];
+ always@(posedge ck)if(!a.g_slice[0].u.r2)wc<=0;else begin tag[wc%4]<=wc;born[wc%4]<=cycle;wc<=wc+1'b1;end
+ genvar s;generate for(s=0;s<4;s=s+1)begin:t assign epo[35*s+:35]={born[s],tag[s]};end endgenerate
+endmodule
+module cb16_model_hr #(parameter W=258,K=2)(input ck,rsi,input[4*W-1:0]bank,input[139:0]epo,input[43:0]vld,output[W-1:0]o);
+ qfd_c_land_safe_r #(.W(W),.K(K)) a(ck,rsi,bank,vld,o);
+ reg[2:0]rc;wire[2:0]expected=rc-K;wire[1:0]slot=expected[1:0];
+ reg[31:0]cycle=0;always@(posedge ck)cycle<=cycle+1'b1;
+ always@(posedge ck)begin
+  if(!a.g_slice[0].u.r2)rc<=0;else rc<=rc+1'b1;
+  if(a.g_slice[0].u.warm&&vld[slot]&&(epo[slot*35+:3]!==expected||cycle-epo[slot*35+3+:32]!=K))
+   $fatal(1,"SAFE_PARENT_EPOCH %m slot%0d tag%0d expected%0d absoluteage%0d K%0d",slot,epo[slot*35+:3],expected,cycle-epo[slot*35+3+:32],K);
+ end
+endmodule
+module cb16_model_w #(parameter W=516,D=4)(input ck,input[1:0]rsi,input[W-1:0]i,output[4*W-1:0]bank,output[279:0]epo,output[87:0]vld);
+ localparam H=W/2;wire[4*H-1:0]b0,b1;
+ cb16_model_hw #(.W(H)) a(ck,rsi[0],i[H-1:0],b0,epo[139:0],vld[43:0]);
+ cb16_model_hw #(.W(H)) b(ck,rsi[1],i[W-1:H],b1,epo[279:140],vld[87:44]);
+ genvar s;generate for(s=0;s<4;s=s+1)begin:g assign bank[s*W+:H]=b0[s*H+:H];assign bank[s*W+H+:H]=b1[s*H+:H];end endgenerate
+endmodule
+module cb16_model_r #(parameter W=516,D=4,K=2)(input ck,input[1:0]rsi,input[4*W-1:0]bank,input[279:0]epo,input[87:0]vld,output[W-1:0]o);
+ localparam H=W/2;wire[4*H-1:0]b0,b1;
+ genvar s;generate for(s=0;s<4;s=s+1)begin:g assign b0[s*H+:H]=bank[s*W+:H];assign b1[s*H+:H]=bank[s*W+H+:H];end endgenerate
+ cb16_model_hr #(.W(H),.K(K)) a(ck,rsi[0],b0,epo[139:0],vld[43:0],o[H-1:0]);
+ cb16_model_hr #(.W(H),.K(K)) b(ck,rsi[1],b1,epo[279:140],vld[87:44],o[W-1:H]);
+endmodule
+"""
 (out/'model_helpers.sv').write_text(helper)
 # Price reset initialization in the generated compiler fixture. All normal data
 # latencies stay byte-for-byte unchanged. The conservative boot guard allows
@@ -105,7 +153,8 @@ tb=(ROOT/'rtl/test/tb_qcluster_fabric.sv').read_text()
 tb=tb.replace('`include "qcluster_lat.svh"', '`include "qcluster_lat.svh"\n'+f'    initial begin if(QC_LAT_WARM!={warm} || Q3H_RST_DEPTH!={plan["A0_xstn_reset_pin_depth"]}) $fatal(1,"SAFE_COMPILER_WRONG_INCLUDE"); $display("SAFE_COMPILER warm%0d reset%0d",QC_LAT_WARM,Q3H_RST_DEPTH); end')
 (out/'tb_safe_fabric_model.sv').write_text(tb)
 inputs=[ROOT/'rtl/physical/qcluster/qfd_c_b16_dv_fabric.sv',ROOT/'rtl/physical/qcluster/qfd_c_land_safe.sv',Path(a.plan)]
+if physical:inputs.append(Path(a.physical_reset_ledger))
 if a.safe_xstn:inputs.append(ROOT/'rtl/physical/qcluster/qfd_c_xstn_safe.sv')
-receipt=dict(schema='opentallas.cb16.safe_fabric_model.v1',model_only=True,inputs={str(p):hashlib.sha256(p.read_bytes()).hexdigest()for p in inputs},generated={p.name:hashlib.sha256(p.read_bytes()).hexdigest()for p in out.glob('*')if p.suffix in ['.sv','.svh']},reset_forward_hops=plan['mapped_forward_hops'],reset_padding_hops=plan['equal_depth_padding_hops'],reset_ff_total=2*plan['total_two_stage_relay_hops'],compiler_reset_core_edge=plan['A0_xstn_reset_pin_depth'],compiler_latest_landing_reset_state=plan['latest_landing_epoch'],compiler_first_active_landing=plan['latest_landing_epoch']+1,compiler_warm_guard_edges=warm,warm_guard_formula='latest landing reset state +D4fill +max normal fabric latency',normal_data_calendar_unchanged=True,physical_adoption=False)
+receipt=dict(schema='opentallas.cb16.safe_fabric_model.v1',model_only=True,inputs={str(p):hashlib.sha256(p.read_bytes()).hexdigest()for p in inputs},generated={p.name:hashlib.sha256(p.read_bytes()).hexdigest()for p in out.glob('*')if p.suffix in ['.sv','.svh']},reset_forward_hops=plan['mapped_forward_hops'],reset_padding_hops=plan['equal_depth_padding_hops'],reset_ff_total=2*plan['total_two_stage_relay_hops'],compiler_reset_core_edge=plan['A0_xstn_reset_pin_depth'],compiler_latest_landing_reset_state=plan['latest_landing_epoch'],compiler_first_active_landing=plan['latest_landing_epoch']+1,compiler_warm_guard_edges=warm,warm_guard_formula='latest landing reset state +D4fill +max normal fabric latency',normal_data_calendar_unchanged=True,physical_reset_ledger=a.physical_reset_ledger,independent_half_epoch_tags=bool(physical),A0_reset_pin_face_unqualified=bool(physical),physical_adoption=False)
 (out/'model_sources.json').write_text(json.dumps(receipt,indent=1)+'\n')
 print('SAFE_FABRIC_MODEL',len(bydst),'reset nodes',len(padding),'consumer pads')

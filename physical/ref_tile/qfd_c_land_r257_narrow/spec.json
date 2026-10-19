@@ -93,22 +93,41 @@
  },
  "structural_change": "SAFE-QW-CB16: replace 163k soft parent DFFs with <=258bit ring/read hard halves, kept per24bit rotating onehot selects and 2stage reset. Geometry pin limited; parent not yet bound. Narrow split bank_w/e at516bits per128.52um face (4.02pins/um); explicit4 slot-written flags restore phase-shifted reset behavior.",
  "job": {
-  "owner": "Codex:SAFE-QW-CB16",
-  "branch": "codex/safe-qw-cb16-1019",
+  "owner": "Claude:QW-LANDCB16",
+  "branch": "claude/qw-landcb16-1019",
   "tag": "safe1",
   "purpose": "hard landing half; critical CB16 parent prerequisite, gate only",
-  "submit": false,
+  "submit": true,
   "benches": [
    {
-    "name": "safe_land",
-    "cmd": "bash tools/qwen_cluster/bench_land_safe.sh bench_safe",
+    "name": "safe_land_primary",
+    "cmd": "bash tools/qwen_cluster/bench_land_safe.sh {RUN}/land_pass pass 257",
     "expect": "pass",
-    "pass_regex": "SAFE_LAND_EXIT 0",
+    "pass_regex": "SAFE_LAND_PASS MUT0",
     "threads": 8,
-    "peak_ram_gb": 16,
+    "peak_ram_gb": 12,
     "sources": [
-     "tools/qwen_cluster/bench_land_safe.sh"
-    ]
+     "tools/qwen_cluster/bench_land_safe.sh",
+     "rtl/physical/qcluster/qfd_c_land.sv",
+     "rtl/physical/qcluster/qfd_c_land_safe.sv",
+     "rtl/test/tb_qfd_c_land_safe.sv"
+    ],
+    "pass_witness": "results/arch/qwen_cluster_1017/q_cluster16/bench_land_narrow/w257_pass.log"
+   },
+   {
+    "name": "safe_land_mutant_wrongK3",
+    "cmd": "bash tools/qwen_cluster/bench_land_safe.sh {RUN}/land_mut mut 257",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 12,
+    "sources": [
+     "tools/qwen_cluster/bench_land_safe.sh",
+     "rtl/physical/qcluster/qfd_c_land.sv",
+     "rtl/physical/qcluster/qfd_c_land_safe.sv",
+     "rtl/test/tb_qfd_c_land_safe.sv"
+    ],
+    "fail_regex": "SAFE_LAND_FAIL MUT1 errors=[1-9][0-9]*",
+    "fail_witness": "results/arch/qwen_cluster_1017/q_cluster16/bench_land_narrow/w257_mut.log"
    }
   ]
  }
