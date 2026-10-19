@@ -4,7 +4,7 @@ Bound to functional source d37b5dae1, gate kit66a0feffc and terminal pickup15729
 
 ## Actual failed vehicle
 
-Both masters have20 SRAMs: ten512x128 TX and ten32x128 RX, two lanes, five banks each. RX_SRAM=1 is real SRAM, not the obsolete eight553-bit flop rows. Total runtime data: TX566272 useful bits, RX8848 useful bits; physical capacity696320 bits. Each lane transports553 bits/cycle (69.125 B/cycle), comprising a552-bit flit plus sequence bit. The pair transports1106 internal bits/cycle; the external ring beat is1104 bits. No claim that this defeats the separate off-die rate cap.
+Both masters have20 SRAMs: ten512x128 TX and ten32x128 RX, two lanes, five banks each. RX_SRAM=1 is real SRAM, not the obsolete eight553-bit flop rows. Total runtime data: TX566272 useful bits, RX8848 useful bits; addressable macro data capacity696320 bits, or716960 array cells including TX repair rows/columns. Each lane transports553 bits/cycle (69.125 B/cycle), comprising a552-bit flit plus sequence bit. The pair transports1106 internal bits/cycle; the external ring beat is1104 bits. No claim that this defeats the separate off-die rate cap.
 
 | Quantity | A HOST_EN0 | H HOST_EN1 |
 | --- | ---: | ---: |
@@ -26,7 +26,7 @@ Four unmatched A keep names are host-only modules absent at HOST_EN0: host_enabl
 
 ## Named SRAM and access obligations
 
-TX master ot_sram_1r1w_512x128_m4_r2c2 is174.120×29.736um. Its native M4 contacts are219 W/218 E, 0.096um pitch, clock at(0.012,0.780), giving7.365/7.331 contacts/um. RX master ot_sram_1r1w_32x128_m1 is51.408×20.790um;199 W/198 E, same pitch/clock location, giving9.572/9.524 contacts/um. Both violate the current<=6/um rule. Halo or a larger parent cannot change these face densities. Ten of each occupy62463.9968um². TX repaired physical rows/columns remain512+2 spare rows,128data with2 spare IO columns; RX remains32x128 without new ECC.
+TX master ot_sram_1r1w_512x128_m4_r2c2 is174.120×29.736um. Its native M4 contacts are219 W/218 E, 0.096um pitch, clock at(0.012,0.780), giving7.365/7.331 contacts/um. RX master ot_sram_1r1w_32x128_m1 is51.408×20.790um;199 W/198 E, same pitch/clock location, giving9.572/9.524 contacts/um. Both violate the current<=6/um rule. Halo or a larger parent cannot change these face densities. Ten of each occupy62463.9968um². TX retains512 logical words mapped to128 physical rows plus2 spare rows, and520 physical columns (128data+2 spare IO columns, each mux4); RX remains32x128 without new ECC.
 
 All macros use a single clk input. Their real TT clock capacitance is9.3458fF each, FF10.3732fF, SS8.68376fF: totals186.916/207.464/173.6752fF before clock wiring. TT CQ is415.195ps TX and269.741ps RX, FF346.044/217.521ps. These are original macro models, not signoff or successor bounds. Model.json preserves setup/hold/pulse/period for all corners. Clock entry is at the lower W corner, not macro centre. Local macro clock slew/native spread still require actual analysis.
 

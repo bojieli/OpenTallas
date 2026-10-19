@@ -21,6 +21,24 @@
         174.12,
         29.736
       ],
+      "physical": {
+        "column_interleave": "data bit b, column select s -> physical column b*mux + s",
+        "columns": 520,
+        "rows": 128,
+        "rows_per_bank": 128,
+        "spare_io_columns": 2,
+        "spare_rows": 2
+      },
+      "spec": {
+        "banks": 1,
+        "bits": 128,
+        "mux": 4,
+        "name": "ot_sram_1r1w_512x128_m4_r2c2",
+        "ports": "1r1w",
+        "spare_cols": 2,
+        "spare_rows": 2,
+        "words": 512
+      },
       "area_um2": 5177.632320000001,
       "face_contacts": {
         "W": 219,
@@ -3167,6 +3185,24 @@
         51.408,
         20.79
       ],
+      "physical": {
+        "column_interleave": "data bit b, column select s -> physical column b*mux + s",
+        "columns": 128,
+        "rows": 32,
+        "rows_per_bank": 32,
+        "spare_io_columns": 0,
+        "spare_rows": 0
+      },
+      "spec": {
+        "banks": 1,
+        "bits": 128,
+        "mux": 1,
+        "name": "ot_sram_1r1w_32x128_m1",
+        "ports": "1r1w",
+        "spare_cols": 0,
+        "spare_rows": 0,
+        "words": 32
+      },
       "area_um2": 1068.77232,
       "face_contacts": {
         "W": 199,
@@ -6639,7 +6675,10 @@
     "TX_physical_bits": 655360,
     "RX_physical_bits": 40960,
     "total_useful_bits": 575120,
-    "total_physical_bits": 696320
+    "total_physical_bits": 696320,
+    "physical_bits_definition": "addressable data capacity, excluding repair cells",
+    "TX_array_bits_including_repair": 676000,
+    "total_array_bits_including_repair": 716960
   },
   "no_new_runs": true,
   "sizing_only": {
