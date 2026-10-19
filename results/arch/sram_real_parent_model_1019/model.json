@@ -52,11 +52,11 @@
   "conditional_geometry": {
     "master": "Spread192 SC2, NOT selected",
     "outline_um": [
-      303.24,
-      130.2
+      216.84,
+      43.8
     ],
     "count": 5,
-    "macro_area_um2": 197409.24,
+    "macro_area_um2": 47487.96,
     "old_macro_area_um2": 25888.1616,
     "R0_origin_phase_nm": 144,
     "macro_origin_lattice_nm": 43200,
@@ -199,7 +199,25 @@
         "orient": "R0",
         "offtrack": 0
       }
-    ]
+    ],
+    "macro_area_delta_um2": 21599.7984,
+    "macro_area_multiplier": 1.8343504159831883,
+    "B_fixture_envelope_per_bank_um": [
+      303.24,
+      130.2
+    ],
+    "B_fixture_envelope_fivebank_area_um2": 197409.24,
+    "B_fixture_envelope_selected_parent_fit": false,
+    "old_master_authority": {
+      "source_commit": "d37b5dae18f9dbc9c68dce5a10ac12a8092f7c24",
+      "path": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+      "sha256": "bf018f2d8886b98a4a9644a788c8d26231d2d10eeb333c2b732cc5556233eca1",
+      "lef_SIZE_um": [
+        174.12,
+        29.736
+      ],
+      "matches_whole_parent_model_sha256": true
+    }
   },
   "native_mapping": null,
   "native_all_driver_fanout": null,
