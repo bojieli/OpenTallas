@@ -24,6 +24,12 @@ BIG = {  # measured --mem (tools/fleet/die_trial_mem.json 2026-10-16: typical sy
 ENV = {'ot_hbm_accel_smh_static': 'DEFINES=OT_SMH_FC_HIER LIBCELLS=1', 'ot_hbm_accel_smh_attn': 'DEFINES=OT_SMH_FC_HIER,OT_SMH_HIER,OT_SMH_XLK,OT_FP_DATA_NORST,OT_SMH_DRST0,OT_SMH_RSTRELAY LIBCELLS=1', 'hfd_ckgen': 'DROP=rtl/hbm_accel/control/tb_hfd_ckgen.sv'}
 PRE = {'hfd_ckgen': '(* blackbox *) module ot_hbm_pll_bb(input wire refclk, input wire reset_n, output wire clk_stream, '
        'output wire clk_serial, output wire clk_hbm, output wire clk_link, output wire locked); endmodule'}
+# DIE-HBM-LEAD 10-19: hop-0 / 0-station landing masters (hbfd_lh0_*, hbfd_land0_*) instantiate the ASAP7 ICG (ot_hdc_cg) directly:
+# read lib cells as boxes (the behavioural retention_cell_models.sv ICG became a 'reg IQ = 0' netlist that OpenSTA cannot parse).
+def env_of(m):
+    return ENV.get(m, 'LIBCELLS=1' if re.match(r'hbfd_(lh0|land0)_', m) else '')
+
+
 BB = {}   # the PLL (allowed analog model, die_port_bind --allow-model) is declared blackbox in the ckgen wrapper (PRE)
 
 
@@ -150,9 +156,9 @@ def main():
         (a.out / 'wrap' / f'{w}.sv').write_text('\n'.join(body))
         base = re.sub(r'_(SW|SE|NW|NE)$', '', m)
         mem = BIG.get(m, BIG.get(base, 48))
-        ent.update(kind='SYNTH', params_dropped_yosys=dropped, wrapper=w, mem_gb=mem, env=ENV.get(m, ''), blackbox=BB.get(m, '-'))
+        ent.update(kind='SYNTH', params_dropped_yosys=dropped, wrapper=w, mem_gb=mem, env=env_of(m), blackbox=BB.get(m, '-'))
         views[cell] = ent
-        jobs.append((cell, m, w, mem, BB.get(m, '-'), ENV.get(m, '')))
+        jobs.append((cell, m, w, mem, BB.get(m, '-'), env_of(m)))
     (a.out / 'views.json').write_text(json.dumps(views, indent=1))
     with open(a.out / 'jobs.tsv', 'w') as f:
         for j in jobs:
