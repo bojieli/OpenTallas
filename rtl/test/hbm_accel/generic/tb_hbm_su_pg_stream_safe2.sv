@@ -20,8 +20,8 @@
 // faults rise mid-run, so the fault offset is exercised.
 // LH-PGVM 2026-10-19 SAFE2: generated from tb_hbm_su_pg_stream_regional.sv by tools/hbm_static/pgstream_safe/gen_safe2_tb.py.
 // The SAFE2 kit lands rst_n / bridge_rst_n in ONE face stage and the source adds the other two (reset tree); the bench
-// therefore feeds the REFERENCE through the two stages the source now owns (plain clk_ctl flops, as the kit landing),
-// so both see the same 3-stage release.  Everything else (stimulus, compare, windows) is the regional bench.
+// models the kit face landing: the DUT gets 1 face stage, the REFERENCE the old kit's 3 (plain clk_ctl flops),
+// so both see the same epoch-aligned 3-stage release.  Everything else (stimulus, compare, windows) is the regional bench.
 module tb_hbm_su_pg_stream_safe2;
  parameter integer QID=1, G=2, READ_RETURN=10, WRITE_RETURN=7, MUT=0, EDGES=1500, FAULT_REG=0;
  localparam integer Q=278;
@@ -36,9 +36,11 @@ module tb_hbm_su_pg_stream_safe2;
   wire [513:0] N``_surr; wire [3:0] N``_ijv; wire [35:0] N``_ijrow; wire N``_ijbad, N``_pgf; wire [33:0] N``_lgrq; \
   wire [561:0] N``_lgwq; wire [513:0] N``_farrr; wire [1:0] N``_farwd; wire N``_lgf;
  `PGS_PORTS(r)
- reg [1:0] rl_r=0, rl_b=0;
- always @(posedge clk_ctl) begin rl_r <= {rl_r[0], rst_n}; rl_b <= {rl_b[0], brst_n}; end
- wire r_rst = rl_r[1], r_brst = rl_b[1], d_rst = rst_n, d_brst = brst_n;
+ // kit face landing: 1 stage for the DUT (SAFE2 kit), 3 stages for the reference (the old kit) -> both release on
+ // the same epoch-aligned edge (3 serial edges = 12q after the coincident edge), as on the die
+ reg [2:0] rl_r=0, rl_b=0;
+ always @(posedge clk_ctl) begin rl_r <= {rl_r[1:0], rst_n}; rl_b <= {rl_b[1:0], brst_n}; end
+ wire r_rst = rl_r[2], r_brst = rl_b[2], d_rst = rl_r[0], d_brst = rl_b[0];
  `PGS_PORTS(d)
  `define PGS_CONN(N) \
   .clk_ctl(clk_ctl),.pg_clk(pg_clk),.rst_n(N``_rst),.bridge_rst_n(N``_brst),.pos(pos),.vmr_cmd(vmr),.su_wq(suwq), \
