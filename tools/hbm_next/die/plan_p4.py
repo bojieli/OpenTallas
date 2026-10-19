@@ -38,6 +38,10 @@ FRAME = ROOT / 'physical/hbm_next/die/frame_d4g_copy'
 W0, H0 = 20200.0, 31773.52
 LAT = 43.2
 SM_W0, SM_H0 = 1939.68, 6955.2
+# UNITS-IDXN (claude/hbm-next-1019@5bf6d2d50, units/idxn/README.md Area): 2 key replay buffers 0.486 + 3 selectors 0.331
+# + issuer 0.007 mm2 cell+macro per die; plan outlines at fill 0.7
+IDXN_KEY_MM2 = 0.486 / 0.7
+IDXN_SEL_MM2 = (0.331 + 0.007) / 0.7
 TW0, TH0 = 457.92, 1598.4
 EDGE = 42.4
 GAPS = (540.0, 100.0, 540.0)       # SW0|SW1, SW1|SW2, SW2|SW3 (xq pair stores sit in the 540 gaps)
@@ -99,7 +103,7 @@ def sm_row(P0, W, smw, smh, north, H):
     return out, top
 
 
-def quadrant_core_c(P0, q, BY, W, vmh='inner', side=None, hc='quad', vm_dw=0.0, vm_dh=0.0):
+def quadrant_core_c(P0, q, BY, W, vmh='inner', side=None, hc='quad', vm_dw=0.0, vm_dh=0.0, fused=0.0, idxn=False):
     """F4-C quadrant band (W-quadrant S frame, x from the die W edge): row A = 8 VM banks on the SM row inner face,
     row B = 4 SU groups (SU slot + HC client + SFU group (+ quant)) over the 4 SMs, quadrant core at the inner end."""
     out = {}
@@ -121,8 +125,13 @@ def quadrant_core_c(P0, q, BY, W, vmh='inner', side=None, hc='quad', vm_dw=0.0, 
         out[f'vmb_{q}{2 * g + 1}'] = R(x + vw + 20.0, BY, vw, vh)
         out[f'su_{q}{g}'] = R(x, rowB, suw, suh)
         cx = x + suw + 40.0
-        fw, fh = (side, side) if side else dims(f'sfu_{q}{g}'); out[f'sfu_{q}{g}'] = R(cx, rowB, fw, fh)
-        hw, hh = (side, side) if side else dims(f'hc_{q}{g}'); out[f'hc_{q}{g}'] = R(cx, rowB + fh + 60.0, hw, hh)
+        fy = rowB
+        if fused:                              # UNITS-FUSED hnx_fused_lane_1019 (x32 = one per VM bank, S face = its bank): the group's
+            for k in range(2):                 # 2 lanes at the foot of the SFU/HC client column, next to the bank pair's inner corner
+                out[f'fus_{q}{2 * g + k}'] = R(cx, rowB + k * (fused + 20.0), fused, fused)
+            fy = rowB + 2 * (fused + 20.0) + 40.0
+        fw, fh = (side, side) if side else dims(f'sfu_{q}{g}'); out[f'sfu_{q}{g}'] = R(cx, fy, fw, fh)
+        hw, hh = (side, side) if side else dims(f'hc_{q}{g}'); out[f'hc_{q}{g}'] = R(cx, fy + fh + 60.0, hw, hh)
         if f'quant_{q}{g}' in P0:              # quantiser in the bank row, beside its bank pair (QUANT_VM)
             qw, qh = dims(f'quant_{q}{g}'); out[f'quant_{q}{g}'] = R(x + 2 * vw + 60.0, BY, qw, qh)
         x = cx + max(hw, fw) + ga
@@ -138,13 +147,15 @@ def quadrant_core_c(P0, q, BY, W, vmh='inner', side=None, hc='quad', vm_dw=0.0, 
     y = BY
     for n in ('dbk', 'sucore', 'sucx', 'hc', 'cij', 'idxq'):
         w_, h_ = dims(f'{n}_{q}')
+        if n == 'idxq' and idxn:             # UNITS-IDXN: half a key replay buffer per quadrant scorer quarter beside the
+            h_ = round(h_ + IDXN_KEY_MM2 / 4 * 1e6 / w_, 2)   # quadrant scorer (2 buffers / 4 quadrants, outline at fill 0.7)
         out[f'{n}_{q}'] = R(x, y, w_, h_); y += h_ + 60.0
     right = max(r['x'] + r['w'] for r in out.values())
     top = max(r['y'] + r['h'] for r in out.values())
     return out, right, top
 
 
-def strip_c(P0, ys, W, sh, coll_d):
+def strip_c(P0, ys, W, sh, coll_d, idxn=False):
     """centre strip: SerDes pairs at the die edges; per side, from the centre line outward (greedy, no overlap, each
     item as close as possible to its preferred centre x): the SFU programme stores (over their SFU cores at the
     quadrant core), the COLL engine pair (S over N, stacked; preferred centre CX -/+ coll_d, swept: COLL_VM from the
@@ -174,6 +185,10 @@ def strip_c(P0, ys, W, sh, coll_d):
     def sfus(q):
         r = P0[f'sfus_{q}']; return one(f'sfus_{q}', r['w'], r['h'])
     idxw = (650, lambda x0: {'idx_sel': R(x0, cy(1000), 600, 450), 'idx_link': R(x0, cy(1000) + 500, 650, 500)})
+    if idxn:                                      # UNITS-IDXN: the 3 added selectors + issuer beside idx_sel
+        nh = 600.0; nw = round(IDXN_SEL_MM2 * 1e6 / nh, 2)
+        idxw = (650 + 40 + nw, lambda x0: {'idx_sel': R(x0 + nw + 40, cy(1000), 600, 450), 'idx_link': R(x0 + nw + 40, cy(1000) + 500, 650, 500),
+                                           'idx_nsel': R(x0, cy(1000), nw, nh)})
     idxc = (300, lambda x0: {'idx_ctl': R(x0, cy(708), 300, 260), 'idx_op': R(x0, cy(708) + 300, 216, 108), 'idx_q': R(x0, cy(708) + 448, 260, 260)})
     sides = {
         -1: [(0.6e3, sfus('SW')), (1.7e3, sfus('NW')), (coll_d, coll_pair('SW', 'NW')), (3.0e3, idxw)],
@@ -190,18 +205,18 @@ def strip_c(P0, ys, W, sh, coll_d):
     return out
 
 
-def plan_f4c(P0, tw, th, vmh, coll_d=500.0, side=None, hc='quad', vm_dw=0.0, vm_dh=0.0):
+def plan_f4c(P0, tw, th, vmh, coll_d=500.0, side=None, hc='quad', vm_dw=0.0, vm_dh=0.0, fused=0.0, idxn=False):
     smw, smh = sm_dims(tw, th)
     W = round(2 * (EDGE + 4 * smw + sum(GAPS) + CH / 2), 2)
     BY = 2056.0 + smh + 200.0
     tops = []
     cores = {}
     for q in ('SW', 'NW'):
-        c, right, top = quadrant_core_c(P0, q, BY, W, vmh, side, hc, vm_dw, vm_dh)
+        c, right, top = quadrant_core_c(P0, q, BY, W, vmh, side, hc, vm_dw, vm_dh, fused, idxn)
         assert right <= W / 2 - CH / 2 + 1e-6, (q, 'core overruns centre channel', right, W / 2 - CH / 2)
         cores[q] = c; tops.append(top)
     for q, src in (('SE', 'SW'), ('NE', 'NW')):
-        c, right, top = quadrant_core_c(P0, q, BY, W, vmh, side, hc, vm_dw, vm_dh)
+        c, right, top = quadrant_core_c(P0, q, BY, W, vmh, side, hc, vm_dw, vm_dh, fused, idxn)
         cores[q] = {n: S.mirror_x(r, W) for n, r in c.items()}; tops.append(top)
     ys = max(tops) + 100.0
     SH = 1800.0
@@ -213,7 +228,7 @@ def plan_f4c(P0, tw, th, vmh, coll_d=500.0, side=None, hc='quad', vm_dw=0.0, vm_
         P.update(cores[q])
     for q in ('NW', 'NE'):
         P.update({k: S.mirror_y(r, H) for k, r in cores[q].items()})
-    P.update(strip_c(P0, ys, W, SH, coll_d))
+    P.update(strip_c(P0, ys, W, SH, coll_d, idxn))
     if hc == 'one':
         # the ONE split HC engine (GEN2 binds ot_hbm_hc_root_static + 4 qhub + 32 bank tiles, 5,223 x 1,953 um at the S-E PHY
         # corner): the S-E corner between idxs_SE and the die E edge, up to 40 um under the SM row
@@ -349,6 +364,9 @@ def main():
     ap.add_argument('--hc', default='quad', choices=('quad', 'one'), help='4 quadrant HC slots (reserve) or ONE engine at the S-E PHY corner')
     ap.add_argument('--vm-dh', type=float, default=0.0, help='VM bank growth in height: 412k words = 5 x 1024x256 macros stacked = +86.4; 524k (Engram ~490k) = 6 = +151.2')
     ap.add_argument('--vm-dw', type=float, default=0.0, help='VM bank growth: um added to every vmb_* width (412k words = 5 macros: 118.8)')
+    ap.add_argument('--fused', type=float, default=0.0, help='UNITS-FUSED hnx_fused_lane_1019 square side (um), x32 = 2 per bank pair in row A '
+                    '(README outline 259.2 = a guess until the gate prints std_area_um2)')
+    ap.add_argument('--idxn', action='store_true', help='UNITS-IDXN N-row adder: key buffers at the quadrant scorers + selectors at idx_sel')
     a = ap.parse_args()
     P0 = json.loads((FRAME / 'd4g_phy.compact.P.json').read_text())
     out = ROOT / a.out
@@ -362,7 +380,7 @@ def main():
         elif t == 'f4w':
             P, W, H = plan_f4w(P0, a.tile_w, a.tile_h)
         elif t == 'f4c':
-            P, W, H = plan_f4c(P0, a.tile_w, a.tile_h, a.vmh, a.coll_d, a.grp_side, a.hc, a.vm_dw, a.vm_dh)
+            P, W, H = plan_f4c(P0, a.tile_w, a.tile_h, a.vmh, a.coll_d, a.grp_side, a.hc, a.vm_dw, a.vm_dh, a.fused, a.idxn)
         tag = t + a.suffix
         ov, outside, ret = checks(P, W, H)
         G = graph_for(P, a.coll_x if t != 'd4g' else 1.0, a.hc if t == 'f4c' else 'quad', a.coll_l5 and t != 'd4g')
@@ -376,7 +394,7 @@ def main():
                         stages_bw=ev['stages_bw'], per_class=ev['per_class'], longest_class_um=ev['by_class_longest_um'],
                         relay_flops=ev['graph_relay_flops'], overlaps=len(ov), overlap_pairs=ov[:10], outside=outside, reticle=ret,
                         sm_hbm_offset_um=sm_hbm_offsets(P), vmh=a.vmh if t == 'f4c' else None, grp_side=a.grp_side if t == 'f4c' else None, coll_d=a.coll_d if t == 'f4c' else None, coll_x=a.coll_x if t != 'd4g' else 1.0,
-                        hc=a.hc if t == 'f4c' else None, coll_l5=a.coll_l5, vm_dw=a.vm_dw if t == 'f4c' else None, vm_dh=a.vm_dh if t == 'f4c' else None,
+                        hc=a.hc if t == 'f4c' else None, coll_l5=a.coll_l5, vm_dw=a.vm_dw if t == 'f4c' else None, vm_dh=a.vm_dh if t == 'f4c' else None, fused=a.fused if t == 'f4c' else None, idxn=a.idxn if t == 'f4c' else None,
                         hce_um=[P['hce_SE']['w'], P['hce_SE']['h']] if 'hce_SE' in P else None)
         r = res[tag]
         print(tag, f"{W/1000:.2f}x{H/1000:.2f}={r['die_mm2']} cut {cut['worst_v']['ratio']}/{cut['worst_h']['ratio']} bitmm {ev['sum_bits_mm']/1e6:.3f}M "
