@@ -5,7 +5,7 @@
 // replicated hr_q (16) / hgo (64) roots).
 `ifndef OT_KVPC_SRAM_CLONES_1019_SV
 `define OT_KVPC_SRAM_CLONES_1019_SV
-// ---- qkd_kvpc_s_fan_nc_b: clone of qkd_static_kv_pc_path_fan_nc_b (rtl/qwen_sys/static_embedding_20261014/qkd_static_kv_pc_path_fan_nc_b.sv) with 1 substitution(s) ----
+// ---- qkd_kvpc_s_fan_nc_b: clone of qkd_static_kv_pc_path_fan_nc_b (rtl/qwen_sys/static_embedding_20261014/qkd_static_kv_pc_path_fan_nc_b.sv) with 2 substitution(s) ----
 module qkd_kvpc_s_fan_nc_b #(parameter integer MU = 0) (   // MU-ADOPT-KV 10-19: -> qkd_static_kv_pc_path_nc MU
     input wire pll_hbm,
     input wire pll_hbm_port,
@@ -121,7 +121,7 @@ module qkd_kvpc_s_fan_nc_b #(parameter integer MU = 0) (   // MU-ADOPT-KV 10-19:
     (* keep *) reg [1:0] st_sr;
     always @(posedge ck) begin pc_sr <= pc; st_sr <= cfg_stack; end
     // hard child: no #() overrides (MUT 0 is the production value)
-    qkd_kv_pc_chain_station_b u_chain (
+    qkd_kvpc_s_chain u_chain (
         .ck(ck), .rst_n(rsi), .pc(pc), .cfg_stack(cfg_stack), .di(chain_i), .dout(chain_o),
         .land_es(land_es), .land_er(land_er),
         .wes(s_wes), .es_context(s_es_context), .es_expected_valid(s_es_expected_valid),
@@ -227,7 +227,7 @@ module qkd_kvpc_s_fan_nc_b #(parameter integer MU = 0) (   // MU-ADOPT-KV 10-19:
     );
 endmodule
 
-// ---- qkd_kvpc_s_emb_nc_b: clone of qkd_static_kv_pc_path_emb_nc_b (rtl/qwen_sys/static_embedding_20261014/qkd_static_kv_pc_path_fan_nc_b.sv) with 1 substitution(s) ----
+// ---- qkd_kvpc_s_emb_nc_b: clone of qkd_static_kv_pc_path_emb_nc_b (rtl/qwen_sys/static_embedding_20261014/qkd_static_kv_pc_path_fan_nc_b.sv) with 2 substitution(s) ----
 module qkd_kvpc_s_emb_nc_b #(parameter integer MU = 0) (   // MU-ADOPT-KV 10-19: -> qkd_static_kv_pc_path_nc MU
     input wire pll_hbm,
     input wire pll_hbm_port,
@@ -327,7 +327,7 @@ module qkd_kvpc_s_emb_nc_b #(parameter integer MU = 0) (   // MU-ADOPT-KV 10-19:
 );
     wire [287:0] es_merged;
     // hard child: no #() overrides (its defaults ROW0 24427 / MUT 0 are the production values; ref_tile rtl gate)
-    qkd_static_kv_pc_es_merge_b u_esm (
+    qkd_kvpc_s_esm u_esm (
         .ck(ck), .rst_n(rsi), .pc(pc), .cfg_stack(cfg_stack), .wes(wes),
         .emb_boot_ready(emb_boot_ready), .emb_issue_v(emb_issue_v), .emb_token(emb_token),
         .emb_word_index(emb_word_index), .emb_half(emb_half), .emb_scale(emb_scale), .emb_epoch(emb_epoch),
@@ -411,7 +411,7 @@ module qkd_kvpc_s_emb_nc_b #(parameter integer MU = 0) (   // MU-ADOPT-KV 10-19:
     );
 endmodule
 
-// ---- qkd_kvpc_s_path_nc: clone of qkd_static_kv_pc_path_nc (rtl/qwen_sys/static_kv_20261014/qkd_static_kv_pc_path_nc.sv) with 3 substitution(s) ----
+// ---- qkd_kvpc_s_path_nc: clone of qkd_static_kv_pc_path_nc (rtl/qwen_sys/static_kv_20261014/qkd_static_kv_pc_path_nc.sv) with 4 substitution(s) ----
 module qkd_kvpc_s_path_nc #(parameter integer MU = 0) (
     input wire pll_hbm,
     input wire pll_hbm_port,  // u_ctrl.u_port HBM clock entry (same clock as pll_hbm; separate die entry)
@@ -541,7 +541,7 @@ module qkd_kvpc_s_path_nc #(parameter integer MU = 0) (
         .drain_fault_core(drain_fault_core),
         .drain_fault_hbm(drain_fault_hbm)
     );
-    qkd_controller_hbm_calendar #(.N(16), .ROW0(64), .MUT(0)) u_calendar (
+    qkd_kvpc_s_calendar #(.N(16), .ROW0(64), .MUT(0)) u_calendar (
         .hck(cal_hck),
         .rst_n(cal_rst_n),
         .cfg_we(cal_cfg_we),
@@ -608,7 +608,7 @@ module qkd_kvpc_s_path_nc #(parameter integer MU = 0) (
     );
 endmodule
 
-// ---- qkd_kvpc_s_ctrl: clone of qkd_ctrl_pc_host_static_nc (rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_nc.sv) with 2 substitution(s) ----
+// ---- qkd_kvpc_s_ctrl: clone of qkd_ctrl_pc_host_static_nc (rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_nc.sv) with 5 substitution(s) ----
 module qkd_kvpc_s_ctrl #(
     parameter integer ROW0  = 64,          // CONTRACT map v2: HBM row of layer 0
     parameter integer CVL   = 2,           // qkd_cdc_wleaf r2 (WPIPE 1): h_cv edges after h_wcon at its pin
@@ -712,22 +712,22 @@ module qkd_kvpc_s_ctrl #(
         .idle_core(idle_core), .drain_fault_core(drain_fault_core),
         .s_cr(s_cr), .p_em_v(p_em_v), .p_em_d(p_em_d), .c_v(c_v), .c_d(c_d), .c_context(c_context), .f_ecdc(f_ecdc),
         .col_v(po[28]), .col_we(po[29]), .col_sr(physical_col_sr));
-    qkd_ctrl_pc_obs_child #(.PROFILE(PROFILE)) u_obs (
+    qkd_kvpc_s_obs_child #(.PROFILE(PROFILE)) u_obs (
         .pll_hbm(pll_hbm_obs), .hrst(hrst), .po(po), .static_column(physical_col_sr), .expected_static_column(expected_sr),
         .context_word(physical_context), .obs_commit_valid(obs_commit_valid), .native_commit_valid(native_commit_valid),
         .native_commit_identity(native_commit_identity), .native_commit_address(native_commit_address),
         .fault(native_observer_fault));
-    qkd_ctrl_pc_port_child_nc #(.RQD(TQD), .MUT(MUT == 2 ? 4 : 0)) u_port (
+    qkd_kvpc_s_port_child #(.RQD(TQD), .MUT(MUT == 2 ? 4 : 0)) u_port (
         .hclk(pll_hbm_port), .hrst(hrst), .col_v_e(p_col_v), .col_we_e(p_col_we), .col_sr_e(p_col_sr),
         .w_v(p_w_v), .w_d(p_w_d), .pi(pi),
         .wd(p_wd), .kv_v(p_kv_v), .kv_d(p_kv_d), .em_v(p_em_v), .em_d(p_em_d), .fault(p_fault));
-    qkd_ctrl_pc_ecc_child u_ecc (
+    qkd_kvpc_s_ecc_child u_ecc (
         .hclk(pll_hbm_ecc), .hrst(hrst), .i_v(p_kv_v), .i_code(p_kv_d), .i_sec(e_sec), .i_row(e_row),
         .o_v(e_l_v), .o_data(l_data), .o_sec(l_sec), .o_row(l_row), .fault(e_fault));
     assign co = {l_data, l_row, l_sec, e_l_v};
 endmodule
 
-// ---- qkd_kvpc_s_sched: clone of qkd_ctrl_pc_sched_nc (rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_nc.sv) with 8 substitution(s) ----
+// ---- qkd_kvpc_s_sched: clone of qkd_ctrl_pc_sched_nc (rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_nc.sv) with 9 substitution(s); kept copy families static_owner_q[1]x3(2) ----
 module qkd_kvpc_s_sched #(
     parameter integer ROW0  = 64,          // CONTRACT map v2: HBM row of layer 0
     parameter integer CVL   = 2,           // qkd_cdc_wleaf r2 (WPIPE 1): h_cv edges after h_wcon at its pin
@@ -861,13 +861,16 @@ module qkd_kvpc_s_sched #(
     always @(posedge hclk or negedge h_rn)if(!h_rn)static_owner_d<=0;else static_owner_d<=static_owner_q;
     // (nc) the legacy write path (w_pend / w_go: wq write command, its open-row match, hand-off hold, late watchdog) is
     // removed with its ci producer: before ownership only the kc chain (ki) issues, after it only the calendar.
-    (* keep *) reg static_owner_q,static_v_q,rdslot_q,srslot_q,wrslot_q;
+    (* keep *) reg static_v_q, rdslot_q, srslot_q, wrslot_q;
+    (* keep, ot_rst_split *) reg [2:0] static_owner_q__qv;   // KV-PC SAFE: 3 kept copies of static_owner_q
+    function static_owner_q__f; input v; static_owner_q__f = v; endfunction
+    wire static_owner_q = static_owner_q__qv[0:0];
     (* keep *) reg [31:0] static_d_q;
     (* keep *) reg [9:0] static_first_q;
     always @(posedge hclk)begin static_d_q<=static_cmd[32:1];static_first_q<=static_cmd[42:33];end
     always @(posedge hclk or negedge h_rn)
-      if(!h_rn)begin static_owner_q<=0;static_v_q<=0;rdslot_q<=0;srslot_q<=0;wrslot_q<=0;end
-      else begin static_owner_q<=static_cmd_owner;static_v_q<=static_cmd[0];rdslot_q<=reserved_rd;srslot_q<=reserved_static_col;wrslot_q<=reserved_write_col;end
+      if(!h_rn)begin static_owner_q__qv <= {3{static_owner_q__f(0)}};static_v_q<=0;rdslot_q<=0;srslot_q<=0;wrslot_q<=0;end
+      else begin static_owner_q__qv <= {3{static_owner_q__f(static_cmd_owner)}};static_v_q<=static_cmd[0];rdslot_q<=reserved_rd;srslot_q<=reserved_static_col;wrslot_q<=reserved_write_col;end
     wire        cmd_v  = static_owner_q ? static_v_q : tc_v;
     wire [31:0] cmd    = static_owner_q ? static_d_q : tc_d;
     always @(posedge hclk or negedge hgo)
@@ -889,7 +892,7 @@ module qkd_kvpc_s_sched #(
     wire [2:0]  row_op;
     wire [4:0]  row_bank, col_bank, col_col;
     wire [18:0] row_row;
-    ot_qkd_static_ctrl_pc_emb #(.STATIC_REFRESH(STATIC_REFRESH),.CONTEXT_DESC(CONTEXT_DESC),.ENABLE(1), .PC(0), .PHASE(0),.PROFILE(PROFILE)) u_ctl (
+    ot_qkd_static_ctrl_pc_emb_kvpc_s #(.STATIC_REFRESH(STATIC_REFRESH),.CONTEXT_DESC(CONTEXT_DESC),.ENABLE(1), .PC(0), .PHASE(0),.PROFILE(PROFILE)) u_ctl (
         .clk(hclk), .rst_n(hgo), .cmd_v(cmd_v), .cmd(cmd), .cmd_first(static_owner_q?static_first_q:10'd0),.reserved_rd(rdslot_q),.reserved_static_col(srslot_q),.reserved_write_col(wrslot_q), .cmd_credit(cmd_credit),
         .row_v(row_v), .row_op(row_op), .row_bank(row_bank), .row_row(row_row),
         .col_v(col_v), .col_bank(col_bank), .col_col(col_col), .col_we(col_we), .busy(), .phase_idle(ctl_phase_idle), .fault(ctl_fault),
@@ -1027,7 +1030,7 @@ module qkd_kvpc_s_sched #(
       end
 endmodule
 
-// ---- qkd_kvpc_s_cdc_child: clone of qkd_ctrl_pc_cdc_child (rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_host_static_core.sv) with 1 substitution(s) ----
+// ---- qkd_kvpc_s_cdc_child: clone of qkd_ctrl_pc_cdc_child (rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_host_static_core.sv) with 1 substitution(s); kept copy families hr_q[1]x2(1), rs_q[1]x3(1) ----
 module qkd_kvpc_s_cdc_child #(
     parameter integer WDONE = 17,
     parameter integer PROFILE = 0,
@@ -1059,10 +1062,14 @@ module qkd_kvpc_s_cdc_child #(
     input  wire         col_v, col_we, col_sr          // sched po[28] / po[29] / physical_col_sr registers
 );
     wire hclk = pll_hbm;
-    (* keep *) reg hr_q;
-    (* keep *) reg rs_q;
-    always @(posedge hclk) hr_q <= hrst;
-    always @(posedge ck)   rs_q <= rsi;
+    (* keep, ot_rst_split *) reg [1:0] hr_q__qv;   // KV-PC SAFE: 2 kept copies of hr_q
+    function hr_q__f; input v; hr_q__f = v; endfunction
+    wire hr_q = hr_q__qv[0:0];
+    (* keep, ot_rst_split *) reg [2:0] rs_q__qv;   // KV-PC SAFE: 3 kept copies of rs_q
+    function rs_q__f; input v; rs_q__f = v; endfunction
+    wire rs_q = rs_q__qv[0:0];
+    always @(posedge hclk) hr_q__qv <= {2{hr_q__f(hrst)}};
+    always @(posedge ck)   rs_q__qv <= {3{rs_q__f(rsi)}};
     wire h_rn = hr_q;
     // pin registers (flop-first): u_ctl credit and the embedding return beat
     (* keep *) reg s_cr_q, em_v_q;
@@ -1181,5 +1188,1474 @@ module qkd_kvpc_s_cdc_child #(
         (drain_desc==0&&drain_reads==0&&drain_credits==0&&
          !es_v_q&&!completion_v&&!e_v&&!er_v&&!s_credit&&!er_cr&&
          !drain_fault_core&&!completion_fault&&!f_core&&!native_intake_fault);
+endmodule
+
+// ---- qkd_kvpc_s_obs_child: clone of qkd_ctrl_pc_obs_child (rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_host_static_core.sv) with 2 substitution(s); kept copy families hr_q[1]x16(1) ----
+module qkd_kvpc_s_obs_child #(parameter integer PROFILE = 0)(
+    input  wire         pll_hbm,
+    input  wire         hrst,
+    input  wire [327:0] po,
+    input  wire         static_column,
+    input  wire         expected_static_column,
+    input  wire [346:0] context_word,
+    output wire         obs_commit_valid,
+    output wire         native_commit_valid,
+    output wire [60:0]  native_commit_identity,
+    output wire [28:0]  native_commit_address,
+    output wire         fault
+);
+    wire hclk = pll_hbm;
+    (* keep, ot_rst_split *) reg [15:0] hr_q__qv;   // KV-PC SAFE: 16 kept copies of hr_q
+    function hr_q__f; input v; hr_q__f = v; endfunction
+    wire hr_q = hr_q__qv[0:0];
+    always @(posedge hclk) hr_q__qv <= {16{hr_q__f(hrst)}};
+    wire h_rn = hr_q;
+    // KV-PC SAFE: po_q[34:30] (col_bank: the observer's bank-indexed open-row reads, 641..43 loads) as 27 kept copies
+    (* keep *) reg [327:0] po_q_d;
+    (* keep, ot_rst_split = 5 *) reg [134:0] pob__qv;
+    wire [327:0] po_q = {po_q_d[327:35], pob__qv[4:0], po_q_d[29:0]};
+    (* keep *) reg [346:0] ctx_q;
+    (* keep *) reg sc_q, esc_q;
+    always @(posedge hclk or negedge h_rn) if(!h_rn)begin po_q_d<=0;pob__qv<=135'd0;sc_q<=0;esc_q<=0;end else begin po_q_d<=po;pob__qv<={27{po[34:30]}};sc_q<=static_column;esc_q<=expected_static_column;end
+    always @(posedge hclk) ctx_q<=context_word;
+    wire [60:0] obs_commit_identity; wire [28:0] obs_commit_address;
+    qkd_static_kv_write_observer #(.STRICT(PROFILE==0)) u_native_write_observer(
+        .hclk(hclk),.rst_n(h_rn),.po(po_q),.static_column(sc_q),.expected_static_column(esc_q),.context_word(ctx_q),
+        .commit_valid(obs_commit_valid),.commit_identity(obs_commit_identity),.commit_address(obs_commit_address),.fault(fault));
+    (* keep *) reg nc_v_q;(* keep *) reg [60:0] nc_id_q;(* keep *) reg [28:0] nc_ad_q;
+    always @(posedge hclk or negedge h_rn)if(!h_rn)nc_v_q<=1'b0;else nc_v_q<=obs_commit_valid;
+    always @(posedge hclk)begin nc_id_q<=obs_commit_identity;nc_ad_q<=obs_commit_address;end
+    assign native_commit_valid=nc_v_q;assign native_commit_identity=nc_id_q;assign native_commit_address=nc_ad_q;
+endmodule
+
+// ---- qkd_kvpc_s_port_child: clone of qkd_ctrl_pc_port_child_nc (rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_nc.sv) with 1 substitution(s); kept copy families rv_q[1]x27(2), col_sr_q[1]x2(2) ----
+module qkd_kvpc_s_port_child #(
+    parameter integer RQD = 64,
+    parameter integer MUT = 0
+) (
+    input  wire         hclk,
+    input  wire         hrst,
+    input  wire         col_v_e, col_we_e, col_sr_e,   // one edge early
+    input  wire         w_v,
+    input  wire [255:0] w_d,
+    input  wire [288:0] pi,
+    output wire [287:0] wd,
+    output wire         kv_v,
+    output wire [287:0] kv_d,
+    output wire         em_v,
+    output wire [257:0] em_d,
+    output wire         fault
+);
+    (* keep *) reg hr_q;
+    always @(posedge hclk) hr_q <= hrst;
+    wire h_rn = hr_q;
+    (* keep *) reg col_v_q, col_we_q;
+    (* keep, ot_rst_split *) reg [1:0] col_sr_q__qv;   // KV-PC SAFE: 2 kept copies of col_sr_q
+    function col_sr_q__f; input v; col_sr_q__f = v; endfunction
+    wire col_sr_q = col_sr_q__qv[0:0];
+    (* keep, ot_rst_split *) reg [26:0] rv_q__qv;   // KV-PC SAFE: 27 kept copies of rv_q
+    function rv_q__f; input v; rv_q__f = v; endfunction
+    wire rv_q = rv_q__qv[0:0];
+    (* keep *) reg [287:0] rd_q;
+    (* keep *) reg w_v_q;
+    (* keep *) reg [255:0] w_d_q;
+    always @(posedge hclk or negedge h_rn)
+        if (!h_rn) begin rv_q__qv <= {27{rv_q__f(1'b0)}}; col_v_q <= 1'b0; col_we_q <= 1'b0; col_sr_q__qv <= {2{col_sr_q__f(1'b0)}}; w_v_q <= 1'b0; end
+        else begin rv_q__qv <= {27{rv_q__f(pi[0])}}; col_v_q <= col_v_e; col_we_q <= col_we_e; col_sr_q__qv <= {2{col_sr_q__f(col_sr_e)}}; w_v_q <= w_v; end
+    always @(posedge hclk) begin rd_q <= pi[288:1]; w_d_q <= w_d; end
+    ot_qfd_emb_pcport_nkw_kvpc_s #(.RQD(RQD), .MUT(MUT)) u_port (
+        .clk(hclk), .rst_n(h_rn), .col_v(col_v_q), .col_we(col_we_q), .col_sr(col_sr_q),
+        .w_v(w_v_q), .w_d(w_d_q), .wd(wd),
+        .r_v(rv_q), .r_d(rd_q), .kv_v(kv_v), .kv_d(kv_d), .em_v(em_v), .em_d(em_d), .fault(fault));
+endmodule
+
+// ---- ot_qfd_emb_pcport_nkw_kvpc_s: clone of ot_qfd_emb_pcport_nkw (rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_nc.sv) with 2 substitution(s); kept copy families wr[3]x49(2), wc1_st[1]x24(2), v1[1]x22(2), wc1_kv[1]x13(2), kr[7]x3(2), y1[32]x4(1), kv_v[1]x2(2) ----
+module ot_qfd_emb_pcport_nkw_kvpc_s #(
+    parameter integer RQD = 32,
+    parameter integer WQD = 4,
+    parameter integer MUT = 0
+) (
+    input  wire         clk,
+    input  wire         rst_n,
+    input  wire         col_v,
+    input  wire         col_we,
+    input  wire         col_sr,
+    input  wire         w_v,
+    input  wire [255:0] w_d,
+    output wire [287:0] wd,
+    input  wire         r_v,
+    input  wire [287:0] r_d,
+    output wire         kv_v,
+    output reg  [287:0] kv_d,
+    output reg          em_v,
+    output reg  [257:0] em_d,             // {ue, ce, data}
+    output reg          fault
+);
+    (* keep, ot_rst_split *) reg [1:0] kv_v__qv;   // KV-PC SAFE: 2 kept copies of kv_v
+    function kv_v__f; input v; kv_v__f = v; endfunction
+    assign kv_v = kv_v__qv[0:0];
+  // ---- SECDED(72,64): ot_gpu_w6_secded_pkg layout (Hamming positions 1..71, check bits at 2^k, overall parity bit 71)
+  function automatic [71:0] enc64(input [63:0] data);
+    reg [71:0] c; integer p, k, j;
+    begin
+      c = '0; j = 0;
+      for (p = 1; p <= 71; p = p + 1)
+        if ((p & (p - 1)) != 0) begin c[p-1] = data[j]; j = j + 1; end
+      for (k = 0; k < 7; k = k + 1)
+        for (p = 1; p <= 71; p = p + 1)
+          if ((p & (1 << k)) != 0 && p != (1 << k)) c[(1<<k)-1] = c[(1<<k)-1] ^ c[p-1];
+      c[71] = ^c[70:0]; enc64 = c;
+    end
+  endfunction
+  function automatic [287:0] enc256(input [255:0] d);
+    enc256 = {enc64(d[255:192]), enc64(d[191:128]), enc64(d[127:64]), enc64(d[63:0])};
+  endfunction
+  // decode stage A: {syndrome[6:0], overall parity}
+  function automatic [7:0] syn64(input [71:0] code);
+    reg [6:0] sy; integer p, k;
+    begin
+      sy = '0;
+      for (k = 0; k < 7; k = k + 1)
+        for (p = 1; p <= 71; p = p + 1)
+          if ((p & (1 << k)) != 0) sy[k] = sy[k] ^ code[p-1];
+      syn64 = {sy, ^code};
+    end
+  endfunction
+  // decode stage B: {ue, corrected, data[63:0]} from the code and its stage-A syndrome
+  function automatic [65:0] cor64(input [71:0] code, input [7:0] so);
+    reg [71:0] c; reg [6:0] sy; reg ov, ue, ce; reg [63:0] d; integer p, j;
+    begin
+      c = code; sy = so[7:1]; ov = so[0]; ue = 1'b0; ce = 1'b0;
+      if (sy != 0) begin
+        if (ov && sy <= 71) begin c[sy-1] = ~c[sy-1]; ce = 1'b1; end
+        else ue = 1'b1;
+      end else if (ov) begin c[71] = ~c[71]; ce = 1'b1; end
+      d = '0; j = 0;
+      for (p = 1; p <= 71; p = p + 1)
+        if ((p & (p - 1)) != 0) begin d[j] = c[p-1]; j = j + 1; end
+      cor64 = {ue, ce, d};
+    end
+  endfunction
+
+    localparam integer RA = $clog2(RQD);
+    localparam integer WA = (WQD > 1) ? $clog2(WQD) : 1;
+    initial if (WA != 2 || RA != 6) $error("ot_qfd_emb_pcport_nkw_kvpc_s: kept copy widths assume WQD 4, RQD 64");
+    reg [RQD-1:0] kq;
+    reg [RA:0] kw;
+    (* keep, ot_rst_split = 7 *) reg [20:0] kr__qv;   // KV-PC SAFE: 3 kept copies of kr
+    function [6:0] kr__f; input [6:0] v; kr__f = v; endfunction
+    wire [6:0] kr = kr__qv[6:0];
+    reg [287:0] wq [0:WQD-1];
+    reg [WA:0] ww;
+    (* keep, ot_rst_split = 3 *) reg [146:0] wr__qv;   // KV-PC SAFE: 49 kept copies of wr
+    function [2:0] wr__f; input [2:0] v; wr__f = v; endfunction
+    wire [2:0] wr = wr__qv[2:0];
+    wire rd_issue = col_v && !col_we;
+    wire wr_static = col_v && col_we && col_sr;
+    wire wr_kv = col_v && col_we && !col_sr;      // no KV write data source: a KV WR column is a fault
+    wire k_empty = kw == kr;
+    wire k_full = (kw[RA-1:0] == kr[RA-1:0]) && (kw[RA] != kr[RA]);
+    wire w_empty = ww == wr;
+    wire w_full = (ww[WA-1:0] == wr[WA-1:0]) && (ww[WA] != wr[WA]);
+    wire cls = kq[kr[RA-1:0]];
+    // KVW 2 timing: wd two edges after every WR column
+    (* keep, ot_rst_split *) reg [12:0] wc1_kv__qv;   // KV-PC SAFE: 13 kept copies of wc1_kv
+    function wc1_kv__f; input v; wc1_kv__f = v; endfunction
+    wire wc1_kv = wc1_kv__qv[0:0];
+    (* keep, ot_rst_split *) reg [23:0] wc1_st__qv;   // KV-PC SAFE: 24 kept copies of wc1_st
+    function wc1_st__f; input v; wc1_st__f = v; endfunction
+    wire wc1_st = wc1_st__qv[0:0]; reg [287:0] st1_wd, s2_wd;
+    assign wd = s2_wd;
+    always @(posedge clk) begin
+        if (wr_static) st1_wd <= wq[wr[WA-1:0]];
+        if (wc1_kv) s2_wd <= 288'd0; else if (wc1_st) s2_wd <= st1_wd;
+    end
+    (* keep, ot_rst_split *) reg [21:0] v1__qv;   // KV-PC SAFE: 22 kept copies of v1
+    function v1__f; input v; v1__f = v; endfunction
+    wire v1 = v1__qv[0:0]; reg [287:0] c1; (* keep, ot_rst_split = 32 *) reg [127:0] y1__qv;   // KV-PC SAFE: 4 kept copies of y1
+    function [31:0] y1__f; input [31:0] v; y1__f = v; endfunction
+ wire [31:0] y1 = y1__qv[31:0];
+    integer i;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin
+            kw <= 0; kr__qv <= {3{kr__f(0)}}; ww <= 0; wr__qv <= {49{wr__f(0)}}; kv_v__qv <= {2{kv_v__f(1'b0)}}; em_v <= 1'b0; v1__qv <= {22{v1__f(1'b0)}}; fault <= 1'b0;
+            wc1_kv__qv <= {13{wc1_kv__f(1'b0)}}; wc1_st__qv <= {24{wc1_st__f(1'b0)}};
+        end else begin
+            if (rd_issue) begin kw <= kw + 1'b1; if (k_full) fault <= 1'b1; end
+            if (r_v) begin kr__qv <= {3{kr__f(kr + 1'b1)}}; if (k_empty) fault <= 1'b1; end
+            kv_v__qv <= {2{kv_v__f(r_v && !cls)}};
+            v1__qv <= {22{v1__f(r_v && cls)}};
+            em_v <= v1;
+            if (w_v) begin ww <= ww + 1'b1; if (w_full) fault <= 1'b1; end
+            if (wr_static) begin wr__qv <= {49{wr__f(wr + 1'b1)}}; if (w_empty) fault <= 1'b1; end
+            wc1_kv__qv <= {13{wc1_kv__f(wr_kv)}}; wc1_st__qv <= {24{wc1_st__f(wr_static)}};
+            if (wc1_kv) fault <= 1'b1;
+        end
+    always @(posedge clk) begin : dp
+        reg [65:0] dc; reg ue, ce; reg [255:0] d;
+        if (rd_issue) kq[kw[RA-1:0]] <= col_sr;
+        if (w_v) wq[ww[WA-1:0]] <= enc256(w_d);
+        if (r_v) begin
+            kv_d <= r_d; c1 <= r_d;
+            y1__qv <= {4{y1__f({syn64(r_d[3*72 +: 72]), syn64(r_d[2*72 +: 72]), syn64(r_d[1*72 +: 72]), syn64(r_d[0*72 +: 72])})}};
+        end
+        ue = 1'b0; ce = 1'b0;
+        for (i = 0; i < 4; i = i + 1) begin
+            dc = cor64(c1[i*72 +: 72], (MUT == 3) ? 8'd0 : y1[i*8 +: 8]);
+            d[i*64 +: 64] = dc[63:0]; ue = ue | dc[65]; ce = ce | dc[64];
+        end
+        if (v1) em_d <= {ue, ce, d};
+    end
+endmodule
+
+// ---- qkd_kvpc_s_ecc_child: clone of qkd_ctrl_pc_ecc_child (rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_children.sv) with 1 substitution(s) ----
+module qkd_kvpc_s_ecc_child (
+    input  wire         hclk,
+    input  wire         hrst,
+    input  wire         i_v,
+    input  wire [287:0] i_code,
+    input  wire [16:0]  i_sec,
+    input  wire [7:0]   i_row,
+    output wire         o_v,
+    output wire [255:0] o_data,
+    output wire [16:0]  o_sec,
+    output wire [7:0]   o_row,
+    output wire         fault
+);
+    (* keep *) reg hr_q;
+    always @(posedge hclk) hr_q <= hrst;
+    ot_qfd_kv_landing_ecc_kvpc_s #(.ENABLE(1), .INTERLEAVED(1)) u_ecc (
+        .hclk(hclk), .h_rst_n(hr_q), .i_v(i_v), .i_code(i_code), .i_sec(i_sec), .i_row(i_row),
+        .o_v(o_v), .o_data(o_data), .o_sec(o_sec), .o_row(o_row), .ce(), .ue(), .fault(fault), .ce_count());
+endmodule
+
+// ---- ot_qfd_kv_landing_ecc_kvpc_s: clone of ot_qfd_kv_landing_ecc (rtl/qwen_sys/q5_20261009/synth/ot_qfd_kv_landing_ecc.sv) with 0 substitution(s); kept copy families p1_v[1]x23(2) ----
+module ot_qfd_kv_landing_ecc_kvpc_s #(parameter integer ENABLE=0, MUT=0, INTERLEAVED=1, PIPE=2)(
+ input wire hclk,h_rst_n,
+ input wire i_v,input wire [287:0] i_code,
+ input wire [16:0] i_sec,input wire [7:0] i_row,
+ output wire o_v,output wire [255:0] o_data,
+ output reg [16:0] o_sec,output reg [7:0] o_row,
+ output wire ce,ue,output wire fault,output wire [31:0] ce_count
+);
+ // el1011-q-kvd 2026-10-12 (PIPE 2, default): registered-boundary pipeline.  M5 re-route qfd_q5_landing_ecc_m5-m5-8dcfc40b3
+ // failed TT -169.88 entirely input->reg (0.2 T input budget + the whole SECDED decode before the first flop).  Now:
+ //   P0  pin flops: i_v (reset) and i_code / i_sec / i_row captured every edge, no enable, no logic (io_flop_at_pins);
+ //   P1  per 72-b word the 7-b Hamming syndrome + overall parity (XOR trees only), registered with the code word;
+ //   P2  correction (syndrome -> one-hot flip), CE/UE classification, output registers (unchanged semantics).
+ // +2 hclk landing latency (o_v / ce / ue / fault / ce_count all move together; the parent's prepaid landing credit is
+ // held 2 hclk longer, LD = 64 slots absorb it).  PIPE 0 keeps the original one-register structure.
+ // Bit-exact: syn64 / fix64 below are decode64 split at the syndrome register.
+ function automatic [7:0] syn64(input [71:0] code);   // {overall, syndrome}
+  integer p,k;reg [6:0] s;begin s=0;
+   for(k=0;k<7;k=k+1)for(p=1;p<=71;p=p+1)if((p&(1<<k))!=0)s[k]=s[k]^code[p-1];
+   syn64={^code,s};
+  end
+ endfunction
+ function automatic [65:0] fix64(input [71:0] code,input [7:0] so);   // {ue, corrected, data} == decode64(code)
+  reg [71:0] c;reg [6:0] s;reg ov,ue_,co;reg [63:0] d;integer p,j;begin
+   c=code;s=so[6:0];ov=so[7];ue_=0;co=0;
+   if(s!=0)begin
+    if(ov&&s<=71)begin for(p=1;p<=71;p=p+1)if(s==p)c[p-1]=~c[p-1];co=1;end
+    else ue_=1;
+   end else if(ov)begin c[71]=~c[71];co=1;end
+   d=0;j=0;for(p=1;p<=71;p=p+1)if((p&(p-1))!=0)begin d[j]=c[p-1];j=j+1;end
+   fix64={ue_,co,d};
+  end
+ endfunction
+ function automatic [71:0] unpack(input [71:0] s);
+  integer p,j,k;begin j=0;k=0;unpack=0;
+   for(p=1;p<=71;p=p+1)
+    if((p&(p-1))!=0)begin unpack[p-1]=s[j];j=j+1;end
+    else begin unpack[p-1]=s[64+k];k=k+1;end
+   unpack[71]=s[71];
+  end
+ endfunction
+ function automatic [63:0] unpack_data(input [71:0] code);
+  integer p,j;begin j=0;unpack_data=0;
+   for(p=1;p<=71;p=p+1)if((p&(p-1))!=0)begin unpack_data[j]=code[p-1];j=j+1;end
+  end
+ endfunction
+ // ECC storage layout is {32 check bits,256 data bits}; no assumed free PHY
+ // sideband. The parent must bind real check storage and every check pin.
+ reg dv,dc,du,sticky;
+ reg [255:0] corrected;
+ reg [31:0] count;
+ reg [255:0] decoded;
+ reg any_ce,any_ue;
+ // e_* : the word entering the decode (P0 pin flops when PIPE != 0, the ports otherwise)
+ wire e_v;wire [287:0] e_code;wire [16:0] e_sec;wire [7:0] e_row;
+ // f_* : the word entering the correction (P1 registers when PIPE == 2), with its per-word {overall, syndrome}
+ wire f_v;wire [287:0] f_code;wire [31:0] f_so;wire [16:0] f_sec;wire [7:0] f_row;
+ reg [287:0] e_cw;   // the 4 x 72-b codewords of e_code in Hamming position order
+ reg [31:0] e_so;
+ integer w;
+ always @* begin
+  for(w=0;w<4;w=w+1)begin
+   e_cw[w*72+:72]=(INTERLEAVED!=0)?e_code[w*72+:72]:unpack({e_code[256+w*8+:8],e_code[w*64+:64]});
+   e_so[w*8+:8]=syn64(e_cw[w*72+:72]);
+  end
+ end
+ generate if (PIPE != 0) begin : g_p0
+  reg p0_v;reg [287:0] p0_code;reg [16:0] p0_sec;reg [7:0] p0_row;
+  always @(posedge hclk or negedge h_rst_n) if(!h_rst_n) p0_v<=1'b0; else p0_v<=i_v;
+  always @(posedge hclk) begin p0_code<=i_code;p0_sec<=i_sec;p0_row<=i_row;end
+  assign e_v=p0_v;assign e_code=p0_code;assign e_sec=p0_sec;assign e_row=p0_row;
+ end else begin : g_np0
+  assign e_v=i_v;assign e_code=i_code;assign e_sec=i_sec;assign e_row=i_row;
+ end endgenerate
+ generate if (PIPE >= 2) begin : g_p1
+  (* keep, ot_rst_split *) reg [22:0] p1_v__qv;   // KV-PC SAFE: 23 kept copies of p1_v
+    function p1_v__f; input v; p1_v__f = v; endfunction
+  wire p1_v = p1_v__qv[0:0];reg [287:0] p1_cw;reg [31:0] p1_so;reg [16:0] p1_sec;reg [7:0] p1_row;
+  always @(posedge hclk or negedge h_rst_n) if(!h_rst_n) p1_v__qv <= {23{p1_v__f(1'b0)}}; else p1_v__qv <= {23{p1_v__f(e_v)}};
+  always @(posedge hclk) begin p1_cw<=e_cw;p1_so<=e_so;p1_sec<=e_sec;p1_row<=e_row;end
+  assign f_v=p1_v;assign f_code=p1_cw;assign f_so=p1_so;assign f_sec=p1_sec;assign f_row=p1_row;
+ end else begin : g_np1
+  assign f_v=e_v;assign f_code=e_cw;assign f_so=e_so;assign f_sec=e_sec;assign f_row=e_row;
+ end endgenerate
+ always @* begin
+  decoded=0;any_ce=0;any_ue=0;
+  for(w=0;w<4;w=w+1)begin : decode_word
+   reg [65:0] d;
+   d=fix64(f_code[w*72+:72],f_so[w*8+:8]);
+   decoded[w*64+:64]=(MUT!=0)?unpack_data(f_code[w*72+:72]):d[63:0];
+   any_ce=any_ce|d[64];any_ue=any_ue|d[65];
+  end
+ end
+ always @(posedge hclk or negedge h_rst_n)
+  if(!h_rst_n)begin dv<=0;dc<=0;du<=0;sticky<=0;count<=0;end
+  else begin
+   dv<=(ENABLE!=0)&&f_v;dc<=(ENABLE!=0)&&f_v&&any_ce;du<=(ENABLE!=0)&&f_v&&any_ue;
+   if((ENABLE!=0)&&f_v&&any_ue)sticky<=1;
+   if((ENABLE!=0)&&f_v&&any_ce&&!any_ue)count<=count+1'b1;
+  end
+ always @(posedge hclk)if(f_v)corrected<=decoded;
+ assign ce_count=count;
+ always @(posedge hclk) if(f_v) begin o_sec<=f_sec;o_row<=f_row;end
+ assign fault=(ENABLE!=0)&&sticky;
+ assign ce=(ENABLE!=0)&&dc;
+ assign ue=(ENABLE!=0)&&du;
+ assign o_v=(ENABLE!=0)&&dv&&!du&&!sticky;
+ assign o_data=corrected;
+endmodule
+
+// ---- qkd_kvpc_s_calendar: clone of qkd_controller_hbm_calendar (rtl/qwen_sys/static_kv_20261014/qkd_controller_hbm_calendar.sv) with 0 substitution(s); kept copy families rn[1]x28(1), go_q[1]x41(2) ----
+module qkd_kvpc_s_calendar #(parameter integer N=16, ROW0=64, MUT=0)(
+ input wire hck,rst_n,
+ input wire cfg_we,input wire [4:0] cfg_addr,input wire [63:0] cfg_data,
+ input wire seal,go,input wire [15:0] epoch,input wire [5:0] layer,
+ output reg static_cmd_owner,output reg [42:0] static_cmd,
+ output reg reserved_rd,reserved_static_col,reserved_write_col,
+ output reg [15:0] static_epoch,output wire expected_raw_valid,
+ output reg fault,output reg idle
+);
+ initial if(N<1 || N>16)$fatal(1,"calendar descriptor capacity must be 1..16");
+ (* keep, ot_rst_split *) reg [27:0] rn__qv;   // KV-PC SAFE: 28 kept copies of rn
+    function rn__f; input v; rn__f = v; endfunction
+ wire rn = rn__qv[0:0];
+ always @(posedge hck)rn__qv <= {28{rn__f(rst_n)}};
+ reg we_q, seal_q;
+ (* keep, ot_rst_split *) reg [40:0] go_q__qv;   // KV-PC SAFE: 41 kept copies of go_q
+    function go_q__f; input v; go_q__f = v; endfunction
+ wire go_q = go_q__qv[0:0];reg [4:0] addr_q;reg [63:0] data_q;
+ reg [15:0] epoch_q;reg [5:0] layer_q;
+ always @(posedge hck)begin addr_q<=cfg_addr;data_q<=cfg_data;epoch_q<=epoch;layer_q<=layer;end
+ always @(posedge hck or negedge rn)
+ if(!rn)begin we_q<=0;seal_q<=0;go_q__qv <= {41{go_q__f(0)}};end
+ else begin we_q<=cfg_we;seal_q<=seal;go_q__qv <= {41{go_q__f(go)}};end
+ reg [127:0] image[0:N-1];reg [N-1:0] low_seen,high_seen;
+ reg sealed;reg [15:0] active_epoch;reg [18:0] active_row;
+ reg [15:0] wait_q[0:N-1];reg [9:0] left_q[0:N-1];reg [3:0] burst_q[0:N-1];
+ wire [N-1:0] fire,live;
+ genvar g;
+ generate for(g=0;g<N;g=g+1)begin:events
+ assign live[g]=left_q[g]!=0;
+ assign fire[g]=live[g]&&(wait_q[g]==0);
+ end endgenerate
+ reg [42:0] event_cmd;reg [2:0] event_mask;
+ reg static_read;integer fires,i;
+ always @*begin
+ event_cmd=0;event_mask=0;static_read=0;fires=0;
+ for(integer k=0;k<N;k=k+1)if(fire[k])begin
+ fires=fires+1;
+ event_cmd=event_cmd | (image[k][84] ? {image[k][80:58],active_row,image[k][38]} : image[k][80:38]);
+ event_mask=event_mask | image[k][83:81];static_read=static_read|image[k][85];
+ end
+ end
+ wire raw,unused_put;wire [15:0] unused_epoch;
+ // Compiler accounts original controller pin-to-raw offset exactly. This leaf
+ // feeds the reservation pins, so its own two pin edges precede this pipe.
+ qkd_static_kv_return_calendar raw_calendar(.pll_hbm(hck),.hrst(rn),
+ .reserved_rd(reserved_rd),.reserved_static_read(reserved_static_col&&static_read_q),
+ .reservation_epoch(static_epoch),.expected_raw_valid(raw),.compiled_hbm_put(unused_put),.expected_return_epoch(unused_epoch));
+ assign expected_raw_valid=raw;
+ reg static_read_q;
+ always @(posedge hck or negedge rn)
+ if(!rn)begin
+ low_seen<=0;high_seen<=0;sealed<=0;active_epoch<=0;active_row<=0;
+ static_cmd_owner<=0;static_cmd<=0;reserved_rd<=0;reserved_static_col<=0;reserved_write_col<=0;
+ static_epoch<=0;static_read_q<=0;fault<=0;idle<=1;
+ for(i=0;i<N;i=i+1)begin wait_q[i]<=0;left_q[i]<=0;burst_q[i]<=0;end
+ end else begin
+ static_cmd<=event_cmd;reserved_rd<=event_mask[0];reserved_static_col<=event_mask[1];reserved_write_col<=event_mask[2];
+ static_epoch<=active_epoch;static_read_q<=static_read;idle<=!(|live);
+ if(fires>1 || (event_mask!=0 && (event_mask&(event_mask-1))!=0))fault<=1;
+ if(we_q)begin
+ if(sealed || |live || addr_q[3:0]>=N)fault<=1;
+ else if(addr_q[4])begin image[addr_q[3:0]][127:64]<=data_q;high_seen[addr_q[3:0]]<=1;end
+ else begin image[addr_q[3:0]][63:0]<=data_q;low_seen[addr_q[3:0]]<=1;end
+ end
+ if(seal_q)begin if((&low_seen)&&(&high_seen)&&!(|live))sealed<=1;else fault<=1;end
+ if(go_q)begin
+ if(!sealed || |live || we_q)fault<=1;
+ else begin
+ active_epoch<=epoch_q;active_row<=19'(ROW0)+{13'b0,layer_q};static_cmd_owner<=1;idle<=0;
+ for(i=0;i<N;i=i+1)begin
+ wait_q[i]<=image[i][15:0]+16'(MUT==1);left_q[i]<=image[i][25:16];burst_q[i]<=0;
+ end
+ end
+ end else for(i=0;i<N;i=i+1)if(live[i])begin
+ if(fire[i])begin
+ left_q[i]<=left_q[i]-10'd1;
+ if(burst_q[i]==image[i][29:26])begin wait_q[i]<= (MUT==2)?16'd0:{8'b0,image[i][37:30]};burst_q[i]<=0;end
+ else begin wait_q[i]<=0;burst_q[i]<=burst_q[i]+4'd1;end
+ end else wait_q[i]<=wait_q[i]-16'd1;
+ end
+ end
+endmodule
+
+// ---- ot_qkd_static_ctrl_pc_emb_kvpc_s: clone of ot_qkd_static_ctrl_pc_emb (rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv) with 1 substitution(s); kept copy families rp[3]x15(2), col_bank[5]x11(1), col_col[5]x3(1), row_row[19]x2(1) ----
+module ot_qkd_static_ctrl_pc_emb_kvpc_s #(parameter integer ENABLE=0,PC=0,PHASE=0,SQD=4,S_STARVE=8,TWIN=0,TWIN_ROFF=0,PULLIN=0,PROFILE=0,CONTEXT_DESC=0,STATIC_REFRESH=0)(   // PULLIN: qwen-1010/b
+ input wire clk,rst_n,
+ input wire cmd_v,input wire [31:0] cmd,
+ input wire [9:0] cmd_first, input wire reserved_rd,input wire reserved_static_col,input wire reserved_write_col,
+ output reg cmd_credit,
+ output reg row_v,output reg [2:0] row_op,output reg [4:0] row_bank,
+ output wire [18:0] row_row,
+ output reg col_v,output wire [4:0] col_bank,output wire [4:0] col_col,output reg col_we,
+ output reg busy,fault,output wire phase_idle,
+ input wire [346:0] s_context,output reg [346:0] col_context,
+ input wire s_v,s_we,input wire [4:0] s_bank,s_col,input wire [18:0] s_row,
+ output reg s_cr,output reg col_sr
+);
+    (* keep, ot_rst_split = 19 *) reg [37:0] row_row__qv;   // KV-PC SAFE: 2 kept copies of row_row
+    function [18:0] row_row__f; input [18:0] v; row_row__f = v; endfunction
+    assign row_row = row_row__qv[18:0];
+    (* keep, ot_rst_split = 5 *) reg [14:0] col_col__qv;   // KV-PC SAFE: 3 kept copies of col_col
+    function [4:0] col_col__f; input [4:0] v; col_col__f = v; endfunction
+    assign col_col = col_col__qv[4:0];
+    (* keep, ot_rst_split = 5 *) reg [54:0] col_bank__qv;   // KV-PC SAFE: 11 kept copies of col_bank
+    function [4:0] col_bank__f; input [4:0] v; col_bank__f = v; endfunction
+    assign col_bank = col_bank__qv[4:0];
+ (* keep *) reg cmd_v_q;
+ (* keep *) reg [31:0] cmd_q;
+ (* keep *) reg [9:0] first_q;
+ (* keep *) reg rdslot_q,srslot_q,wrslot_q;
+ reg [9:0] first_fifo[0:7];reg [9:0] head_first;
+ reg [31:0] fifo[0:7];
+ reg [2:0] wp;
+ (* keep, ot_rst_split = 3 *) reg [44:0] rp__qv;   // KV-PC SAFE: 15 kept copies of rp
+    function [2:0] rp__f; input [2:0] v; rp__f = v; endfunction
+ wire [2:0] rp = rp__qv[2:0];
+ reg [3:0] count;
+ reg fault_q;
+ // Lookahead head: same visible consume cycle and eight-credit capacity.
+ // Data need not reset: count gates all consumers until the first push.
+ (* keep *) reg [31:0] head;
+ wire [2:0] rp_next=rp+3'd1;
+ wire live=(ENABLE!=0) && count!=0;
+ wire desc_ready,wr_ready,core_fault,core_busy,schedule_fault,core_idle;
+ wire rv,cv,cwe,csr,sr_r,spop;wire [2:0] rop;wire [4:0] rb,cb,cc;wire [18:0] rr;
+ (* keep *) reg s_v_q,s_we_q;(* keep *) reg [4:0] s_bank_q,s_col_q;(* keep *) reg [18:0] s_row_q;
+ (* keep *) reg [346:0] s_context_q;
+ wire [346:0] core_context;
+ wire context_head=CONTEXT_DESC!=0 && head[31:30]==3;
+ wire descriptor_head=head[31:30]==0 || context_head;
+ wire malformed=(head[31:30]==3 && !context_head) || (context_head && (head[27:19]>256 || head_first>128)) ||
+    (head[31:30]==0 && (head[29:19]==0 || head[29:19]>1024 || head_first>=head[29:19]));
+ wire pop=live && (malformed || (descriptor_head ? desc_ready : head[31:30]==2 ? wr_ready : 1'b1));
+ wire push=(ENABLE!=0) && cmd_v_q && count<8;
+ assign phase_idle=core_idle && count==0 && !cmd_v_q && !s_v_q;
+ ot_qkd_static_kv_timing_kvpc_s #(.STATIC_REFRESH(STATIC_REFRESH),.CONTEXT_DESC(CONTEXT_DESC),.PROFILE(PROFILE),.SROW(1),.SQD(SQD),.S_STARVE(S_STARVE),.TWIN(TWIN),.TWIN_ROFF(TWIN_ROFF),.READY_CUT(1),.ENABLE(ENABLE),.REF_MODE(1),.PC(PC),
+  .REF_PHASE((PHASE+(PC*118)/32)%118),.WR_EN(1),.WQ(4),.PULLIN(PULLIN),.AQ_RD(0)) core(
+  .clk(clk),.rst_n(rst_n),.desc_v(live && !malformed && descriptor_head),
+  .desc_r(desc_ready),.desc_row(head[18:0]),.desc_n(context_head?{2'b0,head[27:19]}:head[29:19]),.desc_first(head_first),.desc_context(context_head),.desc_vpass(head[28]),.desc_k_order_b(head[29]),.desc_k_count0(head_first[7:0]),.reserved_rd(rdslot_q),.reserved_static_col(srslot_q),.reserved_write_col(wrslot_q),.schedule_fault(schedule_fault),.phase_idle(core_idle),
+  .go(live && head[31:30]==1),.next_posted(1'b0),
+  .row_v(rv),.row_prio(),.row_gnt(1'b1),.row_op(rop),.row_bank(rb),.row_row(rr),
+  .col_v(cv),.col_bank(cb),.col_col(cc),
+  .busy(core_busy),.ref_fault(core_fault),
+  .wr_v(live && head[31:30]==2),.wr_bank(head[4:0]),.wr_col(head[9:5]),
+  .wr_r(wr_ready),.col_we(cwe),.wr_rd(1'b0),.col_aq(),
+  .s_context(s_context_q),.col_context(core_context),.s_v(ENABLE!=0 && s_v_q),.s_we(s_we_q),.s_bank(s_bank_q),.s_col(s_col_q),.s_row(s_row_q),
+  .s_r(sr_r),.col_sr(csr),.s_pop(spop));
+ always @(posedge clk) begin
+  cmd_q<=cmd;first_q<=cmd_first;
+  s_context_q<=s_context;col_context<=core_context;
+  s_we_q<=s_we;s_bank_q<=s_bank;s_col_q<=s_col;s_row_q<=s_row;
+  if(push)begin fifo[wp]<=cmd_q;first_fifo[wp]<=first_q;end
+  if(count==0 && push)begin head<=cmd_q;head_first<=first_q;end
+  else if(pop) begin
+   if(count>1)begin head<=fifo[rp_next];head_first<=first_fifo[rp_next];end
+   else if(push)begin head<=cmd_q;head_first<=first_q;end
+  end
+  // Equal output delay on every row/column preserves all JEDEC spacings.
+  row_op<=rop;row_bank<=rb;row_row__qv <= {2{row_row__f(rr)}};col_bank__qv <= {11{col_bank__f(cb)}};col_col__qv <= {3{col_col__f(cc)}};
+ end
+ always @(posedge clk or negedge rst_n) begin
+  if(!rst_n) begin
+   cmd_v_q<=0;rdslot_q<=0;srslot_q<=0;wrslot_q<=0;cmd_credit<=0;wp<=0;rp__qv <= {15{rp__f(0)}};count<=0;s_v_q<=0;s_cr<=0;col_sr<=0;
+   row_v<=0;col_v<=0;col_we<=0;busy<=0;fault_q<=0;fault<=0;
+  end else begin
+   cmd_v_q<=cmd_v;rdslot_q<=reserved_rd;srslot_q<=reserved_static_col;wrslot_q<=reserved_write_col;
+   s_v_q<=s_v;s_cr<=spop;col_sr<=csr;
+   cmd_credit<=pop;
+   if(push) wp<=wp+1'b1;
+   if(pop) rp__qv <= {15{rp__f(rp+1'b1)}};
+   case({push,pop})
+    2'b10:count<=count+1'b1;
+    2'b01:count<=count-1'b1;
+    default:count<=count;
+   endcase
+   if(ENABLE!=0 && ((cmd_v_q && !push) || (pop && malformed) || (s_v_q && !sr_r))) fault_q<=1;
+   row_v<=rv;col_v<=cv;col_we<=cwe;busy<=core_busy;
+   fault<=fault_q || core_fault || schedule_fault;
+  end
+ end
+endmodule
+
+// ---- ot_qkd_static_kv_timing_kvpc_s: clone of ot_qkd_static_kv_timing (rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv) with 1 substitution(s); kept copy families sq_rp[2]x27(2), wq_rp[2]x9(2), wq_rp1[2]x8(2), context_active[1]x5(2), streaming[1]x7(3), wq_n[3]x3(2), c_s[1]x2(2), wq_v[4]x2(2) ----
+module ot_qkd_static_kv_timing_kvpc_s #(
+  parameter integer SROW = 0,                 // static-row queue (emb-hbm); 0 = ot_hbm_r14_stream_pc_ready exactly
+  parameter integer SQD = 4,                  // static queue entries (power of two)
+  parameter integer S_STARVE = 8,             // cycles a static head waits before it takes priority
+  parameter integer TWIN = 0,                 // twin-copy switch (refresh / conflict avoidance)
+  parameter integer TWIN_ROFF = 0,            // twin row offset (two's complement, 19 b)
+  parameter integer READY_CUT = 0,
+  parameter integer ENABLE   = 0,
+  parameter integer REF_MODE = 1,
+  parameter integer PC       = 0,
+  parameter integer T_RCD = 19, T_RP = 16, T_RAS = 28, T_RTP = 6, T_CCDL = 3,
+  parameter integer T_RRDS = 3, T_RRDL = 4, T_FAW = 15, T_RFC = 342, T_RFCPB = 196,
+  parameter integer T_REFI = 3808, T_REFIPB = 118, T_RREFD = 8,
+  parameter integer PROFILE = 0, // 0 strict production,1 maximum-legal compiler,2 paced compiler
+  parameter integer REF_PHASE = 0,
+  parameter integer IDLE0 = 3, IDLE1 = 4, IDLE2 = 2, IDLE3 = 5,
+  parameter integer IDLE4 = 1, IDLE5 = 6, IDLE6 = 0, IDLE7 = 7,
+  parameter integer WR_EN = 0, WQ = 4, T_RTW = 10, T_WTR = 14, T_WRR = 28, T_RCDW = 10,
+  parameter integer PULLIN = 0,
+  parameter integer AQ_RD = 0,
+  parameter integer AQ_STARVE = 64,
+  parameter integer CONTEXT_DESC = 0,
+  parameter integer STATIC_REFRESH = 0 // new descriptor ABI, legacy default unchanged
+)(
+  input  wire        clk, rst_n,
+  input  wire        desc_v, output wire desc_r,
+  input  wire [18:0] desc_row, input wire [10:0] desc_n,
+  input  wire        go, input wire next_posted,
+  output wire        row_v, output wire row_prio, input wire row_gnt,
+  output wire [2:0]  row_op, output wire [4:0] row_bank, output wire [18:0] row_row,
+  output wire        col_v, output wire [4:0] col_bank, output wire [4:0] col_col,
+  input wire reserved_rd,input wire reserved_static_col,input wire reserved_write_col,
+  input wire [9:0] desc_first,
+  input wire desc_context,desc_vpass,desc_k_order_b,input wire [7:0] desc_k_count0,
+  output wire schedule_fault,
+  output wire phase_idle,
+  output wire        busy, output wire ref_fault,
+  // WR_EN: write queue (push wr_v && wr_r) and the WR flag of the column command
+  input  wire        wr_v, input wire [4:0] wr_bank, input wire [4:0] wr_col,
+  output wire        wr_r, output wire col_we,
+  // AQ_RD: the pushed entry is a tagged read; the column command is a queued read
+  input  wire        wr_rd, output wire col_aq,
+  // SROW: static-row queue (push s_v && s_r) and the static flag of the column command
+  input wire [346:0] s_context,output wire [346:0] col_context,
+  input  wire        s_v, input wire s_we, input wire [4:0] s_bank, input wire [4:0] s_col, input wire [18:0] s_row,
+  output wire        s_r, output wire col_sr, output wire s_pop
+);
+`ifdef SYNTHESIS
+  initial if(PROFILE!=0)$error("Compiler profile cannot be a native physical master");
+`endif
+  localparam [2:0] PRE=0, ACT=1, RD=2, REFAB=4, PREALL=5, REFPB=6;
+  generate if (!ENABLE) begin : off
+    assign desc_r=0; assign row_v=0; assign row_prio=0; assign row_op=0; assign row_bank=0;
+    assign row_row=0; assign col_v=0; assign col_bank=0; assign col_col=0; assign busy=0;
+    assign ref_fault=0; assign schedule_fault=0; assign phase_idle=1; assign wr_r=0; assign col_we=0; assign col_aq=0;
+    assign s_r=0; assign col_sr=0; assign s_pop=0;assign col_context=0;
+  end else begin : on
+    localparam W = (WR_EN != 0);
+    localparam integer WQW = (WQ > 1) ? $clog2(WQ) : 1;
+    localparam integer PERIOD = REF_MODE ? T_REFIPB : T_REFI;
+    localparam integer LEAD   = T_RAS + T_RP + 4;
+    localparam integer RW     = $clog2(2 * PERIOD + 4);
+    // first refresh due on one of this PC's row slots (cycle parity == PC[0]); PERIOD is even
+    localparam integer RPH    = REF_PHASE + ((REF_PHASE + PERIOD + PC) % 2);
+    function automatic [2:0] idle_rank(input [2:0] s);
+      idle_rank = (s==3'(IDLE0))?0:(s==3'(IDLE1))?1:(s==3'(IDLE2))?2:(s==3'(IDLE3))?3:
+                  (s==3'(IDLE4))?4:(s==3'(IDLE5))?5:(s==3'(IDLE6))?6:7;
+    endfunction
+    reg [10:0] j, n; reg [18:0] row;
+    reg v_consumer_order;
+    reg context_v, context_kb;
+    (* keep, ot_rst_split *) reg [4:0] context_active__qv;   // KV-PC SAFE: 5 kept copies of context_active
+    function context_active__f; input v; context_active__f = v; endfunction
+    wire context_active = context_active__qv[0:0];reg [7:0] context_k0;
+    reg [8:0] ordinal,context_count;
+    function automatic [10:0] context_sector(input [8:0] o,input vp,kb,input [7:0] k0);
+      context_sector=!vp&&kb?(o<k0?{3'b0,o[7:0]}:{3'b0,1'b1,7'(o-k0)}):{1'b0,vp,1'b0,o[3],o[7:4],o[2:0]};
+    endfunction
+    wire context_accept=CONTEXT_DESC!=0 && desc_context;
+    wire [10:0] first_sector=context_accept?context_sector(9'd0,desc_vpass,desc_k_order_b,desc_k_count0):{1'b0,desc_first};
+    reg [31:0] open, done, stale, refreshed;
+    reg [1:0] rrds_c; reg [3:0] noact_c; reg [RW-1:0] ref_c; reg ref_pend; reg [4:0] rb; reg fault_r;
+    reg running; reg [31:0] blk;   // blk: one-hot of rb while a REFpb is pending
+    (* keep, ot_rst_split *) reg [6:0] streaming__qv;   // KV-PC SAFE: 7 kept copies of streaming
+    function streaming__f; input v; streaming__f = v; endfunction
+    wire streaming = streaming__qv[0:0]; reg [2:0] last; reg [10:0] nm1;   // registered at descriptor accept
+    wire [2:0] k = j[9:7];
+    wire [4:0] rd_bank = {j[9:7], j[1:0]};
+    wire [1:0] rd_bg = j[1:0];
+    // r8: the RD bank as a registered one-hot (rd_oh, rd_bgoh) and credit != 0 as a registered
+    // flag, updated exactly with j / credit, so rd_ok is an AND-OR of flops (no j-decoded mux).
+    reg [31:0] rd_oh; reg [3:0] rd_bgoh;
+    // Native full-context V alternates eight-sector chunks across the two
+    // V bank sets. Match actual n-major V consumption so a 128-row ring can
+    // be admitted with compiled pacing; physical-linear V acquisition cannot.
+    wire [7:0] v_ordinal={j[6:3],j[7],j[2:0]};
+    wire [7:0] v_next=v_ordinal+8'd1;
+    wire [10:0] j_p1 = context_active ? context_sector(ordinal+9'd1,context_v,context_kb,context_k0) : v_consumer_order ? {3'b010,v_next[3],v_next[7:4],v_next[2:0]} : j+11'd1;
+    // ---- write queue (WR_EN) ------------------------------------------------------------
+    reg [4:0] wq_bank [0:WQ-1]; reg [4:0] wq_col [0:WQ-1]; reg wq_rd [0:WQ-1];
+    localparam AQ = (WR_EN != 0) && (AQ_RD != 0);
+    reg hr;                                           // AQ_RD: the head entry is a read (registered)
+    (* keep, ot_rst_split = 3 *) reg [8:0] wq_n__qv;   // KV-PC SAFE: 3 kept copies of wq_n
+    function [2:0] wq_n__f; input [2:0] v; wq_n__f = v; endfunction
+    wire [2:0] wq_n = wq_n__qv[2:0]; (* keep, ot_rst_split = 2 *) reg [17:0] wq_rp__qv;   // KV-PC SAFE: 9 kept copies of wq_rp
+    function [1:0] wq_rp__f; input [1:0] v; wq_rp__f = v; endfunction
+ wire [1:0] wq_rp = wq_rp__qv[1:0];
+    // KVCTRL core_s4 (2026-10-16): the next-head select is restructured, cycle-identical: each entry keeps its bank
+    // ONE-HOT from push time and wq_rp1 = wq_rp + 1 is a register, so both head candidates are read in parallel and
+    // the late wr_ok picks between them last (was: wr_ok -> wq_rp + 1 -> 4:1 read -> 5:32 decode, 18 levels).
+    reg [31:0] wq_oh [0:WQ-1]; (* keep, ot_rst_split = 2 *) reg [15:0] wq_rp1__qv;   // KV-PC SAFE: 8 kept copies of wq_rp1
+    function [1:0] wq_rp1__f; input [1:0] v; wq_rp1__f = v; endfunction
+ wire [1:0] wq_rp1 = wq_rp1__qv[1:0];
+    reg [3:0] rtw_c, wtr_c;
+    reg [31:0] wopen;                                 // banks opened by a write ACT (precharged after)
+    reg c_w;                                          // the registered row command is a write ACT
+    wire wq_ne = W && wq_n != 0;
+    // the head write's bank/column are REGISTERED copies (hb_oh one-hot), kept off the queue index
+    reg [4:0] hb, hc; reg [31:0] hb_oh;
+    wire [5*WQ-1:0] wq_bq;                            // queued write banks, oldest first
+    wire [WQ-1:0] wq_in;                              // queue entry valid
+    for (genvar i = 0; i < WQ; i = i + 1) begin : wqe
+      assign wq_bq[i*5 +: 5] = wq_bank[WQW'(wq_rp + i)];
+      assign wq_in[i] = W && i < wq_n;
+    end
+    reg [31:0] hold_n, hold;                          // banks a queued write needs (never precharged;
+    integer hi;                                       // registered: one cycle behind the queue)
+    // KVCTRL core_s4: the same set (every queued entry's bank) from per-SLOT valid bits and the stored one-hots, with no
+    // wq_rp-relative index / decode (core_s1 routed TT: wq_rp -> wq_bq -> hold_n -> s_pre_ok -> s_pblk -> rd_ok -> rd_oh
+    // -20.54 ps, 24 levels; SS -525.84). Membership is order-free, so the OR is identical.
+    (* keep, ot_rst_split = 4 *) reg [7:0] wq_v__qv;   // KV-PC SAFE: 2 kept copies of wq_v
+    function [3:0] wq_v__f; input [3:0] v; wq_v__f = v; endfunction
+    wire [3:0] wq_v = wq_v__qv[3:0];                                // physical slot holds a queued entry
+    always @* begin
+      hold_n = 0;
+      for (hi = 0; hi < WQ; hi = hi + 1) if (W && wq_v[hi]) hold_n = hold_n | wq_oh[hi];
+    end
+    always @(posedge clk or negedge rst_n) if (!rst_n) hold <= 0; else hold <= hold_n;
+    wire wr_ok, wr_ok0, rd_ok0;
+    // ---- static-row queue (SROW) -------------------------------------------------------------
+    localparam S = (SROW != 0);
+    localparam integer SQW = (SQD > 1) ? $clog2(SQD) : 1;
+    initial if (SQW != 2 || WQW != 2) $error("ot_qkd_static_kv_timing_kvpc_s: kept copy widths assume SQD 4, WQ 4");
+    reg [4:0] sq_bank [0:SQD-1]; reg [4:0] sq_col [0:SQD-1]; reg [18:0] sq_row [0:SQD-1]; reg sq_we [0:SQD-1];
+    reg [SQW:0] sq_n; (* keep, ot_rst_split = 2 *) reg [53:0] sq_rp__qv;   // KV-PC SAFE: 27 kept copies of sq_rp
+    function [1:0] sq_rp__f; input [1:0] v; sq_rp__f = v; endfunction
+ wire [1:0] sq_rp = sq_rp__qv[1:0];
+    reg [346:0] sq_context[0:SQD-1];reg [346:0] shead_context;
+    assign col_context=shead_context;
+    wire sq_ne = S && sq_n != 0;
+    // the head, REGISTERED (sb_oh one-hot): bank, column, row, direction; scm: committed (its ACT issued or it hit);
+    // sfl: switched to the twin once.  so_*: the newest static-opened bank and its row (cleared by its PRE).
+    reg [4:0] sb, sc; reg [18:0] srw; reg swe, sfl, scm; reg [31:0] sb_oh;
+    reg so_v; reg [4:0] so_b; reg [18:0] so_row;
+    reg [7:0] swait;
+    reg c_sp;
+    (* keep, ot_rst_split *) reg [1:0] c_s__qv;   // KV-PC SAFE: 2 kept copies of c_s
+    function c_s__f; input v; c_s__f = v; endfunction
+    wire c_s = c_s__qv[0:0]; reg [18:0] c_srow;                 // the registered row command is a static ACT / static PRE
+    wire sprio = sq_ne && swait >= 8'(S_STARVE);
+    wire s_hit = sq_ne && so_v && so_b == sb && so_row == srw && |(sb_oh & open);
+    wire [31:0] shold = s_hit ? sb_oh : 32'b0;        // never precharge the bank the head is about to access
+    wire s_go;                                        // the static head's column command issues this cycle
+    // ---- refresh windows -------------------------------------------------------------
+    wire ref_due = (ref_c == 0);
+    reg  phase;                                       // cycle parity; this PC's row slot when == PC[0]
+    wire slot_next = (phase != 1'(PC % 2));           // the next cycle is this PC's row slot
+    wire [RW-1:0] ref_n = ref_due ? RW'(PERIOD - 1) : ref_c - 1'b1;   // ref_c of the next cycle
+    wire ref_due_n = (ref_n == 0);
+    wire act_block = REF_MODE ? (ref_n != 0 && ref_n < RW'(T_RREFD))
+                              : (ref_n <= RW'(T_RP + T_RAS + 2));
+    wire rd_block  = REF_MODE ? 1'b0 : (ref_c <= RW'(T_RP + T_RTP + 2));
+    wire preall_ok = !REF_MODE && ref_n <= RW'(T_RP + 2) && ref_n >= RW'(T_RP) && (|open);
+    // ---- row command (combinational) and its events ------------------------------------
+    reg r_v, r_prio; reg [2:0] r_op; reg [4:0] r_bank;      // decision for the next cycle
+    reg c_v, c_prio; reg [2:0] c_op; reg [4:0] c_bank; reg [31:0] c_oh;   // issued this cycle
+    wire row_fire = c_v && row_gnt;
+    wire [31:0] open_nx = !row_fire ? open : (c_op == ACT) ? (open | c_oh) : (c_op == PRE) ? (open & ~c_oh) :
+                          (c_op == PREALL) ? 32'b0 : open;
+    wire rd_ok;
+
+    // ---- per-bank timing state (down-counters; 0 = allowed) ------------------------------
+    wire [31:0] rcd_z, ras_z, rtp_z, aok_z, aok_busy, rcdw_z;
+    wire [223:0] keys;
+    reg [4:0] bsel;reg [4:0] refresh_rr;
+    initial if(STATIC_REFRESH!=0 && (PULLIN!=0 || REF_MODE!=1))$fatal(1,"static RR refresh requires REFpb/no pullin");
+    always @(posedge clk or negedge rst_n)if(!rst_n)refresh_rr<=0;else if(row_fire&&c_op==REFPB)refresh_rr<=refresh_rr+5'd1;
+    // Exact next-state eligibility; no extra decision cycle. The cut is
+    // specialised to strict refresh and the write-only queue used by Qwen.
+    localparam READY_ACTIVE = READY_CUT && PULLIN == 0 && AQ_RD == 0;
+    reg [31:0] write_ready_bank;
+    wire [31:0] ready_stale_next = desc_acc ? open_nx :
+      (row_fire && c_op == PREALL) ? 32'b0 :
+      (row_fire && c_op == PRE) ? stale & ~c_oh :
+      (row_fire && c_op == ACT && S && c_s) ? stale | c_oh : stale;
+    wire [31:0] ready_blk_next = (row_fire && c_op == REFPB) ? 32'b0 :
+      (REF_MODE && ref_c == RW'(LEAD)) ? (32'b1 << bsel) : blk;
+    for (genvar b = 0; b < 32; b = b + 1) begin : bank
+      reg [4:0] rcd, ras; reg [8:0] aok; reg [2:0] rtp; reg aok_zr, rcd_zr;   // == 0 flags, registered
+      reg [4:0] wrr;
+      wire wr_e = (W && wr_ok && hb_oh[b] && !(AQ && hr)) || (s_go && swe && sb_oh[b]);
+      wire act_e = row_fire && c_op == ACT && c_oh[b];
+      wire pre_e = row_fire && ((c_op == PRE && c_oh[b]) || c_op == PREALL);
+      wire rfa_e = row_fire && c_op == REFAB;
+      wire rfp_e = row_fire && c_op == REFPB && c_oh[b];
+      wire rd_e  = (rd_ok && rd_oh[b]) || (AQ && wr_ok && hr && hb_oh[b]) || (s_go && !swe && sb_oh[b]);
+      always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin rcd <= 0; ras <= 0; aok <= 0; rtp <= 0; aok_zr <= 1'b1; rcd_zr <= 1'b1; wrr <= 0; end
+        else begin
+          rcd_zr <= act_e ? (T_RCD - 1 == 0) : (rcd <= 5'd1);
+          if (wr_e) wrr <= 5'(T_WRR - 1); else if (wrr != 0) wrr <= wrr - 1'b1;
+          if (act_e) begin rcd <= 5'(T_RCD - 1); ras <= 5'(T_RAS - 1); end
+          else begin if (rcd != 0) rcd <= rcd - 1'b1; if (ras != 0) ras <= ras - 1'b1; end
+          if (rd_e) rtp <= 3'(T_RTP - 1); else if (rtp != 0) rtp <= rtp - 1'b1;
+          if (act_e) aok <= 9'(T_RAS + T_RP - 1);
+          else if (rfa_e) aok <= 9'(T_RFC - 1);
+          else if (rfp_e) aok <= 9'(T_RFCPB - 1);
+          else if (pre_e && aok < 9'(T_RP)) aok <= 9'(T_RP - 1);
+          else if (aok != 0) aok <= aok - 1'b1;
+          // the same priority, evaluated as "is the next aok zero" (exact, registered flag)
+          if (act_e) aok_zr <= (T_RAS + T_RP - 1 == 0);
+          else if (rfa_e) aok_zr <= (T_RFC - 1 == 0);
+          else if (rfp_e) aok_zr <= (T_RFCPB - 1 == 0);
+          else if (pre_e && aok < 9'(T_RP)) aok_zr <= (T_RP - 1 == 0);
+          else aok_zr <= (aok <= 9'd1);
+        end
+      if (READY_ACTIVE) begin : ready_cut
+        // Saturating rcd decrement: (next rcd <= threshold) is
+        // exactly (current rcd <= threshold+1), unless ACT reloads it.
+        wire rcdw_next = act_e ? (T_RCD-1 <= T_RCD-T_RCDW) :
+          (rcd <= T_RCD-T_RCDW+1);
+        always @(posedge clk or negedge rst_n)
+          if (!rst_n) write_ready_bank[b] <= 1'b0;
+          else write_ready_bank[b] <= open_nx[b] && !ready_stale_next[b] &&
+            !ready_blk_next[b] && rcdw_next;
+      end
+      assign rcd_z[b] = rcd_zr; assign rcdw_z[b] = (rcd <= 5'(T_RCD - T_RCDW)); assign ras_z[b] = (ras == 0); assign rtp_z[b] = (rtp == 0) && (!W || wrr == 0);
+      assign aok_z[b] = aok_zr; assign aok_busy[b] = (aok > 9'(LEAD));
+      // REFpb key: 127 refreshed; streaming/posted: open 24 (finished) / 32, protected (needed
+      // within the next two sets) 16..18 farthest first, upcoming = distance, passed 8 + set;
+      // idle: IDLE rank (+32 open); +64 if still busy from an earlier tRFCpb / tRC.
+      localparam [2:0] S = 3'(b >> 2);
+      wire [2:0] d = context_active ? (S==k?3'd0:3'd1) : S-k;
+      wire ahead = (context_active ? (context_v ? (S==4 || S==5) : (S==0 || S==1)) : (S >= k && S <= last)) || next_posted;
+      // WR_EN: the descriptor's last set holds the token's write-back sectors (the service writes
+      // only there): its closed banks rank 20, after every other closed bank, streaming or not.
+      wire wset = W && S == last && !open[b];
+      wire [6:0] base = wset ? 7'd20 :
+                        !streaming ? 7'(idle_rank(S)) + (open[b] ? 7'd32 : 7'd0) :
+                        open[b] ? ((done[b] || stale[b]) ? 7'd24 : 7'd32) :
+                        (ahead && d <= 3'd2) ? 7'd16 + 7'(3'd2 - d) :
+                        ahead ? 7'(d) : 7'd8 + 7'(S);
+      assign keys[b*7 +: 7] = refreshed[b] ? 7'd127 : base + ((!open[b] && aok_busy[b]) ? 7'd64 : 7'd0);
+    end
+    // ---- per-bank-group state ----------------------------------------------------------
+    wire [3:0] rrdl_z, ccdl_z, faw_z;
+    for (genvar g = 0; g < 4; g = g + 1) begin : bgs
+      reg [2:0] rrdl; reg [1:0] ccdl; reg [3:0] faw; reg rrdl_zr, faw_zr, ccdl_zr;   // registered (== 0) flags
+      wire act_g = row_fire && c_op == ACT && c_bank[1:0] == 2'(g);
+      // FAW slot g takes this ACT if it is the lowest free slot
+      wire ccdl_e = (rd_ok && rd_bgoh[g]) || (W && wr_ok && hb[1:0] == 2'(g)) || (s_go && sb[1:0] == 2'(g));
+      wire faw_take = row_fire && c_op == ACT && faw == 0 && (g == 0 || !(|faw_z[g == 0 ? 0 : g-1:0]));
+      always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin rrdl <= 0; ccdl <= 0; faw <= 0; rrdl_zr <= 1'b1; faw_zr <= 1'b1; ccdl_zr <= 1'b1; end
+        else begin
+          if (act_g) rrdl <= 3'(T_RRDL - 1); else if (rrdl != 0) rrdl <= rrdl - 1'b1;
+          if (ccdl_e) ccdl <= 2'(T_CCDL - 1); else if (ccdl != 0) ccdl <= ccdl - 1'b1;
+          if (faw_take) faw <= 4'(T_FAW - 1); else if (faw != 0) faw <= faw - 1'b1;
+          rrdl_zr <= act_g ? (T_RRDL - 1 == 0) : (rrdl <= 3'd1);
+          ccdl_zr <= ccdl_e ? (T_CCDL - 1 == 0) : (ccdl <= 2'd1);
+          faw_zr  <= faw_take ? (T_FAW - 1 == 0) : (faw <= 4'd1);
+        end
+      assign rrdl_z[g] = rrdl_zr; assign ccdl_z[g] = ccdl_zr; assign faw_z[g] = faw_zr;
+    end
+    wire faw_ok = |faw_z;
+    // ---- REFpb bank choice: argmin of keys, ties to the lowest bank ----------------------
+    // registered keys, then three registered 4-way stages (32 -> 8 -> 2 -> 1); the choice taken
+    // at ref_c == LEAD reflects the bank state 4 cycles earlier (protection spans 3 sets).
+    function automatic [8:0] min4(input [27:0] k4, input [1:0] dummy);   // {key, idx2}
+      reg [6:0] ka, kb; reg ia, ib;
+      begin
+        ka = (k4[13:7] < k4[6:0]) ? k4[13:7] : k4[6:0];   ia = (k4[13:7] < k4[6:0]);
+        kb = (k4[27:21] < k4[20:14]) ? k4[27:21] : k4[20:14]; ib = (k4[27:21] < k4[20:14]);
+        min4 = (kb < ka) ? {kb, 1'b1, ib} : {ka, 1'b0, ia};
+      end
+    endfunction
+    reg [6:0] s1k [0:7]; reg [4:0] s1i [0:7]; reg [6:0] s2k [0:1]; reg [4:0] s2i [0:1];
+    reg [6:0] bkey;                                   // PULLIN: the key of bsel
+    wire [71:0] m1; wire [17:0] m2; reg [223:0] keys_r;
+    for (genvar q = 0; q < 8; q = q + 1) begin : st1
+      assign m1[q*9 +: 9] = min4(keys_r[q*28 +: 28], 2'd0);
+    end
+    for (genvar q = 0; q < 2; q = q + 1) begin : st2
+      assign m2[q*9 +: 9] = min4({s1k[4*q+3], s1k[4*q+2], s1k[4*q+1], s1k[4*q]}, 2'd0);
+    end
+    always @(posedge clk or negedge rst_n)
+      if (!rst_n) begin
+        for (integer q = 0; q < 8; q = q + 1) begin s1k[q] <= 7'd127; s1i[q] <= 0; end
+        for (integer q = 0; q < 2; q = q + 1) begin s2k[q] <= 7'd127; s2i[q] <= 0; end
+        bsel <= 0; keys_r <= {32{7'd127}}; bkey <= 7'd127;
+      end else begin
+        keys_r <= keys;
+        for (integer q = 0; q < 8; q = q + 1) begin
+          s1k[q] <= m1[q*9 + 2 +: 7]; s1i[q] <= {3'(q), m1[q*9 +: 2]};
+        end
+        for (integer q = 0; q < 2; q = q + 1) begin
+          s2k[q] <= m2[q*9 + 2 +: 7]; s2i[q] <= s1i[4*q + m2[q*9 +: 2]];
+        end
+        bsel <= STATIC_REFRESH!=0?refresh_rr:((s2k[1] < s2k[0]) ? s2i[1] : s2i[0]);
+        bkey <= (s2k[1] < s2k[0]) ? s2k[1] : s2k[0];
+      end
+    // ---- column: one RD per cycle ------------------------------------------------------
+    // the head write is issuable but for tRTW / tCCD_L: RDs stop so it can go
+    reg [7:0] hwait;                                  // AQ_RD: cycles the read head has waited
+    wire starve = AQ && hr && hwait >= 8'(AQ_STARVE);
+    wire head_prio = !(AQ && hr) || starve;
+    wire wr_bank_rdy = wq_ne && (READY_ACTIVE ? |(hb_oh & write_ready_bank) : |(hb_oh & open & ~stale & (AQ ? rcd_z : rcdw_z) & ~blk));   // AQ: every access-queue head waits full tRCD (no hr on this path)
+    wire rd_ok_base = running && streaming && !rd_block && |(rd_oh & open & ~stale & rcd_z & ~blk) &&
+                      |(rd_bgoh & ccdl_z);
+    assign wr_ok0 = wr_bank_rdy && ccdl_z[hb[1:0]] && ((AQ && hr) ? (wtr_c == 0) : (rtw_c == 0)) && !rd_block &&
+                   (head_prio || !rd_ok_base);
+    assign rd_ok0 = rd_ok_base && !(W && ((wr_bank_rdy && head_prio) || wtr_c != 0));
+    // static column command: the head hit (its bank open on its row), tRCD (write: tRCDW), tCCD_L, tWTR (read) / tRTW
+    // (write), the bank not chosen for refresh.  Background (a cycle neither the stream nor the KV queue uses) until it
+    // starves.  s_pblk: the bank a static PRE was just decided for / is issuing takes no column command meanwhile.
+    reg [31:0] s_pblk;
+    wire s_col_ok = s_hit && ccdl_z[sb[1:0]] && !(|(sb_oh & blk)) && !rd_block &&
+                    (swe ? (W && |(sb_oh & rcdw_z) && rtw_c == 0) : (|(sb_oh & rcd_z) && wtr_c == 0));
+    wire legal_static = s_col_ok && (sprio || (!rd_ok_base && !(W && wr_ok0)));
+    assign s_go = legal_static && (PROFILE == 1 || reserved_static_col);
+    wire legal_rd = rd_ok0 && !s_go && !(|(rd_oh & s_pblk));
+    assign rd_ok = legal_rd && (PROFILE == 1 || reserved_rd);
+    reg fault_schedule;
+    assign schedule_fault = fault_schedule;
+    always @(posedge clk or negedge rst_n)
+      if (!rst_n) fault_schedule <= 0;
+      else if (PROFILE == 0 && ((reserved_rd && !legal_rd) || (reserved_static_col && !legal_static) || (reserved_write_col && !legal_write) || (({1'b0,reserved_rd}+{1'b0,reserved_static_col}+{1'b0,reserved_write_col})>1))) fault_schedule <= 1;
+    wire legal_write = wr_ok0 && !s_go && !(|(hb_oh & s_pblk));
+    assign wr_ok = legal_write && (PROFILE == 1 || reserved_write_col);
+    // ---- row: refresh > forced PRE > ACT ahead (sets k, k+1) > PRE finished -----------
+    function automatic [4:0] act_bank(input integer c, input [2:0] kk);
+      act_bank = {(c >= 4) ? (context_active ? (kk ^ 3'd1) : kk + 3'd1) : kk, 2'(c & 3)};
+    endfunction
+    // candidates (no dynamic indexing on the decision path): per-bank ACT eligibility, the 4-bank
+    // groups of sets k and k+1, lowest-first one-hot selection; PRE of finished banks, lowest first
+    wire [31:0] act_okb = ~open & ~done & ~blk & aok_z & {8{rrdl_z}};
+    // r8: k as a registered one-hot (koh) and the k+1 validity as a registered flag (k1v), both
+    // updated exactly with j/last, so the set selection is an AND-OR, not a k-decoded mux.
+    reg [7:0] koh; reg k1v;
+    wire [7:0] k1oh = context_active ? (context_v?(koh^8'h30):(koh^8'h03)) : {koh[6:0], 1'b0};                 // set k+1 (none when k == 7)
+    reg [3:0] grp_k, grp_k1;
+    always @* begin
+      grp_k = 4'b0; grp_k1 = 4'b0;
+      for (integer s = 0; s < 8; s = s + 1) begin
+        grp_k  = grp_k  | ({4{koh[s]}}  & act_okb[4*s +: 4]);
+        grp_k1 = grp_k1 | ({4{k1oh[s] & k1v}} & act_okb[4*s +: 4]);
+      end
+    end
+    wire [7:0] act_cand = {grp_k1, grp_k};
+    wire [7:0] act_oh8 = act_cand & (~act_cand + 8'd1);
+    // AQ_RD: a bank the stream still needs (set k .. last, not done) is never precharged as write-opened,
+    // and the current queue (hold_n, not only the registered hold) protects the banks of queued accesses
+    reg [31:0] sneed;
+    always @* for (integer b = 0; b < 32; b = b + 1) sneed[b] = (AQ || context_active) && streaming && !done[b] && (context_active ? (context_v ? (3'(b>>2)==4 || 3'(b>>2)==5) : (3'(b>>2)==0 || 3'(b>>2)==1)) : (3'(b >> 2) >= k && 3'(b >> 2) <= last));
+    wire [31:0] pre_cand = open & (done | stale | (W ? (wopen & ~sneed) : 32'b0)) & ~blk & ras_z & rtp_z & ~shold &
+                           ~(W ? (hold | (AQ ? hold_n : 32'b0)) : 32'b0);
+    wire [31:0] pre_oh, act_oh;
+    for (genvar b = 0; b < 32; b = b + 1) begin : oh
+      if (b == 0) begin : z assign pre_oh[b] = pre_cand[b]; end
+      else begin : nz assign pre_oh[b] = pre_cand[b] & ~(|pre_cand[b-1:0]); end
+      assign act_oh[b] = (koh[b >> 2] & act_oh8[b & 3]) | (k1oh[b >> 2] & act_oh8[4 + (b & 3)]);
+    end
+    function automatic [4:0] ffs32(input [31:0] v);   // index of the lowest set bit (tree)
+      reg [15:0] v16; reg [7:0] v8; reg [3:0] v4; reg [1:0] v2;
+      begin
+        ffs32[4] = ~|v[15:0];  v16 = ffs32[4] ? v[31:16] : v[15:0];
+        ffs32[3] = ~|v16[7:0]; v8 = ffs32[3] ? v16[15:8] : v16[7:0];
+        ffs32[2] = ~|v8[3:0];  v4 = ffs32[2] ? v8[7:4] : v8[3:0];
+        ffs32[1] = ~|v4[1:0];  v2 = ffs32[1] ? v4[3:2] : v4[1:0];
+        ffs32[0] = ~v2[0];
+      end
+    endfunction
+    wire act_ok_any = streaming && !act_block && noact_c == 0 && rrds_c == 0 && faw_ok && (|act_cand);
+    wire [2:0] act_sel = 3'(ffs32({24'b0, act_cand}));
+    wire [4:0] pre_sel = ffs32(pre_cand);
+    wire forced_pre = REF_MODE && ref_pend && |(blk & open & ras_z & rtp_z);
+    // next-cycle k and last (the same updates as j and last below)
+    wire desc_acc = desc_v && !streaming && !fault_r;
+    wire k_step = rd_ok && (j[6:0] == 7'h7f);
+    wire v_set_flip=v_consumer_order && rd_ok && j[2:0]==3'd7;
+    wire [2:0] k_n = desc_acc ? first_sector[9:7] : context_active&&rd_ok ? j_p1[9:7] : v_set_flip ? (k^3'd1) : k_step ? k+3'd1 : k;
+    wire [2:0] last_n = desc_acc ? (context_accept ? (desc_vpass?3'd5:3'd1) : 3'((desc_n - 11'd1) >> 7)) : last;
+    wire [7:0] koh_n = desc_acc ? (8'b1 << first_sector[9:7]) : context_active&&rd_ok ? (8'b1 << j_p1[9:7]) : v_set_flip ? {koh[6],koh[7],koh[4],koh[5],koh[2],koh[3],koh[0],koh[1]} : k_step ? {koh[6:0],koh[7]} : koh;
+    // write ACT: closed target bank, not chosen (or about to be chosen) for refresh
+    // any queued write's bank may open (oldest first), so a burst of writes opens its banks together
+    wire [WQ-1:0] wq_act;
+    for (genvar i = 0; i < WQ; i = i + 1) begin : wqa
+      wire [4:0] bq = wq_bq[i*5 +: 5];
+      assign wq_act[i] = wq_in[i] && !open[bq] && !blk[bq] && aok_z[bq] && rrdl_z[bq[1:0]] &&
+                         !(REF_MODE && (ref_c == RW'(LEAD) || ref_c == RW'(LEAD + 1)) && bq == bsel);
+    end
+    // The candidate (oldest queued write whose bank can open) is REGISTERED and re-validated at use
+    // against the current bank state with one-hot reductions, keeping the queue indexing and the
+    // bank-state muxes off the row-decision path.
+    reg wcand; reg [4:0] wab_n; reg wcrd_n;
+    integer ai;
+    always @* begin
+      wcand = 1'b0; wab_n = 0; wcrd_n = 1'b0;
+      for (ai = WQ - 1; ai >= 0; ai = ai - 1) if (wq_act[ai]) begin
+        wcand = 1'b1; wab_n = wq_bq[ai*5 +: 5]; wcrd_n = AQ && wq_rd[WQW'(wq_rp + ai)];
+      end
+    end
+    reg wcand_q; reg [4:0] wab; reg [31:0] wab_oh; reg wcrd_q;
+    always @(posedge clk or negedge rst_n)
+      if (!rst_n) begin wcand_q <= 1'b0; wab <= 0; wab_oh <= 0; wcrd_q <= 1'b0; end
+      else begin wcand_q <= W && wcand; wab <= wab_n; wab_oh <= 32'b1 << wab_n; wcrd_q <= wcrd_n; end
+    wire wact_ok = wcand_q && !(|(wab_oh & (open | blk))) && (|(wab_oh & aok_z)) && rrdl_z[wab[1:0]] &&
+                   !(REF_MODE && (ref_c == RW'(LEAD) || ref_c == RW'(LEAD + 1)) && wab == bsel) &&
+                   !act_block && noact_c == 0 && rrds_c == 0 && faw_ok;
+    // ---- PULLIN: refresh ahead of schedule while not reading ---------------------------------
+    localparam integer PIW = $clog2(PULLIN + 2);
+    localparam PI = (REF_MODE != 0) && (PULLIN > 0);
+    reg [PIW-1:0] pin;                                // REFpb issued ahead of the schedule
+    reg ep;                                           // a pulled-in REFpb is pending (rb / blk)
+    reg skip;                                         // this due slot was paid ahead: nothing issues
+    reg [3:0] sact;                                   // cycles since the last ACT / REFpb (saturating)
+    wire pi_idle = !streaming || !running;
+    wire ep_start = PI && pi_idle && !ep && !ref_pend && 32'(pin) < PULLIN && ref_c > RW'(LEAD + 8) &&
+                    (bkey < 7'd16 || bkey == 7'd20) && !(|(blk)) && sact >= 4'd6;   // bsel/bkey see a REFpb / ACT 5 cycles late
+    wire ep_rdy = PI && ep && !(|(blk & open)) && (|(blk & aok_z)) && noact_c == 0 && sact >= 4'(T_RREFD + 2) &&
+                  ref_c > RW'(LEAD + 8);   // bsel at LEAD must not see a REFpb in flight
+    reg [31:0] r_oh;
+    reg r_w, r_s, r_sp;
+    // ---- static row commands (SROW) -----------------------------------------------------------
+    // the twin bank (other bank-group pair) as a one-hot permutation of the head's
+    wire [31:0] ab_oh;
+    for (genvar b = 0; b < 32; b = b + 1) begin : twin_oh
+      assign ab_oh[b] = sb_oh[b ^ 2];
+    end
+    wire s_refsel = REF_MODE && (ref_c == RW'(LEAD) || ref_c == RW'(LEAD + 1));   // bsel is about to be taken
+    wire s_unav = (|(sb_oh & ((aok_busy & ~open) | blk))) || (|(sb_oh & open) && !s_hit) || (s_refsel && sb == bsel);
+    wire s_av_a = !(|(ab_oh & (open | blk | aok_busy))) && (|(ab_oh & aok_z)) && !(s_refsel && (sb ^ 5'd2) == bsel);
+    wire s_sw = S && (TWIN != 0) && sq_ne && !swe && !sfl && !scm && !s_hit && s_unav && s_av_a;
+    wire s_act_ok = sq_ne && !s_sw && !(|(sb_oh & (open | blk))) && (|(sb_oh & aok_z)) && rrdl_z[sb[1:0]] &&
+                    !(s_refsel && sb == bsel) && !act_block && noact_c == 0 && rrds_c == 0 && faw_ok;
+    wire s_pre_ok = sq_ne && !s_sw && !s_hit && (|(sb_oh & open & ras_z & rtp_z & ~blk & ~hold & ~hold_n));
+    always @* begin
+      r_v = 0; r_prio = 0; r_op = PRE; r_bank = 0; r_oh = 0; r_w = 0; r_s = 0; r_sp = 0;
+      if (REF_MODE && ref_due_n && ref_pend) begin r_v = 1; r_prio = 1; r_op = REFPB; r_bank = rb; r_oh = blk; end
+      else if (!REF_MODE && ref_due_n) begin r_v = 1; r_prio = 1; r_op = REFAB; end
+      else if (preall_ok) begin r_v = 1; r_prio = 1; r_op = PREALL; end
+      else if (ep_rdy) begin r_v = 1; r_prio = 1; r_op = REFPB; r_bank = rb; r_oh = blk; end
+      else if (forced_pre) begin r_v = 1; r_prio = 1; r_op = PRE; r_bank = rb; r_oh = blk; end
+      else if (S && sprio && s_pre_ok) begin r_v = 1; r_op = PRE; r_bank = sb; r_oh = sb_oh; r_sp = 1; end
+      else if (S && sprio && s_act_ok) begin r_v = 1; r_op = ACT; r_bank = sb; r_oh = sb_oh; r_s = 1; end
+      else if (W && wact_ok && !(AQ && wcrd_q && act_ok_any && !starve)) begin r_v = 1; r_op = ACT; r_bank = wab; r_oh = wab_oh; r_w = 1; end
+      else if (act_ok_any) begin r_v = 1; r_op = ACT; r_bank = act_bank(act_sel, k); r_oh = act_oh; end
+      else if (S && s_act_ok) begin r_v = 1; r_op = ACT; r_bank = sb; r_oh = sb_oh; r_s = 1; end
+      else if (|pre_cand) begin r_v = 1; r_op = PRE; r_bank = pre_sel; r_oh = pre_oh; end
+    end
+    assign row_v = c_v; assign row_prio = c_prio; assign row_op = c_op; assign row_bank = c_bank;
+    assign row_row = (S && c_s) ? c_srow : row;
+    always @* s_pblk = ((S && slot_next && r_v && r_sp) ? r_oh : 32'b0) | ((S && c_v && c_sp) ? c_oh : 32'b0);
+    assign col_v = rd_ok || (W && wr_ok) || s_go; assign col_we = (W && wr_ok && !(AQ && hr)) || (s_go && swe);
+    assign col_aq = AQ && wr_ok && hr; assign col_sr = s_go;
+    assign col_bank = s_go ? sb : (W && wr_ok) ? hb : rd_bank; assign col_col = s_go ? sc : (W && wr_ok) ? hc : j[6:2];
+    assign s_r = S && sq_n != (SQW+1)'(SQD); assign s_pop = s_go;
+    assign wr_r = W && wq_n != (WQW+1)'(WQ);
+    assign desc_r = !streaming && !fault_r && !wq_ne;
+    assign phase_idle = !streaming && !wq_ne && !sq_ne;
+    assign busy = streaming; assign ref_fault = fault_r;
+    always @(posedge clk or negedge rst_n) begin
+      if (!rst_n) begin
+        streaming__qv <= {7{streaming__f(0)}};v_consumer_order<=0;context_active__qv <= {5{context_active__f(0)}};context_v<=0;context_kb<=0;context_k0<=0;ordinal<=0;context_count<=0; last <= 0; nm1 <= 0;
+        j <= 0; n <= 0; row <= 0; open <= 0; done <= 0; stale <= 0; refreshed <= 0;
+        rrds_c <= 0; noact_c <= 0; ref_pend <= 0; blk <= 0; rb <= 0; fault_r <= 0;
+        ref_c <= RW'(RPH + PERIOD); running <= 0; phase <= 0;
+        c_v <= 0; c_prio <= 0; c_op <= PRE; c_bank <= 0; c_oh <= 0; c_s__qv <= {2{c_s__f(0)}}; c_sp <= 0; c_srow <= 0;
+        sq_n <= 0; sq_rp__qv <= {27{sq_rp__f(0)}}; sb <= 0; sc <= 0; srw <= 0; swe <= 0; sb_oh <= 0; sfl <= 0; scm <= 0; swait <= 0;
+        so_v <= 0; so_b <= 0; so_row <= 0;
+        koh <= 8'b1; k1v <= 1'b0; rd_oh <= 32'b1; rd_bgoh <= 4'b1;
+        wq_n__qv <= {3{wq_n__f(0)}}; wq_rp__qv <= {9{wq_rp__f(0)}}; wq_rp1__qv <= {8{wq_rp1__f(WQW'(1))}}; wq_v__qv <= {2{wq_v__f('0)}}; rtw_c <= 0; wtr_c <= 0; wopen <= 0; c_w <= 0; hb <= 0; hc <= 0; hb_oh <= 0; hr <= 0;
+        pin <= 0; ep <= 0; skip <= 0; sact <= 0; hwait <= 0;
+      end else begin
+        if (AQ) begin if (!wq_ne || !hr || wr_ok) hwait <= 0; else if (hwait != 8'hff) hwait <= hwait + 1'b1; end
+        if (W) begin
+          if (rd_ok || (AQ && wr_ok && hr) || (s_go && !swe)) rtw_c <= 4'(T_RTW - 1); else if (rtw_c != 0) rtw_c <= rtw_c - 1'b1;
+          if ((wr_ok && !(AQ && hr)) || (s_go && swe)) wtr_c <= 4'(T_WTR - 1); else if (wtr_c != 0) wtr_c <= wtr_c - 1'b1;
+          if (wr_v && wr_r) begin
+            wq_bank[WQW'(wq_rp + wq_n)] <= wr_bank; wq_col[WQW'(wq_rp + wq_n)] <= wr_col;
+            wq_oh[WQW'(wq_rp + wq_n)] <= 32'b1 << wr_bank;
+            if (AQ) wq_rd[WQW'(wq_rp + wq_n)] <= wr_rd;
+          end
+          wq_n__qv <= {3{wq_n__f(wq_n + (wr_v && wr_r ? 1'b1 : 1'b0) - (wr_ok ? 1'b1 : 1'b0))}};
+          begin : slotv
+            reg [WQ-1:0] v; v = wq_v;
+            if (wr_ok) v[wq_rp] = 1'b0;
+            if (wr_v && wr_r) v[WQW'(wq_rp + wq_n)] = 1'b1;
+            wq_v__qv <= {2{wq_v__f(v)}};
+          end
+          if (wr_ok) begin wq_rp__qv <= {9{wq_rp__f(wq_rp1)}}; wq_rp1__qv <= {8{wq_rp1__f(WQW'(wq_rp1 + 1'b1))}}; end
+          // next head: the entry after the popped one if it exists, else the entry pushed now
+          begin : headn
+            // identical to: rpn = wr_ok ? wq_rp + 1 : wq_rp; head = (wq_n - wr_ok != 0) ? q[rpn] : the pushed entry
+            reg [4:0] b0, c0, b1, c1; reg r0, r1, ne0, ne1; reg [31:0] o0, o1;
+            b0 = wq_bank[wq_rp];  c0 = wq_col[wq_rp];  r0 = AQ && wq_rd[wq_rp];  o0 = wq_oh[wq_rp];
+            b1 = wq_bank[wq_rp1]; c1 = wq_col[wq_rp1]; r1 = AQ && wq_rd[wq_rp1]; o1 = wq_oh[wq_rp1];
+            ne0 = wq_n != 0; ne1 = wq_n != 1;
+            if (wr_ok) begin
+              if (ne1) begin hb <= b1; hc <= c1; hb_oh <= o1; hr <= r1; end
+              else begin hb <= wr_bank; hc <= wr_col; hb_oh <= 32'b1 << wr_bank; hr <= AQ && wr_rd; end
+            end else begin
+              if (ne0) begin hb <= b0; hc <= c0; hb_oh <= o0; hr <= r0; end
+              else begin hb <= wr_bank; hc <= wr_col; hb_oh <= 32'b1 << wr_bank; hr <= AQ && wr_rd; end
+            end
+          end
+          // write-opened banks: set by a write ACT, cleared by PRE/PREALL or a stream RD (the stream owns it)
+          wopen <= ((wopen | ((row_fire && c_op == ACT && c_w) ? c_oh : 32'b0))
+                    & ~((row_fire && c_op == PRE) ? c_oh : 32'b0)
+                    & ~(rd_ok ? rd_oh : 32'b0))
+                   & {32{!(row_fire && c_op == PREALL)}};
+        end
+        if (desc_acc) begin rd_oh <= 32'b1 << {first_sector[9:7],first_sector[1:0]}; rd_bgoh <= 4'b1 << first_sector[1:0]; end
+        else if (rd_ok) begin rd_oh <= 32'b1 << {j_p1[9:7], j_p1[1:0]}; rd_bgoh <= 4'b1 << j_p1[1:0]; end
+
+        koh <= koh_n; k1v <= (desc_acc ? context_accept : context_active) || ((k_n != 3'd7) && (k_n + 3'd1 <= last_n));
+        if (rrds_c != 0) rrds_c <= rrds_c - 1'b1;
+        if (noact_c != 0) noact_c <= noact_c - 1'b1;
+
+        // refresh schedule
+        ref_c <= ref_n; phase <= ~phase;
+        // register the row decision for this PC's next slot (an off-slot cycle issues nothing)
+        c_v <= slot_next && r_v; c_prio <= r_prio; c_op <= r_op; c_bank <= r_bank; c_oh <= r_oh; c_w <= W && r_w;
+        c_s__qv <= {2{c_s__f(S && slot_next && r_v && r_s)}}; c_sp <= S && slot_next && r_v && r_sp; c_srow <= srw;
+        // ---- static queue: push, pop, head (registered), twin switch, commit, wait counter, static-open bank
+        if (S) begin : sq
+          reg [SQW-1:0] rpn; reg chg;
+          if (s_v && s_r) begin
+            sq_bank[SQW'(sq_rp + sq_n)] <= s_bank; sq_col[SQW'(sq_rp + sq_n)] <= s_col;
+            sq_row[SQW'(sq_rp + sq_n)] <= s_row; sq_we[SQW'(sq_rp + sq_n)] <= s_we;
+            sq_context[SQW'(sq_rp + sq_n)]<=s_context;
+          end
+          sq_n <= sq_n + ((s_v && s_r) ? 1'b1 : 1'b0) - (s_go ? 1'b1 : 1'b0);
+          if (s_go) sq_rp__qv <= {27{sq_rp__f(SQW'(sq_rp + 1'b1))}};
+          rpn = s_go ? SQW'(sq_rp + 1'b1) : sq_rp;
+          chg = s_go || sq_n == 0;
+          if (chg) begin
+            if (sq_n - (s_go ? 1'b1 : 1'b0) != 0) begin
+              shead_context<=sq_context[rpn];
+              sb <= sq_bank[rpn]; sc <= sq_col[rpn]; srw <= sq_row[rpn]; swe <= sq_we[rpn]; sb_oh <= 32'b1 << sq_bank[rpn];
+            end else begin
+              shead_context<=s_context;
+              sb <= s_bank; sc <= s_col; srw <= s_row; swe <= s_we; sb_oh <= 32'b1 << s_bank;
+            end
+            sfl <= 1'b0; scm <= 1'b0;
+          end else if (s_sw) begin
+            sb <= sb ^ 5'd2; srw <= 19'(srw + 19'(TWIN_ROFF)); sb_oh <= ab_oh; sfl <= 1'b1;
+          end else if (s_hit || (row_fire && c_op == ACT && c_s)) scm <= 1'b1;
+          if (!sq_ne || chg || s_sw) swait <= 0; else if (swait != 8'hff) swait <= swait + 1'b1;
+          if (row_fire && c_op == ACT && c_s) begin so_v <= 1'b1; so_b <= c_bank; so_row <= c_srow; end
+          else if (row_fire && (c_op == PREALL || (c_op == PRE && c_bank == so_b))) so_v <= 1'b0;
+        end
+        if (!PI) begin
+          if (REF_MODE && ref_c == RW'(LEAD)) begin ref_pend <= 1; rb <= bsel; blk <= 32'b1 << bsel; end
+        end else begin
+          if (row_fire && (c_op == ACT || c_op == REFPB)) sact <= 0; else if (sact != 4'hf) sact <= sact + 1'b1;
+          if (ref_c == RW'(LEAD)) begin
+            if (ep) begin ref_pend <= 1; ep <= 0; end                 // a pending pull-in becomes this slot's REFpb
+            else if (pin != 0 && !pi_idle) begin pin <= pin - 1'b1; skip <= 1; end  // paid ahead: skip (only while reading)
+            else begin ref_pend <= 1; rb <= bsel; blk <= 32'b1 << bsel; end
+          end else if (ep_start) begin ep <= 1; rb <= bsel; blk <= 32'b1 << bsel; end
+          else if (ep && |(blk & open)) begin ep <= 0; blk <= 0; end   // the chosen bank opened meanwhile
+          if (ref_due) skip <= 0;
+        end
+        // a due refresh that cannot issue (bank open / not granted) is a held fault
+        if (ref_due && !(PI && skip) && (!row_fire || !(c_op == REFPB || c_op == REFAB) ||
+                        (REF_MODE && (|(blk & open) || |(blk & ~aok_z))) || (!REF_MODE && |open))) fault_r <= 1;
+        if (streaming && go) running <= 1;
+        // column
+        if (rd_ok) begin
+          j <= j_p1;
+          if (context_active ? ordinal+9'd1==context_count : j==nm1) streaming__qv <= {7{streaming__f(0)}};
+          if(context_active)ordinal<=ordinal+9'd1;
+          if (!context_active && j[6:2] == 5'd31) done <= done | rd_oh;
+          if(context_active && ordinal+9'd1==context_count)done<=done|32'hffffffff;
+        end
+        // row
+        if (row_fire) case (c_op)
+          ACT: begin open <= open | c_oh; rrds_c <= 2'(T_RRDS - 1); if (S && c_s) stale <= stale | c_oh; end
+          PRE: begin open <= open & ~c_oh; stale <= stale & ~c_oh; end
+          PREALL: begin open <= 0; stale <= 0; end
+          REFPB: begin
+            noact_c <= 4'(T_RREFD - 1); ref_pend <= 0; blk <= 0;
+            if (PI && ep && !ref_pend) begin ep <= 0; pin <= pin + 1'b1; end
+            refreshed <= (&(refreshed | (32'b1 << rb))) ? 32'b0 : (refreshed | (32'b1 << rb));
+          end
+          default: ;
+        endcase
+        // descriptor
+        if (desc_v && !streaming && !fault_r) begin
+          j <= first_sector; n <= desc_n; row <= desc_row;
+          context_active__qv <= {5{context_active__f(context_accept)}};context_v<=desc_vpass;context_kb<=desc_k_order_b;context_k0<=desc_k_count0;ordinal<=0;context_count<=desc_n[8:0];
+          v_consumer_order <= !context_accept && desc_first==10'd512 && desc_n==11'd768; done <= 0; running <= 0;
+          streaming__qv <= {7{streaming__f((desc_n != 0))}}; nm1 <= desc_n - 11'd1; last <= context_accept ? (desc_vpass?3'd5:3'd1) : 3'((desc_n - 11'd1) >> 7);
+          stale <= open_nx;                     // rows still open from the old descriptor close first
+        end
+      end
+    end
+  end endgenerate
+endmodule
+
+// ---- qkd_kvpc_s_chain: clone of qkd_kv_pc_chain_station_b (rtl/qwen_sys/static_embedding_20261014/qkd_kv_pc_chain_station_b.sv) with 5 substitution(s); kept copy families rs_q[1]x10(1), bt[1]x12(2), ss[1]x4(2), hit[1]x11(2), emb_issue_v[1]x4(2) ----
+module qkd_kvpc_s_chain #(parameter integer MUT = 0) (
+    input  wire          ck,
+    input  wire          rst_n,
+    input  wire [4:0]    pc,
+    input  wire [1:0]    cfg_stack,
+    input  wire [779:0]  di,
+    output wire [779:0]  dout,
+    // BOOT: this PC's HOST slice landing face (qkd_host_pc_slice_die land_es / land_er, unchanged slice)
+    output reg  [287:0]  land_es,
+    input  wire [260:0]  land_er,
+    // PC face: writer word + intake context / expected descriptor
+    output wire [287:0]  wes,
+    output wire [317:0]  es_context,
+    output reg           es_expected_valid,
+    output reg  [60:0]   es_expected_identity,
+    output reg  [28:0]   es_expected_address,
+    output reg  [4:0]    es_expected_pc,
+    output reg  [1:0]    es_expected_stack,
+    // PC face: embedding read issue (qkd_static_kv_pc_es_merge)
+    output wire          emb_issue_v,
+    output reg  [17:0]   emb_token,
+    output reg  [5:0]    emb_word_index,
+    output reg           emb_half,
+    output reg           emb_scale,
+    output reg  [15:0]   emb_epoch,
+    output reg           emb_return_slot,
+    // the PC's return station
+    output reg           capture_slot,
+    output reg           transfer_slot,
+    output reg           fault
+);
+    (* keep, ot_rst_split *) reg [3:0] emb_issue_v__qv;   // KV-PC SAFE: 4 kept copies of emb_issue_v
+    function emb_issue_v__f; input v; emb_issue_v__f = v; endfunction
+    assign emb_issue_v = emb_issue_v__qv[0:0];
+    localparam integer F_V = 0, F_PC0 = 2, F_PC1 = 7, F_D0 = 12, F_D1 = 268, F_AD = 524, F_SV = 553, F_CTX = 554,
+                       F_EV = 615, F_EPC0 = 617, F_EPC1 = 622, F_EST = 627, F_EID = 629, F_EAD = 690,
+                       F_SS = 719, F_TOK = 720, F_EP = 738, F_CV = 754, F_CPC = 755, F_CRG = 760, F_CVL = 763, F_BT = 779,
+                       W = 780;
+    (* keep, ot_rst_split *) reg [9:0] rs_q__qv;   // KV-PC SAFE: 10 kept copies of rs_q
+    function rs_q__f; input v; rs_q__f = v; endfunction
+    wire rs_q = rs_q__qv[0:0];
+    // KV-PC SAFE: wes[0] (the es valid, 575 loads in the controller CDC intake) as 24 kept copies; wes[287:1] plain
+    reg [287:1] wes_d;
+    (* keep, ot_rst_split *) reg [23:0] wes0__qv;
+    assign wes = {wes_d, wes0__qv[0]};
+    always @(posedge ck) rs_q__qv <= {10{rs_q__f(rst_n)}};
+    // ---- the hop register (pin flop) ----
+    reg [W-1:0] c;
+    always @(posedge ck) c[W-1:F_V+2] <= di[W-1:F_V+2];
+    always @(posedge ck or negedge rs_q)
+        if (!rs_q) c[F_V +: 2] <= 2'd0; else c[F_V +: 2] <= di[F_V +: 2];
+    // valid-type control bits that are not data-qualified: register with reset
+    reg ev0, ev1, cv;
+    (* keep, ot_rst_split *) reg [3:0] ss__qv;   // KV-PC SAFE: 4 kept copies of ss
+    function ss__f; input v; ss__f = v; endfunction
+    wire ss = ss__qv[0:0];
+    (* keep, ot_rst_split *) reg [11:0] bt__qv;   // KV-PC SAFE: 12 kept copies of bt
+    function bt__f; input v; bt__f = v; endfunction
+    wire bt = bt__qv[0:0];
+    always @(posedge ck or negedge rs_q)
+        if (!rs_q) begin ev0 <= 1'b0; ev1 <= 1'b0; ss__qv <= {4{ss__f(1'b0)}}; cv <= 1'b0; bt__qv <= {12{bt__f(1'b0)}}; end
+        else begin ev0 <= di[F_EV]; ev1 <= di[F_EV + 1]; ss__qv <= {4{ss__f(di[F_SS])}}; cv <= di[F_CV]; bt__qv <= {12{bt__f(di[F_BT])}}; end
+    assign dout = {bt, c[F_BT-1:F_CV+1], cv, c[F_CV-1:F_SS+1], ss, c[F_SS-1:F_EV+2], ev1, ev0, c[F_EV-1:0]};
+    // ---- identity strap registers (HKV-PCH 2026-10-19) ----
+    // pc / cfg_stack are die-top identity straps (kv_static_die cls strap: constants on the die).  Unregistered they
+    // reached ~1,100 tap enables (wes / land_es / ctx / eid / r[] / emb_*) straight from the tile pins inside the
+    // 0.2 T input budget (qkd_kvs_pc_h_k1 route eb7cbd435: TT -50.35, 1,131 input->register endpoints, all strap).
+    // Registered here, every tap compare starts at a local flop.  Constant straps: identical behaviour from the first
+    // edge (reset is held far longer); no edge age, calendar slot or die relay stage changes.
+    (* keep *) reg [4:0] spc;
+    (* keep *) reg [1:0] sst;
+    always @(posedge ck) begin spc <= pc; sst <= cfg_stack; end
+    // ---- (1) fan-out tap ----
+    wire [4:0] pm = (MUT == 1) ? 5'h0f : 5'h1f;
+    wire h0 = c[F_V]     && ((c[F_PC0 +: 5] & pm) == (spc & pm));
+    wire h1 = c[F_V + 1] && ((c[F_PC1 +: 5] & pm) == (spc & pm));
+    wire x0 = ev0 && c[F_EPC0 +: 5] == spc;
+    wire x1 = ev1 && c[F_EPC1 +: 5] == spc;
+    (* keep, ot_rst_split *) reg [10:0] hit__qv;   // KV-PC SAFE: 11 kept copies of hit
+    function hit__f; input v; hit__f = v; endfunction
+    wire hit = hit__qv[0:0];                       // context valid (bit 317), lagged
+    reg [60:0] ctx_id;
+    // lag stage (CTX_LAG = 1): context / expected computed from the hop register one edge later than wes
+    reg        hit_a, x_a; reg [60:0] ctx_a, eid_a; reg [28:0] ead_a; reg [4:0] epc_a; reg [1:0] est_a;
+    always @(posedge ck) begin
+        if (h0 | h1) wes_d[287:1] <= {c[F_SV], c[F_SV], c[F_AD +: 29], h0 ? c[F_D0 +: 256] : c[F_D1 +: 256]};
+        if (h0 | h1) ctx_a <= c[F_CTX +: 61];
+        if (x0 | x1) begin eid_a <= c[F_EID +: 61]; ead_a <= c[F_EAD +: 29]; epc_a <= x0 ? c[F_EPC0 +: 5] : c[F_EPC1 +: 5];
+                           est_a <= c[F_EST +: 2]; end
+    end
+    always @(posedge ck or negedge rs_q)
+        if (!rs_q) begin wes0__qv <= 24'd0; hit_a <= 1'b0; x_a <= 1'b0; end
+        else begin wes0__qv <= {24{h0 | h1}}; hit_a <= h0 | h1; x_a <= x0 | x1; end
+    generate
+        if (MUT == 5) begin : g_nolag
+            reg hit__nolag;   // KV-PC SAFE clone: hit is a kept copy family (the lag-free MUT 5 is not built)
+            always @(*) begin hit__nolag = hit_a; ctx_id = ctx_a; es_expected_valid = x_a; es_expected_identity = eid_a;
+                              es_expected_address = ead_a; es_expected_pc = epc_a; es_expected_stack = est_a; end
+        end else begin : g_lag
+            always @(posedge ck) begin
+                ctx_id <= ctx_a; es_expected_identity <= eid_a; es_expected_address <= ead_a;
+                es_expected_pc <= epc_a; es_expected_stack <= est_a;
+            end
+            always @(posedge ck or negedge rs_q)
+                if (!rs_q) begin hit__qv <= {11{hit__f(1'b0)}}; es_expected_valid <= 1'b0; end
+                else begin hit__qv <= {11{hit__f(hit_a)}}; es_expected_valid <= x_a; end
+        end
+    endgenerate
+    assign es_context = {hit, ctx_id, {256{hit}}};
+    // ---- (3) BOOT tap: the embedding boot word for this PC -> the HOST slice landing source (registered, +1), as the
+    //      HOST static ABI word {we-data 1, we 1, bank, col, row, data 256, v} (= qkd_host_ingest_station host_es).
+    //      land_er (the slice's landing return) lands on pin flops and is CHECKED, never waited on: the slice returns
+    //      one credit (er[259]) per landing word it launches; a credit with none outstanding, a landing read return
+    //      (no landing reads exist on the static die), the slice's fault bit (er[260]: its landing queue overflow is
+    //      flagged there, exactly) or a counter overflow latch fault.  Static: no ready / wait (the gateway paces the
+    //      boot stream; note.md).
+    wire [4:0] bpm = (MUT == 6) ? 5'h0f : 5'h1f;
+    wire bh = bt && ((c[F_PC0 +: 5] & bpm) == (spc & bpm));
+    always @(posedge ck) if (bh) land_es[287:1] <= {1'b1, 1'b1, c[F_AD +: 29], c[F_D0 +: 256]};
+    always @(posedge ck or negedge rs_q) if (!rs_q) land_es[0] <= 1'b0; else land_es[0] <= bh;
+    (* keep *) reg ler_v, ler_cr, ler_f;
+    always @(posedge ck or negedge rs_q)
+        if (!rs_q) begin ler_v <= 1'b0; ler_cr <= 1'b0; ler_f <= 1'b0; end
+        else begin ler_v <= land_er[0]; ler_cr <= land_er[259]; ler_f <= land_er[260]; end
+    reg [2:0] bo;                         // boot words outstanding in the slice's landing queue
+    reg       bfault;
+    always @(posedge ck or negedge rs_q)
+        if (!rs_q) begin bo <= 3'd0; bfault <= 1'b0; end
+        else begin
+            bo <= bo + {2'd0, land_es[0]} - {2'd0, ler_cr};
+            if ((ler_cr && bo == 3'd0 && !land_es[0]) || (land_es[0] && !ler_cr && bo == 3'd7) || ler_v || ler_f)
+                bfault <= 1'b1;
+        end
+    // ---- (2) embedding slot player ----
+    reg [15:0] r [0:7];
+    reg [15:0] cnt, last; reg act; reg [17:0] tok; reg [15:0] ep;
+    wire home = tok[8:4] == spc && (MUT == 4 || tok[10:9] == sst);
+    wire [15:0] trn = (MUT == 3 && spc == 5'd5) ? r[3] + 16'd1 : r[3];
+    integer k;
+    always @(posedge ck) if (ss) begin tok <= c[F_TOK +: 18]; ep <= c[F_EP +: 16]; end
+    always @(posedge ck or negedge rs_q)
+        if (!rs_q) begin
+            for (k = 0; k < 8; k = k + 1) r[k] <= 16'hffff;
+            cnt <= 16'd0; last <= 16'd0; act <= 1'b0; fault <= 1'b0;
+            emb_issue_v__qv <= {4{emb_issue_v__f(1'b0)}}; emb_return_slot <= 1'b0; capture_slot <= 1'b0; transfer_slot <= 1'b0;
+            emb_token <= 18'd0; emb_epoch <= 16'd0; emb_word_index <= 6'd0; emb_half <= 1'b0; emb_scale <= 1'b0;
+        end else begin
+            if (cv && c[F_CPC +: 5] == spc) begin
+                r[c[F_CRG +: 3]] <= c[F_CVL +: 16];
+                if (c[F_CVL +: 16] != 16'hffff && c[F_CVL +: 16] > last) last <= c[F_CVL +: 16];
+                if (act) fault <= 1'b1;
+            end
+            if (ss) begin
+                if (act) fault <= 1'b1;
+                act <= 1'b1; cnt <= 16'd0;
+            end else if (act) begin
+                cnt <= cnt + 16'd1;
+                if (cnt == last) act <= 1'b0;      // the calendar ends on its last configured event
+            end
+            emb_token <= tok; emb_epoch <= ep;
+            emb_issue_v__qv <= {4{emb_issue_v__f(act && (cnt == r[0] || (home && cnt == r[4])))}};
+            emb_return_slot <= act && (cnt == r[1] || (home && cnt == r[5]));
+            capture_slot    <= act && (cnt == r[2] || (home && cnt == r[6]));
+            transfer_slot   <= act && (cnt == trn  || (home && cnt == r[7]));
+            if (act && cnt == r[0]) begin emb_word_index <= {sst, spc[4:1]}; emb_half <= spc[0]; emb_scale <= 1'b0; end
+            else if (act && home && cnt == r[4]) begin emb_word_index <= 6'd0; emb_half <= 1'b0; emb_scale <= 1'b1; end
+            if ((h0 && h1) || (x0 && x1) || bfault || (bh && (h0 || h1))) fault <= 1'b1;
+        end
+endmodule
+
+// ---- qkd_kvpc_s_esm: clone of qkd_static_kv_pc_es_merge_b (rtl/qwen_sys/static_embedding_20261014/qkd_static_kv_pc_es_merge_b.sv) with 1 substitution(s); kept copy families own[1]x11(2) ----
+module qkd_kvpc_s_esm #(
+    parameter integer ROW0 = 24427,
+    parameter integer MUT  = 0,
+    parameter integer RETIME = 1
+) (
+    input  wire          ck,
+    input  wire          rst_n,
+    input  wire [4:0]    pc,
+    input  wire [1:0]    cfg_stack,
+    input  wire [287:0]  wes,
+    input  wire          emb_boot_ready,
+    input  wire          emb_issue_v,
+    input  wire [17:0]   emb_token,
+    input  wire [5:0]    emb_word_index,
+    input  wire          emb_half,
+    input  wire          emb_scale,
+    input  wire [15:0]   emb_epoch,
+    input  wire          emb_return_slot,
+    // the HOST slice face (boot window)
+    input  wire [287:0]  hes,
+    output reg  [260:0]  her,
+    input  wire          completion_v,
+    input  wire          completion_we,
+    output reg           hcv,
+    output reg           hcw,
+    // the controller face
+    output reg  [287:0]  es,
+    input  wire [260:0]  er,
+    output wire          beat_v,
+    output wire [255:0]  beat_data,
+    output wire [17:0]   beat_token,
+    output wire [5:0]    beat_word,
+    output wire          beat_half,
+    output wire          beat_scale,
+    output wire [15:0]   beat_epoch,
+    output wire          corrected,
+    output wire          emb_outstanding,
+    output wire          fault
+);
+    (* keep *) reg rs_q;
+    always @(posedge ck) rs_q <= rst_n;
+    // phase: own = boot window (the slice owns the controller face)
+    (* keep, ot_rst_split *) reg [10:0] own__qv;   // KV-PC SAFE: 11 kept copies of own
+    function own__f; input v; own__f = v; endfunction
+    wire own = own__qv[0:0];
+    always @(posedge ck or negedge rs_q) if (!rs_q) own__qv <= {11{own__f(1'b1)}}; else own__qv <= {11{own__f(!emb_boot_ready)}};
+    // slice word pin flop
+    // KV-PC SAFE: hq[0] (the slice word valid, 310 loads) as 13 kept copies; hq[287:1] plain
+    reg [287:1] hq_d;
+    (* keep, ot_rst_split *) reg [12:0] hq0__qv;
+    wire [287:0] hq = {hq_d, hq0__qv[0]};
+    always @(posedge ck) hq_d[287:1] <= hes[287:1];
+    always @(posedge ck or negedge rs_q) if (!rs_q) hq0__qv <= 13'd0; else hq0__qv <= {13{hes[0]}};
+    // the embedding endpoint (unchanged master), er steered by phase
+    wire [260:0] er_e = (own && MUT != 4) ? 261'd0 : er;
+    wire [287:0] ees;
+    wire         emb_fault;
+    qkd_embedding_static_pc_strap #(.ROW0(ROW0), .MUT(MUT == 2 ? 2 : 0), .RETIME(RETIME)) u_emb (.ck(ck), .rst_n(rs_q),
+        .boot_ready(emb_boot_ready), .strap_stack(cfg_stack), .strap_pc(pc),
+        .issue_v(emb_issue_v), .token(emb_token), .word_index(emb_word_index), .half(emb_half), .scale(emb_scale),
+        .epoch(emb_epoch), .return_slot(emb_return_slot), .es(ees), .er(er_e),
+        .beat_v(beat_v), .beat_data(beat_data), .beat_token(beat_token), .beat_word(beat_word), .beat_half(beat_half),
+        .beat_scale(beat_scale), .beat_epoch(beat_epoch), .corrected(corrected), .fault(emb_fault),
+        .outstanding(emb_outstanding));
+    // registered 3:1 slot select (never an arbitration: the schedule / phase makes the slots disjoint)
+    reg m_fault;
+    wire w_first = (MUT == 3) ? !ees[0] : wes[0];
+    always @(posedge ck) es[287:1] <= w_first ? wes[287:1] : (hq[0] ? hq[287:1] : ees[287:1]);
+    always @(posedge ck or negedge rs_q)
+        if (!rs_q) begin es[0] <= 1'b0; m_fault <= 1'b0; end
+        else begin
+            es[0] <= wes[0] | ees[0] | hq[0];
+            if (wes[0] && ees[0] && MUT != 1) m_fault <= 1'b1;
+            if (hq[0] && (wes[0] || ees[0])) m_fault <= 1'b1;
+            if (hq[0] && !own && MUT != 5) m_fault <= 1'b1;
+            if (wes[0] && own) m_fault <= 1'b1;
+        end
+    // slice return face (output registers)
+    wire sl = own || MUT == 6;
+    always @(posedge ck) her[258:1] <= er[258:1];
+    always @(posedge ck or negedge rs_q)
+        if (!rs_q) begin her[0] <= 1'b0; her[259] <= 1'b0; her[260] <= 1'b0; hcv <= 1'b0; hcw <= 1'b0; end
+        else begin
+            her[0] <= own && er[0]; her[259] <= own && er[259]; her[260] <= own && er[260];
+            hcv <= sl && completion_v; hcw <= sl && completion_we;
+        end
+    assign fault = m_fault | emb_fault;
+endmodule
+
+// ---- qkd_kvpc_s_rhop: clone of qkd_embedding_static_return_hop (rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_return_hop.sv) with 0 substitution(s); kept copy families ts_q[1]x25(2) ----
+module qkd_kvpc_s_rhop(
+    input wire ck,rst_n,
+    input wire capture_slot,capture_v,input wire [297:0] capture_record,
+    input wire transfer_slot,
+    input wire [298:0] upi,output reg [298:0] upo,
+    output reg fault
+);
+    reg cs_q, cv_q;
+    (* keep, ot_rst_split *) reg [24:0] ts_q__qv;   // KV-PC SAFE: 25 kept copies of ts_q
+    function ts_q__f; input v; ts_q__f = v; endfunction
+    wire ts_q = ts_q__qv[0:0];
+    reg [297:0] record_q,retained;
+    reg [298:0] up_q;
+    reg occupied;
+    always @(posedge ck) begin
+        record_q<=capture_record;up_q[298:1]<=upi[298:1];
+        if(cs_q&&cv_q)retained<=record_q;
+        upo[298:1]<=ts_q?retained:up_q[298:1];
+    end
+    always @(posedge ck or negedge rst_n)
+        if(!rst_n) begin cs_q<=0;cv_q<=0;ts_q__qv <= {25{ts_q__f(0)}};up_q[0]<=0;upo[0]<=0;occupied<=0;fault<=0;end
+        else begin
+            cs_q<=capture_slot;cv_q<=capture_v;ts_q__qv <= {25{ts_q__f(transfer_slot)}};up_q[0]<=upi[0];
+            upo[0]<=up_q[0]||ts_q;
+            if(ts_q)occupied<=0;
+            if(cs_q&&cv_q)occupied<=1;
+            if(cs_q!=cv_q||(ts_q&&up_q[0])||(ts_q&&!occupied)||
+               (cs_q&&occupied)||(cs_q&&ts_q))fault<=1;
+        end
+endmodule
+
+// ---- qkd_kvpc_s_rhead: clone of qkd_embedding_static_return_head (rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_return_head.sv) with 0 substitution(s); kept copy families ts_q[1]x25(2) ----
+module qkd_kvpc_s_rhead #(parameter integer MUT = 0) (
+    input wire ck,rst_n,
+    input wire capture_slot,capture_v,input wire [297:0] capture_record,
+    input wire transfer_slot,
+    output reg [298:0] upo,
+    output reg fault
+);
+    reg cs_q, cv_q;
+    (* keep, ot_rst_split *) reg [24:0] ts_q__qv;   // KV-PC SAFE: 25 kept copies of ts_q
+    function ts_q__f; input v; ts_q__f = v; endfunction
+    wire ts_q = ts_q__qv[0:0];
+    reg [297:0] record_q,retained;
+    reg occupied;
+    always @(posedge ck) begin
+        record_q<=capture_record;
+        if(cs_q&&cv_q)retained<=record_q;
+        upo[298:1]<=ts_q?retained:298'd0;
+    end
+    always @(posedge ck or negedge rst_n)
+        if(!rst_n) begin cs_q<=0;cv_q<=0;ts_q__qv <= {25{ts_q__f(0)}};upo[0]<=0;occupied<=0;fault<=0;end
+        else begin
+            cs_q<=capture_slot;cv_q<=capture_v;ts_q__qv <= {25{ts_q__f(transfer_slot)}};
+            upo[0]<=ts_q;
+            if(ts_q)occupied<=0;
+            if(cs_q&&cv_q)occupied<=1;
+            if(cs_q!=cv_q||(ts_q&&!occupied&&MUT!=1)||(cs_q&&occupied)||(cs_q&&ts_q))fault<=1;
+        end
 endmodule
 `endif

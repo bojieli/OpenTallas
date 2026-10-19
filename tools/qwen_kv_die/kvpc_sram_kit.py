@@ -11,7 +11,10 @@ specs (tools/ref_tile/specs/qkd_kvs_pc{,_h}_rl1.json: same ports, faces, pin ran
   * reset_relay_split max_loads 32 (ot_rst_copies: the kept hr_qv / hgo_qv families of the scheduler);
   * the SAFE unit benches (tools/qwen_kv_die/kvpc_sram_bench.py) with mutants and committed witnesses.
     python3 tools/qwen_kv_die/kvpc_sram_kit.py [--tag sr1] [--variant a|b]     (writes tools/ref_tile/specs/<kit>.json)
-Variant b (fallback, parallel): same RTL, outline sized from synthesis area at ~50 % (die frame change, MU-DIE-KV)."""
+Variant b (fallback, gated in parallel): same RTL and outline, the CDC stacks in a centre column (x=129.6) instead of
+x=172.8 (104 um std-cell region along the dense E face: er / her / hes / land_er / land_es).  The outline stays the die
+frame: every face is pin-bound (N i_next 780 b + o_next 299 b + o_grp 295 b at ~6 / um over 267 um; E 5 x ~260 b over 288
+um), so util (macros + std ~26k of 78k um2) cannot reach 40 % without a die-level pin re-assignment (MU-DIE-KV)."""
 import argparse
 import copy
 import json
@@ -36,12 +39,15 @@ STACKS = [
     ('cdc_up', '*u_ecdc.up.u_mem.g_b?{k}?.u_m', 5, 172.8, 151.2),
 ]
 WIT = 'results/rtl/qwen_kv_die/kvpc_sram_1019'
-UNITS = [('front', (1, 4, 5)), ('return', (1, 2)), ('cdc', (1, 2)), ('tq', (1,)), ('sched', (1,))]
+UNITS = [('front', (1, 4, 5)), ('return', (1, 2)), ('cdc', (1, 2)), ('tq', (1,)), ('sched', (1,)), ('ctrl', (1, 2)),
+         ('path', (2,))]
 
 
-def macros():
+def macros(variant='a'):
     out = []
     for name, glob, n, x, y in STACKS:
+        if variant == 'b' and x > 100:
+            x = 129.6            # fallback: CDC stacks in the centre column (E std-cell region 104 um for the E faces)
         for k in range(n):
             inst = glob.format(k=k, eo='eo'[k % 2])
             out.append(dict(view=VIEW, count=1, inst=inst, at=[x, round(y + k * PITCH, 3)], orient='R0',
@@ -75,9 +81,12 @@ def derive(tile, tag, variant):
     kit = f'qkd_kvs_{tile}_{tag}'
     s['name'] = kit
     s['sources'] = [SR_TILE if f == RL_TILE else f for f in s['sources']] + NEW_RTL
-    s['macros'] = macros()
+    s['macros'] = macros(variant)
     s['sdc_extra'] = list(s.get('sdc_extra', [])) + [f'physical/qkd_kvs_kits/qkd_kvs_pc_{tag}_store.sdc']
     s['reset_relay_split'] = dict(max_loads=32)
+    ov = dict(s.get('orfs_vars', {}))
+    ov['OT_RST_COPIES_WIDE'] = '1'      # kept copy families that select wide words / flop-array reads (item 3)
+    s['orfs_vars'] = ov
     why = ('KV-PC SAFE 10-19 (one failed route = structural redesign; terminal gate 1248d0585 PC WARN / PC_H FAIL): the '
            'five runtime-indexed flop arrays (front 32x297 = 9216 FF on 4 storage roots, tag queue 64x34, return ring 8x288, '
            'embedding CDC FIFOs 8x349 / 8x258) are 23 native 32x64 dual-clock SRAM banks (kv_pc_sram_gen / '
@@ -98,8 +107,6 @@ def derive(tile, tag, variant):
     j['record_to'] = f'results/rtl/ref_tile/{kit}'
     kb = s.get('kits_b', {})
     kb['rtl'] = SR_TILE
-    if variant == 'b':
-        s['outline'] = dict(w=233.28, h=259.2, exact=True)   # placeholder until the synthesis area is measured
     return kit, s
 
 

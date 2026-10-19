@@ -33,7 +33,9 @@ DUT_TILE = D + 'qkd_kvs_tiles_hroot_ff_k_mu_ds_rl_sr.sv'
 KIT = dict(pc='physical/ref_tile/qkd_kvs_pc_rl1/spec.json', pc_h='physical/ref_tile/qkd_kvs_pc_h_rl1/spec.json')
 SCHED_PARAMS = ('.ROW0(64), .CVL(2), .HOFF(3), .WDONE(17), .LATE(4096), .PROFILE(0), .EVMUT(0), .MUT(0), .ELASTIC(1), '
                 '.RAW_WD(256), .TQD(64)')
-STRAP = dict(pc__pc="5'd9", pc__cfg_stack="2'd2")
+STRAP = dict(pc__pc="5'd9", pc__cfg_stack="2'd2", pc="5'd9", cfg_stack="2'd2")
+CTRL_PARAMS = ('.ROW0(64), .CVL(2), .HOFF(3), .WDONE(17), .LATE(4096), .PROFILE(0), .EVMUT(0), .MUT(0), .ELASTIC(1), '
+               '.RAW_WD(256), .TQD(64)')
 
 
 def kit_sources(tile='pc'):
@@ -83,9 +85,14 @@ def rnd(w):
     return '{' + ', '.join(['$urandom'] * ((w + 31) // 32)) + '}'
 
 
-def lockstep_tb(name, P, ref_inst, dut_inst, clocks, resets, edges, mut, extra_in=None, tag='SCHED'):
-    """generic two-instance random lockstep: clocks {port: half_period_ps}, resets {port: clock port}"""
+def lockstep_tb(name, P, ref_inst, dut_inst, clocks, resets, edges, mut, extra_in=None, tag='SCHED', qual=None,
+                strap=None):
+    """generic two-instance random lockstep: clocks {port: half_period_ps}, resets {port: clock port}; qual {output:
+    (valid bit, data msb, data lsb)}: the data slice of that output is compared only while REF's valid bit is set (the
+    payload of an EMPTY dual-clock FIFO head: an undefined async read across domains in the original)"""
     extra_in = extra_in or {}
+    qual = qual or {}
+    straps = STRAP if strap is None else strap
     ins = [(n, w) for n, d, w in P if d == 'input' and n not in clocks and n not in resets and n not in extra_in]
     outs = [(n, w) for n, d, w in P if d == 'output']
     L = ['`timescale 1ps/1fs', f'module {name};']
@@ -110,8 +117,18 @@ def lockstep_tb(name, P, ref_inst, dut_inst, clocks, resets, edges, mut, extra_i
     L.append('  reg [31:0] nbad [0:%d];' % max(0, len(outs) - 1))
     L.append('  task compare; begin')
     for k, (n, w) in enumerate(outs):
-        L.append(f'    chk = chk + 1; if (r__{n} !== d__{n}) begin bad = bad + 1; nbad[{k}] = nbad[{k}] + 1; '
-                 f'if (bad < 8) $display("MISMATCH t=%0d %s out {n}", t, phase); end')
+        if n in qual:
+            v, hi, lo = qual[n]
+            v = f'r__{n}[{v}]' if isinstance(v, int) else v
+            parts = ([f"{{{w - hi - 1}{{1'b1}}}}"] if hi < w - 1 else []) + [f"{{{hi - lo + 1}{{{v}}}}}"] + \
+                ([f"{{{lo}{{1'b1}}}}"] if lo > 0 else [])
+            mask = '{' + ', '.join(parts) + '}'
+            cond = f'((r__{n} ^ d__{n}) & {mask}) !== {w}\'d0'
+        else:
+            cond = f'r__{n} !== d__{n}'
+        val = f' %h/%h", t, phase, r__{n}, d__{n});' if w <= 128 else '", t, phase);'
+        L.append(f'    chk = chk + 1; if ({cond}) begin bad = bad + 1; nbad[{k}] = nbad[{k}] + 1; '
+                 f'if (bad < 8) $display("MISMATCH t=%0d %s out {n}{val} end')
     L.append('  end endtask')
     cks = list(clocks)
     for c in cks:
@@ -121,7 +138,7 @@ def lockstep_tb(name, P, ref_inst, dut_inst, clocks, resets, edges, mut, extra_i
     L.append('    bad = 0; chk = 0; act = 0;')
     L.append(f'    for (k = 0; k < {max(1, len(outs))}; k = k + 1) nbad[k] = 0;')
     for n, w in ins:
-        L.append(f'    {n} = {STRAP.get(n, "0")};')
+        L.append(f'    {n} = {straps.get(n, "0")};')
     L.append(f'    repeat (12) @(negedge {cks[0]});')
     for r in resets:
         L.append(f'    {r} = 1;')
@@ -130,7 +147,7 @@ def lockstep_tb(name, P, ref_inst, dut_inst, clocks, resets, edges, mut, extra_i
     for n, w in outs:
         L.append(f'      if (r__{n} != 0) act = act + 1;')
     for n, w in ins:
-        if n not in STRAP:
+        if n not in straps:
             L.append(f'      {n} = {rnd(w)};')
     L.append(f'      if (t == {edges // 2}) begin')
     for r in resets:
@@ -178,7 +195,7 @@ def build_run(out, top, files, defines, threads, tag, plus=()):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument('--unit', required=True, choices=('front', 'return', 'cdc', 'tq', 'sched', 'tile'))
+    ap.add_argument('--unit', required=True, choices=('front', 'return', 'cdc', 'tq', 'sched', 'ctrl', 'path', 'tile'))
     ap.add_argument('--tile', default='pc', choices=('pc', 'pc_h'))
     ap.add_argument('--mut', type=int, default=0)
     ap.add_argument('--edges', type=int, default=0)
@@ -202,10 +219,37 @@ def main():
             raise SystemExit('kvpc_sram_bench: sched REF / DUT ports differ')
         edges = a.edges or 30000
         tb = lockstep_tb('tb_kvpc_sched', P, f'qkd_ctrl_pc_sched_nc #({SCHED_PARAMS})', f'qkd_kvpc_s_sched #({SCHED_PARAMS})',
-                         {'pll_hbm': 512}, {'hrst': 'pll_hbm'}, edges, a.mut, tag='SCHED')
+                         {'pll_hbm': 512}, {'hrst': 'pll_hbm'}, edges, a.mut, tag='SCHED', strap={})
         (out / 'tb.sv').write_text(tb)
         defs = ['OT_KVPC_MUT_TQ_NEXT'] if a.mut == 1 else []
         return build_run(out, 'tb_kvpc_sched', [str(out / 'tb.sv')] + base, defs, a.threads, 'SCHED', plus)
+    if a.unit in ('ctrl', 'path'):
+        if a.unit == 'ctrl':
+            ref = module('rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_nc.sv', 'qkd_ctrl_pc_host_static_nc')
+            dut = module(CLONES, 'qkd_kvpc_s_ctrl')
+            ri, di = f'qkd_ctrl_pc_host_static_nc #({CTRL_PARAMS})', f'qkd_kvpc_s_ctrl #({CTRL_PARAMS})'
+            clk = {'ck': 417, 'pll_hbm': 512}
+            xin = {k: 'pll_hbm' for k in ('pll_hbm_port', 'pll_hbm_ecc', 'pll_hbm_cdc', 'pll_hbm_obs')}
+            rst = {'rsi': 'ck', 'hrst': 'pll_hbm'}
+        else:
+            ref = module('rtl/qwen_sys/static_kv_20261014/qkd_static_kv_pc_path_nc.sv', 'qkd_static_kv_pc_path_nc')
+            dut = module(CLONES, 'qkd_kvpc_s_path_nc')
+            ri, di = 'qkd_static_kv_pc_path_nc #(.MU(1))', 'qkd_kvpc_s_path_nc #(.MU(1))'
+            clk = {'ck': 417, 'pll_hbm': 512}
+            xin = {k: 'pll_hbm' for k in ('pll_hbm_port', 'pll_hbm_ecc', 'pll_hbm_cdc', 'pll_hbm_obs', 'cal_hck',
+                                          'front_hck', 'return_hck')}
+            xin.update(return_ck='ck', front_hbm_data='{4{pll_hbm}}', return_hbm_data='{4{pll_hbm}}', cal_rst_n='hrst')
+            rst = {'rsi': 'ck', 'hrst': 'pll_hbm'}
+        P = ports(ref)
+        if P != ports(dut):
+            raise SystemExit(f'kvpc_sram_bench: {a.unit} REF / DUT ports differ')
+        tag = a.unit.upper()
+        tb = lockstep_tb(f'tb_kvpc_{a.unit}', P, ri, di, clk, rst, a.edges or 20000, a.mut, extra_in=xin, tag=tag,
+                         qual={'er': (0, 258, 1), 'native_commit_identity': ('r__native_commit_valid[0]', 60, 0),
+                               'native_commit_address': ('r__native_commit_valid[0]', 28, 0)})
+        (out / 'tb.sv').write_text(tb)
+        defs = {1: ['OT_KVPC_MUT_TQ_NEXT'], 2: ['OT_KVPC_CDC_UP_MUT'], 3: ['OT_KVPC_FRONT_MUT4']}.get(a.mut, [])
+        return build_run(out, f'tb_kvpc_{a.unit}', [str(out / 'tb.sv')] + base, defs, a.threads, tag, plus)
     # tile: DUT = the OT_KV_PC_SRAM tile, REF = the _rl tile; storage roots driven by hck in both
     nm = f'qkd_kvs_{a.tile}'
     ref = module(REF_TILE, nm).replace(f'module {nm} (', 'module ref_tile (', 1)

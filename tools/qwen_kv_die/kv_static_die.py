@@ -1012,7 +1012,16 @@ def pc_sram_text(txt):
     old, new = 'qkd_static_kv_pc_path_fan_nc_b #(.MU(1)) u_pc (', 'qkd_kvpc_s_fan_nc_b #(.MU(1)) u_pc ('
     if txt.count(old) != 1:
         raise ValueError('kv_static_die PC_SRAM: PC kit module has no single MU fan_nc_b u_pc instance')
-    return txt.replace(old, new)
+    txt = txt.replace(old, new)
+    # the embedding return hop / head (u_embr): ts_q (597 loads, the 298-b transfer enable) as kept copies
+    n = 0
+    for o, w in (('qkd_embedding_static_return_hop u_embr (', 'qkd_kvpc_s_rhop u_embr ('),
+                 ('qkd_embedding_static_return_head #(.MUT(0)) u_embr (', 'qkd_kvpc_s_rhead #(.MUT(0)) u_embr (')):
+        n += txt.count(o)
+        txt = txt.replace(o, w)
+    if n != 1:
+        raise ValueError('kv_static_die PC_SRAM: PC kit module has no single u_embr return hop / head')
+    return txt
 
 
 def pc_rland_text(txt):

@@ -19,13 +19,19 @@ set ot_rs_args [list --json $ot_rs_dir/ot_rst_copies_in.json --max $::env(OT_RST
                   --ys $ot_rs_dir/ot_rst_copies.ys --tsv $ot_rs_dir/ot_rst_copies.tsv]
 set ot_rs_re [expr {[info exists ::env(OT_RST_COPIES_RE)] && $::env(OT_RST_COPIES_RE) ne "" ? [list --re $::env(OT_RST_COPIES_RE)] : {}}]
 lappend ot_rs_args {*}$ot_rs_re
+# KV-PC SAFE 10-19 (opt-in): OT_RST_COPIES_WIDE=1 -> the prep also maps family-read memories / coarse cells per gate
+set ot_rs_wide [expr {[info exists ::env(OT_RST_COPIES_WIDE)] && $::env(OT_RST_COPIES_WIDE) eq "1" ? [list --wide] : {}}]
 yosys flatten
 yosys opt_clean
+# KV-PC SAFE 10-19 (OT_RST_COPIES_WIDE=1 only): fold hold-feedback muxes into enables first, so N identical copies of a
+# register that HOLDS its value (D = mux(Q_own, next, en) after proc) become identical $dffe cells (D = next, EN = en);
+# otherwise every copy's D differs by its own Q and the identity proof refuses the family.  synth runs opt_dff anyway.
+if {$ot_rs_wide ne {}} { yosys opt_dff }
 # multi-bit coarse registers on a relay copy would be one indivisible load (a 64-bit $adff = 64 flops on one ARST bit):
 # ot_rst_copies.py --prep lists them and they are mapped to per-bit flops first (as ot_keep_regs does for kept
 # registers).  Function unchanged; only the grouping granularity changes.
 yosys write_json $ot_rs_dir/ot_rst_copies_in.json
-puts [exec python3 $ot_rs_py --prep --json $ot_rs_dir/ot_rst_copies_in.json --ys $ot_rs_dir/ot_rst_copies_prep.ys {*}$ot_rs_re]
+puts [exec python3 $ot_rs_py --prep --json $ot_rs_dir/ot_rst_copies_in.json --ys $ot_rs_dir/ot_rst_copies_prep.ys {*}$ot_rs_re {*}$ot_rs_wide]
 yosys script $ot_rs_dir/ot_rst_copies_prep.ys
 yosys opt_clean
 yosys write_json $ot_rs_dir/ot_rst_copies_in.json

@@ -98,8 +98,10 @@ module qkd_kvpc_s_front #(
     initial if (NBLK < 2 || (NBLK & (NBLK-1)) != 0 || BLK < 2 || (BLK & (BLK-1)) != 0 || STRIDE < 1 || DEPTH > 32)
         $error("elastic front: NBLK>=2 and BLK>=2 powers of two, STRIDE>=1, NBLK*BLK<=32");
 
-    (* keep *) reg hr;
-    always @(posedge pll_hbm) hr <= hrst;
+    // item 3: hr (50 loads) and emitting (606: take = emitting enables the 297-bit out_q) are kept copy families
+    (* keep, ot_rst_split *) reg [2:0] hr__qv;
+    wire hr = hr__qv[0];
+    always @(posedge pll_hbm) hr__qv <= {3{hrst}};
     (* keep *) reg land_v;
     (* keep *) reg [296:0] land_d;
     always @(posedge pll_hbm or negedge hr)
@@ -113,7 +115,8 @@ module qkd_kvpc_s_front #(
     (* keep *) reg go_q;
     always @(posedge pll_hbm or negedge hr) if (!hr) go_q <= 1'b0; else go_q <= blk_go;
     reg [PW-1:0] pending;
-    reg emitting;
+    (* keep, ot_rst_split *) reg [25:0] emitting__qv;
+    wire emitting = emitting__qv[0];
     reg [BW-1:0] cnt;
     reg [SW-1:0] sc;
     wire last = emitting && sc == C_S1 && cnt == C_B1;
@@ -146,7 +149,7 @@ module qkd_kvpc_s_front #(
 
     always @(posedge pll_hbm or negedge hr)
         if (!hr) begin
-            wp <= 0; rp <= 0; bs <= 0; pending <= 0; emitting <= 0; cnt <= 0; sc <= 0; ra <= C_RA0;
+            wp <= 0; rp <= 0; bs <= 0; pending <= 0; emitting__qv <= 26'd0; cnt <= 0; sc <= 0; ra <= C_RA0;
             put_q <= 0; blk_freed <= 0; hold <= 0; stall_edges <= 0; fault_overflow <= 0; fault_go <= 0; idle <= 1'b1;
             occupancy <= 0;
         end else begin
@@ -165,10 +168,10 @@ module qkd_kvpc_s_front #(
                 sc <= (sc == C_S1) ? C_S0 : sc + 1'b1;
                 if (take) begin
                     put_q <= 1'b1; rp <= rp + 1'b1; cnt <= cnt + 1'b1; ra <= ra + 1'b1;
-                    if (last) begin emitting <= 1'b0; blk_freed <= 1'b1; end
+                    if (last) begin emitting__qv <= 26'd0; blk_freed <= 1'b1; end
                 end
             end
-            if (start) begin emitting <= 1'b1; cnt <= 0; sc <= C_S1; bs <= bs + C_BLK; end
+            if (start) begin emitting__qv <= {26{1'b1}}; cnt <= 0; sc <= C_S1; bs <= bs + C_BLK; end
         end
     always @(posedge pll_hbm) if (take) out_q <= mem_rd;
     assign co_out = {out_q[280:0], put_q};
@@ -194,20 +197,25 @@ module qkd_kvpc_s_return #(parameter integer DEPTH = 8, parameter integer MUT = 
 );
  localparam integer AW=$clog2(DEPTH);
  initial if(DEPTH<4 || (DEPTH&(DEPTH-1))!=0 || DEPTH>32)$error("static return depth must be power of two 4..32");
- (* keep *)reg hr;
- always @(posedge pll_hbm)hr<=hrst;
- (* keep *)reg rs_a,rs_b,rs_c;
- always @(posedge ck)begin rs_a<=rsi;rs_b<=rsi;rs_c<=rsi;end
+ // item 3: hr (44 loads), rs_c (51), slot (61) are kept copy families
+ (* keep, ot_rst_split *)reg [1:0] hr__qv;
+ wire hr=hr__qv[0];
+ always @(posedge pll_hbm)hr__qv<={2{hrst}};
+ (* keep *)reg rs_a,rs_b;
+ (* keep, ot_rst_split *)reg [2:0] rs_c__qv;
+ wire rs_c=rs_c__qv[0];
+ always @(posedge ck)begin rs_a<=rsi;rs_b<=rsi;rs_c__qv<={3{rsi}};end
  (* keep *)reg observed,write_slot;
  (* keep *)reg [287:0] hd;
  always @(posedge pll_hbm)hd<={controller_epoch,controller_co[17:12],controller_co[11:9],controller_co[7:1],controller_co[281:26]};
  always @(posedge pll_hbm or negedge hr)
   if(!hr)begin observed<=0;write_slot<=0;end
   else begin observed<=controller_co[0];write_slot<=compiled_hbm_put;end
- (* keep *)reg slot;
+ (* keep, ot_rst_split *)reg [2:0] slot__qv;
+ wire slot=slot__qv[0];
  (* keep *)reg [31:0] meta;
  always @(posedge ck)meta<={expected_epoch,expected_layer,expected_sector};
- always @(posedge ck or negedge rs_c)if(!rs_c)slot<=0;else slot<=expected_put;
+ always @(posedge ck or negedge rs_c)if(!rs_c)slot__qv<=3'd0;else slot__qv<={3{expected_put}};
  wire [287:0] read_data;
  reg [DEPTH-1:0] published,consumed,observed_valid;
  (* async_reg="true" *)reg [DEPTH-1:0] pub_sync1,pub_sync2,done_sync1,done_sync2;
@@ -270,7 +278,8 @@ endmodule
 module ot_async_fifo_kvpc_s #(
     parameter integer WIDTH = 32,
     parameter integer DEPTH = 8,
-    parameter integer MUT = 0      // 1 bank permutation, 2 read at rd_bin (no prefetch)
+    parameter integer MUT = 0,     // 1 bank permutation, 2 read at rd_bin (no prefetch)
+    parameter integer SRAM = 1     // 0: flop array (the 1-bit credit FIFO), read as ot_async_fifo
 ) (
     input  wire             wr_clk,
     input  wire             wr_rst_n,
@@ -292,14 +301,19 @@ module ot_async_fifo_kvpc_s #(
     localparam integer ADDR_W = $clog2(DEPTH);
     localparam integer PTR_W = ADDR_W + 1;
     wire fifo_async_rst_n = wr_rst_n && rd_rst_n;
-    wire wr_domain_rst_n;
-    wire rd_domain_rst_n;
-    ot_reset_sync wr_reset_conditioner (
-        .clk(wr_clk), .async_rst_n(fifo_async_rst_n),
-        .sync_rst_n(wr_domain_rst_n));
-    ot_reset_sync rd_reset_conditioner (
-        .clk(rd_clk), .async_rst_n(fifo_async_rst_n),
-        .sync_rst_n(rd_domain_rst_n));
+    // the two reset conditioners of ot_async_fifo (ot_reset_sync, 2 stages each), inline: the released stage is a kept
+    // copy family (item 3: the credit FIFO conditioner drove 74 loads), same release edge
+    (* async_reg = "true" *) reg wr_rs1, rd_rs1;
+    (* keep, ot_rst_split *) reg [3:0] wr_rs2__qv;
+    (* keep, ot_rst_split *) reg [3:0] rd_rs2__qv;
+    wire wr_domain_rst_n = wr_rs2__qv[0];
+    wire rd_domain_rst_n = rd_rs2__qv[0];
+    always @(posedge wr_clk or negedge fifo_async_rst_n)
+        if (!fifo_async_rst_n) begin wr_rs1 <= 1'b0; wr_rs2__qv <= 4'd0; end
+        else begin wr_rs1 <= 1'b1; wr_rs2__qv <= {4{wr_rs1}}; end
+    always @(posedge rd_clk or negedge fifo_async_rst_n)
+        if (!fifo_async_rst_n) begin rd_rs1 <= 1'b0; rd_rs2__qv <= 4'd0; end
+        else begin rd_rs1 <= 1'b1; rd_rs2__qv <= {4{rd_rs1}}; end
     reg [PTR_W-1:0] wr_bin, wr_gray;
     reg [PTR_W-1:0] rd_bin, rd_gray;
     (* async_reg = "true" *) reg [PTR_W-1:0] rd_gray_w1, rd_gray_w2;
@@ -327,9 +341,16 @@ module ot_async_fifo_kvpc_s #(
     assign wr_ready = wr_domain_rst_n && rd_online_w2 && !wr_full;
     assign rd_valid = rd_domain_rst_n && wr_online_r2 && !rd_empty;
     // storage: native banks; the write is the original's (inside the wr_domain_rst_n-released branch, on wr_fire)
-    qkd_kvpc_ram2c #(.WORDS(DEPTH), .BITS(WIDTH), .NW(1), .WCLK_MAP(64'd0), .MUT(MUT == 1 ? 1 : 0)) u_mem (
-        .wclk(wr_clk), .rclk(rd_clk), .r_ce(1'b1), .r_addr(MUT == 2 ? rd_bin[ADDR_W-1:0] : rd_bin_next[ADDR_W-1:0]), .rd(rd_data),
-        .w_ce({((WIDTH + 63) / 64){wr_domain_rst_n && wr_fire}}), .w_addr(wr_bin[ADDR_W-1:0]), .wd(wr_data));
+    generate if (SRAM != 0) begin : g_sram
+        qkd_kvpc_ram2c #(.WORDS(DEPTH), .BITS(WIDTH), .NW(1), .WCLK_MAP(64'd0), .MUT(MUT == 1 ? 1 : 0)) u_mem (
+            .wclk(wr_clk), .rclk(rd_clk), .r_ce(1'b1), .r_addr(MUT == 2 ? rd_bin[ADDR_W-1:0] : rd_bin_next[ADDR_W-1:0]),
+            .rd(rd_data), .w_ce({((WIDTH + 63) / 64){wr_domain_rst_n && wr_fire}}), .w_addr(wr_bin[ADDR_W-1:0]),
+            .wd(wr_data));
+    end else begin : g_flop
+        reg [WIDTH-1:0] mem [0:DEPTH-1];
+        assign rd_data = mem[rd_bin[ADDR_W-1:0]];
+        always @(posedge wr_clk) if (wr_domain_rst_n && wr_fire) mem[wr_bin[ADDR_W-1:0]] <= wr_data;
+    end endgenerate
 
     always @(posedge wr_clk or negedge wr_domain_rst_n) begin
         if (!wr_domain_rst_n) begin
@@ -379,7 +400,7 @@ module ot_async_fifo_kvpc_s #(
 endmodule
 
 // ---- embedding static crossing (ot_qkd_static_emb_cdc successor): down / up FIFOs in native banks ---------------
-// The 1-bit credit FIFO keeps ot_async_fifo (8 flops).  Everything else is the original.
+// The 1-bit credit FIFO is the same successor with flop storage (SRAM 0).  Everything else is the original.
 module ot_qkd_static_emb_cdc_kvpc_s #(parameter integer ENABLE=0, DEPTH=8, MUT=0)(   // MUT 1/2: down FIFO bank permutation / no prefetch
  input wire clk,rst_n,hclk,hrst_n,
  input wire s_v,input wire [286:0] s_d,input wire [61:0] s_context,
@@ -409,7 +430,7 @@ module ot_qkd_static_emb_cdc_kvpc_s #(parameter integer ENABLE=0, DEPTH=8, MUT=0
   .wr_ready(up_ready),.wr_data(h_d),.wr_overflow(),
   .rd_clk(clk),.rd_rst_n(rst_n),.rd_valid(up_valid),
   .rd_ready(1'b1),.rd_data(up_data),.rd_underflow());
- ot_async_fifo #(.WIDTH(1),.DEPTH(DEPTH)) credit(
+ ot_async_fifo_kvpc_s #(.WIDTH(1),.DEPTH(DEPTH),.SRAM(0)) credit(
   .wr_clk(hclk),.wr_rst_n(hrst_n),.wr_valid(ENABLE!=0 && h_credit),
   .wr_ready(credit_ready),.wr_data(1'b1),.wr_overflow(),
   .rd_clk(clk),.rd_rst_n(rst_n),.rd_valid(credit_valid),
