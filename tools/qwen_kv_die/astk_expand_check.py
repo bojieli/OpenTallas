@@ -58,6 +58,7 @@ def main(argv=None):
         insts.append(f'  {mst} {inst} ({", ".join(conns)});')
         place.append(f'ot_mts::place [$_blk findInst {inst}] {x:.3f} 0.000 R0')
     (case / 'die.v').write_text('module astk_check_die ();\n' + '\n'.join(wires) + '\n' + '\n'.join(insts) + '\nendmodule\n')
+    place.append('ot_mts::place [$_blk findInst anchor_keep] 0.000 0.000 R0   ;# harness anchor (kv_expand appends after the last kept place line)')
     (case / 'place.tcl').write_text('\n'.join(place) + '\n')
     lef = ''.join(f'MACRO {m}\n  CLASS BLOCK ;\n  SIZE {fw} BY {fh} ;\nEND {m}\n' for m in ('qkd_astk', 'qkd_astk_n'))
     (case / 'elements.lef').write_text(lef + 'END LIBRARY\n')
