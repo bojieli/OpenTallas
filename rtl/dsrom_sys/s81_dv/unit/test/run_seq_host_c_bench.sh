@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # PL-SEQ option B: the S81U-SEQ golden bench (run_seq_host_bench.sh, unchanged tb) on dsdv_seq_host_bw = the hardened core
 # dsdv_seq_host_c + the 2-stage die-lane stand-in.  The tb is copied with its DUT module name swapped (dsdv_seq_host ->
-# dsdv_seq_host_bw) and its dut.u_l<k> probes re-rooted to dut.u_c.u_l<k>; nothing else changes.  Goldens seeds 1-4 PASS, collide / W-drop faults, mutants 1..6 FAIL.
+# dsdv_seq_host_bw) and its dut.u_l<k> probes re-rooted to dut.u_c.u_l<k>; nothing else changes.  Goldens seeds 1-4 PASS, collide / W-drop faults, mutants 1..9 FAIL
+# (S81-GUSEQ 10-18: 7 OT_ING_MUT_HREGV, 8 OT_ING_MUT_RAC = APIPE 7 ingest; 9 = lk RL 1 rung landing dropped; as run_seq_host_bench.sh).
 # Run on the FLEET (ot-run), never on localhost.  Prints SEQHOST_C_GATE PASS/FAIL.   Usage: run_seq_host_c_bench.sh OUTDIR [seeds]
 set -u
 R=$(cd "$(dirname "$0")/../../../../.." && pwd)
@@ -33,8 +34,9 @@ done
 grep '^SEQHOST COLLIDE' "$O/run_collide.log"; grep -q 'PASS (fault raised)' "$O/run_collide.log" || { echo "collision not faulted"; bad=1; }
 "$O/base/tb" +seed=3 +stdrop=1 > "$O/run_stdrop.log" 2>&1
 grep '^SEQHOST STDROP' "$O/run_stdrop.log"; grep -q 'PASS (fault raised)' "$O/run_stdrop.log" || { echo "W region drop not faulted"; bad=1; }
-for m in 1 2 3 4 5 6; do
-  build mut$m +define+MUT=$m || { bad=1; continue; }
+mdef() { case $1 in 7) echo +define+OT_ING_MUT_HREGV;; 8) echo +define+OT_ING_MUT_RAC;; *) echo +define+MUT=$1;; esac; }
+for m in 1 2 3 4 5 6 7 8 9; do
+  build mut$m $(mdef $m) || { bad=1; continue; }
   "$O/mut$m/tb" +seed=1 > "$O/run_mut$m.log" 2>&1
   if grep -q '^SEQHOST PASS' "$O/run_mut$m.log"; then echo "mutant $m NOT detected"; bad=1
   else echo "mutant $m detected: $(grep -m1 '^SEQHOST seed' "$O/run_mut$m.log" | grep -o 'mism.*')"; fi

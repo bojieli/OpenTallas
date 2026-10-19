@@ -3,7 +3,7 @@
 // stages = the dvrlyh relays the die places toward s_4N) == dsdv_seq_host, port for port.  MUT 3 = one lane stage
 // missing (latency 5), as dsdv_seq_host's MUT 3.  The S81U-SEQ golden bench runs on this wrapper
 // (run_seq_host_c_bench.sh), so every seq_host mutant (1..6) is exercised on the core.
-module dsdv_seq_host_bw #(parameter integer V = 276, parameter integer STAGE = 0, parameter integer MUT = 0) (
+module dsdv_seq_host_bw #(parameter integer V = 276, parameter integer STAGE = 0, parameter integer MUT = 0, parameter integer RL = 1) (
     input  wire          ck,
     input  wire          rst_n,
     input  wire [7:0]    tap_k, sink_k,
@@ -17,7 +17,7 @@ module dsdv_seq_host_bw #(parameter integer V = 276, parameter integer STAGE = 0
     output wire          cw_v, output wire [9:0] cw_a, output wire [255:0] cw_d
 );
     wire [V-1:0] cn, cs, n1, s1;
-    dsdv_seq_host_c #(.V(V), .STAGE(STAGE), .MUT(MUT)) u_c (.ck(ck), .rst_n(rst_n), .tap_k(tap_k), .sink_k(sink_k),
+    dsdv_seq_host_c #(.V(V), .STAGE(STAGE), .MUT(MUT), .RL(RL)) u_c (.ck(ck), .rst_n(rst_n), .tap_k(tap_k), .sink_k(sink_k),
         .vi_s(vi_s), .vo_s(vo_s), .vi_n(cs), .vo_n(cn), .f_host(f_host), .t_host(t_host), .f_lf(f_lf), .f_ks(f_ks), .t_kd(t_kd),
         .s_j(s_j), .s_jd_w(s_jd_w), .s_jd_e(s_jd_e), .s_hw_w(s_hw_w), .s_hw_e(s_hw_e), .s_hc_w(s_hc_w), .s_hc_e(s_hc_e),
         .st_rg_w(st_rg_w), .st_rg_e(st_rg_e), .cw_v(cw_v), .cw_a(cw_a), .cw_d(cw_d));
