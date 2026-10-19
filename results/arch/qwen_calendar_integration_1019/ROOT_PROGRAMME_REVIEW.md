@@ -34,8 +34,11 @@ rejects remapped qkv/gu PC3. A source-only clone candidate24 passes the identity
 checker. Slot12 is deliberately not proposed because head MODEL reserves12..23.
 
 The current producer observation path also filters every filler user through
-`c_su && c_u0`. Actual XS source groups issue12 slice-targeted commands at
-different cycles with the same producer PC. XPF checks each matching PC against
+`c_su && c_u0`. Actual XS3 source groups are in resid1/resid2, each with12 slice-targeted
+commands at different cycles. The qkv/gu families themselves contain kind2 STN
+commands, not direct SU issues. Thus actual predecessor/stage identity is also
+required: first qkv needs embedding/INIT or prior-stage residency; it cannot be
+bound to the qkv family STN timestamp. XPF checks each matching PC against
 one issue cycle, so even user0 with remapped PC3 would fault on the other slice
 commands. Clone24 resolves the repeated record identity only. A source-qualified
 producer witness scheme and filler observation contract remain open; no decoder

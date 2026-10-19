@@ -20097,11 +20097,2983 @@
     ],
     "adopted": false
   },
+  "actual_SU_issue_events": [
+    {
+      "source_index": 0,
+      "edge_w5": 26,
+      "label": "SSQ s11 blocks [11, 23]",
+      "local_pidx": 0,
+      "target_slice": 11,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 0
+        },
+        {
+          "user": 1,
+          "pidx": 128
+        },
+        {
+          "user": 2,
+          "pidx": 256
+        },
+        {
+          "user": 3,
+          "pidx": 384
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 1,
+      "edge_w5": 27,
+      "label": "SSQ s10 blocks [10, 22]",
+      "local_pidx": 0,
+      "target_slice": 10,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 0
+        },
+        {
+          "user": 1,
+          "pidx": 128
+        },
+        {
+          "user": 2,
+          "pidx": 256
+        },
+        {
+          "user": 3,
+          "pidx": 384
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 2,
+      "edge_w5": 28,
+      "label": "SSQ s9 blocks [9, 21]",
+      "local_pidx": 0,
+      "target_slice": 9,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 0
+        },
+        {
+          "user": 1,
+          "pidx": 128
+        },
+        {
+          "user": 2,
+          "pidx": 256
+        },
+        {
+          "user": 3,
+          "pidx": 384
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 3,
+      "edge_w5": 29,
+      "label": "SSQ s8 blocks [8, 20]",
+      "local_pidx": 0,
+      "target_slice": 8,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 0
+        },
+        {
+          "user": 1,
+          "pidx": 128
+        },
+        {
+          "user": 2,
+          "pidx": 256
+        },
+        {
+          "user": 3,
+          "pidx": 384
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 4,
+      "edge_w5": 30,
+      "label": "SSQ s7 blocks [7, 19, 31]",
+      "local_pidx": 0,
+      "target_slice": 7,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 0
+        },
+        {
+          "user": 1,
+          "pidx": 128
+        },
+        {
+          "user": 2,
+          "pidx": 256
+        },
+        {
+          "user": 3,
+          "pidx": 384
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 5,
+      "edge_w5": 31,
+      "label": "SSQ s6 blocks [6, 18, 30]",
+      "local_pidx": 0,
+      "target_slice": 6,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 0
+        },
+        {
+          "user": 1,
+          "pidx": 128
+        },
+        {
+          "user": 2,
+          "pidx": 256
+        },
+        {
+          "user": 3,
+          "pidx": 384
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 6,
+      "edge_w5": 32,
+      "label": "SSQ s5 blocks [5, 17, 29]",
+      "local_pidx": 0,
+      "target_slice": 5,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 0
+        },
+        {
+          "user": 1,
+          "pidx": 128
+        },
+        {
+          "user": 2,
+          "pidx": 256
+        },
+        {
+          "user": 3,
+          "pidx": 384
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 7,
+      "edge_w5": 33,
+      "label": "SSQ s4 blocks [4, 16, 28]",
+      "local_pidx": 0,
+      "target_slice": 4,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 0
+        },
+        {
+          "user": 1,
+          "pidx": 128
+        },
+        {
+          "user": 2,
+          "pidx": 256
+        },
+        {
+          "user": 3,
+          "pidx": 384
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 8,
+      "edge_w5": 34,
+      "label": "SSQ s3 blocks [3, 15, 27]",
+      "local_pidx": 0,
+      "target_slice": 3,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 0
+        },
+        {
+          "user": 1,
+          "pidx": 128
+        },
+        {
+          "user": 2,
+          "pidx": 256
+        },
+        {
+          "user": 3,
+          "pidx": 384
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 9,
+      "edge_w5": 35,
+      "label": "SSQ s2 blocks [2, 14, 26]",
+      "local_pidx": 0,
+      "target_slice": 2,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 0
+        },
+        {
+          "user": 1,
+          "pidx": 128
+        },
+        {
+          "user": 2,
+          "pidx": 256
+        },
+        {
+          "user": 3,
+          "pidx": 384
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 10,
+      "edge_w5": 36,
+      "label": "SSQ s1 blocks [1, 13, 25]",
+      "local_pidx": 0,
+      "target_slice": 1,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 0
+        },
+        {
+          "user": 1,
+          "pidx": 128
+        },
+        {
+          "user": 2,
+          "pidx": 256
+        },
+        {
+          "user": 3,
+          "pidx": 384
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 11,
+      "edge_w5": 37,
+      "label": "SSQ s0 blocks [0, 12, 24]",
+      "local_pidx": 0,
+      "target_slice": 0,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 0
+        },
+        {
+          "user": 1,
+          "pidx": 128
+        },
+        {
+          "user": 2,
+          "pidx": 256
+        },
+        {
+          "user": 3,
+          "pidx": 384
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 24,
+      "edge_w5": 302,
+      "label": "qk: q*r+SS s0",
+      "local_pidx": 4,
+      "target_slice": 0,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 4
+        },
+        {
+          "user": 1,
+          "pidx": 132
+        },
+        {
+          "user": 2,
+          "pidx": 260
+        },
+        {
+          "user": 3,
+          "pidx": 388
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 25,
+      "edge_w5": 303,
+      "label": "qk: q*r+SS s2",
+      "local_pidx": 4,
+      "target_slice": 2,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 4
+        },
+        {
+          "user": 1,
+          "pidx": 132
+        },
+        {
+          "user": 2,
+          "pidx": 260
+        },
+        {
+          "user": 3,
+          "pidx": 388
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 26,
+      "edge_w5": 304,
+      "label": "qk: q*r+SS s4",
+      "local_pidx": 4,
+      "target_slice": 4,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 4
+        },
+        {
+          "user": 1,
+          "pidx": 132
+        },
+        {
+          "user": 2,
+          "pidx": 260
+        },
+        {
+          "user": 3,
+          "pidx": 388
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 27,
+      "edge_w5": 305,
+      "label": "qk: q*r+SS s6",
+      "local_pidx": 4,
+      "target_slice": 6,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 4
+        },
+        {
+          "user": 1,
+          "pidx": 132
+        },
+        {
+          "user": 2,
+          "pidx": 260
+        },
+        {
+          "user": 3,
+          "pidx": 388
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 28,
+      "edge_w5": 306,
+      "label": "qk: k*r+SS s8",
+      "local_pidx": 4,
+      "target_slice": 8,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 4
+        },
+        {
+          "user": 1,
+          "pidx": 132
+        },
+        {
+          "user": 2,
+          "pidx": 260
+        },
+        {
+          "user": 3,
+          "pidx": 388
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 29,
+      "edge_w5": 307,
+      "label": "qk: V*r s10 -> KV fp8",
+      "local_pidx": 4,
+      "target_slice": 10,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 4
+        },
+        {
+          "user": 1,
+          "pidx": 132
+        },
+        {
+          "user": 2,
+          "pidx": 260
+        },
+        {
+          "user": 3,
+          "pidx": 388
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 30,
+      "edge_w5": 393,
+      "label": "qk: RS s0",
+      "local_pidx": 5,
+      "target_slice": 0,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 5
+        },
+        {
+          "user": 1,
+          "pidx": 133
+        },
+        {
+          "user": 2,
+          "pidx": 261
+        },
+        {
+          "user": 3,
+          "pidx": 389
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 31,
+      "edge_w5": 394,
+      "label": "qk: RS s2",
+      "local_pidx": 5,
+      "target_slice": 2,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 5
+        },
+        {
+          "user": 1,
+          "pidx": 133
+        },
+        {
+          "user": 2,
+          "pidx": 261
+        },
+        {
+          "user": 3,
+          "pidx": 389
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 32,
+      "edge_w5": 395,
+      "label": "qk: RS s4",
+      "local_pidx": 5,
+      "target_slice": 4,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 5
+        },
+        {
+          "user": 1,
+          "pidx": 133
+        },
+        {
+          "user": 2,
+          "pidx": 261
+        },
+        {
+          "user": 3,
+          "pidx": 389
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 33,
+      "edge_w5": 396,
+      "label": "qk: RS s6",
+      "local_pidx": 5,
+      "target_slice": 6,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 5
+        },
+        {
+          "user": 1,
+          "pidx": 133
+        },
+        {
+          "user": 2,
+          "pidx": 261
+        },
+        {
+          "user": 3,
+          "pidx": 389
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 34,
+      "edge_w5": 397,
+      "label": "qk: RS s8",
+      "local_pidx": 5,
+      "target_slice": 8,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 5
+        },
+        {
+          "user": 1,
+          "pidx": 133
+        },
+        {
+          "user": 2,
+          "pidx": 261
+        },
+        {
+          "user": 3,
+          "pidx": 389
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 35,
+      "edge_w5": 464,
+      "label": "qk: QN s0",
+      "local_pidx": 6,
+      "target_slice": 0,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 6
+        },
+        {
+          "user": 1,
+          "pidx": 134
+        },
+        {
+          "user": 2,
+          "pidx": 262
+        },
+        {
+          "user": 3,
+          "pidx": 390
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 36,
+      "edge_w5": 465,
+      "label": "qk: QN s2",
+      "local_pidx": 6,
+      "target_slice": 2,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 6
+        },
+        {
+          "user": 1,
+          "pidx": 134
+        },
+        {
+          "user": 2,
+          "pidx": 262
+        },
+        {
+          "user": 3,
+          "pidx": 390
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 37,
+      "edge_w5": 466,
+      "label": "qk: QN s4",
+      "local_pidx": 6,
+      "target_slice": 4,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 6
+        },
+        {
+          "user": 1,
+          "pidx": 134
+        },
+        {
+          "user": 2,
+          "pidx": 262
+        },
+        {
+          "user": 3,
+          "pidx": 390
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 38,
+      "edge_w5": 467,
+      "label": "qk: QN s6",
+      "local_pidx": 6,
+      "target_slice": 6,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 6
+        },
+        {
+          "user": 1,
+          "pidx": 134
+        },
+        {
+          "user": 2,
+          "pidx": 262
+        },
+        {
+          "user": 3,
+          "pidx": 390
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 39,
+      "edge_w5": 468,
+      "label": "qk: QN s8",
+      "local_pidx": 6,
+      "target_slice": 8,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 6
+        },
+        {
+          "user": 1,
+          "pidx": 134
+        },
+        {
+          "user": 2,
+          "pidx": 262
+        },
+        {
+          "user": 3,
+          "pidx": 390
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 40,
+      "edge_w5": 513,
+      "label": "qk: rlo s0 (q)",
+      "local_pidx": 7,
+      "target_slice": 0,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 7
+        },
+        {
+          "user": 1,
+          "pidx": 135
+        },
+        {
+          "user": 2,
+          "pidx": 263
+        },
+        {
+          "user": 3,
+          "pidx": 391
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 41,
+      "edge_w5": 514,
+      "label": "qk: rlo s2 (q)",
+      "local_pidx": 7,
+      "target_slice": 2,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 7
+        },
+        {
+          "user": 1,
+          "pidx": 135
+        },
+        {
+          "user": 2,
+          "pidx": 263
+        },
+        {
+          "user": 3,
+          "pidx": 391
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 42,
+      "edge_w5": 515,
+      "label": "qk: rlo s4 (q)",
+      "local_pidx": 7,
+      "target_slice": 4,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 7
+        },
+        {
+          "user": 1,
+          "pidx": 135
+        },
+        {
+          "user": 2,
+          "pidx": 263
+        },
+        {
+          "user": 3,
+          "pidx": 391
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 43,
+      "edge_w5": 516,
+      "label": "qk: rlo s6 (q)",
+      "local_pidx": 7,
+      "target_slice": 6,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 7
+        },
+        {
+          "user": 1,
+          "pidx": 135
+        },
+        {
+          "user": 2,
+          "pidx": 263
+        },
+        {
+          "user": 3,
+          "pidx": 391
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 44,
+      "edge_w5": 554,
+      "label": "qk: rhi s0 (q)",
+      "local_pidx": 8,
+      "target_slice": 0,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 8
+        },
+        {
+          "user": 1,
+          "pidx": 136
+        },
+        {
+          "user": 2,
+          "pidx": 264
+        },
+        {
+          "user": 3,
+          "pidx": 392
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 45,
+      "edge_w5": 555,
+      "label": "qk: rhi s2 (q)",
+      "local_pidx": 8,
+      "target_slice": 2,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 8
+        },
+        {
+          "user": 1,
+          "pidx": 136
+        },
+        {
+          "user": 2,
+          "pidx": 264
+        },
+        {
+          "user": 3,
+          "pidx": 392
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 46,
+      "edge_w5": 556,
+      "label": "qk: rhi s4 (q)",
+      "local_pidx": 8,
+      "target_slice": 4,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 8
+        },
+        {
+          "user": 1,
+          "pidx": 136
+        },
+        {
+          "user": 2,
+          "pidx": 264
+        },
+        {
+          "user": 3,
+          "pidx": 392
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 47,
+      "edge_w5": 557,
+      "label": "qk: rhi s6 (q)",
+      "local_pidx": 8,
+      "target_slice": 6,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 8
+        },
+        {
+          "user": 1,
+          "pidx": 136
+        },
+        {
+          "user": 2,
+          "pidx": 264
+        },
+        {
+          "user": 3,
+          "pidx": 392
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 48,
+      "edge_w5": 558,
+      "label": "qk: rlo s8 (k)",
+      "local_pidx": 7,
+      "target_slice": 8,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 7
+        },
+        {
+          "user": 1,
+          "pidx": 135
+        },
+        {
+          "user": 2,
+          "pidx": 263
+        },
+        {
+          "user": 3,
+          "pidx": 391
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 49,
+      "edge_w5": 599,
+      "label": "qk: rhi s8 (k)",
+      "local_pidx": 8,
+      "target_slice": 8,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 8
+        },
+        {
+          "user": 1,
+          "pidx": 136
+        },
+        {
+          "user": 2,
+          "pidx": 264
+        },
+        {
+          "user": 3,
+          "pidx": 392
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 59,
+      "edge_w5": 2368,
+      "label": "attn: XA s0 blk0",
+      "local_pidx": 11,
+      "target_slice": 0,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 11
+        },
+        {
+          "user": 1,
+          "pidx": 139
+        },
+        {
+          "user": 2,
+          "pidx": 267
+        },
+        {
+          "user": 3,
+          "pidx": 395
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 62,
+      "edge_w5": 2375,
+      "label": "attn: XA s1 blk1",
+      "local_pidx": 11,
+      "target_slice": 1,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 11
+        },
+        {
+          "user": 1,
+          "pidx": 139
+        },
+        {
+          "user": 2,
+          "pidx": 267
+        },
+        {
+          "user": 3,
+          "pidx": 395
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 64,
+      "edge_w5": 2382,
+      "label": "attn: XA s2 blk2",
+      "local_pidx": 11,
+      "target_slice": 2,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 11
+        },
+        {
+          "user": 1,
+          "pidx": 139
+        },
+        {
+          "user": 2,
+          "pidx": 267
+        },
+        {
+          "user": 3,
+          "pidx": 395
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 65,
+      "edge_w5": 2387,
+      "label": "attn: XA s5 blk3",
+      "local_pidx": 11,
+      "target_slice": 5,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 11
+        },
+        {
+          "user": 1,
+          "pidx": 139
+        },
+        {
+          "user": 2,
+          "pidx": 267
+        },
+        {
+          "user": 3,
+          "pidx": 395
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 168,
+      "edge_w5": 3279,
+      "label": "resid1: RES1 s8 blocks [8, 20]",
+      "local_pidx": 1,
+      "target_slice": 8,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 1
+        },
+        {
+          "user": 1,
+          "pidx": 129
+        },
+        {
+          "user": 2,
+          "pidx": 257
+        },
+        {
+          "user": 3,
+          "pidx": 385
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 171,
+      "edge_w5": 3286,
+      "label": "resid1: RES1 s9 blocks [9, 21]",
+      "local_pidx": 1,
+      "target_slice": 9,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 1
+        },
+        {
+          "user": 1,
+          "pidx": 129
+        },
+        {
+          "user": 2,
+          "pidx": 257
+        },
+        {
+          "user": 3,
+          "pidx": 385
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 173,
+      "edge_w5": 3293,
+      "label": "resid1: RES1 s10 blocks [10, 22]",
+      "local_pidx": 1,
+      "target_slice": 10,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 1
+        },
+        {
+          "user": 1,
+          "pidx": 129
+        },
+        {
+          "user": 2,
+          "pidx": 257
+        },
+        {
+          "user": 3,
+          "pidx": 385
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 174,
+      "edge_w5": 3300,
+      "label": "resid1: RES1 s11 blocks [11, 23]",
+      "local_pidx": 1,
+      "target_slice": 11,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 1
+        },
+        {
+          "user": 1,
+          "pidx": 129
+        },
+        {
+          "user": 2,
+          "pidx": 257
+        },
+        {
+          "user": 3,
+          "pidx": 385
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 180,
+      "edge_w5": 3319,
+      "label": "resid1: RES1 s0 blocks [0, 12, 24]",
+      "local_pidx": 1,
+      "target_slice": 0,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 1
+        },
+        {
+          "user": 1,
+          "pidx": 129
+        },
+        {
+          "user": 2,
+          "pidx": 257
+        },
+        {
+          "user": 3,
+          "pidx": 385
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 183,
+      "edge_w5": 3326,
+      "label": "resid1: RES1 s1 blocks [1, 13, 25]",
+      "local_pidx": 1,
+      "target_slice": 1,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 1
+        },
+        {
+          "user": 1,
+          "pidx": 129
+        },
+        {
+          "user": 2,
+          "pidx": 257
+        },
+        {
+          "user": 3,
+          "pidx": 385
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 186,
+      "edge_w5": 3333,
+      "label": "resid1: RES1 s2 blocks [2, 14, 26]",
+      "local_pidx": 1,
+      "target_slice": 2,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 1
+        },
+        {
+          "user": 1,
+          "pidx": 129
+        },
+        {
+          "user": 2,
+          "pidx": 257
+        },
+        {
+          "user": 3,
+          "pidx": 385
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 189,
+      "edge_w5": 3340,
+      "label": "resid1: RES1 s3 blocks [3, 15, 27]",
+      "local_pidx": 1,
+      "target_slice": 3,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 1
+        },
+        {
+          "user": 1,
+          "pidx": 129
+        },
+        {
+          "user": 2,
+          "pidx": 257
+        },
+        {
+          "user": 3,
+          "pidx": 385
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 192,
+      "edge_w5": 3347,
+      "label": "resid1: RES1 s4 blocks [4, 16, 28]",
+      "local_pidx": 1,
+      "target_slice": 4,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 1
+        },
+        {
+          "user": 1,
+          "pidx": 129
+        },
+        {
+          "user": 2,
+          "pidx": 257
+        },
+        {
+          "user": 3,
+          "pidx": 385
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 195,
+      "edge_w5": 3354,
+      "label": "resid1: RES1 s5 blocks [5, 17, 29]",
+      "local_pidx": 1,
+      "target_slice": 5,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 1
+        },
+        {
+          "user": 1,
+          "pidx": 129
+        },
+        {
+          "user": 2,
+          "pidx": 257
+        },
+        {
+          "user": 3,
+          "pidx": 385
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 197,
+      "edge_w5": 3361,
+      "label": "resid1: RES1 s6 blocks [6, 18, 30]",
+      "local_pidx": 1,
+      "target_slice": 6,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 1
+        },
+        {
+          "user": 1,
+          "pidx": 129
+        },
+        {
+          "user": 2,
+          "pidx": 257
+        },
+        {
+          "user": 3,
+          "pidx": 385
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 198,
+      "edge_w5": 3368,
+      "label": "resid1: RES1 s7 blocks [7, 19, 31]",
+      "local_pidx": 1,
+      "target_slice": 7,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 1
+        },
+        {
+          "user": 1,
+          "pidx": 129
+        },
+        {
+          "user": 2,
+          "pidx": 257
+        },
+        {
+          "user": 3,
+          "pidx": 385
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 199,
+      "edge_w5": 3387,
+      "label": "resid1: XS s8",
+      "local_pidx": 3,
+      "target_slice": 8,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 3
+        },
+        {
+          "user": 1,
+          "pidx": 131
+        },
+        {
+          "user": 2,
+          "pidx": 259
+        },
+        {
+          "user": 3,
+          "pidx": 387
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 200,
+      "edge_w5": 3396,
+      "label": "resid1: XS s9",
+      "local_pidx": 3,
+      "target_slice": 9,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 3
+        },
+        {
+          "user": 1,
+          "pidx": 131
+        },
+        {
+          "user": 2,
+          "pidx": 259
+        },
+        {
+          "user": 3,
+          "pidx": 387
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 201,
+      "edge_w5": 3442,
+      "label": "resid1: XS s0",
+      "local_pidx": 3,
+      "target_slice": 0,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 3
+        },
+        {
+          "user": 1,
+          "pidx": 131
+        },
+        {
+          "user": 2,
+          "pidx": 259
+        },
+        {
+          "user": 3,
+          "pidx": 387
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 202,
+      "edge_w5": 3449,
+      "label": "resid1: XS s1",
+      "local_pidx": 3,
+      "target_slice": 1,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 3
+        },
+        {
+          "user": 1,
+          "pidx": 131
+        },
+        {
+          "user": 2,
+          "pidx": 259
+        },
+        {
+          "user": 3,
+          "pidx": 387
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 203,
+      "edge_w5": 3456,
+      "label": "resid1: XS s2",
+      "local_pidx": 3,
+      "target_slice": 2,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 3
+        },
+        {
+          "user": 1,
+          "pidx": 131
+        },
+        {
+          "user": 2,
+          "pidx": 259
+        },
+        {
+          "user": 3,
+          "pidx": 387
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 204,
+      "edge_w5": 3463,
+      "label": "resid1: XS s3",
+      "local_pidx": 3,
+      "target_slice": 3,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 3
+        },
+        {
+          "user": 1,
+          "pidx": 131
+        },
+        {
+          "user": 2,
+          "pidx": 259
+        },
+        {
+          "user": 3,
+          "pidx": 387
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 205,
+      "edge_w5": 3486,
+      "label": "resid1: XS s4",
+      "local_pidx": 3,
+      "target_slice": 4,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 3
+        },
+        {
+          "user": 1,
+          "pidx": 131
+        },
+        {
+          "user": 2,
+          "pidx": 259
+        },
+        {
+          "user": 3,
+          "pidx": 387
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 206,
+      "edge_w5": 3493,
+      "label": "resid1: XS s5",
+      "local_pidx": 3,
+      "target_slice": 5,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 3
+        },
+        {
+          "user": 1,
+          "pidx": 131
+        },
+        {
+          "user": 2,
+          "pidx": 259
+        },
+        {
+          "user": 3,
+          "pidx": 387
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 207,
+      "edge_w5": 3500,
+      "label": "resid1: XS s6",
+      "local_pidx": 3,
+      "target_slice": 6,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 3
+        },
+        {
+          "user": 1,
+          "pidx": 131
+        },
+        {
+          "user": 2,
+          "pidx": 259
+        },
+        {
+          "user": 3,
+          "pidx": 387
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 208,
+      "edge_w5": 3507,
+      "label": "resid1: XS s7",
+      "local_pidx": 3,
+      "target_slice": 7,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 3
+        },
+        {
+          "user": 1,
+          "pidx": 131
+        },
+        {
+          "user": 2,
+          "pidx": 259
+        },
+        {
+          "user": 3,
+          "pidx": 387
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 209,
+      "edge_w5": 3530,
+      "label": "resid1: XS s10",
+      "local_pidx": 3,
+      "target_slice": 10,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 3
+        },
+        {
+          "user": 1,
+          "pidx": 131
+        },
+        {
+          "user": 2,
+          "pidx": 259
+        },
+        {
+          "user": 3,
+          "pidx": 387
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 210,
+      "edge_w5": 3537,
+      "label": "resid1: XS s11",
+      "local_pidx": 3,
+      "target_slice": 11,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 3
+        },
+        {
+          "user": 1,
+          "pidx": 131
+        },
+        {
+          "user": 2,
+          "pidx": 259
+        },
+        {
+          "user": 3,
+          "pidx": 387
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 236,
+      "edge_w5": 4203,
+      "label": "silu: GU*r s0",
+      "local_pidx": 9,
+      "target_slice": 0,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 9
+        },
+        {
+          "user": 1,
+          "pidx": 137
+        },
+        {
+          "user": 2,
+          "pidx": 265
+        },
+        {
+          "user": 3,
+          "pidx": 393
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 237,
+      "edge_w5": 4204,
+      "label": "silu: GU*r s1",
+      "local_pidx": 9,
+      "target_slice": 1,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 9
+        },
+        {
+          "user": 1,
+          "pidx": 137
+        },
+        {
+          "user": 2,
+          "pidx": 265
+        },
+        {
+          "user": 3,
+          "pidx": 393
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 238,
+      "edge_w5": 4205,
+      "label": "silu: GU*r s2",
+      "local_pidx": 9,
+      "target_slice": 2,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 9
+        },
+        {
+          "user": 1,
+          "pidx": 137
+        },
+        {
+          "user": 2,
+          "pidx": 265
+        },
+        {
+          "user": 3,
+          "pidx": 393
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 239,
+      "edge_w5": 4206,
+      "label": "silu: GU*r s3",
+      "local_pidx": 9,
+      "target_slice": 3,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 9
+        },
+        {
+          "user": 1,
+          "pidx": 137
+        },
+        {
+          "user": 2,
+          "pidx": 265
+        },
+        {
+          "user": 3,
+          "pidx": 393
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 240,
+      "edge_w5": 4207,
+      "label": "silu: GU*r s4",
+      "local_pidx": 9,
+      "target_slice": 4,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 9
+        },
+        {
+          "user": 1,
+          "pidx": 137
+        },
+        {
+          "user": 2,
+          "pidx": 265
+        },
+        {
+          "user": 3,
+          "pidx": 393
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 241,
+      "edge_w5": 4208,
+      "label": "silu: GU*r s5",
+      "local_pidx": 9,
+      "target_slice": 5,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 9
+        },
+        {
+          "user": 1,
+          "pidx": 137
+        },
+        {
+          "user": 2,
+          "pidx": 265
+        },
+        {
+          "user": 3,
+          "pidx": 393
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 242,
+      "edge_w5": 4209,
+      "label": "silu: GU*r s6",
+      "local_pidx": 9,
+      "target_slice": 6,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 9
+        },
+        {
+          "user": 1,
+          "pidx": 137
+        },
+        {
+          "user": 2,
+          "pidx": 265
+        },
+        {
+          "user": 3,
+          "pidx": 393
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 243,
+      "edge_w5": 4210,
+      "label": "silu: GU*r s7",
+      "local_pidx": 9,
+      "target_slice": 7,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 9
+        },
+        {
+          "user": 1,
+          "pidx": 137
+        },
+        {
+          "user": 2,
+          "pidx": 265
+        },
+        {
+          "user": 3,
+          "pidx": 393
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 244,
+      "edge_w5": 4211,
+      "label": "silu: GU*r s8",
+      "local_pidx": 9,
+      "target_slice": 8,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 9
+        },
+        {
+          "user": 1,
+          "pidx": 137
+        },
+        {
+          "user": 2,
+          "pidx": 265
+        },
+        {
+          "user": 3,
+          "pidx": 393
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 245,
+      "edge_w5": 4212,
+      "label": "silu: GU*r s9",
+      "local_pidx": 9,
+      "target_slice": 9,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 9
+        },
+        {
+          "user": 1,
+          "pidx": 137
+        },
+        {
+          "user": 2,
+          "pidx": 265
+        },
+        {
+          "user": 3,
+          "pidx": 393
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 246,
+      "edge_w5": 4213,
+      "label": "silu: GU*r s10",
+      "local_pidx": 9,
+      "target_slice": 10,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 9
+        },
+        {
+          "user": 1,
+          "pidx": 137
+        },
+        {
+          "user": 2,
+          "pidx": 265
+        },
+        {
+          "user": 3,
+          "pidx": 393
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 247,
+      "edge_w5": 4214,
+      "label": "silu: GU*r s11",
+      "local_pidx": 9,
+      "target_slice": 11,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 9
+        },
+        {
+          "user": 1,
+          "pidx": 137
+        },
+        {
+          "user": 2,
+          "pidx": 265
+        },
+        {
+          "user": 3,
+          "pidx": 393
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 248,
+      "edge_w5": 4268,
+      "label": "silu: SILU s0",
+      "local_pidx": 10,
+      "target_slice": 0,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 10
+        },
+        {
+          "user": 1,
+          "pidx": 138
+        },
+        {
+          "user": 2,
+          "pidx": 266
+        },
+        {
+          "user": 3,
+          "pidx": 394
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 249,
+      "edge_w5": 4269,
+      "label": "silu: SILU s1",
+      "local_pidx": 10,
+      "target_slice": 1,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 10
+        },
+        {
+          "user": 1,
+          "pidx": 138
+        },
+        {
+          "user": 2,
+          "pidx": 266
+        },
+        {
+          "user": 3,
+          "pidx": 394
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 250,
+      "edge_w5": 4270,
+      "label": "silu: SILU s2",
+      "local_pidx": 10,
+      "target_slice": 2,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 10
+        },
+        {
+          "user": 1,
+          "pidx": 138
+        },
+        {
+          "user": 2,
+          "pidx": 266
+        },
+        {
+          "user": 3,
+          "pidx": 394
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 251,
+      "edge_w5": 4271,
+      "label": "silu: SILU s3",
+      "local_pidx": 10,
+      "target_slice": 3,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 10
+        },
+        {
+          "user": 1,
+          "pidx": 138
+        },
+        {
+          "user": 2,
+          "pidx": 266
+        },
+        {
+          "user": 3,
+          "pidx": 394
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 252,
+      "edge_w5": 4280,
+      "label": "silu: SILU s4",
+      "local_pidx": 10,
+      "target_slice": 4,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 10
+        },
+        {
+          "user": 1,
+          "pidx": 138
+        },
+        {
+          "user": 2,
+          "pidx": 266
+        },
+        {
+          "user": 3,
+          "pidx": 394
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 253,
+      "edge_w5": 4281,
+      "label": "silu: SILU s5",
+      "local_pidx": 10,
+      "target_slice": 5,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 10
+        },
+        {
+          "user": 1,
+          "pidx": 138
+        },
+        {
+          "user": 2,
+          "pidx": 266
+        },
+        {
+          "user": 3,
+          "pidx": 394
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 254,
+      "edge_w5": 4282,
+      "label": "silu: SILU s6",
+      "local_pidx": 10,
+      "target_slice": 6,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 10
+        },
+        {
+          "user": 1,
+          "pidx": 138
+        },
+        {
+          "user": 2,
+          "pidx": 266
+        },
+        {
+          "user": 3,
+          "pidx": 394
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 255,
+      "edge_w5": 4283,
+      "label": "silu: SILU s7",
+      "local_pidx": 10,
+      "target_slice": 7,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 10
+        },
+        {
+          "user": 1,
+          "pidx": 138
+        },
+        {
+          "user": 2,
+          "pidx": 266
+        },
+        {
+          "user": 3,
+          "pidx": 394
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 256,
+      "edge_w5": 4292,
+      "label": "silu: SILU s8",
+      "local_pidx": 10,
+      "target_slice": 8,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 10
+        },
+        {
+          "user": 1,
+          "pidx": 138
+        },
+        {
+          "user": 2,
+          "pidx": 266
+        },
+        {
+          "user": 3,
+          "pidx": 394
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 257,
+      "edge_w5": 4293,
+      "label": "silu: SILU s9",
+      "local_pidx": 10,
+      "target_slice": 9,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 10
+        },
+        {
+          "user": 1,
+          "pidx": 138
+        },
+        {
+          "user": 2,
+          "pidx": 266
+        },
+        {
+          "user": 3,
+          "pidx": 394
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 258,
+      "edge_w5": 4294,
+      "label": "silu: SILU s10",
+      "local_pidx": 10,
+      "target_slice": 10,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 10
+        },
+        {
+          "user": 1,
+          "pidx": 138
+        },
+        {
+          "user": 2,
+          "pidx": 266
+        },
+        {
+          "user": 3,
+          "pidx": 394
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 259,
+      "edge_w5": 4295,
+      "label": "silu: SILU s11",
+      "local_pidx": 10,
+      "target_slice": 11,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 10
+        },
+        {
+          "user": 1,
+          "pidx": 138
+        },
+        {
+          "user": 2,
+          "pidx": 266
+        },
+        {
+          "user": 3,
+          "pidx": 394
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 362,
+      "edge_w5": 5264,
+      "label": "resid2: RES1 s8 blocks [8, 20]",
+      "local_pidx": 1,
+      "target_slice": 8,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 1
+        },
+        {
+          "user": 1,
+          "pidx": 129
+        },
+        {
+          "user": 2,
+          "pidx": 257
+        },
+        {
+          "user": 3,
+          "pidx": 385
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 365,
+      "edge_w5": 5271,
+      "label": "resid2: RES1 s9 blocks [9, 21]",
+      "local_pidx": 1,
+      "target_slice": 9,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 1
+        },
+        {
+          "user": 1,
+          "pidx": 129
+        },
+        {
+          "user": 2,
+          "pidx": 257
+        },
+        {
+          "user": 3,
+          "pidx": 385
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 367,
+      "edge_w5": 5278,
+      "label": "resid2: RES1 s10 blocks [10, 22]",
+      "local_pidx": 1,
+      "target_slice": 10,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 1
+        },
+        {
+          "user": 1,
+          "pidx": 129
+        },
+        {
+          "user": 2,
+          "pidx": 257
+        },
+        {
+          "user": 3,
+          "pidx": 385
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 368,
+      "edge_w5": 5285,
+      "label": "resid2: RES1 s11 blocks [11, 23]",
+      "local_pidx": 1,
+      "target_slice": 11,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 1
+        },
+        {
+          "user": 1,
+          "pidx": 129
+        },
+        {
+          "user": 2,
+          "pidx": 257
+        },
+        {
+          "user": 3,
+          "pidx": 385
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 374,
+      "edge_w5": 5304,
+      "label": "resid2: RES1 s0 blocks [0, 12, 24]",
+      "local_pidx": 1,
+      "target_slice": 0,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 1
+        },
+        {
+          "user": 1,
+          "pidx": 129
+        },
+        {
+          "user": 2,
+          "pidx": 257
+        },
+        {
+          "user": 3,
+          "pidx": 385
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 377,
+      "edge_w5": 5311,
+      "label": "resid2: RES1 s1 blocks [1, 13, 25]",
+      "local_pidx": 1,
+      "target_slice": 1,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 1
+        },
+        {
+          "user": 1,
+          "pidx": 129
+        },
+        {
+          "user": 2,
+          "pidx": 257
+        },
+        {
+          "user": 3,
+          "pidx": 385
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 380,
+      "edge_w5": 5318,
+      "label": "resid2: RES1 s2 blocks [2, 14, 26]",
+      "local_pidx": 1,
+      "target_slice": 2,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 1
+        },
+        {
+          "user": 1,
+          "pidx": 129
+        },
+        {
+          "user": 2,
+          "pidx": 257
+        },
+        {
+          "user": 3,
+          "pidx": 385
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 383,
+      "edge_w5": 5325,
+      "label": "resid2: RES1 s3 blocks [3, 15, 27]",
+      "local_pidx": 1,
+      "target_slice": 3,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 1
+        },
+        {
+          "user": 1,
+          "pidx": 129
+        },
+        {
+          "user": 2,
+          "pidx": 257
+        },
+        {
+          "user": 3,
+          "pidx": 385
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 386,
+      "edge_w5": 5332,
+      "label": "resid2: RES1 s4 blocks [4, 16, 28]",
+      "local_pidx": 1,
+      "target_slice": 4,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 1
+        },
+        {
+          "user": 1,
+          "pidx": 129
+        },
+        {
+          "user": 2,
+          "pidx": 257
+        },
+        {
+          "user": 3,
+          "pidx": 385
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 389,
+      "edge_w5": 5339,
+      "label": "resid2: RES1 s5 blocks [5, 17, 29]",
+      "local_pidx": 1,
+      "target_slice": 5,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 1
+        },
+        {
+          "user": 1,
+          "pidx": 129
+        },
+        {
+          "user": 2,
+          "pidx": 257
+        },
+        {
+          "user": 3,
+          "pidx": 385
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 391,
+      "edge_w5": 5346,
+      "label": "resid2: RES1 s6 blocks [6, 18, 30]",
+      "local_pidx": 1,
+      "target_slice": 6,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 1
+        },
+        {
+          "user": 1,
+          "pidx": 129
+        },
+        {
+          "user": 2,
+          "pidx": 257
+        },
+        {
+          "user": 3,
+          "pidx": 385
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 392,
+      "edge_w5": 5353,
+      "label": "resid2: RES1 s7 blocks [7, 19, 31]",
+      "local_pidx": 1,
+      "target_slice": 7,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 1
+        },
+        {
+          "user": 1,
+          "pidx": 129
+        },
+        {
+          "user": 2,
+          "pidx": 257
+        },
+        {
+          "user": 3,
+          "pidx": 385
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 393,
+      "edge_w5": 5372,
+      "label": "resid2: XS s8",
+      "local_pidx": 3,
+      "target_slice": 8,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 3
+        },
+        {
+          "user": 1,
+          "pidx": 131
+        },
+        {
+          "user": 2,
+          "pidx": 259
+        },
+        {
+          "user": 3,
+          "pidx": 387
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 394,
+      "edge_w5": 5381,
+      "label": "resid2: XS s9",
+      "local_pidx": 3,
+      "target_slice": 9,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 3
+        },
+        {
+          "user": 1,
+          "pidx": 131
+        },
+        {
+          "user": 2,
+          "pidx": 259
+        },
+        {
+          "user": 3,
+          "pidx": 387
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 395,
+      "edge_w5": 5427,
+      "label": "resid2: XS s0",
+      "local_pidx": 3,
+      "target_slice": 0,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 3
+        },
+        {
+          "user": 1,
+          "pidx": 131
+        },
+        {
+          "user": 2,
+          "pidx": 259
+        },
+        {
+          "user": 3,
+          "pidx": 387
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 396,
+      "edge_w5": 5434,
+      "label": "resid2: XS s1",
+      "local_pidx": 3,
+      "target_slice": 1,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 3
+        },
+        {
+          "user": 1,
+          "pidx": 131
+        },
+        {
+          "user": 2,
+          "pidx": 259
+        },
+        {
+          "user": 3,
+          "pidx": 387
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 397,
+      "edge_w5": 5441,
+      "label": "resid2: XS s2",
+      "local_pidx": 3,
+      "target_slice": 2,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 3
+        },
+        {
+          "user": 1,
+          "pidx": 131
+        },
+        {
+          "user": 2,
+          "pidx": 259
+        },
+        {
+          "user": 3,
+          "pidx": 387
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 398,
+      "edge_w5": 5448,
+      "label": "resid2: XS s3",
+      "local_pidx": 3,
+      "target_slice": 3,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 3
+        },
+        {
+          "user": 1,
+          "pidx": 131
+        },
+        {
+          "user": 2,
+          "pidx": 259
+        },
+        {
+          "user": 3,
+          "pidx": 387
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 399,
+      "edge_w5": 5471,
+      "label": "resid2: XS s4",
+      "local_pidx": 3,
+      "target_slice": 4,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 3
+        },
+        {
+          "user": 1,
+          "pidx": 131
+        },
+        {
+          "user": 2,
+          "pidx": 259
+        },
+        {
+          "user": 3,
+          "pidx": 387
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 400,
+      "edge_w5": 5478,
+      "label": "resid2: XS s5",
+      "local_pidx": 3,
+      "target_slice": 5,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 3
+        },
+        {
+          "user": 1,
+          "pidx": 131
+        },
+        {
+          "user": 2,
+          "pidx": 259
+        },
+        {
+          "user": 3,
+          "pidx": 387
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 401,
+      "edge_w5": 5485,
+      "label": "resid2: XS s6",
+      "local_pidx": 3,
+      "target_slice": 6,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 3
+        },
+        {
+          "user": 1,
+          "pidx": 131
+        },
+        {
+          "user": 2,
+          "pidx": 259
+        },
+        {
+          "user": 3,
+          "pidx": 387
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 402,
+      "edge_w5": 5492,
+      "label": "resid2: XS s7",
+      "local_pidx": 3,
+      "target_slice": 7,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 3
+        },
+        {
+          "user": 1,
+          "pidx": 131
+        },
+        {
+          "user": 2,
+          "pidx": 259
+        },
+        {
+          "user": 3,
+          "pidx": 387
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 403,
+      "edge_w5": 5515,
+      "label": "resid2: XS s10",
+      "local_pidx": 3,
+      "target_slice": 10,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 3
+        },
+        {
+          "user": 1,
+          "pidx": 131
+        },
+        {
+          "user": 2,
+          "pidx": 259
+        },
+        {
+          "user": 3,
+          "pidx": 387
+        }
+      ],
+      "consumer_epoch_binding": null
+    },
+    {
+      "source_index": 404,
+      "edge_w5": 5522,
+      "label": "resid2: XS s11",
+      "local_pidx": 3,
+      "target_slice": 11,
+      "issue_users": [
+        {
+          "user": 0,
+          "pidx": 3
+        },
+        {
+          "user": 1,
+          "pidx": 131
+        },
+        {
+          "user": 2,
+          "pidx": 259
+        },
+        {
+          "user": 3,
+          "pidx": 387
+        }
+      ],
+      "consumer_epoch_binding": null
+    }
+  ],
   "producer_observation": {
     "filler_users_observed": false,
     "source": "qfd_tt_ctlm_dv_lpf_parts.sv su_obs requires c_su&&c_u0",
-    "actual_qkv_and_gu_events_per_group": 12,
+    "actual_XS3_groups": [
+      "resid1",
+      "resid2"
+    ],
+    "XS3_events_per_group": 12,
     "events_are_slice_targeted": true,
+    "qkv_and_gu_families_are_STN_kind2": true,
+    "first_qkv_predecessor": "embedding/INIT or prior stage residency; not bound",
     "XPF_any_matching_PC_at_other_cycle_faults": true,
     "clone24_resolves_only_record_identity": true,
     "production_witness_bound": false

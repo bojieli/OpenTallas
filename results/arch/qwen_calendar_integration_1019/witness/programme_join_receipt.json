@@ -24,7 +24,7 @@
   },
   "sha256": {
     "tools/qwen_layerbench/programme_namespace_join.py": "7e925ccea2795b3d5559dc3f30f8fe1777d4f7e8eb15c08084d329493c1ee5ab",
-    "tools/qwen_layerbench/model_programme_integration.py": "b84d6da7789e42c1f500c125d6eeffca45d85c6272767fbd900e05f35f358654",
+    "tools/qwen_layerbench/model_programme_integration.py": "6fed0587cbcbda97468d9abd0b445f55a269a42921da50e1fdb16d687f181500",
     "rtl/test/mu_qwen_seq/tb_programme_namespace_join.sv": "4281c67cd8262bf09d232f68f350fd8f64a58e42f55acc22498a2819e20121fc",
     "rtl/test/qwen_dv/tb_xpf_compact_producer_ids.sv": "e472e0c22b491344d93ba120910692344e48b6517a115f73580fa653cf6e9192",
     "results/arch/qwen_calendar_integration_1019/witness/namespace_m1.log": "1f73a699504982399ddd1a5dc7b8bdf220bbd1e4f4533ea0b0092a0b2a72408b",
@@ -39,7 +39,7 @@
     "results/arch/qwen_calendar_integration_1019/witness/xpf_id_build.log": "8ad035ec29a67656c2860369e5a91d719d4fe85033dfac1ea8da13d57400766d",
     "results/arch/qwen_calendar_integration_1019/witness/programme_join/certificate.json": "5b3c211bd64c98774d3d605d88d9a6216434a6dda5986a7059d9876329b01d4b",
     "results/arch/qwen_calendar_integration_1019/witness/programme_join/x_events.txt": "c449e086b17fde84262e1e4dffe6b5104c8ebfb0eb688d3359d85e64d83223d4",
-    "results/arch/qwen_calendar_integration_1019/witness/programme_integration_model.json": "270568f9b4bad064a9f170ce955850e06325fdef518c5811891b21042bb9529d"
+    "results/arch/qwen_calendar_integration_1019/witness/programme_integration_model.json": "a4d32cd6a739b1c623dcb50085c77ac3190c9b3b60c02ef4bef2ac21d6bc4f06"
   },
   "scope": "Actual affine address and BF16 publication join; source XPF seal only. No Qwen arithmetic, full token, production physical phase, or enabled programme ABI."
 }

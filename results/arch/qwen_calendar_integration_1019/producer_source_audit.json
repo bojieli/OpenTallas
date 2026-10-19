@@ -1,0 +1,15 @@
+{
+  "schema": "opentallas.qwen.producer-source-audit.v1",
+  "final_facts": [
+    "114 actual direct kind1 SU source commands; model lists exact source indices, local pidx, target slice, W5 pin edges and per-user relocated pidx",
+    "XS3 direct issue groups are resid1/resid2 with12 commands each; qkv/gu families contain kind2 STN",
+    "first qkv predecessor must be embedding/INIT or prior-stage source residency; unbound",
+    "GI observer filters filler users and lacks source slice identity; static XPF current matchingPC lifetime rejects repeated issue"
+  ],
+  "retracted_intermediate_hypotheses": [
+    "qkv/gu family 12 commands are direct XS3 issues: false, kind2 STN",
+    "STN internally expands XS3: not supported; actual XS3 commands are separately in residual groups"
+  ],
+  "numerical_address_certificate_changed": false,
+  "ROOT_selection": "canonical400PW held-user source MODEL, authenticated exactbase/user lifetime proof before RTL choice"
+}
