@@ -8,7 +8,8 @@
 module qkd_host_ctl_service_pins_rr #(
   parameter WDOG=1<<22,
   ENABLE_SERVICE=0,
-  MUT=0
+  MUT=0,
+  MU=0
 )(
  input wire ck,
  input wire rst_n,
@@ -32,7 +33,7 @@ module qkd_host_ctl_service_pins_rr #(
 `else
  ot_rst_relay #(.REGIONS(1),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst_relay(.clk(ck),.rst_n_in(rst_n),.rst_n(rst_q));
 `endif
- qkd_host_ctl_service_pins #(.WDOG(WDOG),.ENABLE_SERVICE(ENABLE_SERVICE),.MUT(MUT)) u_m(
+ qkd_host_ctl_service_pins #(.WDOG(WDOG),.ENABLE_SERVICE(ENABLE_SERVICE),.MUT(MUT),.MU(MU)) u_m(
   .ck(ck),
   .rst_n(rst_q),
   .sys_ready(sys_ready),
