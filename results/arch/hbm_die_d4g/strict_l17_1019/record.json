@@ -1,0 +1,46 @@
+{
+ "schema": "opentallas.hbm.strict_l17_1019.v1",
+ "verdict": "FAIL",
+ "source_revision": "d517a76adbead9ddebd6e855ee78c6dd03ce957f",
+ "contract_sha256": "dc95a75aee00bee01212318ab75678c91a2d54a752400b5cb79663c6777fcad0",
+ "die_sha256": "47f3575f56d7304ccb42667a929506ba8e177ff9a18c40efb61cfe6dc2010805",
+ "summary": {
+  "masters": 100,
+  "instances": 1223,
+  "unbound_masters": 0,
+  "stub_masters": 0,
+  "ambiguous_masters": 0,
+  "port_not_in_rtl": 0,
+  "width_mismatch": 0,
+  "input_unconnected": 0,
+  "input_tied": 0,
+  "unparsed_connections": 0,
+  "duplicate_port_connections": 0,
+  "undriven_net_bits": 0,
+  "multi_driven_net_bits": 0,
+  "unread_net_bits": 70320,
+  "output_open_ports": 0,
+  "top_assigns": 0,
+  "params_not_in_rtl": 0,
+  "strap_ports": 45,
+  "pad_bits": 0,
+  "spare_out_bits": 0,
+  "unresolved_children": 0,
+  "ambiguous_children": 0,
+  "variant_children": 8
+ },
+ "qualification": "Source structure only.70320 unread bits remain fail; no manifest/admission/native/physical/token promotion.",
+ "layers": [
+  "l14_scoped_rtl",
+  "l15_smb_relative",
+  "l16_vm_fault",
+  "l17_router_ids",
+  "l16b_score_fault"
+ ],
+ "clock_policy": "TT setup+FF hold; SS sensitivity reported",
+ "fleet": {
+  "host": "ot-epyc5",
+  "source": "/srv/opentallas-scratch/codex/hd4g-strict/src_d517a76ad",
+  "job": "oth-ubuntu-1600011-1792425100"
+ }
+}
