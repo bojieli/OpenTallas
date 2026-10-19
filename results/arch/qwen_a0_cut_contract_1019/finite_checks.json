@@ -1,0 +1,176 @@
+{
+  "logic_identity_tables": [
+    {
+      "driver": "_31855_/Y",
+      "exact_truth_table": [
+        {
+          "inputs": {
+            "A": 0,
+            "B": 0
+          },
+          "original": 1,
+          "every_same_master_replica": 1,
+          "wrong_output_polarity_mutant": 0
+        },
+        {
+          "inputs": {
+            "A": 1,
+            "B": 0
+          },
+          "original": 0,
+          "every_same_master_replica": 0,
+          "wrong_output_polarity_mutant": 1
+        },
+        {
+          "inputs": {
+            "A": 0,
+            "B": 1
+          },
+          "original": 0,
+          "every_same_master_replica": 0,
+          "wrong_output_polarity_mutant": 1
+        },
+        {
+          "inputs": {
+            "A": 1,
+            "B": 1
+          },
+          "original": 0,
+          "every_same_master_replica": 0,
+          "wrong_output_polarity_mutant": 1
+        }
+      ],
+      "partition_disjoint_complete_except_protected": true
+    },
+    {
+      "driver": "_31850_/Y",
+      "exact_truth_table": [
+        {
+          "inputs": {
+            "A": 0,
+            "B": 0
+          },
+          "original": 0,
+          "every_same_master_replica": 0,
+          "wrong_output_polarity_mutant": 1
+        },
+        {
+          "inputs": {
+            "A": 1,
+            "B": 0
+          },
+          "original": 1,
+          "every_same_master_replica": 1,
+          "wrong_output_polarity_mutant": 0
+        },
+        {
+          "inputs": {
+            "A": 0,
+            "B": 1
+          },
+          "original": 1,
+          "every_same_master_replica": 1,
+          "wrong_output_polarity_mutant": 0
+        },
+        {
+          "inputs": {
+            "A": 1,
+            "B": 1
+          },
+          "original": 1,
+          "every_same_master_replica": 1,
+          "wrong_output_polarity_mutant": 0
+        }
+      ],
+      "partition_disjoint_complete_except_protected": true
+    },
+    {
+      "driver": "_31808_/Y",
+      "exact_truth_table": [
+        {
+          "inputs": {
+            "A": 0,
+            "B": 0,
+            "C": 0
+          },
+          "original": 0,
+          "every_same_master_replica": 0,
+          "wrong_output_polarity_mutant": 1
+        },
+        {
+          "inputs": {
+            "A": 1,
+            "B": 0,
+            "C": 0
+          },
+          "original": 0,
+          "every_same_master_replica": 0,
+          "wrong_output_polarity_mutant": 1
+        },
+        {
+          "inputs": {
+            "A": 0,
+            "B": 1,
+            "C": 0
+          },
+          "original": 0,
+          "every_same_master_replica": 0,
+          "wrong_output_polarity_mutant": 1
+        },
+        {
+          "inputs": {
+            "A": 1,
+            "B": 1,
+            "C": 0
+          },
+          "original": 0,
+          "every_same_master_replica": 0,
+          "wrong_output_polarity_mutant": 1
+        },
+        {
+          "inputs": {
+            "A": 0,
+            "B": 0,
+            "C": 1
+          },
+          "original": 0,
+          "every_same_master_replica": 0,
+          "wrong_output_polarity_mutant": 1
+        },
+        {
+          "inputs": {
+            "A": 1,
+            "B": 0,
+            "C": 1
+          },
+          "original": 0,
+          "every_same_master_replica": 0,
+          "wrong_output_polarity_mutant": 1
+        },
+        {
+          "inputs": {
+            "A": 0,
+            "B": 1,
+            "C": 1
+          },
+          "original": 0,
+          "every_same_master_replica": 0,
+          "wrong_output_polarity_mutant": 1
+        },
+        {
+          "inputs": {
+            "A": 1,
+            "B": 1,
+            "C": 1
+          },
+          "original": 1,
+          "every_same_master_replica": 1,
+          "wrong_output_polarity_mutant": 0
+        }
+      ],
+      "partition_disjoint_complete_except_protected": true
+    }
+  ],
+  "seven_distinct_retention_witnesses": 7,
+  "scope": "finite source/model checks, not RTL simulation or native physical qualification"
+}
