@@ -1,0 +1,432 @@
+{
+  "celltypes": {
+    "$_DFF_PN1_": 64,
+    "$_DFF_PN0_": 4,
+    "$_DFF_P_": 4096,
+    "$_DFFE_PP_": 1104,
+    "$_SDFF_PN0_": 64,
+    "$_DFFE_PN0P_": 33,
+    "$_DFFE_PN_": 1024,
+    "$_NOT_": 306,
+    "$_OR_": 15665,
+    "$_AND_": 16773,
+    "$_XOR_": 59,
+    "$_MUX_": 981
+  },
+  "top_fanout": [
+    {
+      "bit": 2,
+      "loads": 6389,
+      "driver": null,
+      "names": [
+        "clk_q"
+      ]
+    },
+    {
+      "bit": 14735,
+      "loads": 256,
+      "driver": [
+        "$auto$ff.cc:337:slice$6014",
+        "$_SDFF_PN0_"
+      ],
+      "names": [
+        "g_safe_gather.g_chunk[0].oh",
+        "g_safe_gather.g_chunk[1].oh",
+        "g_safe_gather.g_chunk[2].oh",
+        "g_safe_gather.g_chunk[3].oh"
+      ]
+    },
+    {
+      "bit": 14733,
+      "loads": 256,
+      "driver": [
+        "$auto$ff.cc:337:slice$6013",
+        "$_SDFF_PN0_"
+      ],
+      "names": [
+        "g_safe_gather.g_chunk[0].oh",
+        "g_safe_gather.g_chunk[1].oh",
+        "g_safe_gather.g_chunk[2].oh",
+        "g_safe_gather.g_chunk[3].oh"
+      ]
+    },
+    {
+      "bit": 14731,
+      "loads": 256,
+      "driver": [
+        "$auto$ff.cc:337:slice$6012",
+        "$_SDFF_PN0_"
+      ],
+      "names": [
+        "g_safe_gather.g_chunk[0].oh",
+        "g_safe_gather.g_chunk[1].oh",
+        "g_safe_gather.g_chunk[2].oh",
+        "g_safe_gather.g_chunk[3].oh"
+      ]
+    },
+    {
+      "bit": 14729,
+      "loads": 256,
+      "driver": [
+        "$auto$ff.cc:337:slice$6011",
+        "$_SDFF_PN0_"
+      ],
+      "names": [
+        "g_safe_gather.g_chunk[0].oh",
+        "g_safe_gather.g_chunk[1].oh",
+        "g_safe_gather.g_chunk[2].oh",
+        "g_safe_gather.g_chunk[3].oh"
+      ]
+    },
+    {
+      "bit": 14727,
+      "loads": 256,
+      "driver": [
+        "$auto$ff.cc:337:slice$6010",
+        "$_SDFF_PN0_"
+      ],
+      "names": [
+        "g_safe_gather.g_chunk[0].oh",
+        "g_safe_gather.g_chunk[1].oh",
+        "g_safe_gather.g_chunk[2].oh",
+        "g_safe_gather.g_chunk[3].oh"
+      ]
+    },
+    {
+      "bit": 15343,
+      "loads": 256,
+      "driver": [
+        "$auto$ff.cc:337:slice$6990",
+        "$_SDFF_PN0_"
+      ],
+      "names": [
+        "g_safe_gather.g_chunk[0].oh",
+        "g_safe_gather.g_chunk[1].oh",
+        "g_safe_gather.g_chunk[2].oh",
+        "g_safe_gather.g_chunk[3].oh"
+      ]
+    },
+    {
+      "bit": 15325,
+      "loads": 256,
+      "driver": [
+        "$auto$ff.cc:337:slice$6973",
+        "$_SDFF_PN0_"
+      ],
+      "names": [
+        "g_safe_gather.g_chunk[0].oh",
+        "g_safe_gather.g_chunk[1].oh",
+        "g_safe_gather.g_chunk[2].oh",
+        "g_safe_gather.g_chunk[3].oh"
+      ]
+    },
+    {
+      "bit": 15323,
+      "loads": 256,
+      "driver": [
+        "$auto$ff.cc:337:slice$6956",
+        "$_SDFF_PN0_"
+      ],
+      "names": [
+        "g_safe_gather.g_chunk[0].oh",
+        "g_safe_gather.g_chunk[1].oh",
+        "g_safe_gather.g_chunk[2].oh",
+        "g_safe_gather.g_chunk[3].oh"
+      ]
+    },
+    {
+      "bit": 14725,
+      "loads": 256,
+      "driver": [
+        "$auto$ff.cc:337:slice$6009",
+        "$_SDFF_PN0_"
+      ],
+      "names": [
+        "g_safe_gather.g_chunk[0].oh",
+        "g_safe_gather.g_chunk[1].oh",
+        "g_safe_gather.g_chunk[2].oh",
+        "g_safe_gather.g_chunk[3].oh"
+      ]
+    },
+    {
+      "bit": 14723,
+      "loads": 256,
+      "driver": [
+        "$auto$ff.cc:337:slice$6008",
+        "$_SDFF_PN0_"
+      ],
+      "names": [
+        "g_safe_gather.g_chunk[0].oh",
+        "g_safe_gather.g_chunk[1].oh",
+        "g_safe_gather.g_chunk[2].oh",
+        "g_safe_gather.g_chunk[3].oh"
+      ]
+    },
+    {
+      "bit": 14721,
+      "loads": 256,
+      "driver": [
+        "$auto$ff.cc:337:slice$6007",
+        "$_SDFF_PN0_"
+      ],
+      "names": [
+        "g_safe_gather.g_chunk[0].oh",
+        "g_safe_gather.g_chunk[1].oh",
+        "g_safe_gather.g_chunk[2].oh",
+        "g_safe_gather.g_chunk[3].oh"
+      ]
+    },
+    {
+      "bit": 14719,
+      "loads": 256,
+      "driver": [
+        "$auto$ff.cc:337:slice$6006",
+        "$_SDFF_PN0_"
+      ],
+      "names": [
+        "g_safe_gather.g_chunk[0].oh",
+        "g_safe_gather.g_chunk[1].oh",
+        "g_safe_gather.g_chunk[2].oh",
+        "g_safe_gather.g_chunk[3].oh"
+      ]
+    },
+    {
+      "bit": 14717,
+      "loads": 256,
+      "driver": [
+        "$auto$ff.cc:337:slice$6005",
+        "$_SDFF_PN0_"
+      ],
+      "names": [
+        "g_safe_gather.g_chunk[0].oh",
+        "g_safe_gather.g_chunk[1].oh",
+        "g_safe_gather.g_chunk[2].oh",
+        "g_safe_gather.g_chunk[3].oh"
+      ]
+    },
+    {
+      "bit": 14715,
+      "loads": 256,
+      "driver": [
+        "$auto$ff.cc:337:slice$6004",
+        "$_SDFF_PN0_"
+      ],
+      "names": [
+        "g_safe_gather.g_chunk[0].oh",
+        "g_safe_gather.g_chunk[1].oh",
+        "g_safe_gather.g_chunk[2].oh",
+        "g_safe_gather.g_chunk[3].oh"
+      ]
+    },
+    {
+      "bit": 14713,
+      "loads": 256,
+      "driver": [
+        "$auto$ff.cc:337:slice$6003",
+        "$_SDFF_PN0_"
+      ],
+      "names": [
+        "g_safe_gather.g_chunk[0].oh",
+        "g_safe_gather.g_chunk[1].oh",
+        "g_safe_gather.g_chunk[2].oh",
+        "g_safe_gather.g_chunk[3].oh"
+      ]
+    },
+    {
+      "bit": 14711,
+      "loads": 256,
+      "driver": [
+        "$auto$ff.cc:337:slice$6002",
+        "$_SDFF_PN0_"
+      ],
+      "names": [
+        "g_safe_gather.g_chunk[0].oh",
+        "g_safe_gather.g_chunk[1].oh",
+        "g_safe_gather.g_chunk[2].oh",
+        "g_safe_gather.g_chunk[3].oh"
+      ]
+    },
+    {
+      "bit": 14709,
+      "loads": 256,
+      "driver": [
+        "$auto$ff.cc:337:slice$6001",
+        "$_SDFF_PN0_"
+      ],
+      "names": [
+        "g_safe_gather.g_chunk[0].oh",
+        "g_safe_gather.g_chunk[1].oh",
+        "g_safe_gather.g_chunk[2].oh",
+        "g_safe_gather.g_chunk[3].oh"
+      ]
+    },
+    {
+      "bit": 14707,
+      "loads": 256,
+      "driver": [
+        "$auto$ff.cc:337:slice$6000",
+        "$_SDFF_PN0_"
+      ],
+      "names": [
+        "g_safe_gather.g_chunk[0].oh",
+        "g_safe_gather.g_chunk[1].oh",
+        "g_safe_gather.g_chunk[2].oh",
+        "g_safe_gather.g_chunk[3].oh"
+      ]
+    },
+    {
+      "bit": 14705,
+      "loads": 256,
+      "driver": [
+        "$auto$ff.cc:337:slice$5999",
+        "$_SDFF_PN0_"
+      ],
+      "names": [
+        "g_safe_gather.g_chunk[0].oh",
+        "g_safe_gather.g_chunk[1].oh",
+        "g_safe_gather.g_chunk[2].oh",
+        "g_safe_gather.g_chunk[3].oh"
+      ]
+    },
+    {
+      "bit": 14703,
+      "loads": 256,
+      "driver": [
+        "$auto$ff.cc:337:slice$5998",
+        "$_SDFF_PN0_"
+      ],
+      "names": [
+        "g_safe_gather.g_chunk[0].oh",
+        "g_safe_gather.g_chunk[1].oh",
+        "g_safe_gather.g_chunk[2].oh",
+        "g_safe_gather.g_chunk[3].oh"
+      ]
+    },
+    {
+      "bit": 14701,
+      "loads": 256,
+      "driver": [
+        "$auto$ff.cc:337:slice$5997",
+        "$_SDFF_PN0_"
+      ],
+      "names": [
+        "g_safe_gather.g_chunk[0].oh",
+        "g_safe_gather.g_chunk[1].oh",
+        "g_safe_gather.g_chunk[2].oh",
+        "g_safe_gather.g_chunk[3].oh"
+      ]
+    },
+    {
+      "bit": 14699,
+      "loads": 256,
+      "driver": [
+        "$auto$ff.cc:337:slice$5996",
+        "$_SDFF_PN0_"
+      ],
+      "names": [
+        "g_safe_gather.g_chunk[0].oh",
+        "g_safe_gather.g_chunk[1].oh",
+        "g_safe_gather.g_chunk[2].oh",
+        "g_safe_gather.g_chunk[3].oh"
+      ]
+    },
+    {
+      "bit": 14697,
+      "loads": 256,
+      "driver": [
+        "$auto$ff.cc:337:slice$5995",
+        "$_SDFF_PN0_"
+      ],
+      "names": [
+        "g_safe_gather.g_chunk[0].oh",
+        "g_safe_gather.g_chunk[1].oh",
+        "g_safe_gather.g_chunk[2].oh",
+        "g_safe_gather.g_chunk[3].oh"
+      ]
+    },
+    {
+      "bit": 14695,
+      "loads": 256,
+      "driver": [
+        "$auto$ff.cc:337:slice$5994",
+        "$_SDFF_PN0_"
+      ],
+      "names": [
+        "g_safe_gather.g_chunk[0].oh",
+        "g_safe_gather.g_chunk[1].oh",
+        "g_safe_gather.g_chunk[2].oh",
+        "g_safe_gather.g_chunk[3].oh"
+      ]
+    },
+    {
+      "bit": 14693,
+      "loads": 256,
+      "driver": [
+        "$auto$ff.cc:337:slice$5993",
+        "$_SDFF_PN0_"
+      ],
+      "names": [
+        "g_safe_gather.g_chunk[0].oh",
+        "g_safe_gather.g_chunk[1].oh",
+        "g_safe_gather.g_chunk[2].oh",
+        "g_safe_gather.g_chunk[3].oh"
+      ]
+    },
+    {
+      "bit": 14691,
+      "loads": 256,
+      "driver": [
+        "$auto$ff.cc:337:slice$5992",
+        "$_SDFF_PN0_"
+      ],
+      "names": [
+        "g_safe_gather.g_chunk[0].oh",
+        "g_safe_gather.g_chunk[1].oh",
+        "g_safe_gather.g_chunk[2].oh",
+        "g_safe_gather.g_chunk[3].oh"
+      ]
+    },
+    {
+      "bit": 14689,
+      "loads": 256,
+      "driver": [
+        "$auto$ff.cc:337:slice$5991",
+        "$_SDFF_PN0_"
+      ],
+      "names": [
+        "g_safe_gather.g_chunk[0].oh",
+        "g_safe_gather.g_chunk[1].oh",
+        "g_safe_gather.g_chunk[2].oh",
+        "g_safe_gather.g_chunk[3].oh"
+      ]
+    },
+    {
+      "bit": 14687,
+      "loads": 256,
+      "driver": [
+        "$auto$ff.cc:337:slice$5990",
+        "$_SDFF_PN0_"
+      ],
+      "names": [
+        "g_safe_gather.g_chunk[0].oh",
+        "g_safe_gather.g_chunk[1].oh",
+        "g_safe_gather.g_chunk[2].oh",
+        "g_safe_gather.g_chunk[3].oh"
+      ]
+    },
+    {
+      "bit": 14685,
+      "loads": 256,
+      "driver": [
+        "$auto$ff.cc:337:slice$5989",
+        "$_SDFF_PN0_"
+      ],
+      "names": [
+        "g_safe_gather.g_chunk[0].oh",
+        "g_safe_gather.g_chunk[1].oh",
+        "g_safe_gather.g_chunk[2].oh",
+        "g_safe_gather.g_chunk[3].oh"
+      ]
+    }
+  ]
+}

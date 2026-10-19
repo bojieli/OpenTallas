@@ -10,7 +10,7 @@
 // previous serial edge, and an ro_v fault may report one serial edge later.
 // MUT (both sides): 1/2/3/4 change both identically -> must still PASS (sanity) unless MUTONE=1 (split only) -> FAIL.
 module tb_hbm_su_cxport_split;
- parameter integer QID=2, B39=0, MUT=0, MUTONE=0, NRST=3, EDGES=4000, OBR=0;  // OBR: ij_s seam pin registers (TW2-NATIVE-IJS 10-19)
+ parameter integer QID=2, B39=0, MUT=0, MUTONE=0, NRST=3, EDGES=4000;
  localparam integer TS=1200, TP=900, T0=600;
  reg clk_q=0, clk_s=0;
  initial begin #(T0); forever begin clk_q=1; #(TS/2); clk_q=0; #(TS/2); end end
@@ -57,7 +57,7 @@ module tb_hbm_su_cxport_split;
   .dw_d(h_dwd),.red_sv(red_sv),.red_tag(red_tag),.red_x(red_x),.rr_wv(h_rrv),.rr_wa(h_rra),.rr_wd(h_rrd),.ro_v(ro_v),
   .ro_x(ro_x),.red_sel(red_sel),.sfu_x(h_sfu),.fault(h_f));
  reg [11:0] red_sel_d = 12'd0; always @(posedge clk_q) red_sel_d <= red_sel;   // E+1 SFU-operand rule
- ot_hbm_su_static_cxport_split #(.QID(QID),.B39_NOOP(B39),.INJ_RET(11),.MUT(MUT),.OBR(OBR)) spl(.clk_s(clk_s),.clk_q(clk_q),.rst_n(rst_n),
+ ot_hbm_su_static_cxport_split #(.QID(QID),.B39_NOOP(B39),.INJ_RET(11),.MUT(MUT)) spl(.clk_s(clk_s),.clk_q(clk_q),.rst_n(rst_n),
   .inj_rd(inj_rd),.inj_addr(inj_addr),.inj_d(s_ij),.del_valid(del_valid),.del_flit(del_flit),.del_obase(del_obase),
   .rc_v(s_rcv),.rc_tag(s_rct),.rc_d(s_rcd),.rr_v(rr_v),.rr_tag(rr_tag),.rr_d(rr_d),.inj_q(inj_q),.dw_v(s_dwv),.dw_row(s_dwr),
   .dw_d(s_dwd),.red_sv(red_sv),.red_tag(red_tag),.red_x(red_x),.rr_wv(s_rrv),.rr_wa(s_rra),.rr_wd(s_rrd),.ro_v(ro_v),

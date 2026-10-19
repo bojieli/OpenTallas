@@ -1,0 +1,250 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[INFO ODB-0227] LEF file: /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef, created 1 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9184, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9217, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9250, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9283, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9316, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9349, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9382, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10518, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10551, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10584, timing group from output port.
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+QDM PINFLOP reference: 2584 input pin flops, median arrival 832.154297 (range 810.348083 .. 856.196106)
+QDM reference pin line_r[338]$_DFF_P_/CLK clock arrival max 832.154297 min 799.348450 skew 90 hold 50
+OT_HOLD_BUDGET die: L_min 799.348450 C 25 U 25 relief 0
+OT_IO_INTER 0 inputs 0 outputs at 150 ps
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+OT_CORNER ff
+OT_WS -4.7623294197052246e-11
+OT_TNS -8.388632566358467e-10
+Startpoint: rst_n (input port clocked by core_clk)
+Endpoint: rst_core_n$_DFF_PN0_
+          (removal check against rising-edge clock core_clk)
+Path Group: asynchronous
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock network delay (propagated)
+ 849.35  849.35 ^ input external delay
+   0.00  849.35 ^ rst_n (in)
+  29.29  878.64 ^ hold83311/Y (BUFx2_ASAP7_75t_R)
+  12.76  891.40 ^ hold83309/Y (BUFx2_ASAP7_75t_R)
+  11.60  903.00 ^ hold83312/Y (BUFx2_ASAP7_75t_R)
+  11.66  914.66 ^ input7309/Y (BUFx2_ASAP7_75t_R)
+  11.61  926.28 ^ hold83313/Y (BUFx2_ASAP7_75t_R)
+  13.52  939.80 ^ hold83310/Y (BUFx2_ASAP7_75t_R)
+   0.26  940.06 ^ rst_core_n$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)
+         940.06   data arrival time
+
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk (in)
+  39.22   39.22 ^ clkbuf_sp_N2422_r1/Y (BUFx24_ASAP7_75t_R)
+  62.67  101.88 ^ clkbuf_sp_N2422_r2/Y (BUFx24_ASAP7_75t_R)
+  39.53  141.41 ^ clkbuf_sp_N2422_r3/Y (BUFx24_ASAP7_75t_R)
+  40.65  182.06 ^ clkbuf_sp_N2422_r4/Y (BUFx24_ASAP7_75t_R)
+  60.62  242.68 ^ clkbuf_sp_N2422/Y (BUFx24_ASAP7_75t_R)
+  56.96  299.64 ^ clkbuf_sp_N2421/Y (BUFx24_ASAP7_75t_R)
+  45.19  344.83 ^ clkbuf_sp_N2420/Y (BUFx24_ASAP7_75t_R)
+  43.97  388.80 ^ clkbuf_sp_N2419/Y (BUFx24_ASAP7_75t_R)
+  78.88  467.68 ^ clkbuf_sp_N2418/Y (BUFx24_ASAP7_75t_R)
+  57.70  525.38 ^ clkbuf_sp_N2417/Y (BUFx24_ASAP7_75t_R)
+  56.71  582.09 ^ clkbuf_sp_N2379/Y (BUFx24_ASAP7_75t_R)
+  58.07  640.16 ^ clkbuf_sp_N2378/Y (BUFx24_ASAP7_75t_R)
+  38.41  678.57 ^ clkbuf_sp_N2377/Y (BUFx24_ASAP7_75t_R)
+  24.10  702.67 ^ clkbuf_sp_N2376/Y (BUFx24_ASAP7_75t_R)
+  19.96  722.63 ^ clkbuf_sp_N2373/Y (BUFx24_ASAP7_75t_R)
+  44.48  767.12 ^ clkbuf_sp_L938_p1/Y (HB4xp67_ASAP7_75t_R)
+  39.90  807.02 ^ clkbuf_sp_L938_p2/Y (HB4xp67_ASAP7_75t_R)
+  14.52  821.54 ^ clkbuf_sp_L938_p3/Y (BUFx2_ASAP7_75t_R)
+  11.79  833.32 ^ clkbuf_sp_L938_p4/Y (BUFx2_ASAP7_75t_R)
+  14.93  848.25 ^ clkbuf_sp_L938_p5/Y (BUFx2_ASAP7_75t_R)
+  18.13  866.37 ^ clkbuf_sp_L938/Y (BUFx24_ASAP7_75t_R)
+   0.20  866.57 ^ rst_core_n$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  25.00  891.57   clock uncertainty
+   0.00  891.57   clock reconvergence pessimism
+  20.12  911.69   library removal time
+         911.69   data required time
+---------------------------------------------------------
+         911.69   data required time
+        -940.06   data arrival time
+---------------------------------------------------------
+          28.38   slack (MET)
+
+
+Startpoint: core.grp_d[8]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: core.grp_d[12]$_DFF_P_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk (in)
+  37.51   37.51 ^ clkbuf_sp_N2422_r1/Y (BUFx24_ASAP7_75t_R)
+  61.25   98.77 ^ clkbuf_sp_N2422_r2/Y (BUFx24_ASAP7_75t_R)
+  37.85  136.62 ^ clkbuf_sp_N2422_r3/Y (BUFx24_ASAP7_75t_R)
+  38.98  175.60 ^ clkbuf_sp_N2422_r4/Y (BUFx24_ASAP7_75t_R)
+  59.10  234.70 ^ clkbuf_sp_N2422/Y (BUFx24_ASAP7_75t_R)
+  55.20  289.90 ^ clkbuf_sp_N1210/Y (BUFx24_ASAP7_75t_R)
+  41.01  330.91 ^ clkbuf_sp_N1209/Y (BUFx24_ASAP7_75t_R)
+  41.99  372.90 ^ clkbuf_sp_N1208/Y (BUFx24_ASAP7_75t_R)
+  86.11  459.02 ^ clkbuf_sp_N1207/Y (BUFx24_ASAP7_75t_R)
+  59.29  518.30 ^ clkbuf_sp_N1131/Y (BUFx24_ASAP7_75t_R)
+  28.22  546.52 ^ clkbuf_sp_N1093/Y (BUFx24_ASAP7_75t_R)
+  40.31  586.83 ^ clkbuf_sp_N1074/Y (BUFx24_ASAP7_75t_R)
+  33.57  620.40 ^ clkbuf_sp_N1073_r1/Y (BUFx24_ASAP7_75t_R)
+  29.16  649.56 ^ clkbuf_sp_N1073/Y (BUFx24_ASAP7_75t_R)
+  24.68  674.25 ^ clkbuf_sp_N1068/Y (BUFx24_ASAP7_75t_R)
+  22.25  696.49 ^ clkbuf_sp_N1067/Y (BUFx24_ASAP7_75t_R)
+  19.12  715.62 ^ clkbuf_sp_N1066/Y (BUFx24_ASAP7_75t_R)
+  37.81  753.43 ^ clkbuf_sp_L846_p1/Y (HB4xp67_ASAP7_75t_R)
+  14.09  767.52 ^ clkbuf_sp_L846_p2/Y (BUFx2_ASAP7_75t_R)
+  11.51  779.03 ^ clkbuf_sp_L846_p3/Y (BUFx2_ASAP7_75t_R)
+  13.90  792.92 ^ clkbuf_sp_L846_p4/Y (BUFx2_ASAP7_75t_R)
+  18.09  811.02 ^ clkbuf_sp_L846/Y (BUFx24_ASAP7_75t_R)
+   1.04  812.06 ^ core.grp_d[8]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+  34.71  846.77 ^ core.grp_d[8]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+  13.85  860.62 v _109166_/Y (INVx1_ASAP7_75t_R)
+   3.08  863.70 v core.grp_d[12]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)
+         863.70   data arrival time
+
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk (in)
+  39.22   39.22 ^ clkbuf_sp_N2422_r1/Y (BUFx24_ASAP7_75t_R)
+  62.67  101.88 ^ clkbuf_sp_N2422_r2/Y (BUFx24_ASAP7_75t_R)
+  39.53  141.41 ^ clkbuf_sp_N2422_r3/Y (BUFx24_ASAP7_75t_R)
+  40.65  182.06 ^ clkbuf_sp_N2422_r4/Y (BUFx24_ASAP7_75t_R)
+  60.62  242.68 ^ clkbuf_sp_N2422/Y (BUFx24_ASAP7_75t_R)
+  56.78  299.45 ^ clkbuf_sp_N1210/Y (BUFx24_ASAP7_75t_R)
+  42.38  341.83 ^ clkbuf_sp_N1209/Y (BUFx24_ASAP7_75t_R)
+  43.52  385.35 ^ clkbuf_sp_N1208/Y (BUFx24_ASAP7_75t_R)
+  87.74  473.09 ^ clkbuf_sp_N1207/Y (BUFx24_ASAP7_75t_R)
+  61.39  534.48 ^ clkbuf_sp_N1131/Y (BUFx24_ASAP7_75t_R)
+  29.08  563.56 ^ clkbuf_sp_N1093/Y (BUFx24_ASAP7_75t_R)
+  42.07  605.63 ^ clkbuf_sp_N1074/Y (BUFx24_ASAP7_75t_R)
+  49.81  655.44 ^ clkbuf_sp_N1064_r1/Y (BUFx24_ASAP7_75t_R)
+  54.67  710.11 ^ clkbuf_sp_N1064/Y (BUFx24_ASAP7_75t_R)
+  29.68  739.79 ^ clkbuf_sp_N1063/Y (BUFx24_ASAP7_75t_R)
+  67.44  807.23 ^ clkbuf_sp_N1062/Y (BUFx24_ASAP7_75t_R)
+  49.81  857.04 ^ clkbuf_sp_N1061/Y (BUFx24_ASAP7_75t_R)
+  22.68  879.72 ^ clkbuf_sp_L2422_p1/Y (BUFx2_ASAP7_75t_R)
+  17.76  897.48 ^ clkbuf_sp_L2422/Y (BUFx24_ASAP7_75t_R)
+   0.05  897.53 ^ core.grp_d[12]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+  25.00  922.53   clock uncertainty
+ -18.80  903.72   clock reconvergence pessimism
+   7.60  911.32   library hold time
+         911.32   data required time
+---------------------------------------------------------
+         911.32   data required time
+        -863.70   data arrival time
+---------------------------------------------------------
+         -47.62   slack (VIOLATED)
+
+
+OT_VIOL_D_PINS 70
+OT_WS_REG_D -47.623295
+OT_WS_OUT 191.877563
+OT_WS_R2R -47.623295
+OT_WS_I2R -7.642276
+OT_PATH core.grp_d[8]$_DFF_P_/QN core.grp_d[12]$_DFF_P_/D -47.623295
+OT_PATH core.wd_r[944]$_DFF_P_/QN core.gm[3].mem/wd_in[80] -41.532223
+OT_PATH core.s4_r[730]$_DFF_P_/QN core.wd_r[730]$_DFF_P_/D -41.085415
+OT_PATH core.wd_r[679]$_DFF_P_/QN core.gm[2].mem/wd_in[103] -36.467331
+OT_PATH core.wr[580]$_DFFE_PP_/QN core.wd_r[580]$_DFF_P_/D -36.392612
+OT_PATH core.wa_r[22]$_DFF_P_/QN core.gm[3].mem/w_addr_in[4] -31.825653
+OT_PATH core.wd_r[1125]$_DFF_P_/QN core.gm[3].mem/wd_in[261] -30.748238
+OT_PATH core.wr[330]$_DFFE_PP_/QN core.wd_r[330]$_DFF_P_/D -28.645975
+OT_PATH core.wr[328]$_DFFE_PP_/QN core.wd_r[328]$_DFF_P_/D -28.010038
+OT_PATH core.wd_r[830]$_DFF_P_/QN core.gm[2].mem/wd_in[254] -27.671087
+OT_PATH core.wd_r[682]$_DFF_P_/QN core.gm[2].mem/wd_in[106] -23.217762
+OT_PATH core.wd_r[845]$_DFF_P_/QN core.gm[2].mem/wd_in[269] -22.692125
+OT_PATH core.s4_r[1120]$_DFF_P_/QN core.wd_r[1120]$_DFF_P_/D -22.141788
+OT_PATH core.wr[962]$_DFFE_PP_/QN core.wd_r[962]$_DFF_P_/D -18.937075
+OT_PATH core.wr[608]$_DFFE_PP_/QN core.wd_r[608]$_DFF_P_/D -18.506031
+OT_PATH core.wr[1091]$_DFFE_PP_/QN core.wd_r[1091]$_DFF_P_/D -18.329227
+OT_PATH core.wd_r[658]$_DFF_P_/QN core.gm[2].mem/wd_in[82] -18.292812
+OT_PATH core.wr[347]$_DFFE_PP_/QN core.wd_r[347]$_DFF_P_/D -18.056723
+OT_PATH core.wr[349]$_DFFE_PP_/QN core.wd_r[349]$_DFF_P_/D -17.924162
+OT_PATH core.wr[864]$_DFFE_PP_/QN core.wd_r[864]$_DFF_P_/D -17.243151
+OT_PATH core.wd_r[837]$_DFF_P_/QN core.gm[2].mem/wd_in[261] -17.084002
+OT_PATH core.wr[1090]$_DFFE_PP_/QN core.wd_r[1090]$_DFF_P_/D -16.675106
+OT_PATH core.wd_r[681]$_DFF_P_/QN core.gm[2].mem/wd_in[105] -15.988211
+OT_PATH core.wr[607]$_DFFE_PP_/QN core.wd_r[607]$_DFF_P_/D -15.192958
+OT_PATH core.wr[353]$_DFFE_PP_/QN core.wd_r[353]$_DFF_P_/D -14.380497
+OT_PATH core.wr[687]$_DFFE_PP_/QN core.wd_r[687]$_DFF_P_/D -13.048119
+OT_PATH core.wr[437]$_DFFE_PP_/QN core.wd_r[437]$_DFF_P_/D -11.514234
+OT_PATH core.wr[352]$_DFFE_PP_/QN core.wd_r[352]$_DFF_P_/D -11.212753
+OT_PATH core.wr[289]$_DFFE_PP_/QN core.wd_r[289]$_DFF_P_/D -10.718148
+OT_PATH core.wd_r[589]$_DFF_P_/QN core.gm[2].mem/wd_in[13] -10.257129
+OT_PATH core.wr[1016]$_DFFE_PP_/QN core.wd_r[1016]$_DFF_P_/D -9.763468
+OT_PATH core.wr[964]$_DFFE_PP_/QN core.wd_r[964]$_DFF_P_/D -9.453216
+OT_PATH core.wr[435]$_DFFE_PP_/QN core.wd_r[435]$_DFF_P_/D -9.436007
+OT_PATH core.wd_r[938]$_DFF_P_/QN core.gm[3].mem/wd_in[74] -8.877954
+OT_PATH selected_line[1457] line_r[1457]$_DFF_P_/D -7.642276
+OT_PATH core.wd_r[986]$_DFF_P_/QN core.gm[3].mem/wd_in[122] -6.578516
+OT_PATH core.wd_r[596]$_DFF_P_/QN core.gm[2].mem/wd_in[20] -6.321388
+OT_PATH selected_line[2077] line_r[2077]$_DFF_P_/D -5.003664
+OT_PATH selected_line[2078] line_r[2078]$_DFF_P_/D -4.905854
+OT_PATH core.wr[583]$_DFFE_PP_/QN core.wd_r[583]$_DFF_P_/D -4.808432
+OT_PATH core.wr[1095]$_DFFE_PP_/QN core.wd_r[1095]$_DFF_P_/D -4.772238
+OT_PATH selected_line[2079] line_r[2079]$_DFF_P_/D -4.739487
+OT_PATH selected_line[2080] line_r[2080]$_DFF_P_/D -4.302170
+OT_PATH core.wd_r[1124]$_DFF_P_/QN core.gm[3].mem/wd_in[260] -4.258371
+OT_PATH core.wr[451]$_DFFE_PP_/QN core.wd_r[451]$_DFF_P_/D -4.126976
+OT_PATH selected_line[2084] line_r[2084]$_DFF_P_/D -3.925582
+OT_PATH selected_line[2187] line_r[2187]$_DFF_P_/D -3.342993
+OT_PATH selected_line[2186] line_r[2186]$_DFF_P_/D -3.264666
+OT_PATH selected_line[2181] line_r[2181]$_DFF_P_/D -3.172518
+OT_PATH selected_line[2184] line_r[2184]$_DFF_P_/D -3.151923
+OT_PATH selected_line[1490] line_r[1490]$_DFF_P_/D -3.124667
+OT_PATH selected_line[2190] line_r[2190]$_DFF_P_/D -3.105738
+OT_PATH selected_line[2185] line_r[2185]$_DFF_P_/D -3.061051
+OT_PATH core.wr[303]$_DFFE_PP_/QN core.wd_r[303]$_DFF_P_/D -3.043399
+OT_PATH core.wd_r[801]$_DFF_P_/QN core.gm[2].mem/wd_in[225] -3.035960
+OT_PATH selected_line[1485] line_r[1485]$_DFF_P_/D -2.960021
+OT_PATH selected_line[1501] line_r[1501]$_DFF_P_/D -2.740530
+OT_PATH selected_line[1546] line_r[1546]$_DFF_P_/D -2.456480
+OT_PATH selected_line[1535] line_r[1535]$_DFF_P_/D -1.875833
+OT_PATH core.wr[578]$_DFFE_PP_/QN core.wd_r[578]$_DFF_P_/D -1.772082
+OT_PATH core.wd_r[1023]$_DFF_P_/QN core.gm[3].mem/wd_in[159] -1.484923
+OT_PATH selected_line[2056] line_r[2056]$_DFF_P_/D -1.186218
+OT_PATH core.wr[946]$_DFFE_PP_/QN core.wd_r[946]$_DFF_P_/D -1.161571
+OT_PATH core.wr[769]$_DFFE_PP_/QN core.wd_r[769]$_DFF_P_/D -1.151745
+OT_PATH core.s4_r[1703]$_DFF_P_/QN core.wd_r[1703]$_DFF_P_/D -1.112332
+OT_PATH core.wr[581]$_DFFE_PP_/QN core.wd_r[581]$_DFF_P_/D -1.088019
+OT_PATH selected_line[2057] line_r[2057]$_DFF_P_/D -1.044276
+OT_PATH core.wr[669]$_DFFE_PP_/QN core.wd_r[669]$_DFF_P_/D -1.007916
+OT_PATH selected_line[2055] line_r[2055]$_DFF_P_/D -0.991762
+OT_PATH selected_line[2081] line_r[2081]$_DFF_P_/D -0.828615
+OT_PATH core.wr[386]$_DFFE_PP_/QN core.wd_r[386]$_DFF_P_/D -0.771883
+OT_PATH selected_line[2082] line_r[2082]$_DFF_P_/D -0.631162
+OT_PATH selected_line[2085] line_r[2085]$_DFF_P_/D -0.622724
+OT_PATH selected_line[1552] line_r[1552]$_DFF_P_/D -0.607625
+OT_PATH selected_line[2156] line_r[2156]$_DFF_P_/D -0.562772
+OT_PATH core.wr[928]$_DFFE_PP_/QN core.wd_r[928]$_DFF_P_/D -0.518086
+OT_PATH selected_line[2083] line_r[2083]$_DFF_P_/D -0.478728
+OT_PATH selected_line[2152] line_r[2152]$_DFF_P_/D -0.454636
+OT_PATH selected_line[1556] line_r[1556]$_DFF_P_/D -0.411948
+OT_PATH core.s4_r[794]$_DFF_P_/QN core.wr[794]$_DFFE_PP_/D -0.393408
+OT_PATH selected_line[2087] line_r[2087]$_DFF_P_/D -0.392186
+OT_PATH selected_line[2159] line_r[2159]$_DFF_P_/D -0.387357
+OT_PATH selected_line[2155] line_r[2155]$_DFF_P_/D -0.369871
+OT_PATH core.wr[367]$_DFFE_PP_/QN core.wd_r[367]$_DFF_P_/D -0.288325
+OT_PATH selected_line[2160] line_r[2160]$_DFF_P_/D -0.282774
+OT_PATH selected_line[2153] line_r[2153]$_DFF_P_/D -0.155931
+OT_PATH core.wr[385]$_DFFE_PP_/QN core.wd_r[385]$_DFF_P_/D -0.039135
