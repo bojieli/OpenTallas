@@ -37,4 +37,13 @@ if [ "${OT_LANE_AUDIT:-1}" = 1 ]; then
   tail -1 $O/record_bundle_audit.txt
   [ $ra -ne 0 ] && [ $rc -eq 0 ] && rc=5
 fi
+# QLB-GEN 10-18 (LAYERBENCH G-C1): fail-closed parameter audit -- every die master whose RTL traps a sentinel-default
+# parameter (qfd_tt_ctlm_dv XPF_TRANSPORT_EDGES -1, qfd_d2d_static TXDP 0) must get it from DIE_V.params.json, and the
+# values must equal the ones re-derived from this die.v (1 hr reg + hr lane cycles; the production image's D2D_TXDP_C).
+# tools/qwen_split/die_params.py audit.  OT_PARAM_AUDIT=0 skips it (diagnosis only).
+if [ "${OT_PARAM_AUDIT:-1}" = 1 ]; then
+  python3 $R/tools/qwen_split/die_params.py audit $D --port-bind $O/port_bind.json --src $R --out $O/die_param_audit.json > $O/die_param_audit.txt 2>&1; pa=$?
+  tail -1 $O/die_param_audit.txt
+  [ $pa -ne 0 ] && [ $rc -eq 0 ] && rc=6
+fi
 exit $rc

@@ -1,0 +1,12 @@
+DV_LOWER_MAT gu FAIL 9/3072 mutant=sbase1 {"stn": 12, "slices": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]}
+    gu slice 0 row 0: got 0xc1f8b137 exp 0xc1b4ddfa
+    gu slice 0 row 1: got 0x40beb5a9 exp 0x403919bb
+    gu slice 0 row 2: got 0x42239c5d exp 0x41e2d8cd
+    gu slice 0 row 3: got 0x41885bce exp 0x41356f94
+    gu slice 0 row 4: got 0xc0702c90 exp 0xc099d1c1
+    gu slice 0 row 5: got 0xbf8d810a exp 0xbfa1b80c
+    gu slice 0 row 6: got 0x410acd46 exp 0x40f9d7e4
+    gu slice 0 row 7: got 0xbf09d2b0 exp 0xbeec7605
+    gu slice 0 row 8: got 0x413e45a6 exp 0x418635b3
+    gu slice 0 row 9: got 0xc064e9e8 exp 0xc16a685a
+rc=1
