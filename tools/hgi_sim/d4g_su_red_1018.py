@@ -70,6 +70,24 @@ def reducer_bound(words, row_words=None, width=1):
     return per_q + tail
 
 
+# HH-6 (10-18/19): the built widening = per-pgslice csum8 pre-tree (ot_hbm_su_red_pretree_s, 4 per quarter) + quarter
+# join (ot_hbm_su_red_pretree_j in qcore_r5): the 128 lanes of a quarter enter in ONE edge (lockstep SIMD lanes emit one
+# issue block per edge), the 128-word aligned csum8 subtree reaches the reducer PT edges later as ONE operand; the
+# reducer then does the pairwise tree over block subtrees (LOAD/ADD_EXT per arriving block + ADD_TREE above the pairs).
+# A row shorter than 128 occupies one block (masked +0 / invalid lanes; no row packing priced).
+PT_EDGES = 70          # measured by the pretree bench (tb_hbm_su_red_pretree: tree_cmd edge E -> tree_x at qcore rc_x)
+PT_BLOCK = 128
+
+
+def pretree_bound(n, m):
+    blocks = m * -(-n // PT_BLOCK)
+    bq = -(-blocks // RED_QUARTERS)
+    pairs = -(-bq // 2)
+    ops = bq + max(0, pairs - 1)                    # arrivals (LOAD / ADD_EXT) + ADD_TREE above the first pair level
+    depth = (pairs - 1).bit_length()
+    return PT_EDGES + ops + RED_DEP * (1 + depth) + RED_LAT + JOIN
+
+
 def red_words(r, dyn, L):
     _, n, m, _, _ = T.eff(r.desc["A"], dyn, L)
     return int(n), int(m or 1)
@@ -82,7 +100,10 @@ def su_cost(r, dyn, L):
     if not mode or not (isinstance(sut, dict) and sut.get("red")):
         return c, how
     n, m = red_words(r, dyn, L)
-    b = reducer_bound(n * m, n if mode == "rows" else None, _MODE["w"]) - JOIN
+    if mode == "pretree":
+        b = pretree_bound(n, m) - JOIN
+    else:
+        b = reducer_bound(n * m, n if mode == "rows" else None, _MODE["w"]) - JOIN
     hbm = any(d.space == "HBM" for d in r.desc.values())
     floor = b + T.cv("units", "SU.issue_overhead") + (T.first_access() if hbm else 0.0)
     if floor > c:
@@ -136,6 +157,7 @@ def main():
     ap.add_argument("--stages", type=Path, default=ROOT / "results/arch/hbm_plan_study_1017/stages.json")
     ap.add_argument("--out", type=Path)
     ap.add_argument("--jobs", type=int, default=24)
+    ap.add_argument("--only", default="", help="comma list of variant names to price (default all)")
     ap.add_argument("--widths", type=lambda x: [int(v) for v in x.split(",") if v], default=[],
                     help="also price a widened reducer ingress of W operands/edge/quarter (sizing), e.g. 2,4,8,16")
     a = ap.parse_args()
@@ -152,13 +174,17 @@ def main():
                 "d4g_2ring_qbg_su_red": (vb, dict(base, su_red="cds")),
                 "d4g_2ring_qbg_su_red_rows_info": (vb, dict(base, su_red="rows")),
                 **{f"d4g_2ring_qbg_su_red_w{w}": (vb, dict(base, su_red="cds", su_red_w=w)) for w in a.widths},
+                "d4g_2ring_qbg_su_pretree": (vb, dict(base, su_red="pretree")),
                 "d4g_2ring_qbg_upper": (vbd, upper),
                 "d4g_2ring_qbg_upper_su_red": (vbd, dict(upper, su_red="cds"))}
+    if a.only:
+        keep = set(a.only.split(",")) | {"b_plan", "d4g_2ring_qbg", "d4g_2ring_qbg_upper", "d4g_2ring_qbg_upper_su_red"}
+        variants = {k: v for k, v in variants.items() if k in keep}
     jobs = [("ds", f"{k}|{case}", case, v, st, kn) for k, (v, kn) in variants.items()
             for case in ("AR", "MTP_design", "draft_design")]
     jobs += [("qwen", f"{k}|qwen", v, st, kn) for k, (v, kn) in variants.items()]
     with mp.Pool(a.jobs) as pool:
-        cen = pool.apply_async(census, ("cds",))
+        cen = pool.apply_async(census, ("pretree" if a.only else "cds",))
         res = dict(pool.map(_any, jobs, chunksize=1))
         cens = cen.get()
     dref = json.loads((ROOT / "results/arch/hbm_mtp_1015/draft_rows/design.json").read_text())
