@@ -1,0 +1,5 @@
+PC_FAULT_EXPORT_PASS cases=12 checks=325 E0_E6=exact nonzero_return=1 default_identity=1
+- run/normal2/bench.sv:52: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 271us; walltime 0.000 s; speed 833.444 ms/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB

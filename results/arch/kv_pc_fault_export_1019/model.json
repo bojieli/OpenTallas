@@ -1,0 +1,98 @@
+{
+  "status": "SOURCE_MODEL_NO_PHYSICAL_QUALIFICATION",
+  "selected_die_sha256": "18464a8b31042bea03b3fc5779d42803ab7b05bebbaab733a4d83d4a714c1ea6",
+  "selected_instances": 128,
+  "selected_pin": "o_grp[301]",
+  "default_export": 0,
+  "output_pin_register": "u_pc.u_pce.u_path.u_return.fault_core",
+  "clock": "ck / return_ck: exact selected ledger matches",
+  "reset": "existing chain/merge rs_q, return rs_a; no new clear epoch or reset stage",
+  "cause_equation": "fault_core <= rs_a && (fault_core_s || fault_core_set || (FAULT_EXPORT && extra_core_fault))",
+  "extra_core_fault": "chain_fault || es_merge_fault; both real sticky core-domain sources",
+  "healthy_data_cycle_delta": 0,
+  "healthy_fault_cycle_delta": 0,
+  "aggregation_added_ff": 0,
+  "minimum_restored_ff_per_PC": {
+    "chain_ler": 3,
+    "chain_bo": 3,
+    "chain_bfault": 1,
+    "chain_fault": 1,
+    "merge_m_fault": 1,
+    "embedding_fault": 1
+  },
+  "minimum_restored_ff_total": 1280,
+  "comb_model": {
+    "chain_boot_predicates": "3-bit +/- and zero/full compares, OR predicates; original source restored",
+    "chain_fault": "existing collision/calendar/boot OR cone; original source restored",
+    "merge": "existing merge collision/ownership OR and embedding address/pending/retime predicate cone restored",
+    "aggregation": "one OR3/OR4 equivalent before existing output FF; no new output comb path",
+    "reset_new_endpoints_per_PC_lower_bound": 10,
+    "land_er_input_receivers_per_PC": {
+      "0": 1,
+      "259": 1,
+      "260": 1
+    }
+  },
+  "fanout_copy_fixed_point": null,
+  "mapped_area_um2": null,
+  "native_reach_um": null,
+  "suffix_to_STATUS_edges": null,
+  "unique_health_inventory_union": null,
+  "edge_ledger": [
+    "E0 ler bad input",
+    "E1 bfault",
+    "E2 chain fault",
+    "E3 existing return fault pin",
+    "E4 real rlys36 bit5",
+    "E5 group fault_core_q",
+    "E6 group sticky fault"
+  ],
+  "not_claimed": [
+    "full PC SAFE",
+    "source adoption",
+    "old hard view compatibility",
+    "native qualification",
+    "full STATUS bound",
+    "full source inventory total"
+  ],
+  "source_family_sha256": "db870da5ef383553579f3f3d25c60854ce4ad79d9cc17669943bf07f55dc9d0c",
+  "functional_bench": {
+    "module_scope": "actual chain, ES merge/embedding, return-slot, relay, drain-guard primitives",
+    "clock_relationship": "common edge for functional source-ledger mechanism; production region phase not certified",
+    "public_input_only": true,
+    "unreset_initial_state_convergence": "not a whole-PC proof; changed equation does not touch payload/storage/relay initial states",
+    "checks": 325,
+    "cases": 12,
+    "causal_prefix_edges": "E0..E6 exact"
+  },
+  "source_family_status": "DEFAULT_OFF_COMPONENT_PROOF_PASS_FULL_PARENT_HOLD",
+  "selected_parent_installed": false,
+  "joined_functional_cutoff": null,
+  "whole_plane_absolute_fault_tail": null,
+  "ordinary_ES_nominal_stage_counts": [
+    80,
+    87
+  ],
+  "ordinary_ES_absolute_age_qualified": false,
+  "old_inventory_source_objects": 357,
+  "old_source_bodies_exact_selected_identity": 17,
+  "old_objects_export_missing": [
+    "kc_WS.kf",
+    "kc_WN.kf",
+    "kc_ES.kf",
+    "kc_EN.kf",
+    "dcal.fault"
+  ],
+  "qualified_health_source_total": null,
+  "aggregation_physical_adoption": false,
+  "source_identity_guards": {
+    "regeneration_identical": true,
+    "foreign_source_rejected": true
+  },
+  "mutants": {
+    "missing_export": "EXPORT_E3",
+    "missing_chain": "EXPORT_E3",
+    "missing_merge": "ES_WRITER_BOOT_CAUSE",
+    "wrong_field": "RELAY_E4"
+  }
+}

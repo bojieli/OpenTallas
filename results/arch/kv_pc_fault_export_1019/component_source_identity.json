@@ -1,0 +1,54 @@
+{
+  "selected_source_commit": "4db097403",
+  "originals_unmodified": true,
+  "records": [
+    {
+      "path": "rtl/qwen_sys/static_embedding_20261014/qkd_kv_pc_chain_station_b.sv",
+      "bench_sha256": "32d1dda6e0c03103193543fbb0af82cda7b9e7e1f9dcc2daabe43f5a759402bd",
+      "selected_sha256": "32d1dda6e0c03103193543fbb0af82cda7b9e7e1f9dcc2daabe43f5a759402bd",
+      "exact_identity": true
+    },
+    {
+      "path": "rtl/qwen_sys/static_embedding_20261014/qkd_static_kv_pc_es_merge_b.sv",
+      "bench_sha256": "f1840155fd8b51c18f5a478106eb3df3e9ea985bcd29c7d729769546d208139a",
+      "selected_sha256": "f1840155fd8b51c18f5a478106eb3df3e9ea985bcd29c7d729769546d208139a",
+      "exact_identity": true
+    },
+    {
+      "path": "rtl/qwen_sys/static_embedding_20261014/qkd_static_kv_pc_es_merge.sv",
+      "bench_sha256": "e10ff78a43fdcd55594163f251ea78b1c9a3cdc5cd6b0a99e38eb438da18530b",
+      "selected_sha256": "e10ff78a43fdcd55594163f251ea78b1c9a3cdc5cd6b0a99e38eb438da18530b",
+      "exact_identity": true
+    },
+    {
+      "path": "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_map.sv",
+      "bench_sha256": "70cd3650131f6d57ad10f21b142208a2b976372ae19ca47755a9a34632e71c45",
+      "selected_sha256": "70cd3650131f6d57ad10f21b142208a2b976372ae19ca47755a9a34632e71c45",
+      "exact_identity": true
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_pc_path_nc.sv",
+      "bench_sha256": "16ac2306ab9b5e707c276042080c03225ab04773f43169d376905c05b0508f0f",
+      "selected_sha256": "16ac2306ab9b5e707c276042080c03225ab04773f43169d376905c05b0508f0f",
+      "exact_identity": true
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_slots_mc.sv",
+      "bench_sha256": "10ab85b1ad30ed29941a8c28e17f61c7acef9cb3e8bd9a966ca33c727a817d48",
+      "selected_sha256": "10ab85b1ad30ed29941a8c28e17f61c7acef9cb3e8bd9a966ca33c727a817d48",
+      "exact_identity": true
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_ownership.sv",
+      "bench_sha256": "d1658764d09ede5b50022a7bdfdfa3ddcc079734dac069018a21e02cdd892c51",
+      "selected_sha256": "d1658764d09ede5b50022a7bdfdfa3ddcc079734dac069018a21e02cdd892c51",
+      "exact_identity": true
+    },
+    {
+      "path": "rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv",
+      "bench_sha256": "62c15fc98ea519674d8f1e606b936b89e6e5718867c571d0939dd9ca985f4d7e",
+      "selected_sha256": "62c15fc98ea519674d8f1e606b936b89e6e5718867c571d0939dd9ca985f4d7e",
+      "exact_identity": true
+    }
+  ]
+}

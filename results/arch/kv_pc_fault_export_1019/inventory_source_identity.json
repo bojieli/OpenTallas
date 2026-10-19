@@ -1,0 +1,109 @@
+{
+  "selected_commit": "4db097403",
+  "old_inventory_commit": "4072f9d57",
+  "sources": [
+    {
+      "path": "rtl/qwen_split/qfd_fwd_lane.sv",
+      "old_inventory_sha256": "16d2375b15110a3613eaf684c727e50933a1b877b48347364a383ad3c3ef7622",
+      "selected_commit_sha256": "16d2375b15110a3613eaf684c727e50933a1b877b48347364a383ad3c3ef7622",
+      "exact_identity": true
+    },
+    {
+      "path": "rtl/qwen_sys/context_transport_20261014/qkd_host_record_port.sv",
+      "old_inventory_sha256": "39e1500710f2a1bd3f2a24f9e19678b25f2ff35d53ec271a7bb5856a28847051",
+      "selected_commit_sha256": "39e1500710f2a1bd3f2a24f9e19678b25f2ff35d53ec271a7bb5856a28847051",
+      "exact_identity": true
+    },
+    {
+      "path": "rtl/qwen_sys/d2d_static_20261015/qkd_d2d_cal_seq_bootcfg.sv",
+      "old_inventory_sha256": "9c43fc17792f780f3b53d635437ed9a6da37737480e480a2ce95b122c4960ae4",
+      "selected_commit_sha256": "9c43fc17792f780f3b53d635437ed9a6da37737480e480a2ce95b122c4960ae4",
+      "exact_identity": true
+    },
+    {
+      "path": "rtl/qwen_sys/host_20261013/qkd_host_ctl_service_pins.sv",
+      "old_inventory_sha256": "c43934f9a6f4f13f9872475e9edf36a5b90e1b7a31787c31c0bd4c1b3e258cc8",
+      "selected_commit_sha256": "c43934f9a6f4f13f9872475e9edf36a5b90e1b7a31787c31c0bd4c1b3e258cc8",
+      "exact_identity": true
+    },
+    {
+      "path": "rtl/qwen_sys/host_20261013/qkd_host_rx_class_admission.sv",
+      "old_inventory_sha256": "99c4995462015346850f04a7d3a09aa12505748ec5ea14730ccab2756a46df66",
+      "selected_commit_sha256": "99c4995462015346850f04a7d3a09aa12505748ec5ea14730ccab2756a46df66",
+      "exact_identity": true
+    },
+    {
+      "path": "rtl/qwen_sys/host_20261013/qkd_host_service_guard.sv",
+      "old_inventory_sha256": "4cf2002bf0feb8f315598827eab527799289c9ae5f68fc52e91e9e188a6f7045",
+      "selected_commit_sha256": "4cf2002bf0feb8f315598827eab527799289c9ae5f68fc52e91e9e188a6f7045",
+      "exact_identity": true
+    },
+    {
+      "path": "rtl/qwen_sys/host_integrated_20261014/qkd_host_control_packet_admission.sv",
+      "old_inventory_sha256": "6413323907a589970013f744dca1f7f3af5859c4739264cd9864b35371801031",
+      "selected_commit_sha256": "6413323907a589970013f744dca1f7f3af5859c4739264cd9864b35371801031",
+      "exact_identity": true
+    },
+    {
+      "path": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+      "old_inventory_sha256": "544639e6add23a4f106f6ff67960c7f02496d8835f06d860b4bdde1f1dc7c470",
+      "selected_commit_sha256": "544639e6add23a4f106f6ff67960c7f02496d8835f06d860b4bdde1f1dc7c470",
+      "exact_identity": true
+    },
+    {
+      "path": "rtl/qwen_sys/host_integrated_20261014/qkd_host_fullcontrol_observed.sv",
+      "old_inventory_sha256": "dae8b9d0b549478d54953c22a819e5ead96fc84d34552be303b18f8749b1e574",
+      "selected_commit_sha256": "dae8b9d0b549478d54953c22a819e5ead96fc84d34552be303b18f8749b1e574",
+      "exact_identity": true
+    },
+    {
+      "path": "rtl/qwen_sys/host_integrated_20261014/qkd_host_native_token_endpoint_cancel.sv",
+      "old_inventory_sha256": "bc26e6313215b8ae9f65163a7bfc1268b05078cd80b5f6988944f7b15b1072c7",
+      "selected_commit_sha256": "bc26e6313215b8ae9f65163a7bfc1268b05078cd80b5f6988944f7b15b1072c7",
+      "exact_identity": true
+    },
+    {
+      "path": "rtl/qwen_sys/host_integrated_20261014/qkd_host_packet_bundle_admission.sv",
+      "old_inventory_sha256": "8216a88b0850a74747cc2402775e9189414182aa0178895caa930b79c7b766c8",
+      "selected_commit_sha256": "8216a88b0850a74747cc2402775e9189414182aa0178895caa930b79c7b766c8",
+      "exact_identity": true
+    },
+    {
+      "path": "rtl/qwen_sys/host_integrated_20261014/qkd_host_peer_rank_codec.sv",
+      "old_inventory_sha256": "e66a6dabed4e5a9e19ddabe6e0179df58053834697127118cadde9d891cbdae7",
+      "selected_commit_sha256": "e66a6dabed4e5a9e19ddabe6e0179df58053834697127118cadde9d891cbdae7",
+      "exact_identity": true
+    },
+    {
+      "path": "rtl/qwen_sys/host_integrated_20261014/qkd_host_peer_root_mux.sv",
+      "old_inventory_sha256": "244d1343057d33c5c08b3d9fa7d6f0734508480e3b7e4ef8eb53874cb00a58be",
+      "selected_commit_sha256": "244d1343057d33c5c08b3d9fa7d6f0734508480e3b7e4ef8eb53874cb00a58be",
+      "exact_identity": true
+    },
+    {
+      "path": "rtl/qwen_sys/host_integrated_20261014/qkd_host_tp8_coordinator.sv",
+      "old_inventory_sha256": "3ef013ca6db4c5358c7eff2a1f6a9c41d6c16995af1386889368197149dab657",
+      "selected_commit_sha256": "3ef013ca6db4c5358c7eff2a1f6a9c41d6c16995af1386889368197149dab657",
+      "exact_identity": true
+    },
+    {
+      "path": "rtl/qwen_sys/kv_die_20261009/qkd_ctrl_strip.sv",
+      "old_inventory_sha256": "22669d7ebf45d72f3a3b47e487b3a8e9e737eac041c80fa644f7a9259728c366",
+      "selected_commit_sha256": "22669d7ebf45d72f3a3b47e487b3a8e9e737eac041c80fa644f7a9259728c366",
+      "exact_identity": true
+    },
+    {
+      "path": "rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv",
+      "old_inventory_sha256": "84cdc01c1382edbca0b7c9e26e60a487401ec31dbcd9004e8f2e4d91f77ef38f",
+      "selected_commit_sha256": "84cdc01c1382edbca0b7c9e26e60a487401ec31dbcd9004e8f2e4d91f77ef38f",
+      "exact_identity": true
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu_ba.sv",
+      "old_inventory_sha256": "df66545140a103b45170c9132cf19e521945c61c8fc649e836df4bb9c49e6e97",
+      "selected_commit_sha256": "df66545140a103b45170c9132cf19e521945c61c8fc649e836df4bb9c49e6e97",
+      "exact_identity": true
+    }
+  ],
+  "body_identity_all": true
+}

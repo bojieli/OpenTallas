@@ -1,0 +1,23 @@
+{
+  "mode": "missing_merge",
+  "exit_code": 1,
+  "verilator": "Verilator 5.050 2026-07-01 rev v5.050",
+  "source_sha256": {
+    "rtl/qwen_sys/static_embedding_20261014/qkd_pc_fault_export_family.sv": "db870da5ef383553579f3f3d25c60854ce4ad79d9cc17669943bf07f55dc9d0c",
+    "rtl/qwen_sys/static_embedding_20261014/qkd_kv_pc_chain_station_b.sv": "32d1dda6e0c03103193543fbb0af82cda7b9e7e1f9dcc2daabe43f5a759402bd",
+    "rtl/qwen_sys/static_embedding_20261014/qkd_static_kv_pc_es_merge_b.sv": "f1840155fd8b51c18f5a478106eb3df3e9ea985bcd29c7d729769546d208139a",
+    "rtl/qwen_sys/static_embedding_20261014/qkd_static_kv_pc_es_merge.sv": "e10ff78a43fdcd55594163f251ea78b1c9a3cdc5cd6b0a99e38eb438da18530b",
+    "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_map.sv": "70cd3650131f6d57ad10f21b142208a2b976372ae19ca47755a9a34632e71c45",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_pc_path_nc.sv": "16ac2306ab9b5e707c276042080c03225ab04773f43169d376905c05b0508f0f",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_slots_mc.sv": "10ab85b1ad30ed29941a8c28e17f61c7acef9cb3e8bd9a966ca33c727a817d48",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_ownership.sv": "d1658764d09ede5b50022a7bdfdfa3ddcc079734dac069018a21e02cdd892c51",
+    "rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv": "62c15fc98ea519674d8f1e606b936b89e6e5718867c571d0939dd9ca985f4d7e",
+    "rtl/test/qwen_static_kv/tb_pc_fault_export.sv": "25c1ff4ede055e2b7578f22b7fb05f64bb3f7160a02bbd84bf640144fa277769",
+    "tools/qwen_kv_die/pc_fault_export_family.py": "168b60092c354cca6c9c8026e9d775b87e61db8ab97a58570b362bba4c53bf55",
+    "tools/qwen_kv_die/run_pc_fault_export.py": "3dc5b32619379a8621e530a725f6d7e08ac663d792341394a4d9485d1a3fecb5"
+  },
+  "mutated_family_sha256": "db870da5ef383553579f3f3d25c60854ce4ad79d9cc17669943bf07f55dc9d0c",
+  "mutated_assembly_sha256": "ca6dcdf36df75ba75d44b4856897686b4e646055bd0da3081e07e5b763124a6b",
+  "claim": "Complete real source primitives and exact assembly fault-field mechanism only, no full PC or physical qualification",
+  "mutation_scope": "source-ledger assembly join mutation"
+}
