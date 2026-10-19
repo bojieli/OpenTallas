@@ -1,13 +1,13 @@
 {
- "name": "hdie_col_idx256_1019-fan32g1-COMMIT",
+ "name": "hdie_col_idx256_1019-pg1-COMMIT",
  "block": "ot_hbm_static_cfg_collar_idx256",
  "ref_tile": true,
- "owner": "CODEX-HBM-IDX256",
+ "owner": "Claude:LEAD2-HBM/L2H-IDX",
  "purpose": "Exact458299321 FAN32 protected16bit banks/counter/run/reset distribution, +960 mappedFF, zero successful data edges; ROOT-approved129.6sq pin-bound component characterization only",
  "threads": 8,
  "peak_ram_gb": 16,
  "source": {
-  "branch": "codex/hbm-idx256-physical-1019",
+  "branch": "claude/l2h-idx-pg-idx256-1019",
   "commit": "COMMIT",
   "extra_paths": [
    "rtl/test/hbm_collar_idx256",
@@ -152,7 +152,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hdie_col_idx256_1019/hdie_col_idx256_1019-fan32g1-COMMIT"
+   "to": "results/rtl/ref_tile/hdie_col_idx256_1019/hdie_col_idx256_1019-pg1-COMMIT"
   }
  ],
  "cycles_added": 0,
@@ -163,8 +163,10 @@
  "merge_target": null,
  "structural_change": "SeparateIDX256 guardedmaster,FAN32=1;16protected16bit banks andsame-edge retainedcontrols plus25 existingresetstage2copies; +960 actualmappedFF,0successfuldataedges; canonicalunchanged.",
  "reroute_reason": {
-  "kind": "rtl_change",
-  "vs": "hdie_col_idx_r1-r3-7d0e74d25",
-  "why": "ActualNF5+256row/page0/needguard preventsAW12alias, sourcebound newmaster"
+  "kind": "flow_failure",
+  "failed_job": "hdie_col_idx256_1019-fan32g1-2727e1f68",
+  "failure": "PG_HOLD unbound PG terms; daemon PG final-connect fix (runtime 8cbc); closure revoked NOT BINDABLE by LEAD2-HBM/L2H-IDX, timing history retained",
+  "why": "PG_HOLD unbound PG terms; daemon PG final-connect fix",
+  "vs": "hdie_col_idx256_1019-fan32g1-2727e1f68"
  }
 }
