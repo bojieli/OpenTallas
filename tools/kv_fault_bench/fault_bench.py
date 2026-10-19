@@ -26,6 +26,11 @@ def normalize(plan):
             if n['kind'] != 'pipe' and n['latency'] != 1:
                 raise ValueError('join/sticky latency must be one')
             known.add(n['id']); ops.append(n); pending.remove(n)
+    for source in sources:
+        if source.get('requires_sticky_latch',False):
+            consumers = [n for n in ops if source['id'] in (n.get('a'),n.get('b'))]
+            if not consumers or any(n['kind']!='sticky' for n in consumers):
+                raise ValueError('pulse source needs immediate sticky latch: '+source['id'])
     sink = plan.get('sink', plan.get('root'))
     if isinstance(sink, dict): sink = sink['id']
     if sink not in known:
@@ -121,11 +126,21 @@ def generate(plan, output, mutant='none'):
             wires.append(f'qkd_astk_fault_join u_{ni}_{j}(.ck(ck),.rst_n(rst_n),.a({prev}),.b({b}),.q({dest}));')
             prev = dest
     text = '''module tb;
-reg ck=0,rst_n=1;
+reg ck=0,rst_n=1,probe_a=0;
+wire probe_q,probe_sticky;
+qkd_astk_fault_join probe(.ck(ck),.rst_n(rst_n),.a(probe_a),.b(1'b0),.q(probe_q));
+qkd_astk_fault_join probe_s(.ck(ck),.rst_n(rst_n),.a(probe_a),.b(probe_sticky),.q(probe_sticky));
 reg [NS-1:0] src=0;
 WIRES
 integer f,r,cycle=0,case_id; reg [W-1:0] expected; reg reset_value;
 initial begin
+ rst_n=0; #2; rst_n=1; probe_a=1; #2; ck=1; #2;
+ if(probe_q!==1 || probe_sticky!==1) $fatal(1,"PROBE_ASSERT_FAILED");
+ ck=0; probe_a=0; #2; ck=1; #2;
+ if(probe_q!==0 || probe_sticky!==1) $fatal(1,"PROBE_PULSE_STICKY_FAILED");
+ ck=0; rst_n=0; #2;
+ if(probe_q!==0 || probe_sticky!==0) $fatal(1,"PROBE_ASYNC_CLEAR_FAILED");
+ $display("PRIMITIVE_PULSE_STICKY_ASYNC_CLEAR_PASS");
  f=$fopen("vectors.txt","r"); if(!f) $fatal(1,"vectors missing");
  while (!$feof(f)) begin
   r=$fscanf(f,"%h %h %h %h\\n", reset_value,src,expected,case_id);
