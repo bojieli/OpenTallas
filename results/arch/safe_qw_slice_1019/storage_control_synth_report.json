@@ -1,0 +1,49 @@
+{
+  "qfd_dv_sram_lookahead": {
+    "kept_control_instances": 16,
+    "mux_widths": [
+      32,
+      32,
+      32,
+      32,
+      32,
+      32,
+      32,
+      32,
+      32,
+      32,
+      32,
+      32,
+      32,
+      32,
+      32,
+      32
+    ],
+    "direct_root_reset_pin_loads": null,
+    "macro_instances": 1
+  },
+  "qfd_dv_sram_delay": {
+    "kept_control_instances": 18,
+    "mux_widths": [
+      2,
+      32,
+      32,
+      32,
+      32,
+      32,
+      32,
+      32,
+      32,
+      32,
+      32,
+      32,
+      32,
+      32,
+      32,
+      32,
+      32
+    ],
+    "direct_root_reset_pin_loads": 21,
+    "macro_instances": 1
+  }
+}
