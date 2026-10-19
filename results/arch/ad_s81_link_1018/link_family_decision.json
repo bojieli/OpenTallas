@@ -1,0 +1,32 @@
+{
+ "schema": "opentallas.supersede_request.v1",
+ "lane": "AD-S81-LINK",
+ "date": "2026-10-18",
+ "decisions": {
+  "ot_s81_kp4_deca": {
+   "verdict": "SUPERSEDED (not a strap, not a separate kit to build)",
+   "by": "ot_s81_kp4_dec = four CLOSED tiles ot_s81_kp4_dsyn / ddly / dchn / dout",
+   "source_evidence": {
+    "rejection_commit": "4757cba8a (S81-TILES2 10-17): deca / decb CTS gates TT insertion 307-455 / 295-417 ps, spread 148 / 122 ps -> re-split into dsyn/ddly/dchn/dout, bit-exact vs the frozen two-tile decoder (tb_s81_kp4_eq, DMUT 2 / 3 / SEAMMUT FAIL)",
+    "rtl": "origin/main rtl/dsrom_sys/s81_link has no ot_s81_kp4_dec_a / ot_s81_kp4_dec_b module; ot_s81_kp4_dec.sv instantiates u_syn ot_s81_kp4_dsyn, u_dly ot_s81_kp4_ddly, u_chn ot_s81_kp4_dchn, u_out ot_s81_kp4_dout (dec_a/dec_b live only in the frozen reference rtl/dsrom_sys/s81_link/ref/ot_s81_kp4_dec_r33.sv)",
+    "die_bind": "origin/claude/s81-die7-1018 results/arch/s81_dv_1016/bind_p4l3/port_bind.json: no ot_s81_kp4_dec_a/_b master; the only mention is bind_table_p4l3.json child_views_owed (stale 'no CLOSED record' entry carried from p4l)",
+    "hbm": "/home/ubuntu/artifacts/hdie-d4/d4g_gen2/pb0/port_bind.json: no dec_a/dec_b"
+   }
+  },
+  "ot_s81_kp4_decb": {"verdict": "SUPERSEDED", "by": "as ot_s81_kp4_deca", "source_evidence": "as ot_s81_kp4_deca"},
+  "ot_pdie_ucie": {
+   "verdict": "REAL on HBM only; 0 instances on S81 (drop the S81 die membership, do NOT supersede the element)",
+   "s81": "bind_p4l3/port_bind.json masters: ot_pdie_serdes 8 instances (u_lk_WS0..), no ot_pdie_ucie; the S81 row reads the stale p4l bind6 port_bind (ot_pdie_ucie 2 = u_lk_WS0 / u_lk_ES0, converted to SerDes by S81-LBGAP/G3 in p4l3); bind_table_p4l3 masters still lists ot_pdie_ucie (0 inst)",
+   "hbm": "d4g_gen2/pb0/port_bind.json ot_pdie_ucie PASS 1 instance host_N (kind real, rtl rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv)"
+  },
+  "ot_pdie_serdes": {
+   "verdict": "REAL parent on both dies: S81 p4l3 8 instances (u_lk_*), HBM d4g GEN2 5 (lk_S0 lk_S1 lk_S3 lk_N0 lk_N2)",
+   "children_rtl": "u_enc ot_s81_kp4_enc (CLOSED k4-10153956e, native PASS), u_dec ot_s81_kp4_dec (CLOSED p1-867a65ed7, native FAIL), u_rm ot_s81_rate_match (CLOSED ec1-bc3912b42, native FAIL capture 458 on 5 pins), PMA ot_s81_pma_bm x2 (behavioural analog, modeled), reset synchronisers + status regs (glue)",
+   "physical_gap": "both dies place ot_pdie_serdes as the pin-only PHY abstract physical/asap7_v41x_pdie_macros{,_v2}/ot_pdie_serdes (250.0 x 2250.2 um; S81 dv_plan lk_* slot 260 x 2250; HBM vplan_a1 views.json view_dir asap7_v41x_pdie_macros): the KP4 enc/dec + rate-match digital layer is inside the modeled abstract, so die STA never sees it (owner 10-14: only PHY/off-chip modeled)",
+   "fit": "the hardened kp4_dec 2x2 parent is 622.08 x 540.0 um and does not fit the 250-260 um link slot; its children are 172.8 / 248.4 / 194.4 / 248.4 um wide (each fits), but their seam faces are 2x2-adjacent (dsyn N->ddly S, dsyn E->dchn W, ddly E->dout W, dchn N->dout S)"
+  },
+  "ot_s81_kp4_enc / ot_s81_rate_match": {
+   "verdict": "wrongly superseded by REG-CLEAN 10-17 ('older variant of ot_pdie_serdes' / 'instantiated by no current die case'): both are RTL leaves of ot_pdie_serdes (u_enc, u_rm) and ot_pdie_ucie (u_rm) on current dies -> un-supersede as leaves of those parents"
+  }
+ }
+}
