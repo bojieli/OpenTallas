@@ -1,4 +1,38 @@
 {
- "jobs": [],
- "note": "none lowered (attention / HBM GAP)"
+ "jobs": [
+  {
+   "layer": "L0",
+   "tag": 0,
+   "arg": 1025,
+   "j_word": "100040100",
+   "s_j": 1767,
+   "j_pin": {
+    "u_rsv_05": 1801,
+    "u_rsv_11": 1791
+   },
+   "frames": {
+    "CFG": 1805,
+    "OWN_ROW": 1806,
+    "WIN_LOAD": 1823,
+    "ATTN_Q0": 3001,
+    "ATTN_Q1": 3130,
+    "SMJ": 3259,
+    "GO": 3262,
+    "PV": 3763
+   },
+   "go": 3262,
+   "pvs": 501,
+   "po": 538,
+   "pvo": 625,
+   "pv_first": 3943,
+   "pv_last": 4102,
+   "done_pin": 4103,
+   "ls": 2368,
+   "hbm_sectors": 2096,
+   "q_words": 346,
+   "q_image": "prog/svc/L0/qwd.hex",
+   "tag_rule": "q headers carry {issuer slot, calendar row index}: re-emit with the final row index / per-slot header rows"
+  }
+ ],
+ "note": "1 jobs"
 }

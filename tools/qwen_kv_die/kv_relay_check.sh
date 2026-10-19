@@ -33,4 +33,26 @@ if [ -z "$SCHED" ]; then
      --kv-stages "$RUNT" --kv-commit "$COMMIT") || { echo "RELAY_CHECK FAIL calendar compiler (layer_compile.py) failed on this die"; exit 1; }
   SCHED=$(ls "$R"/layer_compile/relay_schedule/kv_compiled.json* | head -1)
 fi
+# QLB-KV 10-18 (QXF-LINK F4): the TXDP the die BINDS on d2d_kv (qkd_d2d_static #(.TXDP), kv_die.d2d_txdp_k) must equal
+# the vector the calendar compiler derives for THIS die's stages (RUN/layer_compile/d2d/txdp.svh QKD_D2D_TXDP); a missing
+# or different TXDP is a FAIL (re-GEN with OT_KV_D2D_TXDP_K=<compiled>).  Only when the schedule was compiled here.
+if [ -s "$R/layer_compile/d2d/txdp.svh" ]; then
+  TXL=$(python3 - "$B/die_bound.v" "$R/layer_compile/d2d/txdp.svh" <<'PY'
+import re, sys
+v = open(sys.argv[1]).read(); t = open(sys.argv[2]).read()
+m = re.search(r"QKD_D2D_TXDP\s*=\s*\{8'd(\d+),\s*8'd(\d+),\s*8'd(\d+),\s*8'd(\d+)\}", t)
+comp = [int(x) for x in m.groups()][::-1] if m else None          # {p3,p2,p1,p0} -> [p0..p3]
+b = re.findall(r"\bqkd_d2d_static\s*#\(([^;]*?)\)\s*[A-Za-z_]\w*\s*\(", v, re.S)
+got = []
+for prm in b:
+    mm = re.search(r"\.TXDP\(\s*(?:32'h([0-9a-fA-F_]+)|(\d+))\s*\)", prm)
+    got.append(None if not mm else (int(mm.group(1).replace('_', ''), 16) if mm.group(1) else int(mm.group(2))))
+bv = [[(g >> (8 * k)) & 0xff for k in range(4)] if g is not None else None for g in got]
+ok = bool(comp) and len(bv) == 1 and bv[0] == comp
+print(("TXDP_K PASS" if ok else "TXDP_K FAIL") + f" bound {bv} (qkd_d2d_static instances {len(bv)}) compiled {comp}")
+PY
+)
+  echo "$TXL"
+  case "$TXL" in "TXDP_K PASS"*) ;; *) echo "RELAY_CHECK FAIL $TXL"; exit 1;; esac
+fi
 bash "$SRC/tools/die_relay_chain_step.sh" "$RUNT" "$SCHED" "$R/relay_check.json"

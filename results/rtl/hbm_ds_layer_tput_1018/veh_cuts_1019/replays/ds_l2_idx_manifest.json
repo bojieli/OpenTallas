@@ -1,0 +1,59 @@
+{
+ "schema": "opentallas.hbm_idx_images.v1",
+ "lane": "VEH-CUTS",
+ "fixtures": "results/rtl/hbm_ds_layer_tput_1018/fixtures/L02",
+ "layer": 2,
+ "cal_delta": 10,
+ "records": [
+  {
+   "k_layer": 60,
+   "tag": "route.top6",
+   "i": 86,
+   "op": "IDX.TOPK",
+   "priced_cycles": 231.5,
+   "priced_base_cost": 283.01,
+   "status": "emitted",
+   "n": 384,
+   "k": 6,
+   "order": 1,
+   "launch_cyc": 6230,
+   "cal_delta": 10,
+   "E0": 6240,
+   "G": 6242,
+   "engine_end_rel_G": 151,
+   "end": 6393,
+   "check_cyc": 6409,
+   "ack": 12,
+   "calendar_words": 151,
+   "calendar_configuration_writes": 151,
+   "rec_word": "0xc0600001800200000002003016",
+   "expected_O": [
+    33,
+    36,
+    59,
+    182,
+    279,
+    352
+   ],
+   "mutant": false,
+   "replays": [
+    {
+     "name": "ds_l2_idx_r086",
+     "mutant": false,
+     "events": 774,
+     "vm_preload": 49,
+     "cycles": 6473,
+     "replay_sha256": "22df9357bb3b5e20b0f21151df4b2b7d9557ec9ef7bff1aeb5b48ff1e22fc4ec"
+    },
+    {
+     "name": "ds_l2_idx_r086_mut_sign",
+     "mutant": true,
+     "events": 774,
+     "vm_preload": 49,
+     "cycles": 6473,
+     "replay_sha256": "3cb79370ee78c7009a66415401a467df0d1680a43795ccb94efba56ad9fcd845"
+    }
+   ]
+  }
+ ]
+}

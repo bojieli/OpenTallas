@@ -6,7 +6,11 @@ rtl/hbm_accel/index/ot_hbm_idx_topk_static.sv, never read back from the RTL. The
 calendar (read-group select, hub bank select, bank packet-write select, hub response edge) and checks every
 done / fault edge, every VM write and every untouched neighbour word against the golden hgi_sim.machine.topk_ids.
 
-  hbm_idx_topk_static_vectors.py OUTDIR [random_count <= 24] [seed]
+  hbm_idx_topk_static_vectors.py OUTDIR [random_count <= 24] [seed] [pin_in 0|1]
+
+pin_in 1 (VEH-TOPKFIX 2026-10-19): the VM banks carry literal input pin flops (hfd_vms_bank_native_q0_faces, slice
+BANK_PIN_IN 1, engine PIN_IN 1): rslot/wslot ride the same bank pin register as rq/pq, so R/H/P are unchanged; the
+engine capture (F) and every later edge move +1, the hub echo is +1 (response W+1+RESP+1) and ACK is 13.
 """
 import sys
 from pathlib import Path
@@ -26,8 +30,9 @@ SPECIAL = np.array([0x00000000, 0x80000000, 0x7f800000, 0xff800000, 0x00000001, 
                     0x7f7fffff, 0xff7fffff], np.uint32)
 
 
-def schedule(rec, G):
+def schedule(rec, G, pin_in=0):
     """Edges for one record whose go is sampled at edge G. Returns (events, end_edge, legal)."""
+    ack = ACK + pin_in
     k, n, m = rec['k'], rec['n'], rec['m']
     legal = (1 <= k <= 8 and n >= k and m >= 1
              and ((rec['am'] and rec['a'] >> 16 == 0) or (not rec['am'] and rec['a'] >> 16 == SID))
@@ -43,7 +48,7 @@ def schedule(rec, G):
         for j in range(ns):
             sec = sec0 + j
             ev.append(('R', S + 2 * j + 1, sec % 8))
-        F = S + 2 * (ns - 1) + 9
+        F = S + 2 * (ns - 1) + 9 + pin_in
         P = F + 7 + 4 * k
         secs = []
         orb = rec['o'] + row * rec['o_str']
@@ -55,10 +60,10 @@ def schedule(rec, G):
             W = P + 1 + i
             ev.append(('H', W + 1, sec % 8))
             ev.append(('P', W + 1 + HUB_TO_BANK, sec % 8))
-            ev.append(('A', W + 1 + RESP, i))
+            ev.append(('A', W + 1 + RESP + pin_in, i))
         W_last = P + len(secs)
         S = W_last + 3
-    return ev, W_last + ACK + 1, True
+    return ev, W_last + ack + 1, True
 
 
 def make_records(rng, count):
@@ -89,6 +94,7 @@ def main():
     cnt = int(sys.argv[2]) if len(sys.argv) > 2 else 24
     assert cnt <= 24, 'address plan fits 24 random records in one 64K-word slice'
     rng = np.random.default_rng(20261015 + (int(sys.argv[3]) if len(sys.argv) > 3 else 0))
+    pin_in = int(sys.argv[4]) if len(sys.argv) > 4 else 0
     recs = make_records(rng, cnt)
     main_mem, mirror_mem = {}, {}          # word address (sid-major 18 b) -> value
     for rec in recs:
@@ -126,7 +132,7 @@ def main():
     lines = []
     for idx, rec in enumerate(recs):
         G = G + 2
-        ev, end, legal = schedule(rec, G)
+        ev, end, legal = schedule(rec, G, pin_in)
         # golden (hgi_sim.machine.u_idx_topk semantics): rows in order against the CURRENT VM (earlier records'
         # writes included); a NaN row faults the record and it and later rows write nothing, earlier rows stand.
         mem = mirror_mem if rec['am'] else expect
@@ -179,7 +185,7 @@ def main():
     (out / 'chk.mem').write_text(''.join(f"{s:04x}{''.join(f'{x:08x}' for x in reversed(d))}\n" for s, d in chk))
     (out / 'counts.txt').write_text(f'{len(pre)} {len(chk)}\n')
     prod = [r for r in recs if r['prod']]
-    print(f'records {len(recs)} (prod {len(prod)}, faults {sum(r["fault"] for r in recs)}) preload {len(pre)} '
+    print(f'pin_in {pin_in} records {len(recs)} (prod {len(prod)}, faults {sum(r["fault"] for r in recs)}) preload {len(pre)} '
           f'check {len(chk)} edges {last}; production edges/record ' +
           ', '.join(str(r['end'] - r['G'] + 1) for r in prod))
 

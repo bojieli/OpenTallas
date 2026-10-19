@@ -1,0 +1,16 @@
+RET 709 17d8b890c1000008b
+RET 710 17c7214681000408b
+RET 713 07a9d79001000804b
+RET 714 075d8a0001000c04b
+RET 719 178ebca001000844b
+RET 720 17c57b8881000c44b
+RET 726 07c571b001000888b
+RET 727 07a1fe2001000c88b
+RET 729 17d28bd701000088b
+RET 730 07b8834001000488b
+XSL_LOCKSTEP D=321 compared=1008 mismatch=0 valid_ref=82 valid_xs=82 first_ref=67 first_xs=388 xs_fault_at=-1
+- rtl/dsrom_sys/s81_dv/frame/test/tb_s81dv_frame_xs.sv:186: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1us; walltime 5.390 s; speed 247.660 ns/s
+- Verilator: cpu 5.390 s on 1 threads; allocated 48 MB
+XS_CAL_CHECK PASS p24

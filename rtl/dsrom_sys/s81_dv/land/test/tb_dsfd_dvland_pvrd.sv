@@ -3,10 +3,10 @@
 // lags the slice root by +DL ps; the svc drain pattern is NJ jobs of NW words (5-word beats, head flag on word 0),
 // back to back inside a job, GAP idle cycles between jobs.  Checks: every landed word comes out as one RD beat with
 // kind 4, pairs 2, leaf = w mod 5, row = RB + 4 (w div 5), the exact word, at ONE constant latency; fault 0.
-// +SLIP=1 moves one head flag (calendar slip) -> fault must rise.  Build -DMUT1 -> leaf calendar off by one -> FAIL.
+// +LAT=n pins the calendar latency (S81-DIE7 PVRD). +SLIP=1 moves one head flag (calendar slip) -> fault must rise.  Build -DMUT1 -> leaf calendar off by one -> FAIL.
 module tb;
     localparam integer T = 834;
-    integer DL = 300, NW = 10, NJ = 3, GAP = 7, SLIP = 0, KS = 2;
+    integer DL = 300, NW = 10, NJ = 3, GAP = 7, SLIP = 0, KS = 2, LAT = -1;
     reg ck = 0, ckf = 0, rs = 0;
     always #(T / 2) ck = ~ck;
     initial begin
@@ -14,6 +14,7 @@ module tb;
         if (!$value$plusargs("NW=%d", NW)) NW = 10;
         if (!$value$plusargs("SLIP=%d", SLIP)) SLIP = 0;
         if (!$value$plusargs("K=%d", KS)) KS = 2;
+        if (!$value$plusargs("LAT=%d", LAT)) LAT = -1;   // expected calendar latency (edges); -1 = not checked
         #(DL); forever #(T / 2) ckf = ~ckf;
     end
     reg [561:0] lane = 0;
@@ -62,8 +63,12 @@ module tb;
         #(3 * T); started = 1;
         #((NJ * (NW + GAP) + 40) * T);
         $display("OT_PVRD sent=%0d recv=%0d mism=%0d lat=%0d latbad=%0d fault=%0d", nsent, nrecv, mism, lat0, latbad, fault);
-        if (SLIP) $display(fault ? "PVRD_RESULT PASS (slip faulted)" : "PVRD_RESULT FAIL (slip not seen)");
-        else $display((nrecv == NW * NJ && nsent == nrecv && mism == 0 && latbad == 0 && fault == 0) ? "PVRD_RESULT PASS" : "PVRD_RESULT FAIL");
+        // (if/else, not a string ternary: iverilog printed nothing for the ternary form)
+        if (SLIP) begin
+            if (fault) $display("PVRD_RESULT PASS (slip faulted)"); else $display("PVRD_RESULT FAIL (slip not seen)");
+        end else if (nrecv == NW * NJ && nsent == nrecv && mism == 0 && latbad == 0 && fault == 0 && (LAT < 0 || lat0 == LAT))
+            $display("PVRD_RESULT PASS");
+        else $display("PVRD_RESULT FAIL");
         $finish;
     end
 endmodule

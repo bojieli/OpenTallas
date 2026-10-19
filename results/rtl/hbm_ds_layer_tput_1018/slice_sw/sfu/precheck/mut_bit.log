@@ -1,0 +1,8 @@
+MISMATCH ctl row 100 edge 19914
+SFUCOL launch=19795 io_first=19807 ctl_first=19814 launch_to_io=12 io_to_ctl=7 ctl_rows=1334 io_rows=4
+SFUCOL collar_fault_at=-1 store_fault_at=-1 ready_at_launch=1 programme_done=1 io_done=1 active_end=0
+SFUCOL FAIL errs=1
+- /srv/opentallas-scratch/claude/veh-coll2-sfu/pre/tb_sfu_collar.sv:85: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 22us; walltime 0.117 s; speed 184.247 us/s
+- Verilator: cpu 0.117 s on 1 threads; allocated 8 MB

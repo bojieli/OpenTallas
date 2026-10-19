@@ -1,0 +1,4 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job hidx_rootctl_am_1018-r4-49a5acb8f bench bench_idx_rootctl_am_eq_mut4 host ot-epyc4 run /srv/opentallas-scratch2/claude/closure-loop/hidx_rootctl_am_1018-r4-49a5acb8f-bench log cl/bench_idx_rootctl_am_eq_mut4.a1b1.log captured 2026-10-18T18:26:56-07:00
+# fail_regex '^EQ AMMUT=4 .* errors [1-9][0-9]* IDX_ROOTCTL_AM FAIL'
+EQ AMMUT=4 cycles 40005 checked 39965 argmax_resp 26132 (multi-lane 10481) index_resp 26174 topk_writes 0 sel_ops 11591 share_fault 15781 ingest 547 corrupt@30235 fault_held 9768 errors 26131 IDX_ROOTCTL_AM FAIL 

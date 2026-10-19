@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hbm_accel_smh_fc_xr2",
+ "enable": false,
+ "reason": "the RTL already registers every pin: stage A (u_xa*/u_la*/u_fa) captures xi/li/fi and stage B (u_xb*/u_lb*/u_fb) launches xo/lo/fo, no combinational port path; io_flop_at_pins anchors A at the input faces and B at the output faces (recipe-3 pin registers would add 2 more cycles to a pure relay). Qualifies for hold_budget die (all data pins registered)."
+}

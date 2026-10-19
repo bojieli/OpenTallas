@@ -8,33 +8,35 @@
    "available": true,
    "title": "DeepSeek-V4.1 ROM, S81 array (p4l DV die), 1M context, AR",
    "clock_hz": 1200000000.0,
-   "T_token_cycles": 965378.6,
+   "T_token_cycles": 985848.6,
    "tau": null,
-   "per_accepted_cycles": 965378.6,
-   "tok_s": 1243.0,
+   "per_accepted_cycles": 985848.6,
+   "tok_s": 1217.2,
    "price_of_record": {
-    "tok_s": 1365.7,
-    "cycles": 878670.3,
-    "source": "results/arch/s81_dv_1016/p4l/price_land.json dv_base.ar"
+    "tok_s": 1334.6,
+    "cycles": 899140.3,
+    "source": "results/arch/s81_dv_1016/p4l/price_land.json dv_base.ar + S81-SCAND option D 1-stack scan (ledger S81.SCAN_STACKS_P4L, not yet in dv_price) + S81-L20SPLIT k=6 (ledger S81.L20_SPLIT, not yet in dv_price)",
+    "uncorrected_tok_s": 1365.7,
+    "scan_stacks_correction_cycles": 20470.0
    },
-   "vs_price_pct": -8.98,
-   "T_at_price_cycles": 965378.6,
-   "pct_measured_current_rtl": 10.34,
-   "banner": "10.3% of token cycles measured on current RTL (61.4% on older RTL, 17.9% modelled PHY, 10.4% priced)",
+   "vs_price_pct": -8.79,
+   "T_at_price_cycles": 985848.6,
+   "pct_measured_current_rtl": 10.69,
+   "banner": "10.7% of token cycles measured on current RTL (60.5% on older RTL, 17.5% modelled PHY, 11.2% priced)",
    "by_grade": {
-    "measured-current-RTL": 99813.0,
-    "measured-old-RTL": 592268.7,
+    "measured-current-RTL": 105349.0,
+    "measured-old-RTL": 596814.7,
     "modelled-PHY": 172975.0,
-    "priced": 100321.9
+    "priced": 110709.9
    },
    "by_grade_share": {
-    "measured-current-RTL": 0.1034,
-    "measured-old-RTL": 0.6135,
-    "modelled-PHY": 0.1792,
-    "priced": 0.1039
+    "measured-current-RTL": 0.1069,
+    "measured-old-RTL": 0.6054,
+    "modelled-PHY": 0.1755,
+    "priced": 0.1123
    },
    "by_kind": {
-    "layer": 615525.0,
+    "layer": 635995.0,
     "xdie": 323306.0,
     "adjust": 26547.6
    },
@@ -196,11 +198,11 @@
     },
     "L14": {
      "n": 1,
-     "die": 22928.2,
+     "die": 25631.2,
      "xdie": 7054.0,
      "by_grade": {
-      "priced": 1886.2,
-      "measured-old-RTL": 22248.0,
+      "priced": 3700.2,
+      "measured-old-RTL": 23137.0,
       "measured-current-RTL": 1771.0,
       "modelled-PHY": 4077.0
      }
@@ -229,11 +231,11 @@
     },
     "L2": {
      "n": 1,
-     "die": 21997.0,
+     "die": 24700.0,
      "xdie": 8169.0,
      "by_grade": {
-      "measured-old-RTL": 21377.8,
-      "priced": 1959.2,
+      "measured-old-RTL": 22266.8,
+      "priced": 3773.2,
       "measured-current-RTL": 2299.0,
       "modelled-PHY": 4530.0
      }
@@ -295,11 +297,11 @@
     },
     "L8": {
      "n": 1,
-     "die": 22010.0,
+     "die": 24713.0,
      "xdie": 8169.0,
      "by_grade": {
-      "measured-old-RTL": 21390.8,
-      "priced": 1959.2,
+      "measured-old-RTL": 22279.8,
+      "priced": 3773.2,
       "measured-current-RTL": 2299.0,
       "modelled-PHY": 4530.0
      }
@@ -416,12 +418,12 @@
     },
     "L20": {
      "n": 1,
-     "die": 25328.7,
+     "die": 34557.7,
      "xdie": 7054.0,
      "by_grade": {
-      "measured-old-RTL": 24700.1,
-      "priced": 1834.6,
-      "measured-current-RTL": 1771.0,
+      "measured-old-RTL": 26579.1,
+      "priced": 3648.6,
+      "measured-current-RTL": 7307.0,
       "modelled-PHY": 4077.0
      }
     },
@@ -460,11 +462,11 @@
     },
     "L24": {
      "n": 1,
-     "die": 17454.4,
+     "die": 18237.4,
      "xdie": 8169.0,
      "by_grade": {
       "measured-old-RTL": 16759.9,
-      "priced": 2034.5,
+      "priced": 2817.5,
       "measured-current-RTL": 2299.0,
       "modelled-PHY": 4530.0
      }
@@ -504,11 +506,11 @@
     },
     "L28": {
      "n": 1,
-     "die": 17486.4,
+     "die": 18269.4,
      "xdie": 8169.0,
      "by_grade": {
       "measured-old-RTL": 16791.9,
-      "priced": 2034.5,
+      "priced": 2817.5,
       "measured-current-RTL": 2299.0,
       "modelled-PHY": 4530.0
      }
@@ -548,11 +550,11 @@
     },
     "L32": {
      "n": 1,
-     "die": 17419.4,
+     "die": 18202.4,
      "xdie": 7054.0,
      "by_grade": {
       "measured-old-RTL": 16791.9,
-      "priced": 1833.5,
+      "priced": 2616.5,
       "measured-current-RTL": 1771.0,
       "modelled-PHY": 4077.0
      }
@@ -592,11 +594,11 @@
     },
     "L36": {
      "n": 1,
-     "die": 17419.4,
+     "die": 18202.4,
      "xdie": 7054.0,
      "by_grade": {
       "measured-old-RTL": 16791.9,
-      "priced": 1833.5,
+      "priced": 2616.5,
       "measured-current-RTL": 1771.0,
       "modelled-PHY": 4077.0
      }
@@ -3053,7 +3055,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.ar.layers.L0.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L0",
@@ -3069,7 +3071,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.ar.layers.L1.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L1",
@@ -3085,7 +3087,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.ar.layers.L2.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L2",
@@ -3101,7 +3103,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.ar.layers.L3.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L3",
@@ -3117,7 +3119,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.ar.layers.L4.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L4",
@@ -3133,7 +3135,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.ar.layers.L5.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L5",
@@ -3149,7 +3151,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.ar.layers.L6.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L6",
@@ -3165,7 +3167,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.ar.layers.L7.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L7",
@@ -3181,7 +3183,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.ar.layers.L8.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L8",
@@ -3197,7 +3199,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.ar.layers.L9.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L9",
@@ -3213,7 +3215,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.ar.layers.L10.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L10",
@@ -3229,7 +3231,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.ar.layers.L11.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L11",
@@ -3245,7 +3247,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.ar.layers.L12.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L12",
@@ -3261,7 +3263,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.ar.layers.L13.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L13",
@@ -3277,7 +3279,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.ar.layers.L14.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L14",
@@ -3293,7 +3295,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.ar.layers.L15.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L15",
@@ -3309,7 +3311,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.ar.layers.L16.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L16",
@@ -3325,7 +3327,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.ar.layers.L17.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L17",
@@ -3341,7 +3343,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.ar.layers.L18.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L18",
@@ -3357,7 +3359,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.ar.layers.L19.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L19",
@@ -3373,7 +3375,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.ar.layers.L20.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L20",
@@ -3389,7 +3391,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.ar.layers.L21.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L21",
@@ -3405,7 +3407,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.ar.layers.L22.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L22",
@@ -3421,7 +3423,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.ar.layers.L23.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L23",
@@ -3437,7 +3439,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.ar.layers.L24.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L24",
@@ -3453,7 +3455,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.ar.layers.L25.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L25",
@@ -3469,7 +3471,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.ar.layers.L26.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L26",
@@ -3485,7 +3487,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.ar.layers.L27.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L27",
@@ -3501,7 +3503,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.ar.layers.L28.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L28",
@@ -3517,7 +3519,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.ar.layers.L29.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L29",
@@ -3533,7 +3535,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.ar.layers.L30.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L30",
@@ -3549,7 +3551,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.ar.layers.L31.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L31",
@@ -3565,7 +3567,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.ar.layers.L32.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L32",
@@ -3581,7 +3583,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.ar.layers.L33.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L33",
@@ -3597,7 +3599,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.ar.layers.L34.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L34",
@@ -3613,7 +3615,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.ar.layers.L35.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L35",
@@ -3629,7 +3631,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.ar.layers.L36.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L36",
@@ -3645,7 +3647,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.ar.layers.L37.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L37",
@@ -3661,7 +3663,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.ar.layers.L38.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L38",
@@ -3677,7 +3679,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.ar.layers.L39.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L39",
@@ -3693,7 +3695,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.ar.layers.L40.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L40",
@@ -3713,6 +3715,214 @@
       "origin": "main (S81-DIE7/PRICE ec38691d6)"
      },
      "note": "hop-only basis + accepted-cost ledger rows + DAG re-solve: the part of the S81 price of record that is not a per-node term"
+    },
+    {
+     "slot": "L2.scan_d_reader",
+     "kind": "layer",
+     "n": 1,
+     "cycles": 889,
+     "grade": "measured-old-RTL",
+     "total": 889,
+     "source": {
+      "record": "results/arch/s81_scand_1018/scand.json",
+      "pointer": "by_k.3.per_layer.L2",
+      "commit": "29c341723",
+      "origin": "claude/s81-scand-1018 (S81-SCAND: option D, measured 1-stack reader, keys over k = 3 TP4 stages)"
+     },
+     "layer": "L2",
+     "note": "option D k=3: index scan at 1 HBM stack a p4l die, keys over 12 dies (reader)"
+    },
+    {
+     "slot": "L2.scan_d_legs_merge",
+     "kind": "layer",
+     "n": 1,
+     "cycles": 1814.0,
+     "grade": "priced",
+     "total": 1814.0,
+     "source": {
+      "record": "results/arch/s81_scand_1018/scand.json",
+      "pointer": "by_k.3.per_layer.L2",
+      "commit": "29c341723",
+      "origin": "claude/s81-scand-1018 (S81-SCAND: option D, measured 1-stack reader, keys over k = 3 TP4 stages)"
+     },
+     "layer": "L2",
+     "note": "option D k=3: index scan at 1 HBM stack a p4l die, keys over 12 dies (legs_merge)"
+    },
+    {
+     "slot": "L8.scan_d_reader",
+     "kind": "layer",
+     "n": 1,
+     "cycles": 889,
+     "grade": "measured-old-RTL",
+     "total": 889,
+     "source": {
+      "record": "results/arch/s81_scand_1018/scand.json",
+      "pointer": "by_k.3.per_layer.L8",
+      "commit": "29c341723",
+      "origin": "claude/s81-scand-1018 (S81-SCAND: option D, measured 1-stack reader, keys over k = 3 TP4 stages)"
+     },
+     "layer": "L8",
+     "note": "option D k=3: index scan at 1 HBM stack a p4l die, keys over 12 dies (reader)"
+    },
+    {
+     "slot": "L8.scan_d_legs_merge",
+     "kind": "layer",
+     "n": 1,
+     "cycles": 1814.0,
+     "grade": "priced",
+     "total": 1814.0,
+     "source": {
+      "record": "results/arch/s81_scand_1018/scand.json",
+      "pointer": "by_k.3.per_layer.L8",
+      "commit": "29c341723",
+      "origin": "claude/s81-scand-1018 (S81-SCAND: option D, measured 1-stack reader, keys over k = 3 TP4 stages)"
+     },
+     "layer": "L8",
+     "note": "option D k=3: index scan at 1 HBM stack a p4l die, keys over 12 dies (legs_merge)"
+    },
+    {
+     "slot": "L14.scan_d_reader",
+     "kind": "layer",
+     "n": 1,
+     "cycles": 889,
+     "grade": "measured-old-RTL",
+     "total": 889,
+     "source": {
+      "record": "results/arch/s81_scand_1018/scand.json",
+      "pointer": "by_k.3.per_layer.L14",
+      "commit": "29c341723",
+      "origin": "claude/s81-scand-1018 (S81-SCAND: option D, measured 1-stack reader, keys over k = 3 TP4 stages)"
+     },
+     "layer": "L14",
+     "note": "option D k=3: index scan at 1 HBM stack a p4l die, keys over 12 dies (reader)"
+    },
+    {
+     "slot": "L14.scan_d_legs_merge",
+     "kind": "layer",
+     "n": 1,
+     "cycles": 1814.0,
+     "grade": "priced",
+     "total": 1814.0,
+     "source": {
+      "record": "results/arch/s81_scand_1018/scand.json",
+      "pointer": "by_k.3.per_layer.L14",
+      "commit": "29c341723",
+      "origin": "claude/s81-scand-1018 (S81-SCAND: option D, measured 1-stack reader, keys over k = 3 TP4 stages)"
+     },
+     "layer": "L14",
+     "note": "option D k=3: index scan at 1 HBM stack a p4l die, keys over 12 dies (legs_merge)"
+    },
+    {
+     "slot": "L20.scan_d_reader",
+     "kind": "layer",
+     "n": 1,
+     "cycles": 1879,
+     "grade": "measured-old-RTL",
+     "total": 1879,
+     "source": {
+      "record": "results/arch/s81_scand_1018/scand.json",
+      "pointer": "by_k.3.per_layer.L20",
+      "commit": "29c341723",
+      "origin": "claude/s81-scand-1018 (S81-SCAND: option D, measured 1-stack reader, keys over k = 3 TP4 stages)"
+     },
+     "layer": "L20",
+     "note": "option D k=3: index scan at 1 HBM stack a p4l die, keys over 12 dies (reader)"
+    },
+    {
+     "slot": "L20.scan_d_legs_merge",
+     "kind": "layer",
+     "n": 1,
+     "cycles": 1814.0,
+     "grade": "priced",
+     "total": 1814.0,
+     "source": {
+      "record": "results/arch/s81_scand_1018/scand.json",
+      "pointer": "by_k.3.per_layer.L20",
+      "commit": "29c341723",
+      "origin": "claude/s81-scand-1018 (S81-SCAND: option D, measured 1-stack reader, keys over k = 3 TP4 stages)"
+     },
+     "layer": "L20",
+     "note": "option D k=3: index scan at 1 HBM stack a p4l die, keys over 12 dies (legs_merge)"
+    },
+    {
+     "slot": "L24.scan_d_reindex",
+     "kind": "layer",
+     "n": 1,
+     "cycles": 783.0,
+     "grade": "priced",
+     "total": 783.0,
+     "source": {
+      "record": "results/arch/s81_scand_1018/scand.json",
+      "pointer": "by_k.3.idx_score_delta_cycles.L24",
+      "commit": "29c341723",
+      "origin": "claude/s81-scand-1018 (S81-SCAND: option D, measured 1-stack reader, keys over k = 3 TP4 stages)"
+     },
+     "layer": "L24",
+     "note": "option D k=3: index scan at 1 HBM stack a p4l die, keys over 12 dies (reindex)"
+    },
+    {
+     "slot": "L28.scan_d_reindex",
+     "kind": "layer",
+     "n": 1,
+     "cycles": 783.0,
+     "grade": "priced",
+     "total": 783.0,
+     "source": {
+      "record": "results/arch/s81_scand_1018/scand.json",
+      "pointer": "by_k.3.idx_score_delta_cycles.L28",
+      "commit": "29c341723",
+      "origin": "claude/s81-scand-1018 (S81-SCAND: option D, measured 1-stack reader, keys over k = 3 TP4 stages)"
+     },
+     "layer": "L28",
+     "note": "option D k=3: index scan at 1 HBM stack a p4l die, keys over 12 dies (reindex)"
+    },
+    {
+     "slot": "L32.scan_d_reindex",
+     "kind": "layer",
+     "n": 1,
+     "cycles": 783.0,
+     "grade": "priced",
+     "total": 783.0,
+     "source": {
+      "record": "results/arch/s81_scand_1018/scand.json",
+      "pointer": "by_k.3.idx_score_delta_cycles.L32",
+      "commit": "29c341723",
+      "origin": "claude/s81-scand-1018 (S81-SCAND: option D, measured 1-stack reader, keys over k = 3 TP4 stages)"
+     },
+     "layer": "L32",
+     "note": "option D k=3: index scan at 1 HBM stack a p4l die, keys over 12 dies (reindex)"
+    },
+    {
+     "slot": "L36.scan_d_reindex",
+     "kind": "layer",
+     "n": 1,
+     "cycles": 783.0,
+     "grade": "priced",
+     "total": 783.0,
+     "source": {
+      "record": "results/arch/s81_scand_1018/scand.json",
+      "pointer": "by_k.3.idx_score_delta_cycles.L36",
+      "commit": "29c341723",
+      "origin": "claude/s81-scand-1018 (S81-SCAND: option D, measured 1-stack reader, keys over k = 3 TP4 stages)"
+     },
+     "layer": "L36",
+     "note": "option D k=3: index scan at 1 HBM stack a p4l die, keys over 12 dies (reindex)"
+    },
+    {
+     "slot": "L20.scan_d_l20split_k6",
+     "kind": "layer",
+     "n": 1,
+     "cycles": 5536.0,
+     "grade": "measured-current-RTL",
+     "total": 5536.0,
+     "source": {
+      "record": "results/arch/s81_l20_1019/split/split.json",
+      "pointer": "single_user.chains.split_k6_compiled - record_D",
+      "commit": "uncommitted",
+      "origin": "claude/s81-l20split-1019 (S81-L20SPLIT, coordinator 0li: L20 keys over k = 6 TP4 stages, compiled rank tree on the measured reader + RTL bk_sel jobs)"
+     },
+     "layer": "L20",
+     "note": "L20 index path: compiled k=6 rank tree 19391 vs record D 13855 (reader law + RTL bk_sel jobs + legs; the 116 adders and the 729 leg are older measurements)"
     },
     {
      "slot": "embed.xdie.L0.attn.a_allgather",
@@ -19169,33 +19379,35 @@
    "available": true,
    "title": "DeepSeek-V4.1 ROM, S81 array (p4l DV die), 1M context, MTP (DSpark, tau 4.159)",
    "clock_hz": 1200000000.0,
-   "T_token_cycles": 1311215.8,
+   "T_token_cycles": 1377830.8,
    "tau": 4.159,
-   "per_accepted_cycles": 315271.9,
-   "tok_s": 3806.2,
+   "per_accepted_cycles": 331289.0,
+   "tok_s": 3622.2,
    "price_of_record": {
-    "tok_s": 4045.4,
-    "cycles": 1233697.5,
-    "source": "results/arch/s81_dv_1016/p4l/price_land.json dv_base.mtp"
+    "tok_s": 3838.2,
+    "cycles": 1300312.5,
+    "source": "results/arch/s81_dv_1016/p4l/price_land.json dv_base.mtp + S81-SCAND option D 1-stack scan (ledger S81.SCAN_STACKS_P4L, not yet in dv_price) + S81-L20SPLIT k=6 (ledger S81.L20_SPLIT, not yet in dv_price)",
+    "uncorrected_tok_s": 4045.4,
+    "scan_stacks_correction_cycles": 66615.0
    },
-   "vs_price_pct": -5.91,
-   "T_at_price_cycles": 1311215.8,
-   "pct_measured_current_rtl": 8.12,
-   "banner": "8.1% of token cycles measured on current RTL (68.8% on older RTL, 14.3% modelled PHY, 8.7% priced)",
+   "vs_price_pct": -5.63,
+   "T_at_price_cycles": 1377830.8,
+   "pct_measured_current_rtl": 8.13,
+   "banner": "8.1% of token cycles measured on current RTL (65.8% on older RTL, 13.6% modelled PHY, 12.4% priced)",
    "by_grade": {
-    "measured-current-RTL": 106512.0,
-    "measured-old-RTL": 902298.8,
+    "measured-current-RTL": 112048.0,
+    "measured-old-RTL": 906844.8,
     "modelled-PHY": 187823.6,
-    "priced": 114581.4
+    "priced": 171114.4
    },
    "by_grade_share": {
-    "measured-current-RTL": 0.0812,
-    "measured-old-RTL": 0.6881,
-    "modelled-PHY": 0.1432,
-    "priced": 0.0874
+    "measured-current-RTL": 0.0813,
+    "measured-old-RTL": 0.6582,
+    "modelled-PHY": 0.1363,
+    "priced": 0.1242
    },
    "by_kind": {
-    "layer": 929953.1,
+    "layer": 996568.1,
     "xdie": 348337.6,
     "adjust": 32925.1
    },
@@ -21350,11 +21562,11 @@
     },
     "L2": {
      "n": 1,
-     "die": 21997.0,
+     "die": 24700.0,
      "xdie": 8169.0,
      "by_grade": {
-      "measured-old-RTL": 21377.8,
-      "priced": 1959.2,
+      "measured-old-RTL": 22266.8,
+      "priced": 3773.2,
       "measured-current-RTL": 2299.0,
       "modelled-PHY": 4530.0
      }
@@ -21416,11 +21628,11 @@
     },
     "L8": {
      "n": 1,
-     "die": 22010.0,
+     "die": 24713.0,
      "xdie": 8169.0,
      "by_grade": {
-      "measured-old-RTL": 21390.8,
-      "priced": 1959.2,
+      "measured-old-RTL": 22279.8,
+      "priced": 3773.2,
       "measured-current-RTL": 2299.0,
       "modelled-PHY": 4530.0
      }
@@ -21482,11 +21694,11 @@
     },
     "L14": {
      "n": 1,
-     "die": 22928.2,
+     "die": 25631.2,
      "xdie": 7054.0,
      "by_grade": {
-      "measured-old-RTL": 22248.0,
-      "priced": 1886.2,
+      "measured-old-RTL": 23137.0,
+      "priced": 3700.2,
       "measured-current-RTL": 1771.0,
       "modelled-PHY": 4077.0
      }
@@ -21548,12 +21760,12 @@
     },
     "L20": {
      "n": 1,
-     "die": 25328.7,
+     "die": 34557.7,
      "xdie": 7054.0,
      "by_grade": {
-      "measured-old-RTL": 24700.1,
-      "priced": 1834.6,
-      "measured-current-RTL": 1771.0,
+      "measured-old-RTL": 26579.1,
+      "priced": 3648.6,
+      "measured-current-RTL": 7307.0,
       "modelled-PHY": 4077.0
      }
     },
@@ -21592,11 +21804,11 @@
     },
     "L24": {
      "n": 1,
-     "die": 17454.4,
+     "die": 18237.4,
      "xdie": 8169.0,
      "by_grade": {
       "measured-old-RTL": 16759.9,
-      "priced": 2034.5,
+      "priced": 2817.5,
       "measured-current-RTL": 2299.0,
       "modelled-PHY": 4530.0
      }
@@ -21636,11 +21848,11 @@
     },
     "L28": {
      "n": 1,
-     "die": 17486.4,
+     "die": 18269.4,
      "xdie": 8169.0,
      "by_grade": {
       "measured-old-RTL": 16791.9,
-      "priced": 2034.5,
+      "priced": 2817.5,
       "measured-current-RTL": 2299.0,
       "modelled-PHY": 4530.0
      }
@@ -21680,11 +21892,11 @@
     },
     "L32": {
      "n": 1,
-     "die": 17419.4,
+     "die": 18202.4,
      "xdie": 7054.0,
      "by_grade": {
       "measured-old-RTL": 16791.9,
-      "priced": 1833.5,
+      "priced": 2616.5,
       "measured-current-RTL": 1771.0,
       "modelled-PHY": 4077.0
      }
@@ -21724,11 +21936,11 @@
     },
     "L36": {
      "n": 1,
-     "die": 17419.4,
+     "die": 18202.4,
      "xdie": 7054.0,
      "by_grade": {
       "measured-old-RTL": 16791.9,
-      "priced": 1833.5,
+      "priced": 2616.5,
       "measured-current-RTL": 1771.0,
       "modelled-PHY": 4077.0
      }
@@ -21768,13 +21980,13 @@
     },
     "wave": {
      "n": 1,
-     "die": 176183.8,
+     "die": 222328.8,
      "xdie": 5575.0,
      "by_grade": {
       "measured-old-RTL": 176183.8,
+      "priced": 46815.0,
       "measured-current-RTL": 2640.0,
-      "modelled-PHY": 2265.0,
-      "priced": 670.0
+      "modelled-PHY": 2265.0
      }
     },
     "accept": {
@@ -24282,7 +24494,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.mtp.layers.L0.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L0",
@@ -24298,7 +24510,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.mtp.layers.L1.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L1",
@@ -24314,7 +24526,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.mtp.layers.L2.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L2",
@@ -24330,7 +24542,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.mtp.layers.L3.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L3",
@@ -24346,7 +24558,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.mtp.layers.L4.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L4",
@@ -24362,7 +24574,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.mtp.layers.L5.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L5",
@@ -24378,7 +24590,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.mtp.layers.L6.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L6",
@@ -24394,7 +24606,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.mtp.layers.L7.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L7",
@@ -24410,7 +24622,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.mtp.layers.L8.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L8",
@@ -24426,7 +24638,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.mtp.layers.L9.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L9",
@@ -24442,7 +24654,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.mtp.layers.L10.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L10",
@@ -24458,7 +24670,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.mtp.layers.L11.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L11",
@@ -24474,7 +24686,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.mtp.layers.L12.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L12",
@@ -24490,7 +24702,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.mtp.layers.L13.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L13",
@@ -24506,7 +24718,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.mtp.layers.L14.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L14",
@@ -24522,7 +24734,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.mtp.layers.L15.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L15",
@@ -24538,7 +24750,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.mtp.layers.L16.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L16",
@@ -24554,7 +24766,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.mtp.layers.L17.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L17",
@@ -24570,7 +24782,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.mtp.layers.L18.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L18",
@@ -24586,7 +24798,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.mtp.layers.L19.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L19",
@@ -24602,7 +24814,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.mtp.layers.L20.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L20",
@@ -24618,7 +24830,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.mtp.layers.L21.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L21",
@@ -24634,7 +24846,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.mtp.layers.L22.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L22",
@@ -24650,7 +24862,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.mtp.layers.L23.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L23",
@@ -24666,7 +24878,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.mtp.layers.L24.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L24",
@@ -24682,7 +24894,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.mtp.layers.L25.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L25",
@@ -24698,7 +24910,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.mtp.layers.L26.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L26",
@@ -24714,7 +24926,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.mtp.layers.L27.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L27",
@@ -24730,7 +24942,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.mtp.layers.L28.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L28",
@@ -24746,7 +24958,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.mtp.layers.L29.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L29",
@@ -24762,7 +24974,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.mtp.layers.L30.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L30",
@@ -24778,7 +24990,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.mtp.layers.L31.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L31",
@@ -24794,7 +25006,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.mtp.layers.L32.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L32",
@@ -24810,7 +25022,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.mtp.layers.L33.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L33",
@@ -24826,7 +25038,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.mtp.layers.L34.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L34",
@@ -24842,7 +25054,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.mtp.layers.L35.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L35",
@@ -24858,7 +25070,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.mtp.layers.L36.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L36",
@@ -24874,7 +25086,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.mtp.layers.L37.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L37",
@@ -24890,7 +25102,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.mtp.layers.L38.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L38",
@@ -24906,7 +25118,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.mtp.layers.L39.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L39",
@@ -24922,7 +25134,7 @@
      "source": {
       "record": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
       "pointer": "workloads.mtp.layers.L40.dv_crit - hub_crit",
-      "commit": "1e4c81449",
+      "commit": "335ae3d28",
       "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json"
      },
      "layer": "L40",
@@ -24942,6 +25154,246 @@
       "origin": "main (S81-DIE7/PRICE ec38691d6)"
      },
      "note": "hop-only basis + accepted-cost ledger rows + DAG re-solve: the part of the S81 price of record that is not a per-node term"
+    },
+    {
+     "slot": "L2.scan_d_reader",
+     "kind": "layer",
+     "n": 1,
+     "cycles": 889,
+     "grade": "measured-old-RTL",
+     "total": 889,
+     "source": {
+      "record": "results/arch/s81_scand_1018/scand.json",
+      "pointer": "by_k.3.per_layer.L2",
+      "commit": "29c341723",
+      "origin": "claude/s81-scand-1018 (S81-SCAND: option D, measured 1-stack reader, keys over k = 3 TP4 stages)"
+     },
+     "layer": "L2",
+     "note": "option D k=3: index scan at 1 HBM stack a p4l die, keys over 12 dies (reader)"
+    },
+    {
+     "slot": "L2.scan_d_legs_merge",
+     "kind": "layer",
+     "n": 1,
+     "cycles": 1814.0,
+     "grade": "priced",
+     "total": 1814.0,
+     "source": {
+      "record": "results/arch/s81_scand_1018/scand.json",
+      "pointer": "by_k.3.per_layer.L2",
+      "commit": "29c341723",
+      "origin": "claude/s81-scand-1018 (S81-SCAND: option D, measured 1-stack reader, keys over k = 3 TP4 stages)"
+     },
+     "layer": "L2",
+     "note": "option D k=3: index scan at 1 HBM stack a p4l die, keys over 12 dies (legs_merge)"
+    },
+    {
+     "slot": "L8.scan_d_reader",
+     "kind": "layer",
+     "n": 1,
+     "cycles": 889,
+     "grade": "measured-old-RTL",
+     "total": 889,
+     "source": {
+      "record": "results/arch/s81_scand_1018/scand.json",
+      "pointer": "by_k.3.per_layer.L8",
+      "commit": "29c341723",
+      "origin": "claude/s81-scand-1018 (S81-SCAND: option D, measured 1-stack reader, keys over k = 3 TP4 stages)"
+     },
+     "layer": "L8",
+     "note": "option D k=3: index scan at 1 HBM stack a p4l die, keys over 12 dies (reader)"
+    },
+    {
+     "slot": "L8.scan_d_legs_merge",
+     "kind": "layer",
+     "n": 1,
+     "cycles": 1814.0,
+     "grade": "priced",
+     "total": 1814.0,
+     "source": {
+      "record": "results/arch/s81_scand_1018/scand.json",
+      "pointer": "by_k.3.per_layer.L8",
+      "commit": "29c341723",
+      "origin": "claude/s81-scand-1018 (S81-SCAND: option D, measured 1-stack reader, keys over k = 3 TP4 stages)"
+     },
+     "layer": "L8",
+     "note": "option D k=3: index scan at 1 HBM stack a p4l die, keys over 12 dies (legs_merge)"
+    },
+    {
+     "slot": "L14.scan_d_reader",
+     "kind": "layer",
+     "n": 1,
+     "cycles": 889,
+     "grade": "measured-old-RTL",
+     "total": 889,
+     "source": {
+      "record": "results/arch/s81_scand_1018/scand.json",
+      "pointer": "by_k.3.per_layer.L14",
+      "commit": "29c341723",
+      "origin": "claude/s81-scand-1018 (S81-SCAND: option D, measured 1-stack reader, keys over k = 3 TP4 stages)"
+     },
+     "layer": "L14",
+     "note": "option D k=3: index scan at 1 HBM stack a p4l die, keys over 12 dies (reader)"
+    },
+    {
+     "slot": "L14.scan_d_legs_merge",
+     "kind": "layer",
+     "n": 1,
+     "cycles": 1814.0,
+     "grade": "priced",
+     "total": 1814.0,
+     "source": {
+      "record": "results/arch/s81_scand_1018/scand.json",
+      "pointer": "by_k.3.per_layer.L14",
+      "commit": "29c341723",
+      "origin": "claude/s81-scand-1018 (S81-SCAND: option D, measured 1-stack reader, keys over k = 3 TP4 stages)"
+     },
+     "layer": "L14",
+     "note": "option D k=3: index scan at 1 HBM stack a p4l die, keys over 12 dies (legs_merge)"
+    },
+    {
+     "slot": "L20.scan_d_reader",
+     "kind": "layer",
+     "n": 1,
+     "cycles": 1879,
+     "grade": "measured-old-RTL",
+     "total": 1879,
+     "source": {
+      "record": "results/arch/s81_scand_1018/scand.json",
+      "pointer": "by_k.3.per_layer.L20",
+      "commit": "29c341723",
+      "origin": "claude/s81-scand-1018 (S81-SCAND: option D, measured 1-stack reader, keys over k = 3 TP4 stages)"
+     },
+     "layer": "L20",
+     "note": "option D k=3: index scan at 1 HBM stack a p4l die, keys over 12 dies (reader)"
+    },
+    {
+     "slot": "L20.scan_d_legs_merge",
+     "kind": "layer",
+     "n": 1,
+     "cycles": 1814.0,
+     "grade": "priced",
+     "total": 1814.0,
+     "source": {
+      "record": "results/arch/s81_scand_1018/scand.json",
+      "pointer": "by_k.3.per_layer.L20",
+      "commit": "29c341723",
+      "origin": "claude/s81-scand-1018 (S81-SCAND: option D, measured 1-stack reader, keys over k = 3 TP4 stages)"
+     },
+     "layer": "L20",
+     "note": "option D k=3: index scan at 1 HBM stack a p4l die, keys over 12 dies (legs_merge)"
+    },
+    {
+     "slot": "L24.scan_d_reindex",
+     "kind": "layer",
+     "n": 1,
+     "cycles": 783.0,
+     "grade": "priced",
+     "total": 783.0,
+     "source": {
+      "record": "results/arch/s81_scand_1018/scand.json",
+      "pointer": "by_k.3.idx_score_delta_cycles.L24",
+      "commit": "29c341723",
+      "origin": "claude/s81-scand-1018 (S81-SCAND: option D, measured 1-stack reader, keys over k = 3 TP4 stages)"
+     },
+     "layer": "L24",
+     "note": "option D k=3: index scan at 1 HBM stack a p4l die, keys over 12 dies (reindex)"
+    },
+    {
+     "slot": "L28.scan_d_reindex",
+     "kind": "layer",
+     "n": 1,
+     "cycles": 783.0,
+     "grade": "priced",
+     "total": 783.0,
+     "source": {
+      "record": "results/arch/s81_scand_1018/scand.json",
+      "pointer": "by_k.3.idx_score_delta_cycles.L28",
+      "commit": "29c341723",
+      "origin": "claude/s81-scand-1018 (S81-SCAND: option D, measured 1-stack reader, keys over k = 3 TP4 stages)"
+     },
+     "layer": "L28",
+     "note": "option D k=3: index scan at 1 HBM stack a p4l die, keys over 12 dies (reindex)"
+    },
+    {
+     "slot": "L32.scan_d_reindex",
+     "kind": "layer",
+     "n": 1,
+     "cycles": 783.0,
+     "grade": "priced",
+     "total": 783.0,
+     "source": {
+      "record": "results/arch/s81_scand_1018/scand.json",
+      "pointer": "by_k.3.idx_score_delta_cycles.L32",
+      "commit": "29c341723",
+      "origin": "claude/s81-scand-1018 (S81-SCAND: option D, measured 1-stack reader, keys over k = 3 TP4 stages)"
+     },
+     "layer": "L32",
+     "note": "option D k=3: index scan at 1 HBM stack a p4l die, keys over 12 dies (reindex)"
+    },
+    {
+     "slot": "L36.scan_d_reindex",
+     "kind": "layer",
+     "n": 1,
+     "cycles": 783.0,
+     "grade": "priced",
+     "total": 783.0,
+     "source": {
+      "record": "results/arch/s81_scand_1018/scand.json",
+      "pointer": "by_k.3.idx_score_delta_cycles.L36",
+      "commit": "29c341723",
+      "origin": "claude/s81-scand-1018 (S81-SCAND: option D, measured 1-stack reader, keys over k = 3 TP4 stages)"
+     },
+     "layer": "L36",
+     "note": "option D k=3: index scan at 1 HBM stack a p4l die, keys over 12 dies (reindex)"
+    },
+    {
+     "slot": "wave.scan_d",
+     "kind": "layer",
+     "n": 1,
+     "cycles": 18465.0,
+     "grade": "priced",
+     "total": 18465.0,
+     "source": {
+      "record": "results/arch/s81_scand_1018/scand.json",
+      "pointer": "by_k.3.dag_1009.mtp",
+      "commit": "29c341723",
+      "origin": "claude/s81-scand-1018 (S81-SCAND: option D, measured 1-stack reader, keys over k = 3 TP4 stages)"
+     },
+     "layer": "wave",
+     "note": "MTP wavefront: the slowest verify stage after option D, +delta per position"
+    },
+    {
+     "slot": "L20.scan_d_l20split_k6",
+     "kind": "layer",
+     "n": 1,
+     "cycles": 5536.0,
+     "grade": "measured-current-RTL",
+     "total": 5536.0,
+     "source": {
+      "record": "results/arch/s81_l20_1019/split/split.json",
+      "pointer": "single_user.chains.split_k6_compiled - record_D",
+      "commit": "uncommitted",
+      "origin": "claude/s81-l20split-1019 (S81-L20SPLIT, coordinator 0li: L20 keys over k = 6 TP4 stages, compiled rank tree on the measured reader + RTL bk_sel jobs)"
+     },
+     "layer": "L20",
+     "note": "L20 index path: compiled k=6 rank tree 19391 vs record D 13855 (reader law + RTL bk_sel jobs + legs; the 116 adders and the 729 leg are older measurements)"
+    },
+    {
+     "slot": "wave.scan_d_l20split_k6",
+     "kind": "layer",
+     "n": 1,
+     "cycles": 27680.0,
+     "grade": "priced",
+     "total": 27680.0,
+     "source": {
+      "record": "results/arch/s81_l20_1019/split/split.json",
+      "pointer": "single_user.rows.split_k6_compiled_tree.T_mtp - record_D.T_mtp",
+      "commit": "uncommitted",
+      "origin": "claude/s81-l20split-1019 (S81-L20SPLIT, coordinator 0li: L20 keys over k = 6 TP4 stages, compiled rank tree on the measured reader + RTL bk_sel jobs)"
+     },
+     "layer": "wave",
+     "note": "DAG re-solve of the split (MTP: the slowest verify stage, per position)"
     },
     {
      "slot": "draft.xdie.mtp.0.hop_in",
@@ -39536,6 +39988,40 @@
      "part": "on-die leg farthest slice <-> end slice, both ends (p4l plan, 67 cyc an end)"
     }
    ]
+  }
+ },
+ "multi_user": {
+  "ar": {
+   "available": true,
+   "users": 46,
+   "fillers": 0,
+   "per_user_tok_s": 1217.2,
+   "aggregate_tok_s": 55991,
+   "slot_cycles": 21313.7,
+   "period_cycles": 980428,
+   "dies": 520,
+   "stacks": 520,
+   "total_mm2": 478504,
+   "model_users": 47,
+   "calendar_per_user_tok_s": 1224.0,
+   "record": "results/arch/mu_s81_1018/calendar_ar.json",
+   "grade": "per-user: this composition; users: modelled calendar"
+  },
+  "mtp": {
+   "available": true,
+   "users": 10,
+   "fillers": 1,
+   "per_user_tok_s": 3622.2,
+   "aggregate_tok_s": 37093,
+   "slot_cycles": 124524,
+   "period_cycles": 1303400,
+   "dies": 520,
+   "stacks": 520,
+   "total_mm2": 478504,
+   "model_users": 10,
+   "calendar_per_user_tok_s": 3829.1,
+   "record": "results/arch/mu_s81_1018/calendar_mtp.json",
+   "grade": "per-user: this composition; users: modelled calendar"
   }
  }
 }

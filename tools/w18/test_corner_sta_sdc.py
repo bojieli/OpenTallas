@@ -52,5 +52,19 @@ class SelectedSdcTest(unittest.TestCase):
         self.assertIn('foreach ot_path $pi', text)
 
 
+
+class HardChildInsertionLibsTest(unittest.TestCase):
+    """PF-HARDCHILD-VERDICT: the verdict session names the corner's hard-child ETM libs for pinflop_ref.tcl (b)."""
+
+    def test_macro_libs_exported_before_sdc(self):
+        t = sta.script('ff', '/b', ['physical/ref_tile/x/views/ot_x', 'physical/ref_tile/y/views/ot_y'])
+        line = '/src/physical/ref_tile/x/views/ot_x/ot_x_ff.lib /src/physical/ref_tile/y/views/ot_y/ot_y_ff.lib'
+        self.assertIn(f'set ::env(OT_PF_MACRO_LIBS) [list {line}]', t)
+        self.assertLess(t.index('OT_PF_MACRO_LIBS'), t.index('read_sdc /b/6_final.sdc'))
+
+    def test_no_macros_no_env(self):
+        self.assertNotIn('OT_PF_MACRO_LIBS', sta.script('tt', '/b', []))
+
+
 if __name__ == '__main__':
     unittest.main()

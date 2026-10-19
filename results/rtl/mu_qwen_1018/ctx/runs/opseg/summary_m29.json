@@ -1,0 +1,17 @@
+{
+ "mut": 29,
+ "cases": [
+  "neg_ctx"
+ ],
+ "emb_t": null,
+ "res_skew": 0,
+ "neg_ctx": {
+  "want_edge": 1035,
+  "opf": [],
+  "raised": false
+ },
+ "verdict": "FAIL",
+ "fails": [
+  "neg_ctx: required fault not raised at ~1035 (opf log [])"
+ ]
+}

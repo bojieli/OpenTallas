@@ -158,6 +158,14 @@ def clock_refs(lib, ins_json, corner):
     for record in records:
         j = record.get(corner) or {}
         b = j.get('boundary') if isinstance(j, dict) else None
+        # NATIVE-REF 2026-10-18 (S81-SMHKP4 kp4_dec): a parent whose boundary sinks include hard-child clock pins has a
+        # ck_insertion child_flop record (each child pin counted at arrival + that child's R).  Its boundary mean is the
+        # capture / launch reference: the raw child clock pins sit R (~250-290 ps) before the child flops, which put
+        # launch O - R on the raw-pin basis (kp4_dec 388 vs 174 at the child flops).
+        cf = (j.get('child_flop') or {}).get('boundary') if isinstance(j, dict) else None
+        src, b0 = 'insertion.json boundary mean', b
+        if isinstance(cf, dict) and cf.get('mean') is not None:
+            b, src = cf, 'insertion.json child_flop boundary mean'
         if not (out and isinstance(b, dict) and b.get('mean') is not None):
             continue
         ck = record.get('lib_clock_pin') or record.get('clock')
@@ -167,11 +175,11 @@ def clock_refs(lib, ins_json, corner):
         # pin whose latest tree arc IS the measurement's latest boundary / sink arrival (same route, within 1 ps).
         hit = ([n for n in out if n == ck] or [n for n in out if bus_of(n) == ck] or (list(out) if len(out) == 1 else [])
                or [n for n in out if any(isinstance(x, dict) and x.get('max') is not None and abs(float(x['max']) - out[n]['max']) <= 1.0
-                                         for x in (b, j.get('all')))])
+                                         for x in (b0, j.get('all'), b))])
         for name in hit[:1]:
             ref = out[name]
             d = float(b['mean']) - ref['rise']
-            ref.update(rise=ref['rise'] + d, fall=ref['fall'] + d, src='insertion.json boundary mean',
+            ref.update(rise=ref['rise'] + d, fall=ref['fall'] + d, src=src,
                        bmin=float(b.get('min', ref['min'])), bmax=float(b.get('max', ref['max'])), n=b.get('n'))
     return out
 

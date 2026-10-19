@@ -15,11 +15,19 @@
 //               in place into vn's h store.
 // Commands (c_d): [3:0] op, [13:4] a0, [23:14] a1, [31:24] n, [159:32] imm.
 //   1 GAIN  a0: 16 rows (64 FP32 gains, element order) -> vn wl rows 0..7
-//   2 POST  a0: coefficient rows (comb[j][k] at word 4j + k, post[k] at word 16 + k), a1: y rows (element order)
+//   2 POST  a0: coefficient rows in the G-unit's order (dsdv_gunit_l5 CTL rows R .. R + 5 = pre, post, comb rows 0..3):
+//           row a0 = post[k] at word k, rows a0 + 1 + j = comb[j][k] at word k (so POST a0 = R + 1); a1: y rows (element
+//           order).  (S81-SLICE 10-18: was comb rows a0..a0+3 then post a0+4; changed on the vp side only, the G-unit
+//           write order is unchanged.)
 //   3 HLOAD a0: 32 rows (half row i = sub-beat i>>1, half i&1: rows a0 + 2i, a0 + 2i + 1 = vn's 256-b half-row layout)
 //   4 HSTORE a0: the inverse of HLOAD (h -> leaf store)
 //   5 NORM  imm[127:0] = the hc_pre coefficients -> vn n_go; n[0] / n[1] = gather the q / BF16 family, a1[7:0] = the
-//           vector's global beat index (5 sid + k for h vectors) -> vq mode
+//           vector's global beat index (5 sid + k for h vectors) -> vq mode.  n_go one edge after the command flop.
+//   7 NORMR as NORM, but hc_pre = leaf row a0 (pre[k] at word k: the G-unit's CTL row R, written at runtime by
+//           dsdv_gunit_l5 via the centre's row writes) -- the compiler-visible static-row form; imm unused.  A one-step
+//           sequencer op (one bank read): n_go / m_v leave 3 edges later than NORM's (command flop + 1: read address,
+//           macro output register, step register, output flop), so it obeys the one-op-at-a-time rule and the bank-port
+//           rules like any read op.  A NORM issued in the cycle NORMR completes is a schedule violation (sticky fault).
 //   6 RDOUT a0, n: n row pairs (a0 + 2i, a0 + 2i + 1) -> lo (to the centre: ring / collective sends)
 //   8..15  SU ops: forwarded unchanged to the beat's vs sub-leaf (s_v / s_d, one edge), which runs them on its own
 //          fixed timeline through the extension port: row-pair reads (x_rv / x_ra -> x_qv / x_qd, 4 edges: vp pin flop,
@@ -68,7 +76,7 @@ module ot_s81sl_vp #(
     output reg           wl_v, output reg [2:0] wl_i, output reg [255:0] wl_d,
     output reg           fault
 );
-    localparam [3:0] OP_GAIN = 4'd1, OP_POST = 4'd2, OP_HLOAD = 4'd3, OP_HSTORE = 4'd4, OP_NORM = 4'd5, OP_RDOUT = 4'd6;
+    localparam [3:0] OP_GAIN = 4'd1, OP_POST = 4'd2, OP_HLOAD = 4'd3, OP_HSTORE = 4'd4, OP_NORM = 4'd5, OP_RDOUT = 4'd6, OP_NORMR = 4'd7;
     wire [3:0] rsv;
     ot_rst_relay #(.REGIONS(4), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n(rsv));
     wire rs_c = rsv[0], rs_s = rsv[1], rs_p = rsv[2], rs_o = rsv[3];
@@ -88,12 +96,13 @@ module ot_s81sl_vp #(
     wire [3:0] op = cd_c[3:0]; wire [9:0] a0 = cd_c[13:4], a1 = cd_c[23:14]; wire [7:0] cn = cd_c[31:24];
 
     // ---------------------------------------------------------------- sequencer (one op at a time; fixed timelines)
-    reg [3:0] sop; reg [7:0] si, sn; reg [9:0] sa0, sa1; reg srun;
+    reg [3:0] sop; reg [7:0] si, sn; reg [9:0] sa0, sa1; reg [1:0] sqb; reg srun;
     always @(posedge clk or negedge rs_s)
         if (!rs_s) begin srun <= 1'b0; si <= 8'd0; sop <= 4'd0; end
         else if (cv_c && op != OP_NORM && !op[3]) begin
-            srun <= 1'b1; sop <= op; si <= 8'd0; sa0 <= a0; sa1 <= a1;
-            sn <= (op == OP_GAIN) ? 8'd8 : (op == OP_POST) ? 8'd21 : (op == OP_HLOAD || op == OP_HSTORE) ? 8'd16 : cn;
+            srun <= 1'b1; sop <= op; si <= 8'd0; sa0 <= a0; sa1 <= a1; sqb <= cn[1:0];
+            sn <= (op == OP_GAIN) ? 8'd8 : (op == OP_POST) ? 8'd21 : (op == OP_HLOAD || op == OP_HSTORE) ? 8'd16 :
+                  (op == OP_NORMR) ? 8'd1 : cn;
         end else if (srun) begin
             si <= si + 8'd1;
             if (si == sn - 8'd1) srun <= 1'b0;
@@ -102,7 +111,9 @@ module ot_s81sl_vp #(
 
     // per-cycle leaf-store reads (bank 0 / bank 1 row) and their purpose, by op and step
     //   GAIN   step i: rows a0 + 2i, a0 + 2i + 1 -> wl row i
-    //   POST   steps 0..4: coefficient row a0 + s (one bank); steps 5..20: y row a1 + (s - 5) and h half row (s - 5)
+    //   POST   steps 0..4: coefficient row a0 + s (one bank: s 0 = post, 1..4 = comb rows 0..3); steps 5..20: y row
+    //          a1 + (s - 5) and h half row (s - 5)
+    //   NORMR  step 0: row a0 (one bank) = hc_pre
     //   HLOAD  step i: rows a0 + 2i, + 1 -> hw half row i
     //   HSTORE step i: h half row i read (vn) -> written two edges + vn latency later
     //   RDOUT  step i: rows a0 + 2i, + 1 -> lo
@@ -114,7 +125,7 @@ module ot_s81sl_vp #(
         if (xrv_c) begin re_e = 1'b1; re_o = 1'b1; ra_e = xra_c[0] ? xra_c + 10'd1 : xra_c; ra_o = xra_c[0] ? xra_c : xra_c + 10'd1; end
         if (srun) case (sop)
             OP_GAIN, OP_HLOAD, OP_RDOUT: begin re_e = 1'b1; re_o = 1'b1; ra_e = rr0[0] ? rr1 : rr0; ra_o = rr0[0] ? rr0 : rr1; end
-            OP_POST: begin
+            OP_POST, OP_NORMR: begin
                 if (si < 8'd5) begin rr0 = sa0 + si[2:0]; if (rr0[0]) begin re_o = 1'b1; ra_o = rr0; end
                                                        else begin re_e = 1'b1; ra_e = rr0; end end
                 else begin rr0 = sa1 + (si - 8'd5); if (rr0[0]) begin re_o = 1'b1; ra_o = rr0; end
@@ -175,6 +186,7 @@ module ot_s81sl_vp #(
     // macro output registers + the step that launched the read (2 edges: address edge, output register)
     reg [127:0] q0, q1; reg [3:0] dop; reg [7:0] dsi; reg dv, dodd, dswp;
     reg [3:0] dop1; reg [7:0] dsi1; reg dv1, dodd1, dswp1;
+    reg [9:0] dmq1, dmq;                                      // NORMR: {n[1:0], a1[7:0]} riding with the read step
     reg xr1, xr2, xsw1, xsw2;
     always @(posedge clk) begin q0 <= rq0; q1 <= rq1; xsw1 <= xra_c[0]; xsw2 <= xsw1; end
     always @(posedge clk or negedge rs_s) if (!rs_s) begin xr1 <= 1'b0; xr2 <= 1'b0; end else begin xr1 <= xrv_c; xr2 <= xr1; end
@@ -182,8 +194,8 @@ module ot_s81sl_vp #(
         if (!rs_s) begin dv1 <= 1'b0; dv <= 1'b0; end
         else begin dv1 <= srun; dv <= dv1; end
     always @(posedge clk) begin
-        dop1 <= sop; dsi1 <= si; dodd1 <= re_o && !re_e; dswp1 <= swp;
-        dop <= dop1; dsi <= dsi1; dodd <= dodd1; dswp <= dswp1;
+        dop1 <= sop; dsi1 <= si; dodd1 <= re_o && !re_e; dswp1 <= swp; dmq1 <= {sqb, sa1[7:0]};
+        dop <= dop1; dsi <= dsi1; dodd <= dodd1; dswp <= dswp1; dmq <= dmq1;
     end
     wire [127:0] qe = dswp ? q1 : q0, qo = dswp ? q0 : q1;   // rows a0 + 2i (first) / a0 + 2i + 1 (second)
     wire [127:0] q1r = dodd ? q1 : q0;                        // POST: the one row read this step
@@ -193,7 +205,14 @@ module ot_s81sl_vp #(
     reg [31:0] yv [0:3];
     always @(posedge clk)
         if (dv && dop == OP_POST && dsi < 8'd5)
-            for (i = 0; i < 4; i = i + 1) cf[4 * dsi + i] <= q1r[32 * i +: 32];
+            for (i = 0; i < 4; i = i + 1) begin
+`ifndef OT_S81SL_VP_MUT_POSTLAST
+                // step 0 = post row -> cf[16 + k]; steps 1..4 = comb row j = step - 1 -> cf[4 j + k]
+                if (dsi == 8'd0) cf[16 + i] <= q1r[32 * i +: 32]; else cf[4 * (dsi - 8'd1) + i] <= q1r[32 * i +: 32];
+`else
+                cf[4 * dsi + i] <= q1r[32 * i +: 32];   // bench mutant: the old order (comb rows a0..a0+3, post a0+4)
+`endif
+            end
     // POST step s >= 5 (cycle T): the y row read and the h half-row request (hr) leave together; the y row is at q in
     // T + 2 (macro + output register) and at yrow_d[2] in T + 5, the h half row at hqd_c in T + 5 (hr out flop, vn pin
     // flop, vn h macro edge, vn output flop, this leaf's pin flop): the lanes issue in T + 5.
@@ -261,13 +280,14 @@ module ot_s81sl_vp #(
     always @(posedge clk or negedge rs_o) if (!rs_o) hs_v <= 1'b0; else hs_v <= hsv_q[4] && hqv_c;
     always @(posedge clk) begin hs_a <= hs_base + {hsi_q[4], 1'b0}; hs_d <= hqd_c; end
 
+    wire nr_done = dv && dop == OP_NORMR;          // NORMR: the hc_pre row is at q this cycle
     always @(posedge clk or negedge rs_o)
         if (!rs_o) begin hw_v <= 1'b0; hr_v <= 1'b0; n_go <= 1'b0; m_v <= 1'b0; wl_v <= 1'b0; lo_v <= 1'b0; s_v <= 1'b0; x_qv <= 1'b0; end
         else begin
             hw_v <= wvl || (dv && dop == OP_HLOAD);
             hr_v <= hrq_v;
-            n_go <= cv_c && op == OP_NORM;
-            m_v <= cv_c && op == OP_NORM;
+            n_go <= (cv_c && op == OP_NORM) || nr_done;
+            m_v <= (cv_c && op == OP_NORM) || nr_done;
             wl_v <= dv && dop == OP_GAIN;
             lo_v <= dv && dop == OP_RDOUT;
             s_v <= cv_c && op[3];
@@ -283,6 +303,14 @@ module ot_s81sl_vp #(
         end
         hr_j <= hrq_i[3:1]; hr_hf <= hrq_i[0];
         if (cv_c && op == OP_NORM) begin n_pre <= cd_c[159:32]; m_q <= cn[0]; m_b <= cn[1]; m_i <= a1[7:0]; end
+        else if (nr_done) begin
+`ifndef OT_S81SL_VP_MUT_NORMIMM
+            n_pre <= q1r;
+`else
+            n_pre <= 128'd0;                       // bench mutant: NORMR ignores the row (the old imm-only NORM)
+`endif
+            m_q <= dmq[8]; m_b <= dmq[9]; m_i <= dmq[7:0];
+        end
         wl_i <= dsi[2:0]; wl_d <= {qo, qe};
         lo_d <= {qo, qe};
         s_d <= cd_c;
@@ -296,6 +324,7 @@ module ot_s81sl_vp #(
         else begin
             lvbad <= (lv[0] != wvl) || (|lv != &lv);
             fault <= fault | wcol | busy_hit | xrcol | (|lf) | lvbad | (wvl && dv && dop == OP_HLOAD) |
-                     (hsv_q[4] && !hqv_c) | (ydv[2] && !hqv_c);
+                     (hsv_q[4] && !hqv_c) | (ydv[2] && !hqv_c) |
+                     (cv_c && op == OP_NORM && nr_done);
         end
 endmodule

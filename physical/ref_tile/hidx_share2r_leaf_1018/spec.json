@@ -17,15 +17,18 @@
   ],
   "W": [
    "a_rq",
-   "a_rr"
+   "a_rr1",
+   "a_rr0"
   ],
   "E": [
    "b_rq",
-   "b_rr"
+   "b_rr0",
+   "b_rr1"
   ],
   "S": [
+   "vm_rr0",
    "vm_rq",
-   "vm_rr"
+   "vm_rr1"
   ]
  },
  "layer_cap": "M5",
@@ -46,31 +49,43 @@
  },
  "pin_regs": {
   "enable": false,
-  "reason": "RTL registers every input at the pin (a_rq/b_rq/vm_rr pin flops) and every output is a flop or flop -> one gate (vm_rq one-hot AND-OR of the registered requests; a_rr/b_rr valid = registered vm_rr valid AND owner flop): rtl/hbm_accel/index/quad_1017/ot_hbm_idx_vm_share2_static.sv ot_hbm_idx_vm_share2_leaf_r (coordinator 0hk, +1 rq / +1 rr, proven by run_vm_share2_r.sh lockstep). A synthesis wrapper would add a second unpriced stage. clk/rst_n pass through."
+  "reason": "RTL registers every OUTPUT at the pin (OWN-SHARE2P r2: vm_rq output flops with the one-gate owner select in front, one response flop set per client face a_rr*/b_rr* with the owner AND in front, fault flop); inputs reach their flop through at most one AND-OR gated by their own valid (r3); rst_n lands on one local reset-release flop: rtl/hbm_accel/index/quad_1017/ot_hbm_idx_vm_share2_static.sv ot_hbm_idx_vm_share2_leaf_r (coordinator 0hk, +1 rq / +1 rr, proven by run_vm_share2_r.sh lockstep). A synthesis wrapper would add a second unpriced stage. clk/rst_n pass through."
  },
  "pin_ranges": {
-  "vm_rq": [
+  "vm_rr0": [
    2.16,
-   8.593
+   50.8
   ],
-  "vm_rr": [
-   8.593,
+  "vm_rq": [
+   50.8,
+   57.2
+  ],
+  "vm_rr1": [
+   57.2,
    105.84
   ],
   "a_rq": [
    2.16,
    8.593
   ],
-  "a_rr": [
+  "a_rr1": [
    8.593,
+   57.2
+  ],
+  "a_rr0": [
+   57.2,
    105.84
   ],
   "b_rq": [
    2.16,
    8.593
   ],
-  "b_rr": [
+  "b_rr0": [
    8.593,
+   57.2
+  ],
+  "b_rr1": [
+   57.2,
    105.84
   ],
   "clk": [
@@ -87,10 +102,10 @@
   ]
  },
  "job": {
-  "owner": "Claude:HBM-NSFIX/SHARE2",
-  "branch": "claude/nsfix-share2-1018",
-  "tag": "r1",
-  "purpose": "Coordinator 0hk (10-18): the NW two-client VM read share hb_idx__nwsh (host QDQ + NW IDX operand reader on NW r3) hardened with REGISTERED faces: request +1, response +1 (round trip n+8 -> n+10), fault +1; NW then drops its 1+1 die relays in front of ot_hbm_idx_vm_query_static_n12. Tile = ONE bank-pair leaf (34+514 pins per face: S banks, W client A, E client B), replicated 4x beside the NW bank pairs. Lockstep bench vs the proven zero-latency share shifted by the new latency on 2 x 8 real VM banks (Verilator 5.050): MUT0 PASS, MUT1-5 FAIL (owner off by one, double booking passes A, owner swap, request latency off by one, double booking not faulting).",
+  "owner": "Claude:AD3-HBM-SHARE2",
+  "branch": "claude/ad3-share2-1018",
+  "tag": "r3",
+  "purpose": "NATIVE FIX r3 (AD3-HBM-SHARE2 10-18) of the NW two-client VM read share leaf hb_idx__nwsh: r2 view hidx_share2r_leaf_1018-r2-a1d3f7d2c CLOSED (TT +234.67 / FF +22.36) but native FAIL on CAPTURE (rst_n 280.1; valid pins a_rq/b_rq[16]/[33] 186-207 > 190 while data pins are 122-145: the valid met the other face valid before fanning out to 34 data selects). r3 = local reset release flop at the rst_n pin + data gated by its OWN valid only (bank valid = a_v XOR b_v; double booking still issues nothing and faults). Port timing UNCHANGED. Lockstep 5.050: MUT0 PASS (identical counts), MUT1-5 FAIL.",
   "extra_paths": [
    "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv",
    "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v",
@@ -105,7 +120,7 @@
     "cmd": "bash rtl/test/hbm_idx_static/run_vm_share2_r.sh {RUN}/s2r0 0",
     "expect": "pass",
     "pass_regex": "^IDX_VM_SHARE2R MUT0 checked2062 a_reads5446 b_reads5427 dbl84 errors0 \\(rq0 rr0 f0 st0\\) first_err-1 ref_fault1 dut_fault1 ",
-    "pass_witness": "results/rtl/hbm_nsfix_share2_1018/run0.log",
+    "pass_witness": "results/rtl/ad3_share2_1018/run0.log",
     "threads": 4,
     "peak_ram_gb": 8,
     "needs": [
@@ -117,7 +132,7 @@
     "cmd": "bash rtl/test/hbm_idx_static/run_vm_share2_r.sh {RUN}/s2r1 1",
     "expect": "fail",
     "fail_regex": "^IDX_VM_SHARE2R MUT1 .*errors[1-9][0-9]* \\(rq0 rr[1-9]",
-    "fail_witness": "results/rtl/hbm_nsfix_share2_1018/run1.log",
+    "fail_witness": "results/rtl/ad3_share2_1018/run1.log",
     "note": "owner tap one edge short (own[6])",
     "threads": 4,
     "peak_ram_gb": 8,
@@ -130,7 +145,7 @@
     "cmd": "bash rtl/test/hbm_idx_static/run_vm_share2_r.sh {RUN}/s2r2 2",
     "expect": "fail",
     "fail_regex": "^IDX_VM_SHARE2R MUT2 .*errors[1-9][0-9]* \\(rq[1-9]",
-    "fail_witness": "results/rtl/hbm_nsfix_share2_1018/run2.log",
+    "fail_witness": "results/rtl/ad3_share2_1018/run2.log",
     "note": "double booking passes the A request",
     "threads": 4,
     "peak_ram_gb": 8,
@@ -143,7 +158,7 @@
     "cmd": "bash rtl/test/hbm_idx_static/run_vm_share2_r.sh {RUN}/s2r3 3",
     "expect": "fail",
     "fail_regex": "^IDX_VM_SHARE2R MUT3 .*errors[1-9][0-9]* \\(rq0 rr[1-9]",
-    "fail_witness": "results/rtl/hbm_nsfix_share2_1018/run3.log",
+    "fail_witness": "results/rtl/ad3_share2_1018/run3.log",
     "note": "owner select swapped A<->B",
     "threads": 4,
     "peak_ram_gb": 8,
@@ -156,7 +171,7 @@
     "cmd": "bash rtl/test/hbm_idx_static/run_vm_share2_r.sh {RUN}/s2r4 4",
     "expect": "fail",
     "fail_regex": "^IDX_VM_SHARE2R MUT4 .*errors[1-9][0-9]* \\(rq[1-9][0-9]* rr[1-9]",
-    "fail_witness": "results/rtl/hbm_nsfix_share2_1018/run4.log",
+    "fail_witness": "results/rtl/ad3_share2_1018/run4.log",
     "note": "request pin flop bypassed (round trip n+9: latency off by one)",
     "threads": 4,
     "peak_ram_gb": 8,
@@ -169,7 +184,7 @@
     "cmd": "bash rtl/test/hbm_idx_static/run_vm_share2_r.sh {RUN}/s2r5 5",
     "expect": "fail",
     "fail_regex": "^IDX_VM_SHARE2R MUT5 .*errors[1-9][0-9]* \\(rq0 rr0 f[1-9].* dut_fault0 ",
-    "fail_witness": "results/rtl/hbm_nsfix_share2_1018/run5.log",
+    "fail_witness": "results/rtl/ad3_share2_1018/run5.log",
     "note": "double booking does not fault",
     "threads": 4,
     "peak_ram_gb": 8,
@@ -177,7 +192,11 @@
      "verilator"
     ]
    }
-  ]
+  ],
+  "reroute_reason": {
+   "kind": "rtl_change",
+   "why_route": "native FAIL of the CLOSED r2 view hidx_share2r_leaf_1018-r2-a1d3f7d2c (capture rst_n 280.1 and a_rq/b_rq valid bits 186-207 > 190 ps, 4 pins; receipt results/arch/ad3_share2_1018/native_share2r_leaf_r2-a1d3f7d2c_FAIL.json). r3 = local reset release + own-valid data gating (valid fanout no longer crosses the tile before the select); port timing unchanged (lockstep 5.050 PASS, 5 mutants FAIL)."
+  }
  },
  "outline": {
   "w": 108.0,
@@ -195,5 +214,5 @@
   "allow_none": true
  },
  "keep_pin_regs": true,
- "structural_change": "new pin-registered bank-pair leaf ot_hbm_idx_vm_share2_leaf_r (REG 1 of ot_hbm_idx_vm_share2_static; the zero-latency leaf ot_hbm_idx_vm_share2_leaf is unchanged)"
+ "structural_change": "r3: local reset release flop at rst_n + own-valid data gating in ot_hbm_idx_vm_share2_leaf_r (native capture fix of r2); r2 registered output faces kept; parent ot_hbm_idx_vm_share2_static(_r) port-identical; port timing unchanged"
 }

@@ -1,0 +1,43 @@
+{
+  "admission_gb": 2,
+  "base_commit": "b6959866b1305f87b37d32a6d5b7b7799b1982ee",
+  "candidate": "VDD and VSS all shapes connected",
+  "command_exit": 0,
+  "cross_net_intersections": 0,
+  "generated_files": {
+    "candidate.odb": "ae1c060bb2ed9ba5cafd2086ab30428d2ef550026c82ae7f439f21464589fee4",
+    "candidate.pdn.tcl": "f13928eadebddbe672cb994b5e344c2dfc67c664ad1d5d1abd8c2994447912fb",
+    "candidate.tcl": "efe44a0b86decdef26c04afc20b65f2a71fe671bf00849769b7ff5233f1ca159",
+    "die.v": "a71d2965e430cea23256ef29ade6f25fcd73b9bded5efd1e1ec67616a97a959f",
+    "mutant.pdn.tcl": "e6b74c237238896782874a44d1c807a39fbf78e20fcbc1eac7ef9335ab5cac49",
+    "mutant.tcl": "31e57cfa35ce0128f57ace11a3553c9bfc5590e220f2e9a05fd39835d8a814d4",
+    "pdn.tcl": "f801c9c8132f5ed494a8e7b79fc5d8fba3f2378a40b3e138d30f857abf106688",
+    "qfd_rst_rep.lef": "4aa6d4f5199c68247c5a712371a6340380e2feedd026ee5ac21e4cfd8c751662",
+    "qfd_rst_rep_p8.lef": "22c52d30d8b094d779714781d2c1935d3c5c408cd28fa55d8c6abedbb1e324d9",
+    "readback.tcl": "f27ed3d8437a2005587557db87b739c7ace3849d5a71c24b80274d231b8c1a3f",
+    "shorts.tcl": "f27ed3d8437a2005587557db87b739c7ace3849d5a71c24b80274d231b8c1a3f",
+    "tech.lef": "7694bf4f8ef2f9745e4579f454788a0cf048e8605320f32d1d83ec540ed4ca41"
+  },
+  "host": "ot-epyc4",
+  "image": "openroad/orfs:asap7lock",
+  "macros": 32,
+  "mutant": "exit 1 PDN-0185",
+  "native_version": "OpenROAD 26Q3-1510-g6cb3f2b704",
+  "source_and_evidence_sha256": {
+    "../pdn_regroup.py": "e287b8d25578705dc7d3fddaec2db81fbf04e307056e464192a50391a9a44999",
+    "README.md": "19d5d5601a77196f891454f7fd4e6617426e910efed1458538ccbd273092bc09",
+    "check_shorts.py": "ab3295a0c539ac72ead625ad7443b19b1b865c8553cc83e99dacd4544c51e1a4",
+    "driver.sh": "f9c561ab53b1145fa7f75fe3b0709b53bd34f713e0e8d21f1003d27bba0511a4",
+    "evidence/candidate.json": "f5c91b8de216d29cd117932d6237c9749ae175fd6949f7c4e7c005decee38f82",
+    "evidence/candidate.log": "4dac88bd1876b93ee8d9f24beac0c264c58f08ab141d2270ea4c108850f62e20",
+    "evidence/inputs.json": "f0c47bae6add4a143eddf56e166c5e4d4caea07047d7fd93fc6b9d0ca7b54d57",
+    "evidence/mutant.json": "4f7cbb7b345d06edf83ce229e19c92bb623a85c8cdfc39efa12ac25f0d7baddd",
+    "evidence/mutant.log": "980eb3eaefa1d84d5cb752c08a487fe930ec2be8f73b944e160bb9470427bfe9",
+    "evidence/readback.log": "00ec88923e4c24a2a6149bf9f6b571bbfd7a181cfa1c95d2c771c1388b762098",
+    "evidence/shorts.json": "ce0374672e2b041ede8d0bf7589a2698aac1c8b2d8249af95ccd61791546dc68",
+    "prepare.py": "cb8882fe92fbcbf636bb7905663dcbe3311736ee85d79c8d97bad7ab439aaa19",
+    "readback.tcl": "f27ed3d8437a2005587557db87b739c7ace3849d5a71c24b80274d231b8c1a3f"
+  },
+  "threads": 1,
+  "unit": "oth-ubuntu-565627-1792391451"
+}

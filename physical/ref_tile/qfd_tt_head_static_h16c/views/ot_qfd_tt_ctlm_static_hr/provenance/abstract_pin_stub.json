@@ -1,0 +1,110 @@
+{
+  "schema": 1,
+  "kind": "abstract_pin_stub",
+  "status": "PASS",
+  "input": {
+    "path": "provenance/raw/ot_qfd_tt_ctlm_static_hr.lef",
+    "sha256": "b9aee49453668c3d6e3c5f92527db0c6994724efa768b9529334f1c01e8de768"
+  },
+  "environment": {
+    "OT_OBS_CLOSE": null,
+    "OT_OBS_CLOSE_UM": null
+  },
+  "helper": {
+    "path": "/srv/opentallas-scratch2/claude/closure-loop/qfd_tt_head_static_h16c-h16c-ae6b0c59a/src/tools/hier_contract/abstract_pin_stub.py",
+    "sha256": "c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05"
+  },
+  "command": [
+    "/usr/bin/python3",
+    "/srv/opentallas-scratch2/claude/closure-loop/qfd_tt_head_static_h16c-h16c-ae6b0c59a/src/tools/hier_contract/abstract_pin_stub.py",
+    "/srv/opentallas-scratch2/claude/closure-loop/qfd_tt_head_static_h16c-h16c-ae6b0c59a/record/views/ot_qfd_tt_ctlm_static_hr/provenance/raw/ot_qfd_tt_ctlm_static_hr.lef",
+    "/srv/opentallas-scratch2/claude/closure-loop/qfd_tt_head_static_h16c-h16c-ae6b0c59a/record/views/ot_qfd_tt_ctlm_static_hr/provenance/ot_qfd_tt_ctlm_static_hr.candidate.lef"
+  ],
+  "returncode": 0,
+  "stdout": "pinstub: 4 OBS rects moved into 4 pins: ck_head, ck_pm0, ck_pm1, rst_n; pockets: 1092 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
+  "stderr": "",
+  "invariants": {
+    "macro_outline": "PASS",
+    "pin_names_directions_uses": "PASS",
+    "original_pin_rectangles_retained": "PASS"
+  },
+  "child_lint": {
+    "schema": "opentallas.hier_contract.child_lint.v1",
+    "lef": "/srv/opentallas-scratch2/claude/closure-loop/qfd_tt_head_static_h16c-h16c-ae6b0c59a/record/views/ot_qfd_tt_ctlm_static_hr/provenance/ot_qfd_tt_ctlm_static_hr.candidate.lef",
+    "verdict": "PASS",
+    "fails": [],
+    "warns": [],
+    "summary": "ot_qfd_tt_ctlm_static_hr 259.2 x 222.48: PG M5 VDD 48 stripes (98% spread, 100% cov) / VSS 48 stripes (98% spread, 100% cov); strap M6; face pins 1592 blocked-above 0 blocked-same 0; clock ck_head insertion 371 ps; clock ck_pm0 insertion 15 ps; clock ck_pm1 insertion 15 ps; pockets M5 0 (closed)",
+    "info": {
+      "cell": "ot_qfd_tt_ctlm_static_hr",
+      "W": 259.2,
+      "H": 222.48,
+      "pg": {
+        "nets": {
+          "VDD": {
+            "top_layer": "M5",
+            "stripes": 48,
+            "dir": "V",
+            "spread": 0.979,
+            "coverage": 1.0,
+            "shapes_on_top": 48
+          },
+          "VSS": {
+            "top_layer": "M5",
+            "stripes": 48,
+            "dir": "V",
+            "spread": 0.979,
+            "coverage": 1.0,
+            "shapes_on_top": 48
+          }
+        },
+        "top_layer": "M5",
+        "ok": true,
+        "why": []
+      },
+      "pg_layer": "M5",
+      "strap_layer": "M6",
+      "cap": null,
+      "face": {
+        "face_pins": 1592,
+        "blocked_above": 0,
+        "covered_below": 112,
+        "examples": [],
+        "blocked_same": 0,
+        "same_examples": [],
+        "band_same": 0,
+        "band_examples": []
+      },
+      "clock_insertion": {
+        "ck_head": {
+          "max_ps": 370.86,
+          "min_ps": 253.6
+        },
+        "ck_pm0": {
+          "max_ps": 15.16,
+          "min_ps": 15.16
+        },
+        "ck_pm1": {
+          "max_ps": 14.63,
+          "min_ps": 14.63
+        }
+      },
+      "pockets": {
+        "layer": "M5",
+        "d_um": 1.536,
+        "marker": {
+          "layer": "M5",
+          "d_um": 1.536,
+          "added": 1092
+        },
+        "count": 0,
+        "area_um2": 0,
+        "examples": []
+      }
+    }
+  },
+  "output": {
+    "path": "ot_qfd_tt_ctlm_static_hr.lef",
+    "sha256": "7f4ced565455b0641f3e2ed6bc1a49b44b13e7af09a32482351b5366e917c151"
+  }
+}

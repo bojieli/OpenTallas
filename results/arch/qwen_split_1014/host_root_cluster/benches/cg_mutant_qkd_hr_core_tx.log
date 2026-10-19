@@ -1,8 +1,11 @@
+ot-heavy: request 24G is charged 10G (class 'cluster_gate.py:mutant' measured peak 1.9G, n=2+0 proved); the cap stays 24G
+ot-heavy: admitted on regular-crane as oth-ubuntu-3210659-1792375448 after 1 s
 mutant: u_core_tx.host_rst_n inverted at the parent
+flat reference: 13 member instance(s) wrapped per flat_wraps.json [('qkd_host_axi_packet', 'qkd_host_axi_packet_rr'), ('qkd_host_control_prompt_observed', 'qkd_host_control_prompt_observed_rr'), ('qkd_host_hc_station', 'qkd_host_hc_station_rr'), ('qkd_host_program_loader_target', 'qkd_host_program_loader_target_rr'), ('qkd_host_program_rx_target', 'qkd_host_program_rx_target_rr'), ('qkd_host_record_port', 'qkd_host_record_port_rr'), ('qkd_host_rx_class_admission', 'qkd_host_rx_class_admission_rr'), ('qkd_host_tx_class', 'qkd_host_tx_class_rr')]
 seed=1 mode=0: LOCKSTEP PASS seed=1 mode=0 core_cycles=20000 compares=145291 outputs=73 inputs=50
 seed=1 mode=1: LOCKSTEP PASS seed=1 mode=1 core_cycles=20000 compares=145291 outputs=73 inputs=50
-seed=2 mode=0: LOCKSTEP PASS seed=2 mode=0 core_cycles=20000 compares=145291 outputs=73 inputs=50
-seed=2 mode=1: MISMATCH phy_tx_flit t=555768504 fs core=666
-seed=3 mode=0: MISMATCH phy_tx_v t=43655504 fs core=52 flat=1 clu=0
-seed=3 mode=1: MISMATCH phy_tx_flit t=587058504 fs core=704
+seed=2 mode=0: MISMATCH phy_tx_flit t=8364709504 fs core=10037
+seed=2 mode=1: MISMATCH phy_tx_flit t=377415504 fs core=452
+seed=3 mode=0: LOCKSTEP PASS seed=3 mode=0 core_cycles=20000 compares=145291 outputs=73 inputs=50
+seed=3 mode=1: MISMATCH phy_tx_flit t=662154504 fs core=794
 CLUSTER_GATE FAIL mutant child=core_tx runs_pass=3/6 core_cycles=20000

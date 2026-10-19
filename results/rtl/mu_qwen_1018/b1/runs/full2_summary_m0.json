@@ -1,0 +1,76 @@
+{
+ "mut": 0,
+ "cases": [
+  "full"
+ ],
+ "full": {
+  "H": 4025840,
+  "T": 251615,
+  "ncyc": 8082780,
+  "K": 0,
+  "C": 1,
+  "starts": 9548,
+  "starts_per_user": {
+   "0": 1445,
+   "1": 1479,
+   "2": 3459,
+   "3": 3165
+  },
+  "fires": 44134,
+  "fires_per_user": {
+   "0": 15351,
+   "1": 14391,
+   "2": 7677,
+   "3": 6715
+  },
+  "emb": 92,
+  "seg": 3326,
+  "leaf_entries": 4036,
+  "head_identity_window": [
+   1100,
+   3207
+  ],
+  "measured_frame1": {
+   "0": {
+    "tokens": 16,
+    "tok_s": 4769.2
+   },
+   "1": {
+    "tokens": 15,
+    "tok_s": 4471.1
+   },
+   "2": {
+    "tokens": 8,
+    "tok_s": 2384.6
+   },
+   "3": {
+    "tokens": 7,
+    "tok_s": 2086.5
+   }
+  },
+  "compiled": [
+   {
+    "user": 0,
+    "tokens_per_frame": 16,
+    "tok_s": 4769.2
+   },
+   {
+    "user": 1,
+    "tokens_per_frame": 15,
+    "tok_s": 4471.1
+   },
+   {
+    "user": 2,
+    "tokens_per_frame": 8,
+    "tok_s": 2384.6
+   },
+   {
+    "user": 3,
+    "tokens_per_frame": 7,
+    "tok_s": 2086.5
+   }
+  ]
+ },
+ "verdict": "PASS",
+ "fails": []
+}

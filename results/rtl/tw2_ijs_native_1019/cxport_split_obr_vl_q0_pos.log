@@ -1,0 +1,12 @@
+ot-run: ot-epyc6       admits   559 GB (avail 683, growth 292, headroom 0, waiters 0/0 GB) load 17/128 running 14 disk 6685 GB 
+ot-run: ot-epyc7       admits  1191 GB (avail 928, growth 94, headroom 0, waiters 0/0 GB) load 58/96 running 23 disk 6680 GB 
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-213999-1792402800 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+CXPORT_SPLIT PASS checks=24183 dw=22560 inj=12888 rc=959 rr=578 sfu_checks=12090 fault_lags=0 fault_edges=16106
+- rtl/hbm_accel/generic/adapters/static_su/collport/tb_hbm_su_cxport_split.sv:99: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 15us; walltime 0.401 s; speed 36.219 us/s
+- Verilator: cpu 0.401 s on 1 threads; allocated 7 MB
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-213999-1792402800): exit 0
+rc=0

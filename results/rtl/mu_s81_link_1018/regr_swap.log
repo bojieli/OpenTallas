@@ -1,0 +1,11 @@
+MISMATCH A->B beat 0 at cycle 8057: got 8791bb5b084a98e5.. exp 6be1b26e4143cd6d..
+MISMATCH B->A beat 0 at cycle 8059: got 3844178fbc9bd117.. exp 244113f3b722072d..
+MISMATCH A->B beat 1 at cycle 8061: got 668c49625cfcba77.. exp 6b392e77bf20d7a3..
+MISMATCH B->A beat 1 at cycle 8062: got b09d9a13718b3dbf.. exp 6c1845995f36e7d5..
+MISMATCH B->A beat 2 at cycle 8065: got abd7eae07bd29b7d.. exp 5df24724f4613c69..
+LEP_STATS sent A->B 1000 recv 482, B->A 1000 recv 481, mismatches 963, fault_main 1, overflow_fault 1, lane_flt A 000000 B 000000
+FAIL lep: mismatches 963 recv 482/1000 481/1000 fault_main 1 overflow_fault 1
+- rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_lep.sv:105: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 15us; walltime 0.249 s; speed 59.482 us/s
+- Verilator: cpu 0.249 s on 1 threads; allocated 9 MB

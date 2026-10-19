@@ -98,11 +98,11 @@ def test_discovery_finds_every_family_without_a_path_list(tmp_path):
 
 def test_default_run_reads_the_committed_records():
     rels = {r for r, _ in tc.discover_records()}
-    assert 'results/rtl/xdie_qwen_1018/pair_r1/record.json' in rels
+    assert 'results/rtl/xdie_qwen_1018/pair_r2/record.json' in rels
     assert 'results/rtl/xdie_s81_1018/record.json' in rels
     o, seen = tc.run()
     used = {s['record'] for s in seen if s['used']}
-    assert {'results/rtl/xdie_s81_1018/record.json', 'results/rtl/xdie_qwen_1018/pair_r1/record.json'} <= used
+    assert {'results/rtl/xdie_s81_1018/record.json', 'results/rtl/xdie_qwen_1018/pair_r2/record.json'} <= used
     assert {s['record'] for s in seen} == rels
     for d, wls in o.items():                          # no two records silently fight over one slot
         for w in wls.values():

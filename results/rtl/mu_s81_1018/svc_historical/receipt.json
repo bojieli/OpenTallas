@@ -1,0 +1,14 @@
+{
+ "grade": "historical numerical component only; behavioral staging SRAM_MACRO=0; second job completion-driven",
+ "latency_user_events": 268,
+ "latency_user_trace_equal": true,
+ "user1_events": 1131,
+ "multi_user1_events": 1131,
+ "user1_cycle_offsets": [
+  2306
+ ],
+ "user1_data_equal": true,
+ "static_mapped_gate_result": "FAIL; missing configuration, production timing and mapped memory not established",
+ "source_original": "claude/mu-s81-svc-1018 f9d895c25",
+ "remote": "ot-epyc4:/srv/opentallas-scratch/claude/mu-s81-svc/rs"
+}

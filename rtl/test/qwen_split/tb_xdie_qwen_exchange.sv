@@ -58,6 +58,7 @@ endmodule
 module tb_xdie_qwen_exchange;
     `include "xdie_params.svh"
     parameter integer MUT = 0, C_REAL = 1, K_REAL = 1, NL = 35, QGAP = 0, POS_P = 255, FIN_MUT = 0, K_TEAR = 0;
+    parameter integer K_NTX = 4;           // Q-XDIE-GEN 10-18: KV die binds qkd_d2d_static .NTX(3) (S-QTIES QC-12, kvs14p)
     parameter integer XQ_TXDP_UNSET = 0;   // F4 witness: build the masters without the compiled TXDP (must not elaborate)
     parameter CALDIR = "cal";
     localparam integer FW = 548, PW = 583, PR = 1, LEAD = 2 * PR;
@@ -155,7 +156,7 @@ module tb_xdie_qwen_exchange;
         .result_gen(GEN), .result_token(TOK), .result_value(32'(lay * 77)), .result_cycles(32'(lay)),
         .fdi_tx_up(c_up), .fdi_tx_v(c_ptx_v), .fdi_tx_flit(c_ptx), .fdi_rx_v(c_prx_v), .fdi_rx_flit(c_prx),
         .phy_rst_n(c_phy_rst_n), .epoch_abort(c_abort), .transport_fault(c_tf), .fault(c_f));
-    qkd_d2d_static #(.MUT(0), .PR(PR), .TXDP(XQ_TXDP_UNSET ? 32'd0 : P_TXDP_K)) u_k (.ck(ck), .por_n(por_n), .rst_n(rst_n),
+    qkd_d2d_static #(.MUT(0), .NTX(K_NTX), .PR(PR), .TXDP(XQ_TXDP_UNSET ? 32'd0 : P_TXDP_K)) u_k (.ck(ck), .por_n(por_n), .rst_n(rst_n),
         .cfg_tx_we(cfg_k_tx), .cfg_rx_we(cfg_k_rx), .cfg_addr({1'b0, cfg_a}), .cfg_data(cfg_dk), .cal_start(cstart), .cal_seg(1'b0),
         .host_link_reset_req(1'b0), .host_recovery_clear(1'b0), .host_boot_begin(host_boot),
         .fwd_epoch(fwd_ep), .fwd_link_rst_n(fwd_lrst_n),
@@ -335,7 +336,7 @@ module tb_xdie_qwen_exchange;
         reg sf = 0;
         always @(posedge ck) if (rst_n && (k_pf || lf || iof) && !sf) begin sf <= 1;
             $display("XQ_CAUSE KV programme cyc %0d rel %0d age %0d: ctl local %0d guard %0d record %0d (codec cause {rx_rec,tx_rec,rx_time,tx_time}=%b) slot %0d producer %0d | root lf %0d iof %0d",
-                cyc, rel, age, u_attn.ctl.local_fault, u_attn.ctl.guard_fault, u_attn.ctl.record_fault, u_attn.ctl.codec.fault_cause,
+                cyc, rel, age, u_attn.ctl.local_fault, u_attn.ctl.guard_fault, u_attn.ctl.record_fault, u_attn.ctl.g_cd.codec.fault_cause,
                 u_attn.ctl.slot_fault, u_attn.producer_fault, lf, iof); end
         always @(posedge ck) if (rst_n && (lf || iof || cal_f)) err("KV attention root / calendar fault");
         always @(posedge ck) if (rst_n && kq_v && !q_rdy) err("q_valid without q_ready (no wait exists)");
@@ -365,7 +366,7 @@ module tb_xdie_qwen_exchange;
         always @(posedge ck) if (rst_n && (k_pf || u_kattn.w_attn_face__result_fault) && !sf) begin sf <= 1;
             $display("XQ_CAUSE kvs_attn cyc %0d rel %0d: programme ctl local %0d guard %0d record %0d (codec cause %b) slot %0d | face result_fault %0d RESULT_AGE %0d (P0 %0d P1 %0d PV %0d R %0d) root age %0d | ctl tx_first %0d",
                 cyc, rel, u_kattn.u_attn.ctl.local_fault, u_kattn.u_attn.ctl.guard_fault, u_kattn.u_attn.ctl.record_fault,
-                u_kattn.u_attn.ctl.codec.fault_cause, u_kattn.u_attn.ctl.slot_fault, u_kattn.w_attn_face__result_fault, fres, fp0, fp1, fpv,
+                u_kattn.u_attn.ctl.g_cd.codec.fault_cause, u_kattn.u_attn.ctl.slot_fault, u_kattn.w_attn_face__result_fault, fres, fp0, fp1, fpv,
                 fcal[175:160], fage, u_kattn.w_attn_cal__tx_first); end
     end else if (K_REAL == 3) begin : g_kfin
         // QXF-FACE: as-built qkd_kvs_attn + real qkd_pv_fin_s (0 die relays on pvfst / fin: PV_LEAD 0, F_DLY 1 as built)
@@ -407,7 +408,7 @@ module tb_xdie_qwen_exchange;
                 fpv + ((fp0 > fp1) ? ((fp0 > fr) ? fp0 : fr) : ((fp1 > fr) ? fp1 : fr)) + 17, u_kattn.w_attn_cal__tx_first); end
         always @(posedge ck) if (rst_n && (k_pf || u_kattn.w_attn_face__result_fault || uff) && !sf) begin sf <= 1;
             $display("XQ_CAUSE kvs_attn+pvfin cyc %0d rel %0d: programme ctl local %0d record %0d (codec cause %b) | face result_fault %0d | pvfin fault %0d | cal P0 %0d P1 %0d PV %0d R %0d root age %0d | ctl tx_first %0d",
-                cyc, rel, u_kattn.u_attn.ctl.local_fault, u_kattn.u_attn.ctl.record_fault, u_kattn.u_attn.ctl.codec.fault_cause,
+                cyc, rel, u_kattn.u_attn.ctl.local_fault, u_kattn.u_attn.ctl.record_fault, u_kattn.u_attn.ctl.g_cd.codec.fault_cause,
                 u_kattn.w_attn_face__result_fault, uff, fp0, fp1, fpv, fr, u_kattn.w_attn_root__age, u_kattn.w_attn_cal__tx_first); end
         always @(posedge ck) if (rst_n && act && (uff || u_kattn.w_attn_face__result_fault || u_kattn.w_attn_cal__fault)) err("pvfin / result face / calendar fault");
     end else begin : g_kstub

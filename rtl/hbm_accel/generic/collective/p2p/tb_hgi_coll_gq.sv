@@ -40,6 +40,7 @@ module tb_hgi_coll_gq;
     // ---------------------------------------------------------------- rings, masters, shares, VM
     wire [279:0] aco [0:3], ano [0:3], bco [0:3], bno [0:3];
     wire [3:0] f_gq, f_ra, f_rb, f_rs, f_ks, conf;
+    wire [3:0] f_ld;   // landing-leaf fault alone (NATIVE-SWEEP 10-18: fault 4 must reach the land fault face register)
     reg [57:0] isa [0:3]; reg [255:0] isa_d [0:3];
     wire [135:0] g_rq [0:3]; wire [2055:0] g_rr [0:3]; wire [2247:0] g_kq [0:3];
     wire [135:0] v_rq [0:3]; wire [2055:0] v_rr [0:3]; wire [2247:0] v_kq [0:3];
@@ -52,7 +53,7 @@ module tb_hgi_coll_gq;
         wire rb_lp_we, rb_rd; wire [2:0] rb_lp_tag, rb_rdt, rb_tag; wire [255:0] rb_lp_d; wire [1:0] rb_inj, rb_fwd, rb_rx;
         wire [3:0] rb_ttl, rb_kind, rb_src; wire [5:0] rb_rtag;
         wire [1:0] pa_v, pb_v; wire [3:0] pa_s, pb_s; wire [5:0] pa_t, pb_t; wire [511:0] pa_d, pb_d;
-        wire act, dn, tf, fi, fl; assign f_gq[q] = fi | fl;
+        wire act, dn, tf, fi, fl; assign f_gq[q] = fi | fl; assign f_ld[q] = fl;
         ot_hgi_coll_gq #(.MUT(MUT)) gq(.clk_issue(clk), .clk_land(clk), .rst_n(rst_n), .qid(2'(q)), .tgt(8'hb0 + 8'(q)),
             .cfg_v(cfg_v), .cfg_target(cfg_target), .cfg_addr(cfg_addr), .cfg_data(cfg_data), .desc_v(desc_v),
             .desc_base(desc_base), .desc_limit(desc_limit), .desc_loops(desc_loops), .launch_v(launch_v),
@@ -259,7 +260,8 @@ module tb_hgi_coll_gq;
         while (cyc < last_edge) @(negedge clk);
         // checks
         if (scenario != 0) begin
-            if (|f_gq || |f_ra || |f_rb || |f_ks) $display("COLLQ FAULT PASS scenario=%0d gq%b ra%b rb%b ks%b", scenario, f_gq, f_ra, f_rb, f_ks);
+            if ((|f_gq || |f_ra || |f_rb || |f_ks) && (scenario != 4 || |f_ld))
+                $display("COLLQ FAULT PASS scenario=%0d gq%b ra%b rb%b ks%b ld%b", scenario, f_gq, f_ra, f_rb, f_ks, f_ld);
             else $display("COLLQ FAULT ESCAPED scenario=%0d", scenario);
             $finish;
         end

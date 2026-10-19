@@ -15,10 +15,14 @@ set ::ot_ag_pointer_msb [dict create {u_ca.u_status} 2 {u_ow.u_status} 2 {u_pc.u
 set ::ot_ag_targets [dict create {u_ca.u_status} {{0} {{ca_s} {u_ca.dst_fault} {u_ca.sticky}}} {u_ow.u_status} {{0} {{ow_s} {u_ow.dst_fault} {u_ow.sticky}}} {u_pc.u_status} {{0} {{pc_s} {u_pc.dst_fault} {u_pc.sticky}}}]
 set ::ot_ag_outputs [dict create {u_ca.u_status} {} {u_ow.u_status} {} {u_pc.u_status} {}]
 set ::ot_ag_primitive 0
+set ::ot_ag_reset_syncs [list {u_ca.u_dst_reset} {u_ca.u_src_reset} {u_ca.u_status.u_rd_reset} {u_ca.u_status.u_wr_reset} {u_hrst} {u_ow.u_dst_reset} {u_ow.u_src_reset} {u_ow.u_status.u_rd_reset} {u_ow.u_status.u_wr_reset} {u_pc.u_dst_reset} {u_pc.u_src_reset} {u_pc.u_status.u_rd_reset} {u_pc.u_status.u_wr_reset} {u_srst}]
+set ::ot_ag_reset_alias [list {hrst} {srst} {u_ca.dst_reset} {u_ca.src_reset} {u_ca.u_dst_reset.sync_rst_n} {u_ca.u_src_reset.sync_rst_n} {u_ca.u_status.rd_reset} {u_ca.u_status.u_rd_reset.sync_rst_n} {u_ca.u_status.u_wr_reset.sync_rst_n} {u_ca.u_status.wr_reset} {u_hrst.sync_rst_n} {u_ow.dst_reset} {u_ow.src_reset} {u_ow.u_dst_reset.sync_rst_n} {u_ow.u_src_reset.sync_rst_n} {u_ow.u_status.rd_reset} {u_ow.u_status.u_rd_reset.sync_rst_n} {u_ow.u_status.u_wr_reset.sync_rst_n} {u_ow.u_status.wr_reset} {u_pc.dst_reset} {u_pc.src_reset} {u_pc.u_dst_reset.sync_rst_n} {u_pc.u_src_reset.sync_rst_n} {u_pc.u_status.rd_reset} {u_pc.u_status.u_rd_reset.sync_rst_n} {u_pc.u_status.u_wr_reset.sync_rst_n} {u_pc.u_status.wr_reset} {u_srst.sync_rst_n}]
+set ::ot_ag_reset_bound [dict create core 773.333 hbm 964.0]
 
 # Source fingerprint is checked by the generator before this audited profile is
 # emitted. Fail if mapping loses public register identities; never guess names.
 set ::ot_ag_seen {}
+set ::ot_ag_reset_seen {}
 proc ot_ag_public_nets {cell} {
   set result {}
   # The mapped register instance keeps its Yosys register name plus the cell-type suffix ($_DFF_PN0_, $_DFFE_PN0P_, ...)
@@ -87,9 +91,51 @@ proc ot_ag_target {scope source_bit cell pin} {
   }
   return 0
 }
-proc ot_ag_async_control {pin} {
-  # Reset recovery/removal stays timed. A FIFO data/pointer publication must
-  # never acquire an async-control exception by sharing a legitimate D target.
+proc ot_ag_reset_stage {cell} {
+  # QF-SFAULT 10-18 Gate-Rule: a reset_pipe stage of an elaborated, fingerprint-bound ot_reset_sync instance.
+  set inst [string map {\\ {}} [get_full_name [get_cells $cell]]]
+  set names [ot_ag_public_nets $cell]
+  lappend names $inst
+  if {[regexp {^(.*)\$_[A-Z0-9_]+_$} $inst unused reg]} {lappend names $reg}
+  foreach name $names {
+    # the output stage under its output / parent-net name (generator-derived exact aliases, not a pattern)
+    if {[regsub {_reg$} $name {} bare] && $bare in $::ot_ag_reset_alias} {return 1}
+    if {$name in $::ot_ag_reset_alias} {return 1}
+    foreach scope $::ot_ag_reset_syncs {
+      set prefix "$scope."
+      if {[string first $prefix $name]!=0} continue
+      if {[regexp {^reset_pipe(?:_reg)?(?:\[[0-9]+\])?$} [string range $name [string length $prefix] end]]} {return 1}
+    }
+  }
+  return 0
+}
+proc ot_ag_reset_bound {start pin bound} {
+  if {[sta::object_type $start] eq "Port" || ([sta::object_type $start] eq "Pin" && [$start is_top_level_port])} {
+    set launch [get_ports [get_full_name $start]]
+  } else {
+    set launch [get_cells -quiet -of_objects $start]
+    if {[llength $launch] != 1} {error "OT_ASYNC_GRAY: missing unique reset launch register"}
+  }
+  set_max_delay -ignore_clock_latency $bound -from $launch -to $pin
+  set_min_delay -ignore_clock_latency 0.0 -from $launch -to $pin
+  foreach kind {max min} {
+    set paths [find_timing_paths -from $launch -to $pin -path_delay $kind -group_path_count 1 -endpoint_path_count 1]
+    if {![llength $paths] && [info exists ::env(OT_HOLD_MM)] && $::env(OT_HOLD_MM) eq "1" && ![info exists ::ot_mm_active]} {
+      puts "OT_ASYNC_GRAY PATH_DEFERRED reset [get_full_name $start] -> [get_full_name $pin] $kind (strict at sign-off)"
+      continue
+    }
+    if {![llength $paths] || ![ot_ce_finite [get_property [lindex $paths 0] slack]]} {
+      error "OT_ASYNC_GRAY: missing finite bounded reset $kind path [get_full_name $start] -> [get_full_name $pin]"
+    }
+  }
+}
+proc ot_ag_async_control {pin cells inputs} {
+  # Reset recovery/removal stays timed within a domain. A FIFO data/pointer publication must
+  # never acquire an async-control exception by sharing a legitimate D target.  A cross-domain asynchronous control
+  # is admitted only into a reviewed ot_reset_sync pipe stage (QF-SFAULT 10-18 Gate-Rule, gray_fifo_cdc rule (c)).
+  set target [get_full_name [get_cells -of_objects $pin]]
+  if {![dict exists $cells $target]} {error "OT_ASYNC_GRAY: unowned asynchronous control register $target"}
+  set domain [dict get $cells $target]
   foreach start [get_fanin -flat -startpoints_only -to $pin] {
     # A tie-driven async pin (ASAP7 DFFASRHQNx1 SETN/RESETN tied by TIEHI/TIELO) has no driving register: OpenSTA returns
     # the pin itself as its only startpoint (HBMA-SVC 10-17, hdie_svc_stack_fault SETN of u_ca.u_status.rd_bin[2]).
@@ -103,11 +149,30 @@ proc ot_ag_async_control {pin} {
       if {!$tied} {error "OT_ASYNC_GRAY: asynchronous control without a register or tie driver [get_full_name $pin]"}
       continue
     }
-    set cell [get_cells -quiet -of_objects $start]
-    if {[llength $cell]!=1} continue
-    if {[llength [ot_ag_role [get_full_name $cell]]]} {
-      error "OT_ASYNC_GRAY: FIFO publication drives asynchronous control [get_full_name $pin]"
+    set name [get_full_name $start]
+    if {[sta::object_type $start] eq "Port" || ([sta::object_type $start] eq "Pin" && [$start is_top_level_port])} {
+      if {![dict exists $inputs $name]} {error "OT_ASYNC_GRAY: undeclared input $name drives asynchronous control [get_full_name $pin]"}
+      set source_domain [dict get $inputs $name]
+    } else {
+      set cell [get_cells -quiet -of_objects $start]
+      if {[llength $cell]!=1} continue
+      if {[llength [ot_ag_role [get_full_name $cell]]]} {
+        error "OT_ASYNC_GRAY: FIFO publication drives asynchronous control [get_full_name $pin]"
+      }
+      set source [get_full_name $cell]
+      if {![dict exists $cells $source]} {
+        if {[ot_ce_constant_cone $start]} continue
+        error "OT_ASYNC_GRAY: unowned asynchronous control $source -> [get_full_name $pin]"
+      }
+      set source_domain [dict get $cells $source]
     }
+    if {$source_domain eq $domain} continue
+    if {![ot_ag_reset_stage $target]} {
+      error "OT_ASYNC_GRAY: cross-domain asynchronous control $name ($source_domain) -> [get_full_name $pin] ($domain); only an ot_reset_sync pipe may take it"
+    }
+    ot_ag_reset_bound $start $pin [dict get $::ot_ag_reset_bound $domain]
+    dict incr ::ot_ag_reset_seen $domain
+    puts "OT_ASYNC_GRAY BOUNDED reset $name -> [get_full_name $pin]"
   }
 }
 proc ot_ag_bound {start target} {
@@ -186,7 +251,7 @@ proc ot_ag_complete {} {
     }
   }
   if {$::ot_ag_primitive && ![dict exists $::ot_ag_seen [list {} payload]]} {error "OT_ASYNC_GRAY: missing primitive payload crossing"}
-  puts "OT_ASYNC_GRAY STRUCTURAL_PASS $::ot_ag_seen (bounded CDC; no physical closure claim)"
+  puts "OT_ASYNC_GRAY STRUCTURAL_PASS $::ot_ag_seen reset_sync_inputs=$::ot_ag_reset_seen (bounded CDC; no physical closure claim)"
 }
 
 
@@ -311,7 +376,7 @@ proc ot_ce_leaf_ownership {inputs outputs} {
   set async_pins {}
   foreach pin [all_registers -async_pins] {dict set async_pins [get_full_name $pin] 1}
   foreach pin [all_registers -data_pins] {
-    if {[dict exists $async_pins [get_full_name $pin]]} {ot_ag_async_control $pin; continue}
+    if {[dict exists $async_pins [get_full_name $pin]]} {ot_ag_async_control $pin $cells $inputs; continue}
     set cell [get_full_name [get_cells -of_objects $pin]]
     set expected [dict get $cells $cell]
     foreach start [get_fanin -flat -startpoints_only -to $pin] {

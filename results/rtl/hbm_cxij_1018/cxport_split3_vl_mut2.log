@@ -1,0 +1,9 @@
+Verilator 5.050 2026-07-01 rev v5.050
+MISMATCH t=12601 ij 0 rc 0 dw 1/1/1 rr 0 sfu 1 fault 0/0
+MISMATCH t=13201 ij 0 rc 0 dw 1/1/1 rr 0 sfu 1 fault 0/0
+MISMATCH t=15001 ij 0 rc 0 dw 1/1/1 rr 0 sfu 1 fault 0/0
+CXPORT_SPLIT FAIL legal_phase_faults=0 errors=16310 checks=24183 dw=22468 inj=14950 rc=1003 rr=664 fault_edges=16108
+- rtl/hbm_accel/generic/adapters/static_su/collport/tb_hbm_su_cxport_split.sv:99: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 15us; walltime 0.239 s; speed 60.728 us/s
+- Verilator: cpu 0.239 s on 1 threads; allocated 7 MB
