@@ -37,7 +37,7 @@ module tb_ctrl_pcr_min;
   else begin
    if(r_rk) credits=credits+1;
    rq=0;
-   if(credits>0 && sent<96 && ss%3!=0) begin
+   if(r_co[0] && credits>0 && sent<96 && ss%3!=0) begin
     rq={256'(sent*997+17),32'hfdcba987,17'(sent),4'd1,30'(sent*4),sent[0],1'b1};
     sent=sent+1;credits=credits-1;
    end
