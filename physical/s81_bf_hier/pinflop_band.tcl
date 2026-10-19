@@ -1,11 +1,11 @@
 # Compact199 native repair: existing dedicated boundary registers at their pins.
 # Placement only; connectivity, clocks, SDC, outline and cycle count are unchanged.
 set bf_blk [ord::get_db_block]
-set bf_core [$bf_blk getCoreArea]
-set bf_rh [[[lindex [$bf_blk getRows] 0] getSite] getHeight]
+set ::bf_core [$bf_blk getCoreArea]
+set ::bf_rh [[[lindex [$bf_blk getRows] 0] getSite] getHeight]
 set bf_dbu [[ord::get_db_tech] getDbUnitsPerMicron]
 proc bf_band_target {box} {
-    global bf_core bf_rh
+    set bf_core $::bf_core; set bf_rh $::bf_rh
     set x [expr {([$box xMin]+[$box xMax])/2}]
     set y [expr {([$box yMin]+[$box yMax])/2}]
     set ds [list [expr {abs($x-[$bf_core xMin])}] [expr {abs($x-[$bf_core xMax])}] [expr {abs($y-[$bf_core yMin])}] [expr {abs($y-[$bf_core yMax])}]]
