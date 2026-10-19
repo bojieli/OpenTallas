@@ -151,11 +151,11 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
         end
         for(genvar pc=0;pc<PTR_CTL;pc=pc+1) begin:g_pointer
             (* keep=1 *) dsdv_mu_retire_advance u_retire(.valid(rok),.fresh(h_rfr),.hold_head(rhold),.retire(h_rts),.now_time(tmr),.due(pointer_due[pc]),.advance(pointer_adv[pc]));
-            (* keep=1 *) dsdv_mu_slot_step u_step(.phase(ph),.gap(cg),.armed(armed_event[pc%NEV]),.start(st),.bad(hcfg_bad),.slot(slot_step[pc]),.gap_step(gap_step[pc]));
+            (* keep=1 *) dsdv_mu_slot_step u_step(.phase(ph),.gap(cg),.armed(armed_event[pc%NEV]),.start(start_event[pc%NEV]),.bad(hcfg_bad),.slot(slot_step[pc]),.gap_step(gap_step[pc]));
         end
         for(genvar cc=0;cc<3;cc=cc+1) begin:g_config
             wire unused_slot;
-            (* keep=1 *) dsdv_mu_slot_step u_cg(.phase(ph),.gap(cg),.armed(armed_event[(cc+PTR_CTL)%NEV]),.start(st),.bad(hcfg_bad),.slot(unused_slot),.gap_step(cg_step[cc]));
+            (* keep=1 *) dsdv_mu_slot_step u_cg(.phase(ph),.gap(cg),.armed(armed_event[(cc+PTR_CTL)%NEV]),.start(start_event[(cc+PTR_CTL)%NEV]),.bad(hcfg_bad),.slot(unused_slot),.gap_step(cg_step[cc]));
             (* keep=1 *) dsdv_mu_boot_enable u_crl(.count(global_count),.armed(armed),.valid(mc_q[25]),.match(mc_q[24]),.en(crl_write[cc]));
             (* keep=1 *) dsdv_mu_boot_enable u_crm(.count(global_count),.armed(armed),.valid(mc_q[25]),.match(mc_q[24]),.en(crm_write[cc]));
         end
@@ -176,7 +176,7 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
     always @(posedge ck) tmr <= tm1 - {8'd0,crm};
     // ---- event rows
     wire [31:0] ts_event[0:NEV-1], tm_event[0:NEV-1];
-    wire [23:0] rl_event[0:NEV-1]; wire [NEV-1:0] idle_event, rec_local, armed_event;
+    wire [23:0] rl_event[0:NEV-1]; wire [NEV-1:0] idle_event, rec_local, armed_event, start_event;
     wire [SI-1:0] cfg_addr[0:NEV-1];
     wire [1:0] cfg_attr[0:NEV-1];
     wire [NEV-1:0] invalid_event;
@@ -362,7 +362,7 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
     wire [PTR_CTL-1:0] record_group;
     generate for(genvar rg=0;rg<PTR_CTL;rg=rg+1) begin:g_record_control
         if(LOCAL_BOOT!=0) begin:g_local
-            (* keep=1 *) dsdv_mu_record u_record(.start(st),.on_calendar(on_cal),.collision(col),.duplicate(udup),.armed(armed_event[rg%NEV]),.bad(hcfg_bad),.record(record_group[rg]));
+            (* keep=1 *) dsdv_mu_record u_record(.start(start_event[rg%NEV]),.on_calendar(on_cal),.collision(col),.duplicate(udup),.armed(armed_event[rg%NEV]),.bad(hcfg_bad),.record(record_group[rg]));
         end else begin:g_direct assign record_group[rg]=rec;end
     end endgenerate
     genvar ws, wc;
@@ -546,7 +546,7 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
         end
         assign ts_event[ce]=ts_r; assign tm_event[ce]=time_r;
         assign rl_event[ce]=rl_r; assign lw_event[ce]=lw_r;
-        assign armed_event[ce]=arm_r;
+        assign armed_event[ce]=arm_r;assign start_event[ce]=start_r;
         assign lm_event[ce]=lm_r; assign idle_event[ce]=!arm_r && table_empty;
         always @(posedge ck or negedge rr[COPY_RBASE+7*ce])
             if(!rr[COPY_RBASE+7*ce]) ts_r<=32'd0; else ts_r<=tm;
