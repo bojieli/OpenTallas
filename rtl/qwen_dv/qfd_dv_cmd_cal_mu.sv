@@ -65,6 +65,30 @@
 //   requires them to be 0.  Outputs ctx_dw = {DW6, DW5} (the existing dwr[5] / dwr[6] registers, no new storage) and
 //   ctx_load = one edge on the accepted seal (sealed rises without an image fault) -- the consumer (qfd_tt_ctlm_dv OPSEG)
 //   checks the record and loads it.  CTX_DW 0: ctx_load is 0, ctx_dw is still {dwr[6], dwr[5]} (= 0 on every sealed image).
+// CALPIPE (MU-DQ-CALPIPE / CALPIPE2 10-19, COORD 0ke; safe-design item 4: <= ~600 ps a stage at TT, wide muxes as
+//   registered one-hot selects).  The kit gate's calendar paths were (a) reg->reg -884 / -801 ps: rp -> q_t FIFO-head mux
+//   -> 20-bit tcount == ht compare -> fire -> pop / issue (and the relocation adders behind the issue mux), (b) macro->reg
+//   -411.7 ps: rd[rd_bank] 512-bit mux -> 4 serial 20-bit adders (t_acc + d0 + .. + d3) -> q_t, (c) reg->macro -465.5 ps:
+//   pw_d2 fanned out to both store macros' wd_in.  Now:
+//   - registered head: each playhead keeps its head word / time in registers (hc_q / ht_q) and a registered fire_q
+//     ("the head fires on this edge"), computed one edge ahead against tcount + 1 (precomputed next-compare);
+//   - DELTA TIMER (no adder chain): the SRAM ring stores each entry's 12-b delta, not an accumulated time.  The next
+//     head's time is ht_q + its delta (the previous head is the previous entry: the FIFO is in order and the last popped
+//     entry stays in ht_q while the FIFO is empty; a start clears ht_q); its compare is (tcount + 1) - ht_q == delta,
+//     the subtraction from registers in parallel with the head mux.  t_acc and the 4-adder chain are gone; the programme macro
+//     output reaches write registers through the bank AND-OR (registered one-hot bank, shared: one entry read an edge) only;
+//   - per-user SRAM ring: one 64x512 macro, two rows of four entries (eight entries total); wh selects the write row,
+//     rp_oh rotates on pop. The macro reads ahead to the next head's row; a four-way 128-bit field select captures
+//     directly into the head registers. Per macro: 512-bit WD register and 128-bit collision-forward register.
+//     No runtime-indexed flop FIFO remains. Pending WD and read-before-write collisions forward without a stall;
+//   - issue: each playhead's relocated word / relocation carry / TLOAD checks are computed from its registered head
+//     (constant per-playhead stride), the issuing playhead is a one-hot AND-OR select;
+//   - store write: one registered write stage per macro (ce / row / 64-b word / slot mask copies, each enabled by its
+//     own bank, so they are not merged), placed at its macro.  +1 edge between a PW word and the macro write only (the
+//     store is read only after the seal, >= 8 edges after the last PW word): no command / issue edge moves.
+//   Issue edges, late / fault semantics, TLOAD and the shared read port are unchanged: NU = 1 stays edge-identical to
+//   qfd_dv_cmd_cal (lockstep bench), compiler rules (T_0 >= 4 + (NU - 1)) unchanged.
+//   MUT 33 (bench only): the precomputed next head on a pop takes FIFO slot rp instead of rp + 1 (one-hot not rotated).
 // =====================================================================================================================
 module qfd_dv_cmd_cal_mu #(
     parameter integer MUT = 0,
@@ -163,13 +187,13 @@ module qfd_dv_cmd_cal_mu #(
     reg  [NU-1:0] run_q;
     reg  [9:0]    f_idx [0:NU-1], f_rem [0:NU-1], i_rem [0:NU-1];
     reg  [3:0]    fifo_n [0:NU-1], infl [0:NU-1];
-    reg  [2:0]    wp [0:NU-1], rp [0:NU-1];
-    reg  [115:0]  q_cmd [0:8*NU-1];
-    reg  [TW-1:0] q_t [0:8*NU-1];
-    reg  [TW-1:0] t_acc [0:NU-1], tcount [0:NU-1];
-    reg  [NU-1:0] rce_q, rbank_q, rd_v, rd_bank;
+    reg  [NU-1:0] wh;                               // write half: a push's entry j lands in slot {wh, j}
+    reg  [7:0]    rp_oh [0:NU-1];                   // one-hot read pointer
+    reg  [TW-1:0] tcount [0:NU-1];
+    reg  [NU-1:0] rce_q, rbank_q, rd_v;
     reg  [5:0]    rrow_q [0:NU-1];
     reg  [2:0]    rd_n [0:NU-1], r_n_q [0:NU-1];
+    reg  [1:0]    rdb_oh;                           // bank of the entry read on rd this edge (one-hot, shared)
     assign running_u = run_q;
     assign running = |run_q;
 
@@ -184,14 +208,87 @@ module qfd_dv_cmd_cal_mu #(
                 m_rce = 1'b1; m_rbank = m_rbank | rbank_q[a]; m_rrow = m_rrow | rrow_q[a];
             end
     end
+    // store write stage: one registered copy per macro (enabled by its own bank -> distinct, not merged)
+    reg  [1:0]   w3_ce;
+    reg  [5:0]   w3_row [0:1];
+    reg  [63:0]  w3_d [0:1];
+    reg  [7:0]   w3_sl [0:1];
+    always @(posedge ck or negedge rst_n)
+        if (!rst_n) w3_ce <= 2'b00;
+        else w3_ce <= m_ce;
+    always @(posedge ck) begin
+        if (m_ce[0]) begin w3_row[0] <= pw_row2; w3_d[0] <= pw_d2; w3_sl[0] <= pw_sl2; end
+        if (m_ce[1]) begin w3_row[1] <= pw_row2; w3_d[1] <= pw_d2; w3_sl[1] <= pw_sl2; end
+    end
     wire [511:0] rd [0:1];
     reg          tl_rce_q, tl_v2, tl_v3; reg [5:0] tl_row_q; reg [63:0] tl_ctl_q, tl_ctl2, tl_ctl3; reg [1023:0] tl_pay3;
     wire         tl_fire;
     generate for (g = 0; g < 2; g = g + 1) begin : g_m
+        wire [511:0] w3_mask;
+        genvar h;
+        for (h = 0; h < 8; h = h + 1) begin : g_wm
+            assign w3_mask[64*h +: 64] = {64{w3_sl[g][h]}};
+        end
         ot_sram_1r1w_64x512_m1_r2c2 u_pm (.clk(ck), .r_ce_in((m_rce && (m_rbank == g[0])) || tl_rce_q),
             .r_addr_in(tl_rce_q ? tl_row_q : m_rrow), .rd_out(rd[g]),
-            .w_ce_in(m_ce[g]), .w_addr_in(pw_row2), .wd_in(m_data[512*g +: 512]), .w_mask_in(m_mask[512*g +: 512]),
+            .w_ce_in(w3_ce[g]), .w_addr_in(w3_row[g]), .wd_in({8{w3_d[g]}}), .w_mask_in(w3_mask),
             .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(18'd0));
+    end endgenerate
+    // the entry row on rd (bank AND-OR by the registered one-hot bank; MUT 2: entry halves swapped)
+    wire [511:0] rds = ({512{rdb_oh[0]}} & rd[0]) | ({512{rdb_oh[1]}} & rd[1]);
+    reg  [127:0] ent [0:3];
+    reg  [11:0]  dlt [0:3];
+    integer      e;
+    always @*
+        for (e = 0; e < 4; e = e + 1) begin
+            ent[e] = (MUT == 2) ? {rds[128*e +: 64], rds[128*e + 64 +: 64]} : rds[128*e +: 128];
+            dlt[e] = ent[e][127:116];
+        end
+
+    // registered head (word, time) + registered "fires this edge", computed one edge ahead (see CALPIPE above)
+    reg  [NU-1:0]  fire_q;
+    reg  [115:0]   hc_q [0:NU-1];
+    reg  [TW-1:0]  ht_q [0:NU-1];
+    // Two-row, eight-entry SRAM ring per playhead. One complete four-entry program
+    // fetch is staged at the SRAM write pins. Read the row of the next head ahead
+    // of its pop; the head register is the SRAM read-data capture. SRAM models are
+    // read-before-write, so both pending writes and read/write collisions forward.
+    wire [511:0] fq_rd [0:NU-1];
+    wire [127:0] fq_word [0:NU-1];
+    reg [NU-1:0] fq_we, fq_wa, fq_bypass;
+    reg [511:0] fq_wd [0:NU-1];
+    reg [127:0] fq_bd [0:NU-1];
+    wire [2:0] fq_next [0:NU-1], fq_ahead [0:NU-1];
+    wire [NU-1:0] fq_ra;
+    generate for (g = 0; g < NU; g = g + 1) begin : g_fifo
+        reg [2:0] rp_bin;
+        integer b;
+        always @* begin
+            rp_bin = 3'd0;
+            for (b = 0; b < 8; b = b + 1) if (rp_oh[g][b]) rp_bin = b[2:0];
+        end
+        assign fq_next[g] = rp_bin + ((MUT == 33) ? 3'd0 : 3'd1);
+        assign fq_ahead[g] = rp_bin + ((fire_q[g] && !frz_u[g] && !go_u[g]) ? 3'd2 : 3'd1);
+        assign fq_ra[g] = fq_ahead[g][2];
+        ot_sram_1r1w_64x512_m1_r2c2 u_fifo (
+            .clk(ck), .r_ce_in(1'b1), .r_addr_in({5'd0, fq_ra[g]}), .rd_out(fq_rd[g]),
+            .w_ce_in(fq_we[g]), .w_addr_in({5'd0, fq_wa[g]}), .wd_in(fq_wd[g]), .w_mask_in({512{1'b1}}),
+            .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(18'd0));
+        assign fq_word[g] = (fq_we[g] && fq_wa[g] == fq_next[g][2]) ? fq_wd[g][128*fq_next[g][1:0] +: 128] :
+                            fq_bypass[g] ? fq_bd[g] : fq_rd[g][128*fq_next[g][1:0] +: 128];
+        always @(posedge ck or negedge rst_n)
+            if (!rst_n) begin fq_we[g] <= 1'b0; fq_bypass[g] <= 1'b0; end
+            else begin
+                fq_we[g] <= rd_v[g] && !frz_u[g] && !go_u[g];
+                fq_bypass[g] <= fq_we[g] && fq_wa[g] == fq_ra[g];
+            end
+        always @(posedge ck) begin
+            if (rd_v[g] && !frz_u[g] && !go_u[g]) begin
+                fq_wd[g] <= rds;
+                fq_wa[g] <= wh[g];
+            end
+            if (fq_we[g] && fq_wa[g] == fq_ra[g]) fq_bd[g] <= fq_wd[g][128*fq_ahead[g][1:0] +: 128];
+        end
     end endgenerate
 
     // ================================================================ segment start
@@ -221,16 +318,19 @@ module qfd_dv_cmd_cal_mu #(
     wire busy_sel = (MUT == 13) ? (|run_q) : (MUT == 14) ? 1'b0 : run_q[go_user];
     wire start_bad = !sealed || busy_sel || (start && boot_go) || (start && stage > LAST_STAGE[5:0]) || rng_bad;
 
-    // ================================================================ fetch / issue, per playhead (combinational)
-    reg  [NU-1:0]  can_read, gnt, hv, fire, late, hgo;
+    // ================================================================ fetch / head, per playhead (combinational)
+    reg  [NU-1:0]  can_read, gnt, hv, late, hgo, zd;
     reg  [9:0]     waddr [0:NU-1];
     reg  [2:0]     f_n [0:NU-1];
-    reg  [127:0]   ent [0:NU-1][0:3];
-    reg  [TW-1:0]  et [0:NU-1][0:3];
-    reg  [NU-1:0]  zd;
-    reg  [115:0]   hc [0:NU-1];
-    reg  [TW-1:0]  ht [0:NU-1];
     reg            any_gnt;
+    reg  [NU-1:0]  run_n, nh_v, fire_n;
+    reg  [115:0]   nh_c [0:NU-1];
+    reg  [TW-1:0]  nh_t [0:NU-1];
+    reg  [7:0]     rpa_oh [0:NU-1];
+    reg  [TW-1:0]  tcm, tdif, ht_m;
+    reg  [115:0]   csel;
+    reg  [11:0]    dsel, dd;
+    reg  [3:0]     fn_ap;
     integer        u, j;
     always @* begin
         any_gnt = 1'b0;
@@ -243,72 +343,103 @@ module qfd_dv_cmd_cal_mu #(
             gnt[u] = can_read[u] && !frz_u[u] && !any_gnt && !tl_fire;
             if (can_read[u] && !frz_u[u]) any_gnt = 1'b1;
             zd[u] = 1'b0;
-            for (j = 0; j < 4; j = j + 1) begin
-                ent[u][j] = (MUT == 2) ? {rd[rd_bank[u]][128*j +: 64], rd[rd_bank[u]][128*j + 64 +: 64]}
-                                       : rd[rd_bank[u]][128*j +: 128];
-                if ((j < rd_n[u]) && ent[u][j][127:116] == 12'd0) zd[u] = 1'b1;
-            end
-            et[u][0] = t_acc[u] + {{(TW-12){1'b0}}, ent[u][0][127:116]};
-            for (j = 1; j < 4; j = j + 1) et[u][j] = et[u][j-1] + {{(TW-12){1'b0}}, ent[u][j][127:116]};
-            hc[u] = q_cmd[8*u + {29'd0, rp[u]}];
-            ht[u] = q_t[8*u + {29'd0, rp[u]}] + ((MUT == 1) ? {{(TW-1){1'b0}}, 1'b1} : {TW{1'b0}});
+            for (j = 0; j < 4; j = j + 1)
+                if ((j < rd_n[u]) && dlt[j] == 12'd0) zd[u] = 1'b1;
+            ht_m = ht_q[u] + ((MUT == 1) ? {{(TW-1){1'b0}}, 1'b1} : {TW{1'b0}});
             hv[u] = fifo_n[u] != 4'd0;
-            fire[u] = run_q[u] && hv[u] && tcount[u] == ht[u];
-            late[u] = run_q[u] && hv[u] && tcount[u] > ht[u];
-            hgo[u] = fire[u] && !frz_u[u] && hc[u][0];
+            late[u] = run_q[u] && hv[u] && tcount[u] > ht_m;
+            hgo[u] = fire_q[u] && !frz_u[u] && hc_q[u][0];
+            // next edge's head and its fire flag (used on a non-frozen edge; a frozen edge holds them)
+            run_n[u] = run_q[u] && !(fire_q[u] && i_rem[u] == 10'd1);
+            tcm = tcount[u] + ((MUT == 1) ? {TW{1'b0}} : {{(TW-1){1'b0}}, 1'b1});   // next tcount - MUT 1 offset
+            tdif = tcm - ht_q[u];
+            fn_ap = fifo_n[u] - (fire_q[u] ? 4'd1 : 4'd0);
+            rpa_oh[u] = {rp_oh[u][6:0], rp_oh[u][7]};
+            csel = fq_word[u][115:0];
+            dsel = fq_word[u][127:116];
+            if (MUT == 2) begin
+                csel = {fq_word[u][63:0], fq_word[u][115:64]};
+                dsel = fq_word[u][63:52];
+            end
+            nh_v[u] = 1'b1; nh_c[u] = hc_q[u]; dd = 12'd0;
+            if (fn_ap != 4'd0) begin
+                if (fire_q[u]) begin nh_c[u] = csel; dd = dsel; end           // pop: the next FIFO slot
+            end else if (rd_v[u]) begin nh_c[u] = ent[0][115:0]; dd = dlt[0]; // FIFO empties: the word being pushed
+            end else nh_v[u] = 1'b0;
+            nh_t[u] = ht_q[u] + {{(TW-12){1'b0}}, dd};
+            fire_n[u] = run_n[u] && nh_v[u] && tdif == {{(TW-12){1'b0}}, dd};
         end
     end
-    // the issuing playhead: the lowest with a go entry this edge; a second one is a collision
-    reg  [UB-1:0] iu; reg i_any, i_col;
+    // per-playhead issue word: relocation for its user (constant stride), carry / tag checks, TLOAD checks -- all from
+    // the registered head, beside the issue select
+    reg  [115:0]  rcu [0:NU-1];
+    reg  [NU-1:0] rbad, tlk, tlb;
+    reg  [UB-1:0] ruu [0:NU-1];
+    reg  [115:0]  hu;
+    reg  [24:0]   uvb, r_ar, r_dd, r_em, r_db;
+    reg  [9:0]    upx, r_px;
+    reg  [10:0]   tlo, thi;
+    integer       v;
+    always @* begin
+        for (v = 0; v < NU; v = v + 1) begin
+            hu = hc_q[v];
+            ruu[v] = (MUT == 11 && NU > 1) ? (v + 1) % NU : v;
+            uvb = (NU > 1 && MUT != 12) ? 25'(ruu[v]) * 25'(UVM_STRIDE) : 25'd0;
+            upx = (NU > 1 && MUT != 12) ? 10'(ruu[v]) * 10'(PIDX_STRIDE) : 10'd0;
+            r_ar = {1'b0, hu[27:4]} + uvb; r_dd = {1'b0, hu[51:28]} + uvb; r_em = {1'b0, hu[77:54]} + uvb;
+            r_db = {1'b0, hu[49:26]} + uvb; r_px = {1'b0, hu[12:4]} + upx;
+            rcu[v] = hu; rbad[v] = 1'b0;
+            if (NU > 1 && hu[115:112] != 4'hE) begin
+                case (hu[3:1])
+                    3'd4: begin rcu[v][27:4] = r_ar[23:0]; rcu[v][51:28] = r_dd[23:0]; rcu[v][77:54] = r_em[23:0];
+                                rbad[v] = r_ar[24] | r_dd[24] | r_em[24]; end
+                    3'd2: if (hu[24]) begin rcu[v][49:26] = r_db[23:0]; rbad[v] = r_db[24]; end
+                    3'd1: begin rcu[v][12:4] = r_px[8:0]; rbad[v] = r_px[9]; end
+                    3'd0: if (hu[5:4] == 2'd0) begin
+                              if (hu[23 + UTAG_LSB +: UB] != {UB{1'b0}}) rbad[v] = 1'b1;
+                              rcu[v][23 + UTAG_LSB +: UB] = ruu[v];
+                          end
+                    3'd6: if (UFOLD != 0) begin
+                              if (hu[9:8] != 2'd0) rbad[v] = 1'b1;
+                              rcu[v][9:8] = (MUT == 16) ? 2'd0 : 2'(ruu[v]);
+                          end
+                    default: ;
+                endcase
+                // STN user (UFOLD): beside the dbase relocation above, any dst
+                if (UFOLD != 0 && hu[3:1] == 3'd2) begin
+                    if (hu[52:51] != 2'd0) rbad[v] = 1'b1;
+                    rcu[v][52:51] = (MUT == 16) ? 2'd0 : 2'(ruu[v]);
+                end
+            end
+            // TLOAD (LOCAL kind 3): block row / header / checks (as qfd_dv_cmd_cal)
+            tlk[v] = hu[115:112] == 4'hE && hu[3:1] == 3'd3;
+            tlo = {1'b0, hu[9:4], 4'd0}; thi = tlo + 11'd16;
+            tlb[v] = hu[12:10] == 3'd0 || hu[12] || hu[111:73] != 39'd0 || {4'd0, hu[9:4]} < meta_rows ||
+                     hu[9:4] >= 6'd61 || (tlo < {1'b0, base} + {1'b0, nent, 1'b0} && thi > {1'b0, base});
+        end
+    end
+    // the issuing playhead: the lowest with a go entry this edge (one-hot select); a second one is a collision
+    reg  [NU-1:0] isel; reg i_any, i_col;
+    reg  [115:0]  ic, rc; reg r_bad, tl_bad, tl_go; reg [UB-1:0] ru;
     integer       c;
     always @* begin
-        iu = {UB{1'b0}}; i_any = 1'b0; i_col = 1'b0;
-        for (c = NU - 1; c >= 0; c = c - 1) if (hgo[c]) begin iu = c[UB-1:0]; end
-        for (c = 0; c < NU; c = c + 1) if (hgo[c]) begin if (i_any) i_col = 1'b1; i_any = 1'b1; end
+        i_any = 1'b0; i_col = 1'b0; isel = {NU{1'b0}};
+        for (c = 0; c < NU; c = c + 1) begin
+            isel[c] = hgo[c] && !i_any;
+            if (hgo[c]) begin if (i_any) i_col = 1'b1; i_any = 1'b1; end
+        end
+        ic = 116'd0; rc = 116'd0; r_bad = 1'b0; tl_bad = 1'b0; tl_go = 1'b0; ru = {UB{1'b0}};
+        for (c = 0; c < NU; c = c + 1)
+            if (isel[c]) begin
+                ic = ic | hc_q[c]; rc = rc | rcu[c]; r_bad = r_bad | rbad[c]; tl_bad = tl_bad | tlb[c];
+                tl_go = tl_go | tlk[c]; ru = ru | ruu[c];
+            end
     end
-    // relocation of the issued word for its user (NU > 1; user 0 adds 0)
-    wire [115:0]  ic = hc[iu];
     wire [2:0]    i_kind = ic[3:1];
     wire          i_loc = ic[115:112] == 4'hE;
-    // TLOAD (LOCAL kind 3): block row / header / checks (as qfd_dv_cmd_cal)
-    assign        tl_fire = i_any && i_loc && i_kind == 3'd3;
+    assign        tl_fire = tl_go;
     wire [5:0]    tl_row = ic[9:4];
     wire [2:0]    tl_kind = ic[12:10];
-    wire [10:0]   tl_lo = {1'b0, tl_row, 4'd0}, tl_hi = tl_lo + 11'd16;
-    wire          tl_bad = tl_kind == 3'd0 || tl_kind[2] || ic[111:73] != 39'd0 || {4'd0, tl_row} < meta_rows ||
-                           tl_row >= 6'd61 || (tl_lo < {1'b0, base} + {1'b0, nent, 1'b0} && tl_hi > {1'b0, base});
-    wire [UB-1:0] ru = (MUT == 11 && NU > 1) ? ((iu == NU - 1) ? {UB{1'b0}} : iu + 1'b1) : iu;
-    wire [24:0]   ub = (NU > 1 && MUT != 12) ? 25'(ru) * 25'(UVM_STRIDE) : 25'd0;
-    wire [9:0]    up = (NU > 1 && MUT != 12) ? 10'(ru) * 10'(PIDX_STRIDE) : 10'd0;
-    wire [24:0]   r_ar = {1'b0, ic[27:4]} + ub, r_dd = {1'b0, ic[51:28]} + ub, r_em = {1'b0, ic[77:54]} + ub,
-                  r_db = {1'b0, ic[49:26]} + ub;
-    wire [9:0]    r_px = {1'b0, ic[12:4]} + up;
-    reg  [115:0]  rc; reg r_bad;
-    always @* begin
-        rc = ic; r_bad = 1'b0;
-        if (NU > 1 && !i_loc) begin
-            case (i_kind)
-                3'd4: begin rc[27:4] = r_ar[23:0]; rc[51:28] = r_dd[23:0]; rc[77:54] = r_em[23:0];
-                            r_bad = r_ar[24] | r_dd[24] | r_em[24]; end
-                3'd2: if (ic[24]) begin rc[49:26] = r_db[23:0]; r_bad = r_db[24]; end
-                3'd1: begin rc[12:4] = r_px[8:0]; r_bad = r_px[9]; end
-                3'd0: if (ic[5:4] == 2'd0) begin
-                          if (ic[23 + UTAG_LSB +: UB] != {UB{1'b0}}) r_bad = 1'b1;
-                          rc[23 + UTAG_LSB +: UB] = ru;
-                      end
-                3'd6: if (UFOLD != 0) begin
-                          if (ic[9:8] != 2'd0) r_bad = 1'b1;
-                          rc[9:8] = (MUT == 16) ? 2'd0 : 2'(ru);
-                      end
-                default: ;
-            endcase
-            // STN user (UFOLD): beside the dbase relocation above, any dst
-            if (UFOLD != 0 && i_kind == 3'd2) begin
-                if (ic[52:51] != 2'd0) r_bad = 1'b1;
-                rc[52:51] = (MUT == 16) ? 2'd0 : 2'(ru);
-            end
-        end
-    end
     generate if (UFOLD != 0 && (NU < 2 || UB > 2)) begin : g_ufold_bad
         initial $error("qfd_dv_cmd_cal_mu: UFOLD needs 2 <= NU <= 4");
     end endgenerate
@@ -323,10 +454,12 @@ module qfd_dv_cmd_cal_mu #(
             run_q <= {NU{1'b0}}; done <= 1'b0; done_user <= {UB{1'b0}}; fault <= 1'b0; fault_code <= 6'd0;
             for (k = 0; k < NU; k = k + 1) begin
                 f_idx[k] <= 10'd0; f_rem[k] <= 10'd0; i_rem[k] <= 10'd0; fifo_n[k] <= 4'd0; infl[k] <= 4'd0;
-                wp[k] <= 3'd0; rp[k] <= 3'd0; t_acc[k] <= {TW{1'b0}}; tcount[k] <= {TW{1'b0}};
+                rp_oh[k] <= 8'd1; tcount[k] <= {TW{1'b0}};
                 rrow_q[k] <= 6'd0; r_n_q[k] <= 3'd0; rd_n[k] <= 3'd0;
+                hc_q[k] <= 116'd0; ht_q[k] <= {TW{1'b0}};
             end
-            rce_q <= {NU{1'b0}}; rbank_q <= {NU{1'b0}}; rd_v <= {NU{1'b0}}; rd_bank <= {NU{1'b0}};
+            wh <= {NU{1'b0}}; fire_q <= {NU{1'b0}}; rdb_oh <= 2'b00;
+            rce_q <= {NU{1'b0}}; rbank_q <= {NU{1'b0}}; rd_v <= {NU{1'b0}};
             cmd <= 116'd0; cmd_user <= {UB{1'b0}}; loc_emb <= 1'b0; loc_seg <= 1'b0; loc_base <= 12'd0;
             su_issue <= 1'b0; su_pidx <= 9'd0; xc_issue <= 1'b0;
             tl <= 1088'd0; tl_rce_q <= 1'b0; tl_v2 <= 1'b0; tl_v3 <= 1'b0; tl_row_q <= 6'd0;
@@ -358,41 +491,39 @@ module qfd_dv_cmd_cal_mu #(
                 end
             end
             if (m_dbl) begin fault <= 1'b1; fault_code[5] <= 1'b1; end
+            if (m_rce) rdb_oh <= {m_rbank, !m_rbank};
             // ---------------- playheads
             for (k = 0; k < NU; k = k + 1) begin
                 if (go_u[k]) begin
                     if (start_bad) begin fault <= 1'b1; fault_code[0] <= 1'b1; end
                     else if (g_cnt != 16'd0) begin
                         run_q[k] <= 1'b1; f_idx[k] <= g_first[9:0]; f_rem[k] <= g_cnt[9:0]; i_rem[k] <= g_cnt[9:0];
-                        t_acc[k] <= {TW{1'b0}}; tcount[k] <= {{(TW-1){1'b0}}, 1'b1};
-                        fifo_n[k] <= 4'd0; infl[k] <= 4'd0; wp[k] <= 3'd0; rp[k] <= 3'd0; rce_q[k] <= 1'b0; rd_v[k] <= 1'b0;
+                        tcount[k] <= {{(TW-1){1'b0}}, 1'b1}; ht_q[k] <= {TW{1'b0}};
+                        fifo_n[k] <= 4'd0; infl[k] <= 4'd0; wh[k] <= 1'b0; rp_oh[k] <= 8'd1;
+                        rce_q[k] <= 1'b0; rd_v[k] <= 1'b0; fire_q[k] <= 1'b0;
                     end else begin
                         if (d_any) d_col = 1'b1;
                         d_any = 1'b1; d_u = k[UB-1:0];
                     end
                 end else if (!frz_u[k]) begin
+                    fire_q[k] <= fire_n[k];
+                    if (nh_v[k]) begin hc_q[k] <= nh_c[k]; ht_q[k] <= nh_t[k]; end
                     if (run_q[k]) begin
                         tcount[k] <= tcount[k] + {{(TW-1){1'b0}}, 1'b1};
                         if (&tcount[k]) begin fault <= 1'b1; fault_code[4] <= 1'b1; end
                     end
                     rce_q[k] <= gnt[k]; rbank_q[k] <= waddr[k][3]; rrow_q[k] <= waddr[k][9:4]; r_n_q[k] <= f_n[k];
                     if (gnt[k]) begin f_idx[k] <= f_idx[k] + 10'd4; f_rem[k] <= f_rem[k] - {7'd0, f_n[k]}; end
-                    rd_v[k] <= rce_q[k]; rd_bank[k] <= rbank_q[k]; rd_n[k] <= r_n_q[k];
+                    rd_v[k] <= rce_q[k]; rd_n[k] <= r_n_q[k];
                     infl[k] <= infl[k] + (gnt[k] ? {1'b0, f_n[k]} : 4'd0) - (rd_v[k] ? {1'b0, rd_n[k]} : 4'd0);
                     if (rd_v[k]) begin
-                        for (j = 0; j < 4; j = j + 1)
-                            if (j < rd_n[k]) begin
-                                q_cmd[8*k + {29'd0, 3'(wp[k] + j[2:0])}] <= ent[k][j][115:0];
-                                q_t[8*k + {29'd0, 3'(wp[k] + j[2:0])}] <= et[k][j];
-                            end
-                        wp[k] <= wp[k] + rd_n[k];
-                        t_acc[k] <= et[k][rd_n[k][1:0] - 2'd1];
+                        wh[k] <= !wh[k];
                         if (zd[k]) begin fault <= 1'b1; fault_code[4] <= 1'b1; end
                     end
-                    fifo_n[k] <= fifo_n[k] + {1'b0, (rd_v[k] ? rd_n[k] : 3'd0)} - (fire[k] ? 4'd1 : 4'd0);
+                    fifo_n[k] <= fifo_n[k] + {1'b0, (rd_v[k] ? rd_n[k] : 3'd0)} - (fire_q[k] ? 4'd1 : 4'd0);
                     if (late[k]) begin fault <= 1'b1; fault_code[2] <= 1'b1; end
-                    if (fire[k]) begin
-                        rp[k] <= rp[k] + 3'd1; i_rem[k] <= i_rem[k] - 10'd1;
+                    if (fire_q[k]) begin
+                        rp_oh[k] <= rpa_oh[k]; i_rem[k] <= i_rem[k] - 10'd1;
                         if (i_rem[k] == 10'd1) begin
                             run_q[k] <= 1'b0;
                             if (d_any) d_col = 1'b1;

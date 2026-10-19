@@ -5,7 +5,7 @@ set -u
 D=$(cd "$(dirname "$0")" && pwd); W=${1:?WORK}; shift; mkdir -p "$W"; rc=0
 VL=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
 "$VL" --version
-M=${*:-0 4 5 11 12 13 14 15}
+M=${*:-0 4 5 11 12 13 14 15 33}
 for m in $M; do
     python3 -I "$D/mu_seq_bench.py" --work "$W/m$m" --mut "$m" --verilator "$VL" --jobs 8 > "$W/m$m.out" 2>&1
     L=$(head -1 "$W/m$m.out"); echo "$L"

@@ -45,7 +45,8 @@ Negative cases: the named fault rises on the named edge.
 Mutants (--mut, each must FAIL): 21 range ignored (descriptor plays), 22 collision not flagged, 23 filler result into
 the next filler's bank, 24 leaf entry one edge late, 25 leaf re-anchors on every L0 start (anchor drift), 26 leaf drift
 check dropped, 27 context record never loaded (red), 28 records rotated between fillers (red), 29 record not checked
-(neg_ctx), 32 head-start user not carried on native_pos[17:16] (C8, red).
+(neg_ctx), 32 head-start user not carried on native_pos[17:16] (C8, red), 33 (MU-DQ-CALPIPE2) calendar next head
+from FIFO slot rp instead of rp + 1 (red).
 """
 import argparse, json, os, subprocess, sys
 from pathlib import Path
