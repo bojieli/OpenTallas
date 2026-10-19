@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -euo pipefail
+ulimit -c 0
+out=${1:?};mkdir -p "$out"
+verilator --version | tee "$out/verilator.txt"
+verilator --version | grep -q '5.050'
+SRC=(rtl/qwen_sys/mu_embedding_20261019/qfd_embedding_validation_arm.sv rtl/qwen_sys/mu_embedding_20261019/qfd_mu_embedding_epoch_publication.sv rtl/qwen_sys/mu_embedding_20261019/qfd_mu_embedding_ledger.sv rtl/test/qwen_split/tb_mu_embedding_validation_safe2.sv results/rtl/qwen_mu_embedding_contract_1019/validation_arm/safe2_sources/rtl/qwen_split/qfd_native59_dv_service.sv results/rtl/qwen_mu_embedding_contract_1019/validation_arm/safe2_sources/rtl/qwen_split/qfd_native59_q_export_control.sv results/rtl/qwen_mu_embedding_contract_1019/validation_arm/safe2_sources/rtl/qwen_split/qfd_native59_command_context.sv results/rtl/qwen_mu_embedding_contract_1019/validation_arm/safe2_sources/rtl/qwen_split/qfd_native59_static_service.sv results/rtl/qwen_mu_embedding_contract_1019/validation_arm/safe2_sources/rtl/qwen_split/qfd_native59_record_endpoint.sv results/rtl/qwen_mu_embedding_contract_1019/validation_arm/safe2_sources/rtl/qwen_split/qfd_kvn_static_transport.sv results/rtl/qwen_mu_embedding_contract_1019/validation_arm/safe2_sources/rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv results/rtl/qwen_mu_embedding_contract_1019/validation_arm/safe2_sources/rtl/qwen_sys/vm_nox_20261014/qfd_vm_attention_commit_fence.sv results/rtl/qwen_mu_embedding_contract_1019/validation_arm/safe2_sources/rtl/qwen_sys/split_20261014/qkd_native_attention_record.sv rtl/qwen_split/qfd_embedding_word_provider.sv rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_preload_face.sv rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_core_store.sv physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v results/rtl/qwen_mu_embedding_contract_1019/validation_arm/safe2_sources/rtl/qwen_split/qfd_native59_qseat_sram.sv results/rtl/qwen_mu_embedding_contract_1019/validation_arm/safe2_sources/physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1/ot_sram_1r1w_32x512_m1.v)
+sha256sum "${SRC[@]}" > "$out/source.sha256"
+verilator --binary --timing -j 4 -Wno-fatal --top-module tb_mu_embedding_validation_safe2 --Mdir "$out/obj" "${SRC[@]}" > "$out/build.log" 2>&1
+for token in 0 65536 151935;do
+ "$out/obj/Vtb_mu_embedding_validation_safe2" +TOKEN="$token" +VECTORS="results/arch/qwen_tp8_native_dispatch_1014/embedding_vectors/token$token" > "$out/token$token.log" 2>&1
+ grep '^JOIN_PASS' "$out/token$token.log"
+done
+for mut in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18;do
+ if "$out/obj/Vtb_mu_embedding_validation_safe2" +TOKEN=65536 +VECTORS=results/arch/qwen_tp8_native_dispatch_1014/embedding_vectors/token65536 +MUT="$mut" > "$out/mut$mut.log" 2>&1;then echo "FAIL mutant$mut escaped";exit 1;fi
+ grep 'JOIN_FAIL' "$out/mut$mut.log"
+done
