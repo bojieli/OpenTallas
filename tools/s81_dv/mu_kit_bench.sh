@@ -5,6 +5,11 @@
 #                                            dsdv_mu_land), RP -> RA single-user reference (ot_s81sl_lep_nh).
 #                                            MUT none | TAGDROP | WRONGCOPY | LANDCUT (ot_s81sl_lep_core) | LANDOVR (dsdv_mu_land)
 #                                            (dies A / B = ot_s81sl_lep_mu_a, kit s81sl_lepmua)
+#   mu_kit_bench.sh OUTDIR lepmuh MUT SEED   tb_s81sl_lep_muh (kit s81sl_lepmuh, MU-S81-2/HOSTEP): host-plane MU endpoint
+#                                            ot_s81sl_lep_mu_h + dsdv_mu_land vs the single-user ot_s81sl_lep.
+#                                            MUT none | HSTAMP | TAGDROP | LANDCUT | KSOFF (ot_s81sl_lep_core)
+#   mu_kit_bench.sh OUTDIR hwin   MUT [BADRT]  tb_dsdv_mu_hwin (kit dsdv_mu_hwin) beside dsdv_mu_hslot: MUT 0 | 3 | 4,
+#                                            BADRT 1 = an RX tag of no outstanding start (must fault)
 #   mu_kit_bench.sh OUTDIR hslot  MUT NS [COLLIDE]   tb_dsdv_mu_hslot (kit dsdv_mu_hslot): NS users / slots, MUT 0|1|2,
 #                                            COLLIDE 1 = a start into an occupied slot (must fault)
 # Prints the testbench verdict lines and a last line BENCH_PASS / BENCH_FAIL <what>; exit 0 only on BENCH_PASS.
@@ -13,7 +18,7 @@ O=$(realpath -m "${1:?outdir}"); B=${2:?bench}; M=${3:-none}; mkdir -p "$O"
 V=verilator; [ -x ~/.local/opentallas-tools/verilator-5.050/bin/verilator ] && V=~/.local/opentallas-tools/verilator-5.050/bin/verilator
 $V --version
 case $B in
-lepmu)
+lepmu|lepmuh)
   S=${4:-1}; L=rtl/dsrom_sys/s81_link; SL=rtl/dsrom_sys/s81_dv/slice
   SRCS="rtl/link/ot_link_crc32.sv rtl/common/ot_link_credit.sv rtl/lib/ot_rst_relay.sv rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv
    rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep.sv rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx.sv rtl/dsrom_sys/s81_ph/ot_s81ph_rfifo.sv
@@ -24,17 +29,31 @@ lepmu)
    physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v
    physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v
    physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v
-   $SL/ot_s81sl_slice_lep.sv $SL/dsdv_mu_land.sv $SL/test/tb_s81sl_lep_mu.sv"
+   $SL/ot_s81sl_slice_lep.sv $SL/dsdv_mu_land.sv"
+  TB=tb_s81sl_lep_mu; VR=lep_mu; [ $B = lepmuh ] && { TB=tb_s81sl_lep_muh; VR=lep_muh; }
+  SRCS="$SRCS $SL/test/$TB.sv"
   D="+define+OT_S81PH_GBX_FMT1 +define+OT_S81PH_EP_PIPE2"
   case $M in none) ;; LANDOVR) D="$D +define+OT_DSDV_MU_LAND_MUT_OVR" ;; *) D="$D +define+OT_S81SL_LEP_MUT_$M" ;; esac
-  R=lepmu_${M}_$S
+  R=${B}_${M}_$S
   $V --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-lint -Wno-style +incdir+$L $D -GSEED=$S \
-    --top-module tb_s81sl_lep_mu -Mdir $O/obj_$R $SRCS --build-jobs ${J:-8} -MAKEFLAGS "OPT_FAST=-O1 OPT_SLOW=-O0 OPT_GLOBAL=-O0" \
+    --top-module $TB -Mdir $O/obj_$R $SRCS --build-jobs ${J:-8} -MAKEFLAGS "OPT_FAST=-O1 OPT_SLOW=-O0 OPT_GLOBAL=-O0" \
     > $O/build_$R.log 2>&1 || { grep -m10 %Error $O/build_$R.log; echo "BUILD_FAILED $R"; exit 3; }
-  $O/obj_$R/Vtb_s81sl_lep_mu > $O/run_$R.log 2>&1
-  grep -E "^(LEP_MU_STATS|PASS|FAIL|ERR)" $O/run_$R.log | head -12
-  grep -q "^PASS lep_mu:" $O/run_$R.log && { echo "BENCH_PASS lepmu MUT=$M seed $S"; exit 0; }
-  echo "BENCH_FAIL lepmu MUT=$M seed $S"; exit 1 ;;
+  $O/obj_$R/V$TB > $O/run_$R.log 2>&1
+  grep -E "^(LEP_MU_STATS|LEPMUH_STATS|MISMATCH|PASS|FAIL|ERR)" $O/run_$R.log | head -12
+  grep -q "^PASS $VR:" $O/run_$R.log && { echo "BENCH_PASS $B MUT=$M seed $S"; exit 0; }
+  echo "BENCH_FAIL $B MUT=$M seed $S"; exit 1 ;;
+hwin)
+  C=${4:-0}; U=rtl/dsrom_sys/s81_dv/unit
+  D=""; [ "$M" != none ] && [ "$M" != 0 ] && D="+define+WMUT=$M"; [ "$C" = 1 ] && D="$D +define+BADRT=1"
+  R=hwin_${M}_$C
+  $V --binary --timing -j ${J:-8} -Wno-fatal -Wno-WIDTH -Wno-lint -Wno-style --top-module tb_dsdv_mu_hwin $D \
+    rtl/lib/ot_rst_relay.sv $U/dsdv_mu_hslot.sv $U/dsdv_mu_hwin.sv $U/test/tb_dsdv_mu_hwin.sv --Mdir $O/obj_$R -o tb > $O/build_$R.log 2>&1 \
+    || { grep -m10 %Error $O/build_$R.log; echo "BUILD_FAILED $R"; exit 3; }
+  $O/obj_$R/tb > $O/run_$R.log 2>&1
+  grep -E "^(MUWIN|ERR)" $O/run_$R.log | head -12
+  if [ "$C" = 1 ]; then ok='^MUWIN BADRT PASS \(fault raised\)'; else ok='^MUWIN PASS$'; fi
+  grep -q -E "$ok" $O/run_$R.log && { echo "BENCH_PASS hwin MUT=$M BADRT $C"; exit 0; }
+  echo "BENCH_FAIL hwin MUT=$M BADRT $C"; exit 1 ;;
 hslot)
   NS=${4:-47}; C=${5:-0}; U=rtl/dsrom_sys/s81_dv/unit
   D="+define+NS=$NS +define+NP=$NS"; [ "$M" != none ] && [ "$M" != 0 ] && D="$D +define+MUT=$M"; [ "$C" = 1 ] && D="$D +define+COLLIDE=1"

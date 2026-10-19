@@ -1,0 +1,120 @@
+{
+ "name": "dsdv_mu_hwin",
+ "top": "dsdv_mu_hwin",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin.sv"
+ ],
+ "params": {
+  "NSLOT": 47,
+  "NEV": 8,
+  "NEP": 4,
+  "NRT": 2,
+  "MUT": 0
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "std_area_um2": 4000.0,
+ "pins": {
+  "W": [
+   "f_ks",
+   "f_mc",
+   "f_mw"
+  ],
+  "E": [
+   "mu_c",
+   "mu_rc",
+   "mu_rt",
+   "t_wf"
+  ],
+  "S": [
+   "ck",
+   "rst_n"
+  ]
+ },
+ "recipe": 4,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "clock": "cts",
+ "layer_cap": "M5",
+ "route": {
+  "pd": 0.55,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 10.8,
+  "io_hold_margin_ns": 0.025
+ },
+ "structural_change": "MU-S81-2/DIE 10-19 (RTL fixed by MU-S81-2/SEQ 5dd45e769: slot gap table, entries wrap at the calendar's slot count): NEW leaf dsdv_mu_hwin beside the dsdv_mu_hslot leaf in the MU seq_host master (dsdv_seq_host_mux): the end-slice TX tag windows (mu_c per end slice), landing replays (mu_rc) and RX tag check (mu_rt) of the multi-user S81 die, from its own start table copy (same f_ks start tap, same f_mc S / RL / gap words) and its own boot word stream f_mw (host CSR 0x16), NSLOT 47 x NEV 8 events, NEP 4 end slices, NRT 2 returning end slices. Every event fires at a fixed offset D after its user's start edge (no queue / ready / credit). Faces: taps + boot words W (beside seq_host), mu_c / mu_rc / mu_rt / t_wf E (to the end-slice die wires and the t_mf fold), ck / rst_n S. Kit rules: recipe 4 flop-first, reset_landing 2, io_hold_margin 0.025, M5 cap.",
+ "pin_regs": {
+  "enable": false,
+  "reason": "Source-registered: f_ks / f_mc / f_mw / mu_rt land in pin flops (ks_q / mc_q / mw_q / rt_q), mu_c / mu_rc / t_wf leave flops (c_q / rc_q / t_wf)."
+ },
+ "job": {
+  "owner": "Claude:MU-S81-2/HOSTEP",
+  "branch": "claude/mu-s81-2-hostep-1019",
+  "tag": "dsdv_mu_hwin",
+  "purpose": "MU-S81-2: multi-user end-slice window / replay / RX tag leaf dsdv_mu_hwin (NSLOT 47, NEV 8) to closure (TT setup / FF hold / DRC 0 + native audit).",
+  "extra_paths": [
+   "rtl/lib",
+   "rtl/dsrom_sys/s81_dv/unit",
+   "tools/s81_dv",
+   "results/rtl/mu_s81_2_hostep_1019"
+  ],
+  "benches": [
+   {
+    "name": "hwin_exact",
+    "cmd": "J=2 bash tools/s81_dv/mu_kit_bench.sh {RUN}/hwin_exact hwin none 0",
+    "expect": "pass",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "pass_regex": "^BENCH_PASS hwin MUT=none BADRT 0$",
+    "min_count_regex": "^MUWIN starts (\\d+) fires \\d+ expected \\d+"
+   },
+   {
+    "name": "hwin_badrt_faults",
+    "cmd": "J=2 bash tools/s81_dv/mu_kit_bench.sh {RUN}/hwin_badrt_faults hwin none 1",
+    "expect": "pass",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "pass_regex": "^BENCH_PASS hwin MUT=none BADRT 1$"
+   },
+   {
+    "name": "hwin_mut_abdrop",
+    "cmd": "J=2 bash tools/s81_dv/mu_kit_bench.sh {RUN}/hwin_mut_abdrop hwin 3 0",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "fail_regex": "^MUWIN FAIL errs [1-9]",
+    "fail_witness": "results/rtl/mu_s81_2_hostep_1019/witness_hwin_mut3.log"
+   },
+   {
+    "name": "hwin_mut_noreplay",
+    "cmd": "J=2 bash tools/s81_dv/mu_kit_bench.sh {RUN}/hwin_mut_noreplay hwin 4 0",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "fail_regex": "^MUWIN FAIL errs [1-9]",
+    "fail_witness": "results/rtl/mu_s81_2_hostep_1019/witness_hwin_mut4.log"
+   }
+  ],
+  "views_to": "physical/ref_tile/dsdv_mu_hwin/views",
+  "record_to": "results/rtl/ref_tile/dsdv_mu_hwin"
+ },
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true,
+ "macros": [],
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ }
+}
