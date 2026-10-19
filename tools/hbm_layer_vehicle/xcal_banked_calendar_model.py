@@ -97,6 +97,7 @@ def model(serialized_programmes=None):
       "reset_profile":{"scope":"OBSERVED XC BASELINE ONLY, not a proof for new generic leaves or SVG XW46", "observed_programme_raw_sinks":8,"observed_first_stage_D_loads":7,"observed_final_max_loads":28,
         "equations":"s0[t+1]=rst_n; s1[t+1]=s0[t]; branch_i[t+1]=s0[t]; s0,s1,branches clear asynchronously from raw rst_n. Raw8=original2+branch6, all final releases at t2.",
         "owner_profile_limits":{"raw":12,"first":24,"final":30},
+        "application_reset_plan":"Export core reset_branch[0] to application R/C valid/fault flags, at same second-stage release. Adds2 sink loads, no FF/cycle; initial core branch budget27 implies29 underfinal30 pending mapped census.",
         "generic_payload_state":"PC/base/limit/loops/issued/ctx/iter data are unreset and initialized by each accepted start before running/valid; only control/valid/root/phase state is reset. This avoids reset fanout on invalid data while preserving all valid outputs. Component miter includes occupied-pipeline reset.",
         "generic_obligation":"Repartition every resettable group to<=24 planned bits before mapping. Never reuse old issued16+ctxXW group for SVG:16+46=62 exceeds the bound. New three-root branch graphs require their own raw/first/final load census and exact2edge proof.",
         "status":"Baseline source matches proposed balanced profile bounds; canonical a9a97ee00/54ceeb3f0/63d26d83c tool/profile review and source-bound proof still required. Old raw2 gate REFUSE is preserved, no bypass or present PASS claim."},
