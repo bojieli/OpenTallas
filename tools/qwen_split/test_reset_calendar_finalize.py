@@ -81,3 +81,17 @@ try: LG.safe_land_read_cycles({'safe_land_read_cycles':0},'qfd_landh_180_EN_44x4
 except ValueError: pass
 else: raise AssertionError('gated output capture was not priced')
 print('GATED180_CALENDAR PASS: total age preserved, ring K minus capture1, legacy unchanged, idempotent')
+
+# The bundle projection must retain profiles before normalizing physical K.
+# Same totalE=3 is K4 legacy, K3 safe300, K2 gated180 on equal raw calendars.
+import record_bundles as RB
+mixed={
+ 'a':dict(n=1,E=3,K=4),
+ 'b':dict(n=1,E=3,K=3,landing_master='qfd_landh0_300_EN_54x54'),
+ 'c':dict(n=1,E=3,K=2,landing_master='qfd_landh0_180_EN_39x39')}
+bmap={k:'C.rx_record' for k in mixed}
+a=RB.audit_rows(mixed,bmap)
+assert a['verdict']=='PASS',a
+mixed['c']['K']=3
+assert RB.audit_rows(mixed,bmap)['verdict']=='FAIL'
+print('SAFE_BUNDLE_CALENDAR PASS: profile survives audit projection; mixed landing ages compare correctly; wrong K rejected')

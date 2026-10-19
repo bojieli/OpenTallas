@@ -201,7 +201,9 @@ def audit_rows(rows, bmap, source=''):
             kind = 'direct' if r is None else ('fwd' if r.get('E') is not None else 'plain')
             mem[bid] = dict(cycles=cycles(r), kind=kind, n=0 if r is None else r.get('n'),
                             E=None if r is None else r.get('E'), K=None if r is None else r.get('K'),
-                            basis=None if r is None else r.get('E_basis_audit'))
+                            basis=None if r is None else r.get('E_basis_audit'),
+                            safe_land_reset_cycles=LG.safe_land_reset_cycles(r) if r else 0,
+                            safe_land_read_cycles=LG.safe_land_read_cycles(r) if r else 0)
         cyc = sorted({v['cycles'] for v in mem.values()})
         # QK-LANDEN / RLYH0-EN 10-19: every forwarded member (hop-0 en registered) carries K + 1 for the SAME arrival edge:
         # compare the source-epoch K (K - lane_groups.hop0_en_reg)
@@ -261,6 +263,8 @@ def rows_from_netlist(die_v, lanes=None, bundles=None):
     text = Path(die_v).read_text()
     bmap, info, problems = netlist_members(text, bundles)
     net = LLA.parse(die_v)
+    masters = {m.group(2): m.group(1) for line in text.splitlines()
+               if (m := INST_LINE.match(line))}
     fl = {r['bid']: r for r in (json.loads(Path(lanes).read_text()).get('lanes', []) if lanes else [])}
     rows = {}
     for bid, i in info.items():
@@ -272,15 +276,19 @@ def rows_from_netlist(die_v, lanes=None, bundles=None):
             continue
         if 'fwd' in L['kind']:
             r = fl.get(bid)
+            profile = dict(r or {}, n=L['n'], landing_master=masters.get(f'rly_{bid}_{L["n"]-1}', ''))
             if r is not None and r.get('E') is not None:
                 E, basis = int(r['E']), f'E from {Path(lanes).name}'
             elif L['K'] is not None:
                 # QK-LANDEN / RLYH0-EN 10-19: every forwarded landing is strapped K = E + 1 (hop-0 en registered)
-                E = (int(L['K']) - LG.hop0_en_reg(L) + LG.safe_land_reset_cycles(L) + LG.safe_land_read_cycles(L)) % 8
+                E = (int(L['K']) - LG.hop0_en_reg(profile) + LG.safe_land_reset_cycles(profile) + LG.safe_land_read_cycles(profile)) % 8
                 basis = 'E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8; K - 1: hop-0 en registered)'
             else:
                 problems.append(f'{bid}: landing K straps not on tie cells'); continue
-            rows[bid] = dict(bid=bid, n=L['n'], E=E, K=L['K'], E_basis_audit=basis)
+            rows[bid] = dict(bid=bid, n=L['n'], E=E, K=L['K'], E_basis_audit=basis,
+                             landing_master=profile['landing_master'],
+                             safe_land_reset_cycles=LG.safe_land_reset_cycles(profile),
+                             safe_land_read_cycles=LG.safe_land_read_cycles(profile))
         else:
             rows[bid] = dict(bid=bid, n=L['n'], E=None, K=None, E_basis_audit='plain relays: one edge per frame')
     for bid, r in rows.items():
