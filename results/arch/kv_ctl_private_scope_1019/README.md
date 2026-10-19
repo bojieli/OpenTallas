@@ -21,7 +21,7 @@ No selected-source broad census was repeated and no selected root was rebound.
 
 ## Exact native partition, with startup STOP
 
-partitions.json supplies deterministic partitions of all 191 copied native roots:
+partitions.json.gz supplies deterministic partitions of all 191 copied native roots:
 expanded endpoints include each destination's own copy multiplicity; each partition
 has at most 32 endpoint pins, with BUF/INV/HB already collapsed. It retains
 114 FF roots /278 extra FF, 76 combinational roots /323 extra gates, and one
