@@ -1,0 +1,547 @@
+{
+  "schema": "opentallas.qwen.held-user-all-witness-model.v1",
+  "production_bound": false,
+  "RTL_implemented": false,
+  "source_SU_events": 114,
+  "source_groups": [
+    {
+      "family": "SSQ",
+      "local_pidx": 0,
+      "required_mask": 4095,
+      "first_w5": 26,
+      "last_w5": 37,
+      "delta_by_slice": {
+        "11": 0,
+        "10": 1,
+        "9": 2,
+        "8": 3,
+        "7": 4,
+        "6": 5,
+        "5": 6,
+        "4": 7,
+        "3": 8,
+        "2": 9,
+        "1": 10,
+        "0": 11
+      },
+      "source_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ]
+    },
+    {
+      "family": "qk",
+      "local_pidx": 4,
+      "required_mask": 1365,
+      "first_w5": 302,
+      "last_w5": 307,
+      "delta_by_slice": {
+        "0": 0,
+        "2": 1,
+        "4": 2,
+        "6": 3,
+        "8": 4,
+        "10": 5
+      },
+      "source_indices": [
+        24,
+        25,
+        26,
+        27,
+        28,
+        29
+      ]
+    },
+    {
+      "family": "qk",
+      "local_pidx": 5,
+      "required_mask": 341,
+      "first_w5": 393,
+      "last_w5": 397,
+      "delta_by_slice": {
+        "0": 0,
+        "2": 1,
+        "4": 2,
+        "6": 3,
+        "8": 4
+      },
+      "source_indices": [
+        30,
+        31,
+        32,
+        33,
+        34
+      ]
+    },
+    {
+      "family": "qk",
+      "local_pidx": 6,
+      "required_mask": 341,
+      "first_w5": 464,
+      "last_w5": 468,
+      "delta_by_slice": {
+        "0": 0,
+        "2": 1,
+        "4": 2,
+        "6": 3,
+        "8": 4
+      },
+      "source_indices": [
+        35,
+        36,
+        37,
+        38,
+        39
+      ]
+    },
+    {
+      "family": "qk",
+      "local_pidx": 7,
+      "required_mask": 341,
+      "first_w5": 513,
+      "last_w5": 558,
+      "delta_by_slice": {
+        "0": 0,
+        "2": 1,
+        "4": 2,
+        "6": 3,
+        "8": 45
+      },
+      "source_indices": [
+        40,
+        41,
+        42,
+        43,
+        48
+      ]
+    },
+    {
+      "family": "qk",
+      "local_pidx": 8,
+      "required_mask": 341,
+      "first_w5": 554,
+      "last_w5": 599,
+      "delta_by_slice": {
+        "0": 0,
+        "2": 1,
+        "4": 2,
+        "6": 3,
+        "8": 45
+      },
+      "source_indices": [
+        44,
+        45,
+        46,
+        47,
+        49
+      ]
+    },
+    {
+      "family": "attn",
+      "local_pidx": 11,
+      "required_mask": 39,
+      "first_w5": 2368,
+      "last_w5": 2387,
+      "delta_by_slice": {
+        "0": 0,
+        "1": 7,
+        "2": 14,
+        "5": 19
+      },
+      "source_indices": [
+        59,
+        62,
+        64,
+        65
+      ]
+    },
+    {
+      "family": "resid1",
+      "local_pidx": 1,
+      "required_mask": 4095,
+      "first_w5": 3279,
+      "last_w5": 3368,
+      "delta_by_slice": {
+        "8": 0,
+        "9": 7,
+        "10": 14,
+        "11": 21,
+        "0": 40,
+        "1": 47,
+        "2": 54,
+        "3": 61,
+        "4": 68,
+        "5": 75,
+        "6": 82,
+        "7": 89
+      },
+      "source_indices": [
+        168,
+        171,
+        173,
+        174,
+        180,
+        183,
+        186,
+        189,
+        192,
+        195,
+        197,
+        198
+      ]
+    },
+    {
+      "family": "resid1",
+      "local_pidx": 3,
+      "required_mask": 4095,
+      "first_w5": 3387,
+      "last_w5": 3537,
+      "delta_by_slice": {
+        "8": 0,
+        "9": 9,
+        "0": 55,
+        "1": 62,
+        "2": 69,
+        "3": 76,
+        "4": 99,
+        "5": 106,
+        "6": 113,
+        "7": 120,
+        "10": 143,
+        "11": 150
+      },
+      "source_indices": [
+        199,
+        200,
+        201,
+        202,
+        203,
+        204,
+        205,
+        206,
+        207,
+        208,
+        209,
+        210
+      ]
+    },
+    {
+      "family": "silu",
+      "local_pidx": 9,
+      "required_mask": 4095,
+      "first_w5": 4203,
+      "last_w5": 4214,
+      "delta_by_slice": {
+        "0": 0,
+        "1": 1,
+        "2": 2,
+        "3": 3,
+        "4": 4,
+        "5": 5,
+        "6": 6,
+        "7": 7,
+        "8": 8,
+        "9": 9,
+        "10": 10,
+        "11": 11
+      },
+      "source_indices": [
+        236,
+        237,
+        238,
+        239,
+        240,
+        241,
+        242,
+        243,
+        244,
+        245,
+        246,
+        247
+      ]
+    },
+    {
+      "family": "silu",
+      "local_pidx": 10,
+      "required_mask": 4095,
+      "first_w5": 4268,
+      "last_w5": 4295,
+      "delta_by_slice": {
+        "0": 0,
+        "1": 1,
+        "2": 2,
+        "3": 3,
+        "4": 12,
+        "5": 13,
+        "6": 14,
+        "7": 15,
+        "8": 24,
+        "9": 25,
+        "10": 26,
+        "11": 27
+      },
+      "source_indices": [
+        248,
+        249,
+        250,
+        251,
+        252,
+        253,
+        254,
+        255,
+        256,
+        257,
+        258,
+        259
+      ]
+    },
+    {
+      "family": "resid2",
+      "local_pidx": 1,
+      "required_mask": 4095,
+      "first_w5": 5264,
+      "last_w5": 5353,
+      "delta_by_slice": {
+        "8": 0,
+        "9": 7,
+        "10": 14,
+        "11": 21,
+        "0": 40,
+        "1": 47,
+        "2": 54,
+        "3": 61,
+        "4": 68,
+        "5": 75,
+        "6": 82,
+        "7": 89
+      },
+      "source_indices": [
+        362,
+        365,
+        367,
+        368,
+        374,
+        377,
+        380,
+        383,
+        386,
+        389,
+        391,
+        392
+      ]
+    },
+    {
+      "family": "resid2",
+      "local_pidx": 3,
+      "required_mask": 4095,
+      "first_w5": 5372,
+      "last_w5": 5522,
+      "delta_by_slice": {
+        "8": 0,
+        "9": 9,
+        "0": 55,
+        "1": 62,
+        "2": 69,
+        "3": 76,
+        "4": 99,
+        "5": 106,
+        "6": 113,
+        "7": 120,
+        "10": 143,
+        "11": 150
+      },
+      "source_indices": [
+        393,
+        394,
+        395,
+        396,
+        397,
+        398,
+        399,
+        400,
+        401,
+        402,
+        403,
+        404
+      ]
+    }
+  ],
+  "diagnostic_replays": 144,
+  "accepted_typed_witnesses": 16416,
+  "held_user_address_checks": 32,
+  "mutants": [
+    {
+      "name": "late",
+      "rejected": true
+    },
+    {
+      "name": "wrong_slice",
+      "rejected": true
+    },
+    {
+      "name": "wrong_pc",
+      "rejected": true
+    },
+    {
+      "name": "wrong_user",
+      "rejected": true
+    },
+    {
+      "name": "wrong_stage",
+      "rejected": true
+    },
+    {
+      "name": "stale_generation",
+      "rejected": true
+    },
+    {
+      "name": "duplicate",
+      "rejected": true
+    },
+    {
+      "name": "missing",
+      "rejected": true
+    },
+    {
+      "name": "unauthenticated",
+      "rejected": true
+    },
+    {
+      "name": "wrong_profile",
+      "rejected": true
+    },
+    {
+      "name": "wrong_programme_base",
+      "rejected": true
+    },
+    {
+      "name": "user_overflow",
+      "rejected": true
+    },
+    {
+      "name": "epoch_overflow",
+      "rejected": true
+    },
+    {
+      "name": "replace_before_ME_XPF_retirement",
+      "rejected": true
+    },
+    {
+      "name": "retire_before_final_native_read",
+      "rejected": true
+    },
+    {
+      "name": "noncanonical_base",
+      "rejected": true
+    }
+  ],
+  "source_axis": "actual lowerer W5 pin edges only, repeated as diagnostic per-user/stage cases; no production launch times",
+  "held_user": {
+    "existing_GI_publication": "hu updates at s_me/c_seg with st register",
+    "existing_native_output": "u_thru ORs live hu into native_pos[17:16]; not a ME/XPF snapshot",
+    "current_shared_retirement_guard": false,
+    "candidate_snapshot_bits": 4,
+    "candidate_valid_bits_if_not_reused": 2,
+    "required_guard": "no next publication until both ME last read and XPF last use have source-bound static retirement",
+    "authentication": "same immutable programme/profile/epoch/base and complete physical-copy digest before launch",
+    "current_all_ME_XPF_copy_authentication_bound": false,
+    "publication_sample": null,
+    "retirement_sample": null
+  },
+  "options": [
+    {
+      "id": "typed-slice-observation",
+      "wire_bits": 16,
+      "layout": "valid1,user2,slice4,pidx9; SU unit implicit in dedicated producer port",
+      "existing_wire_bits": 16,
+      "ABI_changed": true,
+      "source": "GI cmd[115:112],cmd_user,c_su,c_pidx",
+      "checks": "all compiled tuples at exact source-relative edge; missing/late/duplicate/wrong user/stage/generation fault",
+      "source_clock_component_ages": {
+        "cal_output_publication_to_GI_obs_publication": 1,
+        "GI_obs_to_monitor_publication": 1,
+        "monitor_publication_to_XPF_sample": 1
+      },
+      "physical_age_bound": false
+    },
+    {
+      "id": "fixed-family-completion",
+      "validates_all_required_slices": true,
+      "required_masks": {
+        "SSQ_0": 4095,
+        "qk_4": 1365,
+        "qk_5": 341,
+        "qk_6": 341,
+        "qk_7": 341,
+        "qk_8": 341,
+        "attn_11": 39,
+        "resid1_1": 4095,
+        "resid1_3": 4095,
+        "silu_9": 4095,
+        "silu_10": 4095,
+        "resid2_1": 4095,
+        "resid2_3": 4095
+      },
+      "completion": "only after every tuple independently validated at its compiled edge",
+      "last_issue_to_completion_register_edges": 1,
+      "physical_age_bound": false,
+      "first_payload_age": "separate source calibration per slice; never replace with completion edge",
+      "producer_gating": false,
+      "XPF_current_scalar_issue_contract_changed": true
+    }
+  ],
+  "finite_storage": {
+    "template_groups": 13,
+    "bits_per_group": 134,
+    "group_fields": "first13,pidx9,required_mask12,delta_by_slice12x8,family4",
+    "immutable_expected_template_bits": 1742,
+    "state_seen_bits_4users": 624,
+    "state_cycle13x4": 52,
+    "state_stage6x4": 24,
+    "state_generation16x4": 64,
+    "state_active4": 4,
+    "state_fault1": 1,
+    "held_ME_XPF_user_bits": 4,
+    "held_snapshot_valid_bits": 2,
+    "total_candidate_state_lower_bound_bits": 775,
+    "excludes_state": [
+      "native ROM return/capture and service arbitration",
+      "clock-domain landing",
+      "producer buffering if required by physical assignment"
+    ],
+    "existing_XPF_four188bit_records": 752,
+    "expected_template_fits_existing_XPF_records": false,
+    "possible_native_ROMs4096x266": 1,
+    "physical_template_ROM_bits": 1089536,
+    "native_ROM_read_port_age_bound": false,
+    "existing_calendar_ROM_extra_read_port_available": false,
+    "expected_template_storage_and_capture_placement": "unselected; no indexed flop/ROM/port implementation approved",
+    "area_timing_admission": false
+  },
+  "predecessor_binding": {
+    "XS3_resid1": "candidate gu producer; actual source/read landing must join",
+    "XS3_resid2": "candidate next-stage qkv producer; interstage lifetime must join",
+    "first_qkv": "embedding/INIT predecessor still unbound",
+    "production_consumer_epoch_times": null
+  },
+  "sources": {
+    "source": {
+      "path": "programme_integration_model.json",
+      "sha256": "a4d32cd6a739b1c623dcb50085c77ac3190c9b3b60c02ef4bef2ac21d6bc4f06"
+    },
+    "certificate": {
+      "path": "programme_join/certificate.json",
+      "sha256": "5b3c211bd64c98774d3d605d88d9a6216434a6dda5986a7059d9876329b01d4b"
+    }
+  }
+}
