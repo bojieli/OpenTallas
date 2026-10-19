@@ -17,5 +17,5 @@ localparam integer D2D_ADM_OFS = 72;      // admission cal_start, edges after th
 localparam integer D2D_ADM_LEN = 1100;    // admission run length (all calendars idle)
 localparam integer D2D_FIRST_TOKEN = 1176;  // first token cal_start, edges after the epoch strobe
 localparam integer D2D_TOKEN_PERIOD = 249600;  // compiled token period (token path totals padded to a 768-edge multiple)
-localparam [31:0] D2D_TXDP_C = 32'h09010308;   // compute TXDP ports 0..3 = [8, 3, 1, 9]
+localparam [31:0] D2D_TXDP_C = 32'h09010308;   // compute TXDP ports 0..3 = [8, 3, 1, 9]; die stages {'CS_TXS': 2, 'CS_RXV': 2, 'CS_RXP': 2, 'CS_X3S': 2, 'SC_TX': 2, 'SC_X3': 2, 'KS_RXV': 11, 'KS_RXP': 11, 'KS_TXS': 9, 'KS_TXK': 9, 'KS_TXB': 9, 'SK_TXV': 11, 'SK_TXP': 11}
 localparam [31:0] D2D_TXDP_K = 32'h03030418;   // KV TXDP ports 0..3 = [24, 4, 3, 3]
