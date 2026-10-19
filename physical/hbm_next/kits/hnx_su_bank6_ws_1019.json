@@ -132,16 +132,74 @@
  "job": {
   "owner": "Claude:HBM-NEXT-UNITS-SUDMA2",
   "branch": "claude/hbm-next-units-sudma3-1019",
-  "tag": "r1",
-  "purpose": "HBM-NEXT (next-release study, NOT a release element): the d4g CLOSED pinned SU store bank tile (hbm_su_static_bank6_clock7_1015, unchanged RTL) + the split write phase ot_hnx_su_wsplit + the bank write mux folded in (SU.VOP row II 44/72 -> 28/56 measured, units/sudma2). Same outline 369.36x151.2 and macros; W face +45 pins (lane write port, wsplit, defer strap, conflict/clash). GATE ONLY for review: no submit until a tile-level wsplit bench lands.",
+  "tag": "r2",
+  "purpose": "HBM-NEXT (next-release study, NOT a release element): the d4g CLOSED pinned SU store bank tile (hbm_su_static_bank6_clock7_1015, unchanged RTL) + the split write phase ot_hnx_su_wsplit + the bank write mux folded in (SU.VOP row II 44/72 -> 28/56 measured, units/sudma2). Same outline 369.36x151.2 and macros; W face +45 pins (lane write port, wsplit, defer strap, conflict/clash). Tile bench tb_hnx_su_bank6_ws (4 phases on the 6 real SRAM models) + WMUT1/2/3 witnesses.",
   "views_to": "physical/ref_tile/hnx_su_bank6_ws_1019/views",
   "record_to": "results/arch/hbm_next_1019/units/sudma2/gate_bank6_ws",
-  "benches": [],
+  "benches": [
+   {
+    "name": "hnx_bank_ws_exact",
+    "cmd": "bash tools/hbm_next/hnx_su_bank_ws_run.sh {RUN}/bench/w0",
+    "expect": "pass",
+    "pass_regex": "HNX_SU_BANK_WS PASS",
+    "min_count_regex": "HNX_SU_BANK_WS PASS checks=(\\d+)",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "hnx_bank_ws_wmut1",
+    "cmd": "bash tools/hbm_next/hnx_su_bank_ws_run.sh {RUN}/bench/w1 wmut1",
+    "expect": "fail",
+    "pass_regex": "HNX_SU_BANK_WS PASS",
+    "fail_regex": "HNX_SU_BANK_WS FAIL WMUT=1 ",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "note": "deferral dropped (HI = 0 lane write collides with the fill, fill wins, lane row lost + conflict)",
+    "fail_witness": "results/arch/hbm_next_1019/units/sudma2/bank_ws/witness/wmut1.log"
+   },
+   {
+    "name": "hnx_bank_ws_wmut2",
+    "cmd": "bash tools/hbm_next/hnx_su_bank_ws_run.sh {RUN}/bench/w2 wmut2",
+    "expect": "fail",
+    "pass_regex": "HNX_SU_BANK_WS PASS",
+    "fail_regex": "HNX_SU_BANK_WS FAIL WMUT=2 ",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "note": "the HI = 1 half deferred instead of HI = 0 (the wrapper's DEFER 1 copy never defers)",
+    "fail_witness": "results/arch/hbm_next_1019/units/sudma2/bank_ws/witness/wmut2.log"
+   },
+   {
+    "name": "hnx_bank_ws_wmut3",
+    "cmd": "bash tools/hbm_next/hnx_su_bank_ws_run.sh {RUN}/bench/w3 wmut3",
+    "expect": "fail",
+    "pass_regex": "HNX_SU_BANK_WS PASS",
+    "fail_regex": "HNX_SU_BANK_WS FAIL WMUT=3 ",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "note": "the deferred write takes the CURRENT edge's address (address capture dropped)",
+    "fail_witness": "results/arch/hbm_next_1019/units/sudma2/bank_ws/witness/wmut3.log"
+   }
+  ],
   "auto_merge": false,
   "extra_paths": [
-   "results/arch/hbm_su_f2_static_1014/arithmetic/physical/bank_clock7/r10c_diagnostic"
-  ],
-  "no_bench_reason": "gate only (review); slice-level wsplit benches in results/arch/hbm_next_1019/units/sudma2/wsplit"
+   "results/arch/hbm_su_f2_static_1014/arithmetic/physical/bank_clock7/r10c_diagnostic",
+   "rtl/hbm_next/su/tb/tb_hnx_su_bank6_ws.sv",
+   "tools/hbm_next/hnx_su_bank_ws_run.sh",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+   "results/arch/hbm_next_1019/units/sudma2/bank_ws/witness"
+  ]
  },
  "recipe": 3,
  "orfs_vars": {
@@ -359,8 +417,8 @@
   "why": "new hnx_ kit (next-release study): write port split into ow_* (fill/dw) + lane_* (lane result, deferred one edge on defer banks when wsplit)"
  },
  "reset_landing": {
-  "enable": false,
+  "enable": true,
   "max_sinks": 4,
-  "reason": "the RTL lands rst_n: the closed d4g bank registers it at its W-face pin (ot_hbm_su_static_pinned_bank PIN_RST 1) and the wsplit wrapper's single boundary register rst_q feeds only the deferral valid + the two fault flops"
+  "reason": "gate r1 textbook.reset_landing FAIL: rst_n reached 8 sinks unlanded (the wrapper's rst_q flop + the d4g bank's reset pin logic); land rst_n at the W face in 2 registered stages (rst_l0 -> rst_l1) and fan out at equal depth; reset release +2 edges = a scheduled constant, no functional change"
  }
 }
