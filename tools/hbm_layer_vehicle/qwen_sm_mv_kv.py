@@ -71,11 +71,11 @@ def main():
             ref = A.sm_int8(e["W"], e["A"])
             if not np.array_equal(np.asarray(ref, F).view(np.uint32), e["O"].view(np.uint32)):
                 raise SystemExit(f"d{d.rank} L{L} {r.tag}: captured operands do not reproduce O")
-            if (e["A"].view(np.uint32) & 0xFFFF).any():
-                raise SystemExit(f"d{d.rank} L{L} {r.tag}: A operand not BF16-exact (SM x path is BF16)")
+            # the unit rounds A to BF16 itself (lib.sm_int8: to_bf16(x)); the SM's x store holds that BF16 image
+            a_bf16_exact = not bool((e["A"].view(np.uint32) & 0xFFFF).any())
             base = f"d{d.rank}.L{L}.{r.tag}"
             meta = dict(rank=d.rank, L=int(L), op="SM.MATVEC", fmt=3, tag=r.tag, m=int(e["W"].shape[0]),
-                        K=int(e["W"].shape[1]), arrays={})
+                        K=int(e["W"].shape[1]), A_bf16_exact=a_bf16_exact, arrays={})
             for nm, arr in e.items():
                 arrays[f"{base}.{nm}"] = arr
                 meta["arrays"][nm] = dict(key=f"{base}.{nm}", shape=list(arr.shape), dtype=str(arr.dtype),
