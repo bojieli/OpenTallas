@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "/home/ubuntu/ot-bench/mu-dq-ctlmkit-1019/src/rtl/test/mu_qwen_seq/mu_opseg_bench.py", line 49, in <module>
+    from qwen_static_schedule import mu_opcal as O            # noqa: E402
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/ot-bench/mu-dq-ctlmkit-1019/src/tools/qwen_static_schedule/mu_opcal.py", line 36, in <module>
+    from .calendar import ScheduleError
+  File "/home/ubuntu/ot-bench/mu-dq-ctlmkit-1019/src/tools/qwen_static_schedule/calendar.py", line 17, in <module>
+    import hdc_isa as ISA
+ModuleNotFoundError: No module named 'hdc_isa'

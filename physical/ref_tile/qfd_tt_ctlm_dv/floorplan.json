@@ -16,7 +16,7 @@
   343.44
  ],
  "why": "spec outline (exact: the closed view's sub-slot)",
- "std_area_um2": 5737.0,
+ "std_area_um2": null,
  "layer_contract": {
   "children": {
    "ot_qfd_tt_ctlm_static_hr": "M5"
@@ -49,6 +49,7 @@
    "control_stores_ready",
    "dc",
    "cf",
+   "dh_user",
    "dh",
    "fab",
    "kok",
@@ -57,6 +58,7 @@
    "pw"
   ],
   "S": [
+   "tl",
    "ag5",
    "cmd",
    "hr",
@@ -96,6 +98,19 @@
    "offtrack": 0
   },
   {
+   "kind": "macro",
+   "view": "physical/asap7_memory_macros/ot_rom_4096x72_m8",
+   "master": "ot_rom_4096x72_m8",
+   "inst": "u_gi.g_op.u_leaf.g_op.u_rom",
+   "idx": 0,
+   "x": 43.2,
+   "y": 259.2,
+   "w": 38.016,
+   "h": 62.91,
+   "orient": "R0",
+   "offtrack": 0
+  },
+  {
    "kind": "child",
    "view": "physical/ref_tile/qfd_tt_head_static_h16c/views/ot_qfd_tt_ctlm_static_hr",
    "master": "ot_qfd_tt_ctlm_static_hr",
@@ -113,21 +128,24 @@
   [
    "WARN",
    "fill",
-   "fill 34% = (macros/children 84306 + std 5737) / outline 268739 um2 (pin-bound: width 777.6 is the die slot: N face (native59/sys_face, 1066 pins over 574 um) and S face (W5, 766 pins over 588 um) pin x positions are kept to abut the die neighbours (74-76% of each face); height 345.6 = the hard h16c child (222.48 at y 43.2) plus the N-face pin-flop band (21 columns, recipe-2 hold stages) and its escape over the child on the 43.2 lattice; one lattice step less (302.4) leaves 36.7 um for 1066 N pins + their flops. Measured fill 34.1% pre-MU; MU NU4 (claude/mu-adopt-ctlm-1019) adds ~3.7k core flops)",
-   ""
+   "parent kit without std_area_um2: fill not computed at gen (the gate measures it)",
+   "pass --area-um2 / std_area_um2 from the synthesis smoke"
   ]
  ],
  "referenced": [
   "rtl/qwen_dv/lp/qfd_tt_ctlm_dv_lpf_lp.sv",
   "rtl/qwen_dv/qfd_tt_ctlm_dv_lpf_parts.sv",
   "rtl/common/landed_parent/ot_pl_land.sv",
-  "rtl/qwen_dv/qfd_dv_cmd_cal.sv",
+  "rtl/qwen_dv/qfd_dv_cmd_cal_mu.sv",
   "rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv",
   "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_dense_pw_loader.sv",
   "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv",
   "rtl/hdc/ot_hdc_delay.sv",
   "rtl/lib/ot_reset_sync.sv",
   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v",
+  "rtl/qwen_dv/qfd_dv_hr_pack.sv",
+  "rtl/qwen_split/mu/qfd_sys_face_mu_dhuser.sv",
+  "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_bb.v",
   "physical/ref_tile/qfd_tt_ctlm_dv/kit.env",
   "physical/ref_tile/qfd_tt_ctlm_dv/clock.sdc",
   "physical/ref_tile/qfd_tt_ctlm_dv/signoff.sdc",
@@ -174,12 +192,18 @@
   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_ss.lib",
   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_ff.lib",
   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+  "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8.lef",
+  "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_ss.lib",
+  "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_ff.lib",
+  "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_tt.lib",
   "physical/ref_tile/qfd_tt_head_static_h16c/views/ot_qfd_tt_ctlm_static_hr/ot_qfd_tt_ctlm_static_hr.lef",
   "physical/ref_tile/qfd_tt_head_static_h16c/views/ot_qfd_tt_ctlm_static_hr/ot_qfd_tt_ctlm_static_hr_ss.lib",
   "physical/ref_tile/qfd_tt_head_static_h16c/views/ot_qfd_tt_ctlm_static_hr/ot_qfd_tt_ctlm_static_hr_ff.lib",
   "physical/ref_tile/qfd_tt_head_static_h16c/views/ot_qfd_tt_ctlm_static_hr/ot_qfd_tt_ctlm_static_hr_tt.lib",
   "physical/ref_tile/qfd_tt_ctlm_dv/place.tcl",
   "tools/ref_tile/raw_macro_clocks.py",
+  "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_ff.lib",
+  "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_tt.lib",
   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_ff.lib",
   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib"
  ]

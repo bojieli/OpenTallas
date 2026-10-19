@@ -13,6 +13,10 @@
 //   u_thru hr region: wires only.  It makes every core-driven output (cmd, cal_*, emb_*) cross into the hr region like
 //          the head's outputs, so the landed parent has ONE output offset (+3 edges on every output, 0 on every input).
 // Every input port is landed from the core region (port_regions), so the die presents all inputs on the flat schedule.
+// MU-DQ-CTLMKIT 10-19: u_gi = the merged qfd_tt_ctlm_dv core at NU / OPSEG (MUT 0): op-start leaf g_op.u_leaf
+//   (qfd_sys_face_mu_dhuser OPSEG 1, one ot_rom_4096x72_m8) feeding qfd_dv_cmd_cal_mu start_rng / start_first / start_cnt,
+//   the result-user token fill (ss5[27:26], MU-QW-AMIX), op_fault, and the TLOAD word tl.  dc's user-0 token gate and
+//   op_fault ride the existing dcs bits (ss_tokv & user 0; start_fault | op_fault: both only OR into core_fault).
 // =====================================================================================================================
 module qfd_tt_ctlm_dv_gi #(
     parameter integer LAST_STAGE = 37,
@@ -20,7 +24,10 @@ module qfd_tt_ctlm_dv_gi #(
     parameter integer NU = 4,
     parameter integer UVM_STRIDE = 4096,
     parameter integer PIDX_STRIDE = 128,
-    parameter integer UTAG_LSB = 6
+    parameter integer UTAG_LSB = 6,
+    parameter integer OPSEG = 1,
+    parameter OPSEG_VIAMAP = "",
+    parameter OPSEG_INST = "qfd_tt_ctlm_opseg"
 ) (
     input  wire          ck,
     input  wire          rst_n,
@@ -30,6 +37,7 @@ module qfd_tt_ctlm_dv_gi #(
     input  wire [9:0]    ag5,
     input  wire          fab,
     output wire [115:0]  cmd,
+    output wire [1087:0] tl,
     output wire [75:0]   cal_program_obs,
     output wire [68:0]   cal_descriptor_obs,
     output wire          cal_image_ready,
@@ -44,8 +52,8 @@ module qfd_tt_ctlm_dv_gi #(
     output wire [15:0]   x_orows,
     output wire          x_oidle,
     output wire [1:0]    rom_ret_v,              // the two live rom_ret bits {ag stn (fault), ME idle = !ag stn_busy}
-    output wire [61:0]   dcs                     // dc inputs: {tok_clr, ss_tokv, ss_tok 18, ss_tval 32, ss_arl, ss_arland,
-                                                 //  c_xc, ag_vm, ag_su_busy, ag_any, fab_q, c_fault, start_fault, c_ready}
+    output wire [61:0]   dcs                     // dc inputs: {tok_clr, ss_tokv (user 0), ss_tok 18, ss_tval 32, ss_arl, ss_arland,
+                                                 //  c_xc, ag_vm, ag_su_busy, ag_any, fab_q, c_fault, start_fault | op_fault, c_ready}
 );
     reg  [186:0] dh_q;
     reg  [106:0] ss_q;
@@ -56,7 +64,8 @@ module qfd_tt_ctlm_dv_gi #(
         if (!rst_n) begin dh_q <= 187'd0; ss_q <= 107'd0; ag_q <= 10'd0; fab_q <= 1'b0; dhu_q <= 2'd0; end
         else begin dh_q <= dh; ss_q <= ss5; ag_q <= ag5; fab_q <= fab; dhu_q <= (NU > 1) ? dh_user : 2'd0; end
     localparam integer UB = (NU > 1) ? $clog2(NU) : 1;
-    wire [UB-1:0] s_user = dhu_q[UB-1:0];
+    localparam integer OPS = (OPSEG != 0 && NU > 1) ? 1 : 0;
+    wire [UB-1:0] s_user = (OPS != 0) ? {UB{1'b0}} : dhu_q[UB-1:0];
     wire        d_start = dh_q[42];
     wire [5:0]  d_stage = dh_q[41:36];
     wire [17:0] s_tok = dh_q[35:18], s_pos = dh_q[17:0];
@@ -67,6 +76,29 @@ module qfd_tt_ctlm_dv_gi #(
     wire        ss_arland = ss_q[106];
     wire        ag_stn_busy = ag_q[9];
     wire        ag_any = ag_q[8], ag_vm = ag_q[6], ag_stn = ag_q[5], ag_su_busy = ag_q[1];
+    wire [1:0]  ss_tu = ss_q[27:26];                // OPSEG: the user of tok_idx when tok_v (MU-QW-AMIX contract)
+
+    wire        l_v, l_ff; wire [1:0] l_u2; wire [5:0] l_stage; wire [9:0] l_first, l_cnt; wire [3:0] l_fcode;
+    wire        l_fault;
+    generate if (OPS != 0) begin : g_op
+        qfd_sys_face_mu_dhuser #(.NU(NU), .OPSEG(1), .LAST_STAGE(LAST_STAGE), .VIAMAP(OPSEG_VIAMAP),
+            .INSTANCE(OPSEG_INST), .MUT(0)) u_leaf (.ck(ck), .rst_n(rst_n),
+            .dh_run(dh_q[43:0]), .dh_user(), .res_user(), .mu_fault(l_fault), .op_v(l_v), .op_user(l_u2),
+            .op_stage(l_stage), .op_first(l_first), .op_cnt(l_cnt), .op_ff(l_ff), .op_fcode(l_fcode));
+    end else begin : g_no_op
+        assign l_v = 1'b0; assign l_ff = 1'b0; assign l_u2 = 2'd0; assign l_stage = 6'd0; assign l_first = 10'd0;
+        assign l_cnt = 10'd0; assign l_fcode = 4'd0; assign l_fault = 1'b0;
+    end endgenerate
+    wire [UB-1:0] l_user = l_u2[UB-1:0];
+    wire        l_start = (OPS != 0) && l_v && !(d_start);          // the face start wins a collision
+    wire        op_coll = (OPS != 0) && l_v && d_start;
+    reg         op_fault;
+    always @(posedge ck or negedge rst_n)
+        if (!rst_n) op_fault <= 1'b0;
+        else if (l_fault || op_coll) op_fault <= 1'b1;
+    wire        u_start = d_start || l_start;
+    wire [5:0]  u_stage = l_start ? l_stage : d_stage;
+    wire [UB-1:0] u_user = l_start ? l_user : s_user;
 
     wire        c_emb, c_seg, c_su, c_xc, c_run, c_done, c_fault, c_ready;
     wire [11:0] c_base; wire [8:0] c_pidx;
@@ -75,7 +107,8 @@ module qfd_tt_ctlm_dv_gi #(
         .UTAG_LSB(UTAG_LSB), .UFOLD((NU > 1) ? 1 : 0)) u_cal (.ck(ck), .rst_n(rst_n),
         .pw_v(dh_q[118]), .pw_addr(dh_q[117:108]), .pw_data(dh_q[107:44]),
         .dw_v(dh_q[186]), .dw_addr(dh_q[185:183]), .dw_data(dh_q[182:119]),
-        .start(d_start), .stage(d_stage), .start_user(s_user), .start_rng(1'b0), .start_first(10'd0), .start_cnt(10'd0), .cmd(cmd), .cmd_user(c_user), .loc_emb(c_emb),
+        .start(u_start), .stage(u_stage), .start_user(u_user), .start_rng(l_start), .start_first(l_first),
+        .start_cnt(l_cnt), .cmd(cmd), .tl(tl), .cmd_user(c_user), .loc_emb(c_emb),
         .loc_seg(c_seg), .loc_base(c_base),
         .su_issue(c_su), .su_pidx(c_pidx), .xc_issue(c_xc), .program_obs(cal_program_obs),
         .descriptor_obs(cal_descriptor_obs), .image_ready(c_ready), .running(c_run), .running_u(c_run_u), .done(c_done),
@@ -91,7 +124,10 @@ module qfd_tt_ctlm_dv_gi #(
     integer     sg_i;
     always @(posedge ck or negedge rst_n)
         if (!rst_n) begin for (sg_i = 0; sg_i < NU; sg_i = sg_i + 1) stg_b[sg_i] <= 6'd0; end
-        else if (d_start) stg_b[s_user] <= d_stage;
+        else begin
+            if (d_start) stg_b[s_user] <= d_stage;
+            else if (l_start) stg_b[l_user] <= l_stage;                // OPSEG: the leaf start's user
+        end
     wire        hd_start = (NU == 1 || 1'b0) ? d_start : ((d_start && s_u0) || c_seg);
     wire [5:0]  hd_stage = (NU == 1 || 1'b0) ? d_stage : ((d_start && s_u0) ? d_stage : stg_b[c_user]);
     assign s_start = hd_start;                   // to u_hr stage_start / stage (the head running stage)
@@ -101,14 +137,37 @@ module qfd_tt_ctlm_dv_gi #(
     reg  [17:0] tok_b [0:NU-1], pos_b [0:NU-1];
     reg         st_h; reg [17:0] st_tok, st_pos; reg [11:0] st_base;
     reg         start_fault;
+    wire        r_fill = (OPS != 0) && ss_tokv && ss_tu != 2'd0 && {1'b0, ss_tu} < 3'(NU);
+    wire [UB-1:0] r_wr = ss_tu[UB-1:0];
     integer     ub_i;
+`ifdef QFD_CTLM_MU_BENCH_PRELOAD
+    // bench-only filler initial context, exactly as qfd_tt_ctlm_dv (+MU_PRE_TOK<u> / +MU_PRE_POS<u>)
+    reg [17:0] pre_tok [0:3], pre_pos [0:3];
+    reg [17:0] pre_v;
+    initial begin
+        for (ub_i = 0; ub_i < 4; ub_i = ub_i + 1) begin pre_tok[ub_i] = 18'd0; pre_pos[ub_i] = 18'd0; end
+        if ($value$plusargs("MU_PRE_TOK1=%h", pre_v)) pre_tok[1] = pre_v;
+        if ($value$plusargs("MU_PRE_POS1=%h", pre_v)) pre_pos[1] = pre_v;
+        if ($value$plusargs("MU_PRE_TOK2=%h", pre_v)) pre_tok[2] = pre_v;
+        if ($value$plusargs("MU_PRE_POS2=%h", pre_v)) pre_pos[2] = pre_v;
+        if ($value$plusargs("MU_PRE_TOK3=%h", pre_v)) pre_tok[3] = pre_v;
+        if ($value$plusargs("MU_PRE_POS3=%h", pre_v)) pre_pos[3] = pre_v;
+    end
+`endif
     always @(posedge ck or negedge rst_n)
         if (!rst_n) begin
-            for (ub_i = 0; ub_i < NU; ub_i = ub_i + 1) begin tok_b[ub_i] <= 18'd0; pos_b[ub_i] <= 18'd0; end
+            for (ub_i = 0; ub_i < NU; ub_i = ub_i + 1) begin
+`ifdef QFD_CTLM_MU_BENCH_PRELOAD
+                tok_b[ub_i] <= pre_tok[ub_i]; pos_b[ub_i] <= pre_pos[ub_i];
+`else
+                tok_b[ub_i] <= 18'd0; pos_b[ub_i] <= 18'd0;
+`endif
+            end
             st_h <= 1'b0; st_tok <= 18'd0; st_pos <= 18'd0; st_base <= 12'd0;
             start_fault <= 1'b0; emb_start <= 1'b0; emb_token <= 18'd0;
         end else begin
             if (d_start) begin tok_b[s_user] <= s_tok; pos_b[s_user] <= s_pos; end
+            if (r_fill) begin tok_b[r_wr] <= ss_tok[17:0]; pos_b[r_wr] <= pos_b[r_wr] + 18'd1; end
             st_h <= s_me | c_seg;
             if (s_me) begin st_tok <= s_tok; st_pos <= s_pos; st_base <= 12'd0; end
             else if (c_seg) begin st_tok <= tok_b[c_user]; st_pos <= pos_b[c_user]; st_base <= c_base; end
@@ -132,9 +191,10 @@ module qfd_tt_ctlm_dv_gi #(
     assign x_oidle = !ag_su_busy;
     // rom_ret = {ag_stn, 16'd0, 1'b0, 32'd0, 18'd0, 24'd0, 1'b0, !ag_stn_busy, 1'b1}: constants assembled at the head pin
     assign rom_ret_v = {ag_stn, !ag_stn_busy};
-    assign dcs = {d_start && d_stage == 6'd0, ss_tokv, ss_tok[17:0], ss_tval, ss_arl, ss_arland,
-                  c_xc, ag_vm, ag_su_busy, ag_any, fab_q, c_fault, start_fault, c_ready};
-    wire unused = &{1'b0, c_run, c_done, ss_q[73:61], ss_q[28:26], ss_tok[23:18], dh_q[43], c_run_u, c_done_user, c_fcode};
+    assign dcs = {d_start && d_stage == 6'd0, ss_tokv && (OPS == 0 || ss_tu == 2'd0), ss_tok[17:0], ss_tval, ss_arl, ss_arland,
+                  c_xc, ag_vm, ag_su_busy, ag_any, fab_q, c_fault, start_fault | op_fault, c_ready};
+    wire unused = &{1'b0, c_run, c_done, ss_q[73:61], ss_q[28], ss_tok[23:18], dh_q[43], c_run_u, c_done_user, c_fcode,
+                    l_ff, l_fcode};
 endmodule
 
 module qfd_tt_ctlm_dv_go #(
@@ -225,18 +285,21 @@ module qfd_tt_ctlm_dv_thru (
     input  wire          ck,                     // region membership only (no state)
     input  wire          rst_n,                  // region membership only (no state)
     input  wire [115:0]  cmd_i,
+    input  wire [1087:0] tl_i,
     input  wire [75:0]   cal_program_obs_i,
     input  wire [68:0]   cal_descriptor_obs_i,
     input  wire          cal_image_ready_i,
     input  wire          emb_start_i,
     input  wire [17:0]   emb_token_i,
     output wire [115:0]  cmd,
+    output wire [1087:0] tl,
     output wire [75:0]   cal_program_obs,
     output wire [68:0]   cal_descriptor_obs,
     output wire          cal_image_ready,
     output wire          emb_start,
     output wire [17:0]   emb_token
 );
+    assign tl = tl_i;
     assign cmd = cmd_i;
     assign cal_program_obs = cal_program_obs_i;
     assign cal_descriptor_obs = cal_descriptor_obs_i;
