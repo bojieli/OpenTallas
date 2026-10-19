@@ -23,7 +23,7 @@ module ot_s81sl_slice_c1x_lp #(
     input wire [275:0] vi,
     output wire [275:0] vo,
     input wire [1103:0] bi,
-    output wire [1103:0] bo,
+    output wire [512:0] bo,
     output wire [4415:0] xc,
     input wire [559:0] rt,
     output wire [15:0] ck_line,
@@ -67,7 +67,7 @@ module ot_s81sl_slice_c1x_lp #(
     wire [31:0] x_eps, x_s, x_rbd, x_scale; wire x_mode;
     wire xe_v, eg_v, f_eg; wire [1:0] xe_c, eg_c; wire [31:0] xe_hh, xe_kk, xe_dd, eg_d; wire [7:0] x_si;
     wire [172:0] nx_wi, nx_ei, nx_eo, nx_wo; wire [1100:0] xw_d;
-    assign bo = 1104'd0;
+    assign bo = 513'd0;
     wire [559:0] rt_q;
     wire [1:0] mkq; wire [1103:0] xw4;
     assign xw4 = {xw_d[1100:565], xw_d[0], mkq[1], xw_d[564:0], mkq[1]};
