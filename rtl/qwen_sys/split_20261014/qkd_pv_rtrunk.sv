@@ -157,6 +157,14 @@ endmodule
 // cycle (pv_rtrunk_bench pair lockstep).  Hence va[k] == v0[k] == v1[k]: the lower half muxes take part 0's copies only,
 // the upper half part 1's only (8 loads per copy, no AND, no cross-half net), and the epoch's two flop banks take one T
 // copy each (er <- a0t, o_epoch <- a1t; 16 loads each).  Function identical to qkd_pv_rs_hd_r under that invariant.
+// HKV-PVRS2 2026-10-19: rev f2 -- INPUT PIN REGISTERS.  f1 (CLOSED TT +264.95 / FF +21.21) failed the native capture budget
+// (a1v[19] S + R 253.1 > 190 on 38 data pins: half selects a0v / a1v, a0t / a1t and far trunk data a0 / a1 / b1): a one-stage
+// station in a pin-limited 190.08 x 43.2 outline at 4 % utilisation puts the select copies' 8 mux loads and the data muxes
+// far from their S-face pins.  f2 registers EVERY input at its pin (one flop per bit, io_flop_at_pins anchors it beside the
+// pin: pin -> D is a pin-local wire), then the f1 half-local select stage on the registered copies -> outputs (unchanged
+// flops).  Every input is delayed by the same one edge, so the function is f1's one edge later: header 2 edges pin to
+// pin (pv_trunk_gen --rs-hd f: RS_D + 1); T and out_epoch are captured together at the input stage, so the header still
+// samples out_epoch at T (out_age + t_header < busy drop, unchanged).  b0[257] / b1[257] have no load (as in f1).
 module qkd_pv_rs_hd_f #(
     parameter integer KV = 32                    // V copies per T0 half (copy 0 = a<q>[256]); 256 / KV data bits each
 )(
@@ -176,26 +184,43 @@ module qkd_pv_rs_hd_f #(
     output reg  [511:0]  o_data
 );
     localparam integer HB = 256 / KV;            // data bits of one half per V copy
-    wire [KV-1:0] v0 = {a0v, a0[256]};           // part 0 V copies -> lower half selects only
-    wire [KV-1:0] v1 = {a1v, a1[256]};           // part 1 V copies -> upper half selects only
-    wire t0 = a0[257] & a1[257];                 // beat / count (10 loads)
-    wire vb = b0[256] & b1[256];
+    // stage 1: input pin registers (relay standard: no reset; the die's reset sequencer flushes the trunk)
+    reg [256:0]  a0_r, a1_r, b0_r, b1_r;         // [255:0] data, [256] V; T rides a0t_r / a1t_r / a?_t
+    reg          a0_t, a1_t;                     // a<q>[257] (T, beat / count)
+    reg [KV-2:0] a0v_r, a1v_r;
+    reg          a0t_r, a1t_r;
+    reg [15:0]   ep_r;
+`ifdef OT_QKD_RSHD_NOPR
+    always @* begin                              // bench mutant: the f1 one-stage leaf (input registers bypassed)
+`else
+    always @(posedge ck) begin
+`endif
+        a0_r  <= a0[256:0];  a1_r <= a1[256:0];  b0_r <= b0[256:0];  b1_r <= b1[256:0];
+        a0_t  <= a0[257];    a1_t <= a1[257];
+        a0v_r <= a0v;        a1v_r <= a1v;       a0t_r <= a0t;       a1t_r <= a1t;
+        ep_r  <= ep;
+    end
+    // stage 2: the f1 half-local select stage on the registered copies
+    wire [KV-1:0] v0 = {a0v_r, a0_r[256]};       // part 0 V copies -> lower half selects only
+    wire [KV-1:0] v1 = {a1v_r, a1_r[256]};       // part 1 V copies -> upper half selects only
+    wire t0 = a0_t & a1_t;                       // beat / count (10 loads)
+    wire vb = b0_r[256] & b1_r[256];
     reg [4:0] cnt;
     reg [15:0] er;
     integer k;
     always @(posedge ck) begin
-        o_valid <= a0[256] | vb;
+        o_valid <= a0_r[256] | vb;
         o_beat  <= t0 ? 5'd0 : cnt;
         cnt     <= t0 ? 5'd1 : cnt + 5'd1;
-        er      <= a0t ? ep : er;
-        o_epoch <= a1t ? ep : er;
+        er      <= a0t_r ? ep_r : er;
+        o_epoch <= a1t_r ? ep_r : er;
         for (k = 0; k < KV; k = k + 1) begin
 `ifdef OT_QKD_RSHD_MUT
-            o_data[k*HB +: HB]       <= v0[k] ? a1[k*HB +: HB] : b0[k*HB +: HB];   // bench mutant: T0 halves swapped
-            o_data[256 + k*HB +: HB] <= v1[k] ? a0[k*HB +: HB] : b1[k*HB +: HB];
+            o_data[k*HB +: HB]       <= v0[k] ? a1_r[k*HB +: HB] : b0_r[k*HB +: HB];   // bench mutant: T0 halves swapped
+            o_data[256 + k*HB +: HB] <= v1[k] ? a0_r[k*HB +: HB] : b1_r[k*HB +: HB];
 `else
-            o_data[k*HB +: HB]       <= v0[k] ? a0[k*HB +: HB] : b0[k*HB +: HB];
-            o_data[256 + k*HB +: HB] <= v1[k] ? a1[k*HB +: HB] : b1[k*HB +: HB];
+            o_data[k*HB +: HB]       <= v0[k] ? a0_r[k*HB +: HB] : b0_r[k*HB +: HB];
+            o_data[256 + k*HB +: HB] <= v1[k] ? a1_r[k*HB +: HB] : b1_r[k*HB +: HB];
 `endif
         end
     end
