@@ -1,0 +1,24 @@
+{
+  "status": "REFUSED",
+  "reason": "ContractError: unsupported bus in ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+  "no_safe_claim": true,
+  "source_odb_sha256": "136ca9b2ee1f6d7e4ea1b0c1ccf7434bcaedc1c366b1f1925aa8a6150262210c",
+  "raw_counts": {
+    "cells": 43798,
+    "ports": 2715,
+    "masters": 80
+  },
+  "inputs": {
+    "raw.json": "c13670ca968e3591cb865950a25d429dc8244074660887743483b08519fb8f8b",
+    "asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz": "fe9f1c18e88ab129d63ad82adc256f3a85c7e38e47dabbe0a96749b41087dea1",
+    "asap7sc7p5t_DFFHQNH2V2X_RVT_TT_nldm_FAKE.lib": "69f120a3a6a717717ffa24e17ca2045a8b8cbf60fe67ddcaba27534262e1cfe7",
+    "asap7sc7p5t_DFFHQNV2X_RVT_TT_nldm_FAKE.lib": "3e5f960c641007e2cef7a9918380d3b045bdc120f0429753a76cea55e7a6ad08",
+    "asap7sc7p5t_DFFHQNV4X_RVT_TT_nldm_FAKE.lib": "49af1e15ef89df27505b522cc0c75801373aad8106a3cacb9017f9995ba0dc9d",
+    "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz": "8d6db2c2f83c3c162be54a5e102b2d379fcaaaef2db5f0b1d4152c395d01fea1",
+    "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz": "bbe6d904d58c7367de1ed7639e4eae386c65fa0a5af26ae62dc5e4e2ec52b08b",
+    "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+    "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz": "073ac4b6b08f272b6953b0ad54d1d9743767a7d15a0e2964ed86cf44c3dbe00e",
+    "ot_sram_1r1w_128x256_m1_r2c2_p192_mir_tt.lib": "67ee0c7bc4add793c938528c15ef9c1bec025e72452e34599631089cab1f4c73",
+    "ot_sram_1r1w_32x128_m1_p192_rc_tt.lib": "16518b1f675fc4d29119e7c74a822d7e9e6893a2006ba35c696d88609e6704e9"
+  }
+}
