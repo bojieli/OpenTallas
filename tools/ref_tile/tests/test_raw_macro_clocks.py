@@ -37,7 +37,7 @@ class Contract(unittest.TestCase):
         for case in ('tile','mode','grant','unbound','extra','master','pin','root','count','entry','hard_child','path','duplicate'):
             s=spec(); b=s['soft_root_macro_bindings']['u_rom']
             if case=='tile': s['kind']='tile'
-            if case=='mode': s['clock']='entries'
+            if case=='mode': s['clock']='multiple_cts_roots'
             if case=='grant': s['clock_ports']=['child']
             if case=='unbound': s['macros'][0]['inst']='other'
             if case=='extra': s['soft_root_macro_bindings']['other']=dict(b)
@@ -65,14 +65,6 @@ class Contract(unittest.TestCase):
                         'cell('+MASTER+') {memory(){type:rom;address_width:12;word_width:0;}pin(clk){direction:input;clock:true;}}'):
                 (v/f'{MASTER}_ff.lib').write_text('library(x){'+bad+'}')
                 with self.subTest(lib=bad), self.assertRaises(ValueError): R.contract(spec(),root)
-
-    def test_landed_multi_root_region_root(self):
-        # TW2-QCTLM 10-19: a landed (multiple_cts_roots) cluster binds a raw memory to one of its region roots
-        s=spec(); s['clock']='multiple_cts_roots'; s.pop('clock_cts_roots')
-        bindings,_=R.contract(s,ROOT)
-        self.assertEqual(bindings['u_rom']['root'],'ck')
-        s['soft_root_macro_bindings']['u_rom']['root']='ck_other'
-        with self.assertRaises(ValueError): R.contract(s,ROOT)
 
     def test_gen_hooks_calls_contract_before_emitting(self):
         s=spec();s['soft_root_macro_bindings']['u_rom']['clock_pin']='ce_in'

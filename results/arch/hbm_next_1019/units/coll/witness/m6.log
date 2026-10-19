@@ -1,4 +1,37 @@
-2026-10-19T06:14:46-07:00 start host=regular-crane bundle=9042294f5
-2026-10-19T06:20:53-07:00 build m6 rc=0 bin=ok
-2026-10-19T06:20:53-07:00 m6: COLLQ FAIL set=1 errors=10872
-2026-10-19T06:20:53-07:00 done
+COLLQ VM q0 b0 unreserved read cyc212 sector 1000 (exp 1 1050)
+COLLQ VM q0 b1 unreserved read cyc212 sector 1001 (exp 1 1051)
+COLLQ VM q1 b0 unreserved read cyc212 sector 3000 (exp 1 3050)
+COLLQ VM q1 b1 unreserved read cyc212 sector 3001 (exp 1 3051)
+COLLQ VM q2 b0 unreserved read cyc212 sector 5000 (exp 1 5050)
+COLLQ VM q2 b1 unreserved read cyc212 sector 5001 (exp 1 5051)
+COLLQ VM q3 b0 unreserved read cyc212 sector 7000 (exp 1 7050)
+COLLQ VM q3 b1 unreserved read cyc212 sector 7001 (exp 1 7051)
+COLLQ VM q0 b2 unreserved read cyc213 sector 1002 (exp 1 1052)
+COLLQ VM q0 b3 unreserved read cyc213 sector 1003 (exp 1 1053)
+COLLQ VM q1 b2 unreserved read cyc213 sector 3002 (exp 1 3052)
+COLLQ VM q1 b3 unreserved read cyc213 sector 3003 (exp 1 3053)
+COLLQ VM q2 b2 unreserved read cyc213 sector 5002 (exp 1 5052)
+COLLQ VM q2 b3 unreserved read cyc213 sector 5003 (exp 1 5053)
+COLLQ VM q3 b2 unreserved read cyc213 sector 7002 (exp 1 7052)
+COLLQ VM q3 b3 unreserved read cyc213 sector 7003 (exp 1 7053)
+COLLQ VM q0 b4 unreserved read cyc215 sector 1004 (exp 1 1054)
+COLLQ VM q0 b5 unreserved read cyc215 sector 1005 (exp 1 1055)
+COLLQ VM q1 b4 unreserved read cyc215 sector 3004 (exp 1 3054)
+COLLQ VM q1 b5 unreserved read cyc215 sector 3005 (exp 1 3055)
+COLLQ_TRAIN row=0 qbg=0 R=2 F=72 K=36 N=4 rsA=80 rsO=288 span_compiled=255 span_observed=255
+COLLQ_TRAIN row=1 qbg=0 R=1 F=19 K=19 N=3 rsA=-24 rsO=99 span_compiled=125 span_observed=125
+COLLQ_TRAIN row=2 qbg=1 R=2 F=19 K=10 N=6 rsA=72 rsO=100 span_compiled=129 span_observed=129
+COLLQ_TRAIN row=3 qbg=1 R=1 F=9 K=9 N=2 rsA=40 rsO=65 span_compiled=66 span_observed=66
+COLLQ_TRAIN row=4 qbg=1 R=2 F=50 K=25 N=1 rsA=0 rsO=0 span_compiled=77 span_observed=77
+COLLQ_TRAIN row=5 qbg=0 R=2 F=1 K=1 N=5 rsA=1 rsO=34 span_compiled=47 span_observed=47
+COLLQ FAIL set=1 errors=10872
+- rtl/hbm_next/coll/tb/tb_hnx_coll_gq.sv:361: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.311 s; speed 6.569 us/s
+- Verilator: cpu 0.129 s on 1 threads; allocated 16 MB
+RUN_RC=0
+
+2026-10-19T00:29:33-07:00 start host=regular-crane bundle=a2880082
+2026-10-19T00:47:41-07:00 build m6 rc=0 bin=ok
+2026-10-19T00:47:41-07:00 m6: COLLQ FAIL set=1 errors=10872
+2026-10-19T00:47:41-07:00 done

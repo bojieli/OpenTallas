@@ -116,14 +116,6 @@ def compare_plans(frozen, effective):
 # the strict guard.  (s81net_sstn_e0c0sinf-n6-790b63257: frozen ba24e51 pre-3c31fb285, fleet/main 8c1b35bb.)
 FLEET_RUN = ("tools/closure_loop/tt_overlay.py",)
 
-# POST-ROUTE PUBLISH HELPERS (RLYH0-NE 2026-10-19): the view exporter runs only in collect / re-export, after the
-# route's verdict, and never changes routed geometry or timing (its sessions are checked against the verdict).  It is
-# the loop's publish step (EXPORT-SDC: every collect runs the loop's copy), so a fix there must reach routes already
-# closed: qfwd_rlyh0_128_ne_65x30-f1-fc2236d82 lost a CLOSED result to the default abstract's merged pin-column OBS
-# and its frozen exporter would replay the same failure on every re-collect.  Same rule as FLEET_RUN: drift sanctioned
-# only to exactly origin/main's blob from an earlier main revision; the current bytes ship.
-PUBLISH_ONLY = ("tools/tt_views/view_export.py",)
-
 
 # LINT-ONLY HELPERS (ROOT 2026-10-16 URGENT, 9 jobs NEEDS_HUMAN after 2c5779073 added the native_capture CLOSED-STANDS kind):
 # textbook_lint.py holds lint/gate constants and rule text; it never changes routed geometry or timing.  A frozen plan
@@ -522,15 +514,14 @@ def compare_plans_sanctioned(frozen, effective, repo, head=None):
                                        frozen_sha256=o["sha256"], current_git_blob=n["git_blob"],
                                        current_sha256=n["sha256"], origin_main=head))
                 continue
-        if rel not in FLEET_RUN + PUBLISH_ONLY or o is None or n is None or not head:
+        if rel not in FLEET_RUN or o is None or n is None or not head:
             return False, f"effective route helper drift: {rel} (frozen {o}, current {n})", []
         p = subprocess.run(["git", "-C", str(repo), "rev-parse", f"{head}:{rel}"], capture_output=True, text=True, timeout=60)
         tip = p.stdout.strip() if not p.returncode else None
         if n["git_blob"] != tip or o["mode"] != n["mode"] or o["git_blob"] not in _main_blobs(repo, head, rel):
             return False, (f"effective route helper drift: {rel} (frozen {o}, current {n}; fleet-run path, but current is "
                            f"not origin/main {str(tip)[:9]} or frozen is not an earlier main revision)"), []
-        sanctioned.append(dict(path=rel, kind="publish" if rel in PUBLISH_ONLY else "fleet_run",
-                               frozen_git_blob=o["git_blob"], frozen_sha256=o["sha256"],
+        sanctioned.append(dict(path=rel, kind="fleet_run", frozen_git_blob=o["git_blob"], frozen_sha256=o["sha256"],
                                current_git_blob=n["git_blob"], current_sha256=n["sha256"], origin_main=head))
     return True, "helper bytes match the frozen plan except sanctioned fleet-run / lint-only paths", sanctioned
 

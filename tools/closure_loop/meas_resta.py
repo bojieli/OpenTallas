@@ -44,22 +44,6 @@ def tt_setup_text(text):
     return re.sub(r"(?m)^set ::ot_ce_corner (?:ss|\{ss\})$", "set ::ot_ce_corner tt", text)
 
 
-def with_pf_macro_libs(lines):
-    """PF-HARDCHILD-VERDICT (ROOT-CORNER 2026-10-19, S81-CAPC finding): a w18_sta_<corner>.tcl written by corner_sta.py
-    before ec6331896 reads the hard-child ETM libs but never names them in OT_PF_MACRO_LIBS, so the sign-off SDC's
-    PINFLOP reference (pinflop_ref.tcl (b)) fell to the RAW child clock pin instead of the child flops (pin + ETM
-    insertion) the route closed against (s81sl_capc d8836674d: route FF +27.6, verdict FF -158.2).  The replay names
-    the macro libs the session reads from /src (the line corner_sta.py now writes), before read_db.  Libraries without
-    min/max_clock_tree_path (SRAM / memory macros) add no insertion: their verdicts are unchanged."""
-    if any("OT_PF_MACRO_LIBS" in ln for ln in lines):
-        return lines
-    libs = [m.group(1) for ln in lines for m in [re.match(r"^read_liberty (/src/\S+\.lib)$", ln)] if m]
-    k = next((i for i, ln in enumerate(lines) if ln.startswith("read_db ")), None)
-    if not libs or k is None:
-        return lines
-    return lines[:k] + [f"set ::env(OT_PF_MACRO_LIBS) [list {' '.join(libs)}]"] + lines[k:]
-
-
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--orfs", type=Path, required=True)
@@ -95,7 +79,7 @@ def main():
         if not t.is_file():
             res[key] = dict(error=f"no {t}")
             continue
-        lines, out, done_ins, n_rep = with_pf_macro_libs(t.read_text().splitlines()), [], False, 0
+        lines, out, done_ins, n_rep = t.read_text().splitlines(), [], False, 0
         for ln in lines:
             m = re.match(r"^read_sdc /src/(\S+)$", ln)
             if m and m.group(1) in rep:

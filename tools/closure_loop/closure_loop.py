@@ -2873,21 +2873,6 @@ def installed_helper_receipt(host, run, frozen):
         raise ValueError("original remote helper verification receipt unreadable") from ex
 
 
-def _publish_refresh(frozen):
-    """(current plan, payloads, modes, sanctioned rows) when the effective helper set differs from the frozen plan ONLY
-    in PUBLISH_ONLY paths drifted to exactly origin/main (compare_plans_sanctioned rules); else None."""
-    try:
-        current, payloads = HO.capture_plan(HERE.parents[1], REPO, head=_ovl_head(), cache=_OVL["hist"])
-        if HO.compare_plans(frozen, current)[0]:
-            return None
-        ok, _why, sanctioned = HO.compare_plans_sanctioned(frozen, current, REPO, head=current.get("origin_main"))
-    except (ValueError, OSError, subprocess.SubprocessError, KeyError, TypeError):
-        return None
-    if not ok or not sanctioned or any(r.get("kind") != "publish" for r in sanctioned):
-        return None
-    return current, payloads, {f["path"]: f["mode"] for f in current["files"]}, sanctioned
-
-
 def ship_helpers(host, run, job=None):
     """Install new helpers, or verify and reuse an already executed frozen set."""
     # one ssh carrying a tar of all helpers (was one ssh per helper, 13 per launch, made while holding FLEET_LOCK)
@@ -2907,29 +2892,9 @@ def ship_helpers(host, run, job=None):
                     HO.recover_frozen_payloads(REPO, HELPER_STORE, frozen)
                     job["helper_overlay_verification"] = dict(receipt, verified_at=now_iso(),
                                                                host=host, run=run, mutation=False)
-                    pub = _publish_refresh(frozen)
-                    if pub is None:
-                        return
-                    # PUBLISH REFRESH (RLYH0-FIN 2026-10-19): an installed, verified run dir is re-entered (resume-postroute
-                    # / re-collect) and ONLY publish helpers (view_export.py) drifted to exactly origin/main: ship the
-                    # current publish bytes into cl/ (the route's own helpers are byte-identical, nothing else changes).
-                    # Without this the PUBLISH_ONLY sanction never reached a preserved closed route: resume-postroute
-                    # of qfwd_rlyh0_128_ne_65x30-f1-fc2236d82 re-ran the frozen exporter and lost the CLOSED result again.
-                    current, payloads, modes, sanctioned = pub
-                    job.setdefault("route_overlay_plan_gate", frozen)
-                    job.setdefault("helper_overlay_sanctioned", []).extend(dict(r, at=now_iso(), host=host, run=run)
-                                                                           for r in sanctioned)
-                    for r in sanctioned:
-                        event(job, f"PUBLISH SANCTION (installed run): {r['path']} frozen {r['frozen_git_blob'][:9]} -> "
-                                   f"fleet/main {r['current_git_blob'][:9]} (origin/main {str(r['origin_main'])[:9]}); "
-                                   f"cl/ refreshed, route helpers unchanged")
-                    job["route_overlay_plan"] = frozen = current
-                    job["helper_overlay_verification"]["mutation"] = True
-                    HO.store_payloads(HELPER_STORE, frozen, payloads)
+                    return
                 origin = job.get("bench_helper_origin")
-                if payloads is not None:
-                    pass                                                   # publish refresh above
-                elif origin:
+                if origin:
                     if origin == dict(host=host, run=run):
                         raise ValueError("bench helper origin must be a different execution location")
                     original = installed_helper_receipt(origin["host"], origin["run"], frozen)
@@ -3018,7 +2983,7 @@ def ship_helpers(host, run, job=None):
                 job.setdefault("helper_overlay_sanctioned", []).extend(dict(r, at=now_iso(), host=host, run=run)
                                                                        for r in sanctioned)
                 for r in sanctioned:
-                    event(job, f"{'PUBLISH' if r.get('kind') == 'publish' else 'FLEET-RUN'} SANCTION: {r['path']} frozen {r['frozen_git_blob'][:9]} -> fleet/main "
+                    event(job, f"FLEET-RUN SANCTION: {r['path']} frozen {r['frozen_git_blob'][:9]} -> fleet/main "
                                f"{r['current_git_blob'][:9]} (sha256 {r['current_sha256'][:16]}, origin/main "
                                f"{str(r['origin_main'])[:9]}); the route runs the fleet copy")
                 job["route_overlay_plan"] = frozen = current
@@ -5023,14 +4988,6 @@ def postroute_crash(j, st, fleet, why):
         j["attempt"] += 1
         j["status"] = "SYNC"
         return
-    # EXPORT-LINT REPEAT (RLYH0-NE 2026-10-19): a collect whose export fails child_lint is not a crash; the same lint
-    # FAIL on the same frozen helpers repeats on every retry (qfwd_rlyh0_128_ne_65x30-f1-fc2236d82: 4 identical
-    # '(i) pin access' collects).  Stop at the first repeat and name the lint.
-    lint = re.search(r"child_lint FAIL[^\n]{0,400}", tail or "")
-    prev = [x for x in j["crashes"][:-1] if x.get("postroute") and x.get("stage") == st["key"]]
-    if lint and prev and lint.group(0)[:200] in (prev[-1].get("tail") or ""):
-        why = f"export {lint.group(0)[:300]} (identical on retry: deterministic, not a crash)"
-        n = POSTROUTE_RETRY_MAX
     if n >= POSTROUTE_RETRY_MAX:
         c = (earlier_closed(j) or [{}])[-1]
         j["lost_closed"] = dict(closed=c, later_status="NEEDS_HUMAN", later_reason=why, at=now_iso(), preserved=where)
@@ -5780,9 +5737,7 @@ IOREF_SDC = "physical/common_flow/io_ref_routed.sdc"
 # FLOW-FIX-0410 2026-10-09: io_ref_routed.sdc reads the ACTIVE-edge insertion (sinks behind an odd clock inversion were
 # T/2 late).  The version is part of the routed_ioref cache key, so ioref-rejudge / a verdict re-STA under the new rule
 # instead of returning a re-STA cached under the old one.
-# PF-HARDCHILD-VERDICT (ROOT-CORNER 2026-10-19): meas_resta names the hard-child ETM libs (OT_PF_MACRO_LIBS) in replayed
-# pre-fix w18 Tcl, so a re-STA cached under the raw-child-clock-pin reference is not returned as the re-judge.
-IOREF_VERSION = "ae0410-cecorner-1015-pfhc1019"
+IOREF_VERSION = "ae0410-cecorner-1015"
 
 
 def routed_ioref(j, m):
@@ -5813,16 +5768,7 @@ def routed_ioref(j, m):
             rp = f"{j['run']}/cl/{rbj['rb']}.sdc"
             ssh(j["host"], f"cat > {rp}", input=Path(rbj["sdc"]).read_text(), timeout=60)
             app += f" --append {rp}"
-        # IOREF-VERDICT-TOOL (ROOT-CORNER 2026-10-19): the routed re-STA is the VERDICT of a finished route, never part of
-        # its execution, so it runs the loop's CURRENT meas_resta.py (= origin/main, as io_ref_routed.sdc above) from
-        # cl_ioref/, not the job's frozen cl/ copy: a frozen-overlay job (freeze_helper_overlay) otherwise re-judged with
-        # the bug it was re-judged for (s81sl_capc d8836674d: frozen pre-fix meas_resta, no OT_PF_MACRO_LIBS -> STILL
-        # FF -158).  cl/ stays byte-identical to the frozen plan; the shipped bytes are recorded in the result.
-        mr_body = (HERE / "meas_resta.py").read_bytes()
-        ssh(j["host"], f"mkdir -p {j['run']}/cl_ioref && cat > {j['run']}/cl_ioref/meas_resta.py",
-            input=mr_body.decode(), timeout=60, check=True)
-        rr["meas_resta_sha256"] = hashlib.sha256(mr_body).hexdigest()
-        r = ssh(j["host"], f"python3 {j['run']}/cl_ioref/meas_resta.py --orfs {shlex.quote(orfs)} --src {j['run']}/src "
+        r = ssh(j["host"], f"python3 {j['run']}/cl/meas_resta.py --orfs {shlex.quote(orfs)} --src {j['run']}/src "
                            f"--out {out} {app}", timeout=12000)
     try:
         res = json.loads([x for x in r.stdout.splitlines() if x.startswith("{")][-1])

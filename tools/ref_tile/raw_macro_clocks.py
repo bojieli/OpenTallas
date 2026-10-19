@@ -60,18 +60,11 @@ def contract(spec, root):
     bindings = spec.get('soft_root_macro_bindings', {})
     if not masters and not bindings:
         return {}, []
-    # TW2-QCTLM 10-19: a LANDED cluster (kind cluster + multiple_cts_roots, tools/landed_parent/lp.py) builds one CTS
-    # tree per region root (every clock_ports entry); a raw SRAM owned by a region's glue (qfd_tt_ctlm_dv calendar
-    # 2 x 64x512 on ck_core) is an ordinary sink of that root exactly as in a hybrid_entries leaf.  Same exact
-    # instance/master/pin/root contract; the root must be one of the region roots.
-    multi = spec.get('clock') == 'multiple_cts_roots'
-    if (spec.get('kind') != 'cluster' or spec.get('clock') not in ('hybrid_entries', 'multiple_cts_roots')
-            or not isinstance(masters, list) or not masters
+    if (spec.get('kind') != 'cluster' or spec.get('clock') != 'hybrid_entries' or not isinstance(masters, list) or not masters
             or any(not isinstance(m, str) or not SAFE.fullmatch(m) for m in masters) or len(masters) != len(set(masters))
             or not isinstance(bindings, dict) or not bindings):
-        raise ValueError('raw memory clocks require explicit named masters and instance bindings in hybrid_entries '
-                         'or a landed multiple_cts_roots cluster')
-    roots = set(spec.get('clock_ports', []) if multi else spec.get('clock_cts_roots', []))
+        raise ValueError('raw memory clocks require explicit named masters and instance bindings in hybrid_entries')
+    roots = set(spec.get('clock_cts_roots', []))
     if not roots or not roots <= set(spec.get('clock_ports', [])):
         raise ValueError('raw memory roots must preserve the declared clock-port grant')
     declared = {}

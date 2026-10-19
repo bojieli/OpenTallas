@@ -185,18 +185,7 @@ class ProbeAndGates(unittest.TestCase):
         txt = "OT_HOLD_GUARD start: x\n" + chunk(-60, -50) + "\n" + chunk(-50, -49.8) + "\n" + chunk(-49.8, -49.5)
         self.assertEqual(self.hold_diag(txt)["verdict"], "EARLY_FAIL_HOLD")
 
-    def test_hold_stop_replay_is_not_judged(self):
-        # (ROOT-CIO 2026-10-19, TW3-S81) a HOLD-STOP resume replays the stopped stage's repair up to its buffer cap: the
-        # flat series is by design; the same series without the OT_HOLD_STOP markers still fires
-        flat = "[INFO RSZ-0046] Found 80635 endpoints with hold violations.\n" + hold_rows(100, -38.5, -38.0)
-        self.assertEqual(self.hold_diag(flat)["verdict"], "EARLY_FAIL_HOLD")
-        capped = ("OT_HOLD_STOP stage=cts: hold repair capped at 10204 buffers (-max_buffer_percent 3.1 of 330000 "
-                  "instances)\n" + flat)
-        self.assertNotEqual(self.hold_diag(capped).get("verdict"), "EARLY_FAIL_HOLD")
-        done = capped + ("\nOT_HOLD_MM after repair: OT_HOLD_STOP cap of 10204 buffers reached (RSZ-0060); continuing "
-                         "to route\nOT_HOLD_STOP stage=cts done: hold ws -9.64 tns -120.0 viol 46\n")
-        self.assertNotEqual(self.hold_diag(done).get("verdict"), "EARLY_FAIL_HOLD")
-
+    def test_hold_buffer_cap(self):
         rows = "\n".join(f"{100 * k:9d} |       0 | {4000 * k:7d} |            0 |    +6.1% | {-90 + k:7.3f} |   0.000 | "
                          f"u.x$_DFF_P_/D" for k in range(30))
         d = self.hold_diag("[INFO RSZ-0046] Found 90000 endpoints with hold violations.\n" + rows)
