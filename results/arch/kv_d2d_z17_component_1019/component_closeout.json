@@ -1,0 +1,92 @@
+{
+  "verdict": "ISOLATED COMPONENTS FUNCTIONAL PASS; COPY REPAIR AND INTEGRATION STOP",
+  "commits": {
+    "transport": "d8383ea88",
+    "producer": "8ec58f314",
+    "receiver_source": "437848d14",
+    "receiver_proofs": "155a85714",
+    "storage": "dce7820f8",
+    "startup_hold": "a1e609a806"
+  },
+  "producer": {
+    "original_outputs": 52,
+    "PR0_edges": 1040,
+    "PR1_edges": 1046,
+    "modes": [
+      0,
+      1
+    ],
+    "walking_bit_vectors": 1098,
+    "simulator": "Icarus",
+    "bench_compiled_TXDP": "0x03030403",
+    "current_GEN8_TXDP": "0x03030416",
+    "actual_GEN8_configuration_qualification": false
+  },
+  "receiver": {
+    "directions": 2,
+    "cases_per_direction": 273,
+    "checks_per_direction": 4249,
+    "codec_output_bits": 1098,
+    "full_programme_modes": 16,
+    "unconditional_all_output_checks": 4000,
+    "simulators": [
+      "Icarus12",
+      "Verilator5.050"
+    ]
+  },
+  "storage": {
+    "banks": 4,
+    "width": 137,
+    "depth": 64,
+    "wrapper_ff": 1780,
+    "added_edges": 0,
+    "no_init_edges": 1325,
+    "comparisons": 1324,
+    "causal_mutants": 4,
+    "simulators": [
+      "Icarus",
+      "Verilator5.050"
+    ]
+  },
+  "transport": {
+    "edges": 11,
+    "live_bits": 565,
+    "shards": [
+      188,
+      188,
+      189
+    ],
+    "bench_edges": 1708,
+    "simulator": "Icarus",
+    "causal_mutants": 2
+  },
+  "startup_hold": {
+    "kind": "complete mapped combinational cone analytical existential witness",
+    "cells": 74,
+    "shared_boundary_leaves": 91,
+    "changed_endpoint": "_44236_/B",
+    "root": "q_sf_seg[0]",
+    "consumer": "txcal.rep[0]",
+    "D_old_clone": [
+      1,
+      0
+    ],
+    "QN_after_old_clone": [
+      0,
+      1
+    ],
+    "RTL_replay": false,
+    "first_legal_enable_authority": null,
+    "owner": "d2d_first_authority"
+  },
+  "forbidden_claims": [
+    "full-chain functional qualification",
+    "129-copy source-ready",
+    "physical SAFE",
+    "native timing",
+    "actual GEN8 binding",
+    "first legal POR/warm/PLL observer proof"
+  ],
+  "live_jobs": [],
+  "next": "No further work; ROOT/LEAD-KV reviews first legal observer authority before structural revision."
+}
