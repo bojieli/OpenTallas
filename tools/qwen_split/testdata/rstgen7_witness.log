@@ -1,0 +1,6 @@
+# Q-RSTGEN7 10-19 witnesses (src branch claude/q-rstgen7-1019)
+## unit test (candidate + mutants)
+RSTGEN7 PASS: 3 untreated reset releases before (mutant: d2d_rom, sys_face, io_ucie), 0 after; io_ucie last hop re-clocked onto clk_ucie; 3 synchroniser endpoints; RTL / repeater / shared-hop mutants refused
+## pre-fix GEN netlist (dv2f15r die.v, ot-epyc4 .../dv2f15r/chain/case_r22k/die.v): MUTANT-equivalent = untreated hops present
+RESET_SYNC_AUDIT FAIL repeaters=2564 endpoints=0 untreated=3 ['rstt_rst_d2d__fo1__r3_12 -> d2d_rom/rst_n', 'rstt_rst_d2d__fo2__r4_9 -> sys_face/rst_n', 'rstt_rst_io_0 -> io_ucie/rst_n']
+## dv2f15codex die STA TT (pre-fix): -100.7 rstt_rst_d2d__fo1__r3_12 -> d2d_rom/rst_n (stream -> stream__early); -220.9 rstt_rst_io_0 -> io_ucie/rst_n (stream -> ucie)

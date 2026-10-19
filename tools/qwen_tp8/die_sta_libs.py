@@ -275,6 +275,10 @@ def main():
     # Q-DIE11-RLY 10-18: forwarded-lane landings (case/landing.sdc from relay_data_run.py, LANDING-CONTRACT L5): the
     # lane is checked at the landing pins against the receiving root E edges later (MCP -setup E -hold D-1)
     land = (case / 'landing.sdc').read_text() if (case / 'landing.sdc').exists() else ''
+    # Q-RSTGEN7 10-19: declared reset synchroniser inputs (case/reset_sync.sdc, tools/qwen_split/reset_sync_contract.py:
+    # a tile's own 2-flop reset synchroniser pin, or the d pin of the last reset hop re-clocked onto a PHY clock)
+    if (case / 'reset_sync.sdc').exists():
+        land += (case / 'reset_sync.sdc').read_text()
     for c in ('tt', 'ff', 'ss'):
         (out / f'clocks_{c}.tcl').write_text(clock_tcl(leaf_doms, leaves, c, periods, related, a.hold_budget) + land)
     # Existing callers naming clocks.tcl are redirected by sta_tcl.py per corner.
