@@ -11,7 +11,10 @@ status timeline), and checks against the compiled expectation:
   * the control stores seal (control_stores_ready) and no fault rises (cf), command_stage follows the running stage.
 Edges are relative to each stage's edge 0 (the dh pin register captures h_start).
 
-Mutants (all must FAIL; fail witnesses committed): --mut 1 (RTL: every calendar entry one edge late), --bmut 1 (the
+QLB-C4b: with an image compiled --tload, every slice table word (BOOT TLOAD) must leave tt_ctlm.tl (the dvs_W5 st_wi
+driver) on its compiled edge with the dv_lower word, and nothing else may leave tl.
+Mutants (all must FAIL; fail witnesses committed): --mut 1 (RTL: every calendar entry one edge late), --mut 9 / 10 (RTL
+TLOAD payload macro halves swapped / table word one edge late), --bmut 1 (the
 slices report the SU op before the gate/up matvec done DEP + 1 edges late: the head's chase is unmet on its fixed cycle),
 --bmut 2 (image: the first decode SU entry one edge late, the expectation unchanged).
 
@@ -44,6 +47,9 @@ def events_and_expect(img: dict, words: list, n_decode: int, bmut: int):
     boot_s = dw7 + 2 - img['constants']['CAL_S']
     for x in img['expected']['boot_cmd_after_seal']:
         exp.append((boot_s + x['edge'], 'CMD', int(x['cmd'], 16)))
+    # QLB-C4b: the slice table words (TLOAD) on tt_ctlm.tl, each on its compiled edge, nothing else
+    for x in img['expected'].get('boot_tl_after_seal', []):
+        exp.append((boot_s + x['edge'], 'TL', int(x['word'], 16)))
     ev.append((c + 4, 6, 0b11))                                   # kok / kwd levels (the T calendar's LEVEL)
     tok, pos = 0x1234, 4321
     # stage starts at the T calendar's compiled spacing (stage 0, the first n decode stages); the LM-head stage follows
@@ -148,6 +154,8 @@ def run(a):
         cy, k = int(p[0]), p[1]
         if k == 'CMD':
             got.append((cy, 'CMD', int(p[2], 16)))
+        elif k == 'TL':
+            got.append((cy, 'TL', int(p[2], 16)))
         elif k == 'LOC':
             got.append((cy, 'LOC', (p[2], int(p[3]))))
         elif k == 'ISSUE':
