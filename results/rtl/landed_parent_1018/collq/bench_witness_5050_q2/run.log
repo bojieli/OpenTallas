@@ -1,0 +1,17 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/pl-collq/src_lpk1
+ot-run: ot-epyc5       admits  1140 GB (avail 979, growth 181, headroom 0, waiters 0/0 GB) load 153/128 running 34 disk 2101 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/pl-collq/src_lpk1
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/pl-collq/src_lpk1
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-2134978-1792373068 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+EQ PASS
+AUDIT PASS
+AUDIT-UNLAND FAIL (expected)
+MUT 0: LP_LOCKSTEP PASS
+MUT 1: LP_LOCKSTEP FAIL
+MUT 2: LP_LOCKSTEP FAIL
+MUT 4: LP_LOCKSTEP FAIL
+BENCH_EXIT 0
+Q2_LP_ALL_EXIT 0
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-2134978-1792373068): exit 0
