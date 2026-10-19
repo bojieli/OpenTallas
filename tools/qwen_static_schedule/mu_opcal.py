@@ -82,9 +82,11 @@ ROM_WORDS = 4096
 LEAF_MAGIC = 0x4F50                     # "OP"
 TB, UB_, SB, FB, CB = 22, 2, 6, 10, 10  # entry fields: t, user, stage, first, cnt  (+ flag FIRST)
 # leaf spacing rule (qfd_sys_face_mu_dhuser OPSEG): the leaf consumes an entry on edge e and issues the ROM read of the
-# next entry on that same edge (1-edge read, captured into the prefetch register on e + 1), so the next entry can be
-# consumed on e + 2 at the earliest: consecutive t_rom (and the frame wrap, last -> first + H) >= LEAF_MIN_GAP
-LEAF_MIN_GAP = 2
+# next entry on that same edge (1-edge read).  The hardened leaf (PINREG 1, MU-LEAF-KIT2 2026-10-19) lands rd_out in a
+# capture register on e + 1 and loads the prefetch register on e + 2, so the next entry can be consumed on e + 3 at the
+# earliest (PINREG 0: e + 2): consecutive t_rom (and the frame wrap, last -> first + H) >= LEAF_MIN_GAP.  The op start
+# edges do not move (the fire edge is t_rom either way).  F16 image: minimum gap 7, wrap 24,246.
+LEAF_MIN_GAP = 3
 
 
 # ---------------------------------------------------------------------------------------------------- image

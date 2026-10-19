@@ -40,7 +40,10 @@ SPEC (JSON; paths relative to the repo root):
   static         [ports / nets] identity straps: never landed (case-analysed), constant in the bench (tb_static {p: v})
   D, E           ring depth / read offset (default 4 / 2: as Q-CLUSTER-LANDALL)
   reach_um       reset-run hop reach (default 405)         residual_ps: inter-region die residual on the 1-bit reset hops (60)
-  bench          {cycles, reset_cycles, sim: iverilog|verilator, child_lockstep: [fnmatch patterns]}
+  bench          {cycles, reset_cycles, sim: iverilog|verilator, child_lockstep: [fnmatch patterns], expr: {input port:
+                 per-cycle stimulus expression (default uniform $urandom; may use the tb cycle counter cyc), e.g. to keep a
+                 sticky fault from saturating or to make writes legal}, mut_waivers: {mutant number: reason} (that mutant is
+                 not run; the record keeps the reason)}
                  child_lockstep (schedule "reference" only; default none): also compare every non-clock pin of the
                  matching children, landed vs flat, at the child (hierarchical u_lp.<inst>.<pin> vs u_flat.<inst>.<pin>):
                  reset pins from reset_cycles on, the rest after warm-up.  Use it when the parent's own outputs do not
@@ -53,6 +56,13 @@ SPEC (JSON; paths relative to the repo root):
                  re-scheduled by +E+1 per landed crossing, e.g. relay depths), reset delayed RB + reset_extra, ports at
                  offset 0.  The record's "compiler" block carries ref_params as the re-schedule.
   ref_params     {name: value} parameters of the reference flat instance (schedule "reference"; default = params)
+  lag_pins       [{inst: fnmatch pattern, pins: [..], why}]  STATUS-RETURN reader pins (e.g. a head's fault / valid-lockstep
+                 inputs fed back from the children it configures).  A head that both configures and collects status from
+                 children in other regions is a cross-region LOOP; its status pins are taken OUT of the schedule: they are
+                 landed as usual, then padded so every lag pin of that reader sees its net exactly lag(reader) edges later
+                 than the reader's own time (one common lag per reader).  The lockstep reference becomes <top>_lagref (the
+                 flat parent with those pins delayed lag(reader) stages, generated beside the landed top), and the record's
+                 compiler block lists the lag: the status those pins carry reaches the reader's outputs lag edges late.
   mut_child      child whose reset run MUT 4 lengthens (default: the first child with a reset pin); pick one whose state
                  outlives the reset (a sticky flag / counter): a pure pipeline register forgets a late reset in one edge
 """
@@ -263,6 +273,14 @@ def parse_body(body: str):
     return wires, assigns, insts
 
 
+def full_item(p: dict) -> str:
+    """a port item that stands alone ('input logic a, b' lists carry the direction on the first item only)"""
+    if re.match(r"(input|output|inout)\b", p["item"]):
+        return p["item"]
+    d = {"in": "input", "out": "output", "inout": "inout"}[p["dir"]]
+    return f"{d} wire {p['range'] + ' ' if p['range'] else ''}{p['name']}"
+
+
 def idents(expr: str) -> set:
     expr = re.sub(r"\d+'[sS]?[bBoOdDhH][0-9a-fA-F_xXzZ]+", " ", expr)
     return {n for n in re.findall(r"(?<![\w'$`.])([A-Za-z_]\w*)\b", expr) if n not in KW}
@@ -319,6 +337,14 @@ class Parent:
         self.D, self.E = int(spec.get("D", 4)), int(spec.get("E", 2))
         self.K = self.E
         self.A = self.E + 1
+        self.lag = set()
+        for g in spec.get("lag_pins") or []:
+            hit = [i["inst"] for i in self.insts if fnmatch.fnmatchcase(i["inst"], g["inst"])]
+            if not hit:
+                raise SystemExit(f"lag_pins: no instance matches {g['inst']}")
+            for i in hit:
+                for pin in g["pins"]:
+                    self.lag.add((i, pin))
         self.AW = 1 if self.D <= 2 else math.ceil(math.log2(self.D))
         self.reference = spec.get("schedule", "offsets") == "reference"
         self.rx = int(spec.get("reset_extra", self.A + self.D)) if self.reference else 0
@@ -358,7 +384,7 @@ class Parent:
                     continue
                 if pin in (self.S.get("clock_pins") or []) or pin in (self.S.get("reset_pins") or []):
                     continue
-                for n in idents(ex) - excl:
+                for n in sorted(idents(ex) - excl):     # sorted: a set's order is PYTHONHASHSEED-random (pslice real7)
                     if n in self.env:
                         continue
                     rd.append((n, ins["inst"], pin))
@@ -401,17 +427,23 @@ class Parent:
                 raise SystemExit(f"net {n} is driven from regions {sorted(sregs)}: split it per region")
             s, r = sregs.pop(), self.region[inst]
             landed = s != r
-            if landed and (n, r) not in lands:
-                lands[(n, r)] = dict(name=f"{len(lands)}", net=n, src_region=s, dst_region=r,
-                                     src_nodes=sorted(ds), width=eval_width(self.rng(n), self.env), readers=[])
+            # TW2-PSLICE2 10-19 (opt-in reader_per_inst): one read half per READER INSTANCE (beside it), not per region
+            key = (n, inst) if self.S.get("reader_per_inst") else (n, r)
+            if landed and key not in lands:
+                lands[key] = dict(name=f"{len(lands)}", net=n, src_region=s, dst_region=r,
+                                  src_nodes=sorted(ds), width=eval_width(self.rng(n), self.env), readers=[])
+                if self.S.get("reader_per_inst"):
+                    lands[key]["dst_inst"] = inst
             if landed:
-                lands[(n, r)]["readers"].append(f"{inst}.{pin}")
+                lands[key]["readers"].append(f"{inst}.{pin}")
             for d in ds:
                 edges.append((d, inst, n, self.A if landed else 0, landed, pin))
         for p, ds in out_drv.items():
             for d in ds:
                 edges.append((d, f"port:{p}", p, 0, False, None))
         nodes = sorted({e[0] for e in edges} | {e[1] for e in edges} | set(self.region))
+        lagged = [e for e in edges if (e[1], e[5]) in self.lag]
+        edges_all, edges = edges, [e for e in edges if (e[1], e[5]) not in self.lag]
         t = {v: 0 for v in nodes}
         if self.reference:
             lst = sorted(lands.values(), key=lambda L: int(L["name"]))
@@ -435,6 +467,8 @@ class Parent:
                 outs = [t[b] - add for a, b, n, add, _, _ in edges if a == v]
                 if outs:
                     t[v] = min(outs)
+                elif any(a == v for a, *_ in lagged):
+                    t[v] = min(t[b] for a, b, *_ in lagged if a == v)
         for p, ds in out_drv.items():
             ts = {t[d] for d in ds}
             if len(ts) > 1:
@@ -448,10 +482,60 @@ class Parent:
                 pads[(n, b)] = max(pads.get((n, b), 0), k)
             if k < 0:
                 raise SystemExit("internal: negative pad")
+        lag = {}            # reader inst -> common status lag (edges after the reader's own time)
+        for a, b, n, add, landed, pin in lagged:
+            lag[b] = max(lag.get(b, 0), t[a] + add - t[b])
+        for a, b, n, add, landed, pin in lagged:
+            k = t[b] + lag[b] - t[a] - add
+            if k > 0:
+                pads[(n, b)] = max(pads.get((n, b), 0), k)
+        edges = edges_all
         lst = sorted(lands.values(), key=lambda L: int(L["name"]))
+        if self.S.get("share_rings"):
+            # TW2-PSLICE2 10-19 (opt-in share_rings): ONE write ring per (net, source region), beside the source; every read
+            # half of that net (each destination region / reader instance) reads the same ring bank (LANDING-CONTRACT
+            # unchanged: equal-depth reset runs G == R0, so every reader keeps K = E; the ring -> read multicycle is per pair)
+            own = {}
+            for L in lst:
+                L["ring_of"] = own.setdefault((L["net"], L["src_region"]), L["name"])
         if mut_unland and lst:
             lst[0]["unlanded_mutant"] = True
-        return dict(t=t, edges=edges, lands=lst, landkey=lands, pads=pads, nreg=nreg, drv=drv, rd=rd, out_drv=out_drv)
+        return dict(t=t, edges=edges, lands=lst, landkey=lands, pads=pads, nreg=nreg, drv=drv, rd=rd, out_drv=out_drv,
+                    lag=lag, lagged=lagged)
+
+    def emit_lagref(self, P):
+        """<top>_lagref: the FLAT parent with every lag pin delayed lag(reader) stages (the lockstep reference)"""
+        S, top = self.S, self.S["top"] + "_lagref"
+        ck = sorted(self.ck)[0]
+        L = ["`timescale 1ns/1ps", f"// GENERATED by tools/landed_parent/lp.py: {S['top']} with its status-return (lag_pins) "
+             f"inputs delayed {dict(sorted(P['lag'].items()))} stages -- the lockstep reference of the landed parent.",
+             f"module {top} " + (f"#({self.mod['params_txt']}) " if self.mod["params_txt"] and self.mod["params_txt"].strip() else "")
+             + "(\n    " + ",\n    ".join(full_item(p) for p in self.mod["ports"]) + "\n);"]
+        body, keep, pos = self.mod["body"], [], 0
+        for ins in self.insts:
+            keep.append(body[pos:ins["span"][0]])
+            pos = ins["span"][1]
+        keep.append(body[pos:])
+        L += [ln.rstrip() for ch in keep for ln in ch.splitlines() if ln.strip()]
+        sub = {}
+        for j, (a, b, n, add, landed, pin) in enumerate(sorted(P["lagged"], key=lambda e: (e[1], e[5], e[2]))):
+            if (b, pin, n) in sub or P["lag"][b] == 0:
+                continue
+            rng = self.rng(n)
+            q = f"{n}__lag_{b}_{pin}"
+            L.append(f"    wire {rng or ''} {q};  ot_pl_pad #(.W({width_text(rng)}), .N({P['lag'][b]})) u_lag_{j} (.ck({ck}), "
+                     f".d({n}), .q({q}));")
+            sub[(b, pin, n)] = q
+        for ins in self.insts:
+            cs = []
+            for pin, ex in ins["conns"].items():
+                for (bi, bp, n), q in sub.items():
+                    if bi == ins["inst"] and bp == pin:
+                        ex = re.sub(rf"(?<![\w$]){re.escape(n)}\b", q, ex)
+                cs.append(f".{pin}({ex})")
+            L.append(f"    {ins['module']} {ins['params'] + ' ' if ins['params'] else ''}{ins['inst']} (" + ", ".join(cs) + ");")
+        L.append("endmodule")
+        return top, "\n".join(L) + "\n"
 
     # ---------------------------------------------------------------------------------------------------- emitters
     def reset_tree(self):
@@ -476,7 +560,7 @@ class Parent:
         L = []
         w = L.append
         # header
-        items = [p["item"] for p in self.mod["ports"] if p["name"] not in self.ck]
+        items = [full_item(p) for p in self.mod["ports"] if p["name"] not in self.ck]
         items += [f"input wire ck_{r}" for r in self.regions]
         par = (self.mod["params_txt"] + ",\n    " if self.mod["params_txt"] and self.mod["params_txt"].strip() else "")
         w("`timescale 1ns/1ps")
@@ -511,15 +595,20 @@ class Parent:
             rng = self.rng(net)
             wt = width_text(rng)
             decl = rng or ""
-            out = f"{net}__l_{r}"
-            w(f"    // ---- LANDING {n}: {net} {s} -> {r}, {Ld['width']} b ({', '.join(Ld['readers'])})")
-            w(f"    wire [{D}*{wt}-1:0] lpl_{n}_bank;  wire [{D * (AW + 1) - 1}:0] lpl_{n}_epo;  wire [{D - 1}:0] lpl_{n}_vld;"
-              f"  wire {decl} {out}, lpl_{n}_o;")
-            w(f"    ot_pl_land_w #(.W({wt}), .D({D})) u_lpl_{n}_w (.ck(ck_{s}), .rsi(lpr_{s}), .i({net}), "
-              f".bank(lpl_{n}_bank), .epo(lpl_{n}_epo), .vld(lpl_{n}_vld));")
+            out = f"{net}__l_{r}" if "dst_inst" not in Ld else f"{net}__l_{Ld['dst_inst']}"
+            g = Ld.get("ring_of", n)
+            w(f"    // ---- LANDING {n}: {net} {s} -> {r}, {Ld['width']} b ({', '.join(Ld['readers'])})"
+              + (f" -- reads ring {g}" if g != n else ""))
+            if g == n:
+                w(f"    wire [{D}*{wt}-1:0] lpl_{n}_bank;  wire [{D * (AW + 1) - 1}:0] lpl_{n}_epo;  wire [{D - 1}:0] lpl_{n}_vld;"
+                  f"  wire {decl} {out}, lpl_{n}_o;")
+                w(f"    ot_pl_land_w #(.W({wt}), .D({D})) u_lpl_{n}_w (.ck(ck_{s}), .rsi(lpr_{s}), .i({net}), "
+                  f".bank(lpl_{n}_bank), .epo(lpl_{n}_epo), .vld(lpl_{n}_vld));")
+            else:
+                w(f"    wire {decl} {out}, lpl_{n}_o;")
             kk = f"(MUT == 2) ? {K + 1} : {K}" if n == "0" and mut else f"{K}"
             w(f"    ot_pl_land_r #(.W({wt}), .D({D}), .K({kk})) u_lpl_{n}_r (.ck(ck_{r}), .rsi(lpr_{r}), "
-              f".bank(lpl_{n}_bank), .epo(lpl_{n}_epo), .vld(lpl_{n}_vld), .o(lpl_{n}_o));")
+              f".bank(lpl_{g}_bank), .epo(lpl_{g}_epo), .vld(lpl_{g}_vld), .o(lpl_{n}_o));")
             if Ld.get("unlanded_mutant"):
                 w(f"    assign {out} = {net};   // --mut-unland: the region audit must FAIL on this crossing")
             elif n == "0" and mut:
@@ -599,13 +688,25 @@ class Parent:
         if P["lands"]:
             o.append(f"# {len(P['lands'])} landings (LANDING-CONTRACT L5): ring -> read multicycle -setup {E} -hold {D - 1}, "
                      f"window ({E} - {D}) T + t_hold < dL < {E} T - t_cq - t_setup")
-            o.append("set ot_lp_lands {" + " ".join(L["name"] for L in P["lands"]) + "}")
-            o += ["set ot_lp_miss 0", "foreach ot_ln $ot_lp_lands {",
-                  "  set ot_lf [get_cells -quiet u_lpl_${ot_ln}_w.*]",
-                  "  set ot_lt [get_cells -quiet u_lpl_${ot_ln}_r.*]",
-                  "  if {[llength $ot_lf] == 0} { set ot_lf [get_cells -quiet u_lpl_${ot_ln}_w/*] }",
-                  "  if {[llength $ot_lt] == 0} { set ot_lt [get_cells -quiet u_lpl_${ot_ln}_r/*] }",
-                  "  if {[llength $ot_lf] == 0 || [llength $ot_lt] == 0} { incr ot_lp_miss; continue }",
+            shared = any(L.get("ring_of", L["name"]) != L["name"] for L in P["lands"])
+            if shared:      # share_rings: (ring, read) pairs; the ring of landing n is u_lpl_<ring_of>_w
+                o.append("set ot_lp_pairs {" + " ".join(f"{L.get('ring_of', L['name'])} {L['name']}" for L in P["lands"]) + "}")
+                o.append("set ot_lp_lands {}; foreach {ot_lw ot_ln} $ot_lp_pairs { lappend ot_lp_lands $ot_ln; set ot_lp_ring($ot_ln) $ot_lw }")
+            else:
+                o.append("set ot_lp_lands {" + " ".join(L["name"] for L in P["lands"]) + "}")
+            o += ["set ot_lp_miss 0", "foreach ot_ln $ot_lp_lands {"]
+            if shared:
+                o += ["  set ot_lw $ot_lp_ring($ot_ln)",
+                      "  set ot_lf [get_cells -quiet u_lpl_${ot_lw}_w.*]",
+                      "  set ot_lt [get_cells -quiet u_lpl_${ot_ln}_r.*]",
+                      "  if {[llength $ot_lf] == 0} { set ot_lf [get_cells -quiet u_lpl_${ot_lw}_w/*] }",
+                      "  if {[llength $ot_lt] == 0} { set ot_lt [get_cells -quiet u_lpl_${ot_ln}_r/*] }"]
+            else:
+                o += ["  set ot_lf [get_cells -quiet u_lpl_${ot_ln}_w.*]",
+                      "  set ot_lt [get_cells -quiet u_lpl_${ot_ln}_r.*]",
+                      "  if {[llength $ot_lf] == 0} { set ot_lf [get_cells -quiet u_lpl_${ot_ln}_w/*] }",
+                      "  if {[llength $ot_lt] == 0} { set ot_lt [get_cells -quiet u_lpl_${ot_ln}_r/*] }"]
+            o += ["  if {[llength $ot_lf] == 0 || [llength $ot_lt] == 0} { incr ot_lp_miss; continue }",
                   f"  set_multicycle_path -setup {E} -from $ot_lf -to $ot_lt",
                   f"  set_multicycle_path -hold {D - 1} -from $ot_lf -to $ot_lt", "}",
                   'puts "OT_LP_LAND_SDC [expr {[llength $ot_lp_lands] - $ot_lp_miss}] of [llength $ot_lp_lands] landings constrained"']
@@ -628,7 +729,8 @@ class Parent:
     def record(self, P, top_lp, rt):
         S = self.S
         t = P["t"]
-        flops_land = sum(self.D * L["width"] + self.D + (self.AW + 1) + 1 + L["width"] + (self.AW + 1) + 2 for L in P["lands"])
+        flops_land = sum((self.D * L["width"] + self.D + (self.AW + 1) + 1 if L.get("ring_of", L["name"]) == L["name"] else 0)
+                         + L["width"] + (self.AW + 1) + 2 for L in P["lands"])
         flops_pad = sum(eval_width(self.rng(n), self.env) * k for (n, _), k in P["pads"].items())
         flops_rst = 1 + len(self.regions) * (rt["RB"] - 1) + sum(t.get(i["inst"], 0) + self.rx for i in self.insts if any(
             pin in (S.get("reset_pins") or []) and ex.strip() == self.rst for pin, ex in i["conns"].items()))
@@ -647,9 +749,10 @@ class Parent:
                      for r in self.regions},
             D=self.D, E=self.E, K=self.K, added_edges_per_landing=self.A,
             window=f"({self.E} - {self.D}) T + t_hold < dL < {self.E} T - t_cq - t_setup at TT and FF",
-            landings=[dict(L, ring=f"u_lpl_{L['name']}_w (ck_{L['src_region']})", read=f"u_lpl_{L['name']}_r (ck_{L['dst_region']})",
-                           added_edges=self.A,
-                           sdc=f"set_multicycle_path -setup {self.E} / -hold {self.D - 1} -from u_lpl_{L['name']}_w.* -to u_lpl_{L['name']}_r.*")
+            landings=[dict(L, ring=f"u_lpl_{L.get('ring_of', L['name'])}_w (ck_{L['src_region']})",
+                           read=f"u_lpl_{L['name']}_r (ck_{L['dst_region']})", added_edges=self.A,
+                           sdc=f"set_multicycle_path -setup {self.E} / -hold {self.D - 1} -from u_lpl_{L.get('ring_of', L['name'])}_w.* "
+                               f"-to u_lpl_{L['name']}_r.*")
                       for L in P["lands"]],
             pads=[dict(net=n, reader=i, stages=k) for (n, i), k in sorted(P["pads"].items())],
             reset=dict(port=self.rst, root_region=rt["reset_region"], depth=rt["RB"], hops=rt["hops"],
@@ -667,7 +770,13 @@ class Parent:
                           "(+E+1 per landed crossing on that path), reset delayed reset_release_added_edges, ports at offset 0"
                           if self.reference else "offsets"),
                 ref_params=dict(S.get("ref_params") or S.get("params") or {}) if self.reference else None,
+                **({} if not P.get("lag") else dict(status_lag_edges={
+                    b: dict(lag=k, pins=sorted({e[5] for e in P["lagged"] if e[1] == b}),
+                            note="these status-return inputs reach the reader lag edges after its own time "
+                                 "(flat == <top>_lagref: the reader's outputs carry that status lag edges "
+                                 "later than in the flat parent)") for b, k in sorted(P["lag"].items())})),
                 max_added_edges=max([0] + list(port_out.values()))),
+            **({} if not (S.get("bench") or {}).get("mut_waivers") else dict(mutant_waivers=S["bench"]["mut_waivers"])),
             warnings=[f"child {i} runs t = {t[i]} edges late but has no reset pin on {self.rst}: its free-running state "
                       "is NOT re-aligned (check it in the bench)" for i in no_rst],
             die_obligations=[
@@ -719,7 +828,8 @@ class Parent:
              [f".{p['name']}(lo_{p['name']})" for p in outs]
         pv = ", ".join(f".{k}({v})" for k, v in (S.get("params") or {}).items())
         pr = ", ".join(f".{k}({v})" for k, v in ((S.get("ref_params") if self.reference else None) or S.get("params") or {}).items())
-        L.append(f"    {S['top']} {('#(' + pr + ') ') if pr else ''}u_flat (" + ", ".join(fc) + ");")
+        ref = S["top"] + "_lagref" if P.get("lag") else S["top"]
+        L.append(f"    {ref} {('#(' + pr + ') ') if pr else ''}u_flat (" + ", ".join(fc) + ");")
         L.append(f"    {top_lp} #({(pv + ', ') if pv else ''}.MUT(MUT)) u_lp (" + ", ".join(lc) + ");")
         L.append("    function [31:0] rnd; input integer k; rnd = $urandom; endfunction")
         L.append("    integer cyc, nc, bad;")
@@ -732,10 +842,11 @@ class Parent:
         L.append(f"        for (cyc = 0; cyc < {cyc}; cyc = cyc + 1) begin")
         L.append("            @(negedge clk);")
         L.append(f"            if (cyc == {rcy}) rst = {'1' if act_low else '0'};")
+        tbx = B.get("expr") or {}
         for p in ins:
             n = p["name"]
             if n not in self.static:
-                L.append(f"            fi_{n} = {{{','.join(['$urandom'] * ((W[n] + 31) // 32))}}};")
+                L.append(f"            fi_{n} = " + (f"{tbx[n]};" if n in tbx else f"{{{','.join(['$urandom'] * ((W[n] + 31) // 32))}}};"))
         L.append(f"            if (cyc > {warm}) begin")
         for p in outs:
             n = p["name"]
@@ -772,8 +883,11 @@ class Parent:
 
     def bench_sh(self, top_lp, rel_out, P=None):
         muts = [0] + ([1, 2] if P and P["lands"] else []) + ([3] if P and P["pads"] else []) + ([4] if self.mut_child(P) else [])
+        waived = {int(k): v for k, v in ((self.S.get("bench") or {}).get("mut_waivers") or {}).items()}
+        muts = [m for m in muts if m not in waived]
         up = "/".join([".."] * len(Path(rel_out).parts))
-        srcs = " ".join(self.S["sources"] + self.S.get("child_sources", []) + [LIB_RTL])
+        srcs = " ".join(self.S["sources"] + self.S.get("child_sources", []) + [LIB_RTL] +
+                        ([f"{rel_out}/{self.S['top']}_lagref.sv"] if P and P.get("lag") else []))
         defs = " ".join(f"-D{d}" for d in self.S.get("defines") or [])
         return f"""#!/usr/bin/env bash
 # GENERATED by tools/landed_parent/lp.py: lockstep bench {self.S['top']} (flat) vs {top_lp} + mutants {muts[1:]} + region audit.
@@ -857,7 +971,7 @@ def audit(spec: dict, rtl_text: str) -> dict:
                         continue
                     di = next(x for x in insts if x["inst"] == d)
                     if di["module"] == "ot_pl_land_w" and i["module"] == "ot_pl_land_r" and \
-                            d[:-2] == i["inst"][:-2]:
+                            (d[:-2] == i["inst"][:-2] or n in {f"lpl_{d[6:-2]}_{x}" for x in ("bank", "epo", "vld")}):
                         landed += pin == "bank"
                     elif n.startswith("lpr_") and d.startswith("u_lpr_"):
                         rst += 1
@@ -885,6 +999,9 @@ def gen(S: dict, mut_unland=False, rtl_out=None):
         Path(rtl_out).write_text(rtl)
         return P
     (out / f"{top_lp}.sv").write_text(rtl)
+    if P.get("lag"):
+        lt, ltxt = Pm.emit_lagref(P)
+        (out / f"{lt}.sv").write_text(ltxt)
     (out / f"{top_lp}.sdc").write_text(Pm.sdc(P, top_lp))
     (out / f"tb_{top_lp}.sv").write_text(Pm.tb(P, top_lp, rt))
     sh = out / f"{top_lp}_bench.sh"
