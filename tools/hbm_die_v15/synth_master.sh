@@ -16,7 +16,7 @@ PREF=""; [ "${1:-}" = "--prefer" ] && PREF="--prefer $SRC/$2"
 BBARG=""; [ "$BB" != "-" ] && BBARG="--bb $BB"
 mkdir -p $OUT
 HDIE_ALLOW_AMBIGUOUS=1 python3 $SRC/tools/hbm_die_v15/master_filelist.py $TOP --root $SRC --json $PREF $BBARG > $OUT/$NAME.files.json || { echo "$NAME FILELIST_FAIL"; exit 2; }
-python3 - "$OUT/$NAME.files.json" "$OUT/$NAME.ys" "$TOP" "$PRM" "$BB" "$NAME" "${COARSE:-0}" "${HIER:-0}" "${DEFINES:-}" "${EXTRA:-}" "${LIBCELLS:-0}" "${WTOP:-}" "${DROP:-}" <<'PY'
+python3 - "$OUT/$NAME.files.json" "$OUT/$NAME.ys" "$TOP" "$PRM" "$BB" "$NAME" "${COARSE:-0}" "${HIER:-0}" "${DEFINES:-}" "${EXTRA:-}" "${LIBCELLS:-0}" "${WTOP:-}" "${DROP:-}" "$SRC" <<'PY'
 import json,sys
 d=json.load(open(sys.argv[1])); dfs=''.join(f' -D{x}' for x in sys.argv[9].split(',') if x)
 for f in [x for x in sys.argv[10].split(',') if x]:   # EXTRA: files outside the indexed RTL roots (e.g. rtl/model_ready_*)
@@ -29,10 +29,12 @@ if len(sys.argv) > 13 and sys.argv[13]:   # DROP=f1,f2: files not read (a test b
 # A preferred scoped closure can already be in the indexed list AND EXTRA.
 # Read each physical source once; do not suppress distinct files defining conflicting modules.
 from pathlib import Path
+source_root = Path(sys.argv[14]) if len(sys.argv) > 14 else Path.cwd()
 seen = set()
 unique = []
 for f in d['files']:
-    key = str(Path(f).resolve())
+    path = Path(f)
+    key = str((path if path.is_absolute() else source_root / path).resolve())
     if key not in seen:
         seen.add(key)
         unique.append(f)
