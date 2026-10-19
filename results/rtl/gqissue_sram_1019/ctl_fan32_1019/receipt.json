@@ -1,0 +1,161 @@
+{
+  "status": "DATA_FANOUT_PASS_CLOCK_BLOCKED",
+  "netlist_sha256": "e0716f0c0244647b276a64e5bdb150b1331edcb8e4f99061c486e5c9d1d7fe17",
+  "source_sha256": {
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv": "a41263125ea57c3077372b10dc671fbfe382345677480d5dfefaf2e2330ad2ac",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq_target16.sv": "28056c61253b7d92df6dc181826a3c4594a519ed1e85affbaad01d8c4a649833",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_aq13.sv": "c05d5ade0da085de3625300b2a585ceb6ae1d404ff1370d9a96791ab11558fa0",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_aq_scale13r.sv": "1581e0a0dbaa2156e64e66d3a7c7680713c7f23f279f663340615d9c0086db40"
+  },
+  "registered_roots": 24548,
+  "max_registered_electrical_loads": 32,
+  "over32": [],
+  "reset_max": 32,
+  "reset_top": [
+    {
+      "net": "u_ot_pr_core.u_rst.sync_q[1]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 32,
+      "flops": 32,
+      "example": "ot_rrs__u_ot_pr_core_u_rst_rst_n__c0$_DFF_PN0_"
+    },
+    {
+      "net": "u_ot_pr_core.u_target.u_reset_data.q$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 30,
+      "flops": 30,
+      "example": "u_ot_pr_core.u_target.g_cfg_addr[0].u_slot.we$_DFF_PN0_"
+    },
+    {
+      "net": "ot_rrs__u_ot_pr_core_u_target_reset_ctrl_copies__c3$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 26,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "ot_rrs__u_ot_pr_core_u_rst_rst_n__c0$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 21,
+      "flops": 21,
+      "example": "u_ot_pr_core.per[10]$_DFFE_PN0P_"
+    },
+    {
+      "net": "ot_rrs__u_ot_pr_core_u_rst_rst_n__c1$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 21,
+      "flops": 21,
+      "example": "u_ot_pr_core.per[0]$_DFFE_PN0P_"
+    },
+    {
+      "net": "ot_rrs__u_ot_pr_core_u_rst_rst_n__c10$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 21,
+      "flops": 21,
+      "example": "ld_p_v[0]$_DFF_PN0_"
+    },
+    {
+      "net": "ot_rrs__u_ot_pr_core_u_rst_rst_n__c11$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 21,
+      "flops": 21,
+      "example": "u_ot_pr_core.rdx[0][2]$_DFF_PN0_"
+    },
+    {
+      "net": "ot_rrs__u_ot_pr_core_u_rst_rst_n__c12$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 21,
+      "flops": 21,
+      "example": "u_ot_pr_core.rdx[2][7]$_DFF_PN0_"
+    },
+    {
+      "net": "ot_rrs__u_ot_pr_core_u_rst_rst_n__c13$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 21,
+      "flops": 21,
+      "example": "u_ot_pr_core.rdx[5][4]$_DFF_PN0_"
+    },
+    {
+      "net": "ot_rrs__u_ot_pr_core_u_rst_rst_n__c14$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 21,
+      "flops": 21,
+      "example": "vm_rq_lo[10]$_DFF_PN0_"
+    },
+    {
+      "net": "ot_rrs__u_ot_pr_core_u_rst_rst_n__c15$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 21,
+      "flops": 21,
+      "example": "vm_rq_lo[30]$_DFF_PN0_"
+    },
+    {
+      "net": "ot_rrs__u_ot_pr_core_u_rst_rst_n__c16$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 21,
+      "flops": 21,
+      "example": "vm_rq_hi[0]$_DFF_PN0_"
+    },
+    {
+      "net": "ot_rrs__u_ot_pr_core_u_rst_rst_n__c17$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 21,
+      "flops": 21,
+      "example": "vm_rq_hi[10]$_DFF_PN0_"
+    },
+    {
+      "net": "ot_rrs__u_ot_pr_core_u_rst_rst_n__c18$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 21,
+      "flops": 21,
+      "example": "vm_rq_hi[25]$_DFF_PN0_"
+    }
+  ],
+  "area_um2": {
+    "inclusive_yosys": 50235.15704,
+    "macro_liberty": 31132.616,
+    "macro_envelopes": 31132.61568,
+    "exclusive_std": 19102.54104,
+    "outline": 149299.2,
+    "fill": 0.33647304687499996,
+    "std_delta_vs_first_safe_sram": 4051.9277999999995
+  },
+  "data_edges_added": 0,
+  "reset_release_edges_added": 0,
+  "storage": {
+    "quantizer_macros": 8,
+    "physical_sram_bits": 262144,
+    "live_ring_bits": 32768,
+    "local_programme_rf_bits": 1616,
+    "installed_bitmap_bits": 16,
+    "wide_payload_flop_delay": false,
+    "retained_metadata": "40-stage narrow event/control metadata (600bits) and2bit/5edge format/fault alignment from the inherited qualified AQ datapath; explicit, not claimed to be SRAM."
+  },
+  "validation": {
+    "K_full_integration": "PASS six rows/two loops/2644 VM words +4 fault scenarios +32768 AQ elements +2097152 scale checks, latency13/II1",
+    "K_target": "PASS canonical differential +2 edges, malformed addr16/31/255/256/4095 and limit17, ADDR/LIMIT/COPY/START mutants, all8resetcopies equal",
+    "K_semantic_mutants": {
+      "status": "PASS_REJECTED_ALL12",
+      "exact_final_source": true,
+      "numerical_fault_errors": {
+        "ctl": 1190,
+        "em": 16,
+        "flit": 373,
+        "kq1": 1,
+        "m1": 973,
+        "m2": 64,
+        "m3": 5558,
+        "m4": 1784,
+        "m5": 841,
+        "m6": 1,
+        "m7": 600,
+        "run": 6893
+      },
+      "real_otrun_exit": 0
+    },
+    "J_AQ_mutants": "exact same AQ/scale source SHA as K: EC block1, SHIFT block4, SCALE2031616, SCALE_DATA21 numerical mismatches"
+  },
+  "clock_blocker": "The prepared fixed-depth helper matches failed SMH algorithm: actual clock leaves drive up to316 FF. No CTS until source-owned regional/capacity-bounded clock successor is modeled and checked.",
+  "pin_geometry": {
+    "schema": "opentallas.fp_pin_geometry.v1",
+    "verdict": "PASS",
+    "fails": [],
+    "metrics": {
+      "signal_clock_pins": 4032,
+      "pin_rectangles": 4032,
+      "pin_track_checked": 4032,
+      "pin_track_inaccessible": 0,
+      "pin_rectangles_outside": 0,
+      "missing_geometry": 0
+    },
+    "dump": "/srv/opentallas-scratch/claude/gqfan32-1019/audit/ctlK/work/orfs/gate_dump.json",
+    "dump_sha256": "807a5acda1e1d95c82b1529c5db977c25f5017e10b79444af6d8bccc2672aed5",
+    "validator_sha256": "5c0b112365aab653a6790d862cec90ff30a182ce0aeae58e80465b5b68c391a8"
+  }
+}

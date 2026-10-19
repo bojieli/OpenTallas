@@ -39,7 +39,7 @@ module ot_hgi_coll_gq_target16 #(parameter [7:0] TARGET=8'd48,parameter integer 
     output reg configured,fault,
     output wire [12:0] cfg_bank_we,
     output wire [103:0] cfg_bank_addr,
-    output wire [3:0] start_bank_v
+    output wire [12:0] start_bank_v
 );
     localparam integer ROWS=16;
 `ifdef OT_GQ_T16_MUT_LIMIT
@@ -50,7 +50,9 @@ module ot_hgi_coll_gq_target16 #(parameter [7:0] TARGET=8'd48,parameter integer 
     initial if(PCW!=8)$fatal(1,"GQ local16 target requires canonical PCW8 public widths");
     // External reset reaches two synchronizer pins, not the entire valid bitmap.
     wire reset_live,reset_data,reset_launch;
-    ot_gq_t16_reset2 u_reset_ctrl(.clk(clk),.rst_n(rst_n),.q(reset_live));
+    (* ot_rst_split=1 *)wire[7:0]reset_ctrl_copies;
+    ot_gq_t16_reset_bank #(.N(8))u_reset_ctrl(.clk(clk),.rst_n(rst_n),.q(reset_ctrl_copies));
+    assign reset_live=reset_ctrl_copies[0];
     ot_gq_t16_reset2 u_reset_data(.clk(clk),.rst_n(rst_n),.q(reset_data));
     ot_gq_t16_reset2 u_reset_launch(.clk(clk),.rst_n(rst_n),.q(reset_launch));
     reg cv,dv,lv;
@@ -105,8 +107,14 @@ module ot_hgi_coll_gq_target16 #(parameter [7:0] TARGET=8'd48,parameter integer 
             .header_ok(header_copy[P]),.flags_ok(flags_copy[P]),.data(data_q[8*g+:8]),.q(program_cfg_data[8*g+:8]));
     end endgenerate
     wire launch_emit=lv&&armed&&launch_ready&&!cv&&!dv;
-    generate for(genvar g=0;g<4;g=g+1)begin:g_launch_copy
-        ot_gq_t16_bitff u_v(.clk(clk),.rst_n(reset_launch),.d(launch_emit),.q(start_bank_v[g]));
+    generate for(genvar g=0;g<13;g=g+1)begin:g_launch_copy
+        ot_gq_t16_bitff u_v(.clk(clk),.rst_n(reset_launch),.d(
+`ifdef OT_GQ_T16_MUT_START
+            ((g==12)?1'b0:launch_emit)
+`else
+            launch_emit
+`endif
+            ),.q(start_bank_v[g]));
     end endgenerate
     // Same observed write and generation semantics as the public target pins.
     always @(posedge clk or negedge reset_data)
@@ -221,3 +229,12 @@ module ot_gq_t16_cfg_byte(input wire clk,cv,match_ok,header_ok,flags_ok,input wi
     (* keep="true" *)reg[7:0]r;always @(posedge clk)if(accept)r<=data;assign q=r;
 endmodule
 `default_nettype wire
+
+// Flattenable, identical kept final reset flops for source-pinned reset-family
+// redistribution. Both have identical clock,D,ARST/type: same2releaseedges.
+module ot_gq_t16_reset_bank #(parameter integer N=8)(input wire clk,rst_n,output wire[N-1:0]q);
+    (* keep="true",async_reg="true" *)reg m;
+    (* keep="true",async_reg="true" *)reg[N-1:0]l;
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin m<=0;l<=0;end else begin m<=1;l<={N{m}};end
+    assign q=l;
+endmodule

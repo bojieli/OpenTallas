@@ -1,0 +1,16 @@
+{
+ "schema": "opentallas.fp_pin_geometry.v1",
+ "verdict": "PASS",
+ "fails": [],
+ "metrics": {
+  "signal_clock_pins": 4032,
+  "pin_rectangles": 4032,
+  "pin_track_checked": 4032,
+  "pin_track_inaccessible": 0,
+  "pin_rectangles_outside": 0,
+  "missing_geometry": 0
+ },
+ "dump": "/srv/opentallas-scratch/claude/gqfan32-1019/audit/ctlK/work/orfs/gate_dump.json",
+ "dump_sha256": "807a5acda1e1d95c82b1529c5db977c25f5017e10b79444af6d8bccc2672aed5",
+ "validator_sha256": "5c0b112365aab653a6790d862cec90ff30a182ce0aeae58e80465b5b68c391a8"
+}

@@ -1,0 +1,2088 @@
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz', decompressing using zlib.
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz', decompressing using zlib.
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz', decompressing using zlib.
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz', decompressing using zlib.
+
+17. Printing statistics.
+
+=== $paramod$1ca0e1e2503f090bf22dd7fbb11ae153be1d756e\ot_hgi_coll_gq_em_chunk ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+       38        -       33        - wires
+       58        -       53        - wire bits
+       14        -        9        - public wires
+       34        -       29        - public wire bits
+       13        -        8        - ports
+       33        -       28        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+       41    4.986       40     4.87 cells
+        1    0.087        1    0.087   AND2x2_ASAP7_75t_R
+        4    0.408        4    0.408   AND3x2_ASAP7_75t_R
+        1    0.102        1    0.102   AND4x1_ASAP7_75t_R
+        5    0.583        4    0.467   AND4x2_ASAP7_75t_R
+        1    0.292        1    0.292   AND5x2_ASAP7_75t_R
+        8    0.583        8    0.583   BUFx2_ASAP7_75t_R
+        8    2.333        8    2.333   DFFHQNx1_ASAP7_75t_R
+       10    0.437       10    0.437   INVx1_ASAP7_75t_R
+        2    0.117        2    0.117   INVx2_ASAP7_75t_R
+        1    0.044        1    0.044   TIELOx1_ASAP7_75t_R
+        1    0.117        1        - submodules
+        1    0.117        1        -   ot_hgi_coll_gq_em_allow
+
+   Chip area for module '$paramod$1ca0e1e2503f090bf22dd7fbb11ae153be1d756e\ot_hgi_coll_gq_em_chunk': 4.986360
+     of which used for sequential elements: 2.332800 (46.78%)
+
+=== $paramod$2d54e8c4131fa5a4ddbefeac50bfd92a0afc31bb\ot_hgi_coll_aq_dec_chunk ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+       20        -       15        - wires
+       55        -       43        - wire bits
+        9        -        6        - public wires
+       44        -       34        - public wire bits
+        8        -        5        - ports
+       43        -       33        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+       20    1.968       17    1.575 cells
+        8      0.7        8      0.7   AND2x2_ASAP7_75t_R
+        1    0.102        -        -   AND4x1_ASAP7_75t_R
+        1    0.117        -        -   AND5x1_ASAP7_75t_R
+        8    0.816        8    0.816   AO21x2_ASAP7_75t_R
+        1    0.058        1    0.058   INVx2_ASAP7_75t_R
+        1    0.175        -        -   XOR2x1_ASAP7_75t_R
+        1    0.394        1        - submodules
+        1    0.394        1        -   ot_hgi_coll_aq_top_dec
+
+   Chip area for module '$paramod$2d54e8c4131fa5a4ddbefeac50bfd92a0afc31bb\ot_hgi_coll_aq_dec_chunk': 1.968300
+     of which used for sequential elements: 0.000000 (0.00%)
+
+=== $paramod$2e6b7673443af59ea9f327861b06bb6be414a860\ot_hgi_coll_aq_dec_chunk ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+       20        -       15        - wires
+       55        -       43        - wire bits
+        9        -        6        - public wires
+       44        -       34        - public wire bits
+        8        -        5        - ports
+       43        -       33        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+       20    1.968       17    1.575 cells
+        8      0.7        8      0.7   AND2x2_ASAP7_75t_R
+        1    0.102        -        -   AND4x1_ASAP7_75t_R
+        1    0.117        -        -   AND5x1_ASAP7_75t_R
+        8    0.816        8    0.816   AO21x2_ASAP7_75t_R
+        1    0.058        1    0.058   INVx2_ASAP7_75t_R
+        1    0.175        -        -   XOR2x1_ASAP7_75t_R
+        1    0.394        1        - submodules
+        1    0.394        1        -   ot_hgi_coll_aq_top_dec
+
+   Chip area for module '$paramod$2e6b7673443af59ea9f327861b06bb6be414a860\ot_hgi_coll_aq_dec_chunk': 1.968300
+     of which used for sequential elements: 0.000000 (0.00%)
+
+=== $paramod$48422feea4bb29987b79644b6ebbf6193e80803a\ot_hgi_coll_aq_dec_chunk ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+       20        -       15        - wires
+       55        -       43        - wire bits
+        9        -        6        - public wires
+       44        -       34        - public wire bits
+        8        -        5        - ports
+       43        -       33        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+       20    1.968       17    1.575 cells
+        8      0.7        8      0.7   AND2x2_ASAP7_75t_R
+        1    0.102        -        -   AND4x1_ASAP7_75t_R
+        1    0.117        -        -   AND5x1_ASAP7_75t_R
+        8    0.816        8    0.816   AO21x2_ASAP7_75t_R
+        1    0.058        1    0.058   INVx2_ASAP7_75t_R
+        1    0.175        -        -   XOR2x1_ASAP7_75t_R
+        1    0.394        1        - submodules
+        1    0.394        1        -   ot_hgi_coll_aq_top_dec
+
+   Chip area for module '$paramod$48422feea4bb29987b79644b6ebbf6193e80803a\ot_hgi_coll_aq_dec_chunk': 1.968300
+     of which used for sequential elements: 0.000000 (0.00%)
+
+=== $paramod$57f7a51f562fc055f05bae661b584bbe03ad2a0a\ot_hgi_coll_aq_dec_chunk ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+       20        -       15        - wires
+       55        -       43        - wire bits
+        9        -        6        - public wires
+       44        -       34        - public wire bits
+        8        -        5        - ports
+       43        -       33        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+       20    1.968       17    1.575 cells
+        8      0.7        8      0.7   AND2x2_ASAP7_75t_R
+        1    0.102        -        -   AND4x1_ASAP7_75t_R
+        1    0.117        -        -   AND5x1_ASAP7_75t_R
+        8    0.816        8    0.816   AO21x2_ASAP7_75t_R
+        1    0.058        1    0.058   INVx2_ASAP7_75t_R
+        1    0.175        -        -   XOR2x1_ASAP7_75t_R
+        1    0.394        1        - submodules
+        1    0.394        1        -   ot_hgi_coll_aq_top_dec
+
+   Chip area for module '$paramod$57f7a51f562fc055f05bae661b584bbe03ad2a0a\ot_hgi_coll_aq_dec_chunk': 1.968300
+     of which used for sequential elements: 0.000000 (0.00%)
+
+=== $paramod$5e01fb1d61c08d0a7e709455f8e1afc37adc8eb4\ot_hgi_coll_gq_em_chunk ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+       81        -       76        - wires
+      101        -       96        - wire bits
+       14        -        9        - public wires
+       34        -       29        - public wire bits
+       13        -        8        - ports
+       33        -       28        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+       84    10.06       83    9.944 cells
+        2    0.175        2    0.175   AND2x2_ASAP7_75t_R
+       10    0.875       10    0.875   AND3x1_ASAP7_75t_R
+        4    0.408        4    0.408   AND3x2_ASAP7_75t_R
+        6      0.7        5    0.583   AND4x2_ASAP7_75t_R
+        2    0.175        2    0.175   AO21x1_ASAP7_75t_R
+        2    0.146        2    0.146   BUFx2_ASAP7_75t_R
+        1    0.087        1    0.087   BUFx3_ASAP7_75t_R
+        1    0.117        1    0.117   BUFx4f_ASAP7_75t_R
+       16    4.666       16    4.666   DFFHQNx1_ASAP7_75t_R
+       24     1.05       24     1.05   INVx1_ASAP7_75t_R
+        1    0.087        1    0.087   INVx4_ASAP7_75t_R
+        2    0.175        2    0.175   NAND2x1_ASAP7_75t_R
+        3    0.262        3    0.262   NOR2x1_ASAP7_75t_R
+        1    0.117        1    0.117   OA211x2_ASAP7_75t_R
+        2    0.204        2    0.204   OA21x2_ASAP7_75t_R
+        3     0.35        3     0.35   OAI21x1_ASAP7_75t_R
+        1    0.102        1    0.102   OR4x1_ASAP7_75t_R
+        2    0.233        2    0.233   OR4x2_ASAP7_75t_R
+        1    0.131        1    0.131   OR5x2_ASAP7_75t_R
+        1    0.117        1        - submodules
+        1    0.117        1        -   ot_hgi_coll_gq_em_allow
+
+   Chip area for module '$paramod$5e01fb1d61c08d0a7e709455f8e1afc37adc8eb4\ot_hgi_coll_gq_em_chunk': 10.060200
+     of which used for sequential elements: 4.665600 (46.38%)
+
+=== $paramod$61165c59c983afedeb37d7c1d9f74a5754fd4b0d\ot_hgi_coll_aq_dec_chunk ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+       20        -       15        - wires
+       55        -       43        - wire bits
+        9        -        6        - public wires
+       44        -       34        - public wire bits
+        8        -        5        - ports
+       43        -       33        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+       20    1.968       17    1.575 cells
+        8      0.7        8      0.7   AND2x2_ASAP7_75t_R
+        1    0.102        -        -   AND4x1_ASAP7_75t_R
+        1    0.117        -        -   AND5x1_ASAP7_75t_R
+        8    0.816        8    0.816   AO21x2_ASAP7_75t_R
+        1    0.058        1    0.058   INVx2_ASAP7_75t_R
+        1    0.175        -        -   XOR2x1_ASAP7_75t_R
+        1    0.394        1        - submodules
+        1    0.394        1        -   ot_hgi_coll_aq_top_dec
+
+   Chip area for module '$paramod$61165c59c983afedeb37d7c1d9f74a5754fd4b0d\ot_hgi_coll_aq_dec_chunk': 1.968300
+     of which used for sequential elements: 0.000000 (0.00%)
+
+=== $paramod$7ba776a2b687a83ce4d8abc4b7dcb63960899a4c\ot_hgi_coll_gq_em_chunk ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+       38        -       33        - wires
+       58        -       53        - wire bits
+       14        -        9        - public wires
+       34        -       29        - public wire bits
+       13        -        8        - ports
+       33        -       28        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+       41    4.797       40     4.68 cells
+        1    0.087        1    0.087   AND2x2_ASAP7_75t_R
+       10    1.166        9     1.05   AND4x2_ASAP7_75t_R
+        8    0.583        8    0.583   BUFx2_ASAP7_75t_R
+        8    2.333        8    2.333   DFFHQNx1_ASAP7_75t_R
+       12    0.525       12    0.525   INVx1_ASAP7_75t_R
+        1    0.058        1    0.058   INVx2_ASAP7_75t_R
+        1    0.044        1    0.044   TIELOx1_ASAP7_75t_R
+        1    0.117        1        - submodules
+        1    0.117        1        -   ot_hgi_coll_gq_em_allow
+
+   Chip area for module '$paramod$7ba776a2b687a83ce4d8abc4b7dcb63960899a4c\ot_hgi_coll_gq_em_chunk': 4.796820
+     of which used for sequential elements: 2.332800 (48.63%)
+
+=== $paramod$88fec4ef70a257d7cd9e85229945bd8fe5bc9e93\ot_hgi_coll_aq_dec_chunk ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+       19        -       14        - wires
+       51        -       39        - wire bits
+        9        -        6        - public wires
+       41        -       31        - public wire bits
+        8        -        5        - ports
+       40        -       30        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+       18    1.779       15    1.385 cells
+        7    0.612        7    0.612   AND2x2_ASAP7_75t_R
+        1    0.102        -        -   AND4x1_ASAP7_75t_R
+        1    0.117        -        -   AND5x1_ASAP7_75t_R
+        7    0.714        7    0.714   AO21x2_ASAP7_75t_R
+        1    0.058        1    0.058   INVx2_ASAP7_75t_R
+        1    0.175        -        -   XOR2x1_ASAP7_75t_R
+        1    0.394        1        - submodules
+        1    0.394        1        -   ot_hgi_coll_aq_top_dec
+
+   Chip area for module '$paramod$88fec4ef70a257d7cd9e85229945bd8fe5bc9e93\ot_hgi_coll_aq_dec_chunk': 1.778760
+     of which used for sequential elements: 0.000000 (0.00%)
+
+=== $paramod$89a85d8cb2fe773f06b24a1a1275a386db5af1c2\ot_hgi_coll_gq_em_chunk ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+       80        -       75        - wires
+      100        -       95        - wire bits
+       14        -        9        - public wires
+       34        -       29        - public wire bits
+       13        -        8        - ports
+       33        -       28        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+       83   10.104       82    9.987 cells
+        9    0.787        9    0.787   AND2x2_ASAP7_75t_R
+        2    0.292        2    0.292   AND2x4_ASAP7_75t_R
+        9    0.787        9    0.787   AND3x1_ASAP7_75t_R
+        2    0.204        2    0.204   AND3x2_ASAP7_75t_R
+        1    0.204        1    0.204   AND3x4_ASAP7_75t_R
+        2    0.233        1    0.117   AND4x2_ASAP7_75t_R
+        2    0.233        2    0.233   AND5x1_ASAP7_75t_R
+        2    0.175        2    0.175   AO21x1_ASAP7_75t_R
+        3     0.35        3     0.35   AO32x1_ASAP7_75t_R
+        1    0.131        1    0.131   AO32x2_ASAP7_75t_R
+        1    0.073        1    0.073   BUFx2_ASAP7_75t_R
+        1    0.087        1    0.087   BUFx3_ASAP7_75t_R
+        1    0.146        1    0.146   BUFx6f_ASAP7_75t_R
+       16    4.666       16    4.666   DFFHQNx1_ASAP7_75t_R
+       24     1.05       24     1.05   INVx1_ASAP7_75t_R
+        2    0.175        2    0.175   NAND2x1_ASAP7_75t_R
+        2    0.175        2    0.175   NOR2x1_ASAP7_75t_R
+        1    0.102        1    0.102   OA21x2_ASAP7_75t_R
+        1    0.117        1    0.117   OAI21x1_ASAP7_75t_R
+        1    0.117        1    0.117   OR4x2_ASAP7_75t_R
+        1    0.117        1        - submodules
+        1    0.117        1        -   ot_hgi_coll_gq_em_allow
+
+   Chip area for module '$paramod$89a85d8cb2fe773f06b24a1a1275a386db5af1c2\ot_hgi_coll_gq_em_chunk': 10.103940
+     of which used for sequential elements: 4.665600 (46.18%)
+
+=== $paramod$a386a90960300d5ef66f0e9d90aedce5e79f9349\ot_hgi_coll_aq_dec_chunk ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+       20        -       15        - wires
+       55        -       43        - wire bits
+        9        -        6        - public wires
+       44        -       34        - public wire bits
+        8        -        5        - ports
+       43        -       33        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+       20    1.968       17    1.575 cells
+        8      0.7        8      0.7   AND2x2_ASAP7_75t_R
+        1    0.102        -        -   AND4x1_ASAP7_75t_R
+        1    0.117        -        -   AND5x1_ASAP7_75t_R
+        8    0.816        8    0.816   AO21x2_ASAP7_75t_R
+        1    0.058        1    0.058   INVx2_ASAP7_75t_R
+        1    0.175        -        -   XOR2x1_ASAP7_75t_R
+        1    0.394        1        - submodules
+        1    0.394        1        -   ot_hgi_coll_aq_top_dec
+
+   Chip area for module '$paramod$a386a90960300d5ef66f0e9d90aedce5e79f9349\ot_hgi_coll_aq_dec_chunk': 1.968300
+     of which used for sequential elements: 0.000000 (0.00%)
+
+=== $paramod$b0e3e2e8206bcea81cf570a314e8506b40ec2522\ot_hgi_coll_gq_em_chunk ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+       80        -       75        - wires
+      100        -       95        - wire bits
+       14        -        9        - public wires
+       34        -       29        - public wire bits
+       13        -        8        - ports
+       33        -       28        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+       83   10.016       82      9.9 cells
+        2    0.175        2    0.175   AND2x2_ASAP7_75t_R
+       10    0.875       10    0.875   AND3x1_ASAP7_75t_R
+        3    0.306        3    0.306   AND3x2_ASAP7_75t_R
+        6      0.7        5    0.583   AND4x2_ASAP7_75t_R
+        3    0.262        3    0.262   AO21x1_ASAP7_75t_R
+        2    0.146        2    0.146   BUFx2_ASAP7_75t_R
+        1    0.087        1    0.087   BUFx3_ASAP7_75t_R
+        1    0.146        1    0.146   BUFx6f_ASAP7_75t_R
+       16    4.666       16    4.666   DFFHQNx1_ASAP7_75t_R
+       23    1.006       23    1.006   INVx1_ASAP7_75t_R
+        1    0.087        1    0.087   INVx4_ASAP7_75t_R
+        2    0.175        2    0.175   NAND2x1_ASAP7_75t_R
+        4     0.35        4     0.35   NOR2x1_ASAP7_75t_R
+        1    0.117        1    0.117   OA211x2_ASAP7_75t_R
+        1    0.102        1    0.102   OA21x2_ASAP7_75t_R
+        3     0.35        3     0.35   OAI21x1_ASAP7_75t_R
+        1    0.102        1    0.102   OR4x1_ASAP7_75t_R
+        2    0.233        2    0.233   OR4x2_ASAP7_75t_R
+        1    0.131        1    0.131   OR5x2_ASAP7_75t_R
+        1    0.117        1        - submodules
+        1    0.117        1        -   ot_hgi_coll_gq_em_allow
+
+   Chip area for module '$paramod$b0e3e2e8206bcea81cf570a314e8506b40ec2522\ot_hgi_coll_gq_em_chunk': 10.016460
+     of which used for sequential elements: 4.665600 (46.58%)
+
+=== $paramod$bc164884553d42dd996176b4a5b40407c14ddcef\ot_hgi_coll_aq_dec_chunk ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+       20        -       15        - wires
+       55        -       43        - wire bits
+        9        -        6        - public wires
+       44        -       34        - public wire bits
+        8        -        5        - ports
+       43        -       33        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+       20    1.968       17    1.575 cells
+        8      0.7        8      0.7   AND2x2_ASAP7_75t_R
+        1    0.102        -        -   AND4x1_ASAP7_75t_R
+        1    0.117        -        -   AND5x1_ASAP7_75t_R
+        8    0.816        8    0.816   AO21x2_ASAP7_75t_R
+        1    0.058        1    0.058   INVx2_ASAP7_75t_R
+        1    0.175        -        -   XOR2x1_ASAP7_75t_R
+        1    0.394        1        - submodules
+        1    0.394        1        -   ot_hgi_coll_aq_top_dec
+
+   Chip area for module '$paramod$bc164884553d42dd996176b4a5b40407c14ddcef\ot_hgi_coll_aq_dec_chunk': 1.968300
+     of which used for sequential elements: 0.000000 (0.00%)
+
+=== $paramod$be83c09751f06cf3f95bd48c88e2306d61a410e1\ot_hgi_coll_aq_dec_chunk ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+       20        -       15        - wires
+       55        -       43        - wire bits
+        9        -        6        - public wires
+       44        -       34        - public wire bits
+        8        -        5        - ports
+       43        -       33        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+       20    1.968       17    1.575 cells
+        8      0.7        8      0.7   AND2x2_ASAP7_75t_R
+        1    0.102        -        -   AND4x1_ASAP7_75t_R
+        1    0.117        -        -   AND5x1_ASAP7_75t_R
+        8    0.816        8    0.816   AO21x2_ASAP7_75t_R
+        1    0.058        1    0.058   INVx2_ASAP7_75t_R
+        1    0.175        -        -   XOR2x1_ASAP7_75t_R
+        1    0.394        1        - submodules
+        1    0.394        1        -   ot_hgi_coll_aq_top_dec
+
+   Chip area for module '$paramod$be83c09751f06cf3f95bd48c88e2306d61a410e1\ot_hgi_coll_aq_dec_chunk': 1.968300
+     of which used for sequential elements: 0.000000 (0.00%)
+
+=== $paramod$bf32dabf451cdd40a93bff924b80cd6ae186f794\ot_hgi_coll_gq_em_chunk ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+       37        -       32        - wires
+       57        -       52        - wire bits
+       14        -        9        - public wires
+       34        -       29        - public wire bits
+       13        -        8        - ports
+       33        -       28        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+       40    4.753       39    4.636 cells
+        1    0.087        1    0.087   AND2x2_ASAP7_75t_R
+       10    1.166        9     1.05   AND4x2_ASAP7_75t_R
+        8    0.583        8    0.583   BUFx2_ASAP7_75t_R
+        8    2.333        8    2.333   DFFHQNx1_ASAP7_75t_R
+       11    0.481       11    0.481   INVx1_ASAP7_75t_R
+        1    0.058        1    0.058   INVx2_ASAP7_75t_R
+        1    0.044        1    0.044   TIELOx1_ASAP7_75t_R
+        1    0.117        1        - submodules
+        1    0.117        1        -   ot_hgi_coll_gq_em_allow
+
+   Chip area for module '$paramod$bf32dabf451cdd40a93bff924b80cd6ae186f794\ot_hgi_coll_gq_em_chunk': 4.753080
+     of which used for sequential elements: 2.332800 (49.08%)
+
+=== $paramod$c034a4ae5b4ca3dae58dc6147a9210fee7c84b40\ot_hgi_coll_gq_em_chunk ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+       37        -       32        - wires
+       57        -       52        - wire bits
+       14        -        9        - public wires
+       34        -       29        - public wire bits
+       13        -        8        - ports
+       33        -       28        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+       40    4.753       39    4.636 cells
+        1    0.102        1    0.102   AND3x2_ASAP7_75t_R
+        5    0.583        4    0.467   AND4x2_ASAP7_75t_R
+        4    0.467        4    0.467   AND5x1_ASAP7_75t_R
+        1    0.117        1    0.117   AO32x1_ASAP7_75t_R
+        8    0.583        8    0.583   BUFx2_ASAP7_75t_R
+        8    2.333        8    2.333   DFFHQNx1_ASAP7_75t_R
+       12    0.525       12    0.525   INVx1_ASAP7_75t_R
+        1    0.044        1    0.044   TIELOx1_ASAP7_75t_R
+        1    0.117        1        - submodules
+        1    0.117        1        -   ot_hgi_coll_gq_em_allow
+
+   Chip area for module '$paramod$c034a4ae5b4ca3dae58dc6147a9210fee7c84b40\ot_hgi_coll_gq_em_chunk': 4.753080
+     of which used for sequential elements: 2.332800 (49.08%)
+
+=== $paramod$d1fd11fe38b2619773d7d24f0c39e74ee615da73\ot_hgi_coll_aq_dec_chunk ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+       20        -       15        - wires
+       55        -       43        - wire bits
+        9        -        6        - public wires
+       44        -       34        - public wire bits
+        8        -        5        - ports
+       43        -       33        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+       20    1.968       17    1.575 cells
+        8      0.7        8      0.7   AND2x2_ASAP7_75t_R
+        1    0.102        -        -   AND4x1_ASAP7_75t_R
+        1    0.117        -        -   AND5x1_ASAP7_75t_R
+        8    0.816        8    0.816   AO21x2_ASAP7_75t_R
+        1    0.058        1    0.058   INVx2_ASAP7_75t_R
+        1    0.175        -        -   XOR2x1_ASAP7_75t_R
+        1    0.394        1        - submodules
+        1    0.394        1        -   ot_hgi_coll_aq_top_dec
+
+   Chip area for module '$paramod$d1fd11fe38b2619773d7d24f0c39e74ee615da73\ot_hgi_coll_aq_dec_chunk': 1.968300
+     of which used for sequential elements: 0.000000 (0.00%)
+
+=== $paramod$f43c4c89b6b395acbbd16a64f028b40cac0aff50\ot_hgi_coll_aq_dec_chunk ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+       20        -       15        - wires
+       55        -       43        - wire bits
+        9        -        6        - public wires
+       44        -       34        - public wire bits
+        8        -        5        - ports
+       43        -       33        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+       20    1.968       17    1.575 cells
+        8      0.7        8      0.7   AND2x2_ASAP7_75t_R
+        1    0.102        -        -   AND4x1_ASAP7_75t_R
+        1    0.117        -        -   AND5x1_ASAP7_75t_R
+        8    0.816        8    0.816   AO21x2_ASAP7_75t_R
+        1    0.058        1    0.058   INVx2_ASAP7_75t_R
+        1    0.175        -        -   XOR2x1_ASAP7_75t_R
+        1    0.394        1        - submodules
+        1    0.394        1        -   ot_hgi_coll_aq_top_dec
+
+   Chip area for module '$paramod$f43c4c89b6b395acbbd16a64f028b40cac0aff50\ot_hgi_coll_aq_dec_chunk': 1.968300
+     of which used for sequential elements: 0.000000 (0.00%)
+
+=== $paramod$f621826f0913eddb1b8cf28ff2f525952e2938d3\ot_hgi_coll_gq_em_chunk ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+       79        -       74        - wires
+       99        -       94        - wire bits
+       14        -        9        - public wires
+       34        -       29        - public wire bits
+       13        -        8        - ports
+       33        -       28        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+       82   10.206       81   10.089 cells
+        3    0.262        3    0.262   AND2x2_ASAP7_75t_R
+        1    0.146        1    0.146   AND2x4_ASAP7_75t_R
+       16      1.4       16      1.4   AND3x1_ASAP7_75t_R
+        1    0.102        1    0.102   AND3x2_ASAP7_75t_R
+        5    0.583        4    0.467   AND4x2_ASAP7_75t_R
+        1    0.292        1    0.292   AND5x2_ASAP7_75t_R
+        4     0.35        4     0.35   AO21x1_ASAP7_75t_R
+        1    0.073        1    0.073   BUFx2_ASAP7_75t_R
+        1    0.087        1    0.087   BUFx3_ASAP7_75t_R
+        2    0.292        2    0.292   BUFx6f_ASAP7_75t_R
+       16    4.666       16    4.666   DFFHQNx1_ASAP7_75t_R
+       20    0.875       20    0.875   INVx1_ASAP7_75t_R
+        1    0.102        1    0.102   INVx5_ASAP7_75t_R
+        2    0.175        2    0.175   NAND2x1_ASAP7_75t_R
+        4     0.35        4     0.35   NOR2x1_ASAP7_75t_R
+        2    0.233        2    0.233   OA211x2_ASAP7_75t_R
+        1    0.102        1    0.102   OA21x2_ASAP7_75t_R
+        1    0.117        1    0.117   OAI21x1_ASAP7_75t_R
+        1    0.117        1        - submodules
+        1    0.117        1        -   ot_hgi_coll_gq_em_allow
+
+   Chip area for module '$paramod$f621826f0913eddb1b8cf28ff2f525952e2938d3\ot_hgi_coll_gq_em_chunk': 10.206000
+     of which used for sequential elements: 4.665600 (45.71%)
+
+=== $paramod\ot_hgi_coll_aq_control_ff\W=s32'00000000000000000000000000000001 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+        5        -        5        - wires
+        5        -        5        - wire bits
+        4        -        4        - public wires
+        4        -        4        - public wire bits
+        3        -        3        - ports
+        3        -        3        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+        3    0.437        3    0.437 cells
+        1    0.073        1    0.073   BUFx2_ASAP7_75t_R
+        1    0.292        1    0.292   DFFHQNx1_ASAP7_75t_R
+        1    0.073        1    0.073   INVx3_ASAP7_75t_R
+
+   Chip area for module '$paramod\ot_hgi_coll_aq_control_ff\W=s32'00000000000000000000000000000001': 0.437400
+     of which used for sequential elements: 0.291600 (66.67%)
+
+=== $paramod\ot_hgi_coll_aq_control_ff\W=s32'00000000000000000000000000000110 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+       15        -       15        - wires
+       25        -       25        - wire bits
+        9        -        9        - public wires
+       19        -       19        - public wire bits
+        3        -        3        - ports
+       13        -       13        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+       18    2.624       18    2.624 cells
+        6    0.437        6    0.437   BUFx2_ASAP7_75t_R
+        6     1.75        6     1.75   DFFHQNx1_ASAP7_75t_R
+        6    0.437        6    0.437   INVx3_ASAP7_75t_R
+
+   Chip area for module '$paramod\ot_hgi_coll_aq_control_ff\W=s32'00000000000000000000000000000110': 2.624400
+     of which used for sequential elements: 1.749600 (66.67%)
+
+=== $paramod\ot_hgi_coll_aq_control_ff\W=s32'00000000000000000000000000001011 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+       25        -       25        - wires
+       45        -       45        - wire bits
+       14        -       14        - public wires
+       34        -       34        - public wire bits
+        3        -        3        - ports
+       23        -       23        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+       33    4.811       33    4.811 cells
+       11    0.802       11    0.802   BUFx2_ASAP7_75t_R
+       11    3.208       11    3.208   DFFHQNx1_ASAP7_75t_R
+       11    0.802       11    0.802   INVx3_ASAP7_75t_R
+
+   Chip area for module '$paramod\ot_hgi_coll_aq_control_ff\W=s32'00000000000000000000000000001011': 4.811400
+     of which used for sequential elements: 3.207600 (66.67%)
+
+=== $paramod\ot_hgi_coll_aq_shift_mux\W=s32'00000000000000000000000000000011 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+        8        -        8        - wires
+       14        -       14        - wire bits
+        4        -        4        - public wires
+       10        -       10        - public wire bits
+        4        -        4        - ports
+       10        -       10        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+        7    0.612        7    0.612 cells
+        3    0.262        3    0.262   AND2x2_ASAP7_75t_R
+        3    0.306        3    0.306   AO21x2_ASAP7_75t_R
+        1    0.044        1    0.044   INVx1_ASAP7_75t_R
+
+   Chip area for module '$paramod\ot_hgi_coll_aq_shift_mux\W=s32'00000000000000000000000000000011': 0.612360
+     of which used for sequential elements: 0.000000 (0.00%)
+
+=== $paramod\ot_hgi_coll_aq_shift_mux\W=s32'00000000000000000000000000010000 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+       23        -       23        - wires
+       68        -       68        - wire bits
+        4        -        4        - public wires
+       49        -       49        - public wire bits
+        4        -        4        - ports
+       49        -       49        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+       35    3.266       35    3.266 cells
+       16      1.4       16      1.4   AND2x2_ASAP7_75t_R
+        6    0.525        6    0.525   AO21x1_ASAP7_75t_R
+       10    1.021       10    1.021   AO21x2_ASAP7_75t_R
+        1    0.087        1    0.087   BUFx3_ASAP7_75t_R
+        1    0.146        1    0.146   BUFx6f_ASAP7_75t_R
+        1    0.087        1    0.087   INVx4_ASAP7_75t_R
+
+   Chip area for module '$paramod\ot_hgi_coll_aq_shift_mux\W=s32'00000000000000000000000000010000': 3.265920
+     of which used for sequential elements: 0.000000 (0.00%)
+
+=== $paramod\ot_hgi_coll_gq_control_hold\W=s32'00000000000000000000000000001000 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+       43        -       40        - wires
+       57        -       54        - wire bits
+       17        -       14        - public wires
+       31        -       28        - public wire bits
+        8        -        5        - ports
+       22        -       19        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+       43    5.365       42     5.22 cells
+        1    0.146        -        -   AND2x4_ASAP7_75t_R
+        6    0.525        6    0.525   AO21x1_ASAP7_75t_R
+        2    0.204        2    0.204   AO21x2_ASAP7_75t_R
+        2    0.525        2    0.525   BUFx12f_ASAP7_75t_R
+        8    0.583        8    0.583   BUFx2_ASAP7_75t_R
+        8    2.333        8    2.333   DFFHQNx1_ASAP7_75t_R
+        8     0.35        8     0.35   INVx1_ASAP7_75t_R
+        8      0.7        8      0.7   NOR2x1_ASAP7_75t_R
+        1    0.146        1        - submodules
+        1    0.146        1        -   ot_hgi_coll_gq_control_and
+
+   Chip area for module '$paramod\ot_hgi_coll_gq_control_hold\W=s32'00000000000000000000000000001000': 5.365440
+     of which used for sequential elements: 2.332800 (43.48%)
+
+=== $paramod\ot_hgi_coll_gq_control_hold\W=s32'00000000000000000000000000001110 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+       68        -       65        - wires
+       94        -       91        - wire bits
+       23        -       20        - public wires
+       49        -       46        - public wire bits
+        8        -        5        - ports
+       34        -       31        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+       74     9.01       73    8.865 cells
+        1    0.146        -        -   AND2x4_ASAP7_75t_R
+        8      0.7        8      0.7   AO21x1_ASAP7_75t_R
+        6    0.612        6    0.612   AO21x2_ASAP7_75t_R
+        2    0.525        2    0.525   BUFx12f_ASAP7_75t_R
+       14    1.021       14    1.021   BUFx2_ASAP7_75t_R
+        1    0.087        1    0.087   BUFx3_ASAP7_75t_R
+       14    4.082       14    4.082   DFFHQNx1_ASAP7_75t_R
+       14    0.612       14    0.612   INVx1_ASAP7_75t_R
+       14    1.225       14    1.225   NOR2x1_ASAP7_75t_R
+        1    0.146        1        - submodules
+        1    0.146        1        -   ot_hgi_coll_gq_control_and
+
+   Chip area for module '$paramod\ot_hgi_coll_gq_control_hold\W=s32'00000000000000000000000000001110': 9.010440
+     of which used for sequential elements: 4.082400 (45.31%)
+
+=== $paramod\ot_hgi_coll_gq_control_hold\W=s32'00000000000000000000000000001111 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+       72        -       69        - wires
+      100        -       97        - wire bits
+       24        -       21        - public wires
+       52        -       49        - public wire bits
+        8        -        5        - ports
+       36        -       33        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+       79    9.419       78    9.273 cells
+        1    0.146        -        -   AND2x4_ASAP7_75t_R
+        5    0.437        5    0.437   AO21x1_ASAP7_75t_R
+       10    1.021       10    1.021   AO21x2_ASAP7_75t_R
+       15    1.093       15    1.093   BUFx2_ASAP7_75t_R
+        1    0.087        1    0.087   BUFx3_ASAP7_75t_R
+        2    0.292        2    0.292   BUFx6f_ASAP7_75t_R
+       15    4.374       15    4.374   DFFHQNx1_ASAP7_75t_R
+       15    0.656       15    0.656   INVx1_ASAP7_75t_R
+       15    1.312       15    1.312   NOR2x1_ASAP7_75t_R
+        1    0.146        1        - submodules
+        1    0.146        1        -   ot_hgi_coll_gq_control_and
+
+   Chip area for module '$paramod\ot_hgi_coll_gq_control_hold\W=s32'00000000000000000000000000001111': 9.418680
+     of which used for sequential elements: 4.374000 (46.44%)
+
+=== $paramod\ot_hgi_coll_gq_control_hold\W=s32'00000000000000000000000000010000 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+       76        -       73        - wires
+      106        -      103        - wire bits
+       25        -       22        - public wires
+       55        -       52        - public wire bits
+        8        -        5        - ports
+       38        -       35        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+       84   10.002       83    9.856 cells
+        1    0.146        -        -   AND2x4_ASAP7_75t_R
+        6    0.525        6    0.525   AO21x1_ASAP7_75t_R
+       10    1.021       10    1.021   AO21x2_ASAP7_75t_R
+       16    1.166       16    1.166   BUFx2_ASAP7_75t_R
+        1    0.087        1    0.087   BUFx3_ASAP7_75t_R
+        2    0.292        2    0.292   BUFx6f_ASAP7_75t_R
+       16    4.666       16    4.666   DFFHQNx1_ASAP7_75t_R
+       16      0.7       16      0.7   INVx1_ASAP7_75t_R
+       16      1.4       16      1.4   NOR2x1_ASAP7_75t_R
+        1    0.146        1        - submodules
+        1    0.146        1        -   ot_hgi_coll_gq_control_and
+
+   Chip area for module '$paramod\ot_hgi_coll_gq_control_hold\W=s32'00000000000000000000000000010000': 10.001880
+     of which used for sequential elements: 4.665600 (46.65%)
+
+=== $paramod\ot_hgi_coll_gq_rf_column\W=s32'00000000000000000000000000000101 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+      434        -      362        - wires
+      568        -      448        - wire bits
+      149        -      101        - public wires
+      283        -      187        - public wire bits
+       53        -        5        - ports
+      187        -       91        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+      461   55.608      421   50.884 cells
+        8    0.933        -        -   AND4x2_ASAP7_75t_R
+        8    2.333        -        -   AND5x2_ASAP7_75t_R
+       80    8.165       80    8.165   AO21x2_ASAP7_75t_R
+       80    5.832       80    5.832   BUFx2_ASAP7_75t_R
+       21    3.062       21    3.062   BUFx6f_ASAP7_75t_R
+       80   23.328       80   23.328   DFFHQNx1_ASAP7_75t_R
+       92    4.024       80    3.499   INVx1_ASAP7_75t_R
+        4    0.233        -        -   INVx2_ASAP7_75t_R
+       88    7.698       80    6.998   NOR2x1_ASAP7_75t_R
+       16    4.724       16        - submodules
+        1    0.292        1        -   $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000000000
+        1    0.248        1        -   $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000000001
+        1    0.248        1        -   $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000000010
+        1    0.204        1        -   $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000000011
+        1    0.248        1        -   $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000000100
+        1    0.394        1        -   $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000000101
+        1    0.204        1        -   $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000000110
+        1     0.35        1        -   $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000000111
+        1    0.248        1        -   $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000001000
+        1    0.394        1        -   $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000001001
+        1    0.394        1        -   $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000001010
+        1    0.335        1        -   $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000001011
+        1    0.204        1        -   $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000001100
+        1    0.335        1        -   $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000001101
+        1    0.335        1        -   $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000001110
+        1    0.292        1        -   $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000001111
+
+   Chip area for module '$paramod\ot_hgi_coll_gq_rf_column\W=s32'00000000000000000000000000000101': 55.608120
+     of which used for sequential elements: 23.328000 (41.95%)
+
+=== $paramod\ot_hgi_coll_gq_rf_column\W=s32'00000000000000000000000000001000 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+      645        -      573        - wires
+      830        -      710        - wire bits
+      197        -      149        - public wires
+      382        -      286        - public wire bits
+       53        -        5        - ports
+      238        -      142        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+      720   87.538      680   82.814 cells
+        8    0.933        -        -   AND4x2_ASAP7_75t_R
+        8    2.333        -        -   AND5x2_ASAP7_75t_R
+       96    8.398       96    8.398   AO21x1_ASAP7_75t_R
+       32    3.266       32    3.266   AO21x2_ASAP7_75t_R
+       21    5.511       21    5.511   BUFx12f_ASAP7_75t_R
+      136    9.914      136    9.914   BUFx2_ASAP7_75t_R
+       11    1.604       11    1.604   BUFx6f_ASAP7_75t_R
+      128   37.325      128   37.325   DFFHQNx1_ASAP7_75t_R
+      140    6.124      128    5.599   INVx1_ASAP7_75t_R
+        4    0.233        -        -   INVx2_ASAP7_75t_R
+      136   11.897      128   11.197   NOR2x1_ASAP7_75t_R
+       16    4.724       16        - submodules
+        1    0.292        1        -   $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000000000
+        1    0.248        1        -   $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000000001
+        1    0.248        1        -   $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000000010
+        1    0.204        1        -   $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000000011
+        1    0.248        1        -   $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000000100
+        1    0.394        1        -   $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000000101
+        1    0.204        1        -   $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000000110
+        1     0.35        1        -   $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000000111
+        1    0.248        1        -   $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000001000
+        1    0.394        1        -   $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000001001
+        1    0.394        1        -   $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000001010
+        1    0.335        1        -   $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000001011
+        1    0.204        1        -   $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000001100
+        1    0.335        1        -   $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000001101
+        1    0.335        1        -   $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000001110
+        1    0.292        1        -   $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000001111
+
+   Chip area for module '$paramod\ot_hgi_coll_gq_rf_column\W=s32'00000000000000000000000000001000': 87.538320
+     of which used for sequential elements: 37.324800 (42.64%)
+
+=== $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000000000 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+        6        -        6        - wires
+        9        -        9        - wire bits
+        3        -        3        - public wires
+        6        -        6        - public wire bits
+        3        -        3        - ports
+        6        -        6        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+        4    0.292        4    0.292 cells
+        1    0.117        1    0.117   AND4x2_ASAP7_75t_R
+        2    0.087        2    0.087   INVx1_ASAP7_75t_R
+        1    0.087        1    0.087   NOR2x1_ASAP7_75t_R
+
+   Chip area for module '$paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000000000': 0.291600
+     of which used for sequential elements: 0.000000 (0.00%)
+
+=== $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000000001 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+        5        -        5        - wires
+        8        -        8        - wire bits
+        3        -        3        - public wires
+        6        -        6        - public wire bits
+        3        -        3        - ports
+        6        -        6        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+        3    0.248        3    0.248 cells
+        1    0.117        1    0.117   AND4x2_ASAP7_75t_R
+        1    0.044        1    0.044   INVx1_ASAP7_75t_R
+        1    0.087        1    0.087   NOR2x1_ASAP7_75t_R
+
+   Chip area for module '$paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000000001': 0.247860
+     of which used for sequential elements: 0.000000 (0.00%)
+
+=== $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000000010 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+        5        -        5        - wires
+        8        -        8        - wire bits
+        3        -        3        - public wires
+        6        -        6        - public wire bits
+        3        -        3        - ports
+        6        -        6        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+        3    0.248        3    0.248 cells
+        1    0.117        1    0.117   AND4x2_ASAP7_75t_R
+        1    0.044        1    0.044   INVx1_ASAP7_75t_R
+        1    0.087        1    0.087   NOR2x1_ASAP7_75t_R
+
+   Chip area for module '$paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000000010': 0.247860
+     of which used for sequential elements: 0.000000 (0.00%)
+
+=== $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000000011 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+        4        -        4        - wires
+        7        -        7        - wire bits
+        3        -        3        - public wires
+        6        -        6        - public wire bits
+        3        -        3        - ports
+        6        -        6        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+        2    0.204        2    0.204 cells
+        1    0.117        1    0.117   AND4x2_ASAP7_75t_R
+        1    0.087        1    0.087   NOR2x1_ASAP7_75t_R
+
+   Chip area for module '$paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000000011': 0.204120
+     of which used for sequential elements: 0.000000 (0.00%)
+
+=== $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000000100 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+        5        -        5        - wires
+        8        -        8        - wire bits
+        3        -        3        - public wires
+        6        -        6        - public wire bits
+        3        -        3        - ports
+        6        -        6        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+        3    0.248        3    0.248 cells
+        1    0.117        1    0.117   AND4x2_ASAP7_75t_R
+        1    0.044        1    0.044   INVx1_ASAP7_75t_R
+        1    0.087        1    0.087   NOR2x1_ASAP7_75t_R
+
+   Chip area for module '$paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000000100': 0.247860
+     of which used for sequential elements: 0.000000 (0.00%)
+
+=== $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000000101 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+        5        -        5        - wires
+        8        -        8        - wire bits
+        3        -        3        - public wires
+        6        -        6        - public wire bits
+        3        -        3        - ports
+        6        -        6        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+        3    0.394        3    0.394 cells
+        1    0.292        1    0.292   AND5x2_ASAP7_75t_R
+        1    0.044        1    0.044   INVx1_ASAP7_75t_R
+        1    0.058        1    0.058   INVx2_ASAP7_75t_R
+
+   Chip area for module '$paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000000101': 0.393660
+     of which used for sequential elements: 0.000000 (0.00%)
+
+=== $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000000110 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+        4        -        4        - wires
+        7        -        7        - wire bits
+        3        -        3        - public wires
+        6        -        6        - public wire bits
+        3        -        3        - ports
+        6        -        6        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+        2    0.204        2    0.204 cells
+        1    0.117        1    0.117   AND4x2_ASAP7_75t_R
+        1    0.087        1    0.087   NOR2x1_ASAP7_75t_R
+
+   Chip area for module '$paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000000110': 0.204120
+     of which used for sequential elements: 0.000000 (0.00%)
+
+=== $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000000111 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+        4        -        4        - wires
+        7        -        7        - wire bits
+        3        -        3        - public wires
+        6        -        6        - public wire bits
+        3        -        3        - ports
+        6        -        6        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+        2     0.35        2     0.35 cells
+        1    0.292        1    0.292   AND5x2_ASAP7_75t_R
+        1    0.058        1    0.058   INVx2_ASAP7_75t_R
+
+   Chip area for module '$paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000000111': 0.349920
+     of which used for sequential elements: 0.000000 (0.00%)
+
+=== $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000001000 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+        5        -        5        - wires
+        8        -        8        - wire bits
+        3        -        3        - public wires
+        6        -        6        - public wire bits
+        3        -        3        - ports
+        6        -        6        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+        3    0.248        3    0.248 cells
+        1    0.117        1    0.117   AND4x2_ASAP7_75t_R
+        1    0.044        1    0.044   INVx1_ASAP7_75t_R
+        1    0.087        1    0.087   NOR2x1_ASAP7_75t_R
+
+   Chip area for module '$paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000001000': 0.247860
+     of which used for sequential elements: 0.000000 (0.00%)
+
+=== $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000001001 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+        5        -        5        - wires
+        8        -        8        - wire bits
+        3        -        3        - public wires
+        6        -        6        - public wire bits
+        3        -        3        - ports
+        6        -        6        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+        3    0.394        3    0.394 cells
+        1    0.292        1    0.292   AND5x2_ASAP7_75t_R
+        1    0.044        1    0.044   INVx1_ASAP7_75t_R
+        1    0.058        1    0.058   INVx2_ASAP7_75t_R
+
+   Chip area for module '$paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000001001': 0.393660
+     of which used for sequential elements: 0.000000 (0.00%)
+
+=== $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000001010 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+        5        -        5        - wires
+        8        -        8        - wire bits
+        3        -        3        - public wires
+        6        -        6        - public wire bits
+        3        -        3        - ports
+        6        -        6        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+        3    0.394        3    0.394 cells
+        1    0.292        1    0.292   AND5x2_ASAP7_75t_R
+        1    0.044        1    0.044   INVx1_ASAP7_75t_R
+        1    0.058        1    0.058   INVx2_ASAP7_75t_R
+
+   Chip area for module '$paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000001010': 0.393660
+     of which used for sequential elements: 0.000000 (0.00%)
+
+=== $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000001011 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+        4        -        4        - wires
+        7        -        7        - wire bits
+        3        -        3        - public wires
+        6        -        6        - public wire bits
+        3        -        3        - ports
+        6        -        6        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+        2    0.335        2    0.335 cells
+        1    0.292        1    0.292   AND5x2_ASAP7_75t_R
+        1    0.044        1    0.044   INVx1_ASAP7_75t_R
+
+   Chip area for module '$paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000001011': 0.335340
+     of which used for sequential elements: 0.000000 (0.00%)
+
+=== $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000001100 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+        4        -        4        - wires
+        7        -        7        - wire bits
+        3        -        3        - public wires
+        6        -        6        - public wire bits
+        3        -        3        - ports
+        6        -        6        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+        2    0.204        2    0.204 cells
+        1    0.117        1    0.117   AND4x2_ASAP7_75t_R
+        1    0.087        1    0.087   NOR2x1_ASAP7_75t_R
+
+   Chip area for module '$paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000001100': 0.204120
+     of which used for sequential elements: 0.000000 (0.00%)
+
+=== $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000001101 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+        4        -        4        - wires
+        7        -        7        - wire bits
+        3        -        3        - public wires
+        6        -        6        - public wire bits
+        3        -        3        - ports
+        6        -        6        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+        2    0.335        2    0.335 cells
+        1    0.292        1    0.292   AND5x2_ASAP7_75t_R
+        1    0.044        1    0.044   INVx1_ASAP7_75t_R
+
+   Chip area for module '$paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000001101': 0.335340
+     of which used for sequential elements: 0.000000 (0.00%)
+
+=== $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000001110 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+        4        -        4        - wires
+        7        -        7        - wire bits
+        3        -        3        - public wires
+        6        -        6        - public wire bits
+        3        -        3        - ports
+        6        -        6        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+        2    0.335        2    0.335 cells
+        1    0.292        1    0.292   AND5x2_ASAP7_75t_R
+        1    0.044        1    0.044   INVx1_ASAP7_75t_R
+
+   Chip area for module '$paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000001110': 0.335340
+     of which used for sequential elements: 0.000000 (0.00%)
+
+=== $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000001111 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+        3        -        3        - wires
+        6        -        6        - wire bits
+        3        -        3        - public wires
+        6        -        6        - public wire bits
+        3        -        3        - ports
+        6        -        6        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+        1    0.292        1    0.292 cells
+        1    0.292        1    0.292   AND5x2_ASAP7_75t_R
+
+   Chip area for module '$paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000001111': 0.291600
+     of which used for sequential elements: 0.000000 (0.00%)
+
+=== ot_gq_t16_accept ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+        5        -        5        - wires
+        5        -        5        - wire bits
+        5        -        5        - public wires
+        5        -        5        - public wire bits
+        5        -        5        - ports
+        5        -        5        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+        1    0.117        1    0.117 cells
+        1    0.117        1    0.117   AND4x2_ASAP7_75t_R
+
+   Chip area for module '\ot_gq_t16_accept': 0.116640
+     of which used for sequential elements: 0.000000 (0.00%)
+
+=== ot_gq_t16_bitff ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+        7        -        7        - wires
+        7        -        7        - wire bits
+        5        -        5        - public wires
+        5        -        5        - public wire bits
+        4        -        4        - ports
+        4        -        4        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+        4    0.569        4    0.569 cells
+        1    0.073        1    0.073   BUFx2_ASAP7_75t_R
+        1    0.379        1    0.379   DFFASRHQNx1_ASAP7_75t_R
+        1    0.073        1    0.073   INVx3_ASAP7_75t_R
+        1    0.044        1    0.044   TIEHIx1_ASAP7_75t_R
+
+   Chip area for module '\ot_gq_t16_bitff': 0.568620
+     of which used for sequential elements: 0.379080 (66.67%)
+
+=== ot_gq_t16_cfg_byte ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+       47        -       42        - wires
+       61        -       56        - wire bits
+       21        -       16        - public wires
+       35        -       30        - public wire bits
+       12        -        7        - ports
+       26        -       21        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+       43    5.336       42     5.22 cells
+        1    0.117        -        -   AND4x2_ASAP7_75t_R
+        6    0.525        6    0.525   AO21x1_ASAP7_75t_R
+        2    0.204        2    0.204   AO21x2_ASAP7_75t_R
+        2    0.525        2    0.525   BUFx12f_ASAP7_75t_R
+        8    0.583        8    0.583   BUFx2_ASAP7_75t_R
+        8    2.333        8    2.333   DFFHQNx1_ASAP7_75t_R
+        8     0.35        8     0.35   INVx1_ASAP7_75t_R
+        8      0.7        8      0.7   NOR2x1_ASAP7_75t_R
+        1    0.117        1        - submodules
+        1    0.117        1        -   ot_gq_t16_accept
+
+   Chip area for module '\ot_gq_t16_cfg_byte': 5.336280
+     of which used for sequential elements: 2.332800 (43.72%)
+
+=== ot_gq_t16_cfg_slot ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+       35        -       30        - wires
+       41        -       36        - wire bits
+       20        -       15        - public wires
+       26        -       21        - public wire bits
+       14        -        9        - ports
+       20        -       15        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+       26    3.193       25    3.076 cells
+        1    0.117        -        -   AND4x2_ASAP7_75t_R
+        4    0.408        4    0.408   AO21x2_ASAP7_75t_R
+        5    0.365        5    0.365   BUFx2_ASAP7_75t_R
+        1    0.146        1    0.146   BUFx6f_ASAP7_75t_R
+        1    0.379        1    0.379   DFFASRHQNx1_ASAP7_75t_R
+        4    1.166        4    1.166   DFFHQNx1_ASAP7_75t_R
+        5    0.219        5    0.219   INVx1_ASAP7_75t_R
+        4     0.35        4     0.35   NOR2x1_ASAP7_75t_R
+        1    0.044        1    0.044   TIEHIx1_ASAP7_75t_R
+        1    0.117        1        - submodules
+        1    0.117        1        -   ot_gq_t16_accept
+
+   Chip area for module '\ot_gq_t16_cfg_slot': 3.193020
+     of which used for sequential elements: 1.545480 (48.40%)
+
+=== ot_gq_t16_flags ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+        8        -        8        - wires
+       19        -       19        - wire bits
+        5        -        5        - public wires
+       16        -       16        - public wire bits
+        5        -        5        - ports
+       16        -       16        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+        4    0.452        4    0.452 cells
+        1     0.16        1     0.16   NOR3x1_ASAP7_75t_R
+        1    0.087        1    0.087   OR3x1_ASAP7_75t_R
+        2    0.204        2    0.204   OR4x1_ASAP7_75t_R
+
+   Chip area for module '\ot_gq_t16_flags': 0.451980
+     of which used for sequential elements: 0.000000 (0.00%)
+
+=== ot_gq_t16_header ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+       27        -       27        - wires
+      293        -      293        - wire bits
+        3        -        3        - public wires
+      269        -      269        - public wire bits
+        3        -        3        - ports
+      269        -      269        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+       25    3.368       25    3.368 cells
+        5     0.51        5     0.51   AND4x1_ASAP7_75t_R
+        1    0.117        1    0.117   AND5x1_ASAP7_75t_R
+        1    0.292        1    0.292   AND5x2_ASAP7_75t_R
+        2    0.087        2    0.087   INVx1_ASAP7_75t_R
+        2    0.175        2    0.175   NOR2x1_ASAP7_75t_R
+        2    0.204        2    0.204   OR4x1_ASAP7_75t_R
+        4      0.7        4      0.7   XNOR2x1_ASAP7_75t_R
+        8    1.283        8    1.283   XNOR2x2_ASAP7_75t_R
+
+   Chip area for module '\ot_gq_t16_header': 3.367980
+     of which used for sequential elements: 0.000000 (0.00%)
+
+=== ot_gq_t16_match ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+       12        -       12        - wires
+       26        -       26        - wire bits
+        3        -        3        - public wires
+       17        -       17        - public wire bits
+        3        -        3        - ports
+       17        -       17        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+       10    1.735       10    1.735 cells
+        1    0.102        1    0.102   AND4x1_ASAP7_75t_R
+        1    0.292        1    0.292   AND5x2_ASAP7_75t_R
+        4      0.7        4      0.7   XNOR2x1_ASAP7_75t_R
+        4    0.642        4    0.642   XNOR2x2_ASAP7_75t_R
+
+   Chip area for module '\ot_gq_t16_match': 1.735020
+     of which used for sequential elements: 0.000000 (0.00%)
+
+=== ot_gq_t16_reset2 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+        8        -        8        - wires
+        8        -        8        - wire bits
+        5        -        5        - public wires
+        5        -        5        - public wire bits
+        3        -        3        - ports
+        3        -        3        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+        6    1.021        6    1.021 cells
+        1    0.073        1    0.073   BUFx2_ASAP7_75t_R
+        2    0.758        2    0.758   DFFASRHQNx1_ASAP7_75t_R
+        2    0.146        2    0.146   INVx3_ASAP7_75t_R
+        1    0.044        1    0.044   TIEHIx1_ASAP7_75t_R
+
+   Chip area for module '\ot_gq_t16_reset2': 1.020600
+     of which used for sequential elements: 0.758160 (74.29%)
+
+=== ot_hgi_coll_aq_top_dec ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+        5        -        5        - wires
+       12        -       12        - wire bits
+        3        -        3        - public wires
+       10        -       10        - public wire bits
+        3        -        3        - ports
+       10        -       10        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+        3    0.394        3    0.394 cells
+        1    0.102        1    0.102   AND4x1_ASAP7_75t_R
+        1    0.117        1    0.117   AND5x1_ASAP7_75t_R
+        1    0.175        1    0.175   XOR2x1_ASAP7_75t_R
+
+   Chip area for module '\ot_hgi_coll_aq_top_dec': 0.393660
+     of which used for sequential elements: 0.000000 (0.00%)
+
+=== ot_hgi_coll_gq_control_and ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+        3        -        3        - wires
+        3        -        3        - wire bits
+        3        -        3        - public wires
+        3        -        3        - public wire bits
+        3        -        3        - ports
+        3        -        3        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+        1    0.146        1    0.146 cells
+        1    0.146        1    0.146   AND2x4_ASAP7_75t_R
+
+   Chip area for module '\ot_hgi_coll_gq_control_and': 0.145800
+     of which used for sequential elements: 0.000000 (0.00%)
+
+=== ot_hgi_coll_gq_control_ff ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+        7        -        7        - wires
+        7        -        7        - wire bits
+        5        -        5        - public wires
+        5        -        5        - public wire bits
+        4        -        4        - ports
+        4        -        4        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+        4    0.569        4    0.569 cells
+        1    0.073        1    0.073   BUFx2_ASAP7_75t_R
+        1    0.379        1    0.379   DFFASRHQNx1_ASAP7_75t_R
+        1    0.073        1    0.073   INVx3_ASAP7_75t_R
+        1    0.044        1    0.044   TIEHIx1_ASAP7_75t_R
+
+   Chip area for module '\ot_hgi_coll_gq_control_ff': 0.568620
+     of which used for sequential elements: 0.379080 (66.67%)
+
+=== ot_hgi_coll_gq_em_allow ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+        5        -        5        - wires
+        5        -        5        - wire bits
+        5        -        5        - public wires
+        5        -        5        - public wire bits
+        5        -        5        - ports
+        5        -        5        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+        1    0.117        1    0.117 cells
+        1    0.117        1    0.117   AND4x2_ASAP7_75t_R
+
+   Chip area for module '\ot_hgi_coll_gq_em_allow': 0.116640
+     of which used for sequential elements: 0.000000 (0.00%)
+
+=== ot_hgi_coll_gq_fire_prefix ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+       37        -       37        - wires
+       74        -       74        - wire bits
+        7        -        7        - public wires
+       44        -       44        - public wire bits
+        7        -        7        - ports
+       44        -       44        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+       32    4.097       32    4.097 cells
+        1    0.087        1    0.087   AND3x1_ASAP7_75t_R
+        1    0.102        1    0.102   AND3x2_ASAP7_75t_R
+        3    0.306        3    0.306   AND4x1_ASAP7_75t_R
+        1    0.117        1    0.117   AND5x1_ASAP7_75t_R
+        1    0.146        1    0.146   AO221x1_ASAP7_75t_R
+        1    0.131        1    0.131   AO22x1_ASAP7_75t_R
+        4    0.175        4    0.175   INVx1_ASAP7_75t_R
+        1    0.087        1    0.087   NAND2x1_ASAP7_75t_R
+        1    0.146        1    0.146   OAI22x1_ASAP7_75t_R
+        1    0.087        1    0.087   OR2x2_ASAP7_75t_R
+        1    0.087        1    0.087   OR3x1_ASAP7_75t_R
+        4      0.7        4      0.7   XNOR2x1_ASAP7_75t_R
+       12    1.925       12    1.925   XNOR2x2_ASAP7_75t_R
+
+   Chip area for module '\ot_hgi_coll_gq_fire_prefix': 4.096980
+     of which used for sequential elements: 0.000000 (0.00%)
+
+=== ot_hgi_coll_gq_issue ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+   162855        -   115387        - wires
+   219575        -   119346        - wire bits
+    53208        -    36509        - public wires
+   109928        -    40468        - public wire bits
+    11484        -       73        - ports
+    68204        -     4032        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+   150661 5.02E+04    92949 4.41E+04 cells
+    18982 1.66E+03     2469  215.988   AND2x2_ASAP7_75t_R
+       54    7.873        -        -   AND2x4_ASAP7_75t_R
+     2273  198.842     2225  194.643   AND3x1_ASAP7_75t_R
+       18    1.837        -        -   AND3x2_ASAP7_75t_R
+        1    0.204        -        -   AND3x4_ASAP7_75t_R
+      937    95.63      893    91.14   AND4x1_ASAP7_75t_R
+      200   23.328        1    0.117   AND4x2_ASAP7_75t_R
+      373   43.507      340   39.658   AND5x1_ASAP7_75t_R
+      110   32.076        -        -   AND5x2_ASAP7_75t_R
+       29    6.765       29    6.765   AO211x2_ASAP7_75t_R
+    10789  943.822     3553  310.816   AO21x1_ASAP7_75t_R
+    11507 1.17E+03        1    0.102   AO21x2_ASAP7_75t_R
+     1762    256.9     1759  256.462   AO221x1_ASAP7_75t_R
+      156   27.294      156   27.294   AO222x2_ASAP7_75t_R
+     1136  149.066     1133  148.672   AO22x1_ASAP7_75t_R
+      129   30.093      129   30.093   AO31x2_ASAP7_75t_R
+      555   64.735      551   64.269   AO32x1_ASAP7_75t_R
+        1    0.131        -        -   AO32x2_ASAP7_75t_R
+       26    3.791       26    3.791   AO33x2_ASAP7_75t_R
+      136   23.795      136   23.795   AOI211x1_ASAP7_75t_R
+      748   87.247      748   87.247   AOI21x1_ASAP7_75t_R
+       68    13.88       68    13.88   AOI221x1_ASAP7_75t_R
+      283   41.261      283   41.261   AOI22x1_ASAP7_75t_R
+      320   83.981        -        -   BUFx12f_ASAP7_75t_R
+    13116  956.156     8000    583.2   BUFx2_ASAP7_75t_R
+     1012    88.53       29    2.537   BUFx3_ASAP7_75t_R
+        1    0.117        -        -   BUFx4f_ASAP7_75t_R
+        1    0.117        1    0.117   BUFx5_ASAP7_75t_R
+     1173  171.023        6    0.875   BUFx6f_ASAP7_75t_R
+      768  291.133      693  262.702   DFFASRHQNx1_ASAP7_75t_R
+    21716 6.33E+03    16711 4.87E+03   DFFHQNx1_ASAP7_75t_R
+     2064  601.862     2064  601.862   DFFLQNx1_ASAP7_75t_R
+    19762   864.39    16875  738.112   INVx1_ASAP7_75t_R
+       78    4.549        -        -   INVx2_ASAP7_75t_R
+     2733  199.236        -        -   INVx3_ASAP7_75t_R
+      962   84.156        -        -   INVx4_ASAP7_75t_R
+        1    0.102        -        -   INVx5_ASAP7_75t_R
+     2691  353.113     2691  353.113   MAJx2_ASAP7_75t_R
+     3553  310.816     3542  309.854   NAND2x1_ASAP7_75t_R
+       87   13.953       87   13.953   NAND3x1_ASAP7_75t_R
+     3940  344.671     1582  138.393   NOR2x1_ASAP7_75t_R
+       81   12.991       79    12.67   NOR3x1_ASAP7_75t_R
+     1703  198.638     1699  198.171   OA211x2_ASAP7_75t_R
+     1820  185.749     1807  184.422   OA21x2_ASAP7_75t_R
+       16    3.732       16    3.732   OA221x2_ASAP7_75t_R
+      659  115.299      659  115.299   OA222x2_ASAP7_75t_R
+     2036  296.849     2036  296.849   OA22x2_ASAP7_75t_R
+      103   22.526      103   22.526   OA31x2_ASAP7_75t_R
+       24    3.499       24    3.499   OA33x2_ASAP7_75t_R
+      636   74.183      628    73.25   OAI21x1_ASAP7_75t_R
+     8954 1.31E+03     8951 1.31E+03   OAI22x1_ASAP7_75t_R
+      879   76.895      876   76.632   OR2x2_ASAP7_75t_R
+     1312  114.774     1307  114.336   OR3x1_ASAP7_75t_R
+     3148  321.285     3138  320.264   OR4x1_ASAP7_75t_R
+        5    0.583        -        -   OR4x2_ASAP7_75t_R
+      342   39.891      342   39.891   OR5x1_ASAP7_75t_R
+        2    0.262        -        -   OR5x2_ASAP7_75t_R
+       74    3.237        1    0.044   TIEHIx1_ASAP7_75t_R
+        5    0.219        1    0.044   TIELOx1_ASAP7_75t_R
+       39    6.823       11    1.925   XNOR2x1_ASAP7_75t_R
+     2931  470.074     2871  460.451   XNOR2x2_ASAP7_75t_R
+       22    3.849        -        -   XOR2x1_ASAP7_75t_R
+     1611  258.372     1611  258.372   XOR2x2_ASAP7_75t_R
+        8 3.11E+04        8 3.11E+04   ot_sram_1r1w_128x256_m1_r2c2
+     2892 6.18E+03     2892        - submodules
+        1    4.986        1        -   $paramod$1ca0e1e2503f090bf22dd7fbb11ae153be1d756e\ot_hgi_coll_gq_em_chunk
+        2    3.937        2        -   $paramod$2d54e8c4131fa5a4ddbefeac50bfd92a0afc31bb\ot_hgi_coll_aq_dec_chunk
+        2    3.937        2        -   $paramod$2e6b7673443af59ea9f327861b06bb6be414a860\ot_hgi_coll_aq_dec_chunk
+        2    3.937        2        -   $paramod$48422feea4bb29987b79644b6ebbf6193e80803a\ot_hgi_coll_aq_dec_chunk
+        2    3.937        2        -   $paramod$57f7a51f562fc055f05bae661b584bbe03ad2a0a\ot_hgi_coll_aq_dec_chunk
+        1    10.06        1        -   $paramod$5e01fb1d61c08d0a7e709455f8e1afc37adc8eb4\ot_hgi_coll_gq_em_chunk
+        2    3.937        2        -   $paramod$61165c59c983afedeb37d7c1d9f74a5754fd4b0d\ot_hgi_coll_aq_dec_chunk
+        1    4.797        1        -   $paramod$7ba776a2b687a83ce4d8abc4b7dcb63960899a4c\ot_hgi_coll_gq_em_chunk
+        2    3.558        2        -   $paramod$88fec4ef70a257d7cd9e85229945bd8fe5bc9e93\ot_hgi_coll_aq_dec_chunk
+        1   10.104        1        -   $paramod$89a85d8cb2fe773f06b24a1a1275a386db5af1c2\ot_hgi_coll_gq_em_chunk
+        2    3.937        2        -   $paramod$a386a90960300d5ef66f0e9d90aedce5e79f9349\ot_hgi_coll_aq_dec_chunk
+        1   10.016        1        -   $paramod$b0e3e2e8206bcea81cf570a314e8506b40ec2522\ot_hgi_coll_gq_em_chunk
+        2    3.937        2        -   $paramod$bc164884553d42dd996176b4a5b40407c14ddcef\ot_hgi_coll_aq_dec_chunk
+        2    3.937        2        -   $paramod$be83c09751f06cf3f95bd48c88e2306d61a410e1\ot_hgi_coll_aq_dec_chunk
+        1    4.753        1        -   $paramod$bf32dabf451cdd40a93bff924b80cd6ae186f794\ot_hgi_coll_gq_em_chunk
+        1    4.753        1        -   $paramod$c034a4ae5b4ca3dae58dc6147a9210fee7c84b40\ot_hgi_coll_gq_em_chunk
+        2    3.937        2        -   $paramod$d1fd11fe38b2619773d7d24f0c39e74ee615da73\ot_hgi_coll_aq_dec_chunk
+        2    3.937        2        -   $paramod$f43c4c89b6b395acbbd16a64f028b40cac0aff50\ot_hgi_coll_aq_dec_chunk
+        1   10.206        1        -   $paramod$f621826f0913eddb1b8cf28ff2f525952e2938d3\ot_hgi_coll_gq_em_chunk
+     1280  559.872     1280        -   $paramod\ot_hgi_coll_aq_control_ff\W=s32'00000000000000000000000000000001
+        8   20.995        8        -   $paramod\ot_hgi_coll_aq_control_ff\W=s32'00000000000000000000000000000110
+       96  461.894       96        -   $paramod\ot_hgi_coll_aq_control_ff\W=s32'00000000000000000000000000001011
+      320  195.955      320        -   $paramod\ot_hgi_coll_aq_shift_mux\W=s32'00000000000000000000000000000011
+      960 3.14E+03      960        -   $paramod\ot_hgi_coll_aq_shift_mux\W=s32'00000000000000000000000000010000
+        1    5.365        1        -   $paramod\ot_hgi_coll_gq_control_hold\W=s32'00000000000000000000000000001000
+        1     9.01        1        -   $paramod\ot_hgi_coll_gq_control_hold\W=s32'00000000000000000000000000001110
+        1    9.419        1        -   $paramod\ot_hgi_coll_gq_control_hold\W=s32'00000000000000000000000000001111
+       17  170.032       17        -   $paramod\ot_hgi_coll_gq_control_hold\W=s32'00000000000000000000000000010000
+        1   55.608        1        -   $paramod\ot_hgi_coll_gq_rf_column\W=s32'00000000000000000000000000000101
+       12  1050.46       12        -   $paramod\ot_hgi_coll_gq_rf_column\W=s32'00000000000000000000000000001000
+       15    8.529       15        -   ot_gq_t16_bitff
+       32  170.761       32        -   ot_gq_t16_cfg_byte
+       14   44.702       14        -   ot_gq_t16_cfg_slot
+        2    0.904        2        -   ot_gq_t16_flags
+        2    6.736        2        -   ot_gq_t16_header
+        2     3.47        2        -   ot_gq_t16_match
+        2    2.041        2        -   ot_gq_t16_reset2
+       31    7.436       31        -   ot_hgi_coll_gq_control_and
+       42   23.882       42        -   ot_hgi_coll_gq_control_ff
+        3   12.291        3        -   ot_hgi_coll_gq_fire_prefix
+        8    1.166        8        -   ot_hgi_coll_gq_issue_allow
+       12  125.971       12        -   ot_hgi_coll_scale_data_ff
+
+   Chip area for module '\ot_hgi_coll_gq_issue': 50235.157040
+     of which used for sequential elements: 7225.381440 (14.38%)
+
+=== ot_hgi_coll_gq_issue_allow ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+        4        -        4        - wires
+        5        -        5        - wire bits
+        3        -        3        - public wires
+        4        -        4        - public wire bits
+        3        -        3        - ports
+        4        -        4        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+        2    0.146        2    0.146 cells
+        1    0.044        1    0.044   INVx1_ASAP7_75t_R
+        1    0.102        1    0.102   OA21x2_ASAP7_75t_R
+
+   Chip area for module '\ot_hgi_coll_gq_issue_allow': 0.145800
+     of which used for sequential elements: 0.000000 (0.00%)
+
+=== ot_hgi_coll_scale_data_ff ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+       51        -       51        - wires
+       97        -       97        - wire bits
+       27        -       27        - public wires
+       73        -       73        - public wire bits
+        3        -        3        - ports
+       49        -       49        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+       72   10.498       72   10.498 cells
+       24     1.75       24     1.75   BUFx2_ASAP7_75t_R
+       24    6.998       24    6.998   DFFHQNx1_ASAP7_75t_R
+       24     1.75       24     1.75   INVx3_ASAP7_75t_R
+
+   Chip area for module '\ot_hgi_coll_scale_data_ff': 10.497600
+     of which used for sequential elements: 6.998400 (66.67%)
+
+=== design hierarchy ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+   150661 5.02E+04    92949 4.41E+04 ot_hgi_coll_gq_issue
+       41    4.986       40     4.87 $paramod$1ca0e1e2503f090bf22dd7fbb11ae153be1d756e\ot_hgi_coll_gq_em_chunk
+        1    0.117        1    0.117   ot_hgi_coll_gq_em_allow
+       20    1.968       17    1.575 $paramod$2d54e8c4131fa5a4ddbefeac50bfd92a0afc31bb\ot_hgi_coll_aq_dec_chunk
+        3    0.394        3    0.394   ot_hgi_coll_aq_top_dec
+       20    1.968       17    1.575 $paramod$2e6b7673443af59ea9f327861b06bb6be414a860\ot_hgi_coll_aq_dec_chunk
+        3    0.394        3    0.394   ot_hgi_coll_aq_top_dec
+       20    1.968       17    1.575 $paramod$48422feea4bb29987b79644b6ebbf6193e80803a\ot_hgi_coll_aq_dec_chunk
+        3    0.394        3    0.394   ot_hgi_coll_aq_top_dec
+       20    1.968       17    1.575 $paramod$57f7a51f562fc055f05bae661b584bbe03ad2a0a\ot_hgi_coll_aq_dec_chunk
+        3    0.394        3    0.394   ot_hgi_coll_aq_top_dec
+       84    10.06       83    9.944 $paramod$5e01fb1d61c08d0a7e709455f8e1afc37adc8eb4\ot_hgi_coll_gq_em_chunk
+        1    0.117        1    0.117   ot_hgi_coll_gq_em_allow
+       20    1.968       17    1.575 $paramod$61165c59c983afedeb37d7c1d9f74a5754fd4b0d\ot_hgi_coll_aq_dec_chunk
+        3    0.394        3    0.394   ot_hgi_coll_aq_top_dec
+       41    4.797       40     4.68 $paramod$7ba776a2b687a83ce4d8abc4b7dcb63960899a4c\ot_hgi_coll_gq_em_chunk
+        1    0.117        1    0.117   ot_hgi_coll_gq_em_allow
+       18    1.779       15    1.385 $paramod$88fec4ef70a257d7cd9e85229945bd8fe5bc9e93\ot_hgi_coll_aq_dec_chunk
+        3    0.394        3    0.394   ot_hgi_coll_aq_top_dec
+       83   10.104       82    9.987 $paramod$89a85d8cb2fe773f06b24a1a1275a386db5af1c2\ot_hgi_coll_gq_em_chunk
+        1    0.117        1    0.117   ot_hgi_coll_gq_em_allow
+       20    1.968       17    1.575 $paramod$a386a90960300d5ef66f0e9d90aedce5e79f9349\ot_hgi_coll_aq_dec_chunk
+        3    0.394        3    0.394   ot_hgi_coll_aq_top_dec
+       83   10.016       82      9.9 $paramod$b0e3e2e8206bcea81cf570a314e8506b40ec2522\ot_hgi_coll_gq_em_chunk
+        1    0.117        1    0.117   ot_hgi_coll_gq_em_allow
+       20    1.968       17    1.575 $paramod$bc164884553d42dd996176b4a5b40407c14ddcef\ot_hgi_coll_aq_dec_chunk
+        3    0.394        3    0.394   ot_hgi_coll_aq_top_dec
+       20    1.968       17    1.575 $paramod$be83c09751f06cf3f95bd48c88e2306d61a410e1\ot_hgi_coll_aq_dec_chunk
+        3    0.394        3    0.394   ot_hgi_coll_aq_top_dec
+       40    4.753       39    4.636 $paramod$bf32dabf451cdd40a93bff924b80cd6ae186f794\ot_hgi_coll_gq_em_chunk
+        1    0.117        1    0.117   ot_hgi_coll_gq_em_allow
+       40    4.753       39    4.636 $paramod$c034a4ae5b4ca3dae58dc6147a9210fee7c84b40\ot_hgi_coll_gq_em_chunk
+        1    0.117        1    0.117   ot_hgi_coll_gq_em_allow
+       20    1.968       17    1.575 $paramod$d1fd11fe38b2619773d7d24f0c39e74ee615da73\ot_hgi_coll_aq_dec_chunk
+        3    0.394        3    0.394   ot_hgi_coll_aq_top_dec
+       20    1.968       17    1.575 $paramod$f43c4c89b6b395acbbd16a64f028b40cac0aff50\ot_hgi_coll_aq_dec_chunk
+        3    0.394        3    0.394   ot_hgi_coll_aq_top_dec
+       82   10.206       81   10.089 $paramod$f621826f0913eddb1b8cf28ff2f525952e2938d3\ot_hgi_coll_gq_em_chunk
+        1    0.117        1    0.117   ot_hgi_coll_gq_em_allow
+        3    0.437        3    0.437 $paramod\ot_hgi_coll_aq_control_ff\W=s32'00000000000000000000000000000001
+       18    2.624       18    2.624 $paramod\ot_hgi_coll_aq_control_ff\W=s32'00000000000000000000000000000110
+       33    4.811       33    4.811 $paramod\ot_hgi_coll_aq_control_ff\W=s32'00000000000000000000000000001011
+        7    0.612        7    0.612 $paramod\ot_hgi_coll_aq_shift_mux\W=s32'00000000000000000000000000000011
+       35    3.266       35    3.266 $paramod\ot_hgi_coll_aq_shift_mux\W=s32'00000000000000000000000000010000
+       43    5.365       42     5.22 $paramod\ot_hgi_coll_gq_control_hold\W=s32'00000000000000000000000000001000
+        1    0.146        1    0.146   ot_hgi_coll_gq_control_and
+       74     9.01       73    8.865 $paramod\ot_hgi_coll_gq_control_hold\W=s32'00000000000000000000000000001110
+        1    0.146        1    0.146   ot_hgi_coll_gq_control_and
+       79    9.419       78    9.273 $paramod\ot_hgi_coll_gq_control_hold\W=s32'00000000000000000000000000001111
+        1    0.146        1    0.146   ot_hgi_coll_gq_control_and
+       84   10.002       83    9.856 $paramod\ot_hgi_coll_gq_control_hold\W=s32'00000000000000000000000000010000
+        1    0.146        1    0.146   ot_hgi_coll_gq_control_and
+      461   55.608      421   50.884 $paramod\ot_hgi_coll_gq_rf_column\W=s32'00000000000000000000000000000101
+        4    0.292        4    0.292   $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000000000
+        3    0.248        3    0.248   $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000000001
+        3    0.248        3    0.248   $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000000010
+        2    0.204        2    0.204   $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000000011
+        3    0.248        3    0.248   $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000000100
+        3    0.394        3    0.394   $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000000101
+        2    0.204        2    0.204   $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000000110
+        2     0.35        2     0.35   $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000000111
+        3    0.248        3    0.248   $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000001000
+        3    0.394        3    0.394   $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000001001
+        3    0.394        3    0.394   $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000001010
+        2    0.335        2    0.335   $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000001011
+        2    0.204        2    0.204   $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000001100
+        2    0.335        2    0.335   $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000001101
+        2    0.335        2    0.335   $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000001110
+        1    0.292        1    0.292   $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000001111
+      720   87.538      680   82.814 $paramod\ot_hgi_coll_gq_rf_column\W=s32'00000000000000000000000000001000
+        4    0.292        4    0.292   $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000000000
+        3    0.248        3    0.248   $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000000001
+        3    0.248        3    0.248   $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000000010
+        2    0.204        2    0.204   $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000000011
+        3    0.248        3    0.248   $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000000100
+        3    0.394        3    0.394   $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000000101
+        2    0.204        2    0.204   $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000000110
+        2     0.35        2     0.35   $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000000111
+        3    0.248        3    0.248   $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000001000
+        3    0.394        3    0.394   $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000001001
+        3    0.394        3    0.394   $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000001010
+        2    0.335        2    0.335   $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000001011
+        2    0.204        2    0.204   $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000001100
+        2    0.335        2    0.335   $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000001101
+        2    0.335        2    0.335   $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000001110
+        1    0.292        1    0.292   $paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000001111
+        4    0.569        4    0.569 ot_gq_t16_bitff
+       43    5.336       42     5.22 ot_gq_t16_cfg_byte
+        1    0.117        1    0.117   ot_gq_t16_accept
+       26    3.193       25    3.076 ot_gq_t16_cfg_slot
+        1    0.117        1    0.117   ot_gq_t16_accept
+        4    0.452        4    0.452 ot_gq_t16_flags
+       25    3.368       25    3.368 ot_gq_t16_header
+       10    1.735       10    1.735 ot_gq_t16_match
+        6    1.021        6    1.021 ot_gq_t16_reset2
+        1    0.146        1    0.146 ot_hgi_coll_gq_control_and
+        4    0.569        4    0.569 ot_hgi_coll_gq_control_ff
+       32    4.097       32    4.097 ot_hgi_coll_gq_fire_prefix
+        2    0.146        2    0.146 ot_hgi_coll_gq_issue_allow
+       72   10.498       72   10.498 ot_hgi_coll_scale_data_ff
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+   162855        -   115387        - wires
+   219575        -   119346        - wire bits
+    53208        -    36509        - public wires
+   109928        -    40468        - public wire bits
+    11484        -       73        - ports
+    68204        -     4032        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+   150661 5.02E+04    92949 4.41E+04 cells
+    18982 1.66E+03     2469  215.988   AND2x2_ASAP7_75t_R
+       54    7.873        -        -   AND2x4_ASAP7_75t_R
+     2273  198.842     2225  194.643   AND3x1_ASAP7_75t_R
+       18    1.837        -        -   AND3x2_ASAP7_75t_R
+        1    0.204        -        -   AND3x4_ASAP7_75t_R
+      937    95.63      893    91.14   AND4x1_ASAP7_75t_R
+      200   23.328        1    0.117   AND4x2_ASAP7_75t_R
+      373   43.507      340   39.658   AND5x1_ASAP7_75t_R
+      110   32.076        -        -   AND5x2_ASAP7_75t_R
+       29    6.765       29    6.765   AO211x2_ASAP7_75t_R
+    10789  943.822     3553  310.816   AO21x1_ASAP7_75t_R
+    11507 1.17E+03        1    0.102   AO21x2_ASAP7_75t_R
+     1762    256.9     1759  256.462   AO221x1_ASAP7_75t_R
+      156   27.294      156   27.294   AO222x2_ASAP7_75t_R
+     1136  149.066     1133  148.672   AO22x1_ASAP7_75t_R
+      129   30.093      129   30.093   AO31x2_ASAP7_75t_R
+      555   64.735      551   64.269   AO32x1_ASAP7_75t_R
+        1    0.131        -        -   AO32x2_ASAP7_75t_R
+       26    3.791       26    3.791   AO33x2_ASAP7_75t_R
+      136   23.795      136   23.795   AOI211x1_ASAP7_75t_R
+      748   87.247      748   87.247   AOI21x1_ASAP7_75t_R
+       68    13.88       68    13.88   AOI221x1_ASAP7_75t_R
+      283   41.261      283   41.261   AOI22x1_ASAP7_75t_R
+      320   83.981        -        -   BUFx12f_ASAP7_75t_R
+    13116  956.156     8000    583.2   BUFx2_ASAP7_75t_R
+     1012    88.53       29    2.537   BUFx3_ASAP7_75t_R
+        1    0.117        -        -   BUFx4f_ASAP7_75t_R
+        1    0.117        1    0.117   BUFx5_ASAP7_75t_R
+     1173  171.023        6    0.875   BUFx6f_ASAP7_75t_R
+      768  291.133      693  262.702   DFFASRHQNx1_ASAP7_75t_R
+    21716 6.33E+03    16711 4.87E+03   DFFHQNx1_ASAP7_75t_R
+     2064  601.862     2064  601.862   DFFLQNx1_ASAP7_75t_R
+    19762   864.39    16875  738.112   INVx1_ASAP7_75t_R
+       78    4.549        -        -   INVx2_ASAP7_75t_R
+     2733  199.236        -        -   INVx3_ASAP7_75t_R
+      962   84.156        -        -   INVx4_ASAP7_75t_R
+        1    0.102        -        -   INVx5_ASAP7_75t_R
+     2691  353.113     2691  353.113   MAJx2_ASAP7_75t_R
+     3553  310.816     3542  309.854   NAND2x1_ASAP7_75t_R
+       87   13.953       87   13.953   NAND3x1_ASAP7_75t_R
+     3940  344.671     1582  138.393   NOR2x1_ASAP7_75t_R
+       81   12.991       79    12.67   NOR3x1_ASAP7_75t_R
+     1703  198.638     1699  198.171   OA211x2_ASAP7_75t_R
+     1820  185.749     1807  184.422   OA21x2_ASAP7_75t_R
+       16    3.732       16    3.732   OA221x2_ASAP7_75t_R
+      659  115.299      659  115.299   OA222x2_ASAP7_75t_R
+     2036  296.849     2036  296.849   OA22x2_ASAP7_75t_R
+      103   22.526      103   22.526   OA31x2_ASAP7_75t_R
+       24    3.499       24    3.499   OA33x2_ASAP7_75t_R
+      636   74.183      628    73.25   OAI21x1_ASAP7_75t_R
+     8954 1.31E+03     8951 1.31E+03   OAI22x1_ASAP7_75t_R
+      879   76.895      876   76.632   OR2x2_ASAP7_75t_R
+     1312  114.774     1307  114.336   OR3x1_ASAP7_75t_R
+     3148  321.285     3138  320.264   OR4x1_ASAP7_75t_R
+        5    0.583        -        -   OR4x2_ASAP7_75t_R
+      342   39.891      342   39.891   OR5x1_ASAP7_75t_R
+        2    0.262        -        -   OR5x2_ASAP7_75t_R
+       74    3.237        1    0.044   TIEHIx1_ASAP7_75t_R
+        5    0.219        1    0.044   TIELOx1_ASAP7_75t_R
+       39    6.823       11    1.925   XNOR2x1_ASAP7_75t_R
+     2931  470.074     2871  460.451   XNOR2x2_ASAP7_75t_R
+       22    3.849        -        -   XOR2x1_ASAP7_75t_R
+     1611  258.372     1611  258.372   XOR2x2_ASAP7_75t_R
+        8 3.11E+04        8 3.11E+04   ot_sram_1r1w_128x256_m1_r2c2
+     2892 6.18E+03     2892        - submodules
+        1    4.986        1        -   $paramod$1ca0e1e2503f090bf22dd7fbb11ae153be1d756e\ot_hgi_coll_gq_em_chunk
+        2    3.937        2        -   $paramod$2d54e8c4131fa5a4ddbefeac50bfd92a0afc31bb\ot_hgi_coll_aq_dec_chunk
+        2    3.937        2        -   $paramod$2e6b7673443af59ea9f327861b06bb6be414a860\ot_hgi_coll_aq_dec_chunk
+        2    3.937        2        -   $paramod$48422feea4bb29987b79644b6ebbf6193e80803a\ot_hgi_coll_aq_dec_chunk
+        2    3.937        2        -   $paramod$57f7a51f562fc055f05bae661b584bbe03ad2a0a\ot_hgi_coll_aq_dec_chunk
+        1    10.06        1        -   $paramod$5e01fb1d61c08d0a7e709455f8e1afc37adc8eb4\ot_hgi_coll_gq_em_chunk
+        2    3.937        2        -   $paramod$61165c59c983afedeb37d7c1d9f74a5754fd4b0d\ot_hgi_coll_aq_dec_chunk
+        1    4.797        1        -   $paramod$7ba776a2b687a83ce4d8abc4b7dcb63960899a4c\ot_hgi_coll_gq_em_chunk
+        2    3.558        2        -   $paramod$88fec4ef70a257d7cd9e85229945bd8fe5bc9e93\ot_hgi_coll_aq_dec_chunk
+        1   10.104        1        -   $paramod$89a85d8cb2fe773f06b24a1a1275a386db5af1c2\ot_hgi_coll_gq_em_chunk
+        2    3.937        2        -   $paramod$a386a90960300d5ef66f0e9d90aedce5e79f9349\ot_hgi_coll_aq_dec_chunk
+        1   10.016        1        -   $paramod$b0e3e2e8206bcea81cf570a314e8506b40ec2522\ot_hgi_coll_gq_em_chunk
+        2    3.937        2        -   $paramod$bc164884553d42dd996176b4a5b40407c14ddcef\ot_hgi_coll_aq_dec_chunk
+        2    3.937        2        -   $paramod$be83c09751f06cf3f95bd48c88e2306d61a410e1\ot_hgi_coll_aq_dec_chunk
+        1    4.753        1        -   $paramod$bf32dabf451cdd40a93bff924b80cd6ae186f794\ot_hgi_coll_gq_em_chunk
+        1    4.753        1        -   $paramod$c034a4ae5b4ca3dae58dc6147a9210fee7c84b40\ot_hgi_coll_gq_em_chunk
+        2    3.937        2        -   $paramod$d1fd11fe38b2619773d7d24f0c39e74ee615da73\ot_hgi_coll_aq_dec_chunk
+        2    3.937        2        -   $paramod$f43c4c89b6b395acbbd16a64f028b40cac0aff50\ot_hgi_coll_aq_dec_chunk
+        1   10.206        1        -   $paramod$f621826f0913eddb1b8cf28ff2f525952e2938d3\ot_hgi_coll_gq_em_chunk
+     1280  559.872     1280        -   $paramod\ot_hgi_coll_aq_control_ff\W=s32'00000000000000000000000000000001
+        8   20.995        8        -   $paramod\ot_hgi_coll_aq_control_ff\W=s32'00000000000000000000000000000110
+       96  461.894       96        -   $paramod\ot_hgi_coll_aq_control_ff\W=s32'00000000000000000000000000001011
+      320  195.955      320        -   $paramod\ot_hgi_coll_aq_shift_mux\W=s32'00000000000000000000000000000011
+      960 3.14E+03      960        -   $paramod\ot_hgi_coll_aq_shift_mux\W=s32'00000000000000000000000000010000
+        1    5.365        1        -   $paramod\ot_hgi_coll_gq_control_hold\W=s32'00000000000000000000000000001000
+        1     9.01        1        -   $paramod\ot_hgi_coll_gq_control_hold\W=s32'00000000000000000000000000001110
+        1    9.419        1        -   $paramod\ot_hgi_coll_gq_control_hold\W=s32'00000000000000000000000000001111
+       17  170.032       17        -   $paramod\ot_hgi_coll_gq_control_hold\W=s32'00000000000000000000000000010000
+        1   55.608        1        -   $paramod\ot_hgi_coll_gq_rf_column\W=s32'00000000000000000000000000000101
+       12  1050.46       12        -   $paramod\ot_hgi_coll_gq_rf_column\W=s32'00000000000000000000000000001000
+       15    8.529       15        -   ot_gq_t16_bitff
+       32  170.761       32        -   ot_gq_t16_cfg_byte
+       14   44.702       14        -   ot_gq_t16_cfg_slot
+        2    0.904        2        -   ot_gq_t16_flags
+        2    6.736        2        -   ot_gq_t16_header
+        2     3.47        2        -   ot_gq_t16_match
+        2    2.041        2        -   ot_gq_t16_reset2
+       31    7.436       31        -   ot_hgi_coll_gq_control_and
+       42   23.882       42        -   ot_hgi_coll_gq_control_ff
+        3   12.291        3        -   ot_hgi_coll_gq_fire_prefix
+        8    1.166        8        -   ot_hgi_coll_gq_issue_allow
+       12  125.971       12        -   ot_hgi_coll_scale_data_ff
+
+   Chip area for top module '\ot_hgi_coll_gq_issue': 50235.157040
+     of which used for sequential elements: 7225.381440 (14.38%)
+

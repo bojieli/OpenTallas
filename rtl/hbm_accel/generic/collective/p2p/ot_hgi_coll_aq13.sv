@@ -168,28 +168,88 @@ module ot_hgi_coll_aq13 #(parameter integer MUT=0, parameter integer LMUT=0) (
 
     // -- S8: e = ceil_log2(prod) ------------------------------------------------------------
     reg              s8_v, s8_fp4, s8_nf;
-    reg signed [9:0] s8_e;
+`ifdef OT_GQ_FAN32
+    wire signed[9:0]s8_e=s8_ec[0];
+`else
+    reg signed[9:0]s8_e;
+`endif
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) s8_v <= 1'b0;
         else s8_v <= s7_v;
     end
-    // r4: 4 kept copies of e / fp4, one per 8 elements of S9 (each bit fed ~64 element legs)
-    (* keep = "true", dont_touch = "true" *) reg signed [9:0] s8_ec [0:3];
-    (* keep = "true", dont_touch = "true" *) reg [3:0] s8_fp4c;
+`ifdef OT_GQ_FAN32
+    localparam integer EC_GROUP=2, EC8_GROUP=1;
+    wire signed[9:0]s8_ec[0:31];wire[31:0]s8_fp4c;
+    wire signed[9:0]e8_d=$signed({2'b00,prod[30:23]})-10'sd127+{9'd0,(prod[22:0]!=23'd0)};
+    generate for(genvar g=0;g<32;g=g+1)begin:g_s8_controls
+        ot_hgi_coll_aq_control_ff #(.W(11))u_ff(.clk(clk),.d({s7_fp4,
+`ifdef OT_GQ_MUT_EC_CTL
+            ((g==0)?(e8_d^10'd1):e8_d)
+`else
+            e8_d
+`endif
+            }),.q({s8_fp4c[g],s8_ec[g]}));
+    end endgenerate
+`else
+    localparam integer EC_GROUP=8, EC8_GROUP=8;
+    (* keep="true",dont_touch="true" *)reg signed[9:0]s8_ec[0:3];
+    (* keep="true",dont_touch="true" *)reg[3:0]s8_fp4c;
+`endif
     always @(posedge clk) begin
         s8_fp4 <= s7_fp4; s8_nf <= s7_nf | pfault;
+`ifndef OT_GQ_FAN32
         s8_e <= $signed({2'b00, prod[30:23]}) - 10'sd127 + {9'd0, (prod[22:0] != 23'd0)};
+`endif
+`ifndef OT_GQ_FAN32
         for (i = 0; i < 4; i = i + 1) begin
             s8_ec[i] <= $signed({2'b00, prod[30:23]}) - 10'sd127 + {9'd0, (prod[22:0] != 23'd0)};
             s8_fp4c[i] <= s7_fp4;
         end
+`endif
     end
 
     // -- S9: per-element grid exponent and shift ----------------------------------------------
     reg              s9_v, s9_fp4, s9_nf;
     reg signed [9:0] s9_e;
     reg [23:0]       s9_sig [0:31];
-    reg [4:0]        s9_rs [0:31];
+`ifdef OT_GQ_FAN32
+    wire[50:0]wide_local[0:31];
+    function automatic[4:0]gq_shift(input[7:0]f,input signed[9:0]e,input fp4);
+        reg signed[10:0]ee,mm,dd;
+        begin
+            ee=((f==0)?-11'sd126:($signed({3'b000,f})-11'sd127))-e;
+            mm=fp4?11'sd0:-11'sd6;dd=mm-ee;
+            if(dd>0)gq_shift=(dd>(fp4?11'sd4:11'sd6))?5'd26:((fp4?5'd22:5'd20)+dd[4:0]);
+            else gq_shift=fp4?5'd22:5'd20;
+        end
+    endfunction
+    generate for(genvar lane=0;lane<32;lane=lane+1)begin:g_shift_controls
+        wire[4:0]d=gq_shift(x8[32*lane+23+:8],s8_ec[lane/EC8_GROUP],s8_fp4c[lane/EC8_GROUP]);
+        wire[50:0]shift_stage[0:5];
+        assign shift_stage[0]={s9_sig[lane],27'd0};
+        for(genvar stage=0;stage<5;stage=stage+1)begin:g_stage
+            for(genvar chunk=0;chunk<4;chunk=chunk+1)begin:g_chunk
+                localparam integer W=(chunk==3)?3:16;
+                wire select_shift;wire[W-1:0]b;
+                ot_hgi_coll_aq_control_ff #(.W(1))u_ff(.clk(clk),
+`ifdef OT_GQ_MUT_SHIFT_CTL
+                    .d((lane==0&&stage==4&&chunk==1)?!d[stage]:d[stage]),
+`else
+                    .d(d[stage]),
+`endif
+                    .q(select_shift));
+                for(genvar bitn=0;bitn<W;bitn=bitn+1)begin:g_b
+                    if(16*chunk+bitn+(1<<stage)<51)assign b[bitn]=shift_stage[stage][16*chunk+bitn+(1<<stage)];
+                    else assign b[bitn]=0;
+                end
+                (* keep="true" *)ot_hgi_coll_aq_shift_mux #(.W(W))u_mux(.sel(select_shift),.a(shift_stage[stage][16*chunk+:W]),.b(b),.q(shift_stage[stage+1][16*chunk+:W]));
+            end
+        end
+        assign wide_local[lane]=shift_stage[5];
+    end endgenerate
+`else
+    reg [4:0]s9_rs[0:31];
+`endif
     reg signed [4:0] s9_g [0:31];
     reg [31:0]       s9_sgn;
     reg [7:0]        fld;
@@ -205,18 +265,22 @@ module ot_hgi_coll_aq13 #(parameter integer MUT=0, parameter integer LMUT=0) (
             fld = x8[32*i + 23 +: 8];
             man = x8[32*i +: 23];
             //: a subnormal element has exponent -126 and no leading one
-            ev = ((fld == 8'd0) ? -11'sd126 : ($signed({3'b000, fld}) - 11'sd127)) - s8_ec[i/8];
-            mine = s8_fp4c[i/8] ? 11'sd0 : -11'sd6;
+            ev = ((fld == 8'd0) ? -11'sd126 : ($signed({3'b000, fld}) - 11'sd127)) - s8_ec[i/EC8_GROUP];
+            mine = s8_fp4c[i/EC8_GROUP] ? 11'sd0 : -11'sd6;
             dd = mine - ev;
             s9_sig[i] <= {(fld != 8'd0), man};
             s9_sgn[i] <= x8[32*i + 31] && (x8[32*i +: 31] != 31'd0);
             if (dd > 11'sd0) begin
                 s9_g[i] <= mine[4:0];
                 //: past 26 every bit of the 24-bit significand is below the guard
-                s9_rs[i] <= (dd > (s8_fp4c[i/8] ? 11'sd4 : 11'sd6)) ? 5'd26 : ((s8_fp4c[i/8] ? 5'd22 : 5'd20) + dd[4:0]);
+`ifndef OT_GQ_FAN32
+                s9_rs[i] <= (dd > (s8_fp4c[i/EC8_GROUP] ? 11'sd4 : 11'sd6)) ? 5'd26 : ((s8_fp4c[i/EC8_GROUP] ? 5'd22 : 5'd20) + dd[4:0]);
+`endif
             end else begin
                 s9_g[i] <= ev[4:0];
-                s9_rs[i] <= s8_fp4c[i/8] ? 5'd22 : 5'd20;
+`ifndef OT_GQ_FAN32
+                s9_rs[i] <= s8_fp4c[i/EC8_GROUP] ? 5'd22 : 5'd20;
+`endif
             end
         end
     end
@@ -224,8 +288,15 @@ module ot_hgi_coll_aq13 #(parameter integer MUT=0, parameter integer LMUT=0) (
     // -- S10: round to the grid ----------------------------------------------------------------
     reg              s10_v, s10_fp4, s10_nf;
     reg signed [9:0] s10_e;
-    (* keep = "true", dont_touch = "true" *) reg signed [9:0] s10_ec [0:3];   // r4: per 8 elements of S11
-    (* keep = "true", dont_touch = "true" *) reg [3:0] s10_fp4c;
+`ifdef OT_GQ_FAN32
+    wire signed[9:0]s10_ec[0:15];wire[15:0]s10_fp4c;
+    generate for(genvar g=0;g<16;g=g+1)begin:g_s10_controls
+        ot_hgi_coll_aq_control_ff #(.W(11))u_ff(.clk(clk),.d({s9_fp4,s9_e}),.q({s10_fp4c[g],s10_ec[g]}));
+    end endgenerate
+`else
+    (* keep="true",dont_touch="true" *)reg signed[9:0]s10_ec[0:3];
+    (* keep="true",dont_touch="true" *)reg[3:0]s10_fp4c;
+`endif
     reg [4:0]        s10_c [0:31];
     reg signed [4:0] s10_g [0:31];
     reg [31:0]       s10_sgn;
@@ -238,9 +309,15 @@ module ot_hgi_coll_aq13 #(parameter integer MUT=0, parameter integer LMUT=0) (
     end
     always @(posedge clk) begin
         s10_fp4 <= s9_fp4; s10_nf <= s9_nf; s10_e <= s9_e; s10_sgn <= s9_sgn;
+`ifndef OT_GQ_FAN32
         for (i = 0; i < 4; i = i + 1) begin s10_ec[i] <= s9_e; s10_fp4c[i] <= s9_fp4; end
+`endif
         for (i = 0; i < 32; i = i + 1) begin
+`ifdef OT_GQ_FAN32
+            wide = wide_local[i];
+`else
             wide = {s9_sig[i], 27'd0} >> s9_rs[i];
+`endif
             tq = wide[50:27];
             gd = wide[26];
             st = (wide[25:0] != 26'd0);
@@ -267,7 +344,7 @@ module ot_hgi_coll_aq13 #(parameter integer MUT=0, parameter integer LMUT=0) (
             c = s10_c[i];
             g4 = s10_g[i][3:0];
             // codes
-            if (!s10_fp4c[i/8]) begin
+            if (!s10_fp4c[i/EC_GROUP]) begin
                 if (c[4])      q[8*i +: 8] <= {s10_sgn[i], g4 + 4'd8, 3'd0};
                 else if (c[3]) q[8*i +: 8] <= {s10_sgn[i], g4 + 4'd7, c[2:0]};
                 else           q[8*i +: 8] <= {s10_sgn[i], 4'd0, c[2:0]};
@@ -278,9 +355,9 @@ module ot_hgi_coll_aq13 #(parameter integer MUT=0, parameter integer LMUT=0) (
             end
             // value c * 2^(g - mant_bits + e) as BF16
             p = c[4] ? 3'd4 : c[3] ? 3'd3 : c[2] ? 3'd2 : c[1] ? 3'd1 : 3'd0;
-            be = $signed({9'd0, p}) + s10_g[i] - (s10_fp4c[i/8] ? 12'sd1 : 12'sd3) + s10_ec[i/8] + 12'sd127;
+            be = $signed({9'd0, p}) + s10_g[i] - (s10_fp4c[i/EC_GROUP] ? 12'sd1 : 12'sd3) + s10_ec[i/EC_GROUP] + 12'sd127;
             cn = {3'd0, c} << (3'd7 - p);
-            shs = s10_g[i] - (s10_fp4c[i/8] ? 12'sd1 : 12'sd3) + s10_ec[i/8] + 12'sd133;
+            shs = s10_g[i] - (s10_fp4c[i/EC_GROUP] ? 12'sd1 : 12'sd3) + s10_ec[i/EC_GROUP] + 12'sd133;
             sub = (shs < 12'sd0) ? 7'd0 : ({2'd0, c} << shs[3:0]);
             if (c == 5'd0)           y[16*i +: 16] <= {s10_sgn[i], 15'd0};
             else if (be >= 12'sd255) y[16*i +: 16] <= {s10_sgn[i], 8'hFF, 7'd0};
@@ -321,3 +398,21 @@ module ot_hgi_coll_aq_sramdelay #(parameter integer MUT=0) (
     end endgenerate
 endmodule
 `endif
+
+(* keep_hierarchy="yes" *)
+module ot_hgi_coll_aq_control_ff #(parameter integer W=11)(input wire clk,input wire[W-1:0]d,output wire[W-1:0]q);
+    (* keep="true",dont_touch="true" *)reg[W-1:0]r;
+    always @(posedge clk)r<=d;
+    assign q=r;
+endmodule
+
+(* keep_hierarchy="yes" *)
+module ot_hgi_coll_aq_shift_chunk #(parameter integer LO=0,W=13)(input wire[23:0]sig,input wire[4:0]shift,output wire[W-1:0]q);
+    wire[50:0]x={sig,27'd0}>>shift;
+    assign q=x[LO+:W];
+endmodule
+
+(* keep_hierarchy="yes" *)
+module ot_hgi_coll_aq_shift_mux #(parameter integer W=16)(input wire sel,input wire[W-1:0]a,b,output wire[W-1:0]q);
+    assign q=sel?b:a;
+endmodule

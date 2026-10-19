@@ -1,0 +1,37 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/gqfan32-1019/src_ctlK
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/gqfan32-1019/src_ctlK
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/gqfan32-1019/src_ctlK
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/gqfan32-1019/src_ctlK
+ot-run: ot-epyc8       admits  1192 GB (avail 948, growth 113, headroom 0, waiters 0/0 GB) load 73/128 running 44 disk 240 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/gqfan32-1019/src_ctlK
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/gqfan32-1019/src_ctlK
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-1286220-1792432044 after 0 s
+GQ_TARGET16 PASS checks204 writes24 launches4 cfg_launch_edges2 rows16 resetreload reuse generation
+- rtl/hbm_accel/generic/collective/p2p/tb_gq_target16.sv:84: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.000 s; speed 9.368 ms/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB
+GQ_TARGET16 ADDR PASS fullwidth16_31_255_256_4095 stickyfault noalias nolaunch
+- rtl/hbm_accel/generic/collective/p2p/tb_gq_target16.sv:84: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1us; walltime 0.000 s; speed 7.573 ms/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB
+GQ_TARGET16 LIMIT PASS limit17 immediate stickyfault nolaunch
+- rtl/hbm_accel/generic/collective/p2p/tb_gq_target16.sv:84: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 357ns; walltime 0.000 s; speed 2.135 ms/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB
+[186000] %Fatal: tb_gq_target16.sv:27: Assertion failed in tb_gq_target16.unnamedblk1: T16 PRIVATE address copy0
+%Error: rtl/hbm_accel/generic/collective/p2p/tb_gq_target16.sv:27: Verilog $stop
+GQ_TARGET16 MUTANT ADDR REJECTED exit1
+[157000] %Fatal: tb_gq_target16.sv:80: Assertion failed in tb_gq_target16: T16 oversized descriptor not earlyfault
+%Error: rtl/hbm_accel/generic/collective/p2p/tb_gq_target16.sv:80: Verilog $stop
+GQ_TARGET16 MUTANT LIMIT REJECTED exit1
+[106000] %Fatal: tb_gq_target16.sv:27: Assertion failed in tb_gq_target16.unnamedblk1: T16 PRIVATE address copy0
+%Error: rtl/hbm_accel/generic/collective/p2p/tb_gq_target16.sv:27: Verilog $stop
+GQ_TARGET16 MUTANT COPY REJECTED exit1
+[1096000] %Fatal: tb_gq_target16.sv:24: Assertion failed in tb_gq_target16: T16 PRIVATE strobe mismatch
+%Error: rtl/hbm_accel/generic/collective/p2p/tb_gq_target16.sv:24: Verilog $stop
+GQ_TARGET16 MUTANT START REJECTED exit1
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-1286220-1792432044): exit 0

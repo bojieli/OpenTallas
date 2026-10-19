@@ -96,6 +96,22 @@ module ot_hgi_coll_aq_mul13r (
         end
     endfunction
 
+`ifdef OT_GQ_FAN32
+    wire[23:0]s1_ac[0:5];
+    generate for(genvar g=0;g<6;g=g+1)begin:g_s1_operand_copy
+        ot_hgi_coll_scale_data_ff u_ff(.clk(clk),
+`ifdef OT_GQ_MUT_SCALE_DATA
+            .d((g==0)?((a_raw<<a_shift)^24'd1):(a_raw<<a_shift)),
+`else
+            .d(a_raw<<a_shift),
+`endif
+            .q(s1_ac[g]));
+    end endgenerate
+`else
+    wire[23:0]s1_ac[0:5];
+    assign s1_ac[0]=s1_a;assign s1_ac[1]=s1_a;assign s1_ac[2]=s1_a;
+    assign s1_ac[3]=s1_a;assign s1_ac[4]=s1_a;assign s1_ac[5]=s1_a;
+`endif
     reg        s2_v;
     reg        s2_byp, s2_sign;
     reg [1:0]  s2_err;
@@ -105,9 +121,9 @@ module ot_hgi_coll_aq_mul13r (
         if (!rst_n) s2_v <= 1'b0; else s2_v <= s1_v;
     always @(posedge clk) begin
         s2_byp <= s1_byp; s2_sign <= s1_sign; s2_err <= s1_err;
-        s2_pp0 <= s1_inv6 ? ({8'd0,s1_a}*32'hAB) : ({8'd0,s1_a}*32'h25);
-        s2_pp1 <= s1_inv6 ? ({8'd0,s1_a}*32'hAA) : ({8'd0,s1_a}*32'h49);
-        s2_pp2 <= s1_inv6 ? ({8'd0,s1_a}*32'hAA) : ({8'd0,s1_a}*32'h92);
+        s2_pp0 <= s1_inv6 ? ({8'd0,s1_ac[0]}*32'hAB) : ({8'd0,s1_ac[1]}*32'h25);
+        s2_pp1 <= s1_inv6 ? ({8'd0,s1_ac[2]}*32'hAA) : ({8'd0,s1_ac[3]}*32'h49);
+        s2_pp2 <= s1_inv6 ? ({8'd0,s1_ac[4]}*32'hAA) : ({8'd0,s1_ac[5]}*32'h92);
         s2_d47 <= decide(s1_power, 6'd47);
         s2_d46 <= decide(s1_power, 6'd46);
     end
@@ -133,7 +149,18 @@ module ot_hgi_coll_aq_mul13r (
     assign bc[5]=bg[4]|(bp[4]&bg[3])|(&bp[4:3]&bg[2])|(&bp[4:2]&bg[1])|(&bp[4:1]&bg[0]);
     assign bc[6]=bg[5]|(bp[5]&bc[5]);
     wire s3_top=byte_sum[5][7]^(bc[5]&(&byte_sum[5][6:0]));
+`ifdef OT_GQ_FAN32
+    // Native combinational chunks own their top-bit decision. Same stage/edges;
+    // one protected scalar controls at most eight decision bits (16 mux legs).
+    wire[86:0]s3_dec;
+    generate for(genvar g=0;g<11;g=g+1)begin:g_dec_control
+        localparam integer W=(g==10)?7:8;
+        (* keep="true" *)ot_hgi_coll_aq_dec_chunk #(.W(W),.G(g)) u_dec(.hi(byte_sum[5][7:0]),.carry(bc[5]),
+            .d47(s2_d47[8*g+:W]),.d46(s2_d46[8*g+:W]),.q(s3_dec[8*g+:W]));
+    end endgenerate
+`else
     wire [86:0] s3_dec = s3_top ? s2_d47 : s2_d46;
+`endif
 
     reg        s3_v;
     reg        s3_byp, s3_sign, s3_is_sub_q;
@@ -211,4 +238,28 @@ module ot_hgi_coll_aq_scale13r(input wire clk,rst_n,v,input wire [31:0] a,b,outp
 `ifndef SYNTHESIS
  always @(posedge clk)if(rst_n&&v&&b!=32'h3b124925&&b!=32'h3e2aaaab)$fatal(1,"AQ_SCALE_COEFFICIENT_UNSUPPORTED");
 `endif
+endmodule
+
+(* keep_hierarchy="yes" *)
+module ot_hgi_coll_aq_dec_chunk #(parameter integer W=8,G=0)(input wire[7:0]hi,input wire carry,input wire[W-1:0]d47,d46,output wire[W-1:0]q);
+    wire top;
+    (* keep="true" *)ot_hgi_coll_aq_top_dec u_top(.hi(hi),.carry(carry),.q(top));
+`ifdef OT_GQ_MUT_SCALE_CTL
+    wire select_top=(G==6)?!top:top;
+`else
+    wire select_top=top;
+`endif
+    assign q=select_top?d47:d46;
+endmodule
+
+(* keep_hierarchy="yes" *)
+module ot_hgi_coll_aq_top_dec(input wire[7:0]hi,input wire carry,output wire q);
+    assign q=hi[7]^(carry&&(&hi[6:0]));
+endmodule
+
+(* keep_hierarchy="yes" *)
+module ot_hgi_coll_scale_data_ff(input wire clk,input wire[23:0]d,output wire[23:0]q);
+    (* keep="true",dont_touch="true" *)reg[23:0]r;
+    always @(posedge clk)r<=d;
+    assign q=r;
 endmodule

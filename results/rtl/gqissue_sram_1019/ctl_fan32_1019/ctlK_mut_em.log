@@ -1,0 +1,15 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/gqfan32-1019/src_ctlK
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/gqfan32-1019/src_ctlK
+ot-run: ot-epyc6       admits   844 GB (avail 692, growth 101, headroom 0, waiters 0/0 GB) load 19/128 running 9 disk 6000 GB 
+ot-run: ot-epyc7       admits  1073 GB (avail 829, growth 78, headroom 0, waiters 0/0 GB) load 28/96 running 19 disk 6433 GB 
+ot-run: ot-epyc8       admits  1200 GB (avail 953, growth 113, headroom 0, waiters 0/0 GB) load 51/128 running 35 disk 231 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/gqfan32-1019/src_ctlK
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/gqfan32-1019/src_ctlK
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-3266967-1792432260 after 2 s
+COLLQ_SCHEDULE_CHECK F<400 R=1,2 plain+qbg links/reads/writes conflicts=0 []
+COLLQ MUTANT em REJECTED: COLLQ DATA row4 q0 seg0 word49 got 0000000000000000000000000000000069696969696969696969696969696900 exp 0000000000000000000000000000000069696969696969696969696969696969
+COLLQ DATA row4 q3 seg3 word49 got 000000000000000000000000000000007e7e7f7f7f7f7e7e7e7d7f7f7f7e7f00 exp 000000000000000000000000000000007e7e7f7f7f7f7e7e7e7d7f7f7f7e7f7f
+COLLQ FAIL errors=16
+EXACT_CONTROL_MUTANT em PASS_REJECTED
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-3266967-1792432260): exit 0

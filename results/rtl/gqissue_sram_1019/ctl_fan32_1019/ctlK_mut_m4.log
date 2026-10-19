@@ -1,0 +1,16 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/gqfan32-1019/src_ctlK
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/gqfan32-1019/src_ctlK
+ot-run: ot-epyc6       admits   844 GB (avail 692, growth 101, headroom 0, waiters 0/0 GB) load 19/128 running 9 disk 6000 GB 
+ot-run: ot-epyc7       admits  1073 GB (avail 829, growth 78, headroom 0, waiters 0/0 GB) load 28/96 running 19 disk 6433 GB 
+ot-run: ot-epyc8       admits  1200 GB (avail 953, growth 113, headroom 0, waiters 0/0 GB) load 51/128 running 35 disk 231 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/gqfan32-1019/src_ctlK
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/gqfan32-1019/src_ctlK
+ot-run: -> ot-epyc7
+ot-heavy: request 24G is charged 12G (class 'run_ctlI_mut.sh:m#' measured peak 3.7G, n=1+0 proved); the cap stays 24G
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-3266383-1792432260 after 1 s
+COLLQ_SCHEDULE_CHECK F<400 R=1,2 plain+qbg links/reads/writes conflicts=0 []
+COLLQ MUTANT m4 REJECTED: COLLQ missing write q0 b0 cyc171
+COLLQ missing write q0 b0 cyc1113
+COLLQ FAIL errors=1784
+EXACT_CONTROL_MUTANT m4 PASS_REJECTED
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-3266383-1792432260): exit 0

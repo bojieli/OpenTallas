@@ -253,7 +253,10 @@
  "keep_pin_regs": true,
  "reset_landing": {
   "enable": true,
-  "stages": 2
+  "stages": 2,
+  "copies": {
+   "rst_n": 4
+  }
  },
  "outline": {
   "w": 432,
@@ -267,5 +270,9 @@
  "pre_cts_extra": [
   "physical/ref_tile/hcoll_gq_issue_sram_rg2_1019/clock_graph.tcl",
   "physical/ref_tile/hcoll_gq_issue_sram_rg2_1019/bnd_branch.tcl"
- ]
+ ],
+ "reset_relay_split": {
+  "max_loads": 32,
+  "re": "(^|\\.)u_rst\\.rst_n$|__ot_rlv$|u_target\\.reset_ctrl_copies$"
+ }
 }

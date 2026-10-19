@@ -20,7 +20,9 @@ LIB=("$P/ot_hgi_coll_gq.sv" "$P/ot_hgi_coll_gq_target16.sv" "$P/ot_hgi_coll_ring
      rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fastfp.sv)
 MEM=physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v
 LIB+=("$MEM")
-FL=(-DOT_COLLQ_SRAM --binary --timing -O2 -j "${JOBS:-16}" -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-BLKSEQ -Wno-MULTITOP -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN)
+DEFS=(-DOT_COLLQ_SRAM)
+[[ ${OT_GQ_FAN32:-0} == 1 ]] && DEFS+=(-DOT_GQ_FAN32)
+FL=("${DEFS[@]}" --binary --timing -O2 -j "${JOBS:-16}" -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-BLKSEQ -Wno-MULTITOP -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN)
 build(){ "$V" "${FL[@]}" -GMUT=$2 -GKQMUT=$3 -GVEC="\"$OUT/vec\"" --top-module tb_hgi_coll_gq --Mdir "$OUT/$1" "$P/tb_hgi_coll_gq.sv" "${LIB[@]}" > "$OUT/$1.build.log" 2>&1 || { tail -40 "$OUT/$1.build.log"; exit 2; }; }
 mut(){ case $1 in m[1-7]) echo "${1#m} 0";; kq1) echo "0 1";; *) echo "unknown mutant $1" >&2; exit 2;; esac; }
 runmut(){ # $1 name -> log; m* run scenario 0, kq1 runs fault 3
@@ -41,14 +43,14 @@ done
 echo "COLLQ FAULTS PASS 4"
 # closed tree13 exact bench on the gather master's quantiser copy (same tb, candidate module renamed)
 sed 's/ot_hbm_xp_aq_tree13 #/ot_hgi_coll_aq13 #/' physical/hbm_xp_aq_tree13_1014/tb_aq_tree13.sv > "$OUT/tb_aq13.sv"
-"$V" -DOT_COLLQ_SRAM --binary --timing -j "${JOBS:-16}" -Wno-fatal -Wno-WIDTH -Wno-TIMESCALEMOD --top-module tb --Mdir "$OUT/aq13" "$OUT/tb_aq13.sv" \
+"$V" "${DEFS[@]}" --binary --timing -j "${JOBS:-16}" -Wno-fatal -Wno-WIDTH -Wno-TIMESCALEMOD --top-module tb --Mdir "$OUT/aq13" "$OUT/tb_aq13.sv" \
   "$P/ot_hgi_coll_aq13.sv" "$P/ot_hgi_coll_aq_scale13r.sv" rtl/hdc/v41/ot_hdc_actquant.sv rtl/hdc/ot_hdc_fpu.sv \
   rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_delay_hc.sv rtl/hdc/ot_hdc_cg.sv "$MEM" > "$OUT/aq13.build.log" 2>&1 || { tail -40 "$OUT/aq13.build.log"; exit 2; }
 "$OUT/aq13/Vtb" > "$OUT/aq13.log" 2>&1 || true
 grep -q '^AQ_TREE13_EXACT_PASS blocks1024 ' "$OUT/aq13.log" || { echo "COLLQ AQ13 FAIL"; tail -3 "$OUT/aq13.log"; exit 1; }
 echo "COLLQ AQ13 $(grep -m1 AQ_TREE13_EXACT_PASS "$OUT/aq13.log")"
 # r4: rebalanced scale multiply vs the closed ot_hbm_xp_aq_scale13 (every a exponent field, both coefficients)
-"$V" -DOT_COLLQ_SRAM --binary --timing -j "${JOBS:-16}" -Wno-fatal -Wno-WIDTH -Wno-TIMESCALEMOD --top-module tb_aq_scale13r_eq --Mdir "$OUT/sc13r" \
+"$V" "${DEFS[@]}" --binary --timing -j "${JOBS:-16}" -Wno-fatal -Wno-WIDTH -Wno-TIMESCALEMOD --top-module tb_aq_scale13r_eq --Mdir "$OUT/sc13r" \
   "$P/tb_aq_scale13r_eq.sv" "$P/ot_hgi_coll_aq_scale13r.sv" physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_scale13.sv > "$OUT/sc13r.build.log" 2>&1 || { tail -40 "$OUT/sc13r.build.log"; exit 2; }
 "$OUT/sc13r/Vtb_aq_scale13r_eq" > "$OUT/sc13r.log" 2>&1 || true
 grep -q '^SCALE13R_EQ PASS ' "$OUT/sc13r.log" || { echo "COLLQ SCALE13R FAIL"; tail -5 "$OUT/sc13r.log"; exit 1; }

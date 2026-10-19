@@ -1,0 +1,15 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/gqfan32-1019/src_ctlK
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/gqfan32-1019/src_ctlK
+ot-run: ot-epyc6       admits   844 GB (avail 692, growth 101, headroom 0, waiters 0/0 GB) load 19/128 running 9 disk 6000 GB 
+ot-run: ot-epyc7       admits  1073 GB (avail 829, growth 78, headroom 0, waiters 0/0 GB) load 28/96 running 19 disk 6433 GB 
+ot-run: ot-epyc8       admits  1200 GB (avail 953, growth 113, headroom 0, waiters 0/0 GB) load 51/128 running 35 disk 231 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/gqfan32-1019/src_ctlK
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/gqfan32-1019/src_ctlK
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-3266378-1792432260 after 1 s
+COLLQ_SCHEDULE_CHECK F<400 R=1,2 plain+qbg links/reads/writes conflicts=0 []
+COLLQ MUTANT ctl REJECTED: COLLQ ISA pass-through t2 got 04d2d4447a24450 exp 04d2d4447a24450
+COLLQ ISA pass-through t21 got 091594621a061f9 exp 091594621a061f9
+COLLQ FAIL errors=1190
+EXACT_CONTROL_MUTANT ctl PASS_REJECTED
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-3266378-1792432260): exit 0
