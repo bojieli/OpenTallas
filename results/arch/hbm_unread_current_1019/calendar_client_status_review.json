@@ -1,0 +1,1961 @@
+{
+ "schema": "opentallas.hbm_calendar_client_status_review_1019.v1",
+ "manifest_adopted": false,
+ "bits": 164,
+ "entries": [
+  {
+   "instance": "calendar_NE",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "bank_client",
+   "net": "calendar_NE__bank_client",
+   "width": 24,
+   "unread_ranges": [
+    [
+     8,
+     23
+    ]
+   ],
+   "bit_count": 16,
+   "die_line": 7125,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_client_capacity_review",
+   "reason": "Universal calendar field is wider than actual native quadrant hub input. All actual sink input bits connect exactly; only source high capacity bits lack a native channel. Generator explicitly zero-extends compact client fields. No claim compiler pack/hardware rejects arbitrary nonzero unused high bits; root reserved-capacity policy review required.",
+   "evidence": {
+    "native_sink": "hb_vms_NE",
+    "port": "bank_client",
+    "native_width": 8,
+    "universal_width": 24,
+    "actual_consumers": [
+     {
+      "instance": "hb_vms_NE",
+      "port": "bank_client",
+      "ranges": [
+       [
+        0,
+        7
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "calendar_NE",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "calendar_v",
+   "net": "calendar_NE__calendar_v",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 7125,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "calendar_valid_done_observation_review",
+   "reason": "Programme calendar itself zeros the entire command outside valid1&&word_ok and raises fault for invalid fetched words. Active/fault reach host-target status. Consumers execute fixed payload slots, and host completion uses active dropping; external calendar_v/done pulses add observation only.",
+   "evidence": {
+    "active": [
+     {
+      "instance": "hleaf_NE",
+      "port": "t_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "hleaf_NE",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "calendar_NE",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "client_seq",
+   "net": "calendar_NE__client_seq",
+   "width": 10,
+   "unread_ranges": [
+    [
+     2,
+     9
+    ]
+   ],
+   "bit_count": 8,
+   "die_line": 7125,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_client_capacity_review",
+   "reason": "Universal calendar field is wider than actual native quadrant hub input. All actual sink input bits connect exactly; only source high capacity bits lack a native channel. Generator explicitly zero-extends compact client fields. No claim compiler pack/hardware rejects arbitrary nonzero unused high bits; root reserved-capacity policy review required.",
+   "evidence": {
+    "native_sink": "hb_vms_NE",
+    "port": "client_seq",
+    "native_width": 2,
+    "universal_width": 10,
+    "actual_consumers": [
+     {
+      "instance": "hb_vms_NE",
+      "port": "client_seq",
+      "ranges": [
+       [
+        0,
+        1
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "calendar_NE",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "done",
+   "net": "calendar_NE__done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 7125,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "calendar_valid_done_observation_review",
+   "reason": "Programme calendar itself zeros the entire command outside valid1&&word_ok and raises fault for invalid fetched words. Active/fault reach host-target status. Consumers execute fixed payload slots, and host completion uses active dropping; external calendar_v/done pulses add observation only.",
+   "evidence": {
+    "active": [
+     {
+      "instance": "hleaf_NE",
+      "port": "t_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "hleaf_NE",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "calendar_NE",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "hub_ring_client",
+   "net": "calendar_NE__hub_ring_client",
+   "width": 6,
+   "unread_ranges": [
+    [
+     2,
+     5
+    ]
+   ],
+   "bit_count": 4,
+   "die_line": 7125,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_client_capacity_review",
+   "reason": "Universal calendar field is wider than actual native quadrant hub input. All actual sink input bits connect exactly; only source high capacity bits lack a native channel. Generator explicitly zero-extends compact client fields. No claim compiler pack/hardware rejects arbitrary nonzero unused high bits; root reserved-capacity policy review required.",
+   "evidence": {
+    "native_sink": "hb_vms_NE",
+    "port": "hub_ring_client",
+    "native_width": 2,
+    "universal_width": 6,
+    "actual_consumers": [
+     {
+      "instance": "hb_vms_NE",
+      "port": "hub_ring_client",
+      "ranges": [
+       [
+        0,
+        1
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "calendar_NE",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "response_enable",
+   "net": "calendar_NE__response_enable",
+   "width": 5,
+   "unread_ranges": [
+    [
+     1,
+     4
+    ]
+   ],
+   "bit_count": 4,
+   "die_line": 7125,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_client_capacity_review",
+   "reason": "Universal calendar field is wider than actual native quadrant hub input. All actual sink input bits connect exactly; only source high capacity bits lack a native channel. Generator explicitly zero-extends compact client fields. No claim compiler pack/hardware rejects arbitrary nonzero unused high bits; root reserved-capacity policy review required.",
+   "evidence": {
+    "native_sink": "hb_vms_NE",
+    "port": "response_enable",
+    "native_width": 1,
+    "universal_width": 5,
+    "actual_consumers": [
+     {
+      "instance": "hb_vms_NE",
+      "port": "response_enable",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "calendar_NE",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "response_seq",
+   "net": "calendar_NE__response_seq",
+   "width": 10,
+   "unread_ranges": [
+    [
+     2,
+     9
+    ]
+   ],
+   "bit_count": 8,
+   "die_line": 7125,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_client_capacity_review",
+   "reason": "Universal calendar field is wider than actual native quadrant hub input. All actual sink input bits connect exactly; only source high capacity bits lack a native channel. Generator explicitly zero-extends compact client fields. No claim compiler pack/hardware rejects arbitrary nonzero unused high bits; root reserved-capacity policy review required.",
+   "evidence": {
+    "native_sink": "hb_vms_NE",
+    "port": "response_seq",
+    "native_width": 2,
+    "universal_width": 10,
+    "actual_consumers": [
+     {
+      "instance": "hb_vms_NE",
+      "port": "response_seq",
+      "ranges": [
+       [
+        0,
+        1
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "calendar_NW",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "bank_client",
+   "net": "calendar_NW__bank_client",
+   "width": 24,
+   "unread_ranges": [
+    [
+     8,
+     23
+    ]
+   ],
+   "bit_count": 16,
+   "die_line": 7084,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_client_capacity_review",
+   "reason": "Universal calendar field is wider than actual native quadrant hub input. All actual sink input bits connect exactly; only source high capacity bits lack a native channel. Generator explicitly zero-extends compact client fields. No claim compiler pack/hardware rejects arbitrary nonzero unused high bits; root reserved-capacity policy review required.",
+   "evidence": {
+    "native_sink": "hb_vms_NW",
+    "port": "bank_client",
+    "native_width": 8,
+    "universal_width": 24,
+    "actual_consumers": [
+     {
+      "instance": "hb_vms_NW",
+      "port": "bank_client",
+      "ranges": [
+       [
+        0,
+        7
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "calendar_NW",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "calendar_v",
+   "net": "calendar_NW__calendar_v",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 7084,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "calendar_valid_done_observation_review",
+   "reason": "Programme calendar itself zeros the entire command outside valid1&&word_ok and raises fault for invalid fetched words. Active/fault reach host-target status. Consumers execute fixed payload slots, and host completion uses active dropping; external calendar_v/done pulses add observation only.",
+   "evidence": {
+    "active": [
+     {
+      "instance": "hleaf_NW",
+      "port": "t_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "hleaf_NW",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "calendar_NW",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "client_seq",
+   "net": "calendar_NW__client_seq",
+   "width": 10,
+   "unread_ranges": [
+    [
+     2,
+     9
+    ]
+   ],
+   "bit_count": 8,
+   "die_line": 7084,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_client_capacity_review",
+   "reason": "Universal calendar field is wider than actual native quadrant hub input. All actual sink input bits connect exactly; only source high capacity bits lack a native channel. Generator explicitly zero-extends compact client fields. No claim compiler pack/hardware rejects arbitrary nonzero unused high bits; root reserved-capacity policy review required.",
+   "evidence": {
+    "native_sink": "hb_vms_NW",
+    "port": "client_seq",
+    "native_width": 2,
+    "universal_width": 10,
+    "actual_consumers": [
+     {
+      "instance": "hb_vms_NW",
+      "port": "client_seq",
+      "ranges": [
+       [
+        0,
+        1
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "calendar_NW",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "done",
+   "net": "calendar_NW__done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 7084,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "calendar_valid_done_observation_review",
+   "reason": "Programme calendar itself zeros the entire command outside valid1&&word_ok and raises fault for invalid fetched words. Active/fault reach host-target status. Consumers execute fixed payload slots, and host completion uses active dropping; external calendar_v/done pulses add observation only.",
+   "evidence": {
+    "active": [
+     {
+      "instance": "hleaf_NW",
+      "port": "t_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "hleaf_NW",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "calendar_NW",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "hub_ring_client",
+   "net": "calendar_NW__hub_ring_client",
+   "width": 6,
+   "unread_ranges": [
+    [
+     2,
+     5
+    ]
+   ],
+   "bit_count": 4,
+   "die_line": 7084,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_client_capacity_review",
+   "reason": "Universal calendar field is wider than actual native quadrant hub input. All actual sink input bits connect exactly; only source high capacity bits lack a native channel. Generator explicitly zero-extends compact client fields. No claim compiler pack/hardware rejects arbitrary nonzero unused high bits; root reserved-capacity policy review required.",
+   "evidence": {
+    "native_sink": "hb_vms_NW",
+    "port": "hub_ring_client",
+    "native_width": 2,
+    "universal_width": 6,
+    "actual_consumers": [
+     {
+      "instance": "hb_vms_NW",
+      "port": "hub_ring_client",
+      "ranges": [
+       [
+        0,
+        1
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "calendar_NW",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "response_enable",
+   "net": "calendar_NW__response_enable",
+   "width": 5,
+   "unread_ranges": [
+    [
+     1,
+     4
+    ]
+   ],
+   "bit_count": 4,
+   "die_line": 7084,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_client_capacity_review",
+   "reason": "Universal calendar field is wider than actual native quadrant hub input. All actual sink input bits connect exactly; only source high capacity bits lack a native channel. Generator explicitly zero-extends compact client fields. No claim compiler pack/hardware rejects arbitrary nonzero unused high bits; root reserved-capacity policy review required.",
+   "evidence": {
+    "native_sink": "hb_vms_NW",
+    "port": "response_enable",
+    "native_width": 1,
+    "universal_width": 5,
+    "actual_consumers": [
+     {
+      "instance": "hb_vms_NW",
+      "port": "response_enable",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "calendar_NW",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "response_seq",
+   "net": "calendar_NW__response_seq",
+   "width": 10,
+   "unread_ranges": [
+    [
+     2,
+     9
+    ]
+   ],
+   "bit_count": 8,
+   "die_line": 7084,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_client_capacity_review",
+   "reason": "Universal calendar field is wider than actual native quadrant hub input. All actual sink input bits connect exactly; only source high capacity bits lack a native channel. Generator explicitly zero-extends compact client fields. No claim compiler pack/hardware rejects arbitrary nonzero unused high bits; root reserved-capacity policy review required.",
+   "evidence": {
+    "native_sink": "hb_vms_NW",
+    "port": "response_seq",
+    "native_width": 2,
+    "universal_width": 10,
+    "actual_consumers": [
+     {
+      "instance": "hb_vms_NW",
+      "port": "response_seq",
+      "ranges": [
+       [
+        0,
+        1
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "calendar_SE",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "bank_client",
+   "net": "calendar_SE__bank_client",
+   "width": 24,
+   "unread_ranges": [
+    [
+     8,
+     23
+    ]
+   ],
+   "bit_count": 16,
+   "die_line": 7043,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_client_capacity_review",
+   "reason": "Universal calendar field is wider than actual native quadrant hub input. All actual sink input bits connect exactly; only source high capacity bits lack a native channel. Generator explicitly zero-extends compact client fields. No claim compiler pack/hardware rejects arbitrary nonzero unused high bits; root reserved-capacity policy review required.",
+   "evidence": {
+    "native_sink": "hb_vms_SE",
+    "port": "bank_client",
+    "native_width": 8,
+    "universal_width": 24,
+    "actual_consumers": [
+     {
+      "instance": "hb_vms_SE",
+      "port": "bank_client",
+      "ranges": [
+       [
+        0,
+        7
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "calendar_SE",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "calendar_v",
+   "net": "calendar_SE__calendar_v",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 7043,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "calendar_valid_done_observation_review",
+   "reason": "Programme calendar itself zeros the entire command outside valid1&&word_ok and raises fault for invalid fetched words. Active/fault reach host-target status. Consumers execute fixed payload slots, and host completion uses active dropping; external calendar_v/done pulses add observation only.",
+   "evidence": {
+    "active": [
+     {
+      "instance": "hleaf_SE",
+      "port": "t_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "hleaf_SE",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "calendar_SE",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "client_seq",
+   "net": "calendar_SE__client_seq",
+   "width": 10,
+   "unread_ranges": [
+    [
+     2,
+     9
+    ]
+   ],
+   "bit_count": 8,
+   "die_line": 7043,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_client_capacity_review",
+   "reason": "Universal calendar field is wider than actual native quadrant hub input. All actual sink input bits connect exactly; only source high capacity bits lack a native channel. Generator explicitly zero-extends compact client fields. No claim compiler pack/hardware rejects arbitrary nonzero unused high bits; root reserved-capacity policy review required.",
+   "evidence": {
+    "native_sink": "hb_vms_SE",
+    "port": "client_seq",
+    "native_width": 2,
+    "universal_width": 10,
+    "actual_consumers": [
+     {
+      "instance": "hb_vms_SE",
+      "port": "client_seq",
+      "ranges": [
+       [
+        0,
+        1
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "calendar_SE",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "done",
+   "net": "calendar_SE__done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 7043,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "calendar_valid_done_observation_review",
+   "reason": "Programme calendar itself zeros the entire command outside valid1&&word_ok and raises fault for invalid fetched words. Active/fault reach host-target status. Consumers execute fixed payload slots, and host completion uses active dropping; external calendar_v/done pulses add observation only.",
+   "evidence": {
+    "active": [
+     {
+      "instance": "hleaf_SE",
+      "port": "t_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "hleaf_SE",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "calendar_SE",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "hub_ring_client",
+   "net": "calendar_SE__hub_ring_client",
+   "width": 6,
+   "unread_ranges": [
+    [
+     2,
+     5
+    ]
+   ],
+   "bit_count": 4,
+   "die_line": 7043,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_client_capacity_review",
+   "reason": "Universal calendar field is wider than actual native quadrant hub input. All actual sink input bits connect exactly; only source high capacity bits lack a native channel. Generator explicitly zero-extends compact client fields. No claim compiler pack/hardware rejects arbitrary nonzero unused high bits; root reserved-capacity policy review required.",
+   "evidence": {
+    "native_sink": "hb_vms_SE",
+    "port": "hub_ring_client",
+    "native_width": 2,
+    "universal_width": 6,
+    "actual_consumers": [
+     {
+      "instance": "hb_vms_SE",
+      "port": "hub_ring_client",
+      "ranges": [
+       [
+        0,
+        1
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "calendar_SE",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "response_enable",
+   "net": "calendar_SE__response_enable",
+   "width": 5,
+   "unread_ranges": [
+    [
+     1,
+     4
+    ]
+   ],
+   "bit_count": 4,
+   "die_line": 7043,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_client_capacity_review",
+   "reason": "Universal calendar field is wider than actual native quadrant hub input. All actual sink input bits connect exactly; only source high capacity bits lack a native channel. Generator explicitly zero-extends compact client fields. No claim compiler pack/hardware rejects arbitrary nonzero unused high bits; root reserved-capacity policy review required.",
+   "evidence": {
+    "native_sink": "hb_vms_SE",
+    "port": "response_enable",
+    "native_width": 1,
+    "universal_width": 5,
+    "actual_consumers": [
+     {
+      "instance": "hb_vms_SE",
+      "port": "response_enable",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "calendar_SE",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "response_seq",
+   "net": "calendar_SE__response_seq",
+   "width": 10,
+   "unread_ranges": [
+    [
+     2,
+     9
+    ]
+   ],
+   "bit_count": 8,
+   "die_line": 7043,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_client_capacity_review",
+   "reason": "Universal calendar field is wider than actual native quadrant hub input. All actual sink input bits connect exactly; only source high capacity bits lack a native channel. Generator explicitly zero-extends compact client fields. No claim compiler pack/hardware rejects arbitrary nonzero unused high bits; root reserved-capacity policy review required.",
+   "evidence": {
+    "native_sink": "hb_vms_SE",
+    "port": "response_seq",
+    "native_width": 2,
+    "universal_width": 10,
+    "actual_consumers": [
+     {
+      "instance": "hb_vms_SE",
+      "port": "response_seq",
+      "ranges": [
+       [
+        0,
+        1
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "calendar_SW",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "bank_client",
+   "net": "calendar_SW__bank_client",
+   "width": 24,
+   "unread_ranges": [
+    [
+     16,
+     23
+    ]
+   ],
+   "bit_count": 8,
+   "die_line": 7002,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_client_capacity_review",
+   "reason": "Universal calendar field is wider than actual native quadrant hub input. All actual sink input bits connect exactly; only source high capacity bits lack a native channel. Generator explicitly zero-extends compact client fields. No claim compiler pack/hardware rejects arbitrary nonzero unused high bits; root reserved-capacity policy review required.",
+   "evidence": {
+    "native_sink": "hb_vms_SW",
+    "port": "bank_client",
+    "native_width": 16,
+    "universal_width": 24,
+    "actual_consumers": [
+     {
+      "instance": "hb_vms_SW",
+      "port": "bank_client",
+      "ranges": [
+       [
+        0,
+        15
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "calendar_SW",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "calendar_v",
+   "net": "calendar_SW__calendar_v",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 7002,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "calendar_valid_done_observation_review",
+   "reason": "Programme calendar itself zeros the entire command outside valid1&&word_ok and raises fault for invalid fetched words. Active/fault reach host-target status. Consumers execute fixed payload slots, and host completion uses active dropping; external calendar_v/done pulses add observation only.",
+   "evidence": {
+    "active": [
+     {
+      "instance": "hleaf_SW",
+      "port": "t_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "hleaf_SW",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "calendar_SW",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "client_seq",
+   "net": "calendar_SW__client_seq",
+   "width": 10,
+   "unread_ranges": [
+    [
+     6,
+     9
+    ]
+   ],
+   "bit_count": 4,
+   "die_line": 7002,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_client_capacity_review",
+   "reason": "Universal calendar field is wider than actual native quadrant hub input. All actual sink input bits connect exactly; only source high capacity bits lack a native channel. Generator explicitly zero-extends compact client fields. No claim compiler pack/hardware rejects arbitrary nonzero unused high bits; root reserved-capacity policy review required.",
+   "evidence": {
+    "native_sink": "hb_vms_SW",
+    "port": "client_seq",
+    "native_width": 6,
+    "universal_width": 10,
+    "actual_consumers": [
+     {
+      "instance": "hb_vms_SW",
+      "port": "client_seq",
+      "ranges": [
+       [
+        0,
+        5
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "calendar_SW",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "done",
+   "net": "calendar_SW__done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 7002,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "calendar_valid_done_observation_review",
+   "reason": "Programme calendar itself zeros the entire command outside valid1&&word_ok and raises fault for invalid fetched words. Active/fault reach host-target status. Consumers execute fixed payload slots, and host completion uses active dropping; external calendar_v/done pulses add observation only.",
+   "evidence": {
+    "active": [
+     {
+      "instance": "hleaf_SW",
+      "port": "t_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "hleaf_SW",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "calendar_SW",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "hub_ring_client",
+   "net": "calendar_SW__hub_ring_client",
+   "width": 6,
+   "unread_ranges": [
+    [
+     4,
+     5
+    ]
+   ],
+   "bit_count": 2,
+   "die_line": 7002,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_client_capacity_review",
+   "reason": "Universal calendar field is wider than actual native quadrant hub input. All actual sink input bits connect exactly; only source high capacity bits lack a native channel. Generator explicitly zero-extends compact client fields. No claim compiler pack/hardware rejects arbitrary nonzero unused high bits; root reserved-capacity policy review required.",
+   "evidence": {
+    "native_sink": "hb_vms_SW",
+    "port": "hub_ring_client",
+    "native_width": 4,
+    "universal_width": 6,
+    "actual_consumers": [
+     {
+      "instance": "hb_vms_SW",
+      "port": "hub_ring_client",
+      "ranges": [
+       [
+        0,
+        3
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "calendar_SW",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "response_enable",
+   "net": "calendar_SW__response_enable",
+   "width": 5,
+   "unread_ranges": [
+    [
+     3,
+     4
+    ]
+   ],
+   "bit_count": 2,
+   "die_line": 7002,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_client_capacity_review",
+   "reason": "Universal calendar field is wider than actual native quadrant hub input. All actual sink input bits connect exactly; only source high capacity bits lack a native channel. Generator explicitly zero-extends compact client fields. No claim compiler pack/hardware rejects arbitrary nonzero unused high bits; root reserved-capacity policy review required.",
+   "evidence": {
+    "native_sink": "hb_vms_SW",
+    "port": "response_enable",
+    "native_width": 3,
+    "universal_width": 5,
+    "actual_consumers": [
+     {
+      "instance": "hb_vms_SW",
+      "port": "response_enable",
+      "ranges": [
+       [
+        0,
+        2
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "calendar_SW",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "response_seq",
+   "net": "calendar_SW__response_seq",
+   "width": 10,
+   "unread_ranges": [
+    [
+     6,
+     9
+    ]
+   ],
+   "bit_count": 4,
+   "die_line": 7002,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "universal_calendar_client_capacity_review",
+   "reason": "Universal calendar field is wider than actual native quadrant hub input. All actual sink input bits connect exactly; only source high capacity bits lack a native channel. Generator explicitly zero-extends compact client fields. No claim compiler pack/hardware rejects arbitrary nonzero unused high bits; root reserved-capacity policy review required.",
+   "evidence": {
+    "native_sink": "hb_vms_SW",
+    "port": "response_seq",
+    "native_width": 6,
+    "universal_width": 10,
+    "actual_consumers": [
+     {
+      "instance": "hb_vms_SW",
+      "port": "response_seq",
+      "ranges": [
+       [
+        0,
+        5
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "epcal_NE",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "calendar_v",
+   "net": "epcal_NE__calendar_v",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 13704,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "calendar_valid_done_observation_review",
+   "reason": "Programme calendar itself zeros the entire command outside valid1&&word_ok and raises fault for invalid fetched words. Active/fault reach host-target status. Consumers execute fixed payload slots, and host completion uses active dropping; external calendar_v/done pulses add observation only.",
+   "evidence": {
+    "active": [
+     {
+      "instance": "hleaf_NE",
+      "port": "t_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "hleaf_NE",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "epcal_NE",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "done",
+   "net": "epcal_NE__done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 13704,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "calendar_valid_done_observation_review",
+   "reason": "Programme calendar itself zeros the entire command outside valid1&&word_ok and raises fault for invalid fetched words. Active/fault reach host-target status. Consumers execute fixed payload slots, and host completion uses active dropping; external calendar_v/done pulses add observation only.",
+   "evidence": {
+    "active": [
+     {
+      "instance": "hleaf_NE",
+      "port": "t_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "hleaf_NE",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "epcal_NW",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "calendar_v",
+   "net": "epcal_NW__calendar_v",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 13663,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "calendar_valid_done_observation_review",
+   "reason": "Programme calendar itself zeros the entire command outside valid1&&word_ok and raises fault for invalid fetched words. Active/fault reach host-target status. Consumers execute fixed payload slots, and host completion uses active dropping; external calendar_v/done pulses add observation only.",
+   "evidence": {
+    "active": [
+     {
+      "instance": "hleaf_NW",
+      "port": "t_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "hleaf_NW",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "epcal_NW",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "done",
+   "net": "epcal_NW__done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 13663,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "calendar_valid_done_observation_review",
+   "reason": "Programme calendar itself zeros the entire command outside valid1&&word_ok and raises fault for invalid fetched words. Active/fault reach host-target status. Consumers execute fixed payload slots, and host completion uses active dropping; external calendar_v/done pulses add observation only.",
+   "evidence": {
+    "active": [
+     {
+      "instance": "hleaf_NW",
+      "port": "t_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "hleaf_NW",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "epcal_SE",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "calendar_v",
+   "net": "epcal_SE__calendar_v",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 13622,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "calendar_valid_done_observation_review",
+   "reason": "Programme calendar itself zeros the entire command outside valid1&&word_ok and raises fault for invalid fetched words. Active/fault reach host-target status. Consumers execute fixed payload slots, and host completion uses active dropping; external calendar_v/done pulses add observation only.",
+   "evidence": {
+    "active": [
+     {
+      "instance": "hleaf_SE",
+      "port": "t_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "hleaf_SE",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "epcal_SE",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "done",
+   "net": "epcal_SE__done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 13622,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "calendar_valid_done_observation_review",
+   "reason": "Programme calendar itself zeros the entire command outside valid1&&word_ok and raises fault for invalid fetched words. Active/fault reach host-target status. Consumers execute fixed payload slots, and host completion uses active dropping; external calendar_v/done pulses add observation only.",
+   "evidence": {
+    "active": [
+     {
+      "instance": "hleaf_SE",
+      "port": "t_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "hleaf_SE",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "epcal_SW",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "calendar_v",
+   "net": "epcal_SW__calendar_v",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 13581,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "calendar_valid_done_observation_review",
+   "reason": "Programme calendar itself zeros the entire command outside valid1&&word_ok and raises fault for invalid fetched words. Active/fault reach host-target status. Consumers execute fixed payload slots, and host completion uses active dropping; external calendar_v/done pulses add observation only.",
+   "evidence": {
+    "active": [
+     {
+      "instance": "hleaf_SW",
+      "port": "t_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "hleaf_SW",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "epcal_SW",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "done",
+   "net": "epcal_SW__done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 13581,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "calendar_valid_done_observation_review",
+   "reason": "Programme calendar itself zeros the entire command outside valid1&&word_ok and raises fault for invalid fetched words. Active/fault reach host-target status. Consumers execute fixed payload slots, and host completion uses active dropping; external calendar_v/done pulses add observation only.",
+   "evidence": {
+    "active": [
+     {
+      "instance": "hleaf_SW",
+      "port": "t_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "hleaf_SW",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmfc_NE",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "calendar_v",
+   "net": "vmfc_NE__calendar_v",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 18108,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "calendar_valid_done_observation_review",
+   "reason": "Programme calendar itself zeros the entire command outside valid1&&word_ok and raises fault for invalid fetched words. Active/fault reach host-target status. Consumers execute fixed payload slots, and host completion uses active dropping; external calendar_v/done pulses add observation only.",
+   "evidence": {
+    "active": [
+     {
+      "instance": "hleaf_NE",
+      "port": "t_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "sfault_NE",
+      "port": "cal_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     },
+     {
+      "instance": "hleaf_NE",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmfc_NE",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "done",
+   "net": "vmfc_NE__done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 18108,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "calendar_valid_done_observation_review",
+   "reason": "Programme calendar itself zeros the entire command outside valid1&&word_ok and raises fault for invalid fetched words. Active/fault reach host-target status. Consumers execute fixed payload slots, and host completion uses active dropping; external calendar_v/done pulses add observation only.",
+   "evidence": {
+    "active": [
+     {
+      "instance": "hleaf_NE",
+      "port": "t_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "sfault_NE",
+      "port": "cal_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     },
+     {
+      "instance": "hleaf_NE",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmfc_NW",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "calendar_v",
+   "net": "vmfc_NW__calendar_v",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 18052,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "calendar_valid_done_observation_review",
+   "reason": "Programme calendar itself zeros the entire command outside valid1&&word_ok and raises fault for invalid fetched words. Active/fault reach host-target status. Consumers execute fixed payload slots, and host completion uses active dropping; external calendar_v/done pulses add observation only.",
+   "evidence": {
+    "active": [
+     {
+      "instance": "hleaf_NW",
+      "port": "t_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "sfault_NW",
+      "port": "cal_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     },
+     {
+      "instance": "hleaf_NW",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmfc_NW",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "done",
+   "net": "vmfc_NW__done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 18052,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "calendar_valid_done_observation_review",
+   "reason": "Programme calendar itself zeros the entire command outside valid1&&word_ok and raises fault for invalid fetched words. Active/fault reach host-target status. Consumers execute fixed payload slots, and host completion uses active dropping; external calendar_v/done pulses add observation only.",
+   "evidence": {
+    "active": [
+     {
+      "instance": "hleaf_NW",
+      "port": "t_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "sfault_NW",
+      "port": "cal_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     },
+     {
+      "instance": "hleaf_NW",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmfc_SE",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "calendar_v",
+   "net": "vmfc_SE__calendar_v",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 18011,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "calendar_valid_done_observation_review",
+   "reason": "Programme calendar itself zeros the entire command outside valid1&&word_ok and raises fault for invalid fetched words. Active/fault reach host-target status. Consumers execute fixed payload slots, and host completion uses active dropping; external calendar_v/done pulses add observation only.",
+   "evidence": {
+    "active": [
+     {
+      "instance": "hleaf_SE",
+      "port": "t_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "sfault_SE",
+      "port": "cal_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     },
+     {
+      "instance": "hleaf_SE",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmfc_SE",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "done",
+   "net": "vmfc_SE__done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 18011,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "calendar_valid_done_observation_review",
+   "reason": "Programme calendar itself zeros the entire command outside valid1&&word_ok and raises fault for invalid fetched words. Active/fault reach host-target status. Consumers execute fixed payload slots, and host completion uses active dropping; external calendar_v/done pulses add observation only.",
+   "evidence": {
+    "active": [
+     {
+      "instance": "hleaf_SE",
+      "port": "t_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "sfault_SE",
+      "port": "cal_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     },
+     {
+      "instance": "hleaf_SE",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmfc_SW",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "calendar_v",
+   "net": "vmfc_SW__calendar_v",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 17955,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "calendar_valid_done_observation_review",
+   "reason": "Programme calendar itself zeros the entire command outside valid1&&word_ok and raises fault for invalid fetched words. Active/fault reach host-target status. Consumers execute fixed payload slots, and host completion uses active dropping; external calendar_v/done pulses add observation only.",
+   "evidence": {
+    "active": [
+     {
+      "instance": "hleaf_SW",
+      "port": "t_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "sfault_SW",
+      "port": "cal_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     },
+     {
+      "instance": "hleaf_SW",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmfc_SW",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "port": "done",
+   "net": "vmfc_SW__done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 17955,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "classification": "calendar_valid_done_observation_review",
+   "reason": "Programme calendar itself zeros the entire command outside valid1&&word_ok and raises fault for invalid fetched words. Active/fault reach host-target status. Consumers execute fixed payload slots, and host completion uses active dropping; external calendar_v/done pulses add observation only.",
+   "evidence": {
+    "active": [
+     {
+      "instance": "hleaf_SW",
+      "port": "t_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "sfault_SW",
+      "port": "cal_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     },
+     {
+      "instance": "hleaf_SW",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  }
+ ],
+ "source_commit": "d517a76ad",
+ "source_sha256": {
+  "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar.sv": "e4ccfb648bf5c4b642ca9a4610d55558447fdd4ce93be1e07048bef2aa64349b",
+  "rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static_xcap.sv": "2d9fc6c6bd4e145ce98ba5cffa785559bdab880e4d39bb6759a2bfd8deb1f960",
+  "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static_glue.sv": "33090faa944a5827c7a04031b6aff5f46830e13e2c35643f589abf543f0591f6",
+  "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_glue_tiles.sv": "486a4ad8a06b5bc32d0b55ac13ee1e1c93d1c5a657cebc146a1e9ef05b851ead",
+  "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv": "9e4e60326d3e9c7be30ae746ba44fd2a7943f126a4c54e6e37ac56f7a92f72a7",
+  "tools/hbm_vm_static_calendar.py": "ca26ae735adfd4b8a8de86ec1bddd104d52b1d77c94b659ab82987f6a53629b0"
+ },
+ "validation": "Read-only exact source/native port/consumer proof; no compiler unused-high rejection or new RTL mutant claimed."
+}
