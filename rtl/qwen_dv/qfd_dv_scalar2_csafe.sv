@@ -62,45 +62,45 @@ wire cfg_schedule_fault=(cfg_v||cfg_mid[0]||cfg_final[105])&&(dn_i[47]||up_i[47]
     localparam [2:0] K_PSUM = 3'd1, K_RB = 3'd2, K_AMI = 3'd3, K_AMV = 3'd4, K_TOK = 3'd5;
     reg        root, rdir, fuse; reg [5:0] nb, amnb; reg [23:0] ss, rx; reg [31:0] eps; reg [4:0] kk;
     reg [5:0] safe_next_amnb_0;
-always @* begin safe_next_amnb_0=amnb; if (cfg_final[64]) begin ; ; ; ; ;
-                              ; ; ; safe_next_amnb_0 = safe_cfg_amnb; end end
-qfd_dv_reset_bank #(.W(6)) safe_b_amnb_0(.ck(ck),.rst_n(safe_group[0]),.d(safe_next_amnb_0[0 +: 6]),.q(amnb[0 +: 6]));
-reg [31:0] safe_next_eps_0;
-always @* begin safe_next_eps_0=eps; if (cfg_final[65]) begin ; ; ; ; ;
-                              ; safe_next_eps_0 = safe_cfg_eps; ; ; end end
-qfd_dv_reset_bank #(.W(24)) safe_b_eps_0(.ck(ck),.rst_n(safe_group[0]),.d(safe_next_eps_0[0 +: 24]),.q(eps[0 +: 24]));
-reg [31:0] safe_next_eps_24;
-always @* begin safe_next_eps_24=eps; if (cfg_final[66]) begin ; ; ; ; ;
-                              ; safe_next_eps_24 = safe_cfg_eps; ; ; end end
-qfd_dv_reset_bank #(.W(8)) safe_b_eps_24(.ck(ck),.rst_n(safe_group[0]),.d(safe_next_eps_24[24 +: 8]),.q(eps[24 +: 8]));
+always @* begin safe_next_amnb_0=amnb[0 +: 6]; if (cfg_final[64]) begin ; ; ; ; ;
+                              ; ; ; safe_next_amnb_0 = 6'((safe_cfg_amnb) >> 0); end end
+qfd_dv_reset_bank #(.W(6)) safe_b_amnb_0(.ck(ck),.rst_n(safe_group[0]),.d(safe_next_amnb_0),.q(amnb[0 +: 6]));
+reg [23:0] safe_next_eps_0;
+always @* begin safe_next_eps_0=eps[0 +: 24]; if (cfg_final[65]) begin ; ; ; ; ;
+                              ; safe_next_eps_0 = 24'((safe_cfg_eps) >> 0); ; ; end end
+qfd_dv_reset_bank #(.W(24)) safe_b_eps_0(.ck(ck),.rst_n(safe_group[0]),.d(safe_next_eps_0),.q(eps[0 +: 24]));
+reg [7:0] safe_next_eps_24;
+always @* begin safe_next_eps_24=eps[24 +: 8]; if (cfg_final[66]) begin ; ; ; ; ;
+                              ; safe_next_eps_24 = 8'((safe_cfg_eps) >> 24); ; ; end end
+qfd_dv_reset_bank #(.W(8)) safe_b_eps_24(.ck(ck),.rst_n(safe_group[0]),.d(safe_next_eps_24),.q(eps[24 +: 8]));
 reg [0:0] safe_next_fuse_0;
-always @* begin safe_next_fuse_0=fuse; if (cfg_final[67]) begin ; ; ; ; safe_next_fuse_0 = safe_cfg_fuse;
+always @* begin safe_next_fuse_0=fuse; if (cfg_final[67]) begin ; ; ; ; safe_next_fuse_0 = 1'((safe_cfg_fuse) >> 0);
                               ; ; ; ; end end
-qfd_dv_reset_bank #(.W(1)) safe_b_fuse_0(.ck(ck),.rst_n(safe_group[0]),.d(safe_next_fuse_0[0 +: 1]),.q(fuse));
+qfd_dv_reset_bank #(.W(1)) safe_b_fuse_0(.ck(ck),.rst_n(safe_group[0]),.d(safe_next_fuse_0),.q(fuse));
 reg [4:0] safe_next_kk_0;
-always @* begin safe_next_kk_0=kk; if (cfg_final[68]) begin ; ; ; ; ;
-                              ; ; safe_next_kk_0 = safe_cfg_k; ; end end
-qfd_dv_reset_bank #(.W(5)) safe_b_kk_0(.ck(ck),.rst_n(safe_group[0]),.d(safe_next_kk_0[0 +: 5]),.q(kk[0 +: 5]));
+always @* begin safe_next_kk_0=kk[0 +: 5]; if (cfg_final[68]) begin ; ; ; ; ;
+                              ; ; safe_next_kk_0 = 5'((safe_cfg_k) >> 0); ; end end
+qfd_dv_reset_bank #(.W(5)) safe_b_kk_0(.ck(ck),.rst_n(safe_group[0]),.d(safe_next_kk_0),.q(kk[0 +: 5]));
 reg [5:0] safe_next_nb_0;
-always @* begin safe_next_nb_0=nb; if (cfg_final[69]) begin ; ; safe_next_nb_0 = safe_cfg_nb; ; ;
+always @* begin safe_next_nb_0=nb[0 +: 6]; if (cfg_final[69]) begin ; ; safe_next_nb_0 = 6'((safe_cfg_nb) >> 0); ; ;
                               ; ; ; ; end end
-qfd_dv_reset_bank #(.W(6)) safe_b_nb_0(.ck(ck),.rst_n(safe_group[0]),.d(safe_next_nb_0[0 +: 6]),.q(nb[0 +: 6]));
+qfd_dv_reset_bank #(.W(6)) safe_b_nb_0(.ck(ck),.rst_n(safe_group[0]),.d(safe_next_nb_0),.q(nb[0 +: 6]));
 reg [0:0] safe_next_rdir_0;
-always @* begin safe_next_rdir_0=rdir; if (cfg_final[70]) begin ; safe_next_rdir_0 = safe_cfg_rdir; ; ; ;
+always @* begin safe_next_rdir_0=rdir; if (cfg_final[70]) begin ; safe_next_rdir_0 = 1'((safe_cfg_rdir) >> 0); ; ; ;
                               ; ; ; ; end end
-qfd_dv_reset_bank #(.W(1)) safe_b_rdir_0(.ck(ck),.rst_n(safe_group[0]),.d(safe_next_rdir_0[0 +: 1]),.q(rdir));
+qfd_dv_reset_bank #(.W(1)) safe_b_rdir_0(.ck(ck),.rst_n(safe_group[0]),.d(safe_next_rdir_0),.q(rdir));
 reg [0:0] safe_next_root_0;
-always @* begin safe_next_root_0=root; if (cfg_final[71]) begin safe_next_root_0 = safe_cfg_root; ; ; ; ;
+always @* begin safe_next_root_0=root; if (cfg_final[71]) begin safe_next_root_0 = 1'((safe_cfg_root) >> 0); ; ; ; ;
                               ; ; ; ; end end
-qfd_dv_reset_bank #(.W(1)) safe_b_root_0(.ck(ck),.rst_n(safe_group[0]),.d(safe_next_root_0[0 +: 1]),.q(root));
+qfd_dv_reset_bank #(.W(1)) safe_b_root_0(.ck(ck),.rst_n(safe_group[0]),.d(safe_next_root_0),.q(root));
 reg [23:0] safe_next_rx_0;
-always @* begin safe_next_rx_0=rx; if (cfg_final[72]) begin ; ; ; ; ;
-                              safe_next_rx_0 = safe_cfg_rx; ; ; ; end end
-qfd_dv_reset_bank #(.W(24)) safe_b_rx_0(.ck(ck),.rst_n(safe_group[0]),.d(safe_next_rx_0[0 +: 24]),.q(rx[0 +: 24]));
+always @* begin safe_next_rx_0=rx[0 +: 24]; if (cfg_final[72]) begin ; ; ; ; ;
+                              safe_next_rx_0 = 24'((safe_cfg_rx) >> 0); ; ; ; end end
+qfd_dv_reset_bank #(.W(24)) safe_b_rx_0(.ck(ck),.rst_n(safe_group[0]),.d(safe_next_rx_0),.q(rx[0 +: 24]));
 reg [23:0] safe_next_ss_0;
-always @* begin safe_next_ss_0=ss; if (cfg_final[73]) begin ; ; ; safe_next_ss_0 = safe_cfg_ss; ;
+always @* begin safe_next_ss_0=ss[0 +: 24]; if (cfg_final[73]) begin ; ; ; safe_next_ss_0 = 24'((safe_cfg_ss) >> 0); ;
                               ; ; ; ; end end
-qfd_dv_reset_bank #(.W(24)) safe_b_ss_0(.ck(ck),.rst_n(safe_group[0]),.d(safe_next_ss_0[0 +: 24]),.q(ss[0 +: 24]));
+qfd_dv_reset_bank #(.W(24)) safe_b_ss_0(.ck(ck),.rst_n(safe_group[0]),.d(safe_next_ss_0),.q(ss[0 +: 24]));
                                                                                                                 
     wire       dv = dn_i[47], uv = up_i[47];
     wire [2:0] dk = dn_i[46:44], uk = up_i[46:44];
@@ -131,41 +131,41 @@ qfd_dv_reset_bank #(.W(24)) safe_b_ss_0(.ck(ck),.rst_n(safe_group[0]),.d(safe_ne
     wire [47:0] own_bc_w = rb_v ? {1'b1, K_RB, 12'd0, rb_val} : rr_v ? {1'b1, K_RB, 12'd0, rr_y} :
                            {1'b1, K_TOK, tk_tag, 8'd0, tk_index};
     reg [0:0] safe_next_am2_0;
-always @* begin safe_next_am2_0=am2; begin safe_next_am2_0 = am_v && !root; ; ; end end
-qfd_dv_reset_bank #(.W(1)) safe_b_am2_0(.ck(ck),.rst_n(safe_group[0]),.d(safe_next_am2_0[0 +: 1]),.q(am2));
+always @* begin safe_next_am2_0=am2; begin safe_next_am2_0 = 1'((am_v && !root) >> 0); ; ; end end
+qfd_dv_reset_bank #(.W(1)) safe_b_am2_0(.ck(ck),.rst_n(safe_group[0]),.d(safe_next_am2_0),.q(am2));
 reg [1:0] safe_next_am2_u_0;
-always @* begin safe_next_am2_u_0=am2_u; begin ; ; safe_next_am2_u_0 = (MU_NU > 1) ? am_u : 2'd0; end end
-qfd_dv_reset_bank #(.W(2)) safe_b_am2_u_0(.ck(ck),.rst_n(safe_group[0]),.d(safe_next_am2_u_0[0 +: 2]),.q(am2_u[0 +: 2]));
-reg [31:0] safe_next_am2_val_0;
-always @* begin safe_next_am2_val_0=am2_val; begin ; safe_next_am2_val_0 = am_val; ; end end
-qfd_dv_reset_bank #(.W(24)) safe_b_am2_val_0(.ck(ck),.rst_n(safe_group[0]),.d(safe_next_am2_val_0[0 +: 24]),.q(am2_val[0 +: 24]));
-reg [31:0] safe_next_am2_val_24;
-always @* begin safe_next_am2_val_24=am2_val; begin ; safe_next_am2_val_24 = am_val; ; end end
-qfd_dv_reset_bank #(.W(8)) safe_b_am2_val_24(.ck(ck),.rst_n(safe_group[0]),.d(safe_next_am2_val_24[24 +: 8]),.q(am2_val[24 +: 8]));
-    reg [47:0] safe_next_dn_o_0;
-always @* begin safe_next_dn_o_0=dn_o; begin
-            safe_next_dn_o_0 = d_pass ? dn_i : (own_tw && !rdir) ? own_tw_w : own_bc ? own_bc_w : 48'd0;
+always @* begin safe_next_am2_u_0=am2_u[0 +: 2]; begin ; ; safe_next_am2_u_0 = 2'(((MU_NU > 1) ? am_u : 2'd0) >> 0); end end
+qfd_dv_reset_bank #(.W(2)) safe_b_am2_u_0(.ck(ck),.rst_n(safe_group[0]),.d(safe_next_am2_u_0),.q(am2_u[0 +: 2]));
+reg [23:0] safe_next_am2_val_0;
+always @* begin safe_next_am2_val_0=am2_val[0 +: 24]; begin ; safe_next_am2_val_0 = 24'((am_val) >> 0); ; end end
+qfd_dv_reset_bank #(.W(24)) safe_b_am2_val_0(.ck(ck),.rst_n(safe_group[0]),.d(safe_next_am2_val_0),.q(am2_val[0 +: 24]));
+reg [7:0] safe_next_am2_val_24;
+always @* begin safe_next_am2_val_24=am2_val[24 +: 8]; begin ; safe_next_am2_val_24 = 8'((am_val) >> 24); ; end end
+qfd_dv_reset_bank #(.W(8)) safe_b_am2_val_24(.ck(ck),.rst_n(safe_group[0]),.d(safe_next_am2_val_24),.q(am2_val[24 +: 8]));
+    reg [23:0] safe_next_dn_o_0;
+always @* begin safe_next_dn_o_0=dn_o[0 +: 24]; begin
+            safe_next_dn_o_0 = 24'((d_pass ? dn_i : (own_tw && !rdir) ? own_tw_w : own_bc ? own_bc_w : 48'd0) >> 0);
             ;
         end end
-qfd_dv_reset_bank #(.W(24)) safe_b_dn_o_0(.ck(ck),.rst_n(safe_group[0]),.d(safe_next_dn_o_0[0 +: 24]),.q(dn_o[0 +: 24]));
-reg [47:0] safe_next_dn_o_24;
-always @* begin safe_next_dn_o_24=dn_o; begin
-            safe_next_dn_o_24 = d_pass ? dn_i : (own_tw && !rdir) ? own_tw_w : own_bc ? own_bc_w : 48'd0;
+qfd_dv_reset_bank #(.W(24)) safe_b_dn_o_0(.ck(ck),.rst_n(safe_group[0]),.d(safe_next_dn_o_0),.q(dn_o[0 +: 24]));
+reg [23:0] safe_next_dn_o_24;
+always @* begin safe_next_dn_o_24=dn_o[24 +: 24]; begin
+            safe_next_dn_o_24 = 24'((d_pass ? dn_i : (own_tw && !rdir) ? own_tw_w : own_bc ? own_bc_w : 48'd0) >> 24);
             ;
         end end
-qfd_dv_reset_bank #(.W(24)) safe_b_dn_o_24(.ck(ck),.rst_n(safe_group[0]),.d(safe_next_dn_o_24[24 +: 24]),.q(dn_o[24 +: 24]));
-reg [47:0] safe_next_up_o_0;
-always @* begin safe_next_up_o_0=up_o; begin
+qfd_dv_reset_bank #(.W(24)) safe_b_dn_o_24(.ck(ck),.rst_n(safe_group[0]),.d(safe_next_dn_o_24),.q(dn_o[24 +: 24]));
+reg [23:0] safe_next_up_o_0;
+always @* begin safe_next_up_o_0=up_o[0 +: 24]; begin
             ;
-            safe_next_up_o_0 = u_pass ? up_i : (own_tw && rdir) ? own_tw_w : own_bc ? own_bc_w : 48'd0;
+            safe_next_up_o_0 = 24'((u_pass ? up_i : (own_tw && rdir) ? own_tw_w : own_bc ? own_bc_w : 48'd0) >> 0);
         end end
-qfd_dv_reset_bank #(.W(24)) safe_b_up_o_0(.ck(ck),.rst_n(safe_group[0]),.d(safe_next_up_o_0[0 +: 24]),.q(up_o[0 +: 24]));
-reg [47:0] safe_next_up_o_24;
-always @* begin safe_next_up_o_24=up_o; begin
+qfd_dv_reset_bank #(.W(24)) safe_b_up_o_0(.ck(ck),.rst_n(safe_group[0]),.d(safe_next_up_o_0),.q(up_o[0 +: 24]));
+reg [23:0] safe_next_up_o_24;
+always @* begin safe_next_up_o_24=up_o[24 +: 24]; begin
             ;
-            safe_next_up_o_24 = u_pass ? up_i : (own_tw && rdir) ? own_tw_w : own_bc ? own_bc_w : 48'd0;
+            safe_next_up_o_24 = 24'((u_pass ? up_i : (own_tw && rdir) ? own_tw_w : own_bc ? own_bc_w : 48'd0) >> 24);
         end end
-qfd_dv_reset_bank #(.W(24)) safe_b_up_o_24(.ck(ck),.rst_n(safe_group[0]),.d(safe_next_up_o_24[24 +: 24]),.q(up_o[24 +: 24]));
+qfd_dv_reset_bank #(.W(24)) safe_b_up_o_24(.ck(ck),.rst_n(safe_group[0]),.d(safe_next_up_o_24),.q(up_o[24 +: 24]));
                                                                                 
     reg [31:0] s [0:31];
     reg [5:0]  cnt;
@@ -174,21 +174,21 @@ qfd_dv_reset_bank #(.W(24)) safe_b_up_o_24(.ck(ck),.rst_n(safe_group[0]),.d(safe
 
     wire [5:0] cnt_n = cnt + (d_ps ? 6'd1 : 6'd0) + (u_ps ? 6'd1 : 6'd0) + (o_ps ? 6'd1 : 6'd0);
 reg [5:0] safe_next_cnt_0;
-always @* begin safe_next_cnt_0=cnt; begin
+always @* begin safe_next_cnt_0=cnt[0 +: 6]; begin
  ;
- if(cfg_final[82]) safe_next_cnt_0 = 0;
- else if((d_ps||u_ps||o_ps)&&cnt_n==nb&&nb!=0) begin ;safe_next_cnt_0 = 0;end
- else safe_next_cnt_0 = cnt_n;
+ if(cfg_final[82]) safe_next_cnt_0 = 6'((0) >> 0);
+ else if((d_ps||u_ps||o_ps)&&cnt_n==nb&&nb!=0) begin ;safe_next_cnt_0 = 6'((0) >> 0);end
+ else safe_next_cnt_0 = 6'((cnt_n) >> 0);
  end end
-qfd_dv_reset_bank #(.W(6)) safe_b_cnt_0(.ck(ck),.rst_n(safe_group[0]),.d(safe_next_cnt_0[0 +: 6]),.q(cnt[0 +: 6]));
+qfd_dv_reset_bank #(.W(6)) safe_b_cnt_0(.ck(ck),.rst_n(safe_group[0]),.d(safe_next_cnt_0),.q(cnt[0 +: 6]));
 reg [0:0] safe_next_trig_0;
 always @* begin safe_next_trig_0=trig; begin
- safe_next_trig_0 = 0;
+ safe_next_trig_0 = 1'((0) >> 0);
  if(cfg_final[83]) ;
- else if((d_ps||u_ps||o_ps)&&cnt_n==nb&&nb!=0) begin safe_next_trig_0 = 1;;end
+ else if((d_ps||u_ps||o_ps)&&cnt_n==nb&&nb!=0) begin safe_next_trig_0 = 1'((1) >> 0);;end
  else ;
  end end
-qfd_dv_reset_bank #(.W(1)) safe_b_trig_0(.ck(ck),.rst_n(safe_group[0]),.d(safe_next_trig_0[0 +: 1]),.q(trig));
+qfd_dv_reset_bank #(.W(1)) safe_b_trig_0(.ck(ck),.rst_n(safe_group[0]),.d(safe_next_trig_0),.q(trig));
 wire[31:0] slot_reset;
 qfd_dv_reset_tree #(.N(32)) u_slot_rt(.ck(ck),.rst_n(safe_group[3]),.q(slot_reset));
 generate for(genvar sr=0;sr<32;sr=sr+1) begin:g_slot_safe
@@ -287,23 +287,23 @@ end end endgenerate
     reg [1:0] candidate_count;
     reg candidate_v,candidate_mix;
     reg [1:0] safe_next_candidate_count_0;
-always @* begin safe_next_candidate_count_0=candidate_count; if (cfg_final[84]) begin ;safe_next_candidate_count_0 = 0;; end
+always @* begin safe_next_candidate_count_0=candidate_count[0 +: 2]; if (cfg_final[84]) begin ;safe_next_candidate_count_0 = 2'((0) >> 0);; end
         else begin ;
-            safe_next_candidate_count_0 = {1'b0,d_amv}+{1'b0,u_amv}+{1'b0,o_am};
+            safe_next_candidate_count_0 = 2'(({1'b0,d_amv}+{1'b0,u_amv}+{1'b0,o_am}) >> 0);
             ; end end
-qfd_dv_reset_bank #(.W(2)) safe_b_candidate_count_0(.ck(ck),.rst_n(safe_group[0]),.d(safe_next_candidate_count_0[0 +: 2]),.q(candidate_count[0 +: 2]));
+qfd_dv_reset_bank #(.W(2)) safe_b_candidate_count_0(.ck(ck),.rst_n(safe_group[0]),.d(safe_next_candidate_count_0),.q(candidate_count[0 +: 2]));
 reg [0:0] safe_next_candidate_mix_0;
-always @* begin safe_next_candidate_mix_0=candidate_mix; if (cfg_final[85]) begin ;;safe_next_candidate_mix_0 = 0; end
+always @* begin safe_next_candidate_mix_0=candidate_mix; if (cfg_final[85]) begin ;;safe_next_candidate_mix_0 = 1'((0) >> 0); end
         else begin ;
             ;
-            safe_next_candidate_mix_0 = edge_mix; end end
-qfd_dv_reset_bank #(.W(1)) safe_b_candidate_mix_0(.ck(ck),.rst_n(safe_group[0]),.d(safe_next_candidate_mix_0[0 +: 1]),.q(candidate_mix));
+            safe_next_candidate_mix_0 = 1'((edge_mix) >> 0); end end
+qfd_dv_reset_bank #(.W(1)) safe_b_candidate_mix_0(.ck(ck),.rst_n(safe_group[0]),.d(safe_next_candidate_mix_0),.q(candidate_mix));
 reg [0:0] safe_next_candidate_v_0;
-always @* begin safe_next_candidate_v_0=candidate_v; if (cfg_final[86]) begin safe_next_candidate_v_0 = 0;;; end
-        else begin safe_next_candidate_v_0 = d_amv||u_amv||o_am;
+always @* begin safe_next_candidate_v_0=candidate_v; if (cfg_final[86]) begin safe_next_candidate_v_0 = 1'((0) >> 0);;; end
+        else begin safe_next_candidate_v_0 = 1'((d_amv||u_amv||o_am) >> 0);
             ;
             ; end end
-qfd_dv_reset_bank #(.W(1)) safe_b_candidate_v_0(.ck(ck),.rst_n(safe_group[0]),.d(safe_next_candidate_v_0[0 +: 1]),.q(candidate_v));
+qfd_dv_reset_bank #(.W(1)) safe_b_candidate_v_0(.ck(ck),.rst_n(safe_group[0]),.d(safe_next_candidate_v_0),.q(candidate_v));
     always @(posedge ck) begin candidate<=edge_best;candidate_user<=edge_user;end
     wire [56:0] m3 = better(candidate,am_best) ? candidate : am_best;
     wire [5:0] amc_n = amc + {4'd0,candidate_count};
@@ -328,88 +328,88 @@ qfd_dv_reset_bank #(.W(1)) safe_b_candidate_v_0(.ck(ck),.rst_n(safe_group[0]),.d
 
 
     reg [1:0] safe_next_mg_u_0;
-always @* begin safe_next_mg_u_0=mg_u; if (MU_NU > 1 && a_any && amc == 6'd0 && !cfg_final[87]) safe_next_mg_u_0 = f_u; end
-qfd_dv_reset_bank #(.W(2)) safe_b_mg_u_0(.ck(ck),.rst_n(safe_group[0]),.d(safe_next_mg_u_0[0 +: 2]),.q(mg_u[0 +: 2]));
-    reg [56:0] safe_next_am_best_0;
-always @* begin safe_next_am_best_0=am_best; begin
+always @* begin safe_next_mg_u_0=mg_u[0 +: 2]; if (MU_NU > 1 && a_any && amc == 6'd0 && !cfg_final[87]) safe_next_mg_u_0 = 2'((f_u) >> 0); end
+qfd_dv_reset_bank #(.W(2)) safe_b_mg_u_0(.ck(ck),.rst_n(safe_group[0]),.d(safe_next_mg_u_0),.q(mg_u[0 +: 2]));
+    reg [23:0] safe_next_am_best_0;
+always @* begin safe_next_am_best_0=am_best[0 +: 24]; begin
             ; ; ;
             if (dv && dk == K_AMI && root) ;
             if (uv && uk == K_AMI && root) ;
-            if (cfg_final[88]) begin safe_next_am_best_0 = 57'd0; ; end
+            if (cfg_final[88]) begin safe_next_am_best_0 = 24'((57'd0) >> 0); ; end
             else if (a_any) begin
-                safe_next_am_best_0 = m3;
+                safe_next_am_best_0 = 24'((m3) >> 0);
                 if (amc_n == amnb && amnb != 6'd0) begin ; ; ; ;
                                                           ; ;
                                                           if (MU_NU > 1) ;
-                                                          if (MU_NU > 1 && MU_MUT != 1) safe_next_am_best_0 = 57'd0; end
+                                                          if (MU_NU > 1 && MU_MUT != 1) safe_next_am_best_0 = 24'((57'd0) >> 0); end
                 else ;
             end
                                                                         
             if (!root && dv && dk == K_TOK) begin ; ; if (MU_NU > 1) ; end
             if (!root && uv && uk == K_TOK) begin ; ; if (MU_NU > 1) ; end
         end end
-qfd_dv_reset_bank #(.W(24)) safe_b_am_best_0(.ck(ck),.rst_n(safe_group[3]),.d(safe_next_am_best_0[0 +: 24]),.q(am_best[0 +: 24]));
-reg [56:0] safe_next_am_best_24;
-always @* begin safe_next_am_best_24=am_best; begin
+qfd_dv_reset_bank #(.W(24)) safe_b_am_best_0(.ck(ck),.rst_n(safe_group[3]),.d(safe_next_am_best_0),.q(am_best[0 +: 24]));
+reg [23:0] safe_next_am_best_24;
+always @* begin safe_next_am_best_24=am_best[24 +: 24]; begin
             ; ; ;
             if (dv && dk == K_AMI && root) ;
             if (uv && uk == K_AMI && root) ;
-            if (cfg_final[89]) begin safe_next_am_best_24 = 57'd0; ; end
+            if (cfg_final[89]) begin safe_next_am_best_24 = 24'((57'd0) >> 24); ; end
             else if (a_any) begin
-                safe_next_am_best_24 = m3;
+                safe_next_am_best_24 = 24'((m3) >> 24);
                 if (amc_n == amnb && amnb != 6'd0) begin ; ; ; ;
                                                           ; ;
                                                           if (MU_NU > 1) ;
-                                                          if (MU_NU > 1 && MU_MUT != 1) safe_next_am_best_24 = 57'd0; end
+                                                          if (MU_NU > 1 && MU_MUT != 1) safe_next_am_best_24 = 24'((57'd0) >> 24); end
                 else ;
             end
                                                                         
             if (!root && dv && dk == K_TOK) begin ; ; if (MU_NU > 1) ; end
             if (!root && uv && uk == K_TOK) begin ; ; if (MU_NU > 1) ; end
         end end
-qfd_dv_reset_bank #(.W(24)) safe_b_am_best_24(.ck(ck),.rst_n(safe_group[3]),.d(safe_next_am_best_24[24 +: 24]),.q(am_best[24 +: 24]));
-reg [56:0] safe_next_am_best_48;
-always @* begin safe_next_am_best_48=am_best; begin
+qfd_dv_reset_bank #(.W(24)) safe_b_am_best_24(.ck(ck),.rst_n(safe_group[3]),.d(safe_next_am_best_24),.q(am_best[24 +: 24]));
+reg [8:0] safe_next_am_best_48;
+always @* begin safe_next_am_best_48=am_best[48 +: 9]; begin
             ; ; ;
             if (dv && dk == K_AMI && root) ;
             if (uv && uk == K_AMI && root) ;
-            if (cfg_final[90]) begin safe_next_am_best_48 = 57'd0; ; end
+            if (cfg_final[90]) begin safe_next_am_best_48 = 9'((57'd0) >> 48); ; end
             else if (a_any) begin
-                safe_next_am_best_48 = m3;
+                safe_next_am_best_48 = 9'((m3) >> 48);
                 if (amc_n == amnb && amnb != 6'd0) begin ; ; ; ;
                                                           ; ;
                                                           if (MU_NU > 1) ;
-                                                          if (MU_NU > 1 && MU_MUT != 1) safe_next_am_best_48 = 57'd0; end
+                                                          if (MU_NU > 1 && MU_MUT != 1) safe_next_am_best_48 = 9'((57'd0) >> 48); end
                 else ;
             end
                                                                         
             if (!root && dv && dk == K_TOK) begin ; ; if (MU_NU > 1) ; end
             if (!root && uv && uk == K_TOK) begin ; ; if (MU_NU > 1) ; end
         end end
-qfd_dv_reset_bank #(.W(9)) safe_b_am_best_48(.ck(ck),.rst_n(safe_group[3]),.d(safe_next_am_best_48[48 +: 9]),.q(am_best[48 +: 9]));
+qfd_dv_reset_bank #(.W(9)) safe_b_am_best_48(.ck(ck),.rst_n(safe_group[3]),.d(safe_next_am_best_48),.q(am_best[48 +: 9]));
 reg [5:0] safe_next_amc_0;
-always @* begin safe_next_amc_0=amc; begin
+always @* begin safe_next_amc_0=amc[0 +: 6]; begin
             ; ; ;
             if (dv && dk == K_AMI && root) ;
             if (uv && uk == K_AMI && root) ;
-            if (cfg_final[91]) begin ; safe_next_amc_0 = 6'd0; end
+            if (cfg_final[91]) begin ; safe_next_amc_0 = 6'((6'd0) >> 0); end
             else if (a_any) begin
                 ;
-                if (amc_n == amnb && amnb != 6'd0) begin safe_next_amc_0 = 6'd0; ; ; ;
+                if (amc_n == amnb && amnb != 6'd0) begin safe_next_amc_0 = 6'((6'd0) >> 0); ; ; ;
                                                           ; ;
                                                           if (MU_NU > 1) ;
                                                           if (MU_NU > 1 && MU_MUT != 1) ; end
-                else safe_next_amc_0 = amc_n;
+                else safe_next_amc_0 = 6'((amc_n) >> 0);
             end
                                                                         
             if (!root && dv && dk == K_TOK) begin ; ; if (MU_NU > 1) ; end
             if (!root && uv && uk == K_TOK) begin ; ; if (MU_NU > 1) ; end
         end end
-qfd_dv_reset_bank #(.W(6)) safe_b_amc_0(.ck(ck),.rst_n(safe_group[3]),.d(safe_next_amc_0[0 +: 6]),.q(amc[0 +: 6]));
+qfd_dv_reset_bank #(.W(6)) safe_b_amc_0(.ck(ck),.rst_n(safe_group[3]),.d(safe_next_amc_0),.q(amc[0 +: 6]));
 reg [23:0] safe_next_di_0;
-always @* begin safe_next_di_0=di; begin
+always @* begin safe_next_di_0=di[0 +: 24]; begin
             ; ; ;
-            if (dv && dk == K_AMI && root) safe_next_di_0 = dn_i[23:0];
+            if (dv && dk == K_AMI && root) safe_next_di_0 = 24'((dn_i[23:0]) >> 0);
             if (uv && uk == K_AMI && root) ;
             if (cfg_final[92]) begin ; ; end
             else if (a_any) begin
@@ -424,16 +424,16 @@ always @* begin safe_next_di_0=di; begin
             if (!root && dv && dk == K_TOK) begin ; ; if (MU_NU > 1) ; end
             if (!root && uv && uk == K_TOK) begin ; ; if (MU_NU > 1) ; end
         end end
-qfd_dv_reset_bank #(.W(24)) safe_b_di_0(.ck(ck),.rst_n(safe_group[3]),.d(safe_next_di_0[0 +: 24]),.q(di[0 +: 24]));
+qfd_dv_reset_bank #(.W(24)) safe_b_di_0(.ck(ck),.rst_n(safe_group[3]),.d(safe_next_di_0),.q(di[0 +: 24]));
 reg [0:0] safe_next_tk_send_0;
 always @* begin safe_next_tk_send_0=tk_send; begin
-            safe_next_tk_send_0 = 1'b0; ; ;
+            safe_next_tk_send_0 = 1'((1'b0) >> 0); ; ;
             if (dv && dk == K_AMI && root) ;
             if (uv && uk == K_AMI && root) ;
             if (cfg_final[93]) begin ; ; end
             else if (a_any) begin
                 ;
-                if (amc_n == amnb && amnb != 6'd0) begin ; safe_next_tk_send_0 = 1'b1; ; ;
+                if (amc_n == amnb && amnb != 6'd0) begin ; safe_next_tk_send_0 = 1'((1'b1) >> 0); ; ;
                                                           ; ;
                                                           if (MU_NU > 1) ;
                                                           if (MU_NU > 1 && MU_MUT != 1) ; end
@@ -443,36 +443,36 @@ always @* begin safe_next_tk_send_0=tk_send; begin
             if (!root && dv && dk == K_TOK) begin ; ; if (MU_NU > 1) ; end
             if (!root && uv && uk == K_TOK) begin ; ; if (MU_NU > 1) ; end
         end end
-qfd_dv_reset_bank #(.W(1)) safe_b_tk_send_0(.ck(ck),.rst_n(safe_group[3]),.d(safe_next_tk_send_0[0 +: 1]),.q(tk_send));
+qfd_dv_reset_bank #(.W(1)) safe_b_tk_send_0(.ck(ck),.rst_n(safe_group[3]),.d(safe_next_tk_send_0),.q(tk_send));
 reg [23:0] safe_next_tok_idx_0;
-always @* begin safe_next_tok_idx_0=tok_idx; begin
+always @* begin safe_next_tok_idx_0=tok_idx[0 +: 24]; begin
             ; ; ;
             if (dv && dk == K_AMI && root) ;
             if (uv && uk == K_AMI && root) ;
             if (cfg_final[94]) begin ; ; end
             else if (a_any) begin
                 ;
-                if (amc_n == amnb && amnb != 6'd0) begin ; ; ; safe_next_tok_idx_0 = m3[55:32];
+                if (amc_n == amnb && amnb != 6'd0) begin ; ; ; safe_next_tok_idx_0 = 24'((m3[55:32]) >> 0);
                                                           ; ;
                                                           if (MU_NU > 1) ;
                                                           if (MU_NU > 1 && MU_MUT != 1) ; end
                 else ;
             end
                                                                         
-            if (!root && dv && dk == K_TOK) begin ; safe_next_tok_idx_0 = dn_i[23:0]; if (MU_NU > 1) ; end
-            if (!root && uv && uk == K_TOK) begin ; safe_next_tok_idx_0 = up_i[23:0]; if (MU_NU > 1) ; end
+            if (!root && dv && dk == K_TOK) begin ; safe_next_tok_idx_0 = 24'((dn_i[23:0]) >> 0); if (MU_NU > 1) ; end
+            if (!root && uv && uk == K_TOK) begin ; safe_next_tok_idx_0 = 24'((up_i[23:0]) >> 0); if (MU_NU > 1) ; end
         end end
-qfd_dv_reset_bank #(.W(24)) safe_b_tok_idx_0(.ck(ck),.rst_n(safe_group[3]),.d(safe_next_tok_idx_0[0 +: 24]),.q(tok_idx[0 +: 24]));
+qfd_dv_reset_bank #(.W(24)) safe_b_tok_idx_0(.ck(ck),.rst_n(safe_group[3]),.d(safe_next_tok_idx_0),.q(tok_idx[0 +: 24]));
 reg [0:0] safe_next_tok_own_0;
 always @* begin safe_next_tok_own_0=tok_own; begin
-            ; ; safe_next_tok_own_0 = 1'b0;
+            ; ; safe_next_tok_own_0 = 1'((1'b0) >> 0);
             if (dv && dk == K_AMI && root) ;
             if (uv && uk == K_AMI && root) ;
             if (cfg_final[95]) begin ; ; end
             else if (a_any) begin
                 ;
                 if (amc_n == amnb && amnb != 6'd0) begin ; ; ; ;
-                                                          safe_next_tok_own_0 = 1'b1; ;
+                                                          safe_next_tok_own_0 = 1'((1'b1) >> 0); ;
                                                           if (MU_NU > 1) ;
                                                           if (MU_NU > 1 && MU_MUT != 1) ; end
                 else ;
@@ -481,9 +481,9 @@ always @* begin safe_next_tok_own_0=tok_own; begin
             if (!root && dv && dk == K_TOK) begin ; ; if (MU_NU > 1) ; end
             if (!root && uv && uk == K_TOK) begin ; ; if (MU_NU > 1) ; end
         end end
-qfd_dv_reset_bank #(.W(1)) safe_b_tok_own_0(.ck(ck),.rst_n(safe_group[3]),.d(safe_next_tok_own_0[0 +: 1]),.q(tok_own));
+qfd_dv_reset_bank #(.W(1)) safe_b_tok_own_0(.ck(ck),.rst_n(safe_group[3]),.d(safe_next_tok_own_0),.q(tok_own));
 reg [1:0] safe_next_tok_user_0;
-always @* begin safe_next_tok_user_0=tok_user; begin
+always @* begin safe_next_tok_user_0=tok_user[0 +: 2]; begin
             ; ; ;
             if (dv && dk == K_AMI && root) ;
             if (uv && uk == K_AMI && root) ;
@@ -492,36 +492,36 @@ always @* begin safe_next_tok_user_0=tok_user; begin
                 ;
                 if (amc_n == amnb && amnb != 6'd0) begin ; ; ; ;
                                                           ; ;
-                                                          if (MU_NU > 1) safe_next_tok_user_0 = cur_u;
+                                                          if (MU_NU > 1) safe_next_tok_user_0 = 2'((cur_u) >> 0);
                                                           if (MU_NU > 1 && MU_MUT != 1) ; end
                 else ;
             end
                                                                         
-            if (!root && dv && dk == K_TOK) begin ; ; if (MU_NU > 1) safe_next_tok_user_0 = dn_i[33:32]; end
-            if (!root && uv && uk == K_TOK) begin ; ; if (MU_NU > 1) safe_next_tok_user_0 = up_i[33:32]; end
+            if (!root && dv && dk == K_TOK) begin ; ; if (MU_NU > 1) safe_next_tok_user_0 = 2'((dn_i[33:32]) >> 0); end
+            if (!root && uv && uk == K_TOK) begin ; ; if (MU_NU > 1) safe_next_tok_user_0 = 2'((up_i[33:32]) >> 0); end
         end end
-qfd_dv_reset_bank #(.W(2)) safe_b_tok_user_0(.ck(ck),.rst_n(safe_group[3]),.d(safe_next_tok_user_0[0 +: 2]),.q(tok_user[0 +: 2]));
+qfd_dv_reset_bank #(.W(2)) safe_b_tok_user_0(.ck(ck),.rst_n(safe_group[3]),.d(safe_next_tok_user_0),.q(tok_user[0 +: 2]));
 reg [0:0] safe_next_tok_v_0;
 always @* begin safe_next_tok_v_0=tok_v; begin
-            ; safe_next_tok_v_0 = 1'b0; ;
+            ; safe_next_tok_v_0 = 1'((1'b0) >> 0); ;
             if (dv && dk == K_AMI && root) ;
             if (uv && uk == K_AMI && root) ;
             if (cfg_final[97]) begin ; ; end
             else if (a_any) begin
                 ;
-                if (amc_n == amnb && amnb != 6'd0) begin ; ; safe_next_tok_v_0 = 1'b1; ;
+                if (amc_n == amnb && amnb != 6'd0) begin ; ; safe_next_tok_v_0 = 1'((1'b1) >> 0); ;
                                                           ; ;
                                                           if (MU_NU > 1) ;
                                                           if (MU_NU > 1 && MU_MUT != 1) ; end
                 else ;
             end
                                                                         
-            if (!root && dv && dk == K_TOK) begin safe_next_tok_v_0 = 1'b1; ; if (MU_NU > 1) ; end
-            if (!root && uv && uk == K_TOK) begin safe_next_tok_v_0 = 1'b1; ; if (MU_NU > 1) ; end
+            if (!root && dv && dk == K_TOK) begin safe_next_tok_v_0 = 1'((1'b1) >> 0); ; if (MU_NU > 1) ; end
+            if (!root && uv && uk == K_TOK) begin safe_next_tok_v_0 = 1'((1'b1) >> 0); ; if (MU_NU > 1) ; end
         end end
-qfd_dv_reset_bank #(.W(1)) safe_b_tok_v_0(.ck(ck),.rst_n(safe_group[3]),.d(safe_next_tok_v_0[0 +: 1]),.q(tok_v));
-reg [31:0] safe_next_tok_val_0;
-always @* begin safe_next_tok_val_0=tok_val; begin
+qfd_dv_reset_bank #(.W(1)) safe_b_tok_v_0(.ck(ck),.rst_n(safe_group[3]),.d(safe_next_tok_v_0),.q(tok_v));
+reg [23:0] safe_next_tok_val_0;
+always @* begin safe_next_tok_val_0=tok_val[0 +: 24]; begin
             ; ; ;
             if (dv && dk == K_AMI && root) ;
             if (uv && uk == K_AMI && root) ;
@@ -529,7 +529,7 @@ always @* begin safe_next_tok_val_0=tok_val; begin
             else if (a_any) begin
                 ;
                 if (amc_n == amnb && amnb != 6'd0) begin ; ; ; ;
-                                                          ; safe_next_tok_val_0 = m3[31:0];
+                                                          ; safe_next_tok_val_0 = 24'((m3[31:0]) >> 0);
                                                           if (MU_NU > 1) ;
                                                           if (MU_NU > 1 && MU_MUT != 1) ; end
                 else ;
@@ -538,9 +538,9 @@ always @* begin safe_next_tok_val_0=tok_val; begin
             if (!root && dv && dk == K_TOK) begin ; ; if (MU_NU > 1) ; end
             if (!root && uv && uk == K_TOK) begin ; ; if (MU_NU > 1) ; end
         end end
-qfd_dv_reset_bank #(.W(24)) safe_b_tok_val_0(.ck(ck),.rst_n(safe_group[3]),.d(safe_next_tok_val_0[0 +: 24]),.q(tok_val[0 +: 24]));
-reg [31:0] safe_next_tok_val_24;
-always @* begin safe_next_tok_val_24=tok_val; begin
+qfd_dv_reset_bank #(.W(24)) safe_b_tok_val_0(.ck(ck),.rst_n(safe_group[3]),.d(safe_next_tok_val_0),.q(tok_val[0 +: 24]));
+reg [7:0] safe_next_tok_val_24;
+always @* begin safe_next_tok_val_24=tok_val[24 +: 8]; begin
             ; ; ;
             if (dv && dk == K_AMI && root) ;
             if (uv && uk == K_AMI && root) ;
@@ -548,7 +548,7 @@ always @* begin safe_next_tok_val_24=tok_val; begin
             else if (a_any) begin
                 ;
                 if (amc_n == amnb && amnb != 6'd0) begin ; ; ; ;
-                                                          ; safe_next_tok_val_24 = m3[31:0];
+                                                          ; safe_next_tok_val_24 = 8'((m3[31:0]) >> 24);
                                                           if (MU_NU > 1) ;
                                                           if (MU_NU > 1 && MU_MUT != 1) ; end
                 else ;
@@ -557,12 +557,12 @@ always @* begin safe_next_tok_val_24=tok_val; begin
             if (!root && dv && dk == K_TOK) begin ; ; if (MU_NU > 1) ; end
             if (!root && uv && uk == K_TOK) begin ; ; if (MU_NU > 1) ; end
         end end
-qfd_dv_reset_bank #(.W(8)) safe_b_tok_val_24(.ck(ck),.rst_n(safe_group[3]),.d(safe_next_tok_val_24[24 +: 8]),.q(tok_val[24 +: 8]));
+qfd_dv_reset_bank #(.W(8)) safe_b_tok_val_24(.ck(ck),.rst_n(safe_group[3]),.d(safe_next_tok_val_24),.q(tok_val[24 +: 8]));
 reg [23:0] safe_next_ui_0;
-always @* begin safe_next_ui_0=ui; begin
+always @* begin safe_next_ui_0=ui[0 +: 24]; begin
             ; ; ;
             if (dv && dk == K_AMI && root) ;
-            if (uv && uk == K_AMI && root) safe_next_ui_0 = up_i[23:0];
+            if (uv && uk == K_AMI && root) safe_next_ui_0 = 24'((up_i[23:0]) >> 0);
             if (cfg_final[100]) begin ; ; end
             else if (a_any) begin
                 ;
@@ -576,31 +576,31 @@ always @* begin safe_next_ui_0=ui; begin
             if (!root && dv && dk == K_TOK) begin ; ; if (MU_NU > 1) ; end
             if (!root && uv && uk == K_TOK) begin ; ; if (MU_NU > 1) ; end
         end end
-qfd_dv_reset_bank #(.W(24)) safe_b_ui_0(.ck(ck),.rst_n(safe_group[3]),.d(safe_next_ui_0[0 +: 24]),.q(ui[0 +: 24]));
+qfd_dv_reset_bank #(.W(24)) safe_b_ui_0(.ck(ck),.rst_n(safe_group[3]),.d(safe_next_ui_0),.q(ui[0 +: 24]));
                                                                                                                          
     wire tap_rb = (dv && dk == K_RB) || (uv && uk == K_RB);
     wire [31:0] rb_in = (dv && dk == K_RB) ? dn_i[31:0] : up_i[31:0];
     wire tot_w = tot_v && !fuse;
     reg [0:0] safe_next_w1_we_0;
-always @* begin safe_next_w1_we_0=w1_we; safe_next_w1_we_0 = tap_rb || tot_w || rr_v; end
-qfd_dv_reset_bank #(.W(1)) safe_b_w1_we_0(.ck(ck),.rst_n(safe_group[3]),.d(safe_next_w1_we_0[0 +: 1]),.q(w1_we));
+always @* begin safe_next_w1_we_0=w1_we; safe_next_w1_we_0 = 1'((tap_rb || tot_w || rr_v) >> 0); end
+qfd_dv_reset_bank #(.W(1)) safe_b_w1_we_0(.ck(ck),.rst_n(safe_group[3]),.d(safe_next_w1_we_0),.q(w1_we));
     always @(posedge ck) begin
         w1_addr <= (tap_rb || rr_v) ? rx : ss;
         w1_data <= tap_rb ? rb_in : rr_v ? rr_y : total;
     end
     reg [6:0] bc;
     reg [6:0] safe_next_bc_0;
-always @* begin safe_next_bc_0=bc; begin
-            safe_next_bc_0 = trig ? 7'd127 : (bc != 0 && (tot_w || rr_v)) ? 7'd0 : bc;
+always @* begin safe_next_bc_0=bc[0 +: 7]; begin
+            safe_next_bc_0 = 7'((trig ? 7'd127 : (bc != 0 && (tot_w || rr_v)) ? 7'd0 : bc) >> 0);
             ;
         end end
-qfd_dv_reset_bank #(.W(7)) safe_b_bc_0(.ck(ck),.rst_n(safe_group[3]),.d(safe_next_bc_0[0 +: 7]),.q(bc[0 +: 7]));
+qfd_dv_reset_bank #(.W(7)) safe_b_bc_0(.ck(ck),.rst_n(safe_group[3]),.d(safe_next_bc_0),.q(bc[0 +: 7]));
 reg [0:0] safe_next_busy_0;
 always @* begin safe_next_busy_0=busy; begin
             ;
-            safe_next_busy_0 = trig || (bc != 0);
+            safe_next_busy_0 = 1'((trig || (bc != 0)) >> 0);
         end end
-qfd_dv_reset_bank #(.W(1)) safe_b_busy_0(.ck(ck),.rst_n(safe_group[3]),.d(safe_next_busy_0[0 +: 1]),.q(busy));
+qfd_dv_reset_bank #(.W(1)) safe_b_busy_0(.ck(ck),.rst_n(safe_group[3]),.d(safe_next_busy_0),.q(busy));
                                                                             
     wire bad = (d_pass && ((own_tw && !rdir) || own_bc)) || (u_pass && ((own_tw && rdir) || own_bc)) ||
                (own_tw && own_bc) || (ps_v && (am_v || am2)) || (rb_v && rr_v) || (tk_send && (rb_v || rr_v)) ||
@@ -611,8 +611,8 @@ qfd_dv_reset_bank #(.W(1)) safe_b_busy_0(.ck(ck),.rst_n(safe_group[3]),.d(safe_n
                (o_ps && (ps_idx[23:5] != 0 || ps_idx[5:0] >= nb && nb != 6'd32)) ||
                am_mix || cfg_schedule_fault;                                                                                              
     reg [0:0] safe_next_fault_0;
-always @* begin safe_next_fault_0=fault; safe_next_fault_0 = fault | bad; end
-qfd_dv_reset_bank #(.W(1)) safe_b_fault_0(.ck(ck),.rst_n(safe_group[3]),.d(safe_next_fault_0[0 +: 1]),.q(fault));
+always @* begin safe_next_fault_0=fault; safe_next_fault_0 = 1'((fault | bad) >> 0); end
+qfd_dv_reset_bank #(.W(1)) safe_b_fault_0(.ck(ck),.rst_n(safe_group[3]),.d(safe_next_fault_0),.q(fault));
 wire[3:0] safe_group;
 qfd_dv_reset_tree #(.N(4)) u_reset_groups(.ck(ck),.rst_n(rst_n),.q(safe_group));
 endmodule
@@ -680,7 +680,7 @@ module qfd_safe_add_fast (
     reg [27:0] s1_small;
     reg [0:0] safe_next_s1_v;
 always @* begin safe_next_s1_v=s1_v; safe_next_s1_v = valid_in; end
-qfd_dv_reset_bank #(.W(1)) safe_b_s1_v_0(.ck(clk),.rst_n(safe_front),.d(safe_next_s1_v),.q(s1_v));
+qfd_dv_reset_bank #(.W(1)) safe_b_s1_v(.ck(clk),.rst_n(safe_front),.d(safe_next_s1_v),.q(s1_v));
     always @(posedge clk) begin
         s1_byp <= bypass;
         s1_err <= nonfinite ? E_NONFINITE : E_NONE;
@@ -720,7 +720,7 @@ qfd_dv_reset_bank #(.W(1)) safe_b_s1_v_0(.ck(clk),.rst_n(safe_front),.d(safe_nex
     reg [26:0] s2_val;
     reg [0:0] safe_next_s2_v;
 always @* begin safe_next_s2_v=s2_v; safe_next_s2_v = s1_v; end
-qfd_dv_reset_bank #(.W(1)) safe_b_s2_v_0(.ck(clk),.rst_n(safe_front),.d(safe_next_s2_v),.q(s2_v));
+qfd_dv_reset_bank #(.W(1)) safe_b_s2_v(.ck(clk),.rst_n(safe_front),.d(safe_next_s2_v),.q(s2_v));
     always @(posedge clk) begin
         s2_byp <= s1_byp; s2_err <= s1_err; s2_code <= s1_code; s2_sign <= s1_sign;
         s2_zero <= s1_sub && (dif == 28'd0);
@@ -746,7 +746,7 @@ always @* begin safe_next_err=err; begin
             else if (over) begin ; safe_next_err = E_OVERFLOW; end
             else begin ; safe_next_err = E_NONE; end
         end end
-qfd_dv_reset_bank #(.W(2)) safe_b_err_0(.ck(clk),.rst_n(safe_front),.d(safe_next_err),.q(err));
+qfd_dv_reset_bank #(.W(2)) safe_b_err(.ck(clk),.rst_n(safe_front),.d(safe_next_err),.q(err));
 reg [0:0] safe_next_valid_out;
 always @* begin safe_next_valid_out=valid_out; begin
             safe_next_valid_out = s2_v;
@@ -755,7 +755,7 @@ always @* begin safe_next_valid_out=valid_out; begin
             else if (over) begin ; ; end
             else begin ; ; end
         end end
-qfd_dv_reset_bank #(.W(1)) safe_b_valid_out_0(.ck(clk),.rst_n(safe_front),.d(safe_next_valid_out),.q(valid_out));
+qfd_dv_reset_bank #(.W(1)) safe_b_valid_out(.ck(clk),.rst_n(safe_front),.d(safe_next_valid_out),.q(valid_out));
 reg [31:0] safe_next_y;
 always @* begin safe_next_y=y; begin
             ;
@@ -764,7 +764,7 @@ always @* begin safe_next_y=y; begin
             else if (over) begin safe_next_y = 32'd0; ; end
             else begin safe_next_y = (code[30:0] == 31'd0) ? 32'd0 : code; ; end
         end end
-qfd_dv_reset_bank #(.W(32)) safe_b_y_0(.ck(clk),.rst_n(safe_front),.d(safe_next_y),.q(y));
+qfd_dv_reset_bank #(.W(32)) safe_b_y(.ck(clk),.rst_n(safe_front),.d(safe_next_y),.q(y));
 wire safe_front;
 qfd_dv_reset_tree #(.N(1)) u_front(.ck(clk),.rst_n(rst_n),.q(safe_front));
 endmodule
@@ -812,7 +812,7 @@ module qfd_safe_mul_fast (
     reg signed [11:0] s1_power;
     reg [0:0] safe_next_s1_v;
 always @* begin safe_next_s1_v=s1_v; safe_next_s1_v = valid_in; end
-qfd_dv_reset_bank #(.W(1)) safe_b_s1_v_0(.ck(clk),.rst_n(safe_front),.d(safe_next_s1_v),.q(s1_v));
+qfd_dv_reset_bank #(.W(1)) safe_b_s1_v(.ck(clk),.rst_n(safe_front),.d(safe_next_s1_v),.q(s1_v));
     always @(posedge clk) begin
         s1_byp <= nonfinite || zero;
         s1_err <= nonfinite ? E_NONFINITE : E_NONE;
@@ -848,7 +848,7 @@ qfd_dv_reset_bank #(.W(1)) safe_b_s1_v_0(.ck(clk),.rst_n(safe_front),.d(safe_nex
     reg signed [11:0] s2_fl47, s2_fl46;
     reg [0:0] safe_next_s2_v;
 always @* begin safe_next_s2_v=s2_v; safe_next_s2_v = s1_v; end
-qfd_dv_reset_bank #(.W(1)) safe_b_s2_v_0(.ck(clk),.rst_n(safe_front),.d(safe_next_s2_v),.q(s2_v));
+qfd_dv_reset_bank #(.W(1)) safe_b_s2_v(.ck(clk),.rst_n(safe_front),.d(safe_next_s2_v),.q(s2_v));
     always @(posedge clk) begin
         s2_byp <= s1_byp; s2_err <= s1_err; s2_sign <= s1_sign;
         s2_prod <= prod;
@@ -890,7 +890,7 @@ always @* begin safe_next_err=err; begin
             else if (over) begin ; safe_next_err = E_OVERFLOW; end
             else begin ; safe_next_err = E_NONE; end
         end end
-qfd_dv_reset_bank #(.W(2)) safe_b_err_0(.ck(clk),.rst_n(safe_front),.d(safe_next_err),.q(err));
+qfd_dv_reset_bank #(.W(2)) safe_b_err(.ck(clk),.rst_n(safe_front),.d(safe_next_err),.q(err));
 reg [0:0] safe_next_valid_out;
 always @* begin safe_next_valid_out=valid_out; begin
             safe_next_valid_out = s2_v;
@@ -898,7 +898,7 @@ always @* begin safe_next_valid_out=valid_out; begin
             else if (over) begin ; ; end
             else begin ; ; end
         end end
-qfd_dv_reset_bank #(.W(1)) safe_b_valid_out_0(.ck(clk),.rst_n(safe_front),.d(safe_next_valid_out),.q(valid_out));
+qfd_dv_reset_bank #(.W(1)) safe_b_valid_out(.ck(clk),.rst_n(safe_front),.d(safe_next_valid_out),.q(valid_out));
 reg [31:0] safe_next_y;
 always @* begin safe_next_y=y; begin
             ;
@@ -906,7 +906,7 @@ always @* begin safe_next_y=y; begin
             else if (over) begin safe_next_y = 32'd0; ; end
             else begin safe_next_y = (code[30:0] == 31'd0) ? 32'd0 : code; ; end
         end end
-qfd_dv_reset_bank #(.W(32)) safe_b_y_0(.ck(clk),.rst_n(safe_front),.d(safe_next_y),.q(y));
+qfd_dv_reset_bank #(.W(32)) safe_b_y(.ck(clk),.rst_n(safe_front),.d(safe_next_y),.q(y));
 wire safe_front;
 qfd_dv_reset_tree #(.N(1)) u_front(.ck(clk),.rst_n(rst_n),.q(safe_front));
 endmodule
