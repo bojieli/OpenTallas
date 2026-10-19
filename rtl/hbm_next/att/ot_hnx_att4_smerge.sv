@@ -156,11 +156,13 @@ module ot_hnx_att4_smerge #(
             // Each bank needs one read and write per edge; independent banks preserve simultaneous lane events.
             // Registered SRAM output is the next head. Distinct read/write addresses avoid collision semantics.
             // MUT 6 reads one residue early: a storage-specific negative control.
-            ot_sram_1r1w_64x512_m1_r2c2 u_ring (
-                .clk(clk), .r_ce_in(1'b1), .r_addr_in({3'b0, (MUT == 6 ? ph : phn)}),
-                .rd_out(hw[(gl*LV+gq)*W +: W]),
-                .w_ce_in(1'b1), .w_addr_in({3'b0, ph}), .wd_in(hn[(gl*LV+gq)*W +: W]),
-                .w_mask_in({W{1'b1}}), .rr_en(2'b0), .rr_addr(12'b0), .cr_en(2'b0), .cr_sel(18'b0));
+            for (genvar half = 0; half < 2; half = half + 1) begin : g_half
+                ot_sram_1r1w_128x256_m1_r2c2 u_ring (
+                    .clk(clk), .r_ce_in(1'b1), .r_addr_in({4'b0, (MUT == 6 ? ph : phn)}),
+                    .rd_out(hw[(gl*LV+gq)*W + half*256 +: 256]),
+                    .w_ce_in(1'b1), .w_addr_in({4'b0, ph}), .wd_in(hn[(gl*LV+gq)*W + half*256 +: 256]),
+                    .w_mask_in({256{1'b1}}), .rr_en(2'b0), .rr_addr(14'b0), .cr_en(2'b0), .cr_sel(16'b0));
+            end
         end
     end endgenerate
 
