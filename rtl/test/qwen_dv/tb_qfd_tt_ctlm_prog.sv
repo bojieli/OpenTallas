@@ -93,11 +93,13 @@ module tb_qfd_tt_ctlm_prog (input wire ck);
     wire [452:0] l_hr; wire [115:0] l_cmd; wire l_emb_start; wire [17:0] l_emb_token; wire [55:0] l_dc; wire l_cf;
     wire [75:0] l_pobs, l_cobs; wire [68:0] l_dobs; wire l_csr, l_cir, l_lcv; wire [17:0] l_ntk, l_nps; wire [5:0] l_cst;
     wire [379:0] l_ncmd;
-    qfd_tt_ctlm_dv_lpf_lp #(.XPF_TRANSPORT_EDGES(XPF_EDGES), .STAGE_ME(STAGE_ME), .MUT(LMUT)) u_lp (.ck_core(ck), .ck_hr(ck),
+    wire [1087:0] l_tl;
+    // MU-DIE-QW 10-19: the regenerated lp is the MU build (default NU 4 / OPSEG 1); this single-user bench runs it at NU 1 / OPSEG 0
+    qfd_tt_ctlm_dv_lpf_lp #(.XPF_TRANSPORT_EDGES(XPF_EDGES), .STAGE_ME(STAGE_ME), .MUT(LMUT), .NU(1), .OPSEG(0)) u_lp (.ck_core(ck), .ck_hr(ck),
         .rst_n(rst_early), .pw(pw), .dh(dh), .kok(kok), .kwd(kwd), .fab(1'b0), .program_obs(l_pobs),
         .control_stores_ready(l_csr), .layer_context_v(l_lcv), .native_tok(l_ntk), .native_pos(l_nps), .command_stage(l_cst),
         .cal_program_obs(l_cobs), .cal_descriptor_obs(l_dobs), .cal_image_ready(l_cir), .dc(l_dc), .native_cmd(l_ncmd),
-        .native_ret(nret), .hr(l_hr), .cmd(l_cmd), .ss5(ss5), .ag5(ag5), .emb_start(l_emb_start), .emb_token(l_emb_token), .cf(l_cf));
+        .native_ret(nret), .hr(l_hr), .cmd(l_cmd), .tl(l_tl), .dh_user(2'd0), .ss5(ss5), .ag5(ag5), .emb_start(l_emb_start), .emb_token(l_emb_token), .cf(l_cf));
     wire [1290:0] v_d = {pobs, csr, lcv, ntk, nps, cst, cobs, dobs, cir, dc, ncmd, hr, cmd, emb_start, emb_token, cf};
     wire [1290:0] v_l = {l_pobs, l_csr, l_lcv, l_ntk, l_nps, l_cst, l_cobs, l_dobs, l_cir, l_dc, l_ncmd, l_hr, l_cmd,
                          l_emb_start, l_emb_token, l_cf};
