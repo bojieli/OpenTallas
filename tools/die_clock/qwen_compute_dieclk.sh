@@ -66,12 +66,14 @@ PY
   say "prep done"
   exit 0
 fi
-V=$3; O=$D/$V; mkdir -p $O; chmod a+rwx $O
+V=$3; O=$D/$V; mkdir -p $O/ff; chmod a+rwx $O $O/ff   # measure_only does not create its --out dir
 DK="docker run --rm --cpus=${DC_CPUS:-8} --memory=${DC_MEM:-90}g -v $D:/work -w /work $IMG bash -lc"
 PRE='source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; for c in tt ff; do for g in $(cat /work/libs_$c.glob); do ls $g; done > /work/libs_$c.txt; done;'
 say "$V build start"
+if [ "${DC_REUSE_TT:-0}" = 1 ] && [ -s $O/tt/clock.odb ] && [ -s $O/tt/manifest.json ]; then say "$V reuse TT build ($O/tt)"; else
 $DK "$PRE /usr/bin/time -v openroad -python -no_init -exit /work/tools/die_clock/build.py --odb /work/floorplan_ck.odb --libs /work/libs_tt.txt --libs-ff /work/libs_ff.txt --spec /work/spec_$V.json --targets /work/targets.json --out /work/$V/tt --iters ${DC_ITERS:-8} --write-odb > /work/$V/build_tt.log 2>&1" \
   || { say "$V CTS build FAIL ($V/build_tt.log)"; exit 1; }
+fi
 $DK "$PRE openroad -python -no_init -exit /work/tools/die_clock/build.py --measure /work/$V/tt/manifest.json --odb /work/$V/tt/clock.odb --libs /work/libs_ff.txt --corner ff --out /work/$V/ff > /work/$V/measure_ff.log 2>&1" \
   || { say "$V FF measure FAIL ($V/measure_ff.log)"; exit 1; }
 cd $O
