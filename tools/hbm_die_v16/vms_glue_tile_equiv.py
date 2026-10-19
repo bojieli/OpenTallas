@@ -1,66 +1,103 @@
 #!/usr/bin/env python3
-"""OWNERS-HBM/VM-GLUE 2026-10-18, rev 2 (VM-GLUE2): equivalence bench of the VM hub-glue TILE tops
-(rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_glue_tiles.sv) inside the hoisted slice.  It runs the existing composition
-generator vms_hoist_equiv.py UNCHANGED for all four quadrants (glue + 8 die-level q0_faces banks [+ NW merges], wired
-from layer vm_hoist_d4f = the GEN2 binding: SW NC 2, NW / SE / NE NC 0) and re-targets the composition's glue:
-  DUT  hfd_hgi_vms_static_<Q>_glue -> <tile>_flat      (the tile master: registered faces + ot_vms_rstop_static_vr core)
-  REF  hfd_hgi_vms_static_<Q>_glue -> <tile>_ref_flat  (the SAME generated face pipes / reset relay around the ORIGINAL
-                                                         ot_vms_slice_static_glue with full-reset ot_vms_rstop_static)
-  tiles: SW -> hfd_hgi_vms_glue_sw_t, NW -> hfd_hgi_vms_glue_nw_t, SE / NE -> hfd_hgi_vms_glue_e_t with .sid(2'd1 / 2'd3)
-The rev-2 tile adds PIPE cycles on every face (a latency change), so the reference is no longer the unpipelined full
-slice wrapper: both sides carry the identical face latency and slice BANK_PIN_IN, and the bench proves the tile top's
-port mapping, the strap, the NW flt merge and the valid-only-reset ring stops against the original ring stops, every
-output on every edge after reset (3000 random edges).
-Mutants (DUT only; the reference is always the clean composition):
-          --mut bank   vms_hoist_equiv's own mutant (bank 0/1 rslot swapped in the DUT composition) -> must FAIL
-          --mut sid    (SE / NE only) the DUT tile strap gets the OTHER E quadrant's sid -> must FAIL
-    vms_glue_tile_equiv.py --quadrant SW|NW|SE|NE --out DIR [--mut bank|sid]
+"""HBM-KITS-C/VMGLUE 2026-10-18 (g2): lockstep equivalence bench of the VM hub-glue TILE masters
+(rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_glue_tiles.sv: reset-light _lt children, parallel hub demultiplex, regional
+reset relay, per-lane ring / per-bank ports, one landing / relay stage on every bank-side port) against their CONTRACT
+reference <tile>_ref (hfd_hgi_vms_glue_tiles_ref.sv: the UNCHANGED historical glue ot_vms_slice_static_glue with
+COMMIT_DELAY 8 behind one delay stage per bank-side port, at the historical flat ports).
+The testbench drives both with the same random inputs on EVERY port (flat buses; the tile's per-lane / per-bank ports
+are wired by slice arithmetic computed here, independent of the generator's concatenations), re-asserts rst_n for 8
+edges every 128 edges (re-arms the sticky faults; proves the reset-light payload flush), and compares EVERY output bit
+on every edge while rst_n is high.  Prints "VMS_GLUE_LT_EQUIV <Q> PASS|FAIL checks=N errors=M".
+The historical glue == the full slice (per bank port wiring, banks hoisted) is the 10-18 witness of 6e62dbac4
+(results/rtl/vm_glue_1018/bench/*pos.sim.log, VMS_HOIST_EQUIV / VMS_QB_EQUIV); ref adds only the latency contract.
+Mutants (must FAIL):  --mut rmut  tile MUT 1 (ring-stop egress flit bit flipped)
+                      --mut land  tile MUT 3 (eg not landed: the contract's +1 edge on egress missing)
+                      --mut sid   (SE / NE) the tile strap gets the OTHER E quadrant's sid
+    vms_glue_tile_equiv.py --quadrant SW|NW|SE|NE --out DIR [--mut rmut|land|sid] [--cycles N]
 """
-import argparse, subprocess, sys
+import argparse, sys
 from pathlib import Path
-ROOT = Path(__file__).resolve().parents[2]
-LAYER = 'tools/hbm_die_v15/v16_layers/vm_hoist_d4f.json'
-TILE = dict(SW='hfd_hgi_vms_glue_sw_t', NW='hfd_hgi_vms_glue_nw_t', SE='hfd_hgi_vms_glue_e_t', NE='hfd_hgi_vms_glue_e_t')
+H = Path(__file__).resolve().parent
+sys.path.insert(0, str(H))
+import gen_vms_glue_tiles as G  # noqa: E402
+
+KEY = dict(SW='sw', NW='nw', SE='e', NE='e')
 SID = dict(SE=1, NE=3)
 
 
-def retarget(comp_text, q, mod, sid):
-    glue = f'hfd_hgi_vms_static_{q}_glue'
-    lines = comp_text.split('\n')
-    idx = [i for i, l in enumerate(lines) if l.startswith(f'  {glue} u_glue (')]
-    if len(idx) != 1:
-        raise SystemExit(f'vms_glue_tile_equiv: expected one {glue} u_glue instance, found {len(idx)}')
-    l = lines[idx[0]].replace(f'  {glue} u_glue (', f'  {mod} u_glue (', 1)
-    if sid is not None:
-        l = l.replace(' u_glue (', f" u_glue (.sid(2'd{sid}), ", 1)
-    lines[idx[0]] = l
-    return '\n'.join(lines)
+def tile_slice(nm, c):
+    """tile port name -> (flat ref port, msb, lsb) by index arithmetic"""
+    for n, _ in G.RINGB:
+        if nm == f'{n}_h':
+            return n, 2223, 2208
+        for b in range(8):
+            if nm == f'{n}_l{b}':
+                return n, b * 276 + 275, b * 276
+    if nm[0] == 'b' and nm[1].isdigit() and nm[2] == '_':
+        b, base = int(nm[1]), nm[3:]
+        for n, _, wd, f in G.bankp(c):
+            if n == base:
+                return f, b * wd + wd - 1, b * wd
+    return nm, None, None
 
 
 def main():
-    ap = argparse.ArgumentParser(); ap.add_argument('--quadrant', required=True, choices=list(TILE))
-    ap.add_argument('--out', required=True, type=Path); ap.add_argument('--mut', choices=('bank', 'sid'))
-    a = ap.parse_args(); q = a.quadrant
+    ap = argparse.ArgumentParser()
+    ap.add_argument('--quadrant', required=True, choices=list(KEY))
+    ap.add_argument('--out', required=True, type=Path)
+    ap.add_argument('--mut', choices=('rmut', 'land', 'sid'))
+    ap.add_argument('--cycles', type=int, default=4000)
+    a = ap.parse_args(); q = a.quadrant; k = KEY[q]; c = G.M[k]
     if a.mut == 'sid' and q not in SID:
         raise SystemExit('vms_glue_tile_equiv: --mut sid is for the strapped E master (SE / NE)')
-    gen = [sys.executable, str(ROOT / 'tools/hbm_die_v16/vms_hoist_equiv.py'), '--layer', str(ROOT / LAYER), '--quadrant', q]
-    ref_dir = a.out / 'ref'
-    subprocess.run(gen + ['--out', str(ref_dir)], check=True)
-    subprocess.run(gen + ['--out', str(a.out)] + (['--mut'] if a.mut == 'bank' else []), check=True)
-    comp = a.out / f'vms_hoist_comp_{q}.sv'
-    sid = SID.get(q)
-    dut = retarget(comp.read_text(), q, f'{TILE[q]}_flat', None if sid is None else (sid if a.mut != 'sid' else SID['NE' if q == 'SE' else 'SE']))
-    ref = retarget((ref_dir / f'vms_hoist_comp_{q}.sv').read_text(), q, f'{TILE[q]}_ref_flat', sid)
-    ref = ref.replace(f'module vms_hoist_comp_{q} (', f'module vms_hoist_comp_{q}_ref (', 1)
-    comp.write_text(dut + '\n' + ref + '\n')
-    tb = a.out / 'tb_vms_hoist.sv'
-    t = tb.read_text().split('\n')
-    k = [i for i, l in enumerate(t) if ' u_ref (' in l]
-    if len(k) != 1:
-        raise SystemExit('vms_glue_tile_equiv: expected one u_ref line in the bench')
-    t[k[0]] = f'  vms_hoist_comp_{q}_ref u_ref (' + t[k[0]].split(' u_ref (', 1)[1]
-    tb.write_text('\n'.join(t))
-    print('VMS_GLUE_TILE_TB', q, TILE[q], 'MUT=' + (a.mut or 'none'), 'REF=' + TILE[q] + '_ref_flat')
+    rp = G.ref_ports(k, c); tp = G.ports(k, c)
+    ins = [(n, w) for n, d, w in rp if d == 'input' and n not in ('clk', 'rst_n', 'sid')]
+    outs = [(n, w) for n, d, w in rp if d == 'output']
+    mut = dict(rmut=1, land=3).get(a.mut, 0)
+    T = ['`timescale 1ns/1ps', 'module tb_vms_glue_lt;', '  reg clk = 0; always #0.5 clk = ~clk;', '  reg rst_n;']
+    T += [f'  reg {G.w(wd)}{n};' for n, wd in ins]
+    T += [f'  wire {G.w(wd)}a_{n}, b_{n};' for n, wd in outs]
+    strap = ''
+    if c['sid'] == 'strap':
+        s = SID[q]; sd = SID['NE' if q == 'SE' else 'SE'] if a.mut == 'sid' else s
+        T.append(f"  wire [1:0] sid_ref = 2'd{s}, sid_dut = 2'd{sd};")
+        strap = '.sid(sid_dut), '
+    conn = []
+    for nm, d, wd in tp:
+        if nm in ('clk', 'rst_n', 'sid'):
+            continue
+        f, hi, lo = tile_slice(nm, c)
+        tgt = f if d == 'input' else f'a_{f}'
+        conn.append(f'.{nm}({tgt}[{hi}:{lo}])' if hi is not None else f'.{nm}({tgt})')
+    T.append(f'  hfd_hgi_vms_glue_{k}_t #(.MUT({mut})) dut (.clk(clk), .rst_n(rst_n), {strap}\n    ' + ',\n    '.join(conn) + ');')
+    rconn = [f'.{n}({n})' for n, _ in ins] + [f'.{n}(b_{n})' for n, _ in outs]
+    rstrap = '.sid(sid_ref), ' if c['sid'] == 'strap' else ''
+    T.append(f'  hfd_hgi_vms_glue_{k}_t_ref u_ref (.clk(clk), .rst_n(rst_n), {rstrap}\n    ' + ',\n    '.join(rconn) + ');')
+    T.append('  integer cyc, chk, errs;')
+    T.append('  task rnd; begin')
+    T += [f'    {n} = {{{(wd + 31) // 32}{{$random}}}};' for n, wd in ins]
+    T.append('  end endtask')
+    T.append('  initial begin')
+    T.append('    chk = 0; errs = 0; rst_n = 0; rnd;')
+    T.append('    repeat (8) begin @(negedge clk); rnd; end')
+    T.append('    rst_n = 1;')
+    T.append(f'    for (cyc = 0; cyc < {a.cycles}; cyc = cyc + 1) begin')
+    T.append('      @(negedge clk);')
+    T.append('      if (rst_n) begin')
+    for n, _ in outs:
+        T.append(f'        chk = chk + 1; if (a_{n} !== b_{n}) begin errs = errs + 1; if (errs < 6) $display("MISMATCH cyc %0d {n}", cyc); end')
+    T.append('      end')
+    T.append('      rnd;')
+    T.append('      if (cyc % 128 == 119) rst_n = 0;')
+    T.append('      if (cyc % 128 == 127) rst_n = 1;')
+    T.append('    end')
+    T.append(f'    $display("VMS_GLUE_LT_EQUIV {q} %s checks=%0d errors=%0d", (errs == 0 && chk > 0) ? "PASS" : "FAIL", chk, errs);')
+    T.append('    $finish;')
+    T.append('  end')
+    T.append('endmodule')
+    a.out.mkdir(parents=True, exist_ok=True)
+    (a.out / 'tb_vms_glue_lt.sv').write_text('\n'.join(T) + '\n')
+    print('VMS_GLUE_TILE_TB', q, f'hfd_hgi_vms_glue_{k}_t', 'MUT=' + (a.mut or 'none'), f'cycles={a.cycles}')
 
 
 if __name__ == '__main__':

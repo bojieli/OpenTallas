@@ -1,94 +1,100 @@
 #!/usr/bin/env python3
-"""OWNERS-HBM/VM-GLUE 2026-10-18, rev 2 (VM-GLUE2): hardened-tile tops of the HBM d4g VM hub glue.  Writes
-  rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_glue_tiles.sv      the three tile masters + ot_vms_slice_static_glue_vr
-  rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_glue_tiles_flat.sv bench-only: <tile>_flat adapters (the glue's flat port
-                                                                 list -> the tile) and <tile>_ref / <tile>_ref_flat (the
-                                                                 same tile body around the ORIGINAL slice glue)
-Masters (GEN2 binding, d4g l4/l5: every hub has NC 0 except SW):
-  hfd_hgi_vms_glue_sw_t  = hfd_hgi_vms_static_SW_glue  (NC 2, sid 0)                 -> hb_vms_SW
-  hfd_hgi_vms_glue_e_t   = hfd_hgi_vms_static_SE_glue / _NE_glue (NC 0, RG 4, WG 2) with the sid STRAP pin -> hb_vms_SE (1), hb_vms_NE (3)
-  hfd_hgi_vms_glue_nw_t  = hfd_hgi_vms_static_NW_glue  (NC 0, sid 2, + bk_flt into bank status bit 17) -> hb_vms_NW
-  NW cannot share the E master: its bk_flt inputs (the wq2-merge sticky flt) do not exist on SE / NE (a shared master
-  would tie them = stub).  RG / WG are dead parameters of the slice (RB / WB unused), so SE / NE / NW differ only in sid + flt.
-Rev 2 (measured: rev-1 NW --cts gate, one clk root 26k sinks, TT insertion 1503 / spread 421 ps, setup WNS -1744 ps:
-hub status / response gather and ring-stop xq / reset recovery crossing 1-2.4 ns of wire in ONE cycle over the
-777.6 x 1555.2 pin-bound outline -- the glue is single-cycle logic sitting between 20k pins on four faces):
-  (1) REGISTERED FACES: every port except clk / rst_n goes through PIPE = 1 + RELAYS flops between the pin and the
-      slice (input: pin flop at the pin, then RELAYS relay flops; output: RELAYS relay flops, then the pin flop).  With
-      RELAYS 2 every stage spans <= ~1/3 of the worst pin-to-core distance (~1,230 um) = <= ~410 um (the 405 um plan).
-      LATENCY (record for the compiler / calendar owner): every hub input +PIPE cycles, every hub output +PIPE cycles;
-      the ring-stop commit check moves with the bank round trip: COMMIT_DELAY = 5 + BANK_PIN_IN, BANK_PIN_IN 1 -> 1 + 2*PIPE.
-  (2) RESET: rst_n -> ot_rst_relay (sync 2 + tree 1 = release +3 edges, transaction-level: no client counts cycles from
-      reset); the ring stops are ot_vms_rstop_static_vr (valid-only reset, logic otherwise verbatim), so the reset net
-      drops from 19k loads to ~2.3k (hub / rcl / status valids + the replay client's registers).
-  (3) one clock (clk_hub / clk_ring / clk_replay are one stream clock); the kit uses the OT_SPINE clock spine.
+"""OWNERS-HBM/VM-GLUE 2026-10-18, physical rework HBM-KITS-C/VMGLUE 10-18 (g2): hardened-tile tops of the VM hub glue.
+Writes
+  rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_glue_tiles.sv      the three tile masters
+  rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_glue_tiles_ref.sv  BENCH-ONLY contract references <tile>_ref (flat glue
+                                                                 ports): the UNCHANGED historical glue
+                                                                 ot_vms_slice_static_glue (BANK_PIN_IN 3) behind the
+                                                                 tile's latency contract
+Tile top = hfd_vms_glue_core_lt (hfd_hgi_vms_glue_lt.sv: the glue wiring with reset-light ring stops / replay and the
+parallel hub response demultiplex) plus
+  (1) ONE tile clock clk (clk_hub / clk_ring[1:0] / clk_replay are the same stream clock on the same edge);
+  (2) ONE reset port rst_n -> ot_rst_relay, 4 regional copies (hub | CW stop | CCW stop | replay + status): release
+      +3 edges after the port (SYNC 2 + TREE 1), assertion asynchronous;
+  (3) per-bank ports b<k>_* (a port sits on ONE face, next to its bank) and per-LANE ring ports
+      <cw_in|cw_out|ccw_in|ccw_out>_l<k> (flit bits [k*276 +: 276], the bank-k lane) + _h (header bits [2223:2208]), so
+      the ring face is laid out in lane bands beside the bank faces (vms_glue_kit_specs.py);
+  (4) ONE register stage at every bank-side port (inputs eg / pr / xq_done / xq2_done / status [/ flt] land on a
+      plain flop at the pin; outputs xq / xq2 / pq leave from a relay flop at the pin): the tile spans 648 x 1555 um,
+      so a bank face to the ring face or to the hub is two reach stages, never one.  The ring commit check moves with
+      it: COMMIT_DELAY 5 + 1 (bank pin) + 2 (tile xq relay + xq_done landing) = 8 (the historical BANK_PIN_IN knob).
+  (5) E quadrants: the slice id is a strap pin, ONE master serves SE (1, R0) and NE (3, MX); E = NC 0 glue
+      (hfd_hgi_vms_static_{SE,NE}_glue, the d4g binding since l4_idx_quad).
+COMPILER CONTRACT (vs the historical glue at the same ports): every bank-side input is consumed 1 edge later and every
+bank-side output appears 1 edge later (bank round trip pq -> pr +2, eject xq -> xq_done check +2 = COMMIT_DELAY 8, the
+WACK / commit fault edge +2 after the eject, mirror egress eg -> ring tx slot +1, bank_status -> vmstat +1); ring,
+client, control ports unchanged; reset release +3 edges.  <tile>_ref states exactly that (tools/hbm_die_v16/
+vms_glue_tile_equiv.py runs tile vs ref in lockstep).
+Tile parameter MUT (bench only, default 0): 1 ring-stop flit mutant, 3 eg not landed (contract break).
     gen_vms_glue_tiles.py [--check]
 """
-import re
 import sys
 from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 D = ROOT / 'rtl/hbm_accel/generic/vm/static'
-OUT, FLAT = D / 'hfd_hgi_vms_glue_tiles.sv', D / 'hfd_hgi_vms_glue_tiles_flat.sv'
-GLUE = D / 'hfd_hgi_vms_static_glue.sv'
-RELAYS = 2
-PIPE = 1 + RELAYS
-BPI = 1 + 2 * PIPE            # slice BANK_PIN_IN: COMMIT_DELAY = 5 + BPI
-# per-bank slices of the glue's flat bank buses (gen_vms_hoist.py: bank b at [b*W+:W])
+OUT, REF = D / 'hfd_hgi_vms_glue_tiles.sv', D / 'hfd_hgi_vms_glue_tiles_ref.sv'
+LANE = 276
+# per-bank slices of the glue's flat bank buses (gen_vms_hoist.py: bank b at [b*W+:W]); name, dir, width, flat bus
 BANK = [('xq', 'output', 276, 'bk_xq'), ('xq2', 'output', 276, 'bk_xq2'), ('xq_done', 'input', 1, 'bk_xq_done'),
         ('xq2_done', 'input', 1, 'bk_xq2_done'), ('eg', 'input', 276, 'bk_eg'), ('pq', 'output', 285, 'bk_pq'),
         ('pr', 'input', 266, 'bk_pr'), ('status', 'input', 18, 'bank_status')]
 FLT = ('flt', 'input', 1, 'bk_flt')
-RING = [('cw_in', 'input', 2224), ('ccw_in', 'input', 2224), ('cw_out', 'output', 2224), ('ccw_out', 'output', 2224),
-        ('ring_tx_enable', 'input', 2), ('ring_tx_source', 'input', 6), ('replay_enable', 'input', 1), ('replay_source', 'input', 1)]
+M = dict(sw=dict(nc=2, rg=5, wg=2, sid="2'd0", flt=False, q='SW'),
+         e=dict(nc=0, rg=4, wg=2, sid='strap', flt=False, q='SE/NE'),
+         nw=dict(nc=0, rg=5, wg=3, sid="2'd2", flt=True, q='NW'))
+RINGB = [('cw_in', 'input'), ('cw_out', 'output'), ('ccw_in', 'input'), ('ccw_out', 'output')]
+RINGC = [('ring_tx_enable', 'input', 2), ('ring_tx_source', 'input', 6), ('replay_enable', 'input', 1),
+         ('replay_source', 'input', 1)]
 OUTS = [('hub_status', 3), ('mirror_busy', 2), ('vmstat', 19), ('ring_fault', 3)]
-
-
-def glue_params(q):
-    """(NC, RG, WG, sid) of hfd_hgi_vms_static_<q>_glue, read from the glue source (so the tile cannot drift from it)."""
-    t = GLUE.read_text()
-    body = re.search(rf'module hfd_hgi_vms_static_{q}_glue\s*\((.*?)endmodule', t, re.S).group(1)
-    m = re.search(r'ot_vms_slice_static_glue #\(\.NC\((\d+)\),\.RG\((\d+)\),\.WG\((\d+)\),\.NATIVE_SHAPE\(1\),\.BANK_PIN_IN\(1\)\)', body)
-    s = re.search(r"\.sid\(2'd(\d)\)", body)
-    return int(m.group(1)), int(m.group(2)), int(m.group(3)), int(s.group(1)), 'bk_flt' in body
-
-
-def masters():
-    sw, se, ne, nw = (glue_params(q) for q in ('SW', 'SE', 'NE', 'NW'))
-    assert se[:3] == ne[:3] and not se[4] and not ne[4] and (se[3], ne[3]) == (1, 3), (se, ne)
-    assert sw[0] == 2 and nw[0] == 0 and nw[4] and not sw[4], (sw, nw)
-    return dict(sw=dict(nc=sw[0], rg=sw[1], wg=sw[2], sid=sw[3], flt=False),
-                e=dict(nc=se[0], rg=se[1], wg=se[2], sid='strap', flt=False),
-                nw=dict(nc=nw[0], rg=nw[1], wg=nw[2], sid=nw[3], flt=True))
+COMMIT_DELAY = 8
 
 
 def w(n):
     return f'[{n - 1}:0] ' if n > 1 else ''
 
 
-def ports(c):
-    nc = c['nc']; cw = max(1, nc.bit_length()) if nc else 1   # CW = clog2(NC+1)
-    p = [('clk', 'input', 1), ('rst_n', 'input', 1)]
-    if c['sid'] == 'strap':
-        p.append(('sid', 'input', 2))
+def cw_of(nc):
+    return max(1, (nc).bit_length()) if nc else 1   # CW = clog2(NC+1)
+
+
+def bankp(c):
+    return BANK + ([FLT] if c['flt'] else [])
+
+
+def common(c):
+    nc = c['nc']; cw = cw_of(nc)
+    p = []
     if nc:
         p += [('cq', 'input', nc * 338), ('cr', 'output', nc * 274)]
     p += [('client_seq', 'input', (nc + 1) * 2), ('response_enable', 'input', nc + 1), ('response_seq', 'input', (nc + 1) * 2),
           ('bank_enable', 'input', 8), ('bank_client', 'input', 8 * cw), ('hub_ring_enable', 'input', 2),
           ('hub_ring_client', 'input', 2 * cw)]
-    p += RING
+    return p
+
+
+def ports(k, c):
+    p = [('clk', 'input', 1), ('rst_n', 'input', 1)]
+    if c['sid'] == 'strap':
+        p.append(('sid', 'input', 2))
+    p += common(c)
+    for n, d in RINGB:
+        p += [(f'{n}_l{b}', d, LANE) for b in range(8)] + [(f'{n}_h', d, 16)]
+    p += RINGC
     for b in range(8):
-        p += [(f'b{b}_{n}', d, wd) for n, d, wd, _ in BANK + ([FLT] if c['flt'] else [])]
+        p += [(f'b{b}_{n}', d, wd) for n, d, wd, _ in bankp(c)]
     p += [(n, 'output', wd) for n, wd in OUTS]
     return p
 
 
-def flat_ports(c):
-    p = [x for x in ports(c) if not (x[0][0] == 'b' and x[0][1].isdigit())]
-    p = [x for x in p if x[0] != 'clk']
-    p = [('clk_hub', 'input', 1), ('clk_ring', 'input', 2), ('clk_replay', 'input', 1)] + p
-    for n, d, wd, f in BANK + ([FLT] if c['flt'] else []):
-        p.append((f, d, 8 * wd))
+def ref_ports(k, c):
+    """the historical glue's flat port list (one clk)"""
+    p = [('clk', 'input', 1), ('rst_n', 'input', 1)]
+    if c['sid'] == 'strap':
+        p.append(('sid', 'input', 2))
+    p += common(c)
+    p += [(n, d, 2224) for n, d in RINGB] + RINGC
+    p += [(f, d, 8 * wd) for _, d, wd, f in bankp(c)]
+    p += [(n, 'output', wd) for n, wd in OUTS]
     return p
 
 
@@ -96,84 +102,89 @@ def decl(p):
     return ',\n'.join(f'    {d} wire {w(n)}{nm}' for nm, d, n in p)
 
 
-def slice_vr():
-    """ot_vms_slice_static_glue verbatim, ring stops -> ot_vms_rstop_static_vr (valid-only reset)."""
-    t = GLUE.read_text()
-    m = re.search(r'module ot_vms_slice_static_glue #\(.*?endmodule\n', t, re.S).group(0)
-    m2 = m.replace('module ot_vms_slice_static_glue #(', 'module ot_vms_slice_static_glue_vr #(', 1)
-    assert m2.count('ot_vms_rstop_static #(') == 2
-    return ('// = ot_vms_slice_static_glue (hfd_hgi_vms_static_glue.sv, gen_vms_hoist.py) verbatim except the two ring stops\n'
-            '//   -> ot_vms_rstop_static_vr (valid-only reset).\n' + m2.replace('ot_vms_rstop_static #(', 'ot_vms_rstop_static_vr #('))
+def cat(names):
+    return '{' + ', '.join(names) + '}'
 
 
-def tile(k, c, core, name):
-    """Tile top: PIPE flops on every face port, reset relay, the slice core."""
-    p = ports(c)
-    L = [f'module {name} (', decl(p), ');']
-    L.append(f'    // REGISTERED FACES (rev 2): {PIPE} flops between every pin and the slice (pin flop + {RELAYS} relays);'
-             f' hub latency +{PIPE} in / +{PIPE} out, slice BANK_PIN_IN {BPI}.')
-    L.append('    wire [0:0] rst_c;')
-    L.append('    ot_rst_relay #(.REGIONS(1),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst (.clk(clk),.rst_n_in(rst_n),.rst_n(rst_c));')
-    inner = {}
-    for nm, d, n in p:
-        if nm in ('clk', 'rst_n'):
-            continue
-        st = [f'pp_{nm}_{i}' for i in range(PIPE)]   # input: st[0] at the pin ... output: st[-1] at the pin
-        L.append(f'    reg {w(n)}' + ', '.join(st) + ';')
+def tile(k, c):
+    p = ports(k, c); nc = c['nc']
+    L = [f'module hfd_hgi_vms_glue_{k}_t #(parameter integer MUT=0) (', decl(p), ');']
+    L.append('    // regional reset: the port drives only the relay (2 sync + 4 region copies); release +3 edges')
+    L.append('    wire [3:0] rr;')
+    L.append('    ot_rst_relay #(.REGIONS(4),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst(.clk(clk),.rst_n_in(rst_n),.rst_n(rr));')
+    L.append('    // ring buses: lane k = flit bits [k*276 +: 276], header = [2223:2208]')
+    for n, d in RINGB:
+        L.append(f'    wire [2223:0] {n};')
         if d == 'input':
-            src = [nm] + st[:-1]
-            inner[nm] = st[-1]
+            L.append(f'    assign {n} = ' + cat([f'{n}_h'] + [f'{n}_l{b}' for b in reversed(range(8))]) + ';')
         else:
-            L.append(f'    wire {w(n)}{nm}_c;')
-            src = [f'{nm}_c'] + st[:-1]
-            L.append(f'    assign {nm} = {st[-1]};')
-            inner[nm] = f'{nm}_c'
-        L.append('    always @(posedge clk) begin ' + ' '.join(f'{s} <= {x};' for s, x in zip(st, src)) + ' end')
-    # flat bank buses between the face pipes and the slice
-    for n, d, wd, f in BANK + ([FLT] if c['flt'] else []):
-        L.append(f'    wire [{8 * wd - 1}:0] {f};')
+            L += [f'    assign {n}_l{b} = {n}[{b * LANE + LANE - 1}:{b * LANE}];' for b in range(8)]
+            L.append(f'    assign {n}_h = {n}[2223:2208];')
+    L.append('    // bank-side ports: one plain register stage at the pin (inputs land, outputs relay)')
+    for n, d, wd, f in bankp(c):
+        L.append(f'    wire [{8 * wd - 1}:0] {f}_p, {f}_c;')
+        L.append(f'    reg [{8 * wd - 1}:0] {f}_r;')
+        L.append(f'    always @(posedge clk) {f}_r <= {f}_p;')
         if d == 'input':
-            L.append(f'    assign {f} = {{' + ', '.join(inner[f'b{b}_{n}'] for b in reversed(range(8))) + '};')
+            L.append(f'    assign {f}_p = ' + cat([f'b{b}_{n}' for b in reversed(range(8))]) + ';')
+            byp = " (MUT == 3) ? bk_eg_p :" if f == 'bk_eg' else ''
+            L.append(f'    assign {f}_c ={byp} {f}_r;')
         else:
-            L += [f'    assign {inner[f"b{b}_{n}"]} = {f}[{b * wd + wd - 1}:{b * wd}];' if wd > 1
-                  else f'    assign {inner[f"b{b}_{n}"]} = {f}[{b}];' for b in range(8)]
-    if c['flt']:   # = hfd_hgi_vms_static_NW_glue: the wq2-merge sticky flt joins bank status bit 17
+            L.append(f'    assign {f}_p = {f}_c;')
+            L += [f'    assign b{b}_{n} = {f}_r[{b * wd + wd - 1}:{b * wd}];' if wd > 1 else f'    assign b{b}_{n} = {f}_r[{b}];'
+                  for b in range(8)]
+    st = 'bank_status_c'
+    if c['flt']:
+        L.append('    // NW: the wq2-merge leaves (vmm_NWb) sticky flt -> bank status bit 17 (as hfd_hgi_vms_static_NW_glue)')
         L.append('    wire [143:0] bank_status_m;')
-        L += [f'    assign bank_status_m[{b * 18 + 17}:{b * 18}] = {{bank_status[{b * 18 + 17}] | bk_flt[{b}], bank_status[{b * 18 + 16}:{b * 18}]}};'
-              for b in range(8)]
-    sid = inner['sid'] if c['sid'] == 'strap' else f"2'd{c['sid']}"
-    conn = ['.clk_hub(clk)', '.clk_ring({clk, clk})', '.clk_replay(clk)', '.rst_n(rst_c[0])', f'.sid({sid})']
-    if c['nc']:
-        conn += [f'.cq({inner["cq"]})', f'.cr({inner["cr"]})']
-    else:
-        L.append('    wire [273:0] vacant_cr; // NC=0: no local clients exist (as the glue).')
-        conn += [".cq(338'd0)", '.cr(vacant_cr)']
-    for nm, d, n in p:
-        if nm in ('clk', 'rst_n', 'sid', 'cq', 'cr') or (nm[0] == 'b' and nm[1].isdigit()):
-            continue
-        conn.append(f'.{nm}({inner[nm]})')
-    for _, _, _, f in BANK:
-        conn.append(f'.{f}({f}_m)' if (f == 'bank_status' and c['flt']) else f'.{f}({f})')
-    L.append(f'    {core} #(.NC({c["nc"]}),.RG({c["rg"]}),.WG({c["wg"]}),.NATIVE_SHAPE(1),.BANK_PIN_IN({BPI})) u_slice (\n        '
+        L += [f'    assign bank_status_m[{b * 18 + 17}:{b * 18}] = {{bank_status_c[{b * 18 + 17}] | bk_flt_c[{b}], '
+              f'bank_status_c[{b * 18 + 16}:{b * 18}]}};' for b in range(8)]
+        st = 'bank_status_m'
+    sid = 'sid' if c['sid'] == 'strap' else c['sid']
+    conn = ['.clk(clk)', '.rst_n(rr)', f'.sid({sid})']
+    conn += [f'.{nm}({nm})' for nm, _, _ in common(c)]
+    if not nc:
+        conn += ['.cq(338\'d0)', '.cr()']
+    conn += [f'.{n}({n})' for n, _ in RINGB] + [f'.{n}({n})' for n, _, _ in RINGC]
+    conn += [f'.bank_status({st})', '.bk_xq(bk_xq_c)', '.bk_xq2(bk_xq2_c)', '.bk_xq_done(bk_xq_done_c)',
+             '.bk_xq2_done(bk_xq2_done_c)', '.bk_eg(bk_eg_c)', '.bk_pq(bk_pq_c)', '.bk_pr(bk_pr_c)']
+    conn += [f'.{n}({n})' for n, _ in OUTS]
+    L.append(f'    hfd_vms_glue_core_lt #(.NC({nc}),.COMMIT_DELAY({COMMIT_DELAY}),.RMUT((MUT == 1) ? 1 : 0)) u_core (\n        '
              + ',\n        '.join(conn) + ');')
     L.append('endmodule')
     return '\n'.join(L) + '\n'
 
 
-def flat(k, c, name):
-    p = flat_ports(c)
-    L = [f'module {name}_flat (', decl(p), ');']
-    conn = ['.clk(clk_hub)']
-    for nm, d, n in ports(c):
-        if nm == 'clk':
-            continue
-        if nm[0] == 'b' and nm[1].isdigit():
-            b = int(nm[1]); base = nm[3:]
-            f, wd = next((f, wd) for n_, _, wd, f in BANK + [FLT] if n_ == base)
-            conn.append(f'.{nm}({f}[{b * wd + wd - 1}:{b * wd}])' if wd > 1 else f'.{nm}({f}[{b}])')
+def ref(k, c):
+    p = ref_ports(k, c); nc = c['nc']
+    L = [f'module hfd_hgi_vms_glue_{k}_t_ref (', decl(p), ');']
+    L.append('    wire rr;  // the same release: 2 sync + 1 relay stage after the port')
+    L.append('    ot_rst_relay #(.REGIONS(1),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst(.clk(clk),.rst_n_in(rst_n),.rst_n(rr));')
+    L.append('    // contract: every bank-side input consumed 1 edge later, every bank-side output 1 edge later')
+    for n, d, wd, f in bankp(c):
+        L.append(f'    reg [{8 * wd - 1}:0] {f}_d; wire [{8 * wd - 1}:0] {f}_g;')
+        if d == 'input':
+            L.append(f'    always @(posedge clk) {f}_d <= {f}; assign {f}_g = {f}_d;')
         else:
-            conn.append(f'.{nm}({nm})')
-    L.append(f'    {name} u_tile (\n        ' + ',\n        '.join(conn) + ');')
+            L.append(f'    always @(posedge clk) {f}_d <= {f}_g; assign {f} = {f}_d;')
+    st = 'bank_status_g'
+    if c['flt']:
+        L.append('    wire [143:0] bank_status_m;')
+        L.append('    genvar fb;')
+        L.append('    generate for(fb=0;fb<8;fb=fb+1)begin:g_flt')
+        L.append('        assign bank_status_m[fb*18+:18]={bank_status_g[fb*18+17]|bk_flt_g[fb],bank_status_g[fb*18+:17]};')
+        L.append('    end endgenerate')
+        st = 'bank_status_m'
+    sid = 'sid' if c['sid'] == 'strap' else c['sid']
+    conn = ['.clk_hub(clk)', '.clk_ring({clk, clk})', '.clk_replay(clk)', '.rst_n(rr)', f'.sid({sid})']
+    conn += [f'.{nm}({nm})' for nm, _, _ in common(c)]
+    if not nc:
+        conn += [".cq(338'd0)", '.cr()']
+    conn += [f'.{n}({n})' for n, _ in RINGB] + [f'.{n}({n})' for n, _, _ in RINGC]
+    conn += [f'.bank_status({st})'] + [f'.{f}({f}_g)' for _, _, _, f in BANK if f != 'bank_status']
+    conn += [f'.{n}({n})' for n, _ in OUTS]
+    L.append(f'    ot_vms_slice_static_glue #(.NC({nc}),.RG({c["rg"]}),.WG({c["wg"]}),.NATIVE_SHAPE(1),.BANK_PIN_IN(3)) u_glue (\n        '
+             + ',\n        '.join(conn) + ');')
     L.append('endmodule')
     return '\n'.join(L) + '\n'
 
@@ -182,20 +193,16 @@ HDR = ('`timescale 1ns/1ps\n`default_nettype none\n// GENERATED by tools/hbm_die
 
 
 def main():
-    M = masters()
     doc = '\n'.join('// ' + x for x in __doc__.strip().split('\n')[:-1])
-    rtl = (HDR + 'VM hub-glue tile masters.\n' + doc + '\n' + slice_vr()
-           + ''.join(tile(k, c, 'ot_vms_slice_static_glue_vr', f'hfd_hgi_vms_glue_{k}_t') for k, c in M.items()) + '`default_nettype wire\n')
-    fl = (HDR + 'BENCH-ONLY.  <tile>_flat: the glue port list (4 clocks, flat bk_* buses) around each tile master, so the '
-          'hoist compositions instantiate the tile in place of the glue.  <tile>_ref: the SAME generated tile body around the '
-          'ORIGINAL ot_vms_slice_static_glue (full-reset ring stops); <tile>_ref_flat its adapter: the bench reference.\n'
-          + ''.join(flat(k, c, f'hfd_hgi_vms_glue_{k}_t') for k, c in M.items())
-          + ''.join(tile(k, c, 'ot_vms_slice_static_glue', f'hfd_hgi_vms_glue_{k}_t_ref') + flat(k, c, f'hfd_hgi_vms_glue_{k}_t_ref')
-                    for k, c in M.items()) + '`default_nettype wire\n')
+    rtl = HDR + 'VM hub-glue tile masters.\n' + doc + '\n' + ''.join(tile(k, c) for k, c in M.items()) + '`default_nettype wire\n'
+    rf = (HDR + 'BENCH-ONLY contract references <tile>_ref: the historical glue ot_vms_slice_static_glue (unchanged '
+          'hub / ring stops / replay / status, BANK_PIN_IN 3 = COMMIT_DELAY 8) behind one delay stage on every bank-side '
+          'port and the tile reset relay timing, at the historical flat ports.\n'
+          + ''.join(ref(k, c) for k, c in M.items()) + '`default_nettype wire\n')
     if '--check' in sys.argv:
-        ok = OUT.read_text() == rtl and FLAT.read_text() == fl
+        ok = OUT.read_text() == rtl and REF.read_text() == rf
         print('VMS_GLUE_TILES_GEN', 'CHECK_PASS' if ok else 'CHECK_FAIL'); sys.exit(0 if ok else 1)
-    OUT.write_text(rtl); FLAT.write_text(fl); print('VMS_GLUE_TILES_GEN WROTE', OUT.relative_to(ROOT), FLAT.relative_to(ROOT), M)
+    OUT.write_text(rtl); REF.write_text(rf); print('VMS_GLUE_TILES_GEN WROTE', OUT.relative_to(ROOT), REF.relative_to(ROOT))
 
 
 if __name__ == '__main__':

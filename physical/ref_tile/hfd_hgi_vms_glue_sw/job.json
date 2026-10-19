@@ -1,9 +1,9 @@
 {
- "name": "hfd_hgi_vms_glue_sw-g1-COMMIT",
+ "name": "hfd_hgi_vms_glue_sw-g2-COMMIT",
  "block": "hfd_hgi_vms_glue_sw_t",
  "ref_tile": true,
- "owner": "Claude OWNERS-HBM/VM-GLUE 1018",
- "purpose": "OWNERS-HBM/VM-GLUE2 2026-10-18 rev 2 (HBM d4g plan (b), GEN2 binding): VM hub glue tile for SW (hb_vms_SW) = ot_vms_slice_static_glue (ot_vms_hub_static + 2 ring stops + ot_vms_rcl_static + ot_vms_status_static; 8 banks are die-level instances) with the ring stops as ot_vms_rstop_static_vr (valid-only reset, logic verbatim). Tile top hfd_hgi_vms_glue_sw_t (gen_vms_glue_tiles.py): one clock (OT_SPINE), rst_n -> ot_rst_relay, REGISTERED FACES: every port passes a pin flop + 2 relay flops (<= ~410 um a stage over the 777.6 x 1555.2 pin-bound outline), per-bank bank ports.",
+ "owner": "Claude HBM-KITS-C/VMGLUE 1018",
+ "purpose": "OWNERS-HBM/VM-GLUE + HBM-KITS-C/VMGLUE 2026-10-18 g2 (HBM d4g plan (b), glue goes into a hardened tile): VM hub glue tile for SW (hb_vms_SW) = hfd_vms_glue_core_lt (ot_vms_hub_lt + 2 ot_vms_rstop_lt + ot_vms_rcl_lt + ot_vms_status_static: the historical glue, reset-light, parallel hub demultiplex), the 8 banks are die-level instances. Tile top hfd_hgi_vms_glue_sw_t (gen_vms_glue_tiles.py): one clock, rst_n -> ot_rst_relay 4 regions, per-bank and per-lane ring ports, one landing / relay stage on every bank-side port (COMMIT_DELAY 8). Contract vs the historical glue: bank-side ports +1 edge each way, reset release +3 (lockstep bench vs <tile>_ref).",
  "threads": 16,
  "peak_ram_gb": 64,
  "source": {
@@ -12,16 +12,14 @@
   "extra_paths": [
    "rtl/hbm_accel/generic/vm",
    "rtl/lib",
-   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
-   "tools/hbm_die_v16",
-   "tools/hbm_die_v15/v16_layers"
+   "tools/hbm_die_v16"
   ]
  },
  "stages": {
   "bench": [
    {
     "name": "lint",
-    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; hfd_hgi_vms_glue_sw_t u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_glue_tiles.sv rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static_glue.sv rtl/hbm_accel/generic/vm/static/ot_vms_hub_static.sv rtl/hbm_accel/generic/vm/static/ot_vms_rstop_static.sv rtl/hbm_accel/generic/vm/static/ot_vms_rstop_static_vr.sv rtl/hbm_accel/generic/vm/static/ot_vms_rcl_static.sv rtl/hbm_accel/generic/vm/static/ot_vms_status_static.sv rtl/lib/ot_rst_relay.sv && echo lint-ok",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; hfd_hgi_vms_glue_sw_t u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_glue_tiles.sv rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_glue_lt.sv rtl/hbm_accel/generic/vm/static/ot_vms_status_static.sv rtl/lib/ot_rst_relay.sv rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_glue_tiles_ref.sv rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static_glue.sv rtl/hbm_accel/generic/vm/static/ot_vms_hub_static.sv rtl/hbm_accel/generic/vm/static/ot_vms_rstop_static.sv rtl/hbm_accel/generic/vm/static/ot_vms_rcl_static.sv && echo lint-ok",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,
@@ -34,25 +32,37 @@
     "cmd": "bash tools/hbm_die_v16/run_vms_glue_tile_equiv.sh SW pos {RUN}/bench",
     "expect": "pass",
     "threads": 8,
-    "peak_ram_gb": 16,
+    "peak_ram_gb": 8,
     "needs": [
      "verilator"
     ],
-    "pass_regex": "^VMS_HOIST_EQUIV SW PASS checks=[1-9][0-9]* errors=0$",
-    "min_count_regex": "VMS_HOIST_EQUIV SW PASS checks=(\\d+)",
-    "pass_witness": "results/rtl/vm_glue_1018/bench/SWpos.sim.log"
+    "pass_regex": "^VMS_GLUE_LT_EQUIV SW PASS checks=[1-9][0-9]* errors=0$",
+    "min_count_regex": "VMS_GLUE_LT_EQUIV SW PASS checks=(\\d+)",
+    "pass_witness": "results/rtl/vm_glue_1018/bench_g2/SWpos.sim.log"
    },
    {
-    "name": "mut_bank_sw",
-    "cmd": "bash tools/hbm_die_v16/run_vms_glue_tile_equiv.sh SW bank {RUN}/bench",
+    "name": "mut_rmut_sw",
+    "cmd": "bash tools/hbm_die_v16/run_vms_glue_tile_equiv.sh SW rmut {RUN}/bench",
     "expect": "fail",
     "threads": 8,
-    "peak_ram_gb": 16,
+    "peak_ram_gb": 8,
     "needs": [
      "verilator"
     ],
-    "fail_regex": "^VMS_HOIST_EQUIV SW FAIL checks=[0-9]+ errors=[1-9][0-9]*$",
-    "fail_witness": "results/rtl/vm_glue_1018/bench/SWbank.sim.log"
+    "fail_regex": "^VMS_GLUE_LT_EQUIV SW FAIL checks=[0-9]+ errors=[1-9][0-9]*$",
+    "fail_witness": "results/rtl/vm_glue_1018/bench_g2/SWrmut.sim.log"
+   },
+   {
+    "name": "mut_land_sw",
+    "cmd": "bash tools/hbm_die_v16/run_vms_glue_tile_equiv.sh SW land {RUN}/bench",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^VMS_GLUE_LT_EQUIV SW FAIL checks=[0-9]+ errors=[1-9][0-9]*$",
+    "fail_witness": "results/rtl/vm_glue_1018/bench_g2/SWland.sim.log"
    }
   ],
   "calibrate": {
@@ -103,7 +113,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hfd_hgi_vms_glue_sw/hfd_hgi_vms_glue_sw-g1-COMMIT"
+   "to": "results/rtl/ref_tile/hfd_hgi_vms_glue_sw/hfd_hgi_vms_glue_sw-g2-COMMIT"
   }
  ],
  "cycles_added": 0,
@@ -111,6 +121,5 @@
  "route_hold_margin_ns": 0.03,
  "route_corner": "TC",
  "notes": "generated by tools/ref_tile/ref_tile.py",
- "merge_target": null,
- "structural_change": "VM-GLUE2 rev 2 LATENCY (for the compiler / VM calendar owner): every hub-tile input +3 cycles and every output +3 cycles (pin flop + 2 relays a face; the measured rev-1 setup WNS -1,744 ps came from single-cycle hub / ring-stop logic spanning 1-2.4 ns of wire); ring transit through a hub +6; bank access round trip (pq -> pr, xq -> xq_done) +6, absorbed for the commit check by slice BANK_PIN_IN 1 -> 7 (COMMIT_DELAY 6 -> 12); calendar inputs (enables, sources, seqs, clients, replay) are issued 3 edges earlier for the same effect; reset release +3 (ot_rst_relay)."
+ "merge_target": null
 }

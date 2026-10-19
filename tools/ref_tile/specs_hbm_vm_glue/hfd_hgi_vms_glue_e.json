@@ -4,27 +4,59 @@
  "kind": "tile",
  "sources": [
   "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_glue_tiles.sv",
+  "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_glue_lt.sv",
+  "rtl/hbm_accel/generic/vm/static/ot_vms_status_static.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_glue_tiles_ref.sv",
   "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static_glue.sv",
   "rtl/hbm_accel/generic/vm/static/ot_vms_hub_static.sv",
   "rtl/hbm_accel/generic/vm/static/ot_vms_rstop_static.sv",
-  "rtl/hbm_accel/generic/vm/static/ot_vms_rstop_static_vr.sv",
-  "rtl/hbm_accel/generic/vm/static/ot_vms_rcl_static.sv",
-  "rtl/hbm_accel/generic/vm/static/ot_vms_status_static.sv",
-  "rtl/lib/ot_rst_relay.sv"
+  "rtl/hbm_accel/generic/vm/static/ot_vms_rcl_static.sv"
  ],
  "clock_port": "clk",
- "clock": "spine",
  "reset_ports": [
   "rst_n"
  ],
  "pins": {
   "W": [
-   "cw_out",
-   "ccw_in",
+   "cw_in_l6",
+   "cw_out_l6",
+   "ccw_out_l6",
+   "ccw_in_l6",
+   "cw_in_l7",
+   "cw_out_l7",
+   "ccw_out_l7",
+   "ccw_in_l7",
+   "cw_in_l0",
+   "cw_out_l0",
+   "ccw_out_l0",
+   "ccw_in_l0",
+   "cw_in_l1",
+   "cw_out_l1",
+   "ccw_out_l1",
+   "ccw_in_l1",
+   "cw_in_h",
+   "cw_out_h",
    "clk",
    "rst_n",
-   "cw_in",
-   "ccw_out"
+   "ccw_out_h",
+   "ccw_in_h",
+   "cw_in_l2",
+   "cw_out_l2",
+   "ccw_out_l2",
+   "ccw_in_l2",
+   "cw_in_l3",
+   "cw_out_l3",
+   "ccw_out_l3",
+   "ccw_in_l3",
+   "cw_in_l4",
+   "cw_out_l4",
+   "ccw_out_l4",
+   "ccw_in_l4",
+   "cw_in_l5",
+   "cw_out_l5",
+   "ccw_out_l5",
+   "ccw_in_l5"
   ],
   "E": [
    "b0_xq",
@@ -61,60 +93,64 @@
    "b3_xq2_done"
   ],
   "N": [
-   "b4_xq",
-   "b4_xq2",
-   "b4_eg",
-   "b4_pq",
-   "b4_pr",
-   "b4_status",
-   "b4_xq_done",
    "b4_xq2_done",
-   "b5_xq",
-   "b5_xq2",
-   "b5_eg",
-   "b5_pq",
-   "b5_pr",
-   "b5_status",
+   "b4_xq_done",
+   "b4_status",
+   "b4_pr",
+   "b4_pq",
+   "b4_eg",
+   "b4_xq2",
+   "b4_xq",
+   "b5_xq2_done",
    "b5_xq_done",
-   "b5_xq2_done"
+   "b5_status",
+   "b5_pr",
+   "b5_pq",
+   "b5_eg",
+   "b5_xq2",
+   "b5_xq"
   ],
   "S": [
-   "b6_xq",
-   "b6_xq2",
-   "b6_eg",
-   "b6_pq",
-   "b6_pr",
-   "b6_status",
-   "b6_xq_done",
-   "b6_xq2_done",
-   "b7_xq",
-   "b7_xq2",
-   "b7_eg",
-   "b7_pq",
-   "b7_pr",
-   "b7_status",
-   "b7_xq_done",
    "b7_xq2_done",
-   "sid",
-   "client_seq",
-   "response_enable",
-   "response_seq",
-   "bank_enable",
-   "bank_client",
-   "hub_ring_enable",
-   "hub_ring_client",
-   "ring_tx_enable",
-   "ring_tx_source",
-   "replay_enable",
-   "replay_source",
-   "hub_status",
-   "mirror_busy",
+   "b7_xq_done",
+   "b7_status",
+   "b7_pr",
+   "b7_pq",
+   "b7_eg",
+   "b7_xq2",
+   "b7_xq",
+   "b6_xq2_done",
+   "b6_xq_done",
+   "b6_status",
+   "b6_pr",
+   "b6_pq",
+   "b6_eg",
+   "b6_xq2",
+   "b6_xq",
+   "ring_fault",
    "vmstat",
-   "ring_fault"
+   "mirror_busy",
+   "hub_status",
+   "replay_source",
+   "replay_enable",
+   "ring_tx_source",
+   "ring_tx_enable",
+   "hub_ring_client",
+   "hub_ring_enable",
+   "bank_client",
+   "bank_enable",
+   "response_seq",
+   "response_enable",
+   "client_seq",
+   "sid"
   ]
  },
  "layer_cap": "M5",
  "recipe": 2,
+ "clock": "spine",
+ "orfs_vars": {
+  "OT_SPINE_LEAF_N": "16"
+ },
  "route": {
   "pd": 0.5,
   "period_ps": 833.333,
@@ -127,16 +163,80 @@
   }
  },
  "outline": {
-  "w": 777.6,
+  "w": 648.0,
   "h": 1555.2
  },
  "pin_ranges": {
-  "cw_out": [
+  "cw_in_l6": [
    4.32,
-   390.873
+   52.292
   ],
-  "ccw_in": [
-   390.873,
+  "cw_out_l6": [
+   52.292,
+   100.263
+  ],
+  "ccw_out_l6": [
+   100.263,
+   148.235
+  ],
+  "ccw_in_l6": [
+   148.235,
+   196.206
+  ],
+  "cw_in_l7": [
+   196.206,
+   244.178
+  ],
+  "cw_out_l7": [
+   244.178,
+   292.149
+  ],
+  "ccw_out_l7": [
+   292.149,
+   340.121
+  ],
+  "ccw_in_l7": [
+   340.121,
+   388.092
+  ],
+  "cw_in_l0": [
+   388.092,
+   436.064
+  ],
+  "cw_out_l0": [
+   436.064,
+   484.035
+  ],
+  "ccw_out_l0": [
+   484.035,
+   532.007
+  ],
+  "ccw_in_l0": [
+   532.007,
+   579.978
+  ],
+  "cw_in_l1": [
+   579.978,
+   627.95
+  ],
+  "cw_out_l1": [
+   627.95,
+   675.921
+  ],
+  "ccw_out_l1": [
+   675.921,
+   723.893
+  ],
+  "ccw_in_l1": [
+   723.893,
+   771.864
+  ],
+  "cw_in_h": [
+   771.864,
+   774.645
+  ],
+  "cw_out_h": [
+   774.645,
    777.426
   ],
   "clk": [
@@ -147,12 +247,76 @@
    777.6,
    777.774
   ],
-  "cw_in": [
+  "ccw_out_h": [
    777.774,
-   1164.327
+   780.555
   ],
-  "ccw_out": [
-   1164.327,
+  "ccw_in_h": [
+   780.555,
+   783.336
+  ],
+  "cw_in_l2": [
+   783.336,
+   831.307
+  ],
+  "cw_out_l2": [
+   831.307,
+   879.279
+  ],
+  "ccw_out_l2": [
+   879.279,
+   927.25
+  ],
+  "ccw_in_l2": [
+   927.25,
+   975.222
+  ],
+  "cw_in_l3": [
+   975.222,
+   1023.193
+  ],
+  "cw_out_l3": [
+   1023.193,
+   1071.165
+  ],
+  "ccw_out_l3": [
+   1071.165,
+   1119.136
+  ],
+  "ccw_in_l3": [
+   1119.136,
+   1167.108
+  ],
+  "cw_in_l4": [
+   1167.108,
+   1215.079
+  ],
+  "cw_out_l4": [
+   1215.079,
+   1263.051
+  ],
+  "ccw_out_l4": [
+   1263.051,
+   1311.022
+  ],
+  "ccw_in_l4": [
+   1311.022,
+   1358.994
+  ],
+  "cw_in_l5": [
+   1358.994,
+   1406.965
+  ],
+  "cw_out_l5": [
+   1406.965,
+   1454.937
+  ],
+  "ccw_out_l5": [
+   1454.937,
+   1502.908
+  ],
+  "ccw_in_l5": [
+   1502.908,
    1550.88
   ],
   "b0_xq": [
@@ -283,197 +447,197 @@
    1550.604,
    1550.88
   ],
-  "b4_xq": [
+  "b4_xq2_done": [
    4.32,
-   80.172
-  ],
-  "b4_xq2": [
-   80.172,
-   156.023
-  ],
-  "b4_eg": [
-   156.023,
-   231.875
-  ],
-  "b4_pq": [
-   231.875,
-   310.2
-  ],
-  "b4_pr": [
-   310.2,
-   383.304
-  ],
-  "b4_status": [
-   383.304,
-   388.25
+   4.549
   ],
   "b4_xq_done": [
-   388.25,
-   388.525
+   4.549,
+   4.777
   ],
-  "b4_xq2_done": [
-   388.525,
-   388.8
+  "b4_status": [
+   4.777,
+   8.89
   ],
-  "b5_xq": [
-   388.8,
-   464.652
+  "b4_pr": [
+   8.89,
+   69.673
   ],
-  "b5_xq2": [
-   464.652,
-   540.503
+  "b4_pq": [
+   69.673,
+   134.797
   ],
-  "b5_eg": [
-   540.503,
-   616.355
+  "b4_eg": [
+   134.797,
+   197.865
   ],
-  "b5_pq": [
-   616.355,
-   694.68
+  "b4_xq2": [
+   197.865,
+   260.932
   ],
-  "b5_pr": [
-   694.68,
-   767.784
-  ],
-  "b5_status": [
-   767.784,
-   772.73
-  ],
-  "b5_xq_done": [
-   772.73,
-   773.005
+  "b4_xq": [
+   260.932,
+   324.0
   ],
   "b5_xq2_done": [
-   773.005,
-   773.28
+   324.0,
+   324.229
   ],
-  "b6_xq": [
-   4.32,
-   78.475
+  "b5_xq_done": [
+   324.229,
+   324.457
   ],
-  "b6_xq2": [
-   78.475,
-   152.631
+  "b5_status": [
+   324.457,
+   328.57
   ],
-  "b6_eg": [
-   152.631,
-   226.786
+  "b5_pr": [
+   328.57,
+   389.353
   ],
-  "b6_pq": [
-   226.786,
-   303.36
+  "b5_pq": [
+   389.353,
+   454.477
   ],
-  "b6_pr": [
-   303.36,
-   374.829
+  "b5_eg": [
+   454.477,
+   517.545
   ],
-  "b6_status": [
-   374.829,
-   379.665
+  "b5_xq2": [
+   517.545,
+   580.612
   ],
-  "b6_xq_done": [
-   379.665,
-   379.934
-  ],
-  "b6_xq2_done": [
-   379.934,
-   380.202
-  ],
-  "b7_xq": [
-   380.202,
-   454.358
-  ],
-  "b7_xq2": [
-   454.358,
-   528.513
-  ],
-  "b7_eg": [
-   528.513,
-   602.669
-  ],
-  "b7_pq": [
-   602.669,
-   679.242
-  ],
-  "b7_pr": [
-   679.242,
-   750.711
-  ],
-  "b7_status": [
-   750.711,
-   755.547
-  ],
-  "b7_xq_done": [
-   755.547,
-   755.816
+  "b5_xq": [
+   580.612,
+   643.68
   ],
   "b7_xq2_done": [
-   755.816,
-   756.085
+   4.32,
+   4.543
   ],
-  "sid": [
-   756.085,
-   756.622
+  "b7_xq_done": [
+   4.543,
+   4.767
   ],
-  "client_seq": [
-   756.622,
-   757.159
+  "b7_status": [
+   4.767,
+   8.788
   ],
-  "response_enable": [
-   757.159,
-   757.428
+  "b7_pr": [
+   8.788,
+   68.211
   ],
-  "response_seq": [
-   757.428,
-   757.965
+  "b7_pq": [
+   68.211,
+   131.879
   ],
-  "bank_enable": [
-   757.965,
-   760.115
+  "b7_eg": [
+   131.879,
+   193.537
   ],
-  "bank_client": [
-   760.115,
-   762.264
+  "b7_xq2": [
+   193.537,
+   255.194
   ],
-  "hub_ring_enable": [
-   762.264,
-   762.802
+  "b7_xq": [
+   255.194,
+   316.851
   ],
-  "hub_ring_client": [
-   762.802,
-   763.339
+  "b6_xq2_done": [
+   316.851,
+   317.075
   ],
-  "ring_tx_enable": [
-   763.339,
-   763.876
+  "b6_xq_done": [
+   317.075,
+   317.298
   ],
-  "ring_tx_source": [
-   763.876,
-   765.488
+  "b6_status": [
+   317.298,
+   321.319
   ],
-  "replay_enable": [
-   765.488,
-   765.757
+  "b6_pr": [
+   321.319,
+   380.743
   ],
-  "replay_source": [
-   765.757,
-   766.026
+  "b6_pq": [
+   380.743,
+   444.411
   ],
-  "hub_status": [
-   766.026,
-   766.832
+  "b6_eg": [
+   444.411,
+   506.068
   ],
-  "mirror_busy": [
-   766.832,
-   767.369
+  "b6_xq2": [
+   506.068,
+   567.725
   ],
-  "vmstat": [
-   767.369,
-   772.474
+  "b6_xq": [
+   567.725,
+   629.383
   ],
   "ring_fault": [
-   772.474,
-   773.28
+   629.383,
+   630.053
+  ],
+  "vmstat": [
+   630.053,
+   634.297
+  ],
+  "mirror_busy": [
+   634.297,
+   634.744
+  ],
+  "hub_status": [
+   634.744,
+   635.414
+  ],
+  "replay_source": [
+   635.414,
+   635.638
+  ],
+  "replay_enable": [
+   635.638,
+   635.861
+  ],
+  "ring_tx_source": [
+   635.861,
+   637.202
+  ],
+  "ring_tx_enable": [
+   637.202,
+   637.648
+  ],
+  "hub_ring_client": [
+   637.648,
+   638.095
+  ],
+  "hub_ring_enable": [
+   638.095,
+   638.542
+  ],
+  "bank_client": [
+   638.542,
+   640.329
+  ],
+  "bank_enable": [
+   640.329,
+   642.116
+  ],
+  "response_seq": [
+   642.116,
+   642.563
+  ],
+  "response_enable": [
+   642.563,
+   642.786
+  ],
+  "client_seq": [
+   642.786,
+   643.233
+  ],
+  "sid": [
+   643.233,
+   643.68
   ]
  },
  "params": {},
@@ -481,9 +645,8 @@
  "inter": [],
  "pin_regs": {
   "enable": false,
-  "reason": "RTL registers every pin explicitly (rev 2): each input lands on a pin flop then 2 relay flops before the slice, each output leaves the slice through 2 relay flops and a pin flop (gen_vms_glue_tiles.py PIPE 3, recorded latency). Synthesis pin registers would add a further unrecorded cycle."
+  "reason": "RTL registers every pin: bank-side inputs land on the tile landing flops (eg / pr / xq_done / xq2_done / status / flt) and bank-side outputs leave from the tile relay flops (xq / xq2 / pq); the hub captures cq / client_seq / bank_client / response_seq / enables on plain flops and drives cr from flops; both ring stops capture l_in / tx controls and drive l_out / mirror_busy / fault from flops; status drives vmstat from a flop; sid lands on flops. A synthesis pin stage would add an edge the contract (gen_vms_glue_tiles.py) does not have."
  },
- "structural_change": "VM-GLUE2 rev 2 LATENCY (for the compiler / VM calendar owner): every hub-tile input +3 cycles and every output +3 cycles (pin flop + 2 relays a face; the measured rev-1 setup WNS -1,744 ps came from single-cycle hub / ring-stop logic spanning 1-2.4 ns of wire); ring transit through a hub +6; bank access round trip (pq -> pr, xq -> xq_done) +6, absorbed for the commit check by slice BANK_PIN_IN 1 -> 7 (COMMIT_DELAY 6 -> 12); calendar inputs (enables, sources, seqs, clients, replay) are issued 3 edges earlier for the same effect; reset release +3 (ot_rst_relay).",
  "io_flop_at_pins": {
   "cols": 4,
   "allow_none": true
@@ -495,24 +658,22 @@
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
  },
- "purpose": "OWNERS-HBM/VM-GLUE2 2026-10-18 rev 2 (HBM d4g plan (b), GEN2 binding): VM hub glue tile for SE (R0, sid 1) / NE (MX, sid 3) (hb_vms_SE, hb_vms_NE) = ot_vms_slice_static_glue (ot_vms_hub_static + 2 ring stops + ot_vms_rcl_static + ot_vms_status_static; 8 banks are die-level instances) with the ring stops as ot_vms_rstop_static_vr (valid-only reset, logic verbatim). Tile top hfd_hgi_vms_glue_e_t (gen_vms_glue_tiles.py): one clock (OT_SPINE), rst_n -> ot_rst_relay, REGISTERED FACES: every port passes a pin flop + 2 relay flops (<= ~410 um a stage over the 777.6 x 1555.2 pin-bound outline), per-bank bank ports, sid strap pin (one master for SE and NE, NC 0 as GEN2 binds them).",
+ "purpose": "OWNERS-HBM/VM-GLUE + HBM-KITS-C/VMGLUE 2026-10-18 g2 (HBM d4g plan (b), glue goes into a hardened tile): VM hub glue tile for SE (R0, sid 1) / NE (MX, sid 3) (hb_vms_SE, hb_vms_NE) = hfd_vms_glue_core_lt (ot_vms_hub_lt + 2 ot_vms_rstop_lt + ot_vms_rcl_lt + ot_vms_status_static: the historical glue, reset-light, parallel hub demultiplex), the 8 banks are die-level instances. Tile top hfd_hgi_vms_glue_e_t (gen_vms_glue_tiles.py): one clock, rst_n -> ot_rst_relay 4 regions, per-bank and per-lane ring ports, one landing / relay stage on every bank-side port (COMMIT_DELAY 8), sid strap pin (one master for SE and NE). Contract vs the historical glue: bank-side ports +1 edge each way, reset release +3 (lockstep bench vs <tile>_ref).",
  "pin_density_per_um": {
   "W": 5.75,
   "E": 3.62,
-  "N": 3.64,
-  "S": 3.72
+  "N": 4.38,
+  "S": 4.48
  },
  "job": {
-  "owner": "Claude OWNERS-HBM/VM-GLUE 1018",
+  "owner": "Claude HBM-KITS-C/VMGLUE 1018",
   "branch": "claude/vm-glue-1018",
-  "tag": "g1",
-  "purpose": "OWNERS-HBM/VM-GLUE2 2026-10-18 rev 2 (HBM d4g plan (b), GEN2 binding): VM hub glue tile for SE (R0, sid 1) / NE (MX, sid 3) (hb_vms_SE, hb_vms_NE) = ot_vms_slice_static_glue (ot_vms_hub_static + 2 ring stops + ot_vms_rcl_static + ot_vms_status_static; 8 banks are die-level instances) with the ring stops as ot_vms_rstop_static_vr (valid-only reset, logic verbatim). Tile top hfd_hgi_vms_glue_e_t (gen_vms_glue_tiles.py): one clock (OT_SPINE), rst_n -> ot_rst_relay, REGISTERED FACES: every port passes a pin flop + 2 relay flops (<= ~410 um a stage over the 777.6 x 1555.2 pin-bound outline), per-bank bank ports, sid strap pin (one master for SE and NE, NC 0 as GEN2 binds them).",
+  "tag": "g2",
+  "purpose": "OWNERS-HBM/VM-GLUE + HBM-KITS-C/VMGLUE 2026-10-18 g2 (HBM d4g plan (b), glue goes into a hardened tile): VM hub glue tile for SE (R0, sid 1) / NE (MX, sid 3) (hb_vms_SE, hb_vms_NE) = hfd_vms_glue_core_lt (ot_vms_hub_lt + 2 ot_vms_rstop_lt + ot_vms_rcl_lt + ot_vms_status_static: the historical glue, reset-light, parallel hub demultiplex), the 8 banks are die-level instances. Tile top hfd_hgi_vms_glue_e_t (gen_vms_glue_tiles.py): one clock, rst_n -> ot_rst_relay 4 regions, per-bank and per-lane ring ports, one landing / relay stage on every bank-side port (COMMIT_DELAY 8), sid strap pin (one master for SE and NE). Contract vs the historical glue: bank-side ports +1 edge each way, reset release +3 (lockstep bench vs <tile>_ref).",
   "extra_paths": [
    "rtl/hbm_accel/generic/vm",
    "rtl/lib",
-   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
-   "tools/hbm_die_v16",
-   "tools/hbm_die_v15/v16_layers"
+   "tools/hbm_die_v16"
   ],
   "record_to": "results/rtl/ref_tile/hfd_hgi_vms_glue_e",
   "benches": [
@@ -521,74 +682,74 @@
     "cmd": "bash tools/hbm_die_v16/run_vms_glue_tile_equiv.sh SE pos {RUN}/bench",
     "expect": "pass",
     "threads": 8,
-    "peak_ram_gb": 16,
+    "peak_ram_gb": 8,
     "needs": [
      "verilator"
     ],
-    "pass_regex": "^VMS_HOIST_EQUIV SE PASS checks=[1-9][0-9]* errors=0$",
-    "min_count_regex": "VMS_HOIST_EQUIV SE PASS checks=(\\d+)",
-    "pass_witness": "results/rtl/vm_glue_1018/bench/SEpos.sim.log"
+    "pass_regex": "^VMS_GLUE_LT_EQUIV SE PASS checks=[1-9][0-9]* errors=0$",
+    "min_count_regex": "VMS_GLUE_LT_EQUIV SE PASS checks=(\\d+)",
+    "pass_witness": "results/rtl/vm_glue_1018/bench_g2/SEpos.sim.log"
    },
    {
     "name": "ne_pos",
     "cmd": "bash tools/hbm_die_v16/run_vms_glue_tile_equiv.sh NE pos {RUN}/bench",
     "expect": "pass",
     "threads": 8,
-    "peak_ram_gb": 16,
+    "peak_ram_gb": 8,
     "needs": [
      "verilator"
     ],
-    "pass_regex": "^VMS_HOIST_EQUIV NE PASS checks=[1-9][0-9]* errors=0$",
-    "min_count_regex": "VMS_HOIST_EQUIV NE PASS checks=(\\d+)",
-    "pass_witness": "results/rtl/vm_glue_1018/bench/NEpos.sim.log"
+    "pass_regex": "^VMS_GLUE_LT_EQUIV NE PASS checks=[1-9][0-9]* errors=0$",
+    "min_count_regex": "VMS_GLUE_LT_EQUIV NE PASS checks=(\\d+)",
+    "pass_witness": "results/rtl/vm_glue_1018/bench_g2/NEpos.sim.log"
    },
    {
-    "name": "mut_bank_se",
-    "cmd": "bash tools/hbm_die_v16/run_vms_glue_tile_equiv.sh SE bank {RUN}/bench",
+    "name": "mut_rmut_se",
+    "cmd": "bash tools/hbm_die_v16/run_vms_glue_tile_equiv.sh SE rmut {RUN}/bench",
     "expect": "fail",
     "threads": 8,
-    "peak_ram_gb": 16,
+    "peak_ram_gb": 8,
     "needs": [
      "verilator"
     ],
-    "fail_regex": "^VMS_HOIST_EQUIV SE FAIL checks=[0-9]+ errors=[1-9][0-9]*$",
-    "fail_witness": "results/rtl/vm_glue_1018/bench/SEbank.sim.log"
+    "fail_regex": "^VMS_GLUE_LT_EQUIV SE FAIL checks=[0-9]+ errors=[1-9][0-9]*$",
+    "fail_witness": "results/rtl/vm_glue_1018/bench_g2/SErmut.sim.log"
    },
    {
-    "name": "mut_bank_ne",
-    "cmd": "bash tools/hbm_die_v16/run_vms_glue_tile_equiv.sh NE bank {RUN}/bench",
+    "name": "mut_land_se",
+    "cmd": "bash tools/hbm_die_v16/run_vms_glue_tile_equiv.sh SE land {RUN}/bench",
     "expect": "fail",
     "threads": 8,
-    "peak_ram_gb": 16,
+    "peak_ram_gb": 8,
     "needs": [
      "verilator"
     ],
-    "fail_regex": "^VMS_HOIST_EQUIV NE FAIL checks=[0-9]+ errors=[1-9][0-9]*$",
-    "fail_witness": "results/rtl/vm_glue_1018/bench/NEbank.sim.log"
+    "fail_regex": "^VMS_GLUE_LT_EQUIV SE FAIL checks=[0-9]+ errors=[1-9][0-9]*$",
+    "fail_witness": "results/rtl/vm_glue_1018/bench_g2/SEland.sim.log"
    },
    {
     "name": "mut_sid_se",
     "cmd": "bash tools/hbm_die_v16/run_vms_glue_tile_equiv.sh SE sid {RUN}/bench",
     "expect": "fail",
     "threads": 8,
-    "peak_ram_gb": 16,
+    "peak_ram_gb": 8,
     "needs": [
      "verilator"
     ],
-    "fail_regex": "^VMS_HOIST_EQUIV SE FAIL checks=[0-9]+ errors=[1-9][0-9]*$",
-    "fail_witness": "results/rtl/vm_glue_1018/bench/SEsid.sim.log"
+    "fail_regex": "^VMS_GLUE_LT_EQUIV SE FAIL checks=[0-9]+ errors=[1-9][0-9]*$",
+    "fail_witness": "results/rtl/vm_glue_1018/bench_g2/SEsid.sim.log"
    },
    {
     "name": "mut_sid_ne",
     "cmd": "bash tools/hbm_die_v16/run_vms_glue_tile_equiv.sh NE sid {RUN}/bench",
     "expect": "fail",
     "threads": 8,
-    "peak_ram_gb": 16,
+    "peak_ram_gb": 8,
     "needs": [
      "verilator"
     ],
-    "fail_regex": "^VMS_HOIST_EQUIV NE FAIL checks=[0-9]+ errors=[1-9][0-9]*$",
-    "fail_witness": "results/rtl/vm_glue_1018/bench/NEsid.sim.log"
+    "fail_regex": "^VMS_GLUE_LT_EQUIV NE FAIL checks=[0-9]+ errors=[1-9][0-9]*$",
+    "fail_witness": "results/rtl/vm_glue_1018/bench_g2/NEsid.sim.log"
    }
   ],
   "views_to": "physical/ref_tile/hfd_hgi_vms_glue_e/views"
