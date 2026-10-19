@@ -17,7 +17,7 @@
  "reset_ports": [
   "rst_n"
  ],
- "std_area_um2": 4200.0,
+ "std_area_um2": 9800.0,
  "pins": {
   "W": [
    "f_ks",
@@ -49,7 +49,7 @@
   "macro_halo_um": 10.8,
   "io_hold_margin_ns": 0.025
  },
- "structural_change": "REFILL-0730/HWIN 10-19: NEW leaf dsdv_mu_hwin (MU-S81-2/DIE ac336f805): the S81 MU die's end-slice TX tag windows, landing replays and RX tag check, moved OUT of the CLOSED dsdv_mu_hslot (view 28a8118d5, source byte-identical) into its own leaf beside it in dsdv_seq_host_mux; own copy of the NSLOT 47 start table + 8 boot-loaded event rows {kind, ep, D} x 47-slot {land, ab} attributes, window words host CSR 0x16 (f_mw), 0 added cycles (every event fires at start + D, static, no ready / credit). Faces: die-facing f_ks tap / mu_c / mu_rc / mu_rt W (the seqhost W face carries every MU lane and the host plane), f_mc / f_mw (master CSR-decode flops) + t_wf (t_mf fold) E, ck / rst_n S. MU_HWIN_GATE PASS 5.050.",
+ "structural_change": "REFILL-0730/HWIN 10-19: NEW leaf dsdv_mu_hwin (MU-S81-2/DIE ac336f805): the S81 MU die's end-slice TX tag windows, landing replays and RX tag check, moved OUT of the CLOSED dsdv_mu_hslot (view 28a8118d5, source byte-identical) into its own leaf beside it in dsdv_seq_host_mux; own copy of the NSLOT 47 start table + 8 boot-loaded event rows {kind, ep, D} x 47-slot {land, ab} attributes, window words host CSR 0x16 (f_mw), 0 added cycles (every event fires at start + D, static, no ready / credit). Faces: die-facing f_ks tap / mu_c / mu_rc / mu_rt W (the seqhost W face carries every MU lane and the host plane), f_mc / f_mw (master CSR-decode flops) + t_wf (t_mf fold) E, ck / rst_n S. MU_HWIN_GATE PASS 5.050. Sized from the first --cts gate's synthesis (9,736 um2, 89.5k cells, 5,356 flops: the 8 event rows' 47:1 start-table reads dominate).",
  "pin_regs": {
   "enable": false,
   "reason": "Source-registered: f_ks / f_mc / f_mw / mu_rt land in pin flops (ks_q / mc_q / mw_q / rt_q), mu_c / mu_rc / t_wf leave flops (c_q / rc_q / t_wf)."
