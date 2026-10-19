@@ -1,0 +1,129 @@
+{
+  "base_revision": "df32caee0",
+  "calendar_status": {
+    "MU_occupancy_and_slot_reuse": null,
+    "SE_to_SO_den_epoch_proof": null,
+    "SMJ_job_qframe_count_and_END_lifetime": {
+      "additional_SMJ_frames": 17,
+      "counterexample": "original attention synthetic END occurs after local P.V, before SO can consume all four quarters. Raising frame count alone cannot define SO completion or denominator lifetime; a separate SO job also lacks a matching END producer without structural change.",
+      "original_PPATH_frames": 7,
+      "proposed_combined_frames": 24
+    },
+    "SO_completion_vs_existing_jd": null,
+    "SO_to_group_gather_to_actual_WO_A_RETIRE": null,
+    "SU_latency_edges": null,
+    "cross_die_quarter_transport": null,
+    "original_strict_token_failure": "unchanged 1324/2628; no token claim",
+    "programme_installed": false,
+    "selected_return_calendar": null
+  },
+  "checks": {
+    "causal_negative_rejected": {
+      "half_swap": true,
+      "head_swap": true,
+      "missing_quarter": true,
+      "reset_stale": true
+    },
+    "identity_positive": "PASS8192",
+    "test_class": "finite Python ABI identity enumeration, not RTL numerical simulation, source timing proof or selected programme replay"
+  },
+  "cost_status": {
+    "candidate_C1_capture_pack_output_checker_FF_lower_bound": 11617,
+    "candidate_C1_min_checker_FF": 166,
+    "capture_FF_area_um2": null,
+    "floorplan_capacity_and_die_cost": null,
+    "logic_mux_area_um2": null,
+    "macro_clock_cap_fF": null,
+    "reason": "source graph design, target placement and original transaction calendar are missing; exact lower bounds above are not a whole-block bill",
+    "regional_clock_reset_FF": null,
+    "relay_stations_and_edges": null,
+    "total_FF": null
+  },
+  "historical_storage_model": "83c2428ca",
+  "pv_ingress": {
+    "all_data_records": 512,
+    "all_quarter_records": 640,
+    "conditional_macro_area_um2": 70708.10112,
+    "conditional_macro_clock_pins": 128,
+    "conditional_macro_count": 128,
+    "conditional_native_capacity": "128 singleclock32x64 banks (8 per head) with actual 32-bit half masks; per bank writes occur only on its lane pair; no same-address read/write needed after all-quarter fence",
+    "identity_enumerated": 8192,
+    "macro_qualification": "historical b65718325 source family only; local contacts/access/PG/native timing unqualified; no physical grant",
+    "quarter_data_records": 128,
+    "quarter_headers": 32,
+    "quarter_records": 160,
+    "remote_payload_bits": 196608,
+    "remote_records": 480,
+    "storage_logical": "16 coherent 32x512-bit head stores, 32-bit lane write masks; simultaneous 16 head writes per PV data record, one 512-bit head-row read for serializer",
+    "unique_payload_bits": 262144,
+    "wire_record_bits": 514
+  },
+  "q_inventory_model": "d6185918c",
+  "scope": {
+    "dimensions": 512,
+    "heads_rank": 16,
+    "output_slices_per_group": 8,
+    "shape_authority": "xs_bf.py declared production shape; selected fixture and physical slice group installation still required",
+    "window": 128,
+    "wo_a_K": 4096,
+    "wo_a_group_heads": 8,
+    "wo_a_groups_local": 2
+  },
+  "se_existing": {
+    "consumer": "dsdv_svc_rs pb_w/pbuf -> RNE BF16 -> pl_d -> score exchange -> fold PV frame -> owner P feed",
+    "new_hardware_for_existing_P_path": 0,
+    "old_no_se_consumer_claim": "superseded for PPATH=True; external write-face routing still open"
+  },
+  "so_q_frames": {
+    "conditional_upstream_NP4_first_to_last_edges": 2132,
+    "conditional_upstream_NP4_occupied_edges": 2133,
+    "earliest_schedule": "symbolic only: max(Q return/gather/QR readiness, four-quarter arrivals, SE den readiness) + assembler macro read/pin ages; all ages not yet installed",
+    "operand_frames": 16,
+    "operand_header_words": 16,
+    "operand_payload_words": 512,
+    "parameter_header_words": 1,
+    "parameter_payload_words": 5,
+    "parameters": "SMJ kind5/start1; row0 obase; rows1..4 token-position coslo/coshi/sinlo/sinhi. Broadcast once then per-head mask1<<h, start0, operand flag1. No new SE and no denominator overwrite.",
+    "q_pin_II1_first_to_last_edges": 533,
+    "start_bound": "all four quarters proven current epoch AND previous SE denominator arrived AND final parameter/cos row early enough for tail divide use",
+    "total_q_words": 534
+  },
+  "so_result": {
+    "VM_replica_payload_bits_16_slices": 1048576,
+    "VM_reuse_reason": "existing XS BF capacity80beats/parity >=64, but source assignment/parity/arrival lifetime must be proven; do not charge new VM by assumption",
+    "VM_unique_bits": 131072,
+    "all_write_events": 512,
+    "beats_per_wo_a_group": 64,
+    "delivered_beats_all_slices": 1024,
+    "existing_XS_target": "ot_s81sl_xs g_v/g_fam=1/g_idx/g_d source0..2; one global BF beat index arrives once per slice. Must open matching parity gather window before arrivals; no direct arbitrary VM write ABI",
+    "existing_address": "obase + 8*oc + floor(h/2)",
+    "existing_mask": "h even00FF, oddFF00; do not overwrite complementary half",
+    "four_rows_pack_register_bits": 1024,
+    "full_face_capture_FF": 8880,
+    "group_beat_index": "idx=floor(((h mod8)*512+d)/64), lane=d mod64; phase group selected by xs_bf row partition",
+    "live_payload_bits_per_write": 256,
+    "new_VM_macro_count": null,
+    "optional_pruned_static_half_capture_FF": 4784,
+    "outgoing_beat_interface_bits": 1033,
+    "pruned_interface": "requires private exact head-parity specialization; no grant and no omission of live bits",
+    "unique_gather_beats_1024b": 128,
+    "unique_normalized_payload_bits": 131072,
+    "wire_interface_bits_per_head": 555,
+    "writes_per_head": 32
+  },
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_ctrl/ot_s81_svc_job.sv": "6ae753c3fea9594fdfab849f8338dfb002af8d974a807de6725fc5df2f1258df",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs.sv": "dcce7f019522c98a8377fe42d39a9b1ad9eb8a2dcd8a5464c244e9c4375ff4c7",
+    "rtl/dsrom_sys/s81_dv/su_sm/ot_s81_su_smh.sv": "09601eee8ec6e92835228a8b5440beacece802dda6addaaffc93d39f7689fafc",
+    "rtl/dsrom_sys/s81_dv/su_sm/ot_s81_su_smq.sv": "98ffbee4b8c7be7f1d11ffe839df6aeb9ecf4e7918630cfa16cab9643a7f7b56",
+    "rtl/dsrom_sys/s81_dv/su_sm/ot_s81_su_sms.sv": "23b25430e54e63fdb099710f8abdeeaf945671525a29938e6fa14aabba3492b8",
+    "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att.sv": "1087fc661d1fd731da3d08eaa400e29304fad88fc53a5b4599c95f2ec749a2fb",
+    "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv": "aeaf3434c95a3c00a8f4cc671262f8813e9ccc3fa371f0a2c7fdd61ed2d5e8ac",
+    "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_sm.sv": "2d8e98a3f25eea07416ac5a408a58e9fb21e302bc08532bbb345ac184dbe3b96",
+    "tools/s81_dv/layer_prog/lower_svc.py": "70f0d9f13a3ced7b0df25dfee463324758c7beabcefdd86716eea04c7fd1ddd4",
+    "tools/s81_dv/layer_prog/lower_vs.py": "ae8bf08bba8bfe22c584784270f14c60a9ccb98d7cd74d135245f55446c8b9ca",
+    "tools/s81_dv/layer_prog/xs_bf.py": "98188f6fff9bdc322129e4832a33f17f013bc40c56aff017dc38c5dedb2d8b0b",
+    "tools/s81_dv/layer_prog/xs_place.py": "066fe46fba6904d8a331dc4b4891324d22b30d1c52f288792ebde05aa32a2718"
+  },
+  "verdict": "MODEL_ONLY_TARGET_ABI_ENUMERATED_FULL_PRODUCTION_CALENDAR_AND_COST_OPEN"
+}
