@@ -31,7 +31,8 @@ O=$W/obj
 # runs a block twice under make -j (PCH race, HBM-TKM3), so the blocks are verilated serially and the C++ built -j.
 VFILES="-f $SL/$TOP.f $MAC/ot_sram_1r1w_256x128_m1_r2c2/ot_sram_1r1w_256x128_m1_r2c2.v $MAC/ot_sram_1r1w_64x128_m1_r2c2/ot_sram_1r1w_64x128_m1_r2c2.v
     $KSRC/physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v $W/tb_$TOP.sv"
-VOPTS="-O1 ${KVA_VFLAGS:--fno-dfg} -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-WIDTHCONCAT -Wno-MULTIDRIVEN
+QKDEF=""; [ "${KVA_QK_ONLY:-0}" = 1 ] && QKDEF="+define+KVA_QK_ONLY"
+VOPTS="$QKDEF -O1 ${KVA_VFLAGS:--fno-dfg} -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-WIDTHCONCAT -Wno-MULTIDRIVEN
     --x-assign unique --x-initial unique --top-module tb_$TOP -GMUT=0 -Mdir $O
     +define+SLICE_DRIVE=\"$H/drive_qwk_slice_attn_mu.svh\" +define+IDLE_EDGES=200 +define+TAIL_EDGES=50 +incdir+$H +incdir+$SL"
 if [ ! -x $O/Vtb_$TOP ] || [ -n "${KVA_REBUILD:-}" ]; then

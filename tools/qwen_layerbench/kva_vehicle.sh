@@ -6,11 +6,15 @@
 #         landings / reset regions grown from them) + the shared control kvs_attn / seq / ahub / pvw / pvfin (timing only)
 #   DIE_RUN  kvs14* run dir holding port_bind_v2/{die_bound.v,port_bind_v2.json}, case_kv/relay_stages.json, relay_check.json
 #   KSRC     the GEN source tree of that run (wt-kvs14*)
+# WSQK/WNQK/ESQK/ENQK isolate a QK strip: PV pair clusters are outside the cut; only K requests and strip partials are judged.
 # Env: KVA_HIER (default the head-unit leaf masters + the PV pair cluster qkd_pvw_die_t, 404k station flops each: MU-TOK-KV3) -> run_kv_attn_mu.sh hierarchical blocks; KVA_VFLAGS, KVA_J.
 set -u
-VEH=$1; R=$2; K=$3; OUT=$(mkdir -p "$4" && readlink -f "$4"); CASES=$(readlink -f "$5")
+VEH=$1; QK=0
+case "$VEH" in WSQK|WNQK|ESQK|ENQK) VEH=${VEH%QK}; QK=1;; esac
+R=$2; K=$3; OUT=$(mkdir -p "$4" && readlink -f "$4"); CASES=$(readlink -f "$5")
 H=$(cd "$(dirname "$0")" && pwd)
-SH='qkd_kvs_attn|qkd_seq_static_s|qkd_ahub_static_dw|qkd_pvw_die_t|qkd_pv_fin_s'
+SH='qkd_kvs_attn|qkd_seq_static_s|qkd_ahub_static_dw|qkd_pv_fin_s'
+[ "$QK" = 1 ] || SH="$SH|qkd_pvw_die_t"
 if [ "$VEH" = all ]; then
   TOP=qwk_slice_attn; SEL=(--master "$SH|qkd_astk_strip_er_die|qkd_ectl3_kiss_st|qkd_pv16_vport|ot_qkh_.*|qkh_head_.*"); STK=WS,WN,ES,EN
 else
@@ -24,4 +28,4 @@ python3 $H/kv_attn_grp_map.py --die-v $R/port_bind_v2/die_bound.v --slice $SL/sl
 python3 $H/kva_mu_ports.py --slice $SL/slice.json --relay-stages $R/case_kv/relay_stages.json --relay-check $R/relay_check.json \
   --out $SL/kva_ports.svh >> $OUT/cut.log 2>&1 || { echo "KVA_PORTS_FAIL $VEH"; tail -5 $OUT/cut.log; exit 2; }
 tail -3 $OUT/cut.log
-KVA_HIER="${KVA_HIER-ot_qkh_.*|qkh_head_.*|qkd_pvw_die_t}" bash $H/run_kv_attn_mu.sh $SL $OUT/run $K $CASES
+KVA_QK_ONLY=$QK KVA_HIER="${KVA_HIER-ot_qkh_.*|qkh_head_.*|qkd_pvw_die_t}" bash $H/run_kv_attn_mu.sh $SL $OUT/run $K $CASES

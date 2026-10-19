@@ -345,7 +345,12 @@
         if (kva_rowerr != 0) smoke_err("K request row != the row of the step whose window holds it");
         if (kva_fs >= 0) smoke_err("stack fault (own ECTL / V port / strip)");
         for (k = 0; k < kva_n; k = k + 1) for (int s = 0; s < KVA_NSTK; s++)
+            `ifdef KVA_QK_ONLY
+            if (kva_sk0[k][s] < 0 || kva_sa0[k][s] < 0) smoke_err("QK strip produced no K request or partial in a step");
+        $display("KVA_QK_ONLY: PV pairs outside cut; no PV completion or RESULT claim");
+`else
             if (kva_sk0[k][s] < 0 || kva_sv0[k][s] < 0 || kva_sa0[k][s] < 0) smoke_err("a stack produced no K / V request or partial in a step");
+`endif
         $display("KVA_PARTIAL stacks %0d: RESULT exactness not judged (absent stacks undriven)", KVA_NSTK);
 `else
         if (!all) smoke_err("a step's RESULT is not exact / complete");
