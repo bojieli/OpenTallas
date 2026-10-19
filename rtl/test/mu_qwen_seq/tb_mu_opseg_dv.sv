@@ -134,7 +134,6 @@ module tb_mu_opseg_dv;
     // except tl 3; inputs pw / kok / kwd / native_ret presented 6 edges later, dh / dh_user / fab / ss5 / ag5 on time ->
     // the landed copy is released 3 edges BEFORE dut, gets pw through a 6-stage delay, and its outputs are compared with
     // dut's 6 (tl: 3) edges later.  LMUT = lp MUT.
-    parameter integer LMUT = 0;
     localparam integer LOFF = 6, LOFF_TL = 3, LIN_PW = 6;
     reg [74:0] pw_dl [0:LIN_PW-1];
     integer pj;
