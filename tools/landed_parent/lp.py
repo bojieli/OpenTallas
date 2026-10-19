@@ -77,6 +77,12 @@ SPEC (JSON; paths relative to the repo root):
                  than the reader's own time (one common lag per reader).  The lockstep reference becomes <top>_lagref (the
                  flat parent with those pins delayed lag(reader) stages, generated beside the landed top), and the record's
                  compiler block lists the lag: the status those pins carry reaches the reader's outputs lag edges late.
+  child_pin_regions {inst: {pin: region}}  CDC CHILDREN (S81-SERDES 10-19, opt-in): a HARD child whose own leaf holds the
+                 only crossing between two parent clock families (a gray-FIFO rate matcher, a 2-flop status synchroniser).
+                 Each listed pin belongs to the named region (unlisted pins: the child's base region from `regions`): a
+                 listed clock pin gets ck_<region>, a listed reset pin its own reset run on that region's root, a data pin
+                 is landed / not landed by ITS region.  Every pin region of the child must own one of its clock pins.  No
+                 parent-level net crosses between the families; the child's internal crossing is its own (closed) proof.
   mut_child      child whose reset run MUT 4 lengthens (default: the first child with a reset pin); pick one whose state
                  outlives the reset (a sticky flag / counter): a pure pipeline register forgets a late reset in one edge
 Child clock pins wider than one bit (a child with several entry clocks in one region) get {W{ck_<r>}}.
@@ -464,6 +470,20 @@ class Parent:
             if len(hit) != 1:
                 raise SystemExit(f"instance {ins['inst']} matches regions {hit}: every child needs exactly one region")
             self.region[ins["inst"]] = hit[0]
+        self.pin_region = {}
+        for inst, pins in (spec.get("child_pin_regions") or {}).items():
+            ins = next((x for x in self.insts if x["inst"] == inst), None)
+            if ins is None or not isinstance(pins, dict) or not pins:
+                raise SystemExit(f"child_pin_regions: {inst} is not a child instance with a pin map")
+            for pin, r in pins.items():
+                if pin not in self.cports[ins["module"]] or r not in self.regions:
+                    raise SystemExit(f"child_pin_regions: {inst}.{pin} -> {r}: unknown pin or region")
+                self.pin_region[(inst, pin)] = r
+            ckp = [q for q in ins["conns"] if q in (spec.get("clock_pins") or [])]
+            owned = {self.preg(inst, q) for q in ckp}
+            used = {self.preg(inst, q) for q in ins["conns"]}
+            if used - owned:
+                raise SystemExit(f"child_pin_regions: {inst} has pins in {sorted(used - owned)} without a clock pin there")
         self.D, self.E = int(spec.get("D", 4)), int(spec.get("E", 2))
         self.K = self.E
         self.direct_timing = bool(spec.get("landing_direct_timing", False))
@@ -490,6 +510,28 @@ class Parent:
         self.reference = spec.get("schedule", "offsets") == "reference"
         self.rx = int(spec.get("reset_extra", self.A + self.D)) if self.reference else 0
 
+    def preg(self, inst, pin):
+        """region of one child pin (child_pin_regions; default the child's region)"""
+        return self.pin_region.get((inst, pin), self.region[inst])
+
+    def dreg(self, node, net):
+        """region of a driver node for net (a CDC child's driving pin region)"""
+        if node.startswith("port:") or not any(i == node for i, _ in self.pin_region):
+            return self.region.get(node) if not node.startswith("port:") else None
+        pins = self.drv_pin.get((node, net))
+        if not pins:
+            raise SystemExit(f"child_pin_regions: {node} drives {net} through an assign; connect CDC outputs directly")
+        rs = {self.preg(node, q) for q in pins}
+        if len(rs) != 1:
+            raise SystemExit(f"child_pin_regions: {node} drives {net} from regions {sorted(rs)}")
+        return rs.pop()
+
+    def rreg(self, inst, net):
+        rs = {self.preg(inst, pin) for n, i, pin in self.rd_cache if i == inst and n == net}
+        if len(rs) != 1:
+            raise SystemExit(f"child_pin_regions: {inst} reads {net} in regions {sorted(rs)}")
+        return rs.pop()
+
     def rng(self, n):
         if n in self.wires:
             return self.wires[n]
@@ -501,6 +543,7 @@ class Parent:
         """drivers {net: {node}}, readers [(net, node, pin)]; node = inst name or 'port:<p>'"""
         excl = self.ck | {self.rst} | self.static
         drv = {}
+        self.drv_pin = {}
         for ins in self.insts:
             for pin, ex in ins["conns"].items():
                 d = self.cports[ins["module"]].get(pin)
@@ -509,6 +552,7 @@ class Parent:
                 if d == "out":
                     for n in idents(ex):
                         drv.setdefault(n, set()).add(ins["inst"])
+                        self.drv_pin.setdefault((ins["inst"], n), set()).add(pin)
         for p in self.mod["ports"]:
             if p["dir"] == "in" and p["name"] not in excl:
                 drv.setdefault(p["name"], set()).add(f"port:{p['name']}")
@@ -529,6 +573,7 @@ class Parent:
                     if n in self.env:
                         continue
                     rd.append((n, ins["inst"], pin))
+        self.rd_cache = rd
         out_drv = {}
         for p in self.mod["ports"]:
             if p["dir"] == "out":
@@ -542,9 +587,9 @@ class Parent:
         if p in (self.S.get("port_regions") or {}):
             return self.S["port_regions"][p]
         if self.ports[p]["dir"] == "in":
-            rs = [self.region[i] for n, i, _ in rd if n == p]
+            rs = [self.preg(i, q) for n, i, q in rd if n == p]
             return rs[0] if rs else self.regions[0]
-        regs = {self.region[d] for d in out_drv[p] if not d.startswith("port:")}
+        regs = {self.dreg(d, p) for d in out_drv[p] if not d.startswith("port:")}
         if len(regs) > 1:
             raise SystemExit(f"output port {p} is driven from regions {sorted(regs)}: split the port")
         return regs.pop() if regs else self.regions[0]
@@ -564,10 +609,10 @@ class Parent:
             ds = drv.get(n, set())
             if not ds:
                 raise SystemExit(f"net {n} read by {inst}.{pin} has no driver (open input: no stubs, owner 10-14)")
-            sregs = {nreg[d] for d in ds}
+            sregs = {nreg[d] if d.startswith("port:") else self.dreg(d, n) for d in ds}
             if len(sregs) > 1:
                 raise SystemExit(f"net {n} is driven from regions {sorted(sregs)}: split it per region")
-            s, r = sregs.pop(), self.region[inst]
+            s, r = sregs.pop(), self.preg(inst, pin)
             landed = s != r
             # TW2-PSLICE2 10-19 (opt-in reader_per_inst): one read half per READER INSTANCE (beside it), not per region
             key = (n, inst) if self.S.get("reader_per_inst") else (n, r)
@@ -864,7 +909,7 @@ class Parent:
             src = sub.get((inst, net), net)
             q = f"{net}__p_{inst}"
             kk = f"(MUT == 3) ? {k - 1} : {k}" if j == 0 and mut else f"{k}"
-            w(f"    wire {rng or ''} {q};  ot_pl_pad #(.W({width_text(rng)}), .N({kk})) u_lpp_{j} (.ck(ck_{self.region[inst]}), "
+            w(f"    wire {rng or ''} {q};  ot_pl_pad #(.W({width_text(rng)}), .N({kk})) u_lpp_{j} (.ck(ck_{self.rreg(inst, net)}), "
               f".d({src}), .q({q}));   // align {inst}: +{k}")
             sub[(inst, net)] = q
         # child resets
@@ -878,6 +923,12 @@ class Parent:
                 w(f"    wire lpr_c_{i};  ot_pl_pad #(.W(1), .N({kk})) u_lprc_{i} (.ck(ck_{r}), .d(lpr_{r}), .q(lpr_c_{i}));"
                   + (f"   // t({i}) = {tc}" if not self.reference else f"   // reference schedule: held {tc} past the landing epochs"))
                 rsub[i] = f"lpr_c_{i}"
+                for pin, ex in ins["conns"].items():         # CDC child: a reset pin of another region gets that run
+                    pr = self.preg(i, pin)
+                    if pin in (S.get("reset_pins") or []) and ex.strip() == self.rst and pr != r:
+                        w(f"    wire lpr_c_{i}_{pin};  ot_pl_pad #(.W(1), .N({tc})) u_lprc_{i}_{pin} (.ck(ck_{pr}), "
+                          f".d(lpr_{pr}), .q(lpr_c_{i}_{pin}));   // CDC child pin region {pr}, t({i}) = {tc}")
+                        rsub[i, pin] = f"lpr_c_{i}_{pin}"
         # Internal regional reset ports receive the same logical child delay as
         # the ordinary child reset, each on its own root. No reset/data mask.
         brsub = {}
@@ -905,9 +956,10 @@ class Parent:
                           if binding['role']=='clocks' else brsub[i,pin])
                 elif pin in (S.get("clock_pins") or []) and idents(ex) & self.ck:
                     cw = self.cwidth[ins["module"]].get(pin, 1)
-                    ex = f"ck_{r}" if cw == 1 else f"{{{cw}{{ck_{r}}}}}"
+                    pr = self.preg(i, pin)
+                    ex = f"ck_{pr}" if cw == 1 else f"{{{cw}{{ck_{pr}}}}}"
                 elif i in rsub and pin in (S.get("reset_pins") or []) and ex.strip() == self.rst:
-                    ex = rsub[i]
+                    ex = rsub.get((i, pin), rsub[i])
                 elif self.cports[ins["module"]][pin] == "in":
                     for (si, net), rep in sub.items():
                         if si == i:
@@ -1090,6 +1142,12 @@ class Parent:
                                  "(flat == <top>_lagref: the reader's outputs carry that status lag edges "
                                  "later than in the flat parent)") for b, k in sorted(P["lag"].items())})),
                 max_added_edges=max([0] + list(port_out.values()))),
+            **({} if not self.pin_region else dict(cdc_children=[dict(
+                inst=i, module=next(x["module"] for x in self.insts if x["inst"] == i), base_region=self.region[i],
+                pin_regions={q: self.preg(i, q) for q in next(x["conns"] for x in self.insts if x["inst"] == i)})
+                for i in sorted({i for i, _ in self.pin_region})],
+                cdc_note="child_pin_regions: these hard children own the only crossings between their pin regions (closed "
+                         "leaf CDC: gray FIFO / 2-flop synchronisers); no parent net crosses there, no landing is used")),
             **({} if not (S.get("bench") or {}).get("mut_waivers") else dict(mutant_waivers=S["bench"]["mut_waivers"])),
             warnings=[f"child {i} runs t = {t[i]} edges late but has no reset pin on {self.rst}: its free-running state "
                       "is NOT re-aligned (check it in the bench)" for i in no_rst],
@@ -1251,9 +1309,9 @@ class Parent:
         waived = {int(k): v for k, v in ((self.S.get("bench") or {}).get("mut_waivers") or {}).items()}
         muts = [m for m in muts if m not in waived]
         up = "/".join([".."] * len(Path(rel_out).parts))
-        srcs = " ".join(self.S["sources"] + self.S.get("child_sources", []) + [LIB_RTL] +
+        srcs = " ".join(dict.fromkeys(self.S["sources"] + self.S.get("child_sources", []) + [LIB_RTL] +   # each file once
                         (RESET_FOREST_RTL if self.reset_forest else []) +
-                        ([f"{rel_out}/{self.S['top']}_lagref.sv"] if P and P.get("lag") else []))
+                        ([f"{rel_out}/{self.S['top']}_lagref.sv"] if P and P.get("lag") else [])))
         defs = " ".join(f"-D{d}" for d in self.S.get("defines") or [])
         return f"""#!/usr/bin/env bash
 # GENERATED by tools/landed_parent/lp.py: lockstep bench {self.S['top']} (flat) vs {top_lp} + mutants {muts[1:]} + region audit.
@@ -1313,18 +1371,26 @@ def audit(spec: dict, rtl_text: str) -> dict:
         if child is None or re.sub(r'\s+','',child['conns'].get(pin,'')) != expected:
             return dict(ok=False, fails=[f'{name}.{pin}: regional {binding["role"]} bit mapping differs from declared contract'])
     rcks = {f"ck_{r['name']}" for r in spec["regions"]}     # region clocks only (a parent port may be named ck_*)
+    cpr = {(i, q): r for i, m in (spec.get("child_pin_regions") or {}).items() for q, r in m.items()}
+    for (i, q), r in cpr.items():
+        ci = next((x for x in insts if x["inst"] == i), None)
+        if ci is None or (q in (spec.get("clock_pins") or []) and ckname(ci["conns"].get(q, "")) != f"ck_{r}"):
+            return dict(ok=False, fails=[f"{i}.{q}: CDC child pin region clock differs from child_pin_regions {r}"])
     reg = {}
     for i in insts:
-        cks = [ckname(ex) for pin, ex in i["conns"].items() if ckname(ex) in rcks and (i['inst'],pin) not in bindings]
+        cks = [ckname(ex) for pin, ex in i["conns"].items() if ckname(ex) in rcks and (i['inst'],pin) not in bindings
+               and (i['inst'], pin) not in cpr]
         if len(set(cks)) != 1:
             return dict(ok=False, fails=[f"{i['inst']}: clock pins on {sorted(set(cks)) or 'no region clock'}"])
         reg[i["inst"]] = cks[0][3:]
-    drv = {}
+    drv, dpr = {}, {}
     for i in insts:
         for pin, ex in i["conns"].items():
             if dirs[i["module"]].get(pin) == "out":
                 for n in idents(ex):
                     drv.setdefault(n, set()).add(i["inst"])
+                    if (i["inst"], pin) in cpr:
+                        dpr[(i["inst"], n)] = cpr[(i["inst"], pin)]
     for _ in range(len(assigns) + 1):
         for lhs, rhs in assigns:
             src = set().union(*(drv.get(n, set()) for n in rhs)) if rhs else set()
@@ -1337,7 +1403,7 @@ def audit(spec: dict, rtl_text: str) -> dict:
                 continue
             for n in idents(ex):
                 for d in drv.get(n, ()):
-                    if reg[d] == reg[i["inst"]]:
+                    if dpr.get((d, n), reg[d]) == cpr.get((i["inst"], pin), reg[i["inst"]]):
                         continue
                     di = next(x for x in insts if x["inst"] == d)
                     if di["module"] in ("ot_pl_land_w", "ot_pl_land_chunk_w", "ot_pl_land_vector_reset_w") and i["module"] in ("ot_pl_land_r", "ot_pl_land_chunk_r", "ot_pl_land_vector_reset_r") and \

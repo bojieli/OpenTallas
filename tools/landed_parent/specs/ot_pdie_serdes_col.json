@@ -1,0 +1,148 @@
+{
+  "top": "ot_pdie_serdes_col_flat",
+  "top_lp": "ot_pdie_serdes_col_lp",
+  "sources": [
+    "rtl/dsrom_sys/s81_link/col/ot_pdie_serdes_col_flat.sv"
+  ],
+  "child_sources": [
+    "rtl/dsrom_sys/s81_link/col/ot_s81_col_leaf.sv",
+    "rtl/dsrom_sys/s81_link/col/ot_s81_pma_models.sv",
+    "rtl/dsrom_sys/s81_link/ot_s81_kp4_dsyn.sv",
+    "rtl/dsrom_sys/s81_link/ot_s81_kp4_bm.sv",
+    "rtl/dsrom_sys/s81_link/ot_s81_kp4_common.sv",
+    "rtl/dsrom_sys/s81_link/ot_s81_kp4_ddly.sv",
+    "rtl/dsrom_sys/s81_link/ot_s81_kp4_dchn.sv",
+    "rtl/dsrom_sys/s81_link/ot_s81_kp4_dout.sv",
+    "rtl/dsrom_sys/s81_link/ot_s81_kp4_enc.sv",
+    "rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv",
+    "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.v",
+    "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v",
+    "rtl/common/landed_parent/ot_pl_land.sv"
+  ],
+  "out_dir": "rtl/dsrom_sys/s81_link/col/lp",
+  "record_dir": "rtl/dsrom_sys/s81_link/col/lp",
+  "clock_ports": [
+    "clk",
+    "pma_rck"
+  ],
+  "clock_pins": [
+    "clk",
+    "ck",
+    "pma_rck",
+    "wclk",
+    "rclk",
+    "ck_r",
+    "ck_t"
+  ],
+  "reset_port": "rst",
+  "reset_pins": [
+    "rst_n",
+    "wrst_n",
+    "rrst_n",
+    "rst_r_n",
+    "rst_t_n"
+  ],
+  "D": 4,
+  "E": 2,
+  "regions": [
+    {
+      "name": "tx",
+      "insts": [
+        "u_txf",
+        "u_live_t",
+        "u_enc",
+        "u_txr0",
+        "u_txr1"
+      ],
+      "centre": [
+        360.0,
+        3500.0
+      ]
+    },
+    {
+      "name": "ptx",
+      "insts": [
+        "u_ptx"
+      ],
+      "centre": [
+        410.4,
+        2289.6
+      ]
+    },
+    {
+      "name": "syn",
+      "insts": [
+        "u_prx",
+        "u_live_r",
+        "u_syn"
+      ],
+      "centre": [
+        151.2,
+        2484.0
+      ]
+    },
+    {
+      "name": "dly",
+      "insts": [
+        "u_dly"
+      ],
+      "centre": [
+        162.0,
+        2708.6
+      ]
+    },
+    {
+      "name": "chn",
+      "insts": [
+        "u_chn"
+      ],
+      "centre": [
+        151.2,
+        2948.4
+      ]
+    },
+    {
+      "name": "out",
+      "insts": [
+        "u_out",
+        "u_rm",
+        "u_sts"
+      ],
+      "centre": [
+        167.4,
+        3300.0
+      ]
+    }
+  ],
+  "child_pin_regions": {
+    "u_rm": {
+      "rclk": "tx",
+      "rrst_n": "tx",
+      "r_d": "tx",
+      "fault": "tx"
+    },
+    "u_sts": {
+      "ck_t": "tx",
+      "rst_t_n": "tx",
+      "rm_flt": "tx",
+      "e_flt": "tx",
+      "st": "tx"
+    }
+  },
+  "out_regs": {
+    "rx": 1,
+    "st": 1
+  },
+  "bench": {
+    "cycles": 3000,
+    "reset_cycles": 16,
+    "sim": "verilator",
+    "expr": {
+      "pma_rx": "u_flat.pma_tx"
+    },
+    "mut_waivers": {
+      "3": "pad 0 is the 6-stage e_flt status alignment pad in front of u_sts: the encoder fault never fires under the continuous stream (tx_v = live flag), so one stage less is unobservable; landing/reset mutants 1, 2, 4 and the region audit cover the generator"
+    }
+  },
+  "note": "S81-SERDES 10-19 (S81.STA.OWN.7): landed SerDes column; COORDINATOR LEAD-S81 11:53: pma_rck is a separate clock family from clk, crossed only by the CDC children u_rm (gray-FIFO rate matcher, elastic) and u_sts (2-flop status syncs); landings only inside one family (tx->ptx on clk; syn/dly/chn/out on pma_rck). Bench loops the flat parent's own pma_tx back into pma_rx (real KP4 frames, the decoder locks)."
+}

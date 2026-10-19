@@ -1,0 +1,323 @@
+{
+ "name": "s81lk_serdes_col_lp",
+ "top": "ot_pdie_serdes_col_lp",
+ "kind": "cluster",
+ "sources": [
+  "rtl/dsrom_sys/s81_link/col/lp/ot_pdie_serdes_col_lp.sv",
+  "rtl/dsrom_sys/s81_link/col/ot_s81_col_leaf.sv",
+  "rtl/common/landed_parent/ot_pl_land.sv",
+  "rtl/dsrom_sys/s81_link/ot_s81_kp4_common.sv",
+  "rtl/dsrom_sys/s81_link/ot_s81_kp4_bm.sv",
+  "rtl/dsrom_sys/s81_link/ot_s81_kp4_dsyn.sv",
+  "rtl/dsrom_sys/s81_link/ot_s81_kp4_ddly.sv",
+  "rtl/dsrom_sys/s81_link/ot_s81_kp4_dchn.sv",
+  "rtl/dsrom_sys/s81_link/ot_s81_kp4_dout.sv",
+  "rtl/dsrom_sys/s81_link/ot_s81_kp4_enc.sv",
+  "rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.v",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v",
+  "physical/asap7_memory_macros/ot_s81_pma_txm/ot_s81_pma_txm_bb.v",
+  "physical/asap7_memory_macros/ot_s81_pma_rxm/ot_s81_pma_rxm_bb.v"
+ ],
+ "params": {
+  "MUT": 0
+ },
+ "orfs_vars": {
+  "VERILOG_INCLUDE_DIRS": "/src/rtl/dsrom_sys/s81_link"
+ },
+ "clock": "multiple_cts_roots",
+ "clock_port": "ck_tx",
+ "clock_ports": [
+  "ck_tx",
+  "ck_ptx",
+  "ck_syn",
+  "ck_dly",
+  "ck_chn",
+  "ck_out"
+ ],
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_tx"
+   ],
+   "inputs": [
+    "rst",
+    "tx"
+   ],
+   "outputs": [
+    "rx",
+    "st"
+   ]
+  },
+  "ptx": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_ptx"
+   ],
+   "inputs": [],
+   "outputs": [
+    "pma_tx",
+    "pma_tck"
+   ]
+  },
+  "syn": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_syn"
+   ],
+   "inputs": [
+    "pma_rx"
+   ],
+   "outputs": []
+  },
+  "dly": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_dly"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "chn": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_chn"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "out": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_out"
+   ],
+   "inputs": [],
+   "outputs": []
+  }
+ },
+ "landed_record": "rtl/dsrom_sys/s81_link/col/lp/ot_pdie_serdes_col_lp_record.json",
+ "landed_note": "S81-SERDES 10-19: lp.py landed column from the wires-only flat parent ot_pdie_serdes_col_flat (spec tools/landed_parent/specs/ot_pdie_serdes_col.json). Clock families (COORDINATOR LEAD-S81 10-19 11:53): clk -> ck_tx, ck_ptx; pma_rck (recovered, NOT the core PLL) -> ck_syn, ck_dly, ck_chn, ck_out. The only rck->clk crossings are the CDC children u_rm (closed gray-FIFO rate matcher, elastic IDLE deletion) and u_sts (2-flop status syncs) plus the regional reset runs (>= 4 stages per region = synchronisers); no landing crosses the families. related_same_frequency is the landed-cluster STA convention (as the closed s81lk_rate_match tile); the CDC is structural, proven by tb_s81_pdie_col with die B 300 ppm slow.",
+ "reset_ports": [
+  "rst"
+ ],
+ "reset_landing": {
+  "enable": false,
+  "reason": "rst is landed by the lp.py regional reset runs: root stage on ck_tx + 4 registered stages per region (depth 5), each child reset run depth + t(child); no plain fanout from the port"
+ },
+ "outline": {
+  "w": 518.4,
+  "h": 3844.8,
+  "exact": true
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_s81_pma_rxm",
+   "count": 1,
+   "inst": "u_prx",
+   "at": [
+    43.2,
+    43.2
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_s81_pma_txm",
+   "count": 1,
+   "inst": "u_ptx",
+   "at": [
+    345.6,
+    43.2
+   ]
+  }
+ ],
+ "children": [
+  {
+   "view": "physical/ref_tile/s81lk_kp4_dsyn/views/ot_s81_kp4_dsyn",
+   "count": 1,
+   "inst": "u_syn",
+   "at": [
+    43.2,
+    2376.0
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81lk_kp4_ddly/views/ot_s81_kp4_ddly",
+   "count": 1,
+   "inst": "u_dly",
+   "at": [
+    43.2,
+    2635.2
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81lk_kp4_dchn/views/ot_s81_kp4_dchn",
+   "count": 1,
+   "inst": "u_chn",
+   "at": [
+    43.2,
+    2851.2
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81lk_kp4_dout/views/ot_s81_kp4_dout",
+   "count": 1,
+   "inst": "u_out",
+   "at": [
+    43.2,
+    3110.4
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81lk_rate_match/views/ot_s81_rate_match",
+   "count": 1,
+   "inst": "u_rm",
+   "at": [
+    43.2,
+    3412.8
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81lk_kp4_enc/views/ot_s81_kp4_enc",
+   "count": 1,
+   "inst": "u_enc",
+   "at": [
+    43.2,
+    3585.6
+   ]
+  }
+ ],
+ "pins": {
+  "N": [
+   "tx",
+   "ck_tx",
+   "rx",
+   "st",
+   "rst"
+  ],
+  "S": [
+   "pma_rx",
+   "pma_tx",
+   "pma_tck"
+  ],
+  "W": [
+   "ck_syn",
+   "ck_dly",
+   "ck_chn",
+   "ck_out"
+  ],
+  "E": [
+   "ck_ptx"
+  ]
+ },
+ "pin_ranges": {
+  "tx": [
+   45.0,
+   215.0
+  ],
+  "ck_tx": [
+   230.0,
+   230.5
+  ],
+  "rx": [
+   262.0,
+   420.0
+  ],
+  "st": [
+   425.0,
+   426.0
+  ],
+  "rst": [
+   430.0,
+   430.5
+  ],
+  "pma_rx": [
+   45.0,
+   170.0
+  ],
+  "pma_tx": [
+   347.5,
+   472.0
+  ],
+  "pma_tck": [
+   473.0,
+   474.5
+  ],
+  "ck_syn": [
+   2484.0,
+   2484.5
+  ],
+  "ck_dly": [
+   2708.0,
+   2708.5
+  ],
+  "ck_chn": [
+   2948.0,
+   2948.5
+  ],
+  "ck_out": [
+   3300.0,
+   3300.5
+  ],
+  "ck_ptx": [
+   2300.0,
+   2300.5
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 64,
+  "period_ps": 833.333333,
+  "macro_halo_um": 5.4,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  }
+ },
+ "recipe": 4,
+ "inhold": false,
+ "outhold": false,
+ "structural_change": "S81-SERDES 10-19 (S81.STA.OWN.7): the SerDes column as an lp.py LANDED parent (replaces the draft s81lk_serdes_col_e3, which could not gen: kind cluster + multiple_cts_roots needs an lp record). All glue moved into children (live flags, status CDC, TX face/relay rows); decoder tiles are direct children in 4 rck regions with 11 D4/E2 landings (+6 edges); TX lane enc -> 2 relay rows -> landing tx->ptx (+3 edges) -> PMA TX; rx/st output regs; PMA RX moved to the W half under dsyn, PMA TX to the E half under the TX lane drop; 518.4 x 3844.8 approved slot.",
+ "job": {
+  "owner": "Claude:S81-SERDES",
+  "branch": "claude/s81-serdes-lpcol-1019",
+  "tag": "lpk1",
+  "purpose": "S81 SerDes column landed parent first kit (gate --cts)"
+ },
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true
+}
