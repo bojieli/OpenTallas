@@ -284,8 +284,12 @@ def su_record(raw, q=0, rng=None, data=None, place=None, tag="", pad_zero=False,
     import su_program_inventory as I
     from su_arith_compile import pack, physical_word
     from su_arith_generate import FIELDS
-    row, sched = L.lower(raw)
     _, unit, sut, desc = I.decode(raw)
+    if safe_calendar and "A" not in desc:
+        raise ValueError("safe calendar supported profile requires a live A operand")
+    row, sched = L.lower(raw)
+    if safe_calendar and len(sched) != 1:
+        raise ValueError("safe calendar supported profile requires exactly one issue group")
     res = dict(lowering={k: v for k, v in row.items() if k != "sut"}, sut=sut, reasons=[])
     if timing is not None:
         res["native_timing"] = timing.as_dict()
