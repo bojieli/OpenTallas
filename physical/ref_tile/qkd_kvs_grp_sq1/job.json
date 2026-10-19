@@ -41,7 +41,7 @@
     ],
     "pass_regex": "^KVS_TILE PASS tile=grp .* errors=0 mut=0",
     "min_count_regex": "checks=(\\d+)",
-    "pass_witness": "results/rtl/qwen_kv_die/kvs_grp_reference_1019/grp/m0.log"
+    "pass_witness": "results/rtl/qwen_kv_die/kvs_grp_reference_1019/grp/grp_m0.log"
    },
    {
     "name": "grp_mut1",
@@ -54,7 +54,7 @@
     ],
     "pass_regex": "^KVS_TILE PASS tile=grp ",
     "fail_regex": "^KVS_TILE FAIL tile=grp .* mut=1 ",
-    "fail_witness": "results/rtl/qwen_kv_die/kvs_grp_reference_1019/grp/m1.log"
+    "fail_witness": "results/rtl/qwen_kv_die/kvs_grp_reference_1019/grp/grp_m1.log"
    },
    {
     "name": "grp_mut2",
@@ -67,7 +67,7 @@
     ],
     "pass_regex": "^KVS_TILE PASS tile=grp ",
     "fail_regex": "^KVS_TILE FAIL tile=grp .* mut=2 ",
-    "fail_witness": "results/rtl/qwen_kv_die/kvs_grp_reference_1019/grp/m2.log"
+    "fail_witness": "results/rtl/qwen_kv_die/kvs_grp_reference_1019/grp/grp_m2.log"
    },
    {
     "name": "grp_mut3",
@@ -80,7 +80,7 @@
     ],
     "pass_regex": "^KVS_TILE PASS tile=grp ",
     "fail_regex": "^KVS_TILE FAIL tile=grp .* mut=3 ",
-    "fail_witness": "results/rtl/qwen_kv_die/kvs_grp_reference_1019/grp/m3.log"
+    "fail_witness": "results/rtl/qwen_kv_die/kvs_grp_reference_1019/grp/grp_m3.log"
    },
    {
     "name": "grp_mut4",
@@ -93,7 +93,7 @@
     ],
     "pass_regex": "^KVS_TILE PASS tile=grp ",
     "fail_regex": "^KVS_TILE FAIL tile=grp .* mut=4 ",
-    "fail_witness": "results/rtl/qwen_kv_die/kvs_grp_reference_1019/grp/m4.log"
+    "fail_witness": "results/rtl/qwen_kv_die/kvs_grp_reference_1019/grp/grp_m4.log"
    },
    {
     "name": "grp_mut5",
@@ -106,7 +106,7 @@
     ],
     "pass_regex": "^KVS_TILE PASS tile=grp ",
     "fail_regex": "^KVS_TILE FAIL tile=grp .* mut=5 ",
-    "fail_witness": "results/rtl/qwen_kv_die/kvs_grp_reference_1019/grp/m5.log"
+    "fail_witness": "results/rtl/qwen_kv_die/kvs_grp_reference_1019/grp/grp_m5.log"
    },
    {
     "name": "grp_mut6",
@@ -119,7 +119,7 @@
     ],
     "pass_regex": "^KVS_TILE PASS tile=grp ",
     "fail_regex": "^KVS_TILE FAIL tile=grp .* mut=6 ",
-    "fail_witness": "results/rtl/qwen_kv_die/kvs_grp_reference_1019/grp/m6.log"
+    "fail_witness": "results/rtl/qwen_kv_die/kvs_grp_reference_1019/grp/grp_m6.log"
    },
    {
     "name": "grp_mut7",
@@ -132,7 +132,7 @@
     ],
     "pass_regex": "^KVS_TILE PASS tile=grp ",
     "fail_regex": "^KVS_TILE FAIL tile=grp .* mut=7 ",
-    "fail_witness": "results/rtl/qwen_kv_die/kvs_grp_reference_1019/grp/m7.log"
+    "fail_witness": "results/rtl/qwen_kv_die/kvs_grp_reference_1019/grp/grp_m7.log"
    },
    {
     "name": "grp_mut8",
@@ -145,7 +145,7 @@
     ],
     "pass_regex": "^KVS_TILE PASS tile=grp ",
     "fail_regex": "^KVS_TILE FAIL tile=grp .* mut=8 ",
-    "fail_witness": "results/rtl/qwen_kv_die/kvs_grp_reference_1019/grp/m8.log"
+    "fail_witness": "results/rtl/qwen_kv_die/kvs_grp_reference_1019/grp/grp_m8.log"
    }
   ],
   "calibrate": {
