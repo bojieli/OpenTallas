@@ -74,8 +74,19 @@
   },
   "review_blockers": [
     "Parent source/geometry review required before gate",
-    "Measured synthesis area and mapped kept-copy fanout audit OPEN",
     "Canonical descriptor macro density scope unresolved",
-    "TT/FF pin-flop spread and linked-root phase contract OPEN"
-  ]
+    "TT/FF pin-flop spread and linked-root phase contract OPEN",
+    "Landed reset recovery fanout190/118 requires explicit treatment before CTS"
+  ],
+  "std_area_um2": 654.642,
+  "pin_regs": {
+    "enable": false,
+    "reason": "Native RTL already registers every data input/output; adding automatic collars changes the qualified +2 GO-crossing schedule."
+  },
+  "reset_landing": {
+    "enable": false,
+    "reason": "Native RTL has two-stage reset release at each actual root; mapped reset fanout190/118 remains an explicit recovery-tree audit item before CTS."
+  },
+  "keep_pin_regs": true,
+  "io_flop_at_pins": true
 }
