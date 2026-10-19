@@ -11,14 +11,14 @@
     "OT_OBS_CLOSE_UM": null
   },
   "helper": {
-    "path": "/srv/opentallas-scratch/claude/closure-loop/qkd_static_ectla_k4-rt80-2a3a97cb2/src/tools/hier_contract/abstract_pin_stub.py",
-    "sha256": "c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05"
+    "path": "/home/ubuntu/wt/kv-ectl5-1019/tools/hier_contract/abstract_pin_stub.py",
+    "sha256": "b8face3a1a84574baea067ee96d597695a051a30254422c9c432c3769c38509a"
   },
   "command": [
     "/usr/bin/python3",
-    "/srv/opentallas-scratch/claude/closure-loop/qkd_static_ectla_k4-rt80-2a3a97cb2/src/tools/hier_contract/abstract_pin_stub.py",
-    "/srv/opentallas-scratch/claude/closure-loop/qkd_static_ectla_k4-rt80-2a3a97cb2/record/views/qkd_static_ectla_kiss/provenance/raw/qkd_static_ectla_kiss.lef",
-    "/srv/opentallas-scratch/claude/closure-loop/qkd_static_ectla_k4-rt80-2a3a97cb2/record/views/qkd_static_ectla_kiss/provenance/qkd_static_ectla_kiss.candidate.lef"
+    "/home/ubuntu/wt/kv-ectl5-1019/tools/hier_contract/abstract_pin_stub.py",
+    "/home/ubuntu/scratch/kvectl5/refin/qkd_static_ectla_k4/qkd_static_ectla_kiss/provenance/raw/qkd_static_ectla_kiss.lef",
+    "/home/ubuntu/scratch/kvectl5/refin/qkd_static_ectla_k4/qkd_static_ectla_kiss/provenance/qkd_static_ectla_kiss.candidate.lef"
   ],
   "returncode": 0,
   "stdout": "pinstub: 2 OBS rects moved into 2 pins: ck, rst_n; pockets: 441 OBS rects added on M6 (gaps < 2.048 um between own-layer obstacles)\n",
@@ -30,7 +30,7 @@
   },
   "child_lint": {
     "schema": "opentallas.hier_contract.child_lint.v1",
-    "lef": "/srv/opentallas-scratch/claude/closure-loop/qkd_static_ectla_k4-rt80-2a3a97cb2/record/views/qkd_static_ectla_kiss/provenance/qkd_static_ectla_kiss.candidate.lef",
+    "lef": "/home/ubuntu/scratch/kvectl5/refin/qkd_static_ectla_k4/qkd_static_ectla_kiss/provenance/qkd_static_ectla_kiss.candidate.lef",
     "verdict": "PASS",
     "fails": [],
     "warns": [],
@@ -92,11 +92,12 @@
         "count": 0,
         "area_um2": 0,
         "examples": []
-      }
+      },
+      "pin_access_violations": 0
     }
   },
   "output": {
     "path": "qkd_static_ectla_kiss.lef",
-    "sha256": "fc040fb1120e757edc318c2020016f7b988efe398e245eede11b19fce47c0f4e"
+    "sha256": "92986c694f7200cf1c1722e3ca36ebcaac0caa5adc2060d03381aa6ade7e9cd3"
   }
 }

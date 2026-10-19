@@ -1,0 +1,273 @@
+{
+ "name": "hidx_op_n12_1018",
+ "top": "ot_hbm_idx_vm_query_static_n12",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/index/ot_hbm_idx_vm_query_static_n12.sv",
+  "rtl/hbm_accel/index/ot_hbm_idx_vm_query_static.sv",
+  "rtl/hbm_accel/index/ot_hbm_idx_vm_static.sv",
+  "rtl/lib/ot_rst_relay.sv"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "N": [
+   "clk",
+   "rst_n"
+  ],
+  "E": [
+   "sid",
+   "weight_slot",
+   "query_slot",
+   "query_index",
+   "weight_sector",
+   "query_sector",
+   "block_v",
+   "block_head",
+   "block_number",
+   "block_data",
+   "head_weight",
+   "fault"
+  ],
+  "S": [
+   "vm_rq",
+   "vm_rr"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 4,
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "h": "M4",
+   "v": "M5",
+   "group_max": 1
+  },
+  "io_hold_margin_ns": 0.025
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL registers every data input and every output at the pin: the die master is the pin-register shell (rtl/hbm_accel/index/ot_hbm_idx_vm_query_static_n12.sv, OWNER RULE 19:50; one kept flop per bit, +1/+1 edge, scheduled by tools/hbm_idx_static_calendar.py and proven by rtl/test/hbm_idx_static/run_scheduled.sh); a synthesis wrapper would add a second unpriced stage. Clock/rst_n ports pass through."
+ },
+ "pin_ranges": {
+  "sid": [
+   1.56,
+   1.752
+  ],
+  "weight_slot": [
+   1.752,
+   1.848
+  ],
+  "query_slot": [
+   1.848,
+   1.944
+  ],
+  "query_index": [
+   1.944,
+   2.616
+  ],
+  "weight_sector": [
+   2.616,
+   4.152
+  ],
+  "query_sector": [
+   4.152,
+   5.688
+  ],
+  "block_v": [
+   5.688,
+   5.784
+  ],
+  "block_head": [
+   5.784,
+   6.264
+  ],
+  "block_number": [
+   6.264,
+   6.456
+  ],
+  "block_data": [
+   6.456,
+   104.76
+  ],
+  "head_weight": [
+   104.76,
+   106.296
+  ],
+  "fault": [
+   106.296,
+   106.392
+  ],
+  "vm_rq": [
+   2.76,
+   15.816
+  ],
+  "vm_rr": [
+   15.816,
+   213.192
+  ],
+  "clk": [
+   107.976,
+   108.072
+  ],
+  "rst_n": [
+   108.072,
+   108.168
+  ]
+ },
+ "job": {
+  "owner": "Claude:HBM-IDXAM3",
+  "branch": "claude/hbm-idxam2-1018",
+  "tag": "n12",
+  "purpose": "Coordinator 0hk (10-18): ONE IDX operand-reader master for hb_idx__op_{SW,SE,NW,NE} capturing the VM round trip at n+12 (core VM_RT_EXTRA 4): tile pin flops 2 + registered share amr on SW / 2 die relay stages on SE/NW/NE (H-D4G-GEN2). Same ports, pins and outline as the CLOSED n+10 master hidx_op_r4 (216x108, recipe 4); only the face depth D 10 -> 12. Bench run_vm_query_n12.sh on actual VM banks with 1/1 relays: MUT0 PASS, MUT1-7 FAIL (data, n+11, n+13, n+10 master, rq relay).",
+  "extra_paths": [
+   "rtl/hbm_accel/index/ot_hbm_idx_query_static.sv",
+   "rtl/hbm_accel/index/ot_hbm_idx_query_owned_native.sv",
+   "rtl/hbm_accel/index/ot_hbm_idx_actquant_owned_native.sv",
+   "rtl/hdc/ot_hdc_delay_rf.sv",
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v",
+   "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv",
+   "rtl/hdc/ot_hdc_fpu.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+   "rtl/proto/ot_fp32_add_rne_pipe.sv",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v",
+   "rtl/test/hbm_idx_static/tb_vm_query_n12.sv",
+   "rtl/test/hbm_idx_static/run_vm_query_n12.sh",
+   "tools/hbm_idx_static_query_vectors.py",
+   "tools/hdc_golden_v41.py",
+   "tools/hdc_golden.py"
+  ],
+  "record_to": "results/rtl/ref_tile/hidx_op_n12_1018",
+  "views_to": "physical/ref_tile/hidx_op_n12_1018/views",
+  "benches": [
+   {
+    "name": "vm_query_n12_exact",
+    "cmd": "bash rtl/test/hbm_idx_static/run_vm_query_n12.sh {RUN}/vqn0 0",
+    "expect": "pass",
+    "pass_regex": "^IDX_VM_QUERY_N12 MUT0 rq_rly1 rr_rly1 commits514 reads514 blocks128 quant32 errors0 fault0 ",
+    "pass_witness": "results/rtl/hbm_idxam3_1018/vqnrun0.log",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "vm_query_n12_mut1",
+    "cmd": "bash rtl/test/hbm_idx_static/run_vm_query_n12.sh {RUN}/vqn1 1",
+    "expect": "fail",
+    "fail_regex": "^IDX_VM_QUERY_N12 MUT1 .*errors[1-9][0-9]* fault0 ",
+    "fail_witness": "results/rtl/hbm_idxam3_1018/vqnrun1.log",
+    "note": "weight word",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "vm_query_n12_mut2",
+    "cmd": "bash rtl/test/hbm_idx_static/run_vm_query_n12.sh {RUN}/vqn2 2",
+    "expect": "fail",
+    "fail_regex": "^IDX_VM_QUERY_N12 MUT2 .*errors[1-9][0-9]* fault0 ",
+    "fail_witness": "results/rtl/hbm_idxam3_1018/vqnrun2.log",
+    "note": "query word",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "vm_query_n12_mut3",
+    "cmd": "bash rtl/test/hbm_idx_static/run_vm_query_n12.sh {RUN}/vqn3 3",
+    "expect": "fail",
+    "fail_regex": "^IDX_VM_QUERY_N12 MUT3 .*quant31 errors0 fault1 ",
+    "fail_witness": "results/rtl/hbm_idxam3_1018/vqnrun3.log",
+    "note": "query index",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "vm_query_n12_mut4",
+    "cmd": "bash rtl/test/hbm_idx_static/run_vm_query_n12.sh {RUN}/vqn4 4",
+    "expect": "fail",
+    "fail_regex": "^IDX_VM_QUERY_N12 MUT4 .*blocks0 quant0 errors0 fault1 ",
+    "fail_witness": "results/rtl/hbm_idxam3_1018/vqnrun4.log",
+    "note": "vm_rr relay removed (n+11)",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "vm_query_n12_mut5",
+    "cmd": "bash rtl/test/hbm_idx_static/run_vm_query_n12.sh {RUN}/vqn5 5",
+    "expect": "fail",
+    "fail_regex": "^IDX_VM_QUERY_N12 MUT5 .*blocks0 quant0 errors0 fault1 ",
+    "fail_witness": "results/rtl/hbm_idxam3_1018/vqnrun5.log",
+    "note": "extra vm_rr relay (n+13)",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "vm_query_n12_mut6",
+    "cmd": "bash rtl/test/hbm_idx_static/run_vm_query_n12.sh {RUN}/vqn6 6",
+    "expect": "fail",
+    "fail_regex": "^IDX_VM_QUERY_N12 MUT6 .*errors[1-9][0-9]* fault1 ",
+    "fail_witness": "results/rtl/hbm_idxam3_1018/vqnrun6.log",
+    "note": "n+10 master on the n+12 path",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "vm_query_n12_mut7",
+    "cmd": "bash rtl/test/hbm_idx_static/run_vm_query_n12.sh {RUN}/vqn7 7",
+    "expect": "fail",
+    "fail_regex": "^IDX_VM_QUERY_N12 MUT7 .*blocks0 quant0 errors0 fault1 ",
+    "fail_witness": "results/rtl/hbm_idxam3_1018/vqnrun7.log",
+    "note": "vm_rq relay removed",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ]
+ },
+ "outline": {
+  "w": 216.0,
+  "h": 108.0
+ },
+ "inhold": false,
+ "outhold": false,
+ "hold_budget": "die",
+ "params": {},
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true,
+ "structural_change": "new master ot_hbm_idx_vm_query_static_n12 (VM face n+12; ot_hbm_idx_vm_query_static unchanged)"
+}
