@@ -1,0 +1,40 @@
+{
+  "schema": "opentallas.qwen.existing_edge_stream_header_producer.v1",
+  "status": "HEADER_COMPONENT_MODEL_NOT_PARENT_OR_CONSUMER_INTEGRATION",
+  "consumer_boundary_source_sha256": "a6802ad9efbd3aca7dc43ed61b1de53240b507c4ddeed8e95c2bf5baa9a3234e",
+  "header_boundary_sha256": "f55cef2292fd7ee50e9840b3592e98aad9a2fe317fe2c949e7db71f2e478894d",
+  "contract": {
+    "raw_header_fields": {
+      "sw_i": {
+        "1087": 90,
+        "1084": 2,
+        "1085": 2,
+        "1086": 2
+      },
+      "se_i": {
+        "1087": 50
+      }
+    },
+    "added_data_edges": 0,
+    "LP_capture": "Five auxiliary field readers capture existing bank bits on the SAME unchanged D4K2 LP reader edge.",
+    "core_capture": "146 kept per-bit async-reset flops capture at the EXISTING sw_q/se_q edge, using7 independent <=24-load reset leaves with exact original core reset age.",
+    "SID": "Original sid_q remains unchanged; no early SID comparison, no SIDcopies.",
+    "scope": "Actual output order matches measured consumer copy_bit ABI; no cfg/SU/reset consumer copies supplied by this header-only component."
+  },
+  "cost": {
+    "aux_LP_output_FFs": 10,
+    "aux_LP_counter_selector_reset_warm_FFs": 45,
+    "core_capture_FFs": 146,
+    "component_total_FFs": 201,
+    "LP_reader_reset_leaves": 5,
+    "core_capture_reset_leaves": 7,
+    "original_source_bank_storage_added_FFs": 0,
+    "extra_parent_forest_cost": "Must price exactly with final total parent leaf allocation; no free reset tree/405um wire credited."
+  },
+  "pending": [
+    "Root-reviewed actual LP source binding to both1088-bit stream banks and per-chunk valid bits; all extra rsi leaves same old reset age.",
+    "Existing core capture reset port leaf assignment/native phase/reach.",
+    "Header-producer-to-native-consumer equivalence/mutants and actual mapped retention/load census.",
+    "cfg_v2/SUwe25/SUaddr6/reset95 producer ownership remains a separate modeled cut."
+  ]
+}
