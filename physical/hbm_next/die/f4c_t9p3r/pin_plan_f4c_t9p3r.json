@@ -1,0 +1,767 @@
+{
+ "schema": "opentallas.hbm_next.pin_plan.v1",
+ "tag": "f4c_t9p3",
+ "rule": "owner 10-13 top-down pins; <= 6 pins/um on full faces; pin registers by default",
+ "hnx_rp4lp4": {
+  "outline_um": [
+   630.72,
+   2203.2
+  ],
+  "source": "physical/hbm_next/die/frame_d4g_copy/smh_tile_rp4lp_pins.tcl (claude/pl-smt-1018)",
+  "file": "physical/hbm_next/die/f4c_t9p3/hnx_rp4lp4_pins.tcl",
+  "faces": {
+   "N": {
+    "pins": 128,
+    "face_um": 630.72,
+    "span_um": 113.7,
+    "pins_per_um_face": 0.2,
+    "densest_10um": 17,
+    "densest_10um_rp4lp": 22,
+    "span_um_rp4lp": 82.6
+   },
+   "S": {
+    "pins": 227,
+    "face_um": 630.72,
+    "span_um": 183.3,
+    "pins_per_um_face": 0.36,
+    "densest_10um": 16,
+    "densest_10um_rp4lp": 21,
+    "span_um_rp4lp": 133.1
+   },
+   "W": {
+    "pins": 3705,
+    "face_um": 2203.2,
+    "span_um": 1422.5,
+    "pins_per_um_face": 1.68,
+    "densest_10um": 27,
+    "densest_10um_rp4lp": 37,
+    "span_um_rp4lp": 1032.0
+   },
+   "E": {
+    "pins": 3705,
+    "face_um": 2203.2,
+    "span_um": 1422.5,
+    "pins_per_um_face": 1.68,
+    "densest_10um": 27,
+    "densest_10um_rp4lp": 37,
+    "span_um_rp4lp": 1032.0
+   }
+  },
+  "clocks": {
+   "ck_n": {
+    "face": "N",
+    "at": [
+     275.448,
+     2203.2
+    ]
+   },
+   "ck_s": {
+    "face": "S",
+    "at": [
+     413.184,
+     0.0
+    ]
+   }
+  },
+  "note": "pin set unchanged (lane addressing internal); clock entries ck_n / ck_s keep their relative face position (beside the register mass of each landed region); pin_regs.json of rp4lp carries over"
+ },
+ "hnx_rp4a4": {
+  "outline_um": [
+   630.72,
+   2203.2
+  ],
+  "rule": "hnx_rp4lp4 set + ATT4 line-mask input (P-bit lane mask per KV line) on the N face next to gin; pending results/arch/hbm_next_1019/att4/geometry.json"
+ },
+ "parents": {
+  "sm_SW0": {
+   "E": {
+    "bits": 2831,
+    "face_um": 9374.4,
+    "bits_per_um_face": 0.3,
+    "links": 8,
+    "classes": {
+     "SM_HBM": 1132,
+     "SM_OUT": 270,
+     "SM_X": 1365,
+     "KV_DESC": 64
+    },
+    "span_um": 9314.6
+   },
+   "N": {
+    "bits": 819,
+    "face_um": 2630.9,
+    "bits_per_um_face": 0.31,
+    "links": 3,
+    "classes": {
+     "SM_X": 819
+    },
+    "span_um": 2020.4
+   }
+  },
+  "sm_SW1": {
+   "E": {
+    "bits": 2012,
+    "face_um": 9374.4,
+    "bits_per_um_face": 0.21,
+    "links": 5,
+    "classes": {
+     "SM_HBM": 1132,
+     "SM_OUT": 270,
+     "SM_X": 546,
+     "KV_DESC": 64
+    },
+    "span_um": 9314.6
+   },
+   "W": {
+    "bits": 819,
+    "face_um": 9374.4,
+    "bits_per_um_face": 0.09,
+    "links": 3,
+    "classes": {
+     "SM_X": 819
+    },
+    "span_um": 54.6
+   },
+   "N": {
+    "bits": 819,
+    "face_um": 2630.9,
+    "bits_per_um_face": 0.31,
+    "links": 3,
+    "classes": {
+     "SM_X": 819
+    },
+    "span_um": 2020.4
+   }
+  },
+  "sm_SW2": {
+   "E": {
+    "bits": 1466,
+    "face_um": 9374.4,
+    "bits_per_um_face": 0.16,
+    "links": 3,
+    "classes": {
+     "SM_HBM": 1132,
+     "SM_OUT": 270,
+     "KV_DESC": 64
+    },
+    "span_um": 9314.6
+   },
+   "W": {
+    "bits": 1365,
+    "face_um": 9374.4,
+    "bits_per_um_face": 0.15,
+    "links": 5,
+    "classes": {
+     "SM_X": 1365
+    },
+    "span_um": 109.2
+   },
+   "N": {
+    "bits": 819,
+    "face_um": 2630.9,
+    "bits_per_um_face": 0.31,
+    "links": 3,
+    "classes": {
+     "SM_X": 819
+    },
+    "span_um": 1911.0
+   }
+  },
+  "sm_SW3": {
+   "S": {
+    "bits": 1132,
+    "face_um": 2630.9,
+    "bits_per_um_face": 0.43,
+    "links": 1,
+    "classes": {
+     "SM_HBM": 1132
+    },
+    "span_um": 0.0
+   },
+   "N": {
+    "bits": 334,
+    "face_um": 2630.9,
+    "bits_per_um_face": 0.13,
+    "links": 2,
+    "classes": {
+     "SM_OUT": 270,
+     "KV_DESC": 64
+    },
+    "span_um": 16.7
+   },
+   "W": {
+    "bits": 2184,
+    "face_um": 9374.4,
+    "bits_per_um_face": 0.23,
+    "links": 8,
+    "classes": {
+     "SM_X": 2184
+    },
+    "span_um": 191.1
+   }
+  },
+  "sm_SW4": {
+   "S": {
+    "bits": 1132,
+    "face_um": 2630.9,
+    "bits_per_um_face": 0.43,
+    "links": 1,
+    "classes": {
+     "SM_HBM": 1132
+    },
+    "span_um": 0.0
+   },
+   "N": {
+    "bits": 334,
+    "face_um": 2630.9,
+    "bits_per_um_face": 0.13,
+    "links": 2,
+    "classes": {
+     "SM_OUT": 270,
+     "KV_DESC": 64
+    },
+    "span_um": 16.7
+   },
+   "E": {
+    "bits": 2184,
+    "face_um": 9374.4,
+    "bits_per_um_face": 0.23,
+    "links": 8,
+    "classes": {
+     "SM_X": 2184
+    },
+    "span_um": 191.1
+   }
+  },
+  "sm_SW5": {
+   "W": {
+    "bits": 1466,
+    "face_um": 9374.4,
+    "bits_per_um_face": 0.16,
+    "links": 3,
+    "classes": {
+     "SM_HBM": 1132,
+     "SM_OUT": 270,
+     "KV_DESC": 64
+    },
+    "span_um": 9314.6
+   },
+   "E": {
+    "bits": 1365,
+    "face_um": 9374.4,
+    "bits_per_um_face": 0.15,
+    "links": 5,
+    "classes": {
+     "SM_X": 1365
+    },
+    "span_um": 109.2
+   },
+   "N": {
+    "bits": 819,
+    "face_um": 2630.9,
+    "bits_per_um_face": 0.31,
+    "links": 3,
+    "classes": {
+     "SM_X": 819
+    },
+    "span_um": 1910.9
+   }
+  },
+  "sm_SW6": {
+   "W": {
+    "bits": 2012,
+    "face_um": 9374.4,
+    "bits_per_um_face": 0.21,
+    "links": 5,
+    "classes": {
+     "SM_HBM": 1132,
+     "SM_OUT": 270,
+     "SM_X": 546,
+     "KV_DESC": 64
+    },
+    "span_um": 9314.6
+   },
+   "E": {
+    "bits": 819,
+    "face_um": 9374.4,
+    "bits_per_um_face": 0.09,
+    "links": 3,
+    "classes": {
+     "SM_X": 819
+    },
+    "span_um": 54.6
+   },
+   "N": {
+    "bits": 819,
+    "face_um": 2630.9,
+    "bits_per_um_face": 0.31,
+    "links": 3,
+    "classes": {
+     "SM_X": 819
+    },
+    "span_um": 2020.4
+   }
+  },
+  "sm_SW7": {
+   "W": {
+    "bits": 2831,
+    "face_um": 9374.4,
+    "bits_per_um_face": 0.3,
+    "links": 8,
+    "classes": {
+     "SM_HBM": 1132,
+     "SM_OUT": 270,
+     "SM_X": 1365,
+     "KV_DESC": 64
+    },
+    "span_um": 9314.6
+   },
+   "N": {
+    "bits": 819,
+    "face_um": 2630.9,
+    "bits_per_um_face": 0.31,
+    "links": 3,
+    "classes": {
+     "SM_X": 819
+    },
+    "span_um": 2020.4
+   }
+  },
+  "sm_NW0": {
+   "E": {
+    "bits": 2831,
+    "face_um": 9374.4,
+    "bits_per_um_face": 0.3,
+    "links": 8,
+    "classes": {
+     "SM_OUT": 270,
+     "SM_X": 1365,
+     "KV_DESC": 64,
+     "SM_HBM": 1132
+    },
+    "span_um": 9304.3
+   },
+   "S": {
+    "bits": 819,
+    "face_um": 2630.9,
+    "bits_per_um_face": 0.31,
+    "links": 3,
+    "classes": {
+     "SM_X": 819
+    },
+    "span_um": 2002.0
+   }
+  },
+  "sm_NW1": {
+   "E": {
+    "bits": 2012,
+    "face_um": 9374.4,
+    "bits_per_um_face": 0.21,
+    "links": 5,
+    "classes": {
+     "SM_OUT": 270,
+     "SM_X": 546,
+     "KV_DESC": 64,
+     "SM_HBM": 1132
+    },
+    "span_um": 9304.3
+   },
+   "W": {
+    "bits": 819,
+    "face_um": 9374.4,
+    "bits_per_um_face": 0.09,
+    "links": 3,
+    "classes": {
+     "SM_X": 819
+    },
+    "span_um": 54.6
+   },
+   "S": {
+    "bits": 819,
+    "face_um": 2630.9,
+    "bits_per_um_face": 0.31,
+    "links": 3,
+    "classes": {
+     "SM_X": 819
+    },
+    "span_um": 2002.1
+   }
+  },
+  "sm_NW2": {
+   "E": {
+    "bits": 1466,
+    "face_um": 9374.4,
+    "bits_per_um_face": 0.16,
+    "links": 3,
+    "classes": {
+     "SM_OUT": 270,
+     "KV_DESC": 64,
+     "SM_HBM": 1132
+    },
+    "span_um": 9304.3
+   },
+   "W": {
+    "bits": 1365,
+    "face_um": 9374.4,
+    "bits_per_um_face": 0.15,
+    "links": 5,
+    "classes": {
+     "SM_X": 1365
+    },
+    "span_um": 109.2
+   },
+   "S": {
+    "bits": 819,
+    "face_um": 2630.9,
+    "bits_per_um_face": 0.31,
+    "links": 3,
+    "classes": {
+     "SM_X": 819
+    },
+    "span_um": 1929.4
+   }
+  },
+  "sm_NW3": {
+   "N": {
+    "bits": 1132,
+    "face_um": 2630.9,
+    "bits_per_um_face": 0.43,
+    "links": 1,
+    "classes": {
+     "SM_HBM": 1132
+    },
+    "span_um": 0.0
+   },
+   "S": {
+    "bits": 334,
+    "face_um": 2630.9,
+    "bits_per_um_face": 0.13,
+    "links": 2,
+    "classes": {
+     "SM_OUT": 270,
+     "KV_DESC": 64
+    },
+    "span_um": 16.7
+   },
+   "W": {
+    "bits": 2184,
+    "face_um": 9374.4,
+    "bits_per_um_face": 0.23,
+    "links": 8,
+    "classes": {
+     "SM_X": 2184
+    },
+    "span_um": 191.1
+   }
+  },
+  "sm_NW4": {
+   "N": {
+    "bits": 1132,
+    "face_um": 2630.9,
+    "bits_per_um_face": 0.43,
+    "links": 1,
+    "classes": {
+     "SM_HBM": 1132
+    },
+    "span_um": 0.0
+   },
+   "S": {
+    "bits": 334,
+    "face_um": 2630.9,
+    "bits_per_um_face": 0.13,
+    "links": 2,
+    "classes": {
+     "SM_OUT": 270,
+     "KV_DESC": 64
+    },
+    "span_um": 16.7
+   },
+   "E": {
+    "bits": 2184,
+    "face_um": 9374.4,
+    "bits_per_um_face": 0.23,
+    "links": 8,
+    "classes": {
+     "SM_X": 2184
+    },
+    "span_um": 191.1
+   }
+  },
+  "sm_NW5": {
+   "W": {
+    "bits": 1466,
+    "face_um": 9374.4,
+    "bits_per_um_face": 0.16,
+    "links": 3,
+    "classes": {
+     "SM_OUT": 270,
+     "KV_DESC": 64,
+     "SM_HBM": 1132
+    },
+    "span_um": 9304.3
+   },
+   "E": {
+    "bits": 1365,
+    "face_um": 9374.4,
+    "bits_per_um_face": 0.15,
+    "links": 5,
+    "classes": {
+     "SM_X": 1365
+    },
+    "span_um": 109.2
+   },
+   "S": {
+    "bits": 819,
+    "face_um": 2630.9,
+    "bits_per_um_face": 0.31,
+    "links": 3,
+    "classes": {
+     "SM_X": 819
+    },
+    "span_um": 1929.3
+   }
+  },
+  "sm_NW6": {
+   "W": {
+    "bits": 2012,
+    "face_um": 9374.4,
+    "bits_per_um_face": 0.21,
+    "links": 5,
+    "classes": {
+     "SM_OUT": 270,
+     "SM_X": 546,
+     "KV_DESC": 64,
+     "SM_HBM": 1132
+    },
+    "span_um": 9304.3
+   },
+   "E": {
+    "bits": 819,
+    "face_um": 9374.4,
+    "bits_per_um_face": 0.09,
+    "links": 3,
+    "classes": {
+     "SM_X": 819
+    },
+    "span_um": 54.6
+   },
+   "S": {
+    "bits": 819,
+    "face_um": 2630.9,
+    "bits_per_um_face": 0.31,
+    "links": 3,
+    "classes": {
+     "SM_X": 819
+    },
+    "span_um": 2002.0
+   }
+  },
+  "sm_NW7": {
+   "W": {
+    "bits": 2831,
+    "face_um": 9374.4,
+    "bits_per_um_face": 0.3,
+    "links": 8,
+    "classes": {
+     "SM_OUT": 270,
+     "SM_X": 1365,
+     "KV_DESC": 64,
+     "SM_HBM": 1132
+    },
+    "span_um": 9304.3
+   },
+   "S": {
+    "bits": 819,
+    "face_um": 2630.9,
+    "bits_per_um_face": 0.31,
+    "links": 3,
+    "classes": {
+     "SM_X": 819
+    },
+    "span_um": 2002.1
+   }
+  },
+  "coll_SW": {
+   "S": {
+    "bits": 3330,
+    "face_um": 1080.0,
+    "bits_per_um_face": 3.08,
+    "links": 6,
+    "classes": {
+     "COLL_VM": 3330
+    },
+    "span_um": 971.9
+   },
+   "W": {
+    "bits": 5188,
+    "face_um": 880.0,
+    "bits_per_um_face": 5.9,
+    "links": 5,
+    "classes": {
+     "COLL_VM": 2740,
+     "COLL_EP": 2448
+    },
+    "span_um": 791.0
+   },
+   "E": {
+    "bits": 1652,
+    "face_um": 880.0,
+    "bits_per_um_face": 1.88,
+    "links": 2,
+    "classes": {
+     "COLL_RING": 1652
+    },
+    "span_um": 82.6
+   },
+   "N": {
+    "bits": 1652,
+    "face_um": 1080.0,
+    "bits_per_um_face": 1.53,
+    "links": 2,
+    "classes": {
+     "COLL_RING": 1652
+    },
+    "span_um": 82.6
+   }
+  },
+  "coll_NW": {
+   "N": {
+    "bits": 3330,
+    "face_um": 1080.0,
+    "bits_per_um_face": 3.08,
+    "links": 6,
+    "classes": {
+     "COLL_VM": 3330
+    },
+    "span_um": 990.2
+   },
+   "W": {
+    "bits": 3964,
+    "face_um": 790.0,
+    "bits_per_um_face": 5.02,
+    "links": 4,
+    "classes": {
+     "COLL_EP": 1224,
+     "COLL_VM": 2740
+    },
+    "span_um": 622.2
+   },
+   "E": {
+    "bits": 1652,
+    "face_um": 790.0,
+    "bits_per_um_face": 2.09,
+    "links": 2,
+    "classes": {
+     "COLL_RING": 1652
+    },
+    "span_um": 82.6
+   },
+   "S": {
+    "bits": 1652,
+    "face_um": 1080.0,
+    "bits_per_um_face": 1.53,
+    "links": 2,
+    "classes": {
+     "COLL_RING": 1652
+    },
+    "span_um": 82.6
+   }
+  },
+  "coll_SE": {
+   "S": {
+    "bits": 3885,
+    "face_um": 1080.0,
+    "bits_per_um_face": 3.6,
+    "links": 7,
+    "classes": {
+     "COLL_VM": 3885
+    },
+    "span_um": 1024.5
+   },
+   "E": {
+    "bits": 3409,
+    "face_um": 790.0,
+    "bits_per_um_face": 4.32,
+    "links": 3,
+    "classes": {
+     "COLL_VM": 2185,
+     "COLL_EP": 1224
+    },
+    "span_um": 675.9
+   },
+   "W": {
+    "bits": 1652,
+    "face_um": 790.0,
+    "bits_per_um_face": 2.09,
+    "links": 2,
+    "classes": {
+     "COLL_RING": 1652
+    },
+    "span_um": 82.6
+   },
+   "N": {
+    "bits": 1652,
+    "face_um": 1080.0,
+    "bits_per_um_face": 1.53,
+    "links": 2,
+    "classes": {
+     "COLL_RING": 1652
+    },
+    "span_um": 82.6
+   }
+  },
+  "coll_NE": {
+   "N": {
+    "bits": 3885,
+    "face_um": 1080.0,
+    "bits_per_um_face": 3.6,
+    "links": 7,
+    "classes": {
+     "COLL_VM": 3885
+    },
+    "span_um": 1024.5
+   },
+   "E": {
+    "bits": 3409,
+    "face_um": 790.0,
+    "bits_per_um_face": 4.32,
+    "links": 3,
+    "classes": {
+     "COLL_EP": 1224,
+     "COLL_VM": 2185
+    },
+    "span_um": 622.2
+   },
+   "S": {
+    "bits": 1652,
+    "face_um": 1080.0,
+    "bits_per_um_face": 1.53,
+    "links": 2,
+    "classes": {
+     "COLL_RING": 1652
+    },
+    "span_um": 82.6
+   },
+   "W": {
+    "bits": 1652,
+    "face_um": 790.0,
+    "bits_per_um_face": 2.09,
+    "links": 2,
+    "classes": {
+     "COLL_RING": 1652
+    },
+    "span_um": 82.6
+   }
+  }
+ },
+ "worst_bits_per_um_by_kind_face": {
+  "sm_E": 0.3,
+  "sm_N": 0.43,
+  "sm_W": 0.3,
+  "sm_S": 0.43,
+  "coll_S": 3.6,
+  "coll_W": 5.9,
+  "coll_E": 4.32,
+  "coll_N": 3.6
+ }
+}

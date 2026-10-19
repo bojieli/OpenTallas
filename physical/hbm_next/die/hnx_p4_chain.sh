@@ -19,7 +19,7 @@ if [ "${FROM:-S4}" = S4 ]; then
 step S4 root_sites_pins_stations
 otr 8 1 python3 tools/hbm_die_v16/d4g_root_sites.py --region-map $RM --manifest $CA/manifest.json --out $B/hnx_root_sites.json > $A/root_sites.otrun 2>&1 || { echo S4_ROOT_FAIL; tail $A/root_sites.otrun; exit 14; }
 otr 8 1 python3 tools/hbm_die_v16/case_pin_centroids.py $CA --out $B/hnx_pins.json.gz > $A/pins.otrun 2>&1 || { echo S4_PINS_FAIL; tail $A/pins.otrun; exit 14; }
-otr 32 16 python3 tools/hbm_die_v15/die_relay_stations.py $CA --contract $PRE --reach 405 --route-grid 10 --jobs 16 \
+otr 32 16 python3 tools/hbm_die_v15/die_relay_stations.py $CA --contract $PRE --reach ${REACH:-405} --route-grid 10 --jobs 16 \
   --root-keepouts $B/hnx_root_sites.json --out $B/hnx_stations_405.json > $A/stations.otrun 2>&1 || { echo S4_STATIONS_FAIL; tail -8 $A/stations.otrun; exit 14; }
 tail -4 $A/stations.otrun
 fi
@@ -73,7 +73,11 @@ $OTRUN --mem 64 --threads 2 --dir $B -- bash $B/hnx_case_relay.sh $TAG $B/views_
 grep -q GEN_OK $A/gen.otrun || exit 17
 scp -q $H:$B/hnx_case_${TAG}_land/layout.png $A/hnx_case_${TAG}_land_layout.png
 step S8 grt
-$OTRUN --mem 160 --threads 16 --dir $B/hnx_case_${TAG}_land -- env OT_ABS_PIN_WINDOW_UM=3 CPUS=16 MEMG=160 bash $B/hnx_case_${TAG}_land/run.sh > $A/grt.otrun 2>&1; echo "GRT rc=$? $(date -Is)"
+if [ -n "${S8_SKIP_SHORT_UM:-}" ]; then   # L2H-P3 10-19: die-scale repeater step (skip_short_um; S8 f4c_t9p3 SIGSEGV at 18.7 M nets)
+  scp -q $W/tools/die_repeaters/die_repeaters.tcl $H:$B/l2h_die_repeaters_$TAG.tcl || exit 18
+  ssh $H "cd $B/hnx_case_${TAG}_land && rm -f die_repeaters.tcl && cp $B/l2h_die_repeaters_$TAG.tcl die_repeaters.tcl && sed 's/repair_args {-buffer_gain 4.0}/repair_args {-buffer_gain 4.0} skip_short_um $S8_SKIP_SHORT_UM/' run.tcl > run.tcl.new && rm -f run.tcl && mv run.tcl.new run.tcl && grep -c skip_short_um run.tcl" || exit 18
+fi
+$OTRUN ${S8_PRIO:+--priority $S8_PRIO} --mem ${S8_MEM:-160} --threads 16 --dir $B/hnx_case_${TAG}_land -- env OT_ABS_PIN_WINDOW_UM=3 CPUS=16 MEMG=${S8_MEM:-160} bash $B/hnx_case_${TAG}_land/run.sh > $A/grt.otrun 2>&1; echo "GRT rc=$? $(date -Is)"
 ssh $H "cd $B/hnx_case_${TAG}_land/out; cat run.exit; grep -E 'OT_DIE_REP|overflow|Total wire|tns|wns' run.log | tail -15; cat neighbour_skew_gate.log; tail -5 hold_budget.log" > $A/grt_summary.txt 2>&1
 cat $A/grt_summary.txt
 echo HNX_P4_CHAIN_DONE TAG=$TAG

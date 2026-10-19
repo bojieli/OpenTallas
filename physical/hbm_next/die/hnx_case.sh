@@ -13,6 +13,8 @@ D=physical/hbm_next/die/$TAG; PL=results/arch/hbm_next_1019/die/plan/$TAG
 SM=wbk_SW=wbk_SW,wbk_NW=wbk_NW,sfup_SW=sfup_SW,sfup_SE=sfup_SE,sfup_NW=sfup_NW,sfup_NE=sfup_NE,refcfg_SW=refcfg_SW,refcfg_NW=refcfg_NW
 # step 5 (10-19): score quarters into their per-quadrant IDX-corner slots (placed before relay lane rows; tags >= f4c_t8)
 grep -q "\"idxs_SW\"" $D/grants_hnx_$TAG.json && SM=$SM,hb_idx__s_SW=idxs_SW,hb_idx__s_SE=idxs_SE,hb_idx__s_NW=idxs_NW,hb_idx__s_NE=idxs_NE
+# L2H-P3 10-19: HC bank tiles hcb_Qk into their explicit racetrack grant slots hcbk_Qk (tags with hcbk_* slots, e.g. f4c_t9p3r)
+grep -q "\"hcbk_SW0\"" $D/grants_hnx_$TAG.json && for q in SW SE NW NE; do for k in 0 1 2 3 4 5 6 7; do SM=$SM,hcb_$q$k=hcbk_$q$k; done; done
 OT_ABS_PIN_WINDOW_UM=3 OT_RESET_GATE=diag PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 MPLBACKEND=Agg /usr/bin/time -v python3 tools/hbm_die_v15/die_case_v16.py \
   --views $R/views --out $R/$CASE --contract $R/views/contract.json --plan $PL/compact.P.json --lanes $PL/lanes.json \
   --grants $D/grants_hnx_$TAG.json --compact-pins --max-pin-density 6 --die-repeaters --max-wire-um 405 --hold-budget die --paths 2000000 \
