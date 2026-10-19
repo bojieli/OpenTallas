@@ -53,10 +53,55 @@ class NetlistWalk(unittest.TestCase):
 
     def test_age_fields(self):
         r = dict(st={1}, lands={('rly_x_0',)})
-        self.assertEqual(N.age_fields(r, {'rly_x_0': 2})['age_edges'], 2)          # n = 1 landed lane: E = K
+        self.assertIsNone(N.age_fields(r, {'rly_x_0': 2})['age_edges'])  # K alone is not an age
         r = dict(st={5}, lands={('rly_x_4',)})
         self.assertIsNone(N.age_fields(r, {'rly_x_4': 3})['age_edges'])            # n > 1: needs the land plan
         self.assertEqual(N.age_fields(dict(st={3}, lands={()}), {})['age_edges'], 3)
+
+    def test_shared_age_source_on_compute_seam(self):
+        import record_bundles as RB
+        f = ROOT / 'results/rtl/qwen_layer_tput_1018/fixtures/dv2f18dh2_seam'
+        metadata = N.export_lanes(f / 'fwd_lanes.json')
+        _, _, rows, problems = RB.rows_from_netlist(f / 'die.v', f / 'fwd_lanes.json')
+        self.assertEqual(problems, [])
+        self.assertTrue(any(row['n'] == 1 for row in rows.values()))
+        self.assertTrue(any(row['n'] > 1 for row in rows.values()))
+        lanes = {r['bid']: r for r in metadata.values()}
+        for bid, row in rows.items():
+            if row.get('E') is None:
+                continue
+            land = lanes[bid]['landing']
+            record = dict(st={row['n']}, lands={(land,)})
+            self.assertEqual(N.age_fields(record, {land: row['K']}, metadata)['age_edges'], RB.cycles(row), bid)
+            self.assertIsNone(N.age_fields(record, {land: (row['K'] + 1) % 8}, metadata)['age_edges'])
+
+    def test_kv_and_compute_landing_walk(self):
+        for master, design in [('qfd_landh0_1', 'qwen_compute'), ('qkd_landsh0_1', 'qwen_kv')]:
+            rtl = RTL + f"module {master} (input wire ck, input wire a, output wire b, input wire k0, k1, k2, tie_hi, tie_lo); endmodule"
+            die = f"""module die();
+wire n_clk_core_c, n_d, n_v, n_out, hi, lo;
+src s (.ck(n_clk_core_c), .v(n_d));
+{master} land (.ck(n_clk_core_c), .a(n_d), .b(n_out), .k0(lo), .k1(hi), .k2(lo), .tie_hi(hi), .tie_lo(lo));
+dst d (.ck(n_clk_core_c), .v(n_out));
+endmodule"""
+            with tempfile.TemporaryDirectory() as t:
+                Path(t, 'm.sv').write_text(rtl)
+                Path(t, 'die.v').write_text(die)
+                pb = dict(masters={m: dict(rtl=f'{t}/m.sv', kind='real') for m in ('src', 'dst', master)}, defines=[])
+                doc = N.export(f'{t}/die.v', pb, design, 'HEAD', [], [t], 'unit',
+                               land_e={'land': dict(E=1, K=2, cal=1, n=1)})
+            self.assertEqual(doc['problem_count'], 0, doc['problems'])
+            self.assertEqual(len(doc['buses']), 1)
+            self.assertEqual(doc['buses'][0]['age_edges'], 2)
+
+    def test_lane_calendar_required_and_checked(self):
+        for row in [dict(bid='x', landing='land', E=3, K=1),
+                    dict(bid='x', landing='land', E=3, K=1, cal=0)]:
+            with tempfile.TemporaryDirectory() as t:
+                path = Path(t, 'lanes.json')
+                path.write_text(json.dumps(dict(lanes=[row])))
+                with self.assertRaises(ValueError):
+                    N.export_lanes(path)
 
 
 def table(design, buses):
