@@ -10,6 +10,11 @@
 #    m11 m12 m13 hnx N = 2: query seen clear only at record start / link clear stripped / selector row clear stripped -> FAIL
 #    mpitch      hnx N = 2, pitch = row II - 1 (two rows collide)       -> FAIL (calendar collision fault)
 #    mstride     hnx N = 2, operand row strides 0 (d4g addressing)      -> FAIL (row 1 scores row 0's query)
+#  topk   : IDX.TOPK rows on the ACTUAL SW VM slice (hfd_hgi_vms_static_SW), route top-6 production shape (n 384, k 6):
+#    t_hnx_P{2,3,4,6}  hnx ot_hnx_idx_topk_rows_static, vectors P = 2,3,4,6 (records m = 1 and m = P + 12 random) -> PASS;
+#                      cycles(N) = measured done edge - go edge + 1 of the m = 1 / m = P production records
+#    t_d4g_P6          d4g ot_hbm_idx_topk_static (die-bound today) on the same records/golden -> PASS (same VM image)
+#    t_m1 t_m2 t_m3    hnx MUT 1 heap NOT reset per row / 2 row stride dropped / 3 lane insert rate violated -> FAIL
 set -u
 B=$(pwd); O=$(realpath -m "${1:?OUT}"); ST=${2:?STAGE}; mkdir -p "$O"
 export PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH
@@ -35,6 +40,45 @@ COMMON=($X/ot_hbm_idx_vm_static.sv $X/hidx_meta_w25_d123_r0.sv rtl/hdc/ot_hdc_de
 VLT=rtl/test/hbm_idx_static/parent.vlt
 sha256sum "${D4G[@]}" "${HNX[@]}" "${COMMON[@]}" $VLT tools/hbm_next/hnx_idx_rows_calendar.py tools/hbm_next/hnx_idx_rows_vectors.py \
   tools/hbm_idx_static_calendar.py tools/hbm_next/hnx_idx_bench.sh > "$O/sources_$ST.sha256"
+if [ "$ST" = topk ]; then
+  VS=rtl/hbm_accel/generic/vm/static
+  TSRC=($X/ot_hbm_idx_topk_static.sv rtl/hbm_next/idx/ot_hnx_idx_topk_rows_static.sv rtl/hbm_accel/generic/idx/ot_hgi_idx_tk2.sv
+   $VS/hfd_hgi_vms_static.sv $VS/ot_vms_slice_static.sv $VS/ot_vms_hub_static.sv $VS/ot_vms_bank_static.sv $VS/ot_vms_rstop_static.sv
+   $VS/ot_vms_rcl_static.sv $VS/ot_vms_status_static.sv physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v
+   rtl/hbm_next/idx/tb/tb_hnx_idx_topk_rows.sv)
+  sha256sum "${TSRC[@]}" tools/hbm_idx_topk_rows_vectors.py tools/hbm_idx_topk_static_vectors.py > $O/sources_topk_rtl.sha256
+  for P in 2 3 4 6; do python3 tools/hbm_idx_topk_rows_vectors.py $O/tvec_rows_P$P $P 0 12 rows > $O/tvec_rows_P$P.log 2>&1 || V "tvec P$P FAILED"; done
+  python3 tools/hbm_idx_topk_rows_vectors.py $O/tvec_static_P6 6 0 12 static > $O/tvec_static_P6.log 2>&1 || V "tvec static FAILED"
+  cmp -s $O/tvec_rows_P6/chk.mem $O/tvec_static_P6/chk.mem && V "golden VM image rows P6 == static P6 (same records, same expected sectors)" || V "golden images DIFFER"
+  tb(){ # tag engine mut
+    local d=$O/obj_$1; rm -rf $d
+    verilator --binary --timing -j 4 -Wno-fatal -Wno-lint -Wno-style --top-module tb_hnx_idx_topk_rows -GENGINE=$2 -GMUT=$3 \
+      -Mdir $d -o V$1 "${TSRC[@]}" > $O/build_$1.log 2>&1 || { sleep 5; verilator --binary --timing -j 1 -Wno-fatal -Wno-lint -Wno-style \
+      --top-module tb_hnx_idx_topk_rows -GENGINE=$2 -GMUT=$3 -Mdir $d -o V$1 "${TSRC[@]}" > $O/build_$1.log 2>&1; }
+    V "build $1 bin=$( [ -x $d/V$1 ] && echo ok || echo MISSING)"
+  }
+  trun(){ # tag bin vecdir want
+    local od=$O/run_$1; rm -rf $od; cp -r $3 $od
+    ( cd $od && $O/obj_$2/V$2 > run.log 2>&1; echo RUN_RC=$? >> run.log )
+    local got=FAIL; grep -q 'RUN_RC=0' $od/run.log && grep -q 'errors0' $od/run.log && got=PASS
+    local ok=OK; [ "$got" = "$4" ] || ok=UNEXPECTED
+    V "$1 [$ok want $4 got $got]: $(grep -h 'IDX_TOPK_ROWS ENGINE\|MISMATCH' $od/run.log | head -3 | tr '\n' ' ')"
+    python3 - $od <<'PYC' | tee -a $O/verdict_$ST.txt
+import json,sys,re
+od=sys.argv[1]; rows=json.load(open(od+'/rows.json')); ends=[int(x) for x in re.findall(r'END_EDGE (\d+)',open(od+'/run.log').read())]
+out=[]
+for i,r in enumerate(rows[:6]):
+    meas=ends[i]-r['G']+1 if i<len(ends) else None
+    out.append(f"m{r['m']}/a_str{r['a_str']}/r{r['has_r']}: compiled {r['end']-r['G']+1} measured {meas}")
+print('   cycles '+od.split('/')[-1]+': '+'; '.join(out))
+PYC
+  }
+  tb hnx_m0 1 0 & tb hnx_m1 1 1 & tb hnx_m2 1 2 & tb hnx_m3 1 3 & tb d4g_m0 0 0 & wait
+  for P in 2 3 4 6; do trun t_hnx_P$P hnx_m0 $O/tvec_rows_P$P PASS & done
+  trun t_d4g_P6 d4g_m0 $O/tvec_static_P6 PASS &
+  trun t_m1 hnx_m1 $O/tvec_rows_P6 FAIL & trun t_m2 hnx_m2 $O/tvec_rows_P6 FAIL & trun t_m3 hnx_m3 $O/tvec_rows_P6 FAIL &
+  wait; rm -rf $O/obj_*; V done; exit 0
+fi
 if [ "$ST" = lint ]; then
   verilator --lint-only --timing -Wno-fatal -Wno-lint -Wno-style --top-module tb_hnx_idx_rows "${HNX[@]}" "${COMMON[@]}" > $O/lint_hnx.log 2>&1
   V "lint hnx rc=$? errors=$(grep -c '%Error' $O/lint_hnx.log)"
