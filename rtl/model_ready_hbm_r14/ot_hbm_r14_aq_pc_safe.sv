@@ -55,6 +55,7 @@ module ot_hbm_r14_aq_pc_safe #(
   wire [255:0] qm;
   wire [WQW-1:0] qwp = WQW'(q_rp + q_n);
   wire qpush=wr_v&&wr_r;
+  wire[31:0]bank_col;
   // Keep the current head in flops and prefetch its successor. On a pop,
   // request the following successor while capturing the SRAM's old output.
   // SRAM clk->q therefore ends at the head flops, outside column eligibility.
@@ -94,7 +95,7 @@ module ot_hbm_r14_aq_pc_safe #(
   // 27 timer flops and seven count bits rather than a thousand-sink reset net.
   for(genvar b=0;b<32;b=b+1)begin:BCOUNT
     always @(posedge clk or negedge reset_regions[b])if(!reset_regions[b])bank_n[b]<=0;
-    else case({qpush&&wr_bank==b,wr_ok&&hb==b})
+    else case({qpush&&wr_bank==b,bank_col[b]})
       2'b10:bank_n[b]<=bank_n[b]+1'b1;
       2'b01:bank_n[b]<=bank_n[b]-1'b1;
       default:bank_n[b]<=bank_n[b];
@@ -205,8 +206,8 @@ module ot_hbm_r14_aq_pc_safe #(
     wire act_e = row_local[b/16][21] && c_oh[b];
     wire pre_e = row_local[b/16][20] && c_oh[b];
     wire rfp_e = row_local[b/16][19] && c_oh[b];
-    wire rd_e = hit_rd && hb_oh[b];
-    wire wr_e = hit_wr && hb_oh[b];
+    wire rd_e = bank_col[b] && head_local[b/8][0];
+    wire wr_e = bank_col[b] && !head_local[b/8][0];
     always @(posedge clk or negedge reset_regions[b])
       if (!reset_regions[b]) begin rcd <= 0; ras <= 0; aok <= 0; rtp <= 0; wrr <= 0; end
       else begin
@@ -298,6 +299,11 @@ module ot_hbm_r14_aq_pc_safe #(
   wire [31:0] head_timer_ready;
   for(genvar b=0;b<32;b=b+1)begin:HEAD_TIMER
     assign head_timer_ready[b]=head_local[b/8][0]?rcd_z[b]:rcdw_z[b];
+    // The one-hot bank owns its eligibility; the global column result no
+    // longer broadcasts into all32 local timer/count update cones.
+    assign bank_col[b]=q_ne&&hb_oh[b]&&open[b]&&head_timer_ready[b]&&
+      !blk[b]&&!pre_fl[b]&&head_row_match[b]&&ccdl_z[b%4]&&
+      (head_local[b/8][0]?(wtr_c==0):(rtw_c==0));
   end
   wire head_bank_rdy = q_ne && |(hb_oh & open & head_timer_ready & ~blk & ~pre_fl & head_row_match);
   wire wr_ok = head_bank_rdy && ccdl_z[hb[1:0]] && (hr ? (wtr_c == 0) : (rtw_c == 0));
