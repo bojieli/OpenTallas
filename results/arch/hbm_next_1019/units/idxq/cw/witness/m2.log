@@ -8,7 +8,7 @@ CWBAD cyc299 xor 08a00000000000000000000000000
 CWBAD cyc300 xor 08b00000000000000000000000000
 CWBAD cyc301 xor 08c00000000000000000000000000
 IDXN_CW rows6 pitch233 phase0 len1315 mut2 errors2159 active_edges2304 row_starts6 dones1 bypass_edges0 fault_cw0 0 fault_cw1 0
-[27930000] %Fatal: tb_hnx_idxn_cw.sv:61: Assertion failed in tb_hnx_idxn_cw: IDXN_CW FAIL
-%Error: rtl/hbm_next/idxn/tb/tb_hnx_idxn_cw.sv:61: Verilog $stop
+[27930000] %Fatal: tb_hnx_idxn_cw.sv:65: Assertion failed in tb_hnx_idxn_cw: IDXN_CW FAIL
+%Error: rtl/hbm_next/idxn/tb/tb_hnx_idxn_cw.sv:65: Verilog $stop
 Aborting...
 RUN_RC=1

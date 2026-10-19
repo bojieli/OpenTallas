@@ -7,14 +7,15 @@
 // +PHASE delays the start (TDM phase of every stream); the bench counts the CW=1 bypass edges (coverage).
 // Mutants (forced on the CW=1 copy): +MUT=1 ring bypass off (a row fetched on the last edge of the previous row is read
 // from the stale ring), +MUT=2 ring slot pinned to 0 (odd rows overwrite even rows), +MUT=3 head row 0 not shared (row 0
-// read from the ring).
+// read from the ring); CW=2 (no-bypass 3-row ring, compared to CW=0 too): +MUT=4 ring write slot pinned 0, +MUT=5 shared
+// head rows 0-1 dropped, +MUT=6 ring read slot pinned 0.
 module tb_hnx_idxn_cw;
  reg clk=0;always #5 clk=~clk;
  reg rst_n=0,we=0,start=0;reg[7:0]addr=0;reg[255:0]data=0;reg[11:0]len=0,pitch=232;reg[4:0]nrows=1;
  integer mutation=0,cyc=0,errors=0,edges=0,starts=0,dones=0,faults0=0,faults1=0,busy=0,phase=0,byp_edges=0;
  localparam integer OW=1+1+1+7+1+5+1+8+5+1+8+16+8+32+1+1+5+1+4+5+1+1;
- wire[OW-1:0]o0,o1;
- for(genvar c=0;c<2;c=c+1)begin:g
+ wire[OW-1:0]o0,o1,o2;
+ for(genvar c=0;c<3;c=c+1)begin:g
   wire rs,ow,oq,qe,kv,pv,lc,lf,le,dn,ft;wire[6:0]oi;wire[4:0]qh,kr,lr,er;wire[7:0]ki,pi;wire[3:0]eg;
   wire[15:0]sop;wire[7:0]sps;wire[31:0]sad;
   ot_hnx_idxn_calendar #(.K(8),.S(4),.CW(c)) cal(.clk(clk),.clk_mem(clk),.rst_n(rst_n),.program_we(we),.program_addr(addr),
@@ -24,7 +25,7 @@ module tb_hnx_idxn_cw;
    .done(dn),.fault(ft));
   wire[OW-1:0]o={rs,ow,oq,oi,qe,qh,kv,ki,kr,pv,pi,sop,sps,sad,lc,lf,lr,le,eg,er,dn,ft};
  end
- assign o0=g[0].o;assign o1=g[1].o;
+ assign o0=g[0].o;assign o1=g[1].o;assign o2=g[2].o;
  for(genvar k=0;k<8;k=k+1)begin:gm
   // coverage: CW=1 bypass edges (a row landing on the edge that reads its first word), from the regs, not the forced wire
   always @(negedge clk)if(rst_n&&g[1].cal.gs[k].fp&&g[1].cal.gs[k].pc[11:3]==g[1].cal.gs[k].f-9'd1)byp_edges++;
@@ -32,13 +33,16 @@ module tb_hnx_idxn_cw;
    #1;
    if(mutation==1)force g[1].cal.gs[k].gring.byp=1'b0;
    if(mutation==2)force g[1].cal.gs[k].fslot=2'd0;
+   if(mutation==4)force g[2].cal.gs[k].gring3.wl=2'd0;
+   if(mutation==6)force g[2].cal.gs[k].gring3.rs=2'd0;
   end
  end
- initial begin #1; if(mutation==3)force g[1].cal.head=1024'd0; end
+ initial begin #1; if(mutation==3)force g[1].cal.head=1024'd0; if(mutation==5)force g[2].cal.head=1024'd0; end
  always @(negedge clk)if(rst_n)begin
   cyc++;
   if(o0!==o1)begin errors++;if(errors<10)$display("CWBAD cyc%0d xor %h",cyc,o0^o1);end
-  if(|o0)edges++; if(g[0].rs)starts++; if(g[0].dn)dones++; if(g[0].ft)faults0=1; if(g[1].ft)faults1=1;
+  if(o0!==o2)begin errors++;if(errors<10)$display("CW2BAD cyc%0d xor %h",cyc,o0^o2);end
+  if(|o0)edges++; if(g[0].rs)starts++; if(g[0].dn)dones++; if(g[0].ft)faults0=1; if(g[1].ft||g[2].ft)faults1=1;
  end
  reg[31:0]prog[0:2047];integer rows=1,plen=0,rnd=0,seed=1;
  initial begin

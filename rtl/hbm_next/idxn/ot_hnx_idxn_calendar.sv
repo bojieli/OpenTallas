@@ -26,6 +26,11 @@
 // those 8 edges), into ring slot f mod 2 (row f - 2: finished); a fetch on the last edge of row f - 1 lands on the
 // edge that reads row f's first word, which then reads the SRAM output word directly (bypass). Same instruction on
 // every edge as CW=0 (4,352 flops instead of 9,216; no 1,024-b head copy at launch). Only the read port slots change.
+// CW=2 NO-BYPASS COMPACT WINDOWS (HBM-NEXT-UNITS IDXQ 2026-10-19; qctl gate 4: CW=1's landing bypass put the frame SRAM
+// read data (clk_mem) combinationally in front of the stream instruction register, cross-clock setup -15.7 ps): shared head
+// rows 0 AND 1 (512 b) and a 3-row ring per stream (768 b): row f (f >= 2) is fetched while the stream issues row f - 2
+// (one TDM slot in those 8 edges), so it lands no later than the first edge of row f - 1 and the SRAM output only ever
+// feeds ring registers (as CW=0's window); ring slot = row mod 3 (row f - 3 finished). 6,656 instead of 9,216 flops.
 module ot_hnx_idxn_calendar #(parameter integer K=8,S=4,G2MIN=23,CW=0)(
  input wire clk,clk_mem,rst_n,
  input wire program_we,input wire[7:0]program_addr,input wire[255:0]program_data,
@@ -45,8 +50,13 @@ module ot_hnx_idxn_calendar #(parameter integer K=8,S=4,G2MIN=23,CW=0)(
  if(CW==0)begin:ghead
   always @(posedge clk)if(program_we&&program_addr<8'd4)head[program_addr[1:0]*256+:256]<=program_data;
  end else begin:ghead0
-  always @(posedge clk)if(program_we&&program_addr==8'd0)head[255:0]<=program_data;   // row 0 only (shared)
-  always @* head[1023:256]=768'd0;
+  if(CW==1)begin:gh1
+   always @(posedge clk)if(program_we&&program_addr==8'd0)head[255:0]<=program_data;   // row 0 only (shared)
+   always @* head[1023:256]=768'd0;
+  end else begin:gh2
+   always @(posedge clk)if(program_we&&program_addr<8'd2)head[program_addr[0]*256+:256]<=program_data; // rows 0, 1 (shared)
+   always @* head[1023:512]=512'd0;
+  end
  end
  wire[31:0]raw_w[0:7];wire[31:0]head_w[0:7];
  for(genvar j=0;j<8;j=j+1)begin:gw assign raw_w[j]=raw[j*32+:32];assign head_w[j]=head[j*32+:32];end
@@ -74,14 +84,14 @@ module ot_hnx_idxn_calendar #(parameter integer K=8,S=4,G2MIN=23,CW=0)(
   reg act;reg[11:0]pc,lim;reg[4:0]row;reg[8:0]f;reg fp;reg[1:0]fslot;
   reg v1,last1;reg[31:0]i1;reg iv,dn;reg[31:0]ins;
   // CW=0: rows 0..3 from the launch copy, prefetch up to 4 rows ahead; CW=1: row f fetched while issuing row f - 1
-  assign want[k]=act&&f<9'd256&&{f,3'd0}<{1'b0,lim}&&f<{1'b0,pc[11:3]}+(CW==0?9'd4:9'd2);
+  assign want[k]=act&&f<9'd256&&{f,3'd0}<{1'b0,lim}&&f<{1'b0,pc[11:3]}+(CW==0?9'd4:CW==1?9'd2:9'd3);
   assign fnext[k*9+:9]=f;
   always @(posedge clk or negedge rst_n)begin
    if(!rst_n)begin act<=0;pc<=0;lim<=0;row<=0;f<=0;fp<=0;fslot<=0;v1<=0;last1<=0;iv<=0;dn<=0;end
    else begin
     v1<=act;last1<=pc+12'd1==lim;iv<=v1;dn<=v1&&last1;
     fp<=0;
-    if(go)begin act<=1;pc<=0;lim<=length;row<=go_row;f<=(CW==0?9'd4:9'd1);end
+    if(go)begin act<=1;pc<=0;lim<=length;row<=go_row;f<=(CW==0?9'd4:CW==1?9'd1:9'd2);end
     else begin
      if(act)begin pc<=pc+12'd1;if(pc+12'd1==lim)act<=0;end
      if(tdm==3'(k)&&want[k])begin f<=f+9'd1;fp<=1;fslot<=f[1:0];end
@@ -94,6 +104,17 @@ module ot_hnx_idxn_calendar #(parameter integer K=8,S=4,G2MIN=23,CW=0)(
     i1<=win[pc[4:3]*256+pc[2:0]*32+:32];ins<=v1?i1:32'd0;
     if(go)win<=head;
     else if(fp)win[fslot*256+:256]<=raw;
+   end
+  end else if(CW==2)begin:gring3
+   reg[31:0]ring[0:23];reg[1:0]rs,ws,wl;      // 3 rows x 8 words; rs = (issued row) mod 3, ws = (next fetched row) mod 3
+   always @(posedge clk)begin
+    i1<=(pc[11:4]==8'd0)?head[pc[3:0]*32+:32]:ring[rs*8+int'(pc[2:0])];ins<=v1?i1:32'd0;
+    if(go)begin rs<=0;ws<=2'd2;end
+    else begin
+     if(act&&pc[2:0]==3'd7)rs<=(rs==2'd2)?2'd0:rs+2'd1;
+     if(tdm==3'(k)&&want[k])begin wl<=ws;ws<=(ws==2'd2)?2'd0:ws+2'd1;end
+    end
+    if(fp)for(integer j=0;j<8;j=j+1)ring[wl*8+j]<=raw_w[j];
    end
   end else begin:gring
    reg[31:0]ring[0:15];                       // 2 rows x 8 words; slot = row parity

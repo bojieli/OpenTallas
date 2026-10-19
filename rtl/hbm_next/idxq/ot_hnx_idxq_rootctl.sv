@@ -9,8 +9,8 @@
 // query-reload hazard, launch onto a busy stream). TOPK engine and the SW read-group share: verbatim d4g.
 // PINS: programme bus, start, length, n_rows, pitch and the quadrant faults land in pin flops; the decoded fields and
 // done leave flops (+2 edges from the host start, as the quadrant copies). RESET: rst_n drives only ot_rst_relay.
-// STATIC: no ready/credit. CW=1 (default): compact calendar stream windows, as ot_hnx_idxq_qctl.
-module ot_hnx_idxq_rootctl #(parameter integer K=8,S=4,CW=1)(
+// STATIC: no ready/credit. CW=2 (default): compact calendar stream windows, as ot_hnx_idxq_qctl.
+module ot_hnx_idxq_rootctl #(parameter integer K=8,S=4,CW=2)(
  input wire clk_program,clk_program_mem,clk_sel,clk_topk,input wire[3:0]clk_pair,input wire rst_n,
  input wire program_we,input wire[7:0]program_addr,input wire[255:0]program_data,
  input wire start,input wire[11:0]length,input wire[4:0]n_rows,input wire[11:0]row_pitch,

@@ -10,10 +10,10 @@
 // flop (+1 edge): the timeline is +2 edges after the host start, as the d4g quadrant copy. frame_start (record start:
 // operand row bases, key buffer clear) = start + 2; row_start = start + 2 (row 0) or the launch edge + 1 (rows >= 1).
 // RESET: rst_n drives only ot_rst_relay; calendar/control flops reset, pin flops unreset. STATIC: no ready/credit.
-// CW=1 (HBM-NEXT-UNITS IDXQ 2026-10-19, default): the calendar's compact stream windows (one shared head row + a 2-row
+// CW=2 (HBM-NEXT-UNITS IDXQ 2026-10-19, default; CW=1 = bypass form, gate 4 cross-clock -15.7 ps): compact windows (shared head rows 0-1 + 3-row ring, no bypass); CW=1 was one shared head row + a 2-row
 // ring per stream: 4,352 instead of 9,216 window flops; same instruction on every edge, tb_hnx_idxn_cw + the quad lockstep);
 // gate hnx_idxq_qctl 04:2x failed the clock rule at 9,290 sinks (pin-flop spread 104 ps > 80 TT).
-module ot_hnx_idxq_qctl #(parameter integer K=8,S=4,CW=1)(
+module ot_hnx_idxq_qctl #(parameter integer K=8,S=4,CW=2)(
  input wire clk_program,clk_program_mem,input wire rst_n,
  input wire slot,
  input wire program_we,input wire[7:0]program_addr,input wire[255:0]program_data,

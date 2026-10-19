@@ -1,11 +1,12 @@
 #!/bin/bash
-# HBM-NEXT-UNITS IDXQ 2026-10-19: ot_hnx_idxn_calendar CW=1 (compact windows) vs CW=0 lockstep (tb_hnx_idxn_cw).
+# HBM-NEXT-UNITS IDXQ 2026-10-19: ot_hnx_idxn_calendar CW=1 (bypass) and CW=2 (no-bypass 3-row ring) vs CW=0 lockstep (tb_hnx_idxn_cw).
 # Fleet (Verilator 5.050), from a bundle root:  tools/hbm_next/hnx_idxn_cw_bench.sh OUT
 #  f<N>      compiled IDXN frame (--score-chain 14), N = 1/2/4/6 rows, pitch 232 (the row II)          -> PASS
 #  f6p<P>    frame, 6 rows, pitch 233 / 236 / 300                                                   -> PASS
 #  f8h<H>    frame, 8 rows, pitch 232, start phase H = 0..7 (every phase has one bypass row)         -> PASS
 #  r<S>/s<S> random 2,048-word frames (dense / 1-in-8 sparse words), 6 rows, pitches 232 / 233 / 237     -> PASS
 #  m1 m2 m3  CW=1 ring bypass off (8 rows 232 phase 3) / ring slot pinned 0 / head row 0 dropped (6 rows 233) -> FAIL
+#  m4 m5 m6  CW=2 ring write slot pinned 0 / shared head rows 0-1 dropped / ring read slot pinned 0 (6 rows 233) -> FAIL
 set -u
 B=$(pwd); O=$(realpath -m "${1:?OUT}"); mkdir -p "$O"
 export PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH
@@ -34,7 +35,7 @@ run(){ # tag hex len want plusargs...
   ( cd $od && $d/Vc +LEN=$ln "$@" > run.log 2>&1; echo RUN_RC=$? >> run.log )
   local got=PASS; grep -q 'IDXN_CW PASS' $od/run.log || got=FAIL
   local ok=OK; [ "$got" = "$want" ] || ok=UNEXPECTED
-  V "$t [$ok want $want got $got]: $(grep -h 'IDXN_CW rows\|CWBAD' $od/run.log | head -3 | tr '\n' ' ')"; rm -f $od/cal.hex
+  V "$t [$ok want $want got $got]: $(grep -h 'IDXN_CW rows\|CWBAD\|CW2BAD' $od/run.log | head -3 | tr '\n' ' ')"; rm -f $od/cal.hex
 }
 F=$O/cal/frame/calendar_instructions.hex
 for n in 1 2 4 6; do run f$n $F $L PASS +ROWS=$n +PITCH=232 & done
@@ -43,7 +44,7 @@ for h in 0 1 2 3 4 5 6 7; do run f8h$h $F $L PASS +ROWS=8 +PITCH=232 +PHASE=$h &
 wait
 i=0; for s in 1 2 3; do for k in r s; do p=$((232 + (i % 3) * 2 + (i % 2))); i=$((i+1)); run $k$s $O/$k$s.hex 2048 PASS +ROWS=6 +PITCH=$p & done; done
 run m1 $F $L FAIL +ROWS=8 +PITCH=232 +PHASE=3 +MUT=1 &
-for m in 2 3; do run m$m $F $L FAIL +ROWS=6 +PITCH=233 +MUT=$m & done
+for m in 2 3 4 5 6; do run m$m $F $L FAIL +ROWS=6 +PITCH=233 +MUT=$m & done
 wait
 rm -rf $d
 V "SUMMARY unexpected=$(grep -c UNEXPECTED $O/verdict.txt)"
