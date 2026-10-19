@@ -17,15 +17,21 @@ into the Qwen / S81 lane form, slice by slice (each standard replica of a row is
 
 Same instance names, same frames, same placement: only the masters and the clock / epoch / strap wiring change
 (rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv over rtl/qwen_split/qfd_fwd_lane.sv).  K straps come from the instance's
-own tie_hi / tie_lo (never a netlist literal), K = planned E (contract L5: E = max over corners of 1 + ceil(-S1/T); until
-the die STA measures S1 the S81 p4j half-cycle fit ceil((n-1)/2) + 1, >= 2, as tools/qwen_split/fwd_lane_price.py).
+own tie_hi / tie_lo (never a netlist literal), K = (planned E + h0(n)) mod 8 (contract L5: E = max over corners of
+1 + ceil(-S1/T); until the die STA measures S1 the S81 p4j half-cycle fit ceil((n-1)/2) + 1, >= 2, as
+tools/qwen_split/fwd_lane_price.py; h0 = 1 for an n = 1 qkd_landsh0 (QK-LANDEN: en registered on ck_s before the ICG moves
+the write epoch one source edge later, lane_groups.HOP0_EN_REG), else 0; the calendar G - R0 is 0 on the KV die).
+KVR-FWDAGE 10-19: the landing delivers the source word o = w(t - L), L = E + 1 core edges, for EVERY n (the in-band lane
+epoch makes the ring absorb the station delay; L = K + 1 - h0, ot_qfd_land), so the compiled age ceil(landed - 1) needs
+landed = E + 2 (+ post-landing stages): not 1 + (n-2)/2 + 1 + E + 1, which counted the station delay twice (1..47 edges
+late on kvs14r, results/rtl/kvr_landlag_1019).
 Reset / boot nets are NOT laned (they define the epochs; OT_KV_RST_PER_TREE keeps one root hop a tree, timed by the die
 STA release window).  fault outputs drive private open wires (recorded: owed to the block fault OR).
 
     kv_fwd_lanes.py --run RUN [--netlist-only] [--dry-run]
 rewrites RUN/case_kv/die.v (original kept as die.v.prefwd), adds the lane masters to expand.json leaves (and their closed
 views / LEF / libs when physical/ref_tile/qkd_<fam>_<S>/views exist), writes RUN/fwd_lanes.json (every lane: bus slice,
-n, source / receiving block and region, planned E, latency today n + 1 vs landed 1 + (n-2)/2 + 1 + E + 1).
+n, source / receiving block and region, planned E, K, latency today n + 1 vs landed E + 2 (+ post stages)).
 """
 import argparse
 import json
@@ -42,6 +48,8 @@ sys.path.insert(0, str(ROOT / 'tools' / 'qwen_kv_die'))
 import kv_rly_std as RS        # noqa: E402
 import kv_lane_orientation as LO  # noqa: E402
 import kv_lane_reach as LR  # noqa: E402
+sys.path.insert(0, str(ROOT / 'tools' / 'qwen_split'))
+import lane_groups as LG  # noqa: E402
 
 RTL = 'rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv'
 CORE_RTL = ['rtl/qwen_split/qfd_fwd_lane.sv', 'rtl/hdc/ot_hdc_cg.sv']
@@ -76,11 +84,23 @@ def planned_e(n):
     return max(2, math.ceil((n - 1) / 2) + 1)
 
 
+def hop0_en_reg(n):
+    """release edges the landing adds to its write epoch: 1 for an n = 1 qkd_landsh0 (en registered on ck_s), else 0"""
+    return LG.HOP0_EN_REG if n == 1 else 0
+
+
+def strap_k(n, E):
+    """the K strap that makes the landing deliver age E + 1: K = (E + G - R0 + h0(n)) mod 8 with G = R0 (the KV GEN
+    calendar); 0 is tied as 000 (K 8 == 0 mod 2D for the 3-bit counters)"""
+    return (E + hop0_en_reg(n)) % 8 or 8
+
+
 def landed_cost(n, E):
-    # hop 0 full-cycle (rising capture), later stations half-cycle, the ring, the E handoff, the block flop
-    N = n - 1
-    st = (1 + (N - 1) / 2) if N >= 1 else 0
-    return dict(today=n + 1, landed=st + 1 + E + 1, added=st + 2 + E - (n + 1))
+    # KVR-FWDAGE 10-19: the landing reads slot (rc - K) mod D: the station transit (hop 0 full cycle, later stations
+    # half-cycle) is INSIDE the ring age E (kv-check window E_sta in [2, D - 1]), not on top of it.  Hardware o = w(t - L),
+    # L = E + 1 (the o flop); landed adds the block flop: landed = E + 2, compiled age ceil(landed - 1) = E + 1 = L.
+    landed = E + 2
+    return dict(today=n + 1, landed=landed, added=landed - (n + 1))
 
 
 def form(lines, dirs, slots):
@@ -198,7 +218,7 @@ def form(lines, dirs, slots):
                rtl=[RTL] + CORE_RTL, lanes=[], skipped=dict(skipped), totals=Counter(), per_master=Counter(),
                owed=['fault outputs drive private open wires: each landing fault goes to the receiving block fault OR '
                      '(blocks have no spare fault input yet)',
-                     'K = planned E until the die STA (TT + FF, one E per bundle) measures S1 at every landing; then '
+                     'K = (planned E + h0(n)) mod 8 until the die STA (TT + FF, one E per bundle) measures S1 at every landing; then '
                      're-strap (ties only, no re-harden)',
                      'reset / boot root hops (one a net and tree with OT_KV_RST_PER_TREE) are timed by the die STA as a '
                      'release window (MCP setup E_r / hold E_r - 1) at TT and FF'])
@@ -217,7 +237,7 @@ def form(lines, dirs, slots):
             skipped['no_reset_net'] += 1
             continue
         E = planned_e(n)
-        K = E % 8 or 8
+        K = strap_k(n, E)
         kb = [(K >> j) & 1 for j in range(3)]
         cost = landed_cost(n, E)
         ck_x, ck_y = f'n_clk_core_{X}[0]', f'n_clk_core_{Y}[0]'
@@ -249,7 +269,7 @@ def form(lines, dirs, slots):
             rep['per_master'][mst] += 1
         rep['lanes'].append(dict(stations=ch, S=S, n=n, src=ln_['src'], src_kind=ln_['src_kind'], src_tree=X, dst=ln_['dst'],
                                  dsts=ln_['dsts'], dst_port=ln_['dst_port'],
-                                 dst_tree=Y, en=en, rs=rs, E_planned=E, K=K, **cost))
+                                 dst_tree=Y, en=en, rs=rs, E_planned=E, K=K, h0=hop0_en_reg(n), **cost))
         rep['totals']['lanes'] += 1
         rep['totals']['stations'] += n
         rep['totals']['bits'] += S

@@ -99,8 +99,9 @@ def domain_of(net, dmap=DOMAIN_MAP):
 def age_fields(r, land_k):
     """core-clock age of the bus at the destination pin (not part of the digest):
     no landing on the path -> age_edges = stages (every relay flop one core edge);
-    one landing and stages == 1 (an n = 1 lane: the landing carries the hop-0 gate) -> age_edges = K (E = K, since
-    1 <= E < 2D = 8 and K = E mod 2D with the generator's G = R0 strap rule, ot_qfd_land header);
+    one landing and stages == 1 (an n = 1 lane: the landing carries the hop-0 gate) -> age_edges = K (the landing
+    delivers L = K + 1 - h0 - cal = K: h0 = 1 for the landh0 en register (QK-LANDEN), cal = G - R0 = 0 with the
+    generator's G = R0 strap rule K = E + 1 (KVR-FWDAGE 10-19), so L = E + 1 = the lane age, 1 <= K < 2D = 8);
     a longer landed lane -> age_edges None: E = K (mod 8) only; the lane's E needs the die's land plan (land_plan.json)."""
     lands = {l for l in r['lands'] if l}
     if not lands:
