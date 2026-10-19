@@ -12,9 +12,12 @@
 // am0..5, sel, mx, mee, mer0..5, rsi_me_*, rsi_tag_*, ld, meok, rf0..5, uf, xflt, b2_status_fault, ovf), the seq_su faces
 // (st, xs, xm, su_image_ready, su_observe) and the CP copy engine faces (cp, cp_active).
 // NEW:
-//   hr[452:0]  -> W5 hr_wi   {ib 380, xpf 72, v}: one register (+1 edge on ib and xpf vs b2; the compiler's ib / XPF
+//   hr[452:0]  -> W5 hr_wi   {go, ib 379 (me_array order: qfd_dv_hr_pack), xpf 72, v}: one register (+1 edge on ib and xpf vs b2; the compiler's ib / XPF
 //                             calendars count it, XPF_TRANSPORT_EDGES included)
 //   cmd[115:0] -> W5 cmd_wi  the static command calendar qfd_dv_cmd_cal (SETID at boot, every slice / XC command)
+//   tl[1087:0] -> W5 st_wi   (QLB-C4b 10-18; MU-QW-DIE 10-19 ported into qfd_dv_cmd_cal_mu) the slice stream TABLE words
+//                             (kinds 1..3: PROG / CROM / BTAB) played by the calendar's LOCAL TLOAD entries from blocks of
+//                             this installed image (the only load path of the slice tables on the die).  A register, one edge.
 //   ss5[106:0] <- W5 ss_wo, ag5[9:0] <- W5 ag_wo (pin registers): the DV status that replaces seq_su's xs / dc sources.
 //              Q-DIEPLAN6 10-17: widened to the Q-SLICE 2f8b7015b contract (ss 107 = {ar_land, tok_val 32, <74 b>},
 //              ag 10 = {stn_busy, <9 b>}) and closes the Q-CTLM gaps: G9b dc nval = ss tok_val latched with tok_v;
@@ -86,12 +89,25 @@
 //   - filler token / position: the face carries user 0 only, so tok_b[u] <= the root token (ss5 tok_idx) and pos_b[u] <=
 //     pos_b[u] + 1 at user u's result (ss5 tok_v with ss5[27:26] = u: the contract with MU-QW-AMIX, the user of tok_idx;
 //     bits spare today).  dc ntok / nval / tok_seen take user-0 results only (the face's RESULT capture never sees a
-//     filler token).  OPEN: a filler's INITIAL context (its prompt token / position) has no path through the closed
-//     face; benches preload it only under `ifdef QFD_CTLM_MU_BENCH_PRELOAD` (+MU_PRE_TOK<u> / +MU_PRE_POS<u>).
+//     filler token).
+//   - filler INITIAL context (MU-QW-DIE 10-19, coordinator 0ka: boot-loaded through the image / host config plane, the
+//     KV schedule-param pattern; the bench-only preload is GONE): the calendar image's DW5 / DW6 (reserved 0 before)
+//     carry the context record CTX = {DW6, DW5} (u_cal CTX_DW 1: the seal accepts them, ctx_dw = the calendar's own dwr
+//     registers, ctx_load = the accepted seal edge).  Layout (tools/qwen_static_schedule/mu_opcal.ctx_words):
+//       CTX[36(u-1) +: 36] = {tok 18, pos 18} of filler u = 1..3;  CTX[108 +: 3] = load mask (bit u-1);  CTX[111] = 0;
+//       CTX[127:112] = tag 16'h4D43.
+//     On ctx_load with a good record every masked filler's tok_b / pos_b takes its record (the boot of that image;
+//     unmasked fillers keep their bank, so a later install can leave running fillers alone).  A bad record (tag,
+//     CTX[111], or a mask bit of a user >= NU) is a sticky op_fault and loads nothing.  The image reaches the cluster
+//     only as dh PW / DW rows: on this die the closed qfd_sys_face replays its config image under the host's BEGIN /
+//     AUTH, so the record is part of the boot image (fixed in operation, no handshake); no port change.
 //   - op_fault (sticky) = leaf fault | start collision, into core_fault (dc, cf).
 //   No port change.  New macro in the cluster: 1 x ot_rom_4096x72_m8 (leaf image).  Bench rtl/test/mu_qwen_seq/
 //   mu_opseg_bench.py.  MUT (bench only): 21 u_cal range ignored; 22 collision not flagged; 23 filler result written to
-//   the next filler's bank; 24 / 25 / 26 -> leaf MUT 4 (entry one edge late) / 5 (re-anchor every L0) / 6 (no drift check).
+//   the next filler's bank; 24 / 25 / 26 -> leaf MUT 4 (entry one edge late) / 5 (re-anchor every L0) / 6 (no drift check);
+//   30 / 31 -> calendar MUT 4 / 5 (TLOAD payload halves swapped / table word one edge late; QLB-C4b's 9 / 10 -- 9 is
+//   HARD_HR's here);  27 context record never loaded (banks start at 0: the pre-0ka hardware); 28 record of user u loaded into user
+//   (u mod (NU-1)) + 1; 29 record not checked (a bad tag loads and does not fault).
 // =====================================================================================================================
 module qfd_tt_ctlm_dv #(
     parameter integer XPF_TRANSPORT_EDGES = -1,
@@ -105,7 +121,8 @@ module qfd_tt_ctlm_dv #(
     parameter integer UTAG_LSB = 6,
     parameter integer OPSEG = 0,
     parameter string  OPSEG_VIAMAP = "",
-    parameter string  OPSEG_INST = "qfd_tt_ctlm_opseg"
+    parameter string  OPSEG_INST = "qfd_tt_ctlm_opseg",
+    parameter integer HR_ASBUILT = 0                // QW-DIEFIX: 1 = bench mutant (as-built hr layout)
 ) (
     input  wire          ck,
     input  wire          rst_n,
@@ -132,6 +149,7 @@ module qfd_tt_ctlm_dv #(
     // ---------------- W5 slice (qfd_dv_slice2_w dn face)
     output wire [452:0]  hr,
     output wire [115:0]  cmd,
+    output wire [1087:0] tl,
     input  wire [106:0]  ss5,
     input  wire [9:0]    ag5,
     // ---------------- embedding provider
@@ -178,12 +196,19 @@ module qfd_tt_ctlm_dv #(
         assign l_cnt = 10'd0; assign l_fcode = 4'd0; assign l_fault = 1'b0;
     end endgenerate
     wire [UB-1:0] l_user = l_u2[UB-1:0];
+    // filler initial context record (CTX_DW, see the header): checked and loaded on the accepted seal edge
+    wire [127:0] c_ctx; wire c_ctxld;                                // from u_cal (below)
+    localparam integer NF = (NU > 1) ? NU - 1 : 1;                   // fillers
+    wire [2:0]  ctx_mask = c_ctx[110:108];
+    wire        ctx_ok = (MUT == 29) || (c_ctx[127:112] == 16'h4D43 && !c_ctx[111] && (({1'b0, ctx_mask} >> (NU - 1)) == 4'd0));
+    wire        ctx_ld = (OPS != 0) && c_ctxld && ctx_ok && (MUT != 27);
+    wire        ctx_bad = (OPS != 0) && c_ctxld && !ctx_ok;
     wire        l_start = (OPS != 0) && l_v && !(s_start);          // the face start wins a collision
     wire        op_coll = (OPS != 0) && l_v && s_start;
     reg         op_fault;
     always @(posedge ck or negedge rst_n)
         if (!rst_n) op_fault <= 1'b0;
-        else if (l_fault || (op_coll && MUT != 22)) op_fault <= 1'b1;
+        else if (l_fault || (op_coll && MUT != 22) || ctx_bad) op_fault <= 1'b1;
     wire        u_start = s_start || l_start;
     wire [5:0]  u_stage = l_start ? l_stage : s_stage;
     wire [UB-1:0] u_user = l_start ? l_user : s_user;
@@ -193,17 +218,17 @@ module qfd_tt_ctlm_dv #(
     wire [11:0] c_base; wire [8:0] c_pidx;
     wire [UB-1:0] c_user, c_done_user; wire [NU-1:0] c_run_u; wire [5:0] c_fcode;
     // MUT 1..3 -> the calendar's MUT; MUT 16 (bench only, NU > 1) -> the calendar's UFOLD-off mutant
-    qfd_dv_cmd_cal_mu #(.MUT((MUT >= 1 && MUT <= 3) ? MUT : (MUT == 16 || MUT == 21) ? MUT : 0), .LAST_STAGE(LAST_STAGE), .NU(NU),
-        .UVM_STRIDE(UVM_STRIDE), .PIDX_STRIDE(PIDX_STRIDE), .UTAG_LSB(UTAG_LSB), .UFOLD((NU > 1) ? 1 : 0)) u_cal (
+    qfd_dv_cmd_cal_mu #(.MUT((MUT >= 1 && MUT <= 3) ? MUT : (MUT == 16 || MUT == 21) ? MUT : (MUT == 30) ? 4 : (MUT == 31) ? 5 : 0), .LAST_STAGE(LAST_STAGE), .NU(NU),
+        .UVM_STRIDE(UVM_STRIDE), .PIDX_STRIDE(PIDX_STRIDE), .UTAG_LSB(UTAG_LSB), .UFOLD((NU > 1) ? 1 : 0), .CTX_DW(OPS)) u_cal (
         .ck(ck), .rst_n(rst_n),
         .pw_v(dh_q[118]), .pw_addr(dh_q[117:108]), .pw_data(dh_q[107:44]),
         .dw_v(dh_q[186]), .dw_addr(dh_q[185:183]), .dw_data(dh_q[182:119]),
         .start(u_start), .stage(u_stage), .start_user(u_user), .start_rng(l_start), .start_first(l_first),
-        .start_cnt(l_cnt), .cmd(cmd), .cmd_user(c_user), .loc_emb(c_emb),
+        .start_cnt(l_cnt), .cmd(cmd), .tl(tl), .cmd_user(c_user), .loc_emb(c_emb),
         .loc_seg(c_seg), .loc_base(c_base),
         .su_issue(c_su), .su_pidx(c_pidx), .xc_issue(c_xc), .program_obs(cal_program_obs),
         .descriptor_obs(cal_descriptor_obs), .image_ready(c_ready), .running(c_run), .running_u(c_run_u), .done(c_done),
-        .done_user(c_done_user), .fault(c_fault), .fault_code(c_fcode));
+        .done_user(c_done_user), .fault(c_fault), .fault_code(c_fcode), .ctx_dw(c_ctx), .ctx_load(c_ctxld));
     // user-0 gates (NU > 1): the head / XPF see the latency user's SU stream only (MUT 17: every user's)
     wire        c_u0 = (NU == 1) || (c_user == {UB{1'b0}}) || (MUT == 17);
     wire        s_u0 = (NU == 1) || (s_user == {UB{1'b0}}) || (MUT == 19);
@@ -237,33 +262,20 @@ module qfd_tt_ctlm_dv #(
     wire [1:0]  r_u2 = (MUT == 23) ? ((ss_tu == 2'(NU - 1)) ? 2'd1 : ss_tu + 2'd1) : ss_tu;
     wire [UB-1:0] r_wr = r_u2[UB-1:0];
     integer     ub_i;
-`ifdef QFD_CTLM_MU_BENCH_PRELOAD
-    // BENCH ONLY (not a hardware path): a filler's initial context (prompt token / position) has no path through the
-    // closed qfd_sys_face; the OPSEG bench preloads it at reset from +MU_PRE_TOK<u> / +MU_PRE_POS<u>.
-    reg [17:0] pre_tok [0:3], pre_pos [0:3];
-    reg [17:0] pre_v;
-    initial begin
-        for (ub_i = 0; ub_i < 4; ub_i = ub_i + 1) begin pre_tok[ub_i] = 18'd0; pre_pos[ub_i] = 18'd0; end
-        if ($value$plusargs("MU_PRE_TOK1=%h", pre_v)) pre_tok[1] = pre_v;
-        if ($value$plusargs("MU_PRE_POS1=%h", pre_v)) pre_pos[1] = pre_v;
-        if ($value$plusargs("MU_PRE_TOK2=%h", pre_v)) pre_tok[2] = pre_v;
-        if ($value$plusargs("MU_PRE_POS2=%h", pre_v)) pre_pos[2] = pre_v;
-        if ($value$plusargs("MU_PRE_TOK3=%h", pre_v)) pre_tok[3] = pre_v;
-        if ($value$plusargs("MU_PRE_POS3=%h", pre_v)) pre_pos[3] = pre_v;
-    end
-`endif
     always @(posedge ck or negedge rst_n)
         if (!rst_n) begin
-            for (ub_i = 0; ub_i < NU; ub_i = ub_i + 1) begin
-`ifdef QFD_CTLM_MU_BENCH_PRELOAD
-                tok_b[ub_i] <= pre_tok[ub_i]; pos_b[ub_i] <= pre_pos[ub_i];
-`else
-                tok_b[ub_i] <= 18'd0; pos_b[ub_i] <= 18'd0;
-`endif
-            end
+            for (ub_i = 0; ub_i < NU; ub_i = ub_i + 1) begin tok_b[ub_i] <= 18'd0; pos_b[ub_i] <= 18'd0; end
             st_h <= 1'b0; st_tok <= 18'd0; st_pos <= 18'd0; st_base <= 12'd0;
             start_fault <= 1'b0; emb_start <= 1'b0; emb_token <= 18'd0;
         end else begin
+            // boot context (OPSEG): masked fillers take their record (MUT 28: rotated records); the image loads only while
+            // no segment plays (calendar image fault), so no start / result of a filler shares this edge in a legal run
+            if (ctx_ld)
+                for (ub_i = 1; ub_i < NU; ub_i = ub_i + 1)
+                    if (ctx_mask[ub_i - 1]) begin
+                        tok_b[ub_i] <= c_ctx[36 * (((MUT == 28) ? (ub_i % NF) + 1 : ub_i) - 1) + 18 +: 18];
+                        pos_b[ub_i] <= c_ctx[36 * (((MUT == 28) ? (ub_i % NF) + 1 : ub_i) - 1) +: 18];
+                    end
             if (s_start) begin tok_b[b_wr] <= s_tok; pos_b[b_wr] <= s_pos; end
             if (r_fill) begin tok_b[r_wr] <= ss_tok[17:0]; pos_b[r_wr] <= pos_b[r_wr] + 18'd1; end
             st_h <= s_me | c_seg;
@@ -392,7 +404,14 @@ module qfd_tt_ctlm_dv #(
     assign control_stores_ready = me_image_ready && c_ready && xpf_loader_ready && xpf_monitor_ready;
 
     // ------------------------------------------------------------------ hr (head row) to W5: one register
-    // (the ib field's register is ib_q: the hard head's rom_cmd register, or g_soft_hr.ib_r)
+    // QW-DIEFIX 10-19: hr[452:73] carries the ROM command in the SLICE's layout {go, ib 379 in ot_qwen_me_array_w12
+    // order} (qfd_dv_slice2 gi decode), not the raw cmd380 {mbase .. nout, go}: as built go sat on hr[73] and the ib
+    // fields were reversed, so no column head ever started a matvec (QW-XHEAD XT1 'asbuilt').  qfd_dv_hr_pack is a
+    // zero-logic field permutation generated by tools/qwen_split/hr_contract.py (whose check is the die contract); it
+    // follows the ib register (ib_q: the hard head's rom_cmd register, or g_soft_hr.ib_r), so no edge changes.
+    // HR_ASBUILT = 1: bench mutant (the as-built layout).
+    wire [379:0] ib_hr;
+    qfd_dv_hr_pack #(.ASBUILT(HR_ASBUILT)) u_hr_pack (.cmd(ib_q), .hr(ib_hr));
     reg hv; reg [72:0] hr_lo;
     always @(posedge ck or negedge rst_n)
         if (!rst_n) begin hv <= 1'b0; hr_lo <= 73'd0; end
@@ -400,7 +419,7 @@ module qfd_tt_ctlm_dv #(
             hv <= 1'b1;
             hr_lo <= {xpf, hv};
         end
-    assign hr = {ib_q, hr_lo};
+    assign hr = {ib_hr, hr_lo};
 
     // ------------------------------------------------------------------ dc (was seq_su's dc) and faults
     wire core_fault = hr_fault | cp_fault | start_fault | xpf_loader_fault | xpf_schedule_fault | op_fault;
