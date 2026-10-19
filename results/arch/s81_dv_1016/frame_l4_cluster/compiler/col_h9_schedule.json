@@ -1577,13 +1577,13 @@
      "link_edges": 6,
      "crossings": []
     },
-    "b": "zero.u_n0.b",
-    "link_b": 0,
+    "b": "e0.r1",
+    "link_b": 7,
     "evidence_b": {
-     "source": "zero.u_n0.b",
-     "flat_link_edges": 0,
+     "source": "e0.r1",
+     "flat_link_edges": 7,
      "added_edges": 0,
-     "link_edges": 0,
+     "link_edges": 7,
      "crossings": []
     }
    },
@@ -1617,13 +1617,13 @@
      "link_edges": 7,
      "crossings": []
     },
-    "b": "zero.u_n10.b",
-    "link_b": 0,
+    "b": "e5.r1",
+    "link_b": 8,
     "evidence_b": {
-     "source": "zero.u_n10.b",
-     "flat_link_edges": 0,
+     "source": "e5.r1",
+     "flat_link_edges": 8,
      "added_edges": 0,
-     "link_edges": 0,
+     "link_edges": 8,
      "crossings": []
     }
    },
@@ -1657,13 +1657,13 @@
      "link_edges": 3,
      "crossings": []
     },
-    "b": "zero.u_n12.b",
-    "link_b": 0,
+    "b": "e6.r1",
+    "link_b": 4,
     "evidence_b": {
-     "source": "zero.u_n12.b",
-     "flat_link_edges": 0,
+     "source": "e6.r1",
+     "flat_link_edges": 4,
      "added_edges": 0,
-     "link_edges": 0,
+     "link_edges": 4,
      "crossings": []
     }
    },
@@ -1697,13 +1697,13 @@
      "link_edges": 6,
      "crossings": []
     },
-    "b": "zero.u_n14.b",
-    "link_b": 0,
+    "b": "e7.r1",
+    "link_b": 7,
     "evidence_b": {
-     "source": "zero.u_n14.b",
-     "flat_link_edges": 0,
+     "source": "e7.r1",
+     "flat_link_edges": 7,
      "added_edges": 0,
-     "link_edges": 0,
+     "link_edges": 7,
      "crossings": []
     }
    },
@@ -1804,13 +1804,13 @@
      "link_edges": 3,
      "crossings": []
     },
-    "b": "zero.u_n18.b",
-    "link_b": 0,
+    "b": "e9.r1",
+    "link_b": 4,
     "evidence_b": {
-     "source": "zero.u_n18.b",
-     "flat_link_edges": 0,
+     "source": "e9.r1",
+     "flat_link_edges": 4,
      "added_edges": 0,
-     "link_edges": 0,
+     "link_edges": 4,
      "crossings": []
     }
    },
@@ -1844,13 +1844,13 @@
      "link_edges": 3,
      "crossings": []
     },
-    "b": "zero.u_n2.b",
-    "link_b": 0,
+    "b": "e1.r1",
+    "link_b": 4,
     "evidence_b": {
-     "source": "zero.u_n2.b",
-     "flat_link_edges": 0,
+     "source": "e1.r1",
+     "flat_link_edges": 4,
      "added_edges": 0,
-     "link_edges": 0,
+     "link_edges": 4,
      "crossings": []
     }
    },
@@ -1871,14 +1871,21 @@
       }
      ]
     },
-    "b": "zero.u_n20.b",
-    "link_b": 0,
+    "b": "e10.r1",
+    "link_b": 11,
     "evidence_b": {
-     "source": "zero.u_n20.b",
-     "flat_link_edges": 0,
-     "added_edges": 0,
-     "link_edges": 0,
-     "crossings": []
+     "source": "e10.r1",
+     "flat_link_edges": 8,
+     "added_edges": 3,
+     "link_edges": 11,
+     "crossings": [
+      {
+       "net": "sk_n20_62",
+       "source": "u_y_rt_20b_sk",
+       "reader": "u_n20",
+       "added_edges": 3
+      }
+     ]
     }
    },
    "n21": {
@@ -1918,14 +1925,21 @@
       }
      ]
     },
-    "b": "zero.u_n22.b",
-    "link_b": 0,
+    "b": "e11.r1",
+    "link_b": 8,
     "evidence_b": {
-     "source": "zero.u_n22.b",
-     "flat_link_edges": 0,
-     "added_edges": 0,
-     "link_edges": 0,
-     "crossings": []
+     "source": "e11.r1",
+     "flat_link_edges": 5,
+     "added_edges": 3,
+     "link_edges": 8,
+     "crossings": [
+      {
+       "net": "sk_n22_62",
+       "source": "u_y_rt_22b_sk",
+       "reader": "u_n22",
+       "added_edges": 3
+      }
+     ]
     }
    },
    "n23": {
@@ -1965,13 +1979,13 @@
      "link_edges": 7,
      "crossings": []
     },
-    "b": "zero.u_n24.b",
-    "link_b": 0,
+    "b": "e12.r1",
+    "link_b": 8,
     "evidence_b": {
-     "source": "zero.u_n24.b",
-     "flat_link_edges": 0,
+     "source": "e12.r1",
+     "flat_link_edges": 8,
      "added_edges": 0,
-     "link_edges": 0,
+     "link_edges": 8,
      "crossings": []
     }
    },
@@ -2045,13 +2059,13 @@
      "link_edges": 3,
      "crossings": []
     },
-    "b": "zero.u_n28.b",
-    "link_b": 0,
+    "b": "e14.r1",
+    "link_b": 4,
     "evidence_b": {
-     "source": "zero.u_n28.b",
-     "flat_link_edges": 0,
+     "source": "e14.r1",
+     "flat_link_edges": 4,
      "added_edges": 0,
-     "link_edges": 0,
+     "link_edges": 4,
      "crossings": []
     }
    },
@@ -2085,13 +2099,13 @@
      "link_edges": 6,
      "crossings": []
     },
-    "b": "zero.u_n4.b",
-    "link_b": 0,
+    "b": "e2.r1",
+    "link_b": 7,
     "evidence_b": {
-     "source": "zero.u_n4.b",
-     "flat_link_edges": 0,
+     "source": "e2.r1",
+     "flat_link_edges": 7,
      "added_edges": 0,
-     "link_edges": 0,
+     "link_edges": 7,
      "crossings": []
     }
    },
@@ -2125,13 +2139,13 @@
      "link_edges": 3,
      "crossings": []
     },
-    "b": "zero.u_n6.b",
-    "link_b": 0,
+    "b": "e3.r1",
+    "link_b": 4,
     "evidence_b": {
-     "source": "zero.u_n6.b",
-     "flat_link_edges": 0,
+     "source": "e3.r1",
+     "flat_link_edges": 4,
      "added_edges": 0,
-     "link_edges": 0,
+     "link_edges": 4,
      "crossings": []
     }
    },

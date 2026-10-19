@@ -24,7 +24,9 @@ def extract(specfile):
     kids = {i['inst']: i for i in p.insts}
     # Frame wrappers spell each internal bit explicitly, including payload/tag bits.
     def bits(ex):
-        return re.findall(r'\bn\d+\b', ex)
+        # TW3-S81/FRAME 10-19: the r1 skew relays (u_y_rt_*_sk) drive sk_n<node>_<bit> nets into every node's b pin;
+        # matching only n<id> dropped every r1 leaf (b resolved to 'zero.*'), so the plan predicted r0 words only.
+        return re.findall(r'\b(?:sk_n\d+_\d+|n\d+)\b', ex)
     drv = {}
     for i in p.insts:
         for pin, ex in i['conns'].items():
