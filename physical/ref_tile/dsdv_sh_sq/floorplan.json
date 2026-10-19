@@ -7,13 +7,13 @@
   0,
   0,
   254.88,
-  120.96
+  207.36
  ],
  "core": [
   2.16,
   2.16,
   252.72,
-  118.8
+  205.20000000000002
  ],
  "why": "spec outline",
  "std_area_um2": 14796,
@@ -61,7 +61,14 @@
  },
  "clock_port": "ck",
  "blocks": [],
- "findings": [],
+ "findings": [
+  [
+   "WARN",
+   "util",
+   "utilisation 29% outside 45%-60% (std 14796 + macro 0 in core 50874 um2)",
+   "resize the outline to util 0.50-0.55 (drop 'outline', set util)"
+  ]
+ ],
  "referenced": [
   "rtl/lib/ot_rst_relay.sv",
   "rtl/dsrom_sys/s81_dv/unit/ot_dsdv_fixed_issue.sv",
