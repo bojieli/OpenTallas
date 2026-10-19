@@ -269,7 +269,8 @@
   "threads": 16,
   "peak_ram_gb": 64,
   "hold_margin_ns": 0.03,
-  "macro_halo_um": 5.4
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.03
  },
  "io_flop_at_pins": {
   "cols": 4,
