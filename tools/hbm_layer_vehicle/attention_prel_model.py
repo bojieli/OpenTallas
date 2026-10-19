@@ -27,6 +27,7 @@ def model(rows_per_sm=64, subrun_rows=8, kv4=False):
                 new_boundary_registers=0, new_routing_tracks=0,
                 cache_read_to_command_edges=1, go_to_first_command_edges=7,
                 native_landing_padding_edges=8, regional_return_edges_unadopted=7,
+                dense_consumer_attention_opt_in='mask dense valid bit25 only at unused dense decode; keep external command and packet/tag checks',
                 provider_gap_edges=0, retire='last word after full result tail',
                 context=dict(row_off=0,tag_base=0,lstep=0,fl=0,mrel=0,loops=1),
                 golden='QK rows exact; each PV node is csum8, merge in original tree order',
