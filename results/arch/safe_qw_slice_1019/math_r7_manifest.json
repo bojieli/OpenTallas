@@ -21,5 +21,8 @@
   "shc0_mutant_mismatches": 48,
   "tool_version": "record actual yosys --version in tool_version.txt",
   "scope": "source construction; exact simulation, native load retention and mapped area/timing required",
-  "emitted_source_sha256": "7f8a4ea445ff68c49d11e52a1d9744cbcee24bbffeeae61a50c3e4c490091d8f"
+  "emitted_source_sha256": "7f8a4ea445ff68c49d11e52a1d9744cbcee24bbffeeae61a50c3e4c490091d8f",
+  "actual_generator_tool": "Yosys0.68 git38e001a6f Release GNUc++11.4.0",
+  "actual_simulation_tool": "Verilator5.0502026-07-01",
+  "fleet_generation": "ot-epyc5 unit1784316-1792431832; tools/qwen_dv/run_station_math_generate.sh /srv/opentallas-scratch/claude/codex-safe-qw-slice/math_repro_r7"
 }

@@ -85,5 +85,18 @@
     "math_r7_positive.log",
     "math_r7_data_age_mutant.log",
     "math_r7_valid_age_mutant.log"
-  ]
+  ],
+  "R7_actual_station_flops": 88963,
+  "R7_actual_primitive_cells": 431980,
+  "R7_actual_native_memory_sinks": 42,
+  "R7_reset_max_all_pins": 32,
+  "R7_driven_fanout_failures": 2,
+  "R8_prefix_state_added_flops_model": 30,
+  "R8_actual_counts": "MEASURED before assertion-only epoch removal",
+  "R8_prefix_fix": "Unique kept prefix captures per real valid-ring consumer, parameter ID per lane; same existing clock edge and all outputs used",
+  "R8_actual_station_flops": 89057,
+  "R8_actual_primitive_cells": 432074,
+  "R8_actual_added_prefix_boundary_flops": 94,
+  "R8_max_driven_data_control_loads": 32,
+  "R8_ghost_assertion_epoch_flops": 9900
 }
