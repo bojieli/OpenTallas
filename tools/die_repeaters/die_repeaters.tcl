@@ -213,6 +213,289 @@ proc ot_die_rep_disp_warning {max_disp_um max_wire_um} {
 
 proc ot_die_rep_gcd {a b} { while {$b} { set t $b; set b [expr {$a % $b}]; set a $t }; return $a }
 
+# ---- CORRIDOR placement + odb length census (S81-DIECHAIN 10-19).  The mu2/mu1/MAB die runs (2.82M BUFx8) left
+# repair_design's buffers at Steiner ideal points; 311,924 sat on macro bodies and the spread moved them up to 841.8 um
+# to the nearest free bin -- off the wire path, worst input slew 11,847 ps vs 260.  The corridor pass re-places every
+# repeater of a pure buffer CHAIN (driver -> buf ... buf -> one sink: the die lane bits) on the free part of the
+# chain's L-shaped Manhattan path (the side with less length over macro bodies), evenly spaced in free arc length, with
+# the chain's stage count unchanged (forwarded-clock / data matching holds); the spread then only snaps each one to the
+# nearest legal slot next to that point.  A path span over a macro body cannot hold a repeater: the resulting segment
+# (free spacing + body span) is measured and reported per chain (> reach = a plan lane over a block, a planning defect).
+#
+# Pure geometry (no odb; tested with tclsh).  ivs: blocked intervals {a b}; returns merged, sorted, clipped to [lo, hi].
+proc ot_die_rep_merge_iv {ivs lo hi} {
+  set c {}
+  foreach iv $ivs {
+    lassign $iv a b
+    if {$a > $b} { set t $a; set a $b; set b $t }
+    if {$b <= $lo || $a >= $hi} { continue }
+    lappend c [list [expr {max($a, $lo)}] [expr {min($b, $hi)}]]
+  }
+  set c [lsort -real -index 0 $c]
+  set m {}
+  foreach iv $c {
+    if {[llength $m] && [lindex $iv 0] <= [lindex $m end 1]} {
+      lset m end 1 [expr {max([lindex $m end 1], [lindex $iv 1])}]
+    } else { lappend m $iv }
+  }
+  return $m
+}
+
+# legs: list of {xa ya xb yb blocked} (axis-parallel; blocked = merged intervals in leg distance from (xa,ya)).
+# k repeaters -> {points max_seg blocked_len total_len}: points = k {x y} at free-arc fractions i/(k+1); max_seg = the
+# longest path distance between consecutive stops (driver, repeaters, sink).  All-blocked path -> points {}.
+proc ot_die_rep_corridor_targets {legs k} {
+  set free {}; set s0 0.0; set blk 0.0
+  foreach leg $legs {
+    lassign $leg xa ya xb yb bl
+    set len [expr {abs($xb - $xa) + abs($yb - $ya)}]
+    set t 0.0
+    foreach iv $bl {
+      lassign $iv a b
+      if {$a > $t} { lappend free [list [expr {$s0 + $t}] [expr {$s0 + $a}] $leg $s0] }
+      set blk [expr {$blk + $b - $a}]; set t $b
+    }
+    if {$len > $t} { lappend free [list [expr {$s0 + $t}] [expr {$s0 + $len}] $leg $s0] }
+    set s0 [expr {$s0 + $len}]
+  }
+  set L $s0; set F 0.0
+  foreach f $free { set F [expr {$F + [lindex $f 1] - [lindex $f 0]}] }
+  if {$k <= 0} { return [list {} $L $blk $L] }
+  if {$F <= 0} { return [list {} $L $blk $L] }
+  if {$blk <= 0} {
+    set ss {}; for {set i 1} {$i <= $k} {incr i} { lappend ss [expr {$L * $i / double($k + 1)}] }
+  } else {
+    set iv {}; foreach f $free { lappend iv [list [lindex $f 0] [lindex $f 1]] }
+    set key "$k|[expr {round($L)}]|$iv"
+    if {[info exists ::ot_die_rep_smemo($key)]} { set ss $::ot_die_rep_smemo($key) } else {
+      set ss [ot_die_rep_minmax_stops $iv $L $k]
+      if {[array size ::ot_die_rep_smemo] < 200000} { set ::ot_die_rep_smemo($key) $ss }
+    }
+  }
+  set pts {}
+  foreach s $ss {
+    set leg ""
+    foreach f $free { if {$s >= [lindex $f 0] - 1e-9 && $s <= [lindex $f 1] + 1e-9} { set leg [lindex $f 2]; set ls0 [lindex $f 3]; break } }
+    lassign $leg xa ya xb yb
+    set u [expr {$s - $ls0}]
+    if {$xa != $xb} { set x [expr {$xa + ($xb > $xa ? $u : -$u)}]; set y $ya } else { set x $xa; set y [expr {$ya + ($yb > $ya ? $u : -$u)}] }
+    lappend pts [list $x $y]
+  }
+  set prev 0.0; set mx 0.0
+  foreach s [concat $ss [list $L]] { if {$s - $prev > $mx} { set mx [expr {$s - $prev}] }; set prev $s }
+  return [list $pts $mx $blk $L]
+}
+
+# k stops on the free intervals iv (arc coords, sorted) of a path of length L that minimise the longest stop-to-stop
+# segment (driver at 0, sink at L): binary search on the segment S with a greedy farthest-free-point feasibility walk;
+# stops the greedy does not need split the longest segments (at the free point nearest their middle).
+proc ot_die_rep_greedy_stops {iv L S} {
+  set pos 0.0; set out {}
+  while {$L - $pos > $S + 1e-9} {
+    set t [expr {$pos + $S}]; set best ""
+    foreach f $iv {
+      lassign $f a b
+      if {$a > $t} { break }
+      if {$b <= $pos + 1e-9} { continue }
+      set best [expr {min($b, $t)}]
+    }
+    if {$best eq "" || $best <= $pos + 1e-9} { return "" }
+    lappend out $best; set pos $best
+  }
+  return $out
+}
+proc ot_die_rep_minmax_stops {iv L k} {
+  set lo [expr {$L / double($k + 1)}]; set hi $L; set got [ot_die_rep_greedy_stops $iv $L $hi]
+  for {set n 0} {$n < 24} {incr n} {
+    set mid [expr {($lo + $hi) / 2.0}]
+    set g [ot_die_rep_greedy_stops $iv $L $mid]
+    if {$g ne "" && [llength $g] <= $k} { set hi $mid; set got $g } else { set lo $mid }
+  }
+  if {$got eq ""} { set got {} }
+  while {[llength $got] < $k} {
+    set stops [concat 0.0 $got [list $L]]; set bi -1; set bl -1
+    for {set i 0} {$i < [llength $stops] - 1} {incr i} {
+      set l [expr {[lindex $stops [expr {$i + 1}]] - [lindex $stops $i]}]
+      if {$l > $bl} { set bl $l; set bi $i }
+    }
+    set a [lindex $stops $bi]; set b [lindex $stops [expr {$bi + 1}]]; set m [expr {($a + $b) / 2.0}]
+    set p ""; set pd 1e30
+    foreach f $iv {
+      lassign $f fa fb
+      set c [expr {min(max($m, $fa), $fb)}]
+      if {$c <= $a || $c >= $b} { continue }
+      if {abs($c - $m) < $pd} { set pd [expr {abs($c - $m)}]; set p $c }
+    }
+    if {$p eq ""} { set p $a }
+    set got [lsort -real [concat $got [list $p]]]
+  }
+  return $got
+}
+
+# odb: macro (block-master) bodies of the pre-existing instances, indexed in bucket rows / columns (bucket um).
+proc ot_die_rep_corr_index {blk {bucket_um 100.0}} {
+  set dbu [$blk getDbUnitsPerMicron]; set B [expr {int($bucket_um * $dbu)}]
+  array unset ::ot_die_rep_cy; array unset ::ot_die_rep_cx; array unset ::ot_die_rep_cmemo
+  set ::ot_die_rep_cB $B; set n 0
+  foreach inst [$blk getInsts] {
+    if {![[$inst getMaster] isBlock]} { continue }
+    set bb [$inst getBBox]
+    set r [list [$bb xMin] [$bb yMin] [$bb xMax] [$bb yMax]]
+    for {set j [expr {[lindex $r 1] / $B}]} {$j <= [lindex $r 3] / $B} {incr j} { lappend ::ot_die_rep_cy($j) $r }
+    for {set i [expr {[lindex $r 0] / $B}]} {$i <= [lindex $r 2] / $B} {incr i} { lappend ::ot_die_rep_cx($i) $r }
+    incr n
+  }
+  return $n
+}
+
+# blocked intervals (dbu, absolute coordinate along the line) of the horizontal line y (h) or vertical line x (v);
+# memo per 1-um line key.
+proc ot_die_rep_corr_line {hv c} {
+  set key "$hv,[expr {$c / 1000}]"
+  if {[info exists ::ot_die_rep_cmemo($key)]} { return $::ot_die_rep_cmemo($key) }
+  set B $::ot_die_rep_cB; set iv {}
+  if {$hv eq "h"} {
+    if {[info exists ::ot_die_rep_cy([expr {$c / $B}])]} {
+      foreach r $::ot_die_rep_cy([expr {$c / $B}]) { if {[lindex $r 1] < $c && [lindex $r 3] > $c} { lappend iv [list [lindex $r 0] [lindex $r 2]] } }
+    }
+  } else {
+    if {[info exists ::ot_die_rep_cx([expr {$c / $B}])]} {
+      foreach r $::ot_die_rep_cx([expr {$c / $B}]) { if {[lindex $r 0] < $c && [lindex $r 2] > $c} { lappend iv [list [lindex $r 1] [lindex $r 3]] } }
+    }
+  }
+  set m [ot_die_rep_merge_iv $iv -1e18 1e18]
+  set ::ot_die_rep_cmemo($key) $m
+  return $m
+}
+
+# one axis-parallel leg (dbu) -> {xa ya xb yb blocked-in-leg-distance}
+proc ot_die_rep_corr_leg {xa ya xb yb} {
+  if {$ya == $yb} {
+    set lo [expr {min($xa, $xb)}]; set hi [expr {max($xa, $xb)}]
+    set m [ot_die_rep_merge_iv [ot_die_rep_corr_line h $ya] $lo $hi]
+  } else {
+    set lo [expr {min($ya, $yb)}]; set hi [expr {max($ya, $yb)}]
+    set m [ot_die_rep_merge_iv [ot_die_rep_corr_line v $xa] $lo $hi]
+  }
+  set fwd [expr {($ya == $yb) ? ($xb >= $xa) : ($yb >= $ya)}]
+  set a0 [expr {($ya == $yb) ? $xa : $ya}]
+  set bl {}
+  foreach iv $m {
+    lassign $iv a b
+    if {$fwd} { lappend bl [list [expr {$a - $a0}] [expr {$b - $a0}]] } else { lappend bl [list [expr {$a0 - $b}] [expr {$a0 - $a}]] }
+  }
+  if {!$fwd} { set bl [lsort -real -index 0 $bl] }
+  return [list $xa $ya $xb $yb $bl]
+}
+
+proc ot_die_rep_iterm_xy {it} {
+  if {[catch {set b [$it getBBox]}] || $b eq "" || $b eq "NULL"} { set b [[$it getInst] getBBox] }
+  return [list [expr {([$b xMin] + [$b xMax]) / 2}] [expr {([$b yMin] + [$b yMax]) / 2}]]
+}
+
+proc ot_die_rep_net_drv_loads {net} {
+  set drv ""; set loads {}
+  foreach it [$net getITerms] {
+    if {[$it isOutputSignal]} { set drv $it } elseif {[$it isInputSignal]} { lappend loads $it }
+  }
+  return [list $drv $loads]
+}
+
+# re-place the new repeaters `new` (odb insts) of pure chains on their corridors.  pre: dict of pre-existing inst names.
+# -> dict of stats (chains, repeaters_moved, trees, all_blocked, max_seg_um, over_reach, over_wire, top).
+proc ot_die_rep_corridor {blk new pre reach_um max_wire_um} {
+  set t0 [clock seconds]
+  set dbu [$blk getDbUnitsPerMicron]
+  set nmac [ot_die_rep_corr_index $blk]
+  set isnew [dict create]
+  foreach inst $new { dict set isnew [$inst getName] 1 }
+  set seen [dict create]
+  set chains 0; set moved 0; set trees 0; set allb 0; set mx 0.0; set over 0; set overw 0; set top {}; set bterm_root 0
+  foreach inst $new {
+    set nm [$inst getName]
+    if {[dict exists $seen $nm]} { continue }
+    set ia [$inst findITerm A]
+    if {$ia eq "NULL" || $ia eq ""} { continue }
+    set n0 [$ia getNet]
+    if {$n0 eq "NULL" || $n0 eq ""} { continue }
+    lassign [ot_die_rep_net_drv_loads $n0] d0 l0
+    # only start at the chain root: the input net's driver is a pre-existing instance (or a top port)
+    if {$d0 ne "" && [dict exists $isnew [[$d0 getInst] getName]]} { continue }
+    if {$d0 eq ""} { incr bterm_root; continue }
+    # walk the chain from the root net
+    set chain {}; set net $n0; set ok 1; set sink ""; set port 0
+    while {1} {
+      lassign [ot_die_rep_net_drv_loads $net] d ls
+      if {[llength [$net getBTerms]]} { set ok 0; set port 1; break }
+      if {[llength $ls] != 1} { set ok 0; break }
+      set li [lindex $ls 0]; set lin [$li getInst]
+      if {![dict exists $isnew [$lin getName]]} { set sink $li; break }
+      lappend chain $lin; dict set seen [$lin getName] 1
+      set yo [$lin findITerm Y]
+      if {$yo eq "NULL" || $yo eq ""} { set ok 0; break }
+      set net [$yo getNet]
+      if {$net eq "NULL" || $net eq ""} { set ok 0; break }
+    }
+    if {$port} { incr bterm_root; continue }
+    if {!$ok || $sink eq "" || ![llength $chain]} { incr trees; continue }
+    lassign [ot_die_rep_iterm_xy $d0] x0 y0
+    lassign [ot_die_rep_iterm_xy $sink] x1 y1
+    set best ""
+    foreach o {hv vh} {
+      if {$o eq "hv"} { set legs [list [ot_die_rep_corr_leg $x0 $y0 $x1 $y0] [ot_die_rep_corr_leg $x1 $y0 $x1 $y1]] } \
+      else { set legs [list [ot_die_rep_corr_leg $x0 $y0 $x0 $y1] [ot_die_rep_corr_leg $x0 $y1 $x1 $y1]] }
+      set r [ot_die_rep_corridor_targets $legs [llength $chain]]
+      if {$best eq "" || [lindex $r 1] < [lindex $best 1]} { set best $r }
+    }
+    incr chains
+    lassign $best pts seg blkd L
+    set seg_um [expr {$seg / double($dbu)}]
+    if {![llength $pts]} { incr allb; continue }
+    foreach b $chain p $pts {
+      set m [$b getMaster]
+      $b setLocation [expr {int([lindex $p 0]) - [$m getWidth] / 2}] [expr {int([lindex $p 1]) - [$m getHeight] / 2}]
+      incr moved
+    }
+    if {$seg_um > $mx} { set mx $seg_um }
+    if {$reach_um > 0 && $seg_um > $reach_um} {
+      incr over
+      if {[llength $top] < 200} { lappend top [list [$n0 getName] [format %.1f $seg_um] [format %.1f [expr {$blkd / double($dbu)}]] [format %.1f [expr {$L / double($dbu)}]]] }
+    }
+    if {$seg_um > 1.25 * $max_wire_um} { incr overw }
+  }
+  set top [lrange [lsort -real -decreasing -index 1 $top] 0 49]
+  ot_die_rep_log "corridor macros=$nmac chains=$chains moved=$moved trees=$trees port_rooted=$bterm_root all_blocked=$allb max_seg_um=[format %.1f $mx] seg>reach($reach_um)=$over seg>1.25*max_wire=$overw s=[expr {[clock seconds] - $t0}]"
+  return [dict create chains $chains moved $moved trees $trees port_rooted $bterm_root all_blocked $allb max_seg_um $mx over_reach $over over_wire $overw top $top]
+}
+
+# odb length census of every signal net not in skip: driver-to-farthest-sink Manhattan from the pin positions (real
+# placed lengths; top-port nets are counted apart -- their unplaced die pins made report_long_wires' top 5,000 all
+# port nets with steiner 0.0, so the mu2 census read longest 0 / overreach 0).  -> {scanned longest over port_nets}
+# over = list of {net driver um} longer than limit_um (all of them, sorted, first 200 kept).
+proc ot_die_rep_net_census {blk skip limit_um} {
+  set dbu [$blk getDbUnitsPerMicron]
+  set scanned 0; set longest 0.0; set over {}; set nover 0; set ports 0
+  foreach net [$blk getNets] {
+    set nm [$net getName]
+    if {[dict exists $skip $nm]} { continue }
+    if {[$net getSigType] ne "SIGNAL"} { continue }
+    if {[llength [$net getBTerms]]} { incr ports; continue }
+    lassign [ot_die_rep_net_drv_loads $net] d ls
+    if {$d eq "" || ![llength $ls]} { continue }
+    lassign [ot_die_rep_iterm_xy $d] x0 y0
+    set m 0
+    foreach l $ls { lassign [ot_die_rep_iterm_xy $l] x y; set v [expr {abs($x - $x0) + abs($y - $y0)}]; if {$v > $m} { set m $v } }
+    incr scanned
+    set um [expr {$m / double($dbu)}]
+    if {$um > $longest} { set longest $um }
+    if {$limit_um > 0 && $um > $limit_um} {
+      incr nover
+      if {[llength $over] < 2000} { lappend over [list $nm "[[$d getInst] getName]/[[$d getMTerm] getName]" [format %.1f $um]] }
+    }
+  }
+  return [list $scanned $longest [lrange [lsort -real -decreasing -index 2 $over] 0 199] $ports $nover]
+}
+
 # instances of the block not named in dict `known` (the cells the last repair_design inserted)
 proc ot_die_rep_new_insts {blk known} {
   set n {}
@@ -247,7 +530,7 @@ proc ot_die_repeaters {cfg} {
            skip_nets {} repeat_nets {} skip_sigtypes {CLOCK POWER GROUND} skip_clock_pins 1 reach_um 0 over_reach report \
            long_wire_scan 5000 post_drv report rc_layer M4 repair_args "" legalize spread bounds_tcl /work/cluster_bounds.tcl \
            libs {} std_corner "" design "" spread_util 0.30 spread_util_hard 0.60 soft_rings 3 bin_um 8.64 repair_passes 1 slew_margin 0 post_grt_rounds 2 \
-           resize_cells {BUFx8_ASAP7_75t_R BUFx12f_ASAP7_75t_R BUFx16f_ASAP7_75t_R}]
+           resize_cells {BUFx8_ASAP7_75t_R BUFx12f_ASAP7_75t_R BUFx16f_ASAP7_75t_R} corridor 0 post_reach report]
   set d [dict merge $d $cfg]
   dict with d {}
   if {![info exists report]} { error "ot_die_repeaters: cfg has no report path" }
@@ -354,32 +637,17 @@ proc ot_die_repeaters {cfg} {
   estimate_parasitics -placement
 
   # ---- standard 1: die nets longer than the reach (no relay register) -- measured before any buffer goes in
-  set over {}; set longest 0.0; set scanned 0
+  # odb census (S81-DIECHAIN 10-19): driver-to-farthest-sink Manhattan of every non-skip signal net from the placed pin
+  # positions; top-port nets counted apart (report_long_wires' top N were all unplaced-port nets, steiner 0.0)
+  set over {}; set longest 0.0; set scanned 0; set port_nets 0; set n_over 0
   if {$long_wire_scan > 0} {
-    set lw [file rootname $report].long_wires.rpt
-    report_long_wires $long_wire_scan > $lw
-    set fh [open $lw]; set txt [read $fh]; close $fh
-    foreach line [split $txt "\n"] {
-      if {![regexp {^(\S+)\s+manhtn\s+([0-9.]+)\s+steiner\s+([0-9.]+)} $line -> drv man st]} { continue }
-      incr scanned
-      set net ""
-      set k [string last / $drv]
-      if {$k > 0} {
-        set inst [$blk findInst [string range $drv 0 [expr {$k - 1}]]]
-        if {$inst ne "NULL" && $inst ne ""} {
-          set it [$inst findITerm [string range $drv [expr {$k + 1}] end]]
-          if {$it ne "NULL" && $it ne ""} { set n_ [$it getNet]; if {$n_ ne "NULL" && $n_ ne ""} { set net [$n_ getName] } }
-        }
-      } else {
-        set bt [$blk findBTerm $drv]
-        if {$bt ne "NULL" && $bt ne ""} { set n_ [$bt getNet]; if {$n_ ne "NULL" && $n_ ne ""} { set net [$n_ getName] } }
-      }
-      if {$net ne "" && [dict exists $skip $net]} { continue }
-      if {$st > $longest} { set longest $st }
-      if {$reach_um > 0 && $st > $reach_um} { lappend over [list $net $drv $st] }
-    }
-    ot_die_rep_log "long wires scanned=$scanned longest_um=[format %.1f $longest] over_reach($reach_um)=[llength $over]"
-    if {[llength $over] && $over_reach eq "fail"} { incr viol [llength $over]; lappend notes "over_reach nets: missing relay registers" }
+    lassign [ot_die_rep_net_census $blk $skip $reach_um] scanned longest over port_nets n_over
+    set fh [open [file rootname $report].long_wires.rpt w]
+    puts $fh "# odb census pre-repair: net driver manhattan_um (> reach $reach_um um; $n_over nets, first 200)"
+    foreach o $over { puts $fh [join $o " "] }
+    close $fh
+    ot_die_rep_log "long wires (odb census) scanned=$scanned port_nets=$port_nets longest_um=[format %.1f $longest] over_reach($reach_um)=$n_over"
+    if {$n_over && $over_reach eq "fail"} { incr viol $n_over; lappend notes "over_reach nets: missing relay registers" }
   }
 
   # ---- buffers only: everything else dont_use for this step (restored after)
@@ -391,7 +659,7 @@ proc ot_die_repeaters {cfg} {
   set repair_s [expr {[clock seconds] - $r0}]
 
   # ---- legalise the new buffers
-  set legal "none"; set passes {}; set ::ot_die_rep_onobs 0; set ::ot_die_rep_maxdisp 0.0; set warnings {}
+  set ::ot_die_rep_corr {}; set legal "none"; set passes {}; set ::ot_die_rep_onobs 0; set ::ot_die_rep_maxdisp 0.0; set warnings {}
   if {$legalize eq "snap" || $legalize eq "spread"} {
     # spread (snap is an alias since DIE-FLOW2: the plain snap stacked every repeater at its ideal point).  Pass k > 1
     # re-runs repair_design on the legal positions (the spread displacement can leave long segments) and spreads again.
@@ -400,6 +668,7 @@ proc ot_die_repeaters {cfg} {
       set new [ot_die_rep_new_insts $blk $known]
       foreach inst $new { dict set known [$inst getName] [[$inst getMaster] getName] }
       if {$pass > 1 && ![llength $new]} { break }
+      if {$pass == 1 && $corridor} { set ::ot_die_rep_corr [ot_die_rep_corridor $blk $new $pre $reach_um $max_wire_um] }
       incr left [ot_die_rep_spread $new [file rootname $report].spread$pass.json $spread_util $bin_um $spread_util_hard $soft_rings]
       lappend passes [llength $new]
       if {$pass == $repair_passes} { break }
@@ -416,6 +685,17 @@ proc ot_die_repeaters {cfg} {
     if {[catch {detailed_placement} e]} { incr viol; lappend notes "detailed_placement: $e"; set legal "dpl FAIL" } else { set legal dpl }
   }
   ot_die_rep_restore_use $flagged
+  # post-legalisation census: every repeated segment (driver -> repeater -> ... -> sink) at its legal position
+  set post_scanned 0; set post_longest 0.0; set post_over {}; set post_n_over 0
+  if {$long_wire_scan > 0} {
+    lassign [ot_die_rep_net_census $blk $skip $reach_um] post_scanned post_longest post_over _pp post_n_over
+    set fh [open [file rootname $report].post_segments.rpt w]
+    puts $fh "# odb census post-legalisation: net driver manhattan_um (> reach $reach_um um; $post_n_over nets, first 200)"
+    foreach o $post_over { puts $fh [join $o " "] }
+    close $fh
+    ot_die_rep_log "post-legal segments scanned=$post_scanned longest_um=[format %.1f $post_longest] over_reach($reach_um)=$post_n_over"
+    if {$post_n_over && $post_reach eq "fail"} { incr viol $post_n_over; lappend notes "repeated segments longer than the reach after legalisation (lane over a block / off corridor)" }
+  }
   set ::ot_die_rep_cfg [dict create buffers $buffers max_wire_um $max_wire_um slew_margin $slew_margin repair_args $repair_args \
                           spread_util $spread_util spread_util_hard $spread_util_hard soft_rings $soft_rings bin_um $bin_um post_grt_rounds $post_grt_rounds resize_cells $resize_cells report $report]
   set ::ot_die_rep_pre $pre
@@ -475,12 +755,21 @@ proc ot_die_repeaters {cfg} {
   puts $f " \"instances_pre\": [dict size $pre], \"instances_post\": [dict size $post], \"repeaters\": $repeaters, \"repeaters_by_master\": {[join $bm {, }]},"
   puts $f " \"removed\": $removed, \"resized\": $changed, \"non_buffer_inserted\": $bad_new, \"skip_nets\": [llength $skip_names], \"skip_nets_modified\": $skip_changed,"
   puts $f " \"skip_by\": {\"sigtype\": $n_sig, \"clock_pin\": $n_ck, \"glob\": [expr {[llength $skip_names] - $n_sig - $n_ck + $n_rep}]}, \"repeated_clock_nets\": $n_rep, \"masters_without_liberty\": [llength $nolib],"
-  puts $f " \"reach_um\": $reach_um, \"over_reach_policy\": [ot_die_rep_json_str $over_reach], \"long_wires_scanned\": $scanned, \"longest_um\": $longest, \"over_reach_nets\": [llength $over], \"over_reach_top\": \[[join $ov {, }]\],"
+  puts $f " \"reach_um\": $reach_um, \"over_reach_policy\": [ot_die_rep_json_str $over_reach], \"long_wires_scanned\": $scanned, \"longest_um\": $longest, \"over_reach_nets\": $n_over, \"port_nets_excluded\": $port_nets, \"over_reach_top\": \[[join $ov {, }]\],"
+  set ct {}; set cs {}
+  if {[llength $::ot_die_rep_corr]} {
+    foreach o [dict get $::ot_die_rep_corr top] { lappend ct "\[[ot_die_rep_json_str [lindex $o 0]], [lindex $o 1], [lindex $o 2], [lindex $o 3]\]" }
+    foreach k {chains moved trees port_rooted all_blocked over_reach over_wire} { lappend cs "\"$k\": [dict get $::ot_die_rep_corr $k]" }
+    lappend cs "\"max_seg_um\": [format %.2f [dict get $::ot_die_rep_corr max_seg_um]]"
+  }
+  set po {}; foreach o [lrange $post_over 0 49] { lappend po "\[[ot_die_rep_json_str [lindex $o 0]], [ot_die_rep_json_str [lindex $o 1]], [lindex $o 2]\]" }
+  puts $f " \"corridor\": $corridor, \"corridor_stats\": {[join $cs {, }]}, \"corridor_over_reach_top\": \[[join $ct {, }]\],"
+  puts $f " \"post_reach_policy\": [ot_die_rep_json_str $post_reach], \"post_segments_scanned\": $post_scanned, \"post_longest_segment_um\": [format %.2f $post_longest], \"post_segments_over_reach\": $post_n_over, \"post_segments_over_reach_top\": \[[join $po {, }]\],"
   set dt_ {}; foreach o $drv_top { lappend dt_ "\[[ot_die_rep_json_str [lindex $o 0]], [ot_die_rep_json_str [lindex $o 1]], [ot_die_rep_json_str [lindex $o 2]], [ot_die_rep_json_str [lindex $o 3]]\]" }
   puts $f " \"post_drv_policy\": [ot_die_rep_json_str $post_drv], \"post_slew_violators\": $post_slew, \"post_cap_violators\": $post_cap, \"post_violators_on_skip_nets\": $post_skipped, \"post_drv_top\": \[[join $dt_ {, }]\],"
   puts $f " \"spread_max_disp_um\": [format %.2f $::ot_die_rep_maxdisp], \"warnings\": \[[join $wn {, }]\], \"notes\": \[[join $nt {, }]\], \"examples\": \[[join $ex {, }]\], \"repair_s\": $repair_s, \"seconds\": [expr {[clock seconds] - $t0}]}"
   close $f
-  ot_die_rep_log "$verdict repeaters=$repeaters violations=$viol over_reach=[llength $over] legalize=($legal) s=[expr {[clock seconds] - $t0}]"
+  ot_die_rep_log "$verdict repeaters=$repeaters violations=$viol over_reach=$n_over post_seg_over_reach=$post_n_over legalize=($legal) s=[expr {[clock seconds] - $t0}]"
   return $viol
 }
 
