@@ -614,7 +614,34 @@ def compile_image(a):
             'stage-0 slice commands beyond the LOCAL EMB start (E calendar / embedding landing not compiled)',
             'LM-head (stage 37) ME programme: the head has one fixed-issue calendar per image, armed at base 0 only',
             'per-layer ROM relocation needs qfd_tt_ctlm_dv STAGE_ME 1 (command_stage = running stage)'])
+    if getattr(a, 'dv_lower', False):
+        rec.update(dv_lower_section(rec))
     return image, rec
+
+
+def dv_lower_section(rec):
+    """QLB-C4 (G-C4): the DV slice lowering (tools/qwen_layerbench/dv_lower.py) of this image's programme."""
+    sys.path.insert(0, str(ROOT / 'tools' / 'qwen_layerbench'))
+    import dv_lower as DL
+    lw = DL.lower()
+    su_bc = [e['label'] for e in rec['cal']['decode'] if e['label'].startswith('SU PC') and
+             int(e['label'][5:]) in lw['isa']['ssq_pcs']]
+    nc = [x for x in rec['not_compiled'] if not x.startswith('G-C4 DV slice lowering')]
+    nc = ['G-C4 DV slice lowering (dv_lower.py): LOWERED = slice map / SETID ids / cmd + scalar chain ages, row '
+          'ownership of every matrix, slice-local VM map, PROG image + kind-3 stream words, the global RMSNorm sum of '
+          'squares (per-slice SSQ, PSUM tags = golden block positions, fused ROOT r) with a collision-free scalar-chain '
+          'schedule; NOT LOWERED: ' + '; '.join(lw['not_lowered'])] + nc
+    nc.append('decode calendar still issues the sum-of-squares ops as broadcast SU commands (%s): dv_lower --mutant '
+              'broadcast shows that schedule collides on the scalar chain (%d collisions); the calendar must take '
+              "dv_lower's per-slice entries (ssq_entry) -- next step" % (', '.join(su_bc), len(DL.lower('broadcast')['expected']['collisions'])))
+    nc.append('RTL GAP (LM head): ot_qfd_tt_ctlm_head_static_rk / split_static arm the fixed-issue calendar only at '
+              'prog_base 0 (u_fixed_issue .start(q_h_start && q_prog_base == 0)) and PW976..983 hold ONE 8-row '
+              'calendar per image: an LM-head ME programme at another base cannot issue on a compiled cycle')
+    return dict(not_compiled=nc, dv_lowering=dict(
+        tool='tools/qwen_layerbench/dv_lower.py', slices=lw['slice_map']['names'], cmd_arrival=lw['slice_map']['cmd_arrival'],
+        residual_blocks=lw['ownership']['residual']['blocks_per_slice'], vm=lw['vm'], root=lw['root'],
+        prog_sha256={s: hashlib.sha256(''.join(w).encode()).hexdigest() for s, w in lw['prog'].items()},
+        commands=lw['commands'], ssq_entry=lw['ssq_entry'], ages=lw['ages'], die_gaps=lw['die_gaps']))
 
 
 def _acc(entries):
@@ -704,11 +731,17 @@ def main():
                     help='tt_ctlm XPF_TRANSPORT_EDGES (default 1 + R_HR: the hr register + the hr relays)')
     ap.add_argument('--me-observe-edges', type=int, default=1, help='head fixed issue -> actual_me_observe edges')
     ap.add_argument('--su-first-write', type=int, default=12, help='SU command at the W5 pin -> its first VM write')
+    ap.add_argument('--dv-lower', action='store_true', help='attach the DV slice lowering (dv_lower.py, G-C4)')
     a = ap.parse_args()
     try:
         image, rec = compile_image(a)
     except (CompileError, AssertionError) as e:
         print(f'CTLM_IMAGE REFUSED: {e}')
+        return 2
+    except Exception as e:                       # dv_lower.LowerError
+        if type(e).__name__ != 'LowerError':
+            raise
+        print(f'CTLM_IMAGE REFUSED (dv lowering): {e}')
         return 2
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
