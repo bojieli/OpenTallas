@@ -51,3 +51,16 @@ Issuer clone and class apps are opt-in functional candidates. Canonical issuer,
 default mode and reserved descriptor bit200 are unchanged. Physical frontend
 load/reset closure, full production mixed-workload qualification and selected
 Qwen HBM fixture/calibration binding remain OPEN.
+
+For a lighter actual transport test, compile `mixed_class_service.py --work NEW
+--out RECEIPT --service-build-revision FULL_REV` and add `--exe FROZEN_EXE`
+only after chronology acceptance. It emits three actual one-word retire-only
+programmes with literal modes0,4,0, no READ, and three independently addressed
+one-row HBM blocks (eight zero sectors each). Fixed GO1000/1100/1200 are relative
+to launch+OFF. Programme storage deduplicates identical mode0 words. Expected
+positive: three exact GO, one run completion, no SM result and no fault.
+`--mut descriptor_class` flips metadata mode197 only for the middle programme;
+literals remain unchanged. Retain its first actual assembled-class fault before
+accepting the causal negative. The selected frozen binary can run this fixture
+without SMB_ATTENTION because every literal low83 field is zero. This fixture
+adds no shared TB or RTL changes.

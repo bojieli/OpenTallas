@@ -1,0 +1,17 @@
+{
+  "pass_": true,
+  "default_event_bytes_exact": true,
+  "read_admission_reference": 7,
+  "actual_read_pin": 8,
+  "actual_command_pin": 11,
+  "run_edges": 9518,
+  "padding": 22,
+  "named_negatives": [
+    "descriptor_class",
+    "command_class",
+    "invalid_mode"
+  ],
+  "profile_conflict_rejected": true,
+  "unbound_native_execution_rejected": true,
+  "scope": "compiler/profile validation only; no whole simulation run"
+}
