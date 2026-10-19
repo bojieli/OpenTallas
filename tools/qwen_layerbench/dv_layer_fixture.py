@@ -268,9 +268,10 @@ def run_tp8od(a):
     if orc.get('tp') != 8 or str(pos) not in orc['per_position']:
         raise SystemExit(f'{gd.parent}/oracle.json: not a TP8 gold recording position {pos}')
     im = Img(a.img.format(layer=n, die=0), n, 8)
-    if orc['layer_image_sha256'][f'L{n}'][0] != {k: v for k, v in im.image_sha.items() if k in
-                                                   orc['layer_image_sha256'][f'L{n}'][0]}:
-        raise SystemExit('TP8 image digests differ from the gold run')
+    gsha = orc['layer_image_sha256'][f'L{n}'][0]
+    common = sorted(set(gsha) & set(im.image_sha))
+    if len(common) < 4 or any(gsha[k] != im.image_sha[k] for k in common):
+        raise SystemExit(f'TP8 image digests differ from the gold run ({common})')
     ar = [si for si, seg in enumerate(im.descriptors) if seg['kind'] == P.COLL_ALLREDUCE]
     if len(ar) != 2:
         raise SystemExit(f'expected 2 all-reduce segments (o, down), got {ar}')

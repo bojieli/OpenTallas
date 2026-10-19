@@ -1,0 +1,34 @@
+{
+ "schema": "opentallas.qwen.dv-layer-fixture-tp8od.v1",
+ "layer": 1,
+ "position": 8191,
+ "tp8_die": 0,
+ "gold": "/srv/opentallas-scratch/claude/qw-realstg/tp8gold/P8191/P8191",
+ "oracle_collective_profile": "production_tp8_two_level (rank 4*DIE+PKG, pair r[p]+r[p+4], ((P0+P1)+P2)+P3)",
+ "allreduce_segments": {
+  "o": 0,
+  "down": 1
+ },
+ "act_snapshot": "candidate_pc20_vm.npz (source PC24)",
+ "image_sha256": {
+  "program.hex": "44e0e715c33b14b6d630325e832c8fb94f7427c895c05df9b2be4207bd345dce",
+  "segments.hex": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+  "crom.hex": "e34f31be589e941d6aa788332049dc247a7f51d9a854051b6eb658b0bbccf649",
+  "matrix_scale_bf16.hex": "0d23db625759e9c40fe85d870999218623556848ab067bc5c4e01ffd34f1884c",
+  "layer1_rom.json": "70b2eeaac2375cac841188c2ead2b0d1531ee9b5a11d851f54d8452263b25181"
+ },
+ "inputs_sha256": {
+  "ATTN_fp32.hex": "bc51a47834d52336ae1134dbf9a9c41cb0262d5dd839caa99df2f55d07c9947f",
+  "candidate_pc20_vm.npz": "4e74760e0e390372feec421f06b865a9a0af8c8f02e210cfe0cb03194b709d10",
+  "collective0_partial.hex": "ea0980102913b2452c65ed2bc5f2b5b85c6f1f45f1b9e97fea3ddb9953e8f183",
+  "collective1_partial.hex": "bf6c04e31b534e63bf699c86914c52cd1f4779effc30039b2b7c3b8d2106031b",
+  "oracle.json": "e10fb57fab813f80d119b33e0cc5b6639b398e90ebb1ab5c5fe4e7dd2e8b7aaa"
+ },
+ "hdc_matvec_split256_equal_rows": {
+  "o": 4096,
+  "down": 4096
+ },
+ "file": "L1_mat_od_tp8.npz",
+ "sha256": "bef0d39661cdf72a6b2eef36e5ee047a2c89b238d2c5d2e07f7d664ead0a9ffe",
+ "tool_sha256": "5ef298b4de308c5ad1c50ae92ba0c43251d72cdb703a9d3561210f59324b9534"
+}
