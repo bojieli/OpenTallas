@@ -1,0 +1,125 @@
+{
+ "verdict": "WARN",
+ "items": [
+  {
+   "severity": "WARN",
+   "check": "fill",
+   "message": "parent kit without std_area_um2: fill not computed at gen (the gate measures it)",
+   "fix": "pass --area-um2 / std_area_um2 from the synthesis smoke"
+  },
+  {
+   "severity": "INFO",
+   "check": "pin_regs",
+   "message": "pin registers opted out: RTL is already pin-registered: d2d_pinreg_gen.py PR=1 wraps qkd_d2d_static_core with exactly one flop per functional port (FIRM at the pin via io_flop_at_pins); the link calendar is compiled --pinreg; a second synthesized pin register would add +1 cycle per port with no timing purpose",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-run selected ot-epyc7 for 48 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "source_binding",
+   "message": "immutable shipping manifest /tmp/ref_gate_qkd_d2d_static_r7w_sfb_20261019-121102.source_snapshot.json",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/ref_gate_qkd_d2d_static_r7w_sfb_20261019-121102.log; host dir ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/qkd_d2d_static_r7w_sfb-20261019-121102",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "synth + floorplan + PDN OK on ot-epyc7 in 161 s (gate total 4276 s)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "floorplan.pin_geometry",
+   "message": "actual pin geometry PASS: {'signal_clock_pins': 4869, 'pin_rectangles': 4869, 'pin_track_checked': 4869, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 383011d538e935bdff046efcc21344c513eb6073899ca1fb9d481d208601b11f",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "util",
+   "message": "synthesized std area 5978 um2 + macros 53294 in core 130189: util 9% (std-cell density 9.1% of placeable 65669 um2; total fill 45.5%)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "textbook",
+   "message": "PASS qkd_d2d_static_sf cells 37,553 flops 11,905 depth 483.4 ps util 0.4566 reach 103.3 um (1.6 s)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cts_calibration",
+   "message": "ss insertion all 568.9..685.3 ps (spread 116.4), boundary mean 651.9; tt insertion all 444.7..528.2 ps (spread 83.5), boundary mean 497.9; ff insertion all 368.4..432.2 ps (spread 63.8), boundary mean 404.6; macro_clk flag True",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "density",
+   "message": "effective global-placement target density 0.600 vs spec PD 0.60",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "constraints signoff /src/physical/ref_tile/qkd_d2d_static_r7w_sfb/signoff.sdc (TT placement RC; diagnostic)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->reg      591 paths, worst slack -23.4 ps (e.g. u_ot_pr_core.u_core.u_rec.n[15]$_DFFE_PN0P_/D)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "macro->reg      9 paths, worst slack 219.0 ps (e.g. u_ot_pr_core.u_core.u_end.u_link.g_bank[0].u_store.dout[7]$_DFF_P_/D)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "setup WNS -2.3403168292190912e-11 hold WNS 3.6527947333553357e-11",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "clock_rule",
+   "message": "root port:ck: 11,909 sinks on the largest root; measured TT insertion 528.2 ps, FF insertion 432.2 ps, TT pin-flop spread 51.6 ps, FF pin-flop spread 47.2 ps; WARN: insertion 528.2 ps > 300 (guidance; boundary matched by parent compensation / landing)",
+   "fix": "guidance only (owner 10-17 0dq): match the boundary by parent compensation or a landed link"
+  },
+  {
+   "severity": "INFO",
+   "check": "layout_images",
+   "message": "LOOK at these before submitting: floorplan /home/ubuntu/wt/claude-kv-d2d-1019/physical/ref_tile/qkd_d2d_static_r7w_sfb/gate_layout/floorplan.png; density /home/ubuntu/wt/claude-kv-d2d-1019/physical/ref_tile/qkd_d2d_static_r7w_sfb/gate_layout/density.png",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "fill",
+   "message": "fill 44% = (hard macros 53293.9 + synthesized std cells 6145.7) / outline 133436.2 um2; pin demand per face: S 2291 pins over 470.8/475.2 um (99%), N 1170 pins over 470.8/475.2 um (99%), W 1251 pins over 276.3/280.8 um (98%), E 333 pins over 276.3/280.8 um (98%) (< 50%)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "trial_route",
+   "message": "trial GRT: total overflow 0; worst layer M2 37.35% used; GRT 1941 s",
+   "fix": ""
+  }
+ ]
+}
