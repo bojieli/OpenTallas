@@ -51,6 +51,15 @@ class PvStartEquality(unittest.TestCase):
         self.assertEqual(m['relay_stages']['ks_pvst'], 1)
         self.assertEqual(m['fork_stages']['ks_pvst__f0'], 1)
         self.assertEqual(m['pv_start_eq']['ages'], [1, 1])
+        # kv_die renders one wire connection per physical output pin. A
+        # second named source net silently disconnects the first branch.
+        launch = [b for b in m['buses'] if tuple(b[3][0]) == ('kvs_attn', 'pvst')]
+        self.assertEqual(len(launch), 1, launch)
+        self.assertGreaterEqual(len(launch[0][3]), 3)
+        for ep in [e for b in m['buses'] for e in b[3][1:]]:
+            if ep[0].startswith(BEQ.PAD_PREFIX) and ep[1] == 'a':
+                self.assertEqual(sum(tuple(e)==tuple(ep) for b in m['buses'] for e in b[3][1:]),1)
+
 
 
 if __name__ == '__main__':

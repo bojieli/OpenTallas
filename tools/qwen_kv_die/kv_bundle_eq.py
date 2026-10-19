@@ -296,10 +296,15 @@ def equalize(K, m, bundles=None, plan_fn=None, record_key='bundle_eq', rule=None
             by.update({it.name: it for it in pads})
             # the sink leaves its old net (a fork net keeps its other loads) and takes the pad chain
             loads = [e for j, e in enumerate(eps[1:], 1) if j != li]
-            m['buses'][bi] = (bid, cl, bits, [eps[0]] + loads) if loads else None
+            # A physical output pin drives ONE net. When its original bus
+            # retains other loads, attach the first pad to that same net;
+            # a second bus from eps[0] would overwrite the pin connection in
+            # the die renderer and leave the original branch undriven.
+            m['buses'][bi] = (bid, cl, bits, [eps[0]] + loads + [(pads[0].name, 'a')]) if loads else None
             hops, src_ep = [], eps[0]
             for q, it in enumerate(pads):
-                hops.append((f'{bid}__beq{q}', cl, bits, [src_ep, (it.name, 'a')]))
+                if not (loads and q == 0):
+                    hops.append((f'{bid}__beq{q}', cl, bits, [src_ep, (it.name, 'a')]))
                 src_ep = (it.name, 'b')
             hops.append((f'{bid}__beq{len(pads)}', cl, bits, [src_ep, eps[li]]))
             m['buses'].extend(hops)
