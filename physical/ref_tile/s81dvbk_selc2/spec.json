@@ -1,0 +1,170 @@
+{
+ "name": "s81dvbk_selc2",
+ "top": "dsdv_bksel_c",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_sel_pipeline.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_sel.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_sel.sv",
+  "rtl/common/ot_fwd_link_stage.sv",
+  "rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel.sv",
+  "rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel_lib.sv",
+  "rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel_slice.sv",
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_sel_ctl_half.sv",
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_sel_ctl_pp.sv",
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_sel_tile.sv",
+  "rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bksel_c.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst"
+ ],
+ "outline": {
+  "w": 388.8,
+  "h": 172.8
+ },
+ "pins": {
+  "S": [
+   "f_s_s",
+   "f_o_s",
+   "t_c_s",
+   "t_cr_s"
+  ],
+  "N": [
+   "f_s_n",
+   "f_o_n",
+   "t_c_n",
+   "t_cr_n"
+  ],
+  "E": [
+   "vd",
+   "ck",
+   "rst"
+  ]
+ },
+ "pin_ranges": {
+  "f_s_s": [
+   4,
+   250
+  ],
+  "t_c_s": [
+   250,
+   270
+  ],
+  "t_cr_s": [
+   270,
+   272
+  ],
+  "f_o_s": [
+   272,
+   384.8
+  ],
+  "f_s_n": [
+   4,
+   250
+  ],
+  "t_c_n": [
+   250,
+   270
+  ],
+  "t_cr_n": [
+   270,
+   272
+  ],
+  "f_o_n": [
+   272,
+   384.8
+  ],
+  "vd": [
+   43.2,
+   129.6
+  ],
+  "ck": [
+   131,
+   134
+  ],
+  "rst": [
+   134,
+   137
+  ]
+ },
+ "macros": [],
+ "layer_cap": "M5",
+ "recipe": 2,
+ "hold_budget": "die",
+ "pin_regs": {
+  "enable": false,
+  "reason": "Source-registered: dsfd_selt_c lands every quarter bundle in its pin flops (sq / oq) and launches t_c / t_cr / vd from flops."
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  },
+  "io_hold_margin_ns": 0.0
+ },
+ "structural_change": "S81U-BK3 VERTICAL CUT (coordinator 0cj (b), 10-17 ~20:10): the bk clusters were ~1,160 um wide (the closed tiles' lane faces point away from the merger / control); they now stack inside the 680-um column (plan results/rtl/s81_dv_1016/bk_units_bk2/vcut_plan.json): S row 2 tiles, middle row merger-or-control + glue, N row 2 tiles (MX). Re-pinned top-down for the new neighbours; square-ish re-cut; the lane relays are gone (every hop <= ~405 um). Control: S face quarters 0 / 1, N face quarters 2 / 3 (t_o at the E end: quarter 1's W-face t_o comes up the inter-quarter gap), E face vd (to the glue's W face) + clock. The S81U-BK2 kit s81dvbk_selc (129.6 x 345.6) FAILed clock_rule: 26,013 sinks, TT insertion 347.4 ps.",
+ "job": {
+  "owner": "Claude:S81U-BK3",
+  "branch": "claude/s81u2-bk-1017",
+  "tag": "c2",
+  "purpose": "S81-DV bk_sel select control leaf, vertical cut (dsfd_selt_c SLAT 4 / XDX 1 re-pinned / re-cut; lane S81U-BK3): clock measurement (26k sinks: control / landing split owed if TT insertion > 300 ps).",
+  "benches": [
+   {
+    "name": "dsdv_bk_sel_exact",
+    "cmd": "bash rtl/dsrom_sys/s81_dv/unit/bk/test/run_bk_bench.sh sel {RUN}/sel 0",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "pass",
+    "pass_regex": "^DSDV_BK_SEL PASS mut=0$"
+   },
+   {
+    "name": "dsdv_bk_sel_mut_lateodd",
+    "cmd": "bash rtl/dsrom_sys/s81_dv/unit/bk/test/run_bk_bench.sh sel {RUN}/selm3 3 odd",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "^DSDV_BK_SEL FAIL mut=3$",
+    "fail_witness": "results/rtl/s81_dv_1016/bk_units_bk2/sel_mut3.txt"
+   }
+  ],
+  "extra_paths": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "results/rtl/s81_dv_1016/bk_units",
+   "results/rtl/s81_dv_1016/bk_units_bk2",
+   "rtl/common",
+   "rtl/dsrom_sys/s81_dv/unit",
+   "rtl/dsrom_sys/s81_ph",
+   "rtl/hdc",
+   "rtl/link"
+  ],
+  "views_to": "physical/ref_tile/s81dvbk_selc2/views",
+  "record_to": "results/rtl/ref_tile/s81dvbk_selc2"
+ },
+ "children": [],
+ "inter": [],
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true
+}

@@ -1,0 +1,174 @@
+{
+  "control_roles": {
+    "clocks": [
+      "ck"
+    ],
+    "excluded_data_ports": [],
+    "reset_meaning": "source RTL polarity and reset semantics preserved by direct wiring",
+    "resets": [
+      "rst_n"
+    ],
+    "source_sha256": {}
+  },
+  "evidence": {
+    "ot_pin_regs.tsv": "dcbd3040dd7611932ef529186a6b1278c3c0c9cf9522716dd9b273de7f612c39",
+    "ot_pin_regs_wrapper.v": "e33200689a7a4be90bdc87d3f8817c10b739a6d738492f8394d225cc8a3d60a5"
+  },
+  "job": "qkd_static_kv_pc_es_merge-r1-4751caff6",
+  "ports": {
+    "beat_data": {
+      "dir": "output",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 256
+    },
+    "beat_epoch": {
+      "dir": "output",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 16
+    },
+    "beat_half": {
+      "dir": "output",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 1
+    },
+    "beat_scale": {
+      "dir": "output",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 1
+    },
+    "beat_token": {
+      "dir": "output",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 18
+    },
+    "beat_v": {
+      "dir": "output",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 1
+    },
+    "beat_word": {
+      "dir": "output",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 6
+    },
+    "cfg_stack": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 2
+    },
+    "ck": {
+      "dir": "input",
+      "reason": "clock",
+      "register_edges": 0,
+      "width": 1
+    },
+    "corrected": {
+      "dir": "output",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 1
+    },
+    "emb_boot_ready": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 1
+    },
+    "emb_epoch": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 16
+    },
+    "emb_half": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 1
+    },
+    "emb_issue_v": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 1
+    },
+    "emb_outstanding": {
+      "dir": "output",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 1
+    },
+    "emb_return_slot": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 1
+    },
+    "emb_scale": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 1
+    },
+    "emb_token": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 18
+    },
+    "emb_word_index": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 6
+    },
+    "er": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 261
+    },
+    "es": {
+      "dir": "output",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 288
+    },
+    "fault": {
+      "dir": "output",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 1
+    },
+    "pc": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 5
+    },
+    "rst_n": {
+      "dir": "input",
+      "reason": "reset",
+      "register_edges": 0,
+      "width": 1
+    },
+    "wes": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 288
+    }
+  },
+  "schema": "opentallas.ref_tile.port_latency.v1",
+  "scope": "Additional generic wrapper edges only; core RTL stages remain in measured core duration; no physical qualification",
+  "source_commit": "4751caff6dc6ce9d51c593a567b56c54194e329b",
+  "top": "qkd_static_kv_pc_es_merge"
+}

@@ -1,0 +1,50 @@
+ot-run: ot-epyc4       admits    96 GB (avail 267, growth 200, headroom 0, waiters 0/0 GB) load 55/128 running 27 disk 140 GB 
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/hn5-rly4/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hn5-rly4/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hn5-rly4/src
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-142571-1792328879 after 0 s
+=== EW_rr_pass: bash rtl/hbm_accel/die_glue/test/bench_rly.sh pass hbfd_rly_136_EW 136 /srv/opentallas-scratch/claude/hn5-rly4/src/bench_out2/w_EW_p 3
+RLY_BENCH PASS 0 errors in 20000 words (hbfd_rly_136_EW W=136) release_edges=3 window_words=5
+rc=0
+=== EW_rr_mut: bash rtl/hbm_accel/die_glue/test/bench_rly.sh mut hbfd_rly_136_EW 136 /srv/opentallas-scratch/claude/hn5-rly4/src/bench_out2/w_EW_m 3
+RLY_BENCH FAIL 19994 errors in 20000 words (hbfd_rly_136_EW W=136) release_edges=3 window_words=5
+rc=1
+=== EW_rr_rrmut: bash rtl/hbm_accel/die_glue/test/bench_rly.sh rrmut hbfd_rly_136_EW 136 /srv/opentallas-scratch/claude/hn5-rly4/src/bench_out2/w_EW_r 3
+RLY_BENCH FAIL 5 errors in 20000 words (hbfd_rly_136_EW W=136) release_edges=3 window_words=5
+rc=1
+=== EW_rr_rel0: bash rtl/hbm_accel/die_glue/test/bench_rly.sh pass hbfd_rly_136_EW 136 /srv/opentallas-scratch/claude/hn5-rly4/src/bench_out2/w_EW_z
+RLY_BENCH PASS 0 errors in 20000 words (hbfd_rly_136_EW W=136) release_edges=0 window_words=0
+rc=0
+=== fc_EW_rel0: bash rtl/hbm_accel/die_glue/test/bench_rly_fc.sh pass 136 EW /srv/opentallas-scratch/claude/hn5-rly4/src/bench_out2/w_fc_EW_z
+RLY_FC_BENCH PASS 0 errors 0 clock_errors 0 chain_errors in 20000 words (hbfd_rly_136_EW_fc W=136) release_edges=0 window_words=0
+rc=0
+=== f2_EW_rel0: bash rtl/hbm_accel/die_glue/test/bench_rly_fcf.sh pass 136 EW 2 /srv/opentallas-scratch/claude/hn5-rly4/src/bench_out2/w_f2_EW_z
+RLY_FCF_BENCH PASS 0 errors 0 clock_errors 0 chain_errors in 20000 words (hbfd_rly_136_EW_fc_f2 W=136) release_edges=0 window_words=0
+rc=0
+=== f4_EW_rel0: bash rtl/hbm_accel/die_glue/test/bench_rly_fcf.sh pass 136 EW 4 /srv/opentallas-scratch/claude/hn5-rly4/src/bench_out2/w_f4_EW_z
+RLY_FCF_BENCH PASS 0 errors 0 clock_errors 0 chain_errors in 20000 words (hbfd_rly_136_EW_fc_f4 W=136) release_edges=0 window_words=0
+rc=0
+=== WE_rr_pass: bash rtl/hbm_accel/die_glue/test/bench_rly.sh pass hbfd_rly_136_WE 136 /srv/opentallas-scratch/claude/hn5-rly4/src/bench_out2/w_WE_p 3
+RLY_BENCH PASS 0 errors in 20000 words (hbfd_rly_136_WE W=136) release_edges=3 window_words=5
+rc=0
+=== WE_rr_mut: bash rtl/hbm_accel/die_glue/test/bench_rly.sh mut hbfd_rly_136_WE 136 /srv/opentallas-scratch/claude/hn5-rly4/src/bench_out2/w_WE_m 3
+RLY_BENCH FAIL 19994 errors in 20000 words (hbfd_rly_136_WE W=136) release_edges=3 window_words=5
+rc=1
+=== WE_rr_rrmut: bash rtl/hbm_accel/die_glue/test/bench_rly.sh rrmut hbfd_rly_136_WE 136 /srv/opentallas-scratch/claude/hn5-rly4/src/bench_out2/w_WE_r 3
+RLY_BENCH FAIL 5 errors in 20000 words (hbfd_rly_136_WE W=136) release_edges=3 window_words=5
+rc=1
+=== WE_rr_rel0: bash rtl/hbm_accel/die_glue/test/bench_rly.sh pass hbfd_rly_136_WE 136 /srv/opentallas-scratch/claude/hn5-rly4/src/bench_out2/w_WE_z
+RLY_BENCH PASS 0 errors in 20000 words (hbfd_rly_136_WE W=136) release_edges=0 window_words=0
+rc=0
+=== fc_WE_rel0: bash rtl/hbm_accel/die_glue/test/bench_rly_fc.sh pass 136 WE /srv/opentallas-scratch/claude/hn5-rly4/src/bench_out2/w_fc_WE_z
+RLY_FC_BENCH PASS 0 errors 0 clock_errors 0 chain_errors in 20000 words (hbfd_rly_136_WE_fc W=136) release_edges=0 window_words=0
+rc=0
+=== f2_WE_rel0: bash rtl/hbm_accel/die_glue/test/bench_rly_fcf.sh pass 136 WE 2 /srv/opentallas-scratch/claude/hn5-rly4/src/bench_out2/w_f2_WE_z
+RLY_FCF_BENCH PASS 0 errors 0 clock_errors 0 chain_errors in 20000 words (hbfd_rly_136_WE_fc_f2 W=136) release_edges=0 window_words=0
+rc=0
+=== f4_WE_rel0: bash rtl/hbm_accel/die_glue/test/bench_rly_fcf.sh pass 136 WE 4 /srv/opentallas-scratch/claude/hn5-rly4/src/bench_out2/w_f4_WE_z
+RLY_FCF_BENCH PASS 0 errors 0 clock_errors 0 chain_errors in 20000 words (hbfd_rly_136_WE_fc_f4 W=136) release_edges=0 window_words=0
+rc=0
+ALL_DONE
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-142571-1792328879): exit 0

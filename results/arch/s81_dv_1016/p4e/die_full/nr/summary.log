@@ -1,0 +1,22 @@
+OT_PLACE_S 1 insts 50204
+OT_CLUSTER_LEGAL_MODE snap gsites=54.40
+OT_CLUSTER_SNAP_LEGAL std_cells=47072 moved=848 still_on_macro=0
+OT_CLUSTER_LEGAL place
+OT_GRT_S 714
+OT_DONE
+[INFO GRT-0096] Final congestion report:
+Layer         Resource        Demand        Usage (%)    Max H / Max V / Total Congestion
+---------------------------------------------------------------------------------------
+M1                   0             0            0.00%             0 /  0 /  0
+M2            11674287         29165            0.25%             0 /  0 /  0
+M3            12239679       1506944           12.31%             0 /  0 /  0
+M4           233672069       11181640            4.79%             0 /  0 /  0
+M5           232215491       15982900            6.88%             0 /  0 /  0
+M6           201248696       1061122            0.53%             0 /  0 /  0
+M7           200413695       2670804            1.33%             0 /  0 /  0
+M8           1032496696        796411            0.08%             0 /  0 /  0
+M9           1032362815       4900522            0.47%             0 /  0 /  0
+---------------------------------------------------------------------------------------
+Total        -1338643868       38129508           -2.85%             0 /  0 /  0
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 12:19.26
+	Maximum resident set size (kbytes): 17926580

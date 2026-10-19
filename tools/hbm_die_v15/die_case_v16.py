@@ -31,7 +31,7 @@ Placement order (every generated home is reported in manifest.json 'homes'):
      nearest free area to each point.
 Generated homes keep a 10.8 um halo (>= 21.6 um channels between them); relays have no halo.
 """
-import argparse, hashlib, json, math, re, shutil, sys
+import argparse, collections, hashlib, json, math, re, shutil, sys
 from collections import defaultdict
 from pathlib import Path
 
@@ -39,9 +39,10 @@ import numpy as np
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from die_case import synth_lef, entry_cap, ports_of_lib, rect_of, _minus  # noqa: E402
+from die_case import synth_lef, entry_cap, ports_of_lib, rect_of, _minus, grant_pins  # noqa: E402
 from view_case import lef_pins, lef_xy  # noqa: E402
 import clock_sites
+import placement_coverage
 import die_clock_tree as dct  # noqa: E402
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import die_reach  # noqa: E402
@@ -71,7 +72,8 @@ OWNER = [(r'hb_vms_(SW|SE|NW|NE)', lambda m: rf'(vmh|vmb)_{m.group(1)}\d*'),
          (r'hb_(idx|argmax)', lambda m: r'idx_\w+')]
 
 
-PIN_STEP = 0.096   # granted die pin pitch (10.417 pins/um, hbm_v15 grants)
+_CH_ROUTER = None
+PIN_STEP0 = 0.096   # granted die pin pitch (10.417 pins/um, hbm_v15 grants)
 
 
 def snap(v, g):
@@ -141,8 +143,11 @@ def pin(port, bits, k):
     return f'{port}[{k}]' if bits > 1 else port
 
 
-def validate_view_coverage(instances, views):
-    """A missing receipt may be diagnostic; stale instance membership is an error."""
+def validate_view_coverage(instances, views, allow_param_alias=False):
+    """A missing receipt may be diagnostic; stale instance membership is an error.
+    allow_param_alias: parameter aliases (same master/ports, different params) are RETURNED as an explicit
+    diagnostic list instead of refused; the case is then labelled not-qualifying (geometry/GRT evidence only)."""
+    aliases = []
     owners = {}
     for cell, entry in views.items():
         for name in entry['instances']:
@@ -163,7 +168,11 @@ def validate_view_coverage(instances, views):
         # Equal ports do not imply equal implementations: QID, pipeline ages,
         # memory depth and static features can alter the mapped body and timing.
         if instance.get('params', {}) != entry.get('params', {}):
-            raise ValueError(f'view parameter mismatch: {name} -> {owners[name]}')
+            if not allow_param_alias:
+                raise ValueError(f'view parameter mismatch: {name} -> {owners[name]}')
+            aliases.append(dict(instance=name, view=owners[name], instance_params=instance.get('params', {}),
+                                view_params=entry.get('params', {})))
+    return aliases
 
 
 def communicating_pairs(nets, dom_of, clique_limit=8):
@@ -179,6 +188,139 @@ def communicating_pairs(nets, dom_of, clique_limit=8):
             for domain in dom_of[x] & dom_of[y]:
                 pairs[domain].add(tuple(sorted((x, y))))
     return {domain: sorted(edges) for domain, edges in pairs.items()}
+
+
+def regional_regions(sinks, entry_map, I, region_map, entry_pairs, near_um, max_um):
+    """H-DIE-R8 10-17: entry alias -> clock region for mode 'regional'.
+    Seed: the DIE-CLOCK region map (instance, else its contract slot, else the nearest region site to the entry).
+    Refinement (coordinator 0dg (2): adjacent communicating tiles share a regional root): communicating entry pairs of
+    different tiles within near_um, nearest first, merge their two regions (union-find) when the merged entry box stays
+    within max_um on both axes.  Returns (alias -> region, report)."""
+    rm_ = json.loads(Path(region_map).read_text()) if region_map else {}
+    rmap = rm_.get('instances', {})
+    sites = [(k, v['site'][0], v['site'][1]) for k, v in rm_.get('regions', {}).items()] or [('all', 0.0, 0.0)]
+    pos = {s[0]: (s[2], s[3]) for s in sinks}
+
+    def seed(alias):
+        tile = entry_map[alias][0]
+        for k in (tile, (I.get(tile) or {}).get('slot')):
+            if k in rmap:
+                v = rmap[k]
+                return v if isinstance(v, str) else v['region']
+        x, y = pos[alias]
+        return min(sites, key=lambda t: abs(t[1] - x) + abs(t[2] - y))[0]
+    reg0 = {a_: seed(a_) for a_ in pos}
+    par = {r: r for r in set(reg0.values())}
+    box = {}
+    for a_, r in reg0.items():
+        x, y = pos[a_]; b = box.get(r)
+        box[r] = [x, y, x, y] if b is None else [min(b[0], x), min(b[1], y), max(b[2], x), max(b[3], y)]
+
+    def find(r):
+        while par[r] != r:
+            par[r] = par[par[r]]; r = par[r]
+        return r
+    near = sorted((abs(pos[x][0] - pos[y][0]) + abs(pos[x][1] - pos[y][1]), x, y) for x, y in entry_pairs
+                  if x in pos and y in pos and entry_map[x][0] != entry_map[y][0])
+    near = [t for t in near if t[0] <= near_um]
+    merged, refused = 0, 0
+    for _, x, y in near:
+        ra, rb = find(reg0[x]), find(reg0[y])
+        if ra == rb:
+            continue
+        A, Bx = box[ra], box[rb]
+        u = [min(A[0], Bx[0]), min(A[1], Bx[1]), max(A[2], Bx[2]), max(A[3], Bx[3])]
+        if u[2] - u[0] <= max_um and u[3] - u[1] <= max_um:
+            par[ra] = rb; box[rb] = u; merged += 1
+        else:
+            refused += 1
+    reg = {a_: find(r) for a_, r in reg0.items()}
+    tiles_near = {tuple(sorted((entry_map[x][0], entry_map[y][0]))) for _, x, y in near}
+    tile_reg = defaultdict(set)
+    for a_, r in reg.items():
+        tile_reg[entry_map[a_][0]].add(r)
+    cross = sum(1 for p_, q_ in tiles_near if not (tile_reg[p_] & tile_reg[q_]))
+    rep = dict(seed_regions=len(set(reg0.values())), regions=len(set(reg.values())), merges=merged, merges_refused_box=refused,
+               near_entry_pairs=len(near), near_tile_pairs=len(tiles_near), near_tile_pairs_cross_region=cross,
+               max_region_um=max_um, near_um=near_um)
+    return reg, rep
+
+
+def reset_reach_gate(rst, nets, pl, vxy, cell_of, master_of, reach, ckgen='hb_ckgen', mode=None):
+    """H-D4G 10-17 (die standard: regional synchronous reset; as the Qwen generator, main 27309ba59): every reset sink must
+    be reachable by a regional reset tree.  Errors:
+      no_regional_tree  -- a reset pin fed straight from hb_ckgen/por_<dom> (die-wide async fan-out) beyond the reach;
+      sink_unreachable  -- a reset pin buried under another placed block, or a forest leaf (hbfd_rrl_*) -> pin hop over the reach;
+      driver_unreachable -- a reset driver pin (por / forest tile) buried under another placed block.
+    Any error FAILS (ValueError) unless mode == 'diag' (OT_RESET_GATE=diag: the case continues, rec['reach_gate'] =
+    'FAIL_DIAG'); 'warn' does NOT bypass it.  Returns rec."""
+    import os as _os
+    mode = _os.environ.get('OT_RESET_GATE') if mode is None else mode
+    BIN = 1000.0
+    grid = defaultdict(list)
+    for n, v in pl.items():
+        for i in range(int(v['x'] // BIN), int((v['x'] + v['w']) // BIN) + 1):
+            for j in range(int(v['y'] // BIN), int((v['y'] + v['h']) // BIN) + 1):
+                grid[(i, j)].append(n)
+
+    def xy(n, p):
+        v = pl[n]; base = re.sub(r'\[\d+\]$', '', p)
+        q = vxy.get(cell_of[n], {}).get(p) or vxy.get(cell_of[n], {}).get(base)
+        if q is None:
+            return v['x'] + v['w'] / 2, v['y'] + v['h'] / 2
+        return rect_of(v['x'], v['y'], v['w'], v['h'], v['o'], q[0], q[1])
+
+    def buried(n, pt):
+        x, y = pt
+        for o in grid.get((int(x // BIN), int(y // BIN)), ()):
+            if o == n:
+                continue
+            v = pl[o]
+            if v['x'] + 0.5 < x < v['x'] + v['w'] - 0.5 and v['y'] + 0.5 < y < v['y'] + v['h'] - 0.5:
+                return o
+        return None
+    errors, n_por, n_forest = [], 0, 0
+    for dom, lst in sorted(rst.items()):
+        src = (ckgen, f'por_{dom}')
+        sp = xy(*src) if ckgen in pl else None
+        if sp is not None and buried(ckgen, sp):
+            errors.append(dict(kind='driver_unreachable', pin=f'{ckgen}.por_{dom}', under=buried(ckgen, sp)))
+        for (n, p) in lst:
+            if n not in pl:
+                continue
+            n_por += 1
+            pt = xy(n, p)
+            b = buried(n, pt)
+            if b:
+                errors.append(dict(kind='sink_unreachable', pin=f'{n}.{p}', domain=dom, under=b))
+            elif sp is not None and abs(pt[0] - sp[0]) + abs(pt[1] - sp[1]) > reach:
+                errors.append(dict(kind='no_regional_tree', pin=f'{n}.{p}', domain=dom,
+                                   um=round(abs(pt[0] - sp[0]) + abs(pt[1] - sp[1]))))
+    for d, ends in nets.items():
+        if d[0] not in pl or not master_of(d[0]).startswith('hbfd_rrl'):
+            continue
+        dp = xy(*d)
+        if buried(d[0], dp):
+            errors.append(dict(kind='driver_unreachable', pin=f'{d[0]}.{d[1]}', under=buried(d[0], dp)))
+        for l in ends[1:]:
+            if l[0] not in pl:
+                continue
+            n_forest += 1
+            pt = xy(*l)
+            b = buried(l[0], pt)
+            if b:
+                errors.append(dict(kind='sink_unreachable', pin=f'{l[0]}.{l[1]}', under=b))
+            elif abs(pt[0] - dp[0]) + abs(pt[1] - dp[1]) > reach:
+                errors.append(dict(kind='sink_unreachable', pin=f'{l[0]}.{l[1]}', driver=f'{d[0]}.{d[1]}',
+                                   um=round(abs(pt[0] - dp[0]) + abs(pt[1] - dp[1]))))
+    kinds = dict(collections.Counter(e['kind'] for e in errors))
+    rec = dict(reach_um=reach, por_direct_sinks=n_por, forest_sinks=n_forest, errors=len(errors), kinds=kinds,
+               first=errors[:20], reach_gate='PASS' if not errors else ('FAIL_DIAG' if mode == 'diag' else 'FAIL'))
+    print('reset_reach_gate', json.dumps({k: rec[k] for k in ('reach_gate', 'por_direct_sinks', 'forest_sinks', 'errors', 'kinds')}), flush=True)
+    if rec['reach_gate'] == 'FAIL':
+        raise ValueError(f'reset tree: reachability gate FAIL, {len(errors)} unbuildable {kinds}: {errors[:8]} '
+                         f'(OT_RESET_GATE=diag continues for diagnosis only)')
+    return rec
 
 
 def clock_entries(insts, placement, cell_of, pin_xy, tile_pairs):
@@ -211,6 +353,8 @@ def clock_entries(insts, placement, cell_of, pin_xy, tile_pairs):
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--views', required=True, type=Path)
+    ap.add_argument('--require-explicit-placement', action='store_true',
+                    help='refuse absent homes and generic centroid fallback; source-complete release admission')
     ap.add_argument('--out', required=True, type=Path)
     ap.add_argument('--contract', type=Path, default=CONTRACT, help='source contract (default: main); freeze it to the synthesis snapshot')
     ap.add_argument('--die-repeaters', action='store_true',
@@ -231,6 +375,22 @@ def main():
     ap.add_argument('--pair-max-tiles', type=int, default=8,
                     help='clique expansion limit; every source-to-sink branch is always a clock pair')
     ap.add_argument('--clock-bin-um', type=float, default=1600.0)
+    ap.add_argument('--clock-region-map', type=Path, default=None,
+                    help="mode 'regional' (H-DIE-R8): DIE-CLOCK region map (region_map.py output: instances/regions/sites); "
+                         "tiles not in it take the region of their contract slot, else the nearest region site")
+    ap.add_argument('--clock-region-max-um', type=float, default=4000.0,
+                    help="regional: two regions joined by a communicating entry pair within --clock-near-um are merged "
+                         "when the merged sink box stays within this side (adjacent communicating tiles share a root)")
+    ap.add_argument('--clock-near-um', type=float, default=405.0, help='regional: near-pair distance (measured reach)')
+    ap.add_argument('--diagnostic-param-alias', action='store_true',
+                    help='DIAGNOSTIC ONLY: accept same-port parameter aliases (listed in manifest.param_aliases_diagnostic); '
+                         'timing of those instances is not their own; the case never qualifies')
+    ap.add_argument('--max-pin-density', type=float, default=0.0,
+                    help='SYNTH abstracts: pins/um/face cap (coordinator standard: 6); compact runs use >= 1/cap pitch; '
+                         'faces whose bus total cannot fit are listed in manifest.pin_density_over (never hidden)')
+    ap.add_argument('--slot-pins', action='store_true',
+                    help='A2P (H-DIE 10-16): a SYNTH master whose grant slots carry exact pins (pin_status COLUMN_PIN_FILE_EXACT, '
+                         'e.g. the H-SM F108 SM column) takes those pins in its abstract instead of the peer-facing generator')
     ap.add_argument('--no-plot', action='store_true', help='defer PNG rendering; manifest retains exact geometry for later rendering')
     ap.add_argument('--no-clock', action='store_true', help='placement/images only (skip die clock trees and run files)')
     ap.add_argument('--pc-strip', type=float, default=0.0,
@@ -240,6 +400,14 @@ def main():
     ap.add_argument('--compact-pins', action='store_true',
                     help='d4b (H-DIE 10-16): SYNTH abstracts pack each bus at 0.096 um centred toward its peers '
                          '(direction averaged over all instances of the master) instead of spreading over 90 percent of the face')
+    ap.add_argument('--outline-override', default='',
+                    help='H-DIE-R7: CELL=WxH[,CELL=WxH] coordinator tile outlines for SYNTH cells (overrides grant/kit/area; '
+                         'still grown if pin-bound)')
+    ap.add_argument('--slot-map', default='',
+                    help='inst=slot[,inst=slot..]: die-side contract slot retarget (H-DIE-R6; same as an H-NETLIST slot_override layer)')
+    ap.add_argument('--replan-chains', default='',
+                    help='regex of contract relay instances whose planned homes are ignored: each chain is re-planned at even '
+                         'spacing along an obstacle-aware route (relay_router, free cells) between its placed ends (H-DIE-R6)')
     ap.add_argument('--d4b-homes', action='store_true',
                     help='d4b (H-DIE 10-16): LG banks beside their user (pgslice / lg_pair / hc_q), not inside VM plan '
                          'blocks; xload ctlw at the Manhattan minimax point of its SM peers')
@@ -247,12 +415,23 @@ def main():
     a = ap.parse_args()
     mw = die_reach.from_args(a, 'hbm')
     C = json.loads(a.contract.read_text()); G = json.loads(a.grants.read_text()); P = json.loads(a.plan.read_text())
+    import reticle; RETICLE = reticle.require_contract(G, "die_case_v16 GEN")   # OWNER 10-16: >= 0.5 mm margin in W AND H
     V = json.loads((a.views / 'views.json').read_text())
-    validate_view_coverage(C['instances'], V)
+    param_aliases = validate_view_coverage(C['instances'], V, a.diagnostic_param_alias)
     lanes = json.loads(a.lanes.read_text())
     slots = {s['name']: s for s in G['slots']}
     W, H = G['floorplan']['die_um']
     I = C['instances']
+    slot_map = dict(kv.split('=') for kv in a.slot_map.split(',') if kv)
+    for n_, s_ in slot_map.items():
+        I[n_]['slot'] = s_
+    replanned = []
+    if a.replan_chains:
+        for n_, v_ in I.items():
+            if re.match(a.replan_chains, n_) and re.search(r'home \(([\d.]+), ([\d.]+)\) um', v_.get('note', '')):
+                v_['note'] = re.sub(r'home \(([\d.]+), ([\d.]+)\) um', r'old home (\1, \2) um ignored (r6 chain re-plan)', v_['note'])
+                replanned.append(n_)
+        print('replan chains: planned homes ignored for', len(replanned), 'relays')
     strip = None
     if a.pc_strip:
         dh = a.pc_strip
@@ -287,6 +466,13 @@ def main():
         if e['kind'] in ('REAL', 'ROUTED_UNBOUND'):
             shutil.copy(ROOT / e['lef'], vd / f'{c}.lef')
             shutil.copy(ROOT / e['tt'], vd / f'{c}_tt.lib'); shutil.copy(ROOT / e['ff'], vd / f'{c}_ff.lib')
+            if c != e['master']:   # H-DIE-R8b: a routed parameter variant (cfg_collar__pv0/1/2 = col_sfu/col_su/col_idx):
+                m_ = re.escape(e['master'])   # macro + liberty cell carry the CELL name die.v instantiates (ORD-2013 in run8)
+                f_ = vd / f'{c}.lef'
+                f_.write_text(re.sub(rf'^(MACRO|END)(\s+){m_}\s*$', rf'\1\g<2>{c}', f_.read_text(), flags=re.M))
+                for k_ in ('tt', 'ff'):
+                    f_ = vd / f'{c}_{k_}.lib'
+                    f_.write_text(re.sub(rf'(\bcell\s*\(\s*"?){m_}("?\s*\))', rf'\g<1>{c}\2', f_.read_text()))
             kinds[c] = 'ROUTED_UNBOUND' + (' (TT abstract used at FF: modelled off-die PHY macro)' if e['tt'] == e['ff'] else '')
             if e['master'] in DIAGNOSTIC:
                 kinds[c] += f" DIAGNOSTIC ({DIAGNOSTIC[e['master']]})"
@@ -337,7 +523,10 @@ def main():
         if s in slots:
             slot_users[s].append(n)
     flags = {}
+    pin_density_over = []
     kit = json.loads((ROOT / 'physical/ref_tile/hdie_pc_ctrl/floorplan.json').read_text())
+    oovr = {kv.split('=')[0]: tuple(float(x) for x in kv.split('=')[1].split('x'))
+            for kv in a.outline_override.split(',') if kv}
     for c in kinds:
         if kinds[c] != 'SYNTH':
             continue
@@ -356,6 +545,8 @@ def main():
             big = max([max(mw, mh) for n_, mw, mh in meta['macros'].values()] or [0])
             s_ = max(math.sqrt(A), big + 2 * HALO, 21.6)
             w, h = s_, s_; why = f"area {meta['std_area_um2']:.0f} um2 std / 0.60 + 1.3 x macros"
+        if c in oovr:
+            w, h = oovr[c]; why = f'coordinator outline override {w}x{h}'
         need = bits * 0.048 * 1.5 / 0.9           # perimeter (um) for one track per bit + 50 % margin (faces fill unevenly: pins face their peers)
         if 2 * (w + h) < need:
             k = need / (2 * (w + h)); w, h = w * k, h * k
@@ -414,6 +605,8 @@ def main():
     per = [('row_v', 1), ('row_op', 3), ('row_bank', 5), ('row_row', 19), ('col_v', 1), ('col_we', 1), ('col_bank', 5),
            ('col_col', 5), ('col_data', 256), ('col_strb', 32), ('dram_rvalid', 1), ('dram_rdata', 256)]
     for q in Q:
+        if f'phy_{q}' not in cell_of or f'phy_{q}' not in P:     # d4f A2P: 2 stacks (SW, NW) -- no SE/NE PHY side
+            continue
         s = slots[f'phy_{q}']; b = P[f'phy_{q}']
         north = b['y'] > H / 2; east = b['x'] > W / 2
         po = ('R180' if east else 'MX') if north else ('MY' if east else 'R0')
@@ -445,7 +638,7 @@ def main():
             continue
         n = users[0]; sl = slots[s]
         x_, y_, o_ = sl['origin']['x'], sl['origin']['y'], sl['origin'].get('orient', 'R0')
-        if re.fullmatch(r'sm_S[WE]\d+', n) and o_ == 'R0':
+        if re.fullmatch(r'sm_S[WE]\d+', n) and o_ == 'R0' and not str(sl.get('pin_status', '')).startswith('COLUMN_PIN_FILE_EXACT'):
             # H-DIE/V790 10-16: the H-SM frame has its SM_HBM window on N; the die grant puts the packet face toward the PC
             # band (S for the S quadrants) -> S-quadrant SM frames placed MX (carve row + XC at the S edge); H-SM: an MX'd
             # frame's y origin must be 0.024 mod 0.048 um so the M4 W/E pins stay on track
@@ -468,6 +661,62 @@ def main():
         else:
             continue
         put_near(n, (reg[0] + reg[2]) / 2, (reg[1] + reg[3]) / 2, f'region {s}', region=reg, halo=0.0)
+    # 3a H-RELAY 10-17 (S81-DV lane model): LANE ROWS.  A relay station = one row of T lane tiles abutted ACROSS the
+    # travel direction at a FIXED site (relay layer note 'lane row <id> <t>/<T> <flow>; site (x, y) um' = row centre).
+    # The row is placed as a unit: exact site, else slid along the travel axis (the hop slack, <= LANE_SLIDE um), else
+    # across it, else the nearest free area for the WHOLE row -- never tile by tile (run8: T tiles on one home point
+    # scattered median 279 um / p90 1.9 mm).  Widest rows first.
+    LANE_SLIDE = 150.0
+    lane_re = re.compile(r'lane row (\S+) (\d+)/(\d+) (EW|WE|NS|SN); site \(([-\d.]+), ([-\d.]+)\) um')
+    rows_ = defaultdict(dict)
+    for n in inst:
+        if n in pl:
+            continue
+        m = lane_re.search(I[n].get('note', ''))
+        if m:
+            rows_[m.group(1)][int(m.group(2))] = (n, m.group(4), float(m.group(5)), float(m.group(6)))
+
+    def rect_free(x, y, w, h):
+        if x < 0 or y < 0 or x + w > W or y + h > H:
+            return False
+        ii = occ.ii()
+        i0, j0 = int(x / CELL), int(y / CELL); i1, j1 = int(math.ceil((x + w) / CELL)), int(math.ceil((y + h) / CELL))
+        i1 = min(i1, occ.nx); j1 = min(j1, occ.ny)
+        return ii[j1, i1] - ii[j0, i1] - ii[j1, i0] + ii[j0, i0] == 0
+    lane_stats = collections.Counter()
+    order_ = sorted(rows_, key=lambda k: -sum(size[cell_of[v[0]]][0] * size[cell_of[v[0]]][1] for v in rows_[k].values()))
+    for rid in order_:
+        tl = [rows_[rid][t] for t in sorted(rows_[rid])]
+        fl = tl[0][1]; cx, cy = tl[0][2], tl[0][3]
+        along_x = fl in ('WE', 'EW')                      # travel along x -> lane tiles stacked along y
+        dims = [size[cell_of[n]] for n, *_ in tl]
+        rw = max(d[0] for d in dims) if along_x else sum(d[0] for d in dims)
+        rh = sum(d[1] for d in dims) if along_x else max(d[1] for d in dims)
+        x0, y0 = cx - rw / 2, cy - rh / 2
+        got, how = None, None
+        steps = [0.0] + [s * k for k in range(1, int(LANE_SLIDE / CELL) + 1) for s in (CELL, -CELL)]
+        for ax, tag in ((along_x, 'slid along'), (not along_x, 'slid across')):
+            for d in steps:
+                x, y = (x0 + d, y0) if ax else (x0, y0 + d)
+                if rect_free(x, y, rw, rh):
+                    got, how = (x, y), ('exact site' if d == 0 else f'{tag} {abs(d):.1f} um'); break
+            if got:
+                break
+        if got is None:
+            r_ = occ.find(cx, cy, rw, rh, 0.0)
+            if r_ is None:
+                raise SystemExit(f'no free area for lane row {rid} ({rw}x{rh})')
+            got, how = r_, 'row nearest free area'
+        lane_stats[how.split(' ')[0] + ' ' + how.split(' ')[1]] += 1
+        off = 0.0
+        for (n, *_), (w_, h_) in zip(tl, dims):
+            x, y = (got[0], got[1] + off) if along_x else (got[0] + off, got[1])
+            off += h_ if along_x else w_
+            put(n, x, y, 'R0', f'lane row {rid} ({len(tl)} lanes, {fl}): {how}', 0.0)
+            homes[n] = dict(rule=f'lane row {how}', target=[round(cx, 1), round(cy, 1)], at=[round(x, 3), round(y, 3)],
+                            dist_um=round(abs(got[0] + rw / 2 - cx) + abs(got[1] + rh / 2 - cy), 1))
+    if rows_:
+        print('lane rows', len(rows_), 'tiles', sum(len(v) for v in rows_.values()), dict(lane_stats), flush=True)
     # 3 relays with planned homes
     for n in inst:
         if n in pl:
@@ -485,7 +734,7 @@ def main():
 
     def centre(n):
         v = pl[n]; return v['x'] + v['w'] / 2, v['y'] + v['h'] / 2
-    is_rly = lambda n: I[n]['master'].startswith('hbfd_rly')
+    is_rly = lambda n: I[n]['master'].startswith(('hbfd_rly', 'hbfd_lh', 'hbfd_land'))
     # 4 remaining blocks by connectivity: compact660_v5 plan blocks are reserved for their owners, so a generated home
     # goes to free die area outside every plan block (corner voids beside the LK/EP column, channels) -- never squeezed
     # into a band (H-DIE 01:30 request)
@@ -611,6 +860,16 @@ def main():
             path = [p0, (p0[0], lane['h']), (p1[0], lane['h']), p1]
         else:
             path = [p0, (p1[0], p0[1]), p1]
+        if a.replan_chains and re.match(a.replan_chains, chain[0]):
+            # r6: obstacle-aware routed path through free channels (wires may cross macro edges), relays on free cells
+            global _CH_ROUTER
+            if _CH_ROUTER is None:
+                import relay_router as RR
+                _CH_ROUTER = RR.Router({k: dict(m=v['m'], x=v['x'], y=v['y'], w=v['w'], h=v['h'], o=v['o']) for k, v in pl.items()},
+                                       (W, H), 405.0, G=20.0)
+            rt = _CH_ROUTER; nodes = rt.route(p0, p1)
+            path = [p0] + [rt.centre(k) for k in nodes if k >= 0] + [p1]
+            lane = 'routed'
         seg = [abs(path[i + 1][0] - path[i][0]) + abs(path[i + 1][1] - path[i][1]) for i in range(len(path) - 1)]
         L = sum(seg) or 1.0
         for r, rn in enumerate(chain):
@@ -691,8 +950,30 @@ def main():
             continue
         rep = next(n for n in V[c]['instances'] if n in pl)
         v = pl[rep]; w, h = size[c]; cx, cy = centre(rep)
+        gsl = slots.get(eslot(rep) or '', {})
+        if a.slot_pins and str(gsl.get('pin_status', '')).startswith('COLUMN_PIN_FILE_EXACT'):
+            gp, bad, extra = grant_pins(gsl, {p: (dirs[c][p], b) for p, b in ports[c].items()})
+            if bad:
+                raise SystemExit(f'{c}: slot pins do not cover the master ports {list(bad.items())[:6]} (extra {extra[:6]})')
+            synth_lef(c, w, h, gp, vd / f'{c}.lef', keepout=[])
+            face_report[c] = dict(collections.Counter(x[2] for x in gp)); flags[c] = 'slot_pins_exact'
+            continue
         cap = {f: 0.9 * (w if f in 'NS' else h) / 0.048 for f in 'NSEW'}
         want = {}
+        # H-D4G GEN2 10-18 (SFU-K9PIN / HANDOFF 0gj): a grant slot's synth_pin_bind pins the stand-in to its kit's pin plan --
+        # faces {port: face} (master-local, so every orientation of the shared abstract matches the hardened block) and
+        # windows [{ports, face, local_um [lo, hi]}] that pack those ports inside the window (pins/um <= the cap).
+        spb = gsl.get('synth_pin_bind') or {}
+        pb_face = dict(spb.get('faces', {}))
+        pb_win = {}
+        for wd in spb.get('windows', []):
+            for p_ in wd['ports']:
+                pb_face[p_] = wd['face']; pb_win[p_] = (wd['face'], float(wd['local_um'][0]), float(wd['local_um'][1]))
+        if spb:
+            miss = sorted(p_ for p_ in pb_face if p_ not in ports[c])
+            if miss:
+                raise SystemExit(f'{c}: synth_pin_bind names ports the master lacks {miss[:6]}')
+            flags[c] = 'synth_pin_bind'
         clockish = set(p for d_ in clk.values() for p in [re.sub(r'\[\d+\]$', '', x) for x in d_.get(rep, [])])
         insts_c = [n for n in V[c]['instances'] if n in pl] if a.compact_pins else [rep]
         for p, b in ports[c].items():
@@ -716,9 +997,29 @@ def main():
             px = sum(pxs) / len(pxs); py = sum(pys) / len(pys)
             sc = {'E': px / w, 'W': -px / w, 'N': py / h, 'S': -py / h}
             order = sorted(sc, key=lambda f: -sc[f])
+            if p in pb_face:
+                order = [pb_face[p]] + [f for f in order if f != pb_face[p]]
             along = (px if order[0] in 'NS' else py)
             want[p] = (order, along, b)
+        for p in pb_face:
+            if p in want and want[p][0][0] != pb_face[p]:      # peer-less port: still the kit face
+                want[p] = ([pb_face[p]] + [f for f in want[p][0] if f != pb_face[p]], want[p][1], want[p][2])
+        win_pins = []                                          # window ports: placed first (they own their tracks)
+        for wd in spb.get('windows', []):
+            f_, lo_w, hi_w = wd['face'], float(wd['local_um'][0]), float(wd['local_um'][1])
+            ps_ = [p_ for p_ in wd['ports'] if p_ in want]
+            tot_w = sum(ports[c][p_] for p_ in ps_)
+            if a.max_pin_density and tot_w / (hi_w - lo_w) > a.max_pin_density:
+                raise SystemExit(f'{c}: synth_pin_bind window {f_} {lo_w}-{hi_w} holds {tot_w} pins > {a.max_pin_density}/um')
+            x_ = lo_w
+            for p_ in ps_:
+                ln_ = (hi_w - lo_w) * ports[c][p_] / tot_w
+                win_pins.append((p_, dirs[c][p_], f_, x_, x_ + ln_, ports[c][p_], 0, ports[c][p_] > 1)); x_ += ln_
+            for p_ in ps_:
+                del want[p_]
         faces = {f: [] for f in 'NSEW'}; usedc = {f: 0 for f in 'NSEW'}
+        for wp in win_pins:
+            usedc[wp[2]] += wp[5]
         for p, (order, along, b) in sorted(want.items(), key=lambda kv: -kv[1][2]):
             base, left = 0, b      # a bus that does not fit its preferred face continues on the next face (bit slices)
             for f in order + [max(usedc, key=lambda f: cap[f] - usedc[f])]:
@@ -733,12 +1034,16 @@ def main():
                 raise SystemExit(f'{c}: pins do not fit ({b} b of {p})')
             if base != b or len([1 for f in faces for x in faces[f] if x[1] == p]) > 1:
                 flags.setdefault(c, 'bus_split_over_faces')
-        pinlist = []
+        pinlist = list(win_pins)
         for f, L in faces.items():
             if not L:
                 continue
             Lf = w if f in 'NS' else h
-            tot = sum(k for _, _, _, k in L)
+            tot = sum(k for _, _, _, k in L) + sum(wp[5] for wp in win_pins if wp[2] == f)
+            PIN_STEP = max(PIN_STEP0, 1.0 / a.max_pin_density) if a.max_pin_density else PIN_STEP0
+            if a.max_pin_density and tot / (0.9 * Lf) > a.max_pin_density:
+                pin_density_over.append(dict(cell=c, face=f, pins=tot, face_um=round(Lf, 2),
+                                             pins_per_um=round(tot / (0.9 * Lf), 2)))
             if a.compact_pins and tot * PIN_STEP <= 0.9 * Lf:
                 # d4b (H-DIE 10-16): each bus packed at the granted 0.096 um pitch, centred where it faces its peers
                 # (not spread over the whole face: the 5.7 mm SM xw_data spread was this abstract's artifact)
@@ -759,7 +1064,8 @@ def main():
                 for st_, en_, p, base, k in runs:
                     pinlist.append((p, dirs[c][p], f, st_, en_, k, base, ports[c][p] > 1))
                 continue
-            step = max(0.048, (0.9 * Lf) / max(tot, 1))
+            step = max(0.048 if not a.max_pin_density else min(1.0 / a.max_pin_density, (0.9 * Lf) / max(tot, 1)),
+                       (0.9 * Lf) / max(tot, 1))
             x = 0.05 * Lf
             for _, p, base, k in sorted(L):
                 pinlist.append((p, dirs[c][p], f, x, x + k * step, k, base, ports[c][p] > 1)); x += k * step
@@ -769,6 +1075,8 @@ def main():
         if ko:
             carved[c] = ko
         face_report[c] = {f: sum(x[3] for x in L) for f, L in fp.items()}
+        for wp in win_pins:
+            face_report[c][wp[2]] = face_report[c].get(wp[2], 0) + wp[5]
 
     vpins = {c: lef_pins(vd / f'{c}.lef') for c in kinds}
     vxy = {c: lef_xy(vd / f'{c}.lef') for c in kinds}
@@ -777,7 +1085,7 @@ def main():
                     label=f"NOT_A_DIE_RESULT (source contract has {exposed.get('ports', 'unknown')} exposed "
                           f"input ports / {exposed.get('bits', 'unknown')} b; SYNTH views are estimates; "
                           'full native/physical qualification remains OPEN)', die_um=[W, H], contract=str(a.contract),
-                    plan=str(a.plan), grants=str(a.grants), lanes=str(a.lanes), views=kinds, flags=flags,
+                    plan=str(a.plan), grants=str(a.grants), lanes=str(a.lanes), views=kinds, flags=flags, reticle=RETICLE,
                     excluded_cells=excluded, excluded_instances=out_inst,
                     excluded_instance_details=exclusion_details,
                     instances={c: sum(1 for n in inst if cell_of[n] == c) for c in kinds},
@@ -787,6 +1095,13 @@ def main():
                     synth_clock_entry=dict(rule='SYNTH ETM clock pins re-capped to one 2 fF entry buffer', pins_recapped=ecap),
                     routed_view_qualification='All routed candidates are source/native UNBOUND; matching ports alone cannot qualify them.',
                     placement=pl, sm_mx_s_quadrant=sm_mx, carved_feedthrough=carved, in_carved_channel=in_channel, corners='setup TT, hold FF (owner option B); SS not run')
+    placement_gate = placement_coverage.audit(manifest, C)
+    manifest['placement_coverage'] = placement_gate
+    (out / 'placement_coverage.json').write_text(json.dumps(placement_gate, indent=1) + '\n')
+    print('placement_coverage', json.dumps({k: v for k, v in placement_gate.items() if k != 'rows'}), flush=True)
+    if a.require_explicit_placement and placement_gate['verdict'] != 'PASS':
+        (out / 'manifest.json').write_text(json.dumps(manifest, indent=1))
+        raise SystemExit('PLACEMENT_COVERAGE_FAIL: give every actual source instance an explicit legal home')
     # Pin the actual consumed bytes, including generated abstracts and recapped SYNTH ETMs.
     # A source path alone cannot establish lineage after another branch changes a view.
     digest = lambda p: hashlib.sha256(Path(p).read_bytes()).hexdigest()
@@ -797,6 +1112,11 @@ def main():
     manifest['consumed_view_sha256'] = {p.name: digest(p) for p in sorted(vd.iterdir())
                                         if p.suffix in ('.lef', '.lib')}
     manifest['native_complete'] = False
+    manifest['param_aliases_diagnostic'] = param_aliases
+    manifest['max_pin_density'] = a.max_pin_density or None
+    manifest['pin_density_over'] = pin_density_over
+    if param_aliases:
+        manifest['label'] += f' PARAM_ALIAS_DIAGNOSTIC: {len(param_aliases)} instances use a different-parameter view'
     manifest['max_wire'] = dict(mw, applied=bool(a.die_repeaters),
                                 role='repair max wire' if a.legacy_die_repeaters else 'over-reach threshold (shared step)')
     manifest['die_repeaters'] = (None if not a.die_repeaters else
@@ -804,6 +1124,8 @@ def main():
                                  die_repeaters_step.config('hbm', '/work/out/die_repeaters.json', reach_um=mw['value_um'],
                                                            max_wire_um=a.repeater_max_wire_um))
     manifest['pc_strip'] = strip
+    manifest['slot_map'] = slot_map; manifest['replanned_chain_relays'] = dict(regex=a.replan_chains, n=len(replanned))
+    manifest['outline_override'] = a.outline_override
     manifest['d4b_homes'] = bool(a.d4b_homes)
     manifest['layout_image_status'] = 'DEFERRED' if a.no_plot else 'GENERATED'
     if not a.no_plot:
@@ -813,6 +1135,8 @@ def main():
         print(json.dumps(dict(insts=len(inst), nets=len(nets), excluded=len(excluded), homes=len(homes), problems=len(bad))))
         return
 
+    # H-D4G: reset reachability gate before the (long) clock trees, so an unbuildable reset fails fast
+    reset_gate_rec = reset_reach_gate(rst, nets, pl, vxy, cell_of, lambda n: I[n]['master'], mw['value_um'])
     # ---------------- die clock trees ----------------
     ck = slots[CKGEN]
     # every hard outline (relays too), minus the carved die-owned feedthrough channels (clock repeaters may sit there)
@@ -825,7 +1149,7 @@ def main():
         for n_ in ii:
             dom_of[n_].add(d_)
     pairs = communicating_pairs(nets, dom_of, a.pair_max_tiles)
-    trees, checks, entry_maps, literal_pairs = {}, {}, {}, []
+    trees, checks, entry_maps, literal_pairs, clock_regions = {}, {}, {}, [], {}
     for di, (dom, insts) in enumerate(sorted(clk.items())):
         # the domain tree starts at the placed REAL hfd_ckgen's pll_<dom> output pin (routed LEF), cross-checked with the grant
         vk = pl[CKGEN]; cp = vxy[cell_of[CKGEN]][f'pll_{dom}']
@@ -838,8 +1162,16 @@ def main():
         mode = dict(kv.split('=') for kv in a.clock_mode.split(',')).get(dom, 'htree')
         if mode == 'auto':
             mode = 'graph' if pairs.get(dom) else 'htree'
+        reg_of = None
+        if mode == 'regional':
+            reg_of, rrep = regional_regions(sinks, entry_map, I, a.clock_region_map, entry_pairs, a.clock_near_um,
+                                            a.clock_region_max_um)
+            clock_regions[dom] = dict(report=rrep, tiles={})
+            for al_, r_ in reg_of.items():
+                clock_regions[dom]['tiles'].setdefault(entry_map[al_][0], sorted({r_} | set(clock_regions[dom]['tiles'].get(entry_map[al_][0], []))))
+            print('clock_regions', dom, json.dumps(rrep), flush=True)
         t = dct.build(W, H, obs, (rx, ry), sinks, lambda n: quad[entry_map[n][0]], mode=mode, bin_um=a.clock_bin_um,
-                      pairs=entry_pairs)
+                      pairs=entry_pairs, region_of=(reg_of.get if reg_of else None), near_um=a.clock_near_um)
         checks[dom] = dict(mode=mode, model=t['model'], pairs=len(entry_pairs),
                            **dct.clock_check(t, entry_pairs))
         print('clock_check', dom, mode, json.dumps(checks[dom]['summary']), flush=True)
@@ -865,6 +1197,8 @@ def main():
         print('clock', dom, 'sinks', len(sinks), 'buffers', len(bufs), flush=True)
 
     manifest['clock_entry_map'] = entry_maps
+    manifest['reset_reach_gate'] = reset_gate_rec
+    manifest['clock_regions'] = clock_regions
     manifest['clock_entry_scope'] = 'Each literal clock pin planned separately; conservative all-entry communicating pairs. Native phase/ownership qualification remains OPEN.'
     (out / 'die_clock_check_pairs.json').write_text(json.dumps(dict(
         pairs=[[x, y, dom] for dom, edges in sorted(pairs.items()) for x, y in edges],
@@ -1077,7 +1411,7 @@ puts "OT_REPAIR_S [expr {{[clock seconds]-$r0}}] insts [llength [get_cells *]]"'
             schema='opentallas.die_hold_budget.masters.v1', design='hbm', paths_cap=a.paths,
             diagnostic=sorted(c for c, k in kinds.items() if k.startswith('SYNTH') or 'DIAGNOSTIC' in k),
             real=sorted(c for c, k in kinds.items() if not (k.startswith('SYNTH') or 'DIAGNOSTIC' in k)),
-            relay=sorted(c for c in kinds if V[c]['master'].startswith('hbfd_rly')),
+            relay=sorted(c for c in kinds if V[c]['master'].startswith(('hbfd_rly', 'hbfd_lh', 'hbfd_land'))),
             launch_source={c: ('SYNTH ETM (ideal clocks, no wires): hold DIAGNOSTIC' if k.startswith('SYNTH') else 'routed view ETM clk->out min')
                            for c, k in sorted(kinds.items())},
             classify=f'python3 tools/die_hold_budget.py classify --report out/hold_links_ff.rpt --masters hold_budget_masters.json '
@@ -1092,6 +1426,16 @@ docker run --rm --name $N --cpus=${CPUS:-8} --memory=${MEMG:-256}g -v $D:/work -
   bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; /usr/bin/time -v openroad -threads ${CPUS:-8} -no_init -exit /work/run.tcl > /work/out/run.log 2>&1; rc=\\$?; chmod -R a+rwX /work/out; exit \\$rc"
 echo $? > $D/out/run.exit
 ''')
+    # H-DIE-R8 (coordinator 0dg (2)): MEASURED neighbour-skew gate on the die STA clock dump, every die trial
+    (out / 'dcc' / 'hbm_die_v15').mkdir(parents=True, exist_ok=True)
+    shutil.copy(ROOT / 'tools/die_clock_check.py', out / 'dcc' / 'die_clock_check.py')
+    for f_ in ('die_clock_tree.py', 'neighbour_skew_gate.py'):
+        shutil.copy(ROOT / 'tools/hbm_die_v15' / f_, out / 'dcc' / 'hbm_die_v15' / f_)
+    with open(out / 'run.sh', 'a') as f_:
+        # HBM-LANDING 10-18 (CLOCK-AUDIT): the gate judges TT AND FF.  This session defines corners tt ff, so the dump's
+        # arr_min column is the FF arrival (min over both corners) and arr_max the TT one (--ff-from-min); no FF = NO_FF.
+        f_.write('[ -s $D/out/die_clock_dump.tsv ] && python3 -I $D/dcc/hbm_die_v15/neighbour_skew_gate.py --run $D/out '
+                 f'--near-um {a.clock_near_um} --budget-ps 80 --ff-from-min --require-ff --out $D/out/neighbour_skew_gate.json > $D/out/neighbour_skew_gate.log 2>&1\n')
     if a.hold_budget == 'die':   # classifier beside the case (fleet hosts run the case dir, not the repo)
         shutil.copy(ROOT / 'tools/die_hold_budget.py', out / 'die_hold_budget.py')
         with open(out / 'run.sh', 'a') as f_:
@@ -1128,7 +1472,7 @@ def render(out, man, P, W, H, trees=None):
     for n, b in P.items():
         if isinstance(b, dict) and 'x' in b:
             ax.add_patch(Rectangle((b['x'], b['y']), b['w'], b['h'], fill=False, lw=0.3, ls='--', color='0.5'))
-    col = lambda v: ('tab:green' if v['m'].startswith('hbfd_rly') else
+    col = lambda v: ('tab:green' if v['m'].startswith(('hbfd_rly', 'hbfd_lh', 'hbfd_land')) else
                      'tab:gray' if 'phy' in v['m'] else
                      'tab:red' if 'OVERFLOW' in v['rule'] else
                      'tab:purple' if v['rule'].startswith(('centroid', 'next to', 'no placed')) else

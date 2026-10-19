@@ -8,11 +8,11 @@
  ],
  "params": {},
  "clock_port": "clk",
- "clock": "cts",
+ "clock": "multiple_cts_roots",
  "reset_ports": [],
  "outline": {
-  "w": 300.24,
-  "h": 300.24
+  "w": 259.2,
+  "h": 259.2
  },
  "layer_cap": "M6",
  "layer_cap_grant": "B2 SPEC D-B2-7 TKM kept inside hb_coll; hardened chain children use M6 beneath M7 parent straps",
@@ -20,6 +20,11 @@
   "N": [
    "ins_v",
    "ins_b",
+   "clk",
+   "clk_r0",
+   "clk_r1",
+   "clk_r2",
+   "clk_r3",
    "up_out"
   ],
   "S": [
@@ -28,7 +33,6 @@
    "up_in"
   ],
   "W": [
-   "clk",
    "tid",
    "clr",
    "conv",
@@ -47,10 +51,10 @@
   "macro_halo_um": 5.4
  },
  "job": {
-  "owner": "Claude H-NETLIST/COLL 1815",
-  "branch": "claude/hnl-coll-tp192",
+  "owner": "Claude TKM-2 1017",
+  "branch": "claude/tkm2-1017",
   "tag": "d4f",
-  "purpose": "TKM tile at d4f TP=192 (EW 86, PT 64) x32 per SW tkm_m; the closed EW85 tile (coll_tkm_tile_cx) does not bind at TP192",
+  "purpose": "TKM tile at d4f TP=192 (EW 86, PT 64) x32 per SW tkm_m; TKM-2 successor: ot_hgi_coll_tkm_tile_rg (live-node compares: no yosys insbuf storm; clock split by row group into clk + clk_r0..r3 related roots; N-face clock entries; N/S pins spread over full faces); 259.2 sq",
   "benches": [
    {
     "name": "tkm_tp192_static_gate",
@@ -105,5 +109,98 @@
   "cols": 4,
   "allow_none": true
  },
- "keep_pin_regs": true
+ "keep_pin_regs": true,
+ "clock_ports": [
+  "clk",
+  "clk_r0",
+  "clk_r1",
+  "clk_r2",
+  "clk_r3"
+ ],
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk"
+   ],
+   "inputs": [
+    "tid",
+    "clr",
+    "conv",
+    "tau_t",
+    "tau_l",
+    "ins_v",
+    "ins_b"
+   ],
+   "outputs": [
+    "tau_o",
+    "busy"
+   ]
+  },
+  "r0": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_r0"
+   ],
+   "inputs": [],
+   "outputs": [
+    "up_out"
+   ]
+  },
+  "r1": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_r1"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "r2": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_r2"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "r3": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_r3"
+   ],
+   "inputs": [
+    "up_in"
+   ],
+   "outputs": [
+    "ovf_v",
+    "ovf_b"
+   ]
+  }
+ },
+ "io_tcl": "physical/ref_tile/hcoll_v7_tkm_tile_e86/io_spread.tcl",
+ "structural_change": "fab3f5eba gate: 756,805 insbuf BUFx2 (55.2k um2) from ot_tkm_lt kept padding (1,711 BUF per 85-b compare, yosys measured; 9 with ot_tkm_lt_live) -> util read 97% vs placed 32%; single root TT 373.1 ps / 12,792 sinks -> five related roots (pin stage + four row groups) meeting register to register; coordinator review item 3 (pins N/S right halves, clock W) -> io_tcl spreads N/S/W faces, clocks centred on N beside ins_b and the pin-stage mass"
 }

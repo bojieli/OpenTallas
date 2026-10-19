@@ -1,0 +1,10 @@
+ERR equivalence cyc 3095 tok 0 ref 0000000000/1/919 img 0000100000/1/919
+ERR equivalence cyc 3096 tok 0 ref 0000100000/1/920 img 0000000000/1/920
+ERR equivalence cyc 9893 tok 0 ref 0000000000/2/647 img 0000100000/2/647
+ERR equivalence cyc 9894 tok 0 ref 0000100000/2/648 img 0000000000/2/648
+ERR equivalence cyc 16729 tok 0 ref 0000000000/3/647 img 0000100000/3/647
+LAYER_ROM FAIL tokens=2 stages=72 runs=70 events=504 run_ofs=1 errors=144 mut=1
+- rtl/test/qwen_static_kv/tb_layer_programme_rom.sv:96: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 498us; walltime 1.998 s; speed 249.235 us/s
+- Verilator: cpu 1.177 s on 1 threads; allocated 6 MB

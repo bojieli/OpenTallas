@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hgi_dma_back_static_vp4_banks_cp",
+ "enable": false,
+ "reason": "Banks, controller and the collar leaf are hard children owning their registered endpoints (bank/controller pin flops, collar core pin flops); the parent holds only wires and the reset relay flops (ot_rst_relay on clk_rst). A parent pin flop would add a cycle to rr/wd/rq and the host bus."
+}

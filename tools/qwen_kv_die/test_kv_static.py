@@ -144,8 +144,30 @@ class CriticalNativeEdges(unittest.TestCase):
 class ActualTopology(unittest.TestCase):
     def test_full_shape_known_joins_and_unknowns_are_explicit(self):
         graph,gaps=K.template()
-        self.assertEqual(len(graph['instances']),374)
+        # 374 + KVJ-C2 embedding token path: gateway, join4, row tx, 4 x 32 return stations + KVJ-C3 PC chain root
+        self.assertEqual(len(graph['instances']),374+3+128+1)
         by={i['name']:i for i in graph['instances']}
+        self.assertEqual(by['d2d']['inputs']['emb_tx_payload'][0]['instance'],'emb_tx')
+        self.assertEqual(by['emb_tx']['inputs']['fill_token'][0]['port'],'engine_result_token')
+        for s,stack in enumerate(('WS','WN','ES','EN')):
+            self.assertEqual(by[f'embr_{stack}_0']['role'],'emb_return_head')
+            self.assertNotIn('upi',by[f'embr_{stack}_0']['inputs'])
+            for slot in range(1,32):
+                self.assertEqual(by[f'embr_{stack}_{slot}']['inputs']['upi'][0]['instance'],f'embr_{stack}_{slot-1}')
+            self.assertEqual(by['emb_join']['inputs'][f'up{s}'][0]['instance'],f'embr_{stack}_31')
+            rec=by[f'embr_{stack}_7']['inputs']['capture_record']
+            self.assertEqual(sum(e['width'] for e in rec),298);self.assertEqual({e['instance'] for e in rec},{f'pc_{stack}_7'})
+        # KVJ-C3: the compiled embedding calendar is played by the PC chain stations / join4_cal
+        self.assertNotIn('emb_issue_v',by['pc_WS_0']['inputs'])
+        for s,stack in enumerate(('WS','WN','ES','EN')):
+            self.assertEqual(by[f'pc_{stack}_31']['inputs']['chain_i'][0],dict(instance='fanr',port=f'd{s}',lo=0,width=779))
+            for slot in range(31):
+                self.assertEqual(by[f'pc_{stack}_{slot}']['inputs']['chain_i'][0]['instance'],f'pc_{stack}_{slot+1}')
+            for slot in range(32):
+                self.assertEqual(by[f'embr_{stack}_{slot}']['inputs']['transfer_slot'][0]['instance'],f'pc_{stack}_{slot}')
+        self.assertEqual(by['fanr']['inputs']['es'][0]['instance'],'wrn')
+        self.assertEqual(by['emb_join']['inputs']['start'][0]['port'],'engine_result_v')
+        self.assertIsNone(by['fanr']['inputs']['cfg_we'])                 # boot dispatcher target: open
         for stack in ('WS','WN','ES','EN'):
             for g in range(8):
                 land=by[f'slg_{stack}_{g}']

@@ -24,6 +24,10 @@ Rule (defaults; env OT_DIE_REPAIR_MAX_WIRE / _SLEW / _SKIP / _REPEAT_NETS / _OVE
     clock / reset / special nets untouched, except forwarded-clock nets named by --repeat-nets (repeated with their
     data bits; DIE-CLOCK accepts fclk repeaters matched to the data to +-1 stage).  A master with signal pins and no
     liberty fails the step (its nets would be invisible to the resizer).
+  * legalisation 'spread' (DIE-FLOW2 10-17; 'snap' = alias): each repeater on its own free slot of the nearest
+    density bin under the utilisation cap (8.64 um bins, 0.30), never on a macro / existing cell; repair passes re-run
+    repair_design on the legal positions (soft cap within 3 bins, else 0.60); after GRT the audit upsizes in place (BUFx12f, BUFx16f; free footprint only) the repeaters driving residual slew/cap violators on GRT
+    parasitics before it judges (stage counts unchanged).
   * die nets longer than the measured die reach (results/arch/die_reach_1016.json via tools/die_reach.py) are a
     planning defect (missing relay register, standard 1): measured before repair and reported; --over-reach fail
     makes them a violation.
@@ -38,7 +42,7 @@ sys.path.insert(0, str(ROOT / 'tools'))
 TCL = HERE / 'die_repeaters.tcl'
 BOUNDS_TCL = ROOT / 'tools/die_cluster/cluster_bounds.tcl'
 BUFFERS = ('BUFx4_ASAP7_75t_R', 'BUFx4f_ASAP7_75t_R', 'BUFx5_ASAP7_75t_R', 'BUFx6f_ASAP7_75t_R', 'BUFx8_ASAP7_75t_R')
-DEFAULTS = dict(max_wire_um=160.0, slew_ps=260.0, over_reach='report', rc_layer='M4', legalize='snap',
+DEFAULTS = dict(max_wire_um=160.0, slew_ps=260.0, over_reach='report', rc_layer='M4', legalize='spread',
                 long_wire_scan=5000)
 # per die flow: the die_reach design key and the clock / reset distribution net globs the step never touches
 # (on top of the automatic skips: nets on register-clock / clock lib pins, CLOCK/POWER/GROUND sig type, special nets)
@@ -50,6 +54,15 @@ DESIGNS = {
                 buffers=('BUFx8_ASAP7_75t_R',), fclk_audit=1),
     'qwen_compute': dict(reach='qwen_compute', skip=('n_clk_*', 'n_fck_*')),   # + n_rst_* unless OT_ROUTE_RESET=1
     'qwen_kv': dict(reach='qwen_kv', skip=('n_clk_*', 'n_fck_*')),
+    # Q-DIE12 10-18 (dv2f14bn TT: ~38k half-cycle hop bits -56..-77 ps): a forwarded-lane die (OT_SPLIT_FWD_LANES, n_fck_*
+    # nets) left its lane clocks unrepeated while the data bits got 1-2 repeaters, so the capture clock arrived ~42 ps
+    # after launch and the data ~213 ps: the forwarded clock did not track its data.  The *_fwd designs repeat the lane
+    # clocks WITH their data (same max wire, one buffer cell -> matched stage counts, as S81) and audit fclk vs data
+    # depth (+-1, reported; OT_DIE_REPAIR_FCLK_POLICY=fail to gate).  die_chain.sh picks them when die.v carries n_fck_* nets.
+    'qwen_compute_fwd': dict(reach='qwen_compute', skip=('n_clk_*',), repeat_nets=('n_fck_*',),
+                             buffers=('BUFx8_ASAP7_75t_R',), fclk_audit=1),
+    'qwen_kv_fwd': dict(reach='qwen_kv', skip=('n_clk_*',), repeat_nets=('n_fck_*',),
+                        buffers=('BUFx8_ASAP7_75t_R',), fclk_audit=1),
     'hbm': dict(reach='hbm', skip=('dk?_*', 'n_dk?_*', 'ckg_*')),
     'cluster': dict(reach=None, skip=('clk_*', 'rst_*')),
 }
@@ -76,7 +89,7 @@ def config(design, report, **kw):
         raise SystemExit(f'die_repeaters: unknown design {design!r} (known: {sorted(DESIGNS)})')
     c = dict(DEFAULTS, design=design, report=report, reach_um=_reach(design),
              skip_nets=list(DESIGNS[design]['skip']))
-    for k_ in ('buffers', 'fclk_audit'):
+    for k_ in ('buffers', 'fclk_audit', 'repeat_nets', 'fclk_policy'):
         if k_ in DESIGNS[design]:
             v_ = DESIGNS[design][k_]
             c[k_] = list(v_) if isinstance(v_, tuple) else v_
@@ -93,6 +106,13 @@ def config(design, report, **kw):
         c['skip_nets'] += env['OT_DIE_REPAIR_SKIP'].split()
     if env.get('OT_DIE_REPAIR_REPEAT_NETS'):
         c['repeat_nets'] = list(c.get('repeat_nets') or []) + env['OT_DIE_REPAIR_REPEAT_NETS'].split()
+    for ek, ck in (('OT_DIE_REPAIR_SPREAD_UTIL', 'spread_util'), ('OT_DIE_REPAIR_SPREAD_UTIL_HARD', 'spread_util_hard'),
+                   ('OT_DIE_REPAIR_BIN_UM', 'bin_um')):
+        if env.get(ek):
+            c[ck] = float(env[ek])
+    for ek, ck in (('OT_DIE_REPAIR_PASSES', 'repair_passes'), ('OT_DIE_REPAIR_POST_GRT_ROUNDS', 'post_grt_rounds')):
+        if env.get(ek):
+            c[ck] = int(env[ek])
     if env.get('OT_DIE_REPAIR_OVER_REACH'):
         c['over_reach'] = env['OT_DIE_REPAIR_OVER_REACH']
     for k, v in kw.items():
@@ -110,8 +130,8 @@ def config(design, report, **kw):
         raise SystemExit("die_repeaters: post_drv must be 'report' or 'fail'")
     if c.get('fclk_policy', 'report') not in ('report', 'fail'):
         raise SystemExit("die_repeaters: fclk_policy must be 'report' or 'fail'")
-    if c['legalize'] not in ('snap', 'dpl', 'none'):
-        raise SystemExit("die_repeaters: legalize must be snap | dpl | none")
+    if c['legalize'] not in ('spread', 'snap', 'dpl', 'none'):
+        raise SystemExit("die_repeaters: legalize must be spread | snap (= spread) | dpl | none")
     return c
 
 
@@ -126,7 +146,7 @@ def tcl_call(design, report, tcl_dir='/work', fail_exit=3, **kw):
     for k, v in c.items():
         if isinstance(v, (list, tuple)):
             parts.append(f'{k} {_tcl_list(v)}')
-        elif isinstance(v, float):
+        elif isinstance(v, (int, float)) and not isinstance(v, bool):
             parts.append(f'{k} {v:g}')
         else:
             parts.append(f'{k} {{{v}}}')
@@ -141,8 +161,9 @@ def tcl_call(design, report, tcl_dir='/work', fail_exit=3, **kw):
         prefix = str(Path(report).with_suffix('')) + '.fclk'
         pre = f'source {tcl_dir}/fclk_audit.tcl\not_die_rep_fclk_snapshot\n'
         post = (f'set ot_die_rep_fb [ot_die_rep_fclk_audit {{{prefix}}} {_tcl_list(fg)} {_tcl_list(bufs)}]\n'
+                f'set ::ot_die_rep_fclk_args [list {{{prefix}.post_grt}} {_tcl_list(fg)} {_tcl_list(bufs)}]\n'
                 + (f'if {{$ot_die_rep_fb != 0}} {{ puts "OT_DIE_REP FAIL fclk_mismatch_hops=$ot_die_rep_fb"; flush stdout; '
-                   f'exit {fail_exit} }}\n' if fp == 'fail' else ''))
+                   f'write_db {{{prefix}.fail.odb}}; exit {fail_exit} }}\n' if fp == 'fail' else ''))
     return (f'# shared die-net repeater step (tools/die_repeaters/step.py, design {design})\n'
             f'source {tcl_dir}/die_repeaters.tcl\n' + pre +
             f'set ot_die_rep_v [ot_die_repeaters [dict create {" ".join(parts)}]]\n'
@@ -171,6 +192,8 @@ def check(report):
          f"resized={r.get('resized')} non_buffer={r.get('non_buffer_inserted')} skip_nets={r.get('skip_nets')} "
          f"longest={r.get('longest_um')} over_reach({r.get('reach_um')})={r.get('over_reach_nets')} "
          f"post_slew={r.get('post_slew_violators')} post_cap={r.get('post_cap_violators')} legalize={r.get('legalize')!r}")
+    if r.get('warnings'):     # warn, never fail (e.g. spread displacement > max_wire/2: a lane over a block)
+        s += f" WARN({len(r['warnings'])}) max_disp={r.get('spread_max_disp_um')}: " + '; '.join(r['warnings'])
     return ok, s
 
 
@@ -184,7 +207,13 @@ def main(argv=None):
     t.add_argument('--libs-file', help='text file, one liberty per line (read inside the step), e.g. /kit/libs_tt.txt')
     t.add_argument('--libs', nargs='*', default=None)
     t.add_argument('--std-corner', choices=['TT', 'FF', 'SS'])
-    t.add_argument('--legalize', choices=['snap', 'dpl', 'none'])
+    t.add_argument('--legalize', choices=['spread', 'snap', 'dpl', 'none'], help='spread (default; snap = alias): '
+                   'repeaters on free slots of density-capped bins + repair passes')
+    t.add_argument('--spread-util', type=float, help='bin utilisation cap for the repeaters (default 0.30)')
+    t.add_argument('--spread-util-hard', type=float, help='cap used where the channel is full at the soft cap (default 0.60)')
+    t.add_argument('--bin-um', type=float, help='spread density bin (default 8.64 um)')
+    t.add_argument('--repair-passes', type=int, help='repair_design + spread passes before GRT (default 1)')
+    t.add_argument('--post-grt-rounds', type=int, help='post-GRT in-place upsizing rounds in the audit (default 2; 0 = audit only)')
     t.add_argument('--max-wire-um', type=float)
     t.add_argument('--slew-ps', type=float)
     t.add_argument('--receiver-slew', type=Path, help='JSON {master: max input slew ps} of the native first cells')
@@ -219,7 +248,8 @@ def main(argv=None):
                     f'{{ if {{$l ne ""}} {{ lappend ot_die_rep_libs $l }} }}\n')
     rs = json.loads(a.receiver_slew.read_text()) if a.receiver_slew else None
     body = tcl_call(a.design, a.report, tcl_dir=a.dir, fail_exit=a.exit_code, libs=libs or None, std_corner=a.std_corner,
-                    legalize=a.legalize, max_wire_um=a.max_wire_um, slew_ps=a.slew_ps, receiver_slew=rs,
+                    legalize=a.legalize, spread_util=a.spread_util, spread_util_hard=a.spread_util_hard, bin_um=a.bin_um, repair_passes=a.repair_passes,
+                    post_grt_rounds=a.post_grt_rounds, max_wire_um=a.max_wire_um, slew_ps=a.slew_ps, receiver_slew=rs,
                     skip_nets=a.skip, repeat_nets=a.repeat_nets, fclk_globs=a.fclk_globs, fclk_policy=a.fclk_policy,
                     over_reach=a.over_reach, post_drv=a.post_drv, rc_layer=a.rc_layer, repair_args=a.repair_args)
     if a.libs_file:

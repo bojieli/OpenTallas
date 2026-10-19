@@ -72,7 +72,8 @@ def assumed_clock_refs(master, ports, physical_ports=None, clock_ports=None):
     The die Verilog connects .ck(net), but a generated LEF may expose ck[0].
     E.write_lib deliberately preserves that spelling; clock delivery must too.
     """
-    selected = [p for p in ports if p in E.CLOCKS or p in (clock_ports or {}).get(master, ())]
+    selected = [p for p in ports if (p in E.CLOCKS or p in (clock_ports or {}).get(master, ()))
+                and not (E.FWD_RE.match(master) and p in E.FWD_NOT_ROOT)]   # forwarded-lane clocks: propagated
     if physical_ports is not None:
         missing=[p for p in selected if p not in physical_ports]
         if missing:
@@ -162,6 +163,8 @@ def clock_connections(path, dirs, leaves, clock_ports=None):
             refs = leaves.get(master, {}).get('tt', {})
             hits = [p for p in refs if re.sub(r'\[\d+\]$', '', p) == port]
             is_clock = port in E.CLOCKS or port in (clock_ports or {}).get(master, ()) or hits
+            if E.FWD_RE.match(master) and port in E.FWD_NOT_ROOT:
+                continue        # Q-DIE11-RLY: a forwarded lane clock (n_fck_*) propagates through the ck -> ck_o arcs
             bits = expr_bits(expression, nets)
             if is_clock:
                 if not bits or any(net in ('CONST', 'Z', 'UNDECL') for net, _ in bits):
@@ -244,7 +247,8 @@ def main():
     lef = {k: q for k, q in lef.items() if k not in skip}
     stubs = {mst: {p: [d, 0, set()] for p, d in ports.items()} for mst, ports in dirs.items()}
     for corner in ('tt', 'ff', 'ss'):
-        E.write_lib(corner, lef, stubs, out / f'qfd_elements_{corner}.lib', clock_ports=declared_clocks)
+        E.write_lib(corner, lef, stubs, out / f'qfd_elements_{corner}.lib', clock_ports=declared_clocks,
+                    related_pins=contract.get('related_pins'))
     views['assumed'] = sorted(lef)
     views['assumed_clock_insertion'] = {m: 'ideal zero-insertion assumption, no measured boundary evidence'
                                        for m in dirs if m not in leaves}
@@ -268,10 +272,13 @@ def main():
         raise ValueError(f'source-declared clock nets without drivers: {undriven}')
     periods = contract.get('periods_ps')
     related = contract.get('related_domains', ())
+    # Q-DIE11-RLY 10-18: forwarded-lane landings (case/landing.sdc from relay_data_run.py, LANDING-CONTRACT L5): the
+    # lane is checked at the landing pins against the receiving root E edges later (MCP -setup E -hold D-1)
+    land = (case / 'landing.sdc').read_text() if (case / 'landing.sdc').exists() else ''
     for c in ('tt', 'ff', 'ss'):
-        (out / f'clocks_{c}.tcl').write_text(clock_tcl(leaf_doms, leaves, c, periods, related, a.hold_budget))
+        (out / f'clocks_{c}.tcl').write_text(clock_tcl(leaf_doms, leaves, c, periods, related, a.hold_budget) + land)
     # Existing callers naming clocks.tcl are redirected by sta_tcl.py per corner.
-    (out / 'clocks.tcl').write_text(clock_tcl(leaf_doms, leaves, 'tt', periods, related, a.hold_budget))
+    (out / 'clocks.tcl').write_text(clock_tcl(leaf_doms, leaves, 'tt', periods, related, a.hold_budget) + land)
     views.update(source_clock_contract=contract, schema='opentallas.qwen-tp8.die-sta-libs.v1', clocks={d: len(p) for d, p in leaf_doms.items()},
                  clock_source_drivers={d: len(set(p)) for d, p in doms.items()},
                  clock_nets=len(sinks), clock_nets_without_driver=undriven[:40],
@@ -279,6 +286,9 @@ def main():
                  clock_budget='related shallow/early levels: setup 60 + 90 ps shallow/shallow, 60 + 150 ps when either TT R > 300 ps; hold H1 50 margin + 50 skew = 100 ps',
                  insertion_ps={m: v for m, v in leaves.items() if m in views['real']},
                  note='PATHFINDING: unbound masters remain assumed single-flop views; no physical die CTS proof')
+    fwd_m = sorted(m_ for m_ in dirs if E.FWD_RE.match(m_))
+    if land or fwd_m:      # Q-DIE11-RLY (only on an OT_SPLIT_FWD_LANES case: older cases keep views.json byte-identical)
+        views.update(fwd_landing_sdc=bool(land), fwd_lane_masters=fwd_m)
     if a.hold_budget == 'die':
         views.update(clock_budget=views['clock_budget'].replace('hold H1 50 margin + 50 skew = 100 ps', HOLD_NOTE['die']),
                      hold_budget=dict(mode='die', U_ps=HOLD_U['die'], rule='results/arch/boundary_hold_budget_1016/RULE.md',

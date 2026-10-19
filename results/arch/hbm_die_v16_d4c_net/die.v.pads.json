@@ -1,0 +1,78 @@
+{
+ "pads": {
+  "hbfd_rly_48_WE": {
+   "reason": "DEDUPE standard relay used below its width (results/arch/tile_dedupe_1015): spare input bits tied low, spare outputs open; per-instance ranges in contract.json straps",
+   "ports": {
+    "i": [
+     [
+      41,
+      47
+     ]
+    ]
+   }
+  },
+  "hbfd_rly_48_EW": {
+   "reason": "DEDUPE standard relay used below its width (results/arch/tile_dedupe_1015): spare input bits tied low, spare outputs open; per-instance ranges in contract.json straps",
+   "ports": {
+    "i": [
+     [
+      41,
+      47
+     ]
+    ]
+   }
+  },
+  "hbfd_rly_624_EW": {
+   "reason": "DEDUPE standard relay used below its width (results/arch/tile_dedupe_1015): spare input bits tied low, spare outputs open; per-instance ranges in contract.json straps",
+   "ports": {
+    "i": [
+     [
+      596,
+      623
+     ],
+     [
+      516,
+      623
+     ]
+    ]
+   }
+  },
+  "hbfd_rly_624_WE": {
+   "reason": "DEDUPE standard relay used below its width (results/arch/tile_dedupe_1015): spare input bits tied low, spare outputs open; per-instance ranges in contract.json straps",
+   "ports": {
+    "i": [
+     [
+      516,
+      623
+     ],
+     [
+      596,
+      623
+     ]
+    ]
+   }
+  },
+  "hbfd_rly_624_NS": {
+   "reason": "DEDUPE standard relay used below its width (results/arch/tile_dedupe_1015): spare input bits tied low, spare outputs open; per-instance ranges in contract.json straps",
+   "ports": {
+    "i": [
+     [
+      596,
+      623
+     ]
+    ]
+   }
+  },
+  "hbfd_rly_624_SN": {
+   "reason": "DEDUPE standard relay used below its width (results/arch/tile_dedupe_1015): spare input bits tied low, spare outputs open; per-instance ranges in contract.json straps",
+   "ports": {
+    "i": [
+     [
+      516,
+      623
+     ]
+    ]
+   }
+  }
+ }
+}

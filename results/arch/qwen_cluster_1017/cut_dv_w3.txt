@@ -1,0 +1,11 @@
+== base: rs_latency 36  relay_bits 35466  worst util(proj) 0.896
+   corr_L         peak   517  proj 0.721  m3 0.443  cap   717  {'bc': 516, 'rst': 1}
+   corr_A         peak  2570  proj 0.896  m3 0.550  cap  2869  {'tree': 2056, 'rs': 514}
+   corr_T         peak  1547  proj 0.539  m3 0.331  cap  2869  {'bc': 1032, 'rst': 1, 'rs_ft': 514}
+   corr_B         peak  2056  proj 0.717  m3 0.440  cap  2869  {'tree': 2056}
+   corr_R         peak   517  proj 0.721  m3 0.443  cap   717  {'bc': 516, 'rst': 1}
+   chan_0_y0      peak     0  proj 0.000  m3 0.000  cap  1434  {}
+   chan_1_y1231   peak   514  proj 0.179  m3 0.110  cap  2869  {'tree': 514}
+   chan_2_y2527   peak   514  proj 0.179  m3 0.110  cap  2869  {'tree': 514}
+   chan_3_y3823   peak   514  proj 0.179  m3 0.110  cap  2869  {'tree': 514}
+   chan_4_y5119   peak     0  proj 0.000  m3 0.000  cap  1434  {}

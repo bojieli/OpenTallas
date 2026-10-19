@@ -9,7 +9,7 @@
 // Runs: +RUNS=n programme runs, each epoch-aligned (no fault allowed); +MISALIGN restart one serial edge off (fault
 // REQUIRED); -P...MUT=1/2 release one stream edge early/late (outputs must mismatch -> FAIL).
 module tb_hbm_su_bridge_release;
- parameter integer MUT=0;
+ parameter integer MUT=0, SERIAL=0;   // SERIAL 1: DUT = ot_hbm_su_bridge_release_s (RBH-SFUS 10-18)
  localparam realtime HALF_Q=1250.0/9.0;
  reg serial_clk=0,stream_clk=0,rst_n=0,ideal_rst_n=0,prog_busy=0;
  integer half_tick=-1,e0=-1,errors=0,cmp_edges=0,runs=2,misalign=0;
@@ -18,8 +18,13 @@ module tb_hbm_su_bridge_release;
   serial_clk=(half_tick%8)<4;stream_clk=(half_tick%6)<3;
  end
  wire bridge_rst_n,leaf_fault;
- ot_hbm_su_bridge_release #(.MUT(MUT)) dut(.clk_serial(serial_clk),.clk_stream(stream_clk),.rst_n(rst_n),
-  .rst_stream_n(rst_n),.prog_busy(prog_busy),.bridge_rst_n(bridge_rst_n),.fault(leaf_fault));
+ if(SERIAL!=0)begin:g_dut_s
+  ot_hbm_su_bridge_release_s #(.MUT(MUT)) dut(.clk_serial(serial_clk),.rst_n(rst_n),.prog_busy(prog_busy),
+   .bridge_rst_n(bridge_rst_n),.fault(leaf_fault));
+ end else begin:g_dut
+  ot_hbm_su_bridge_release #(.MUT(MUT)) dut(.clk_serial(serial_clk),.clk_stream(stream_clk),.rst_n(rst_n),
+   .rst_stream_n(rst_n),.prog_busy(prog_busy),.bridge_rst_n(bridge_rst_n),.fault(leaf_fault));
+ end
  // identical random traffic into both bridges
  reg [16:0] s_rq=0; reg [280:0] s_wq=0; reg [256:0] t_rr=0; reg t_done=0;
  always @(posedge serial_clk) begin s_rq<=$random; s_wq<={$random,$random,$random,$random,$random,$random,$random,$random,$random}; end

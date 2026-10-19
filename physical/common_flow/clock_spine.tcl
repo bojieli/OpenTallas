@@ -576,7 +576,13 @@ proc ot_clock_spine {{requested_port ""} {prefix clkbuf_sp_}} {
     # OT_SPINE_MACRO_LEAF=1 (el1011-q-coll): a hard-macro clock pin is its own leaf, so a child-insertion target never
     # skews the flops that would otherwise share its bin
     if {[ot_sp_env OT_SPINE_MACRO_LEAF 0] eq "1" && [[[$it getInst] getMaster] isBlock]} {
-      dict lappend bins "M[[$it getInst] getName]" [list $it $x $y]
+      # OT_SPINE_MACRO_PIN_LEAF=1 (Q-CLUSTER 2026-10-17): every hard-child clock PIN is its own leaf (a cluster child with
+      # 39 entry pins on two faces 458 um apart would otherwise hang them all on one leaf net at their centroid)
+      if {[ot_sp_env OT_SPINE_MACRO_PIN_LEAF 0] eq "1"} {
+        dict lappend bins "M[[$it getInst] getName]/[[$it getMTerm] getName]" [list $it $x $y]
+      } else {
+        dict lappend bins "M[[$it getInst] getName]" [list $it $x $y]
+      }
     } else {
       dict lappend bins "[expr {int($x / $bin)}],[expr {int($y / $bin)}]" [list $it $x $y]
     }
@@ -599,7 +605,10 @@ proc ot_clock_spine {{requested_port ""} {prefix clkbuf_sp_}} {
         if {![info exists $v]} continue
         foreach it $its {
           set mn [[[$it getInst] getMaster] getName]
-          if {[dict exists [set $v] $mn] && (![dict exists $lins $id] || [dict get [set $v] $mn] > [dict get $lins $id])} { dict set lins $id [dict get [set $v] $mn] }
+          # per-pin target "master/pin" (Q-CLUSTER: a cluster child's entries carry their own insertion) before "master"
+          set key "$mn/[[$it getMTerm] getName]"
+          if {![dict exists [set $v] $key]} { set key $mn }
+          if {[dict exists [set $v] $key] && (![dict exists $lins $id] || [dict get [set $v] $key] > [dict get $lins $id])} { dict set lins $id [dict get [set $v] $key] }
         }
       }
     }
@@ -627,6 +636,13 @@ proc ot_clock_spine {{requested_port ""} {prefix clkbuf_sp_}} {
   set prev ""; set padded [dict create]; set mode coarse
   set safe [expr {[ot_sp_env OT_SPINE_SAFE_BALANCE 0] eq "1"}]
   unset -nocomplain ::ot_sp_best_spread ::ot_sp_best_state
+  # RC-CAL (ROOT-RST 2026-10-19): measure leaf arrivals on the RCX-calibrated clock wire RC (tools/orfs_hold_mm.tcl
+  # ot_rc_cal_apply, sourced in every stage), not on setRC.tcl's: the BUFx24 trunk is wire-dominated and the pads are
+  # cells, so balancing on the platform clock RC (C 0.145 fF/um vs RCX 0.10) padded the short-trunk leaves for ~130 ps
+  # of trunk delay that the routed spine does not have (kp4_dec: placement estimate 564 vs routed 415 ps at FF on the
+  # p_d pin flops; calibrated 417).  OT_SPINE_RC_CAL=0 (or OT_RC_CAL=0) keeps the platform RC.
+  set ot_rcc 0
+  if {[ot_sp_env OT_SPINE_RC_CAL 1] ne "0" && [llength [info commands ot_rc_cal_apply]]} { set ot_rcc [ot_rc_cal_apply spine] }
   for {set it 0} {$it <= $iters} {incr it} {
     set a [ot_sp_leaf_arrivals]
     set vals [dict values $a]
@@ -668,6 +684,7 @@ proc ot_clock_spine {{requested_port ""} {prefix clkbuf_sp_}} {
     }
     if {[dict size $padded] == 0} break
   }
+  if {$ot_rcc} { ot_rc_cal_restore; estimate_parasitics -placement }
   foreach b $::ot_sp_insts { $b setDoNotTouch 1 }
   foreach n [concat [list $net0] [lmap b $::ot_sp_insts {[$b findITerm $::ot_sp_out] getNet}]] { $n setDoNotTouch 1 }
   ot_sp_check_legal

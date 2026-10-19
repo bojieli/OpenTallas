@@ -1,0 +1,1529 @@
+{
+ "schema": "opentallas.s81_dv.lowering.v1",
+ "layer": "L2",
+ "status_counts": {
+  "GAP": 67,
+  "PARTIAL": 16
+ },
+ "die_gaps": [
+  {
+   "module": "results/arch/s81_dv_1016/bind9/die.v (S81 die GEN, lead S81-DIE6/7)",
+   "port": "lt_lk_EN0, lt_lk_EN1, lt_lk_ES0, lt_lk_ES1, lt_lk_WN0, lt_lk_WN1, lt_lk_WS0, lt_lk_WS1, r_f_0L00, r_f_0L01, r_f_0L03, r_f_0L10, r_f_0L11, r_f_0L13, r_f_0R00, r_f_0R01, r_f_0R03, r_f_0R10, r_f_0R11, r_f_0R13, r_f_7L00, r_f_7L01, r_f_7L03, r_f_7L10, r_f_7L11, r_f_7L13, r_f_7R00, r_f_7R01, r_f_7R03, r_f_7R10, r_f_7R11, r_f_7R13, tvN_s_0S, tvN_s_7S, tvS_s_0N, tvS_s_7N, xrE_6N_l0, xrE_6N_l1, xrE_6N_l2, xrE_6N_l3, xrE_6S_l0, xrE_6S_l1, xrE_6S_l2, xrE_6S_l3, xrW_0N_l0, xrW_0N_l1, xrW_0N_l2, xrW_0N_l3, xrW_0S_l0, xrW_0S_l1, xrW_0S_l2, xrW_0S_l3",
+   "missing": "52 lanes with relay stations and a planned landing E in the p4l land plan have no ld_<link> landing tile in die.v (the last station ck_o is left open; the end-slice lep masters ot_s81sl_slice_lep* contain no ot_s81_land): they enter the receiving root domain unlanded",
+   "lanes": [
+    {
+     "link": "lt_lk_EN0",
+     "cls": "coll",
+     "dst": "lk_EN0",
+     "E": 3,
+     "stations": 3
+    },
+    {
+     "link": "lt_lk_EN1",
+     "cls": "coll",
+     "dst": "lk_EN1",
+     "E": 3,
+     "stations": 3
+    },
+    {
+     "link": "lt_lk_ES0",
+     "cls": "coll",
+     "dst": "lk_ES0",
+     "E": 3,
+     "stations": 3
+    },
+    {
+     "link": "lt_lk_ES1",
+     "cls": "coll",
+     "dst": "lk_ES1",
+     "E": 3,
+     "stations": 3
+    },
+    {
+     "link": "lt_lk_WN0",
+     "cls": "coll",
+     "dst": "lk_WN0",
+     "E": 3,
+     "stations": 3
+    },
+    {
+     "link": "lt_lk_WN1",
+     "cls": "coll",
+     "dst": "lk_WN1",
+     "E": 3,
+     "stations": 3
+    },
+    {
+     "link": "lt_lk_WS0",
+     "cls": "coll",
+     "dst": "lk_WS0",
+     "E": 3,
+     "stations": 3
+    },
+    {
+     "link": "lt_lk_WS1",
+     "cls": "coll",
+     "dst": "lk_WS1",
+     "E": 3,
+     "stations": 3
+    },
+    {
+     "link": "r_f_0L00",
+     "cls": "ret",
+     "dst": "s_0S",
+     "E": 4,
+     "stations": 7
+    },
+    {
+     "link": "r_f_0L01",
+     "cls": "ret",
+     "dst": "s_0S",
+     "E": 2,
+     "stations": 1
+    },
+    {
+     "link": "r_f_0L03",
+     "cls": "ret",
+     "dst": "s_0S",
+     "E": 2,
+     "stations": 2
+    },
+    {
+     "link": "r_f_0L10",
+     "cls": "ret",
+     "dst": "s_0N",
+     "E": 4,
+     "stations": 7
+    },
+    {
+     "link": "r_f_0L11",
+     "cls": "ret",
+     "dst": "s_0N",
+     "E": 2,
+     "stations": 1
+    },
+    {
+     "link": "r_f_0L13",
+     "cls": "ret",
+     "dst": "s_0N",
+     "E": 2,
+     "stations": 2
+    },
+    {
+     "link": "r_f_0R00",
+     "cls": "ret",
+     "dst": "s_0S",
+     "E": 4,
+     "stations": 7
+    },
+    {
+     "link": "r_f_0R01",
+     "cls": "ret",
+     "dst": "s_0S",
+     "E": 2,
+     "stations": 1
+    },
+    {
+     "link": "r_f_0R03",
+     "cls": "ret",
+     "dst": "s_0S",
+     "E": 2,
+     "stations": 2
+    },
+    {
+     "link": "r_f_0R10",
+     "cls": "ret",
+     "dst": "s_0N",
+     "E": 4,
+     "stations": 7
+    },
+    {
+     "link": "r_f_0R11",
+     "cls": "ret",
+     "dst": "s_0N",
+     "E": 2,
+     "stations": 1
+    },
+    {
+     "link": "r_f_0R13",
+     "cls": "ret",
+     "dst": "s_0N",
+     "E": 2,
+     "stations": 2
+    },
+    {
+     "link": "r_f_7L00",
+     "cls": "ret",
+     "dst": "s_7S",
+     "E": 4,
+     "stations": 7
+    },
+    {
+     "link": "r_f_7L01",
+     "cls": "ret",
+     "dst": "s_7S",
+     "E": 2,
+     "stations": 1
+    },
+    {
+     "link": "r_f_7L03",
+     "cls": "ret",
+     "dst": "s_7S",
+     "E": 2,
+     "stations": 2
+    },
+    {
+     "link": "r_f_7L10",
+     "cls": "ret",
+     "dst": "s_7N",
+     "E": 4,
+     "stations": 7
+    },
+    {
+     "link": "r_f_7L11",
+     "cls": "ret",
+     "dst": "s_7N",
+     "E": 2,
+     "stations": 1
+    },
+    {
+     "link": "r_f_7L13",
+     "cls": "ret",
+     "dst": "s_7N",
+     "E": 2,
+     "stations": 2
+    },
+    {
+     "link": "r_f_7R00",
+     "cls": "ret",
+     "dst": "s_7S",
+     "E": 4,
+     "stations": 7
+    },
+    {
+     "link": "r_f_7R01",
+     "cls": "ret",
+     "dst": "s_7S",
+     "E": 2,
+     "stations": 1
+    },
+    {
+     "link": "r_f_7R03",
+     "cls": "ret",
+     "dst": "s_7S",
+     "E": 2,
+     "stations": 2
+    },
+    {
+     "link": "r_f_7R10",
+     "cls": "ret",
+     "dst": "s_7N",
+     "E": 4,
+     "stations": 7
+    },
+    {
+     "link": "r_f_7R11",
+     "cls": "ret",
+     "dst": "s_7N",
+     "E": 2,
+     "stations": 1
+    },
+    {
+     "link": "r_f_7R13",
+     "cls": "ret",
+     "dst": "s_7N",
+     "E": 2,
+     "stations": 2
+    },
+    {
+     "link": "tvN_s_0S",
+     "cls": "xtier",
+     "dst": "s_0N",
+     "E": 9,
+     "stations": 16
+    },
+    {
+     "link": "tvN_s_7S",
+     "cls": "xtier",
+     "dst": "s_7N",
+     "E": 8,
+     "stations": 16
+    },
+    {
+     "link": "tvS_s_0N",
+     "cls": "xtier",
+     "dst": "s_0S",
+     "E": 9,
+     "stations": 16
+    },
+    {
+     "link": "tvS_s_7N",
+     "cls": "xtier",
+     "dst": "s_7S",
+     "E": 9,
+     "stations": 16
+    },
+    {
+     "link": "xrE_6N_l0",
+     "cls": "xring",
+     "dst": "s_7N",
+     "E": 4,
+     "stations": 7
+    },
+    {
+     "link": "xrE_6N_l1",
+     "cls": "xring",
+     "dst": "s_7N",
+     "E": 4,
+     "stations": 7
+    },
+    {
+     "link": "xrE_6N_l2",
+     "cls": "xring",
+     "dst": "s_7N",
+     "E": 4,
+     "stations": 7
+    },
+    {
+     "link": "xrE_6N_l3",
+     "cls": "xring",
+     "dst": "s_7N",
+     "E": 4,
+     "stations": 7
+    },
+    {
+     "link": "xrE_6S_l0",
+     "cls": "xring",
+     "dst": "s_7S",
+     "E": 4,
+     "stations": 7
+    },
+    {
+     "link": "xrE_6S_l1",
+     "cls": "xring",
+     "dst": "s_7S",
+     "E": 4,
+     "stations": 7
+    },
+    {
+     "link": "xrE_6S_l2",
+     "cls": "xring",
+     "dst": "s_7S",
+     "E": 4,
+     "stations": 7
+    },
+    {
+     "link": "xrE_6S_l3",
+     "cls": "xring",
+     "dst": "s_7S",
+     "E": 4,
+     "stations": 7
+    },
+    {
+     "link": "xrW_0N_l0",
+     "cls": "xring",
+     "dst": "s_0N",
+     "E": 4,
+     "stations": 7
+    },
+    {
+     "link": "xrW_0N_l1",
+     "cls": "xring",
+     "dst": "s_0N",
+     "E": 4,
+     "stations": 7
+    },
+    {
+     "link": "xrW_0N_l2",
+     "cls": "xring",
+     "dst": "s_0N",
+     "E": 4,
+     "stations": 7
+    },
+    {
+     "link": "xrW_0N_l3",
+     "cls": "xring",
+     "dst": "s_0N",
+     "E": 5,
+     "stations": 7
+    },
+    {
+     "link": "xrW_0S_l0",
+     "cls": "xring",
+     "dst": "s_0S",
+     "E": 4,
+     "stations": 7
+    },
+    {
+     "link": "xrW_0S_l1",
+     "cls": "xring",
+     "dst": "s_0S",
+     "E": 4,
+     "stations": 7
+    },
+    {
+     "link": "xrW_0S_l2",
+     "cls": "xring",
+     "dst": "s_0S",
+     "E": 4,
+     "stations": 7
+    },
+    {
+     "link": "xrW_0S_l3",
+     "cls": "xring",
+     "dst": "s_0S",
+     "E": 5,
+     "stations": 7
+    }
+   ]
+  }
+ ],
+ "ops": [
+  {
+   "id": "L2.attn.hc.fn",
+   "op": "attn.hc.fn",
+   "start": 0.0,
+   "end": 237.0,
+   "unit": "gunit HC job (cw job + HP beats + L5 CTL rows)",
+   "status": "GAP",
+   "gap": {
+    "module": "dsdv_gunit_l0",
+    "port": "HC JOB cw {which, set, row, lmask, smask}",
+    "missing": "job word is documented; the slice HP send (send config, CTL target 4) per accumulation is not lowered yet"
+   }
+  },
+  {
+   "id": "L2.attn.hc.sumsq",
+   "op": "attn.hc.sumsq",
+   "start": 0.0,
+   "end": 397.6,
+   "unit": "gunit HC job (cw job + HP beats + L5 CTL rows)",
+   "status": "GAP",
+   "gap": {
+    "module": "dsdv_gunit_l0",
+    "port": "HC JOB cw {which, set, row, lmask, smask}",
+    "missing": "job word is documented; the slice HP send (send config, CTL target 4) per accumulation is not lowered yet"
+   }
+  },
+  {
+   "id": "L2.attn.hc_pre",
+   "op": "attn.hc_pre",
+   "start": 0.0,
+   "end": 5.9,
+   "unit": "slice vp/vn/vq + xr + xfin (NORM, xfin go, rstd fan, act-quant)",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "ot_s81sl_vp",
+    "port": "c_d[159:32] (OP_NORM imm = hc_pre coefficients)",
+    "missing": "NORM takes hc_pre only as the command immediate; dsdv_gunit_l5 delivers the 24 HC coefficients as six leaf-store row writes (CTL target 5, rows R..R+5) and no vp op loads hc_pre from a leaf-store row (POST reads post/comb rows only), so a boot-loaded CTL template cannot carry the runtime coefficients"
+   }
+  },
+  {
+   "id": "L2.attn.norm.rsqrt",
+   "op": "attn.norm.rsqrt",
+   "start": 5.9,
+   "end": 5.9,
+   "unit": "slice vp/vn/vq + xr + xfin (NORM, xfin go, rstd fan, act-quant)",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "ot_s81sl_vp",
+    "port": "c_d[159:32] (OP_NORM imm = hc_pre coefficients)",
+    "missing": "NORM takes hc_pre only as the command immediate; dsdv_gunit_l5 delivers the 24 HC coefficients as six leaf-store row writes (CTL target 5, rows R..R+5) and no vp op loads hc_pre from a leaf-store row (POST reads post/comb rows only), so a boot-loaded CTL template cannot carry the runtime coefficients"
+   }
+  },
+  {
+   "id": "L2.attn.norm.scale",
+   "op": "attn.norm.scale",
+   "start": 5.9,
+   "end": 5.9,
+   "unit": "slice vp/vn/vq + xr + xfin (NORM, xfin go, rstd fan, act-quant)",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "ot_s81sl_vp",
+    "port": "c_d[159:32] (OP_NORM imm = hc_pre coefficients)",
+    "missing": "NORM takes hc_pre only as the command immediate; dsdv_gunit_l5 delivers the 24 HC coefficients as six leaf-store row writes (CTL target 5, rows R..R+5) and no vp op loads hc_pre from a leaf-store row (POST reads post/comb rows only), so a boot-loaded CTL template cannot carry the runtime coefficients"
+   }
+  },
+  {
+   "id": "L2.attn.norm.sumsq",
+   "op": "attn.norm.sumsq",
+   "start": 5.9,
+   "end": 5.9,
+   "unit": "slice vp/vn/vq + xr + xfin (NORM, xfin go, rstd fan, act-quant)",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "ot_s81sl_vp",
+    "port": "c_d[159:32] (OP_NORM imm = hc_pre coefficients)",
+    "missing": "NORM takes hc_pre only as the command immediate; dsdv_gunit_l5 delivers the 24 HC coefficients as six leaf-store row writes (CTL target 5, rows R..R+5) and no vp op loads hc_pre from a leaf-store row (POST reads post/comb rows only), so a boot-loaded CTL template cannot carry the runtime coefficients"
+   }
+  },
+  {
+   "id": "L2.attn.quant",
+   "op": "attn.quant",
+   "start": 5.9,
+   "end": 475.9,
+   "unit": "slice vp/vn/vq + xr + xfin (NORM, xfin go, rstd fan, act-quant)",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "ot_s81sl_vp",
+    "port": "c_d[159:32] (OP_NORM imm = hc_pre coefficients)",
+    "missing": "NORM takes hc_pre only as the command immediate; dsdv_gunit_l5 delivers the 24 HC coefficients as six leaf-store row writes (CTL target 5, rows R..R+5) and no vp op loads hc_pre from a leaf-store row (POST reads post/comb rows only), so a boot-loaded CTL template cannot carry the runtime coefficients"
+   },
+   "emitted": {
+    "slice": "u_s_0S",
+    "rows": 8,
+    "templates": 8
+   }
+  },
+  {
+   "id": "L2.attn.hc.rsqrt",
+   "op": "attn.hc.rsqrt",
+   "start": 397.6,
+   "end": 561.9,
+   "unit": "gunit HC job (cw job + HP beats + L5 CTL rows)",
+   "status": "GAP",
+   "gap": {
+    "module": "dsdv_gunit_l0",
+    "port": "HC JOB cw {which, set, row, lmask, smask}",
+    "missing": "job word is documented; the slice HP send (send config, CTL target 4) per accumulation is not lowered yet"
+   }
+  },
+  {
+   "id": "L2.attn.a_proj",
+   "op": "attn.a_proj",
+   "start": 475.9,
+   "end": 3677.4,
+   "unit": "frames (cfg7 programme) + slice xs (is_d phase start) + slice cap (cfg_d)",
+   "status": "GAP",
+   "gap": {
+    "module": "ot_s81sl_xs",
+    "port": "calendar / phase / stream ROMs (OT_ROM_DIR images)",
+    "missing": "no DV field placement compiler: the stream / phase / calendar ROM images exist only for the c26l hub stage catalog (results/rtl/dsrom_recovery_20261004/immutable_fullcatalog, 81 stages); the DV rule \"rows in the owning slice's frames\" (SPEC section 2) needs a re-placement and re-emitted ROM images"
+   }
+  },
+  {
+   "id": "L2.attn.hc.pre_post",
+   "op": "attn.hc.pre_post",
+   "start": 561.9,
+   "end": 741.2,
+   "unit": "gunit HC job (cw job + HP beats + L5 CTL rows)",
+   "status": "GAP",
+   "gap": {
+    "module": "dsdv_gunit_l0",
+    "port": "HC JOB cw {which, set, row, lmask, smask}",
+    "missing": "job word is documented; the slice HP send (send config, CTL target 4) per accumulation is not lowered yet"
+   }
+  },
+  {
+   "id": "L2.attn.hc.sinkhorn",
+   "op": "attn.hc.sinkhorn",
+   "start": 741.2,
+   "end": 1374.4,
+   "unit": "gunit HC job (cw job + HP beats + L5 CTL rows)",
+   "status": "GAP",
+   "gap": {
+    "module": "dsdv_gunit_l0",
+    "port": "HC JOB cw {which, set, row, lmask, smask}",
+    "missing": "job word is documented; the slice HP send (send config, CTL target 4) per accumulation is not lowered yet"
+   }
+  },
+  {
+   "id": "L2.attn.a_allgather",
+   "op": "attn.a_allgather",
+   "start": 3677.4,
+   "end": 4111.4,
+   "unit": "end-slice lep link endpoints + ring (cross-die)",
+   "status": "GAP",
+   "gap": {
+    "module": "ot_s81sl_slice_lep* / ot_pdie_serdes",
+    "port": "cross-die collective lanes",
+    "missing": "TP4 collective: owned by TOKEN-XDIE-S81 (TOK.DS.XDIE); the slice bench replays the remote partials at their scheduled cycles at the end-slice lep port"
+   }
+  },
+  {
+   "id": "L2.attn.cmp.pool",
+   "op": "attn.cmp.pool",
+   "start": 4111.4,
+   "end": 4401.3,
+   "unit": "slice vn / vs (compressor norms, QDQ, pool)",
+   "status": "GAP",
+   "gap": {
+    "module": "ot_s81sl_vs",
+    "port": "SU op codes 8..15 (s_d)",
+    "missing": "no compiler encoder for the vs SU op words yet"
+   }
+  },
+  {
+   "id": "L2.attn.kv_norm.sumsq",
+   "op": "attn.kv_norm.sumsq",
+   "start": 4111.4,
+   "end": 4114.4,
+   "unit": "slice vs SU ops (RoPE / QDQ)",
+   "status": "GAP",
+   "gap": {
+    "module": "ot_s81sl_vs",
+    "port": "SU op codes 8..15 (s_d)",
+    "missing": "no compiler encoder for the vs SU op words yet (tools/s81_slice/vs_gold.py drives the leaf bench only); RoPE tables / positions are runtime context (seq_host context splice 1/2)"
+   }
+  },
+  {
+   "id": "L2.attn.q_norm.sumsq",
+   "op": "attn.q_norm.sumsq",
+   "start": 4111.4,
+   "end": 4114.4,
+   "unit": "slice vn/vq over 4 adjacent slices (q_lora norm, xfin)",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "ot_s81sl_vp",
+    "port": "c_d[159:32] (OP_NORM imm = hc_pre coefficients)",
+    "missing": "NORM takes hc_pre only as the command immediate; dsdv_gunit_l5 delivers the 24 HC coefficients as six leaf-store row writes (CTL target 5, rows R..R+5) and no vp op loads hc_pre from a leaf-store row (POST reads post/comb rows only), so a boot-loaded CTL template cannot carry the runtime coefficients"
+   }
+  },
+  {
+   "id": "L2.attn.kv_norm.rsqrt",
+   "op": "attn.kv_norm.rsqrt",
+   "start": 4114.4,
+   "end": 4114.4,
+   "unit": "slice vs SU ops (RoPE / QDQ)",
+   "status": "GAP",
+   "gap": {
+    "module": "ot_s81sl_vs",
+    "port": "SU op codes 8..15 (s_d)",
+    "missing": "no compiler encoder for the vs SU op words yet (tools/s81_slice/vs_gold.py drives the leaf bench only); RoPE tables / positions are runtime context (seq_host context splice 1/2)"
+   }
+  },
+  {
+   "id": "L2.attn.kv_norm.scale",
+   "op": "attn.kv_norm.scale",
+   "start": 4114.4,
+   "end": 4114.4,
+   "unit": "slice vs SU ops (RoPE / QDQ)",
+   "status": "GAP",
+   "gap": {
+    "module": "ot_s81sl_vs",
+    "port": "SU op codes 8..15 (s_d)",
+    "missing": "no compiler encoder for the vs SU op words yet (tools/s81_slice/vs_gold.py drives the leaf bench only); RoPE tables / positions are runtime context (seq_host context splice 1/2)"
+   }
+  },
+  {
+   "id": "L2.attn.kv_rope_qdq",
+   "op": "attn.kv_rope_qdq",
+   "start": 4114.4,
+   "end": 4353.9,
+   "unit": "slice vs SU ops (RoPE / QDQ)",
+   "status": "GAP",
+   "gap": {
+    "module": "ot_s81sl_vs",
+    "port": "SU op codes 8..15 (s_d)",
+    "missing": "no compiler encoder for the vs SU op words yet (tools/s81_slice/vs_gold.py drives the leaf bench only); RoPE tables / positions are runtime context (seq_host context splice 1/2)"
+   }
+  },
+  {
+   "id": "L2.attn.q_norm.rsqrt",
+   "op": "attn.q_norm.rsqrt",
+   "start": 4114.4,
+   "end": 4114.4,
+   "unit": "slice vn/vq over 4 adjacent slices (q_lora norm, xfin)",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "ot_s81sl_vp",
+    "port": "c_d[159:32] (OP_NORM imm = hc_pre coefficients)",
+    "missing": "NORM takes hc_pre only as the command immediate; dsdv_gunit_l5 delivers the 24 HC coefficients as six leaf-store row writes (CTL target 5, rows R..R+5) and no vp op loads hc_pre from a leaf-store row (POST reads post/comb rows only), so a boot-loaded CTL template cannot carry the runtime coefficients"
+   }
+  },
+  {
+   "id": "L2.attn.q_norm.scale",
+   "op": "attn.q_norm.scale",
+   "start": 4114.4,
+   "end": 4114.4,
+   "unit": "slice vn/vq over 4 adjacent slices (q_lora norm, xfin)",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "ot_s81sl_vp",
+    "port": "c_d[159:32] (OP_NORM imm = hc_pre coefficients)",
+    "missing": "NORM takes hc_pre only as the command immediate; dsdv_gunit_l5 delivers the 24 HC coefficients as six leaf-store row writes (CTL target 5, rows R..R+5) and no vp op loads hc_pre from a leaf-store row (POST reads post/comb rows only), so a boot-loaded CTL template cannot carry the runtime coefficients"
+   }
+  },
+  {
+   "id": "L2.attn.q_quant",
+   "op": "attn.q_quant",
+   "start": 4114.4,
+   "end": 4380.9,
+   "unit": "slice vn/vq over 4 adjacent slices (q_lora norm, xfin)",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "ot_s81sl_vp",
+    "port": "c_d[159:32] (OP_NORM imm = hc_pre coefficients)",
+    "missing": "NORM takes hc_pre only as the command immediate; dsdv_gunit_l5 delivers the 24 HC coefficients as six leaf-store row writes (CTL target 5, rows R..R+5) and no vp op loads hc_pre from a leaf-store row (POST reads post/comb rows only), so a boot-loaded CTL template cannot carry the runtime coefficients"
+   }
+  },
+  {
+   "id": "L2.attn.own_row_write",
+   "op": "attn.own_row_write",
+   "start": 4353.9,
+   "end": 7574.5,
+   "unit": "svc_rs HBM service + ot_s81_su_sm attention (svc jobs, engine 4)",
+   "status": "GAP",
+   "gap": {
+    "module": "dsdv_svc_rs / dsdv_svc_att",
+    "port": "s_j job {arg 24, tag {slot, op 7}}",
+    "missing": "svc job op table for the attention pass is not documented as a compiler ABI (dsdv_svc_rs.sv / tools/s81_dv/svc_rs benches drive it directly); HBM KV image placement belongs to the fixtures"
+   }
+  },
+  {
+   "id": "L2.attn.wq_b",
+   "op": "attn.wq_b",
+   "start": 4380.9,
+   "end": 5991.9,
+   "unit": "frames (cfg7 programme) + slice xs (is_d phase start) + slice cap (cfg_d)",
+   "status": "GAP",
+   "gap": {
+    "module": "ot_s81sl_xs",
+    "port": "calendar / phase / stream ROMs (OT_ROM_DIR images)",
+    "missing": "no DV field placement compiler: the stream / phase / calendar ROM images exist only for the c26l hub stage catalog (results/rtl/dsrom_recovery_20261004/immutable_fullcatalog, 81 stages); the DV rule \"rows in the owning slice's frames\" (SPEC section 2) needs a re-placement and re-emitted ROM images"
+   }
+  },
+  {
+   "id": "L2.attn.cmp.norm.sumsq",
+   "op": "attn.cmp.norm.sumsq",
+   "start": 4401.3,
+   "end": 4555.0,
+   "unit": "slice vn / vs (compressor norms, QDQ, pool)",
+   "status": "GAP",
+   "gap": {
+    "module": "ot_s81sl_vs",
+    "port": "SU op codes 8..15 (s_d)",
+    "missing": "no compiler encoder for the vs SU op words yet"
+   }
+  },
+  {
+   "id": "L2.attn.cmp.norm.rsqrt",
+   "op": "attn.cmp.norm.rsqrt",
+   "start": 4555.0,
+   "end": 4719.3,
+   "unit": "slice vn / vs (compressor norms, QDQ, pool)",
+   "status": "GAP",
+   "gap": {
+    "module": "ot_s81sl_vs",
+    "port": "SU op codes 8..15 (s_d)",
+    "missing": "no compiler encoder for the vs SU op words yet"
+   }
+  },
+  {
+   "id": "L2.attn.cmp.norm.scale",
+   "op": "attn.cmp.norm.scale",
+   "start": 4719.3,
+   "end": 4761.0,
+   "unit": "slice vn / vs (compressor norms, QDQ, pool)",
+   "status": "GAP",
+   "gap": {
+    "module": "ot_s81sl_vs",
+    "port": "SU op codes 8..15 (s_d)",
+    "missing": "no compiler encoder for the vs SU op words yet"
+   }
+  },
+  {
+   "id": "L2.attn.cmp.row_qdq",
+   "op": "attn.cmp.row_qdq",
+   "start": 4761.0,
+   "end": 4913.0,
+   "unit": "slice vn / vs (compressor norms, QDQ, pool)",
+   "status": "GAP",
+   "gap": {
+    "module": "ot_s81sl_vs",
+    "port": "SU op codes 8..15 (s_d)",
+    "missing": "no compiler encoder for the vs SU op words yet"
+   }
+  },
+  {
+   "id": "L2.attn.cmp.wk",
+   "op": "attn.cmp.wk",
+   "start": 4761.0,
+   "end": 5397.9,
+   "unit": "frames (cfg7) + slice xs / cap (compressor / indexer projections)",
+   "status": "GAP",
+   "gap": {
+    "module": "ot_s81sl_xs",
+    "port": "calendar / phase / stream ROMs (OT_ROM_DIR images)",
+    "missing": "no DV field placement compiler: the stream / phase / calendar ROM images exist only for the c26l hub stage catalog (results/rtl/dsrom_recovery_20261004/immutable_fullcatalog, 81 stages); the DV rule \"rows in the owning slice's frames\" (SPEC section 2) needs a re-placement and re-emitted ROM images"
+   }
+  },
+  {
+   "id": "L2.attn.cmp.k_norm.sumsq",
+   "op": "attn.cmp.k_norm.sumsq",
+   "start": 5397.9,
+   "end": 5550.5,
+   "unit": "slice vn / vs (compressor norms, QDQ, pool)",
+   "status": "GAP",
+   "gap": {
+    "module": "ot_s81sl_vs",
+    "port": "SU op codes 8..15 (s_d)",
+    "missing": "no compiler encoder for the vs SU op words yet"
+   }
+  },
+  {
+   "id": "L2.attn.cmp.k_norm.rsqrt",
+   "op": "attn.cmp.k_norm.rsqrt",
+   "start": 5550.5,
+   "end": 5714.8,
+   "unit": "slice vn / vs (compressor norms, QDQ, pool)",
+   "status": "GAP",
+   "gap": {
+    "module": "ot_s81sl_vs",
+    "port": "SU op codes 8..15 (s_d)",
+    "missing": "no compiler encoder for the vs SU op words yet"
+   }
+  },
+  {
+   "id": "L2.attn.cmp.k_norm.scale",
+   "op": "attn.cmp.k_norm.scale",
+   "start": 5714.8,
+   "end": 5756.5,
+   "unit": "slice vn / vs (compressor norms, QDQ, pool)",
+   "status": "GAP",
+   "gap": {
+    "module": "ot_s81sl_vs",
+    "port": "SU op codes 8..15 (s_d)",
+    "missing": "no compiler encoder for the vs SU op words yet"
+   }
+  },
+  {
+   "id": "L2.attn.cmp.k_rope_qdq",
+   "op": "attn.cmp.k_rope_qdq",
+   "start": 5756.5,
+   "end": 5899.2,
+   "unit": "slice vn / vs (compressor norms, QDQ, pool)",
+   "status": "GAP",
+   "gap": {
+    "module": "ot_s81sl_vs",
+    "port": "SU op codes 8..15 (s_d)",
+    "missing": "no compiler encoder for the vs SU op words yet"
+   }
+  },
+  {
+   "id": "L2.attn.idx.q",
+   "op": "attn.idx.q",
+   "start": 5991.9,
+   "end": 6084.9,
+   "unit": "frames (cfg7) + slice xs / cap (compressor / indexer projections)",
+   "status": "GAP",
+   "gap": {
+    "module": "ot_s81sl_xs",
+    "port": "calendar / phase / stream ROMs (OT_ROM_DIR images)",
+    "missing": "no DV field placement compiler: the stream / phase / calendar ROM images exist only for the c26l hub stage catalog (results/rtl/dsrom_recovery_20261004/immutable_fullcatalog, 81 stages); the DV rule \"rows in the owning slice's frames\" (SPEC section 2) needs a re-placement and re-emitted ROM images"
+   }
+  },
+  {
+   "id": "L2.attn.q_rope",
+   "op": "attn.q_rope",
+   "start": 5991.9,
+   "end": 6096.0,
+   "unit": "slice vs SU ops (RoPE / QDQ)",
+   "status": "GAP",
+   "gap": {
+    "module": "ot_s81sl_vs",
+    "port": "SU op codes 8..15 (s_d)",
+    "missing": "no compiler encoder for the vs SU op words yet (tools/s81_slice/vs_gold.py drives the leaf bench only); RoPE tables / positions are runtime context (seq_host context splice 1/2)"
+   }
+  },
+  {
+   "id": "L2.attn.idx.newkey",
+   "op": "attn.idx.newkey",
+   "start": 6084.9,
+   "end": 6202.8,
+   "unit": "bk units dsdv_bk_sel / dsdv_bk_col (index scan, top-k, candidate merge, sparse gather) + svc",
+   "status": "GAP",
+   "gap": {
+    "module": "dsdv_bk_sel / dsdv_bk_col",
+    "port": "bk job / HBM index rows",
+    "missing": "no compiler ABI for the bk index-select / collect jobs (rtl/dsrom_sys/s81_dv/unit/bk/test/run_bk_bench.sh drives them directly)"
+   }
+  },
+  {
+   "id": "L2.attn.idx.score",
+   "op": "attn.idx.score",
+   "start": 6084.9,
+   "end": 9035.9,
+   "unit": "bk units dsdv_bk_sel / dsdv_bk_col (index scan, top-k, candidate merge, sparse gather) + svc",
+   "status": "GAP",
+   "gap": {
+    "module": "dsdv_bk_sel / dsdv_bk_col",
+    "port": "bk job / HBM index rows",
+    "missing": "no compiler ABI for the bk index-select / collect jobs (rtl/dsrom_sys/s81_dv/unit/bk/test/run_bk_bench.sh drives them directly)"
+   }
+  },
+  {
+   "id": "L2.attn.idx.topk_local",
+   "op": "attn.idx.topk_local",
+   "start": 9035.9,
+   "end": 11212.9,
+   "unit": "bk units dsdv_bk_sel / dsdv_bk_col (index scan, top-k, candidate merge, sparse gather) + svc",
+   "status": "GAP",
+   "gap": {
+    "module": "dsdv_bk_sel / dsdv_bk_col",
+    "port": "bk job / HBM index rows",
+    "missing": "no compiler ABI for the bk index-select / collect jobs (rtl/dsrom_sys/s81_dv/unit/bk/test/run_bk_bench.sh drives them directly)"
+   }
+  },
+  {
+   "id": "L2.attn.idx.topk_merge",
+   "op": "attn.idx.topk_merge",
+   "start": 11212.9,
+   "end": 11763.9,
+   "unit": "bk units dsdv_bk_sel / dsdv_bk_col (index scan, top-k, candidate merge, sparse gather) + svc",
+   "status": "GAP",
+   "gap": {
+    "module": "dsdv_bk_sel / dsdv_bk_col",
+    "port": "bk job / HBM index rows",
+    "missing": "no compiler ABI for the bk index-select / collect jobs (rtl/dsrom_sys/s81_dv/unit/bk/test/run_bk_bench.sh drives them directly)"
+   }
+  },
+  {
+   "id": "L2.attn.idx.topk_final",
+   "op": "attn.idx.topk_final",
+   "start": 11763.9,
+   "end": 11941.9,
+   "unit": "bk units dsdv_bk_sel / dsdv_bk_col (index scan, top-k, candidate merge, sparse gather) + svc",
+   "status": "GAP",
+   "gap": {
+    "module": "dsdv_bk_sel / dsdv_bk_col",
+    "port": "bk job / HBM index rows",
+    "missing": "no compiler ABI for the bk index-select / collect jobs (rtl/dsrom_sys/s81_dv/unit/bk/test/run_bk_bench.sh drives them directly)"
+   }
+  },
+  {
+   "id": "L2.attn.gather",
+   "op": "attn.gather",
+   "start": 11941.9,
+   "end": 12749.9,
+   "unit": "bk units dsdv_bk_sel / dsdv_bk_col (index scan, top-k, candidate merge, sparse gather) + svc",
+   "status": "GAP",
+   "gap": {
+    "module": "dsdv_bk_sel / dsdv_bk_col",
+    "port": "bk job / HBM index rows",
+    "missing": "no compiler ABI for the bk index-select / collect jobs (rtl/dsrom_sys/s81_dv/unit/bk/test/run_bk_bench.sh drives them directly)"
+   }
+  },
+  {
+   "id": "L2.attn.window_load",
+   "op": "attn.window_load",
+   "start": 11941.9,
+   "end": 12207.8,
+   "unit": "svc_rs HBM service + ot_s81_su_sm attention (svc jobs, engine 4)",
+   "status": "GAP",
+   "gap": {
+    "module": "dsdv_svc_rs / dsdv_svc_att",
+    "port": "s_j job {arg 24, tag {slot, op 7}}",
+    "missing": "svc job op table for the attention pass is not documented as a compiler ABI (dsdv_svc_rs.sv / tools/s81_dv/svc_rs benches drive it directly); HBM KV image placement belongs to the fixtures"
+   }
+  },
+  {
+   "id": "L2.attn.rows_allgather",
+   "op": "attn.rows_allgather",
+   "start": 12749.9,
+   "end": 13782.8,
+   "unit": "end-slice lep link endpoints + ring (cross-die)",
+   "status": "GAP",
+   "gap": {
+    "module": "ot_s81sl_slice_lep* / ot_pdie_serdes",
+    "port": "cross-die collective lanes",
+    "missing": "TP4 collective: owned by TOKEN-XDIE-S81 (TOK.DS.XDIE); the slice bench replays the remote partials at their scheduled cycles at the end-slice lep port"
+   }
+  },
+  {
+   "id": "L2.attn.scores",
+   "op": "attn.scores",
+   "start": 13782.8,
+   "end": 13832.7,
+   "unit": "svc_rs HBM service + ot_s81_su_sm attention (svc jobs, engine 4)",
+   "status": "GAP",
+   "gap": {
+    "module": "dsdv_svc_rs / dsdv_svc_att",
+    "port": "s_j job {arg 24, tag {slot, op 7}}",
+    "missing": "svc job op table for the attention pass is not documented as a compiler ABI (dsdv_svc_rs.sv / tools/s81_dv/svc_rs benches drive it directly); HBM KV image placement belongs to the fixtures"
+   }
+  },
+  {
+   "id": "L2.attn.max",
+   "op": "attn.max",
+   "start": 13832.7,
+   "end": 14021.3,
+   "unit": "svc_rs HBM service + ot_s81_su_sm attention (svc jobs, engine 4)",
+   "status": "GAP",
+   "gap": {
+    "module": "dsdv_svc_rs / dsdv_svc_att",
+    "port": "s_j job {arg 24, tag {slot, op 7}}",
+    "missing": "svc job op table for the attention pass is not documented as a compiler ABI (dsdv_svc_rs.sv / tools/s81_dv/svc_rs benches drive it directly); HBM KV image placement belongs to the fixtures"
+   }
+  },
+  {
+   "id": "L2.attn.exp",
+   "op": "attn.exp",
+   "start": 14021.3,
+   "end": 14278.0,
+   "unit": "svc_rs HBM service + ot_s81_su_sm attention (svc jobs, engine 4)",
+   "status": "GAP",
+   "gap": {
+    "module": "dsdv_svc_rs / dsdv_svc_att",
+    "port": "s_j job {arg 24, tag {slot, op 7}}",
+    "missing": "svc job op table for the attention pass is not documented as a compiler ABI (dsdv_svc_rs.sv / tools/s81_dv/svc_rs benches drive it directly); HBM KV image placement belongs to the fixtures"
+   }
+  },
+  {
+   "id": "L2.attn.den",
+   "op": "attn.den",
+   "start": 14278.0,
+   "end": 14333.0,
+   "unit": "svc_rs HBM service + ot_s81_su_sm attention (svc jobs, engine 4)",
+   "status": "GAP",
+   "gap": {
+    "module": "dsdv_svc_rs / dsdv_svc_att",
+    "port": "s_j job {arg 24, tag {slot, op 7}}",
+    "missing": "svc job op table for the attention pass is not documented as a compiler ABI (dsdv_svc_rs.sv / tools/s81_dv/svc_rs benches drive it directly); HBM KV image placement belongs to the fixtures"
+   }
+  },
+  {
+   "id": "L2.attn.pv",
+   "op": "attn.pv",
+   "start": 14278.0,
+   "end": 14549.9,
+   "unit": "svc_rs HBM service + ot_s81_su_sm attention (svc jobs, engine 4)",
+   "status": "GAP",
+   "gap": {
+    "module": "dsdv_svc_rs / dsdv_svc_att",
+    "port": "s_j job {arg 24, tag {slot, op 7}}",
+    "missing": "svc job op table for the attention pass is not documented as a compiler ABI (dsdv_svc_rs.sv / tools/s81_dv/svc_rs benches drive it directly); HBM KV image placement belongs to the fixtures"
+   }
+  },
+  {
+   "id": "L2.attn.sink",
+   "op": "attn.sink",
+   "start": 14333.0,
+   "end": 14496.0,
+   "unit": "svc_rs HBM service + ot_s81_su_sm attention (svc jobs, engine 4)",
+   "status": "GAP",
+   "gap": {
+    "module": "dsdv_svc_rs / dsdv_svc_att",
+    "port": "s_j job {arg 24, tag {slot, op 7}}",
+    "missing": "svc job op table for the attention pass is not documented as a compiler ABI (dsdv_svc_rs.sv / tools/s81_dv/svc_rs benches drive it directly); HBM KV image placement belongs to the fixtures"
+   }
+  },
+  {
+   "id": "L2.attn.normalize",
+   "op": "attn.normalize",
+   "start": 14549.9,
+   "end": 14761.8,
+   "unit": "svc_rs HBM service + ot_s81_su_sm attention (svc jobs, engine 4)",
+   "status": "GAP",
+   "gap": {
+    "module": "dsdv_svc_rs / dsdv_svc_att",
+    "port": "s_j job {arg 24, tag {slot, op 7}}",
+    "missing": "svc job op table for the attention pass is not documented as a compiler ABI (dsdv_svc_rs.sv / tools/s81_dv/svc_rs benches drive it directly); HBM KV image placement belongs to the fixtures"
+   }
+  },
+  {
+   "id": "L2.attn.wo_a",
+   "op": "attn.wo_a",
+   "start": 14761.8,
+   "end": 17085.8,
+   "unit": "frames (cfg7 programme) + slice xs (is_d phase start) + slice cap (cfg_d)",
+   "status": "GAP",
+   "gap": {
+    "module": "ot_s81sl_xs",
+    "port": "calendar / phase / stream ROMs (OT_ROM_DIR images)",
+    "missing": "no DV field placement compiler: the stream / phase / calendar ROM images exist only for the c26l hub stage catalog (results/rtl/dsrom_recovery_20261004/immutable_fullcatalog, 81 stages); the DV rule \"rows in the owning slice's frames\" (SPEC section 2) needs a re-placement and re-emitted ROM images"
+   }
+  },
+  {
+   "id": "L2.attn.z_quant",
+   "op": "attn.z_quant",
+   "start": 17085.8,
+   "end": 17164.8,
+   "unit": "slice vs/vsw (SwiGLU, qbank)",
+   "status": "GAP",
+   "gap": {
+    "module": "ot_s81sl_vs / ot_s81sl_vsw",
+    "port": "SU op words",
+    "missing": "no compiler encoder for the vs SU op words yet"
+   }
+  },
+  {
+   "id": "L2.attn.wo_b",
+   "op": "attn.wo_b",
+   "start": 17164.8,
+   "end": 17739.2,
+   "unit": "frames (cfg7 programme) + slice xs (is_d phase start) + slice cap (cfg_d)",
+   "status": "GAP",
+   "gap": {
+    "module": "ot_s81sl_xs",
+    "port": "calendar / phase / stream ROMs (OT_ROM_DIR images)",
+    "missing": "no DV field placement compiler: the stream / phase / calendar ROM images exist only for the c26l hub stage catalog (results/rtl/dsrom_recovery_20261004/immutable_fullcatalog, 81 stages); the DV rule \"rows in the owning slice's frames\" (SPEC section 2) needs a re-placement and re-emitted ROM images"
+   }
+  },
+  {
+   "id": "L2.attn.out_allreduce",
+   "op": "attn.out_allreduce",
+   "start": 17739.2,
+   "end": 18566.2,
+   "unit": "end-slice lep link endpoints + ring (cross-die)",
+   "status": "GAP",
+   "gap": {
+    "module": "ot_s81sl_slice_lep* / ot_pdie_serdes",
+    "port": "cross-die collective lanes",
+    "missing": "TP4 collective: owned by TOKEN-XDIE-S81 (TOK.DS.XDIE); the slice bench replays the remote partials at their scheduled cycles at the end-slice lep port"
+   }
+  },
+  {
+   "id": "L2.attn.hc_post",
+   "op": "attn.hc_post",
+   "start": 18566.2,
+   "end": 18631.1,
+   "unit": "slice vp POST (hc_post lanes)",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "ot_s81sl_vp",
+    "port": "POST a0 (coefficient rows) / a1 (y rows)",
+    "missing": "POST is a static template; the coefficient rows are written by the gunit L5 CTL rows (target 5) at their scheduled edge"
+   }
+  },
+  {
+   "id": "L2.substage_hop0",
+   "op": "substage_hop0",
+   "start": 18631.1,
+   "end": 19704.1,
+   "unit": "end-slice lep stage hop (h ring to the edge link)",
+   "status": "GAP",
+   "gap": {
+    "module": "ot_s81sl_slice_lep* / ot_pdie_serdes",
+    "port": "cross-die collective lanes",
+    "missing": "TP4 collective: owned by TOKEN-XDIE-S81 (TOK.DS.XDIE); the slice bench replays the remote partials at their scheduled cycles at the end-slice lep port"
+   }
+  },
+  {
+   "id": "L2.substage_hop1",
+   "op": "substage_hop1",
+   "start": 19704.1,
+   "end": 20777.1,
+   "unit": "end-slice lep stage hop (h ring to the edge link)",
+   "status": "GAP",
+   "gap": {
+    "module": "ot_s81sl_slice_lep* / ot_pdie_serdes",
+    "port": "cross-die collective lanes",
+    "missing": "TP4 collective: owned by TOKEN-XDIE-S81 (TOK.DS.XDIE); the slice bench replays the remote partials at their scheduled cycles at the end-slice lep port"
+   }
+  },
+  {
+   "id": "L2.ffn.hc.fn",
+   "op": "ffn.hc.fn",
+   "start": 20777.1,
+   "end": 21006.1,
+   "unit": "gunit HC job (cw job + HP beats + L5 CTL rows)",
+   "status": "GAP",
+   "gap": {
+    "module": "dsdv_gunit_l0",
+    "port": "HC JOB cw {which, set, row, lmask, smask}",
+    "missing": "job word is documented; the slice HP send (send config, CTL target 4) per accumulation is not lowered yet"
+   }
+  },
+  {
+   "id": "L2.ffn.hc.sumsq",
+   "op": "ffn.hc.sumsq",
+   "start": 20777.1,
+   "end": 21177.7,
+   "unit": "gunit HC job (cw job + HP beats + L5 CTL rows)",
+   "status": "GAP",
+   "gap": {
+    "module": "dsdv_gunit_l0",
+    "port": "HC JOB cw {which, set, row, lmask, smask}",
+    "missing": "job word is documented; the slice HP send (send config, CTL target 4) per accumulation is not lowered yet"
+   }
+  },
+  {
+   "id": "L2.ffn.hc_pre",
+   "op": "ffn.hc_pre",
+   "start": 20777.1,
+   "end": 20786.0,
+   "unit": "slice vp/vn/vq + xr + xfin (NORM, xfin go, rstd fan, act-quant)",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "ot_s81sl_vp",
+    "port": "c_d[159:32] (OP_NORM imm = hc_pre coefficients)",
+    "missing": "NORM takes hc_pre only as the command immediate; dsdv_gunit_l5 delivers the 24 HC coefficients as six leaf-store row writes (CTL target 5, rows R..R+5) and no vp op loads hc_pre from a leaf-store row (POST reads post/comb rows only), so a boot-loaded CTL template cannot carry the runtime coefficients"
+   }
+  },
+  {
+   "id": "L2.ffn.norm.rsqrt",
+   "op": "ffn.norm.rsqrt",
+   "start": 20786.0,
+   "end": 20786.0,
+   "unit": "slice vp/vn/vq + xr + xfin (NORM, xfin go, rstd fan, act-quant)",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "ot_s81sl_vp",
+    "port": "c_d[159:32] (OP_NORM imm = hc_pre coefficients)",
+    "missing": "NORM takes hc_pre only as the command immediate; dsdv_gunit_l5 delivers the 24 HC coefficients as six leaf-store row writes (CTL target 5, rows R..R+5) and no vp op loads hc_pre from a leaf-store row (POST reads post/comb rows only), so a boot-loaded CTL template cannot carry the runtime coefficients"
+   }
+  },
+  {
+   "id": "L2.ffn.norm.scale",
+   "op": "ffn.norm.scale",
+   "start": 20786.0,
+   "end": 21238.0,
+   "unit": "slice vp/vn/vq + xr + xfin (NORM, xfin go, rstd fan, act-quant)",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "ot_s81sl_vp",
+    "port": "c_d[159:32] (OP_NORM imm = hc_pre coefficients)",
+    "missing": "NORM takes hc_pre only as the command immediate; dsdv_gunit_l5 delivers the 24 HC coefficients as six leaf-store row writes (CTL target 5, rows R..R+5) and no vp op loads hc_pre from a leaf-store row (POST reads post/comb rows only), so a boot-loaded CTL template cannot carry the runtime coefficients"
+   }
+  },
+  {
+   "id": "L2.ffn.norm.sumsq",
+   "op": "ffn.norm.sumsq",
+   "start": 20786.0,
+   "end": 20786.0,
+   "unit": "slice vp/vn/vq + xr + xfin (NORM, xfin go, rstd fan, act-quant)",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "ot_s81sl_vp",
+    "port": "c_d[159:32] (OP_NORM imm = hc_pre coefficients)",
+    "missing": "NORM takes hc_pre only as the command immediate; dsdv_gunit_l5 delivers the 24 HC coefficients as six leaf-store row writes (CTL target 5, rows R..R+5) and no vp op loads hc_pre from a leaf-store row (POST reads post/comb rows only), so a boot-loaded CTL template cannot carry the runtime coefficients"
+   }
+  },
+  {
+   "id": "L2.ffn.hc.rsqrt",
+   "op": "ffn.hc.rsqrt",
+   "start": 21177.7,
+   "end": 21342.0,
+   "unit": "gunit HC job (cw job + HP beats + L5 CTL rows)",
+   "status": "GAP",
+   "gap": {
+    "module": "dsdv_gunit_l0",
+    "port": "HC JOB cw {which, set, row, lmask, smask}",
+    "missing": "job word is documented; the slice HP send (send config, CTL target 4) per accumulation is not lowered yet"
+   }
+  },
+  {
+   "id": "L2.ffn.quant",
+   "op": "ffn.quant",
+   "start": 21238.0,
+   "end": 21256.0,
+   "unit": "slice vp/vn/vq + xr + xfin (NORM, xfin go, rstd fan, act-quant)",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "ot_s81sl_vp",
+    "port": "c_d[159:32] (OP_NORM imm = hc_pre coefficients)",
+    "missing": "NORM takes hc_pre only as the command immediate; dsdv_gunit_l5 delivers the 24 HC coefficients as six leaf-store row writes (CTL target 5, rows R..R+5) and no vp op loads hc_pre from a leaf-store row (POST reads post/comb rows only), so a boot-loaded CTL template cannot carry the runtime coefficients"
+   }
+  },
+  {
+   "id": "L2.ffn.router",
+   "op": "ffn.router",
+   "start": 21238.0,
+   "end": 22243.7,
+   "unit": "frames (cfg7 programme) + slice xs (is_d phase start) + slice cap (cfg_d)",
+   "status": "GAP",
+   "gap": {
+    "module": "ot_s81sl_xs",
+    "port": "calendar / phase / stream ROMs (OT_ROM_DIR images)",
+    "missing": "no DV field placement compiler: the stream / phase / calendar ROM images exist only for the c26l hub stage catalog (results/rtl/dsrom_recovery_20261004/immutable_fullcatalog, 81 stages); the DV rule \"rows in the owning slice's frames\" (SPEC section 2) needs a re-placement and re-emitted ROM images"
+   }
+  },
+  {
+   "id": "L2.ffn.hc.pre_post",
+   "op": "ffn.hc.pre_post",
+   "start": 21342.0,
+   "end": 21521.3,
+   "unit": "gunit HC job (cw job + HP beats + L5 CTL rows)",
+   "status": "GAP",
+   "gap": {
+    "module": "dsdv_gunit_l0",
+    "port": "HC JOB cw {which, set, row, lmask, smask}",
+    "missing": "job word is documented; the slice HP send (send config, CTL target 4) per accumulation is not lowered yet"
+   }
+  },
+  {
+   "id": "L2.ffn.hc.sinkhorn",
+   "op": "ffn.hc.sinkhorn",
+   "start": 21521.3,
+   "end": 22154.5,
+   "unit": "gunit HC job (cw job + HP beats + L5 CTL rows)",
+   "status": "GAP",
+   "gap": {
+    "module": "dsdv_gunit_l0",
+    "port": "HC JOB cw {which, set, row, lmask, smask}",
+    "missing": "job word is documented; the slice HP send (send config, CTL target 4) per accumulation is not lowered yet"
+   }
+  },
+  {
+   "id": "L2.ffn.shared_gu",
+   "op": "ffn.shared_gu",
+   "start": 22243.7,
+   "end": 22903.7,
+   "unit": "frames (cfg7 programme) + slice xs (is_d phase start) + slice cap (cfg_d)",
+   "status": "GAP",
+   "gap": {
+    "module": "ot_s81sl_xs",
+    "port": "calendar / phase / stream ROMs (OT_ROM_DIR images)",
+    "missing": "no DV field placement compiler: the stream / phase / calendar ROM images exist only for the c26l hub stage catalog (results/rtl/dsrom_recovery_20261004/immutable_fullcatalog, 81 stages); the DV rule \"rows in the owning slice's frames\" (SPEC section 2) needs a re-placement and re-emitted ROM images"
+   }
+  },
+  {
+   "id": "L2.ffn.softplus_sqrt",
+   "op": "ffn.softplus_sqrt",
+   "start": 22243.7,
+   "end": 22429.3,
+   "unit": "slice vs (softplus) + gunit router L1/L3",
+   "status": "GAP",
+   "gap": {
+    "module": "dsdv_gunit_l1 / ot_s81sl_vs",
+    "port": "SC beats (kind 5) + router job",
+    "missing": "router lowering not written"
+   }
+  },
+  {
+   "id": "L2.ffn.router_allgather",
+   "op": "ffn.router_allgather",
+   "start": 22429.3,
+   "end": 22851.2,
+   "unit": "end-slice lep link endpoints + ring (cross-die)",
+   "status": "GAP",
+   "gap": {
+    "module": "ot_s81sl_slice_lep* / ot_pdie_serdes",
+    "port": "cross-die collective lanes",
+    "missing": "TP4 collective: owned by TOKEN-XDIE-S81 (TOK.DS.XDIE); the slice bench replays the remote partials at their scheduled cycles at the end-slice lep port"
+   }
+  },
+  {
+   "id": "L2.ffn.bias",
+   "op": "ffn.bias",
+   "start": 22851.2,
+   "end": 22935.8,
+   "unit": "slice vs (softplus) + gunit router L1/L3",
+   "status": "GAP",
+   "gap": {
+    "module": "dsdv_gunit_l1 / ot_s81sl_vs",
+    "port": "SC beats (kind 5) + router job",
+    "missing": "router lowering not written"
+   }
+  },
+  {
+   "id": "L2.ffn.shared_swiglu",
+   "op": "ffn.shared_swiglu",
+   "start": 22903.7,
+   "end": 23116.3,
+   "unit": "slice vs/vsw (SwiGLU, qbank)",
+   "status": "GAP",
+   "gap": {
+    "module": "ot_s81sl_vs / ot_s81sl_vsw",
+    "port": "SU op words",
+    "missing": "no compiler encoder for the vs SU op words yet"
+   }
+  },
+  {
+   "id": "L2.ffn.top6",
+   "op": "ffn.top6",
+   "start": 22935.8,
+   "end": 22944.7,
+   "unit": "gunit router (ot_hdc_select_tree) -> ids CTL rows",
+   "status": "GAP",
+   "gap": {
+    "module": "dsdv_gunit_l1",
+    "port": "router job cw / ids CTL rows R..R+2",
+    "missing": "router lowering not written"
+   }
+  },
+  {
+   "id": "L2.ffn.top6_order",
+   "op": "ffn.top6_order",
+   "start": 22944.7,
+   "end": 23052.2,
+   "unit": "gunit router (ot_hdc_select_tree) -> ids CTL rows",
+   "status": "GAP",
+   "gap": {
+    "module": "dsdv_gunit_l1",
+    "port": "router job cw / ids CTL rows R..R+2",
+    "missing": "router lowering not written"
+   }
+  },
+  {
+   "id": "L2.ffn.experts_gu",
+   "op": "ffn.experts_gu",
+   "start": 23052.2,
+   "end": 24961.1,
+   "unit": "frames (cfg7 programme) + slice xs (is_d phase start) + slice cap (cfg_d)",
+   "status": "GAP",
+   "gap": {
+    "module": "ot_s81sl_xs",
+    "port": "calendar / phase / stream ROMs (OT_ROM_DIR images)",
+    "missing": "no DV field placement compiler: the stream / phase / calendar ROM images exist only for the c26l hub stage catalog (results/rtl/dsrom_recovery_20261004/immutable_fullcatalog, 81 stages); the DV rule \"rows in the owning slice's frames\" (SPEC section 2) needs a re-placement and re-emitted ROM images"
+   }
+  },
+  {
+   "id": "L2.ffn.weights",
+   "op": "ffn.weights",
+   "start": 23052.2,
+   "end": 23278.1,
+   "unit": "slice vs (softplus) + gunit router L1/L3",
+   "status": "GAP",
+   "gap": {
+    "module": "dsdv_gunit_l1 / ot_s81sl_vs",
+    "port": "SC beats (kind 5) + router job",
+    "missing": "router lowering not written"
+   }
+  },
+  {
+   "id": "L2.ffn.shared_quant",
+   "op": "ffn.shared_quant",
+   "start": 23116.3,
+   "end": 23178.0,
+   "unit": "slice vs/vsw (SwiGLU, qbank)",
+   "status": "GAP",
+   "gap": {
+    "module": "ot_s81sl_vs / ot_s81sl_vsw",
+    "port": "SU op words",
+    "missing": "no compiler encoder for the vs SU op words yet"
+   }
+  },
+  {
+   "id": "L2.ffn.swiglu",
+   "op": "ffn.swiglu",
+   "start": 24961.1,
+   "end": 24964.1,
+   "unit": "slice vs/vsw (SwiGLU, qbank)",
+   "status": "GAP",
+   "gap": {
+    "module": "ot_s81sl_vs / ot_s81sl_vsw",
+    "port": "SU op words",
+    "missing": "no compiler encoder for the vs SU op words yet"
+   }
+  },
+  {
+   "id": "L2.ffn.route_w",
+   "op": "ffn.route_w",
+   "start": 24964.1,
+   "end": 24970.0,
+   "unit": "slice vs/vsw (SwiGLU, qbank)",
+   "status": "GAP",
+   "gap": {
+    "module": "ot_s81sl_vs / ot_s81sl_vsw",
+    "port": "SU op words",
+    "missing": "no compiler encoder for the vs SU op words yet"
+   }
+  },
+  {
+   "id": "L2.ffn.quant2",
+   "op": "ffn.quant2",
+   "start": 24970.0,
+   "end": 25160.0,
+   "unit": "slice vs/vsw (SwiGLU, qbank)",
+   "status": "GAP",
+   "gap": {
+    "module": "ot_s81sl_vs / ot_s81sl_vsw",
+    "port": "SU op words",
+    "missing": "no compiler encoder for the vs SU op words yet"
+   }
+  },
+  {
+   "id": "L2.ffn.down",
+   "op": "ffn.down",
+   "start": 25160.0,
+   "end": 27264.8,
+   "unit": "frames (cfg7 programme) + slice xs (is_d phase start) + slice cap (cfg_d)",
+   "status": "GAP",
+   "gap": {
+    "module": "ot_s81sl_xs",
+    "port": "calendar / phase / stream ROMs (OT_ROM_DIR images)",
+    "missing": "no DV field placement compiler: the stream / phase / calendar ROM images exist only for the c26l hub stage catalog (results/rtl/dsrom_recovery_20261004/immutable_fullcatalog, 81 stages); the DV rule \"rows in the owning slice's frames\" (SPEC section 2) needs a re-placement and re-emitted ROM images"
+   }
+  },
+  {
+   "id": "L2.ffn.combine_allreduce",
+   "op": "ffn.combine_allreduce",
+   "start": 27264.8,
+   "end": 28091.8,
+   "unit": "end-slice lep link endpoints + ring (cross-die)",
+   "status": "GAP",
+   "gap": {
+    "module": "ot_s81sl_slice_lep* / ot_pdie_serdes",
+    "port": "cross-die collective lanes",
+    "missing": "TP4 collective: owned by TOKEN-XDIE-S81 (TOK.DS.XDIE); the slice bench replays the remote partials at their scheduled cycles at the end-slice lep port"
+   }
+  },
+  {
+   "id": "L2.ffn.hc_post",
+   "op": "ffn.hc_post",
+   "start": 28091.8,
+   "end": 28156.7,
+   "unit": "slice vp POST (hc_post lanes)",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "ot_s81sl_vp",
+    "port": "POST a0 (coefficient rows) / a1 (y rows)",
+    "missing": "POST is a static template; the coefficient rows are written by the gunit L5 CTL rows (target 5) at their scheduled edge"
+   }
+  }
+ ],
+ "gaps": [
+  [
+   "dsdv_bk_sel / dsdv_bk_col",
+   "bk job / HBM index rows",
+   "no compiler ABI for the bk index-select / collect jobs (rtl/dsrom_sys/s81_dv/unit/bk/test/run_bk_bench.sh drives them directly)"
+  ],
+  [
+   "dsdv_gunit_l0",
+   "HC JOB cw {which, set, row, lmask, smask}",
+   "job word is documented; the slice HP send (send config, CTL target 4) per accumulation is not lowered yet"
+  ],
+  [
+   "dsdv_gunit_l1",
+   "router job cw / ids CTL rows R..R+2",
+   "router lowering not written"
+  ],
+  [
+   "dsdv_gunit_l1 / ot_s81sl_vs",
+   "SC beats (kind 5) + router job",
+   "router lowering not written"
+  ],
+  [
+   "dsdv_svc_rs / dsdv_svc_att",
+   "s_j job {arg 24, tag {slot, op 7}}",
+   "svc job op table for the attention pass is not documented as a compiler ABI (dsdv_svc_rs.sv / tools/s81_dv/svc_rs benches drive it directly); HBM KV image placement belongs to the fixtures"
+  ],
+  [
+   "ot_s81sl_slice_lep* / ot_pdie_serdes",
+   "cross-die collective lanes",
+   "TP4 collective: owned by TOKEN-XDIE-S81 (TOK.DS.XDIE); the slice bench replays the remote partials at their scheduled cycles at the end-slice lep port"
+  ],
+  [
+   "ot_s81sl_vp",
+   "POST a0 (coefficient rows) / a1 (y rows)",
+   "POST is a static template; the coefficient rows are written by the gunit L5 CTL rows (target 5) at their scheduled edge"
+  ],
+  [
+   "ot_s81sl_vp",
+   "c_d[159:32] (OP_NORM imm = hc_pre coefficients)",
+   "NORM takes hc_pre only as the command immediate; dsdv_gunit_l5 delivers the 24 HC coefficients as six leaf-store row writes (CTL target 5, rows R..R+5) and no vp op loads hc_pre from a leaf-store row (POST reads post/comb rows only), so a boot-loaded CTL template cannot carry the runtime coefficients"
+  ],
+  [
+   "ot_s81sl_vs",
+   "SU op codes 8..15 (s_d)",
+   "no compiler encoder for the vs SU op words yet"
+  ],
+  [
+   "ot_s81sl_vs",
+   "SU op codes 8..15 (s_d)",
+   "no compiler encoder for the vs SU op words yet (tools/s81_slice/vs_gold.py drives the leaf bench only); RoPE tables / positions are runtime context (seq_host context splice 1/2)"
+  ],
+  [
+   "ot_s81sl_vs / ot_s81sl_vsw",
+   "SU op words",
+   "no compiler encoder for the vs SU op words yet"
+  ],
+  [
+   "ot_s81sl_xs",
+   "calendar / phase / stream ROMs (OT_ROM_DIR images)",
+   "no DV field placement compiler: the stream / phase / calendar ROM images exist only for the c26l hub stage catalog (results/rtl/dsrom_recovery_20261004/immutable_fullcatalog, 81 stages); the DV rule \"rows in the owning slice's frames\" (SPEC section 2) needs a re-placement and re-emitted ROM images"
+  ]
+ ]
+}

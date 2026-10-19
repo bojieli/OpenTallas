@@ -1,0 +1,5 @@
+Verilator 5.050 2026-07-01 rev v5.050
+LEP_MU_STATS A recv 280/280 B recv 240/240 mismatches 0 | latency user identity 1 (A 120 beats, ref 120) | main faults 0000000 | F1 full-slot 1 F2 empty-replay 1 F3 ab-user0 1
+PASS lep_mu: 6 users on the static calendar, copies A/B by the slot bit (user 0 on A), 280 + 240 beats bit-exact with tags, 2 landed + replayed per copy, latency user cycle- and bit-identical to the single-user run (120 beats), F1/F2/F3 faulted
+BENCH_PASS lepmu MUT=none seed 5
+rc=0

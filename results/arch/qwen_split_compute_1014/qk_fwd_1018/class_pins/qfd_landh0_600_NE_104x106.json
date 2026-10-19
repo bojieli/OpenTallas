@@ -1,0 +1,245 @@
+{
+ "schema": "opentallas.qwen-tp8.assigned-pins.v1",
+ "master": "qfd_landh0_600_NE_104x106",
+ "outline": {
+  "w": 104.088,
+  "h": 105.816
+ },
+ "instances": null,
+ "pins": {
+  "N": [
+   "a"
+  ],
+  "E": [
+   "b"
+  ]
+ },
+ "pin_ranges": {
+  "a": [
+   8.844,
+   95.1
+  ],
+  "b": [
+   9.708,
+   95.964
+  ]
+ },
+ "ports": {
+  "a": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 600,
+   "range_um": [
+    8.844,
+    95.1
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "b": {
+   "face": "E",
+   "layer": "M4",
+   "bits": 600,
+   "range_um": [
+    9.708,
+    95.964
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null
+  },
+  "ck_s": {
+   "face": "S",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    52.044,
+    52.044
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     51.244,
+     49.908
+    ]
+   ]
+  },
+  "en": {
+   "face": "S",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    52.044,
+    52.044
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     52.844,
+     49.908
+    ]
+   ]
+  },
+  "ck": {
+   "face": "S",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    52.044,
+    52.044
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     51.244,
+     51.508
+    ]
+   ]
+  },
+  "rs": {
+   "face": "S",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    52.044,
+    52.044
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     52.844,
+     51.508
+    ]
+   ]
+  },
+  "k0": {
+   "face": "S",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    52.044,
+    52.044
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     51.244,
+     53.108
+    ]
+   ]
+  },
+  "k1": {
+   "face": "S",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    52.044,
+    52.044
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     52.844,
+     53.108
+    ]
+   ]
+  },
+  "k2": {
+   "face": "S",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    52.044,
+    52.044
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     51.244,
+     54.708
+    ]
+   ]
+  },
+  "tie_hi": {
+   "face": "S",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    52.044,
+    52.044
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     52.844,
+     54.708
+    ]
+   ]
+  },
+  "tie_lo": {
+   "face": "S",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    52.044,
+    52.044
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     51.244,
+     56.308
+    ]
+   ]
+  },
+  "fault": {
+   "face": "S",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    52.044,
+    52.044
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     52.844,
+     56.308
+    ]
+   ]
+  }
+ },
+ "overlapping_pin_pairs": 0,
+ "note": "QK-FWD class master (tools/qwen_split/fwd_lane_classes.py): data faces of the class rep, positions informational (the flow places the face pins; the die adopts the view pins); centre area pins go to the free face in the kit"
+}

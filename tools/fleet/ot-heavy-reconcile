@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""ot-heavy-reconcile v6: keep ot-heavy reservations at MEASURED memory use, and learn sizes per command class.
+"""ot-heavy-reconcile v9: keep ot-heavy reservations at MEASURED memory use, and learn sizes per command class.
 
 ot-heavy charges every running job `reservation - current use` of future growth.  This pass (cron, every 5 min, all
 hosts) lowers a reservation to ceil(max(peak * 1.25, peak + 4 GB)) once the job is provably past its memory peak:
@@ -54,6 +54,31 @@ lower those, never ran from cron (no XDG_RUNTIME_DIR, so every unit looked inact
   so no request waits while more than 25 % of RAM is really available unless it does not fit above the floor.
 A reservation whose scope is gone is charged for 20 s only (was 120 s: every finished 12-16 GB docker step of the loop
 stayed on the books for two minutes).
+
+v8 admission (owner 2026-10-17: "as long as the current memory is enough, you should not reserve a very large amount of
+memory because the server can auto swap and the reservations often have too large margins. The fleet should admit the
+tasks as soon as possible"):
+  charge(unit) = min(the v6 charge above, GROWTH_FACTOR x (declared ceiling - memory it holds now))
+                 (a reservation admitted but not started yet: GROWTH_FACTOR x its reservation)
+  admit(RES) iff MemAvailable - sum(charge) >= NEED_FACTOR x RES  and  MemAvailable - NEED_FACTOR x RES >= MIN_AVAIL_FRAC x RAM
+  HEADROOM_GB, the 20 % floor and the 25 % rule no longer apply to the gate (HEADROOM_GB stays only in ot-heavy's bash
+  fallback for when this script cannot answer).  admit_gb (--free, ot-run) is the largest DECLARED request admitted now.
+  Config (/etc/ot-heavy.conf, KEY=value; the environment overrides):  GROWTH_FACTOR=0.5  NEED_FACTOR=0.7
+  MIN_AVAIL_FRAC=0.05 (just above earlyoom's 3 % kill line; REAL_FLOOR_GB=<GB> overrides it absolutely).
+  Safety stays with the per-job caps (scope MemoryMax, docker --memory via ot-heavy-docker), swap and earlyoom.
+  DIE-FIRST unchanged: a waiting die trial's request is held free against non-die requests.
+
+v9 (owner 2026-10-18 ~01:05 "NEVER hold jobs on CPU load; keep the fleet busy; never hold important jobs"; memory 10-08:
+priority must never leave a host idle):
+  DIE-FIRST v2 = ORDER, not reservation: a non-die request yields only to a waiting die job that the host admits NOW
+  (charge <= its admissible; it starts on its next attempt, ot-heavy re-tries die waiters every 5 s).  A die job is
+  admitted on CURRENT memory alone (MemAvailable - NEED_FACTOR x request >= floor; running units' growth is not charged:
+  owner 10-17 "admit as soon as current memory suffices; swap is the safety net", 10-18 "never hold important jobs").  A die job that does
+  not fit now holds nothing, so small jobs keep running (v8 held a 48 GB die charge on AGIdock while 75 waiters sat at
+  load 13/64).  Die-level = OT_HEAVY_PRIO=die, or the command / its cwd matches DIE_RE or a line of PRIO_FILE
+  (/var/tmp/ot-heavy/prio_die.re, one regex per line: marks waiters already queued, read on every attempt).
+  --free reports load as cpu_load1 (ot-run v6 orders by it and never holds; the v5 hold read "load1", so v5 clients
+  still running stop holding once this is deployed).
 
 usage: ot-heavy-reconcile [--dry-run] [--verbose]     one pass
        ot-heavy-reconcile --units                      table: request, charge, growth, now, peak, class peak, age per unit
@@ -520,7 +545,20 @@ def read_units():
     return rows
 
 
-YOUNG_S, MID_S, PLENTY, REAL_OK, FLOOR, GONE_S = 300, 1800, 0.35, 0.25, 0.20, 20
+YOUNG_S, MID_S, PLENTY, GONE_S = 300, 1800, 0.35, 20
+DEFAULTS = dict(GROWTH_FACTOR=0.5, NEED_FACTOR=0.7, MIN_AVAIL_FRAC=0.05)     # v8 (owner 2026-10-17), see the module text
+
+
+def conf(key):
+    """a v8 admission factor: the environment, else /etc/ot-heavy.conf (KEY=value), else DEFAULTS"""
+    v = os.environ.get(key)
+    if v is None:
+        m = re.search(rf"^{key}=([0-9.]+)", rd("/etc/ot-heavy.conf"), re.M)
+        v = m[1] if m else None
+    try:
+        return float(v) if v is not None else DEFAULTS[key]
+    except ValueError:
+        return DEFAULTS[key]
 
 
 def class_peak(cls, table):
@@ -528,8 +566,9 @@ def class_peak(cls, table):
     return e["peak_gb"] if e and e["n"] + e.get("proved", 0) >= 1 and e["peak_gb"] > 0 else None
 
 
-def books(rows, total, avail, table):
+def books(rows, total, avail, table, gf=None):
     """the charge of every unit (r['grow'], GB it may still take) and the host sums; see the module text for the rule"""
+    gf = conf("GROWTH_FACTOR") if gf is None else gf
     young = 0.0
     for r in rows:
         r["cp"] = class_peak(r.get("cls"), table)
@@ -545,7 +584,7 @@ def books(rows, total, avail, table):
     plenty = avail - young >= PLENTY * total
     for r in rows:
         if not r["active"]:
-            r["grow"] = r["exp"]
+            r["grow"] = gf * r["exp"]                  # v8: declared - 0 held, times GROWTH_FACTOR
             continue
         now = r["now"]
         if r["age"] >= MID_S:
@@ -556,28 +595,24 @@ def books(rows, total, avail, table):
             tgt = now + 8 if plenty else now + r["exp"]
         if r["cp"] and now <= r["cp"] and r["age"] >= YOUNG_S:
             tgt = min(tgt, max(1.1 * r["cp"] + 2, now + 2))
-        r["grow"] = max(0.0, min(tgt, r["ceil"]) - r["now"])
+        r["grow"] = max(0.0, min(min(tgt, r["ceil"]) - now, gf * (r["ceil"] - now)))   # v8: never above gf x margin
     return dict(grow=sum(r["grow"] for r in rows), young=young, plenty=plenty,
                 used=sum(r["now"] for r in rows), reserved=sum(r["res"] for r in rows if r["active"]),
                 running=sum(1 for r in rows if r["active"]), fresh=sum(1 for r in rows if r["active"] and r["age"] < 90))
-
-
-def headroom():
-    return int((re.search(r"^HEADROOM_GB=(\d+)", rd("/etc/ot-heavy.conf"), re.M) or [0, 32])[1])
 
 
 def floor_gb(total):
     try:
         return float(os.environ["REAL_FLOOR_GB"])
     except (KeyError, ValueError):
-        return FLOOR * total
+        return conf("MIN_AVAIL_FRAC") * total
 
 
-def admissible(total, avail, b, head, floor):
-    """the largest charge the host admits now (GB, may be negative)"""
-    by_books = avail - b["grow"] - head
-    by_real = avail - b["young"] - floor if avail - b["young"] >= REAL_OK * total else -1e9
-    return min(avail - floor, max(by_books, by_real))
+def admissible(total, avail, b, floor, need=None):
+    """v8: the largest DECLARED request (charge) the host admits now (GB, may be negative): NEED_FACTOR x it must fit in
+    MemAvailable - growth charged, and leave MemAvailable above the floor"""
+    need = conf("NEED_FACTOR") if need is None else need
+    return min(avail - b["grow"], avail - floor) / need
 
 
 def gate(mem, argv):
@@ -596,15 +631,41 @@ def gate(mem, argv):
                 except OSError:
                     pass
     b = books(rows, total, avail, table)
-    head, floor = headroom(), floor_gb(total)
-    can = admissible(total, avail, b, head, floor)
-    ok = can >= res
-    held = die_hold(total, can, head, floor, table) if ok and os.environ.get("OT_HEAVY_PRIO") != "die" else 0
+    floor, need = floor_gb(total), conf("NEED_FACTOR")
+    can = admissible(total, avail, b, floor, need)
+    can_die = max(can, (avail - floor) / need)          # v9: a die job is admitted on current memory alone
+    me_die = os.environ.get("OT_HEAVY_PRIO") == "die" or die_like(argv, os.getcwd())
+    if me_die and can < res <= can_die:
+        note = (note + "; " if note else "") + f"DIE: admitted on current memory ({avail:.0f} GB available, growth not charged)"
+    ok = (can_die if me_die else can) >= res
+    held = die_hold(total, can_die, floor, table, need) if ok and not me_die else 0
     if held and can - res < held:
         ok, note = False, (note + "; " if note else "") + f"DIE-FIRST: {held:.0f} GB held for a waiting die trial"
-    print(f"{'OK' if ok else 'NO'} {res} {cls} | need {res} GB, admissible {can:.0f} GB: available {avail:.0f} GB, "
-          f"growth charged {b['grow']:.0f} GB, young {b['young']:.0f} GB, headroom {head} GB, real floor {floor:.0f} GB"
-          + (f"; {note}" if note else ""))
+    print(f"{'OK' if ok else 'NO'} {res} {cls} | need {need:g} x {res} = {need * res:.0f} GB, admissible {can:.0f} GB: "
+          f"available {avail:.0f} GB, growth charged {b['grow']:.0f} GB (x{conf('GROWTH_FACTOR'):g}), young {b['young']:.0f} GB, "
+          f"floor {floor:.0f} GB" + (f"; {note}" if note else ""))
+
+
+DIE_RE = re.compile(r"(?i)(die[_-]?(sta|gen\d*|grt\d*|chain|trial|place|bind)|(sta|gen\d*|grt\d*)[_-]die\b)")
+PRIO_FILE = f"{D}/prio_die.re"
+
+
+def die_like(argv, cwd="", environ=()):
+    """die-level job: OT_HEAVY_PRIO=die, or DIE_RE / a PRIO_FILE regex on its command line or working directory"""
+    if "OT_HEAVY_PRIO=die" in environ:
+        return True
+    text = " ".join(argv) + " " + cwd
+    if DIE_RE.search(text):
+        return True
+    for ln in rd(PRIO_FILE).splitlines():
+        ln = ln.strip()
+        if ln and not ln.startswith("#"):
+            try:
+                if re.search(ln, text):
+                    return True
+            except re.error:
+                pass
+    return False
 
 
 def prio_waiters(table, skip=()):
@@ -618,7 +679,11 @@ def prio_waiters(table, skip=()):
         a = rd(f"/proc/{p}/cmdline").split("\0")[:-1]
         if not (len(a) > 3 and a[1:2] == ["/usr/local/bin/ot-heavy"] and "--mem" in a[:8] and "--" in a):
             continue
-        if "OT_HEAVY_PRIO=die" not in rd(f"/proc/{p}/environ").split("\0"):
+        try:
+            cwd = os.readlink(f"/proc/{p}/cwd")
+        except OSError:
+            cwd = ""
+        if not die_like(a[a.index("--") + 1:], cwd, rd(f"/proc/{p}/environ").split("\0")):
             continue
         m = int(a[a.index("--mem") + 1])
         try:
@@ -629,16 +694,17 @@ def prio_waiters(table, skip=()):
     return sorted(out)
 
 
-def die_hold(total, can, head, floor, table):
-    """GB a non-die request must leave free: the oldest waiting die trial's charge, when it could ever start here
-    (charge <= RAM - floor - headroom) and cannot start now (else it is admitted on its next 20 s attempt)"""
+def die_hold(total, can, floor, table, need=None):
+    """DIE-FIRST v2 (2026-10-18): GB a non-die request must leave free = the charge of the oldest waiting die job that the
+    host admits NOW (charge <= can); it starts on its next attempt.  A die job that does not fit now holds nothing: priority
+    orders the queue and never leaves memory idle.  (total, floor, need kept for the call signature.)"""
     me = {os.getpid(), os.getppid()}
     try:
         me.add(int(rd(f"/proc/{os.getppid()}/stat").rsplit(")", 1)[1].split()[1]))
     except (IndexError, ValueError):
         pass
     for _, charge in prio_waiters(table, skip=me):
-        if charge <= total - floor - head:
+        if charge <= can:
             return charge
     return 0
 
@@ -659,8 +725,8 @@ def free(path):
     table = sizes()
     rows = read_units()
     b = books(rows, total, avail, table)
-    head, floor = headroom(), floor_gb(total)
-    can = admissible(total, avail, b, head, floor)
+    head, floor = 0, floor_gb(total)
+    can = admissible(total, avail, b, floor)
     wait, req = waiters(table)
     try:
         v = os.statvfs(path)
@@ -670,7 +736,7 @@ def free(path):
     print(json.dumps(dict(host=os.uname().nodename, total_gb=round(total), avail_gb=round(avail), used_gb=round(b["used"]),
                           charged_gb=round(b["used"] + b["grow"]), reserved_gb=b["reserved"], growth_gb=round(b["grow"]),
                           young_gb=round(b["young"]), plenty=b["plenty"], headroom_gb=head, floor_gb=round(floor),
-                          load1=float(open("/proc/loadavg").read().split()[0]), ncpu=os.cpu_count(), running=b["running"],
+                          cpu_load1=float(open("/proc/loadavg").read().split()[0]), ncpu=os.cpu_count(), running=b["running"],
                           fresh=b["fresh"], waiting=len(wait), waiting_gb=sum(wait), waiting_req_gb=sum(req), disk_gb=disk,
                           admit_gb=round(can), free_gb=round(can) - sum(wait))))
 
@@ -686,10 +752,11 @@ def units():
         print(f"{r['unit']:34s} {r['req']:5.0f} {r['res']:5d} {r['now'] + r['grow']:6.0f} {r['grow']:5.0f} {r['now']:5.0f} "
               f"{r['obs']:5.0f} {cp:>5s} {r['age']:7.0f}  {'' if r['active'] else '(not running) '}{r.get('cls') or '?'} | "
               f"{la.get(r['unit'], (0, ''))[1][:90]}")
-    head, floor = headroom(), floor_gb(total)
+    floor = floor_gb(total)
     print(f"host {os.uname().nodename}: RAM {total:.0f} GB, MemAvailable {avail:.0f} GB ({100 * avail / total:.0f} %), units hold "
           f"{b['used']:.0f} GB, growth charged {b['grow']:.0f} GB (young {b['young']:.0f} GB, plenty={b['plenty']}), reservations "
-          f"{b['reserved']} GB, headroom {head} GB, floor {floor:.0f} GB -> admissible {admissible(total, avail, b, head, floor):.0f} GB")
+          f"{b['reserved']} GB, floor {floor:.0f} GB -> admits a declared {admissible(total, avail, b, floor):.0f} GB "
+          f"(GROWTH_FACTOR {conf('GROWTH_FACTOR'):g}, NEED_FACTOR {conf('NEED_FACTOR'):g})")
 
 
 def selftest():
@@ -702,7 +769,7 @@ def selftest():
         n[0] += 1
         if abs(got - want) > 0.01:
             bad.append(f"{name}: got {got:.2f}, want {want:.2f}")
-    one = lambda avail, **k: books([u(**k)], T, avail, tab)["grow"]
+    one = lambda avail, **k: books([u(**k)], T, avail, tab, 0.5)["grow"]
     chk("young, plenty: obs + 8", one(800), 8)
     chk("young, not plenty, class measured: 1.1 x class peak", one(300), 34)
     chk("young, not plenty, class unknown: half the request", one(300, cls="x"), 40)
@@ -711,27 +778,26 @@ def selftest():
     chk(">= 30 min: now/4", one(300, age=4000, now=60.0, obs=60.0, cls="x"), 15)
     chk("class bound below the age rule", one(300, age=600, now=38.0, obs=38.0), 8)
     chk("past its peak: charged from what it holds now", one(300, age=4000, now=10.0, obs=50.0, cls="x"), 2.5)
-    chk("never above the request", one(300, age=600, now=95.0, obs=95.0, cls="x"), 5)
-    chk("a lowered reservation bounds the charge", one(300, age=600, now=30.0, obs=30.0, res=40, cls="x"), 10)
+    chk("never above half the margin to the request (v8)", one(300, age=600, now=95.0, obs=95.0, cls="x"), 2.5)
+    chk("a lowered reservation bounds the charge (v8: half its margin)", one(300, age=600, now=30.0, obs=30.0, res=40, cls="x"), 5)
     chk("... not once RSS passed 80 % of it", one(300, age=600, now=30.0, obs=30.0, res=32, cls="x"), 15)
-    chk("admitted, not started: its charge", one(800, active=False, res=64, file_age=3), 64)
+    chk("admitted, not started: half its charge (v8)", one(800, active=False, res=64, file_age=3), 32)
+    chk("young unmeasured 300 GB request at 10 GB, not plenty: half the request, already below half the margin", one(300, req=300.0, res=300, cls="x"), 140)
     chk("gone for 30 s: nothing", one(800, active=False, res=64, file_age=30), 0)
     # the two hosts as measured 2026-10-13 17:47 (GB)
     e4 = [u(req=200.0, res=200, now=70.0, obs=70.0, age=196, cls="x"), u(req=200.0, res=200, now=70.0, obs=70.0, age=194, cls="x"),
           u(req=320.0, res=320, now=70.0, obs=70.0, age=192, cls="x")]
-    b = books(e4, 1133, 806, tab)
+    b = books(e4, 1133, 806, tab, 0.5)
     chk("EPYC4 17:47: three young 70 GB builds, growth", b["grow"], 24)
-    chk("EPYC4 17:47: admissible", admissible(1133, 806, b, 48, 226.6), 579.4)   # the floor binds, not the books
+    chk("EPYC4 17:47: the 5 % floor binds: (806 - 56.65) / 0.7", admissible(1133, 806, b, 56.65, 0.7), 1070.5)
     e1 = [u(req=110.0, res=110, now=42.0, obs=57.0, age=963, cls="x") for _ in range(6)]
-    b = books(e1, 1133, 592, tab)
+    b = books(e1, 1133, 592, tab, 0.5)
     chk("EPYC1 17:47: six 110 GB requests at 42 GB (peak 57), growth", b["grow"], 6 * 21)
-    # admission: floor always; books or the 25 % rule
-    b0 = dict(grow=500.0, young=0.0)
-    chk("25 % really available admits whatever the books say", admissible(T, 400, b0, 50, 200), 200)
-    chk("below 25 %: the books decide", admissible(T, 240, dict(grow=30.0, young=0.0), 50, 200), 40)
-    chk("the floor is the stop", admissible(T, 210, dict(grow=0.0, young=0.0), 0, 200), 10)
-    chk("young units are not yet in MemAvailable", admissible(T, 400, dict(grow=160.0, young=160.0), 50, 200), 190)
-    chk("a burst cannot spend the same memory twice", admissible(T, 400, dict(grow=300.0, young=300.0), 50, 200), 50)
+    # v8 admission: NEED_FACTOR x request <= MemAvailable - growth charged, above the floor
+    chk("growth charged decides", admissible(T, 400, dict(grow=260.0, young=0.0), 50, 0.7), 200)
+    chk("the floor is the stop", admissible(T, 100, dict(grow=0.0, young=0.0), 50, 0.7), 71.43)
+    chk("AGIdock 10-17: 65 GB available, 68 GB growth -> nothing", admissible(128, 65, dict(grow=68.0, young=0.0), 6.4, 0.7), -4.29)
+    chk("EPYC4 10-17: 539 available, 119 GB charged -> 600 GB declared", admissible(1133, 539, dict(grow=119.0, young=0.0), 56.65, 0.7), 600)
     for m in bad:
         print("FAIL " + m)
     print(f"ot-heavy-reconcile selftest: {'FAIL' if bad else 'PASS'} ({n[0]} checks)")

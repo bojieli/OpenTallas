@@ -84,7 +84,8 @@ module tb_hgi_coll_q_hard_v5;
  end
  wire [1023:0] inj_data={512'd0,source_rd[SUL-1]?source_word(source_index[SUL-1]):512'd0};
  // hard parent: its own SU boundary (driven by its own requests) and the same stimuli 2 edges later
- localparam integer SH=4,SHP=1;  // V6 issue path +4 (frame capture +1, uop delay +3); programme target +1
+ // COLLPIN 10-18: issuer input pin registers (+1): issue path +5 (frame capture +1, issuer pin stage +1, uop delay +3)
+ localparam integer SH=5,SHP=1;  // programme target +1
  reg [15:0] n_source_index[0:SUL-1];reg n_source_rd[0:SUL-1];
  always @(posedge clk)begin
   n_source_index[0]<=n_iidx[15:0];n_source_rd[0]<=n_ird[0];
@@ -114,7 +115,23 @@ module tb_hgi_coll_q_hard_v5;
   .rx_pin_v(rxv),.rx_pin_flit({NPT*612{1'b0}}),.retry_requested(r_rty),
   .pr_cw_i(280'd0),.pr_ccw_i(280'd0),.pr_cw_o(r_cw),.pr_ccw_o(r_ccw),
   .vm_rq(r_rq),.vm_rr(r_vm_response),.vm_kq(r_kq),.fault(r_fault),.done(r_done2),.stat_cycles(r_cyc));
-`ifdef Q3
+`ifdef OT_TB_TKX
+ // d4f TKM hoist: the external-TKM parent q3_hard_v7x + the die-level TKM sub-cluster, wired here (zero-latency hop)
+ wire tx_start,tx_mode,tx_has_r,tx_wv,tx_busy,tx_done,tx_fault;wire [11:0] tx_n;wire [12:0] tx_k,tx_nout;
+ wire [7:0] tx_g,tx_gb;wire [15:0] tx_pf,tx_wm;wire [39:0] tx_ob,tx_rb,tx_wa;wire [3:0] tx_ds,tx_dv;wire [2179:0] tx_df;
+ wire [511:0] tx_wd;
+ ot_hgi_coll_tkm_m #(.TP(TPV)) u_tkx(.clk(clk),.tile_clk({32{clk}}),.buffer_clk(clk),.rst_n(rst_n),.start(tx_start),
+  .arg_mode(tx_mode),.cfg_n(tx_n),.cfg_k(tx_k),.cfg_nout(tx_nout),.cfg_g(tx_g),.cfg_gbase(tx_gb),.cfg_pf(tx_pf),
+  .cfg_obase(tx_ob),.cfg_rbase(tx_rb),.cfg_has_r(tx_has_r),.del_slot(tx_ds),.del_valid(tx_dv),.del_flit(tx_df),
+  .w_v(tx_wv),.w_addr(tx_wa),.w_mask(tx_wm),.w_data(tx_wd),.busy(tx_busy),.done(tx_done),.fault(tx_fault),.stat_cycles());
+ ot_hfd_coll_q3_hard_v7x #(.NLINK(NPT),.TP(TPV)) dut(.rst_n(rst_n),.qid(2'(QID)),.clk_program(clk),.clk_control(clk),.clk_vmasm({16{clk}}),.clk_upipe({16{clk}}),
+  .clk_issue(clk),.clk_qslots({NCKQ{clk}}),.clk_ring({17{clk}}),.clk_reduce({33{clk}}),.clk_arg(clk),
+  .clk_vmwrite({16{clk}}),.clk_link({5*NPT{clk}}),
+  .tkx_start(tx_start),.tkx_arg_mode(tx_mode),.tkx_cfg_n(tx_n),.tkx_cfg_k(tx_k),.tkx_cfg_nout(tx_nout),.tkx_cfg_g(tx_g),
+  .tkx_cfg_gbase(tx_gb),.tkx_cfg_pf(tx_pf),.tkx_cfg_obase(tx_ob),.tkx_cfg_rbase(tx_rb),.tkx_cfg_has_r(tx_has_r),
+  .tkx_del_slot(tx_ds),.tkx_del_valid(tx_dv),.tkx_del_flit(tx_df),.tkx_w_v(tx_wv),.tkx_w_addr(tx_wa),.tkx_w_mask(tx_wm),
+  .tkx_w_data(tx_wd),.tkx_busy(tx_busy),.tkx_done(tx_done),.tkx_fault(tx_fault),
+`elsif Q3
  ot_hfd_coll_q3_hard_v5 #(.NLINK(NPT),.TP(TPV)) dut(.rst_n(rst_n),.qid(2'(QID)),.clk_program(clk),.clk_control(clk),.clk_vmasm({16{clk}}),.clk_upipe({16{clk}}),
   .clk_issue(clk),.clk_qslots({NCKQ{clk}}),.clk_ring({17{clk}}),.clk_reduce({33{clk}}),.clk_arg(clk),
   .clk_tkm({34{clk}}),.clk_vmwrite({16{clk}}),.clk_link({5*NPT{clk}}),
@@ -198,6 +215,7 @@ module tb_hgi_coll_q_hard_v5;
    4:begin exp_delta=1;exp_bit=3;code[20][2+NPT]=1;end
    5:begin exp_delta=-1;exp_bit=12;code[20][NPT+7]=1;end   // q2 arg capture slot = NPT+7 (9 at NLINK 2)
    6:begin exp_delta=0;exp_bit=0;end
+   8:begin exp_delta=0;exp_bit=0;end   // COLLPIN: frame on an issuer-occupied edge (pin-stage busy cover)
    default:;
   endcase
 `ifdef Q3
@@ -225,6 +243,11 @@ module tb_hgi_coll_q_hard_v5;
    @(negedge clk);launch=0;
    rxv=(scen==1 && c==20)?{{(NPT-1){1'b0}},1'b1}:'0;
    rcv=(scen==2 && c==20);
+   // COLLPIN scen8: a legal-looking frame (unloaded row NR, segment 0) whose only fault is occupancy. The hard
+   // programme target evaluates it on the edge where the issuer's pin stage holds start (exported busy = busy |
+   // start_q): the reference faults (issuer busy), so must the hard parent, SHP later.
+   if(scen==8 && c==3)begin cv=1;cfg_target=TGT;cfg_addr=12'(NR*8);cfg_data=256'd0;end
+   if(scen==8 && c==4)cv=0;
    @(posedge clk);#1;
    if(scen==0 || scen==7)begin
     if(r_fault)$fatal(1,"reference fault in normal programme at cycle%0d",c);
@@ -250,7 +273,7 @@ module tb_hgi_coll_q_hard_v5;
    if(n_cause!=0)$fatal(1,"fault_cause nonzero without fault");
   end else begin
    if(rf<0 || nf<0)$fatal(1,"scenario%0d fault missing: ref%0d hard%0d cause%h",scen,rf,nf,n_cause);
-   if(nf-rf!=exp_delta+(scen==6?SHP:SH+1))$fatal(1,"scenario%0d fault edge: ref%0d hard%0d delta%0d expected%0d(+%0d issue shift)",scen,rf,nf,nf-rf,exp_delta,scen==6?SHP:SH+1);
+   if(nf-rf!=exp_delta+((scen==6||scen==8)?SHP:SH+1))$fatal(1,"scenario%0d fault edge: ref%0d hard%0d delta%0d expected%0d(+%0d issue shift)",scen,rf,nf,nf-rf,exp_delta,(scen==6||scen==8)?SHP:SH+1);
    if(!first_cause[exp_bit])$fatal(1,"scenario%0d visibility: first cause %h lacks bit%0d",scen,first_cause,exp_bit);
   end
   $display("HCOLL_VM_COVERAGE outputs%0d bank0_to_low_bank7_to_high",vm_outputs);

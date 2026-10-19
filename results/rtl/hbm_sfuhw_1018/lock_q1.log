@@ -1,0 +1,9 @@
+SFUSTORE_HW checks vi_q=23997 fault=23997 reads=255783 writes=127129 illegal=29 fault_edges=1961 fault_rises=6 errors=0 MUT=0
+SFUSTORE_HW LOCKSTEP PASS checks=47994
+rtl/hbm_accel/generic/adapters/static_su/collport/tb_hbm_su_sfustore_hw.sv:93: $finish called at 240585000 (1ps)
+SFUSTORE_HW_GATE PASS MUT=0
+...
+SFUSTORE_HW checks vi_q=23997 fault=23997 reads=255783 writes=127129 illegal=29 fault_edges=1961 fault_rises=6 errors=0 MUT=0
+SFUSTORE_HW LOCKSTEP PASS checks=47994
+rtl/hbm_accel/generic/adapters/static_su/collport/tb_hbm_su_sfustore_hw.sv:93: $finish called at 240585000 (1ps)
+SFUSTORE_HW_GATE PASS MUT=0

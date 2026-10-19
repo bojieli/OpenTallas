@@ -1,0 +1,362 @@
+{
+ "ck_w0": {
+  "tt": {
+   "n": 102,
+   "pin_min": 1185.2,
+   "pin_max": 1848.8,
+   "pin_spread": 663.6,
+   "flop_min": 1291.0,
+   "flop_max": 2046.4,
+   "flop_spread": 755.4,
+   "a0_pin": [
+    1185.2,
+    1832.3
+   ],
+   "stn_pin": [
+    1197.0,
+    1848.8
+   ],
+   "soft_regs": [
+    1268.3,
+    1775.1
+   ],
+   "latest": "u_fab.u_dn1_rly0/ck",
+   "earliest": "u_t_1_0/ck_rp3"
+  },
+  "ff": {
+   "n": 102,
+   "pin_min": 975.9,
+   "pin_max": 1564.4,
+   "pin_spread": 588.5,
+   "flop_min": 1055.9,
+   "flop_max": 1727.0,
+   "flop_spread": 671.1,
+   "a0_pin": [
+    975.9,
+    1548.3
+   ],
+   "stn_pin": [
+    986.9,
+    1564.4
+   ],
+   "soft_regs": [
+    1047.5,
+    1490.9
+   ],
+   "latest": "u_fab.u_dn1_rly0/ck",
+   "earliest": "u_t_1_0/ck_rnw"
+  }
+ },
+ "ck_w1": {
+  "tt": {
+   "n": 95,
+   "pin_min": 1326.1,
+   "pin_max": 2321.7,
+   "pin_spread": 995.6,
+   "flop_min": 1430.1,
+   "flop_max": 2435.7,
+   "flop_spread": 1005.6,
+   "a0_pin": [
+    1326.1,
+    2204.5
+   ],
+   "stn_pin": [
+    1336.1,
+    2321.7
+   ],
+   "soft_regs": null,
+   "latest": "u_fab.u_leg_3_0a_3/ck",
+   "earliest": "u_t_1_1/ck_fa0"
+  },
+  "ff": {
+   "n": 95,
+   "pin_min": 1103.8,
+   "pin_max": 1977.1,
+   "pin_spread": 873.3,
+   "flop_min": 1182.1,
+   "flop_max": 2066.6,
+   "flop_spread": 884.5,
+   "a0_pin": [
+    1103.8,
+    1878.6
+   ],
+   "stn_pin": [
+    1113.1,
+    1977.1
+   ],
+   "soft_regs": null,
+   "latest": "u_fab.u_leg_3_0a_3/ck",
+   "earliest": "u_t_1_1/ck_fa0"
+  }
+ },
+ "ck_w2": {
+  "tt": {
+   "n": 99,
+   "pin_min": 1303.0,
+   "pin_max": 2166.8,
+   "pin_spread": 863.8,
+   "flop_min": 1411.8,
+   "flop_max": 2357.0,
+   "flop_spread": 945.2,
+   "a0_pin": [
+    1303.0,
+    2166.5
+   ],
+   "stn_pin": [
+    1317.8,
+    2166.8
+   ],
+   "soft_regs": null,
+   "latest": "u_fab.u_x_0_2/ck",
+   "earliest": "u_t_1_2/ck_rnw"
+  },
+  "ff": {
+   "n": 99,
+   "pin_min": 1087.1,
+   "pin_max": 1848.1,
+   "pin_spread": 761.0,
+   "flop_min": 1168.8,
+   "flop_max": 2006.8,
+   "flop_spread": 838.0,
+   "a0_pin": [
+    1087.1,
+    1847.8
+   ],
+   "stn_pin": [
+    1099.8,
+    1848.1
+   ],
+   "soft_regs": null,
+   "latest": "u_fab.u_x_0_2/ck",
+   "earliest": "u_t_1_2/ck_rnw"
+  }
+ },
+ "ck_w3": {
+  "tt": {
+   "n": 91,
+   "pin_min": 1199.1,
+   "pin_max": 2148.3,
+   "pin_spread": 949.2,
+   "flop_min": 1304.2,
+   "flop_max": 2376.4,
+   "flop_spread": 1072.2,
+   "a0_pin": [
+    1199.1,
+    2148.3
+   ],
+   "stn_pin": [
+    1210.2,
+    2012.4
+   ],
+   "soft_regs": [
+    1247.2,
+    2012.4
+   ],
+   "latest": "u_t_1_3/ck_rp5",
+   "earliest": "u_t_1_3/ck_rnw"
+  },
+  "ff": {
+   "n": 91,
+   "pin_min": 983.4,
+   "pin_max": 1818.2,
+   "pin_spread": 834.8,
+   "flop_min": 1062.3,
+   "flop_max": 2013.1,
+   "flop_spread": 950.8,
+   "a0_pin": [
+    983.4,
+    1818.2
+   ],
+   "stn_pin": [
+    993.3,
+    1693.5
+   ],
+   "soft_regs": [
+    1027.3,
+    1693.5
+   ],
+   "latest": "u_t_1_3/ck_rp5",
+   "earliest": "u_t_1_3/ck_rnw"
+  }
+ },
+ "ck_e0": {
+  "tt": {
+   "n": 93,
+   "pin_min": 1261.6,
+   "pin_max": 2003.6,
+   "pin_spread": 742.0,
+   "flop_min": 1356.8,
+   "flop_max": 2117.6,
+   "flop_spread": 760.8,
+   "a0_pin": [
+    1261.6,
+    1880.6
+   ],
+   "stn_pin": [
+    1262.8,
+    2003.6
+   ],
+   "soft_regs": [
+    1360.8,
+    1882.5
+   ],
+   "latest": "u_fab.u_dn3_rly0/ck",
+   "earliest": "u_t_3_0/ck_rnw"
+  },
+  "ff": {
+   "n": 93,
+   "pin_min": 1040.0,
+   "pin_max": 1695.6,
+   "pin_spread": 655.6,
+   "flop_min": 1110.5,
+   "flop_max": 1784.6,
+   "flop_spread": 674.1,
+   "a0_pin": [
+    1040.0,
+    1585.4
+   ],
+   "stn_pin": [
+    1041.5,
+    1695.6
+   ],
+   "soft_regs": [
+    1109.7,
+    1587.4
+   ],
+   "latest": "u_fab.u_dn3_rly0/ck",
+   "earliest": "u_t_2_0/ck_fa2"
+  }
+ },
+ "ck_e1": {
+  "tt": {
+   "n": 103,
+   "pin_min": 1375.0,
+   "pin_max": 2262.4,
+   "pin_spread": 887.4,
+   "flop_min": 1477.0,
+   "flop_max": 2376.4,
+   "flop_spread": 899.4,
+   "a0_pin": [
+    1375.0,
+    2123.4
+   ],
+   "stn_pin": [
+    1383.0,
+    2262.4
+   ],
+   "soft_regs": null,
+   "latest": "u_fab.u_dn3_rly5/ck",
+   "earliest": "u_t_3_1/ck_tx1"
+  },
+  "ff": {
+   "n": 103,
+   "pin_min": 1145.9,
+   "pin_max": 1920.2,
+   "pin_spread": 774.3,
+   "flop_min": 1223.2,
+   "flop_max": 2009.2,
+   "flop_spread": 786.0,
+   "a0_pin": [
+    1145.9,
+    1800.9
+   ],
+   "stn_pin": [
+    1154.2,
+    1920.2
+   ],
+   "soft_regs": null,
+   "latest": "u_fab.u_dn3_rly5/ck",
+   "earliest": "u_t_3_1/ck_tx1"
+  }
+ },
+ "ck_e2": {
+  "tt": {
+   "n": 97,
+   "pin_min": 1280.2,
+   "pin_max": 2185.9,
+   "pin_spread": 905.7,
+   "flop_min": 1384.7,
+   "flop_max": 2299.9,
+   "flop_spread": 915.2,
+   "a0_pin": [
+    1280.2,
+    2053.9
+   ],
+   "stn_pin": [
+    1290.7,
+    2185.9
+   ],
+   "soft_regs": null,
+   "latest": "u_fab.u_dn3_rly8/ck",
+   "earliest": "u_t_3_2/ck_rp2"
+  },
+  "ff": {
+   "n": 97,
+   "pin_min": 1066.0,
+   "pin_max": 1857.6,
+   "pin_spread": 791.6,
+   "flop_min": 1145.1,
+   "flop_max": 1946.6,
+   "flop_spread": 801.5,
+   "a0_pin": [
+    1066.0,
+    1746.4
+   ],
+   "stn_pin": [
+    1076.1,
+    1857.6
+   ],
+   "soft_regs": null,
+   "latest": "u_fab.u_dn3_rly8/ck",
+   "earliest": "u_t_3_2/ck_rp2"
+  }
+ },
+ "ck_e3": {
+  "tt": {
+   "n": 92,
+   "pin_min": 1281.9,
+   "pin_max": 2065.1,
+   "pin_spread": 783.2,
+   "flop_min": 1385.5,
+   "flop_max": 2293.2,
+   "flop_spread": 907.7,
+   "a0_pin": [
+    1281.9,
+    2065.1
+   ],
+   "stn_pin": [
+    1291.5,
+    2003.0
+   ],
+   "soft_regs": [
+    1747.3,
+    2003.0
+   ],
+   "latest": "u_t_3_3/ck_rp5",
+   "earliest": "u_t_3_3/ck_rnw"
+  },
+  "ff": {
+   "n": 92,
+   "pin_min": 1056.6,
+   "pin_max": 1742.8,
+   "pin_spread": 686.2,
+   "flop_min": 1133.5,
+   "flop_max": 1937.7,
+   "flop_spread": 804.2,
+   "a0_pin": [
+    1056.6,
+    1742.8
+   ],
+   "stn_pin": [
+    1064.5,
+    1688.3
+   ],
+   "soft_regs": [
+    1464.9,
+    1688.3
+   ],
+   "latest": "u_t_3_3/ck_rp5",
+   "earliest": "u_t_3_3/ck_rnw"
+  }
+ }
+}

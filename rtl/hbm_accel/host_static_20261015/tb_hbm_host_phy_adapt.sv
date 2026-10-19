@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 // Bench: ot_hbm_host_phy_adapt framing (487-b endpoint word <-> 512-b UCIe beat, reserved lanes zero),
-// 1-edge latency each way, reserved-lane check gated by link-live st[1], session pin flop. MUT 1/2 must FAIL.
+// 2-edge latency each way (HBM-NATIVE 10-17 pin stages: capture flop at the input pin + launch flop at the output pin), reserved-lane check gated by link-live st[1], session pin flop. MUT 1/2 must FAIL.
 module tb_hbm_host_phy_adapt;
 parameter integer MUT=0;
 reg clk=0,rst_n=0; always #1 clk=~clk;
@@ -10,7 +10,7 @@ reg [486:0] ep_tx=0; reg [511:0] phy_rx=0; reg [1:0] st=0; reg [23:0] sp=24'h5e5
 wire [511:0] phy_tx; wire [486:0] ep_rx; wire [23:0] session; wire pad_fault,phy_fault;
 ot_hbm_host_phy_adapt #(.MUT(MUT)) dut(.clk(clk),.rst_n(rst_n),.ep_tx(ep_tx),.phy_tx(phy_tx),.phy_rx(phy_rx),.phy_st(st),.ep_rx(ep_rx),
  .session_pad(sp),.session(session),.pad_fault(pad_fault),.phy_fault(phy_fault));
-reg [486:0] t_prev; reg [511:0] r_prev;
+reg [486:0] t_prev=0; reg [511:0] r_prev=0;
 initial begin
  repeat(3) @(posedge clk); rst_n=1;
  for(i=0;i<200;i=i+1) begin
@@ -18,8 +18,8 @@ initial begin
   ep_tx={$random,$random,$random,$random,$random,$random,$random,$random,$random,$random,$random,$random,$random,$random,$random,$random};
   phy_rx={25'd0,ep_tx^487'h1234567}; if(i==50) phy_rx[500]=1'b1;   // reserved lane set while link not live: ignored
   @(posedge clk); #0.1;
-  chk(phy_tx=={25'd0,ep_tx},"tx framed, reserved lanes zero, 1 edge");
-  chk(ep_rx==phy_rx[486:0],"rx word, 1 edge");
+  chk(phy_tx=={25'd0,t_prev},"tx framed, reserved lanes zero, 2 edges");
+  chk(ep_rx==r_prev[486:0],"rx word, 2 edges");
  end
  chk(!pad_fault,"reserved lanes ignored before link live");
  chk(session==24'h5e551d,"session pin flop");

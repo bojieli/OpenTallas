@@ -1,0 +1,196 @@
+{
+ "schema": "opentallas.s81_dv.die_runs.v1",
+ "host": "ot-epyc4",
+ "dir": "/srv/opentallas-scratch/claude/s81dv/die",
+ "label": "DIAGNOSTIC: pin-only stand-in abstracts for every DV block (0da); routing evidence of the die-top nets only",
+ "collected": "S81-DIE 10-17 ~12:40 from out/run.log",
+ "runs": {
+  "die_p4f_full_r": {
+   "unit": "oth-ubuntu-618073-1792253578",
+   "exit": 0,
+   "grt_overflow": 0,
+   "M2": 7.27,
+   "M3": 16.18,
+   "M4": 5.28,
+   "M5": 6.88,
+   "repeaters": 1989579,
+   "rep_violations": 0,
+   "over_reach": 0,
+   "fclk": {
+    "nets": 2624,
+    "hops": 1982,
+    "judged": 1726,
+    "mismatch_over_1": 0
+   },
+   "post_grt_slew_viol": 13,
+   "worst_slew_ps": 293.03,
+   "wirelength_um": 353524204,
+   "wall": "28:08",
+   "peak_gb": 34.3
+  },
+  "die_p4g_full_nr": {
+   "unit": "(E4, log not in artifacts)",
+   "exit": 0,
+   "grt_overflow": 0,
+   "M2": 0.89,
+   "M3": 12.81,
+   "M4": 6.08,
+   "M5": 6.98,
+   "wirelength_um": 366913507,
+   "wall": "13:49",
+   "peak_gb": 18.0
+  },
+  "die_p4h_full_nr": {
+   "unit": "oth-ubuntu-1745579-1792254257",
+   "exit": 0,
+   "grt_overflow": 0,
+   "M2": 0.29,
+   "M3": 9.71,
+   "M4": 4.64,
+   "M5": 5.58,
+   "wirelength_um": 305662147,
+   "wall": "9:47",
+   "peak_gb": 16.7
+  },
+  "die_p4h_full_r": {
+   "unit": "oth-ubuntu-1745568-1792254257",
+   "exit": 0,
+   "grt_overflow": 0,
+   "M2": 6.16,
+   "M3": 12.65,
+   "M4": 4.61,
+   "M5": 5.61,
+   "repeaters": 1888102,
+   "rep_violations": 0,
+   "over_reach": 0,
+   "fclk": {
+    "nets": 2347,
+    "hops": 1715,
+    "judged": 1438,
+    "mismatch_over_1": 0
+   },
+   "post_grt_slew_viol": 22,
+   "worst_slew_ps": 349.4,
+   "wirelength_um": 341688403,
+   "wall": "27:23",
+   "peak_gb": 33.3
+  },
+  "die_p4i_full_nr": {
+   "unit": "oth-ubuntu-2590699-1792264979",
+   "exit": 0,
+   "grt_overflow": 0,
+   "M2": 0.29,
+   "M3": 9.67,
+   "M4": 4.59,
+   "M5": 5.5,
+   "wirelength_um": 310539628,
+   "wall": "9:57",
+   "peak_gb": 16.6
+  },
+  "die_p4i_full_r": {
+   "unit": "oth-ubuntu-2590710-1792264979",
+   "exit": 0,
+   "grt_overflow": 0,
+   "M2": 6.14,
+   "M3": 12.64,
+   "M4": 4.57,
+   "M5": 5.55,
+   "repeaters": 1932675,
+   "rep_violations": 0,
+   "over_reach": 0,
+   "fclk": {
+    "nets": 2403,
+    "hops": 1771,
+    "judged": 1494,
+    "mismatch_over_1": 0
+   },
+   "post_grt_slew_viol": 1402,
+   "worst_slew_ps": 973.7,
+   "wirelength_um": 348338707,
+   "wall": "27:10",
+   "peak_gb": 33.6,
+   "note": "post-GRT slew regressed vs p4h_r (22 / 349 ps): 1,402 violators worst 973.7 ps after 2 resize passes (911 blocked, 320 driver not a repeater); classify before die STA"
+  },
+  "die_p4j_full_nr": {
+   "exit": 0,
+   "grt_overflow": 0,
+   "M2": 0.29,
+   "M3": 9.69,
+   "M4": 4.53,
+   "M5": 5.54,
+   "wirelength_um": 307323686,
+   "note": "no repeaters (stand-in abstracts, diagnostic)"
+  },
+  "die_p4j_full_r": {
+   "unit": "oth-ubuntu-110833-1792283268",
+   "exit": 0,
+   "grt_overflow": 0,
+   "M2": 6.06,
+   "M3": 12.68,
+   "M4": 4.5,
+   "M5": 5.59,
+   "repeaters": 1909510,
+   "rep_violations": 0,
+   "over_reach": 0,
+   "longest_wire_um": 439.7,
+   "spread": {
+    "mean_disp_um": 6.18,
+    "max_disp_um": 51.15,
+    "unplaced": 0
+   },
+   "fclk": {
+    "nets": 2371,
+    "hops": 1739,
+    "judged": 1462,
+    "mismatch_over_1": 0
+   },
+   "post_grt_resized": [
+    38,
+    26
+   ],
+   "post_grt_slew_viol": 23,
+   "worst_slew_ps": 349.4,
+   "wirelength_um": 343742822,
+   "wall": "27:31",
+   "peak_gb": 33.4,
+   "note": "p4j plan fix (q/pv entry under the voids, 0 um lane over blocks) restores p4h: 23 post-GRT slew violators worst 349.4 ps (p4h 22 / 349; p4i 1,402 / 973.7); spread max_disp 51 um (p4h 51, p4i 322)"
+  },
+  "die_p4k_r": {
+   "unit": "oth-ubuntu-3131956-1792308984",
+   "host": "ot-pve1",
+   "dir": "/srv/opentallas-scratch/claude/s81die5/case_p4k_r",
+   "exit": 0,
+   "grt_overflow": 0,
+   "M2": 6.38,
+   "M3": 13.5,
+   "M4": 4.86,
+   "M5": 5.79,
+   "repeaters": 2044061,
+   "rep_violations": 0,
+   "spread": {
+    "mean_disp_um": 6.1,
+    "max_disp_um": 63.51,
+    "unplaced": 0
+   },
+   "fclk": {
+    "nets": 2532,
+    "hops": 1897,
+    "judged": 1895,
+    "mismatch_over_1": 0
+   },
+   "post_grt_resized": [
+    48,
+    24
+   ],
+   "post_grt_slew_viol": 25,
+   "worst_slew_ps": 310.38,
+   "wirelength_um": 371982921,
+   "wall": "1:59:28",
+   "peak_gb": 35.5,
+   "pin_window_um": 0,
+   "note": "S81-DIE6 collect: p4k (RTL-width lanes, 2,532 CLOSED dvrlyh) GRT overflow 0, fclk mismatch 0, post-GRT slew 25 / 310.4 ps (p4j 23 / 349.4: same class, frame x_f / hrq station inputs and long wires near stand-in faces), spread max_disp 63.5 um; stand-in abstracts fully obstructed (no pin window) -> the p4l rerun uses OT_ABS_PIN_WINDOW_UM=3. Records: p4k/grt_r/"
+  }
+ },
+ "collected_p4i": "S81-DIE2 10-17 ~17:10 from out/run.log on ot-epyc4",
+ "collected_p4j": "S81-DIE4 10-17 ~19:30 from out/run.log on ot-epyc4"
+}
