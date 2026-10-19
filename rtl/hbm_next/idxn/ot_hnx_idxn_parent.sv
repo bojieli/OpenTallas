@@ -51,7 +51,11 @@ module ot_hnx_idxn_parent #(parameter integer N_Q=4,TP=96,S=4,RANK_W=(TP<=1?1:$c
   ot_hnx_idxn_keybuf kb(.clk(clk_score[q]),.rst_n(rst_n),.clear(frame_start),.live_v(live_v),.live_index(key_index),
    .key_in(key_lines[q*8792+:8792]),.pre_v(kb_pre_v),.pre_index(kb_pre_index),.replay_v(replay_v),.replay_index(key_index),
    .key_out(klines),.fault(kbf[q]));
-  ot_hbm_idx_score_static #(.TP(TP)) scorer(.clk_ctl(clk_score[q]),.clk_engine(clk_engine[q*4+:4]),.clk_meta(clk_meta[q*4+:4]),
+`ifdef OT_IDX_SCORE_CLUSTER
+  ot_hbm_idx_score_cluster #(.TP(TP)) scorer(   // the die's 16-leaf chained cluster (+8 edges; compiler --score-chain 8): quad lockstep reference
+`else
+  ot_hbm_idx_score_static #(.TP(TP)) scorer(
+`endif.clk_ctl(clk_score[q]),.clk_engine(clk_engine[q*4+:4]),.clk_meta(clk_meta[q*4+:4]),
    .clk_tail(clk_tail[q*4+:4]),.clk_chunk(clk_chunk[q*16+:16]),.clk_hslice(clk_hslice[q*512+:512]),.rst_n(rst_n),
    .rank(rank),.first_ord(11'(q*342)),.nkeys(nq),.keep_en(keep_en),.keep_bitmap(keep_bitmap[q*342+:342]),
    .ql_v(qv),.ql_head(qh),.ql_codes(qc),.ql_sc(qs),.ql_w(qw),.beat_v(key_v),.beat_index(key_index),

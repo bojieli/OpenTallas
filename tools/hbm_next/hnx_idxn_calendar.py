@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 """HBM-NEXT-UNITS-IDXN 2026-10-19: IDX.INDEX row frame + row II for ONE key stream (ot_hnx_idxn_calendar / _parent).
 
-    hnx_idxn_calendar.py OUT [--gap G] [--g2 G2] [--sel S] [--streams K] [--pitch P]
+    hnx_idxn_calendar.py OUT [--gap G] [--g2 G2] [--sel S] [--streams K] [--pitch P] [--score-chain C]
+
+--score-chain C (IDXQ 2026-10-19): the d4g compiler's scorer->selector chain (0 = the IDXN bench's score_static; 8 = the
+chained 16-leaf cluster; 14 = the quad form: cluster 8 + quarter pins 2 + XQ tree 4). Default 0 = unchanged output.
 
 Takes the d4g single-row INDEX microprogram (tools/hbm_idx_static_calendar.py compile_program, registered pins,
 UNCHANGED fields and latencies) with the head-emit -> first-key gap G (d4g 100; the scorer needs >= 3: engine settle
@@ -40,8 +43,8 @@ def write(d, prog, meta):
     (d / 'calendar.json').write_text(json.dumps(meta, indent=1) + '\n')
 
 
-def frame(gap):
-    prog, meta = CAL.compile_program('registered', gap, 0)
+def frame(gap, chain=0):
+    prog, meta = CAL.compile_program('registered', gap, chain)
     sh, F = meta['calendar_shift'], len(prog)
     w = list(prog)
     e1 = sh['sel']
@@ -109,12 +112,13 @@ def main():
     ap.add_argument('--g2', type=int, default=23)
     ap.add_argument('--sel', type=int, default=4)
     ap.add_argument('--streams', type=int, default=8)
+    ap.add_argument('--score-chain', type=int, default=0)
     ap.add_argument('--pitch', type=int, default=0, help='force this pitch (bench mutants), 0 = the compiled row II')
     a = ap.parse_args()
     out = Path(a.out)
-    prog, meta = CAL.compile_program('registered', 100, 0)
+    prog, meta = CAL.compile_program('registered', 100, a.score_chain)
     write(out / 'd4g', prog, meta)
-    w, fm, moved = frame(a.gap)
+    w, fm, moved = frame(a.gap, a.score_chain)
     F = len(w)
     ii, bad, ex, sel_span = min_pitch(w, a.g2, a.sel, a.streams)
     pitch = a.pitch or ii
@@ -125,7 +129,7 @@ def main():
     pred = fm['predicted']
     fm.update(scope='HBM-NEXT-UNITS-IDXN row frame (ot_hnx_idxn_calendar): d4g programme at gap G, selector clears '
                     'before the first ingest, link row clear before the first compaction; rows pipelined, ONE key stream',
-              frame_length=F, gap=a.gap, g2=a.g2, selectors=a.sel, streams=a.streams, row_ii=ii, pitch=pitch,
+              frame_length=F, score_chain=a.score_chain, gap=a.gap, g2=a.g2, selectors=a.sel, streams=a.streams, row_ii=ii, pitch=pitch,
               binding_unit=bind, unit_spans=spans, moved=moved, collisions_at_pitch=len(bad(pitch)),
               first_key_edge_row0=pred['first_key_instruction'] + 3, first_tx_edge_row0=pred['first_tx_from_instruction0'] + 3,
               cycles_formula='record edges(N) = (N - 1) x pitch + last TX of row 0 (measured by tb_hnx_idxn_rows)')
