@@ -1173,7 +1173,7 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--mode", default="mtp", choices=("mtp", "ar", "mu"))
     ap.add_argument("--layers", default="0,1")
-    ap.add_argument("--P", type=int, default=4)
+    ap.add_argument("--P", type=int, default=3)      # owner 0le 10-19: next die P = 3
     ap.add_argument("--legacy", action="store_true", help="step-3 behaviour (union records skipped, no ATT plan)")
     ap.add_argument("--out", type=Path, required=True)
     ap.add_argument("--N", type=int, default=0, help="rows (mu: users 1..4; default mtp 6 / mu 4 / ar 1)")

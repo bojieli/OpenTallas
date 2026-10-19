@@ -1,0 +1,43 @@
+carried {"carried": [[188864, 192960]], "host": [], "consumers": [{"segment": "24", "words": 4096, "from_earlier": 4096}, {"segment": "28", "words": 4096, "from_earlier": 4096}, {"segment": "32", "words": 4096, "from_earlier": 4096}, {"segment": "36", "words": 4096, "from_earlier": 4096}], "pinned": [[0, 20480, 0], [40960, 40964, 20480], [188864, 192960, 20488]], "pinned_words": 24584, "rule": "AR intervals read before any in-segment writer and written by some segment (outside h / PRE): pinned N-row arrays at one token-wide base, like h / PRE"}
+ar 0 {"emit": {"plain_records": 91, "ok": 91}, "errors": [], "need": 99168, "hw": 62496}
+ar 1 {"emit": {"plain_records": 154, "ok": 154}, "errors": [], "need": 99168, "hw": 97296}
+ar 2 {"emit": {"plain_records": 130, "ok": 130}, "errors": [], "need": 99168, "hw": 62888}
+ar 3 {"emit": {"plain_records": 91, "ok": 91}, "errors": [], "need": 99168, "hw": 62496}
+ar 4 {"emit": {"plain_records": 91, "ok": 91}, "errors": [], "need": 99168, "hw": 62496}
+ar 5 {"emit": {"plain_records": 91, "ok": 91}, "errors": [], "need": 99168, "hw": 62496}
+ar 6 {"emit": {"plain_records": 91, "ok": 91}, "errors": [], "need": 99168, "hw": 62496}
+ar 7 {"emit": {"plain_records": 91, "ok": 91}, "errors": [], "need": 99168, "hw": 62496}
+ar 8 {"emit": {"plain_records": 130, "ok": 130}, "errors": [], "need": 99168, "hw": 62888}
+ar 9 {"emit": {"plain_records": 91, "ok": 91}, "errors": [], "need": 99168, "hw": 62496}
+ar 10 {"emit": {"plain_records": 91, "ok": 91}, "errors": [], "need": 99168, "hw": 62496}
+ar 11 {"emit": {"plain_records": 91, "ok": 91}, "errors": [], "need": 99168, "hw": 62496}
+ar 12 {"emit": {"plain_records": 91, "ok": 91}, "errors": [], "need": 99168, "hw": 62496}
+ar 13 {"emit": {"plain_records": 91, "ok": 91}, "errors": [], "need": 99168, "hw": 62496}
+ar 14 {"emit": {"plain_records": 193, "ok": 193}, "errors": [], "need": 99168, "hw": 99152}
+ar 15 {"emit": {"plain_records": 91, "ok": 91}, "errors": [], "need": 99168, "hw": 62496}
+ar 16 {"emit": {"plain_records": 91, "ok": 91}, "errors": [], "need": 99168, "hw": 62496}
+ar 17 {"emit": {"plain_records": 91, "ok": 91}, "errors": [], "need": 99168, "hw": 62496}
+ar 18 {"emit": {"plain_records": 91, "ok": 91}, "errors": [], "need": 99168, "hw": 62496}
+ar 19 {"emit": {"plain_records": 91, "ok": 91}, "errors": [], "need": 99168, "hw": 62496}
+ar 20 {"emit": {"plain_records": 120, "ok": 120}, "errors": [], "need": 99168, "hw": 62888}
+ar 21 {"emit": {"plain_records": 91, "ok": 91}, "errors": [], "need": 99168, "hw": 62496}
+ar 22 {"emit": {"plain_records": 91, "ok": 91}, "errors": [], "need": 99168, "hw": 62496}
+ar 23 {"emit": {"plain_records": 91, "ok": 91}, "errors": [], "need": 99168, "hw": 62496}
+ar 24 {"emit": {"plain_records": 100, "ok": 100}, "errors": [], "need": 99168, "hw": 62888}
+ar 25 {"emit": {"plain_records": 91, "ok": 91}, "errors": [], "need": 99168, "hw": 62496}
+ar 26 {"emit": {"plain_records": 91, "ok": 91}, "errors": [], "need": 99168, "hw": 62496}
+ar 27 {"emit": {"plain_records": 91, "ok": 91}, "errors": [], "need": 99168, "hw": 62496}
+ar 28 {"emit": {"plain_records": 100, "ok": 100}, "errors": [], "need": 99168, "hw": 62888}
+ar 29 {"emit": {"plain_records": 91, "ok": 91}, "errors": [], "need": 99168, "hw": 62496}
+ar 30 {"emit": {"plain_records": 91, "ok": 91}, "errors": [], "need": 99168, "hw": 62496}
+ar 31 {"emit": {"plain_records": 91, "ok": 91}, "errors": [], "need": 99168, "hw": 62496}
+ar 32 {"emit": {"plain_records": 100, "ok": 100}, "errors": [], "need": 99168, "hw": 62888}
+ar 33 {"emit": {"plain_records": 91, "ok": 91}, "errors": [], "need": 99168, "hw": 62496}
+ar 34 {"emit": {"plain_records": 91, "ok": 91}, "errors": [], "need": 99168, "hw": 62496}
+ar 35 {"emit": {"plain_records": 91, "ok": 91}, "errors": [], "need": 99168, "hw": 62496}
+ar 36 {"emit": {"plain_records": 100, "ok": 100}, "errors": [], "need": 99168, "hw": 62888}
+ar 37 {"emit": {"plain_records": 91, "ok": 91}, "errors": [], "need": 99168, "hw": 62496}
+ar 38 {"emit": {"plain_records": 91, "ok": 91}, "errors": [], "need": 99168, "hw": 62496}
+ar 39 {"emit": {"plain_records": 91, "ok": 91}, "errors": [], "need": 99168, "hw": 62496}
+ar head {"emit": {"plain_records": 4, "ok": 4, "tail": {"ok": 6, "plain_records": 6, "tokx_base": 99168, "accept_base": null}}, "errors": [], "need": 99200, "hw": 29712}
+token {"image": "ar_N1_token.hgi1r", "bytes": 470976, "records": 3954, "sha256": "09b394e917ba720629f875825fd6f0f067952b6a3a1a09fc570e9f076bbd9ba1", "liveins": {}, "pinned_bases": {"0": [0], "40960": [20480], "188864": [20488]}, "pinned_one_base": true, "host_preloaded": [], "one_vm_map": true, "end_at": [3953], "end_ok": true, "ctl_ops": {"NOP": 109, "TOKX": 1, "END": 1}, "segments": [{"segment": "0", "offset": 0, "bytes": 11088, "sha256": "00be433e8981cd056ba3a6c67e8c321f604aa54633ce137a4f2f303fe6c0852a"}, {"segment": "1", "offset": 11088, "bytes": 18240, "sha256": "d7893e887626c1fd1a4b3724b89f7b00bc490dcb41bb653df6f17e84cb043eb7"}, {"segment": "2", "offset": 29328, "bytes": 12736, "sha256": "5e156bb70ac94f09a6a231d4cf64451c1e19df1a605e034aa764fe5d1c6e281f"}, {"segment": "3", "offset": 42064, "bytes": 11152, "sha256": "4bc38a72b47b289800176d8d79309dd217ad4d17431cc2b288c08846fed5da91"}, {"segment": "4", "offset": 53216, "bytes": 11152, "sha256": "86321d3156b3973d1f0be1a8344364cd29e2fd2ece5ebb4faffc1976a0c2cb01"}, {"segment": "5", "offset": 64368, "bytes": 11152, "sha256": "6fcb02b11a5ced49c68def3939792365e0d0fb11222ca1d8198ed781f071ffde"}, {"segment": "6", "offset": 75520, "bytes": 11152, "sha256": "96ce2bd335cf358eb565e1fcd042b7f515b25d6861bbb70004224249e9705ad3"}, {"segment": "7", "offset": 86672, "bytes": 11152, "sha256": "27a92c4afb9c352eb3a6140ae2502400d58c7eb006048f010a0dba6aecfb5f4a"}, {"segment": "8", "offset": 97824, "bytes": 12736, "sha256": "a76b42f243f6cc63d68833d23947

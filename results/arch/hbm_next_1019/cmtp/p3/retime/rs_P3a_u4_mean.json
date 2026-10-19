@@ -1,0 +1,201 @@
+{
+ "schema": "opentallas.hbm_next_1019.cmtp.meas_retime.v1",
+ "generated_utc": "2026-10-19T14:18:33Z",
+ "rule": "HBM-NEXT-CMTP: the P-lane record compiler for the next HBM die (P = 4), on the D1 compiler / price chain.\n\nFork, not edit: tools/hgi_sim (d4g compiler ds_mtp_verify / ds_mtp_draft / hbm_plane_model, the D1 model) is used\nUNCHANGED; this module wraps its record compile (V.compile_verify, called by the verify, the DSpark draft bodies and the\nSEED) with the P = 4 rules below, and runs the re-time.  Every rule is opt-in (Knobs); with every knob at the D1\nvalue the wrapper is the identity, which the re-time checks against the D1 / STUDY records (validation rows).\n\nP = 4 RULES (results/arch/hbm_next_1019/cmtp/isa_rows.md, HGI-1R):\n  rpl   SM remainder pass (R5): an N-row SM record on P lanes costs max(1, issues / 1.374) of the AR record, issues =\n        isa_rows.best_rpl(N, P, nc, rows per SM) (idle / K-split / row-split, the cheapest; D1: ceil(N / P)).  nc = the\n        record's csum chunk count (K / 32 / 8 block-dot, K / 8 BF16), rows per SM = ceil(B.m / 16).\n  union MoE union grouped GEMM: a union expert with c_u routed rows costs max(1, issues(c_u) / 1.374), averaged over the\n        MEASURED lane histogram (MTP-STATS: verify N = 6 decorrelated estimate; users: independent mixed workloads);\n        D1: the mean P_e = 6 N / U, ceil(ceil(P_e) / P).  Draft bodies (no histogram): P_e as D1, with rpl.\n  m1    x-load beats + lane-major publish (D2 model gap M1): an SM record over N rows loads N x-slots (2,048-b xw beat:\n        ceil(K esz / 256) beats a row) and publishes N result rows on the unchanged result port (8 FP32 words a beat a\n        SM: ceil(rows per SM / 8) beats a row).  Charged EXPOSED (no overlap credit): (N - 1) x the x beats once per\n        distinct x in a layer segment (the x-slot store keeps it for the other records) + (N - 1) x the publish beats\n        on every SM record.  PRICED estimate, labelled.\n  coll  COLL delivery lanes L (STUDY (a): L = 5 adopted, the widest the SerDes feeds; D1 4).\n  hc    HC further-row II: MEASURED 250.0 (HBM-NEXT-UNITS tb_hnx_hc_eng4, hnx RTL root + 4 ring quarters, Verilator\n        5.050, bit-exact N = 1, 2, 3, 4, 6, 8: HC_MIX 998 + 250 (N - 1); results/arch/hbm_next_1019/units/hc/README.md).\n        It replaces both the priced HCP x6 II (250, D1) and the stale measured static-engine II (4,385, codex 128-lane\n        engine the die does not bind) in the d4g row_ii; 600 / 950 kept as sensitivities only.\n  vm    VM-resident N columns (D1 / VM grown) or as-built column swaps (STUDY (b)).\n\n    PYTHONPATH=tools python3 tools/hbm_next/plane_compiler.py retime --out DIR [--jobs N]   (fleet: ~20-40 min)\n",
+ "meas_keys": {
+  "idx_index": "IDX.INDEX further row = c1 x 953 / 658.9 (UNITS-IDX units/idx/README.md: measured 953 a row of the 1,397-cycle d4g frame vs the priced 152 of 658.9; the key stream is re-read a row, selector top-512 binds); users: the same (no shared stream either way)",
+  "idx_index_abs": "IDX.INDEX further row = 953 absolute (sensitivity: the measured row at the bench shape, not scaled to the record's c1)",
+  "idx_topk": "IDX.TOPK further row 49.2 (UNITS-IDX topk, priced 47.0)",
+  "idx_union": "IDX.UNION record (the expert_union record, priced as a TOPK c1) = measured cycles(N) 48 / 67 / 90 / 101 / 142 at N = 1 / 2 / 3 / 4 / 6 (UNITS-IDX union; N = 5 interpolated)",
+  "su_vop": "SU.VOP N-row (the un-indexed 'shared' SU records: norms, gates, residual ops) further row = (2k + 1) ceil(e / 512) + 2, k = per-row VM read operands (operands some record writes; constants broadcast), e = A elements a row (UNITS-SUDMA su_vop: AB 44 / ABC 72 at n 7,168, single store write port); the indexed route gather stays at its measured II 1 (= price)",
+  "kvwb": "DMA.KVWB_DS further row 8 (+28 a ring wrap, amortised (N - 1) / 256 a record) (UNITS-SUDMA kvwb; priced 2)",
+  "argmax": "ARGMAX.LOCAL further row 169 (UNITS-SUDMA argmax; priced 6)",
+  "coll_rg": "COLL.ROW_GATHER further row = priced II x 623 / 1,449 (UNITS-COLL rows: measured II = R = 623 flits a rail at the DS verify shape where the model priced 1,449; payload-proportional for the other shapes)",
+  "coll_am": "COLL.ARGMAX_MERGE further row 32 (UNITS-COLL rows; model 12.7)",
+  "att4": "ATT PV row records: shared 4-lane merge PV span -40 cycles a pass (ATT4 a1: shared 385 / 529 / 745 / 1,089 vs base 401 / 569 / 785 / 1,129 at sigma 0 / 0.3 / 1 / disjoint; -40 at every overlap but full)",
+  "sm4skew": "SM4 lane-major publish skew: +8 cycles a further lane a pass on every N-row SM.MATVEC record (hnx_rp4lp4 LSKEW 8; +24 a 4-lane pass); union experts by the measured lane histogram (1-lane experts: 0)",
+  "idxn": "IDX.INDEX further row = c1 x 232 / 658.9 (UNITS-IDXN units/idxn/README.md: key pass once a record, K = 8 row streams, 4 time-shared selectors; MEASURED 1,297 + 232 (N - 1), bit-exact N = 1..6; replaces idx_index)",
+  "idx_frame": "IDX.INDEX first row c1 x 1,297 / 658.9 on EVERY record incl. AR (IDXN measured frame; the d4g frame the release AR model prices at 658.9 measures 1,397) -- frame sensitivity, moves AR",
+  "su_vop2": "SU.VOP N-row further row = 2 k ceil(e / 512) (k >= 1; k = 0: ceil(e / 512)) (UNITS-SUDMA2 units/sudma2: write-port split, AB 28 / ABC 56 at e = 7,168; replaces su_vop)",
+  "argmax2": "ARGMAX.LOCAL further row 22 (UNITS-SUDMA2 wide ARGMAX ot_hnx_argmax_wide_rows; replaces argmax 169)",
+  "fused": "FUSED.HC_PRE_NORM further row 81 (priced 160) and FUSED.HC_POST 103 (priced 100), KX = 4, rgap 0 (UNITS-FUSED units/fused/README.md, bit-exact N = 1/2/3/4/6)",
+  "fused_frame": "FUSED.HC_PRE_NORM / HC_POST first row = MEASURED c1 404 / 196 (absolute, D 5,120) on every record incl. AR -- frame sensitivity, moves AR",
+  "fused_tree": "FUSED die tree latency (P3-DIE f4c_t9p3, claude/hbm-next-1019@9f003920b): worst lane -> fus_hub 37 hops at 405 um ~ +18.5 cycles each way = +37 cycles on the first row of EVERY FUSED record (HC_PRE_NORM / HC_POST, incl. AR); row II unchanged",
+  "sm3": "SM P=3 tile hnx_rp3lp3x (P3-SM, claude/hbm-next-1019@217fff8b6): +4 cycles (2 gather relay stages a half) on EVERY SM.MATVEC record incl. AR, and x 1.008 on N-row SM.MATVEC records (measured throughput 1.002x K16 / 1.008x K4 of the P1 time for 3 results; the worse K4 figure taken)"
+ },
+ "options": {
+  "P3a_u4": {
+   "label": "(P3a) P=3 + shared 3-lane x store, 4 users on 3 lanes",
+   "users": 4,
+   "cases": {
+    "ALL measured v2 + frames + die FUSED tree + SM P3 tile": {
+     "knobs": {
+      "rpl": true,
+      "union_hist": true,
+      "m1": true,
+      "coll_lanes": 5,
+      "hc_ii": 250.0,
+      "vm_grown": true,
+      "P": 3,
+      "bf16_lanes": 0,
+      "meas": [
+       "idxn",
+       "idx_topk",
+       "idx_union",
+       "su_vop2",
+       "kvwb",
+       "argmax2",
+       "coll_rg",
+       "coll_am",
+       "att4",
+       "sm4skew",
+       "fused",
+       "idx_frame",
+       "fused_frame",
+       "fused_tree",
+       "sm3"
+      ],
+      "att_single": "record"
+     },
+     "ar_cycles": 609810.7,
+     "ar_tok_s": 1967.8,
+     "mtp": {
+      "verify_cycles": 1330122.1,
+      "draft_cycles": 129154.4,
+      "draft_by_kind": {
+       "dsa": 18078.9,
+       "dsb": 85532.9,
+       "dhead": 8192.1,
+       "markov": 15579.0,
+       "demb": 1771.5
+      },
+      "seed_cycles": 11674.9,
+      "mh_ctl_cycles": 7818.0,
+      "overlap_credit": 1125.6,
+      "step_cycles": 1477643.8,
+      "tok_s": 3377.5,
+      "unit_busy": {
+       "FUSED": 173451.6,
+       "SM": 565157.0,
+       "COLL": 509605.0,
+       "SU": 194297.1,
+       "DMA": 58358.0,
+       "HC": 191652.0,
+       "IDX": 50325.6,
+       "CTL": 0.0,
+       "ARGMAX": 7491.6
+      },
+      "compile": {
+       "shared": 6992,
+       "per_position": 0,
+       "expert_slots": 25,
+       "union_records": 40,
+       "cmtp_frames": {
+        "FUSED.HC_PRE_NORM": -16872.3,
+        "SM.MATVEC": 13500.0,
+        "FUSED.HC_POST": 824.0,
+        "IDX.INDEX": 7276.4
+       },
+       "cmtp": {
+        "sm_shared": 375,
+        "sm_expert": 3000,
+        "x_loads": 443,
+        "m1_cycles": 30565.0,
+        "rpl_saved": -2970.5,
+        "att_single_records": 0,
+        "meas": {
+         "FUSED.HC_PRE_NORM": -31995.0,
+         "SM.MATVEC shared": 13378.1,
+         "SU.VOP shared": 37204.0,
+         "DMA.KVWB_DS": 1220.0,
+         "FUSED.HC_POST": 1200.0,
+         "IDX.TOPK": 440.0,
+         "IDX.TOPK expert_union": -5640.0,
+         "SM.MATVEC expert": 12948.0,
+         "COLL.ROW_GATHER": -32565.9,
+         "ARGMAX.LOCAL": 80.0,
+         "COLL.ARGMAX_MERGE": 41.5
+        }
+       },
+       "att_rows_records": 80,
+       "fused_pre_measured_ii_records": 81,
+       "idx_index_per_user_records": 0,
+       "att_lanes": 3,
+       "meas_post": {
+        "ATT.PV": -3200.0,
+        "IDX.INDEX": 4561.2
+       }
+      }
+     },
+     "mu": {
+      "users": 4,
+      "step_cycles": 1153979.6,
+      "per_user_tok_s": 1039.9,
+      "agg_tok_s": 4159.5,
+      "unit_busy": {
+       "FUSED": 123777.6,
+       "SM": 483207.4,
+       "COLL": 441725.5,
+       "SU": 167753.1,
+       "DMA": 53226.0,
+       "HC": 151652.0,
+       "IDX": 75891.7,
+       "CTL": 0.0,
+       "ARGMAX": 7388.8
+      },
+      "compile": {
+       "shared": 6512,
+       "per_position": 0,
+       "expert_slots": 22,
+       "union_records": 40,
+       "cmtp_frames": {
+        "FUSED.HC_PRE_NORM": -16872.3,
+        "SM.MATVEC": 12060.0,
+        "FUSED.HC_POST": 824.0,
+        "IDX.INDEX": 7276.4
+       },
+       "cmtp": {
+        "sm_shared": 375,
+        "sm_expert": 2640,
+        "x_loads": 443,
+        "m1_cycles": 17767.9,
+        "rpl_saved": -69.4,
+        "att_single_records": 0,
+        "meas": {
+         "FUSED.HC_PRE_NORM": -19197.0,
+         "SM.MATVEC shared": 13311.5,
+         "SU.VOP shared": 21566.0,
+         "DMA.KVWB_DS": 732.0,
+         "FUSED.HC_POST": 720.0,
+         "IDX.TOPK": 264.0,
+         "IDX.TOPK expert_union": -7280.0,
+         "SM.MATVEC expert": 3180.8,
+         "COLL.ROW_GATHER": -19539.6,
+         "ARGMAX.LOCAL": 48.0,
+         "COLL.ARGMAX_MERGE": 24.9
+        }
+       },
+       "att_rows_records": 80,
+       "fused_pre_measured_ii_records": 81,
+       "idx_index_per_user_records": 8,
+       "att_lanes": 3,
+       "meas_post": {
+        "ATT.PV": -3200.0
+       }
+      }
+     }
+    }
+   }
+  }
+ },
+ "union_bound": false,
+ "sources_sha256": {
+  "tools/hbm_next/plane_compiler.py": "bfcd014945c0b3830d7688371bfc4cf19af2f2d2e9550b843f1a4d15db374a27",
+  "tools/hbm_next/isa_rows.py": "778e66cf64b07fef7750b8ed97dffdd622670dbb83a98ba97a361afa560cb36b",
+  "tools/hgi_sim/hbm_plane_model.py": "5ac91ba0f6cbe1769ca35267c1f9c30394d8b12ecd02a08ef87953b9bed8d824",
+  "tools/hgi_sim/ds_mtp_verify.py": "35613f56f3f93633e3c5381d2bc3b8c3123734678b038914240078a3c1dff400",
+  "tools/hgi_sim/ds_mtp_draft.py": "1f686040970b8b37ab569392e8adaa051dc8e06669051cdb5f50012683498af8",
+  "tools/hgi_sim/timing.py": "6690caa113e1bb7f5435c001a6a12ca5b0ebe15ad8867376903939a3b096a7b3",
+  "results/arch/hbm_mtp_next_1018/stats/summary.json": "8cf6f7b70f493e0f8de99473aeec59f0f6f7cc6145407c466f34c2437f4f38c1"
+ }
+}
