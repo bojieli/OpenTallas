@@ -1,0 +1,67 @@
+{
+  "schema": "opentallas.sysface.sram-table-player.v1",
+  "production_bound": false,
+  "image_source_sha256": "a4b4fb3f84c69b89c25376f9e81cffc1b86cc58438ef66b3486a3f3225d19889",
+  "shapes": {
+    "T": {
+      "NE": 64,
+      "AW": 6,
+      "entries": 49,
+      "SEG1": 46
+    },
+    "L": {
+      "NE": 32,
+      "AW": 5,
+      "SEG1": 0
+    },
+    "E": {
+      "NE": 16,
+      "AW": 4,
+      "entries": 8,
+      "SEG1": 4
+    }
+  },
+  "storage": {
+    "macros_per_player": 2,
+    "macro": "ot_sram_1r1w_64x16_m1",
+    "physical_bits_total": 6144,
+    "head_payload_flops_per_player": 128,
+    "lookahead_payload_flops_per_player": 32,
+    "native_read_latency": 1,
+    "native_semantics": "read-before-write, mask16 active-high, no memory reset",
+    "collision_policy": "read disabled on cfg writes; cfg while running faults and write disabled"
+  },
+  "ports": {
+    "write_bytes_per_cycle": 4,
+    "read_bytes_per_cycle": 4,
+    "event_boundary_bits_per_cycle": 13,
+    "sustained_entries_per_cycle": 1,
+    "sustained_events_per_cycle": 1
+  },
+  "cycles": {
+    "cfg_to_ready_stopped_edges": 4,
+    "start_to_first_event": "dt unchanged",
+    "entry_dt1": true,
+    "burst_II": 1,
+    "external_delta": 0,
+    "runtime_wait": false,
+    "load_condition": "all cfg writes while stopped; final write then four stopped edges before start; violation sticky-fault"
+  },
+  "area": {
+    "extra_macros": 6,
+    "raw_um2": 2290.2264,
+    "proposed_parent_um": [
+      302.4,
+      172.8
+    ],
+    "outline_growth_fraction": 0.09375,
+    "min_channels_um": [
+      24.84,
+      22.41
+    ],
+    "synth_std_area": null,
+    "physical_qualification": false
+  },
+  "reset": "control only; cache payload validity from four reads; reset fanout/mapped census pending",
+  "ownership": "SRAM tables module only; FACE/prefix/ABI/kit owned by KV-OVL-CLOSURE"
+}
