@@ -1,6 +1,6 @@
 {
   "schema": "opentallas.svg-cache-safe-composition.v1",
-  "status": "COMPONENT QUALIFIED; composition RTL opt-in awaiting whole proof",
+  "status": "CACHE-ONLY WHOLE L00 CAUSAL PROOF PASS; physical/current-cohort adoption OPEN",
   "opt_in_default": false,
   "baseline": {
     "whole_source": "2f13a5b1d",
@@ -51,5 +51,17 @@
     "Fresh physical source binding and root geometry/PNG review before submit"
   ],
   "physical_claim": "NONE",
-  "future_banked_calendar": "Separate model716f5f110 adds2 calendar edges to READ and command, then safe-cache adds2 command-only: eventual SMcommandG11. This cache-only integration uses originalcalendar and commandG9; no physical qualification."
+  "future_banked_calendar": "Separate model716f5f110 adds2 calendar edges to READ and command, then safe-cache adds2 command-only: eventual SMcommandG11. This cache-only integration uses originalcalendar and commandG9; no physical qualification.",
+  "whole_proof": {
+    "source": "a7da66a75",
+    "ops": 20,
+    "result_rows": 81,
+    "exact_fixed_GO": 29,
+    "cycles": 12975,
+    "baseline_cycles": 12899,
+    "measured_cycle_delta": 76,
+    "DRAM_beats": 5988,
+    "mirror_one_edge_short_mutant": "SM schedule fault cycle804",
+    "scope": "Frozen old-issuer cohort0 baseline with hardened4leaf predating strict reset successor; isolates cache+2 causality. Current cohort1 source, native producer timeline, final reset successor composition and bankedcalendar require separate exact-source proof."
+  }
 }
