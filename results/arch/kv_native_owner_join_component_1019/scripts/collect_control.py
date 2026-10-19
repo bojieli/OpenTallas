@@ -26,6 +26,9 @@ mutant_pass='NATIVE_JOIN_PASS FUNCTIONAL_ONLY' in us
 extra=True
 if x['name']=='latest_pending':extra=re.search(r'CQ_STALL .*pending_phase=[123]',bs)is not None
 if x['name']=='rank_masks':extra='REAL_RESULT_RETURN_STALL' in bs
+if x['name']=='current_event_guard':
+ witness=r'COMPONENT_JOIN_INPUT_REPLAY case=16 .*raw=1 terminal=0 genuine_raw_seen=1 genuine_terminal_seen=1'
+ extra=re.search(witness,bs)is not None and re.search(witness,us)is not None
 caught=baseline_pass and urc is not None and urc!=0 and named_fail and not mutant_pass and extra
 verdict={'name':x['name'],'verdict':'CAUGHT'if caught else 'NOT_CAUGHT','baseline_exit':brc,'mutant_exit':urc,'baseline_application_pass':baseline_pass,'mutant_named_invariant_failed':named_fail,'mutant_application_pass':mutant_pass,'extra_witness_present':extra,'source_delta':changed,'baseline_log_sha256':hashlib.sha256(bl.read_bytes()).hexdigest(),'mutant_log_sha256':hashlib.sha256(ul.read_bytes()).hexdigest(),'required_regex':x['required_fail_regex'],'scope':'minimum native seam COMPONENT source control, no production/native/physical qualification'}
 o.write_text(json.dumps(verdict,indent=2)+'\n');print(verdict['name'],verdict['verdict'])
