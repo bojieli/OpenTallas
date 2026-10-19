@@ -52,6 +52,7 @@ def model(serialized_programmes=1):
         "bank_leaf_full_width_std_band_y_um":[2.16,37.8],
         "central_leaf_outline_um":centre,
         "parent_bbox_um":envelope,"parent_origins_um":{"bank0":[0,0],"central":[77.76,146.88],"bank1":[0,241.92]},
+        "central_hard_top":"Application central wrapper contains the shared calendar-control/select core plus the existing SVG or XC R/C logic and explicit safe-cache command/mirror alignment. Bank request/tuple ports cross real hard boundaries. Do not harden the generic core alone and leave R/C as an unconstrained soft parent.",
         "hierarchy":"Real one-SRAM hard leaves and a separate central hard leaf, not cosmetic keep_hierarchy in one flat GPL region. Each leaf exports native registered pins and a source-bound placement region.",
         "bank_face_plan":"bank0 registered row output N; bank1 output S, each centred over central bus. cfg write-data captures split W136/E120 beside true macro pin faces. Clock beside local FF mass; local tied mask/repair pins on E.",
         "central_face_plan":"bank0 tuple enters S, bank1 tuple N, native input Q first. Per<=16bit selects/qualifiers and output Q remain local; stage control uses same-edge kept copies.",
