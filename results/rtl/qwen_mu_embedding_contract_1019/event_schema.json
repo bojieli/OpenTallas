@@ -22,7 +22,10 @@
       "user": null,
       "token": null,
       "epoch": null,
-      "identity_source": "pending accepted epoch copied to active on exact matching CTLM token/context-bank load"
+      "identity_source": "pending accepted epoch copied to active on exact matching CTLM token/context-bank load",
+      "user_mask": null,
+      "mask_width_bits": 4,
+      "mask_semantics": "independent simultaneous bank bits; zero no-op; unsupported bits fault"
     },
     "fetch": {
       "sample_edge": null,
@@ -82,7 +85,10 @@
       "user": null,
       "token": null,
       "epoch": null,
-      "identity_source": "immutable scheduled identity invalidation only outside residency"
+      "identity_source": "immutable scheduled identity invalidation only outside residency",
+      "user_mask": null,
+      "mask_width_bits": 4,
+      "mask_semantics": "independent simultaneous bank bits; zero no-op; unsupported bits fault"
     }
   },
   "expected_words": {
@@ -216,5 +222,6 @@
     "next_epoch_publish": 175,
     "final_retire": 171,
     "production_timeline": false
-  }
+  },
+  "mask_source_binding": "mask_source_binding.json"
 }

@@ -1,0 +1,21 @@
+FIRST_CODE_RE cycle=95 token=151935 epoch=0 resident=151935/0 complete=1
+ROUND_PASS user=0 token=151935 epoch=0 reads=64 output=65
+FIRST_CODE_RE cycle=295 token=151935 epoch=1 resident=151935/1 complete=1
+ROUND_PASS user=1 token=151935 epoch=1 reads=64 output=65
+FIRST_CODE_RE cycle=495 token=151935 epoch=2 resident=151935/2 complete=1
+ROUND_PASS user=2 token=151935 epoch=2 reads=64 output=65
+FIRST_CODE_RE cycle=695 token=151935 epoch=3 resident=151935/3 complete=1
+ROUND_PASS user=3 token=151935 epoch=3 reads=64 output=65
+FIRST_CODE_RE cycle=895 token=151935 epoch=4 resident=151935/4 complete=1
+ROUND_PASS user=0 token=151935 epoch=4 reads=64 output=65
+FIRST_CODE_RE cycle=1095 token=151935 epoch=5 resident=151935/5 complete=1
+ROUND_PASS user=1 token=151935 epoch=5 reads=64 output=65
+FIRST_CODE_RE cycle=1295 token=151935 epoch=6 resident=151935/6 complete=1
+ROUND_PASS user=2 token=151935 epoch=6 reads=64 output=65
+FIRST_CODE_RE cycle=1495 token=151935 epoch=7 resident=151935/7 complete=1
+ROUND_PASS user=3 token=151935 epoch=7 reads=64 output=65
+JOIN_PASS pending_vs_active recurring4 reload native59 provider token=151935 rounds=8
+- rtl/test/qwen_split/tb_mu_embedding_publication.sv:86: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1us; walltime 0.129 s; speed 10.232 us/s
+- Verilator: cpu 0.129 s on 1 threads; allocated 8 MB

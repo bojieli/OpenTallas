@@ -2,7 +2,7 @@
  "schema":"opentallas.qwen-mu-epoch-mask-model.v1",
  "state_bits":157,"pending_epoch_bits":64,"active_epoch_bits":64,
  "valid_bits":8,"resident_identity_bits":18,"reservation_bits":2,"fault_bits":1,
- "publication_mask_bits":4,"retirement_mask_bits":4,"new_CTLМ_output_bits":2,
+ "publication_mask_bits":4,"retirement_mask_bits":4,"new_CTLM_output_bits":2,
  "logical_data_edges_added":0,"payload_bytes":0,
  "publication_semantics":"Each mask bit independently copies that bank pending epoch to active on the same edge; no scalar priority encoding",
  "retirement_semantics":"Each mask bit independently invalidates that bank active and pending entries",

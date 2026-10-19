@@ -1,0 +1,25 @@
+{
+  "source": "644073ce1",
+  "path": "rtl/qwen_dv/qfd_tt_ctlm_dv.sv",
+  "sha256": "4157b4a380db9fb66c3c3ed352c4755adbd9e7cc484f9123e98b1683a7e1e0e7",
+  "fragments": {
+    "245-267": "    always @(posedge ck or negedge rst_n)\n        if (!rst_n) mu_fault_q <= 1'b0; else mu_fault_q <= mu_fault;\n    reg  [128:0] ctx_q;\n    always @(posedge ck or negedge rst_n)\n        if (!rst_n) ctx_q <= 129'd0; else ctx_q <= (CTX_SRC != 0 && OPS != 0) ? ctx_x : 129'd0;\n    wire        x_ld = (CTX_SRC != 0) && (OPS != 0) && ctx_q[128];\n    wire [127:0] c_ctx = x_ld ? ctx_q[127:0] : c_ctx_cal;\n    wire        c_ctxld = c_ctxld_cal || x_ld;\n    wire        r_fill;                                              // filler result write (below)\n    wire [1:0]  r_u2;\n    localparam integer NF = (NU > 1) ? NU - 1 : 1;                   // fillers\n    wire [2:0]  ctx_mask = c_ctx[110:108];\n    wire        ctx_ok = (MUT == 29) || (c_ctx[127:112] == 16'h4D43 && !c_ctx[111] && (({1'b0, ctx_mask} >> (NU - 1)) == 4'd0));\n    // same-filler collision of a runtime load (with the leaf start / result of a filler in its mask) or both sources\n    wire        x_hit = x_ld && (c_ctxld_cal || (l_v && !s_start && l_u2 != 2'd0 && ctx_mask[l_u2 - 2'd1]) ||\n                                 (r_fill && r_u2 != 2'd0 && ctx_mask[r_u2 - 2'd1])) && (MUT != 33);\n    wire        ctx_ld = (OPS != 0) && c_ctxld && ctx_ok && !x_hit && (MUT != 27);\n    wire        ctx_bad = (OPS != 0) && c_ctxld && (!ctx_ok || x_hit);\n    wire        l_start = (OPS != 0) && l_v && !(s_start);          // the face start wins a collision\n    wire        op_coll = (OPS != 0) && l_v && s_start;\n    wire u0_init_start = (INIT_U0 != 0) && init_u0_q && s_start && s_stage == 6'd0 && s_user == {UB{1'b0}};\n    wire init_u0_bad = init_u0_q && !u0_init_start;\n    reg         op_fault;",
+    "328-348": "    integer     ub_i;\n    always @(posedge ck or negedge rst_n)\n        if (!rst_n) begin\n            for (ub_i = 0; ub_i < NU; ub_i = ub_i + 1) begin tok_b[ub_i] <= 18'd0; pos_b[ub_i] <= 18'd0; end\n            st_h <= 1'b0; st_tok <= 18'd0; st_pos <= 18'd0; st_base <= 12'd0;\n            start_fault <= 1'b0; emb_start <= 1'b0; emb_token <= 18'd0;\n        end else begin\n            // boot context (OPSEG): masked fillers take their record (MUT 28: rotated records); the image loads only while\n            // no segment plays (calendar image fault), so no start / result of a filler shares this edge in a legal run\n            if (ctx_ld)\n                for (ub_i = 1; ub_i < NU; ub_i = ub_i + 1)\n                    if (ctx_mask[ub_i - 1]) begin\n                        tok_b[ub_i] <= c_ctx[36 * (((MUT == 28) ? (ub_i % NF) + 1 : ub_i) - 1) + 18 +: 18];\n                        pos_b[ub_i] <= c_ctx[36 * (((MUT == 28) ? (ub_i % NF) + 1 : ub_i) - 1) +: 18];\n                    end\n            if (s_start) begin tok_b[b_wr] <= s_tok; pos_b[b_wr] <= s_pos; end\n            if (r_fill) begin tok_b[r_wr] <= ss_tok[17:0]; pos_b[r_wr] <= pos_b[r_wr] + 18'd1; end\n            st_h <= s_me | c_seg;\n            if (s_me) begin st_tok <= s_tok; st_pos <= s_pos; st_base <= 12'd0; end\n            else if (c_seg) begin st_tok <= tok_b[b_rd]; st_pos <= pos_b[b_rd]; st_base <= c_base; end\n            if (s_me && c_seg) start_fault <= 1'b1;"
+  },
+  "filler_publish_mask": "{ctx_mask[2:0],1'b0}",
+  "filler_publish_slot": "actual ctx_ld event, including legal zero mask as no-op",
+  "user0_publish_slot": "explicit new-context INIT bank update only; source association owned by parent",
+  "ordinary_token_updates_do_not_publish": [
+    "r_fill",
+    "d_start/s_start without explicit new context"
+  ],
+  "production_wired": false,
+  "production_event_times": null,
+  "accepted_observer": {
+    "source": "644073ce1",
+    "path": "rtl/qwen_split/qfd_sys_face_accepted_mu_ctx.sv",
+    "sha256": "47dcb86af69604092ab294721f22a1b00fb7774f3f10ea78e22f01bc022421dd",
+    "epoch_user_relation": "user_id=tag[44:43]; accepted requires host_epoch==tag[58:43], therefore accepted_user==host_epoch[1:0]",
+    "lines_14_18": " wire[1:0]user_id=tag[44:43];\n wire accepted=(MUT==1)||\n  (host_accept_v&&host_epoch_valid&&host_epoch==tag[58:43]&&host_tag==tag&&\n   ((MUT==4)||host_gen==gen)&&program_ready&&!program_fault&&\n   program_epoch==image_epoch&&program_digest==digest&&program_cap==cap);"
+  }
+}
