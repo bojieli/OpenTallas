@@ -199,12 +199,11 @@ def deal_into(items, parts):
 XS_OPS = {'L0': ['attn.wq_b', 'attn.wo_b', 'ffn.shared_gu', 'ffn.experts_gu', 'ffn.down']}
 XS_OPS['L2'] = XS_OPS['L20'] = XS_OPS['L0'][:1] + ['attn.idx.q'] + XS_OPS['L0'][1:]
 XS_OPS['L14'] = ['eng.wkv'] + XS_OPS['L2']
-NOT_PLACED = {
-    'attn.wo_a': 'grouped BF16 matvec (golden matvec_c = csum(mul(dequant fp8 w, bf16(o)))): needs BF16-pair phases '
-                 '(bf elements, i_fmt bf16 x family) and the 8-head group x per row group; not placed',
-    'attn.cmp.wk': 'compressor wkv / wgate are BF16 [128, 10240 B]: BF16-pair phases (bf elements); not placed',
-    'ffn.router': 'BF16 gate (96 rows) on the bf pairs, FP32 output (no BF16 round): needs BF16-pair phases; not placed',
-}
+# TOK-S81-GAPS/XS2: the BF16 pair phases (xs_bf.py) are APPENDED after the FP8 / FP4 phases of the field, so the q phase
+# indices (and the bench_xsp* records) are unchanged
+BF_OPS = {'L0': ['attn.wo_a', 'ffn.router']}
+BF_OPS['L2'] = BF_OPS['L14'] = BF_OPS['L20'] = ['attn.cmp.wk'] + BF_OPS['L0']
+NOT_PLACED = {}
 
 
 def make_mat(fx, grp, sel, phase):
@@ -344,15 +343,20 @@ def compile_frame(die, frame, fixd, ops, iters=LX.ITERS, only=None):
         _f, _ph, plan0, qa, _q, _bf = LX.frame_programme(master, lk, mats, fxa['x'])
     else:
         qa = q[:NPAIRS]
-    field = I.Field(16, 1, 0, depth=8192, active=len(qa), pp=True, fast=True)
+    import xs_bf as XB
+    nbf = len(bf) if any(o in XB.BF_OPS for o in ops) else 0
+    field = I.Field(16, 1, nbf, depth=8192, active=len(qa) + nbf, pp=True, fast=True)
+    field.bf[:] = False
+    field.bf[len(qa):len(qa) + nbf] = True                  # field slots len(qa).. = the frame's BF pairs (bf order)
+    field.bf_desc = {}                                      # field phase -> {field slot: 82-bit BF programme descriptor}
     if p0['rows']:
         ph = add_planned(field, dict(plan0, assign_slots=plan0['assign_slots'],
                                      stream=_f.stream[_ph['sbase']:_ph['sbase'] + _ph['nbeat']]), mats[0], LX.NSEG)
         phases.append(dict(phase=0, op='attn.a_proj', mat=mats[0].name, rows=len(gidx), out_index=gidx, nseg=LX.NSEG,
                            nbeat=ph['nbeat'], faults=plan0['faults'], ret_words=plan0['ret_words'],
                            calendar='measured_class', ret=plan0['ret']))
-    groups = {op: op_groups(fx, op) for op in ops}
-    for op, gi, c, nseg, R in phase_list(fx, ops):
+    groups = {op: op_groups(fx, op) for op in ops if op not in XB.BF_OPS}
+    for op, gi, c, nseg, R in phase_list(fx, [o for o in ops if o not in XB.BF_OPS]):
         grp = groups[op][gi]
         sel_all = grp['groups'][g][j]
         sel = sel_all[c * R:(c + 1) * R]
@@ -371,9 +375,84 @@ def compile_frame(die, frame, fixd, ops, iters=LX.ITERS, only=None):
                            nbeat=ph['nbeat'], sbase=ph['sbase'], faults=plan['faults'], ret_words=plan['ret_words'],
                            calendar=plan['calendar'], elem_class=plan['elem_class'], ret=plan['ret'],
                            emission=plan['emission'], placement=plan['placement'], plan=plan, sel=sel, gi=gi))
+    bfo = [o for o in ops if o in XB.BF_OPS]
+    if bfo:
+        phases += compile_bf(field, fx, bfo, g, j, LX.base_master(master), LX.land_e(lk), bf, len(qa))
     fill = [int(v) for v in field.fill]
     return dict(frame=frame, master=master, lk=lk, slice=sl, slice_index=g, frame_index=j, pairs=qa, q_pairs=q,
-                bf_pairs=bf, phases=phases, fill=fill, depth=field.depth, nphases=len(field.phases)), field
+                bf_pairs=bf, phases=phases, fill=fill, depth=field.depth, nphases=len(field.phases),
+                slots=list(qa) + list(bf[:nbf])), field
+
+
+def bf_phase_list(fx, ops, npairs):
+    """die-wide BF phase sequence: [(op, group, row chunk c, segment s, segments n, rows per phase, most rows on a frame)]:
+    per chunk of <= 2 x npairs rows of each frame, one phase per BSEG segment of K (one x slice per phase)"""
+    import xs_bf as XB
+    seq = []
+    for op in ops:
+        for gi, grp in enumerate(XB.bf_groups(fx, op)):
+            most = max(len(fr) for sl in grp['groups'] for fr in sl)
+            n, _ = XB.nseg_total(grp['u16'].shape[1])
+            R = 2 * npairs
+            for c in range(-(-most // R)):
+                for s in range(n):
+                    seq.append((op, gi, c, s, n, R, most))
+    return seq
+
+
+def compile_bf(field, fx, ops, g, j, master, land_e, bf, off):
+    """the BF16 pair phases of this frame (xs_bf.py): one BSEG segment of up to 2 x 3 rows per phase, super row R on BF
+    pair R; the programme (measured descriptor of the master / lane latency, this phase's ROM base) rides the cfg spare
+    columns.  A frame without rows in a die-wide phase gets the phase's stream and an EMPTY configuration."""
+    import v41_die_images_w17w10 as I
+    import xs_bf as XB
+    meas, how = XB.meas_for(XB.load_meas(), master, land_e)
+    if meas is not None:
+        meas = dict(meas, calendar=how)
+    out = []
+    for op, gi, c, s, n, R, most in bf_phase_list(fx, ops, XB.BF_PAIRS_DIE):
+        grp = XB.bf_groups(fx, op)[gi]
+        sel = grp['groups'][g][j][c * R:(c + 1) * R]
+        k = len(field.phases)
+        x = XB.x_of(grp, g)
+        cols = slice(s * XB.BSEG, (s + 1) * XB.BSEG)
+        if sel:
+            u = grp['u16'][[grp['rows'][i] for i in sel]]
+            vals, acc, b16 = XB.bf_vals(u, x)
+        else:      # the stream of a frame holding rows; no configuration, no ROM words kept
+            u, vals = np.zeros((1, grp['u16'].shape[1]), np.uint16), [[0] * n]
+        mat = FMatBF(grp['mat'], np.ascontiguousarray(u[:, cols]), list(range(len(u))), op)
+        nsr = -(-mat.rows // 2)
+        base = [int(field.fill[off + R_]) + (int(field.fill[off + R_]) & 1) for R_ in range(nsr)]   # PP: even start
+        plan = XB.bf_plan(master, bf, vals, s, n, meas if sel else None, base)
+        orig = I._place
+        I._place = XB.place_bf([(off + R_, R_) for R_ in range(nsr)], s, n)
+        try:
+            words0, fill0 = [dict(w) for w in field.words], field.fill.copy()
+            ph = I.add_phase(field, [mat])
+        finally:
+            I._place = orig
+        if not sel:
+            field.cfg[-1] = [[0] * I.CW for _ in range(field.np)]
+            field.words, field.fill = words0, fill0
+            plan['calendar'] = 'empty_frame'
+        else:
+            for R_ in range(nsr):     # the descriptor's ROM base is the pair's phase start (PP reorder from there)
+                assert (field.cfg[-1][off + R_][2 * I.NSEG] >> 6) == base[R_], ('BF phase start', base[R_])
+        sys.path.insert(0, str(ROOT / 'tools/s81'))
+        import bf_programme_compile as BC
+        field.bf_desc[k] = {off + bf.index(int(p_)): BC.pack(d) for p_, d in plan['desc'].items()}
+        out.append(dict(phase=k, op=op, mat=grp['mat'], fmt='bf16', K=grp['u16'].shape[1], k_pad=grp['k_pad'],
+                        kseg=[cols.start, cols.stop],
+                        xbase=cols.start, chunk=c, seg=s, nseg=n, rows=len(sel), row_index=[grp['rows'][i] for i in sel],
+                        tie=[grp['tie'][i] for i in sel], tie_kind=grp['tie_kind'], rows_per_phase=R,
+                        nbeat=ph['nbeat'], sbase=ph['sbase'], faults=plan['faults'], ret_words=plan['ret_words'],
+                        calendar=plan['calendar'], elem_class=['bf16', XB.BSEG], ret=plan['ret'],
+                        shape=XB.shape_key(master, land_e), bf_pairs=plan['pairs'], assign=plan['assign'],
+                        desc=plan['desc'], plan=dict(plan, rows_vals={str(r): v for r, v in enumerate(vals)},
+                                                     acc=acc if sel else [], bf16=b16 if sel else []),
+                        sel=sel, gi=gi))
+    return out
 
 
 def write_images(field, qa, q, bf, inst, out):
@@ -384,22 +463,36 @@ def write_images(field, qa, q, bf, inst, out):
     tmp = out / '_field'
     I.write_field(field, tmp, 10, flat_viamaps=True)
     slot_of = {k: s for s, k in enumerate(qa)}
+    nbf = int(field.bf.sum())
+    bslot = {k: len(qa) + i for i, k in enumerate(bf[:nbf])}
     names = []
     for k, s in slot_of.items():
         for mb in ('', 'b'):
             for par in (0, 1):
                 (out / f'{inst}_e{k}{mb}_{par}.viamap.hex').write_text((tmp / f'e{s}{mb}_{par}.viamap.hex').read_text())
                 names.append(f'{inst}_e{k}{mb}_{par}.viamap.hex')
+    # BF pair columns (dsfd_bf_col u_e<k>w = front c0 = macro 0 = row 2R; u_e<k>e = c1 = macro 1 = row 2R + 1), PP banks
+    for k, s in bslot.items():
+        for mb, col in (('', 'w'), ('b', 'e')):
+            for par in (0, 1):
+                (out / f'{inst}_e{k}{col}_{par}.viamap.hex').write_text((tmp / f'e{s}{mb}_{par}.viamap.hex').read_text())
+                names.append(f'{inst}_e{k}{col}_{par}.viamap.hex')
+    slot_all = {**slot_of, **bslot}
     nph = len(field.cfg)
     assert 4 * nph <= 4096, ('cfg7 bank rows', nph)
+    bdesc = getattr(field, 'bf_desc', {})
     for k in q + bf:
         banked = [[0] * 4096 for _ in range(7)]
         for p in range(nph):
-            words = field.cfg[p][slot_of[k]] if k in slot_of else [0] * 25
+            words = list(field.cfg[p][slot_all[k]]) if k in slot_all else [0] * 25
+            d = bdesc.get(p, {}).get(slot_all.get(k))
+            if d:     # ot_s81_cfg7_seq_bfp: desc[24 w +: 24] in the spare columns [71:48] of cfg word w = 0..3
+                for w_ in range(4):
+                    words[w_] |= ((d >> (24 * w_)) & 0xFFFFFF) << 48
             for w_, v in enumerate(words):
                 banked[w_ % 7][4 * p + w_ // 7] = v
         for jb in range(7):
-            (out / f'{inst}_c{k}_{jb}.viamap.hex').write_text(''.join(f'{w:0144x}\n' for w in encode_bank(banked[jb])))
+            (out / f'{inst}_c{k}_{jb}.viamap.hex').write_text(''.join(f'{w:0144x}\n' for w in encode_bank72(banked[jb])))
             names.append(f'{inst}_c{k}_{jb}.viamap.hex')
     # the bench's spine reads its phase / stream ROMs from OT_ROM_DIR (missing -> no go, no returns: XS 10-18 bench)
     for f in ('spine_phase.hex', 'spine_stream.hex'):
@@ -407,10 +500,27 @@ def write_images(field, qa, q, bf, inst, out):
     return names, tmp
 
 
+def encode_bank72(words):
+    """field_cfg7_image.encode_bank with the 24 spare columns (the BF programme descriptor): 72-bit rows"""
+    from field_cfg7_image import decode_bank
+    assert len(words) == 4096 and all(0 <= w < 1 << 72 for w in words)
+    phys = [0] * 512
+    for addr, word in enumerate(words):
+        b = 0
+        while word:
+            if word & 1:
+                phys[addr // 8] |= 1 << (8 * b + addr % 8)
+            word >>= 1
+            b += 1
+    if any(w >> 48 for w in words):
+        assert decode_bank(phys) == words
+    return phys
+
+
 def cmd_frame(a):
     import dv_layer_compile as C
     die = C.Die(C.die_tree(a.die_ref, a.die_src))
-    rec, field = compile_frame(die, a.frame, a.fixtures, a.ops or XS_OPS['L0'], iters=a.iters,
+    rec, field = compile_frame(die, a.frame, a.fixtures, a.ops or XS_OPS['L0'] + BF_OPS['L0'], iters=a.iters,
                                only=None if a.only is None else set(a.only))
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
@@ -429,7 +539,7 @@ def cmd_gen(a):
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
     die = C.Die(C.die_tree(a.die_ref, a.die_src))
-    rec, field = compile_frame(die, a.frame, a.fixtures, a.ops or XS_OPS['L0'], iters=a.iters)
+    rec, field = compile_frame(die, a.frame, a.fixtures, a.ops or XS_OPS['L0'] + BF_OPS['L0'], iters=a.iters)
     if a.phase:
         rc = 0
         for k_ in a.phase:
@@ -447,6 +557,8 @@ def gen_one(a, rec, field, ph, out):
     op = ph['op']
     k = ph['phase']
     fx = Fix(a.fixtures)
+    if ph['fmt'] == 'bf16':
+        return gen_bf(a, rec, field, ph, out, fx)
     grp = op_groups(fx, op)[ph['gi']]
     mat = make_mat(fx, grp, ph['sel'], op)
     names, tmp = write_images(field, rec['pairs'], rec['q_pairs'], rec['bf_pairs'], a.frame, out)
@@ -488,17 +600,94 @@ def gen_one(a, rec, field, ph, out):
     return 0
 
 
+def gen_bf(a, rec, field, ph, out, fx):
+    """bench vectors of one BF16 pair phase.  --bf-measure: the measurement vector (the bench build BF_LEGACY=1 issues
+    on the walker; no calendar claim, values checked); mutants: swap (two BF columns' ROM images exchanged), shift
+    (calendar +1 edge), desc (one pair's descriptor OFF 1 edge EARLY -> programme fault)"""
+    import xs_bf as XB
+    k = ph['phase']
+    plan = ph['plan']
+    measure = bool(getattr(a, 'bf_measure', False))
+    if a.mutant == 'desc':
+        p0 = ph['bf_pairs'][0]
+        slot = rec['slots'].index(p0)
+        v = field.bf_desc[k][slot]
+        off = (v >> 15) & 0xFF
+        field.bf_desc[k][slot] = (v & ~(0xFF << 15)) | ((off - 1) << 15)
+    names, tmp = write_images(field, rec['pairs'], rec['q_pairs'], rec['bf_pairs'], a.frame, out)
+    xsn = LX.xs_roms(tmp, out)
+    if a.mutant == 'swap':      # the first pair's two columns (rows 0 / 1; a 1-row phase: row 0 reads the empty column)
+        c1, c2 = f'e{ph["bf_pairs"][0]}w', f'e{ph["bf_pairs"][0]}e'
+    for n in names:
+        dst = 'f' + n[len(a.frame):]
+        if a.mutant == 'swap':
+            dst = re.sub(rf'^f_({c1}|{c2})(_\d)', lambda m: f'f_{c2 if m.group(1) == c1 else c1}{m.group(2)}', dst)
+        (out / dst).write_text((out / n).read_text())
+    rows = {}
+    for r in range(ph['rows']):
+        rows[r] = dict(vals=plan['rows_vals'][str(r)], acc=plan['acc'][r], bf16=plan['bf16'][r],
+                       src=[ph['mat'], ph['row_index'][r]], out_index=ph['tie'][r][1], tie=ph['tie'][r],
+                       tie_kind=ph['tie_kind'], seg=ph['seg'])
+    # the bench spine reads x at i_xbase 0: vm.hex = the phase's x slice (the die issues xbase = ph['xbase'])
+    xs_ = XB.x_of(XB.bf_groups(fx, ph['op'])[ph['gi']], rec['slice_index'])[ph['kseg'][0]:ph['kseg'][1]]
+    vm = [int(struct.unpack('<I', struct.pack('<f', float(v)))[0]) for v in np.asarray(xs_, dtype=np.float32)]
+    (out / 'vm.hex').write_text(''.join(f'{v:08x}\n' for v in vm))
+    pl = dict(ret=[list(w) for w in plan['ret']], faults=plan['faults'], ret_words=plan['ret_words'],
+              nodes=plan.get('nodes'), emission=plan.get('emission'), assign=plan['assign'], desc=ph['desc'])
+    if a.mutant == 'shift':
+        pl['ret'] = [[e + 1] + list(rest) for e, *rest in pl['ret']]
+    T = (max(w_[0] for w_ in pl['ret']) + 600) if pl['ret'] and not measure else 3000
+    meta = dict(op=ph['op'], field_phase=k, nphases=rec['nphases'], chunk=ph['chunk'], mat=ph['mat'], fmt='bf16',
+                calendar='bf_measure' if measure else ph['calendar'], elem_class=ph['elem_class'], shape=ph['shape'],
+                master=LX.base_master(rec['master']), die_frame=a.frame, die_master=rec['master'], lk=rec['lk'],
+                land_e=LX.land_e(rec['lk']), slice=rec['slice'], slice_index=rec['slice_index'],
+                frame_index=rec['frame_index'], K=ph['K'], kseg=ph['kseg'], xbase=ph['xbase'], seg=ph['seg'],
+                nseg=ph['nseg'], pairs=rec['pairs'], nrows=ph['rows'],
+                rows={str(r): v for r, v in rows.items()}, cycles=T, plan=pl, mutant=a.mutant, measure=measure,
+                bf=dict(pairs=ph['bf_pairs'], assign=ph['assign'], desc=ph['desc'],
+                        desc_images={str(rec['slots'][s]): f'{v:021x}' for s, v in field.bf_desc.get(k, {}).items()}),
+                fill=rec['fill'], fixture=dict(dir=str(a.fixtures), meta_sha256=sha((Path(a.fixtures) / 'meta.json').read_bytes())),
+                images={n: sha((out / n).read_bytes()) for n in names + xsn + ['spine_phase.hex', 'spine_stream.hex']})
+    (out / 'meta.json').write_text(json.dumps(meta, indent=1) + '\n')
+    (out / 'ARGS').write_text(f'+OT_ROM_DIR={out.resolve()} +T={T} +K={ph["kseg"][1] - ph["kseg"][0]} '
+                              f'+OPS={max(1, ph["rows"])} +PH={k}\n')
+    print(f'XS_PLACE_GEN {a.frame} op {ph["op"]} phase {k}/{rec["nphases"]} mat {ph["mat"]} BF16 rows {ph["rows"]} seg '
+          f'{ph["seg"]}/{ph["nseg"]} pairs {ph["bf_pairs"]} faults {pl["faults"]} ret_words {pl["ret_words"]} calendar '
+          f'{meta["calendar"]} shape {ph["shape"]} T {T} mutant {a.mutant}')
+    return 0
+
+
 def cmd_check(a):
     import hdc_golden_v41 as G
     d = Path(a.dir)
     meta = json.loads((d / 'meta.json').read_text())
-    errs, summ = LX.check_words(meta, Path(a.log).read_text())
+    log = Path(a.log).read_text()
+    errs, summ = LX.check_words(meta, log)
+    if meta.get('measure'):      # BF_LEGACY measurement run: values / tiling / faults only, the calendar is what it measures
+        errs = [e for e in errs if not e.startswith(('PLAN_MISMATCH', 'PLAN_FAULTS'))]
+    if meta['fmt'] == 'bf16':    # a BF phase computes ONE golden segment of every row: coverage = {seg}, exactly once
+        errs = [e for e in errs if not e.startswith('COVERAGE')]
+        from static_return_calendar import _f, norm
+        cov = {}
+        for m_ in re.finditer(r'^RET (\d+) ([0-9a-f]+)$', log, re.M):
+            w = int(m_.group(2), 16)
+            row19, lo, k_, n_ = _f(norm((w >> 1) & 0xFFFFFFFF))
+            cov.setdefault(row19 & 0x3FFF, []).extend(range(lo, min(lo + (1 << k_), n_)))
+        for r in meta['rows']:
+            if sorted(cov.get(int(r), [])) != [meta['seg']]:
+                errs.append(f'COVERAGE row {r} segments {sorted(cov.get(int(r), []))} want [{meta["seg"]}]')
+    errs += [l for l in re.findall(r'^BFP_BAD .*$', log, re.M)[:4]]
     fx = Fix(a.fixtures or meta['fixture']['dir'])
     tied = 0
     for r, v in meta['rows'].items():
         if not v['tie']:
             continue
         fb = int(G.bits(G.F(fx.op(v['tie'][0]).reshape(-1)[v['tie'][1]])))
+        if v.get('tie_kind') == 'fp32':
+            if fb != v['acc']:
+                errs.append(f'FIXTURE row {r} {v["tie"]} fixture {fb:08x} acc {v["acc"]:08x}')
+            tied += 1
+            continue
         acc_bf = int(G.bits(G.to_bf16(np.array([v['acc']], dtype=np.uint32).view(np.float32))[0])) >> 16
         if fb >> 16 != acc_bf or fb >> 16 != v['bf16'] or fb & 0xFFFF:
             errs.append(f'FIXTURE row {r} {v["tie"]} fixture {fb >> 16:04x} acc->bf16 {acc_bf:04x}')
@@ -549,14 +738,16 @@ def cmd_collect(a):
                          ret_edge_offsets_vs_plan=offs, witness=str(wit.relative_to(ROOT))))
     for r in runs:
         r['pass'] = r.pop('pass_')
-    base = [r for r in runs if not r['mutant'] and r['calendar'] == 'measured_class']
+    base = [r for r in runs if not r['mutant'] and r['calendar'] in ('measured_class', 'measured_shape',
+                                                                     'predicted_lane_shift')]
     muts = [r for r in runs if r['mutant']]
     rec = dict(schema='opentallas.s81_dv.bench_xsp.v1', bench='tools/s81_dv/layer_prog/xs/xs_bench.sh (+PH)',
                lowering='tools/s81_dv/layer_prog/xs_place.py', host=a.host, die_frame='u_f_0L00', runs=runs,
                base_pass=all(r['pass'] for r in base) and bool(base), mutants_fail=all(not r['pass'] for r in muts),
                measurements=[dict(name=r['name'], elem_class=r['elem_class'], offsets=r['ret_edge_offsets_vs_plan'],
                                   values_exact=not r['value_errors']) for r in runs
-                             if not r['mutant'] and r['calendar'] != 'measured_class'])
+                             if not r['mutant'] and r['calendar'] not in ('measured_class', 'measured_shape',
+                                                                              'predicted_lane_shift')])
     rec['pass'] = rec['base_pass'] and rec['mutants_fail'] and bool(muts)
     (res / 'check.json').write_text(json.dumps(rec, indent=1) + '\n')
     print(f'XS_PLACE_COLLECT pass={rec["pass"]} base={[(r["name"], r["pass"]) for r in base]} '
@@ -568,10 +759,12 @@ def cmd_collect(a):
 BENCHP = 'results/rtl/s81_layer_tput_1018/compiler/bench_xsp'
 BENCH_RECORDS = [BENCHP + '4', BENCHP + '2', BENCHP]   # bench_xsp4 = current field (per-segment terms legalised in)
 OPS = [r'^attn\.(wq_b|wo_a|wo_b|idx\.q|cmp\.wk)$', r'^ffn\.(router|shared_gu|experts_gu|down)$', r'^eng\.wkv$']
-REST = ('the slice xs CALENDAR images (75-b action words: stream requests, VM responses, cfg / launch / retire), the is_d '
-        'GO word per phase and the cap write-back cfg_d (row tag -> owning slice row) for the DV placement are not '
-        'emitted; no bench drives ot_s81sl_xs into a frame (the frame bench drives the frame through the w17w10 spine '
-        'with the same phase / stream words)')
+REST = ('per-phase slice xs programme (calendar action / time ROMs, is_d GO, gathers: xs_calendar.py gen) and cap cfg_d '
+        '(xs_calendar.py cap) are emitted and benched (bench_xs_slice: ot_s81sl_xs drives the frame, cycle-exact = plan + D); '
+        'open: xs_place frame images still tag rows phase-local 0..R-1 (the cap needs the rank-local row: gen --tags rank '
+        'proves the rewrite, the image writer must emit it), and the die-wide multi-phase xs calendar (all phases of the '
+        'layer + one gather per x vector in one calendar) is not compiled')
+XS_SLICE_BENCH = 'results/rtl/s81_layer_tput_1018/compiler/bench_xs_slice'
 
 
 def lower_placed(die, op, ctx):
@@ -587,6 +780,9 @@ def lower_placed(die, op, ctx):
     sl = ctx['slice']
     g = LX.slice_index(die, sl)
     rec['insts'] = die.frames_of(sl) + [sl]
+    import xs_bf as XB
+    if name in XB.BF_OPS:
+        return lower_placed_bf(die, op, ctx, rec, fx, sl, g)
     seq = phase_list(fx, [name])
     mats = []
     for gi, grp in enumerate(op_groups(fx, name)):
@@ -611,6 +807,50 @@ def lower_placed(die, op, ctx):
     miss = REST + ('' if bench else '; this op has no frame bench of its own (the placement compiler is benched on '
                    'another op of the same field)') + (f'; element-work term unmeasured for {unm} (calendar not '
                                                       'cycle-exact until one bench of that class)' if unm else '')
+    return dict(rec, status='PARTIAL', gap=dict(module='ot_s81sl_xs / ot_s81sl_cap', port='pq_calendar_action / '
+                                                'pq_calendar_time ROMs, is_d (GO ph np), cap cfg_d', missing=miss))
+
+
+BENCHB = 'results/rtl/s81_layer_tput_1018/compiler/bench_xsb'
+
+
+def lower_placed_bf(die, op, ctx, rec, fx, sl, g):
+    """a BF16 pair op (xs_bf.py): placed on the slice's frames' BF pairs; per frame and die-wide phase the shape key
+    (master, lane latency, K, nseg, rows) is MEASURED (xs_bf.MEAS: programme descriptors + emission) or not"""
+    import frame_bench as B
+    import xs_bf as XB
+    name = op['op']
+    meas = XB.load_meas()
+    rec = dict(rec, unit='frames: BF pairs (dsfd_bf_front_roots + 2 dsfd_bf_col, cfg7_seq_bfp static programme in the cfg '
+                          'spare columns) + frame return plan + slice xs phase / stream ROMs', bench=BENCHB)
+    seq = bf_phase_list(fx, [name], XB.BF_PAIRS_DIE)
+    frames = []
+    unm = set()
+    for j, fr in enumerate(die.frames_of(sl)):
+        master, E = LX.base_master(die.inst[fr]['master']), LX.land_e(die.strap(fr, 'lk'))
+        _, bfp = B.frame_pairs(master)
+        key = XB.shape_key(master, E)
+        _, how = XB.meas_for(meas, master, E)
+        if how is None:
+            unm.add(key)
+        rows = [len(XB.bf_groups(fx, op_)[gi]['groups'][g][j][c * R:(c + 1) * R]) for op_, gi, c, s, n, R, most in seq]
+        frames.append(dict(frame=fr, master=master, land_e=E, bf_pairs=bfp, shape=key, calendar=how or 'calendar_unmeasured',
+                           phases=len(seq), rows_per_phase=rows))
+    bench = None
+    bp = ROOT / BENCHB / 'check.json'
+    if bp.exists():
+        b = json.loads(bp.read_text())
+        bench = next((dict(r, record=BENCHB) for r in b.get('runs', []) if r['op'] == name and r.get('pass')
+                      and not r.get('mutant') and not r.get('measure')), None)
+    rec['files'] = {f'prog/xs/{op["id"]}.json': json.dumps(dict(
+        schema='opentallas.s81_dv.xs_place_bf.v1', op=op, slice=sl, slice_index=g, phases_die_wide=len(seq),
+        frames=frames, bench=bench, measured_shapes=sorted({f['shape'] for f in frames} - unm),
+        unmeasured_shapes=sorted(unm),
+        images='python3 tools/s81_dv/layer_prog/xs_place.py frame --frame <inst> --out DIR (BF phases appended after '
+        'the FP8 / FP4 phases; gen --op OP for one phase\'s bench vectors)'), indent=1) + '\n'}
+    miss = REST + ('' if bench else '; no production frame bench PASS of this op yet') + (
+        f'; programme / emission unmeasured for shapes {sorted(unm)} (BF_LEGACY measurement run of each shape owed)'
+        if unm else '')
     return dict(rec, status='PARTIAL', gap=dict(module='ot_s81sl_xs / ot_s81sl_cap', port='pq_calendar_action / '
                                                 'pq_calendar_time ROMs, is_d (GO ph np), cap cfg_d', missing=miss))
 
@@ -644,7 +884,8 @@ def main(argv=None):
     g.add_argument('--die-src', default=None)
     g.add_argument('--ops', nargs='*')
     g.add_argument('--iters', type=int, default=LX.ITERS)
-    g.add_argument('--mutant', choices=('swap', 'shift'), default=None)
+    g.add_argument('--mutant', choices=('swap', 'shift', 'desc'), default=None)
+    g.add_argument('--bf-measure', action='store_true', help='BF phase: measurement vector (BF_LEGACY bench build)')
     c = sp.add_parser('check')
     c.add_argument('--dir', required=True)
     c.add_argument('--log', required=True)
