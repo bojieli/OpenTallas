@@ -2099,20 +2099,20 @@
   },
   {
    "design": "r25gq",
-   "unit": "HBM d4g plan (b) as built (two rings + QBG + RTL1/2 ledger latencies) vs plan (b) model",
+   "unit": "HBM d4g plan (b) as built (two rings + QBG + measured COLL gather master spans + ISA ring-A +2 + RTL1/2 ledger latencies) vs plan (b) model",
    "group": "HBM.D4G_PLAN_B",
-   "measured": 1905.4,
+   "measured": 1849.2,
    "price": 1978.4,
    "unit_of_measure": "tok/s (DS AR)",
-   "unit_ratio": 1.0383,
-   "e2e_loss_pct": 3.69,
+   "unit_ratio": 1.0699,
+   "e2e_loss_pct": 6.59,
    "binding_workload": "ds_ar",
    "per_workload": {
     "ds_ar": {
-     "model": "d4g_2ring_qbg priced vs plan (b) model (tools/hgi_sim price_rtl3c)",
+     "model": "collq (d4g_2ring_qbg + ag_collq measured gather-master spans + ra_extra 2) vs plan (b) model (tools/hgi_sim/d4g_collq_price_1018.py)",
      "base_tok_s": 1978.4,
-     "tok_s": 1905.4,
-     "e2e_loss_pct": 3.69,
+     "tok_s": 1849.2,
+     "e2e_loss_pct": 6.53,
      "blocking": true
     },
     "qwen_ar": {
@@ -2125,20 +2125,24 @@
      "evidence": "results/rtl/hbm_qwen_layer_tput_1018/price_per_layer.json"
     },
     "ds_mtp": {
-     "model": "d4g_2ring_qbg priced vs plan (b) model",
+     "model": "collq (d4g_2ring_qbg + ag_collq measured gather-master spans + ra_extra 2) vs plan (b) model (tools/hgi_sim/d4g_collq_price_1018.py)",
      "base_tok_s": 3370.7,
-     "tok_s": 3258.7,
-     "e2e_loss_pct": 3.32,
+     "tok_s": 3148.5,
+     "e2e_loss_pct": 6.59,
      "blocking": false,
      "rule": "owner: MTP is recorded, not blocking"
     }
    },
-   "within_unit_limit": true,
-   "evidence": "results/arch/hbm_d4g_price_1017/price5/summary.json",
-   "evidence_grade": "interim_log",
+   "within_unit_limit": false,
+   "evidence": "results/arch/hbm_d4g_price_1017/collq/price_collq.json results/arch/hbm_d4g_price_1017/price5/summary.json",
+   "evidence_grade": "committed_bench",
    "date": "2026-10-18",
-   "status": "proposed",
-   "note": "d4g_2ring_qbg (price_rtl3c, claude/hbm-price5-1018 b98e4492e; results/arch/hbm_d4g_price_1017/price.json) vs b_plan (plan (b) model without d4g adders): DS AR 1905.4 vs 1978.4 (-3.69 %), DS MTP 3258.7 vs 3370.7 (-3.32 %), Qwen 946.2 vs 955.2 (-0.94 %). Owner rule: MTP is recorded but not blocking (binding = DS AR). Priced model, not a bench: interim grade until die runs measure it. ROOT-0510 2026-10-18.  RE-BASE 2026-10-18 (coordinator 0he): HBM-Qwen price of record = 948.8 tok/s, the real compiled 8-die D4G8 programme with landed half-cycle hops (was 946.2 = TP-4 programme under a split transform). D4G8 down_proj = whole TP-4 slice-j partial per row half after the SwiGLU ALL_GATHER + GROUP_REDUCE_MCAST s4 in j order: bit-identical to the qwen_r25 golden. An EVEN 8-way down_proj K split (1,536/die) is NOT ALLOWED: it changes the golden rounding (1,899/4,096 down and 1,077/4,096 x_out elements of L0 differ, proof_L0.json numerics_witness); any Qwen d4g RTL/compiler work must use D4G8."
+   "status": "accepted",
+   "note": "d4g_2ring_qbg (price_rtl3c, claude/hbm-price5-1018 b98e4492e; results/arch/hbm_d4g_price_1017/price.json) vs b_plan (plan (b) model without d4g adders): DS AR 1905.4 vs 1978.4 (-3.69 %), DS MTP 3258.7 vs 3370.7 (-3.32 %), Qwen 946.2 vs 955.2 (-0.94 %). Owner rule: MTP is recorded but not blocking (binding = DS AR). Priced model, not a bench: interim grade until die runs measure it. ROOT-0510 2026-10-18.  RE-BASE 2026-10-18 (coordinator 0he): HBM-Qwen price of record = 948.8 tok/s, the real compiled 8-die D4G8 programme with landed half-cycle hops (was 946.2 = TP-4 programme under a split transform). D4G8 down_proj = whole TP-4 slice-j partial per row half after the SwiGLU ALL_GATHER + GROUP_REDUCE_MCAST s4 in j order: bit-identical to the qwen_r25 golden. An EVEN 8-way down_proj K split (1,536/die) is NOT ALLOWED: it changes the golden rounding (1,899/4,096 down and 1,077/4,096 x_out elements of L0 differ, proof_L0.json numerics_witness); any Qwen d4g RTL/compiler work must use D4G8. RE-PRICE 2026-10-18 (HBM-COLLQ c8d42a3a4, tools/hgi_sim/d4g_collq_price_1018.py): MEASURED per-quadrant COLL gather master (rtl ot_hgi_coll_gq, bench tb_hgi_coll_gq PASS on Verilator 5.050; gq_land CLOSED 44e16c567) replaces the ring-schedule model: DS AR 1905.4 -> 1849.2 (-6.53 %), DS MTP 3258.7 -> 3148.5 (-6.59 %); Qwen stays at the D4G8 re-base 948.8 (collq Qwen delta 0 vs ring model). Attribution: gather spans -2.92 % AR (no gather pipeline in the model, canonical 3-hop vs 2-hop MODE 1), ring-A +2 -0.03 %. e2e_loss_pct = worst workload per the ledger check rule (6.59 %, DS MTP); the owner budget counts DS AR only (6.53 %). The 2-hop MODE-1 gather schedule recovery is NOT pursued now (coordinator 0gm: closure first, only significant gains).",
+   "share_basis": "modelled",
+   "accepted_date": "2026-10-18",
+   "owner_exception": "OWNER 10-18 02:15 (HBM d4g budget counts DS AR only; MTP recorded, not blocking) + OWNER 10-18 03:50 (HBM accepts > 15 % AR loss rather than changing numerics): DS AR -6.53 % accepted above the 5 %/unit limit",
+   "acceptance_note": "coordinator 0gm 10-18 ~07:30: HBM-COLLQ2 as-built price (DS AR 1849.2, -6.53 %; MTP -6.59 % recorded; Qwen 948.8) accepted under the owner rules; merged by ROOT-1945 with the gq_land record 44e16c567. Written directly: accepted_cost.py accept short-circuits on unit_ratio 1.0699 <= 1.10 ('qualifies'), but the e2e rate loss is over the 5 % unit limit, so the owner exception is recorded."
   },
   {
    "design": "r25gq",
@@ -2626,14 +2630,14 @@
    "superseded_pct_not_counted": 24.435
   },
   "r25gq": {
-   "accepted_pct": 0.895,
-   "proposed_pct": 119.337,
-   "accepted_plus_proposed_pct": 120.232,
+   "accepted_pct": 7.485,
+   "proposed_pct": 115.647,
+   "accepted_plus_proposed_pct": 123.132,
    "limit_pct": 15.0,
-   "accepted_rows": 1,
-   "proposed_rows": 24,
-   "headroom_pct": 14.105,
-   "owner_exception_rows": 0,
+   "accepted_rows": 2,
+   "proposed_rows": 23,
+   "headroom_pct": 7.515,
+   "owner_exception_rows": 1,
    "over_limit_by_owner_exception": false,
    "superseded_rows": 0,
    "superseded_pct_not_counted": 0
