@@ -13,3 +13,5 @@ Safe-design checklist before gate:
 6 Macro at43.2,43.2 on lattice;174.12x29.736 macro,10.8halo. Outline aspect2.0, full-width cell channels. Width is set by smallest existing1R1W macro and halo; spare array capacity makes aggregate fill lower than40%. Std estimate2400from HSLOT2 synth2312, conservative until synthesis. Density/PNG review pending gate.
 7 PASS io_hold.03, reset2. Measured CTS spread pending.
 8 PASS zero additional output edges, static calendar preserved.
+
+Gate 08:02: WARN zero failures; TT setup +114.1ps, hold +40.48ps, TT/FF pinspread 53.1/48.9ps, insertion 306.6/256.3ps,2424sinks,GRT0,M2 8.51%. Floorplan/density viewed; macro/lattice/bands sound, W register mass no hot-red density. Parent must match boundary insertion. Full SEQHOST_MU_GATE PASS including AR46/MTP11users, user0 cycle+bit exact, faultcases, mutants1/2/5 detected, MU_HOST_GATE and MU_HWIN_GATE PASS.

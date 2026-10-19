@@ -4,7 +4,7 @@
 # -Wno-MODMISSING, as the kit lint stage.  cwd = repo root.
 set -u; O=${1:?outdir}; mkdir -p $O
 V=verilator; [ -x ~/.local/opentallas-tools/verilator-5.050/bin/verilator ] && V=~/.local/opentallas-tools/verilator-5.050/bin/verilator
-S="rtl/lib/ot_rst_relay.sv rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv
+S="physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v rtl/lib/ot_rst_relay.sv rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv
  rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep_mu.sv rtl/dsrom_sys/s81_dv/slice/dsdv_mu_land.sv
  rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hslot.sv rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin.sv rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dvh.sv
  physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v"
