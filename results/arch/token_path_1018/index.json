@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.token_compose_xdie.v1.index",
- "generated_from": "47c0b67c4",
+ "generated_from": "1eadb631d",
  "tool": "tools/token_compose_xdie.py",
  "clock_hz": 1200000000.0,
  "formula": "T_token = sum_l n_l C_die(l) + sum_l n_l sum_x max(0, E_meas(x) - O_meas(l,x)); tok/s = f_clk / T (MTP: per accepted token = step / tau)",
@@ -274,24 +274,24 @@
   "hbm_gen_ds": {
    "ar": {
     "title": "HBM d4g GEN2 die, DeepSeek-V4.1 (TP96 x quadrants), 1M context, AR",
-    "tok_s": 1681.5,
-    "T_token_cycles": 713645.2,
-    "per_accepted_cycles": 713645.2,
+    "tok_s": 1243.6,
+    "T_token_cycles": 964977.0,
+    "per_accepted_cycles": 964977.0,
     "tau": null,
-    "pct_measured_current_rtl": 20.68,
-    "banner": "20.7% of token cycles measured on current RTL (0.0% on older RTL, 7.1% modelled PHY, 72.2% priced)",
+    "pct_measured_current_rtl": 13.42,
+    "banner": "13.4% of token cycles measured on current RTL (0.0% on older RTL, 5.3% modelled PHY, 81.3% priced)",
     "by_grade": {
-     "measured-current-RTL": 147615.6,
+     "measured-current-RTL": 129506.6,
      "measured-old-RTL": 0,
      "modelled-PHY": 50881.6,
-     "priced": 515148.0
+     "priced": 784588.8
     },
     "price_of_record": {
      "tok_s": 1905.4,
      "cycles": 629775.1,
      "source": "results/arch/token_path_1018/inputs/hbm_ds_priced_layers_all.json"
     },
-    "vs_price_pct": -11.75
+    "vs_price_pct": -34.74
    },
    "mtp": {
     "title": "HBM d4g GEN2 die, DeepSeek-V4.1, 1M context, MTP (priced only)",
@@ -344,6 +344,39 @@
   }
  },
  "multi_user": {
-  "ds_rom": {}
+  "ds_rom": {
+   "ar": {
+    "available": true,
+    "users": 46,
+    "fillers": 0,
+    "per_user_tok_s": 1217.2,
+    "aggregate_tok_s": 55991,
+    "slot_cycles": 21313.7,
+    "period_cycles": 980428,
+    "dies": 520,
+    "stacks": 520,
+    "total_mm2": 478504,
+    "model_users": 47,
+    "calendar_per_user_tok_s": 1224.0,
+    "record": "results/arch/mu_s81_1018/calendar_ar.json",
+    "grade": "per-user: this composition; users: modelled calendar"
+   },
+   "mtp": {
+    "available": true,
+    "users": 10,
+    "fillers": 1,
+    "per_user_tok_s": 3622.2,
+    "aggregate_tok_s": 37093,
+    "slot_cycles": 124524,
+    "period_cycles": 1303400,
+    "dies": 520,
+    "stacks": 520,
+    "total_mm2": 478504,
+    "model_users": 10,
+    "calendar_per_user_tok_s": 3829.1,
+    "record": "results/arch/mu_s81_1018/calendar_mtp.json",
+    "grade": "per-user: this composition; users: modelled calendar"
+   }
+  }
  }
 }

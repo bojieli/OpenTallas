@@ -39990,5 +39990,38 @@
    ]
   }
  },
- "multi_user": {}
+ "multi_user": {
+  "ar": {
+   "available": true,
+   "users": 46,
+   "fillers": 0,
+   "per_user_tok_s": 1217.2,
+   "aggregate_tok_s": 55991,
+   "slot_cycles": 21313.7,
+   "period_cycles": 980428,
+   "dies": 520,
+   "stacks": 520,
+   "total_mm2": 478504,
+   "model_users": 47,
+   "calendar_per_user_tok_s": 1224.0,
+   "record": "results/arch/mu_s81_1018/calendar_ar.json",
+   "grade": "per-user: this composition; users: modelled calendar"
+  },
+  "mtp": {
+   "available": true,
+   "users": 10,
+   "fillers": 1,
+   "per_user_tok_s": 3622.2,
+   "aggregate_tok_s": 37093,
+   "slot_cycles": 124524,
+   "period_cycles": 1303400,
+   "dies": 520,
+   "stacks": 520,
+   "total_mm2": 478504,
+   "model_users": 10,
+   "calendar_per_user_tok_s": 3829.1,
+   "record": "results/arch/mu_s81_1018/calendar_mtp.json",
+   "grade": "per-user: this composition; users: modelled calendar"
+  }
+ }
 }
