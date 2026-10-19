@@ -843,3 +843,126 @@ class PinRegWrapperNames(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+# ---------------------------------------------------------------------------------------------------------------------
+# Merged online chains (HKV-HRADM3 10-19, qkd_hr_cdc_host/pc r5 'missing actual synchronised pointer crossing f1 ronl'):
+# a core -> host and a host -> core ot_qwen_async_fifo_w on the same two clocks and resets.  u_ch's wr_online chain
+# (core launch, host stages) and u_hc's rd_online chain are bit-identical; synthesis' opt_merge keeps one of them.
+MERGE_FIXTURE = r'''
+module gm_fix (input ck_core, input ck_host, input rst_core_n, input rst_host_n,
+  input c_wr, input [3:0] c_wd, output c_ready, output reg [3:0] h_q, output reg h_v,
+  input h_wr, input [3:0] h_wd, output h_ready, output reg [3:0] c_q, output reg c_v);
+  wire hv, cv; wire [3:0] hd, cd;
+  ot_qwen_async_fifo_w #(.WIDTH(4), .DEPTH(4)) u_ch (
+    .wr_clk(ck_core), .wr_rst_n(rst_core_n), .wr_valid(c_wr), .wr_ready(c_ready), .wr_data(c_wd), .wr_overflow(),
+    .rd_clk(ck_host), .rd_rst_n(rst_host_n), .rd_valid(hv), .rd_ready(1'b1), .rd_data(hd), .rd_underflow());
+  ot_qwen_async_fifo_w #(.WIDTH(4), .DEPTH(4)) u_hc (
+    .wr_clk(ck_host), .wr_rst_n(rst_host_n), .wr_valid(h_wr), .wr_ready(h_ready), .wr_data(h_wd), .wr_overflow(),
+    .rd_clk(ck_core), .rd_rst_n(rst_core_n), .rd_valid(cv), .rd_ready(1'b1), .rd_data(cd), .rd_underflow());
+  always @(posedge ck_host) if (hv) h_q <= hd;
+  always @(posedge ck_host or negedge rst_host_n) if (!rst_host_n) h_v <= 1'b0; else h_v <= hv;
+  always @(posedge ck_core) if (cv) c_q <= cd;
+  always @(posedge ck_core or negedge rst_core_n) if (!rst_core_n) c_v <= 1'b0; else c_v <= cv;
+endmodule
+'''
+M_INS = dict(core=['rst_core_n', 'c_wr', 'c_wd'], host=['rst_host_n', 'h_wr', 'h_wd'])
+M_OUTS = dict(core=['c_ready', 'c_q', 'c_v'], host=['h_ready', 'h_q', 'h_v'])
+
+
+def merge_spec():
+    ports = dict(core='ck_core', host='ck_host')
+    return dict(name='gm_fix', top='gm_fix', kind='tile', sources=REVIEWED + ['gm_fix.sv'], params={},
+                clock='multiple_cts_roots', clock_port='ck_core', clock_ports=['ck_core', 'ck_host'],
+                clock_data_paths='reviewed_gray_fifos',
+                clock_relationship=dict(kind='independent_clock_families', periods_ps=dict(core=833.333, host=1000.0)),
+                clock_entry_domains={n: dict(ratio=G.family_ratio(n), ports=[ports[n]], inputs=M_INS[n],
+                                             outputs=M_OUTS[n]) for n in ('core', 'host')})
+
+
+def merge_sta_case(root, out, name):
+    paths = ' '.join(str(root / f) for f in merge_spec()['sources'])
+    synth = (f'read_verilog -sv -DSYNTHESIS {paths}; hierarchy -check -top gm_fix; '
+             f'synth -top gm_fix -flatten -noabc; dffunmap; abc -g simple; clean; write_json {out / "fix.json"}')
+    p = subprocess.run([YOSYS, '-Q', '-T', '-p', synth], text=True, capture_output=True)
+    if p.returncode:
+        raise AssertionError(p.stdout + p.stderr)
+    data = json.loads((out / 'fix.json').read_text())
+    m = data['modules']['gm_fix']
+    (out / 'probe.lib').write_text(fixture_lib(m))
+    online = sorted(n for n in m['netnames'] if 'online' in n and not m['netnames'][n].get('hide_name'))
+    q_of = {n: m['netnames'][n]['bits'][0] for n in online}
+    flops = {c['connections']['Q'][0]: c for c in m['cells'].values() if c['type'].startswith('$_DFF')}
+    if name == 'merged_partner_broken':
+        # the surviving shared chain's stage 1 samples a host register instead of the core online flag
+        src = [n for n in online if n.endswith('wr_online') or n.endswith('rd_online')]
+        stage1 = [n for n in online if n.endswith('_r1') or n.endswith('_w1')]
+        mutated = []
+        for s1 in stage1:
+            f = flops.get(q_of[s1])
+            if f is None:
+                continue
+            for s in src:
+                if f['connections']['D'] == [q_of[s]] and any(x['connections']['Q'] == [q_of[s]] for x in flops.values()):
+                    f['connections']['D'] = [m['netnames']['h_v']['bits'][0]]
+                    mutated.append(s1)
+        assert mutated, online
+    jp, vp = out / f'{name}.json', out / f'{name}.v'
+    jp.write_text(json.dumps(data))
+    p = subprocess.run([YOSYS, '-Q', '-T', '-p', f'read_json {jp}; write_verilog -noattr -noexpr {vp}'],
+                       capture_output=True, text=True)
+    if p.returncode:
+        raise AssertionError(p.stdout + p.stderr)
+    s = merge_spec()
+    generated = C.generate(s, root).rsplit('\not_ce_apply\n', 1)[0]
+    ins, outs = [], []
+    for table, acc in ((M_INS, ins), (M_OUTS, outs)):
+        for domain, names in table.items():
+            for n in names:
+                w = len(m['ports'][n]['bits'])
+                acc += [f'{{{n}}} {domain}'] if w == 1 else [f'{{{n}[{i}]}} {domain}' for i in range(w)]
+    body = (f'read_liberty {{{out}/probe.lib}}\nread_verilog {{{vp}}}\nlink_design gm_fix\n'
+            + C.clocks(s, 833.333) + generated
+            + f'\nset ins [dict create {" ".join(ins)}]\nset outs [dict create {" ".join(outs)}]\n'
+            + 'if {[catch {ot_ce_leaf_ownership $ins $outs} message]} {puts stderr $message; exit 1}\n'
+            + 'puts ACTUAL_GF_GRAPH_PASS\nexit 0\n')
+    tp = out / f'{name}.tcl'
+    tp.write_text(body)
+    p = subprocess.run([STA, '-exit', str(tp)], text=True, capture_output=True)
+    return p.returncode, p.stdout + p.stderr, online
+
+
+@unittest.skipUnless(Path(YOSYS).exists() and Path(STA).exists(), 'Yosys 0.68 and OpenSTA fixture tools required')
+class MergedOnline(unittest.TestCase):
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.root = Path(self.tmp.name)
+        for f in REVIEWED:
+            (self.root / f).parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy(ROOT / f, self.root / f)
+        (self.root / 'gm_fix.sv').write_text(MERGE_FIXTURE)
+
+    def tearDown(self):
+        self.tmp.cleanup()
+
+    def test_merged_online_chain_admitted_once(self):
+        out = self.root / 'sta'
+        out.mkdir()
+        rc, log, online = merge_sta_case(self.root, out, 'normal')
+        self.assertEqual(rc, 0, log)
+        self.assertIn('ACTUAL_GF_GRAPH_PASS', log)
+        self.assertIn('OT_GF STRUCTURAL_PASS', log)
+        # synthesis merged the two same-direction online chains (the fixture is the qkd_hr_cdc_host shape) ...
+        self.assertEqual(log.count('OT_GF MERGED_ONLINE'), 2, log)
+        # ... and every surviving online chain is bounded; pointers are never admitted by the merge rule
+        self.assertEqual(log.count('src wonl -> sync1') + log.count('src ronl -> sync1'), 2, log)
+        self.assertEqual(log.count('src wptr -> sync1'), 6, log)
+        self.assertEqual(log.count('src rptr -> sync1'), 6, log)
+
+    def test_broken_partner_refused(self):
+        out = self.root / 'sta'
+        out.mkdir()
+        rc, log, _ = merge_sta_case(self.root, out, 'merged_partner_broken')
+        self.assertNotEqual(rc, 0, log)
+        self.assertNotIn('ACTUAL_GF_GRAPH_PASS', log)
+        self.assertIn('OT_GF:', log)
