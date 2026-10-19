@@ -89,12 +89,20 @@ for name in ('dsdv_mu_mem.sv','dsdv_mu_mem_early_capture.sv'):
     (out/name).write_text(projected)
     (out/(name+'.diff')).write_text(''.join(difflib.unified_diff(src.splitlines(True),projected.splitlines(True),fromfile=name,tofile='parser/'+name)))
     records.append({'source':str(u/name),'source_sha256':hashlib.sha256(src.encode()).hexdigest(),'projected_sha256':hashlib.sha256(projected.encode()).hexdigest(),'change':'exact declaration split to same-width nets and identical continuous assignment; no other edits'})
+name='dsdv_mu_hwin.sv';src=(u/name).read_text()
+decl='    wire [6:0] global_count;\n'
+anchor='    localparam integer PTR_CTL=(NSLOT+7)/8;\n'
+if src.count(decl)!=1 or src.count(anchor)!=1: raise SystemExit('REFUSE HWIN declaration reorder matchcount')
+projected=src.replace(decl,'').replace(anchor,anchor+decl)
+(out/name).write_text(projected)
+(out/(name+'.diff')).write_text(''.join(difflib.unified_diff(src.splitlines(True),projected.splitlines(True),fromfile=name,tofile='parser/'+name)))
+records.append({'source':str(u/name),'source_sha256':hashlib.sha256(src.encode()).hexdigest(),'projected_sha256':hashlib.sha256(projected.encode()).hexdigest(),'change':'single global_count wire declaration moved before generate use; no expression or statement changed'})
 (out/'parser_projection.json').write_text(json.dumps(records,indent=2)+'\n')
 PYPROJECT
  projected_files=()
  for file in "${files[@]}"; do
   case "$file" in
-   "$U/dsdv_mu_mem.sv"|"$U/dsdv_mu_mem_early_capture.sv") projected_files+=("$O/four_state/$(basename "$file")");;
+   "$U/dsdv_mu_mem.sv"|"$U/dsdv_mu_mem_early_capture.sv"|"$U/dsdv_mu_hwin.sv") projected_files+=("$O/four_state/$(basename "$file")");;
    *) projected_files+=("$file");;
   esac
  done
@@ -129,6 +137,32 @@ SVPROBE
  iverilog -g2012 -s tb_dsdv_mu_hwin_early_capture -DOT_MEM_NO_INIT -DFOUR_STATE_GUARDS \
   -DNSLOT_TEST=2 -DNEV=1 -DMIN_D -DOCCUPIED_RESET_STRESS -o "$O/four_state/tb.vvp" "${projected_files[@]}" \
   > "$O/four_state/build.log" 2>&1
+ python3 - "$O/four_state/tb.vvp" "$O/four_state/binding_audit.json" <<'PYBIND'
+import json,pathlib,re,sys
+text=pathlib.Path(sys.argv[1]).read_text()
+parents=set(re.findall(r'\.net "global_count", 6 0, (\w+);',text))
+checks=[]
+for chunk in re.split(r'(?=S_\w+ \.scope )',text):
+    if not re.match(r'S_\w+ \.scope module, "u_cr[lm]" ',chunk):continue
+    m=re.search(r'\.net "count", 6 0, (\w+);',chunk)
+    checks.append({'scope':chunk.splitlines()[0],'driver':m.group(1) if m else None,'bound_parent':bool(m and m.group(1) in parents)})
+if len(parents)!=2 or len(checks)!=12 or not all(x['bound_parent'] for x in checks):raise SystemExit('REFUSE incorrect parent global_count binding')
+pathlib.Path(sys.argv[2]).write_text(json.dumps({'parent_drivers':sorted(parents),'count_ports':checks,'verdict':'PASS'},indent=2)+'\n')
+PYBIND
+ if grep -q 'Port 1 (count).*got 1' "$O/four_state/build.log"; then echo 'REFUSE count widthwarning'; exit 1; fi
+ # Bounded 5.050 original/projected source trace equivalence under identical input/reset/seed.
+ for variant in original projected; do
+  selected=("${files[@]}"); [[ "$variant" != projected ]] || selected=("${projected_files[@]}")
+  verilator --binary --timing --x-initial unique --x-assign unique -j "${OT_THREADS:-8}" -Wno-fatal -Wno-WIDTH -Wno-lint -Wno-style \
+   +define+OT_MEM_NO_INIT +define+NSLOT_TEST=2 +define+NEV=1 +define+MIN_D +define+OCCUPIED_RESET_STRESS \
+   --top-module tb_dsdv_mu_hwin_early_capture "${selected[@]}" --Mdir "$O/four_state/obj_$variant" -o tb > "$O/four_state/build_equiv_$variant.log" 2>&1
+  for seed in 1 19 313; do
+   "$O/four_state/obj_$variant/tb" +verilator+rand+reset+2 +verilator+seed+$seed > "$O/four_state/equiv_${variant}_seed$seed.log" 2>&1
+   grep -q '^MUWIN PASS' "$O/four_state/equiv_${variant}_seed$seed.log"
+   grep -E '^(KU |MUWIN |EARLY_RESET |EARLY_MITER )' "$O/four_state/equiv_${variant}_seed$seed.log" > "$O/four_state/equiv_${variant}_seed$seed.trace"
+  done
+ done
+ for seed in 1 19 313; do cmp "$O/four_state/equiv_original_seed$seed.trace" "$O/four_state/equiv_projected_seed$seed.trace"; done
  for phase in 0 1 2 3 4 5 6 7 8 90 93; do
   log="$O/four_state/run_phase${phase}.log"
   vvp "$O/four_state/tb.vvp" +reset_phase=$phase > "$log" 2>&1
