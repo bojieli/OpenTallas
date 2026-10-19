@@ -1,0 +1,8 @@
+SU_PROGRAMME_PART_MISMATCH t=45587000 valid=1/1 edge=0/0 done=0/0 busy=1/1 fault=0/0 cmd_eq=0
+SU_PROGRAMME_PART_MISMATCH t=45597000 valid=1/1 edge=1/1 done=0/0 busy=1/1 fault=0/0 cmd_eq=0
+SU_PROGRAMME_PART_MISMATCH t=45607000 valid=1/1 edge=2/2 done=0/0 busy=1/1 fault=0/0 cmd_eq=0
+SU_PROGRAMME_PART_MISMATCH t=45617000 valid=1/1 edge=3/3 done=0/0 busy=1/1 fault=0/0 cmd_eq=0
+[51626000] %Fatal: tb_hnx_su_programme_rc.sv:80: Assertion failed in tb_hnx_su_programme_rc: SU_PROGRAMME_PART FAIL mismatches=578 active=592 of 592 checked=613
+%Error: rtl/hbm_next/su/tb/tb_hnx_su_programme_rc.sv:80: Verilog $stop
+Aborting...
+RUN_RC=1

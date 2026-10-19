@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hnx_coll_gq_land",
+ "enable": false,
+ "reason": "every input is captured by a flop at the pin and every output is a flop Q in the RTL (gather master stage table, tools/hgi_sim/collq_gather_1018.py); automatic pin registers would add an unpriced edge"
+}

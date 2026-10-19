@@ -1,0 +1,137 @@
+{
+ "schema": "opentallas.hbm_next.lane_geometry.v1",
+ "lane": "HBM-NEXT-ATT4",
+ "date": "2026-10-19",
+ "status": "STEP 3 (2026-10-19): A1 decided = SHARED 4-lane merge (hnx_rp4a4_spvm, one a BF16 column, replaces the release's one merge a column); turn pre-decoded (timing fix), outline shrunk to util 0.55; --cts gate running (ot-epyc7). hnx_rp4a4 leaf composition waits for hnx_rp4lp4 (SM4).",
+ "per_leaf": {
+  "what_att4_adds_to_hnx_rp4lp4": "per BF16 column leaf: 4 query lanes; lane 0 = the P=1 merge, lanes 1..3 add 3 x hnx_rp4a4_pvm (ot_hnx_att4_pvm: per-lane PV binary-counter merge on its own 64x512 stack macro, PUBLISH=1); per-lane flags/x word come from the SM front (ot_hnx_att4_issue: lane mask store 256 x 4 b, per-lane ordinals, 4 x-stores)",
+  "leaves_per_sm": 32,
+  "sms_per_die": 16,
+  "added_pvm_per_die": 1536,
+  "lane_chunk_sum_bus_bits_per_pvm": 512,
+  "publication_bits_per_pvm": 57
+ },
+ "tiles": {
+  "hnx_rp4a4_pvm": {
+   "top": "ot_hnx_att4_pvm",
+   "outline_um": [
+    216.0,
+    237.6
+   ],
+   "macros": [
+    {
+     "view": "ot_sram_1r1w_64x512_m1_r2c2",
+     "size_um": [
+      171.288,
+      77.76
+     ],
+     "at": [
+      22.464,
+      25.92
+     ]
+    }
+   ],
+   "pins": {
+    "N": {
+     "ports": [
+      "clk",
+      "rst_n",
+      "ev",
+      "sum[511:0]",
+      "tag_d[15:0]",
+      "pub_start",
+      "pub_slot[2:0]",
+      "fold_start",
+      "fold_a[2:0]",
+      "fold_b[2:0]"
+     ],
+     "bits": 543,
+     "per_um": 2.51
+    },
+    "S": {
+     "ports": [
+      "pub_v",
+      "pub_data[31:0]",
+      "pub_word[3:0]",
+      "pub_out_slot[2:0]",
+      "pub_tag[15:0]",
+      "fault"
+     ],
+     "bits": 57,
+     "per_um": 0.26
+    }
+   },
+   "pin_registers": "RTL registers every data pin (+1 edge in, +1 edge out)",
+   "kit": "physical/ref_tile/hnx_rp4a4_pvm (ref_tile tool hard-codes physical/ref_tile/; spec physical/hbm_next/att4/hnx_rp4a4_pvm.json)"
+  },
+  "hnx_rp4a4_spvm": {
+   "top": "ot_hnx_att4_spvm",
+   "outline_um": [
+    250.56,
+    250.56
+   ],
+   "macros": [],
+   "synth_area_um2": 32083,
+   "flops": 67354,
+   "util": 0.53,
+   "pins": {
+    "N": {
+     "ports": [
+      "clk",
+      "rst_n",
+      "ev[3:0]",
+      "sum_lo[1023:0]",
+      "tag_lo[31:0]",
+      "pub_start",
+      "pub_lane[1:0]",
+      "pub_slot[2:0]"
+     ],
+     "bits": 1068,
+     "per_um": 4.26
+    },
+    "S": {
+     "ports": [
+      "sum_hi[1023:0]",
+      "tag_hi[31:0]",
+      "pub_v",
+      "pub_data[31:0]",
+      "pub_word[3:0]",
+      "pub_out_slot[2:0]",
+      "pub_out_lane[1:0]",
+      "pub_tag[15:0]",
+      "fault"
+     ],
+     "bits": 1115,
+     "per_um": 4.45
+    }
+   },
+   "pin_registers": "RTL registers every data pin (+1 edge in, +1 edge out); the merge adds its decode-stage input register (+1)",
+   "kit": "physical/ref_tile/hnx_rp4a4_spvm (spec physical/hbm_next/att4/hnx_rp4a4_spvm.json)",
+   "gate": "--cts on ot-epyc7 /srv/opentallas-scratch/claude/ref_gate/hnx_rp4a4_spvm-20261019-020708 (timing-driven GPL slack -308 ps vs -745 ps step 2 at the same stage)"
+  }
+ },
+ "sm_front": {
+  "ot_hnx_att4_issue": "soft in the SM front: +256x4 b mask store, 4 lane ordinal counters, 3 more x-store sets (4 x 128x256 each) = the SM4 x-slot stores (shared with matvec x slots, SM4 owns)",
+  "kv_line_port": "unchanged (one union line stream a SM; 136-B lines)",
+  "mask_load_port_bits": 64
+ },
+ "area_note": "NOT in the D1/D2 price: the model charges ATT lanes 0.64 mm2 x 16/32 x P/6 = 0.21 mm2 at P=4; 1,536 added per-lane merges (one 64x512 macro = 0.0133 mm2 each, 20.5 mm2 of macros alone, plus 16 FP32 adders a merge) are far above it. Measured tile area from the hnx_rp4a4_pvm gate synthesis to follow (pending_results).",
+ "per_leaf_step3": {
+  "what_att4_adds_to_hnx_rp4lp4": "per BF16 column: ONE hnx_rp4a4_spvm (ot_hnx_att4_spvm: shared 16-adder merge, per-lane LV 3 flop rings, PUBLISH=1) INSTEAD of the release's one pv_merge+64x512 macro; per-lane flags/x word from the SM front (ot_hnx_att4_issue)",
+  "columns_per_die": 512,
+  "lane_chunk_sum_bus_bits_per_column": 2048,
+  "publication_bits_per_column": 59,
+  "fixed_latency_edges": {
+   "pin_to_head_turn": 2,
+   "pub_request_to_first_word": "step-2 timing + 1",
+   "pv_node": "+1 vs step 2"
+  }
+ },
+ "area_die_step3": {
+  "basis": "x512 columns, over the release's one merge a column (pv_merge + 64x512 macro: 23,860 um2 synth, 216 x 237.6 = 51,322 um2 outline)",
+  "shared_cells_mm2": 4.21,
+  "shared_outline_mm2": 5.87,
+  "previous_reserve_mm2": 16.0,
+  "note": "DIE reserve drops 16.0 -> 5.9 mm2 (outline as gated now); final once the 250.56 um gate passes"
+ }
+}

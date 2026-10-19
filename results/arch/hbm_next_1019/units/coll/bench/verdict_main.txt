@@ -1,0 +1,13 @@
+2026-10-19T00:29:32-07:00 start host=regular-crane bundle=a2880082
+2026-10-19T00:29:37-07:00 COLLQ_SCHEDULE_CHECK F<400 R=1,2 plain+qbg links/reads/writes conflicts=0 []
+2026-10-19T00:30:22-07:00 HNX_COLLQ_TRAIN_CHECK F<200 N=1..6 R=1,2 plain+qbg links/reads/writes/overlap conflicts=0 []
+2026-10-19T00:41:53-07:00 build m rc=0 bin=ok
+2026-10-19T00:41:54-07:00 s0: COLLQ PASS set=0 rows=6 loops=2 vm_words_checked=2644 reads=3104 writes=5288 isa_passthrough=38
+2026-10-19T00:41:54-07:00 s1: COLLQ PASS set=1 rows=6 loops=2 vm_words_checked=8284 reads=8304 writes=16568 isa_passthrough=38
+2026-10-19T00:41:54-07:00 f2: COLLQ FAULT PASS scenario=2 gq1111 ra1111 rb0000 ks0000
+2026-10-19T00:41:54-07:00 f1: COLLQ FAULT PASS scenario=1 gq0100 ra0000 rb0000 ks0000
+2026-10-19T00:41:54-07:00 f4: COLLQ FAULT PASS scenario=4 gq1100 ra0000 rb1110 ks0000
+2026-10-19T00:41:54-07:00 f3: COLLQ FAULT PASS scenario=3 gq0000 ra0000 rb0000 ks0010
+2026-10-19T00:41:54-07:00 f5: COLLQ FAULT PASS scenario=5 gq1111 ra0000 rb0000 ks0000
+2026-10-19T00:41:54-07:00 s2: COLLQ PASS set=2 rows=10 loops=1 vm_words_checked=21248 reads=8704 writes=21248 isa_passthrough=38
+2026-10-19T00:41:54-07:00 done

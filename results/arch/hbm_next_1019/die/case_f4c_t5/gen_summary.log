@@ -1,0 +1,12 @@
+placement problems 0 []
+reset_reach_gate {"reach_gate": "FAIL_DIAG", "por_direct_sinks": 1857, "forest_sinks": 0, "errors": 1857, "kinds": {"no_regional_tree": 1857}}
+clock_regions hbm {"seed_regions": 14, "regions": 12, "merges": 2, "merges_refused_box": 4, "near_entry_pairs": 151, "near_tile_pairs": 43, "near_tile_pairs_cross_region": 4, "max_region_um": 4000.0, "near_um": 405.0}
+clock_check hbm regional {"pairs": 876, "noncommon_ps": {"median": 132.4, "p90": 2054.4, "max": 2261.1}, "ocv_10pct_max_ps": 226.1, "insertion_ps": [8466.1, 8830.3]}
+clock hbm sinks 206 buffers 835
+clock_regions serial {"seed_regions": 34, "regions": 31, "merges": 3, "merges_refused_box": 0, "near_entry_pairs": 309, "near_tile_pairs": 49, "near_tile_pairs_cross_region": 0, "max_region_um": 4000.0, "near_um": 405.0}
+clock_check serial regional {"pairs": 12968985, "noncommon_ps": {"median": 1751.8, "p90": 2569.5, "max": 4811.1}, "ocv_10pct_max_ps": 481.1, "insertion_ps": [7294.2, 7718.5]}
+clock serial sinks 10375 buffers 4523
+clock_regions stream {"seed_regions": 70, "regions": 66, "merges": 4, "merges_refused_box": 807, "near_entry_pairs": 6194, "near_tile_pairs": 457, "near_tile_pairs_cross_region": 67, "max_region_um": 4000.0, "near_um": 405.0}
+clock_check stream regional {"pairs": 789929, "noncommon_ps": {"median": 7596.2, "p90": 9392.4, "max": 9582.9}, "ocv_10pct_max_ps": 958.3, "insertion_ps": [12071.3, 12635.4]}
+clock stream sinks 3875 buffers 9834
+{"insts": 1214, "nets": 1058039, "excluded": 0, "homes": 942, "problems": 0, "clock": {"hbm": 835, "serial": 4523, "stream": 9834}}

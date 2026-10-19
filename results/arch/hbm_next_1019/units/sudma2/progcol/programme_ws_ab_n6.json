@@ -1,0 +1,69 @@
+{
+ "schema": "opentallas.hbm_next.su_rows.v1",
+ "n": 6,
+ "nv": 14,
+ "op": "AB",
+ "row_relative": true,
+ "lat": 1,
+ "edges": 296,
+ "wsplit": 1,
+ "fw": 12,
+ "ii": 28,
+ "c1_rule": "2 nv B fill + II row-0 fill + 16 + nv emits + 23 + MARGIN + 2 nv drain",
+ "row_ops": [
+  "A"
+ ],
+ "fr": [
+  28,
+  56,
+  84,
+  112,
+  140,
+  168
+ ],
+ "ld_edge": 73,
+ "first_emit": 81,
+ "last_drain": 286,
+ "first_cmd_edge": 0,
+ "last_vm_write_edge": 292,
+ "cycles": 292,
+ "expected_vm_writes": 5376,
+ "expected_scalars": 0,
+ "dict_words_per_col": [
+  113,
+  449,
+  338,
+  57,
+  61,
+  2,
+  2,
+  2,
+  2,
+  3
+ ],
+ "dict_words_per_col_rc_in_col9": [
+  113,
+  449,
+  338,
+  57,
+  61,
+  2,
+  2,
+  2,
+  2,
+  28
+ ],
+ "d4g_pslice_q4_dict_capacity": [
+  384,
+  1280,
+  1152,
+  1664,
+  256,
+  128,
+  128,
+  128,
+  128,
+  128
+ ],
+ "golden": "hdc_golden mul/add NumPy FP32 RNE (+ bf16 RNE for ABC), independent of the DUT"
+}

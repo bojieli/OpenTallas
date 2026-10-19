@@ -1,0 +1,165 @@
+{
+ "mode": "synth",
+ "arith": "legacy",
+ "heads": 8,
+ "hd": 512,
+ "window": 128,
+ "topk": 512,
+ "ncomp": 2048,
+ "lanes": 4,
+ "seed": 1019,
+ "cases": [
+  {
+   "sigma": 0.0,
+   "union_lines": 643,
+   "lane_lines": [
+    640,
+    640,
+    640,
+    640
+   ],
+   "mean_pair_topk_overlap": 1.0,
+   "union_mism": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "neg_zins_mism": [
+    7,
+    3,
+    5,
+    4
+   ],
+   "neg_rank_mism": [
+    3794,
+    3741,
+    3768,
+    3756
+   ],
+   "wall_s": 24.0
+  },
+  {
+   "sigma": 0.15,
+   "union_lines": 740,
+   "lane_lines": [
+    640,
+    640,
+    640,
+    640
+   ],
+   "mean_pair_topk_overlap": 0.8988,
+   "union_mism": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "neg_zins_mism": [
+    2,
+    5,
+    2,
+    5
+   ],
+   "neg_rank_mism": [
+    3793,
+    3795,
+    3772,
+    3798
+   ],
+   "wall_s": 25.1
+  },
+  {
+   "sigma": 0.4,
+   "union_lines": 893,
+   "lane_lines": [
+    640,
+    640,
+    640,
+    640
+   ],
+   "mean_pair_topk_overlap": 0.7507,
+   "union_mism": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "neg_zins_mism": [
+    7,
+    7,
+    6,
+    6
+   ],
+   "neg_rank_mism": [
+    3759,
+    3767,
+    3743,
+    3729
+   ],
+   "wall_s": 27.7
+  },
+  {
+   "sigma": 1.0,
+   "union_lines": 1199,
+   "lane_lines": [
+    640,
+    640,
+    640,
+    640
+   ],
+   "mean_pair_topk_overlap": 0.4867,
+   "union_mism": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "neg_zins_mism": [
+    6,
+    6,
+    5,
+    7
+   ],
+   "neg_rank_mism": [
+    3765,
+    3626,
+    3692,
+    3684
+   ],
+   "wall_s": 28.9
+  },
+  {
+   "sigma": -1,
+   "union_lines": 2179,
+   "lane_lines": [
+    640,
+    640,
+    640,
+    640
+   ],
+   "mean_pair_topk_overlap": 0.0,
+   "union_mism": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "neg_zins_mism": [
+    6,
+    2,
+    2,
+    1
+   ],
+   "neg_rank_mism": [
+    3772,
+    0,
+    0,
+    0
+   ],
+   "wall_s": 26.6
+  }
+ ],
+ "negatives_that_passed": [],
+ "verdict": "PASS"
+}
