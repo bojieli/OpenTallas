@@ -593,7 +593,9 @@ module qfd_sys_face #(
                     emb_word_token <= r_tok; emb_word_epoch <= row_ep;
                 end
             end
-            if (emb_fill_begin) row_v <= 1'b0;
+            // Clear the receive ledger on the decoded FILL edge. The registered
+            // provider FILL pin is one edge later and can coincide with header RX.
+            if (ev_fill) row_v <= 1'b0;
         end
     end
     always @(posedge ck) emb_word_data <= is_hdr ? {496'd0, rx_payload[15:0]} : rx_payload[511:0];
