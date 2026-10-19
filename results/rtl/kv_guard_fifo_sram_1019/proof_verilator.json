@@ -1,0 +1,55 @@
+{
+  "admission": {
+    "memory_gb": 4,
+    "threads": 4,
+    "unit": "oth-ubuntu-4093704-1792424279"
+  },
+  "host": "ot-epyc6",
+  "runner": "results/rtl/kv_guard_fifo_sram_1019/run_verilator.sh OUT MUT",
+  "runner_commit": "fd8455ea8",
+  "runner_sha256": "4451daaef6788d13f92570cabbb3c1379e0cb0244eafc339e0e969fab138acd0",
+  "runs": [
+    {
+      "exit_code": 0,
+      "expected": "PASS",
+      "log_sha256": "732fb7312996e4c94e42dc650c213c2fec9a7c0cf2a3dab5dbe6cfcb4ff2bdfb",
+      "mutant": 0,
+      "observed": "PASS",
+      "witness": "PASS cycles=100140 accepted=67057 retired=64730 full=3794 empty=4081 simultaneous=44379 full_simultaneous=512 resets=121 overflow=3238 underflow=6035 zero_added_edges=1"
+    },
+    {
+      "exit_code": 1,
+      "expected": "FAIL",
+      "log_sha256": "9d9994ebcd442f2dadca135c620a58e2d1984985b8b5d09371d73a755c055f5b",
+      "mutant": 1,
+      "observed": "FAIL",
+      "witness": "[76000] %Fatal: tb_guard_fifo_sram.sv:29: Assertion failed in tb_guard_fifo_sram.check: cycle 7 data got 0000000000000000 ref 1f87f86be49d628d"
+    },
+    {
+      "exit_code": 1,
+      "expected": "FAIL",
+      "log_sha256": "49cfdcec421218fcb37772fa0cda303c140971ab06725b2523a02b050b41ee35",
+      "mutant": 2,
+      "observed": "FAIL",
+      "witness": "[66000] %Fatal: tb_guard_fifo_sram.sv:28: Assertion failed in tb_guard_fifo_sram.check: cycle 6 control got 1/  4/0/0 ref 0/  4/0/0"
+    },
+    {
+      "exit_code": 1,
+      "expected": "FAIL",
+      "log_sha256": "585ab27bdd3cdf848fcb2d3535d4fc7b1ce4879bdb161e45bd8a24dbb74e57ea",
+      "mutant": 3,
+      "observed": "FAIL",
+      "witness": "[1296000] %Fatal: tb_guard_fifo_sram.sv:28: Assertion failed in tb_guard_fifo_sram.check: cycle 129 control got 1/127/1/0 ref 1/127/0/0"
+    }
+  ],
+  "schema": "opentallas.guard-fifo-verilator-proof.v1",
+  "source_commit": "caf3904fa",
+  "source_sha256": {
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192/ot_sram_1r1w_128x64_m1_p192.v": "cf9d3ba1b30c0665fcec3957b162aeec38e5db00fa6a97a1f4b178dad54da139",
+    "results/rtl/kv_guard_fifo_sram_1019/qkd_host_guard_fifo_ref.sv": "21ac0f2d4949685447eac1f0c669c267b9a27c030fee7189aa6e68483cb49c2f",
+    "results/rtl/kv_guard_fifo_sram_1019/tb_guard_fifo_sram.sv": "707cb58909ad18776234f82aab9bbc677fd4857bdffc7d9811fd01ddb3200133",
+    "rtl/qwen_sys/host_20261013/qkd_host_guard_fifo.sv": "50644336aebf1405d3d123e454d1dc9115c60e57304f87154e190e58073d5db9"
+  },
+  "tool": "Verilator 5.050 2026-07-01 rev v5.050",
+  "verdict": "PASS"
+}
