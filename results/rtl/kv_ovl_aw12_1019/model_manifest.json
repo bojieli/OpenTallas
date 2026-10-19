@@ -1,0 +1,81 @@
+{
+  "schema": "opentallas.qwen.expanded-origin0-ovl.model.v1",
+  "production_bound": false,
+  "input_sha256": "0f0ff677d7173f0e98e8818e5dcf2b9b14c1988a2dcdddcdb9ccac95a32fe401",
+  "H": 4026816,
+  "superframe": 8053632,
+  "origin": 0,
+  "D0": 16,
+  "lists": {
+    "C_tx": {
+      "starts": 3259,
+      "words": 3260,
+      "address_bits": 12,
+      "first_raw": 773,
+      "last_raw": 8053361,
+      "first_encoded": 789,
+      "last_end_raw": 8053391,
+      "wrap_playhead_slack": 1014,
+      "minimum_entry_dt": 255,
+      "logical_word_bits": 32
+    },
+    "C_rx": {
+      "starts": 3259,
+      "words": 3260,
+      "address_bits": 12,
+      "first_raw": 2579,
+      "last_raw": 8053377,
+      "first_encoded": 2595,
+      "last_end_raw": 8053631,
+      "wrap_playhead_slack": 2580,
+      "minimum_entry_dt": 35,
+      "logical_word_bits": 32
+    },
+    "K_tx": {
+      "starts": 3259,
+      "words": 3260,
+      "address_bits": 12,
+      "first_raw": 2545,
+      "last_raw": 8053361,
+      "first_encoded": 2561,
+      "last_end_raw": 8053616,
+      "wrap_playhead_slack": 2561,
+      "minimum_entry_dt": 53,
+      "logical_word_bits": 32
+    },
+    "K_rx": {
+      "starts": 3259,
+      "words": 3260,
+      "address_bits": 12,
+      "first_raw": 793,
+      "last_raw": 8053374,
+      "first_encoded": 809,
+      "last_end_raw": 8053406,
+      "wrap_playhead_slack": 1019,
+      "minimum_entry_dt": 242,
+      "logical_word_bits": 32
+    }
+  },
+  "context_slot": {
+    "logical_kind": 12,
+    "logical_beat": 1,
+    "K_cyc": 2,
+    "wire_beat": 0,
+    "wire_arrive_offset": 18,
+    "provisional_bank_extra": 3
+  },
+  "normal_tokens_per_superframe": {
+    "0": 32,
+    "1": 29,
+    "2": 15,
+    "3": 12
+  },
+  "leaf_L0_anchor_constraint": "list_anchor +16+ measured(player output + pin launch ages)",
+  "player_changes": "AW12 for selectedF16 (3260words); physical4096x72 ROM unchanged; existing32-bit entry decoder unchanged",
+  "unresolved": [
+    "user0 initial validated context/embedding prelude must precede rawL0",
+    "absolute epoch FIRST and wrapper pin ages not yet production bound",
+    "fullidentity ctx_x129 output and measured+3 load age not yet implemented",
+    "pergeneration host record source/context identities require actual cyclic bench"
+  ]
+}

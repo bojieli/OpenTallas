@@ -101,7 +101,7 @@ module qkd_d2d_cal_seq_ovl_bc_core #(parameter integer AW = 11, parameter intege
 endmodule
 
 // Hardened top owns both list ROM macros.  No extra address stage: player's register drives ROM addr.
-module qkd_d2d_cal_seq_pin_ovl_bc #(parameter ROM_DIR = "", parameter integer MUT=0, parameter integer MUT_HALT_REWIND=0) (
+module qkd_d2d_cal_seq_pin_ovl_bc #(parameter ROM_DIR = "", parameter integer AW=11, parameter integer MUT=0, parameter integer MUT_HALT_REWIND=0) (
     input wire ck, rst_n, reload, epoch_go, halt,
     input wire bcfg_tx_we, bcfg_rx_we,
     input wire [5:0] bcfg_addr, input wire [31:0] bcfg_data,
@@ -110,18 +110,19 @@ module qkd_d2d_cal_seq_pin_ovl_bc #(parameter ROM_DIR = "", parameter integer MU
     output wire [1:0] cal_user_tx, cal_user_rx,
     output wire cal_ready, adm_done, running, fault
 );
-    wire [10:0] ta, ra;
+    initial if (AW < 1 || AW > 12) $error("physical list ROM supports AW1..12");
+    wire [AW-1:0] ta, ra;
     wire [71:0] tq, rq;
 `ifdef SYNTHESIS
-    ot_rom_4096x72_m8 u_tx_rom (.clk(ck),.ce_in(1'b1),.addr_in({1'b0,ta}),.rd_out(tq));
-    ot_rom_4096x72_m8 u_rx_rom (.clk(ck),.ce_in(1'b1),.addr_in({1'b0,ra}),.rd_out(rq));
+    ot_rom_4096x72_m8 u_tx_rom (.clk(ck),.ce_in(1'b1),.addr_in({{(12-AW){1'b0}},ta}),.rd_out(tq));
+    ot_rom_4096x72_m8 u_rx_rom (.clk(ck),.ce_in(1'b1),.addr_in({{(12-AW){1'b0}},ra}),.rd_out(rq));
 `else
     ot_rom_4096x72_m8 #(.VIAMAP({ROM_DIR,"/ovl_k_tx.viamap.hex"}),.INSTANCE("ovl_k_tx")) u_tx_rom
-        (.clk(ck),.ce_in(1'b1),.addr_in({1'b0,ta}),.rd_out(tq));
+        (.clk(ck),.ce_in(1'b1),.addr_in({{(12-AW){1'b0}},ta}),.rd_out(tq));
     ot_rom_4096x72_m8 #(.VIAMAP({ROM_DIR,"/ovl_k_rx.viamap.hex"}),.INSTANCE("ovl_k_rx")) u_rx_rom
-        (.clk(ck),.ce_in(1'b1),.addr_in({1'b0,ra}),.rd_out(rq));
+        (.clk(ck),.ce_in(1'b1),.addr_in({{(12-AW){1'b0}},ra}),.rd_out(rq));
 `endif
-    qkd_d2d_cal_seq_ovl_bc_core #(.MUT(MUT),.MUT_HALT_REWIND(MUT_HALT_REWIND)) u_core (
+    qkd_d2d_cal_seq_ovl_bc_core #(.AW(AW),.MUT(MUT),.MUT_HALT_REWIND(MUT_HALT_REWIND)) u_core (
         .ck(ck),.rst_n(rst_n),.reload(reload),.epoch_go(epoch_go),.halt(halt),
         .bcfg_tx_we(bcfg_tx_we),.bcfg_rx_we(bcfg_rx_we),.bcfg_addr(bcfg_addr),.bcfg_data(bcfg_data),
         .cfg_tx_we(cfg_tx_we),.cfg_rx_we(cfg_rx_we),.cfg_addr(cfg_addr),.cfg_data(cfg_data),
