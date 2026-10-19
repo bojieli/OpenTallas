@@ -619,6 +619,9 @@ proc ot_cdc_flow_names {name} {
     lappend names $core
     if {[regexp {^([^$]+)\$} $core -> base]} {lappend names $base}
   }
+  # LH-PGVM2 10-19: contents of kept-hierarchy instances (keep_hierarchy region / replica cells) are named with '/'
+  # in the routed netlist; the lint flattens them with '.' (cdc_sync_constraints.elaborate)
+  foreach n $names {if {[string first / $n] >= 0} {lappend names [string map {/ .} $n]}}
   return $names
 }
 '''
