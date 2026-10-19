@@ -1,0 +1,32 @@
+Verilator 5.050 2026-07-01 rev v5.050
+COLL_ITER_SAFE_PASS cases=512 independent unsigned truncation +sameedge baseline
+[46000] %Fatal: tb_hgi_coll_iter_safephys.sv:25: Assertion failed in tb_hgi_coll_iter_safephys.unnamedblk1: COLL_ITER_SAFE_FAIL j=3 old=00010001ffff0001ffff0001ffff0001000000000000feff01feff01 new=00000000000000000000000000000000000000000000000000000000 expected=00010001ffff0001ffff0001ffff0001000000000000feff01feff01
+%Error: rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_iter_safephys.sv:25: Verilog $stop
+[46000] %Fatal: tb_hgi_coll_iter_safephys.sv:25: Assertion failed in tb_hgi_coll_iter_safephys.unnamedblk1: COLL_ITER_SAFE_FAIL j=3 old=00010001ffff0001ffff0001ffff0001000000000000feff01feff01 new=00010001ffff0001ffff0001ffff0100000000000000feff01feff01 expected=00010001ffff0001ffff0001ffff0001000000000000feff01feff01
+%Error: rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_iter_safephys.sv:25: Verilog $stop
+PASS fixed_delay checks=39824 cycles=10000 II=1 reset_bursts=11
+[8320000] %Fatal: tb_hgi_coll_fixed_delay_sram_safephys.sv:35: Assertion failed in tb_hgi_coll_fixed_delay_sram_safephys: FAIL fixed_delay checks=39824 errors=9110
+%Error: rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_fixed_delay_sram_safephys.sv:35: Verilog $stop
+[8320000] %Fatal: tb_hgi_coll_fixed_delay_sram_safephys.sv:35: Assertion failed in tb_hgi_coll_fixed_delay_sram_safephys: FAIL fixed_delay checks=39824 errors=765
+%Error: rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_fixed_delay_sram_safephys.sv:35: Verilog $stop
+[8320000] %Fatal: tb_hgi_coll_fixed_delay_sram_safephys.sv:35: Assertion failed in tb_hgi_coll_fixed_delay_sram_safephys: FAIL fixed_delay checks=39824 errors=9200
+%Error: rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_fixed_delay_sram_safephys.sv:35: Verilog $stop
+[8320000] %Fatal: tb_hgi_coll_fixed_delay_sram_safephys.sv:35: Assertion failed in tb_hgi_coll_fixed_delay_sram_safephys: FAIL fixed_delay checks=39824 errors=9835
+%Error: rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_fixed_delay_sram_safephys.sv:35: Verilog $stop
+COLL_VMRT PASS LAT74 VM_RT74 pairs1792 lanes_padded_to_budget
+[601000] %Fatal: tb_hgi_coll_ctl_v74_safephys.sv:111: Assertion failed in tb_hgi_coll_ctl_v74_safephys: COLL VM_RT
+%Error: rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_ctl_v74_safephys.sv:111: Verilog $stop
+[601000] %Fatal: tb_hgi_coll_ctl_v74_safephys.sv:111: Assertion failed in tb_hgi_coll_ctl_v74_safephys: COLL VM_RT
+%Error: rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_ctl_v74_safephys.sv:111: Verilog $stop
+[601000] %Fatal: tb_hgi_coll_ctl_v74_safephys.sv:111: Assertion failed in tb_hgi_coll_ctl_v74_safephys: COLL VM_RT
+%Error: rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_ctl_v74_safephys.sv:111: Verilog $stop
+COLL_VMRT PASS LAT74 VM_RT74 pairs8192 lanes_padded_to_budget
+COLL_VMRT PASS LAT74 VM_RT74 pairs1792 lanes_padded_to_budget
+[601000] %Fatal: tb_hgi_coll_ctl_v74_safephys.sv:111: Assertion failed in tb_hgi_coll_ctl_v74_safephys: COLL VM_RT
+%Error: rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_ctl_v74_safephys.sv:111: Verilog $stop
+[601000] %Fatal: tb_hgi_coll_ctl_v74_safephys.sv:111: Assertion failed in tb_hgi_coll_ctl_v74_safephys: COLL VM_RT
+%Error: rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_ctl_v74_safephys.sv:111: Verilog $stop
+[601000] %Fatal: tb_hgi_coll_ctl_v74_safephys.sv:111: Assertion failed in tb_hgi_coll_ctl_v74_safephys: COLL VM_RT
+%Error: rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_ctl_v74_safephys.sv:111: Verilog $stop
+COLL_VMRT PASS LAT74 VM_RT74 pairs8192 lanes_padded_to_budget
+PROOFS_RC=0

@@ -3039,6 +3039,26 @@ def checkpoint(j, why=""):
     return True
 
 
+def frozen_helper_transport_rows(plan, payloads, modes):
+    """Transport precisely the recorded helper membership, including old sets.
+
+    A newer daemon can add or remove helper names. An existing route keeps its
+    verified bytes and modes; only the already-sanctioned publish rows may differ.
+    """
+    rows = HO.frozen_rows(plan)
+    expected = {row['path'] for row in rows}
+    if set(payloads) != expected or modes is None or set(modes) != expected:
+        raise ValueError('FROZEN_HELPER_OVERLAY: transport membership differs from frozen plan')
+    result = []
+    for row in rows:
+        rel = row['path']; data = payloads[rel]
+        if (hashlib.sha256(data).hexdigest() != row['sha256'] or HO.blob_id(data) != row['git_blob']
+                or modes[rel] != row['mode']):
+            raise ValueError('FROZEN_HELPER_OVERLAY: transport bytes/mode differ from frozen plan: ' + rel)
+        result.append((Path(rel).name, data, row['mode']))
+    return result
+
+
 def ship_helpers(host, run, job=None):
     """Install new helpers, or verify and reuse an already executed frozen set."""
     # one ssh carrying a tar of all helpers (was one ssh per helper, 13 per launch, made while holding FLEET_LOCK)
@@ -3177,12 +3197,14 @@ def ship_helpers(host, run, job=None):
                                f"{str(r['origin_main'])[:9]}); the route runs the fleet copy")
                 job["route_overlay_plan"] = frozen = current
             HO.store_payloads(HELPER_STORE, frozen, payloads)
+    # Frozen recovery/publish refresh may contain fewer (or older) helpers than
+    # today's HELPERS. Never append a new dependency to an already executed set.
+    outgoing = (frozen_helper_transport_rows(frozen, payloads, modes) if payloads is not None else
+                [(Path(h).name, overlay_helper_bytes(h), (HERE / h).stat().st_mode & 0o777) for h in HELPERS])
     buf = io.BytesIO()
     with tarfile.open(fileobj=buf, mode="w") as tf:
-        for helper in HELPERS:
-            rel = os.path.normpath(f"tools/closure_loop/{helper}")
-            data = payloads[rel] if payloads is not None else overlay_helper_bytes(helper)
-            ti = tarfile.TarInfo(Path(helper).name); ti.size = len(data); ti.mode = modes[rel] if modes is not None else (HERE / helper).stat().st_mode & 0o777
+        for name, data, mode in outgoing:
+            ti = tarfile.TarInfo(name); ti.size = len(data); ti.mode = mode
             ti.mtime = int(time.time()); tf.addfile(ti, io.BytesIO(data))
         if frozen is not None:
             data = (json.dumps(frozen, indent=1) + "\n").encode()
@@ -3580,16 +3602,22 @@ def launch_stage(j, st, cmd):
     if st["kind"] in ("route", "calibrate"):
         j["route_attempt"] = j["attempt"]
     t = tag(st, j)
+    rebound = None
     if st["kind"] == "bench":
         # Mutation benches must never write the route's source tree. One private
         # tree per job attempt retains generated inputs shared by bench stages.
         j["stage_source"] = f"{j['run']}/bench_src_a{str(j['attempt']).split('b')[0]}"
+        if j.get("bench_rebind"):
+            from bench_rebind import source_for_stage
+            rebound = source_for_stage(j, st["key"])
+            if rebound:
+                j["stage_source"] = rebound["source_path"]
     else:
         j.pop("stage_source", None)
     env = "".join(f"export {k}={shlex.quote(v)}\n" for k, v in dict(
         RUN=j["run"], SRC=j.get("stage_source", f"{j['run']}/src"), CL=f"{j['run']}/cl", HOST=j["host"], NAME=label(j["name"]),
         LABEL=label(j["name"]), RAW_NAME=j["name"],
-        BLOCK=j["spec"]["block"], COMMIT=j["commit_full"], THREADS=str(st.get("threads", 4)),
+        BLOCK=j["spec"]["block"], COMMIT=rebound["source_commit"] if rebound else j["commit_full"], THREADS=str(st.get("threads", 4)),
         CL_PHASE=st["kind"], CL_LABEL_SUFFIX="_cal" if st["kind"] == "calibrate" else "",
         CL_STOP_AFTER="--pnr-stop-after cts" if st["kind"] == "calibrate" else "").items())
     # OOM-FIRST (drive-0849 2026-10-09): synth runs NATIVELY (host yosys, outside any container cgroup) -- the 208 GB
@@ -3796,6 +3824,9 @@ def launch_stage(j, st, cmd):
         # refusing on an existing .tmp.  A copy that died (ENOSPC on AGIdock, hfd_lk_ep-b46a972cd-cc 10-11) left a
         # stale .tmp that made every retry exit 9 (NEEDS_RTL with no bench run); under the lock a leftover .tmp is
         # always stale, so it is removed and the copy redone.
+        if rebound:
+            from bench_rebind import launch_guard
+            env += launch_guard(rebound)
         env += bench_copy_script(original, private)
         # A few legacy recipes spell {RUN}/src instead of using {SRC}.
         cmd = cmd.replace("{RUN}/src", "{SRC}")
@@ -5590,6 +5621,11 @@ def memory_offload_bench(j, fleet, st, stl, location, why):
     return off
 
 
+def _bench_source_fields(j, key):
+    row = (j.get("bench_rebind") or {}).get(key)
+    return dict(source_commit=row["source_commit"], bench_rebind_id=row["id"]) if row else {}
+
+
 def bench_track(j, fleet, stl):
     """advance the bench track; returns False if the job ended (bench failure)"""
     if not j.get("bench_par") or j["status"] in TERMINAL or j["status"] in ("QUEUED", "SYNC", "MIGRATING"):
@@ -5608,7 +5644,9 @@ def bench_track(j, fleet, stl):
         if e is None or e.get("state") == "retry":
             if any(x.get("state") == "running" for x in tr.values()):
                 return True                  # one bench at a time
-            location = bench_location(j, stl)
+            recovery = (j.get("bench_rebind") or {}).get(k)
+            location = (dict(host=j["host"], run=j["run"], attempt=j.get("route_attempt", j["attempt"]))
+                        if recovery else bench_location(j, stl))
             if location["run"] != j.get("run") and vanished_bench_location(j, location):
                 location = bench_location(j, stl)
             caps = next((x.get("caps", []) for x in hosts_table() if x["name"] == location["host"]), None)
@@ -5631,7 +5669,7 @@ def bench_track(j, fleet, stl):
                 if ok:
                     launch_token = fleet._launched(host, st["threads"], st["ram"], actual=True)
             if not ok:
-                off = memory_offload_bench(j, fleet, st, stl, location, why)
+                off = None if recovery else memory_offload_bench(j, fleet, st, stl, location, why)
                 if off is None:
                     if j.get("bwait") != why:
                         j["bwait"] = why
@@ -5657,7 +5695,8 @@ def bench_track(j, fleet, stl):
             finally:
                 fleet.launch_complete(host, launch_token)
             j["bench_location"] = location
-            tr[k] = dict(state="running", tag=v["stage_tag"], host=host, run=location["run"], n=n, started=now_iso(), stage_source=v.get("stage_source"))
+            tr[k] = dict(state="running", tag=v["stage_tag"], host=host, run=location["run"], n=n, started=now_iso(), stage_source=v.get("stage_source"),
+                         **_bench_source_fields(j, k))
             j["bwait"] = None
             j.pop("bwait_since", None)
             event(j, f"bench track: launched {k} ({v['stage_tag']}) beside {j.get('stage_key')}")
@@ -5705,7 +5744,8 @@ def bench_track(j, fleet, stl):
             finish(j, "NEEDS_HUMAN", f"{k} tool race twice in the bench track (rc={rc})",
                    f"NEEDS_HUMAN: bench {k} hit a build tool race twice (rc={rc}): {race}; route stopped")
             return False
-        j["benches"][k] = dict(expect=st["expect"], rc=rc, ok=passed, tail=tail[-600:], track="parallel")
+        j["benches"][k] = dict(expect=st["expect"], rc=rc, ok=passed, tail=tail[-600:], track="parallel",
+                               **_bench_source_fields(j, k))
         if not passed:
             stop_main_for_bench(j)
             finish(j, "NEEDS_RTL", f"{k} expected {st['expect'].upper()} but rc={rc}{bench_why(j, st, rc, ok_extra)}",
@@ -9844,6 +9884,16 @@ def cmd_retry(a):
 
 
 @locked_job_command
+def cmd_bench_rebind(a):
+    """Recover the reviewed path-string bench bug without re-syncing or re-routing."""
+    from bench_rebind import command
+    try:
+        command(sys.modules[__name__], a)
+    except (ValueError, OSError, subprocess.SubprocessError) as exc:
+        sys.exit(str(exc))
+
+
+@locked_job_command
 def cmd_ioref_rejudge(a):
     """human (FLOW-IOREF): re-judge a NEEDS_RTL job at its ROUTED insertion (routed_ioref re-STA, no re-route).  Closes
     -> back to the verdict stage (READY; the cached re-STA is the verdict).  Hold-only at the routed reference with no
@@ -10398,6 +10448,10 @@ def main():
     r.add_argument("--force", action="store_true", help="FLOORPLAN_MARGIN job whose lint dump is gone: requeue anyway")
     r = sub.add_parser("retry-eco"); r.add_argument("name"); r.add_argument("--why", default="hold_eco rev 2")
     r.add_argument("--stack", action="store_true", help="ECO on top of an installed ECO (its db in the route base)")
+    r = sub.add_parser("bench-rebind", help="reviewed path-string bench recovery; preserve the completed route")
+    r.add_argument("name"); r.add_argument("--commit", required=True)
+    r.add_argument("--bench", action="append", required=True, help="affected benchmark stage key; repeat as needed")
+    r.add_argument("--why", required=True); r.add_argument("--apply", action="store_true", help="prepare a private source and requeue only benchmarks; default is read-only")
     r = sub.add_parser("ioref-rejudge"); r.add_argument("name")
     r = sub.add_parser("rebudget-rejudge"); r.add_argument("name"); r.add_argument("--rb", required=True)
     r.add_argument("--sdc", required=True); r.add_argument("--dry", action="store_true")
@@ -10439,6 +10493,8 @@ def main():
         cmd_retry(a)
     elif a.cmd == "retry-eco":
         cmd_retry_eco(a)
+    elif a.cmd == "bench-rebind":
+        cmd_bench_rebind(a)
     elif a.cmd == "reverdict":
         cmd_reverdict(a)
     elif a.cmd == "ioref-rejudge":
