@@ -51,7 +51,7 @@ def main(a):
     if a.pdn_addon:
         for code in (
             'set_voltage_domain -name CORE -power VDD -ground VSS',
-            'define_pdn_grid -name clock_existing -existing -voltage_domains CORE',
+            'define_pdn_grid -name clock_existing -existing',
             'define_pdn_grid -name clock_followpins -voltage_domains CORE -starts_with GROUND',
             'add_pdn_stripe -grid clock_followpins -layer M1 -width .018 -followpins',
             'add_pdn_stripe -grid clock_followpins -layer M2 -width .018 -followpins',
