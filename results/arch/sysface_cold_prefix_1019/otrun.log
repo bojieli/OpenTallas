@@ -1,0 +1,137 @@
+ot-run: ot-epyc4       admits   962 GB (avail 787, growth 113, headroom 0, waiters 0/0 GB) load 79/128 running 36 disk 325 GB 
+ot-run: ot-epyc5       admits   840 GB (avail 701, growth 113, headroom 0, waiters 0/0 GB) load 59/128 running 13 disk 1100 GB 
+ot-run: ot-epyc6       admits   488 GB (avail 455, growth 113, headroom 0, waiters 0/0 GB) load 37/128 running 17 disk 6069 GB 
+ot-run: ot-epyc7       admits   848 GB (avail 691, growth 98, headroom 0, waiters 0/0 GB) load 63/96 running 22 disk 6448 GB 
+ot-run: ot-epyc8       admits  1079 GB (avail 857, growth 102, headroom 0, waiters 0/0 GB) load 46/128 running 25 disk 377 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/sysface-cold-model2-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/sysface-cold-model2-1019
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-1625462-1792425810 after 0 s
+{
+  "schema": "opentallas.qwen.cold-prefix-candidate.v1",
+  "production_bound": false,
+  "blockers": [
+    "FACE-to-GI raw DH transport/clock age unbound",
+    "actual embedding row producer/provider/consumer join pending",
+    "final programme store ABI/image capacity pending",
+    "absolute epoch origin unbound"
+  ],
+  "source_sha256": "8d0ef69e8da7689fd8bd835a6cf8ada5ae71b73838df81a8e0e7205193c69b35",
+  "old_admission": {
+    "C_tx": [
+      283015200
+    ],
+    "C_rx": [
+      5141537
+    ],
+    "K_tx": [
+      947233
+    ],
+    "K_rx": [
+      286947360
+    ]
+  },
+  "new_admission": {
+    "C_tx": [
+      283015200
+    ],
+    "C_rx": [
+      5010465,
+      287469568
+    ],
+    "K_tx": [
+      816161,
+      287469568
+    ],
+    "K_rx": [
+      286947360
+    ]
+  },
+  "admission_table": [
+    {
+      "src": "C",
+      "cyc": 1079,
+      "tx_port": 1,
+      "rx_port": 1,
+      "kind": 14,
+      "beat": 1,
+      "arrive": 1094,
+      "rx_out": 1096,
+      "wr": 1082
+    },
+    {
+      "src": "K",
+      "cyc": 3,
+      "tx_port": 1,
+      "rx_port": 1,
+      "kind": 13,
+      "beat": 1,
+      "arrive": 19,
+      "rx_out": 21,
+      "wr": 7
+    },
+    {
+      "src": "K",
+      "cyc": 4,
+      "tx_port": 1,
+      "rx_port": 1,
+      "kind": 13,
+      "beat": 2,
+      "arrive": 20,
+      "rx_out": 22,
+      "wr": 8
+    },
+    {
+      "src": "K",
+      "cyc": 1100,
+      "tx_port": 1,
+      "rx_port": 1,
+      "kind": 12,
+      "beat": 0,
+      "arrive": 1116,
+      "rx_out": 1118,
+      "wr": 1104
+    }
+  ],
+  "admission_ofs": 72,
+  "new_admission_len": 1122,
+  "min_same_reference_prefix_start": 1198,
+  "measured_GI_relative": {
+    "INIT": 0,
+    "cal_accept": 1,
+    "emb_start": 63,
+    "first_L0_raw_pin": 334
+  },
+  "cold_head_prefix": {
+    "K_tx": {
+      "start_relative_GI_raw_INIT": 64,
+      "last_relative_GI_raw_INIT": 318,
+      "events": 67,
+      "image": [
+        290848,
+        290816,
+        49324032,
+        301087,
+        433183
+      ]
+    },
+    "C_rx": {
+      "start_relative_GI_raw_INIT": 80,
+      "last_relative_GI_raw_INIT": 333,
+      "events": 67,
+      "image": [
+        290848,
+        290816,
+        49061888,
+        301087,
+        433183
+      ]
+    }
+  },
+  "context_policy": "explicit user0 CONTEXT after existing WITNESS receive+4; actualhostreceiver stillvalidates fullidentity",
+  "steady_period": 8053632,
+  "steady_runtime_delta_edges": 0,
+  "wrap_policy": "constant per-list WRAP_BASE skips prefix, halt/reload rewinds0",
+  "structural_cost": "same2x4096x72 listROM,<=1extra listword/direction; +constantwrap mux; newctx129output; resetfamilies<=32 planned"
+}
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1625462-1792425810): exit 0
