@@ -230,7 +230,7 @@ module ot_hbm_r14_aq_pc_safe #(
   assign wr_r = q_n != (WQW+1)'(WQ);
   // ---- row command: REFpb due > forced PRE > ACT (oldest queued closed bank) > PRE (open row no entry needs) ----------
   wire forced_pre = ref_pend && |(blk & open & ras_z & rtp_z);
-  wire [31:0] pre_cand = open & ~held & ~blk & ras_z & rtp_z;
+  wire [31:0] pre_cand = open & ~held & need & ~blk & ras_z & rtp_z;
   reg [4:0] pre_sel; integer pi_;
   always @* begin pre_sel = 0; for (pi_ = 31; pi_ >= 0; pi_ = pi_ - 1) if (pre_cand[pi_]) pre_sel = 5'(pi_); end
   // ---- PULLIN (JEDEC pull-in): while a closed, unneeded, unprotected bank (key < 16) is available, issue up to PULLIN
