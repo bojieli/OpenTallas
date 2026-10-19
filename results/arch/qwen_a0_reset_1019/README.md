@@ -51,14 +51,41 @@ Verilator5.050 and the actual Liberty functions; it is not timing simulation.
 
 The strict full64-MAC numerical comparator is preserved under `diagnostics`:
 r1 (synchronous-only tree) passes its limited clock-stop scenario; r2/r3 each
-fail95 idle-payload comparisons after the stopped TX warm reset, while each
-has5120 real nonzero valid outputs. The invalid payload contains retained
-unreset data; changing it to zero would change existing state semantics.
-The coordinator authorized a separate protocol comparison that checks all
-status/valid bits continuously, checks every payload bit when either side is
-valid, and reports all invalid-payload differences separately. It introduces
-no hardware data mask, gate or drop. That numerical continuation is pending
-when this document is first committed; see the final receipts before use.
+fail95 idle-payload comparisons after the stopped TX warm reset. A read-only
+observer links against copies of the completed immutable Verilator model
+objects, changing only the main entrypoint and adding observation. It records
+all95 exact events between cycles6642 and6790 inclusive, each with expected
+valid0 and actual valid0. Exact disjoint ranges and source/model object hashes
+are committed. This retained unreset payload is outside the valid protocol;
+changing it to zero would change existing state semantics.
+
+The final r6 protocol comparator checks all status/valid bits continuously,
+every payload bit when either side is valid, and counts idle differences
+separately. It introduces no hardware mask, gate or drop. Both cold and warm
+epochs execute exactly five fixed operations across all five physical ROM bank
+rows, all64 actual MACs and all eight LSL leaves. Results:13040 comparisons,
+5120 valid nonzero outputs,248501 actual reset-trace checks PASS. Every measured
+first GO samples exactly16 edges after all reset leaves release; first valid
+arrives51 edges after GO. The held-leaf and missing-face mutants fail reset
+traces before arithmetic; a GO0 admission mutant fails512 meaningful numeric
+comparisons. The independent native tree cut additionally catches four mutants.
+Sixteen is the minimum GO age exercised by the passing fixture, not a claim of
+the smallest physically legal guard; intermediate guard values are unqualified.
+
+The final fixture reports72 idle-payload differences, each with both valid
+flags0, between cycles6501 and6613 inclusive (exact disjoint ranges in summary).
+No asserted valid operation observes those differences. Earlier r4/r5 harness
+failures are retained: moving first GO earlier inadvertently admitted a sixth
+operation under the inherited absolute cutoff, overlapping warm reset, and
+node-valid stimulus was not quiet across boot. The final fixture limits exactly
+five operations and uses a static quiet warm fence. Its legacy reference clock
+runs through reset so its old one-sample face cannot miss the entire pulse.
+
+The pinned-input generator refuses a different source ODB and reproduces the
+native candidate byte for byte. Independent Yosys source and OpenDB native
+censuses agree on all38609 cells,15651 FF, all seven broad register roots and
+all70 broad nonclock driver/master/load records. Complete passing/failing pin
+inventories are retained in compressed form.
 
 Remaining actual all-root census: seven FF roots exceed32 (split[3:0], wsrc_r,
 active_o, k_last; maximum415). There are70 nonclock drivers above32 in total:

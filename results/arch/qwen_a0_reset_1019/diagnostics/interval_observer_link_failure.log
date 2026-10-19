@@ -1,0 +1,21 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/qwen-a0-reset-r3-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/qwen-a0-reset-r3-1019
+ot-run: ot-epyc6       admits   843 GB (avail 691, growth 101, headroom 0, waiters 0/0 GB) load 17/128 running 9 disk 5999 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/qwen-a0-reset-r3-1019
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/qwen-a0-reset-r3-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/qwen-a0-reset-r3-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/qwen-a0-reset-r3-1019
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-2446832-1792432301 after 0 s
+/usr/bin/x86_64-linux-gnu-ld.bfd: numeric/obj/Vtb_qwen_a0_reset_native__ALL.a(Vtb_qwen_a0_reset_native_vm_classes_7.o): in function `main':
+Vtb_qwen_a0_reset_native_vm_classes_7.cpp:(.text.startup+0x0): multiple definition of `main'; /tmp/cchui1vo.o:observer.cpp:(.text+0x0): first defined here
+collect2: error: ld returned 1 exit status
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/qwen-a0-reset-r3-1019/observe_intervals.py", line 39, in <module>
+    subprocess.run(cmd,check=True)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/subprocess.py", line 578, in run
+    raise CalledProcessError(retcode, process.args,
+                             output=stdout, stderr=stderr)
+subprocess.CalledProcessError: Command '['g++', '-std=c++20', '-fcoroutines', '-O1', '-I/srv/opentallas-scratch/claude/qwen-a0-reset-r3-1019/numeric/obj', '-I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include', '-I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd', 'intervals/numeric/observer.cpp', 'numeric/obj/Vtb_qwen_a0_reset_native__ALL.a', 'numeric/obj/verilated.o', 'numeric/obj/verilated_timing.o', 'numeric/obj/verilated_threads.o', '-pthread', '-latomic', '-o', 'intervals/numeric/observer']' returned non-zero exit status 1.
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-2446832-1792432301): exit 1

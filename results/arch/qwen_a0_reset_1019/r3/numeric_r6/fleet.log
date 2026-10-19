@@ -1,0 +1,45 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/qwen-a0-reset-r3-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/qwen-a0-reset-r3-1019
+ot-run: ot-epyc6       admits   803 GB (avail 675, growth 113, headroom 0, waiters 0/0 GB) load 23/128 running 13 disk 6008 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/qwen-a0-reset-r3-1019
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/qwen-a0-reset-r3-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/qwen-a0-reset-r3-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/qwen-a0-reset-r3-1019
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-2435333-1792431940 after 0 s
+A0_NATIVE_BENCH_GENERATED 2622 ports; TX-clock reset leaf 11
+A0_ALL_LEAVES_READY time0.000
+A0_ALL_LEAVES_READY time11.500
+A0_ALL_LEAVES_READY time31.500
+A0_ALL_LEAVES_READY time51.500
+A0_GO_SAMPLE cyc19 time67.500 ready_age16.000
+A0_FIRST_VALID go19 result70 age51
+A0_GO_SAMPLE cyc1219 time1267.500 ready_age1216.000
+A0_FIRST_VALID go1219 result1270 age51
+A0_GO_SAMPLE cyc2419 time2467.500 ready_age2416.000
+A0_FIRST_VALID go2419 result2470 age51
+A0_GO_SAMPLE cyc3619 time3667.500 ready_age3616.000
+A0_FIRST_VALID go3619 result3670 age51
+A0_GO_SAMPLE cyc4819 time4867.500 ready_age4816.000
+A0_FIRST_VALID go4819 result4870 age51
+A0_ALL_LEAVES_READY time6595.500
+A0_GO_SAMPLE cyc6563 time6611.500 ready_age16.000
+A0_FIRST_VALID go6563 result6614 age51
+A0_GO_SAMPLE cyc7763 time7811.500 ready_age1216.000
+A0_FIRST_VALID go7763 result7814 age51
+A0_GO_SAMPLE cyc8963 time9011.500 ready_age2416.000
+A0_FIRST_VALID go8963 result9014 age51
+A0_GO_SAMPLE cyc10163 time10211.500 ready_age3616.000
+A0_FIRST_VALID go10163 result10214 age51
+A0_GO_SAMPLE cyc11363 time11411.500 ready_age4816.000
+A0_FIRST_VALID go11363 result11414 age51
+A0_IDLE_PAYLOAD_DIFFERENCES 72
+A0_RESET_TRACE_PASS checks248501
+A0_RESET_NATIVE_NUMERIC_PASS checks13040 valids5120 nonzero5120 leaves'{'h1400, 'h1400, 'h1400, 'h1400, 'h1400, 'h1400, 'h1400, 'h1400}
+- native/tb_numeric_r6.sv:2758: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 13us; walltime 2.140 s; speed 6.115 us/s
+- Verilator: cpu 2.140 s on 1 threads; allocated 24 MB
+A0_RESET_ALL_PROOFS_PASS
+A0_RESET_EARLY_GO_REFUSED
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-2435333-1792431940): exit 0

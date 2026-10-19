@@ -1,0 +1,12 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/qwen-a0-reset-r3-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/qwen-a0-reset-r3-1019
+ot-run: ot-epyc6       admits   836 GB (avail 690, growth 105, headroom 0, waiters 0/0 GB) load 21/128 running 9 disk 5999 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/qwen-a0-reset-r3-1019
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/qwen-a0-reset-r3-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/qwen-a0-reset-r3-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/qwen-a0-reset-r3-1019
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-2449847-1792432380 after 1 s
+A0_IDLE_INTERVAL_PASS numeric 95 A0_INTERVAL cycle6642 event1 time6691000 expected_valid0 actual_valid0 A0_INTERVAL cycle6790 event95 time6839000 expected_valid0 actual_valid0
+A0_IDLE_INTERVAL_PASS numeric_r6 72 A0_INTERVAL cycle6501 event1 time6550000 expected_valid0 actual_valid0 A0_INTERVAL cycle6613 event72 time6662000 expected_valid0 actual_valid0
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-2449847-1792432380): exit 0

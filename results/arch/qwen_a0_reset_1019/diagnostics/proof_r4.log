@@ -1,0 +1,27 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/qwen-a0-reset-r3-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/qwen-a0-reset-r3-1019
+ot-run: ot-epyc6       admits   817 GB (avail 686, growth 113, headroom 0, waiters 0/0 GB) load 48/128 running 17 disk 6010 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/qwen-a0-reset-r3-1019
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/qwen-a0-reset-r3-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/qwen-a0-reset-r3-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/qwen-a0-reset-r3-1019
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-1962240-1792431573 after 1 s
+A0_NATIVE_BENCH_GENERATED 2622 ports; TX-clock reset leaf 11
+A0_FIRST_VALID go16 result67 age51
+A0_FIRST_VALID go1216 result1267 age51
+A0_FIRST_VALID go2416 result2467 age51
+A0_FIRST_VALID go3616 result3667 age51
+A0_FIRST_VALID go4816 result4867 age51
+A0_FIRST_VALID go6016 result6067 age51
+ROMLEAF_PARENT_NK_MISMATCH cycle6555 rt000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 ut000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 rn13ff000003fed00003fea00003fe700003fe400003fe100003fde00003fdb00003fd800003fd500003fd200003fcf00003fcc00003fc900003fc600003fc30000 un03ff000003fed00003fea00003fe700003fe400003fe100003fde00003fdb00003fd800003fd500003fd200003fcf00003fcc00003fc900003fc600003fc30000
+A0_FIRST_VALID go6556 result6607 age51
+A0_FIRST_VALID go7756 result7807 age51
+A0_FIRST_VALID go8956 result9007 age51
+A0_FIRST_VALID go10156 result10207 age51
+A0_FIRST_VALID go11356 result11407 age51
+A0_FIRST_VALID go12556 result12607 age51
+[13088000] %Fatal: tb_numeric_r4.sv:2753: Assertion failed in tb_qwen_a0_reset_native_r4: ROMLEAF_PARENT_NK_NATIVE_FAIL MUT0 errors1 checks12974 valids5988 nonzero5988
+%Error: native/tb_numeric_r4.sv:2753: Verilog $stop
+Aborting...
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-1962240-1792431573): exit 1

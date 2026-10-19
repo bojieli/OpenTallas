@@ -1,0 +1,164 @@
+{
+  "schema": "opentallas.a0.reset_protocol_result.v1",
+  "specialized_top": "qfd_tile_nk_regroot5_reset_native",
+  "source_commit": "4204d15a6",
+  "source_changed_after_native_snapshot": false,
+  "comparisons": 13040,
+  "valid_nonzero_outputs": 5120,
+  "cold_warm_epochs": 2,
+  "operations_per_epoch": 5,
+  "MAC_lanes": 64,
+  "physical_ROM_bodies": 10,
+  "LSL_leaves_active": 8,
+  "minimum_observed_first_GO_after_all_leaves_ready_edges": 16,
+  "first_output_after_GO_edges": 51,
+  "reset_trace_checks": 248501,
+  "idle_payload_difference_events": 72,
+  "idle_event_intervals": {
+    "numeric": {
+      "events": 95,
+      "first_cycle": 6642,
+      "last_cycle": 6790,
+      "exact_cycle_ranges_inclusive": [
+        [
+          6642,
+          6646
+        ],
+        [
+          6650,
+          6654
+        ],
+        [
+          6658,
+          6662
+        ],
+        [
+          6666,
+          6670
+        ],
+        [
+          6674,
+          6678
+        ],
+        [
+          6682,
+          6686
+        ],
+        [
+          6690,
+          6694
+        ],
+        [
+          6698,
+          6702
+        ],
+        [
+          6706,
+          6710
+        ],
+        [
+          6714,
+          6718
+        ],
+        [
+          6722,
+          6726
+        ],
+        [
+          6730,
+          6734
+        ],
+        [
+          6738,
+          6742
+        ],
+        [
+          6746,
+          6750
+        ],
+        [
+          6754,
+          6758
+        ],
+        [
+          6762,
+          6766
+        ],
+        [
+          6770,
+          6774
+        ],
+        [
+          6778,
+          6782
+        ],
+        [
+          6786,
+          6790
+        ]
+      ],
+      "expected_valid_for_every_event": 0,
+      "actual_valid_for_every_event": 0
+    },
+    "numeric_r6": {
+      "events": 72,
+      "first_cycle": 6501,
+      "last_cycle": 6613,
+      "exact_cycle_ranges_inclusive": [
+        [
+          6501,
+          6548
+        ],
+        [
+          6578,
+          6582
+        ],
+        [
+          6586,
+          6590
+        ],
+        [
+          6594,
+          6598
+        ],
+        [
+          6602,
+          6606
+        ],
+        [
+          6610,
+          6613
+        ]
+      ],
+      "expected_valid_for_every_event": 0,
+      "actual_valid_for_every_event": 0
+    }
+  },
+  "all_protocol_valid_payload_comparisons_exact": true,
+  "all_status_valid_comparisons_exact": true,
+  "tree_cut": {
+    "scenarios": 32,
+    "clock_nets": 17,
+    "checks": 22052,
+    "mutants": [
+      41,
+      42,
+      43,
+      44
+    ]
+  },
+  "full_native_mutants": {
+    "41": "actual new leaf held reset: fails reset trace before arithmetic",
+    "42": "face sample bypass: fails reset age trace before arithmetic",
+    "FIRST_GO=0": "fails512 meaningful numerical comparisons"
+  },
+  "sync_state_proofs": {
+    "cleared_metadata": 6,
+    "retained_context": 254,
+    "unproven": 0
+  },
+  "native_generic_census_exact_bad_driver_match": true,
+  "remaining_broad_registers": 7,
+  "remaining_broad_nonclock_drivers": 70,
+  "gate_or_physical_adoption_authorized": false
+}

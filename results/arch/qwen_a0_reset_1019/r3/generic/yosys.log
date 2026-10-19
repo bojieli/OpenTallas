@@ -1,0 +1,313 @@
+
+-- Running command `read_verilog -lib /work/native/native_cells.v /work/rtl/physical/bb/ot_qwen_tile_lsl_fp1_bb.v /work/rtl/physical/bb/ot_qwen_tile_node_bb.v /work/rtl/physical/bb/ot_qwen_tile_romleaf_bb.v; read_verilog /work/native/candidate.v; hierarchy -check -top qfd_tile_nk_regroot5_reset_native; stat; write_json /work/generic/source.json' --
+
+1. Executing Verilog-2005 frontend: /work/native/native_cells.v
+Parsing Verilog input from `/work/native/native_cells.v' to AST representation.
+Generating RTLIL representation for module `\A2O1A1Ixp33_ASAP7_75t_R'.
+Generating RTLIL representation for module `\A2O1A1O1Ixp25_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AND2x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AND2x4_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AND2x6_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AND3x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AND3x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AND3x4_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AND4x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AND4x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AND5x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AND5x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AO211x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AO21x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AO21x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AO221x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AO221x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AO222x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AO22x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AO22x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AO31x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AO322x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AO32x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AO32x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AO331x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AO331x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AO332x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AO332x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AO333x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AO333x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AO33x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AOI211x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AOI211xp5_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AOI21x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AOI21xp33_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AOI21xp5_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AOI221x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AOI221xp5_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AOI222xp33_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AOI22x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AOI22xp33_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AOI22xp5_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AOI311xp33_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AOI31xp33_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AOI31xp67_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AOI321xp33_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AOI322xp5_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AOI32xp33_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AOI331xp33_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AOI332xp33_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AOI333xp33_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AOI33xp33_ASAP7_75t_R'.
+Generating RTLIL representation for module `\BUFx10_ASAP7_75t_R'.
+Generating RTLIL representation for module `\BUFx12_ASAP7_75t_R'.
+Generating RTLIL representation for module `\BUFx12f_ASAP7_75t_R'.
+Generating RTLIL representation for module `\BUFx16f_ASAP7_75t_R'.
+Generating RTLIL representation for module `\BUFx24_ASAP7_75t_R'.
+Generating RTLIL representation for module `\BUFx2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\BUFx3_ASAP7_75t_R'.
+Generating RTLIL representation for module `\BUFx4_ASAP7_75t_R'.
+Generating RTLIL representation for module `\BUFx4f_ASAP7_75t_R'.
+Generating RTLIL representation for module `\BUFx5_ASAP7_75t_R'.
+Generating RTLIL representation for module `\BUFx6f_ASAP7_75t_R'.
+Generating RTLIL representation for module `\BUFx8_ASAP7_75t_R'.
+Generating RTLIL representation for module `\CKINVDCx10_ASAP7_75t_R'.
+Generating RTLIL representation for module `\CKINVDCx11_ASAP7_75t_R'.
+Generating RTLIL representation for module `\CKINVDCx12_ASAP7_75t_R'.
+Generating RTLIL representation for module `\CKINVDCx14_ASAP7_75t_R'.
+Generating RTLIL representation for module `\CKINVDCx16_ASAP7_75t_R'.
+Generating RTLIL representation for module `\CKINVDCx20_ASAP7_75t_R'.
+Generating RTLIL representation for module `\CKINVDCx5p33_ASAP7_75t_R'.
+Generating RTLIL representation for module `\CKINVDCx6p67_ASAP7_75t_R'.
+Generating RTLIL representation for module `\CKINVDCx8_ASAP7_75t_R'.
+Generating RTLIL representation for module `\CKINVDCx9p33_ASAP7_75t_R'.
+Generating RTLIL representation for module `\DFFASRHQNx1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\DFFHQNH2V2Xx1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\DFFHQNH2V2Xx2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\DFFHQNH2V2Xx3_ASAP7_75t_R'.
+Generating RTLIL representation for module `\DFFHQNV2Xx1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\DFFHQNV2Xx2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\DFFHQNV2Xx3_ASAP7_75t_R'.
+Generating RTLIL representation for module `\DFFHQNV4Xx1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\DFFHQNV4Xx2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\DFFHQNV4Xx3_ASAP7_75t_R'.
+Generating RTLIL representation for module `\DFFHQNx1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\DFFHQNx2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\DFFHQNx3_ASAP7_75t_R'.
+Generating RTLIL representation for module `\DFFHQx4_ASAP7_75t_R'.
+Generating RTLIL representation for module `\DFFLQNx1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\DFFLQNx2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\DFFLQNx3_ASAP7_75t_R'.
+Generating RTLIL representation for module `\DFFLQx4_ASAP7_75t_R'.
+Generating RTLIL representation for module `\DHLx1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\DHLx2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\DHLx3_ASAP7_75t_R'.
+Generating RTLIL representation for module `\DLLx1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\DLLx2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\DLLx3_ASAP7_75t_R'.
+Generating RTLIL representation for module `\FAx1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\HAxp5_ASAP7_75t_R'.
+Generating RTLIL representation for module `\HB1xp67_ASAP7_75t_R'.
+Generating RTLIL representation for module `\HB2xp67_ASAP7_75t_R'.
+Generating RTLIL representation for module `\HB3xp67_ASAP7_75t_R'.
+Generating RTLIL representation for module `\HB4xp67_ASAP7_75t_R'.
+Generating RTLIL representation for module `\INVx11_ASAP7_75t_R'.
+Generating RTLIL representation for module `\INVx13_ASAP7_75t_R'.
+Generating RTLIL representation for module `\INVx1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\INVx2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\INVx3_ASAP7_75t_R'.
+Generating RTLIL representation for module `\INVx4_ASAP7_75t_R'.
+Generating RTLIL representation for module `\INVx5_ASAP7_75t_R'.
+Generating RTLIL representation for module `\INVx6_ASAP7_75t_R'.
+Generating RTLIL representation for module `\INVx8_ASAP7_75t_R'.
+Generating RTLIL representation for module `\INVxp33_ASAP7_75t_R'.
+Generating RTLIL representation for module `\INVxp67_ASAP7_75t_R'.
+Generating RTLIL representation for module `\MAJIxp5_ASAP7_75t_R'.
+Generating RTLIL representation for module `\MAJx2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\MAJx3_ASAP7_75t_R'.
+Generating RTLIL representation for module `\NAND2x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\NAND2x1p5_ASAP7_75t_R'.
+Generating RTLIL representation for module `\NAND2x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\NAND2xp33_ASAP7_75t_R'.
+Generating RTLIL representation for module `\NAND2xp5_ASAP7_75t_R'.
+Generating RTLIL representation for module `\NAND2xp67_ASAP7_75t_R'.
+Generating RTLIL representation for module `\NAND3x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\NAND3x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\NAND3xp33_ASAP7_75t_R'.
+Generating RTLIL representation for module `\NAND4xp25_ASAP7_75t_R'.
+Generating RTLIL representation for module `\NAND4xp75_ASAP7_75t_R'.
+Generating RTLIL representation for module `\NAND5xp2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\NOR2x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\NOR2x1p5_ASAP7_75t_R'.
+Generating RTLIL representation for module `\NOR2x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\NOR2xp33_ASAP7_75t_R'.
+Generating RTLIL representation for module `\NOR2xp67_ASAP7_75t_R'.
+Generating RTLIL representation for module `\NOR3x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\NOR3x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\NOR3xp33_ASAP7_75t_R'.
+Generating RTLIL representation for module `\NOR4xp25_ASAP7_75t_R'.
+Generating RTLIL representation for module `\NOR4xp75_ASAP7_75t_R'.
+Generating RTLIL representation for module `\NOR5xp2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\O2A1O1Ixp33_ASAP7_75t_R'.
+Generating RTLIL representation for module `\O2A1O1Ixp5_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OA211x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OA21x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OA221x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OA222x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OA22x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OA31x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OA331x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OA331x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OA332x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OA332x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OA333x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OA333x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OA33x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OAI211xp5_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OAI21x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OAI21xp33_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OAI21xp5_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OAI221xp5_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OAI222xp33_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OAI22x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OAI22xp33_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OAI22xp5_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OAI311xp33_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OAI31xp33_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OAI31xp67_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OAI321xp33_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OAI322xp33_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OAI32xp33_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OAI331xp33_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OAI332xp33_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OAI333xp33_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OAI33xp33_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OR2x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OR2x4_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OR2x6_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OR3x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OR3x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OR3x4_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OR4x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OR4x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OR5x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OR5x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\SDFHx1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\SDFHx2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\SDFHx3_ASAP7_75t_R'.
+Generating RTLIL representation for module `\SDFHx4_ASAP7_75t_R'.
+Generating RTLIL representation for module `\SDFLx1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\SDFLx2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\SDFLx3_ASAP7_75t_R'.
+Generating RTLIL representation for module `\SDFLx4_ASAP7_75t_R'.
+Generating RTLIL representation for module `\TIEHIx1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\TIELOx1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\XNOR2x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\XNOR2x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\XNOR2xp5_ASAP7_75t_R'.
+Generating RTLIL representation for module `\XOR2x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\XOR2x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\XOR2xp5_ASAP7_75t_R'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: /work/rtl/physical/bb/ot_qwen_tile_lsl_fp1_bb.v
+Parsing Verilog input from `/work/rtl/physical/bb/ot_qwen_tile_lsl_fp1_bb.v' to AST representation.
+Generating RTLIL representation for module `\ot_qwen_tile_lsl_fp1'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: /work/rtl/physical/bb/ot_qwen_tile_node_bb.v
+Parsing Verilog input from `/work/rtl/physical/bb/ot_qwen_tile_node_bb.v' to AST representation.
+Generating RTLIL representation for module `\ot_qwen_tile_node'.
+Successfully finished Verilog frontend.
+
+4. Executing Verilog-2005 frontend: /work/rtl/physical/bb/ot_qwen_tile_romleaf_bb.v
+Parsing Verilog input from `/work/rtl/physical/bb/ot_qwen_tile_romleaf_bb.v' to AST representation.
+Generating RTLIL representation for module `\ot_qwen_tile_romleaf'.
+Successfully finished Verilog frontend.
+
+5. Executing Verilog-2005 frontend: /work/native/candidate.v
+Parsing Verilog input from `/work/native/candidate.v' to AST representation.
+Generating RTLIL representation for module `\qfd_tile_nk_regroot5_reset_native'.
+Successfully finished Verilog frontend.
+
+6. Executing HIERARCHY pass (managing design hierarchy).
+
+6.1. Analyzing design hierarchy..
+Top module:  \qfd_tile_nk_regroot5_reset_native
+
+6.2. Analyzing design hierarchy..
+Top module:  \qfd_tile_nk_regroot5_reset_native
+Removed 0 unused modules.
+
+7. Printing statistics.
+
+=== qfd_tile_nk_regroot5_reset_native ===
+
+        +----------Local Count, excluding submodules.
+        | 
+    46913 wires
+    46913 wire bits
+    46913 public wires
+    46913 public wire bits
+     2622 ports
+     2622 port bits
+    38609 cells
+      557   AND2x2_ASAP7_75t_R
+        2   AND2x4_ASAP7_75t_R
+      183   AND3x1_ASAP7_75t_R
+        1   AND3x4_ASAP7_75t_R
+       61   AND4x1_ASAP7_75t_R
+       19   AND5x1_ASAP7_75t_R
+        8   AO211x2_ASAP7_75t_R
+      565   AO21x1_ASAP7_75t_R
+        3   AO21x2_ASAP7_75t_R
+       57   AO221x1_ASAP7_75t_R
+        5   AO222x2_ASAP7_75t_R
+       44   AO22x1_ASAP7_75t_R
+        1   AO22x2_ASAP7_75t_R
+       14   AO31x2_ASAP7_75t_R
+       67   AO32x1_ASAP7_75t_R
+       10   AO33x2_ASAP7_75t_R
+       46   AOI211x1_ASAP7_75t_R
+      179   AOI21x1_ASAP7_75t_R
+       16   AOI221x1_ASAP7_75t_R
+       11   AOI22x1_ASAP7_75t_R
+     1849   BUFx2_ASAP7_75t_R
+       55   BUFx3_ASAP7_75t_R
+       11   BUFx4f_ASAP7_75t_R
+        9   BUFx6f_ASAP7_75t_R
+      129   DFFASRHQNx1_ASAP7_75t_R
+    15522   DFFHQNx1_ASAP7_75t_R
+     5939   INVx1_ASAP7_75t_R
+       13   INVx2_ASAP7_75t_R
+     6249   INVx3_ASAP7_75t_R
+        2   INVx4_ASAP7_75t_R
+       91   MAJx2_ASAP7_75t_R
+     1516   NAND2x1_ASAP7_75t_R
+        2   NAND2x2_ASAP7_75t_R
+       12   NAND3x1_ASAP7_75t_R
+     1478   NOR2x1_ASAP7_75t_R
+        4   NOR2x2_ASAP7_75t_R
+       27   NOR3x1_ASAP7_75t_R
+      257   OA211x2_ASAP7_75t_R
+      398   OA21x2_ASAP7_75t_R
+        2   OA221x2_ASAP7_75t_R
+        6   OA222x2_ASAP7_75t_R
+       22   OA22x2_ASAP7_75t_R
+       28   OA31x2_ASAP7_75t_R
+        3   OA33x2_ASAP7_75t_R
+       91   OAI21x1_ASAP7_75t_R
+       21   OAI22x1_ASAP7_75t_R
+     1196   OR2x2_ASAP7_75t_R
+     1215   OR3x1_ASAP7_75t_R
+        1   OR3x2_ASAP7_75t_R
+       79   OR4x1_ASAP7_75t_R
+        2   OR4x2_ASAP7_75t_R
+       13   OR5x1_ASAP7_75t_R
+       39   TIEHIx1_ASAP7_75t_R
+        1   TIELOx1_ASAP7_75t_R
+        7   XNOR2x1_ASAP7_75t_R
+      261   XNOR2x2_ASAP7_75t_R
+        1   XOR2x1_ASAP7_75t_R
+      190   XOR2x2_ASAP7_75t_R
+        8   ot_qwen_tile_lsl_fp1
+        1   ot_qwen_tile_node
+       10   ot_qwen_tile_romleaf
+
+8. Executing JSON backend.
