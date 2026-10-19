@@ -2,12 +2,12 @@
  "name": "hidx_score_leaf_1017-ref-COMMIT",
  "block": "ot_hbm_idx_score_leaf",
  "ref_tile": true,
- "owner": "Claude HBM-C lane 1017 (for H-NETLIST/IDX-SCORE)",
+ "owner": "Claude OWN-IDXSCORE 1018",
  "purpose": "IDX-SCORE leaf master (16 instances in the scorer cluster x 2 scorers)",
  "threads": 16,
  "peak_ram_gb": 64,
  "source": {
-  "branch": "claude/hbmc-1017",
+  "branch": "claude/own-idxscore-1018",
   "commit": "COMMIT"
  },
  "stages": {
