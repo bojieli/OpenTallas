@@ -127,7 +127,12 @@ def run_sim2(name, ev, work, mut, ncyc, n=2):
               ([f"+define+OT_DV_AMAX_MUT={AM_MUT}"] if AM_MUT else []) + \
               VFLAGS + ["-Mdir", str(obj), str(HERE / "main2.cpp")] + \
               [str(ROOT / s) for s in SRCS2 + (XSRCS if VFLAGS else [])]
-        subprocess.run(cmd, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        obj.mkdir(parents=True, exist_ok=True)
+        with open(obj.parent / f"build_{obj.name}.log", "w") as bl:     # kept: a failed build names its error
+            r = subprocess.run(cmd, stdout=bl, stderr=subprocess.STDOUT)
+        if r.returncode:
+            print("    VERILATOR BUILD FAIL:", "".join(open(obj.parent / f"build_{obj.name}.log").readlines()[-15:]))
+            raise subprocess.CalledProcessError(r.returncode, cmd[:4])
     subprocess.run([str(exe), f"+EV={evf}", f"+LOG={lgf}", f"+NCYC={ncyc}"], check=True, stdout=subprocess.DEVNULL)
     out = {}
     for line in lgf.read_text().split("\n"):
