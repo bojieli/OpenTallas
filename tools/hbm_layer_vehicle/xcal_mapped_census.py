@@ -19,7 +19,8 @@ yosys='/OpenROAD-flow-scripts/tools/install/yosys/bin/yosys'
 jobs=[json.loads(pathlib.Path(p).read_text()) for p in args.spec] if args.spec else [dict(top='ot_hbm_xcal_desc_host_native',params={'PAW':11,'PREL':1,'DD':256,'DAW':8}),dict(top='ot_hbm_xcal_prog_native',params={'PAW':11,'PREL':1})]
 for job in jobs:
     top=job['top'];params=job.get('params',{});sources=job.get('sources',common+bbs)
-    dst=out/top;dst.mkdir(exist_ok=True)
+    tag=job.get('name',top+('_'+hashlib.sha256(json.dumps(params,sort_keys=True).encode()).hexdigest()[:8] if sum(j['top']==top for j in jobs)>1 else ''))
+    dst=out/tag;dst.mkdir(exist_ok=True)
     la=''.join(' -liberty '+str(p) for p in libs)
     script=['read_liberty -lib '+str(p) for p in libs]
     script+=['read_verilog -sv '+p for p in sources]
