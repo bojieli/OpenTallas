@@ -14,9 +14,11 @@ F="$R/rtl/lib/ot_async_fifo.sv $R/rtl/lib/ot_reset_sync.sv $R/rtl/lib/ot_rst_rel
    $R/rtl/dsrom_sys/s81_ingest/ot_s81_ingest_visibility_fence.sv $R/rtl/dsrom_sys/s81_ingest/dsfd_host_native.sv
    $R/rtl/dsrom_sys/s81_ingest/dsfd_host_sd.sv $R/rtl/dsrom_sys/s81_ingest/dsfd_host_c.sv
    $R/rtl/dsrom_sys/s81_static_control/ot_s81_fixed_issue.sv $U/ot_dsdv_fixed_issue.sv $U/ot_dsdv_walk_issue.sv $U/ot_dsdv_vstop.sv $U/dsdv_sh_sd.sv $U/dsdv_seq_host.sv
+   $R/rtl/dsrom_sys/s81_dv/unit/host_sram/ot_dsdv_host_afifo_sram.sv
+   $R/physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1/ot_sram_1r1w2c_16x546_m1.v
    $R/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v"
 build() { l=$1; shift
-  verilator --binary --timing -j 16 -Wno-fatal -Wno-WIDTH -Wno-lint -Wno-style -Wno-UNOPTFLAT +define+DSFD_HOST_C_STATIC \
+  verilator ${VL_EXTRA:-} --binary --timing -j 16 -Wno-fatal -Wno-WIDTH -Wno-lint -Wno-style -Wno-UNOPTFLAT +define+DSFD_HOST_C_STATIC \
     --top-module tb_dsdv_seq_host "$@" --Mdir "$O/$l" -o tb $F $U/test/tb_dsdv_seq_host.sv > "$O/build_$l.log" 2>&1 \
     || { echo "BUILD_FAIL $l (see $O/build_$l.log)"; return 2; }
 }
@@ -26,6 +28,15 @@ bad=0
 # mutant OT_ING_MUT_HREG needs a full-rate host stream: physical/sys_takeover/host_native_pipe_bench.py hreg7)
 # 9 = the unit MUT 9: the L0 rung landing dropped (S81-SHLK2 10-18; rung one edge short)
 mdef() { case $1 in 7) echo +define+OT_ING_MUT_HREGV;; 8) echo +define+OT_ING_MUT_RAC;; *) echo +define+MUT=$1;; esac; }
+if [ "${3:-}" = base ]; then
+  build base || exit 2
+  for seed in $SEEDS; do
+    "$O/base/tb" +seed=$seed > "$O/run_s$seed.log" 2>&1
+    grep '^SEQHOST' "$O/run_s$seed.log"
+    grep -q '^SEQHOST PASS' "$O/run_s$seed.log" || bad=1
+  done
+  exit $bad
+fi
 if [ -n "${3:-}" ]; then   # single-mutant mode for closure-loop benches: run_seq_host_bench.sh OUT SEED <1..9>; prints the SEQHOST lines
   m=$3; build mut$m $(mdef $m) || exit 2
   "$O/mut$m/tb" +seed=${SEEDS%% *} > "$O/run_mut$m.log" 2>&1; grep '^SEQHOST' "$O/run_mut$m.log"; exit 0
@@ -49,7 +60,7 @@ for m in 1 2 3 4 5 6 7 8 9 10; do
   if grep -q '^SEQHOST PASS' "$O/run_mut$m.log"; then echo "mutant $m NOT detected"; bad=1
   else echo "mutant $m detected: $(grep -m1 '^SEQHOST seed' "$O/run_mut$m.log" | grep -o 'mism.*')"; fi
 done
-verilator --lint-only -Wall -Wno-fatal --top-module dsdv_seq_host $F > "$O/lint.log" 2>&1
+verilator ${VL_EXTRA:-} --lint-only -Wall -Wno-fatal --top-module dsdv_seq_host $F > "$O/lint.log" 2>&1
 # waived in dsdv_seq_host.sv: DECLFILENAME (5 leaves in one file), PINCONNECTEMPTY / UNUSEDSIGNAL (the reused modules'
 # diagnostic outputs the unit does not export: issuer st_*/phase/job_rdy/END pulse, vstop dl_* (seqhost taps nothing),
 # ingest h_crn (static host: no receive credits, as dsfd_host_c STATIC), lane live bits), MULTIDRIVEN s_hw (dsfd_host_sd

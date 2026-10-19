@@ -716,19 +716,40 @@ module ot_hdc_kv_ingest #(
             ap1_rbase <= s_rbase; ap1_local <= s_local; ap1_gs <= s_gs; ap1_row <= st_row; ap1_pitch <= s_pitch; ap1_mine <= s_mine;
         end
     end
+    // APIPE 9: split sb*2176 from the base addition. Each stage has one
+    // two-operand add; the old ap1_gs -> apb_blk cone had two serial adds.
+    // Same modulo32-bit addresses; one additional row-start bubble.
+    reg ap_okx, apx_mine;
+    reg [31:0] apx_stride, apx_base, apx_koff, apx_soff, apx_raddr;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) ap_okx <= 1'b0;
+        else if (ap_inval) ap_okx <= 1'b0;
+        else ap_okx <= st_act && ap_ok1;
+    end
+    always @(posedge clk) if (!ap_okx) begin
+        apx_stride <= (a2_sb << 11) + (a2_sb << 7);
+        apx_base <= ap1_rbase;
+        apx_koff <= ((32'd1 + {28'd0, a2_q[5:2]}) << 7) + ({30'd0, a2_q[1:0]} << 5) + ((ap1_row & 32'd15) << 1);
+        apx_soff <= {26'd0, a2_q} << 1;
+        apx_raddr <= a2_raddr; apx_mine <= ap1_mine;
+    end
     // APIPE 8: stage B0 (apb_*) = block base, IKEY offsets, row address; stage B = two-operand sums
     reg         ap_okb, apb_mine;
     reg  [31:0] apb_blk, apb_koff, apb_soff, apb_raddr;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) ap_okb <= 1'b0;
         else if (ap_inval) ap_okb <= 1'b0;
+`ifdef OT_ING_MUT_APXSKIP
         else ap_okb <= st_act && ap_ok1;
+`else
+        else ap_okb <= st_act && ((APIPE >= 9) ? ap_okx : ap_ok1);
+`endif
     end
     always @(posedge clk) if (!ap_okb) begin
-        apb_blk  <= a2_blk;
-        apb_koff <= ((32'd1 + {28'd0, a2_q[5:2]}) << 7) + ({30'd0, a2_q[1:0]} << 5) + ((ap1_row & 32'd15) << 1);
-        apb_soff <= {26'd0, a2_q} << 1;
-        apb_raddr <= a2_raddr; apb_mine <= ap1_mine;
+        apb_blk  <= (APIPE >= 9) ? apx_base + apx_stride : a2_blk;
+        apb_koff <= (APIPE >= 9) ? apx_koff : ((32'd1 + {28'd0, a2_q[5:2]}) << 7) + ({30'd0, a2_q[1:0]} << 5) + ((ap1_row & 32'd15) << 1);
+        apb_soff <= (APIPE >= 9) ? apx_soff : ({26'd0, a2_q} << 1);
+        apb_raddr <= (APIPE >= 9) ? apx_raddr : a2_raddr; apb_mine <= (APIPE >= 9) ? apx_mine : ap1_mine;
     end
     always @(posedge clk) if (!ap_ok) begin
         if (APIPE >= 8) begin ap_raddr <= apb_raddr; ap_kcode <= apb_blk + apb_koff; ap_kscal <= apb_blk + apb_soff; ap_mine <= apb_mine; end

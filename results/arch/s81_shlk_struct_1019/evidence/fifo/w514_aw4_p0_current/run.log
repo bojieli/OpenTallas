@@ -1,0 +1,9 @@
+SH_FIFO_MISMATCH read1
+SH_FIFO_MISMATCH read2
+SH_FIFO_MISMATCH read3
+SH_FIFO_MISMATCH read4
+SH_FIFO_MISMATCH read5
+SH_FIFO_RESULT W514 AW4 phase0 reads3770 errors3759 outstanding0 ovf0 maxburst381
+[4229888] %Fatal: tb_sh_host_fifo.sv:33: Assertion failed in tb_sh_host_fifo: SH_FIFO_FAIL
+%Error: rtl/dsrom_sys/s81_dv/unit/host_sram/tb_sh_host_fifo.sv:33: Verilog $stop
+Aborting...

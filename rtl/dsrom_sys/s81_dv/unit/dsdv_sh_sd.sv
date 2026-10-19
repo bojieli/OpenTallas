@@ -49,7 +49,13 @@ module dsdv_sh_sd #(
 );
     // ---- reset: the port drives only the relay (design standard); release 3 cycles after the port
     wire rn;
+`ifdef OT_S81_SH_APIPE9
+    wire [7:0] reset_regions__ot_rlv;
+    ot_rst_relay #(.REGIONS(8)) u_rr (.clk(ck), .rst_n_in(rst_n), .rst_n(reset_regions__ot_rlv));
+    assign rn = reset_regions__ot_rlv[0];
+`else
     ot_rst_relay #(.REGIONS(1)) u_rr (.clk(ck), .rst_n_in(rst_n), .rst_n(rn));
+`endif
     // ---- pin flops
     reg iv; reg iwe; reg [31:0] ia; reg [255:0] id; reg [9*NS-1:0] hc_q;
     always @(posedge ck or negedge rn)
@@ -57,8 +63,27 @@ module dsdv_sh_sd #(
         else begin iv <= o_v; hc_q <= hc; end
     always @(posedge ck) begin iwe <= o_we; ia <= o_addr; id <= o_d; end
     // ---- FIFO
-    reg [288:0] f [0:7]; reg [2:0] wp, rp; reg [3:0] n;
+    reg [2:0] wp, rp; reg [3:0] n;
+`ifdef OT_S81_SH_SRAM
+    wire [288:0] h;
+    reg head_v;
+    wire head_ready=head_v;
+    wire sd_pop;
+    wire [2:0] read_next=rp+sd_pop;
+    wire have_next=n>{3'd0,sd_pop};
+    wire [545:0] mem_q;
+    ot_sram_1r1w2c_16x546_m1 u_mem(.wclk(ck),.rclk(ck),.r_ce_in(rn&&have_next),.r_addr_in({1'b0,read_next}),.rd_out(mem_q),
+      .w_ce_in(rn&&iv),.w_addr_in({1'b0,wp}),.wd_in({257'd0,iwe,ia,id}),.w_mask_in({546{1'b1}}));
+    assign h=mem_q[288:0];
+    always @(posedge ck or negedge rn) if(!rn)head_v<=0;else head_v<=have_next;
+`ifndef SYNTHESIS
+    always @(posedge ck)if(rn&&have_next&&iv&&read_next==wp)$fatal(1,"SH_SD_SRAM_COLLISION");
+`endif
+`else
+    reg [288:0] f [0:7];
     wire [288:0] h = f[rp];
+    wire head_ready=1'b1;
+`endif
     wire hwe = h[288]; wire [31:0] ha = h[287:256]; wire [255:0] hd = h[255:0];
     // ---- KV stack list
     function automatic integer nkv(input integer m); integer i, c; begin c = 0; for (i = 0; i < NS; i = i + 1) if (m[i]) c = c + 1; nkv = c; end endfunction
@@ -100,7 +125,26 @@ module dsdv_sh_sd #(
     reg [4:0] cr [0:NS-1]; reg [6:0] crn;
     reg ok;
     always @* begin ok = 1'b1; for (s = 0; s < NS; s = s + 1) if (dst[s] && cr[s] == 0) ok = 1'b0; end
-    wire pop = (n != 0) && (STATIC != 0 || bad || ok);
+    wire pop = (n != 0) && head_ready && (STATIC != 0 || bad || ok);
+`ifdef OT_S81_SH_SRAM
+    assign sd_pop=pop;
+`endif
+`ifdef OT_S81_SH_SRAM
+    // One physical payload hop between the upper SRAM and the stack faces.
+    // Credits are reserved at pop; the following edge emits that reserved word.
+    (* keep = "true" *) reg [290:0] sd_hop_payload;
+    (* keep = "true" *) reg [NS-1:0] sd_hop_dst;
+    reg sd_hop_v;
+    always @(posedge ck or negedge rn)
+        if (!rn) begin sd_hop_v<=0; sd_hop_dst<=0; end
+        else begin sd_hop_v<=pop; sd_hop_dst<=dst; end
+`ifdef OT_S81_SH_MUT_HOPSTALE
+    always @(posedge ck) if(pop && !sd_hop_v)
+`else
+    always @(posedge ck) if(pop)
+`endif
+        sd_hop_payload <= {(cls == 2'd3) ? 2'd2 : ((cls == 2'd2) ? 2'd1 : 2'd0), hwe, ha, hd};
+`endif
     reg [8:0] asum;
     always @* begin asum = 9'd0; for (s = 0; s < NS; s = s + 1) asum = asum + hc_q[9*s + 1 +: 8]; end
     always @(posedge ck or negedge rn)
@@ -108,13 +152,21 @@ module dsdv_sh_sd #(
             wp <= 0; rp <= 0; n <= 0; o_cr <= 1'b0; fault <= 1'b0; host_ack_n <= 8'd0; crn <= 0;
             for (s = 0; s < NS; s = s + 1) begin cr[s] <= SCRED[4:0]; hw[292*s] <= 1'b0; end
         end else begin
-            if (iv) begin f[wp] <= {iwe, ia, id}; wp <= wp + 1'b1; if (n == 8 && !pop) fault <= 1'b1; end
+            if (iv) begin
+`ifndef OT_S81_SH_SRAM
+                f[wp] <= {iwe, ia, id};
+`endif
+                wp <= wp + 1'b1; if (n == 8 && !pop) fault <= 1'b1; end
             if (pop) rp <= rp + 1'b1;
             n <= n + iv - pop;
             o_cr <= pop;
             if (pop && (bad || (STATIC != 0 && !ok))) fault <= 1'b1;
             for (s = 0; s < NS; s = s + 1) begin
+`ifdef OT_S81_SH_SRAM
+                hw[292*s] <= sd_hop_v && sd_hop_dst[s];
+`else
                 hw[292*s] <= pop && dst[s];
+`endif
                 cr[s] <= cr[s] - (pop && dst[s]) + (hc_q[9*s] && !(MUT == 2 && crn == 49 && s == 0));
                 if (cr[s] - (pop && dst[s]) + hc_q[9*s] > SCRED) fault <= 1'b1;
             end
@@ -122,7 +174,12 @@ module dsdv_sh_sd #(
             host_ack_n <= asum[8] ? 8'hff : asum[7:0];
             if (asum[8]) fault <= 1'b1;
         end
+`ifdef OT_S81_SH_SRAM
+    always @(posedge ck)
+        for (integer t=0;t<NS;t=t+1) if(sd_hop_v&&sd_hop_dst[t]) hw[292*t+1+:291]<=sd_hop_payload;
+`else
     always @(posedge ck)
         for (s = 0; s < NS; s = s + 1) if (pop && dst[s]) hw[292*s + 1 +: 291] <= {(cls == 2'd3) ? 2'd2 : ((cls == 2'd2) ? 2'd1 : 2'd0), hwe, ha, hd};
+`endif
 endmodule
 

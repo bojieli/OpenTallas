@@ -97,9 +97,9 @@ module ot_rom_host_ingest #(
     output wire              fault
 );
     wire rn_h, rn_i, rn_c;
-    ot_reset_sync u_rsh (.clk(clk_h), .async_rst_n(rst_n), .sync_rst_n(rn_h));
-    ot_reset_sync u_rsi (.clk(clk_i), .async_rst_n(rst_n), .sync_rst_n(rn_i));
-    ot_reset_sync u_rsc (.clk(ck),    .async_rst_n(rst_n), .sync_rst_n(rn_c));
+    ot_reset_sync #(.OUTPUT_COPIES(APIPE >= 9 ? 8 : 1)) u_rsh (.clk(clk_h), .async_rst_n(rst_n), .sync_rst_n(rn_h));
+    ot_reset_sync #(.OUTPUT_COPIES(APIPE >= 9 ? 8 : 1)) u_rsi (.clk(clk_i), .async_rst_n(rst_n), .sync_rst_n(rn_i));
+    ot_reset_sync #(.OUTPUT_COPIES(APIPE >= 9 ? 8 : 1)) u_rsc (.clk(ck),    .async_rst_n(rst_n), .sync_rst_n(rn_c));
     // cross-domain nets (declared ahead of use)
     wire         hx_ovf_i, rx_ovf_i, ox_pop, cx_pop;
     reg          irv_q;
@@ -119,9 +119,19 @@ module ot_rom_host_ingest #(
     reg          hx_pop;
     wire         hx_rd, hx_fempty;                // FIFO-side pop / empty (= hx_pop / hx_empty when APIPE < 7)
     wire [513:0] hx_fhead;
-    ot_link_afifo #(.W(514), .AW(HFA), .RCOPY(32)) u_hx (   // 32 kept read-address copies (8,230-load select)
+`ifdef OT_S81_SH_SRAM
+    if (APIPE >= 9) begin : g_hx_sram
+        ot_dsdv_host_afifo_sram #(.W(514), .AW(HFA)) u_hx (
         .wclk(clk_h), .wrst_n(rn_h), .wr(hv_q), .wdata({hc_q, hd_q}), .wfull(hx_full), .wfreed(hx_freed), .ovf(hx_ovf),
         .rclk(clk_i), .rrst_n(rn_i), .rd(hx_rd), .rempty(hx_fempty), .rdata(hx_fhead), .rcount(hx_cnt));
+    end else begin : g_hx_legacy
+`endif
+        ot_link_afifo #(.W(514), .AW(HFA), .RCOPY(32)) u_hx (
+        .wclk(clk_h), .wrst_n(rn_h), .wr(hv_q), .wdata({hc_q, hd_q}), .wfull(hx_full), .wfreed(hx_freed), .ovf(hx_ovf),
+        .rclk(clk_i), .rrst_n(rn_i), .rd(hx_rd), .rempty(hx_fempty), .rdata(hx_fhead), .rcount(hx_cnt));
+`ifdef OT_S81_SH_SRAM
+    end
+`endif
     if (APIPE >= 7) begin : g_hreg
         // APIPE >= 7: registered FWFT head (see the parameter note).  hr_d is data only (no reset): hr_v qualifies it.
         reg          hr_v;
@@ -313,9 +323,19 @@ module ot_rom_host_ingest #(
 
     // Actual mapped HOST native leaf: the output FIFO rbin[1] drove4631
     // mux loads. Kept local read selectors preserve the same head/cycle.
-    ot_link_afifo #(.W(AW + 257), .AW(OFA), .RCOPY(32)) u_ox (
+`ifdef OT_S81_SH_SRAM
+    if (APIPE >= 9) begin : g_ox_sram
+        ot_dsdv_host_afifo_sram #(.W(AW + 257), .AW(OFA)) u_ox (
         .wclk(clk_i), .wrst_n(rn_i), .wr(ox_wr_f), .wdata(ox_w_f), .wfull(ox_full), .wfreed(ox_freed), .ovf(ox_ovf),
         .rclk(ck), .rrst_n(rn_c), .rd(ox_pop), .rempty(ox_empty), .rdata(ox_head), .rcount(ox_cnt));
+    end else begin : g_ox_legacy
+`endif
+        ot_link_afifo #(.W(AW + 257), .AW(OFA), .RCOPY(32)) u_ox (
+        .wclk(clk_i), .wrst_n(rn_i), .wr(ox_wr_f), .wdata(ox_w_f), .wfull(ox_full), .wfreed(ox_freed), .ovf(ox_ovf),
+        .rclk(ck), .rrst_n(rn_c), .rd(ox_pop), .rempty(ox_empty), .rdata(ox_head), .rcount(ox_cnt));
+`ifdef OT_S81_SH_SRAM
+    end
+`endif
     ot_link_afifo #(.W(256), .AW(RFA)) u_rx (
         .wclk(ck), .wrst_n(rn_c), .wr(irv_q), .wdata(ird_q), .wfull(rx_full), .wfreed(rx_freed), .ovf(rx_ovf),
         .rclk(clk_i), .rrst_n(rn_i), .rd(rx_pop), .rempty(rx_empty), .rdata(rx_head), .rcount(rx_cnt));

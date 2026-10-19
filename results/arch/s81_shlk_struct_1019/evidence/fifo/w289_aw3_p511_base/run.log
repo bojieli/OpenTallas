@@ -1,0 +1,6 @@
+SH_FIFO_RESULT W289 AW3 phase511 reads3700 errors0 outstanding0 ovf0 maxburst374
+SH_FIFO_PASS
+- rtl/dsrom_sys/s81_dv/unit/host_sram/tb_sh_host_fifo.sv:34: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4us; walltime 0.021 s; speed 204.371 us/s
+- Verilator: cpu 0.021 s on 1 threads; allocated 7 MB

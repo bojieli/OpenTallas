@@ -15,6 +15,9 @@ pos: pipeline ON, must pass; base: pipeline OFF (the original), must pass; fence
 S81-SHLK 10-18: pos7 (OT_HOSTNATIVE_PIPE7 = FPIPE 2 / APIPE 7) must pass; hreg7 / hregv7 / rac7 must be caught.
 Prints HNP_PASS / HNP_FAIL (pos, base) or HNP_NEG_DETECTED (rc 1) / HNP_NEG_MISSED (rc 0) and the ck cycles per case."""
 import re
+import os
+import subprocess
+import hashlib
 import sys
 from pathlib import Path
 
@@ -56,6 +59,9 @@ extra = {
     "raw_fenced_stall": case_raw_multi(rngm, [1, 1, 0, 1, 1, 0, 1, 1], [24, 2, 3, 24, 1, 2, 30, 1]),
 }
 extra["raw_fenced_stall"]["mstall"] = 90
+# Exercise the actual failed block-address cone across ap1_gs[7] / sb boundary.
+if mode in ('pos8','pos9','apbskip9','apstale9','apxskip9'):
+    extra['ikey_cross_sb'] = C.case_ikey(np.random.default_rng(20261019),256,first=32720,ndie=4,die=2,ns=4)
 for name, c in extra.items():
     c["nb"] = [(d >> 240) & 0xFFFF for d in c["descs"]]
     memw = C.pow2(max(c["exp"].size // 32 + 1, 1024 + 64))
@@ -85,10 +91,42 @@ defs = {"pos2": P2, "fencevis2": P2 + ["-DOT_FENCE_MUT_HRSTALE"], "apstale2": P2
         "pos7": ["-DOT_HOSTNATIVE_PIPE7"], "hreg7": ["-DOT_HOSTNATIVE_PIPE7", "-DOT_ING_MUT_HREG"],
         "hregv7": ["-DOT_HOSTNATIVE_PIPE7", "-DOT_ING_MUT_HREGV"], "rac7": ["-DOT_HOSTNATIVE_PIPE7", "-DOT_ING_MUT_RAC"],
         # S81-SAFE-FIX/SH 10-19: APIPE 8 (IKEY address stage split): pos8 must pass, apbskip8 / apstale8 must be caught
+        "pos9": ["-DOT_HOSTNATIVE_PIPE9"], "apbskip9": ["-DOT_HOSTNATIVE_PIPE9", "-DOT_ING_MUT_APBSKIP"],
+        "apstale9": ["-DOT_HOSTNATIVE_PIPE9", "-DOT_ING_MUT_APSTALE"], "apxskip9": ["-DOT_HOSTNATIVE_PIPE9", "-DOT_ING_MUT_APXSKIP"],
         "pos8": ["-DOT_HOSTNATIVE_PIPE8"], "apbskip8": ["-DOT_HOSTNATIVE_PIPE8", "-DOT_ING_MUT_APBSKIP"],
         "apstale8": ["-DOT_HOSTNATIVE_PIPE8", "-DOT_ING_MUT_APSTALE"]}[mode]
 srcs = [R / s for s in [B.SECDED] + B.HOST_RTL + ["rtl/dsrom_sys/s81_ingest/ot_s81_ingest_visibility_fence.sv",
                                                   "rtl/dsrom_sys/s81_ingest/dsfd_host_native.sv"]] + [w / "tb.sv"]
+# Explicit fleet-only Verilator backend. Keep legacy Icarus mode available.
+if os.environ.get('HNP_VERILATOR') == '1':
+    max_memw=max(c['memw'] for c in cases.values())
+    max_np=max(1 << max(4,(len(c['beats'])-1).bit_length()) for c in cases.values())
+    def sim_vlt(case_dir, sources, top, extra, plus=()):
+        vl=os.environ.get('VL',str(Path.home()/'.local/opentallas-tools/verilator-5.050/bin/verilator'))
+        flags=[]
+        for a in extra:
+            if a.startswith('-P'+top+'.'):
+                name,val=a.split('.',1)[1].split('=',1)
+                if name=='MEMW':val=str(max_memw)
+                if name=='NP':val=str(max_np)
+                flags.append('-G'+name+'='+val)
+            else:flags.append(a)
+        if os.environ.get('HNP_SAMECLOCK') == '1':flags += ['-GHP=833','-GIP=833','-GCP=833']
+        obj=w/'obj_vlt';binary=obj/('V'+top)
+        if not binary.exists():
+            args=[vl,'--binary','--timing','-j',os.environ.get('J','16'),'-Wno-fatal','-Wno-lint','-Wno-style','-Wno-WIDTH','-Wno-UNOPTFLAT','--top-module',top,'--Mdir',str(obj),*flags,*map(str,sources)]
+            (w/'sources.sha256').write_text(''.join(hashlib.sha256(Path(f).read_bytes()).hexdigest()+'  '+str(f)+'\n' for f in sources))
+            (w/'verilator.version').write_text(subprocess.check_output([vl,'--version'],text=True))
+            with (w/'build_vlt.log').open('w') as out:
+                out.write(repr(args)+'\n');out.flush()
+                rc=subprocess.run(args,stdout=out,stderr=subprocess.STDOUT).returncode
+            if rc:raise RuntimeError('Verilator build failed: '+str(w/'build_vlt.log'))
+        r=subprocess.run([str(binary),*plus],cwd=case_dir,capture_output=True,text=True)
+        return r.returncode,r.stdout+r.stderr
+    B.sim=sim_vlt
+if os.environ.get('HNP_SRAM') == '1':
+    defs += ['-DOT_S81_SH_SRAM']
+    srcs += [R/'rtl/dsrom_sys/s81_dv/unit/host_sram/ot_dsdv_host_afifo_sram.sv', R/'physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1/ot_sram_1r1w2c_16x546_m1.v']
 ok_all = True
 vis_only = False         # fencevis: a case whose ONLY failure is the visibility check (protocol counts all correct)
 for name, c in cases.items():
@@ -122,7 +160,7 @@ for name, c in cases.items():
 if mode in ("fencevis", "fencevis2"):
     print("HNP_NEG_DETECTED (visibility check)" if vis_only else "HNP_NEG_MISSED (no visibility-only catch)")
     sys.exit(1 if vis_only else 0)
-if mode in ("pos", "base", "pos2", "pos7", "pos8"):
+if mode in ("pos", "base", "pos2", "pos7", "pos8", "pos9"):
     print("HNP_PASS" if ok_all else "HNP_FAIL")
     sys.exit(0 if ok_all else 1)
 print("HNP_NEG_DETECTED" if not ok_all else "HNP_NEG_MISSED")

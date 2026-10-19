@@ -2,7 +2,8 @@
 // Asynchronous-assert, synchronous-deassert reset conditioner.  ASYNC_STAGES
 // includes the output stage and must be at least two for a CDC/RDC boundary.
 module ot_reset_sync #(
-    parameter integer ASYNC_STAGES = 2
+    parameter integer ASYNC_STAGES = 2,
+    parameter integer OUTPUT_COPIES = 1
 ) (
     input  wire clk,
     input  wire async_rst_n,
@@ -17,7 +18,17 @@ module ot_reset_sync #(
             reset_pipe <= {reset_pipe[ASYNC_STAGES-2:0],1'b1};
     end
 
-    assign sync_rst_n = reset_pipe[ASYNC_STAGES-1];
+    generate if (OUTPUT_COPIES > 1) begin : g_regions
+        // Same release edge as reset_pipe's last stage. The canonicalizer
+        // proves identical D/clock/reset and partitions reset loads <=256.
+        (* keep = "true" *) reg [OUTPUT_COPIES-1:0] reset_regions__ot_rlv;
+        always @(posedge clk or negedge async_rst_n)
+            if (!async_rst_n) reset_regions__ot_rlv <= '0;
+            else reset_regions__ot_rlv <= {OUTPUT_COPIES{reset_pipe[ASYNC_STAGES-2]}};
+        assign sync_rst_n = reset_regions__ot_rlv[0];
+    end else begin : g_original
+        assign sync_rst_n = reset_pipe[ASYNC_STAGES-1];
+    end endgenerate
 
 `ifndef SYNTHESIS
     initial begin

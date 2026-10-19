@@ -91,7 +91,11 @@ module dsdv_sh_lk #(parameter integer V = 276, parameter integer MUT = 0, parame
     input  wire [5:0]    sq_i,            // L1 status {fault, code 4, busy}
     input  wire          vf_i             // L2 fault (via L1)
 );
+`ifdef OT_S81_SH_APIPE9
+    wire [7:0] rr; ot_rst_relay #(.REGIONS(8)) u_rr (.clk(ck), .rst_n_in(rst_n), .rst_n(rr)); wire rn = rr[0];
+`else
     wire [0:0] rr; ot_rst_relay #(.REGIONS(1)) u_rr (.clk(ck), .rst_n_in(rst_n), .rst_n(rr)); wire rn = rr[0];
+`endif
     // ---- rung hop.  RL 1 (S81-SHLK2 10-18, default): LANDED at both faces -- each direction is two flops, the capture flop
     // beside its input pin and the launch flop beside its output pin (vi_s -> vi_q (S face) -> rn_o (N face); rs_i -> rs_q
     // (N face) -> vo_s (S face)), +1 edge each way.  RL 0 = the single-flop hop of the APIPE-6 view 743e0021b, whose one
@@ -163,7 +167,11 @@ module dsdv_sh_lk #(parameter integer V = 276, parameter integer MUT = 0, parame
     // mux -> dq paths start at a ck_ic flop; every host word +1 ck_ic edge, rate unchanged) + 8 kept realigner pointer
     // copies in the engine (ra_rp -> 512-b shift fanout; no cycle change).  Host path f_host -> s_hw / t_host = +2 edges
     // vs the dsfd_host_c golden (tb HSH 2).
-    dsfd_host_native #(.ENABLE(1), .FPIPE(2), .ENG_TRIM(1), .APIPE(8)) u_h (.rst_n(rn), .clk_h(ck), .h_v(to_ing), .h_cls(hcl),
+`ifdef OT_S81_SH_APIPE9
+    dsfd_host_native #(.ENABLE(1), .FPIPE(2), .ENG_TRIM(1), .APIPE(9))
+`else
+    dsfd_host_native #(.ENABLE(1), .FPIPE(2), .ENG_TRIM(1), .APIPE(8))
+`endif u_h (.rst_n(rn), .clk_h(ck), .h_v(to_ing), .h_cls(hcl),
         .h_d(hd), .h_crn(crn), .t_v(t_v), .t_d(t_d), .t_cr(tcr_l), .clk_i(ck), .ck(ck), .o_v(ov), .o_we(owe), .o_addr(oa),
         .o_d(od), .o_cr(ocr), .i_rv(1'b0), .i_rd(256'd0), .host_ack_n(ack), .fault(hf));
     // two host-write stacks = the two svc halves (dsdv_sh_sd = dsfd_host_sd fork, HALF 1: route by the PC owner half; markers to both; MUT 6 = HALF 2)
