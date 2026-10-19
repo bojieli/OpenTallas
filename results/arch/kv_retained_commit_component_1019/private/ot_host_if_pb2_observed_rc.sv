@@ -311,6 +311,8 @@ module ot_host_if_pb2_observed_rc #(
     reg [3:0] saved_stat;
     reg [31:0] saved_cycles;
     reg [61:0] event_lineage [0:EQD-1]; // {TAG59, generation2, certified1}; functional SRAM HOLD.
+    reg event_owner_record [0:EQD-1];
+    reg cq_saved_owner_record;
     reg [EVW-1:0] cq_saved;
     reg [61:0] cq_saved_lineage;
     reg [63:0] cq_saved_addr;
@@ -344,8 +346,8 @@ module ot_host_if_pb2_observed_rc #(
     wire failure_insert = ENABLE_RETAINED_COMMIT && failure_pending_q && !report_once_q &&
         !pending_v && !inflight && ev_n == 0 && d_st == D_IDLE;
     wire word0_cut_ok = !bad_next && armed_q && !poison_q &&
-        ((!owner_valid_q && eh_kind == EV_ERROR) ||
-        (cq_saved_lineage[0] && cq_saved_lineage[61:3] == owner_tag && cq_saved_lineage[2:1] == owner_gen));
+        ((eh_kind == EV_ERROR && eh_st != ST_FAULT) ||
+        (cq_saved_owner_record && cq_saved_lineage[0] && cq_saved_lineage[61:3] == owner_tag && cq_saved_lineage[2:1] == owner_gen));
     assign rc_bad = ENABLE_RETAINED_COMMIT && bad_q;
     assign rc_armed = ENABLE_RETAINED_COMMIT && armed_q;
     assign rc_retained_owned = retained_owned;
@@ -497,7 +499,7 @@ module ot_host_if_pb2_observed_rc #(
             pending_age <= 0; pending_identity <= 0;
             saved_pos <= 0; saved_tok <= 0; saved_ngen <= 0;
             saved_last <= 0; saved_generated <= 0; saved_fault <= 0; saved_stat <= 0; saved_cycles <= 0;
-            cq_saved <= 0; cq_saved_lineage <= 0; cq_saved_addr <= 0; cq_saved_phase <= 0;
+            cq_saved_owner_record <= 0; cq_saved <= 0; cq_saved_lineage <= 0; cq_saved_addr <= 0; cq_saved_phase <= 0;
             offered_success_q <= 0; response_confirmed_q <= 0;
             enable <= 1'b0; sq_base <= 0; cq_base <= 0; msi_addr <= 0; sq_log <= 0; cq_log <= 0;
             sq_tail <= 0; sq_head <= 0; cq_head <= 0; cq_tail <= 0; cq_phase <= 1'b1;
@@ -596,8 +598,10 @@ module ot_host_if_pb2_observed_rc #(
             // ---- event queue
             if (ep_v || (dp_v && dp_ok)) begin
                 evq[ev_w] <= ep_v ? ep_d : dp_d;
-                if (ENABLE_RETAINED_COMMIT)
+                if (ENABLE_RETAINED_COMMIT) begin
                     event_lineage[ev_w] <= {owner_tag,owner_gen,certify && cert_generated};
+                    event_owner_record[ev_w] <= ep_v;
+                end
                 ev_w <= ev_w + 1'b1;
             end
             if (ev_pop) ev_r <= ev_r + 1'b1;
@@ -612,7 +616,7 @@ module ot_host_if_pb2_observed_rc #(
             case (d_st)
                 D_IDLE:
                     if (ev_n != 0 && cq_room && (!ENABLE_RETAINED_COMMIT || !report_once_q)) begin
-                        if (ENABLE_RETAINED_COMMIT) begin cq_saved <= evq[ev_r]; cq_saved_lineage <= event_lineage[ev_r]; cq_saved_addr <= cq_entry; cq_saved_phase <= cq_phase; end
+                        if (ENABLE_RETAINED_COMMIT) begin cq_saved_owner_record <= event_owner_record[ev_r]; cq_saved <= evq[ev_r]; cq_saved_lineage <= event_lineage[ev_r]; cq_saved_addr <= cq_entry; cq_saved_phase <= cq_phase; end
                         // post the head event: w1 first, then w0 with the phase bit
                         m_awvalid <= 1'b1; m_awaddr <= cq_entry + 64'd8;
                         m_wvalid <= 1'b1; m_wdata <= cq_w1; m_wstrb <= 8'hFF;
@@ -648,9 +652,9 @@ module ot_host_if_pb2_observed_rc #(
                     d_st <= D_ERR;
                 end
                 D_ERR:
-                    if (err_st != ST_OK || (ENABLE_RETAINED_COMMIT && !admission_ok)) begin
-                        if (dp_ok || (ENABLE_RETAINED_COMMIT && !admission_ok)) d_st <= D_IDLE;                       // the error event is pushed below
-                    end else begin
+                    if (err_st != ST_OK || (ENABLE_RETAINED_COMMIT && (bad_next || poison_q))) begin
+                        if (dp_ok) d_st <= D_IDLE;                       // the error event is pushed below
+                    end else if (admission_ok) begin
                         if (ENABLE_RETAINED_COMMIT) begin
                             owner_valid_q <= 1; owner_tag <= {43'd0,q_tag}; owner_gen <= owner_gen + 1'b1;
                             cm_pos <= 0; cm_tok <= 0; cm_ngen <= 0; cm_state <= SL_FREE;
@@ -701,7 +705,12 @@ module ot_host_if_pb2_observed_rc #(
                             cm_pos <= eh_pos + 1'b1; cm_tok <= eh_tok; cm_ngen <= eh_ngen;
                             cm_state <= eh_kind == EV_LAST ? SL_DRAIN : SL_RUN;
                         end else if (!word0_cut_ok) begin
-                            poison_q <= 1; failure_pending_q <= 0; report_once_q <= 1;
+                            poison_q <= 1;
+                            // A different accepted descriptor's error is not this owner's report.
+                            if (owner_valid_q && cq_saved_owner_record &&
+                                cq_saved_lineage[61:3] == owner_tag && cq_saved_lineage[2:1] == owner_gen) begin
+                                failure_pending_q <= 0; report_once_q <= 1;
+                            end
                         end
                     end
                     d_st <= D_CQ0;
@@ -871,8 +880,8 @@ module ot_host_if_pb2_observed_rc #(
         if (failure_insert) begin
             ep_v = 1; ep_d = ev(EV_ERROR,ST_FAULT,8'd0,sl_tag[0],cm_pos,cm_tok,32'd0,cm_ngen);
         end
-        dp_v = (d_st == D_ERR) && (err_st != ST_OK);
-        dp_d = ev(EV_ERROR, err_st, q_slot, q_tag, {NW{1'b0}}, {NW{1'b0}}, 32'd0, {NW{1'b0}});
+        dp_v = (d_st == D_ERR) && ((err_st != ST_OK) || (ENABLE_RETAINED_COMMIT && (bad_next || poison_q)));
+        dp_d = ev(EV_ERROR, (ENABLE_RETAINED_COMMIT && err_st == ST_OK && (bad_next || poison_q)) ? ST_FAULT : err_st, q_slot, q_tag, {NW{1'b0}}, {NW{1'b0}}, 32'd0, {NW{1'b0}});
     end
 
     // -- prompt buffer read port: the step issue (MODE 0) or the package controller (MODE 1)

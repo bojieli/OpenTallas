@@ -27,16 +27,17 @@
   "health_producer": "scheduler_bench scheduled exact identity/cutoff, conditional COMPONENT producer",
   "owner_drained_producer": "conditional component only; native KV/VM/collective/host/MSI external obligations not qualified",
   "recovery": "fail-stop until raw POR",
-  "physical_storage": "HOLD: original116-bit event plus62-bit lineage x16=2848 indexed bits requires actual SRAM integration",
+  "physical_storage": "HOLD: original116-bit event +62-bit lineage +owner-record1 x16=2864 indexed bits requires actual SRAM integration",
   "added_declared_state_bits_NW18_H12_EVQ4": {
     "global_owner_mirror": 124,
     "pending_snapshot_including_age_stat_cycles": 179,
-    "cq_immutable_snapshot": 243,
+    "cq_immutable_snapshot": 244,
     "offer_response_diagnostics": 8,
     "event_lineage": 992,
-    "sum": 1546
+    "sum": 1563,
+    "event_owner_record": 16
   },
-  "source_sha256": "547f8188db0df993799272336b6745c1e2f56a8429107dc9d8d81d5d43bc4416",
+  "source_sha256": "acf1208a092735df94d7555f76b19c9971b9ae4701e9dcbdc96c02a8ab5b14c2",
   "limitations": [
     "Selected scalar SU only; MU4 elaboration refused",
     "Actual runtime PLL loss witness absent; between-stopped-edge pulse unsupported",
@@ -53,5 +54,7 @@
     "native_TAG59_mapping": null,
     "native_TAG59_layout": "{epoch16,stage6,token18,position13,segment6}",
     "release_binding": "OPEN: real accepted native identity origin, mapping, phase and health producer coverage not established"
-  }
+  },
+  "added_declared_state_bits_NW18_H64_EVQ4": 1566,
+  "owner_record_model": "One bit per event distinguishes real owner engine/failure records (ep_v) from accepted descriptor validation responses (dp_v). CQ immutable snapshot retains one bit; report_once consumes only exact saved owner record and lineage/generation."
 }
