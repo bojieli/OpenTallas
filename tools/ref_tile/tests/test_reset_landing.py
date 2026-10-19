@@ -157,3 +157,54 @@ class GateRecord(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+class PlaceFollowsWrapper(unittest.TestCase):
+    """ROOT 10-19 (S81-XG): pin_regs off + reset_landing on wraps the top (core instance u_ot_pr_core), so the spec's
+    macro instance patterns must match the wrapped names; kits without a wrapper keep a byte-identical place.tcl."""
+    BLOCKS = [dict(master='ram', inst='u_s.g_bank[0].u_mem', x=10, y=0, orient='R0'),
+              dict(master='ram', inst='u_s.g_bank[1].u_mem', x=60, y=0, orient='MY')]
+
+    def spec(self, **kw):
+        s = dict(name='xg', top='example', kind='tile', clock_port='ck', reset_ports=['rst_n'], route={})
+        s.update(kw)
+        return s
+
+    def run_place(self, tcl, names):
+        objs = ''.join(f'proc i{k} {{args}} {{ switch [lindex $args 0] {{ getMaster {{return m}} getName {{return {{{n}}}}}'
+                       f' default {{return}} }} }}\n' for k, n in enumerate(names))
+        harness = ('namespace eval ord {}\nproc ord::get_db_block {} {return B}\nproc ord::get_db_tech {} {return T}\n'
+                   'proc T {args} {return 1000}\nproc m {args} { switch [lindex $args 0] { isBlock {return 1} '
+                   'getName {return ram} } }\n'
+                   f'proc B {{args}} {{ return {{{" ".join(f"i{k}" for k in range(len(names)))}}} }}\n' + objs)
+        with tempfile.TemporaryDirectory() as d:
+            (Path(d) / 'place.tcl').write_text(tcl)
+            harness += f'if {{[catch {{source {{{d}/place.tcl}}}} m]}} {{puts stderr $m; exit 1}}\nexit 0\n'
+            return subprocess.run(['tclsh'], input=harness, capture_output=True, text=True, timeout=30)
+
+    def test_landing_only_wrapper_matches_macros(self):
+        s = self.spec(pin_regs={'enable': False, 'reason': 'RTL registers pins'}, reset_landing={'enable': True})
+        self.assertTrue(RT.pin_wrapper(s))
+        tcl = RT.gen_place(s, self.BLOCKS)
+        wrapped = ['u_ot_pr_core.u_s.g_bank[1].u_mem', 'u_ot_pr_core.u_s.g_bank[0].u_mem']
+        r = self.run_place(tcl, wrapped)
+        self.assertEqual(r.returncode, 0, r.stderr)
+        self.assertIn('REF_TILE place: u_ot_pr_core.u_s.g_bank[0].u_mem ram at 10 0 R0', r.stdout)
+        self.assertIn('REF_TILE place: u_ot_pr_core.u_s.g_bank[1].u_mem ram at 60 0 MY', r.stdout)
+        self.assertEqual(self.run_place(tcl, ['u_s.g_bank[0].u_mem', 'u_s.g_bank[1].u_mem']).returncode, 0)
+
+    def test_pre_fix_place_fails_on_wrapped_names(self):
+        s = self.spec(pin_regs={'enable': False, 'reason': 'RTL registers pins'}, reset_landing={'enable': True})
+        old = RT.gen_place(self.spec(pin_regs={'enable': False, 'reason': 'x'},
+                                     reset_landing={'enable': False, 'reason': 'RTL lands'}), self.BLOCKS)
+        r = self.run_place(old, ['u_ot_pr_core.u_s.g_bank[0].u_mem', 'u_ot_pr_core.u_s.g_bank[1].u_mem'])
+        self.assertNotEqual(r.returncode, 0)
+        self.assertIn('no unplaced instance of ram', r.stderr + r.stdout)
+        self.assertNotEqual(old, RT.gen_place(s, self.BLOCKS))
+
+    def test_no_wrapper_byte_identical(self):
+        s = self.spec(pin_regs={'enable': False, 'reason': 'x'}, reset_landing={'enable': False, 'reason': 'RTL lands'})
+        self.assertFalse(RT.pin_wrapper(s))
+        self.assertNotIn('ot_ref_wrapped_match', RT.gen_place(s, self.BLOCKS))
+        on = self.spec(pin_regs={'enable': True}, reset_landing={'enable': True})
+        self.assertNotIn('ot_ref_wrapped_match', RT.gen_place(on, [dict(b, inst='') for b in self.BLOCKS]))
