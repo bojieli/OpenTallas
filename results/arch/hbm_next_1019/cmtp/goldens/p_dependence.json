@@ -1,0 +1,20 @@
+{
+  "schema": "opentallas.hbm_next_1019.cmtp.goldens_p_dependence.v1",
+  "lane": "HBM-NEXT-P3-CMTP",
+  "date": "2026-10-19",
+  "owner_decision": "0le 10-19: next-release HBM die P = 3 + shared 3-lane x store (P3+(a)); supersedes P = 4",
+  "question": "which committed goldens depend on the lane count P and must be regenerated at P = 3",
+  "decision": "NONE. All three goldens are P-independent; none is regenerated; no fleet run (no CONTROL re-run needed).",
+  "basis": [
+    "goldens.py computes every golden with hdc_golden_v41 (HDC_V41_ARITH=chunk8, rtl_v41_fullshape_layer_campaign.build_model): the pinned DS golden, whose reduction / rounding order is fixed by the golden, not by the schedule. P never enters goldens.py (no lane, pass or split term).",
+    "Every committed array is a per-position (or per-user, per-position) per-layer activation or token: ar_mtp_g5 630 arrays h/pre/dsk/dh/dpre/mainx/mh/dlog; mtp_all5 21 arrays h/h_in/pre; mu4 640 arrays u#_p#_h/pre. No array has a lane or pass dimension.",
+    "P only changes which lane computes which position in which pass. Each lane computes a whole position row in the golden order, so values are unchanged: MTP verify N = 6 at P = 3 = 2 full passes of 3 (no remainder, so no K-split / row-split; the P = 4 K-split was itself exact = aligned golden csum subtrees, isa_rows.md R5); draft N = 5 = 3 + 2 rows, rpl 0; 4 users on 3 lanes = 3 + 1 users, each user independent; attention keeps one online-softmax stream per query lane (sequential over its blocks, unchanged).",
+    "Therefore the bit-exact targets VEH compares against at P = 3 are the same arrays: ar_mtp_g5 (manifest PASS 630), mtp_all5 (PASS 21), mu4 (CONTROL PASS 160/160, manifest PASS 640)."
+  ],
+  "goldens": {
+    "ar_mtp_g5": {"p_dependent": false, "action": "keep"},
+    "mtp_all5": {"p_dependent": false, "action": "keep"},
+    "mu4": {"p_dependent": false, "action": "keep (4 users on 3 lanes = scheduling only)"}
+  },
+  "would_change_values": "only a level-6 algebraic reordering or a split that is not an aligned golden subtree (excluded by AGENTS.md); none is in the P = 3 plan"
+}
