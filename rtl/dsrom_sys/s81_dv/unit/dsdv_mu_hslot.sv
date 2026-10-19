@@ -70,15 +70,20 @@ module dsdv_mu_hslot #(parameter integer NSLOT = 47, parameter integer MUT = 0) 
 `ifndef SYNTHESIS
     initial if (NSLOT < 2 || NSLOT > 1023) $fatal(1, "dsdv_mu_hslot: NSLOT must be 2..1023 (NSLOT 1 = leaf absent)");
 `endif
-    wire [0:0] rr; ot_rst_relay #(.REGIONS(1)) u_rr (.clk(ck), .rst_n_in(rst_n), .rst_n(rr)); wire rn_ = rr[0];
-    // ---- pin flops (valid bits gated by the relayed reset, payload not); payload / gap word in kept copies
+    // three reset regions (<= ~250 flops each): rn_ = control scalars + pin gating, rs_ = start-side one-hot vectors,
+    // rt_ = return side (timer, return pointers, valid bits, t_ku)
+    wire [2:0] rr; ot_rst_relay #(.REGIONS(3)) u_rr (.clk(ck), .rst_n_in(rst_n), .rst_n(rr));
+    wire rn_ = rr[0], rs_ = rr[1], rt_ = rr[2];
+    // ---- pin flops (valid bits held low by the relayed reset, payload not); payload / gap word in kept copies
     reg st_q, kd_q, mv_q, ms_q;
     (* keep *) reg [31*NG-1:0] kp_q;                     // NG x {user 10, pos 21}
     (* keep *) reg [24*NC-1:0] md_q;                     // NC x gap / RL word
     always @(posedge ck) begin
-        st_q <= rn_ & f_ks[52]; kd_q <= rn_ & f_kd[53]; mv_q <= rn_ & f_mc[25]; ms_q <= f_mc[24];
-        kp_q <= {NG{f_ks[51:42], f_ks[20:0]}}; md_q <= {NC{f_mc[23:0]}};
+        ms_q <= f_mc[24]; kp_q <= {NG{f_ks[51:42], f_ks[20:0]}}; md_q <= {NC{f_mc[23:0]}};
     end
+    always @(posedge ck or negedge rn_)                 // valid bits: reset-held low
+        if (!rn_) begin st_q <= 1'b0; kd_q <= 1'b0; mv_q <= 1'b0; end
+        else begin st_q <= f_ks[52]; kd_q <= f_kd[53]; mv_q <= f_mc[25]; end
     wire [23:0] md = md_q[23:0];
     // ---- state
     reg [23:0] cs, crl; reg armed; reg [23:0] ph, cg, ng; reg kv_d;
@@ -124,12 +129,12 @@ module dsdv_mu_hslot #(parameter integer NSLOT = 47, parameter integer MUT = 0) 
             if (gwr && gw[k]) gt[24*k +: 24] <= md_q[24*(k/24) +: 24] - 24'd1;
         end
     end endgenerate
+    wire sadv = armed && ph == cg;                       // start slot timer: gap end
+    // ---- region rn_: control scalars and faults
     always @(posedge ck or negedge rn_)
         if (!rn_) begin
-            armed <= 1'b0; ph <= 24'd0; cg <= 24'd0; sl <= ONE; gx <= ONE; gw <= ONE; gwo <= ONE; lwo <= LAST;
-            gn <= {SJ{1'b0}}; lw <= SI'(NSLOT - 1); cs <= 24'd0; crl <= 24'd0;
-            rpend <= 1'b0; rarmed <= 1'b0; rc <= 24'd0; rph <= 24'd0; rcg <= 24'd0; rn <= ONE; rgx <= ONE;
-            vld <= {NSLOT{1'b0}}; t_ku <= 32'd0; kv_d <= 1'b0; t_mf <= 4'd0;
+            armed <= 1'b0; ph <= 24'd0; cg <= 24'd0; gn <= {SJ{1'b0}}; lw <= SI'(NSLOT - 1); cs <= 24'd0; crl <= 24'd0;
+            kv_d <= 1'b0; t_mf <= 4'd0;
         end else begin
             // boot config
             if (mv_q) begin
@@ -137,15 +142,14 @@ module dsdv_mu_hslot #(parameter integer NSLOT = 47, parameter integer MUT = 0) 
                 else if (ms_q) crl <= md;
                 else if (gn == SJ'(NSLOT)) t_mf[3] <= 1'b1;                          // more gaps than slots
                 else begin
-                    gn <= gn + 1'b1; gw <= {gw[NSLOT-2:0], 1'b0}; gwo <= gw;
+                    gn <= gn + 1'b1;
                     if (gn == {SJ{1'b0}} || md < cs) cs <= md;
                     lw <= (gn == {SJ{1'b0}}) ? SI'(NSLOT - 1) : gn[SI-1:0];        // nw = n for n >= 2
-                    lwo <= (gn == {SJ{1'b0}}) ? LAST : gw;
                 end
             end
             // start slot timer: phase of the current edge, slot advanced at the gap end
             if (armed) begin
-                if (ph == cg) begin ph <= 24'd0; sl <= onx(sl, lwo); cg <= ng; gx <= gxn; end else ph <= ph + 24'd1;
+                if (sadv) begin ph <= 24'd0; cg <= ng; end else ph <= ph + 24'd1;
                 if (ph == 24'd0 && sl[0] && !rarmed) t_mf[3] <= 1'b1;                // RL - 1 >= calendar period
             end
             if (st_q) begin
@@ -153,8 +157,27 @@ module dsdv_mu_hslot #(parameter integer NSLOT = 47, parameter integer MUT = 0) 
                 if (col && MUT != 2) t_mf[0] <= 1'b1;                            // (a slot collision is also a user dup)
                 else if (!on_cal || (udup && !m2c)) t_mf[1] <= 1'b1;
             end
-            if (arm) begin armed <= 1'b1; ph <= 24'd1; cg <= ng; gx <= gxn; rpend <= 1'b1; rc <= crl - 24'd1; end
-            // return slot timer: the same gap walk, RL - 1 edges behind
+            if (arm) begin armed <= 1'b1; ph <= 24'd1; cg <= ng; end
+            // the unit's done must land on exactly the edge t_ku announced
+            kv_d <= t_ku[31];
+            if (kd_q != kv_d) t_mf[2] <= 1'b1;
+        end
+    // ---- region rs_: start-side one-hot vectors
+    always @(posedge ck or negedge rs_)
+        if (!rs_) begin
+            sl <= ONE; gx <= ONE; gw <= ONE; gwo <= ONE; lwo <= LAST;
+        end else begin
+            if (gwr) begin gw <= {gw[NSLOT-2:0], 1'b0}; gwo <= gw; lwo <= (gn == {SJ{1'b0}}) ? LAST : gw; end
+            if (sadv) begin sl <= onx(sl, lwo); gx <= gxn; end
+            if (arm) gx <= gxn;
+        end
+    // ---- region rt_: return slot timer (the same gap walk, RL - 1 edges behind), valid bits, t_ku
+    always @(posedge ck or negedge rt_)
+        if (!rt_) begin
+            rpend <= 1'b0; rarmed <= 1'b0; rc <= 24'd0; rph <= 24'd0; rcg <= 24'd0; rn <= ONE; rgx <= ONE;
+            vld <= {NSLOT{1'b0}}; t_ku <= 32'd0;
+        end else begin
+            if (arm) begin rpend <= 1'b1; rc <= crl - 24'd1; end
             if (rpend) begin
                 rc <= rc - 24'd1;
                 if (rc == 24'd1) begin rpend <= 1'b0; rarmed <= 1'b1; rph <= 24'd1; rcg <= rng; rgx <= rgxn; end
@@ -167,9 +190,6 @@ module dsdv_mu_hslot #(parameter integer NSLOT = 47, parameter integer MUT = 0) 
             if (rb) rn <= onx(rn, lwo);
             if (ret) t_ku <= {1'b1, (MUT == 1) ? 10'd0 : rq[30:21], rq[20:0]};
             vld <= (vld & ~(ret ? rn : {NSLOT{1'b0}})) | (rec ? sl : {NSLOT{1'b0}});
-            // the unit's done must land on exactly the edge t_ku announced
-            kv_d <= t_ku[31];
-            if (kd_q != kv_d) t_mf[2] <= 1'b1;
         end
 endmodule
 

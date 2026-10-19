@@ -1544,7 +1544,7 @@ PROG TMF 0000
 PROG END
 - /srv/opentallas-scratch/claude/mu-s81-2-hslot2/src/rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_seq_host_mu.sv:131: Verilog $finish
 - S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 2ms; walltime 85.783 s; speed 22.673 us/s
-- Verilator: cpu 78.721 s on 1 threads; allocated 9 MB
+- Verilator: $finish at 2ms; walltime 76.184 s; speed 25.530 us/s
+- Verilator: cpu 76.175 s on 1 threads; allocated 9 MB
 SEQHOST_MU_MUT 1 detected (FAIL as required)
 exit 1
