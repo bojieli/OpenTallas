@@ -9,7 +9,7 @@ SRC="$D/tb_hbm_sm_vm_wr_q_t_lanes4_lockstep.sv $D/ot_hbm_sm_vm_wr_q_t_lanes4.sv 
 rc=0
 for m in 0 1 2 3 4 6; do
   iverilog -g2012 -DMUT=$m -s tb_hbm_sm_vm_wr_q_t_lanes4_lockstep -o $O/tb$m $SRC || exit 2
-  vvp -n $O/tb$m > $O/tb$m.log 2>&1; tail -2 $O/tb$m.log
+  vvp -n $O/tb$m > $O/tb$m.log 2>&1; grep -E "^(lockstep lane-edges|TB_WRQ4_LOCKSTEP)" $O/tb$m.log
   r=$(grep -cE "^TB_WRQ4_LOCKSTEP $([ $m = 0 ] && echo PASS || echo FAIL) MUT=$m" $O/tb$m.log)
   [ "$r" = 1 ] || { echo "case MUT=$m UNEXPECTED"; rc=1; }
 done
