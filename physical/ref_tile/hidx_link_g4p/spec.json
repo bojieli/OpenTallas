@@ -127,9 +127,9 @@
    "inst": "core.gm[0].mem",
    "at": [
     23.76,
-    108.0
+    64.8
    ],
-   "at_exact": true,
+   "at_exact": false,
    "orient": "MY"
   },
   {
@@ -138,9 +138,9 @@
    "inst": "core.gm[1].mem",
    "at": [
     23.76,
-    185.808
+    164.184
    ],
-   "at_exact": true,
+   "at_exact": false,
    "orient": "MY"
   },
   {
@@ -149,9 +149,9 @@
    "inst": "core.gm[2].mem",
    "at": [
     23.76,
-    263.616
+    263.568
    ],
-   "at_exact": true,
+   "at_exact": false,
    "orient": "MY"
   },
   {
@@ -160,9 +160,9 @@
    "inst": "core.gm[3].mem",
    "at": [
     23.76,
-    341.424
+    362.952
    ],
-   "at_exact": true,
+   "at_exact": false,
    "orient": "MY"
   },
   {
@@ -171,9 +171,9 @@
    "inst": "core.gm[4].mem",
    "at": [
     454.896,
-    108.0
+    64.8
    ],
-   "at_exact": true,
+   "at_exact": false,
    "orient": "R0"
   },
   {
@@ -182,9 +182,9 @@
    "inst": "core.gm[5].mem",
    "at": [
     454.896,
-    185.808
+    164.184
    ],
-   "at_exact": true,
+   "at_exact": false,
    "orient": "R0"
   },
   {
@@ -193,9 +193,9 @@
    "inst": "core.gm[6].mem",
    "at": [
     454.896,
-    263.616
+    263.568
    ],
-   "at_exact": true,
+   "at_exact": false,
    "orient": "R0"
   },
   {
@@ -204,9 +204,9 @@
    "inst": "core.gm[7].mem",
    "at": [
     454.896,
-    341.424
+    362.952
    ],
-   "at_exact": true,
+   "at_exact": false,
    "orient": "R0"
   }
  ],
@@ -281,5 +281,11 @@
   "cols": 4,
   "allow_none": true
  },
- "keep_pin_regs": true
+ "keep_pin_regs": true,
+ "spine_macro_leaf": false,
+ "floorplan_note": "HBM-TOPKLINK r3 10-19: bank stacks get 21.6-um N-S channels (y 64.8 + k*99.384): wd_in[266..287] sit on the macro's FAR face (LEF E, y 0.8-3 um); with abutted stacks their M4 legs detoured around the whole stack (route c94204038: max-slew 260->374 ps, TT setup -36 on gm[2].wd_in[284]). spine_macro_leaf false: the SRAM has no internal clock insertion, so its clock pin shares the bin leaf with the wd_r flops beside it (own leaf ran +75 ps late at FF -> wd_r->wd_in hold -30.8).",
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ }
 }

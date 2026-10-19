@@ -10,6 +10,15 @@ belong in the measured core duration. Generation cannot infer parameterized
 ports before elaboration; missing tables (including opt-outs) fail closed.
 Copy this report with the source-pinned synthesis evidence and bind its SHA in
 the compiler's kit_boundary record. It is not a physical timing qualification.
+
+ROOT-INF21 2026-10-19 (coordinator INF.21.1): a CLOSED leaf routed with pin registers OFF has no table/wrapper, so the
+landed-parent raw-clock-pin check had no port_latency.json (job + clock roles) to reach the leaf's closed record.
+  python3 tools/ref_tile/port_latency.py --unregistered-view VIEW_DIR --job CLOSED_JOB [--root REPO] --out VIEW/port_latency.json
+writes schema opentallas.ref_tile.port_latency.unregistered.v1: 0 additional wrapper edges on every port (proved from
+kit.env + spec.json at the closing source commit, as closure_loop.port_latency_record does), the clock roles from the
+record sign-off SDC, and the per-root clock reference measured by STA on the ROUTED view (VIEW/insertion.json
+clock_measurements: 6_final.odb + SPEF per root, TT/FF/SS; boundary flops, else all internal sinks) with provenance
+(file SHA-256s, routed base, closing job and commit).  Nothing is invented: a missing measurement fails closed.
 """
 import argparse
 import csv
@@ -109,12 +118,16 @@ def validate_roles(report, wrapper, spec, read_source):
         raise ValueError('conflicting clock/reset declarations: ' + ','.join(sorted(clocks & resets)))
     excluded = excluded_ports((spec.get('pin_regs') or {}).get('exclude', ''), sorted(report['ports']))
     text = wrapper.read_text()
+    landed = {}
     for role, names in [('clock', clocks), ('reset', resets), ('excluded data', excluded)]:
         for name in names:
             rec = report['ports'].get(name)
             if not rec or rec['register_edges'] != 0:
                 raise ValueError('declared ' + role + ' selected as data or absent: ' + name)
             direct = r'\.' + re.escape(name) + r'\s*\(\s*' + re.escape(name) + r'\s*\)'
+            if role == 'reset' and landed_reset(text, name, spec) is not None:
+                landed[name] = landed_reset(text, name, spec)
+                continue
             if not re.search(direct, text) or re.search(r'(?<![A-Za-z0-9_$])' + re.escape(name) + r'__ot_q\b', text):
                 raise ValueError('declared ' + role + ' is not direct in transformed wrapper: ' + name)
     for name, rec in report['ports'].items():
@@ -122,19 +135,139 @@ def validate_roles(report, wrapper, spec, read_source):
         if rec['register_edges'] != expected:
             raise ValueError(f'intended data pin-register stages differ for {name}: '
                              f"actual {rec['register_edges']}, expected {expected}")
-    return dict(clocks=sorted(clocks), resets=sorted(resets), excluded_data_ports=sorted(excluded - clocks - resets),
-                source_sha256=source_hashes,
-                reset_meaning='source RTL polarity and reset semantics preserved by direct wiring')
+    out = dict(clocks=sorted(clocks), resets=sorted(resets), excluded_data_ports=sorted(excluded - clocks - resets),
+               source_sha256=source_hashes,
+               reset_meaning='source RTL polarity and reset semantics preserved by direct wiring')
+    if landed:
+        out['reset_landing'] = landed
+        out['reset_meaning'] = ('source RTL polarity and reset semantics preserved: direct wiring, or a landed reset '
+                                '(plain registers copy the value; assertion and release delayed by the stage count)')
+    return out
+
+
+def landed_reset(text, name, spec):
+    """ROOT-RST 2026-10-19: the stage count when the wrapper lands reset NAME (ot_pin_regs.tcl OT_RST_LAND: port ->
+    NAME__ot_rl0 -> ... -> core, plain registers) and the spec asks for it (reset_landing.enable); else None"""
+    rl = spec.get('reset_landing') if isinstance(spec.get('reset_landing'), dict) else {}
+    if not rl.get('enable'):
+        return None
+    n = re.escape(name)
+    m = re.search(r'\.' + n + r'\s*\(\s*' + n + r'__ot_rl(\d+)\s*\)', text)
+    if not m:
+        return None
+    k = int(m.group(1))
+    prev = name
+    for i in range(k + 1):
+        if not re.search(r'always @\(posedge \S+\) ' + n + r'__ot_rl' + str(i) + r' <= ' + re.escape(prev) + r';', text):
+            return None
+        prev = f'{name}__ot_rl{i}'
+    return k + 1
+
+
+UNREGISTERED_SCHEMA = 'opentallas.ref_tile.port_latency.unregistered.v1'
+KIT_RE = re.compile(r"(physical/ref_tile/[^/\s'\"]+)/kit\.env")
+
+
+def _git_show(root: Path, rev: str, path: str):
+    r = subprocess.run(['git', '-C', str(root), 'show', f'{rev}:{path}'], capture_output=True, text=True, timeout=120)
+    return r.stdout if r.returncode == 0 else None
+
+
+def export_unregistered(view: Path, job: str, root: Path) -> dict:
+    """port_latency.json for a CLOSED leaf routed WITHOUT pin registers (see module doc).  Fail closed."""
+    sys_path = str(Path(__file__).resolve().parent)
+    import sys
+    if sys_path not in sys.path:
+        sys.path.insert(0, sys_path)
+    from kit_orfs_vars import parse
+    import clock_entry_constraints as CE
+    view, root = Path(view), Path(root)
+    vpath = root / 'results' / 'closure_loop' / job / 'verdict.json'
+    verdict = json.loads(vpath.read_text())
+    if verdict.get('status') != 'CLOSED' or verdict.get('job') != job:
+        raise ValueError(f'{vpath}: not the CLOSED record of {job}')
+    commit = verdict.get('source_commit') or ''
+    if not re.fullmatch(r'[0-9a-f]{40}', commit):
+        raise ValueError(f'{vpath}: no full source_commit')
+    js = verdict.get('job_spec') or {}
+    rec = js.get('record') or []
+    views_to = [r.get('to') for r in rec if isinstance(r, dict) and str(r.get('from', '')).endswith('/record/views')]
+    routes = [r.get('to') for r in rec if isinstance(r, dict) and str(r.get('from', '')).endswith('/record/route')]
+    if len(views_to) != 1 or len(routes) != 1 or view.resolve().parent != (root / views_to[0]).resolve():
+        raise ValueError(f'{vpath}: {view} is not the record view directory of {job}')
+    m = KIT_RE.search(((js.get('stages') or {}).get('route') or {}).get('cmd') or '')
+    if not m:
+        raise ValueError(f'{vpath}: route command names no ref_tile kit')
+    kit = m.group(1)
+    env = _git_show(root, commit, f'{kit}/kit.env')
+    spec_text = _git_show(root, commit, f'{kit}/spec.json')
+    if env is None or spec_text is None:
+        raise ValueError(f'{kit}/kit.env or spec.json missing at {commit}')
+    tile = json.loads(spec_text)
+    declared = tile.get('pin_regs')
+    if parse(env).get('OT_PIN_REGS') == '1' or (isinstance(declared, dict) and declared.get('enable') is not False):
+        raise ValueError(f'{kit} at {commit[:12]} inserts pin registers: use the elaborated table export, not this one')
+    sdc_rel = f'{routes[0]}/signoff.sdc'
+    sdc = (root / sdc_rel).read_text()
+    ports = CE._tcl_words(sdc, 'ot_ce_ports')
+    if not ports:
+        raise ValueError(f'{sdc_rel}: no ::ot_ce_ports clock roles')
+    ins_path = view / 'insertion.json'
+    ins_raw = ins_path.read_bytes()
+    ins = json.loads(ins_raw)
+    if not ins.get('raw_source') or ins.get('db') != '6_final.odb' or ins.get('parasitics') != 'spef':
+        raise ValueError(f'{ins_path}: not an STA measurement on the routed view (6_final.odb + SPEF)')
+    cm = ins.get('clock_measurements') or {}
+    if sorted(cm) != sorted(ports):
+        raise ValueError(f'{ins_path}: measured clock pins {sorted(cm)} differ from the record roles {sorted(ports)}')
+    ref = {}
+    for p in ports:
+        ref[p] = {}
+        for c in CE.CORNERS:
+            r = cm[p].get(c) or {}
+            if r.get('errors'):
+                raise ValueError(f'{ins_path}: {p}/{c} measurement errors {r["errors"]}')
+            b, a = r.get('boundary') or {}, r.get('all') or {}
+            scope, d = ('boundary', b) if b.get('n') else ('macro_pin_wire' if (r.get('macros') or {}).get('n') else
+                                                           'all_internal_sinks', a)
+            if not d.get('n'):
+                raise ValueError(f'{ins_path}: {p}/{c} has no measured sink')
+            ref[p][c] = dict(scope=scope, n=d['n'], **{k: float(d[k]) for k in ('min', 'mean', 'max')})
+    if not tile.get('top'):
+        raise ValueError(f'{kit}/spec.json at {commit[:12]} names no top')
+    return dict(schema=UNREGISTERED_SCHEMA, top=tile['top'], job=job, source_commit=commit, kit=kit,
+                pin_registers=False, register_edges_all_ports=0,
+                control_roles=dict(clocks=sorted(ports), source=sdc_rel),
+                clock_reference=ref,
+                provenance=dict(measurement='STA on the routed view (closure_loop ck_insertion: 6_final.odb + SPEF, '
+                                            'propagated clock arrival at every register clock pin per root and corner)',
+                                routed_base=ins.get('base'), db=ins.get('db'), parasitics=ins.get('parasitics'),
+                                sha256={str(ins_path.relative_to(root)): hashlib.sha256(ins_raw).hexdigest(),
+                                        sdc_rel: hashlib.sha256((root / sdc_rel).read_bytes()).hexdigest(),
+                                        str(vpath.relative_to(root)): hashlib.sha256(vpath.read_bytes()).hexdigest()},
+                                generator='tools/ref_tile/port_latency.py --unregistered-view (ROOT-INF21 2026-10-19)'),
+                scope='No pin registers: 0 additional wrapper edges on every port; clock_reference = routed-view per-root '
+                      'insertion (landed-parent co-timing reference); no physical qualification')
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    for name in ('table', 'wrapper', 'out'):
-        parser.add_argument('--' + name, required=True, type=Path)
-    parser.add_argument('--top', required=True)
-    parser.add_argument('--source-commit', required=True)
+    for name in ('table', 'wrapper', 'unregistered-view', 'root'):
+        parser.add_argument('--' + name, type=Path)
+    parser.add_argument('--out', required=True, type=Path)
+    parser.add_argument('--top')
+    parser.add_argument('--source-commit')
+    parser.add_argument('--job')
     args = parser.parse_args()
-    report = export(args.table, args.wrapper, args.top, args.source_commit)
+    if args.unregistered_view:
+        if not args.job or args.table or args.wrapper:
+            parser.error('--unregistered-view takes --job (and --root), not --table/--wrapper')
+        report = export_unregistered(args.unregistered_view, args.job,
+                                     args.root or Path(__file__).resolve().parents[2])
+    else:
+        if not (args.table and args.wrapper and args.top and args.source_commit):
+            parser.error('--table --wrapper --top --source-commit are required')
+        report = export(args.table, args.wrapper, args.top, args.source_commit)
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(report, indent=2, sort_keys=True) + '\n')
 

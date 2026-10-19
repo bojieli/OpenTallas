@@ -32,20 +32,37 @@
 //     records (total, faults, ring W, bank writes) is already qualified by s3_v/s4_v.
 //   * the rotate selects come from 16 kept region copies of total[5:0] (trep, each 4 slots x 36 b per shift stage),
 //     loaded from the same next-state as total. No function or latency change (outputs still historical +5).
+// HBM-TOPKLINK r3 (10-19, route hidx_link_g4p-g4p-c94204038 NEEDS_RTL TT -78.45 / FF -30.81 classified): TT = 506 endpoints
+//   line_r lane-valid pin flop -> s1_pm (one valid flop = INVx1 275 ps into the whole group's compaction + pair merge,
+//   14 levels, 0 ps at GRT) + 8 s4_fill -> wd_r (fill fanout); FF = wd_r -> SRAM wd_in (macro own spine leaf +75 ps).
+//   RTL (no latency / function change; outputs still historical +5):
+//   * S1 = per-group compaction only, from 4 kept pin-flop copies of each lane valid bit (2 slots per copy);
+//     group counts and pair counts registered with kept region copies (s1_nac / s1_nqc).
+//   * S2 = pair merge + quad merge, every shift select from a register (merge NC region copies).
+//   * S5 ring-W slot selects from per-bank kept copies of fill / f0[2:0].
 // MUT (bench only): 1 record halves swapped (emit side), 2 flit sequence header, 3 carry slots from the beat instead of W,
 //                   4 emit read tap one edge early (latency mutant).
 // ---------------------------------------------------------------------------------------------------------------
 module ot_hbm_idx_link_p_merge #(parameter integer NA=8,parameter integer NB=8,parameter integer CW=4,
-                                 parameter integer RW=36)(
- input wire[NA*RW-1:0]a,input wire[CW-1:0]na,input wire[NB*RW-1:0]b,output wire[(NA+NB)*RW-1:0]y
+                                 parameter integer RW=36,parameter integer NC=1)(
+ input wire[NA*RW-1:0]a,input wire[NC*CW-1:0]na,input wire[NB*RW-1:0]b,output wire[(NA+NB)*RW-1:0]y
 );
  // y = a | (b shifted up by na slots). Slots of a at/above na are zero by construction.
+ // NC identical region copies of na (r3): stage i output slot q uses copy (q*NC)/N, so each select bit drives N/NC slots.
  localparam integer N=NA+NB,W=N*RW;
  wire[(CW+1)*W-1:0]st;
  assign st[0+:W]={{(NA*RW){1'b0}},b};
- genvar i;
+ genvar i,q;
  for(i=0;i<CW;i=i+1)begin:sh
-  assign st[(i+1)*W+:W]=na[i]?(st[i*W+:W]<<((1<<i)*RW)):st[i*W+:W];
+  for(q=0;q<N;q=q+1)begin:sl
+   localparam integer C=(q*NC)/N;
+   localparam integer SH=(1<<i);
+   if(q>=SH)begin:mv
+    assign st[(i+1)*W+q*RW+:RW]=na[C*CW+i]?st[i*W+(q-SH)*RW+:RW]:st[i*W+q*RW+:RW];
+   end else begin:lo
+    assign st[(i+1)*W+q*RW+:RW]=na[C*CW+i]?{RW{1'b0}}:st[i*W+q*RW+:RW];
+   end
+  end
  end
  assign y=st[CW*W+:W]|{{(NB*RW){1'b0}},a};
 endmodule
@@ -71,7 +88,7 @@ endmodule
 
 module ot_hbm_idx_topk_link_static_p_core #(parameter integer MUT=0)(
  input wire clk,input wire rst_n,
- input wire clear,ingest_v,input wire[2367:0]selected_line,
+ input wire clear,ingest_v,input wire[2367:0]selected_line,input wire[4*64-1:0]lane_vc,
  input wire flush,emit_v,input wire[3:0]emit_group,input wire[7:0]rank,gbase,
  output reg[3:0]tx_v,output reg[2179:0]tx,
  output wire fault,output wire[9:0]selected_count
@@ -93,41 +110,45 @@ module ot_hbm_idx_topk_link_static_p_core #(parameter integer MUT=0)(
  wire[7:0]rk3=rk_d[23:16],gb3=gb_d[23:16];
  localparam integer RT=(MUT==4)?3:4;            // read tap index (4 = 5 edges)
  wire em5=em_d[RT];wire[3:0]grp5=grp_d[RT*4+:4];wire[7:0]rk5=rk_d[RT*8+:8],gb5=gb_d[RT*8+:8];
- // ---------------- S1
- wire[63:0]m;wire[64*RW-1:0]pay;
+ // ---------------- S1 (r3: per-group compaction only; counts registered)
+ // lane_vc = 4 kept pin-flop copies of the 64 lane valid bits (copy c at [c*64+j]; copy 0 = line_r[j*37]).
+ // Copy c drives slots 2c/2c+1 of every group (its own prefix counts), copy 0 also the group / pair counts.
+ wire[64*RW-1:0]pay;
  for(j=0;j<64;j=j+1)begin:ln
-  assign m[j]=selected_line[j*37];             // r2: lane valid only (ingest_v rides s1_v; see header)
   assign pay[j*RW+:RW]={selected_line[j*37+17+:20],selected_line[j*37+1+:16]};
  end
  wire[8*8*RW-1:0]gc;wire[8*4-1:0]gcnt;
  for(g=0;g<8;g=g+1)begin:grp
-  wire[7:0]gm=m[g*8+:8];
-  wire[8*3-1:0]pre;
-  for(j=0;j<8;j=j+1)begin:pr
-   assign pre[j*3+:3]=3'(pc8(gm&((8'd1<<j)-8'd1)));
-  end
-  assign gcnt[g*4+:4]=pc8(gm);
+  assign gcnt[g*4+:4]=pc8(lane_vc[g*8+:8]);
   for(s=0;s<8;s=s+1)begin:sl
+   wire[7:0]gm=lane_vc[(s/2)*64+g*8+:8];
    reg[RW-1:0]v;integer k;
    always @*begin
     v={RW{1'b0}};
-    for(k=s;k<8;k=k+1)if(gm[k]&&pre[k*3+:3]==3'(s))v=v|pay[(g*8+k)*RW+:RW];
+    for(k=s;k<8;k=k+1)if(gm[k]&&pc8(gm&((8'd1<<k)-8'd1))==4'(s))v=v|pay[(g*8+k)*RW+:RW];
    end
    assign gc[(g*8+s)*RW+:RW]=v;
   end
  end
- wire[4*16*RW-1:0]pm;wire[4*5-1:0]pcnt;
- for(p=0;p<4;p=p+1)begin:pair
-  ot_hbm_idx_link_p_merge #(.NA(8),.NB(8),.CW(4),.RW(RW)) mg(.a(gc[(2*p)*8*RW+:8*RW]),.na(gcnt[(2*p)*4+:4]),
-   .b(gc[(2*p+1)*8*RW+:8*RW]),.y(pm[p*16*RW+:16*RW]));
+ wire[4*5-1:0]pcnt;
+ for(p=0;p<4;p=p+1)begin:pc
   assign pcnt[p*5+:5]={1'b0,gcnt[(2*p)*4+:4]}+{1'b0,gcnt[(2*p+1)*4+:4]};
  end
- reg s1_v;reg[4*16*RW-1:0]s1_pm;reg[4*5-1:0]s1_pcnt;
- // ---------------- S2
+ // registered counts + kept region copies of the merge selects (S2 pair merge: count of group 2p, 4 copies per pair;
+ // S2 quad merge: count of pair 2q, 8 copies per quad)
+ reg s1_v;reg[8*8*RW-1:0]s1_gc;reg[4*5-1:0]s1_pcnt;
+ (* keep *) reg[4*4*4-1:0]s1_nac;              // pair p copy c at [(p*4+c)*4]
+ (* keep *) reg[2*8*5-1:0]s1_nqc;              // quad q copy c at [(q*8+c)*5]
+ // ---------------- S2 (pair merge + quad merge, every select from a register)
+ wire[4*16*RW-1:0]pm;
+ for(p=0;p<4;p=p+1)begin:pair
+  ot_hbm_idx_link_p_merge #(.NA(8),.NB(8),.CW(4),.RW(RW),.NC(4)) mg(.a(s1_gc[(2*p)*8*RW+:8*RW]),.na(s1_nac[p*16+:16]),
+   .b(s1_gc[(2*p+1)*8*RW+:8*RW]),.y(pm[p*16*RW+:16*RW]));
+ end
  wire[2*32*RW-1:0]qm;wire[2*6-1:0]qcnt;
  for(p=0;p<2;p=p+1)begin:quad
-  ot_hbm_idx_link_p_merge #(.NA(16),.NB(16),.CW(5),.RW(RW)) mg(.a(s1_pm[(2*p)*16*RW+:16*RW]),.na(s1_pcnt[(2*p)*5+:5]),
-   .b(s1_pm[(2*p+1)*16*RW+:16*RW]),.y(qm[p*32*RW+:32*RW]));
+  ot_hbm_idx_link_p_merge #(.NA(16),.NB(16),.CW(5),.RW(RW),.NC(8)) mg(.a(pm[(2*p)*16*RW+:16*RW]),.na(s1_nqc[p*40+:40]),
+   .b(pm[(2*p+1)*16*RW+:16*RW]),.y(qm[p*32*RW+:32*RW]));
   assign qcnt[p*6+:6]={1'b0,s1_pcnt[(2*p)*5+:5]}+{1'b0,s1_pcnt[(2*p+1)*5+:5]};
  end
  reg s2_v;reg[2*32*RW-1:0]s2_qm;reg[2*6-1:0]s2_qcnt;
@@ -150,6 +171,7 @@ module ot_hbm_idx_topk_link_static_p_core #(parameter integer MUT=0)(
  wire[63:0]mk;
  ot_hbm_idx_link_p_rot #(.N(64),.RW(1),.SW(6),.NC(1)) rm(.x(mk0),.s(trep[0+:6]),.y(mk));
  reg s4_v;reg[64*RW-1:0]s4_r;reg[63:0]s4_m;reg[2:0]s4_fill;reg[3:0]s4_nf;reg[6:0]s4_f0;
+ (* keep *) reg[8*3-1:0]s4_fillc,s4_f0c;      // r3: per-bank copies of fill / f0[2:0] for the ring-W slot selects
  // ---------------- S5 (write formation) + ring register W
  reg[64*RW-1:0]wr;
  wire[7:0]we_c;wire[47:0]wa_c;wire[8*288-1:0]wd_c;
@@ -159,7 +181,7 @@ module ot_hbm_idx_topk_link_static_p_core #(parameter integer MUT=0)(
   assign we_c[b]=s4_v&&({1'b0,k}<s4_nf);
   assign wa_c[b*6+:6]={1'b0,fr[7:3]};
   for(q=0;q<8;q=q+1)begin:wq
-   wire old=(MUT!=3)&&(s4_f0[2:0]==3'(b))&&(3'(q)<s4_fill);
+   wire old=(MUT!=3)&&(s4_f0c[b*3+:3]==3'(b))&&(3'(q)<s4_fillc[b*3+:3]);
    assign wd_c[b*288+q*RW+:RW]=old?wr[(b*8+q)*RW+:RW]:s4_r[(b*8+q)*RW+:RW];
   end
  end
@@ -180,10 +202,13 @@ module ot_hbm_idx_topk_link_static_p_core #(parameter integer MUT=0)(
  end
  integer pp;
  always @(posedge clk)begin
-  s1_pm<=pm;s1_pcnt<=pcnt;
+  s1_gc<=gc;s1_pcnt<=pcnt;
+  for(pp=0;pp<4;pp=pp+1)s1_nac[pp*16+:16]<={4{gcnt[(2*pp)*4+:4]}};
+  for(pp=0;pp<2;pp=pp+1)s1_nqc[pp*40+:40]<={8{pcnt[(2*pp)*5+:5]}};
   s2_qm<=qm;s2_qcnt<=qcnt;
   s3_c<=cm;s3_n<=ccnt;
   s4_r<=rot;s4_m<=mk&{64{s3_v}};s4_fill<=fill;s4_nf<=nsum[6:3];s4_f0<=f0;
+  s4_fillc<={8{fill}};s4_f0c<={8{f0[2:0]}};
   for(pp=0;pp<64;pp=pp+1)if(s4_v&&s4_m[pp])wr[pp*RW+:RW]<=s4_r[pp*RW+:RW];
   wa_r<=wa_c;wd_r<=wd_c;
  end
@@ -246,13 +271,26 @@ module ot_hbm_idx_topk_link_static_p #(parameter integer MUT=0)(
  always @(posedge clk or negedge rst_n) if(!rst_n) rst_sync<=2'b00; else rst_sync<={rst_sync[0],1'b1};
  wire rst_core_n=rst_sync[1];
  (* keep *) reg clear_r,ingest_r,flush_r,emit_r;(* keep *) reg[2367:0]line_r;(* keep *) reg[3:0]group_r;(* keep *) reg[7:0]rank_r,gbase_r;
+ // r3: three more kept pin flops per lane valid bit (selected_line[j*37]); with line_r they are the 4 copies the S1
+ // compaction slots use (each copy drives 2 of the 8 slots of its group), so no single valid flop fans into a whole group.
+ (* keep *) reg[3*64-1:0]vrep;
+ wire[4*64-1:0]lane_vc;
+ genvar gj;
+ for(gj=0;gj<64;gj=gj+1)begin:lv
+  assign lane_vc[gj]=line_r[gj*37];
+  assign lane_vc[64+gj]=vrep[gj];
+  assign lane_vc[128+gj]=vrep[64+gj];
+  assign lane_vc[192+gj]=vrep[128+gj];
+ end
+ integer vj;
  wire[3:0]c_tx_v;wire[2179:0]c_tx;wire c_fault;wire[9:0]c_count;
  always @(posedge clk)begin
   clear_r<=clear;ingest_r<=ingest_v;line_r<=selected_line;flush_r<=flush;emit_r<=emit_v;group_r<=emit_group;rank_r<=rank;gbase_r<=gbase;
+  for(vj=0;vj<64;vj=vj+1)begin vrep[vj]<=selected_line[vj*37];vrep[64+vj]<=selected_line[vj*37];vrep[128+vj]<=selected_line[vj*37];end
   tx_v<=c_tx_v;tx<=c_tx;fault<=c_fault;selected_count<=c_count;
  end
  ot_hbm_idx_topk_link_static_p_core #(.MUT(MUT)) core(.clk(clk),.rst_n(rst_core_n),.clear(clear_r),.ingest_v(ingest_r),
-  .selected_line(line_r),.flush(flush_r),.emit_v(emit_r),.emit_group(group_r),.rank(rank_r),.gbase(gbase_r),
+  .selected_line(line_r),.lane_vc(lane_vc),.flush(flush_r),.emit_v(emit_r),.emit_group(group_r),.rank(rank_r),.gbase(gbase_r),
   .tx_v(c_tx_v),.tx(c_tx),.fault(c_fault),.selected_count(c_count));
 endmodule
 `default_nettype wire

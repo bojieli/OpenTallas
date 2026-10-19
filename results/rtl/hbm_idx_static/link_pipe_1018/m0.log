@@ -1,6 +1,4 @@
-ot-run: ot-epyc4       admits   661 GB (avail 611, growth 148, headroom 0, waiters 0/0 GB) load 42/128 running 16 disk 515 GB 
-ot-run: -> ot-epyc4
-ot-heavy: admitted on regular-crane as oth-ubuntu-225938-1792388858 after 0 s
+# HBM-TOPKLINK r3 10-19 (claude/hbm-topklink-1019): run_link_pipe.sh MUT 0 on ot-epyc4 via ot-run
 Verilator 5.050 2026-07-01 rev v5.050
 IDX_LINK_PIPE frame0 MUT0 records512 flits64 errors0 fault0/0
 IDX_LINK_PIPE frame1 MUT0 records512 flits64 errors0 fault0/0
@@ -11,4 +9,7 @@ IDX_LINK_PIPE frame5 MUT0 records512 flits64 errors0 fault0/0
 IDX_LINK_PIPE frame6 MUT0 records0 flits0 errors0 fault1/1
 IDX_LINK_PIPE_TOTAL MUT0 records3072 miter1954 errors0 fillsff maxpack71 first_tx ref187 dut192 fault ref1954 dut1959
 IDX_LINK_PIPE PASS
-ot-run: RAN on ot-epyc4 (unit oth-ubuntu-225938-1792388858): exit 0
+- rtl/test/hbm_idx_static/tb_idx_link_pipe.sv:82: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 20us; walltime 0.019 s; speed 1.055 ms/s
+- Verilator: cpu 0.010 s on 1 threads; allocated 7 MB
