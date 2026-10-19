@@ -50,7 +50,7 @@ module hnx_rp3lp3x_flat_lp #(
     ot_pl_land_w #(.W(((99) - (0) + 1)), .D(4)) u_lpl_2_w (.ck(ck_n), .rsi(lpr_n), .i(gpm), .bank(lpl_2_bank), .epo(lpl_2_epo), .vld(lpl_2_vld));
     ot_pl_land_r #(.W(((99) - (0) + 1)), .D(4), .K(2)) u_lpl_2_r (.ck(ck_s), .rsi(lpr_s), .bank(lpl_2_bank), .epo(lpl_2_epo), .vld(lpl_2_vld), .o(lpl_2_o));
     assign gpm__l_s = lpl_2_o;
-    wire [817:0] rl1_s__p_u_lf1;  hnx_pl_pad_sram #(.W(((817) - (0) + 1)), .N((MUT == 3) ? 2 : 3), .SMALL(1)) u_lpp_0 (.ck(ck_s), .rst_n(lpr_s), .d(rl1_s), .q(rl1_s__p_u_lf1));   // align u_lf1: +3
+    wire [817:0] rl1_s__p_u_lf1;  hnx_pl_pad_sram #(.W(((817) - (0) + 1)), .N((MUT == 3) ? 2 : 3), .SMALL(1), .INREG((MUT == 3) ? 0 : 1)) u_lpp_0 (.ck(ck_s), .rst_n(lpr_s), .d(rl1_s), .q(rl1_s__p_u_lf1));   // align u_lf1: +3
     wire [25:0] st_s__p_u_lf1;  hnx_pl_pad_ring #(.W(((25) - (0) + 1)), .N(3)) u_lpp_1 (.ck(ck_s), .rst_n(lpr_s), .d(st_s), .q(st_s__p_u_lf1));   // align u_lf1: +3
     wire lpr_c_u_pr_n;  ot_pl_pad #(.W(1), .N((MUT == 4) ? 1 : 0)) u_lprc_u_pr_n (.ck(ck_n), .d(lpr_n), .q(lpr_c_u_pr_n));   // t(u_pr_n) = 0
     wire lpr_c_u_pr_s;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_pr_s (.ck(ck_s), .d(lpr_s), .q(lpr_c_u_pr_s));   // t(u_pr_s) = 0

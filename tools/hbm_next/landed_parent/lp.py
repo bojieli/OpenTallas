@@ -527,6 +527,10 @@ class Parent:
             pad_type = "hnx_pl_pad_sram" if use_sram else ("hnx_pl_pad_ring" if use_ring else "ot_pl_pad")
             reset_pin = f".rst_n(lpr_{self.region[inst]}), " if use_sram or use_ring else ""
             extra = ", .SMALL(1)" if net in S.get("small_sram_pads", []) else ""
+            # "inreg_sram_pads" (LH-P3DIE 10-19, matched pad-return plan): one input capture register in front of the SRAM
+            # ring (INREG=1; same N edges).  MUT 3 = N-1 edges with the register dropped (2-residue ring; N-1 with INREG would be MN=1).
+            if use_sram and net in S.get("inreg_sram_pads", []):
+                extra += ", .INREG((MUT == 3) ? 0 : 1)" if j == 0 and mut else ", .INREG(1)"
             w(f"    wire {rng or ''} {q};  {pad_type} #(.W({width_text(rng)}), .N({kk}){extra}) u_lpp_{j} (.ck(ck_{self.region[inst]}), "
               f"{reset_pin}.d({src}), .q({q}));   // align {inst}: +{k}")
             sub[(inst, net)] = q

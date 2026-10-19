@@ -143,5 +143,9 @@
  ],
  "small_sram_pads": [
   "rl1_s"
- ]
+ ],
+ "inreg_sram_pads": [
+  "rl1_s"
+ ],
+ "inreg_note": "LH-P3DIE 10-19: matched pad-return plan (results/arch/hbm_next_1019/sm4/p3/pad_return_plan, 1ff2abe39): rl1_s pad = input capture register + 2-residue native SRAM ring (seven 32x128) = the same 3 edges; source->capture 337.8, capture->SRAM 176.7, SRAM read->xs3 native-N rl1 389.6 um"
 }
