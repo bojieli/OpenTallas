@@ -1,0 +1,95 @@
+{
+ "schema": "opentallas.native_pin_audit.receipt.v1",
+ "lane": "OWN-QWEN/FWD-LAND",
+ "generated": "2026-10-18 21:5x PT",
+ "tool": "tools/hier_contract/native_pin_audit.py @ origin/main d4d6d65db (--view, --case k0,k1,k2)",
+ "note": "views read from codex/closure-record-<job> branches; completes native_receipts_qwen_fwd.json (claude/native-sweep-1018 a612d6e92), which lacked landh0_1_NE and landh0_1_EN; own-R FAIL is capture on k0..k2 only (NE 226.9 / EN 229.4 > 190); all PASS with case pins",
+ "records": [
+  {
+   "cell": "qfd_landh0_1_NE_65x30",
+   "view": "physical/ref_tile/qfwd_landh0_1_ne_65x30/views/qfd_landh0_1_NE_65x30",
+   "lib_cell": "qfd_landh0_1_NE_65x30",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 41.1,
+   "spread_ps": 2.1,
+   "outputs": 2,
+   "inputs": 3,
+   "launch_ps": 107.2,
+   "launch_pin": "fault",
+   "capture_ps": 187.3,
+   "capture_pin": "en",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "case_patterns": [
+    "k0",
+    "k1",
+    "k2"
+   ],
+   "case_pins": [
+    "k0",
+    "k1",
+    "k2"
+   ],
+   "case_pins_raw_capture_ps": {
+    "k0": 223.3,
+    "k1": 226.9,
+    "k2": 196.8
+   },
+   "ff_spread_ps": 1.9,
+   "ff_launch_min_ps": 56.4,
+   "ff_hold_need_ps": -16.5,
+   "pass": true,
+   "fail_why": "",
+   "job": "qfwd_landh0_1_ne_65x30-c1-11f7ce306",
+   "mode": "case k0,k1,k2 (coordinator 0gs (b): die drives k0..k2 from cluster strap tie-outputs + set_case_analysis; Q-DIE14 owes the die SDC line)"
+  },
+  {
+   "cell": "qfd_landh0_1_EN_65x30",
+   "view": "physical/ref_tile/qfwd_landh0_1_en_65x30/views/qfd_landh0_1_EN_65x30",
+   "lib_cell": "qfd_landh0_1_EN_65x30",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 63.8,
+   "spread_ps": 0.7,
+   "outputs": 2,
+   "inputs": 3,
+   "launch_ps": 93.9,
+   "launch_pin": "fault",
+   "capture_ps": 187.8,
+   "capture_pin": "en",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "case_patterns": [
+    "k0",
+    "k1",
+    "k2"
+   ],
+   "case_pins": [
+    "k0",
+    "k1",
+    "k2"
+   ],
+   "case_pins_raw_capture_ps": {
+    "k0": 225.5,
+    "k1": 229.4,
+    "k2": 199.9
+   },
+   "ff_spread_ps": 0.8,
+   "ff_launch_min_ps": 64.4,
+   "ff_hold_need_ps": -16.5,
+   "pass": true,
+   "fail_why": "",
+   "job": "qfwd_landh0_1_en_65x30-c1-e9066c679",
+   "mode": "case k0,k1,k2 (coordinator 0gs (b): die drives k0..k2 from cluster strap tie-outputs + set_case_analysis; Q-DIE14 owes the die SDC line)"
+  }
+ ]
+}
