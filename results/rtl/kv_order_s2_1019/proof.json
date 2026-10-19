@@ -1,0 +1,47 @@
+{
+  "status": "functional_candidate_PASS_physical_unqualified",
+  "source_commit": "eba9e5e58",
+  "bench_and_model_commit": "ad7d2632c",
+  "verilator": "5.050",
+  "external_equivalence": {
+    "cycles": 600000,
+    "seeds": [
+      1,
+      2,
+      3
+    ],
+    "mismatches": 0,
+    "resets": 916,
+    "map_max_count": 8,
+    "dispatch_max_count": 8,
+    "map_emits": 137853,
+    "dispatch_sends": 237459
+  },
+  "independent_queue": {
+    "cycles": 30000,
+    "pushes": 11969,
+    "pops": 11866,
+    "full_edges": 3712,
+    "empty_edges": 4518,
+    "clears": 31,
+    "simultaneous": 4885,
+    "scoreboard": "independent logical queue; not derived from DUT pointer/cache signals"
+  },
+  "mutants": {
+    "drop_raw_bypass": "FAIL external3/3 and independent cycle65",
+    "wrong_prefetch_addr": "FAIL external3/3 and independent cycle18",
+    "wrong_cache_advance": "FAIL external3/3 and independent cycle17"
+  },
+  "latency_added_leaf_edges": 0,
+  "capacity": 8,
+  "physical": "No S2 gate or production adoption; same macro views and prospective parent outline require measured actual placement/clock/load checks. Live S1 preserved.",
+  "quiet": "No RTL change. 175 fits quiet8 and SETTLE4..255; three service wrappers use default4, future coordinated passthrough and calendar/readiness pricing required.",
+  "rtl_sha256": {
+    "rtl/qwen_sys/host_20261013/qkd_host_boot_dispatch.sv": "29d8acc340c62e777c33d7d88de4e0f6274c5754197af787b260a9b74ed2df92",
+    "rtl/qwen_sys/host_20261013/qkd_host_boot_dispatch_debt.sv": "2ee958bb30d898f7449fa3e5013934303784b411493e1f1d4e1e171a73257322",
+    "rtl/qwen_sys/host_20261013/qkd_host_commit_order.sv": "2f276a63f327ea404075a9f97ce0901fb367e08e2998745e22df0ef9ac5ea4ae",
+    "rtl/qwen_sys/host_20261013/qkd_host_commit_order_debt.sv": "5435098a6e4e18c0c0f02a1e6bc7d89b7d6adf043939824b53331f503b8cb003",
+    "rtl/qwen_sys/host_20261013/qkd_host_ingest_map.sv": "5dcc99f1ef1de2ad7ecc84c4f46e540d27552d93982cfa46b731dbfcfbdef328",
+    "rtl/qwen_sys/host_20261013/qkd_host_boot_fifo8_sram.sv": "2be0dc2a4bedc60985195934e00d7316ea8da042d1d2ef4689d2428483169142"
+  }
+}

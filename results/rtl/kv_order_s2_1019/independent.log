@@ -1,0 +1,5 @@
+FIFO_INDEPENDENT_PASS cycles=30000 pushes=11969 pops=11866 full=3712 empty=4518 clear=31 simultaneous=4885
+- results/rtl/kv_order_s2_1019/tb_fifo_independent.sv:27: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 60us; walltime 0.109 s; speed 550.124 us/s
+- Verilator: cpu 0.109 s on 1 threads; allocated 7 MB

@@ -1,0 +1,50 @@
+HRORDER_EQUIV verilator Verilator 5.050 2026-07-01 rev v5.050
+HRORDER_EQUIV MISMATCH cyc=29 map.out
+HRORDER_EQUIV MISMATCH cyc=30 map.out
+HRORDER_EQUIV MISMATCH cyc=31 map.out
+HRORDER_EQUIV MISMATCH cyc=32 map.out
+HRORDER_EQUIV MISMATCH cyc=33 map.out
+HRORDER_EQUIV MISMATCH cyc=34 map.out
+HRORDER_EQUIV MISMATCH cyc=35 map.out
+HRORDER_EQUIV MISMATCH cyc=36 map.out
+HRORDER_EQUIV MISMATCH cyc=37 map.out
+HRORDER_EQUIV MISMATCH cyc=38 map.out
+HRORDER_FIFO_CAPACITY map_max=8 dispatch_max=8 logical_depth=8
+HRORDER_EQUIV FAIL seed=1 cycles=30000 mismatches=69162 map_emits=7173 order_pops=9866 disp_sends=11817 disp_pops=11536 fault_cycles=224 (map 88 order 6 disp 130) resets=53
+- /srv/opentallas-scratch/claude/codex-kv-order-s2-1019/wt/tools/qwen_kv_die/host_cluster/bench/hrorder_equiv/tb_hrorder_equiv.sv:131: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 60us; walltime 0.598 s; speed 100.312 us/s
+- Verilator: cpu 0.598 s on 1 threads; allocated 8 MB
+HRORDER_EQUIV MISMATCH cyc=34 map.out
+HRORDER_EQUIV MISMATCH cyc=35 map.out
+HRORDER_EQUIV MISMATCH cyc=35 disp.kv
+HRORDER_EQUIV MISMATCH cyc=36 map.out
+HRORDER_EQUIV MISMATCH cyc=36 disp.kv
+HRORDER_EQUIV MISMATCH cyc=37 map.out
+HRORDER_EQUIV MISMATCH cyc=37 disp.kv
+HRORDER_EQUIV MISMATCH cyc=38 map.out
+HRORDER_EQUIV MISMATCH cyc=39 map.out
+HRORDER_EQUIV MISMATCH cyc=40 map.out
+HRORDER_FIFO_CAPACITY map_max=8 dispatch_max=8 logical_depth=8
+HRORDER_EQUIV FAIL seed=2 cycles=30000 mismatches=64436 map_emits=8078 order_pops=9892 disp_sends=11813 disp_pops=11536 fault_cycles=193 (map 75 order 0 disp 118) resets=55
+- /srv/opentallas-scratch/claude/codex-kv-order-s2-1019/wt/tools/qwen_kv_die/host_cluster/bench/hrorder_equiv/tb_hrorder_equiv.sv:131: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 60us; walltime 0.605 s; speed 99.207 us/s
+- Verilator: cpu 0.605 s on 1 threads; allocated 8 MB
+HRORDER_EQUIV MISMATCH cyc=21 map.out
+HRORDER_EQUIV MISMATCH cyc=22 map.out
+HRORDER_EQUIV MISMATCH cyc=23 map.out
+HRORDER_EQUIV MISMATCH cyc=24 map.out
+HRORDER_EQUIV MISMATCH cyc=25 map.out
+HRORDER_EQUIV MISMATCH cyc=26 map.out
+HRORDER_EQUIV MISMATCH cyc=27 map.out
+HRORDER_EQUIV MISMATCH cyc=28 map.out
+HRORDER_EQUIV MISMATCH cyc=29 map.out
+HRORDER_EQUIV MISMATCH cyc=30 map.out
+HRORDER_FIFO_CAPACITY map_max=8 dispatch_max=8 logical_depth=8
+HRORDER_EQUIV FAIL seed=3 cycles=30000 mismatches=72025 map_emits=6740 order_pops=9732 disp_sends=11814 disp_pops=11625 fault_cycles=115 (map 43 order 0 disp 72) resets=36
+- /srv/opentallas-scratch/claude/codex-kv-order-s2-1019/wt/tools/qwen_kv_die/host_cluster/bench/hrorder_equiv/tb_hrorder_equiv.sv:131: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 60us; walltime 0.590 s; speed 101.713 us/s
+- Verilator: cpu 0.590 s on 1 threads; allocated 8 MB
+HRORDER_EQUIV FAIL exact runs_pass=0/3
