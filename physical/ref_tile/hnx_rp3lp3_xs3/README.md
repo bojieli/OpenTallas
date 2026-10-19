@@ -29,3 +29,8 @@ Spec: `physical/hbm_next/sm4/hnx_rp3lp3_xs3_spec.json`. Lane: HBM-NEXT-P3-SM, br
 The leaf `hnx_rp4lp4_lfx` at P = 3 instantiates `hnx_xs3`. It is checked against 3 PRODUCTION d4g leaves plus the lane-protocol model.
 - PASS at P = 3, and at P = 1 / 2 (hnx_xs4 #(.P)).
 - Mutants must FAIL and do: MUT1 (x-store lane alias), MUT2 (lane-select ignored), MUT3 (publish slot) and MUT4 (W-face BF16 weight sign). The witness logs are committed.
+
+## LH-P3DIE 10-19 pin fix (re-gate)
+The 08:38 --cts gate (GRT 0, pin-flop spread TT 58.6 / FF 57.1 ps, fill 38 %) placed the face pins with auto IO, which packed them into partial faces: S 2,930 pins in 297.1 of 561.6 um (9.9/um) and W 787 pins in 115.1 of 289.4 um (6.8/um). Both are above the 6 pins/um of checklist item 6.
+Fix: an exact `io_tcl` (`physical/hbm_next/sm4/hnx_rp3lp3_xs3_pins.tcl`, from `tools/ref_tile/spread_face_pins.py`) spreads every face over its full length, with buses in the spec face order. N/S pins alternate M3/M5 and W/E pins are on M4. The result is N 2,176 pins at 3.9/um, S 2,903 at 5.3/um, W 787 at 2.8/um and E 531 at 1.9/um. clk sits at the N centre (x 280.7). Nothing else changed: same RTL, macros, outline and clock recipe.
+Checklist after the fix: items 1-5, 7 and 8 are unchanged (PASS). Item 6 now passes for pins (every face is full and at most 6/um). The fill waiver stays: the measured fill is 38 %, and the width is set by the pins and the lattice.
