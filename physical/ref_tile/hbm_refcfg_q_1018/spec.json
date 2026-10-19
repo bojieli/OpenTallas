@@ -3,6 +3,7 @@
  "top": "ot_hbm_pc_refresh_cfg",
  "kind": "tile",
  "sources": [
+  "rtl/lib/ot_rst_relay.sv",
   "rtl/hbm_accel/loader/service_native/ot_hbm_pc_refresh_cfg.sv"
  ],
  "params": {
@@ -150,9 +151,9 @@
  },
  "slot_change_request": "d4g refcfg_<q> x4 (one per quadrant, NPC 16): new slot 51.84 x 51.84 (pin-bound: S F20 host bus 290 pins at 5.6/um, N refresh_reload 16x8 + pc_rst_n + clk_hbm + rst_hbm_n 131 pins at 2.5/um toward the quadrant's 16 PC controllers); GEN0 bound the NPC32 master as a SYNTH ETM",
  "job": {
-  "owner": "Claude:OWNERS-HBM/STK",
-  "branch": "claude/owners-hbm-1018-stk",
-  "tag": "q1",
+  "owner": "Claude:ELEM-GAPS/HBMN2",
+  "branch": "claude/eg-hbmn2-1018",
+  "tag": "q2",
   "views_to": "physical/ref_tile/hbm_refcfg_q_1018/views",
   "record_to": "results/rtl/ref_tile/hbm_refcfg_q_1018",
   "purpose": "HBM die d4g refcfg_<q> x4 = ot_hbm_pc_refresh_cfg #(NPC 16) (per-quadrant refresh-phase boot producer; F20 SW 126 / NW 127 / SE 128 / NE 129); first hardening, async stream833/HBM1024 pair through the cdc_synchronizers_async policy (632a61852)",
@@ -226,7 +227,8 @@
     "fail_witness": "results/rtl/rbh_stk_1018/logs/rc_mut4.log",
     "note": "PC byte order swapped"
    }
-  ]
+  ],
+  "reroute_note": "ELEM-GAPS/HBMN2 10-18: closed q1-17f24ab03 native FAIL capture 217.3 > 190 at rst_n (the port net was the async clear of ~150 stream flops). rst_n now drives only ot_rst_relay (2 sync + 1 relay flop); stream-domain release +3 clk edges (RST_RELEASE)."
  },
  "hold_budget_note": "pins spread over the full S/N faces by the balanced pin placer (first gate: IO placer packed the N face into ~20 um)"
 }

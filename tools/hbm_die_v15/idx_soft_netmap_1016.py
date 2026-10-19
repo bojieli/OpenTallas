@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Bit-level net map of the SOFT IDX client composition (H-NETLIST/IDXP 2026-10-16).
 
-    idx_soft_netmap_1016.py OUT_JSON
+    idx_soft_netmap_1016.py OUT_JSON [N_Q [TP [AM_MERGE]]]
 
 Elaborates rtl/hbm_accel/index/soft_1016/ot_hbm_idx_client_static_soft.sv with yosys, every child master read as a
 blackbox from its real source (ot_hbm_idx_ctl_static included), and writes for every child port bit what it connects
@@ -31,11 +31,12 @@ def main():
     out = Path(sys.argv[1])
     nq = int(sys.argv[2]) if len(sys.argv) > 2 else 4          # N_Q of the composition (A2P half die: 2)
     tp = int(sys.argv[3]) if len(sys.argv) > 3 else 96         # TP (d4f TP192: 192)
+    am = int(sys.argv[4]) if len(sys.argv) > 4 else 0          # AM_MERGE (HBM-SU3 10-17: argmax r2, 264-b argmax_rr)
     with tempfile.TemporaryDirectory() as td:
         j = Path(td) / 'soft.json'
         lib = ' '.join(str(ROOT / f) for f in CHILD_SRC.values())
         r = subprocess.run(['yosys', '-q', '-p', f'read_verilog -sv -lib {lib}; read_verilog -sv {ROOT / SOFT}; '
-                            f'chparam -set N_Q {nq} -set TP {tp} {TOP}; hierarchy -top {TOP}; proc; opt_clean -purge; write_json {j}'], capture_output=True, text=True)
+                            f'chparam -set N_Q {nq} -set TP {tp}' + (f' -set AM_MERGE {am}' if am else '') + f' {TOP}; hierarchy -top {TOP}; proc; opt_clean -purge; write_json {j}'], capture_output=True, text=True)
         if r.returncode:
             sys.exit(r.stdout + r.stderr)
         d = json.loads(j.read_text())
@@ -96,7 +97,7 @@ def main():
     for p, v in outs.items():
         for t in v:
             assert t[0] != 'N' or t[1] in drivers, ('undriven client output', p)
-    rec = dict(schema='opentallas.hbm_idx_soft_netmap.v1', top=TOP, params=dict(N_Q=nq, TP=tp), replaces='hb_idx (ot_hbm_idx_client_static_sw)',
+    rec = dict(schema='opentallas.hbm_idx_soft_netmap.v1', top=TOP, params=dict(N_Q=nq, TP=tp, **({'AM_MERGE': am} if am else {})), replaces='hb_idx (ot_hbm_idx_client_static_sw)',
                sources={f: hashlib.sha256((ROOT / f).read_bytes()).hexdigest() for f in [SOFT] + list(CHILD_SRC.values())},
                children=children, outputs=outs, net_drivers={str(k): v for k, v in drivers.items()})
     out.parent.mkdir(parents=True, exist_ok=True)

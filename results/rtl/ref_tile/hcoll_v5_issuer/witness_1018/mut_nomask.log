@@ -1,0 +1,13 @@
+ot-run: ot-epyc4       admits   109 GB (avail 229, growth 153, headroom 0, waiters 0/0 GB) load 56/128 running 27 disk 155 GB 
+ot-run: ot-epyc5       admits   705 GB (avail 562, growth 68, headroom 0, waiters 0/0 GB) load 36/128 running 12 disk 2658 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/collpin/src
+ot-run: ot-agidock128  admits    63 GB (avail 89, growth 45, headroom 0, waiters 0/0 GB) load 16/64 running 9 disk 264 GB 
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-439128-1792327614 after 0 s
+MISMATCH cyc2392 conf1/1 init0/0 pf0/0 busy0/0 done0/0 ird0/0 dv0/0 ob0000000000/0000012345 txv0/0 rq_eq1 kq_eq1 dd_eq1 cyc38/38
+MISMATCH cyc2393 conf1/1 init0/0 pf0/0 busy0/0 done0/0 ird0/0 dv0/0 ob0000000000/0000012345 txv0/0 rq_eq1 kq_eq1 dd_eq1 cyc38/38
+MISMATCH cyc2394 conf1/1 init0/0 pf0/0 busy0/0 done0/0 ird0/0 dv0/0 ob0000000000/0000012345 txv0/0 rq_eq1 kq_eq1 dd_eq1 cyc38/38
+MISMATCH cyc2395 conf1/1 init0/0 pf0/0 busy0/0 done0/0 ird0/0 dv0/0 ob0000000000/0000012345 txv0/0 rq_eq1 kq_eq1 dd_eq1 cyc38/38
+POSITIVE m_nomask scen0 FAILED
+HCOLL_Q_HARD_V5_MUTANT_REJECTED nomask
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-439128-1792327614): exit 1

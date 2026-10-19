@@ -9,7 +9,11 @@
 // compiled edge, on the compiled ring; no fault. +fault=N (ring B): 1 missing arrival, 2 inject ttl 0,
 // 3 missing transit -> must fault. Lane mutants (MUT_TTL / MUT_SRC on ring B) must FAIL.
 module tb_hgi_coll_ring_ag2;
-    parameter integer MUT_TTL=0,MUT_SRC=0;
+    // BLK=1 (HBM-RTL4): ring B is the die block ot_hgi_coll_ring_b_stop (reset relay + 1-edge command pin register):
+    // its commands are driven one edge earlier (BLK_LEAD) and the timeline starts IDLE edges after reset release.
+    // BLK_PIPE=0 with BLK=1 is the block mutant (commands early, no pin register) and must FAIL.
+    parameter integer MUT_TTL=0,MUT_SRC=0,BLK=0,BLK_PIPE=1;
+    localparam integer BLK_LEAD=BLK?1:0,IDLE=BLK?6:0;
     localparam integer NC=1400,READ_LEAD=2;
     reg clk=0,rst_n=0;always #0.5 clk=~clk;
     typedef struct packed {
@@ -41,6 +45,16 @@ module tb_hgi_coll_ring_ag2;
             .rx_slot(cmd[0][q].rx),.rx_kind(cmd[0][q].kind),.rx_src(cmd[0][q].src),.rx_tag(cmd[0][q].tag),
             .rr_local(1'b0),.rr_local_tag(3'd0),.rr_v(rr_v),.rr_tag(rr_tag),.rr_d(rr_d),
             .ag_v(ag_v[0][q]),.ag_src(ag_src[0][q]),.ag_tag(ag_tag[0][q]),.ag_d(ag_d[0][q]),.fault(fault[0][q]));
+        if(BLK)begin:g_blk
+        ot_hgi_coll_ring_b_stop #(.MUT_TTL(MUT_TTL),.MUT_SRC(MUT_SRC),.CMD_PIPE(BLK_PIPE)) rb(
+            .clk(clk),.rst_n(rst_n),.qid(2'(q)),
+            .cw_i(co[1][prevq(q)]),.ccw_i(no[1][nextq(q)]),.cw_o(co[1][q]),.ccw_o(no[1][q]),
+            .lp_we(cmd[1][q].lp_we),.lp_tag(cmd[1][q].lp_tag),.lp_data(cmd[1][q].lp_data),
+            .state_read_tx(cmd[1][q].read_tx),.state_tx_tag(cmd[1][q].read_tx_tag),
+            .tx_inject(cmd[1][q].inject),.tx_forward(cmd[1][q].fwd),.tx_tag(cmd[1][q].tx_tag),.tx_ttl(cmd[1][q].ttl),
+            .rx_slot(cmd[1][q].rx),.rx_kind(cmd[1][q].kind),.rx_src(cmd[1][q].src),.rx_tag(cmd[1][q].tag),
+            .ag_v(ag_v[1][q]),.ag_src(ag_src[1][q]),.ag_tag(ag_tag[1][q]),.ag_d(ag_d[1][q]),.fault(fault[1][q]));
+        end else begin:g_lane
         ot_hgi_coll_ring_ag_lane #(.MUT_TTL(MUT_TTL),.MUT_SRC(MUT_SRC)) rb(
             .clk(clk),.rst_n(rst_n),.qid(2'(q)),
             .cw_i(co[1][prevq(q)]),.ccw_i(no[1][nextq(q)]),.cw_o(co[1][q]),.ccw_o(no[1][q]),
@@ -49,6 +63,7 @@ module tb_hgi_coll_ring_ag2;
             .tx_inject(cmd[1][q].inject),.tx_forward(cmd[1][q].fwd),.tx_tag(cmd[1][q].tx_tag),.tx_ttl(cmd[1][q].ttl),
             .rx_slot(cmd[1][q].rx),.rx_kind(cmd[1][q].kind),.rx_src(cmd[1][q].src),.rx_tag(cmd[1][q].tag),
             .ag_v(ag_v[1][q]),.ag_src(ag_src[1][q]),.ag_tag(ag_tag[1][q]),.ag_d(ag_d[1][q]),.fault(fault[1][q]));
+        end
     end
     function automatic [255:0] payload(input integer q,input integer i);
         reg [255:0] v;
@@ -119,9 +134,14 @@ module tb_hgi_coll_ring_ag2;
             default:begin end
         endcase
         repeat(5)@(negedge clk);rst_n=1;
-        for(integer c=0;c<=last_cycle;c=c+1)begin
-            for(integer r=0;r<2;r=r+1)for(integer q=0;q<4;q=q+1)cmd[r][q]=prog[r][q][c];
+        repeat(IDLE)@(negedge clk);
+        for(integer c=-BLK_LEAD;c<=last_cycle;c=c+1)begin
+            for(integer r=0;r<2;r=r+1)for(integer q=0;q<4;q=q+1)begin
+                integer cc;cc=(r==1)?c+BLK_LEAD:c;
+                cmd[r][q]=(cc>=0 && cc<NC)?prog[r][q][cc]:'0;
+            end
             @(posedge clk);#0.01;
+            if(c<0)begin @(negedge clk);continue;end
             if(|fault[0] || |fault[1])saw_fault=1;
             if(scenario==0)begin
                 if(|fault[0] || |fault[1])begin if(errors<10)$display("RING_AG2 unexpected fault cycle%0d A%h B%h",c,fault[0],fault[1]);errors=errors+1;end

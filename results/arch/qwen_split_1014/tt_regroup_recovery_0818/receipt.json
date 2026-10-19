@@ -1,0 +1,17 @@
+{
+  "formal_positive": "EQUIV_PASS MUT=0",
+  "formal_negative": "EQUIV_FAIL MUT=1 (16 unproven equiv cells)",
+  "functional_simulation": "all three m0/m1/m2 returned REGROUP_PASS60000; mutants escaped, no functional qualification",
+  "formal_memory_scope": "explicit proof-only registered port-dependency macro abstraction, not actual native SRAM functional model",
+  "formal_source": "claude/q15-tt-static f976a7c86 regroup parent; source_hashes.json records frozen actual remote files",
+  "own_head_source": "ot_qfd_tt_ctlm_static_hr exact SHA matches proof",
+  "qualification": false,
+  "files_sha256": {
+    "rg_m0.log": "090e2439c434395b1771583a64d7373093bf96c3a6e30f9a6a08da92a2594f27",
+    "rg_m1.log": "27fdd189a95951aa3e566a89a7d00ec82b1cbb4198510af1d64cd9b17f0a3e7e",
+    "eq_m1.log": "d8d626c42f256729fbf7fd9c5c865e8881ddaa2be015c8ca1ed19ce69a772644",
+    "rg_m2.log": "8f4cc666745843842f0c4bbb80b31f0dbcabc2ec02a321beabf071bb2e37ecff",
+    "eq_m0.log": "052e07625a9af142c3891fc266d608eb75bb210b7ce2707655ee17eab42802f7",
+    "source_hashes.json": "a6da8ad41b4c82c3c6a9a463db445c9b95de1e0063712ac0cd6de8a1e68f7a59"
+  }
+}

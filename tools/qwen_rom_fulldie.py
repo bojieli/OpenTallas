@@ -912,6 +912,9 @@ def _corner_keep(poss, along, step, cr, off, p, label):
     return out
 
 
+MX_AREA = set()     # masters placed MX whose M8 area pins snap to the mirrored track grid (opt-in, kv_die)
+
+
 def pin_rects(mst, k, wmap):
     """[(pin name, layer, (x0, y0, x1, y1))] for one master.  wmap: port -> width actually emitted."""
     out = []
@@ -930,7 +933,14 @@ def pin_rects(mst, k, wmap):
             _, _, x, yc, pitch = spec
             off, p = TRK['M8']
             step = p * k * pitch
-            y = off * k + round((yc - n * step / 2 - off * k) / (p * k)) * p * k
+            if mst.name in MX_AREA:
+                # KV-CLOCK 10-18 (kvs14b real case 'qkd_pvw_n MX y: site grid never meets the legal residues mod 240'):
+                # a master the die places MX puts its M8 area pins on the MIRRORED track grid, H - (off + j p), so the
+                # 270-nm row origin can meet the M8 tracks (an n x 2.16 - 0.024 frame never does with R0-grid pins)
+                base = mst.h - off * k
+                y = base + round((yc - n * step / 2 - base) / (p * k)) * p * k
+            else:
+                y = off * k + round((yc - n * step / 2 - off * k) / (p * k)) * p * k
             hw = 0.020 * k
             for i, nm in enumerate(names):
                 yy = y + i * step
@@ -1048,41 +1058,12 @@ def lef_text(mst, k, wmap):
 
 
 def pin_windows(mst, pins):
-    """[(layer index, rect)] pin-access windows of a master with pin_window > 0 (see lef_text).  Pins of one face
-    closer than 2 x pin_window share one window."""
+    """[(layer index, rect)] pin-access windows of a master with pin_window > 0 (see lef_text; shared rule
+    tools/abstract_pin_windows.py).  Pins of one face closer than 2 x pin_window share one window."""
+    import abstract_pin_windows as APW
     win = float(getattr(mst, 'pin_window', 0.0) or 0.0)
-    if win <= 0:
-        return []
-    faces = {}
-    for nm, layer, (a, b, c_, d) in pins:
-        if b < 0.5:
-            f, lo, hi = 'S', a, c_
-        elif d > mst.h - 0.5:
-            f, lo, hi = 'N', a, c_
-        elif a < 0.5:
-            f, lo, hi = 'W', b, d
-        elif c_ > mst.w - 0.5:
-            f, lo, hi = 'E', b, d
-        else:
-            continue
-        faces.setdefault(f, []).append((lo, hi))
-    out = []
-    lo_layer = int(getattr(mst, 'pin_window_layer_lo', 4))
-    for f, iv in sorted(faces.items()):
-        iv.sort()
-        spans = [list(iv[0])]
-        for lo, hi in iv[1:]:
-            if lo - spans[-1][1] <= 2 * win:
-                spans[-1][1] = max(spans[-1][1], hi)
-            else:
-                spans.append([lo, hi])
-        along = mst.w if f in 'NS' else mst.h
-        for lo, hi in spans:
-            lo, hi = max(0.0, lo - win), min(along, hi + win)
-            r = {'S': (lo, 0.0, hi, win), 'N': (lo, mst.h - win, hi, mst.h),
-                 'W': (0.0, lo, win, hi), 'E': (mst.w - win, lo, mst.w, hi)}[f]
-            out += [(i, r) for i in range(lo_layer, mst.obs_top + 1)]
-    return out
+    lo = int(getattr(mst, 'pin_window_layer_lo', 4))
+    return [(i, r) for i, rs in sorted(APW.windows(mst.w, mst.h, pins, win, lo, mst.obs_top).items()) for r in rs]
 
 
 def _minus(w, h, holes):
