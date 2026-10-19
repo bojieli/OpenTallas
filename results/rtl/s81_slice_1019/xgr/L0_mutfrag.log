@@ -1,0 +1,5 @@
+# witness: xg_bench.sh L0_mutfrag on claude/s81-xgr-1019 710b93b84 (Verilator 5.050, ot-epyc4, full-run section)
+XG_CASE L0_mutfrag FAIL expected=FAIL ok=1 :: XS_PROGRAM stage=stage0 phases=[0, 1, 10, 11] cal_rows=1289 arrivals=320 off=37 off_load=37 order=near slice=5 end=1670 slack={'q0': 0, 'b0': 540, 'q1': 120, 'q1b': 433}
+XG_RING sid=5 col=2 line_beats=300 own_path=10 v_path=10 own_line_e=20/20 own_line_w=20/20 stray=0
+XS_LOCKSTEP stage_off=37 D=34 first_ref_word=385 first_xs_word=419 cycles=1577 valid=411 q=320 (nonzero 320) bf=84 cfg=239 go=206 mismatches=24 ref_fault_cycles=0 ref_cal_fault=0 xs_fault_at=-1 valid_word_mismatches=24 pre_start_transient_cycles=16 beat_to_word_latency=8 (beat 4, 80 beats used by phase 0)
+FIRST MISMATCH ref iter 459 (xs 493): b259=1/0 b261=1/0 b262=1/0 b263=1/0 b264=1/0 b265=1/0 b266=1/0 b540=1/0 b542=1/0 b544=1/0 b545=1/0 b546=1/0

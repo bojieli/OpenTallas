@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_s81sl_xg",
+ "enable": false,
+ "reason": "Source-registered (S81-SLICE ring stop + x streamer): every data input lands in a flop at the pin (rstop iw / ie / iv / xf_q / xfv_q / neo_q / nwo_q / ci_q / cid_q / sid_c; xs isv_q / isd_q) and every output leaves a flop (rstop ro_e / ro_w / vo / nx regs / dl_* regs; xs xw_d relay register, xw_v = its bit 0; xg fault register). recipe-3 pin_regs would add a second unpriced stage per ring hop (SPEC: +1 ring-stop register ~ +8 cycles per ring traversal) and break the landed-slice lockstep (C1 / C3) latencies. pin_reg_split clones shared output launch flops; io_flop_at_pins anchors every pin flop at its face."
+}

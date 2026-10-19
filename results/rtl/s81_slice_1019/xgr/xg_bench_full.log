@@ -1,0 +1,47 @@
+XG_CASE L0_near_s5 PASS expected=PASS ok=1 :: XS_PROGRAM stage=stage0 phases=[0, 1, 10, 11] cal_rows=1289 arrivals=320 off=37 off_load=37 order=near slice=5 end=1670 slack={'q0': 0, 'b0': 540, 'q1': 120, 'q1b': 433}
+XG_RING sid=5 col=2 line_beats=300 own_path=10 v_path=10 own_line_e=20/20 own_line_w=20/20 stray=0
+XS_LOCKSTEP stage_off=37 D=34 first_ref_word=385 first_xs_word=419 cycles=1577 valid=411 q=320 (nonzero 320) bf=84 cfg=239 go=206 mismatches=0 ref_fault_cycles=0 ref_cal_fault=0 xs_fault_at=-1 valid_word_mismatches=0 pre_start_transient_cycles=16 beat_to_word_latency=8 (beat 4, 80 beats used by phase 0)
+XG_CASE L0_far_s0 PASS expected=PASS ok=1 :: XS_PROGRAM stage=stage0 phases=[0, 1, 10, 11] cal_rows=1289 arrivals=320 off=52 off_load=52 order=far slice=0 end=1685 slack={'q0': 0, 'b0': 547, 'q1': 130, 'q1b': 428}
+XG_RING sid=0 col=0 line_beats=300 own_path=10 v_path=10 own_line_e=20/20 own_line_w=0/0 stray=0
+XS_LOCKSTEP stage_off=52 D=49 first_ref_word=385 first_xs_word=434 cycles=1577 valid=411 q=320 (nonzero 320) bf=84 cfg=239 go=206 mismatches=0 ref_fault_cycles=0 ref_cal_fault=0 xs_fault_at=-1 valid_word_mismatches=0 pre_start_transient_cycles=16 beat_to_word_latency=8 (beat 8, 80 beats used by phase 0)
+XG_CASE L0_rand_s15 PASS expected=PASS ok=1 :: XS_PROGRAM stage=stage0 phases=[0, 1, 10, 11] cal_rows=1289 arrivals=320 off=29 off_load=29 order=rand slice=15 end=1662 slack={'q0': 0, 'b0': 546, 'q1': 124, 'q1b': 412}
+XG_RING sid=15 col=7 line_beats=300 own_path=10 v_path=10 own_line_e=0/0 own_line_w=20/20 stray=0
+XS_LOCKSTEP stage_off=29 D=26 first_ref_word=385 first_xs_word=411 cycles=1577 valid=411 q=320 (nonzero 320) bf=84 cfg=202 go=197 mismatches=0 ref_fault_cycles=0 ref_cal_fault=0 xs_fault_at=-1 valid_word_mismatches=0 pre_start_transient_cycles=16 beat_to_word_latency=8 (beat 36, 80 beats used by phase 0)
+XG_CASE L2_near_s9 PASS expected=PASS ok=1 :: XS_PROGRAM stage=stage3 phases=[456, 457, 466, 467] cal_rows=1289 arrivals=320 off=37 off_load=37 order=near slice=9 end=1670 slack={'q0': 0, 'b0': 550, 'q1': 120, 'q1b': 421}
+XG_RING sid=9 col=4 line_beats=300 own_path=10 v_path=10 own_line_e=20/20 own_line_w=20/20 stray=0
+XS_LOCKSTEP stage_off=37 D=34 first_ref_word=385 first_xs_word=419 cycles=1577 valid=411 q=320 (nonzero 320) bf=84 cfg=239 go=206 mismatches=0 ref_fault_cycles=0 ref_cal_fault=0 xs_fault_at=-1 valid_word_mismatches=0 pre_start_transient_cycles=16 beat_to_word_latency=8 (beat 8, 80 beats used by phase 0)
+XG_CASE L2_rand_s3 PASS expected=PASS ok=1 :: XS_PROGRAM stage=stage3 phases=[456, 457, 466, 467] cal_rows=1289 arrivals=320 off=44 off_load=44 order=rand slice=3 end=1677 slack={'q0': 0, 'b0': 548, 'q1': 128, 'q1b': 417}
+XG_RING sid=3 col=1 line_beats=300 own_path=10 v_path=10 own_line_e=20/20 own_line_w=20/20 stray=0
+XS_LOCKSTEP stage_off=44 D=41 first_ref_word=385 first_xs_word=426 cycles=1577 valid=411 q=320 (nonzero 320) bf=84 cfg=219 go=213 mismatches=0 ref_fault_cycles=0 ref_cal_fault=0 xs_fault_at=-1 valid_word_mismatches=0 pre_start_transient_cycles=16 beat_to_word_latency=8 (beat 4, 80 beats used by phase 0)
+XG_CASE L2_far_s14 PASS expected=PASS ok=1 :: XS_PROGRAM stage=stage3 phases=[456, 457, 466, 467] cal_rows=1289 arrivals=320 off=61 off_load=61 order=far slice=14 end=1694 slack={'q0': 0, 'b0': 545, 'q1': 129, 'q1b': 428}
+XG_RING sid=14 col=7 line_beats=300 own_path=10 v_path=10 own_line_e=0/0 own_line_w=20/20 stray=0
+XS_LOCKSTEP stage_off=61 D=58 first_ref_word=385 first_xs_word=443 cycles=1577 valid=411 q=320 (nonzero 320) bf=84 cfg=239 go=206 mismatches=0 ref_fault_cycles=0 ref_cal_fault=0 xs_fault_at=-1 valid_word_mismatches=0 pre_start_transient_cycles=16 beat_to_word_latency=8 (beat 0, 80 beats used by phase 0)
+XG_CASE L0_rand_s8 PASS expected=PASS ok=1 :: XS_PROGRAM stage=stage0 phases=[0, 1, 10, 11] cal_rows=1289 arrivals=320 off=40 off_load=40 order=rand slice=8 end=1673 slack={'q0': 0, 'b0': 551, 'q1': 123, 'q1b': 408}
+XG_RING sid=8 col=4 line_beats=300 own_path=10 v_path=10 own_line_e=20/20 own_line_w=20/20 stray=0
+XS_LOCKSTEP stage_off=40 D=37 first_ref_word=385 first_xs_word=422 cycles=1577 valid=411 q=320 (nonzero 320) bf=84 cfg=199 go=221 mismatches=0 ref_fault_cycles=0 ref_cal_fault=0 xs_fault_at=-1 valid_word_mismatches=0 pre_start_transient_cycles=16 beat_to_word_latency=8 (beat 12, 80 beats used by phase 0)
+XG_CASE L0_offm1 FAIL expected=FAIL ok=1 :: XS_PROGRAM stage=stage0 phases=[0, 1, 10, 11] cal_rows=1289 arrivals=320 off=37 off_load=36 order=near slice=5 end=1670 slack={'q0': 0, 'b0': 540, 'q1': 120, 'q1b': 433}
+XG_RING sid=5 col=2 line_beats=300 own_path=10 v_path=10 own_line_e=20/20 own_line_w=20/20 stray=0
+XS_LOCKSTEP stage_off=37 D=34 first_ref_word=385 first_xs_word=418 cycles=1577 valid=411 q=320 (nonzero 320) bf=84 cfg=239 go=206 mismatches=812 ref_fault_cycles=0 ref_cal_fault=0 xs_fault_at=452 valid_word_mismatches=808 pre_start_transient_cycles=16 beat_to_word_latency=7 (beat 4, 80 beats used by phase 0)
+FIRST MISMATCH ref iter 384 (xs 418): b0=0/1 b551=0/1
+XG_CASE L0_mutfrag FAIL expected=FAIL ok=1 :: XS_PROGRAM stage=stage0 phases=[0, 1, 10, 11] cal_rows=1289 arrivals=320 off=37 off_load=37 order=near slice=5 end=1670 slack={'q0': 0, 'b0': 540, 'q1': 120, 'q1b': 433}
+XG_RING sid=5 col=2 line_beats=300 own_path=10 v_path=10 own_line_e=20/20 own_line_w=20/20 stray=0
+XS_LOCKSTEP stage_off=37 D=34 first_ref_word=385 first_xs_word=419 cycles=1577 valid=411 q=320 (nonzero 320) bf=84 cfg=239 go=206 mismatches=24 ref_fault_cycles=0 ref_cal_fault=0 xs_fault_at=-1 valid_word_mismatches=24 pre_start_transient_cycles=16 beat_to_word_latency=8 (beat 4, 80 beats used by phase 0)
+FIRST MISMATCH ref iter 459 (xs 493): b259=1/0 b261=1/0 b262=1/0 b263=1/0 b264=1/0 b265=1/0 b266=1/0 b540=1/0 b542=1/0 b544=1/0 b545=1/0 b546=1/0
+XG_CASE L0_mutvasm FAIL expected=FAIL ok=1 :: XS_PROGRAM stage=stage0 phases=[0, 1, 10, 11] cal_rows=1289 arrivals=320 off=37 off_load=37 order=near slice=5 end=1670 slack={'q0': 0, 'b0': 540, 'q1': 120, 'q1b': 433}
+XG_RING sid=5 col=2 line_beats=300 own_path=10 v_path=10 own_line_e=20/20 own_line_w=20/20 stray=0
+XS_LOCKSTEP stage_off=37 D=34 first_ref_word=385 first_xs_word=419 cycles=1577 valid=411 q=320 (nonzero 320) bf=84 cfg=239 go=206 mismatches=24 ref_fault_cycles=0 ref_cal_fault=0 xs_fault_at=-1 valid_word_mismatches=24 pre_start_transient_cycles=16 beat_to_word_latency=8 (beat 4, 80 beats used by phase 0)
+FIRST MISMATCH ref iter 427 (xs 461): b539=0/1 b540=1/0 b544=1/0 b545=1/0 b546=1/0 b547=1/0 b548=1/0 b549=1/0
+XG_CASE L0_mutgswap FAIL expected=FAIL ok=1 :: XS_PROGRAM stage=stage0 phases=[0, 1, 10, 11] cal_rows=1289 arrivals=320 off=37 off_load=37 order=near slice=5 end=1670 slack={'q0': 0, 'b0': 540, 'q1': 120, 'q1b': 433}
+XG_RING sid=5 col=2 line_beats=300 own_path=10 v_path=10 own_line_e=20/20 own_line_w=20/20 stray=0
+XS_LOCKSTEP stage_off=37 D=34 first_ref_word=385 first_xs_word=419 cycles=1577 valid=411 q=320 (nonzero 320) bf=84 cfg=239 go=206 mismatches=392 ref_fault_cycles=0 ref_cal_fault=0 xs_fault_at=-1 valid_word_mismatches=392 pre_start_transient_cycles=16 beat_to_word_latency=8 (beat 4, 80 beats used by phase 0)
+FIRST MISMATCH ref iter 421 (xs 455): b1=1/0 b3=1/0 b5=1/0 b8=1/0 b9=0/1 b10=0/1 b12=1/0 b16=1/0 b18=1/0 b19=1/0 b21=0/1 b24=0/1
+XG_CASE L0_mutbank FAIL expected=FAIL ok=1 :: XS_PROGRAM stage=stage0 phases=[0, 1, 10, 11] cal_rows=1289 arrivals=320 off=37 off_load=37 order=near slice=5 end=1670 slack={'q0': 0, 'b0': 540, 'q1': 120, 'q1b': 433}
+XG_RING sid=5 col=2 line_beats=300 own_path=10 v_path=10 own_line_e=20/20 own_line_w=20/20 stray=0
+XS_LOCKSTEP stage_off=37 D=34 first_ref_word=385 first_xs_word=419 cycles=1577 valid=411 q=320 (nonzero 320) bf=84 cfg=239 go=206 mismatches=320 ref_fault_cycles=0 ref_cal_fault=0 xs_fault_at=-1 valid_word_mismatches=320 pre_start_transient_cycles=16 beat_to_word_latency=8 (beat 4, 80 beats used by phase 0)
+FIRST MISMATCH ref iter 421 (xs 455): b1=1/0 b3=1/0 b5=1/0 b6=1/0 b7=1/0 b8=1/0 b11=1/0 b12=1/0 b14=1/0 b15=1/0 b16=1/0 b17=1/0
+XG_CASE L0_mutoff FAIL expected=FAIL ok=1 :: XS_PROGRAM stage=stage0 phases=[0, 1, 10, 11] cal_rows=1289 arrivals=320 off=37 off_load=37 order=near slice=5 end=1670 slack={'q0': 0, 'b0': 540, 'q1': 120, 'q1b': 433}
+XG_RING sid=5 col=2 line_beats=300 own_path=10 v_path=10 own_line_e=20/20 own_line_w=20/20 stray=0
+XS_LOCKSTEP stage_off=37 D=34 first_ref_word=385 first_xs_word=418 cycles=1577 valid=411 q=320 (nonzero 320) bf=84 cfg=239 go=206 mismatches=812 ref_fault_cycles=0 ref_cal_fault=0 xs_fault_at=452 valid_word_mismatches=808 pre_start_transient_cycles=16 beat_to_word_latency=7 (beat 4, 80 beats used by phase 0)
+FIRST MISMATCH ref iter 384 (xs 418): b0=0/1 b551=0/1
+XG_BENCH PASS
+XG_EXIT=0
