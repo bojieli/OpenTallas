@@ -39,6 +39,26 @@ class T(unittest.TestCase):
         self.assertEqual(rc, 0, r['summary'])
         self.assertEqual(r['verdict'], 'PASS')
 
+    def test_unread_output_bits(self):
+        # A named net with no consumer used to pass and the SM would be synthesised away.
+        rc, r = run("module top (ck);\n input ck;\n wire [15:0] dead;\n"
+                    " a u (.ck(ck), .i({16{ck}}), .en(ck), .o(dead));\nendmodule\n")
+        self.assertEqual(rc, 1)
+        self.assertEqual(r['summary']['unread_net_bits'], 16)
+        self.assertEqual(r['unread_nets'], {'dead': 16})
+
+    def test_open_output(self):
+        rc, r = run("module top (ck);\n input ck;\n"
+                    " a u (.ck(ck), .i({16{ck}}), .en(ck), .o());\nendmodule\n")
+        self.assertEqual(rc, 1)
+        self.assertEqual(r['summary']['output_open_ports'], 1)
+        self.assertIn('OUTPUT_OPEN', r['masters']['a']['fails'])
+
+    def test_top_output_is_a_consumer(self):
+        rc, r = run("module top (ck, y);\n input ck;\n output [15:0] y;\n"
+                    " a u (.ck(ck), .i({16{ck}}), .en(ck), .o(y));\nendmodule\n")
+        self.assertEqual(rc, 0, r['summary'])
+
     def test_duplicate_port(self):
         # r2h2/r2h4 GEN emitted .tt(actual) AND .tt(1538'h0) on one instance; Verilog keeps one silently -> FAIL
         rc, r = run("module top (ck);\n  input ck;\n  wire [15:0] n1;\n  wire [15:0] n2;\n"
