@@ -71,7 +71,7 @@ def main():
                 s=d-448
                 assert leaf==2 and word==64+8*(s//4)+s%4
                 wrong_stride+=int(word != 64+s)
-            values.append(dict(semantic_dimension=d,frame=d//64,frame_local_row=d%64,
+            values.append(dict(semantic_dimension=d,reference_eight_frame=d//64,reference_eight_frame_local_row=d%64,
                 semantic_rank_row=512*h+d,storage_rank_row=(t>>13)&65535,
                 leaf=leaf,word=word,row=word//4,word_in_row=word%4,bank=port))
             total+=1
@@ -125,7 +125,7 @@ def main():
             coefficient_rows=list(range(17,48,2)),
             qr_command=dict(target=0,leaf_mask=4,body=f'{_vp(12,a0=16,n=16,imm=544):040x}',
                             measured_existing_duration=57,new_duration_claimed=False),
-            values=values,source_word_reads=sends,return_slot_candidates=candidates))
+            values=values,source_word_reads=sends,reference_eight_frame_return_slot_candidates=candidates))
     rec=dict(schema='opentallas.s81.head_local_qf_source_contract.v1',
         default_enabled=False,production_installed=False,hardware_added=False,
         new_ff=0,new_macro=0,new_pins=0,added_stage_edges=0,
@@ -144,7 +144,7 @@ def main():
         heads=heads,
         blockers=['actual imagewriter must install semantic-row-to-storage-tag map, not only bench tags',
                   'all real partial live intervals and both CAP write ports must pass',
-                  'whole11-phase wq_b XS calendar/RETIRE and fixed row lifetime not emitted',
+                  'actual selected 6/7/8-frame wq_b calendar/RETIRE and fixed row lifetime not emitted',
                   'head-local leaf2 QR/coeff cmd placement requires exact new compiler profile',
                   'actual 16head-to-central6/8 gather incl tier crossings/local reads unproved',
                   'full runtime source/consumer originalgold/deadlines/mutants not run',

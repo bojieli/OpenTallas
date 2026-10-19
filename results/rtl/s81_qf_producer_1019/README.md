@@ -244,8 +244,10 @@ of coefficient storage and2048 output bits, across its real VP SRAMs. This is
 an address reservation proposal; whole programme/MU lifetimes and phase ports
 must still be checked before it can be called safe or installed.
 
-The exact remaining dependency is the actual wq_b image writer and all11
-six-row-per-frame phases (K1280, nseg3, ten q-pairs, eight real frames/head).
+The exact remaining dependency is the actual selected wq_b image writer and
+its 11/13/15 six-row-per-frame phases (K1280, nseg3, ten q-pairs). The earlier
+eight-frame annotations and slot candidates are reference only, not selected
+MU3 placement evidence.
 Every original semantic row must receive its mapped storage tag across all
 partials without altering weight indices, reduction order or original gold.
 Then real CAP partial live slots, both write ports, CFG/RETIRE boundaries,
@@ -255,3 +257,29 @@ intervals/write-port calendars UNPROVED. A static address bijection does not
 prove those timing obligations. Subsequent real head→central6/8 gather,
 uniform q binding, job/MU identity/lifetime, original deadline and causal
 corrupt/owner/early/late/missing-payload proofs remain open.
+
+
+Actual selected frame inventory (source/model only)
+-------------------------------------------------
+
+`selected_inventory/` pins die SHA256
+61b683b697d17b7d6d1619352d302648d835822677c02097ce48639a0aa399b8
+from source ceaed19c4 and its exact p4l_lkcol_mu_pf plan. The real die has
+122 frames. Heads 4/10 have seven frames and heads 6/8 have six; the other
+heads have eight. The existing fixed eight-frame, 64-row placement would
+omit 384 semantic projection rows. The private model assigns all 8192 rows
+to actual named frames: 64 rows/frame for eight frames, 74/73 for seven,
+and 86/85 for six. This requires 11/13/15 six-row phases, respectively.
+
+`selected_frame_contract.py` checks exact plan/inventory agreement and records
+actual masters, LK lanes, clock/return nets and return station counts. Native
+capture phase, exact phase cycles and whole-token delta remain NULL. There
+is no new hardware or production image. Required compiler scope: replace
+`dv_layer_compile.Die` hardcoded bind9/p4l with the selected typed plan and
+real die straps; replace `xs_place` fixed NFRAME8 placement with actual frame
+lists and balanced semantic-row ranges; propagate those ranges and original
+row flags into phase image tags and CAP configuration; then validate phased
+return ports, RETIRE and capture-slot lifetimes before imagewriter approval.
+Other matvec placements also assume eight frames, so whole-layer phase count
+remains NULL. Header and address component passes do not establish row or
+programme coverage.
