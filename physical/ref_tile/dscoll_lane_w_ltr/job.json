@@ -15,7 +15,8 @@
    "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.v",
    "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v",
    "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v",
-   "results/rtl/xdie_s81_1018/gate_g5"
+   "results/rtl/xdie_s81_1018/gate_g5",
+   "results/rtl/s81sf_coll_1019"
   ]
  },
  "stages": {
@@ -41,7 +42,7 @@
     ],
     "pass_regex": "^PASS xdie_s81: \\d+ beats of the TP4 calendar landed bit-exact",
     "min_count_regex": "^PASS xdie_s81: (\\d+) beats",
-    "pass_witness": "results/rtl/xdie_s81_1018/gate_g5/kit_pass.log"
+    "pass_witness": "results/rtl/s81sf_coll_1019/kit_pass.log"
    },
    {
     "name": "xdie_mut_board400",
@@ -54,7 +55,7 @@
     ],
     "pass_regex": "^PASS xdie_s81: \\d+ beats of the TP4 calendar landed bit-exact",
     "fail_regex": "^FAIL xdie_s81: landed \\d+/\\d+ mismatches \\d+ late [1-9]",
-    "fail_witness": "results/rtl/xdie_s81_1018/gate_g5/kit_witness_board400.log"
+    "fail_witness": "results/rtl/s81sf_coll_1019/kit_witness_board400.log"
    },
    {
     "name": "xdie_mut_chb0",
@@ -67,7 +68,7 @@
     ],
     "pass_regex": "^PASS xdie_s81: \\d+ beats of the TP4 calendar landed bit-exact",
     "fail_regex": "^FAIL xdie_s81: landed \\d+/\\d+ mismatches \\d+ late [1-9]",
-    "fail_witness": "results/rtl/xdie_s81_1018/gate_g5/kit_witness_chb0.log"
+    "fail_witness": "results/rtl/s81sf_coll_1019/kit_witness_chb0.log"
    }
   ],
   "calibrate": {
