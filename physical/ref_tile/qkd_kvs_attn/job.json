@@ -81,6 +81,71 @@
     "pass_regex": "^KVS_TILE PASS tile=attn ",
     "fail_regex": "^KVS_TILE FAIL tile=attn .* mut=3 ",
     "fail_witness": "results/rtl/qwen_kv_die/kvs_attnkit_1018/attn_m3.log"
+   },
+   {
+    "name": "attn_land_pair",
+    "cmd": "bash tools/qwen_kv_die/kvs_attn_land_pair_bench.sh {RUN}/bench/land_pair_m0 0 0 \"0 1 2 3 4 5 6 7 8 9 10 11 12 13 14\"",
+    "expect": "pass",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVS_LANDPAIR_ALL PASS bmut=0 fmut=0 ",
+    "min_count_regex": "checks=(\\d+)",
+    "pass_witness": "results/rtl/qwen_kv_die/kvs_attnkit_1018/land_pair_m0.log"
+   },
+   {
+    "name": "attn_land_pair_b5",
+    "cmd": "bash tools/qwen_kv_die/kvs_attn_land_pair_bench.sh {RUN}/bench/land_pair_b5 5 0 \"0\"",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVS_LANDPAIR_ALL PASS ",
+    "fail_regex": "^KVS_LANDPAIR_ALL FAIL bmut=5 fmut=0 ",
+    "fail_witness": "results/rtl/qwen_kv_die/kvs_attnkit_1018/land_pair_b5.log"
+   },
+   {
+    "name": "attn_land_pair_b6",
+    "cmd": "bash tools/qwen_kv_die/kvs_attn_land_pair_bench.sh {RUN}/bench/land_pair_b6 6 0 \"8\"",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVS_LANDPAIR_ALL PASS ",
+    "fail_regex": "^KVS_LANDPAIR_ALL FAIL bmut=6 fmut=0 ",
+    "fail_witness": "results/rtl/qwen_kv_die/kvs_attnkit_1018/land_pair_b6.log"
+   },
+   {
+    "name": "attn_land_pair_b4",
+    "cmd": "bash tools/qwen_kv_die/kvs_attn_land_pair_bench.sh {RUN}/bench/land_pair_b4 4 0 \"13\"",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVS_LANDPAIR_ALL PASS ",
+    "fail_regex": "^KVS_LANDPAIR_ALL FAIL bmut=4 fmut=0 ",
+    "fail_witness": "results/rtl/qwen_kv_die/kvs_attnkit_1018/land_pair_b4.log"
+   },
+   {
+    "name": "attn_land_pair_f5",
+    "cmd": "bash tools/qwen_kv_die/kvs_attn_land_pair_bench.sh {RUN}/bench/land_pair_f5 0 5 \"0\"",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVS_LANDPAIR_ALL PASS ",
+    "fail_regex": "^KVS_LANDPAIR_ALL FAIL bmut=0 fmut=5 ",
+    "fail_witness": "results/rtl/qwen_kv_die/kvs_attnkit_1018/land_pair_f5.log"
    }
   ],
   "calibrate": {
