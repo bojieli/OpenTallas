@@ -9363,6 +9363,7 @@ def main(argv=None):
     ap.add_argument("--s81-selector-quarter-retime", action="store_true", help="size exact existing-stage selector comparator retiming")
     ap.add_argument("--s81-collective-gearbox-pipeline", action="store_true", help="price the two-cycle partitioned collective gearbox")
     ap.add_argument("--s81-collective-gearbox", action="store_true", help="size the exact registered-head collective gearbox candidate")
+    ap.add_argument("--s81-collective-lane-safe2-params", action="store_true", help="size zero-edge COLL controls and bounded SRAM forwarding")
     ap.add_argument("--s81-collective-lane-storage-p1", action="store_true", help="size the opt-in SRAM collective landing successor and explicit physical reserve")
     ap.add_argument("--s81-collective-lane-width", type=float, help="size a default-off S81 collective lane footprint from measured congestion")
     ap.add_argument("--s81-collective-core-width", type=float, help="size an opt-in native OQPIPE core with four-track VM pins")
@@ -9494,6 +9495,14 @@ def main(argv=None):
     if a.s81_collective_core_width is not None:
         from s81_collective_core_sizing import model
         payload = json.dumps(model(a.s81_collective_core_width), indent=2, allow_nan=False) + "\n"
+        if a.out:
+            Path(a.out).parent.mkdir(parents=True, exist_ok=True)
+            Path(a.out).write_text(payload)
+        print(payload)
+        return
+    if a.s81_collective_lane_safe2_params:
+        from s81_collective_lane_sizing import safe2_parameter_model
+        payload = json.dumps(safe2_parameter_model(), indent=2, allow_nan=False) + "\n"
         if a.out:
             Path(a.out).parent.mkdir(parents=True, exist_ok=True)
             Path(a.out).write_text(payload)

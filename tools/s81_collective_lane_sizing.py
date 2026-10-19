@@ -97,3 +97,47 @@ def storage_p1_model():
             single_user_token_delta_ns=0,
             condition='receiver-only delta; parent relocation, link hops, clock phase and physical latency must be priced separately'),
         adoption='Requires full link positive/mutants, placement/CTS/TT+FF, root PNG review and actual parent fit/escape.')
+
+
+def safe2_parameter_model():
+    """Prebuild inventory for zero-edge controls and bounded SRAM forwarding.
+
+    FF area is a sizing estimate, not synthesized standard-cell area. The
+    actual mapped controls, reset copies and geometry must be measured before
+    a physical gate. No inherited positive timing/closure claim is made.
+    """
+    base = storage_p1_model()
+    width, aw, sb = 553, 9, 8
+    slices = math.ceil(width / sb)
+    address_groups = math.ceil(slices / 4)
+    per_oldread = 1 + address_groups * aw + width + slices * (aw + 2) + width
+    pointer_copies = 4 * (address_groups - 1) * aw
+    relay_copies = 2 * slices
+    control_ff = 10 + 12  # sequence preclassification + timeout limit/at-limit
+    extra_ff = 2 * per_oldread + pointer_copies + relay_copies + control_ff
+    ff_area = .2916  # DFFHQNx1_ASAP7_75t_R TT Liberty area, measured library
+    estimate = base['evidence']['std_cell_area_um2'] + extra_ff * ff_area
+    return dict(schema='opentallas.s81.collective_lane_safe2_parameters.v1',
+        status='PREBUILD_NOT_ADOPTED', base=base,
+        parameters=dict(RXSRAM=1, RXLOCAL=1, EPRX=1, EPTO=1, EPMW=1),
+        state_inventory=dict(oldread_sb=sb, oldread_slices=slices, oldread_group_slices=4,
+            address_groups=address_groups, oldread_ff_per_buffer=per_oldread,
+            oldread_buffers=2, pointer_copy_ff=pointer_copies,
+            same_depth_reset_relay_ff=relay_copies,
+            sequence_timeout_ff=control_ff, provisional_extra_ff=extra_ff),
+        area=dict(ff_liberty_area_um2=ff_area,
+            provisional_std_cell_area_um2=estimate,
+            provisional_band_density=estimate/base['geometry']['std_band_area_um2'],
+            qualification='FF-only sizing, excludes added compare/control gates; replace with actual synthesis before gate'),
+        macro_delta=0, outline_delta_um=[0, 0],
+        ports=base['boundaries_bits_per_cycle'],
+        latency=dict(added_boundary_edges=0, token_delta_ns=0,
+            qualification='claimed equivalence pending actual boundary-cycle miter including refill/reset/collision; no deadline-only substitute'),
+        critical_driver_limit=32,
+        rx_hit_decode=dict(groups=3, current_previous_instances=6,
+            max_flag_D_loads_per_group=16, added_pipeline_edges=0),
+        prerequisites=['qualified old-read SB8 helper, no shared wide enables',
+            'reset-distinct pointer/control copies survive mapping',
+            'actual critical fanout <=32, synthesis area and one-band cell census',
+            'exact boundary-cycle positive and mutant witnesses',
+            'ROOT PNG/native review and actual parent slot/escape'])
