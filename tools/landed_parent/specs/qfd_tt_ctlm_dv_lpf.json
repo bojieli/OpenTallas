@@ -1,0 +1,102 @@
+{
+ "top": "qfd_tt_ctlm_dv_lpf",
+ "why": "HF-4 (HARD-FIX 0id) 10-18: Qwen TT control cluster qfd_tt_ctlm_dv (slot 777.6 x 345.6) as a landed parent. The hard TT head h16c/h17 (ck_head TT insertion ~355 ps, FF ~292) and the calendar's 2 x 64x512 SRAMs + pin registers (macro clock entry ~0 ps) differ by >300 ps and sit ~400 um apart, so they get their own clock regions: core = u_gi (W, calendar SRAMs, pin registers), hr = u_hr + u_go + u_thru (E). Every input lands from core (port_regions) and every output leaves hr, so the cluster is the flat block + 3 edges on every output (uniform). MU-ADOPT-CTLM 10-19: u_gi calendar = qfd_dv_cmd_cal_mu NU 4 (Qwen ROM 4 users) + dh_user input (core).",
+ "sources": [
+  "rtl/qwen_dv/qfd_tt_ctlm_dv_lpf.sv"
+ ],
+ "child_sources": [
+  "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv",
+  "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_head_static_rk.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctl_static.sv",
+  "rtl/hdc/ot_qwen_me_spine_h_w12.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_qwen_w12_arith.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/ot_qwen_w12_matvec.sv",
+  "rtl/qwen_sys/missing_masters_20261007/ot_qfd_spine_masters.sv",
+  "rtl/physical/ot_qfd_tt_ctlm_split.sv",
+  "rtl/qwen_sys/missing_masters_20261007/ot_qfd_split_exact.sv",
+  "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv",
+  "rtl/hdc/ot_hdc_cg.sv",
+  "rtl/hdc/ot_hdc_qwen_int8_embed_decode.sv",
+  "rtl/hdc/ot_hdc_dyn_ttiles.sv",
+  "rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_pw.sv",
+  "rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv",
+  "rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv",
+  "rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v",
+  "rtl/qwen_sys/static_schedule_20261014/ot_qfd_native_cmd_route.sv",
+  "rtl/qwen_sys/static_schedule_20261014/ot_qwen_tp8_rom_relocate.sv",
+  "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_static_hr.sv",
+  "rtl/qwen_dv/qfd_dv_cmd_cal_mu.sv",
+  "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_dense_pw_loader.sv",
+  "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv",
+  "rtl/lib/ot_reset_sync.sv",
+  "rtl/qwen_dv/qfd_tt_ctlm_dv_lpf_parts.sv"
+ ],
+ "params": {
+  "XPF_TRANSPORT_EDGES": 20,
+  "STAGE_ME": 1,
+  "LAST_STAGE": 37,
+  "NU": 4
+ },
+ "out_dir": "rtl/qwen_dv/lp",
+ "record_dir": "results/arch/landed_parent_1018/qfd_tt_ctlm_dv_lpf",
+ "clock_ports": [
+  "ck"
+ ],
+ "clock_pins": [
+  "ck",
+  "clk",
+  "ck_head",
+  "ck_pm0",
+  "ck_pm1"
+ ],
+ "reset_port": "rst_n",
+ "reset_pins": [
+  "rst_n"
+ ],
+ "regions": [
+  {
+   "name": "core",
+   "insts": [
+    "u_gi"
+   ],
+   "centre": [
+    194.4,
+    172.8
+   ]
+  },
+  {
+   "name": "hr",
+   "insts": [
+    "u_hr",
+    "u_go",
+    "u_thru"
+   ],
+   "centre": [
+    604.8,
+    172.8
+   ]
+  }
+ ],
+ "port_regions": {
+  "pw": "core",
+  "dh": "core",
+  "dh_user": "core",
+  "kok": "core",
+  "kwd": "core",
+  "fab": "core",
+  "native_ret": "core",
+  "ss5": "core",
+  "ag5": "core"
+ },
+ "bench": {
+  "cycles": 3000,
+  "reset_cycles": 16,
+  "sim": "verilator"
+ },
+ "mut_child": "u_hr"
+}

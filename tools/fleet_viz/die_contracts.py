@@ -25,6 +25,10 @@ element).  Files are read from origin/main (the shared checkout can lag), fallin
 import collections, json, os, pathlib, re, subprocess, threading, time
 
 CONFIG = 'results/fleet_viz/die_contracts.json'
+# FLEETVIZ-ELEM 10-18: die_contract_sync.py regenerates the contracts hourly from the current die netlists / bind tables
+# (results/fleet_viz/die_sources.json) into this live file, which is preferred over the committed CONFIG when present.
+LIVE_CONFIG = os.environ.get('FLEET_VIZ_DIE_CONTRACTS', os.path.join(os.environ.get(
+    'FLEET_VIZ_STATE', os.path.expanduser('~/.local/state/fleet-viz')), 'die_contracts_live.json'))
 SKIP_MODULE_FILES = re.compile(r'(^|/)(views|test|tb|bench)/|_stubs?\.s?v$|/die_top_lint_|(^|/)results/', re.I)
 VKEYWORDS = set('''module endmodule input output inout wire reg logic always always_ff always_comb assign if else for
 generate endgenerate begin end case endcase function endfunction task endtask initial localparam parameter genvar
@@ -196,7 +200,8 @@ class Contracts:
             if stream and not x['stream']: x['stream'] = stream
         for d in cfg.get('designs', []):
             info = {k: d.get(k) for k in ('design', 'label', 'target', 'revision', 'lead', 'log', 'doc', 'complete', 'note')}
-            info['sources'] = []; info['errors'] = []
+            info['sources'] = [dict(kind=x.get('kind'), path=x.get('where'), n=x.get('n')) for x in d.get('evidence_sources') or []]
+            info['errors'] = list(d.get('errors') or [])
             for src in d.get('sources', []):
                 try:
                     got = self.extract(src)
@@ -267,10 +272,17 @@ class Contracts:
     # ---------------------------------------------------------------- public
     def load(self, known=()):
         """-> dict(designs, elements, retired, rtl_leaves) ; known = every row/variant name of the registry."""
+        raw, config = None, CONFIG
         try:
-            raw = self.repo.read(CONFIG); cfg = json.loads(raw) if raw else {}
+            if os.path.exists(LIVE_CONFIG):
+                raw = pathlib.Path(LIVE_CONFIG).read_text(); config = LIVE_CONFIG
+        except OSError:
+            raw = None
+        try:
+            if raw is None: raw = self.repo.read(CONFIG)
+            cfg = json.loads(raw) if raw else {}
         except Exception as e:
-            self.log('die_contracts: %s: %s' % (CONFIG, e)); cfg = {}
+            self.log('die_contracts: %s: %s' % (config, e)); cfg = {}
         key = (self.repo.rev(), raw if raw else '')
         if key != self.key:
             self.base = self.build(cfg); self.key = key
@@ -290,7 +302,8 @@ class Contracts:
                 if k in known and k not in elems:
                     rtl_leaves.setdefault(k, dict(parents=set(), designs=set()))
                     rtl_leaves[k]['parents'].add(e); rtl_leaves[k]['designs'].update(x['designs'])
-        return dict(designs=designs, elements=elems, retired=retired, rtl_leaves=rtl_leaves, config=CONFIG)
+        return dict(designs=designs, elements=elems, retired=retired, rtl_leaves=rtl_leaves, config=config,
+                    aliases=cfg.get('aliases') or {}, kits=cfg.get('kits') or {})
 
     @staticmethod
     def stream(designs, design, element, explicit=None):

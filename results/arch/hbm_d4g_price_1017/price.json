@@ -1,0 +1,601 @@
+{
+ "schema": "opentallas.hbm_d4g_price_1017.v1",
+ "generated_utc": "2026-10-18T10:22:21Z",
+ "rule": "HBM-B-RTL3 (10-17): d4g plan (b) compiler pass -- quadrant-local placement + DMA + fixed static schedule -- and the\nre-price of DS AR / DS MTP (3,500 design point) / Qwen3-8B AR on the hgi price model (plan_study_price_1017 machinery).\n\nD4G GEOMETRY (results/arch/hbm_plan_study_1017/plan_b_inner/compact.P.json):\n  16 SM = 4 quadrants x 4 SM (SW, SE, NW, NE; ring qid 0 SW, 1 SE, 2 NW, 3 NE, CW order 0 -> 1 -> 3 -> 2).\n  2 HBM stacks x 8 PCs: south stack pc_SW0..7 (PHY phy_SW), north stack pc_NW0..7 (phy_NW).\n  Lever 1: quadrant SW = pc_SW0..3, SE = pc_SW4..7, NW = pc_NW0..3, NE = pc_NW4..7 (the PCs directly in front of it).\n\n(A) PLACEMENT + DMA (the compiler pass; `place_programme`):\n  W1  SM.MATVEC row-split matrices: the die's m rows are dealt in blocks of R = ceil(m / 16) to SM 0..15 (the timing\n      model's per-SM floor rule); SM j's block lives in quadrant j // 4's 4 PCs, PC-interleaved inside the quadrant.\n      Checked: every SM reads only its own quadrant's PCs; the busiest quadrant's bytes / (4 x per-SM share) equals the\n      busiest SM's bytes / share (the per-SM floor already priced), so lever 1 costs 0 cycles when this holds.\n  W2  head-aligned work (wq_b of the die's head, wo_a K-split) and attention KV: token blocks of the head are dealt to\n      the 16 SMs the same way; each SM's KV lines (KV_DESC + SM_HBM) and KVWB_DS appends go to its quadrant's PCs.\n  D1  DMA.LOAD whose VM consumer is quadrant-sliced (HC rows -> the quadrant HC engine's hidden slice; KV / row gather ->\n      the token-owning SMs): split 4 ways, quadrant q loads its share on its own 4 PCs into its own 8 banks (same\n      stream time as the die-wide load: 1/4 the bytes at 1/4 the bandwidth).\n  D2  DMA.LOAD of a table every quadrant reads (norm gains, rope / sink tables, route bias, engram codes/scales):\n      REPLICATED: the table image is placed once per quadrant (4 copies, capacity counted) and each quadrant loads its\n      own copy: stream part x 4 (1/4 the bandwidth), first access unchanged.\n  C1  COLL.* results that an SM-side consumer reads in every quadrant (gathers of qa / kvraw / iq / gsc / cmp / iwr,\n      the o-group reduce-mcast, the 7 expert-intermediate gathers): each quadrant COLL engine writes ONLY its 8 banks,\n      so its quarter is replicated by the on-die ALL-GATHER on the COLL ring (rtl ot_hgi_coll_ring_ag, GATHER kind 3).\n  C2  COLL.* results whose consumer is quadrant-sliced (attn_out y / ffn_out yf -> HC_POST of the quadrant HC engine's\n      hidden slice): the sender dies address quadrant q's endpoint with slice q (switch multicast pattern only) -> no\n      ring traffic, no added cycles.\n  C3  ROW_GATHER rows go to the token-owning quadrant's endpoint (W2) -> no ring traffic.\n  C4  merges (TOPK_MERGE / ARGMAX_MERGE) land in the quadrant that owns the consumer -> one XQ tree crossing.\n\n(B) FIXED STATIC SCHEDULE ADDERS (cycles at 1.2 GHz, added to the record's unit cost; the same S2 schedule is re-run, so\n    latency is exposed only where the programme is serially dependent):\n  AG   on-die all-gather of a C1 record, B = result bytes in VM words (4 B), F = ceil(B / 4 / 32) flits a quadrant:\n       ring schedule MODE 0 (bench tb_hgi_coll_ring_ag: even flits CW / odd CCW, ttl 3): 1.5 F + 3 hops, hop = 2 edges\n       + r relay stages (r = COLL_RING stages of the plan).  Measured on the RTL at r = 0: F 224 -> 336 inject edges +\n       6 = 342..; F 112 -> 168 + 6.  Cut-through (nominal): the ring forwards a slice as it lands, so the exposed part\n       is max(0, 1.5 F - D) + 3 hop, D = the off-die delivery stream of that record ((G-1) f / lanes, ds_die_split).\n       MODE 1 (both directions, ttl 2 + 1): 2 F + 2 hops; the compiler takes the cheaper ring schedule per record.\n       Alternative M (compiler choice): the switch multicasts to all 4 quadrant endpoints: + 3 D (delivery x 4, one lane\n       a quadrant).  The compiler takes min(AG, M) per record.\n  XQT  cross-quadrant trees (plan R3, XQ lanes), one crossing = 1 + XQ stages (XQ = COLL_RING stages of the plan):\n       SU.VOP with a reduction (sut.red: RMS / softmax scalars): SU 64-b scalar tree up + down = 2 crossings;\n       HC.HC_MIX / FUSED.HC_PRE_NORM: hcx_root 1,024-b partial-sum tree up + down = 2 crossings (HC_POST is\n       element-wise on the slice: 0); IDX.INDEX / IDX.TOPK: quadrant lists -> selector merge = 1; ARGMAX.LOCAL = 2;\n       COLL TOPK_MERGE / ARGMAX_MERGE (C4) = 1.\n  SU   SU programme slice pslice r4/c5: start advance DEPTH + 4 -> +4 a SU-executed record (SU.VOP, FUSED non-QDQ/HC).\n  SFUD SFU programme store r10 cluster relays: D 4 -> 5 -> +1 a SFU-using record (SFU.*, SU.VOP with sut.sfu).\n  SFUC SFU chains R11 -> R14 (+3 edges each way of the LG VM round trip) -> +6 a SFU-using record.\n  BD   broadcast depth (lane model, equal-age forks: every sink sees the fork's full depth, not the bit-weighted mean):\n       plan_b_inner deep list x the run9 fork calibration 1.204: xl_<Q>_ctl x data fork 40 -> 48.2 stages (SM_X data\n       leg; request leg keeps the class mean) and vmks fill fork 44 -> 53.0 (HBM_VM).\n       nominal: the x-data fork runs in parallel with the weight fetch leg (2 SM_HBM [+ KV_DESC] + the HBM first\n       access 104), so an SM record pays only max(0, SM_X + 48.2 - that leg); a DMA record pays 53.0 - HBM_VM.\n       upper (\"plan_b_bd\" stages): the per-class table is overridden, SM_X = (mean + 48.2) / 2 (2 crossings:\n       request + data), HBM_VM = max(mean, 53.0), on the ds_relay_latency absolute-leg rule (no first access).\n  RTL1/RTL2 latencies (SU scalar tree, HC partial tree, IDX quarters, VM client side) enter through LEDGER entries\n  (results/arch/hbm_d4g_price_1017/latency_ledger.json): a 'measured' entry sets knob = cycles (bench-measured edges)\n  + xq_crossings x COLL_RING (die relay stages the bench did not have).  10-17 23:59 measured: su_tree 28 (RTL1\n  RF_TREE_UP/DN 14+14), hc_tree 28 + 2 XQ (RTL2 HC split RAW0 165 vs 137 + XRD + XRU), idx_merge 8 + 1 XQ (RTL2 IDX\n  quad: first TX / every TX flit +8 incl. the +2 calendar start).\n\n    PYTHONPATH=tools python3 -m hgi_sim.d4g_quadrant_1017 --out results/arch/hbm_d4g_price_1017/price.json\n",
+ "stages_plan_b": {
+  "HBM_K": 0.0,
+  "SM_X": 10.16,
+  "SM_HBM": 4.5,
+  "LG_SU": 0.09,
+  "LG_HC": 0.5,
+  "LG_SFU": 0.5,
+  "HC_CORE": 15.56,
+  "VM_RING": 9.5,
+  "COLL_VM": 14.91,
+  "VM_HUB": 16.41,
+  "HC_ENG": 5.54,
+  "COLL_RING": 9.38,
+  "COLL_EP": 9.6,
+  "EP_SERDES": 0.0,
+  "QUANT_VM": 0.0,
+  "SM_OUT": 9.0,
+  "HBM_VM": 18.88,
+  "VM_HBM": 18.69,
+  "SFU_CORE": 9.25,
+  "SU_CORE": 3.67,
+  "KV_DESC": 8.94
+ },
+ "stages_plan_b_bd": {
+  "HBM_K": 0.0,
+  "SM_X": 29.159999999999997,
+  "SM_HBM": 4.5,
+  "LG_SU": 0.09,
+  "LG_HC": 0.5,
+  "LG_SFU": 0.5,
+  "HC_CORE": 15.56,
+  "VM_RING": 9.5,
+  "COLL_VM": 14.91,
+  "VM_HUB": 16.41,
+  "HC_ENG": 5.54,
+  "COLL_RING": 9.38,
+  "COLL_EP": 9.6,
+  "EP_SERDES": 0.0,
+  "QUANT_VM": 0.0,
+  "SM_OUT": 9.0,
+  "HBM_VM": 52.976,
+  "VM_HBM": 18.69,
+  "SFU_CORE": 9.25,
+  "SU_CORE": 3.67,
+  "KV_DESC": 8.94
+ },
+ "ledger": {
+  "schema": "opentallas.hbm_d4g_latency_ledger.v1",
+  "rule": "d4g fixed-latency inputs of tools/hgi_sim/d4g_quadrant_1017.py. An entry with status 'measured' and a 'knob' overrides that adder's cycles (knob names: su_start, sfu_d, sfu_chain, su_tree, hc_tree, idx_merge). 'plan' entries document the plan-level estimate the pricer uses until the RTL lane reports.",
+  "entries": [
+   {
+    "item": "COLL ring all-gather (GATHER kind 3)",
+    "lane": "HBM-B-RTL3",
+    "status": "measured",
+    "cycles_rule": "min(1.5 F + 3 hop, 2 F + 2 hop), hop = 2 + COLL_RING relays; RTL r=0: F224 340 / F112 172 (mode 0), F224 451 / F112 227 (mode 1); TWO RINGS (0dr): ring B = ot_hgi_coll_ring_ag_lane (gather-only stop), flit i on ring i%2, same per-ring rule on F/2 (bench run_ring_ag2_bench.sh RINGS=1 vs 2)",
+    "evidence": "rtl/hbm_accel/generic/collective/p2p/run_ring_ag_bench.sh"
+   },
+   {
+    "item": "SU programme slice start advance DEPTH+4",
+    "lane": "HBM-SU2 / HBM-TILES-A2 (pslice r4 / c5)",
+    "status": "measured",
+    "knob": "su_start",
+    "cycles": 4,
+    "evidence": "HANDOFF HBM-TILES-A2 13:12, HBM-SU2 17:24 (start advance unchanged DEPTH+4)"
+   },
+   {
+    "item": "SFU programme store D 4 -> 5 (r10 cluster relays)",
+    "lane": "SFU-PS-4",
+    "status": "measured",
+    "knob": "sfu_d",
+    "cycles": 1,
+    "evidence": "HANDOFF SFU-PS-4 17:51 (D=5, lockstep vs r7c PASS)"
+   },
+   {
+    "item": "SFU chains R11 -> R14 (+3 each way of the LG VM round trip)",
+    "lane": "H-DIE-R8",
+    "status": "measured",
+    "knob": "sfu_chain",
+    "cycles": 6,
+    "evidence": "lanes/H-DIE-R8.md (LG_PATH 15, +6 stream edges per SFU LG round trip)"
+   },
+   {
+    "item": "broadcast depth (equal-age forks: xl x-data 40, vmks fill 44 model x 1.204)",
+    "lane": "H-PLANSTUDY lane model",
+    "status": "plan",
+    "evidence": "results/arch/hbm_plan_study_1017 plans.json b_inner.bus.deep"
+   },
+   {
+    "item": "SU 64-b scalar tree (replaces rfr chains)",
+    "lane": "HBM-B-RTL1",
+    "status": "measured",
+    "knob": "su_tree",
+    "cycles_rule": "RF_TREE_UP 14 + RF_TREE_DN 14 (leaf->root->4 heads, equal legs incl. leg stations; H-D4G may retune UP/DN after placement -> update here)",
+    "cycles": 28,
+    "xq_crossings": 0,
+    "evidence": "lanes/HBM-B-RTL1.md SU DONE claude/hbm-b-rtl1-su-1017 81eb10546: lockstep vs d4f 36-stage relay PASS 14/14, 4 mutants FAIL"
+   },
+   {
+    "item": "HC partial-sum tree (root TPRE=6 + 4 quarter engines, 4x34 b up / 4x68 b down)",
+    "lane": "HBM-B-RTL2",
+    "status": "measured",
+    "knob": "hc_tree",
+    "cycles_rule": "RAW0 165 + XRD + XRU vs 137 single block (+28 measured; XRD/XRU = die relay stages root<->quarter, 0 in bench); HC_MIX P1/P2/P8 996/1246/2746 vs 968/1218/2718. Compiler: ingest event 2 + XRD edges earlier; wave index quarter-local 0..19",
+    "cycles": 28,
+    "xq_crossings": 2,
+    "evidence": "lanes/HBM-B-RTL2.md HC split lockstep P1/P2/P8/G22 PASS bit-exact (claude/hbm-b-rtl2-1017 b5b3af11b); MUT1/MUT4 verdict pending agidock out5"
+   },
+   {
+    "item": "IDX scorer quarters -> XQ node tree -> selector",
+    "lane": "HBM-B-RTL2",
+    "status": "measured",
+    "knob": "idx_merge",
+    "cycles_rule": "vs N_Q=2 cluster client: events +2, key beats +2, scores +4, first TX / every TX flit +8, done +2, frame +6; compile hbm_idx_static_calendar.py --score-chain 14 (was 8)",
+    "cycles": 8,
+    "xq_crossings": 1,
+    "evidence": "lanes/HBM-B-RTL2.md ## IDX (claude/hbm-b-rtl2-idx-1017 b605bce30); quad lockstep verdict pending agidock lock1 -> UNVERIFIED until then"
+   },
+   {
+    "item": "HOST cfg leaves (4 per-quadrant leaves)",
+    "lane": "HBM-B-RTL1",
+    "status": "measured",
+    "cycles": 0,
+    "evidence": "lanes/HBM-B-RTL1.md HOST DONE 5828f1128: config path only, no programme-timeline record"
+   },
+   {
+    "item": "VM SE/NE client side + 16 vmdel lanes",
+    "lane": "HBM-B-RTL1/VM",
+    "status": "measured",
+    "evidence": "lanes/HBM-B-RTL1.md VM DONE claude/hbm-b-rtl1-vm-1017 a61511e52: VMS_QB_EQUIV SE/NE PASS, WRQ4_LOCKSTEP PASS, VMDEL_N lockstep PASS, mutants FAIL",
+    "cycles": 0,
+    "cycles_rule": "SM writer 0 edges added (rv(t) -> wq slot 0 at t+3, calendar C_launch+2+LEAD+at unchanged); vmdel NPC2 LAT 2 / STATUS_LAT 2 / first beat start+3 unchanged; SE/NE bank timing = SW. E-quadrant SMs lose the VM ring hop (a gain, NOT credited: conservative)"
+   }
+  ]
+ },
+ "knob_nominal": {
+  "on": [
+   "AG",
+   "BD",
+   "D2",
+   "SFUC",
+   "SFUD",
+   "SU",
+   "XQT"
+  ],
+  "xq": 9.38,
+  "r_hop": 9.38,
+  "G1": 192,
+  "lanes": 4,
+  "nominal": true,
+  "stages": {
+   "HBM_K": 0.0,
+   "SM_X": 10.16,
+   "SM_HBM": 4.5,
+   "LG_SU": 0.09,
+   "LG_HC": 0.5,
+   "LG_SFU": 0.5,
+   "HC_CORE": 15.56,
+   "VM_RING": 9.5,
+   "COLL_VM": 14.91,
+   "VM_HUB": 16.41,
+   "HC_ENG": 5.54,
+   "COLL_RING": 9.38,
+   "COLL_EP": 9.6,
+   "EP_SERDES": 0.0,
+   "QUANT_VM": 0.0,
+   "SM_OUT": 9.0,
+   "HBM_VM": 18.88,
+   "VM_HBM": 18.69,
+   "SFU_CORE": 9.25,
+   "SU_CORE": 3.67,
+   "KV_DESC": 8.94
+  },
+  "su_start": 4.0,
+  "sfu_d": 1.0,
+  "sfu_chain": 6.0,
+  "su_tree": 28.0,
+  "hc_tree": 46.760000000000005,
+  "idx_merge": 17.380000000000003
+ },
+ "placement": {
+  "class_census": {
+   "-": 1835,
+   "W1": 1015,
+   "C1": 464,
+   "D2": 340,
+   "W2": 200,
+   "C2": 80,
+   "C4": 10,
+   "C3": 8
+  },
+  "checks": {
+   "sm_records": 1175,
+   "sm_quadrant_local": 1175,
+   "worst_quadrant_over_sm_floor": 1.0
+  },
+  "replicated_tables_bytes": {
+   "q_norm.gain": 5120,
+   "kv_norm.gain": 2048,
+   "kv_rope.table": 256,
+   "attend.sink_table": 4,
+   "route.bias": 1536,
+   "route.one": 4,
+   "engram.ids": 96,
+   "engram.codes": 256,
+   "engram.scales": 8,
+   "engram.wgt": 81920
+  },
+  "replica_capacity_bytes_per_layer": 273744,
+  "qbg_census_AR": {
+   "per_tag": {
+    "x_projections_gather.qa": {
+     "records": 40,
+     "bytes": 204800,
+     "n": 1280,
+     "quadrant_slice": 320.0,
+     "qualifies": false,
+     "slice_mod32": 0,
+     "slice_mod128": 64
+    },
+    "x_projections_gather.kvraw": {
+     "records": 40,
+     "bytes": 81920,
+     "n": 512,
+     "quadrant_slice": 128.0,
+     "qualifies": false,
+     "slice_mod32": 0,
+     "slice_mod128": 0
+    },
+    "o-group": {
+     "records": 40,
+     "bytes": 163840,
+     "n": 1024,
+     "quadrant_slice": 256.0,
+     "qualifies": true,
+     "slice_mod32": 0,
+     "slice_mod128": 0
+    },
+    "router_gather.gsc": {
+     "records": 40,
+     "bytes": 61440,
+     "n": 384,
+     "quadrant_slice": 96.0,
+     "qualifies": false,
+     "slice_mod32": 0,
+     "slice_mod128": 96
+    },
+    "expert_intermediate_gather.s4": {
+     "records": 40,
+     "bytes": 368640,
+     "n": 2304,
+     "quadrant_slice": 576.0,
+     "qualifies": true,
+     "slice_mod32": 0,
+     "slice_mod128": 64
+    },
+    "expert_intermediate_gather.s3": {
+     "records": 40,
+     "bytes": 368640,
+     "n": 2304,
+     "quadrant_slice": 576.0,
+     "qualifies": true,
+     "slice_mod32": 0,
+     "slice_mod128": 64
+    },
+    "expert_intermediate_gather.s1": {
+     "records": 40,
+     "bytes": 368640,
+     "n": 2304,
+     "quadrant_slice": 576.0,
+     "qualifies": true,
+     "slice_mod32": 0,
+     "slice_mod128": 64
+    },
+    "expert_intermediate_gather.s5": {
+     "records": 40,
+     "bytes": 368640,
+     "n": 2304,
+     "quadrant_slice": 576.0,
+     "qualifies": true,
+     "slice_mod32": 0,
+     "slice_mod128": 64
+    },
+    "expert_intermediate_gather.s0": {
+     "records": 40,
+     "bytes": 368640,
+     "n": 2304,
+     "quadrant_slice": 576.0,
+     "qualifies": true,
+     "slice_mod32": 0,
+     "slice_mod128": 64
+    },
+    "expert_intermediate_gather.s2": {
+     "records": 40,
+     "bytes": 368640,
+     "n": 2304,
+     "quadrant_slice": 576.0,
+     "qualifies": true,
+     "slice_mod32": 0,
+     "slice_mod128": 64
+    },
+    "expert_intermediate_gather.s6": {
+     "records": 40,
+     "bytes": 368640,
+     "n": 2304,
+     "quadrant_slice": 576.0,
+     "qualifies": true,
+     "slice_mod32": 0,
+     "slice_mod128": 64
+    },
+    "engram.rows_gather.eg_rows": {
+     "records": 2,
+     "bytes": 49152,
+     "n": 6144,
+     "quadrant_slice": 1536.0,
+     "qualifies": true,
+     "slice_mod32": 0,
+     "slice_mod128": 0
+    },
+    "engram.kv_gather.eg_kv": {
+     "records": 2,
+     "bytes": 204800,
+     "n": 25600,
+     "quadrant_slice": 6400.0,
+     "qualifies": false,
+     "slice_mod32": 0,
+     "slice_mod128": 0
+    },
+    "x_projections_gather.iwr": {
+     "records": 8,
+     "bytes": 1024,
+     "n": 32,
+     "quadrant_slice": 8.0,
+     "qualifies": false,
+     "slice_mod32": 8,
+     "slice_mod128": 8
+    },
+    "x_projections_gather.cmp": {
+     "records": 4,
+     "bytes": 14336,
+     "n": 1024,
+     "quadrant_slice": 256.0,
+     "qualifies": false,
+     "slice_mod32": 0,
+     "slice_mod128": 0
+    },
+    "indexer.q_gather.iq": {
+     "records": 8,
+     "bytes": 131072,
+     "n": 4096,
+     "quadrant_slice": 1024.0,
+     "qualifies": false,
+     "slice_mod32": 0,
+     "slice_mod128": 0
+    }
+   },
+   "ag_bytes_total": 3492864,
+   "ag_bytes_qbg": 2793472,
+   "qbg_fraction": 0.7998,
+   "qbg_bytes_after": 720192,
+   "slice_rule": "quadrant slice n/4 must be a multiple of the golden act_quant block (32); 128 reported for reference"
+  }
+ },
+ "table": {
+  "b_plan": {
+   "ar_cycles": 606563.8,
+   "ar_tok_s": 1978.4,
+   "mtp_step_cycles": 1480624.1,
+   "mtp_design_tok_s": 3370.7,
+   "qwen_tok_s": 955.2,
+   "d_ar_pct_vs_b_plan": 0.0,
+   "d_mtp_pct_vs_b_plan": 0.0,
+   "d_qwen_pct_vs_b_plan": 0.0
+  },
+  "d4g_nominal": {
+   "ar_cycles": 651681.1,
+   "ar_tok_s": 1841.4,
+   "mtp_step_cycles": 1965452.8,
+   "mtp_design_tok_s": 2539.3,
+   "qwen_tok_s": 946.2,
+   "d_ar_pct_vs_b_plan": -6.92,
+   "d_mtp_pct_vs_b_plan": -24.67,
+   "d_qwen_pct_vs_b_plan": -0.94
+  },
+  "d4g_upper": {
+   "ar_cycles": 716579.9,
+   "ar_tok_s": 1674.6,
+   "mtp_step_cycles": 2364045.8,
+   "mtp_design_tok_s": 2111.1,
+   "qwen_tok_s": 930.6,
+   "d_ar_pct_vs_b_plan": -15.36,
+   "d_mtp_pct_vs_b_plan": -37.37,
+   "d_qwen_pct_vs_b_plan": -2.58
+  },
+  "only_AG": {
+   "ar_cycles": 638207.0,
+   "ar_tok_s": 1880.3,
+   "mtp_step_cycles": 1946963.5,
+   "mtp_design_tok_s": 2563.4,
+   "qwen_tok_s": 950.6,
+   "d_ar_pct_vs_b_plan": -4.96,
+   "d_mtp_pct_vs_b_plan": -23.95,
+   "d_qwen_pct_vs_b_plan": -0.48
+  },
+  "only_XQT": {
+   "ar_cycles": 614817.4,
+   "ar_tok_s": 1951.8,
+   "mtp_step_cycles": 1490646.4,
+   "mtp_design_tok_s": 3348.1,
+   "qwen_tok_s": 953.6,
+   "d_ar_pct_vs_b_plan": -1.34,
+   "d_mtp_pct_vs_b_plan": -0.67,
+   "d_qwen_pct_vs_b_plan": -0.17
+  },
+  "only_D2": {
+   "ar_cycles": 606563.8,
+   "ar_tok_s": 1978.4,
+   "mtp_step_cycles": 1481825.8,
+   "mtp_design_tok_s": 3368.0,
+   "qwen_tok_s": 955.2,
+   "d_ar_pct_vs_b_plan": 0.0,
+   "d_mtp_pct_vs_b_plan": -0.08,
+   "d_qwen_pct_vs_b_plan": 0.0
+  },
+  "only_SU": {
+   "ar_cycles": 608943.8,
+   "ar_tok_s": 1970.6,
+   "mtp_step_cycles": 1483032.1,
+   "mtp_design_tok_s": 3365.3,
+   "qwen_tok_s": 953.6,
+   "d_ar_pct_vs_b_plan": -0.39,
+   "d_mtp_pct_vs_b_plan": -0.16,
+   "d_qwen_pct_vs_b_plan": -0.17
+  },
+  "only_SFUD": {
+   "ar_cycles": 606722.8,
+   "ar_tok_s": 1977.8,
+   "mtp_step_cycles": 1480790.1,
+   "mtp_design_tok_s": 3370.4,
+   "qwen_tok_s": 955.1,
+   "d_ar_pct_vs_b_plan": -0.03,
+   "d_mtp_pct_vs_b_plan": -0.01,
+   "d_qwen_pct_vs_b_plan": -0.01
+  },
+  "only_SFUC": {
+   "ar_cycles": 607517.8,
+   "ar_tok_s": 1975.3,
+   "mtp_step_cycles": 1481620.1,
+   "mtp_design_tok_s": 3368.5,
+   "qwen_tok_s": 954.8,
+   "d_ar_pct_vs_b_plan": -0.16,
+   "d_mtp_pct_vs_b_plan": -0.07,
+   "d_qwen_pct_vs_b_plan": -0.04
+  },
+  "only_BD": {
+   "ar_cycles": 608268.6,
+   "ar_tok_s": 1972.8,
+   "mtp_step_cycles": 1484306.6,
+   "mtp_design_tok_s": 3362.4,
+   "qwen_tok_s": 954.2,
+   "d_ar_pct_vs_b_plan": -0.28,
+   "d_mtp_pct_vs_b_plan": -0.25,
+   "d_qwen_pct_vs_b_plan": -0.1
+  },
+  "only_BD_upper": {
+   "ar_cycles": 647494.9,
+   "ar_tok_s": 1853.3,
+   "mtp_step_cycles": 1598970.9,
+   "mtp_design_tok_s": 3121.3,
+   "qwen_tok_s": 945.9,
+   "d_ar_pct_vs_b_plan": -6.32,
+   "d_mtp_pct_vs_b_plan": -7.4,
+   "d_qwen_pct_vs_b_plan": -0.97
+  },
+  "opt_2ring": {
+   "ar_cycles": 634711.5,
+   "ar_tok_s": 1890.6,
+   "mtp_step_cycles": 1736582.8,
+   "mtp_design_tok_s": 2873.9,
+   "qwen_tok_s": 946.2,
+   "d_ar_pct_vs_b_plan": -4.44,
+   "d_mtp_pct_vs_b_plan": -14.74,
+   "d_qwen_pct_vs_b_plan": -0.94
+  },
+  "opt_fp8_gather": {
+   "ar_cycles": 629872.3,
+   "ar_tok_s": 1905.1,
+   "mtp_step_cycles": 1569630.7,
+   "mtp_design_tok_s": 3179.6,
+   "qwen_tok_s": 946.2,
+   "d_ar_pct_vs_b_plan": -3.71,
+   "d_mtp_pct_vs_b_plan": -5.67,
+   "d_qwen_pct_vs_b_plan": -0.94
+  },
+  "opt_2ring_fp8": {
+   "ar_cycles": 629298.0,
+   "ar_tok_s": 1906.9,
+   "mtp_step_cycles": 1529733.7,
+   "mtp_design_tok_s": 3262.5,
+   "qwen_tok_s": 946.2,
+   "d_ar_pct_vs_b_plan": -3.61,
+   "d_mtp_pct_vs_b_plan": -3.21,
+   "d_qwen_pct_vs_b_plan": -0.94
+  },
+  "opt_qbg": {
+   "ar_cycles": 631159.5,
+   "ar_tok_s": 1901.3,
+   "mtp_step_cycles": 1581059.6,
+   "mtp_design_tok_s": 3156.6,
+   "qwen_tok_s": 946.2,
+   "d_ar_pct_vs_b_plan": -3.9,
+   "d_mtp_pct_vs_b_plan": -6.35,
+   "d_qwen_pct_vs_b_plan": -0.94
+  },
+  "opt_2ring_qbg": {
+   "ar_cycles": 629775.1,
+   "ar_tok_s": 1905.4,
+   "mtp_step_cycles": 1531513.5,
+   "mtp_design_tok_s": 3258.7,
+   "qwen_tok_s": 946.2,
+   "d_ar_pct_vs_b_plan": -3.69,
+   "d_mtp_pct_vs_b_plan": -3.32,
+   "d_qwen_pct_vs_b_plan": -0.94
+  },
+  "d4g_2ring_upper": {
+   "ar_cycles": 697980.8,
+   "ar_tok_s": 1719.2,
+   "mtp_step_cycles": 2006983.7,
+   "mtp_design_tok_s": 2486.7,
+   "qwen_tok_s": 935.7,
+   "d_ar_pct_vs_b_plan": -13.1,
+   "d_mtp_pct_vs_b_plan": -26.23,
+   "d_qwen_pct_vs_b_plan": -2.04
+  },
+  "d4g_2ring_qbg_upper": {
+   "ar_cycles": 685082.1,
+   "ar_tok_s": 1751.6,
+   "mtp_step_cycles": 1755365.6,
+   "mtp_design_tok_s": 2843.2,
+   "qwen_tok_s": 935.7,
+   "d_ar_pct_vs_b_plan": -11.46,
+   "d_mtp_pct_vs_b_plan": -15.65,
+   "d_qwen_pct_vs_b_plan": -2.04
+  }
+ },
+ "static_schedule": {
+  "AG_C1_ring_allgather": {
+   "rule": "min(ceil(1.5 F) + 3 hop, 2 F + 2 hop) with cut-through min(.., 3 D multicast)",
+   "hop_edges": 11.38,
+   "F": "ceil(B / 4 quadrants / 32 B)",
+   "example_F224": 370.14
+  },
+  "SU_VOP_reduction_scalar_tree": 28.0,
+  "HC_MIX_partial_sum_tree": 46.760000000000005,
+  "HC_ingest_event_advance": 11.38,
+  "IDX_quarter_merge": 17.380000000000003,
+  "IDX_score_chain": 14,
+  "ARGMAX_LOCAL": 20.76,
+  "COLL_TOPK_ARGMAX_MERGE_C4": 10.38,
+  "SU_start_advance": 4.0,
+  "SFU_store_D": 1.0,
+  "SFU_chain_LG": 6.0,
+  "D2_replicated_table_stream_factor": 4,
+  "placement": "W1/W2 rows dealt in R=ceil(m/16) blocks, SM j in quadrant j//4 on its own 4 PCs (QPCS); D1 quadrant-sliced loads split 4 ways; D2 tables replicated x4; C2/C3 slice-addressed, no ring",
+  "quadrant_pcs": {
+   "SW": [
+    "pc_SW0",
+    "pc_SW1",
+    "pc_SW2",
+    "pc_SW3"
+   ],
+   "SE": [
+    "pc_SW4",
+    "pc_SW5",
+    "pc_SW6",
+    "pc_SW7"
+   ],
+   "NW": [
+    "pc_NW0",
+    "pc_NW1",
+    "pc_NW2",
+    "pc_NW3"
+   ],
+   "NE": [
+    "pc_NW4",
+    "pc_NW5",
+    "pc_NW6",
+    "pc_NW7"
+   ]
+  }
+ },
+ "d4f_reference": {
+  "plan_a_ar": 1763.0,
+  "plan_a_mtp": 3022.3,
+  "plan_a_qwen": 933.6,
+  "note": "plan-study (a) d4f price, no d4g adders (results/arch/hbm_plan_study_1017/price.json)"
+ }
+}

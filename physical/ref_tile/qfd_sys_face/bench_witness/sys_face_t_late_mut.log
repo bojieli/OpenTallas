@@ -1,0 +1,6 @@
+# Q-SYSFACE3 10-18 fail witness: bench sys_face_t_late_mutant, cmd verbatim from job.json: bash rtl/test/qwen_split/run_sys_face_bench.sh {RUN}/bench/mut1 1 (source 94032c5a2, ot-run on ot-epyc4, iverilog)
+SYS_FACE_PASS MUT=0 boot 54 records, PW 1024 DW 8, 1512 events exact, row 64+scale exact
+SYS_FACE_FAIL MUT=1 timeout (errors 1476, face_fault 1 cal_fault 1)
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-2683551-1792310517 after 0 s
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-2683551-1792310517): exit 0

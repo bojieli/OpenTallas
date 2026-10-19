@@ -16,12 +16,20 @@
 // Pins: every input lands in an unconditional pin flop; every output is a flop Q. AXI and landing
 // handshakes are evaluated on mirrored pin copies (own valid/ready delayed one edge) and ready/valid
 // are pulsed at most every other edge, so the registered views can never double-transfer.
-module ot_hbm_host_packet_static #(parameter integer TXC=32, parameter integer MUT=0)(
+// HBMA-HOST2 2026-10-17 (successor parameters; defaults keep the separate-tile behaviour):
+//  RXREG=0  rx_packet is taken straight from the producer's flop Q (the host landing out_data inside the folded
+//           landing+packet tile ot_hbm_host_cp_rx): the landing holds out_data unchanged through the consume edge, and
+//           rx_take is that same edge (both evaluate the mirrored handshake), so buf_p captures the identical word.
+//  RRELAY=1 rst_n drives only an ot_rst_relay (2 sync + 1 tree stage, release +3 edges, assert immediate); region 0 =
+//           pin/mirror flops, 1 = control state, 2..4 = the three f_flit thirds (the 545-b transmit flit is a data
+//           register with its own regions). r1 gate: rst_n port 733 loads.
+module ot_hbm_host_packet_static #(parameter integer TXC=32, parameter integer MUT=0,
+ parameter integer RXREG=1, parameter integer RRELAY=0)(
  input wire clk,rst_n,
  // host landing FIFO (rx)
  input wire rx_valid,input wire [511:0] rx_packet,output reg rx_ready,
  // endpoint face (tx), credit returned by the face
- output reg f_send,output reg [544:0] f_flit,input wire t_cr,
+ output reg f_send,output wire [544:0] f_flit,input wire t_cr,
  // AXI-lite master toward ot_hbm_host_static_ingress
  output reg s_awvalid,input wire s_awready,output reg [11:0] s_awaddr,
  output reg s_wvalid,input wire s_wready,output reg [31:0] s_wdata,output reg [3:0] s_wstrb,
@@ -32,18 +40,25 @@ module ot_hbm_host_packet_static #(parameter integer TXC=32, parameter integer M
  input wire irq,fault,
  output reg protocol_fault
 );
+ // ---------------- reset regions
+ wire [4:0] rr;
+ generate if(RRELAY!=0)begin:g_rr
+  ot_rst_relay #(.REGIONS(5),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rr(.clk(clk),.rst_n_in(rst_n),.rst_n(rr));
+ end else begin:g_rr0
+  assign rr={5{rst_n}};
+ end endgenerate
  // ---------------- pin flops
  reg rv_p,awr_p,wr_p,arr_p,bv_p,rvv_p,cr_p,irq_p,flt_p;
  reg [511:0] rp_p;reg [1:0] br_p;reg [31:0] rd_p;
  always @(posedge clk)begin rp_p<=rx_packet;br_p<=s_bresp;rd_p<=s_rdata;end
- always @(posedge clk or negedge rst_n)
-  if(!rst_n)begin rv_p<=0;awr_p<=0;wr_p<=0;arr_p<=0;bv_p<=0;rvv_p<=0;cr_p<=0;irq_p<=0;flt_p<=0;end
+ always @(posedge clk or negedge rr[0])
+  if(!rr[0])begin rv_p<=0;awr_p<=0;wr_p<=0;arr_p<=0;bv_p<=0;rvv_p<=0;cr_p<=0;irq_p<=0;flt_p<=0;end
   else begin rv_p<=rx_valid;awr_p<=s_awready;wr_p<=s_wready;arr_p<=s_arready;bv_p<=s_bvalid;rvv_p<=s_rvalid;
    cr_p<=t_cr;irq_p<=irq;flt_p<=fault;end
  // mirrors of own outputs as the peer sampled them
  reg rxr_m,awv_m,wv_m,arv_m,brd_m,rrd_m;
- always @(posedge clk or negedge rst_n)
-  if(!rst_n)begin rxr_m<=0;awv_m<=0;wv_m<=0;arv_m<=0;brd_m<=0;rrd_m<=0;end
+ always @(posedge clk or negedge rr[0])
+  if(!rr[0])begin rxr_m<=0;awv_m<=0;wv_m<=0;arv_m<=0;brd_m<=0;rrd_m<=0;end
   else begin rxr_m<=rx_ready;awv_m<=s_awvalid;wv_m<=s_wvalid;arv_m<=s_arvalid;brd_m<=s_bready;rrd_m<=s_rready;end
  wire rx_take=rv_p&&rxr_m, aw_hs=awr_p&&awv_m, w_hs=wr_p&&wv_m, ar_hs=arr_p&&arv_m;
  wire b_hs=bv_p&&brd_m, r_hs=rvv_p&&rrd_m;
@@ -57,16 +72,17 @@ module ot_hbm_host_packet_static #(parameter integer TXC=32, parameter integer M
  wire malformed=buf_p[15:8]!=8'd1 || buf_p[511:171]!=341'd0;
  function automatic [511:0] packet(input [7:0] code,input [15:0] id,input [63:0] data,input [1:0] resp);
  begin packet={341'd0,1'b1,resp,8'd0,data,64'd0,id,8'd1,code};end endfunction
- always @(posedge clk or negedge rst_n)begin
- if(!rst_n)begin
-  rx_ready<=0;f_send<=0;f_flit<=0;protocol_fault<=0;buf_v<=0;
+ wire [511:0] rx_word=(RXREG!=0)?rp_p:rx_packet;
+ always @(posedge clk or negedge rr[1])begin
+ if(!rr[1])begin
+  rx_ready<=0;f_send<=0;protocol_fault<=0;buf_v<=0;
   sbw<=0;sbr<=0;sb_resp<=0;sr_resp<=0;status_pending<=0;last_status<=0;s_write_resp<=0;s_read_data<=0;
   sb_id<=0;sr_id<=0;credits<=TXC[$clog2(TXC+1)-1:0];
   s_awvalid<=0;s_wvalid<=0;s_bready<=0;s_arvalid<=0;s_rready<=0;s_awaddr<=0;s_wdata<=0;s_wstrb<=0;s_araddr<=0;
  end else begin
   // landing handshake: ready pulsed at most every other edge, only into an empty buffer
   rx_ready<=!rx_ready&&!buf_v&&!rx_take;
-  if(rx_take)begin buf_v<=1;buf_p<=rp_p;end
+  if(rx_take)begin buf_v<=1;buf_p<=rx_word;end
   if({flt_p,irq_p}!=last_status)begin status_pending<=1;last_status<={flt_p,irq_p};end
   if(aw_hs)s_awvalid<=0;
   if(w_hs)s_wvalid<=0;
@@ -95,12 +111,22 @@ module ot_hbm_host_packet_static #(parameter integer TXC=32, parameter integer M
   f_send<=0;
   if(credits!=0 && (sb_resp||sr_resp||status_pending))begin
    f_send<=1;
-   if(sb_resp)begin f_flit<={33'd0,packet(8'h81,sb_id,64'd0,s_write_resp)};sb_resp<=0;sbw<=0;end
-   else if(sr_resp)begin f_flit<={33'd0,packet(8'h82,sr_id,{32'd0,s_read_data},2'd0)};sr_resp<=0;sbr<=0;end
-   else begin f_flit<={33'd0,packet(8'hff,16'd0,{62'd0,last_status},2'd0)};status_pending<=0;end
+   if(sb_resp)begin sb_resp<=0;sbw<=0;end
+   else if(sr_resp)begin sr_resp<=0;sbr<=0;end
+   else status_pending<=0;
   end
   credits<=credits+(cr_p?1'b1:1'b0)-((credits!=0 && (sb_resp||sr_resp||status_pending) && MUT!=2)?1'b1:1'b0);
  end
  end
+ // transmit flit: data register, same load condition and word as before, in three reset regions
+ wire tx_go=credits!=0 && (sb_resp||sr_resp||status_pending);
+ wire [544:0] tx_flit=sb_resp?{33'd0,packet(8'h81,sb_id,64'd0,s_write_resp)}:
+                      sr_resp?{33'd0,packet(8'h82,sr_id,{32'd0,s_read_data},2'd0)}:
+                              {33'd0,packet(8'hff,16'd0,{62'd0,last_status},2'd0)};
+ reg [181:0] fl0;reg [181:0] fl1;reg [180:0] fl2;
+ always @(posedge clk or negedge rr[2])if(!rr[2])fl0<=0;else if(tx_go)fl0<=tx_flit[181:0];
+ always @(posedge clk or negedge rr[3])if(!rr[3])fl1<=0;else if(tx_go)fl1<=tx_flit[363:182];
+ always @(posedge clk or negedge rr[4])if(!rr[4])fl2<=0;else if(tx_go)fl2<=tx_flit[544:364];
+ assign f_flit={fl2,fl1,fl0};
 endmodule
 `default_nettype wire

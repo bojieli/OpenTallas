@@ -1,0 +1,32 @@
+SEED=5 QMUT=5
+ERR quadrant x-load differs from today's xql at cycle 76 (W en 00/00, E en 00/00)
+ERR quadrant x-load differs from today's xql at cycle 77 (W en 00/00, E en 00/00)
+ERR quadrant x-load differs from today's xql at cycle 78 (W en 00/00, E en 00/00)
+ERR quadrant x-load differs from today's xql at cycle 79 (W en 00/00, E en 00/00)
+ERR quadrant x-load differs from today's xql at cycle 80 (W en 00/00, E en 00/00)
+round 0 W {fmt 0 P 2 K 9000} E {fmt 0 P 2 K 9000}: 628 edges
+round 1 W {fmt 0 P 3 K 1030} E {fmt 0 P 5 K 498}: 183 edges
+round 2 W {fmt 0 P 3 K 1119} E {fmt 0 P 8 K 569}: 318 edges
+round 3 W {fmt 0 P 2 K 1324} E {fmt 0 P 2 K 911}: 157 edges
+round 4 W {fmt 0 P 6 K 1297} E {fmt 0 P 4 K 489}: 336 edges
+round 5 W {fmt 0 P 6 K 663} E {fmt 0 P 3 K 1286}: 259 edges
+round 6 W {fmt 0 P 6 K 962} E {fmt 0 P 1 K 1428}: 262 edges
+round 7 W {fmt 0 P 7 K 650} E {fmt 0 P 6 K 563}: 268 edges
+round 8 W {fmt 0 P 7 K 1022} E {fmt 0 P 8 K 404}: 271 edges
+round 9 W {fmt 0 P 2 K 1324} E {fmt 0 P 2 K 1145}: 168 edges
+round 10 W {fmt 1 P 8 K 1792} E {fmt 1 P 5 K 4704}: 523 edges
+round 11 W {fmt 2 P 7 K 4800} E {fmt 2 P 3 K 2848}: 773 edges
+round 12 W {fmt 1 P 4 K 1568} E {fmt 1 P 1 K 4096}: 219 edges
+round 13 W {fmt 2 P 7 K 5472} E {fmt 2 P 6 K 2496}: 779 edges
+round 14 W {fmt 1 P 4 K 2304} E {fmt 1 P 5 K 2208}: 351 edges
+round 15 W {fmt 2 P 4 K 5312} E {fmt 2 P 5 K 1760}: 478 edges
+round 16 W {fmt 1 P 5 K 384} E {fmt 1 P 3 K 2048}: 176 edges
+round 17 W {fmt 2 P 4 K 512} E {fmt 2 P 1 K 640}: 196 edges
+round 18 W {fmt 1 P 6 K 5728} E {fmt 1 P 3 K 3296}: 728 edges
+round 19 W {fmt 2 P 8 K 4832} E {fmt 2 P 8 K 896}: 874 edges
+quadrant vs today's xql (pairs W0,1 = ref 0,1; E0,1 = ref 2,3): 10809 cycles compared, 8032 W beats, 8032 E beats, 10631 differ; W/E distinct beats 1670
+XQL_QUAD_LOCK FAIL 1
+- rtl/hbm_accel/generic/adapters/tb/tb_hgi_xload_xql_quad_lock.sv:213: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 22us; walltime 14.693 s; speed 1.474 us/s
+- Verilator: cpu 14.678 s on 1 threads; allocated 76 MB

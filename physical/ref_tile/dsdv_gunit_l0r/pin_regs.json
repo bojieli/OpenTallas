@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "dsdv_gunit_l0r",
+ "enable": false,
+ "reason": "Source-registered: every input lands in a flop at the pin and every output is a flop (dsdv_gunit_l* input/output flops, dsdv_gunit_pass feedthroughs, ot_dsdv_vstop's own flops); recipe pin_regs would add an unpriced stage on the router's critical path and on every rung hop."
+}

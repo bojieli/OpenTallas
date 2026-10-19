@@ -9,7 +9,8 @@
 `default_nettype none
 module ot_hbm_rly_fcf #(
     parameter int W = 136,
-    parameter int N = 2
+    parameter int N = 2,
+    parameter int RS_RELAY = 0   // ot_hbm_rly RS_RELAY (registered reset relay on rs at any width)
 ) (
     input  wire           clk_in,
     input  wire           rs,
@@ -18,7 +19,7 @@ module ot_hbm_rly_fcf #(
     output wire [N-1:0]   clk_out
 );
     wire [W-1:0] q;
-    ot_hbm_rly #(.W(W)) u_stage (.ck(clk_in), .rs(rs), .i(i), .o(q));
+    ot_hbm_rly #(.W(W), .RS_RELAY(RS_RELAY)) u_stage (.ck(clk_in), .rs(rs), .i(i), .o(q));
     genvar k, b;
     generate
         for (k = 0; k < N; k = k + 1) begin : g_br

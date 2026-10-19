@@ -133,7 +133,71 @@ def table(vals_fn, idx1, idx2=None):
                                                               ', '.join(f'{x:g}' for x in idx2), rows))
 
 
-def write_lib(corner, lef, stubs, path, clock_ports=None):
+# Q-DIE11-RLY 10-18 (OT_SPLIT_FWD_LANES, rtl/qwen_split/qfd_fwd_lane.sv): forwarded-clock half-cycle lane frames.  The
+# die STA propagates each lane's clock from the hop-0 station's root pin through the ck -> ck_o arcs (hop 0: capture on
+# the RISING root edge, ck_o = ~(ck gated); station: capture on ckf rising, ck_o = ~ckf), so every station hop is timed
+# as the half-cycle hop it is, on routed RC.  The landing is modelled as in the S81-LAND pilot (dv_land_pilot.py): the
+# lane's data / epoch pins are checked against the RECEIVING root ck, with case/landing.sdc's MCP -setup E -hold D-1.
+FWD_RE = re.compile(r'^qfd_(rlyh0|rlyh|landh0|landh|rlyr0|rlyrl|rlyr)_')   # LANDFIX-SQ: + forwarded reset lanes
+FWD_NOT_ROOT = ('ck_o', 'ckf')       # forwarded clock pins: no create_clock (die_sta_libs), propagated through the arcs
+FWD_CK_FWD = dict(ss=40.0, tt=40.0, ff=18.0)     # ASSUMED ck -> ck_o cell delay (one INVx2 / ICG + INV class)
+
+
+def fwd_cell(master, ports, c, pb, cq, trn):
+    kind = FWD_RE.match(master).group(1)
+    clk = {'rlyh0': 'ck', 'rlyh': 'ckf', 'landh': 'ck', 'landh0': 'ck', 'rlyr0': 'ck', 'rlyr': 'ckf', 'rlyrl': 'ck'}[kind]
+    edge = 'rising'                     # Q-DIE11 10-18: hop 0 captures on the rising root edge too
+    clocks = {'rlyh0': ('ck',), 'rlyh': ('ckf',), 'landh': ('ckf', 'ck'), 'landh0': ('ck_s', 'ck'),
+              'rlyr0': ('ck',), 'rlyr': ('ckf',), 'rlyrl': ('ck',)}[kind]
+    data_in = {'rlyh0': ('a', 'en'), 'rlyh': ('a', 'ea'), 'landh': ('a', 'ea', 'rs'), 'landh0': ('a', 'rs'),
+               'rlyr0': ('a',), 'rlyr': ('a',), 'rlyrl': ('a',)}[kind]
+    data_out = {'rlyh0': ('b', 'eb'), 'rlyh': ('b', 'eb'), 'landh': ('b', 'fault'), 'landh0': ('b', 'fault'),
+                'rlyr0': ('b',), 'rlyr': ('b',), 'rlyrl': ('b',)}[kind]
+    fd = FWD_CK_FWD.get(next(k for k, v in CORNERS.items() if v is c), 40.0)
+    L = [f'  cell ({master}) {{ area : 0; dont_touch : true; dont_use : true;']
+    pn = lambda q: q + '[0]' if (master, q) in IDX else q      # noqa: E731  (LEF pins indexed even at width 1)
+
+    def cons(rel):
+        out = []
+        for tt, v in ((f'setup_{edge}', c['setup'] + pb), (f'hold_{edge}', c['hold'] - pb)):
+            f = (lambda a, s_, v=v: v + 0.1 * s_)
+            out.append(f'timing () {{ related_pin : "{pn(rel)}"; timing_type : {tt}; '
+                       f'rise_constraint (cons2) {{ {table(f, SLEWS, SLEWS)} }} fall_constraint (cons2) {{ {table(f, SLEWS, SLEWS)} }} }}')
+        return ' '.join(out)
+    launch = (f'timing () {{ related_pin : "{pn(clk)}"; timing_type : {edge}_edge; '
+              f'cell_rise (load1) {{ {table(cq, LOADS)} }} cell_fall (load1) {{ {table(cq, LOADS)} }} '
+              f'rise_transition (load1) {{ {table(trn, LOADS)} }} fall_transition (load1) {{ {table(trn, LOADS)} }} }}')
+    for p, n in sorted(ports.items()):
+        bus = n > 1 or (master, p) in IDX
+        if p in clocks:
+            body = 'direction : input; clock : true; capacitance : 2.0;'
+        elif p == 'ck_o':
+            src = 'ck' if kind in ('rlyh0', 'rlyr0') else 'ckf'
+            sense = 'negative_unate'    # every forward inverts (hop 0: ck_o = ~gated ck)
+            dly = (lambda load, fd=fd: fd + c['k'] * load)
+            body = (f'direction : output; max_capacitance : 5000; timing () {{ related_pin : "{pn(src)}"; timing_sense : {sense}; '
+                    f'timing_type : combinational; cell_rise (load1) {{ {table(dly, LOADS)} }} cell_fall (load1) {{ {table(dly, LOADS)} }} '
+                    f'rise_transition (load1) {{ {table(trn, LOADS)} }} fall_transition (load1) {{ {table(trn, LOADS)} }} }}')
+        elif p in data_in:
+            body = f'direction : input; capacitance : {c["cin"]}; ' + cons(clk)
+        elif kind == 'landh0' and p == 'en':
+            # QK-LANDEN 10-19: en is registered on ck_s at the face (one flop before the hop-0 gate): a ck_s input
+            body = f'direction : input; capacitance : {c["cin"]}; ' + cons('ck_s')
+        elif p in data_out:
+            body = 'direction : output; max_capacitance : 5000; ' + launch
+        elif p in ('tie_hi', 'tie_lo'):
+            body = 'direction : output; max_capacitance : 5000;'
+        else:                       # k0..k2 straps: no arcs
+            body = f'direction : input; capacitance : {c["cin"]};'
+        if bus:
+            L.append(f'    bus ({p}) {{ bus_type : b{n}; {body} }}')
+        else:
+            L.append(f'    pin ({p}) {{ {body} }}')
+    L.append('  }')
+    return L
+
+
+def write_lib(corner, lef, stubs, path, clock_ports=None, related_pins=None):
     c = CORNERS[corner]
     L = [f'library (qfd_elements_{corner}) {{',
          '  delay_model : table_lookup; time_unit : "1ps"; capacitive_load_unit (1, ff); voltage_unit : "1V";',
@@ -157,6 +221,9 @@ def write_lib(corner, lef, stubs, path, clock_ports=None):
     for master, ports in sorted(lef.items()):
         if master == 'ot_hbm3e_phy':
             continue                                    # real PHY: its own characterised .lib
+        if FWD_RE.match(master):
+            L += fwd_cell(master, ports, c, pb, cq, trn)
+            continue
         clocks = [p for p in ports if p in CLOCKS or p in (clock_ports or {}).get(master, ())]
         L.append(f'  cell ({master}) {{ area : 0; dont_touch : true; dont_use : true;')
         for p, n in sorted(ports.items()):
@@ -168,6 +235,13 @@ def write_lib(corner, lef, stubs, path, clock_ports=None):
                     L.append(f'    pin ({p}) {{ direction : input; clock : true; capacitance : 2.0; }}')
                 continue
             rel = rel or ('ck' if 'ck' in clocks else (clocks[0] if clocks else None))
+            # Q-DIE11-COLL 10-18: source-declared per-bit capture/launch clocks (clock contract related_pins), e.g.
+            # the production collective's SerDes words on their face codec root and the UCIe words on fdi(_rx)_ck
+            bit_rel = (related_pins or {}).get(master, {}).get(p)
+            if bit_rel is not None:
+                if len(bit_rel) != n:
+                    raise ValueError(f'{master}.{p}: related_pins has {len(bit_rel)} bits, LEF has {n}')
+                bit_rel = [r_ if '[' in r_ or (master, r_) not in IDX else r_ + '[0]' for r_ in bit_rel]
             if master in ('qkd_ctrl', 'qkd_ctrl_n') and 'hk_k' in clocks:
                 # qwen-split kvsys v1.2: the HBM controller strip has two domains: its CDC / PHY words run on the HBM
                 # clock (hk_*), the landing / stream-command words on the core clock (ck_*)
@@ -176,7 +250,7 @@ def write_lib(corner, lef, stubs, path, clock_ports=None):
                 rel = rel + '[0]'
             arcs = rel is not None and not p.startswith(('fck_', 'pll_'))
 
-            def pin_body(d):
+            def pin_body(d, rel=rel):
                 if d == 'output':
                     b = ['direction : output; max_capacitance : 5000;']
                     if arcs:
@@ -193,6 +267,18 @@ def write_lib(corner, lef, stubs, path, clock_ports=None):
                                  f'rise_constraint (cons2) {{ {table(f, SLEWS, SLEWS)} }} '
                                  f'fall_constraint (cons2) {{ {table(f, SLEWS, SLEWS)} }} }}')
                 return ' '.join(b)
+            if bit_rel is not None and arcs:
+                if n == 1 and (master, p) not in IDX:
+                    L.append(f'    pin ({p}) {{ {pin_body(dirs[0], bit_rel[0])} }}')
+                    continue
+                L.append(f'    bus ({p}) {{ bus_type : b{n}; direction : {"inout" if len(set(dirs)) > 1 else dirs[0]};')
+                if len(set(bit_rel)) == 1:
+                    L.append(f'      {pin_body(dirs[0], bit_rel[0]).replace("direction : " + dirs[0] + ";", "")}')
+                else:
+                    for i, d in enumerate(dirs):
+                        L.append(f'      pin ({p}[{i}]) {{ {pin_body(d, bit_rel[i])} }}')
+                L.append('    }')
+                continue
             if n == 1 and (master, p) not in IDX:
                 L.append(f'    pin ({p}) {{ {pin_body(dirs[0])} }}')
             else:

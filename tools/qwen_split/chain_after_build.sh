@@ -30,7 +30,10 @@ if [ "$PDN_REV" = r7 ] || [ "$PDN_REV" = r8 ]; then
 # Under r8 with --skip-prefix rly_ no M8 stripe meets those pins (dv2f10 PSM-0039 on all 498 relays). OT_PDN_RELAY_GRIDS=1
 # groups the relays into the per-phase macro grids like every other macro (4 y-phases on the 2.16 lattice).
   RLYSKIP="--skip-prefix rly_"; [ "${OT_PDN_RELAY_GRIDS:-0}" = 1 ] && RLYSKIP=
-  python3 tools/qwen_split/pdn_regroup.py $R/case_r22k $RLYSKIP $UP4SKIP --skip-prefix io_serdes --skip-prefix io_ucie --pos ../out/rom_tp8b.json --out pdn.tcl $TIE_LOCAL > $R/pdn_$PDN_REV.json || { echo pdn regroup failed; exit 10; }
+  # Q-DIE15 10-18: the CLOSED qfd_rst_rep / _p8 (12.96 x 6.48) carry VSS+VDD only as M5 straps in y 2.137..4.343: their
+  # own M8 grid VSS 2.16 / VDD 3.84 (pitch 3.36) inside that window (dv2f14bi PDN-0185 on the 8.64 phase grid)
+  OWNG=; [ "${OT_RST_REP_VIEW:-}" = closed ] && OWNG="--own-grid qfd_rst_rep=2.16,3.36 --own-grid qfd_rst_rep_p8=2.16,3.36"
+  python3 tools/qwen_split/pdn_regroup.py $R/case_r22k $RLYSKIP $UP4SKIP $OWNG --skip-prefix io_serdes --skip-prefix io_ucie --pos ../out/rom_tp8b.json --out pdn.tcl $TIE_LOCAL > $R/pdn_$PDN_REV.json || { echo pdn regroup failed; exit 10; }
 fi
 # Binding supplies the actual modeled PHY masters, and regroup writes the final
 # PDN grid. Apply the explicit contract here, before run.tcl creates any ODB.

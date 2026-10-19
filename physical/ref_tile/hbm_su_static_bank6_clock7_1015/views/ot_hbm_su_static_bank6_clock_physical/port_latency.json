@@ -1,0 +1,245 @@
+{
+  "clock_reference": {
+    "clk": {
+      "ff": {
+        "max": 51.2,
+        "mean": 49.4,
+        "min": 47.3,
+        "n": 103,
+        "scope": "boundary"
+      },
+      "ss": {
+        "max": 82.7,
+        "mean": 80.8,
+        "min": 78.6,
+        "n": 103,
+        "scope": "boundary"
+      },
+      "tt": {
+        "max": 62.6,
+        "mean": 60.8,
+        "min": 58.7,
+        "n": 103,
+        "scope": "boundary"
+      }
+    },
+    "clk_macro0": {
+      "ff": {
+        "max": 10.4,
+        "mean": 10.4,
+        "min": 10.4,
+        "n": 1,
+        "scope": "macro_pin_wire"
+      },
+      "ss": {
+        "max": 9.0,
+        "mean": 9.0,
+        "min": 9.0,
+        "n": 1,
+        "scope": "macro_pin_wire"
+      },
+      "tt": {
+        "max": 9.5,
+        "mean": 9.5,
+        "min": 9.5,
+        "n": 1,
+        "scope": "macro_pin_wire"
+      }
+    },
+    "clk_macro1": {
+      "ff": {
+        "max": 10.6,
+        "mean": 10.6,
+        "min": 10.6,
+        "n": 1,
+        "scope": "macro_pin_wire"
+      },
+      "ss": {
+        "max": 9.2,
+        "mean": 9.2,
+        "min": 9.2,
+        "n": 1,
+        "scope": "macro_pin_wire"
+      },
+      "tt": {
+        "max": 9.8,
+        "mean": 9.8,
+        "min": 9.8,
+        "n": 1,
+        "scope": "macro_pin_wire"
+      }
+    },
+    "clk_macro2": {
+      "ff": {
+        "max": 10.5,
+        "mean": 10.5,
+        "min": 10.5,
+        "n": 1,
+        "scope": "macro_pin_wire"
+      },
+      "ss": {
+        "max": 9.1,
+        "mean": 9.1,
+        "min": 9.1,
+        "n": 1,
+        "scope": "macro_pin_wire"
+      },
+      "tt": {
+        "max": 9.6,
+        "mean": 9.6,
+        "min": 9.6,
+        "n": 1,
+        "scope": "macro_pin_wire"
+      }
+    },
+    "clk_macro3": {
+      "ff": {
+        "max": 21.9,
+        "mean": 21.9,
+        "min": 21.9,
+        "n": 1,
+        "scope": "macro_pin_wire"
+      },
+      "ss": {
+        "max": 19.7,
+        "mean": 19.7,
+        "min": 19.7,
+        "n": 1,
+        "scope": "macro_pin_wire"
+      },
+      "tt": {
+        "max": 20.6,
+        "mean": 20.6,
+        "min": 20.6,
+        "n": 1,
+        "scope": "macro_pin_wire"
+      }
+    },
+    "clk_macro4": {
+      "ff": {
+        "max": 24.8,
+        "mean": 24.8,
+        "min": 24.8,
+        "n": 1,
+        "scope": "macro_pin_wire"
+      },
+      "ss": {
+        "max": 22.5,
+        "mean": 22.5,
+        "min": 22.5,
+        "n": 1,
+        "scope": "macro_pin_wire"
+      },
+      "tt": {
+        "max": 23.4,
+        "mean": 23.4,
+        "min": 23.4,
+        "n": 1,
+        "scope": "macro_pin_wire"
+      }
+    },
+    "clk_macro5": {
+      "ff": {
+        "max": 22.3,
+        "mean": 22.3,
+        "min": 22.3,
+        "n": 1,
+        "scope": "macro_pin_wire"
+      },
+      "ss": {
+        "max": 20.1,
+        "mean": 20.1,
+        "min": 20.1,
+        "n": 1,
+        "scope": "macro_pin_wire"
+      },
+      "tt": {
+        "max": 21.0,
+        "mean": 21.0,
+        "min": 21.0,
+        "n": 1,
+        "scope": "macro_pin_wire"
+      }
+    },
+    "clk_rd": {
+      "ff": {
+        "max": 70.2,
+        "mean": 68.2,
+        "min": 66.5,
+        "n": 198,
+        "scope": "boundary"
+      },
+      "ss": {
+        "max": 116.2,
+        "mean": 113.9,
+        "min": 111.9,
+        "n": 198,
+        "scope": "boundary"
+      },
+      "tt": {
+        "max": 87.0,
+        "mean": 84.9,
+        "min": 83.1,
+        "n": 198,
+        "scope": "boundary"
+      }
+    },
+    "clk_ws": {
+      "ff": {
+        "max": 156.2,
+        "mean": 128.0,
+        "min": 108.9,
+        "n": 24,
+        "scope": "all_internal_sinks"
+      },
+      "ss": {
+        "max": 224.6,
+        "mean": 186.8,
+        "min": 162.8,
+        "n": 24,
+        "scope": "all_internal_sinks"
+      },
+      "tt": {
+        "max": 182.7,
+        "mean": 151.1,
+        "min": 130.2,
+        "n": 24,
+        "scope": "all_internal_sinks"
+      }
+    }
+  },
+  "control_roles": {
+    "clocks": [
+      "clk",
+      "clk_macro0",
+      "clk_macro1",
+      "clk_macro2",
+      "clk_macro3",
+      "clk_macro4",
+      "clk_macro5",
+      "clk_rd",
+      "clk_ws"
+    ],
+    "source": "results/arch/hbm_su_f2_static_1014/arithmetic/physical/bank_clock7/hbm_su_static_bank6_clock7_1015-r12-0a5f7732e/signoff.sdc"
+  },
+  "job": "hbm_su_static_bank6_clock7_1015-r12-0a5f7732e",
+  "kit": "physical/ref_tile/hbm_su_static_bank6_clock7_1015",
+  "pin_registers": false,
+  "provenance": {
+    "db": "6_final.odb",
+    "generator": "tools/ref_tile/port_latency.py --unregistered-view (ROOT-INF21 2026-10-19)",
+    "measurement": "STA on the routed view (closure_loop ck_insertion: 6_final.odb + SPEF, propagated clock arrival at every register clock pin per root and corner)",
+    "parasitics": "spef",
+    "routed_base": "/srv/opentallas-scratch2/claude/closure-loop/hbm_su_static_bank6_clock7_1015-r12-0a5f7732e/routes/hbm_su_static_bank6_clock7_1015_r12_0a5f7732e/work/orfs/results/asap7/opentallas_ot_hbm_su_static_bank6_clock_physical_asap7_ref_hbm_su_static_bank6_clock7_1015_r12_0a5f7732e/base",
+    "sha256": {
+      "physical/ref_tile/hbm_su_static_bank6_clock7_1015/views/ot_hbm_su_static_bank6_clock_physical/insertion.json": "30f96bf1d5455bdb3833ded0ebefd96d0cd37eaacaec48b67b695555863f0c14",
+      "results/arch/hbm_su_f2_static_1014/arithmetic/physical/bank_clock7/hbm_su_static_bank6_clock7_1015-r12-0a5f7732e/signoff.sdc": "7be459024d6ceec4a41c4eafa5891cb70db3d891532e8393b97c2bba19442ac4",
+      "results/closure_loop/hbm_su_static_bank6_clock7_1015-r12-0a5f7732e/verdict.json": "b0a435e8b5ee537e3045be6efe412cbb40caee1165582042f542189c80892d46"
+    }
+  },
+  "register_edges_all_ports": 0,
+  "schema": "opentallas.ref_tile.port_latency.unregistered.v1",
+  "scope": "No pin registers: 0 additional wrapper edges on every port; clock_reference = routed-view per-root insertion (landed-parent co-timing reference); no physical qualification",
+  "source_commit": "0a5f7732e61b5d357520b4695cfb978dab383cbc",
+  "top": "ot_hbm_su_static_bank6_clock_physical"
+}

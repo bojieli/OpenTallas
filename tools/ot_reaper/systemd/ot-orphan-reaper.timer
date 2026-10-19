@@ -1,0 +1,7 @@
+[Unit]
+Description=Local orphan reaper every 10 min
+[Timer]
+OnCalendar=*:0/10
+Persistent=true
+[Install]
+WantedBy=timers.target

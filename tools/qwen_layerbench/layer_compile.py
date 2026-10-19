@@ -109,6 +109,22 @@ def bundle_ages(tables):
     return out
 
 
+def kv_codec_edges(tile_rtl):
+    """Read the implemented codec from the source-pinned attention tile, never an environment default."""
+    tile = re.search(r'module\s+qkd_kvs_attn\b(.*?)endmodule', tile_rtl, re.S)
+    if not tile:
+        raise SystemExit('layer_compile: qkd_kvs_attn tile not found')
+    inst = re.search(r'qkd_native_attention_programme\s*#\((.*?)\)\s*u_attn\s*\(', tile.group(1), re.S)
+    if not inst:
+        raise SystemExit('layer_compile: qkd_kvs_attn native attention programme not found')
+    land = re.search(r'\.LAND\(([^)]+)\)', inst.group(1))
+    # The historical programme has no LAND override and its RTL default is zero.
+    value = land.group(1).strip() if land else '0'
+    if value not in ('0', '1'):
+        raise SystemExit(f'layer_compile: unsupported attention LAND value {value!r}')
+    return 1 + int(value)
+
+
 def kv_programme_constants(kv_commit):
     t = git_show(kv_commit, 'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv')
     m = re.search(r'qkd_attn_cal_gen\s*#\(([^)]*(?:\([^)]*\)[^)]*)*)\)\s*u_attn_cal', t)
@@ -118,29 +134,68 @@ def kv_programme_constants(kv_commit):
     rx, se, st = int(prm['RX_CMD']), int(prm['SERVICE_END']), int(prm['STRETCH'])
     if st != 1:
         raise SystemExit(f'layer_compile: qkd_attn_cal_gen STRETCH {st}: only the STRETCH = 1 TX_FIRST law is known')
-    return dict(RX_CMD=rx, SERVICE_END=se, STRETCH=st, TX_FIRST=rx + 2 + se - 31,
+    return dict(RX_CMD=rx, SERVICE_END=se, STRETCH=st, TX_FIRST=rx + 2 + se - 31, KV_CODEC=kv_codec_edges(t),
                 source=f'{kv_commit}:rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv u_attn_cal',
                 law='TX_FIRST = RX_CMD + 2 + SERVICE_END - 31 (qkd_attn_cal_gen STRETCH = 1; TOKEN-XDIE-QWEN measured)')
 
 
-def rtl_txdp(commit):
-    t = git_show(commit, 'rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv')
-    out = {}
-    for end, core in (('C', 'qfd_d2d_static_core'), ('K', 'qkd_d2d_static_core')):
-        m = re.search(core + r"\s*#\([^;]*?\.TXDP\(PR \? \{8'd(\d+), 8'd(\d+), 8'd(\d+), 8'd(\d+)\}", t, re.S)
-        if not m:
-            raise SystemExit(f'layer_compile: PR TXDP of {core} not found')
-        out[end] = [int(x) for x in m.groups()][::-1]          # {p3, p2, p1, p0} -> [p0..p3]
-    return out
+D2D_RTL = 'rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv'
+D2D_IMAGE = 'rtl/qwen_sys/d2d_static_20261015/d2d_cal_image.svh'
+
+
+def txdp_bound(rtl, image, end):
+    """TXDP the die master of END ('C' compute / 'K' KV) actually elaborates with, from source text.
+
+    Pre-QXF-LINK RTL hard-wires a literal vector in the core instance (PR ? {p3, p2, p1, p0}); from 6ef1a097f the wrapper
+    takes TXDP as a REQUIRED parameter (default 32'd0 refuses elaboration) and the die GEN binds D2D_TXDP_<END> of the
+    committed calendar image (kv_static.compiled_txdp).  Returns (ports [p0..p3], source tag); never a default."""
+    core, top = {'C': ('qfd_d2d_static_core', 'qfd_d2d_static'), 'K': ('qkd_d2d_static_core', 'qkd_d2d_static')}[end]
+    m = re.search(core + r"\s*#\([^;]*?\.TXDP\(PR \? \{8'd(\d+), 8'd(\d+), 8'd(\d+), 8'd(\d+)\}", rtl, re.S)
+    if m:
+        return [int(x) for x in m.groups()][::-1], 'rtl_literal'       # {p3, p2, p1, p0} -> [p0..p3]
+    if not re.search(r'module\s+' + top + r"\s*#\([^)]*parameter\s*\[31:0\]\s*TXDP\s*=\s*32'd0\b", rtl, re.S):
+        raise SystemExit(f'layer_compile: {top}: neither a literal PR TXDP nor a required TXDP parameter')
+    if image is None:
+        raise SystemExit(f'layer_compile: {top} takes a required TXDP but no calendar image was found at the commit')
+    m = re.search(r"localparam\s*\[31:0\]\s*D2D_TXDP_" + end + r"\s*=\s*32'h([0-9a-fA-F]{8})\s*;", image)
+    if not m:
+        raise SystemExit(f'layer_compile: {D2D_IMAGE}: no D2D_TXDP_{end}')
+    v = int(m.group(1), 16)
+    return [(v >> (8 * b)) & 0xff for b in range(4)], 'image_parameter'
+
+
+def git_show_opt(commit, path):
+    r = subprocess.run(['git', '-C', str(ROOT), 'show', f'{commit}:{path}'], capture_output=True, text=True)
+    return r.stdout if r.returncode == 0 else None
+
+
+def rtl_txdp(compute_commit, kv_commit=None, compute_params=None):
+    """bound TXDP per end: the compute master from the compute die's source commit, the KV master from the KV die's.
+    A required-parameter compute master takes the compute GEN's die.v.params.json qfd_d2d_static.TXDP when given
+    (QLB-GEN assignment), else the committed image D2D_TXDP_C."""
+    out, src = {}, {}
+    for end, commit in (('C', compute_commit), ('K', kv_commit or compute_commit)):
+        rtl = git_show(commit, D2D_RTL)
+        if end == 'C' and compute_params and not re.search(
+                r"qfd_d2d_static_core\s*#\([^;]*?\.TXDP\(PR \?", rtl, re.S):
+            v = json.loads(Path(compute_params).read_text()).get('masters', {}).get('qfd_d2d_static', {}).get('TXDP')
+            if v is None:
+                raise SystemExit(f'layer_compile: {compute_params} assigns no qfd_d2d_static TXDP')
+            out[end] = [(int(v) >> (8 * i)) & 0xff for i in range(4)]
+            src[end] = f'{compute_params} qfd_d2d_static.TXDP (die_parameter)'
+            continue
+        out[end], kind = txdp_bound(rtl, git_show_opt(commit, D2D_IMAGE), end)
+        src[end] = f'{commit}:{D2D_RTL if kind == "rtl_literal" else D2D_IMAGE} ({kind})'
+    return out, src
 
 
 def compile_stages(ba):
     return {k: ba[b]['age'] for k, b in STAGE_OF.items()}
 
 
-def txd_of(S):
+def txd_of(S, kv_codec=KV_CODEC):
     raw_c = [S['CS_TXS'] + N59_TX + S['SC_TX'], 1, 1, S['CS_X3S'] + N59_X3 + 1 + S['SC_X3']]
-    raw_k = [S['KS_TXS'] + KV_CODEC + S['SK_TXP'], 2, 1, 1]
+    raw_k = [S['KS_TXS'] + kv_codec + S['SK_TXP'], 2, 1, 1]
     return dict(C=raw_c, K=raw_k), {e: [x + p for x, p in zip(v, PINREG_EXT[e])] for e, v in (('C', raw_c), ('K', raw_k))}
 
 
@@ -220,11 +275,18 @@ def main(argv=None):
     ap.add_argument('--compute-stages', required=True); ap.add_argument('--kv-stages', required=True)
     ap.add_argument('--token-path', default='results/arch/token_path_20261009/qwen_rom.json')
     ap.add_argument('--link-handoff', default='results/arch/qwen_split_compute_1014/res_train_decision_1015/decision.json')
+    ap.add_argument('--compute-params', help='compute die.v.params.json (TXDP as the die elaborates it)')
     ap.add_argument('--compute-commit', default='0a9c93921'); ap.add_argument('--kv-commit', default='f05f9338f')
     ap.add_argument('--txl', type=int, default=6); ap.add_argument('--phy', type=int, default=5)
     ap.add_argument('--n59-land-edges', type=int, default=8,
                     help='qfd_native59_dv_service LAND_EDGES the die binds (dv2f14bn: default 8; see gaps)')
     ap.add_argument('--gz-over', type=int, default=4_000_000, help='write a compiled table gzipped above this many bytes')
+    ap.add_argument('--kv-die-v', help='KVR-DERIVE: the bound KV die netlist (die_bound.v): instance bindings checked')
+    ap.add_argument('--kv-case-die-v', help='KVR-DERIVE: the KV case die.v (+ .params.json): straps / relay clocks checked')
+    ap.add_argument('--kv-static-model', help='HKV-DIE2: CASE/static_model.json (kv_die.py case): recompute the KV static '
+                    'parameters (hub AP_OFS/FR_OFS, ASTK e_after_header, attention fault latencies, seq KVN bundle) on '
+                    '--kv-stages and FAIL a finding where they disagree (tools/qwen_kv_die/kv_static_params.py)')
+    ap.add_argument('--kv-fwd-lanes', help='RUN/fwd_lanes.json: landed lane ages for buses whose netlist age is not a stage count')
     a = ap.parse_args(argv)
     out = Path(a.out); out.mkdir(parents=True, exist_ok=True)
     findings, gaps = [], []
@@ -241,16 +303,18 @@ def main(argv=None):
                                  lanes=[f"{m['bus']}: stages {m['stages']} age {m['age']}" for m in b['members']],
                                  fix=f'land the whole bundle at age {b["age"]} (pad the shorter members) or re-plan the seam'))
     S = compile_stages(ba)
-    raw, txd = txd_of(S)
     kvp = kv_programme_constants(a.kv_commit)
-    hard = rtl_txdp(a.compute_commit)
+    raw, txd = txd_of(S, kv_codec=kvp['KV_CODEC'])
+    hard, hard_src = rtl_txdp(a.compute_commit, a.kv_commit, a.compute_params)
     for e in ('C', 'K'):
         if hard[e] != txd[e]:
             findings.append(dict(id=f'TXDP {e}', severity='FAIL', owner='Q-LINK / die leads',
-                                 what=f'{"qfd" if e == "C" else "qkd"}_d2d_static PR=1 hard-wires TXDP {hard[e]} (ports 0..3); '
-                                      f'the die stages need {txd[e]}',
-                                 fix='make TXDP a parameter of the die master set from this compiler (d2d/txdp.svh), '
-                                     'or re-harden with the compiled vector'))
+                                 what=f'{"qfd" if e == "C" else "qkd"}_d2d_static binds TXDP {hard[e]} (ports 0..3; '
+                                      f'{hard_src[e]}); the die stages need {txd[e]}',
+                                 fix=('commit this pass\'s d2d/d2d_cal_image.svh (D2D_TXDP_' + e + ') as the production image and '
+                                      're-GEN the die' if hard_src[e].endswith('(image_parameter)') else
+                                      'make TXDP a parameter of the die master set from this compiler (d2d/txdp.svh), '
+                                      'or re-harden with the compiled vector')))
     # ------------------------------------------------------------------ windows / extension X
     tp = json.load(open(ROOT / a.token_path))
     _, lay = L.program_profile(a.txl + 2, a.phy + 2, str(ROOT / a.token_path), host_stages=0, st_ofs=40,
@@ -354,6 +418,17 @@ def main(argv=None):
         rep = DRC.check(DRS.load(a.compute_stages if short == 'compute' else a.kv_stages), DRS.load(p))
         write_json(rs / f'relay_check_{short}.json', rep)
         checks[short] = dict(verdict=rep['verdict'], fails=rep['fails'], stage_diffs=rep['stage_diffs'], schedule=p.name)
+    ksp = None
+    if a.kv_static_model:                        # HKV-DIE2 10-19: stage-derived KV static parameters on THIS kv table
+        sys.path.insert(0, str(ROOT / 'tools/qwen_kv_die'))
+        import kv_static_params as KSP
+        ksp = KSP.run(json.load(open(a.kv_static_model)), docs['qwen_kv'],
+                      json.load(open(a.kv_fwd_lanes)) if a.kv_fwd_lanes else None, attn=True,   # HKV-DIE3: + ATTN_CALENDAR
+                      die_v=a.kv_die_v, case_die_v=a.kv_case_die_v)       # KVR-DERIVE: bindings / straps / relay clocks
+        write_json(out / 'kv_static_params.json', ksp)
+        for f in ksp['fails']:
+            findings.append(dict(id=f'KV_STATIC_PARAMS {f["id"]}', severity='FAIL', owner='KV die lead (HKV-DIE)',
+                                 what=f['what'], **({'fix': f['fix']} if f.get('fix') else {})))
     write_json(out / 'findings.json', dict(findings=findings, gaps=gaps, relay_check=checks, bundles=ba))
     # ------------------------------------------------------------------ manifest
     files = sorted(p for p in out.rglob('*') if p.is_file() and p.name != 'manifest.json')
@@ -368,6 +443,14 @@ def main(argv=None):
                            L0=dict(X=X['L0'], start=pc['program']['layers'][0]['start']),
                            head='no D2D traffic (compute-only; terminal RESULT is in the token run segment 1); ME programme = gap'),
                stages=S, txd=txd, kv_programme=kvp, relay_check={k: v['verdict'] for k, v in checks.items()},
+               **({'kv_static_params': dict(status=ksp['status'], table_digest=ksp['table_digest'],
+                                            ahub_ages=ksp['params'].get('ahub_ages'), seq_kvn=ksp['params'].get('seq_kvn'),
+                                            attn_fault_lane_max=(ksp['params'].get('attn_fault') or {}).get('lane_latency_max'),
+                                            # KVR-DERIVE 10-19: the attention-path static ages THIS table needs vs the
+                                            # closed tiles' hard ages the die binds (any difference is a FAIL finding)
+                                            static_schedule={k: (ksp['params'].get('static_schedule') or {}).get(k)
+                                                             for k in ('schedule', 'tile_ages')})}
+                  if ksp else {}),
                findings=[f['id'] for f in findings], gaps=len(gaps),
                files={str(p.relative_to(out)): sha(p) for p in files})
     write_json(out / 'manifest.json', man)

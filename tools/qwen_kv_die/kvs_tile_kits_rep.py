@@ -35,6 +35,9 @@ sys.path.insert(0, str(HERE))
 
 ENV = dict(OT_KV_STATIC_DIE='1', OT_KV_HROOT='1', OT_KV_FANFOLD='1', OT_KV_TILE_KITS='1')
 OUT = 'results/arch/qwen_kv_kits_b_1018'
+# KV-DOMSPLIT 10-19 (OT_KV_DOMSPLIT=1): the split tiles' measured port records (kv_static_die DOMSPLIT; single-domain words)
+if os.environ.get('OT_KV_DOMSPLIT', '0') == '1':
+    OUT = 'results/arch/qwen_kv_domsplit_1019/ports'
 SRAM = 'physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2'
 TAG = 'k1'
 LAT = 2.16
@@ -398,7 +401,7 @@ MUTANTS['grp_h'] = {k: (d, ['qkd_kvs_grp_h' if c == 'qkd_kvs_grp' else c for c i
 MUTANTS['pc_h'] = dict(MUTANTS['pc'])
 MUTANTS['pc_h'][4] = ('return head never faults on an empty transfer', ['qkd_kvs_pc_h'],
                       'qkd_embedding_static_return_head #(.MUT(0)) u_embr', 'qkd_embedding_static_return_head #(.MUT(1)) u_embr')
-WIT = 'results/rtl/qwen_kv_die/kvs_kits_1018'      # KV-INTEG2: one witness dir for every kvs kit
+WIT = os.environ.get('KVS_KIT_RES', 'results/rtl/qwen_kv_die/kvs_kits_1018')      # KV-INTEG2: one witness dir for every kvs kit
 
 
 def benches(kind):

@@ -1,0 +1,3 @@
+col m3 gold1: RESULT PASS jobs 40/40 words 10518 frames 1319 done 40 errors 0 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 0: through beats 3503, ingress words 10638, drain CTL 3503, egress words 10518, errors 0
+col m3 gold2_thru: RESULT FAIL jobs 0/40 words 136 frames 2 done 0 errors 137 | WRAP_SUMMARY unit 1 thru 1 mir 0 lmap 0: through beats 175121, ingress words 140, drain CTL 24998, egress words 136, errors 199730
+DSDV_BK_COL FAIL mut=3

@@ -206,7 +206,11 @@ module ot_hgi_coll_uop_pipe(input wire clk,input wire [1535:0] uop_d1,output reg
  always @(posedge clk)begin uop_d2<=uop_d1;uop_d3<=uop_d2;end
 endmodule
 
-module ot_hgi_coll_issuer_m(
+// COLLPIN 10-18 (coordinator 0gd): PIN_REGS=1 (default; d4g) registers every data/control input pin (cfg, start,
+// start_pc) in the leaf: issue path +1 edge (lockstep SH 4 -> 5). The exported raw busy (fj programme-target
+// occupancy + program_active) is busy | start_q, so the programme target sees busy on the SAME edge as before the
+// pin stage (no new launch window); busy_d1..d3 / done / uop stream take the core busy, i.e. everything +1.
+module ot_hgi_coll_issuer_m #(parameter integer PIN_REGS=1)(
  input wire clk_control,input wire rst_n,
  input wire [36:0] cfg,input wire start,input wire [5:0] start_pc,
  output wire busy,done,fault,uop_v,          // raw (programme-target feedback, host_v4 edges)
@@ -222,8 +226,32 @@ module ot_hgi_coll_issuer_m(
  output wire [87:0] tap_steps                // {lk8, rgx16, del16, iaddr16, vm16, idx16}
 );
  wire [1535:0] raw,uop;wire [31:0] iteration;
- ot_hgi_coll_static_issuer_v6 u_issuer(.clk_control(clk_control),.clk_mem({3{clk_control}}),.rst_n(rst_n),
-  .cfg(cfg),.start(start),.start_pc(start_pc),.busy(busy),.done(done),.fault(fault),
+ // COLL-ISS 10-18 (die standard: regional reset regs; gate rst_n 492 loads): rst_n loads ONE flop (async assert,
+ // synchronous release one edge later, as the ctl_v5 leaf V7); rst_l resets the leaf.
+ reg rst_l;
+ always @(posedge clk_control or negedge rst_n) if(!rst_n)rst_l<=1'b0;else rst_l<=1'b1;
+ wire [36:0] cfg_i;wire start_i;wire [5:0] start_pc_i;wire busy_c;
+`ifdef OT_COLL_ISS_MUT_NOPIN
+ localparam integer PR=0;                    // mutant: pin stage removed (bench expects the +1 issue edge)
+`else
+ localparam integer PR=PIN_REGS;
+`endif
+ generate if(PR!=0)begin:g_pin
+  reg [35:0] cfg_q;reg cfgv_q,start_q;reg [5:0] start_pc_q;
+  always @(posedge clk_control)begin cfg_q<=cfg[35:0];start_pc_q<=start_pc;end
+  always @(posedge clk_control or negedge rst_l) if(!rst_l)begin cfgv_q<=1'b0;start_q<=1'b0;end
+   else begin cfgv_q<=cfg[36];start_q<=start;end
+  assign cfg_i={cfgv_q,cfg_q};assign start_i=start_q;assign start_pc_i=start_pc_q;
+`ifdef OT_COLL_ISS_MUT_NOHOLD
+  assign busy=busy_c;                       // mutant: no occupancy cover on the pin-stage edge
+`else
+  assign busy=busy_c|start_q;
+`endif
+ end else begin:g_nopin
+  assign cfg_i=cfg;assign start_i=start;assign start_pc_i=start_pc;assign busy=busy_c;
+ end endgenerate
+ ot_hgi_coll_static_issuer_v6 u_issuer(.clk_control(clk_control),.clk_mem({3{clk_control}}),.rst_n(rst_l),
+  .cfg(cfg_i),.start(start_i),.start_pc(start_pc_i),.busy(busy_c),.done(done),.fault(fault),
   .uop_v(uop_v),.uop(raw),.iteration(iteration),.uop_pc(uop_pc));
 `ifdef OT_COLL_V5_MUT_NOMASK
  assign uop=raw;
@@ -234,10 +262,10 @@ module ot_hgi_coll_issuer_m(
  assign tap_steps={uop[1407+:8],uop[1318+:16],uop[1350+:16],uop[1366+:16],uop[1302+:16],uop[1334+:16]};
  reg busy_d1,done_d1,done_d2,start_d1;
  always @(posedge clk_control)uop_d1<=uop;
- always @(posedge clk_control or negedge rst_n)
-  if(!rst_n)begin busy_d1<=0;busy_d2<=0;busy_d3<=0;done_d1<=0;done_d2<=0;done_d3<=0;start_d1<=0;start_d2<=0;start_d3<=0;end
-  else begin busy_d1<=busy;busy_d2<=busy_d1;busy_d3<=busy_d2;done_d1<=done;done_d2<=done_d1;done_d3<=done_d2;
-   start_d1<=start;start_d2<=start_d1;start_d3<=start_d2;end
+ always @(posedge clk_control or negedge rst_l)
+  if(!rst_l)begin busy_d1<=0;busy_d2<=0;busy_d3<=0;done_d1<=0;done_d2<=0;done_d3<=0;start_d1<=0;start_d2<=0;start_d3<=0;end
+  else begin busy_d1<=busy_c;busy_d2<=busy_d1;busy_d3<=busy_d2;done_d1<=done;done_d2<=done_d1;done_d3<=done_d2;
+   start_d1<=start_i;start_d2<=start_d1;start_d3<=start_d2;end
 endmodule
 
 // ---------------------------------------------------------------------------------------------------------------

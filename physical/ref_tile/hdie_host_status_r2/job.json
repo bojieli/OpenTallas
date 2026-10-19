@@ -1,0 +1,172 @@
+{
+ "name": "hdie_host_status_r2-r2-COMMIT",
+ "block": "ot_hbm_status_join",
+ "ref_tile": true,
+ "owner": "Claude:HBMA-HOST2",
+ "purpose": "HBM die d4f host_status successor (HBMA-HOST2 2026-10-17, coordinator 0dc+ (d)): ot_hbm_status_join RRELAY=1 (3-region ot_rst_relay; r1 rst_n drove ~340 flops), outline 23.76 sq (r1 21.6 sq failed FLOORPLAN_MARGIN util 60.4%). Lockstep-exact vs r1 with a relayed reset (+3 edges release, configuration only).",
+ "threads": 8,
+ "peak_ram_gb": 16,
+ "source": {
+  "branch": "claude/hbma-host2-1017",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
+   "rtl/hbm_accel/host_static_20261015/ot_hbm_host_static_ingress.sv",
+   "rtl/hbm_accel/host_static_20261015/ot_hbm_static_cfg_collar.sv",
+   "rtl/hbm_accel/host_static_20261015/ot_hbm_status_join.sv",
+   "rtl/hbm_accel/host_static_20261015/run_cp2_one.sh",
+   "rtl/hbm_accel/host_static_20261015/run_status_join_relay.sh",
+   "rtl/hbm_accel/host_static_20261015/tb_hbm_all_target_status.sv",
+   "rtl/hbm_accel/host_static_20261015/tb_hbm_host_packet_static.sv",
+   "rtl/hbm_accel/host_static_20261015/tb_hbm_host_phy_adapt.sv",
+   "rtl/hbm_accel/host_static_20261015/tb_hbm_static_cfg_collar.sv",
+   "rtl/hbm_accel/host_static_20261015/tb_hbm_status_join_relay.sv",
+   "rtl/hbm_accel/host_static_20261015/tb_static_cmd_target.sv",
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/model/hbm_pc40_native_sim_20261003/ot_sram_1r1w_128x256_m1_r2c2_sim.sv"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hbm_status_join #(.RRELAY(1)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/host_static_20261015/ot_hbm_status_join.sv rtl/lib/ot_rst_relay.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "relay_lockstep",
+    "cmd": "bash rtl/hbm_accel/host_static_20261015/run_status_join_relay.sh {RUN}/bench/relay_lockstep 0",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "STATUS_JOIN_RELAY_PASS"
+   },
+   {
+    "name": "relay_mut_norelay",
+    "cmd": "bash rtl/hbm_accel/host_static_20261015/run_status_join_relay.sh {RUN}/bench/relay_mut_norelay 3",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "STATUS_JOIN_RELAY_PASS",
+    "fail_regex": "STATUS_JOIN_RELAY_FAIL mism=[1-9]",
+    "note": "DUT without its reset relay (raw rst_n)"
+   },
+   {
+    "name": "status_die_shape",
+    "cmd": "bash rtl/hbm_accel/host_static_20261015/run_cp2_one.sh {RUN}/bench/status_die_shape status",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "ALL_TARGET_STATUS PASS targets=67 faults=105"
+   },
+   {
+    "name": "status_mut1",
+    "cmd": "bash rtl/hbm_accel/host_static_20261015/run_cp2_one.sh {RUN}/bench/status_mut1 status_mut1",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "ALL_TARGET_STATUS PASS",
+    "fail_regex": "CP2_ONE status_mut1: FATAL",
+    "note": "participation ignored"
+   },
+   {
+    "name": "status_mut2",
+    "cmd": "bash rtl/hbm_accel/host_static_20261015/run_cp2_one.sh {RUN}/bench/status_mut2 status_mut2",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "ALL_TARGET_STATUS PASS",
+    "fail_regex": "CP2_ONE status_mut2: FATAL",
+    "note": "no readiness guard"
+   },
+   {
+    "name": "join_in_ingress",
+    "cmd": "bash rtl/hbm_accel/host_static_20261015/run_cp2_one.sh {RUN}/bench/join_in_ingress collar",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "PASS collar\\+join\\+ingress checks="
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hdie_host_status_r2/signoff_ffrepair.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hdie_host_status_r2/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 16
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hdie_host_status_r2 --out {RUN}/record/views/ot_hbm_status_join  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/hdie_host_status_r2/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/hdie_host_status_r2/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/hdie_host_status_r2/hdie_host_status_r2-r2-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "HBMA-HOST2 10-17: RRELAY=1 regional reset relay (coordinator 0dc+ (d))"
+}

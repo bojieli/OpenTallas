@@ -1,0 +1,55 @@
+Endpoint: rly_dvw_dd_wo_25 (rising edge-triggered flip-flop clocked by stream)
+Path Group: stream
+Path Type: min
+
+ Delay   Time   Description
+-------------------------------------------------------
+   0.0    0.0   clock stream (rise edge)
+   0.0    0.0   clock source latency
+   0.0    0.0 ^ rly_dvw_dd_wo_0/ck[0] (qfd_rlyh0_548_EN_95x60)
+  18.7   18.7 v rly_dvw_dd_wo_0/ck_o[0] (qfd_rlyh0_548_EN_95x60)
+  18.7   37.4 ^ rly_dvw_dd_wo_1/ck_o[0] (qfd_rlyh_548_SN_95x60)
+  18.7   56.1 v rly_dvw_dd_wo_2/ck_o[0] (qfd_rlyh_548_SN_95x60)
+  18.7   74.8 ^ rly_dvw_dd_wo_3/ck_o[0] (qfd_rlyh_548_SN_95x60)
+  18.7   93.5 v rly_dvw_dd_wo_4/ck_o[0] (qfd_rlyh_548_SN_95x60)
+  18.7  112.2 ^ rly_dvw_dd_wo_5/ck_o[0] (qfd_rlyh_548_SN_95x60)
+  18.7  130.9 v rly_dvw_dd_wo_6/ck_o[0] (qfd_rlyh_548_SN_95x60)
+  18.7  149.6 ^ rly_dvw_dd_wo_7/ck_o[0] (qfd_rlyh_548_SN_95x60)
+  18.7  168.3 v rly_dvw_dd_wo_8/ck_o[0] (qfd_rlyh_548_SN_95x60)
+  18.7  187.0 ^ rly_dvw_dd_wo_9/ck_o[0] (qfd_rlyh_548_SN_95x60)
+  18.7  205.7 v rly_dvw_dd_wo_10/ck_o[0] (qfd_rlyh_548_SN_95x60)
+  18.7  224.4 ^ rly_dvw_dd_wo_11/ck_o[0] (qfd_rlyh_548_SN_95x60)
+  18.7  243.1 v rly_dvw_dd_wo_12/ck_o[0] (qfd_rlyh_548_SN_95x60)
+  18.7  261.8 ^ rly_dvw_dd_wo_13/ck_o[0] (qfd_rlyh_548_SN_95x60)
+  18.7  280.5 v rly_dvw_dd_wo_14/ck_o[0] (qfd_rlyh_548_SN_95x60)
+  18.7  299.3 ^ rly_dvw_dd_wo_15/ck_o[0] (qfd_rlyh_548_SN_95x60)
+  18.7  318.0 v rly_dvw_dd_wo_16/ck_o[0] (qfd_rlyh_548_SN_95x60)
+  18.7  336.7 ^ rly_dvw_dd_wo_17/ck_o[0] (qfd_rlyh_548_SN_95x60)
+  18.7  355.4 v rly_dvw_dd_wo_18/ck_o[0] (qfd_rlyh_548_SN_95x60)
+  18.7  374.1 ^ rly_dvw_dd_wo_19/ck_o[0] (qfd_rlyh_548_SN_95x60)
+  18.7  392.8 v rly_dvw_dd_wo_20/ck_o[0] (qfd_rlyh_548_SN_95x60)
+  18.7  411.5 ^ rly_dvw_dd_wo_21/ck_o[0] (qfd_rlyh_548_SN_95x60)
+  18.7  430.2 v rly_dvw_dd_wo_22/ck_o[0] (qfd_rlyh_548_SN_95x60)
+  18.7  448.9 ^ rly_dvw_dd_wo_23/ck_o[0] (qfd_rlyh_548_SW_95x60)
+   0.0  448.9 ^ rly_dvw_dd_wo_24/ckf[0] (qfd_rlyh_548_EW_95x60)
+  48.0  496.8 ^ rly_dvw_dd_wo_24/b[390] (qfd_rlyh_548_EW_95x60)
+  42.9  539.8 ^ wire21973/Y (BUFx6f_ASAP7_75t_R)
+  46.5  586.3 ^ wire21972/Y (BUFx8_ASAP7_75t_R)
+  35.6  621.9 ^ rly_dvw_dd_wo_25/a[390] (qfd_landh_548_EN_95x60)
+        621.9   data arrival time
+
+8333.3 8333.3   clock stream (rise edge)
+   0.0 8333.3   clock source latency
+   0.0 8333.3 ^ rly_dvw_dd_wo_25/ck[0] (qfd_landh_548_EN_95x60)
+  25.0 8358.3   inter-clock uncertainty
+   0.0 8358.3   clock reconvergence pessimism
+  11.4 8369.7   library hold time
+       8369.7   data required time
+-------------------------------------------------------
+       8369.7   data required time
+       -621.9   data arrival time
+-------------------------------------------------------
+       -7747.9   slack (VIOLATED)
+Endpoint: rly_dvw_dd_wo_25 (rising edge-triggered flip-flop clocked by stream)
+Path Group: stream
+Path Type: min

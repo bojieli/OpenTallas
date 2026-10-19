@@ -1,0 +1,18 @@
+L3 {"edges_dropped": 1048, "remastered": 23, "edges_added": 2408, "instances_added": 80, "instances_dropped": 18, "kshare_vm_moved": 80} exposed 50 bits 1492 unlisted 0
+{"R1_cross_quadrant_edges": [], "edges_new": 1088, "edges_removed": 1012, "instances_new_or_renamed": 60, "instances_removed": 24, "bank_edges_per_quadrant": {"SW": 16, "SE": 16, "NW": 16, "NE": 16}}
+{"instances": [1520, 1540], "edges": [10634, 11131], "host": [71, 77, 109, 117], "deferred": 0, "cross_quadrant": 0, "undriven_ports": 18}
+{"before": {"instances": 1540, "edges": 11131, "edge_bits": 1122981}, "after": {"instances": 1161, "edges": 11071, "edge_bits": 1107977}, "stree": {"leaves": 4, "root": 1, "stations": 168}, "prog_busy": 3}
+L4 {"edges_dropped": 242, "instances_dropped": 5, "instances_added": 21, "ctl_edges_kept": 54, "edges_added": 1028, "remastered": 2} exposed 0 bits 0 unlisted 0
+L5 {"remastered": 28, "bus_edges_split": 136} exposed 0 bits 0 unlisted 0
+L5 {"edges_dropped": 44, "instances_dropped": 4, "instances_added": 2, "edges_kept": 18, "edges_added": 22, "gap_session_moved": 1} exposed 0 bits 0 unlisted 0
+L5b {"edges_dropped": 3, "instances_added": 3, "edges_added": 99, "fr_SE_N": 10, "fr_NW_N": 10, "fr_NE_N": 11, "vm_tile_slots": 2} exposed 0 bits 0 unlisted 0
+L6 {"remastered": 4, "instances_added": 20, "resourced_rq": 32, "resourced_rr": 32, "resourced_kq": 32, "edges_added": 348, "edges_ring_b": 8, "edges_collq": 308, "host_faults_added": 20} exposed 0 bits 0 unlisted 0
+LAYER OK l3_vm_hc_coll.py
+LAYER OK l1_host_xload_stack.py
+LAYER OK l2_su_sfu.py
+LAYER OK l4_idx_quad.py
+LAYER OK l5_rebind.py
+LAYER OK l5_host_ep.py
+LAYER OK l5b_cij4.py
+LAYER OK l6_collq.py
+PRE_RELAY instances 1198 edges 12351

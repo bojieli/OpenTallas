@@ -152,8 +152,10 @@ endmodule
 // ot_hbm_idx_selector_static_core. Latency: +1 edge on every input, +1 edge on every output; the IDX
 // calendar compiler (tools/hbm_idx_static_calendar.py, PIN table) schedules them.
 // Pin flops have no reset (as physical/common_flow/ot_pin_regs.tcl); the core is reset.
-// One data clock for every pin flop: clk_ctl (the die's typed control clock, E face); the core's clk_q[q]
-// quadrant roots and clk_mem[] SRAM entries are same-PLL phase-0 roots (related_same_frequency STA).
+// ONE CLOCK ROOT (IDX-SMALL 2026-10-18, as idx_q 1a7a712ce): clk_ctl clocks every pin flop, every core flop
+// (the four quadrant blocks) and all 12 SRAMs. clk_q[3:0] / clk_mem[11:0] stay as ports (parents unchanged) and are
+// unloaded: the earlier 5 CTS roots + 12 SRAM entries made every core<->SRAM / pin<->quadrant transfer a cross-root
+// path (hidx_q_pr: hold repair -56.6 ps on cross-entry transfers). Same PLL, phase 0: function and latency unchanged.
 module ot_hbm_idx_selector_static #(parameter integer MUT=0)(
  input wire clk_ctl,input wire [3:0] clk_q,input wire [11:0] clk_mem,
  input wire rst_n,input wire [3:0] op,input wire [1:0] pass,
@@ -178,7 +180,7 @@ module ot_hbm_idx_selector_static #(parameter integer MUT=0)(
   out_v<=c_out_v;out_line<=c_out_line;threshold_observe<=c_thr;
   selected_v<=c_sel_v;selected_line<=c_sel_line;selected_observe<=c_obs;fault<=c_fault;
  end
- ot_hbm_idx_selector_static_core #(.MUT(MUT)) core(.clk_ctl(clk_ctl),.clk_q(clk_q),.clk_mem(clk_mem),.rst_n(rst_core_n),
+ ot_hbm_idx_selector_static_core #(.MUT(MUT)) core(.clk_ctl(clk_ctl),.clk_q({4{clk_ctl}}),.clk_mem({12{clk_ctl}}),.rst_n(rst_core_n),
   .op(op_r),.pass(pass_r),.addr(addr_r),.k(k_r),.in_line(in_r),.out_v(c_out_v),.out_line(c_out_line),
   .threshold_observe(c_thr),.selected_v(c_sel_v),.selected_line(c_sel_line),.selected_observe(c_obs),.fault(c_fault));
 endmodule

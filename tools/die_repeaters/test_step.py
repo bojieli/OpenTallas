@@ -58,6 +58,32 @@ def test_check(tmp_path):
     assert not step.check(tmp_path / 'missing.json')[0]
 
 
+def test_check_warning_does_not_fail(tmp_path):
+    p = tmp_path / 'r.json'
+    p.write_text(json.dumps(dict(schema='opentallas.die_repeaters.v1', verdict='PASS', violations=0, repeaters=3,
+                                 spread_max_disp_um=322.0, warnings=['repeater displaced 322.0 um > max_wire/2 = 80.0 um'])))
+    ok, s = step.check(p)
+    assert ok and 'WARN(1)' in s and 'max_disp=322.0' in s
+    p.write_text(json.dumps(dict(schema='opentallas.die_repeaters.v1', verdict='PASS', violations=0, repeaters=3,
+                                 spread_max_disp_um=51.15, warnings=[])))
+    ok, s = step.check(p)
+    assert ok and 'WARN' not in s
+
+
+@pytest.mark.skipif(not shutil.which('tclsh'), reason='no tclsh')
+def test_disp_warning_threshold(tmp_path):
+    """the displacement rule alone (pure Tcl): warn only above max_wire/2; p4i 322 um warns, p4h/p4j 51 um does not"""
+    tcl = Path(__file__).with_name('die_repeaters.tcl').read_text()
+    body = tcl[tcl.index('proc ot_die_rep_disp_warning'):]
+    body = body[:body.index('\nproc ', 1)]
+    f = tmp_path / 't.tcl'
+    f.write_text(body + '\nforeach {d m} {322.0 160 51.15 160 80.0 160 80.01 160 500 0} '
+                 '{ puts "[expr {[ot_die_rep_disp_warning $d $m] ne {}}]" }\n')
+    r = subprocess.run(['tclsh', str(f)], capture_output=True, text=True)
+    assert r.returncode == 0, r.stderr
+    assert r.stdout.split() == ['1', '0', '0', '1', '0']
+
+
 DESIGN_V = '''module top(input clk, input d, output q);
   wire a, b, c;
   DFFHQNx1_ASAP7_75t_R r0 (.CLK(clk), .D(d), .QN(a));
@@ -187,5 +213,25 @@ def test_spread_no_stacking(tmp_path):
     assert int(line[5]) >= rep['repeaters']
     print('\n'.join(l for l in r.stdout.splitlines() if l.startswith('OT_')))
     assert rep['post_slew_violators'] == 0
+    assert rep['warnings'] == [] and rep['spread_max_disp_um'] <= rep['max_wire_um'] / 2
     pg = json.loads((w / 'post_grt.json').read_text())
     assert 'rebuffer_rounds' in pg and pg['pre_existing_changed'] == 0 and pg['slew_violators'] == 0
+
+
+# Q-DIE9 (f8e1095d0): a bus-bit clock net ('n_clk_r0[0]') skipped by clock pin must stay untouched.  The escaped STA
+# lookup missed such names, so repair_design buffered 44 dv2f11 clock nets; the fix also marks the odb net do-not-touch.
+BUSCK_V = DESIGN_V.replace('module top(input clk,', 'module top(input [1:0] n_clk_r0,').replace(
+    '.CLK(clk)', '.CLK(n_clk_r0[0])')
+
+
+@pytest.mark.skipif(os.environ.get('OT_SKIP_DOCKER') == '1' or not _docker_ok(), reason='no docker / ORFS image')
+def test_bus_bit_clock_net_untouched(tmp_path):
+    chk = CHECK_TCL.replace('findNet clk]', 'findNet {n_clk_r0[0]}]')
+    r, w = _run(tmp_path, False, tag='busck', design_v=BUSCK_V, check=False, extra=chk)
+    assert r.returncode == 0, r.stdout[-3000:] + r.stderr[-2000:]
+    rep = json.loads((w / 'die_repeaters.json').read_text())
+    assert rep['verdict'] == 'PASS' and rep['skip_nets_modified'] == 0 and rep['repeaters'] >= 10
+    assert 'n_clk_r0[0]' in (w / 'die_repeaters.skip_nets.txt').read_text().split()
+    assert 'OT_CLKNET 3' in r.stdout, [l for l in r.stdout.splitlines() if l.startswith('OT_')]
+    assert not any(l.split()[1].startswith('n_clk') or 'clk' in l.split()[1] for l in r.stdout.splitlines()
+                   if l.startswith('OT_CELL') and l.split()[2].startswith('BUF')), r.stdout[-2000:]

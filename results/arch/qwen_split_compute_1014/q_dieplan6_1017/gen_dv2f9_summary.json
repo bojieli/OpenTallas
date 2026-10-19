@@ -1,0 +1,91 @@
+{
+ "plan": "dv2f9-qdieplan6",
+ "src_commit": "441bcbd7735f8a676c0fce831012ab51f8fb21cd",
+ "die": {
+  "w": 30693.576,
+  "h": 24029.624,
+  "mm2": 737.555,
+  "budget_mm2": 858,
+  "margin_mm2": 116.347
+ },
+ "relays": {
+  "relays": 494,
+  "relay_flop_bits": 70809,
+  "relay_area_mm2": 1.082,
+  "max_pin_to_pin_um": 394.7,
+  "over_reach": [],
+  "unrepaired": []
+ },
+ "worst_cut": 0.347,
+ "cuts_top": [
+  [
+   "x",
+   16400.0,
+   [
+    11960.0,
+    12220.0
+   ],
+   2842.0,
+   0.347
+  ],
+  [
+   "y",
+   18650.0,
+   [
+    5460.0,
+    5720.0
+   ],
+   2580.0,
+   0.315
+  ],
+  [
+   "y",
+   18600.0,
+   [
+    3120.0,
+    3380.0
+   ],
+   2580.0,
+   0.315
+  ],
+  [
+   "y",
+   18700.0,
+   [
+    24700.0,
+    24960.0
+   ],
+   2579.0,
+   0.315
+  ],
+  [
+   "y",
+   5500.0,
+   [
+    5460.0,
+    5720.0
+   ],
+   2578.0,
+   0.315
+  ],
+  [
+   "y",
+   5500.0,
+   [
+    3120.0,
+    3380.0
+   ],
+   2578.0,
+   0.315
+  ]
+ ],
+ "pin_align": "OT_PIN_ALIGN PASS bundles 1134 bits 279985: FAIL 0 (jog spills past the channel) WARN 325 (jog > 20 um: 271 bundles / 52091 bits, max 221.9 um; order not preserved: 13 bundles; u-turn 54); bits without pin 0",
+ "pin_bit_reach": {
+  "limit_um": 405.0,
+  "over": 0,
+  "worst": [],
+  "relay_skip": false
+ },
+ "relay_stages_digest": "sha256:1c4fbc9f5c6d2b9cb3f057b80f2e77ae196857ddc1e13c6f0029a588e2dc7645",
+ "die_v_sha256": "0d5f60d4acc8c1997773fb2a2b37308baa3abb6e36c10d2046571eff270b36fb"
+}

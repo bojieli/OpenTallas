@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qfd_native59_dv_service",
+ "enable": false,
+ "reason": "RTL is flop-first at every pin (Q-N59 dd73225e0: every input lands in a p_* pin register, every output is a flop; the die calendar already counts those +1 edges); OT_PIN_REGS would add a second edge and break the benched edge contract"
+}

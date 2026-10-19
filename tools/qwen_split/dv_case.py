@@ -366,6 +366,9 @@ def apply_dv(v, m):
     if not 5 <= slice_obs <= 9:
         raise ValueError(f'OT_SPLIT_DV_SLICE_OBS_TOP must be 5..9, got {slice_obs}')
     slice_win = float(os.environ.get('OT_SPLIT_DV_PIN_WINDOW_UM', '0') or 0)
+    # the same windows on the synthetic cluster abstract (coordinator 10-18: every placeholder abstract; its OBS
+    # stays M1-M<OT_SPLIT_DV_OBS_TOP>: the two-level cluster contract routes signals M2-M7 + PG M8 inside)
+    M[CDV].pin_window = slice_win
     if slice_win:
         m.setdefault('dv_slice_abstract', {}).update(obs_top=slice_obs, pin_window_um=slice_win, window_layers=f'M4-M{slice_obs}',
                                                      rule='hardened slice keeps OBS within M1-M%d and the face windows free on M4-M%d' % (slice_obs, slice_obs))

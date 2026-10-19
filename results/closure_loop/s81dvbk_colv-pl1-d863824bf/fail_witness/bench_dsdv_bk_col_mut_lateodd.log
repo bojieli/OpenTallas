@@ -1,0 +1,5 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job s81dvbk_colv-pl1-d863824bf bench bench_dsdv_bk_col_mut_lateodd host ot-epyc4 run /srv/opentallas-scratch2/claude/closure-loop/s81dvbk_colv-pl1-d863824bf log cl/bench_dsdv_bk_col_mut_lateodd.a1b1.log captured 2026-10-18T07:18:16-07:00
+# fail_regex '^DSDV_BK_COL FAIL mut=3$'
+col m3 gold5_odd: RESULT PASS jobs 40/40 words 12530 frames 1845 done 40 errors 0 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 0: through beats 4758, ingress words 12650, drain CTL 4759, egress words 12530, errors 3201
+DSDV_BK_COL FAIL mut=3

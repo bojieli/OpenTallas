@@ -1,0 +1,71 @@
+{
+ "schema": "opentallas.hier_contract.child_lint.v1",
+ "lef": "/srv/opentallas-scratch2/claude/closure-loop/hdie_svc_stack_fault-hkb-sf-5f7d151bc/record/views/ot_hbm_svc_stack_fault/provenance/ot_hbm_svc_stack_fault.candidate.lef",
+ "verdict": "PASS",
+ "fails": [],
+ "warns": [],
+ "summary": "ot_hbm_svc_stack_fault 21.6 x 21.6: PG M5 VDD 4 stripes (75% spread, 100% cov) / VSS 4 stripes (75% spread, 100% cov); strap M6; face pins 157 blocked-above 0 blocked-same 0; clock hbm_clk insertion 88 ps; clock stream_clk insertion 70 ps; pockets M5 0 (closed)",
+ "info": {
+  "cell": "ot_hbm_svc_stack_fault",
+  "W": 21.6,
+  "H": 21.6,
+  "pg": {
+   "nets": {
+    "VDD": {
+     "top_layer": "M5",
+     "stripes": 4,
+     "dir": "V",
+     "spread": 0.75,
+     "coverage": 1.0,
+     "shapes_on_top": 4
+    },
+    "VSS": {
+     "top_layer": "M5",
+     "stripes": 4,
+     "dir": "V",
+     "spread": 0.75,
+     "coverage": 1.0,
+     "shapes_on_top": 4
+    }
+   },
+   "top_layer": "M5",
+   "ok": true,
+   "why": []
+  },
+  "pg_layer": "M5",
+  "strap_layer": "M6",
+  "cap": null,
+  "face": {
+   "face_pins": 157,
+   "blocked_above": 0,
+   "covered_below": 0,
+   "examples": [],
+   "blocked_same": 0,
+   "same_examples": [],
+   "band_same": 0,
+   "band_examples": []
+  },
+  "clock_insertion": {
+   "hbm_clk": {
+    "max_ps": 88.28,
+    "min_ps": 73.77
+   },
+   "stream_clk": {
+    "max_ps": 69.63,
+    "min_ps": 58.91
+   }
+  },
+  "pockets": {
+   "layer": "M5",
+   "d_um": 1.536,
+   "marker": {
+    "layer": "M5",
+    "d_um": 1.536,
+    "added": 48
+   },
+   "count": 0,
+   "area_um2": 0,
+   "examples": []
+  }
+ }
+}

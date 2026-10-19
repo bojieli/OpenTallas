@@ -39,36 +39,54 @@
   "macro_halo_um": 5.4
  },
  "job": {
-  "owner": "Claude:hbmdie-lead",
-  "branch": "claude/hbm-native-die-1013",
-  "tag": "v1",
+  "owner": "Claude:HBM-NATIVE5/RLY4",
+  "branch": "claude/hn5-rly4-1018",
+  "tag": "rr1",
   "purpose": "HBM R25GQ die relay family: hbfd_rly_136_WE, one register stage of width class 136 b (in W / out E, ck + rs S), 21.6 x 21.6 um, M5 cap, pins at 2 tracks on one layer a face, flops at the pins, minimum output delay at the pin (outhold); replaces the generated per-instance relay station placeholders of its class (tools/hbm_die_rly_kits.py --map)",
   "benches": [
    {
     "name": "exact_words",
-    "cmd": "bash rtl/hbm_accel/die_glue/test/bench_rly.sh pass hbfd_rly_136_WE 136 {RUN}/bench_p",
+    "cmd": "bash rtl/hbm_accel/die_glue/test/bench_rly.sh pass hbfd_rly_136_WE 136 {RUN}/bench_p 3",
     "expect": "pass",
-    "pass_regex": "RLY_BENCH PASS 0 errors in 20000 words",
+    "pass_regex": "RLY_BENCH PASS 0 errors in 20000 words .* release_edges=3 window_words=[1-9]",
+    "min_count_regex": "RLY_BENCH PASS 0 errors in (\\d+) words",
     "threads": 2,
     "peak_ram_gb": 4,
     "needs": [
      "verilator"
-    ]
+    ],
+    "pass_witness": "results/rtl/hbm_rly_rly4_1018/WE_rr_pass.log"
    },
    {
     "name": "neg_bit0_mutant",
-    "cmd": "bash rtl/hbm_accel/die_glue/test/bench_rly.sh mut hbfd_rly_136_WE 136 {RUN}/bench_m",
+    "cmd": "bash rtl/hbm_accel/die_glue/test/bench_rly.sh mut hbfd_rly_136_WE 136 {RUN}/bench_m 3",
     "expect": "fail",
-    "fail_regex": "RLY_BENCH FAIL",
+    "fail_regex": "RLY_BENCH FAIL [1-9]",
     "threads": 2,
     "peak_ram_gb": 4,
     "needs": [
      "verilator"
-    ]
+    ],
+    "fail_witness": "results/rtl/hbm_rly_rly4_1018/WE_rr_mut.log"
+   },
+   {
+    "name": "neg_reset_relay_bypass_mutant",
+    "cmd": "bash rtl/hbm_accel/die_glue/test/bench_rly.sh rrmut hbfd_rly_136_WE 136 {RUN}/bench_r 3",
+    "expect": "fail",
+    "fail_regex": "RLY_BENCH FAIL [1-9]\\d* errors in 20000 words .* release_edges=3",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/hbm_rly_rly4_1018/WE_rr_rrmut.log"
    }
   ],
   "views_to": "physical/ref_tile/hbfd_rly_136_we/views",
-  "record_to": "results/rtl/ref_tile/hbfd_rly_136_we"
+  "record_to": "results/rtl/ref_tile/hbfd_rly_136_we",
+  "extra_paths": [
+   "rtl/hbm_accel/die_glue/test/bench_rly.sh"
+  ]
  },
  "children": [],
  "inter": [],
@@ -77,5 +95,24 @@
   "cols": 4,
   "allow_none": true
  },
- "inhold": true
+ "inhold": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "structural_change": "HBM-NATIVE5/RLY4 rr1 (2026-10-18): (1) output stage re-kit: closed hbfd_rly_136_we-v1-2d0c1a8ac (kit predates the recipe-2 pin defaults: implicit HB4xp67 pad on every pin) fails native launch 221.6 ps > 220 on 3 o pins (worst o[16]; owners HBM native audit), still FAIL relative to every GEN1 neighbour view (221.6-241.1 ps); kit re-generated with hold_pad HB2xp67, pin_reg_split (one launch flop per o pin FIRM at the o face), OT_KEEP_PIN_REGS=1 -> CTS probe launch 186.8 / 183.1. (2) that probe then measured rs capture 215.5 ps > 190 (rs = async clear of all 136 stage flops): ot_hbm_rly RS_RELAY=1 (RS_RELAY_MASTERS + hbfd_rly_136_WE) = registered reset relay, rs drives 3 flops; release 3 clock edges after rs (as NS/SN and the _fc variants), assert async. Outline 21.6 x 21.6, pins unchanged; 0 data cycles.",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "source": "results/arch/owners_hbm_1018/owners_hbm_native_audit.json",
+  "cell": "hbfd_rly_136_WE",
+  "launch_ps": 221.6,
+  "capture_ps": 215.5,
+  "fix": "RS_RELAY=1 in hbfd_rly_136_WE (generator RS_RELAY_MASTERS) + kit regen with the recipe-2 output stage (HB2xp67 pad, pin_reg_split, keep_pin_regs)",
+  "why_route": "owners HBM native audit (claude/owners-hbm-native-1018 61ccb4897, results/arch/owners_hbm_1018/owners_hbm_native_audit.json): hbfd_rly_136_WE TT launch 221.6 ps > 220 on 3 o pins in CLOSED hbfd_rly_136_we-v1-2d0c1a8ac; relative re-audit vs GEN1 neighbours still FAIL; after the output-stage re-kit the CTS probe measured rs capture 215.5 > 190. kind rtl_change: the master's RTL changes (RS_RELAY=1)."
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "relay = ONE register stage at the pins by definition: i is captured by the stage register (FIRM at the i face, io_flop_at_pins), o is launched by it (one launch flop per o pin FIRM at the o face, pin_reg_split); a pin register would add a cycle per hop of the lane chain (as the F1 _fc relays, DIE-CLOCK F1)"
+ }
 }

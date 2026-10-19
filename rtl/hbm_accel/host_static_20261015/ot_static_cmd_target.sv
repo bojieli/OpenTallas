@@ -211,7 +211,9 @@ endmodule
 module ot_static_cmd_target #(
     parameter [7:0]  TARGET = 8'd64,
     parameter integer MODE = 0, AWA = 0, AWB = 0, RBW = 1, RCW = 1, CW = 1, RELF = 0, NA = 1, NF = 1, LEAD = 8,
-    parameter integer MUT = 0, TGT_PIN = 0
+    parameter integer MUT = 0, TGT_PIN = 0,
+    parameter integer RSYNC = 0,     // 1: local 2-flop reset synchroniser at the rst_n pin (hardened cp_svg tile, r2)
+    parameter integer RSMUT = 0      // bench only: 1 = a mid-run reset does not reach the core (power-on reset only)
 )(
     input  wire clk, rst_n,
     input  wire [7:0] tgt,
@@ -241,10 +243,31 @@ module ot_static_cmd_target #(
     output wire configured, fault, active
 );
     localparam integer NT = (MODE == 1) ? ((32 + CW + 255) / 256) : 1;
+    // RSYNC=1: local reset synchroniser at the pin (HBM-NATIVE 2026-10-17; the col_su r3 collar shape). The native pin
+    // audit of the closed cp_svg r1 view found the raw rst_n pin async-clearing every core flop (capture 402.6 ps >
+    // 190). The pin now drives ONE plain clk flop; its stage-2 Q (rst_q_n) is the core reset. Assert and release both
+    // take +2 clk edges; datapath and launch latencies are unchanged (cycles 0): configuration arrives from the elastic
+    // host ingress long after reset. The free-running `cycle` export starts counting 2 edges later (cp_svg leaves it
+    // unconnected; MODE 1 schedules are launch-relative). RSYNC=0 (default): unchanged, for the soft consumers that
+    // fold this wrapper (ot_hbm_sm_vm_wr_q_t, ot_hbm_svc_sm_xcal_t) and the core-only folds (wr_q_t lanes/faces, xload).
+    wire rst_q_n;
+    generate if (RSYNC == 1) begin : g_rs
+        reg [1:0] rsync;
+        always @(posedge clk) rsync <= {rsync[0], rst_n};
+        if (RSMUT == 1) begin : g_rsmut
+            reg por_done = 1'b0;
+            always @(posedge clk) if (rsync[1] === 1'b1) por_done <= 1'b1;
+            assign rst_q_n = rsync[1] | por_done;
+        end else begin : g_rsync
+            assign rst_q_n = rsync[1];
+        end
+    end else begin : g_rs_raw
+        assign rst_q_n = rst_n;
+    end endgenerate
     wire r_ce; wire [6:0] r_addr, w_addr; wire [NT-1:0] w_ce; wire [255:0] w_data; wire [NT*256-1:0] rd_word;
     ot_static_cmd_target_core #(.TARGET(TARGET),.MODE(MODE),.AWA(AWA),.AWB(AWB),.RBW(RBW),.RCW(RCW),.CW(CW),.RELF(RELF),
         .NA(NA),.NF(NF),.LEAD(LEAD),.MUT(MUT),.TGT_PIN(TGT_PIN)) core(
-        .clk(clk),.rst_n(rst_n),.tgt(tgt),.cfg_v(cfg_v),.cfg_target(cfg_target),.cfg_addr(cfg_addr),.cfg_data(cfg_data),
+        .clk(clk),.rst_n(rst_q_n),.tgt(tgt),.cfg_v(cfg_v),.cfg_target(cfg_target),.cfg_addr(cfg_addr),.cfg_data(cfg_data),
         .desc_v(desc_v),.desc_base(desc_base),.desc_limit(desc_limit),.desc_loops(desc_loops),.launch_v(launch_v),
         .tgt_active(tgt_active),.tgt_fault(tgt_fault),.a_we(a_we),.a_addr(a_addr),.a_data(a_data),.b_we(b_we),.b_addr(b_addr),
         .b_data(b_data),.run_v(run_v),.run_base(run_base),.run_count(run_count),.cmd_v(cmd_v),.cmd(cmd),.cycle(cycle),

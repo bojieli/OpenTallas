@@ -1,0 +1,753 @@
+{
+ "schema": "opentallas.xdie_qwen_1018.record.v1",
+ "lane": "TOKEN-XDIE-QWEN",
+ "date": "2026-10-18",
+ "vehicle": {
+  "bench": "rtl/test/qwen_split/tb_xdie_qwen_exchange.sv",
+  "run": "rtl/test/qwen_split/run_xdie_exchange.sh",
+  "calendar_compiler": "tools/qwen_split/xdie_exchange_cal.py",
+  "record_tool": "tools/qwen_split/xdie_exchange_record.py",
+  "simulator": "Verilator 5.050 --binary --timing (fleet ot-run)",
+  "clock": "1.2 GHz core edges",
+  "layers_per_run": 35,
+  "witnesses": "results/rtl/xdie_qwen_1018/run_r3"
+ },
+ "rtl_commits": {
+  "compute_dv2f14bn": "0a9c93921",
+  "kv_kvs14c": "f05f9338f",
+  "vehicle_base_main": "fb0dd2600"
+ },
+ "modelled": {
+  "phy": {
+   "model": "physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_model.sv",
+   "lat_cycles": 5,
+   "source": "3.5 ns measured FDI-to-FDI, IEEE JSSC 2026 doi:10.1109/JSSC.2026.3651425 (registry sct:r-ucie-jssc26) -> 4.2 -> 5 cycles at 1.2 GHz; best 3 (CPMT 2022 bound), worst 9 (2x measured, phy json)",
+   "sensitivity_lat9": {
+    "C2K_cmd": 34,
+    "C2K_q31": 34,
+    "K2C_r31": 37,
+    "KVN_last": 24,
+    "kv_service_cmd_land_to_r31_issue": 1779,
+    "q0_to_r31_land": 1854
+   }
+  },
+  "die_seam_stages": "register chains at the die depth (dv2f14bn fwd_lanes E 2 / kvs14c die.v relay chains); the positive runs equalise each bundle to its netlisted maximum (PLAN)",
+  "stimuli": "slice Q/K/V dd words, HOST context, sys_face slots, KV layer-programme authority, PV final join result beats: compiled stimuli at the native59 / programme pins"
+ },
+ "exchanges": [
+  {
+   "name": "C2K CMD + 32 Q (native59 -> KV attention programme)",
+   "per_layer": 1,
+   "beats": 33,
+   "E_meas_cycles": 30,
+   "E_meas_cmd_cycles": 30,
+   "definition": "last Q beat issue at native59 native_tx_v -> that beat at the programme q_valid (CMD: issue -> request_valid)",
+   "O_meas": 0,
+   "O_source": "compiler token path: attn_kv window serial after qknorm_rope; no independent compute op scheduled inside it",
+   "E_exposed": 30,
+   "grade": "measured-current-RTL (composed vc+vk; full-pair co-sim blocked, see findings)"
+  },
+  {
+   "name": "K2C 32 RESULT + STATUS (KV attention programme -> native59 -> DV return chain)",
+   "per_layer": 1,
+   "beats": 33,
+   "E_meas_cycles": 33,
+   "definition": "last RESULT beat issue at the programme tx_valid -> that beat at native59 dr_o",
+   "O_meas": 0,
+   "O_source": "compiler token path: o_proj starts after attn_kv (serial)",
+   "E_exposed": 33,
+   "grade": "measured-current-RTL (composed vc+vk)"
+  },
+  {
+   "name": "KVN 4 words (new K/V, native59 formatter -> KV d2d KVN word)",
+   "per_layer": 1,
+   "beats": 4,
+   "E_meas_cycles": 20,
+   "O_meas": "hidden: consumed by the next token attention (layer period 6835 edges >> KVN latency)",
+   "E_exposed": 0,
+   "grade": "measured-current-RTL (vc)"
+  }
+ ],
+ "kv_service_cmd_land_to_r31_issue": 1779,
+ "layer_attention_segment": {
+  "measured_q0_to_r31_land": 1846,
+  "priced_q0_to_r31_land": 1814,
+  "delta_per_layer": 32,
+  "delta_per_layer_phy9": 40,
+  "note": "q0 = the compiled CMD slot (end of qknorm_rope); priced = the d2d_link_calendar image with zero-latency component codecs (vk_abut reproduces it). Abutted real producers (vc_abut/vk_abut): +4."
+ },
+ "composition": {
+  "formula": "T_token += sum_l n_l * max(0, E_meas - O_meas)  (exchanges above; n_l = 1 per decode layer)",
+  "layers_covered": "L1..L35 (segment 0, identical windows); L0 (token-run window 2038) NOT run: see findings F7",
+  "per_layer_exposed": 63,
+  "L1_L35_total": 2205,
+  "vs_priced_token_path": {
+   "per_layer": 32,
+   "L1_L35_total": 1120,
+   "phy9_L1_L35_total": 1400
+  },
+  "usage": "with TOKEN-PASS-QWEN C_die(l) terms that exclude every D2D leg (compute die to the Q issue / from the dr_o land; KV die C_kv = programme CMD land -> last RESULT issue = 1779, fixed by SERVICE_END 1777): add per_layer_exposed. If C_die keeps the priced attn_kv window (1816), add vs_priced_token_path instead."
+ },
+ "configs": {
+  "face_asbuilt": {
+   "expect": "FAIL",
+   "got": "FAIL",
+   "cfg": "C_REAL=0 K_REAL=2 QGAP=0 PHY=5 TXL=6 X=2 period=6837 stages C 0,0,0,0,0,0 K 11,11,9,9,9,11,11 MUT=0 layers=35",
+   "E": {
+    "C2K_cmd_issue_to_land": 28,
+    "C2K_q31_issue_to_land": 29,
+    "C2K_q_first_issue_to_last_land": 61,
+    "K2C_r31_issue_to_land": 0,
+    "K2C_r0_issue_to_land": 0,
+    "K2C_r_first_issue_to_last_land": 0,
+    "KVN_k3_issue_to_land": 18,
+    "roundtrip_cmd_issue_to_r31_land": -601,
+    "kv_service_cmd_land_to_r31_issue": -629,
+    "compute_done_after_r31_land": 0
+   },
+   "causes": [
+    "kvs_attn cyc 1726 rel 1544: programme ctl local 1 guard 0 record 1 (codec cause 0001) slot 0 | face result_fault 0 RESULT_AGE 913 (P0 245 P1 245 PV 651 R 1077) root age 915 | ctl tx_first 1750",
+    "d2d: compute fault 0 abort 0 end_fault 0 cause 00000000 | KV fault 0 abort 1 end_fault 0 cause 10000000",
+    "compute stub codec cyc 2586 rel 2404 cause 0010"
+   ],
+   "first_errors": [
+    "cyc 1726 layer 1 rel 1544: KV producer/consumer fault",
+    "cyc 2573 layer 1 rel 2391: D2D end fault / epoch abort in a normal layer",
+    "cyc 2586 layer 1 rel 2404: compute producer/consumer fault"
+   ],
+   "X": 2,
+   "txd": {
+    "C": [
+     3,
+     3,
+     1,
+     4
+    ],
+    "K": [
+     23,
+     4,
+     3,
+     3
+    ]
+   }
+  },
+  "full_gap0": {
+   "expect": "FAIL",
+   "got": "FAIL",
+   "cfg": "C_REAL=1 K_REAL=1 QGAP=0 PHY=5 TXL=6 X=7 period=6842 stages C 2,2,2,2,2,2 K 11,11,9,9,9,11,11 MUT=0 layers=35",
+   "E": {
+    "C2K_cmd_issue_to_land": -604,
+    "C2K_q31_issue_to_land": 0,
+    "C2K_q_first_issue_to_last_land": -604,
+    "K2C_r31_issue_to_land": 0,
+    "K2C_r0_issue_to_land": 0,
+    "K2C_r_first_issue_to_last_land": 0,
+    "KVN_k3_issue_to_land": 0,
+    "roundtrip_cmd_issue_to_r31_land": -604,
+    "kv_service_cmd_land_to_r31_issue": 0,
+    "compute_done_after_r31_land": 0
+   },
+   "causes": [
+    "native59 cyc 786 rel 604: context 0 qtag 1 qexport 0 dv 0 formatter 0 x3 0 record 1 (codec cause {rx_rec,tx_rec,rx_time,tx_time}=0100) land 0 visibility 0 vm_addr 0 service 1",
+    "d2d: compute fault 0 abort 1 end_fault 0 cause 10000000 | KV fault 0 abort 0 end_fault 0 cause 00000000",
+    "KV programme cyc 815 rel 633 age 3: ctl local 0 guard 0 record 1 (codec cause {rx_rec,tx_rec,rx_time,tx_time}=0010) slot 0 producer 0 | root lf 0 iof 0"
+   ],
+   "first_errors": [
+    "cyc 786 layer 1 rel 604: compute producer/consumer fault",
+    "cyc 792 layer 1 rel 610: D2D end fault / epoch abort in a normal layer",
+    "cyc 815 layer 1 rel 633: KV producer/consumer fault"
+   ],
+   "X": 7,
+   "txd": {
+    "C": [
+     8,
+     3,
+     1,
+     9
+    ],
+    "K": [
+     23,
+     4,
+     3,
+     3
+    ]
+   }
+  },
+  "full_gap1": {
+   "expect": "FAIL",
+   "got": "FAIL",
+   "cfg": "C_REAL=1 K_REAL=1 QGAP=1 PHY=5 TXL=6 X=7 period=6842 stages C 2,2,2,2,2,2 K 11,11,9,9,9,11,11 MUT=0 layers=35",
+   "E": {
+    "C2K_cmd_issue_to_land": 30,
+    "C2K_q31_issue_to_land": -637,
+    "C2K_q_first_issue_to_last_land": -604,
+    "K2C_r31_issue_to_land": 0,
+    "K2C_r0_issue_to_land": 0,
+    "K2C_r_first_issue_to_last_land": 0,
+    "KVN_k3_issue_to_land": 20,
+    "roundtrip_cmd_issue_to_r31_land": -604,
+    "kv_service_cmd_land_to_r31_issue": -634,
+    "compute_done_after_r31_land": 0
+   },
+   "causes": [
+    "KV programme cyc 816 rel 634 age 4: ctl local 0 guard 0 record 1 (codec cause {rx_rec,tx_rec,rx_time,tx_time}=0010) slot 0 producer 0 | root lf 0 iof 0",
+    "d2d: compute fault 0 abort 0 end_fault 0 cause 00000000 | KV fault 0 abort 1 end_fault 0 cause 10000000",
+    "native59 cyc 2595 rel 2413: context 0 qtag 0 qexport 0 dv 0 formatter 0 x3 0 record 1 (codec cause {rx_rec,tx_rec,rx_time,tx_time}=0010) land 0 visibility 0 vm_addr 0 service 1"
+   ],
+   "first_errors": [
+    "cyc 816 layer 1 rel 634: KV producer/consumer fault",
+    "cyc 818 layer 1 rel 636: KV attention root / calendar fault",
+    "cyc 819 layer 1 rel 637: KV attention root / calendar fault"
+   ],
+   "X": 7,
+   "txd": {
+    "C": [
+     8,
+     3,
+     1,
+     9
+    ],
+    "K": [
+     23,
+     4,
+     3,
+     3
+    ]
+   }
+  },
+  "masters_asbuilt": {
+   "expect": "FAIL",
+   "got": "FAIL",
+   "cfg": "C_REAL=1 K_REAL=0 QGAP=1 PHY=5 TXL=6 X=0 period=6835 stages C 0,0,0,0,0,0 K 0,0,0,0,0,0,0 MUT=0 layers=35",
+   "E": {
+    "C2K_cmd_issue_to_land": -602,
+    "C2K_q31_issue_to_land": 0,
+    "C2K_q_first_issue_to_last_land": -602,
+    "K2C_r31_issue_to_land": 0,
+    "K2C_r0_issue_to_land": 0,
+    "K2C_r_first_issue_to_last_land": 0,
+    "KVN_k3_issue_to_land": 0,
+    "roundtrip_cmd_issue_to_r31_land": -602,
+    "kv_service_cmd_land_to_r31_issue": 0,
+    "compute_done_after_r31_land": 0
+   },
+   "causes": [
+    "d2d: compute fault 1 abort 1 end_fault 1 cause 10000000 | KV fault 0 abort 0 end_fault 0 cause 00000000",
+    "native59 cyc 790 rel 608: context 0 qtag 0 qexport 0 dv 0 formatter 0 x3 0 record 1 (codec cause {rx_rec,tx_rec,rx_time,tx_time}=0101) land 0 visibility 0 vm_addr 0 service 1",
+    "KV stub codec cyc 799 rel 617 cause 0010"
+   ],
+   "first_errors": [
+    "cyc 786 layer 1 rel 604: D2D end fault / epoch abort in a normal layer",
+    "cyc 790 layer 1 rel 608: compute producer/consumer fault",
+    "cyc 799 layer 1 rel 617: KV producer/consumer fault"
+   ],
+   "X": 0,
+   "txd": {
+    "C": [
+     3,
+     3,
+     1,
+     4
+    ],
+    "K": [
+     3,
+     4,
+     3,
+     3
+    ]
+   }
+  },
+  "mut1_kv_run_late": {
+   "expect": "FAIL",
+   "got": "FAIL",
+   "cfg": "C_REAL=0 K_REAL=1 QGAP=0 PHY=5 TXL=6 X=2 period=6837 stages C 0,0,0,0,0,0 K 11,11,9,9,9,11,11 MUT=1 layers=35",
+   "E": {
+    "C2K_cmd_issue_to_land": -601,
+    "C2K_q31_issue_to_land": -633,
+    "C2K_q_first_issue_to_last_land": -601,
+    "K2C_r31_issue_to_land": 0,
+    "K2C_r0_issue_to_land": 0,
+    "K2C_r_first_issue_to_last_land": 0,
+    "KVN_k3_issue_to_land": 18,
+    "roundtrip_cmd_issue_to_r31_land": -601,
+    "kv_service_cmd_land_to_r31_issue": 0,
+    "compute_done_after_r31_land": 0
+   },
+   "causes": [
+    "KV programme cyc 810 rel 628 age 2: ctl local 0 guard 0 record 1 (codec cause {rx_rec,tx_rec,rx_time,tx_time}=1010) slot 0 producer 0 | root lf 0 iof 0",
+    "d2d: compute fault 0 abort 0 end_fault 0 cause 00000000 | KV fault 0 abort 1 end_fault 0 cause 10000000",
+    "compute stub codec cyc 2586 rel 2404 cause 0010"
+   ],
+   "first_errors": [
+    "cyc 810 layer 1 rel 628: KV producer/consumer fault",
+    "cyc 2573 layer 1 rel 2391: D2D end fault / epoch abort in a normal layer",
+    "cyc 2586 layer 1 rel 2404: compute producer/consumer fault"
+   ],
+   "X": 2,
+   "txd": {
+    "C": [
+     3,
+     3,
+     1,
+     4
+    ],
+    "K": [
+     23,
+     4,
+     3,
+     3
+    ]
+   }
+  },
+  "mut2_phy_bit": {
+   "expect": "FAIL",
+   "got": "FAIL",
+   "cfg": "C_REAL=1 K_REAL=0 QGAP=1 PHY=5 TXL=6 X=5 period=6840 stages C 2,2,2,2,2,2 K 0,0,0,0,0,0,0 MUT=2 layers=35",
+   "E": {
+    "C2K_cmd_issue_to_land": 19,
+    "C2K_q31_issue_to_land": 19,
+    "C2K_q_first_issue_to_last_land": 52,
+    "K2C_r31_issue_to_land": 22,
+    "K2C_r0_issue_to_land": 22,
+    "K2C_r_first_issue_to_last_land": 53,
+    "KVN_k3_issue_to_land": 20,
+    "roundtrip_cmd_issue_to_r31_land": 1820,
+    "kv_service_cmd_land_to_r31_issue": 1779,
+    "compute_done_after_r31_land": 14
+   },
+   "causes": [
+    "d2d: compute fault 0 abort 0 end_fault 0 cause 00000000 | KV fault 0 abort 1 end_fault 0 cause 00000001",
+    "KV stub codec cyc 14484 rel 622 cause 0010",
+    "native59 cyc 16253 rel 2391: context 0 qtag 0 qexport 0 dv 0 formatter 0 x3 0 record 1 (codec cause {rx_rec,tx_rec,rx_time,tx_time}=0010) land 0 visibility 0 vm_addr 0 service 1"
+   ],
+   "first_errors": [
+    "cyc 14483 layer 3 rel 621: D2D end fault / epoch abort in a normal layer",
+    "cyc 14484 layer 3 rel 622: KV producer/consumer fault",
+    "cyc 16253 layer 3 rel 2391: compute producer/consumer fault"
+   ],
+   "X": 5,
+   "txd": {
+    "C": [
+     8,
+     3,
+     1,
+     9
+    ],
+    "K": [
+     3,
+     4,
+     3,
+     3
+    ]
+   }
+  },
+  "mut3_result_word": {
+   "expect": "FAIL",
+   "got": "FAIL",
+   "cfg": "C_REAL=1 K_REAL=0 QGAP=1 PHY=5 TXL=6 X=5 period=6840 stages C 2,2,2,2,2,2 K 0,0,0,0,0,0,0 MUT=3 layers=35",
+   "E": {
+    "C2K_cmd_issue_to_land": 19,
+    "C2K_q31_issue_to_land": 19,
+    "C2K_q_first_issue_to_last_land": 52,
+    "K2C_r31_issue_to_land": 22,
+    "K2C_r0_issue_to_land": 22,
+    "K2C_r_first_issue_to_last_land": 53,
+    "KVN_k3_issue_to_land": 20,
+    "roundtrip_cmd_issue_to_r31_land": 1820,
+    "kv_service_cmd_land_to_r31_issue": 1779,
+    "compute_done_after_r31_land": 14
+   },
+   "causes": [],
+   "first_errors": [
+    "cyc 29941 layer 5 rel 2399: RESULT beat != golden at the compute consumer"
+   ],
+   "X": 5,
+   "txd": {
+    "C": [
+     8,
+     3,
+     1,
+     9
+    ],
+    "K": [
+     3,
+     4,
+     3,
+     3
+    ]
+   }
+  },
+  "mut4_qslot_late": {
+   "expect": "FAIL",
+   "got": "FAIL",
+   "cfg": "C_REAL=1 K_REAL=0 QGAP=1 PHY=5 TXL=6 X=5 period=6840 stages C 2,2,2,2,2,2 K 0,0,0,0,0,0,0 MUT=4 layers=35",
+   "E": {
+    "C2K_cmd_issue_to_land": -604,
+    "C2K_q31_issue_to_land": 0,
+    "C2K_q_first_issue_to_last_land": -604,
+    "K2C_r31_issue_to_land": 0,
+    "K2C_r0_issue_to_land": 0,
+    "K2C_r_first_issue_to_last_land": 0,
+    "KVN_k3_issue_to_land": 0,
+    "roundtrip_cmd_issue_to_r31_land": -604,
+    "kv_service_cmd_land_to_r31_issue": 0,
+    "compute_done_after_r31_land": 0
+   },
+   "causes": [
+    "native59 cyc 788 rel 606: context 0 qtag 0 qexport 0 dv 0 formatter 0 x3 0 record 1 (codec cause {rx_rec,tx_rec,rx_time,tx_time}=0001) land 0 visibility 0 vm_addr 0 service 1",
+    "d2d: compute fault 0 abort 1 end_fault 0 cause 10000000 | KV fault 0 abort 0 end_fault 0 cause 00000000",
+    "KV stub codec cyc 804 rel 622 cause 0010"
+   ],
+   "first_errors": [
+    "cyc 788 layer 1 rel 606: compute producer/consumer fault",
+    "cyc 793 layer 1 rel 611: D2D end fault / epoch abort in a normal layer",
+    "cyc 804 layer 1 rel 622: KV producer/consumer fault"
+   ],
+   "X": 5,
+   "txd": {
+    "C": [
+     8,
+     3,
+     1,
+     9
+    ],
+    "K": [
+     3,
+     4,
+     3,
+     3
+    ]
+   }
+  },
+  "mut5_kv_status_zero": {
+   "expect": "FAIL",
+   "got": "FAIL",
+   "cfg": "C_REAL=1 K_REAL=0 QGAP=1 PHY=5 TXL=6 X=5 period=6840 stages C 2,2,2,2,2,2 K 0,0,0,0,0,0,0 MUT=5 layers=35",
+   "E": {
+    "C2K_cmd_issue_to_land": 19,
+    "C2K_q31_issue_to_land": 19,
+    "C2K_q_first_issue_to_last_land": 52,
+    "K2C_r31_issue_to_land": 22,
+    "K2C_r0_issue_to_land": 22,
+    "K2C_r_first_issue_to_last_land": 53,
+    "KVN_k3_issue_to_land": 20,
+    "roundtrip_cmd_issue_to_r31_land": 1820,
+    "kv_service_cmd_land_to_r31_issue": 1779,
+    "compute_done_after_r31_land": -2424
+   },
+   "causes": [
+    "native59 cyc 2620 rel 2438: context 0 qtag 0 qexport 0 dv 0 formatter 0 x3 0 record 0 (codec cause {rx_rec,tx_rec,rx_time,tx_time}=0000) land 0 visibility 0 vm_addr 0 service 1",
+    "d2d: compute fault 0 abort 1 end_fault 0 cause 10000000 | KV fault 0 abort 0 end_fault 0 cause 00000000",
+    "KV stub codec cyc 7644 rel 622 cause 0010"
+   ],
+   "first_errors": [
+    "cyc 2620 layer 1 rel 2438: compute producer/consumer fault",
+    "cyc 7019 layer 1 rel 6837: per-layer counts (32 Q, 32 RESULT, 4 KVN, 1 status, completion)",
+    "cyc 7019 layer 1 rel 6837: an exchange event never happened"
+   ],
+   "X": 5,
+   "txd": {
+    "C": [
+     8,
+     3,
+     1,
+     9
+    ],
+    "K": [
+     3,
+     4,
+     3,
+     3
+    ]
+   }
+  },
+  "netlist_c": {
+   "expect": "FAIL",
+   "got": "FAIL",
+   "cfg": "C_REAL=1 K_REAL=0 QGAP=1 PHY=5 TXL=6 X=3 period=6838 stages C 2,0,2,2,0,2 K 0,0,0,0,0,0,0 MUT=0 layers=35",
+   "E": {
+    "C2K_cmd_issue_to_land": 17,
+    "C2K_q31_issue_to_land": 17,
+    "C2K_q_first_issue_to_last_land": 50,
+    "K2C_r31_issue_to_land": -2400,
+    "K2C_r0_issue_to_land": -2369,
+    "K2C_r_first_issue_to_last_land": -2369,
+    "KVN_k3_issue_to_land": 20,
+    "roundtrip_cmd_issue_to_r31_land": -604,
+    "kv_service_cmd_land_to_r31_issue": 1779,
+    "compute_done_after_r31_land": 0
+   },
+   "causes": [
+    "native59 cyc 2569 rel 2387: context 0 qtag 0 qexport 0 dv 0 formatter 0 x3 0 record 1 (codec cause {rx_rec,tx_rec,rx_time,tx_time}=1000) land 0 visibility 0 vm_addr 0 service 1",
+    "d2d: compute fault 0 abort 1 end_fault 0 cause 10000000 | KV fault 0 abort 0 end_fault 0 cause 00000000",
+    "KV stub codec cyc 7640 rel 620 cause 0010"
+   ],
+   "first_errors": [
+    "cyc 2569 layer 1 rel 2387: compute producer/consumer fault",
+    "cyc 7017 layer 1 rel 6835: per-layer counts (32 Q, 32 RESULT, 4 KVN, 1 status, completion)",
+    "cyc 7017 layer 1 rel 6835: an exchange event never happened"
+   ],
+   "X": 3,
+   "txd": {
+    "C": [
+     6,
+     3,
+     1,
+     9
+    ],
+    "K": [
+     3,
+     4,
+     3,
+     3
+    ]
+   }
+  },
+  "netlist_k": {
+   "expect": "FAIL",
+   "got": "FAIL",
+   "cfg": "C_REAL=0 K_REAL=1 QGAP=0 PHY=5 TXL=6 X=0 period=6835 stages C 0,0,0,0,0,0 K 9,11,9,8,9,6,11 MUT=0 layers=35",
+   "E": {
+    "C2K_cmd_issue_to_land": -601,
+    "C2K_q31_issue_to_land": -633,
+    "C2K_q_first_issue_to_last_land": -601,
+    "K2C_r31_issue_to_land": 0,
+    "K2C_r0_issue_to_land": 0,
+    "K2C_r_first_issue_to_last_land": 0,
+    "KVN_k3_issue_to_land": 18,
+    "roundtrip_cmd_issue_to_r31_land": -601,
+    "kv_service_cmd_land_to_r31_issue": 0,
+    "compute_done_after_r31_land": 0
+   },
+   "causes": [
+    "KV programme cyc 808 rel 626 age 3: ctl local 0 guard 0 record 1 (codec cause {rx_rec,tx_rec,rx_time,tx_time}=1000) slot 0 producer 0 | root lf 0 iof 0",
+    "d2d: compute fault 0 abort 0 end_fault 0 cause 00000000 | KV fault 0 abort 1 end_fault 0 cause 10000000",
+    "compute stub codec cyc 2584 rel 2402 cause 0010"
+   ],
+   "first_errors": [
+    "cyc 808 layer 1 rel 626: KV producer/consumer fault",
+    "cyc 2571 layer 1 rel 2389: D2D end fault / epoch abort in a normal layer",
+    "cyc 2584 layer 1 rel 2402: compute producer/consumer fault"
+   ],
+   "X": 0,
+   "txd": {
+    "C": [
+     3,
+     3,
+     1,
+     4
+    ],
+    "K": [
+     23,
+     4,
+     3,
+     3
+    ]
+   }
+  },
+  "vc": {
+   "expect": "PASS",
+   "got": "PASS",
+   "cfg": "C_REAL=1 K_REAL=0 QGAP=1 PHY=5 TXL=6 X=5 period=6840 stages C 2,2,2,2,2,2 K 0,0,0,0,0,0,0 MUT=0 layers=35",
+   "E": {
+    "C2K_cmd_issue_to_land": 19,
+    "C2K_q31_issue_to_land": 19,
+    "C2K_q_first_issue_to_last_land": 52,
+    "K2C_r31_issue_to_land": 22,
+    "K2C_r0_issue_to_land": 22,
+    "K2C_r_first_issue_to_last_land": 53,
+    "KVN_k3_issue_to_land": 20,
+    "roundtrip_cmd_issue_to_r31_land": 1820,
+    "kv_service_cmd_land_to_r31_issue": 1779,
+    "compute_done_after_r31_land": 14
+   },
+   "causes": [],
+   "first_errors": [],
+   "X": 5,
+   "txd": {
+    "C": [
+     8,
+     3,
+     1,
+     9
+    ],
+    "K": [
+     3,
+     4,
+     3,
+     3
+    ]
+   }
+  },
+  "vc_abut": {
+   "expect": "PASS",
+   "got": "PASS",
+   "cfg": "C_REAL=1 K_REAL=0 QGAP=1 PHY=5 TXL=6 X=1 period=6836 stages C 0,0,0,0,0,0 K 0,0,0,0,0,0,0 MUT=0 layers=35",
+   "E": {
+    "C2K_cmd_issue_to_land": 17,
+    "C2K_q31_issue_to_land": 17,
+    "C2K_q_first_issue_to_last_land": 50,
+    "K2C_r31_issue_to_land": 20,
+    "K2C_r0_issue_to_land": 20,
+    "K2C_r_first_issue_to_last_land": 51,
+    "KVN_k3_issue_to_land": 18,
+    "roundtrip_cmd_issue_to_r31_land": 1816,
+    "kv_service_cmd_land_to_r31_issue": 1779,
+    "compute_done_after_r31_land": 14
+   },
+   "causes": [],
+   "first_errors": [],
+   "X": 1,
+   "txd": {
+    "C": [
+     4,
+     3,
+     1,
+     5
+    ],
+    "K": [
+     3,
+     4,
+     3,
+     3
+    ]
+   }
+  },
+  "vc_phy9": {
+   "expect": "PASS",
+   "got": "PASS",
+   "cfg": "C_REAL=1 K_REAL=0 QGAP=1 PHY=9 TXL=6 X=13 period=6848 stages C 2,2,2,2,2,2 K 0,0,0,0,0,0,0 MUT=0 layers=35",
+   "E": {
+    "C2K_cmd_issue_to_land": 23,
+    "C2K_q31_issue_to_land": 23,
+    "C2K_q_first_issue_to_last_land": 56,
+    "K2C_r31_issue_to_land": 26,
+    "K2C_r0_issue_to_land": 26,
+    "K2C_r_first_issue_to_last_land": 57,
+    "KVN_k3_issue_to_land": 24,
+    "roundtrip_cmd_issue_to_r31_land": 1828,
+    "kv_service_cmd_land_to_r31_issue": 1779,
+    "compute_done_after_r31_land": 14
+   },
+   "causes": [],
+   "first_errors": [],
+   "X": 13,
+   "txd": {
+    "C": [
+     8,
+     3,
+     1,
+     9
+    ],
+    "K": [
+     3,
+     4,
+     3,
+     3
+    ]
+   }
+  },
+  "vk": {
+   "expect": "PASS",
+   "got": "PASS",
+   "cfg": "C_REAL=0 K_REAL=1 QGAP=0 PHY=5 TXL=6 X=2 period=6837 stages C 0,0,0,0,0,0 K 11,11,9,9,9,11,11 MUT=0 layers=35",
+   "E": {
+    "C2K_cmd_issue_to_land": 28,
+    "C2K_q31_issue_to_land": 29,
+    "C2K_q_first_issue_to_last_land": 61,
+    "K2C_r31_issue_to_land": 28,
+    "K2C_r0_issue_to_land": 28,
+    "K2C_r_first_issue_to_last_land": 59,
+    "KVN_k3_issue_to_land": 18,
+    "roundtrip_cmd_issue_to_r31_land": 1835,
+    "kv_service_cmd_land_to_r31_issue": 1779,
+    "compute_done_after_r31_land": 2
+   },
+   "causes": [],
+   "first_errors": [],
+   "X": 2,
+   "txd": {
+    "C": [
+     3,
+     3,
+     1,
+     4
+    ],
+    "K": [
+     23,
+     4,
+     3,
+     3
+    ]
+   }
+  },
+  "vk_abut": {
+   "expect": "PASS",
+   "got": "PASS",
+   "cfg": "C_REAL=0 K_REAL=1 QGAP=0 PHY=5 TXL=6 X=0 period=6835 stages C 0,0,0,0,0,0 K 0,0,0,0,0,0,0 MUT=0 layers=35",
+   "E": {
+    "C2K_cmd_issue_to_land": 17,
+    "C2K_q31_issue_to_land": 18,
+    "C2K_q_first_issue_to_last_land": 50,
+    "K2C_r31_issue_to_land": 17,
+    "K2C_r0_issue_to_land": 17,
+    "K2C_r_first_issue_to_last_land": 48,
+    "KVN_k3_issue_to_land": 18,
+    "roundtrip_cmd_issue_to_r31_land": 1813,
+    "kv_service_cmd_land_to_r31_issue": 1779,
+    "compute_done_after_r31_land": 2
+   },
+   "causes": [],
+   "first_errors": [],
+   "X": 0,
+   "txd": {
+    "C": [
+     3,
+     3,
+     1,
+     4
+    ],
+    "K": [
+     3,
+     4,
+     3,
+     3
+    ]
+   }
+  },
+  "vk_phy9": {
+   "expect": "PASS",
+   "got": "PASS",
+   "cfg": "C_REAL=0 K_REAL=1 QGAP=0 PHY=9 TXL=6 X=10 period=6845 stages C 0,0,0,0,0,0 K 11,11,9,9,9,11,11 MUT=0 layers=35",
+   "E": {
+    "C2K_cmd_issue_to_land": 32,
+    "C2K_q31_issue_to_land": 33,
+    "C2K_q_first_issue_to_last_land": 65,
+    "K2C_r31_issue_to_land": 32,
+    "K2C_r0_issue_to_land": 32,
+    "K2C_r_first_issue_to_last_land": 63,
+    "KVN_k3_issue_to_land": 22,
+    "roundtrip_cmd_issue_to_r31_land": 1843,
+    "kv_service_cmd_land_to_r31_issue": 1779,
+    "compute_done_after_r31_land": 2
+   },
+   "causes": [],
+   "first_errors": [],
+   "X": 10,
+   "txd": {
+    "C": [
+     3,
+     3,
+     1,
+     4
+    ],
+    "K": [
+     23,
+     4,
+     3,
+     3
+    ]
+   }
+  }
+ }
+}

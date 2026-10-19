@@ -1,0 +1,167 @@
+{
+ "name": "hbm_su_cx_dlq_1018",
+ "top": "ot_hbm_su_static_cxport_dl_q",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_cxport_split.sv"
+ ],
+ "params": {},
+ "clock_port": "clk_q",
+ "reset_ports": [
+  "rst_q_n"
+ ],
+ "outline": {
+  "w": 108.0,
+  "h": 216.0,
+  "exact": true
+ },
+ "std_area_um2": 1500,
+ "layer_cap": "M5",
+ "recipe": 4,
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "pins": {
+  "W": [
+   "v0",
+   "b0",
+   "v1",
+   "b1",
+   "sfault_s"
+  ],
+  "E": [
+   "dw_v",
+   "dw_row",
+   "dw_d"
+  ],
+  "N": [
+   "clk_q",
+   "rst_q_n",
+   "fault"
+  ]
+ },
+ "pin_ranges": {
+  "v0": [
+   4.0,
+   5.525
+  ],
+  "b0": [
+   6.725,
+   106.609
+  ],
+  "v1": [
+   107.809,
+   109.334
+  ],
+  "b1": [
+   110.534,
+   210.419
+  ],
+  "sfault_s": [
+   211.619,
+   212.0
+  ],
+  "dw_v": [
+   4.0,
+   4.394
+  ],
+  "dw_row": [
+   5.594,
+   9.139
+  ],
+  "dw_d": [
+   10.339,
+   212.0
+  ],
+  "clk_q": [
+   48.0,
+   51.6
+  ],
+  "rst_q_n": [
+   52.2,
+   55.8
+  ],
+  "fault": [
+   56.4,
+   60.0
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 12,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_h": "M4",
+  "pin_v": "M3 M5",
+  "pin_balance": {
+   "h": "M4",
+   "v": "M3 M5",
+   "group_max": 1
+  },
+  "io_hold_margin_ns": 0.03
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": false,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "hold_budget": "die",
+ "pin_regs": {
+  "enable": false,
+  "reason": "Every pin is registered in RTL (inputs land in pin registers / banks, every output is a register); a wrapper stage would move the fixed 3:4 seam calendar edges."
+ },
+ "structural_change": "HBM-CXDL 10-18: the two-root cxport leaves failed route (dl 761317600: TT -166.7 / FF hold -95.1 on 1,045 dl_slot -> dw_d endpoints, hold repair stalled because the same endpoints fail setup; rc: TT -173.4 / FF -77.9 on ro_slot / rr_slot1 -> serial and rc_slot -> pend / rc_d). Cause: NOT tree skew (clk_s / clk_q leaf insertion differ ~47 ps) but the 3:4 crossing inside one leaf, which ordinary related-clock STA times at the VCO tick (setup 277.8 ps, hold at the coincident edge) less the 150 / 100 distinct-entry reserve. Fix (S81 x34 _s/_t and bridge_release_s precedent): each leaf splits into a stream half and a serial half with ONE root each; the crossing becomes a 2-bank seam (events alternate banks; static calendar windows >= 3 quanta for setup and for rewrite-after-read), a die-level 3:4 seam arc. Same edges and outputs: lockstep vs the hub PASS QID 2 and QID 0 (checks=24183, as before); mutants 2/3/4 FAIL. dl_q (serial, die x16): W seam from dl_s 1,065 b (4.9/um), E slice-G write port 1,044 b (4.9/um).",
+ "job": {
+  "owner": "Claude:HBM-CXDL",
+  "branch": "claude/hbm-cxdl-1018",
+  "tag": "x1",
+  "purpose": "HBM die d4g cxport one-root half: ot_hbm_su_static_cxport_dl_q",
+  "record_to": "results/rtl/ref_tile/hbm_su_cx_dlq_1018",
+  "views_to": "physical/ref_tile/hbm_su_cx_dlq_1018/views",
+  "auto_merge": false,
+  "reroute_reason": {
+   "kind": "rtl_change",
+   "what": "one-root split vs hbm_su_cx_dl_1017-s2-761317600",
+   "why": "HBM-CXDL 10-18: the two-root cxport leaves failed route (dl 761317600: TT -166.7 / FF hold -95.1 on 1,045 dl_slot -> dw_d endpoints, hold repair stalled because the same endpoints fail setup; rc: TT -173.4 / FF -77.9 on ro_slot / rr_slot1 -> serial and rc_slot -> pend / rc_d). Cause: NOT tree skew (clk_s / clk_q leaf insertion differ ~47 ps) but the 3:4 crossing inside one leaf, which ordinary related-clock STA times at the VCO tick (setup 277.8 ps, hold at the coincident edge) less the 150 / 100 distinct-entry reserve. Fix (S81 x34 _s/_t and bridge_release_s precedent): each leaf splits into "
+  },
+  "extra_paths": [
+   "tools/hbm_static/su_cxport_split_run.sh",
+   "rtl/hbm_accel/generic/adapters/static_su/collport/tb_hbm_su_cxport_split.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_cxport.sv"
+  ],
+  "benches": [
+   {
+    "name": "cxport_split_lockstep",
+    "cmd": "bash tools/hbm_static/su_cxport_split_run.sh {RUN}/bench/pos 2 0 0 0",
+    "expect": "pass",
+    "pass_regex": "CXPORT_SPLIT PASS",
+    "pass_witness": "results/rtl/hbm_cxdl_1018/cxport_split2_q2_pos.log",
+    "min_count_regex": "checks=(\\d+)",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "cxport_split_mut4",
+    "cmd": "bash tools/hbm_static/su_cxport_split_run.sh {RUN}/bench/mut4 2 0 4 1",
+    "expect": "fail",
+    "fail_regex": "CXPORT_SPLIT FAIL",
+    "fail_witness": "results/rtl/hbm_cxdl_1018/cxport_split2_mut4.log",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ]
+ },
+ "orfs_vars": {
+  "GPL_ROUTABILITY_DRIVEN": "0"
+ }
+}

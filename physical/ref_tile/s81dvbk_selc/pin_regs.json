@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "dsdv_bksel_c",
+ "enable": false,
+ "reason": "Source-registered: dsfd_selt_c lands every quarter bundle in its pin flops (sq / oq) and launches t_c / t_cr / vd from flops (the closed mrg variant's configuration plus SLAT 4 / XDX 1)."
+}

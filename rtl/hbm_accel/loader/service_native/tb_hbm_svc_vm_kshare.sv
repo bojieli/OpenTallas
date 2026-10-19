@@ -8,7 +8,7 @@
 // slots 0..63 of each PC exactly once with data = f(VM address of the slot), its bank/epoch; no fault.
 // Plusargs: +HBM_HALF=<ps> +STR_HALF=<ps> +WINDOWS=<n>.  Exit: "PASS" line, else "FAIL".
 module tb_hbm_svc_vm_kshare;
- parameter integer SM=2, MUT=0, KRL1=0, TBL1=KRL1;   // TBL1: controller model ready-latency-1 (PC H9b)
+ parameter integer SM=2, MUT=0, KRL1=0, TBL1=KRL1, SPLIT=0;   // TBL1: controller model ready-latency-1 (PC H9b)
  integer HBM_HALF=600, STR_HALF=500, WINDOWS=6;
  reg hbm_clk=0,stream_clk=0,hbm_rst_n=0,stream_rst_n=0;
  always #(HBM_HALF*1ps) hbm_clk=~hbm_clk;
@@ -19,6 +19,17 @@ module tb_hbm_svc_vm_kshare;
  wire[1023:0]c_k_wdata;wire[127:0]c_k_wstrb;reg[3:0]c_kr_v;wire[3:0]c_kr_rdy;reg[67:0]c_kr_tag;reg[15:0]c_kr_beat;reg[1023:0]c_kr_data;
  reg vm_v,vm_bank;reg[15:0]vm_epoch;reg[14:0]vm_row;reg[3:0]vm_col;
  wire[3:0]fill_v,fill_bank;wire[23:0]fill_slot;wire[63:0]fill_epoch;wire[1023:0]fill_data;wire fault;
+ // SPLIT=1 (SVC-SMALL 10-18): the die kit top ot_hbm_svc_vm_kshare_splitstrap (both strap pins tied to SM)
+ generate if(SPLIT!=0)begin:g_split
+ ot_hbm_svc_vm_kshare_splitstrap #(.MUT(MUT),.KRL1(KRL1)) dut(.sm_stream(3'(SM)),.sm_hbm(3'(SM)),.hbm_clk(hbm_clk),.hbm_rst_n(hbm_rst_n),.stream_clk(stream_clk),.stream_rst_n(stream_rst_n),
+  .g_k_v(g_k_v),.g_k_rdy(g_k_rdy),.g_k_addr(g_k_addr),.g_k_len(g_k_len),.g_k_tag(g_k_tag),.g_k_we(4'b0),.g_k_wdata(1024'b0),.g_k_wstrb(128'b0),
+  .g_k_wr_done(g_k_wr_done),.g_kr_v(g_kr_v),.g_kr_rdy(g_kr_rdy),.g_kr_tag(g_kr_tag),.g_kr_beat(g_kr_beat),.g_kr_data(g_kr_data),
+  .c_k_v(c_k_v),.c_k_rdy(c_k_rdy),.c_k_addr(c_k_addr),.c_k_len(c_k_len),.c_k_tag(c_k_tag),.c_k_we(c_k_we),.c_k_wdata(c_k_wdata),
+  .c_k_wstrb(c_k_wstrb),.c_k_wr_done(4'b0),.c_kr_v(c_kr_v),.c_kr_rdy(c_kr_rdy),.c_kr_tag(c_kr_tag),.c_kr_beat(c_kr_beat),.c_kr_data(c_kr_data),
+  .vm_v(vm_v),.vm_bank(vm_bank),.vm_epoch(vm_epoch),.vm_row(vm_row),.vm_col(vm_col),
+  .wbw_v(1'b0),.wbw_base(30'd0),.wbw_total(12'd0),.w_k_v(4'b0),.w_k_rdy(),.w_k_addr(120'd0),.w_k_wdata(1024'd0),.w_k_wr_done(),
+  .fill_v(fill_v),.fill_bank(fill_bank),.fill_slot(fill_slot),.fill_epoch(fill_epoch),.fill_data(fill_data),.fault(fault));
+ end else begin:g_plain
  ot_hbm_svc_vm_kshare #(.MUT(MUT),.KRL1(KRL1)) dut(.sm(3'(SM)),.hbm_clk(hbm_clk),.hbm_rst_n(hbm_rst_n),.stream_clk(stream_clk),.stream_rst_n(stream_rst_n),
   .g_k_v(g_k_v),.g_k_rdy(g_k_rdy),.g_k_addr(g_k_addr),.g_k_len(g_k_len),.g_k_tag(g_k_tag),.g_k_we(4'b0),.g_k_wdata(1024'b0),.g_k_wstrb(128'b0),
   .g_k_wr_done(g_k_wr_done),.g_kr_v(g_kr_v),.g_kr_rdy(g_kr_rdy),.g_kr_tag(g_kr_tag),.g_kr_beat(g_kr_beat),.g_kr_data(g_kr_data),
@@ -27,6 +38,7 @@ module tb_hbm_svc_vm_kshare;
   .vm_v(vm_v),.vm_bank(vm_bank),.vm_epoch(vm_epoch),.vm_row(vm_row),.vm_col(vm_col),
   .wbw_v(1'b0),.wbw_base(30'd0),.wbw_total(12'd0),.w_k_v(4'b0),.w_k_rdy(),.w_k_addr(120'd0),.w_k_wdata(1024'd0),.w_k_wr_done(),
   .fill_v(fill_v),.fill_bank(fill_bank),.fill_slot(fill_slot),.fill_epoch(fill_epoch),.fill_data(fill_data),.fault(fault));
+ end endgenerate
  function automatic [255:0] f(input [29:0] a, input [3:0] b);
   reg[255:0]r;integer i;begin for(i=0;i<8;i=i+1)r[32*i+:32]=32'h9e3779b9*(a+b+1)+i*32'h85ebca6b^{a[13:0],b,i[3:0],10'h2a5};f=r;end
  endfunction

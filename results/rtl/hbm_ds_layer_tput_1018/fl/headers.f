@@ -1,0 +1,11 @@
+rtl/dsrom_sys/s81_link/ot_s81_gf1024.svh
+rtl/dsrom_sys/s81_link/ot_s81_kp4_enc_mat.svh
+rtl/dsrom_sys/s81_link/ot_s81_kp4_syn_mat.svh
+rtl/hbm_accel/generic/ot_hgi_cfg_consts.svh
+rtl/hbm_accel/generic/ot_hgi_seq_seam.svh
+rtl/hdc/ot_hdc_isa.svh
+rtl/hdc/v41/ot_hdc_isa_v41.svh
+rtl/hdc/v41/ot_hdc_isa_v41_full.svh
+rtl/hdc/v41/ot_hdc_isa_v41_fuse.svh
+rtl/hdc/v41/ot_hdc_isa_v41_profiles.svh
+rtl/hdc/v41x/ot_hdc_v41x_idx_rowmap.svh

@@ -1,0 +1,7 @@
+LP_MISMATCH port=z3 cycle=38 flat=6e landed=0e
+LP_MISMATCH port=z3 cycle=39 flat=d5 landed=5f
+LP_MISMATCH port=z3 cycle=40 flat=ee landed=e1
+LP_MISMATCH port=z3 cycle=41 flat=ae landed=a7
+LP_MISMATCH port=z3 cycle=42 flat=b1 landed=2e
+LP_LOCKSTEP FAIL MUT=3 mismatches=1951 of 3924
+tools/landed_parent/lp_selftest_q2_wa_am/tb_lpt_top_lp.sv:34: $finish called at 2000000 (1ps)

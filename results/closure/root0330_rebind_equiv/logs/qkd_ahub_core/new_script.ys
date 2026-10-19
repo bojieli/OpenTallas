@@ -1,0 +1,13 @@
+read_verilog -defer -sv -DSYNTHESIS  /tmp/r0330_eqv/qkd_ahub_core/src/00_ot_qkd_ahub_core.sv
+read_verilog -defer -sv -DSYNTHESIS  /tmp/r0330_eqv/qkd_ahub_core/src/01_ot_rst_pipe.sv
+read_verilog -defer -sv -DSYNTHESIS  /tmp/r0330_eqv/qkd_ahub_core/src/02_ot_hdc_delay.sv
+read_verilog -defer -sv -DSYNTHESIS  /tmp/r0330_eqv/qkd_ahub_core/new/ot_hbm_svc_stack_fault.sv
+read_verilog -defer -sv -DSYNTHESIS  /tmp/r0330_eqv/qkd_ahub_core/new/ot_hbm_svc_wb_cutthrough_cdc.sv
+read_verilog -defer -sv -DSYNTHESIS  /tmp/r0330_eqv/qkd_ahub_core/new/qkd_pvw_die_t.sv
+hierarchy -top qkd_ahub_core 
+tee -o /tmp/r0330_eqv/qkd_ahub_core/out_new/modules.txt ls
+proc; flatten; opt_clean -purge
+rename -enumerate
+tee -o /tmp/r0330_eqv/qkd_ahub_core/out_new/stat.txt stat
+write_rtlil /tmp/r0330_eqv/qkd_ahub_core/out_new/netlist.il
+write_verilog -noattr /tmp/r0330_eqv/qkd_ahub_core/out_new/netlist.v

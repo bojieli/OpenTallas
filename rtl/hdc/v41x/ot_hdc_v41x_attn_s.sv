@@ -189,8 +189,10 @@ module ot_hdc_v41x_attn_s #(
     parameter integer TD = 64,         // tile width (dims per q.k beat / rows per p.v block)
     parameter integer NL = 4,          // row lanes (rows per cycle)
     parameter integer TROWS = 640,     // staging buffer rows
-    parameter integer SC_CRED = 64,     // score-beat credits
-    parameter integer PV_CRED = 64,    // pv-beat credits
+    parameter integer SC_CRED = 64,     // score-beat credits; 0 = static scores (SVC-PV3): no credit, sc_cr ignored --
+                                        //   the consumer takes every beat the cycle it is produced (valid-only)
+    parameter integer PV_CRED = 64,    // pv-beat credits; 0 = static P.V (SVC-PV2): no credit, pv_cr ignored -- the
+                                       //   consumer's buffer and drain are compiled and fault-checked there
     parameter bit SRAM_MACRO = 0,      // ASAP7 packed-row staging macro boundary
     parameter integer PWORDS = 1,      // probability words per p handshake (1 or 2)
     parameter integer ILV = 0,         // 1: position-interleaved verify mode (see the controller)
@@ -436,13 +438,13 @@ module ot_hdc_v41x_attn_s #(
     wire iss_loaded = (pl_blk > iss_blk) || (p_last_word && (pl_blk == iss_blk));
     wire iss_final = (iss_blk + 1 == nblk_p);
     wire pv_go_raw = pv_side && (iss_blk < nblk_p) && iss_loaded && (filled_upto > iss_blk) &&
-                 (!iss_final || (pv_cred != 0));
+                 (!iss_final || (PV_CRED == 0) || (pv_cred != 0));
     wire pv_go = pv_go_raw;
     wire fl_half_free = (fl_blk < iss_blk + 2) || ((fl_blk == iss_blk + 2) && pv_go_raw && (iss_c + 1 == DPT));
     wire fl_go = pv_side && (fl_blk < nblk_p) && fl_half_free;
     // q.k issue (ILV: after the fill and the p.v beat of the cycle)
     wire qk_rows_ok = (wptr >= T) || (qk_row + NL <= wptr);
-    wire qk_go = act && !phase_pv && (q_cnt == H) && (qk_row < T) && qk_rows_ok && (sc_cred != 0) &&
+    wire qk_go = act && !phase_pv && (q_cnt == H) && (qk_row < T) && qk_rows_ok && ((SC_CRED == 0) || (sc_cred != 0)) &&
                  !((ILV != 0) && (((NSTAGE == 1) && fl_go) || pv_go));
     wire [BW-1:0] iss_bank = (pl_blk == iss_blk) ? ((pl_word == 0) ? nb_p : pl_bank) : blk_bank[iss_blk % BD];
     assign qk_iss = qk_go;
@@ -499,8 +501,10 @@ module ot_hdc_v41x_attn_s #(
                     held[q_bank] <= 1'b0;
                 end
             end
-            if (sc_cr && !qk_go) sc_cred <= sc_cred + 1'b1;
-            else if (!sc_cr && qk_go) sc_cred <= sc_cred - 1'b1;
+            if (SC_CRED != 0) begin
+                if (sc_cr && !qk_go) sc_cred <= sc_cred + 1'b1;
+                else if (!sc_cr && qk_go) sc_cred <= sc_cred - 1'b1;
+            end
             // p words
             if (p_go) begin
                 if (pl_word == 0) begin
@@ -541,8 +545,10 @@ module ot_hdc_v41x_attn_s #(
                     iss_c <= iss_c + 1'b1;
                 end
             end
-            if (pv_cr && !(pv_go && iss_final)) pv_cred <= pv_cred + 1'b1;
-            else if (!pv_cr && pv_go && iss_final) pv_cred <= pv_cred - 1'b1;
+            if (PV_CRED != 0) begin
+                if (pv_cr && !(pv_go && iss_final)) pv_cred <= pv_cred + 1'b1;
+                else if (!pv_cr && pv_go && iss_final) pv_cred <= pv_cred - 1'b1;
+            end
         end
     end
 

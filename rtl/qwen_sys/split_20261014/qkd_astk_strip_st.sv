@@ -3,7 +3,7 @@
 // KVE-2-ASTK 2026-10-17: wires-only static ASTK strip (credit-free, lane-free successor of qkd_astk_strip_s).
 // The topology of the selected static composition qkd_astk_native_stack_cal (rtl/qwen_sys/split_20261014/qkd_astk_cal_gen.sv)
 // without its e-read service (that is KVJ-D's inline qkd_astk_er_tap on the so / si bus) and without the legacy P.V tree:
-//   qkd_astk_ctl_s + 8 x qkd_astk_ep_s + 32 x qkd_astk_ex_s + 4 x qkd_astk_zn, registered die relays (ot_hdc_delay) on ck_r.
+//   qkd_astk_ctl_s + 8 x qkd_astk_ep_s + 32 x qkd_astk_ex_s + 4 x qkd_astk_zn, registered die relays (qkd_astk_delay) on ck_r.
 // No credit, ready or lane: every slot is a fixed age after the command's start edge (cal = {EXP base, Z start, LMAX start},
 // held by the compiler from issue through the last slice's start edge); availability / identity / overflow are fault checks.
 // Relative to qkd_astk_strip_s: nb* (32 x 1,024 b), ck_v (64), pv_done, si[633] (engine nb_cr) and so[423:412] are gone;
@@ -41,8 +41,8 @@ module qkd_astk_strip_st #(
     wire [650:0] zo [0:8];
     wire [521:0] ro [0:8];
     assign xo[0] = 267'd0; assign zo[0] = 651'd0;
-    ot_hdc_delay #(.W(572), .D(RL), .RESET(1)) u_cq (.clk(ck_r), .rst_n(rst_n), .d(cq), .q(qi[8]));
-    ot_hdc_delay #(.W(267), .D(RL), .RESET(1)) u_cx (.clk(ck_r), .rst_n(rst_n), .d(xo[8]), .q(cx));
+    qkd_astk_delay #(.W(572), .D(RL), .RESET(1)) u_cq (.clk(ck_r), .rst_n(rst_n), .d(cq), .q(qi[8]));
+    qkd_astk_delay #(.W(267), .D(RL), .RESET(1)) u_cx (.clk(ck_r), .rst_n(rst_n), .d(xo[8]), .q(cx));
     assign ro[8] = {zo[8][650:139], zo[8][10:7], zo[8][6:3], zo[8][2], zo[8][0]};
     genvar e, h, z;
     generate for (e = 0; e < 8; e = e + 1) begin : g_ep
@@ -50,10 +50,10 @@ module qkd_astk_strip_st #(
         wire [650:0] zi;
         wire [263:0] xa;
         wire [135:0] xe;
-        ot_hdc_delay #(.W(267), .D(RL), .RESET(1)) u_x (.clk(ck_r), .rst_n(rst_n), .d(xo[e]), .q(xi));
-        ot_hdc_delay #(.W(651), .D((e % 2) ? 0 : RL), .RESET(1)) u_z (.clk(ck_r), .rst_n(rst_n), .d(zo[e]), .q(zi));
-        ot_hdc_delay #(.W(572), .D(RL), .RESET(1)) u_q (.clk(ck_r), .rst_n(rst_n), .d(qi[e+1]), .q(qi[e]));
-        ot_hdc_delay #(.W(522), .D(RL), .RESET(1)) u_r (.clk(ck_r), .rst_n(rst_n), .d(ro[e+1]), .q(ro[e]));
+        qkd_astk_delay #(.W(267), .D(RL), .RESET(1)) u_x (.clk(ck_r), .rst_n(rst_n), .d(xo[e]), .q(xi));
+        qkd_astk_delay #(.W(651), .D((e % 2) ? 0 : RL), .RESET(1)) u_z (.clk(ck_r), .rst_n(rst_n), .d(zo[e]), .q(zi));
+        qkd_astk_delay #(.W(572), .D(RL), .RESET(1)) u_q (.clk(ck_r), .rst_n(rst_n), .d(qi[e+1]), .q(qi[e]));
+        qkd_astk_delay #(.W(522), .D(RL), .RESET(1)) u_r (.clk(ck_r), .rst_n(rst_n), .d(ro[e+1]), .q(ro[e]));
         // the slice's EXP offset: the chunk chain's 9-edge join plus the command-bus relay skew (qkd_astk_native_stack_cal)
         qkd_astk_ep_s u_ep (.cal_exp(cal[47:32]), .eo(8'(9*e + RL*(e + e/2))), .ck(ck_e[e]), .rst_n(rst_n), .sq({st, 3'(e)}),
             .so(so[413*e +: 412]), .sf(so[413*e + 412]), .si(si[633*e +: 633]), .qi(qi[e]), .xi(xi), .xo(xo[e+1]),

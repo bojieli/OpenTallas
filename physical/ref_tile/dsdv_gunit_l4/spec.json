@@ -1,0 +1,168 @@
+{
+ "name": "dsdv_gunit_l4",
+ "top": "dsdv_gunit_l4",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fp32_f12.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_norm.sv",
+  "rtl/hdc/v41x/ot_dsrom_divc.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+  "rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_pass.sv",
+  "rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l4.sv"
+ ],
+ "params": {},
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "macros": [],
+ "pins": {
+  "S": [
+   "rs_i",
+   "rs_o",
+   "g_v",
+   "g_i",
+   "g_acc",
+   "g_d",
+   "j_v",
+   "j_set",
+   "j_w",
+   "j_row",
+   "j_lm",
+   "j_sm",
+   "cw_v",
+   "cw_a",
+   "cw_d",
+   "sid_i",
+   "hct_v",
+   "hct_b",
+   "mix_go_s",
+   "launch_s",
+   "fault"
+  ],
+  "N": [
+   "rn_o",
+   "rn_i",
+   "launch",
+   "mx_v",
+   "mx_i",
+   "mx_y",
+   "t_set",
+   "t_w",
+   "t_row",
+   "t_lm",
+   "t_sm",
+   "cwo_v",
+   "cwo_a",
+   "cwo_d",
+   "sid_o",
+   "hct5_v",
+   "hct5_b",
+   "f5"
+  ],
+  "E": [
+   "ss_v",
+   "ss",
+   "eps_c",
+   "r_v",
+   "r_y",
+   "r_f"
+  ],
+  "W": [
+   "clk",
+   "rst_n"
+  ]
+ },
+ "outline": {
+  "w": 345.6,
+  "h": 64.8
+ },
+ "recipe": 4,
+ "clock": "cts",
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.0,
+  "macro_halo_um": 5.4,
+  "pin_min_tracks": 4
+ },
+ "structural_change": "NATIVE-FIX3/gl4 (10-18, placement only, 0 cycles, RTL byte-identical to the closed 30d12242b view): NATIVE-3 audit FAIL launch rn_o[122] 236.3 / rn_o[123] 202.6 / fault 224.1, capture rn_i[215] 197.8 at R 295.7. Measured in the closed route: the rn_* pin flops sat beside their N pins, but their single-fanout chain cells (QN inverter, port buffer, GPL repair buffers) were left 76-151 um away along the FIRM pin-flop band (rn_o[122]: flop 158.9 -> INV 40.8 -> port BUF 85 -> pin 158.7; rn_i[215]: pin 140.5 -> port BUF 287 -> flop 142), and the sticky fault flop (QN also read by its own enable logic, so io_flop_at_pins could not anchor it) sat at x 270 for an S pin at x 110. Fix: pin_reg_split (the fault pin gets a cloned launch flop, same D / clock / reset, anchored at its pin) + pre_dpl_extra chain_pull.tcl (every pin -> pin-flop chain cell further than 6 um from its pin -> flop segment is placed on it before DPL; trial on the closed route's 3_4 db: 26 cells on 2,673 ports moved, DPL max displacement 2.2 um). S81U-GUNIT6 (10-17): native pin rules -- cw captured once (feedthrough stage 1 = eps-table input flops); launch output flop has a kept internal twin feeding launch_s (0 edges). S81U-GUNIT4 (10-17): rst_n via ot_rst_relay (4 kept regions; GUNIT3 gate: port 688 reset loads) and outline 345.6 x 64.8 (GUNIT3 gate: std 9,773 um2 at util 35% in 345.6 x 86.4; the stack width is fixed, the height shortens the rung hops). S81U-GUNIT3 (10-17): dsdv_gunit_l4 successor: the r chain (divc, + eps, rsqrt: 9.9k flops) moved to the E-side leaf dsdv_gunit_l4r (GUNIT2 L4: 21,174 sinks, TT insertion 436 ps, clock-rule FAIL). L4 keeps the golden tree above the slice roots, the 24 mixes, the tail launch and the passes. Outline from the gate's std area (L4 was 22% util at 345.6 x 259.2). Pins at 4 tracks, clock on the free W face. The 24 mixes leave one a cycle (38 pins, -768 flops) instead of a 768-bit register + bus.",
+ "job": {
+  "owner": "Claude:NATIVE-FIX3/gl4",
+  "branch": "claude/nf3-gl4-1018",
+  "tag": "nf3",
+  "purpose": "S81-DV G-unit leaf L4 to closure (TT setup / FF hold / DRC 0 + native audit).",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_dv/unit",
+   "rtl/hdc",
+   "rtl/dsrom_sys/s81_suhc",
+   "tools/hdc_golden_v41.py",
+   "tools/hdc_golden.py",
+   "physical/ref_tile_specs/s81dv"
+  ],
+  "benches": [
+   {
+    "name": "gunit_exact",
+    "cmd": "bash rtl/dsrom_sys/s81_dv/unit/test/run_gunit_bench.sh {RUN}/bench 8 0",
+    "expect": "pass",
+    "pass_regex": "^MUT=0: GUNIT PASS cases=8 ",
+    "threads": 6,
+    "peak_ram_gb": 24,
+    "pass_witness": "results/rtl/s81_dv_units_1017/nf3_gl4/exact.log",
+    "min_count_regex": "^MUT=0: GUNIT PASS cases=(\\d+) "
+   },
+   {
+    "name": "gunit_mut5",
+    "cmd": "bash rtl/dsrom_sys/s81_dv/unit/test/run_gunit_bench.sh {RUN}/mut 4 5",
+    "expect": "fail",
+    "fail_regex": "^MUT=5: GUNIT FAIL ",
+    "threads": 6,
+    "peak_ram_gb": 24,
+    "fail_witness": "results/rtl/s81_dv_units_1017/nf3_gl4/mut5.log"
+   }
+  ],
+  "views_to": "physical/ref_tile/dsdv_gunit_l4/views",
+  "record_to": "results/rtl/ref_tile/dsdv_gunit_l4"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Source-registered: every input lands in a flop at the pin and every output is a flop (dsdv_gunit_l* input/output flops, dsdv_gunit_pass feedthroughs, ot_dsdv_vstop's own flops); recipe pin_regs would add an unpriced stage on the router's critical path and on every rung hop."
+ },
+ "hold_budget": "die",
+ "children": [],
+ "inter": [],
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "pre_dpl_extra": [
+  "physical/ref_tile/dsdv_gunit_l4/chain_pull.tcl"
+ ],
+ "reroute_reason": {
+  "kind": "native_launch",
+  "source": "results/arch/native_3_1017/native_3_audit.json",
+  "cell": "dsdv_gunit_l4",
+  "launch_ps": 236.3,
+  "capture_ps": 197.8,
+  "launch_over": 2,
+  "capture_over": 1,
+  "closed_job": "dsdv_gunit_l4-g3-30d12242b",
+  "why": "NATIVE-3 audit (claude/native-3-1017 73adc87ea, lanes/NATIVE-3.md): rn_o[122] 236.3 / fault 224.1 launch, rn_i[215] 197.8 capture -> pin chain cells pulled onto the pin -> flop segment (chain_pull.tcl) + fault launch flop cloned at its pin (pin_reg_split); same RTL, outline and pins as dsdv_gunit_l4-g3-30d12242b",
+  "fix": "recipe-2 output stage (pin_reg_split.tcl in pre_gpl.tcl, OT_KEEP_PIN_REGS=1) + PRE_DETAIL_PLACE chain pull; 0 cycles"
+ }
+}

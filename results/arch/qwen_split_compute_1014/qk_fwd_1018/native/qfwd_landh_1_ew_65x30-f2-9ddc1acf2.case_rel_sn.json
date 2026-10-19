@@ -1,0 +1,60 @@
+{
+ "cell": "qfd_landh_1_EW_65x30",
+ "view": "v/qfwd_landh_1_ew_65x30-f2-9ddc1acf2/physical/ref_tile/qfwd_landh_1_ew_65x30/views/qfd_landh_1_EW_65x30",
+ "lib_cell": "qfd_landh_1_EW_65x30",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean -> relative C 37.5"
+ ],
+ "R_ps": 37.9,
+ "spread_ps": 1.1,
+ "relative_to": "neighbour /srv/opentallas-scratch/claude/qk-fwd/audit/v/qfwd_rlyh_1_sn_65x30-f1-93960f2c9/physical/ref_tile/qfwd_rlyh_1_sn_65x30/views/qfd_rlyh_1_SN_65x30/insertion.json boundary mean",
+ "outputs": 2,
+ "inputs": 3,
+ "launch_ps": 92.3,
+ "launch_pin": "fault",
+ "capture_ps": 87.6,
+ "capture_pin": "a[0]",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "case_patterns": [
+  "k0",
+  "k1",
+  "k2"
+ ],
+ "case_pins": [
+  "k0",
+  "k1",
+  "k2"
+ ],
+ "case_pins_raw_capture_ps": {
+  "k0": 225.7,
+  "k1": 226.9,
+  "k2": 196.2
+ },
+ "ff_spread_ps": 1.0,
+ "ff_launch_min_ps": 56.3,
+ "ff_hold_need_ps": -16.6,
+ "relative": {
+  "tt": {
+   "clock_pin": "ckf",
+   "rel_min_ps": -1.4,
+   "rel_max_ps": -0.4,
+   "mismatch_ps": 1.4,
+   "offset_ps": -0.9,
+   "comp_ps": 37.5
+  },
+  "ff": {
+   "clock_pin": "ckf",
+   "rel_min_ps": -1.5,
+   "rel_max_ps": -0.5,
+   "mismatch_ps": 1.5,
+   "offset_ps": -0.9,
+   "comp_ps": 29.7
+  }
+ },
+ "pass": true,
+ "fail_why": ""
+}

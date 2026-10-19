@@ -1,0 +1,184 @@
+{
+ "name": "s81sl_hcpl",
+ "top": "ot_dsrom_su_hcpost_lane_pr",
+ "kind": "tile",
+ "sources": [
+  "rtl/hdc/v41x/ot_dsrom_su_hcpost_lane_pr.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_hcpost.sv",
+  "rtl/hdc/ot_hdc_fp32_f12.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_add6.sv"
+ ],
+ "params": {
+  "ML": 7,
+  "AL": 6
+ },
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "macros": [],
+ "pins": {
+  "W": [
+   "v",
+   "r0",
+   "r1",
+   "r2",
+   "r3",
+   "y"
+  ],
+  "N": [
+   "c0",
+   "c1",
+   "c2",
+   "c3",
+   "p"
+  ],
+  "E": [
+   "vo",
+   "o",
+   "fault"
+  ],
+  "S": [
+   "clk",
+   "rst_n"
+  ]
+ },
+ "recipe": 4,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "clock": "cts",
+ "layer_cap": "M5",
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  },
+  "io_hold_margin_ns": 0.0,
+  "macro_halo_um": 5.4
+ },
+ "structural_change": "S81-SLICE (stream 0cm, owner-approved DV p4): new beat sub-leaf of the distributed-vector slice; flop-first pins, die hold budget.",
+ "job": {
+  "owner": "Claude:S81-SLICE",
+  "branch": "claude/s81slice-1017",
+  "tag": "s81sl_hcpl",
+  "purpose": "S81-SLICE deliverable 3: beat-leaf sub-leaf to closure (TT setup / FF hold / DRC 0 + native audit).",
+  "extra_paths": [
+   "results/rtl/s81_slice_1017/hcpl/mut.log",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_fp32_f12.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/v41x/ot_dsrom_su_add6.sv",
+   "rtl/hdc/v41x/ot_dsrom_su_hcpost.sv",
+   "rtl/hdc/v41x/ot_dsrom_su_hcpost_lane_pr.sv",
+   "rtl/test/tb_hcpost_lane_pr.sv",
+   "tools/s81_slice/hcpl_bench.sh"
+  ],
+  "benches": [
+   {
+    "name": "hcpl_lane_pr",
+    "cmd": "bash tools/s81_slice/hcpl_bench.sh {RUN}/hcpl",
+    "expect": "pass",
+    "pass_regex": "^PASS hcpl$",
+    "threads": 2,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "hcpl_lane_pr_mut1",
+    "cmd": "bash tools/s81_slice/hcpl_bench.sh {RUN}/hcplm mut",
+    "expect": "fail",
+    "fail_regex": "^FAIL_HCPOST_LANE_PR mismatches=[1-9][0-9]* ",
+    "fail_witness": "results/rtl/s81_slice_1017/hcpl/mut.log",
+    "threads": 2,
+    "peak_ram_gb": 4
+   }
+  ],
+  "views_to": "physical/ref_tile/s81sl_hcpl/views",
+  "record_to": "results/rtl/ref_tile/s81sl_hcpl"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Source-registered: ot_dsrom_su_hcpost_lane_pr puts one flop at every input pin (its own design, REVIEW_20261008 S-C1) and every output is a core register; this kit re-closes the unchanged closed lane RTL (ML 7 / AL 6, hbm_hcp_lane_pr_79315a431-tc) in the current flow as the S81 slice vp's hard child."
+ },
+ "util": 0.52,
+ "std_area_um2": 6248,
+ "pin_ranges": {
+  "v": [
+   6.48,
+   9.19
+  ],
+  "r0": [
+   9.19,
+   28.952
+  ],
+  "r1": [
+   28.952,
+   48.714
+  ],
+  "r2": [
+   48.714,
+   68.476
+  ],
+  "r3": [
+   68.476,
+   88.238
+  ],
+  "y": [
+   88.238,
+   108.0
+  ],
+  "c0": [
+   6.48,
+   26.784
+  ],
+  "c1": [
+   26.784,
+   47.088
+  ],
+  "c2": [
+   47.088,
+   67.392
+  ],
+  "c3": [
+   67.392,
+   87.696
+  ],
+  "p": [
+   87.696,
+   108.0
+  ],
+  "vo": [
+   6.48,
+   11.435
+  ],
+  "o": [
+   11.435,
+   103.045
+  ],
+  "fault": [
+   103.045,
+   108.0
+  ]
+ },
+ "reroute_reason": {
+  "kind": "slot_change",
+  "slot_change_request": "S81-SLICE SLOT CHANGE REQUEST 10-17 (S81-DV p4c slice, coordinator-approved gate 0co): the closed lane_pr view 79315a431 is a legacy-flow view (no TT lib, no insertion.json, legacy M6/M7 layers, 85.32 x 115.02) that cannot be a hard child of the current-flow vp cluster; new 114.48 x 114.48 outline, recipe 4 / hold_budget die, full-face pin spread for the DV beat leaf (16 per leaf, 80 per slice). RTL unchanged."
+ },
+ "slot_change_request": "S81-SLICE SLOT CHANGE REQUEST 10-17 (S81-DV p4c slice, coordinator-approved gate 0co): the closed lane_pr view 79315a431 is a legacy-flow view (no TT lib, no insertion.json, legacy M6/M7 layers, 85.32 x 115.02) that cannot be a hard child of the current-flow vp cluster; new 114.48 x 114.48 outline, recipe 4 / hold_budget die, full-face pin spread for the DV beat leaf (16 per leaf, 80 per slice). RTL unchanged.",
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true
+}

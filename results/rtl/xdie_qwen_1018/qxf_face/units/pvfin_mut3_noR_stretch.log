@@ -1,0 +1,14 @@
+MISMATCH cmd 1 beat 0 at k 36 (ref out -1) db 0
+MISMATCH cmd 1 beat 1 at k 37 (ref out -1) db 1
+MISMATCH cmd 1 beat 2 at k 38 (ref out 38) db 2
+MISMATCH cmd 1 beat 3 at k 39 (ref out 38) db 3
+MISMATCH cmd 1 beat 4 at k 40 (ref out 38) db 4
+cmd 2 fault ref 0 dut 1
+cmd 3 fault ref 0 dut 1
+cmd 4 fault ref 0 dut 1
+cmd 5 fault ref 0 dut 1
+FAIL 71 mismatches (96 beats, 6 compared)
+- rtl/test/qwen_split/tb_qkd_pv_fin_s.sv:109: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.049 s; speed 41.682 us/s
+- Verilator: cpu 0.049 s on 1 threads; allocated 11 MB

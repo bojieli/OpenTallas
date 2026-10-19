@@ -1,0 +1,21 @@
+SM_MV k4 wq_a FP8 m=13 K=5120 PASS sm0 R=1 lines=40 cyc=182 priced=199.97 fault=None
+SM_MV k7 wkv FP8 m=5 K=5120 PASS sm0 R=1 lines=40 cyc=182 priced=199.97 fault=None
+SM_MV k12 wq_b (head-aligned: head FP8 m=512 K=1280 PASS sm0 R=16 lines=256 cyc=363 priced=482.82 fault=None
+SM_MV k30 wo_a K-split: the die's  BF16 m=1024 K=512 PASS sm0 R=32 lines=256 cyc=367 priced=489.83 fault=None
+SM_MV k37 wo_b FP8 m=53 K=8192 PASS sm0 R=2 lines=128 cyc=249 priced=320.92 fault=None
+SM_MV k42 router gate BF16 m=4 K=5120 PASS sm0 R=1 lines=80 cyc=261 priced=275.94 fault=None
+SM_MV k44 expert slot 6 w1+w3 FP8 m=48 K=5120 PASS sm0 R=2 lines=80 cyc=243 priced=None fault=None
+SM_MV k49 expert slot 0 w1+w3 FP4 m=48 K=5120 PASS sm0 R=2 lines=48 cyc=176 priced=None fault=None
+SM_MV k58 expert slot 1 w1+w3 FP4 m=48 K=5120 PASS sm0 R=2 lines=48 cyc=176 priced=None fault=None
+SM_MV k59 expert slot 2 w1+w3 FP4 m=48 K=5120 PASS sm0 R=2 lines=48 cyc=176 priced=None fault=None
+SM_MV k62 expert slot 3 w1+w3 FP4 m=48 K=5120 PASS sm0 R=2 lines=48 cyc=176 priced=None fault=None
+SM_MV k64 expert slot 4 w1+w3 FP4 m=48 K=5120 PASS sm0 R=2 lines=48 cyc=176 priced=None fault=None
+SM_MV k65 expert slot 5 w1+w3 FP4 m=48 K=5120 PASS sm0 R=2 lines=48 cyc=176 priced=None fault=None
+SM_MV k71 expert slot 0 w2 FP4 m=53 K=2304 PASS sm0 R=2 lines=32 cyc=167 priced=43.98 fault=None
+SM_MV k73 expert slot 3 w2 FP4 m=53 K=2304 PASS sm0 R=2 lines=32 cyc=167 priced=43.98 fault=None
+SM_MV k75 expert slot 1 w2 FP4 m=53 K=2304 PASS sm0 R=2 lines=32 cyc=167 priced=43.98 fault=None
+SM_MV k78 expert slot 2 w2 FP4 m=53 K=2304 PASS sm0 R=2 lines=32 cyc=167 priced=43.98 fault=None
+SM_MV k79 expert slot 4 w2 FP4 m=53 K=2304 PASS sm0 R=2 lines=32 cyc=167 priced=43.98 fault=None
+SM_MV k80 expert slot 5 w2 FP4 m=53 K=2304 PASS sm0 R=2 lines=32 cyc=167 priced=43.98 fault=None
+SM_MV k82 expert slot 6 w2 FP8 m=53 K=2304 PASS sm0 R=2 lines=48 cyc=176 priced=65.97 fault=None
+SM_MV_UNIT PASS records=20 mut=-

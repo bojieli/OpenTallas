@@ -181,6 +181,14 @@ module ot_qwen_d2d_static_end #(
     wire wr_v = |fire;
     // a producer presenting a record outside its reserved capture edge is a stray (schedule fault)
     wire stray = |(tx_valid & ~fire);
+    // S-QTIES QC-12: an end built with fewer than 4 TX lanes faults a TX calendar event that names an unbuilt port
+    // (NT = 4: constant 0, the closed ends' logic is unchanged)
+    wire bad_port;
+    if (NT < 4) begin : g_bad_port
+        assign bad_port = tv && tp >= NT;
+    end else begin : g_all_ports
+        assign bad_port = 1'b0;
+    end
     reg [5:0] wcnt, rcnt, rslot; reg rd_v;
     wire [5:0] wslot = (MUT == 1) ? wcnt + 6'd1 : wcnt;
     // RX expectation and its 2-edge alignment with the slot link's checked output
@@ -198,7 +206,7 @@ module ot_qwen_d2d_static_end #(
             if (wr_v) wcnt <= wcnt + 6'd1;
             rd_v <= wr_v & ~halt; rslot <= wslot;
             if (rv) ecnt <= ecnt + 6'd1;
-            if (stray | multi | tf | rf) end_fault <= 1'b1;
+            if (stray | multi | tf | rf | bad_port) end_fault <= 1'b1;
             r1v <= rv; r1p <= rp; r1k <= rk; r1b <= rb;
             r2v <= r1v; r2p <= (MUT == 2 && r1p < 2) ? r1p ^ 3'd1 : r1p;
             rx_kind <= r1k; rx_beat <= r1b;

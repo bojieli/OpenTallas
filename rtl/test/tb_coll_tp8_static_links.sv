@@ -34,7 +34,19 @@ module tb_coll_tp8_static_links #(
     parameter integer PU = 14, PS = 339,         // PHY latencies the calendar compiles
     parameter integer KC = 4, KW = 2,
     parameter integer RU=0,RS0=0,RS1=0,RS2=0,SHARED=0,SIXFIVE=0,
-    parameter integer XU = 0, XS = 0             // extra PHY cycles vs compiled (negative control)
+    parameter integer XU = 0, XS = 0,            // extra PHY cycles vs compiled (negative control)
+    // TOKEN-XDIE-QTP8 10-18: die-level lanes between io_collective and io_serdes_j (dv2f14 fwd_lanes E, core cycles):
+    // ETj on port j's TX frame, ERj on port j's RX frame, EV2 = extra cycles of port 2's TX VALID lane only (the die
+    // gave serdes2_txv E 6 vs serdes2_tx E 5); LXj = the calendar's absorbed lane cycles (parent opt-in); TOKREG = face form
+    parameter integer ET0 = 0, ET1 = 0, ET2 = 0, ER0 = 0, ER1 = 0, ER2 = 0, EV2 = 0,
+    parameter integer TOKREG = 0, LX0 = 0, LX1 = 0, LX2 = 0,
+    parameter integer ISSUE_DEPTH = 8,            // MU-QWEN 10-18: stage-program rows of the bench issuer (<= 31)
+    // Q-COLLCAL 10-18 (+define+OT_TP8S_REAL_LANES): the die lanes are the REAL forwarded half-cycle lanes + landings
+    // (rtl/qwen_split/qfd_fwd_lane.sv: ot_qfd_lane_st hop 0 + half-cycle stations, ot_qfd_land ring D 4 read at rc - K)
+    // with the frame counts N and K straps of the die GEN (case/coll_lane_latency.json): per SerDes port j the TX data /
+    // valid lanes (io_collective -> io_serdes_j) and the RX data / valid lanes (io_serdes_j -> io_collective)
+    parameter integer NT0 = 0, NT1 = 0, NT2 = 0, NTV0 = 0, NTV1 = 0, NTV2 = 0, NR0 = 0, NR1 = 0, NR2 = 0, NRV0 = 0, NRV1 = 0, NRV2 = 0,
+    parameter integer KT0 = 0, KT1 = 0, KT2 = 0, KTV0 = 0, KTV1 = 0, KTV2 = 0, KR0 = 0, KR1 = 0, KR2 = 0, KRV0 = 0, KRV1 = 0, KRV2 = 0
 ) (input wire clk, input wire lck,input wire fdi_ck,input wire blk_ck);
     localparam integer ND = 8, LANES = 16, FW = 512, TAGW = 32, PW = FW + 2 + TAGW, RW = FW + 2, MAXW = 1 << 16;
     localparam integer FP = 546 + 19 + 32, FR = 514 + 19 + 32;       // codec frames 597 / 565
@@ -84,6 +96,10 @@ module tb_coll_tp8_static_links #(
     wire [ND-1:0] ptxv, rtxv; wire [ND*FP-1:0] ptx; wire [ND*FR-1:0] rtx;
     wire [ND-1:0] prxv, rrxv; wire [ND*FP-1:0] prx; wire [ND*FR-1:0] rrx;
     wire [ND*3-1:0] stxv, srxv; wire [ND*3*FP-1:0] stx, srx;
+    wire [ND*12-1:0] lflt;          // Q-COLLCAL real die lanes: landing faults, die*12 + port*4 + {tx, txv, rx, rxv}
+`ifndef OT_TP8S_REAL_LANES
+    assign lflt = 0;
+`endif
     wire[ND-1:0]shareflt;wire[ND-1:0]sharetxv,sharerxv;wire[ND*1043-1:0]sharetx,sharerx;
     wire [ND*20-1:0] xflt;            // 10 CDC channels x {w, r}
     wire [ND*5-1:0]  cabort;          // codec aborts: P, R, S0, S1, S2
@@ -112,7 +128,7 @@ module tb_coll_tp8_static_links #(
             assign imode[g] = scmd[16]; assign iwords[g*16 +: 16] = scmd[15:0];
             assign idone[g] = 1'b0;
 `else
-            ot_coll_cmd_issue #(.DEPTH(8), .BASE(0)) u_iss (.clk(clk), .rst_n(rst_n), .pw_v(pw_go), .pw_addr(pw_a),
+            ot_coll_cmd_issue #(.DEPTH(ISSUE_DEPTH), .BASE(0)) u_iss (.clk(clk), .rst_n(rst_n), .pw_v(pw_go), .pw_addr(pw_a),
                 .pw_data(pw_d), .start(stage_start), .cmd_free(cfree[g]), .cmd_v(icv[g]), .cmd_mode(imode[g]),
                 .cmd_words(iwords[g*16 +: 16]), .cmd_tag(itag[g*TAGW +: TAGW]), .active(iact[g]), .done(idone[g]),
                 .fault(ifl[g]));
@@ -132,9 +148,9 @@ module tb_coll_tp8_static_links #(
 `ifdef OT_TP8S_PRODUCTION_WRAPPER
             assign ptv[1:0]=u_parent.u_io.phy_tx_valid[1:0];
             assign ptpack[0+:1194]=u_parent.u_io.phy_tx[0+:1194];
-            qfd_collective_static_io_production #(.PU(PU),.PS(PS),.LU(LATU),.LS(LATS),.RU(RU),.RS0(RS0),.RS1(RS1),.RS2(RS2))u_parent(
+            qfd_collective_static_io_production #(.PU(PU),.PS(PS),.LU(LATU),.LS(LATS),.RU(RU),.RS0(RS0),.RS1(RS1),.RS2(RS2),.TOK_REG(TOKREG),.LX0(LX0),.LX1(LX1),.LX2(LX2))u_parent(
 `else
-            qfd_collective_static_io #(.PU(PU),.PS(PS),.LU(LATU),.LS(LATS),.RU(RU),.RS0(RS0),.RS1(RS1),.RS2(RS2),.SHARED_UCIE(SHARED),.SIX_FIVE(SIXFIVE))u_parent(
+            qfd_collective_static_io #(.PU(PU),.PS(PS),.LU(LATU),.LS(LATS),.RU(RU),.RS0(RS0),.RS1(RS1),.RS2(RS2),.SHARED_UCIE(SHARED),.SIX_FIVE(SIXFIVE),.TOK_REG(TOKREG),.LX0(LX0),.LX1(LX1),.LX2(LX2))u_parent(
 `endif
               .clk(clk),.clk_pfold0(clk),.clk_pfold1(clk),.clk_pfold2(clk),.clk_pfold3(clk),
               .clk_xfold0(clk),.clk_xfold1(clk),.clk_xfold2(clk),.clk_xfold3(clk),
@@ -243,9 +259,44 @@ module tb_coll_tp8_static_links #(
                 // CORRUPT: flip one bit of die 6's port-0 frame number CORRUPT (a CRC must catch it)
                 integer nf = 0;
                 always @(posedge lck) if (stxv[g*3 + j]) nf <= nf + 1;
-                tb_phy_pipe #(.W(FP), .L(PS + XS)) u_sp (.clk(lck), .rst_n(rst_n), .v_in(stxv[g*3 + j]),
+                localparam integer ETJ = (j == 0) ? ET0 : (j == 1) ? ET1 : ET2;
+                localparam integer ERJ = (J2 == 0) ? ER0 : (J2 == 1) ? ER1 : ER2;
+`ifdef OT_TP8S_REAL_LANES
+                localparam integer NTJ = (j == 0) ? NT0 : (j == 1) ? NT1 : NT2, NTVJ = (j == 0) ? NTV0 : (j == 1) ? NTV1 : NTV2;
+                localparam integer KTJ = (j == 0) ? KT0 : (j == 1) ? KT1 : KT2, KTVJ = (j == 0) ? KTV0 : (j == 1) ? KTV1 : KTV2;
+                localparam integer NRJ = (J2 == 0) ? NR0 : (J2 == 1) ? NR1 : NR2, NRVJ = (J2 == 0) ? NRV0 : (J2 == 1) ? NRV1 : NRV2;
+                localparam integer KRJ = (J2 == 0) ? KR0 : (J2 == 1) ? KR1 : KR2, KRVJ = (J2 == 0) ? KRV0 : (J2 == 1) ? KRV1 : KRV2;
+                wire [FP-1:0] ltd, lrd; wire ltv, lrv;
+                // TX lanes on die g (io_collective root clk -> io_serdes_j root lck); RX lanes on die R2 (lck -> clk)
+                tb_fwd_lane #(.W(FP), .N(NTJ), .K(KTJ)) u_ltd (.cks(clk), .ens(rst_n), .ckd(lck), .rsd(rst_n),
+                    .i(stx[(g*3 + j)*FP +: FP]), .o(ltd), .fault(lflt[g*12 + j*4 + 0]));
+                tb_fwd_lane #(.W(1), .N(NTVJ), .K(KTVJ)) u_ltv (.cks(clk), .ens(rst_n), .ckd(lck), .rsd(rst_n),
+                    .i(stxv[g*3 + j]), .o(ltv), .fault(lflt[g*12 + j*4 + 1]));
+                wire [FP-1:0] pd; wire pv_;
+                tb_phy_pipe #(.W(FP), .L(PS + XS)) u_sp (.clk(lck), .rst_n(rst_n), .v_in(ltv),
+                    .d_in(ltd), .flip(g == 6 && j == 0 && CORRUPT >= 0 && nf == CORRUPT), .v_out(pv_), .d_out(pd));
+                tb_fwd_lane #(.W(FP), .N(NRJ), .K(KRJ)) u_lrd (.cks(lck), .ens(rst_n), .ckd(clk), .rsd(rst_n),
+                    .i(pd), .o(srx[(R2*3 + J2)*FP +: FP]), .fault(lflt[R2*12 + J2*4 + 2]));
+                tb_fwd_lane #(.W(1), .N(NRVJ), .K(KRVJ)) u_lrv (.cks(lck), .ens(rst_n), .ckd(clk), .rsd(rst_n),
+                    .i(pv_), .o(srxv[R2*3 + J2]), .fault(lflt[R2*12 + J2*4 + 3]));
+                // measured lane latency (die 0 only): first valid frame in -> out, TX and RX
+                integer c_ti = -1, c_to = -1, c_ri = -1, c_ro = -1;
+                always @(posedge clk) begin
+                    if (c_ti < 0 && stxv[g*3 + j]) c_ti = cyc;
+                    if (c_to < 0 && ltv) c_to = cyc;
+                    if (c_ri < 0 && pv_) c_ri = cyc;
+                    if (c_ro < 0 && srxv[R2*3 + J2]) c_ro = cyc;
+                end
+                if (g == 0) begin : g_meas
+                    always @(posedge clk) if (rst_n && cyc == endc)
+                        $display("TP8SL_LANE die0 port%0d tx N %0d/%0d K %0d/%0d meas %0d | rx(die%0d port%0d) N %0d/%0d K %0d/%0d meas %0d",
+                                 j, NTJ, NTVJ, KTJ, KTVJ, c_to - c_ti, R2, J2, NRJ, NRVJ, KRJ, KRVJ, c_ro - c_ri);
+                end
+`else
+                tb_phy_pipe #(.W(FP), .L(PS + XS + ETJ + ERJ), .LV((j == 2) ? EV2 : 0)) u_sp (.clk(lck), .rst_n(rst_n), .v_in(stxv[g*3 + j]),
                     .d_in(stx[(g*3 + j)*FP +: FP]), .flip(g == 6 && j == 0 && CORRUPT >= 0 && nf == CORRUPT),
                     .v_out(srxv[R2*3 + J2]), .d_out(srx[(R2*3 + J2)*FP +: FP]));
+`endif
             end
             always @(posedge lck) if (ptxv[g] && rtxv[g]) pr_overlap = pr_overlap + 1;
             // ---------------- producer at its compiled slots ----------------
@@ -343,7 +394,7 @@ module tb_coll_tp8_static_links #(
     always @(posedge clk) begin
         if (rst_n && cyc == endc) begin
             for (t = 0; t < ND; t = t + 1)
-                dief[t] = (SHARED && shareflt[t]) | flt[t] | ifl[t] | (|xflt[t*20 +: 20]) | (|cabort[t*5 +: 5]);
+                dief[t] = (SHARED && shareflt[t]) | flt[t] | ifl[t] | (|xflt[t*20 +: 20]) | (|cabort[t*5 +: 5]) | (|lflt[t*12 +: 12]);
             $display("TP8SL dies=8 latu=%0d lats=%0d pu=%0d ps=%0d xu=%0d xs=%0d msgs=%0d drop=%0d corrupt=%0d mismatches=%0d extra=%0d out_err=%0d cmd_bad=%0d coll_fault=%b issuer_fault=%b die_fault=%b words_out=%0d meas_lu=%0d meas_ls=%0d pr_overlap=%0d issuer_done=%b",
                      LATU, LATS, PU, PS, XU, XS, NMSG, DROP, CORRUPT, bad, extra, errs, cmd_bad, flt, ifl, dief, words_out,
                      first_dp - first_up, first_sr - first_sx, pr_overlap, idone);
@@ -371,17 +422,39 @@ module tb_coll_tp8_static_links #(
 endmodule
 
 // PHY model: fixed-latency register pipe of the codec frame, reset like the endpoints (off-chip, modelled)
-module tb_phy_pipe #(parameter integer W = 597, parameter integer L = 14) (
+module tb_phy_pipe #(parameter integer W = 597, parameter integer L = 14, parameter integer LV = 0) (
     input wire clk, input wire rst_n, input wire v_in, input wire [W-1:0] d_in, input wire flip,
     output wire v_out, output wire [W-1:0] d_out);
-    reg [L-1:0] vp;
+    reg [L+LV-1:0] vp;
     reg [W-1:0] dm [0:L-1];          // ring: entry wp was written L edges ago
     integer wp = 0;
     always @(posedge clk) begin
-        if (!rst_n) vp <= 0; else vp <= {vp[L-2:0], v_in};
+        if (!rst_n) vp <= 0; else vp <= {vp[L+LV-2:0], v_in};
         dm[wp] <= d_in ^ (flip ? {{(W-1){1'b0}}, 1'b1} : {W{1'b0}});
         wp <= (wp == L - 1) ? 0 : wp + 1;
     end
-    assign v_out = vp[L-1];
+    assign v_out = vp[L+LV-1];   // LV > 0: the valid lane lands LV cycles after its data (die lane skew)
     assign d_out = dm[wp];
+endmodule
+
+// Q-COLLCAL 10-18: one die lane exactly as the GEN builds it (OT_SPLIT_FWD_LANES=1, gen_relay_rtl wrappers of the same
+// modules): N = 0 a wire; N = 1 the landing carries the hop-0 gate; N >= 2 hop-0 station on the source root, N - 2
+// half-cycle stations on the forwarded clock, the landing (ring D 4, read on the receiving root at rc - K).  ens = the
+// source's released reset (gate enable + lane epoch), rsd = the receiver's regional reset.  Zero wire delay (the window
+// is the die STA's job, LANDING-CONTRACT L5); the latency is K + 1 + (R0 - G) whatever the delay inside the window.
+module tb_fwd_lane #(parameter integer W = 1, parameter integer N = 0, parameter integer K = 0) (
+    input wire cks, input wire ens, input wire ckd, input wire rsd, input wire [W-1:0] i, output wire [W-1:0] o, output wire fault);
+    generate if (N == 0) begin : g_wire
+        assign o = i; assign fault = 1'b0;
+    end else if (N == 1) begin : g_one
+        ot_qfd_land #(.W(W), .D(4), .FIRST(1)) u_land (.ckf(cks), .ea(ens), .i(i), .ck(ckd), .rs(rsd), .k(K[2:0]), .o(o), .fault(fault));
+    end else begin : g_lane
+        wire [W-1:0] b [0:N-2]; wire e [0:N-2]; wire c [0:N-2];
+        ot_qfd_lane_st #(.W(W), .FIRST(1)) u_s0 (.ck(cks), .en(ens), .a(i), .b(b[0]), .eb(e[0]), .ck_o(c[0]));
+        genvar s;
+        for (s = 1; s < N - 1; s = s + 1) begin : g_st
+            ot_qfd_lane_st #(.W(W), .FIRST(0)) u_s (.ck(c[s-1]), .en(e[s-1]), .a(b[s-1]), .b(b[s]), .eb(e[s]), .ck_o(c[s]));
+        end
+        ot_qfd_land #(.W(W), .D(4), .FIRST(0)) u_land (.ckf(c[N-2]), .ea(e[N-2]), .i(b[N-2]), .ck(ckd), .rs(rsd), .k(K[2:0]), .o(o), .fault(fault));
+    end endgenerate
 endmodule

@@ -85,10 +85,10 @@
   "pin_min_tracks": 3
  },
  "job": {
-  "owner": "Claude:HBMA-HOST",
-  "branch": "claude/hbma-host-1017",
-  "tag": "r1",
-  "purpose": "HBM die d4f col_sfu_<Q> x4 = ot_hbm_static_cfg_collar__pv0 (PAGE_W3 NS2 NPR1 NREC0 NGO1 NB2 NF1 XSER0; HBMA-HOST 2026-10-17): first hardening (RTL unchanged, every pin registered). Pin-bound 1050 pins; slot 26.1x27 was 20.8 pins/um.",
+  "owner": "Claude:HBM-NATIVE",
+  "branch": "claude/hbm-native-b-1017",
+  "tag": "r2",
+  "purpose": "HBM die d4f col_sfu_<Q> x4 = ot_hbm_static_cfg_collar__pv0 (PAGE_W3 NS2 NPR1 NREC0 NGO1 NB2 NF1 XSER0; HBMA-HOST 2026-10-17): first hardening -- HBM-NATIVE 10-17 r2: native pin audit of the closed r1 view (hdie_col_sfu_r1-r1-dcfed59ab): rst_n capture 455.7 ps > 190, the raw rst_n pin async-cleared every collar flop (XSER=0 had no reset synchroniser). XSER=0 now uses the XSER=1 core-path shape (col_su r3, capture 65.3): rst_n -> one plain clk flop -> stage 2, whose Q resets every flop. Assert/release +2 edges; launch_v->start_v 2 edges, cfg",
   "extra_paths": [
    "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
    "rtl/hbm_accel/host_static_20261015/ot_hbm_host_static_ingress.sv",
@@ -99,7 +99,10 @@
    "rtl/hbm_accel/host_static_20261015/tb_hbm_host_phy_adapt.sv",
    "rtl/hbm_accel/host_static_20261015/tb_hbm_static_cfg_collar.sv",
    "rtl/hbm_accel/host_static_20261015/tb_static_cmd_target.sv",
-   "rtl/model/hbm_pc40_native_sim_20261003/ot_sram_1r1w_128x256_m1_r2c2_sim.sv"
+   "rtl/model/hbm_pc40_native_sim_20261003/ot_sram_1r1w_128x256_m1_r2c2_sim.sv",
+   "rtl/test/hbm_native_rsync_1017",
+   "results/rtl/hbm_native_rsync_1017",
+   "rtl/hbm_accel/host_static_20261015/ref_ot_hbm_static_cfg_collar_r1.sv"
   ],
   "benches": [
    {
@@ -124,7 +127,8 @@
     ],
     "pass_regex": "PASS collar",
     "fail_regex": "FAIL errors=\\d+",
-    "note": "sequential install check skipped"
+    "note": "sequential install check skipped",
+    "fail_witness": "results/rtl/hbm_native_rsync_1017/cp2_collar_mut1.log"
    },
    {
     "name": "collar_mut2",
@@ -137,7 +141,8 @@
     ],
     "pass_regex": "PASS collar",
     "fail_regex": "FAIL errors=\\d+",
-    "note": "ready ignores need"
+    "note": "ready ignores need",
+    "fail_witness": "results/rtl/hbm_native_rsync_1017/cp2_collar_mut2.log"
    },
    {
     "name": "collar_mut3",
@@ -150,7 +155,8 @@
     ],
     "pass_regex": "PASS collar",
     "fail_regex": "FAIL errors=\\d+",
-    "note": "go one edge early"
+    "note": "go one edge early",
+    "fail_witness": "results/rtl/hbm_native_rsync_1017/cp2_collar_mut3.log"
    },
    {
     "name": "collar_mut4",
@@ -163,11 +169,47 @@
     ],
     "pass_regex": "PASS collar",
     "fail_regex": "FAIL errors=\\d+",
-    "note": "XSER event sequence check off"
+    "note": "XSER event sequence check off",
+    "fail_witness": "results/rtl/hbm_native_rsync_1017/cp2_collar_mut4.log"
+   },
+   {
+    "name": "rsync_lockstep",
+    "cmd": "bash rtl/test/hbm_native_rsync_1017/run_rsync_lockstep.sh {RUN}/bench/rsync_lockstep col_sfu 0",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "errors 0 RSYNC_LOCKSTEP PASS$",
+    "min_count_regex": "resets (\\d+) ",
+    "min_count": 10,
+    "pass_witness": "results/rtl/hbm_native_rsync_1017/col_sfu_mut0.log",
+    "note": "old vs new, every output every edge outside the reset window"
+   },
+   {
+    "name": "rsync_lockstep_mutant",
+    "cmd": "bash rtl/test/hbm_native_rsync_1017/run_rsync_lockstep.sh {RUN}/bench/rsync_lockstep_mutant col_sfu 8",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "errors 0 RSYNC_LOCKSTEP PASS$",
+    "fail_regex": "errors [1-9][0-9]* RSYNC_LOCKSTEP FAIL",
+    "fail_witness": "results/rtl/hbm_native_rsync_1017/col_sfu_mut8.log",
+    "note": "mid-run reset does not reach the core/body (power-on only)"
    }
   ],
   "views_to": "physical/ref_tile/hdie_col_sfu_r1/views",
-  "record_to": "results/rtl/ref_tile/hdie_col_sfu_r1"
+  "record_to": "results/rtl/ref_tile/hdie_col_sfu_r1",
+  "reroute_reason": {
+   "kind": "rtl_change",
+   "vs": "hdie_col_sfu_r1-r1-dcfed59ab",
+   "why": "native audit rst_n capture 455.7 ps: raw pin fanout -> local reset sync at the pin"
+  }
  },
- "slot_change_request": "HBMA-HOST 10-17 -> H-DIE: d4f slot 26.136x27.0 (pv0) is pin-bound (E/W 506 at 20.8/um); needs 51.84x51.84 (E host 293, W sfup 276, N prm 257 at <=5.7/um)"
+ "slot_change_request": "HBMA-HOST 10-17 -> H-DIE: d4f slot 26.136x27.0 (pv0) is pin-bound (E/W 506 at 20.8/um); needs 51.84x51.84 (E host 293, W sfup 276, N prm 257 at <=5.7/um)",
+ "structural_change": "HBM-NATIVE 10-17 r2: native pin audit of the closed r1 view (hdie_col_sfu_r1-r1-dcfed59ab): rst_n capture 455.7 ps > 190, the raw rst_n pin async-cleared every collar flop (XSER=0 had no reset synchroniser). XSER=0 now uses the XSER=1 core-path shape (col_su r3, capture 65.3): rst_n -> one plain clk flop -> stage 2, whose Q resets every flop. Assert/release +2 edges; launch_v->start_v 2 edges, cfg->pw_we 2 edges, record go offsets unchanged (cycles_added 0). XSER=1 elaboration unchanged. Bench: lockstep r1 vs r2 at the kit params (~30 resets incl. mid-run, every output every edge outside the reset window) + MUT 8 mutant (mid-run reset misses the core)."
 }

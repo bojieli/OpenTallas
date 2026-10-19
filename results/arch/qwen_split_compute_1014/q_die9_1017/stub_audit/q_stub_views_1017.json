@@ -1,0 +1,30 @@
+{
+ "schema": "opentallas.die_view_owners.v1",
+ "lane": "Q-STUB",
+ "date": "2026-10-17",
+ "die": "Qwen compute dv2f11/dv2f12 (80 functional instances, 17 masters)",
+ "search": "bind_real.py view paths (physical/ref_tile/<m>/views, ref_tile/*/views, qwen_die_masters/views, qwen_missing_phy) on origin/main and every origin branch named for these elements (qn59, qctlm, qslice, qcluster*, qc-lane*, qdv, coll*, sysface*, qkv*, phy*)",
+ "closed_view_found_and_unbound": [],
+ "bound_real": {
+  "qfd_d2d_static": {"inst": 1, "view": "physical/ref_tile/qfd_d2d_static_r5", "note": "provenance check owed (RTL changed after c38379ae2)"},
+  "qfd_embedding_word_provider": {"inst": 1, "view": "physical/ref_tile/qfd_embedding_word_provider"},
+  "qfd_rstseq": {"inst": 1}, "qfd_rstsync": {"inst": 1},
+  "qfd_sys_face": {"inst": 1, "view": "@4458091af STALE (pre-G8 pins)", "action": "rs2 kit on claude/q-stub-1017 (G8 + emb_prov_fault + rs1 reset regions); CRITICAL tile -> gate then coordinator review"},
+  "ot_qfd_serdes_112g_x12_phy_s597": {"inst": 3, "kind": "PHY abstract"},
+  "ot_qfd_ucie_x64_phy": {"inst": 1, "kind": "PHY abstract"}
+ },
+ "no_closed_view": {
+  "qfd_c_b16_dv": {"inst": 48, "owner": "Q-CLUSTER3", "state": "8-root --cts gates SIGKILL in post-CTS repair; next: false_path on cid/far straps, classify 9.5k violations (CRITICAL)"},
+  "qfd_dv_slice2_w": {"inst": 6, "owner": "Q-SLICE / QC", "state": "no partition spec; hardening = pin-reg wrappers + SU lane tile + heads gates first (CRITICAL)"},
+  "qfd_dv_slice2_e": {"inst": 6, "owner": "Q-SLICE / QC", "state": "as slice2_w"},
+  "qfd_tt_ctlm_dv": {"inst": 1, "owner": "Q-CTLM", "state": "RTL d8f159727, never kitted; ~777.6^2 slot proposed"},
+  "qfd_native59_dv_service": {"inst": 1, "owner": "Q-N59", "state": "RTL dd73225e0, never kitted"},
+  "qfd_collective_static_io_production": {"inst": 1, "owner": "QC (collective)", "state": "BLOCKED: qfd_io_collective_s1..s4 never routed"},
+  "qfd_clkrx": {"inst": 1, "owner": "DIE-FLOW / die-clock (coordinator decision pending)", "state": "generated RTL (gen_relay_rtl.py); die clock-entry, not a ref_tile"},
+  "qfd_ckbump": {"inst": 1, "owner": "none (off-chip signal model, abstract only)", "state": "allowed model"},
+  "qfd_sigbump": {"inst": 5, "owner": "none (package strap bump model)", "state": "allowed model"},
+  "ot_qkvd_ucie_x64_phy": {"inst": 1, "owner": "PHY-ABS", "state": "PHY abstract only (KV-side UCIe model); no view by this name in the compute bind path"}
+ },
+ "counts": {"real_view_instances": 9, "consistent_real_after_rs2_close": 9, "allowed_models_or_phy": 7, "need_hardening": 64},
+ "note": "71 = 64 hardening-owed functional instances (48 cluster + 12 slice + tt_ctlm + native59 + collective + clkrx) + 7 off-chip/PHY models (ckbump, 5 sigbump, KV UCIe PHY); no closed view exists anywhere for the 64, so nothing can be bound today"
+}

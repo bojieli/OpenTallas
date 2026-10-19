@@ -1,0 +1,8 @@
+RST_BENCH masters qfd_rlyr0_1_EW_65x30 qfd_rlyr_1_EW_65x30 qfd_rlyrl_1_EW_65x30 mode pass
+RST_LANE NF=27 CD=0.60 DD=0.40 arrival=150.40 L=15
+RST_LANE NF=8 CD=1.00 DD=0.50 arrival=46.50 L=5
+RST_LANE NF=5 CD=2.00 DD=1.50 arrival=32.50 L=4
+RST_LANE NF=3 CD=1.00 DD=1.00 arrival=17.00 L=2
+RST_LANE NF=2 CD=1.00 DD=1.00 arrival=11.00 L=1
+RST_LANE NF=1 CD=1.00 DD=1.00 arrival=1.00 L=0
+RST_BENCH PASS 0 errors in 3354 checks

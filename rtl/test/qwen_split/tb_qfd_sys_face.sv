@@ -12,7 +12,7 @@
 // consumer pin on exactly its compiled cycle and no other event fires; (4) the embedding row lands bit-exact in the
 // provider SRAM and scale register; (5) RESULT carries the sequencer's argmax and the token loop feeds it to dh;
 // (6) no fault anywhere.  MUT 1/2/3 (face parameter) and 4 (D2D sequencer layer-5 start +1: the face must flag the
-// calendar disagreement) must FAIL.
+// calendar disagreement) must FAIL.  MUT 5: a one-edge embedding-provider fault pulse must reach the face fault and FAIL.
 module tb_qfd_sys_face;
     parameter integer MUT = 0;
     parameter IMG = "img";
@@ -48,7 +48,10 @@ module tb_qfd_sys_face;
     wire ew_v, ew_s, ex_s, ex_sc, fb; wire [511:0] ew_d; wire [17:0] ew_t, ex_t, f_t; wire [5:0] ew_i, ex_w; wire [15:0] ew_e, ex_e, f_e, c_e;
     wire face_fault;
     reg fwd_epoch = 0;
-    qfd_sys_face #(.MUT(MUT == 4 ? 0 : MUT), .GO_OFS(GO_OFS), .START_ADJ(MUT == 4 ? (720'd1 << (20 * 5)) : 720'd0), .ROM_VIAMAP({IMG, "/sys_face_cfg.viamap.hex"})) u_dut (
+    // MUT 5 (Q-STUB 10-17): one-edge provider fault pulse after reset -- the face must latch it (face_fault / fab) and FAIL
+    wire prov_fault; reg prov_inj = 0; integer rel_cyc = -1;
+    always @(posedge ck) begin if (rst_n && rel_cyc < 0) rel_cyc = cyc; prov_inj <= (MUT == 5) && rel_cyc >= 0 && cyc == rel_cyc + 50; end
+    qfd_sys_face #(.MUT((MUT == 4 || MUT == 5) ? 0 : MUT), .GO_OFS(GO_OFS), .START_ADJ(MUT == 4 ? (720'd1 << (20 * 5)) : 720'd0), .ROM_VIAMAP({IMG, "/sys_face_cfg.viamap.hex"})) u_dut (
         .ck(ck), .rst_n(rst_n),
         .cfg_tx_we(cfg_tx_we), .cfg_rx_we(cfg_rx_we), .cfg_addr(cfg_addr), .cfg_data(cfg_data), .cal_start(cal_start), .cal_seg(cal_seg), .fwd_epoch(fwd_epoch),
         .rx_payload(rx_payload), .prog_rx_v(prog_rx_v), .prog_witness_slot(prog_witness_slot), .prog_auth_slot(prog_auth_slot),
@@ -66,10 +69,10 @@ module tb_qfd_sys_face;
         .emb_word_v(ew_v), .emb_word_data(ew_d), .emb_word_token(ew_t), .emb_word_index(ew_i), .emb_word_scale(ew_s),
         .emb_word_epoch(ew_e), .emb_expected_slot(ex_s), .emb_expected_token(ex_t), .emb_expected_word(ex_w),
         .emb_expected_scale(ex_sc), .emb_expected_epoch(ex_e), .emb_fill_begin(fb), .emb_fill_token(f_t), .emb_fill_epoch(f_e),
-        .emb_core_epoch(c_e), .io_cmd_free(1'b1), .io_fault(1'b0), .io_shared_fault(1'b0), .crom_fault_code(16'd0),
-        .res_issue_fault(1'b0), .fault(face_fault));
+        .emb_core_epoch(c_e), .emb_prov_fault(prov_fault | prov_inj), .io_cmd_free(1'b1), .io_fault(1'b0), .io_shared_fault(1'b0),
+        .fault(face_fault));
     reg core_start = 0, code_re = 0, scale_re = 0; reg [23:0] code_addr = 0; reg [17:0] scale_addr = 0;
-    wire [511:0] code_q; wire [15:0] scale_q; wire prov_fault;
+    wire [511:0] code_q; wire [15:0] scale_q;
     qfd_embedding_word_provider u_prov (.ck(ck), .rst_n(rst_n), .word_v(ew_v), .word_data(ew_d), .word_token(ew_t),
         .word_index(ew_i), .word_scale(ew_s), .word_epoch(ew_e), .expected_word_slot(ex_s), .expected_token(ex_t),
         .expected_word(ex_w), .expected_scale(ex_sc), .expected_epoch(ex_e), .fill_begin(fb), .fill_token(f_t), .fill_epoch(f_e),

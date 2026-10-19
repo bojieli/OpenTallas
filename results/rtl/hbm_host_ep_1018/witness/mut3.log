@@ -1,0 +1,6 @@
+FAULT at die edge 6044: land 0 prot 0 link 0 seq 0 ep 0/000 host_ep 1/100 host_link 0/000 host_seq 0 st 10/10
+HOST_CP_RXS_FAIL MUT=3 fault_edge=6044 mism=0 first_bad=-1 rsp 349/958 ev 56/154 (eq 0) st 0/1 (eq 0) rsp_eq 0 cfg=28 rd=38 ingf 0/0
+- /home/ubuntu/scratch/hostep/src/rtl/hbm_accel/host_ep_20261018/tb_hbm_host_cp_rxs.sv:197: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 5us; walltime 0.335 s; speed 15.547 us/s
+- Verilator: cpu 0.335 s on 1 threads; allocated 9 MB

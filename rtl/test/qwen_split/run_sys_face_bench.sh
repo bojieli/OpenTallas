@@ -1,10 +1,10 @@
 #!/bin/bash
 # Q-NETLIST 2026-10-16: compute-die system face bench (tb_qfd_sys_face.sv).  usage: run_sys_face_bench.sh OUTDIR [MUT ...]
 # Builds the config-ROM image from sys_face_bench_events.json (+ the compute end's D2D calendars of the dies_token
-# sequencer's compiled starts), the expected-event include, then runs MUT 0 (must PASS) and every listed mutant (default 1 2 3, must FAIL).
+# sequencer's compiled starts), the expected-event include, then runs MUT 0 (must PASS) and every listed mutant (default 1 2 3 4 5, must FAIL).
 set -eu
 OUT=$(mkdir -p "$1" && readlink -f "$1"); shift
-MUTS=${*:-1 2 3 4}
+MUTS=${*:-1 2 3 4 5}
 R=$(cd "$(dirname "$0")/../../.." && pwd)
 # production token timeline: the D2D sequencer's compiled starts (d2d_cal_image.svh) + the bench layer / row events
 python3 - $R $OUT <<'PY'
@@ -56,7 +56,7 @@ sed 's/parameter string /parameter /g' $R/physical/asap7_memory_macros/ot_rom_40
 F="$R/rtl/qwen_split/qfd_sys_face.sv $R/rtl/qwen_split/qfd_embedding_word_provider.sv
    $R/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_static.sv
    $R/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq.sv $R/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq_dies.sv
-   $R/rtl/qwen_sys/context_transport_20261014/qfd_program_record_port.sv
+   $R/rtl/qwen_split/qfd_sys_face_record_port.sv
    $R/rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv
    $R/rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv
    $R/rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_preload_face.sv

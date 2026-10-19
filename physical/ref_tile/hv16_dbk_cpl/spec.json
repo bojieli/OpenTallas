@@ -34,11 +34,9 @@
  ],
  "pins": {
   "W": [
-   "rr",
    "rq"
   ],
   "N": [
-   "wd",
    "wb_reserve_v",
    "wb_reserve_bank",
    "wb_fill_bank",
@@ -54,8 +52,10 @@
    "clk",
    "clk_cp",
    "clk_rst",
-   "rst_n",
+   "busy",
+   "quiet",
    "stk",
+   "rst_n",
    "tgt",
    "cfg_v",
    "cfg_target",
@@ -71,17 +71,17 @@
    "cp_active",
    "mv_src",
    "mv_done",
-   "mv_fault",
-   "quiet",
-   "busy"
+   "mv_fault"
   ],
   "ANY": [
-   "clk_bank"
+   "clk_bank",
+   "rr",
+   "wd"
   ]
  },
  "outline": {
-  "w": 604.8,
-  "h": 540.0,
+  "w": 606.96,
+  "h": 542.16,
   "exact": true
  },
  "pg_layer": "M7",
@@ -205,6 +205,7 @@
   "threads": 8,
   "peak_ram_gb": 16,
   "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
   "macro_halo_um": 5.4,
   "pin_balance": {
    "h": "M4",
@@ -212,6 +213,9 @@
    "group_max": 1
   }
  },
+ "boundary_tcl": [
+  "physical/common_flow/child_pocket_guard.tcl"
+ ],
  "params": {},
  "inter": [],
  "io_flop_at_pins": {
@@ -222,24 +226,27 @@
  "outhold": false,
  "keep_pin_regs": true,
  "io_tcl": "results/arch/hbm_die_v16_d4f/dbk_cpl_1017/assigned_pins.tcl",
- "slot_change_request": "hb_dbk_<q> (d4f slot 560.0 x 400.0) -> 604.8 x 540.0 (1.12:1): 8 banks + controller + collar leaf on the 43.2 lattice cannot fit 560 x 400 (see make_dbk_cpl_parent.py); master ports: clk_tab[1:0] removed, clk_rst added (reset relay root, same die clock); rr/rq W, wd/wb/wa N, F20 host bus/status/straps E, clk_bank on the nearest face (W x3, N x3, S x1, E x1).",
+ "slot_change_request": "hb_dbk_<q> (d4f slot 560.0 x 400.0) -> 606.96 x 542.16 (1.12:1): 8 banks + controller + collar leaf on the 43.2 lattice cannot fit 560 x 400 (see make_dbk_cpl_parent.py); master ports: clk_tab[1:0] removed, clk_rst added (reset relay root, same die clock); rr/rq W, wd/wb/wa N, F20 host bus/status/straps E, clk_bank on the nearest face (W x3, N x3, S x1, E x1); OWNERS-HBM/STK 10-18: 606.96 x 542.16 (macro_edge 20 um), wd of bank rows 0-1 on the S face, rows 2-3 on N (wire_reach), F20 host bus over the full E face; HBM-DBKCPL 10-18: rr of the col2 banks (rr[514..769] bank 2 -> S face, rr[1799..2054] bank 7 -> N face, beside their wd; rr_valid stays W) for daemon bank_distance (157 um).",
  "structural_change": "Measured reasons (hv15_dbk_cp gate 1f18141cb, 10-16): clk_cp 1,844 sinks TT 421.6 / spread 126.5 (collar flops smeared between the 8 banks), rst_n port -> 793 loads unregistered incl. 8 bank macros + controller (in->macro -296.1), in->reg -170.8 u_cp.cmd[26] with the W face 98% pin-full; children off the 43.2 um lattice; 645.84 x 360.72 (1.79:1).  Why not the d4f slot 560 x 400: on the 43.2 um child lattice three 87.48-um bank rows need y = 43.2/172.8/302.4 (top 389.9, no N channel left in 400) and three 140.4-um columns need x up to 529.2, so 560 x 400 holds at most 2 x 3 = 6 banks; 8 banks + controller + collar leaf = 10 objects, and every bank must stay within ~480 um of BOTH the W face (rr) and the N face (wd) (textbook wire_reach 500 um/stage).  A 3-row ring (controller centre) cannot take the leaf within 1.5:1 (width >= 712 at height 432).  Chosen: 4 rows x 3 columns, 604.8 x 540 (1.12:1):   * col0 (x 86.4, 4 banks; 86.4 um W channel carries their 1,156 wd bits N), col1/col2 (x 259.2/432) banks in rows 0     and 3; the controller in col1 between rows 1-2 (bank star <= ~430 um), the collar leaf in col2 between rows 1-2     (W face -> controller E face 104 um; E face 21.6 um from the cluster E face where the F20 host bus enters);   * channels >= 32.4 um (columns) / 42.1 um (rows), every child on the 43.2 lattice;   * W face: rr per bank row (rq + rr_valid beside the controller row), <= 4.6 pins/um; N face: wd per bank column + wb/wa,     <= 4.5 pins/um; each clk_bank entry on the face point nearest its bank clock pin; clk_cp at the leaf clock pin.",
  "reroute_reason": {
-  "kind": "slot_change",
-  "source": "physical/ref_tile/hv15_dbk_cp (gate 1f18141cb, structural FAIL)",
-  "why": "Measured reasons (hv15_dbk_cp gate 1f18141cb, 10-16): clk_cp 1,844 sinks TT 421.6 / spread 126.5 (collar flops smeared between the 8 banks), rst_n port -> 793 loads unregistered incl. 8 bank macros + controller (in->macro -296.1), in->reg -170.8 u_cp.cmd[26] with the W face 98% pin-full; children off the 43.2 um lattice; 645.84 x 360.72 (1.79:1).  Why not the d4f slot 560 x 400: on the 43.2 um child lattice three 87.48-um bank rows need y = 43.2/172.8/302.4 (top 389.9, no N channel left in 400) and three 140.4-um columns need x up to 529.2, so 560 x 400 holds at most 2 x 3 = 6 banks; 8 banks + controller + collar leaf = 10 objects, and every bank must stay within ~480 um of BOTH the W face (rr) and the N face (wd) (textbook wire_reach 500 um/stage).  A 3-row ring (controller centre) cannot take the leaf within 1.5:1 (width >= 712 at height 432).  Chosen: 4 rows x 3 columns, 604.8 x 540 (1.12:1):   * col0 (x 86.4, 4 banks; 86.4 um W channel carries their 1,156 wd bits N), col1/col2 (x 259.2/432) banks in rows 0     and 3; the controller in col1 between rows 1-2 (bank star <= ~430 um), the collar leaf in col2 between rows 1-2     (W face -> controller E face 104 um; E face 21.6 um from the cluster E face where the F20 host bus enters);   * channels >= 32.4 um (columns) / 42.1 um (rows), every child on the 43.2 lattice;   * W face: rr per bank row (rq + rr_valid beside the controller row), <= 4.6 pins/um; N face: wd per bank column + wb/wa,     <= 4.5 pins/um; each clk_bank entry on the face point nearest its bank clock pin; clk_cp at the leaf clock pin."
+  "kind": "rtl_change",
+  "failed_job": "hv16_dbk_cpl-q1-65c2387ab",
+  "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks.sv",
+  "failure": "TT -12.30: u_control/bank_read_addr[166] -> L[5].read_addr[6] -12.30 (S-face pin, ~457 um U-turn), u_control/bank_write_slot[6] -> L[2].write_slot[6] -11.73 (one W-face 7-bit star to 8 banks), L[4].wd[277] -> wd[1433] -7.63 / wd[1415] -6.15 (N wd order inverted in column 0); DRC 1 M4 Metal Spacing inside u_dbk.L[0].u_bank (parent wire in the bank M4 OBS pocket)",
+  "why": "controller bank_read_addr / slot copies leave on the face of the bank group they serve (S 0-2, W 3-4, N 5-7; worst leg ~457 -> ~343 um); column-0 N wd: farther bank on the channel side; parent M2-M4 obstructed over hard children between GRT and DRT (child_pocket_guard.tcl). 0 cycles, exact."
  },
  "job": {
-  "owner": "Claude:HBM-HCDMA/HCDMA-DBK",
-  "branch": "claude/hcdma-dbk-1017",
-  "tag": "l1",
+  "owner": "Claude:HOURLY-HBM/HH-7",
+  "branch": "claude/hh7-dbkcpl-1019",
+  "tag": "h7",
   "record_to": "results/rtl/ref_tile/hv16_dbk_cpl",
-  "purpose": "Measured reasons (hv15_dbk_cp gate 1f18141cb, 10-16): clk_cp 1,844 sinks TT 421.6 / spread 126.5 (collar flops smeared between the 8 banks), rst_n port -> 793 loads unregistered incl. 8 bank macros + controller (in->macro -296.1), in->reg -170.8 u_cp.cmd[26] with the W face 98% pin-full; children off the 43.2 um lattice; 645.84 x 360.72 (1.79:1).  Why not the d4f slot 560 x 400: on the 43.2 um child lattice three 87.48-um bank rows need y = 43.2/172.8/302.4 (top 389.9, no N channel left in 400) and three 140.4-um columns need x up to 529.2, so 560 x 400 holds at most 2 x 3 = 6 banks; 8 banks + controller + collar leaf = 10 objects, and every bank must stay within ~480 um of BOTH the W face (rr) and the N face (wd) (textbook wire_reach 500 um/stage).  A 3-row ring (controller centre) cannot take the leaf within 1.5:1 (width >= 712 at height 432).  Chosen: 4 rows x 3 columns, 604.8 x 540 (1.12:1):   * col0 (x 86.4, 4 banks; 86.4 um W channel carries their 1,156 wd bits N), col1/col2 (x 259.2/432) banks in rows 0     and 3; the controller in col1 between rows 1-2 (bank star <= ~430 um), the collar leaf in col2 between rows 1-2     (W face -> controller E face 104 um; E face 21.6 um from the cluster E face where the F20 host bus enters);   * channels >= 32.4 um (columns) / 42.1 um (rows), every child on the 43.2 lattice;   * W face: rr per bank row (rq + rr_valid beside the controller row), <= 4.6 pins/um; N face: wd per bank column + wb/wa,     <= 4.5 pins/um; each clk_bank entry on the face point nearest its bank clock pin; clk_cp at the leaf clock pin.",
+  "purpose": "HBM die d4g hb_dbk_<q> x4 (per quadrant, master unchanged; F20 tgt 104+QID: SW 104 / SE 105 / NW 106 / NE 107; RBH-STK). Measured reasons (hv15_dbk_cp gate 1f18141cb, 10-16): clk_cp 1,844 sinks TT 421.6 / spread 126.5 (collar flops smeared between the 8 banks), rst_n port -> 793 loads unregistered incl. 8 bank macros + controller (in->macro -296.1), in->reg -170.8 u_cp.cmd[26] with the W face 98% pin-full; children off the 43.2 um lattice; 645.84 x 360.72 (1.79:1).  Why not the d4f slot 560 x 400: on the 43.2 um child lattice three 87.48-um bank rows need y = 43.2/172.8/302.4 (top 389.9, no N channel left in 400) and three 140.4-um columns need x up to 529.2, so 560 x 400 holds at most 2 x 3 = 6 banks; 8 banks + controller + collar leaf = 10 objects, and every bank must stay within ~480 um of BOTH the W face (rr) and the N face (wd) (textbook wire_reach 500 um/stage).  A 3-row ring (controller centre) cannot take the leaf within 1.5:1 (width >= 712 at height 432).  Chosen: 4 rows x 3 columns, 604.8 x 540 (1.12:1):   * col0 (x 86.4, 4 banks; 86.4 um W channel carries their 1,156 wd bits N), col1/col2 (x 259.2/432) banks in rows 0     and 3; the controller in col1 between rows 1-2 (bank star <= ~430 um), the collar leaf in col2 between rows 1-2     (W face -> controller E face 104 um; E face 21.6 um from the cluster E face where the F20 host bus enters);   * channels >= 32.4 um (columns) / 42.1 um (rows), every child on the 43.2 lattice;   * W face: rr per bank row (rq + rr_valid beside the controller row), <= 4.6 pins/um; N face: wd per bank column + wb/wa,     <= 4.5 pins/um; each clk_bank entry on the face point nearest its bank clock pin; clk_cp at the leaf clock pin.",
   "extra_paths": [
    "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
    "physical/common_flow/assigned_pin_exact.tcl",
+   "physical/common_flow/child_pocket_guard.tcl",
    "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
    "physical/ref_tile/hv15_dbk_vp4_ctl/views/ot_hgi_dma_back_static_vp4_controller",
    "physical/ref_tile/hv16_dbk_collar/views/ot_hgi_dma_back_cp_collar",
@@ -272,7 +279,9 @@
     "needs": [
      "iverilog"
     ],
-    "pass_regex": "CP_FOLD PASS"
+    "pass_regex": "CP_FOLD PASS",
+    "fail_regex": "DMA absolute cycle did not advance by one",
+    "fail_witness": "results/rtl/ref_tile/hv16_dbk_cpl/witness/reset_latency_mutant.log"
    },
    {
     "name": "exact",
@@ -293,13 +302,23 @@
     "peak_ram_gb": 4,
     "needs": [
      "iverilog"
-    ]
+    ],
+    "fail_regex": "FATAL: .*dispatcher/engine fault at\\d+",
+    "fail_witness": "results/rtl/ref_tile/hv16_dbk_cpl/witness/strap_mutant.log"
    }
   ],
   "reroute_reason": {
-   "kind": "slot_change",
-   "source": "physical/ref_tile/hv15_dbk_cp (gate 1f18141cb, structural FAIL)",
-   "why": "Measured reasons (hv15_dbk_cp gate 1f18141cb, 10-16): clk_cp 1,844 sinks TT 421.6 / spread 126.5 (collar flops smeared between the 8 banks), rst_n port -> 793 loads unregistered incl. 8 bank macros + controller (in->macro -296.1), in->reg -170.8 u_cp.cmd[26] with the W face 98% pin-full; children off the 43.2 um lattice; 645.84 x 360.72 (1.79:1).  Why not the d4f slot 560 x 400: on the 43.2 um child lattice three 87.48-um bank rows need y = 43.2/172.8/302.4 (top 389.9, no N channel left in 400) and three 140.4-um columns need x up to 529.2, so 560 x 400 holds at most 2 x 3 = 6 banks; 8 banks + controller + collar leaf = 10 objects, and every bank must stay within ~480 um of BOTH the W face (rr) and the N face (wd) (textbook wire_reach 500 um/stage).  A 3-row ring (controller centre) cannot take the leaf within 1.5:1 (width >= 712 at height 432).  Chosen: 4 rows x 3 columns, 604.8 x 540 (1.12:1):   * col0 (x 86.4, 4 banks; 86.4 um W channel carries their 1,156 wd bits N), col1/col2 (x 259.2/432) banks in rows 0     and 3; the controller in col1 between rows 1-2 (bank star <= ~430 um), the collar leaf in col2 between rows 1-2     (W face -> controller E face 104 um; E face 21.6 um from the cluster E face where the F20 host bus enters);   * channels >= 32.4 um (columns) / 42.1 um (rows), every child on the 43.2 lattice;   * W face: rr per bank row (rq + rr_valid beside the controller row), <= 4.6 pins/um; N face: wd per bank column + wb/wa,     <= 4.5 pins/um; each clk_bank entry on the face point nearest its bank clock pin; clk_cp at the leaf clock pin."
+   "kind": "rtl_change",
+   "failed_job": "hv16_dbk_cpl-q1-65c2387ab",
+   "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks.sv",
+   "failure": "TT -12.30: u_control/bank_read_addr[166] -> L[5].read_addr[6] -12.30 (S-face pin, ~457 um U-turn), u_control/bank_write_slot[6] -> L[2].write_slot[6] -11.73 (one W-face 7-bit star to 8 banks), L[4].wd[277] -> wd[1433] -7.63 / wd[1415] -6.15 (N wd order inverted in column 0); DRC 1 M4 Metal Spacing inside u_dbk.L[0].u_bank (parent wire in the bank M4 OBS pocket)",
+   "why": "controller bank_read_addr / slot copies leave on the face of the bank group they serve (S 0-2, W 3-4, N 5-7; worst leg ~457 -> ~343 um); column-0 N wd: farther bank on the channel side; parent M2-M4 obstructed over hard children between GRT and DRT (child_pocket_guard.tcl). 0 cycles, exact."
   }
+ },
+ "reset_landing": {
+  "enable": true,
+  "stages": 2,
+  "clock": "clk_rst",
+  "why": "ROOT-RST 2026-10-19: rst_n reaches the async clears of both ot_rst_relay copies (u_rst_bk 2 sync + 9 relay, u_rst_ctl 2 sync + 2 relay = 15 sinks > 2); land it at the E face in 2 clk_rst stages first (reset assert/release +2 clk_rst cycles, a scheduled constant; data latency unchanged)"
  }
 }

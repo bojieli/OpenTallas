@@ -1,0 +1,12 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job hcoll_ring_ag_ctln_1018-r5c-4c84aa2ed bench bench_ring_ag_n_mut_ttl host ot-agidock128 run /srv/opentallas-scratch/claude/closure-loop/hcoll_ring_ag_ctln_1018-r5c-4c84aa2ed log cl/bench_ring_ag_n_mut_ttl.recovery1019.log captured 2026-10-18T23:30:47-07:00
+# fail_regex 'RING_AG_N MUTANT ttl FAILED'
+RING_AG_N LOCK PASS seed=1 edges=6000 fault_edges=5999 v1_first_fault=0
+RING_AG_N RR PASS rr_publishes=596 edges=6000
+RING_AG_N RR HZ PASS native_fault_edge=53
+RING_AG unexpected fault cycle9 maskf
+RING_AG unexpected fault cycle10 maskf
+RING_AG unexpected fault cycle11 maskf
+RING_AG unexpected fault cycle12 maskf
+RING_AG unexpected fault cycle13 maskf
+RING_AG_N MUTANT ttl FAILED

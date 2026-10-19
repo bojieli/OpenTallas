@@ -12,11 +12,12 @@
 // edge >= n+12+RF_RELAY sees it. RF_RELAY is set from the die geometry (worst quarter-to-quarter route / reach per stage);
 // the compiler uses the same value.
 // No credits/ready/arbitration anywhere; compile-time conflicts are checked (FAULT), never resolved at run time.
-// MUT (bench): quarter mutants pass through (1 fill phase, 2 drain group, 4 RF-broadcast phase); 8 = the relay route from
+// MUT (bench): 16+k = tree mutant k of ot_hbm_su_stree_net (RF_TREE=1 only); quarter mutants pass through (1 fill phase, 2 drain group, 4 RF-broadcast phase); 8 = the relay route from
 // reducer 1 to quarter 3's replica is missing (replica incoherence).
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_hbm_su_static_top #(
- parameter integer READ_RETURN=10,WRITE_RETURN=7,RF_RELAY=36,FETCH_EXTRA_EDGES=2,MLAT=3,ALAT=3,LEAF=0,MUT=0,MULTIRATE=0,PIN_REG=0,COLLPORT=0,RF_LOCAL=0
+ parameter integer READ_RETURN=10,WRITE_RETURN=7,RF_RELAY=36,FETCH_EXTRA_EDGES=2,MLAT=3,ALAT=3,LEAF=0,MUT=0,MULTIRATE=0,PIN_REG=0,COLLPORT=0,RF_LOCAL=0,
+ RF_TREE=0,RF_TREE_UP=14,RF_TREE_DN=14  // HBM-B-RTL1 d4g: 1 = scalar gather/broadcast tree (ot_hbm_su_stree_net) replaces the 16 relay routes
 )(
  input wire [15:0] pg_clk,                       // 4 port-group roots per quarter
  input wire [4095:0] clk_lane, input wire [2047:0] clk_insert, input wire [511:0] rst_lane_n,
@@ -47,17 +48,34 @@ module ot_hbm_su_static_top #(
  input wire [4*8*257-1:0] lg_rr, input wire [31:0] lg_w_done,
  output wire [19:0] fault                        // per quarter {core, slice 3..0}
 );
- localparam integer QMUT=(MUT==8)?0:MUT;
+ localparam integer QMUT=(MUT==8||MUT>=16)?0:MUT;
+ // RF write latency seen by the compiler: RF_RELAY (d4f relay routes) or L_TREE (d4g tree; set RF_RELAY:=L_TREE in the
+ // compiler / su_top_compile.py when RF_TREE=1). Tree clocks: leaf/legs of quadrant q on clk_relay[q], root on clk_relay[0].
+ localparam integer L_TREE=RF_TREE_UP+RF_TREE_DN+4;
+ localparam integer RF_LAT=(RF_TREE!=0)?L_TREE:RF_RELAY;
  wire [3:0] red_sv,red_rf_v; wire [4*32-1:0] red_tag,red_x;
  assign collective_red_sv=red_sv;
  assign collective_red_tag=red_tag;
  assign collective_red_x=red_x;
  // relay[w][d]: reducer w -> replica d, RF_RELAY stages of {v, addr8, data32}
  wire [40:0] rly_out [0:3][0:3];
+ wire [15:0] tq_wv; wire [127:0] tq_wa; wire [511:0] tq_wd;
+ if(RF_TREE!=0)begin:g_stree
+  wire [4*41-1:0] theads;
+  for(genvar w=0;w<4;w=w+1)begin:g_h
+   assign theads[w*41+:41]={red_rf_v[w],red_tag[w*32+:8],red_x[w*32+:32]};
+  end
+  ot_hbm_su_stree_net #(.UP(RF_TREE_UP),.DN(RF_TREE_DN),.MUT(MUT>=16?MUT-16:0)) u_stree(.clk_q(clk_relay),.clk_root(clk_relay[0]),
+   .rst_n(rst_n),.head(theads),.q_wv(tq_wv),.q_wa(tq_wa),.q_wd(tq_wd));
+ end else begin:g_no_stree
+  assign tq_wv='0; assign tq_wa='0; assign tq_wd='0;
+ end
  for(genvar w=0;w<4;w=w+1)begin:g_src
   wire [40:0] head={red_rf_v[w],red_tag[w*32+:8],red_x[w*32+:32]};   // red_rf_v = red_sv && tag[8], decoded in the core
   for(genvar d=0;d<4;d=d+1)begin:g_dst
-   if(RF_RELAY==0)begin:g_wire
+   if(RF_TREE!=0)begin:g_tree
+    assign rly_out[w][d]={tq_wv[d*4+w],tq_wa[d*32+w*8+:8],tq_wd[d*128+w*32+:32]};
+   end else if(RF_RELAY==0)begin:g_wire
     assign rly_out[w][d]=head;
    end else begin:g_stages
     reg st_v [0:RF_RELAY-1]; reg [39:0] st_d [0:RF_RELAY-1];

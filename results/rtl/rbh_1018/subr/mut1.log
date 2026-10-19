@@ -1,0 +1,9 @@
+stream mismatch ht=141
+stream mismatch ht=153
+stream mismatch ht=171
+stream mismatch ht=177
+BRIDGE_RELEASE release_ht=E0-12 window=[E0-6,E0-1] cmp_edges=340 errors=151 leaf_fault=1 bridge_fault=1/1
+release outside window
+FATAL: rtl/hbm_accel/generic/adapters/static_su/top/tb_hbm_su_bridge_release.sv:72: BRIDGE_RELEASE FAIL errors=153
+       Time: 166807689  Scope: tb_hbm_su_bridge_release
+BRIDGE_RELEASE_GATE FAIL mut1 rc=1

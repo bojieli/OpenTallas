@@ -1,0 +1,989 @@
+{
+ "schema": "opentallas.hbm.d4g.gen2_bus_model.v1",
+ "tool": "tools/hbm_die_v16/d4g_bus_model_gen2.py",
+ "note": "d4g netlist on d4g geometry (plan \"a\" mode); replaces the stale run8-manifest d4g_vs_b for GEN2 (d4g_vs_b.json left untouched)",
+ "runs": {
+  "pre_smframe_f58b236af": {
+   "label": "pre_smframe_f58b236af",
+   "mode": "grants",
+   "contract": "/home/ubuntu/scratch/hd4g-gen2/model/pre.json.gz",
+   "positions": "/home/ubuntu/scratch/hd4g-gen2/model/grants_gen1.json",
+   "plan": "/home/ubuntu/scratch/hd4g-gen2/model/P_gen1.json",
+   "die_um": [
+    20200.0,
+    31220.56
+   ],
+   "die_mm2": 630.66,
+   "rows": 8473,
+   "placement": {
+    "unplaced": 176,
+    "slot": 173,
+    "shared_slot": 12,
+    "plan_block": 186
+   },
+   "bus": {
+    "bit_mm": 1241740,
+    "station_bits": 3334592,
+    "tiles": 37384,
+    "buses": 4972,
+    "fork_buses": 0,
+    "xq_bits": 20960,
+    "xq_buses": 392,
+    "missing": [
+     "cic_NE",
+     "cic_NW",
+     "cic_SE",
+     "cic_SW",
+     "col_idx",
+     "col_sfu_NE",
+     "col_sfu_NW",
+     "col_sfu_SE",
+     "col_sfu_SW",
+     "col_su",
+     "cp_svg_NW0",
+     "cp_svg_NW1",
+     "cp_svg_NW2",
+     "cp_svg_NW3",
+     "cp_svg_NW4",
+     "cp_svg_NW5",
+     "cp_svg_NW6",
+     "cp_svg_NW7",
+     "cp_svg_SW0",
+     "cp_svg_SW1",
+     "cp_svg_SW2",
+     "cp_svg_SW3",
+     "cp_svg_SW4",
+     "cp_svg_SW5",
+     "cp_svg_SW6",
+     "cp_svg_SW7",
+     "cxdl_NE0",
+     "cxdl_NE1",
+     "cxdl_NE2",
+     "cxdl_NE3",
+     "cxdl_NW0",
+     "cxdl_NW1",
+     "cxdl_NW2",
+     "cxdl_NW3",
+     "cxdl_SE0",
+     "cxdl_SE1",
+     "cxdl_SE2",
+     "cxdl_SE3",
+     "cxdl_SW0",
+     "cxdl_SW1",
+     "cxdl_SW2",
+     "cxdl_SW3",
+     "cxij_NE",
+     "cxij_NW",
+     "cxij_SE",
+     "cxij_SW",
+     "cxrc_NE",
+     "cxrc_NW",
+     "cxrc_SE",
+     "cxrc_SW",
+     "epcal_NE",
+     "epcal_NW",
+     "epcal_SE",
+     "epcal_SW",
+     "fcx_NE",
+     "fcx_NW",
+     "fcx_SE",
+     "fcx_SW",
+     "fs_NE",
+     "fs_SE",
+     "hb_dbk_NE",
+     "hb_dbk_SE",
+     "hb_idx__nwsh",
+     "hb_idx__op_NE",
+     "hb_idx__op_NW",
+     "hb_idx__op_SE",
+     "hb_idx__op_SW",
+     "hb_idx__q_NE",
+     "hb_idx__q_NW",
+     "hb_idx__q_SE",
+     "hb_idx__q_SW",
+     "hb_idx__qctl_NE",
+     "hb_idx__qctl_NW",
+     "hb_idx__qctl_SE",
+     "hb_idx__qctl_SW",
+     "hb_idx__s_NE",
+     "hb_idx__s_NW",
+     "hb_idx__s_SE",
+     "hb_idx__s_SW",
+     "hb_idx__xq_N",
+     "hb_idx__xq_S",
+     "hb_idx__xqr",
+     "hb_quant_NW",
+     "hb_vms_NE",
+     "hb_vms_NW",
+     "hb_vms_SE",
+     "hb_vms_SW",
+     "hcb_NE0",
+     "hcb_NE1",
+     "hcb_NE2",
+     "hcb_NE3",
+     "hcb_NE4",
+     "hcb_NE5",
+     "hcb_NE6",
+     "hcb_NE7",
+     "hcb_NW0",
+     "hcb_NW1",
+     "hcb_NW2",
+     "hcb_NW3",
+     "hcb_NW4",
+     "hcb_NW5",
+     "hcb_NW6",
+     "hcb_NW7",
+     "hcb_SE0",
+     "hcb_SE1",
+     "hcb_SE2",
+     "hcb_SE3",
+     "hcb_SE4",
+     "hcb_SE5",
+     "hcb_SE6",
+     "hcb_SE7",
+     "hcb_SW0",
+     "hcb_SW1",
+     "hcb_SW2",
+     "hcb_SW3",
+     "hcb_SW4",
+     "hcb_SW5",
+     "hcb_SW6",
+     "hcb_SW7",
+     "hleaf_NE",
+     "hleaf_NW",
+     "hleaf_SE",
+     "hleaf_SW",
+     "host_cp_rxs",
+     "host_ep",
+     "refcfg_NE",
+     "refcfg_SE",
+     "sfault_NE",
+     "sfault_SE",
+     "str_C",
+     "subr_NE",
+     "subr_NW",
+     "subr_SE",
+     "subr_SW",
+     "wbc_NE",
+     "wbc_NW",
+     "wbc_SE",
+     "wbc_SW",
+     "wbk_NE",
+     "wbk_SE",
+     "xl_NE_aqhi",
+     "xl_NE_aqlo",
+     "xl_NE_ctl",
+     "xl_NW_aqhi",
+     "xl_NW_aqlo",
+     "xl_NW_ctl",
+     "xl_SE_aqhi",
+     "xl_SE_aqlo",
+     "xl_SE_ctl",
+     "xl_SW_aqhi",
+     "xl_SW_aqlo",
+     "xl_SW_ctl",
+     "xq_NE_p0_bd",
+     "xq_NE_p0_bfq0",
+     "xq_NE_p0_bfq1",
+     "xq_NE_p0_bfq2",
+     "xq_NE_p0_bfq3",
+     "xq_NE_p0_eg",
+     "xq_NE_p1_bd",
+     "xq_NE_p1_bfq0",
+     "xq_NE_p1_bfq1",
+     "xq_NE_p1_bfq2",
+     "xq_NE_p1_bfq3",
+     "xq_NE_p1_eg",
+     "xq_SE_p0_bd",
+     "xq_SE_p0_bfq0",
+     "xq_SE_p0_bfq1",
+     "xq_SE_p0_bfq2",
+     "xq_SE_p0_bfq3",
+     "xq_SE_p0_eg",
+     "xq_SE_p1_bd",
+     "xq_SE_p1_bfq0",
+     "xq_SE_p1_bfq1",
+     "xq_SE_p1_bfq2",
+     "xq_SE_p1_bfq3",
+     "xq_SE_p1_eg"
+    ],
+    "longest": [
+     24900,
+     "hc_eng.result_v",
+     69
+    ],
+    "over_reach_bits": 0,
+    "per_cls": {
+     "p2p": 37384
+    },
+    "clock_regions": {
+     "grid": "6 x 8 (box 3.37 x 3.90 mm)",
+     "regions": 48,
+     "communicating_pairs": 92,
+     "neighbour_pairs": 58,
+     "pairs_over_1_region": 34,
+     "max_pair_distance_regions": 5
+    },
+    "equal_age_depth": {
+     "stream": 18,
+     "hbm": 0
+    },
+    "max_depth": {
+     "stream": 69,
+     "hbm": 24,
+     "serial": 43
+    },
+    "relay_tiles_calibrated": 51440
+   },
+   "deepest": [
+    [
+     69,
+     "stream",
+     "hc_eng.result_v",
+     1,
+     1,
+     false
+    ],
+    [
+     69,
+     "stream",
+     "hc_eng.result_position",
+     1,
+     3,
+     false
+    ],
+    [
+     69,
+     "stream",
+     "hc_eng.result",
+     1,
+     768,
+     false
+    ],
+    [
+     69,
+     "stream",
+     "hc_eng.qi_word",
+     1,
+     10,
+     false
+    ],
+    [
+     69,
+     "stream",
+     "hc_eng.qi_w",
+     1,
+     5,
+     false
+    ],
+    [
+     69,
+     "stream",
+     "hc_eng.qi_v",
+     1,
+     1,
+     false
+    ],
+    [
+     69,
+     "stream",
+     "hc_eng.qi_slot",
+     1,
+     2,
+     false
+    ],
+    [
+     69,
+     "stream",
+     "hc_eng.qi_lo",
+     1,
+     5,
+     false
+    ],
+    [
+     69,
+     "stream",
+     "hc_eng.qi_kind",
+     1,
+     1,
+     false
+    ],
+    [
+     69,
+     "stream",
+     "hc_eng.qi_cnt",
+     1,
+     12,
+     false
+    ],
+    [
+     69,
+     "stream",
+     "hc_eng.qd_xa",
+     1,
+     10,
+     false
+    ],
+    [
+     69,
+     "stream",
+     "hc_eng.qd_wa",
+     1,
+     10,
+     false
+    ]
+   ],
+   "lever2": {
+    "bundles": 760,
+    "relay_tiles": 10791,
+    "station_rows": 9149,
+    "landing_tiles": 719,
+    "tiles_by_lane_width": {
+     "624": 10791
+    },
+    "biggest": [
+     [
+      152,
+      "dbk_SW",
+      [
+       "idxs_SE"
+      ],
+      "stream",
+      9,
+      2392,
+      4,
+      38
+     ],
+     [
+      148,
+      "dbk_NW",
+      [
+       "idxs_NE"
+      ],
+      "stream",
+      9,
+      2392,
+      4,
+      37
+     ],
+     [
+      132,
+      "idxs_SE",
+      [
+       "hc_NW"
+      ],
+      "stream",
+      15,
+      837,
+      2,
+      66
+     ],
+     [
+      112,
+      "idxs_SE",
+      [
+       "hc_NE"
+      ],
+      "stream",
+      15,
+      837,
+      2,
+      56
+     ],
+     [
+      78,
+      "idxs_SE",
+      [
+       "hc_SW"
+      ],
+      "stream",
+      15,
+      837,
+      2,
+      39
+     ],
+     [
+      76,
+      "sucore_NE",
+      [
+       "su_NE2"
+      ],
+      "serial",
+      1,
+      1892,
+      4,
+      19
+     ],
+     [
+      66,
+      "hc_NW",
+      [
+       "idxs_SE"
+      ],
+      "stream",
+      8,
+      76,
+      1,
+      66
+     ],
+     [
+      64,
+      "su_NW2",
+      [
+       "su_NW1"
+      ],
+      "serial",
+      1,
+      1892,
+      4,
+      16
+     ],
+     [
+      64,
+      "pc_NW0",
+      [
+       "vmh_NW"
+      ],
+      "stream",
+      20,
+      1120,
+      2,
+      32
+     ],
+     [
+      62,
+      "pc_SW7",
+      [
+       "vmh_SE"
+      ],
+      "stream",
+      20,
+      1120,
+      2,
+      31
+     ],
+     [
+      62,
+      "pc_SW0",
+      [
+       "vmh_SW"
+      ],
+      "stream",
+      20,
+      1120,
+      2,
+      31
+     ],
+     [
+      62,
+      "pc_NW7",
+      [
+       "vmh_NE"
+      ],
+      "stream",
+      20,
+      1120,
+      2,
+      31
+     ]
+    ]
+   }
+  },
+  "gen2_smframe_sfuplan": {
+   "label": "gen2_smframe_sfuplan",
+   "mode": "grants",
+   "contract": "/home/ubuntu/scratch/hd4g-gen2/model/pre.json.gz",
+   "positions": "results/arch/hbm_die_d4g/grants_d4g.json",
+   "plan": "results/arch/hbm_die_d4g/plan/d4g_phy/compact.P.json",
+   "die_um": [
+    20200.0,
+    31773.52
+   ],
+   "die_mm2": 641.83,
+   "rows": 8473,
+   "placement": {
+    "unplaced": 176,
+    "slot": 173,
+    "shared_slot": 12,
+    "plan_block": 186
+   },
+   "bus": {
+    "bit_mm": 1247958,
+    "station_bits": 3355122,
+    "tiles": 37782,
+    "buses": 4972,
+    "fork_buses": 0,
+    "xq_bits": 20960,
+    "xq_buses": 392,
+    "missing": [
+     "cic_NE",
+     "cic_NW",
+     "cic_SE",
+     "cic_SW",
+     "col_idx",
+     "col_sfu_NE",
+     "col_sfu_NW",
+     "col_sfu_SE",
+     "col_sfu_SW",
+     "col_su",
+     "cp_svg_NW0",
+     "cp_svg_NW1",
+     "cp_svg_NW2",
+     "cp_svg_NW3",
+     "cp_svg_NW4",
+     "cp_svg_NW5",
+     "cp_svg_NW6",
+     "cp_svg_NW7",
+     "cp_svg_SW0",
+     "cp_svg_SW1",
+     "cp_svg_SW2",
+     "cp_svg_SW3",
+     "cp_svg_SW4",
+     "cp_svg_SW5",
+     "cp_svg_SW6",
+     "cp_svg_SW7",
+     "cxdl_NE0",
+     "cxdl_NE1",
+     "cxdl_NE2",
+     "cxdl_NE3",
+     "cxdl_NW0",
+     "cxdl_NW1",
+     "cxdl_NW2",
+     "cxdl_NW3",
+     "cxdl_SE0",
+     "cxdl_SE1",
+     "cxdl_SE2",
+     "cxdl_SE3",
+     "cxdl_SW0",
+     "cxdl_SW1",
+     "cxdl_SW2",
+     "cxdl_SW3",
+     "cxij_NE",
+     "cxij_NW",
+     "cxij_SE",
+     "cxij_SW",
+     "cxrc_NE",
+     "cxrc_NW",
+     "cxrc_SE",
+     "cxrc_SW",
+     "epcal_NE",
+     "epcal_NW",
+     "epcal_SE",
+     "epcal_SW",
+     "fcx_NE",
+     "fcx_NW",
+     "fcx_SE",
+     "fcx_SW",
+     "fs_NE",
+     "fs_SE",
+     "hb_dbk_NE",
+     "hb_dbk_SE",
+     "hb_idx__nwsh",
+     "hb_idx__op_NE",
+     "hb_idx__op_NW",
+     "hb_idx__op_SE",
+     "hb_idx__op_SW",
+     "hb_idx__q_NE",
+     "hb_idx__q_NW",
+     "hb_idx__q_SE",
+     "hb_idx__q_SW",
+     "hb_idx__qctl_NE",
+     "hb_idx__qctl_NW",
+     "hb_idx__qctl_SE",
+     "hb_idx__qctl_SW",
+     "hb_idx__s_NE",
+     "hb_idx__s_NW",
+     "hb_idx__s_SE",
+     "hb_idx__s_SW",
+     "hb_idx__xq_N",
+     "hb_idx__xq_S",
+     "hb_idx__xqr",
+     "hb_quant_NW",
+     "hb_vms_NE",
+     "hb_vms_NW",
+     "hb_vms_SE",
+     "hb_vms_SW",
+     "hcb_NE0",
+     "hcb_NE1",
+     "hcb_NE2",
+     "hcb_NE3",
+     "hcb_NE4",
+     "hcb_NE5",
+     "hcb_NE6",
+     "hcb_NE7",
+     "hcb_NW0",
+     "hcb_NW1",
+     "hcb_NW2",
+     "hcb_NW3",
+     "hcb_NW4",
+     "hcb_NW5",
+     "hcb_NW6",
+     "hcb_NW7",
+     "hcb_SE0",
+     "hcb_SE1",
+     "hcb_SE2",
+     "hcb_SE3",
+     "hcb_SE4",
+     "hcb_SE5",
+     "hcb_SE6",
+     "hcb_SE7",
+     "hcb_SW0",
+     "hcb_SW1",
+     "hcb_SW2",
+     "hcb_SW3",
+     "hcb_SW4",
+     "hcb_SW5",
+     "hcb_SW6",
+     "hcb_SW7",
+     "hleaf_NE",
+     "hleaf_NW",
+     "hleaf_SE",
+     "hleaf_SW",
+     "host_cp_rxs",
+     "host_ep",
+     "refcfg_NE",
+     "refcfg_SE",
+     "sfault_NE",
+     "sfault_SE",
+     "str_C",
+     "subr_NE",
+     "subr_NW",
+     "subr_SE",
+     "subr_SW",
+     "wbc_NE",
+     "wbc_NW",
+     "wbc_SE",
+     "wbc_SW",
+     "wbk_NE",
+     "wbk_SE",
+     "xl_NE_aqhi",
+     "xl_NE_aqlo",
+     "xl_NE_ctl",
+     "xl_NW_aqhi",
+     "xl_NW_aqlo",
+     "xl_NW_ctl",
+     "xl_SE_aqhi",
+     "xl_SE_aqlo",
+     "xl_SE_ctl",
+     "xl_SW_aqhi",
+     "xl_SW_aqlo",
+     "xl_SW_ctl",
+     "xq_NE_p0_bd",
+     "xq_NE_p0_bfq0",
+     "xq_NE_p0_bfq1",
+     "xq_NE_p0_bfq2",
+     "xq_NE_p0_bfq3",
+     "xq_NE_p0_eg",
+     "xq_NE_p1_bd",
+     "xq_NE_p1_bfq0",
+     "xq_NE_p1_bfq1",
+     "xq_NE_p1_bfq2",
+     "xq_NE_p1_bfq3",
+     "xq_NE_p1_eg",
+     "xq_SE_p0_bd",
+     "xq_SE_p0_bfq0",
+     "xq_SE_p0_bfq1",
+     "xq_SE_p0_bfq2",
+     "xq_SE_p0_bfq3",
+     "xq_SE_p0_eg",
+     "xq_SE_p1_bd",
+     "xq_SE_p1_bfq0",
+     "xq_SE_p1_bfq1",
+     "xq_SE_p1_bfq2",
+     "xq_SE_p1_bfq3",
+     "xq_SE_p1_eg"
+    ],
+    "longest": [
+     25176,
+     "hc_NW.eng_fault",
+     70
+    ],
+    "over_reach_bits": 0,
+    "per_cls": {
+     "p2p": 37782
+    },
+    "clock_regions": {
+     "grid": "6 x 8 (box 3.37 x 3.97 mm)",
+     "regions": 48,
+     "communicating_pairs": 92,
+     "neighbour_pairs": 58,
+     "pairs_over_1_region": 34,
+     "max_pair_distance_regions": 5
+    },
+    "equal_age_depth": {
+     "stream": 18,
+     "hbm": 0
+    },
+    "max_depth": {
+     "stream": 70,
+     "hbm": 24,
+     "serial": 43
+    },
+    "relay_tiles_calibrated": 51988
+   },
+   "deepest": [
+    [
+     70,
+     "stream",
+     "hc_eng.result_v",
+     1,
+     1,
+     false
+    ],
+    [
+     70,
+     "stream",
+     "hc_eng.result_position",
+     1,
+     3,
+     false
+    ],
+    [
+     70,
+     "stream",
+     "hc_eng.result",
+     1,
+     768,
+     false
+    ],
+    [
+     70,
+     "stream",
+     "hc_eng.qi_word",
+     1,
+     10,
+     false
+    ],
+    [
+     70,
+     "stream",
+     "hc_eng.qi_w",
+     1,
+     5,
+     false
+    ],
+    [
+     70,
+     "stream",
+     "hc_eng.qi_v",
+     1,
+     1,
+     false
+    ],
+    [
+     70,
+     "stream",
+     "hc_eng.qi_slot",
+     1,
+     2,
+     false
+    ],
+    [
+     70,
+     "stream",
+     "hc_eng.qi_lo",
+     1,
+     5,
+     false
+    ],
+    [
+     70,
+     "stream",
+     "hc_eng.qi_kind",
+     1,
+     1,
+     false
+    ],
+    [
+     70,
+     "stream",
+     "hc_eng.qi_cnt",
+     1,
+     12,
+     false
+    ],
+    [
+     70,
+     "stream",
+     "hc_eng.qd_xa",
+     1,
+     10,
+     false
+    ],
+    [
+     70,
+     "stream",
+     "hc_eng.qd_wa",
+     1,
+     10,
+     false
+    ]
+   ],
+   "lever2": {
+    "bundles": 760,
+    "relay_tiles": 10844,
+    "station_rows": 9182,
+    "landing_tiles": 719,
+    "tiles_by_lane_width": {
+     "624": 10844
+    },
+    "biggest": [
+     [
+      156,
+      "dbk_SW",
+      [
+       "idxs_SE"
+      ],
+      "stream",
+      9,
+      2392,
+      4,
+      39
+     ],
+     [
+      152,
+      "dbk_NW",
+      [
+       "idxs_NE"
+      ],
+      "stream",
+      9,
+      2392,
+      4,
+      38
+     ],
+     [
+      134,
+      "idxs_SE",
+      [
+       "hc_NW"
+      ],
+      "stream",
+      15,
+      837,
+      2,
+      67
+     ],
+     [
+      112,
+      "idxs_SE",
+      [
+       "hc_NE"
+      ],
+      "stream",
+      15,
+      837,
+      2,
+      56
+     ],
+     [
+      80,
+      "idxs_SE",
+      [
+       "hc_SW"
+      ],
+      "stream",
+      15,
+      837,
+      2,
+      40
+     ],
+     [
+      76,
+      "sucore_NE",
+      [
+       "su_NE2"
+      ],
+      "serial",
+      1,
+      1892,
+      4,
+      19
+     ],
+     [
+      67,
+      "hc_NW",
+      [
+       "idxs_SE"
+      ],
+      "stream",
+      8,
+      76,
+      1,
+      67
+     ],
+     [
+      64,
+      "su_NW2",
+      [
+       "su_NW1"
+      ],
+      "serial",
+      1,
+      1892,
+      4,
+      16
+     ],
+     [
+      64,
+      "pc_SW7",
+      [
+       "vmh_SE"
+      ],
+      "stream",
+      20,
+      1120,
+      2,
+      32
+     ],
+     [
+      64,
+      "pc_SW0",
+      [
+       "vmh_SW"
+      ],
+      "stream",
+      20,
+      1120,
+      2,
+      32
+     ],
+     [
+      64,
+      "pc_NW7",
+      [
+       "vmh_NE"
+      ],
+      "stream",
+      20,
+      1120,
+      2,
+      32
+     ],
+     [
+      64,
+      "pc_NW0",
+      [
+       "vmh_NW"
+      ],
+      "stream",
+      20,
+      1120,
+      2,
+      32
+     ]
+    ]
+   }
+  }
+ },
+ "delta": {
+  "gen2_smframe_sfuplan - pre_smframe_f58b236af": {
+   "bit_mm": 6218,
+   "tiles": 398,
+   "l2_relay_tiles": 53,
+   "l2_station_rows": 33,
+   "l2_landing_tiles": 0,
+   "die_mm2": 11.17
+  }
+ }
+}

@@ -155,6 +155,9 @@ endmodule
 
 // a register that synthesis must keep (SYNTH_KEEP_MODULES + keep): per-position copies of a broadcast control value.
 // Reset value all ones = the off of rcnt 0 (bit-identical to the former rc_j <= 0 copies).
+// keep_hierarchy (S81-QNTKEEP 10-18, ROOT-KEEP f3c8ca0d1): instances are #(.W(..)), so yosys renames them $paramod\...
+// and SYNTH_KEEP_MODULES alone matches nothing; the attribute is copied to every $paramod derivative.
+(* keep_hierarchy *)
 module ot_s81_su_qn_keep_ff #(parameter integer W = 1) (input wire clk, input wire rst_n, input wire [W-1:0] d,
                                                            output wire [W-1:0] q);
     (* keep = "true" *) reg [W-1:0] q_k;

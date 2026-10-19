@@ -1,0 +1,25 @@
+netlist_k expect=FAIL got=FAIL -> OK
+    XQ_ERR cyc 808 layer 1 rel 626: KV producer/consumer fault
+    XQ_CAUSE KV programme cyc 808 rel 626 age 3: ctl local 0 guard 0 record 1 (codec cause {rx_rec,tx_rec,rx_time,tx_time}=1000) slot 0 producer 0 | root lf 0 iof 0
+    XQ_ERR cyc 2571 layer 1 rel 2389: D2D end fault / epoch abort in a normal layer
+    XQ_CAUSE d2d: compute fault 0 abort 0 end_fault 0 cause 00000000 | KV fault 0 abort 1 end_fault 0 cause 10000000
+    XQ_ERR cyc 2584 layer 1 rel 2402: compute producer/consumer fault
+    XQ_CAUSE compute stub codec cyc 2584 rel 2402 cause 0010
+    XQ_ERR cyc 7014 layer 1 rel 6832: per-layer counts (32 Q, 32 RESULT, 4 KVN, 1 status, completion)
+    XQ_ERR cyc 7014 layer 1 rel 6832: an exchange event never happened
+    XQ_ERR cyc 7014 layer 1 rel 6832: an exchange event never happened
+    XQ_ERR cyc 7014 layer 1 rel 6832: an exchange event never happened
+    XQ_ERR cyc 7014 layer 1 rel 6832: an exchange event never happened
+    XQ_ERR cyc 7014 layer 1 rel 6832: an exchange event never happened
+    XQ_ERR cyc 7014 layer 1 rel 6832: an exchange event never happened
+    XQ_ERR cyc 7014 layer 1 rel 6832: an exchange event never happened
+    XQ_ERR cyc 7014 layer 1 rel 6832: an exchange event never happened
+    XQ_ERR cyc 7014 layer 1 rel 6832: an exchange event never happened
+    XQ_ERR cyc 7640 layer 2 rel 623: programme age 0 not on the compiled run edge
+    XQ_ERR cyc 13849 layer 2 rel 6832: per-layer counts (32 Q, 32 RESULT, 4 KVN, 1 status, completion)
+    XQ_E C2K_cmd_issue_to_land=-601 C2K_q31_issue_to_land=-633 C2K_q_first_issue_to_last_land=-601 K2C_r31_issue_to_land=0 K2C_r0_issue_to_land=0 K2C_r_first_issue_to_last_land=0 KVN_k3_issue_to_land=18 roundtrip_cmd_issue_to_r31_land=-601 kv_service_cmd_land_to_r31_issue=0 compute_done_after_r31_land=0
+    XQ_CFG C_REAL=0 K_REAL=1 QGAP=0 PHY=5 TXL=6 X=0 period=6835 stages C 0,0,0,0,0,0 K 9,11,9,8,9,6,11 MUT=0 layers=35
+    XQ_FAIL errors=863
+    XQ_ERR cyc 808 layer 1 rel 626: KV producer/consumer fault
+    XQ_ERR cyc 2571 layer 1 rel 2389: D2D end fault / epoch abort in a normal layer
+    XQ_ERR cyc 2584 layer 1 rel 2402: compute producer/consumer fault

@@ -1,0 +1,37 @@
+{
+  "lane": "MU-S81/SVC (item MU.S81.BUF svc part), 2026-10-18",
+  "source": "origin/main c2b6b4e72: rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att.sv (header + CFG / OWN_ROW / WIN_LOAD decode); legacy index reader rtl/dsrom_sys/s81_ph/svc/q/ot_s81_svcq_idx.sv + rtl/hdc/v41x/ot_hdc_v41x_idx_ring_ranges.sv",
+  "units": "sector = 256 b = 32 B, PC-local sector address of one pseudo-channel; every slice of the p4l service owns 2 PCs (16 slices x 2 = 32 PCs = the die's one HBM stack)",
+  "wb_sectors_per_user": 68,
+  "sb_sectors_per_user": 18432,
+  "ikb_sectors_per_user": 139520,
+  "wb": {
+    "rtl": "ring = WB + 68 u (WB from the CFG frame [29:0]; u = OWN_ROW header [458:449] on writes, WIN_LOAD header [458:449] on reads)",
+    "layout": "codes sector WB + 68 u + s[6:1] on PC s[0]; scales WB + 68 u + 64 + s[6] on PC s[5]; s = pos mod 128 (66 of the 68 sectors used, same addresses on both PCs of every slice)",
+    "per_user_per_layer": "68 sectors on each of the 32 PCs (2,176 sectors = 69.6 KB a die)",
+    "compiler": "one WB per owner layer (CFG before the layer's jobs); reuse layers send the OWNER layer's WB; the user field selects the ring, so the compiler writes WB once and only the 10-bit user id per job (max 1,024 users per WB)"
+  },
+  "sb": {
+    "rtl": "compressed rows read at SB + 9 (g >> 9) on PC g[8], 1-2 sectors a row, SB = WIN_LOAD [29:0], ABSOLUTE per job (compiler-written); gid g from SEL_IDS is region-relative (no user field needed)",
+    "writes": "compressed rows are not written by OWN_ROW (window ring only): they arrive as host sector writes hw (absolute 30-bit sector address [285:256], compiler / host-written), so a per-user region is purely an address choice",
+    "per_user": "9 sectors a 16-row block, 32 gid buckets (g[8:4] = PC, die, stack): sectors a PC = 9 ceil(N_rows / 512). N_rows = 1,048,576 (L20 class, 1M context) -> 18,432 (the stride used here, covers every owner layer); 524,288 (L2 / L8 / L14 class) -> 9,216; field maximum (g 21 b, block field 12 b) 36,864",
+    "compiler": "per user and owner layer: SB_u,L = SB_L + u_local x 18,432; reuse layers (kv_source) send the owner layer's SB_u,L for the same user; the tb uses 0x1000 (user 0) and 0xA000 = 0x1000 + 36,864 (user 1, field-maximum stride)"
+  },
+  "ikb": {
+    "rtl_p4l": "NONE: no index reader is bound on the p4l die (dsdv_svc_att decodes no IDX_Q type 4; lanes/S81-SCAND.md, RELEASE_TREE MU.BAL.SX.3 COORD). Nothing to change in the existing svc RTL.",
+    "rtl_legacy": "ot_s81_svcq_idx IDX_Q (type 4): spec [55:33] key base block (23 b, absolute, compiler-written) + header user [458:449]; ot_hdc_v41x_idx_ring_ranges adds user x UBLK itself (UBLK = 1,090 4-KB blocks a user a stack: RSB 64 x 17 + 2 tail blocks, ring C = 65,568 keys)",
+    "per_user": "1,090 blocks x 4 KB = 139,520 sectors (4.36 MB) a user a stack per index layer (legacy W11 quarter-per-stack ring)",
+    "requirement_for_the_rehomed_reader": "keep IDX_Q [55:33] absolute key base block + the 10-bit user (or the compiler writes kb_u absolute and user 0) -- no new field; MU-S81 calendar may treat ikb as base + u_local x 139,520 sectors"
+  },
+  "complete": {
+    "own_row_write_per_user": true,
+    "win_load_sb_per_user": true,
+    "window_ring_per_user": true,
+    "sel_ids_rows_need_user": false,
+    "index_key_base": "absent on p4l (no reader element); legacy reader format already absolute + user"
+  },
+  "rtl_changed": [],
+  "closed_tiles_to_reclose": [],
+  "bench": "tools/s81_dv/svc_rs/mu_bench.sh (tb_dsdv_svc_rs MU mode, TB-only); witnesses results/rtl/s81_dv_1016/svc_rs/mu_bases/",
+  "notes": "Per-user KV addressing on the p4l svc is COMPLETE with compiler-written absolute bases: no RTL change, no tile re-close. Index-key base has no consumer on p4l until MU.BAL.SX.3 re-homes a reader; that reader must keep the legacy absolute key-base-block + user fields."
+}

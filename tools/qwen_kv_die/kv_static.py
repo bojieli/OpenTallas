@@ -37,6 +37,19 @@ def d2d_txdp_k():
     if any(((v >> (8 * k)) & 0xff) == 0 for k in range(4)):
         raise SystemExit(f'kv_static: D2D_TXDP_K {v:#010x} has a zero port byte (D2D_TXDP_NOT_COMPILED)')
     return v
+
+
+def d2d_ntx_k():
+    """KV-PLAN5 10-18: qkd_d2d_static KV-die TX lane count (S-QTIES QC-12, RTL parameter NTX).  3 = the dead port-3 TX lane
+    removed, the CLOSED view qkd_d2d_static_r7t-r7t-28642e9aa (TT +22.73 / FF +10.31) is built at NTX = 3; OT_KV_D2D_NTX
+    overrides (4 = the r7q port-3-tied-idle build)."""
+    import os
+    n = int(os.environ.get('OT_KV_D2D_NTX', '3'))
+    if n not in (3, 4):
+        raise SystemExit(f'kv_static: OT_KV_D2D_NTX={n} (qkd_d2d_static builds 3 or 4 TX lanes)')
+    return n
+
+
 S = 'rtl/qwen_sys/static_kv_20261014/'
 E = 'rtl/qwen_sys/static_embedding_20261014/'
 # KVJ-C2 2026-10-17: the per-PC parent is the embedding successor qkd_static_kv_pc_path_emb (unchanged pc_path + the
@@ -85,6 +98,14 @@ ROLES = {
     # KVJ-C3 2026-10-17: root of the four per-stack static PC chains, beside the writer and the d2d KV end
     'es_fan_root': (S+'qkd_kv_es_fan_root.sv', 'qkd_kv_es_fan_root', 1),
 }
+# MU-ADOPT-KV 10-19 (Qwen ROM 4 users, R6; OT_KV_MU=1, default off: every existing design point is unchanged): the per-user
+# KV row 64 + layer + 256*user (user = the stage's TAG epoch[1:0]).  Write side: the writer role binds the drop-in wrapper
+# qkd_kv_static_writer_native_mu (closed writer + qkd_kv_mu_wrow, glue of the RTL-only parent kvs_ctl); read side: every
+# pc_path gets MU=1 (the inline qkd_kv_mu_rrow map in qkd_static_kv_pc_path_nc).  Tile file suffix '_mu'.
+MU = __import__('os').environ.get('OT_KV_MU', '0') == '1'
+MU_DEPS = ['rtl/physical/ot_qkd_kv_static_writer_native.sv', 'rtl/qwen_sys/mu_qwen_20261018/qkd_kv_mu_rowoff.sv']
+if MU:
+    ROLES['writer'] = ('rtl/qwen_sys/mu_qwen_20261018/qkd_kv_static_writer_native_mu.sv', 'qkd_kv_static_writer_native_mu', 1)
 # return-train beat record (qkd_embedding_static_return_head / _hop capture_record, unpacked by join4), MSB first
 EMB_RECORD = (('emb_beat_epoch', 16), ('emb_beat_scale', 1), ('emb_beat_half', 1), ('emb_beat_word', 6),
               ('emb_beat_token', 18), ('emb_beat_data', 256))
@@ -390,6 +411,21 @@ def emit(graph_path,out,root=ROOT):
     return report
 
 
+D2D_CAL_IMAGE = 'rtl/qwen_sys/d2d_static_20261015/d2d_cal_image.svh'
+
+
+def compiled_txdp(name='D2D_TXDP_K', root=ROOT):
+    """QXF-LINK (6ef1a097f): TXDP is a REQUIRED qkd/qfd_d2d_static parameter (no default; PR=1 with a zero byte does not
+    elaborate). The die binds the compiler's value from the committed calendar image, never a literal."""
+    m = re.search(r'localparam\s*\[31:0\]\s*' + name + r"\s*=\s*32'h([0-9a-fA-F]{8})\s*;", (root / D2D_CAL_IMAGE).read_text())
+    if not m:
+        raise ValueError(f'{D2D_CAL_IMAGE}: no {name} (compile it: tools/qwen_split/d2d_cal_image_production.sh)')
+    v = int(m.group(1), 16)
+    if any(((v >> (8 * b)) & 0xff) == 0 for b in range(4)):
+        raise ValueError(f'{name} = {v:#010x}: a zero TX port byte is uncompiled')
+    return v
+
+
 def template(root=ROOT):
     """Populate proven ABI joins; leave every unimplemented producer as null.
 
@@ -397,16 +433,16 @@ def template(root=ROOT):
     netlist. Unknown measured latencies are null, not guessed physical values.
     """
     params={
-        'layer_programme':dict(MUT=0),'attention_programme':dict(MUT=0),
+        'layer_programme':dict(MUT=0),'attention_programme':dict(MUT=0,LAND=1 if __import__('os').environ.get('OT_KV_ATTN_LAND','0')=='1' else 0),
         'phase_launch':dict(PH0=None,SAFE_LOW_U=None,SAFE_HIGH_U=None,META_HOLD_CORE=None,MUT=0),
         'ownership':dict(MUT=0),'drain_guard':dict(MUT=0),
-        'pc_path':{},'landing':dict(MUT=0,HOP_MUT=0),
+        'pc_path':dict(MU=1 if MU else 0),'landing':dict(MUT=0,HOP_MUT=0),
         'landing_calendar':dict(MUT=0,PH0=0),'front_calendar':dict(MUT=0),
         'k_issuer':dict(RESPONSE_LAT=None,MUT=0),
         'vport':dict(MUT=0,DQ=None,RT=None),
         'ectla':dict(STATIC_QK=1,QK_ISSUE_AGE=34,ROW_RETURN_LAT=None,HXK=13),
-        'writer':dict(MUT=0,VMAP=1),'writer_programme':dict(MUT=0,VMAP=1),
-        'link':dict(MUT=0,NL=2,PR=1,TXDP=d2d_txdp_k()),
+        'writer':dict(MUT=0,VMAP=1,**({'MU':1} if MU else {})),'writer_programme':dict(MUT=0,VMAP=1),
+        'link':dict(MUT=0,NL=2,NTX=d2d_ntx_k(),PR=1,TXDP=d2d_txdp_k() if root == ROOT else compiled_txdp(root=root)),
         'embgw':dict(MUT=0),'emb_return_head':dict(MUT=0),'emb_return_hop':{},'emb_join':dict(MUT=0),'row_tx':dict(MUT=0),
         'es_fan_root':dict(MUT=0),
     }

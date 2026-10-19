@@ -64,10 +64,10 @@
   "pin_min_tracks": 3
  },
  "job": {
-  "owner": "Claude:HBMA-HOST",
-  "branch": "claude/hbma-host-1017",
-  "tag": "r1",
-  "purpose": "HBM die d4f host_phy (HBMA-HOST 2026-10-17): first hardening of the host UCIe PHY adapter (RTL unchanged, every pin registered). Pin-bound 2052 pins; slot 41.04 was 20.8 pins/um.",
+  "owner": "Claude:HBM-NATIVE",
+  "branch": "claude/hbm-native-a-1017",
+  "tag": "r2",
+  "purpose": "host_phy r2 (HBM-NATIVE 10-17): feedthrough pin flops split into an input-pin capture flop + an output-pin launch flop on TX/RX/session (+1 edge each, elastic link); native audit phy_tx launch 255.2 > 220",
   "extra_paths": [
    "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
    "rtl/hbm_accel/host_static_20261015/ot_hbm_host_static_ingress.sv",
@@ -78,7 +78,10 @@
    "rtl/hbm_accel/host_static_20261015/tb_hbm_host_phy_adapt.sv",
    "rtl/hbm_accel/host_static_20261015/tb_hbm_static_cfg_collar.sv",
    "rtl/hbm_accel/host_static_20261015/tb_static_cmd_target.sv",
-   "rtl/model/hbm_pc40_native_sim_20261003/ot_sram_1r1w_128x256_m1_r2c2_sim.sv"
+   "rtl/model/hbm_pc40_native_sim_20261003/ot_sram_1r1w_128x256_m1_r2c2_sim.sv",
+   "rtl/hbm_accel/host_static_20261015/run_host_phy_pin_stage.sh",
+   "rtl/hbm_accel/host_static_20261015/tb_host_phy_pin_stage.sv",
+   "rtl/hbm_accel/host_static_20261015/ref_hbm_host_phy_adapt_dcfed.sv"
   ],
   "benches": [
    {
@@ -117,10 +120,45 @@
     "pass_regex": "PASS host phy adapt",
     "fail_regex": "FAIL errors=\\d+",
     "note": "reserved-lane check off"
+   },
+   {
+    "name": "phy_pin_stage_lockstep",
+    "cmd": "bash rtl/hbm_accel/host_static_20261015/run_host_phy_pin_stage.sh {RUN}/bench/pin_stage 0 7",
+    "expect": "pass",
+    "pass_regex": "^HOST_PHY_PIN_STAGE PASS$",
+    "pass_witness": "results/rtl/hbm_tiles_b_1017/host_phy_pin_stage.log",
+    "min_count_regex": "fault_edges (\\d+) ",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "phy_pin_stage_mutant",
+    "cmd": "bash rtl/hbm_accel/host_static_20261015/run_host_phy_pin_stage.sh {RUN}/bench/pin_stage_mut 1 7",
+    "expect": "fail",
+    "fail_regex": "^HOST_PHY_PIN_STAGE FAIL$",
+    "fail_witness": "results/rtl/hbm_tiles_b_1017/host_phy_pin_stage_mut.log",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "note": "TX pin stage bypassed (r1 timing)"
    }
   ],
   "views_to": "physical/ref_tile/hdie_host_phy_r1/views",
-  "record_to": "results/rtl/ref_tile/hdie_host_phy_r1"
+  "record_to": "results/rtl/ref_tile/hdie_host_phy_r1",
+  "cycles_added": 1,
+  "reroute_reason": {
+   "kind": "rtl_change",
+   "vs": "hdie_host_phy_r1-r1-dcfed59ab",
+   "why": "routed native pin audit (NATIVE-BATCH 10-17): phy_tx launch up to 255.2 > 220 ps on 12 pins: phy_tx <= ep_tx was ONE feedthrough flop between the S (ep_tx) and N (phy_tx) faces, so it sat at its ep_tx pin (phy_tx[460] flop at y 3.2, 87+45 um from its N pin); TX, RX and session are now capture flop at the input pin + launch flop at the output pin (+1 edge each, elastic link)"
+  },
+  "structural_change": "host_phy r2 (HBM-NATIVE 10-17): every face-to-face feedthrough (ep_tx S -> phy_tx N, phy_rx W -> ep_rx E, session_pad S -> session E) is two flops, capture at the input pin and launch at the output pin (io_flop_at_pins anchors each at its own face); +1 edge TX/RX/session vs r1, elastic host link (endpoint CRC/replay/credits) so no compile-schedule change; pad/status checks unchanged. Lockstep tb_host_phy_pin_stage vs the closed dcfed59ab RTL (data +1 edge, faults same edge), mutant rejected.",
+  "cycles_added_note": "+1 edge TX, +1 RX, +1 session (elastic link)"
  },
- "slot_change_request": "HBMA-HOST 10-17 -> H-DIE: d4f slot 41.04x41.04 is pin-bound (2052 pins, 20.8/um); needs 90.72x90.72 (4 faces of ~515 pins at <=5.7/um; host_N UCIe is N/W, endpoint E/S)"
+ "slot_change_request": "HBMA-HOST 10-17 -> H-DIE: d4f slot 41.04x41.04 is pin-bound (2052 pins, 20.8/um); needs 90.72x90.72 (4 faces of ~515 pins at <=5.7/um; host_N UCIe is N/W, endpoint E/S)",
+ "structural_change": "host_phy r2 (HBM-NATIVE 10-17): every face-to-face feedthrough (ep_tx S -> phy_tx N, phy_rx W -> ep_rx E, session_pad S -> session E) is two flops, capture at the input pin and launch at the output pin (io_flop_at_pins anchors each at its own face); +1 edge TX/RX/session vs r1, elastic host link (endpoint CRC/replay/credits) so no compile-schedule change; pad/status checks unchanged. Lockstep tb_host_phy_pin_stage vs the closed dcfed59ab RTL (data +1 edge, faults same edge), mutant rejected."
 }

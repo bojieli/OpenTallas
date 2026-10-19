@@ -1,0 +1,26 @@
+{
+ "cell": "dsfd_su_t_qnt",
+ "view": "physical/ref_tile/s81su_qnt_cb32_ref/views/dsfd_su_t_qnt",
+ "lib_cell": "dsfd_su_t_qnt",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 293.3,
+ "spread_ps": 26.7,
+ "outputs": 4304,
+ "inputs": 4161,
+ "launch_ps": 212.2,
+ "launch_pin": "e_eps[10]",
+ "capture_ps": 138.6,
+ "capture_pin": "dn_v[2]",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "ff_spread_ps": 26.4,
+ "ff_launch_min_ps": 81.0,
+ "ff_hold_need_ps": -44.8,
+ "pass": true,
+ "fail_why": ""
+}

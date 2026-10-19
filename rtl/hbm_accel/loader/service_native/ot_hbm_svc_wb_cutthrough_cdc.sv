@@ -1,7 +1,15 @@
 `default_nettype none
 // All variable waits live inside this dual-clock HBM PHY boundary. Stream
 // admission occurs once; a started block supplies eight fixed sectors/edge.
-module ot_hbm_svc_wb_cutthrough_cdc #(parameter [1:0] STACK=0)(
+// RTL-BUILD-HBM/stk 2026-10-18 (d4g plan item 10, per-quadrant DMA write-back): NPC / QFOLD parameters.
+//  NPC=32, QFOLD=0 (default): today's stack block, elaboration identical (32 K ports, PC = s[6:2]^s[11:7]^s[16:12],
+//    sectors are stack-local, end <= 2^30).
+//  NPC=16, QFOLD=1: quadrant block.  Sectors are QUADRANT ORDINALS o (29 b, end <= 2^29); the HBM sector of o in
+//    quadrant Q is fold_Q(o) = {o[28:6], Q^o[10]^o[15], o[5:0]} (the PHY hash bit 4 = s[6]^s[11]^s[16] = Q), whose
+//    PHY PC is 16Q + (o[5:2]^o[9:6]^o[14:11]).  This block works in ordinal space and drives local PC index
+//    k = o[5:2]^o[9:6]^o[14:11] on K port k with k_addr = o; the quadrant wrapper (ot_hbm_svc_wb_kport_q) applies the
+//    fold with its quad strap in front of its K pin skids.  Payload SRAMs, FIFOs and the stream side are unchanged.
+module ot_hbm_svc_wb_cutthrough_cdc #(parameter [1:0] STACK=0, parameter integer NPC=32, parameter integer QFOLD=0)(
  input wire stream_clk,stream_rst_n,hbm_clk,hbm_rst_n,
  input wire [3:0] stream_fifo_clk,
  input wire reserve_v,output wire reserve_ready,input wire reserve_bank,
@@ -9,10 +17,11 @@ module ot_hbm_svc_wb_cutthrough_cdc #(parameter [1:0] STACK=0)(
  input wire fill_start,fill_start_bank,input wire [15:0] fill_start_epoch,input wire [2311:0] wd,
  output reg fill_done,output reg done_v,done_bank,output reg [15:0] done_epoch,output reg [11:0] done_sectors,
  output wire [1:0] bank_owned,output wire fault,
- output reg [31:0] k_v,input wire [31:0] k_rdy,output reg [959:0] k_addr,
- output wire [127:0] k_len,output wire [543:0] k_tag,output wire [31:0] k_we,
- output reg [8191:0] k_wdata,output wire [1023:0] k_wstrb,input wire [31:0] k_wr_done
+ output reg [NPC-1:0] k_v,input wire [NPC-1:0] k_rdy,output reg [30*NPC-1:0] k_addr,
+ output wire [4*NPC-1:0] k_len,output wire [17*NPC-1:0] k_tag,output wire [NPC-1:0] k_we,
+ output reg [256*NPC-1:0] k_wdata,output wire [32*NPC-1:0] k_wstrb,input wire [NPC-1:0] k_wr_done
 );
+ localparam [32:0] SPACE_END=(QFOLD!=0)?33'h020000000:33'h040000000;
  wire reset_both=stream_rst_n&&hbm_rst_n;
  wire srst,hrst;wire [3:0] root_rst_n;wire roots_ready=&root_rst_n;
  ot_reset_sync u_stream_reset(.clk(stream_clk),.async_rst_n(reset_both),.sync_rst_n(srst));
@@ -30,13 +39,13 @@ module ot_hbm_svc_wb_cutthrough_cdc #(parameter [1:0] STACK=0)(
  wire [28:0] meta_data,ack_data;wire meta_full,meta_empty,ack_full,ack_empty;
  wire meta_we,meta_re,ack_we,ack_re;
  reg meta_active,ack_pending;reg [28:0] meta_q;reg [11:0] ack_count;
- reg [31:0] req_valid;reg [6:0] outstanding[0:31];reg [4:0] req_lane[0:31];
- reg [31:0] pick_v;reg [4:0] pick_lane[0:31];reg [31:0] pop;reg [4:0] selected_lane[0:31];
+ reg [NPC-1:0] req_valid;reg [6:0] outstanding[0:NPC-1];reg [4:0] req_lane[0:NPC-1];
+ reg [NPC-1:0] pick_v;reg [4:0] pick_lane[0:NPC-1];reg [31:0] pop;reg [4:0] selected_lane[0:NPC-1];
  integer pc,l,acks;wire hbm_fault=hbm_sticky||sf2||!hrst;
  assign fault=stream_sticky||hf2;assign bank_owned=allocated;
  wire [32:0] reserve_end={3'b0,reserve_base[29:0]}+reserve_total;
  assign reserve_ready=srst&&roots_ready&&!allocated[reserve_bank]&&!fault&&reserve_total!=0&&reserve_total<=2048&&
-  reserve_base[31:30]==STACK&&reserve_end<=33'h040000000;
+  reserve_base[31:30]==STACK&&reserve_end<=SPACE_END;
  wire [1:0] copy_eligible={staged[1]&&committed[1]!=0,staged[0]&&committed[0]!=0};
  wire start_copy=srst&&roots_ready&&!copy_active&&(|copy_eligible)&&!meta_full&&!fault;
  wire choose_bank=!copy_eligible[0];
@@ -120,13 +129,16 @@ module ot_hbm_svc_wb_cutthrough_cdc #(parameter [1:0] STACK=0)(
   end
  end
  function automatic [4:0] sector_pc(input [29:0] sector);
-  begin sector_pc=sector[6:2]^sector[11:7]^sector[16:12];end
+  begin
+   if(QFOLD!=0)sector_pc={1'b0,sector[5:2]^sector[9:6]^sector[14:11]};
+   else sector_pc=sector[6:2]^sector[11:7]^sector[16:12];
+  end
  endfunction
  assign fifo_re=pop;
- assign k_we=k_v;assign k_len={32{4'd1}};assign k_tag={32{{meta_q[28],meta_q[27:12]}}};assign k_wstrb={1024{1'b1}};
+ assign k_we=k_v;assign k_len={NPC{4'd1}};assign k_tag={NPC{{meta_q[28],meta_q[27:12]}}};assign k_wstrb={(32*NPC){1'b1}};
  always @*begin
   pick_v=0;pop=0;k_v=0;k_addr=0;k_wdata=0;acks=0;
-  for(pc=0;pc<32;pc=pc+1)begin
+  for(pc=0;pc<NPC;pc=pc+1)begin
    pick_lane[pc]=0;
    for(l=0;l<32;l=l+1)if(!pick_v[pc]&&!fifo_empty[l]&&fifo_pc[l]==pc)begin pick_v[pc]=1;pick_lane[pc]=l;end
    selected_lane[pc]=req_valid[pc]?req_lane[pc]:pick_lane[pc];
@@ -142,12 +154,12 @@ module ot_hbm_svc_wb_cutthrough_cdc #(parameter [1:0] STACK=0)(
  always @(posedge hbm_clk or negedge hrst)begin
   if(!hrst)begin
    sf1<=0;sf2<=0;hbm_sticky<=0;meta_active<=0;meta_q<=0;ack_pending<=0;ack_count<=0;req_valid<=0;
-   for(h=0;h<32;h=h+1)begin req_lane[h]<=0;outstanding[h]<=0;end
+   for(h=0;h<NPC;h=h+1)begin req_lane[h]<=0;outstanding[h]<=0;end
   end else begin
    sf1<=stream_sticky;sf2<=sf1;
    if(meta_re)begin meta_active<=1;meta_q<=meta_data;ack_count<=0;ack_pending<=0;end
    if(meta_active&&!hbm_fault)begin
-    for(h=0;h<32;h=h+1)begin
+    for(h=0;h<NPC;h=h+1)begin
      if(k_v[h]&&!k_rdy[h])begin req_valid[h]<=1;req_lane[h]<=selected_lane[h];end
      if(k_v[h]&&k_rdy[h])req_valid[h]<=0;
      case ({k_v[h]&&k_rdy[h],k_wr_done[h]})

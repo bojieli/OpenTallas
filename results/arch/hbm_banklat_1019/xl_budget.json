@@ -1,0 +1,128 @@
+{
+ "schema": "hbm_banklat_xl_budget_v1",
+ "date": "2026-10-19",
+ "lane": "HBM-BANKLAT-XL",
+ "client": "xl_<q>_ctl = ot_hgi_sm_xload_cl2_ctlx (rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv, branch claude/hbm-banklat-xl-1019)",
+ "param": "RD_LAT: scalar int (all banks) or contract LIST [l0..l7] (element b = bank vmb_<q>b), emitted packed {8d l7,...,8d l0}",
+ "semantics": "l_b = registers rq pin -> bank b -> rr pin = 6 + faces pin 1 + lane_rq_b + lane_rr_b (d4g_bank_latency RT_b, ref 6 at RT 6). ctl issues bank b request D_b = max(l) - l_b edges after the wave issue from one shared 16-bit tapped delay line; all answers land together max(l) edges after issue; everything after rr pins (md, em_off, eg_*, x_done) = the scalar schedule at RD_LAT = max(l).",
+ "source": "results/arch/hbm_banklat_1019/gen2c_contract_pre_bank_latency.json (GEN2c contract_pre)",
+ "gen2c_round_trip": {
+  "NE": [
+   10,
+   13,
+   23,
+   25,
+   26,
+   29,
+   39,
+   41
+  ],
+  "SE": [
+   9,
+   12,
+   23,
+   25,
+   25,
+   28,
+   38,
+   41
+  ],
+  "NW": [
+   33,
+   35,
+   20,
+   22,
+   49,
+   51,
+   36,
+   38
+  ],
+  "SW": [
+   33,
+   35,
+   19,
+   22,
+   48,
+   51,
+   35,
+   37
+  ]
+ },
+ "decision": "ONE hardened view for all four quadrants: RD_LAT = BUDGET = element-wise max over quadrants + 4 edges GEN2d headroom; die pads the rq2 (17-bit request) lane of each bank by budget - RT_b. No rr (257-bit) padding anywhere.",
+ "budget": [
+  37,
+  39,
+  27,
+  29,
+  53,
+  55,
+  43,
+  45
+ ],
+ "budget_hex": "64'h2d2b37351d1b2725",
+ "rlm": 55,
+ "tile_stagger_stages": 28,
+ "die_rq2_pads": {
+  "NE": [
+   27,
+   26,
+   4,
+   4,
+   27,
+   26,
+   4,
+   4
+  ],
+  "SE": [
+   28,
+   27,
+   4,
+   4,
+   28,
+   27,
+   5,
+   4
+  ],
+  "NW": [
+   4,
+   4,
+   7,
+   7,
+   4,
+   4,
+   7,
+   7
+  ],
+  "SW": [
+   4,
+   4,
+   8,
+   7,
+   5,
+   4,
+   8,
+   8
+  ]
+ },
+ "die_rq2_pad_edges": {
+  "NE": 122,
+  "SE": 127,
+  "NW": 44,
+  "SW": 48
+ },
+ "die_rq2_pad_flops_total": 5797,
+ "compare": {
+  "scalar_55_rq_pads": {
+   "NE": 234,
+   "SE": 239,
+   "NW": 156,
+   "SW": 160
+  },
+  "scalar_55_rq_pad_flops": 13413,
+  "scalar_rr_pad_note": "padding the rr side instead costs 257 b per edge (15x)",
+  "per_quadrant_exact_vectors": "0 die pads but 4 hardened ctlx views (E/W pair split: 2 views, ~150 pad edges)"
+ },
+ "tile_cost": "md metadata line 8 -> 57 stages x 21 b (+1,029 flops) + issue stagger line 28 x 16 b (448 flops) + 8 per-lane 12-b +1 adders; datapath unchanged",
+ "schedule": "x-load first beat / every xw beat / x_done +49 edges vs RD_LAT 6 (= scalar schedule at 55); command calendar spacing (issuer at) must allow it. VM calendar: x-load read of bank b reaches its port D_b + lane_rq_b + pad_b = 55 - 7 - lane_rr_b edges after the wave issue (rslot of the x-load group).",
+ "headroom_rule": "GEN2d: if any bank RT_b > budget_b the view must be re-hardened; otherwise the die re-pads rq2 only (re-run d4g_bank_latency: lane_pads)."
+}

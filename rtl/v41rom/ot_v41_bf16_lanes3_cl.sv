@@ -34,6 +34,7 @@ module ot_v41_bf16_lanes3_cl #(
     parameter integer XST = 0
 ) (
     input wire [4:0] leaf_clk, // cl: lane groups0..3, reduction (one hardened root)
+    input wire [3:0] lane_ckl, lane_cko, // cl BFCOL-4: lane band roots fclk / fclk_o (die: = leaf_clk[g])
     input  wire              fclk,     // free-running element clock
     input  wire              rst_pin,  // element reset pin
     input  wire              ze_d,     // element gate-enable next state (qx QZE ze_d)
@@ -54,6 +55,7 @@ module ot_v41_bf16_lanes3_cl #(
 );
     initial if (XST<0) $fatal(1,"XST must be nonnegative");
     localparam integer PARENT_XST=XST>0?XST-1:0;
+    localparam integer PXH=PARENT_XST>1?PARENT_XST-2:0; // clamped shift-index (unselected when PARENT_XST <= 1)
     localparam integer HW = $clog2(NCHB);
     localparam integer TW = HW + 2 + TRW + 1;
     // 1.2 GHz: the word, x slice and tag are registered at the lanes' boundary (the element's capture mux and the
@@ -70,13 +72,13 @@ module ot_v41_bf16_lanes3_cl #(
         reg [255:0] sw [0:PARENT_XST-1];
         reg [255:0] sx [0:PARENT_XST-1];
         reg [TW-1:0] st [0:PARENT_XST-1];
-        always @(posedge clk or negedge rst_n) if (!rst_n) sv <= '0; else sv <= (PARENT_XST > 1) ? {sv[PARENT_XST-2:0], v} : v;
+        always @(posedge clk or negedge rst_n) if (!rst_n) sv <= '0; else sv <= (PARENT_XST > 1) ? {sv[PXH:0], v} : v;
         always @(posedge clk) begin
             sw[0] <= w; sx[0] <= x; st[0] <= {slot, first, last, tree, final_i};
             for (int k = 1; k < PARENT_XST; k++) begin sw[k] <= sw[k-1]; sx[k] <= sx[k-1]; st[k] <= st[k-1]; end
         end
 `ifdef XST_MUTANT_TAG
-        assign v_s = sv[PARENT_XST-1]; assign w_s = sw[PARENT_XST-1]; assign x_s = sx[PARENT_XST-1]; assign t_s = (PARENT_XST > 1) ? st[PARENT_XST-2] : {slot, first, last, tree, final_i};  // negative control: tag one stage early
+        assign v_s = sv[PARENT_XST-1]; assign w_s = sw[PARENT_XST-1]; assign x_s = sx[PARENT_XST-1]; assign t_s = (PARENT_XST > 1) ? st[PXH] : {slot, first, last, tree, final_i};  // negative control: tag one stage early
 `else
         assign v_s = sv[PARENT_XST-1]; assign w_s = sw[PARENT_XST-1]; assign x_s = sx[PARENT_XST-1]; assign t_s = st[PARENT_XST-1];
 `endif
@@ -104,13 +106,13 @@ module ot_v41_bf16_lanes3_cl #(
     ot_v41_bf_lane16_cl #(.NCHB(NCHB),.TRW(TRW),.CUT(CUT),.GRADUAL_RNE(GRADUAL_RNE),.RC(RC),
         .BOUNDARY_STAGE(PARENT_XST>0)) u_lanes
         (
-         .fclk0(leaf_clk[0]),.rst_pin0(rst_pin),.ze_d0(ze_d),.v_s0(v_s),.w_s0(w_s[0 +: 64]),.x_s0(x_s[0 +: 64]),.t_p0(t_p),
+         .fclk0(leaf_clk[0]),.fclkl0(lane_ckl[0]),.fclko0(lane_cko[0]),.rst_pin0(rst_pin),.ze_d0(ze_d),.v_s0(v_s),.w_s0(w_s[0 +: 64]),.x_s0(x_s[0 +: 64]),.t_p0(t_p),
          .cv0(cv16[0 +: 4]),.cf0(cf16[0 +: 4]),.cfault0(fault16[0 +: 4]),.cs_p0(cs16[0 +: 128]),.ct_p0(ct16[0*(TRW+1) +: 4*(TRW+1)]),
-         .fclk1(leaf_clk[1]),.rst_pin1(rst_pin),.ze_d1(ze_d),.v_s1(v_s),.w_s1(w_s[64 +: 64]),.x_s1(x_s[64 +: 64]),.t_p1(t_p),
+         .fclk1(leaf_clk[1]),.fclkl1(lane_ckl[1]),.fclko1(lane_cko[1]),.rst_pin1(rst_pin),.ze_d1(ze_d),.v_s1(v_s),.w_s1(w_s[64 +: 64]),.x_s1(x_s[64 +: 64]),.t_p1(t_p),
          .cv1(cv16[4 +: 4]),.cf1(cf16[4 +: 4]),.cfault1(fault16[4 +: 4]),.cs_p1(cs16[128 +: 128]),.ct_p1(ct16[4*(TRW+1) +: 4*(TRW+1)]),
-         .fclk2(leaf_clk[2]),.rst_pin2(rst_pin),.ze_d2(ze_d),.v_s2(v_s),.w_s2(w_s[128 +: 64]),.x_s2(x_s[128 +: 64]),.t_p2(t_p),
+         .fclk2(leaf_clk[2]),.fclkl2(lane_ckl[2]),.fclko2(lane_cko[2]),.rst_pin2(rst_pin),.ze_d2(ze_d),.v_s2(v_s),.w_s2(w_s[128 +: 64]),.x_s2(x_s[128 +: 64]),.t_p2(t_p),
          .cv2(cv16[8 +: 4]),.cf2(cf16[8 +: 4]),.cfault2(fault16[8 +: 4]),.cs_p2(cs16[256 +: 128]),.ct_p2(ct16[8*(TRW+1) +: 4*(TRW+1)]),
-         .fclk3(leaf_clk[3]),.rst_pin3(rst_pin),.ze_d3(ze_d),.v_s3(v_s),.w_s3(w_s[192 +: 64]),.x_s3(x_s[192 +: 64]),.t_p3(t_p),
+         .fclk3(leaf_clk[3]),.fclkl3(lane_ckl[3]),.fclko3(lane_cko[3]),.rst_pin3(rst_pin),.ze_d3(ze_d),.v_s3(v_s),.w_s3(w_s[192 +: 64]),.x_s3(x_s[192 +: 64]),.t_p3(t_p),
          .cv3(cv16[12 +: 4]),.cf3(cf16[12 +: 4]),.cfault3(fault16[12 +: 4]),.cs_p3(cs16[384 +: 128]),.ct_p3(ct16[12*(TRW+1) +: 4*(TRW+1)]));
     for (genvar j=0;j<16;j++) begin : g_out
         assign cv[j]=cv16[j];assign cf[j]=cf16[j];assign cfault[j]=fault16[j];

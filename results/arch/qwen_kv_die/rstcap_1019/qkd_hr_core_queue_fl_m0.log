@@ -1,0 +1,14 @@
+ot-run: ot-epyc4       admits    48 GB (avail 363, growth 329, headroom 0, waiters 0/0 GB) load 133/128 running 36 disk 695 GB 
+ot-run: ot-epyc5       admits    32 GB (avail 380, growth 357, headroom 0, waiters 6/968 GB) load 260/128 running 45 disk 1796 GB 
+ot-run: ot-pve1        admits    18 GB (avail 166, growth 153, headroom 0, waiters 0/0 GB) load 74/28 running 25 disk 1248 GB 
+ot-run: ot-agidock128  admits    14 GB (avail 33, growth 23, headroom 0, waiters 0/0 GB) load 56/64 running 7 disk 213 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-3946565-1792393749 after 0 s
+FACE_LAND verilator Verilator 5.050 2026-07-01 rev v5.050
+FACE_LAND PASS top=qkd_hr_core_queue_fl mut=0 checks=20196 comparisons=20196 epochs=196 toggles=1396 errors=0 first_err=-1
+- /tmp/rstcap-bench/qkd_hr_core_queue_m0/tb_face_land.sv:105: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 20us; walltime 0.007 s; speed 2.770 ms/s
+- Verilator: cpu 0.007 s on 1 threads; allocated 7 MB
+
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-3946565-1792393749): exit 0

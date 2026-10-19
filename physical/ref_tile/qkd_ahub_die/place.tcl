@@ -29,46 +29,46 @@ proc ot_ref_pick {by master pat} {
 }
 set ot_ref_n 0
 set i [ot_ref_pick $ot_ref_by ot_nhb_pbst {*g_s?0?*u_pbst}]
-$i setOrient R0; $i setLocation [expr {round(43.2 * $dbu)}] [expr {round(43.2 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_nhb_pbst at 43.2 43.2 R0"
+$i setOrient R0; $i setLocation [expr {round(172.8 * $dbu)}] [expr {round(86.4 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_nhb_pbst at 172.8 86.4 R0"
 set i [ot_ref_pick $ot_ref_by ot_nhb_pbst {*g_s?1?*u_pbst}]
-$i setOrient R0; $i setLocation [expr {round(259.2 * $dbu)}] [expr {round(43.2 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_nhb_pbst at 259.2 43.2 R0"
+$i setOrient R0; $i setLocation [expr {round(345.6 * $dbu)}] [expr {round(86.4 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_nhb_pbst at 345.6 86.4 R0"
 set i [ot_ref_pick $ot_ref_by ot_nhb_pbst {*g_s?2?*u_pbst}]
-$i setOrient R0; $i setLocation [expr {round(777.6 * $dbu)}] [expr {round(43.2 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_nhb_pbst at 777.6 43.2 R0"
+$i setOrient R0; $i setLocation [expr {round(561.6 * $dbu)}] [expr {round(86.4 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_nhb_pbst at 561.6 86.4 R0"
 set i [ot_ref_pick $ot_ref_by ot_nhb_pbst {*g_s?3?*u_pbst}]
-$i setOrient R0; $i setLocation [expr {round(950.4 * $dbu)}] [expr {round(43.2 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_nhb_pbst at 950.4 43.2 R0"
+$i setOrient R0; $i setLocation [expr {round(734.4 * $dbu)}] [expr {round(86.4 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_nhb_pbst at 734.4 86.4 R0"
 set i [ot_ref_pick $ot_ref_by ot_nhb_pvlg {*g_pv?0?*u_pv}]
-$i setOrient R0; $i setLocation [expr {round(43.2 * $dbu)}] [expr {round(302.4 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_nhb_pvlg at 43.2 302.4 R0"
+$i setOrient R0; $i setLocation [expr {round(172.8 * $dbu)}] [expr {round(345.6 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_nhb_pvlg at 172.8 345.6 R0"
 set i [ot_ref_pick $ot_ref_by ot_nhb_pvlg {*g_pv?1?*u_pv}]
-$i setOrient R0; $i setLocation [expr {round(259.2 * $dbu)}] [expr {round(302.4 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_nhb_pvlg at 259.2 302.4 R0"
+$i setOrient R0; $i setLocation [expr {round(345.6 * $dbu)}] [expr {round(345.6 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_nhb_pvlg at 345.6 345.6 R0"
 set i [ot_ref_pick $ot_ref_by ot_nhb_pvlg {*g_pv?2?*u_pv}]
-$i setOrient R0; $i setLocation [expr {round(777.6 * $dbu)}] [expr {round(302.4 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_nhb_pvlg at 777.6 302.4 R0"
+$i setOrient R0; $i setLocation [expr {round(561.6 * $dbu)}] [expr {round(345.6 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_nhb_pvlg at 561.6 345.6 R0"
 set i [ot_ref_pick $ot_ref_by ot_nhb_pvlg {*g_pv?3?*u_pv}]
-$i setOrient R0; $i setLocation [expr {round(950.4 * $dbu)}] [expr {round(302.4 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_nhb_pvlg at 950.4 302.4 R0"
+$i setOrient R0; $i setLocation [expr {round(734.4 * $dbu)}] [expr {round(345.6 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_nhb_pvlg at 734.4 345.6 R0"
 set i [ot_ref_pick $ot_ref_by ot_nhb_zh {*g_zh?0?*u_zh}]
 $i setOrient R0; $i setLocation [expr {round(43.2 * $dbu)}] [expr {round(561.6 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_nhb_zh at 43.2 561.6 R0"
 set i [ot_ref_pick $ot_ref_by ot_nhb_zh {*g_zh?1?*u_zh}]
-$i setOrient R0; $i setLocation [expr {round(259.2 * $dbu)}] [expr {round(561.6 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_nhb_zh at 259.2 561.6 R0"
+$i setOrient R0; $i setLocation [expr {round(216.0 * $dbu)}] [expr {round(561.6 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_nhb_zh at 216.0 561.6 R0"
 set i [ot_ref_pick $ot_ref_by ot_nhb_zh {*g_zh?2?*u_zh}]
-$i setOrient R0; $i setLocation [expr {round(777.6 * $dbu)}] [expr {round(561.6 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_nhb_zh at 777.6 561.6 R0"
+$i setOrient R0; $i setLocation [expr {round(648.0 * $dbu)}] [expr {round(561.6 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_nhb_zh at 648.0 561.6 R0"
 set i [ot_ref_pick $ot_ref_by ot_nhb_zh {*g_zh?3?*u_zh}]
-$i setOrient R0; $i setLocation [expr {round(950.4 * $dbu)}] [expr {round(561.6 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_nhb_zh at 950.4 561.6 R0"
+$i setOrient R0; $i setLocation [expr {round(820.8 * $dbu)}] [expr {round(561.6 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_nhb_zh at 820.8 561.6 R0"
 set i [ot_ref_pick $ot_ref_by ot_qkh_recip_leaf {u_recip}]
-$i setOrient R0; $i setLocation [expr {round(475.2 * $dbu)}] [expr {round(259.2 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_qkh_recip_leaf at 475.2 259.2 R0"
+$i setOrient R0; $i setLocation [expr {round(907.2 * $dbu)}] [expr {round(302.4 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_qkh_recip_leaf at 907.2 302.4 R0"
 set i [ot_ref_pick $ot_ref_by qkd_ahub_core {u_core}]
-$i setOrient R0; $i setLocation [expr {round(518.4 * $dbu)}] [expr {round(561.6 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] qkd_ahub_core at 518.4 561.6 R0"
+$i setOrient R0; $i setLocation [expr {round(432.0 * $dbu)}] [expr {round(561.6 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qkd_ahub_core at 432.0 561.6 R0"
 set nb 0; dict for {k v} $ot_ref_by { incr nb [llength $v] }
 if {$nb != 14} { error "ref_tile place: expected 14 macros, netlist has $nb" }

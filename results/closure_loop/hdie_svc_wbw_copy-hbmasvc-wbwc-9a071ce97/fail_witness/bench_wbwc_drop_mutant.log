@@ -1,0 +1,8 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job hdie_svc_wbw_copy-hbmasvc-wbwc-9a071ce97 bench bench_wbwc_drop_mutant host ot-epyc5 run /srv/opentallas-scratch/claude/closure-loop/hdie_svc_wbw_copy-hbmasvc-wbwc-9a071ce97 log cl/bench_wbwc_drop_mutant.a1b1.log captured 2026-10-18T05:44:07-07:00
+# fail_regex 'WBW_AGE'
+RAW wbwc_drop rc=1
+WBW_AGE kshare 7 at 200833000: got v=0 exp v=1
+WBW_AGE kshare 7 at 296667000: got v=0 exp v=1
+[17153347000] %Fatal: tb_hbm_svc_wb_kshare_q.sv:106: Assertion failed in tb_hbm_svc_wb_kshare_q: WB_INTEGRITY errors=1 wb=0 kshare=00000000 controller=0
+RAW_FAIL wbwc_drop
