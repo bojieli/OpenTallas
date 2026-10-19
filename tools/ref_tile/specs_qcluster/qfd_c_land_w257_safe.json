@@ -26,6 +26,9 @@
   ],
   "N": [
    "bank"
+  ],
+  "E": [
+   "vld"
   ]
  },
  "pin_ranges": {
@@ -44,6 +47,10 @@
   "bank": [
    0.54,
    215.46
+  ],
+  "vld": [
+   10.0,
+   20.0
   ]
  },
  "route": {
@@ -74,7 +81,7 @@
  },
  "reset_landing": {
   "enable": false,
-  "reason": "one shared kept face rst_l0 then kept r2 per <=24bit slice; exactly two stages, first-stage fanout <=11"
+  "reason": "one shared kept face rst_l0 then kept r2 per <=24bit slice; exactly two stages, first-stage fanout <=12"
  },
  "structural_change": "SAFE-QW-CB16: replace 163k soft parent DFFs with <=258bit ring/read hard halves, kept per24bit rotating onehot selects and 2stage reset. Geometry pin limited; parent not yet bound.",
  "job": {

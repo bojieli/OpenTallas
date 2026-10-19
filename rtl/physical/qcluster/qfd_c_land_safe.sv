@@ -25,9 +25,16 @@ module qfd_c_land_safe_w_slice #(parameter integer W=24)(
 endmodule
 
 module qfd_c_land_safe_w #(parameter integer W=258)(
- input wire ck,rsi, input wire [W-1:0] i, output wire [4*W-1:0] bank);
+ input wire ck,rsi, input wire [W-1:0] i, output wire [4*W-1:0] bank, output reg [3:0] vld);
  (* keep = 1 *) reg rst_l0;
  always @(posedge ck) rst_l0 <= rsi;
+ (* keep = 1 *) reg vld_rst_l1;
+ reg [3:0] vld_sel;
+ always @(posedge ck) begin
+  vld_rst_l1 <= rst_l0;
+  if(!vld_rst_l1) begin vld_sel<=4'b0001;vld<=0;end
+  else begin vld_sel<={vld_sel[2:0],vld_sel[3]};vld<=vld|vld_sel;end
+ end
  genvar g,s;
  generate for(g=0;g<(W+23)/24;g=g+1) begin:g_slice
   localparam integer N=(W-g*24<24)?W-g*24:24;
@@ -44,15 +51,15 @@ endmodule
 
 (* keep_hierarchy = "yes" *)
 module qfd_c_land_safe_r_slice #(parameter integer W=24, K=2)(
- input wire ck,rsi, input wire [4*W-1:0] bank, output reg [W-1:0] o);
+ input wire ck,rsi, input wire [4*W-1:0] bank, input wire [3:0] vld, output reg [W-1:0] o);
  (* keep = 1 *) reg r2;
  (* keep = 1 *) reg [3:0] sel;
  (* keep = 1 *) reg warm;
  reg [1:0] age;
- wire [W-1:0] chosen=(bank[0*W+:W]&{W{sel[0]}})
-                         |(bank[1*W+:W]&{W{sel[1]}})
-                         |(bank[2*W+:W]&{W{sel[2]}})
-                         |(bank[3*W+:W]&{W{sel[3]}});
+ wire [W-1:0] chosen=(bank[0*W+:W]&{W{sel[0] & vld[0]}})
+                         |(bank[1*W+:W]&{W{sel[1] & vld[1]}})
+                         |(bank[2*W+:W]&{W{sel[2] & vld[2]}})
+                         |(bank[3*W+:W]&{W{sel[3] & vld[3]}});
  always @(posedge ck) begin
   r2<=rsi;
   if(!r2) begin sel<=4'b0001 << ((4-K)%4); age<=0; warm<=0; end
@@ -65,7 +72,7 @@ module qfd_c_land_safe_r_slice #(parameter integer W=24, K=2)(
 endmodule
 
 module qfd_c_land_safe_r #(parameter integer W=258, K=2)(
- input wire ck,rsi, input wire [4*W-1:0] bank, output wire [W-1:0] o);
+ input wire ck,rsi, input wire [4*W-1:0] bank, input wire [3:0] vld, output wire [W-1:0] o);
  (* keep = 1 *) reg rst_l0;
  always @(posedge ck) rst_l0 <= rsi;
  genvar g,s;
@@ -75,46 +82,46 @@ module qfd_c_land_safe_r #(parameter integer W=258, K=2)(
   for(s=0;s<4;s=s+1) begin:g_bank
    assign b[s*N+:N]=bank[s*W+g*24+:N];
   end
-  qfd_c_land_safe_r_slice #(.W(N),.K(K)) u(ck,rst_l0,b,o[g*24+:N]);
+  qfd_c_land_safe_r_slice #(.W(N),.K(K)) u(ck,rst_l0,b,vld,o[g*24+:N]);
  end endgenerate
 `ifndef SYNTHESIS
  initial if(W>258 || K<1 || K>3) $fatal(1,"invalid safe hard-child shape/epoch");
 `endif
 endmodule
 
-module qfd_c_land_w257_safe(input wire ck,rsi, input wire [256:0] i, output wire [1027:0] bank);
- qfd_c_land_safe_w #(.W(257)) u(.ck(ck),.rsi(rsi),.i(i),.bank(bank));
+module qfd_c_land_w257_safe(input wire ck,rsi,input wire [256:0] i,output wire [1027:0] bank,output wire [3:0] vld);
+ qfd_c_land_safe_w #(.W(257)) u(.ck(ck),.rsi(rsi),.i(i),.bank(bank),.vld(vld));
 endmodule
 
-module qfd_c_land_r257_safe(input wire ck,rsi, input wire [1027:0] bank, output wire [256:0] o);
- qfd_c_land_safe_r #(.W(257)) u(.ck(ck),.rsi(rsi),.bank(bank),.o(o));
-endmodule
-
-module qfd_c_land_w258_safe(input wire ck,rsi, input wire [257:0] i, output wire [1031:0] bank);
- qfd_c_land_safe_w #(.W(258)) u(.ck(ck),.rsi(rsi),.i(i),.bank(bank));
-endmodule
-
-module qfd_c_land_r258_safe(input wire ck,rsi, input wire [1031:0] bank, output wire [257:0] o);
- qfd_c_land_safe_r #(.W(258)) u(.ck(ck),.rsi(rsi),.bank(bank),.o(o));
-endmodule
-
-module qfd_c_land_w257_narrow(input wire ck,rsi,input wire [256:0] i,output wire [513:0] bank_w,bank_e);
+module qfd_c_land_w257_narrow(input wire ck,rsi,input wire [256:0] i,output wire [513:0] bank_w,bank_e,output wire [3:0] vld);
  wire [1027:0] b; assign {bank_e,bank_w}=b;
- qfd_c_land_safe_w #(.W(257)) u(.ck(ck),.rsi(rsi),.i(i),.bank(b));
+ qfd_c_land_safe_w #(.W(257)) u(.ck(ck),.rsi(rsi),.i(i),.bank(b),.vld(vld));
 endmodule
 
-module qfd_c_land_r257_narrow(input wire ck,rsi,output wire [256:0] o,input wire [513:0] bank_w,bank_e);
+module qfd_c_land_r257_safe(input wire ck,rsi,output wire [256:0] o,input wire [1027:0] bank,input wire [3:0] vld);
+ qfd_c_land_safe_r #(.W(257)) u(.ck(ck),.rsi(rsi),.bank(bank),.vld(vld),.o(o));
+endmodule
+
+module qfd_c_land_r257_narrow(input wire ck,rsi,output wire [256:0] o,input wire [513:0] bank_w,bank_e,input wire [3:0] vld);
  wire [1027:0] b; assign b={bank_e,bank_w};
- qfd_c_land_safe_r #(.W(257)) u(.ck(ck),.rsi(rsi),.bank(b),.o(o));
+ qfd_c_land_safe_r #(.W(257)) u(.ck(ck),.rsi(rsi),.bank(b),.vld(vld),.o(o));
 endmodule
 
-module qfd_c_land_w258_narrow(input wire ck,rsi,input wire [257:0] i,output wire [515:0] bank_w,bank_e);
+module qfd_c_land_w258_safe(input wire ck,rsi,input wire [257:0] i,output wire [1031:0] bank,output wire [3:0] vld);
+ qfd_c_land_safe_w #(.W(258)) u(.ck(ck),.rsi(rsi),.i(i),.bank(bank),.vld(vld));
+endmodule
+
+module qfd_c_land_w258_narrow(input wire ck,rsi,input wire [257:0] i,output wire [515:0] bank_w,bank_e,output wire [3:0] vld);
  wire [1031:0] b; assign {bank_e,bank_w}=b;
- qfd_c_land_safe_w #(.W(258)) u(.ck(ck),.rsi(rsi),.i(i),.bank(b));
+ qfd_c_land_safe_w #(.W(258)) u(.ck(ck),.rsi(rsi),.i(i),.bank(b),.vld(vld));
 endmodule
 
-module qfd_c_land_r258_narrow(input wire ck,rsi,output wire [257:0] o,input wire [515:0] bank_w,bank_e);
+module qfd_c_land_r258_safe(input wire ck,rsi,output wire [257:0] o,input wire [1031:0] bank,input wire [3:0] vld);
+ qfd_c_land_safe_r #(.W(258)) u(.ck(ck),.rsi(rsi),.bank(bank),.vld(vld),.o(o));
+endmodule
+
+module qfd_c_land_r258_narrow(input wire ck,rsi,output wire [257:0] o,input wire [515:0] bank_w,bank_e,input wire [3:0] vld);
  wire [1031:0] b; assign b={bank_e,bank_w};
- qfd_c_land_safe_r #(.W(258)) u(.ck(ck),.rsi(rsi),.bank(b),.o(o));
+ qfd_c_land_safe_r #(.W(258)) u(.ck(ck),.rsi(rsi),.bank(b),.vld(vld),.o(o));
 endmodule
 `default_nettype wire

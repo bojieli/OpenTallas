@@ -30,7 +30,8 @@
   ],
   "S": [
    "ck",
-   "rsi"
+   "rsi",
+   "vld"
   ]
  },
  "pin_ranges": {
@@ -53,6 +54,10 @@
   "rsi": [
    33.48,
    36.72
+  ],
+  "vld": [
+   40.0,
+   50.0
   ]
  },
  "route": {
@@ -83,9 +88,9 @@
  },
  "reset_landing": {
   "enable": false,
-  "reason": "one shared kept face rst_l0 then kept r2 per <=24bit slice; exactly two stages, first-stage fanout <=11"
+  "reason": "one shared kept face rst_l0 then kept r2 per <=24bit slice; exactly two stages, first-stage fanout <=12"
  },
- "structural_change": "SAFE-QW-CB16: replace 163k soft parent DFFs with <=258bit ring/read hard halves, kept per24bit rotating onehot selects and 2stage reset. Geometry pin limited; parent not yet bound. Narrow variant: split bank_w/bank_e across W/E faces; 516/128.52=4.02pins/um; 258/63.72=4.05 on N. 64.8x129.6, aspect2.",
+ "structural_change": "SAFE-QW-CB16: replace 163k soft parent DFFs with <=258bit ring/read hard halves, kept per24bit rotating onehot selects and 2stage reset. Geometry pin limited; parent not yet bound. Narrow split bank_w/e at516bits per128.52um face (4.02pins/um); explicit4 slot-written flags restore phase-shifted reset behavior.",
  "job": {
   "owner": "Codex:SAFE-QW-CB16",
   "branch": "codex/safe-qw-cb16-1019",
