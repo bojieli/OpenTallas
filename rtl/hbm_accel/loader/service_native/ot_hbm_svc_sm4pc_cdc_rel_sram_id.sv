@@ -19,10 +19,11 @@
 // (ot_hbm_svc_prefetch_overlap_owner), counting returns per landing bank; OVERLAP=0 = the Codex 14:47 behaviour (the next
 // descriptor only after the whole block has RETURNED), kept for the measured ablation.  Steady 64-row stream at
 // OVERLAP=0: 139.3 ns/epoch = 52 B/cycle/SM vs the 99 B/cycle/SM price (tb_hbm_svc_sm_stack_steady).
-module ot_hbm_svc_sm4pc_cdc_rel_sram_id #(parameter integer NATIVE_LANDING=0,FIFOMUT=0,OWNER_AW=5, parameter integer RESPONSE_DEPTH=8, parameter integer OVERLAP=1,
+module ot_hbm_svc_sm4pc_cdc_rel_sram_id #(parameter integer NATIVE_RETURN=0,RETURN_MUT=0,NATIVE_LANDING=0,FIFOMUT=0,OWNER_AW=5, parameter integer RESPONSE_DEPTH=8, parameter integer OVERLAP=1,
  parameter integer LBANKS=2, parameter integer LB=(LBANKS>2)?2:1)(
  input wire [1:0] id_stack,input wire [2:0] id_sm,
  input wire stream_clk,stream_rst_n,hbm_clk,hbm_rst_n,
+ input wire [3:0] return_pair_clk,
  input wire [1:0] stream_bank_clk,input wire [1:0] hbm_fifo_clk,input wire [3:0] hbm_pc_clk,
  input wire [14:0] reserve_row_base,
  input wire reserve_v,output wire reserve_ready,input wire [31:0] reserve_base,
@@ -51,7 +52,8 @@ module ot_hbm_svc_sm4pc_cdc_rel_sram_id #(parameter integer NATIVE_LANDING=0,FIF
    meta_d1<={out_v0,out_mask0,out_ordinal0,out_bank0,out_epoch0,out_last0};meta_d2<=meta_d1;
    ord_d1<=read_ordinal_q;ord_d2<=ord_d1;
   end
- assign {out_v,out_mask,out_ordinal,out_bank,out_epoch,out_last}=(NATIVE_LANDING!=0)?meta_d2:
+ wire pre_v,pre_last;wire[3:0]pre_mask;wire[10:0]pre_ordinal;wire[LB-1:0]pre_bank;wire[15:0]pre_epoch;
+ assign {pre_v,pre_mask,pre_ordinal,pre_bank,pre_epoch,pre_last}=(NATIVE_LANDING!=0)?meta_d2:
   {out_v0,out_mask0,out_ordinal0,out_bank0,out_epoch0,out_last0};
 
  // strap identity (static): stream-side copies for the reserve check/PC set, hbm-side copy for the re-check
@@ -90,7 +92,8 @@ module ot_hbm_svc_sm4pc_cdc_rel_sram_id #(parameter integer NATIVE_LANDING=0,FIF
  .wr_clk(stream_clk),.wr_rst_n(srst),.wr_valid(reserve_fire),.wr_ready(desc_wr_ready),
  .wr_data({reserve_pcs,reserve_row_base,reserve_base,reserve_total,reserve_bank,reserve_epoch}),.wr_overflow(desc_ov),
  .rd_clk(hbm_clk),.rd_rst_n(hrst),.rd_valid(desc_rd_valid),.rd_ready(desc_rd_ready),.rd_data(desc_data),.rd_underflow(desc_un));
- assign fault=stream_fault||hbf2||desc_ov||(|bank_fault);
+ wire return_fault;
+ assign fault=stream_fault||hbf2||desc_ov||(|bank_fault)||return_fault;
  assign block_ready=ready_q;
  reg h_active;reg [LB-1:0] h_bank;reg [15:0] h_epoch;reg [29:0] h_base;
  reg [11:0] h_total,h_received;reg [19:0] h_pcs;reg [14:0] h_row_base;
@@ -201,8 +204,29 @@ module ot_hbm_svc_sm4pc_cdc_rel_sram_id #(parameter integer NATIVE_LANDING=0,FIF
   for(rb=0;rb<LBANKS;rb=rb+1)complete_event[rb]=0;
   for(ci=0;ci<8;ci=ci+1)if(bank_complete[ci])complete_event[bank_complete_bank[ci]][ci]=1;
  end
- generate for(g=0;g<4;g=g+1)begin:out_lane
-  assign out_data[256*g+:256]=macro_data[(read_ordinal_pick[2:0]+g)%8];
+ generate if(NATIVE_RETURN!=0)begin:g_regional
+  wire[2047:0] banks;wire[2:0] return_ordinal;wire return_valid;
+  reg[MW-1:0] labels[0:6];integer mi;
+  for(genvar mb=0;mb<8;mb=mb+1)begin:g_bank
+   assign banks[mb*256+:256]=macro_data[mb];
+  end
+  always @(posedge stream_clk or negedge srst)
+   if(!srst)begin for(mi=0;mi<7;mi=mi+1)labels[mi]<=0;end
+   else begin
+    labels[0]<={pre_v,pre_mask,pre_ordinal,pre_bank,pre_epoch,pre_last};
+    for(mi=1;mi<7;mi=mi+1)labels[mi]<=labels[mi-1];
+   end
+  ot_hbm_svg_return_regional #(.MUT(RETURN_MUT)) u_return(
+   .pair_clk(return_pair_clk),.pair_rst_n({4{srst}}),.cache_clk(stream_clk),.cache_rst_n(srst),
+   .bank_data(banks),.in_ordinal({4{read_ordinal_pick[2:0]}}),.in_valid({4{pre_v}}),
+   .out_data(out_data),.out_ordinal(return_ordinal),.out_valid(return_valid),.fault(return_fault));
+  assign {out_v,out_mask,out_ordinal,out_bank,out_epoch,out_last}=labels[6];
+ end else begin:g_flat
+  assign return_fault=0;
+  assign {out_v,out_mask,out_ordinal,out_bank,out_epoch,out_last}={pre_v,pre_mask,pre_ordinal,pre_bank,pre_epoch,pre_last};
+  for(g=0;g<4;g=g+1)begin:out_lane
+   assign out_data[256*g+:256]=macro_data[(read_ordinal_pick[2:0]+g)%8];
+  end
  end endgenerate
  integer si,sb;
  always @(posedge stream_clk or negedge srst)begin

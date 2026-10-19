@@ -8,12 +8,13 @@
 // ot_hbm_svc_sm_group_id; FIXED_GO always (static schedule).  New ports vs ot_hbm_svc_sm_group_id: run_layer (with the run
 // launch, from the host collar), ids_v / ids_layer / ids (router top-k broadcast), PAW-bit programme address, DD-row
 // descriptor table (DD 256: 8-bit descriptor address / run base, 9-bit run count).
-module ot_hbm_svc_sm_group_rel_sram_id #(parameter integer NATIVE_LANDING=0,FIFOMUT=0,LBANKS=4,parameter integer LB=(LBANKS>2)?2:1,
+module ot_hbm_svc_sm_group_rel_sram_id #(parameter integer NATIVE_RETURN=0,RETURN_MUT=0,NATIVE_LANDING=0,FIFOMUT=0,LBANKS=4,parameter integer LB=(LBANKS>2)?2:1,
  parameter integer NID=6,parameter integer IDW=9,parameter integer PAW=11,parameter integer PREL=1,parameter integer DD=256,parameter integer IMUT=0,
  parameter integer DAW=(DD>128)?8:7)(
  // strap identity: id_stack = HBM stack / quadrant (SW0 SE1 NW2 NE3), id_sm = SM index k (PCs 4k..4k+3)
  input wire[1:0]id_stack,input wire[2:0]id_sm,
  input wire stream_clk,stream_rst_n,hbm_clk,hbm_rst_n,
+ input wire[3:0]return_pair_clk,
  input wire[1:0]stream_bank_clk,hbm_fifo_clk,input wire[3:0]hbm_pc_clk,
  input wire program_cfg_we,input wire[PAW-1:0]program_cfg_addr,input wire[255:0]program_cfg_data,
  input wire desc_we,input wire[DAW-1:0]desc_addr,input wire[255:0]desc_data,
@@ -42,10 +43,10 @@ module ot_hbm_svc_sm_group_rel_sram_id #(parameter integer NATIVE_LANDING=0,FIFO
   .start_v(start_v),.start_bank(start_bank),.start_epoch(start_epoch),.program_start_v(program_start_v),
   .program_start_base(program_start_base),.program_start_limit(program_start_limit),.program_start_loops(program_start_loops),
   .program_start_ctx(program_start_ctx),.program_done(program_done));
- ot_hbm_svc_sm_feed_programmed_rel_sram_id #(.NATIVE_LANDING(NATIVE_LANDING),.FIFOMUT(FIFOMUT),.LBANKS(LBANKS),.PAW(PAW),.PREL(PREL)) feed(
+ ot_hbm_svc_sm_feed_programmed_rel_sram_id #(.NATIVE_RETURN(NATIVE_RETURN),.RETURN_MUT(RETURN_MUT),.NATIVE_LANDING(NATIVE_LANDING),.FIFOMUT(FIFOMUT),.LBANKS(LBANKS),.PAW(PAW),.PREL(PREL)) feed(
   .id_stack(id_stack),.id_sm(id_sm),
   .stream_clk(stream_clk),.stream_rst_n(stream_rst_n),.hbm_clk(hbm_clk),.hbm_rst_n(hbm_rst_n),
-  .stream_bank_clk(stream_bank_clk),.hbm_fifo_clk(hbm_fifo_clk),.hbm_pc_clk(hbm_pc_clk),
+  .return_pair_clk(return_pair_clk),.stream_bank_clk(stream_bank_clk),.hbm_fifo_clk(hbm_fifo_clk),.hbm_pc_clk(hbm_pc_clk),
   .reserve_v(reserve_v),.reserve_ready(reserve_ready),.reserve_base(reserve_base),.reserve_row_base(reserve_row_base),
   .reserve_total(reserve_total),.reserve_bank(reserve_bank),.reserve_epoch(reserve_epoch),.reserve_rows(reserve_rows),
   .reserve_tag_base(reserve_tag_base),.block_ready(block_ready),.cache_ready(cache_ready),.cache_owned(cache_owned),

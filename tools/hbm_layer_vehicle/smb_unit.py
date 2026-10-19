@@ -443,6 +443,7 @@ def build(work: Path, bundle: Path, defines):
     own = [ROOT / p for p in SVG_SRC]
     if "SMB_SRAMFIFO" in defines:
         own += [ROOT / p for p in (
+            "rtl/hbm_accel/loader/service_native/ot_hbm_svg_return_regional.sv",
             "rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo_sram285.sv",
             "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm8_landing_boundary.sv",
             "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm8_landing_bank_sram285.sv",
@@ -527,7 +528,7 @@ def cmd_run(a):
     exe = build(work, Path(a.bundle).resolve(), defines)
     a.out_dir = work / f"run_{a.name}"
     c = compile_all(Path(a.fix), Path(a.smw), parse_layers(a.layers), a.mut,
-                    native_padding=8 if "SMB_NATIVE_LANDING" in defines else 0)
+                    native_padding=(8 if "SMB_NATIVE_LANDING" in defines else 0) + (7 if "SMB_NATIVE_RETURN" in defines else 0))
     d = a.out_dir
     n = write_events(c, d)
     t0 = time.time()
