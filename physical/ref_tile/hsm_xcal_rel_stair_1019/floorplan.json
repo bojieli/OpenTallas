@@ -6,14 +6,14 @@
  "die": [
   0,
   0,
-  362.88,
-  250.56
+  380.16,
+  267.84
  ],
  "core": [
   2.16,
   2.16,
-  360.71999999999997,
-  248.4
+  378.0,
+  265.67999999999995
  ],
  "why": "spec outline (exact: the closed view's sub-slot)",
  "std_area_um2": 1198,
@@ -109,27 +109,9 @@
  ],
  "findings": [
   [
-   "FAIL",
-   "macro_edge",
-   "ot_sram_1r1w_1024x256_m2_r2c2#0 5.1 um from the N core edge (< 20 um, a pin face)",
-   "move the macro inward / to a face without pins (sliver + pin-access blockage)"
-  ],
-  [
-   "FAIL",
-   "macro_edge",
-   "ot_sram_1r1w_128x256_m1_r2c2#0 6.7 um from the E core edge (< 20 um)",
-   "move the macro inward / to a face without pins (sliver + pin-access blockage)"
-  ],
-  [
-   "FAIL",
-   "macro_edge",
-   "ot_sram_1r1w_128x256_m1_r2c2#0 6.7 um from the E core edge (< 20 um)",
-   "move the macro inward / to a face without pins (sliver + pin-access blockage)"
-  ],
-  [
    "WARN",
    "fill",
-   "fill 37% = (macros/children 32412 + std 1198) / outline 90923 um2 < 50%",
+   "fill 33% = (macros/children 32412 + std 1198) / outline 101822 um2 (pin-bound: Coordinator-approved macro-perimeter/channel exception (10-19): actual four SRAM signal/clock/PG pin faces require20um core-edge access and43.2um origin lattice. Macroextents x354.024/y243.27 plus20um+2.16coremargin need >=376.184x265.43; next8.64um contractgrid is380.16x267.84. This yields33.0%fill from measured1198um2cells+32412um2SRAM. No claim that tileedge pins saturate; this is macro-perimeter access, not speculative cell area. Single full-width cellband y113.67..129.6 with connected surrounding cellregion. Acceptarea ratherthan reducingclearances.)",
    ""
   ]
  ],

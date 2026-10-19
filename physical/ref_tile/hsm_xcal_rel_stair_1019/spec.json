@@ -20,8 +20,8 @@
   "rst_n"
  ],
  "outline": {
-  "w": 362.88,
-  "h": 250.56,
+  "w": 380.16,
+  "h": 267.84,
   "exact": true
  },
  "macros": [
@@ -104,7 +104,7 @@
   "owner": "Codex:HBM-SMB-KITS",
   "branch": "codex/hbm-smb-kits-1019",
   "tag": "r1",
-  "purpose": "Structural staircase after GPL-0305 on all-W345.6square: separate host N and SM outputs W; programme macros form left column, descriptor macros form right shorter column. No RTL/clock/latency change; area from measured1198um2cells+32412um2SRAM, totalfill~37%. Origins43.2lattice, >=41um horizontal macro channels; source native cfg pipelines remain. CTS/nativeclockspread and reach must qualify new geometry.",
+  "purpose": "Structural staircase after GPL-0305 on all-W345.6square: separate host N and SM outputs W; programme macros form left column, descriptor macros form right shorter column. No RTL/clock/latency change; area from measured1198um2cells+32412um2SRAM, totalfill~33% (macro-perimeter exception). Origins43.2lattice, >=41um horizontal macro channels; source native cfg pipelines remain. CTS/nativeclockspread and reach must qualify new geometry.",
   "extra_paths": [
    "rtl/test/hbm_accel/svg_rel",
    "tools/hbm_layer_vehicle",
@@ -179,7 +179,7 @@
   "enable": false,
   "reason": "every input lands in a source pin flop (F20 bus/strap in the folded ot_static_cmd_target pin rung, rst_n in the local reset-release flop) and every output is a source flop (calendar output flops cmd_ext/kv_desc, xcal done, collar configured/fault/active); added synthesis pin registers would shift the compiler-fixed lockstep with the svg collar"
  },
- "structural_change": "Structural staircase after GPL-0305 on all-W345.6square: separate host N and SM outputs W; programme macros form left column, descriptor macros form right shorter column. No RTL/clock/latency change; area from measured1198um2cells+32412um2SRAM, totalfill~37%. Origins43.2lattice, >=41um horizontal macro channels; source native cfg pipelines remain. CTS/nativeclockspread and reach must qualify new geometry.",
+ "structural_change": "Structural staircase after GPL-0305 on all-W345.6square: separate host N and SM outputs W; programme macros form left column, descriptor macros form right shorter column. No RTL/clock/latency change; area from measured1198um2cells+32412um2SRAM, totalfill~33% (macro-perimeter exception). Origins43.2lattice, >=41um horizontal macro channels; source native cfg pipelines remain. CTS/nativeclockspread and reach must qualify new geometry.",
  "children": [],
  "inter": [],
  "recipe": 4,
@@ -194,12 +194,15 @@
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
  },
- "purpose": "Structural staircase after GPL-0305 on all-W345.6square: separate host N and SM outputs W; programme macros form left column, descriptor macros form right shorter column. No RTL/clock/latency change; area from measured1198um2cells+32412um2SRAM, totalfill~37%. Origins43.2lattice, >=41um horizontal macro channels; source native cfg pipelines remain. CTS/nativeclockspread and reach must qualify new geometry.",
+ "purpose": "Structural staircase after GPL-0305 on all-W345.6square: separate host N and SM outputs W; programme macros form left column, descriptor macros form right shorter column. No RTL/clock/latency change; area from measured1198um2cells+32412um2SRAM, totalfill~33% (macro-perimeter exception). Origins43.2lattice, >=41um horizontal macro channels; source native cfg pipelines remain. CTS/nativeclockspread and reach must qualify new geometry.",
  "hold_budget": "die",
  "reset_landing": {
   "enable": true,
   "stages": 2
  },
- "slot_change_request": "HBM-SMB-KITS -> die lead: relativeXC362.88x250.56 staircase candidate; hostN, outputs+clockW; PAW11/DD256; fixedrelativeRTLcycles unchanged. No bind until real gate/route and fullsource/relay/slot contract adoption.",
- "std_area_um2": 1198
+ "slot_change_request": "HBM-SMB-KITS -> die lead: relativeXC380.16x267.84 staircase candidate; hostN, outputs+clockW; PAW11/DD256; fixedrelativeRTLcycles unchanged. No bind until real gate/route and fullsource/relay/slot contract adoption.",
+ "std_area_um2": 1198,
+ "fill_reason": {
+  "pin_bound": "Coordinator-approved macro-perimeter/channel exception (10-19): actual four SRAM signal/clock/PG pin faces require20um core-edge access and43.2um origin lattice. Macroextents x354.024/y243.27 plus20um+2.16coremargin need >=376.184x265.43; next8.64um contractgrid is380.16x267.84. This yields33.0%fill from measured1198um2cells+32412um2SRAM. No claim that tileedge pins saturate; this is macro-perimeter access, not speculative cell area. Single full-width cellband y113.67..129.6 with connected surrounding cellregion. Acceptarea ratherthan reducingclearances."
+ }
 }
