@@ -21,7 +21,7 @@
     "return_clk"
   ],
   "reset": "two release stages/root; HBM/stream FIFO and local return reset assertion/release balanced",
-  "native_landing": "unchanged opt-in ot_hbm_svc_sm8_landing_boundary, BANK=J andJ+4; both share pair HBM/stream roots",
+  "native_landing": "opt-in ot_hbm_svc_sm8_landing_boundary_safe, BANK=J andJ+4; both share pair HBM/stream roots",
   "group_metadata": {
     "fields": "group_valid1+ordinal3",
     "storage": "actual four-slot four-bit ring",
@@ -70,6 +70,6 @@
   },
   "output_registers": "native ready/overflow/completion-bank/fault exported separately from their existing Q; data/ordinal/valid/phasefault are ring return Q; no combinational OR fault pin",
   "storage": "two native landing SRAMs +two native response SRAMs; 1140bit ingress ring per bank,1052bit return ring,16bit group-alignment ring; no >=3 unchanged flop delay chain",
-  "geometry": "source-bound reduced candidate380.16x198.72; actual cell area, face access, mapped control fanout, <=405um reach and all root spread OPEN",
-  "qualification": "MODEL ONLY before leaf RTL; actual-SRAM old/new component miter and select/metadata/ring mutants required; no gate/submit"
+  "geometry": "source-bound reduced candidate380.16x198.72; mapped area3177.81306um2; 16.2um fullwidth band at51.6003% density; face access, <=405um reach and root spread OPEN",
+  "qualification": "source8792c55c3 actual-SRAM all-J old/new miter PASS; three mutants FAIL; fullflatten mapped fanout PASS; physical timing/reach/pin access OPEN; no gate/submit"
 }

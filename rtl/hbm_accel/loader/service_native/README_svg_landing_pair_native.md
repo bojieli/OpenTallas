@@ -2,12 +2,13 @@
 
 `ot_hbm_svg_landing_pair_native #(.J(j))` is an opt-in four-macro hardening
 vehicle, j0..3. Model63cdbc115 preceded RTLb7043ae12. Final component bench is
-10e6d5a53. Existing masters remain unchanged; no gate, REVIEW, SDC or submission
+10e6d5a53 for the original leaf; final fanout revision source8792c55c3 has
+expanded guard proof below. Existing masters remain unchanged; no gate, REVIEW, SDC or submission
 is included. `hbm_svg_landing_pair_native_model()` exposes the analytical model.
 
 ## Source and native roots
 
-The leaf instantiates two native `ot_hbm_svc_sm8_landing_boundary` banks J/J+4,
+The leaf now instantiates two opt-in `ot_hbm_svc_sm8_landing_boundary_safe` banks J/J+4,
 one kept pair select, one group-alignment ring, and the entire selected return
 ring. The actual storage is two256x256 landing SRAMs and two8x285 dual-clock
 response SRAMs,22577.762304um2 total. Each landing macro packs four64-row blocks.
@@ -111,15 +112,18 @@ The initial static-producer testbench race is preserved as a diagnostic log;
    reset landing per root, no data reset mass or combined combinational fault.
 2. OPEN: reduced380.16x198.72 geometry has382.604um cell-band diagonal; actual
    pin-to-register, macro, return-Q and local net reach <=405um still unmeasured.
-3. Fixed at return slices: kept16-bit selects/pointers. Native bank epoch/seen/
-   count controls, reset distribution and mapped preserved copies need audit.
+3. Mapped fanout PASS at8792c55c3: byte-ring pointers, local bitmap/metadata
+   predicates, preserved bank hierarchy and real inverse field/reset copies.
+   No non-clock mapped net exceeds32 loads; no unresolved kept paramods.
 4. Fixed seven-edge pipeline, no pin bypass. Normal one-edge paths need mapped
    logic-depth and directed setup/hold analysis.
 5. Source PASS: four actual SRAMs;1140bit ingress rings/bank,1052bit return ring,
    16bit metadata ring. No >=3-stage unchanged flop metadata chain.
 6. Geometry candidate only: four43.2-lattice macro origins; one full-width narrow
    cell band inside43.176um gap, height from measured cell area at40-60%; routing/
-   PG/clock access reserved elsewhere. Synthesis/native pin-access audit OPEN.
+   PG/clock access reserved elsewhere. Measured3177.81306um2 of cells fits a
+   16.2um full-width band (y99.9..116.1) at51.60% local density. Physical
+   placement/reach/native pin access remain OPEN.
 7. Three explicit roots; physical forwarding, native neighbour references,
    TT/FF pin-flop spread<=80ps and hold margin>=0.03ns remain OPEN.
 8. Static schedule/group-valid independent of reads preserved; parent mask and
@@ -127,3 +131,39 @@ The initial static-producer testbench race is preserved as a diagnostic log;
 
 The separate packed-row-cache4096bit assembler is outside this leaf and remains
 a storage blocker. This source leaf does not imply whole-SVG physical closure.
+
+## Ownership-reset and mapped fanout revision
+
+Model7cf65dafd preceded candidate RTL408d02ca3 and final source8792c55c3.
+Legacy masters and the earlier boundary implementation are unchanged. The safe
+core resets valid/sticky/control only. Reservation initializes epoch/count/
+received/seen before ownership permits identity acceptance. Sixteen kept bitmap
+groups and four metadata groups recompute predicates locally; real inverse
+field cells bound source-bit loads. Epoch enable is isolated from count/received
+enables. Nine ingress groups/bank each contain byte-sized three-slot rings.
+Pin payload and native output data capture unconditionally, avoiding reset-as-
+enable trees. Kept local reset polarity cells drive two-stage branches from
+raw roots; no operation or reset-release edge was added. The return ring uses
+33 byte-sized slices (last7bits), with grouped source/return reset branches.
+
+Final fleet Verilator5.050 on ot-epyc6 reran all four J: each passes3264payload
+groups,24masked warm groups,12II1windows,1032group-valid/read-disabled cases,
+first-valid9,latency7/7,829admitted packets, and original-master miter0/0.
+Independent correct-epoch duplicate, unowned block, wrong epoch, count overflow
+and wrong bank ordinal faults all fire. Three return mutants fail with the
+same3263/4276/6653witness errors and retain bank-master miter0/0. The former
+"duplicate" test actually used a changed epoch after its loop; that test was
+corrected and the separate identity guards added. No comparison was removed.
+
+TT/RVT Yosys+dfflibmap+ABC833.333ps mapping used actual macro blackboxes, then
+removed module AND cell keep_hierarchy and flattened without opt_merge. All
+6687FFs are resolved (5773unreset,914resettable); actual macros remain2+2;
+unknown cells and retained paramods are zero. Every273output pin bits trace
+through optional polarity/buffer cells to FFQ. Only the three clock nets have
+more than32loads. This is a census, not routed timing or physical closure.
+
+Complete final map/source hashes and compressed census, final bench log, and
+failed/incomplete earlier mapping logs are preserved under
+`native_pair_evidence/fanout_8792c55c3`. Baseline area755.3898 was incomplete
+(unflattened kept cells), then2977.87752 was complete but fanout FAIL. Those
+values are not final geometry evidence.

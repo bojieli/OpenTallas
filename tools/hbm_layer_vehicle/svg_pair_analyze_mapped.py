@@ -21,7 +21,7 @@ for b,sinks in loads.items():
 report.sort(key=lambda a:a['loads'],reverse=True)
 ff=collections.Counter(c['type'] for c in cells.values() if seq(c['type']));groups=collections.Counter()
 for name,c in cells.items():
- if seq(c['type']):groups['ingress_slices' if '.g_pin[' in name else 'return_slices' if 'u_ring.g_slice[' in name else 'pair_slices' if 'u_pair.g_slice[' in name else 'other_native_control']+=1
+ if seq(c['type']):groups['ingress_slices' if 'g_pin' in name else 'return_slices' if 'u_ring.g_slice[' in name else 'pair_slices' if 'u_pair.g_slice[' in name else 'other_native_control']+=1
 def q_origin(bit,visited=None):
  visited=set() if visited is None else visited
  if bit in visited:return False
@@ -53,9 +53,10 @@ for p,v in m['ports'].items():
  for b in v['bits']:
   sinks=loads[b];c['bits']+=1;c['direct_seq_D_loads']+=sum(seq(x['type']) and x['port'] not in ['CLK','CK','clock'] for x in sinks);c['comb_or_macro_loads']+=sum(not seq(x['type']) for x in sinks);c['pin_fanout_max']=max(c['pin_fanout_max'],len(sinks))
  inputs[p]=dict(c)
-result=dict(source_sha256=base['source_sha256'],mapped_json_sha256=hashlib.sha256(mapped.read_bytes()).hexdigest(),physical_claim=False,std_area_um2=base['std_area_um2'],macro_counts=base['macro_counts'],unmapped_or_unknown=base['unmapped_or_unknown'],FF_cells_total=sum(ff.values()),FF_cell_types=dict(ff),FF_hierarchy_groups=dict(groups),output_boundary=qoutputs,output_non_FF_detail=outputs_not_q,input_boundary=inputs,over32_counts=dict(collections.Counter(a['kind'] for a in report)),over32=report,
+max_critical_load=max((len(v) for b,v in loads.items() if b not in clockbits),default=0)
+result=dict(max_nonclock_load=max_critical_load,source_sha256=base['source_sha256'],mapped_json_sha256=hashlib.sha256(mapped.read_bytes()).hexdigest(),physical_claim=False,std_area_um2=base['std_area_um2'],macro_counts=base['macro_counts'],unmapped_or_unknown=base['unmapped_or_unknown'],FF_cells_total=sum(ff.values()),FF_cell_types=dict(ff),FF_hierarchy_groups=dict(groups),output_boundary=qoutputs,output_non_FF_detail=outputs_not_q,input_boundary=inputs,over32_counts=dict(collections.Counter(a['kind'] for a in report)),over32=report,
  kept_instance_paths_remaining=[n for n,c in cells.items() if c['type'].startswith('$paramod')],
- qualification='area/fanout census only; >32 critical data/control, resets and hierarchy status must be resolved before gate')
+ qualification='mapped area/fanout only; physical reach, clock roots, native pin access and ordinary TT/FF timing remain OPEN')
 out.write_text(json.dumps(result,indent=2)+'\n')
 print(json.dumps({k:v for k,v in result.items() if k not in ['over32','output_non_FF_detail','input_boundary','source_sha256']},indent=2))
 for a in report:
