@@ -35,7 +35,7 @@ module tb_mu_cold_epoch_model #(parameter NU=4);
   // Reset, abort and new epoch each invalidate pending/resident/publication.
   for(k=0;k<3;k=k+1)begin seed();@(negedge ck);if(k==0)rst_n=0;else if(k==1)epoch_abort=1;else new_epoch=1;tick();ok(!dut.reserved&&!dut.pending_valid&&!dut.active_valid,"invalidation clears validity and reservation");@(negedge ck);quiet();rst_n=1;tick();accept(0,16'h300,999,1,1);fetch(1,0,999,1);publish(1,1,999,1);consume(0,999);ok(!fault,"fresh identity after invalidation");release_row();end
   // Targeted rejected identity, ordering, role and lifecycle cases.
-  for(k=0;k<20;k=k+1)begin
+  for(k=0;k<21;k=k+1)begin
    seed();case(k)
     0:publish(1,1,778,2);
     1:publish(1,1,777,3);
@@ -57,9 +57,10 @@ module tb_mu_cold_epoch_model #(parameter NU=4);
     17:begin publish(1,1,777,2);accept(0,16'h200,888,3,1);publish(1,0,888,3);end
     18:begin publish(1,1,777,2);consume(0,777);consume(0,777);end
     19:begin consume(0,777);publish(1,1,777,2);end
+    20:begin publish(1,1,777,2);consume(0,777);release_row();accept(0,16'h100,888,3,1);fetch(1,0,888,3);consume(0,888);end
    endcase
    ok(fault,"bad identity/order/role must sticky-fault");@(negedge ck);quiet();new_epoch=1;tick();ok(fault,"new epoch cannot mask sticky fault");
   end
-  $display("COLD_MODEL_PASS NU%0d checks%0d allmasks/cold/warm/pending/invalidation/20rejects/defaultoff",NU,checks);$finish;
+  $display("COLD_MODEL_PASS NU%0d checks%0d allmasks/cold/warm/pending/invalidation/21rejects/defaultoff",NU,checks);$finish;
  end
 endmodule
