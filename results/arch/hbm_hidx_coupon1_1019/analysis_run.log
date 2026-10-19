@@ -1,0 +1,11 @@
+ot-run: ot-epyc4       admits  1168 GB (avail 880, growth 63, headroom 0, waiters 0/0 GB) load 39/128 running 21 disk 386 GB 
+ot-run: ot-epyc5       admits   576 GB (avail 490, growth 87, headroom 0, waiters 0/0 GB) load 54/128 running 7 disk 904 GB 
+ot-run: ot-epyc6       admits  1134 GB (avail 875, growth 81, headroom 0, waiters 0/0 GB) load 34/128 running 25 disk 5730 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/hidx-coupon1-1019
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/hidx-coupon1-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hidx-coupon1-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hidx-coupon1-1019
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-1605002-1792443078 after 0 s
+/usr/bin/bash: tools/hbm_hidx_coupon1/analyze.sh: No such file or directory
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-1605002-1792443078): exit 127

@@ -1,0 +1,1068 @@
+
+-- Running command `read_verilog -formal -sv tools/hbm_hidx_coupon1/coupon.sv tools/hbm_hidx_coupon1/formal.sv; hierarchy -top formal; setattr -mod -unset keep_hierarchy; prep -top formal -flatten; sat -seq 3 -prove-skip 2 -prove bad 0 -verify -show-ports' --
+
+1. Executing Verilog-2005 frontend: tools/hbm_hidx_coupon1/coupon.sv
+Parsing formal SystemVerilog input from `tools/hbm_hidx_coupon1/coupon.sv' to AST representation.
+Generating RTLIL representation for module `\hidx_c1_compact'.
+Generating RTLIL representation for module `\hidx_c1_count'.
+Generating RTLIL representation for module `\hidx_coupon1'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: tools/hbm_hidx_coupon1/formal.sv
+Parsing formal SystemVerilog input from `tools/hbm_hidx_coupon1/formal.sv' to AST representation.
+Generating RTLIL representation for module `\formal'.
+Successfully finished Verilog frontend.
+
+3. Executing HIERARCHY pass (managing design hierarchy).
+
+3.1. Analyzing design hierarchy..
+Top module:  \formal
+Used module:     \hidx_c1_count
+Used module:     \hidx_c1_compact
+Parameter \ID = 1
+Parameter \N = 16
+Parameter \W = 5
+
+3.2. Executing AST frontend in derive mode using pre-parsed AST for module `\hidx_c1_count'.
+Parameter \ID = 1
+Parameter \N = 16
+Parameter \W = 5
+Generating RTLIL representation for module `$paramod$a45ddedabe632d6c8a7d2b5653dc0448832bd619\hidx_c1_count'.
+Parameter \ID = 0
+Parameter \N = 8
+Parameter \W = 4
+
+3.3. Executing AST frontend in derive mode using pre-parsed AST for module `\hidx_c1_count'.
+Parameter \ID = 0
+Parameter \N = 8
+Parameter \W = 4
+Generating RTLIL representation for module `$paramod$dbeef5c7015caa43cfcfdf6498b4a2356fde3e43\hidx_c1_count'.
+Parameter \ID = 0
+
+3.4. Executing AST frontend in derive mode using pre-parsed AST for module `\hidx_c1_compact'.
+Parameter \ID = 0
+Generating RTLIL representation for module `$paramod\hidx_c1_compact\ID=s32'00000000000000000000000000000000'.
+
+3.5. Analyzing design hierarchy..
+Top module:  \formal
+Used module:     $paramod$a45ddedabe632d6c8a7d2b5653dc0448832bd619\hidx_c1_count
+Used module:     $paramod$dbeef5c7015caa43cfcfdf6498b4a2356fde3e43\hidx_c1_count
+Used module:     $paramod\hidx_c1_compact\ID=s32'00000000000000000000000000000000
+
+3.6. Analyzing design hierarchy..
+Top module:  \formal
+Used module:     $paramod$a45ddedabe632d6c8a7d2b5653dc0448832bd619\hidx_c1_count
+Used module:     $paramod$dbeef5c7015caa43cfcfdf6498b4a2356fde3e43\hidx_c1_count
+Used module:     $paramod\hidx_c1_compact\ID=s32'00000000000000000000000000000000
+Removing unused module `\hidx_coupon1'.
+Removing unused module `\hidx_c1_count'.
+Removing unused module `\hidx_c1_compact'.
+Removed 3 unused modules.
+
+4. Executing PREP pass.
+
+4.1. Executing HIERARCHY pass (managing design hierarchy).
+
+4.1.1. Analyzing design hierarchy..
+Top module:  \formal
+Used module:     $paramod$a45ddedabe632d6c8a7d2b5653dc0448832bd619\hidx_c1_count
+Used module:     $paramod$dbeef5c7015caa43cfcfdf6498b4a2356fde3e43\hidx_c1_count
+Used module:     $paramod\hidx_c1_compact\ID=s32'00000000000000000000000000000000
+
+4.1.2. Analyzing design hierarchy..
+Top module:  \formal
+Used module:     $paramod$a45ddedabe632d6c8a7d2b5653dc0448832bd619\hidx_c1_count
+Used module:     $paramod$dbeef5c7015caa43cfcfdf6498b4a2356fde3e43\hidx_c1_count
+Used module:     $paramod\hidx_c1_compact\ID=s32'00000000000000000000000000000000
+Removed 0 unused modules.
+
+4.2. Executing PROC pass (convert processes to netlists).
+
+4.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 16 empty switches in `\formal.$proc$tools/hbm_hidx_coupon1/formal.sv:8$1442'.
+Found and cleaned up 256 empty switches in `$paramod\hidx_c1_compact\ID=s32'00000000000000000000000000000000.$proc$tools/hbm_hidx_coupon1/coupon.sv:17$1648'.
+Cleaned up 272 empty switches.
+
+4.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 16 switch rules as full_case in process $proc$tools/hbm_hidx_coupon1/formal.sv:8$1442 in module formal.
+Marked 8 switch rules as full_case in process $proc$tools/hbm_hidx_coupon1/formal.sv:7$1345 in module formal.
+Marked 64 switch rules as full_case in process $proc$tools/hbm_hidx_coupon1/coupon.sv:17$1648 in module $paramod\hidx_c1_compact\ID=s32'00000000000000000000000000000000.
+Removed a total of 0 dead cases.
+
+4.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 623 assignments to connections.
+
+4.2.4. Executing PROC_INIT pass (extract init attributes).
+
+4.2.5. Executing PROC_ARST pass (detect async resets in processes).
+
+4.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~88 debug messages>
+
+4.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\formal.$proc$tools/hbm_hidx_coupon1/formal.sv:9$1467'.
+Creating decoders for process `\formal.$proc$tools/hbm_hidx_coupon1/formal.sv:8$1442'.
+     1/32: $16\qc[4:0]
+     2/32: $15\qc[4:0]
+     3/32: $14\qc[4:0]
+     4/32: $13\qc[4:0]
+     5/32: $12\qc[4:0]
+     6/32: $11\qc[4:0]
+     7/32: $10\qc[4:0]
+     8/32: $9\qc[4:0]
+     9/32: $16\pc[3:0]
+    10/32: $15\pc[3:0]
+    11/32: $8\qc[4:0]
+    12/32: $14\pc[3:0]
+    13/32: $13\pc[3:0]
+    14/32: $7\qc[4:0]
+    15/32: $12\pc[3:0]
+    16/32: $11\pc[3:0]
+    17/32: $6\qc[4:0]
+    18/32: $10\pc[3:0]
+    19/32: $9\pc[3:0]
+    20/32: $5\qc[4:0]
+    21/32: $8\pc[3:0]
+    22/32: $7\pc[3:0]
+    23/32: $4\qc[4:0]
+    24/32: $6\pc[3:0]
+    25/32: $5\pc[3:0]
+    26/32: $3\qc[4:0]
+    27/32: $4\pc[3:0]
+    28/32: $3\pc[3:0]
+    29/32: $2\qc[4:0]
+    30/32: $2\pc[3:0]
+    31/32: $1\pc[3:0]
+    32/32: $1\qc[4:0]
+Creating decoders for process `\formal.$proc$tools/hbm_hidx_coupon1/formal.sv:7$1345'.
+     1/24: $8\s[31:0]
+     2/24: $8\refc[31:0]
+     3/24: $1$bitselwrite$pos$tools/hbm_hidx_coupon1/formal.sv:7$1344[31:0]$1431
+     4/24: $7\s[31:0]
+     5/24: $7\refc[31:0]
+     6/24: $1$bitselwrite$pos$tools/hbm_hidx_coupon1/formal.sv:7$1343[31:0]$1420
+     7/24: $6\s[31:0]
+     8/24: $6\refc[31:0]
+     9/24: $1$bitselwrite$pos$tools/hbm_hidx_coupon1/formal.sv:7$1342[31:0]$1409
+    10/24: $5\s[31:0]
+    11/24: $5\refc[31:0]
+    12/24: $1$bitselwrite$pos$tools/hbm_hidx_coupon1/formal.sv:7$1341[31:0]$1398
+    13/24: $4\s[31:0]
+    14/24: $4\refc[31:0]
+    15/24: $1$bitselwrite$pos$tools/hbm_hidx_coupon1/formal.sv:7$1340[31:0]$1387
+    16/24: $3\s[31:0]
+    17/24: $3\refc[31:0]
+    18/24: $1$bitselwrite$pos$tools/hbm_hidx_coupon1/formal.sv:7$1339[31:0]$1376
+    19/24: $2\s[31:0]
+    20/24: $2\refc[31:0]
+    21/24: $1$bitselwrite$pos$tools/hbm_hidx_coupon1/formal.sv:7$1338[31:0]$1365
+    22/24: $1\s[31:0]
+    23/24: $1\refc[31:0]
+    24/24: $1$bitselwrite$pos$tools/hbm_hidx_coupon1/formal.sv:7$1337[31:0]$1354
+Creating decoders for process `$paramod\hidx_c1_compact\ID=s32'00000000000000000000000000000000.$proc$tools/hbm_hidx_coupon1/coupon.sv:17$1648'.
+     1/256: $256\v[3:0]
+     2/256: $255\v[3:0]
+     3/256: $254\v[3:0]
+     4/256: $253\v[3:0]
+     5/256: $252\v[3:0]
+     6/256: $251\v[3:0]
+     7/256: $250\v[3:0]
+     8/256: $249\v[3:0]
+     9/256: $248\v[3:0]
+    10/256: $247\v[3:0]
+    11/256: $246\v[3:0]
+    12/256: $245\v[3:0]
+    13/256: $244\v[3:0]
+    14/256: $243\v[3:0]
+    15/256: $242\v[3:0]
+    16/256: $241\v[3:0]
+    17/256: $240\v[3:0]
+    18/256: $239\v[3:0]
+    19/256: $238\v[3:0]
+    20/256: $237\v[3:0]
+    21/256: $236\v[3:0]
+    22/256: $235\v[3:0]
+    23/256: $234\v[3:0]
+    24/256: $233\v[3:0]
+    25/256: $232\v[3:0]
+    26/256: $231\v[3:0]
+    27/256: $230\v[3:0]
+    28/256: $229\v[3:0]
+    29/256: $228\v[3:0]
+    30/256: $227\v[3:0]
+    31/256: $226\v[3:0]
+    32/256: $225\v[3:0]
+    33/256: $224\v[3:0]
+    34/256: $223\v[3:0]
+    35/256: $222\v[3:0]
+    36/256: $221\v[3:0]
+    37/256: $220\v[3:0]
+    38/256: $219\v[3:0]
+    39/256: $218\v[3:0]
+    40/256: $217\v[3:0]
+    41/256: $216\v[3:0]
+    42/256: $215\v[3:0]
+    43/256: $214\v[3:0]
+    44/256: $213\v[3:0]
+    45/256: $212\v[3:0]
+    46/256: $211\v[3:0]
+    47/256: $210\v[3:0]
+    48/256: $209\v[3:0]
+    49/256: $208\v[3:0]
+    50/256: $207\v[3:0]
+    51/256: $206\v[3:0]
+    52/256: $205\v[3:0]
+    53/256: $204\v[3:0]
+    54/256: $203\v[3:0]
+    55/256: $202\v[3:0]
+    56/256: $201\v[3:0]
+    57/256: $200\v[3:0]
+    58/256: $199\v[3:0]
+    59/256: $198\v[3:0]
+    60/256: $197\v[3:0]
+    61/256: $196\v[3:0]
+    62/256: $195\v[3:0]
+    63/256: $194\v[3:0]
+    64/256: $193\v[3:0]
+    65/256: $192\v[3:0]
+    66/256: $191\v[3:0]
+    67/256: $190\v[3:0]
+    68/256: $189\v[3:0]
+    69/256: $188\v[3:0]
+    70/256: $187\v[3:0]
+    71/256: $186\v[3:0]
+    72/256: $185\v[3:0]
+    73/256: $184\v[3:0]
+    74/256: $183\v[3:0]
+    75/256: $182\v[3:0]
+    76/256: $181\v[3:0]
+    77/256: $180\v[3:0]
+    78/256: $179\v[3:0]
+    79/256: $178\v[3:0]
+    80/256: $177\v[3:0]
+    81/256: $176\v[3:0]
+    82/256: $175\v[3:0]
+    83/256: $174\v[3:0]
+    84/256: $173\v[3:0]
+    85/256: $172\v[3:0]
+    86/256: $171\v[3:0]
+    87/256: $170\v[3:0]
+    88/256: $169\v[3:0]
+    89/256: $168\v[3:0]
+    90/256: $167\v[3:0]
+    91/256: $166\v[3:0]
+    92/256: $165\v[3:0]
+    93/256: $164\v[3:0]
+    94/256: $163\v[3:0]
+    95/256: $162\v[3:0]
+    96/256: $161\v[3:0]
+    97/256: $160\v[3:0]
+    98/256: $159\v[3:0]
+    99/256: $158\v[3:0]
+   100/256: $157\v[3:0]
+   101/256: $156\v[3:0]
+   102/256: $155\v[3:0]
+   103/256: $154\v[3:0]
+   104/256: $153\v[3:0]
+   105/256: $152\v[3:0]
+   106/256: $151\v[3:0]
+   107/256: $150\v[3:0]
+   108/256: $149\v[3:0]
+   109/256: $148\v[3:0]
+   110/256: $147\v[3:0]
+   111/256: $146\v[3:0]
+   112/256: $145\v[3:0]
+   113/256: $144\v[3:0]
+   114/256: $143\v[3:0]
+   115/256: $142\v[3:0]
+   116/256: $141\v[3:0]
+   117/256: $140\v[3:0]
+   118/256: $139\v[3:0]
+   119/256: $138\v[3:0]
+   120/256: $137\v[3:0]
+   121/256: $136\v[3:0]
+   122/256: $135\v[3:0]
+   123/256: $134\v[3:0]
+   124/256: $133\v[3:0]
+   125/256: $132\v[3:0]
+   126/256: $131\v[3:0]
+   127/256: $130\v[3:0]
+   128/256: $129\v[3:0]
+   129/256: $128\v[3:0]
+   130/256: $127\v[3:0]
+   131/256: $126\v[3:0]
+   132/256: $125\v[3:0]
+   133/256: $124\v[3:0]
+   134/256: $123\v[3:0]
+   135/256: $122\v[3:0]
+   136/256: $121\v[3:0]
+   137/256: $120\v[3:0]
+   138/256: $119\v[3:0]
+   139/256: $118\v[3:0]
+   140/256: $117\v[3:0]
+   141/256: $116\v[3:0]
+   142/256: $115\v[3:0]
+   143/256: $114\v[3:0]
+   144/256: $113\v[3:0]
+   145/256: $112\v[3:0]
+   146/256: $111\v[3:0]
+   147/256: $110\v[3:0]
+   148/256: $109\v[3:0]
+   149/256: $108\v[3:0]
+   150/256: $107\v[3:0]
+   151/256: $106\v[3:0]
+   152/256: $105\v[3:0]
+   153/256: $104\v[3:0]
+   154/256: $103\v[3:0]
+   155/256: $102\v[3:0]
+   156/256: $101\v[3:0]
+   157/256: $100\v[3:0]
+   158/256: $99\v[3:0]
+   159/256: $98\v[3:0]
+   160/256: $97\v[3:0]
+   161/256: $96\v[3:0]
+   162/256: $95\v[3:0]
+   163/256: $94\v[3:0]
+   164/256: $93\v[3:0]
+   165/256: $92\v[3:0]
+   166/256: $91\v[3:0]
+   167/256: $90\v[3:0]
+   168/256: $89\v[3:0]
+   169/256: $88\v[3:0]
+   170/256: $87\v[3:0]
+   171/256: $86\v[3:0]
+   172/256: $85\v[3:0]
+   173/256: $84\v[3:0]
+   174/256: $83\v[3:0]
+   175/256: $82\v[3:0]
+   176/256: $81\v[3:0]
+   177/256: $80\v[3:0]
+   178/256: $79\v[3:0]
+   179/256: $78\v[3:0]
+   180/256: $77\v[3:0]
+   181/256: $76\v[3:0]
+   182/256: $75\v[3:0]
+   183/256: $74\v[3:0]
+   184/256: $73\v[3:0]
+   185/256: $72\v[3:0]
+   186/256: $71\v[3:0]
+   187/256: $70\v[3:0]
+   188/256: $69\v[3:0]
+   189/256: $68\v[3:0]
+   190/256: $67\v[3:0]
+   191/256: $66\v[3:0]
+   192/256: $65\v[3:0]
+   193/256: $64\v[3:0]
+   194/256: $63\v[3:0]
+   195/256: $62\v[3:0]
+   196/256: $61\v[3:0]
+   197/256: $60\v[3:0]
+   198/256: $59\v[3:0]
+   199/256: $58\v[3:0]
+   200/256: $57\v[3:0]
+   201/256: $56\v[3:0]
+   202/256: $55\v[3:0]
+   203/256: $54\v[3:0]
+   204/256: $53\v[3:0]
+   205/256: $52\v[3:0]
+   206/256: $51\v[3:0]
+   207/256: $50\v[3:0]
+   208/256: $49\v[3:0]
+   209/256: $48\v[3:0]
+   210/256: $47\v[3:0]
+   211/256: $46\v[3:0]
+   212/256: $45\v[3:0]
+   213/256: $44\v[3:0]
+   214/256: $43\v[3:0]
+   215/256: $42\v[3:0]
+   216/256: $41\v[3:0]
+   217/256: $40\v[3:0]
+   218/256: $39\v[3:0]
+   219/256: $38\v[3:0]
+   220/256: $37\v[3:0]
+   221/256: $36\v[3:0]
+   222/256: $35\v[3:0]
+   223/256: $34\v[3:0]
+   224/256: $33\v[3:0]
+   225/256: $32\v[3:0]
+   226/256: $31\v[3:0]
+   227/256: $30\v[3:0]
+   228/256: $29\v[3:0]
+   229/256: $28\v[3:0]
+   230/256: $27\v[3:0]
+   231/256: $26\v[3:0]
+   232/256: $25\v[3:0]
+   233/256: $24\v[3:0]
+   234/256: $23\v[3:0]
+   235/256: $22\v[3:0]
+   236/256: $21\v[3:0]
+   237/256: $20\v[3:0]
+   238/256: $19\v[3:0]
+   239/256: $18\v[3:0]
+   240/256: $17\v[3:0]
+   241/256: $16\v[3:0]
+   242/256: $15\v[3:0]
+   243/256: $14\v[3:0]
+   244/256: $13\v[3:0]
+   245/256: $12\v[3:0]
+   246/256: $11\v[3:0]
+   247/256: $10\v[3:0]
+   248/256: $9\v[3:0]
+   249/256: $8\v[3:0]
+   250/256: $7\v[3:0]
+   251/256: $6\v[3:0]
+   252/256: $5\v[3:0]
+   253/256: $4\v[3:0]
+   254/256: $3\v[3:0]
+   255/256: $2\v[3:0]
+   256/256: $1\v[3:0]
+Creating decoders for process `$paramod\hidx_c1_compact\ID=s32'00000000000000000000000000000000.$proc$tools/hbm_hidx_coupon1/coupon.sv:9$1647'.
+Creating decoders for process `$paramod$dbeef5c7015caa43cfcfdf6498b4a2356fde3e43\hidx_c1_count.$proc$tools/hbm_hidx_coupon1/coupon.sv:46$1566'.
+Creating decoders for process `$paramod$dbeef5c7015caa43cfcfdf6498b4a2356fde3e43\hidx_c1_count.$proc$tools/hbm_hidx_coupon1/coupon.sv:48$1541'.
+Creating decoders for process `$paramod$dbeef5c7015caa43cfcfdf6498b4a2356fde3e43\hidx_c1_count.$proc$tools/hbm_hidx_coupon1/coupon.sv:40$1540'.
+Creating decoders for process `$paramod$a45ddedabe632d6c8a7d2b5653dc0448832bd619\hidx_c1_count.$proc$tools/hbm_hidx_coupon1/coupon.sv:46$1520'.
+Creating decoders for process `$paramod$a45ddedabe632d6c8a7d2b5653dc0448832bd619\hidx_c1_count.$proc$tools/hbm_hidx_coupon1/coupon.sv:46$1503'.
+Creating decoders for process `$paramod$a45ddedabe632d6c8a7d2b5653dc0448832bd619\hidx_c1_count.$proc$tools/hbm_hidx_coupon1/coupon.sv:48$1478'.
+Creating decoders for process `$paramod$a45ddedabe632d6c8a7d2b5653dc0448832bd619\hidx_c1_count.$proc$tools/hbm_hidx_coupon1/coupon.sv:40$1477'.
+
+4.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `\formal.\k' from process `\formal.$proc$tools/hbm_hidx_coupon1/formal.sv:8$1442'.
+No latch inferred for signal `\formal.\pc' from process `\formal.$proc$tools/hbm_hidx_coupon1/formal.sv:8$1442'.
+No latch inferred for signal `\formal.\qc' from process `\formal.$proc$tools/hbm_hidx_coupon1/formal.sv:8$1442'.
+No latch inferred for signal `\formal.\k' from process `\formal.$proc$tools/hbm_hidx_coupon1/formal.sv:7$1345'.
+No latch inferred for signal `\formal.\s' from process `\formal.$proc$tools/hbm_hidx_coupon1/formal.sv:7$1345'.
+No latch inferred for signal `\formal.\refc' from process `\formal.$proc$tools/hbm_hidx_coupon1/formal.sv:7$1345'.
+No latch inferred for signal `$paramod\hidx_c1_compact\ID=s32'00000000000000000000000000000000.\y' from process `$paramod\hidx_c1_compact\ID=s32'00000000000000000000000000000000.$proc$tools/hbm_hidx_coupon1/coupon.sv:17$1648'.
+No latch inferred for signal `$paramod\hidx_c1_compact\ID=s32'00000000000000000000000000000000.\k' from process `$paramod\hidx_c1_compact\ID=s32'00000000000000000000000000000000.$proc$tools/hbm_hidx_coupon1/coupon.sv:17$1648'.
+No latch inferred for signal `$paramod\hidx_c1_compact\ID=s32'00000000000000000000000000000000.\s' from process `$paramod\hidx_c1_compact\ID=s32'00000000000000000000000000000000.$proc$tools/hbm_hidx_coupon1/coupon.sv:17$1648'.
+No latch inferred for signal `$paramod\hidx_c1_compact\ID=s32'00000000000000000000000000000000.\pref' from process `$paramod\hidx_c1_compact\ID=s32'00000000000000000000000000000000.$proc$tools/hbm_hidx_coupon1/coupon.sv:17$1648'.
+No latch inferred for signal `$paramod\hidx_c1_compact\ID=s32'00000000000000000000000000000000.\v' from process `$paramod\hidx_c1_compact\ID=s32'00000000000000000000000000000000.$proc$tools/hbm_hidx_coupon1/coupon.sv:17$1648'.
+No latch inferred for signal `$paramod$dbeef5c7015caa43cfcfdf6498b4a2356fde3e43\hidx_c1_count.\pc8$func$tools/hbm_hidx_coupon1/coupon.sv:46$1538.$result' from process `$paramod$dbeef5c7015caa43cfcfdf6498b4a2356fde3e43\hidx_c1_count.$proc$tools/hbm_hidx_coupon1/coupon.sv:46$1566'.
+No latch inferred for signal `$paramod$a45ddedabe632d6c8a7d2b5653dc0448832bd619\hidx_c1_count.\pc8$func$tools/hbm_hidx_coupon1/coupon.sv:46$1474.$result' from process `$paramod$a45ddedabe632d6c8a7d2b5653dc0448832bd619\hidx_c1_count.$proc$tools/hbm_hidx_coupon1/coupon.sv:46$1520'.
+No latch inferred for signal `$paramod$a45ddedabe632d6c8a7d2b5653dc0448832bd619\hidx_c1_count.\pc8$func$tools/hbm_hidx_coupon1/coupon.sv:46$1473.$result' from process `$paramod$a45ddedabe632d6c8a7d2b5653dc0448832bd619\hidx_c1_count.$proc$tools/hbm_hidx_coupon1/coupon.sv:46$1503'.
+
+4.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\formal.\refq' using process `\formal.$proc$tools/hbm_hidx_coupon1/formal.sv:9$1467'.
+  created $dff cell `$procdff$3801' with positive edge clock.
+Creating register for signal `\formal.\saved_mask' using process `\formal.$proc$tools/hbm_hidx_coupon1/formal.sv:9$1467'.
+  created $dff cell `$procdff$3802' with positive edge clock.
+Creating register for signal `\formal.\pr' using process `\formal.$proc$tools/hbm_hidx_coupon1/formal.sv:9$1467'.
+  created $dff cell `$procdff$3803' with positive edge clock.
+Creating register for signal `\formal.\qr' using process `\formal.$proc$tools/hbm_hidx_coupon1/formal.sv:9$1467'.
+  created $dff cell `$procdff$3804' with positive edge clock.
+Creating register for signal `$paramod\hidx_c1_compact\ID=s32'00000000000000000000000000000000.\mask' using process `$paramod\hidx_c1_compact\ID=s32'00000000000000000000000000000000.$proc$tools/hbm_hidx_coupon1/coupon.sv:9$1647'.
+  created $dff cell `$procdff$3805' with positive edge clock.
+Creating register for signal `$paramod\hidx_c1_compact\ID=s32'00000000000000000000000000000000.\pay' using process `$paramod\hidx_c1_compact\ID=s32'00000000000000000000000000000000.$proc$tools/hbm_hidx_coupon1/coupon.sv:9$1647'.
+  created $dff cell `$procdff$3806' with positive edge clock.
+Creating register for signal `$paramod$dbeef5c7015caa43cfcfdf6498b4a2356fde3e43\hidx_c1_count.\c' using process `$paramod$dbeef5c7015caa43cfcfdf6498b4a2356fde3e43\hidx_c1_count.$proc$tools/hbm_hidx_coupon1/coupon.sv:48$1541'.
+  created $dff cell `$procdff$3807' with positive edge clock.
+Creating register for signal `$paramod$dbeef5c7015caa43cfcfdf6498b4a2356fde3e43\hidx_c1_count.\sel' using process `$paramod$dbeef5c7015caa43cfcfdf6498b4a2356fde3e43\hidx_c1_count.$proc$tools/hbm_hidx_coupon1/coupon.sv:48$1541'.
+  created $dff cell `$procdff$3808' with positive edge clock.
+Creating register for signal `$paramod$dbeef5c7015caa43cfcfdf6498b4a2356fde3e43\hidx_c1_count.\mask' using process `$paramod$dbeef5c7015caa43cfcfdf6498b4a2356fde3e43\hidx_c1_count.$proc$tools/hbm_hidx_coupon1/coupon.sv:40$1540'.
+  created $dff cell `$procdff$3809' with positive edge clock.
+Creating register for signal `$paramod$a45ddedabe632d6c8a7d2b5653dc0448832bd619\hidx_c1_count.\c' using process `$paramod$a45ddedabe632d6c8a7d2b5653dc0448832bd619\hidx_c1_count.$proc$tools/hbm_hidx_coupon1/coupon.sv:48$1478'.
+  created $dff cell `$procdff$3810' with positive edge clock.
+Creating register for signal `$paramod$a45ddedabe632d6c8a7d2b5653dc0448832bd619\hidx_c1_count.\sel' using process `$paramod$a45ddedabe632d6c8a7d2b5653dc0448832bd619\hidx_c1_count.$proc$tools/hbm_hidx_coupon1/coupon.sv:48$1478'.
+  created $dff cell `$procdff$3811' with positive edge clock.
+Creating register for signal `$paramod$a45ddedabe632d6c8a7d2b5653dc0448832bd619\hidx_c1_count.\mask' using process `$paramod$a45ddedabe632d6c8a7d2b5653dc0448832bd619\hidx_c1_count.$proc$tools/hbm_hidx_coupon1/coupon.sv:40$1477'.
+  created $dff cell `$procdff$3812' with positive edge clock.
+
+4.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+4.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `formal.$proc$tools/hbm_hidx_coupon1/formal.sv:9$1467'.
+Found and cleaned up 16 empty switches in `\formal.$proc$tools/hbm_hidx_coupon1/formal.sv:8$1442'.
+Removing empty process `formal.$proc$tools/hbm_hidx_coupon1/formal.sv:8$1442'.
+Found and cleaned up 8 empty switches in `\formal.$proc$tools/hbm_hidx_coupon1/formal.sv:7$1345'.
+Removing empty process `formal.$proc$tools/hbm_hidx_coupon1/formal.sv:7$1345'.
+Found and cleaned up 64 empty switches in `$paramod\hidx_c1_compact\ID=s32'00000000000000000000000000000000.$proc$tools/hbm_hidx_coupon1/coupon.sv:17$1648'.
+Removing empty process `$paramod\hidx_c1_compact\ID=s32'00000000000000000000000000000000.$proc$tools/hbm_hidx_coupon1/coupon.sv:17$1648'.
+Removing empty process `$paramod\hidx_c1_compact\ID=s32'00000000000000000000000000000000.$proc$tools/hbm_hidx_coupon1/coupon.sv:9$1647'.
+Removing empty process `$paramod$dbeef5c7015caa43cfcfdf6498b4a2356fde3e43\hidx_c1_count.$proc$tools/hbm_hidx_coupon1/coupon.sv:46$1566'.
+Removing empty process `$paramod$dbeef5c7015caa43cfcfdf6498b4a2356fde3e43\hidx_c1_count.$proc$tools/hbm_hidx_coupon1/coupon.sv:48$1541'.
+Removing empty process `$paramod$dbeef5c7015caa43cfcfdf6498b4a2356fde3e43\hidx_c1_count.$proc$tools/hbm_hidx_coupon1/coupon.sv:40$1540'.
+Removing empty process `$paramod$a45ddedabe632d6c8a7d2b5653dc0448832bd619\hidx_c1_count.$proc$tools/hbm_hidx_coupon1/coupon.sv:46$1520'.
+Removing empty process `$paramod$a45ddedabe632d6c8a7d2b5653dc0448832bd619\hidx_c1_count.$proc$tools/hbm_hidx_coupon1/coupon.sv:46$1503'.
+Removing empty process `$paramod$a45ddedabe632d6c8a7d2b5653dc0448832bd619\hidx_c1_count.$proc$tools/hbm_hidx_coupon1/coupon.sv:48$1478'.
+Removing empty process `$paramod$a45ddedabe632d6c8a7d2b5653dc0448832bd619\hidx_c1_count.$proc$tools/hbm_hidx_coupon1/coupon.sv:40$1477'.
+Cleaned up 88 empty switches.
+
+4.2.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module formal.
+<suppressed ~12 debug messages>
+Optimizing module $paramod\hidx_c1_compact\ID=s32'00000000000000000000000000000000.
+<suppressed ~322 debug messages>
+Optimizing module $paramod$dbeef5c7015caa43cfcfdf6498b4a2356fde3e43\hidx_c1_count.
+<suppressed ~24 debug messages>
+Optimizing module $paramod$a45ddedabe632d6c8a7d2b5653dc0448832bd619\hidx_c1_count.
+<suppressed ~24 debug messages>
+
+4.3. Executing FLATTEN pass (flatten design).
+Deleting now unused module $paramod\hidx_c1_compact\ID=s32'00000000000000000000000000000000.
+Deleting now unused module $paramod$dbeef5c7015caa43cfcfdf6498b4a2356fde3e43\hidx_c1_count.
+Deleting now unused module $paramod$a45ddedabe632d6c8a7d2b5653dc0448832bd619\hidx_c1_count.
+<suppressed ~3 debug messages>
+
+4.4. Executing FUTURE pass.
+
+4.5. Executing OPT_EXPR pass (perform const folding).
+Optimizing module formal.
+
+4.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \formal..
+Removed 12 unused cells and 1668 unused wires.
+<suppressed ~17 debug messages>
+
+4.7. Executing CHECK pass (checking for obvious problems).
+Checking module formal...
+Found and reported 0 problems.
+
+4.8. Executing OPT pass (performing simple optimizations).
+
+4.8.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module formal.
+
+4.8.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\formal'.
+Computing hashes of 831 cells of `\formal'.
+Finding duplicate cells in `\formal'.
+Computing hashes of 703 cells of `\formal'.
+Finding duplicate cells in `\formal'.
+Computing hashes of 630 cells of `\formal'.
+Finding duplicate cells in `\formal'.
+Computing hashes of 581 cells of `\formal'.
+Finding duplicate cells in `\formal'.
+<suppressed ~750 debug messages>
+Removed a total of 250 cells.
+
+4.8.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \formal..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+    dead port 2/2 on $mux $flatten\c.$procmux$3529.
+    dead port 2/2 on $mux $flatten\c.$procmux$3526.
+    dead port 2/2 on $mux $flatten\c.$procmux$3760.
+    dead port 2/2 on $mux $flatten\c.$procmux$3652.
+    dead port 2/2 on $mux $flatten\c.$procmux$3520.
+    dead port 2/2 on $mux $flatten\c.$procmux$3757.
+    dead port 2/2 on $mux $flatten\c.$procmux$3754.
+    dead port 2/2 on $mux $flatten\c.$procmux$3649.
+    dead port 2/2 on $mux $flatten\c.$procmux$3646.
+    dead port 2/2 on $mux $flatten\c.$procmux$3517.
+    dead port 2/2 on $mux $flatten\c.$procmux$3514.
+    dead port 2/2 on $mux $flatten\c.$procmux$3586.
+    dead port 2/2 on $mux $flatten\c.$procmux$3496.
+    dead port 2/2 on $mux $flatten\c.$procmux$3493.
+    dead port 2/2 on $mux $flatten\c.$procmux$3490.
+    dead port 2/2 on $mux $flatten\c.$procmux$3484.
+    dead port 2/2 on $mux $flatten\c.$procmux$3481.
+    dead port 2/2 on $mux $flatten\c.$procmux$3478.
+    dead port 2/2 on $mux $flatten\c.$procmux$3580.
+    dead port 2/2 on $mux $flatten\c.$procmux$3748.
+    dead port 2/2 on $mux $flatten\c.$procmux$3472.
+    dead port 2/2 on $mux $flatten\c.$procmux$3469.
+    dead port 2/2 on $mux $flatten\c.$procmux$3466.
+    dead port 2/2 on $mux $flatten\c.$procmux$3577.
+    dead port 2/2 on $mux $flatten\c.$procmux$3460.
+    dead port 2/2 on $mux $flatten\c.$procmux$3457.
+    dead port 2/2 on $mux $flatten\c.$procmux$3454.
+    dead port 2/2 on $mux $flatten\c.$procmux$3448.
+    dead port 2/2 on $mux $flatten\c.$procmux$3745.
+    dead port 2/2 on $mux $flatten\c.$procmux$3742.
+    dead port 2/2 on $mux $flatten\c.$procmux$3445.
+    dead port 2/2 on $mux $flatten\c.$procmux$3442.
+    dead port 2/2 on $mux $flatten\c.$procmux$3574.
+    dead port 2/2 on $mux $flatten\c.$procmux$3436.
+    dead port 2/2 on $mux $flatten\c.$procmux$3640.
+    dead port 2/2 on $mux $flatten\c.$procmux$3433.
+    dead port 2/2 on $mux $flatten\c.$procmux$3430.
+    dead port 2/2 on $mux $flatten\c.$procmux$3637.
+    dead port 2/2 on $mux $flatten\c.$procmux$3634.
+    dead port 2/2 on $mux $flatten\c.$procmux$3424.
+    dead port 2/2 on $mux $flatten\c.$procmux$3736.
+    dead port 2/2 on $mux $flatten\c.$procmux$3733.
+    dead port 2/2 on $mux $flatten\c.$procmux$3421.
+    dead port 2/2 on $mux $flatten\c.$procmux$3418.
+    dead port 2/2 on $mux $flatten\c.$procmux$3772.
+    dead port 2/2 on $mux $flatten\c.$procmux$3400.
+    dead port 2/2 on $mux $flatten\c.$procmux$3046.
+    dead port 2/2 on $mux $flatten\c.$procmux$3397.
+    dead port 2/2 on $mux $flatten\c.$procmux$3394.
+    dead port 2/2 on $mux $flatten\c.$procmux$3730.
+    dead port 2/2 on $mux $flatten\c.$procmux$3388.
+    dead port 2/2 on $mux $flatten\c.$procmux$3385.
+    dead port 2/2 on $mux $flatten\c.$procmux$3382.
+    dead port 2/2 on $mux $flatten\c.$procmux$3568.
+    dead port 2/2 on $mux $flatten\c.$procmux$3376.
+    dead port 2/2 on $mux $flatten\c.$procmux$3373.
+    dead port 2/2 on $mux $flatten\c.$procmux$3370.
+    dead port 2/2 on $mux $flatten\c.$procmux$3628.
+    dead port 2/2 on $mux $flatten\c.$procmux$3565.
+    dead port 2/2 on $mux $flatten\c.$procmux$3364.
+    dead port 2/2 on $mux $flatten\c.$procmux$3562.
+    dead port 2/2 on $mux $flatten\c.$procmux$3361.
+    dead port 2/2 on $mux $flatten\c.$procmux$3358.
+    dead port 2/2 on $mux $flatten\c.$procmux$3352.
+    dead port 2/2 on $mux $flatten\c.$procmux$3349.
+    dead port 2/2 on $mux $flatten\c.$procmux$3346.
+    dead port 2/2 on $mux $flatten\c.$procmux$3340.
+    dead port 2/2 on $mux $flatten\c.$procmux$3724.
+    dead port 2/2 on $mux $flatten\c.$procmux$3337.
+    dead port 2/2 on $mux $flatten\c.$procmux$3625.
+    dead port 2/2 on $mux $flatten\c.$procmux$3334.
+    dead port 2/2 on $mux $flatten\c.$procmux$3721.
+    dead port 2/2 on $mux $flatten\c.$procmux$3664.
+    dead port 2/2 on $mux $flatten\c.$procmux$3328.
+    dead port 2/2 on $mux $flatten\c.$procmux$3556.
+    dead port 2/2 on $mux $flatten\c.$procmux$3325.
+    dead port 2/2 on $mux $flatten\c.$procmux$3322.
+    dead port 2/2 on $mux $flatten\c.$procmux$3052.
+    dead port 2/2 on $mux $flatten\c.$procmux$3304.
+    dead port 2/2 on $mux $flatten\c.$procmux$3049.
+    dead port 2/2 on $mux $flatten\c.$procmux$3718.
+    dead port 2/2 on $mux $flatten\c.$procmux$3301.
+    dead port 2/2 on $mux $flatten\c.$procmux$3298.
+    dead port 2/2 on $mux $flatten\c.$procmux$3292.
+    dead port 2/2 on $mux $flatten\c.$procmux$3289.
+    dead port 2/2 on $mux $flatten\c.$procmux$3622.
+    dead port 2/2 on $mux $flatten\c.$procmux$3286.
+    dead port 2/2 on $mux $flatten\c.$procmux$3769.
+    dead port 2/2 on $mux $flatten\c.$procmux$3280.
+    dead port 2/2 on $mux $flatten\c.$procmux$3277.
+    dead port 2/2 on $mux $flatten\c.$procmux$3274.
+    dead port 2/2 on $mux $flatten\c.$procmux$3796.
+    dead port 2/2 on $mux $flatten\c.$procmux$3268.
+    dead port 2/2 on $mux $flatten\c.$procmux$3265.
+    dead port 2/2 on $mux $flatten\c.$procmux$3262.
+    dead port 2/2 on $mux $flatten\c.$procmux$3793.
+    dead port 2/2 on $mux $flatten\c.$procmux$3553.
+    dead port 2/2 on $mux $flatten\c.$procmux$3256.
+    dead port 2/2 on $mux $flatten\c.$procmux$3790.
+    dead port 2/2 on $mux $flatten\c.$procmux$3253.
+    dead port 2/2 on $mux $flatten\c.$procmux$3250.
+    dead port 2/2 on $mux $flatten\c.$procmux$3661.
+    dead port 2/2 on $mux $flatten\c.$procmux$3550.
+    dead port 2/2 on $mux $flatten\c.$procmux$3244.
+    dead port 2/2 on $mux $flatten\c.$procmux$3241.
+    dead port 2/2 on $mux $flatten\c.$procmux$3238.
+    dead port 2/2 on $mux $flatten\c.$procmux$3712.
+    dead port 2/2 on $mux $flatten\c.$procmux$3232.
+    dead port 2/2 on $mux $flatten\c.$procmux$3616.
+    dead port 2/2 on $mux $flatten\c.$procmux$3229.
+    dead port 2/2 on $mux $flatten\c.$procmux$3226.
+    dead port 2/2 on $mux $flatten\c.$procmux$3061.
+    dead port 2/2 on $mux $flatten\c.$procmux$3058.
+    dead port 2/2 on $mux $flatten\c.$procmux$3784.
+    dead port 2/2 on $mux $flatten\c.$procmux$3208.
+    dead port 2/2 on $mux $flatten\c.$procmux$3205.
+    dead port 2/2 on $mux $flatten\c.$procmux$3202.
+    dead port 2/2 on $mux $flatten\c.$procmux$3037.
+    dead port 2/2 on $mux $flatten\c.$procmux$3196.
+    dead port 2/2 on $mux $flatten\c.$procmux$3193.
+    dead port 2/2 on $mux $flatten\c.$procmux$3034.
+    dead port 2/2 on $mux $flatten\c.$procmux$3190.
+    dead port 2/2 on $mux $flatten\c.$procmux$3544.
+    dead port 2/2 on $mux $flatten\c.$procmux$3766.
+    dead port 2/2 on $mux $flatten\c.$procmux$3184.
+    dead port 2/2 on $mux $flatten\c.$procmux$3181.
+    dead port 2/2 on $mux $flatten\c.$procmux$3178.
+    dead port 2/2 on $mux $flatten\c.$procmux$3658.
+    dead port 2/2 on $mux $flatten\c.$procmux$3589.
+    dead port 2/2 on $mux $flatten\c.$procmux$3172.
+    dead port 2/2 on $mux $flatten\c.$procmux$3169.
+    dead port 2/2 on $mux $flatten\c.$procmux$3166.
+    dead port 2/2 on $mux $flatten\c.$procmux$3541.
+    dead port 2/2 on $mux $flatten\c.$procmux$3160.
+    dead port 2/2 on $mux $flatten\c.$procmux$3709.
+    dead port 2/2 on $mux $flatten\c.$procmux$3706.
+    dead port 2/2 on $mux $flatten\c.$procmux$3157.
+    dead port 2/2 on $mux $flatten\c.$procmux$3154.
+    dead port 2/2 on $mux $flatten\c.$procmux$3538.
+    dead port 2/2 on $mux $flatten\c.$procmux$3148.
+    dead port 2/2 on $mux $flatten\c.$procmux$3145.
+    dead port 2/2 on $mux $flatten\c.$procmux$3613.
+    dead port 2/2 on $mux $flatten\c.$procmux$3142.
+    dead port 2/2 on $mux $flatten\c.$procmux$3688.
+    dead port 2/2 on $mux $flatten\c.$procmux$3610.
+    dead port 2/2 on $mux $flatten\c.$procmux$3136.
+    dead port 2/2 on $mux $flatten\c.$procmux$3685.
+    dead port 2/2 on $mux $flatten\c.$procmux$3682.
+    dead port 2/2 on $mux $flatten\c.$procmux$3040.
+    dead port 2/2 on $mux $flatten\c.$procmux$3133.
+    dead port 2/2 on $mux $flatten\c.$procmux$3130.
+    dead port 2/2 on $mux $flatten\c.$procmux$3112.
+    dead port 2/2 on $mux $flatten\c.$procmux$3064.
+    dead port 2/2 on $mux $flatten\c.$procmux$3109.
+    dead port 2/2 on $mux $flatten\c.$procmux$3106.
+    dead port 2/2 on $mux $flatten\c.$procmux$3100.
+    dead port 2/2 on $mux $flatten\c.$procmux$3097.
+    dead port 2/2 on $mux $flatten\c.$procmux$3781.
+    dead port 2/2 on $mux $flatten\c.$procmux$3094.
+    dead port 2/2 on $mux $flatten\c.$procmux$3532.
+    dead port 2/2 on $mux $flatten\c.$procmux$3676.
+    dead port 2/2 on $mux $flatten\c.$procmux$3088.
+    dead port 2/2 on $mux $flatten\c.$procmux$3085.
+    dead port 2/2 on $mux $flatten\c.$procmux$3082.
+    dead port 2/2 on $mux $flatten\c.$procmux$3076.
+    dead port 2/2 on $mux $flatten\c.$procmux$3673.
+    dead port 2/2 on $mux $flatten\c.$procmux$3592.
+    dead port 2/2 on $mux $flatten\c.$procmux$3073.
+    dead port 2/2 on $mux $flatten\c.$procmux$3070.
+    dead port 2/2 on $mux $flatten\c.$procmux$3778.
+    dead port 2/2 on $mux $procmux$2953.
+    dead port 2/2 on $mux $procmux$2944.
+    dead port 2/2 on $mux $procmux$2935.
+    dead port 2/2 on $mux $procmux$2926.
+    dead port 2/2 on $mux $procmux$2917.
+    dead port 2/2 on $mux $procmux$2908.
+    dead port 2/2 on $mux $procmux$2899.
+    dead port 2/2 on $mux $procmux$2890.
+    dead port 2/2 on $mux $flatten\c.$procmux$3670.
+Removed 179 multiplexer ports.
+<suppressed ~371 debug messages>
+
+4.8.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \formal.
+Performed a total of 0 changes.
+
+4.8.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\formal'.
+Computing hashes of 402 cells of `\formal'.
+Finding duplicate cells in `\formal'.
+Removed a total of 0 cells.
+
+4.8.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \formal..
+Removed 0 unused cells and 422 unused wires.
+<suppressed ~1 debug messages>
+
+4.8.7. Executing OPT_EXPR pass (perform const folding).
+Optimizing module formal.
+
+4.8.8. Rerunning OPT passes. (Maybe there is more to do..)
+
+4.8.9. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \formal..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~192 debug messages>
+
+4.8.10. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \formal.
+Performed a total of 0 changes.
+
+4.8.11. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\formal'.
+Computing hashes of 402 cells of `\formal'.
+Finding duplicate cells in `\formal'.
+Removed a total of 0 cells.
+
+4.8.12. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \formal..
+
+4.8.13. Executing OPT_EXPR pass (perform const folding).
+Optimizing module formal.
+
+4.8.14. Finished fast OPT passes. (There is nothing left to do.)
+
+4.9. Executing WREDUCE pass (reducing word size of cells).
+Removed top 28 bits (of 32) from port B of cell formal.$mul$tools/hbm_hidx_coupon1/formal.sv:7$1366 ($mul).
+Removed top 31 bits (of 32) from port B of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:7$1367 ($add).
+Removed top 1 bits (of 33) from port A of cell formal.$neg$tools/hbm_hidx_coupon1/formal.sv:7$1372 ($neg).
+Removed top 30 bits (of 32) from port B of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:7$1375 ($add).
+Removed top 28 bits (of 32) from port B of cell formal.$mul$tools/hbm_hidx_coupon1/formal.sv:7$1377 ($mul).
+Removed top 31 bits (of 32) from port B of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:7$1378 ($add).
+Removed top 1 bits (of 33) from port A of cell formal.$neg$tools/hbm_hidx_coupon1/formal.sv:7$1383 ($neg).
+Removed top 30 bits (of 32) from port B of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:7$1386 ($add).
+Removed top 28 bits (of 32) from port B of cell formal.$mul$tools/hbm_hidx_coupon1/formal.sv:7$1388 ($mul).
+Removed top 31 bits (of 32) from port B of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:7$1389 ($add).
+Removed top 1 bits (of 33) from port A of cell formal.$neg$tools/hbm_hidx_coupon1/formal.sv:7$1394 ($neg).
+Removed top 30 bits (of 32) from port B of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:7$1397 ($add).
+Removed top 28 bits (of 32) from port B of cell formal.$mul$tools/hbm_hidx_coupon1/formal.sv:7$1399 ($mul).
+Removed top 31 bits (of 32) from port B of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:7$1400 ($add).
+Removed top 1 bits (of 33) from port A of cell formal.$neg$tools/hbm_hidx_coupon1/formal.sv:7$1405 ($neg).
+Removed top 30 bits (of 32) from port B of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:7$1408 ($add).
+Removed top 28 bits (of 32) from port B of cell formal.$mul$tools/hbm_hidx_coupon1/formal.sv:7$1410 ($mul).
+Removed top 31 bits (of 32) from port B of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:7$1411 ($add).
+Removed top 1 bits (of 33) from port A of cell formal.$neg$tools/hbm_hidx_coupon1/formal.sv:7$1416 ($neg).
+Removed top 30 bits (of 32) from port B of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:7$1419 ($add).
+Removed top 28 bits (of 32) from port B of cell formal.$mul$tools/hbm_hidx_coupon1/formal.sv:7$1421 ($mul).
+Removed top 31 bits (of 32) from port B of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:7$1422 ($add).
+Removed top 1 bits (of 33) from port A of cell formal.$neg$tools/hbm_hidx_coupon1/formal.sv:7$1427 ($neg).
+Removed top 30 bits (of 32) from port B of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:7$1430 ($add).
+Removed top 28 bits (of 32) from port B of cell formal.$mul$tools/hbm_hidx_coupon1/formal.sv:7$1432 ($mul).
+Removed top 31 bits (of 32) from port B of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:7$1433 ($add).
+Removed top 1 bits (of 33) from port A of cell formal.$neg$tools/hbm_hidx_coupon1/formal.sv:7$1438 ($neg).
+Removed top 31 bits (of 32) from port B of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1445 ($add).
+Removed top 27 bits (of 32) from port Y of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1445 ($add).
+Removed top 31 bits (of 32) from port B of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1446 ($add).
+Removed top 28 bits (of 32) from port Y of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1446 ($add).
+Removed top 31 bits (of 32) from port B of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1447 ($add).
+Removed top 27 bits (of 32) from port Y of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1447 ($add).
+Removed top 31 bits (of 32) from port B of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1448 ($add).
+Removed top 28 bits (of 32) from port Y of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1448 ($add).
+Removed top 31 bits (of 32) from port B of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1449 ($add).
+Removed top 27 bits (of 32) from port Y of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1449 ($add).
+Removed top 31 bits (of 32) from port B of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1450 ($add).
+Removed top 28 bits (of 32) from port Y of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1450 ($add).
+Removed top 31 bits (of 32) from port B of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1451 ($add).
+Removed top 27 bits (of 32) from port Y of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1451 ($add).
+Removed top 31 bits (of 32) from port B of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1452 ($add).
+Removed top 28 bits (of 32) from port Y of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1452 ($add).
+Removed top 31 bits (of 32) from port B of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1453 ($add).
+Removed top 27 bits (of 32) from port Y of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1453 ($add).
+Removed top 31 bits (of 32) from port B of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1454 ($add).
+Removed top 28 bits (of 32) from port Y of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1454 ($add).
+Removed top 31 bits (of 32) from port B of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1455 ($add).
+Removed top 27 bits (of 32) from port Y of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1455 ($add).
+Removed top 31 bits (of 32) from port B of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1456 ($add).
+Removed top 28 bits (of 32) from port Y of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1456 ($add).
+Removed top 31 bits (of 32) from port B of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1457 ($add).
+Removed top 27 bits (of 32) from port Y of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1457 ($add).
+Removed top 31 bits (of 32) from port B of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1458 ($add).
+Removed top 28 bits (of 32) from port Y of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1458 ($add).
+Removed top 31 bits (of 32) from port B of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1459 ($add).
+Removed top 27 bits (of 32) from port Y of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1459 ($add).
+Removed top 31 bits (of 32) from port B of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1460 ($add).
+Removed top 27 bits (of 32) from port Y of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1460 ($add).
+Removed top 31 bits (of 32) from port B of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1461 ($add).
+Removed top 27 bits (of 32) from port Y of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1461 ($add).
+Removed top 31 bits (of 32) from port B of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1462 ($add).
+Removed top 27 bits (of 32) from port Y of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1462 ($add).
+Removed top 31 bits (of 32) from port B of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1463 ($add).
+Removed top 27 bits (of 32) from port Y of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1463 ($add).
+Removed top 31 bits (of 32) from port B of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1464 ($add).
+Removed top 27 bits (of 32) from port Y of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1464 ($add).
+Removed top 31 bits (of 32) from port B of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1465 ($add).
+Removed top 27 bits (of 32) from port Y of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1465 ($add).
+Removed top 31 bits (of 32) from port B of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1466 ($add).
+Removed top 27 bits (of 32) from port Y of cell formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1466 ($add).
+Removed top 3 bits (of 4) from mux cell formal.$procmux$2956 ($mux).
+Removed top 4 bits (of 5) from mux cell formal.$procmux$2959 ($mux).
+Removed top 31 bits (of 32) from mux cell formal.$procmux$3025 ($mux).
+Removed top 28 bits (of 32) from mux cell formal.$procmux$3028 ($mux).
+Removed top 1 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:24$2807 ($eq).
+Removed top 1 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:24$2796 ($eq).
+Removed top 1 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:24$2818 ($eq).
+Removed top 1 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:24$2774 ($eq).
+Removed top 1 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:24$2763 ($eq).
+Removed top 1 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:24$2752 ($eq).
+Removed top 1 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:24$2741 ($eq).
+Removed top 1 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:24$2730 ($eq).
+Removed top 1 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:24$2719 ($eq).
+Removed top 1 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:24$2708 ($eq).
+Removed top 1 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:24$2829 ($eq).
+Removed top 1 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:24$2686 ($eq).
+Removed top 1 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:24$2675 ($eq).
+Removed top 1 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:24$2664 ($eq).
+Removed top 1 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:24$2653 ($eq).
+Removed top 1 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:24$2642 ($eq).
+Removed top 1 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:24$2631 ($eq).
+Removed top 1 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:24$2620 ($eq).
+Removed top 1 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:24$2598 ($eq).
+Removed top 1 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:24$2587 ($eq).
+Removed top 1 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:24$2576 ($eq).
+Removed top 1 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:24$2565 ($eq).
+Removed top 1 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:24$2554 ($eq).
+Removed top 1 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:24$2543 ($eq).
+Removed top 1 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:24$2532 ($eq).
+Removed top 1 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:24$2840 ($eq).
+Removed top 2 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:24$2510 ($eq).
+Removed top 2 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:24$2499 ($eq).
+Removed top 2 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:24$2488 ($eq).
+Removed top 2 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:24$2477 ($eq).
+Removed top 2 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:24$2466 ($eq).
+Removed top 2 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:24$2455 ($eq).
+Removed top 2 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:24$2444 ($eq).
+Removed top 2 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:24$2422 ($eq).
+Removed top 1 bits (of 4) from port A of cell formal.$flatten\c.$add$tools/hbm_hidx_coupon1/coupon.sv:14$2421 ($add).
+Removed top 2 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:24$2411 ($eq).
+Removed top 1 bits (of 4) from port A of cell formal.$flatten\c.$add$tools/hbm_hidx_coupon1/coupon.sv:14$2410 ($add).
+Removed top 2 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:24$2400 ($eq).
+Removed top 1 bits (of 4) from port A of cell formal.$flatten\c.$add$tools/hbm_hidx_coupon1/coupon.sv:14$2399 ($add).
+Removed top 2 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:24$2389 ($eq).
+Removed top 1 bits (of 4) from port A of cell formal.$flatten\c.$add$tools/hbm_hidx_coupon1/coupon.sv:14$2388 ($add).
+Removed top 2 bits (of 3) from port B of cell formal.$flatten\c.$add$tools/hbm_hidx_coupon1/coupon.sv:14$2388 ($add).
+Removed top 2 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:24$2378 ($eq).
+Removed top 1 bits (of 4) from port A of cell formal.$flatten\c.$add$tools/hbm_hidx_coupon1/coupon.sv:14$2377 ($add).
+Removed top 2 bits (of 3) from port B of cell formal.$flatten\c.$add$tools/hbm_hidx_coupon1/coupon.sv:14$2377 ($add).
+Removed top 2 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:24$2367 ($eq).
+Removed top 1 bits (of 4) from port A of cell formal.$flatten\c.$add$tools/hbm_hidx_coupon1/coupon.sv:14$2366 ($add).
+Removed top 2 bits (of 3) from port B of cell formal.$flatten\c.$add$tools/hbm_hidx_coupon1/coupon.sv:14$2366 ($add).
+Removed top 1 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:24$2851 ($eq).
+Removed top 2 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:24$2356 ($eq).
+Removed top 1 bits (of 4) from port A of cell formal.$flatten\c.$add$tools/hbm_hidx_coupon1/coupon.sv:14$2355 ($add).
+Removed top 2 bits (of 3) from port B of cell formal.$flatten\c.$add$tools/hbm_hidx_coupon1/coupon.sv:14$2355 ($add).
+Removed top 1 bits (of 3) from port A of cell formal.$flatten\c.$add$tools/hbm_hidx_coupon1/coupon.sv:14$2353 ($add).
+Removed top 1 bits (of 2) from port B of cell formal.$flatten\c.$add$tools/hbm_hidx_coupon1/coupon.sv:14$2353 ($add).
+Removed top 3 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:24$2334 ($eq).
+Removed top 1 bits (of 3) from port A of cell formal.$flatten\c.$add$tools/hbm_hidx_coupon1/coupon.sv:14$2332 ($add).
+Removed top 3 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:24$2323 ($eq).
+Removed top 1 bits (of 3) from port A of cell formal.$flatten\c.$add$tools/hbm_hidx_coupon1/coupon.sv:14$2321 ($add).
+Removed top 1 bits (of 2) from port B of cell formal.$flatten\c.$add$tools/hbm_hidx_coupon1/coupon.sv:14$2321 ($add).
+Removed top 3 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:24$2312 ($eq).
+Removed top 1 bits (of 3) from port A of cell formal.$flatten\c.$add$tools/hbm_hidx_coupon1/coupon.sv:14$2310 ($add).
+Removed top 1 bits (of 2) from port B of cell formal.$flatten\c.$add$tools/hbm_hidx_coupon1/coupon.sv:14$2310 ($add).
+Removed top 3 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:24$2301 ($eq).
+Removed top 1 bits (of 3) from port A of cell formal.$flatten\c.$add$tools/hbm_hidx_coupon1/coupon.sv:14$2298 ($add).
+Removed top 3 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:24$2290 ($eq).
+Removed top 1 bits (of 3) from port A of cell formal.$flatten\c.$add$tools/hbm_hidx_coupon1/coupon.sv:14$2287 ($add).
+Removed top 3 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:24$2279 ($eq).
+Removed top 1 bits (of 3) from port A of cell formal.$flatten\c.$add$tools/hbm_hidx_coupon1/coupon.sv:14$2276 ($add).
+Removed top 1 bits (of 2) from port B of cell formal.$flatten\c.$add$tools/hbm_hidx_coupon1/coupon.sv:14$2276 ($add).
+Removed top 3 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:24$2268 ($eq).
+Removed top 1 bits (of 4) from port B of cell formal.$flatten\c.$eq$tools/hbm_hidx_coupon1/coupon.sv:24$2862 ($eq).
+Removed top 1 bits (of 2) from port A of cell formal.$flatten\c.$add$tools/hbm_hidx_coupon1/coupon.sv:14$2242 ($add).
+Removed top 1 bits (of 2) from port A of cell formal.$flatten\c.$add$tools/hbm_hidx_coupon1/coupon.sv:14$2230 ($add).
+Removed top 1 bits (of 2) from port A of cell formal.$flatten\c.$add$tools/hbm_hidx_coupon1/coupon.sv:14$2219 ($add).
+Removed top 1 bits (of 2) from port A of cell formal.$flatten\c.$add$tools/hbm_hidx_coupon1/coupon.sv:13$2207 ($add).
+Removed top 1 bits (of 2) from port A of cell formal.$flatten\c.$add$tools/hbm_hidx_coupon1/coupon.sv:13$2196 ($add).
+Removed top 1 bits (of 2) from port A of cell formal.$flatten\c.$add$tools/hbm_hidx_coupon1/coupon.sv:13$2184 ($add).
+Removed top 1 bits (of 2) from port A of cell formal.$flatten\c.$add$tools/hbm_hidx_coupon1/coupon.sv:13$2173 ($add).
+Removed top 1 bits (of 2) from port A of cell formal.$flatten\p.$add$tools/hbm_hidx_coupon1/coupon.sv:43$1576 ($add).
+Removed top 1 bits (of 2) from port A of cell formal.$flatten\p.$add$tools/hbm_hidx_coupon1/coupon.sv:43$1577 ($add).
+Removed top 1 bits (of 2) from port A of cell formal.$flatten\p.$add$tools/hbm_hidx_coupon1/coupon.sv:43$1578 ($add).
+Removed top 1 bits (of 2) from port A of cell formal.$flatten\p.$add$tools/hbm_hidx_coupon1/coupon.sv:43$1579 ($add).
+Removed top 1 bits (of 3) from port A of cell formal.$flatten\p.$add$tools/hbm_hidx_coupon1/coupon.sv:43$1580 ($add).
+Removed top 1 bits (of 3) from port A of cell formal.$flatten\p.$add$tools/hbm_hidx_coupon1/coupon.sv:43$1581 ($add).
+Removed top 1 bits (of 4) from port A of cell formal.$flatten\p.$add$tools/hbm_hidx_coupon1/coupon.sv:43$1582 ($add).
+Removed top 1 bits (of 2) from port A of cell formal.$flatten\q.$add$tools/hbm_hidx_coupon1/coupon.sv:43$1513 ($add).
+Removed top 1 bits (of 2) from port A of cell formal.$flatten\q.$add$tools/hbm_hidx_coupon1/coupon.sv:43$1514 ($add).
+Removed top 1 bits (of 2) from port A of cell formal.$flatten\q.$add$tools/hbm_hidx_coupon1/coupon.sv:43$1515 ($add).
+Removed top 1 bits (of 2) from port A of cell formal.$flatten\q.$add$tools/hbm_hidx_coupon1/coupon.sv:43$1516 ($add).
+Removed top 1 bits (of 3) from port A of cell formal.$flatten\q.$add$tools/hbm_hidx_coupon1/coupon.sv:43$1517 ($add).
+Removed top 1 bits (of 3) from port A of cell formal.$flatten\q.$add$tools/hbm_hidx_coupon1/coupon.sv:43$1518 ($add).
+Removed top 1 bits (of 4) from port A of cell formal.$flatten\q.$add$tools/hbm_hidx_coupon1/coupon.sv:43$1519 ($add).
+Removed top 1 bits (of 2) from port A of cell formal.$flatten\q.$add$tools/hbm_hidx_coupon1/coupon.sv:43$1530 ($add).
+Removed top 1 bits (of 2) from port A of cell formal.$flatten\q.$add$tools/hbm_hidx_coupon1/coupon.sv:43$1531 ($add).
+Removed top 1 bits (of 2) from port A of cell formal.$flatten\q.$add$tools/hbm_hidx_coupon1/coupon.sv:43$1532 ($add).
+Removed top 1 bits (of 2) from port A of cell formal.$flatten\q.$add$tools/hbm_hidx_coupon1/coupon.sv:43$1533 ($add).
+Removed top 1 bits (of 3) from port A of cell formal.$flatten\q.$add$tools/hbm_hidx_coupon1/coupon.sv:43$1534 ($add).
+Removed top 1 bits (of 3) from port A of cell formal.$flatten\q.$add$tools/hbm_hidx_coupon1/coupon.sv:43$1535 ($add).
+Removed top 1 bits (of 4) from port A of cell formal.$flatten\q.$add$tools/hbm_hidx_coupon1/coupon.sv:43$1536 ($add).
+Removed top 1 bits (of 5) from port A of cell formal.$flatten\q.$add$tools/hbm_hidx_coupon1/coupon.sv:46$1537 ($add).
+Removed top 1 bits (of 5) from port B of cell formal.$flatten\q.$add$tools/hbm_hidx_coupon1/coupon.sv:46$1537 ($add).
+Removed top 27 bits (of 32) from wire formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1466_Y.
+Removed top 27 bits (of 32) from wire formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1465_Y.
+Removed top 27 bits (of 32) from wire formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1464_Y.
+Removed top 27 bits (of 32) from wire formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1463_Y.
+Removed top 27 bits (of 32) from wire formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1462_Y.
+Removed top 27 bits (of 32) from wire formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1461_Y.
+Removed top 27 bits (of 32) from wire formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1460_Y.
+Removed top 27 bits (of 32) from wire formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1459_Y.
+Removed top 27 bits (of 32) from wire formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1457_Y.
+Removed top 27 bits (of 32) from wire formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1455_Y.
+Removed top 27 bits (of 32) from wire formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1453_Y.
+Removed top 27 bits (of 32) from wire formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1451_Y.
+Removed top 27 bits (of 32) from wire formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1449_Y.
+Removed top 27 bits (of 32) from wire formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1447_Y.
+Removed top 27 bits (of 32) from wire formal.$add$tools/hbm_hidx_coupon1/formal.sv:8$1445_Y.
+Removed top 4 bits (of 5) from wire formal.$1\qc[4:0].
+Removed top 3 bits (of 4) from wire formal.$1\pc[3:0].
+Removed top 28 bits (of 32) from wire formal.$1\refc[31:0].
+Removed top 31 bits (of 32) from wire formal.$1\s[31:0].
+
+4.10. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \formal..
+Removed 0 unused cells and 26 unused wires.
+<suppressed ~1 debug messages>
+
+4.11. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+4.12. Executing OPT pass (performing simple optimizations).
+
+4.12.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module formal.
+
+4.12.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\formal'.
+Computing hashes of 402 cells of `\formal'.
+Finding duplicate cells in `\formal'.
+Computing hashes of 401 cells of `\formal'.
+Finding duplicate cells in `\formal'.
+<suppressed ~3 debug messages>
+Removed a total of 1 cells.
+
+4.12.3. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \formal..
+Removed 0 unused cells and 1 unused wires.
+<suppressed ~1 debug messages>
+
+4.12.4. Finished fast OPT passes.
+
+4.13. Executing SORT pass.
+
+4.14. Printing statistics.
+
+=== formal ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      879 wires
+     5773 wire bits
+      508 public wires
+     2586 public wire bits
+        4 ports
+       50 port bits
+      401 cells
+       78   $add
+        7   $and
+       10   $dff
+       49   $eq
+       56   $logic_and
+        7   $logic_not
+        2   $logic_or
+        7   $mul
+       95   $mux
+        3   $ne
+        7   $neg
+        7   $not
+       56   $or
+        3   $scopeinfo
+       14   $shift
+
+4.15. Executing CHECK pass (checking for obvious problems).
+Checking module formal...
+Found and reported 0 problems.
+
+5. Executing SAT pass (solving SAT problems in the circuit).
+Using SAT solver `minisat`.
+
+Setting up time step 1:
+Final constraint equation: { } = { }
+Imported 401 cells to SAT database.
+No constraints for initial state found.
+
+
+Setting up time step 2:
+Final constraint equation: { } = { }
+Imported 401 cells to SAT database.
+
+Setting up time step 3:
+Final constraint equation: { } = { }
+Imported 401 cells to SAT database.
+Import proof-constraint: \bad = 1'0
+Final proof equation: \bad = 1'0
+Import show expression: \clk
+Import show expression: \mask
+Import show expression: \payload
+Import show expression: \bad
+
+Solving problem with 83668 variables and 229574 clauses..
+SAT proof finished - no model found: SUCCESS!
+
+                  /$$$$$$      /$$$$$$$$     /$$$$$$$    
+                 /$$__  $$    | $$_____/    | $$__  $$   
+                | $$  \ $$    | $$          | $$  \ $$   
+                | $$  | $$    | $$$$$       | $$  | $$   
+                | $$  | $$    | $$__/       | $$  | $$   
+                | $$/$$ $$    | $$          | $$  | $$   
+                |  $$$$$$/ /$$| $$$$$$$$ /$$| $$$$$$$//$$
+                 \____ $$$|__/|________/|__/|_______/|__/
+                       \__/                              
+

@@ -1,0 +1,20 @@
+ot-run: ot-epyc4       admits  1172 GB (avail 877, growth 57, headroom 0, waiters 0/0 GB) load 37/128 running 20 disk 386 GB 
+ot-run: ot-epyc5       admits   581 GB (avail 493, growth 86, headroom 0, waiters 0/0 GB) load 57/128 running 7 disk 904 GB 
+ot-run: ot-epyc6       admits  1145 GB (avail 880, growth 78, headroom 0, waiters 0/0 GB) load 35/128 running 25 disk 5760 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/hidx-coupon1-1019
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/hidx-coupon1-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hidx-coupon1-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hidx-coupon1-1019
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-3684884-1792442926 after 0 s
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/hidx-coupon1-1019/tools/hbm_hidx_coupon1/merge_libs.py", line 3, in <module>
+    texts=[gzip.open(p,'rt').read() if p.endswith('.gz') else Path(p).read_text() for p in sys.argv[2:]]
+           ~~~~~~~~~^^^^^^^^
+  File "/usr/lib/python3.14/gzip.py", line 66, in open
+    binary_file = GzipFile(filename, gz_mode, compresslevel)
+  File "/usr/lib/python3.14/gzip.py", line 208, in __init__
+    fileobj = self.myfileobj = builtins.open(filename, mode or 'rb')
+                               ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_*.lib.gz'
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-3684884-1792442926): exit 1

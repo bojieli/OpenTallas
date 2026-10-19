@@ -1,0 +1,14 @@
+ot-run: ot-epyc4       admits  1161 GB (avail 876, growth 63, headroom 0, waiters 0/0 GB) load 37/128 running 21 disk 386 GB 
+ot-run: ot-epyc5       admits   576 GB (avail 489, growth 86, headroom 0, waiters 0/0 GB) load 51/128 running 7 disk 904 GB 
+ot-run: ot-epyc6       admits  1144 GB (avail 882, growth 81, headroom 0, waiters 0/0 GB) load 33/128 running 25 disk 5743 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/hidx-coupon1-1019
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/hidx-coupon1-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hidx-coupon1-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hidx-coupon1-1019
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-3687759-1792443033 after 0 s
+Traceback (most recent call last):
+  File "/work/tools/hbm_hidx_coupon1/native.py", line 28, in <module>
+    t=c['type'];assert t in L,('non-native',n,t);mstr=L[t];ins=[];outs=[]
+AssertionError: ('non-native', 'on.pair[0].own', '$scopeinfo')
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-3687759-1792443033): exit 1

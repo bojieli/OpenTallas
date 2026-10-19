@@ -1,0 +1,557 @@
+{
+  "_06086_": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+      "CLK": {
+        "bits": [
+          2
+        ],
+        "source_aliases": [
+          "on.pair[0].own.clk[0]",
+          "on.pair[1].own.clk[0]",
+          "on.pair[2].own.clk[0]",
+          "on.pair[3].own.clk[0]",
+          "on.pair[4].own.clk[0]",
+          "on.pair[5].own.clk[0]",
+          "on.quad[0].own.clk[0]",
+          "on.quad[10].own.clk[0]",
+          "on.quad[11].own.clk[0]",
+          "on.quad[1].own.clk[0]",
+          "on.quad[2].own.clk[0]",
+          "on.quad[3].own.clk[0]",
+          "on.quad[4].own.clk[0]",
+          "on.quad[5].own.clk[0]",
+          "on.quad[6].own.clk[0]",
+          "on.quad[7].own.clk[0]",
+          "on.quad[8].own.clk[0]",
+          "on.quad[9].own.clk[0]",
+          "on.slice[0].own.clk[0]",
+          "on.slice[1].own.clk[0]",
+          "on.slice[2].own.clk[0]",
+          "on.slice[3].own.clk[0]",
+          "on.slice[4].own.clk[0]",
+          "on.slice[5].own.clk[0]",
+          "on.slice[6].own.clk[0]",
+          "on.slice[7].own.clk[0]",
+          "on.slice[8].own.clk[0]"
+        ]
+      },
+      "D": {
+        "bits": [
+          4
+        ],
+        "source_aliases": [
+          "on.pair[0].own.lane_v[1]",
+          "on.pair[1].own.lane_v[1]",
+          "on.pair[2].own.lane_v[1]",
+          "on.pair[3].own.lane_v[1]",
+          "on.pair[4].own.lane_v[1]",
+          "on.pair[5].own.lane_v[1]",
+          "on.quad[0].own.lane_v[1]",
+          "on.quad[10].own.lane_v[1]",
+          "on.quad[11].own.lane_v[1]",
+          "on.quad[1].own.lane_v[1]",
+          "on.quad[2].own.lane_v[1]",
+          "on.quad[3].own.lane_v[1]",
+          "on.quad[4].own.lane_v[1]",
+          "on.quad[5].own.lane_v[1]",
+          "on.quad[6].own.lane_v[1]",
+          "on.quad[7].own.lane_v[1]",
+          "on.quad[8].own.lane_v[1]",
+          "on.quad[9].own.lane_v[1]",
+          "on.slice[0].own.lane_v[1]",
+          "on.slice[1].own.lane_v[1]",
+          "on.slice[2].own.lane_v[1]",
+          "on.slice[3].own.lane_v[1]",
+          "on.slice[4].own.lane_v[1]",
+          "on.slice[5].own.lane_v[1]",
+          "on.slice[6].own.lane_v[1]",
+          "on.slice[7].own.lane_v[1]",
+          "on.slice[8].own.lane_v[1]"
+        ]
+      },
+      "QN": {
+        "bits": [
+          3545
+        ],
+        "source_aliases": []
+      }
+    }
+  },
+  "_05925_": {
+    "master": "XOR2xp5_ASAP7_75t_R",
+    "pins": {
+      "A": {
+        "bits": [
+          3400
+        ],
+        "source_aliases": []
+      },
+      "B": {
+        "bits": [
+          3545
+        ],
+        "source_aliases": []
+      },
+      "Y": {
+        "bits": [
+          3554
+        ],
+        "source_aliases": []
+      }
+    }
+  },
+  "_05928_": {
+    "master": "XNOR2xp5_ASAP7_75t_R",
+    "pins": {
+      "A": {
+        "bits": [
+          3541
+        ],
+        "source_aliases": []
+      },
+      "B": {
+        "bits": [
+          3554
+        ],
+        "source_aliases": []
+      },
+      "Y": {
+        "bits": [
+          3557
+        ],
+        "source_aliases": []
+      }
+    }
+  },
+  "_05930_": {
+    "master": "XNOR2xp5_ASAP7_75t_R",
+    "pins": {
+      "A": {
+        "bits": [
+          3547
+        ],
+        "source_aliases": []
+      },
+      "B": {
+        "bits": [
+          3557
+        ],
+        "source_aliases": []
+      },
+      "Y": {
+        "bits": [
+          3559
+        ],
+        "source_aliases": []
+      }
+    }
+  },
+  "_05936_": {
+    "master": "XNOR2xp5_ASAP7_75t_R",
+    "pins": {
+      "A": {
+        "bits": [
+          3558
+        ],
+        "source_aliases": []
+      },
+      "B": {
+        "bits": [
+          3559
+        ],
+        "source_aliases": []
+      },
+      "Y": {
+        "bits": [
+          3565
+        ],
+        "source_aliases": []
+      }
+    }
+  },
+  "_05937_": {
+    "master": "XNOR2xp5_ASAP7_75t_R",
+    "pins": {
+      "A": {
+        "bits": [
+          3531
+        ],
+        "source_aliases": []
+      },
+      "B": {
+        "bits": [
+          3565
+        ],
+        "source_aliases": []
+      },
+      "Y": {
+        "bits": [
+          3566
+        ],
+        "source_aliases": []
+      }
+    }
+  },
+  "_05938_": {
+    "master": "XNOR2xp5_ASAP7_75t_R",
+    "pins": {
+      "A": {
+        "bits": [
+          3564
+        ],
+        "source_aliases": []
+      },
+      "B": {
+        "bits": [
+          3566
+        ],
+        "source_aliases": []
+      },
+      "Y": {
+        "bits": [
+          3567
+        ],
+        "source_aliases": []
+      }
+    }
+  },
+  "_05939_": {
+    "master": "XNOR2xp5_ASAP7_75t_R",
+    "pins": {
+      "A": {
+        "bits": [
+          3540
+        ],
+        "source_aliases": [
+          "on.quad[0].own.mask[4]"
+        ]
+      },
+      "B": {
+        "bits": [
+          3567
+        ],
+        "source_aliases": []
+      },
+      "Y": {
+        "bits": [
+          3568
+        ],
+        "source_aliases": []
+      }
+    }
+  },
+  "_05950_": {
+    "master": "XNOR2xp5_ASAP7_75t_R",
+    "pins": {
+      "A": {
+        "bits": [
+          3536
+        ],
+        "source_aliases": [
+          "on.quad[0].own.mask[6]"
+        ]
+      },
+      "B": {
+        "bits": [
+          3568
+        ],
+        "source_aliases": []
+      },
+      "Y": {
+        "bits": [
+          3579
+        ],
+        "source_aliases": []
+      }
+    }
+  },
+  "_05952_": {
+    "master": "OR3x1_ASAP7_75t_R",
+    "pins": {
+      "A": {
+        "bits": [
+          3543
+        ],
+        "source_aliases": []
+      },
+      "B": {
+        "bits": [
+          3579
+        ],
+        "source_aliases": []
+      },
+      "C": {
+        "bits": [
+          3580
+        ],
+        "source_aliases": []
+      },
+      "Y": {
+        "bits": [
+          3581
+        ],
+        "source_aliases": []
+      }
+    }
+  },
+  "_05958_": {
+    "master": "AOI211xp5_ASAP7_75t_R",
+    "pins": {
+      "A1": {
+        "bits": [
+          3578
+        ],
+        "source_aliases": []
+      },
+      "A2": {
+        "bits": [
+          3581
+        ],
+        "source_aliases": []
+      },
+      "B": {
+        "bits": [
+          3586
+        ],
+        "source_aliases": []
+      },
+      "C": {
+        "bits": [
+          3561
+        ],
+        "source_aliases": []
+      },
+      "Y": {
+        "bits": [
+          3587
+        ],
+        "source_aliases": [
+          "on.quad[0].own.count[4]"
+        ]
+      }
+    }
+  },
+  "_05960_": {
+    "master": "A2O1A1O1Ixp25_ASAP7_75t_R",
+    "pins": {
+      "A1": {
+        "bits": [
+          3578
+        ],
+        "source_aliases": []
+      },
+      "A2": {
+        "bits": [
+          3581
+        ],
+        "source_aliases": []
+      },
+      "B": {
+        "bits": [
+          3586
+        ],
+        "source_aliases": []
+      },
+      "C": {
+        "bits": [
+          3588
+        ],
+        "source_aliases": []
+      },
+      "D": {
+        "bits": [
+          3587
+        ],
+        "source_aliases": [
+          "on.quad[0].own.count[4]"
+        ]
+      },
+      "Y": {
+        "bits": [
+          3589
+        ],
+        "source_aliases": [
+          "on.quad[0].own.count[3]"
+        ]
+      }
+    }
+  },
+  "_05968_": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+      "CLK": {
+        "bits": [
+          2
+        ],
+        "source_aliases": [
+          "on.pair[0].own.clk[0]",
+          "on.pair[1].own.clk[0]",
+          "on.pair[2].own.clk[0]",
+          "on.pair[3].own.clk[0]",
+          "on.pair[4].own.clk[0]",
+          "on.pair[5].own.clk[0]",
+          "on.quad[0].own.clk[0]",
+          "on.quad[10].own.clk[0]",
+          "on.quad[11].own.clk[0]",
+          "on.quad[1].own.clk[0]",
+          "on.quad[2].own.clk[0]",
+          "on.quad[3].own.clk[0]",
+          "on.quad[4].own.clk[0]",
+          "on.quad[5].own.clk[0]",
+          "on.quad[6].own.clk[0]",
+          "on.quad[7].own.clk[0]",
+          "on.quad[8].own.clk[0]",
+          "on.quad[9].own.clk[0]",
+          "on.slice[0].own.clk[0]",
+          "on.slice[1].own.clk[0]",
+          "on.slice[2].own.clk[0]",
+          "on.slice[3].own.clk[0]",
+          "on.slice[4].own.clk[0]",
+          "on.slice[5].own.clk[0]",
+          "on.slice[6].own.clk[0]",
+          "on.slice[7].own.clk[0]",
+          "on.slice[8].own.clk[0]"
+        ]
+      },
+      "D": {
+        "bits": [
+          3589
+        ],
+        "source_aliases": [
+          "on.quad[0].own.count[3]"
+        ]
+      },
+      "QN": {
+        "bits": [
+          3517
+        ],
+        "source_aliases": []
+      }
+    }
+  },
+  "_04542_": {
+    "master": "AOI21xp33_ASAP7_75t_R",
+    "pins": {
+      "A1": {
+        "bits": [
+          2735
+        ],
+        "source_aliases": []
+      },
+      "A2": {
+        "bits": [
+          2738
+        ],
+        "source_aliases": []
+      },
+      "B": {
+        "bits": [
+          2736
+        ],
+        "source_aliases": [
+          "on.pair[0].own.count[3]"
+        ]
+      },
+      "Y": {
+        "bits": [
+          2739
+        ],
+        "source_aliases": [
+          "on.pair[0].own.count[2]"
+        ]
+      }
+    }
+  },
+  "_04548_": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+      "CLK": {
+        "bits": [
+          2
+        ],
+        "source_aliases": [
+          "on.pair[0].own.clk[0]",
+          "on.pair[1].own.clk[0]",
+          "on.pair[2].own.clk[0]",
+          "on.pair[3].own.clk[0]",
+          "on.pair[4].own.clk[0]",
+          "on.pair[5].own.clk[0]",
+          "on.quad[0].own.clk[0]",
+          "on.quad[10].own.clk[0]",
+          "on.quad[11].own.clk[0]",
+          "on.quad[1].own.clk[0]",
+          "on.quad[2].own.clk[0]",
+          "on.quad[3].own.clk[0]",
+          "on.quad[4].own.clk[0]",
+          "on.quad[5].own.clk[0]",
+          "on.quad[6].own.clk[0]",
+          "on.quad[7].own.clk[0]",
+          "on.quad[8].own.clk[0]",
+          "on.quad[9].own.clk[0]",
+          "on.slice[0].own.clk[0]",
+          "on.slice[1].own.clk[0]",
+          "on.slice[2].own.clk[0]",
+          "on.slice[3].own.clk[0]",
+          "on.slice[4].own.clk[0]",
+          "on.slice[5].own.clk[0]",
+          "on.slice[6].own.clk[0]",
+          "on.slice[7].own.clk[0]",
+          "on.slice[8].own.clk[0]"
+        ]
+      },
+      "D": {
+        "bits": [
+          2736
+        ],
+        "source_aliases": [
+          "on.pair[0].own.count[3]"
+        ]
+      },
+      "QN": {
+        "bits": [
+          2707
+        ],
+        "source_aliases": []
+      }
+    }
+  },
+  "worst_slew_driver": {
+    "name": "_04539_",
+    "master": "NOR4xp25_ASAP7_75t_R",
+    "pins": {
+      "A": {
+        "bits": [
+          2717
+        ],
+        "source_aliases": []
+      },
+      "B": {
+        "bits": [
+          2728
+        ],
+        "source_aliases": []
+      },
+      "C": {
+        "bits": [
+          2731
+        ],
+        "source_aliases": []
+      },
+      "D": {
+        "bits": [
+          2734
+        ],
+        "source_aliases": []
+      },
+      "Y": {
+        "bits": [
+          2736
+        ],
+        "source_aliases": [
+          "on.pair[0].own.count[3]"
+        ]
+      }
+    }
+  }
+}
