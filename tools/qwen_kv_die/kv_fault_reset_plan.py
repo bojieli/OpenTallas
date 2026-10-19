@@ -38,7 +38,10 @@ def plan(run,inv,candidate,manifest,skew):
     # Counting every occurrence is conservative, including unfamiliar ports.
     uses=collections.Counter()
     for _,_,_,ports in insts:
-        for expr in ports.values():uses.update(b for b in (P.expr_bits(expr,nets) or []) if b[0]!='CONST')
+        for expr in ports.values():
+            bits=P.expr_bits(expr,nets)
+            if bits is None and expr.strip():raise ValueError('Unresolved expression prevents conservative reset fanout counting: '+expr)
+            uses.update(b for b in (bits or []) if b[0]!='CONST')
     rects=list(inv['physical_obstacles'])
     for n in candidate['nodes']:
         x,y=n['placement']['x'],n['placement']['y'];rects.append([x,y,x+21.6,y+21.6])
