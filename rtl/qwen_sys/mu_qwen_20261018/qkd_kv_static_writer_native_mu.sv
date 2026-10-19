@@ -13,7 +13,8 @@
 // stage's latched value, held until the next accepted word).  MU 0: wires (bit-identical to the plain writer role).
 // range_fault (a KV write row outside the KV window under MU) sets a sticky flop ORed into fault / fault_code[7] (the
 // writer uses code bits [4:0]; its own bits are unchanged).
-module qkd_kv_static_writer_native_mu #(parameter integer MUT = 0, parameter integer VMAP = 0, parameter integer MU = 0) (
+module qkd_kv_static_writer_native_mu #(parameter integer MUT = 0, parameter integer VMAP = 0, parameter integer MU = 0,
+    parameter integer RST_COPIES = 1) (
     input wire ck, rst_n,
     input wire word_valid, input wire [10:0] word_tag,
     input wire [511:0] word_data,
@@ -33,7 +34,7 @@ module qkd_kv_static_writer_native_mu #(parameter integer MUT = 0, parameter int
     wire [28:0] xa_w;
     wire f_w;
     wire [7:0] fc_w;
-    qkd_kv_static_writer_native #(.MUT(MUT), .VMAP(VMAP)) u_wrn (
+    qkd_kv_static_writer_native #(.MUT(MUT), .VMAP(VMAP), .RST_COPIES(RST_COPIES)) u_wrn (
         .ck(ck), .rst_n(rst_n), .word_valid(word_valid), .word_tag(word_tag), .word_data(word_data),
         .word_identity(word_identity), .word_generation(word_generation), .compiled_word_slot(compiled_word_slot),
         .compiled_word_index(compiled_word_index), .compiled_identity(compiled_identity),

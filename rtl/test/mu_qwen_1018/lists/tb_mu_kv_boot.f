@@ -63,3 +63,5 @@ rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_layer_programme_mus.sv
 physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v
 rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_ownership_calendar_mu.sv
 rtl/test/mu_qwen_1018/tb_mu_kv_boot.sv
+physical/asap7_memory_macros_v2/ctl_sram_1r1w_64x64_p192/ctl_sram_1r1w_64x64_p192.v
+physical/asap7_memory_macros_v2/ctl_sram_1r1w_64x128_p192/ctl_sram_1r1w_64x128_p192.v

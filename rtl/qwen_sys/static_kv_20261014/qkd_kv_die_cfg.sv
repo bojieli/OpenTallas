@@ -21,7 +21,9 @@
 // reset, survives the functional re-reset).  CAP=0 = the KVJ-F block unchanged (the output is then 0).
 // MUT (bench negative controls): 1 = ECTL B / C fields swapped; 2 = padding bits not checked; 3 = reset-region words
 // written one region off; 4 = capability taken from data[1]; 5 = capability not gated by the seal.
-module qkd_kv_die_cfg #(parameter integer NRST = 43, parameter integer CAP = 0, parameter integer MUT = 0) (
+// KV-SRAM-CTL 10-19: PCOPIES > 1 = that many KEPT identical copies of the POR synchroniser output ps[1] (same D ps[0],
+// clock and async clear; family wire g_pc.prv, ot_rst_split) for the synthesis reset split; default 1 = unchanged.
+module qkd_kv_die_cfg #(parameter integer NRST = 43, parameter integer CAP = 0, parameter integer MUT = 0, parameter integer PCOPIES = 1) (
     input  wire               ck, por_n,
     input  wire               cfg_we, input wire [7:0] cfg_addr, input wire [63:0] cfg_data,
     output reg  [32*5-1:0]    ectl_a_cfg, ectl_b_cfg, ectl_c_cfg,
@@ -38,6 +40,11 @@ module qkd_kv_die_cfg #(parameter integer NRST = 43, parameter integer CAP = 0, 
     reg [1:0] ps;
     always @(posedge ck or negedge por_n) if (!por_n) ps <= 2'b00; else ps <= {ps[0], 1'b1};
     wire pr_n = ps[1];
+    generate if (PCOPIES > 1) begin : g_pc
+        (* keep *) reg [PCOPIES-2:0] pc_q;
+        always @(posedge ck or negedge por_n) if (!por_n) pc_q <= {(PCOPIES-1){1'b0}}; else pc_q <= {(PCOPIES-1){ps[0]}};
+        (* keep, ot_rst_split *) wire [PCOPIES-1:0] prv = {pc_q, ps[1]};
+    end endgenerate
     // write port pin registers
     reg we_q; reg [7:0] a_q; reg [63:0] d_q;
     always @(posedge ck or negedge pr_n) if (!pr_n) we_q <= 1'b0; else we_q <= cfg_we;

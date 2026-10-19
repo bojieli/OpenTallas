@@ -1,0 +1,5 @@
+PASS KV_WPRG_MU5_LOCKSTEP mismatches0 boots60 starts787 dones490 slots2017 faults25 cycles57362
+- rtl/test/mu_qwen_1018/tb_kv_wprg_mu5_lockstep.sv:64: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 115us; walltime 0.031 s; speed 3.751 ms/s
+- Verilator: cpu 0.031 s on 1 threads; allocated 7 MB

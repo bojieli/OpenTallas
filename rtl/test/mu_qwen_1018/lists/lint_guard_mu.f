@@ -105,3 +105,5 @@ rtl/qwen_sys/host_20261013/qkd_host_tx_class_rr.sv
 rtl/qwen_sys/host_20261013/qkd_host_rx_class_admission_rr.sv
 rtl/qwen_sys/mu_qwen_20261018/qkd_host_native_token_endpoint_cancel_mu.sv
 rtl/qwen_sys/mu_qwen_20261018/host_cluster_mu/qkd_hr_core_guard.v
+physical/asap7_memory_macros_v2/ctl_sram_1r1w_64x64_p192/ctl_sram_1r1w_64x64_p192.v
+physical/asap7_memory_macros_v2/ctl_sram_1r1w_64x128_p192/ctl_sram_1r1w_64x128_p192.v

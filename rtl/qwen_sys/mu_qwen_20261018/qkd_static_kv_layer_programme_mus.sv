@@ -25,7 +25,16 @@
 //            reset-relay split (physical/common_flow/ot_rst_copies.py).
 // MUT (bench only): 2 = stage output xor 1 (as the original); MUT 1 of the original (writer offset) is not carried.
 // MU must be 1 (the multi-user form; the generator passes MUT 0 / MU 1).
-module qkd_static_kv_layer_programme_mus #(parameter integer MUT=0,parameter integer MU=1)(
+// KV-SRAM-CTL 10-19 (mu6): CTLSRAM selects the storage family of the two row tables (defaults keep the mu5 view):
+//   0 = 2 x ot_sram_1r1w_128x256_m1_r2c2 (mu5; W/E faces 410/409 contacts on 41.064 um = 9.98/um > 6: FAIL)
+//   1 = rightsized 64-word banks ctl_sram_1r1w_64x64_p192: u_rowa 4 banks (256 b), u_rowb 3 banks (192 b >= 168 b read)
+//   2 = rightsized 64-word banks ctl_sram_1r1w_64x128_p192: u_rowa 2 banks, u_rowb 2 banks
+//   Both families: 64 words >= the 36 rows used (row = stage - 1, the 128-word masters' address bit 6 was tied 0),
+//   same single-clock 1R1W port, same registered one-edge read, same compiler behavioural model, no repair ports
+//   (they were tied off); contacts at 0.192 um pitch (<= 5.21/um on every face).  Bits 192..255 of rowb are never
+//   read (fields end at bit 167).  0 added edges.  RCOPIES = KEPT copies of the reset pin flop (family rnv).
+module qkd_static_kv_layer_programme_mus #(parameter integer MUT=0,parameter integer MU=1,parameter integer CTLSRAM=0,
+ parameter integer RCOPIES=4)(
  input wire ck,rst_n,
  input wire cfg_we,input wire[8:0]cfg_addr,input wire[63:0]cfg_data,
  input wire start,authority_valid,programme_authorized,
@@ -40,7 +49,7 @@ module qkd_static_kv_layer_programme_mus #(parameter integer MUT=0,parameter int
  output reg configured,active,done,fault,output reg[7:0]fault_code,
  output reg[31:0]age,token_cycles
 );
- localparam integer RC=4;
+ localparam integer RC=RCOPIES;
  (* keep = "true", ot_rst_split *) reg[RC-1:0]rnv;
  always @(posedge ck)rnv<={RC{rst_n}};
  wire rn=rnv[0];
@@ -113,12 +122,41 @@ module qkd_static_kv_layer_programme_mus #(parameter integer MUT=0,parameter int
    rd_idx=rd_idx|((start_go&&us==k)?6'd0:(f_wx[k]?c_stage[k]-6'd1:c_stage[k]));
  end
  wire[255:0]rowa,rowb;
- ot_sram_1r1w_128x256_m1_r2c2 u_rowa(.clk(ck),.r_ce_in(|e_begin),.r_addr_in({1'b0,rd_idx}),.rd_out(rowa),
-  .w_ce_in(wq&&!w_end),.w_addr_in({1'b0,w_row}),.wd_in({8{w_data}}),.w_mask_in(a_mask),
+ wire r_ce=|e_begin,wa_ce=wq&&!w_end,wb_ce=(wq&&w_end)||wg;
+ wire[255:0]wa_d={8{w_data}};
+ generate if(CTLSRAM==0)begin:g_s0
+ ot_sram_1r1w_128x256_m1_r2c2 u_rowa(.clk(ck),.r_ce_in(r_ce),.r_addr_in({1'b0,rd_idx}),.rd_out(rowa),
+  .w_ce_in(wa_ce),.w_addr_in({1'b0,w_row}),.wd_in(wa_d),.w_mask_in(a_mask),
   .rr_en(2'b0),.rr_addr(14'b0),.cr_en(2'b0),.cr_sel(16'b0));
- ot_sram_1r1w_128x256_m1_r2c2 u_rowb(.clk(ck),.r_ce_in(|e_begin),.r_addr_in({1'b0,rd_idx}),.rd_out(rowb),
-  .w_ce_in((wq&&w_end)||wg),.w_addr_in({1'b0,w_row}),.wd_in(b_data),.w_mask_in(b_mask),
+ ot_sram_1r1w_128x256_m1_r2c2 u_rowb(.clk(ck),.r_ce_in(r_ce),.r_addr_in({1'b0,rd_idx}),.rd_out(rowb),
+  .w_ce_in(wb_ce),.w_addr_in({1'b0,w_row}),.wd_in(b_data),.w_mask_in(b_mask),
   .rr_en(2'b0),.rr_addr(14'b0),.cr_en(2'b0),.cr_sel(16'b0));
+ end else if(CTLSRAM==1)begin:g_s1
+ ctl_sram_1r1w_64x64_p192 u_rowa_b0(.clk(ck),.r_ce_in(r_ce),.r_addr_in(rd_idx),.rd_out(rowa[0+:64]),
+  .w_ce_in(wa_ce),.w_addr_in(w_row),.wd_in(wa_d[0+:64]),.w_mask_in(a_mask[0+:64]));
+ ctl_sram_1r1w_64x64_p192 u_rowa_b1(.clk(ck),.r_ce_in(r_ce),.r_addr_in(rd_idx),.rd_out(rowa[64+:64]),
+  .w_ce_in(wa_ce),.w_addr_in(w_row),.wd_in(wa_d[64+:64]),.w_mask_in(a_mask[64+:64]));
+ ctl_sram_1r1w_64x64_p192 u_rowa_b2(.clk(ck),.r_ce_in(r_ce),.r_addr_in(rd_idx),.rd_out(rowa[128+:64]),
+  .w_ce_in(wa_ce),.w_addr_in(w_row),.wd_in(wa_d[128+:64]),.w_mask_in(a_mask[128+:64]));
+ ctl_sram_1r1w_64x64_p192 u_rowa_b3(.clk(ck),.r_ce_in(r_ce),.r_addr_in(rd_idx),.rd_out(rowa[192+:64]),
+  .w_ce_in(wa_ce),.w_addr_in(w_row),.wd_in(wa_d[192+:64]),.w_mask_in(a_mask[192+:64]));
+ ctl_sram_1r1w_64x64_p192 u_rowb_b0(.clk(ck),.r_ce_in(r_ce),.r_addr_in(rd_idx),.rd_out(rowb[0+:64]),
+  .w_ce_in(wb_ce),.w_addr_in(w_row),.wd_in(b_data[0+:64]),.w_mask_in(b_mask[0+:64]));
+ ctl_sram_1r1w_64x64_p192 u_rowb_b1(.clk(ck),.r_ce_in(r_ce),.r_addr_in(rd_idx),.rd_out(rowb[64+:64]),
+  .w_ce_in(wb_ce),.w_addr_in(w_row),.wd_in(b_data[64+:64]),.w_mask_in(b_mask[64+:64]));
+ ctl_sram_1r1w_64x64_p192 u_rowb_b2(.clk(ck),.r_ce_in(r_ce),.r_addr_in(rd_idx),.rd_out(rowb[128+:64]),
+  .w_ce_in(wb_ce),.w_addr_in(w_row),.wd_in(b_data[128+:64]),.w_mask_in(b_mask[128+:64]));
+ assign rowb[255:192]=64'd0;
+ end else begin:g_s2
+ ctl_sram_1r1w_64x128_p192 u_rowa_b0(.clk(ck),.r_ce_in(r_ce),.r_addr_in(rd_idx),.rd_out(rowa[0+:128]),
+  .w_ce_in(wa_ce),.w_addr_in(w_row),.wd_in(wa_d[0+:128]),.w_mask_in(a_mask[0+:128]));
+ ctl_sram_1r1w_64x128_p192 u_rowa_b1(.clk(ck),.r_ce_in(r_ce),.r_addr_in(rd_idx),.rd_out(rowa[128+:128]),
+  .w_ce_in(wa_ce),.w_addr_in(w_row),.wd_in(wa_d[128+:128]),.w_mask_in(a_mask[128+:128]));
+ ctl_sram_1r1w_64x128_p192 u_rowb_b0(.clk(ck),.r_ce_in(r_ce),.r_addr_in(rd_idx),.rd_out(rowb[0+:128]),
+  .w_ce_in(wb_ce),.w_addr_in(w_row),.wd_in(b_data[0+:128]),.w_mask_in(b_mask[0+:128]));
+ ctl_sram_1r1w_64x128_p192 u_rowb_b1(.clk(ck),.r_ce_in(r_ce),.r_addr_in(rd_idx),.rd_out(rowb[128+:128]),
+  .w_ce_in(wb_ce),.w_addr_in(w_row),.wd_in(b_data[128+:128]),.w_mask_in(b_mask[128+:128]));
+ end endgenerate
  // ---- events ----
  wire[3:0]e_ctrl=f_ctrl,e_k=f_k,e_v=f_v,e_issue=f_issue,e_run=f_run,e_writer=f_writer,e_link=f_link,e_quiet=f_quiet,e_end=f_end;
  wire collide=(e_any&(e_any-4'd1))!=0;                  // two or more contexts fire on this edge

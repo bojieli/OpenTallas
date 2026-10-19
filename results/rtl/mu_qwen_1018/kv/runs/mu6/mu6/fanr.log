@@ -1,0 +1,5 @@
+PASS KV_FANR_MU6_LOCKSTEP mismatches0 cycles 400000 ph1_edges 98205 boot_words 60723 fault_edges 39957
+- rtl/test/mu_qwen_1018/tb_kv_fanr_mu6_lockstep.sv:45: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 800us; walltime 0.248 s; speed 3.229 ms/s
+- Verilator: cpu 0.248 s on 1 threads; allocated 7 MB

@@ -20,7 +20,10 @@
 // PIPE (MU-KV-CTL3 10-19, = KV-CTL mu2 PIPE of the original; 0 = unchanged): the 32-group drain AND gets its own register
 //   (drained_all_q, guards see the drain 1 edge earlier vs the compiled roots: compiler QUIET / drain window +1 ck before
 //   enter / leave) and the root - k compare offsets are captured with the root words (roots are static once sealed).
-module qkd_static_kv_ownership_calendar_mu #(parameter integer MUT = 0, parameter integer MU = 0, parameter integer PIPE = 0, parameter integer SAFE = 0) (
+// KV-SRAM-CTL 10-19: RCOPIES > 1 (MU only) = that many KEPT identical copies of the reset pin flop rn (family wire
+// g_mu.g_rc.rnv, ot_rst_split) for the synthesis reset-relay split (<= 32 loads a copy); default 1 = unchanged.
+module qkd_static_kv_ownership_calendar_mu #(parameter integer MUT = 0, parameter integer MU = 0, parameter integer PIPE = 0, parameter integer SAFE = 0,
+    parameter integer RCOPIES = 1) (
     input wire ck, rst_n,
     input wire cfg_we, input wire [1:0] cfg_addr, input wire [31:0] cfg_data,
     input wire go,
@@ -40,6 +43,11 @@ generate if (MU == 0) begin : g_plain
 end else begin : g_mu
     (* keep *) reg rn;
     always @(posedge ck) rn <= rst_n;
+    if (RCOPIES > 1) begin : g_rc
+        (* keep *) reg [RCOPIES-2:0] rc_q;
+        always @(posedge ck) rc_q <= {(RCOPIES-1){rst_n}};
+        (* keep, ot_rst_split *) wire [RCOPIES-1:0] rnv = {rc_q, rn};
+    end
     reg we_q, go_q, host_q, upstream_q;
     reg [1:0] addr_q; reg [31:0] data_q, drained_q, fault_q;
     always @(posedge ck) begin

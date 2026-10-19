@@ -18,7 +18,11 @@
 //           the flop table was read: 0 added cycles.
 //   RCOPIES N > 1: N KEPT identical copies of reset_pin_n (family wire g_rc.rpv, ot_rst_split) for the synthesis
 //           reset-relay split (physical/common_flow/ot_rst_copies.py); reset_pin_n stays copy 0.
-module qkd_kv_native_programme #(parameter integer MUT=0,parameter integer VMAP=0,parameter integer RCOPIES=1,parameter integer SRAM=0)(
+// KV-SRAM-CTL 10-19 (mu6): CTLSRAM (SRAM 1 only) selects the root-row storage family; default 0 keeps the mu5 view.
+//   0 = ot_sram_1r1w_128x256_m1_r2c2 (faces 9.98 contacts/um > 6); 1 = 3 x ctl_sram_1r1w_64x64_p192 (192 b >= 160 b);
+//   2 = 2 x ctl_sram_1r1w_64x128_p192.  64 words >= the 36 rows used, same port / one-edge read / model, 0 added edges.
+module qkd_kv_native_programme #(parameter integer MUT=0,parameter integer VMAP=0,parameter integer RCOPIES=1,parameter integer SRAM=0,
+ parameter integer CTLSRAM=0)(
  input wire ck,rst_n,
  input wire cfg_we,input wire[7:0]cfg_addr,input wire[63:0]cfg_data,
  input wire start,input wire[5:0]stage,input wire[15:0]epoch,input wire[17:0]token,
@@ -115,10 +119,27 @@ module qkd_kv_native_programme #(parameter integer MUT=0,parameter integer VMAP=
   reg[5:0]wq_row;
   always @(posedge ck)wq_row<=cfg_stage;
   wire[255:0]rd;
-  ot_sram_1r1w_128x256_m1_r2c2 u_rows(.clk(ck),.r_ce_in(start_p),.r_addr_in({1'b0,selected_stage-6'd1}),.rd_out(rd),
-   .w_ce_in(wq_v),.w_addr_in({1'b0,wq_row}),.wd_in({96'd0,{5{wq_data}}}),
-   .w_mask_in({96'd0,{32{wq_word[4]}},{32{wq_word[3]}},{32{wq_word[2]}},{32{wq_word[1]}},{32{wq_word[0]}}}),
+  wire[5:0]r_row=selected_stage-6'd1;
+  wire[255:0]w_d={96'd0,{5{wq_data}}};
+  wire[255:0]w_m={96'd0,{32{wq_word[4]}},{32{wq_word[3]}},{32{wq_word[2]}},{32{wq_word[1]}},{32{wq_word[0]}}};
+  if(CTLSRAM==0)begin:g_s0
+  ot_sram_1r1w_128x256_m1_r2c2 u_rows(.clk(ck),.r_ce_in(start_p),.r_addr_in({1'b0,r_row}),.rd_out(rd),
+   .w_ce_in(wq_v),.w_addr_in({1'b0,wq_row}),.wd_in(w_d),.w_mask_in(w_m),
    .rr_en(2'b0),.rr_addr(14'b0),.cr_en(2'b0),.cr_sel(16'b0));
+  end else if(CTLSRAM==1)begin:g_s1
+  ctl_sram_1r1w_64x64_p192 u_rows_b0(.clk(ck),.r_ce_in(start_p),.r_addr_in(r_row),.rd_out(rd[0+:64]),
+   .w_ce_in(wq_v),.w_addr_in(wq_row),.wd_in(w_d[0+:64]),.w_mask_in(w_m[0+:64]));
+  ctl_sram_1r1w_64x64_p192 u_rows_b1(.clk(ck),.r_ce_in(start_p),.r_addr_in(r_row),.rd_out(rd[64+:64]),
+   .w_ce_in(wq_v),.w_addr_in(wq_row),.wd_in(w_d[64+:64]),.w_mask_in(w_m[64+:64]));
+  ctl_sram_1r1w_64x64_p192 u_rows_b2(.clk(ck),.r_ce_in(start_p),.r_addr_in(r_row),.rd_out(rd[128+:64]),
+   .w_ce_in(wq_v),.w_addr_in(wq_row),.wd_in(w_d[128+:64]),.w_mask_in(w_m[128+:64]));
+  assign rd[255:192]=64'd0;
+  end else begin:g_s2
+  ctl_sram_1r1w_64x128_p192 u_rows_b0(.clk(ck),.r_ce_in(start_p),.r_addr_in(r_row),.rd_out(rd[0+:128]),
+   .w_ce_in(wq_v),.w_addr_in(wq_row),.wd_in(w_d[0+:128]),.w_mask_in(w_m[0+:128]));
+  ctl_sram_1r1w_64x128_p192 u_rows_b1(.clk(ck),.r_ce_in(start_p),.r_addr_in(r_row),.rd_out(rd[128+:128]),
+   .w_ce_in(wq_v),.w_addr_in(wq_row),.wd_in(w_d[128+:128]),.w_mask_in(w_m[128+:128]));
+  end
   assign rt0=rd[31:0];assign rt1=rd[63:32];assign rt2=rd[95:64];assign rt3=rd[127:96];assign rts=rd[159:128];
  end endgenerate
  always @(posedge ck or negedge reset_pin_n)

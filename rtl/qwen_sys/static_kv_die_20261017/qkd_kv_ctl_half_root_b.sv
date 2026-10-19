@@ -12,7 +12,12 @@
 // as a writer lane 0 word (kvjc3_pc_chain writer_ages).  Boot is elastic (init phase): no compiled slot is added.
 // MUT (bench only): root2_b 1 = a boot word overrides a writer edge with no fault.
 // ---------------------------------------------------------------------------------------------------------------------
-module qkd_kv_es_fan_root2_b #(parameter integer MUT = 0, parameter integer RCOPIES = 1) (
+// KV-SRAM-CTL 10-19 (mu6, SAFE checklist item 3): PH1C = 1 replaces the phase register ph1 (mu5 census: 1,033 loads, the
+// select of the two 256-bit lane-pair data muxes) by 17 KEPT identical copies (same D / clock / async clear): copy 0 drives
+// the narrow selects (av, xv, pc fields, boot terms, fault), copies 1..16 drive one 32-bit slice of DB / DA each (<= ~32
+// loads a copy), and the runtime part-selects es_p[288*hi + 1 +: 256] / es_p[288*lo + 1 +: 256] / [5*hi +: 5] become
+// explicit constant-index 2:1 muxes (the gate's runtime_partselect warning).  Same function on every edge; 0 = mu5 form.
+module qkd_kv_es_fan_root2_b #(parameter integer MUT = 0, parameter integer RCOPIES = 1, parameter integer PH1C = 0) (
     input  wire            ck,
     input  wire            rst_n,
     input  wire [4*288-1:0] es,
@@ -81,13 +86,32 @@ module qkd_kv_es_fan_root2_b #(parameter integer MUT = 0, parameter integer RCOP
     wire bt_x = bw_p[0] && (ev_now || ph1);
     wire use_b = (MUT == 1) ? bw_p[0] : bt;
     // ---- the edge word (field map: qkd_kv_es_fan_half) ----
+    wire [255:0] db_s, da_s; wire [4:0] qb_s, qa_s, pb_s, pa_s;
+    generate if (PH1C == 0) begin : g_ph0
+        assign db_s = es_p[288*hi + 1 +: 256]; assign da_s = es_p[288*lo + 1 +: 256];
+        assign qb_s = epc_p[5*hi +: 5]; assign qa_s = epc_p[5*lo +: 5];
+        assign pb_s = dpc_p[5*hi +: 5]; assign pa_s = dpc_p[5*lo +: 5];
+    end else begin : g_ph1
+        // copies 1..16 of ph1: identical D, clock and async clear (kept flops, ot_keep_regs)
+        (* keep *) reg [15:0] ph1c;
+        always @(posedge ck or negedge rs_q)
+            if (!rs_q) ph1c <= 16'd0; else ph1c <= {16{ev_now && MUT != 2}};
+        genvar gs;
+        for (gs = 0; gs < 8; gs = gs + 1) begin : g_sl
+            // hi = ph1 ? 3 : 1, lo = ph1 ? 2 : 0
+            assign db_s[32*gs +: 32] = ph1c[gs]     ? es_p[865 + 32*gs +: 32] : es_p[289 + 32*gs +: 32];
+            assign da_s[32*gs +: 32] = ph1c[8 + gs] ? es_p[577 + 32*gs +: 32] : es_p[  1 + 32*gs +: 32];
+        end
+        assign qb_s = ph1 ? epc_p[15 +: 5] : epc_p[5 +: 5]; assign qa_s = ph1 ? epc_p[10 +: 5] : epc_p[0 +: 5];
+        assign pb_s = ph1 ? dpc_p[15 +: 5] : dpc_p[5 +: 5]; assign pa_s = ph1 ? dpc_p[10 +: 5] : dpc_p[0 +: 5];
+    end endgenerate
     wire [782:0] hn = {cd_p[15:0], ca_p[2:0], ca_p[7:3], cd_p[17:16], c_pc,                 // CVL CRG CPC CST CV
                        ep_p, tok_p, ss_p,                                                    // EP TOK SS
                        ea_p, {eid_p, egen_p}, {id_p, gen_p}, es_p[286],                      // EAD EID CTX SV
                        use_b ? bw_p[36:8] : es_p[257 +: 29],                                 // AD
-                       es_p[288*hi + 1 +: 256], use_b ? bw_p[292:37] : es_p[288*lo + 1 +: 256], // DB DA
-                       epc_p[5*hi +: 5], epc_p[5*lo +: 5], dpc_p[5*hi +: 5],                 // QB QA PB
-                       use_b ? bw_p[7:3] : dpc_p[5*lo +: 5],                                 // PA
+                       db_s, use_b ? bw_p[292:37] : da_s,                                    // DB DA
+                       qb_s, qa_s, pb_s,                                                     // QB QA PB
+                       use_b ? bw_p[7:3] : pa_s,                                             // PA
                        est_p, use_b ? bw_p[2:1] : dst_p, xv, av};                            // EST DST XV AV
     always @(posedge ck or negedge rs_q)
         if (!rs_q) begin h <= 784'd0; fault <= 1'b0; end

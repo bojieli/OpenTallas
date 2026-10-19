@@ -1,0 +1,2 @@
+rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_half_root_b.sv
+rtl/test/mu_qwen_1018/tb_kv_fanr_mu6_lockstep.sv

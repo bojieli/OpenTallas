@@ -112,3 +112,5 @@ rtl/qwen_sys/mu_qwen_20261018/qkd_host_peer_coordinator_codec_mu.sv
 rtl/qwen_sys/mu_qwen_20261018/qkd_host_tp8_coordinator_mu.sv
 rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv
 rtl/qwen_sys/mu_qwen_20261018/host_cluster_mu/qkd_hr_core_peer.v
+physical/asap7_memory_macros_v2/ctl_sram_1r1w_64x64_p192/ctl_sram_1r1w_64x64_p192.v
+physical/asap7_memory_macros_v2/ctl_sram_1r1w_64x128_p192/ctl_sram_1r1w_64x128_p192.v

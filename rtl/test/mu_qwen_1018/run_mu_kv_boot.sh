@@ -24,6 +24,8 @@ case "$CASE" in
  # user 1 stage 1 moved onto a user-0 event edge (no list check: the RTL's own collision fault)
  #                                                                    FAIL: 'layer programme / dispatcher fault .*lprg fault 10'
  kb_collide) IMG=$K/mut_collide.hex; PX=+NOLIST;;
+ # KV-SRAM-CTL 10-19: the same boot through the mu6b tile storage (CTLSRAM 2, 6 x 64x128 banks)  PASS expected
+ kb_ctl2) MF=rtl/test/mu_qwen_1018/tb_mu_kv_boot.sv; FROM='qkd_kvs_ctl dut('; TO='qkd_kvs_ctl #(.CTLSRAM(2)) dut(';;
 esac
 W="$OUT/src_$CASE"; rm -rf "$W"; mkdir -p "$W"
 for f in $(cat "$L/$TB.f") $DATA; do mkdir -p "$W/$(dirname "$f")"; cp "$ROOT/$f" "$W/$f"; done

@@ -1,0 +1,245 @@
+{
+ "schema": "opentallas.kv-sram-ctl-family.1019",
+ "pitch_um": 0.192,
+ "face_rule": "<= 6.0 contacts/um on every pin face (full face AND worst 1 um window)",
+ "replaces": {
+  "master": "ot_sram_1r1w_128x256_m1_r2c2",
+  "count": 3,
+  "faces": {
+   "W": [
+    410,
+    41.064,
+    9.984
+   ],
+   "E": [
+    409,
+    41.064,
+    9.96
+   ]
+  },
+  "raw_area_um2": 11681.559
+ },
+ "masters": [
+  {
+   "master": "ctl_sram_1r1w_64x64_p192",
+   "words": 64,
+   "bits": 64,
+   "mux": 1,
+   "ports": "1r1w (single clock clk)",
+   "spare_rows": 0,
+   "spare_cols": 0,
+   "addr_bits": 6,
+   "width_um": 32.856,
+   "height_um": 21.624,
+   "area_um2": 710.4781,
+   "core_um": [
+    32.7536,
+    20.535163260579264
+   ],
+   "pin_stretch_um": 0.969,
+   "pin_pitch_um": 0.192,
+   "faces": {
+    "W": {
+     "contacts": 104,
+     "face_um": 21.624,
+     "full_face_per_um": 4.8095,
+     "worst_1um_window": 6,
+     "min_pitch_um": 0.192,
+     "span_um": 19.776
+    },
+    "E": {
+     "contacts": 103,
+     "face_um": 21.624,
+     "full_face_per_um": 4.7632,
+     "worst_1um_window": 6,
+     "min_pitch_um": 0.192,
+     "span_um": 19.584
+    }
+   },
+   "track_legal_all_orientations": true,
+   "allowed_orientations": [
+    "R0",
+    "MX",
+    "MY",
+    "R180"
+   ],
+   "clk_to_q_ps": {
+    "tt": 263.7,
+    "ss": 343.61,
+    "ff": 212.28
+   },
+   "setup_ps": {
+    "tt": 28.26,
+    "ss": 39.8,
+    "ff": 24.69
+   },
+   "hold_ps": {
+    "tt": 21.6,
+    "ss": 30.07,
+    "ff": 19.67
+   },
+   "min_period_ps": {
+    "tt": 255.5,
+    "ss": 333.25,
+    "ff": 205.54
+   },
+   "stretch_lead_elmore_bound_ps": 0.002,
+   "views": {
+    "ctl_sram_1r1w_64x64_p192.lef": "7a882c626f56ca71d76aa5c06f1981f9e29e71f8e7e76f4b8d924aa693967417",
+    "ctl_sram_1r1w_64x64_p192.v": "1bdf64bab7d0c928d2dfea819140fecdba170b882da922585f68d1c1b2c49738",
+    "ctl_sram_1r1w_64x64_p192_bb.v": "e29d0eb0c71b0e71531b69d80c0777b284727ced4cb3a84db07f7750c6b5529b",
+    "ctl_sram_1r1w_64x64_p192_ff.lib": "d01e1bf577cfd273b40c1cba7f0c52e1cb95cd379f074ed104959b8c94188639",
+    "ctl_sram_1r1w_64x64_p192_ss.lib": "c357f9ba3dde8de76f5c480f750063602b06a553cc184d55f84906009a32eec1",
+    "ctl_sram_1r1w_64x64_p192_tt.lib": "a6d160d614296869bd66216bdcdaa4f942a8cf9f521c0b6ac06788616e3dc481"
+   }
+  },
+  {
+   "master": "ctl_sram_1r1w_64x128_p192",
+   "words": 64,
+   "bits": 128,
+   "mux": 1,
+   "ports": "1r1w (single clock clk)",
+   "spare_rows": 0,
+   "spare_cols": 0,
+   "addr_bits": 6,
+   "width_um": 52.296,
+   "height_um": 39.96,
+   "area_um2": 2089.7482,
+   "core_um": [
+    52.1072,
+    20.535163260579264
+   ],
+   "pin_stretch_um": 19.401,
+   "pin_pitch_um": 0.192,
+   "faces": {
+    "W": {
+     "contacts": 200,
+     "face_um": 39.96,
+     "full_face_per_um": 5.005,
+     "worst_1um_window": 6,
+     "min_pitch_um": 0.192,
+     "span_um": 38.208
+    },
+    "E": {
+     "contacts": 199,
+     "face_um": 39.96,
+     "full_face_per_um": 4.98,
+     "worst_1um_window": 6,
+     "min_pitch_um": 0.192,
+     "span_um": 38.016
+    }
+   },
+   "track_legal_all_orientations": true,
+   "allowed_orientations": [
+    "R0",
+    "MX",
+    "MY",
+    "R180"
+   ],
+   "clk_to_q_ps": {
+    "tt": 289.75,
+    "ss": 378.03,
+    "ff": 233.71
+   },
+   "setup_ps": {
+    "tt": 28.26,
+    "ss": 39.8,
+    "ff": 24.69
+   },
+   "hold_ps": {
+    "tt": 21.6,
+    "ss": 30.07,
+    "ff": 19.67
+   },
+   "min_period_ps": {
+    "tt": 281.54,
+    "ss": 367.68,
+    "ff": 226.97
+   },
+   "stretch_lead_elmore_bound_ps": 0.8116,
+   "views": {
+    "ctl_sram_1r1w_64x128_p192.lef": "9ae42f5484c9d91c9af5edb3f88c3321b43d3a15aa50b0b4d810915f6a41a899",
+    "ctl_sram_1r1w_64x128_p192.v": "e7509e9e8d3a0223642546605b55649d82369257949b38b538993e4c9daafb71",
+    "ctl_sram_1r1w_64x128_p192_bb.v": "4da0c3fe79951b6ff06a36cdaf060bc949a995e08179326904123b9872607504",
+    "ctl_sram_1r1w_64x128_p192_ff.lib": "4dc32fc776afeda85f8f57a164e27b9e27c6acecbea2c32c247f57f833fc111f",
+    "ctl_sram_1r1w_64x128_p192_ss.lib": "bb325d0832167d430647ade8bfbf6bed761dd6b01e0deaadcd96a8b7e132a00c",
+    "ctl_sram_1r1w_64x128_p192_tt.lib": "4b3ac73587753367634db00a0ff863df56f5d78a7ad56b76031c6ed682143e1d"
+   }
+  }
+ ],
+ "clients": [
+  {
+   "client": "lprg.u_rowa (stage rows P_ctrl..P_quiet)",
+   "rows_used": 36,
+   "bits_used": 256,
+   "master": "ctl_sram_1r1w_64x64_p192",
+   "banks": 4,
+   "physical_bits": 16384,
+   "raw_area_um2": 2841.912,
+   "capacity_ok": true
+  },
+  {
+   "client": "lprg.u_rowa (stage rows P_ctrl..P_quiet)",
+   "rows_used": 36,
+   "bits_used": 256,
+   "master": "ctl_sram_1r1w_64x128_p192",
+   "banks": 2,
+   "physical_bits": 16384,
+   "raw_area_um2": 4179.496,
+   "capacity_ok": true
+  },
+  {
+   "client": "lprg.u_rowb (P_end, next gap x4, ==0/==1 flags)",
+   "rows_used": 36,
+   "bits_used": 168,
+   "master": "ctl_sram_1r1w_64x64_p192",
+   "banks": 3,
+   "physical_bits": 12288,
+   "raw_area_um2": 2131.434,
+   "capacity_ok": true
+  },
+  {
+   "client": "lprg.u_rowb (P_end, next gap x4, ==0/==1 flags)",
+   "rows_used": 36,
+   "bits_used": 168,
+   "master": "ctl_sram_1r1w_64x128_p192",
+   "banks": 2,
+   "physical_bits": 16384,
+   "raw_area_um2": 4179.496,
+   "capacity_ok": true
+  },
+  {
+   "client": "wprg.u_rows (5 cycle32 roots)",
+   "rows_used": 36,
+   "bits_used": 160,
+   "master": "ctl_sram_1r1w_64x64_p192",
+   "banks": 3,
+   "physical_bits": 12288,
+   "raw_area_um2": 2131.434,
+   "capacity_ok": true
+  },
+  {
+   "client": "wprg.u_rows (5 cycle32 roots)",
+   "rows_used": 36,
+   "bits_used": 160,
+   "master": "ctl_sram_1r1w_64x128_p192",
+   "banks": 2,
+   "physical_bits": 16384,
+   "raw_area_um2": 4179.496,
+   "capacity_ok": true
+  }
+ ],
+ "kits": {
+  "qkd_kvs_ctl_mu6": "10 x ctl_sram_1r1w_64x64_p192 (rowa 4, rowb 3, rows 3)",
+  "qkd_kvs_ctl_mu6b": "6 x ctl_sram_1r1w_64x128_p192 (rowa 2, rowb 2, rows 2)"
+ },
+ "claim_boundary": "calibrated analytical abstracts from the unchanged compiler (bitcell, periphery, timing, behaviour); no transistor layout / macro SPICE; stretch lead bounded analytically",
+ "source_sha256": {
+  "tools/mem_compiler/build_ctl_p192_1019.py": "e879cdf4bab1c9d1274bb4a63bf2bd9e20ff08ce412c1afde791fc9fd36dadc0",
+  "tools/mem_compiler/sram_gen.py": "b876be0fa55dad638d999cfee084c2176014e60720236e32025f53cef63faccf",
+  "tools/mem_compiler/views.py": "903794eb3e93fc6bee510ad90d84f16a30bcfba5a97b3b6dc1babec235be8dfa",
+  "tools/mem_compiler/build_aligned_v2.py": "a880643a4e3f3ee2e417dc6ebb2652d8c4300035b60478ec41372a2d4ec2db2f",
+  "tools/mem_compiler/asap7.py": "5d655e0acdaaf386a1c8602b9ca01dfed64250f094355547703e95a40509afe6",
+  "tools/mem_compiler/asap7_calibration.json": "db9005199aaf928750e61b6831e7b9552d0eafa0522a1220fe3cdd526a2902b0"
+ }
+}

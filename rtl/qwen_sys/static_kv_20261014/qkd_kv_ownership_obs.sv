@@ -28,7 +28,8 @@
 //                       context must be flushed by reset before the HOST may reuse it (status bit of the token result).
 // MUT (bench negative controls): 1 = go on every stage_start; 2 = es lanes not observed; 3 = drained ignores guard
 // faults; 4 = no host synchroniser (raw host level used, one edge early).
-module qkd_kv_ownership_obs #(parameter integer QUIET_WIN = 16, parameter integer MUT = 0) (
+// KV-SRAM-CTL 10-19: RCOPIES > 1 = KEPT identical copies of the reset pin flop rn (family g_rc.rnv, ot_rst_split).
+module qkd_kv_ownership_obs #(parameter integer QUIET_WIN = 16, parameter integer MUT = 0, parameter integer RCOPIES = 1) (
     input  wire        ck, rst_n,
     input  wire        stage_start, input wire [5:0] stage,
     input  wire        word_valid, input wire [3:0] es_sv, es_wv,
@@ -43,6 +44,11 @@ module qkd_kv_ownership_obs #(parameter integer QUIET_WIN = 16, parameter intege
     end endgenerate
     (* keep *) reg rn;
     always @(posedge ck) rn <= rst_n;
+    generate if (RCOPIES > 1) begin : g_rc
+        (* keep *) reg [RCOPIES-2:0] rc_q;
+        always @(posedge ck) rc_q <= {(RCOPIES-1){rst_n}};
+        (* keep, ot_rst_split *) wire [RCOPIES-1:0] rnv = {rc_q, rn};
+    end endgenerate
     // ---- pin registers ----
     reg ss_q, wv_q, act_q, of_q; reg [5:0] st_q; reg [3:0] sv_q, ev_q; reg [31:0] dr_q, gf_q;
     always @(posedge ck or negedge rn)

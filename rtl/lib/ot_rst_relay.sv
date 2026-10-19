@@ -16,7 +16,12 @@
 module ot_rst_relay #(
     parameter integer REGIONS     = 4,
     parameter integer SYNC_STAGES = 2,
-    parameter integer TREE_STAGES = 1
+    parameter integer TREE_STAGES = 1,
+    // KV-SRAM-CTL 10-19: COPIES > 1 = each region's last-stage relay flop gets COPIES-1 KEPT identical copies (same D,
+    // clock and async clear) forming the family wire g_cp[k].rcv (ot_rst_split); the synthesis reset split
+    // (physical/common_flow/ot_rst_copies.py) spreads region k's loads over them.  rst_n[k] stays copy 0, so timing
+    // (assert / RELEASE_CYCLES) is unchanged.  Default 1 = no extra cells (every existing view unchanged).
+    parameter integer COPIES      = 1
 ) (
     input  wire               clk,
     input  wire               rst_n_in,
@@ -49,6 +54,21 @@ module ot_rst_relay #(
     endgenerate
 
     assign rst_n = relay_q[TREE_STAGES-1];
+    genvar k;
+    generate if (COPIES > 1) begin : g_cps
+        for (k = 0; k < REGIONS; k = k + 1) begin : g_cp
+            (* keep = "true", dont_touch = "true" *) reg [COPIES-2:0] cp_q;
+            always @(posedge clk or negedge rst_n_in) begin
+                if (!rst_n_in)
+                    cp_q <= {(COPIES-1){1'b0}};
+                else if (TREE_STAGES == 1)
+                    cp_q <= {(COPIES-1){sync_q[SYNC_STAGES-1]}};
+                else
+                    cp_q <= {(COPIES-1){relay_q[(TREE_STAGES > 1) ? TREE_STAGES-2 : 0][k]}};
+            end
+            (* keep = "true", ot_rst_split *) wire [COPIES-1:0] rcv = {cp_q, relay_q[TREE_STAGES-1][k]};
+        end
+    end endgenerate
 
 `ifndef SYNTHESIS
     initial begin

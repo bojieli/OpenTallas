@@ -21,7 +21,9 @@
 //   same-cycle rows (equal t[3:0], t[5:4] = lane) hit four DIFFERENT groups and every PC streams its V rows in the
 //   controller's existing v_consumer_order (rank {t[12:9], t[6], low3}) = the pair's consumption order, one sector
 //   every other core edge.  No transposer buffer.  K placement is unchanged.  0 = the historical t[2:0] layout.
-module qkd_kv_static_writer #(parameter integer MUT = 0, parameter integer RST_RELAY = 0, parameter integer VMAP = 0) (
+// KV-SRAM-CTL 10-19: RST_COPIES > 1 = KEPT copies per reset region relay flop (ot_rst_relay COPIES; <= 32 loads a copy).
+module qkd_kv_static_writer #(parameter integer MUT = 0, parameter integer RST_RELAY = 0, parameter integer VMAP = 0,
+    parameter integer RST_COPIES = 1) (
     input wire ck, rst_n,
     input wire word_valid, input wire [10:0] word_tag,
     input wire [511:0] word_data,
@@ -45,7 +47,7 @@ module qkd_kv_static_writer #(parameter integer MUT = 0, parameter integer RST_R
     wire [RST_REGIONS-1:0] rr;
     generate
         if (RST_RELAY != 0) begin : g_rst
-            ot_rst_relay #(.REGIONS(RST_REGIONS), .SYNC_STAGES(2), .TREE_STAGES(1))
+            ot_rst_relay #(.REGIONS(RST_REGIONS), .SYNC_STAGES(2), .TREE_STAGES(1), .COPIES(RST_COPIES))
                 u_rst (.clk(ck), .rst_n_in(rst_n), .rst_n(rr));
         end else begin : g_rst_direct
             assign rr = {RST_REGIONS{rst_n}};
