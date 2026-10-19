@@ -26,12 +26,42 @@
     "remove_reset_as_payload_enable": true
   },
   "latency": {
-    "operation_edges_added_goal": 0,
-    "ingress_Q": "price after partition selection",
-    "egress_Q": "macro output native Q, valid/tag Q"
+    "all_inputs": 2,
+    "read_packet": 2,
+    "open_sector_prefetch": 2,
+    "retire": 2,
+    "reset_release_edges": 2,
+    "root_select_copies": "same-next-D, no operation edge"
   },
   "clock_reach_um_limit": 405,
   "outline": "OPEN until mapped area; five macros on43.2um lattice, channels by pin density",
   "area": "baseline admitted census first; no mapped estimate or closure claim yet",
-  "no_rate_credit": true
+  "no_rate_credit": true,
+  "implementation_plan": "17 quarter-read roots, 4x16bit kept SOP leaves each; 8slot x16x16bit kept write leaves",
+  "metadata": "2bank epoch/count/base + registered final-row ready; no tag1280 or valid128 arrays",
+  "measured_predecessor": {
+    "std_area_um2": 3532.48614,
+    "over32_data_control_nets": 95,
+    "max_fanout": 3652,
+    "reset_fanout": 1553,
+    "unknown_cells": 0
+  },
+  "controls": {
+    "read_selector_bits": 2720,
+    "write_select_bits": 512,
+    "selector_q_data_loads": 16,
+    "write_q_data_loads": 17,
+    "ring_data_read_loads": 17,
+    "keep_hierarchy": true,
+    "postABC_flatten_no_opt_merge": true
+  },
+  "storage": {
+    "payload_ring_bits": 2048,
+    "input_pipeline_bits": 2548,
+    "input_pipeline_depth": 2,
+    "payload_reset": false,
+    "tag_array_bits": 0,
+    "read_pointer_control_bits": 2720
+  },
+  "physical": "OPEN: mapped area then macro channels/405um-reach region budget; no route claim"
 }
