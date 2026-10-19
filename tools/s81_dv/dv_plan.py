@@ -78,6 +78,7 @@ PATHFIX = False                   # --pathfix (MU-DIE-S81/PATH 10-19, p4l only):
                                   # relay bodies -- lr/lt_lk lanes 25 um from the end-column frame faces (562 relay 62.6 um
                                   # across), jd_W 10 um under the row-2 frames, 276 xring / unit lanes 15-30 um apart (relay
                                   # 32.4 um across), HBM rq / rd jogs 30 um over the controllers (682 relay 75.6 um across)
+RESET_SPACE = False               # opt-in dedicated reset corridor, actual physical qualification still required
 PLACEFIX = False                  # --placefix: true lane/relay geometry, preserve every block slot
 STREET_PITCH = 34.0               # PATHFIX: 276 street lanes 34 um apart (relay 32.4 across + 1.6 um); 11 slots -170..+170
 COL_EXW, COL_EXE = {}, {}         # p4k: extra slice-column width W / E of the slice, per column (um)
@@ -92,6 +93,10 @@ XB = 1104                         # x stream beat: 64 FP8 codes + 2 exps (566 b)
 RET = 68                          # frame return lane (dsfd_m2l_vr_68x1x); p4j: 70 (frame ret / slice rt RTL width)
 CTL = 96                          # slice command (85 b) + done (9 b) + 2 status
 COLL_LANE = 512
+
+
+def street_width(t):
+    return STREET + (30.0 if RESET_SPACE and t == 0 else 0.0)
 
 
 def chain(pts, hop=None):
@@ -270,6 +275,12 @@ def place_rsv(P, facts):
         cnt = [sum(1 for v in gap_of.values() if v == g) for g in range(1, 8)]
         gaps = [RSV_GU * n if n else RSV_GAP for n in cnt]
     w = (x1 - x0 - sum(gaps)) / 8
+    if RESET_SPACE:
+        # Preserve every service reservation exactly. Use existing side whitespace
+        # for reset bodies beside the actual request/return lane bands.
+        x0 -= 151.2
+        x1 += 151.2
+        gaps = [g + 43.2 for g in gaps]
     xs = [x0]
     for g in gaps:
         xs.append(xs[-1] + w + g)
@@ -501,7 +512,7 @@ def unit_lanes(P, facts, colx, streets):
     xm3 = lambda k: colx(3) + SCOL_W + 40.0 + 16.0 * k
     clamp = lambda v, B: min(max(v, B['x'] + 60.0), B['x'] + B['w'] - 60.0)
     qw = Q['x']
-    yN = streets[1] + STREET / 2 + 150.0
+    yN = streets[1] + street_width(1) / 2 + 150.0
     yc, yg = Q['y'] + Q['h'] - 100.0, G['y'] + G['h'] - 150.0
     P._link('cw_seqhost', 'unit', 276, ('seqhost', 'cw', (qw, yc)), ('gunit', 'cw', (G['x'] + G['w'], yg)),
             [(qw, yc), (xm4(1), yc), (xm4(1), yN), (xm3(0), yN), (xm3(0), yg), (G['x'] + G['w'], yg)],
@@ -518,7 +529,7 @@ def unit_lanes(P, facts, colx, streets):
         yj = Q['y'] + 300.0 + 30.0 * k
         ys = streets[0] + 310.0 + 30.0 * k
         if PATHFIX:
-            ys = streets[0] + STREET / 2 - 170.0 + STREET_PITCH * (8 + k)     # street slots 8 / 9
+            ys = streets[0] + street_width(0) / 2 - 170.0 + STREET_PITCH * (8 + k)     # street slots 8 / 9
         yb = S3S['y'] - 150.0 - 30.0 * k
         xw = clamp(colx(3) + 250.0 + 30.0 * k, R5)
         P._link(f'jw_W_l{k}', 'unit', 276, ('seqhost', 'jw', (qw, yj)), ('rsv_05', 'jw', (xw, t5)),
@@ -559,7 +570,7 @@ def host_lanes(P, facts, colx, streets):
     # E/W): hf = 3 x 276 (572 b payload), ht = 1 x 276 (131 b)
     for k, (nm, d) in enumerate((('hf_7N_l0', 'in'), ('hf_7N_l1', 'in'), ('hf_7N_l2', 'in'), ('ht_7N', 'out'))):
         yq = Q['y'] + Q['h'] - 300.0 - 40.0 * k
-        yt = ftop + 90.0 + 50.0 * k
+        yt = ftop + 90.0 + (40.0 if RESET_SPACE else 50.0) * k
         xs = S7['x'] + 80.0 + 50.0 * k
         xm = xm4(2) - 0.0 if k == 0 else xm4(2 + k)
         pts = [(qw, yq), (xm, yq), (xm, yt), (xs, yt), (xs, S7['y'] + S7['h'])]
@@ -573,7 +584,7 @@ def host_lanes(P, facts, colx, streets):
     yj = Q['y'] + 360.0
     ys = streets[0] + 370.0
     if PATHFIX:
-        ys = streets[0] + STREET / 2 + 170.0                                 # street slot 10 (was 10 um under the row-2 frames)
+        ys = streets[0] + street_width(0) / 2 + 170.0                                 # street slot 10 (was 10 um under the row-2 frames)
     yb = S3S['y'] - 240.0
     xw = min(max(colx(3) + 340.0, R5['x'] + 60.0), R5['x'] + R5['w'] - 60.0)
     pts = [(xw, t5), (xw, yb), (xm3(3), yb), (xm3(3), ys), (xm4(1), ys), (xm4(1), yj), (qw, yj)]   # xm4(1): cw uses it above the seqhost only
@@ -694,7 +705,7 @@ def build():
     lo = lambda hs, t: sum(hs[4 * t:4 * t + 2])
     hi = lambda hs, t: sum(hs[4 * t + 2:4 * t + 4])
     st0 = BAND + max(lo(h, 0) for h in heights)
-    t1 = st0 + STREET + max(hi(h, 0) for h in heights)
+    t1 = st0 + street_width(0) + max(hi(h, 0) for h in heights)
     st1 = t1 + max(lo(h, 1) for h in heights)
     streets = (st0, st1)
     ymax = 0.0
@@ -706,7 +717,7 @@ def build():
                 y = streets[t] - lo(hs, t)
                 for r in range(4):
                     if r == 2:
-                        y = streets[t] + STREET
+                        y = streets[t] + street_width(t)
                     h = hs[4 * t + r]
                     if P4H and t == 0 and r == 0 and (c, side) in P4H_DROP:
                         y += h      # p4h: this footprint becomes the regional service region (no frame)
@@ -723,7 +734,7 @@ def build():
     # ---------------------------------------------------------------- slices (centred on their street)
     for c in range(NCOL):
         for t in range(2):
-            ym = streets[t] + STREET / 2
+            ym = streets[t] + street_width(t) / 2
             sm_ = 'dsdv_slice_lep' if P4I and c in (0, NCOL - 1) else 'dsdv_slice'   # p4i: end slices = link endpoint variant
             if P4L and c in (0, NCOL - 1):
                 # S81-LEPV (10-18): the host plane is served by s_7N only -> s_7S binds the host-less E master
@@ -824,7 +835,7 @@ def build():
               P.block(nm, master, 'unit', 'void', colx(c) + (160 if LAYOUT != 'p4' else (160 if TIER_W else 75)), yy, wu, hh)
               if y is not None:
                   y += h + 100
-    ys, yn = streets[0] + STREET / 2, streets[1] + STREET / 2
+    ys, yn = streets[0] + street_width(0) / 2, streets[1] + street_width(1) / 2
     for side, xl in (('W', 0.0), ('E', DIE_W - 260)):
         for t, yc in (('S', ys), ('N', yn)):
             # S81-LINKTO 10-18 (coordinator 0hn decision 2): UCIe cannot cross the switch and every end-slice port crosses
@@ -1315,9 +1326,16 @@ def legalize_stations(P, attempts=0, original=None):
                         else:
                             pts.append(q[2:4])
                         last_axis = axis
-                    segs, count, length = chain(pts, hop=max(200, HOP_UM - 45 - 10 * (l['s'] - original[l['i']])))
-                    if count <= l['s']:
-                        raise ValueError(f'no station phase slack on {l["i"]}')
+                    trial = max(200, HOP_UM - 45 - 10 * (l['s'] - original[l['i']]))
+                    while True:
+                        segs, count, length = chain(pts, hop=trial)
+                        if count > l['s']:
+                            break
+                        if not RESET_SPACE:
+                            raise ValueError(f'no station phase slack on {l["i"]}')
+                        trial -= 20
+                        if trial < 40:
+                            raise ValueError(f'no physical station phase slack on {l["i"]}')
                     l['sp'] = [[round(a,1),round(b,1)] for a,b in chain.stations]
                     l['s'] = count
                     l['h'] = [[round(a,1),round(b,1),round(c,1),round(d,1),l['b']] for a,b,c,d in segs]
@@ -1428,6 +1446,7 @@ def main():
     ap.add_argument('--p4l', action='store_true', help='p4l (S81-DIE6): p4k + no-mix4 + lepw/lepe endpoints (rx 514 on 562 lanes), host plane lanes hf_7N / ht_7N, jd_W, svc up 16')
     ap.add_argument('--mu', type=int, default=0, choices=(0, 1, 2), help='MU-S81/DIE (p4l only): 0 single-user (default, byte-identical), 1 multi-user MU_EN masters + mu lanes, 2 + copy-A/B lane pair on s_0S (+2 SerDes lk_WS2/3)')
     ap.add_argument('--lk-slots', default=None, help='MU-S81-2/DIE: copy the lk_* slot geometry of this plan.json (p4l_lkcol rev2) onto the output plan (post-hoc, after every fact)')
+    ap.add_argument('--reset-space', action='store_true', help='p4l placefix: add30um to south street and24um controller gap from existing north whitespace; physical reset corridor candidate')
     ap.add_argument('--placefix', action='store_true', help='p4l MU: open a 100-um south lane channel using 70-um north whitespace; legalize relay stations without adding stages')
     ap.add_argument('--pathfix', action='store_true', help='MU-DIE-S81/PATH (p4l): street lanes keep their realized band (pin span / relay body) clear of blocks and neighbour relays')
     ap.add_argument('--no-mix4', action='store_true', help='0dv: delete mix4_w / mix4_e (Engram mix = in-slice op ENG); V rungs of columns 2 / 5 join directly')
@@ -1441,12 +1460,17 @@ def main():
     P4F = a.p4f or a.p4g or a.p4h
     global P4G, P4H, P4H_DROP, P4I, P4J, RET, NO_MIX4
     NO_MIX4 = a.no_mix4
-    global P4K, P4L, MU, PATHFIX, PLACEFIX, BAND
+    global P4K, P4L, MU, PATHFIX, PLACEFIX, BAND, STREET, RESET_SPACE, RSV_CH
     P4L = a.p4l
     PLACEFIX = a.placefix
     assert not PLACEFIX or (P4L and a.mu), '--placefix needs --p4l --mu'
     if PLACEFIX:
         BAND += 70.0
+    assert not a.reset_space or PLACEFIX, '--reset-space needs --placefix'
+    RESET_SPACE = a.reset_space
+    if a.reset_space:
+        BAND += 24.0
+        RSV_CH += 24.0
     PATHFIX = a.pathfix or PLACEFIX
     assert not PATHFIX or P4L, '--pathfix needs --p4l'
     MU = a.mu
@@ -1483,6 +1507,9 @@ def main():
         COL_EXE[3] = a.lane_margin
         COL_EXW[4] = a.lane_margin
         DIE_W += a.lane_margin * 2
+        if RESET_SPACE:
+            COL_EXE[3] -= 16.0
+            COL_EXW[4] += 16.0
     if a.layout == 'p3':
         LAYOUT, SCOL_W, SLICE_W, SLICE_H, SVC_W = 'p3', 950.0, 900.0, 4900.0, 4000.0
         PITCH = 2 * FRAME_PITCH + SCOL_W
@@ -1491,7 +1518,7 @@ def main():
     P, facts = build()
     if PLACEFIX:
         facts['placefix'] = dict(south_channel_um=100, array_shift_um=70,
-            service_slots_preserved=True, die_outline_preserved=True,
+            service_slots_preserved=not a.reset_space, die_outline_preserved=True,
             north_frame_clearance_um=round(DIE_H - facts['frame_top_um'], 2))
         facts['placefix']['station_moves'] = legalize_stations(P)
         # Lane-summary ages must describe the same stations as plan.links.
@@ -1500,6 +1527,10 @@ def main():
             for name, row in facts.get(section, {}).items():
                 row['stations'] = actual[name]['s']
                 row['um'] = actual[name]['L']
+    if a.reset_space:
+        facts['reset_space'] = dict(street_add_um=30.0, streets=1, service_controller_gap_add_um=24.0, total_height_used_um=54.0,
+            height_outline_preserved=True, service_dimensions_preserved=True, service_gaps_add_um=43.2,
+            service_region_growth_um=302.4, central_margin_reallocated_e3_to_w4_um=16.0, candidate_only=True, actual_reset_placement_and_reach='OWED')
     geometry_facts(P, facts)
     if P4I:
         p4i_facts(P, facts)

@@ -9,7 +9,7 @@ default `dv_plan` output is unchanged.
 
 All sixteen real tx/rx endpoints are snapped to the new die-facing slot edge.
 Legacy259.2wide post-hoc slots used endpoint x260.0 and some y outside their box.
-The new pair y positions retain100um gaps and contain both actual endpoint rows.
+The new pair y positions retain100um gaps and contain the full actual tx/rx data bands (not only their center points); minimum face-band clearance3.924um.
 Global actual-hop census: max403.1um,0over405,3185stations,863424bit-stages,
 no changed ages, no block overlaps, no relay overlaps and no lane-band crossings.
 Bit-wire cost395674256->395681181bit-um (+0.00175%); worstcut0.5663 unchanged.

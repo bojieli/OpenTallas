@@ -28,7 +28,7 @@ Top-port nets (clock roots, rst_n, PMA, land_fault) are special (not die-top rou
       -> CASE/{views/, die.v, place.tcl, run.tcl, run.sh, sta_<c>.tcl, sta.sh, landing.sdc, classify.py, case.json}
 Labels: NOT_A_DIE_RESULT while case.json census lists stand-ins.
 """
-import argparse, collections, json, math, re, shutil, subprocess, sys
+import argparse, collections, heapq, json, math, re, shutil, subprocess, sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -250,11 +250,40 @@ class Placer:
                         return True
         return False
 
-    def put(self, x, y, w, h, prefer=None, step=None, rmax=400.0):
+    def put(self, x, y, w, h, prefer=None, step=None, rmax=400.0, max_distance=None, exact_edges=False, origin_grid=None):
         """lower-left nearest (x, y) with no overlap: first along `prefer` (unit vector list), then a square spiral"""
         step = step or max(2.0, min(w, h) / 2)
         def candidates():
             yield 0.0, 0.0
+            if exact_edges:
+                # A 17.28um cell fits an18.8um corridor, but a4um sampling
+                # phase may miss every legal y. Enumerate actual keepout edges,
+                # ordered by true Manhattan displacement, without widening reach.
+                xs,ys={x,1.2,self.W-1.2-w},{y,1.2,self.H-1.2-h}
+                seen=set()
+                for bx in range(int((x-rmax-w)//self.B),int((x+rmax+w)//self.B)+1):
+                    for by in range(int((y-rmax-h)//self.B),int((y+rmax+h)//self.B)+1):
+                        for a in self.buck.get((bx,by),()):
+                            if a in seen:continue
+                            seen.add(a)
+                            xs.update((a[0]-w-.500001,a[2]+.500001))
+                            ys.update((a[1]-h-.500001,a[3]+.500001))
+                if origin_grid:
+                    gx,gy,ox,oy=origin_grid
+                    def snap(values,g,o):
+                        return {o+k*g for v in values for k in (math.floor((v-o)/g),math.ceil((v-o)/g))}
+                    xs,ys=snap(xs,gx,ox),snap(ys,gy,oy)
+                xs=sorted((v-x for v in xs if abs(v-x)<=rmax),key=lambda v:(abs(v),v))
+                ys=sorted((v-y for v in ys if abs(v-y)<=rmax),key=lambda v:(abs(v),v))
+                queue=[(0.0,0,0)];visited={(0,0)}
+                while queue:
+                    _,i,j=heapq.heappop(queue)
+                    dx,dy=xs[i],ys[j]
+                    if max_distance is None or abs(dx)+abs(dy)<=max_distance:
+                        yield dx,dy
+                    for a,b in ((i+1,j),(i,j+1)):
+                        if a<len(xs) and b<len(ys) and (a,b) not in visited:
+                            visited.add((a,b));heapq.heappush(queue,(abs(xs[a])+abs(ys[b]),a,b))
             for k in range(1, int(rmax / step) + 1):
                 d = k * step
                 for ux, uy in (prefer or []):
@@ -265,6 +294,12 @@ class Placer:
                     yield d, t * step
                     yield -d, t * step
         for dx, dy in candidates():
+            if max_distance is not None and abs(dx) + abs(dy) > max_distance:
+                continue
+            if origin_grid:
+                gx,gy,ox,oy=origin_grid
+                if any(abs(v-round(v))>1e-6 for v in ((x+dx-ox)/gx,(y+dy-oy)/gy)):
+                    continue
             r = (x + dx, y + dy, x + dx + w, y + dy + h)
             if not self.hits(r):
                 self.add(r)

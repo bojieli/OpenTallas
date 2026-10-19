@@ -18,6 +18,17 @@ def candidate(original):
     p=copy.deepcopy(original)
     width,height=518.4,3844.8
     old_width=p['facts']['die_um'][0]
+    bounds={}
+    for link in p['links']:
+        half=link['b']*.096/2+1.5
+        for end in link['e']:
+            name=p['blocks'][end[0]]['name']
+            if name.startswith('lk_'):
+                low,high=bounds.get(name,(float('inf'),float('-inf')))
+                bounds[name]=(min(low,end[3]-half),max(high,end[3]+half))
+    pair_top={(side,tier):(bounds[f'lk_{side}{tier}0'][1]+bounds[f'lk_{side}{tier}1'][0]-100)/2
+              for side in 'WE' for tier in 'SN'}
+    face_clearance=[]
     for b in p['blocks']:
         b['x']+=259.2
         if b['name'].startswith('lk_'):
@@ -27,7 +38,7 @@ def candidate(original):
             suffix=b['name'][-1]
             if suffix not in '01':raise ValueError('copy-B extra slots need explicit six-slot repack proof')
             # 100um gap, with both actual tx/rx rows inside the real facing edge.
-            top=7597.5 if tier=='S' else 19049.7
+            top=pair_top[(b['name'][3],tier)]
             b['y']=top-height if suffix=='0' else top+100
     byidx=p['blocks']
     for l in p['links']:
@@ -38,7 +49,10 @@ def candidate(original):
             b=byidx[e[0]]
             if not b['name'].startswith('lk_'):continue
             face=b['x']+b['w'] if b['name'].startswith('lk_W') else b['x']
-            assert b['y']<=e[3]<=b['y']+b['h'],(b['name'],e)
+            half=l['b']*.096/2+1.5
+            clearance=min(e[3]-half-b['y'],b['y']+b['h']-e[3]-half)
+            assert clearance>=0,(b['name'],e,clearance)
+            face_clearance.append(clearance)
             e[2]=face
             if side==0:l['h'][0][0]=face
             else:l['h'][-1][2]=face
@@ -56,7 +70,7 @@ def candidate(original):
     maxhop=max(abs(h[2]-h[0])+abs(h[3]-h[1]) for l in p['links'] for h in l['h'])
     changed=[a['i'] for a,b in zip(p['links'],original['links']) if a['s']!=b['s']]
     proof=dict(scope='DIAGNOSTIC_NOT_FIT_OR_CLOCK_CLOSURE',slots=sum(b['name'].startswith('lk_') for b in p['blocks']),
-        slot_um=[width,height],array_shift_x_um=259.2,die_width_add_um=518.4,
+        slot_um=[width,height],min_data_face_band_clearance_um=min(face_clearance),array_shift_x_um=259.2,die_width_add_um=518.4,
         max_hop_um=maxhop,over_405=sum(abs(h[2]-h[0])+abs(h[3]-h[1])>405.0001 for l in p['links'] for h in l['h']),
         changed_station_ages=changed,block_overlaps=overlaps,lane_band_um=sum(bands.values()),relay_overlap_count=sum(relays.values()),
         old_reticle_margin_um=original['facts']['reticle_margin_um'],new_reticle_margin_um=p['facts']['reticle_margin_um'],

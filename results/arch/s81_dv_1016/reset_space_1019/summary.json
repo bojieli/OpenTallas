@@ -1,0 +1,165 @@
+{
+  "scope": "GEOMETRY_CANDIDATE_NOT_BOUND_OR_ROUTED",
+  "source_base": "6e3559855",
+  "first_failure": "st_rs_39_18_2 could not place17.28square within1200 of15951.36,7463.28. Strict bind9130PASS but first physicalcase generator failed; no GRT.",
+  "candidate": {
+    "street_add_um": 30.0,
+    "streets": 1,
+    "service_controller_gap_add_um": 24.0,
+    "total_height_used_um": 54.0,
+    "height_outline_preserved": true,
+    "service_dimensions_preserved": true,
+    "service_gaps_add_um": 43.2,
+    "service_region_growth_um": 302.4,
+    "central_margin_reallocated_e3_to_w4_um": 16.0,
+    "candidate_only": true,
+    "actual_reset_placement_and_reach": "OWED"
+  },
+  "serdes": {
+    "scope": "DIAGNOSTIC_NOT_FIT_OR_CLOCK_CLOSURE",
+    "slots": 8,
+    "slot_um": [
+      518.4,
+      3844.8
+    ],
+    "min_data_face_band_clearance_um": 3.9239999999990687,
+    "array_shift_x_um": 259.2,
+    "die_width_add_um": 518.4,
+    "max_hop_um": 404.89999999999964,
+    "over_405": 0,
+    "changed_station_ages": [],
+    "block_overlaps": [],
+    "lane_band_um": 0,
+    "relay_overlap_count": 0,
+    "old_reticle_margin_um": [
+      515.7,
+      500.0
+    ],
+    "new_reticle_margin_um": [
+      256.55,
+      500.0
+    ],
+    "margin_policy_um": 500.0,
+    "margin_policy_pass": false,
+    "native_children_and_parent_clock": "OWED: actual per-root TT/FF, reset/status and <=405um internal timed transport",
+    "coll_storage_successor": {
+      "status": "prospective_not_qualified",
+      "required_um": [
+        561.6,
+        561.6
+      ],
+      "std_um2": 7357.69494,
+      "macros": 15
+    },
+    "global_routing_metrics": {
+      "worst_cut": {
+        "before": 0.5663,
+        "after": 0.5663
+      },
+      "over_reach_bits": {
+        "before": 0,
+        "after": 0
+      },
+      "relays": {
+        "before": 3182,
+        "after": 3182
+      },
+      "relay_bit_stages": {
+        "before": 864100,
+        "after": 864100
+      },
+      "sum_bit_um_hops": {
+        "before": 400345130,
+        "after": 400352055
+      },
+      "cut_windows_over_limit": {
+        "before": 0,
+        "after": 0
+      }
+    },
+    "source_plan_sha256": "cfdf2378e7644efeeea92a0d193085b9e1a3c40c6debffb9c53adf31ff748e53"
+  },
+  "reset_body_probe": {
+    "scope": "SIGNAL_GRID_GEOMETRY_ONLY_PG_AND_RESET_TOPOLOGY_NOT_QUALIFIED",
+    "origin_grid_um": [
+      0.048,
+      0.048,
+      0,
+      0
+    ],
+    "failures": [],
+    "max_move_um": 352.73199999999997,
+    "reset_request_translation_x_um": 259.20000000000005
+  },
+  "reset_bodies": 5184,
+  "changed_link_station_counts": [
+    {
+      "link": "r_f_3R10",
+      "before_stations": 8,
+      "after_stations": 7
+    },
+    {
+      "link": "x_f_4L02_l1",
+      "before_stations": 0,
+      "after_stations": 1
+    },
+    {
+      "link": "x_f_4L03_l3",
+      "before_stations": 2,
+      "after_stations": 3
+    },
+    {
+      "link": "r_f_4L03",
+      "before_stations": 2,
+      "after_stations": 3
+    },
+    {
+      "link": "x_f_4L13_l3",
+      "before_stations": 2,
+      "after_stations": 3
+    },
+    {
+      "link": "hrq_01",
+      "before_stations": 5,
+      "after_stations": 6
+    },
+    {
+      "link": "hrd_10",
+      "before_stations": 0,
+      "after_stations": 1
+    },
+    {
+      "link": "hrq_12",
+      "before_stations": 1,
+      "after_stations": 2
+    },
+    {
+      "link": "hrq_15",
+      "before_stations": 4,
+      "after_stations": 5
+    },
+    {
+      "link": "ht_7N",
+      "before_stations": 68,
+      "after_stations": 67
+    },
+    {
+      "link": "mu_7S",
+      "before_stations": 78,
+      "after_stations": 69
+    }
+  ],
+  "schedule": "OWED: rederive K/landing bundle ages/compiler; reset graph and gate-calendar chains must be rebuilt from actual legalized nodes with per-edge<=405 checks.405 probe displacement is NOT an edge reach proof.",
+  "pg": "OWED actual PDN/via/strap connection; lattice_summary is potential track access only.",
+  "default_byte_identity": {
+    "plan.json": "6465d75e46038e1763f262abc082df272e5201425e17b681cbfb37568b07423d",
+    "dv_links_record.json": "8ae9479aac4c558bc7e16e3b81417169634d64ca50d6707d3597b2bd496e0d3c"
+  },
+  "unchanged": {
+    "service_dimensions": true,
+    "non_SerDes_block_dimensions": true,
+    "die_height_um": 25000,
+    "native_child_geometry": "not qualified; all earlier caveats retained"
+  },
+  "plan_sha256": "f81acf98fc7f0723a6b360426237ba497435d0b8490955275438eeb09219348e"
+}

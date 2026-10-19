@@ -1,0 +1,99 @@
+{
+  "master": "dsfd_rly_1_WN",
+  "lef_sha256": "ea3b49f5a008c33aa7dfb2401cccb0f7ce889ee12ca05eb9dbcb6ce4e6f52118",
+  "class": "BLOCK",
+  "has_SITE": false,
+  "has_SYMMETRY": false,
+  "R0_origin_pitch_um": 0.048,
+  "signal_shapes": {
+    "ck": [
+      {
+        "layer": "M5",
+        "preferred_track_center_um": 8.027999999999999
+      }
+    ],
+    "i": [
+      {
+        "layer": "M4",
+        "preferred_track_center_um": 8.7
+      },
+      {
+        "layer": "M4",
+        "preferred_track_center_um": 8.7
+      }
+    ],
+    "o": [
+      {
+        "layer": "M5",
+        "preferred_track_center_um": 9.084
+      },
+      {
+        "layer": "M5",
+        "preferred_track_center_um": 9.084
+      }
+    ],
+    "rs": [
+      {
+        "layer": "M5",
+        "preferred_track_center_um": 8.123999999999999
+      }
+    ]
+  },
+  "pg_track_access": {
+    "VDD": [
+      {
+        "M5_full_wire_track_count": 3,
+        "min_M6_full_wire_crossings_all_origin_phases": 202,
+        "via_enclosure": "OWED actual technology VIA56 and parent strap selection"
+      },
+      {
+        "M5_full_wire_track_count": 2,
+        "min_M6_full_wire_crossings_all_origin_phases": 202,
+        "via_enclosure": "OWED actual technology VIA56 and parent strap selection"
+      },
+      {
+        "M5_full_wire_track_count": 2,
+        "min_M6_full_wire_crossings_all_origin_phases": 202,
+        "via_enclosure": "OWED actual technology VIA56 and parent strap selection"
+      },
+      {
+        "M5_full_wire_track_count": 2,
+        "min_M6_full_wire_crossings_all_origin_phases": 202,
+        "via_enclosure": "OWED actual technology VIA56 and parent strap selection"
+      },
+      {
+        "M5_full_wire_track_count": 3,
+        "min_M6_full_wire_crossings_all_origin_phases": 202,
+        "via_enclosure": "OWED actual technology VIA56 and parent strap selection"
+      }
+    ],
+    "VSS": [
+      {
+        "M5_full_wire_track_count": 3,
+        "min_M6_full_wire_crossings_all_origin_phases": 202,
+        "via_enclosure": "OWED actual technology VIA56 and parent strap selection"
+      },
+      {
+        "M5_full_wire_track_count": 2,
+        "min_M6_full_wire_crossings_all_origin_phases": 202,
+        "via_enclosure": "OWED actual technology VIA56 and parent strap selection"
+      },
+      {
+        "M5_full_wire_track_count": 2,
+        "min_M6_full_wire_crossings_all_origin_phases": 202,
+        "via_enclosure": "OWED actual technology VIA56 and parent strap selection"
+      },
+      {
+        "M5_full_wire_track_count": 2,
+        "min_M6_full_wire_crossings_all_origin_phases": 202,
+        "via_enclosure": "OWED actual technology VIA56 and parent strap selection"
+      },
+      {
+        "M5_full_wire_track_count": 3,
+        "min_M6_full_wire_crossings_all_origin_phases": 202,
+        "via_enclosure": "OWED actual technology VIA56 and parent strap selection"
+      }
+    ]
+  },
+  "pg_network": "OWED: dv_rvcase has no PDN/globalconnect generation; this checks potential metal-track access only"
+}
