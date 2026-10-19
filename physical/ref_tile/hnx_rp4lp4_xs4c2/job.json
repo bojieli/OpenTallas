@@ -1,0 +1,94 @@
+{
+ "name": "hnx_rp4lp4_xs4c2-xs4c2-COMMIT",
+ "block": "hnx_xs4",
+ "ref_tile": true,
+ "owner": "Claude HBM-NEXT-SM4",
+ "purpose": "NEXT-release HBM die (not a release gate), PROG lever (a): shared 4-lane x store of the SM P=4 leaf (copy of the closed d4g xs p45m with 4 lane SRAM sets); CRITICAL prefix hnx_rp4lp4*: coordinator PNG review before any submit",
+ "threads": 16,
+ "peak_ram_gb": 96,
+ "source": {
+  "branch": "claude/hbm-next-sm4-1019",
+  "commit": "COMMIT"
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; hnx_xs4 u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS -DOT_SMH_XLK -DOT_FP_DATA_NORST -DOT_SMH_DRST0 -DOT_SMH_RSTRELAY -DOT_SMH_HIER --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hdc/ot_hdc_prefix.sv rtl/v41rom/ot_v41_bterm.sv rtl/v41rom/ot_v41_bterm2.sv rtl/gpu/ot_gpu_fadd.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_fastfp.sv rtl/gpu/ot_gpu_tree.sv rtl/gpu/ot_gpu_issue.sv rtl/gpu/ot_gpu_stack.sv rtl/gpu/ot_gpu_tc_col.sv rtl/gpu/ot_gpu_bd_col.sv rtl/hdc/v41/ot_hdc_blockdot.sv rtl/gpu/ot_gpu_bulk_copy.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_delay.sv rtl/hbm_accel/epilogue/ot_hbm_accel_issue.sv rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq4.sv rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq5.sv rtl/hbm_accel/sm/ot_hbm_accel_tc16.sv rtl/hbm_accel/sm/ot_hbm_accel_bd_col.sv rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv rtl/hbm_accel/sm/ot_hbm_accel_issue_pq.sv rtl/hbm_accel/sm/ot_hbm_accel_stack.sv rtl/hbm_accel/sm/ot_hbm_accel_smh_bd.sv rtl/hbm_accel/sm/ot_hbm_accel_smh.sv physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v physical/hbm_accel_macros/ot_sram_1r1w_512x256_m1_r2c2/ot_sram_1r1w_512x256_m1_r2c2_bb.v rtl/lib/ot_hdly.sv rtl/lib/ot_rst_relay.sv rtl/hbm_next/sm/hnx_xs4.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "leaf_lanes_xs4",
+    "expect": "pass",
+    "pass_regex": "BENCH PASS p4_m0_t0",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "cmd": "bash rtl/hbm_next/sm/tb/run_leaf_bench.sh {RUN}/xs4 4 0 0 -DHNX_XS4"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hnx_rp4lp4_xs4c2/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hnx_rp4lp4_xs4c2/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 96
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hnx_rp4lp4_xs4c2 --out {RUN}/record/views/hnx_xs4 --macro-view physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/hnx_rp4lp4_xs4c2/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/hnx_rp4lp4_xs4c2/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/hnx_rp4lp4_xs4c2/hnx_rp4lp4_xs4c2-xs4c2-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "hnx_xs4 = d4g ot_hbm_accel_smh_xs (p45m recipe: region pins, M4 H-face pins, M6 cap) with P=4 lane copies of the 4 x 128x256 macros (16 macros, 4 x 4 grid, lane p = row p), per-lane kept macro pin registers, per-lane x operand register (o_ix 4 x 788), lane write mask wl[3:0] riding the write pipeline; shared landing / strap tree / rotation / o_iw. Outline 501.12 x 289.44 (d4g xs 302.4 x 155.544, macro pitch kept 116.424 x 62.64). FACE SPLIT 10-19 (SM4 (a) tile layout): N = block-dot operands (o_iwb + o_ixb x P, 2,660 b, to the 4 bdc above), W / E = BF16 operands (shared weight copy per face, kept duplicate i-stage registers on W, + lanes 0-1 W / 2-3 E, 768 b per face, to the tcl stacks beside the store); S = landing inputs unchanged. CLOCK FIX 10-19 (SM4B): xs4 r3 gate pin-flop spread TT 93.5 / FF 86.0 > 80 with one root. Measured per face (TT, 4_1_cts): N 524-591, S 523-596, W 530-555, E 552-616 ps; all-register arrival 501-666 with every leaf net <= 6 ps internal -> the spread is H-tree level imbalance (E-face pin regs late vs the symmetric W face), not distance (0.50 x 0.29 mm tile, < the ~1 mm region-tree threshold). Variant xs4c2: unclustered + obstruction-unaware H-tree (qkd_d2d_static 475x281 macro tile precedent: 637 -> 442..508 ps)."
+}
