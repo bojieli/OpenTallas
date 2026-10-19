@@ -60,5 +60,112 @@
   ],
   "basis_meta": "/home/ubuntu/artifacts/hdie-d4/d4g_gen2c/vplan_pre/synth/ot_hbm_hc_root_static/meta.json",
   "basis_note": "Implementation source list from prior synthesis; source hashes are re-recorded from current checkout and fresh synthesis is mandatory."
+ },
+ "hcb0": {
+  "master": "ot_hbm_hc_bankq0_static",
+  "sources": [
+   "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_bank_static.sv",
+   "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_bankq_static.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_hcp.sv",
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc/v41/ot_hdc_fsqrt.sv",
+   "rtl/hdc/v41/ot_hdc_fsqrt_c12.sv"
+  ],
+  "basis_meta": "/home/ubuntu/artifacts/hdie-d4/d4g_gen2e/vplan_a/synth/ot_hbm_hc_bankq0_static/meta.json",
+  "basis_note": "Implementation source list from prior synthesis; current hashes recorded by generation, fresh synthesis required."
+ },
+ "hcb": {
+  "master": "ot_hbm_hc_bankq_static",
+  "sources": [
+   "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_bank_static.sv",
+   "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_bankq_static.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_hcp.sv",
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc/v41/ot_hdc_fsqrt.sv",
+   "rtl/hdc/v41/ot_hdc_fsqrt_c12.sv"
+  ],
+  "basis_meta": "/home/ubuntu/artifacts/hdie-d4/d4g_gen2c/vplan_pre/synth/ot_hbm_hc_bankq_static/meta.json",
+  "basis_note": "Implementation source list from prior synthesis; current hashes recorded by generation, fresh synthesis required."
+ },
+ "hcbft": {
+  "master": "ot_hbm_hc_bankq_ft_static",
+  "sources": [
+   "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_bank_static.sv",
+   "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_bankq_static.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_hcp.sv",
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc/v41/ot_hdc_fsqrt.sv",
+   "rtl/hdc/v41/ot_hdc_fsqrt_c12.sv"
+  ],
+  "basis_meta": "/home/ubuntu/artifacts/hdie-d4/d4g_gen2/vplan_a0/synth/ot_hbm_hc_bankq_ft_static/meta.json",
+  "basis_note": "Implementation source list from prior synthesis; current hashes recorded by generation, fresh synthesis required."
+ },
+ "pgslice": {
+  "master": "ot_hbm_su_static_pgslice_lg",
+  "sources": [
+   "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_ins.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_lane.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_lane_pinreg.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_side.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_data_store.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_pinned_bank.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_static_vm_ports.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/programme/multirate_bridge.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice_lg.sv",
+   "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv",
+   "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_fastfp_lat.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_sfu.sv",
+   "rtl/hdc/v41/ot_hdc_fsqrt.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+   "rtl/hdc/v41/ot_hdc_fsqrt_c12.sv"
+  ],
+  "basis_meta": "/home/ubuntu/artifacts/hdie-d4/d4g_gen2/vplan_fast/synth/ot_hbm_su_static_pgslice_lg__pv0/meta.json",
+  "basis_note": "Implementation source list from prior synthesis; current hashes recorded by generation, fresh synthesis required."
+ },
+ "qdq": {
+  "master": "ot_hgi_qdq_host_split",
+  "sources": [
+   "rtl/hbm_accel/generic/ot_hgi_fp4qdq.sv",
+   "rtl/hbm_accel/generic/qw/ot_hgi_qw_dec3.sv",
+   "rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_host_split.sv",
+   "rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_host_static.sv",
+   "rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_lg_port_group.sv",
+   "rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_record_calendar.sv",
+   "rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_split.sv",
+   "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
+   "rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_fastfp_lat.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_fp32_f12.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_sfu.sv",
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc/v41/ot_hdc_fsqrt.sv",
+   "rtl/hdc/v41/ot_hdc_fsqrt_c12.sv"
+  ],
+  "basis_meta": "/home/ubuntu/artifacts/hdie-d4/d4g_gen2/vplan_a0/synth/ot_hgi_qdq_host_split/meta.json",
+  "basis_note": "Implementation source list from prior synthesis; current hashes recorded by generation, fresh synthesis required."
  }
 }
