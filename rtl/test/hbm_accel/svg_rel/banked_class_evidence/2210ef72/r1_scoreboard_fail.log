@@ -1,0 +1,4 @@
+Verilator 5.050 2026-07-01 rev v5.050
+[2746000] %Fatal: tb_banked_class.sv:38: Assertion failed in tb_banked_class.x0: CLASS_FAIL SVG=0 PREL=0 MUT=0 cycle=275 cls=0/0 valid=1/1 fault=0/1
+%Error: rtl/test/hbm_accel/svg_rel/tb_banked_class.sv:38: Verilog $stop
+Aborting...
