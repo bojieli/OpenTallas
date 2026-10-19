@@ -109,6 +109,17 @@ CASES["rl_gen_bhd_lp_residualk"] = RLB + ["--real-lanes", f"{QC}/gen_bhd_lp/coll
                                           "KT2=2", "KTV2=3", "KR2=3", "KRV2=2", "--lats", "376", "--expect-fail"]
 CASES["rl_asbuilt_lx000"] = RLB + ["--real-lanes", f"{QC}/gen_bhd_asbuilt/coll_lane_latency.json", "--lx", "0", "0", "0", "--lats", "376", "--expect-fail"]
 
+# Q-COLLCAL-RL 10-18 (Q.STA.GEN.6 bench): the FIRST GEN that ran the Q-COLLCAL code = netlist-only compute GEN dv2f14bq
+# (claude/qlb-gen-1018 @9634b2b0d; ot-epyc4 qlb-gen-1018/dv2f14bq/out/case/coll_lane_latency.json copied, LX 10/0/9,
+# port 2 K tx/txv 6/6 rx/rxv 5/5).  PASS = as built at LS 376; negatives = the qtp8 fixed-delay calendar LX 7/0/7 and a
+# port-2 TX valid K one off its data K (KTV2=7; this GEN already has KTV2=6 = KT2, so the bhd KTV2=6 mutant is as built here).
+QR = "results/rtl/qcollcal_rl_1018/gen_dv2f14bq/coll_lane_latency.json"
+CASES.update({
+    "rl_dv2f14bq_ls376": RLB + ["--real-lanes", QR, "--lats", "376"],
+    "rl_dv2f14bq_lx707": RLB + ["--real-lanes", QR, "--lats", "376", "--lx", "7", "0", "7", "--expect-fail"],
+    "rl_dv2f14bq_ktv2skew": RLB + ["--real-lanes", QR, "--real-lanes-override", "KTV2=7", "--lats", "376", "--expect-fail"],
+})
+
 if __name__ == "__main__":
     if sys.argv[1] == "list":
         print("\n".join(CASES))
