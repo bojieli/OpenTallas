@@ -135,7 +135,7 @@ SVPROBE
  vvp "$O/four_state/primitive_probe.vvp" > "$O/four_state/primitive_probe.log" 2>&1
  grep -q 'PRIMITIVE_PROBE PASS cases13' "$O/four_state/primitive_probe.log"
  iverilog -g2012 -s tb_dsdv_mu_hwin_early_capture -DOT_MEM_NO_INIT -DFOUR_STATE_GUARDS \
-  -DNSLOT_TEST=2 -DNEV=1 -DMIN_D -DOCCUPIED_RESET_STRESS -o "$O/four_state/tb.vvp" "${projected_files[@]}" \
+  -DNSLOT_TEST=${FOUR_STATE_NS:-2} -DNEV=${FOUR_STATE_NEV:-1} -DMIN_D -DOCCUPIED_RESET_STRESS -o "$O/four_state/tb.vvp" "${projected_files[@]}" \
   > "$O/four_state/build.log" 2>&1
  python3 - "$O/four_state/tb.vvp" "$O/four_state/binding_audit.json" <<'PYBIND'
 import json,pathlib,re,sys
@@ -194,6 +194,15 @@ calendar_mutants)
  RUN_SEEDS=1 run timestamp_shift tb_dsdv_mu_hwin_early_capture 'FAIL:EARLY_MITER' +define+NSLOT_TEST=2 +define+NEV=1 +define+MIN_D +define+TIMESTAMP_MUTANT
  RUN_SEEDS=1 run delayed_retirement tb_dsdv_mu_hwin_early_capture 'FAIL:EARLY_MITER' +define+NSLOT_TEST=2 +define+NEV=1 +define+MIN_D +define+DELAY_RETIRE_MUTANT
  RUN_SEEDS=1 SIM_RESET_PHASE=5 run reset_validity tb_dsdv_mu_hwin_early_capture 'FAIL:EARLY_MITER' +define+NSLOT_TEST=2 +define+NEV=1 +define+MIN_D +define+OCCUPIED_RESET_STRESS +define+RESET_VALID_MUTANT
+ ;;
+short_fixture)
+ ns=${SHORT_NS:-2}
+ run nonuniform_short_ns$ns tb_dsdv_mu_hwin_early_capture '^MUWIN PASS' +define+NSLOT_TEST=$ns +define+MIN_D +define+SWEEP256 +define+NONUNIFORM_GAPS +define+SHORT_RL
+ for shift in 0 1; do for seed in 1 19 313; do
+  log="$O/nonuniform_short_ns$ns/run_seed${seed}_rxshift${shift}.log"
+  "$O/nonuniform_short_ns$ns/obj/tb" +verilator+rand+reset+2 +verilator+seed+$seed +rx_shift=$shift > "$log" 2>&1
+  grep -q '^MUWIN RX_EXPIRED PASS' "$log"
+ done;done
  ;;
 *) echo 'unknown phase' >&2; exit 64;;
 esac
