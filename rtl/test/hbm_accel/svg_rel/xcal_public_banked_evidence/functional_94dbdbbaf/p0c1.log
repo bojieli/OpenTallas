@@ -1,0 +1,29 @@
+Verilator 5.050 2026-07-01 rev v5.050
+PUBLIC_GO scenario=0 edge=109
+PUBLIC_ACTIVE_GAP_REPAIR scenario=0 edge=116 independent_outstanding5=1 dut_outstanding=1 running=0 app_active=1
+PUBLIC_ACTIVE_GAP_REPAIR scenario=0 edge=117 independent_outstanding5=1 dut_outstanding=1 running=0 app_active=1
+PUBLIC_CAL_DONE scenario=0 edge=119 remaining=0
+PUBLIC_CASE scenario=0 words=4/4 first_delta=4 done=1 old_done=1 go=1 naive_early=0 simultaneous=0 active_gap_repairs=2
+PUBLIC_GO scenario=1 edge=303
+PUBLIC_ACTIVE_GAP_REPAIR scenario=1 edge=310 independent_outstanding5=1 dut_outstanding=1 running=0 app_active=1
+PUBLIC_ACTIVE_GAP_REPAIR scenario=1 edge=311 independent_outstanding5=1 dut_outstanding=1 running=0 app_active=1
+PUBLIC_CAL_DONE scenario=1 edge=317 remaining=0
+PUBLIC_CASE scenario=1 words=8/8 first_delta=4 done=1 old_done=1 go=1 naive_early=0 simultaneous=0 active_gap_repairs=2
+PUBLIC_GO scenario=2 edge=513
+PUBLIC_GO scenario=2 edge=522
+PUBLIC_OLD_DONE_PREDICATE_WITNESS scenario=2 outstanding=2 edge=522
+PUBLIC_CAL_DONE scenario=2 edge=523 remaining=1
+PUBLIC_ACTIVE_GAP_REPAIR scenario=2 edge=529 independent_outstanding5=1 dut_outstanding=1 running=0 app_active=1
+PUBLIC_ACTIVE_GAP_REPAIR scenario=2 edge=530 independent_outstanding5=1 dut_outstanding=1 running=0 app_active=1
+PUBLIC_CAL_DONE scenario=2 edge=532 remaining=0
+PUBLIC_CASE scenario=2 words=8/8 first_delta=4 done=1 old_done=1 go=2 naive_early=1 simultaneous=0 active_gap_repairs=2
+PUBLIC_GO scenario=3 edge=707
+PUBLIC_ACTIVE_GAP_REPAIR scenario=3 edge=714 independent_outstanding5=1 dut_outstanding=1 running=0 app_active=1
+PUBLIC_ACTIVE_GAP_REPAIR scenario=3 edge=715 independent_outstanding5=1 dut_outstanding=1 running=0 app_active=1
+PUBLIC_CAL_DONE scenario=3 edge=717 remaining=0
+PUBLIC_CASE scenario=3 words=4/4 first_delta=4 done=1 old_done=1 go=1 naive_early=0 simultaneous=0 active_gap_repairs=2
+XCAL_PUBLIC_BANKED PASS errors=0 checks=448 mut=0 prel=0 class=1 classmut=0 mirrormut=0 gap=9
+- rtl/test/hbm_accel/svg_rel/tb_xcal_public_banked.sv:159: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 661ns; walltime 0.001 s; speed 594.273 us/s
+- Verilator: cpu 0.001 s on 1 threads; allocated 7 MB

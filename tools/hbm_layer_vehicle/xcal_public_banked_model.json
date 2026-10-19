@@ -109,7 +109,7 @@
     "MIRROR_MUT1": "full175 mirror one edge early"
   },
   "proof": [
-    "original counterpart +4 command/KV and singleGO runtime active/done/fault",
+    "canonical counterpart +4 full175 command/KV and strict done/fault; independently bounded active correction",
     "PREL0/1 and descriptor mode/format association",
     "full64KV and literal commands; reserved200 rejection",
     "tighttwoGO exactone final completion with oldprematuredone witness",
@@ -117,5 +117,53 @@
     "legacy mutants1..5 plus class mismatch and earlymirror FAIL",
     "fleet Verilator5.050 only; immutable source hashes and fail logs"
   ],
+  "functional_receipt": {
+    "source": "94dbdbbaf",
+    "wrapper_RTL": "6daf49dbe",
+    "positive_profiles": 5,
+    "checks_per_profile": 448,
+    "negative_controls": 7,
+    "active_gap_edges": {
+      "single0": [
+        116,
+        117
+      ],
+      "single1": [
+        310,
+        311
+      ],
+      "tight9": [
+        529,
+        530
+      ],
+      "reserved200": [
+        714,
+        715
+      ]
+    },
+    "tight9": {
+      "GO": [
+        513,
+        522
+      ],
+      "completion_consumed": [
+        523,
+        532
+      ],
+      "naive_old_predicate_witness": 522
+    },
+    "simultaneous10": {
+      "GO": [
+        513,
+        523
+      ],
+      "completion_consumed": [
+        523,
+        533
+      ],
+      "simultaneous_edge": 523
+    },
+    "source_RTL_unchanged_since_first_active_mismatch": true
+  },
   "physical": "UNQUALIFIED host/descriptor/collar soft composition; child mapped facts do not qualify this wrapper. No gate/submit, no outline/timing/fanout claim; canonical roots/placement/access/depth/load audits OPEN"
 }

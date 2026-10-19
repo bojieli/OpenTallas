@@ -1,0 +1,28 @@
+ot-run: ot-epyc4       admits   979 GB (avail 774, growth 89, headroom 0, waiters 0/0 GB) load 116/128 running 30 disk 412 GB 
+ot-run: ot-epyc5       admits   688 GB (avail 574, growth 93, headroom 0, waiters 0/0 GB) load 63/128 running 16 disk 564 GB 
+ot-run: ot-epyc6       admits   852 GB (avail 694, growth 97, headroom 0, waiters 0/0 GB) load 20/128 running 8 disk 563 GB 
+ot-run: ot-epyc7       admits  1081 GB (avail 827, growth 70, headroom 0, waiters 0/0 GB) load 28/96 running 19 disk 502 GB 
+ot-run: ot-epyc8       admits  1196 GB (avail 951, growth 113, headroom 0, waiters 0/0 GB) load 54/128 running 38 disk 565 GB 
+ot-run: ot-pve1        admits   149 GB (avail 116, growth 6, headroom 0, waiters 0/0 GB) load 18/28 running 3 disk 1196 GB 
+ot-run: ot-agidock128  admits    99 GB (avail 82, growth 13, headroom 0, waiters 0/0 GB) load 10/64 running 7 disk 46 GB 
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-3264580-1792432235 after 0 s
+RESULT_ROOT=/srv/opentallas-scratch/claude/hbm-xcal-public-banked-1019
+Verilator 5.050 2026-07-01 rev v5.050
+PUBLIC_STATUS_MISMATCH scenario=0 edge=116 got=100 expected=000
+PUBLIC_STATUS_MISMATCH scenario=0 edge=117 got=100 expected=000
+PUBLIC_CASE scenario=0 words=5/5 first_delta=4 done=1 old_done=1 go=1 naive_early=0 simultaneous=0
+PUBLIC_STATUS_MISMATCH scenario=1 edge=310 got=100 expected=000
+PUBLIC_STATUS_MISMATCH scenario=1 edge=311 got=100 expected=000
+PUBLIC_CASE scenario=1 words=8/8 first_delta=4 done=1 old_done=1 go=1 naive_early=0 simultaneous=0
+PUBLIC_OLD_DONE_PREDICATE_WITNESS scenario=2 outstanding=2 edge=522
+PUBLIC_CASE scenario=2 words=10/10 first_delta=4 done=1 old_done=1 go=2 naive_early=1 simultaneous=0
+PUBLIC_STATUS_MISMATCH scenario=3 edge=714 got=101 expected=001
+PUBLIC_STATUS_MISMATCH scenario=3 edge=715 got=101 expected=001
+PUBLIC_CASE scenario=3 words=4/4 first_delta=4 done=1 old_done=1 go=1 naive_early=0 simultaneous=0
+XCAL_PUBLIC_BANKED FAIL errors=6 checks=448 mut=0 prel=1 class=0 classmut=0 mirrormut=0 gap=9
+[660528] %Fatal: tb_xcal_public_banked.sv:135: Assertion failed in tb_xcal_public_banked: public banked XC mismatch
+%Error: rtl/test/hbm_accel/svg_rel/tb_xcal_public_banked.sv:135: Verilog $stop
+Aborting...
+CASE MUT=0 PREL=1 CLASS=0 RC=1
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-3264580-1792432235): exit 0

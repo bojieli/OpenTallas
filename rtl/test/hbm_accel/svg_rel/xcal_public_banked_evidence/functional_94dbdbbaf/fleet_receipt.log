@@ -1,0 +1,144 @@
+ot-run: ot-epyc4       admits   822 GB (avail 689, growth 113, headroom 0, waiters 0/0 GB) load 115/128 running 31 disk 412 GB 
+ot-run: ot-epyc5       admits   740 GB (avail 582, growth 64, headroom 0, waiters 0/0 GB) load 60/128 running 10 disk 564 GB 
+ot-run: ot-epyc6       admits   833 GB (avail 691, growth 108, headroom 0, waiters 0/0 GB) load 17/128 running 9 disk 563 GB 
+ot-run: ot-epyc7       admits  1083 GB (avail 821, growth 63, headroom 0, waiters 0/0 GB) load 35/96 running 19 disk 502 GB 
+ot-run: ot-epyc8       admits  1209 GB (avail 960, growth 113, headroom 0, waiters 0/0 GB) load 46/128 running 30 disk 565 GB 
+ot-run: ot-pve1        admits   155 GB (avail 120, growth 6, headroom 0, waiters 0/0 GB) load 14/28 running 3 disk 1196 GB 
+ot-run: ot-agidock128  admits   108 GB (avail 88, growth 13, headroom 0, waiters 0/0 GB) load 11/64 running 8 disk 46 GB 
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-2458897-1792432665 after 0 s
+RESULT_ROOT=/srv/opentallas-scratch/claude/hbm-xcal-public-banked-1019-matrix
+CASE p0c1 RC=0
+PUBLIC_GO scenario=3 edge=707
+PUBLIC_ACTIVE_GAP_REPAIR scenario=3 edge=714 independent_outstanding5=1 dut_outstanding=1 running=0 app_active=1
+PUBLIC_ACTIVE_GAP_REPAIR scenario=3 edge=715 independent_outstanding5=1 dut_outstanding=1 running=0 app_active=1
+PUBLIC_CAL_DONE scenario=3 edge=717 remaining=0
+PUBLIC_CASE scenario=3 words=4/4 first_delta=4 done=1 old_done=1 go=1 naive_early=0 simultaneous=0 active_gap_repairs=2
+XCAL_PUBLIC_BANKED PASS errors=0 checks=448 mut=0 prel=0 class=1 classmut=0 mirrormut=0 gap=9
+- rtl/test/hbm_accel/svg_rel/tb_xcal_public_banked.sv:159: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 661ns; walltime 0.001 s; speed 594.273 us/s
+- Verilator: cpu 0.001 s on 1 threads; allocated 7 MB
+CASE p0c0 RC=0
+PUBLIC_GO scenario=3 edge=707
+PUBLIC_ACTIVE_GAP_REPAIR scenario=3 edge=714 independent_outstanding5=1 dut_outstanding=1 running=0 app_active=1
+PUBLIC_ACTIVE_GAP_REPAIR scenario=3 edge=715 independent_outstanding5=1 dut_outstanding=1 running=0 app_active=1
+PUBLIC_CAL_DONE scenario=3 edge=717 remaining=0
+PUBLIC_CASE scenario=3 words=4/4 first_delta=4 done=1 old_done=1 go=1 naive_early=0 simultaneous=0 active_gap_repairs=2
+XCAL_PUBLIC_BANKED PASS errors=0 checks=448 mut=0 prel=0 class=0 classmut=0 mirrormut=0 gap=9
+- rtl/test/hbm_accel/svg_rel/tb_xcal_public_banked.sv:159: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 661ns; walltime 0.001 s; speed 590.733 us/s
+- Verilator: cpu 0.001 s on 1 threads; allocated 7 MB
+CASE p1c0 RC=0
+PUBLIC_GO scenario=3 edge=707
+PUBLIC_ACTIVE_GAP_REPAIR scenario=3 edge=714 independent_outstanding5=1 dut_outstanding=1 running=0 app_active=1
+PUBLIC_ACTIVE_GAP_REPAIR scenario=3 edge=715 independent_outstanding5=1 dut_outstanding=1 running=0 app_active=1
+PUBLIC_CAL_DONE scenario=3 edge=717 remaining=0
+PUBLIC_CASE scenario=3 words=4/4 first_delta=4 done=1 old_done=1 go=1 naive_early=0 simultaneous=0 active_gap_repairs=2
+XCAL_PUBLIC_BANKED PASS errors=0 checks=448 mut=0 prel=1 class=0 classmut=0 mirrormut=0 gap=9
+- rtl/test/hbm_accel/svg_rel/tb_xcal_public_banked.sv:159: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 661ns; walltime 0.001 s; speed 566.130 us/s
+- Verilator: cpu 0.001 s on 1 threads; allocated 7 MB
+CASE p1c1 RC=0
+PUBLIC_GO scenario=3 edge=707
+PUBLIC_ACTIVE_GAP_REPAIR scenario=3 edge=714 independent_outstanding5=1 dut_outstanding=1 running=0 app_active=1
+PUBLIC_ACTIVE_GAP_REPAIR scenario=3 edge=715 independent_outstanding5=1 dut_outstanding=1 running=0 app_active=1
+PUBLIC_CAL_DONE scenario=3 edge=717 remaining=0
+PUBLIC_CASE scenario=3 words=4/4 first_delta=4 done=1 old_done=1 go=1 naive_early=0 simultaneous=0 active_gap_repairs=2
+XCAL_PUBLIC_BANKED PASS errors=0 checks=448 mut=0 prel=1 class=1 classmut=0 mirrormut=0 gap=9
+- rtl/test/hbm_accel/svg_rel/tb_xcal_public_banked.sv:159: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 661ns; walltime 0.001 s; speed 584.166 us/s
+- Verilator: cpu 0.001 s on 1 threads; allocated 7 MB
+CASE mut2 RC=1
+PUBLIC_CASE scenario=2 words=10/10 first_delta=4 done=1 old_done=1 go=2 naive_early=1 simultaneous=0 active_gap_repairs=2
+PUBLIC_GO scenario=3 edge=707
+PUBLIC_ACTIVE_GAP_REPAIR scenario=3 edge=714 independent_outstanding5=1 dut_outstanding=1 running=0 app_active=1
+PUBLIC_ACTIVE_GAP_REPAIR scenario=3 edge=715 independent_outstanding5=1 dut_outstanding=1 running=0 app_active=1
+PUBLIC_CAL_DONE scenario=3 edge=717 remaining=0
+PUBLIC_CASE scenario=3 words=4/4 first_delta=4 done=1 old_done=1 go=1 naive_early=0 simultaneous=0 active_gap_repairs=2
+XCAL_PUBLIC_BANKED FAIL errors=27 checks=448 mut=2 prel=1 class=0 classmut=0 mirrormut=0 gap=9
+[660528] %Fatal: tb_xcal_public_banked.sv:159: Assertion failed in tb_xcal_public_banked: public banked XC mismatch
+%Error: rtl/test/hbm_accel/svg_rel/tb_xcal_public_banked.sv:159: Verilog $stop
+Aborting...
+CASE mut1 RC=1
+PUBLIC_ACTIVE_GAP_REPAIR scenario=3 edge=714 independent_outstanding5=1 dut_outstanding=1 running=0 app_active=1
+PUBLIC_ACTIVE_GAP_REPAIR scenario=3 edge=715 independent_outstanding5=1 dut_outstanding=1 running=0 app_active=1
+PUBLIC_CAL_DONE scenario=3 edge=718 remaining=0
+PUBLIC_ACTIVE_GAP_REPAIR scenario=3 edge=722 independent_outstanding5=1 dut_outstanding=0 running=0 app_active=0
+PUBLIC_COUNTS_FAIL scenario=3 words=4/4 first_delta=5
+PUBLIC_CASE scenario=3 words=4/4 first_delta=5 done=1 old_done=1 go=1 naive_early=0 simultaneous=0 active_gap_repairs=3
+XCAL_PUBLIC_BANKED FAIL errors=44 checks=448 mut=1 prel=1 class=0 classmut=0 mirrormut=0 gap=9
+[660528] %Fatal: tb_xcal_public_banked.sv:159: Assertion failed in tb_xcal_public_banked: public banked XC mismatch
+%Error: rtl/test/hbm_accel/svg_rel/tb_xcal_public_banked.sv:159: Verilog $stop
+Aborting...
+CASE simultaneous RC=0
+PUBLIC_GO scenario=3 edge=707
+PUBLIC_ACTIVE_GAP_REPAIR scenario=3 edge=714 independent_outstanding5=1 dut_outstanding=1 running=0 app_active=1
+PUBLIC_ACTIVE_GAP_REPAIR scenario=3 edge=715 independent_outstanding5=1 dut_outstanding=1 running=0 app_active=1
+PUBLIC_CAL_DONE scenario=3 edge=717 remaining=0
+PUBLIC_CASE scenario=3 words=4/4 first_delta=4 done=1 old_done=1 go=1 naive_early=0 simultaneous=0 active_gap_repairs=2
+XCAL_PUBLIC_BANKED PASS errors=0 checks=448 mut=0 prel=1 class=1 classmut=0 mirrormut=0 gap=10
+- rtl/test/hbm_accel/svg_rel/tb_xcal_public_banked.sv:159: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 661ns; walltime 0.001 s; speed 591.289 us/s
+- Verilator: cpu 0.001 s on 1 threads; allocated 7 MB
+CASE mut3 RC=1
+PUBLIC_CASE scenario=2 words=0/10 first_delta=-519 done=0 old_done=1 go=0 naive_early=0 simultaneous=0 active_gap_repairs=0
+PUBLIC_COUNTS_FAIL scenario=3 words=0/4 first_delta=-714
+PUBLIC_FAULT_FAIL scenario=3 fault=0 expected=1
+PUBLIC_COMPLETION_FAIL scenario=3 done=0 active=0 old_done=1
+PUBLIC_LEDGER_COUNTS_FAIL
+PUBLIC_CASE scenario=3 words=0/4 first_delta=-714 done=0 old_done=1 go=0 naive_early=0 simultaneous=0 active_gap_repairs=0
+XCAL_PUBLIC_BANKED FAIL errors=260 checks=448 mut=3 prel=1 class=0 classmut=0 mirrormut=0 gap=9
+[660528] %Fatal: tb_xcal_public_banked.sv:159: Assertion failed in tb_xcal_public_banked: public banked XC mismatch
+%Error: rtl/test/hbm_accel/svg_rel/tb_xcal_public_banked.sv:159: Verilog $stop
+Aborting...
+CASE mut5 RC=1
+PUBLIC_GO scenario=3 edge=707
+PUBLIC_ACTIVE_GAP_REPAIR scenario=3 edge=714 independent_outstanding5=1 dut_outstanding=1 running=0 app_active=1
+PUBLIC_ACTIVE_GAP_REPAIR scenario=3 edge=715 independent_outstanding5=1 dut_outstanding=1 running=0 app_active=1
+PUBLIC_CAL_DONE scenario=3 edge=717 remaining=0
+PUBLIC_ENVELOPE_MISMATCH scenario=3 edge=717 got=1fdb97530eca864200000000000000000000000003e7 expected=102468acf13579bdd444000000000000000000000000
+PUBLIC_CASE scenario=3 words=4/4 first_delta=4 done=1 old_done=1 go=1 naive_early=0 simultaneous=0 active_gap_repairs=2
+XCAL_PUBLIC_BANKED FAIL errors=6 checks=448 mut=5 prel=1 class=0 classmut=0 mirrormut=0 gap=9
+[660528] %Fatal: tb_xcal_public_banked.sv:159: Assertion failed in tb_xcal_public_banked: public banked XC mismatch
+%Error: rtl/test/hbm_accel/svg_rel/tb_xcal_public_banked.sv:159: Verilog $stop
+Aborting...
+CASE classmut RC=1
+PUBLIC_CASE scenario=2 words=10/10 first_delta=4 done=1 old_done=1 go=2 naive_early=1 simultaneous=0 active_gap_repairs=2
+PUBLIC_GO scenario=3 edge=707
+PUBLIC_ACTIVE_GAP_REPAIR scenario=3 edge=714 independent_outstanding5=1 dut_outstanding=1 running=0 app_active=1
+PUBLIC_ACTIVE_GAP_REPAIR scenario=3 edge=715 independent_outstanding5=1 dut_outstanding=1 running=0 app_active=1
+PUBLIC_CAL_DONE scenario=3 edge=717 remaining=0
+PUBLIC_CASE scenario=3 words=4/4 first_delta=4 done=1 old_done=1 go=1 naive_early=0 simultaneous=0 active_gap_repairs=2
+XCAL_PUBLIC_BANKED FAIL errors=251 checks=448 mut=0 prel=1 class=1 classmut=1 mirrormut=0 gap=9
+[660528] %Fatal: tb_xcal_public_banked.sv:159: Assertion failed in tb_xcal_public_banked: public banked XC mismatch
+%Error: rtl/test/hbm_accel/svg_rel/tb_xcal_public_banked.sv:159: Verilog $stop
+Aborting...
+CASE mirrormut RC=1
+PUBLIC_GO scenario=3 edge=707
+PUBLIC_ACTIVE_GAP_REPAIR scenario=3 edge=714 independent_outstanding5=1 dut_outstanding=1 running=0 app_active=1
+PUBLIC_ACTIVE_GAP_REPAIR scenario=3 edge=715 independent_outstanding5=1 dut_outstanding=1 running=0 app_active=1
+PUBLIC_CAL_DONE scenario=3 edge=717 remaining=0
+PUBLIC_COUNTS_FAIL scenario=3 words=4/4 first_delta=3
+PUBLIC_CASE scenario=3 words=4/4 first_delta=3 done=1 old_done=1 go=1 naive_early=0 simultaneous=0 active_gap_repairs=2
+XCAL_PUBLIC_BANKED FAIL errors=36 checks=448 mut=0 prel=1 class=1 classmut=0 mirrormut=1 gap=9
+[660528] %Fatal: tb_xcal_public_banked.sv:159: Assertion failed in tb_xcal_public_banked: public banked XC mismatch
+%Error: rtl/test/hbm_accel/svg_rel/tb_xcal_public_banked.sv:159: Verilog $stop
+Aborting...
+CASE mut4 RC=1
+PUBLIC_GO scenario=3 edge=707
+PUBLIC_ACTIVE_GAP_REPAIR scenario=3 edge=714 independent_outstanding5=1 dut_outstanding=1 running=0 app_active=1
+PUBLIC_ACTIVE_GAP_REPAIR scenario=3 edge=715 independent_outstanding5=1 dut_outstanding=1 running=0 app_active=1
+PUBLIC_CAL_DONE scenario=3 edge=717 remaining=0
+PUBLIC_COUNTS_FAIL scenario=3 words=4/4 first_delta=2
+PUBLIC_CASE scenario=3 words=4/4 first_delta=2 done=1 old_done=1 go=1 naive_early=0 simultaneous=0 active_gap_repairs=2
+XCAL_PUBLIC_BANKED FAIL errors=38 checks=448 mut=4 prel=1 class=0 classmut=0 mirrormut=0 gap=9
+[660528] %Fatal: tb_xcal_public_banked.sv:159: Assertion failed in tb_xcal_public_banked: public banked XC mismatch
+%Error: rtl/test/hbm_accel/svg_rel/tb_xcal_public_banked.sv:159: Verilog $stop
+Aborting...
+EVIDENCE=/srv/opentallas-scratch/claude/hbm-xcal-public-banked-1019-matrix/evidence.tgz
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-2458897-1792432665): exit 0
