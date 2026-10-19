@@ -76,3 +76,29 @@ Recommendation: (B), if the die GRT shows that the seams carry the feedthrough. 
 - slice2 a..j at SU_LT = 1 / HD_W130 = 1, plus the lane mutants LOFF / TLS / LOREG / IREG.
 
 The fleet logs land at `ot-epyc4:/srv/opentallas-scratch/claude/qslice2-hard/bench_h1/`. Once they finish, commit them as the fail witnesses under `bench_h1/`.
+
+## 7. Hierarchical slice kit (QK-SLICE 10-18, coordinator 0gs(c))
+
+The coordinator chose (B): the slice is a hardened cluster, and the die grants M1-M7 inside its region. The flat-M5 gate is reference only; it hit the 4 h synthesis cap (REMOTE_INCOMPLETE).
+
+`qfd_dv_slice2_wh` (`tools/qwen_dv/slice2_wh_spec.py`) has **one cluster level**: children M5, straps M6, PG M7. The su_lane and heads cluster levels fold into the slice, because a nested cluster would need its own PG on M7, and the M1-M7 grant has no room for that.
+- **Hard children:**
+  - 8 x (`qfd_dv_lane_h` + closed `ot_hdc_sfu_exp/rcp/rsq_t`), each group 324 x 324 on the 43.2 lattice;
+  - 32 x `ot_qfd_xs_leaf` at the heads_w130 relative positions.
+- **Macros and soft logic:** 22 VM SRAMs sit in two rows between the lane rows. The glue is soft.
+- **Stand-ins (never bindable, `tools/qwen_dv/slice_standin.py`):**
+  - lane_h, built from its kit with the measured gate insertion (254 / 209 / 330);
+  - xs_leaf, an M5 re-layer of the closed w130 view: the 791 M6 E/W pins move to the nearest M4 track at the same y.
+- **Real M5 leaf kit:** `qfd_xs_leaf_w130m5`, the same RTL with E/W pins on M4. `ref_tile.py` now admits literal pin plans that have no M6 pin without an M6 grant.
+
+**Owed:** landed regions. The slice RTL still has one clock port `ck`, so this gate runs one balanced tree over 2.46 mm. The landed form needs:
+- per-region `ck_<r>` ports;
+- landed crossings (`tools/landed_parent/lp.py`).
+
+lp.py takes only a wires-only parent, so qfd_dv_slice2 must first be split into one core tile (stream, scalar2, redstn2, VM control, su8 glue) plus the lane groups and the heads. That is an RTL restructure. It costs +E+1 edges on every landed net, and the compiler (cycles_dv.py) must price it.
+
+**Bench h3** (Verilator 5.050, with the redstn2 idle fix):
+- slice2 SU_LT=1 HD_W130=1: a..j PASS;
+- mutants LOFF / TLS / LOREG / IREG: FAIL (committed witnesses in `bench_h3/`);
+- lints: PASS;
+- **open:** the `run_heads.sh` HD_W130=1 positive bench FAILs 192 / 397,440 checks, all at ref cycle 1623, with identical data words (`go 0/0`). This looks like the bench's end window not extended by the +4-edge w130 delivery offset. It is unverified.
