@@ -381,7 +381,7 @@ def _row_ii(r, dyn, L, c):
     return c                          # SFU, STORE, CTL: no row saving priced
 
 
-def qwen_plane_cost(mode, P, N, groups):
+def qwen_plane_cost(mode, P, N, groups, att_g=1):
     """the P-lane per-record transform of timing.cost (module doc, Qwen)"""
     dfc = None
     if mode == "dflash":
@@ -396,7 +396,7 @@ def qwen_plane_cost(mode, P, N, groups):
         else:
             c, g, how = _T_COST0(r, dyn, L)
         if u == "SM":
-            slots = N if mode == "mu" else ((r.param >> 2) & 7) + 1
+            slots = N if mode == "mu" else r.desc["A"].m      # x rows = slots (param [4:2] is 3 b: R <= 8 only)
             mult = slots if P == 1 else math.ceil(slots / P)
             if mult != 1:
                 c = _sm_cost(r, dyn, L, mult)
@@ -414,7 +414,7 @@ def qwen_plane_cost(mode, P, N, groups):
         if u == "ATT":
             m = GROUP_RE.search(tag)
             if m:
-                j = int(m.group(1))
+                j = int(m.group(1)) // att_g     # tag .g<s0> carries the first SLOT; group index = s0 / G (QCHK)
                 if j % P:                 # merged into the pass of group j - j % P: context lines streamed once
                     c = max(0.0, c - _att_stream(r, dyn, L))
             return c, g, how
@@ -438,9 +438,46 @@ def qwen_job(job):
         dcfg = json.loads((ROOT / "compiler/models/qwen3-8b-dflash-b16/config.json").read_text())
         B = kw["B"]
         pos = 8192 - B
-        recs = DF.step_program(DF.DGeom(cfg, dcfg, 8192, B), md, timing_pos=pos)
+        # QCHK 10-18: on a P-lane die the compiler chooses the record size R (slots a record: SM.MATVEC slot field
+        # widened to 4 b, N <= 16, RTL change list SM/ISA) among R in {P, 8, 16}: an SM record of R slots costs
+        # ceil(R / P) line passes behind ONE first access, and the per-pass records (norm / row-scale SU /
+        # all-reduce, payload R x H) are issued ceil(B / R) times.  The LM head takes R-slot passes too (the logits
+        # stream SM -> SU -> ARGMAX; ARGMAX.LOCAL row field N = R running maxima).  The as-built split (R = 8,
+        # head 4) made P = 6 cost ceil(8 / 6) x 2 = 4 weight passes (= P 4) and every head 4 passes at any P.
+        # P = 1 keeps the as-built split (every slot re-issues the line).
+        R = kw.get("R")
+        # VM: the P-lane die's VM growth (+ (P - 1) x 30k words, VM item) bounds R; an R that does not fit is not a
+        # choice (R = 16 needs ~410k words: P >= 6)
+        # The head pass PH = the largest of {16, 8, 6, 4} (<= B) whose VM map fits (the map keeps PH x 37,984 logit
+        # words, TP4 layout: conservative for the TP-8 price).
+        s0_, h0_, v0_ = DF.SM_MAX_SLOTS, DF.HEAD_SLOTS, DF.VM_WORDS
+        g = None
+        try:
+            if R and kw["P"] > 1:
+                DF.SM_MAX_SLOTS = R
+                DF.VM_WORDS = (1 << 18) + (kw["P"] - 1) * VM_WORDS_PER_COLUMN
+                for ph in (16, 8, 6, 4):
+                    if ph > B:
+                        continue
+                    DF.HEAD_SLOTS = ph
+                    try:
+                        g = DF.DGeom(cfg, dcfg, 8192, B)
+                        break
+                    except AssertionError as ex:
+                        unfit = str(ex)
+                if g is None:
+                    return name, dict(cycles=float("inf"), vm_unfit=unfit)
+            else:
+                g = DF.DGeom(cfg, dcfg, 8192, B)
+            recs = DF.step_program(g, md, timing_pos=pos)
+        finally:
+            DF.SM_MAX_SLOTS, DF.HEAD_SLOTS, DF.VM_WORDS = s0_, h0_, v0_
+        rec_info = dict(record_slots=g.P, head_slots=g.PH, vm_words=g.vm_end)
+        att_g = g.G
     else:
         pos = 8191
+        att_g = 1
+        rec_info = {}
         recs = QT.QC.program(QT.QC.Geometry(cfg, 8192), md, cfg["num_hidden_layers"])
     groups = {}
     for r in recs:
@@ -448,7 +485,7 @@ def qwen_job(job):
         if m:
             key = SLOT_RE.sub(r".\1#", r.tag)
             groups[key] = min(groups.get(key, 1 << 30), int(m.group(2)))
-    base = qwen_plane_cost(mode, kw["P"], kw.get("N", 1), groups)
+    base = qwen_plane_cost(mode, kw["P"], kw.get("N", 1), groups, att_g)
     # Q._qwen: the d4g adders on the unit cost (Qwen full precision: no QBG); S._qwen_job: relay knob + TP-8 split
     q = env["vb"].get("qwen") or {}
     kq = dict(env["kn"], G1=q.get("G1", 8), lanes=q.get("lanes", 4))
@@ -482,7 +519,7 @@ def qwen_job(job):
         return c, g, how
     s = T.schedule(recs, pos, "S2", cost_fn=cf)
     busy = {u: round(v["busy"], 1) for u, v in s["per_unit"].items()}
-    return name, dict(cycles=round(s["total_cycles"], 1), records=len(recs), unit_busy=busy, position=pos,
+    return name, dict(cycles=round(s["total_cycles"], 1), records=len(recs), unit_busy=busy, position=pos, **rec_info,
                       races=len(s.get("races", [])))
 
 
@@ -519,10 +556,31 @@ def jobs_for(stats, quick=False):
     J.append(("qwen", "qwen|AR", "ar", dict(P=1)))
     for P in PS_LIST:
         for B in (16, 8):
-            J.append(("qwen", f"qwen|DFlash{B}|P{P}", "dflash", dict(P=P, B=B)))
+            if P == 1:
+                J.append(("qwen", f"qwen|DFlash{B}|P{P}", "dflash", dict(P=P, B=B)))
+            for R in sorted({min(B, x) for x in (P, 2 * P, 8, 16)}) if P > 1 else ():
+                J.append(("qwen", f"qwen|DFlash{B}|P{P}|R{R}", "dflash", dict(P=P, B=B, R=R)))
         if P > 1:
             J.append(("qwen", f"qwen|MU|P{P}", "mu", dict(P=P, N=P)))
     return J
+
+
+def pick_record_size(res):
+    """the compiler's record-size choice: qwen|DFlash<B>|P<P> = the fastest qwen|DFlash<B>|P<P>|R<R> (QCHK 10-18)"""
+    best = {}
+    for k, v in res.items():
+        m = re.match(r"(qwen\|DFlash\d+\|P\d+)\|R(\d+)$", k)
+        if m and (m.group(1) not in best or v["cycles"] < best[m.group(1)][1]["cycles"]):
+            best[m.group(1)] = (int(m.group(2)), v)
+    for k, (R, v) in best.items():
+        res[k] = dict(v, record_slots_tried={int(kk.rsplit("R", 1)[1]): res[kk]["cycles"]
+                                             for kk in res if kk.startswith(k + "|R")})
+    for v in res.values():                # an R whose VM map does not fit: no time (JSON null, not Infinity)
+        for d_ in (v, v.get("record_slots_tried") or {}):
+            for kk, x in d_.items():
+                if isinstance(x, float) and math.isinf(x):
+                    d_[kk] = None
+    return res
 
 
 def compose(res, stats, area):
@@ -569,6 +627,9 @@ def compose(res, stats, area):
             if k in res:
                 c = res[k]["cycles"]
                 row[f"qwen_dflash{B}_step_cycles"] = c
+                row[f"qwen_dflash{B}_step_over_ar"] = round(c / qar, 3)
+                if res[k].get("record_slots"):
+                    row[f"qwen_dflash{B}_record_head_slots"] = [res[k]["record_slots"], res[k]["head_slots"]]
                 for tk, tv in QWEN_TAU[B].items():
                     row[f"qwen_dflash{B}_tok_s_{tk}"] = round(tv * CLK / c, 1)
         qmu = dict(cycles=qar) if P == 1 else res.get(f"qwen|MU|P{P}")
@@ -669,7 +730,11 @@ def summarize(out):
             "overlap = joint S2 schedule with the verify head, nothing after the accept overlaps",
             "Qwen DFlash: dflash.step_program B = 16 (8 info) at pos 8,192 - B, tau published 8.01 (b16) / 5.584 "
             "(b8, anchored) and measured cycle-weighted 3.656 / 3.2956; ATT 4-slot groups (16 lanes) are the current "
-            "record form; P = 1 = every slot re-issues the SM line",
+            "record form, a P-lane engine streams the context once for P groups (QCHK fix: group index = slot / 4); "
+            "P = 1 = every slot re-issues the SM line; P >= 2 = the compiler's record size R in {P, 2P, 8, 16} "
+            "(SM ceil(R / P) line passes a record, ceil(B / R) per-pass records) and head pass PH in {16, 8, 6, 4}, "
+            "largest that fits the P-lane VM (2^18 + (P - 1) x 30k words; TP4 map, conservative) (QCHK 10-18: the "
+            "as-built 8-slot / 4-slot head split had made P = 6 = P = 4)",
             "multi-user: all users at the same position (DS 1M, Qwen 8K); HBM capacity for P users' 1M KV NOT checked",
             "area: " + ("MTP-AREA measured" if out["area"]["measured"] else
                         "PLACEHOLDER (closed BDC outline floor x 16 SMs x 32 BDCs a lane + item estimates); "
@@ -770,6 +835,7 @@ def main():
     J.sort(key=lambda j: 0 if ("draft" in j[1] or "MU|P8" in j[1] or "MTP|P" in j[1]) else 1)
     with mp.Pool(a.jobs) as pool:
         res = dict(pool.imap_unordered(_any, J, chunksize=1))
+    res = pick_record_size(res)
     out = dict(schema="opentallas.hbm_mtp_next_1018.model.v1",
                generated_utc=datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
                git_head=git_sha(), rule=__doc__, stats=stats, area=area, reference_price_of_record=REF, runs=res)

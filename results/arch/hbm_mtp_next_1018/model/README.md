@@ -13,10 +13,10 @@ Stats: results/arch/hbm_mtp_next_1018/stats/summary.json. Area: results/arch/hbm
 | P | +mm2 | DS AR | DS MTP (KV upper) | DS MTP kv-lower | DS MTP union p90 | DS users agg / per-user | Qwen AR | Qwen DFlash b16 pub 8.01 / meas 3.656 | Qwen b8 pub / meas | Qwen users agg / per-user |
 |---:|---:|---:|---:|---:|---:|---|---:|---|---|---|
 | 1 | 0.0 | 1905.4 | **1694.3** |  |  | 1905.4 / 1905.4 | 946.2 | 459.5 / 209.7 | 642.8 / 379.4 | 946.2 / 946.2 |
-| 2 | 34.56 | 1905.4 | **3142.8** | 3288.8 | 3063.1 | 3060.3 / 1530.1 | 946.2 | 864.7 / 394.7 | 1198.5 / 707.3 | 1734.2 / 867.1 |
-| 4 | 101.11 | 1905.4 | **3363.5** | 3597.8 | 3272.3 | 4365.3 / 1091.3 | 946.2 | 1460.0 / 666.4 | 2015.3 / 1189.4 | 2971.4 / 742.9 |
-| 6 | 167.64 | 1905.4 | **3519.3** | 3841.7 | 3419.6 | 5153.7 / 858.9 | 946.2 | 1487.4 / 678.9 | 2052.8 / 1211.6 | 3898.6 / 649.8 |
-| 8 | 234.51 | 1905.4 | **3519.3** | 3841.7 | 3419.6 | 5710.4 / 713.8 | 946.2 | 2101.9 / 959.4 | 2888.8 / 1704.9 | 4619.2 / 577.4 |
+| 2 | 34.56 | 1905.4 | **3142.8** | 3288.8 | 3063.1 | 3060.3 / 1530.1 | 946.2 | 874.3 / 399.1 | 1211.7 / 715.1 | 1734.2 / 867.1 |
+| 4 | 101.11 | 1905.4 | **3363.5** | 3597.8 | 3272.3 | 4365.3 / 1091.3 | 946.2 | 1465.9 / 669.1 | 1961.5 / 1157.7 | 2971.4 / 742.9 |
+| 6 | 167.64 | 1905.4 | **3519.3** | 3841.7 | 3419.6 | 5153.7 / 858.9 | 946.2 | 1758.1 / 802.5 | 2050.4 / 1210.1 | 3898.6 / 649.8 |
+| 8 | 234.51 | 1905.4 | **3519.3** | 3841.7 | 3419.6 | 5710.4 / 713.8 | 946.2 | 2442.8 / 1115.0 | 3085.8 / 1821.2 | 4619.2 / 577.4 |
 
 DS MTP step terms (cycles):
 
@@ -63,7 +63,7 @@ Compiler per-layer lane choice (best lanes <= P per layer segment, row field on)
 - KV top-512 overlap of consecutive positions is UNMEASURED: headline at the upper bound (N x 512 selected + 128 + N - 1 window lines), kv_lower = full overlap (512 + window); users: N x single (exact)
 - row II: FUSED.HC_PRE_NORM measured 197 (P6 RTL); all other II PRICED from tables / structure (ds_mtp_verify.row_ii): FUSED.POST 100, QDQ n/32, HC max(250 HCP x6 measured, Sinkhorn 634/3), COLL c1 - 741.7 fixed, IDX.TOPK 47, IDX.INDEX c1 x 152/658.9 (users: c1), SU nv, DMA c1 - first access, ARGMAX 6; Qwen ROW_NORM 157.6 (anchor scaled 4096/5120), SU nv, all-reduce n/16 (64 B/cycle)
 - DSpark draft at P lanes = R = 5-row records (ds_mtp_draft, stage expert union = no sharing 15); seed overlap = joint S2 schedule with the verify head, nothing after the accept overlaps
-- Qwen DFlash: dflash.step_program B = 16 (8 info) at pos 8,192 - B, tau published 8.01 (b16) / 5.584 (b8, anchored) and measured cycle-weighted 3.656 / 3.2956; ATT 4-slot groups (16 lanes) are the current record form; P = 1 = every slot re-issues the SM line
+- Qwen DFlash: dflash.step_program B = 16 (8 info) at pos 8,192 - B, tau published 8.01 (b16) / 5.584 (b8, anchored) and measured cycle-weighted 3.656 / 3.2956; ATT 4-slot groups (16 lanes) are the current record form, a P-lane engine streams the context once for P groups (QCHK fix: group index = slot / 4); P = 1 = every slot re-issues the SM line; P >= 2 = the compiler's record size R in {P, 2P, 8, 16} (SM ceil(R / P) line passes a record, ceil(B / R) per-pass records) and head pass PH in {16, 8, 6, 4}, largest that fits the P-lane VM (2^18 + (P - 1) x 30k words; TP4 map, conservative) (QCHK 10-18: the as-built 8-slot / 4-slot head split had made P = 6 = P = 4)
 - multi-user: all users at the same position (DS 1M, Qwen 8K); HBM capacity for P users' 1M KV NOT checked
 - area: MTP-AREA measured
 

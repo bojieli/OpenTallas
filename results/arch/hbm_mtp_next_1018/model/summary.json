@@ -78,9 +78,19 @@
    "ds_mu_per_user_tok_s": 1905.4,
    "qwen_ar_tok_s": 946.2,
    "qwen_dflash16_step_cycles": 20919267.6,
+   "qwen_dflash16_step_over_ar": 16.495,
+   "qwen_dflash16_record_head_slots": [
+    8,
+    4
+   ],
    "qwen_dflash16_tok_s_published": 459.5,
    "qwen_dflash16_tok_s_measured": 209.7,
    "qwen_dflash8_step_cycles": 10423729.0,
+   "qwen_dflash8_step_over_ar": 8.219,
+   "qwen_dflash8_record_head_slots": [
+    8,
+    4
+   ],
    "qwen_dflash8_tok_s_published": 642.8,
    "qwen_dflash8_tok_s_measured": 379.4,
    "qwen_mu_aggregate_tok_s": 946.2,
@@ -105,12 +115,22 @@
    "ds_mu_aggregate_tok_s": 3060.3,
    "ds_mu_per_user_tok_s": 1530.1,
    "qwen_ar_tok_s": 946.2,
-   "qwen_dflash16_step_cycles": 11115496.1,
-   "qwen_dflash16_tok_s_published": 864.7,
-   "qwen_dflash16_tok_s_measured": 394.7,
-   "qwen_dflash8_step_cycles": 5590901.8,
-   "qwen_dflash8_tok_s_published": 1198.5,
-   "qwen_dflash8_tok_s_measured": 707.3,
+   "qwen_dflash16_step_cycles": 10993879.8,
+   "qwen_dflash16_step_over_ar": 8.669,
+   "qwen_dflash16_record_head_slots": [
+    8,
+    4
+   ],
+   "qwen_dflash16_tok_s_published": 874.3,
+   "qwen_dflash16_tok_s_measured": 399.1,
+   "qwen_dflash8_step_cycles": 5530034.1,
+   "qwen_dflash8_step_over_ar": 4.36,
+   "qwen_dflash8_record_head_slots": [
+    8,
+    6
+   ],
+   "qwen_dflash8_tok_s_published": 1211.7,
+   "qwen_dflash8_tok_s_measured": 715.1,
    "qwen_mu_aggregate_tok_s": 1734.2,
    "qwen_mu_per_user_tok_s": 867.1
   },
@@ -133,12 +153,22 @@
    "ds_mu_aggregate_tok_s": 4365.3,
    "ds_mu_per_user_tok_s": 1091.3,
    "qwen_ar_tok_s": 946.2,
-   "qwen_dflash16_step_cycles": 6583784.1,
-   "qwen_dflash16_tok_s_published": 1460.0,
-   "qwen_dflash16_tok_s_measured": 666.4,
-   "qwen_dflash8_step_cycles": 3325045.8,
-   "qwen_dflash8_tok_s_published": 2015.3,
-   "qwen_dflash8_tok_s_measured": 1189.4,
+   "qwen_dflash16_step_cycles": 6557186.3,
+   "qwen_dflash16_step_over_ar": 5.17,
+   "qwen_dflash16_record_head_slots": [
+    8,
+    6
+   ],
+   "qwen_dflash16_tok_s_published": 1465.9,
+   "qwen_dflash16_tok_s_measured": 669.1,
+   "qwen_dflash8_step_cycles": 3416114.1,
+   "qwen_dflash8_step_over_ar": 2.694,
+   "qwen_dflash8_record_head_slots": [
+    8,
+    6
+   ],
+   "qwen_dflash8_tok_s_published": 1961.5,
+   "qwen_dflash8_tok_s_measured": 1157.7,
    "qwen_mu_aggregate_tok_s": 2971.4,
    "qwen_mu_per_user_tok_s": 742.9
   },
@@ -159,12 +189,22 @@
    "ds_mu_aggregate_tok_s": 5153.7,
    "ds_mu_per_user_tok_s": 858.9,
    "qwen_ar_tok_s": 946.2,
-   "qwen_dflash16_step_cycles": 6462167.8,
-   "qwen_dflash16_tok_s_published": 1487.4,
-   "qwen_dflash16_tok_s_measured": 678.9,
-   "qwen_dflash8_step_cycles": 3264178.1,
-   "qwen_dflash8_tok_s_published": 2052.8,
-   "qwen_dflash8_tok_s_measured": 1211.6,
+   "qwen_dflash16_step_cycles": 5467215.6,
+   "qwen_dflash16_step_over_ar": 4.311,
+   "qwen_dflash16_record_head_slots": [
+    12,
+    8
+   ],
+   "qwen_dflash16_tok_s_published": 1758.1,
+   "qwen_dflash16_tok_s_measured": 802.5,
+   "qwen_dflash8_step_cycles": 3268022.8,
+   "qwen_dflash8_step_over_ar": 2.577,
+   "qwen_dflash8_record_head_slots": [
+    8,
+    8
+   ],
+   "qwen_dflash8_tok_s_published": 2050.4,
+   "qwen_dflash8_tok_s_measured": 1210.1,
    "qwen_mu_aggregate_tok_s": 3898.6,
    "qwen_mu_per_user_tok_s": 649.8
   },
@@ -185,12 +225,22 @@
    "ds_mu_aggregate_tok_s": 5710.4,
    "ds_mu_per_user_tok_s": 713.8,
    "qwen_ar_tok_s": 946.2,
-   "qwen_dflash16_step_cycles": 4573034.6,
-   "qwen_dflash16_tok_s_published": 2101.9,
-   "qwen_dflash16_tok_s_measured": 959.4,
-   "qwen_dflash8_step_cycles": 2319611.5,
-   "qwen_dflash8_tok_s_published": 2888.8,
-   "qwen_dflash8_tok_s_measured": 1704.9,
+   "qwen_dflash16_step_cycles": 3934838.1,
+   "qwen_dflash16_step_over_ar": 3.103,
+   "qwen_dflash16_record_head_slots": [
+    16,
+    8
+   ],
+   "qwen_dflash16_tok_s_published": 2442.8,
+   "qwen_dflash16_tok_s_measured": 1115.0,
+   "qwen_dflash8_step_cycles": 2171520.3,
+   "qwen_dflash8_step_over_ar": 1.712,
+   "qwen_dflash8_record_head_slots": [
+    8,
+    8
+   ],
+   "qwen_dflash8_tok_s_published": 3085.8,
+   "qwen_dflash8_tok_s_measured": 1821.2,
    "qwen_mu_aggregate_tok_s": 4619.2,
    "qwen_mu_per_user_tok_s": 577.4
   }
@@ -535,7 +585,7 @@
     "SU": 1669704.4,
     "COLL": 619958.5,
     "FUSED": 220820.3,
-    "ATT": 452537.7,
+    "ATT": 330921.4,
     "SFU": 9990.9,
     "ARGMAX": 1273674.2,
     "CTL": 19.0
@@ -566,13 +616,13 @@
    },
    "qwen_dflash16": {
     "DMA": 18210.4,
-    "SM": 4655094.5,
-    "SU": 1061960.4,
+    "SM": 4806337.3,
+    "SU": 1213085.2,
     "COLL": 619958.5,
     "FUSED": 220820.3,
-    "ATT": 452537.7,
+    "ATT": 270113.2,
     "SFU": 9990.9,
-    "ARGMAX": 665930.2,
+    "ARGMAX": 821774.9,
     "CTL": 19.0
    },
    "ds_mu": {
@@ -600,14 +650,14 @@
     "ARGMAX": 4913.2
    },
    "qwen_dflash16": {
-    "DMA": 18210.4,
-    "SM": 4655094.5,
-    "SU": 1061960.4,
-    "COLL": 619958.5,
+    "DMA": 18262.2,
+    "SM": 3709141.6,
+    "SU": 1060338.1,
+    "COLL": 622582.5,
     "FUSED": 220820.3,
-    "ATT": 330921.4,
+    "ATT": 270113.2,
     "SFU": 9990.9,
-    "ARGMAX": 665930.2,
+    "ARGMAX": 673747.6,
     "CTL": 19.0
    },
    "ds_mu": {
@@ -635,14 +685,14 @@
     "ARGMAX": 4913.2
    },
    "qwen_dflash16": {
-    "DMA": 18210.4,
-    "SM": 2765961.3,
-    "SU": 1061960.4,
-    "COLL": 619958.5,
-    "FUSED": 220820.3,
-    "ATT": 330921.4,
-    "SFU": 9990.9,
-    "ARGMAX": 665930.2,
+    "DMA": 13408.8,
+    "SM": 2327547.2,
+    "SU": 734113.6,
+    "COLL": 531335.9,
+    "FUSED": 210886.7,
+    "ATT": 270113.2,
+    "SFU": 4995.4,
+    "ARGMAX": 369875.6,
     "CTL": 19.0
    },
    "ds_mu": {
@@ -665,7 +715,7 @@
   "KV top-512 overlap of consecutive positions is UNMEASURED: headline at the upper bound (N x 512 selected + 128 + N - 1 window lines), kv_lower = full overlap (512 + window); users: N x single (exact)",
   "row II: FUSED.HC_PRE_NORM measured 197 (P6 RTL); all other II PRICED from tables / structure (ds_mtp_verify.row_ii): FUSED.POST 100, QDQ n/32, HC max(250 HCP x6 measured, Sinkhorn 634/3), COLL c1 - 741.7 fixed, IDX.TOPK 47, IDX.INDEX c1 x 152/658.9 (users: c1), SU nv, DMA c1 - first access, ARGMAX 6; Qwen ROW_NORM 157.6 (anchor scaled 4096/5120), SU nv, all-reduce n/16 (64 B/cycle)",
   "DSpark draft at P lanes = R = 5-row records (ds_mtp_draft, stage expert union = no sharing 15); seed overlap = joint S2 schedule with the verify head, nothing after the accept overlaps",
-  "Qwen DFlash: dflash.step_program B = 16 (8 info) at pos 8,192 - B, tau published 8.01 (b16) / 5.584 (b8, anchored) and measured cycle-weighted 3.656 / 3.2956; ATT 4-slot groups (16 lanes) are the current record form; P = 1 = every slot re-issues the SM line",
+  "Qwen DFlash: dflash.step_program B = 16 (8 info) at pos 8,192 - B, tau published 8.01 (b16) / 5.584 (b8, anchored) and measured cycle-weighted 3.656 / 3.2956; ATT 4-slot groups (16 lanes) are the current record form, a P-lane engine streams the context once for P groups (QCHK fix: group index = slot / 4); P = 1 = every slot re-issues the SM line; P >= 2 = the compiler's record size R in {P, 2P, 8, 16} (SM ceil(R / P) line passes a record, ceil(B / R) per-pass records) and head pass PH in {16, 8, 6, 4}, largest that fits the P-lane VM (2^18 + (P - 1) x 30k words; TP4 map, conservative) (QCHK 10-18: the as-built 8-slot / 4-slot head split had made P = 6 = P = 4)",
   "multi-user: all users at the same position (DS 1M, Qwen 8K); HBM capacity for P users' 1M KV NOT checked",
   "area: MTP-AREA measured"
  ],

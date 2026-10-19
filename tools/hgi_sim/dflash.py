@@ -50,6 +50,7 @@ NSEL = HGI.NSEL_FROM_VM
 MASK_ID = 151669
 SM_MAX_SLOTS = 8              # SM.MATVEC param [4:2]: one weight read serves <= 8 slots
 HEAD_SLOTS = 4                # VM: 4 x 37,984 FP32 logits a head pass (TP4)
+VM_WORDS = 1 << 18            # die VM words (a P-lane die study raises it: hbm_plane_model)
 NL = 64                       # replicated count words per I table (>= the largest LOOP count)
 
 
@@ -133,7 +134,7 @@ class DGeom:
         phase([("FIN", P * H)] + fcp + [("FCG", TP * P * HT), ("FCR", P * H), ("HC", P * H), ("DKV", P * 2 * self.nk * HD),
                                          ("DKN", P * self.nk * HD), ("DKR", P * self.nk * HD)])
         self.vm_end = ubase + max(uses.values())
-        assert self.vm_end <= 1 << 18, f"DFlash VM map needs {self.vm_end} words (> 262,144)"
+        assert self.vm_end <= VM_WORDS, f"DFlash VM map needs {self.vm_end} words (> {VM_WORDS:,})"
         self.vm = vm
         self.spans = {k: (v[0], v[0] + v[1]) for k, v in vm.items()}
         # ---- HBM: the target image (QC layout) + the drafter, the caches and the step scratch -----------------
