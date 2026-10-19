@@ -36,7 +36,7 @@ module tb_hbm_svg_rel_sm;
  wire[31:0]kv,krdy,kwe,kdone,rv_,rrdy;wire[959:0]ka;wire[127:0]kl,rb;wire[543:0]kt,rt;wire[8191:0]kw,rd;wire[1023:0]ks;
  wire[1098:0]packet;wire[82:0]command;
  `ifdef SMB_SRAMFIFO
- ot_hbm_svc_sm_group_rel_sram_id #(.NATIVE_LANDING(`ifdef SMB_NATIVE_LANDING 1 `else 0 `endif),.FIFOMUT(`ifdef SMB_FIFOMUT `SMB_FIFOMUT `else 0 `endif),
+ ot_hbm_svc_sm_group_rel_sram_id #(.ATTENTION(`ifdef SMB_ATTENTION 1 `else 0 `endif),.NATIVE_LANDING(`ifdef SMB_NATIVE_LANDING 1 `else 0 `endif),.FIFOMUT(`ifdef SMB_FIFOMUT `SMB_FIFOMUT `else 0 `endif),
  `else
  ot_hbm_svc_sm_group_rel_id #(
  `endif

@@ -15,7 +15,7 @@
 //     the same +1 stage.
 // Everything else (four-PC producer, landing/cache SRAMs, packed136 rows, S1 consumer copy, faults) is the _id feed.
 module ot_hbm_svc_sm_feed_programmed_rel_sram_id #(
- parameter integer NATIVE_LANDING=0,FIFOMUT=0,PAW=11,PREL=1,
+ parameter integer ATTENTION=0,NATIVE_LANDING=0,FIFOMUT=0,PAW=11,PREL=1,
  parameter integer OWNER_AW=5,RESPONSE_DEPTH=8,DECOUPLE=1,OVERLAP=1,LBANKS=4,
  parameter integer LB=(LBANKS>2)?2:1
 )(
@@ -135,8 +135,11 @@ module ot_hbm_svc_sm_feed_programmed_rel_sram_id #(
   .read_v(programme_v&&programme[83]),.read_bank(programme[84]),.read_epoch(programme[100:85]),.read_row(programme[106:101]),.read_tag(programme[116:107]),
   .retire_v(programme[117]),.retire_bank(programme[118]),.retire_epoch(programme[134:119]),
   .block_ready(cache_ready),.bank_owned(cache_owned),.busy(cache_busy),.fault(cache_fault),.out_packet(packet_observe));
+ // Attention command[25] means KV-converter consume, independently of packet arrival.
+ // The unused dense decoder receives packet/tag checks but no dense issue requests.
+ wire[82:0]dense_check_command=ATTENTION ? (sm_command & ~(83'd1<<25)) : sm_command;
  ot_smh_static_feed consumer(
-  .clk(stream_clk),.rst_n(stream_rst_n),.command(sm_command),.packet(packet_observe),
+  .clk(stream_clk),.rst_n(stream_rst_n),.command(dense_check_command),.packet(packet_observe),
   .expected_request(expected_request),.fault(feed_fault),.lt0(lt0),.lt1(lt1),.lb0(lb0),.lb1(lb1),.fm(fm));
  assign fault=descriptor_fault||cdc_fault||cache_fault||programme_fault||feed_fault||inj_f;
 endmodule
