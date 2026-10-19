@@ -40,8 +40,8 @@
         "u_face_n_relock"
       ],
       "centre": [
-        151.2,
-        151.2
+        133.92,
+        129.6
       ]
     },
     {
@@ -50,8 +50,8 @@
         "u_dly"
       ],
       "centre": [
-        162,
-        376
+        124.2,
+        354.24
       ]
     },
     {
@@ -62,8 +62,8 @@
         "u_face_n_unc"
       ],
       "centre": [
-        410.4,
-        140.4
+        113.4,
+        550.8
       ]
     },
     {
@@ -73,8 +73,8 @@
         "u_face_q*"
       ],
       "centre": [
-        469.8,
-        375.8
+        129.6,
+        807.84
       ]
     }
   ],
@@ -83,5 +83,6 @@
     "reset_cycles": 16,
     "sim": "verilator"
   },
-  "mut_child": "u_syn"
+  "mut_child": "u_syn",
+  "note": "TW7-S81SERDES 10-19: region centres = the SerDes COLUMN kit s81lk_kp4_dec_col (259.2 x 950.4, children stacked N-S per results/arch/s81_link_col_1019/serdes_column_plan.json); the 2x2 centres are retired"
 }

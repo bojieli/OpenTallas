@@ -1,0 +1,138 @@
+{
+ "name": "s81lk_kp4_dec_col-col1-COMMIT",
+ "block": "ot_s81_kp4_dec_native_flat_lp",
+ "ref_tile": true,
+ "owner": "Claude:TW7-S81SERDES",
+ "purpose": "S81 SerDes RX KP4 decoder landed column cluster (dsyn/ddly/dchn/dout, 4 rck regions); level 1 of ot_pdie_serdes_col (S81.STA.OWN.7)",
+ "threads": 16,
+ "peak_ram_gb": 64,
+ "source": {
+  "branch": "claude/tw7-s81serdes-1019",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_link",
+   "rtl/common/landed_parent",
+   "tools/landed_parent",
+   "tools/s81_link/run_serdes_col_bench.sh",
+   "results/arch/serdes_native_1019",
+   "results/rtl/s81_link/col_1019",
+   "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.v",
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_s81_kp4_dec_native_flat_lp #(.MUT(0)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS -Irtl/dsrom_sys/s81_link --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/dsrom_sys/s81_link/lp/ot_s81_kp4_dec_native_flat_lp.sv rtl/common/landed_parent/ot_pl_land.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_common.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_bm.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_dsyn.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_ddly.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_dchn.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_dout.sv physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.v physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "serdes_col_link",
+    "cmd": "bash tools/s81_link/run_serdes_col_bench.sh col {RUN}/bench_col",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "timeout_s": 3600,
+    "pass_regex": "^TB_S81_PDIE_COL PASS$",
+    "min_count_regex": "^TB_S81_PDIE_COL MODE=0 MUT=0 sent=(\\d+) got=\\d+ bad=0 "
+   },
+   {
+    "name": "serdes_col_mut1",
+    "cmd": "bash tools/s81_link/run_serdes_col_bench.sh mut1 {RUN}/bench_mut1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "timeout_s": 3600,
+    "fail_regex": "^TB_S81_PDIE_COL FAIL$",
+    "fail_witness": "results/rtl/s81_link/col_1019/mut1/run.log"
+   },
+   {
+    "name": "serdes_col_mut2",
+    "cmd": "bash tools/s81_link/run_serdes_col_bench.sh mut2 {RUN}/bench_mut2",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "timeout_s": 3600,
+    "fail_regex": "^TB_S81_PDIE_COL FAIL$",
+    "fail_witness": "results/rtl/s81_link/col_1019/mut2/run.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/s81lk_kp4_dec_col/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/s81lk_kp4_dec_col/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 64
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/s81lk_kp4_dec_col --out {RUN}/record/views/ot_s81_kp4_dec_native_flat_lp --macro-view physical/ref_tile/s81lk_kp4_dchn/views/ot_s81_kp4_dchn --macro-view physical/ref_tile/s81lk_kp4_ddly/views/ot_s81_kp4_ddly --macro-view physical/ref_tile/s81lk_kp4_dout/views/ot_s81_kp4_dout --macro-view physical/ref_tile/s81lk_kp4_dsyn/views/ot_s81_kp4_dsyn > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/s81lk_kp4_dec_col/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/ref_tile/s81lk_kp4_dchn/views/ot_s81_kp4_dchn",
+   "physical/ref_tile/s81lk_kp4_ddly/views/ot_s81_kp4_ddly",
+   "physical/ref_tile/s81lk_kp4_dout/views/ot_s81_kp4_dout",
+   "physical/ref_tile/s81lk_kp4_dsyn/views/ot_s81_kp4_dsyn"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/s81lk_kp4_dec_col/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/s81lk_kp4_dec_col/s81lk_kp4_dec_col-col1-COMMIT"
+  }
+ ],
+ "cycles_added": 6,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "TW7-S81SERDES 10-19 (S81.STA.OWN.7): the S81 SerDes RX KP4 decoder as ONE landed-region column cluster (lp.py, landed-regions-standard-1018): the four closed column re-pins dsyn / ddly / dchn / dout stacked N-S in their own recovered-clock regions ck_syn / ck_dly / ck_chn / ck_out, all 11 seams LANDED (D 4 / E 2, 9,978 landing flops, fixed latency, no backpressure), face registers on every port, lp reset runs (depth 3, 2 hops at reach 405).  Replaces the retired 2x2 s81lk_kp4_dec (its one-spine p2 gate failed the clock rule 83.5 / 87.2 ps).  First level of the column parent ot_pdie_serdes_col: the outer column (PMA abstracts + this + rate_match + enc, rck / clk async) needs async regions that lp.py / landed_cluster do not support yet.  Width 302.4 (not the plan's 259.2): the 20-um macro-edge rule with the widest child dout 248.4 needs >= 292.7 um."
+}

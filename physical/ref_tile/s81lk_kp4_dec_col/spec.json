@@ -1,0 +1,333 @@
+{
+ "name": "s81lk_kp4_dec_col",
+ "top": "ot_s81_kp4_dec_native_flat_lp",
+ "kind": "cluster",
+ "sources": [
+  "rtl/dsrom_sys/s81_link/lp/ot_s81_kp4_dec_native_flat_lp.sv",
+  "rtl/common/landed_parent/ot_pl_land.sv",
+  "rtl/dsrom_sys/s81_link/ot_s81_kp4_common.sv",
+  "rtl/dsrom_sys/s81_link/ot_s81_kp4_bm.sv",
+  "rtl/dsrom_sys/s81_link/ot_s81_kp4_dsyn.sv",
+  "rtl/dsrom_sys/s81_link/ot_s81_kp4_ddly.sv",
+  "rtl/dsrom_sys/s81_link/ot_s81_kp4_dchn.sv",
+  "rtl/dsrom_sys/s81_link/ot_s81_kp4_dout.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.v",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v"
+ ],
+ "params": {
+  "MUT": 0
+ },
+ "orfs_vars": {
+  "VERILOG_INCLUDE_DIRS": "/src/rtl/dsrom_sys/s81_link"
+ },
+ "clock": "multiple_cts_roots",
+ "clock_port": "ck_syn",
+ "clock_ports": [
+  "ck_syn",
+  "ck_dly",
+  "ck_chn",
+  "ck_out"
+ ],
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_syn"
+   ],
+   "inputs": [
+    "rst_n",
+    "p_v",
+    "p_d"
+   ],
+   "outputs": [
+    "lock",
+    "n_relock"
+   ]
+  },
+  "dly": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_dly"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "chn": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_chn"
+   ],
+   "inputs": [],
+   "outputs": [
+    "n_corr",
+    "n_unc"
+   ]
+  },
+  "out": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_out"
+   ],
+   "inputs": [],
+   "outputs": [
+    "q_v",
+    "q_first",
+    "q_unc",
+    "q_nerr",
+    "q_seq",
+    "q_d"
+   ]
+  }
+ },
+ "landed_record": "results/arch/serdes_native_1019/ot_s81_kp4_dec_native_flat_lp_record.json",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "reset_landing": {
+  "enable": false,
+  "reason": "the lp.py RTL lands it: rst_n -> u_lpr_root (ck_syn) -> u_lpr_<r> regional runs (depth 3, chn/out 2 hops at reach 405) -> per-child pads; the port net has ONE sink"
+ },
+ "outline": {
+  "w": 302.4,
+  "h": 959.04,
+  "exact": true
+ },
+ "children": [
+  {
+   "view": "physical/ref_tile/s81lk_kp4_dsyn/views/ot_s81_kp4_dsyn",
+   "count": 1,
+   "inst": "u_syn",
+   "at": [
+    43.2,
+    25.92
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81lk_kp4_ddly/views/ot_s81_kp4_ddly",
+   "count": 1,
+   "inst": "u_dly",
+   "at": [
+    25.92,
+    285.12
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81lk_kp4_dchn/views/ot_s81_kp4_dchn",
+   "count": 1,
+   "inst": "u_chn",
+   "at": [
+    25.92,
+    457.92
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81lk_kp4_dout/views/ot_s81_kp4_dout",
+   "count": 1,
+   "inst": "u_out",
+   "at": [
+    25.92,
+    699.84
+   ]
+  }
+ ],
+ "pins": {
+  "S": [
+   "p_d",
+   "p_v",
+   "rst_n",
+   "ck_syn",
+   "lock",
+   "n_relock"
+  ],
+  "W": [
+   "ck_dly",
+   "ck_chn",
+   "n_corr",
+   "n_unc",
+   "ck_out"
+  ],
+  "N": [
+   "q_v",
+   "q_first",
+   "q_unc",
+   "q_nerr",
+   "q_seq",
+   "q_d"
+  ]
+ },
+ "pin_ranges": {
+  "p_d": [
+   4.32,
+   129.6
+  ],
+  "p_v": [
+   130.68,
+   131.76
+  ],
+  "rst_n": [
+   133.92,
+   135.0
+  ],
+  "ck_syn": [
+   138.24,
+   139.32
+  ],
+  "lock": [
+   151.2,
+   152.28
+  ],
+  "n_relock": [
+   153.36,
+   196.56
+  ],
+  "ck_dly": [
+   279.72,
+   280.8
+  ],
+  "ck_chn": [
+   449.28,
+   450.36
+  ],
+  "n_corr": [
+   462.24,
+   505.44
+  ],
+  "n_unc": [
+   507.6,
+   550.8
+  ],
+  "ck_out": [
+   814.32,
+   815.4
+  ],
+  "q_v": [
+   125.28,
+   126.36
+  ],
+  "q_first": [
+   127.44,
+   128.52
+  ],
+  "q_unc": [
+   129.6,
+   130.68
+  ],
+  "q_nerr": [
+   131.76,
+   135.0
+  ],
+  "q_seq": [
+   136.08,
+   141.48
+  ],
+  "q_d": [
+   142.56,
+   272.16
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 64,
+  "period_ps": 833.333333,
+  "macro_halo_um": 5.4,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03
+ },
+ "child_lattice_um": 8.64,
+ "structural_change": "TW7-S81SERDES 10-19 (S81.STA.OWN.7): the S81 SerDes RX KP4 decoder as ONE landed-region column cluster (lp.py, landed-regions-standard-1018): the four closed column re-pins dsyn / ddly / dchn / dout stacked N-S in their own recovered-clock regions ck_syn / ck_dly / ck_chn / ck_out, all 11 seams LANDED (D 4 / E 2, 9,978 landing flops, fixed latency, no backpressure), face registers on every port, lp reset runs (depth 3, 2 hops at reach 405).  Replaces the retired 2x2 s81lk_kp4_dec (its one-spine p2 gate failed the clock rule 83.5 / 87.2 ps).  First level of the column parent ot_pdie_serdes_col: the outer column (PMA abstracts + this + rate_match + enc, rck / clk async) needs async regions that lp.py / landed_cluster do not support yet.  Width 302.4 (not the plan's 259.2): the 20-um macro-edge rule with the widest child dout 248.4 needs >= 292.7 um.",
+ "job": {
+  "owner": "Claude:TW7-S81SERDES",
+  "branch": "claude/tw7-s81serdes-1019",
+  "tag": "col1",
+  "cycles_added": 6,
+  "purpose": "S81 SerDes RX KP4 decoder landed column cluster (dsyn/ddly/dchn/dout, 4 rck regions); level 1 of ot_pdie_serdes_col (S81.STA.OWN.7)",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_link",
+   "rtl/common/landed_parent",
+   "tools/landed_parent",
+   "tools/s81_link/run_serdes_col_bench.sh",
+   "results/arch/serdes_native_1019",
+   "results/rtl/s81_link/col_1019",
+   "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.v",
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v"
+  ],
+  "benches": [
+   {
+    "name": "serdes_col_link",
+    "cmd": "bash tools/s81_link/run_serdes_col_bench.sh col {RUN}/bench_col",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "timeout_s": 3600,
+    "pass_regex": "^TB_S81_PDIE_COL PASS$",
+    "min_count_regex": "^TB_S81_PDIE_COL MODE=0 MUT=0 sent=(\\d+) got=\\d+ bad=0 "
+   },
+   {
+    "name": "serdes_col_mut1",
+    "cmd": "bash tools/s81_link/run_serdes_col_bench.sh mut1 {RUN}/bench_mut1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "timeout_s": 3600,
+    "fail_regex": "^TB_S81_PDIE_COL FAIL$",
+    "fail_witness": "results/rtl/s81_link/col_1019/mut1/run.log"
+   },
+   {
+    "name": "serdes_col_mut2",
+    "cmd": "bash tools/s81_link/run_serdes_col_bench.sh mut2 {RUN}/bench_mut2",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "timeout_s": 3600,
+    "fail_regex": "^TB_S81_PDIE_COL FAIL$",
+    "fail_witness": "results/rtl/s81_link/col_1019/mut2/run.log"
+   }
+  ],
+  "bench_note": "The lp.py lockstep bench (random p_d) never locks the decoder, so its landing mutants (MUT 1 = landing 0 bypassed) PASS there (TW7 run 10-19 on Verilator 5.050: MUT 0 PASS, MUT 1 PASS): it is not a witness.  The kit top is benched inside the two-die link bench tb_s81_pdie_col (real KP4 frames, 300 ppm, bit errors): col PASS 6000/6000, mut1 (landing 0 bypass) / mut2 (landing 0 read K+1) FAIL."
+ },
+ "macros": [],
+ "inter": [],
+ "recipe": 4,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}

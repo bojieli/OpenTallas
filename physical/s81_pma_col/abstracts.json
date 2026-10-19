@@ -1,0 +1,38 @@
+{
+ "ot_s81_pma_rxm": {
+  "name": "ot_s81_pma_rxm",
+  "kind": "analog_pma",
+  "width_um": 129.024,
+  "height_um": 2250.216,
+  "area_um2": 290331.869,
+  "signal_pins": 1089,
+  "clk_to_q_ns": 0.218,
+  "setup_ns": 0.05,
+  "basis": "S81 SerDes PMA RX half (modelled analog, ot_s81_pma_bm LAT 4 behaviour)",
+  "clock": "pma_rck",
+  "clock_edge": "W",
+  "files": {
+   "lef": "physical/s81_pma_col/ot_s81_pma_rxm/ot_s81_pma_rxm.lef",
+   "lib": "physical/s81_pma_col/ot_s81_pma_rxm/ot_s81_pma_rxm.lib",
+   "v": "physical/s81_pma_col/ot_s81_pma_rxm/ot_s81_pma_rxm.v"
+  }
+ },
+ "ot_s81_pma_txm": {
+  "name": "ot_s81_pma_txm",
+  "kind": "analog_pma",
+  "width_um": 129.024,
+  "height_um": 2250.216,
+  "area_um2": 290331.869,
+  "signal_pins": 1091,
+  "clk_to_q_ns": 0.218,
+  "setup_ns": 0.05,
+  "basis": "S81 SerDes PMA TX half (modelled analog, ot_s81_pma_bm LAT 4 behaviour)",
+  "clock": "ck",
+  "clock_edge": "N",
+  "files": {
+   "lef": "physical/s81_pma_col/ot_s81_pma_txm/ot_s81_pma_txm.lef",
+   "lib": "physical/s81_pma_col/ot_s81_pma_txm/ot_s81_pma_txm.lib",
+   "v": "physical/s81_pma_col/ot_s81_pma_txm/ot_s81_pma_txm.v"
+  }
+ }
+}

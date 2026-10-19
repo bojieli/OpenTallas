@@ -237,6 +237,12 @@
   }
  ],
  "pads": [],
+ "loose_status": {
+  "nets": [],
+  "lag": [],
+  "sticky_outputs": {},
+  "note": "sticky status flags (no reservation / valid / payload effect): landed, outside the offset solve; the reader sees each flag lag_edges later than the flat parent"
+ },
  "reset": {
   "port": "rst_n",
   "root_region": "syn",
@@ -244,7 +250,7 @@
   "hops": {
    "syn": 0,
    "dly": 1,
-   "chn": 1,
+   "chn": 2,
    "out": 2
   },
   "note": "flat reference == landed parent with its reset delayed by depth; child c's reset run is depth + t(c)"
@@ -252,7 +258,7 @@
  "flops": {
   "landing": 9978,
   "pads": 0,
-  "reset": 63
+  "reset": 21
  },
  "communicating_region_pairs": {
   "landed": [
@@ -304,6 +310,9 @@
    "n_relock": 0
   },
   "reset_release_added_edges": 3,
+  "status_flag_lag_edges": {},
+  "schedule": "offsets",
+  "ref_params": null,
   "max_added_edges": 6
  },
  "warnings": [

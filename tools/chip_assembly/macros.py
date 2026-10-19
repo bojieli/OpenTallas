@@ -87,6 +87,10 @@ class MacroSpec:
     height_um: float
     pins: list[Pin]
     clock: str = "clk"
+    # TW7-S81SERDES 10-19: the clock pin's edge and span (um along that edge).  Default W / whole edge (unchanged
+    # output).  ot_s81_pma_txm abuts ot_s81_pma_rxm on its W edge, so its lane clock must enter from N.
+    clock_edge: str = "W"
+    clock_span: tuple[float, float] | None = None
     clk_to_q_ns: float = FAKERAM_CLK_TO_Q_NS
     setup_ns: float = FAKERAM_SETUP_NS
     hold_ns: float = FAKERAM_HOLD_NS
@@ -142,12 +146,15 @@ def _edge_positions(n: int, length: float, offset: float, pitch: float,
 
 
 def pin_rects(spec: MacroSpec) -> dict[str, tuple[str, tuple[float, float, float, float]]]:
-    """bit name -> (layer, rect), the clock first on the west edge.
+    """bit name -> (layer, rect), the clock first on its edge (spec.clock_edge, default west).
 
     Pins are grouped by (edge, span); a group is spread evenly over its span
     (the whole edge when the pin names none), in declaration order.
     """
-    groups: dict[tuple[str, Any], list[str]] = {("W", None): [spec.clock]}
+    if spec.clock_edge not in EDGES:
+        raise ValueError(f"{spec.name}.{spec.clock}: clock edge {spec.clock_edge!r} not in {EDGES}")
+    cspan = tuple(spec.clock_span) if spec.clock_span else None
+    groups: dict[tuple[str, Any], list[str]] = {(spec.clock_edge, cspan): [spec.clock]}
     for pin in spec.pins:
         for i, bit in enumerate(pin.bits()):
             edge, span = pin.place_of_bit(i)

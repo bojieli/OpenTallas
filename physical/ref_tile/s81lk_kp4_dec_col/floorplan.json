@@ -1,0 +1,218 @@
+{
+ "schema": "opentallas.ref_tile.floorplan.v1",
+ "name": "s81lk_kp4_dec_col",
+ "top": "ot_s81_kp4_dec_native_flat_lp",
+ "kind": "cluster",
+ "die": [
+  0,
+  0,
+  302.4,
+  959.04
+ ],
+ "core": [
+  2.16,
+  2.16,
+  300.23999999999995,
+  956.88
+ ],
+ "why": "spec outline (exact: the closed view's sub-slot)",
+ "std_area_um2": null,
+ "layer_contract": {
+  "children": {
+   "ot_s81_kp4_dsyn": "M5",
+   "ot_s81_kp4_ddly": "M5",
+   "ot_s81_kp4_dchn": "M5",
+   "ot_s81_kp4_dout": "M5"
+  },
+  "pg_layer": "M7",
+  "rlayers": [
+   "M2",
+   "M7"
+  ],
+  "strap_layer": "M8"
+ },
+ "pins": {
+  "S": [
+   "p_d",
+   "p_v",
+   "rst_n",
+   "ck_syn",
+   "lock",
+   "n_relock"
+  ],
+  "W": [
+   "ck_dly",
+   "ck_chn",
+   "n_corr",
+   "n_unc",
+   "ck_out"
+  ],
+  "N": [
+   "q_v",
+   "q_first",
+   "q_unc",
+   "q_nerr",
+   "q_seq",
+   "q_d"
+  ]
+ },
+ "clock_port": "ck_syn",
+ "clock_ports": [
+  "ck_syn",
+  "ck_dly",
+  "ck_chn",
+  "ck_out"
+ ],
+ "blocks": [
+  {
+   "kind": "child",
+   "view": "physical/ref_tile/s81lk_kp4_dsyn/views/ot_s81_kp4_dsyn",
+   "master": "ot_s81_kp4_dsyn",
+   "inst": "u_syn",
+   "idx": 0,
+   "x": 43.2,
+   "y": 25.92,
+   "w": 216.0,
+   "h": 216.0,
+   "orient": "R0",
+   "offtrack": 0
+  },
+  {
+   "kind": "child",
+   "view": "physical/ref_tile/s81lk_kp4_ddly/views/ot_s81_kp4_ddly",
+   "master": "ot_s81_kp4_ddly",
+   "inst": "u_dly",
+   "idx": 0,
+   "x": 25.92,
+   "y": 285.12,
+   "w": 237.6,
+   "h": 146.88,
+   "orient": "R0",
+   "offtrack": 0
+  },
+  {
+   "kind": "child",
+   "view": "physical/ref_tile/s81lk_kp4_dchn/views/ot_s81_kp4_dchn",
+   "master": "ot_s81_kp4_dchn",
+   "inst": "u_chn",
+   "idx": 0,
+   "x": 25.92,
+   "y": 457.92,
+   "w": 216.0,
+   "h": 194.4,
+   "orient": "R0",
+   "offtrack": 0
+  },
+  {
+   "kind": "child",
+   "view": "physical/ref_tile/s81lk_kp4_dout/views/ot_s81_kp4_dout",
+   "master": "ot_s81_kp4_dout",
+   "inst": "u_out",
+   "idx": 0,
+   "x": 25.92,
+   "y": 699.84,
+   "w": 248.4,
+   "h": 233.28,
+   "orient": "R0",
+   "offtrack": 0
+  }
+ ],
+ "findings": [
+  [
+   "WARN",
+   "macro_grid",
+   "ot_s81_kp4_dsyn#0: origin (43.2, 25.92) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "ot_s81_kp4_ddly#0: origin (25.92, 285.12) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "ot_s81_kp4_dchn#0: origin (25.92, 457.92) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "ot_s81_kp4_dout#0: origin (25.92, 699.84) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "fill",
+   "parent kit without std_area_um2: fill not computed at gen (the gate measures it)",
+   "pass --area-um2 / std_area_um2 from the synthesis smoke"
+  ]
+ ],
+ "referenced": [
+  "rtl/dsrom_sys/s81_link/lp/ot_s81_kp4_dec_native_flat_lp.sv",
+  "rtl/common/landed_parent/ot_pl_land.sv",
+  "rtl/dsrom_sys/s81_link/ot_s81_kp4_common.sv",
+  "rtl/dsrom_sys/s81_link/ot_s81_kp4_bm.sv",
+  "rtl/dsrom_sys/s81_link/ot_s81_kp4_dsyn.sv",
+  "rtl/dsrom_sys/s81_link/ot_s81_kp4_ddly.sv",
+  "rtl/dsrom_sys/s81_link/ot_s81_kp4_dchn.sv",
+  "rtl/dsrom_sys/s81_link/ot_s81_kp4_dout.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.v",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v",
+  "physical/ref_tile/s81lk_kp4_dec_col/kit.env",
+  "physical/ref_tile/s81lk_kp4_dec_col/clock.sdc",
+  "physical/ref_tile/s81lk_kp4_dec_col/signoff.sdc",
+  "physical/ref_tile/s81lk_kp4_dec_col/pdn.tcl",
+  "physical/ref_tile/s81lk_kp4_dec_col/pre_cts.tcl",
+  "physical/ref_tile/s81lk_kp4_dec_col/post_cts.tcl",
+  "physical/ref_tile/s81lk_kp4_dec_col/post_grt.tcl",
+  "physical/ref_tile/s81lk_kp4_dec_col/pre_drt.tcl",
+  "physical/ref_tile/s81lk_kp4_dec_col/pre_fill.tcl",
+  "physical/ref_tile/s81lk_kp4_dec_col/post_fill.tcl",
+  "physical/ref_tile/s81lk_kp4_dec_col/pre_grt.tcl",
+  "physical/ref_tile/s81lk_kp4_dec_col/post_drt.tcl",
+  "tools/ref_tile/ref_route.sh",
+  "physical/qwen_die_masters/io_ref_skew.sdc",
+  "physical/qwen_die_masters/io_plain.sdc",
+  "physical/qwen_die_masters/repair_budget.tcl",
+  "physical/qwen_die_masters/pre_cts_skew.tcl",
+  "physical/qwen_die_masters/pre_ref_skew.tcl",
+  "physical/qwen_die_masters/post_plain.tcl",
+  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+  "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/qwen_die_masters/io_flop_at_pins.tcl",
+  "physical/qwen_die_masters/out_flop_release.tcl",
+  "physical/dsrom_window_source/leaf_iohold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/dsrom_window_source/leaf_inhold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/ref_tile/s81lk_kp4_dec_col/pre_gpl.tcl",
+  "physical/ref_tile/s81lk_kp4_dec_col/pre_dpl.tcl",
+  "physical/common_flow/pin_reg_split.tcl",
+  "physical/common_flow/clock_entries.tcl",
+  "physical/ref_tile/s81lk_kp4_dec_col/clock_entry.sdc",
+  "physical/ref_tile/s81lk_kp4_dsyn/views/ot_s81_kp4_dsyn/insertion.json",
+  "physical/ref_tile/s81lk_kp4_ddly/views/ot_s81_kp4_ddly/insertion.json",
+  "physical/ref_tile/s81lk_kp4_dchn/views/ot_s81_kp4_dchn/insertion.json",
+  "physical/ref_tile/s81lk_kp4_dout/views/ot_s81_kp4_dout/insertion.json",
+  "results/arch/serdes_native_1019/ot_s81_kp4_dec_native_flat_lp_record.json",
+  "physical/ref_tile/s81lk_kp4_dsyn/views/ot_s81_kp4_dsyn/ot_s81_kp4_dsyn.lef",
+  "physical/ref_tile/s81lk_kp4_dsyn/views/ot_s81_kp4_dsyn/ot_s81_kp4_dsyn_ss.lib",
+  "physical/ref_tile/s81lk_kp4_dsyn/views/ot_s81_kp4_dsyn/ot_s81_kp4_dsyn_ff.lib",
+  "physical/ref_tile/s81lk_kp4_dsyn/views/ot_s81_kp4_dsyn/ot_s81_kp4_dsyn_tt.lib",
+  "physical/ref_tile/s81lk_kp4_ddly/views/ot_s81_kp4_ddly/ot_s81_kp4_ddly.lef",
+  "physical/ref_tile/s81lk_kp4_ddly/views/ot_s81_kp4_ddly/ot_s81_kp4_ddly_ss.lib",
+  "physical/ref_tile/s81lk_kp4_ddly/views/ot_s81_kp4_ddly/ot_s81_kp4_ddly_ff.lib",
+  "physical/ref_tile/s81lk_kp4_ddly/views/ot_s81_kp4_ddly/ot_s81_kp4_ddly_tt.lib",
+  "physical/ref_tile/s81lk_kp4_dchn/views/ot_s81_kp4_dchn/ot_s81_kp4_dchn.lef",
+  "physical/ref_tile/s81lk_kp4_dchn/views/ot_s81_kp4_dchn/ot_s81_kp4_dchn_ss.lib",
+  "physical/ref_tile/s81lk_kp4_dchn/views/ot_s81_kp4_dchn/ot_s81_kp4_dchn_ff.lib",
+  "physical/ref_tile/s81lk_kp4_dchn/views/ot_s81_kp4_dchn/ot_s81_kp4_dchn_tt.lib",
+  "physical/ref_tile/s81lk_kp4_dout/views/ot_s81_kp4_dout/ot_s81_kp4_dout.lef",
+  "physical/ref_tile/s81lk_kp4_dout/views/ot_s81_kp4_dout/ot_s81_kp4_dout_ss.lib",
+  "physical/ref_tile/s81lk_kp4_dout/views/ot_s81_kp4_dout/ot_s81_kp4_dout_ff.lib",
+  "physical/ref_tile/s81lk_kp4_dout/views/ot_s81_kp4_dout/ot_s81_kp4_dout_tt.lib",
+  "physical/ref_tile/s81lk_kp4_dec_col/place.tcl"
+ ]
+}

@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "ot_s81_kp4_dec_native_flat_lp",
+ "enable": false,
+ "reason": "the lp.py RTL lands it: rst_n -> u_lpr_root (ck_syn) -> u_lpr_<r> regional runs (depth 3, chn/out 2 hops at reach 405) -> per-child pads; the port net has ONE sink"
+}

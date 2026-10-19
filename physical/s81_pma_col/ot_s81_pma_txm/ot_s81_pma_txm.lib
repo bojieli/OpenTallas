@@ -1,0 +1,138 @@
+library(ot_s81_pma_txm) {
+    technology (cmos);
+    delay_model : table_lookup;
+    time_unit : "1ns";
+    voltage_unit : "1V";
+    current_unit : "1uA";
+    leakage_power_unit : "1uW";
+    pulling_resistance_unit : "1kohm";
+    capacitive_load_unit (1,pf);
+    nom_process : 1;
+    nom_temperature : 25.000;
+    nom_voltage : 0.7;
+    operating_conditions(tt_0p7_25) { process : 1; temperature : 25.000; voltage : 0.7; tree_type : balanced_tree; }
+    default_operating_conditions : tt_0p7_25;
+    default_max_transition : 0.320;
+    default_fanout_load : 1;
+    default_input_pin_cap : 0.0;
+    default_output_pin_cap : 0.0;
+    default_inout_pin_cap : 0.0;
+    default_cell_leakage_power : 0;
+    default_leakage_power_density : 0.0;
+    slew_lower_threshold_pct_rise : 20.000;
+    slew_upper_threshold_pct_rise : 80.000;
+    slew_lower_threshold_pct_fall : 20.000;
+    slew_upper_threshold_pct_fall : 80.000;
+    input_threshold_pct_rise : 50.000;
+    input_threshold_pct_fall : 50.000;
+    output_threshold_pct_rise : 50.000;
+    output_threshold_pct_fall : 50.000;
+    lu_table_template(ot_s81_pma_txm_delay) { variable_1 : input_net_transition; variable_2 : total_output_net_capacitance; index_1 ("1000, 1001"); index_2 ("1000, 1001"); }
+    lu_table_template(ot_s81_pma_txm_slew) { variable_1 : input_net_transition; variable_2 : total_output_net_capacitance; index_1 ("1000, 1001"); index_2 ("1000, 1001"); }
+    lu_table_template(ot_s81_pma_txm_check) { variable_1 : related_pin_transition; variable_2 : constrained_pin_transition; index_1 ("1000, 1001"); index_2 ("1000, 1001"); }
+    type (ot_s81_pma_txm_bus544) { base_type : array; data_type : bit; bit_width : 544; bit_from : 543; bit_to : 0; downto : true; }
+    cell(ot_s81_pma_txm) {
+        area : 290331.869;
+        interface_timing : true;
+        dont_use : true;
+        dont_touch : true;
+        pin(ck) { direction : input; capacitance : 0.020; clock : true; }
+        pin(d_v) {
+            direction : input;
+            capacitance : 0.0020;
+            timing() {
+                related_pin : "ck";
+                timing_type : setup_rising;
+            rise_constraint(ot_s81_pma_txm_check) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0500, 0.0500", "0.0500, 0.0500");
+            }
+            fall_constraint(ot_s81_pma_txm_check) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0500, 0.0500", "0.0500, 0.0500");
+            }
+            }
+            timing() {
+                related_pin : "ck";
+                timing_type : hold_rising;
+            rise_constraint(ot_s81_pma_txm_check) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0500, 0.0500", "0.0500, 0.0500");
+            }
+            fall_constraint(ot_s81_pma_txm_check) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0500, 0.0500", "0.0500, 0.0500");
+            }
+            }
+        }
+        bus(d) { bus_type : ot_s81_pma_txm_bus544;
+            direction : input;
+            capacitance : 0.0020;
+            timing() {
+                related_pin : "ck";
+                timing_type : setup_rising;
+            rise_constraint(ot_s81_pma_txm_check) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0500, 0.0500", "0.0500, 0.0500");
+            }
+            fall_constraint(ot_s81_pma_txm_check) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0500, 0.0500", "0.0500, 0.0500");
+            }
+            }
+            timing() {
+                related_pin : "ck";
+                timing_type : hold_rising;
+            rise_constraint(ot_s81_pma_txm_check) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0500, 0.0500", "0.0500, 0.0500");
+            }
+            fall_constraint(ot_s81_pma_txm_check) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0500, 0.0500", "0.0500, 0.0500");
+            }
+            }
+        }
+        bus(pma_tx) { bus_type : ot_s81_pma_txm_bus544;
+            direction : output;
+            max_capacitance : 0.500;
+            timing() {
+                related_pin : "ck";
+                timing_type : rising_edge;
+                timing_sense : non_unate;
+            cell_rise(ot_s81_pma_txm_delay) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.2180, 0.2180", "0.2180, 0.2180");
+            }
+            cell_fall(ot_s81_pma_txm_delay) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.2180, 0.2180", "0.2180, 0.2180");
+            }
+            rise_transition(ot_s81_pma_txm_slew) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0200, 0.0200", "0.0200, 0.0200");
+            }
+            fall_transition(ot_s81_pma_txm_slew) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0200, 0.0200", "0.0200, 0.0200");
+            }
+            }
+        }
+        pin(pma_tck) {
+            direction : output;
+            max_capacitance : 0.500;
+        }
+    }
+}

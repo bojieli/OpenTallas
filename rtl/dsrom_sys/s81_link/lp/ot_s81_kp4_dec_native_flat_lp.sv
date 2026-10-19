@@ -47,7 +47,7 @@ wire [31:0] face_n_relock;
     wire lpr_root;  ot_pl_pad #(.W(1), .N(1)) u_lpr_root (.ck(ck_syn), .d(rst_n), .q(lpr_root));
     wire lpr_syn;  ot_pl_pad #(.W(1), .N(2)) u_lpr_syn (.ck(ck_syn), .d(lpr_root), .q(lpr_syn));   // 0 hop(s) from syn
     wire lpr_dly;  ot_pl_pad #(.W(1), .N(2)) u_lpr_dly (.ck(ck_dly), .d(lpr_root), .q(lpr_dly));   // 1 hop(s) from syn
-    wire lpr_chn;  ot_pl_pad #(.W(1), .N(2)) u_lpr_chn (.ck(ck_chn), .d(lpr_root), .q(lpr_chn));   // 1 hop(s) from syn
+    wire lpr_chn;  ot_pl_pad #(.W(1), .N(2)) u_lpr_chn (.ck(ck_chn), .d(lpr_root), .q(lpr_chn));   // 2 hop(s) from syn
     wire lpr_out;  ot_pl_pad #(.W(1), .N(2)) u_lpr_out (.ck(ck_out), .d(lpr_root), .q(lpr_out));   // 2 hop(s) from syn
     // ---- LANDING 0: x_q syn -> dly, 544 b (u_dly.w_d)
     wire [4*((543) - (0) + 1)-1:0] lpl_0_bank;  wire [11:0] lpl_0_epo;  wire [3:0] lpl_0_vld;  wire [543:0] x_q__l_dly, lpl_0_o;
