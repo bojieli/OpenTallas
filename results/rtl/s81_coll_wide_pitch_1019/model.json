@@ -1,0 +1,343 @@
+{
+  "area": {
+    "array_height_um": 14.04,
+    "array_width_um": 157.248,
+    "bank_control_height_um": 0.0,
+    "cell_area_um2": 0.03265919999999999,
+    "cell_col_pitch_um": 0.3024,
+    "cell_row_pitch_um": 0.108,
+    "column_height_um": 15.523163260579265,
+    "core_height_um": 29.563163260579266,
+    "core_width_um": 173.94799999999998,
+    "data_array_area_um2": 2140.3533311999995,
+    "decoder_width_um": 16.7,
+    "geometry_constants_um": {
+      "column_fixed": 9.082108840386176,
+      "column_per_mux_bit": 0.5,
+      "control_extra": 1.5,
+      "decoder_fixed": 4.0,
+      "decoder_per_row_bit": 0.45,
+      "fuse_compare_per_spare": 0.6,
+      "rom_column_fixed": 5.0,
+      "rom_decoder_fixed": 3.2
+    },
+    "macro_area_um2": 7618.09824,
+    "macro_height_um": 43.752,
+    "macro_width_um": 174.12,
+    "physical_array_area_um2": 2207.76192
+  },
+  "array_escape_qualification": null,
+  "compiler_provenance": {
+    "configs/hardware/technology.json": "17bcb8af6dffcbbe1817c60600b4b6961a06a6c58a773f9e1eaba88741b36706",
+    "results/asap7_physical/bitcell_density/bitcell_density.json": "8bde87086a7f97e23df4c826f28bf4e8510a3180360116ebe92655abdce13484",
+    "tools/mem_compiler/asap7.py": "5d655e0acdaaf386a1c8602b9ca01dfed64250f094355547703e95a40509afe6",
+    "tools/mem_compiler/asap7_calibration.json": "db9005199aaf928750e61b6831e7b9552d0eafa0522a1220fe3cdd526a2902b0",
+    "tools/mem_compiler/behav.py": "56db6bf14906a4152ea975a038dbce585e84ecbbf76fff778e99dbffac9685c5",
+    "tools/mem_compiler/model_s81_coll_wide_pitch_1019.py": "9f8f26cc75a77d42b7b8157d46e1d0d1aabefbe5a8ff62a6a2d737976b7b4535",
+    "tools/mem_compiler/sram_gen.py": "b876be0fa55dad638d999cfee084c2176014e60720236e32025f53cef63faccf",
+    "tools/mem_compiler/views.py": "903794eb3e93fc6bee510ad90d84f16a30bcfba5a97b3b6dc1babec235be8dfa"
+  },
+  "contacts": 437,
+  "cycle_change_proposed": 0,
+  "face_contact_centers_um": {
+    "first": 0.78,
+    "last_e": 42.444,
+    "last_w": 42.636
+  },
+  "face_contacts": {
+    "E": 218,
+    "W": 219
+  },
+  "families": [
+    {
+      "area_each_um2": 7618.09824,
+      "clock_contacts": 10,
+      "count": 10,
+      "name": "ot_sram_1r1w_512x128_m4_r2c2_p192_rc2",
+      "raw_bits": 655360,
+      "role": "payload",
+      "useful_bits": 566272
+    },
+    {
+      "area_each_um2": 2054.26368,
+      "clock_contacts": 5,
+      "count": 5,
+      "name": "ot_sram_1r1w_32x128_m1_p192_rc",
+      "raw_bits": 20480,
+      "role": "credit",
+      "useful_bits": 4424
+    },
+    {
+      "area_each_um2": 553.589568,
+      "clock_contacts": 20,
+      "count": 10,
+      "name": "ot_sram_1r1w2c_32x64_m1",
+      "raw_bits": 20480,
+      "role": "gearbox",
+      "useful_bits": 2380
+    }
+  ],
+  "full_face_density": {
+    "E": 4.982629365514719,
+    "W": 5.0054854635216675
+  },
+  "name": "ot_sram_1r1w_512x128_m4_r2c2_p192_rc2",
+  "native_qualification": null,
+  "old_payload_macro_area_um2": 51776.323200000006,
+  "parent_fit": null,
+  "physical_payload_bits_including_spares": 676000,
+  "pitch_um": 0.192,
+  "required_usable_face_um": 36.5,
+  "source_views": {
+    "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc/ot_sram_1r1w_32x128_m1_p192_rc.json": {
+      "ref": "bb61ae67c",
+      "sha256": "559bcc76dfae8994cfdc8c1274066a8a5a527a6d09be1838fc8b2bdfaed886db"
+    },
+    "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc/ot_sram_1r1w_32x128_m1_p192_rc.lef": {
+      "ref": "bb61ae67c",
+      "sha256": "382d89f3b087fbf3a10552a3363c7346228bdfcc9d923245ac1093c0551db9fe"
+    },
+    "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc/ot_sram_1r1w_32x128_m1_p192_rc.v": {
+      "ref": "bb61ae67c",
+      "sha256": "677905209f60681d770b887b4295d72a518d2ea1f9ed8f717792be3ac457fe70"
+    },
+    "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc/ot_sram_1r1w_32x128_m1_p192_rc_bb.v": {
+      "ref": "bb61ae67c",
+      "sha256": "abcda04ef59dc8c8056b48e3d1b1aab255d4d3713d658644e57a6638974799ba"
+    },
+    "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc/ot_sram_1r1w_32x128_m1_p192_rc_ff.lib": {
+      "ref": "bb61ae67c",
+      "sha256": "bb01e29f9d14f7d6bf0a2d76bc365895ef54e6e804956a850a786ce68baa719b"
+    },
+    "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc/ot_sram_1r1w_32x128_m1_p192_rc_ss.lib": {
+      "ref": "bb61ae67c",
+      "sha256": "58be955664209402cd4dfe27e6295a2630d6fc491ff17f0bab3d2d5d83393746"
+    },
+    "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc/ot_sram_1r1w_32x128_m1_p192_rc_tt.lib": {
+      "ref": "bb61ae67c",
+      "sha256": "16518b1f675fc4d29119e7c74a822d7e9e6893a2006ba35c696d88609e6704e9"
+    },
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.json": {
+      "ref": "e26d92503",
+      "sha256": "b29a2cbba8646cf6b05367e317af4162a25a0ddf101309507459966522c7c8f5"
+    },
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.lef": {
+      "ref": "e26d92503",
+      "sha256": "d7a029998af5a52564714748de1529d82273b118f2bae53658f5af92ed148d2b"
+    },
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.v": {
+      "ref": "e26d92503",
+      "sha256": "2a2a1aa8e015910789e25f178352fb4af6c0255fbbe472708c3a4bd5922bce9e"
+    },
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_bb.v": {
+      "ref": "e26d92503",
+      "sha256": "a21c47f48da07db2e746b68c5519a41f0b53185d8de066689040631b29c1a19e"
+    },
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_ff.lib": {
+      "ref": "e26d92503",
+      "sha256": "a2fc1ab2421ecf212aaaecec108a5b1a8d0fd3010c9b584c3648ffd96f2b5989"
+    },
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_ss.lib": {
+      "ref": "e26d92503",
+      "sha256": "0c7692196d7fc8e8b123455828956499e24ac24d5781de273a0253b63a4b1880"
+    },
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_tt.lib": {
+      "ref": "e26d92503",
+      "sha256": "fd9dfbb0ab5127026d7024a5c59cac0d87b57a6ea42cf9c547abb3e501a2cbe7"
+    },
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.json": {
+      "ref": "eb8141cf8",
+      "sha256": "ff563d0bfc50d97e09ebbd0427858f4e3a2837bab16503d6f57831f88cded60b"
+    },
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef": {
+      "ref": "eb8141cf8",
+      "sha256": "bf018f2d8886b98a4a9644a788c8d26231d2d10eeb333c2b732cc5556233eca1"
+    },
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v": {
+      "ref": "eb8141cf8",
+      "sha256": "6f87b48e0860f3645178d2973638322af7867280a6884809be5e2024b2d91828"
+    },
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_bb.v": {
+      "ref": "eb8141cf8",
+      "sha256": "a8fb2509a28f91a30c9b28184fd9be11f30eea9f847797cb8c5435f8870c6128"
+    },
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_ff.lib": {
+      "ref": "eb8141cf8",
+      "sha256": "74e4679510e68dc0d8bf27956decf2c3da8357349da6649d7a885a3c60108063"
+    },
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_ss.lib": {
+      "ref": "eb8141cf8",
+      "sha256": "f5f58120a3076a8bd999ab6ccfca8f57de49b985f74473f25fe69a3797f5f8cd"
+    },
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib": {
+      "ref": "eb8141cf8",
+      "sha256": "559775f07579bf289f40ca98841b0f3b1f39019ad7e4af4769dd863652d1d8b1"
+    }
+  },
+  "spec": {
+    "banks": 1,
+    "bits": 128,
+    "mux": 4,
+    "name": "ot_sram_1r1w_512x128_m4_r2c2_p192_rc2",
+    "ports": "1r1w",
+    "spare_cols": 2,
+    "spare_rows": 2,
+    "words": 512
+  },
+  "status": "MODEL_ONLY_NOT_BUILD_OR_ADMISSION",
+  "timing": {
+    "ff": {
+      "base": {
+        "breakdown": {
+          "bitline_cap_ff": 8.096400000000001,
+          "bitline_ps": 32.75198103628078,
+          "cell_current_ua": 24.720336736368004,
+          "column_mux_ps": 14.777241075555557,
+          "control_ps": 44.33172322666667,
+          "decode_ps": 93.8354808297778,
+          "fo4_ps": 14.777241075555557,
+          "output_ps": 44.33172322666667,
+          "precharge_ps": 31.32679626347178,
+          "read_cycle_ps": 318.03307739804444,
+          "sense_ps": 29.554482151111113,
+          "wordline_cap_ff": 134.96346628266667,
+          "wordline_ps": 86.23261389073629,
+          "write_cycle_ps": 301.8306515496799,
+          "write_ps": 270.5038552862081
+        },
+        "clk_cap_ff": 10.3732,
+        "clk_to_q_ps": 346.0436643943168,
+        "corner": "ff",
+        "hold_ps": 19.67222053777778,
+        "leakage_nw": 38090.491200000004,
+        "min_period_ps": 318.03307739804444,
+        "min_pulse_ps": 127.21323095921778,
+        "out_r_kohm": 0.31724855211381614,
+        "out_slew_intrinsic_ps": 22.165861613333334,
+        "pin_cap_ff": 0.683716,
+        "read_energy_fj": 503.8454257536598,
+        "setup_ps": 24.694771075555558,
+        "temperature": 0.0,
+        "voltage": 0.77,
+        "write_energy_fj": 1038.49281903366
+      },
+      "lead_cap_ff": 2.532352637068116,
+      "lead_delay_ps": 1.8530377648254137,
+      "lead_um": 14.188836739420736,
+      "proposed_clk_cap_ff": 12.905552637068116,
+      "proposed_clk_to_q_ps": 349.74973992396764,
+      "proposed_hold_ps": 23.378296067428607,
+      "proposed_min_period_ps": 321.7391529276953,
+      "proposed_min_pulse_ps": 130.9193064888686,
+      "proposed_out_slew_intrinsic_ps": 24.018899378158746,
+      "proposed_pin_cap_ff": 3.216068637068116,
+      "proposed_read_energy_fj": 1158.469724787371,
+      "proposed_setup_ps": 28.400846605206386,
+      "proposed_write_energy_fj": 1693.117118067371
+    },
+    "ss": {
+      "base": {
+        "breakdown": {
+          "bitline_cap_ff": 8.096400000000001,
+          "bitline_ps": 52.29158700233866,
+          "cell_current_ua": 15.483178966509284,
+          "column_mux_ps": 23.593241169166667,
+          "control_ps": 70.7797235075,
+          "decode_ps": 149.81708142420834,
+          "fo4_ps": 23.593241169166667,
+          "output_ps": 70.77972350750001,
+          "precharge_ps": 51.14368614620566,
+          "read_cycle_ps": 480.3331843324704,
+          "sense_ps": 47.186482338333334,
+          "wordline_cap_ff": 134.96346628266667,
+          "wordline_ps": 109.11462391388442,
+          "write_cycle_ps": 455.5920423071707,
+          "write_ps": 404.44835616096503
+        },
+        "clk_cap_ff": 8.68376,
+        "clk_to_q_ps": 524.0724742442052,
+        "corner": "ss",
+        "hold_ps": 30.074020584583334,
+        "leakage_nw": 38090.491200000004,
+        "min_period_ps": 480.3331843324704,
+        "min_pulse_ps": 192.1332737329882,
+        "out_r_kohm": 0.7083491406580278,
+        "out_slew_intrinsic_ps": 35.38986175375,
+        "pin_cap_ff": 0.578766,
+        "read_energy_fj": 385.5100569755905,
+        "setup_ps": 39.800541169166664,
+        "temperature": 100.0,
+        "voltage": 0.63,
+        "write_energy_fj": 731.5437158555904
+      },
+      "lead_cap_ff": 2.532352637068116,
+      "lead_delay_ps": 3.833846978343067,
+      "lead_um": 14.188836739420736,
+      "proposed_clk_cap_ff": 11.216112637068115,
+      "proposed_clk_to_q_ps": 531.7401682008913,
+      "proposed_hold_ps": 37.74171454126947,
+      "proposed_min_period_ps": 488.00087828915656,
+      "proposed_min_pulse_ps": 199.8009676896743,
+      "proposed_out_slew_intrinsic_ps": 39.223708732093066,
+      "proposed_pin_cap_ff": 3.111118637068116,
+      "proposed_read_energy_fj": 823.7296290560087,
+      "proposed_setup_ps": 47.4682351258528,
+      "proposed_write_energy_fj": 1169.7632879360085
+    },
+    "tt": {
+      "base": {
+        "breakdown": {
+          "bitline_cap_ff": 8.096400000000001,
+          "bitline_ps": 40.482000000000006,
+          "cell_current_ua": 20.0,
+          "column_mux_ps": 18.264918771111113,
+          "control_ps": 54.79475631333334,
+          "decode_ps": 115.98223419655558,
+          "fo4_ps": 18.264918771111113,
+          "output_ps": 54.79475631333334,
+          "precharge_ps": 39.07872791159102,
+          "read_cycle_ps": 380.88584645675326,
+          "sense_ps": 36.529837542222225,
+          "wordline_cap_ff": 134.96346628266667,
+          "wordline_ps": 94.0182904930511,
+          "write_cycle_ps": 361.21765559723315,
+          "write_ps": 322.1389276856421
+        },
+        "clk_cap_ff": 9.3458,
+        "clk_to_q_ps": 415.19529909991155,
+        "corner": "tt",
+        "hold_ps": 21.600259385555557,
+        "leakage_nw": 38090.491200000004,
+        "min_period_ps": 380.88584645675326,
+        "min_pulse_ps": 152.3543385827013,
+        "out_r_kohm": 0.4562575976456151,
+        "out_slew_intrinsic_ps": 27.39737815666667,
+        "pin_cap_ff": 0.619928,
+        "read_energy_fj": 443.1929019451734,
+        "setup_ps": 28.256178771111113,
+        "temperature": 25.0,
+        "voltage": 0.7,
+        "write_energy_fj": 878.4553659451733
+      },
+      "lead_cap_ff": 2.532352637068116,
+      "lead_delay_ps": 2.55707761088296,
+      "lead_um": 14.188836739420736,
+      "proposed_clk_cap_ff": 11.878152637068116,
+      "proposed_clk_to_q_ps": 420.3094543216775,
+      "proposed_hold_ps": 26.714414607321476,
+      "proposed_min_period_ps": 386.0000016785192,
+      "proposed_min_pulse_ps": 157.46849380446722,
+      "proposed_out_slew_intrinsic_ps": 29.95445576754963,
+      "proposed_pin_cap_ff": 3.152280637068116,
+      "proposed_read_energy_fj": 984.2047193284055,
+      "proposed_setup_ps": 33.370333992877036,
+      "proposed_write_energy_fj": 1419.4671833284056
+    }
+  },
+  "total_clock_contacts": 35,
+  "total_macro_area_um2": 91988.19648000001,
+  "total_physical_bits_including_spares": 716960,
+  "total_raw_bits": 696320,
+  "total_useful_bits": 573076,
+  "usable_face_um": 42.216
+}
