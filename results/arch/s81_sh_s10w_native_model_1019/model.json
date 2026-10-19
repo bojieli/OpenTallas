@@ -1,0 +1,403 @@
+{
+  "verdict": "MODEL_HOLD_NO_SOURCE_OR_GATE_GRANT",
+  "source": "40261329ff8bdcdfb6d8e344937c9f5c9e3a00bb",
+  "archive_sha256": "36b2f4a76535094f784228602fa7fe8c4abdb1f235fa8d9358a147731ffb507e",
+  "manifest_sha256": "87d4b8513ad09e4e0cb5b79d53803b41f4dbab1b479615a06a9c92079367ce5a",
+  "selected_source_dependencies": [
+    {
+      "path": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_16x257_m1/ot_sram_1r1w2c_16x257_m1.json",
+      "kind": "file",
+      "sha256": "d6728be8a5cb04b8bf4156cc873d3be062e7f8175d84a9a9995f04eceeb7b6c7",
+      "git_blob": "ad0897a3410e7bb2f01f0f67fb9b7a200a8e0b8d",
+      "source": "working_tree",
+      "matches_provenance_commit": true
+    },
+    {
+      "path": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_16x257_m1/ot_sram_1r1w2c_16x257_m1.lef",
+      "kind": "file",
+      "sha256": "1ad6737cf7764716fc40dd5c5b6414093332fecc8db7090f84c0be646d578159",
+      "git_blob": "a1d19d48843af468bbb9730a3704250be587fd13",
+      "source": "working_tree",
+      "matches_provenance_commit": true
+    },
+    {
+      "path": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_16x257_m1/ot_sram_1r1w2c_16x257_m1.v",
+      "kind": "file",
+      "sha256": "6913f5fdb7ad44d25bf27c57e1388247e2d6bd91c0d9e74f524b3bfd7983c384",
+      "git_blob": "a2fd94f89bc12405667b236da240c5f619ada41f",
+      "source": "working_tree",
+      "matches_provenance_commit": true
+    },
+    {
+      "path": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_16x257_m1/ot_sram_1r1w2c_16x257_m1_bb.v",
+      "kind": "file",
+      "sha256": "a4cef76e25258cdded7d49ac732c18559bab226f83ba1d1bea43dc015df29c05",
+      "git_blob": "13b77bc9701e3c85fb16b84a2b6362f08b645951",
+      "source": "working_tree",
+      "matches_provenance_commit": true
+    },
+    {
+      "path": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_16x257_m1/ot_sram_1r1w2c_16x257_m1_ff.lib",
+      "kind": "file",
+      "sha256": "412c40f5215e87d86aac4b8c279bc1f5d9d375d4694bafd720932c6a8fb502dd",
+      "git_blob": "2b1ca5b176f044c3ebcaa1f1856f1092dd91ea91",
+      "source": "working_tree",
+      "matches_provenance_commit": true
+    },
+    {
+      "path": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_16x257_m1/ot_sram_1r1w2c_16x257_m1_ss.lib",
+      "kind": "file",
+      "sha256": "02c86eea70b7f04d610108f0d880d137cb51c8fb95e60c6c19b5e3633ced3700",
+      "git_blob": "594a1592a2f20d2b03a9917a9961f666c18efde1",
+      "source": "working_tree",
+      "matches_provenance_commit": true
+    },
+    {
+      "path": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_16x257_m1/ot_sram_1r1w2c_16x257_m1_tt.lib",
+      "kind": "file",
+      "sha256": "fc1e87ffad0f825bb672ce880b1adb876e6c82d5a4c50e2f4a730481ff030cfd",
+      "git_blob": "e21f31ea9575f907721e323320d05af17cf1fa71",
+      "source": "working_tree",
+      "matches_provenance_commit": true
+    },
+    {
+      "path": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_16x289_m1/ot_sram_1r1w2c_16x289_m1.json",
+      "kind": "file",
+      "sha256": "d01f53a97a1e398614fee3a7086e673454155136412c6c8f5d161edea14cc318",
+      "git_blob": "7cdc22c1ac7890fc4c6ff9393fdd1a5fe1a013b2",
+      "source": "working_tree",
+      "matches_provenance_commit": true
+    },
+    {
+      "path": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_16x289_m1/ot_sram_1r1w2c_16x289_m1.lef",
+      "kind": "file",
+      "sha256": "1ebeb2b7470d8c27d03397c3f74616e0bd2dc4da5a6e4fedd6b594b1390185f7",
+      "git_blob": "089ff7ce4bbb409505c0656a97c51510a2dfebe2",
+      "source": "working_tree",
+      "matches_provenance_commit": true
+    },
+    {
+      "path": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_16x289_m1/ot_sram_1r1w2c_16x289_m1.v",
+      "kind": "file",
+      "sha256": "d794e28302767db7219de7b885891c937c86aa07ec4515941511ffafbee49a3c",
+      "git_blob": "9cecc9d69bdd26c346d436373267b52465cb5f0e",
+      "source": "working_tree",
+      "matches_provenance_commit": true
+    },
+    {
+      "path": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_16x289_m1/ot_sram_1r1w2c_16x289_m1_bb.v",
+      "kind": "file",
+      "sha256": "b35d3bef276e930c5a7804da87cae59f382c2c8f6ab356a63df98ed7a0cbf6fc",
+      "git_blob": "68b400593e3a6806f032fbde8c28739f1e5ad636",
+      "source": "working_tree",
+      "matches_provenance_commit": true
+    },
+    {
+      "path": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_16x289_m1/ot_sram_1r1w2c_16x289_m1_ff.lib",
+      "kind": "file",
+      "sha256": "6568eb4d8ef08dee0e900e623e2dae5d95695ed22ce54c85ae30107a32f257b4",
+      "git_blob": "22a83cab6f54e50718ff4a34264cfaf58eaec897",
+      "source": "working_tree",
+      "matches_provenance_commit": true
+    },
+    {
+      "path": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_16x289_m1/ot_sram_1r1w2c_16x289_m1_ss.lib",
+      "kind": "file",
+      "sha256": "94e208bf91f010226b31b41eaef0bc745a6e32b46e78ed31d9f5be18f18e9179",
+      "git_blob": "d7bd9bfc2a9ccb5067dcef8b0584314eee8202f8",
+      "source": "working_tree",
+      "matches_provenance_commit": true
+    },
+    {
+      "path": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_16x289_m1/ot_sram_1r1w2c_16x289_m1_tt.lib",
+      "kind": "file",
+      "sha256": "a9172625e17c07319cac67fff83c91f5b3103cb012eb212588e0128dee0fd57f",
+      "git_blob": "dfe4b65efcd13029774239557c932cf441ad7915",
+      "source": "working_tree",
+      "matches_provenance_commit": true
+    },
+    {
+      "path": "physical/ref_tile/dsdv_sh_lk_s10w/clock.sdc",
+      "kind": "file",
+      "sha256": "07d5c4db404b518724cc91d24a79a60aff13155b3f90d89fdc7174efc6729b39",
+      "git_blob": "d57901389078bb528ace83a6eaedfeb6bf02da84",
+      "source": "working_tree",
+      "matches_provenance_commit": true
+    },
+    {
+      "path": "physical/ref_tile/dsdv_sh_lk_s10w/floorplan.json",
+      "kind": "file",
+      "sha256": "b3b99624fefed85853eb227ca9131f1f2bb6854efc13c20c3462861b7c114100",
+      "git_blob": "ad38af9ef161b40abb5d80966b3ac41e22bc4e91",
+      "source": "working_tree",
+      "matches_provenance_commit": true
+    },
+    {
+      "path": "physical/ref_tile/dsdv_sh_lk_s10w/job.json",
+      "kind": "file",
+      "sha256": "cb98e459f9d9e2122cd39aea6738425e6a9ad8c247ad2a0a8236025e3a82d1ce",
+      "git_blob": "af589daa1ee70e3be7e005e6a307fa8ad7360d81",
+      "source": "working_tree",
+      "matches_provenance_commit": true
+    },
+    {
+      "path": "physical/ref_tile/dsdv_sh_lk_s10w/kit.env",
+      "kind": "file",
+      "sha256": "6dc02ba5c8b645d5dbe0c8b2391bdcb79f6096c1dc78c4591c42180fd702b369",
+      "git_blob": "d4712c4f3bb3289bad075b15285446e8b8bb48e0",
+      "source": "working_tree",
+      "matches_provenance_commit": true
+    },
+    {
+      "path": "physical/ref_tile/dsdv_sh_lk_s10w/pdn.tcl",
+      "kind": "file",
+      "sha256": "188294ea07e2a7e332bfa8781b9e956fb0c5df2aa0ecc5a39767460966bc46cb",
+      "git_blob": "2e49a838b88d8ac1ef80c4256691e8b975b68c2f",
+      "source": "working_tree",
+      "matches_provenance_commit": true
+    },
+    {
+      "path": "physical/ref_tile/dsdv_sh_lk_s10w/pin_regs.json",
+      "kind": "file",
+      "sha256": "4a8f779817ebc77329a4e322ceba9f34519bd1ecac85df9437fc199808b7a859",
+      "git_blob": "d084da1f4a1ccb66e765600bb99f18943455c7ef",
+      "source": "working_tree",
+      "matches_provenance_commit": true
+    },
+    {
+      "path": "physical/ref_tile/dsdv_sh_lk_s10w/place.tcl",
+      "kind": "file",
+      "sha256": "e1893f4bb55fca90f2f8ec68abfeb27afa9603a5eb03a5def3d1d498fd320660",
+      "git_blob": "eee8d102faeaace5197e6aa69e86db5167a39b96",
+      "source": "working_tree",
+      "matches_provenance_commit": true
+    },
+    {
+      "path": "physical/ref_tile/dsdv_sh_lk_s10w/post_cts.tcl",
+      "kind": "file",
+      "sha256": "29b39bbe8e35409d82f878e19c0b596c9b117175b8efc14b249939c1099b0cd8",
+      "git_blob": "9e516a992ea585a2414ea9cf388b1fde18554ca1",
+      "source": "working_tree",
+      "matches_provenance_commit": true
+    },
+    {
+      "path": "physical/ref_tile/dsdv_sh_lk_s10w/post_drt.tcl",
+      "kind": "file",
+      "sha256": "d641c00636794807858c84bf3efe129e33ce4001757e653618397e6c461b8238",
+      "git_blob": "040c9c0ede1efeb6f95ec4a474484a54e7857f53",
+      "source": "working_tree",
+      "matches_provenance_commit": true
+    },
+    {
+      "path": "physical/ref_tile/dsdv_sh_lk_s10w/post_fill.tcl",
+      "kind": "file",
+      "sha256": "29b39bbe8e35409d82f878e19c0b596c9b117175b8efc14b249939c1099b0cd8",
+      "git_blob": "9e516a992ea585a2414ea9cf388b1fde18554ca1",
+      "source": "working_tree",
+      "matches_provenance_commit": true
+    },
+    {
+      "path": "physical/ref_tile/dsdv_sh_lk_s10w/post_grt.tcl",
+      "kind": "file",
+      "sha256": "29b39bbe8e35409d82f878e19c0b596c9b117175b8efc14b249939c1099b0cd8",
+      "git_blob": "9e516a992ea585a2414ea9cf388b1fde18554ca1",
+      "source": "working_tree",
+      "matches_provenance_commit": true
+    },
+    {
+      "path": "physical/ref_tile/dsdv_sh_lk_s10w/pre_cts.tcl",
+      "kind": "file",
+      "sha256": "103a4e4c541f0d2e10f10224fb13a2b6a1fbb5977cab7921420f9ceaaefb50fe",
+      "git_blob": "4f824fe4621693e24679982b239064e8f3ae2cc6",
+      "source": "working_tree",
+      "matches_provenance_commit": true
+    },
+    {
+      "path": "physical/ref_tile/dsdv_sh_lk_s10w/pre_dpl.tcl",
+      "kind": "file",
+      "sha256": "c668b3677a80a60029982fd74af121c738a52d3010947134539610b2bde0c8d9",
+      "git_blob": "8711478e1ba0e9ce55797bbdec67bddac07b0b43",
+      "source": "working_tree",
+      "matches_provenance_commit": true
+    },
+    {
+      "path": "physical/ref_tile/dsdv_sh_lk_s10w/pre_drt.tcl",
+      "kind": "file",
+      "sha256": "121e31c5bfdbe81c5490bc3614957163714fce04f56c62d942b174cd321eacae",
+      "git_blob": "f3194ba91f58ab5a3d66ed4d02acbd00b1781664",
+      "source": "working_tree",
+      "matches_provenance_commit": true
+    },
+    {
+      "path": "physical/ref_tile/dsdv_sh_lk_s10w/pre_fill.tcl",
+      "kind": "file",
+      "sha256": "121e31c5bfdbe81c5490bc3614957163714fce04f56c62d942b174cd321eacae",
+      "git_blob": "f3194ba91f58ab5a3d66ed4d02acbd00b1781664",
+      "source": "working_tree",
+      "matches_provenance_commit": true
+    },
+    {
+      "path": "physical/ref_tile/dsdv_sh_lk_s10w/pre_gpl.tcl",
+      "kind": "file",
+      "sha256": "20bd5a176343ec3648e77be3cea11da16aabfbac3717358c9c3c5d8bf59cb990",
+      "git_blob": "7ce0f8a1c0c9be78d756a96bbcf0357ccb15fe7e",
+      "source": "working_tree",
+      "matches_provenance_commit": true
+    },
+    {
+      "path": "physical/ref_tile/dsdv_sh_lk_s10w/pre_grt.tcl",
+      "kind": "file",
+      "sha256": "96bd1f80dfc8803a9d6e392004ae8a911f97bc7c1639ec5dac57ef1ee0c3c469",
+      "git_blob": "b141f3ed15cb23c0613062784c422ccc5a5a105f",
+      "source": "working_tree",
+      "matches_provenance_commit": true
+    },
+    {
+      "path": "physical/ref_tile/dsdv_sh_lk_s10w/reset_landing.json",
+      "kind": "file",
+      "sha256": "eb782ace1e02fd369973b37a2f76b893c9810aabbc341d2ac86bce65074e5c36",
+      "git_blob": "d5bf8b3eaff9675d742de3099c46d7f33d02aab3",
+      "source": "working_tree",
+      "matches_provenance_commit": true
+    },
+    {
+      "path": "physical/ref_tile/dsdv_sh_lk_s10w/signoff.sdc",
+      "kind": "file",
+      "sha256": "a9037e1fa2729a82f1e7a804a8c877ccd25e2216dc1ebf252a48d6ac7e33e872",
+      "git_blob": "e2b6b03833f6c097ebe7ebdda6e838b46f046362",
+      "source": "working_tree",
+      "matches_provenance_commit": true
+    },
+    {
+      "path": "physical/ref_tile/dsdv_sh_lk_s10w/spec.json",
+      "kind": "file",
+      "sha256": "30551d41ada4f535eef3b425d5048a6a47180ca5d1e581f446b29cde96c9f321",
+      "git_blob": "e6d84a1bdae71666a71f1a6e1c7c225e1a8276e3",
+      "source": "working_tree",
+      "matches_provenance_commit": true
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv",
+      "kind": "file",
+      "sha256": "e525a5217bf42df91b420480f911ae94ccd25f60bb5f6a8292791cf8b4c9fc40",
+      "git_blob": "dc0255cf93462accd854fc13781bf160f045d90e",
+      "source": "working_tree",
+      "matches_provenance_commit": true
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_dv/unit/host_sram/ot_dsdv_host_afifo_sram.sv",
+      "kind": "file",
+      "sha256": "973e4c89344fb766fbb4973406ff11b60d52b87ba69f59201a536fe6296db3e4",
+      "git_blob": "443d3be6fd00390471845e22d4e55a8e3f5e3e78",
+      "source": "working_tree",
+      "matches_provenance_commit": true
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_seq_host.sv",
+      "kind": "file",
+      "sha256": "d927a6ec1ffeaa7e6b70adcc980b9a56fd5ebfe4cbfbb9296fe0eff40ae49c1e",
+      "git_blob": "c7dfb0bed407b43a16b70540377aea0221cd4908",
+      "source": "working_tree",
+      "matches_provenance_commit": true
+    },
+    {
+      "path": "rtl/hdc/ingest/ot_hdc_kv_ingest.sv",
+      "kind": "file",
+      "sha256": "34c6f7d39d98d48592a310cd3c8beb84cbbcb6a0dc4dbf7a585fbff74836374d",
+      "git_blob": "ef15b56f18172ee884c51f6ba16e4495d5e2e654",
+      "source": "working_tree",
+      "matches_provenance_commit": true
+    },
+    {
+      "path": "rtl/hdc/ingest/ot_rom_host_ingest.sv",
+      "kind": "file",
+      "sha256": "a9b3ebb46a0a968e20e81e04e36af9bb7db36c3a76a225ddc5fd0a50315c76b5",
+      "git_blob": "e82765fb58e4663b18986dc318247660bc8e804e",
+      "source": "working_tree",
+      "matches_provenance_commit": true
+    }
+  ],
+  "current_exact_tt_cts": {
+    "setup_ps": -52.7,
+    "hold_ps": 31.9206883148,
+    "class": "placement RC diagnostic pc.log"
+  },
+  "final_grt": {
+    "SS_setup_sensitivity_ps": -135.35,
+    "FF_internal_hold_ps": 30.07,
+    "FF_input_hold_ps": 29.78,
+    "FF_async_removal_ps": 31.16
+  },
+  "fanout_counts": {
+    "FF": 70,
+    "comb": 142
+  },
+  "first_order_copy_floor": {
+    "FF": 233,
+    "comb": 620
+  },
+  "warning": "Copy floor excludes recursive D/enable/reset fanout, placement, clock and lifetime. It is not a fixed point or implementable design.",
+  "macro_contacts": [
+    {
+      "master": "ot_sram_1r1w2c_16x257_m1",
+      "width": 89.448,
+      "height": 39.432,
+      "faces": {
+        "W": {
+          "contacts": 392,
+          "active_min": 0.78,
+          "active_max": 38.316,
+          "adjacent_pitch_um": 0.09599999999999653,
+          "pitch_density_per_um": 10.416666666667043
+        },
+        "E": {
+          "contacts": 391,
+          "active_min": 0.78,
+          "active_max": 38.22,
+          "adjacent_pitch_um": 0.09599999999999653,
+          "pitch_density_per_um": 10.416666666667043
+        }
+      },
+      "conditional_p192_height_floor_um": 76.632,
+      "qualification": "FAIL legacy contact pitch; height floor only, not an access model or prototype"
+    },
+    {
+      "master": "ot_sram_1r1w2c_16x289_m1",
+      "width": 99.144,
+      "height": 44.04,
+      "faces": {
+        "W": {
+          "contacts": 440,
+          "active_min": 0.78,
+          "active_max": 42.924,
+          "adjacent_pitch_um": 0.09599999999999653,
+          "pitch_density_per_um": 10.416666666667043
+        },
+        "E": {
+          "contacts": 439,
+          "active_min": 0.78,
+          "active_max": 42.828,
+          "adjacent_pitch_um": 0.09599999999999653,
+          "pitch_density_per_um": 10.416666666667043
+        }
+      },
+      "conditional_p192_height_floor_um": 85.848,
+      "qualification": "FAIL legacy contact pitch; height floor only, not an access model or prototype"
+    }
+  ],
+  "pg": {
+    "macro_count": 4,
+    "master_pg_mterm_count": 8,
+    "connected_pg_iterm_count": 8,
+    "pg_rectangles": 432,
+    "physical_rectangles_qualified": 0,
+    "status": "MTerm universe enumerated, net names only; physical via/OBS/PG connectivity unqualified"
+  },
+  "source_storage": {
+    "descriptor_fifo": "DQ=4 x 256 =1024bits, indexed, true queue; no >2kb assertion",
+    "realigner": "8 x256 =2048bits, pairwrite2/readwindow; exact2kb boundary not automatically 8 independent stores",
+    "completion_fifo": "8x40=320bits, pointer queue",
+    "request_staging": "4x(AW+256)=1152bits atAW32",
+    "warning": "These are live ENG_TRIM stream structures; QKV-only bk/bv declarations cannot be charged without elaboration. Macro conversion requires exact bandwidth/lifetime/edge proof."
+  }
+}

@@ -1,0 +1,30 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/s81-sh-native-model-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/s81-sh-native-model-1019
+ot-run: ot-epyc6       admits  1211 GB (avail 928, growth 80, headroom 0, waiters 0/0 GB) load 40/128 running 23 disk 5721 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/s81-sh-native-model-1019
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/s81-sh-native-model-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-sh-native-model-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-sh-native-model-1019
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-2627135-1792444149 after 1 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING ORD-0039] .openroad ignored with -python
+Traceback (most recent call last):
+  File "/out/native.py", line 44, in <module>
+    q=xy(s)
+  File "/out/native.py", line 9, in xy
+    ps=[r.getBox() for bp in p.getBPins() for r in bp.getBoxes()]
+  File "/out/native.py", line 9, in <listcomp>
+    ps=[r.getBox() for bp in p.getBPins() for r in bp.getBoxes()]
+  File "odb_py.py", line 1653, in getBox
+TypeError: Wrong number or type of arguments for overloaded function 'dbBox_getBox'.
+  Possible C/C++ prototypes are:
+    odb::dbBox::getBox() const
+    odb::dbBox::getBox(odb::dbBlock *,uint32_t)
+    odb::dbBox::getBox(odb::dbTech *,uint32_t)
+    odb::dbBox::getBox(odb::dbMaster *,uint32_t)
+
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-2627135-1792444149): exit 1

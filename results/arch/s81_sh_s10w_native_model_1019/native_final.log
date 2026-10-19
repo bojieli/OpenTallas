@@ -1,0 +1,125 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/s81-sh-native-model-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/s81-sh-native-model-1019
+ot-run: ot-epyc6       admits  1213 GB (avail 927, growth 78, headroom 0, waiters 0/0 GB) load 47/128 running 22 disk 5721 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/s81-sh-native-model-1019
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/s81-sh-native-model-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-sh-native-model-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-sh-native-model-1019
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-3009201-1792444262 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING ORD-0039] .openroad ignored with -python
+{
+  "output_non_ff": [
+    {
+      "output": "PORT/t_host[32]",
+      "driver": "_111517__1/L",
+      "driver_type": "tie"
+    },
+    {
+      "output": "PORT/t_host[33]",
+      "driver": "_111518__2/L",
+      "driver_type": "tie"
+    },
+    {
+      "output": "PORT/t_host[34]",
+      "driver": "_111519__3/L",
+      "driver_type": "tie"
+    },
+    {
+      "output": "PORT/t_host[35]",
+      "driver": "_111520__4/L",
+      "driver_type": "tie"
+    },
+    {
+      "output": "PORT/t_host[36]",
+      "driver": "_111521__5/L",
+      "driver_type": "tie"
+    },
+    {
+      "output": "PORT/t_host[37]",
+      "driver": "_111522__6/L",
+      "driver_type": "tie"
+    },
+    {
+      "output": "PORT/t_host[38]",
+      "driver": "_111523__7/L",
+      "driver_type": "tie"
+    },
+    {
+      "output": "PORT/t_host[39]",
+      "driver": "_111524__8/L",
+      "driver_type": "tie"
+    },
+    {
+      "output": "PORT/t_host[48]",
+      "driver": "_111525__9/L",
+      "driver_type": "tie"
+    },
+    {
+      "output": "PORT/t_host[49]",
+      "driver": "_111526__10/L",
+      "driver_type": "tie"
+    },
+    {
+      "output": "PORT/t_host[50]",
+      "driver": "_111527__11/L",
+      "driver_type": "tie"
+    },
+    {
+      "output": "PORT/t_host[51]",
+      "driver": "_111528__12/L",
+      "driver_type": "tie"
+    },
+    {
+      "output": "PORT/t_host[52]",
+      "driver": "_111529__13/L",
+      "driver_type": "tie"
+    },
+    {
+      "output": "PORT/t_host[53]",
+      "driver": "_111530__14/L",
+      "driver_type": "tie"
+    },
+    {
+      "output": "PORT/t_host[54]",
+      "driver": "_111531__15/L",
+      "driver_type": "tie"
+    },
+    {
+      "output": "PORT/t_host[55]",
+      "driver": "_111532__16/L",
+      "driver_type": "tie"
+    }
+  ],
+  "cell_area_um2": 11442.252779989332,
+  "ff_master_areas": {
+    "DFFHQNx1_ASAP7_75t_R": 0.2916,
+    "DFFASRHQNx1_ASAP7_75t_R": 0.37908,
+    "DFFHQNx2_ASAP7_75t_R": 0.30618,
+    "DFFHQNx3_ASAP7_75t_R": 0.32076
+  },
+  "stage": "GRT diagnostic only",
+  "odb_sha256": "efcf6c0da26728a1985168cf98a07c5084591910fc338b0ccbf873906c1b8ded",
+  "instances": 91978,
+  "drivers": {
+    "FF": 13927,
+    "comb": 39625,
+    "tie": 2321,
+    "input": 1245,
+    "macro": 1092
+  },
+  "max_loads": {
+    "FF": 794,
+    "comb": 890,
+    "tie": 1,
+    "input": 1,
+    "macro": 1
+  }
+}
+UNSAFE 212 FAR 351 INPUT_NON_FF 8 MACROS 4
+PG [('ot_sram_1r1w2c_16x257_m1', [('VDD', 'VDD', 51), ('VSS', 'VSS', 51)]), ('ot_sram_1r1w2c_16x257_m1', [('VDD', 'VDD', 51), ('VSS', 'VSS', 51)]), ('ot_sram_1r1w2c_16x289_m1', [('VDD', 'VDD', 57), ('VSS', 'VSS', 57)]), ('ot_sram_1r1w2c_16x289_m1', [('VDD', 'VDD', 57), ('VSS', 'VSS', 57)])]
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-3009201-1792444262): exit 0
