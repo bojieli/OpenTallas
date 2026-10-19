@@ -224,12 +224,9 @@
    }
   ],
   "reroute_reason": {
-   "kind": "native_capture",
-   "source": "results/arch/smhkp4_1018/native_closed_views.json",
-   "cell": "ot_s81_kp4_dec",
-   "vs": "s81lk_kp4_dec-p1-867a65ed7",
-   "why": "SMHKP4 10-18 (lanes/S81-SMHKP4.md): native launch 387.8 / capture 337.0 / spread 220.1: wires-only parent, io_ref fell back to the raw child clock pin u_chn/clk (~250 ps before the child flops) -> 3,276 + 7,670 CTS hold buffers ~410 ps per p_d pin; linked syn->dly pair TT 113 at child flops",
-   "fix": "landed boundary: parent pin_regs (+1 in / +1 out, hw latency 66 -> 68, tb kp4_dec_hw DLY_Q 8 / DLY_L 4, PREGMUT mutant), refglob p_d__ot_q* (landing flops = IO reference), symmetric spine with tree-shared pads"
+   "kind": "flow_failure",
+   "failed_job": "s81lk_kp4_dec-p1-c915f96e3",
+   "failure": "routed on ot-epyc5 without the TT overlay / OT_CTS_FIX_HOOKS (daemon pipefail path-pick bug, fixed main 59a8139a8); ttb_routed_at_TC failed"
   }
  },
  "child_clock_ref": "boundary",
