@@ -4,7 +4,11 @@
 // on the PRODUCTION calendars of the native case: kv_static_programme.compile_all(profile('die')) attention samples under
 // OT_KV_ASTK_EXPAND=1 (RL3 law: LMAX / EXP +16, Z / HUB_Z / HUB_RECIP / HUB_PUB +40; service_end 1779, R stretched so
 // PV_START + R = 1730 for every T; claude/hkv-die-1019 90dedf84f, die ages qwen_kv_static_programme_1017/die_ages.json).
-// One calendar per pass (T 8192 / 2048 / 1 / 1000 / 128 / 6144 / 4096).  Same structure as tb_qkd_ahub_static_dw:
+// One calendar per pass (T 8192 / 2048 / 1 / 1000 / 128 / 6144 / 4096).  Every hub field (EXP .. PV_START, R) is the
+// compiled value; ONLY the synthetic pair-stream slots P0 / P1 given to qkd_pv_fin_s are set to R: the compiled stretched
+// {R, P1, P0} violate qkd_pv_fin_s cal_bad (R <= max(P0, P1) + ADD_LAT + 1, |P0 - P1| <= SKEW) at every T (T 8192 R 843 vs
+// LASTP 776; T 1 skew 32) -- a die compiler / pvfin finding for HKV-DIE, outside this hub kit.  (Unstretched R fails the
+// HUB instead: the dw export needs PV_START + R + FR_OFS >= HUB_PUB + 3, the compiler's RZ_MARGIN is 2.)  Same structure as tb_qkd_ahub_static_dw:
 // ACTUAL qkd_attn_service_root -> die relays -> DUT -> relays -> ACTUAL qkd_pv_fin_s, lockstep against the sealed
 // ot_qkd_ahub_static_die_cal at Z_IN_STRIDE 4 fed by the root with no die stages; the stack words ride the reference's
 // compiled slots (slot_h / slot_k at stride 4 = one Z word EVERY edge of a 4 x nblk window), and the DUT's own slot
@@ -181,6 +185,7 @@ module tb_qkd_ahub_static_dw_s4;
             repeat (3) @(negedge ck);
             pass_i = i;
             CAL = pcal(pT[i]);
+            CAL[159:144] = CAL[175:160]; CAL[143:128] = CAL[175:160];   // pvfin pair slots P0 = P1 = R (see header)
             req_v = 1; req_ep = pep[i]; req_layer = 6'(3 + i); req_pos = 18'(pT[i] - 1);
             @(negedge ck); req_v = 0;
             repeat (1950) @(negedge ck);
