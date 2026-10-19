@@ -156,7 +156,15 @@
     "fail_regex": "^SMS FAIL MUT=5 errors=[1-9]",
     "fail_witness": "results/rtl/s81_dv_1016/su_sm/smh1018_smt_m5/run.log"
    }
-  ]
+  ],
+  "reroute_reason": {
+   "kind": "native_capture",
+   "source": "results/arch/smhkp4_1018/native_closed_views.json",
+   "cell": "dsfd_su_t_smhq",
+   "vs": "s81su_smhq-s81su_smhq-65b8808ea",
+   "why": "SMHKP4 10-18 (lanes/S81-SMHKP4.md): native capture 441.9 > 190 on all 341 inputs: GRT io_ref pin-flop search (3 hops) lost the input pin flops behind INHOLD driver + HB2 pad + CTS hold buffers and fell back to the hard-child clock pin g_l[0].u_sml/ck (~250 ps early) -> 3,756 GRT hold buffers ~250 ps per input",
+   "fix": "refglob u_t* names the tap input pin-flop group as the IO reference at every stage (same RTL, outline, pins); gate WARN 0 fail spread 27.7/21.3, GRT 0"
+  }
  },
  "child_clock_ref": "boundary",
  "why_clock": "SMH 10-18: clock = balanced spine with child-insertion leaf targets from each child's ROUTED boundary-register insertion (child_clock_ref boundary), so the glue pin flops and the children's pin flops tick together. cfg_q and f are now registered at the pin, so no raw child clock pin is a pin flop (g1 spread 240 ps).",

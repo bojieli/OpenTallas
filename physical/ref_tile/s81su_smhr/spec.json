@@ -109,7 +109,15 @@
     "fail_regex": "^SMS FAIL MUT=5 errors=[1-9]",
     "fail_witness": "results/rtl/s81_dv_1016/su_sm/smh1018_smt_m5/run.log"
    }
-  ]
+  ],
+  "reroute_reason": {
+   "kind": "native_capture",
+   "source": "results/arch/smhkp4_1018/native_closed_views.json",
+   "cell": "dsfd_su_t_smhr",
+   "vs": "s81su_smhr-s81su_smhr-1ced40b32",
+   "why": "SMHKP4 10-18 (lanes/S81-SMHKP4.md): native capture 235.7 > 190 on 125 inputs (GRT io_ref fallback to reset relay rr0, 252 GRT hold buffers) + routed TT pin-flop spread 87.0 > 80 (CTS 30.5: count-bisection trunk branches equalised at placement parasitics diverge under routed RC)",
+   "fix": "refglob u_ld* (1,024 input pin flops) + symmetric insertion-aware spine with tree-shared pads (OT_SPINE_SYM/TREE_PAD/SAFE_BALANCE): gate insertion 501.8 TT, spread 28.7/21.5, GRT 0"
+  }
  },
  "child_clock_ref": "boundary",
  "why_clock": "SMH 10-18: clock = balanced spine with child-insertion leaf targets from each child's ROUTED boundary-register insertion (child_clock_ref boundary), so the glue pin flops and the children's pin flops tick together. The 10-17 g3 TritonCTS trial (insertion-cap driven) gave pin-flop spread 144 ps; the g2 spine gave 24.8 ps (insertion > 300 ps is guidance under 0dq).",
