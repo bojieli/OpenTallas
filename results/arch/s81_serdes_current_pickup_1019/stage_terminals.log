@@ -1,0 +1,28 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+AUDIT_SCOPE pre_PDN_stage_only_not_final
+HARD u_chn ot_s81_kp4_dchn
+SUPPLY u_chn/VSS type=GROUND net=NONE rectangles=40 layers=M5
+SUPPLY u_chn/VDD type=POWER net=NONE rectangles=40 layers=M5
+HARD u_dly ot_s81_kp4_ddly
+SUPPLY u_dly/VDD type=POWER net=NONE rectangles=44 layers=M5
+SUPPLY u_dly/VSS type=GROUND net=NONE rectangles=44 layers=M5
+HARD u_enc ot_s81_kp4_enc
+SUPPLY u_enc/VSS type=GROUND net=NONE rectangles=40 layers=M5
+SUPPLY u_enc/VDD type=POWER net=NONE rectangles=40 layers=M5
+HARD u_out ot_s81_kp4_dout
+SUPPLY u_out/VDD type=POWER net=NONE rectangles=46 layers=M5
+SUPPLY u_out/VSS type=GROUND net=NONE rectangles=46 layers=M5
+HARD u_prx ot_s81_pma_rxm
+SUPPLY u_prx/VDD type=POWER net=NONE rectangles=935 layers=M4
+SUPPLY u_prx/VSS type=GROUND net=NONE rectangles=934 layers=M4
+HARD u_ptx ot_s81_pma_txm
+SUPPLY u_ptx/VDD type=POWER net=NONE rectangles=935 layers=M4
+SUPPLY u_ptx/VSS type=GROUND net=NONE rectangles=934 layers=M4
+HARD u_syn ot_s81_kp4_dsyn
+SUPPLY u_syn/VSS type=GROUND net=NONE rectangles=40 layers=M5
+SUPPLY u_syn/VDD type=POWER net=NONE rectangles=40 layers=M5
+AUDIT_DONE
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-2230771-1792443216): exit 0

@@ -1,0 +1,9 @@
+GATE WARN fill: parent kit without std_area_um2: fill not computed at gen (the gate measures it)  -> FIX: pass --area-um2 / std_area_um2 from the synthesis smoke
+GATE INFO layer: cluster: PG M7 stripes as pins, signals M2-M7, parent strap M8; children PG {'ot_s81_kp4_dsyn': 'M5', 'ot_s81_kp4_ddly': 'M5', 'ot_s81_kp4_dchn': 'M5', 'ot_s81_kp4_dout': 'M5', 'ot_s81_kp4_enc': 'M5'}
+GATE INFO remote: ot-run selected ot-epyc5 for 24 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_s81lk_serdes_col_lp_20261019-122601.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_s81lk_serdes_col_lp_20261019-122601.log; host dir ot-epyc5:/srv/opentallas-scratch/claude/ref_gate/s81lk_serdes_col_lp-20261019-122601
+GATE FAIL textbook_execution: missing unique actual textbook verdict or failed lint execution; RC=[]  -> FIX: inspect original terminal log and canonical helper CLI; main/daemon sync required before re-gate
+GATE FAIL floorplan_run: synthesis + floorplan + PDN failed: FAILED: FlowError: ORFS place-and-route through floorplan failed with exit 2:; [ERROR PDN-0006] VDD on M4 is blocked by obstructions on M5 for u_prx; Error: pdn.tcl, 7 PDN-0006; [ERROR PDN-0006] VDD on M4 is blocked by obstructions on M5 for u_prx  -> FIX: read the first [ERROR] above (PDN-0217/0233/0006, PPL-0061, MPL, ...) and fix the kit/RTL
+GATE WARN layout_images: the gate produced no layout dump (layout_dump.tcl); see the remote layout_*.log
+PRE_ROUTE_GATE: FAIL (2 fail, 2 warn)

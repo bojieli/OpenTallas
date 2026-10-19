@@ -1,0 +1,17 @@
+ot-run: ot-epyc4       admits   971 GB (avail 766, growth 86, headroom 0, waiters 0/0 GB) load 122/128 running 30 disk 412 GB 
+ot-run: ot-epyc5       admits   534 GB (avail 461, growth 87, headroom 0, waiters 0/0 GB) load 64/128 running 14 disk 563 GB 
+ot-run: ot-epyc6       admits   938 GB (avail 770, growth 113, headroom 0, waiters 0/0 GB) load 192/128 running 48 disk 559 GB 
+ot-run: ot-epyc7       admits   980 GB (avail 787, growth 101, headroom 0, waiters 0/0 GB) load 43/96 running 33 disk 502 GB 
+ot-run: ot-epyc8       admits  1023 GB (avail 829, growth 113, headroom 0, waiters 0/0 GB) load 147/128 running 34 disk 565 GB 
+ot-run: ot-pve1        skipped: no /tmp/s81-serdes-lpcol-1019c
+ot-run: ot-agidock128  skipped: no /tmp/s81-serdes-lpcol-1019c
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-2128867-1792438012 after 0 s
+AUDIT PASS
+AUDIT-UNLAND FAIL (expected)
+MUT 0: LP_LOCKSTEP PASS
+MUT 1: LP_LOCKSTEP FAIL
+MUT 2: LP_LOCKSTEP FAIL
+MUT 4: LP_LOCKSTEP FAIL
+BENCH_EXIT 0
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-2128867-1792438012): exit 0

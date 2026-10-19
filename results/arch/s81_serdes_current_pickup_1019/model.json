@@ -1,0 +1,151 @@
+{
+  "all_PMA_PG_rectangles": 3738,
+  "conditional_structural_model": {
+    "OBS": "Split M5 obstruction only around actual protected same-net PG stems; retain all other OBS",
+    "area_increment_if_internal_geometry_qualifies_um2": 0,
+    "data_edge_increment": 0,
+    "distinct_new_master_required": true,
+    "export": "M6 same-net stripes, retaining existing M4 terminals; parent macro PG connect M6-M7",
+    "extra_FF": 0,
+    "internal_via_box_budget_um": [
+      0.288,
+      0.288
+    ],
+    "native_via_enclosure_spacing_and_internal_analog_reservation": "UNPROVED: root selection and complete constructive proof required",
+    "new_M5_PG_stem_width_um": 0.288,
+    "new_PG_stem_centres_x_um": {
+      "VDD": 0.72,
+      "VSS": 128.88
+    },
+    "one_via45_and_one_via56_per_old_PG_rectangle": 3738,
+    "preserve_all_old_M4_PG_rectangles": true,
+    "preserve_signal_pins_and_clock_ABI": true,
+    "reserved_M5_corridor_width_um": 0.432,
+    "resistance_capacitance_power_and_analog_current_capacity": null,
+    "selected": false
+  },
+  "evidence_scope": "LEF source geometry plus pre-PDN stage ODB terminals; no final connectivity, native timing, physical escape, or die adoption",
+  "intended_domain": {
+    "existing_macro_connect": [
+      "M4",
+      "M5"
+    ],
+    "ground": "VSS",
+    "name": "CORE",
+    "power": "VDD"
+  },
+  "masters": [
+    {
+      "M5_OBS": [
+        0.0,
+        0.6,
+        129.6,
+        2245.8
+      ],
+      "PG": {
+        "VDD": {
+          "entirely_under_M5_OBS": 935,
+          "layer": "M4",
+          "rectangles": 935
+        },
+        "VSS": {
+          "entirely_under_M5_OBS": 934,
+          "layer": "M4",
+          "rectangles": 934
+        }
+      },
+      "instance": "u_prx",
+      "lef_sha256": "1393b65b44a4dfd20c7662c93d83c39be24e446533736c6e5303b48939dc37de",
+      "master": "ot_s81_pma_rxm",
+      "signal_pins": 1089
+    },
+    {
+      "M5_OBS": [
+        0.0,
+        0.6,
+        129.6,
+        2245.8
+      ],
+      "PG": {
+        "VDD": {
+          "entirely_under_M5_OBS": 935,
+          "layer": "M4",
+          "rectangles": 935
+        },
+        "VSS": {
+          "entirely_under_M5_OBS": 934,
+          "layer": "M4",
+          "rectangles": 934
+        }
+      },
+      "instance": "u_ptx",
+      "lef_sha256": "61de63139a0050f09f6fb828a6f693abed775015e04ff7d3eb2d6efc060550fa",
+      "master": "ot_s81_pma_txm",
+      "signal_pins": 1091
+    }
+  ],
+  "outline_area_um2": 1993144.32,
+  "outline_um": [
+    518.4,
+    3844.8
+  ],
+  "prerequisites": [
+    "Root selects structural PG model before source/view generation or gate.",
+    "Enumerate all 3738 original M4 supply rectangles, via enclosures, M5 protection and M6 terminals; no removed terminals or open supply windows.",
+    "Validate actual PDK min-area/width/PRL/cut spacing and same-net connectivity; proposed .288 box is a budget, not native-rule proof.",
+    "All 14 hard-child PG ITerms must reach intended supply component in post-repair/final ODB; count every rectangle, not net-name presence.",
+    "Remeasure all nonclock native roots <=32 including comb/reset/input/ties; FF/root list currently unknown.",
+    "Native registered boundary, all single-edge reaches <=405 and clock-spread<=80 TT/FF including macro pins and neighbor matching remain unproved.",
+    "4096-bit indexed two-clock rate-match FIFO requires real dual-clock SRAM/OLD/lifetime model; README waiver does not establish owner authorization.",
+    "Keep real distinct core/recovered clock families and gray FIFO; do not convert async relation into a PLL assumption.",
+    "PMA boundary libs are assumed analog models; no measured CQ, slew, power or hold claim.",
+    "MUT3 status-path six-stage pad remains unobservable; need encoder-fault/status-specific causal witness preserving edges/reset.",
+    "Root PNG/checklist review required after legal physical model; old gate never reached CTS.",
+    "RC=[] textbook scope must be reconciled against actual pinned helper logs; do not patch generic rules based on missing verdict.",
+    "Install and verify exact +3 TX/+7 RX-status/+5 reset compiler offsets with actual parent placement/calendar and SU/MU token stream."
+  ],
+  "schema": "opentallas.s81-serdes-terminal-pickup.v1",
+  "source_commit": "247c97136",
+  "source_compiler_offsets": {
+    "child_offset_edges": {
+      "u_chn": 3,
+      "u_dly": 3,
+      "u_enc": 0,
+      "u_live_r": 0,
+      "u_live_t": 0,
+      "u_out": 6,
+      "u_prx": 0,
+      "u_ptx": 3,
+      "u_rm": 6,
+      "u_sts": 6,
+      "u_syn": 0,
+      "u_txf": 0,
+      "u_txr0": 0,
+      "u_txr1": 0
+    },
+    "input_port_offset_edges": {
+      "pma_rx": 0,
+      "tx": 0
+    },
+    "max_added_edges": 7,
+    "note": "every latency change vs the flat parent; the compiler schedule takes these (static calendar, no runtime flow control)",
+    "output_port_offset_edges": {
+      "pma_tck": 3,
+      "pma_tx": 3,
+      "rx": 7,
+      "st": 7
+    },
+    "ref_params": null,
+    "reset_release_added_edges": 5,
+    "schedule": "offsets",
+    "status_flag_lag_edges": {}
+  },
+  "source_lp_flops": {
+    "landing": 12734,
+    "out_regs": 514,
+    "pads": 9,
+    "reset": 49
+  },
+  "status": "FAIL_PDN_NO_NATIVE_FINAL_QUALIFICATION",
+  "synthesis_report_FF": 19514
+}
