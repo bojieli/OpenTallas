@@ -1,0 +1,8 @@
+# case FACES_mut0_nu4 host ot-epyc8 2026-10-19T03:12:04-07:00 commit 95074c8a3fd7440506e37b1f7cbf6c75a9e704cf
+FACES MU_NU=4
+FACES MUT=0: PASS
+- rtl/test/qwen_dv/tb_qfd_dv2_faces.sv:98: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 162ns; walltime 0.232 s; speed 697.915 ns/s
+- Verilator: cpu 0.232 s on 1 threads; allocated 83 MB
+# exit 0

@@ -187,6 +187,39 @@ class Gate(unittest.TestCase):
         self.assertEqual(r["verdict"], "REFUSE")
         self.assertIn("port sets differ", r["message"])
 
+    def test_slot_change_custom_io_vs_pin_regions_still_needs_its_receipt(self):
+        # (ROOT-CIO 2026-10-19, coordinator condition on the RESUB-2 relaxation 820ace57d) a literal custom IO kit
+        # (place_pin without -force_to_die_boundary) is compared per port against a closed pin-region view; a REAL
+        # face change (ck E -> N) is admitted only with its receipt (contract / SLOT CHANGE REQUEST line); with no
+        # receipt it is refused, and the same faces stay refused (closed view stands).
+        regions = "(--pin-region '^(d)(\\[|$)=left' --pin-region '^(ck)(\\[|$)=right')"
+        self.r.put("aaaaaaaaa", pv="M7", rl="M2 M7", pins=regions)
+        self.r.c["a" * 36] = self.r.c["aaaaaaaaa"]
+        tcl = "physical/ref_tile/t/assigned_pins.tcl"
+
+        def custom(commit, ck_xy):
+            self.r.put(commit, pins="()")
+            self.r.c[commit]["physical/ref_tile/t/kit.env"] += (
+                f"EXTRA=('--orfs-var' 'IO_CONSTRAINTS=/src/{tcl}')\n")
+            pins = [("d[0]", 0.0, 10.0), ("d[1]", 0.0, 20.0), ("ck",) + ck_xy]
+            self.r.c[commit][tcl] = "".join(
+                f"place_pin -pin_name {{{n}}} -layer M4 -location {{{x} {y}}} -pin_size {{0.084 0.024}}\n"
+                for n, x, y in pins)
+
+        custom("fffffffff", (8.64, 64.8))        # ck E -> N: a real face change
+        custom("999999999", (17.28, 30.0))       # ck stays E: same faces
+        receipt = {"kind": "slot_change", "slot_change_request": "HF-2 r9j SLOT CHANGE REQUEST: ck E -> N"}
+        r = self.run_(spec(name="t-v3-fffffffff", commit="fffffffff", reroute_reason={"kind": "slot_change"}))
+        self.assertEqual(r["verdict"], "REFUSE", r)
+        self.assertIn("SLOT CHANGE REQUEST", r["message"])
+        r = self.run_(spec(name="t-v3-fffffffff", commit="fffffffff", reroute_reason=receipt))
+        self.assertEqual((r["verdict"], r["kind"]), ("PASS", "slot_change"), r["message"])
+        ev = next(iter(r["facts"]["custom_io_face_comparisons"].values()))
+        self.assertEqual((ev["status"], ev["level"], ev["examples"]), ("changed", "port", {"ck": ["E", "N"]}))
+        r = self.run_(spec(name="t-v3-999999999", commit="999999999", reroute_reason=receipt))
+        self.assertEqual(r["verdict"], "REFUSE", r)
+        self.assertIn("die_window, not slot_change", r["message"])
+
     # ---------------------------------------------------------------- pin_register
     def test_pin_wrapper_changes_are_actual_rtl_changes(self):
         path = 'physical/ref_tile/t/kit.env'

@@ -1,0 +1,4 @@
+# case F0_nu4_m_gap20 env DV2_FACE=0 DV2_MU_NU=4 DV2_GAP=20 args m --work /srv/opentallas-scratch/claude/mu-adopt-slice/work2/F0_nu4_m host regular-crane 2026-10-19T01:55:04-07:00 commit a540f1f9f481ce632e987da1d733d9a941216717
+    bench2 (m): seed 21 gap 20 MU_NU 4 FACE 0 AM_MUT 0: 8 emits, 6 tie heads, end cycle 1744
+bench2 (m) MUT=0: PASS 8/8
+# exit 0

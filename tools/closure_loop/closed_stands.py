@@ -368,7 +368,11 @@ def check(spec, name, jobs, show, blob, closure_counts=None, bench_gap=None, exi
             if old_custom["status"] == "verified" and old_regions["faces"]:
                 return refuse("slot_change closed custom IO plus nonempty pin-region rules are ambiguous")
             if custom["status"] != "absent" or old_custom["status"] != "absent":
-                comparison = custom_io_faces.compare(custom, old_custom)
+                # (RESUB-2 2026-10-19) a literal custom IO kit against a pin-region kit: the pin regions are the
+                # other side's literal face map (qfd_d2d_static r9j custom IO vs closed r8c regions)
+                comparison = custom_io_faces.compare(
+                    custom if custom["status"] != "absent" else custom_io_faces.regions_as_map(regions),
+                    old_custom if old_custom["status"] != "absent" else custom_io_faces.regions_as_map(old_regions))
                 face_evidence[closed_name] = comparison
                 facts["custom_io_face_comparisons"] = face_evidence
                 if comparison["status"] == "unverified":
