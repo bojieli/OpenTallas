@@ -1,0 +1,582 @@
+{
+  "source_commit": "119c3c8ba",
+  "tool": "Yosys0.68 generic/noabc",
+  "qualification": "structural diagnostic; no technology area or routed timing",
+  "netlist_sha256": "bd9fc450727e2368452caa3cc5fcb532479d32356bb4654bbff3d6c235dfb3c4",
+  "remote": "ot-epyc6:/srv/opentallas-scratch/claude/sysface-sram-parent-synth-1019/synth_parent/netlist.json",
+  "macro_cells": {
+    "g_ovl.u_cseq.u_rx_rom": "ot_rom_4096x72_m8",
+    "g_ovl.u_cseq.u_tx_rom": "ot_rom_4096x72_m8",
+    "g_sram_cal.u_cal_e.hi": "ot_sram_1r1w_64x16_m1",
+    "g_sram_cal.u_cal_e.lo": "ot_sram_1r1w_64x16_m1",
+    "g_sram_cal.u_cal_l.hi": "ot_sram_1r1w_64x16_m1",
+    "g_sram_cal.u_cal_l.lo": "ot_sram_1r1w_64x16_m1",
+    "g_sram_cal.u_cal_t.hi": "ot_sram_1r1w_64x16_m1",
+    "g_sram_cal.u_cal_t.lo": "ot_sram_1r1w_64x16_m1",
+    "u_rom": "ot_rom_4096x72_m8"
+  },
+  "loads_over32": [
+    {
+      "loads": 3670,
+      "names": [
+        "ck",
+        "g_accepted_ctx.u_observer.ck",
+        "g_ovl.u_cseq.ck",
+        "g_ovl.u_cseq.u_seq.ck",
+        "g_ovl.u_cseq.u_seq.u_rx.ck",
+        "g_ovl.u_cseq.u_seq.u_seq.ck",
+        "g_ovl.u_cseq.u_seq.u_tx.ck",
+        "g_sram_cal.u_cal_e.ck",
+        "g_sram_cal.u_cal_l.ck",
+        "g_sram_cal.u_cal_t.ck",
+        "u_record.ck",
+        "u_record.g_actual_sink[0].u_receipt.ck",
+        "u_record.g_actual_sink[1].u_receipt.ck",
+        "u_record.u_auth.ck",
+        "u_record.u_context.ck",
+        "u_record.u_join.ck",
+        "u_record.u_witness.ck"
+      ],
+      "driver": null
+    },
+    {
+      "loads": 2188,
+      "names": [
+        "g_accepted_ctx.u_observer.rst_n",
+        "g_ovl.u_cseq.rst_n",
+        "g_ovl.u_cseq.u_seq.rst_n",
+        "g_ovl.u_cseq.u_seq.u_rx.rst_n",
+        "g_ovl.u_cseq.u_seq.u_seq.rst_n",
+        "g_ovl.u_cseq.u_seq.u_tx.rst_n",
+        "g_sram_cal.u_cal_e.rst_n",
+        "g_sram_cal.u_cal_l.rst_n",
+        "g_sram_cal.u_cal_t.rst_n",
+        "rr_q",
+        "rr_q",
+        "rr_q",
+        "rr_q",
+        "rr_q",
+        "rr_q",
+        "rr_q",
+        "rr_q",
+        "rr_q",
+        "rr_q",
+        "rr_q",
+        "rr_q",
+        "rr_q",
+        "rr_q",
+        "rst_boot",
+        "rst_bpay",
+        "rst_calle",
+        "rst_calt",
+        "rst_emb",
+        "rst_loop",
+        "rst_out",
+        "rst_rec",
+        "rst_rec",
+        "rst_rec",
+        "rst_rec",
+        "rst_rec",
+        "rst_rec",
+        "rst_st",
+        "u_record.g_actual_sink[0].u_receipt.rst_n",
+        "u_record.g_actual_sink[1].u_receipt.rst_n",
+        "u_record.rst_rn",
+        "u_record.rst_rn",
+        "u_record.rst_rn",
+        "u_record.rst_rn",
+        "u_record.rst_rn",
+        "u_record.rst_rn",
+        "u_record.u_auth.rst_n",
+        "u_record.u_context.rst_n",
+        "u_record.u_join.rst_n",
+        "u_record.u_witness.rst_n"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$15869",
+        "type": "$_DFF_PN0_",
+        "pin": "Q"
+      }
+    },
+    {
+      "loads": 507,
+      "names": [
+        "is_hdr"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:256:simplemap_logbin$14705",
+        "type": "$_AND_",
+        "pin": "Y"
+      }
+    },
+    {
+      "loads": 191,
+      "names": [
+        "$auto$simplemap.cc:271:simplemap_eqne$12429",
+        "$auto$simplemap.cc:271:simplemap_eqne$13139",
+        "$auto$simplemap.cc:271:simplemap_eqne$13164",
+        "$auto$simplemap.cc:271:simplemap_eqne$13262",
+        "$auto$simplemap.cc:271:simplemap_eqne$13344",
+        "$auto$simplemap.cc:271:simplemap_eqne$13633",
+        "$auto$simplemap.cc:271:simplemap_eqne$13658",
+        "$auto$simplemap.cc:271:simplemap_eqne$13756",
+        "$auto$simplemap.cc:271:simplemap_eqne$13838",
+        "begin_v",
+        "u_record.begin_v",
+        "u_record.g_actual_sink[0].u_receipt.begin_v",
+        "u_record.g_actual_sink[1].u_receipt.begin_v",
+        "u_record.u_auth.begin_v",
+        "u_record.u_context.program_begin_v",
+        "u_record.u_join.begin_v"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$23023",
+        "type": "$_DFF_PN0_",
+        "pin": "Q"
+      }
+    },
+    {
+      "loads": 165,
+      "names": [
+        "$auto$simplemap.cc:271:simplemap_eqne$10163",
+        "$auto$simplemap.cc:271:simplemap_eqne$10299",
+        "g_ovl.u_cseq.u_seq.u_rx.halt",
+        "g_ovl.u_cseq.u_seq.u_tx.halt"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:106:simplemap_bitop$15947",
+        "type": "$_OR_",
+        "pin": "Y"
+      }
+    },
+    {
+      "loads": 152,
+      "names": [
+        "ev_res"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:256:simplemap_logbin$14396",
+        "type": "$_AND_",
+        "pin": "Y"
+      }
+    },
+    {
+      "loads": 144,
+      "names": [
+        "$auto$opt_dff.cc:336:make_patterns_logic$6177"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:157:simplemap_reduce$10499",
+        "type": "$_AND_",
+        "pin": "Y"
+      }
+    },
+    {
+      "loads": 143,
+      "names": [
+        "g_ovl.u_cseq.u_seq.u_seq.ep_rise"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:256:simplemap_logbin$16658",
+        "type": "$_AND_",
+        "pin": "Y"
+      }
+    },
+    {
+      "loads": 90,
+      "names": [
+        "g_sram_cal.u_cal_t.start"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:106:simplemap_bitop$15332",
+        "type": "$_OR_",
+        "pin": "Y"
+      }
+    },
+    {
+      "loads": 88,
+      "names": [
+        "ev_lay",
+        "g_sram_cal.u_cal_l.start",
+        "l_go"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:256:simplemap_logbin$14394",
+        "type": "$_AND_",
+        "pin": "Y"
+      }
+    },
+    {
+      "loads": 86,
+      "names": [
+        "prog_witness_slot",
+        "u_record.u_witness.send_slot",
+        "u_record.witness_slot"
+      ],
+      "driver": null
+    },
+    {
+      "loads": 86,
+      "names": [
+        "g_accepted_ctx.u_observer.program_ready",
+        "rp_program_ready",
+        "u_record.program_ready",
+        "u_record.u_context.program_ready",
+        "u_record.u_join.ready",
+        "u_record.u_witness.program_ready"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$12245",
+        "type": "$_DFFE_PN0P_",
+        "pin": "Q"
+      }
+    },
+    {
+      "loads": 86,
+      "names": [
+        "ecal_go",
+        "ev_tok",
+        "g_sram_cal.u_cal_e.start"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:256:simplemap_logbin$14395",
+        "type": "$_AND_",
+        "pin": "Y"
+      }
+    },
+    {
+      "loads": 83,
+      "names": [
+        "rp_commit_v",
+        "u_record.commit_v",
+        "u_record.u_join.commit_v",
+        "u_record.u_witness.commit_v"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$21944",
+        "type": "$_DFF_PN0_",
+        "pin": "Q"
+      }
+    },
+    {
+      "loads": 82,
+      "names": [
+        "seq_descriptor_obs",
+        "u_record.descriptor_obs",
+        "u_record.g_actual_sink[1].dw",
+        "u_record.g_actual_sink[1].u_receipt.dw_v",
+        "u_record.g_actual_sink[1].u_receipt.event_desc"
+      ],
+      "driver": null
+    },
+    {
+      "loads": 81,
+      "names": [
+        "u_record.g_actual_sink[0].dw",
+        "u_record.g_actual_sink[0].u_receipt.dw_v",
+        "u_record.g_actual_sink[0].u_receipt.event_desc",
+        "u_record.tt_descriptor_obs"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$23093",
+        "type": "$_DFF_PN0_",
+        "pin": "Q"
+      }
+    },
+    {
+      "loads": 80,
+      "names": [
+        "$auto$opt_dff.cc:336:make_patterns_logic$5840"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:157:simplemap_reduce$12344",
+        "type": "$_AND_",
+        "pin": "Y"
+      }
+    },
+    {
+      "loads": 80,
+      "names": [
+        "$auto$opt_dff.cc:336:make_patterns_logic$5918"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:157:simplemap_reduce$12077",
+        "type": "$_AND_",
+        "pin": "Y"
+      }
+    },
+    {
+      "loads": 80,
+      "names": [
+        "$auto$opt_dff.cc:336:make_patterns_logic$5901"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:157:simplemap_reduce$11859",
+        "type": "$_AND_",
+        "pin": "Y"
+      }
+    },
+    {
+      "loads": 80,
+      "names": [
+        "$auto$opt_dff.cc:336:make_patterns_logic$5744"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:157:simplemap_reduce$12688",
+        "type": "$_AND_",
+        "pin": "Y"
+      }
+    },
+    {
+      "loads": 80,
+      "names": [
+        "$auto$opt_dff.cc:336:make_patterns_logic$5696"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:157:simplemap_reduce$12930",
+        "type": "$_AND_",
+        "pin": "Y"
+      }
+    },
+    {
+      "loads": 75,
+      "names": [
+        "$auto$opt_dff.cc:336:make_patterns_logic$6227"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:157:simplemap_reduce$10328",
+        "type": "$_AND_",
+        "pin": "Y"
+      }
+    },
+    {
+      "loads": 75,
+      "names": [
+        "$0\\dh_prog[142:0]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:157:simplemap_reduce$11930",
+        "type": "$_AND_",
+        "pin": "Y"
+      }
+    },
+    {
+      "loads": 75,
+      "names": [
+        "$auto$opt_dff.cc:336:make_patterns_logic$5676"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:157:simplemap_reduce$12763",
+        "type": "$_AND_",
+        "pin": "Y"
+      }
+    },
+    {
+      "loads": 73,
+      "names": [
+        "cold_active",
+        "g_sram_cal.u_cal_e.sel_seg",
+        "g_sram_cal.u_cal_e.start_seg"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$11854",
+        "type": "$_DFFE_PN0P_",
+        "pin": "Q"
+      }
+    },
+    {
+      "loads": 71,
+      "names": [
+        "cold_t_go",
+        "g_sram_cal.u_cal_t.sel_seg",
+        "g_sram_cal.u_cal_t.start_seg"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:256:simplemap_logbin$14604",
+        "type": "$_AND_",
+        "pin": "Y"
+      }
+    },
+    {
+      "loads": 68,
+      "names": [
+        "$0\\dh_prog[142:0]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:157:simplemap_reduce$12006",
+        "type": "$_AND_",
+        "pin": "Y"
+      }
+    },
+    {
+      "loads": 64,
+      "names": [
+        "$auto$opt_dff.cc:336:make_patterns_logic$5718"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:157:simplemap_reduce$12856",
+        "type": "$_AND_",
+        "pin": "Y"
+      }
+    },
+    {
+      "loads": 64,
+      "names": [
+        "$auto$opt_dff.cc:336:make_patterns_logic$6651"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:157:simplemap_reduce$8861",
+        "type": "$_AND_",
+        "pin": "Y"
+      }
+    },
+    {
+      "loads": 55,
+      "names": [
+        "$auto$simplemap.cc:271:simplemap_eqne$10589",
+        "$auto$simplemap.cc:271:simplemap_eqne$10632",
+        "$auto$simplemap.cc:271:simplemap_eqne$10642",
+        "$auto$simplemap.cc:271:simplemap_eqne$10654",
+        "g_ovl.u_cseq.u_seq.u_seq.init"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$16011",
+        "type": "$_DFF_PN1_",
+        "pin": "Q"
+      }
+    },
+    {
+      "loads": 41,
+      "names": [
+        "t_go"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:256:simplemap_logbin$14601",
+        "type": "$_AND_",
+        "pin": "Y"
+      }
+    },
+    {
+      "loads": 39,
+      "names": [
+        "$auto$opt_dff.cc:336:make_patterns_logic$5878"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:157:simplemap_reduce$12152",
+        "type": "$_AND_",
+        "pin": "Y"
+      }
+    },
+    {
+      "loads": 37,
+      "names": [
+        "$logic_and$rtl/qwen_split/qfd_sys_face.sv:534$1307_Y"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:256:simplemap_logbin$14684",
+        "type": "$_AND_",
+        "pin": "Y"
+      }
+    },
+    {
+      "loads": 36,
+      "names": [
+        "$auto$opt_dff.cc:319:make_patterns_logic$5978"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:157:simplemap_reduce$11164",
+        "type": "$_OR_",
+        "pin": "Y"
+      }
+    },
+    {
+      "loads": 35,
+      "names": [
+        "$flatten\\g_sram_cal.u_cal_t.$logic_and$rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_sram.sv:37$1460_Y"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:256:simplemap_logbin$18112",
+        "type": "$_AND_",
+        "pin": "Y"
+      }
+    },
+    {
+      "loads": 35,
+      "names": [
+        "$flatten\\g_sram_cal.u_cal_e.$logic_and$rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_sram.sv:37$1634_Y"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:256:simplemap_logbin$17431",
+        "type": "$_AND_",
+        "pin": "Y"
+      }
+    },
+    {
+      "loads": 34,
+      "names": [
+        "$auto$opt_dff.cc:336:make_patterns_logic$5873"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:157:simplemap_reduce$12208",
+        "type": "$_AND_",
+        "pin": "Y"
+      }
+    },
+    {
+      "loads": 34,
+      "names": [
+        "$auto$rtlil.cc:3270:ReduceAnd$6972"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:157:simplemap_reduce$8341",
+        "type": "$_AND_",
+        "pin": "Y"
+      }
+    },
+    {
+      "loads": 34,
+      "names": [
+        "$auto$rtlil.cc:3270:ReduceAnd$6887"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:157:simplemap_reduce$8527",
+        "type": "$_AND_",
+        "pin": "Y"
+      }
+    },
+    {
+      "loads": 33,
+      "names": [
+        "$auto$opt_dff.cc:319:make_patterns_logic$6524"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:157:simplemap_reduce$9330",
+        "type": "$_OR_",
+        "pin": "Y"
+      }
+    },
+    {
+      "loads": 33,
+      "names": [
+        "$auto$opt_dff.cc:319:make_patterns_logic$6436"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:157:simplemap_reduce$9631",
+        "type": "$_OR_",
+        "pin": "Y"
+      }
+    },
+    {
+      "loads": 33,
+      "names": [
+        "$auto$opt_dff.cc:319:make_patterns_logic$6346"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:157:simplemap_reduce$9932",
+        "type": "$_OR_",
+        "pin": "Y"
+      }
+    }
+  ],
+  "status": "OPEN requires distributed reset and enable copies"
+}

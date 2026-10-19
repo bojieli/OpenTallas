@@ -1,0 +1,40 @@
+ot-run: ot-epyc4       admits  1027 GB (avail 818, growth 99, headroom 0, waiters 0/0 GB) load 87/128 running 32 disk 323 GB 
+ot-run: ot-epyc5       admits   620 GB (avail 547, growth 113, headroom 0, waiters 0/0 GB) load 80/128 running 15 disk 1044 GB 
+ot-run: ot-epyc6       admits   293 GB (avail 311, growth 106, headroom 0, waiters 0/0 GB) load 31/128 running 16 disk 6048 GB 
+ot-run: ot-epyc7       admits   480 GB (avail 437, growth 101, headroom 0, waiters 0/0 GB) load 63/96 running 17 disk 6476 GB 
+ot-run: ot-epyc8       admits  1181 GB (avail 928, growth 101, headroom 0, waiters 0/0 GB) load 38/128 running 29 disk 346 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/sysface-sram-parent-synth-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/sysface-sram-parent-synth-1019
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-102740-1792427707 after 0 s
+      769 public wires
+    13596 public wire bits
+      116 ports
+     2815 port bits
+        - memories
+        - memory bits
+        - processes
+    12979 cells
+     1581   $_AND_
+        2   $_DFFE_PN0N_
+     2095   $_DFFE_PN0P_
+      431   $_DFFE_PP_
+      258   $_DFF_PN0_
+        4   $_DFF_PN1_
+      279   $_DFF_P_
+     1751   $_MUX_
+      717   $_NOT_
+     3804   $_OR_
+       94   $_SDFF_PN0_
+      498   $_SDFF_PP0_
+     1440   $_XOR_
+       16   $scopeinfo
+        3   ot_rom_4096x72_m8
+        6   ot_sram_1r1w_64x16_m1
+        9 submodules
+        9   ot_qwen_cal_reset_copy
+
+End of script. Logfile hash: 4eee3491b5, time: 2.67s, user: 2.79s, system: 0.18s, MEM: 96.25 MB peak
+Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)
+Time spent: 23% 35x opt_clean (0 sec), 18% 53x opt_expr (0 sec), ...
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-102740-1792427707): exit 0
