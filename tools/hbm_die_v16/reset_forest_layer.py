@@ -1,202 +1,225 @@
 #!/usr/bin/env python3
-"""H-NETLIST 1815: the HBM die REGIONAL SYNCHRONOUS RESET FOREST as a full_die_v16 revision layer (owner standard
-10-16: regional sync reset trees with registered stages, no die-wide async fan-out; hops within the measured reach).
+"""Plan a source-bound regional synchronous reset forest from placed LEF pins.
 
-Input: a contract GENERATED WITHOUT the forest (its clock_resets name every reset port and its hb_ckgen por source; its
-bridge_rst_n edges) and the placement (case manifest; relay stations: the 'home (x, y)' of their note).
-Per domain d (stream / serial / hbm / link) and region z (C band x in [CB0, CB1], quadrants SW/SE/NW/NE at die mid):
-    hb_ckgen.por_d --(hop tiles every <= R um, L path)--> hbfd_rrl_sync root at the region's sink centroid
-        --(hop tiles, L path, shared prefixes)--> leaf hbfd_rrl_hop per (R x R cell, sink class), <= FANOUT sinks
-        --> element reset pins.   Relay-station rs pins get their own leaves (class 'relay').
-Equal age per domain: release age(sink) = pre-root hops + 3 (root) + root->leaf hops + 1 (leaf); every leaf is padded
-with hop tiles to the domain maximum, so every reset pin of a domain releases on the same edge (compiler constant
-RESET_AGE[d] in the report).  bridge_rst_n (subr_<q> -> su_<q>k, already synchronous in stream): hop chains, padded
-equal age per source, leaf = last hop.  Each tile is clocked by its domain's regional root (clock kind 'clock').
-    reset_forest_layer.py --contract C.json[.gz] --manifest M.json --out LAYER.json --report REP.json [--reach 405]
-                          [--fanout 2048] [--mut-skew]   (--mut-skew: one leaf one hop deeper; bench mutant only)
+Requires a pre-forest contract, its placed case manifest and the exact consumed
+LEFs (including hbfd_rrl_sync/hop). Writes a revision layer only on geometric
+PASS. Full rectangle homes are reserved outside all placed outlines; fixed
+reset release ages are equalized per (domain, POR) and per bridge source.
+This is geometry and RTL latency evidence, never physical sign-off: rebuild the
+case, check actual post-placement pins/reach, clock phases, TT/FF and DRC.
 """
-import argparse, collections, gzip, json, math, re
+import argparse
+import collections
+import gzip
+import hashlib
+import json
 from pathlib import Path
+
+from reset_forest_geometry import Geometry, GeometryError, md
 
 CB0, CB1 = 14970.0, 18831.0
 SRC = 'rtl/hbm_accel/die_glue/hbfd_rrl.sv'
 DEPS = ['rtl/lib/ot_rst_relay.sv']
-HOME = re.compile(r'home \(([-\d.]+), ([-\d.]+)\)')
 
 
 def load(p):
     return json.loads(gzip.open(p).read() if str(p).endswith('.gz') else Path(p).read_text())
 
 
-def main():
-    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument('--contract', required=True); ap.add_argument('--manifest', required=True)
-    ap.add_argument('--out', required=True, type=Path); ap.add_argument('--report', required=True, type=Path)
-    ap.add_argument('--reach', type=float, default=405.0); ap.add_argument('--fanout', type=int, default=2048)
-    ap.add_argument('--mut-skew', action='store_true')
-    ap.add_argument('--zones', choices=('d4b', 'quadrant'), default='d4b',
-                    help="quadrant (H-D4G d4g): one regional root per die quadrant (no E core column)")
-    ap.add_argument('--diag', action='store_true',
-                    help='record reachability errors and still write the layer (FAIL_DIAG); default: they FAIL (exit 3)')
-    a = ap.parse_args()
-    R, FO = a.reach, a.fanout
-    c = load(a.contract); man = load(a.manifest)
-    pl = man['placement']; W, H = man['die_um']
-    inst = c['instances']
-
-    def pos(n):
-        p = pl.get(n)
-        if p is not None:
-            return (p['x'] + p['w'] / 2, p['y'] + p['h'] / 2)
-        m = HOME.search(inst[n].get('note', ''))
-        return (float(m.group(1)), float(m.group(2))) if m else None
+def build(c, manifest, views, relay_views=None, reach=405., fanout=2048, zones='d4b', mut_skew=False):
+    if reach <= 0 or fanout < 1:
+        raise GeometryError('reach and fanout must be positive')
+    g = Geometry(manifest, views, relay_views, reach)
+    W, H = manifest['die_um']
+    tiles, edges, clocks, ports, drop = [], [], [], [], []
+    report = dict(schema='opentallas.hbm.reset_forest.v2', reach_um=reach, fanout_cap=fanout,
+                  domains={}, geometry_gate='PASS', physical_signoff='OPEN', native_complete=False,
+                  home_basis='lower left, R0, exact consumed LEF outline',
+                  clock_requirement='downstream regional clock binding and phase validation required',
+                  compiler_requirement='use emitted domain age constants; no runtime scheduling/backpressure',
+                  homes={}, consumed_lef_sha256=g.hashes)
 
     def zone(xy):
         x, y = xy
-        if a.zones == 'quadrant':
-            return ('N' if y >= H / 2 else 'S') + ('W' if x < W / 2 else 'E')
-        if CB0 <= x <= CB1:
+        if zones != 'quadrant' and CB0 <= x <= CB1:
             return 'C'
-        return ('N' if y >= H / 2 else 'S') + ('W' if x < CB0 else 'E')
-    md = lambda p, q: abs(p[0] - q[0]) + abs(p[1] - q[1])
-    ck = pos('hb_ckgen')
-    tiles, edges, clocks, problems = [], [], [], []
-    nid = collections.Counter()
+        return ('N' if y >= H / 2 else 'S') + ('W' if x < (W / 2 if zones == 'quadrant' else CB0) else 'E')
 
-    def tile(kind, dom, tag, xy, note):
-        nid[tag] += 1
-        n = f'rrf_{tag}_{nid[tag]:04d}'
-        tiles.append(dict(name=n, master=f'hbfd_rrl_{kind}', source=SRC, rtl_deps=DEPS, params={}, slot=None,
-                          owner='H-NETLIST reset forest', note=f'{note}; home ({round(xy[0], 1)}, {round(xy[1], 1)}) um'))
+    def centre(points):
+        return tuple(sum(p[i] for p in points) / len(points) for i in (0, 1))
+
+    def emit(t, dom, tag, note):
+        n = f'rrf_{tag}_{len(tiles) + 1:06d}'
+        t['name'] = n
+        x, y = t['home']
+        tiles.append(dict(name=n, master='hbfd_rrl_' + t['kind'], source=SRC, rtl_deps=DEPS, params={}, slot=None,
+                          owner='H-NETLIST reset forest', note=f'{note}; home ({x:.6f}, {y:.6f}) um'))
         clocks.append(dict(inst=n, port='clk', domain=dom, kind='clock'))
+        w, h, _ = g.relay[t['kind']]
+        report['homes'][n] = dict(x=x, y=y, w=w, h=h, o='R0', m='hbfd_rrl_' + t['kind'])
         return n
 
-    def E(src, dst, dom):
-        edges.append(dict(src=src, dst=dst, bits=1, clock=dom, basis='H-NETLIST 1815 regional sync reset forest'))
+    def edge(src, dst, dom):
+        edges.append(dict(src=src, dst=dst, bits=1, clock=dom,
+                          basis='source-bound regional synchronous reset forest; fixed release age'))
 
-    def lpath(p, q):
-        """points every R um along the L path p -> q (x first), excluding p, excluding q"""
-        L = md(p, q); n = max(0, math.ceil(L / R) - 1); out = []
-        for k in range(1, n + 1):
-            t = k * L / (n + 1); dx = abs(q[0] - p[0])
-            if t <= dx:
-                out.append((p[0] + math.copysign(t, q[0] - p[0]), p[1]))
-            else:
-                out.append((q[0], p[1] + math.copysign(t - dx, q[1] - p[1])))
-        return out
-    # ---- sinks per domain from clock_resets
+    def wire_chain(prev, chain, dom, tag, note):
+        for t in chain:
+            n = emit(t, dom, tag, note)
+            edge(prev, [n, 'rst_n_in'], dom)
+            prev = [n, 'rst_n']
+        return prev
+
     sinks = collections.defaultdict(list)
-    unplaced = collections.Counter()
+    seen = set()
     for x in c['clock_resets']:
         if x['kind'] != 'reset' or x['source'][0] != 'hb_ckgen':
             continue
-        dom = x['domain']; xy = pos(x['instance'])
-        if xy is None:
-            unplaced[inst[x['instance']]['master']] += 1
-            continue
-        cls = 'relay' if inst[x['instance']]['master'].startswith('hbfd_rly_') else 'elem'
-        for b in range(x['bits']):     # a multi-bit reset port (per-lane / per-region copies): every bit is a sink pin
-            sinks[(dom, x['source'][1])].append((x['instance'], (x['port'], b, x['bits']), xy, cls))
-    rep = dict(schema='opentallas.hbm.reset_forest.v1', reach_um=R, fanout_cap=FO, domains={}, unplaced=dict(unplaced))
-    ports = []
+        for bit in range(x['bits']):
+            ref = (x['instance'], x['port'], bit, x['bits'])
+            if ref[:3] in seen:
+                raise GeometryError(f'duplicate reset sink: {ref}')
+            seen.add(ref[:3])
+            xy = g.pin(*ref)
+            sinks[(x['domain'], x['source'][1])].append((ref, xy))
     for (dom, por), S in sorted(sinks.items()):
-        byz = collections.defaultdict(list)
-        for s in S:
-            byz[zone(s[2])].append(s)
-        plan = []   # (zone, root, [(leaf_xy, cls, [sinks])])
-        for z, Z in sorted(byz.items()):
-            cx = sum(s[2][0] for s in Z) / len(Z); cy = sum(s[2][1] for s in Z) / len(Z)
+        source = g.pin('hb_ckgen', por)
+        ingress = g.reserve('sync', source, targets=[('rst_n_in', source)])
+        distributed_source = g.tile_pin(ingress, 'rst_n')
+        groups = collections.defaultdict(list)
+        for ref, xy in S:
+            groups[zone(xy)].append((ref, xy))
+        plans = []
+        for z, Z in sorted(groups.items()):
+            root = g.reserve('sync', centre([s[1] for s in Z]), max_distance=max(W, H))
+            pre = g.chain(distributed_source, root)
             cells = collections.defaultdict(list)
-            for s in Z:
-                cells[(int(s[2][0] // R), int(s[2][1] // R), s[3])].append(s)
+            for ref, xy in Z:
+                cells[(int(xy[0] // (reach / 2)), int(xy[1] // (reach / 2)))].append((ref, xy))
             leaves = []
-            for (gx, gy, cls), L_ in sorted(cells.items()):
-                for k in range(0, len(L_), FO):
-                    chunk = L_[k:k + FO]
-                    leaves.append(((sum(s[2][0] for s in chunk) / len(chunk), sum(s[2][1] for s in chunk) / len(chunk)), cls, chunk))
-            plan.append((z, (cx, cy), leaves))
-        # ages before padding
+            for _, cell in sorted(cells.items()):
+                pending = [cell[k:k + fanout] for k in range(0, len(cell), fanout)]
+                while pending:
+                    chunk = pending.pop(0)
+                    try:
+                        leaf = g.reserve('hop', centre([s[1] for s in chunk]),
+                                         targets=[('rst_n', s[1]) for s in chunk])
+                    except GeometryError:
+                        if len(chunk) == 1:
+                            raise
+                        mid = len(chunk) // 2
+                        pending[0:0] = [chunk[:mid], chunk[mid:]]
+                        continue
+                    chain = g.chain(g.tile_pin(root, 'rst_n'), leaf)
+                    leaves.append(dict(tile=leaf, chain=chain, sinks=chunk, age=3 + len(pre) + 3 + len(chain) + 1))
+            plans.append(dict(zone=z, root=root, pre=pre, leaves=leaves))
+        age = max(l['age'] for p in plans for l in p['leaves'])
+        ingress_name = emit(ingress, dom, f'{dom}_por', 'local POR synchronization before registered distribution')
+        edge(['hb_ckgen', por], [ingress_name, 'rst_n_in'], dom)
         ages = []
-        for z, root, leaves in plan:
-            pre = len(lpath(ck, root))
-            for lxy, cls, chunk in leaves:
-                ages.append(pre + 3 + len(lpath(root, lxy)) + 1)
-        AGE = max(ages)
-        stats = dict(sinks=len(S), regions={}, age=AGE, tiles=0)
-        mut_done = False
-        for z, root, leaves in plan:
-            tag = f'{dom[:2]}{z}'
-            prev = ['hb_ckgen', por]
-            for xy in lpath(ck, root):
-                n = tile('hop', dom, tag, xy, f'{dom} reset: hb_ckgen.{por} -> {z} root, reach hop')
-                E(prev, [n, 'rst_n_in'], dom); prev = [n, 'rst_n']
-            rt = tile('sync', dom, tag, root, f'{dom} reset: {z} regional root (async por -> 2-flop sync release)')
-            E(prev, [rt, 'rst_n_in'], dom)
-            pre = len(lpath(ck, root))
-            trie = {}
-            nleaf = 0
-            for lxy, cls, chunk in leaves:
-                prev = [rt, 'rst_n']; key = ()
-                for xy in lpath(root, lxy):
-                    key = key + ((round(xy[0]), round(xy[1])),)
-                    if key not in trie:
-                        n = tile('hop', dom, tag, xy, f'{dom} reset: {z} root -> leaf, reach hop')
-                        E(prev, [n, 'rst_n_in'], dom); trie[key] = n
-                    prev = [trie[key], 'rst_n']
-                pads = AGE - (pre + 3 + len(lpath(root, lxy)) + 1)
-                if a.mut_skew and not mut_done:
-                    pads += 1; mut_done = True
-                for k in range(pads):
-                    n = tile('hop', dom, tag, lxy, f'{dom} reset: {z} equal-age pad {k + 1}/{pads}')
-                    E(prev, [n, 'rst_n_in'], dom); prev = [n, 'rst_n']
-                lf = tile('hop', dom, tag, lxy, f'{dom} reset: {z} leaf ({cls}, {len(chunk)} sinks)')
-                E(prev, [lf, 'rst_n_in'], dom); nleaf += 1
-                for (i, (p, b, nb), _xy, _c) in chunk:
-                    E([lf, 'rst_n', 0, 1], [i, p, b, b + 1] if nb > 1 else [i, p], dom)
+        mutated = False
+        for plan in plans:
+            z, root, pre = plan['zone'], plan['root'], plan['pre']
+            tag = f'{dom}_{z}'
+            prev = wire_chain([ingress_name, 'rst_n'], pre, dom, tag, 'synchronized POR reach hop')
+            rt = emit(root, dom, tag, 'regional root: two sync stages and one relay stage')
+            edge(prev, [rt, 'rst_n_in'], dom)
+            for leaf in plan['leaves']:
+                chain, tile = leaf['chain'], leaf['tile']
+                prev = wire_chain([rt, 'rst_n'], chain, dom, tag, 'regional reach hop')
+                point = g.tile_pin(chain[-1] if chain else root, 'rst_n')
+                pads = age - leaf['age']
+                if mut_skew and not mutated:
+                    pads += 1
+                    mutated = True
+                for _ in range(pads):
+                    pad = g.reserve('hop', g.centre(tile), targets=[('rst_n_in', point),
+                                                                     ('rst_n', g.tile_pin(tile, 'rst_n_in'))])
+                    prev = wire_chain(prev, [pad], dom, tag, 'equal-age pad')
+                    point = g.tile_pin(pad, 'rst_n')
+                lf = emit(tile, dom, tag, f'leaf: {len(leaf["sinks"])} reset pins')
+                edge(prev, [lf, 'rst_n_in'], dom)
+                for (i, p, b, nb), _ in leaf['sinks']:
+                    edge([lf, 'rst_n'], [i, p, b, b + 1] if nb > 1 else [i, p], dom)
                     if b == 0:
                         ports.append([i, p])
-            stats['regions'][z] = dict(sinks=sum(len(l[2]) for l in leaves), leaves=nleaf, root=[round(root[0]), round(root[1])],
-                                       pre_root_hops=pre)
-        stats['tiles'] = sum(1 for t in tiles if t['name'].startswith(f'rrf_{dom[:2]}'))
-        rep['domains'][f'{dom}:{por}'] = stats
-    # ---- bridge_rst_n: synchronous stream source -> hop chains, equal age per source
-    drop = []
-    br = collections.defaultdict(list)
+                ages.append(leaf['age'] + pads)
+        report['domains'][f'{dom}:{por}'] = dict(sinks=len(S), regions=len(plans), age=age,
+                                                       actual_leaf_ages=sorted(set(ages)))
+    bridges = collections.defaultdict(list)
     for e in c['edges']:
         if e['source'][1] == 'bridge_rst_n':
-            br[e['source'][0]].append(e['sink'])
-    for s_, dsts in sorted(br.items()):
-        drop.extend([s_, 'bridge_rst_n', d[0]] for d in dsts)
-        sp = pos(s_); dom = 'stream'
-        lens = [len(lpath(sp, pos(d[0]))) for d in dsts]
-        AGE = max(lens) + 1
-        tag = f'br{s_.split("_")[-1]}'
-        for d, L_ in zip(dsts, lens):
-            prev = [s_, 'bridge_rst_n']; dxy = pos(d[0])
-            for xy in lpath(sp, dxy):
-                n = tile('hop', dom, tag, xy, f'bridge reset {s_} -> {d[0]}, reach hop')
-                E(prev, [n, 'rst_n_in'], dom); prev = [n, 'rst_n']
-            for k in range(AGE - 1 - L_):
-                n = tile('hop', dom, tag, dxy, f'bridge reset {s_} -> {d[0]}, equal-age pad')
-                E(prev, [n, 'rst_n_in'], dom); prev = [n, 'rst_n']
-            lf = tile('hop', dom, tag, dxy, f'bridge reset {s_} -> {d[0]}, leaf')
-            E(prev, [lf, 'rst_n_in'], dom); E([lf, 'rst_n'], [d[0], d[1]], dom)
-        rep['domains'][f'bridge:{s_}'] = dict(sinks=len(dsts), age=AGE)
-    spec = dict(region='reset_forest', author='Claude H-NETLIST 1815', basis_commit='owner standard 10-16 (regional sync reset trees)',
+            if len(e['source']) != 2 or len(e['sink']) != 2 or e['bits'] != 1:
+                raise GeometryError('bridge reset must be an unsliced scalar edge')
+            bridges[e['source'][0]].append(e['sink'])
+    for src, dsts in sorted(bridges.items()):
+        source = g.pin(src, 'bridge_rst_n')
+        paths = []
+        for dst in dsts:
+            dp = g.pin(*dst)
+            leaf = g.reserve('hop', dp, targets=[('rst_n', dp)])
+            chain = g.chain(source, leaf)
+            paths.append((dst, leaf, chain))
+        age = max(len(p[2]) + 1 for p in paths)
+        for dst, leaf, chain in paths:
+            prev = wire_chain([src, 'bridge_rst_n'], chain, 'stream', 'br_' + src, 'bridge reach hop')
+            point = g.tile_pin(chain[-1], 'rst_n') if chain else source
+            for _ in range(age - len(chain) - 1):
+                pad = g.reserve('hop', g.centre(leaf), targets=[('rst_n_in', point),
+                                                                  ('rst_n', g.tile_pin(leaf, 'rst_n_in'))])
+                prev = wire_chain(prev, [pad], 'stream', 'br_' + src, 'bridge equal-age pad')
+                point = g.tile_pin(pad, 'rst_n')
+            prev = wire_chain(prev, [leaf], 'stream', 'br_' + src, 'bridge leaf')
+            edge(prev, dst, 'stream')
+            drop.append([src, 'bridge_rst_n', dst[0]])
+        report['domains'][f'bridge:{src}'] = dict(sinks=len(dsts), age=age, actual_leaf_ages=[age])
+    if mut_skew:
+        report['geometry_gate'] = 'FAIL_MUTANT_RELEASE_AGE'
+    # Independent check of emitted actual pin distances, including all pad links.
+    byname = {t['name']: t for t in g.reserved.values()}
+    def endpoint(ref):
+        if ref[0] in byname:
+            return g.tile_pin(byname[ref[0]], ref[1])
+        return g.pin(ref[0], f'{ref[1]}[{ref[2]}]' if len(ref) > 2 else ref[1])
+    lengths = [md(endpoint(e['src']), endpoint(e['dst'])) for e in edges]
+    if any(d > reach + 1e-6 for d in lengths):
+        raise GeometryError('emitted edge exceeds actual placed pin reach')
+    report.update(tiles=len(tiles), reset_ports=len(ports), max_actual_pin_hop_um=max(lengths, default=0),
+                  tiles_by_master=dict(collections.Counter(t['master'] for t in tiles)))
+    spec = dict(region='reset_forest', author='H-NETLIST source-bound reset planner',
+                basis_commit='regional synchronous reset owner standard 10-16',
                 instances=tiles, edges=edges, clocks=clocks, straps=[], gaps=[], drop_edges=drop,
-                reset_forest_ports=ports, notes=__doc__.split('\n\n')[0])
-    a.out.write_text(json.dumps(spec) + '\n')
-    rep.update(tiles=len(tiles), reset_ports=len(ports), problems=problems,
-               tiles_by_master=dict(collections.Counter(t['master'] for t in tiles)))
-    # H-D4G reset reachability gate (die standard: regional reset): an unplaced reset sink cannot be reached by any tree
-    for m_, k_ in unplaced.items():
-        problems.append(dict(kind='sink_unreachable', master=m_, sinks=k_, why='no placement / home for the reset pin'))
-    rep['reach_gate'] = 'PASS' if not problems else ('FAIL_DIAG' if a.diag else 'FAIL')
-    a.report.write_text(json.dumps(rep, indent=1) + '\n')
-    print(json.dumps({k: rep[k] for k in ('tiles', 'reset_ports', 'tiles_by_master', 'unplaced')}),
-          {k: (v.get('sinks'), v.get('age')) for k, v in rep['domains'].items()}, len(problems), 'problems', rep['reach_gate'])
-    if rep['reach_gate'] == 'FAIL':
+                reset_forest_ports=ports, notes=__doc__)
+    return spec, report
+
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__)
+    for name in ('contract', 'manifest', 'out', 'report', 'views'):
+        ap.add_argument('--' + name, type=Path, required=True)
+    ap.add_argument('--relay-views', type=Path)
+    ap.add_argument('--reach', type=float, default=405.)
+    ap.add_argument('--fanout', type=int, default=2048)
+    ap.add_argument('--zones', choices=('d4b', 'quadrant'), default='d4b')
+    ap.add_argument('--mut-skew', action='store_true', help='emit an explicitly failing release-age bench mutant')
+    ap.add_argument('--diag', action='store_true', help='compatibility: failures still refuse layer emission and exit 3')
+    a = ap.parse_args()
+    try:
+        spec, rep = build(load(a.contract), load(a.manifest), a.views, a.relay_views,
+                          a.reach, a.fanout, a.zones, a.mut_skew)
+    except GeometryError as e:
+        a.report.write_text(json.dumps(dict(schema='opentallas.hbm.reset_forest.v2', geometry_gate='FAIL',
+                                           physical_signoff='OPEN', problems=[str(e)]), indent=2) + '\n')
+        print(f'reset forest FAIL: {e}')
         raise SystemExit(3)
+    rep['input_sha256'] = {str(p.resolve()): hashlib.sha256(p.read_bytes()).hexdigest()
+                           for p in (a.contract, a.manifest, Path(__file__), Path(__file__).with_name('reset_forest_geometry.py'),
+                                     Path(__file__).resolve().parents[2] / SRC,
+                                     Path(__file__).resolve().parents[2] / DEPS[0])}
+    a.out.write_text(json.dumps(spec) + '\n')
+    rep['layer_sha256'] = hashlib.sha256(a.out.read_bytes()).hexdigest()
+    a.report.write_text(json.dumps(rep, indent=2) + '\n')
+    print(json.dumps({k: rep[k] for k in ('tiles', 'reset_ports', 'max_actual_pin_hop_um', 'geometry_gate')}))
 
 
 if __name__ == '__main__':
