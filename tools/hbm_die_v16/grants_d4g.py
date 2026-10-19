@@ -282,6 +282,11 @@ def main():
             by[n]['origin']['x'] = round(x, 3); by[n]['origin']['y'] = round(y, 3)
     for s in slots:
         if s.get('pins'):
+            # HBM-CHAIN4 10-18: a HARDENED slot's pins are its routed LEF (closed view, R0 slot-relative face/offset), not a
+            # die pin plan -> they stay (top-down rule: closed tiles keep their pins).  Dropping hb_ckgen's pll_<dom>/por_<dom>
+            # killed GEN2a (die_clock_tree.ckgen_pin_xy: 'ckgen slot has no placed pin pll_hbm').
+            if s.get('hardened') and all(p.get('offset_basis') == 'routed view LEF pin centre' for p in s['pins']):
+                continue
             s['pins_d4f_dropped'] = len(s['pins']); s['pins'] = []
             s.pop('pin_status', None)
     die = next(s for s in G2['slots'] if s['kind'] == 'die')
