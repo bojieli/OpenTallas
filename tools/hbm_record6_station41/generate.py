@@ -256,7 +256,15 @@ for i in range(26):
             b,n=global_meta(o)
             emit(f" if(active&&tick==10'd{tm(o,'done')})fragment_{i}<={{epoch,5'd{n.bit_length()-1},8'd{b},2'd0,global_owned,nx[40]}};")
     emit(' end')
-emit(" assign root_v=global_owned&&tick==10'd591;assign root_x=nx[40];assign fault=ctl_fault||gbad||(|sf);")
+emit(""" // Genuine final-result boundary: retain the owned T591 value for the
+ // qcore's following-edge LOAD pin capture. No compiler scalar enters here.
+ reg root_held_v;reg [31:0] root_held_x;
+ always @(posedge clk or negedge run_rst_n)
+  if(!run_rst_n)root_held_v<=0;
+  else if(start)root_held_v<=0;
+  else if(global_owned&&tick==10'd591)root_held_v<=1;
+ always @(posedge clk)if(global_owned&&tick==10'd591)root_held_x<=nx[40];
+ assign root_v=root_held_v;assign root_x=root_held_x;assign fault=ctl_fault||gbad||(|sf);""")
 emit('end endgenerate\nendmodule')
 emit('''// Actual source arithmetic, OPR1 then LAT6; no real/shortreal arithmetic.
 module ot_hbm_r6_add_node(input wire clk,rst_n,v,input wire [31:0] a,b,
@@ -284,6 +292,7 @@ ledger=dict(scope='SOURCE ONLY; no RTL simulation or physical qualification',sou
  local_selector_control_ff=40*27,local_selector_bank_ff=40*2,
  local_epoch_op_group_extra_ff=40*30,local_live_result_bypass_mux_bits=40*32,
  global_live_entry_bypass_mux_bits=26*56,global_ownership_register_ff=13,
+ final_root_capture_ff=33,final_root_capture_edge=591,
  reset_face_sampled_stages=2,arithmetic_mode_pipeline_removed_ff=41*7,
  global_state_and_root_distribution_native_fanout='UNQUALIFIED; central schedule/reset are not physically SAFE',
  capture_ancestors_used=32,unused_ancestor_reported=False,

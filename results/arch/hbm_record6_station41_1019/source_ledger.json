@@ -20520,6 +20520,8 @@
   "local_live_result_bypass_mux_bits": 1280,
   "global_live_entry_bypass_mux_bits": 1456,
   "global_ownership_register_ff": 13,
+  "final_root_capture_ff": 33,
+  "final_root_capture_edge": 591,
   "reset_face_sampled_stages": 2,
   "arithmetic_mode_pipeline_removed_ff": 287,
   "global_state_and_root_distribution_native_fanout": "UNQUALIFIED; central schedule/reset are not physically SAFE",

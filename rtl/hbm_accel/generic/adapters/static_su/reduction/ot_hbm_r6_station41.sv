@@ -10887,7 +10887,15 @@ end else begin:g_on
  if(active&&tick==10'd492)fragment_25<={epoch,5'd3,8'd144,2'd3,result_v[24],result_x[24]};
  if(active&&tick==10'd528)fragment_25<={epoch,5'd4,8'd144,2'd0,global_owned,nx[40]};
  end
- assign root_v=global_owned&&tick==10'd591;assign root_x=nx[40];assign fault=ctl_fault||gbad||(|sf);
+ // Genuine final-result boundary: retain the owned T591 value for the
+ // qcore's following-edge LOAD pin capture. No compiler scalar enters here.
+ reg root_held_v;reg [31:0] root_held_x;
+ always @(posedge clk or negedge run_rst_n)
+  if(!run_rst_n)root_held_v<=0;
+  else if(start)root_held_v<=0;
+  else if(global_owned&&tick==10'd591)root_held_v<=1;
+ always @(posedge clk)if(global_owned&&tick==10'd591)root_held_x<=nx[40];
+ assign root_v=root_held_v;assign root_x=root_held_x;assign fault=ctl_fault||gbad||(|sf);
 end endgenerate
 endmodule
 // Actual source arithmetic, OPR1 then LAT6; no real/shortreal arithmetic.
