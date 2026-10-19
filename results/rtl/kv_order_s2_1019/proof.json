@@ -30,7 +30,10 @@
   "mutants": {
     "drop_raw_bypass": "FAIL external3/3 and independent cycle65",
     "wrong_prefetch_addr": "FAIL external3/3 and independent cycle18",
-    "wrong_cache_advance": "FAIL external3/3 and independent cycle17"
+    "wrong_cache_advance": "FAIL external3/3 and independent cycle17",
+    "map_capacity7": "FAIL external3/3 runs",
+    "disp_capacity7": "FAIL external3/3 runs",
+    "order_s2_select": "FAIL external3/3 runs"
   },
   "latency_added_leaf_edges": 0,
   "capacity": 8,
@@ -43,5 +46,25 @@
     "rtl/qwen_sys/host_20261013/qkd_host_commit_order_debt.sv": "5435098a6e4e18c0c0f02a1e6bc7d89b7d6adf043939824b53331f503b8cb003",
     "rtl/qwen_sys/host_20261013/qkd_host_ingest_map.sv": "5dcc99f1ef1de2ad7ecc84c4f46e540d27552d93982cfa46b731dbfcfbdef328",
     "rtl/qwen_sys/host_20261013/qkd_host_boot_fifo8_sram.sv": "2be0dc2a4bedc60985195934e00d7316ea8da042d1d2ef4689d2428483169142"
+  },
+  "negative_bench_commit": "5ae4c01fc",
+  "quiet_constraints": {
+    "guard_counter_bits": 8,
+    "guard_settle_range": [
+      4,
+      255
+    ],
+    "candidate": 175,
+    "current_settle": 4,
+    "guard_status_quiet_bits": "status[23:16]",
+    "guarded_token_width": 93,
+    "guarded_token_behavior": "Fault bit88 ORed; no quiet interval field, existing retirement identity retained",
+    "host_native_quiet": "5 observation edges plus source export age, source observations never issue enables",
+    "leaf_capacity": "8 payload slots, 256 completion order slots;175-edge guard interval alone does not imply175 queued payloads",
+    "adoption_requirements": [
+      "explicit default-off SETTLE plumbing across three service wrappers",
+      "static producer/admission idle window and cross-clock fault/quiet observation price",
+      "preserve runtime credits and calendar; no no-stall claim before event mapping"
+    ]
   }
 }
