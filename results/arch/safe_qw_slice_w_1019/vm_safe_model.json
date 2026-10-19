@@ -1,0 +1,50 @@
+{
+  "status": "MODEL_BEFORE_SOURCE_AND_GATE",
+  "baseline_source": "rtl/qwen_dv/qfd_dv_vm.sv",
+  "baseline_sha256": "bbdacf0bb0876d86a86ea2c5af5a1f73b9f9935e8dc799f0d59a9b68c78ddb30",
+  "candidate_source": "rtl/qwen_dv/qfd_dv_vm_safe.sv",
+  "native_macros": {
+    "ot_sram_1r1w_1024x256_m2_r2c2": 10,
+    "ot_sram_1r1w_128x256_m1_r2c2": 8,
+    "ot_sram_1r1w_256x256_m2_r2c2": 4
+  },
+  "native_ports": "Each true1R1W. Unchanged3operand replicas, one shared CROM, 2BTABcopies and2PROGbanks. Input/output throughput unchanged.",
+  "boundary_bandwidth_bits_per_edge": {
+    "VM_SUwrite": 256,
+    "VM_wordwrite": 512,
+    "VM_elementwrite": 32,
+    "table_write": 1024,
+    "operand_reads": 768,
+    "CROM_reads": 512,
+    "BTAB_reads": 512,
+    "PROG_read": 457
+  },
+  "read_latency_edges": 2,
+  "added_read_edges": 0,
+  "added_write_edges": 0,
+  "added_reset_edges": 0,
+  "read_controls": {
+    "baseline_stage1": 105,
+    "baseline_stage2": 105,
+    "candidate_stage1": 133,
+    "candidate_stage2": 734,
+    "added_flops": 657,
+    "stage2_detail": {
+      "VM": 384,
+      "CROM": 256,
+      "BTAB": 64,
+      "PROG": 30
+    },
+    "max_data_loads_per_kept_select": 32
+  },
+  "capture_data_flops": 5522,
+  "write_semantics": "Fixed per-bank/per-slot parallel merge; W16 over SU over W1, highest enabled SU lane wins repeated low-slot addresses exactly as baseline; identical sticky fault predicates. No new fault for duplicate slots.",
+  "capacity": "Unchanged16K physical, canonical UVM4096 x4. No address truncation/wrap/new tables.",
+  "remaining_before_gate": [
+    "actual source equivalence including disabled reads/collisions/priority/MUT4/5",
+    "retained select copies plus recursive upstream data/control fanout census; write-input loads may still require parent source replicas",
+    "native macro rawpin escape and TT/FFclock/reference timing",
+    "mapped area/utilization and actual PG/data/clock/reset reach",
+    "all paths timed, no MCP/falsepath; generic level count is not TT delay"
+  ]
+}
