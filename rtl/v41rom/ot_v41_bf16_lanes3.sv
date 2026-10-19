@@ -118,7 +118,7 @@ module ot_v41_bf16_lanes3 #(
     generate for (l = 0; l < 16; l = l + 1) begin : g_l
         // lane tile: local gated clock lclk / reset lrst; the lane's own boundary registers (16-bit word and x slices,
         // valid copy) are the lane's local operand registers
-        wire lclk, lrst, lrst_m;   // lrst: lane body + chain; lrst_m: the multiplier (RSTPART copies, else one)
+        wire lclk, lrst, lrst_m;   // lrst: lane body + chain; lrst_m: the multiplier (else one; RSTPART: ot_v41_bmul2_rne_prepare_rp)
 `ifdef OT_BF_RSTPART
         assign lclk = fclk;    // OT_BF_TILE_FREECLK: the tile clock is the free clock
 `ifdef OT_BF_RSTPART_MUT_STUCK
@@ -126,7 +126,7 @@ module ot_v41_bf16_lanes3 #(
 `else
         ot_v41_rst_copy u_rl (.clk(fclk), .rst_pin(rst_pv[l / 4]), .rst_n(lrst));
 `endif
-        ot_v41_rst_copy u_rm (.clk(fclk), .rst_pin(rst_pv[l / 4]), .rst_n(lrst_m));
+        assign lrst_m = 1'b1;   // unused: the multiplier holds its own copies
 `elsif TCG_MUTANT_EN
         // negative control: lane 3's tile enable copy loads the wrong function (go-only), so lane 3 misses edges
         ot_v41_tile_clk u_tl (.fclk(fclk), .rst_pin(rst_pin), .ze_d(l == 3 ? 1'b0 : ze_d), .gclk(lclk), .rst_n(lrst));
@@ -140,7 +140,12 @@ module ot_v41_bf16_lanes3 #(
         reg        v_r;
         always @(posedge lclk or negedge lrst) if (!lrst) v_r <= 1'b0; else v_r <= v_s;
         always @(posedge lclk) begin w_r <= w_s[16*l +: 16]; x_r <= x_s[16*l +: 16]; end
-        ot_v41_bmul2_rne_prepare #(.GRADUAL_RNE(GRADUAL_RNE), .XS(RC != 0 ? 1 : 0)) u_m (.clk(lclk), .rst_n(lrst_m), .v(v_r), .a({w_r, 16'd0}), .b({x_r, 16'd0}),
+`ifdef OT_BF_RSTPART
+        ot_v41_bmul2_rne_prepare_rp #(.GRADUAL_RNE(GRADUAL_RNE), .XS(RC != 0 ? 1 : 0)) u_m (.clk(lclk), .rst_pin(rst_pv[l / 4]), .v(v_r),
+`else
+        ot_v41_bmul2_rne_prepare #(.GRADUAL_RNE(GRADUAL_RNE), .XS(RC != 0 ? 1 : 0)) u_m (.clk(lclk), .rst_n(lrst_m), .v(v_r),
+`endif
+                         .a({w_r, 16'd0}), .b({x_r, 16'd0}),
                          .y(prod[l]), .fault(pf[l]));
         reg [PL-1:0] vp;
         always @(posedge lclk or negedge lrst) if (!lrst) vp <= '0; else vp <= {vp[PL-2:0], v_r};
@@ -193,11 +198,12 @@ module ot_v41_bf16_lanes3 #(
             wire vo;
             wire rst_a;        // this adder's synchroniser copy (RSTPART), else the tree tile's
 `ifdef OT_BF_RSTPART
-            ot_v41_rst_copy u_ra (.clk(fclk), .rst_pin(rst_pv[4]), .rst_n(rst_a));
+            assign rst_a = 1'b1;   // unused: the adder holds its own copies
+            ot_v41_fadd_rp #(.CUT(CUTT)) u_a (.clk(clk), .rst_pin(rst_pv[4]), .valid_in(lvvld[lv]), .a(lvv[lv][2*k]),
 `else
             assign rst_a = rst_n;
-`endif
             ot_v41_fadd #(.CUT(CUTT)) u_a (.clk(clk), .rst_n(rst_a), .valid_in(lvvld[lv]), .a(lvv[lv][2*k]),
+`endif
                                           .b(lvv[lv][2*k+1]), .y(lvv[lv+1][k]), .err(e), .valid_out(vo));
             reg [LATT-1:0] ep;
             always @(posedge clk) ep <= {ep[LATT-2:0], lve[lv][2*k] | lve[lv][2*k+1]};

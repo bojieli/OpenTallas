@@ -2,7 +2,7 @@
 // ot_v41_chain4_rp (S81-C199 reset partition, 2026-10-19, opt-in OT_BF_RSTPART): ot_v41_chain4 (body unchanged) whose
 // reset input is the RAW reset source rst_pin (the column's landed reset copy, a register on the same free clock), and
 // which holds three kept same-edge synchroniser copies (ot_v41_rst_copy): u_rb -> the chain body (valid / pv / accf /
-// fault / sp_v), u_rf -> the ND kept forward-select registers, u_ra -> the adder ot_v41_fadd2.  Each copy is the same
+// fault / sp_v), u_rf -> the ND kept forward-select registers; the adder is ot_v41_fadd2_rp (its own two copies).  Each copy is the same
 // register function as the caller's single synchroniser it replaces (d = 1, async clear from the same source, same
 // clock), so every reset releases on the same edge; no register drives more than one region's resets.
 // Only valid when clk is the free-running clock the source register runs on (OT_BF_TILE_FREECLK).
@@ -30,10 +30,9 @@ module ot_v41_chain4_rp #(
     output reg                      fault
 );
     localparam integer SW = $clog2(NCH);
-    wire rst_n, rst_f, rst_a;
+    wire rst_n, rst_f;
     ot_v41_rst_copy u_rb (.clk(clk), .rst_pin(rst_pin), .rst_n(rst_n));
     ot_v41_rst_copy u_rf (.clk(clk), .rst_pin(rst_pin), .rst_n(rst_f));
-    ot_v41_rst_copy u_ra (.clk(clk), .rst_pin(rst_pin), .rst_n(rst_a));
     reg [31:0] acc [0:NCH-1];
     reg [NCH-1:0] accf;
     // input register: the chain slot's stored sum is read one cycle before the term meets the adder, so the
@@ -64,7 +63,7 @@ module ot_v41_chain4_rp #(
     wire af;
     // PD: the adder's step 0 formed on every forward candidate in parallel, the bundle selected (see the header)
     wire [104:0] o0_ext;
-    ot_v41_fadd2 #(.CUT(CUT), .EXT0(PD != 0 ? 1 : 0)) u_add (.clk(clk), .rst_n(rst_a), .valid_in(v_r), .a(a), .b(term_r),
+    ot_v41_fadd2_rp #(.CUT(CUT), .EXT0(PD != 0 ? 1 : 0)) u_add (.clk(clk), .rst_pin(rst_pin), .valid_in(v_r), .a(a), .b(term_r),
                                      .o0_ext(o0_ext), .y(sum), .err(err), .valid_out(sv));
     wire [TW+2:0] dt;
     ot_hdc_delay #(.W(TW + 3), .D(LAT)) u_t (.clk(clk), .rst_n(rst_n), .d({tag_r, last_r, af | termf_r, 1'b0}), .q(dt));

@@ -571,7 +571,11 @@ module ot_v41_bf_col #(
     wire [1:0] pr_err;
     wire pr_vo;
     if (FAST != 0) begin : g_pa2
+`ifdef OT_BF_RSTPART
+        ot_v41_fadd_rp #(.CUT(CUT)) u_pair (.clk(gclk_c), .rst_pin(b_rst_v[5]), .valid_in(both), .a(c0_s), .b(c1_s),
+`else
         ot_v41_fadd #(.CUT(CUT)) u_pair (.clk(gclk_c), .rst_n(rst_mp), .valid_in(both), .a(c0_s), .b(c1_s),
+`endif
             .y(pr_sum), .err(pr_err), .valid_out(pr_vo));
     end else begin : g_pa1
         ot_fp32_add_rne_pipe u_pair (.clk(gclk_c), .rst_n(rst_mp), .valid_in(both), .a(c0_s), .b(c1_s),

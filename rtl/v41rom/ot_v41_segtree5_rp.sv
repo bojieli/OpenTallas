@@ -3,7 +3,7 @@
 // adds, same next-state expressions) whose reset input is the RAW reset source rst_pin (the column's landed reset copy,
 // a register on the same free clock).  The 241 asynchronous resets the caller's single synchroniser drove are split over
 // kept same-edge synchroniser copies (ot_v41_rst_copy): u_rc -> the control (sv / x_v / y_v / add_v / queue pointers /
-// ov / oerr / fault), u_ra -> the adder, and one copy per TWO trees -> those trees' have / herr / in-flight state (2 x
+// ov / oerr / fault), the adder is ot_v41_fadd_rp (its own two copies), and one copy per TWO trees -> those trees' have / herr / in-flight state (2 x
 // (LV + LV + IW) = 28 resets).  have / herr / infl become per-tree registers with the identical next-state expressions.
 // Every copy is the same register function as the synchroniser it replaces (d = 1, async clear from the same source,
 // same clock), so every reset releases on the same edge.  Only valid on the free-running clock (OT_BF_TILE_FREECLK).
@@ -34,9 +34,8 @@ module ot_v41_segtree5_rp #(
     localparam integer PW = $clog2(NT);
     localparam integer LW = $clog2(LV + 1);
     localparam integer QW = $clog2(QD);
-    wire rst_n, rst_a;
+    wire rst_n;
     ot_v41_rst_copy u_rc (.clk(clk), .rst_pin(rst_pin), .rst_n(rst_n));
-    ot_v41_rst_copy u_ra (.clk(clk), .rst_pin(rst_pin), .rst_n(rst_a));
     // base-node queue
     reg [31:0] qv [0:QD-1];
     reg [PW-1:0] qt [0:QD-1];
@@ -201,7 +200,7 @@ module ot_v41_segtree5_rp #(
     end
     always @(posedge clk or negedge rst_n)
         if (!rst_n) add_v <= 1'b0; else add_v <= pair | promote;
-    ot_v41_fadd #(.CUT(CUT)) u_add (.clk(clk), .rst_n(rst_a), .valid_in(add_v), .a(add_a), .b(add_b),
+    ot_v41_fadd_rp #(.CUT(CUT)) u_add (.clk(clk), .rst_pin(rst_pin), .valid_in(add_v), .a(add_a), .b(add_b),
                                      .y(sum_a), .err(err_a), .valid_out(sv_a));
     ot_hdc_delay #(.W(PW + LW + 2), .D(LAT + 1)) u_t (.clk(clk), .rst_n(rst_n),
         .d({y_t, y_l + 1'b1, y_f, y_e | (pair && u_herr)}), .q(st_a));
