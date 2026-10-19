@@ -58,15 +58,15 @@ def die_sources_tree(bundle: Path, int8: bool):
     return src + ([ROOT / f for f in I8_FILES] if int8 else [])
 
 
-def build(work: Path, bundle: Path, mut_sign=False):
-    obj = work / ("obj_i8_sign" if mut_sign else "obj_i8")
+def build(work: Path, bundle: Path, mut_sign=False, int8=True):
+    obj = work / (("obj_i8_sign" if mut_sign else "obj_i8") if int8 else "obj_default")
     exe = obj / "Vtb_hbm_smh_attn"
     if exe.exists():
         return exe
-    srcs = die_sources_tree(bundle, True)
+    srcs = die_sources_tree(bundle, int8)
     tb = ROOT / "rtl/test/hbm_accel/sm_attn/tb_hbm_smh_attn.sv"
     vl = os.environ.get("VERILATOR") or os.path.expanduser("~/.local/opentallas-tools/verilator-5.050/bin/verilator")
-    defs = SM.DIE_DEFINES + ["OT_SMH_ATTN_INT8"] + (["OT_INT8_MUT_SIGN"] if mut_sign else [])
+    defs = SM.DIE_DEFINES + (["OT_SMH_ATTN_INT8"] if int8 else []) + (["OT_INT8_MUT_SIGN"] if mut_sign else [])
     inc = sorted({str(Path(s).parent) for s in srcs})
     cmd = [vl, "--binary", "-j", os.environ.get("VL_JOBS", "16"), "-O1", "-CFLAGS", "-O1", "--x-assign", "fast",
            "-Wno-fatal", "-Wno-lint", "-Wno-style", "-Wno-TIMESCALEMOD", "-Wno-MULTIDRIVEN", "--unroll-count", "256",
@@ -273,8 +273,7 @@ def cmd_run(a):
 
 def cmd_regress(rest):
     """sm_mv_unit.py run with this tree's ot_hbm_accel_smh_attn at its default parameters (ENABLE_INT8 = 0)."""
-    orig = SM.die_sources
-    SM.die_sources = lambda bundle: [ROOT / SMH_ATTN if str(p).endswith(SMH_ATTN) else p for p in orig(bundle)]
+    SM.build = lambda work, bundle: build(work, bundle, int8=False)
     return SM.main(["run"] + rest)
 
 
