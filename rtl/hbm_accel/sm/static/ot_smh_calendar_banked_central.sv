@@ -66,7 +66,7 @@ module ot_smh_calendar_banked_central #(parameter integer W=135,AW=11,XW=46,MUT=
  wire[NS-1:0]start_copy,accept_copy;
  for(genvar g=0;g<NS;g=g+1)begin:g_start
   (* keep=1 *) ot_smh_banked_rbit u_start(.clk(clk),.rst_n(reset_branch[1]),.d(start_v),.q(start_copy[g]));
-  assign accept_copy[g]=start_copy[g]&&!busy&&!cw&&legal_start;
+  (* keep=1 *) ot_smh_banked_accept u_accept(.start(start_copy[g]),.ok(!busy&&!cw&&legal_start),.accepted(accept_copy[g]));
  end
  wire next_running=(running&&!final_issue)||accepted;
  wire[10:0]pc_inc=pc+1'b1;
