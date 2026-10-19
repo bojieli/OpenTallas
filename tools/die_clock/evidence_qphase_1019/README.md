@@ -159,3 +159,21 @@ The original8de whole-spine replay also completed and is preserved in
 were collected; no earlier clock/control replay is left waiting for another
 owner. The final source gives the topology-model bound its correct planned
 name; no routing/placement behavior changes from the audited998281bbb run.
+
+Power infrastructure is a substantive placement constraint, not a missing-row
+metadata issue. `physical/clock_pg_blocker` measures the actual completed ODB:
+all83670 new clock PG pins are unconnected,20873 violate the existing M8 supply
+stripe clearance rule, and17283 clock cells violate the canonical1.08um macro
+halo. The M8 phase/width is read from actual long core polygons (VDD edge4080DBU,
+VSS edge8400DBU, width480DBU,8640DBU period), not inferred from a changed row
+bounding box. The supplied mesh and deployed policy hashes are preserved.
+
+Canonical `tools/qwen_split/die_tie_rows.tcl` treats every non-block/non-pad
+instance as a movable constant, relocates it to a supply-safe row and rebuilds
+all rows. Reusing it on this clock candidate would invalidate the405um proof.
+The next actual source fix is PG-safe exact bay selection before regional and
+spine reservations, fixed clock-row preservation in the constant/PG flow,
+logical supply binding, literal M1/M2 contacts and safe upper-metal connections.
+Power continuity/short and full405um/site audits must pass before timing. No
+rows or rails were fabricated to convert this known physical blocker into a
+geometry-only PASS; the live GEN and shared constant-PG tools remain untouched.

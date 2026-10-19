@@ -1,0 +1,12 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+ROW_CREATE None
+ROW_TEMPLATE TROW_1854 asap7sc7p5t 54 270 HORIZONTAL R0
+PG_NET VDD POWER iterms 28667 swires 1
+PG_NET VSS GROUND iterms 28667 swires 1
+PG_CELL dc_spine_src [('A', 'SIGNAL', 'n_clk_d2d[0]'), ('VDD', 'POWER', None), ('VSS', 'GROUND', None), ('Y', 'SIGNAL', 'n_dc_spine_src')]
+PG_CELL dc_spine_E1 [('A', 'SIGNAL', 'n_dc_spine_8'), ('VDD', 'POWER', None), ('VSS', 'GROUND', None), ('Y', 'SIGNAL', 'n_dc_spine_0')]
+PG_CELL dc_r343_L1 [('A', 'SIGNAL', 'n_dc_r343_P4'), ('VDD', 'POWER', None), ('VSS', 'GROUND', None), ('Y', 'SIGNAL', 'n_dc_r343_L1')]
+TCL_GLOBAL_CONNECT add_global_connection global_connect clear_global_connect report_global_connect
