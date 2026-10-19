@@ -389,11 +389,15 @@ class Parent:
                 raise SystemExit(f"net {n} is driven from regions {sorted(sregs)}: split it per region")
             s, r = sregs.pop(), self.region[inst]
             landed = s != r
-            if landed and (n, r) not in lands:
-                lands[(n, r)] = dict(name=f"{len(lands)}", net=n, src_region=s, dst_region=r,
-                                     src_nodes=sorted(ds), width=eval_width(self.rng(n), self.env), readers=[])
+            # TW2-PSLICE2 10-19 (opt-in reader_per_inst): one read half per READER INSTANCE (beside it), not per region
+            key = (n, inst) if self.S.get("reader_per_inst") else (n, r)
+            if landed and key not in lands:
+                lands[key] = dict(name=f"{len(lands)}", net=n, src_region=s, dst_region=r,
+                                  src_nodes=sorted(ds), width=eval_width(self.rng(n), self.env), readers=[])
+                if self.S.get("reader_per_inst"):
+                    lands[key]["dst_inst"] = inst
             if landed:
-                lands[(n, r)]["readers"].append(f"{inst}.{pin}")
+                lands[key]["readers"].append(f"{inst}.{pin}")
             for d in ds:
                 edges.append((d, inst, n, self.A if landed else 0, landed, pin))
         for p, ds in out_drv.items():
@@ -444,6 +448,13 @@ class Parent:
                 pads[(n, b)] = max(pads.get((n, b), 0), k)
         edges = edges_all
         lst = sorted(lands.values(), key=lambda L: int(L["name"]))
+        if self.S.get("share_rings"):
+            # TW2-PSLICE2 10-19 (opt-in share_rings): ONE write ring per (net, source region), beside the source; every read
+            # half of that net (each destination region / reader instance) reads the same ring bank (LANDING-CONTRACT
+            # unchanged: equal-depth reset runs G == R0, so every reader keeps K = E; the ring -> read multicycle is per pair)
+            own = {}
+            for L in lst:
+                L["ring_of"] = own.setdefault((L["net"], L["src_region"]), L["name"])
         if mut_unland and lst:
             lst[0]["unlanded_mutant"] = True
         return dict(t=t, edges=edges, lands=lst, landkey=lands, pads=pads, nreg=nreg, drv=drv, rd=rd, out_drv=out_drv,
@@ -541,15 +552,20 @@ class Parent:
             rng = self.rng(net)
             wt = width_text(rng)
             decl = rng or ""
-            out = f"{net}__l_{r}"
-            w(f"    // ---- LANDING {n}: {net} {s} -> {r}, {Ld['width']} b ({', '.join(Ld['readers'])})")
-            w(f"    wire [{D}*{wt}-1:0] lpl_{n}_bank;  wire [{D * (AW + 1) - 1}:0] lpl_{n}_epo;  wire [{D - 1}:0] lpl_{n}_vld;"
-              f"  wire {decl} {out}, lpl_{n}_o;")
-            w(f"    ot_pl_land_w #(.W({wt}), .D({D})) u_lpl_{n}_w (.ck(ck_{s}), .rsi(lpr_{s}), .i({net}), "
-              f".bank(lpl_{n}_bank), .epo(lpl_{n}_epo), .vld(lpl_{n}_vld));")
+            out = f"{net}__l_{r}" if "dst_inst" not in Ld else f"{net}__l_{Ld['dst_inst']}"
+            g = Ld.get("ring_of", n)
+            w(f"    // ---- LANDING {n}: {net} {s} -> {r}, {Ld['width']} b ({', '.join(Ld['readers'])})"
+              + (f" -- reads ring {g}" if g != n else ""))
+            if g == n:
+                w(f"    wire [{D}*{wt}-1:0] lpl_{n}_bank;  wire [{D * (AW + 1) - 1}:0] lpl_{n}_epo;  wire [{D - 1}:0] lpl_{n}_vld;"
+                  f"  wire {decl} {out}, lpl_{n}_o;")
+                w(f"    ot_pl_land_w #(.W({wt}), .D({D})) u_lpl_{n}_w (.ck(ck_{s}), .rsi(lpr_{s}), .i({net}), "
+                  f".bank(lpl_{n}_bank), .epo(lpl_{n}_epo), .vld(lpl_{n}_vld));")
+            else:
+                w(f"    wire {decl} {out}, lpl_{n}_o;")
             kk = f"(MUT == 2) ? {K + 1} : {K}" if n == "0" and mut else f"{K}"
             w(f"    ot_pl_land_r #(.W({wt}), .D({D}), .K({kk})) u_lpl_{n}_r (.ck(ck_{r}), .rsi(lpr_{r}), "
-              f".bank(lpl_{n}_bank), .epo(lpl_{n}_epo), .vld(lpl_{n}_vld), .o(lpl_{n}_o));")
+              f".bank(lpl_{g}_bank), .epo(lpl_{g}_epo), .vld(lpl_{g}_vld), .o(lpl_{n}_o));")
             if Ld.get("unlanded_mutant"):
                 w(f"    assign {out} = {net};   // --mut-unland: the region audit must FAIL on this crossing")
             elif n == "0" and mut:
@@ -629,13 +645,25 @@ class Parent:
         if P["lands"]:
             o.append(f"# {len(P['lands'])} landings (LANDING-CONTRACT L5): ring -> read multicycle -setup {E} -hold {D - 1}, "
                      f"window ({E} - {D}) T + t_hold < dL < {E} T - t_cq - t_setup")
-            o.append("set ot_lp_lands {" + " ".join(L["name"] for L in P["lands"]) + "}")
-            o += ["set ot_lp_miss 0", "foreach ot_ln $ot_lp_lands {",
-                  "  set ot_lf [get_cells -quiet u_lpl_${ot_ln}_w.*]",
-                  "  set ot_lt [get_cells -quiet u_lpl_${ot_ln}_r.*]",
-                  "  if {[llength $ot_lf] == 0} { set ot_lf [get_cells -quiet u_lpl_${ot_ln}_w/*] }",
-                  "  if {[llength $ot_lt] == 0} { set ot_lt [get_cells -quiet u_lpl_${ot_ln}_r/*] }",
-                  "  if {[llength $ot_lf] == 0 || [llength $ot_lt] == 0} { incr ot_lp_miss; continue }",
+            shared = any(L.get("ring_of", L["name"]) != L["name"] for L in P["lands"])
+            if shared:      # share_rings: (ring, read) pairs; the ring of landing n is u_lpl_<ring_of>_w
+                o.append("set ot_lp_pairs {" + " ".join(f"{L.get('ring_of', L['name'])} {L['name']}" for L in P["lands"]) + "}")
+                o.append("set ot_lp_lands {}; foreach {ot_lw ot_ln} $ot_lp_pairs { lappend ot_lp_lands $ot_ln; set ot_lp_ring($ot_ln) $ot_lw }")
+            else:
+                o.append("set ot_lp_lands {" + " ".join(L["name"] for L in P["lands"]) + "}")
+            o += ["set ot_lp_miss 0", "foreach ot_ln $ot_lp_lands {"]
+            if shared:
+                o += ["  set ot_lw $ot_lp_ring($ot_ln)",
+                      "  set ot_lf [get_cells -quiet u_lpl_${ot_lw}_w.*]",
+                      "  set ot_lt [get_cells -quiet u_lpl_${ot_ln}_r.*]",
+                      "  if {[llength $ot_lf] == 0} { set ot_lf [get_cells -quiet u_lpl_${ot_lw}_w/*] }",
+                      "  if {[llength $ot_lt] == 0} { set ot_lt [get_cells -quiet u_lpl_${ot_ln}_r/*] }"]
+            else:
+                o += ["  set ot_lf [get_cells -quiet u_lpl_${ot_ln}_w.*]",
+                      "  set ot_lt [get_cells -quiet u_lpl_${ot_ln}_r.*]",
+                      "  if {[llength $ot_lf] == 0} { set ot_lf [get_cells -quiet u_lpl_${ot_ln}_w/*] }",
+                      "  if {[llength $ot_lt] == 0} { set ot_lt [get_cells -quiet u_lpl_${ot_ln}_r/*] }"]
+            o += ["  if {[llength $ot_lf] == 0 || [llength $ot_lt] == 0} { incr ot_lp_miss; continue }",
                   f"  set_multicycle_path -setup {E} -from $ot_lf -to $ot_lt",
                   f"  set_multicycle_path -hold {D - 1} -from $ot_lf -to $ot_lt", "}",
                   'puts "OT_LP_LAND_SDC [expr {[llength $ot_lp_lands] - $ot_lp_miss}] of [llength $ot_lp_lands] landings constrained"']
@@ -658,7 +686,8 @@ class Parent:
     def record(self, P, top_lp, rt):
         S = self.S
         t = P["t"]
-        flops_land = sum(self.D * L["width"] + self.D + (self.AW + 1) + 1 + L["width"] + (self.AW + 1) + 2 for L in P["lands"])
+        flops_land = sum((self.D * L["width"] + self.D + (self.AW + 1) + 1 if L.get("ring_of", L["name"]) == L["name"] else 0)
+                         + L["width"] + (self.AW + 1) + 2 for L in P["lands"])
         flops_pad = sum(eval_width(self.rng(n), self.env) * k for (n, _), k in P["pads"].items())
         flops_rst = 1 + len(self.regions) * (rt["RB"] - 1) + sum(t.get(i["inst"], 0) for i in self.insts)
         pairs = sorted({"-".join(sorted((L["src_region"], L["dst_region"]))) for L in P["lands"]})
@@ -676,9 +705,10 @@ class Parent:
                      for r in self.regions},
             D=self.D, E=self.E, K=self.K, added_edges_per_landing=self.A,
             window=f"({self.E} - {self.D}) T + t_hold < dL < {self.E} T - t_cq - t_setup at TT and FF",
-            landings=[dict(L, ring=f"u_lpl_{L['name']}_w (ck_{L['src_region']})", read=f"u_lpl_{L['name']}_r (ck_{L['dst_region']})",
-                           added_edges=self.A,
-                           sdc=f"set_multicycle_path -setup {self.E} / -hold {self.D - 1} -from u_lpl_{L['name']}_w.* -to u_lpl_{L['name']}_r.*")
+            landings=[dict(L, ring=f"u_lpl_{L.get('ring_of', L['name'])}_w (ck_{L['src_region']})",
+                           read=f"u_lpl_{L['name']}_r (ck_{L['dst_region']})", added_edges=self.A,
+                           sdc=f"set_multicycle_path -setup {self.E} / -hold {self.D - 1} -from u_lpl_{L.get('ring_of', L['name'])}_w.* "
+                               f"-to u_lpl_{L['name']}_r.*")
                       for L in P["lands"]],
             pads=[dict(net=n, reader=i, stages=k) for (n, i), k in sorted(P["pads"].items())],
             reset=dict(port=self.rst, root_region=rt["reset_region"], depth=rt["RB"], hops=rt["hops"],
@@ -861,7 +891,7 @@ def audit(spec: dict, rtl_text: str) -> dict:
                         continue
                     di = next(x for x in insts if x["inst"] == d)
                     if di["module"] == "ot_pl_land_w" and i["module"] == "ot_pl_land_r" and \
-                            d[:-2] == i["inst"][:-2]:
+                            (d[:-2] == i["inst"][:-2] or n in {f"lpl_{d[6:-2]}_{x}" for x in ("bank", "epo", "vld")}):
                         landed += pin == "bank"
                     elif n.startswith("lpr_") and d.startswith("u_lpr_"):
                         rst += 1

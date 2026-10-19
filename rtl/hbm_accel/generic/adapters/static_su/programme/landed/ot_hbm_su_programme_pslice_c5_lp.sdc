@@ -19,13 +19,15 @@ set_clock_uncertainty -setup 120 -from [get_clocks core_clk] -to [get_clocks ck_
 set_clock_uncertainty -hold 85 -from [get_clocks core_clk] -to [get_clocks ck_b]
 set_clock_uncertainty -setup 120 -from [get_clocks ck_b] -to [get_clocks core_clk]
 set_clock_uncertainty -hold 85 -from [get_clocks ck_b] -to [get_clocks core_clk]
-# 41 landings (LANDING-CONTRACT L5): ring -> read multicycle -setup 3 -hold 7, window (3 - 8) T + t_hold < dL < 3 T - t_cq - t_setup
-set ot_lp_lands {0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40}
+# 90 landings (LANDING-CONTRACT L5): ring -> read multicycle -setup 3 -hold 7, window (3 - 8) T + t_hold < dL < 3 T - t_cq - t_setup
+set ot_lp_pairs {0 0 1 1 2 2 3 3 4 4 5 5 6 6 0 7 1 8 2 9 3 10 4 11 5 12 6 13 0 14 1 15 2 16 3 17 4 18 5 19 6 20 0 21 1 22 2 23 3 24 4 25 5 26 6 27 0 28 1 29 2 30 3 31 4 32 5 33 6 34 0 35 1 36 2 37 3 38 4 39 5 40 6 41 0 42 1 43 2 44 3 45 4 46 5 47 6 48 0 49 1 50 2 51 3 52 4 53 5 54 6 55 0 56 1 57 2 58 3 59 4 60 5 61 6 62 0 63 1 64 2 65 3 66 4 67 5 68 6 69 70 70 71 71 72 72 73 73 74 74 75 75 76 76 77 77 78 78 79 79 80 80 81 81 82 82 83 83 84 84 85 85 86 86 87 87 88 88 89 89}
+set ot_lp_lands {}; foreach {ot_lw ot_ln} $ot_lp_pairs { lappend ot_lp_lands $ot_ln; set ot_lp_ring($ot_ln) $ot_lw }
 set ot_lp_miss 0
 foreach ot_ln $ot_lp_lands {
-  set ot_lf [get_cells -quiet u_lpl_${ot_ln}_w.*]
+  set ot_lw $ot_lp_ring($ot_ln)
+  set ot_lf [get_cells -quiet u_lpl_${ot_lw}_w.*]
   set ot_lt [get_cells -quiet u_lpl_${ot_ln}_r.*]
-  if {[llength $ot_lf] == 0} { set ot_lf [get_cells -quiet u_lpl_${ot_ln}_w/*] }
+  if {[llength $ot_lf] == 0} { set ot_lf [get_cells -quiet u_lpl_${ot_lw}_w/*] }
   if {[llength $ot_lt] == 0} { set ot_lt [get_cells -quiet u_lpl_${ot_ln}_r/*] }
   if {[llength $ot_lf] == 0 || [llength $ot_lt] == 0} { incr ot_lp_miss; continue }
   set_multicycle_path -setup 3 -from $ot_lf -to $ot_lt

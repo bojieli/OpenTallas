@@ -118,5 +118,8 @@
   }
  },
  "floorplan": "tools/landed_parent/specs/pslice_c5_kit.py (1900.8 x 950.4: bottom row R0 L c1 c2 c3 + S c0 c4, central channel y 496.8..648 with the head at the W end, top row MX S c5..c9; regions h / l / t / b)",
- "why_E": "10-18 PL-KIT re-plan: E = K = 3 (+4 edges per landing, was +3): the write rings are fenced beside the head at the W end of the channel, so the ring -> read hop carries the whole run (up to ~1.7 mm to the E ends of the t and b regions, ~0.85-1.2 ns/mm repeated); 3 T leaves ~2.4 ns. Owner 10-18: landing latency cost accepted. D = 8 ring slots: ot_pl_land needs D a power of two and K in 1..D-1 (the K+1 = 4 read mutant needs D > 4); hold multicycle D-1 = 7."
+ "why_E": "10-18 PL-KIT re-plan: E = K = 3 (+4 edges per landing, was +3): the write rings are fenced beside the head at the W end of the channel, so the ring -> read hop carries the whole run (up to ~1.7 mm to the E ends of the t and b regions, ~0.85-1.2 ns/mm repeated); 3 T leaves ~2.4 ns. Owner 10-18: landing latency cost accepted. D = 8 ring slots: ot_pl_land needs D a power of two and K in 1..D-1 (the K+1 = 4 read mutant needs D > 4); hold multicycle D-1 = 7.",
+ "reader_per_inst": true,
+ "share_rings": true,
+ "why_reader_per_inst": "TW2-PSLICE2 real7 10-19: real6 (CTS PASS, GRT ovf 0) failed setup -870 ps / TNS -364 ns on 1,453 read registers: one read half per REGION sat by wirelength next to the head's ring (l/t readers at x 224..590 although their leaves span 43..1857), so the same-root rc -> 8:1 mux -> o path and o -> far leaf ran ~1-2 mm in one cycle, and the l/t/b soft flops sat ~1 mm from the region's children (per-pair clock spread h 96 / l 168 / t ~364 / b 143 ps TT). Now every reader leaf has its own read half beside it (kit fence) and ONE ring per (net, source region) beside the head is read by all of them: the long hop is the multicycle ring -> read bank (E = 3), offsets / K / D / E unchanged, ring flops 3x fewer."
 }
