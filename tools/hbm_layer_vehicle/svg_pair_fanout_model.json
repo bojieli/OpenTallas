@@ -1,0 +1,10 @@
+{
+  "status": "PROPOSED; mapped proof required before qualification",
+  "baseline": {"std_area_um2": 2977.877520, "ff": 6058, "macro_inventory": {"landing256x256": 2, "fifo8x285": 2}, "critical_fanout": "FAIL"},
+  "latency_change_edges": 0,
+  "ingress": {"slots": 3, "bits_per_bank": 1140, "slice_bits": 8, "group_bits": 32, "groups_per_bank": 9, "local_predicates": "push and pop recomputed per preserved group", "reset": "raw-root two-stage branch per slice; unconditional data capture; reset pointers/valid only"},
+  "core": {"ownership": "only valid/sticky reset; reserve initializes epoch/count/received/seen before valid allows identity", "metadata_groups": 4, "seen_groups": 16, "seen_bits_per_group": 16, "local_field_encoding": "preserved inverse copies bound packet LB/row and reserve LB loads", "checks": ["ownership", "epoch", "ordinal bank", "count", "duplicate"], "same_edge_reserve_packet": "original nonblocking precedence preserved"},
+  "return": {"slice_bits": 8, "slots": 4, "reset": "raw-root two-stage local pointer branches", "latency_edges": 7},
+  "proof_required": ["all J actual-SRAM original-master miter", "invalid ownership/epoch/count/ordinal/duplicate cases", "three discriminating mutants", "post-ABC flattened no-merge real load census", "registered output polarity tracing", "final measured area band"],
+  "physical": {"outline_um": [380.16,198.72], "row_gap_um": 43.176, "baseline_band_um": 16.2, "baseline_band_density": 0.4835, "qualification": "OPEN; no physical timing or SAFE claim"}
+}
