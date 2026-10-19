@@ -71,11 +71,11 @@ module ot_hbm_r14_aq_pc_safe #(
   (* keep="true",dont_touch="true" *) reg [19:0] head_local[0:7];
   // Canonical head mux owns hold/advance once. Local copies capture the
   // identical next state unconditionally at the original head edge.
-  wire [1:0] head_capture_regions,head_push_regions;
+  wire [3:0] head_capture_regions,head_push_regions;
   wire [29:0] head_d;
-  (* keep="true",dont_touch="true" *) reg [WQW-1:0] fresh_addr_local[0:1],successor_local[0:1];
-  (* keep="true",dont_touch="true" *) reg [1:0] fresh_local;
-  for(genvar g=0;g<2;g=g+1)begin:HEAD_IDENTITY_LOCAL
+  (* keep="true",dont_touch="true" *) reg [WQW-1:0] fresh_addr_local[0:3],successor_local[0:3];
+  (* keep="true",dont_touch="true" *) reg [3:0] fresh_local;
+  for(genvar g=0;g<4;g=g+1)begin:HEAD_IDENTITY_LOCAL
     always @(posedge clk)fresh_addr_local[g]<=qwp;
     always @(posedge clk or negedge rst_n)if(!rst_n)begin
       successor_local[g]<=1;fresh_local[g]<=0;
@@ -86,13 +86,15 @@ module ot_hbm_r14_aq_pc_safe #(
     assign head_push_regions[g]=qpush&&((q_n_local[g]==0)||(wr_ok&&q_n_local[g]==1));
     assign head_capture_regions[g]=head_push_regions[g]||(wr_ok&&q_n_local[g]>1);
   end
-  wire [29:0] head_prefetch_local={
-    ((fresh_local[1]&&fresh_addr_local[1]==successor_local[1])?qfresh_data[29:20]:qm[29:20]),
-    ((fresh_local[0]&&fresh_addr_local[0]==successor_local[0])?qfresh_data[19:0]:qm[19:0])};
-  assign head_d[19:0]=head_capture_regions[0]?
-      (head_push_regions[0]?{wr_row,wr_rd}:head_prefetch_local[19:0]):qhead[19:0];
-  assign head_d[29:20]=head_capture_regions[1]?
-      (head_push_regions[1]?{wr_bank,wr_col}:head_prefetch_local[29:20]):qhead[29:20];
+  for(genvar g=0;g<4;g=g+1)begin:HEAD_WORD_LOCAL
+    localparam LO=(g==3)?20:g*8;
+    localparam B=(g==3)?10:((g==2)?4:8);
+    wire [B-1:0] pref=(fresh_local[g]&&fresh_addr_local[g]==successor_local[g])?
+       qfresh_data[LO+:B]:qm[LO+:B];
+    wire [29:0] pushed={wr_bank,wr_col,wr_row,wr_rd};
+    assign head_d[LO+:B]=head_capture_regions[g]?
+       (head_push_regions[g]?pushed[LO+:B]:pref):qhead[LO+:B];
+  end
   for(genvar g=0;g<8;g=g+1)begin:HEAD_LOCAL
     always @(posedge clk)
       `ifdef BW_AQ_MUT_HEAD
@@ -155,9 +157,11 @@ module ot_hbm_r14_aq_pc_safe #(
   end
   reg [WQW:0] q_n; reg [WQW-1:0] q_rp;
   wire [4:0] hb=qhead[29:25], hc=qhead[24:20]; wire [RW_ROW-1:0] hrow=qhead[19:1]; wire hr=head_read_global;   // registered head (valid when q_n != 0)
-  (* keep="true",dont_touch="true" *) reg [2:0] tail_set_local;
-  always @(posedge clk or negedge rst_n)if(!rst_n)tail_set_local<=0;else if(qpush)tail_set_local<=wr_bank[4:2];
-  reg [2:0] tail_set;                                   // bank-set of the newest pushed entry
+  (* keep="true",dont_touch="true" *) reg [2:0] tail_set_regions[0:7];
+  for(genvar t=0;t<8;t=t+1)begin:TAIL_SET_REGION
+    always @(posedge clk or negedge rst_n)if(!rst_n)tail_set_regions[t]<=0;
+      else if(wr_v&&(q_n_local[t/2]!=(WQW+1)'(WQ)))tail_set_regions[t]<=wr_bank[4:2];
+  end
   // ---- bank / group state ---------------------------------------------------------------
   reg [31:0] open, refreshed;
   (* keep="true",dont_touch="true" *) reg [4:0] blk_bank;
@@ -319,7 +323,7 @@ module ot_hbm_r14_aq_pc_safe #(
   integer kb;
   always @* for (kb = 0; kb < 32; kb = kb + 1) begin : keyb
     reg [2:0] s, d; reg prot;
-    s = 3'(kb >> 2); d = s - (kb<16?tail_set:tail_set_local); prot = (d >= 3'd6) || (d <= 3'd3);
+    s = 3'(kb >> 2); d = s - tail_set_regions[kb/4]; prot = (d >= 3'd6) || (d <= 3'd3);
     if (refreshed[kb]) keys[kb] = 7'd127;
     else if (MRKEY == 0) keys[kb] = 7'(idle_rank(s)) + (open[kb] ? 7'd32 : 7'd0) + ((!open[kb] && aok_busy[kb]) ? 7'd64 : 7'd0);
     else if (need[kb]) keys[kb] = 7'd120;
@@ -432,14 +436,13 @@ module ot_hbm_r14_aq_pc_safe #(
   assign ref_fault = fault_r;
   always @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
-      q_n <= 0; q_rp <= 0;q_rp_plus1<=1;q_rp_plus2<=2; tail_set <= 0;
+      q_n <= 0; q_rp <= 0;q_rp_plus1<=1;q_rp_plus2<=2;
       refreshed <= 0; blk_valid <= 0;blk_bank<=0; rrds_c <= 0; noact_c <= 0; ref_pend <= 0; rb <= 0; fault_r <= 0;
       rtw_c <= 0; wtr_c <= 0; phase <= 0; rkey <= 127; pin <= 0; ep <= 0; skip <= 0; sact <= 0; c_v <= 0; c_op <= PRE; c_bank <= 0; command_bank_local<=0;command_bank_valid<=0; c_row <= 0;
       for (integer f = 0; f < 4; f = f + 1) fawq[f] <= 0;
 
     end else begin
       // queue
-      if(qpush)tail_set<=wr_bank[4:2];
       case({qpush,wr_ok})
         2'b10:q_n<=q_n+1'b1;2'b01:q_n<=q_n-1'b1;default:q_n<=q_n;
       endcase

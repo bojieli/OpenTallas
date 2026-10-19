@@ -16,8 +16,8 @@
     "delta_ff": 44
   },
   "delta_ff": {
-    "WQ32": 509,
-    "WQ64": 581
+    "WQ32": 549,
+    "WQ64": 625
   },
   "architecture": "Canonical next-state muxes feed unconditional same-edge kept local captures. ACT summary row captures use independent existing ac_v_local state, outside global selected-group enable. One-hot ACT bits capture from two additional retained valid regions; invalid one-hot clears while ac2_v=0.",
   "cost": "124 clock sinks; nominal DFF area subject to mapped census. Original slot not approved; actual standard-cell mass/clock/native reach admission remains required.",
@@ -35,8 +35,8 @@
     "architecture": "Unconditional width-preserving saturating decrement datapaths with priority reload mux; remove duplicated reload and DFFE enable dependence on local bank commands.",
     "qualification": "Exact trace and three mutants, then actual mapped all-driver loads; no source-level fanout claim."
   },
-  "delta_ff_default_wq32": 509,
-  "delta_ff_production_wq64": 581,
+  "delta_ff_default_wq32": 549,
+  "delta_ff_production_wq64": 625,
   "production_wq": 64,
   "head_followup": {
     "prefetch_identity_ff_added": "2*(2*$clog2(WQ)+1):26 at64",
@@ -76,5 +76,14 @@
     "architecture": "Each19-bit row word uses3 independent <=8-bit capture regions. Existing-edge bank-count and head-bank state replicas distinguish local capture cones; canonical next-count logic shared.",
     "reset_cost": "14 extra reset sinks/bank atWQ64; parent reset tree must rebalance before gate.",
     "remaining_external_dependency": "Incoming wr_row bits35 loads need CFG producer existing-edge data replicas; no aliases inside AQ."
+  },
+  "head_capture_byte_partition": {
+    "delta_ff_wq64": 26,
+    "delta_ff_wq32": 22,
+    "architecture": "Four retained head capture identities: three row/read chunks <=8 bits and one bank/column10-bit chunk."
+  },
+  "tail_partition": {
+    "delta_ff": 18,
+    "architecture": "Eight retained3-bit tail-set states, each owns four-bank refresh key region; capture admission uses existing local occupancy state."
   }
 }
