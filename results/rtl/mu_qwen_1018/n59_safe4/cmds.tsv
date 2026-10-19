@@ -1,0 +1,10 @@
+n59dv_positive	N59_R1=1 N59_EMBR=1 N59_SAFE=2 N59_ONLY=positive bash rtl/test/qwen_split/run_native59_dv_service_bench.sh /srv/opentallas-scratch/claude/qw-n59-3/run/bench/n59_positive
+n59dv_bad_q	N59_R1=1 N59_EMBR=1 N59_SAFE=2 N59_ONLY=bad_q bash rtl/test/qwen_split/run_native59_dv_service_bench.sh /srv/opentallas-scratch/claude/qw-n59-3/run/bench/n59_bad_q
+n59dv_mut1_q_lane	N59_R1=1 N59_EMBR=1 N59_SAFE=2 N59_ONLY=mut1_q_lane bash rtl/test/qwen_split/run_native59_dv_service_bench.sh /srv/opentallas-scratch/claude/qw-n59-3/run/bench/n59_mut1_q_lane
+n59dv_mut2_kv_addr	N59_R1=1 N59_EMBR=1 N59_SAFE=2 N59_ONLY=mut2_kv_addr bash rtl/test/qwen_split/run_native59_dv_service_bench.sh /srv/opentallas-scratch/claude/qw-n59-3/run/bench/n59_mut2_kv_addr
+n59dv_mut3_emb_word	N59_R1=1 N59_EMBR=1 N59_SAFE=2 N59_ONLY=mut3_emb_word bash rtl/test/qwen_split/run_native59_dv_service_bench.sh /srv/opentallas-scratch/claude/qw-n59-3/run/bench/n59_mut3_emb_word
+qseat_positive	bash rtl/test/qwen_split/run_native59_qseat_sram.sh /srv/opentallas-scratch/claude/qw-n59-3/run/bench/qseat_positive
+qseat_mut7_owner	QSEAT_MUT=7 bash rtl/test/qwen_split/run_native59_qseat_sram.sh /srv/opentallas-scratch/claude/qw-n59-3/run/bench/qseat_mut7
+mu_ovl_positive	N59_R1=1 N59_EMBR=1 N59_SAFE=2 N59MU_ONLY=ovl_positive bash rtl/test/qwen_split/run_native59_dv_mu_bench.sh /srv/opentallas-scratch/claude/qw-n59-3/run/bench/mu_ovl
+n59_late_prefetch	N59_R1=1 N59_EMBR=1 N59_SAFE=2 N59_ONLY=late_prefetch bash rtl/test/qwen_split/run_native59_dv_service_bench.sh /srv/opentallas-scratch/claude/qw-n59-3/run/bench/late_prefetch
+mu_ovl_mut5_wrong_user	N59_R1=1 N59_EMBR=1 N59_SAFE=2 N59MU_ONLY=ovl_mut5_m7 bash rtl/test/qwen_split/run_native59_dv_mu_bench.sh /srv/opentallas-scratch/claude/qw-n59-3/run/bench/mu_ovl_mut5

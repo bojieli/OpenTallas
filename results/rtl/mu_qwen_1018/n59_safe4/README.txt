@@ -1,0 +1,1 @@
+QW-N59-3 safe4/safe4b fleet witnesses (Verilator 5.050 via ot-run, ot-epyc5) at source 665efdb38: top qfd_native59_dv_service_r1 NU4 MCTX1 SAFE2 RST_FOREST1 EMB_RELAY1 (benches N59_EMBR=1). Positives PASS (embedding words at cmd+7..+71, group 0 +2 edges unchanged); every mutant FAIL by its fail_regex. Commands: cmds.tsv.
