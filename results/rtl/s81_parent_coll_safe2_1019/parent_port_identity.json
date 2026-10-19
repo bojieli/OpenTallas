@@ -1,0 +1,55 @@
+{
+  "scope": "Static exact parent interface identity except unused tf/tfb; lane params/memory behavior still independently pending",
+  "modules": [
+    {
+      "module": "ot_s81sl_slice_lep_mux_coll_safe2",
+      "unchanged_ports": 33,
+      "removed_ports": [
+        "tf",
+        "tfb"
+      ],
+      "parameters_unchanged": true
+    },
+    {
+      "module": "ot_s81sl_slice_lepw_mu_coll_safe2",
+      "unchanged_ports": 24,
+      "removed_ports": [
+        "tf"
+      ],
+      "parameters_unchanged": true
+    },
+    {
+      "module": "ot_s81sl_slice_lepw_mus_coll_safe2",
+      "unchanged_ports": 23,
+      "removed_ports": [
+        "tf"
+      ],
+      "parameters_unchanged": true
+    },
+    {
+      "module": "ot_s81sl_slice_lepe_mu_coll_safe2",
+      "unchanged_ports": 29,
+      "removed_ports": [
+        "tf"
+      ],
+      "parameters_unchanged": true
+    },
+    {
+      "module": "ot_s81sl_slice_lepe_nh_mus_coll_safe2",
+      "unchanged_ports": 23,
+      "removed_ports": [
+        "tf"
+      ],
+      "parameters_unchanged": true
+    },
+    {
+      "module": "ot_s81sl_slice_lepw_mab_coll_safe2",
+      "unchanged_ports": 27,
+      "removed_ports": [
+        "tf",
+        "tfb"
+      ],
+      "parameters_unchanged": true
+    }
+  ]
+}
