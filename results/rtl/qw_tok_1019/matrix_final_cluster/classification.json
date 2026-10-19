@@ -1,0 +1,2566 @@
+{
+  "cases": [
+    {
+      "nu": 1,
+      "layer": 0,
+      "mode": "gu",
+      "mutant": "kc2",
+      "verdict": "CAUSAL_FAIL",
+      "fixture_words": 3072,
+      "observed_words": 3072,
+      "equal_words": 0,
+      "data_mismatch_count": 3072,
+      "first_mismatches": [
+        {
+          "address": 0,
+          "got": "0x0",
+          "expected": "0xbc9d3436"
+        },
+        {
+          "address": 1,
+          "got": "0x0",
+          "expected": "0x3a1a2ad3"
+        },
+        {
+          "address": 2,
+          "got": "0x0",
+          "expected": "0xbae6a706"
+        },
+        {
+          "address": 3,
+          "got": "0x0",
+          "expected": "0x3b2927b7"
+        },
+        {
+          "address": 4,
+          "got": "0x0",
+          "expected": "0x3b18b294"
+        },
+        {
+          "address": 5,
+          "got": "0x0",
+          "expected": "0x3ba58865"
+        },
+        {
+          "address": 6,
+          "got": "0x0",
+          "expected": "0xbc072b12"
+        },
+        {
+          "address": 7,
+          "got": "0x0",
+          "expected": "0xbcbc1f34"
+        },
+        {
+          "address": 8,
+          "got": "0x0",
+          "expected": "0xbcd21c60"
+        },
+        {
+          "address": 9,
+          "got": "0x0",
+          "expected": "0xbba71198"
+        },
+        {
+          "address": 10,
+          "got": "0x0",
+          "expected": "0x3b81f91d"
+        },
+        {
+          "address": 11,
+          "got": "0x0",
+          "expected": "0xbbd6f4d5"
+        }
+      ],
+      "missing_addresses": [],
+      "extra_addresses": [],
+      "edge_checks": 384,
+      "edge_mismatches": [],
+      "readback_edge_basis": "measured pilot command entry +26+4*slice+packet; not native station phase",
+      "schedule_breakdown": {
+        "actual_command_entry_first": 170,
+        "actual_command_entry_last": 192,
+        "actual_cluster_input_first": 184,
+        "actual_cluster_input_last": 205,
+        "readback_command_entry_first": 405,
+        "readback_command_entry_last": 5465,
+        "actual_readback_output_first": 431,
+        "actual_readback_output_last": 5566,
+        "stream_table_setup_first": 46,
+        "stream_table_setup_last": 117,
+        "stream_table_setup_events": 72,
+        "actual_command_to_last_station_result_span": null,
+        "actual_station_result_visibility": "internal VM write not logged in existing fixed binary",
+        "actual_command_to_last_readback_output_span": 5396,
+        "operation_latency_qualified": false
+      },
+      "faults": {
+        "S0ST": 0,
+        "S1ST": 0,
+        "S2ST": 0,
+        "S3ST": 0,
+        "S4ST": 0,
+        "S5ST": 0,
+        "S6ST": 0,
+        "S7ST": 0,
+        "S8ST": 0,
+        "S9ST": 0,
+        "S10ST": 0,
+        "S11ST": 0
+      },
+      "aggregate": "0x200",
+      "stn_busy": 1,
+      "terminal_status": {
+        "S0ST": "0x4004000020000000",
+        "S1ST": "0x404004000020000000",
+        "S2ST": "0x804004000020000000",
+        "S3ST": "0xc04004000020000000",
+        "S4ST": "0x1004004000020000000",
+        "S5ST": "0x1404004000020000000",
+        "S6ST": "0x1804004000020000000",
+        "S7ST": "0x1c04004000020000000",
+        "S8ST": "0x2004004000020000000",
+        "S9ST": "0x2404004000020000000",
+        "S10ST": "0x2804004000020000000",
+        "S11ST": "0x2c04004000020000000"
+      },
+      "first_output_edge": 431,
+      "last_output_edge": 5566,
+      "raw_log_sha256": "0b614e5c06b13a9f649127050fc9137451a9f8c8e00958822061f7651df35888",
+      "event_sha256": "c33b58044efb0f6b3ad5c40b33d2fc3824e9473d5d591f40fd7d2a5d0bc8d94a",
+      "resources": {
+        "wall_seconds": 114.48829460144043,
+        "self_peak_rss_kb": 316852,
+        "child_peak_rss_kb": 316852,
+        "files": {
+          "bench.out": {
+            "bytes": 969,
+            "sha256": "5d63cdb3bdfc3bc3cf3aba486c59293a34780e06f93ef058acba59d06c5ab29e"
+          },
+          "lowering.json": {
+            "bytes": 12578,
+            "sha256": "cb8ed61a3646e888ca750606c5556d9556ef7bfe48154ed894cd1d011eb8b9eb"
+          },
+          "output_edges.json": {
+            "bytes": 96884,
+            "sha256": "1190db26ba242cd915ac5bbbddf693f47c97fe924db25d54e96ef50b93fe578d"
+          },
+          "gu_m0.ev": {
+            "bytes": 98004,
+            "sha256": "c33b58044efb0f6b3ad5c40b33d2fc3824e9473d5d591f40fd7d2a5d0bc8d94a"
+          },
+          "terminal_status.json": {
+            "bytes": 1586,
+            "sha256": "f3cec5bfe16dbabf2c5ce1f4934edcaf153bd6bc3b5ca40d885795e910e4d02b"
+          },
+          "runtime_reads.json": {
+            "bytes": 1050,
+            "sha256": "acd43bbd9b7a6a7cb42c19285fbde5b7855bddadeef59c7a690a0ebc4a692266"
+          },
+          "command_mutation.json": {
+            "bytes": 1819,
+            "sha256": "c3ef7cd6c59e469b54732a1200d23a08d5c969d133d605af9da3ccc9bcaaf8ec"
+          },
+          "gu_m0.log": {
+            "bytes": 77514,
+            "sha256": "0b614e5c06b13a9f649127050fc9137451a9f8c8e00958822061f7651df35888"
+          }
+        }
+      }
+    },
+    {
+      "nu": 1,
+      "layer": 0,
+      "mode": "gu",
+      "mutant": "nearshift",
+      "verdict": "CAUSAL_FAIL",
+      "fixture_words": 3072,
+      "observed_words": 3072,
+      "equal_words": 2816,
+      "data_mismatch_count": 256,
+      "first_mismatches": [
+        {
+          "address": 0,
+          "got": "0xbc36538c",
+          "expected": "0xbc9d3436"
+        },
+        {
+          "address": 1,
+          "got": "0xbb4dfbfc",
+          "expected": "0x3a1a2ad3"
+        },
+        {
+          "address": 2,
+          "got": "0xb872a724",
+          "expected": "0xbae6a706"
+        },
+        {
+          "address": 3,
+          "got": "0xbbf55d2d",
+          "expected": "0x3b2927b7"
+        },
+        {
+          "address": 4,
+          "got": "0xbb2400e8",
+          "expected": "0x3b18b294"
+        },
+        {
+          "address": 5,
+          "got": "0x3b68c259",
+          "expected": "0x3ba58865"
+        },
+        {
+          "address": 6,
+          "got": "0xbcb741d9",
+          "expected": "0xbc072b12"
+        },
+        {
+          "address": 7,
+          "got": "0xbc769141",
+          "expected": "0xbcbc1f34"
+        },
+        {
+          "address": 8,
+          "got": "0xbcf925eb",
+          "expected": "0xbcd21c60"
+        },
+        {
+          "address": 9,
+          "got": "0x3973f32b",
+          "expected": "0xbba71198"
+        },
+        {
+          "address": 10,
+          "got": "0xbb05904a",
+          "expected": "0x3b81f91d"
+        },
+        {
+          "address": 11,
+          "got": "0x3c702af3",
+          "expected": "0xbbd6f4d5"
+        }
+      ],
+      "missing_addresses": [],
+      "extra_addresses": [],
+      "edge_checks": 384,
+      "edge_mismatches": [],
+      "readback_edge_basis": "measured pilot command entry +26+4*slice+packet; not native station phase",
+      "schedule_breakdown": {
+        "actual_command_entry_first": 170,
+        "actual_command_entry_last": 192,
+        "actual_cluster_input_first": 184,
+        "actual_cluster_input_last": 205,
+        "readback_command_entry_first": 405,
+        "readback_command_entry_last": 5465,
+        "actual_readback_output_first": 431,
+        "actual_readback_output_last": 5566,
+        "stream_table_setup_first": 46,
+        "stream_table_setup_last": 117,
+        "stream_table_setup_events": 72,
+        "actual_command_to_last_station_result_span": null,
+        "actual_station_result_visibility": "internal VM write not logged in existing fixed binary",
+        "actual_command_to_last_readback_output_span": 5396,
+        "operation_latency_qualified": false
+      },
+      "faults": {
+        "S0ST": 72,
+        "S1ST": 0,
+        "S2ST": 0,
+        "S3ST": 0,
+        "S4ST": 0,
+        "S5ST": 0,
+        "S6ST": 0,
+        "S7ST": 0,
+        "S8ST": 0,
+        "S9ST": 0,
+        "S10ST": 0,
+        "S11ST": 0
+      },
+      "aggregate": "0x320",
+      "stn_busy": 1,
+      "terminal_status": {
+        "S0ST": "0x244004000020000000",
+        "S1ST": "0x404004000020000000",
+        "S2ST": "0x804004000020000000",
+        "S3ST": "0xc04004000020000000",
+        "S4ST": "0x1004004000020000000",
+        "S5ST": "0x1404004000020000000",
+        "S6ST": "0x1804004000020000000",
+        "S7ST": "0x1c04004000020000000",
+        "S8ST": "0x2004004000020000000",
+        "S9ST": "0x2404004000020000000",
+        "S10ST": "0x2804004000020000000",
+        "S11ST": "0x2c04004000020000000"
+      },
+      "first_output_edge": 431,
+      "last_output_edge": 5566,
+      "raw_log_sha256": "ee309994b7c9f29c447f3374999e012bbe0d9175119fc5d8ff1db164178f359b",
+      "event_sha256": "886100b38ad63a73ad4f06de47f36d414899e3a741221c9915c5aee08d69748a",
+      "resources": {
+        "wall_seconds": 76.2425582408905,
+        "self_peak_rss_kb": 316768,
+        "child_peak_rss_kb": 316768,
+        "files": {
+          "bench.out": {
+            "bytes": 1039,
+            "sha256": "142bc015bf7ec9a3817e27a6b3d64b9151a5affaf050eedf7ca98f6a41a1592c"
+          },
+          "lowering.json": {
+            "bytes": 12578,
+            "sha256": "b29796e53589ff3681872952ce8fd1bd3f9e27a41f01a9fb1e08899422e646ff"
+          },
+          "output_edges.json": {
+            "bytes": 96886,
+            "sha256": "5789952dbfab7c29d117711103b82226e034cc7cc62ea44a465add320db77629"
+          },
+          "gu_m0.ev": {
+            "bytes": 97999,
+            "sha256": "886100b38ad63a73ad4f06de47f36d414899e3a741221c9915c5aee08d69748a"
+          },
+          "terminal_status.json": {
+            "bytes": 1588,
+            "sha256": "799d2fc7855ea675655569a30e3a31852a2a954aa2e10a982796b601e15536b1"
+          },
+          "runtime_reads.json": {
+            "bytes": 1050,
+            "sha256": "acd43bbd9b7a6a7cb42c19285fbde5b7855bddadeef59c7a690a0ebc4a692266"
+          },
+          "command_mutation.json": {
+            "bytes": 225,
+            "sha256": "f816bcb032403c3b24dfa62a865cbe071f24ed5cc72c34f577f7c0716e580b71"
+          },
+          "gu_m0.log": {
+            "bytes": 77514,
+            "sha256": "ee309994b7c9f29c447f3374999e012bbe0d9175119fc5d8ff1db164178f359b"
+          }
+        }
+      }
+    },
+    {
+      "nu": 1,
+      "layer": 0,
+      "mode": "gu",
+      "mutant": "positive",
+      "verdict": "PASS",
+      "fixture_words": 3072,
+      "observed_words": 3072,
+      "equal_words": 3072,
+      "data_mismatch_count": 0,
+      "first_mismatches": [],
+      "missing_addresses": [],
+      "extra_addresses": [],
+      "edge_checks": 384,
+      "edge_mismatches": [],
+      "readback_edge_basis": "measured pilot command entry +26+4*slice+packet; not native station phase",
+      "schedule_breakdown": {
+        "actual_command_entry_first": 170,
+        "actual_command_entry_last": 192,
+        "actual_cluster_input_first": 184,
+        "actual_cluster_input_last": 205,
+        "readback_command_entry_first": 405,
+        "readback_command_entry_last": 5465,
+        "actual_readback_output_first": 431,
+        "actual_readback_output_last": 5566,
+        "stream_table_setup_first": 46,
+        "stream_table_setup_last": 117,
+        "stream_table_setup_events": 72,
+        "actual_command_to_last_station_result_span": null,
+        "actual_station_result_visibility": "internal VM write not logged in existing fixed binary",
+        "actual_command_to_last_readback_output_span": 5396,
+        "operation_latency_qualified": false
+      },
+      "faults": {
+        "S0ST": 0,
+        "S1ST": 0,
+        "S2ST": 0,
+        "S3ST": 0,
+        "S4ST": 0,
+        "S5ST": 0,
+        "S6ST": 0,
+        "S7ST": 0,
+        "S8ST": 0,
+        "S9ST": 0,
+        "S10ST": 0,
+        "S11ST": 0
+      },
+      "aggregate": "0x0",
+      "stn_busy": 0,
+      "terminal_status": {
+        "S0ST": "0x4004000020000000",
+        "S1ST": "0x404004000020000000",
+        "S2ST": "0x804004000020000000",
+        "S3ST": "0xc04004000020000000",
+        "S4ST": "0x1004004000020000000",
+        "S5ST": "0x1404004000020000000",
+        "S6ST": "0x1804004000020000000",
+        "S7ST": "0x1c04004000020000000",
+        "S8ST": "0x2004004000020000000",
+        "S9ST": "0x2404004000020000000",
+        "S10ST": "0x2804004000020000000",
+        "S11ST": "0x2c04004000020000000"
+      },
+      "first_output_edge": 431,
+      "last_output_edge": 5566,
+      "raw_log_sha256": "7f6259b42997ebc156e5880bfde5b0305ba47ce3afac912fc743cf465c9d650a",
+      "event_sha256": "e958526d1cf1320e72f3eb81da7b3c38be0d5e6dfc40370221b54ca104b25e1d",
+      "resources": {
+        "wall_seconds": 78.66038370132446,
+        "self_peak_rss_kb": 316628,
+        "child_peak_rss_kb": 316628,
+        "files": {
+          "bench.out": {
+            "bytes": 515,
+            "sha256": "3de3bc8e7d1559b931e1eeb10fbc89be64ee5375d000dc3ceb62a01d93484823"
+          },
+          "lowering.json": {
+            "bytes": 12578,
+            "sha256": "b29796e53589ff3681872952ce8fd1bd3f9e27a41f01a9fb1e08899422e646ff"
+          },
+          "output_edges.json": {
+            "bytes": 96882,
+            "sha256": "0ba35c2be7c86647efae73fb8df6036b8e76578bcce793c175d5d02448b51284"
+          },
+          "gu_m0.ev": {
+            "bytes": 97999,
+            "sha256": "e958526d1cf1320e72f3eb81da7b3c38be0d5e6dfc40370221b54ca104b25e1d"
+          },
+          "terminal_status.json": {
+            "bytes": 1584,
+            "sha256": "96c31f6fa625710be33825e293bdf25894b74a8bc467ea9c6773b2798ee0621d"
+          },
+          "runtime_reads.json": {
+            "bytes": 1050,
+            "sha256": "acd43bbd9b7a6a7cb42c19285fbde5b7855bddadeef59c7a690a0ebc4a692266"
+          },
+          "gu_m0.log": {
+            "bytes": 77514,
+            "sha256": "7f6259b42997ebc156e5880bfde5b0305ba47ce3afac912fc743cf465c9d650a"
+          }
+        }
+      }
+    },
+    {
+      "nu": 1,
+      "layer": 0,
+      "mode": "gu",
+      "mutant": "predrain",
+      "verdict": "CAUSAL_FAIL",
+      "fixture_words": 3072,
+      "observed_words": 3072,
+      "equal_words": 2816,
+      "data_mismatch_count": 256,
+      "first_mismatches": [
+        {
+          "address": 0,
+          "got": "0x0",
+          "expected": "0xbc9d3436"
+        },
+        {
+          "address": 1,
+          "got": "0x0",
+          "expected": "0x3a1a2ad3"
+        },
+        {
+          "address": 2,
+          "got": "0x0",
+          "expected": "0xbae6a706"
+        },
+        {
+          "address": 3,
+          "got": "0x0",
+          "expected": "0x3b2927b7"
+        },
+        {
+          "address": 4,
+          "got": "0x0",
+          "expected": "0x3b18b294"
+        },
+        {
+          "address": 5,
+          "got": "0x0",
+          "expected": "0x3ba58865"
+        },
+        {
+          "address": 6,
+          "got": "0x0",
+          "expected": "0xbc072b12"
+        },
+        {
+          "address": 7,
+          "got": "0x0",
+          "expected": "0xbcbc1f34"
+        },
+        {
+          "address": 8,
+          "got": "0x0",
+          "expected": "0xbcd21c60"
+        },
+        {
+          "address": 9,
+          "got": "0x0",
+          "expected": "0xbba71198"
+        },
+        {
+          "address": 10,
+          "got": "0x0",
+          "expected": "0x3b81f91d"
+        },
+        {
+          "address": 11,
+          "got": "0x0",
+          "expected": "0xbbd6f4d5"
+        }
+      ],
+      "missing_addresses": [],
+      "extra_addresses": [],
+      "edge_checks": 384,
+      "edge_mismatches": [],
+      "readback_edge_basis": "measured pilot command entry +26+4*slice+packet; not native station phase",
+      "schedule_breakdown": {
+        "actual_command_entry_first": 170,
+        "actual_command_entry_last": 206,
+        "actual_cluster_input_first": 184,
+        "actual_cluster_input_last": 205,
+        "readback_command_entry_first": 405,
+        "readback_command_entry_last": 5465,
+        "actual_readback_output_first": 431,
+        "actual_readback_output_last": 5566,
+        "stream_table_setup_first": 46,
+        "stream_table_setup_last": 117,
+        "stream_table_setup_events": 72,
+        "actual_command_to_last_station_result_span": null,
+        "actual_station_result_visibility": "internal VM write not logged in existing fixed binary",
+        "actual_command_to_last_readback_output_span": 5396,
+        "operation_latency_qualified": false
+      },
+      "faults": {
+        "S0ST": 0,
+        "S1ST": 0,
+        "S2ST": 0,
+        "S3ST": 0,
+        "S4ST": 0,
+        "S5ST": 0,
+        "S6ST": 0,
+        "S7ST": 0,
+        "S8ST": 0,
+        "S9ST": 0,
+        "S10ST": 0,
+        "S11ST": 0
+      },
+      "aggregate": "0x200",
+      "stn_busy": 1,
+      "terminal_status": {
+        "S0ST": "0x4004000020000000",
+        "S1ST": "0x404004000020000000",
+        "S2ST": "0x804004000020000000",
+        "S3ST": "0xc04004000020000000",
+        "S4ST": "0x1004004000020000000",
+        "S5ST": "0x1404004000020000000",
+        "S6ST": "0x1804004000020000000",
+        "S7ST": "0x1c04004000020000000",
+        "S8ST": "0x2004004000020000000",
+        "S9ST": "0x2404004000020000000",
+        "S10ST": "0x2804004000020000000",
+        "S11ST": "0x2c04004000020000000"
+      },
+      "first_output_edge": 431,
+      "last_output_edge": 5566,
+      "raw_log_sha256": "f246a1fe880f4ea4fb97c12b2e764252b9780d99284cc1bc58f35d76c7df252d",
+      "event_sha256": "f43e6979b536415e7ebfaaaa9edb812b86600158002391a7fc413718220dfbe4",
+      "resources": {
+        "wall_seconds": 78.02145385742188,
+        "self_peak_rss_kb": 317984,
+        "child_peak_rss_kb": 317984,
+        "files": {
+          "bench.out": {
+            "bytes": 972,
+            "sha256": "ac0906f5dc19c9769616431eaff1a230686cee6aefa03538a17b232f3cb7d2eb"
+          },
+          "lowering.json": {
+            "bytes": 12578,
+            "sha256": "b29796e53589ff3681872952ce8fd1bd3f9e27a41f01a9fb1e08899422e646ff"
+          },
+          "output_edges.json": {
+            "bytes": 96884,
+            "sha256": "767252d4f07bdaf476973473f286ba906cf65319c8b18beb24a4e5b74bda8b0c"
+          },
+          "gu_m0.ev": {
+            "bytes": 98015,
+            "sha256": "f43e6979b536415e7ebfaaaa9edb812b86600158002391a7fc413718220dfbe4"
+          },
+          "terminal_status.json": {
+            "bytes": 1586,
+            "sha256": "1e44845d7bbbb5380e87a5dc00529c6f44c9246b64c425a986d068293b5693b2"
+          },
+          "runtime_reads.json": {
+            "bytes": 1050,
+            "sha256": "acd43bbd9b7a6a7cb42c19285fbde5b7855bddadeef59c7a690a0ebc4a692266"
+          },
+          "command_mutation.json": {
+            "bytes": 92,
+            "sha256": "fabde57fd5a15aa1d9d79b3eca0aaadfc0c33560b4b21127bce1d07369b234d7"
+          },
+          "gu_m0.log": {
+            "bytes": 77514,
+            "sha256": "f246a1fe880f4ea4fb97c12b2e764252b9780d99284cc1bc58f35d76c7df252d"
+          }
+        }
+      }
+    },
+    {
+      "nu": 1,
+      "layer": 0,
+      "mode": "gu",
+      "mutant": "sbase1",
+      "verdict": "CAUSAL_FAIL",
+      "fixture_words": 3072,
+      "observed_words": 3072,
+      "equal_words": 21,
+      "data_mismatch_count": 3051,
+      "first_mismatches": [
+        {
+          "address": 0,
+          "got": "0xbc7f590d",
+          "expected": "0xbc9d3436"
+        },
+        {
+          "address": 1,
+          "got": "0x3a8111fe",
+          "expected": "0x3a1a2ad3"
+        },
+        {
+          "address": 2,
+          "got": "0xbb370184",
+          "expected": "0xbae6a706"
+        },
+        {
+          "address": 3,
+          "got": "0x3b3100a7",
+          "expected": "0x3b2927b7"
+        },
+        {
+          "address": 4,
+          "got": "0x3b4d99c6",
+          "expected": "0x3b18b294"
+        },
+        {
+          "address": 5,
+          "got": "0x3bf17227",
+          "expected": "0x3ba58865"
+        },
+        {
+          "address": 6,
+          "got": "0xbbc4afe7",
+          "expected": "0xbc072b12"
+        },
+        {
+          "address": 7,
+          "got": "0xbc84295d",
+          "expected": "0xbcbc1f34"
+        },
+        {
+          "address": 8,
+          "got": "0xbcae95b9",
+          "expected": "0xbcd21c60"
+        },
+        {
+          "address": 9,
+          "got": "0xbba080b1",
+          "expected": "0xbba71198"
+        },
+        {
+          "address": 10,
+          "got": "0x3b5fb964",
+          "expected": "0x3b81f91d"
+        },
+        {
+          "address": 11,
+          "got": "0xbb42397b",
+          "expected": "0xbbd6f4d5"
+        }
+      ],
+      "missing_addresses": [],
+      "extra_addresses": [],
+      "edge_checks": 384,
+      "edge_mismatches": [],
+      "readback_edge_basis": "measured pilot command entry +26+4*slice+packet; not native station phase",
+      "schedule_breakdown": {
+        "actual_command_entry_first": 170,
+        "actual_command_entry_last": 192,
+        "actual_cluster_input_first": 184,
+        "actual_cluster_input_last": 205,
+        "readback_command_entry_first": 405,
+        "readback_command_entry_last": 5465,
+        "actual_readback_output_first": 431,
+        "actual_readback_output_last": 5566,
+        "stream_table_setup_first": 46,
+        "stream_table_setup_last": 117,
+        "stream_table_setup_events": 72,
+        "actual_command_to_last_station_result_span": null,
+        "actual_station_result_visibility": "internal VM write not logged in existing fixed binary",
+        "actual_command_to_last_readback_output_span": 5396,
+        "operation_latency_qualified": false
+      },
+      "faults": {
+        "S0ST": 0,
+        "S1ST": 0,
+        "S2ST": 0,
+        "S3ST": 0,
+        "S4ST": 0,
+        "S5ST": 0,
+        "S6ST": 0,
+        "S7ST": 0,
+        "S8ST": 0,
+        "S9ST": 0,
+        "S10ST": 0,
+        "S11ST": 0
+      },
+      "aggregate": "0x0",
+      "stn_busy": 0,
+      "terminal_status": {
+        "S0ST": "0x4004000020000000",
+        "S1ST": "0x404004000020000000",
+        "S2ST": "0x804004000020000000",
+        "S3ST": "0xc04004000020000000",
+        "S4ST": "0x1004004000020000000",
+        "S5ST": "0x1404004000020000000",
+        "S6ST": "0x1804004000020000000",
+        "S7ST": "0x1c04004000020000000",
+        "S8ST": "0x2004004000020000000",
+        "S9ST": "0x2404004000020000000",
+        "S10ST": "0x2804004000020000000",
+        "S11ST": "0x2c04004000020000000"
+      },
+      "first_output_edge": 431,
+      "last_output_edge": 5566,
+      "raw_log_sha256": "a0dbb2b8f84de946526ee7f408e089ffc9e396500314b674b8cb4f733eff9646",
+      "event_sha256": "9f64d0b71bec0d8dcd66d846d4bf203c9b02c0a51eddae7a97d4e3881368f7da",
+      "resources": {
+        "wall_seconds": 77.09740209579468,
+        "self_peak_rss_kb": 318040,
+        "child_peak_rss_kb": 318040,
+        "files": {
+          "bench.out": {
+            "bytes": 1038,
+            "sha256": "0c5f20d1b8963141d19e9c4af740ede126bfc67736385139a409be7a0a1fb0af"
+          },
+          "lowering.json": {
+            "bytes": 12578,
+            "sha256": "df1dfb2fa2fabf9e58e9088ccb12f525ac011eac60a44499c4bd2a9e395b2f45"
+          },
+          "output_edges.json": {
+            "bytes": 96882,
+            "sha256": "a872d789727c876cf1bbfe4c7632afdb5b7226da85282d58ff6125ed136fe0e4"
+          },
+          "gu_sbase1.log": {
+            "bytes": 77514,
+            "sha256": "a0dbb2b8f84de946526ee7f408e089ffc9e396500314b674b8cb4f733eff9646"
+          },
+          "terminal_status.json": {
+            "bytes": 1584,
+            "sha256": "96c31f6fa625710be33825e293bdf25894b74a8bc467ea9c6773b2798ee0621d"
+          },
+          "runtime_reads.json": {
+            "bytes": 1050,
+            "sha256": "acd43bbd9b7a6a7cb42c19285fbde5b7855bddadeef59c7a690a0ebc4a692266"
+          },
+          "gu_sbase1.ev": {
+            "bytes": 97999,
+            "sha256": "9f64d0b71bec0d8dcd66d846d4bf203c9b02c0a51eddae7a97d4e3881368f7da"
+          }
+        }
+      }
+    },
+    {
+      "nu": 1,
+      "layer": 0,
+      "mode": "qkv",
+      "mutant": "positive",
+      "verdict": "PASS",
+      "fixture_words": 768,
+      "observed_words": 768,
+      "equal_words": 768,
+      "data_mismatch_count": 0,
+      "first_mismatches": [],
+      "missing_addresses": [],
+      "extra_addresses": [],
+      "edge_checks": 96,
+      "edge_mismatches": [],
+      "readback_edge_basis": "measured pilot command entry +26+4*slice+packet; not native station phase",
+      "schedule_breakdown": {
+        "actual_command_entry_first": 134,
+        "actual_command_entry_last": 156,
+        "actual_cluster_input_first": 148,
+        "actual_cluster_input_last": 169,
+        "readback_command_entry_first": 369,
+        "readback_command_entry_last": 2659,
+        "actual_readback_output_first": 395,
+        "actual_readback_output_last": 2740,
+        "stream_table_setup_first": 46,
+        "stream_table_setup_last": 81,
+        "stream_table_setup_events": 36,
+        "actual_command_to_last_station_result_span": null,
+        "actual_station_result_visibility": "internal VM write not logged in existing fixed binary",
+        "actual_command_to_last_readback_output_span": 2606,
+        "operation_latency_qualified": false
+      },
+      "faults": {
+        "S0ST": 0,
+        "S1ST": 0,
+        "S2ST": 0,
+        "S3ST": 0,
+        "S4ST": 0,
+        "S5ST": 0,
+        "S6ST": 0,
+        "S7ST": 0,
+        "S8ST": 0,
+        "S9ST": 0,
+        "S10ST": 0,
+        "S11ST": 0
+      },
+      "aggregate": "0x0",
+      "stn_busy": 0,
+      "terminal_status": {
+        "S0ST": "0x4002000020000000",
+        "S1ST": "0x404000000000000000",
+        "S2ST": "0x804002000020000000",
+        "S3ST": "0xc04000000000000000",
+        "S4ST": "0x1004002000020000000",
+        "S5ST": "0x1404000000000000000",
+        "S6ST": "0x1804002000020000000",
+        "S7ST": "0x1c04000000000000000",
+        "S8ST": "0x2004002000020000000",
+        "S9ST": "0x2404000000000000000",
+        "S10ST": "0x2804002000020000000",
+        "S11ST": "0x2c04000000000000000"
+      },
+      "first_output_edge": 395,
+      "last_output_edge": 2740,
+      "raw_log_sha256": "3ad316f51783094e647c0d70ec52321b016ac7338c34003fcd8890fef61acfc8",
+      "event_sha256": "1b34f9aae7c4208ac0cf7e3f0ccbc3ad46def619bd48b90d37b0d68d18637676",
+      "resources": {
+        "wall_seconds": 41.23248028755188,
+        "self_peak_rss_kb": 271352,
+        "child_peak_rss_kb": 271352,
+        "files": {
+          "bench.out": {
+            "bytes": 494,
+            "sha256": "c6bbd0777e0e5c60127d75fa5e5aa5da22f0d4637f0a1e88a7b9252eef6a3992"
+          },
+          "qkv_m0.log": {
+            "bytes": 24770,
+            "sha256": "3ad316f51783094e647c0d70ec52321b016ac7338c34003fcd8890fef61acfc8"
+          },
+          "lowering.json": {
+            "bytes": 7522,
+            "sha256": "60a09a67e5115f84f74d47b4cea6acd02bd0f16cce23e8644de16cc3dd8ca78b"
+          },
+          "output_edges.json": {
+            "bytes": 30854,
+            "sha256": "d7cb2ce276a79289f6431081ad3a5125292fa8f19603d70867ded824e4a19baa"
+          },
+          "terminal_status.json": {
+            "bytes": 1583,
+            "sha256": "598f9a2033069ce08e9e6b400ca54b9f8aef2e6d58bce60a70eb18f83680261a"
+          },
+          "runtime_reads.json": {
+            "bytes": 1051,
+            "sha256": "9ea9e0b4b190d26d6376f5402cf5bcc5d18cc3fe657f3acb699971f756aff267"
+          },
+          "qkv_m0.ev": {
+            "bytes": 87715,
+            "sha256": "1b34f9aae7c4208ac0cf7e3f0ccbc3ad46def619bd48b90d37b0d68d18637676"
+          }
+        }
+      }
+    },
+    {
+      "nu": 1,
+      "layer": 1,
+      "mode": "gu",
+      "mutant": "positive",
+      "verdict": "PASS",
+      "fixture_words": 3072,
+      "observed_words": 3072,
+      "equal_words": 3072,
+      "data_mismatch_count": 0,
+      "first_mismatches": [],
+      "missing_addresses": [],
+      "extra_addresses": [],
+      "edge_checks": 384,
+      "edge_mismatches": [],
+      "readback_edge_basis": "measured pilot command entry +26+4*slice+packet; not native station phase",
+      "schedule_breakdown": {
+        "actual_command_entry_first": 170,
+        "actual_command_entry_last": 192,
+        "actual_cluster_input_first": 184,
+        "actual_cluster_input_last": 205,
+        "readback_command_entry_first": 405,
+        "readback_command_entry_last": 5465,
+        "actual_readback_output_first": 431,
+        "actual_readback_output_last": 5566,
+        "stream_table_setup_first": 46,
+        "stream_table_setup_last": 117,
+        "stream_table_setup_events": 72,
+        "actual_command_to_last_station_result_span": null,
+        "actual_station_result_visibility": "internal VM write not logged in existing fixed binary",
+        "actual_command_to_last_readback_output_span": 5396,
+        "operation_latency_qualified": false
+      },
+      "faults": {
+        "S0ST": 0,
+        "S1ST": 0,
+        "S2ST": 0,
+        "S3ST": 0,
+        "S4ST": 0,
+        "S5ST": 0,
+        "S6ST": 0,
+        "S7ST": 0,
+        "S8ST": 0,
+        "S9ST": 0,
+        "S10ST": 0,
+        "S11ST": 0
+      },
+      "aggregate": "0x0",
+      "stn_busy": 0,
+      "terminal_status": {
+        "S0ST": "0x4004000020000000",
+        "S1ST": "0x404004000020000000",
+        "S2ST": "0x804004000020000000",
+        "S3ST": "0xc04004000020000000",
+        "S4ST": "0x1004004000020000000",
+        "S5ST": "0x1404004000020000000",
+        "S6ST": "0x1804004000020000000",
+        "S7ST": "0x1c04004000020000000",
+        "S8ST": "0x2004004000020000000",
+        "S9ST": "0x2404004000020000000",
+        "S10ST": "0x2804004000020000000",
+        "S11ST": "0x2c04004000020000000"
+      },
+      "first_output_edge": 431,
+      "last_output_edge": 5566,
+      "raw_log_sha256": "1e9f9ae3c348f46da73c40dcbce3770348b4cfea8f1351a8d35082b0a51bf346",
+      "event_sha256": "6be362986a1929c8993edcd9fe791069f57b478b363a0a78612d9db9e5f9501b",
+      "resources": {
+        "wall_seconds": 116.20879912376404,
+        "self_peak_rss_kb": 316276,
+        "child_peak_rss_kb": 316276,
+        "files": {
+          "bench.out": {
+            "bytes": 515,
+            "sha256": "425b0d207825cd9e565e4a473d34acbec58cf3505e90de42974f570a327bc0ac"
+          },
+          "lowering.json": {
+            "bytes": 12578,
+            "sha256": "b29796e53589ff3681872952ce8fd1bd3f9e27a41f01a9fb1e08899422e646ff"
+          },
+          "output_edges.json": {
+            "bytes": 96882,
+            "sha256": "817bf4b29f17259a545ab6d60ff70e92382372120b146eb02e385d787d296a0f"
+          },
+          "gu_m0.ev": {
+            "bytes": 97999,
+            "sha256": "6be362986a1929c8993edcd9fe791069f57b478b363a0a78612d9db9e5f9501b"
+          },
+          "terminal_status.json": {
+            "bytes": 1584,
+            "sha256": "96c31f6fa625710be33825e293bdf25894b74a8bc467ea9c6773b2798ee0621d"
+          },
+          "runtime_reads.json": {
+            "bytes": 1050,
+            "sha256": "80a182e21d65b4ea27eec8e784c1d07a1bc1c55a4c96dc97e04ffd481319f22c"
+          },
+          "gu_m0.log": {
+            "bytes": 77514,
+            "sha256": "1e9f9ae3c348f46da73c40dcbce3770348b4cfea8f1351a8d35082b0a51bf346"
+          }
+        }
+      }
+    },
+    {
+      "nu": 1,
+      "layer": 1,
+      "mode": "qkv",
+      "mutant": "positive",
+      "verdict": "PASS",
+      "fixture_words": 768,
+      "observed_words": 768,
+      "equal_words": 768,
+      "data_mismatch_count": 0,
+      "first_mismatches": [],
+      "missing_addresses": [],
+      "extra_addresses": [],
+      "edge_checks": 96,
+      "edge_mismatches": [],
+      "readback_edge_basis": "measured pilot command entry +26+4*slice+packet; not native station phase",
+      "schedule_breakdown": {
+        "actual_command_entry_first": 134,
+        "actual_command_entry_last": 156,
+        "actual_cluster_input_first": 148,
+        "actual_cluster_input_last": 169,
+        "readback_command_entry_first": 369,
+        "readback_command_entry_last": 2659,
+        "actual_readback_output_first": 395,
+        "actual_readback_output_last": 2740,
+        "stream_table_setup_first": 46,
+        "stream_table_setup_last": 81,
+        "stream_table_setup_events": 36,
+        "actual_command_to_last_station_result_span": null,
+        "actual_station_result_visibility": "internal VM write not logged in existing fixed binary",
+        "actual_command_to_last_readback_output_span": 2606,
+        "operation_latency_qualified": false
+      },
+      "faults": {
+        "S0ST": 0,
+        "S1ST": 0,
+        "S2ST": 0,
+        "S3ST": 0,
+        "S4ST": 0,
+        "S5ST": 0,
+        "S6ST": 0,
+        "S7ST": 0,
+        "S8ST": 0,
+        "S9ST": 0,
+        "S10ST": 0,
+        "S11ST": 0
+      },
+      "aggregate": "0x0",
+      "stn_busy": 0,
+      "terminal_status": {
+        "S0ST": "0x4002000020000000",
+        "S1ST": "0x404000000000000000",
+        "S2ST": "0x804002000020000000",
+        "S3ST": "0xc04000000000000000",
+        "S4ST": "0x1004002000020000000",
+        "S5ST": "0x1404000000000000000",
+        "S6ST": "0x1804002000020000000",
+        "S7ST": "0x1c04000000000000000",
+        "S8ST": "0x2004002000020000000",
+        "S9ST": "0x2404000000000000000",
+        "S10ST": "0x2804002000020000000",
+        "S11ST": "0x2c04000000000000000"
+      },
+      "first_output_edge": 395,
+      "last_output_edge": 2740,
+      "raw_log_sha256": "dff42ce1db6317a9a460464da8119641d4aba780f57835501616588a08b4be7d",
+      "event_sha256": "b0e31514d7c4f689fb9ed918c63fbaf28f487d6f2d2eab583fc301673a565806",
+      "resources": {
+        "wall_seconds": 42.8201642036438,
+        "self_peak_rss_kb": 271388,
+        "child_peak_rss_kb": 271388,
+        "files": {
+          "bench.out": {
+            "bytes": 494,
+            "sha256": "468bce993ea3bc9cdc505963bb085125d159a21eadc4351703079696986ac439"
+          },
+          "qkv_m0.log": {
+            "bytes": 24770,
+            "sha256": "dff42ce1db6317a9a460464da8119641d4aba780f57835501616588a08b4be7d"
+          },
+          "lowering.json": {
+            "bytes": 7522,
+            "sha256": "60a09a67e5115f84f74d47b4cea6acd02bd0f16cce23e8644de16cc3dd8ca78b"
+          },
+          "output_edges.json": {
+            "bytes": 30854,
+            "sha256": "44c6f91712e88078e7f8822ace72f12a038198494810d8ae0f067dbeb533e8e9"
+          },
+          "terminal_status.json": {
+            "bytes": 1583,
+            "sha256": "598f9a2033069ce08e9e6b400ca54b9f8aef2e6d58bce60a70eb18f83680261a"
+          },
+          "runtime_reads.json": {
+            "bytes": 1051,
+            "sha256": "7e7620f527d8dccc4b6654245ba320ad5baa44b02db76c7e8ec9ea4549cc1c5e"
+          },
+          "qkv_m0.ev": {
+            "bytes": 87715,
+            "sha256": "b0e31514d7c4f689fb9ed918c63fbaf28f487d6f2d2eab583fc301673a565806"
+          }
+        }
+      }
+    },
+    {
+      "nu": 1,
+      "layer": 1,
+      "mode": "qkv",
+      "mutant": "scale_before_tree",
+      "verdict": "CAUSAL_FAIL",
+      "fixture_words": 768,
+      "observed_words": 768,
+      "equal_words": 326,
+      "data_mismatch_count": 442,
+      "first_mismatches": [
+        {
+          "address": 1,
+          "got": "0x3b8ba680",
+          "expected": "0x3b8ba67e"
+        },
+        {
+          "address": 2,
+          "got": "0x3c141003",
+          "expected": "0x3c141004"
+        },
+        {
+          "address": 7,
+          "got": "0xbc427c4d",
+          "expected": "0xbc427c4e"
+        },
+        {
+          "address": 11,
+          "got": "0x3c252c8c",
+          "expected": "0x3c252c8d"
+        },
+        {
+          "address": 12,
+          "got": "0xbc780cd6",
+          "expected": "0xbc780cd5"
+        },
+        {
+          "address": 16,
+          "got": "0x3c5a4897",
+          "expected": "0x3c5a4898"
+        },
+        {
+          "address": 18,
+          "got": "0xbd280fb3",
+          "expected": "0xbd280fb4"
+        },
+        {
+          "address": 19,
+          "got": "0xbc23e5bd",
+          "expected": "0xbc23e5be"
+        },
+        {
+          "address": 20,
+          "got": "0xbd13c133",
+          "expected": "0xbd13c132"
+        },
+        {
+          "address": 21,
+          "got": "0xbb4d292b",
+          "expected": "0xbb4d292a"
+        },
+        {
+          "address": 25,
+          "got": "0xba981406",
+          "expected": "0xba98140a"
+        },
+        {
+          "address": 26,
+          "got": "0x3d3c1538",
+          "expected": "0x3d3c1537"
+        }
+      ],
+      "missing_addresses": [],
+      "extra_addresses": [],
+      "edge_checks": 96,
+      "edge_mismatches": [],
+      "readback_edge_basis": "measured pilot command entry +26+4*slice+packet; not native station phase",
+      "schedule_breakdown": {
+        "actual_command_entry_first": 134,
+        "actual_command_entry_last": 156,
+        "actual_cluster_input_first": 148,
+        "actual_cluster_input_last": 169,
+        "readback_command_entry_first": 369,
+        "readback_command_entry_last": 2659,
+        "actual_readback_output_first": 395,
+        "actual_readback_output_last": 2740,
+        "stream_table_setup_first": 46,
+        "stream_table_setup_last": 81,
+        "stream_table_setup_events": 36,
+        "actual_command_to_last_station_result_span": null,
+        "actual_station_result_visibility": "internal VM write not logged in existing fixed binary",
+        "actual_command_to_last_readback_output_span": 2606,
+        "operation_latency_qualified": false
+      },
+      "faults": {
+        "S0ST": 0,
+        "S1ST": 0,
+        "S2ST": 0,
+        "S3ST": 0,
+        "S4ST": 0,
+        "S5ST": 0,
+        "S6ST": 0,
+        "S7ST": 0,
+        "S8ST": 0,
+        "S9ST": 0,
+        "S10ST": 0,
+        "S11ST": 0
+      },
+      "aggregate": "0x0",
+      "stn_busy": 0,
+      "terminal_status": {
+        "S0ST": "0x4002000020000000",
+        "S1ST": "0x404000000000000000",
+        "S2ST": "0x804002000020000000",
+        "S3ST": "0xc04000000000000000",
+        "S4ST": "0x1004002000020000000",
+        "S5ST": "0x1404000000000000000",
+        "S6ST": "0x1804002000020000000",
+        "S7ST": "0x1c04000000000000000",
+        "S8ST": "0x2004002000020000000",
+        "S9ST": "0x2404000000000000000",
+        "S10ST": "0x2804002000020000000",
+        "S11ST": "0x2c04000000000000000"
+      },
+      "first_output_edge": 395,
+      "last_output_edge": 2740,
+      "raw_log_sha256": "feca7b47a874cd8b102c2ce3c45147488faa90f0f9047e48a064a7e4f3b002a2",
+      "event_sha256": "567531aa39902be53ab3f6932bd4abe055a0284db2eb61873b13d6eb47ca6e01",
+      "resources": {
+        "wall_seconds": 42.09274387359619,
+        "self_peak_rss_kb": 271336,
+        "child_peak_rss_kb": 271336,
+        "files": {
+          "bench.out": {
+            "bytes": 1031,
+            "sha256": "f9a755964b685d328caacd534729e350f14068d3def224d104db86320b85b6b7"
+          },
+          "rounding_witness.json": {
+            "bytes": 978,
+            "sha256": "4102b854ae9b636acb03d5da47b35617780d60b28118477364ffe7a74d5a700a"
+          },
+          "qkv_m0.log": {
+            "bytes": 24770,
+            "sha256": "feca7b47a874cd8b102c2ce3c45147488faa90f0f9047e48a064a7e4f3b002a2"
+          },
+          "lowering.json": {
+            "bytes": 7522,
+            "sha256": "60a09a67e5115f84f74d47b4cea6acd02bd0f16cce23e8644de16cc3dd8ca78b"
+          },
+          "output_edges.json": {
+            "bytes": 30854,
+            "sha256": "e8f7b82472f7ec759fd31097bda2a4ab6c61a6e6595eb70b7b0ca99a56057f91"
+          },
+          "terminal_status.json": {
+            "bytes": 1583,
+            "sha256": "598f9a2033069ce08e9e6b400ca54b9f8aef2e6d58bce60a70eb18f83680261a"
+          },
+          "runtime_reads.json": {
+            "bytes": 1051,
+            "sha256": "7e7620f527d8dccc4b6654245ba320ad5baa44b02db76c7e8ec9ea4549cc1c5e"
+          },
+          "qkv_m0.ev": {
+            "bytes": 87715,
+            "sha256": "567531aa39902be53ab3f6932bd4abe055a0284db2eb61873b13d6eb47ca6e01"
+          }
+        }
+      }
+    },
+    {
+      "nu": 4,
+      "layer": 0,
+      "mode": "gu",
+      "mutant": "kc2",
+      "verdict": "CAUSAL_FAIL",
+      "fixture_words": 3072,
+      "observed_words": 3072,
+      "equal_words": 0,
+      "data_mismatch_count": 3072,
+      "first_mismatches": [
+        {
+          "address": 0,
+          "got": "0x0",
+          "expected": "0xbc9d3436"
+        },
+        {
+          "address": 1,
+          "got": "0x0",
+          "expected": "0x3a1a2ad3"
+        },
+        {
+          "address": 2,
+          "got": "0x0",
+          "expected": "0xbae6a706"
+        },
+        {
+          "address": 3,
+          "got": "0x0",
+          "expected": "0x3b2927b7"
+        },
+        {
+          "address": 4,
+          "got": "0x0",
+          "expected": "0x3b18b294"
+        },
+        {
+          "address": 5,
+          "got": "0x0",
+          "expected": "0x3ba58865"
+        },
+        {
+          "address": 6,
+          "got": "0x0",
+          "expected": "0xbc072b12"
+        },
+        {
+          "address": 7,
+          "got": "0x0",
+          "expected": "0xbcbc1f34"
+        },
+        {
+          "address": 8,
+          "got": "0x0",
+          "expected": "0xbcd21c60"
+        },
+        {
+          "address": 9,
+          "got": "0x0",
+          "expected": "0xbba71198"
+        },
+        {
+          "address": 10,
+          "got": "0x0",
+          "expected": "0x3b81f91d"
+        },
+        {
+          "address": 11,
+          "got": "0x0",
+          "expected": "0xbbd6f4d5"
+        }
+      ],
+      "missing_addresses": [],
+      "extra_addresses": [],
+      "edge_checks": 384,
+      "edge_mismatches": [],
+      "readback_edge_basis": "measured pilot command entry +26+4*slice+packet; not native station phase",
+      "schedule_breakdown": {
+        "actual_command_entry_first": 170,
+        "actual_command_entry_last": 192,
+        "actual_cluster_input_first": 184,
+        "actual_cluster_input_last": 205,
+        "readback_command_entry_first": 405,
+        "readback_command_entry_last": 5465,
+        "actual_readback_output_first": 431,
+        "actual_readback_output_last": 5566,
+        "stream_table_setup_first": 46,
+        "stream_table_setup_last": 117,
+        "stream_table_setup_events": 72,
+        "actual_command_to_last_station_result_span": null,
+        "actual_station_result_visibility": "internal VM write not logged in existing fixed binary",
+        "actual_command_to_last_readback_output_span": 5396,
+        "operation_latency_qualified": false
+      },
+      "faults": {
+        "S0ST": 0,
+        "S1ST": 0,
+        "S2ST": 0,
+        "S3ST": 0,
+        "S4ST": 0,
+        "S5ST": 0,
+        "S6ST": 0,
+        "S7ST": 0,
+        "S8ST": 0,
+        "S9ST": 0,
+        "S10ST": 0,
+        "S11ST": 0
+      },
+      "aggregate": "0x200",
+      "stn_busy": 1,
+      "terminal_status": {
+        "S0ST": "0x4004000020000000",
+        "S1ST": "0x404004000020000000",
+        "S2ST": "0x804004000020000000",
+        "S3ST": "0xc04004000020000000",
+        "S4ST": "0x1004004000020000000",
+        "S5ST": "0x1404004000020000000",
+        "S6ST": "0x1804004000020000000",
+        "S7ST": "0x1c04004000020000000",
+        "S8ST": "0x2004004000020000000",
+        "S9ST": "0x2404004000020000000",
+        "S10ST": "0x2804004000020000000",
+        "S11ST": "0x2c04004000020000000"
+      },
+      "first_output_edge": 431,
+      "last_output_edge": 5566,
+      "raw_log_sha256": "0b614e5c06b13a9f649127050fc9137451a9f8c8e00958822061f7651df35888",
+      "event_sha256": "c33b58044efb0f6b3ad5c40b33d2fc3824e9473d5d591f40fd7d2a5d0bc8d94a",
+      "resources": {
+        "wall_seconds": 115.56075835227966,
+        "self_peak_rss_kb": 317632,
+        "child_peak_rss_kb": 317632,
+        "files": {
+          "bench.out": {
+            "bytes": 969,
+            "sha256": "b9a361d47a9b90fcfbf1f7c5acf3cc3edca02ca6db50504284aa913dbf5ea790"
+          },
+          "lowering.json": {
+            "bytes": 12578,
+            "sha256": "cb8ed61a3646e888ca750606c5556d9556ef7bfe48154ed894cd1d011eb8b9eb"
+          },
+          "output_edges.json": {
+            "bytes": 96884,
+            "sha256": "1190db26ba242cd915ac5bbbddf693f47c97fe924db25d54e96ef50b93fe578d"
+          },
+          "gu_m0.ev": {
+            "bytes": 98004,
+            "sha256": "c33b58044efb0f6b3ad5c40b33d2fc3824e9473d5d591f40fd7d2a5d0bc8d94a"
+          },
+          "terminal_status.json": {
+            "bytes": 1586,
+            "sha256": "f3cec5bfe16dbabf2c5ce1f4934edcaf153bd6bc3b5ca40d885795e910e4d02b"
+          },
+          "runtime_reads.json": {
+            "bytes": 1050,
+            "sha256": "acd43bbd9b7a6a7cb42c19285fbde5b7855bddadeef59c7a690a0ebc4a692266"
+          },
+          "command_mutation.json": {
+            "bytes": 1819,
+            "sha256": "c3ef7cd6c59e469b54732a1200d23a08d5c969d133d605af9da3ccc9bcaaf8ec"
+          },
+          "gu_m0.log": {
+            "bytes": 77514,
+            "sha256": "0b614e5c06b13a9f649127050fc9137451a9f8c8e00958822061f7651df35888"
+          }
+        }
+      }
+    },
+    {
+      "nu": 4,
+      "layer": 0,
+      "mode": "gu",
+      "mutant": "nearshift",
+      "verdict": "CAUSAL_FAIL",
+      "fixture_words": 3072,
+      "observed_words": 3072,
+      "equal_words": 2816,
+      "data_mismatch_count": 256,
+      "first_mismatches": [
+        {
+          "address": 0,
+          "got": "0xbc36538c",
+          "expected": "0xbc9d3436"
+        },
+        {
+          "address": 1,
+          "got": "0xbb4dfbfc",
+          "expected": "0x3a1a2ad3"
+        },
+        {
+          "address": 2,
+          "got": "0xb872a724",
+          "expected": "0xbae6a706"
+        },
+        {
+          "address": 3,
+          "got": "0xbbf55d2d",
+          "expected": "0x3b2927b7"
+        },
+        {
+          "address": 4,
+          "got": "0xbb2400e8",
+          "expected": "0x3b18b294"
+        },
+        {
+          "address": 5,
+          "got": "0x3b68c259",
+          "expected": "0x3ba58865"
+        },
+        {
+          "address": 6,
+          "got": "0xbcb741d9",
+          "expected": "0xbc072b12"
+        },
+        {
+          "address": 7,
+          "got": "0xbc769141",
+          "expected": "0xbcbc1f34"
+        },
+        {
+          "address": 8,
+          "got": "0xbcf925eb",
+          "expected": "0xbcd21c60"
+        },
+        {
+          "address": 9,
+          "got": "0x3973f32b",
+          "expected": "0xbba71198"
+        },
+        {
+          "address": 10,
+          "got": "0xbb05904a",
+          "expected": "0x3b81f91d"
+        },
+        {
+          "address": 11,
+          "got": "0x3c702af3",
+          "expected": "0xbbd6f4d5"
+        }
+      ],
+      "missing_addresses": [],
+      "extra_addresses": [],
+      "edge_checks": 384,
+      "edge_mismatches": [],
+      "readback_edge_basis": "measured pilot command entry +26+4*slice+packet; not native station phase",
+      "schedule_breakdown": {
+        "actual_command_entry_first": 170,
+        "actual_command_entry_last": 192,
+        "actual_cluster_input_first": 184,
+        "actual_cluster_input_last": 205,
+        "readback_command_entry_first": 405,
+        "readback_command_entry_last": 5465,
+        "actual_readback_output_first": 431,
+        "actual_readback_output_last": 5566,
+        "stream_table_setup_first": 46,
+        "stream_table_setup_last": 117,
+        "stream_table_setup_events": 72,
+        "actual_command_to_last_station_result_span": null,
+        "actual_station_result_visibility": "internal VM write not logged in existing fixed binary",
+        "actual_command_to_last_readback_output_span": 5396,
+        "operation_latency_qualified": false
+      },
+      "faults": {
+        "S0ST": 72,
+        "S1ST": 0,
+        "S2ST": 0,
+        "S3ST": 0,
+        "S4ST": 0,
+        "S5ST": 0,
+        "S6ST": 0,
+        "S7ST": 0,
+        "S8ST": 0,
+        "S9ST": 0,
+        "S10ST": 0,
+        "S11ST": 0
+      },
+      "aggregate": "0x320",
+      "stn_busy": 1,
+      "terminal_status": {
+        "S0ST": "0x244004000020000000",
+        "S1ST": "0x404004000020000000",
+        "S2ST": "0x804004000020000000",
+        "S3ST": "0xc04004000020000000",
+        "S4ST": "0x1004004000020000000",
+        "S5ST": "0x1404004000020000000",
+        "S6ST": "0x1804004000020000000",
+        "S7ST": "0x1c04004000020000000",
+        "S8ST": "0x2004004000020000000",
+        "S9ST": "0x2404004000020000000",
+        "S10ST": "0x2804004000020000000",
+        "S11ST": "0x2c04004000020000000"
+      },
+      "first_output_edge": 431,
+      "last_output_edge": 5566,
+      "raw_log_sha256": "ee309994b7c9f29c447f3374999e012bbe0d9175119fc5d8ff1db164178f359b",
+      "event_sha256": "886100b38ad63a73ad4f06de47f36d414899e3a741221c9915c5aee08d69748a",
+      "resources": {
+        "wall_seconds": 78.88918352127075,
+        "self_peak_rss_kb": 317324,
+        "child_peak_rss_kb": 317324,
+        "files": {
+          "bench.out": {
+            "bytes": 1039,
+            "sha256": "60ea6e1c52f3c871e8c2ac14188400b8b329e351f9ae58b3b5bf5af9992540d3"
+          },
+          "lowering.json": {
+            "bytes": 12578,
+            "sha256": "b29796e53589ff3681872952ce8fd1bd3f9e27a41f01a9fb1e08899422e646ff"
+          },
+          "output_edges.json": {
+            "bytes": 96886,
+            "sha256": "5789952dbfab7c29d117711103b82226e034cc7cc62ea44a465add320db77629"
+          },
+          "gu_m0.ev": {
+            "bytes": 97999,
+            "sha256": "886100b38ad63a73ad4f06de47f36d414899e3a741221c9915c5aee08d69748a"
+          },
+          "terminal_status.json": {
+            "bytes": 1588,
+            "sha256": "799d2fc7855ea675655569a30e3a31852a2a954aa2e10a982796b601e15536b1"
+          },
+          "runtime_reads.json": {
+            "bytes": 1050,
+            "sha256": "acd43bbd9b7a6a7cb42c19285fbde5b7855bddadeef59c7a690a0ebc4a692266"
+          },
+          "command_mutation.json": {
+            "bytes": 225,
+            "sha256": "f816bcb032403c3b24dfa62a865cbe071f24ed5cc72c34f577f7c0716e580b71"
+          },
+          "gu_m0.log": {
+            "bytes": 77514,
+            "sha256": "ee309994b7c9f29c447f3374999e012bbe0d9175119fc5d8ff1db164178f359b"
+          }
+        }
+      }
+    },
+    {
+      "nu": 4,
+      "layer": 0,
+      "mode": "gu",
+      "mutant": "positive",
+      "verdict": "PASS",
+      "fixture_words": 3072,
+      "observed_words": 3072,
+      "equal_words": 3072,
+      "data_mismatch_count": 0,
+      "first_mismatches": [],
+      "missing_addresses": [],
+      "extra_addresses": [],
+      "edge_checks": 384,
+      "edge_mismatches": [],
+      "readback_edge_basis": "measured pilot command entry +26+4*slice+packet; not native station phase",
+      "schedule_breakdown": {
+        "actual_command_entry_first": 170,
+        "actual_command_entry_last": 192,
+        "actual_cluster_input_first": 184,
+        "actual_cluster_input_last": 205,
+        "readback_command_entry_first": 405,
+        "readback_command_entry_last": 5465,
+        "actual_readback_output_first": 431,
+        "actual_readback_output_last": 5566,
+        "stream_table_setup_first": 46,
+        "stream_table_setup_last": 117,
+        "stream_table_setup_events": 72,
+        "actual_command_to_last_station_result_span": null,
+        "actual_station_result_visibility": "internal VM write not logged in existing fixed binary",
+        "actual_command_to_last_readback_output_span": 5396,
+        "operation_latency_qualified": false
+      },
+      "faults": {
+        "S0ST": 0,
+        "S1ST": 0,
+        "S2ST": 0,
+        "S3ST": 0,
+        "S4ST": 0,
+        "S5ST": 0,
+        "S6ST": 0,
+        "S7ST": 0,
+        "S8ST": 0,
+        "S9ST": 0,
+        "S10ST": 0,
+        "S11ST": 0
+      },
+      "aggregate": "0x0",
+      "stn_busy": 0,
+      "terminal_status": {
+        "S0ST": "0x4004000020000000",
+        "S1ST": "0x404004000020000000",
+        "S2ST": "0x804004000020000000",
+        "S3ST": "0xc04004000020000000",
+        "S4ST": "0x1004004000020000000",
+        "S5ST": "0x1404004000020000000",
+        "S6ST": "0x1804004000020000000",
+        "S7ST": "0x1c04004000020000000",
+        "S8ST": "0x2004004000020000000",
+        "S9ST": "0x2404004000020000000",
+        "S10ST": "0x2804004000020000000",
+        "S11ST": "0x2c04004000020000000"
+      },
+      "first_output_edge": 431,
+      "last_output_edge": 5566,
+      "raw_log_sha256": "7f6259b42997ebc156e5880bfde5b0305ba47ce3afac912fc743cf465c9d650a",
+      "event_sha256": "e958526d1cf1320e72f3eb81da7b3c38be0d5e6dfc40370221b54ca104b25e1d",
+      "resources": {
+        "wall_seconds": 76.81246614456177,
+        "self_peak_rss_kb": 317712,
+        "child_peak_rss_kb": 317712,
+        "files": {
+          "bench.out": {
+            "bytes": 515,
+            "sha256": "4220fe252bb07b50b11fec8653c4bf7d2227b333d49e408b40c9f8a3620984a4"
+          },
+          "lowering.json": {
+            "bytes": 12578,
+            "sha256": "b29796e53589ff3681872952ce8fd1bd3f9e27a41f01a9fb1e08899422e646ff"
+          },
+          "output_edges.json": {
+            "bytes": 96882,
+            "sha256": "0ba35c2be7c86647efae73fb8df6036b8e76578bcce793c175d5d02448b51284"
+          },
+          "gu_m0.ev": {
+            "bytes": 97999,
+            "sha256": "e958526d1cf1320e72f3eb81da7b3c38be0d5e6dfc40370221b54ca104b25e1d"
+          },
+          "terminal_status.json": {
+            "bytes": 1584,
+            "sha256": "96c31f6fa625710be33825e293bdf25894b74a8bc467ea9c6773b2798ee0621d"
+          },
+          "runtime_reads.json": {
+            "bytes": 1050,
+            "sha256": "acd43bbd9b7a6a7cb42c19285fbde5b7855bddadeef59c7a690a0ebc4a692266"
+          },
+          "gu_m0.log": {
+            "bytes": 77514,
+            "sha256": "7f6259b42997ebc156e5880bfde5b0305ba47ce3afac912fc743cf465c9d650a"
+          }
+        }
+      }
+    },
+    {
+      "nu": 4,
+      "layer": 0,
+      "mode": "gu",
+      "mutant": "predrain",
+      "verdict": "CAUSAL_FAIL",
+      "fixture_words": 3072,
+      "observed_words": 3072,
+      "equal_words": 2816,
+      "data_mismatch_count": 256,
+      "first_mismatches": [
+        {
+          "address": 0,
+          "got": "0x0",
+          "expected": "0xbc9d3436"
+        },
+        {
+          "address": 1,
+          "got": "0x0",
+          "expected": "0x3a1a2ad3"
+        },
+        {
+          "address": 2,
+          "got": "0x0",
+          "expected": "0xbae6a706"
+        },
+        {
+          "address": 3,
+          "got": "0x0",
+          "expected": "0x3b2927b7"
+        },
+        {
+          "address": 4,
+          "got": "0x0",
+          "expected": "0x3b18b294"
+        },
+        {
+          "address": 5,
+          "got": "0x0",
+          "expected": "0x3ba58865"
+        },
+        {
+          "address": 6,
+          "got": "0x0",
+          "expected": "0xbc072b12"
+        },
+        {
+          "address": 7,
+          "got": "0x0",
+          "expected": "0xbcbc1f34"
+        },
+        {
+          "address": 8,
+          "got": "0x0",
+          "expected": "0xbcd21c60"
+        },
+        {
+          "address": 9,
+          "got": "0x0",
+          "expected": "0xbba71198"
+        },
+        {
+          "address": 10,
+          "got": "0x0",
+          "expected": "0x3b81f91d"
+        },
+        {
+          "address": 11,
+          "got": "0x0",
+          "expected": "0xbbd6f4d5"
+        }
+      ],
+      "missing_addresses": [],
+      "extra_addresses": [],
+      "edge_checks": 384,
+      "edge_mismatches": [],
+      "readback_edge_basis": "measured pilot command entry +26+4*slice+packet; not native station phase",
+      "schedule_breakdown": {
+        "actual_command_entry_first": 170,
+        "actual_command_entry_last": 206,
+        "actual_cluster_input_first": 184,
+        "actual_cluster_input_last": 205,
+        "readback_command_entry_first": 405,
+        "readback_command_entry_last": 5465,
+        "actual_readback_output_first": 431,
+        "actual_readback_output_last": 5566,
+        "stream_table_setup_first": 46,
+        "stream_table_setup_last": 117,
+        "stream_table_setup_events": 72,
+        "actual_command_to_last_station_result_span": null,
+        "actual_station_result_visibility": "internal VM write not logged in existing fixed binary",
+        "actual_command_to_last_readback_output_span": 5396,
+        "operation_latency_qualified": false
+      },
+      "faults": {
+        "S0ST": 0,
+        "S1ST": 0,
+        "S2ST": 0,
+        "S3ST": 0,
+        "S4ST": 0,
+        "S5ST": 0,
+        "S6ST": 0,
+        "S7ST": 0,
+        "S8ST": 0,
+        "S9ST": 0,
+        "S10ST": 0,
+        "S11ST": 0
+      },
+      "aggregate": "0x200",
+      "stn_busy": 1,
+      "terminal_status": {
+        "S0ST": "0x4004000020000000",
+        "S1ST": "0x404004000020000000",
+        "S2ST": "0x804004000020000000",
+        "S3ST": "0xc04004000020000000",
+        "S4ST": "0x1004004000020000000",
+        "S5ST": "0x1404004000020000000",
+        "S6ST": "0x1804004000020000000",
+        "S7ST": "0x1c04004000020000000",
+        "S8ST": "0x2004004000020000000",
+        "S9ST": "0x2404004000020000000",
+        "S10ST": "0x2804004000020000000",
+        "S11ST": "0x2c04004000020000000"
+      },
+      "first_output_edge": 431,
+      "last_output_edge": 5566,
+      "raw_log_sha256": "f246a1fe880f4ea4fb97c12b2e764252b9780d99284cc1bc58f35d76c7df252d",
+      "event_sha256": "f43e6979b536415e7ebfaaaa9edb812b86600158002391a7fc413718220dfbe4",
+      "resources": {
+        "wall_seconds": 110.2252287864685,
+        "self_peak_rss_kb": 317584,
+        "child_peak_rss_kb": 317584,
+        "files": {
+          "bench.out": {
+            "bytes": 972,
+            "sha256": "e5533c344e35391ce81df93337e9eee38bd2db599b87789c0311ad1f5ebfb422"
+          },
+          "lowering.json": {
+            "bytes": 12578,
+            "sha256": "b29796e53589ff3681872952ce8fd1bd3f9e27a41f01a9fb1e08899422e646ff"
+          },
+          "output_edges.json": {
+            "bytes": 96884,
+            "sha256": "767252d4f07bdaf476973473f286ba906cf65319c8b18beb24a4e5b74bda8b0c"
+          },
+          "gu_m0.ev": {
+            "bytes": 98015,
+            "sha256": "f43e6979b536415e7ebfaaaa9edb812b86600158002391a7fc413718220dfbe4"
+          },
+          "terminal_status.json": {
+            "bytes": 1586,
+            "sha256": "1e44845d7bbbb5380e87a5dc00529c6f44c9246b64c425a986d068293b5693b2"
+          },
+          "runtime_reads.json": {
+            "bytes": 1050,
+            "sha256": "acd43bbd9b7a6a7cb42c19285fbde5b7855bddadeef59c7a690a0ebc4a692266"
+          },
+          "command_mutation.json": {
+            "bytes": 92,
+            "sha256": "fabde57fd5a15aa1d9d79b3eca0aaadfc0c33560b4b21127bce1d07369b234d7"
+          },
+          "gu_m0.log": {
+            "bytes": 77514,
+            "sha256": "f246a1fe880f4ea4fb97c12b2e764252b9780d99284cc1bc58f35d76c7df252d"
+          }
+        }
+      }
+    },
+    {
+      "nu": 4,
+      "layer": 0,
+      "mode": "gu",
+      "mutant": "sbase1",
+      "verdict": "CAUSAL_FAIL",
+      "fixture_words": 3072,
+      "observed_words": 3072,
+      "equal_words": 21,
+      "data_mismatch_count": 3051,
+      "first_mismatches": [
+        {
+          "address": 0,
+          "got": "0xbc7f590d",
+          "expected": "0xbc9d3436"
+        },
+        {
+          "address": 1,
+          "got": "0x3a8111fe",
+          "expected": "0x3a1a2ad3"
+        },
+        {
+          "address": 2,
+          "got": "0xbb370184",
+          "expected": "0xbae6a706"
+        },
+        {
+          "address": 3,
+          "got": "0x3b3100a7",
+          "expected": "0x3b2927b7"
+        },
+        {
+          "address": 4,
+          "got": "0x3b4d99c6",
+          "expected": "0x3b18b294"
+        },
+        {
+          "address": 5,
+          "got": "0x3bf17227",
+          "expected": "0x3ba58865"
+        },
+        {
+          "address": 6,
+          "got": "0xbbc4afe7",
+          "expected": "0xbc072b12"
+        },
+        {
+          "address": 7,
+          "got": "0xbc84295d",
+          "expected": "0xbcbc1f34"
+        },
+        {
+          "address": 8,
+          "got": "0xbcae95b9",
+          "expected": "0xbcd21c60"
+        },
+        {
+          "address": 9,
+          "got": "0xbba080b1",
+          "expected": "0xbba71198"
+        },
+        {
+          "address": 10,
+          "got": "0x3b5fb964",
+          "expected": "0x3b81f91d"
+        },
+        {
+          "address": 11,
+          "got": "0xbb42397b",
+          "expected": "0xbbd6f4d5"
+        }
+      ],
+      "missing_addresses": [],
+      "extra_addresses": [],
+      "edge_checks": 384,
+      "edge_mismatches": [],
+      "readback_edge_basis": "measured pilot command entry +26+4*slice+packet; not native station phase",
+      "schedule_breakdown": {
+        "actual_command_entry_first": 170,
+        "actual_command_entry_last": 192,
+        "actual_cluster_input_first": 184,
+        "actual_cluster_input_last": 205,
+        "readback_command_entry_first": 405,
+        "readback_command_entry_last": 5465,
+        "actual_readback_output_first": 431,
+        "actual_readback_output_last": 5566,
+        "stream_table_setup_first": 46,
+        "stream_table_setup_last": 117,
+        "stream_table_setup_events": 72,
+        "actual_command_to_last_station_result_span": null,
+        "actual_station_result_visibility": "internal VM write not logged in existing fixed binary",
+        "actual_command_to_last_readback_output_span": 5396,
+        "operation_latency_qualified": false
+      },
+      "faults": {
+        "S0ST": 0,
+        "S1ST": 0,
+        "S2ST": 0,
+        "S3ST": 0,
+        "S4ST": 0,
+        "S5ST": 0,
+        "S6ST": 0,
+        "S7ST": 0,
+        "S8ST": 0,
+        "S9ST": 0,
+        "S10ST": 0,
+        "S11ST": 0
+      },
+      "aggregate": "0x0",
+      "stn_busy": 0,
+      "terminal_status": {
+        "S0ST": "0x4004000020000000",
+        "S1ST": "0x404004000020000000",
+        "S2ST": "0x804004000020000000",
+        "S3ST": "0xc04004000020000000",
+        "S4ST": "0x1004004000020000000",
+        "S5ST": "0x1404004000020000000",
+        "S6ST": "0x1804004000020000000",
+        "S7ST": "0x1c04004000020000000",
+        "S8ST": "0x2004004000020000000",
+        "S9ST": "0x2404004000020000000",
+        "S10ST": "0x2804004000020000000",
+        "S11ST": "0x2c04004000020000000"
+      },
+      "first_output_edge": 431,
+      "last_output_edge": 5566,
+      "raw_log_sha256": "a0dbb2b8f84de946526ee7f408e089ffc9e396500314b674b8cb4f733eff9646",
+      "event_sha256": "9f64d0b71bec0d8dcd66d846d4bf203c9b02c0a51eddae7a97d4e3881368f7da",
+      "resources": {
+        "wall_seconds": 79.91336178779602,
+        "self_peak_rss_kb": 317224,
+        "child_peak_rss_kb": 317224,
+        "files": {
+          "bench.out": {
+            "bytes": 1038,
+            "sha256": "51b5463aeb1846803c8ddeb09f898a7c8acf69e300d790efbb0aa91e9a39f801"
+          },
+          "lowering.json": {
+            "bytes": 12578,
+            "sha256": "df1dfb2fa2fabf9e58e9088ccb12f525ac011eac60a44499c4bd2a9e395b2f45"
+          },
+          "output_edges.json": {
+            "bytes": 96882,
+            "sha256": "a872d789727c876cf1bbfe4c7632afdb5b7226da85282d58ff6125ed136fe0e4"
+          },
+          "gu_sbase1.log": {
+            "bytes": 77514,
+            "sha256": "a0dbb2b8f84de946526ee7f408e089ffc9e396500314b674b8cb4f733eff9646"
+          },
+          "terminal_status.json": {
+            "bytes": 1584,
+            "sha256": "96c31f6fa625710be33825e293bdf25894b74a8bc467ea9c6773b2798ee0621d"
+          },
+          "runtime_reads.json": {
+            "bytes": 1050,
+            "sha256": "acd43bbd9b7a6a7cb42c19285fbde5b7855bddadeef59c7a690a0ebc4a692266"
+          },
+          "gu_sbase1.ev": {
+            "bytes": 97999,
+            "sha256": "9f64d0b71bec0d8dcd66d846d4bf203c9b02c0a51eddae7a97d4e3881368f7da"
+          }
+        }
+      }
+    },
+    {
+      "nu": 4,
+      "layer": 0,
+      "mode": "qkv",
+      "mutant": "positive",
+      "verdict": "PASS",
+      "fixture_words": 768,
+      "observed_words": 768,
+      "equal_words": 768,
+      "data_mismatch_count": 0,
+      "first_mismatches": [],
+      "missing_addresses": [],
+      "extra_addresses": [],
+      "edge_checks": 96,
+      "edge_mismatches": [],
+      "readback_edge_basis": "measured pilot command entry +26+4*slice+packet; not native station phase",
+      "schedule_breakdown": {
+        "actual_command_entry_first": 134,
+        "actual_command_entry_last": 156,
+        "actual_cluster_input_first": 148,
+        "actual_cluster_input_last": 169,
+        "readback_command_entry_first": 369,
+        "readback_command_entry_last": 2659,
+        "actual_readback_output_first": 395,
+        "actual_readback_output_last": 2740,
+        "stream_table_setup_first": 46,
+        "stream_table_setup_last": 81,
+        "stream_table_setup_events": 36,
+        "actual_command_to_last_station_result_span": null,
+        "actual_station_result_visibility": "internal VM write not logged in existing fixed binary",
+        "actual_command_to_last_readback_output_span": 2606,
+        "operation_latency_qualified": false
+      },
+      "faults": {
+        "S0ST": 0,
+        "S1ST": 0,
+        "S2ST": 0,
+        "S3ST": 0,
+        "S4ST": 0,
+        "S5ST": 0,
+        "S6ST": 0,
+        "S7ST": 0,
+        "S8ST": 0,
+        "S9ST": 0,
+        "S10ST": 0,
+        "S11ST": 0
+      },
+      "aggregate": "0x0",
+      "stn_busy": 0,
+      "terminal_status": {
+        "S0ST": "0x4002000020000000",
+        "S1ST": "0x404000000000000000",
+        "S2ST": "0x804002000020000000",
+        "S3ST": "0xc04000000000000000",
+        "S4ST": "0x1004002000020000000",
+        "S5ST": "0x1404000000000000000",
+        "S6ST": "0x1804002000020000000",
+        "S7ST": "0x1c04000000000000000",
+        "S8ST": "0x2004002000020000000",
+        "S9ST": "0x2404000000000000000",
+        "S10ST": "0x2804002000020000000",
+        "S11ST": "0x2c04000000000000000"
+      },
+      "first_output_edge": 395,
+      "last_output_edge": 2740,
+      "raw_log_sha256": "3ad316f51783094e647c0d70ec52321b016ac7338c34003fcd8890fef61acfc8",
+      "event_sha256": "1b34f9aae7c4208ac0cf7e3f0ccbc3ad46def619bd48b90d37b0d68d18637676",
+      "resources": {
+        "wall_seconds": 41.76764464378357,
+        "self_peak_rss_kb": 272176,
+        "child_peak_rss_kb": 272176,
+        "files": {
+          "bench.out": {
+            "bytes": 494,
+            "sha256": "8c4923b7569984b0c4ff1e701feb1b3fb29ec670cf7065d014a57465bb449a3a"
+          },
+          "qkv_m0.log": {
+            "bytes": 24770,
+            "sha256": "3ad316f51783094e647c0d70ec52321b016ac7338c34003fcd8890fef61acfc8"
+          },
+          "lowering.json": {
+            "bytes": 7522,
+            "sha256": "60a09a67e5115f84f74d47b4cea6acd02bd0f16cce23e8644de16cc3dd8ca78b"
+          },
+          "output_edges.json": {
+            "bytes": 30854,
+            "sha256": "d7cb2ce276a79289f6431081ad3a5125292fa8f19603d70867ded824e4a19baa"
+          },
+          "terminal_status.json": {
+            "bytes": 1583,
+            "sha256": "598f9a2033069ce08e9e6b400ca54b9f8aef2e6d58bce60a70eb18f83680261a"
+          },
+          "runtime_reads.json": {
+            "bytes": 1051,
+            "sha256": "9ea9e0b4b190d26d6376f5402cf5bcc5d18cc3fe657f3acb699971f756aff267"
+          },
+          "qkv_m0.ev": {
+            "bytes": 87715,
+            "sha256": "1b34f9aae7c4208ac0cf7e3f0ccbc3ad46def619bd48b90d37b0d68d18637676"
+          }
+        }
+      }
+    },
+    {
+      "nu": 4,
+      "layer": 1,
+      "mode": "gu",
+      "mutant": "positive",
+      "verdict": "PASS",
+      "fixture_words": 3072,
+      "observed_words": 3072,
+      "equal_words": 3072,
+      "data_mismatch_count": 0,
+      "first_mismatches": [],
+      "missing_addresses": [],
+      "extra_addresses": [],
+      "edge_checks": 384,
+      "edge_mismatches": [],
+      "readback_edge_basis": "measured pilot command entry +26+4*slice+packet; not native station phase",
+      "schedule_breakdown": {
+        "actual_command_entry_first": 170,
+        "actual_command_entry_last": 192,
+        "actual_cluster_input_first": 184,
+        "actual_cluster_input_last": 205,
+        "readback_command_entry_first": 405,
+        "readback_command_entry_last": 5465,
+        "actual_readback_output_first": 431,
+        "actual_readback_output_last": 5566,
+        "stream_table_setup_first": 46,
+        "stream_table_setup_last": 117,
+        "stream_table_setup_events": 72,
+        "actual_command_to_last_station_result_span": null,
+        "actual_station_result_visibility": "internal VM write not logged in existing fixed binary",
+        "actual_command_to_last_readback_output_span": 5396,
+        "operation_latency_qualified": false
+      },
+      "faults": {
+        "S0ST": 0,
+        "S1ST": 0,
+        "S2ST": 0,
+        "S3ST": 0,
+        "S4ST": 0,
+        "S5ST": 0,
+        "S6ST": 0,
+        "S7ST": 0,
+        "S8ST": 0,
+        "S9ST": 0,
+        "S10ST": 0,
+        "S11ST": 0
+      },
+      "aggregate": "0x0",
+      "stn_busy": 0,
+      "terminal_status": {
+        "S0ST": "0x4004000020000000",
+        "S1ST": "0x404004000020000000",
+        "S2ST": "0x804004000020000000",
+        "S3ST": "0xc04004000020000000",
+        "S4ST": "0x1004004000020000000",
+        "S5ST": "0x1404004000020000000",
+        "S6ST": "0x1804004000020000000",
+        "S7ST": "0x1c04004000020000000",
+        "S8ST": "0x2004004000020000000",
+        "S9ST": "0x2404004000020000000",
+        "S10ST": "0x2804004000020000000",
+        "S11ST": "0x2c04004000020000000"
+      },
+      "first_output_edge": 431,
+      "last_output_edge": 5566,
+      "raw_log_sha256": "1e9f9ae3c348f46da73c40dcbce3770348b4cfea8f1351a8d35082b0a51bf346",
+      "event_sha256": "6be362986a1929c8993edcd9fe791069f57b478b363a0a78612d9db9e5f9501b",
+      "resources": {
+        "wall_seconds": 77.18183612823486,
+        "self_peak_rss_kb": 317688,
+        "child_peak_rss_kb": 317688,
+        "files": {
+          "bench.out": {
+            "bytes": 515,
+            "sha256": "06c5208417ded294d0405b3375ac7915f2717021153aeb292015ede5a3c6db04"
+          },
+          "lowering.json": {
+            "bytes": 12578,
+            "sha256": "b29796e53589ff3681872952ce8fd1bd3f9e27a41f01a9fb1e08899422e646ff"
+          },
+          "output_edges.json": {
+            "bytes": 96882,
+            "sha256": "817bf4b29f17259a545ab6d60ff70e92382372120b146eb02e385d787d296a0f"
+          },
+          "gu_m0.ev": {
+            "bytes": 97999,
+            "sha256": "6be362986a1929c8993edcd9fe791069f57b478b363a0a78612d9db9e5f9501b"
+          },
+          "terminal_status.json": {
+            "bytes": 1584,
+            "sha256": "96c31f6fa625710be33825e293bdf25894b74a8bc467ea9c6773b2798ee0621d"
+          },
+          "runtime_reads.json": {
+            "bytes": 1050,
+            "sha256": "80a182e21d65b4ea27eec8e784c1d07a1bc1c55a4c96dc97e04ffd481319f22c"
+          },
+          "gu_m0.log": {
+            "bytes": 77514,
+            "sha256": "1e9f9ae3c348f46da73c40dcbce3770348b4cfea8f1351a8d35082b0a51bf346"
+          }
+        }
+      }
+    },
+    {
+      "nu": 4,
+      "layer": 1,
+      "mode": "qkv",
+      "mutant": "positive",
+      "verdict": "PASS",
+      "fixture_words": 768,
+      "observed_words": 768,
+      "equal_words": 768,
+      "data_mismatch_count": 0,
+      "first_mismatches": [],
+      "missing_addresses": [],
+      "extra_addresses": [],
+      "edge_checks": 96,
+      "edge_mismatches": [],
+      "readback_edge_basis": "measured pilot command entry +26+4*slice+packet; not native station phase",
+      "schedule_breakdown": {
+        "actual_command_entry_first": 134,
+        "actual_command_entry_last": 156,
+        "actual_cluster_input_first": 148,
+        "actual_cluster_input_last": 169,
+        "readback_command_entry_first": 369,
+        "readback_command_entry_last": 2659,
+        "actual_readback_output_first": 395,
+        "actual_readback_output_last": 2740,
+        "stream_table_setup_first": 46,
+        "stream_table_setup_last": 81,
+        "stream_table_setup_events": 36,
+        "actual_command_to_last_station_result_span": null,
+        "actual_station_result_visibility": "internal VM write not logged in existing fixed binary",
+        "actual_command_to_last_readback_output_span": 2606,
+        "operation_latency_qualified": false
+      },
+      "faults": {
+        "S0ST": 0,
+        "S1ST": 0,
+        "S2ST": 0,
+        "S3ST": 0,
+        "S4ST": 0,
+        "S5ST": 0,
+        "S6ST": 0,
+        "S7ST": 0,
+        "S8ST": 0,
+        "S9ST": 0,
+        "S10ST": 0,
+        "S11ST": 0
+      },
+      "aggregate": "0x0",
+      "stn_busy": 0,
+      "terminal_status": {
+        "S0ST": "0x4002000020000000",
+        "S1ST": "0x404000000000000000",
+        "S2ST": "0x804002000020000000",
+        "S3ST": "0xc04000000000000000",
+        "S4ST": "0x1004002000020000000",
+        "S5ST": "0x1404000000000000000",
+        "S6ST": "0x1804002000020000000",
+        "S7ST": "0x1c04000000000000000",
+        "S8ST": "0x2004002000020000000",
+        "S9ST": "0x2404000000000000000",
+        "S10ST": "0x2804002000020000000",
+        "S11ST": "0x2c04000000000000000"
+      },
+      "first_output_edge": 395,
+      "last_output_edge": 2740,
+      "raw_log_sha256": "dff42ce1db6317a9a460464da8119641d4aba780f57835501616588a08b4be7d",
+      "event_sha256": "b0e31514d7c4f689fb9ed918c63fbaf28f487d6f2d2eab583fc301673a565806",
+      "resources": {
+        "wall_seconds": 40.86726713180542,
+        "self_peak_rss_kb": 271520,
+        "child_peak_rss_kb": 271520,
+        "files": {
+          "bench.out": {
+            "bytes": 494,
+            "sha256": "dd54da8b87670518edc87e9c327629b5c0f313787d8ed403f917e80fe8ec387e"
+          },
+          "qkv_m0.log": {
+            "bytes": 24770,
+            "sha256": "dff42ce1db6317a9a460464da8119641d4aba780f57835501616588a08b4be7d"
+          },
+          "lowering.json": {
+            "bytes": 7522,
+            "sha256": "60a09a67e5115f84f74d47b4cea6acd02bd0f16cce23e8644de16cc3dd8ca78b"
+          },
+          "output_edges.json": {
+            "bytes": 30854,
+            "sha256": "44c6f91712e88078e7f8822ace72f12a038198494810d8ae0f067dbeb533e8e9"
+          },
+          "terminal_status.json": {
+            "bytes": 1583,
+            "sha256": "598f9a2033069ce08e9e6b400ca54b9f8aef2e6d58bce60a70eb18f83680261a"
+          },
+          "runtime_reads.json": {
+            "bytes": 1051,
+            "sha256": "7e7620f527d8dccc4b6654245ba320ad5baa44b02db76c7e8ec9ea4549cc1c5e"
+          },
+          "qkv_m0.ev": {
+            "bytes": 87715,
+            "sha256": "b0e31514d7c4f689fb9ed918c63fbaf28f487d6f2d2eab583fc301673a565806"
+          }
+        }
+      }
+    },
+    {
+      "nu": 4,
+      "layer": 1,
+      "mode": "qkv",
+      "mutant": "scale_before_tree",
+      "verdict": "CAUSAL_FAIL",
+      "fixture_words": 768,
+      "observed_words": 768,
+      "equal_words": 326,
+      "data_mismatch_count": 442,
+      "first_mismatches": [
+        {
+          "address": 1,
+          "got": "0x3b8ba680",
+          "expected": "0x3b8ba67e"
+        },
+        {
+          "address": 2,
+          "got": "0x3c141003",
+          "expected": "0x3c141004"
+        },
+        {
+          "address": 7,
+          "got": "0xbc427c4d",
+          "expected": "0xbc427c4e"
+        },
+        {
+          "address": 11,
+          "got": "0x3c252c8c",
+          "expected": "0x3c252c8d"
+        },
+        {
+          "address": 12,
+          "got": "0xbc780cd6",
+          "expected": "0xbc780cd5"
+        },
+        {
+          "address": 16,
+          "got": "0x3c5a4897",
+          "expected": "0x3c5a4898"
+        },
+        {
+          "address": 18,
+          "got": "0xbd280fb3",
+          "expected": "0xbd280fb4"
+        },
+        {
+          "address": 19,
+          "got": "0xbc23e5bd",
+          "expected": "0xbc23e5be"
+        },
+        {
+          "address": 20,
+          "got": "0xbd13c133",
+          "expected": "0xbd13c132"
+        },
+        {
+          "address": 21,
+          "got": "0xbb4d292b",
+          "expected": "0xbb4d292a"
+        },
+        {
+          "address": 25,
+          "got": "0xba981406",
+          "expected": "0xba98140a"
+        },
+        {
+          "address": 26,
+          "got": "0x3d3c1538",
+          "expected": "0x3d3c1537"
+        }
+      ],
+      "missing_addresses": [],
+      "extra_addresses": [],
+      "edge_checks": 96,
+      "edge_mismatches": [],
+      "readback_edge_basis": "measured pilot command entry +26+4*slice+packet; not native station phase",
+      "schedule_breakdown": {
+        "actual_command_entry_first": 134,
+        "actual_command_entry_last": 156,
+        "actual_cluster_input_first": 148,
+        "actual_cluster_input_last": 169,
+        "readback_command_entry_first": 369,
+        "readback_command_entry_last": 2659,
+        "actual_readback_output_first": 395,
+        "actual_readback_output_last": 2740,
+        "stream_table_setup_first": 46,
+        "stream_table_setup_last": 81,
+        "stream_table_setup_events": 36,
+        "actual_command_to_last_station_result_span": null,
+        "actual_station_result_visibility": "internal VM write not logged in existing fixed binary",
+        "actual_command_to_last_readback_output_span": 2606,
+        "operation_latency_qualified": false
+      },
+      "faults": {
+        "S0ST": 0,
+        "S1ST": 0,
+        "S2ST": 0,
+        "S3ST": 0,
+        "S4ST": 0,
+        "S5ST": 0,
+        "S6ST": 0,
+        "S7ST": 0,
+        "S8ST": 0,
+        "S9ST": 0,
+        "S10ST": 0,
+        "S11ST": 0
+      },
+      "aggregate": "0x0",
+      "stn_busy": 0,
+      "terminal_status": {
+        "S0ST": "0x4002000020000000",
+        "S1ST": "0x404000000000000000",
+        "S2ST": "0x804002000020000000",
+        "S3ST": "0xc04000000000000000",
+        "S4ST": "0x1004002000020000000",
+        "S5ST": "0x1404000000000000000",
+        "S6ST": "0x1804002000020000000",
+        "S7ST": "0x1c04000000000000000",
+        "S8ST": "0x2004002000020000000",
+        "S9ST": "0x2404000000000000000",
+        "S10ST": "0x2804002000020000000",
+        "S11ST": "0x2c04000000000000000"
+      },
+      "first_output_edge": 395,
+      "last_output_edge": 2740,
+      "raw_log_sha256": "feca7b47a874cd8b102c2ce3c45147488faa90f0f9047e48a064a7e4f3b002a2",
+      "event_sha256": "567531aa39902be53ab3f6932bd4abe055a0284db2eb61873b13d6eb47ca6e01",
+      "resources": {
+        "wall_seconds": 40.870601177215576,
+        "self_peak_rss_kb": 272084,
+        "child_peak_rss_kb": 272084,
+        "files": {
+          "bench.out": {
+            "bytes": 1031,
+            "sha256": "23233f449feb732337349b3eff14c45ca309ed4be8c40a0b474a81f962d66cd5"
+          },
+          "rounding_witness.json": {
+            "bytes": 978,
+            "sha256": "4102b854ae9b636acb03d5da47b35617780d60b28118477364ffe7a74d5a700a"
+          },
+          "qkv_m0.log": {
+            "bytes": 24770,
+            "sha256": "feca7b47a874cd8b102c2ce3c45147488faa90f0f9047e48a064a7e4f3b002a2"
+          },
+          "lowering.json": {
+            "bytes": 7522,
+            "sha256": "60a09a67e5115f84f74d47b4cea6acd02bd0f16cce23e8644de16cc3dd8ca78b"
+          },
+          "output_edges.json": {
+            "bytes": 30854,
+            "sha256": "e8f7b82472f7ec759fd31097bda2a4ab6c61a6e6595eb70b7b0ca99a56057f91"
+          },
+          "terminal_status.json": {
+            "bytes": 1583,
+            "sha256": "598f9a2033069ce08e9e6b400ca54b9f8aef2e6d58bce60a70eb18f83680261a"
+          },
+          "runtime_reads.json": {
+            "bytes": 1051,
+            "sha256": "7e7620f527d8dccc4b6654245ba320ad5baa44b02db76c7e8ec9ea4549cc1c5e"
+          },
+          "qkv_m0.ev": {
+            "bytes": 87715,
+            "sha256": "567531aa39902be53ab3f6932bd4abe055a0284db2eb61873b13d6eb47ca6e01"
+          }
+        }
+      }
+    }
+  ],
+  "complete_trace_pairs": [
+    {
+      "layer": 0,
+      "mode": "gu",
+      "mutant": "kc2",
+      "raw_log_sha256": "0b614e5c06b13a9f649127050fc9137451a9f8c8e00958822061f7651df35888",
+      "event_sha256": "c33b58044efb0f6b3ad5c40b33d2fc3824e9473d5d591f40fd7d2a5d0bc8d94a"
+    },
+    {
+      "layer": 0,
+      "mode": "gu",
+      "mutant": "nearshift",
+      "raw_log_sha256": "ee309994b7c9f29c447f3374999e012bbe0d9175119fc5d8ff1db164178f359b",
+      "event_sha256": "886100b38ad63a73ad4f06de47f36d414899e3a741221c9915c5aee08d69748a"
+    },
+    {
+      "layer": 0,
+      "mode": "gu",
+      "mutant": "positive",
+      "raw_log_sha256": "7f6259b42997ebc156e5880bfde5b0305ba47ce3afac912fc743cf465c9d650a",
+      "event_sha256": "e958526d1cf1320e72f3eb81da7b3c38be0d5e6dfc40370221b54ca104b25e1d"
+    },
+    {
+      "layer": 0,
+      "mode": "gu",
+      "mutant": "predrain",
+      "raw_log_sha256": "f246a1fe880f4ea4fb97c12b2e764252b9780d99284cc1bc58f35d76c7df252d",
+      "event_sha256": "f43e6979b536415e7ebfaaaa9edb812b86600158002391a7fc413718220dfbe4"
+    },
+    {
+      "layer": 0,
+      "mode": "gu",
+      "mutant": "sbase1",
+      "raw_log_sha256": "a0dbb2b8f84de946526ee7f408e089ffc9e396500314b674b8cb4f733eff9646",
+      "event_sha256": "9f64d0b71bec0d8dcd66d846d4bf203c9b02c0a51eddae7a97d4e3881368f7da"
+    },
+    {
+      "layer": 0,
+      "mode": "qkv",
+      "mutant": "positive",
+      "raw_log_sha256": "3ad316f51783094e647c0d70ec52321b016ac7338c34003fcd8890fef61acfc8",
+      "event_sha256": "1b34f9aae7c4208ac0cf7e3f0ccbc3ad46def619bd48b90d37b0d68d18637676"
+    },
+    {
+      "layer": 1,
+      "mode": "gu",
+      "mutant": "positive",
+      "raw_log_sha256": "1e9f9ae3c348f46da73c40dcbce3770348b4cfea8f1351a8d35082b0a51bf346",
+      "event_sha256": "6be362986a1929c8993edcd9fe791069f57b478b363a0a78612d9db9e5f9501b"
+    },
+    {
+      "layer": 1,
+      "mode": "qkv",
+      "mutant": "positive",
+      "raw_log_sha256": "dff42ce1db6317a9a460464da8119641d4aba780f57835501616588a08b4be7d",
+      "event_sha256": "b0e31514d7c4f689fb9ed918c63fbaf28f487d6f2d2eab583fc301673a565806"
+    },
+    {
+      "layer": 1,
+      "mode": "qkv",
+      "mutant": "scale_before_tree",
+      "raw_log_sha256": "feca7b47a874cd8b102c2ce3c45147488faa90f0f9047e48a064a7e4f3b002a2",
+      "event_sha256": "567531aa39902be53ab3f6932bd4abe055a0284db2eb61873b13d6eb47ca6e01"
+    }
+  ],
+  "positive_isa_words": 15360
+}
