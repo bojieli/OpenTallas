@@ -1,0 +1,52 @@
+{
+  "schema": "opentallas.qwen.same_depth_landing_reset_forest_receipt.v1",
+  "status": "PRIVATE_COMPONENT_PASS_NO_PARENT_GENERATOR_ADOPTION_OR_NATIVE_TIMING_PROOF",
+  "model_commit": "db50465eb",
+  "source_commit": "b70c63a8a",
+  "host": "ot-epyc7",
+  "unit": "oth-ubuntu-3252659-1792431975",
+  "tools": {
+    "verilator": "5.050 compiled path captured in Vtb__verFiles.dat",
+    "yosys": "0.68"
+  },
+  "remote": "/srv/opentallas-scratch/claude/safe-qw-reset-forest-1019",
+  "source_sha256": {
+    "rtl/common/landed_parent/ot_pl_land.sv": "a9ed286c05de67a04586445f54e1522a508f10813cd0adb502e8e70812aa591f",
+    "rtl/common/landed_parent/ot_pl_land_field_copies.sv": "315329a060fb11d4a2171241d9f4031f36638d4e93857f5d2498e78d4824f2ab",
+    "rtl/common/landed_parent/ot_pl_land_reset_forest.sv": "254ac60bb538e91edd82061cbe3c33afb19b2a2255e53a2b4f97f5dcd489c9af",
+    "tools/qwen_dv/test_land_reset_forest.py": "a10ac655b6461e06cada7e976d6052d1c2fe9e5b5b344979123f77978ffe7f9a"
+  },
+  "comparison": {
+    "reference": "ot_pl_pad N8 plus unchanged ot_pl_land_chunk_w/r",
+    "candidate": "same8edge forest47leaves plus explicit vector reset chunk_w/r",
+    "data_bits": 1088,
+    "chunks": 46,
+    "phases_ps": [
+      -80,
+      0,
+      80
+    ],
+    "checks_each_phase": 1400,
+    "reset_assertions": 2,
+    "age": "Every leaf exactly matches unchanged8edge run through assertion/release; all data outputs remain equal.",
+    "wrong9edge_receiver_mutant": "all3phases reject RESET_FOREST_AGE_MISMATCH",
+    "added_data_edges": 0,
+    "added_release_edges": 0
+  },
+  "generic_synthesis": {
+    "forest_FFs": 55,
+    "model_FFs": 55,
+    "prefix_FFs": 6,
+    "branch_FFs": 2,
+    "leaf_FFs_retained": 47,
+    "source_D_maxfanout": 32,
+    "driven_nonclock_nets_over32": 0,
+    "register_outputs_over32": 0,
+    "increment_vs_original8edge_pad": 47
+  },
+  "pending": [
+    "No parent generator rewrite or finalsource integration yet.",
+    "Total regional leaves must price all chunks and scalar child reset paths at exact source depth.",
+    "No native CTS/TTFF clockphase, physical reset405um reach, PG or pin-access claim."
+  ]
+}

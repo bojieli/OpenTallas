@@ -1,0 +1,5 @@
+PASS reset forest phase=80 chunks=46 leaves=47 checks=1400 two resets
+- out/tb.sv:34: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1us; walltime 0.008 s; speed 178.343 us/s
+- Verilator: cpu 0.008 s on 1 threads; allocated 7 MB

@@ -1,0 +1,421 @@
+{
+  "status": "GENERIC_DIAGNOSTIC_NOT_MAPPED_TIMING_OR_FANOUT_QUALIFICATION",
+  "top": "ot_pl_land_reset_forest",
+  "cells": 55,
+  "issues": [],
+  "register_outputs_over32": [],
+  "driven_nets_over32_count": 0,
+  "highest_fanout_nets": [
+    {
+      "bit": 4,
+      "loads": 55,
+      "names": [
+        "ck",
+        "g_leaf[0].u_ff.ck",
+        "g_leaf[1].u_ff.ck",
+        "g_leaf[2].u_ff.ck",
+        "g_leaf[3].u_ff.ck"
+      ],
+      "driver": null,
+      "register_output": false
+    }
+  ],
+  "highest_generic_stage_depth": [
+    {
+      "cell": "g_branch[0].u_ff.$auto$ff.cc:337:slice$261",
+      "pin": "D",
+      "bit": 11,
+      "generic_levels": 0,
+      "names": [
+        "prefix[6]",
+        "g_branch[0].u_ff.d",
+        "g_branch[1].u_ff.d",
+        "g_prefix[5].u_ff.q",
+        "g_prefix[5].u_ff.value"
+      ]
+    },
+    {
+      "cell": "g_branch[1].u_ff.$auto$ff.cc:337:slice$260",
+      "pin": "D",
+      "bit": 11,
+      "generic_levels": 0,
+      "names": [
+        "prefix[6]",
+        "g_branch[0].u_ff.d",
+        "g_branch[1].u_ff.d",
+        "g_prefix[5].u_ff.q",
+        "g_prefix[5].u_ff.value"
+      ]
+    },
+    {
+      "cell": "g_leaf[0].u_ff.$auto$ff.cc:337:slice$259",
+      "pin": "D",
+      "bit": 2,
+      "generic_levels": 0,
+      "names": [
+        "branch[0]",
+        "g_leaf[0].u_ff.d",
+        "g_leaf[1].u_ff.d",
+        "g_leaf[2].u_ff.d",
+        "g_leaf[3].u_ff.d"
+      ]
+    },
+    {
+      "cell": "g_leaf[10].u_ff.$auto$ff.cc:337:slice$249",
+      "pin": "D",
+      "bit": 2,
+      "generic_levels": 0,
+      "names": [
+        "branch[0]",
+        "g_leaf[0].u_ff.d",
+        "g_leaf[1].u_ff.d",
+        "g_leaf[2].u_ff.d",
+        "g_leaf[3].u_ff.d"
+      ]
+    },
+    {
+      "cell": "g_leaf[11].u_ff.$auto$ff.cc:337:slice$248",
+      "pin": "D",
+      "bit": 2,
+      "generic_levels": 0,
+      "names": [
+        "branch[0]",
+        "g_leaf[0].u_ff.d",
+        "g_leaf[1].u_ff.d",
+        "g_leaf[2].u_ff.d",
+        "g_leaf[3].u_ff.d"
+      ]
+    },
+    {
+      "cell": "g_leaf[12].u_ff.$auto$ff.cc:337:slice$247",
+      "pin": "D",
+      "bit": 2,
+      "generic_levels": 0,
+      "names": [
+        "branch[0]",
+        "g_leaf[0].u_ff.d",
+        "g_leaf[1].u_ff.d",
+        "g_leaf[2].u_ff.d",
+        "g_leaf[3].u_ff.d"
+      ]
+    },
+    {
+      "cell": "g_leaf[13].u_ff.$auto$ff.cc:337:slice$246",
+      "pin": "D",
+      "bit": 2,
+      "generic_levels": 0,
+      "names": [
+        "branch[0]",
+        "g_leaf[0].u_ff.d",
+        "g_leaf[1].u_ff.d",
+        "g_leaf[2].u_ff.d",
+        "g_leaf[3].u_ff.d"
+      ]
+    },
+    {
+      "cell": "g_leaf[14].u_ff.$auto$ff.cc:337:slice$245",
+      "pin": "D",
+      "bit": 2,
+      "generic_levels": 0,
+      "names": [
+        "branch[0]",
+        "g_leaf[0].u_ff.d",
+        "g_leaf[1].u_ff.d",
+        "g_leaf[2].u_ff.d",
+        "g_leaf[3].u_ff.d"
+      ]
+    },
+    {
+      "cell": "g_leaf[15].u_ff.$auto$ff.cc:337:slice$244",
+      "pin": "D",
+      "bit": 2,
+      "generic_levels": 0,
+      "names": [
+        "branch[0]",
+        "g_leaf[0].u_ff.d",
+        "g_leaf[1].u_ff.d",
+        "g_leaf[2].u_ff.d",
+        "g_leaf[3].u_ff.d"
+      ]
+    },
+    {
+      "cell": "g_leaf[16].u_ff.$auto$ff.cc:337:slice$243",
+      "pin": "D",
+      "bit": 2,
+      "generic_levels": 0,
+      "names": [
+        "branch[0]",
+        "g_leaf[0].u_ff.d",
+        "g_leaf[1].u_ff.d",
+        "g_leaf[2].u_ff.d",
+        "g_leaf[3].u_ff.d"
+      ]
+    },
+    {
+      "cell": "g_leaf[17].u_ff.$auto$ff.cc:337:slice$242",
+      "pin": "D",
+      "bit": 2,
+      "generic_levels": 0,
+      "names": [
+        "branch[0]",
+        "g_leaf[0].u_ff.d",
+        "g_leaf[1].u_ff.d",
+        "g_leaf[2].u_ff.d",
+        "g_leaf[3].u_ff.d"
+      ]
+    },
+    {
+      "cell": "g_leaf[18].u_ff.$auto$ff.cc:337:slice$241",
+      "pin": "D",
+      "bit": 2,
+      "generic_levels": 0,
+      "names": [
+        "branch[0]",
+        "g_leaf[0].u_ff.d",
+        "g_leaf[1].u_ff.d",
+        "g_leaf[2].u_ff.d",
+        "g_leaf[3].u_ff.d"
+      ]
+    },
+    {
+      "cell": "g_leaf[19].u_ff.$auto$ff.cc:337:slice$240",
+      "pin": "D",
+      "bit": 2,
+      "generic_levels": 0,
+      "names": [
+        "branch[0]",
+        "g_leaf[0].u_ff.d",
+        "g_leaf[1].u_ff.d",
+        "g_leaf[2].u_ff.d",
+        "g_leaf[3].u_ff.d"
+      ]
+    },
+    {
+      "cell": "g_leaf[1].u_ff.$auto$ff.cc:337:slice$258",
+      "pin": "D",
+      "bit": 2,
+      "generic_levels": 0,
+      "names": [
+        "branch[0]",
+        "g_leaf[0].u_ff.d",
+        "g_leaf[1].u_ff.d",
+        "g_leaf[2].u_ff.d",
+        "g_leaf[3].u_ff.d"
+      ]
+    },
+    {
+      "cell": "g_leaf[20].u_ff.$auto$ff.cc:337:slice$239",
+      "pin": "D",
+      "bit": 2,
+      "generic_levels": 0,
+      "names": [
+        "branch[0]",
+        "g_leaf[0].u_ff.d",
+        "g_leaf[1].u_ff.d",
+        "g_leaf[2].u_ff.d",
+        "g_leaf[3].u_ff.d"
+      ]
+    },
+    {
+      "cell": "g_leaf[21].u_ff.$auto$ff.cc:337:slice$238",
+      "pin": "D",
+      "bit": 2,
+      "generic_levels": 0,
+      "names": [
+        "branch[0]",
+        "g_leaf[0].u_ff.d",
+        "g_leaf[1].u_ff.d",
+        "g_leaf[2].u_ff.d",
+        "g_leaf[3].u_ff.d"
+      ]
+    },
+    {
+      "cell": "g_leaf[22].u_ff.$auto$ff.cc:337:slice$237",
+      "pin": "D",
+      "bit": 2,
+      "generic_levels": 0,
+      "names": [
+        "branch[0]",
+        "g_leaf[0].u_ff.d",
+        "g_leaf[1].u_ff.d",
+        "g_leaf[2].u_ff.d",
+        "g_leaf[3].u_ff.d"
+      ]
+    },
+    {
+      "cell": "g_leaf[23].u_ff.$auto$ff.cc:337:slice$236",
+      "pin": "D",
+      "bit": 2,
+      "generic_levels": 0,
+      "names": [
+        "branch[0]",
+        "g_leaf[0].u_ff.d",
+        "g_leaf[1].u_ff.d",
+        "g_leaf[2].u_ff.d",
+        "g_leaf[3].u_ff.d"
+      ]
+    },
+    {
+      "cell": "g_leaf[24].u_ff.$auto$ff.cc:337:slice$235",
+      "pin": "D",
+      "bit": 2,
+      "generic_levels": 0,
+      "names": [
+        "branch[0]",
+        "g_leaf[0].u_ff.d",
+        "g_leaf[1].u_ff.d",
+        "g_leaf[2].u_ff.d",
+        "g_leaf[3].u_ff.d"
+      ]
+    },
+    {
+      "cell": "g_leaf[25].u_ff.$auto$ff.cc:337:slice$234",
+      "pin": "D",
+      "bit": 2,
+      "generic_levels": 0,
+      "names": [
+        "branch[0]",
+        "g_leaf[0].u_ff.d",
+        "g_leaf[1].u_ff.d",
+        "g_leaf[2].u_ff.d",
+        "g_leaf[3].u_ff.d"
+      ]
+    },
+    {
+      "cell": "g_leaf[26].u_ff.$auto$ff.cc:337:slice$233",
+      "pin": "D",
+      "bit": 2,
+      "generic_levels": 0,
+      "names": [
+        "branch[0]",
+        "g_leaf[0].u_ff.d",
+        "g_leaf[1].u_ff.d",
+        "g_leaf[2].u_ff.d",
+        "g_leaf[3].u_ff.d"
+      ]
+    },
+    {
+      "cell": "g_leaf[27].u_ff.$auto$ff.cc:337:slice$232",
+      "pin": "D",
+      "bit": 2,
+      "generic_levels": 0,
+      "names": [
+        "branch[0]",
+        "g_leaf[0].u_ff.d",
+        "g_leaf[1].u_ff.d",
+        "g_leaf[2].u_ff.d",
+        "g_leaf[3].u_ff.d"
+      ]
+    },
+    {
+      "cell": "g_leaf[28].u_ff.$auto$ff.cc:337:slice$231",
+      "pin": "D",
+      "bit": 2,
+      "generic_levels": 0,
+      "names": [
+        "branch[0]",
+        "g_leaf[0].u_ff.d",
+        "g_leaf[1].u_ff.d",
+        "g_leaf[2].u_ff.d",
+        "g_leaf[3].u_ff.d"
+      ]
+    },
+    {
+      "cell": "g_leaf[29].u_ff.$auto$ff.cc:337:slice$230",
+      "pin": "D",
+      "bit": 2,
+      "generic_levels": 0,
+      "names": [
+        "branch[0]",
+        "g_leaf[0].u_ff.d",
+        "g_leaf[1].u_ff.d",
+        "g_leaf[2].u_ff.d",
+        "g_leaf[3].u_ff.d"
+      ]
+    },
+    {
+      "cell": "g_leaf[2].u_ff.$auto$ff.cc:337:slice$257",
+      "pin": "D",
+      "bit": 2,
+      "generic_levels": 0,
+      "names": [
+        "branch[0]",
+        "g_leaf[0].u_ff.d",
+        "g_leaf[1].u_ff.d",
+        "g_leaf[2].u_ff.d",
+        "g_leaf[3].u_ff.d"
+      ]
+    },
+    {
+      "cell": "g_leaf[30].u_ff.$auto$ff.cc:337:slice$229",
+      "pin": "D",
+      "bit": 2,
+      "generic_levels": 0,
+      "names": [
+        "branch[0]",
+        "g_leaf[0].u_ff.d",
+        "g_leaf[1].u_ff.d",
+        "g_leaf[2].u_ff.d",
+        "g_leaf[3].u_ff.d"
+      ]
+    },
+    {
+      "cell": "g_leaf[31].u_ff.$auto$ff.cc:337:slice$228",
+      "pin": "D",
+      "bit": 2,
+      "generic_levels": 0,
+      "names": [
+        "branch[0]",
+        "g_leaf[0].u_ff.d",
+        "g_leaf[1].u_ff.d",
+        "g_leaf[2].u_ff.d",
+        "g_leaf[3].u_ff.d"
+      ]
+    },
+    {
+      "cell": "g_leaf[32].u_ff.$auto$ff.cc:337:slice$227",
+      "pin": "D",
+      "bit": 3,
+      "generic_levels": 0,
+      "names": [
+        "branch[1]",
+        "g_leaf[32].u_ff.d",
+        "g_leaf[33].u_ff.d",
+        "g_leaf[34].u_ff.d",
+        "g_leaf[35].u_ff.d"
+      ]
+    },
+    {
+      "cell": "g_leaf[33].u_ff.$auto$ff.cc:337:slice$226",
+      "pin": "D",
+      "bit": 3,
+      "generic_levels": 0,
+      "names": [
+        "branch[1]",
+        "g_leaf[32].u_ff.d",
+        "g_leaf[33].u_ff.d",
+        "g_leaf[34].u_ff.d",
+        "g_leaf[35].u_ff.d"
+      ]
+    },
+    {
+      "cell": "g_leaf[34].u_ff.$auto$ff.cc:337:slice$225",
+      "pin": "D",
+      "bit": 3,
+      "generic_levels": 0,
+      "names": [
+        "branch[1]",
+        "g_leaf[32].u_ff.d",
+        "g_leaf[33].u_ff.d",
+        "g_leaf[34].u_ff.d",
+        "g_leaf[35].u_ff.d"
+      ]
+    }
+  ],
+  "all_comb_terminal_influence_registers_over32": [],
+  "all_comb_terminal_influence_inputs_over32": [],
+  "bit_namespace": "Diagnostic flattened alias IDs; locate raw elaborated bits using names/source hash.",
+  "terminal_influence_scope": "Conservative logical influence through ALL combinational gates to sequential/native input pin bits plus each top output bit as one boundary stop. This exceeds buffer-transparent electrical fanout and is not the native rule verdict or a mandatory replica count; early registered decodes can partition it. Parent consumers beyond outputs remain unproven.",
+  "scope": "Generic synthesis before ABC/physical buffers. Primitive levels are not TT ps; native macro clk-to-Q/setup, mapped logic, placement/route and retained replicas require separate proof. Clock/reset boundary loads retained and labeled, not counted as data-fanout failures.",
+  "netlist_sha256": "38a794bdbf3c1cfa04df2690a8f7ebb5844179e58f6f503dd9afe95815c6984b"
+}
