@@ -9,6 +9,10 @@ import stat
 import subprocess
 from pathlib import Path
 
+PG_HELPERS = ("pg_receipt.py", "../../physical/common_flow/audit_native_pg.tcl",
+              "../../physical/common_flow/native_pg_binding.tcl",
+              "../../physical/common_flow/native_pg_bootstrap.tcl")
+
 HELPERS = ("m6_stub_config.py", "eco_recovery.py", "path_summary.py", "macro_views.py", "ck_insertion.py", "hold_eco.sh", "hold_eco.tcl", "hold_eco_corner.tcl",
            "hold_eco_sdc.py", "hold_eco_window.tcl", "hold_corners_patch.py", "h1_patch.py", "cal_classify.sh", "resume_patch.py", "resume_check.sh",
            "../orfs_hold_mm.py", "../orfs_hold_mm.tcl", "tt_resta.sh", "meas_resta.py", "lane_kh_overlay.py",
@@ -69,6 +73,34 @@ def helper_paths(helpers=None):
     return sorted({os.path.normpath("tools/closure_loop/" + h) for h in (HELPERS if helpers is None else helpers)})
 
 
+def pg_strict(spec):
+    """The job/spec is authoritative; environment variables never admit strict jobs."""
+    value = spec.get("pg_strict", False)
+    if type(value) is not bool:
+        raise ValueError("pg_strict must be a boolean")
+    return value
+
+
+def validate_pg_policy(plan, pg_strict=False):
+    """Refuse policy drift; never retrofit PG dependencies into historical plans."""
+    if type(pg_strict) is not bool:
+        raise ValueError("pg_strict must be a boolean")
+    if not isinstance(plan, dict):
+        if pg_strict:
+            raise ValueError("strict PG job requires a strict frozen helper plan")
+        return
+    if type(plan.get("pg_strict", False)) is not bool or plan.get("pg_strict", False) != pg_strict:
+        raise ValueError("strict PG policy differs from frozen helper plan")
+    pg_paths = set(helper_paths(PG_HELPERS))
+    paths = {r.get("path") for r in plan.get("files", []) if isinstance(r, dict)}
+    if not pg_strict and pg_paths & paths:
+        raise ValueError("default frozen helper plan unexpectedly carries strict PG dependencies")
+    if pg_strict:
+        rows = frozen_rows(plan)
+        if not pg_paths <= {r["path"] for r in rows}:
+            raise ValueError("strict frozen helper plan lacks PG dependencies")
+
+
 def content_rows(files):
     return sorted([{k: f[k] for k in ("path", "sha256", "git_blob", "mode")} for f in files], key=lambda f: f["path"])
 
@@ -77,24 +109,34 @@ def digest(files):
     return hashlib.sha256(json.dumps(content_rows(files), sort_keys=True, separators=(",", ":")).encode()).hexdigest()
 
 
-def capture_plan(daemon, repo, paths=None, head=None, cache=None):
+def capture_plan(daemon, repo, paths=None, head=None, cache=None, pg_strict=False):
     """Freeze one origin ref and the actual effective bytes; HEAD is provenance only."""
+    if type(pg_strict) is not bool:
+        raise ValueError("pg_strict must be a boolean")
+    paths = set(helper_paths() if paths is None else paths)
+    if pg_strict:
+        paths.update(helper_paths(PG_HELPERS))
     head = main_head(repo) if head is None else head
     files, payloads = [], {}
-    for rel in sorted(set(helper_paths() if paths is None else paths)):
+    for rel in sorted(paths):
         literal = (Path(daemon) / rel).read_bytes()
         data, state = resolve_bytes(daemon, repo, rel, head, cache, local_bytes=literal)
         payloads[rel] = data
         files.append({"path": rel, "sha256": hashlib.sha256(data).hexdigest(), "git_blob": blob_id(data),
                       "mode": (Path(daemon) / rel).stat().st_mode & 0o777, "resolution": state,
                       "literal_git_blob": blob_id(literal)})
-    return {"schema": SCHEMA, "origin_main": head, "content_sha256": digest(files), "files": files}, payloads
+    plan = {"schema": SCHEMA, "origin_main": head, "content_sha256": digest(files), "files": files}
+    if pg_strict:
+        plan["pg_strict"] = True
+    return plan, payloads
 
 
 def compare_plans(frozen, effective):
     if not isinstance(frozen, dict) or frozen.get("schema") != SCHEMA:
         return False, "missing frozen effective helper plan"
     try:
+        validate_pg_policy(effective, pg_strict=effective.get("pg_strict", False))
+        validate_pg_policy(frozen, pg_strict=effective.get("pg_strict", False))
         if digest(frozen["files"]) != frozen.get("content_sha256"):
             return False, "frozen helper plan digest mismatch"
         old = {f["path"]: f for f in content_rows(frozen["files"])}
@@ -275,6 +317,40 @@ RULE_COMMITS = {
         kind="tightening", rule="balanced-reset-proof", requires="balanced_reset_profile", paths=("tools/textbook_lint.py",),
         what="BALANCED-RESET: opt-in mapped two-edge reset proof for kits with reset_landing.first_copies (proof replaces "
              "the rst_land_max sink limit, refusal is a FAIL); kits without first_copies unchanged"),
+    # ROOT-RULETAG 10-19: the six remaining helper-chain commits without a (valid) trailer.
+    # 03c544ca1 (DAEMON-FIX2): abstract_pin_stub.move_stubs pin index = same hits in the same order (randomised
+    # equivalence test vs the all-pairs scan); the closure_loop.py part is daemon restart-drain / checkpoint plumbing.
+    "03c544ca1ab6f68f0d2a94bb2e7fb43751eedce7": dict(
+        kind="neutral", rule="pin-stub-index",
+        what="DAEMON-FIX2: abstract_pin_stub binned pin index (identical output, faster); daemon SIGTERM drain + "
+             "write-ahead checkpoint + staged helper ship; no gate check or limit changes"),
+    # b7918e979 (KV-ECTL5): child_lint (i) pin access is a new FAIL on hard-child views (the pre-route gate lints spec
+    # "children" only) and ref_tile gen refuses such a view; abstract_pin_stub's wider pin keep-out only shrinks the
+    # pocket set child_lint (h) can see.  -> tightening, judged per kit by requires=child_pin_access (no children, or no
+    # child view LEF with a violation: gate kept).
+    "b7918e97926daf87d0edfee3e62f07322d62e96b": dict(
+        kind="tightening", rule="child-pin-access", requires="child_pin_access",
+        what="KV-ECTL5: child_lint (i) FAILs a hard-child pin with a same-layer OBS closer than the wide-metal spacing; "
+             "ref_tile gen refuses such a child view; pin keep-out >= wide spacing (pockets can only shrink)"),
+    # view_export.py (PUBLISH_ONLY): runs only in collect / re-export after the route verdict; no pre-route gate reads it.
+    # bb5e443cd's trailer "Gate-Rule: export-session reproduces verdict" is not in the vocabulary, so it read unclassified.
+    "bb5e443cdb8423c7b3ad4fab6961c201bfeb9e1b": dict(
+        kind="neutral", rule="export-replays-verdict",
+        what="PF-HARDCHILD-EXPORT: the export session replays the verdict's OT_PF_MACRO_LIBS line, so export slack = "
+             "verdict slack; no rule or limit changes"),
+    "b8fa05678b7e74d2549d37a0d6c8a7608abc6731": dict(
+        kind="relaxing", rule="exact-abstract-fallback",
+        what="RLYH0-NE: export publishes the exact-shape abstract only when the default abstract has child_lint (i) "
+             "pin-access violations and the exact one has fewer (a collect FAIL can only disappear); PUBLISH_ONLY "
+             "drift sanction; identical export-lint FAIL stops at the first repeat (retry count, not a verdict)"),
+    "cdd8d92a84daa2bf1d60a08d9d8ba97be64c1488": dict(
+        kind="relaxing", rule="exact-abstract-fallback", paths=("tools/tt_views/view_export.py",),
+        what="view_export judges pin access on the finalized LEF too, so the exact-shape fallback also runs when the "
+             "published LEF would fail child_lint (i); a collect FAIL can only disappear"),
+    "ff7aa2deb861035c309af48249284018f40718b0": dict(
+        kind="relaxing", rule="exact-abstract-fallback", paths=("tools/tt_views/view_export.py",),
+        what="TW3-LGTAP: exact shapes only inside pin windows when the exact abstract is > 200k rects; published only "
+             "when it has fewer pin-access violations than the default; a collect FAIL can only disappear"),
 }
 # ROOT-0040 name, kept for callers / tests: the relaxing entries
 RELAXING_RULE_COMMITS = {c: e for c, e in RULE_COMMITS.items() if e.get("kind") == "relaxing"}
