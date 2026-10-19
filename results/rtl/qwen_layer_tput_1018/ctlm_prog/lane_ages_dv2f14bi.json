@@ -1,0 +1,42 @@
+{
+ "schema": "opentallas.qwen.ctlm-lane-ages.v1",
+ "die": "dv2f14bi out/case (GEN 230b28bd5)",
+ "why": "Q-XPF: lane ages of a land-plan die = lane_groups.lane_cycles (E + 1 landing o) of the GEN fwd_lanes.json; the netlist bench reproduces them only with the lane timing (land_lag_sim.py annotate)",
+ "source": "/srv/opentallas-scratch/claude/qwen-split-compute/dv2f14bi/out/case/fwd_lanes.json",
+ "source_sha256": "68d49f1a3f10da19f5fd25d5a460e4ba05befb0a9e199e4a19e908b8fa137e00",
+ "R_CMD": 19,
+ "lanes": {
+  "R_CMD": {
+   "bid": "dvw_cmd_wi",
+   "n": 25,
+   "E": 18,
+   "E_sta": 7,
+   "K": 2
+  },
+  "R_HR": {
+   "bid": "dvw_hr_wi",
+   "n": 25,
+   "E": 18,
+   "E_sta": 7,
+   "K": 2
+  },
+  "R_SS": {
+   "bid": "dvw_ss_wo",
+   "n": 22,
+   "E": 16,
+   "E_sta": 6,
+   "K": 0
+  },
+  "R_AG": {
+   "bid": "dvw_ag_wo",
+   "n": 22,
+   "E": 16,
+   "E_sta": 6,
+   "K": 0
+  }
+ },
+ "R_HR": 19,
+ "R_SS": 17,
+ "R_AG": 17,
+ "XPF_TRANSPORT_EDGES": 20
+}

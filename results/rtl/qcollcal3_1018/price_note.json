@@ -1,0 +1,27 @@
+{
+ "schema": "opentallas.qwen.price_note.v1",
+ "lane": "Q-COLLCAL3 10-18 (DRIVE-1800)",
+ "item": "Qwen ROM TP8 collective SerDes calendar LS compiled from the die lanes (lane_groups.collective_calendar) instead of hand-set 376",
+ "rule": "each dependent SerDes crossing of the collective pays LS; measured: compiled_span +1 per AR256 per LS cycle (rl_dv2f14bq ls376 795 / ls377 796 / ls378 797; argmax 444/445/446)",
+ "token_terms": "Qwen3-8B 36 layers x 2 TP8 all-reduces (o_proj, down_proj) + 1 LM-head argmax gather (tools/xdie_qtp8/record.py T_xdie_tp8)",
+ "base": "results/rtl/qwen_layer_tput_1013/die_terms.json end_to_end.base_cycles 249,431 (price of record)",
+ "rows": [
+  {
+   "gen": "dv2f14bq",
+   "LS": 377,
+   "delta_LS_vs_376": 1,
+   "token_cycles_added": 73,
+   "base_cycles": 249431,
+   "ar_loss_pct": 0.0293
+  },
+  {
+   "gen": "dv2f14bi",
+   "LS": 378,
+   "delta_LS_vs_376": 2,
+   "token_cycles_added": 146,
+   "base_cycles": 249431,
+   "ar_loss_pct": 0.0585
+  }
+ ],
+ "status": "LEDGER NOTE (well under the 5 %/unit accepted-cost bound; no re-pricing of other terms)"
+}

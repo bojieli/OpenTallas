@@ -50,7 +50,11 @@ W5_COLL = [('arv_wo', 'in_valid'), ('ard_wo', 'in_data'), ('arl_wo', 'in_last'),
            ('rr_wi', 'out_rank'), ('re_wi', 'out_err'), ('ccv_wo', 'cmd_v'), ('ccm_wo', 'cmd_mode'),
            ('ccw_wo', 'cmd_words'), ('cct_wo', 'cmd_tag')]
 W5_PEERS = [('dd_wo', 'native59', 'dd_i'), ('dr_wi', 'native59', 'dr_o'), ('hr_wi', 'tt_ctlm', 'hr'),
-            ('cmd_wi', 'tt_ctlm', 'cmd'), ('ss_wo', 'tt_ctlm', 'ss5'), ('ag_wo', 'tt_ctlm', 'ag5')]
+            ('cmd_wi', 'tt_ctlm', 'cmd'), ('ss_wo', 'tt_ctlm', 'ss5'), ('ag_wo', 'tt_ctlm', 'ag5'),
+            # QLB-C4b 10-18: the slice stream TABLE words (PROG / CROM / BTAB, stream kinds 1..3) -- tt_ctlm's calendar
+            # TLOAD entries play them from the installed image onto the up-travelling stream at W5 (was a tie: no load
+            # path for the slice tables on the die)
+            ('st_wi', 'tt_ctlm', 'tl')]
 CDV = 'qfd_c_b16_dv'
 WCOL = ('io_collective', 'native59', 'tt_ctlm', 'embed_prov', 'sys_face')
 # Q-DIEPLAN6 10-17 (face mode, OT_SPLIT_DV_WCOL_RTL != 0): the W-column masters re-ported to the DV slices, bound on
@@ -658,8 +662,10 @@ def apply_dv(v, m):
         m.setdefault('q3h', {}).setdefault('dv_face_missing', miss)
         if wrtl:
             _wcol_rebind(v, m, M, keep, out, wrtl)
-        # chain-end idle inputs (rule c): W5 st/sc up-travelling inputs from the W column side, E5 up-face inputs,
-        # the l9_wi of an unpaired slice -- only where no bus lands
+        # chain-end idle inputs (rule c): W5 sc up-travelling input from the W column side (no scalar producer west of
+        # W5: the scalar chain is slice-to-slice, its ROOT is on W5), E5 up-face inputs, the l9_wi of an unpaired slice --
+        # only where no bus lands.  QLB-C4b 10-18: W5 st_wi is NOT a chain-end idle input any more (tt_ctlm.tl drives
+        # it, W5_PEERS); without that bus it stays unconnected and the strict bind fails (never tied).
         conn = {e for b in out for e in b[3]}
         east = max((n for n in names if n.startswith('dvs_E')), key=lambda n: x_of[n], default=None)
         for n in sorted(names):
@@ -671,7 +677,7 @@ def apply_dv(v, m):
                     continue
                 up_in = n == east and p_.endswith('_wi') and not p_.startswith(('l9', 'cmd', 'hr', 'rv', 're', 'rr',
                                                                                 'rl', 'rd', 'dr'))
-                if (n == 'dvs_W5' and p_ in ('st_wi', 'sc_wi')) or up_in or p_ == 'l9_wi':
+                if (n == 'dvs_W5' and p_ == 'sc_wi') or up_in or p_ == 'l9_wi':
                     m['ties'].append((n, p_, pv[1], 0))
     # far-band clusters: rs_i tied low (Q-CLUSTER: the far bands tie the feedthrough input)
     fed = {e[0] for b in out for e in b[3] if e[1] == 'rs_i'}

@@ -1,0 +1,91 @@
+{
+ "schema": "opentallas.qwen_split.die_param_audit.v1",
+ "die_v": "/home/ubuntu/scratch/qlb-gen/rc/dv2f14bq/die.v",
+ "params": "/home/ubuntu/scratch/qlb-gen/rc/dv2f14bq/die.v.params.json",
+ "lanes": "/home/ubuntu/scratch/qlb-gen/rc/dv2f14bq/fwd_lanes.json",
+ "trapped": {
+  "qfd_d2d_static": {
+   "TXDP": {
+    "default": "32'd0",
+    "condition": "PR != 0 && (TXDP[7:0] == 8'd0 || TXDP[15:8] == 8'd0 || TXDP[23:16] == 8'd0 || TXDP[31:24] == 8'd0)"
+   }
+  },
+  "qfd_tt_ctlm_dv": {
+   "XPF_TRANSPORT_EDGES": {
+    "default": "-1",
+    "condition": "XPF_TRANSPORT_EDGES < 0"
+   }
+  }
+ },
+ "xpf": {
+  "XPF_TRANSPORT_EDGES": 15,
+  "hr_pin_register": 1,
+  "lane_cycles": 14,
+  "buses": [
+   {
+    "bid": "dvw_hr_wi",
+    "kind": "fwd",
+    "n": 25,
+    "E": 13,
+    "K": 5,
+    "lane_cycles": 14
+   }
+  ],
+  "rule": "1 (hr pin register) + lane_groups.lane_cycles(hr bus): fwd E + 1, plain n, direct 0",
+  "sinks": [
+   "dvs_W5.hr_wi"
+  ]
+ },
+ "txdp": {
+  "TXDP": 151061254,
+  "image": "rtl/qwen_sys/d2d_static_20261015/d2d_cal_image.svh",
+  "ports": [
+   6,
+   3,
+   1,
+   9
+  ],
+  "die_stages": "{'CS_TXS': 2, 'CS_RXV': 2, 'CS_RXP': 2, 'CS_X3S': 2, 'SC_TX': 0, 'SC_X3': 2, 'KS_RXV': 11, 'KS_RXP': 11, 'KS_TXS': 9, 'KS_TXK': 9, 'KS_TXB': 9, 'SK_TXV': 11, 'SK_TXP': 11}",
+  "compiled_txd_c": [
+   8,
+   3,
+   1,
+   9
+  ],
+  "compiled_stages": {
+   "CS_TXS": 2,
+   "CS_RXV": 2,
+   "CS_RXP": 2,
+   "CS_X3S": 2,
+   "SC_TX": 2,
+   "SC_X3": 2,
+   "KS_RXV": 11,
+   "KS_RXP": 11,
+   "KS_TXS": 9,
+   "KS_TXK": 9,
+   "KS_TXB": 9,
+   "SK_TXV": 11,
+   "SK_TXP": 11
+  },
+  "compiled_manifest": "/home/ubuntu/scratch/qlb-gen/rc/dv2f14bq/layer_compile/manifest.json"
+ },
+ "assigned": {
+  "qfd_collective_static_io_production": {
+   "LX0": 10,
+   "LX1": 0,
+   "LX2": 9
+  },
+  "qfd_d2d_static": {
+   "TXDP": 151061254
+  },
+  "qfd_tt_ctlm_dv": {
+   "XPF_TRANSPORT_EDGES": 15
+  }
+ },
+ "verdict": "FAIL",
+ "fails": [
+  "ot_qfd_serdes_112g_x12_phy_s597: RTL /home/ubuntu/wt/qlb-gen-1018/physical/qwen_missing_phy/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597_bb.v not found (cannot audit its parameters)",
+  "ot_qfd_ucie_x64_phy: RTL /home/ubuntu/wt/qlb-gen-1018/physical/qwen_missing_phy/tp8_1013/ot_qfd_ucie_x64_phy/ot_qfd_ucie_x64_phy_bb.v not found (cannot audit its parameters)",
+  "qfd_d2d_static.TXDP 0x09010306 != 0x09010308 = the layer compiler's TXD [8, 3, 1, 9] for this die (stages {'CS_TXS': 2, 'CS_RXV': 2, 'CS_RXP': 2, 'CS_X3S': 2, 'SC_TX': 2, 'SC_X3': 2, 'KS_RXV': 11, 'KS_RXP': 11, 'KS_TXS': 9, 'KS_TXK': 9, 'KS_TXB': 9, 'SK_TXV': 11, 'SK_TXP': 11}); recompile the image: D2D_DIE_STAGES=<these stages> tools/qwen_split/d2d_cal_image_production.sh"
+ ]
+}

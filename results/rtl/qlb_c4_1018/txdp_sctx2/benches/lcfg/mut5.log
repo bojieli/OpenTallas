@@ -1,0 +1,12 @@
+BAD link cfg write 0 40250c0c1f, sequencer 80250c0c1f
+BAD link cfg write 1 8009ac0400, sequencer 4009ac0400
+BAD link cfg write 2 41000a1000, sequencer 81000a1000
+BAD link cfg write 3 810004081f, sequencer 410004081f
+BAD link cfg write 4 42000c7000, sequencer 82000c7000
+BAD link cfg write 5 820004bc00, sequencer 420004bc00
+BAD link cfg write 6 4302f0a000, sequencer 8302f0a000
+BAD link cfg write 7 830006d403, sequencer 430006d403
+BAD calendar fault A 01 B 00
+FAIL kv_link_cfg_boot scn0 mut5 errors6479
+FATAL: rtl/test/qwen_static_kv/tb_kv_link_cfg_boot.sv:108: 
+       Time: 115950000  Scope: tb_kv_link_cfg_boot
