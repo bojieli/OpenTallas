@@ -1,0 +1,48 @@
+{
+  "schema": "opentallas.kv-dcal-bc3safe-supported-profile.v1",
+  "candidate_only": true,
+  "frozen_source": "569419a7d",
+  "frozen_record": "43122e84b",
+  "production_parameters": {
+    "EP_SKEW": 3,
+    "GO_OFS": 0,
+    "START_ADJ": 0,
+    "MUT": 0
+  },
+  "bench_only_parameters": {
+    "MUT": 1
+  },
+  "ordinary": {
+    "calendar_aw": 11,
+    "entries": 32,
+    "layers": 36,
+    "token_period": 249600,
+    "first_token": 1176,
+    "TXDP_K": "0x03030415"
+  },
+  "fault_contract": {
+    "output": "fault",
+    "continuous": true,
+    "sticky_until_reset": true,
+    "causes": [
+      "sequencer",
+      "COL",
+      "RUN",
+      "STALE",
+      "EARLY"
+    ],
+    "parent_consumer_required": true,
+    "parent_consumer_currently_missing": true,
+    "ignore_at_status": false,
+    "reset_clear": "exact frozen full-wrapper: synchronous outer2 then internal2"
+  },
+  "primitive_sha256": {
+    "qkd_d2d_cal_seq_bootcfg.sv": "9c43fc17792f780f3b53d635437ed9a6da37737480e480a2ce95b122c4960ae4",
+    "ot_qwen_d2d_cal_seq.sv": "5edaee7a8c1650c6babfd9fae99b4f83a2cafc3eaed557934721778a5f977688",
+    "ot_qwen_d2d_cal_seq_dies_mu.sv": "5ed298078d7e2592628e0d70b64129254731664a3601b13efb6a8af2d0bd68a1",
+    "d2d_cal_image_mu.svh": "b68b9fb8422f648ffc8ce750bd01522f09687e033d301705c4dd9e2fe4bb7913"
+  },
+  "frozen_outer_wrapper_sha256": "e7ccff2f1b02dda2539a186203e3e994bfdeaabde91a972e11b751fe3296ed52",
+  "canonicalize_sha256": "7e423ef2b5bda4ba5bfcb60bec07c0d209f026fbabfb72b2cbf0274576ecbd7b",
+  "image_scope": "ordinary frozen only; expanded AW12/0x03030416 requires new source/certificate/qualification"
+}
