@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "ot_hbm_svc_pc_ctrl_leaf_cfg_safe_legacy",
+ "enable": false,
+ "reason": "RTL top g_reset_face.rst_l0/rst_l1 are two kept same-clock registered face landing stages; native relay adds3; physical release5. Disable duplicate tool2. Source-owned fullnative/adversephase proof required."
+}
