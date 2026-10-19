@@ -320,21 +320,21 @@
    "composition_1018": {
     "ar": {
      "available": true,
-     "banner": "6.9% of token cycles measured on current RTL (0.0% on older RTL, 0.1% modelled PHY, 93.0% priced)",
-     "pct_measured_current_rtl": 6.85,
-     "tok_s": 930.9,
-     "T_token_cycles": 1289007.9,
-     "per_accepted_cycles": 1289007.9,
+     "banner": "8.1% of token cycles measured on current RTL (0.0% on older RTL, 0.1% modelled PHY, 91.7% priced)",
+     "pct_measured_current_rtl": 8.14,
+     "tok_s": 925.4,
+     "T_token_cycles": 1296711.9,
+     "per_accepted_cycles": 1296711.9,
      "tau": null,
      "by_grade": {
-      "measured-current-RTL": 88327.1,
+      "measured-current-RTL": 105499.1,
       "measured-old-RTL": 0,
-      "modelled-PHY": 1562.1,
-      "priced": 1199118.7
+      "modelled-PHY": 1572.2,
+      "priced": 1189640.6
      },
      "by_kind": {
       "layer": 1179176.5,
-      "xdie": 109831.4,
+      "xdie": 117535.4,
       "adjust": 0
      },
      "price_of_record": {
@@ -342,17 +342,17 @@
       "cycles": 1268221.8,
       "source": "results/arch/token_path_1018/inputs/hbm_qwen_price_per_layer.json base.record"
      },
-     "vs_price_pct": -1.61,
+     "vs_price_pct": -2.2,
      "o_rule": "O from the S2 compiler schedule (static_schedule.json base.record); AR = realisable hypercube form (5 die links)",
      "title": "HBM d4g GEN2 die, Qwen3-8B (TP8, 8 dies in package), 8K context, AR",
      "xdie_top": [
       {
        "x": "Q_AR",
-       "exposed": 109584.0,
+       "exposed": 117288.0,
        "by_grade": {
-        "measured-current-RTL": 88178.4,
-        "modelled-PHY": 1555.2,
-        "priced": 19850.4
+        "measured-current-RTL": 105350.4,
+        "modelled-PHY": 1569.6,
+        "priced": 10368.2
        }
       },
       {
@@ -387,21 +387,21 @@
    "composition_1018": {
     "ar": {
      "available": true,
-     "banner": "9.6% of token cycles measured on current RTL (0.0% on older RTL, 8.2% modelled PHY, 82.2% priced)",
-     "pct_measured_current_rtl": 9.59,
-     "tok_s": 1993.8,
-     "T_token_cycles": 601855.9,
-     "per_accepted_cycles": 601855.9,
+     "banner": "10.6% of token cycles measured on current RTL (0.0% on older RTL, 8.4% modelled PHY, 81.0% priced)",
+     "pct_measured_current_rtl": 10.62,
+     "tok_s": 1976.0,
+     "T_token_cycles": 607290.0,
+     "per_accepted_cycles": 607290.0,
      "tau": null,
      "by_grade": {
-      "measured-current-RTL": 57738.4,
+      "measured-current-RTL": 64504.1,
       "measured-old-RTL": 0,
-      "modelled-PHY": 49446.7,
-      "priced": 494670.8
+      "modelled-PHY": 50709.7,
+      "priced": 492076.2
      },
      "by_kind": {
       "layer": 458493.3,
-      "xdie": 143362.6,
+      "xdie": 148796.6,
       "adjust": 0
      },
      "price_of_record": {
@@ -409,26 +409,26 @@
       "cycles": 629775.1,
       "source": "results/arch/token_path_1018/inputs/hbm_ds_priced_layers_all.json"
      },
-     "vs_price_pct": 4.64,
+     "vs_price_pct": 3.7,
      "o_rule": "O from the S2 compiler schedule of record (priced_layers.py: the HBMDS vehicle's schedule contract)",
      "title": "HBM d4g GEN2 die, DeepSeek-V4.1 (TP96 x quadrants), 1M context, AR",
      "xdie_top": [
       {
        "x": "attn_out y / ffn_out yf",
-       "exposed": 39558.1,
+       "exposed": 39038.4,
        "by_grade": {
-        "measured-current-RTL": 14888.0,
-        "modelled-PHY": 19792.0,
-        "priced": 4878.4
+        "measured-current-RTL": 15814.4,
+        "modelled-PHY": 19724.8,
+        "priced": 3499.2
        }
       },
       {
        "x": "o-group reduce-mcast (8 contributors)",
-       "exposed": 26103.8,
+       "exposed": 33023.8,
        "by_grade": {
-        "measured-current-RTL": 12973.2,
-        "modelled-PHY": 11078.4,
-        "priced": 2052.0
+        "measured-current-RTL": 18403.2,
+        "modelled-PHY": 12624.0,
+        "priced": 1994.6
        }
       },
       {
@@ -440,38 +440,38 @@
       },
       {
        "x": "router gsc",
-       "exposed": 18621.0,
+       "exposed": 18361.3,
        "by_grade": {
-        "measured-current-RTL": 6776.5,
-        "modelled-PHY": 9008.2,
-        "priced": 2838.5
+        "measured-current-RTL": 7188.5,
+        "modelled-PHY": 8967.5,
+        "priced": 2206.6
        }
       },
       {
        "x": "96x512 index TOPK_MERGE",
-       "exposed": 18408.4,
+       "exposed": 18215.6,
        "by_grade": {
-        "measured-current-RTL": 15572.6,
-        "modelled-PHY": 2219.4,
-        "priced": 616.6
+        "measured-current-RTL": 15384.7,
+        "modelled-PHY": 2215.4,
+        "priced": 615.4
        }
       },
       {
        "x": "MoE expert_intermediate s0..s6 7-record train (dispatch/combine)",
-       "exposed": 11884.9,
+       "exposed": 11624.9,
        "by_grade": {
-        "measured-current-RTL": 5596.9,
-        "modelled-PHY": 4782.0,
-        "priced": 1505.6
+        "measured-current-RTL": 5753.1,
+        "modelled-PHY": 4713.1,
+        "priced": 1158.3
        }
       },
       {
        "x": "x_proj qa+kvraw 2-record train",
-       "exposed": 3599.4,
+       "exposed": 3391.0,
        "by_grade": {
-        "measured-current-RTL": 1308.8,
-        "modelled-PHY": 1740.8,
-        "priced": 547.2
+        "measured-current-RTL": 1328.0,
+        "modelled-PHY": 1655.8,
+        "priced": 406.4
        }
       },
       {
