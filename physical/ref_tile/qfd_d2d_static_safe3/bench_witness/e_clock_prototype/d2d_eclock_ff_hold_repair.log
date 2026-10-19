@@ -1,0 +1,109 @@
+ot-run: ot-epyc8       admits  1183 GB (avail 930, growth 101, headroom 0, waiters 0/0 GB) load 39/128 running 27 disk 343 GB 
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-1585843-1792427932 after 1 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9184, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9217, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9250, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9283, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9316, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9349, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9382, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10518, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10551, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10584, timing group from output port.
+[WARNING STA-1140] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 34, library asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407 already exists.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9184, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9217, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9250, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9283, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9316, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9349, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9382, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 10518, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 10551, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 10584, timing group from output port.
+[INFO ODB-0227] LEF file: /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef, created 1 library cells
+[WARNING ORD-2056] The following 9 liberty cell(s) do not have LEF masters and will be marked as dont-use:
+  DFFHQNV2Xx1_ASAP7_75t_R
+  DFFHQNV2Xx2_ASAP7_75t_R
+  DFFHQNV2Xx3_ASAP7_75t_R
+  DFFHQNV4Xx1_ASAP7_75t_R
+  DFFHQNV4Xx2_ASAP7_75t_R
+  DFFHQNV4Xx3_ASAP7_75t_R
+  DFFHQNH2V2Xx1_ASAP7_75t_R
+  DFFHQNH2V2Xx2_ASAP7_75t_R
+  DFFHQNH2V2Xx3_ASAP7_75t_R
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+QDM PINFLOP reference: 2457 input pin flops (0 hard-child clock pins at +insertion), median arrival 350.337067 (range 335.226807 .. 402.347229)
+QDM reference pin c_native_tx_payload[183]$_DFF_P_/CLK clock arrival max 350.337067 min 335.580109 skew 90 hold 50
+OT_HOLD_BUDGET die: L_min 335.580109 C 25 U 25 relief 0
+OT_IO_INTER 0 inputs 0 outputs at 150 ps
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+GATE_PC constraints signoff /src/physical/ref_tile/qfd_d2d_static_safe3/signoff.sdc (FF placement RC; diagnostic)
+E_CLOCK_SNAPSHOT before_native_FF_hold_repair boundary=3623 min=333.819458 mincell=rx_payload[87]$_DFF_P_ max=397.845459 maxcell=c_prog_tx_record[469]$_DFF_P_ spread=64.02600100000001 setup_s=1.9970347597819682e-10 hold_s=-1.4536455372748947e-11
+[INFO RSZ-0046] Found 28 endpoints with hold violations.
+Iteration | Resized | Buffers | Cloned Gates |   Area   |   WNS   |   TNS   | Endpoint
+--------------------------------------------------------------------------------------
+        0 |       0 |       0 |            0 |    +0.0% | -14.536 | -55.676 | u_core.u_end.tx_user[0]$_DFFE_PN0P_/D
+       10 |       0 |      15 |            0 |    +0.0% |  29.556 |   0.000 | u_core.u_end.u_link.u_ctl.rf[467]$_DFF_P_/D
+       20 |       0 |      25 |            0 |    +0.0% |  29.862 |   0.000 | u_core.u_end.u_txcal.first0_q[15]$_DFF_P_/D
+    final |       0 |      34 |            0 |    +0.0% |  30.003 |   0.000 | u_core.u_end.u_txcal.tbl[25][0]$_DFFE_PP_/D
+--------------------------------------------------------------------------------------
+[INFO RSZ-0032] Inserted 34 hold buffers.
+[INFO RSZ-0506] Runtime: 1.13s
+[INFO DPL-0006] Core area: 130188.90 um^2
+[INFO DPL-0007] Movable instances area: 7935.21 um^2
+[INFO DPL-0008] Fixed instances area within core: 53742.58 um^2
+[INFO DPL-0009] Utilization: 47.4%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (2 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 72931 cells
+[INFO DPL-0393]   height 289 row(s): 4 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |        126 |        26 |       100
+        1 |        139 |        25 |       114
+        2 |        100 |        16 |        84
+        3 |        117 |        13 |       104
+        4 |        104 |        10 |        94
+        5 |         95 |        13 |        82
+        6 |        101 |        15 |        86
+        7 |         61 |        15 |        46
+        8 |         72 |        14 |        58
+        9 |         70 |        15 |        55
+       10 |         53 |        10 |        43
+       18 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 18.
+[INFO DPL-0500] Runtime: 2.30s
+Placement Analysis
+---------------------------------
+total displacement        104.9 u
+average displacement        0.0 u
+max displacement            6.0 u
+original HPWL          817720.1 u
+legalized HPWL         817814.6 u
+delta HPWL                    0 %
+
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+QDM PINFLOP reference: 2457 input pin flops (0 hard-child clock pins at +insertion), median arrival 350.337067 (range 335.226807 .. 402.407471)
+QDM reference pin c_native_tx_payload[183]$_DFF_P_/CLK clock arrival max 350.337067 min 335.580109 skew 90 hold 50
+OT_HOLD_BUDGET die: L_min 335.580109 C 25 U 25 relief 0
+OT_IO_INTER 0 inputs 0 outputs at 150 ps
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+E_CLOCK_SNAPSHOT after_native_FF_hold_repair boundary=3623 min=333.819458 mincell=rx_payload[87]$_DFF_P_ max=397.845459 maxcell=c_prog_tx_record[469]$_DFF_P_ spread=64.02600100000001 setup_s=1.9970347597819682e-10 hold_s=3.000291681765077e-11
+E_CLOCK_NATIVE_HOLD_REPAIR_COMPLETED source=b30f8454c6db1309ee4ec7a154943f6c737b43f2 hold_margin_ps=30 real_data_cells=1 SDC/reserves/ports/FFedges=UNCHANGED TT_reload_required=1
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-1585843-1792427932): exit 0

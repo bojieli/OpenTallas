@@ -1,0 +1,95 @@
+{
+  "source": "b30f8454c6db1309ee4ec7a154943f6c737b43f2",
+  "diagnostic_only": true,
+  "adoption": false,
+  "original_cells": 72883,
+  "original_masters_unchanged": true,
+  "ports_unchanged": 3670,
+  "ff_input_equations_unchanged": 27576,
+  "clock_population": 10967,
+  "changed_E_clock_paths": 64,
+  "unchanged_other_clock_paths": 10903,
+  "original_clock_cells_moved": 1,
+  "original_clock_cells_moved_names": [
+    "clkbuf_leaf2_61_ck_regs"
+  ],
+  "E_clock_levels_before": 13,
+  "E_clock_levels_after": 16,
+  "original_clock_master_polarities_unchanged": true,
+  "added_cell_masters": {
+    "BUFx24_ASAP7_75t_R": 18,
+    "HB4xp67_ASAP7_75t_R": 34
+  },
+  "original_cells_legally_moved": 120,
+  "native_ff_fanout_identical_to_original": true,
+  "native_ff_outputs_over32": 64,
+  "native_ff_fanout_max": 1072,
+  "fanout_top10": [
+    [
+      302,
+      "c_result_v$_DFF_P_",
+      "QN"
+    ],
+    [
+      374,
+      "u_core.u_end.g_dly\\[3\\].sr\\[9\\]$_DFF_PN0_",
+      "QN"
+    ],
+    [
+      548,
+      "u_core.u_end.u_link.g_bank\\[0\\].u_store.hit_age0$_DFF_P_",
+      "QN"
+    ],
+    [
+      551,
+      "u_core.u_end.g_dly\\[0\\].sr\\[7\\]$_DFF_PN0_",
+      "QN"
+    ],
+    [
+      553,
+      "u_core.u_end.g_dly\\[1\\].sr\\[2\\]$_DFF_PN0_",
+      "QN"
+    ],
+    [
+      899,
+      "u_core.u_end.u_txcal.ptr\\[1\\]$_DFFE_PN0P_",
+      "QN"
+    ],
+    [
+      901,
+      "u_core.u_end.u_rxcal.ptr\\[1\\]$_DFFE_PN0P_",
+      "QN"
+    ],
+    [
+      1027,
+      "u_core.u_end.u_rxcal.seg1\\[1\\]$_DFFE_PP_",
+      "QN"
+    ],
+    [
+      1027,
+      "u_core.u_end.u_txcal.seg1\\[1\\]$_DFFE_PP_",
+      "QN"
+    ],
+    [
+      1072,
+      "u_core.u_end.u_link.g_bank\\[0\\].u_store.hit_age1$_DFF_P_",
+      "QN"
+    ]
+  ],
+  "TT": {
+    "setup_ps": 96.496696,
+    "hold_ps": 37.962635,
+    "boundary_spread_ps": 70.090698
+  },
+  "FF": {
+    "setup_ps": 199.703476,
+    "hold_ps": 30.002916,
+    "boundary_spread_ps": 64.026001
+  },
+  "remaining_blockers": [
+    "64 native FF outputs exceed32 buffer-collapsed loads",
+    "two SRAM clock slew violations TT274.6744/267.3019 FF285.7455/278.0821 versus260ps",
+    "104 new open power/ground pins before global-connect; baseline43204 open too",
+    "routed clock corridor and full escape DRC not qualified"
+  ]
+}
