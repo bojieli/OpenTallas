@@ -1,0 +1,3566 @@
+{
+  "tt": {
+    "clock_refs": {
+      "ck": {
+        "rise": 86.2,
+        "fall": 91.124215,
+        "min": 77.39268,
+        "max": 88.99464,
+        "src": "insertion.json boundary mean",
+        "bmin": 83.9,
+        "bmax": 89.0,
+        "n": 97
+      }
+    },
+    "launch_max": [
+      [
+        178.48784,
+        "cfg_data[21]"
+      ]
+    ],
+    "capture_max": [
+      [
+        126.14655,
+        "bcfg_data[31]"
+      ]
+    ],
+    "launch_over220": [],
+    "capture_over190": [],
+    "combinational_pins": {},
+    "metrics": {
+      "adm_done": {
+        "dir": "output",
+        "out": 168.11316,
+        "lmin": 165.12166000000002,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_rx_we": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 106.9862,
+        "hold": -79.46085000000001,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_tx_we": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 123.78643,
+        "hold": -96.20874,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cal_ready": {
+        "dir": "output",
+        "out": 172.02415000000002,
+        "lmin": 169.26443,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cal_seg": {
+        "dir": "output",
+        "out": 174.86525,
+        "lmin": 172.33775000000003,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cal_start": {
+        "dir": "output",
+        "out": 162.94529,
+        "lmin": 159.40077000000002,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_rx_we": {
+        "dir": "output",
+        "out": 171.12144,
+        "lmin": 168.48982,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_tx_we": {
+        "dir": "output",
+        "out": 160.04913,
+        "lmin": 156.65650999999997,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "epoch_go": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 109.32379,
+        "hold": -82.66113,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "fault": {
+        "dir": "output",
+        "out": 172.71849000000003,
+        "lmin": 170.1345,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "halt": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 124.37236,
+        "hold": -97.147,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "reload": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 121.44716,
+        "hold": -93.77773,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "rst_n": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 118.37163000000001,
+        "hold": -92.45193,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "running": {
+        "dir": "output",
+        "out": 172.65214000000003,
+        "lmin": 169.96577000000002,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "tok_start": {
+        "dir": "output",
+        "out": 173.01231,
+        "lmin": 170.30311,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "VDD": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": []
+      },
+      "VSS": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": []
+      },
+      "bcfg_addr[5]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 107.48634,
+        "hold": -80.82601,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_addr[4]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 123.99262,
+        "hold": -96.89411,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_addr[3]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 107.14471,
+        "hold": -80.26152,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_addr[2]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 107.82915,
+        "hold": -81.21445,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_addr[1]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 125.03411,
+        "hold": -97.70123000000001,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_addr[0]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 123.70139,
+        "hold": -96.47131,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[31]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 126.14655,
+        "hold": -98.9038,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[30]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 125.55507,
+        "hold": -98.31335,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[29]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 110.28184,
+        "hold": -83.40766,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[28]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 106.02958000000001,
+        "hold": -78.6229,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[27]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 122.75376,
+        "hold": -95.24346,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[26]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 124.95678000000001,
+        "hold": -97.62208,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[25]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 108.47775,
+        "hold": -81.65669,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[24]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 105.9127,
+        "hold": -78.50710000000001,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[23]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 105.29638,
+        "hold": -78.00596,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[22]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 124.09444,
+        "hold": -96.75454,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[21]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 110.3013,
+        "hold": -83.29698,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[20]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 106.70558,
+        "hold": -79.2696,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[19]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 124.89948000000001,
+        "hold": -97.43383,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[18]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 124.50014,
+        "hold": -97.09564,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[17]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 107.39077,
+        "hold": -80.1198,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[16]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 108.74408,
+        "hold": -82.15095000000001,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[15]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 108.29156,
+        "hold": -81.91732,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[14]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 123.86976,
+        "hold": -96.77048,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[13]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 123.99412000000001,
+        "hold": -96.46985000000001,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[12]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 108.5139,
+        "hold": -81.66567,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[11]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 125.71199,
+        "hold": -98.96297,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[10]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 124.44347,
+        "hold": -97.35442,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[9]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 106.80028,
+        "hold": -79.33756,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[8]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 123.01939,
+        "hold": -95.47733,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[7]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 122.94794,
+        "hold": -95.4432,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[6]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 124.34016,
+        "hold": -97.28331,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[5]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 107.99627000000001,
+        "hold": -80.4004,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[4]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 106.58538,
+        "hold": -79.04562,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[3]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 108.14335,
+        "hold": -81.44099,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[2]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 107.59769,
+        "hold": -81.04405,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[1]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 107.52519000000001,
+        "hold": -80.19987,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[0]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 106.2093,
+        "hold": -78.9312,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_addr[5]": {
+        "dir": "output",
+        "out": 168.03348999999997,
+        "lmin": 165.18567000000002,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_addr[4]": {
+        "dir": "output",
+        "out": 165.71702,
+        "lmin": 162.40791000000002,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_addr[3]": {
+        "dir": "output",
+        "out": 160.20256999999998,
+        "lmin": 156.64044,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_addr[2]": {
+        "dir": "output",
+        "out": 162.32795,
+        "lmin": 158.71245,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_addr[1]": {
+        "dir": "output",
+        "out": 168.80203999999998,
+        "lmin": 165.99252,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_addr[0]": {
+        "dir": "output",
+        "out": 165.76407,
+        "lmin": 162.52659,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[31]": {
+        "dir": "output",
+        "out": 166.52814999999998,
+        "lmin": 163.75191999999998,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[30]": {
+        "dir": "output",
+        "out": 163.10417999999999,
+        "lmin": 159.90472,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[29]": {
+        "dir": "output",
+        "out": 173.93345,
+        "lmin": 171.36952000000002,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[28]": {
+        "dir": "output",
+        "out": 171.51701000000003,
+        "lmin": 168.88205,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[27]": {
+        "dir": "output",
+        "out": 168.6212,
+        "lmin": 165.89828,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[26]": {
+        "dir": "output",
+        "out": 164.57249000000002,
+        "lmin": 161.59037,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[25]": {
+        "dir": "output",
+        "out": 160.73913,
+        "lmin": 157.33619,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[24]": {
+        "dir": "output",
+        "out": 175.0851,
+        "lmin": 172.42189000000002,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[23]": {
+        "dir": "output",
+        "out": 164.66019999999997,
+        "lmin": 161.73037,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[22]": {
+        "dir": "output",
+        "out": 163.51170000000002,
+        "lmin": 160.36005999999998,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[21]": {
+        "dir": "output",
+        "out": 178.48784,
+        "lmin": 175.75459,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[20]": {
+        "dir": "output",
+        "out": 174.87706000000003,
+        "lmin": 172.20546000000002,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[19]": {
+        "dir": "output",
+        "out": 165.96445999999997,
+        "lmin": 163.07679000000002,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[18]": {
+        "dir": "output",
+        "out": 162.68977,
+        "lmin": 159.58841999999999,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[17]": {
+        "dir": "output",
+        "out": 174.88481000000002,
+        "lmin": 172.30397,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[16]": {
+        "dir": "output",
+        "out": 175.14100000000002,
+        "lmin": 172.44218,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[15]": {
+        "dir": "output",
+        "out": 171.72023000000002,
+        "lmin": 169.10142000000002,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[14]": {
+        "dir": "output",
+        "out": 163.38286,
+        "lmin": 160.26521000000002,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[13]": {
+        "dir": "output",
+        "out": 174.94096000000002,
+        "lmin": 172.32530000000003,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[12]": {
+        "dir": "output",
+        "out": 174.48546,
+        "lmin": 171.83647000000002,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[11]": {
+        "dir": "output",
+        "out": 167.25914,
+        "lmin": 164.46032000000002,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[10]": {
+        "dir": "output",
+        "out": 168.70254,
+        "lmin": 165.69486999999998,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[9]": {
+        "dir": "output",
+        "out": 173.70637,
+        "lmin": 171.19587,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[8]": {
+        "dir": "output",
+        "out": 174.13377000000003,
+        "lmin": 171.58583,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[7]": {
+        "dir": "output",
+        "out": 164.95067999999998,
+        "lmin": 161.85109999999997,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[6]": {
+        "dir": "output",
+        "out": 166.02956999999998,
+        "lmin": 162.68041999999997,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[5]": {
+        "dir": "output",
+        "out": 161.8218,
+        "lmin": 158.52746000000002,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[4]": {
+        "dir": "output",
+        "out": 173.89048000000003,
+        "lmin": 171.30555000000004,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[3]": {
+        "dir": "output",
+        "out": 167.81909000000002,
+        "lmin": 165.00455999999997,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[2]": {
+        "dir": "output",
+        "out": 168.61930999999998,
+        "lmin": 165.56385,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[1]": {
+        "dir": "output",
+        "out": 164.57700999999997,
+        "lmin": 161.14130999999998,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[0]": {
+        "dir": "output",
+        "out": 162.59782,
+        "lmin": 158.98216000000002,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "layer[5]": {
+        "dir": "output",
+        "out": 175.16179,
+        "lmin": 172.49257,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "layer[4]": {
+        "dir": "output",
+        "out": 172.36369000000002,
+        "lmin": 169.66609999999997,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "layer[3]": {
+        "dir": "output",
+        "out": 172.40086000000002,
+        "lmin": 169.68193000000002,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "layer[2]": {
+        "dir": "output",
+        "out": 160.47935,
+        "lmin": 156.87739,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "layer[1]": {
+        "dir": "output",
+        "out": 161.77589,
+        "lmin": 158.2622,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "layer[0]": {
+        "dir": "output",
+        "out": 172.14732000000004,
+        "lmin": 169.46672999999998,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      }
+    },
+    "lib_sha256": "af5ebe54d19f006ea1ddb088a557c36bb79afad725b9a2fe4655e51c9ded199b"
+  },
+  "ff": {
+    "clock_refs": {
+      "ck": {
+        "rise": 65.6,
+        "fall": 67.46542,
+        "min": 58.65797,
+        "max": 68.32763,
+        "src": "insertion.json boundary mean",
+        "bmin": 63.2,
+        "bmax": 68.3,
+        "n": 97
+      }
+    },
+    "launch_max": [
+      [
+        126.96046000000001,
+        "cfg_data[21]"
+      ]
+    ],
+    "capture_max": [
+      [
+        93.63659999999999,
+        "bcfg_data[11]"
+      ]
+    ],
+    "launch_over220": [],
+    "capture_over190": [],
+    "combinational_pins": {},
+    "metrics": {
+      "adm_done": {
+        "dir": "output",
+        "out": 119.35583,
+        "lmin": 117.46818999999999,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_rx_we": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 79.42264,
+        "hold": -58.23273,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_tx_we": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 91.46631,
+        "hold": -70.00398999999999,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cal_ready": {
+        "dir": "output",
+        "out": 122.12749,
+        "lmin": 119.94784000000001,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cal_seg": {
+        "dir": "output",
+        "out": 124.92422000000002,
+        "lmin": 122.84649000000002,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cal_start": {
+        "dir": "output",
+        "out": 115.86921000000001,
+        "lmin": 113.59559000000002,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_rx_we": {
+        "dir": "output",
+        "out": 121.35235,
+        "lmin": 119.23302000000001,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_tx_we": {
+        "dir": "output",
+        "out": 112.86552,
+        "lmin": 110.68258,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "epoch_go": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 81.79558999999999,
+        "hold": -60.948359999999994,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "fault": {
+        "dir": "output",
+        "out": 122.61242000000001,
+        "lmin": 120.52018000000001,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "halt": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 92.35378999999999,
+        "hold": -71.2833,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "reload": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 89.4105,
+        "hold": -67.83091999999999,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "rst_n": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 85.64331999999999,
+        "hold": -66.96244999999999,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "running": {
+        "dir": "output",
+        "out": 122.52413000000001,
+        "lmin": 120.40813,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "tok_start": {
+        "dir": "output",
+        "out": 122.93494000000001,
+        "lmin": 120.79607000000001,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "VDD": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": []
+      },
+      "VSS": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": []
+      },
+      "bcfg_addr[5]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 80.44739999999999,
+        "hold": -59.78030999999999,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_addr[4]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 91.99887,
+        "hold": -70.95778,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_addr[3]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 80.2217,
+        "hold": -59.41694999999999,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_addr[2]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 80.97509,
+        "hold": -60.401039999999995,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_addr[1]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 92.62831,
+        "hold": -71.40199999999999,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_addr[0]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 91.6335,
+        "hold": -70.47631999999999,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[31]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 93.41068,
+        "hold": -72.09808,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[30]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 92.93227999999999,
+        "hold": -71.60625999999999,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[29]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 82.38167999999999,
+        "hold": -61.345079999999996,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[28]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 78.45584,
+        "hold": -57.21585999999999,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[27]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 90.47219999999999,
+        "hold": -68.92362,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[26]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 92.33255,
+        "hold": -70.92168,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[25]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 80.93807,
+        "hold": -59.92925999999999,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[24]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 78.40541999999999,
+        "hold": -57.153369999999995,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[23]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 77.93565,
+        "hold": -56.77369999999999,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[22]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 91.67976999999999,
+        "hold": -70.25412999999999,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[21]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 82.29973,
+        "hold": -61.159699999999994,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[20]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 79.10892,
+        "hold": -57.778659999999995,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[19]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 92.22314,
+        "hold": -70.71885999999999,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[18]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 91.94621,
+        "hold": -70.47828,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[17]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 79.72071,
+        "hold": -58.52083999999999,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[16]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 81.40222999999999,
+        "hold": -60.681779999999996,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[15]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 81.28151,
+        "hold": -60.720319999999994,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[14]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 91.87711999999999,
+        "hold": -70.84000999999999,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[13]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 91.47764,
+        "hold": -69.93032,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[12]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 80.99628,
+        "hold": -60.0851,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[11]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 93.63659999999999,
+        "hold": -72.76232999999999,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[10]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 92.32794999999999,
+        "hold": -71.29844,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[9]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 79.19745999999999,
+        "hold": -57.842009999999995,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[8]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 90.62798,
+        "hold": -69.05002999999999,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[7]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 90.57645,
+        "hold": -69.02486999999999,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[6]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 92.37934,
+        "hold": -71.39395999999999,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[5]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 79.98008999999999,
+        "hold": -58.58111999999999,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[4]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 78.80301999999999,
+        "hold": -57.47935,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[3]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 80.97014999999999,
+        "hold": -60.279999999999994,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[2]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 80.59846999999999,
+        "hold": -60.024809999999995,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[1]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 79.99758,
+        "hold": -58.94928999999999,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[0]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 78.95833999999999,
+        "hold": -57.938939999999995,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_addr[5]": {
+        "dir": "output",
+        "out": 118.68194,
+        "lmin": 116.839,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_addr[4]": {
+        "dir": "output",
+        "out": 118.00672,
+        "lmin": 115.85227,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_addr[3]": {
+        "dir": "output",
+        "out": 113.26026000000002,
+        "lmin": 110.94651000000002,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_addr[2]": {
+        "dir": "output",
+        "out": 115.46567000000002,
+        "lmin": 113.13256000000001,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_addr[1]": {
+        "dir": "output",
+        "out": 119.30726000000001,
+        "lmin": 117.52329,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_addr[0]": {
+        "dir": "output",
+        "out": 117.93893,
+        "lmin": 115.84739000000002,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[31]": {
+        "dir": "output",
+        "out": 117.09342000000001,
+        "lmin": 115.23698000000002,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[30]": {
+        "dir": "output",
+        "out": 114.87020000000001,
+        "lmin": 112.79366000000002,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[29]": {
+        "dir": "output",
+        "out": 123.17765,
+        "lmin": 121.19736,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[28]": {
+        "dir": "output",
+        "out": 121.66356999999999,
+        "lmin": 119.55259000000001,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[27]": {
+        "dir": "output",
+        "out": 118.30692000000002,
+        "lmin": 116.54194000000001,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[26]": {
+        "dir": "output",
+        "out": 115.84569000000002,
+        "lmin": 113.89545000000001,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[25]": {
+        "dir": "output",
+        "out": 113.18821,
+        "lmin": 110.96889000000002,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[24]": {
+        "dir": "output",
+        "out": 124.62002000000001,
+        "lmin": 122.57973000000001,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[23]": {
+        "dir": "output",
+        "out": 115.48589000000001,
+        "lmin": 113.58758,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[22]": {
+        "dir": "output",
+        "out": 115.10500000000002,
+        "lmin": 113.08115000000001,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[21]": {
+        "dir": "output",
+        "out": 126.96046000000001,
+        "lmin": 124.98299,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[20]": {
+        "dir": "output",
+        "out": 124.45313000000002,
+        "lmin": 122.39098000000001,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[19]": {
+        "dir": "output",
+        "out": 116.46782999999999,
+        "lmin": 114.60070000000002,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[18]": {
+        "dir": "output",
+        "out": 114.33846,
+        "lmin": 112.32563000000002,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[17]": {
+        "dir": "output",
+        "out": 123.42676,
+        "lmin": 121.45026000000001,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[16]": {
+        "dir": "output",
+        "out": 124.48405,
+        "lmin": 122.41799,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[15]": {
+        "dir": "output",
+        "out": 121.46487000000002,
+        "lmin": 119.67344,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[14]": {
+        "dir": "output",
+        "out": 114.87084000000002,
+        "lmin": 112.81756000000001,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[13]": {
+        "dir": "output",
+        "out": 123.30958000000001,
+        "lmin": 121.33491000000001,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[12]": {
+        "dir": "output",
+        "out": 123.87461000000002,
+        "lmin": 121.81873000000002,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[11]": {
+        "dir": "output",
+        "out": 118.35691,
+        "lmin": 116.45525,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[10]": {
+        "dir": "output",
+        "out": 120.35297,
+        "lmin": 118.37656000000001,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[9]": {
+        "dir": "output",
+        "out": 123.00916000000001,
+        "lmin": 120.96958000000001,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[8]": {
+        "dir": "output",
+        "out": 123.64104,
+        "lmin": 121.58808000000002,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[7]": {
+        "dir": "output",
+        "out": 116.68404000000001,
+        "lmin": 114.65449000000001,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[6]": {
+        "dir": "output",
+        "out": 118.46155000000002,
+        "lmin": 116.33184,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[5]": {
+        "dir": "output",
+        "out": 114.06835000000001,
+        "lmin": 111.97910000000002,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[4]": {
+        "dir": "output",
+        "out": 123.38965000000002,
+        "lmin": 121.33446,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[3]": {
+        "dir": "output",
+        "out": 118.30007,
+        "lmin": 116.44602,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[2]": {
+        "dir": "output",
+        "out": 120.25753,
+        "lmin": 118.3039,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[1]": {
+        "dir": "output",
+        "out": 117.47776999999999,
+        "lmin": 115.23647,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[0]": {
+        "dir": "output",
+        "out": 115.82004,
+        "lmin": 113.48754,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "layer[5]": {
+        "dir": "output",
+        "out": 124.40041,
+        "lmin": 122.35316,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "layer[4]": {
+        "dir": "output",
+        "out": 122.34644,
+        "lmin": 120.21326000000002,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "layer[3]": {
+        "dir": "output",
+        "out": 122.52762000000001,
+        "lmin": 120.37316000000001,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "layer[2]": {
+        "dir": "output",
+        "out": 113.6166,
+        "lmin": 111.28162,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "layer[1]": {
+        "dir": "output",
+        "out": 114.53046,
+        "lmin": 112.32715000000002,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "layer[0]": {
+        "dir": "output",
+        "out": 122.25570000000002,
+        "lmin": 120.10802000000001,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      }
+    },
+    "lib_sha256": "c27ebc0e0228d6e3568ceebfdf328ebe7682c9dee8de268aebfcc2763ff40d0b"
+  },
+  "ss": {
+    "clock_refs": {
+      "ck": {
+        "rise": 122.5,
+        "fall": 134.783045,
+        "min": 110.37224,
+        "max": 125.40946,
+        "src": "insertion.json boundary mean",
+        "bmin": 120.0,
+        "bmax": 125.3,
+        "n": 97
+      }
+    },
+    "launch_max": [
+      [
+        268.89719,
+        "cfg_data[21]"
+      ]
+    ],
+    "capture_max": [
+      [
+        180.42712,
+        "bcfg_data[31]"
+      ]
+    ],
+    "launch_over220": [
+      [
+        268.89719,
+        "cfg_data[21]"
+      ],
+      [
+        265.67581,
+        "cfg_data[13]"
+      ],
+      [
+        265.2597,
+        "cfg_data[17]"
+      ],
+      [
+        264.39087,
+        "layer[5]"
+      ],
+      [
+        263.9624,
+        "cfg_data[16]"
+      ],
+      [
+        263.58679,
+        "cfg_data[24]"
+      ],
+      [
+        263.5466,
+        "cfg_data[29]"
+      ],
+      [
+        263.30093,
+        "cfg_data[20]"
+      ],
+      [
+        263.25095,
+        "cfg_data[12]"
+      ],
+      [
+        262.66058,
+        "cfg_data[9]"
+      ],
+      [
+        262.62897,
+        "cfg_data[8]"
+      ],
+      [
+        262.45859,
+        "cfg_data[4]"
+      ],
+      [
+        262.4494,
+        "cal_seg"
+      ],
+      [
+        260.98419,
+        "tok_start"
+      ],
+      [
+        260.84973,
+        "cfg_data[15]"
+      ],
+      [
+        260.75851,
+        "running"
+      ],
+      [
+        260.71982,
+        "fault"
+      ],
+      [
+        260.2529,
+        "layer[4]"
+      ],
+      [
+        259.99701,
+        "layer[3]"
+      ],
+      [
+        259.80991,
+        "layer[0]"
+      ],
+      [
+        259.69641,
+        "cal_ready"
+      ],
+      [
+        259.53943,
+        "cfg_data[28]"
+      ],
+      [
+        258.96396,
+        "cfg_rx_we"
+      ],
+      [
+        257.66486,
+        "cfg_data[27]"
+      ],
+      [
+        256.51166,
+        "cfg_addr[1]"
+      ],
+      [
+        255.64746000000002,
+        "cfg_data[3]"
+      ],
+      [
+        255.57378999999997,
+        "cfg_addr[5]"
+      ],
+      [
+        254.58407999999997,
+        "adm_done"
+      ],
+      [
+        254.23895,
+        "cfg_data[31]"
+      ],
+      [
+        254.11187999999999,
+        "cfg_data[2]"
+      ],
+      [
+        254.09409,
+        "cfg_data[11]"
+      ],
+      [
+        254.05054,
+        "cfg_data[10]"
+      ],
+      [
+        253.71832,
+        "cfg_data[19]"
+      ],
+      [
+        251.80892999999998,
+        "cfg_data[23]"
+      ],
+      [
+        250.98160000000001,
+        "cfg_data[26]"
+      ],
+      [
+        250.41660000000002,
+        "cfg_data[7]"
+      ],
+      [
+        250.09625,
+        "cfg_addr[0]"
+      ],
+      [
+        249.73486000000003,
+        "cfg_data[6]"
+      ],
+      [
+        249.63776000000001,
+        "cfg_addr[4]"
+      ],
+      [
+        249.19362999999998,
+        "cfg_data[22]"
+      ],
+      [
+        249.09240999999997,
+        "cfg_data[14]"
+      ],
+      [
+        248.31238000000002,
+        "cfg_data[30]"
+      ],
+      [
+        248.28026999999997,
+        "cfg_data[18]"
+      ],
+      [
+        247.19567999999998,
+        "cfg_data[1]"
+      ],
+      [
+        246.17917,
+        "cfg_data[5]"
+      ],
+      [
+        245.59528,
+        "cal_start"
+      ],
+      [
+        245.05872,
+        "layer[1]"
+      ],
+      [
+        244.55901999999998,
+        "cfg_data[0]"
+      ],
+      [
+        244.47415,
+        "cfg_data[25]"
+      ],
+      [
+        244.45251000000002,
+        "cfg_addr[2]"
+      ],
+      [
+        243.69457999999997,
+        "cfg_tx_we"
+      ],
+      [
+        242.79327,
+        "layer[2]"
+      ],
+      [
+        242.62198,
+        "cfg_addr[3]"
+      ]
+    ],
+    "capture_over190": [],
+    "combinational_pins": {},
+    "metrics": {
+      "adm_done": {
+        "dir": "output",
+        "out": 254.58407999999997,
+        "lmin": 249.30164000000002,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_rx_we": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 155.09028,
+        "hold": -102.74746999999999,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_tx_we": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 177.11961,
+        "hold": -128.12275,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cal_ready": {
+        "dir": "output",
+        "out": 259.69641,
+        "lmin": 256.56894,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cal_seg": {
+        "dir": "output",
+        "out": 262.4494,
+        "lmin": 259.98492,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cal_start": {
+        "dir": "output",
+        "out": 245.59528,
+        "lmin": 240.27408000000003,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_rx_we": {
+        "dir": "output",
+        "out": 258.96396,
+        "lmin": 256.2966,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_tx_we": {
+        "dir": "output",
+        "out": 243.69457999999997,
+        "lmin": 238.54498,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "epoch_go": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 157.70884999999998,
+        "hold": -105.71067,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "fault": {
+        "dir": "output",
+        "out": 260.71982,
+        "lmin": 257.98141,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "halt": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 177.0793,
+        "hold": -128.48807,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "reload": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 174.99599,
+        "hold": -125.27017,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "rst_n": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 162.31038,
+        "hold": -125.39395,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "running": {
+        "dir": "output",
+        "out": 260.75851,
+        "lmin": 257.62473,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "tok_start": {
+        "dir": "output",
+        "out": 260.98419,
+        "lmin": 258.03781,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "VDD": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": []
+      },
+      "VSS": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": []
+      },
+      "bcfg_addr[5]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 155.34717,
+        "hold": -103.10913,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_addr[4]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 177.33687,
+        "hold": -128.33358,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_addr[3]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 153.96238,
+        "hold": -102.35209,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_addr[2]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 154.92525,
+        "hold": -103.27353,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_addr[1]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 179.0593,
+        "hold": -129.99016,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_addr[0]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 177.22054,
+        "hold": -128.0858,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[31]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 180.42712,
+        "hold": -131.55671,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[30]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 179.72165999999999,
+        "hold": -130.74506,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[29]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 159.23408,
+        "hold": -107.14846,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[28]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 154.41432,
+        "hold": -101.74017,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[27]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 176.92076,
+        "hold": -127.52298,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[26]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 179.01105,
+        "hold": -130.04569,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[25]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 156.59381,
+        "hold": -104.5625,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[24]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 154.11087,
+        "hold": -101.50365,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[23]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 153.47169,
+        "hold": -100.66978,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[22]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 177.70366,
+        "hold": -128.71076,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[21]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 159.02562,
+        "hold": -107.19035,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[20]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 154.49729,
+        "hold": -102.493,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[19]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 178.69027,
+        "hold": -129.84842,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[18]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 178.21969,
+        "hold": -129.34886,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[17]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 155.63655,
+        "hold": -103.45701,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[16]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 157.09993,
+        "hold": -104.96381,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[15]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 156.00125,
+        "hold": -104.13336,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[14]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 177.21704,
+        "hold": -128.22795,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[13]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 178.11388,
+        "hold": -129.08512,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[12]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 156.76654,
+        "hold": -104.76406,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[11]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 179.18141,
+        "hold": -130.55938,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[10]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 178.19324,
+        "hold": -129.07693,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[9]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 154.68818,
+        "hold": -102.60546,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[8]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 177.4752,
+        "hold": -128.02218,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[7]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 177.56118,
+        "hold": -127.96847,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[6]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 177.29759,
+        "hold": -128.61553,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[5]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 156.90501,
+        "hold": -104.46529,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[4]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 155.33228,
+        "hold": -102.57731,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[3]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 156.09908000000001,
+        "hold": -104.02193,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[2]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 155.56271,
+        "hold": -103.23571,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[1]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 155.85893,
+        "hold": -103.43979,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "bcfg_data[0]": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 153.84424,
+        "hold": -101.57732,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_addr[5]": {
+        "dir": "output",
+        "out": 255.57378999999997,
+        "lmin": 250.43158,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_addr[4]": {
+        "dir": "output",
+        "out": 249.63776000000001,
+        "lmin": 244.76873999999998,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_addr[3]": {
+        "dir": "output",
+        "out": 242.62198,
+        "lmin": 237.12349999999998,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_addr[2]": {
+        "dir": "output",
+        "out": 244.45251000000002,
+        "lmin": 239.11095999999998,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_addr[1]": {
+        "dir": "output",
+        "out": 256.51166,
+        "lmin": 251.15017999999998,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_addr[0]": {
+        "dir": "output",
+        "out": 250.09625,
+        "lmin": 245.15706999999998,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[31]": {
+        "dir": "output",
+        "out": 254.23895,
+        "lmin": 249.44457999999997,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[30]": {
+        "dir": "output",
+        "out": 248.31238000000002,
+        "lmin": 243.29883,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[29]": {
+        "dir": "output",
+        "out": 263.5466,
+        "lmin": 260.83823,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[28]": {
+        "dir": "output",
+        "out": 259.53943,
+        "lmin": 256.77744,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[27]": {
+        "dir": "output",
+        "out": 257.66486,
+        "lmin": 252.94537000000003,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[26]": {
+        "dir": "output",
+        "out": 250.98160000000001,
+        "lmin": 245.87195000000003,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[25]": {
+        "dir": "output",
+        "out": 244.47415,
+        "lmin": 239.1907,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[24]": {
+        "dir": "output",
+        "out": 263.58679,
+        "lmin": 260.52747,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[23]": {
+        "dir": "output",
+        "out": 251.80892999999998,
+        "lmin": 246.81839000000002,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[22]": {
+        "dir": "output",
+        "out": 249.19362999999998,
+        "lmin": 244.03049,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[21]": {
+        "dir": "output",
+        "out": 268.89719,
+        "lmin": 265.72351,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[20]": {
+        "dir": "output",
+        "out": 263.30093,
+        "lmin": 260.28485,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[19]": {
+        "dir": "output",
+        "out": 253.71832,
+        "lmin": 248.56948999999997,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[18]": {
+        "dir": "output",
+        "out": 248.28026999999997,
+        "lmin": 243.07141000000001,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[17]": {
+        "dir": "output",
+        "out": 265.2597,
+        "lmin": 262.43466,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[16]": {
+        "dir": "output",
+        "out": 263.9624,
+        "lmin": 261.01852,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[15]": {
+        "dir": "output",
+        "out": 260.84973,
+        "lmin": 256.65787,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[14]": {
+        "dir": "output",
+        "out": 249.09240999999997,
+        "lmin": 244.34381000000002,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[13]": {
+        "dir": "output",
+        "out": 265.67581,
+        "lmin": 262.80334,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[12]": {
+        "dir": "output",
+        "out": 263.25095,
+        "lmin": 260.37677,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[11]": {
+        "dir": "output",
+        "out": 254.09409,
+        "lmin": 249.29021999999998,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[10]": {
+        "dir": "output",
+        "out": 254.05054,
+        "lmin": 249.28967,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[9]": {
+        "dir": "output",
+        "out": 262.66058,
+        "lmin": 260.23544,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[8]": {
+        "dir": "output",
+        "out": 262.62897,
+        "lmin": 260.33273,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[7]": {
+        "dir": "output",
+        "out": 250.41660000000002,
+        "lmin": 245.44448999999997,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[6]": {
+        "dir": "output",
+        "out": 249.73486000000003,
+        "lmin": 244.55025999999998,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[5]": {
+        "dir": "output",
+        "out": 246.17917,
+        "lmin": 240.80936000000003,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[4]": {
+        "dir": "output",
+        "out": 262.45859,
+        "lmin": 259.75491,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[3]": {
+        "dir": "output",
+        "out": 255.64746000000002,
+        "lmin": 250.72678000000002,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[2]": {
+        "dir": "output",
+        "out": 254.11187999999999,
+        "lmin": 249.05496,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[1]": {
+        "dir": "output",
+        "out": 247.19567999999998,
+        "lmin": 241.97293000000002,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "cfg_data[0]": {
+        "dir": "output",
+        "out": 244.55901999999998,
+        "lmin": 239.15404999999998,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "layer[5]": {
+        "dir": "output",
+        "out": 264.39087,
+        "lmin": 261.39734,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "layer[4]": {
+        "dir": "output",
+        "out": 260.2529,
+        "lmin": 257.15259,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "layer[3]": {
+        "dir": "output",
+        "out": 259.99701,
+        "lmin": 257.05981,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "layer[2]": {
+        "dir": "output",
+        "out": 242.79327,
+        "lmin": 237.26970999999998,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "layer[1]": {
+        "dir": "output",
+        "out": 245.05872,
+        "lmin": 239.47577,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "layer[0]": {
+        "dir": "output",
+        "out": 259.80991,
+        "lmin": 256.84207,
+        "inp": null,
+        "hold": null,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      }
+    },
+    "lib_sha256": "f20235caf5817057e07b22d9daf320ab7b409ef037f4a8ca03f125960888aaf5"
+  }
+}

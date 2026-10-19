@@ -1,0 +1,1936 @@
+{
+  "1_synth": {
+    "odb_sha256": "8c76672034f4fe4bbf4e246c3acc0842d0109b48eba0bbb4827979ac3807eaba",
+    "ff_count": 253,
+    "functional_master_counts": {
+      "INVx1_ASAP7_75t_R": 180,
+      "BUFx2_ASAP7_75t_R": 97,
+      "NAND2x1_ASAP7_75t_R": 114,
+      "BUFx3_ASAP7_75t_R": 3,
+      "OR5x1_ASAP7_75t_R": 26,
+      "OR3x1_ASAP7_75t_R": 70,
+      "OR2x2_ASAP7_75t_R": 38,
+      "OR4x1_ASAP7_75t_R": 32,
+      "XOR2x2_ASAP7_75t_R": 24,
+      "AND2x2_ASAP7_75t_R": 73,
+      "AND3x1_ASAP7_75t_R": 80,
+      "OAI21x1_ASAP7_75t_R": 61,
+      "AO21x1_ASAP7_75t_R": 142,
+      "AND4x1_ASAP7_75t_R": 35,
+      "AND5x1_ASAP7_75t_R": 10,
+      "NAND3x1_ASAP7_75t_R": 4,
+      "OA33x2_ASAP7_75t_R": 1,
+      "NOR2x1_ASAP7_75t_R": 43,
+      "XNOR2x2_ASAP7_75t_R": 20,
+      "OA21x2_ASAP7_75t_R": 61,
+      "OA211x2_ASAP7_75t_R": 46,
+      "AO32x1_ASAP7_75t_R": 33,
+      "OAI22x1_ASAP7_75t_R": 10,
+      "AOI21x1_ASAP7_75t_R": 16,
+      "AOI22x1_ASAP7_75t_R": 11,
+      "BUFx6f_ASAP7_75t_R": 2,
+      "AO221x1_ASAP7_75t_R": 14,
+      "AO22x1_ASAP7_75t_R": 10,
+      "NOR3x1_ASAP7_75t_R": 4,
+      "AO31x2_ASAP7_75t_R": 2,
+      "AOI211x1_ASAP7_75t_R": 2,
+      "OA31x2_ASAP7_75t_R": 7,
+      "MAJx2_ASAP7_75t_R": 3,
+      "AO211x2_ASAP7_75t_R": 3,
+      "OR4x2_ASAP7_75t_R": 1,
+      "TIEHIx1_ASAP7_75t_R": 1,
+      "DFFHQNx1_ASAP7_75t_R": 2,
+      "DFFASRHQNx1_ASAP7_75t_R": 251
+    },
+    "over32": [
+      {
+        "net": "_1461_",
+        "loads": 252,
+        "drivers": [
+          {
+            "inst": "_2740_",
+            "master": "TIEHIx1_ASAP7_75t_R",
+            "pin": "H"
+          }
+        ],
+        "ports": [],
+        "sinks": [
+          "u_ot_pr_core.u_seq.u_seq.tokbase$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.tok_start$_DFF_PN0_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.t\\[9\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.t\\[8\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.t\\[7\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.t\\[6\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.t\\[5\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.t\\[4\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.t\\[3\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.t\\[2\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.t\\[1\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.t\\[19\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.t\\[18\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.t\\[17\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.t\\[16\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.t\\[15\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.t\\[14\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.t\\[13\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.t\\[12\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.t\\[11\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.t\\[10\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.t\\[0\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.running$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.prun$_DFF_PN0_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.pcnt\\[9\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.pcnt\\[8\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.pcnt\\[7\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.pcnt\\[6\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.pcnt\\[5\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.pcnt\\[4\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.pcnt\\[3\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.pcnt\\[31\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.pcnt\\[30\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.pcnt\\[2\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.pcnt\\[29\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.pcnt\\[28\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.pcnt\\[27\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.pcnt\\[26\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.pcnt\\[25\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.pcnt\\[24\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.pcnt\\[23\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.pcnt\\[22\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.pcnt\\[21\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.pcnt\\[20\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.pcnt\\[1\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.pcnt\\[19\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.pcnt\\[18\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.pcnt\\[17\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.pcnt\\[16\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.pcnt\\[15\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.pcnt\\[14\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.pcnt\\[13\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.pcnt\\[12\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.pcnt\\[11\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.pcnt\\[10\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.pcnt\\[0\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.li\\[5\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.li\\[4\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.li\\[3\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.li\\[2\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.li\\[1\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.li\\[0\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.layer\\[5\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.layer\\[4\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.layer\\[3\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.layer\\[2\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.layer\\[1\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.layer\\[0\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.ip\\[6\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.ip\\[5\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.ip\\[4\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.ip\\[3\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.ip\\[2\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.ip\\[1\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.ip\\[0\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.init$_DFF_PN1_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.fault$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.ep_q$_DFF_PN0_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.eact$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.e\\[9\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.e\\[8\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.e\\[7\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.e\\[6\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.e\\[5\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.e\\[4\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.e\\[3\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.e\\[31\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.e\\[30\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.e\\[2\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.e\\[29\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.e\\[28\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.e\\[27\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.e\\[26\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.e\\[25\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.e\\[24\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.e\\[23\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.e\\[22\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.e\\[21\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.e\\[20\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.e\\[1\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.e\\[19\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.e\\[18\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.e\\[17\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.e\\[16\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.e\\[15\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.e\\[14\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.e\\[13\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.e\\[12\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.e\\[11\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.e\\[10\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.e\\[0\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.cfg_tx_we$_DFF_PN0_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.cfg_rx_we$_DFF_PN0_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.cfg_data\\[5\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.cfg_data\\[4\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.cfg_data\\[3\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.cfg_data\\[2\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.cfg_data\\[29\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.cfg_data\\[28\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.cfg_data\\[27\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.cfg_data\\[26\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.cfg_data\\[25\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.cfg_data\\[24\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.cfg_data\\[23\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.cfg_data\\[22\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.cfg_data\\[21\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.cfg_data\\[20\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.cfg_data\\[1\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.cfg_data\\[19\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.cfg_data\\[18\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.cfg_data\\[17\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.cfg_data\\[15\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.cfg_data\\[14\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.cfg_data\\[13\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.cfg_data\\[12\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.cfg_data\\[11\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.cfg_data\\[10\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.cfg_data\\[0\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.cfg_addr\\[5\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.cfg_addr\\[4\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.cfg_addr\\[3\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.cfg_addr\\[2\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.cfg_addr\\[1\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.cfg_addr\\[0\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.cal_start$_DFF_PN0_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.cal_seg$_DFF_PN0_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.cal_ready$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.adm_run$_DFF_PN0_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.adm_pend$_DFF_PN0_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.adm_done$_DFF_PN0_/SETN",
+          "u_ot_pr_core.tok_start$_DFF_PN0_/SETN",
+          "u_ot_pr_core.running$_DFF_PN0_/SETN",
+          "u_ot_pr_core.reload_q$_DFF_PN0_/SETN",
+          "u_ot_pr_core.release_q\\[1\\]$_DFF_PN0_/SETN",
+          "u_ot_pr_core.release_q\\[0\\]$_DFF_PN0_/SETN",
+          "u_ot_pr_core.release_q\\[0\\]$_DFF_PN0_/D",
+          "u_ot_pr_core.rdy_q$_DFF_PN0_/SETN",
+          "u_ot_pr_core.layer\\[5\\]$_DFF_PN0_/SETN",
+          "u_ot_pr_core.layer\\[4\\]$_DFF_PN0_/SETN",
+          "u_ot_pr_core.layer\\[3\\]$_DFF_PN0_/SETN",
+          "u_ot_pr_core.layer\\[2\\]$_DFF_PN0_/SETN",
+          "u_ot_pr_core.layer\\[1\\]$_DFF_PN0_/SETN",
+          "u_ot_pr_core.layer\\[0\\]$_DFF_PN0_/SETN",
+          "u_ot_pr_core.halt_q$_DFF_PN1_/RESETN",
+          "u_ot_pr_core.fault$_DFF_PN0_/SETN",
+          "u_ot_pr_core.epoch_go_q$_DFF_PN0_/SETN",
+          "u_ot_pr_core.cfg_tx_we$_DFF_PN0_/SETN",
+          "u_ot_pr_core.cfg_rx_we$_DFF_PN0_/SETN",
+          "u_ot_pr_core.cfg_data\\[9\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.cfg_data\\[8\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.cfg_data\\[7\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.cfg_data\\[6\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.cfg_data\\[5\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.cfg_data\\[4\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.cfg_data\\[3\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.cfg_data\\[31\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.cfg_data\\[30\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.cfg_data\\[2\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.cfg_data\\[29\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.cfg_data\\[28\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.cfg_data\\[27\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.cfg_data\\[26\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.cfg_data\\[25\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.cfg_data\\[24\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.cfg_data\\[23\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.cfg_data\\[22\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.cfg_data\\[21\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.cfg_data\\[20\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.cfg_data\\[1\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.cfg_data\\[19\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.cfg_data\\[18\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.cfg_data\\[17\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.cfg_data\\[16\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.cfg_data\\[15\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.cfg_data\\[14\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.cfg_data\\[13\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.cfg_data\\[12\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.cfg_data\\[11\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.cfg_data\\[10\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.cfg_data\\[0\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.cfg_addr\\[5\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.cfg_addr\\[4\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.cfg_addr\\[3\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.cfg_addr\\[2\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.cfg_addr\\[1\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.cfg_addr\\[0\\]$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.cal_start$_DFF_PN0_/SETN",
+          "u_ot_pr_core.cal_seg$_DFF_PN0_/SETN",
+          "u_ot_pr_core.btx_seen$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.brx_seen$_DFFE_PN0P_/SETN",
+          "u_ot_pr_core.b_tx_q$_DFF_PN0_/SETN",
+          "u_ot_pr_core.b_rx_q$_DFF_PN0_/SETN",
+          "u_ot_pr_core.b_data_q\\[9\\]$_DFF_PN0_/SETN",
+          "u_ot_pr_core.b_data_q\\[8\\]$_DFF_PN0_/SETN",
+          "u_ot_pr_core.b_data_q\\[7\\]$_DFF_PN0_/SETN",
+          "u_ot_pr_core.b_data_q\\[6\\]$_DFF_PN0_/SETN",
+          "u_ot_pr_core.b_data_q\\[5\\]$_DFF_PN0_/SETN",
+          "u_ot_pr_core.b_data_q\\[4\\]$_DFF_PN0_/SETN",
+          "u_ot_pr_core.b_data_q\\[3\\]$_DFF_PN0_/SETN",
+          "u_ot_pr_core.b_data_q\\[31\\]$_DFF_PN0_/SETN",
+          "u_ot_pr_core.b_data_q\\[30\\]$_DFF_PN0_/SETN",
+          "u_ot_pr_core.b_data_q\\[2\\]$_DFF_PN0_/SETN",
+          "u_ot_pr_core.b_data_q\\[29\\]$_DFF_PN0_/SETN",
+          "u_ot_pr_core.b_data_q\\[28\\]$_DFF_PN0_/SETN",
+          "u_ot_pr_core.b_data_q\\[27\\]$_DFF_PN0_/SETN",
+          "u_ot_pr_core.b_data_q\\[26\\]$_DFF_PN0_/SETN",
+          "u_ot_pr_core.b_data_q\\[25\\]$_DFF_PN0_/SETN",
+          "u_ot_pr_core.b_data_q\\[24\\]$_DFF_PN0_/SETN",
+          "u_ot_pr_core.b_data_q\\[23\\]$_DFF_PN0_/SETN",
+          "u_ot_pr_core.b_data_q\\[22\\]$_DFF_PN0_/SETN",
+          "u_ot_pr_core.b_data_q\\[21\\]$_DFF_PN0_/SETN",
+          "u_ot_pr_core.b_data_q\\[20\\]$_DFF_PN0_/SETN",
+          "u_ot_pr_core.b_data_q\\[1\\]$_DFF_PN0_/SETN",
+          "u_ot_pr_core.b_data_q\\[19\\]$_DFF_PN0_/SETN",
+          "u_ot_pr_core.b_data_q\\[18\\]$_DFF_PN0_/SETN",
+          "u_ot_pr_core.b_data_q\\[17\\]$_DFF_PN0_/SETN",
+          "u_ot_pr_core.b_data_q\\[16\\]$_DFF_PN0_/SETN",
+          "u_ot_pr_core.b_data_q\\[15\\]$_DFF_PN0_/SETN",
+          "u_ot_pr_core.b_data_q\\[14\\]$_DFF_PN0_/SETN",
+          "u_ot_pr_core.b_data_q\\[13\\]$_DFF_PN0_/SETN",
+          "u_ot_pr_core.b_data_q\\[12\\]$_DFF_PN0_/SETN",
+          "u_ot_pr_core.b_data_q\\[11\\]$_DFF_PN0_/SETN",
+          "u_ot_pr_core.b_data_q\\[10\\]$_DFF_PN0_/SETN",
+          "u_ot_pr_core.b_data_q\\[0\\]$_DFF_PN0_/SETN",
+          "u_ot_pr_core.b_addr_q\\[5\\]$_DFF_PN0_/SETN",
+          "u_ot_pr_core.b_addr_q\\[4\\]$_DFF_PN0_/SETN",
+          "u_ot_pr_core.b_addr_q\\[3\\]$_DFF_PN0_/SETN",
+          "u_ot_pr_core.b_addr_q\\[2\\]$_DFF_PN0_/SETN",
+          "u_ot_pr_core.b_addr_q\\[1\\]$_DFF_PN0_/SETN",
+          "u_ot_pr_core.b_addr_q\\[0\\]$_DFF_PN0_/SETN",
+          "u_ot_pr_core.adm_done$_DFF_PN0_/SETN",
+          "u_ot_pr_core.adm_act$_DFFE_PN0P_/SETN"
+        ]
+      },
+      {
+        "net": "u_ot_pr_core.release_q\\[1\\]",
+        "loads": 206,
+        "drivers": [
+          {
+            "inst": "_2647_",
+            "master": "INVx1_ASAP7_75t_R",
+            "pin": "Y"
+          }
+        ],
+        "ports": [],
+        "sinks": [
+          "u_ot_pr_core.u_seq.u_seq.tokbase$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.tok_start$_DFF_PN0_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.t\\[9\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.t\\[8\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.t\\[7\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.t\\[6\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.t\\[5\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.t\\[4\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.t\\[3\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.t\\[2\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.t\\[1\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.t\\[19\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.t\\[18\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.t\\[17\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.t\\[16\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.t\\[15\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.t\\[14\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.t\\[13\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.t\\[12\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.t\\[11\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.t\\[10\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.t\\[0\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.running$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.prun$_DFF_PN0_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.pcnt\\[9\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.pcnt\\[8\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.pcnt\\[7\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.pcnt\\[6\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.pcnt\\[5\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.pcnt\\[4\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.pcnt\\[3\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.pcnt\\[31\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.pcnt\\[30\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.pcnt\\[2\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.pcnt\\[29\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.pcnt\\[28\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.pcnt\\[27\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.pcnt\\[26\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.pcnt\\[25\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.pcnt\\[24\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.pcnt\\[23\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.pcnt\\[22\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.pcnt\\[21\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.pcnt\\[20\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.pcnt\\[1\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.pcnt\\[19\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.pcnt\\[18\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.pcnt\\[17\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.pcnt\\[16\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.pcnt\\[15\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.pcnt\\[14\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.pcnt\\[13\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.pcnt\\[12\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.pcnt\\[11\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.pcnt\\[10\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.pcnt\\[0\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.li\\[5\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.li\\[4\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.li\\[3\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.li\\[2\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.li\\[1\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.li\\[0\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.layer\\[5\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.layer\\[4\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.layer\\[3\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.layer\\[2\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.layer\\[1\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.layer\\[0\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.ip\\[6\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.ip\\[5\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.ip\\[4\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.ip\\[3\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.ip\\[2\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.ip\\[1\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.ip\\[0\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.init$_DFF_PN1_/SETN",
+          "u_ot_pr_core.u_seq.u_seq.fault$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.ep_q$_DFF_PN0_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.eact$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.e\\[9\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.e\\[8\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.e\\[7\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.e\\[6\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.e\\[5\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.e\\[4\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.e\\[3\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.e\\[31\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.e\\[30\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.e\\[2\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.e\\[29\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.e\\[28\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.e\\[27\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.e\\[26\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.e\\[25\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.e\\[24\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.e\\[23\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.e\\[22\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.e\\[21\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.e\\[20\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.e\\[1\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.e\\[19\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.e\\[18\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.e\\[17\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.e\\[16\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.e\\[15\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.e\\[14\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.e\\[13\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.e\\[12\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.e\\[11\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.e\\[10\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.e\\[0\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.cfg_tx_we$_DFF_PN0_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.cfg_rx_we$_DFF_PN0_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.cfg_data\\[5\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.cfg_data\\[4\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.cfg_data\\[3\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.cfg_data\\[2\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.cfg_data\\[29\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.cfg_data\\[28\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.cfg_data\\[27\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.cfg_data\\[26\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.cfg_data\\[25\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.cfg_data\\[24\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.cfg_data\\[23\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.cfg_data\\[22\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.cfg_data\\[21\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.cfg_data\\[20\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.cfg_data\\[1\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.cfg_data\\[19\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.cfg_data\\[18\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.cfg_data\\[17\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.cfg_data\\[15\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.cfg_data\\[14\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.cfg_data\\[13\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.cfg_data\\[12\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.cfg_data\\[11\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.cfg_data\\[10\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.cfg_data\\[0\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.cfg_addr\\[5\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.cfg_addr\\[4\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.cfg_addr\\[3\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.cfg_addr\\[2\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.cfg_addr\\[1\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.cfg_addr\\[0\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.cal_start$_DFF_PN0_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.cal_seg$_DFF_PN0_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.cal_ready$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.adm_run$_DFF_PN0_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.adm_pend$_DFF_PN0_/RESETN",
+          "u_ot_pr_core.u_seq.u_seq.adm_done$_DFF_PN0_/RESETN",
+          "u_ot_pr_core.tok_start$_DFF_PN0_/RESETN",
+          "u_ot_pr_core.running$_DFF_PN0_/RESETN",
+          "u_ot_pr_core.rdy_q$_DFF_PN0_/RESETN",
+          "u_ot_pr_core.layer\\[5\\]$_DFF_PN0_/RESETN",
+          "u_ot_pr_core.layer\\[4\\]$_DFF_PN0_/RESETN",
+          "u_ot_pr_core.layer\\[3\\]$_DFF_PN0_/RESETN",
+          "u_ot_pr_core.layer\\[2\\]$_DFF_PN0_/RESETN",
+          "u_ot_pr_core.layer\\[1\\]$_DFF_PN0_/RESETN",
+          "u_ot_pr_core.layer\\[0\\]$_DFF_PN0_/RESETN",
+          "u_ot_pr_core.fault$_DFF_PN0_/RESETN",
+          "u_ot_pr_core.cfg_tx_we$_DFF_PN0_/RESETN",
+          "u_ot_pr_core.cfg_rx_we$_DFF_PN0_/RESETN",
+          "u_ot_pr_core.cfg_data\\[9\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.cfg_data\\[8\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.cfg_data\\[7\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.cfg_data\\[6\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.cfg_data\\[5\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.cfg_data\\[4\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.cfg_data\\[3\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.cfg_data\\[31\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.cfg_data\\[30\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.cfg_data\\[2\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.cfg_data\\[29\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.cfg_data\\[28\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.cfg_data\\[27\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.cfg_data\\[26\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.cfg_data\\[25\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.cfg_data\\[24\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.cfg_data\\[23\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.cfg_data\\[22\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.cfg_data\\[21\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.cfg_data\\[20\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.cfg_data\\[1\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.cfg_data\\[19\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.cfg_data\\[18\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.cfg_data\\[17\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.cfg_data\\[16\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.cfg_data\\[15\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.cfg_data\\[14\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.cfg_data\\[13\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.cfg_data\\[12\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.cfg_data\\[11\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.cfg_data\\[10\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.cfg_data\\[0\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.cfg_addr\\[5\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.cfg_addr\\[4\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.cfg_addr\\[3\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.cfg_addr\\[2\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.cfg_addr\\[1\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.cfg_addr\\[0\\]$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.cal_start$_DFF_PN0_/RESETN",
+          "u_ot_pr_core.cal_seg$_DFF_PN0_/RESETN",
+          "u_ot_pr_core.btx_seen$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.brx_seen$_DFFE_PN0P_/RESETN",
+          "u_ot_pr_core.adm_done$_DFF_PN0_/RESETN",
+          "u_ot_pr_core.adm_act$_DFFE_PN0P_/RESETN"
+        ]
+      },
+      {
+        "net": "rst_n__ot_rl1\\[0\\]",
+        "loads": 45,
+        "drivers": [
+          {
+            "inst": "_2738_",
+            "master": "INVx1_ASAP7_75t_R",
+            "pin": "Y"
+          }
+        ],
+        "ports": [],
+        "sinks": [
+          "u_ot_pr_core.reload_q$_DFF_PN0_/RESETN",
+          "u_ot_pr_core.release_q\\[1\\]$_DFF_PN0_/RESETN",
+          "u_ot_pr_core.release_q\\[0\\]$_DFF_PN0_/RESETN",
+          "u_ot_pr_core.halt_q$_DFF_PN1_/SETN",
+          "u_ot_pr_core.epoch_go_q$_DFF_PN0_/RESETN",
+          "u_ot_pr_core.b_tx_q$_DFF_PN0_/RESETN",
+          "u_ot_pr_core.b_rx_q$_DFF_PN0_/RESETN",
+          "u_ot_pr_core.b_data_q\\[9\\]$_DFF_PN0_/RESETN",
+          "u_ot_pr_core.b_data_q\\[8\\]$_DFF_PN0_/RESETN",
+          "u_ot_pr_core.b_data_q\\[7\\]$_DFF_PN0_/RESETN",
+          "u_ot_pr_core.b_data_q\\[6\\]$_DFF_PN0_/RESETN",
+          "u_ot_pr_core.b_data_q\\[5\\]$_DFF_PN0_/RESETN",
+          "u_ot_pr_core.b_data_q\\[4\\]$_DFF_PN0_/RESETN",
+          "u_ot_pr_core.b_data_q\\[3\\]$_DFF_PN0_/RESETN",
+          "u_ot_pr_core.b_data_q\\[31\\]$_DFF_PN0_/RESETN",
+          "u_ot_pr_core.b_data_q\\[30\\]$_DFF_PN0_/RESETN",
+          "u_ot_pr_core.b_data_q\\[2\\]$_DFF_PN0_/RESETN",
+          "u_ot_pr_core.b_data_q\\[29\\]$_DFF_PN0_/RESETN",
+          "u_ot_pr_core.b_data_q\\[28\\]$_DFF_PN0_/RESETN",
+          "u_ot_pr_core.b_data_q\\[27\\]$_DFF_PN0_/RESETN",
+          "u_ot_pr_core.b_data_q\\[26\\]$_DFF_PN0_/RESETN",
+          "u_ot_pr_core.b_data_q\\[25\\]$_DFF_PN0_/RESETN",
+          "u_ot_pr_core.b_data_q\\[24\\]$_DFF_PN0_/RESETN",
+          "u_ot_pr_core.b_data_q\\[23\\]$_DFF_PN0_/RESETN",
+          "u_ot_pr_core.b_data_q\\[22\\]$_DFF_PN0_/RESETN",
+          "u_ot_pr_core.b_data_q\\[21\\]$_DFF_PN0_/RESETN",
+          "u_ot_pr_core.b_data_q\\[20\\]$_DFF_PN0_/RESETN",
+          "u_ot_pr_core.b_data_q\\[1\\]$_DFF_PN0_/RESETN",
+          "u_ot_pr_core.b_data_q\\[19\\]$_DFF_PN0_/RESETN",
+          "u_ot_pr_core.b_data_q\\[18\\]$_DFF_PN0_/RESETN",
+          "u_ot_pr_core.b_data_q\\[17\\]$_DFF_PN0_/RESETN",
+          "u_ot_pr_core.b_data_q\\[16\\]$_DFF_PN0_/RESETN",
+          "u_ot_pr_core.b_data_q\\[15\\]$_DFF_PN0_/RESETN",
+          "u_ot_pr_core.b_data_q\\[14\\]$_DFF_PN0_/RESETN",
+          "u_ot_pr_core.b_data_q\\[13\\]$_DFF_PN0_/RESETN",
+          "u_ot_pr_core.b_data_q\\[12\\]$_DFF_PN0_/RESETN",
+          "u_ot_pr_core.b_data_q\\[11\\]$_DFF_PN0_/RESETN",
+          "u_ot_pr_core.b_data_q\\[10\\]$_DFF_PN0_/RESETN",
+          "u_ot_pr_core.b_data_q\\[0\\]$_DFF_PN0_/RESETN",
+          "u_ot_pr_core.b_addr_q\\[5\\]$_DFF_PN0_/RESETN",
+          "u_ot_pr_core.b_addr_q\\[4\\]$_DFF_PN0_/RESETN",
+          "u_ot_pr_core.b_addr_q\\[3\\]$_DFF_PN0_/RESETN",
+          "u_ot_pr_core.b_addr_q\\[2\\]$_DFF_PN0_/RESETN",
+          "u_ot_pr_core.b_addr_q\\[1\\]$_DFF_PN0_/RESETN",
+          "u_ot_pr_core.b_addr_q\\[0\\]$_DFF_PN0_/RESETN"
+        ]
+      }
+    ],
+    "max_loads": 252,
+    "die_area": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "dbu": 1000
+  },
+  "6_final": {
+    "odb_sha256": "36348e286da471c429dec6561b6055f73ba772465a0988e1cdd3b956adb50794",
+    "ff_count": 293,
+    "functional_master_counts": {
+      "INVx1_ASAP7_75t_R": 190,
+      "BUFx16f_ASAP7_75t_R": 14,
+      "DFFASRHQNx1_ASAP7_75t_R": 291,
+      "NAND2x1_ASAP7_75t_R": 114,
+      "OR5x1_ASAP7_75t_R": 26,
+      "OR3x1_ASAP7_75t_R": 70,
+      "OR2x2_ASAP7_75t_R": 38,
+      "OR4x1_ASAP7_75t_R": 32,
+      "XOR2x2_ASAP7_75t_R": 24,
+      "AND2x2_ASAP7_75t_R": 73,
+      "AND3x1_ASAP7_75t_R": 80,
+      "OAI21x1_ASAP7_75t_R": 61,
+      "AO21x1_ASAP7_75t_R": 142,
+      "AND4x1_ASAP7_75t_R": 35,
+      "AND5x1_ASAP7_75t_R": 10,
+      "NAND3x1_ASAP7_75t_R": 4,
+      "BUFx3_ASAP7_75t_R": 34,
+      "OA33x2_ASAP7_75t_R": 1,
+      "NOR2x1_ASAP7_75t_R": 43,
+      "XNOR2x2_ASAP7_75t_R": 20,
+      "OA21x2_ASAP7_75t_R": 61,
+      "OA211x2_ASAP7_75t_R": 46,
+      "AO32x1_ASAP7_75t_R": 33,
+      "BUFx4f_ASAP7_75t_R": 151,
+      "OAI22x1_ASAP7_75t_R": 10,
+      "AOI21x1_ASAP7_75t_R": 16,
+      "BUFx6f_ASAP7_75t_R": 2,
+      "AOI22x1_ASAP7_75t_R": 11,
+      "BUFx2_ASAP7_75t_R": 218,
+      "AO221x1_ASAP7_75t_R": 14,
+      "AO22x1_ASAP7_75t_R": 10,
+      "NOR3x1_ASAP7_75t_R": 4,
+      "AO31x2_ASAP7_75t_R": 2,
+      "AOI211x1_ASAP7_75t_R": 2,
+      "OA31x2_ASAP7_75t_R": 7,
+      "MAJx2_ASAP7_75t_R": 3,
+      "AO211x2_ASAP7_75t_R": 3,
+      "OR4x2_ASAP7_75t_R": 1,
+      "HB2xp67_ASAP7_75t_R": 97,
+      "INVx2_ASAP7_75t_R": 2,
+      "DFFHQNx1_ASAP7_75t_R": 2,
+      "TIEHIx1_ASAP7_75t_R": 252,
+      "BUFx8_ASAP7_75t_R": 4,
+      "INVx3_ASAP7_75t_R": 5,
+      "INVx4_ASAP7_75t_R": 1,
+      "INVx5_ASAP7_75t_R": 1
+    },
+    "over32": [],
+    "max_loads": 32,
+    "die_area": [
+      0,
+      0,
+      21600,
+      34560
+    ],
+    "dbu": 1000,
+    "pins": [
+      {
+        "name": "adm_done",
+        "direction": "OUTPUT",
+        "rects": [
+          [
+            18648,
+            5904,
+            18792,
+            5928
+          ]
+        ]
+      },
+      {
+        "name": "bcfg_addr[0]",
+        "direction": "INPUT",
+        "rects": [
+          [
+            18648,
+            8064,
+            18792,
+            8088
+          ]
+        ]
+      },
+      {
+        "name": "bcfg_addr[1]",
+        "direction": "INPUT",
+        "rects": [
+          [
+            18648,
+            8496,
+            18792,
+            8520
+          ]
+        ]
+      },
+      {
+        "name": "bcfg_addr[2]",
+        "direction": "INPUT",
+        "rects": [
+          [
+            18648,
+            8928,
+            18792,
+            8952
+          ]
+        ]
+      },
+      {
+        "name": "bcfg_addr[3]",
+        "direction": "INPUT",
+        "rects": [
+          [
+            18648,
+            9360,
+            18792,
+            9384
+          ]
+        ]
+      },
+      {
+        "name": "bcfg_addr[4]",
+        "direction": "INPUT",
+        "rects": [
+          [
+            18648,
+            9792,
+            18792,
+            9816
+          ]
+        ]
+      },
+      {
+        "name": "bcfg_addr[5]",
+        "direction": "INPUT",
+        "rects": [
+          [
+            18648,
+            10224,
+            18792,
+            10248
+          ]
+        ]
+      },
+      {
+        "name": "bcfg_data[0]",
+        "direction": "INPUT",
+        "rects": [
+          [
+            18648,
+            10656,
+            18792,
+            10680
+          ]
+        ]
+      },
+      {
+        "name": "bcfg_data[10]",
+        "direction": "INPUT",
+        "rects": [
+          [
+            18648,
+            14976,
+            18792,
+            15000
+          ]
+        ]
+      },
+      {
+        "name": "bcfg_data[11]",
+        "direction": "INPUT",
+        "rects": [
+          [
+            18648,
+            15408,
+            18792,
+            15432
+          ]
+        ]
+      },
+      {
+        "name": "bcfg_data[12]",
+        "direction": "INPUT",
+        "rects": [
+          [
+            18648,
+            15840,
+            18792,
+            15864
+          ]
+        ]
+      },
+      {
+        "name": "bcfg_data[13]",
+        "direction": "INPUT",
+        "rects": [
+          [
+            18648,
+            16272,
+            18792,
+            16296
+          ]
+        ]
+      },
+      {
+        "name": "bcfg_data[14]",
+        "direction": "INPUT",
+        "rects": [
+          [
+            18648,
+            16704,
+            18792,
+            16728
+          ]
+        ]
+      },
+      {
+        "name": "bcfg_data[15]",
+        "direction": "INPUT",
+        "rects": [
+          [
+            18648,
+            17136,
+            18792,
+            17160
+          ]
+        ]
+      },
+      {
+        "name": "bcfg_data[16]",
+        "direction": "INPUT",
+        "rects": [
+          [
+            18648,
+            17568,
+            18792,
+            17592
+          ]
+        ]
+      },
+      {
+        "name": "bcfg_data[17]",
+        "direction": "INPUT",
+        "rects": [
+          [
+            18648,
+            18000,
+            18792,
+            18024
+          ]
+        ]
+      },
+      {
+        "name": "bcfg_data[18]",
+        "direction": "INPUT",
+        "rects": [
+          [
+            18648,
+            18432,
+            18792,
+            18456
+          ]
+        ]
+      },
+      {
+        "name": "bcfg_data[19]",
+        "direction": "INPUT",
+        "rects": [
+          [
+            18648,
+            18864,
+            18792,
+            18888
+          ]
+        ]
+      },
+      {
+        "name": "bcfg_data[1]",
+        "direction": "INPUT",
+        "rects": [
+          [
+            18648,
+            11088,
+            18792,
+            11112
+          ]
+        ]
+      },
+      {
+        "name": "bcfg_data[20]",
+        "direction": "INPUT",
+        "rects": [
+          [
+            18648,
+            19296,
+            18792,
+            19320
+          ]
+        ]
+      },
+      {
+        "name": "bcfg_data[21]",
+        "direction": "INPUT",
+        "rects": [
+          [
+            18648,
+            19728,
+            18792,
+            19752
+          ]
+        ]
+      },
+      {
+        "name": "bcfg_data[22]",
+        "direction": "INPUT",
+        "rects": [
+          [
+            18648,
+            20160,
+            18792,
+            20184
+          ]
+        ]
+      },
+      {
+        "name": "bcfg_data[23]",
+        "direction": "INPUT",
+        "rects": [
+          [
+            18648,
+            20592,
+            18792,
+            20616
+          ]
+        ]
+      },
+      {
+        "name": "bcfg_data[24]",
+        "direction": "INPUT",
+        "rects": [
+          [
+            18648,
+            21024,
+            18792,
+            21048
+          ]
+        ]
+      },
+      {
+        "name": "bcfg_data[25]",
+        "direction": "INPUT",
+        "rects": [
+          [
+            18648,
+            21456,
+            18792,
+            21480
+          ]
+        ]
+      },
+      {
+        "name": "bcfg_data[26]",
+        "direction": "INPUT",
+        "rects": [
+          [
+            18648,
+            21888,
+            18792,
+            21912
+          ]
+        ]
+      },
+      {
+        "name": "bcfg_data[27]",
+        "direction": "INPUT",
+        "rects": [
+          [
+            18648,
+            22320,
+            18792,
+            22344
+          ]
+        ]
+      },
+      {
+        "name": "bcfg_data[28]",
+        "direction": "INPUT",
+        "rects": [
+          [
+            18648,
+            22752,
+            18792,
+            22776
+          ]
+        ]
+      },
+      {
+        "name": "bcfg_data[29]",
+        "direction": "INPUT",
+        "rects": [
+          [
+            18648,
+            23184,
+            18792,
+            23208
+          ]
+        ]
+      },
+      {
+        "name": "bcfg_data[2]",
+        "direction": "INPUT",
+        "rects": [
+          [
+            18648,
+            11520,
+            18792,
+            11544
+          ]
+        ]
+      },
+      {
+        "name": "bcfg_data[30]",
+        "direction": "INPUT",
+        "rects": [
+          [
+            18648,
+            23616,
+            18792,
+            23640
+          ]
+        ]
+      },
+      {
+        "name": "bcfg_data[31]",
+        "direction": "INPUT",
+        "rects": [
+          [
+            18648,
+            24048,
+            18792,
+            24072
+          ]
+        ]
+      },
+      {
+        "name": "bcfg_data[3]",
+        "direction": "INPUT",
+        "rects": [
+          [
+            18648,
+            11952,
+            18792,
+            11976
+          ]
+        ]
+      },
+      {
+        "name": "bcfg_data[4]",
+        "direction": "INPUT",
+        "rects": [
+          [
+            18648,
+            12384,
+            18792,
+            12408
+          ]
+        ]
+      },
+      {
+        "name": "bcfg_data[5]",
+        "direction": "INPUT",
+        "rects": [
+          [
+            18648,
+            12816,
+            18792,
+            12840
+          ]
+        ]
+      },
+      {
+        "name": "bcfg_data[6]",
+        "direction": "INPUT",
+        "rects": [
+          [
+            18648,
+            13248,
+            18792,
+            13272
+          ]
+        ]
+      },
+      {
+        "name": "bcfg_data[7]",
+        "direction": "INPUT",
+        "rects": [
+          [
+            18648,
+            13680,
+            18792,
+            13704
+          ]
+        ]
+      },
+      {
+        "name": "bcfg_data[8]",
+        "direction": "INPUT",
+        "rects": [
+          [
+            18648,
+            14112,
+            18792,
+            14136
+          ]
+        ]
+      },
+      {
+        "name": "bcfg_data[9]",
+        "direction": "INPUT",
+        "rects": [
+          [
+            18648,
+            14544,
+            18792,
+            14568
+          ]
+        ]
+      },
+      {
+        "name": "bcfg_rx_we",
+        "direction": "INPUT",
+        "rects": [
+          [
+            18648,
+            7632,
+            18792,
+            7656
+          ]
+        ]
+      },
+      {
+        "name": "bcfg_tx_we",
+        "direction": "INPUT",
+        "rects": [
+          [
+            18648,
+            7200,
+            18792,
+            7224
+          ]
+        ]
+      },
+      {
+        "name": "cal_ready",
+        "direction": "OUTPUT",
+        "rects": [
+          [
+            18648,
+            2448,
+            18792,
+            2472
+          ]
+        ]
+      },
+      {
+        "name": "cal_seg",
+        "direction": "OUTPUT",
+        "rects": [
+          [
+            0,
+            2448,
+            144,
+            2472
+          ]
+        ]
+      },
+      {
+        "name": "cal_start",
+        "direction": "OUTPUT",
+        "rects": [
+          [
+            0,
+            2880,
+            144,
+            2904
+          ]
+        ]
+      },
+      {
+        "name": "cfg_addr[0]",
+        "direction": "OUTPUT",
+        "rects": [
+          [
+            0,
+            3312,
+            144,
+            3336
+          ]
+        ]
+      },
+      {
+        "name": "cfg_addr[1]",
+        "direction": "OUTPUT",
+        "rects": [
+          [
+            0,
+            3744,
+            144,
+            3768
+          ]
+        ]
+      },
+      {
+        "name": "cfg_addr[2]",
+        "direction": "OUTPUT",
+        "rects": [
+          [
+            0,
+            4176,
+            144,
+            4200
+          ]
+        ]
+      },
+      {
+        "name": "cfg_addr[3]",
+        "direction": "OUTPUT",
+        "rects": [
+          [
+            0,
+            4608,
+            144,
+            4632
+          ]
+        ]
+      },
+      {
+        "name": "cfg_addr[4]",
+        "direction": "OUTPUT",
+        "rects": [
+          [
+            0,
+            5040,
+            144,
+            5064
+          ]
+        ]
+      },
+      {
+        "name": "cfg_addr[5]",
+        "direction": "OUTPUT",
+        "rects": [
+          [
+            0,
+            5472,
+            144,
+            5496
+          ]
+        ]
+      },
+      {
+        "name": "cfg_data[0]",
+        "direction": "OUTPUT",
+        "rects": [
+          [
+            0,
+            5904,
+            144,
+            5928
+          ]
+        ]
+      },
+      {
+        "name": "cfg_data[10]",
+        "direction": "OUTPUT",
+        "rects": [
+          [
+            0,
+            10224,
+            144,
+            10248
+          ]
+        ]
+      },
+      {
+        "name": "cfg_data[11]",
+        "direction": "OUTPUT",
+        "rects": [
+          [
+            0,
+            10656,
+            144,
+            10680
+          ]
+        ]
+      },
+      {
+        "name": "cfg_data[12]",
+        "direction": "OUTPUT",
+        "rects": [
+          [
+            0,
+            11088,
+            144,
+            11112
+          ]
+        ]
+      },
+      {
+        "name": "cfg_data[13]",
+        "direction": "OUTPUT",
+        "rects": [
+          [
+            0,
+            11520,
+            144,
+            11544
+          ]
+        ]
+      },
+      {
+        "name": "cfg_data[14]",
+        "direction": "OUTPUT",
+        "rects": [
+          [
+            0,
+            11952,
+            144,
+            11976
+          ]
+        ]
+      },
+      {
+        "name": "cfg_data[15]",
+        "direction": "OUTPUT",
+        "rects": [
+          [
+            0,
+            12384,
+            144,
+            12408
+          ]
+        ]
+      },
+      {
+        "name": "cfg_data[16]",
+        "direction": "OUTPUT",
+        "rects": [
+          [
+            0,
+            12816,
+            144,
+            12840
+          ]
+        ]
+      },
+      {
+        "name": "cfg_data[17]",
+        "direction": "OUTPUT",
+        "rects": [
+          [
+            0,
+            13248,
+            144,
+            13272
+          ]
+        ]
+      },
+      {
+        "name": "cfg_data[18]",
+        "direction": "OUTPUT",
+        "rects": [
+          [
+            0,
+            13680,
+            144,
+            13704
+          ]
+        ]
+      },
+      {
+        "name": "cfg_data[19]",
+        "direction": "OUTPUT",
+        "rects": [
+          [
+            0,
+            14112,
+            144,
+            14136
+          ]
+        ]
+      },
+      {
+        "name": "cfg_data[1]",
+        "direction": "OUTPUT",
+        "rects": [
+          [
+            0,
+            6336,
+            144,
+            6360
+          ]
+        ]
+      },
+      {
+        "name": "cfg_data[20]",
+        "direction": "OUTPUT",
+        "rects": [
+          [
+            0,
+            14544,
+            144,
+            14568
+          ]
+        ]
+      },
+      {
+        "name": "cfg_data[21]",
+        "direction": "OUTPUT",
+        "rects": [
+          [
+            0,
+            14976,
+            144,
+            15000
+          ]
+        ]
+      },
+      {
+        "name": "cfg_data[22]",
+        "direction": "OUTPUT",
+        "rects": [
+          [
+            0,
+            15408,
+            144,
+            15432
+          ]
+        ]
+      },
+      {
+        "name": "cfg_data[23]",
+        "direction": "OUTPUT",
+        "rects": [
+          [
+            0,
+            15840,
+            144,
+            15864
+          ]
+        ]
+      },
+      {
+        "name": "cfg_data[24]",
+        "direction": "OUTPUT",
+        "rects": [
+          [
+            0,
+            16272,
+            144,
+            16296
+          ]
+        ]
+      },
+      {
+        "name": "cfg_data[25]",
+        "direction": "OUTPUT",
+        "rects": [
+          [
+            0,
+            16704,
+            144,
+            16728
+          ]
+        ]
+      },
+      {
+        "name": "cfg_data[26]",
+        "direction": "OUTPUT",
+        "rects": [
+          [
+            0,
+            17136,
+            144,
+            17160
+          ]
+        ]
+      },
+      {
+        "name": "cfg_data[27]",
+        "direction": "OUTPUT",
+        "rects": [
+          [
+            0,
+            17568,
+            144,
+            17592
+          ]
+        ]
+      },
+      {
+        "name": "cfg_data[28]",
+        "direction": "OUTPUT",
+        "rects": [
+          [
+            0,
+            18000,
+            144,
+            18024
+          ]
+        ]
+      },
+      {
+        "name": "cfg_data[29]",
+        "direction": "OUTPUT",
+        "rects": [
+          [
+            0,
+            18432,
+            144,
+            18456
+          ]
+        ]
+      },
+      {
+        "name": "cfg_data[2]",
+        "direction": "OUTPUT",
+        "rects": [
+          [
+            0,
+            6768,
+            144,
+            6792
+          ]
+        ]
+      },
+      {
+        "name": "cfg_data[30]",
+        "direction": "OUTPUT",
+        "rects": [
+          [
+            0,
+            18864,
+            144,
+            18888
+          ]
+        ]
+      },
+      {
+        "name": "cfg_data[31]",
+        "direction": "OUTPUT",
+        "rects": [
+          [
+            0,
+            19296,
+            144,
+            19320
+          ]
+        ]
+      },
+      {
+        "name": "cfg_data[3]",
+        "direction": "OUTPUT",
+        "rects": [
+          [
+            0,
+            7200,
+            144,
+            7224
+          ]
+        ]
+      },
+      {
+        "name": "cfg_data[4]",
+        "direction": "OUTPUT",
+        "rects": [
+          [
+            0,
+            7632,
+            144,
+            7656
+          ]
+        ]
+      },
+      {
+        "name": "cfg_data[5]",
+        "direction": "OUTPUT",
+        "rects": [
+          [
+            0,
+            8064,
+            144,
+            8088
+          ]
+        ]
+      },
+      {
+        "name": "cfg_data[6]",
+        "direction": "OUTPUT",
+        "rects": [
+          [
+            0,
+            8496,
+            144,
+            8520
+          ]
+        ]
+      },
+      {
+        "name": "cfg_data[7]",
+        "direction": "OUTPUT",
+        "rects": [
+          [
+            0,
+            8928,
+            144,
+            8952
+          ]
+        ]
+      },
+      {
+        "name": "cfg_data[8]",
+        "direction": "OUTPUT",
+        "rects": [
+          [
+            0,
+            9360,
+            144,
+            9384
+          ]
+        ]
+      },
+      {
+        "name": "cfg_data[9]",
+        "direction": "OUTPUT",
+        "rects": [
+          [
+            0,
+            9792,
+            144,
+            9816
+          ]
+        ]
+      },
+      {
+        "name": "cfg_rx_we",
+        "direction": "OUTPUT",
+        "rects": [
+          [
+            0,
+            19728,
+            144,
+            19752
+          ]
+        ]
+      },
+      {
+        "name": "cfg_tx_we",
+        "direction": "OUTPUT",
+        "rects": [
+          [
+            0,
+            20160,
+            144,
+            20184
+          ]
+        ]
+      },
+      {
+        "name": "ck",
+        "direction": "INPUT",
+        "rects": [
+          [
+            9408,
+            0,
+            9432,
+            144
+          ]
+        ]
+      },
+      {
+        "name": "epoch_go",
+        "direction": "INPUT",
+        "rects": [
+          [
+            0,
+            21024,
+            144,
+            21048
+          ]
+        ]
+      },
+      {
+        "name": "fault",
+        "direction": "OUTPUT",
+        "rects": [
+          [
+            18648,
+            6768,
+            18792,
+            6792
+          ]
+        ]
+      },
+      {
+        "name": "halt",
+        "direction": "INPUT",
+        "rects": [
+          [
+            0,
+            20592,
+            144,
+            20616
+          ]
+        ]
+      },
+      {
+        "name": "layer[0]",
+        "direction": "OUTPUT",
+        "rects": [
+          [
+            18648,
+            3312,
+            18792,
+            3336
+          ]
+        ]
+      },
+      {
+        "name": "layer[1]",
+        "direction": "OUTPUT",
+        "rects": [
+          [
+            18648,
+            3744,
+            18792,
+            3768
+          ]
+        ]
+      },
+      {
+        "name": "layer[2]",
+        "direction": "OUTPUT",
+        "rects": [
+          [
+            18648,
+            4176,
+            18792,
+            4200
+          ]
+        ]
+      },
+      {
+        "name": "layer[3]",
+        "direction": "OUTPUT",
+        "rects": [
+          [
+            18648,
+            4608,
+            18792,
+            4632
+          ]
+        ]
+      },
+      {
+        "name": "layer[4]",
+        "direction": "OUTPUT",
+        "rects": [
+          [
+            18648,
+            5040,
+            18792,
+            5064
+          ]
+        ]
+      },
+      {
+        "name": "layer[5]",
+        "direction": "OUTPUT",
+        "rects": [
+          [
+            18648,
+            5472,
+            18792,
+            5496
+          ]
+        ]
+      },
+      {
+        "name": "reload",
+        "direction": "INPUT",
+        "rects": [
+          [
+            4704,
+            0,
+            4728,
+            144
+          ]
+        ]
+      },
+      {
+        "name": "rst_n",
+        "direction": "INPUT",
+        "rects": [
+          [
+            11568,
+            0,
+            11592,
+            144
+          ]
+        ]
+      },
+      {
+        "name": "running",
+        "direction": "OUTPUT",
+        "rects": [
+          [
+            18648,
+            2880,
+            18792,
+            2904
+          ]
+        ]
+      },
+      {
+        "name": "tok_start",
+        "direction": "OUTPUT",
+        "rects": [
+          [
+            18648,
+            6336,
+            18792,
+            6360
+          ]
+        ]
+      },
+      {
+        "name": "VDD",
+        "direction": "INOUT",
+        "rects": [
+          [
+            18792,
+            2151,
+            18912,
+            32409
+          ],
+          [
+            16092,
+            2151,
+            16212,
+            32409
+          ],
+          [
+            13392,
+            2151,
+            13512,
+            32409
+          ],
+          [
+            10692,
+            2151,
+            10812,
+            32409
+          ],
+          [
+            7992,
+            2151,
+            8112,
+            32409
+          ],
+          [
+            5292,
+            2151,
+            5412,
+            32409
+          ],
+          [
+            2592,
+            2151,
+            2712,
+            32409
+          ]
+        ]
+      },
+      {
+        "name": "VSS",
+        "direction": "INOUT",
+        "rects": [
+          [
+            18600,
+            2137,
+            18720,
+            32423
+          ],
+          [
+            15900,
+            2137,
+            16020,
+            32423
+          ],
+          [
+            13200,
+            2137,
+            13320,
+            32423
+          ],
+          [
+            10500,
+            2137,
+            10620,
+            32423
+          ],
+          [
+            7800,
+            2137,
+            7920,
+            32423
+          ],
+          [
+            5100,
+            2137,
+            5220,
+            32423
+          ],
+          [
+            2400,
+            2137,
+            2520,
+            32423
+          ]
+        ]
+      }
+    ]
+  }
+}

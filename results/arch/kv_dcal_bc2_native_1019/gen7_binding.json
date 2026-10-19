@@ -1,0 +1,27 @@
+{
+  "case": "/srv/opentallas-scratch/claude/qwen-kvsys/kvs14r-4db097403-codexmub",
+  "source": "4db097403",
+  "die_sha256": "973efc8396aa237838fbf53aa629692c6a52c872ab5b72ab6658f3218b4ebbda",
+  "port_bind_sha256": "23a7e979f51da1a3ed40242aa5fa959ddd2db4728ef0cda6778ae15eb87b8a38",
+  "dcal_binding": {
+    "n_instances": 1,
+    "die_ports": 12,
+    "cls": "REAL",
+    "module": "qkd_d2d_cal_seq_pin_bc",
+    "file": "rtl/qwen_sys/d2d_static_20261015/qkd_d2d_cal_seq_bootcfg.sv",
+    "width_or_missing": [],
+    "die_ports_not_bound": [],
+    "rtl_inputs_unconnected": [],
+    "rtl_outputs_unread": [
+      "adm_done",
+      "cal_ready",
+      "fault",
+      "layer",
+      "running"
+    ]
+  },
+  "instance": [
+    "qkd_dcal dcal (.ck(n_clk_core_c), .cal(n_dcal_cfg), .dcfg(n_dcal_dcfg), .hlt(n_dcal_hlt), .rld(n_dcal_rld__pinfix3), .btx(n_ks_kvs_ctl__boot__link_cfg_tx_we__r2), .brx(n_ks_kvs_ctl__boot__link_cfg_rx_we__r2), .bad(n_ks_kvs_ctl__boot__link_cfg_addr__r2), .bdt(n_ks_kvs_ctl__boot__link_cfg_data__r2), .tks(n_ks_lprg_st), .rst_n(n_rrs_n_rst_link_t0__m_0__s0[0]), .ego(n_hfwd_epoch));"
+  ],
+  "flags": "export OT_KV_HOST_NORTH='1'\nexport OT_KV_LANDSLOT='1'\nexport OT_KV_BOOT_AGES='1'\nexport OT_KV_HOST_V14='1'\nexport OT_KV_RST_PER_TREE='1'\nexport OT_KV_PVT_HUB_CLEAR='172.8'\nexport OT_KV_KVNC='1'\nexport OT_KV_SN_LIFT='432'\nexport OT_KV_STATIC_DIE='1'\nexport OT_KV_REACH_W='36:400,296:370,100000:340'\nexport OT_KV_PV_AGE='96'\nexport OT_KV_TILE_KITS='1'\nexport OT_KV_PV_T='1'\nexport OT_KV_PV_W='82'\nexport OT_KV_V144_R6='1'\nexport OT_KV_FANFOLD='1'\nexport OT_KV_RLY_STD='1'\nexport OT_KV_FACE_LAND='astk_rly_296'\nexport OT_KV_REACH_FIX='1'\nexport OT_KV_PVFORK_GAP='64.8'\nexport OT_KV_PV_PINY='1'\nexport OT_KV_SEQ_STATIC='1'\nexport OT_KV_TREES='1'\nexport OT_KV_DCAL_BC='1'\nexport OT_KV_PVT_HDR_CTL='1'\nexport OT_KV_STATIC_SCHED_STRICT='1'\nexport OT_KV_ATTN_LAND='1'\nexport OT_KV_FWD='1'\nexport OT_KV_RST_REGIONAL='1'\nexport OT_KV_V144_DW='2462.4'\nexport OT_KV_V143C='1'\nexport OT_KV_PV_CTL_KIT='qkd_pv_ctl_rstpin_a72'\nexport OT_KV_REACH='400'\nexport OT_KV_HROOT='1'\nexport OT_KV_V144='1'\nexport OT_KV_V143='1'\nexport OT_KV_MU='1'\nexport OT_KV_EXPAND='qkd_rhead,qkd_rhead_ft,qkd_ectl,qkd_ctrl,qkd_ctrl_n,qkd_pvfork,qkd_pvtap2,qkd_pvtap3,qkd_pvtap4,qkd_seq_st,qkd_pvw_s,qkd_pvw_n'\nexport OT_KV_HOP='1'\nexport OT_KV_CTL_BAND='302.4'\nexport OT_KV_BUNDLE_EQ='1'\nexport OT_KV_DCAL='1'\nexport OT_KV_ECTL_H13='1'\nexport OT_KV_PV_T_CTL_KIT='qkd_pv_ctl_t_d54f58a95'\nexport OT_KV_D2DS_VIEW='auto'\nexport OT_KV_PVT_PINS='1'\nexport OT_KV_HROOT_VIEW='auto'\nexport OT_KV_KV_CHAN_EXTRA='86.4'\nexport OT_KV_STATIC_DIE_STRICT='1'\nexport OT_KV_SEAM='1'\nexport OT_KV_RST_PIN_REG='1'\nexport OT_KV_D2D_NTX='3'\nexport OT_KV_PVT_SOFT_SLACK='0'\nexport OT_KV_V144_RLY_FIRST='pvin_,krs_,kvn_,ap_,aq_,am_,ks_acal_,pve_'\nexport OT_KV_PHY_REG='1'\nexport OT_KV_SERDES_N='1'\n"
+}
