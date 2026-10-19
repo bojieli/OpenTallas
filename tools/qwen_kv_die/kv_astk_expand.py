@@ -89,7 +89,9 @@ def prepare(J, leaf, fw, fh):
             y=center(k)-172.8-(2-j)*153.36 if j<2 else center(k)+172.8+(j-2)*153.36+4.32
         elif t=='qkd_astk_ctl_s':x=0;y=fh-h
         elif t=='qkd_astk_zn' and z:
-            k=int(z[1]);x=(k%2)*166.32;y=fh-237.6+(k//2)*90.72
+            # KVR-VIEWS 10-19: the 2 x 2 zn block sits RIGHT of the 103.68-um ctl (top-left): at x 0 / 166.32 the second zn
+            # row (fh-146.88 .. fh-60.48) overlapped ctl (fh-86.4 .. fh) and every expansion refused ('does not fit')
+            k=int(z[1]);x=fw-2*86.4+(k%2)*86.4;y=fh-237.6+(k//2)*90.72
         else:
             pending.append(n);continue
         if not put(n,x,y):raise ValueError(f'{n}: actual functional leaf does not fit ASTK envelope')
