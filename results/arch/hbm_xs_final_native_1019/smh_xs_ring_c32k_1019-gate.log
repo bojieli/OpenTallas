@@ -1,0 +1,24 @@
+GATE WARN fill: fill 43% = (macros/children 23048 + std 13468) / outline 83981 um2 (pin-bound: S face carries the 2,069-bit bk1 beat: 345.6 um would be 5.99 pins/um before corner keep-outs, so the outline is 388.8 wide (5.3/um); height 216 is the minimum that holds the abutted 4-high x-store stack (164.2 um) and the 4-high ring column (43.2 pitch) with >= 20 um to the pin faces. Fill (23,031 macro + 13,468 synth std) / 83,981 = 43.5%: inside the owner 40-60% band, below the 50% parent-kit warn line.)
+GATE INFO pin_regs: pin registers opted out: Existing RTL input and output pin registers retained; explicit OT_SMH_XSRST two-stage face reset landing. Zero added data edges.
+GATE INFO layer: tile: PG M6 stripes as pins, signals M2-M6, parent strap M7, cap M6 (granted)
+GATE INFO remote: ot-run selected ot-agidock128 for 48 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_smh_xs_ring_c32k_1019_20261019-115411.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_smh_xs_ring_c32k_1019_20261019-115411.log; host dir ot-agidock128:/srv/opentallas-scratch/claude/ref_gate/smh_xs_ring_c32k_1019-20261019-115411
+GATE INFO remote: synth + floorplan + PDN OK on ot-agidock128 in 117 s (gate total 2867 s)
+GATE INFO floorplan.pin_geometry: actual pin geometry PASS: {'signal_clock_pins': 4543, 'pin_rectangles': 4543, 'pin_track_checked': 4543, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 da55ebe67f8611e9ae79e031d4215a187eebdd33ba7f825931de39d123ed9f2d
+GATE INFO util: synthesized std area 13485 um2 + macros 23048 in core 81387: util 25% (std-cell density 25.2% of placeable 53603 um2; total fill 44.9%)
+GATE INFO textbook: WARN ot_hbm_accel_smh_xs cells 102,599 flops 26,135 depth 288.4 ps util 0.4215 reach 0.0 um (3.0 s)
+GATE WARN textbook.clock_domain: clock root port clk: 26,135 flops > 15,000 on one root (+0 ICGs, 11 macro clock pins; e.g. g_ohr[0].u.q[0]$_DFF_P_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine  -> FIX: hardened sub-tiles with local roots and registered seams (kind cluster), <= ~15k sinks / 600 um a root
+GATE WARN textbook.clock_guidance: clock root port:clk: 26,146 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 26,146 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate
+GATE INFO cts_calibration: ss insertion all 617.5..756.5 ps (spread 139.0), boundary mean 648.0; tt insertion all 479.3..556.1 ps (spread 76.8), boundary mean 499.6; ff insertion all 389.7..449.7 ps (spread 60.0), boundary mean 408.3; macro_clk flag False
+GATE INFO density: effective global-placement target density 0.450 vs spec PD 0.45
+GATE INFO path_classes: constraints signoff /src/physical/ref_tile/smh_xs_ring_c32k_1019/signoff.sdc (TT placement RC; diagnostic)
+GATE INFO path_classes: reg->macro    299 paths, worst slack 108.9 ps (e.g. u_leaf.g_wr_ring[4].u_w/wd_in[64])
+GATE INFO path_classes: reg->reg       71 paths, worst slack 182.1 ps (e.g. u_leaf.wce_q[2]$_DFF_PN0_/D)
+GATE INFO path_classes: setup WNS 1.0889522616963632e-10 hold WNS 4.7952530835004836e-11
+GATE WARN clock_rule: root port:clk: 26,146 sinks on the largest root; measured TT insertion 556.1 ps, FF insertion 449.7 ps, TT pin-flop spread 39.6 ps, FF pin-flop spread 38.0 ps; WARN: 26,146 sinks on one clock root > 15,000 (guidance); insertion 556.1 ps > 300 (guidance; boundary matched by parent compensation / landing)  -> FIX: guidance only (owner 10-17 0dq): match the boundary by parent compensation or a landed link
+GATE INFO layout_images: LOOK at these before submitting: floorplan /home/ubuntu/wt/codex-smhxs-ring-rg2-1019/physical/ref_tile/smh_xs_ring_c32k_1019/gate_layout/floorplan.png; density /home/ubuntu/wt/codex-smhxs-ring-rg2-1019/physical/ref_tile/smh_xs_ring_c32k_1019/gate_layout/density.png
+GATE WARN fill: fill 41% = (hard macros 23047.7 + synthesized std cells 11255.0) / outline 83980.8 um2; pin demand per face: S 2089 pins over 329.4/388.8 um (85%), N 1644 pins over 346.3/388.8 um (89%), W 831 pins over 153.5/216.0 um (71%), E 19 pins over 1.7/216.0 um (1%) (pin-bound: S face carries the 2,069-bit bk1 beat: 345.6 um would be 5.99 pins/um before corner keep-outs, so the outline is 388.8 wide (5.3/um); height 216 is the minimum that holds the abutted 4-high x-store stack (164.2 um) and the 4-high ring column (43.2 pitch) with >= 20 um to the pin faces. Fill (23,031 macro + 13,468 synth std) / 83,981 = 43.5%: inside the owner 40-60% band, below the 50% parent-kit warn line.)
+GATE INFO trial_route: trial GRT: total overflow 0; worst layer M2 29.44% used; GRT 1204 s
+PRE_ROUTE_GATE: WARN (0 fail, 5 warn)
+GATE: smh_xs_ring_c32k_1019/gate_result.json written (exact staged source binding; commit it with the kit)

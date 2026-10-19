@@ -1,0 +1,352 @@
+{
+  "limits": {
+    "max_contacts_per_um": 6
+  },
+  "macros": [
+    {
+      "bbox": [
+        43.2,
+        43.2,
+        94.608,
+        63.99
+      ],
+      "faces": [
+        {
+          "contacts": 198,
+          "density_per_um": 9.523809523809524,
+          "full_face_um": 20.79,
+          "side": "E"
+        },
+        {
+          "contacts": 199,
+          "density_per_um": 9.571909571909572,
+          "full_face_um": 20.79,
+          "side": "W"
+        }
+      ],
+      "instance": "u_leaf.g_wr_ring\\[0\\].u_w",
+      "lattice_x_43p2": true,
+      "lattice_y_43p2": true,
+      "master": "ot_sram_1r1w_32x128_m1"
+    },
+    {
+      "bbox": [
+        43.2,
+        86.4,
+        94.608,
+        107.19
+      ],
+      "faces": [
+        {
+          "contacts": 198,
+          "density_per_um": 9.523809523809527,
+          "full_face_um": 20.789999999999992,
+          "side": "E"
+        },
+        {
+          "contacts": 199,
+          "density_per_um": 9.571909571909575,
+          "full_face_um": 20.789999999999992,
+          "side": "W"
+        }
+      ],
+      "instance": "u_leaf.g_wr_ring\\[1\\].u_w",
+      "lattice_x_43p2": true,
+      "lattice_y_43p2": true,
+      "master": "ot_sram_1r1w_32x128_m1"
+    },
+    {
+      "bbox": [
+        43.2,
+        129.6,
+        94.608,
+        150.39
+      ],
+      "faces": [
+        {
+          "contacts": 198,
+          "density_per_um": 9.523809523809527,
+          "full_face_um": 20.789999999999992,
+          "side": "E"
+        },
+        {
+          "contacts": 199,
+          "density_per_um": 9.571909571909575,
+          "full_face_um": 20.789999999999992,
+          "side": "W"
+        }
+      ],
+      "instance": "u_leaf.g_wr_ring\\[2\\].u_w",
+      "lattice_x_43p2": true,
+      "lattice_y_43p2": true,
+      "master": "ot_sram_1r1w_32x128_m1"
+    },
+    {
+      "bbox": [
+        43.2,
+        172.8,
+        94.608,
+        193.59
+      ],
+      "faces": [
+        {
+          "contacts": 198,
+          "density_per_um": 9.523809523809527,
+          "full_face_um": 20.789999999999992,
+          "side": "E"
+        },
+        {
+          "contacts": 199,
+          "density_per_um": 9.571909571909575,
+          "full_face_um": 20.789999999999992,
+          "side": "W"
+        }
+      ],
+      "instance": "u_leaf.g_wr_ring\\[3\\].u_w",
+      "lattice_x_43p2": true,
+      "lattice_y_43p2": true,
+      "master": "ot_sram_1r1w_32x128_m1"
+    },
+    {
+      "bbox": [
+        129.6,
+        43.2,
+        181.008,
+        63.99
+      ],
+      "faces": [
+        {
+          "contacts": 198,
+          "density_per_um": 9.523809523809524,
+          "full_face_um": 20.79,
+          "side": "E"
+        },
+        {
+          "contacts": 199,
+          "density_per_um": 9.571909571909572,
+          "full_face_um": 20.79,
+          "side": "W"
+        }
+      ],
+      "instance": "u_leaf.g_wr_ring\\[4\\].u_w",
+      "lattice_x_43p2": true,
+      "lattice_y_43p2": true,
+      "master": "ot_sram_1r1w_32x128_m1"
+    },
+    {
+      "bbox": [
+        129.6,
+        86.4,
+        181.008,
+        107.19
+      ],
+      "faces": [
+        {
+          "contacts": 198,
+          "density_per_um": 9.523809523809527,
+          "full_face_um": 20.789999999999992,
+          "side": "E"
+        },
+        {
+          "contacts": 199,
+          "density_per_um": 9.571909571909575,
+          "full_face_um": 20.789999999999992,
+          "side": "W"
+        }
+      ],
+      "instance": "u_leaf.g_wr_ring\\[5\\].u_w",
+      "lattice_x_43p2": true,
+      "lattice_y_43p2": true,
+      "master": "ot_sram_1r1w_32x128_m1"
+    },
+    {
+      "bbox": [
+        129.6,
+        129.6,
+        181.008,
+        150.39
+      ],
+      "faces": [
+        {
+          "contacts": 198,
+          "density_per_um": 9.523809523809527,
+          "full_face_um": 20.789999999999992,
+          "side": "E"
+        },
+        {
+          "contacts": 199,
+          "density_per_um": 9.571909571909575,
+          "full_face_um": 20.789999999999992,
+          "side": "W"
+        }
+      ],
+      "instance": "u_leaf.g_wr_ring\\[6\\].u_w",
+      "lattice_x_43p2": true,
+      "lattice_y_43p2": true,
+      "master": "ot_sram_1r1w_32x128_m1"
+    },
+    {
+      "bbox": [
+        216.0,
+        23.76,
+        310.824,
+        64.8
+      ],
+      "faces": [
+        {
+          "contacts": 409,
+          "density_per_um": 9.965886939571153,
+          "full_face_um": 41.03999999999999,
+          "side": "E"
+        },
+        {
+          "contacts": 410,
+          "density_per_um": 9.990253411306044,
+          "full_face_um": 41.03999999999999,
+          "side": "W"
+        }
+      ],
+      "instance": "u_leaf.g_xm\\[0\\].u_x",
+      "lattice_x_43p2": true,
+      "lattice_y_43p2": false,
+      "master": "ot_sram_1r1w_128x256_m1_r2c2"
+    },
+    {
+      "bbox": [
+        216.0,
+        64.8,
+        310.824,
+        105.84
+      ],
+      "faces": [
+        {
+          "contacts": 409,
+          "density_per_um": 9.96588693957115,
+          "full_face_um": 41.040000000000006,
+          "side": "E"
+        },
+        {
+          "contacts": 410,
+          "density_per_um": 9.99025341130604,
+          "full_face_um": 41.040000000000006,
+          "side": "W"
+        }
+      ],
+      "instance": "u_leaf.g_xm\\[1\\].u_x",
+      "lattice_x_43p2": true,
+      "lattice_y_43p2": false,
+      "master": "ot_sram_1r1w_128x256_m1_r2c2"
+    },
+    {
+      "bbox": [
+        216.0,
+        105.84,
+        310.824,
+        146.88
+      ],
+      "faces": [
+        {
+          "contacts": 409,
+          "density_per_um": 9.965886939571153,
+          "full_face_um": 41.03999999999999,
+          "side": "E"
+        },
+        {
+          "contacts": 410,
+          "density_per_um": 9.990253411306044,
+          "full_face_um": 41.03999999999999,
+          "side": "W"
+        }
+      ],
+      "instance": "u_leaf.g_xm\\[2\\].u_x",
+      "lattice_x_43p2": true,
+      "lattice_y_43p2": false,
+      "master": "ot_sram_1r1w_128x256_m1_r2c2"
+    },
+    {
+      "bbox": [
+        216.0,
+        146.88,
+        310.824,
+        187.92
+      ],
+      "faces": [
+        {
+          "contacts": 409,
+          "density_per_um": 9.965886939571153,
+          "full_face_um": 41.03999999999999,
+          "side": "E"
+        },
+        {
+          "contacts": 410,
+          "density_per_um": 9.990253411306044,
+          "full_face_um": 41.03999999999999,
+          "side": "W"
+        }
+      ],
+      "instance": "u_leaf.g_xm\\[3\\].u_x",
+      "lattice_x_43p2": true,
+      "lattice_y_43p2": false,
+      "master": "ot_sram_1r1w_128x256_m1_r2c2"
+    }
+  ],
+  "scope": "Original IOP floorplan dump; actual contact pitch/full face counts, not detailed-route access or PG certification",
+  "source_dump_sha256": "da55ebe67f8611e9ae79e031d4215a187eebdd33ba7f825931de39d123ed9f2d",
+  "top_faces": [
+    {
+      "contacts": 19,
+      "local_pitch_density_per_um": 10.416666666666666,
+      "minimum_pitch_um": 0.096,
+      "pitch_histogram": {
+        "0.096": 18
+      },
+      "side": "E"
+    },
+    {
+      "contacts": 1624,
+      "local_pitch_density_per_um": 10.416666666666666,
+      "minimum_pitch_um": 0.096,
+      "pitch_histogram": {
+        "0.096": 1612,
+        "0.864": 8,
+        "35.424": 1,
+        "47.712": 1,
+        "101.472": 1
+      },
+      "side": "N"
+    },
+    {
+      "contacts": 2069,
+      "local_pitch_density_per_um": 10.416666666666666,
+      "minimum_pitch_um": 0.096,
+      "pitch_histogram": {
+        "0.096": 2052,
+        "0.864": 7,
+        "1.152": 1,
+        "3.168": 1,
+        "3.936": 1,
+        "7.008": 1,
+        "10.08": 1,
+        "13.152": 3,
+        "61.536": 1
+      },
+      "side": "S"
+    },
+    {
+      "contacts": 831,
+      "local_pitch_density_per_um": 10.416666666666666,
+      "minimum_pitch_um": 0.096,
+      "pitch_histogram": {
+        "0.096": 822,
+        "0.864": 3,
+        "3.936": 1,
+        "6.24": 1,
+        "19.296": 1,
+        "19.392": 1,
+        "23.136": 1
+      },
+      "side": "W"
+    }
+  ],
+  "verdict": "FAIL"
+}

@@ -1,0 +1,43 @@
+{
+  "error": "unsupported bus in ot_sram_1r1w_128x256_m1_r2c2",
+  "provenance": {
+    "collector_sha256": "893a3f5566752a5ee38b7dd3495b43d8d84258cbbd49b975b3e01a38707bb9dd",
+    "libs": [
+      {
+        "path": "asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz",
+        "sha256": "fe9f1c18e88ab129d63ad82adc256f3a85c7e38e47dabbe0a96749b41087dea1"
+      },
+      {
+        "path": "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+        "sha256": "8d6db2c2f83c3c162be54a5e102b2d379fcaaaef2db5f0b1d4152c395d01fea1"
+      },
+      {
+        "path": "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz",
+        "sha256": "bbe6d904d58c7367de1ed7639e4eae386c65fa0a5af26ae62dc5e4e2ec52b08b"
+      },
+      {
+        "path": "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3"
+      },
+      {
+        "path": "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz",
+        "sha256": "073ac4b6b08f272b6953b0ad54d1d9743767a7d15a0e2964ed86cf44c3dbe00e"
+      },
+      {
+        "path": "ot_sram_1r1w_128x256_m1_r2c2_tt.lib",
+        "sha256": "c39f42e739c93c5809d82fdc12d41cbb3ddfc6ab43fba192e542e347a7f6ea94"
+      },
+      {
+        "path": "ot_sram_1r1w_32x128_m1_tt.lib",
+        "sha256": "fff564af30de7be97939931864886b378892f7bac57ff77853813f9704af7cf7"
+      }
+    ],
+    "odb_sha256": "9783679fcb24b771ccc0799bb111cf07c09e18eb6303c27fab0c3486ece5276e",
+    "pg_omissions": {
+      "instance_pg": 168388,
+      "top_pg": 2
+    },
+    "raw_sha256": "af7c156f228868787d9b7bc27f361feaef715b90f643a3b2a75a8183203c88ee"
+  },
+  "verdict": "REFUSED"
+}
