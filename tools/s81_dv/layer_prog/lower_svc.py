@@ -409,20 +409,26 @@ def lower(die, op, ctx):
         st = 'LOWERED'
     elif name == 'attn.pv':
         st = 'PARTIAL'
-        r['gap'] = dict(module='results/arch/s81_dv_1016/bind9/die.v u_rsv_00..15 (dsdv_svc_att ST)', port='ST (parameter)',
-                        missing='every u_rsv_* takes the default ST = 0, so only the quarter-0 owners (tiles 0..3 = dims '
-                                '0..127) emit P.V (rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att.sv:313 pvown, '
-                                'dsdv_svc_rs_roles.svh rs_pvslot); the rank needs all 512 dims of its 16 heads for '
-                                'wo_a: dims 128..511 have no on-die P.V output (the quarter-0 words are bench-exact)')
+        r['gap'] = dict(module='results/arch/s81_dv_1016/bind_p4l3_g8/die.v u_rsv_00..15 (dsdv_svc_att ST) -- die gap G10',
+                        port='ST (compile-time parameter = the die\'s HBM-stack position)',
+                        missing='by design (results/arch/s81_dv_1016/svc_rs/decisions.json, svc_c rule) a die emits the P.V '
+                                'of its stack\'s output quarter only (tiles 4 ST .. 4 ST + 3, dsdv_svc_att.sv:313 pvown); '
+                                'the quarter-0 words are bench-exact, so for the die at stack position 0 the on-die op is '
+                                'complete. GAP G10: ST is a parameter, not a strap or CFG field, so one die netlist '
+                                'cannot take stack positions 1..3 (every array die emits quarter 0), and the other 3 '
+                                'quarters reach wo_a only through a cross-die exchange that no layer op prices or lowers '
+                                '(TOK.DS.XDIE / S81-DIE8 decision)')
     else:
         st = 'GAP'
-        r['gap'] = dict(module='results/arch/s81_dv_1016/bind9/die.v u_rsv_00..15 (dsdv_svc_rs SM face)',
+        r['gap'] = dict(module='results/arch/s81_dv_1016/bind_p4l3_g8/die.v u_rsv_00..15 (dsdv_svc_rs SM face) -- die gap G9',
                         port='w_v / w_a / w_m / w_d / w_st',
                         missing='the SM head (ot_s81_su_sms, dsdv_svc_rs.sv:215-219) computes the head\'s max / exp / '
-                                'den from the SE rows, but its write face is unconnected on all 16 u_rsv_* (open '
-                                'outputs): the P operand of the PV frame and den for the normalisation have no on-die '
-                                'path (the entry q pin is fed only by u_s_3S / u_s_4S xr band bo); the bench feeds P '
-                                '= bf16(fixture attn.exp) as runtime data')
+                                'den from the SE rows, but its write face has NO consumer anywhere in rtl/ (open outputs '
+                                'on all 16 u_rsv_*; die_port_bind does not count unconnected outputs, so strict bind '
+                                'PASSes and synthesis would remove the SM): the P operand of the PV frame (16 heads x 2 '
+                                'rows BF16 a word, from 16 different slices) and the normalised o rows have no on-die '
+                                'path; the bench feeds P = bf16(fixture attn.exp) as runtime data. Needs an RTL dataflow '
+                                'decision (gaps.json G9 options), not a lowering')
     return dict(r, status=st)
 
 
