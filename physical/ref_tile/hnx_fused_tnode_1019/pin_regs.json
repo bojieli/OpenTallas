@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hnx_fused_tnode",
+ "enable": false,
+ "reason": "the RTL registers every pin: up inputs ua/ub land in pin flops iac/iad/ibc/ibd, the parent bus dn in idv/idd, the straps pad_k/pad_b in pk_q/pb_q; every output is a flop Q (uo = oc/od, da/db = kept av_q/ad_q/bv_q/bd_q). The die's pads / wsc are derived from these fixed edges, so automatic pin registers would shift the static tree schedule"
+}
