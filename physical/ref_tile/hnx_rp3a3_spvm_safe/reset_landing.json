@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "ot_hnx_att4_spvm",
+ "enable": false,
+ "reason": "RTL rst_n -> spvm.rq -> smerge kept rst_c/rst_e/rst_m = two registered stages; data pins already registered"
+}
