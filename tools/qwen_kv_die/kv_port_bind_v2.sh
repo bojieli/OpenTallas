@@ -37,8 +37,10 @@ fi
 # canonical arithmetic files resolve duplicate combined-model definitions.
 python3 $R/tools/die_port_bind.py $O/die_bound.v --rtl-root rtl \
   --prefer rtl/hdc/ot_hdc_fp32_add_lat.sv --prefer rtl/hdc/ot_hdc_fp32_mul_lat.sv \
+  --prefer physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_bb.v \
+  --prefer physical/qwen_missing_phy/ot_qfd_serdes_112g_x12_phy/ot_qfd_serdes_112g_x12_phy_bb.v \
   --lib-root physical/qkd_astk_strip/macros \
-  --rtl-file $R/physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_model.sv \
+  --rtl-file $R/physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_bb.v \
   "${F[@]}" --rtl-file $O/kv_hard_models.sv --rtl-file $O/kv_relays_dir.sv \
   --rtl-file $R/physical/qwen_missing_phy/ot_qfd_serdes_112g_x12_phy/ot_qfd_serdes_112g_x12_phy_bb.v \
   --allow-model qkd_hbm3e_phy_pc --allow-model qkd_ckbump --allow-model qkd_fwdbump --allow-model ot_qkvd_ucie_x64_phy \

@@ -47,6 +47,18 @@ from binding_order import sliced_order  # noqa: E402
 SCHEMA = 'opentallas.qwen_kv_bound_netlist.v1'
 # analog hard macros / pad cells with no RTL: port models (directions derived from the real endpoints)
 HARD_MODELS = ('qkd_hbm3e_phy_pc', 'qkd_ckbump', 'qkd_fwdbump')
+# Licensed PHYs have real scalar tx/rx ports; the die's bundled fdi net
+# must be split in the same LSB order as its digital peer, never inferred
+# as a generic model inout. These are canonical macro port abstracts.
+PHY_BINDINGS = {
+    'ot_qkvd_ucie_x64_phy': dict(module='ot_qkvd_ucie_x64_phy',
+        file='physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_bb.v',
+        ports=dict(clk=['clk'], rst_n=['rst_n'], fdi=['tx_up','tx_v','tx_flit','rx_v','rx_flit'])),
+    'ot_qfd_serdes_112g_x12_phy': dict(module='ot_qfd_serdes_112g_x12_phy',
+        file='physical/qwen_missing_phy/ot_qfd_serdes_112g_x12_phy/ot_qfd_serdes_112g_x12_phy_bb.v',
+        ports=dict(clk=['clk'], rst_n=['rst_n'], fdi=['tx_up','tx_v','tx_flit','rx_v','rx_flit'])),
+}
+
 # classed inputs driven from OFF the die (package pads / package straps)
 OFF_CHIP = ('por_n', 'refclk', 'die_id')
 # die-top constant net classes (die.v 'assign n_<net> = const') -> why the constant is a die strap
@@ -166,7 +178,8 @@ def main(argv=None):
         insts = [(mst_, inst_, dict(params_ or {}, **{k_: str(v_) for k_, v_ in _ip.get(inst_, {}).items()}), cm_)
                  if mst_ != '__assign__' else (mst_, inst_, params_, cm_) for mst_, inst_, params_, cm_ in insts]
     top = a.top or re.search(r'^\s*module\s+(\w+)', Path(a.die_v).read_text(), re.M).group(1)
-    files = [str(ROOT / b['file']) for b in K.BINDINGS.values() if (ROOT / b['file']).exists()]
+    bindings = dict(PHY_BINDINGS, **K.BINDINGS)
+    files = [str(ROOT / b['file']) for b in bindings.values() if (ROOT / b['file']).exists()]
     files += [a.relay_rtl] if a.relay_rtl else []
     idx, _amb = PB.rtl_index(['rtl'], files, {}, files)
     exp = json.loads(Path(a.expanded).read_text())['leaves'] if a.expanded else {}
@@ -216,8 +229,8 @@ def main(argv=None):
                         hard[mst][p].add((t[1], t[2]))
             rows.append((mst, inst, params, conns))
             continue
-        if mst in K.BINDINGS and not (mst.startswith('qkd_rly') or mst in exp):
-            b = K.BINDINGS[mst]
+        if mst in bindings and not (mst.startswith('qkd_rly') or mst in exp):
+            b = bindings[mst]
             mod = idx.get(b['module'])
             if mod is None:
                 r.update(how='unbound', module=b['module'])
