@@ -1,0 +1,16 @@
+Verilator 5.050 2026-07-01 rev v5.050
+CTLM_PROG MUT=0 BMUT=0 HARD_HR=1 HRA=1 DECODE=2: FAIL 87/96  rom_go-issue None nat_go-issue [1] csr@1042 tl got/exp (12, 12) stage1_xt1 []
+    ROM fields (slice layout): []
+    ROM command at 1224 with go on hr[73] (the as-built cmd380 layout): the slice reads go = hr[452]
+    ROM command at 3415 with go on hr[73] (the as-built cmd380 layout): the slice reads go = hr[452]
+    ROM command at 5062 with go on hr[73] (the as-built cmd380 layout): the slice reads go = hr[452]
+    ROM command at 5746 with go on hr[73] (the as-built cmd380 layout): the slice reads go = hr[452]
+    ROM command at 7807 with go on hr[73] (the as-built cmd380 layout): the slice reads go = hr[452]
+    ROM command at 9998 with go on hr[73] (the as-built cmd380 layout): the slice reads go = hr[452]
+    ROM command at 11645 with go on hr[73] (the as-built cmd380 layout): the slice reads go = hr[452]
+    ROM command at 12329 with go on hr[73] (the as-built cmd380 layout): the slice reads go = hr[452]
+    missing ROM at 1224 None
+    missing ROM at 3415 None
+    missing ROM at 5062 None
+    missing ROM at 5746 None
+exit 1

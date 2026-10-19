@@ -1,0 +1,6 @@
+MU-DQ-CTLMTL 10-19: tt_ctlm_prog_bench.py --hard 1 on image/ (ctlm_image.py --tload, digest f19bc10aa52f77eb), qfd_tt_ctlm_dv NU 1 (qfd_dv_cmd_cal_mu) + hr_pack; source fe8d9e2c1; Verilator 5.050 on ot-epyc8 (ot-run). fail regex: 'CTLM_PROG .*: FAIL'
+CTLM_PROG MUT=0 BMUT=0 HARD_HR=1 HRA=0 DECODE=2: PASS 96/96  rom_go-issue [2] nat_go-issue [1] csr@1042 tl got/exp (12, 12) stage1_xt1 [True, True, True, True]
+CTLM_PROG MUT=27 BMUT=0 HARD_HR=1 HRA=0 DECODE=2: FAIL 84/96  rom_go-issue [2] nat_go-issue [1] csr@1042 tl got/exp (12, 12) stage1_xt1 [True, True, True, True]
+CTLM_PROG MUT=28 BMUT=0 HARD_HR=1 HRA=0 DECODE=2: FAIL 84/96  rom_go-issue [2] nat_go-issue [1] csr@1042 tl got/exp (12, 12) stage1_xt1 [True, True, True, True]
+CTLM_PROG MUT=0 BMUT=0 HARD_HR=1 HRA=1 DECODE=2: FAIL 87/96  rom_go-issue None nat_go-issue [1] csr@1042 tl got/exp (12, 12) stage1_xt1 []
+CTLM_PROG MUT=1 BMUT=0 HARD_HR=1 HRA=0 DECODE=2: FAIL 40/96  rom_go-issue [2] nat_go-issue [1] csr@1042 tl got/exp (12, 12) stage1_xt1 [True, True, True, True]

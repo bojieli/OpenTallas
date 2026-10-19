@@ -1,0 +1,43 @@
+{
+ "mut": 15,
+ "verdict": "FAIL",
+ "fails": [
+  "C3 user 0 events differ: mu4 vs solo1 (first diffs [(3421, 'CMD', 0, 77884452878022635802399327358353417), (3701, 'CMD', 0, 77884452878022414427957444938301523), (3701, 'SUI', 0, 5), (3420, 'CMD', 0, 77884452878022635802399327358353417), (3700, 'CMD', 0, 77884452878022414427957444938301523), (3700, 'SUI', 0, 5)])",
+  "C4 mu4 timeline != compiled (missing 143 e.g. [(3420, 'CMD', 0, 77884452878022635802399327358353417), (3700, 'CMD', 0, 77884452878022414427957444938301523), (3700, 'SUI', 0, 5)]; extra 143 e.g. [(3421, 'CMD', 0, 77884452878022635802399327358353417), (3701, 'CMD', 0, 77884452878022414427957444938301523), (3701, 'SUI', 0, 5)])",
+  "C8 tlc4 TL words != compiled: got 3 at [1042, 2403, 3701] want 3 at [1042, 2402, 3701]; value diffs 1",
+  "C9 tlc4 timeline != compiled (missing 13 extra 13)",
+  "C7 coll4 collision not faulted (fault_code 000000)"
+ ],
+ "C_issue_offset": 0,
+ "lock": {
+  "mismatches": 0,
+  "faults": [
+   [
+    22388,
+    "000001"
+   ]
+  ]
+ },
+ "solo1_events": 72,
+ "mu4_events": 288,
+ "mu4_done_per_user": {
+  "0": 3,
+  "1": 3,
+  "2": 3,
+  "3": 3
+ },
+ "landed_words": 1536,
+ "busy4_fault_code": "000001",
+ "coll4_fault_code": "000000",
+ "mu4_fault_code": "000000",
+ "tl_words": {
+  "lock": 7,
+  "solo1": 4,
+  "solo4": 4,
+  "mu4": 13,
+  "tlc4": 3
+ },
+ "tlc4_fault_code": "000000",
+ "tlc4_user1_start": 2399,
+ "tlc4_tload_issue": 2400
+}

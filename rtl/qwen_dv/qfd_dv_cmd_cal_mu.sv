@@ -35,7 +35,8 @@
 //   [2] a playhead's entry is late (its prefetch lost the read port too long, or T_0 < 4 + arbitration)
 //   [3] relocation carry, or an XC entry whose user tag bits are not 0, or two segment ends on one edge
 //   [4] image fault (load order / seal / tcount overflow / zero delta / load while any playhead plays)
-//   [5] store read port double-booked (two playheads' reads on one edge: only after a faulted start)
+//   [5] store read port double-booked (two playheads' reads, or a read and a TLOAD block read, on one edge: only
+//       after a faulted start)
 // MUT (bench only): 1..3 as qfd_dv_cmd_cal; 11 = relocation / tag / cmd_user from the wrong user ((u + 1) % NU);
 //   12 = the per-user base dropped (no relocation); 13 = the old one-in-flight rule (a start while ANY playhead plays
 //   faults and is refused); 14 = a start for a playing user is not faulted (silent restart); 15 = a start freezes every
@@ -61,7 +62,8 @@
 //   apart, fetch modelled in ctlm_image.py cal_model; in practice TLOADs are BOOT entries on playhead 0).  The word is
 //   not relocated per user (shared tables).  FAULT (fault_code[4]): kind 0 / 4..7, [111:73] != 0, a block inside the ME
 //   programme rows, the entry area or the ME control rows (>= 976).
-//   MUT 4 (bench only): TLOAD payload macro halves swapped; MUT 5: the table word leaves one edge late.
+//   MUT 4 (bench only): TLOAD payload macro halves swapped; MUT 5: the table word leaves one edge late; MUT 29: a TLOAD
+//   issue edge still grants a playhead's fetch read (the block read and that fetch then share the port edge).
 // =====================================================================================================================
 module qfd_dv_cmd_cal_mu #(
     parameter integer MUT = 0,
@@ -223,7 +225,6 @@ module qfd_dv_cmd_cal_mu #(
     reg  [TW-1:0]  ht [0:NU-1];
     integer        u, j;
     always @* begin
-        any_gnt = 1'b0;
         for (u = 0; u < NU; u = u + 1) begin
             waddr[u] = base + {f_idx[u][8:0], 1'b0};
             f_n[u] = (f_rem[u] >= 10'd4) ? 3'd4 : f_rem[u][2:0];
@@ -269,7 +270,7 @@ module qfd_dv_cmd_cal_mu #(
     always @* begin
         any_gnt = 1'b0;
         for (gu = 0; gu < NU; gu = gu + 1) begin
-            gnt[gu] = can_read[gu] && !frz_u[gu] && !any_gnt && !tl_fire;
+            gnt[gu] = can_read[gu] && !frz_u[gu] && !any_gnt && !(tl_fire && MUT != 29);
             if (can_read[gu] && !frz_u[gu]) any_gnt = 1'b1;
         end
     end
@@ -353,7 +354,9 @@ module qfd_dv_cmd_cal_mu #(
                     if (seal_bad) begin fault <= 1'b1; fault_code[4] <= 1'b1; end else sealed <= 1'b1;
                 end
             end
-            if (m_dbl) begin fault <= 1'b1; fault_code[5] <= 1'b1; end
+            // a playhead read on the TLOAD block-read edge (only after a faulted start holds a stale rce_q; NU > 1 so
+            // that NU = 1 stays edge-identical to qfd_dv_cmd_cal, which has no such check)
+            if (m_dbl || (NU > 1 && m_rce && tl_rce_q)) begin fault <= 1'b1; fault_code[5] <= 1'b1; end
             // ---------------- playheads
             for (k = 0; k < NU; k = k + 1) begin
                 if (go_u[k]) begin
