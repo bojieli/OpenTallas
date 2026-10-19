@@ -1,0 +1,24 @@
+{
+  "schema": "opentallas.bw_ring_regional_control.v1",
+  "baseline": "80d7987a4",
+  "region_bits": 16,
+  "k_width_bits": 341,
+  "regions": 22,
+  "payload_slice_bits": 8,
+  "queue_depth": 64,
+  "queue_count_bits": 7,
+  "extra_register_bits": 252,
+  "extra_data_edges": 0,
+  "extra_sram": 0,
+  "extra_mac_or_boundary_bits": 0,
+  "initiation_interval": 1,
+  "token_schedule_change": 0,
+  "production_contract": "66 operations,154 GO,OP_GAP384 unchanged",
+  "state": "Each K region uses its own existing-edge k_v/prior-ready capture, ring occupancy and consumer count. Consumer count uses local accepted event and original cv. Local readiness retains exact arithmetic widths of the architectural count. Canonical metadata accounting is unchanged.",
+  "physical_cost": "252 additional state bits; retained regional count/capture state, routing estimate pending mapped netlist. No floorplan admission before actual synthesis area/fanout/reset census.",
+  "hazards": [
+    "Shared fault, legal, length, cv and reset may require same-edge source replicas after mapped census; no delay of registered kill",
+    "No kept combinational buffers accepted as register replication",
+    "No physical or token qualification from model alone"
+  ]
+}
