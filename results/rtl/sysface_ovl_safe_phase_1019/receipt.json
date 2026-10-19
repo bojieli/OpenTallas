@@ -77,7 +77,7 @@
       "physical_launch_binding_qualified": false,
       "checked_RX_pin_sample": 334,
       "calendar_event_sample_to_checked_pin": 3,
-      "early_FDI_mutant": "caught abort08/no checked RX"
+      "early_FDI_mutant": "caught epoch_abort/no checked RX"
     },
     "K_tx": {
       "go_sample": 300,
@@ -108,7 +108,7 @@
       "physical_launch_binding_qualified": false,
       "checked_RX_pin_sample": 334,
       "calendar_event_sample_to_checked_pin": 3,
-      "early_FDI_mutant": "caught abort08/no checked RX"
+      "early_FDI_mutant": "caught epoch_abort/no checked RX"
     }
   },
   "scope": "Actual shared raw OVL cseq with synthetic dt8 lists, ADM0, synchronous ROM plus capture; direct output wire into exact SAFE wrappers. No full programme required; TX stops before producer deadline.",
