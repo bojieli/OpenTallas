@@ -895,8 +895,13 @@ def d2d_txdp_k():
     return _ks.d2d_txdp_k()
 
 
+def _ks_ntx():
+    import kv_static as _ks          # KV-PLAN5: one source of the TX lane count (kv_static.d2d_ntx_k, closed r7t = 3)
+    return _ks.d2d_ntx_k()
+
+
 def d2ds_binding():
-    return dict(module='qkd_d2d_static', file=D2DS_FILE, parameters=dict(NL=2, TXDP=d2d_txdp_k()),
+    return dict(module='qkd_d2d_static', file=D2DS_FILE, parameters=dict(NL=2, NTX=_ks_ntx(), TXDP=d2d_txdp_k()),
                 ports=dict(ck0=['ck'], rst_n=['rst_n'], fdi=['fdi_tx_up', 'fdi_tx_v', 'fdi_tx_flit', 'fdi_rx_v', 'fdi_rx_flit'],
                            phy_rst_n=['phy_rst_n'], svc=list(D2DS_SVC), lup=['link_up'], rec_tx=list(D2DS_REC_TX),
                            rec_rx=list(D2DS_REC_RX), lrc=['host_link_reset_req', 'host_recovery_clear'],
