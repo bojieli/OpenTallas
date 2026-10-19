@@ -1,0 +1,8 @@
+mutant: u_cdc_pc.host_rst_n inverted at the parent
+seed=1 mode=0: MISMATCH phy_tx_flit t=38440504 fs core=45
+seed=1 mode=1: MISMATCH phy_tx_flit t=144826504 fs core=173
+seed=2 mode=0: MISMATCH phy_tx_flit t=43655504 fs core=52
+seed=2 mode=1: MISMATCH phy_tx_v t=43655504 fs core=52 flat=1 clu=0
+seed=3 mode=0: MISMATCH phy_tx_v t=38440504 fs core=45 flat=1 clu=0
+seed=3 mode=1: MISMATCH phy_tx_v t=285631504 fs core=342 flat=1 clu=0
+CLUSTER_GATE FAIL mutant child=cdc_pc runs_pass=0/6 core_cycles=20000
