@@ -9,6 +9,7 @@ import hashlib
 import math
 import re
 import sys
+from collections import deque
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'hbm_die_v15'))
@@ -25,7 +26,8 @@ class GeometryError(ValueError):
 
 
 class Geometry:
-    def __init__(self, manifest, views, relay_views, reach):
+    def __init__(self, manifest, views, relay_views, reach, provisional_delay=False):
+        self.provisional_delay, self.provisional_used = provisional_delay, set()
         self.pl = manifest['placement']
         self.W, self.H = manifest['die_um']
         self.expected_hashes = manifest.get('consumed_view_sha256', {})
@@ -123,6 +125,58 @@ class Geometry:
                 raise GeometryError(f'buried reset pin {name}.{p} under {other}')
         return xy
 
+    def delay_kind(self, n):
+        """Kind of the n-stage leaf (n >= 1): 'hop' or the multi-stage delay tile hbfd_rrl_d<n>.
+
+        A delay leaf replaces a hop leaf plus n-1 separate equal-age pad tiles: it is reserved with the hop outline,
+        so its actual LEF must have exactly the hop SIZE (pins may differ; every emitted edge is re-checked on them).
+        provisional_delay: a missing d<n> LEF is planned on the hop LEF geometry and the report says so (never a
+        layer for a release; the strict re-run with the gated LEFs is required)."""
+        if n == 1:
+            return 'hop'
+        kind = f'd{n}'
+        if kind not in self.relay:
+            path = self.relay_views / f'hbfd_rrl_{kind}.lef'
+            if not path.is_file() and self.provisional_delay:
+                self.relay[kind] = self.relay['hop']
+                self.provisional_used.add(kind)
+                return kind
+            w, h, pins = self.lef('hbfd_rrl_' + kind, self.relay_views)
+            hw, hh, _ = self.relay['hop']
+            if abs(w - hw) > .001 or abs(h - hh) > .001:
+                raise GeometryError(f'hbfd_rrl_{kind}: outline {w}x{h} differs from hop {hw}x{hh}')
+            for p in ('rst_n_in', 'rst_n', 'clk'):
+                if p not in pins:
+                    raise GeometryError(f'hbfd_rrl_{kind}: missing LEF pin {p}')
+            self.relay[kind] = (w, h, pins)
+        return kind
+
+    def component(self, point):
+        """Free cells reachable from point by the same strict bounded-blocked-run rule chain() routes with.
+
+        Reachability under 'every blocked run <= R' is an equivalence on free cells, so one label-correcting flood
+        (minimum blocked run per cell) decides which candidate homes chain() can ever reach. Returns a bytearray mask
+        over grid cells (1 = reachable free cell)."""
+        R = int((self.budget - 4 * GRID) // GRID)
+        nx, ny, blk = self.grid.nx, self.grid.ny, self.grid.blk
+        best = bytearray(b'\xff') * (nx * ny)
+        a = self.grid.cell(*point)
+        k0 = a[1] * nx + a[0]
+        best[k0] = 0
+        q = deque([k0])
+        while q:
+            k = q.popleft()
+            r = best[k]
+            i = k % nx
+            for n, ok in ((k + 1, i + 1 < nx), (k - 1, i > 0), (k + nx, k + nx < nx * ny), (k - nx, k >= nx)):
+                if not ok:
+                    continue
+                nr = r + 1 if blk[n] else 0
+                if nr <= R and nr < best[n]:
+                    best[n] = nr
+                    q.append(n)
+        return bytearray(1 if (b == 0 and not blk[k]) else 0 for k, b in enumerate(best))
+
     def centre(self, tile):
         w, h, _ = self.relay[tile['kind']]
         return tile['home'][0] + w / 2, tile['home'][1] + h / 2
@@ -131,7 +185,7 @@ class Geometry:
         x, y = self.relay[tile['kind']][2][p]
         return tile['home'][0] + x, tile['home'][1] + y
 
-    def candidates(self, point, max_distance):
+    def candidates(self, point, max_distance, allowed=None):
         ci, cj = self.grid.cell(*point)
         max_steps = int(math.ceil((max_distance + GRID) / GRID))
         for r in range(max_steps + 1):
@@ -139,15 +193,16 @@ class Geometry:
             for di in range(-r, r + 1):
                 for dj in set((r - abs(di), -(r - abs(di)))):
                     c = ci + di, cj + dj
-                    if 0 <= c[0] < self.grid.nx and 0 <= c[1] < self.grid.ny and self.grid.free(c):
+                    if 0 <= c[0] < self.grid.nx and 0 <= c[1] < self.grid.ny and self.grid.free(c) and (
+                            allowed is None or allowed[c[1] * self.grid.nx + c[0]]):
                         d = md(point, self.grid.xy(c))
                         if d <= max_distance:
                             choices.append((d, c))
             yield from (c for _, c in sorted(choices))
 
-    def reserve(self, kind, point, targets=(), max_distance=None):
+    def reserve(self, kind, point, targets=(), max_distance=None, allowed=None):
         w, h, pins = self.relay[kind]
-        for cell in self.candidates(point, max_distance if max_distance is not None else self.reach):
+        for cell in self.candidates(point, max_distance if max_distance is not None else self.reach, allowed):
             cx, cy = self.grid.xy(cell)
             tile = dict(kind=kind, home=(round(cx - w / 2, 6), round(cy - h / 2, 6)))
             if cx - w / 2 < 0 or cy - h / 2 < 0 or cx + w / 2 > self.W or cy + h / 2 > self.H:

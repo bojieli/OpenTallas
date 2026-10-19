@@ -5,6 +5,11 @@ Requires a pre-forest contract, its placed case manifest and the exact consumed
 LEFs (including hbfd_rrl_sync/hop). Writes a revision layer only on geometric
 PASS. Full rectangle homes are reserved outside all placed outlines; fixed
 reset release ages are equalized per (domain, POR) and per bridge source.
+Equalization lives INSIDE the leaf: a leaf that needs p extra edges is one
+multi-stage delay tile hbfd_rrl_d<p+1> (same outline as the hop), never p
+separate pad tiles. Regional roots and leaves are homed only on free cells
+reachable from the synchronized POR under the strict bounded-run rule (no
+pocket roots that need an overflight longer than the reach budget).
 This is geometry and RTL latency evidence, never physical sign-off: rebuild the
 case, check actual post-placement pins/reach, clock phases, TT/FF and DRC.
 """
@@ -26,12 +31,13 @@ def load(p):
     return json.loads(gzip.open(p).read() if str(p).endswith('.gz') else Path(p).read_text())
 
 
-def build(c, manifest, views, relay_views=None, reach=405., fanout=2048, zones='d4b', mut_skew=False):
+def build(c, manifest, views, relay_views=None, reach=405., fanout=2048, zones='d4b', mut_skew=False,
+          provisional_delay=False):
     if reach <= 0 or fanout < 1:
         raise GeometryError('reach and fanout must be positive')
     if any(i['master'].startswith('hbfd_rrl_') for i in c['instances'].values()):
         raise GeometryError('input already contains reset forest instances; use pre-forest contract')
-    g = Geometry(manifest, views, relay_views, reach)
+    g = Geometry(manifest, views, relay_views, reach, provisional_delay)
     W, H = manifest['die_um']
     tiles, edges, clocks, ports, drop = [], [], [], [], []
     report = dict(schema='opentallas.hbm.reset_forest.v2', reach_um=reach, fanout_cap=fanout,
@@ -90,12 +96,13 @@ def build(c, manifest, views, relay_views=None, reach=405., fanout=2048, zones='
         source = g.pin('hb_ckgen', por)
         ingress = g.reserve('sync', source, targets=[('rst_n_in', source)])
         distributed_source = g.tile_pin(ingress, 'rst_n')
+        comp = g.component(distributed_source)
         groups = collections.defaultdict(list)
         for ref, xy in S:
             groups[zone(xy)].append((ref, xy))
         plans = []
         for z, Z in sorted(groups.items()):
-            root = g.reserve('sync', centre([s[1] for s in Z]), max_distance=max(W, H))
+            root = g.reserve('sync', centre([s[1] for s in Z]), max_distance=max(W, H), allowed=comp)
             pre = g.chain(distributed_source, root)
             cells = collections.defaultdict(list)
             for ref, xy in Z:
@@ -107,7 +114,7 @@ def build(c, manifest, views, relay_views=None, reach=405., fanout=2048, zones='
                     chunk = pending.pop(0)
                     try:
                         leaf = g.reserve('hop', centre([s[1] for s in chunk]),
-                                         targets=[('rst_n', s[1]) for s in chunk])
+                                         targets=[('rst_n', s[1]) for s in chunk], allowed=comp)
                     except GeometryError:
                         if len(chunk) == 1:
                             raise
@@ -131,17 +138,12 @@ def build(c, manifest, views, relay_views=None, reach=405., fanout=2048, zones='
             for leaf in plan['leaves']:
                 chain, tile = leaf['chain'], leaf['tile']
                 prev = wire_chain([rt, 'rst_n'], chain, dom, tag, 'regional reach hop')
-                point = g.tile_pin(chain[-1] if chain else root, 'rst_n')
                 pads = age - leaf['age']
                 if mut_skew and not mutated:
                     pads += 1
                     mutated = True
-                for _ in range(pads):
-                    pad = g.reserve('hop', g.centre(tile), targets=[('rst_n_in', point),
-                                                                     ('rst_n', g.tile_pin(tile, 'rst_n_in'))])
-                    prev = wire_chain(prev, [pad], dom, tag, 'equal-age pad')
-                    point = g.tile_pin(pad, 'rst_n')
-                lf = emit(tile, dom, tag, f'leaf: {len(leaf["sinks"])} reset pins')
+                tile['kind'] = g.delay_kind(pads + 1)
+                lf = emit(tile, dom, tag, f'leaf: {pads + 1} registered stages, {len(leaf["sinks"])} reset pins')
                 edge(prev, [lf, 'rst_n_in'], dom)
                 for (i, p, b, nb), _ in leaf['sinks']:
                     edge([lf, 'rst_n'], [i, p, b, b + 1] if nb > 1 else [i, p], dom)
@@ -167,13 +169,8 @@ def build(c, manifest, views, relay_views=None, reach=405., fanout=2048, zones='
         age = max(len(p[2]) + 1 for p in paths)
         for dst, leaf, chain in paths:
             prev = wire_chain([src, 'bridge_rst_n'], chain, 'stream', 'br_' + src, 'bridge reach hop')
-            point = g.tile_pin(chain[-1], 'rst_n') if chain else source
-            for _ in range(age - len(chain) - 1):
-                pad = g.reserve('hop', g.centre(leaf), targets=[('rst_n_in', point),
-                                                                  ('rst_n', g.tile_pin(leaf, 'rst_n_in'))])
-                prev = wire_chain(prev, [pad], 'stream', 'br_' + src, 'bridge equal-age pad')
-                point = g.tile_pin(pad, 'rst_n')
-            prev = wire_chain(prev, [leaf], 'stream', 'br_' + src, 'bridge leaf')
+            leaf['kind'] = g.delay_kind(age - len(chain))
+            prev = wire_chain(prev, [leaf], 'stream', 'br_' + src, f'bridge leaf: {age - len(chain)} registered stages')
             edge(prev, dst, 'stream')
             drop.append([src, 'bridge_rst_n', dst[0]])
         report['domains'][f'bridge:{src}'] = dict(sinks=len(dsts), age=age, actual_leaf_ages=[age])
@@ -190,6 +187,11 @@ def build(c, manifest, views, relay_views=None, reach=405., fanout=2048, zones='
         raise GeometryError('emitted edge exceeds actual placed pin reach')
     report.update(tiles=len(tiles), reset_ports=len(ports), max_actual_pin_hop_um=max(lengths, default=0),
                   tiles_by_master=dict(collections.Counter(t['master'] for t in tiles)))
+    if g.provisional_used:
+        report['geometry_gate'] = 'PROVISIONAL_DELAY_LEF'
+        report['provisional_delay_masters'] = sorted('hbfd_rrl_' + k for k in g.provisional_used)
+        report['provisional_note'] = ('delay-leaf masters planned on the hop LEF geometry (their gated LEFs are not in '
+                                      '--relay-views yet); re-run strictly with the gated LEFs before any splice')
     spec = dict(region='reset_forest', author='H-NETLIST source-bound reset planner',
                 basis_commit='regional synchronous reset owner standard 10-16',
                 instances=tiles, edges=edges, clocks=clocks, straps=[], gaps=[], drop_edges=drop,
@@ -206,11 +208,13 @@ def main():
     ap.add_argument('--fanout', type=int, default=2048)
     ap.add_argument('--zones', choices=('d4b', 'quadrant'), default='d4b')
     ap.add_argument('--mut-skew', action='store_true', help='emit an explicitly failing release-age bench mutant')
+    ap.add_argument('--provisional-delay', action='store_true',
+                    help='plan missing hbfd_rrl_d<N> LEFs on the hop geometry (report PROVISIONAL_DELAY_LEF)')
     ap.add_argument('--diag', action='store_true', help='compatibility: failures still refuse layer emission and exit 3')
     a = ap.parse_args()
     try:
         spec, rep = build(load(a.contract), load(a.manifest), a.views, a.relay_views,
-                          a.reach, a.fanout, a.zones, a.mut_skew)
+                          a.reach, a.fanout, a.zones, a.mut_skew, a.provisional_delay)
     except GeometryError as e:
         a.report.write_text(json.dumps(dict(schema='opentallas.hbm.reset_forest.v2', geometry_gate='FAIL', reach_gate='FAIL',
                                            physical_signoff='OPEN', problems=[str(e)]), indent=2) + '\n')
