@@ -1,0 +1,34 @@
+{
+  "schema": "mu_gi_init_bank_contract_v1",
+  "production_bound": false,
+  "arithmetic": "scripted external result, triggered solely by real AMemit",
+  "absolute_epoch": "unbound",
+  "packet": "F16_P2/admission.json",
+  "source_base": "ca8c97cacea268f2b61fa027321cef1302f20980",
+  "full_positive_fleet_unit": "oth-ubuntu-4166630-1792425465",
+  "edge_trace_negatives_count_guard_unit": "oth-ubuntu-4175739-1792425613",
+  "host": "ot-epyc6",
+  "receiver_observer_source": "72bf7edeb",
+  "controller_parameter_source": [
+    "4589a8545",
+    "5abd3f025"
+  ],
+  "qualified_receiver_offer_to_bank_edges": 3,
+  "raw_DH_INIT_to_cal_accept_edges": 1,
+  "raw_DH_INIT_to_emb_start_edges": 63,
+  "INIT_entry_t": 61,
+  "cold_L0_relative_raw_INIT_pin": 334,
+  "sha256": {
+    "tools/qwen_static_schedule/mu_admission.py": "c37c5be2b31a6dab4ac1098bbd9438400dbe4121adfee6bc2fb5344e94033e98",
+    "tools/qwen_static_schedule/mu_opcal.py": "eb1b34486fca64cfba59834b5ffa4e6fa5bfdebcb384045966ac7793b593faa5",
+    "rtl/qwen_dv/qfd_tt_ctlm_dv_lpf_parts.sv": "04ae3d2c828f62bde1893cf17b6772a43999c16e55bce29fc9f1ea9b1e067012",
+    "rtl/qwen_dv/qfd_dv_cmd_cal_mu.sv": "94d0f34c29260687db22b252b38a3e7df3710c394c1570501d5b0a24c379b402",
+    "rtl/qwen_dv/qfd_mu_context_guard.sv": "c10920e0fc918c6c100b1b9d93fe7b48473cbe8173091af75d4b5b35d12bf1ea",
+    "rtl/qwen_split/mu/qfd_sys_face_mu_dhuser.sv": "938747fafef027b58ebf9c04e8a5a23b565f0d05291573c46324cb57df5a25dc",
+    "rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv": "94f59024db39f4250ad15e07ae4ec85f099c8e13a9cb1d556d7d6cd5ab063b9f",
+    "rtl/qwen_split/qfd_sys_face_accepted_mu_ctx.sv": "47dcb86af69604092ab294721f22a1b00fb7774f3f10ea78e22f01bc022421dd",
+    "rtl/test/mu_qwen_seq/gi_init_fixture.py": "4a018065788cf9c493883510ca03df2979137a14c4dbb0b188e0db4ae490ded9",
+    "rtl/test/mu_qwen_seq/tb_mu_gi_init.sv": "ce5bd422934f58926906dc6a1678213c7d28861b96657623572b497372946538",
+    "rtl/test/mu_qwen_seq/run_mu_gi_init.sh": "e8fbbf01c64c1e419e7a718e92488864eae4ff8a425d42d476533d4abea9844f"
+  }
+}

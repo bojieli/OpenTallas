@@ -1,0 +1,5 @@
+TB_MU_GI_INIT PASS edges=9140490 prefix=1 headstarts=5112 ctxloads=2/2/2 firstemb=2/2/2 emits=36/32/16/12 results=36/32/16/12 accepted_receiver_bank_age=3 arithmetic=scripted absolute_epoch=unbound
+- /srv/opentallas-scratch/claude/mu-ctx-admission/gi_init_src/rtl/test/mu_qwen_seq/tb_mu_gi_init.sv:83: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 9ms; walltime 91.079 s; speed 100.358 us/s
+- Verilator: cpu 91.076 s on 1 threads; allocated 7 MB

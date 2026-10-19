@@ -1152,7 +1152,7 @@
       2883585,
       3145730,
       0,
-      0,
+      5567293564360065024,
       0
     ],
     "descriptors": {
@@ -1210,7 +1210,13 @@
       ]
     },
     "added_words": 5,
-    "added_issue_edges": 0
+    "added_issue_edges": 0,
+    "boot_context": {
+      "tag": 19779,
+      "mask": 0,
+      "users": [],
+      "admission": "runtime_slots"
+    }
   },
   "leaf_words": [
     2901880407754455373596,
@@ -320340,12 +320346,12 @@
   "source_sha256": {
     "frame": "60662c12738a9642f02a15b712fbac88467aacbfd1e6b2f69f4413a5321000fa",
     "context_binding": "a416b8a914aac4a7f8ea2e9711b87609b5c6201017d862ac90733968d8a8be78",
-    "compiler": "2e5318376d78bba44fb5f77b8197ef7eb45f3c06e28274ce6cf0023e85d34581",
-    "opcal": "334164bfccc4a4cbdeb5081a68dd0d4ed3471c0c9fa812ec4ec56fe7e0b12ba9"
+    "compiler": "c37c5be2b31a6dab4ac1098bbd9438400dbe4121adfee6bc2fb5344e94033e98",
+    "opcal": "eb1b34486fca64cfba59834b5ffa4e6fa5bfdebcb384045966ac7793b593faa5"
   },
   "artifact_sha256": {
     "pw.hex": "84bba13453c3547be994e66ee3488468c0b82e8d2a8d840cd327e473a0a20216",
-    "dw.hex": "366bfb69df65a4d0ac92178af33e32da7bb387a962831d5612bb10579c32e232",
+    "dw.hex": "5cd6fb2fc743bd6c5b2773233077254c03b5a278d8ce679b3e7de7c7e6c80928",
     "qfd_tt_ctlm_opseg.viamap.hex": "f5fb45d27cc8b7adea76f03fb2d0ae601799b44897e7a09bcea0b38a0bf4b091",
     "qfd_tt_ctlm_opseg_b1.viamap.hex": "02ff216763db7c5a6ae9dbbe49c11e0edc95b52963a8d856324c9b42f698ea6f",
     "qfd_tt_ctlm_opseg_b2.viamap.hex": "ba07f5d4d5b7b4c7633efc66bf0ac295e70b95124db1ba4028f5bc4fb0a064a2"
