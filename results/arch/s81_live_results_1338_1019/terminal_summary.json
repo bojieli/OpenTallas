@@ -1,0 +1,128 @@
+{
+  "s81reg": {
+    "lep_base": {
+      "sha256": "53080d50a3c3cb97b7a13d8d1527ed86278109f3c5b2c1445e542439746c3c5b",
+      "terminal_rc0": true,
+      "last_lines": [
+        "mu_s1: PASS lep_mu: 6 users on the static calendar, copies A/B by the slot bit (user 0 on A), 280 + 240 beats bit-exact with tags, 2 landed + replayed per copy, latency user cycle- and bit-identical to the single-user run (120 beats), F1/F2/F3 faulted; return to the A/B master over pairs A and B: 240 cut-through and 160 landed beats exact",
+        "mu_s5: PASS lep_mu: 6 users on the static calendar, copies A/B by the slot bit (user 0 on A), 280 + 240 beats bit-exact with tags, 2 landed + replayed per copy, latency user cycle- and bit-identical to the single-user run (120 beats), F1/F2/F3 faulted; return to the A/B master over pairs A and B: 240 cut-through and 160 landed beats exact",
+        "LEP_MU_GATE PASS",
+        "LEG lep_base rc=0",
+        "ot-run: RAN on ot-epyc7 (unit oth-ubuntu-4120433-1792438136): exit 0"
+      ]
+    },
+    "lep_mut3": {
+      "sha256": "89167dab9607717b29e1bcd9f1eaf7e599cbe0489195b66744585a60e81537c1",
+      "terminal_rc0": true,
+      "last_lines": [
+        "mut_WRONGCOPY: FAIL lep_mu: recv A 280/280 B 0/240 mismatches 80 identity 1 main faults 0110011 F1 1 F2 1 F3 1 return P 240/240 L 160/160",
+        "mut_OVR: FAIL lep_mu: recv A 280/280 B 240/240 mismatches 0 identity 1 main faults 0000000 F1 0 F2 1 F3 1 return P 240/240 L 160/160",
+        "LEP_MU_GATE PASS",
+        "LEG lep_mut3 rc=0",
+        "ot-run: RAN on ot-epyc7 (unit oth-ubuntu-4120650-1792438136): exit 0"
+      ]
+    },
+    "lep_mut2": {
+      "sha256": "9f03389e0a45b0603154fa7f9dbbc595001a0a170a15b4e71e542b43e782a508",
+      "terminal_rc0": true,
+      "last_lines": [
+        "mut_LANDCUT: FAIL lep_mu: recv A 440/280 B 240/240 mismatches 640 identity 1 main faults 0110011 F1 1 F2 1 F3 1 return P 400/240 L 0/160",
+        "mut_STALEHD: FAIL lep_mu: recv A 201/280 B 81/240 mismatches 644 identity 0 main faults 1110011 F1 1 F2 1 F3 1 return P 242/240 L 158/160",
+        "LEP_MU_GATE PASS",
+        "LEG lep_mut2 rc=0",
+        "ot-run: RAN on ot-epyc7 (unit oth-ubuntu-4120659-1792438136): exit 0"
+      ]
+    },
+    "lep_regr": {
+      "sha256": "5408b5d6041ea0bdb76db497e03c76d268fbf490855913361d17f3ac9afa38a6",
+      "terminal_rc0": true,
+      "last_lines": [
+        "regr_host s3: PASS lep_host: H->A 233 ring + 84 HOST + 83 KS, A->H 592 frames (51 THOST incl. 1 merge, 52 TKD) bit-exact in order; f_lf live",
+        "regr_swap: FAIL lep: mismatches 963 recv 482/1000 481/1000 fault_main 1 overflow_fault 1",
+        "LEP_MU_GATE PASS",
+        "LEG lep_regr rc=0",
+        "ot-run: RAN on ot-epyc7 (unit oth-ubuntu-4120606-1792438136): exit 0"
+      ]
+    },
+    "lep_nh": {
+      "sha256": "a754dec8f1a8a8cff9f5df249f2e244c9d289158a8defaed29539e4896a02092",
+      "terminal_rc0": true,
+      "last_lines": [
+        "LEP_MU_GATE PASS",
+        "nhr_s7: PASS lep: 1000 + 1000 beats bit-exact in order across 2 x 2 UCIe lanes (lane skew 7 PMA cycles, SRAM landing wrapped); overflow flagged",
+        "LEP_MU_GATE PASS",
+        "LEG lep_nh rc=0",
+        "ot-run: RAN on ot-epyc7 (unit oth-ubuntu-4120406-1792438136): exit 0"
+      ]
+    },
+    "hwin": {
+      "sha256": "12c97d90c6bd26ba6114419c6934af5a2ad3cfe2c7134bd1ff02a7572b5876bd",
+      "terminal_rc0": true,
+      "last_lines": [
+        "lint relays: errors 0",
+        "LEP_MU_DIE_LINT PASS",
+        "MU_HWIN_GATE PASS",
+        "LEG hwin rc=0",
+        "ot-run: RAN on ot-epyc7 (unit oth-ubuntu-4120652-1792438136): exit 0"
+      ]
+    },
+    "host": {
+      "sha256": "ae2a979782d1567522c3d6a8ee9fa7fb987cfd251d11de7c1b690c9157a9a067",
+      "terminal_rc0": true,
+      "last_lines": [
+        "lint dsdv_seq_host_mu -GNSLOT=47 clean (verilator -Wall: 0 errors, 0 unwaived warnings in the new files)",
+        "lint dsdv_seq_host_mu -GNSLOT=1 clean (verilator -Wall: 0 errors, 0 unwaived warnings in the new files)",
+        "MU_HOST_GATE PASS",
+        "LEG host rc=0",
+        "ot-run: RAN on ot-epyc7 (unit oth-ubuntu-4120663-1792438136): exit 0"
+      ]
+    },
+    "prog": {
+      "sha256": "161dacf60a8b1d4e55aa5f0308f4c7845886fc944b87b88bfc1c7a9a52b1fdec",
+      "terminal_rc0": true,
+      "last_lines": [
+        "m_ctx3 issuer: PROG FAULT 379 code 5",
+        "m_raw issuer: PROG FAULT 21676 code 5",
+        "m_drop issuer: no fault",
+        "LEG prog rc=0",
+        "ot-run: RAN on ot-epyc7 (unit oth-ubuntu-4120644-1792438136): exit 0"
+      ]
+    },
+    "seqhost": {
+      "sha256": "cc648cb9a239ecf1578ee192ec7141e38beb8ddea3bbab55c5a2d312bf6ad915",
+      "terminal_rc0": true,
+      "last_lines": [
+        "MU_HOST_GATE PASS",
+        "MU_HWIN_GATE PASS",
+        "SEQHOST_MU_GATE PASS",
+        "LEG seqhost rc=0",
+        "ot-run: RAN on ot-epyc7 (unit oth-ubuntu-4120668-1792438136): exit 0"
+      ]
+    }
+  },
+  "svc_comparison": {
+    "job_base_s0_pe0.log": {
+      "cases": 8,
+      "pass": 8,
+      "causal_fail": 0,
+      "exact_all_case_lines_equal_flop_baseline": false,
+      "baseline_sha256": "c77000bb8bf8bafbf284a065fa12d505eb8e6441dabd4593b96801ede8f0306b",
+      "all_fields_equal_flop_baseline_by_case": true
+    },
+    "job_base_s2_pe1.log": {
+      "cases": 8,
+      "pass": 8,
+      "causal_fail": 0,
+      "exact_all_case_lines_equal_flop_baseline": false,
+      "baseline_sha256": "60d0fb317abc159e25de3b1e1c034e582e1f540bbf6338ae8679cc5a0c9a6330",
+      "all_fields_equal_flop_baseline_by_case": true
+    },
+    "job_mut6_s0_pe0.log": {
+      "cases": 4,
+      "pass": 0,
+      "causal_fail": 4,
+      "exact_all_case_lines_equal_flop_baseline": false,
+      "baseline_sha256": null
+    }
+  }
+}
