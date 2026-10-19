@@ -62,6 +62,32 @@ def detach_reset_inputs(c, layer, problems):
     c['edges'] = edges
 
 
+def apply_remaster(c, layer, rtl, problems):
+    """HBM-RSTROW: a reset layer may REMASTER existing relay stations (hbfd_rly_<W>_<flow> -> _rr: same ports + rso).
+    Refused when the instance is missing / not on the stated old master, or the new master drops or changes any old
+    port, or adds an input (an added input would be undriven)."""
+    I = c['instances']
+    for x in layer.get('remaster', []):
+        n = x['inst']
+        v = I.get(n)
+        if v is None or v['master'] != x['old']:
+            problems.append(f'remaster stale {n}: expected {x["old"]}, have {None if v is None else v["master"]}')
+            continue
+        new = rtl.ports(x['master'], x['source'], v.get('params') or {})
+        old = v['ports']
+        bad = [p for p, d in old.items() if new.get(p) != d] + [p for p, d in new.items()
+                                                                if p not in old and d['direction'] != 'output']
+        if bad:
+            problems.append(f'remaster {n} {x["old"]} -> {x["master"]}: incompatible ports {bad[:5]}')
+            continue
+        c['masters'][x['old']] = c['masters'].get(x['old'], 1) - 1
+        if not c['masters'][x['old']]:
+            del c['masters'][x['old']]
+        c['masters'][x['master']] = c['masters'].get(x['master'], 0) + 1
+        v.update(master=x['master'], source=x['source'], rtl_deps=list(x.get('rtl_deps') or []), ports=new)
+        v['note'] = (v.get('note') or '') + f' | {layer.get("region")}: {x["old"]} -> {x["master"]} (relay-row reset rso)'
+
+
 def main():
     ap = argparse.ArgumentParser(); ap.add_argument('contract'); ap.add_argument('layer'); ap.add_argument('out')
     ap.add_argument('--report', required=True)
@@ -77,6 +103,7 @@ def main():
         d['ports'] = rtl.ports(x['master'], x['source'], d['params'])
         I[n] = d
         c['masters'][x['master']] = c['masters'].get(x['master'], 0) + 1
+    apply_remaster(c, L, rtl, problems)
     detach_reset_inputs(c, L, problems)
     ports = {n: v['ports'] for n, v in I.items()}
     drv = {}
@@ -136,6 +163,7 @@ def main():
     c['summary']['instances'] = len(I)
     rep = dict(layer=a.layer, relay_instances=len(L['instances']), buses=len(L.get('relay_splice_v2', [])),
                edges_before=n_edges0, edges_after=len(E), masters=dict(collections.Counter(x['master'] for x in L['instances'])),
+               remastered=dict(collections.Counter(x['master'] for x in L.get('remaster', []))),
                problems=problems)
     json.dump(rep, open(a.report, 'w'), indent=1)
     if problems:

@@ -296,9 +296,14 @@ def reset_reach_gate(rst, nets, pl, vxy, cell_of, master_of, reach, ckgen='hb_ck
             elif sp is not None and abs(pt[0] - sp[0]) + abs(pt[1] - sp[1]) > reach:
                 errors.append(dict(kind='no_regional_tree', pin=f'{n}.{p}', domain=dom,
                                    um=round(abs(pt[0] - sp[0]) + abs(pt[1] - sp[1]))))
+    n_row = 0
     for d, ends in nets.items():
-        if d[0] not in pl or not master_of(d[0]).startswith('hbfd_rrl'):
+        # HBM-RSTROW (coordinator 0jp): a relay-row reset hop (hbfd_rly_*_rr.rso -> next station rs) is a forest edge
+        # too: same reach / buried checks as a hbfd_rrl driver.
+        row = d[0] in pl and d[1] == 'rso' and master_of(d[0]).endswith('_rr')
+        if d[0] not in pl or not (master_of(d[0]).startswith('hbfd_rrl') or row):
             continue
+        n_row += row * (len(ends) - 1)
         dp = xy(*d)
         if buried(d[0], dp):
             errors.append(dict(kind='driver_unreachable', pin=f'{d[0]}.{d[1]}', under=buried(d[0], dp)))
@@ -314,9 +319,9 @@ def reset_reach_gate(rst, nets, pl, vxy, cell_of, master_of, reach, ckgen='hb_ck
                 errors.append(dict(kind='sink_unreachable', pin=f'{l[0]}.{l[1]}', driver=f'{d[0]}.{d[1]}',
                                    um=round(abs(pt[0] - dp[0]) + abs(pt[1] - dp[1]))))
     kinds = dict(collections.Counter(e['kind'] for e in errors))
-    rec = dict(reach_um=reach, por_direct_sinks=n_por, forest_sinks=n_forest, errors=len(errors), kinds=kinds,
+    rec = dict(reach_um=reach, por_direct_sinks=n_por, forest_sinks=n_forest, relay_row_sinks=n_row, errors=len(errors), kinds=kinds,
                first=errors[:20], reach_gate='PASS' if not errors else ('FAIL_DIAG' if mode == 'diag' else 'FAIL'))
-    print('reset_reach_gate', json.dumps({k: rec[k] for k in ('reach_gate', 'por_direct_sinks', 'forest_sinks', 'errors', 'kinds')}), flush=True)
+    print('reset_reach_gate', json.dumps({k: rec[k] for k in ('reach_gate', 'por_direct_sinks', 'forest_sinks', 'relay_row_sinks', 'errors', 'kinds')}), flush=True)
     if rec['reach_gate'] == 'FAIL':
         raise ValueError(f'reset tree: reachability gate FAIL, {len(errors)} unbuildable {kinds}: {errors[:8]} '
                          f'(OT_RESET_GATE=diag continues for diagnosis only)')
