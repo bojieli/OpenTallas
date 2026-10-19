@@ -1,0 +1,89 @@
+{
+ "verdict": "FAIL",
+ "items": [
+  {
+   "severity": "WARN",
+   "check": "fill",
+   "message": "fill 21% = (macros/children 57120 + std 10496) / outline 315395 um2 (lattice/channel-bound gate-rule exception: ROOT mandated SRAM storage successor plus43.2lattice and>=20umchannels; newthirdcolumn needs561.6square. Candidate measuredstdarea must be refreshed from synthesis beforefullgate. stdband216..259.2.)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "pin_regs",
+   "message": "pin registers opted out: the lane RTL already registers every data pin (rx -> lr pin flops; tx = the gearbox's registered beat; LCR 1 core faces = ot_link_credit_rx landing flops for lo_v/lo_d and its registered credit pulse lo_r, ot_link_credit_tx sender flops for li_v/li_d with li_r captured; flt flops; chb registered in ",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "pins",
+   "message": "1-bit vector ports ['ck', 'rs', 'chb', 'tf', 'lo_v', 'lo_r']: retain declared indices for literal clock entries; check actual mapped pin names for a hand pin list",
+   "fix": "use the actual RTL and mapped pin names"
+  },
+  {
+   "severity": "INFO",
+   "check": "pin_fit",
+   "message": "pin fit not estimated: the top's port widths are not resolved from its header with the spec parameters (the --remote run places the pins with the route's settings)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "pin_order",
+   "message": "bit order not judged for 13 abutted port(s) with an unresolved width (rx, tx, tf, lo_v); the route places them in chunks of 32",
+   "fix": "add route.pin_balance {group_max 1, h, v} (disjoint per-port pin_ranges on the face); for a face that abuts an R180 / MX / MY neighbour mirror the range and list the port in pin_order_desc; check the die joint with tools/hier_contract/abutted_joint_audit.py; or name a channel-routed port in pin_order_waiver {port: reason}"
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-run selected ot-epyc6 for 48 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "source_binding",
+   "message": "immutable shipping manifest /tmp/ref_gate_dscoll_lane_w_ltr_20261019-084805.source_snapshot.json",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/ref_gate_dscoll_lane_w_ltr_20261019-084805.log; host dir ot-epyc6:/srv/opentallas-scratch/claude/ref_gate/dscoll_lane_w_ltr-20261019-084805",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "synth + floorplan + PDN OK on ot-epyc6 in 101 s (gate total 716 s)",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "io_place",
+   "message": "IO placement failed: [ERROR GPL-0305] RePlAce diverged during gradient descent calculation, resulting in an invalid step length (Inf or NaN). This is often caused by numerical instability or high placement density. Consider reducing placement density to potentially resolve the issue.",
+   "fix": "fix the pin plan / pin layers"
+  },
+  {
+   "severity": "FAIL",
+   "check": "floorplan.pin_geometry",
+   "message": "missing successful actual gate_dump / unique pin-geometry report",
+   "fix": "rerun the actual placed-IO dump and fp_margin_lint pins check; old CTS measurements alone cannot qualify geometry"
+  },
+  {
+   "severity": "WARN",
+   "check": "clock_rule",
+   "message": "the synthesized netlist's clock sinks were not reported: clock sinks unknown; no measured clock tree (no --cts gate evidence)",
+   "fix": "read the remote log (textbook lint line 'clock_roots')"
+  },
+  {
+   "severity": "WARN",
+   "check": "layout_images",
+   "message": "the gate produced no layout dump (layout_dump.tcl); see the remote layout_*.log",
+   "fix": ""
+  }
+ ]
+}

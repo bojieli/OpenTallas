@@ -1,0 +1,26 @@
+{
+  "source_commit": "b5c03d49e",
+  "probe": "noCTS synthesis/floorplan",
+  "verdict": "FAIL",
+  "failure": "GPL-0305 numerical divergence, invalid Inf/NaN step after3790iterations; placement overflow0.7113, phi9.68e32",
+  "std_area_um2": 7357.69494,
+  "macros": 15,
+  "macro_liberty_area_um2": 57120.1845,
+  "outline_um": [
+    561.6,
+    561.6
+  ],
+  "actual_rows": {
+    "count": 160,
+    "y": [
+      216,
+      259.2
+    ],
+    "capacity_um2": 24074.496,
+    "regions": 0,
+    "groups": 0
+  },
+  "pin_qualification": "missing; preplace PNG has PG pins only, no signal pin qualification",
+  "next": "preserve failure; restrict actual single band with explicit placement-region semantics and measure-density band216..246.24, no timing/hold relaxation; test region ownership of later-inserted buffers",
+  "adoption": false
+}

@@ -1,0 +1,16 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/codex-s81-coll-storage-inspect-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-s81-coll-storage-inspect-1019
+ot-run: ot-epyc6       admits   506 GB (avail 467, growth 113, headroom 0, waiters 0/0 GB) load 33/128 running 18 disk 6072 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-s81-coll-storage-inspect-1019
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/codex-s81-coll-storage-inspect-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-s81-coll-storage-inspect-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-s81-coll-storage-inspect-1019
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-4174508-1792425607 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+OT_LAYOUT_DUMP /inspect/floorplan.json blocks 15 pins 208 pg 208 fill 0.205
+BAND_AUDIT rows=160 capacity_um2=24074.49599999994 ymin=216.0 ymax=259.2 regions=0 groups=0
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-4174508-1792425607): exit 0
