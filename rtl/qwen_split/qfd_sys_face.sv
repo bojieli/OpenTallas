@@ -397,7 +397,7 @@ module qfd_sys_face #(
     ot_qwen_d2d_cal #(.NE(32)) u_cal_l (.ck(ck), .rst_n(rst_calle), .cfg_we(l_we), .cfg_addr({c_addr[7], c_addr[4:0]}), .cfg_data(c_data),
         .start(l_go), .start_seg(1'b0), .halt(halt), .ev_v(l_ev), .ev_port(l_p), .ev_kind(l_k), .ev_beat(l_b), .running(l_run), .fault(l_cf));
     ot_qwen_d2d_cal #(.NE(16)) u_cal_e (.ck(ck), .rst_n(rst_calle), .cfg_we(e_we), .cfg_addr({c_addr[7], c_addr[3:0]}), .cfg_data(c_data),
-        .start(ecal_go), .start_seg(1'b0), .halt(halt), .ev_v(e_ev), .ev_port(e_p), .ev_kind(e_k), .ev_beat(e_b), .running(e_run), .fault(e_cf));
+        .start(ecal_go), .start_seg(COLD_PREFIX && cold_active), .halt(halt), .ev_v(e_ev), .ev_port(e_p), .ev_kind(e_k), .ev_beat(e_b), .running(e_run), .fault(e_cf));
     assign any_running = t_run | l_run | e_run | t_running_q;
     // D2D link calendars: the Q-LINK sequencer (compiler images as constants) is the ONLY producer of the link end's
     // cfg_* / cal_start / cal_seg; its token start is this face's t_go; reload = the first epoch strobe after an epoch
