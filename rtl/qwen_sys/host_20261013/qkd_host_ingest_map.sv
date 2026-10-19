@@ -71,7 +71,11 @@ module qkd_host_ingest_map #(parameter integer MUT=0,KEPT_SELECT=`OT_HOST_ORDER_
  end
  wire[293:0]iq_dec={iq[289:34],d_row,d_col,d_bank,d_pc,d_stack,d_good,we&&addr==32'hffffffff};
  wire mark=pending&&hmark;
- wire emit=pending&&good&&!fault&&credits[{stack,pc}]!=0&&(!ORDERED||ord_credit!=0);
+ wire[127:0]head_pc_oh;
+ wire[75:0]head_stack_oh;
+ wire[127:0]credit_ready;
+ for(genvar k=0;k<128;k++)assign credit_ready[k]=head_pc_oh[k]&&(credits[k]!=0);
+ wire emit=pending&&good&&!fault&&(|credit_ready)&&(!ORDERED||ord_credit!=0);
  wire emit_marker=mark&&!fault&&issued==landed&&marker_credit;
  wire[32:0]sum={1'b0,landed}+33'(aq);
  // Credit-overflow fault, restructured (HRORDER 10-18 gate: hd -> 128:1 credit mux -> emit -> per-k spend -> 128-input OR
@@ -79,10 +83,10 @@ module qkd_host_ingest_map #(parameter integer MUT=0,KEPT_SELECT=`OT_HOST_ORDER_
  // OR_{k!=sel}(cfull[k]) | (cfull[sel]&&!emit). The 128-wide OR now runs in parallel with emit; same cycle, exact.
  wire[6:0]sel={stack,pc};
  wire[127:0]cfull;
- wire ovf_other=|(cfull&~(128'd1<<sel));
- wire ovf_sel=cfull[sel]&&!emit;
+ wire ovf_other=|(cfull&~head_pc_oh);
+ wire ovf_sel=(|(cfull&head_pc_oh))&&!emit;
  for(genvar k=0;k<128;k++)begin:g_credit
-  wire spend=emit&&sel==7'(k);
+  wire spend=emit&&head_pc_oh[k];
   assign cfull[k]=crq[k]&&credits[k]==4;
   always @(posedge ck or negedge rst_n)begin
    if(!rst_n)credits[k]<=4;
@@ -92,6 +96,7 @@ module qkd_host_ingest_map #(parameter integer MUT=0,KEPT_SELECT=`OT_HOST_ORDER_
    endcase
   end
  end
+ wire[290:0]word_out={data,row,col,bank,pc,1'b1};
  wire wr=iq[0]&&count<8;
  wire adv=emit||emit_marker;
  wire[2:0]rp1=rp+3'd1;
@@ -112,8 +117,17 @@ module qkd_host_ingest_map #(parameter integer MUT=0,KEPT_SELECT=`OT_HOST_ORDER_
   end
   (* keep=1 *)wire[8:0]hold_value=(wr&&wp==rp)?iq_dec[8:0]:hold_ctl;
   (* keep=1 *)wire[8:0]adv_value=(wr&&wp==rp1)?iq_dec[8:0]:adv_ctl;
-  always @(posedge ck)hd<=adv?adv_value:hold_value;
+  wire[8:0]next_hd=adv?adv_value:hold_value;
+  (* keep=1 *)reg[127:0]pc_oh;
+  (* keep=1 *)reg[75:0]stack_oh;
+  always @(posedge ck)begin
+   hd<=next_hd;
+   pc_oh<=128'b1<<{next_hd[3:2],next_hd[8:4]};
+   for(integer c=0;c<19;c++)stack_oh[c*4+:4]<=4'b1<<next_hd[3:2];
+  end
+  assign head_pc_oh=pc_oh;assign head_stack_oh=stack_oh;
  end else begin:g_control_legacy
+  assign head_pc_oh=128'b1<<sel;for(genvar c=0;c<19;c++)assign head_stack_oh[c*4+:4]=4'b1<<stack;
   always @(posedge ck)begin
    if(adv)hd<=(wr&&wp==rp1)?iq_dec[8:0]:q_ctl[rp1];
    else hd<=(wr&&wp==rp)?iq_dec[8:0]:q_ctl[rp];
@@ -137,7 +151,10 @@ module qkd_host_ingest_map #(parameter integer MUT=0,KEPT_SELECT=`OT_HOST_ORDER_
     2'b10:count<=count+1'b1;2'b01:count<=count-1'b1;default:;endcase
    if(pending&&!good&&!mark)fault<=1;
    if(emit)begin
-    for(integer k=0;k<4;k++)if(stack==2'(k))out[k*291+:291]<={data,row,col,bank,pc,1'b1};   // constant slices (no wide $shift)
+    for(integer k=0;k<4;k++)for(integer c=0;c<19;c++)begin
+     if(c<18)begin if(head_stack_oh[c*4+k])out[k*291+c*16+:16]<=word_out[c*16+:16];end
+     else if(head_stack_oh[c*4+k])out[k*291+288+:3]<=word_out[288+:3];
+    end   // constant slices (no wide $shift)
     issued<=issued+1'b1;if(issued==32'hffffffff)fault<=1;ing_cr<=1;
    end
    if(mcq)begin if(marker_credit)fault<=1;else marker_credit<=1;end

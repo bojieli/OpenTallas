@@ -8,7 +8,7 @@
 `ifndef OT_HOST_ORDER_S2_DEFAULT
 `define OT_HOST_ORDER_S2_DEFAULT 0
 `endif
-module qkd_host_boot_fifo8_sram #(parameter integer W=290, MUT=0, CACHE=`OT_HOST_ORDER_S2_DEFAULT)(
+module qkd_host_boot_fifo8_sram #(parameter integer W=290, MUT=0, CACHE=`OT_HOST_ORDER_S2_DEFAULT, SAFE_COPIES=`OT_HOST_ORDER_S2_DEFAULT)(
  input wire ck, input wire wr, input wire[2:0]wp, input wire[W-1:0]wd,
  input wire[2:0]rp,next_rp, output wire[W-1:0]head);
  wire[383:0]padded={{(384-W){1'b0}},wd};
@@ -25,7 +25,18 @@ module qkd_host_boot_fifo8_sram #(parameter integer W=290, MUT=0, CACHE=`OT_HOST
    .rd_out(mem_q[b*128+:128]),.w_ce_in(wr),.w_addr_in({2'b0,wp}),
    .wd_in(padded[b*128+:128]),.w_mask_in({128{1'b1}}));
  end
- wire[W-1:0]third=(raw && MUT!=1)?raw_data:mem_q[W-1:0];
+ wire[W-1:0]third;
+ generate if(SAFE_COPIES)begin:g_raw_local
+  // Same-edge replicas: each flag controls at most sixteen payload mux bits.
+  for(genvar c=0;c<(W+15)/16;c++)begin:g_chunk
+   localparam integer CW=(W-c*16<16)?W-c*16:16;
+   (* keep=1 *)reg local_raw;
+   always @(posedge ck)local_raw<=wr&&(wp==ra);
+   assign third[c*16+:CW]=(local_raw&&MUT!=1)?raw_data[c*16+:CW]:mem_q[c*16+:CW];
+  end
+ end else begin:g_raw_legacy
+  assign third=(raw&&MUT!=1)?raw_data:mem_q[W-1:0];
+ end endgenerate
  generate if(CACHE)begin:g_cache
   // Two forward words isolate macro clk->q from external output edges.
   // The third word was requested for the old current head on the prior edge.

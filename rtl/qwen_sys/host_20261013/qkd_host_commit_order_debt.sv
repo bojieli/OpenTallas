@@ -32,7 +32,26 @@ module qkd_host_commit_order_debt #(parameter integer MUT=0,KEPT_SELECT=`OT_HOST
  wire pop=fc!=0&&!fault&&((|head_ready)||MUT==1);
  wire[2:0]fr1=fr+3'd1;
  wire[6:0]head_adv=(v3&&fw==fr1)?s3:front[fr1],head_hold=(v3&&fw==fr)?s3:front[fr];
- always @(posedge ck)head_oh<=pop?(128'd1<<head_adv):(128'd1<<head_hold);
+ generate if(KEPT_SELECT)begin:g_front_local
+  (* keep=1 *)reg[7:0]fr_oh;
+  always @(posedge ck or negedge rst_n)
+   if(!rst_n)fr_oh<=8'b1;
+   else if(pop)fr_oh<={fr_oh[6:0],fr_oh[7]};
+  wire[7:0]adv_oh={fr_oh[6:0],fr_oh[7]};
+  reg[6:0]hold_word,advance_word;
+  always @*begin
+   hold_word=0;advance_word=0;
+   for(integer j=0;j<8;j++)begin
+    hold_word=hold_word|(front[j]&{7{fr_oh[j]}});
+    advance_word=advance_word|(front[j]&{7{adv_oh[j]}});
+   end
+  end
+  wire[6:0]h=(v3&&fw==fr)?s3:hold_word;
+  wire[6:0]a=(v3&&fw==fr1)?s3:advance_word;
+  always @(posedge ck)head_oh<=128'b1<<(pop?a:h);
+ end else begin:g_front_legacy
+  always @(posedge ck)head_oh<=pop?(128'd1<<head_adv):(128'd1<<head_hold);
+ end endgenerate
  wire take=iqv&&!fault&&total<256;
  always @(posedge ck)begin
   iqpc<=issue_pc;
@@ -42,8 +61,11 @@ module qkd_host_commit_order_debt #(parameter integer MUT=0,KEPT_SELECT=`OT_HOST
  end
  for(genvar b=0;b<32;b++)begin:g_bank
   reg[6:0]words[0:7];
+  (* keep=1 *)reg[6:0]local_pc;
+  always @(posedge ck)if(KEPT_SELECT)local_pc<=issue_pc;
+  wire[6:0]write_pc=KEPT_SELECT?local_pc:iqpc;
   always @(posedge ck)begin
-   if(take&&wp[7:3]==5'(b))words[wp[2:0]]<=iqpc;
+   if(take&&wp[7:3]==5'(b))words[wp[2:0]]<=write_pc;
    if(!KEPT_SELECT)s1[b]<=words[rp[2:0]];
   end
  end
@@ -72,7 +94,8 @@ module qkd_host_commit_order_debt #(parameter integer MUT=0,KEPT_SELECT=`OT_HOST
   end
  end endgenerate
  for(genvar k=0;k<128;k++)begin:g_pc
-  wire add=take&&iqpc==7'(k),physical=aq[k],consume=pop&&head_oh[k];
+  wire[6:0]pc_local=KEPT_SELECT?g_bank[k/4].local_pc:iqpc;
+  wire add=take&&pc_local==7'(k),physical=aq[k],consume=pop&&head_oh[k];
   always @(posedge ck or negedge rst_n)begin
    if(!rst_n)begin outstanding[k]<=0;pending[k]<=0;end
    else begin
@@ -83,7 +106,8 @@ module qkd_host_commit_order_debt #(parameter integer MUT=0,KEPT_SELECT=`OT_HOST
  end
  wire[127:0]bad_ack;
  for(genvar k=0;k<128;k++)begin:g_guard
-  assign bad_ack[k]=aq[k]&&outstanding[k]==0&&!(take&&iqpc==7'(k));
+  wire[6:0]pc_local=KEPT_SELECT?g_bank[k/4].local_pc:iqpc;
+  assign bad_ack[k]=aq[k]&&outstanding[k]==0&&!(take&&pc_local==7'(k));
  end
  always @(posedge ck or negedge rst_n)begin
   if(!rst_n)begin
