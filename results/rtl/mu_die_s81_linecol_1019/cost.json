@@ -1,0 +1,58 @@
+{
+ "L0": {
+  "delay": 3,
+  "crit": 15492.1,
+  "span": 15492.0,
+  "ra_critical": true,
+  "succ": [
+   [
+    "ffn.router_allgather",
+    10779.5,
+    true
+   ]
+  ],
+  "priced_cost_pct": 0.0194
+ },
+ "L2": {
+  "delay": 3,
+  "crit": 28119.8,
+  "span": 28173.7,
+  "ra_critical": true,
+  "succ": [
+   [
+    "ffn.router_allgather",
+    22441.3,
+    true
+   ]
+  ],
+  "priced_cost_pct": 0.0107
+ },
+ "L14": {
+  "delay": 3,
+  "crit": 28045.0,
+  "span": 318554.6,
+  "ra_critical": true,
+  "succ": [
+   [
+    "ffn.router_allgather",
+    22366.5,
+    true
+   ]
+  ],
+  "priced_cost_pct": 0.0107
+ },
+ "L20": {
+  "delay": 2,
+  "crit": 30448.5,
+  "span": 30502.4,
+  "ra_critical": true,
+  "succ": [
+   [
+    "ffn.router_allgather",
+    25152.9,
+    true
+   ]
+  ],
+  "priced_cost_pct": 0.0066
+ }
+}

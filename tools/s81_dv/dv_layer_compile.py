@@ -702,6 +702,118 @@ def row_ctl_events(die, prog):
     return added
 
 
+# ================================================================================================= tier-line slot reservation
+# MU-DIE-S81/LINECOL (10-19): every beat on a tier line occupies ONE line slot per stop it passes: (slice, line face,
+# landed edge).  Two beats on one slot = two sources on the upstream stop's line out in one cycle (ot_s81sl_rstop se / sw_
+# > 1); two CTL beats a slice takes (slice mask bit) landing on two faces (ri_e / ri_w / V) in one edge reach the xr
+# classify stage in one cycle (ot_s81sl_xr f1: ce + cw + cv > 1; rstop line pin -> dl and V pin -> dl_vb are both 2
+# edges).  Both are sticky faults, never arbitration (owner: static fixed-cycle schedule), so the compiler reserves the
+# slots: the beats are derived with dv_cut_replay's line model (derive_line_events: seq_host V -> column-4 xr re-inject
+# both ways; derive_vctl_line_events: G-unit vo_s / vo_n -> column-3 xr re-inject both ways), which is the model the
+# replay generator and the RTL benches are checked against.  A seq_host V row whose beat would take a reserved slot is
+# moved later (its family re-lowers with line_delay {op: edges}); a collision no family can move is a compile fault.
+LINE_FACES = ('ri_e', 'ri_w')
+LINE_DELAY_MAX = 64
+_REPLAY_DIE = {}
+
+
+def _replay_die(tree):
+    import dv_cut_replay as R
+    p = Path(tree) / 'results/arch/s81_dv_1016/bind9/die.v.gz'
+    if str(p) not in _REPLAY_DIE:
+        _REPLAY_DIE[str(p)] = R.DieBuild(p)
+    return _REPLAY_DIE[str(p)]
+
+
+def _beat_id(ev):
+    """one physical beat: a calendar row's beat (from_row) or the producer edge it was derived from"""
+    if ev.get('from_row') is not None:
+        return f"{ev.get('tag')}|row@{ev['from_row']}"
+    o = (ev.get('derived_from') or f"{ev.get('inst')}@{ev.get('cycle')}").split(' via ')[0]
+    inst, _, cyc = o.partition('@')
+    return f"{ev.get('tag')}|{inst.split('.')[0]}@{cyc}"
+
+
+def line_slots(tree, prog):
+    """{(slice, face, landed edge): [beat]} for every tier-line beat of the programme + the xr CTL slots
+    {(slice, landed edge): [beat]} of the CTL beats the slice takes (mask bit), each beat = dict(tag, src, kind, row, mine)"""
+    import dv_cut_replay as R
+    die = _replay_die(tree)
+    S = dict(events=[dict(e) for e in prog.events], port_valid=list(prog.port_valid))
+    T = {i: dict(beat=f'{ctl_line_beat(p_):x}') for i, p_ in enumerate(prog.templates)}
+    words, _, _, _ = R.landed_words(S, T, die)
+    sid_of = {i: die.sid(i) for i in die.inst if re.fullmatch(r'u_s_\d[NS]', i)}
+    line, xr = {}, {}
+    for w in words:
+        ev, inst = w['event'], w['inst']
+        if inst not in sid_of:
+            continue
+        src = 'gunit' if ('u_gunit' in str(ev.get('derived_from', '')) or ev.get('inst') == 'u_gunit') else \
+            'seq_host' if w.get('template') is not None else str(ev.get('inst')).split('.')[0]
+        kind = ev.get('kind')
+        mine = None
+        if kind == 'CTL':
+            if w.get('template') is not None:
+                mine = bool((prog.templates[w['template']] >> sid_of[inst]) & 1)
+            elif src == 'gunit':
+                # the G-unit row words: payload at beat [21 +: 186], slice mask = payload [15:0]
+                ws = [x for x in prog.events if x.get('inst') == 'u_gunit' and x.get('tag') == ev.get('tag')
+                      and x.get('words')]
+                mine = any((int(x['words'][0][1], 16) >> (21 + sid_of[inst])) & 1 for x in ws) if ws else True
+        b = dict(tag=ev.get('tag'), src=src, kind=kind, id=_beat_id(ev), row=ev.get('from_row'), mine=mine,
+                 face=w['port'])
+        if w['port'] in LINE_FACES:
+            line.setdefault((inst, w['port'], w['cycle_land']), []).append(b)
+        if kind == 'CTL' and mine is not False:
+            xr.setdefault((inst, w['cycle_land']), []).append(b)
+    return line, xr
+
+
+def line_collisions(tree, prog):
+    line, xr = line_slots(tree, prog)
+    out = []
+    for k, bs in line.items():
+        ids = {b['id'] for b in bs}
+        if len(ids) > 1:
+            out.append(dict(where='line', slot=list(k), beats=sorted(ids)))
+    for k, bs in xr.items():
+        faces = {}
+        for b in bs:
+            faces.setdefault(b['id'], b['face'])
+        if len(faces) > 1 and len(set(faces.values())) > 1:   # same-face pairs are line collisions (above)
+            out.append(dict(where='xr', slot=list(k), beats=sorted(faces)))
+    return sorted(out, key=lambda c: (c['slot'][-1], c['where'])), line, xr
+
+
+def _movable_op(prog, tag):
+    """the op whose seq_host V row carries template name `tag` ({family}.{op}...): only families that take a
+    line_delay can move (lower_vs)"""
+    for fam in LINE_DELAY_FAMILIES:
+        if tag and tag.startswith(fam + '.'):
+            rest = tag[len(fam) + 1:]
+            for o in sorted(getattr(prog, 'op_names', []), key=len, reverse=True):
+                if rest == o or rest.startswith(o + '.'):
+                    return o
+    return None
+
+
+LINE_DELAY_FAMILIES = ('vs',)
+
+
+def _min_line_delay(prog, line, xr, op):
+    """the smallest extra delay of op's V beats that clears every slot another beat holds"""
+    own = lambda bs: [b for b in bs if _movable_op(prog, b['tag']) == op]
+    oth = lambda bs: [b for b in bs if _movable_op(prog, b['tag']) != op]
+    my_l = [k for k, bs in line.items() if own(bs)]
+    ot_l = {k for k, bs in line.items() if oth(bs)}
+    my_x = [k for k, bs in xr.items() if own(bs)]
+    ot_x = {k for k, bs in xr.items() if oth(bs)}
+    for d in range(1, LINE_DELAY_MAX + 1):
+        if all((i, f, t + d) not in ot_l for i, f, t in my_l) and all((i, t + d) not in ot_x for i, t in my_x):
+            return d
+    raise RuntimeError(f'line slots: no delay <= {LINE_DELAY_MAX} clears op {op}')
+
+
 class CalendarFull(Exception):
     pass
 
@@ -765,7 +877,7 @@ def finish(prog, stage=0, kit_lead=20):
 
 
 def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtures=None, svc_tag=0, mu_ctx=False,
-                  mu_win=None):
+                  line_delay=None, mu_win=None):
     out = Path(out)
     (out / 'prog' / 'frame_cfg7').mkdir(parents=True, exist_ok=True)
     die = Die(tree)
@@ -776,7 +888,10 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
     prog.mu_ctx = mu_ctx
     low = []
     fams = family_lowerings()
-    ctx = dict(layer=layer, slice=sl, sched=sched, fixtures=Path(fixtures) if fixtures else None, svc_tag=svc_tag)
+    line_delay = dict(line_delay or {})
+    prog.op_names = [o['op'] for o in sched['ops']]
+    ctx = dict(layer=layer, slice=sl, sched=sched, fixtures=Path(fixtures) if fixtures else None, svc_tag=svc_tag,
+               line_delay=line_delay)
     for o in sched['ops']:
         unit, st, gap = op_unit(o['op'])
         rec = dict(id=o['id'], op=o['op'], start=o['start'], end=o['end'], unit=unit, status=st,
@@ -812,6 +927,29 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
                                         dict(zip(('module', 'port', 'missing'), GAP_XS_ROM))])
         (out / 'prog/frame_cfg7' / f'{f}.json').write_text(json.dumps(rec, indent=1) + '\n')
     n_row_ctl = row_ctl_events(die, prog)
+    # MU-DIE-S81/LINECOL: tier-line slot reservation (see line_slots); a move re-lowers the whole layer
+    cols, line, xr = line_collisions(tree, prog)
+    if cols:
+        moved = {}
+        for c in cols:
+            ops = sorted({o for o in (_movable_op(prog, b.split('|')[0]) for b in c['beats']) if o})
+            if not ops:
+                raise RuntimeError(f'line slot collision no family can move: {c}')
+            op = ops[0]
+            if op not in moved:
+                moved[op] = _min_line_delay(prog, line, xr, op)
+        for op, d in moved.items():
+            line_delay[op] = line_delay.get(op, 0) + d
+        assert all(v <= LINE_DELAY_MAX for v in line_delay.values()), f'line delay > {LINE_DELAY_MAX}: {line_delay}'
+        print(f'LINE_SLOTS {layer}: {len(cols)} collisions {[(c["where"], c["slot"]) for c in cols][:6]} -> '
+              f'line_delay {line_delay}', file=sys.stderr)
+        return compile_layer(layer, out, tree, sl, smoke=smoke, workload=workload, fixtures=fixtures, svc_tag=svc_tag,
+                             mu_ctx=mu_ctx, line_delay=line_delay, mu_win=mu_win)
+    line_rec = dict(model='dv_cut_replay landed_words (derive_line_events + derive_vctl_line_events) on the die build; '
+                          'slot = (slice, line face, landed edge); xr = (slice, landed edge) of the CTL beats a slice takes',
+                    line_delay=line_delay, collisions=0, line_slots=len(line), xr_slots=len(xr),
+                    shared_slots=sorted([list(k) + [sorted({b['src'] for b in bs})] for k, bs in line.items()
+                                         if len({b['src'] for b in bs}) > 1]))
     files = {}
     for rel, text in prog.files.items():
         (out / rel).parent.mkdir(parents=True, exist_ok=True)
@@ -830,7 +968,7 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
         assert len(need) <= 1, f'more than one svc job row ({sorted(need)}): one tag per layer is modelled'
         if need and need != {svc_tag} and prog.svc:
             return compile_layer(layer, out, tree, sl, smoke=smoke, workload=workload, fixtures=fixtures,
-                                 svc_tag=need.pop(), mu_ctx=mu_ctx, mu_win=mu_win)
+                                 svc_tag=need.pop(), mu_ctx=mu_ctx, line_delay=line_delay, mu_win=mu_win)
         cal = []
         for k, (t0, jp, (rows, hs, endage)) in enumerate(jobs):
             jd = '' if len(jobs) == 1 else f'job{k}/'
@@ -871,7 +1009,7 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
                     '(LSB-first); dir in: the edge the consumer pin\'s landed register takes the value; dir out: the '
                     'edge the producer\'s output register takes it; boundary offdie = beyond the die\'s elastic link '
                     'layer (no fixed-cycle cut word); dir internal = inside one instance, carried_by its CTL template',
-        row_ctl_events=n_row_ctl, port_valid=prog.port_valid, links=links), indent=1) + '\n')
+        row_ctl_events=n_row_ctl, port_valid=prog.port_valid, links=links, line_slots=line_rec), indent=1) + '\n')
     mu_tab = None
     if mu_win:
         # MU-DIE-S81/MUWIN (10-19): the dsdv_mu_hwin / hslot event table + boot config of this layer on this die copy
@@ -902,6 +1040,7 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
             man['files'][str(p.relative_to(out))] = sha256(p)
     (out / 'manifest.json').write_text(json.dumps(man, indent=1) + '\n')
     return dict(layer=layer, ops=len(low), status=stat, rows=len(prog.rows), templates=len(prog.templates), smoke=sub,
+                line_delay=line_delay, line_collisions=0,
                 **({'mu_win': dict(copy=mu_tab['copy'], events=len(mu_tab['events']), nw=mu_tab['nw'], RL=mu_tab['RL'],
                                    verdict=mu_tab['verdict'], failed=[c['check'] for c in mu_tab['checks']
                                                                       if c['verdict'] != 'PASS'])} if mu_tab else {}))
