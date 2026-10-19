@@ -30,6 +30,16 @@
     "total": 4,
     "stored_bytes": 73728
   },
+  "public_pin_budget": {
+    "direct_inputs": 555,
+    "direct_outputs": 353,
+    "direct_total": 908,
+    "target_inputs": 332,
+    "target_outputs": 354,
+    "target_total": 686,
+    "extra_observation_outputs": 177,
+    "observation_aliases": "175 envelope plus class and valid; count every retained physical output alias"
+  },
   "replicas": {
     "program_banks": 2,
     "central_app": 1,
