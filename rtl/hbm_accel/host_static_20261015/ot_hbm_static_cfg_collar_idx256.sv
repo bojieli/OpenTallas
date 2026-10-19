@@ -203,6 +203,14 @@ module ot_hbm_static_cfg_collar_idx256 #(
     reg need_set, wait_mask, wait_done;
     reg [NPR-1:0] loaded;
     reg armed, run;
+    wire [15:0] run_copies;
+    generate if(FAN32!=0)begin:g_run_copies
+        (* keep *) reg [15:0] rq;
+        always @(posedge clk or negedge regional_reset[18])
+            if(!regional_reset[18])rq<=0;else rq<={16{g_distributed_control.n_run}};
+        assign run_copies=rq;
+    end else assign run_copies=0;
+    endgenerate
     reg [31:0] cnt;
     reg [RW-1:0] rptr;
     reg [7:0] tail;
@@ -252,7 +260,7 @@ module ot_hbm_static_cfg_collar_idx256 #(
     generate if (FAN32 != 0) begin : g_fan32
         ot_hbm_idx256_banks #(.AW(AW),.MUT(MUT)) u_banks(
             .clk(clk),.rst_c_n(rst_c_n),.regional_reset(regional_reset[16:0]),.cfg_v(cfg_v),.cfg_target(cfg_target),
-            .cfg_addr(cfg_addr),.cd(cd),.tg(tg),.run(run),.recs_done(recs_done),
+            .cfg_addr(cfg_addr),.cd(cd),.tg(tg),.run_state(run_copies),.recs_done(recs_done),
             .cur_off(cur_off),.cnt_next(cnt_next),.rptr_next(rptr_next),
             .programme_accept(programme_accept),.lin(lin[AW-1:0]),
             .selected_record(selected_record),.pw_addr(pw_addr_banked),.pw_data(pw_data_banked),
@@ -484,7 +492,8 @@ endmodule
 // ot_keep_regs.tcl synthesis hook must retain these declared register copies.
 // Hierarchy protects each 16-bit bank from global ABC enable absorption.
 module ot_hbm_idx256_banks #(parameter integer AW=12,MUT=0)(
- input wire clk,rst_c_n,cfg_v,run,recs_done,programme_accept,
+ input wire clk,rst_c_n,cfg_v,recs_done,programme_accept,
+ input wire [15:0] run_state,
  input wire [16:0] regional_reset,
  input wire [7:0] cfg_target,tg,
  input wire [11:0] cfg_addr,
@@ -503,7 +512,7 @@ module ot_hbm_idx256_banks #(parameter integer AW=12,MUT=0)(
   wire [95:0] local_prm;
   wire [15:0] local_rec;
   (* keep_hierarchy *) ot_hbm_idx256_payload_bank #(.LO(g*16),.MUT(MUT)) u_payload(
-   .clk(clk),.rst_c_n(regional_reset[g]),.cfg_v(cfg_v),.run(run),.recs_done(recs_done),
+   .clk(clk),.rst_c_n(regional_reset[g]),.cfg_v(cfg_v),.run(run_state[g]),.recs_done(recs_done),
    .programme_accept(programme_accept),.cfg_target(cfg_target),.tg(tg),
    .cfg_addr(cfg_addr),.cd(cd[g*16+:16]),.valid_data(cd[32]),
    .cur_off(cur_off),.cnt_next(cnt_next),.rptr_next(rptr_next),
