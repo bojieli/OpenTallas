@@ -1,0 +1,106 @@
+{
+ "name": "hcoll_v5r_ctl_n1s0_v74x-v74x-COMMIT",
+ "block": "ot_hgi_coll_ctl_v5r_n1s0_safephys",
+ "ref_tile": true,
+ "owner": "Claude:LEAD2-HBM/L2H-SMATT",
+ "purpose": "H.STA.BLK.16.4 COLL release leaf n1s0 SAFE successor after v74k/v74e GRT FAIL (single abutted macro column = horizontal wall: M3/M4 OBS, cap M5): two macro columns: col A (2x 128x256) x 43.2, col B (2x 32x128) x 216; middle channel 78 um (register band between faces), E band 33 um; all macro origins on the 43.2 lattice, >=49 um horizontal channels between macro rows. RTL unchanged ot_hgi_coll_ctl_v5r_n1s0_safephys (VM_RT 74, SAFE_DELAY 1, 9 KEPT reset copies max 32); same ABI/edges as v74.",
+ "threads": 8,
+ "peak_ram_gb": 32,
+ "source": {
+  "branch": "claude/hbm-coll-v74w-1019",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/hbm_accel/generic/collective",
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc",
+   "tools/run_hbm_coll_safephys_proofs_1019.sh"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hgi_coll_ctl_v5r_n1s0_safephys #(.VM_RT(74), .SAFE_DELAY(1)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ctl_release_safephys.sv rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ctl_v5_safephys.sv rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_fixed_delay_sram_safephys.sv rtl/hdc/ot_hdc_prefix.sv rtl/lib/ot_rst_relay.sv physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir/ot_sram_1r1w_128x256_m1_r2c2_p192_mir_bb.v physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc/ot_sram_1r1w_32x128_m1_p192_rc_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "coll_safephys_n1s0_proofs",
+    "cmd": "bash tools/run_hbm_coll_safephys_proofs_1019.sh {RUN}/bench/proofs",
+    "expect": "pass",
+    "pass_regex": "COLL_VMRT PASS LAT74 VM_RT74 pairs8192",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "note": "iter/mech/production/dense positives PASS; the script exits non-zero if any mutant survives (iter1-2, mech1-4, s0/s1 m1-3)"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hcoll_v5r_ctl_n1s0_v74x/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hcoll_v5r_ctl_n1s0_v74x/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 32
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hcoll_v5r_ctl_n1s0_v74x --out {RUN}/record/views/ot_hgi_coll_ctl_v5r_n1s0_safephys --macro-view physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir --macro-view physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/hcoll_v5r_ctl_n1s0_v74x/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/hcoll_v5r_ctl_n1s0_v74x/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/hcoll_v5r_ctl_n1s0_v74x/hcoll_v5r_ctl_n1s0_v74x-v74x-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null
+}

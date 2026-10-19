@@ -1,0 +1,180 @@
+{
+ "name": "hcoll_v5r_ctl_n1s0_v74x",
+ "top": "ot_hgi_coll_ctl_v5r_n1s0_safephys",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ctl_release_safephys.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ctl_v5_safephys.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_fixed_delay_sram_safephys.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir/ot_sram_1r1w_128x256_m1_r2c2_p192_mir_bb.v",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc/ot_sram_1r1w_32x128_m1_p192_rc_bb.v"
+ ],
+ "clock_port": "clk_control",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 302.4,
+  "h": 345.6
+ },
+ "pins": {
+  "W": [
+   "clk_control",
+   "rst_n",
+   "inst",
+   "tap_iteration",
+   "tap_steps",
+   "hgi_start",
+   "hgi_busy",
+   "issue_done"
+  ],
+  "N": [
+   "vm_rv",
+   "vm_sel_d",
+   "tkm_done",
+   "tkm_busy",
+   "dest_v",
+   "rc_v",
+   "rc_tag"
+  ],
+  "S": [
+   "vm_assembled_v",
+   "vm_source_meta",
+   "inj_source_v",
+   "inj_source_meta"
+  ],
+  "E": [
+   "vm_req_pin",
+   "inj_req_pin",
+   "inj_idx_pin",
+   "inj_addr_pin",
+   "delivery_obase_pin",
+   "rgx_addr_pin",
+   "held_epoch",
+   "wr_sequence_pin",
+   "rd_sequence_pin",
+   "rx_sequence_pin",
+   "protocol_fault",
+   "cycles"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 3,
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+   "at": [
+    43.2,
+    43.2
+   ],
+   "at_exact": true,
+   "inst": "*u_vm*u_mem*"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+   "at": [
+    43.2,
+    172.8
+   ],
+   "at_exact": true,
+   "inst": "*u_se*u_mem*"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc",
+   "at": [
+    216.0,
+    43.2
+   ],
+   "at_exact": true,
+   "inst": "*u_inj*u_mem*"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc",
+   "at": [
+    216.0,
+    172.8
+   ],
+   "at_exact": true,
+   "inst": "*u_sl*u_mem*"
+  }
+ ],
+ "children": [],
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.03,
+  "pin_min_tracks": 4
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "V6 (H-ELEM 14:20, +1 issue edge): inst/hgi_start/hgi_busy arrive at the issuer's d2 edge and are captured at this leaf's pins (= the d3 edge of the other children); tap_iteration/tap_steps are pin-captured by ot_hgi_coll_iter_mul, then 16x8 partial products, then a registered combine, so only field + offset adders sit between flops. VM read data moved to ot_hgi_coll_vmasm; vm_rv (valid bits) is captured at its pin. Every output is a flop Q. A synthesis pin stage would add edges the V6 schedule and lockstep bench (tb_hgi_coll_q_hard_v5 SH=4) do not carry."
+ },
+ "job": {
+  "owner": "Claude:LEAD2-HBM/L2H-SMATT",
+  "branch": "claude/hbm-coll-v74w-1019",
+  "tag": "v74x",
+  "purpose": "H.STA.BLK.16.4 COLL release leaf n1s0 SAFE successor after v74k/v74e GRT FAIL (single abutted macro column = horizontal wall: M3/M4 OBS, cap M5): two macro columns: col A (2x 128x256) x 43.2, col B (2x 32x128) x 216; middle channel 78 um (register band between faces), E band 33 um; all macro origins on the 43.2 lattice, >=49 um horizontal channels between macro rows. RTL unchanged ot_hgi_coll_ctl_v5r_n1s0_safephys (VM_RT 74, SAFE_DELAY 1, 9 KEPT reset copies max 32); same ABI/edges as v74.",
+  "extra_paths": [
+   "rtl/hbm_accel/generic/collective",
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc",
+   "tools/run_hbm_coll_safephys_proofs_1019.sh"
+  ],
+  "benches": [
+   {
+    "name": "coll_safephys_n1s0_proofs",
+    "cmd": "bash tools/run_hbm_coll_safephys_proofs_1019.sh {RUN}/bench/proofs",
+    "expect": "pass",
+    "pass_regex": "COLL_VMRT PASS LAT74 VM_RT74 pairs8192",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "note": "iter/mech/production/dense positives PASS; the script exits non-zero if any mutant survives (iter1-2, mech1-4, s0/s1 m1-3)"
+   }
+  ],
+  "views_to": "physical/ref_tile/hcoll_v5r_ctl_n1s0_v74x/views",
+  "record_to": "results/rtl/ref_tile/hcoll_v5r_ctl_n1s0_v74x"
+ },
+ "params": {
+  "VM_RT": 74,
+  "SAFE_DELAY": 1
+ },
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ },
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "fill_reason": {
+  "pin_bound": "L2H-SMATT 10-19: pin/macro-bound outline 302.4 x 345.6. W face ~1,700 pins at pin_min_tracks 4 (0.192 um) need >=331 um -> h 345.6; width set by two macro columns + three >=33 um std bands so no horizontal net must cross a macro (M3/M4 OBS, cap M5). Std area ~3.2k um2 -> ~25% fill incl. macros."
+ },
+ "orfs_vars": {
+  "MACRO_ROWS_HALO_X": "6.48",
+  "MACRO_ROWS_HALO_Y": "2.16",
+  "OT_CKKM_K": "8",
+  "OT_CKKM_PORT": "clk_control"
+ },
+ "pre_cts_extra": [
+  "physical/common_flow/clock_split_km.tcl"
+ ]
+}
