@@ -59,11 +59,11 @@ def schedule(rec, G):
             writes.append((rec['o'] >> 3) + i // 8)
     writes.append(rec['d'] >> 3)
     for x, sec in enumerate(writes):
-        W = W0 + x
+        W = W0 + 10 * (x // 4) + x % 4              # 4 packet sequence numbers, ack frees one at W + 10
         ev.append(('H', W + 1, sec % 8))
         ev.append(('P', W + 1 + V.HUB_TO_BANK, sec % 8))
         ev.append(('A', W + 1 + V.RESP, x % 4))
-    nxt = W0 + len(writes)
+    nxt = W0 + 10 * ((len(writes) - 1) // 4) + (len(writes) - 1) % 4 + 1
     return ev, nxt + V.ACK, True, dict(read_edges=eL - G - 1, writes=len(writes), T=T, TS=TS)
 
 

@@ -11,7 +11,8 @@
 //       tools/hbm_next/isa_rows.idx_union / entry_word).
 // STATIC: the write count is data-independent: T = N k table slots (U <= N k), each TS = ceil((1 + N) / 8) sector
 // writes (slot i >= U writes byte mask 0), one O sector after every 8 slots (and after the last), then D: W = T TS +
-// ceil(T / 8) + 1 write edges. Union ids come from a 384-b bitmap, popped lowest-first one per slot (ascending = the
+// ceil(T / 8) + 1 writes. The idx packet client has 4 sequence numbers and a write's ack frees its number at W + 10,
+// so writes go in groups of 4 every 10 edges (write x at W0 + 10 (x div 4) + x mod 4). Union ids come from a 384-b bitmap, popped lowest-first one per slot (ascending = the
 // golden's G15 slot order, gate E2); each popped id is matched against the N x k captured ids (rho, kappa).
 // Timeline (G = the edge that samples go; tools/hbm_next/hnx_idx_union_vectors.py replays it edge by edge):
 //   G+1 CHK (illegal descriptor -> fault, no traffic); G+2.. RD: one sector an edge, rows back to back (row r: sectors
@@ -140,7 +141,7 @@ module ot_hnx_idx_union_static #(
     end
     // ------------------------------------------------------------ writer
     reg [7:0] slot; reg [1:0] sct; reg [4:0] ogrp; reg [255:0] obuf; reg [7:0] omask; reg [9:0] ucount;
-    reg flt, dbad; reg [3:0] cnt; reg [1:0] wi;
+    reg flt, dbad; reg [3:0] cnt; reg [1:0] wi; reg [2:0] gap;
     function automatic [31:0] bmask(input [7:0] wm);
         for (integer q = 0; q < 8; q = q + 1) bmask[4*q +: 4] = {4{wm[q]}};
     endfunction
@@ -191,11 +192,11 @@ module ot_hnx_idx_union_static #(
         end
     end
     // ------------------------------------------------------------ control
-    always @* tick = st == S_PRE || (st == S_WT && ph == P_TAB && sct + 2'd1 == ts);
+    always @* tick = st == S_PRE || (st == S_WT && gap == 3'd0 && ph == P_TAB && sct + 2'd1 == ts);
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             st <= S_IDLE; ph <= P_TAB; busy <= 1'b0; done <= 1'b0; fault <= 1'b0; flt <= 1'b0; dbad <= 1'b0; rng_bad <= 1'b0;
-            cq <= 338'd0; cq_seq <= 2'd0; wr_now <= 1'b0; wi <= 2'd0; cnt <= 4'd0; ft_v <= 12'd0; full <= 1'b0;
+            cq <= 338'd0; cq_seq <= 2'd0; wr_now <= 1'b0; wi <= 2'd0; gap <= 3'd0; cnt <= 4'd0; ft_v <= 12'd0; full <= 1'b0;
             slot <= 8'd0; sct <= 2'd0; ogrp <= 5'd0; obuf <= 256'd0; omask <= 8'd0; ucount <= 10'd0;
             rd_row <= 5'd0; c_rb <= 18'd0; i_sec <= 15'd0; i_s <= 1'b0;
         end else begin
@@ -212,7 +213,7 @@ module ot_hnx_idx_union_static #(
                 S_CHK: begin                                              // G+1
                     flt <= 1'b0; dbad <= 1'b0; rng_bad <= 1'b0; full <= 1'b0; ft_v <= 12'd0;
                     rd_row <= 5'd0; c_rb <= a_base_q; i_sec <= a_base_q[17:3]; i_s <= 1'b0;
-                    slot <= 8'd0; sct <= 2'd0; ogrp <= 5'd0; obuf <= 256'd0; omask <= 8'd0; ucount <= 10'd0; ph <= P_TAB; wi <= 2'd0;
+                    slot <= 8'd0; sct <= 2'd0; ogrp <= 5'd0; obuf <= 256'd0; omask <= 8'd0; ucount <= 10'd0; ph <= P_TAB; wi <= 2'd0; gap <= 3'd0;
                     if (!legal_q) begin fault <= 1'b1; busy <= 1'b0; st <= S_IDLE; end
                     else st <= S_RD;
                 end
@@ -235,8 +236,9 @@ module ot_hnx_idx_union_static #(
                     cnt <= 4'd2; st <= S_PRE;
                 end
                 S_PRE: if (cnt == 4'd0) st <= S_WT; else cnt <= cnt - 4'd1;
-                S_WT: begin
-                    wr_now <= 1'b1; cq_seq <= wi; wi <= wi + 2'd1;
+                S_WT: if (gap != 3'd0) gap <= gap - 3'd1;          // seq reuse: write x + 4 >= 10 edges after write x
+                else begin
+                    wr_now <= 1'b1; cq_seq <= wi; wi <= wi + 2'd1; if (wi == 2'd3) gap <= 3'd6;
                     case (ph)
                         P_TAB: begin
                             cq <= {1'b1, 1'b1, 11'd0, 1'b0, t_sec, 5'd0, t_data, wkill ? 32'd0 : bmask(t_wm), {14'h0244, wi}};
