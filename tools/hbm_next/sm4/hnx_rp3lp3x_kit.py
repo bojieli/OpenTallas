@@ -34,9 +34,13 @@ STAT_T = ROOT / "physical/hbm_next/sm4/hnx_rp4lp4x_stations.tcl"
 NAME = "hnx_rp3lp3x"
 P = 3
 G = 43.2
-W, H = 630.72, 2289.6
-SRAM_LIFT = 86.4
-V = {"xs3": "physical/ref_tile/hnx_rp3lp3_xs3/views/hnx_xs3",
+W, H = 630.72, 2203.2
+SRAM_LIFT = 0.0   # LH-P3DIE 10-19: the matched pad-return plan fits the original DIE slot (no 86.4 lift)
+# LH-P3DIE 10-19: child positions + SRAM pad / landing macros from the matched pad-return plan (1ff2abe39)
+CAND = ROOT / "results/arch/hbm_next_1019/sm4/p3/pad_return_plan/candidate.json"
+PADV = "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1"
+LANDV = "physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1"
+V = {"xs3": "physical/ref_tile/hnx_rp3lp3_xs3n/views/hnx_xs3",   # xs3n: rl1 on the N face (pad-return plan)
      "bdc": "physical/ref_tile/smh_bdc_ref_p50/views/ot_hbm_accel_smh_bdc",
      "tcl": "physical/ref_tile/smh_tcl_ref_p45/views/ot_hbm_accel_smh_tcl",
      "tct": "physical/ref_tile/smh_tct_ref_p45/views/ot_hbm_accel_smh_tct",
@@ -87,8 +91,27 @@ def children():
             ("beat", "u_beate", 388.8, 993.6, "R0", "n"),
             ("row_e", "u_rowe1", 475.2, 950.4, "MX", "s"),
             ("row_e", "u_rowe0", 475.2, 1166.4, "R0", "n")]
-    return [(k, inst, x, y + (SRAM_LIFT if inst.startswith("u_lf0.") else 0), o, reg)
-            for k, inst, x, y, o, reg in out]
+    cand = {r["name"]: r for r in json.loads(CAND.read_text())["rects"]}
+    res = []
+    for k, inst, x, y, o, reg in out:
+        c = cand[inst]                     # every hard child is in the plan: take its matched position / orientation
+        assert c["region"] == reg and c["w"] == SZ[k][0] and c["h"] == SZ[k][1], (inst, c)
+        res.append((k, inst, c["x"], c["y"], c["orient"], reg))
+    return res
+
+
+def plan_macros():
+    """the 7 x 32x128 rl1_s pad banks (u_lpp_0) and the 4 x 16x546 dual-clock bin_l landing banks (u_lpl_0_sram)"""
+    out = []
+    for r in json.loads(CAND.read_text())["rects"]:
+        if r["name"].startswith("new_pad_"):
+            b = int(r["name"].rsplit("_", 1)[1])
+            out.append(("pad", f"u_lpp_0.g_bank[{b}].g_small.u_mem", r["x"], r["y"], r["orient"], r["region"]))
+        elif r["name"].startswith("new_dualclk_"):
+            b = int(r["name"].rsplit("_", 1)[1])
+            out.append(("landm", f"u_lpl_0_sram.g_bank[{b}].u_mem", r["x"], r["y"], r["orient"], r["region"]))
+    assert sum(k == "pad" for k, *_ in out) == 7 and sum(k == "landm" for k, *_ in out) == 4, out
+    return out
 
 
 def check(ch):
@@ -190,21 +213,23 @@ def main():
     s = json.loads(TEMPLATE.read_text())
     src = json.loads((ROOT / "rtl/hbm_next/sm/sources.json").read_text())
     ch = children()
-    pad_boxes = [("pad", f"u_lpp_0.g_bank[{b}].u_mem", 43.2+129.6*b, 1296.0, "R0", "s") for b in range(4)]
-    SZ["pad"] = (94.824, 41.04)
+    pad_boxes = plan_macros()
+    SZ["pad"] = (51.408, 20.79)
+    SZ["landm"] = (176.904, 81.0)
     bad = check(ch + pad_boxes)
     assert not bad, bad
     s["name"] = NAME
     s["top"] = "hnx_rp3lp3x_flat_lp"
     s["sources"] = [f for f in src["kit_sources"] if not f.endswith("hnx_rp4lp4.sv")] + ["rtl/hbm_next/sm/lp/hnx_rp3lp3x_flat_lp.sv"]
-    s["sources"].append("rtl/hbm_next/common/hnx_pl_pad_sram.sv")
+    s["sources"] += ["rtl/hbm_next/common/hnx_pl_pad_sram.sv", "rtl/hbm_next/common/hnx_pl_land_sram.sv",
+                     f"{PADV}/ot_sram_1r1w_32x128_m1_bb.v", f"{LANDV}/ot_sram_1r1w2c_16x546_m1_bb.v"]
     s["defines"] = src["defines"]
     s["hard_define"] = "SYNTHESIS"
     s["outline"] = {"w": W, "h": H}
     s["child_lattice_um"] = G
     s["children"] = [dict(view=V[k], count=1, at=[r3(x), r3(y)], orient=o, inst=inst, region=reg) for k, inst, x, y, o, reg in ch]
-    s["macros"] = [dict(view="physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
-                        at=[43.2 + 129.6*b, 1296.0], inst=f"*u_lpp_0.g_bank?{b}?.u_mem*") for b in range(4)]
+    s["macros"] = [dict(view=PADV if k == "pad" else LANDV, at=[r3(x), r3(y)], orient=o,
+                        inst="*" + inst.replace("[", "?").replace("]", "?") + "*") for k, inst, x, y, o, reg in pad_boxes]
     s["landed_record"] = "results/arch/hbm_next_1019/sm4/p3/hnx_rp3lp3x_flat_lp_record.json"
     pt, npins = pins_tcl()
     (OUTD / f"{NAME}_pins.tcl").write_text(pt)
@@ -215,7 +240,7 @@ def main():
     s["reset_landing"] = {"enable": True, "clock": "ck_n"}
     s["pin_regs"] = dict(s["pin_regs"], reason=s["pin_regs"]["reason"].replace("hnx_rp4lp4", "hnx_rp4lp4 / hnx_rp4lp4x"))
     s["job"] = {
-        "owner": "Claude HBM-NEXT-P3-SM", "branch": "claude/hbm-next-p3sm-1019", "tag": NAME,
+        "owner": "Claude LH-P3DIE (HBM-NEXT-P3-SM)", "branch": "claude/lh-p3die-1019", "tag": NAME,
         "purpose": "NEXT-release HBM die (OWNER 10-19 P3+(a), not a release gate): SM P = 3 matrix tile on the shared 3-lane x store "
                    "hnx_xs3; CRITICAL tile hnx_rp3*: coordinator PNG review before any submit (report only).",
         "structural_change": (
@@ -224,7 +249,9 @@ def main():
             "nearest the store's W face) = 2 x 13 leaf hard children + the 8 rp4lp transport children, ALL on the 43.2 lattice; "
             f"outline {W} x {H} = the DIE P3 SM slot (aspect 3.5:1: two landed regional halves 630.72 x ~1,100 each, <= 1.8:1); "
             "NREL = 2 gather relays per half (+4 edges on the pass / leaf-0 gather lanes, compiler record) with FIRM stations "
-            "every ~300 um; publish lane delays as ring buffers; 818x3 align pad in four SRAM macros, leaf0 lifted86.4um."),
+            "every ~300 um; publish lane delays as ring buffers. LH-P3DIE 10-19 matched pad-return plan (1ff2abe39): rl1_s 3-edge pad = "
+            "input capture register + 2-residue ring in seven 32x128 SRAMs (reach source->capture 337.8, ->SRAM 176.7, SRAM read->xs3 "
+            "native-N rl1 389.6 um), bin_l landing in four dual-clock 16x546 SRAMs, xs3n child (rl1 on N), outline back to 2203.2."),
         "extra_paths": ["physical/common_flow/anchor_row_packing.tcl", "tools/hbm_next", "results/arch/hbm_next_1019/sm4",
                         "rtl/hbm_next"],
         "benches": [

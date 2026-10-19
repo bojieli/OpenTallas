@@ -51,7 +51,10 @@
   "rtl/hbm_next/sm/hnx_rp4lp4_leaf.sv",
   "rtl/hbm_next/sm/hnx_rp3lp3.sv",
   "rtl/hbm_next/sm/lp/hnx_rp3lp3x_flat_lp.sv",
-  "rtl/hbm_next/common/hnx_pl_pad_sram.sv"
+  "rtl/hbm_next/common/hnx_pl_pad_sram.sv",
+  "rtl/hbm_next/common/hnx_pl_land_sram.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_bb.v",
+  "physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1/ot_sram_1r1w2c_16x546_m1_bb.v"
  ],
  "params": {},
  "defines": [
@@ -78,16 +81,16 @@
  ],
  "outline": {
   "w": 630.72,
-  "h": 2289.6
+  "h": 2203.2
  },
  "child_lattice_um": 43.2,
  "children": [
   {
-   "view": "physical/ref_tile/hnx_rp3lp3_xs3/views/hnx_xs3",
+   "view": "physical/ref_tile/hnx_rp3lp3_xs3n/views/hnx_xs3",
    "count": 1,
    "at": [
     43.2,
-    1382.4
+    1296.0
    ],
    "orient": "R0",
    "inst": "u_lf0.g_xs3.u_xs",
@@ -97,8 +100,8 @@
    "view": "physical/ref_tile/smh_bdc_ref_p50/views/ot_hbm_accel_smh_bdc",
    "count": 1,
    "at": [
-    129.6,
-    1684.8
+    43.2,
+    1598.4
    ],
    "orient": "R0",
    "inst": "u_lf0.g_ln[0].u_bdc",
@@ -108,8 +111,8 @@
    "view": "physical/ref_tile/smh_bdc_ref_p50/views/ot_hbm_accel_smh_bdc",
    "count": 1,
    "at": [
-    259.2,
-    1684.8
+    172.8,
+    1598.4
    ],
    "orient": "R0",
    "inst": "u_lf0.g_ln[1].u_bdc",
@@ -119,8 +122,8 @@
    "view": "physical/ref_tile/smh_bdc_ref_p50/views/ot_hbm_accel_smh_bdc",
    "count": 1,
    "at": [
-    388.8,
-    1684.8
+    302.4,
+    1598.4
    ],
    "orient": "R0",
    "inst": "u_lf0.g_ln[2].u_bdc",
@@ -131,7 +134,7 @@
    "count": 1,
    "at": [
     43.2,
-    1857.6
+    1771.2
    ],
    "orient": "R0",
    "inst": "u_lf0.g_ln[0].u_tcc.u_tr",
@@ -142,7 +145,7 @@
    "count": 1,
    "at": [
     43.2,
-    1944.0
+    1857.6
    ],
    "orient": "R0",
    "inst": "u_lf0.g_ln[0].u_tcc.u_h0",
@@ -153,7 +156,7 @@
    "count": 1,
    "at": [
     172.8,
-    1944.0
+    1857.6
    ],
    "orient": "R0",
    "inst": "u_lf0.g_ln[0].u_tcc.u_h1",
@@ -164,7 +167,7 @@
    "count": 1,
    "at": [
     388.8,
-    1857.6
+    1771.2
    ],
    "orient": "R0",
    "inst": "u_lf0.g_ln[2].u_tcc.u_tr",
@@ -175,7 +178,7 @@
    "count": 1,
    "at": [
     388.8,
-    1944.0
+    1857.6
    ],
    "orient": "R0",
    "inst": "u_lf0.g_ln[2].u_tcc.u_h0",
@@ -186,7 +189,7 @@
    "count": 1,
    "at": [
     518.4,
-    1944.0
+    1857.6
    ],
    "orient": "R0",
    "inst": "u_lf0.g_ln[2].u_tcc.u_h1",
@@ -197,7 +200,7 @@
    "count": 1,
    "at": [
     43.2,
-    2116.8
+    2030.4
    ],
    "orient": "R0",
    "inst": "u_lf0.g_ln[1].u_tcc.u_h0",
@@ -208,7 +211,7 @@
    "count": 1,
    "at": [
     172.8,
-    2116.8
+    2030.4
    ],
    "orient": "R0",
    "inst": "u_lf0.g_ln[1].u_tcc.u_h1",
@@ -219,14 +222,14 @@
    "count": 1,
    "at": [
     302.4,
-    2116.8
+    2030.4
    ],
    "orient": "R0",
    "inst": "u_lf0.g_ln[1].u_tcc.u_tr",
    "region": "n"
   },
   {
-   "view": "physical/ref_tile/hnx_rp3lp3_xs3/views/hnx_xs3",
+   "view": "physical/ref_tile/hnx_rp3lp3_xs3n/views/hnx_xs3",
    "count": 1,
    "at": [
     43.2,
@@ -240,7 +243,7 @@
    "view": "physical/ref_tile/smh_bdc_ref_p50/views/ot_hbm_accel_smh_bdc",
    "count": 1,
    "at": [
-    129.6,
+    43.2,
     475.2
    ],
    "orient": "MX",
@@ -251,7 +254,7 @@
    "view": "physical/ref_tile/smh_bdc_ref_p50/views/ot_hbm_accel_smh_bdc",
    "count": 1,
    "at": [
-    259.2,
+    172.8,
     475.2
    ],
    "orient": "MX",
@@ -262,7 +265,7 @@
    "view": "physical/ref_tile/smh_bdc_ref_p50/views/ot_hbm_accel_smh_bdc",
    "count": 1,
    "at": [
-    388.8,
+    302.4,
     475.2
    ],
    "orient": "MX",
@@ -373,7 +376,7 @@
    "count": 1,
    "at": [
     43.2,
-    993.6
+    1036.8
    ],
    "orient": "R0",
    "inst": "u_beat_t",
@@ -383,7 +386,7 @@
    "view": "physical/ref_tile/smh_tr_group_land_ref/views/ot_smh_tr_group_land",
    "count": 1,
    "at": [
-    129.6,
+    388.8,
     950.4
    ],
    "orient": "MX",
@@ -394,8 +397,8 @@
    "view": "physical/ref_tile/smh_tr_group_row_w_ref/views/ot_smh_tr_group_row_w",
    "count": 1,
    "at": [
-    129.6,
-    1036.8
+    432.0,
+    475.2
    ],
    "orient": "MX",
    "inst": "u_row1",
@@ -405,8 +408,8 @@
    "view": "physical/ref_tile/smh_tr_group_row_w_ref/views/ot_smh_tr_group_row_w",
    "count": 1,
    "at": [
-    259.2,
-    1036.8
+    432.0,
+    1598.4
    ],
    "orient": "R0",
    "inst": "u_row0",
@@ -417,7 +420,7 @@
    "count": 1,
    "at": [
     129.6,
-    1166.4
+    950.4
    ],
    "orient": "R0",
    "inst": "u_land_n",
@@ -427,8 +430,8 @@
    "view": "physical/ref_tile/smh_tr_group_beat_e_ref/views/ot_smh_tr_group_beat_e",
    "count": 1,
    "at": [
-    388.8,
-    993.6
+    561.6,
+    1036.8
    ],
    "orient": "R0",
    "inst": "u_beate",
@@ -438,8 +441,8 @@
    "view": "physical/ref_tile/smh_tr_group_row_e_ref/views/ot_smh_tr_group_row_e",
    "count": 1,
    "at": [
-    475.2,
-    950.4
+    561.6,
+    475.2
    ],
    "orient": "MX",
    "inst": "u_rowe1",
@@ -449,8 +452,8 @@
    "view": "physical/ref_tile/smh_tr_group_row_e_ref/views/ot_smh_tr_group_row_e",
    "count": 1,
    "at": [
-    475.2,
-    1166.4
+    561.6,
+    1598.4
    ],
    "orient": "R0",
    "inst": "u_rowe0",
@@ -510,11 +513,11 @@
   "io_hold_margin_ns": 0.03
  },
  "job": {
-  "owner": "Claude HBM-NEXT-P3-SM",
-  "branch": "claude/hbm-next-p3sm-1019",
+  "owner": "Claude LH-P3DIE (HBM-NEXT-P3-SM)",
+  "branch": "claude/lh-p3die-1019",
   "tag": "hnx_rp3lp3x",
   "purpose": "NEXT-release HBM die (OWNER 10-19 P3+(a), not a release gate): SM P = 3 matrix tile on the shared 3-lane x store hnx_xs3; CRITICAL tile hnx_rp3*: coordinator PNG review before any submit (report only).",
-  "structural_change": "hnx_rp3lp3x (HBM-NEXT-P3-SM 10-19) = hnx_rp4lp4x at P = 3 (RTL hnx_rp3lp3x_flat_lp, lp.py landed regions n / s): per leaf one hnx_xs3 at the band + 3 bdc on its N face + 3 BF16 lane stacks (lanes 0 / 2 beside each other, lane 1 flat in row B nearest the store's W face) = 2 x 13 leaf hard children + the 8 rp4lp transport children, ALL on the 43.2 lattice; outline 630.72 x 2289.6 = the DIE P3 SM slot (aspect 3.5:1: two landed regional halves 630.72 x ~1,100 each, <= 1.8:1); NREL = 2 gather relays per half (+4 edges on the pass / leaf-0 gather lanes, compiler record) with FIRM stations every ~300 um; publish lane delays as ring buffers; 818x3 align pad in four SRAM macros, leaf0 lifted86.4um.",
+  "structural_change": "hnx_rp3lp3x (HBM-NEXT-P3-SM 10-19) = hnx_rp4lp4x at P = 3 (RTL hnx_rp3lp3x_flat_lp, lp.py landed regions n / s): per leaf one hnx_xs3 at the band + 3 bdc on its N face + 3 BF16 lane stacks (lanes 0 / 2 beside each other, lane 1 flat in row B nearest the store's W face) = 2 x 13 leaf hard children + the 8 rp4lp transport children, ALL on the 43.2 lattice; outline 630.72 x 2203.2 = the DIE P3 SM slot (aspect 3.5:1: two landed regional halves 630.72 x ~1,100 each, <= 1.8:1); NREL = 2 gather relays per half (+4 edges on the pass / leaf-0 gather lanes, compiler record) with FIRM stations every ~300 um; publish lane delays as ring buffers. LH-P3DIE 10-19 matched pad-return plan (1ff2abe39): rl1_s 3-edge pad = input capture register + 2-residue ring in seven 32x128 SRAMs (reach source->capture 337.8, ->SRAM 176.7, SRAM read->xs3 native-N rl1 389.6 um), bin_l landing in four dual-clock 16x546 SRAMs, xs3n child (rl1 on N), outline back to 2203.2.",
   "extra_paths": [
    "physical/common_flow/anchor_row_packing.tcl",
    "tools/hbm_next",
@@ -542,36 +545,103 @@
  },
  "macros": [
   {
-   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
-   "at": [
-    43.2,
-    1296.0
-   ],
-   "inst": "*u_lpp_0.g_bank?0?.u_mem*"
-  },
-  {
-   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
-   "at": [
-    172.8,
-    1296.0
-   ],
-   "inst": "*u_lpp_0.g_bank?1?.u_mem*"
-  },
-  {
-   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
    "at": [
     302.4,
-    1296.0
+    302.4
    ],
-   "inst": "*u_lpp_0.g_bank?2?.u_mem*"
+   "orient": "MX",
+   "inst": "*u_lpp_0.g_bank?0?.g_small.u_mem*"
   },
   {
-   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
    "at": [
-    431.99999999999994,
-    1296.0
+    302.4,
+    345.6
    ],
-   "inst": "*u_lpp_0.g_bank?3?.u_mem*"
+   "orient": "R0",
+   "inst": "*u_lpp_0.g_bank?1?.g_small.u_mem*"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "at": [
+    302.4,
+    259.2
+   ],
+   "orient": "MX",
+   "inst": "*u_lpp_0.g_bank?2?.g_small.u_mem*"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "at": [
+    302.4,
+    388.8
+   ],
+   "orient": "R0",
+   "inst": "*u_lpp_0.g_bank?3?.g_small.u_mem*"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "at": [
+    302.4,
+    432.0
+   ],
+   "orient": "R0",
+   "inst": "*u_lpp_0.g_bank?4?.g_small.u_mem*"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "at": [
+    432.0,
+    604.8
+   ],
+   "orient": "R0",
+   "inst": "*u_lpp_0.g_bank?5?.g_small.u_mem*"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "at": [
+    518.4,
+    604.8
+   ],
+   "orient": "R0",
+   "inst": "*u_lpp_0.g_bank?6?.g_small.u_mem*"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1",
+   "at": [
+    129.6,
+    1166.4
+   ],
+   "orient": "R180",
+   "inst": "*u_lpl_0_sram.g_bank?0?.u_mem*"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1",
+   "at": [
+    129.6,
+    1036.8
+   ],
+   "orient": "MY",
+   "inst": "*u_lpl_0_sram.g_bank?1?.u_mem*"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1",
+   "at": [
+    345.6,
+    1036.8
+   ],
+   "orient": "MY",
+   "inst": "*u_lpl_0_sram.g_bank?2?.u_mem*"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1",
+   "at": [
+    345.6,
+    1166.4
+   ],
+   "orient": "MY",
+   "inst": "*u_lpl_0_sram.g_bank?3?.u_mem*"
   }
  ],
  "inter": [],
