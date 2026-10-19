@@ -1,0 +1,15 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/tw3-frame-1019/src_fg
+ot-run: ot-epyc5       admits   720 GB (avail 765, growth 261, headroom 0, waiters 0/0 GB) load 91/128 running 25 disk 1529 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/tw3-frame-1019/src_fg
+ot-run: ot-epyc7       admits  1100 GB (avail 841, growth 71, headroom 0, waiters 0/0 GB) load 127/96 running 29 disk 6548 GB 
+ot-run: ot-epyc8       admits  1055 GB (avail 873, growth 135, headroom 0, waiters 0/0 GB) load 53/128 running 15 disk 534 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/tw3-frame-1019/src_fg
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/tw3-frame-1019/src_fg
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-525818-1792408458 after 1 s
+=== SET=plan
+  [plan] FRAME_BENCH FAIL col_h9 errors=11 words=14 rows=6
+FRAME_SET col_h9 MUT=landread set=plan pass=0 fail=1
+NEGATIVE_CONTROL_FAILED_AS_EXPECTED MUT=landread col_h9
+RC SET=plan 0
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-525818-1792408458): exit 0

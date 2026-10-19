@@ -1,0 +1,12 @@
+MISMATCH edge 363 row 2 lo 2 k 1 n 4 got 47230dbd/0 want 47230efe/0
+MISMATCH edge 364 row 3 lo 2 k 1 n 4 got 48042ee9/0 want 48042ed4/0
+MISMATCH edge 368 row 0 lo 0 k 1 n 4 got c7591e40/0 want c7548702/0
+MISMATCH edge 369 row 1 lo 0 k 1 n 4 got c7b4a9a1/0 want c7b4ad21/0
+MISMATCH edge 375 row 0 lo 2 k 1 n 4 got 47b6e72f/0 want 47b5fd2d/0
+MISMATCH edge 376 row 1 lo 2 k 1 n 4 got c6d51bdd/0 want c6d2cea9/0
+MISMATCH edge 380 row 2 lo 1 k 0 n 4 got c3127598/0 want c2fbc530/0
+MISMATCH edge 381 row 3 lo 1 k 0 n 4 got 46ddda6a/0 want 46dbadbd/0
+MISMATCH edge 385 row 4 lo 2 k 1 n 4 got 4774ac60/0 want 4774a8f0/0
+MISMATCH edge 386 row 5 lo 2 k 1 n 4 got c784d431/0 want c784d5b9/0
+PLAN_MISMATCH predicted 14 ret words, got 14; first diff ((363, 2, (2, 1, 4), 1193479934, 0), (363, 2, (2, 1, 4), 1193479613, 0))
+FRAME_BENCH FAIL col_h9 errors=11 words=14 rows=6

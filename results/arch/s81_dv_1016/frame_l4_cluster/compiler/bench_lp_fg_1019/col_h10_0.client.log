@@ -1,0 +1,21 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/tw3-frame-1019/src_fg
+ot-run: ot-epyc5       admits   720 GB (avail 765, growth 261, headroom 0, waiters 0/0 GB) load 91/128 running 25 disk 1529 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/tw3-frame-1019/src_fg
+ot-run: ot-epyc7       admits  1100 GB (avail 841, growth 71, headroom 0, waiters 0/0 GB) load 127/96 running 29 disk 6548 GB 
+ot-run: ot-epyc8       admits  1055 GB (avail 873, growth 135, headroom 0, waiters 0/0 GB) load 53/128 running 15 disk 534 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/tw3-frame-1019/src_fg
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/tw3-frame-1019/src_fg
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-525806-1792408458 after 1 s
+=== SET=plan
+  [plan] FRAME_BENCH PASS col_h10 rows=6 words=10 complete_at_root=2 partials=8 END edges=3063 ret_words=10 xo_checked=3061 fault=0
+FRAME_SET col_h10 MUT=0 set=plan pass=1 fail=0
+PASS frame col_h10
+RC SET=plan 0
+=== SET=each
+BENCH_SETUP_FAILED gen 0
+    assert not over, ("element round capacity exceeded (words per round > %d)" % cap, sorted(over.items())[:4])
+           ^^^^^^^^
+AssertionError: ('element round capacity exceeded (words per round > 16)', [((0, 0, 0), 32), ((0, 1, 0), 32), ((0, 2, 0), 32), ((0, 3, 0), 32)])
+RC SET=each 4
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-525806-1792408458): exit 0

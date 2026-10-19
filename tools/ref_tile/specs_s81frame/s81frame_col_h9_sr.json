@@ -1,0 +1,2182 @@
+{
+ "name": "s81frame_col_h9_sr",
+ "top": "col_h9_l4_lp",
+ "kind": "cluster",
+ "sources": [
+  "rtl/common/landed_parent/ot_pl_land.sv",
+  "rtl/dsrom_sys/s81_glue/ot_s81_rly.sv",
+  "rtl/dsrom_sys/s81_dv/frame/dsfd_rly_frame_exact.sv",
+  "rtl/dsrom_sys/s81_glue/dsfd_rly_masters.sv",
+  "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_266ew.sv",
+  "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_536.sv",
+  "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_c26l.sv",
+  "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_gen18.sv",
+  "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_v16.sv",
+  "rtl/dsrom_sys/s81_dv/frame_lp/kit/col_h9_l4_lp_kit.sv",
+  "rtl/dsrom_sys/s81_dv/frame_lp/kit/dsfd_bf_col_kit.sv",
+  "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8_bb.v"
+ ],
+ "params": {},
+ "defines": [],
+ "clock": "multiple_cts_roots",
+ "clock_port": "ck_r0",
+ "clock_ports": [
+  "ck_r0",
+  "ck_r1",
+  "ck_r2"
+ ],
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_r0"
+   ],
+   "inputs": [
+    "x",
+    "xk",
+    "lk",
+    "rst_n"
+   ],
+   "outputs": [
+    "xo",
+    "xok",
+    "ret"
+   ]
+  },
+  "r1": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_r1"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "r2": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_r2"
+   ],
+   "inputs": [],
+   "outputs": []
+  }
+ },
+ "landed_record": "results/arch/s81_dv_1016/frame_l4_cluster/compiler/col_h9_l4_lp_record.json",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "static_ports": [
+  "lk"
+ ],
+ "outline": {
+  "w": 1436.832,
+  "h": 3369.6,
+  "exact": true
+ },
+ "children": [
+  {
+   "view": "physical/ref_tile/s81fill2_qbank_n/views/dsfd_qbank_N",
+   "inst": "u_bn0",
+   "at": [
+    345.6,
+    561.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81fill2_qbank_n/views/dsfd_qbank_N",
+   "inst": "u_bn1",
+   "at": [
+    1123.2,
+    561.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81fill2_qbank_n/views/dsfd_qbank_N",
+   "inst": "u_bn10",
+   "at": [
+    345.6,
+    2721.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81fill2_qbank_n/views/dsfd_qbank_N",
+   "inst": "u_bn11",
+   "at": [
+    1123.2,
+    2721.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81fill2_qbank_n/views/dsfd_qbank_N",
+   "inst": "u_bn12",
+   "at": [
+    864.0,
+    3024.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81fill2_qbank_n/views/dsfd_qbank_N",
+   "inst": "u_bn14",
+   "at": [
+    864.0,
+    3067.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81fill2_qbank_n/views/dsfd_qbank_N",
+   "inst": "u_bn2",
+   "at": [
+    864.0,
+    864.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81fill2_qbank_n/views/dsfd_qbank_N",
+   "inst": "u_bn3",
+   "at": [
+    864.0,
+    907.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81fill2_qbank_n/views/dsfd_qbank_N",
+   "inst": "u_bn5",
+   "at": [
+    345.6,
+    1641.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81fill2_qbank_n/views/dsfd_qbank_N",
+   "inst": "u_bn6",
+   "at": [
+    1123.2,
+    1641.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81fill2_qbank_n/views/dsfd_qbank_N",
+   "inst": "u_bn7",
+   "at": [
+    864.0,
+    1944.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81fill2_qbank_n/views/dsfd_qbank_N",
+   "inst": "u_bn9",
+   "at": [
+    864.0,
+    1987.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81fill2_qbank_s/views/dsfd_qbank_S",
+   "inst": "u_bs0",
+   "at": [
+    216.0,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81fill2_qbank_s/views/dsfd_qbank_S",
+   "inst": "u_bs1",
+   "at": [
+    777.6,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81fill2_qbank_s/views/dsfd_qbank_S",
+   "inst": "u_bs10",
+   "at": [
+    1252.8,
+    2332.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81fill2_qbank_s/views/dsfd_qbank_S",
+   "inst": "u_bs11",
+   "at": [
+    1252.8,
+    2289.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81fill2_qbank_s/views/dsfd_qbank_S",
+   "inst": "u_bs12",
+   "at": [
+    1252.8,
+    2678.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81fill2_qbank_s/views/dsfd_qbank_S",
+   "inst": "u_bs14",
+   "at": [
+    1252.8,
+    2635.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81fill2_qbank_s/views/dsfd_qbank_S",
+   "inst": "u_bs2",
+   "at": [
+    1252.8,
+    518.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81fill2_qbank_s/views/dsfd_qbank_S",
+   "inst": "u_bs3",
+   "at": [
+    1252.8,
+    475.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81fill2_qbank_s/views/dsfd_qbank_S",
+   "inst": "u_bs5",
+   "at": [
+    1252.8,
+    1252.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81fill2_qbank_s/views/dsfd_qbank_S",
+   "inst": "u_bs6",
+   "at": [
+    1252.8,
+    1209.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81fill2_qbank_s/views/dsfd_qbank_S",
+   "inst": "u_bs7",
+   "at": [
+    1252.8,
+    1598.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81fill2_qbank_s/views/dsfd_qbank_S",
+   "inst": "u_bs9",
+   "at": [
+    1252.8,
+    1555.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81coll_cfifo_crs4/views/dsfd_cfifo_crs4",
+   "inst": "u_cf",
+   "at": [
+    1123.2,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/s81_die_views/q_elem_qs5f_efs_view/ot_v41_rom_elem_q_qxpq_w10",
+   "inst": "u_e0",
+   "at": [
+    43.2,
+    216.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/s81_die_views/q_elem_qs5f_efs_view/ot_v41_rom_elem_q_qxpq_w10",
+   "inst": "u_e1",
+   "at": [
+    604.8,
+    216.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/s81_die_views/q_elem_qs5f_efs_view/ot_v41_rom_elem_q_qxpq_w10",
+   "inst": "u_e10",
+   "at": [
+    43.2,
+    2376.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/s81_die_views/q_elem_qs5f_efs_view/ot_v41_rom_elem_q_qxpq_w10",
+   "inst": "u_e11",
+   "at": [
+    604.8,
+    2376.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/s81_die_views/q_elem_qs5f_efs_view/ot_v41_rom_elem_q_qxpq_w10",
+   "inst": "u_e12",
+   "at": [
+    43.2,
+    2764.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/s81_die_views/bf_roots_1016_fg/dsfd_bf_front_roots",
+   "inst": "u_e13",
+   "at": [
+    518.4,
+    3110.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/s81_die_views/bf_compact199/ot_v41_bf_col",
+   "inst": "u_e13e.u_view",
+   "at": [
+    691.2,
+    3110.4
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/s81_die_views/bf_compact199/ot_v41_bf_col",
+   "inst": "u_e13w.u_view",
+   "at": [
+    43.2,
+    3110.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/s81_die_views/q_elem_qs5f_efs_view/ot_v41_rom_elem_q_qxpq_w10",
+   "inst": "u_e14",
+   "at": [
+    604.8,
+    2764.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/s81_die_views/q_elem_qs5f_efs_view/ot_v41_rom_elem_q_qxpq_w10",
+   "inst": "u_e2",
+   "at": [
+    43.2,
+    604.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/s81_die_views/q_elem_qs5f_efs_view/ot_v41_rom_elem_q_qxpq_w10",
+   "inst": "u_e3",
+   "at": [
+    604.8,
+    604.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/s81_die_views/bf_roots_1016_fg/dsfd_bf_front_roots",
+   "inst": "u_e4",
+   "at": [
+    518.4,
+    950.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/s81_die_views/bf_compact199/ot_v41_bf_col",
+   "inst": "u_e4e.u_view",
+   "at": [
+    691.2,
+    950.4
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/s81_die_views/bf_compact199/ot_v41_bf_col",
+   "inst": "u_e4w.u_view",
+   "at": [
+    43.2,
+    950.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/s81_die_views/q_elem_qs5f_efs_view/ot_v41_rom_elem_q_qxpq_w10",
+   "inst": "u_e5",
+   "at": [
+    43.2,
+    1296.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/s81_die_views/q_elem_qs5f_efs_view/ot_v41_rom_elem_q_qxpq_w10",
+   "inst": "u_e6",
+   "at": [
+    604.8,
+    1296.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/s81_die_views/q_elem_qs5f_efs_view/ot_v41_rom_elem_q_qxpq_w10",
+   "inst": "u_e7",
+   "at": [
+    43.2,
+    1684.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/s81_die_views/bf_roots_1016_fg/dsfd_bf_front_roots",
+   "inst": "u_e8",
+   "at": [
+    518.4,
+    2030.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/s81_die_views/bf_compact199/ot_v41_bf_col",
+   "inst": "u_e8e.u_view",
+   "at": [
+    691.2,
+    2030.4
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/s81_die_views/bf_compact199/ot_v41_bf_col",
+   "inst": "u_e8w.u_view",
+   "at": [
+    43.2,
+    2030.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/s81_die_views/q_elem_qs5f_efs_view/ot_v41_rom_elem_q_qxpq_w10",
+   "inst": "u_e9",
+   "at": [
+    604.8,
+    1684.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81net_node_llfu/views/dsfd_node_LLfu",
+   "inst": "u_n0",
+   "at": [
+    1166.4,
+    172.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81net_node_nnfu/views/dsfd_node_NNfu",
+   "inst": "u_n1",
+   "at": [
+    1166.4,
+    302.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81net_node_llfd/views/dsfd_node_LLfd",
+   "inst": "u_n10",
+   "at": [
+    1166.4,
+    1036.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81net_node_nnfd/views/dsfd_node_NNfd",
+   "inst": "u_n11",
+   "at": [
+    1252.8,
+    1080.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81net_node_llfu/views/dsfd_node_LLfu",
+   "inst": "u_n12",
+   "at": [
+    1166.4,
+    1296.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81net_node_nnfd/views/dsfd_node_NNfd",
+   "inst": "u_n13",
+   "at": [
+    1252.8,
+    1339.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81net_node_llfd/views/dsfd_node_LLfd",
+   "inst": "u_n14",
+   "at": [
+    1166.4,
+    1425.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81net_node_nnfd/views/dsfd_node_NNfd",
+   "inst": "u_n15",
+   "at": [
+    1209.6,
+    1641.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81net_node_llfu/views/dsfd_node_LLfu",
+   "inst": "u_n16",
+   "at": [
+    1166.4,
+    1771.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81net_node_nnfu/views/dsfd_node_NNfu",
+   "inst": "u_n17",
+   "at": [
+    1296.0,
+    1728.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81net_node_llfd/views/dsfd_node_LLfd",
+   "inst": "u_n18",
+   "at": [
+    1166.4,
+    1900.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81net_node_nnfu/views/dsfd_node_NNfu",
+   "inst": "u_n19",
+   "at": [
+    1252.8,
+    1900.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81net_node_llfd/views/dsfd_node_LLfd",
+   "inst": "u_n2",
+   "at": [
+    1252.8,
+    302.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81net_node_llfu/views/dsfd_node_LLfu",
+   "inst": "u_n20",
+   "at": [
+    1166.4,
+    2030.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81net_node_nnfd/views/dsfd_node_NNfd",
+   "inst": "u_n21",
+   "at": [
+    1166.4,
+    2160.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81net_node_llfd/views/dsfd_node_LLfd",
+   "inst": "u_n22",
+   "at": [
+    1252.8,
+    2160.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81net_node_nnfd/views/dsfd_node_NNfd",
+   "inst": "u_n23",
+   "at": [
+    1166.4,
+    2376.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81net_node_llfu/views/dsfd_node_LLfu",
+   "inst": "u_n24",
+   "at": [
+    1252.8,
+    2376.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81net_node_nnfu/views/dsfd_node_NNfu",
+   "inst": "u_n25",
+   "at": [
+    1166.4,
+    2505.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81net_node_llfd/views/dsfd_node_LLfd",
+   "inst": "u_n26",
+   "at": [
+    1252.8,
+    2505.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81net_node_nnfd/views/dsfd_node_NNfd",
+   "inst": "u_n27",
+   "at": [
+    1166.4,
+    2764.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81net_node_lld/views/dsfd_node_LLd",
+   "inst": "u_n28",
+   "at": [
+    1252.8,
+    2764.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81net_node_nnfu/views/dsfd_node_NNfu",
+   "inst": "u_n3",
+   "at": [
+    1339.2,
+    345.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81net_node_llfu/views/dsfd_node_LLfu",
+   "inst": "u_n4",
+   "at": [
+    1209.6,
+    561.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81net_node_nnfd/views/dsfd_node_NNfd",
+   "inst": "u_n5",
+   "at": [
+    1166.4,
+    691.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81net_node_llfd/views/dsfd_node_LLfd",
+   "inst": "u_n6",
+   "at": [
+    1252.8,
+    691.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81net_node_nnfu/views/dsfd_node_NNfu",
+   "inst": "u_n7",
+   "at": [
+    1166.4,
+    820.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81net_node_llfu/views/dsfd_node_LLfu",
+   "inst": "u_n8",
+   "at": [
+    1252.8,
+    864.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81net_node_nnfu/views/dsfd_node_NNfu",
+   "inst": "u_n9",
+   "at": [
+    1339.2,
+    950.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81net_rstg/views/dsfd_rstg",
+   "inst": "u_rg0",
+   "at": [
+    1339.2,
+    1296.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81net_rstg/views/dsfd_rstg",
+   "inst": "u_rg1",
+   "at": [
+    1080.0,
+    864.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81net_rstg/views/dsfd_rstg",
+   "inst": "u_rg2",
+   "at": [
+    1296.0,
+    561.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81coll_cfg7_seq_pr/views/ot_s81_cfg7_seq",
+   "inst": "u_s0",
+   "at": [
+    475.2,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81coll_cfg7_seq_pr/views/ot_s81_cfg7_seq",
+   "inst": "u_s1",
+   "at": [
+    604.8,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81coll_cfg7_seq_pr/views/ot_s81_cfg7_seq",
+   "inst": "u_s10",
+   "at": [
+    345.6,
+    2289.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81coll_cfg7_seq_pr/views/ot_s81_cfg7_seq",
+   "inst": "u_s11",
+   "at": [
+    1339.2,
+    2289.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81coll_cfg7_seq_pr/views/ot_s81_cfg7_seq",
+   "inst": "u_s12",
+   "at": [
+    345.6,
+    2635.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81coll_cfg7_seq_bfp_pr/views/ot_s81_cfg7_seq_bfp",
+   "inst": "u_s13",
+   "at": [
+    777.6,
+    3024.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81coll_cfg7_seq_pr/views/ot_s81_cfg7_seq",
+   "inst": "u_s14",
+   "at": [
+    1339.2,
+    2635.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81coll_cfg7_seq_pr/views/ot_s81_cfg7_seq",
+   "inst": "u_s2",
+   "at": [
+    345.6,
+    475.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81coll_cfg7_seq_pr/views/ot_s81_cfg7_seq",
+   "inst": "u_s3",
+   "at": [
+    1339.2,
+    475.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81coll_cfg7_seq_bfp_pr/views/ot_s81_cfg7_seq_bfp",
+   "inst": "u_s4",
+   "at": [
+    777.6,
+    864.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81coll_cfg7_seq_pr/views/ot_s81_cfg7_seq",
+   "inst": "u_s5",
+   "at": [
+    345.6,
+    1209.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81coll_cfg7_seq_pr/views/ot_s81_cfg7_seq",
+   "inst": "u_s6",
+   "at": [
+    1339.2,
+    1209.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81coll_cfg7_seq_pr/views/ot_s81_cfg7_seq",
+   "inst": "u_s7",
+   "at": [
+    345.6,
+    1555.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81coll_cfg7_seq_bfp_pr/views/ot_s81_cfg7_seq_bfp",
+   "inst": "u_s8",
+   "at": [
+    777.6,
+    1944.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81coll_cfg7_seq_pr/views/ot_s81_cfg7_seq",
+   "inst": "u_s9",
+   "at": [
+    1339.2,
+    1555.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/s81_die_views/frame_restub_1019/ot_s81_sstn_base566",
+   "inst": "u_t0",
+   "at": [
+    388.8,
+    129.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81_sstn_payload536/views/ot_s81_sstn_payload536",
+   "inst": "u_t0__payload",
+   "at": [
+    518.4,
+    129.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/s81_die_views/frame_restub_1019/ot_s81_sstn_base566",
+   "inst": "u_t1",
+   "at": [
+    388.8,
+    475.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81_sstn_payload536/views/ot_s81_sstn_payload536",
+   "inst": "u_t1__payload",
+   "at": [
+    1123.2,
+    475.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/s81_die_views/frame_restub_1019/ot_s81_sstn_base566",
+   "inst": "u_t2",
+   "at": [
+    388.8,
+    864.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81_sstn_payload536/views/ot_s81_sstn_payload536",
+   "inst": "u_t2__payload",
+   "at": [
+    648.0,
+    864.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/s81_die_views/frame_restub_1019/ot_s81_sstn_base566",
+   "inst": "u_t3",
+   "at": [
+    388.8,
+    1209.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81_sstn_payload536/views/ot_s81_sstn_payload536",
+   "inst": "u_t3__payload",
+   "at": [
+    1123.2,
+    1209.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/s81_die_views/frame_restub_1019/ot_s81_sstn_base566",
+   "inst": "u_t4",
+   "at": [
+    388.8,
+    1555.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81_sstn_payload536/views/ot_s81_sstn_payload536",
+   "inst": "u_t4__payload",
+   "at": [
+    1123.2,
+    1555.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/s81_die_views/frame_restub_1019/ot_s81_sstn_base566",
+   "inst": "u_t5",
+   "at": [
+    388.8,
+    1944.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81_sstn_payload536/views/ot_s81_sstn_payload536",
+   "inst": "u_t5__payload",
+   "at": [
+    648.0,
+    1944.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/s81_die_views/frame_restub_1019/ot_s81_sstn_base566",
+   "inst": "u_t6",
+   "at": [
+    388.8,
+    2289.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81_sstn_payload536/views/ot_s81_sstn_payload536",
+   "inst": "u_t6__payload",
+   "at": [
+    1123.2,
+    2289.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/s81_die_views/frame_restub_1019/ot_s81_sstn_base566",
+   "inst": "u_t7",
+   "at": [
+    388.8,
+    2635.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81_sstn_payload536/views/ot_s81_sstn_payload536",
+   "inst": "u_t7__payload",
+   "at": [
+    1123.2,
+    2635.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/s81_die_views/frame_restub_1019/ot_s81_sstn_base566",
+   "inst": "u_t8",
+   "at": [
+    388.8,
+    3024.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81_sstn_payload536/views/ot_s81_sstn_payload536",
+   "inst": "u_t8__payload",
+   "at": [
+    648.0,
+    3024.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81dv_rly_276_ns/views/dsfd_dvrly_276_NS",
+   "inst": "u_xo0",
+   "at": [
+    518.4,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81dv_rly_276_ns/views/dsfd_dvrly_276_NS",
+   "inst": "u_xo1",
+   "at": [
+    648.0,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81dv_rly_276_ns/views/dsfd_dvrly_276_NS",
+   "inst": "u_xo2",
+   "at": [
+    518.4,
+    86.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81dv_rly_276_ns/views/dsfd_dvrly_276_NS",
+   "inst": "u_xo3",
+   "at": [
+    864.0,
+    43.2
+   ],
+   "orient": "R0"
+  }
+ ],
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c0_0",
+   "at": [
+    47.52,
+    108.0
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c0_1",
+   "at": [
+    105.84,
+    108.0
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c0_2",
+   "at": [
+    164.16,
+    108.0
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c0_3",
+   "at": [
+    222.48,
+    108.0
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c0_4",
+   "at": [
+    280.8,
+    108.0
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c0_5",
+   "at": [
+    339.12,
+    43.2
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c0_6",
+   "at": [
+    397.44,
+    43.2
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c10_0",
+   "at": [
+    47.52,
+    2272.32
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c10_1",
+   "at": [
+    105.84,
+    2272.32
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c10_2",
+   "at": [
+    164.16,
+    2272.32
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c10_3",
+   "at": [
+    222.48,
+    2272.32
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c10_4",
+   "at": [
+    280.8,
+    2272.32
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c10_5",
+   "at": [
+    494.64,
+    2272.32
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c10_6",
+   "at": [
+    552.96,
+    2272.32
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c11_0",
+   "at": [
+    680.4,
+    2272.32
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c11_1",
+   "at": [
+    747.36,
+    2272.32
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c11_2",
+   "at": [
+    805.68,
+    2272.32
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c11_3",
+   "at": [
+    864.0,
+    2272.32
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c11_4",
+   "at": [
+    922.32,
+    2272.32
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c11_5",
+   "at": [
+    980.64,
+    2272.32
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c11_6",
+   "at": [
+    1038.96,
+    2272.32
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c12_0",
+   "at": [
+    47.52,
+    2643.84
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c12_1",
+   "at": [
+    105.84,
+    2643.84
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c12_2",
+   "at": [
+    164.16,
+    2643.84
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c12_3",
+   "at": [
+    222.48,
+    2643.84
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c12_4",
+   "at": [
+    280.8,
+    2643.84
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c12_5",
+   "at": [
+    494.64,
+    2643.84
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c12_6",
+   "at": [
+    552.96,
+    2643.84
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c13_0",
+   "at": [
+    47.52,
+    3015.36
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c13_1",
+   "at": [
+    105.84,
+    3015.36
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c13_2",
+   "at": [
+    164.16,
+    3015.36
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c13_3",
+   "at": [
+    222.48,
+    3015.36
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c13_4",
+   "at": [
+    280.8,
+    3015.36
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c13_5",
+   "at": [
+    494.64,
+    3015.36
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c13_6",
+   "at": [
+    552.96,
+    3015.36
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c14_0",
+   "at": [
+    680.4,
+    2643.84
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c14_1",
+   "at": [
+    747.36,
+    2643.84
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c14_2",
+   "at": [
+    805.68,
+    2643.84
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c14_3",
+   "at": [
+    864.0,
+    2643.84
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c14_4",
+   "at": [
+    922.32,
+    2643.84
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c14_5",
+   "at": [
+    980.64,
+    2643.84
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c14_6",
+   "at": [
+    1038.96,
+    2643.84
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c1_0",
+   "at": [
+    680.4,
+    108.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c1_1",
+   "at": [
+    747.36,
+    108.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c1_2",
+   "at": [
+    805.68,
+    108.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c1_3",
+   "at": [
+    864.0,
+    108.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c1_4",
+   "at": [
+    922.32,
+    108.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c1_5",
+   "at": [
+    980.64,
+    108.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c1_6",
+   "at": [
+    1038.96,
+    108.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c2_0",
+   "at": [
+    47.52,
+    481.68
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c2_1",
+   "at": [
+    105.84,
+    481.68
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c2_2",
+   "at": [
+    164.16,
+    481.68
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c2_3",
+   "at": [
+    222.48,
+    481.68
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c2_4",
+   "at": [
+    280.8,
+    481.68
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c2_5",
+   "at": [
+    494.64,
+    481.68
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c2_6",
+   "at": [
+    552.96,
+    481.68
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c3_0",
+   "at": [
+    680.4,
+    481.68
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c3_1",
+   "at": [
+    747.36,
+    481.68
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c3_2",
+   "at": [
+    805.68,
+    481.68
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c3_3",
+   "at": [
+    864.0,
+    481.68
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c3_4",
+   "at": [
+    922.32,
+    481.68
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c3_5",
+   "at": [
+    980.64,
+    481.68
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c3_6",
+   "at": [
+    1038.96,
+    481.68
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c4_0",
+   "at": [
+    47.52,
+    855.36
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c4_1",
+   "at": [
+    105.84,
+    855.36
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c4_2",
+   "at": [
+    164.16,
+    855.36
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c4_3",
+   "at": [
+    222.48,
+    855.36
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c4_4",
+   "at": [
+    280.8,
+    855.36
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c4_5",
+   "at": [
+    494.64,
+    855.36
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c4_6",
+   "at": [
+    552.96,
+    855.36
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c5_0",
+   "at": [
+    47.52,
+    1192.32
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c5_1",
+   "at": [
+    105.84,
+    1192.32
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c5_2",
+   "at": [
+    164.16,
+    1192.32
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c5_3",
+   "at": [
+    222.48,
+    1192.32
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c5_4",
+   "at": [
+    280.8,
+    1192.32
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c5_5",
+   "at": [
+    494.64,
+    1192.32
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c5_6",
+   "at": [
+    552.96,
+    1192.32
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c6_0",
+   "at": [
+    680.4,
+    1192.32
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c6_1",
+   "at": [
+    747.36,
+    1192.32
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c6_2",
+   "at": [
+    805.68,
+    1192.32
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c6_3",
+   "at": [
+    864.0,
+    1192.32
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c6_4",
+   "at": [
+    922.32,
+    1192.32
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c6_5",
+   "at": [
+    980.64,
+    1192.32
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c6_6",
+   "at": [
+    1038.96,
+    1192.32
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c7_0",
+   "at": [
+    47.52,
+    1561.68
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c7_1",
+   "at": [
+    105.84,
+    1561.68
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c7_2",
+   "at": [
+    164.16,
+    1561.68
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c7_3",
+   "at": [
+    222.48,
+    1561.68
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c7_4",
+   "at": [
+    280.8,
+    1561.68
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c7_5",
+   "at": [
+    494.64,
+    1561.68
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c7_6",
+   "at": [
+    552.96,
+    1561.68
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c8_0",
+   "at": [
+    47.52,
+    1935.36
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c8_1",
+   "at": [
+    105.84,
+    1935.36
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c8_2",
+   "at": [
+    164.16,
+    1935.36
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c8_3",
+   "at": [
+    222.48,
+    1935.36
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c8_4",
+   "at": [
+    280.8,
+    1935.36
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c8_5",
+   "at": [
+    494.64,
+    1935.36
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c8_6",
+   "at": [
+    552.96,
+    1935.36
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c9_0",
+   "at": [
+    680.4,
+    1561.68
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c9_1",
+   "at": [
+    747.36,
+    1561.68
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c9_2",
+   "at": [
+    805.68,
+    1561.68
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c9_3",
+   "at": [
+    864.0,
+    1561.68
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c9_4",
+   "at": [
+    922.32,
+    1561.68
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c9_5",
+   "at": [
+    980.64,
+    1561.68
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "inst": "u_c9_6",
+   "at": [
+    1038.96,
+    1561.68
+   ],
+   "orient": "R0"
+  }
+ ],
+ "pins": {
+  "E": [
+   "xo",
+   "xok",
+   "xk",
+   "x",
+   "ret",
+   "lk",
+   "rst_n",
+   "ck_r0",
+   "ck_r1",
+   "ck_r2"
+  ]
+ },
+ "pin_ranges": {
+  "xo": [
+   140,
+   330
+  ],
+  "xok": [
+   331,
+   334
+  ],
+  "xk": [
+   336,
+   339
+  ],
+  "x": [
+   341,
+   531
+  ],
+  "ret": [
+   534,
+   552
+  ],
+  "lk": [
+   555,
+   561
+  ],
+  "rst_n": [
+   563,
+   566
+  ],
+  "ck_r0": [
+   600,
+   603
+  ],
+  "ck_r1": [
+   1588.5,
+   1591.5
+  ],
+  "ck_r2": [
+   2805.5,
+   2808.5
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 32,
+  "peak_ram_gb": 192
+ },
+ "structural_change": "TW3-S81-FRAMEGATE 10-19 (COORD 0jy option A): col_h9 landed frame (3 regions r0/r1/r2, every crossing landed as a compiler re-schedule, 3017 landings, reset hops {'r0': 0, 'r1': 3, 'r2': 6} at reach 405 from measured region centres {'r0': [629.1, 493.4], 'r1': [619.4, 1588.5], 'r2': [601.5, 2805.5]}); hard children legalised from the c26l GEN placement (tools/s81_dv/frame_kit.py)",
+ "frame": {
+  "lp_rtl": "rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp.sv",
+  "lp_rtl_sha256": "4fd9147f3f384c5e439b313ef897a57755cd638e584cc3a8472ca2b057f8da42",
+  "bench": "results/arch/s81_dv_1016/frame_l4_cluster/compiler/bench_lp_1019 (claude/tw3-frame-1019 2911edcc2)",
+  "placement": {
+   "worst_disp_um": [
+    1017.4,
+    "u_bs7"
+   ],
+   "disp_p50": 47.6,
+   "disp_p90": 529.3,
+   "bit_mm": 20383.5,
+   "c26l_height": 2682.7,
+   "y_scale": 1.2376
+  },
+  "stand_ins": {
+   "ot_v41_rom_elem_q_qxpq_w10": "non-RSTP efs view (COORD 0gs) until the RSTP ob2 re-route closes",
+   "ot_v41_bf_col": "compact199 closed view; pin-band re-route (same outline / pins) being submitted"
+  },
+  "xk_note": "xk (forwarded x clock, preserved port) feeds crs4 only; timed as a core input in this gate"
+ },
+ "soft_children": {
+  "patterns": [
+   "dsfd_rly_.*"
+  ],
+  "why": "the 1-283 b frame relays are plain register stages (ot_s81_rly); as hard 15-56 um tiles under the 20-um channel rule they set the frame height (hard-relay legalisation needs 3.67 mm vs 3.20 mm soft, p4l slot 2.70): synthesised in the frame, placed by the placer on their region tree"
+ },
+ "job": {
+  "owner": "Claude:TW3-S81-FRAMEGATE",
+  "branch": "claude/tw3-framegate-1019",
+  "tag": "fg1",
+  "purpose": "S81 col_h9 landed frame cluster (COORD 0jy, landed-regions standard) -- physical gate",
+  "no_bench_reason": "frame lockstep + plan benches: frame_l4_cluster/compiler/bench_lp_1019; gate only (critical review)",
+  "views_to": "physical/ref_tile/s81frame_col_h9_sr/views",
+  "record_to": "results/rtl/ref_tile/s81frame_col_h9_sr"
+ },
+ "slot_change_request": "frame height 3369.6 > p4l slot 2695.68: the c26l arrangement under the ref_tile 20-um channel rule needs it; die plan frame pitch must grow (coordinator)",
+ "cluster_level": 2,
+ "cluster_level_why": "children include the q element (PG top M7, legacy closed view): two-level cluster contract (PG M8 aligned to the die grid, signals M2-M7)",
+ "reset_landing": {
+  "enable": false,
+  "reason": "the RTL lands it: rst_n -> dsfd_cfifo_crs4 rst (2-stage rsync_q on cr) -> crs4 rs = n257 -> lp.py regional reset runs (ot_pl_pad chains per region, reach 405 hops from the measured centres); rst_n also reaches the 4 xo forwarded-clock relays u_xo* (.rs, async assert, their own RSREG). A kit landing would shift the crs4 release against the lane hop-0 gate the frame calendar is benched on"
+ }
+}
