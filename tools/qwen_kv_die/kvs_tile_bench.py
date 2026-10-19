@@ -188,7 +188,7 @@ def main():
         # KV-KITS-ATTN 10-18: the closure daemon's pinned Verilator (5.050, PATH set by the loop / kvs_tile_bench.sh)
         cmd = ['verilator', '--binary', '--timing', '-j', str(a.threads), '-Wno-fatal', '-Wno-lint', '-Wno-style',
                '-Wno-TIMESCALEMOD', '--top-module', 'tb_kvs_tile', '-Mdir', str(out / 'obj'), '-o', 'sim',
-               str(out / 'tb.sv'), str(out / 'tiles.sv')] + list(srcs) + ['+libext+.sv+.v'] + [f'-y{d}' for d in dirs]
+               str(out / 'tb.sv'), str(out / 'tiles.sv')] + list(srcs) + ['+libext+.sv+.v'] + [x for d in dirs for x in ('-y', d)]
         run = [str(out / 'obj' / 'sim')]
         print('SIM ' + subprocess.run(['verilator', '--version'], capture_output=True, text=True).stdout.strip())
     else:
