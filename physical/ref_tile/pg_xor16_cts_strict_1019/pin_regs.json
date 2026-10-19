@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_pg_canonical_xor16_1019",
+ "enable": false,
+ "reason": "Private source already registers all32inputs and16outputs; preserve exact2edge source latency."
+}

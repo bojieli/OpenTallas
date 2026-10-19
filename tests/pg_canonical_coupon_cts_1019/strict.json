@@ -1,0 +1,130 @@
+{
+  "name": "pg_xor16_cts_strict_1019",
+  "top": "ot_pg_canonical_xor16_1019",
+  "kind": "tile",
+  "sources": [
+    "tests/pg_canonical_coupon_1019/coupon.sv"
+  ],
+  "clock_port": "clk",
+  "reset_ports": [
+    "rst_n"
+  ],
+  "outline": {
+    "w": 43.2,
+    "h": 43.2,
+    "exact": true
+  },
+  "std_area_um2": 25.2963,
+  "pins": {
+    "W": [
+      "a",
+      "b"
+    ],
+    "E": [
+      "y"
+    ],
+    "N": [
+      "clk",
+      "rst_n"
+    ]
+  },
+  "clock": "cts",
+  "recipe": 1,
+  "pin_regs": {
+    "enable": false,
+    "reason": "Private source already registers all32inputs and16outputs; preserve exact2edge source latency."
+  },
+  "reset_landing": {
+    "enable": false,
+    "reason": "Source owns first face FF and two kept second-stage copies with24data resets each; preserve exactresetrelease."
+  },
+  "inhold": false,
+  "outhold": false,
+  "io_flop_at_pins": false,
+  "route": {
+    "pd": 0.55,
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "period_ps": 770,
+    "hold_margin_ns": 0.03,
+    "io_hold_margin_ns": 0.03
+  },
+  "job": {
+    "owner": "Codex:PG canonical integration coupon",
+    "branch": "codex/pg-canonical-coupon-cts-1019",
+    "tag": "cts_only",
+    "hold_merge": "Private flow integration diagnostic only, no accelerator performance/physical adoption; sourceowned770ps constraints and low wholeoutlinefill are explicit.",
+    "purpose": "ROOT approved canonical CTS integration coupon only",
+    "extra_paths": [
+      "tests/pg_canonical_coupon_1019",
+      "tests/pg_canonical_coupon_cts_1019"
+    ],
+    "record_to": "results/rtl/pg_canonical_coupon_1019",
+    "views_to": "physical/ref_tile/pg_xor16_canonical_1019/views",
+    "benches": [
+      {
+        "name": "xor16_source_exact",
+        "cmd": "bash tests/pg_canonical_coupon_1019/bench_one.sh original",
+        "expect": "pass",
+        "pass_regex": "PASS checks=",
+        "threads": 4,
+        "peak_ram_gb": 8,
+        "needs": [
+          "verilator"
+        ]
+      },
+      {
+        "name": "xor16_mut_or",
+        "cmd": "bash tests/pg_canonical_coupon_1019/bench_one.sh or",
+        "expect": "fail",
+        "fail_regex": "MISMATCH|ASYNC_RESET_FAILURE",
+        "fail_witness": "tests/pg_canonical_coupon_1019/evidence_v2/run_or.log",
+        "threads": 4,
+        "peak_ram_gb": 8,
+        "needs": [
+          "verilator"
+        ]
+      },
+      {
+        "name": "xor16_mut_bypass",
+        "cmd": "bash tests/pg_canonical_coupon_1019/bench_one.sh bypass",
+        "expect": "fail",
+        "fail_regex": "MISMATCH|ASYNC_RESET_FAILURE",
+        "fail_witness": "tests/pg_canonical_coupon_1019/evidence_v2/run_bypass.log",
+        "threads": 4,
+        "peak_ram_gb": 8,
+        "needs": [
+          "verilator"
+        ]
+      },
+      {
+        "name": "xor16_mut_reset_early",
+        "cmd": "bash tests/pg_canonical_coupon_1019/bench_one.sh reset_early",
+        "expect": "fail",
+        "fail_regex": "MISMATCH|ASYNC_RESET_FAILURE",
+        "fail_witness": "tests/pg_canonical_coupon_1019/evidence_v2/run_reset_early.log",
+        "threads": 4,
+        "peak_ram_gb": 8,
+        "needs": [
+          "verilator"
+        ]
+      },
+      {
+        "name": "xor16_mut_reset_missing",
+        "cmd": "bash tests/pg_canonical_coupon_1019/bench_one.sh reset_missing",
+        "expect": "fail",
+        "fail_regex": "MISMATCH|ASYNC_RESET_FAILURE",
+        "fail_witness": "tests/pg_canonical_coupon_1019/evidence_v2/run_reset_missing.log",
+        "threads": 4,
+        "peak_ram_gb": 8,
+        "needs": [
+          "verilator"
+        ]
+      }
+    ]
+  },
+  "pg_strict": true,
+  "orfs_vars": {
+    "PRE_TAPCELL_TCL": "/src/tests/pg_canonical_coupon_1019/band_rows.tcl"
+  }
+}
