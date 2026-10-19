@@ -397,14 +397,14 @@
   "reason": "rtl_change: MU1 endpoint_cancel_mu + marker FIFO in SRAM (SAFE item 5)"
  },
  "safe_design_checklist": {
-  "1_pins": "PASS: pin_regs on, literal async reset roles only; two-stage reset_landing; gate elaborated port_latency recorded.",
-  "2_reach": "PASS geometry:108x140.4um, evenoppositecornerManhattan248.4um<405.",
-  "3_fanout": "FIXED:18identicalKEPThostresetcopies, synthesisgroupcap256; previousgeometry-onlycopyauditmax226. Removingmarkersarrayandbankprefetchflopsreducesloads; recheckfreshsynthesis.",
-  "4_depth": "PASS design: realSRAMSSclkq382.333ps (TT293.679,FF236.533) feedsone64bitregisteredstage; existingcontrolstagesunchanged,noarbitrationdepthadded. Gatefreshmeasurementrequired.",
-  "5_storage": "FIXED:8192bitW64markerFIFO usesone real128x64SRAM; smallheadpipeline/frontbuffers andW8fencedFIFO1024bitsstayflops. Capacity128andfour-edgeprefetchpreserved; noexception.",
-  "6_floorplan": "FIXED:108x140.4um,onemacro33.696x27.54at43.2/43.2lattice,borderchannelsW/S43.2/E31.104/N69.66um; macroW105/27.54=3.813,E104/27.54=3.776pins/um,minpitch.192. FullwidthstdregionabovemacroplusconnectedIOrows,noislands. OuterW778/140.4=5.541,N154/108=1.426,E376/140.4=2.678. Estimated6000std/(136.08x103.68-927.988)=45.5%;gateactualarearequired.",
-  "7_clock": "PASS plan: oneck_coretoSRAMandstdcellregion,unchangedpinregisteredboundaries/resetlanding2,io_hold_margin.03; freshTT/FFCTSspread<=80required. Earliergeometry-onlymu3spread12.7/12.5psunqualifiedfornewSRAMslot.",
-  "8_schedule": "PASS measured: Verilator5.050+Icarus100140cyclelegacy-and-independentqueueequivalence,128entrycapacity,512fullsimultaneousreplacements,121resets;0addededges. Originalfour-edgeprefetchpreserved,externalhosthandshakes/runtimecomputescheduleunchanged. 3mutantsFAIL."
+  "1_pins": "PASS: pin_regs on every data in/out (gate: 58 in / 20 out +1 edge, 3 pass-through clock/reset); por_n + host_rst_n land in 2 registered stages at the face (reset_landing stages 2); no comb in->out (textbook in_to_out_bits 0).",
+  "2_reach": "PASS: 108 x 140.4 um tile, opposite-corner Manhattan 248.4 um < 405; textbook reach violations 0.",
+  "3_fanout": "PASS reset / WAIVED data: host_rst_n last landing stage = 18 KEPT copies, reset_relay_split 256 (textbook hf_max_reset 0, hf_max_port 0). Data: g_sram.fr[2] (front read select of the 8x64 b head buffer, a 8:1 mux) drives 305 mux loads and one AO21 enable net 336 loads (buffered by repair_design); inherited from the closed MU0 view; NOT critical at CTS (reg->reg worst +67.0 ps is u_guard.quiet[3], tns 0); structural fix (8 KEPT fr copies) gated in parallel as fallback kit qkd_hr_core_guard_frc.",
+  "4_depth": "PASS: textbook depth 483.4 ps / 12 levels (fr[2] -> service_ready__ot_pr) < 600 ps; SRAM TT clk->q 293.7 ps feeds one registered 64 b stage; no added arbitration.",
+  "5_storage": "FIXED: the 8192 b W64 x128 marker FIFO is one real ot_sram_1r1w_128x64_m1_p192 (33.696 x 27.54 um) with the same four-edge prefetch (0 added edges); remaining flop storage: 8x64 b front buffer + 2 pipeline words (<2 kb) and the W8 fenced FIFO 1024 b. Bench: Verilator 5.050 100,140 cycles exact vs legacy, 128 capacity, 512 full-simultaneous, 121 resets PASS; 3 mutants FAIL.",
+  "6_floorplan": "PASS / util WAIVED pin-bound: macro at (43.2, 43.2) on the 43.2 lattice, channels W/S 43.2, E 31.1, N 69.7 um, macro-face pins <= 3.8/um with 5.4 um halo; outer faces W 778/140.4 = 5.54/um, E 376 = 2.68/um, N 154/108 = 1.43/um (<= 6). Height is set by the W face pin demand (129.6 gives 6.003/um), width by the macro lattice + 20 um pin-face clearance and the parent's exact slot 108 x 140.4. Synthesis util 30% (std 3696 um2, placeable 12403), 39% after CTS: below 40% because of the perimeter, gate util INFO. Full-width std-cell bands above and below the macro, no islands; aspect 1.3.",
+  "7_clock": "PASS: one ck_core root, 6,180 sinks, TT insertion 233.7 / FF 193.8 ps, pin-flop spread TT 24.9 / FF 24.1 ps (<= 80); SRAM clk pin on the same leaf tree; io_hold_margin_ns 0.03; hold WNS +39 ps at CTS.",
+  "8_schedule": "PASS: static; SRAM FIFO preserves the four-edge prefetch and the 128 capacity (0 added cycles); MU1 endpoint same ports, MU1 schedule recorded in results/rtl/mu_qwen_1018/hroot."
  },
  "defines": [
   "OT_HOST_GUARD_SRAM_DEFAULT=1"

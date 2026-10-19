@@ -1,0 +1,25 @@
+{
+ "reviewer": "Claude:KV-HOST/GUARD (LEAD-KV delegated non-critical self-review; coordinator countersign if submit_exact requires it)",
+ "time": "2026-10-19T12:25-07:00",
+ "gate_commit": "ef7b3a8c3",
+ "geometry_sha256": "c59f64080f7467334aec503bf1dc378c45bee02f79438e03dd43bf3797b2df5c",
+ "geometry": {
+  "schema": "opentallas.ref_tile.review_geometry.v1",
+  "sha256": "c59f64080f7467334aec503bf1dc378c45bee02f79438e03dd43bf3797b2df5c",
+  "components": {
+   "outline": "ba781cc5c76665afd81162d443a388d9f009bb33be31d646c5850f9d14c6a5d5",
+   "macros": "ff1213d619f846dae0c7aac035eb67b0b24e256890dcba4116bbc24185e3ce02",
+   "pins": "89f144eaa8e1619d2720dd6f4e98b8016b41ded3417c191a991962ca1411b0be",
+   "clock_entry": "e8658d2969cf95d85f85c60199644d3ac04ee95166472949ad06b46c41d552b9"
+  }
+ },
+ "verdict": "APPROVED",
+ "checklist": {
+  "lattice": "one SRAM 33.696x27.54 at (43.2, 43.2) R0, on the 43.2 lattice; channels >= 31.1 um; halo 5.4 um",
+  "std_cell_band": "floorplan.png/density.png inspected: std cells fill the left 2/3 full height (above + below + left of the macro, continuous), red only in the W pin-flop column; right third sparse (E-face IO flop column only): pin-bound outline, util 30% synth / 39% CTS",
+  "pin_spread": "W 778 pins full face 5.54/um, E 376 full face 2.68/um, N 154 1.43/um, S 3 (host_rst_n, service_faults_o, u_rank__done_v); actual pin geometry PASS 1311/1311 on track",
+  "clock_entry": "ck_core on the W face (one root, 6,180 sinks), TT 233.7 / FF 193.8 ps insertion, spread 24.9 / 24.1 ps",
+  "shape": "108 x 140.4 um, aspect 1.30",
+  "timing": "CTS gate: reg->reg worst +67.0 ps, setup WNS +67 ps, hold WNS +39 ps; 4_cts_final.rpt wns 0.00 tns 0.00 worst slack +3.68 (ns-units flow report); trial GRT overflow 0 (M2 24.7%)"
+ }
+}
