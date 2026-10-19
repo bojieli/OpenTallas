@@ -1,0 +1,7 @@
+# Private AHUB transport component
+
+Pre-edit interface and resource freeze is freeze.json. Default/public source files remain byte-identical. The two directions are independent actual-width opaque transports; this does not substitute a child arithmetic implementation. Indexed four-slot payload has no initialization/reset assumption. Only stored valid bits authorize an output. Reset must propagate through actual nested ot_rst_pipe before transport is meaningful; clocks must run during assertion. Independent face releases may discard words while a receiver is reset; accepted means input valid with transmitter and receiver regional reset released, without backpressure. This conditional component contract does not establish legal integrated child startup or fault retention.
+
+The four-interval latency is two ring intervals plus input and output captures. It is an explicit new candidate cost, not selected RY1/candidate RY2 equivalence or a token price. Selected reciprocal return remains issue+67+RX1+RY1=69; safe candidate RY2 with RS1 is71. Those adapters stay metadata until actual-source arithmetic/calendar qualification.
+
+All-root native proposal: each bank contains <=8 payload bits and independent phase/valid controls. Indexed reads must be mapped and audited including mux, combinational, tie, reset, and clock roots; no source-only maximum-fanout qualification is claimed. Reset input repetition needs bounded registered distribution in the full shell. No full-shell or mapping grant.

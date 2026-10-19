@@ -1,0 +1,50 @@
+{
+  "source": "5f2ce19bc interface identity; proposal 5c507c03b",
+  "default_enabled": false,
+  "public_edits": false,
+  "interface": {
+    "command": {
+      "width": 268,
+      "order": "start,zs_we[127:0],sid[127:0],ziv[3:0],zg,zp[5:0]"
+    },
+    "return": {
+      "width": 68,
+      "order": "zerr[3:0],root[63:0]"
+    }
+  },
+  "storage": {
+    "slots": 4,
+    "bank_bits_max": 8,
+    "banks_command": 34,
+    "banks_return": 9,
+    "payload_bits": 1344,
+    "type": "indexed single-clock READ_OLD functional array; no shifting",
+    "write_read_separation": 2,
+    "total_accepted_to_output_intervals": 4,
+    "steady_words_per_edge": 1,
+    "physical_macro_qualified": false
+  },
+  "reset": "each bank two faces each actual ot_rst_pipe REGIONS1 STAGES2; nested release 4 sampling edges plus consumer NBA edge; assertion regional 2 running-clock edges; validity stored with slot",
+  "state_cost": {
+    "payload_array_bits": 1344,
+    "phase_bits": 86,
+    "slot_valid_bits": 172,
+    "input_ring_output_valid_bits": 129,
+    "reset_bits": 344,
+    "total_bits": 3083,
+    "payload_input_ringread_output_bits": 1008
+  },
+  "resource": {
+    "memory_gb": 8,
+    "threads": 2,
+    "disk_gb": 20,
+    "tool": "Verilator 5.050 fleet only"
+  },
+  "native_allroot_proposal": "8-bit banks limit indexed read address mux loads; validate mapped all-root fanout including control, reset, ties before physical; raw reset root requires registered bounded distribution, not an inherited PASS",
+  "physical_and_schedule": "HOLD; no mapping, parent adoption, ZH arithmetic or token latency claim",
+  "files": {
+    "rtl/hdc/nearhbm/qkd_ahub_static_dw.sv": "15c402899c814a44f48e54cf4bd562419a831357f21d1078b6b3abf64e450a6b",
+    "rtl/lib/ot_rst_pipe.sv": "7d6cba3c9dc09470b92d2304a41a1907c4aca1d44249904c0e5065a835117441",
+    "tools/qwen_kv_die/kv_static_die.py": "a7063e6b1fbd8c3e3dce453d5447eec5ec7fb4b1286a202dd7611bbefc08c05a"
+  }
+}
