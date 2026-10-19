@@ -1,0 +1,1 @@
+MODEL lemma PASS; source/calendar/native HOLD. ROOT review next-address plus current-wdata capture identity before opt-in RTL. Preserve all22 obligations, original dated gold, arbitrary-state reset/first-use proof and paid full-calendar fallback. No gate grant.

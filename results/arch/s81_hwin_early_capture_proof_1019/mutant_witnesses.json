@@ -1,0 +1,72 @@
+{
+  "raw_OLD_no_forward": {
+    "n": 2,
+    "phase": 0,
+    "edge": 0,
+    "read_address": 0,
+    "write_address": 0,
+    "expected": [
+      "write",
+      2,
+      0,
+      0
+    ],
+    "actual": [
+      "initial",
+      2,
+      0
+    ]
+  },
+  "no_current_write_bypass": {
+    "n": 2,
+    "phase": 0,
+    "edge": 1,
+    "pointer": 0,
+    "write_address": 0,
+    "write_valid": true,
+    "expected": [
+      "write",
+      2,
+      0,
+      1
+    ],
+    "actual": [
+      "write",
+      2,
+      0,
+      0
+    ]
+  },
+  "no_next_address": {
+    "n": 2,
+    "phase": 0,
+    "edge": 7,
+    "pointer": 0,
+    "write_address": 0,
+    "write_valid": false,
+    "expected": [
+      "write",
+      2,
+      0,
+      6
+    ],
+    "actual": [
+      "write",
+      2,
+      0,
+      5
+    ]
+  },
+  "extra_retire_edge": {
+    "retire": 100,
+    "start": 101,
+    "legacy_pre_start_valid": 0,
+    "delayed_pre_start_valid": 1
+  },
+  "time_shift": {
+    "now": 0,
+    "due": 0,
+    "expected_equal": true,
+    "shifted_equal": false
+  }
+}

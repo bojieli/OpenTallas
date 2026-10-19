@@ -1,0 +1,653 @@
+{
+  "schema": "s81.hwin.early_capture.lemma.v1",
+  "scope": "Bounded symbolic source-equation MODEL/PROOF only",
+  "source_commit": "1e057b7bf",
+  "kit_commit": "281ec8898",
+  "region_commit": "21cbb79ac",
+  "hashes": {
+    "/home/ubuntu/artifacts/s81-endpoint-physical-pickup-1019/dsdv_mu_hwin.sv": "9be6f5e15bc0c89804b565f67c4211b4e1b4dbef30cf3f276a1ecef3421fc971",
+    "/home/ubuntu/artifacts/s81-hwin-region-calendar-1019/memory_source_snapshot.sv": "6034771d826ddcadf9fdfab3247e92d13e991b66d424316851161cb3b7e91e25",
+    "/home/ubuntu/artifacts/s81-hwin-region-calendar-1019/model.json": "09d2cc984eb21b475d5cf722bf1f1ba10bac1ac41249eeb04de910149177dd92",
+    "/home/ubuntu/artifacts/s81-hwin-region-calendar-1019/calendar_obligations.json": "eea67648b50a5c28dc191c74a7c5a8e2850f71a0bb066948a20552c2c456de3b"
+  },
+  "lemma": {
+    "symbolic_one_step_cases": 972,
+    "bounded_pointer_phases": 1127,
+    "bounded_capture_equalities": 43608,
+    "arbitrary_initial_warmup_cases": 1127,
+    "word_bits_unrestricted": true,
+    "head_generation_not_guessed": true,
+    "original_compare_time_unchanged": true,
+    "source_st_rec_holds_retained": true,
+    "all_2_to_47_original_minD": [
+      {
+        "n": 2,
+        "D": 4,
+        "same_read_date_delta": 0
+      },
+      {
+        "n": 3,
+        "D": 5,
+        "same_read_date_delta": 0
+      },
+      {
+        "n": 4,
+        "D": 6,
+        "same_read_date_delta": 0
+      },
+      {
+        "n": 5,
+        "D": 7,
+        "same_read_date_delta": 0
+      },
+      {
+        "n": 6,
+        "D": 8,
+        "same_read_date_delta": 0
+      },
+      {
+        "n": 7,
+        "D": 9,
+        "same_read_date_delta": 0
+      },
+      {
+        "n": 8,
+        "D": 10,
+        "same_read_date_delta": 0
+      },
+      {
+        "n": 9,
+        "D": 11,
+        "same_read_date_delta": 0
+      },
+      {
+        "n": 10,
+        "D": 12,
+        "same_read_date_delta": 0
+      },
+      {
+        "n": 11,
+        "D": 13,
+        "same_read_date_delta": 0
+      },
+      {
+        "n": 12,
+        "D": 14,
+        "same_read_date_delta": 0
+      },
+      {
+        "n": 13,
+        "D": 15,
+        "same_read_date_delta": 0
+      },
+      {
+        "n": 14,
+        "D": 16,
+        "same_read_date_delta": 0
+      },
+      {
+        "n": 15,
+        "D": 17,
+        "same_read_date_delta": 0
+      },
+      {
+        "n": 16,
+        "D": 18,
+        "same_read_date_delta": 0
+      },
+      {
+        "n": 17,
+        "D": 19,
+        "same_read_date_delta": 0
+      },
+      {
+        "n": 18,
+        "D": 20,
+        "same_read_date_delta": 0
+      },
+      {
+        "n": 19,
+        "D": 21,
+        "same_read_date_delta": 0
+      },
+      {
+        "n": 20,
+        "D": 22,
+        "same_read_date_delta": 0
+      },
+      {
+        "n": 21,
+        "D": 23,
+        "same_read_date_delta": 0
+      },
+      {
+        "n": 22,
+        "D": 24,
+        "same_read_date_delta": 0
+      },
+      {
+        "n": 23,
+        "D": 25,
+        "same_read_date_delta": 0
+      },
+      {
+        "n": 24,
+        "D": 26,
+        "same_read_date_delta": 0
+      },
+      {
+        "n": 25,
+        "D": 27,
+        "same_read_date_delta": 0
+      },
+      {
+        "n": 26,
+        "D": 28,
+        "same_read_date_delta": 0
+      },
+      {
+        "n": 27,
+        "D": 29,
+        "same_read_date_delta": 0
+      },
+      {
+        "n": 28,
+        "D": 30,
+        "same_read_date_delta": 0
+      },
+      {
+        "n": 29,
+        "D": 31,
+        "same_read_date_delta": 0
+      },
+      {
+        "n": 30,
+        "D": 32,
+        "same_read_date_delta": 0
+      },
+      {
+        "n": 31,
+        "D": 33,
+        "same_read_date_delta": 0
+      },
+      {
+        "n": 32,
+        "D": 34,
+        "same_read_date_delta": 0
+      },
+      {
+        "n": 33,
+        "D": 35,
+        "same_read_date_delta": 0
+      },
+      {
+        "n": 34,
+        "D": 36,
+        "same_read_date_delta": 0
+      },
+      {
+        "n": 35,
+        "D": 37,
+        "same_read_date_delta": 0
+      },
+      {
+        "n": 36,
+        "D": 38,
+        "same_read_date_delta": 0
+      },
+      {
+        "n": 37,
+        "D": 39,
+        "same_read_date_delta": 0
+      },
+      {
+        "n": 38,
+        "D": 40,
+        "same_read_date_delta": 0
+      },
+      {
+        "n": 39,
+        "D": 41,
+        "same_read_date_delta": 0
+      },
+      {
+        "n": 40,
+        "D": 42,
+        "same_read_date_delta": 0
+      },
+      {
+        "n": 41,
+        "D": 43,
+        "same_read_date_delta": 0
+      },
+      {
+        "n": 42,
+        "D": 44,
+        "same_read_date_delta": 0
+      },
+      {
+        "n": 43,
+        "D": 45,
+        "same_read_date_delta": 0
+      },
+      {
+        "n": 44,
+        "D": 46,
+        "same_read_date_delta": 0
+      },
+      {
+        "n": 45,
+        "D": 47,
+        "same_read_date_delta": 0
+      },
+      {
+        "n": 46,
+        "D": 48,
+        "same_read_date_delta": 0
+      },
+      {
+        "n": 47,
+        "D": 49,
+        "same_read_date_delta": 0
+      }
+    ],
+    "retire_read_date_delta": 0,
+    "reset_warmup_argument": "Initial payload and early/capture Q arbitrary; two active read edges establish identity, while source pin-valid/staged-record guards prevent a qualified head. Actual reset-cone RTL proof still required."
+  },
+  "mutants": {
+    "no_next_address": 8921,
+    "no_current_write_bypass": 17389,
+    "raw_OLD_no_forward": 22377,
+    "extra_retire_edge": 1,
+    "time_shift": 10
+  },
+  "first_failure_witnesses": {
+    "raw_OLD_no_forward": {
+      "n": 2,
+      "phase": 0,
+      "edge": 0,
+      "read_address": 0,
+      "write_address": 0,
+      "expected": [
+        "write",
+        2,
+        0,
+        0
+      ],
+      "actual": [
+        "initial",
+        2,
+        0
+      ]
+    },
+    "no_current_write_bypass": {
+      "n": 2,
+      "phase": 0,
+      "edge": 1,
+      "pointer": 0,
+      "write_address": 0,
+      "write_valid": true,
+      "expected": [
+        "write",
+        2,
+        0,
+        1
+      ],
+      "actual": [
+        "write",
+        2,
+        0,
+        0
+      ]
+    },
+    "no_next_address": {
+      "n": 2,
+      "phase": 0,
+      "edge": 7,
+      "pointer": 0,
+      "write_address": 0,
+      "write_valid": false,
+      "expected": [
+        "write",
+        2,
+        0,
+        6
+      ],
+      "actual": [
+        "write",
+        2,
+        0,
+        5
+      ]
+    },
+    "extra_retire_edge": {
+      "retire": 100,
+      "start": 101,
+      "legacy_pre_start_valid": 0,
+      "delayed_pre_start_valid": 1
+    },
+    "time_shift": {
+      "now": 0,
+      "due": 0,
+      "expected_equal": true,
+      "shifted_equal": false
+    }
+  },
+  "timestamp_wrap_cases": [
+    {
+      "now": 0,
+      "due": 0,
+      "equal": true,
+      "late": false
+    },
+    {
+      "now": 0,
+      "due": 1,
+      "equal": false,
+      "late": false
+    },
+    {
+      "now": 0,
+      "due": 4294967295,
+      "equal": false,
+      "late": true
+    },
+    {
+      "now": 1,
+      "due": 1,
+      "equal": true,
+      "late": false
+    },
+    {
+      "now": 1,
+      "due": 2,
+      "equal": false,
+      "late": false
+    },
+    {
+      "now": 1,
+      "due": 0,
+      "equal": false,
+      "late": true
+    },
+    {
+      "now": 2147483647,
+      "due": 2147483647,
+      "equal": true,
+      "late": false
+    },
+    {
+      "now": 2147483647,
+      "due": 2147483648,
+      "equal": false,
+      "late": false
+    },
+    {
+      "now": 2147483647,
+      "due": 2147483646,
+      "equal": false,
+      "late": true
+    },
+    {
+      "now": 4294967294,
+      "due": 4294967294,
+      "equal": true,
+      "late": false
+    },
+    {
+      "now": 4294967294,
+      "due": 4294967295,
+      "equal": false,
+      "late": false
+    },
+    {
+      "now": 4294967294,
+      "due": 4294967293,
+      "equal": false,
+      "late": true
+    },
+    {
+      "now": 4294967295,
+      "due": 4294967295,
+      "equal": true,
+      "late": false
+    },
+    {
+      "now": 4294967295,
+      "due": 0,
+      "equal": false,
+      "late": false
+    },
+    {
+      "now": 4294967295,
+      "due": 4294967294,
+      "equal": false,
+      "late": true
+    }
+  ],
+  "cost": {
+    "native_library_compressed_sha256": {
+      "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz": "073ac4b6b08f272b6953b0ad54d1d9743767a7d15a0e2964ed86cf44c3dbe00e",
+      "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz": "8d6db2c2f83c3c162be54a5e102b2d379fcaaaef2db5f0b1d4152c395d01fea1"
+    },
+    "native_area_coefficients": {
+      "AND2x2_ASAP7_75t_R": 0.08748,
+      "NAND2x1_ASAP7_75t_R": 0.08748,
+      "XNOR2x1_ASAP7_75t_R": 0.17496,
+      "INVx1_ASAP7_75t_R": 0.04374
+    },
+    "explicit_structural_cells": {
+      "NAND2x1_ASAP7_75t_R": 3810,
+      "INVx1_ASAP7_75t_R": 181,
+      "XNOR2x1_ASAP7_75t_R": 888,
+      "AND2x2_ASAP7_75t_R": 1086
+    },
+    "explicit_structural_comb_area_um2": 591.5835000000001,
+    "capture_plain_FF": 1072,
+    "capture_FF_area_um2": 312.59520000000003,
+    "capture_clock_TT_FF_fF": [
+      508.916992,
+      559.5947199999999
+    ],
+    "additional_reset_capture_FF": 0,
+    "read_address_6bit_mux_bits": 198,
+    "current_write_payload_mux_bits": 1072,
+    "explicit_mux_NAND2": 3810,
+    "explicit_mux_select_INV": 181,
+    "current_write_hit_compare_6bit": 148,
+    "current_write_hit_XNOR2": 888,
+    "current_write_hit_AND_reduction2": 740,
+    "current_write_valid_AND2": 148,
+    "read_reset_mask_AND2": 198,
+    "independent_per_8bit_hit_copy_DFF_if_needed": null,
+    "reset_tree_and_clock_tree_cells": null,
+    "native_mapped_comb_area_um2": null,
+    "native_address_setup_ps": null,
+    "native_macro_to_capture_ps": null,
+    "native_FF_compare_ps": null,
+    "all_reset_and_fanout_fixedpoint_qualified": false
+  },
+  "geometry": {
+    "outline": [
+      0,
+      0,
+      388.8,
+      604.8
+    ],
+    "band": [
+      2.16,
+      248.4,
+      386.64,
+      302.4
+    ],
+    "macro_count": 84,
+    "previous_partial_priced_fill": 0.5037893431821338,
+    "conservative_partial_fill_including_all_prior_reservations_plus_new_capture_and_muxes": 0.5473392027326955,
+    "successor_total_fill": null,
+    "reason": "1072FF capture mechanism overlaps prior 1816FF reservation; no double counting. Exact source subtraction and all comb/reset/root costs need synthesis."
+  },
+  "calendar_obligations": [
+    {
+      "element": "event SRAM read",
+      "current": "pbi, registered OLD data, current/previous write forwarding",
+      "required": "capture actual head63+attr2, retain wv/address/forwarding identity",
+      "status": "Qualified early-wdata bypass needed at2-slot D4; raw cache mutant wrong",
+      "successor_status": "Conditional source-equation identity from exact same-edge event/retire read wires; RTL/source-cone and original dated bench replay OPEN"
+    },
+    {
+      "element": "event okay/fresh",
+      "current": "evld and pe&vld&~fd; fresh=!adv && !(pe&rec_slot)",
+      "required": "capture okay/fresh/pointer and revalidate at compare/fire",
+      "status": "OPEN occupied record, advance and overwrite generation proof",
+      "successor_status": "Conditional source-equation identity from exact same-edge event/retire read wires; RTL/source-cone and original dated bench replay OPEN"
+    },
+    {
+      "element": "event equality",
+      "current": "eqn <= fresh && due==tm_event",
+      "required": "captured due vs captured_time+1 for zero-date; otherwise priced target offset",
+      "status": "47-slot first-read readiness fits D49; this is not full RTL proof",
+      "successor_status": "Conditional source-equation identity from exact same-edge event/retire read wires; RTL/source-cone and original dated bench replay OPEN"
+    },
+    {
+      "element": "event late fault",
+      "current": "ltn <= fresh && sign(due-tm_event); lt uses current fresh",
+      "required": "preserve first observable late edge, not merely equal-event date",
+      "status": "OPEN newly fresh already-late head, timestamp wrap and reset",
+      "successor_status": "Conditional source-equation identity from exact same-edge event/retire read wires; RTL/source-cone and original dated bench replay OPEN"
+    },
+    {
+      "element": "event advance",
+      "current": "fire || (!ok&&!hold)",
+      "required": "same generation as current head; no repeated fire/stale pointer",
+      "status": "OPEN all2..47phase first/last/wrap, sameedge record/fire",
+      "successor_status": "Conditional source-equation identity from exact same-edge event/retire read wires; RTL/source-cone and original dated bench replay OPEN"
+    },
+    {
+      "element": "fired vector",
+      "current": "fd <- (fd || fire&pe) && !rec_slot",
+      "required": "head generation and priority retained",
+      "status": "OPEN same-slot record clear versus fire set",
+      "successor_status": "Conditional source-equation identity from exact same-edge event/retire read wires; RTL/source-cone and original dated bench replay OPEN"
+    },
+    {
+      "element": "output payload",
+      "current": "HEAD_STAGE captures head_word alongside select lookahead",
+      "required": "retime head34 and all endpoint selects together",
+      "status": "OPEN winning payload same generation, no extra output date claim",
+      "successor_status": "Conditional source-equation identity from exact same-edge event/retire read wires; RTL/source-cone and original dated bench replay OPEN"
+    },
+    {
+      "element": "TX winner",
+      "current": "highest numbered active event per endpoint",
+      "required": "retain event priority after added stage",
+      "status": "OPEN multi-event collision plus winning payload dates",
+      "successor_status": "Conditional source-equation identity from exact same-edge event/retire read wires; RTL/source-cone and original dated bench replay OPEN"
+    },
+    {
+      "element": "replay",
+      "current": "replay enable from attr, per-endpoint winner",
+      "required": "retain land/ab/user and priority",
+      "status": "OPEN MUT3/MUT4 original dated witnesses must remain",
+      "successor_status": "Conditional source-equation identity from exact same-edge event/retire read wires; RTL/source-cone and original dated bench replay OPEN"
+    },
+    {
+      "element": "output collision",
+      "current": "raw nsc/nsr pairs -> fq1 -> sticky fault",
+      "required": "same set of event decisions and existing fault pipeline",
+      "status": "OPEN no silently shifted collision flag",
+      "successor_status": "Conditional source-equation identity from exact same-edge event/retire read wires; RTL/source-cone and original dated bench replay OPEN"
+    },
+    {
+      "element": "retirement SRAM",
+      "current": "registered timestamp h_rts, current rpb",
+      "required": "own local capture and compare-time horizon",
+      "status": "OPEN original due edge or fully priced new due ABI",
+      "successor_status": "Conditional source-equation identity from exact same-edge event/retire read wires; RTL/source-cone and original dated bench replay OPEN"
+    },
+    {
+      "element": "retirement pointer",
+      "current": "radv=due || (!rok&&!rhold)",
+      "required": "generation/fresh hold and rpb/rp equivalence",
+      "status": "OPEN skipped entries and simultaneous record",
+      "successor_status": "Conditional source-equation identity from exact same-edge event/retire read wires; RTL/source-cone and original dated bench replay OPEN"
+    },
+    {
+      "element": "valid vector",
+      "current": "(vld && !(due&rp)) || rec_slot",
+      "required": "single semantic event ordering, no extended membership by accident",
+      "status": "Abstract retire100/start101 collision retained",
+      "successor_status": "Conditional source-equation identity from exact same-edge event/retire read wires; RTL/source-cone and original dated bench replay OPEN"
+    },
+    {
+      "element": "global/event counts",
+      "current": "count += rec_slot - due",
+      "required": "all copies reflect same original event generation",
+      "status": "OPEN count equality after reset/record/retire",
+      "successor_status": "Conditional source-equation identity from exact same-edge event/retire read wires; RTL/source-cone and original dated bench replay OPEN"
+    },
+    {
+      "element": "RX match",
+      "current": "rt valid compares eu/ep of vld entries",
+      "required": "align returned payload/valid with exact outstanding image",
+      "status": "OPEN before/on/after retirement tag and user reuse",
+      "successor_status": "Conditional source-equation identity from exact same-edge event/retire read wires; RTL/source-cone and original dated bench replay OPEN"
+    },
+    {
+      "element": "start admission",
+      "current": "st && on_cal && !col && !udup && legal first config",
+      "required": "preserve slot, user identity and timer phase",
+      "status": "OPEN addingretireedge changes occupancy; never claimjust+1output",
+      "successor_status": "Conditional source-equation identity from exact same-edge event/retire read wires; RTL/source-cone and original dated bench replay OPEN"
+    },
+    {
+      "element": "boot MC/MW face",
+      "current": "five predicate bits decode before first physical FF",
+      "required": "decode registered MC/MW payload/valid; align all21/24bitpayload and selector",
+      "status": "52bit stage reserved; source generation and boot fault date OPEN",
+      "successor_status": "OPEN independent structural/initialisation/parent obligation; memory lemma grants no closure"
+    },
+    {
+      "element": "boot selector",
+      "current": "cfg_sel lookahead accounts preceding selector write",
+      "required": "carry exact transaction and selected event",
+      "status": "OPEN adjacent selector/D/attribute words, MC+MW traffic",
+      "successor_status": "OPEN independent structural/initialisation/parent obligation; memory lemma grants no closure"
+    },
+    {
+      "element": "boot eligibility",
+      "current": "idle=!armed && table_empty",
+      "required": "same armed/count generation; no accepting stale idle",
+      "status": "Post-arm retirement does not by itself make idle; retain actual armed gate",
+      "successor_status": "Conditional source-equation identity from exact same-edge event/retire read wires; RTL/source-cone and original dated bench replay OPEN"
+    },
+    {
+      "element": "D/gap/RL limits",
+      "current": "D>=nw+2; gap>=nw+2; D<=RL-2",
+      "required": "every altered date rederive min/max envelopes",
+      "status": "OPEN production mu_cfg manifest; original fixture dates unchanged",
+      "successor_status": "Conditional source-equation identity from exact same-edge event/retire read wires; RTL/source-cone and original dated bench replay OPEN"
+    },
+    {
+      "element": "reset/restart",
+      "current": "root/group/local release edges1/2/3; plain payload qualified by valid",
+      "required": "all new context invalid until exact inherited release and coherent read",
+      "status": "OPEN arbitrary SRAM/payload init, occupied restart, no extra reset edge free",
+      "successor_status": "OPEN independent structural/initialisation/parent obligation; memory lemma grants no closure"
+    },
+    {
+      "element": "parent/compiler/token",
+      "current": "real start, windows, returned tags, C/PINPIPE and slot period",
+      "required": "derive actual production schedule deltas before any date rewrite",
+      "status": "SU token/MU rate/parent die costs NULL",
+      "successor_status": "OPEN independent structural/initialisation/parent obligation; memory lemma grants no closure"
+    }
+  ],
+  "full_added_edge_fallback": {
+    "status": "NOT selected: memory recurrence has an exact same-edge constructive solution; preserve fallback obligations if actual source/timing fails",
+    "public_ABI_delta": null,
+    "production_schedule_delta": null,
+    "retire_start_RX_boot_transform": null
+  },
+  "RTL_or_gate_authorized": false,
+  "full_calendar_rtl_equivalence": false
+}
