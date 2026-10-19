@@ -279,6 +279,7 @@ def apply_dv(v, m):
     # ranges incl. rs_i / rs_o and the four quadrant clock entries); without it the CB contract scaled + rs_i / rs_o
     CD = _load('OT_SPLIT_DV_CONTRACT')
     ck_pins = ['ck']
+    rst_pins = []
     if CD:
         CWN, ch = CD['outline_um']['w'], CD['outline_um']['h']
         dirs = {'bco': 'output', 'rs_o': 'output', 'rs': 'output', 'tie_hi': 'output', 'tie_lo': 'output'}
@@ -288,6 +289,9 @@ def apply_dv(v, m):
             d_ = dirs.get(n_) or ('output' if n_.startswith('bco') else 'input')
             ports[n_] = dict(dir=d_, bits=p_['bits'], face=p_['face'], layer=p_['layer'], range=list(p_['range_um']))
         ck_pins = [p for p in ports if p.startswith('ck')]
+        # Q-CB16RST 10-19 (claude/q-cb16rst-1019 ac8e4c483): a contract with regional resets rst_c<c>r<r> (beside each
+        # ck_c<c>r<r>, registered on that region's clock at entry) replaces the cluster's single rst_n
+        rst_pins = sorted(p for p in ports if re.fullmatch(r'rst_c\d+r\d+', p))
         if os.environ.get('OT_SPLIT_DV_RSI_AT_RS') == '1':
             # the far cluster's rs (S face, 488.9-660.2) feeds the near cluster's rs_i (N face) across the 130-um band
             # gap; the contract's rs_i sits under rs_o (1093.7-1265.0): a 605-um jog per bit (735 um each, one relay
@@ -516,6 +520,9 @@ def apply_dv(v, m):
             e2 = [e for e in eps if e[0] in names]
             if cl == 'clock_trunk':           # a cluster's die clock entries (Q-CLUSTER: four quadrant pins)
                 e2 = [x for e in e2 for x in ([(e[0], p) for p in ck_pins] if e[0].startswith('c16_') and e[1] == 'ck'
+                                              else [e])]
+            if cl == 'reset' and rst_pins:   # Q-CB16RST: a cluster's reset = 16 regional drops (one per clock region)
+                e2 = [x for e in e2 for x in ([(e[0], p) for p in rst_pins] if e[0].startswith('c16_') and e[1] == 'rst_n'
                                               else [e])]
             if cl == 'clock_trunk' and any(e[0].startswith('c16_') for e in e2):
                 e2 += [(s, 'ck') for s in slices if not any(x == s for x, _ in e2)]

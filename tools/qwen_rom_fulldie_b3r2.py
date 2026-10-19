@@ -5104,6 +5104,17 @@ def _reset_tree(v, m):
     for nm, mst, x, y, bid, _ in cells:
         m['insts'].append(v.Inst(nm, mst, x, y, RST_W, RST_H, kind='reset_rep', region='reset_tree', domain=dom_inst[bid]))
         ck_add.setdefault(ck_of_bus[bid], []).append((nm, 'clk'))
+    # DIE-QWEN-GEN16 (Q-CB16RST 10-19): a repeater whose output drops on a cluster's regional reset pin (qfd_c_b16_dv
+    # rst_c<c>r<r>) is the LAST hop of that drop: it is clocked from the cluster's own root (re-filed with the cluster),
+    # so the 16 drops of an instance leave the die tree on the cluster's clock, all at the tree's equal depth (same edge)
+    _rn = {c[0] for c in cells}
+    _ckf = m.setdefault('ck_follow', {})
+    for w_ in wires:
+        eps_ = w_[-1]
+        drv = next((i for i, p in eps_ if i in _rn and p in ('q0', 'q1')), None)
+        tgt = next((i for i, p in eps_ if re.fullmatch(r'rst_c\d+r\d+', p.lstrip('*'))), None)
+        if drv and tgt:
+            _ckf.setdefault((drv, 'clk'), tgt)
     drop = set(idx_of.values())
     B = [b for j, b in enumerate(m['buses']) if j not in drop]
     B = [(bid, cl, bits, eps + ck_add.pop(bid)) if bid in ck_add else (bid, cl, bits, eps) for bid, cl, bits, eps in B]
