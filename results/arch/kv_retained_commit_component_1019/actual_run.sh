@@ -13,7 +13,7 @@ set +e
 actual_out/mut_obj/Vactual_ingress_reset_tb >actual_out/mut_ingress_bypass.log 2>&1
 mut_rc=$?
 set -e
-if [ "$mut_rc" = 0 ] || ! rg -q "RESERVED_CSR_RESTART|RESERVATION_EXCLUSION_MISSING" actual_out/mut_ingress_bypass.log; then
+if [ "$mut_rc" = 0 ] || ! grep -Eq "RESERVED_CSR_RESTART|RESERVATION_EXCLUSION_MISSING" actual_out/mut_ingress_bypass.log; then
  echo "FAIL ingress bypass mutant was not causally caught";exit 1
 fi
 echo "PASS causal ingress admission bypass mutant"
