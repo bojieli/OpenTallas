@@ -3,7 +3,8 @@
 
 1. e2 (ot_hbm_hc_bankq_ft_static) carries the corner banks' resets through the tile (fa_rst_n -> fa_rst_n_o,
    fb_rst_n -> fb_rst_n_o).  ot_pin_regs (83a02883d) refuses a reset-named input that is not declared
-   ("legacy reset regexp/default matches undeclared reset fa_rst_n").  Declare both as reset_ports: the
+   ("legacy reset regexp/default matches undeclared reset fa_rst_n", then "... fa_rst_n_o").  Declare all four as
+   reset_ports (an output reset port passes straight through the wrapper); the
    RESET-LANDING rule then lands them at the S face in 2 registered stages like rst_n, so the feed is a registered
    feed (as its beat/write feeds already are) instead of a 734 um combinational reset wire.  Cost: the corner banks
    (b1/b3/b5/b7) release reset 2 cycles after the edge banks; reset release is a scheduled constant and the ring
@@ -20,7 +21,7 @@ W_NEW = 'results/rtl/hbm_hc_ring_1019_drly2/ring_mut1.log'
 
 p = RT / 'hbm_hcq_bank_e2_1017' / 'spec.json'
 s = json.loads(p.read_text())
-s['reset_ports'] = ['rst_n', 'fa_rst_n', 'fb_rst_n']
+s['reset_ports'] = ['rst_n', 'fa_rst_n', 'fb_rst_n', 'fa_rst_n_o', 'fb_rst_n_o']
 p.write_text(json.dumps(s, indent=1) + '\n')
 
 p = RT / 'hbm_hcq_bank_b0_1017' / 'spec.json'
