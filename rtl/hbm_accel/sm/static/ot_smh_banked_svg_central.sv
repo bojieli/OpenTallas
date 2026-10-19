@@ -10,20 +10,22 @@
 // SVG R/C inventory: rd52 + cmd2x83 + retire2 + retirefields2x17 =254
 // nonreset datapath bits; programme_v and sticky injection fault =2 reset bits.
 module ot_smh_banked_svg_central #(
- parameter integer PREL=1,CALMUT=0,COMMANDALIGN=0
+ parameter integer PREL=1,CALMUT=0,COMMANDALIGN=0,XW=46,CLASS_ENABLE=0
 )(
  input wire clk,rst_n,
  input wire cfg_we,input wire[10:0]cfg_addr,input wire[255:0]cfg_data,
  input wire start_v,input wire[10:0]start_base,input wire[11:0]start_limit,
- input wire[15:0]start_loops,input wire[45:0]start_ctx,
+ input wire[15:0]start_loops,input wire[XW-1:0]start_ctx,
  output wire cfg0_we,cfg1_we,output wire[9:0]bank_cfg_addr,output wire[255:0]bank_cfg_data,
- output wire[107:0]request0,request1,
- input wire[134:0]row0,row1,input wire[8:0]ok0,ok1,input wire[107:0]token0,token1,
+ output wire[61+XW:0]request0,request1,
+ input wire[134:0]row0,row1,input wire[8:0]ok0,ok1,input wire[61+XW:0]token0,token1,
  output reg[134:0]programme,output wire programme_v,
+ output wire command_class_observe,command_context_valid_observe,output wire[84:0]command_envelope,
  output wire active,done,output reg fault
 );
  initial if(COMMANDALIGN!=0)$fatal(1,"command-only alignment is not implemented in this wrapper");
- wire[134:0]word;wire[45:0]wctx;wire[15:0]wit;wire wlast,word_v;wire[31:0]ordinal;
+ initial if(XW!=46&&XW!=47 || CLASS_ENABLE!=0&&XW!=47)$fatal(1,"class transport requiresXW47");
+ wire[134:0]word;wire[XW-1:0]wctx;wire[15:0]wit;wire wlast,word_v;wire[31:0]ordinal;
  wire calendar_fault,app_reset_n,app_next_valid,app_next_fault;wire[7:0]app_resets;wire[134:0]app_next_word;
  wire[15:0]local_valid;wire[3:0]write_copy,read_copy;
  for(genvar g=0;g<16;g=g+1)begin:g_app_valid
@@ -33,7 +35,7 @@ module ot_smh_banked_svg_central #(
   (* keep=1 *) ot_smh_banked_bit u_w(.clk(clk),.d(app_next_word[25]),.q(write_copy[g]));
   (* keep=1 *) ot_smh_banked_bit u_r(.clk(clk),.d(app_next_word[83]),.q(read_copy[g]));
  end
- ot_smh_calendar_banked_central #(.W(135),.AW(11),.XW(46),.MUT(CALMUT)) u_core(
+ ot_smh_calendar_banked_central #(.W(135),.AW(11),.XW(XW),.MUT(CALMUT)) u_core(
   .clk(clk),.rst_n(rst_n),.cfg_we(cfg_we),.cfg_addr(cfg_addr),.cfg_data(cfg_data),
   .start_v(start_v),.start_base(start_base),.start_limit(start_limit),.start_loops(start_loops),.start_ctx(start_ctx),
   .cfg0_we(cfg0_we),.cfg1_we(cfg1_we),.bank_cfg_addr(bank_cfg_addr),.bank_cfg_data(bank_cfg_data),
@@ -101,6 +103,26 @@ module ot_smh_banked_svg_central #(
   if(PREL!=0)begin programme[82:0]=cmd_c;programme[117]=ret_c;programme[134:118]=retf_c;end
   else begin programme[82:0]=cmd_r;programme[117]=ret_r;programme[134:118]=retf_r;end
  end
+ generate if(CLASS_ENABLE!=0)begin:g_class
+  reg class_r,class_c,valid_r,valid_c;
+  wire descriptor_class=wctx[XW-1];
+  always @(posedge clk)begin
+   class_r<=local_valid[15]?descriptor_class:1'b0;
+   class_c<=class_r;
+   if(PREL!=0&&local_valid[12]&&ordinal==0&&c_fl)class_c<=descriptor_class;
+  end
+  always @(posedge clk or negedge app_reset_n)
+   if(!app_reset_n)begin valid_r<=0;valid_c<=0;end
+   else begin
+    valid_r<=local_valid[15];valid_c<=valid_r;
+    if(PREL!=0&&local_valid[12]&&ordinal==0&&c_fl)valid_c<=1;
+   end
+  assign command_class_observe=PREL!=0?class_c:class_r;
+  assign command_context_valid_observe=PREL!=0?valid_c:valid_r;
+ end else begin:g_legacy_class
+  assign command_class_observe=0;assign command_context_valid_observe=0;
+ end endgenerate
+ assign command_envelope={command_context_valid_observe,command_class_observe,programme[82:0]};
  assign programme_v=programme_v_q;
 
 endmodule
