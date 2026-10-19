@@ -1,0 +1,16 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/kv-dcal-mu-1019/src
+ot-run: ot-epyc5       admits   996 GB (avail 771, growth 74, headroom 0, waiters 0/0 GB) load 68/128 running 15 disk 1362 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/kv-dcal-mu-1019/src
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/kv-dcal-mu-1019/src
+ot-run: ot-epyc8       admits   957 GB (avail 783, growth 113, headroom 0, waiters 0/0 GB) load 60/128 running 25 disk 458 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/kv-dcal-mu-1019/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/kv-dcal-mu-1019/src
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-1852680-1792419167 after 1 s
+2c2
+< D2D_TXDP_K = 32'h03030415
+---
+> D2D_TXDP_K = 32'h03030417
+CALPIN_FAIL txdp: d2d_cal_image_mu.svh TXDP lines differ from the production d2d_cal_image.svh
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-1852680-1792419167): exit 1
+rc=1
