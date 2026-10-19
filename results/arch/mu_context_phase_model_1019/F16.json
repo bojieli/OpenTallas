@@ -77,8 +77,9 @@
     "wire_beat": 0,
     "identity_bits": 129,
     "wire_record_bits": 548,
-    "controller_bank_load_after_rx_slot": 2,
-    "identity_validation": "full face context receiver checks digest/image epoch/cap; raw observer alone insufficient"
+    "controller_bank_load_after_rx_slot": 3,
+    "identity_validation": "full face context receiver checks digest/image epoch/cap; raw observer alone insufficient",
+    "bank_load_qualification": "candidate full-identity validated observer, pending RTL measurement; legacy raw observer2 is unqualified"
   },
   "playhead_quiet_boundary": {
     "last_busy_offset": -3856,

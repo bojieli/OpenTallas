@@ -109,7 +109,7 @@ def compare(out, frame=16, calpipe_opcal=None):
         calendar_entries={sg:{c:len(x['img']) for c,x in cs.items()} for sg,cs in b['im'].items()},
         per_user_go_counts={c:{str(u):sum(v==u for t,s,v in seq) for u in range(4)} for c,seq in active.items()},
         canonical_context=dict(logical_mu=dict(kind=12,beat=1,K_cycle=2),logical_user0=dict(kind=12,beat=0,K_cycle=3),
-            wire_beat=0,identity_bits=129,wire_record_bits=548,controller_bank_load_after_rx_slot=2,
+            wire_beat=0,identity_bits=129,wire_record_bits=548,controller_bank_load_after_rx_slot=3,bank_load_qualification="candidate full-identity validated observer, pending RTL measurement; legacy raw observer2 is unqualified",
             identity_validation='full face context receiver checks digest/image epoch/cap; raw observer alone insufficient'),
         playhead_quiet_boundary=dict(last_busy_offset=boundary_gap[0],next_start_offset=boundary_gap[1],
             width=boundary_gap[1]-boundary_gap[0],qualification='link playheads only: does not prove programme retirement or host/controller quiescence'),
