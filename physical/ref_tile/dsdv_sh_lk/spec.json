@@ -216,5 +216,7 @@
   "kind": "flow_failure",
   "failed_job": "dsdv_sh_lk-dsdv_sh_lk-9de9eb2d6",
   "failure": "FLOORPLAN_MARGIN at route: util 61.3% > 60% (std 20,230 um2 in 33,014 um2); retry with the outline grown to 254.88 x 151.20 (util 55.0%), same pin faces, same RTL/clock as 9de9eb2d6 (admitted native_spread, receipt results/closure/shlk_pick_1018/native_audit.json)"
- }
+ },
+ "pin_reg_split": true,
+ "pin_reg_split_why": "S81-GUSEQ 10-18 gate 424f904dd: OT_IOFLOP left 315 output ports unanchored (not single-flop): u_sd.hw[*] are load-enable DFFs whose Q also feeds their own enable-recirculation NOR2, so s_hw_w flops sat near the S face up to 100 um from their E pins (cts_native_probe launch s_hw_w[287] 235.2 > 220). pin_reg_split clones one dedicated launch flop per output pin (0 cycles, same function)."
 }

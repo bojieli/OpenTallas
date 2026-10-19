@@ -110,6 +110,9 @@
   "physical/common_flow/grt_macro_top_layer.tcl",
   "physical/dsdv_seq_host_pins/dsdv_sh_lk.tcl",
   "physical/qwen_die_masters/io_flop_at_pins.tcl",
-  "physical/qwen_die_masters/out_flop_release.tcl"
+  "physical/qwen_die_masters/out_flop_release.tcl",
+  "physical/ref_tile/dsdv_sh_lk/pre_gpl.tcl",
+  "physical/ref_tile/dsdv_sh_lk/pre_dpl.tcl",
+  "physical/common_flow/pin_reg_split.tcl"
  ]
 }
