@@ -11,7 +11,7 @@ PREFER below (the variant whose parameters the parent instantiates).  Every roun
 VIEWS_DIR/drive/<cell>.json; logs in VIEWS_DIR/drive/<cell>.r<k>.log.  Nothing is stubbed: a module that cannot be
 resolved fails the cell (it is then an excluded region of the die case, with its owner).
 """
-import argparse, json, re, subprocess, sys, threading
+import argparse, json, re, shutil, subprocess, sys, threading
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -44,8 +44,10 @@ def module_index(commit):
     roots = [p for p in roots if (ROOT / p).is_dir()]
     if not roots:
         raise ValueError('pinned HBM source roots are absent from the sparse checkout')
-    proc = subprocess.run(['timeout', '120', 'rg', '-n', '--glob', '*.sv', '--glob', '*.v', r'^\s*module\s+\w+',
-                           *roots], cwd=ROOT, capture_output=True, text=True)
+    # LH-GEN2E 10-19: rg is not installed on every coordinator host; same scan with GNU grep (exit codes 0/1 alike)
+    cmd = (['timeout', '120', 'rg', '-n', '--glob', '*.sv', '--glob', '*.v', r'^\s*module\s+\w+', *roots] if shutil.which('rg') else
+           ['timeout', '120', 'grep', '-rnE', '--include=*.sv', '--include=*.v', r'^\s*module\s+\w+', *roots])
+    proc = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True)
     if proc.returncode not in (0, 1):
         raise RuntimeError(f'HBM module index scan failed rc={proc.returncode}: {proc.stderr[:500]}')
     idx = {}
