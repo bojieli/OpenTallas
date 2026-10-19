@@ -17,20 +17,28 @@
 // Plusargs: none (parameters by -G).  Prints TB_IDXRD PASS / FAIL and a TB_IDXRD_STATS line.
 // ---------------------------------------------------------------------------------------------------------------------
 module tb_dsdv_idx_rg;
-    parameter integer N = 4096;            // scan: keys; gather: blocks (8 keys each)
-    parameter integer GATHER = 0;
-    parameter integer B = 13;              // scan base position
-    parameter integer PMAX = 131072;       // gather: positions drawn from [0, PMAX)
-    parameter integer KB = 64;             // index-key base (PC-local sector)
-    parameter integer T0 = 400;
-    parameter integer P = 2;
-    parameter integer K = 512;
-    parameter integer SEED = 1;
+    // runtime knobs (plusargs, one build serves every size / window): +N= +GATHER= +B= +PMAX= +KB= +T0= +P= +K= +SEED=
+    // +SLICE=;  build-time: MUT, SRAM_MACRO, CKH_PS
+    integer N = 4096;                      // scan: keys; gather: blocks (8 keys each)
+    integer GATHER = 0;
+    integer B = 13;                        // scan base position
+    integer PMAX = 131072;                 // gather: positions drawn from [0, PMAX)
+    integer KB = 64;                       // index-key base (PC-local sector)
+    integer T0 = 400;
+    integer P = 2;
+    integer K = 512;
+    integer SEED = 1;
+    integer SLICE = 1;
+    initial begin
+        void'($value$plusargs("N=%d", N)); void'($value$plusargs("GATHER=%d", GATHER)); void'($value$plusargs("B=%d", B));
+        void'($value$plusargs("PMAX=%d", PMAX)); void'($value$plusargs("KB=%d", KB)); void'($value$plusargs("T0=%d", T0));
+        void'($value$plusargs("P=%d", P)); void'($value$plusargs("K=%d", K)); void'($value$plusargs("SEED=%d", SEED));
+        void'($value$plusargs("SLICE=%d", SLICE));
+    end
     parameter integer MUT = 0;
     parameter bit SRAM_MACRO = 1;
     parameter integer CKH_PS = 900;
-    parameter integer SLICE = 1;
-    localparam integer R = 16, MW = 1 << 20, NWMAX = 16384, IK = 5, TAG = 8'h5A, SL0 = 16000, NS = 6;
+    localparam integer R = 16, MW = 1 << 20, NWMAX = 16384, IK = 5, TAG = 8'h5A, SL0 = 20000, NS = 6;
 
     // ------------------------------------------------------------------ clocks / reset
     reg ck = 0, ckh = 0, rst = 0;
@@ -38,7 +46,6 @@ module tb_dsdv_idx_rg;
     always #(CKH_PS / 2) ckh = ~ckh;
     longint cyc = 0;
     integer fail = 0, nerr = 0;
-    longint min_slack = 1 << 30;
     always @(posedge ck) cyc <= cyc + 1;
 
     function automatic [3:0] hj(input [15:0] j); hj = j[3:0] ^ j[7:4] ^ j[11:8] ^ j[15:12]; endfunction
@@ -60,19 +67,20 @@ module tb_dsdv_idx_rg;
     // ------------------------------------------------------------------ query
     reg [511:0] qc [0:31]; reg [31:0] qs [0:31]; reg [15:0] qw [0:31];
     integer h_;
-    initial for (h_ = 0; h_ < 32; h_ = h_ + 1) begin : g_q
+    initial begin #0; for (h_ = 0; h_ < 32; h_ = h_ + 1) begin : g_q
         integer w; reg [15:0] wl [0:5];
         wl[0] = 16'h3F80; wl[1] = 16'hBF00; wl[2] = 16'h3E80; wl[3] = 16'h4000; wl[4] = 16'h3F00; wl[5] = 16'hBE40;
         for (w = 0; w < 16; w = w + 1) qc[h_][32 * w +: 32] = mix(64'h7000_0000 + h_ * 64 + w);
         for (w = 0; w < 4; w = w + 1) qs[h_][8 * w +: 8] = 8'(124 + (mix(64'h7100_0000 + h_ * 8 + w) % 7));
         qw[h_] = wl[mix(64'h7200_0000 + h_) % 6];
-    end
+    end end
 
     // ------------------------------------------------------------------ job geometry + gather blocks
     integer j0, j1, nw, nlw;
     reg [16:0] blk [0:8191];
     integer o_, b_;
     initial begin
+        #0;
         if (GATHER != 0) begin
             b_ = mix(64'h7300_0000) % 64;
             for (o_ = 0; o_ < N; o_ = o_ + 1) begin                 // strictly ascending, gaps 1..(2 PMAX / 8 N)
@@ -120,13 +128,6 @@ module tb_dsdv_idx_rg;
             .k_wstrb(k_wstrb[64 * r +: 64]), .k_wr_done(k_wr_done[2 * r +: 2]), .kr_v(kr_v[2 * r +: 2]),
             .kr_rdy(kr_rdy[2 * r +: 2]), .kr_tag(kr_tag[34 * r +: 34]), .kr_beat(kr_beat[8 * r +: 8]),
             .kr_data(kr_data[512 * r +: 512]));
-        // min slack per region: word assembled (a_v & a_done) -> its slot (r_take)
-        longint asm_c [0:NWMAX-1];
-        always @(posedge ck) begin
-            if (u.a_v && u.a_done && u.a_w < NWMAX && asm_c[u.a_w] < 0) asm_c[u.a_w] <= cyc;
-            if (u.r_take && asm_c[u.r_w] >= 0 && cyc - asm_c[u.r_w] < min_slack) min_slack <= cyc - asm_c[u.r_w];
-        end
-        initial for (int w = 0; w < NWMAX; w++) asm_c[w] = -1;
     end endgenerate
 
     // ------------------------------------------------------------------ PC adapters + HBM model
@@ -336,9 +337,8 @@ module tb_dsdv_idx_rg;
         end
         if (vin_f) begin fail = 1; $display("TB_IDXRD selector V-ingress protocol fault"); end
         if (nerr != 0 || qerr != 0 || s_err != 0) fail = 1;
-        $display("TB_IDXRD_STATS gather %0d N %0d keys %0d words %0d T0 %0d P %0d mut %0d sram %0d ckh %0d hdr_to_last %0d end_to_last %0d min_slack %0d t0_min_est %0d nerr %0d qerr %0d slice_err %0d",
-                 GATHER, N, GATHER != 0 ? 8 * N : N, nw, T0, P, MUT, SRAM_MACRO, CKH_PS, t_last - t_hdr0, t_last - t_end, min_slack,
-                 T0 - min_slack, nerr, qerr, s_err);
+        $display("TB_IDXRD_STATS gather %0d N %0d keys %0d words %0d T0 %0d P %0d mut %0d sram %0d ckh %0d hdr_to_last %0d end_to_last %0d nerr %0d qerr %0d slice_err %0d",
+                 GATHER, N, GATHER != 0 ? 8 * N : N, nw, T0, P, MUT, SRAM_MACRO, CKH_PS, t_last - t_hdr0, t_last - t_end, nerr, qerr, s_err);
         if (fail) $display("TB_IDXRD FAIL"); else $display("TB_IDXRD PASS");
         $finish;
     end
