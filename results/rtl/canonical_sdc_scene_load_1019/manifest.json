@@ -5,13 +5,13 @@
   "diagnostic_freeze": "61b77bd14",
   "comparison_source_freeze": "1f1ddb1c2",
   "production_helper_sha256": "e4debd987a144ea506fc38d3e990ae2b07cfdd695a0e2847b770357fcec17290",
-  "production_helper_mode": "0644",
+  "production_helper_mode": "Git100644; observed joint/full filesystem0664, preserved",
   "native_unit": "ot-epyc8/oth-ubuntu-2297670-1792450430",
   "native_admission": "4GB/1CPU/2GB unpinned",
   "focused_unit": "ot-epyc7/oth-ubuntu-199781-1792450448",
   "baseline_unit": "ot-epyc7/oth-ubuntu-187614-1792450290",
   "baseline_summary": "112 failed,1713 passed,41 skipped,448 subtests,338.53s",
-  "candidate_full_state": "Not started; sequencer187614 SIGSTOP by ROOT request, awaiting combined source freeze with PG final-preflight fix",
+  "candidate_full_state": "Completed coherent b7c combined full; see ../canonical_sdc_pg_combined_1019.",
   "qualification": "Native direct-read preservation PASS; generic write_sdc/sync HOLD; no physical/timing/PG qualification",
   "suite_input_archives": {
     "baseline_overlay.tar": {
@@ -39,8 +39,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 6574,
-      "sha256": "45a65833f5a61d81745c1fd97f77a553eb8557061d9fd035cf801cad0c600200"
+      "bytes": 6715,
+      "sha256": "c29fc282d2623d0b81e2fd1c111b51b03321e647a11977a01f20a7c4fbce6324"
     },
     {
       "path": "Sdc.i",
@@ -487,5 +487,7 @@
       "bytes": 415,
       "sha256": "483d5f124f8070a37ebc93b4679e5c041f1575907f2ce0fe235c92e6f1f5db8a"
     }
-  ]
+  ],
+  "production_helper_git_mode": "100644",
+  "permission_clarification": "Earlier0644 normal-mode claim is superseded by exact joint/full receipts. No runtime mode changed."
 }
