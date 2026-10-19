@@ -6,6 +6,8 @@
 #   mut5_m7         user 3's CMD / Q carry user tag 0 (MU-TOK-KV m7 at the compute end)                  -> must FAIL
 #   mut6_seq        the filler epoch sequence never advances                                             -> must FAIL
 #   regress_nu1     the as-built NU 1 bench (run_native59_dv_service_bench.sh: positive, bad_q, mut1-3) -> rc 0
+#   mctx_serial / ovl_positive / ovl_ret_bad (pass), ovl_asbuilt_1ctx / ovl_mut_collide / ovl_mut5_m7 (must FAIL): MU-D2D-OVL
+#   overlapped operations on the two-context service (MCTX 1); see the bench header.
 #   N59MU_ONLY=<name> runs one case (closure-loop form).
 set -uo pipefail
 out=${1:?fresh output directory}; mkdir -p "$out"
@@ -32,12 +34,26 @@ run() { # name expect(pass|fail) -G...
   else
     if [[ $rc != 0 ]] || ! grep -q '^N59MU_PASS' "$out/$n.log"; then echo "$n OK (mutant fails)"; echo "N59MU_FAIL $n"; else echo "$n MUTANT SURVIVED"; rc_all=1; fi
   fi
-  grep -E '^N59MU_' "$out/$n.log" | head -4; rm -rf "$out/$n.obj"
+  grep -E '^N59MU_' "$out/$n.log" | head -4
+  # MU-D2D-OVL (closure daemon form, as QW-N59's dv_service wrapper): the simulator's verdict line on stdout, and in
+  # N59MU_ONLY mode the exit code is the simulator's raw verdict (0 only on N59MU_PASS; a mutant run exits non-zero)
+  grep -E '^N59MU_(PASS|FAIL)' "$out/$n.log" | tail -1 || echo "N59MU_NOVERDICT (sim rc=$rc)"
+  if [[ -n ${N59MU_ONLY:-} ]]; then
+    if [[ $rc == 0 ]] && grep -q '^N59MU_PASS' "$out/$n.log"; then rc_all=0; else rc_all=1; fi
+  fi
+  rm -rf "$out/$n.obj"
 }
 run positive pass
 run ret_bad pass -GRET_BAD=1
 run mut5_m7 fail -GMUT=5
 run mut6_seq fail -GMUT=6
+# MU-D2D-OVL 10-19: overlapped operations (op k+1's front while op k's back is in flight), two context slots (MCTX 1)
+run mctx_serial pass -GMCTX=1
+run ovl_positive pass -GOVLP=1 -GMCTX=1
+run ovl_ret_bad pass -GOVLP=1 -GMCTX=1 -GRET_BAD=1
+run ovl_asbuilt_1ctx fail -GOVLP=1 -GMCTX=0
+run ovl_mut_collide fail -GOVLP=1 -GMCTX=1 -GCOLL=1
+run ovl_mut5_m7 fail -GOVLP=1 -GMCTX=1 -GMUT=5
 if [[ -z ${N59MU_ONLY:-} || ${N59MU_ONLY:-} == regress_nu1 ]]; then
   VERILATOR=$VL bash "$R/rtl/test/qwen_split/run_native59_dv_service_bench.sh" "$out/regress_nu1" > "$out/regress_nu1.log" 2>&1 \
     && echo "regress_nu1 OK" || { echo "regress_nu1 FAIL"; rc_all=1; }

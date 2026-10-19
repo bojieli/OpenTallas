@@ -249,7 +249,7 @@ module tb_xdie_qwen_exchange;
         always @(posedge ck) if (rst_n && n_fault && !sf) begin sf <= 1;
             $display("XQ_CAUSE native59 cyc %0d rel %0d: context %0d qtag %0d qexport %0d dv %0d formatter %0d x3 %0d record %0d (codec cause {rx_rec,tx_rec,rx_time,tx_time}=%b) land %0d visibility %0d vm_addr %0d service %0d",
                 cyc, rel, native59.context_fault, native59.qtag_fault, native59.export_control_fault, native59.dv_fault, native59.formatter_fault,
-                native59.x3_fault, native59.record_fault, native59.u_record.fault_cause, native59.land_fault, native59.visibility_fault,
+                native59.x3_fault, native59.record_fault, native59.g_slot[0].u_record.fault_cause, native59.land_fault, native59.visibility_fault,
                 native59.vm_address_fault, native59.svc_fault); end
     end else begin : g_cstub
         // component-bench producer: the record codec on the compiled slots (no die stages)
@@ -336,7 +336,7 @@ module tb_xdie_qwen_exchange;
         reg sf = 0;
         always @(posedge ck) if (rst_n && (k_pf || lf || iof) && !sf) begin sf <= 1;
             $display("XQ_CAUSE KV programme cyc %0d rel %0d age %0d: ctl local %0d guard %0d record %0d (codec cause {rx_rec,tx_rec,rx_time,tx_time}=%b) slot %0d producer %0d | root lf %0d iof %0d",
-                cyc, rel, age, u_attn.ctl.local_fault, u_attn.ctl.guard_fault, u_attn.ctl.record_fault, u_attn.ctl.codec.fault_cause,
+                cyc, rel, age, u_attn.ctl.local_fault, u_attn.ctl.guard_fault, u_attn.ctl.record_fault, u_attn.ctl.g_cd.codec.fault_cause,
                 u_attn.ctl.slot_fault, u_attn.producer_fault, lf, iof); end
         always @(posedge ck) if (rst_n && (lf || iof || cal_f)) err("KV attention root / calendar fault");
         always @(posedge ck) if (rst_n && kq_v && !q_rdy) err("q_valid without q_ready (no wait exists)");
@@ -366,7 +366,7 @@ module tb_xdie_qwen_exchange;
         always @(posedge ck) if (rst_n && (k_pf || u_kattn.w_attn_face__result_fault) && !sf) begin sf <= 1;
             $display("XQ_CAUSE kvs_attn cyc %0d rel %0d: programme ctl local %0d guard %0d record %0d (codec cause %b) slot %0d | face result_fault %0d RESULT_AGE %0d (P0 %0d P1 %0d PV %0d R %0d) root age %0d | ctl tx_first %0d",
                 cyc, rel, u_kattn.u_attn.ctl.local_fault, u_kattn.u_attn.ctl.guard_fault, u_kattn.u_attn.ctl.record_fault,
-                u_kattn.u_attn.ctl.codec.fault_cause, u_kattn.u_attn.ctl.slot_fault, u_kattn.w_attn_face__result_fault, fres, fp0, fp1, fpv,
+                u_kattn.u_attn.ctl.g_cd.codec.fault_cause, u_kattn.u_attn.ctl.slot_fault, u_kattn.w_attn_face__result_fault, fres, fp0, fp1, fpv,
                 fcal[175:160], fage, u_kattn.w_attn_cal__tx_first); end
     end else if (K_REAL == 3) begin : g_kfin
         // QXF-FACE: as-built qkd_kvs_attn + real qkd_pv_fin_s (0 die relays on pvfst / fin: PV_LEAD 0, F_DLY 1 as built)
@@ -408,7 +408,7 @@ module tb_xdie_qwen_exchange;
                 fpv + ((fp0 > fp1) ? ((fp0 > fr) ? fp0 : fr) : ((fp1 > fr) ? fp1 : fr)) + 17, u_kattn.w_attn_cal__tx_first); end
         always @(posedge ck) if (rst_n && (k_pf || u_kattn.w_attn_face__result_fault || uff) && !sf) begin sf <= 1;
             $display("XQ_CAUSE kvs_attn+pvfin cyc %0d rel %0d: programme ctl local %0d record %0d (codec cause %b) | face result_fault %0d | pvfin fault %0d | cal P0 %0d P1 %0d PV %0d R %0d root age %0d | ctl tx_first %0d",
-                cyc, rel, u_kattn.u_attn.ctl.local_fault, u_kattn.u_attn.ctl.record_fault, u_kattn.u_attn.ctl.codec.fault_cause,
+                cyc, rel, u_kattn.u_attn.ctl.local_fault, u_kattn.u_attn.ctl.record_fault, u_kattn.u_attn.ctl.g_cd.codec.fault_cause,
                 u_kattn.w_attn_face__result_fault, uff, fp0, fp1, fpv, fr, u_kattn.w_attn_root__age, u_kattn.w_attn_cal__tx_first); end
         always @(posedge ck) if (rst_n && act && (uff || u_kattn.w_attn_face__result_fault || u_kattn.w_attn_cal__fault)) err("pvfin / result face / calendar fault");
     end else begin : g_kstub

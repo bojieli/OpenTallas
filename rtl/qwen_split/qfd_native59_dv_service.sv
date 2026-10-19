@@ -39,12 +39,28 @@
 //             _EPOCH[15:2] = MU_SEQ0).  A filler context of a layer > 0 before the user's first L0 is a fault.
 //   The KV die serves user epoch[1:0] (MU-ADOPT-KV, HBM row 64 + l + 256 u).  Context checks: qfd_native59_command_
 //   context_mu (HOST token / position match for user 0 only).  No port, no edge: the stamp is on the context edge.
+// MULTI-CONTEXT (MU-D2D-OVL 10-19, MCTX = 1; MCTX = 0 is the single-context block on every edge): with the D2D link's
+//   overlapping request / response segments (ot_qwen_d2d_static_end OVL = 1) user k+1's operation FRONT (context begin,
+//   Q seats, K/V formatter, CMD + Q records, KVN words) runs while user k's BACK (RESULT / STATUS records, VM writes,
+//   dr landing, visibility, completion) is still in flight.  The per-operation state is held in NS = 2 static context
+//   slots: static service, record endpoint (codec), dr landing fence, visibility, operation tag.  Slots are taken in
+//   operation order: the FRONT slot is the one the latest context begin took (begins alternate 0, 1, 0, ...), the BACK
+//   slot is the oldest operation not yet completed (it advances on its completion).  Front events (begin, request,
+//   Q, TX slots, KV/x3) drive the front slot; back events (RX records, result slots, VM commits, kernel done,
+//   visibility, complete) drive the back slot.  The front children (Q seat bank, export control, formatter, KVN
+//   transport, command context) hold one operation (they finish at the CMD / KVN edge).  Static schedule: a begin into
+//   a slot whose operation is still active (a third operation in flight) is the context's service_active fault, an RX
+//   record of another operation fails the back slot's codec epoch / layer check (the user is in epoch[1:0]): collision
+//   = fault, never a wait.  native_ret: the back slot's word with ready = the next begin's slot is free.
+// RESET (S-QWCOL QW-N59 94d19372e, merged 10-19): see rst_q below.
 module qfd_native59_dv_service #(
  parameter integer MUT=0,CODEC_MUT=0,
  // LAND_EDGES=0 profile is not allowed: production must supply the measured W5..E5 return-chain landing edge count.
  parameter integer NATIVE_PROFILE=0,LAND_QUALIFIED=0,LAND_EDGES=8,
  // MU-DQ-D2DUSER: users (1 = single user, the as-built block) and the HOST allocator's initial sequence (INITIAL_EPOCH[15:2])
- parameter integer NU=1,parameter [13:0] MU_SEQ0=14'd0
+ parameter integer NU=1,parameter [13:0] MU_SEQ0=14'd0,
+ // MU-D2D-OVL: 1 = two operation context slots (overlapping D2D request / response; see the header)
+ parameter integer MCTX=0
 )(
  input wire ck,rst_n,
  input wire host_epoch_valid,host_fused_capability,input wire[15:0]host_epoch,
@@ -66,14 +82,27 @@ module qfd_native59_dv_service #(
  output reg fault
 );
  integer l;
+ // ---------------------------------------------------------------- reset distribution (ROOT-RST, QW-N59 10-19)
+ // The kit lands rst_n at the face in 2 registered stages (ref_tile "reset_landing", ot_pin_regs.tcl OT_RST_LAND); here
+ // ONE more registered stage replicates it per region (equal depth: every copy is a kept flop fed by the landed port),
+ // so no reset net drives the whole tile (n1-e4ecec634: one rst_n net reached 10,582 flops > 8,000).  Assertion is
+ // immediate (async clear of the copies), release is synchronous one edge later; reset release latency is a scheduled
+ // constant.  Copies: 0 formatter, 1 x3 transport, 2 static service, 3 record codec, 4 command context + Q export
+ // control, 5 dr landing fence, 6 pin registers + native_ret, 7 the remaining top-level state.
+ (* keep = "true" *) reg[7:0]rst_q;
+ always @(posedge ck or negedge rst_n)
+  if(!rst_n)rst_q<=8'd0;
+  else rst_q<=8'hFF;
+ wire rst_fmt=rst_q[0],rst_x3=rst_q[1],rst_svc=rst_q[2],rst_rec=rst_q[3],rst_ctx=rst_q[4],rst_land=rst_q[5],
+      rst_pin=rst_q[6],rst_top=rst_q[7];
  // ---------------------------------------------------------------- pin registers (every input, flop-first)
  reg p_hev,p_hfc;reg[15:0]p_he;reg[58:0]p_ht;reg[1:0]p_hg;
  reg p_lcv;reg[5:0]p_stage;reg[17:0]p_tok,p_pos;reg[379:0]p_cmd;reg[547:0]p_dd;
  reg p_kvs,p_x3s;reg[1:0]p_kvi;reg p_qs;reg[4:0]p_qb;
  reg p_ts;reg[3:0]p_tk;reg[4:0]p_tb;reg p_rv;reg[547:0]p_rp;reg p_rs;reg[3:0]p_rk;reg[4:0]p_rb;
  reg[511:0]p_ecq;reg[15:0]p_esq;reg p_vis,p_cs;
- always @(posedge ck or negedge rst_n)
-  if(!rst_n)begin
+ always @(posedge ck or negedge rst_pin)
+  if(!rst_pin)begin
    p_hev<=0;p_hfc<=0;p_he<=0;p_ht<=0;p_hg<=0;p_lcv<=0;p_stage<=0;p_tok<=0;p_pos<=0;p_cmd<=0;p_dd<=0;
    p_kvs<=0;p_x3s<=0;p_kvi<=0;p_qs<=0;p_qb<=0;p_ts<=0;p_tk<=0;p_tb<=0;p_rv<=0;p_rp<=0;p_rs<=0;p_rk<=0;p_rb<=0;
    p_ecq<=0;p_esq<=0;p_vis<=0;p_cs<=0;
@@ -87,8 +116,8 @@ module qfd_native59_dv_service #(
   end
  // ---------------------------------------------------------------- command context (unchanged child)
  wire[94:0]service_ret_raw;
- always @(posedge ck or negedge rst_n)
-  if(!rst_n)native_ret<=95'd0;
+ always @(posedge ck or negedge rst_pin)
+  if(!rst_pin)native_ret<=95'd0;
   else native_ret<=service_ret_raw;
  wire vm_write_v;wire[19:0]vm_write_word;wire[4:0]vm_write_beat;wire[58:0]vm_write_tag;wire[511:0]vm_write_data;
  wire vm_address_fault=vm_write_v&&(vm_write_word!=(20'd3167+{15'd0,vm_write_beat}));
@@ -105,21 +134,21 @@ module qfd_native59_dv_service #(
  wire[1:0]c_tag=(MUT==5&&c_user==2'd3)?2'd0:c_user;
  wire[15:0]c_epoch=(MU==0||c_user==2'd0)?p_he:{c_seq,c_tag};
  integer fu;
- always @(posedge ck or negedge rst_n)
-  if(!rst_n)begin for(fu=0;fu<4;fu=fu+1)fseq[fu]<=MU_SEQ0;fstart<=0;mu_fault<=0;end
+ always @(posedge ck or negedge rst_top)
+  if(!rst_top)begin for(fu=0;fu<4;fu=fu+1)fseq[fu]<=MU_SEQ0;fstart<=0;mu_fault<=0;end
   else if(MU!=0&&native_context&&c_user!=2'd0)begin
    fseq[c_user]<=c_seq;if(c_l0)fstart[c_user]<=1'b1;
    if({1'b0,c_user}>=3'(NU)||(!c_l0&&!fstart[c_user]))mu_fault<=1'b1;
   end
  generate if(MU==0)begin:g_ctx1
   qfd_native59_command_context u_context(
-  .ck(ck),.rst_n(rst_n),.host_epoch_valid(p_hev),.host_fused_capability(p_hfc),.host_epoch(p_he),.host_tag(p_ht),.host_generation(p_hg),
+  .ck(ck),.rst_n(rst_ctx),.host_epoch_valid(p_hev),.host_fused_capability(p_hfc),.host_epoch(p_he),.host_tag(p_ht),.host_generation(p_hg),
   .context_v(native_context),.context_stage(p_stage),.context_token(p_tok),.context_position(p_pos),
   .native_cmd(p_cmd),.command_stage(p_stage),.command_token(p_tok),.command_position(p_pos),
   .service_active(active),.begin_slot(begin_slot),.begin_tag(begin_tag),.request_slot(request_slot),.request_tag(request_tag),.result_base_word(base),.fault(context_fault));
  end else begin:g_ctxmu
   qfd_native59_command_context_mu #(.NU(NU)) u_context(
-  .ck(ck),.rst_n(rst_n),.host_epoch_valid(p_hev),.host_fused_capability(p_hfc),.host_epoch(p_he),.host_tag(p_ht),.host_generation(p_hg),
+  .ck(ck),.rst_n(rst_ctx),.host_epoch_valid(p_hev),.host_fused_capability(p_hfc),.host_epoch(p_he),.host_tag(p_ht),.host_generation(p_hg),
   .context_v(native_context),.context_stage(p_stage),.context_token(p_tok),.context_position(c_pos),
   .native_cmd(p_cmd),.command_stage(p_stage),.command_token(p_tok),.command_position(c_pos),
   .service_active(active),.ctx_user(c_user),.ctx_epoch(c_epoch),
@@ -165,8 +194,8 @@ module qfd_native59_dv_service #(
   end
  endgenerate
  wire q_in_bad=(dd_q&&(!qctx||qlock||begin_slot))||(|qhi_bad)||(|qdup);
- always @(posedge ck or negedge rst_n)
-  if(!rst_n)begin qseen<=0;qctx<=0;qlock<=0;end
+ always @(posedge ck or negedge rst_top)
+  if(!rst_top)begin qseen<=0;qctx<=0;qlock<=0;end
   else if(begin_slot)begin qseen<=0;qctx<=1;qlock<=0;end
   else begin qseen<=qseen_n;if(q_open)qlock<=1;end
  always @(posedge ck)if(!begin_slot)qbuf<=qbuf_n;
@@ -185,15 +214,14 @@ module qfd_native59_dv_service #(
  wire[523:0]q=p_qs?{1'b1,3'd1,3'd0,p_qb,qrow}:524'd0;
  wire export_control_fault;
  qfd_native59_q_export_control u_qexport_control(
- .ck(ck),.rst_n(rst_n),.begin_slot(begin_slot),.request_slot(request_slot),.q_committed(q_committed),
+ .ck(ck),.rst_n(rst_ctx),.begin_slot(begin_slot),.request_slot(request_slot),.q_committed(q_committed),
  .vm_q_epoch(vm_q_epoch),.vm_q_start(vm_q_start),.fault(export_control_fault));
- reg[58:0]context_tag,q_epoch_tag,q_frame_tag,operation_tag;
+ reg[58:0]context_tag,q_epoch_tag,q_frame_tag;
  reg context_valid,q_window,qtag_fault;reg[5:0]q_count;
- always @(posedge ck or negedge rst_n)begin
-  if(!rst_n)begin context_tag<=0;q_epoch_tag<=0;q_frame_tag<=0;operation_tag<=0;context_valid<=0;q_window<=0;qtag_fault<=0;q_count<=0;end
+ always @(posedge ck or negedge rst_top)begin
+  if(!rst_top)begin context_tag<=0;q_epoch_tag<=0;q_frame_tag<=0;context_valid<=0;q_window<=0;qtag_fault<=0;q_count<=0;end
   else begin
    if(begin_slot)begin context_tag<=begin_tag;context_valid<=1;end
-   if(request_slot)operation_tag<=request_tag;
    if(vm_q_epoch)begin
     if(q_window||(!context_valid&&!begin_slot))qtag_fault<=1;
     q_epoch_tag<=begin_slot?begin_tag:context_tag;
@@ -220,62 +248,104 @@ module qfd_native59_dv_service #(
   end
  end
  reg[2:0]iss;
- always @(posedge ck or negedge rst_n)if(!rst_n)iss<=0;else iss<={iss[1:0],native_context};
+ always @(posedge ck or negedge rst_top)if(!rst_top)iss<=0;else iss<={iss[1:0],native_context};
  wire kv_issue=|iss;
  wire[1:0]kv_kind=iss[0]?2'd0:iss[1]?2'd1:2'd2;
  wire[17:0]kv_nin=iss[0]?18'd128:18'd64;
  wire formatter_fault,formatter_idle,formatter_drained,kvn_v;wire[7:0]formatter_fault_code;
  wire[10:0]kvn_tag;wire[511:0]kvn_data;
  ot_qfd_su_kv_static_posted #(.ENABLE(1),.HEADS(1))u_formatter(
- .clk(ck),.rst_n(rst_n),.epoch_begin(native_context),.epoch_pos(c_pos),
+ .clk(ck),.rst_n(rst_fmt),.epoch_begin(native_context),.epoch_pos(c_pos),
  .issue_v(kv_issue),.issue_kind(kv_kind),.issue_nout(18'd1),.issue_nin(kv_nin),
  .kv_we(kv_we),.kv_waddr(kv_waddr),.kv_wdata(kv_wdata),.epoch_idle(formatter_idle),.drained(formatter_drained),
  .word_v(kvn_v),.word_tag(kvn_tag),.word_data(kvn_data),.word_slot(p_kvs),.word_index(p_kvi),
  .fault(formatter_fault),.fault_code(formatter_fault_code));
  reg[58:0]formatter_identity;reg[1:0]formatter_generation;
- always @(posedge ck or negedge rst_n)
-  if(!rst_n)begin formatter_identity<=0;formatter_generation<=0;end
+ always @(posedge ck or negedge rst_top)
+  if(!rst_top)begin formatter_identity<=0;formatter_generation<=0;end
   else if(native_context)begin formatter_identity<=begin_tag;formatter_generation<=p_hg;end
  wire x3_fault;
- qfd_kvn_static_transport u_kvn(.ck(ck),.rst_n(rst_n),.word_v(kvn_v),.word_tag(kvn_tag),.word_data(kvn_data),
+ qfd_kvn_static_transport u_kvn(.ck(ck),.rst_n(rst_x3),.word_v(kvn_v),.word_tag(kvn_tag),.word_data(kvn_data),
  .word_identity(formatter_identity),.word_generation(formatter_generation),.slot_v(p_x3s),
  .x3(x3),.x3_identity(x3_identity),.x3_generation(x3_generation),.fault(x3_fault));
- // ---------------------------------------------------------------- service + codec (unchanged children)
- wire req_v,kq_v,svc_fault,record_fault;wire[58:0]req_tag,kq_tag;wire[4:0]kq_beat;wire[511:0]kq_data;
- wire result_v,result_slot;wire[4:0]result_beat,result_slot_beat;wire[58:0]result_tag;wire[511:0]result_data;
- wire kernel_done;wire[58:0]kernel_done_tag;
- wire vm_commit_v,commit_complete,land_fault;wire[4:0]vm_commit_beat;wire[58:0]vm_commit_tag;
- reg visibility_seen;
- always @(posedge ck or negedge rst_n)
-  if(!rst_n)visibility_seen<=0;
-  else if(request_slot)visibility_seen<=0;
-  else if(p_vis)visibility_seen<=commit_complete&&!land_fault;
- wire visibility_fault=p_cs&&!visibility_seen;
+ // ---------------------------------------------------------------- operation context slots (MU-D2D-OVL; NS = 1: as built)
+ localparam integer NS=(MCTX!=0)?2:1;
+ reg nf,fs,bs;                       // slot of the next begin, the front (latest begun) slot, the back (oldest active) slot
+ wire[NS-1:0]s_active,s_completed,s_svc_fault,s_rec_fault,s_land_fault,s_commit_complete,s_tx_v;
+ wire[NS-1:0]s_req_v,s_kq_v,s_vm_write_v;wire[58:0]s_vm_write_tag[0:NS-1];wire[19:0]s_vm_write_word[0:NS-1];
+ wire[4:0]s_vm_write_beat[0:NS-1];wire[511:0]s_vm_write_data[0:NS-1];wire[547:0]s_tx_payload[0:NS-1];wire[94:0]s_ret[0:NS-1];
+ reg[58:0]s_optag[0:NS-1];reg[NS-1:0]s_vis_seen;
+ wire svc_fault=|s_svc_fault,record_fault=|s_rec_fault,land_fault=|s_land_fault;
+ wire[NS-1:0]sel_nf=NS'(1)<<(MCTX!=0?nf:1'b0),sel_f=NS'(1)<<(MCTX!=0?fs:1'b0),sel_b=NS'(1)<<(MCTX!=0?bs:1'b0);
+ assign active=|(s_active&sel_nf);   // the command context faults a begin into a slot that is still active
+ assign completed=|s_completed;
+ assign service_ret_raw={s_ret[MCTX!=0?bs:1'b0][94:2],{2{!(|(s_active&sel_nf))&&!svc_fault}}};
+ always @(posedge ck or negedge rst_top)
+  if(!rst_top)begin nf<=0;fs<=0;bs<=0;end
+  else if(MCTX!=0)begin
+   if(begin_slot)begin fs<=nf;nf<=~nf;end
+   if(|(s_completed&sel_b))bs<=~bs;
+  end
+ // the merged VM write (only the back slot writes; two at once is a slot collision)
+ integer si;
+ reg vmw_v;reg[19:0]vmw_word;reg[4:0]vmw_beat;reg[58:0]vmw_tag;reg[511:0]vmw_data;reg vmw_two;
+ reg ntx_v;reg[547:0]ntx_p;
+ always @*begin
+  vmw_v=0;vmw_word=0;vmw_beat=0;vmw_tag=0;vmw_data=0;vmw_two=0;ntx_v=0;ntx_p=0;
+  for(si=0;si<NS;si=si+1)begin
+   if(s_vm_write_v[si])begin vmw_two=vmw_two|vmw_v;vmw_v=1;vmw_word=vmw_word|s_vm_write_word[si];vmw_beat=vmw_beat|s_vm_write_beat[si];
+    vmw_tag=vmw_tag|s_vm_write_tag[si];vmw_data=vmw_data|s_vm_write_data[si];end
+   ntx_v=ntx_v|s_tx_v[si];if(NS==1||s_tx_v[si])ntx_p=ntx_p|s_tx_payload[si];   // NS 1: the codec register as built
+  end
+ end
+ assign vm_write_v=vmw_v;assign vm_write_word=vmw_word;assign vm_write_beat=vmw_beat;assign vm_write_tag=vmw_tag;assign vm_write_data=vmw_data;
+ assign native_tx_v=ntx_v;assign native_tx_payload=ntx_p;
+ wire visibility_fault=p_cs&&!(|(s_vis_seen&sel_b));
  reg dv_fault;
- qfd_native59_static_service u_service(
- .ck(ck),.rst_n(rst_n),.source_fault(context_fault|qtag_fault|export_control_fault|dv_fault|formatter_fault|x3_fault|record_fault|land_fault|visibility_fault|vm_address_fault|mu_fault),
- .begin_slot(begin_slot),.begin_tag(begin_tag),.request_slot(request_slot),.request_tag(request_tag),.result_base_word(base),
- .qr_committed(q_committed),.qr_tag(q_epoch_tag),.kernel_request_v(req_v),.kernel_request_tag(req_tag),
- .q_slot(p_qs),.q_slot_beat(p_qb),.q_v(q[523]),.q_beat(q[516:512]),.q_tag(q_frame_tag),.q_data(q[511:0]),
- .kernel_q_v(kq_v),.kernel_q_beat(kq_beat),.kernel_q_tag(kq_tag),.kernel_q_data(kq_data),
- .result_slot(result_slot),.result_slot_beat(result_slot_beat),.result_v(result_v),.result_beat(result_beat),.result_tag(result_tag),.result_data(result_data),
- .vm_write_v(vm_write_v),.vm_write_word(vm_write_word),.vm_write_beat(vm_write_beat),.vm_write_tag(vm_write_tag),.vm_write_data(vm_write_data),
- .vm_commit_v(vm_commit_v),.vm_commit_beat(vm_commit_beat),.vm_commit_tag(vm_commit_tag),.kernel_done(kernel_done),.kernel_done_tag(kernel_done_tag),
- .complete_slot(p_cs),.completed(completed),.active(active),.fault(svc_fault),.native_ret(service_ret_raw));
- qfd_native59_record_endpoint #(.CODEC_MUT(CODEC_MUT))u_record(
- .ck(ck),.rst_n(rst_n),.operation_tag(operation_tag),.kernel_request_v(req_v),.kernel_request_tag(req_tag),
- .kernel_q_v(kq_v),.kernel_q_beat(kq_beat),.kernel_q_tag(kq_tag),.kernel_q_data(kq_data),
- .tx_slot(p_ts),.tx_slot_kind(p_tk),.tx_slot_beat(p_tb),.tx_valid(native_tx_v),.tx_payload(native_tx_payload),
- .rx_event(p_rv),.rx_payload(p_rp),.rx_slot(p_rs),.rx_slot_kind(p_rk),.rx_slot_beat(p_rb),
- .result_v(result_v),.result_beat(result_beat),.result_tag(result_tag),.result_data(result_data),.result_slot(result_slot),.result_slot_beat(result_slot_beat),
- .kernel_done(kernel_done),.kernel_done_tag(kernel_done_tag),.fault(record_fault));
+ wire src_fault=context_fault|qtag_fault|export_control_fault|dv_fault|formatter_fault|x3_fault|record_fault|land_fault|visibility_fault|vm_address_fault|mu_fault;
+ reg dr_s;                            // slot whose VM write is in dr_o (the landing fence of that slot checks it)
+ genvar gs;
+ generate for(gs=0;gs<NS;gs=gs+1)begin:g_slot
+  wire f=sel_f[gs],b=sel_b[gs];
+  wire req_s=request_slot&&f;
+  wire result_v,result_slot,kernel_done;wire[4:0]result_beat,result_slot_beat;wire[58:0]result_tag,kernel_done_tag;wire[511:0]result_data;
+  wire[58:0]req_tag,kq_tag;wire[4:0]kq_beat;wire[511:0]kq_data;
+  wire vm_commit_v;wire[4:0]vm_commit_beat;wire[58:0]vm_commit_tag;
+  always @(posedge ck or negedge rst_top)
+   if(!rst_top)begin s_optag[gs]<=0;s_vis_seen[gs]<=0;end
+   else begin
+    if(req_s)begin s_optag[gs]<=request_tag;s_vis_seen[gs]<=0;end
+    else if(p_vis&&b)s_vis_seen[gs]<=s_commit_complete[gs]&&!s_land_fault[gs];
+   end
+  qfd_native59_static_service u_service(
+  .ck(ck),.rst_n(rst_svc),.source_fault(src_fault),
+  .begin_slot(begin_slot&&sel_nf[gs]),.begin_tag(begin_tag),.request_slot(req_s),.request_tag(request_tag),.result_base_word(base),
+  .qr_committed(q_committed),.qr_tag(q_epoch_tag),.kernel_request_v(s_req_v[gs]),.kernel_request_tag(req_tag),
+  .q_slot(p_qs&&f),.q_slot_beat(p_qb),.q_v(q[523]&&f),.q_beat(q[516:512]),.q_tag(q_frame_tag),.q_data(q[511:0]),
+  .kernel_q_v(s_kq_v[gs]),.kernel_q_beat(kq_beat),.kernel_q_tag(kq_tag),.kernel_q_data(kq_data),
+  .result_slot(result_slot),.result_slot_beat(result_slot_beat),.result_v(result_v),.result_beat(result_beat),.result_tag(result_tag),.result_data(result_data),
+  .vm_write_v(s_vm_write_v[gs]),.vm_write_word(s_vm_write_word[gs]),.vm_write_beat(s_vm_write_beat[gs]),.vm_write_tag(s_vm_write_tag[gs]),.vm_write_data(s_vm_write_data[gs]),
+  .vm_commit_v(vm_commit_v),.vm_commit_beat(vm_commit_beat),.vm_commit_tag(vm_commit_tag),.kernel_done(kernel_done),.kernel_done_tag(kernel_done_tag),
+  .complete_slot(p_cs&&b),.completed(s_completed[gs]),.active(s_active[gs]),.fault(s_svc_fault[gs]),.native_ret(s_ret[gs]));
+  qfd_native59_record_endpoint #(.CODEC_MUT(CODEC_MUT))u_record(
+  .ck(ck),.rst_n(rst_rec),.operation_tag(s_optag[gs]),.kernel_request_v(s_req_v[gs]),.kernel_request_tag(req_tag),
+  .kernel_q_v(s_kq_v[gs]),.kernel_q_beat(kq_beat),.kernel_q_tag(kq_tag),.kernel_q_data(kq_data),
+  .tx_slot(p_ts&&f),.tx_slot_kind(p_tk),.tx_slot_beat(p_tb),.tx_valid(s_tx_v[gs]),.tx_payload(s_tx_payload[gs]),
+  .rx_event(p_rv&&b),.rx_payload(p_rp),.rx_slot(p_rs&&b),.rx_slot_kind(p_rk),.rx_slot_beat(p_rb),
+  .result_v(result_v),.result_beat(result_beat),.result_tag(result_tag),.result_data(result_data),.result_slot(result_slot),.result_slot_beat(result_slot_beat),
+  .kernel_done(kernel_done),.kernel_done_tag(kernel_done_tag),.fault(s_rec_fault[gs]));
+  qfd_native59_dr_landing #(.LAND_EDGES(LAND_EDGES))u_land(
+  .ck(ck),.rst_n(rst_land),.request_slot(req_s),.request_tag59(request_tag),
+  .emit_v(dr_o[519]&&!dr_o[518]&&(NS==1||dr_s==1'(gs))),.emit_beat(dr_o[516:512]),.emit_tag59(dr_tag),.visibility_slot(p_vis&&b),
+  .vm_commit_v(vm_commit_v),.vm_commit_beat(vm_commit_beat),.vm_commit_tag59(vm_commit_tag),.complete(s_commit_complete[gs]),.fault(s_land_fault[gs]));
+ end endgenerate
  // ---------------------------------------------------------------- embedding row read (G9), fixed 65-edge sequence
  wire emb_go=!p_cmd[0]&&p_cmd[379:376]==4'hE;
  wire cmd_bad=(emb_go&&((|p_cmd[357:1])||p_cmd[375:358]>=18'd151936))||(!p_cmd[0]&&(|p_cmd)&&!emb_go);
  reg emb_act;reg[6:0]emb_k;reg[17:0]emb_tok;
  reg e1,e2,e3;reg[6:0]k1,k2,k3;
- always @(posedge ck or negedge rst_n)
-  if(!rst_n)begin emb_act<=0;emb_k<=0;emb_tok<=0;emb_code_re<=0;emb_code_addr<=0;emb_scale_re<=0;emb_scale_addr<=0;
+ always @(posedge ck or negedge rst_top)
+  if(!rst_top)begin emb_act<=0;emb_k<=0;emb_tok<=0;emb_code_re<=0;emb_code_addr<=0;emb_scale_re<=0;emb_scale_addr<=0;
                   e1<=0;e2<=0;e3<=0;k1<=0;k2<=0;k3<=0;end
   else begin
    emb_code_re<=0;emb_scale_re<=0;
@@ -291,29 +361,26 @@ module qfd_native59_dv_service #(
  // ---------------------------------------------------------------- dr_o: group 0 attention result / group 1 embedding row
  wire g0=vm_write_v,g1=e3;
  reg[58:0]dr_tag;
- always @(posedge ck or negedge rst_n)
-  if(!rst_n)begin dr_o<=0;dr_tag<=0;end
+ always @(posedge ck or negedge rst_top)
+  if(!rst_top)begin dr_o<=0;dr_tag<=0;dr_s<=0;end
   else begin
-   dr_tag<=vm_write_tag;
+   dr_tag<=vm_write_tag;dr_s<=(NS>1)?s_vm_write_v[NS-1]:1'b0;
    dr_o<=g0?{1'b1,1'b0,1'b0,vm_write_beat,vm_write_data}:
          g1?{1'b1,1'b1,(k3==7'd64)?6'd0:k3[5:0],(k3==7'd64)?{496'd0,p_esq}:p_ecq}:520'd0;
   end
- qfd_native59_dr_landing #(.LAND_EDGES(LAND_EDGES))u_land(
- .ck(ck),.rst_n(rst_n),.request_slot(request_slot),.request_tag59(request_tag),
- .emit_v(dr_o[519]&&!dr_o[518]),.emit_beat(dr_o[516:512]),.emit_tag59(dr_tag),.visibility_slot(p_vis),
- .vm_commit_v(vm_commit_v),.vm_commit_beat(vm_commit_beat),.vm_commit_tag59(vm_commit_tag),.complete(commit_complete),.fault(land_fault));
  // ---------------------------------------------------------------- sticky DV boundary faults and the fault pin
- always @(posedge ck or negedge rst_n)
-  if(!rst_n)dv_fault<=0;
-  else if(dd_form_bad||q_in_bad||kv_in_bad||q_miss||(g0&&g1)||(emb_go&&emb_act)||cmd_bad)dv_fault<=1;
- always @(posedge ck or negedge rst_n)
-  if(!rst_n)fault<=0;
+ always @(posedge ck or negedge rst_top)
+  if(!rst_top)dv_fault<=0;
+  else if(dd_form_bad||q_in_bad||kv_in_bad||q_miss||(g0&&g1)||(emb_go&&emb_act)||cmd_bad||vmw_two)dv_fault<=1;
+ always @(posedge ck or negedge rst_top)
+  if(!rst_top)fault<=0;
   else fault<=svc_fault|context_fault|qtag_fault|export_control_fault|dv_fault|formatter_fault|x3_fault|record_fault|land_fault|visibility_fault|vm_address_fault|mu_fault;
  initial begin
   if(NATIVE_PROFILE!=0&&LAND_QUALIFIED!=1)$fatal(1,"native service requires the measured dr landing edge contract");
   if(LAND_EDGES<2)$fatal(1,"LAND_EDGES must include the slice pin register and VM write");
   if(MUT<0||MUT>6||(MUT>=5&&NU<2))$fatal(1,"qfd_native59_dv_service: MUT undefined");
   if(NU<1||NU>4)$fatal(1,"qfd_native59_dv_service: NU %0d outside 1..4",NU);
+  if(MCTX!=0&&MCTX!=1)$fatal(1,"qfd_native59_dv_service: MCTX %0d (0 or 1)",MCTX);
  end
 endmodule
 

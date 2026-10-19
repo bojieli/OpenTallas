@@ -15,9 +15,14 @@
 // dr words and x3 words equal DUT1's on the same edges (user 0 = single user).
 // Cases: RET_BAD=1 the KV side answers user 2's op with user tag 1 -> DUT4 must fault and that op must not complete.
 //        MUT 5 (m7, = MU-TOK-KV's m7) user 3's CMD/Q carry user tag 0;  MUT 6 the filler sequence never advances  -> FAIL.
+// MU-D2D-OVL 10-19: OVLP=1 runs the ops OVERLAPPED (P = 170: op k+1's front -- context, dd, KV, CMD + Q -- runs while
+//   op k's back -- RESULT x 32, visibility, STATUS, completion -- is in flight, as the overlapping D2D link segments
+//   deliver them), DUT4 built with MCTX (1 = two context slots); outputs are attributed to the op they belong to (back
+//   outputs of op k inside op k+1's window).  OVLP=1 MCTX=0 = the as-built single-context service: must FAIL.
+//   COLL=1 (OVLP): op 3's completion slot is never driven, so op 5's begin takes op 3's still-active slot -> fault.
 // Pass line N59MU_PASS ...; failure N59MU_FAIL ... and exit != 0.
-module tb_qfd_native59_dv_mu #(parameter integer MUT=0,RET_BAD=0)(input wire clk);
- localparam integer NOP=14,P=240,B0=10;
+module tb_qfd_native59_dv_mu #(parameter integer MUT=0,RET_BAD=0,OVLP=0,MCTX=0,COLL=0)(input wire clk);
+ localparam integer NOP=14,P=OVLP?170:240,B0=10,BK=OVLP?60:0;
  localparam[13:0]SEQ0=14'd9;
  localparam[379:0]TEMPLATE=380'h0000003000001000001000c5f0000000000000000000000000100358000000000000000000000000080100000080401;
  reg[31:0]cyc=0;
@@ -70,48 +75,57 @@ module tb_qfd_native59_dv_mu #(parameter integer MUT=0,RET_BAD=0)(input wire clk
  reg[5:0]stage;reg[17:0]token,position;reg[379:0]cmd;
  reg[1:0]kvindex;reg[4:0]qb,tb,rb;reg[3:0]tk,rk;reg[547:0]rxdata,dd;
  reg[15:0]he;reg[58:0]htag;reg[15:0]kep;
+ reg m0f,m0b;                      // the front / back op of this cycle is a user-0 op (DUT1 gating)
+ integer kk,rr,sl,kraw;
  always @*begin
-  c=cyc;k=(c>=B0)?(c-B0)/P:0;r=(c>=B0)?(c-B0)%P:-1;in_op=(c>=B0)&&k<NOP;
+  c=cyc;k=(c>=B0)?(c-B0)/P:0;r=(c>=B0)?(c-B0)%P:-1;in_op=(c>=B0)&&k<NOP;kraw=k;
   if(!in_op)k=NOP-1;
   u=op_u[k];lay=op_l[k];n=op_n[k];
   context_v=0;kvslot=0;xslot=0;qslot=0;txslot=0;rxslot=0;rxv=0;visibility_slot=0;complete_slot=0;
-  cmd=0;kvindex=0;qb=0;tb=0;rb=0;tk=0;rk=0;rxdata=0;dd=0;
+  cmd=0;kvindex=0;qb=0;tb=0;rb=0;tk=0;rk=0;rxdata=0;dd=0;m0f=in_op&&(op_u[k]==0);m0b=0;kep=0;
   stage=6'(lay+1);token=otok(u,n);position={2'(u),opos(u,n)[15:0]};
   // HOST face: user 0's current token context only (held across filler ops)
   he={SEQ0+14'(op_n0[k]),2'd0};htag={he,6'd0,otok(0,op_n0[k]),opos(0,op_n0[k])[12:0],6'd0};
-  kep=kv_epoch(u,n);if(RET_BAD!=0&&u==2)kep={kep[15:2],2'd1};
-  if(in_op)begin
-   if(r==5)context_v=1;
-   for(i=0;i<4;i=i+1)begin
-    w=(i==0)?9:(i==1)?17:(i==2)?26:35;
-    if(r>=w&&r<w+8)begin
-     j=r-w;dd[547]=1;dd[546:545]=(wkind(i)==1)?2'd2:2'd1;dd[544:537]=8'hff;
-     for(ll=0;ll<8;ll=ll+1)begin pp=((8*j+ll)*17)%64;
-      dd[345+24*ll+:24]=address(wkind(i),wbase(i)+pp,int'(opos(u,n)));dd[89+32*ll+:32]=decode(code(wkind(i),k,wbase(i)+pp));end
+  // sl 0: the op of this period (all of its pins, r < P); sl 1 (OVLP): the previous op's back (its age r + P < 214)
+  for(sl=0;sl<(OVLP?2:1);sl=sl+1)begin
+   kk=kraw-sl;rr=r+sl*P;
+   if(c>=B0&&kk>=0&&kk<NOP&&(sl==0||rr<214))begin
+    kep=kv_epoch(op_u[kk],op_n[kk]);if(RET_BAD!=0&&op_u[kk]==2)kep={kep[15:2],2'd1};
+    if(sl==1)m0b=(op_u[kk]==0);
+    if(sl==0&&rr>=160&&op_u[kk]==0)m0b=1;
+    if(rr==5)context_v=1;
+    for(i=0;i<4;i=i+1)begin
+     w=(i==0)?9:(i==1)?17:(i==2)?26:35;
+     if(rr>=w&&rr<w+8)begin
+      j=rr-w;dd[547]=1;dd[546:545]=(wkind(i)==1)?2'd2:2'd1;dd[544:537]=8'hff;
+      for(ll=0;ll<8;ll=ll+1)begin pp=((8*j+ll)*17)%64;
+       dd[345+24*ll+:24]=address(wkind(i),wbase(i)+pp,int'(opos(op_u[kk],op_n[kk])));dd[89+32*ll+:32]=decode(code(wkind(i),kk,wbase(i)+pp));end
+     end
     end
+    if(rr>=44&&rr<108)begin
+     j=rr-44;dd[547]=1;dd[546:545]=2'd0;dd[544:537]=8'hff;
+     for(ll=0;ll<8;ll=ll+1)begin dd[345+24*ll+:24]=24'(qperm(8*j+ll));dd[89+32*ll+:32]=qval(qperm(8*j+ll),kk);end
+    end
+    if(rr>=112&&rr<119)begin i=rr-112;kvslot=i<4;kvindex=2'(i);xslot=i>=3;end
+    if(rr==122)cmd=TEMPLATE;
+    if(rr==123)begin txslot=1;tk=1;tb=0;end
+    if(rr>=126&&rr<159)begin i=rr-126;qslot=i<32;qb=5'(i);txslot=i>0;tk=2;tb=5'(i-1);end
+    if(rr>=160&&rr<192)begin
+     i=rr-160;rxv=1;rxslot=1;rk=3;rb=5'(i);
+     rxdata[547:512]={5'd0,4'd3,6'(op_l[kk]),kep,5'(i)};for(j=0;j<16;j=j+1)rxdata[32*j+:32]=rval(i,j,kk);
+    end
+    if(rr==210)visibility_slot=1;
+    if(rr==211)begin rxv=1;rxslot=1;rk=4;rb=0;rxdata={5'd0,4'd4,6'(op_l[kk]),kep,5'd0,507'd0,5'b01001};end
+    if(rr==213&&!(COLL!=0&&kk==3))complete_slot=1;
    end
-   if(r>=44&&r<108)begin
-    j=r-44;dd[547]=1;dd[546:545]=2'd0;dd[544:537]=8'hff;
-    for(ll=0;ll<8;ll=ll+1)begin dd[345+24*ll+:24]=24'(qperm(8*j+ll));dd[89+32*ll+:32]=qval(qperm(8*j+ll),k);end
-   end
-   if(r>=112&&r<119)begin i=r-112;kvslot=i<4;kvindex=2'(i);xslot=i>=3;end
-   if(r==122)cmd=TEMPLATE;
-   if(r==123)begin txslot=1;tk=1;tb=0;end
-   if(r>=126&&r<159)begin i=r-126;qslot=i<32;qb=5'(i);txslot=i>0;tk=2;tb=5'(i-1);end
-   if(r>=160&&r<192)begin
-    i=r-160;rxv=1;rxslot=1;rk=3;rb=5'(i);
-    rxdata[547:512]={5'd0,4'd3,6'(lay),kep,5'(i)};for(j=0;j<16;j=j+1)rxdata[32*j+:32]=rval(i,j,k);
-   end
-   if(r==210)visibility_slot=1;
-   if(r==211)begin rxv=1;rxslot=1;rk=4;rb=0;rxdata={5'd0,4'd4,6'(lay),kep,5'd0,507'd0,5'b01001};end
-   if(r==213)complete_slot=1;
   end
  end
  // DUT1 sees user 0's ops only (every pin idle in a filler window)
- wire m0=(u==0);
+ // (OVLP: the front pins follow the period's op, the back pins -- rx, visibility, complete -- the op they belong to)
+ wire m0=m0f;wire m0r=OVLP?m0b:m0f;
  // ------------------------------------------------------------------ DUTs
  wire[519:0]dr4,dr1;wire tv4,tv1,dn4,dn1,f4,f1;wire[58:0]xid4,xid1;wire[1:0]xg4,xg1;wire[523:0]x34,x31;wire[547:0]td4,td1;wire[94:0]ret4,ret1;
- qfd_native59_dv_service #(.MUT(MUT),.NU(4),.MU_SEQ0(SEQ0))dut4(
+ qfd_native59_dv_service #(.MUT(MUT),.NU(4),.MU_SEQ0(SEQ0),.MCTX(MCTX))dut4(
  .ck(clk),.rst_n(rst_n),
  .host_epoch_valid(1'b1),.host_fused_capability(1'b1),.host_epoch(he),.host_tag(htag),.host_generation(2'd1),
  .layer_context_v(context_v),.command_stage(stage),.native_token(token),.native_position(position),.native_cmd(cmd),
@@ -128,18 +142,19 @@ module tb_qfd_native59_dv_mu #(parameter integer MUT=0,RET_BAD=0)(input wire clk
  .dd_i(m0?dd:548'd0),.kv_word_slot(kvslot&&m0),.kv_word_index(kvindex),.kv_x3_slot(xslot&&m0),
  .x3(x31),.x3_identity(xid1),.x3_generation(xg1),
  .q_slot(qslot&&m0),.q_slot_beat(qb),.tx_slot(txslot&&m0),.tx_slot_kind(tk),.tx_slot_beat(tb),.native_tx_v(tv1),.native_tx_payload(td1),
- .native_rx_v(rxv&&m0),.native_rx_payload(m0?rxdata:548'd0),.rx_slot(rxslot&&m0),.rx_slot_kind(rk),.rx_slot_beat(rb),.dr_o(dr1),
+ .native_rx_v(rxv&&m0r),.native_rx_payload(m0r?rxdata:548'd0),.rx_slot(rxslot&&m0r),.rx_slot_kind(rk),.rx_slot_beat(rb),.dr_o(dr1),
  .emb_code_re(),.emb_code_addr(),.emb_scale_re(),.emb_scale_addr(),.emb_code_q(512'd0),.emb_scale_q(16'd0),
- .visibility_slot(visibility_slot&&m0),.complete_slot(complete_slot&&m0),.completed(dn1),.native_ret(ret1),.fault(f1));
+ .visibility_slot(visibility_slot&&m0r),.complete_slot(complete_slot&&m0r),.completed(dn1),.native_ret(ret1),.fault(f1));
  // ------------------------------------------------------------------ the KV seam checks
  integer errs=0,tagerr=0,nrec[0:3],ncmd[0:3],nq[0:3],nres[0:NOP-1],ndone[0:NOP-1],nx3[0:NOP-1],nid=0,first_fault=-1;
- integer ko,ro,b,q;reg[511:0]exq;reg[15:0]ee;
+ integer ko,ro,b,q,kb;reg[511:0]exq;reg[15:0]ee;
  initial for(q=0;q<4;q=q+1)begin nrec[q]=0;ncmd[q]=0;nq[q]=0;end
  initial for(q=0;q<NOP;q=q+1)begin nres[q]=0;ndone[q]=0;nx3[q]=0;end
  task automatic err(input [8*72-1:0] what);begin errs=errs+1;if(errs<16)$display("N59MU_ERR cycle %0d op %0d: %0s",cyc,ko,what);end endtask
  always @(posedge clk)if(rst_n&&cyc>=B0)begin
   // outputs at this edge belong to the op of the current cycle (every DUT output is < P/2 edges after its slot)
-  ko=(cyc-B0)/P;ro=(cyc-B0)%P;if(ko>=NOP)ko=NOP-1;
+  ko=(cyc-B0)/P;ro=(cyc-B0)%P;
+  kb=(OVLP&&ro<BK&&ko>0)?ko-1:ko;if(kb>=NOP)kb=NOP-1;if(ko>=NOP)ko=NOP-1;   // back outputs (dr words, completion) of op k land inside op k+1's window
   ee=kv_epoch(op_u[ko],op_n[ko]);
   if(tv4)begin
    if(td4[547:543]!=0||td4[538:533]!=6'(op_l[ko])||(td4[542:539]!=4'd1&&td4[542:539]!=4'd2))err("tx record kind / layer");
@@ -154,26 +169,28 @@ module tb_qfd_native59_dv_mu #(parameter integer MUT=0,RET_BAD=0)(input wire clk
    nrec[op_u[ko]]=nrec[op_u[ko]]+1;
   end
   if(dr4[519]&&!dr4[518])begin
-   for(b=0;b<16;b=b+1)exq[32*b+:32]=rval(dr4[516:512],b,ko);
+   for(b=0;b<16;b=b+1)exq[32*b+:32]=rval(dr4[516:512],b,kb);
    if(dr4[511:0]!==exq)err("attention result word (returns not matched to the op)");
-   nres[ko]=nres[ko]+1;
+   nres[kb]=nres[kb]+1;
   end
   if(x34[523])begin if(xid4[58:43]!=ee||xid4[36:19]!=otok(op_u[ko],op_n[ko]))err("KVN x3 identity epoch / token");nx3[ko]=nx3[ko]+1;end
-  if(dn4)ndone[ko]=ndone[ko]+1;
+  if(dn4)ndone[kb]=ndone[kb]+1;
   if(f4&&first_fault<0)begin first_fault=cyc;$display("N59MU_FAULT first at cycle %0d op %0d user %0d",cyc,ko,op_u[ko]);end
   if(f1)err("DUT1 (NU 1) fault");
   // user 0 = single user: DUT4 == DUT1 on every edge of a user-0 op
-  if(op_u[ko]==0&&ro>0)begin
+  if(op_u[ko]==0&&ro>0&&ro>=BK)begin
    if(tv4!==tv1||(tv4&&td4!==td1))err("user-0 tx record != NU 1");
-   if(dr4!==dr1)err("user-0 dr word != NU 1");
    // x3[522:0] / identity hold the last popped word between pops (qfd_kvn_static_transport): compared on valid edges
    if(x34[523]!==x31[523]||(x34[523]&&{xg4,xid4,x34}!=={xg1,xid1,x31}))err("user-0 x3 != NU 1");
+  end
+  if(op_u[kb]==0&&ro>0&&(OVLP==0||ro<BK||ro>=150))begin
+   if(dr4!==dr1)err("user-0 dr word != NU 1");
    if(dn4!==dn1)err("user-0 completion != NU 1");
    nid=nid+1;
   end
  end
  integer s0,s1;
- always @(posedge clk)if(cyc==B0+NOP*P+20)begin
+ always @(posedge clk)if(cyc==B0+NOP*P+20+BK)begin
   s0=0;s1=0;
   for(q=0;q<NOP;q=q+1)begin
    if(RET_BAD==0||op_u[q]!=2)begin if(nres[q]!=32||ndone[q]!=1||nx3[q]!=4)s0=s0+1;end
