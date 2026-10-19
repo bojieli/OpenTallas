@@ -1,0 +1,20 @@
+host=ot-epyc8 run=/srv/opentallas-scratch/claude/ref_gate/hcoll_gq_issue_k1_1019-20261019-112755
+cts.log
+     6680 |       0 |   12876 |            0 |    +1.5% | -88.651 | -6433.673 | u_ot_pr_core.u_aq1.s0_x[479]$_DFF_P_/D
+     6690 |       0 |   12886 |            0 |    +1.5% | -88.651 | -6433.673 | u_ot_pr_core.u_aq1.s0_x[479]$_DFF_P_/D
+     6700 |       0 |   12893 |            0 |    +1.5% | -88.651 | -6433.673 | u_ot_pr_core.u_aq1.s0_x[479]$_DFF_P_/D
+     6710 |       0 |   12904 |            0 |    +1.5% | -88.651 | -6433.673 | u_ot_pr_core.u_aq1.s0_x[479]$_DFF_P_/D
+     6720 |       0 |   12915 |            0 |    +1.5% | -88.651 | -6433.673 | u_ot_pr_core.u_aq1.s0_x[479]$_DFF_P_/D
+     6730 |       0 |   12924 |            0 |    +1.5% | -88.651 | -6433.673 | u_ot_pr_core.u_aq1.s0_x[479]$_DFF_P_/D
+     6740 |       0 |   12937 |            0 |    +1.5% | -88.651 | -6433.673 | u_ot_pr_core.u_aq1.s0_x[479]$_DFF_P_/D
+     6750 |       0 |   12945 |            0 |    +1.5% | -88.651 | -6433.673 | u_ot_pr_core.u_aq1.s0_x[479]$_DFF_P_/D
+     6760 |       0 |   12953 |            0 |    +1.5% | -88.651 | -6433.673 | u_ot_pr_core.u_aq1.s0_x[479]$_DFF_P_/D
+     6770 |       0 |   12963 |            0 |    +1.5% | -88.651 | -6433.673 | u_ot_pr_core.u_aq1.s0_x[479]$_DFF_P_/D
+     6780 |       0 |   12974 |            0 |    +1.5% | -88.651 | -6433.673 | u_ot_pr_core.u_aq1.s0_x[479]$_DFF_P_/D
+     6790 |       0 |   12982 |            0 |    +1.5% | -88.651 | -6433.673 | u_ot_pr_core.u_aq1.s0_x[479]$_DFF_P_/D
+/srv/opentallas-scratch/claude/ref_gate/hcoll_gq_issue_k1_1019-20261019-112755/routes/gate/work/orfs/results/asap7/opentallas_ot_hgi_coll_gq_issue_asap7_ref_gate/base/ot_rst_copies.tsv
+family	copies	total_loads	fixed	moves	group_loads	status
+rst_n__ot_rlv	4	45	0	33	12,12,12,9	OK
+u_ot_pr_core.u_rst.rst_n	32	656	0	642	21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,5	OK
+u_ot_pr_core.u_target.reset_ctrl_copies	8	35	0	30	5,5,5,5,5,5,5,0	OK
+

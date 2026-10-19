@@ -1,0 +1,42 @@
+host=ot-epyc8 run=/srv/opentallas-scratch/claude/ref_gate/hdie_pc_ctrl_bw_n64-20261019-114111
+ck.log
+CK_SS_MEAN=922 CK_SS_ALL_MEAN=918 CK_SS_MIN=896 CK_SS_ALL_MIN=889 CK_SS_MAX=947 CK_SS_ALL_MAX=957 CK_TT_MEAN=689 CK_TT_ALL_MEAN=683 CK_TT_MIN=664 CK_TT_ALL_MIN=655 CK_TT_MAX=724 CK_TT_ALL_MAX=735 CK_FF_MEAN=548 CK_FF_ALL_MEAN=541 CK_FF_MIN=524 CK_FF_ALL_MIN=514 CK_FF_MAX=588 CK_FF_ALL_MAX=598 CK_ROUTE_REF=SS
+pc.log
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+QDM PINFLOP reference: 611 input pin flops (0 hard-child clock pins at +insertion), median arrival 699.874512 (range 678.283997 .. 724.240723)
+QDM reference pin u_native.g_kreg.kp_data[51]$_DFF_P_/CLK clock arrival max 699.874512 min 676.959839 skew 90 hold 50
+OT_IO_INTER 0 inputs 0 outputs at 150 ps
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+GATE_PC constraints signoff /src/physical/ref_tile/hdie_pc_ctrl_bw_n64/signoff.sdc (TT placement RC; diagnostic)
+GATE_PC macro->reg    300 paths, worst slack -189.6 ps (e.g. u_native.controller.head_bank_cfg[0]$_DFF_P_/D)
+GATE_PC reg->reg      300 paths, worst slack 322.9 ps (e.g. u_native.u_rst.rst_n[30]$_DFF_PN0_/RESETN)
+GATE_PC setup WNS -1.8964441128588305e-10 hold WNS 3.569500250932833e-11
+GATE_XCLK_SCOPE clocks=1 names=core_clk exceptions=1
+GATE_XCLK_DONE pairs=0
+cts.log
+
+==========================================================================
+cts final report_design_area
+--------------------------------------------------------------------------
+Design area 31460 um^2 16% utilization.
+source /work/hooks/post_cts_post_cts.tcl
+write_db /work/results/asap7/opentallas_ot_hbm_svc_pc_ctrl_leaf_cfg_safe_legacy_asap7_ref_gate/base/4_1_cts.odb
+write_sdc -no_timestamp /work/results/asap7/opentallas_ot_hbm_svc_pc_ctrl_leaf_cfg_safe_legacy_asap7_ref_gate/base/4_cts.sdc
+Elapsed time: 27:52.46[h:]min:sec. CPU time: user 1804.95 sys 20.99 (109%). Peak memory: 1967660KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+4_1_cts                   .odb         1672           1921 a854e92cfebf5da92c9b
+cp /work/results/asap7/opentallas_ot_hbm_svc_pc_ctrl_leaf_cfg_safe_legacy_asap7_ref_gate/base/4_1_cts.odb /work/results/asap7/opentallas_ot_hbm_svc_pc_ctrl_leaf_cfg_safe_legacy_asap7_ref_gate/base/4_cts.odb
+grt.log
+      240 |       0 |     538 |            0 |    +0.1% |   7.071 |   0.000 | u_native.g_kreg.u_kring.g_slice[24].rp[0]$_SDFFE_PN0P_/D
+      250 |       0 |     554 |            0 |    +0.1% |   7.071 |   0.000 | u_native.g_kreg.u_kring.g_slice[24].rp[0]$_SDFFE_PN0P_/D
+      260 |       0 |     575 |            0 |    +0.1% |   7.071 |   0.000 | u_native.g_kreg.u_kring.g_slice[24].rp[0]$_SDFFE_PN0P_/D
+      270 |       0 |     593 |            0 |    +0.1% |   7.071 |   0.000 | u_native.g_kreg.u_kring.g_slice[24].rp[0]$_SDFFE_PN0P_/D
+      280 |       0 |     614 |            0 |    +0.1% |   7.071 |   0.000 | u_native.g_kreg.u_kring.g_slice[24].rp[0]$_SDFFE_PN0P_/D
+      290 |       0 |     626 |            0 |    +0.1% |   7.071 |   0.000 | u_native.g_kreg.u_kring.g_slice[24].rp[0]$_SDFFE_PN0P_/D
+      300 |       0 |     643 |            0 |    +0.1% |   7.071 |   0.000 | u_native.g_kreg.u_kring.g_slice[24].rp[0]$_SDFFE_PN0P_/D
+      310 |       0 |     657 |            0 |    +0.2% |   7.071 |   0.000 | u_native.g_kreg.u_kring.g_slice[24].rp[0]$_SDFFE_PN0P_/D
+      320 |       0 |     676 |            0 |    +0.2% |   7.071 |   0.000 | u_native.g_kreg.u_kring.g_slice[24].rp[0]$_SDFFE_PN0P_/D
+      330 |       0 |     682 |            0 |    +0.2% |   7.071 |   0.000 | u_native.g_kreg.u_kring.g_slice[24].rp[0]$_SDFFE_PN0P_/D
+      340 |       0 |     702 |            0 |    +0.2% |   7.071 |   0.000 | u_native.g_kreg.u_kring.g_slice[24].rp[0]$_SDFFE_PN0P_/D
+      350 |       0 |     718 |            0 |    +0.2% |   7.071 |   0.000 | u_native.g_kreg.u_kring.g_slice[24].rp[0]$_SDFFE_PN0P_/D

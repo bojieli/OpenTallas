@@ -1,0 +1,16 @@
+GATE_SOURCE_ARCHIVE_SHA256=2b2d858a33c0fa58961e527e516eca4cd4133996fb700a8eb784b56ac00664f9
+GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=["openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29"]
+GATE_TOOL_CTS_MACRO_CLUSTER=
+GATE_FLOW_RC=1 GATE_FLOW_S=113
+GATE_FLOWERR FAILED: FlowError: ORFS place-and-route through floorplan failed with exit 2:
+GATE_FLOWERR Error: macro_place.tcl, 6 ref_tile place: no unplaced instance of ot_sram_1r1w2c_128x64_m1 matching ''
+GATE_FLOWERR Error: macro_place.tcl, 6 ref_tile place: no unplaced instance of ot_sram_1r1w2c_128x64_m1 matching ''
+GATE_SCRIPT_RC=0
+GATE_DONE
+
+--- stderr
+ot-run: ot-agidock128  admits   117 GB (avail 94, growth 13, headroom 0, waiters 0/0 GB) load 21/64 running 10 disk 252 GB 
+ot-run: -> ot-agidock128
+ot-heavy: request 24G is charged 10G (family 'ref_gate_*' seed 10G (class 'ref_gate_hdie_pc_ctrl_bw_n#_#-#.sh' not measured yet)); the cap stays 24G
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-1618455-1792435091 after 0 s
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-1618455-1792435091): exit 0

@@ -1,0 +1,71 @@
+{
+  "name": "hbm_su_pretree_s_1018-p3-1dad69123",
+  "status": "RUNNING",
+  "stage_idx": 9,
+  "stage": null,
+  "host": "ot-epyc7",
+  "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_su_pretree_s_1018-p3-1dad69123",
+  "pid": null,
+  "updated": "2026-10-19T12:39:26-07:00",
+  "last_events": [
+    "2026-10-19T09:32:59-07:00 hold-only miss (TT +98.24 / FF -7.07, DRC 0): post-route hold ECO launched on /srv/opentallas-scratch/claude/closure-loop/hbm_su_pretree_s_1018-p3-1dad69123/routes/hbm_su_pretree_s_1018_p3_1dad69123/work/orfs/results/asap7/opentallas_ot_hbm_su_red_pretree_s_asap7_ref_hbm_su_pretree_s_1018_p3_1dad69123/base/5_2_route.odb",
+    "2026-10-19T12:24:26-07:00 hold ECO PASS: {'ss_ps': 93.2, 'tt_ps': 93.2, 'ff_ps': 18.72, 'drc': 0, 'sdc_name': '6_final.sdc', 'setup_post_sdc': [], 'setup_corner': 'tt', 'ss_sensitivity_ps': -233.51, 'cells_added': 36603, 'errors': [], 'pass': 1, 'session': 'mm', 'window': 'endpoints_below_hm 30676 fixable 30676 tight 0 infeasible 0 nodata 0 (hm 30.0 filt 40 accept_ss 0.0 accept_ff 0.0 r 2.4)', 'route_strategy': ['incremental_original_guides'], 'score': 18.72, 'rank': 18.72}",
+    "2026-10-19T12:26:28-07:00 verdict TT +93.20 / FF +18.72 / DRC 0 / checks failed [] -> CLOSED",
+    "2026-10-19T12:33:55-07:00 routed-insertion IO re-STA: TT setup +93.20 / FF hold +18.72 (route SDC 93.2 / 18.72); routed reference TT [ot_lb_v_core_clk 316] FF [ot_lb_v_core_clk 260]",
+    "2026-10-19T12:33:55-07:00 verdict at the ROUTED insertion: TT +93.20 / FF +18.72 -> CLOSED",
+    "2026-10-19T12:34:31-07:00 launched collect (attempt 1) on ot-epyc7"
+  ],
+  "routed_ioref": {
+    "tt": 93.2,
+    "ff": 18.72,
+    "ioref": {
+      "tt": {
+        "ot_lb_v_core_clk": {
+          "clock": "core_clk",
+          "mean": 316.1,
+          "min": 303.9,
+          "max": 327.2,
+          "n": 1137,
+          "kind": "boundary"
+        }
+      },
+      "ff": {
+        "ot_lb_v_core_clk": {
+          "clock": "core_clk",
+          "mean": 260.1,
+          "min": 248.4,
+          "max": 270.1,
+          "n": 1137,
+          "kind": "boundary"
+        }
+      }
+    },
+    "tt_i2r": 401.08,
+    "tt_out": 305.51,
+    "ff_i2r": 27.16,
+    "ff_out": 28.3,
+    "ff_r2r": 18.72,
+    "registers": 37425
+  },
+  "eco_result": {
+    "ss_ps": 93.2,
+    "tt_ps": 93.2,
+    "ff_ps": 18.72,
+    "drc": 0,
+    "sdc_name": "6_final.sdc",
+    "setup_post_sdc": [],
+    "setup_corner": "tt",
+    "ss_sensitivity_ps": -233.51,
+    "cells_added": 36603,
+    "errors": [],
+    "pass": 1,
+    "session": "mm",
+    "window": "endpoints_below_hm 30676 fixable 30676 tight 0 infeasible 0 nodata 0 (hm 30.0 filt 40 accept_ss 0.0 accept_ff 0.0 r 2.4)",
+    "route_strategy": [
+      "incremental_original_guides"
+    ],
+    "score": 18.72,
+    "rank": 18.72
+  },
+  "observed_at": "2026-10-19T12:40:04.390323-07:00"
+}
