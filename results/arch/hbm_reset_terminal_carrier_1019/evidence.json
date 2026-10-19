@@ -1,0 +1,1428 @@
+{
+  "status": "TERMINAL_FAILED_SNAPSHOTS_NOT_PERSISTED",
+  "variants": {
+    "ofly": {
+      "source_label": "15e069307",
+      "report": {
+        "schema": "opentallas.hbm.reset_forest.v2",
+        "geometry_gate": "FAIL",
+        "reach_gate": "FAIL",
+        "physical_signoff": "OPEN",
+        "problems": [
+          "hbm CN: no regional root home routes within reach after 40 sites; first 0@(18531,30455): no legal reset relay within routed reach from (12761.158, 19794.987999999998); last 39@(19677,29309): no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        ],
+        "unhomable": []
+      },
+      "files_outside_src": [
+        "report.json"
+      ],
+      "source_hashes": {
+        "tools/hbm_die_v16/reset_forest_layer.py": "3f4c036c85d083dc1884f3e3f4798b6f632e12646f0887cdda9e76d67756ed05",
+        "tools/hbm_die_v16/reset_forest_geometry.py": "b591813023a18b7fd20e6ca77b40fcffac2d2a8267405be6657bd0092df6d590",
+        "tools/hbm_die_v16/reset_rows.py": "90da585a9852eb4df78ec05301e24c5cd0ca4785766c6f2c6d01189fe52c3660",
+        "tools/hbm_die_v15/die_clock_tree.py": "1bb0a6289363607f6112934dcfe70cb89edf64fac07df919fa8f3d60974192cd",
+        "rtl/hbm_accel/die_glue/hbfd_rrl.sv": "045f8b80c88170013d1431b87ca453d32de6c7bf10425324e9cda367c918e937",
+        "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "report_sha256": "e9c8a95edeecfec085ebd2021bc4c25f47f210befab42b75eeda282c3fd27b64",
+      "snapshot_present": false,
+      "layer_present": false,
+      "loc_entries": [],
+      "original_log_sha256": "fd3401c66fa05e8fa55ce37bfa638e98616935e3fc43850776e735e1a72b9459",
+      "terminal_receipt": [
+        "ot-run: RAN on ot-epyc4 (unit oth-ubuntu-53329-1792434922): exit 3",
+        "RC 3 2026-10-19T13:59:52-07:00"
+      ],
+      "peak_rss_kb": [
+        "2694424"
+      ],
+      "elapsed": [
+        "Elapsed (wall clock) time (h:mm:ss or m:ss): 2:24:29"
+      ],
+      "all_attempts": [
+        {
+          "index": 0,
+          "site": "18531,30455",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 1,
+          "site": "18731,30455",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 2,
+          "site": "18672,30596",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 3,
+          "site": "18531,30655",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 4,
+          "site": "18390,30596",
+          "result": "no legal sync home near (18389.602643762693, 30596.351145710996) satisfying reset reach"
+        },
+        {
+          "index": 5,
+          "site": "18331,30455",
+          "result": "no legal sync home near (18331.024, 30454.92978947369) satisfying reset reach"
+        },
+        {
+          "index": 6,
+          "site": "18390,30314",
+          "result": "no legal sync home near (18389.602643762693, 30313.50843323638) satisfying reset reach"
+        },
+        {
+          "index": 7,
+          "site": "18531,30255",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 8,
+          "site": "18672,30314",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 9,
+          "site": "18936,30455",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 10,
+          "site": "18817,30741",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 11,
+          "site": "18531,30860",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 12,
+          "site": "18245,30741",
+          "result": "no legal sync home near (18244.64575361945, 30741.30803585424) satisfying reset reach"
+        },
+        {
+          "index": 13,
+          "site": "18126,30455",
+          "result": "no legal sync home near (18126.024, 30454.92978947369) satisfying reset reach"
+        },
+        {
+          "index": 14,
+          "site": "18245,30169",
+          "result": "no legal sync home near (18244.64575361945, 30168.551543093137) satisfying reset reach"
+        },
+        {
+          "index": 15,
+          "site": "18531,30050",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 16,
+          "site": "18817,30169",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 17,
+          "site": "19341,30455",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 18,
+          "site": "19104,31028",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 19,
+          "site": "18531,31265",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 20,
+          "site": "17958,31028",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 21,
+          "site": "17721,30455",
+          "result": "no legal sync home near (17721.024, 30454.92978947369) satisfying reset reach"
+        },
+        {
+          "index": 22,
+          "site": "17958,29882",
+          "result": "no legal sync home near (17958.2675072389, 29882.173296712586) satisfying reset reach"
+        },
+        {
+          "index": 23,
+          "site": "18531,29645",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 24,
+          "site": "19104,29882",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 25,
+          "site": "19746,30455",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 26,
+          "site": "19390,31314",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 27,
+          "site": "18531,31670",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 28,
+          "site": "17672,31314",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 29,
+          "site": "17316,30455",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 30,
+          "site": "17672,29596",
+          "result": "no legal sync home near (17671.889260858345, 29595.79505033203) satisfying reset reach"
+        },
+        {
+          "index": 31,
+          "site": "18531,29240",
+          "result": "no legal sync home near (18531.024, 29239.92978947369) satisfying reset reach"
+        },
+        {
+          "index": 32,
+          "site": "19390,29596",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 33,
+          "site": "20151,30455",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 34,
+          "site": "19677,31600",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 35,
+          "site": "17386,31600",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 36,
+          "site": "16911,30455",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 37,
+          "site": "17386,29309",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 38,
+          "site": "18531,28835",
+          "result": "no legal sync home near (18531.024, 28834.92978947369) satisfying reset reach"
+        },
+        {
+          "index": 39,
+          "site": "19677,29309",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        }
+      ],
+      "no_relay_count": 29,
+      "no_home_count": 11
+    },
+    "ofly57": {
+      "source_label": "15e069307",
+      "report": {
+        "schema": "opentallas.hbm.reset_forest.v2",
+        "geometry_gate": "FAIL",
+        "reach_gate": "FAIL",
+        "physical_signoff": "OPEN",
+        "problems": [
+          "hbm CN: no regional root home routes within reach after 46 sites; first 0@(18531,30455): no legal reset relay within routed reach from (12761.158, 19794.987999999998); last 45@(18531,27215): no legal sync home near (18531.024, 27214.92978947369) satisfying reset reach"
+        ],
+        "unhomable": []
+      },
+      "files_outside_src": [
+        "report.json"
+      ],
+      "source_hashes": {
+        "tools/hbm_die_v16/reset_forest_layer.py": "3f4c036c85d083dc1884f3e3f4798b6f632e12646f0887cdda9e76d67756ed05",
+        "tools/hbm_die_v16/reset_forest_geometry.py": "b591813023a18b7fd20e6ca77b40fcffac2d2a8267405be6657bd0092df6d590",
+        "tools/hbm_die_v16/reset_rows.py": "90da585a9852eb4df78ec05301e24c5cd0ca4785766c6f2c6d01189fe52c3660",
+        "tools/hbm_die_v15/die_clock_tree.py": "1bb0a6289363607f6112934dcfe70cb89edf64fac07df919fa8f3d60974192cd",
+        "rtl/hbm_accel/die_glue/hbfd_rrl.sv": "045f8b80c88170013d1431b87ca453d32de6c7bf10425324e9cda367c918e937",
+        "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "report_sha256": "43d91b6ca293f4fed641a5903bffb1c067eae3a00805ef62fc2dddf9891c8289",
+      "snapshot_present": false,
+      "layer_present": false,
+      "loc_entries": [],
+      "original_log_sha256": "f6f1725388c18dbcdb61371b6adc225daed04204bcbf8bd2a719caa7d466ea0f",
+      "terminal_receipt": [
+        "ot-run: RAN on ot-epyc4 (unit oth-ubuntu-53476-1792434922): exit 3",
+        "RC 3 2026-10-19T14:10:57-07:00"
+      ],
+      "peak_rss_kb": [
+        "2692316"
+      ],
+      "elapsed": [
+        "Elapsed (wall clock) time (h:mm:ss or m:ss): 2:35:33"
+      ],
+      "all_attempts": [
+        {
+          "index": 0,
+          "site": "18531,30455",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 1,
+          "site": "18731,30455",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 2,
+          "site": "18672,30596",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 3,
+          "site": "18531,30655",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 4,
+          "site": "18390,30596",
+          "result": "no legal sync home near (18389.602643762693, 30596.351145710996) satisfying reset reach"
+        },
+        {
+          "index": 5,
+          "site": "18331,30455",
+          "result": "no legal sync home near (18331.024, 30454.92978947369) satisfying reset reach"
+        },
+        {
+          "index": 6,
+          "site": "18390,30314",
+          "result": "no legal sync home near (18389.602643762693, 30313.50843323638) satisfying reset reach"
+        },
+        {
+          "index": 7,
+          "site": "18531,30255",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 8,
+          "site": "18672,30314",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 9,
+          "site": "18936,30455",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 10,
+          "site": "18817,30741",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 11,
+          "site": "18531,30860",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 12,
+          "site": "18245,30741",
+          "result": "no legal sync home near (18244.64575361945, 30741.30803585424) satisfying reset reach"
+        },
+        {
+          "index": 13,
+          "site": "18126,30455",
+          "result": "no legal sync home near (18126.024, 30454.92978947369) satisfying reset reach"
+        },
+        {
+          "index": 14,
+          "site": "18245,30169",
+          "result": "no legal sync home near (18244.64575361945, 30168.551543093137) satisfying reset reach"
+        },
+        {
+          "index": 15,
+          "site": "18531,30050",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 16,
+          "site": "18817,30169",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 17,
+          "site": "19341,30455",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 18,
+          "site": "19104,31028",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 19,
+          "site": "18531,31265",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 20,
+          "site": "17958,31028",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 21,
+          "site": "17721,30455",
+          "result": "no legal sync home near (17721.024, 30454.92978947369) satisfying reset reach"
+        },
+        {
+          "index": 22,
+          "site": "17958,29882",
+          "result": "no legal sync home near (17958.2675072389, 29882.173296712586) satisfying reset reach"
+        },
+        {
+          "index": 23,
+          "site": "18531,29645",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 24,
+          "site": "19104,29882",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 25,
+          "site": "19746,30455",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 26,
+          "site": "19390,31314",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 27,
+          "site": "18531,31670",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 28,
+          "site": "17672,31314",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 29,
+          "site": "17316,30455",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 30,
+          "site": "17672,29596",
+          "result": "no legal sync home near (17671.889260858345, 29595.79505033203) satisfying reset reach"
+        },
+        {
+          "index": 31,
+          "site": "18531,29240",
+          "result": "no legal sync home near (18531.024, 29239.92978947369) satisfying reset reach"
+        },
+        {
+          "index": 32,
+          "site": "19390,29596",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 33,
+          "site": "20151,30455",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 34,
+          "site": "19677,31600",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 35,
+          "site": "17386,31600",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 36,
+          "site": "16911,30455",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 37,
+          "site": "17386,29309",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 38,
+          "site": "18531,28835",
+          "result": "no legal sync home near (18531.024, 28834.92978947369) satisfying reset reach"
+        },
+        {
+          "index": 39,
+          "site": "19677,29309",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 40,
+          "site": "16101,30455",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 41,
+          "site": "16813,28737",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 42,
+          "site": "18531,28025",
+          "result": "no legal sync home near (18531.024, 28024.92978947369) satisfying reset reach"
+        },
+        {
+          "index": 43,
+          "site": "15291,30455",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 44,
+          "site": "16240,28164",
+          "result": "no legal sync home near (16239.998028955586, 28163.903818429273) satisfying reset reach"
+        },
+        {
+          "index": 45,
+          "site": "18531,27215",
+          "result": "no legal sync home near (18531.024, 27214.92978947369) satisfying reset reach"
+        }
+      ],
+      "no_relay_count": 32,
+      "no_home_count": 14
+    },
+    "hhpref": {
+      "source_label": "1e3fbe31b",
+      "report": {
+        "schema": "opentallas.hbm.reset_forest.v2",
+        "geometry_gate": "FAIL",
+        "reach_gate": "FAIL",
+        "physical_signoff": "OPEN",
+        "problems": [
+          "hbm CN: no regional root home routes within reach after 46 sites; first 0@(18531,30455): no legal reset relay within routed reach from (12761.158, 19794.987999999998); last 45@(18531,27215): no legal sync home near (18531.024, 27214.92978947369) satisfying reset reach"
+        ],
+        "unhomable": []
+      },
+      "files_outside_src": [
+        "report.json"
+      ],
+      "source_hashes": {
+        "tools/hbm_die_v16/reset_forest_layer.py": "6f89f9c63690141e56030a70e265f6da329f84d17f201efd70f82d92eeb3b339",
+        "tools/hbm_die_v16/reset_forest_geometry.py": "7daca67895f58568dd3f156ac87736d548ab3d236d3c4f02c591b88d9556bbe5",
+        "tools/hbm_die_v16/reset_rows.py": "90da585a9852eb4df78ec05301e24c5cd0ca4785766c6f2c6d01189fe52c3660",
+        "tools/hbm_die_v15/die_clock_tree.py": "1bb0a6289363607f6112934dcfe70cb89edf64fac07df919fa8f3d60974192cd",
+        "rtl/hbm_accel/die_glue/hbfd_rrl.sv": "045f8b80c88170013d1431b87ca453d32de6c7bf10425324e9cda367c918e937",
+        "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "report_sha256": "43d91b6ca293f4fed641a5903bffb1c067eae3a00805ef62fc2dddf9891c8289",
+      "snapshot_present": false,
+      "layer_present": false,
+      "loc_entries": [],
+      "original_log_sha256": "8cf04462e4cf43d626090f9161d898b2ad192bd502c1562099f13da710bd6a0a",
+      "terminal_receipt": [
+        "ot-run: RAN on ot-epyc4 (unit oth-ubuntu-939143-1792436175): exit 3",
+        "RC 3 2026-10-19T14:25:44-07:00"
+      ],
+      "peak_rss_kb": [
+        "2713500"
+      ],
+      "elapsed": [
+        "Elapsed (wall clock) time (h:mm:ss or m:ss): 2:29:28"
+      ],
+      "all_attempts": [
+        {
+          "index": 0,
+          "site": "18531,30455",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 1,
+          "site": "18731,30455",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 2,
+          "site": "18672,30596",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 3,
+          "site": "18531,30655",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 4,
+          "site": "18390,30596",
+          "result": "no legal sync home near (18389.602643762693, 30596.351145710996) satisfying reset reach"
+        },
+        {
+          "index": 5,
+          "site": "18331,30455",
+          "result": "no legal sync home near (18331.024, 30454.92978947369) satisfying reset reach"
+        },
+        {
+          "index": 6,
+          "site": "18390,30314",
+          "result": "no legal sync home near (18389.602643762693, 30313.50843323638) satisfying reset reach"
+        },
+        {
+          "index": 7,
+          "site": "18531,30255",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 8,
+          "site": "18672,30314",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 9,
+          "site": "18936,30455",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 10,
+          "site": "18817,30741",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 11,
+          "site": "18531,30860",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 12,
+          "site": "18245,30741",
+          "result": "no legal sync home near (18244.64575361945, 30741.30803585424) satisfying reset reach"
+        },
+        {
+          "index": 13,
+          "site": "18126,30455",
+          "result": "no legal sync home near (18126.024, 30454.92978947369) satisfying reset reach"
+        },
+        {
+          "index": 14,
+          "site": "18245,30169",
+          "result": "no legal sync home near (18244.64575361945, 30168.551543093137) satisfying reset reach"
+        },
+        {
+          "index": 15,
+          "site": "18531,30050",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 16,
+          "site": "18817,30169",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 17,
+          "site": "19341,30455",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 18,
+          "site": "19104,31028",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 19,
+          "site": "18531,31265",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 20,
+          "site": "17958,31028",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 21,
+          "site": "17721,30455",
+          "result": "no legal sync home near (17721.024, 30454.92978947369) satisfying reset reach"
+        },
+        {
+          "index": 22,
+          "site": "17958,29882",
+          "result": "no legal sync home near (17958.2675072389, 29882.173296712586) satisfying reset reach"
+        },
+        {
+          "index": 23,
+          "site": "18531,29645",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 24,
+          "site": "19104,29882",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 25,
+          "site": "19746,30455",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 26,
+          "site": "19390,31314",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 27,
+          "site": "18531,31670",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 28,
+          "site": "17672,31314",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 29,
+          "site": "17316,30455",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 30,
+          "site": "17672,29596",
+          "result": "no legal sync home near (17671.889260858345, 29595.79505033203) satisfying reset reach"
+        },
+        {
+          "index": 31,
+          "site": "18531,29240",
+          "result": "no legal sync home near (18531.024, 29239.92978947369) satisfying reset reach"
+        },
+        {
+          "index": 32,
+          "site": "19390,29596",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 33,
+          "site": "20151,30455",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 34,
+          "site": "19677,31600",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 35,
+          "site": "17386,31600",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 36,
+          "site": "16911,30455",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 37,
+          "site": "17386,29309",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 38,
+          "site": "18531,28835",
+          "result": "no legal sync home near (18531.024, 28834.92978947369) satisfying reset reach"
+        },
+        {
+          "index": 39,
+          "site": "19677,29309",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 40,
+          "site": "16101,30455",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 41,
+          "site": "16813,28737",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 42,
+          "site": "18531,28025",
+          "result": "no legal sync home near (18531.024, 28024.92978947369) satisfying reset reach"
+        },
+        {
+          "index": 43,
+          "site": "15291,30455",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 44,
+          "site": "16240,28164",
+          "result": "no legal sync home near (16239.998028955586, 28163.903818429273) satisfying reset reach"
+        },
+        {
+          "index": 45,
+          "site": "18531,27215",
+          "result": "no legal sync home near (18531.024, 27214.92978947369) satisfying reset reach"
+        }
+      ],
+      "no_relay_count": 32,
+      "no_home_count": 14
+    },
+    "hhfb": {
+      "source_label": "1e3fbe31b",
+      "report": {
+        "schema": "opentallas.hbm.reset_forest.v2",
+        "geometry_gate": "FAIL",
+        "reach_gate": "FAIL",
+        "physical_signoff": "OPEN",
+        "problems": [
+          "hbm CN: no regional root home routes within reach after 46 sites; first 0@(18531,30455): no legal reset relay within routed reach from (12761.158, 19794.987999999998); last 45@(18531,27215): no legal sync home near (18531.024, 27214.92978947369) satisfying reset reach"
+        ],
+        "unhomable": []
+      },
+      "files_outside_src": [
+        "report.json"
+      ],
+      "source_hashes": {
+        "tools/hbm_die_v16/reset_forest_layer.py": "6f89f9c63690141e56030a70e265f6da329f84d17f201efd70f82d92eeb3b339",
+        "tools/hbm_die_v16/reset_forest_geometry.py": "7daca67895f58568dd3f156ac87736d548ab3d236d3c4f02c591b88d9556bbe5",
+        "tools/hbm_die_v16/reset_rows.py": "90da585a9852eb4df78ec05301e24c5cd0ca4785766c6f2c6d01189fe52c3660",
+        "tools/hbm_die_v15/die_clock_tree.py": "1bb0a6289363607f6112934dcfe70cb89edf64fac07df919fa8f3d60974192cd",
+        "rtl/hbm_accel/die_glue/hbfd_rrl.sv": "045f8b80c88170013d1431b87ca453d32de6c7bf10425324e9cda367c918e937",
+        "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "report_sha256": "43d91b6ca293f4fed641a5903bffb1c067eae3a00805ef62fc2dddf9891c8289",
+      "snapshot_present": false,
+      "layer_present": false,
+      "loc_entries": [],
+      "original_log_sha256": "8b82c9cb8d2ef7ae00be0dbf9f0e8fe9daa361b80f5bc1f45e5a6d8b50dac04f",
+      "terminal_receipt": [
+        "ot-run: RAN on ot-epyc4 (unit oth-ubuntu-939294-1792436175): exit 3",
+        "RC 3 2026-10-19T14:26:04-07:00"
+      ],
+      "peak_rss_kb": [
+        "2716964"
+      ],
+      "elapsed": [
+        "Elapsed (wall clock) time (h:mm:ss or m:ss): 2:29:48"
+      ],
+      "all_attempts": [
+        {
+          "index": 0,
+          "site": "18531,30455",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 1,
+          "site": "18731,30455",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 2,
+          "site": "18672,30596",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 3,
+          "site": "18531,30655",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 4,
+          "site": "18390,30596",
+          "result": "no legal sync home near (18389.602643762693, 30596.351145710996) satisfying reset reach"
+        },
+        {
+          "index": 5,
+          "site": "18331,30455",
+          "result": "no legal sync home near (18331.024, 30454.92978947369) satisfying reset reach"
+        },
+        {
+          "index": 6,
+          "site": "18390,30314",
+          "result": "no legal sync home near (18389.602643762693, 30313.50843323638) satisfying reset reach"
+        },
+        {
+          "index": 7,
+          "site": "18531,30255",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 8,
+          "site": "18672,30314",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 9,
+          "site": "18936,30455",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 10,
+          "site": "18817,30741",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 11,
+          "site": "18531,30860",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 12,
+          "site": "18245,30741",
+          "result": "no legal sync home near (18244.64575361945, 30741.30803585424) satisfying reset reach"
+        },
+        {
+          "index": 13,
+          "site": "18126,30455",
+          "result": "no legal sync home near (18126.024, 30454.92978947369) satisfying reset reach"
+        },
+        {
+          "index": 14,
+          "site": "18245,30169",
+          "result": "no legal sync home near (18244.64575361945, 30168.551543093137) satisfying reset reach"
+        },
+        {
+          "index": 15,
+          "site": "18531,30050",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 16,
+          "site": "18817,30169",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 17,
+          "site": "19341,30455",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 18,
+          "site": "19104,31028",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 19,
+          "site": "18531,31265",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 20,
+          "site": "17958,31028",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 21,
+          "site": "17721,30455",
+          "result": "no legal sync home near (17721.024, 30454.92978947369) satisfying reset reach"
+        },
+        {
+          "index": 22,
+          "site": "17958,29882",
+          "result": "no legal sync home near (17958.2675072389, 29882.173296712586) satisfying reset reach"
+        },
+        {
+          "index": 23,
+          "site": "18531,29645",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 24,
+          "site": "19104,29882",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 25,
+          "site": "19746,30455",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 26,
+          "site": "19390,31314",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 27,
+          "site": "18531,31670",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 28,
+          "site": "17672,31314",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 29,
+          "site": "17316,30455",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 30,
+          "site": "17672,29596",
+          "result": "no legal sync home near (17671.889260858345, 29595.79505033203) satisfying reset reach"
+        },
+        {
+          "index": 31,
+          "site": "18531,29240",
+          "result": "no legal sync home near (18531.024, 29239.92978947369) satisfying reset reach"
+        },
+        {
+          "index": 32,
+          "site": "19390,29596",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 33,
+          "site": "20151,30455",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 34,
+          "site": "19677,31600",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 35,
+          "site": "17386,31600",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 36,
+          "site": "16911,30455",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 37,
+          "site": "17386,29309",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 38,
+          "site": "18531,28835",
+          "result": "no legal sync home near (18531.024, 28834.92978947369) satisfying reset reach"
+        },
+        {
+          "index": 39,
+          "site": "19677,29309",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 40,
+          "site": "16101,30455",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 41,
+          "site": "16813,28737",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 42,
+          "site": "18531,28025",
+          "result": "no legal sync home near (18531.024, 28024.92978947369) satisfying reset reach"
+        },
+        {
+          "index": 43,
+          "site": "15291,30455",
+          "result": "no legal reset relay within routed reach from (12761.158, 19794.987999999998)"
+        },
+        {
+          "index": 44,
+          "site": "16240,28164",
+          "result": "no legal sync home near (16239.998028955586, 28163.903818429273) satisfying reset reach"
+        },
+        {
+          "index": 45,
+          "site": "18531,27215",
+          "result": "no legal sync home near (18531.024, 27214.92978947369) satisfying reset reach"
+        }
+      ],
+      "no_relay_count": 32,
+      "no_home_count": 14
+    }
+  },
+  "inputs": {
+    "/srv/opentallas-scratch/claude/hd4g/gen2d/forest_codex9d5a2c350/manifest.json": {
+      "sha256": "e2a5d517469ec339e013783d248ddab9c2b2085c6d4ddc6dddfac78442cc66ad",
+      "bytes": 25868837
+    },
+    "/srv/opentallas-scratch/claude/hd4g/gen2d/forest_codex9d5a2c350/contract_pre.json": {
+      "sha256": "1e46f68cfdd7271f3e22714d0b205714bbe69259a3a4497be47c2a4aa0442ec4",
+      "bytes": 104249670
+    },
+    "/srv/opentallas-scratch/claude/hd4g/gen2c/case_a/run.tcl": {
+      "sha256": "99c9859b4fecdc8b395922f3f36c1272d2e76fffe6e04137087669df9cf84957",
+      "bytes": 11986433
+    },
+    "/srv/opentallas-scratch/claude/hd4g/gen2c/case_a/die.v": {
+      "sha256": "536cf78130805726c132eecbf88c98bb60142ab1cb36e582a8c62086439aebae",
+      "bytes": 725983941
+    },
+    "/srv/opentallas-scratch/claude/hd4g/gen2d/forest_codex9d5a2c350/relay_views/hbfd_rrl_hop.lef": {
+      "sha256": "18b4da7ef8ca031acabfd2064c67765e479c3d7b5c5171d76c61a09380e39e16",
+      "bytes": 15835
+    },
+    "/srv/opentallas-scratch/claude/hd4g/gen2d/forest_codex9d5a2c350/relay_views/hbfd_rrl_sync.lef": {
+      "sha256": "a0f45ea7716436f9d40d64cd8511e61e08b6dcd4e30352ae30bf09829dff5e12",
+      "bytes": 16410
+    }
+  },
+  "relay_lef": {
+    "hbfd_rrl_hop.lef": {
+      "pins": {
+        "clk": {
+          "rectangles": [
+            "0 16.176 0.084 16.2 "
+          ],
+          "direction": [
+            "INPUT"
+          ],
+          "use": [
+            "SIGNAL"
+          ]
+        },
+        "rst_n": {
+          "rectangles": [
+            "32.316 16.176 32.4 16.2 "
+          ],
+          "direction": [
+            "OUTPUT"
+          ],
+          "use": [
+            "SIGNAL"
+          ]
+        },
+        "rst_n_in": {
+          "rectangles": [
+            "0 16.272 0.084 16.296 "
+          ],
+          "direction": [
+            "INPUT"
+          ],
+          "use": [
+            "SIGNAL"
+          ]
+        },
+        "VDD": {
+          "rectangles": [
+            "29.592 2.151 29.712 30.249 ",
+            "24.192 2.151 24.312 30.249 ",
+            "18.792 2.151 18.912 30.249 ",
+            "13.392 2.151 13.512 30.249 ",
+            "7.992 2.151 8.112 30.249 ",
+            "2.592 2.151 2.712 30.249 "
+          ],
+          "direction": [
+            "INOUT"
+          ],
+          "use": [
+            "POWER"
+          ]
+        },
+        "VSS": {
+          "rectangles": [
+            "29.4 2.137 29.52 30.263 ",
+            "24 2.137 24.12 30.263 ",
+            "18.6 2.137 18.72 30.263 ",
+            "13.2 2.137 13.32 30.263 ",
+            "7.8 2.137 7.92 30.263 ",
+            "2.4 2.137 2.52 30.263 "
+          ],
+          "direction": [
+            "INOUT"
+          ],
+          "use": [
+            "GROUND"
+          ]
+        }
+      },
+      "has_clock_out": false
+    },
+    "hbfd_rrl_sync.lef": {
+      "pins": {
+        "clk": {
+          "rectangles": [
+            "0 16.176 0.084 16.2 "
+          ],
+          "direction": [
+            "INPUT"
+          ],
+          "use": [
+            "SIGNAL"
+          ]
+        },
+        "rst_n": {
+          "rectangles": [
+            "32.316 16.08 32.4 16.104 "
+          ],
+          "direction": [
+            "OUTPUT"
+          ],
+          "use": [
+            "SIGNAL"
+          ]
+        },
+        "rst_n_in": {
+          "rectangles": [
+            "0 16.272 0.084 16.296 "
+          ],
+          "direction": [
+            "INPUT"
+          ],
+          "use": [
+            "SIGNAL"
+          ]
+        },
+        "VDD": {
+          "rectangles": [
+            "29.592 2.151 29.712 30.249 ",
+            "24.192 2.151 24.312 30.249 ",
+            "18.792 2.151 18.912 30.249 ",
+            "13.392 2.151 13.512 30.249 ",
+            "7.992 2.151 8.112 30.249 ",
+            "2.592 2.151 2.712 30.249 "
+          ],
+          "direction": [
+            "INOUT"
+          ],
+          "use": [
+            "POWER"
+          ]
+        },
+        "VSS": {
+          "rectangles": [
+            "29.4 2.137 29.52 30.263 ",
+            "24 2.137 24.12 30.263 ",
+            "18.6 2.137 18.72 30.263 ",
+            "13.2 2.137 13.32 30.263 ",
+            "7.8 2.137 7.92 30.263 ",
+            "2.4 2.137 2.52 30.263 "
+          ],
+          "direction": [
+            "INOUT"
+          ],
+          "use": [
+            "GROUND"
+          ]
+        }
+      },
+      "has_clock_out": false
+    }
+  },
+  "manifest_fields": [
+    "schema",
+    "label",
+    "die_um",
+    "contract",
+    "plan",
+    "grants",
+    "lanes",
+    "views",
+    "flags",
+    "reticle",
+    "excluded_cells",
+    "excluded_instances",
+    "excluded_instance_details",
+    "instances",
+    "homes",
+    "placeholder_slots_ignored",
+    "placement_problems",
+    "face_bits",
+    "dropped_edge_bits",
+    "signal_nets",
+    "die_ports",
+    "synth_clock_entry",
+    "routed_view_qualification",
+    "placement",
+    "sm_mx_s_quadrant",
+    "carved_feedthrough",
+    "in_carved_channel",
+    "corners",
+    "placement_coverage",
+    "input_sha256",
+    "consumed_view_sha256",
+    "native_complete",
+    "param_aliases_diagnostic",
+    "max_pin_density",
+    "pin_density_over",
+    "max_wire",
+    "die_repeaters",
+    "pc_strip",
+    "prior_place",
+    "slot_map",
+    "replanned_chain_relays",
+    "outline_override",
+    "d4b_homes",
+    "layout_image_status",
+    "clock_entry_map",
+    "reset_reach_gate",
+    "clock_regions",
+    "clock_entry_scope",
+    "open_pins_by_cell",
+    "exposed_inputs_owner",
+    "straps_open",
+    "clock_domains",
+    "die_clock_trees",
+    "die_clock_check_model",
+    "clock_buffers_in_window",
+    "reset",
+    "clock_source"
+  ],
+  "native_clock_source_placement_lines": [
+    "place_inst -name dkh_P2 -location {11234.700 20124.720} -orientation R0 -status FIRM"
+  ],
+  "endpoint_distance_um": 16429.854,
+  "clock_metadata_keys": [
+    "synth_clock_entry",
+    "clock_entry_map",
+    "reset_reach_gate",
+    "clock_regions",
+    "clock_entry_scope",
+    "clock_domains",
+    "die_clock_trees",
+    "die_clock_check_model",
+    "clock_buffers_in_window",
+    "reset",
+    "clock_source"
+  ],
+  "source_lef_full_sha256": "4eb73f825720d95eba4da455c7b2e7a28e444e88e9d8595d13492cf5eecfc0d1",
+  "native_source_Y_rect_centers_um": [
+    [
+      11235.332,
+      20124.954
+    ],
+    [
+      11235.645,
+      20124.855
+    ],
+    [
+      11235.332,
+      20124.756
+    ]
+  ],
+  "native_source_to_first_proposed_clk_um": [
+    286.45600000000013,
+    286.66999999999825,
+    286.2579999999998
+  ],
+  "clock_out_qualified": false,
+  "failed_point_to_proposed_output_shift_um": 20,
+  "clock_contract": {
+    "clock_source": "REAL hfd_ckgen (hbm_ckgen_cl); create_clock at hb_ckgen/pll_<domain> (ETM has no pll arcs)",
+    "clock_entry_scope": "Each literal clock pin planned separately; conservative all-entry communicating pairs. Native phase/ownership qualification remains OPEN.",
+    "clock_domains": {
+      "stream": {
+        "period_ps": 833.333,
+        "sink_insts": 21610,
+        "sink_pins": 24536
+      },
+      "serial": {
+        "period_ps": 1111.111,
+        "sink_insts": 5529,
+        "sink_pins": 15707
+      },
+      "hbm": {
+        "period_ps": 1024.0,
+        "sink_insts": 3857,
+        "sink_pins": 3953
+      }
+    },
+    "hbm_tree": {
+      "mode": "regional",
+      "sinks": 3953,
+      "regions": 28,
+      "leaves": 2152,
+      "buffers": 11087,
+      "pads": 2212,
+      "trunk_root_model_ps": 656.6,
+      "model_insertion_ps": 9958.2,
+      "region_sinks": {
+        "band_NE2": 16,
+        "band_NW2": 17,
+        "band_SE2": 16,
+        "band_SW2": 17,
+        "idx_NE": 294,
+        "idx_NW": 245,
+        "idx_SE": 23,
+        "idx_SW": 227,
+        "pc_NE": 586,
+        "pc_NW": 507,
+        "pc_SE": 498,
+        "pc_SW": 489,
+        "phy_NW": 233,
+        "phy_SW": 227,
+        "sm_NW0": 10,
+        "sm_NW1": 12,
+        "sm_NW2": 62,
+        "sm_NW4": 127,
+        "sm_NW5": 36,
+        "sm_NW6": 6,
+        "sm_NW7": 21,
+        "sm_SW0": 16,
+        "sm_SW1": 13,
+        "sm_SW3": 58,
+        "sm_SW4": 75,
+        "sm_SW5": 67,
+        "sm_SW6": 28,
+        "sm_SW7": 27
+      },
+      "near_pairs": {
+        "um": 405.0,
+        "tile_pairs": 2888,
+        "cross_region": 313
+      },
+      "grid_um": 10.0,
+      "span_um": 200.0,
+      "max_run_over_blocks_um": 400.0,
+      "free_cells_frac": 0.2911,
+      "site_allocation": {
+        "cells": 11087,
+        "max_displacement_um": 5.45,
+        "mean_displacement_um": 0.748,
+        "reserved_site_um": [
+          1.62,
+          0.27
+        ],
+        "overlap": 0,
+        "basis": "asap7sc7p5t_28_R_1x_220121a.lef; complete cell outside conservative hard-block grid",
+        "timing": "Topology insertion estimate predates site allocation; actual propagated STA required"
+      }
+    },
+    "hbm_pair_model_summary": {
+      "pairs": 5398,
+      "noncommon_ps": {
+        "median": 470.6,
+        "p90": 1989.3,
+        "max": 7275.2
+      },
+      "ocv_10pct_max_ps": 727.5,
+      "insertion_ps": [
+        9845.3,
+        11016.0
+      ]
+    }
+  }
+}

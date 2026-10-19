@@ -1,0 +1,10 @@
+{
+  "schema": "opentallas.hbm.reset_forest.v2",
+  "geometry_gate": "FAIL",
+  "reach_gate": "FAIL",
+  "physical_signoff": "OPEN",
+  "problems": [
+    "hbm CN: no regional root home routes within reach after 46 sites; first 0@(18531,30455): no legal reset relay within routed reach from (12761.158, 19794.987999999998); last 45@(18531,27215): no legal sync home near (18531.024, 27214.92978947369) satisfying reset reach"
+  ],
+  "unhomable": []
+}

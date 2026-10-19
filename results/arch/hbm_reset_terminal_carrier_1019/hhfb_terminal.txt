@@ -1,0 +1,31 @@
+[  8987.3s]   region CN try 44 site [16240, 28164]
+[  8987.3s]     rejected: 44@(16240,28164): no legal sync home near (16239.998028955586, 28163.903818429273) satisfying reset reach
+[  8987.3s]   region CN try 45 site [18531, 27215]
+[  8987.3s]     rejected: 45@(18531,27215): no legal sync home near (18531.024, 27214.92978947369) satisfying reset reach
+reset forest FAIL: hbm CN: no regional root home routes within reach after 46 sites; first 0@(18531,30455): no legal reset relay within routed reach from (12761.158, 19794.987999999998); last 45@(18531,27215): no legal sync home near (18531.024, 27214.92978947369) satisfying reset reach
+Command exited with non-zero status 3
+	Command being timed: "python3 reset_forest_layer.py --relay-rows --overfly-masters hbfd_(rly|lh|land) --max-root-tries 57 --host-hops fallback --contract /srv/opentallas-scratch/claude/hd4g/gen2d/forest_codex9d5a2c350/contract_pre.json --manifest /srv/opentallas-scratch/claude/hd4g/gen2d/forest_codex9d5a2c350/manifest.json --views /srv/opentallas-scratch/claude/hd4g/gen2d/forest_1e3fbe31b/hhfb/views --relay-views /srv/opentallas-scratch/claude/hd4g/gen2d/forest_1e3fbe31b/hhfb/relay_views --out /srv/opentallas-scratch/claude/hd4g/gen2d/forest_1e3fbe31b/hhfb/layer.json --report /srv/opentallas-scratch/claude/hd4g/gen2d/forest_1e3fbe31b/hhfb/report.json"
+	User time (seconds): 8744.80
+	System time (seconds): 241.09
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 2:29:48
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 2716964
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 203006260
+	Voluntary context switches: 187
+	Involuntary context switches: 18061
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 344
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 3
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-939294-1792436175): exit 3
+RC 3 2026-10-19T14:26:04-07:00
