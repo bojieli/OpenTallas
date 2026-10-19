@@ -88,7 +88,34 @@ def astk_pv_gap_shift(T, law):
 # (tools/qwen_split/d2d_cal_image_production.sh, QXF-LINK 6ef1a097f): die seam stages + the LAYERBENCH compiled token path,
 # so target 11 (KV sequencer init) loads exactly the calendar the RTL image / D2D_TXDP_K were compiled from.  The old
 # '--txd-c 1,1,1,2 --txd-k 1,2,1,1' args predate the compiled TXDP and no longer match the image.
-LINK_DIE_STAGES = '2,2,2,2,2,2/11,11,9,9,9,11,11'   # HKV-DIE 10-19: dv2f14bq seam (SC_TX 2) + kvs14p (= production script)
+# KV-LINKCFG-MU 10-19: ONE seam source.  The die seam stages are no longer a constant here (it was the stale dv2f14bq / kvs14p
+# seam 2,2,2,2,2,2/11,11,9,9,9,11,11 after the pair image moved to the MU release seam): they are read from the D2D_TXDP_C
+# record of the BOUND image (LINK_IMAGE), i.e. the stages the strict bind checks against the compute die.v
+# (die_params audit (e), record_bundles.seam_stages) and the KV die table (BUNDLE_EQ K.*) the image was compiled for.
+# OT_KV_MU=1 binds the MU image d2d_cal_image_mu.svh and compiles with --mu (the token run's MU context slot: K TX +1 entry,
+# K TX SEG2 8 -> 9), so the KV link end carries the slot.  link_image_check() proves target 11 == the bound image.
+LINK_IMAGE_SU = 'rtl/qwen_sys/d2d_static_20261015/d2d_cal_image.svh'
+LINK_IMAGE_MU = 'rtl/qwen_sys/d2d_static_20261015/d2d_cal_image_mu.svh'
+LINK_MU = os.environ.get('OT_KV_MU', '0') == '1'
+LINK_IMAGE = LINK_IMAGE_MU if LINK_MU else LINK_IMAGE_SU
+
+
+def image_die_stages(img=None, root=None):
+    """the die seam stages a committed d2d_cal_seq_image.py image records (D2D_TXDP_C comment) as a --die-stages string"""
+    import ast
+    import re
+    txt = ((root or ROOT) / (img or LINK_IMAGE)).read_text()
+    m = re.search(r"D2D_TXDP_C = 32'h[0-9a-fA-F]+;.*die stages (\{[^}]*\})", txt)
+    if not m:
+        raise SystemExit(f'kv_static_programme: {img or LINK_IMAGE} records no die stages (recompile it with '
+                         'tools/qwen_split/d2d_cal_image_production.sh)')
+    sys.path.insert(0, str(ROOT / 'tools' / 'qwen_split'))
+    import d2d_link_calendar as _L
+    st = ast.literal_eval(m.group(1))
+    if set(st) != set(_L.STAGE_NAMES):
+        raise SystemExit(f'kv_static_programme: image die stages {sorted(st)} != {_L.STAGE_NAMES}')
+    v = [st[k] for k in _L.STAGE_NAMES]
+    return ','.join(map(str, v[:6])) + '/' + ','.join(map(str, v[6:]))
 
 
 def _link_kv_codec():
@@ -98,10 +125,11 @@ def _link_kv_codec():
     return str(_LC.kv_codec_edges((ROOT / 'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv').read_text()))
 
 
+LINK_DIE_STAGES = image_die_stages()
 LINK_TOKEN_PATH = 'results/rtl/qwen_layer_tput_1018/compiled_L1/d2d/token_path_compiled.json.gz'
 LINK_ARGS = ['--txl', '6', '--phy', '5', '--profile', 'program', '--die-stages', LINK_DIE_STAGES, '--kv-codec', _link_kv_codec(),
              '--host-stages', '0', '--link-handoff', 'results/arch/qwen_split_compute_1014/res_train_decision_1015/decision.json',
-             '--pinreg']                                    # + --token-path (decompressed in link_calendar)
+             '--pinreg'] + (['--mu'] if LINK_MU else [])     # + --token-path (decompressed in link_calendar)
 T_MAX = 8192
 CORE_U, HBM_U = 625, 768
 XU_STRICT = CORE_U + 1          # phase launch: toggle 1 core edge after capture; first HBM edge strictly after it
@@ -162,6 +190,39 @@ def link_cfg_words(caldir, end='K', base_seg=2):
     if len(words) != LINK_CFG_WORDS or any(not 0 <= w < 1 << 32 for w in words):
         raise ValueError('link cfg image: 66 words of 32 bits expected')
     return words
+
+
+def image_link_cfg_words(img=None, end='K', root=None):
+    """the 66 target-11 words a committed sequencer image implies for the KV end (the qkd_d2d_cal_seq init stream with
+    ADM=1: TX i, RX i for i = 0..31, then the admission-segment TX / RX bases)"""
+    import re
+    txt = ((root or ROOT) / (img or LINK_IMAGE)).read_text()
+    val = lambda n: int(re.search(rf"{n} = \d+'h([0-9a-fA-F]+);", txt).group(1), 16)
+    tx, rx = val(f'D2D_CAL_{end}_TX_IMG'), val(f'D2D_CAL_{end}_RX_IMG')
+    return [w for i in range(32) for w in ((tx >> 32 * i) & 0xffffffff, (rx >> 32 * i) & 0xffffffff)] + \
+        [val(f'D2D_CAL_{end}_TX_SEG2'), val(f'D2D_CAL_{end}_RX_SEG2')]
+
+
+def link_image_check(words, cal=None, img=None, root=None):
+    """KV-LINKCFG-MU 10-19: target 11 must be the bound image's K calendar word for word (fail closed).  Also records the
+    KV TXDP the compile implies with the die's own attention codec against the image's D2D_TXDP_K (a codec disagreement
+    changes TXDP_K and the compute C RX image, never the K words: reported, not hidden)."""
+    import re
+    img = img or LINK_IMAGE
+    want = image_link_cfg_words(img, root=root)
+    diff = [i for i, (a, b) in enumerate(zip(words, want)) if a != b] + ([len(want)] if len(words) != len(want) else [])
+    if diff:
+        raise ValueError(f'target 11 differs from {img} at word(s) {diff[:8]} (MU {LINK_MU}, die stages {LINK_DIE_STAGES}): '
+                         'the link end would load another calendar than the bound sequencer image')
+    rec = dict(image=img, mu=LINK_MU, die_stages=LINK_DIE_STAGES, words=len(words), equal=True)
+    if cal is not None and cal.get('txd'):
+        sys.path.insert(0, str(ROOT / 'tools' / 'qwen_split'))
+        import d2d_link_calendar as _L
+        txt = ((root or ROOT) / img).read_text()
+        rec.update(txdp_k_image=int(re.search(r"D2D_TXDP_K = 32'h([0-9a-fA-F]+);", txt).group(1), 16),
+                   txdp_k_die_codec=_L.txdp_word(cal['txd']['K']), kv_codec=int(_link_kv_codec()))
+        rec['txdp_k_agree'] = rec['txdp_k_image'] == rec['txdp_k_die_codec']
+    return rec
 
 
 ES_CFG_TARGETS, ES_CFG_WORDS = (12, 13), (1024, 8)
@@ -634,6 +695,7 @@ def compile_all(pr, epoch=0x0b0b, program_words=None, workdir=None, die_cfg_word
     with tempfile.TemporaryDirectory(dir=workdir) as td:
         cal = link_calendar(td)
         link_words = link_cfg_words(Path(td) / 'cal')
+    link_check = link_image_check(link_words, cal)        # KV-LINKCFG-MU: target 11 == the bound image (fail closed)
     es_pc, es_beat = es_cfg_words()
     prog_cal = cal['program']
     lay = prog_cal['layers']
@@ -852,7 +914,7 @@ def compile_all(pr, epoch=0x0b0b, program_words=None, workdir=None, die_cfg_word
                 attention=att, phase=phase, images=images, bundle=bundle,
                 # dispatcher target 11 (LINKCFG=1, order 1..9, 11, 0); in the HOST class-8 bundle (KVJ-G2b: the HOST
                 # loader / program_target_frames accept targets 0..13; target 10 = pass 1 from the die plan)
-                link_cfg=dict(target=LINK_CFG_TARGET, program=link_words),
+                link_cfg=dict(target=LINK_CFG_TARGET, program=link_words, check=link_check),
                 # dispatcher targets 12 / 13 (ESCFG=1, order 1..9, 11, 12, 13, 0): the KVJ-C3 PC chain root + join4_cal
                 # calendar constants (kvjc3_pc_chain.boot_words at ctrl_lat ES_CFG_CTRL_LAT, relays 0); same HOST note
                 es_cfg=dict(targets=list(ES_CFG_TARGETS), pc=es_pc, beat=es_beat, ctrl_lat=ES_CFG_CTRL_LAT, relay=[0, 0, 0, 0]))

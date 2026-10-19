@@ -84,7 +84,7 @@ class Programme(unittest.TestCase):
     def test_link_cfg_target_is_the_kv_sequencer_init_image(self):
         # KVJ-SMALL 10-17: target 11 (dispatcher LINKCFG=1) = the qkd_d2d_cal_seq init stream from d2d_cal_image.svh
         import re
-        svh = (ROOT / 'rtl/qwen_sys/d2d_static_20261015/d2d_cal_image.svh').read_text()
+        svh = (ROOT / C.LINK_IMAGE).read_text()          # KV-LINKCFG-MU: the BOUND image (_mu under OT_KV_MU=1)
         val = lambda n: int(re.search(rf"{n} = \d+'h([0-9a-f]+);", svh).group(1), 16)
         tx, rx = val('D2D_CAL_K_TX_IMG'), val('D2D_CAL_K_RX_IMG')
         want = [w for i in range(32) for w in ((tx >> 32 * i) & 0xffffffff, (rx >> 32 * i) & 0xffffffff)]
