@@ -220,7 +220,14 @@ module tb_svg_landing_pair_native;
   // Independent ownership/epoch/count/ordinal faults after clean balanced resets.
   for(k=0;k<4;k=k+1)begin
    pair_hbm_rst_n=0;pair_rst_n=0;return_rst_n=0;group_valid=0;read_v=0;in_v=0;stop=1;reserve_v=0;
-   idle(5);pair_hbm_rst_n=1;if(k==0)idle(2);pair_rst_n=1;if(k==0)idle(2);return_rst_n=1;idle(15);
+   idle(5);
+   case(k)
+    0:begin pair_hbm_rst_n=1;idle(2);pair_rst_n=1;idle(2);return_rst_n=1;end
+    1:begin pair_rst_n=1;idle(2);return_rst_n=1;idle(2);pair_hbm_rst_n=1;end
+    2:begin return_rst_n=1;idle(2);pair_hbm_rst_n=1;idle(2);pair_rst_n=1;end
+    default:begin pair_hbm_rst_n=1;pair_rst_n=1;return_rst_n=1;end
+   endcase
+   idle(15);
    if(k!=0)begin
     reserve_v=1;reserve_bank=0;reserve_epoch=71;reserve_total=k==2?8:272;
     idle(1);reserve_v=0;idle(4);
