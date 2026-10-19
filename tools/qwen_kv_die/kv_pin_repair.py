@@ -6,6 +6,7 @@ Never route through a leaf; failed placement remains an explicit plan defect.
 """
 import json
 import math
+import os
 import re
 from pathlib import Path
 
@@ -19,6 +20,9 @@ from pathlib import Path
 # carries both (slg o_pc / o_ctl, kvpc o_grp) has no single legal relay clock: core (as the main planner) + recorded
 # MIXED (the bundle must be split by domain; open item, lanes/KVR-DERIVE.md).
 PORT_DOMAINS = 'results/arch/qwen_kv_kits_b_1018'
+# KV-DOMSPLIT 10-19 (OT_KV_DOMSPLIT=1): the split tiles' measured records (every group <-> PC / gather word single-domain)
+if os.environ.get('OT_KV_DOMSPLIT', '0') == '1':
+    PORT_DOMAINS = 'results/arch/qwen_kv_domsplit_1019/ports'
 _PD = {}
 
 

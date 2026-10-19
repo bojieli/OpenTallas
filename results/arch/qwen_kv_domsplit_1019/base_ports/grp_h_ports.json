@@ -1,0 +1,1120 @@
+{
+ "top": "qkd_kvs_grp_h",
+ "registers": 619,
+ "clock_ports": [
+  "?const",
+  "ck",
+  "hck"
+ ],
+ "ports": {
+  "ck": {
+   "dir": "input",
+   "width": 1,
+   "role": "clock"
+  },
+  "rst_n": {
+   "dir": "input",
+   "width": 1,
+   "domains": [
+    "ck"
+   ],
+   "feedthrough": [],
+   "depth": 0,
+   "reg_sinks": 12,
+   "async_reset": true
+  },
+  "afk": {
+   "dir": "input",
+   "width": 1,
+   "domains": [
+    "ck"
+   ],
+   "feedthrough": [],
+   "depth": 1,
+   "reg_sinks": 1,
+   "async_reset": false
+  },
+  "afv": {
+   "dir": "input",
+   "width": 1,
+   "domains": [
+    "ck"
+   ],
+   "feedthrough": [],
+   "depth": 1,
+   "reg_sinks": 1,
+   "async_reset": false
+  },
+  "hck": {
+   "dir": "input",
+   "width": 1,
+   "role": "clock"
+  },
+  "hrst_n": {
+   "dir": "input",
+   "width": 1,
+   "domains": [
+    "hck"
+   ],
+   "feedthrough": [],
+   "depth": 0,
+   "reg_sinks": 2,
+   "async_reset": true
+  },
+  "slg__cfg_stack": {
+   "dir": "input",
+   "width": 2,
+   "domains": [
+    "ck"
+   ],
+   "feedthrough": [],
+   "depth": 0,
+   "reg_sinks": 8,
+   "async_reset": false
+  },
+  "slg__cfg_group": {
+   "dir": "input",
+   "width": 3,
+   "domains": [
+    "ck"
+   ],
+   "feedthrough": [],
+   "depth": 0,
+   "reg_sinks": 12,
+   "async_reset": false
+  },
+  "kreq": {
+   "dir": "input",
+   "width": 38,
+   "domains": [
+    "ck"
+   ],
+   "feedthrough": [],
+   "depth": 0,
+   "reg_sinks": 38,
+   "async_reset": false
+  },
+  "vreq": {
+   "dir": "input",
+   "width": 15,
+   "domains": [
+    "ck"
+   ],
+   "feedthrough": [],
+   "depth": 0,
+   "reg_sinks": 15,
+   "async_reset": false
+  },
+  "x__est": {
+   "dir": "input",
+   "width": 13,
+   "domains": [
+    "none"
+   ],
+   "feedthrough": [
+    "y__est__0_1"
+   ],
+   "depth": 0,
+   "reg_sinks": 0,
+   "async_reset": false
+  },
+  "x__tok": {
+   "dir": "input",
+   "width": 18,
+   "domains": [
+    "none"
+   ],
+   "feedthrough": [
+    "y__tok"
+   ],
+   "depth": 0,
+   "reg_sinks": 0,
+   "async_reset": false
+  },
+  "x__tep": {
+   "dir": "input",
+   "width": 16,
+   "domains": [
+    "none"
+   ],
+   "feedthrough": [
+    "y__tep"
+   ],
+   "depth": 0,
+   "reg_sinks": 0,
+   "async_reset": false
+  },
+  "rsp": {
+   "dir": "output",
+   "width": 1056,
+   "domains": [
+    "ck"
+   ],
+   "from_inputs": [],
+   "depth": 0,
+   "reg_sources": 1056
+  },
+  "krsp": {
+   "dir": "output",
+   "width": 1062,
+   "domains": [
+    "ck"
+   ],
+   "from_inputs": [],
+   "depth": 0,
+   "reg_sources": 1062
+  },
+  "af__fault": {
+   "dir": "output",
+   "width": 1,
+   "domains": [
+    "ck"
+   ],
+   "from_inputs": [],
+   "depth": 0,
+   "reg_sources": 1
+  },
+  "y__est__0_1": {
+   "dir": "output",
+   "width": 1,
+   "domains": [
+    "none"
+   ],
+   "from_inputs": [
+    "x__est"
+   ],
+   "depth": 0,
+   "reg_sources": 0
+  },
+  "y__tok": {
+   "dir": "output",
+   "width": 18,
+   "domains": [
+    "none"
+   ],
+   "from_inputs": [
+    "x__tok"
+   ],
+   "depth": 0,
+   "reg_sources": 0
+  },
+  "y__tep": {
+   "dir": "output",
+   "width": 16,
+   "domains": [
+    "none"
+   ],
+   "from_inputs": [
+    "x__tep"
+   ],
+   "depth": 0,
+   "reg_sources": 0
+  },
+  "i_ctl": {
+   "dir": "input",
+   "width": 271,
+   "domains": [
+    "ck"
+   ],
+   "feedthrough": [
+    "o_dn"
+   ],
+   "depth": 6,
+   "reg_sinks": 432383,
+   "async_reset": false,
+   "bit_domains": [
+    [
+     193,
+     0,
+     [
+      "ck"
+     ]
+    ],
+    [
+     270,
+     194,
+     [
+      "none"
+     ]
+    ]
+   ]
+  },
+  "i_pc0": {
+   "dir": "input",
+   "width": 305,
+   "domains": [
+    "ck"
+   ],
+   "feedthrough": [],
+   "depth": 1,
+   "reg_sinks": 306,
+   "async_reset": false
+  },
+  "i_pc1": {
+   "dir": "input",
+   "width": 305,
+   "domains": [
+    "ck"
+   ],
+   "feedthrough": [],
+   "depth": 1,
+   "reg_sinks": 306,
+   "async_reset": false
+  },
+  "i_pc2": {
+   "dir": "input",
+   "width": 305,
+   "domains": [
+    "ck"
+   ],
+   "feedthrough": [],
+   "depth": 1,
+   "reg_sinks": 306,
+   "async_reset": false
+  },
+  "i_pc3": {
+   "dir": "input",
+   "width": 305,
+   "domains": [
+    "ck"
+   ],
+   "feedthrough": [],
+   "depth": 1,
+   "reg_sinks": 306,
+   "async_reset": false
+  },
+  "o_pc0": {
+   "dir": "output",
+   "width": 128,
+   "domains": [
+    "ck",
+    "hck"
+   ],
+   "from_inputs": [],
+   "depth": 0,
+   "reg_sources": 128,
+   "bit_domains": [
+    [
+     71,
+     0,
+     [
+      "hck"
+     ]
+    ],
+    [
+     104,
+     72,
+     [
+      "ck"
+     ]
+    ],
+    [
+     127,
+     105,
+     [
+      "hck"
+     ]
+    ]
+   ]
+  },
+  "o_pc1": {
+   "dir": "output",
+   "width": 128,
+   "domains": [
+    "ck",
+    "hck"
+   ],
+   "from_inputs": [],
+   "depth": 0,
+   "reg_sources": 128,
+   "bit_domains": [
+    [
+     71,
+     0,
+     [
+      "hck"
+     ]
+    ],
+    [
+     104,
+     72,
+     [
+      "ck"
+     ]
+    ],
+    [
+     127,
+     105,
+     [
+      "hck"
+     ]
+    ]
+   ]
+  },
+  "o_pc2": {
+   "dir": "output",
+   "width": 128,
+   "domains": [
+    "ck",
+    "hck"
+   ],
+   "from_inputs": [],
+   "depth": 0,
+   "reg_sources": 128,
+   "bit_domains": [
+    [
+     71,
+     0,
+     [
+      "hck"
+     ]
+    ],
+    [
+     104,
+     72,
+     [
+      "ck"
+     ]
+    ],
+    [
+     127,
+     105,
+     [
+      "hck"
+     ]
+    ]
+   ]
+  },
+  "o_pc3": {
+   "dir": "output",
+   "width": 128,
+   "domains": [
+    "ck",
+    "hck"
+   ],
+   "from_inputs": [],
+   "depth": 0,
+   "reg_sources": 128,
+   "bit_domains": [
+    [
+     71,
+     0,
+     [
+      "hck"
+     ]
+    ],
+    [
+     104,
+     72,
+     [
+      "ck"
+     ]
+    ],
+    [
+     127,
+     105,
+     [
+      "hck"
+     ]
+    ]
+   ]
+  },
+  "o_dn": {
+   "dir": "output",
+   "width": 271,
+   "domains": [
+    "none"
+   ],
+   "from_inputs": [
+    "i_ctl"
+   ],
+   "depth": 0,
+   "reg_sources": 0
+  },
+  "o_ctl": {
+   "dir": "output",
+   "width": 144,
+   "domains": [
+    "ck",
+    "hck"
+   ],
+   "from_inputs": [],
+   "depth": 0,
+   "reg_sources": 144,
+   "bit_domains": [
+    [
+     0,
+     0,
+     [
+      "hck"
+     ]
+    ],
+    [
+     1,
+     1,
+     [
+      "ck"
+     ]
+    ],
+    [
+     3,
+     2,
+     [
+      "hck"
+     ]
+    ],
+    [
+     4,
+     4,
+     [
+      "ck"
+     ]
+    ],
+    [
+     6,
+     5,
+     [
+      "hck"
+     ]
+    ],
+    [
+     7,
+     7,
+     [
+      "ck"
+     ]
+    ],
+    [
+     9,
+     8,
+     [
+      "hck"
+     ]
+    ],
+    [
+     10,
+     10,
+     [
+      "ck"
+     ]
+    ],
+    [
+     12,
+     11,
+     [
+      "hck"
+     ]
+    ],
+    [
+     13,
+     13,
+     [
+      "ck"
+     ]
+    ],
+    [
+     14,
+     14,
+     [
+      "hck"
+     ]
+    ],
+    [
+     17,
+     15,
+     [
+      "ck"
+     ]
+    ],
+    [
+     18,
+     18,
+     [
+      "hck"
+     ]
+    ],
+    [
+     19,
+     19,
+     [
+      "ck"
+     ]
+    ],
+    [
+     21,
+     20,
+     [
+      "hck"
+     ]
+    ],
+    [
+     22,
+     22,
+     [
+      "ck"
+     ]
+    ],
+    [
+     24,
+     23,
+     [
+      "hck"
+     ]
+    ],
+    [
+     25,
+     25,
+     [
+      "ck"
+     ]
+    ],
+    [
+     27,
+     26,
+     [
+      "hck"
+     ]
+    ],
+    [
+     28,
+     28,
+     [
+      "ck"
+     ]
+    ],
+    [
+     30,
+     29,
+     [
+      "hck"
+     ]
+    ],
+    [
+     31,
+     31,
+     [
+      "ck"
+     ]
+    ],
+    [
+     32,
+     32,
+     [
+      "hck"
+     ]
+    ],
+    [
+     35,
+     33,
+     [
+      "ck"
+     ]
+    ],
+    [
+     36,
+     36,
+     [
+      "hck"
+     ]
+    ],
+    [
+     37,
+     37,
+     [
+      "ck"
+     ]
+    ],
+    [
+     39,
+     38,
+     [
+      "hck"
+     ]
+    ],
+    [
+     40,
+     40,
+     [
+      "ck"
+     ]
+    ],
+    [
+     42,
+     41,
+     [
+      "hck"
+     ]
+    ],
+    [
+     43,
+     43,
+     [
+      "ck"
+     ]
+    ],
+    [
+     45,
+     44,
+     [
+      "hck"
+     ]
+    ],
+    [
+     46,
+     46,
+     [
+      "ck"
+     ]
+    ],
+    [
+     48,
+     47,
+     [
+      "hck"
+     ]
+    ],
+    [
+     49,
+     49,
+     [
+      "ck"
+     ]
+    ],
+    [
+     50,
+     50,
+     [
+      "hck"
+     ]
+    ],
+    [
+     53,
+     51,
+     [
+      "ck"
+     ]
+    ],
+    [
+     54,
+     54,
+     [
+      "hck"
+     ]
+    ],
+    [
+     55,
+     55,
+     [
+      "ck"
+     ]
+    ],
+    [
+     57,
+     56,
+     [
+      "hck"
+     ]
+    ],
+    [
+     58,
+     58,
+     [
+      "ck"
+     ]
+    ],
+    [
+     60,
+     59,
+     [
+      "hck"
+     ]
+    ],
+    [
+     61,
+     61,
+     [
+      "ck"
+     ]
+    ],
+    [
+     63,
+     62,
+     [
+      "hck"
+     ]
+    ],
+    [
+     64,
+     64,
+     [
+      "ck"
+     ]
+    ],
+    [
+     66,
+     65,
+     [
+      "hck"
+     ]
+    ],
+    [
+     67,
+     67,
+     [
+      "ck"
+     ]
+    ],
+    [
+     68,
+     68,
+     [
+      "hck"
+     ]
+    ],
+    [
+     71,
+     69,
+     [
+      "ck"
+     ]
+    ],
+    [
+     72,
+     72,
+     [
+      "hck"
+     ]
+    ],
+    [
+     73,
+     73,
+     [
+      "ck"
+     ]
+    ],
+    [
+     75,
+     74,
+     [
+      "hck"
+     ]
+    ],
+    [
+     76,
+     76,
+     [
+      "ck"
+     ]
+    ],
+    [
+     78,
+     77,
+     [
+      "hck"
+     ]
+    ],
+    [
+     79,
+     79,
+     [
+      "ck"
+     ]
+    ],
+    [
+     81,
+     80,
+     [
+      "hck"
+     ]
+    ],
+    [
+     82,
+     82,
+     [
+      "ck"
+     ]
+    ],
+    [
+     84,
+     83,
+     [
+      "hck"
+     ]
+    ],
+    [
+     85,
+     85,
+     [
+      "ck"
+     ]
+    ],
+    [
+     86,
+     86,
+     [
+      "hck"
+     ]
+    ],
+    [
+     89,
+     87,
+     [
+      "ck"
+     ]
+    ],
+    [
+     90,
+     90,
+     [
+      "hck"
+     ]
+    ],
+    [
+     91,
+     91,
+     [
+      "ck"
+     ]
+    ],
+    [
+     93,
+     92,
+     [
+      "hck"
+     ]
+    ],
+    [
+     94,
+     94,
+     [
+      "ck"
+     ]
+    ],
+    [
+     96,
+     95,
+     [
+      "hck"
+     ]
+    ],
+    [
+     97,
+     97,
+     [
+      "ck"
+     ]
+    ],
+    [
+     99,
+     98,
+     [
+      "hck"
+     ]
+    ],
+    [
+     100,
+     100,
+     [
+      "ck"
+     ]
+    ],
+    [
+     102,
+     101,
+     [
+      "hck"
+     ]
+    ],
+    [
+     103,
+     103,
+     [
+      "ck"
+     ]
+    ],
+    [
+     104,
+     104,
+     [
+      "hck"
+     ]
+    ],
+    [
+     107,
+     105,
+     [
+      "ck"
+     ]
+    ],
+    [
+     108,
+     108,
+     [
+      "hck"
+     ]
+    ],
+    [
+     109,
+     109,
+     [
+      "ck"
+     ]
+    ],
+    [
+     111,
+     110,
+     [
+      "hck"
+     ]
+    ],
+    [
+     112,
+     112,
+     [
+      "ck"
+     ]
+    ],
+    [
+     114,
+     113,
+     [
+      "hck"
+     ]
+    ],
+    [
+     115,
+     115,
+     [
+      "ck"
+     ]
+    ],
+    [
+     117,
+     116,
+     [
+      "hck"
+     ]
+    ],
+    [
+     118,
+     118,
+     [
+      "ck"
+     ]
+    ],
+    [
+     120,
+     119,
+     [
+      "hck"
+     ]
+    ],
+    [
+     121,
+     121,
+     [
+      "ck"
+     ]
+    ],
+    [
+     122,
+     122,
+     [
+      "hck"
+     ]
+    ],
+    [
+     125,
+     123,
+     [
+      "ck"
+     ]
+    ],
+    [
+     126,
+     126,
+     [
+      "hck"
+     ]
+    ],
+    [
+     127,
+     127,
+     [
+      "ck"
+     ]
+    ],
+    [
+     129,
+     128,
+     [
+      "hck"
+     ]
+    ],
+    [
+     130,
+     130,
+     [
+      "ck"
+     ]
+    ],
+    [
+     132,
+     131,
+     [
+      "hck"
+     ]
+    ],
+    [
+     133,
+     133,
+     [
+      "ck"
+     ]
+    ],
+    [
+     135,
+     134,
+     [
+      "hck"
+     ]
+    ],
+    [
+     136,
+     136,
+     [
+      "ck"
+     ]
+    ],
+    [
+     138,
+     137,
+     [
+      "hck"
+     ]
+    ],
+    [
+     139,
+     139,
+     [
+      "ck"
+     ]
+    ],
+    [
+     140,
+     140,
+     [
+      "hck"
+     ]
+    ],
+    [
+     143,
+     141,
+     [
+      "ck"
+     ]
+    ]
+   ]
+  }
+ }
+}

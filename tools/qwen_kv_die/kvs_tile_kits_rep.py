@@ -35,6 +35,9 @@ sys.path.insert(0, str(HERE))
 
 ENV = dict(OT_KV_STATIC_DIE='1', OT_KV_HROOT='1', OT_KV_FANFOLD='1', OT_KV_TILE_KITS='1')
 OUT = 'results/arch/qwen_kv_kits_b_1018'
+# KV-DOMSPLIT 10-19 (OT_KV_DOMSPLIT=1): the split tiles' measured port records (kv_static_die DOMSPLIT; single-domain words)
+if os.environ.get('OT_KV_DOMSPLIT', '0') == '1':
+    OUT = 'results/arch/qwen_kv_domsplit_1019/ports'
 SRAM = 'physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2'
 TAG = 'k1'
 LAT = 2.16
