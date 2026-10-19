@@ -136,14 +136,15 @@ def compose(stage=1, tile_first=40, ar_order='row', lane_ages=LANE_AGES, tile_mo
             if land >= done or tile_mode != 'priced':
                 break
             tf += done - land
-        tile_note.append(dict(matvec=name, tile_first_eff=tf, dv_tail=land - (go_w5(at) + tf), land=land, priced_done=done))
+        tile_note.append(dict(matvec=name, tile_first_eff=tf, dv_tail=land - (go_w5(at) + tf), land=land, priced_done=done,
+                              go_w5=go_w5(at)))
         return low, ch, go_w5(at) + tf, land
 
     def mv_ar(name, at, done):
         tf = tile_first
         if tile_mode == 'priced':                        # the last AR word leaves W5 no earlier than the priced ME done
             tf = max(tf, done - 255 - go_w5(at) - ages['l8_ar'] - 2 * (N - 1))
-        tile_note.append(dict(matvec=name, tile_first_eff=tf, priced_done=done))
+        tile_note.append(dict(matvec=name, tile_first_eff=tf, priced_done=done, go_w5=go_w5(at)))
         ch = M.Chain(smap)
         t0 = go_w5(at) + tf + ages['l8_ar'] + 2 * (N - 1)
         x = M.lower_xc(ch, ages, t0, 4096 // 16, 0)
