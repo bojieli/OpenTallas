@@ -69,7 +69,8 @@ def run_repair(stats, guard_hm, env=""):
     src = TCL.read_text()
     procs = []
     for name in ("ot_env_num", "ot_hold_guard_on", "ot_hold_stage", "ot_hold_stop_cap", "ot_hold_stop_args", "ot_hold_stop",
-                 "ot_repair_timing"):
+                 "ot_rc_cal_on", "ot_rc_cal_rc", "ot_rc_cal_mode", "ot_rc_cal_spine", "ot_rc_cal_apply", "ot_rc_cal_restore",
+                 "ot_rc_cal_hold", "ot_repair_timing", "ot_repair_hold_guarded"):
         i = src.index(f"proc {name} ")
         j = src.index("\nproc ", i + 1) if src.find("\nproc ", i + 1) > 0 else len(src)
         procs.append(src[i:j])
