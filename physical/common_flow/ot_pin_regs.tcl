@@ -120,8 +120,8 @@ foreach p $ports {
       set prev "${n}__ot_rl$k"
     }
     # KV-RELAYGEN 2026-10-19 (OT_RST_LAND_COPIES "port=N,..."): the last landing stage gets N-1 KEPT identical copies
-    # <port>__ot_rlc beside it; <port>__ot_rlv = {copies, last stage} is the copy family that ot_rst_split.tcl spreads
-    # the core's reset loads over (<= OT_RST_SPLIT_MAX each).  The chain text and the core connection are unchanged.
+    # <port>__ot_rlc beside it; <port>__ot_rlv = {copies, last stage} is the copy family that ot_rst_copies.tcl spreads
+    # the core's reset loads over (<= OT_RST_COPIES_MAX each).  The chain text and the core connection are unchanged.
     if {[dict exists $ot_rl_cp $n] && [dict get $ot_rl_cp $n] > 1} {
       set c [dict get $ot_rl_cp $n]
       if {$w != 1} { error "OT_RST_LAND_COPIES: $n is $w bits wide (copies need a 1-bit reset)" }

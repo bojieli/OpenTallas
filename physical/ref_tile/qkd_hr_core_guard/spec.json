@@ -190,7 +190,7 @@
    "die_id"
   ]
  },
- "structural_change": "KVJ-A3 r2 HOST cluster child qkd_hr_core_guard (core family, one ck_core entry): members u_guard, u_native + their glue, generated wrapper (tools/qwen_kv_die/host_cluster/gen_cluster.py). Partition results/arch/qwen_split_1014/host_root_cluster/partition_r2.json | KV-RELAYGEN 10-19 (SAFE-AUDIT-KV item 3/7, results/arch/safe_audit_1019/kv.md): gate mu1: host_rst_n drove 3,222 loads -> landed (2 stages) with the last stage as 14 KEPT identical copies (reset_landing.copies) and reset_relay_split {256} spreading the core's reset loads over them in synthesis (ot_rst_split.tcl); por_n landed as before; release latency unchanged; io_hold_margin 0.025 -> 0.03. RTL unchanged from mu1.",
+ "structural_change": "KVJ-A3 r2 HOST cluster child qkd_hr_core_guard (core family, one ck_core entry): members u_guard, u_native + their glue, generated wrapper (tools/qwen_kv_die/host_cluster/gen_cluster.py). Partition results/arch/qwen_split_1014/host_root_cluster/partition_r2.json | KV-RELAYGEN 10-19 (SAFE-AUDIT-KV item 3/7, results/arch/safe_audit_1019/kv.md): gate mu1: host_rst_n drove 3,222 loads -> landed (2 stages) with the last stage as 18 KEPT identical copies (sized from the 4,062 reset loads the synthesis pass saw on gate mu2a) (reset_landing.copies) and reset_relay_split {256} spreading the core's reset loads over them in synthesis (ot_rst_copies.tcl); por_n landed as before; release latency unchanged; io_hold_margin 0.025 -> 0.03. RTL unchanged from mu1.",
  "kind": "tile",
  "recipe": 4,
  "hold_budget": "die",
@@ -323,7 +323,7 @@
   "enable": true,
   "stages": 2,
   "copies": {
-   "host_rst_n": 14
+   "host_rst_n": 18
   }
  },
  "reset_relay_split": {
