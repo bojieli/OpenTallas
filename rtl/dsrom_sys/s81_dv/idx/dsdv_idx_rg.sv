@@ -24,6 +24,9 @@
 //   type 8 IDX_G  gather (re-index) of NB candidate BLOCKS              len 64 + ceil(NB / 16)
 //   spec [19:0] B (scan; 0 for a gather), [40:20] N (scan count, or NB), [50:41] k (<= 512), [80:51] KB,
 //        [96:81] T0, [100:97] P (>= 2), [103:101] ik (= the selector's ingress-kind strap)
+//        [106:104] om: OPEN lanes 1..3 (S81-L20DIE 10-19, bit i-1 = lane i): the reader emits neither the HDR nor the
+//        empty BEAT of an open lane -- that lane belongs to a child die's candidate set (dsdv_idx_tx on the child, landed
+//        by dsdv_idx_vmux here), which opens it with its own HDR.  om = 0 (default) = the record behaviour.
 //   payload 0..63: query, word 2h = head h's 128 FP4 codes, word 2h + 1 = {[47:32] BF16 head weight, [31:0] scales}
 //   payload 64..: (IDX_G) candidate block list, 16 entries a word ([32 e +: 17] = block b = positions 8 b .. 8 b + 7,
 //                 the re-index candidate unit: dsrom_reindex_candidates 2,048 blocks = 16,384 keys), strictly
@@ -143,6 +146,7 @@ module dsdv_idx_rg #(
     reg [15:0] t0;
     reg [3:0]  pp;
     reg [2:0]  ik;
+    reg [2:0]  om;                           // open lanes 1..3 (spec [106:104])
     reg [7:0]  tg;
     reg [15:0] j0, j1, nw;                   // first / last absolute word, word count
     reg [15:0] nlw;                          // gather: list words
@@ -180,7 +184,7 @@ module dsdv_idx_rg #(
     always @(posedge ck or negedge rn)
         if (!rn) begin
             act <= 1'b0; infr <= 1'b0; isj <= 1'b0; left <= 0; pw <= 0; ftyp <= 0; gat <= 0; jb <= 0; jn <= 0; jk <= 0;
-            kb <= 0; t0 <= 0; pp <= 0; ik <= 0; tg <= 0; j0 <= 0; j1 <= 0; nw <= 0; nlw <= 0; ql_v <= 1'b0; ql_h <= 0;
+            kb <= 0; t0 <= 0; pp <= 0; ik <= 0; om <= 0; tg <= 0; j0 <= 0; j1 <= 0; nw <= 0; nlw <= 0; ql_v <= 1'b0; ql_h <= 0;
             qset <= 0; q_done <= 1'b0; ended <= 1'b0; tc <= 0;
         end else begin
             ql_v <= 1'b0;
@@ -189,7 +193,7 @@ module dsdv_idx_rg #(
                 isj <= hdr_job;
                 if (hdr_job && !act) begin
                     act <= 1'b1; gat <= q_d[511]; jb <= q_d[19:0]; jn <= h_n; jk <= q_d[50:41]; kb <= q_d[80:51];
-                    t0 <= q_d[96:81]; pp <= q_d[100:97]; ik <= q_d[103:101]; tg <= q_d[502:495];
+                    t0 <= q_d[96:81]; pp <= q_d[100:97]; ik <= q_d[103:101]; om <= q_d[106:104]; tg <= q_d[502:495];
                     // gather: NB blocks = 8 NB ordinals = ceil(NB / 2) selector words, ceil(NB / 16) list words
                     if (q_d[511]) begin j0 <= 16'd0; j1 <= 16'(((h_n + 21'd1) >> 1) - 21'd1); nw <= 16'((h_n + 21'd1) >> 1);
                                         nlw <= 16'((h_n + 21'd15) >> 4); end
@@ -681,6 +685,9 @@ module dsdv_idx_rg #(
             4'd9: hb = bk(ik, 2'd3, 1'b1, 1'b0, 12'd0, {4'd2, tg, 227'd0, 1'b1, 16'd0});
             default: hb = '0;
         endcase
+        // open lanes (spec om): no HDR / empty BEAT of that lane (e_ix 1-3 lane 1, 4-6 lane 2, 7-9 lane 3)
+        if ((e_ix[3:0] >= 4'd1 && e_ix[3:0] <= 4'd3 && om[0]) || (e_ix[3:0] >= 4'd4 && e_ix[3:0] <= 4'd6 && om[1]) ||
+            (e_ix[3:0] >= 4'd7 && e_ix[3:0] <= 4'd9 && om[2])) hb = '0;
     end
     wire        slot = ended && !wdone && ew < nw && tc == et;
     wire [15:0] ej = ew + j0;                // absolute word

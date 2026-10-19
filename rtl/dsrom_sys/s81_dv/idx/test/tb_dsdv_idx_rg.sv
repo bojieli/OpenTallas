@@ -30,12 +30,13 @@ module tb_dsdv_idx_rg;
     integer SEED = 1;
     integer SLICE = 1;
     integer TRW = 0, TRN = 0;
+    integer OPEN = 0;                      // S81-L20DIE: spec om (open lanes 1..3 -> no HDR / empty BEAT expected)
     initial begin
         void'($value$plusargs("TRW=%d", TRW)); void'($value$plusargs("TRN=%d", TRN));
         void'($value$plusargs("N=%d", N)); void'($value$plusargs("GATHER=%d", GATHER)); void'($value$plusargs("B=%d", B));
         void'($value$plusargs("PMAX=%d", PMAX)); void'($value$plusargs("KB=%d", KB)); void'($value$plusargs("T0=%d", T0));
         void'($value$plusargs("P=%d", P)); void'($value$plusargs("K=%d", K)); void'($value$plusargs("SEED=%d", SEED));
-        void'($value$plusargs("SLICE=%d", SLICE));
+        void'($value$plusargs("SLICE=%d", SLICE)); void'($value$plusargs("OPEN=%d", OPEN));
     end
     parameter integer MUT = 0;
     parameter bit SRAM_MACRO = 1;
@@ -232,7 +233,8 @@ module tb_dsdv_idx_rg;
                 for (i = 0; i < 16; i = i + 1) m[16 * i +: 16] = {16{exp_v[lw_n[0] - 1][i]}};
                 e = {4'd2, 8'(TAG), 227'd0, 1'(lw_n[0] == nw), exp_v[lw_n[0] - 1], exp_s[lw_n[0] - 1] & m};
             end
-            if (d !== e || ln[515 * l + 514] || (l != 0 && lw_n[l] > 1) || (l == 0 && lw_n[0] > nw)) begin
+            if (d !== e || ln[515 * l + 514] || (l != 0 && lw_n[l] > 1) || (l == 0 && lw_n[0] > nw) ||
+                (l != 0 && OPEN[l - 1])) begin
                 nerr = nerr + 1;
                 if (nerr <= 8) $display("TB_IDXRD MISMATCH cyc %0d lane %0d word %0d fault %0d got %h exp %h", cyc, l,
                                         lw_n[l], ln[515 * l + 514], d, e);
@@ -285,7 +287,7 @@ module tb_dsdv_idx_rg;
         h = 512'd0;
         h[511:508] = (GATHER != 0) ? 4'd8 : 4'd4; h[502:495] = 8'(TAG); h[491:480] = 12'(len); h[458:449] = 10'd3;
         h[19:0] = (GATHER != 0) ? 20'd0 : 20'(B); h[40:20] = 21'(N); h[50:41] = 10'(K); h[80:51] = 30'(KB);
-        h[96:81] = 16'(T0); h[100:97] = 4'(P); h[103:101] = 3'(IK);
+        h[96:81] = 16'(T0); h[100:97] = 4'(P); h[103:101] = 3'(IK); h[106:104] = 3'(OPEN);
         job_hdr = h;
     endfunction
     initial begin : g_run
@@ -348,8 +350,8 @@ module tb_dsdv_idx_rg;
         for (a = 0; a < R; a = a + 1) if (st[a][0] || st[a][1]) begin
             fail = 1; $display("TB_IDXRD region %0d st %b (fault causes {window-end leftovers, bad job, job while active, k_ready, flag, late, rsp, list})", a, st[a]);
         end
-        for (i = 0; i < 4; i = i + 1) if (lw_n[i] != (i == 0 ? nw + 1 : 2)) begin
-            fail = 1; $display("TB_IDXRD lane %0d words %0d expected %0d", i, lw_n[i], i == 0 ? nw + 1 : 2);
+        for (i = 0; i < 4; i = i + 1) if (lw_n[i] != (i == 0 ? nw + 1 : (OPEN[i - 1] ? 0 : 2))) begin
+            fail = 1; $display("TB_IDXRD lane %0d words %0d expected %0d", i, lw_n[i], i == 0 ? nw + 1 : (OPEN[i - 1] ? 0 : 2));
         end
         if (vin_f) begin fail = 1; $display("TB_IDXRD selector V-ingress protocol fault"); end
         if (nerr != 0 || qerr != 0 || s_err != 0) fail = 1;
