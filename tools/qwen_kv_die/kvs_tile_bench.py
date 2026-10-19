@@ -98,6 +98,8 @@ def main():
     ap.add_argument('--mut', type=int, default=0)
     ap.add_argument('--edges', type=int, default=2000)
     ap.add_argument('--out', required=True)
+    ap.add_argument('--sim', default=os.environ.get('KVS_SIM', 'iverilog'), choices=('iverilog', 'verilator'))
+    ap.add_argument('--threads', type=int, default=4)
     a = ap.parse_args()
     t = a.tile
     out = Path(a.out)
@@ -181,14 +183,24 @@ def main():
     cl = json.loads(subprocess.check_output([sys.executable, '-c', code], cwd=ROOT,
                                             env=dict(os.environ, OT_KV_STATIC_DIE='1', OT_KV_TILE_KITS='1')))
     srcs = sorted((set(old['src']) | set(new['src']) | set(cl)) - {old['rtl'], new['rtl']})
-    cmd = ['iverilog', '-g2012', '-o', str(out / 'sim'), '-s', 'tb_kvs_tile', str(out / 'tb.sv'), str(out / 'tiles.sv')] + \
-        [s for s in srcs] + ['-Y', '.sv'] + [x for d in sorted({str(Path(s).parent) for s in srcs}) for x in ('-y', d)]
+    dirs = sorted({str(Path(s).parent) for s in srcs})
+    if a.sim == 'verilator':
+        # KV-KITS-ATTN 10-18: the closure daemon's pinned Verilator (5.050, PATH set by the loop / kvs_tile_bench.sh)
+        cmd = ['verilator', '--binary', '--timing', '-j', str(a.threads), '-Wno-fatal', '-Wno-lint', '-Wno-style',
+               '-Wno-TIMESCALEMOD', '--top-module', 'tb_kvs_tile', '-Mdir', str(out / 'obj'), '-o', 'sim',
+               str(out / 'tb.sv'), str(out / 'tiles.sv')] + list(srcs) + ['+libext+.sv+.v'] + [x for d in dirs for x in ('-y', d)]
+        run = [str(out / 'obj' / 'sim')]
+        print('SIM ' + subprocess.run(['verilator', '--version'], capture_output=True, text=True).stdout.strip())
+    else:
+        cmd = ['iverilog', '-g2012', '-o', str(out / 'sim'), '-s', 'tb_kvs_tile', str(out / 'tb.sv'),
+               str(out / 'tiles.sv')] + list(srcs) + ['-Y', '.sv'] + [x for d in dirs for x in ('-y', d)]
+        run = ['vvp', '-n', str(out / 'sim')]
     r = subprocess.run(cmd, capture_output=True, text=True, cwd=ROOT)
     if r.returncode:
         print(r.stdout[-3000:], r.stderr[-3000:])
         print(f'KVS_TILE FAIL tile={t} build mut={a.mut} ')
         return 2
-    r = subprocess.run(['vvp', '-n', str(out / 'sim')], capture_output=True, text=True, cwd=ROOT)
+    r = subprocess.run(run, capture_output=True, text=True, cwd=ROOT)
     print(r.stdout[-4000:])
     line = [ln for ln in r.stdout.splitlines() if ln.startswith('KVS_TILE ')]
     if not line:

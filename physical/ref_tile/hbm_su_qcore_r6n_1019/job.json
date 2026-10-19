@@ -1,0 +1,164 @@
+{
+ "name": "hbm_su_qcore_r6n_1019-n1-COMMIT",
+ "block": "ot_hbm_su_static_qcore_r5",
+ "ref_tile": true,
+ "owner": "Claude:LEAD2-HBM/L2H-SU",
+ "purpose": "HBM die d4g sucore_<q> = qcore r6 RTL (8 kept sector modules, gated k+1 reads, PRETREE 1) WITHOUT the INCLUSIVE sector placement regions (r6 gate 10-19 01:45 crashed DPL: detail_place.tcl bad optional access) and with main tools (reset_landing now lands rst_n; r6 gate: 121 unlanded sinks)",
+ "threads": 8,
+ "peak_ram_gb": 32,
+ "source": {
+  "branch": "claude/l2h-qcore6n-1019",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "tools/hbm_static/su_qcore_rg_run.sh",
+   "rtl/test/hbm_qcore_physical_1016/tb_qcore_rg_lockstep.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/register_file/ot_hbm_su_static_rf.sv",
+   "tools/hbm_static/su_pretree_run.sh",
+   "tools/hbm_static/su_pretree_bench.py",
+   "tools/hbm_static/su_pretree_lower.py",
+   "tools/hdc_golden_v41.py",
+   "tools/hdc_golden.py",
+   "rtl/test/hbm_accel/generic/tb_hbm_su_red_pretree.sv"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hbm_su_static_qcore_r5 #(.MUT(0), .COLLPORT(1), .RF_LOCAL(1), .PRETREE(1)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore_r5.sv rtl/hbm_accel/generic/adapters/static_su/reduction/ot_hbm_su_red_pretree.sv rtl/hbm_accel/generic/adapters/static_su/reduction/ot_hbm_su_reduce_static.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fastfp.sv physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "qcore_r6_lockstep",
+    "cmd": "bash tools/hbm_static/su_qcore_rg_run.sh {RUN}/bench/pos 0",
+    "expect": "pass",
+    "pass_regex": "QCORE_RG PASS",
+    "pass_witness": "results/rtl/hbm_su3_1017/qcore_r6_pos.log",
+    "threads": 8,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ],
+    "min_count_regex": "checks=(\\d+)"
+   },
+   {
+    "name": "qcore_r6_mut256",
+    "cmd": "bash tools/hbm_static/su_qcore_rg_run.sh {RUN}/bench/mut 256",
+    "expect": "fail",
+    "fail_regex": "QCORE_RG FAIL",
+    "fail_witness": "results/rtl/hbm_su3_1017/qcore_r6_mut256.log",
+    "threads": 8,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "qcore_r6_pretree_exact",
+    "cmd": "bash tools/hbm_static/su_pretree_run.sh {RUN}/bench/pt0 0",
+    "expect": "pass",
+    "pass_regex": "^PASS tb_hbm_su_red_pretree MUT=0: 10 exports",
+    "pass_witness": "results/rtl/su_pretree_1018/qcore_r6_m0.log",
+    "threads": 8,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "qcore_r6_pretree_mut512_late",
+    "cmd": "bash tools/hbm_static/su_pretree_run.sh {RUN}/bench/pt512 512",
+    "expect": "fail",
+    "fail_regex": "FAIL tb_hbm_su_red_pretree MUT=512",
+    "fail_witness": "results/rtl/su_pretree_1018/qcore_r6_m512.log",
+    "threads": 8,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "qcore_r6_pretree_mut1024_pairing",
+    "cmd": "bash tools/hbm_static/su_pretree_run.sh {RUN}/bench/pt1024 1024",
+    "expect": "fail",
+    "fail_regex": "FAIL tb_hbm_su_red_pretree MUT=1024",
+    "fail_witness": "results/rtl/su_pretree_1018/qcore_r6_m1024.log",
+    "threads": 8,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hbm_su_qcore_r6n_1019/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hbm_su_qcore_r6n_1019/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 32
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hbm_su_qcore_r6n_1019 --out {RUN}/record/views/ot_hbm_su_static_qcore_r5 --macro-view physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/hbm_su_qcore_r6n_1019/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/hbm_su_qcore_r6n_1019/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/hbm_su_qcore_r6n_1019/hbm_su_qcore_r6n_1019-n1-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "r6 RTL (sector-local storage + gated reads, kept copies) placed by the placer without INCLUSIVE regions (the region groups crashed DPL); reset landed 2 stages. HBM-SU3 10-17 qcore r5 (coordinator 0dc): ot_hbm_su_static_qcore_r5 replaces the 66-root qcore (64 per-bank clk_rf + ctl + red; codex hbm_qcore_s_pinrung_r2, 76k FF on 330.48^2). One RF copy (8,192 flops) instead of six per-reader replicas, and only the selected word per read class is registered (raw k+1, rd k+2) instead of a raw/read_data register per (bank, reader) + bank-select mux: ~11.5k flops, ONE root clk_ctl (reducer SRAMs on it; g1 gate: clk_red reached SRAM clock pins, CTS refused a separate root). Read: per-sector word at k+1 from a per-sector address copy, sector select at k+2 (g1: 8,192-load address nets). Pins first (raw command/writer capture at k, decode after the flop). Same edges: commit k+1, rf_bword/rf_dsec k+3, scalar E+11; write-conflict FAULT +1 edge; invalid-read output words are don't-care (documented). Reducer SRAMs stacked on the 43.2 lattice; die faces kept (W slice, E channel, N clocks). Re-home: H-DIE-R7b/R8b grants put sucore_<q> beside its pgslices. g3 (HBM-SU6 10-17, g2 gate: rf_bcmd[*] 8,193 loads = synthesis merged the per-sector read-address copies with the rf_bcmd output flop; placement reg->reg -178.7 ps into mem D): every replicated pin-rung copy is a kept instance (keep_hierarchy ot_hbm_su_qcore_r5_kq): read address per (sector, class, 16-bit half), class 5 per (word slot, half), writer wv/wa/wd/rrv/rra per sector (8 banks each). Same edges; slice_x stays raw (a pin flop would move the E+1 operand edge). r6 (HH-11 10-19, route r5-1a1108053 NEEDS_RTL TT -314.4 / FF +11.49 / DRC 0, 6,633 TT-violating D: g_sec.u_wd -> mem D 20 levels (per-sector writer copies clumped at the E face, each sector's banks spread over the tile), class-5 r5a -> raw5 ~470 ps of placement buffers (slot kk read bank kk of all 8 sectors), cmd_p -> fault 18 levels; and route.period_ps 1111.111 made repair target 1111 instead of the 833 sign-off -> removed): one keep_hierarchy module per sector (ot_hbm_su_qcore_r6_sec: 8 banks x 4 rows x 32 b, raw writer copies incl. its own 256-b COLL data copy, one-hot priority write decode, read-address copies per (class, half), k+1 read registers GATED by the sector match), each placed as an INCLUSIVE region (sector_regions.tcl: 2 sectors per free band row, S/middle/N bands beside the SRAM rows); k+2 = OR of the 8 gated sector words (classes 0-4 and the class-5 row); write-conflict fault registered per sector (+1 edge, status only). Same ports + PRETREE 1 (HH-6: slice_t[267:0] on the W face beside slice_x, pretree_j beside the reducer), same edges (commit k+1, reads k+3, E+11, tree operand E+69).",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "what": "route hbm_su_qcore_r5_1017-r5-1a1108053 ended NEEDS_RTL TT -314.4 ps; r6 RTL (sector storage modules, gated k+1 reads) replaces the shared read cone",
+  "vs": "hbm_su_qcore_r5_1017-r5-1a1108053"
+ }
+}

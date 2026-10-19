@@ -204,7 +204,7 @@ def dv_deltas(doc, g, pinreg=8, su_scale=0.0, basis_scale=1.0, hbm_rt=False, hos
 
 def host_terms(plan, land, half=False, landed=True):
     """one traversal of the host plane in / out (worst lane), cycles (module docstring item 6)"""
-    E = {l['link']: l['E'] for l in land['links']}
+    E = {l['link']: (l.get('K') or l['E']) for l in land['links']}   # S81-LBGAP/G8: the landing latency is K + 1
     lanes = {l['i'].replace('-', '_'): l['s'] for l in plan['links'] if l['i'].startswith(('hf_', 'ht_'))}
     if not lanes:
         return None
@@ -222,7 +222,7 @@ def land_terms(plan, land, half=False):
     """per rule: added cycles per traversal (+ sum(1 + E) over landed links, - stations / 2 if half) and the path"""
     import collections, heapq
     B = plan['blocks']
-    E = {l['link']: l['E'] for l in land['links']}
+    E = {l['link']: (l.get('K') or l['E']) for l in land['links']}   # S81-LBGAP/G8: the landing latency is K + 1
     G = collections.defaultdict(dict)
     for l in plan['links']:
         a, b = B[l['e'][0][0]]['name'], B[l['e'][1][0]]['name']
@@ -325,6 +325,7 @@ def ledger_split(path=LEDGER, drop=None):
             continue
         is_drop = r['status'] == 'superseded' or bool(drop.search(r['group']))
         tgt = dropped if is_drop else kept
+
         for wl in ('ar', 'mtp'):
             tgt[wl] += (r.get('per_workload', {}).get(wl) or {}).get('e2e_loss_pct', 0.0) or 0.0
         rows.append(dict(group=r['group'], status=r['status'], dropped=is_drop,

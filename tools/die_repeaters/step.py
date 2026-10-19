@@ -163,7 +163,7 @@ def tcl_call(design, report, tcl_dir='/work', fail_exit=3, **kw):
         post = (f'set ot_die_rep_fb [ot_die_rep_fclk_audit {{{prefix}}} {_tcl_list(fg)} {_tcl_list(bufs)}]\n'
                 f'set ::ot_die_rep_fclk_args [list {{{prefix}.post_grt}} {_tcl_list(fg)} {_tcl_list(bufs)}]\n'
                 + (f'if {{$ot_die_rep_fb != 0}} {{ puts "OT_DIE_REP FAIL fclk_mismatch_hops=$ot_die_rep_fb"; flush stdout; '
-                   f'exit {fail_exit} }}\n' if fp == 'fail' else ''))
+                   f'write_db {{{prefix}.fail.odb}}; exit {fail_exit} }}\n' if fp == 'fail' else ''))
     return (f'# shared die-net repeater step (tools/die_repeaters/step.py, design {design})\n'
             f'source {tcl_dir}/die_repeaters.tcl\n' + pre +
             f'set ot_die_rep_v [ot_die_repeaters [dict create {" ".join(parts)}]]\n'

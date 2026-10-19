@@ -58,6 +58,9 @@ INPUTS = {
     's81_p4l_price': ('results/arch/s81_dv_1016/p4l/price_land.json', 'main (S81-DIE7/PRICE ec38691d6)'),
     's81_scand': ('results/arch/s81_scand_1018/scand.json',
                   'claude/s81-scand-1018 (S81-SCAND: option D, measured 1-stack reader, keys over k = 3 TP4 stages)'),
+    's81_l20split': ('results/arch/s81_l20_1019/split/split.json',
+                     'claude/s81-l20split-1019 (S81-L20SPLIT, coordinator 0li: L20 keys over k = 6 TP4 stages, '
+                     'compiled rank tree on the measured reader + RTL bk_sel jobs)'),
     'q_1013': ('results/rtl/qwen_layer_tput_1013/record.json', 'main'),
     'q_1013_terms': ('results/rtl/qwen_layer_tput_1013/die_terms.json', 'main'),
     'q_tp8_coll': ('results/rtl/qwen_layer_tput_1013/native_tp8_collective/positive/record.json', 'main'),
@@ -139,6 +142,7 @@ def union_overlap(s, e, ivs):
 # ---------------------------------------------------------------- DS ROM (S81 array)
 GRADE_DAG = {'measured': 'measured-old-RTL', 'measured+vendor': 'modelled-PHY'}
 SCAN_GROUP = 'S81.SCAN_STACKS_P4L'      # accepted-cost ledger group of the 1-stack scan correction
+SPLIT_GROUP = 'S81.L20_SPLIT'          # accepted-cost ledger group of the L20 split (coordinator 0li)
 
 
 def ds_rom(wl):
@@ -227,10 +231,34 @@ def ds_rom(wl):
             terms.append(term('wave.scan_d', 'layer', 1, wave, 'priced', src('s81_scand', f'by_k.{k}.dag_1009.{wl}'),
                               layer='wave', note='MTP wavefront: the slowest verify stage after option D, +delta per position'))
             sc_add += wave
+    # S81-L20SPLIT (10-19, coordinator 0li: adopted): L20's index keys over k = 6 TP4 stages (the record's 3 + 3 helper
+    # stages, no new silicon); the L20 index path (reader + adders + topk_local + legs/merge) becomes the COMPILED rank
+    # tree (split.json: measured dsdv_idx_rg reader law, bk_sel jobs verified on RTL at their compiled edges, measured
+    # 729-cycle leg).  The delta vs record D comes from the same DAG solve (b3_price machinery): the chain delta is
+    # charged on L20, the rest of the solve (MTP wavefront) as wave.  Charged until dv_price carries the ledger row.
+    # Slots carry 'scan_d' so results/arch/s81_idxrd_1018/b3_price.py strips them from its basis (T0) like option D's.
+    if SPLIT_GROUP not in led_rows and (ROOT / INPUTS['s81_l20split'][0]).exists():
+        sp = load('s81_l20split')['single_user']
+        r0, r1 = sp['rows']['record_D'], sp['rows']['split_k6_compiled_tree']
+        dT = r1['T_' + wl] - r0['T_' + wl]
+        dch = sp['chains']['split_k6_compiled'] - sp['chains']['record_D']
+        terms.append(term('L20.scan_d_l20split_k6', 'layer', 1, dch, 'measured-current-RTL',
+                          src('s81_l20split', 'single_user.chains.split_k6_compiled - record_D'), layer='L20',
+                          note='L20 index path: compiled k=6 rank tree %d vs record D %d (reader law + RTL bk_sel jobs + '
+                               'legs; the 116 adders and the 729 leg are older measurements)'
+                               % (sp['chains']['split_k6_compiled'], sp['chains']['record_D'])))
+        sc_add += dch
+        if abs(dT - dch) > 1e-6:
+            terms.append(term('wave.scan_d_l20split_k6', 'layer', 1, dT - dch, 'priced',
+                              src('s81_l20split', f'single_user.rows.split_k6_compiled_tree.T_{wl} - record_D.T_{wl}'),
+                              layer='wave', note='DAG re-solve of the split (MTP: the slowest verify stage, per position)'))
+            sc_add += dT - dch
     T_por = T_rec + sc_add
     por = dict(tok_s=round(F_CLK * (tau if mtp else 1.0) / T_por, 1), cycles=round(T_por, 1),
                source=INPUTS['s81_p4l_price'][0] + f' dv_base.{wl}' + (' + S81-SCAND option D 1-stack scan (ledger %s, '
-                                                                     'not yet in dv_price)' % SCAN_GROUP if sc_add else ''))
+                                                                     'not yet in dv_price)' % SCAN_GROUP if sc_add else '')
+               + (' + S81-L20SPLIT k=6 (ledger %s, not yet in dv_price)' % SPLIT_GROUP
+                  if SPLIT_GROUP not in led_rows and (ROOT / INPUTS['s81_l20split'][0]).exists() else ''))
     if sc_add:
         por.update(uncorrected_tok_s=rec['dv_tok_s'], scan_stacks_correction_cycles=round(sc_add, 1))
     return dict(terms=terms, tau=tau, price_of_record=por,
@@ -481,6 +509,20 @@ def discover_records(root=None):
     return sorted(found.items())
 
 
+def missing_records(root=None):
+    """Tracked record-family json files that are NOT on disk (sparse worktree: skip-worktree 'S', or deleted).
+    Discovery reads the working tree, so a sparse checkout without e.g. results/rtl/xdie_qwen_1018 silently drops the
+    pair_r2 override and recomputes Qwen ROM AR 4,767.1 instead of 4,766.5 (MU-S81-2/CHK 10-19).  Callers refuse."""
+    root = Path(root or ROOT)
+    try:
+        ls = subprocess.run(['git', '-C', str(root), 'ls-files', '-t', '--', *[p + '/*.json' for p in FAMILIES.values()]],
+                            capture_output=True, text=True, check=True).stdout.splitlines()
+    except Exception:
+        return []
+    return sorted(rel for tag, rel in (l.split(' ', 1) for l in ls if ' ' in l)
+                  if tag == 'S' or not (root / rel).is_file())
+
+
 def default_xdie_records():
     """compatibility: the discovered TOKEN-XDIE records (absolute paths)"""
     return [str(ROOT / r) for r, f in discover_records() if f == 'xdie']
@@ -526,6 +568,12 @@ def overrides(paths):
         ent = dict(record=rel, family=_family(rel), used=bool(tc and tc.get('terms')), n_terms=len((tc or {}).get('terms', [])),
                    why=None if tc and tc.get('terms') else ((tc or {}).get('note') or 'no token_compose block (record not yet in the override format)'),
                    rejected=[])
+        if tc and tc.get('active', True) is False:
+            ent.update(used=False, why=tc.get('selection_note') or 'explicitly inactive composition record',
+                       superseded_by=tc.get('superseded_by'))
+            ent.pop('rejected')
+            seen.append(ent)
+            continue
         commit = git('log', '-1', '--format=%h', '--', str(p)) or 'uncommitted'
         for i, o in enumerate((tc or {}).get('terms', [])):
             o = dict(o, _record=rel, _commit=commit, _i=i)
@@ -635,6 +683,37 @@ def compose(design, wl, ov):
                 layers=lay, overrides_used=used, evidence=b.get('evidence'), terms=terms)
 
 
+# ---------------------------------------------------------------- multi-user (MU-S81, owner MU.DECIDE option A, 10-18)
+MU_CAL = ROOT / 'results/arch/mu_s81_1018'
+
+
+def multi_user_ds(wls):
+    """S81 multi-user pricing: the latency user keeps the composed single-user rate (shift lemma, asserted by the
+    calendar's brute-force check); the other users run the same schedule shifted by whole slots, so aggregate =
+    users x composed per-user rate (+ AR fillers inside the MTP calendar at f_clk / step).  The user count is the
+    compiled calendar's (tools/s81_dv/dv_mu_calendar.py: integer windows, A/B copy colouring, 0 collisions), not
+    floor(T / II).  Grades: per-user = this composition's; users = modelled calendar (MU.TOK measures it)."""
+    mu = {}
+    for wl in ('ar', 'mtp'):
+        f = MU_CAL / f'calendar_{wl}.json'
+        w = wls.get(wl)
+        if not f.exists() or not w or not w.get('available'):
+            continue
+        cal = json.loads(f.read_text())
+        if cal['lemma']['brute_force']['result'] != 'PASS':
+            mu[wl] = dict(available=False, reason=f'calendar lemma {cal["lemma"]["brute_force"]["result"]}')
+            continue
+        per = w['tok_s']
+        fill = cal.get('fillers', 0) * (per / w['tau'] if wl == 'mtp' and w.get('tau') else 0.0)
+        mu[wl] = dict(available=True, users=cal['users'], fillers=cal.get('fillers', 0), per_user_tok_s=round(per, 1),
+                      aggregate_tok_s=round(cal['users'] * per + fill), slot_cycles=cal['slot'],
+                      period_cycles=cal['period'], dies=cal['config']['dies'], stacks=cal['config']['stacks'],
+                      total_mm2=cal['config']['total_mm2'], model_users=cal['config']['model_users'],
+                      calendar_per_user_tok_s=cal['per_user_tok_s'],
+                      record=str(f.relative_to(ROOT)), grade='per-user: this composition; users: modelled calendar')
+    return mu
+
+
 def run(pass_records=None, xdie_records=None):
     """records: None -> discovery (every TOKEN-PASS / LB2 / XDIE record); lists -> exactly those (tests, what-ifs)"""
     if pass_records is None and xdie_records is None:
@@ -657,6 +736,9 @@ def write(out, seen, page_dirs):
                grades=list(GRADES), inputs=_seen, records_seen=seen, designs={})
     for d, wls in out.items():
         doc = dict(schema=SCHEMA, design=d, workloads=wls)
+        if d == 'ds_rom':
+            doc['multi_user'] = multi_user_ds(wls)
+            idx.setdefault('multi_user', {})[d] = doc['multi_user']
         (OUT / f'{d}.json').write_text(json.dumps(doc, indent=1) + '\n')
         idx['designs'][d] = {wl: ({k: w[k] for k in ('title', 'tok_s', 'T_token_cycles', 'per_accepted_cycles', 'tau',
                                                          'pct_measured_current_rtl', 'banner', 'by_grade', 'price_of_record',
@@ -711,6 +793,12 @@ def main():
         return
     explicit = a.pass_records is not None or a.xdie_records is not None
     pr, xr = (a.pass_records, a.xdie_records) if explicit else (None, None)
+    miss = [] if explicit else missing_records()
+    if miss:
+        dirs = sorted({'/'.join(m.split('/')[:3]) for m in miss})
+        print(f'INCOMPLETE: {len(miss)} tracked record files are not on disk (sparse worktree?); discovery would drop '
+              f'their overrides. Check out: {" ".join(dirs)}')
+        sys.exit(2)
     out, seen = run(pr, xr)
     if a.check:
         bad = 0

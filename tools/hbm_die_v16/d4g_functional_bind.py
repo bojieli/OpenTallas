@@ -30,12 +30,20 @@ PATHS (one class per TOKEN-PASS-HBMDS gap; the producer/consumer pairs and slots
                     x-wave slices xb_d<k>).  The quarter engine (root + 4 x (centre + 8 banks)) IS the HC engine.
   SFUJ  G-SFU-OPERAND-JOIN-<q> sfus_<q>.l<nn>_vi_q -> sfucore_<q>.vi_q_<face> (lanes 4f..4f+3 on face f = w,n,e,s).
   DMA   G-DMA/G-DMA-WB hb_dbk_<q>.wb_*/wd -> wbk_<q>; wbk_<q>.wb_ready/wa -> hb_dbk_<q> (write-back partner).
+  LAT   G-VM-BANKLAT (HBM-BANKLAT 10-19, coordinator decision on the VEH-TOPKFIX2 audit): every fixed-latency VM bank
+                    client's round-trip parameter == bank contract (read 6 / commit 3, + 1 when the bank master pin-
+                    registers its inputs) + the die lane edges on its rq and rr lanes, EQUAL over every bank it reads
+                    (d4g_bank_latency.py: rule table, landing latency ceil(N/2)+1+E with E from the K straps).
+                    --lat strict (default) fails the bind on any mismatch; --lat warn reports it (physical-only
+                    stand-in iterations; never for a qualifying GEN).
 Every gap id the contract still lists whose paths ALL pass here is reported STALE (the netlist closed it, the contract's
 gap list was never pruned -> layer_coverage.py grades the layer BLOCKED on a closed gap).  --gaps strict fails on that.
 Output line: FUNCTIONAL_BIND PASS|FAIL paths=N bits=B fail_paths=F stale_gaps=S open_gaps=O.
 """
 import argparse, collections, gzip, json, re, sys
 from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import d4g_bank_latency
 
 QS = ('SW', 'SE', 'NW', 'NE')
 EAST = {'SW': 'SE', 'NW': 'NE'}
@@ -284,6 +292,8 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('contract'); ap.add_argument('--report'); ap.add_argument('--spec-out')
     ap.add_argument('--gaps', choices=('strict', 'warn'), default='strict')
+    ap.add_argument('--lat', choices=('strict', 'warn', 'off'), default='strict',
+                    help='LAT class (bank-client latency): strict fails the bind on a mismatch')
     a = ap.parse_args()
     S = spec()
     if a.spec_out:
@@ -293,6 +303,16 @@ def main():
     pres = check_params(c, param_rules())
     for x in pres:   # a param rule counts as a 0-bit path of its class
         res.append(dict(x, src=[x['inst'], x['param'], 0], dst=[x['inst'], x['param'], 0], w=0, relay_stages=[], kind='slot'))
+    lat_rows = []
+    if a.lat != 'off':
+        lat_rows, lat_sum = d4g_bank_latency.check(c)
+        for r in lat_rows:
+            if r['status'] == 'INFO':
+                continue
+            st = r['status'] if a.lat == 'strict' else 'PASS'
+            res.append(dict(gap='G-VM-BANKLAT', cls='LAT', kind='latency', src=[r['client'], r['port'], 0],
+                            dst=[r['client'], r.get('param', '-'), 0], w=0, relay_stages=[], status=st, bad=r['bad'],
+                            have=r.get('have'), want=r.get('want'), rt=r.get('rt'), lat_status=r['status']))
     by_gap = collections.defaultdict(list)
     for r in res:
         by_gap[r['gap']].append(r['status'])
@@ -300,7 +320,8 @@ def main():
     stale = sorted(g for g in by_gap if g in listed and all(s == 'PASS' for s in by_gap[g])
                    and listed[g].get('status') != 'closed')
     open_ = sorted(g for g in by_gap if any(s != 'PASS' for s in by_gap[g]))
-    unlisted_open = sorted(g for g in open_ if g not in listed or listed[g].get('status') == 'closed')
+    unlisted_open = sorted(g for g in open_ if (g not in listed or listed[g].get('status') == 'closed')
+                           and g != 'G-VM-BANKLAT')   # LAT fails are reported as fail_paths; not a contract gap id
     fails = [r for r in res if r['status'] != 'PASS']
     cls = collections.OrderedDict()
     for r in res:
@@ -313,6 +334,10 @@ def main():
     for r in fails[:40]:
         print('  FAIL', r['cls'], f'{r["src"][0]}.{r["src"][1]}[{r["src"][2]}+:{r["w"]}] -> {r["dst"][0]}.{r["dst"][1]}[{r["dst"][2]}]',
               '|', '; '.join(r['bad']))
+    lat_bad = [r for r in lat_rows if r['status'] == 'FAIL']
+    if lat_rows:
+        print(f'  LAT   clients {sum(r["status"] != "INFO" for r in lat_rows):4d} fail {len(lat_bad):3d} (--lat {a.lat})'
+              + ('' if a.lat == 'strict' or not lat_bad else '  WARN: bank-client latency mismatches NOT failing this bind'))
     for g in stale:
         print('  STALE_GAP', g, '(all functional paths bound; contract still lists it open)')
     for g in unlisted_open:
@@ -324,7 +349,8 @@ def main():
             'schema': 'opentallas.d4g_functional_bind.v1', 'contract': str(a.contract), 'verdict': 'PASS' if ok else 'FAIL',
             'classes': {k: dict(v, relay_stages=sorted(v['relay_stages'])) for k, v in cls.items()},
             'stale_gaps': stale, 'open_gaps': open_, 'unlisted_open_gaps': unlisted_open,
-            'fails': fails, 'paths': len(res)}, indent=1))
+            'fails': fails, 'paths': len(res), 'lat_mode': a.lat,
+            'lat_rows': [{k: v for k, v in r.items() if k != 'paths'} for r in lat_rows]}, indent=1))
     sys.exit(0 if ok else 1)
 
 

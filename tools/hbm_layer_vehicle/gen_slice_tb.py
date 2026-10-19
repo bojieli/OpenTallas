@@ -15,7 +15,8 @@ REPLAY MODEL (the slice's neighbours, at their SCHEDULED cycles).  replay.json (
   fixed-delay schedule, no handshakes).
 TB prints SLICE_CHECK_FAIL / SLICE_REC lines, SLICE_OUT first/last change cycle per output (measured activity span),
 and SLICE_PASS (all checks met, drives applied) or SLICE_FAIL.  Plusargs: +REPLAY=<dir> (mem files), +CYCLES=<n>
-stream edges after reset (default: last event + 64, or 2000 with no replay), +HBM_IMG_DIR=<dir> (DRAM model preload).
+stream edges after reset (default: last event + 64, or 2000 with no replay), +HBM_IMG_DIR=<dir> (DRAM model preload),
++SHOWVAL (each failed check also prints SLICE_CHECK_VAL got/exp/msk; VEH-CUTS 10-19).
 VM image / VM checks (backdoor, the producer records' state): M events {"k":"M","mem":"vm","bank","row","sector","val"}
 (cyc 0 only: preloaded before reset release) write the bank's SRAM macro cells with the bank's own SECDED (39,32) check
 bits (ot_vms_bank_q0_faces_body.sv: sector s -> bank s[2:0], quarter s[14:13], mirror s[15] -> macro C else A, row
@@ -98,6 +99,9 @@ def main():
         last = max([e["cyc"] for e in ev if e["dom"] == "stream"] + [0])
         (d / "index.json").write_text(json.dumps({"events": len(ev), "drives": sum(e["k"] == "D" for e in ev),
                                                   "checks": sum(e["k"] == "C" for e in ev), "vm_preload_words": len(vm), "last_stream_cyc": last,
+                                                  "scope": r.get("scope", "unspecified"),
+                                                  "qualifies_native_layer": False, "qualifies_native_chain": False,
+                                                  "state_seed_provenance": r.get("state_seed_provenance", ["unspecified"]),
                                                   "records": sorted({e["rec"] for e in ev if "rec" in e})}, indent=1))
         nev_max = max(nev_max, len(ev) + 1)
     nev = a.nev or nev_max
@@ -236,6 +240,7 @@ def main():
           "                if (((got ^ val[p]) & msk[p]) != '0) begin",
           "                    fails = fails + 1;",
           "                    $display(\"SLICE_CHECK_FAIL out=%0d dom=%0d cyc=%0d rec=%0d\", hdr[p][59:44], d, cnt[d], rec);",
+          "                    if ($test$plusargs(\"SHOWVAL\")) $display(\"SLICE_CHECK_VAL out=%0d cyc=%0d got=%h exp=%h msk=%h\", hdr[p][59:44], cnt[d], got, val[p], msk[p]);",
           "                    if (rec >= 0) begin rec_fail = rec_fail + 1; $display(\"SLICE_REC rec=%0d cyc=%0d FAIL\", rec, cnt[d]); end",
           "                end else if (rec >= 0) begin rec_ok = rec_ok + 1; $display(\"SLICE_REC rec=%0d cyc=%0d COMMIT_OK\", rec, cnt[d]); end",
           "            end",

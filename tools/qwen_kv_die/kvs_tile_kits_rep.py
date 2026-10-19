@@ -35,6 +35,9 @@ sys.path.insert(0, str(HERE))
 
 ENV = dict(OT_KV_STATIC_DIE='1', OT_KV_HROOT='1', OT_KV_FANFOLD='1', OT_KV_TILE_KITS='1')
 OUT = 'results/arch/qwen_kv_kits_b_1018'
+# KV-DOMSPLIT 10-19 (OT_KV_DOMSPLIT=1): the split tiles' measured port records (kv_static_die DOMSPLIT; single-domain words)
+if os.environ.get('OT_KV_DOMSPLIT', '0') == '1':
+    OUT = 'results/arch/qwen_kv_domsplit_1019/ports'
 SRAM = 'physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2'
 TAG = 'k1'
 LAT = 2.16
@@ -297,9 +300,13 @@ def spec(S, kind):
         outline=dict(w=W, h=H, exact=True), layer_cap='M5', macros=sram_macros(S, kind, pins, rng, W, H), pins=pins,
         pin_ranges=rng,
         route=dict(pd=0.5, threads=8, peak_ram_gb=32 if kind.startswith(('grp', 'pc')) else 16, hold_margin_ns=0.03,
-                   macro_halo_um=5.4),
+                   io_hold_margin_ns=0.03, macro_halo_um=5.4,      # KITS 10-18: boundary margin >= 0.025
+                   # HKV-PCH2 10-19: pc / pc_h N face i_next (~800 b in 132 um): PPL ordered groups of 32 left 8-slot
+                   # section tails and PPL-0086 stranded a group at 3_2 (gate 20261019-001742); 16-pin chunks fit.
+                   **(dict(pin_group_max=16) if kind.startswith('pc') else {})),
         recipe=3, purpose=purpose,
-        job=dict(owner='Claude:KV-INTEG2', branch='claude/kv-integ2-kits-1018', tag=TAG, purpose=purpose,
+        job=dict(owner=os.environ.get('KVS_KIT_OWNER', 'Claude:KV-INTEG2'),
+                 branch=os.environ.get('KVS_KIT_BRANCH', 'claude/kv-integ2-kits-1018'), tag=TAG, purpose=purpose,
                  benches=benches(kind), extra_paths=['rtl', 'tools/qwen_kv_die', 'results/arch', OUT,
                                                      WIT, SRAM],
                  views_to=f'physical/ref_tile/{kit}/views', record_to=f'results/rtl/ref_tile/{kit}'),
@@ -318,6 +325,8 @@ def spec(S, kind):
                     critical=CRITICAL.get(kind)))
     if sdc:
         sp['sdc_extra'] = [sdc]
+    if 'hrst_n' in resets and len(resets) > 1:      # HKV-PCH2 10-19: single-clock landing cannot land hrst_n
+        sp['reset_landing'] = dict(enable=False, reason="Two reset domains: rst_n is the core_clk (ck) reset, hrst_n the hclk (hck, 1024 ps, asynchronous root) reset of the HBM-side front / return / cal / ecc / cdc logic.  The flow's landing (OT_RST_LAND) lands every reset_ports input on ONE clock (ck), which would move the hclk reset release onto core_clk flops -- an unsynchronised ck->hck reset crossing the RTL does not have.  Until the landing supports a per-port clock, both resets stay as the RTL drives them (HKV-PCH2 10-19).")
     return kit, sp
 
 
@@ -349,7 +358,7 @@ MUTANTS['grp_h'] = {k: (d, ['qkd_kvs_grp_h' if c == 'qkd_kvs_grp' else c for c i
 MUTANTS['pc_h'] = dict(MUTANTS['pc'])
 MUTANTS['pc_h'][4] = ('return head never faults on an empty transfer', ['qkd_kvs_pc_h'],
                       'qkd_embedding_static_return_head #(.MUT(0)) u_embr', 'qkd_embedding_static_return_head #(.MUT(1)) u_embr')
-WIT = 'results/rtl/qwen_kv_die/kvs_kits_1018'      # KV-INTEG2: one witness dir for every kvs kit
+WIT = os.environ.get('KVS_KIT_RES', 'results/rtl/qwen_kv_die/kvs_kits_1018')      # KV-INTEG2: one witness dir for every kvs kit
 
 
 def benches(kind):
@@ -357,13 +366,16 @@ def benches(kind):
     canonical faces) against the die-bound tile of the same design point without OT_KV_TILE_KITS; mutants = wiring faults
     of the KIT TOP (1 dropped child wire, 2 swapped equal-width child inputs, 3 missing child).  The children's own
     behaviour is qualified by their own benches (MUTANTS above are child-level and kept for reference only)."""
-    sh = f'bash tools/qwen_kv_die/kvs_tile_bench.sh {{RUN}}/bench/{kind}_m{{M}} {kind} {{M}}'
+    # KV-KITS 10-18: Verilator 5.050 (the closure daemon's), KVS_SIM=verilator; iverilog only when KVS_SIM=iverilog
+    sim = os.environ.get('KVS_SIM', 'verilator')
+    sh = f'KVS_SIM={sim} bash tools/qwen_kv_die/kvs_tile_bench.sh {{RUN}}/bench/{kind}_m{{M}} {kind} {{M}}'
+    need = ['verilator'] if sim == 'verilator' else ['iverilog']
     b = [dict(name=f'{kind}_lockstep', cmd=sh.replace('{M}', '0'), expect='pass', threads=4, peak_ram_gb=8,
-              needs=['iverilog'], pass_regex=rf'^KVS_TILE PASS tile={kind} .* errors=0 mut=0',
+              needs=need, pass_regex=rf'^KVS_TILE PASS tile={kind} .* errors=0 mut=0',
               min_count_regex=r'checks=(\d+)', pass_witness=f'{WIT}/{kind}_m0.log')]
     for n in (1, 2, 3):
         b.append(dict(name=f'{kind}_mut{n}', cmd=sh.replace('{M}', str(n)), expect='fail', threads=4, peak_ram_gb=8,
-                      needs=['iverilog'], pass_regex=rf'^KVS_TILE PASS tile={kind} ',
+                      needs=need, pass_regex=rf'^KVS_TILE PASS tile={kind} ',
                       fail_regex=rf'^KVS_TILE FAIL tile={kind} .* mut={n} ', fail_witness=f'{WIT}/{kind}_m{n}.log'))
     return b
 

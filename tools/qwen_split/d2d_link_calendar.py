@@ -128,7 +128,7 @@ PREC_K0 = 3   # first S->C program-record slot of the token / admission run (run
 ADM_REPLAY = 1056   # admission: AUTH accepted -> 1,032-word replay + ledger commit (~1,045, Q-NETLIST) + margin
 
 
-def program_profile(txl, phy, tp_path, emb_window=None, host_stages=None, st_ofs=38, handoff=None):
+def program_profile(txl, phy, tp_path, emb_window=None, host_stages=None, st_ofs=38, handoff=None, mu=False):
     """Full 36-layer decode-token program from the priced token path (layer-relative op windows).
     Segment 0 = L1..L35 (identical windows: the KV fill of layer n+1 is hidden behind layer n); segment 1 = the token
     run = terminal RESULT + embedding row + L0 (its KV fill is exposed: attn_kv 2,038 vs 1,816 cycles).
@@ -164,6 +164,13 @@ def program_profile(txl, phy, tp_path, emb_window=None, host_stages=None, st_ofs
     # token run: S->C kind 12 CONTEXT (token / position for the face) and C->S kind 14 beat 0 per-token WITNESS
     # (ready / digest or not-ready: always a record)
     m1.append(dict(seg=1, src="K", cyc=PREC_K0, tx_port=1, rx_port=1, kind=12, beat=0))
+    if mu:
+        # MU-KV-CTX 10-19 (coordinator 0kg, --mu; Qwen ROM 4 users): the MU CONTEXT slot, S->C kind 12 beat 1 ONE cycle
+        # before the existing kind-12 slot.  The KV host record port (qkd_host_record_port_mu MU 1) fills it with one
+        # filler's initial context (or a user-0 copy); the compute face's own kind-12 RX accepts it and the existing slot
+        # one edge later restores user 0's context; qfd_mu_ctx_rx loads users 1..3 into the ctlm boot-context loader.
+        # Field spec: results/rtl/mu_qwen_1018/kvctx/README.md section 2.  (= mu-die-qw2 05a8c8fe3; KV-LINKCFG-MU 10-19)
+        m1.append(dict(seg=1, src="K", cyc=PREC_K0 - 1, tx_port=1, rx_port=1, kind=12, beat=1))
     prec_w = PREC_K0 + txl + phy + 12
     m1.append(dict(seg=1, src="C", cyc=prec_w, tx_port=1, rx_port=1, kind=14, beat=0))
     # ADMISSION run (segment 2; once per epoch, before the first token; Q-NETLIST 2026-10-16): S->C kind 13 beat 1
@@ -220,10 +227,19 @@ def parse_stages(s):
     return dict(zip(STAGE_NAMES, v))
 
 
-def producer_txd(S, host_stages=0):
-    """raw producer latency per TX port (before the PR pin flops) from the die seam stages S"""
-    return {"C": [S["CS_TXS"] + N59_TX + S["SC_TX"], 1, 1, S["CS_X3S"] + N59_X3 + 1 + S["SC_X3"]],
-            "K": [S["KS_TXS"] + KV_CODEC + S["SK_TXP"], 2 + host_stages, 1, 1]}
+def producer_txd_c(S):
+    """Compute-die producer edges, independent of the KV die's codec."""
+    return [S["CS_TXS"] + N59_TX + S["SC_TX"], 1, 1,
+            S["CS_X3S"] + N59_X3 + 1 + S["SC_X3"]]
+
+
+def producer_txd(S, host_stages=0, kv_codec=None):
+    """raw producer latency per TX port (before the PR pin flops) from the die seam stages S.  kv_codec = the attention
+    programme's codec edges as instantiated (HKV-DIE 10-19: OT_KV_ATTN_LAND / .LAND(1) -> 2); never silently 1."""
+    if kv_codec is None:
+        raise SystemExit("producer_txd: kv_codec required (layer_compile.kv_codec_edges of the KV die's qkd_kvs_attn)")
+    return {"C": producer_txd_c(S),
+            "K": [S["KS_TXS"] + kv_codec + S["SK_TXP"], 2 + host_stages, 1, 1]}
 
 
 def txdp_word(v):
@@ -313,18 +329,23 @@ def main():
                     help="program profile: pad the token period up to a multiple of this many core edges (default 768, "
                          "coordinator 10-17 KVJ-E2: 768 core edges = 625 HBM beats, so every token run starts at one HBM-beat "
                          "phase and the KV die's compiled core->HBM phase launches hold for every token); 1 = no padding")
+    ap.add_argument("--kv-codec", type=int, default=None,
+                    help="with --die-stages: KV attention codec edges as instantiated (1 as-built, 2 with .LAND(1)); required")
     ap.add_argument("--die-stages", default=None,
                     help="die seam stages " + ",".join(STAGE_NAMES[:6]) + "/" + ",".join(STAGE_NAMES[6:]) + ": the producer "
                          "TXD per port is derived from them (overrides --txd-c / --txd-k; QXF-LINK F4)")
     ap.add_argument("--allow-unmeasured-host", action="store_true",
                     help="diagnostic program images only: retain PENDING HOST stages and compile with zero; never production-qualified")
+    ap.add_argument("--mu", action="store_true",
+                    help="MU-KV-CTX 10-19 (Qwen ROM 4 users): add the token run's MU context slot (S->C kind 12 beat 1, one "
+                         "cycle before the existing kind-12 slot); default off = the single-user images, unchanged")
     a = ap.parse_args()
     if a.profile == "program" and a.host_stages is None and not a.allow_unmeasured_host:
         ap.error("program calendar requires --host-stages from the measured KV die plan; use --allow-unmeasured-host only for diagnostics")
     txd = {"C": [int(x) for x in a.txd_c.split(",")], "K": [int(x) for x in a.txd_k.split(",")]}
     stages = parse_stages(a.die_stages) if a.die_stages else None
     if stages:
-        txd = producer_txd(stages)    # host stages are added below, as for --txd-k
+        txd = producer_txd(stages, kv_codec=a.kv_codec)    # host stages are added below, as for --txd-k
     phy_c, txl_p, phy_p = a.phy, a.txl, a.phy
     if a.pinreg:
         # +2 on ports whose codec is OUTSIDE the die master (slot pin flop + payload pin flop); the compute STATUS
@@ -338,7 +359,7 @@ def main():
         msgs = json.load(open(a.spec))
     elif a.profile == "program":
         msgs, layout = program_profile(txl_p, phy_p, a.token_path, host_stages=a.host_stages,
-                                        st_ofs=40 if a.pinreg else 38, handoff=a.link_handoff)   # STATUS capture after the (+2) KVN captures
+                                        st_ofs=40 if a.pinreg else 38, handoff=a.link_handoff, mu=a.mu)   # STATUS capture after the (+2) KVN captures
         if a.host_stages:
             txd["K"][1] += a.host_stages   # HOST record words reach the end's capture edge host_stages later
     elif a.profile == "dies_token":

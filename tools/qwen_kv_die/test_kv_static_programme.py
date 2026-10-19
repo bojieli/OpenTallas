@@ -84,7 +84,7 @@ class Programme(unittest.TestCase):
     def test_link_cfg_target_is_the_kv_sequencer_init_image(self):
         # KVJ-SMALL 10-17: target 11 (dispatcher LINKCFG=1) = the qkd_d2d_cal_seq init stream from d2d_cal_image.svh
         import re
-        svh = (ROOT / 'rtl/qwen_sys/d2d_static_20261015/d2d_cal_image.svh').read_text()
+        svh = (ROOT / C.LINK_IMAGE).read_text()          # KV-LINKCFG-MU: the BOUND image (_mu under OT_KV_MU=1)
         val = lambda n: int(re.search(rf"{n} = \d+'h([0-9a-f]+);", svh).group(1), 16)
         tx, rx = val('D2D_CAL_K_TX_IMG'), val('D2D_CAL_K_RX_IMG')
         want = [w for i in range(32) for w in ((tx >> 32 * i) & 0xffffffff, (rx >> 32 * i) & 0xffffffff)]
@@ -136,7 +136,9 @@ class Programme(unittest.TestCase):
         self.assertEqual(ph['token_period_core'] % 768, 0)
         # ROOT-QLINE 10-18: production calendar (die stages + LAYERBENCH compiled token path) = unpadded 249,389 -> 249,600
         self.assertEqual(ph['token_period_core'], 249600)
-        self.assertEqual(ph['token_period_core'] - self.die['link']['token_period_unpadded'], 211)
+        # HKV-DIE 10-19: current pair (compute dv2f14bq SC_TX 2: L1 X 5 -> 7, +2 edges x 36 layers; KV landed codec) =
+        # unpadded 249,461 (was 249,389) -> still 249,600
+        self.assertEqual(ph['token_period_core'] - self.die['link']['token_period_unpadded'], 139)
         self.assertEqual((ph['token_phases'], ph['launches'], ph['outside_window'], ph['hold_conflicts']), (1, 108, [], []))
         # the unpadded period visits all 768 phases: no compiled launch holds at every one of them
         self.assertEqual(ph['unpadded_counterfactual']['token_phases'], 768)
