@@ -1,0 +1,22 @@
+{
+  "verdict": "DIAGNOSTIC_ONLY",
+  "pair_dependency_result": "FAIL",
+  "method": "Actual unaliased graph pair dependency. Exact combinational congruence; one edge per FF-pair dependency. No reset/enable value assumptions or zero initial states.",
+  "new_ff_count": 1155,
+  "finite_bound_histogram": {
+    "1": 625,
+    "2": 386,
+    "3": 95
+  },
+  "unresolved_count": 49,
+  "errors": [
+    "('leaf_or_polarity_mismatch', ('CELL', 'ot_ctl_copy_01758', 'QN', '0'), ('CELL', 'ot_ctl_copy_01474', 'Y', '0'))",
+    "('leaf_or_polarity_mismatch', ('CELL', 'ot_ctl_copy_01754', 'Y', '0'), ('CELL', 'ot_ctl_copy_01758', 'QN', '0'))"
+  ],
+  "qualifications": [
+    "Finite capture bound assumes both corresponding clocks deliver the same legal edge and all controls meet native timing. It does not prove valid observability begins later than the bound.",
+    "Unresolved feedback pairs need actual qualified-write/validity lifetime proof; a structural cycle alone is not a counterexample.",
+    "Asynchronous assertion/deassertion and abort/restart first-valid joins are not established by this data dependency census."
+  ]
+}
+unresolved source families [('u_core.u_end.u_rxcal.seg1\\', 49)]

@@ -1,0 +1,19 @@
+{
+  "verdict": "DIAGNOSTIC_ONLY",
+  "pair_dependency_result": "PASS",
+  "method": "Actual unaliased graph pair dependency. Exact combinational congruence; one edge per FF-pair dependency. No reset/enable value assumptions or zero initial states.",
+  "new_ff_count": 1155,
+  "finite_bound_histogram": {
+    "1": 626,
+    "2": 402,
+    "3": 127
+  },
+  "unresolved_count": 0,
+  "errors": [],
+  "qualifications": [
+    "Finite capture bound assumes both corresponding clocks deliver the same legal edge and all controls meet native timing. It does not prove valid observability begins later than the bound.",
+    "Unresolved feedback pairs need actual qualified-write/validity lifetime proof; a structural cycle alone is not a counterexample.",
+    "Asynchronous assertion/deassertion and abort/restart first-valid joins are not established by this data dependency census."
+  ]
+}
+unresolved source families []
