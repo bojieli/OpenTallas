@@ -1,0 +1,857 @@
+{
+ "ep_SN__fault_cause": {
+  "bits": 33,
+  "nets": 3,
+  "example": "ep_S0__fault_cause"
+ },
+ "hb_coll_SW__stat_cycles": {
+  "bits": 32,
+  "nets": 1,
+  "example": "hb_coll_SW__stat_cycles"
+ },
+ "hb_coll_SE__stat_cycles": {
+  "bits": 32,
+  "nets": 1,
+  "example": "hb_coll_SE__stat_cycles"
+ },
+ "hb_coll_NW__stat_cycles": {
+  "bits": 32,
+  "nets": 1,
+  "example": "hb_coll_NW__stat_cycles"
+ },
+ "hb_coll_NE__stat_cycles": {
+  "bits": 32,
+  "nets": 1,
+  "example": "hb_coll_NE__stat_cycles"
+ },
+ "tkm_SW__stat_cycles": {
+  "bits": 32,
+  "nets": 1,
+  "example": "tkm_SW__stat_cycles"
+ },
+ "ep_NN__fault_cause": {
+  "bits": 22,
+  "nets": 2,
+  "example": "ep_N0__fault_cause"
+ },
+ "calendar_SE__bank_client": {
+  "bits": 16,
+  "nets": 1,
+  "example": "calendar_SE__bank_client"
+ },
+ "calendar_NW__bank_client": {
+  "bits": 16,
+  "nets": 1,
+  "example": "calendar_NW__bank_client"
+ },
+ "calendar_NE__bank_client": {
+  "bits": 16,
+  "nets": 1,
+  "example": "calendar_NE__bank_client"
+ },
+ "hb_coll_SW__fault_cause": {
+  "bits": 16,
+  "nets": 1,
+  "example": "hb_coll_SW__fault_cause"
+ },
+ "hb_coll_SE__fault_cause": {
+  "bits": 16,
+  "nets": 1,
+  "example": "hb_coll_SE__fault_cause"
+ },
+ "hb_coll_NW__fault_cause": {
+  "bits": 16,
+  "nets": 1,
+  "example": "hb_coll_NW__fault_cause"
+ },
+ "hb_coll_NE__fault_cause": {
+  "bits": 16,
+  "nets": 1,
+  "example": "hb_coll_NE__fault_cause"
+ },
+ "vmm_NWN__wq_doneN": {
+  "bits": 16,
+  "nets": 16,
+  "example": "vmm_NW0__wq_done1"
+ },
+ "pgp_SW__edge_index": {
+  "bits": 16,
+  "nets": 1,
+  "example": "pgp_SW__edge_index"
+ },
+ "pgp_SE__edge_index": {
+  "bits": 16,
+  "nets": 1,
+  "example": "pgp_SE__edge_index"
+ },
+ "pgp_NW__edge_index": {
+  "bits": 16,
+  "nets": 1,
+  "example": "pgp_NW__edge_index"
+ },
+ "pgp_NE__edge_index": {
+  "bits": 16,
+  "nets": 1,
+  "example": "pgp_NE__edge_index"
+ },
+ "vmdel_SWN__block_ready": {
+  "bits": 16,
+  "nets": 8,
+  "example": "vmdel_SW0__block_ready"
+ },
+ "vmdel_SEN__block_ready": {
+  "bits": 16,
+  "nets": 8,
+  "example": "vmdel_SE0__block_ready"
+ },
+ "vmdel_NWN__block_ready": {
+  "bits": 16,
+  "nets": 8,
+  "example": "vmdel_NW0__block_ready"
+ },
+ "vmdel_NEN__block_ready": {
+  "bits": 16,
+  "nets": 8,
+  "example": "vmdel_NE0__block_ready"
+ },
+ "host_ep__fault_cause": {
+  "bits": 11,
+  "nets": 1,
+  "example": "host_ep__fault_cause"
+ },
+ "hb_idx__link__selected_count": {
+  "bits": 10,
+  "nets": 1,
+  "example": "hb_idx__link__selected_count"
+ },
+ "calendar_SW__bank_client": {
+  "bits": 8,
+  "nets": 1,
+  "example": "calendar_SW__bank_client"
+ },
+ "calendar_SE__client_seq": {
+  "bits": 8,
+  "nets": 1,
+  "example": "calendar_SE__client_seq"
+ },
+ "calendar_SE__response_seq": {
+  "bits": 8,
+  "nets": 1,
+  "example": "calendar_SE__response_seq"
+ },
+ "calendar_NW__client_seq": {
+  "bits": 8,
+  "nets": 1,
+  "example": "calendar_NW__client_seq"
+ },
+ "calendar_NW__response_seq": {
+  "bits": 8,
+  "nets": 1,
+  "example": "calendar_NW__response_seq"
+ },
+ "calendar_NE__client_seq": {
+  "bits": 8,
+  "nets": 1,
+  "example": "calendar_NE__client_seq"
+ },
+ "calendar_NE__response_seq": {
+  "bits": 8,
+  "nets": 1,
+  "example": "calendar_NE__response_seq"
+ },
+ "svg_SWN__run_done": {
+  "bits": 8,
+  "nets": 8,
+  "example": "svg_SW0__run_done"
+ },
+ "svg_NWN__run_done": {
+  "bits": 8,
+  "nets": 8,
+  "example": "svg_NW0__run_done"
+ },
+ "xc_SWN__done": {
+  "bits": 8,
+  "nets": 8,
+  "example": "xc_SW0__done"
+ },
+ "xc_NWN__done": {
+  "bits": 8,
+  "nets": 8,
+  "example": "xc_NW0__done"
+ },
+ "vmb_SWN__wq_doneN": {
+  "bits": 8,
+  "nets": 8,
+  "example": "vmb_SW0__wq_done1"
+ },
+ "vmb_SWN__dq_done": {
+  "bits": 8,
+  "nets": 8,
+  "example": "vmb_SW0__dq_done"
+ },
+ "vmb_SWN__kq_done": {
+  "bits": 8,
+  "nets": 8,
+  "example": "vmb_SW0__kq_done"
+ },
+ "vmb_NWN__dq_done": {
+  "bits": 8,
+  "nets": 8,
+  "example": "vmb_NW0__dq_done"
+ },
+ "vmb_NWN__kq_done": {
+  "bits": 8,
+  "nets": 8,
+  "example": "vmb_NW0__kq_done"
+ },
+ "vmb_SEN__wq_doneN": {
+  "bits": 8,
+  "nets": 8,
+  "example": "vmb_SE0__wq_done1"
+ },
+ "vmb_SEN__dq_done": {
+  "bits": 8,
+  "nets": 8,
+  "example": "vmb_SE0__dq_done"
+ },
+ "vmb_SEN__kq_done": {
+  "bits": 8,
+  "nets": 8,
+  "example": "vmb_SE0__kq_done"
+ },
+ "vmb_NEN__wq_doneN": {
+  "bits": 8,
+  "nets": 8,
+  "example": "vmb_NE0__wq_done1"
+ },
+ "vmb_NEN__dq_done": {
+  "bits": 8,
+  "nets": 8,
+  "example": "vmb_NE0__dq_done"
+ },
+ "vmb_NEN__kq_done": {
+  "bits": 8,
+  "nets": 8,
+  "example": "vmb_NE0__kq_done"
+ },
+ "vmdel_SWN__busy": {
+  "bits": 8,
+  "nets": 8,
+  "example": "vmdel_SW0__busy"
+ },
+ "vmdel_SEN__busy": {
+  "bits": 8,
+  "nets": 8,
+  "example": "vmdel_SE0__busy"
+ },
+ "vmdel_NWN__busy": {
+  "bits": 8,
+  "nets": 8,
+  "example": "vmdel_NW0__busy"
+ },
+ "vmdel_NEN__busy": {
+  "bits": 8,
+  "nets": 8,
+  "example": "vmdel_NE0__busy"
+ },
+ "ep_SN__rx_block_ready": {
+  "bits": 6,
+  "nets": 3,
+  "example": "ep_S0__rx_block_ready"
+ },
+ "calendar_SW__client_seq": {
+  "bits": 4,
+  "nets": 1,
+  "example": "calendar_SW__client_seq"
+ },
+ "calendar_SW__response_seq": {
+  "bits": 4,
+  "nets": 1,
+  "example": "calendar_SW__response_seq"
+ },
+ "calendar_SE__response_enable": {
+  "bits": 4,
+  "nets": 1,
+  "example": "calendar_SE__response_enable"
+ },
+ "calendar_SE__hub_ring_client": {
+  "bits": 4,
+  "nets": 1,
+  "example": "calendar_SE__hub_ring_client"
+ },
+ "calendar_NW__response_enable": {
+  "bits": 4,
+  "nets": 1,
+  "example": "calendar_NW__response_enable"
+ },
+ "calendar_NW__hub_ring_client": {
+  "bits": 4,
+  "nets": 1,
+  "example": "calendar_NW__hub_ring_client"
+ },
+ "calendar_NE__response_enable": {
+  "bits": 4,
+  "nets": 1,
+  "example": "calendar_NE__response_enable"
+ },
+ "calendar_NE__hub_ring_client": {
+  "bits": 4,
+  "nets": 1,
+  "example": "calendar_NE__hub_ring_client"
+ },
+ "host_status__a_cause": {
+  "bits": 4,
+  "nets": 1,
+  "example": "host_status__a_cause"
+ },
+ "ep_NN__rx_block_ready": {
+  "bits": 4,
+  "nets": 2,
+  "example": "ep_N0__rx_block_ready"
+ },
+ "hb_vms_SW__hub_status": {
+  "bits": 3,
+  "nets": 1,
+  "example": "hb_vms_SW__hub_status"
+ },
+ "hb_vms_SE__hub_status": {
+  "bits": 3,
+  "nets": 1,
+  "example": "hb_vms_SE__hub_status"
+ },
+ "hb_vms_NW__hub_status": {
+  "bits": 3,
+  "nets": 1,
+  "example": "hb_vms_NW__hub_status"
+ },
+ "hb_vms_NE__hub_status": {
+  "bits": 3,
+  "nets": 1,
+  "example": "hb_vms_NE__hub_status"
+ },
+ "hb_vms_SW__mirror_busy": {
+  "bits": 2,
+  "nets": 1,
+  "example": "hb_vms_SW__mirror_busy"
+ },
+ "hb_vms_SE__mirror_busy": {
+  "bits": 2,
+  "nets": 1,
+  "example": "hb_vms_SE__mirror_busy"
+ },
+ "hb_vms_NW__mirror_busy": {
+  "bits": 2,
+  "nets": 1,
+  "example": "hb_vms_NW__mirror_busy"
+ },
+ "hb_vms_NE__mirror_busy": {
+  "bits": 2,
+  "nets": 1,
+  "example": "hb_vms_NE__mirror_busy"
+ },
+ "calendar_SW__response_enable": {
+  "bits": 2,
+  "nets": 1,
+  "example": "calendar_SW__response_enable"
+ },
+ "calendar_SW__hub_ring_client": {
+  "bits": 2,
+  "nets": 1,
+  "example": "calendar_SW__hub_ring_client"
+ },
+ "hb_argmax__cq_seq": {
+  "bits": 2,
+  "nets": 1,
+  "example": "hb_argmax__cq_seq"
+ },
+ "xq_SW_pN_eg__x_done": {
+  "bits": 2,
+  "nets": 2,
+  "example": "xq_SW_p0_eg__x_done"
+ },
+ "xq_SW_pN_eg__xw_last": {
+  "bits": 2,
+  "nets": 2,
+  "example": "xq_SW_p0_eg__xw_last"
+ },
+ "xq_NW_pN_eg__x_done": {
+  "bits": 2,
+  "nets": 2,
+  "example": "xq_NW_p0_eg__x_done"
+ },
+ "xq_NW_pN_eg__xw_last": {
+  "bits": 2,
+  "nets": 2,
+  "example": "xq_NW_p0_eg__xw_last"
+ },
+ "xq_SE_pN_eg__x_done": {
+  "bits": 2,
+  "nets": 2,
+  "example": "xq_SE_p0_eg__x_done"
+ },
+ "xq_SE_pN_eg__xw_last": {
+  "bits": 2,
+  "nets": 2,
+  "example": "xq_SE_p0_eg__xw_last"
+ },
+ "xq_NE_pN_eg__x_done": {
+  "bits": 2,
+  "nets": 2,
+  "example": "xq_NE_p0_eg__x_done"
+ },
+ "xq_NE_pN_eg__xw_last": {
+  "bits": 2,
+  "nets": 2,
+  "example": "xq_NE_p0_eg__xw_last"
+ },
+ "hb_ckgen__pll_link": {
+  "bits": 1,
+  "nets": 1,
+  "example": "hb_ckgen__pll_link"
+ },
+ "hb_ckgen__por_link": {
+  "bits": 1,
+  "nets": 1,
+  "example": "hb_ckgen__por_link"
+ },
+ "calendar_SW__calendar_v": {
+  "bits": 1,
+  "nets": 1,
+  "example": "calendar_SW__calendar_v"
+ },
+ "calendar_SW__done": {
+  "bits": 1,
+  "nets": 1,
+  "example": "calendar_SW__done"
+ },
+ "calendar_SE__calendar_v": {
+  "bits": 1,
+  "nets": 1,
+  "example": "calendar_SE__calendar_v"
+ },
+ "calendar_SE__done": {
+  "bits": 1,
+  "nets": 1,
+  "example": "calendar_SE__done"
+ },
+ "calendar_NW__calendar_v": {
+  "bits": 1,
+  "nets": 1,
+  "example": "calendar_NW__calendar_v"
+ },
+ "calendar_NW__done": {
+  "bits": 1,
+  "nets": 1,
+  "example": "calendar_NW__done"
+ },
+ "calendar_NE__calendar_v": {
+  "bits": 1,
+  "nets": 1,
+  "example": "calendar_NE__calendar_v"
+ },
+ "calendar_NE__done": {
+  "bits": 1,
+  "nets": 1,
+  "example": "calendar_NE__done"
+ },
+ "hb_coll_SW__program_init_busy": {
+  "bits": 1,
+  "nets": 1,
+  "example": "hb_coll_SW__program_init_busy"
+ },
+ "hb_coll_SW__hgi_done": {
+  "bits": 1,
+  "nets": 1,
+  "example": "hb_coll_SW__hgi_done"
+ },
+ "hb_coll_SW__done": {
+  "bits": 1,
+  "nets": 1,
+  "example": "hb_coll_SW__done"
+ },
+ "hb_coll_SE__program_init_busy": {
+  "bits": 1,
+  "nets": 1,
+  "example": "hb_coll_SE__program_init_busy"
+ },
+ "hb_coll_SE__hgi_done": {
+  "bits": 1,
+  "nets": 1,
+  "example": "hb_coll_SE__hgi_done"
+ },
+ "hb_coll_SE__done": {
+  "bits": 1,
+  "nets": 1,
+  "example": "hb_coll_SE__done"
+ },
+ "hb_coll_NW__program_init_busy": {
+  "bits": 1,
+  "nets": 1,
+  "example": "hb_coll_NW__program_init_busy"
+ },
+ "hb_coll_NW__hgi_done": {
+  "bits": 1,
+  "nets": 1,
+  "example": "hb_coll_NW__hgi_done"
+ },
+ "hb_coll_NW__done": {
+  "bits": 1,
+  "nets": 1,
+  "example": "hb_coll_NW__done"
+ },
+ "hb_coll_NE__program_init_busy": {
+  "bits": 1,
+  "nets": 1,
+  "example": "hb_coll_NE__program_init_busy"
+ },
+ "hb_coll_NE__hgi_done": {
+  "bits": 1,
+  "nets": 1,
+  "example": "hb_coll_NE__hgi_done"
+ },
+ "hb_coll_NE__done": {
+  "bits": 1,
+  "nets": 1,
+  "example": "hb_coll_NE__done"
+ },
+ "hb_dbk_SW__mv_src": {
+  "bits": 1,
+  "nets": 1,
+  "example": "hb_dbk_SW__mv_src"
+ },
+ "hb_dbk_SW__mv_done": {
+  "bits": 1,
+  "nets": 1,
+  "example": "hb_dbk_SW__mv_done"
+ },
+ "hb_dbk_SW__quiet": {
+  "bits": 1,
+  "nets": 1,
+  "example": "hb_dbk_SW__quiet"
+ },
+ "hb_dbk_SW__busy": {
+  "bits": 1,
+  "nets": 1,
+  "example": "hb_dbk_SW__busy"
+ },
+ "hb_dbk_NW__mv_src": {
+  "bits": 1,
+  "nets": 1,
+  "example": "hb_dbk_NW__mv_src"
+ },
+ "hb_dbk_NW__mv_done": {
+  "bits": 1,
+  "nets": 1,
+  "example": "hb_dbk_NW__mv_done"
+ },
+ "hb_dbk_NW__quiet": {
+  "bits": 1,
+  "nets": 1,
+  "example": "hb_dbk_NW__quiet"
+ },
+ "hb_dbk_NW__busy": {
+  "bits": 1,
+  "nets": 1,
+  "example": "hb_dbk_NW__busy"
+ },
+ "hb_argmax__done": {
+  "bits": 1,
+  "nets": 1,
+  "example": "hb_argmax__done"
+ },
+ "hb_quant_NW__program_done": {
+  "bits": 1,
+  "nets": 1,
+  "example": "hb_quant_NW__program_done"
+ },
+ "hb_quant_NW__beat_done": {
+  "bits": 1,
+  "nets": 1,
+  "example": "hb_quant_NW__beat_done"
+ },
+ "hb_quant_NW__record_done": {
+  "bits": 1,
+  "nets": 1,
+  "example": "hb_quant_NW__record_done"
+ },
+ "hc_SW__residual_done": {
+  "bits": 1,
+  "nets": 1,
+  "example": "hc_SW__residual_done"
+ },
+ "hc_SW__gather_done": {
+  "bits": 1,
+  "nets": 1,
+  "example": "hc_SW__gather_done"
+ },
+ "hc_SW__program_done": {
+  "bits": 1,
+  "nets": 1,
+  "example": "hc_SW__program_done"
+ },
+ "hc_SE__residual_done": {
+  "bits": 1,
+  "nets": 1,
+  "example": "hc_SE__residual_done"
+ },
+ "hc_SE__gather_done": {
+  "bits": 1,
+  "nets": 1,
+  "example": "hc_SE__gather_done"
+ },
+ "hc_SE__program_done": {
+  "bits": 1,
+  "nets": 1,
+  "example": "hc_SE__program_done"
+ },
+ "hc_NW__residual_done": {
+  "bits": 1,
+  "nets": 1,
+  "example": "hc_NW__residual_done"
+ },
+ "hc_NW__gather_done": {
+  "bits": 1,
+  "nets": 1,
+  "example": "hc_NW__gather_done"
+ },
+ "hc_NW__program_done": {
+  "bits": 1,
+  "nets": 1,
+  "example": "hc_NW__program_done"
+ },
+ "hc_NE__residual_done": {
+  "bits": 1,
+  "nets": 1,
+  "example": "hc_NE__residual_done"
+ },
+ "hc_NE__gather_done": {
+  "bits": 1,
+  "nets": 1,
+  "example": "hc_NE__gather_done"
+ },
+ "hc_NE__program_done": {
+  "bits": 1,
+  "nets": 1,
+  "example": "hc_NE__program_done"
+ },
+ "hc_eng__program_done": {
+  "bits": 1,
+  "nets": 1,
+  "example": "hc_eng__program_done"
+ },
+ "epcal_SW__calendar_v": {
+  "bits": 1,
+  "nets": 1,
+  "example": "epcal_SW__calendar_v"
+ },
+ "epcal_SW__done": {
+  "bits": 1,
+  "nets": 1,
+  "example": "epcal_SW__done"
+ },
+ "epcal_SE__calendar_v": {
+  "bits": 1,
+  "nets": 1,
+  "example": "epcal_SE__calendar_v"
+ },
+ "epcal_SE__done": {
+  "bits": 1,
+  "nets": 1,
+  "example": "epcal_SE__done"
+ },
+ "epcal_NW__calendar_v": {
+  "bits": 1,
+  "nets": 1,
+  "example": "epcal_NW__calendar_v"
+ },
+ "epcal_NW__done": {
+  "bits": 1,
+  "nets": 1,
+  "example": "epcal_NW__done"
+ },
+ "epcal_NE__calendar_v": {
+  "bits": 1,
+  "nets": 1,
+  "example": "epcal_NE__calendar_v"
+ },
+ "epcal_NE__done": {
+  "bits": 1,
+  "nets": 1,
+  "example": "epcal_NE__done"
+ },
+ "sfup_SW__programme_done": {
+  "bits": 1,
+  "nets": 1,
+  "example": "sfup_SW__programme_done"
+ },
+ "sfup_SE__programme_done": {
+  "bits": 1,
+  "nets": 1,
+  "example": "sfup_SE__programme_done"
+ },
+ "sfup_NW__programme_done": {
+  "bits": 1,
+  "nets": 1,
+  "example": "sfup_NW__programme_done"
+ },
+ "sfup_NE__programme_done": {
+  "bits": 1,
+  "nets": 1,
+  "example": "sfup_NE__programme_done"
+ },
+ "vmfc_SW__calendar_v": {
+  "bits": 1,
+  "nets": 1,
+  "example": "vmfc_SW__calendar_v"
+ },
+ "vmfc_SW__done": {
+  "bits": 1,
+  "nets": 1,
+  "example": "vmfc_SW__done"
+ },
+ "vmfc_SE__calendar_v": {
+  "bits": 1,
+  "nets": 1,
+  "example": "vmfc_SE__calendar_v"
+ },
+ "vmfc_SE__done": {
+  "bits": 1,
+  "nets": 1,
+  "example": "vmfc_SE__done"
+ },
+ "vmfc_NW__calendar_v": {
+  "bits": 1,
+  "nets": 1,
+  "example": "vmfc_NW__calendar_v"
+ },
+ "vmfc_NW__done": {
+  "bits": 1,
+  "nets": 1,
+  "example": "vmfc_NW__done"
+ },
+ "vmfc_NE__calendar_v": {
+  "bits": 1,
+  "nets": 1,
+  "example": "vmfc_NE__calendar_v"
+ },
+ "vmfc_NE__done": {
+  "bits": 1,
+  "nets": 1,
+  "example": "vmfc_NE__done"
+ },
+ "pgp_SE__valid": {
+  "bits": 1,
+  "nets": 1,
+  "example": "pgp_SE__valid"
+ },
+ "pgp_SE__done": {
+  "bits": 1,
+  "nets": 1,
+  "example": "pgp_SE__done"
+ },
+ "pgp_NW__valid": {
+  "bits": 1,
+  "nets": 1,
+  "example": "pgp_NW__valid"
+ },
+ "pgp_NW__done": {
+  "bits": 1,
+  "nets": 1,
+  "example": "pgp_NW__done"
+ },
+ "pgp_NE__valid": {
+  "bits": 1,
+  "nets": 1,
+  "example": "pgp_NE__valid"
+ },
+ "pgp_NE__done": {
+  "bits": 1,
+  "nets": 1,
+  "example": "pgp_NE__done"
+ },
+ "hb_dbk_SE__mv_src": {
+  "bits": 1,
+  "nets": 1,
+  "example": "hb_dbk_SE__mv_src"
+ },
+ "hb_dbk_SE__mv_done": {
+  "bits": 1,
+  "nets": 1,
+  "example": "hb_dbk_SE__mv_done"
+ },
+ "hb_dbk_SE__quiet": {
+  "bits": 1,
+  "nets": 1,
+  "example": "hb_dbk_SE__quiet"
+ },
+ "hb_dbk_SE__busy": {
+  "bits": 1,
+  "nets": 1,
+  "example": "hb_dbk_SE__busy"
+ },
+ "hb_dbk_NE__mv_src": {
+  "bits": 1,
+  "nets": 1,
+  "example": "hb_dbk_NE__mv_src"
+ },
+ "hb_dbk_NE__mv_done": {
+  "bits": 1,
+  "nets": 1,
+  "example": "hb_dbk_NE__mv_done"
+ },
+ "hb_dbk_NE__quiet": {
+  "bits": 1,
+  "nets": 1,
+  "example": "hb_dbk_NE__quiet"
+ },
+ "hb_dbk_NE__busy": {
+  "bits": 1,
+  "nets": 1,
+  "example": "hb_dbk_NE__busy"
+ },
+ "hb_idx__ctl__topk_done": {
+  "bits": 1,
+  "nets": 1,
+  "example": "hb_idx__ctl__topk_done"
+ },
+ "hb_idx__s_SW__score": {
+  "bits": 1,
+  "nets": 1,
+  "example": "hb_idx__s_SW__score"
+ },
+ "hb_idx__s_SE__score": {
+  "bits": 1,
+  "nets": 1,
+  "example": "hb_idx__s_SE__score"
+ },
+ "hb_idx__s_NW__score": {
+  "bits": 1,
+  "nets": 1,
+  "example": "hb_idx__s_NW__score"
+ },
+ "hb_idx__s_NE__score": {
+  "bits": 1,
+  "nets": 1,
+  "example": "hb_idx__s_NE__score"
+ },
+ "hcollgi_SW__done": {
+  "bits": 1,
+  "nets": 1,
+  "example": "hcollgi_SW__done"
+ },
+ "hcollgi_SE__done": {
+  "bits": 1,
+  "nets": 1,
+  "example": "hcollgi_SE__done"
+ },
+ "hcollgi_NW__done": {
+  "bits": 1,
+  "nets": 1,
+  "example": "hcollgi_NW__done"
+ },
+ "hcollgi_NE__done": {
+  "bits": 1,
+  "nets": 1,
+  "example": "hcollgi_NE__done"
+ }
+}
