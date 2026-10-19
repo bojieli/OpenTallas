@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "ot_static_run_target",
+ "enable": false,
+ "reason": "RTL RSYNC=1 lands rst_n through the plain two-flop rsync[0]/rsync[1] pipeline; no raw pin drives core reset."
+}

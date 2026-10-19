@@ -1,0 +1,112 @@
+{
+ "name": "hdie_cp_svg_rel_1019",
+ "top": "ot_static_run_target",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/host_static_20261015/ot_static_run_target.sv"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 86.4,
+  "h": 86.4,
+  "exact": true
+ },
+ "pins": {
+  "N": [
+   "clk",
+   "rst_n",
+   "tgt",
+   "cfg_v",
+   "cfg_target",
+   "cfg_addr",
+   "cfg_data",
+   "desc_v",
+   "desc_base",
+   "desc_limit",
+   "desc_loops",
+   "launch_v",
+   "configured",
+   "fault",
+   "active"
+  ],
+  "S": [
+   "tgt_active",
+   "tgt_fault",
+   "a_we",
+   "a_addr",
+   "a_data",
+   "run_v",
+   "run_base",
+   "run_count"
+  ],
+  "E": [
+   "b_we",
+   "b_addr",
+   "b_data"
+  ],
+  "W": [
+   "run_arg"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 4,
+ "hold_budget": "die",
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": false,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL registers every pin: every input lands in an unconditional pin flop (data) or a reset pin flop (valid/strobe/status), every output is a flop Q (HBMA-HOST 2026-10-17 audit of the source); a kit flop stage would add a redundant edge"
+ },
+ "params": {
+  "AWA": 11,
+  "AWB": 8,
+  "RBW": 8,
+  "RCW": 9,
+  "NA": 2,
+  "NF": 1,
+  "TGT_PIN": 1,
+  "RSYNC": 1
+ },
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.03,
+  "pin_min_tracks": 3
+ },
+ "job": {
+  "owner": "Codex:HBM-SMB-KITS",
+  "branch": "codex/hbm-smb-kits-1019",
+  "tag": "r1",
+  "purpose": "Successor master: 2,048 programme words via window2 and layer argument, DD256 descriptors. Conservative square pin envelope with unchanged native cfg/run latency.",
+  "extra_paths": [
+   "rtl/test/hbm_accel/svg_rel",
+   "tools/hbm_layer_vehicle/smb_unit.py",
+   "results/rtl/hbm_ds_layer_tput_1018/smbudget_1019"
+  ],
+  "benches": [],
+  "no_bench_reason": "Pre-route visual review only. Adoption remains blocked until source-pinned run-target direct bench and relative end-to-end SMB bench qualify this successor. Existing SMB positive and mutant logs are integration evidence, not substitutes for successor signoff.",
+  "views_to": "physical/ref_tile/hdie_cp_svg_rel_1019/views",
+  "record_to": "results/rtl/ref_tile/hdie_cp_svg_rel_1019"
+ },
+ "slot_change_request": "HBM-SMB-KITS -> HBM die lead: cp_svg relative target grows to 86.4 um square; programme AWA 11 and descriptor/run widths 8/9. cfg->write and launch->run remain +2 edges; new run_arg carries layer.",
+ "structural_change": "Successor master: 2,048 programme words via window2 and layer argument, DD256 descriptors. Conservative square pin envelope with unchanged native cfg/run latency.",
+ "reset_landing": {
+  "enable": false,
+  "reason": "RTL RSYNC=1 lands rst_n through the plain two-flop rsync[0]/rsync[1] pipeline; no raw pin drives core reset."
+ }
+}
