@@ -1,0 +1,86 @@
+{
+ "schema": "opentallas.hbm_unread_candidate_negatives_1019.v1",
+ "verdict": "PASS",
+ "cases": [
+  {
+   "name": "stale_die_hash",
+   "verdict": "PASS",
+   "expected": "refuse",
+   "exit_code": 1,
+   "detail": "ValueError: die hash differs from strict binder input"
+  },
+  {
+   "name": "strict_range_drift",
+   "verdict": "PASS",
+   "expected": "refuse",
+   "exit_code": 1,
+   "detail": "ValueError: source graph differs from strict binder diagnostics"
+  },
+  {
+   "name": "zero_padding_to_one",
+   "verdict": "PASS",
+   "expected": "unresolved",
+   "exit_code": 0,
+   "detail": "mutated relay padding became unresolved"
+  },
+  {
+   "name": "zero_padding_to_payload",
+   "verdict": "PASS",
+   "expected": "unresolved",
+   "exit_code": 0,
+   "detail": "mutated relay padding became unresolved"
+  },
+  {
+   "name": "remove_aq_q",
+   "verdict": "PASS",
+   "expected": "refuse",
+   "exit_code": 1,
+   "detail": "AssertionError"
+  },
+  {
+   "name": "remove_aq_e",
+   "verdict": "PASS",
+   "expected": "refuse",
+   "exit_code": 1,
+   "detail": "AssertionError"
+  },
+  {
+   "name": "remove_selector_selected_line",
+   "verdict": "PASS",
+   "expected": "refuse",
+   "exit_code": 1,
+   "detail": "AssertionError"
+  },
+  {
+   "name": "remove_selector_selected_v",
+   "verdict": "PASS",
+   "expected": "refuse",
+   "exit_code": 1,
+   "detail": "AssertionError"
+  },
+  {
+   "name": "remove_svg_sm_packet",
+   "verdict": "PASS",
+   "expected": "refuse",
+   "exit_code": 1,
+   "detail": "AssertionError"
+  },
+  {
+   "name": "remove_svg_sm_command",
+   "verdict": "PASS",
+   "expected": "refuse",
+   "exit_code": 1,
+   "detail": "AssertionError"
+  },
+  {
+   "name": "remove_svg_fault",
+   "verdict": "PASS",
+   "expected": "refuse",
+   "exit_code": 1,
+   "detail": "AssertionError"
+  }
+ ],
+ "count": 11,
+ "scope": "Candidate classifier negative proof only. Mutant input reports regenerate ranges using independent lightweight parser, not full strict binder. No admission/manifest changed.",
+ "source_audit_sha256": "eec788a8c8626a0134d893e6fd76ce19b49d5ca606cc3e87ae811c877558fc43"
+}
