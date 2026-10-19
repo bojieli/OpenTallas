@@ -1,0 +1,20 @@
+GATE WARN fill: parent kit without std_area_um2: fill not computed at gen (the gate measures it)  -> FIX: pass --area-um2 / std_area_um2 from the synthesis smoke
+GATE INFO pin_regs: pin registers opted out: every input lands in a source pin flop (F20 bus/strap in the folded ot_static_cmd_target pin rung, rst_n in the local reset-release flop) and every output is a source flop (calendar output flops cmd_ext/kv_desc, xcal done, collar configured/fault/active); added synthesis pin registers would shift th
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO remote: ot-run selected ot-epyc5 for 24 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_hsm_xcal_rel_t_1019_20261019-075933.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_hsm_xcal_rel_t_1019_20261019-075933.log; host dir ot-epyc5:/srv/opentallas-scratch/claude/ref_gate/hsm_xcal_rel_t_1019-20261019-075933
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc5 in 23 s (gate total 1323 s)
+GATE INFO floorplan.pin_geometry: actual pin geometry PASS: {'signal_clock_pins': 507, 'pin_rectangles': 507, 'pin_track_checked': 507, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 fe2e98956c8d7a160663eabec3013460be269db9579cccdb4567cd9167e5dcf0
+GATE INFO util: synthesized std area 1198 um2 + macros 32412 in core 116472: util 2% (std-cell density 1.6% of placeable 75363 um2; total fill 28.9%)
+GATE INFO textbook: PASS ot_hbm_svc_sm_xcal_rel_t cells 7,967 flops 2,639 depth 368.4 ps util 0.2891 reach 0.0 um (0.2 s)
+GATE FAIL cts_run: placement / CTS of the kit failed: [ERROR GPL-0305] RePlAce diverged during gradient descent calculation, resulting in an invalid step length (Inf or NaN). This is often caused by numerical instability or high placement density. Consider reducing placement density to potentially resolve the issue.  -> FIX: the route would fail the same way (DPL-0033 / GPL-0305 / CTS-*): fix the floorplan / density before routing
+GATE WARN cts_calibration: CTS rc=2 ck_insertion rc=1
+GATE INFO density: effective global-placement target density 0.520 vs spec PD 0.52
+GATE INFO clock_rule: root port:clk: 2,643 sinks on the largest root; no measured clock tree (no --cts gate evidence)
+GATE FAIL remote_script: remote script completed with exit 1  -> FIX: read the original terminal log and fix the reported failure
+GATE INFO layout_images: LOOK at these before submitting: floorplan /home/ubuntu/wt/codex-hbm-smb-kits-1019/physical/ref_tile/hsm_xcal_rel_t_1019/gate_layout/floorplan.png
+GATE FAIL fill: fill 28% = (hard macros 32411.6 + synthesized std cells 1260.2) / outline 119439.4 um2; pin demand per face: S 0 pins over 0.0/345.6 um (0%), N 0 pins over 0.0/345.6 um (0%), W 571 pins over 342.9/345.6 um (99%), E 64 pins over 0.0/345.6 um (0%) (< 35%)  -> FIX: shrink the outline / regroup the macros, or record "fill_reason": {"pin_bound": "<why the perimeter, not the area, sets the outline>"} if the pin demand above shows the edges are full
+GATE FAIL trial_route: trial global route produced no congestion table (GATE_GRT_RC=2)  -> FIX: read the remote grt.log
+PRE_ROUTE_GATE: FAIL (4 fail, 2 warn)
+GATE: hsm_xcal_rel_t_1019/gate_result.json written (exact staged source binding; commit it with the kit)

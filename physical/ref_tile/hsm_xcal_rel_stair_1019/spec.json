@@ -1,0 +1,205 @@
+{
+ "name": "hsm_xcal_rel_stair_1019",
+ "top": "ot_hbm_svc_sm_xcal_rel_t",
+ "kind": "tile",
+ "params": {
+  "PAW": 11,
+  "PREL": 1,
+  "DD": 256
+ },
+ "sources": [
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal_rel_t.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal_rel.sv",
+  "rtl/hbm_accel/host_static_20261015/ot_static_run_target.sv",
+  "rtl/hbm_accel/sm/static/ot_smh_calendar_static_x.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 362.88,
+  "h": 250.56,
+  "exact": true
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    43.2,
+    43.2
+   ],
+   "inst": "u_xcal.u_cal.g_m2.u_program_lo"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    43.2,
+    172.8
+   ],
+   "inst": "u_xcal.u_cal.g_m2.u_program_hi"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    259.2,
+    43.2
+   ],
+   "inst": "u_xcal.g_t2.u_tab_lo"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    259.2,
+    129.6
+   ],
+   "inst": "u_xcal.g_t2.u_tab_hi"
+  }
+ ],
+ "pins": {
+  "N": [
+   "tgt",
+   "cfg_data",
+   "cfg_addr",
+   "cfg_target",
+   "cfg_v",
+   "desc_base",
+   "desc_limit",
+   "desc_loops",
+   "desc_v",
+   "launch_v"
+  ],
+  "W": [
+   "cmd_ext",
+   "kv_desc",
+   "done",
+   "configured",
+   "fault",
+   "active",
+   "rst_n",
+   "clk"
+  ]
+ },
+ "layer_cap": "M5",
+ "route": {
+  "pd": 0.52,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  },
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.03
+ },
+ "job": {
+  "owner": "Codex:HBM-SMB-KITS",
+  "branch": "codex/hbm-smb-kits-1019",
+  "tag": "r1",
+  "purpose": "Structural staircase after GPL-0305 on all-W345.6square: separate host N and SM outputs W; programme macros form left column, descriptor macros form right shorter column. No RTL/clock/latency change; area from measured1198um2cells+32412um2SRAM, totalfill~37%. Origins43.2lattice, >=41um horizontal macro channels; source native cfg pipelines remain. CTS/nativeclockspread and reach must qualify new geometry.",
+  "extra_paths": [
+   "rtl/test/hbm_accel/svg_rel",
+   "tools/hbm_layer_vehicle",
+   "results/rtl/hbm_ds_layer_tput_1018/smbudget_1019",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "results/rtl/hbm_ds_layer_tput_1018/smb_kits_1019"
+  ],
+  "benches": [
+   {
+    "name": "xcal_rel_exact",
+    "cmd": "bash rtl/test/hbm_accel/svg_rel/run_xcal_rel.sh {RUN}/bench/xc0 0",
+    "expect": "pass",
+    "pass_regex": "XCAL_REL PASS mut=0 errors=0 words=4 first_delta=29 fault=0",
+    "threads": 1,
+    "peak_ram_gb": 2
+   },
+   {
+    "name": "xcal_rel_mut1",
+    "cmd": "bash rtl/test/hbm_accel/svg_rel/run_xcal_rel.sh {RUN}/bench/xc1 1",
+    "expect": "fail",
+    "fail_regex": "XCAL_REL FAIL mut=1 errors=[1-9]",
+    "fail_witness": "results/rtl/hbm_ds_layer_tput_1018/smb_kits_1019/xc_mut1.log",
+    "threads": 1,
+    "peak_ram_gb": 2
+   },
+   {
+    "name": "xcal_rel_mut2",
+    "cmd": "bash rtl/test/hbm_accel/svg_rel/run_xcal_rel.sh {RUN}/bench/xc2 2",
+    "expect": "fail",
+    "fail_regex": "XCAL_REL FAIL mut=2 errors=[1-9]",
+    "fail_witness": "results/rtl/hbm_ds_layer_tput_1018/smb_kits_1019/xc_mut2.log",
+    "threads": 1,
+    "peak_ram_gb": 2
+   },
+   {
+    "name": "xcal_rel_mut3",
+    "cmd": "bash rtl/test/hbm_accel/svg_rel/run_xcal_rel.sh {RUN}/bench/xc3 3",
+    "expect": "fail",
+    "fail_regex": "XCAL_REL FAIL mut=3 errors=[1-9]",
+    "fail_witness": "results/rtl/hbm_ds_layer_tput_1018/smb_kits_1019/xc_mut3.log",
+    "threads": 1,
+    "peak_ram_gb": 2
+   },
+   {
+    "name": "xcal_rel_mut4",
+    "cmd": "bash rtl/test/hbm_accel/svg_rel/run_xcal_rel.sh {RUN}/bench/xc4 4",
+    "expect": "fail",
+    "fail_regex": "XCAL_REL FAIL mut=4 errors=[1-9]",
+    "fail_witness": "results/rtl/hbm_ds_layer_tput_1018/smb_kits_1019/xc_mut4.log",
+    "threads": 1,
+    "peak_ram_gb": 2
+   },
+   {
+    "name": "xcal_rel_mut5",
+    "cmd": "bash rtl/test/hbm_accel/svg_rel/run_xcal_rel.sh {RUN}/bench/xc5 5",
+    "expect": "fail",
+    "fail_regex": "XCAL_REL FAIL mut=5 errors=[1-9]",
+    "fail_witness": "results/rtl/hbm_ds_layer_tput_1018/smb_kits_1019/xc_mut5.log",
+    "threads": 1,
+    "peak_ram_gb": 2
+   }
+  ],
+  "views_to": "physical/ref_tile/hsm_xcal_rel_stair_1019/views",
+  "record_to": "results/rtl/ref_tile/hsm_xcal_rel_stair_1019",
+  "reroute_reason": {
+   "kind": "structural_floorplan",
+   "why": "Prior pre-route CTS/GRT placement GPL-0305 and fill28.9% on hsm_xcal_rel_t_1019; separated N-host/W-output pin masses and regrouped descriptor SRAMs in a second column; no route was submitted."
+  }
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "every input lands in a source pin flop (F20 bus/strap in the folded ot_static_cmd_target pin rung, rst_n in the local reset-release flop) and every output is a source flop (calendar output flops cmd_ext/kv_desc, xcal done, collar configured/fault/active); added synthesis pin registers would shift the compiler-fixed lockstep with the svg collar"
+ },
+ "structural_change": "Structural staircase after GPL-0305 on all-W345.6square: separate host N and SM outputs W; programme macros form left column, descriptor macros form right shorter column. No RTL/clock/latency change; area from measured1198um2cells+32412um2SRAM, totalfill~37%. Origins43.2lattice, >=41um horizontal macro channels; source native cfg pipelines remain. CTS/nativeclockspread and reach must qualify new geometry.",
+ "children": [],
+ "inter": [],
+ "recipe": 4,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": false,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "purpose": "Structural staircase after GPL-0305 on all-W345.6square: separate host N and SM outputs W; programme macros form left column, descriptor macros form right shorter column. No RTL/clock/latency change; area from measured1198um2cells+32412um2SRAM, totalfill~37%. Origins43.2lattice, >=41um horizontal macro channels; source native cfg pipelines remain. CTS/nativeclockspread and reach must qualify new geometry.",
+ "hold_budget": "die",
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ },
+ "slot_change_request": "HBM-SMB-KITS -> die lead: relativeXC362.88x250.56 staircase candidate; hostN, outputs+clockW; PAW11/DD256; fixedrelativeRTLcycles unchanged. No bind until real gate/route and fullsource/relay/slot contract adoption.",
+ "std_area_um2": 1198
+}
