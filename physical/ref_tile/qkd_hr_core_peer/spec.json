@@ -92,7 +92,8 @@
   "rtl/qwen_sys/host_cluster_20261017/peer_rr/qkd_host_peer_rank_codec_rr.sv",
   "rtl/qwen_sys/host_cluster_20261017/peer_rr/qkd_host_ctrl_token_service_packet_collected_rr.sv",
   "rtl/qwen_sys/host_cluster_20261017/peer_rr/qkd_host_peer_link_rr.sv",
-  "rtl/qwen_sys/host_cluster_20261017/peer_rr/qkd_host_peer_root_mux_pl_rr.sv"
+  "rtl/qwen_sys/host_cluster_20261017/peer_rr/qkd_host_peer_root_mux_pl_rr.sv",
+  "rtl/qwen_sys/host_cluster_20261017/peer_pd/qkd_host_ctrl_token_service_packet_collected_pd.sv"
  ],
  "params": {},
  "clock_port": "ck_core",
@@ -250,7 +251,7 @@
    "step_retire_client_tag"
   ]
  },
- "structural_change": "KVJ-A3 r2 HOST cluster child qkd_hr_core_peer (core family, one ck_core entry): members u_peer, u_peer_codec, u_root_mux, u_coordinator, u_ctrl + their glue, generated wrapper (tools/qwen_kv_die/host_cluster/gen_cluster.py). Partition results/arch/qwen_split_1014/host_root_cluster/partition_r2.json | r3 (KV-HROOT-PEER 10-18, gate ca25bcce7 FAIL: TT spread 80.6, insertion 472.7 from a NW-corner clock entry, reg->reg -272.8 (step_slot rank-0 RX / last_allocation TX), por_n 5,341 + host_rst_n 3,419 reset loads from the ports, util 17%): (a) every reset pin of the 5 members behind a local ot_rst_relay (tools/qwen_kv_die/host_cluster/gen_peer_rr.py; +3 release uniform); (b) root mux -> qkd_host_peer_root_mux_pl: cycle-exact one-hot TX round robin (no 512-b runtime part-select) + registered rank-0 RX slice (+1 cycle on rank0->coordinator class9 words; bench rtl/test/qwen_host/hr_peer_pl_1018); (c) outline 302.4 -> 280.8 (pin-bound: 6,301 pins, faces 5.5-5.8 /um after moving cd S, guarded_tk/slice_boot_done/step tags W, slice_boot_ok/seen/peer acks E), ck_core at the N-face centre (was the NW corner).",
+ "structural_change": "KVJ-A3 r2 HOST cluster child qkd_hr_core_peer (core family, one ck_core entry): members u_peer, u_peer_codec, u_root_mux, u_coordinator, u_ctrl + their glue, generated wrapper (tools/qwen_kv_die/host_cluster/gen_cluster.py). Partition results/arch/qwen_split_1014/host_root_cluster/partition_r2.json | r3 (KV-HROOT-PEER 10-18, gate ca25bcce7 FAIL: TT spread 80.6, insertion 472.7 from a NW-corner clock entry, reg->reg -272.8 (step_slot rank-0 RX / last_allocation TX), por_n 5,341 + host_rst_n 3,419 reset loads from the ports, util 17%): (a) every reset pin of the 5 members behind a local ot_rst_relay (tools/qwen_kv_die/host_cluster/gen_peer_rr.py; +3 release uniform); (b) root mux -> qkd_host_peer_root_mux_pl: cycle-exact one-hot TX round robin (no 512-b runtime part-select) + registered rank-0 RX slice (+1 cycle on rank0->coordinator class9 words; bench rtl/test/qwen_host/hr_peer_pl_1018); (c) outline 302.4 -> 280.8 (pin-bound: 6,301 pins, faces 5.5-5.8 /um after moving cd S, guarded_tk/slice_boot_done/step tags W, slice_boot_ok/seen/peer acks E), ck_core at the N-face centre (was the NW corner). | r4 (HKV-PROMPT6 10-19, routed r3-40d82161e NEEDS_RTL TT -174.78 / FF -11.03; routed sign-off STA classified: no reset-pin path among violators): (1) TT u_ctrl.u_m rp -> 4:1x512 head mux q[rp] -> h[511:K]==0 OR trees -> accept -> 744-flop tk8 / kst8 enable (all 400 listed endpoints, -174.8): registered queue head h (+ same-edge write forwarding) with zero flags computed at queue write (qkd_host_ctrl_token_service_packet_collected_pd, gen_peer_pd.py; bit/cycle exact, 0 cycles); (2) FF input pin-reg hold slice_boot_done/guarded_tk/step*_client_tag/cq_pos (-11.0, 150+ ep): route.io_hold_margin_ns 0.03; internal participant_trace -5.9 to route hold repair; (3) main RESET-LANDING: reset_landing 2 stages on por_n/host_rst_n ahead of the member relays (release +2 more ck_core edges, uniform). MU (allocator_mu) NOT carried: not wireable alone (MU-ADOPT-HROOT).",
  "kind": "tile",
  "recipe": 4,
  "hold_budget": "die",
@@ -270,7 +271,7 @@
    "h": "M4",
    "v": "M5"
   },
-  "io_hold_margin_ns": 0.0
+  "io_hold_margin_ns": 0.03
  },
  "pin_regs": {
   "enable": true,
@@ -278,9 +279,9 @@
   "reason": "literal async reset roles only (data levels such as native_link_reset_seen are registered)"
  },
  "job": {
-  "owner": "Claude:KV-HROOT-PEER",
-  "branch": "claude/kv-hroot-peer-1018",
-  "tag": "r3",
+  "owner": "Claude:HKV-PROMPT6",
+  "branch": "claude/hkv-peer6-1019",
+  "tag": "r4",
   "purpose": "HOST root cluster child qkd_hr_core_peer r3: reset relays + root-mux restructure + 280.8 outline, centre clock (parent qkd_host_root is CRITICAL)",
   "benches": [
    {
@@ -341,8 +342,37 @@
     "cmd": "bash rtl/test/qwen_host/hr_peer_pl_1018/run_hr_peer_pl.sh {RUN}/bench/plm 1",
     "fail_regex": "HR_PEER_PL .* FAIL",
     "fail_witness": "results/arch/qwen_split_1014/host_root_cluster/benches/hr_peer_pl_mutant.log"
+   },
+   {
+    "name": "peer_pd_equiv",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "bash tools/qwen_kv_die/host_cluster/bench/peer_pd_equiv.sh pass {RUN}/bench/pepd_pass",
+    "pass_regex": "HKV_PEER_PD PASS 4/4",
+    "note": "original qkd_host_ctrl_token_service_packet_collected vs _pd lockstep, 4 configs (service/token on/off x die 0/peer), all outputs every edge"
+   },
+   {
+    "name": "peer_pd_mutant",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "bash tools/qwen_kv_die/host_cluster/bench/peer_pd_equiv.sh mutant {RUN}/bench/pepd_mut",
+    "fail_regex": "HKV_PEER_PD FAIL mutant [1-4]/4",
+    "fail_witness": "results/arch/qwen_split_1014/host_root_cluster/benches/peer_pd_mutant_FAIL_v5050.log",
+    "note": "QKD_HR_PEPD_MUTANT drops the same-edge head forwarding: must FAIL"
    }
   ]
+ },
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
  },
  "children": [],
  "inter": [],
