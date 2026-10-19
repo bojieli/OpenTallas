@@ -75,6 +75,12 @@ fi
 # The PDN stays FAIL in STATUS; nothing about the PG verdict is relaxed (like OT_PDN=skip, timing-only evidence).
 pg_open_diag() {
   [ "${OT_PG_OPEN_DIAG:-0}" = 1 ] && grep -q '^OT_PDN PASS' $C/run_pdn.log && [ -s $C/floorplan_pdn_prepg.odb ] || return 1
+  # A killed or incomplete PG check is not a measured connectivity failure. Require both the process verdict
+  # and an explicit completed check failure before taking the diagnostic continuation (Qwen recovery 10-18).
+  local pg_process_rc
+  pg_process_rc=$(cat "$C/run_pdn.log.process_exit" 2>/dev/null) || return 1
+  case "$pg_process_rc" in 0|1) ;; *) return 1;; esac
+  grep -Eq '^OT_PGCHECK (VDD|VSS) FAIL ' "$C/run_pdn.log" || return 1
   grep -E '^(OT_.*FAIL|Error:|\[ERROR)' $C/run_pdn.log | grep -v -E 'OT_PGCHECK (VDD|VSS) FAIL|PSM-0069|run_pdn.tcl, [0-9]+ PSM-0069' | grep -q . && return 1
   ln -f $C/floorplan_pdn_prepg.odb $C/floorplan_pdn.odb
   say "PDN PG OPEN -- DIAGNOSTIC ONLY (GRT/STA continue): islands by class: $(grep PSM-0039 $C/run_pdn.log | sed -E 's/.*instance ([^ /]+)\/.*/\1/; s/(_[0-9]+)+$//' | sort | uniq -c | sort -rn | awk '{printf "%s=%s ",$2,$1}')"

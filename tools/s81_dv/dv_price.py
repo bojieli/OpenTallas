@@ -59,6 +59,21 @@ from throughput import accepted_cost as ac          # noqa: E402
 TP = ROOT / 'results/arch/token_path_20261009'
 LEDGER = ROOT / 'results/arch/accepted_cost_ledger_1013.json'
 HOP = 1004 + 171 / 84
+# KP4 FEC in the stage hop (S81-SMHKP4 / NATIVE-REF 10-18): HOP's board channel is 251 cycles = 209 ns
+# (configs/hardware/technology.json links.rom_board_serdes hop_latency_s: channel 200 ns incl. RS(544,514) encode +
+# decode ~80-100 ns, + CDC 4 ns + digital endpoint).  The on-die RTL decoder ot_s81_kp4_dec (claude/smhkp4-1018:
+# flow pin_regs +1 in / +1 out) is 68 cycles p_d -> q_d (was 66; RTL 60 + tile pin registers) = 56.7 ns at 833.3 ps,
+# inside the channel's FEC share, so HOP (and every price here) is unchanged by the +2; kp4_check() keeps it so.
+T_PS = 833.333
+KP4_DEC_HW_CYCLES = 68
+KP4_FEC_SHARE_NS = (80.0, 100.0)     # encode + decode share of the 200 ns channel (technology.json note)
+
+
+def kp4_check(dec_cycles=KP4_DEC_HW_CYCLES):
+    """the RTL KP4 decode latency (ns) and whether it fits the FEC share the hop price assumes"""
+    ns = dec_cycles * T_PS / 1000.0
+    return dict(kp4_dec_cycles=dec_cycles, kp4_dec_ns=round(ns, 1), fec_share_ns=KP4_FEC_SHARE_NS,
+                within_hop_price=ns <= KP4_FEC_SHARE_NS[0])
 ANCHOR = {'ar': (1447.7, 1.0), 'mtp': (4238.4, 4.159)}
 DROP = re.compile(r'^(VM|SU|HC)\.|^CAPT\.CD_PINREG$')
 BASIS_PHASE = 138.0          # results/rtl/dsrom_field_reprice_r8_20261006 f183.60: farthest-frame round trip
@@ -301,12 +316,18 @@ def ledger_split(path=LEDGER, drop=None):
     kept, dropped = {'ar': 0.0, 'mtp': 0.0}, {'ar': 0.0, 'mtp': 0.0}
     rows = []
     for r in led['rows']:
-        if r['design'] != 's81' or r.get('status') not in ('accepted', 'proposed'):
+        # superseded = a retired hub-design row (accepted_cost.py supersede): it is in the current hub-die baseline
+        # (dropped side), never in the DV kept total.  S81.DV_* rows are this tool's own DV terms (landing, ...):
+        # dv_price computes them, so counting the ledger copy too would charge them twice.
+        if r['design'] != 's81' or r.get('status') not in ('accepted', 'proposed', 'superseded'):
             continue
-        tgt = dropped if drop.search(r['group']) else kept
+        if r['group'].startswith('S81.DV_'):
+            continue
+        is_drop = r['status'] == 'superseded' or bool(drop.search(r['group']))
+        tgt = dropped if is_drop else kept
         for wl in ('ar', 'mtp'):
             tgt[wl] += (r.get('per_workload', {}).get(wl) or {}).get('e2e_loss_pct', 0.0) or 0.0
-        rows.append(dict(group=r['group'], status=r['status'], dropped=bool(drop.search(r['group'])),
+        rows.append(dict(group=r['group'], status=r['status'], dropped=is_drop,
                          ar=(r.get('per_workload', {}).get('ar') or {}).get('e2e_loss_pct'),
                          mtp=(r.get('per_workload', {}).get('mtp') or {}).get('e2e_loss_pct')))
     return kept, dropped, rows

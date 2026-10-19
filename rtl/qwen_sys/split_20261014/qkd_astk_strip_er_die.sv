@@ -6,7 +6,7 @@
 //   vh<k>          the V-return header of the stack's V port k (qkd_pvfork vh = {epoch 16, t 14, valid}, a relayed fork
 //                  branch of the die word pvh_<st>_<k>): e-read request read_v[k] = vh<k>[0], read_addr[11 k +: 11] =
 //                  {t[12:9], t[6:0]} = {vh<k>[13:10], vh<k>[7:1]} (the e quad of the V row the pair is about to take)
-//   erd            response_data (4 x 64 b, port k = the e quad of V port k, ERL 3 edges after its request) -> the PV pair's
+//   erd            response_data (4 x 64 b, port k = the e quad of V port k, 7 edges after its request: ERL 3 + 4 tap pin regs) -> the PV pair's
 //                  in_e lanes of this stack (pvw_<p>.ie / .iee); response_v / response_addr stay inside (no die e-read
 //                  identity check: the tap's own owner / visibility checks fault instead)
 //   af             the stack fault lane (sequencer af_<st> + attention fault root ufs_<st>) = strip af | er_fault: the
