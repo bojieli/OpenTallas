@@ -24,7 +24,7 @@ module tb_link_reset_profile;
    for(j=0;j<4;j=j+1)begin
     en[j]=1;repeat(3)@(posedge clk[j]);@(negedge clk[j]);en[j]=0;
    end
-   #(.02*phase+.05);rst_n=0;#0.03;if(ov||fault)$fatal(1,"FAIL reset occupied flags");
+   #(0.02*phase+0.05);rst_n=0;#0.03;if(ov||fault)$fatal(1,"FAIL reset occupied flags");
   end
   $display("PASS link_reset_profile raw8 first8 final196 independent_faces4 phases8 assert_without_clock release_exact2");$finish;
  end
