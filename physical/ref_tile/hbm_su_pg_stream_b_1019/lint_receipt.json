@@ -6,7 +6,7 @@
      "rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_static_vm_bank_leaf_s.sv": "3b0b126340d39eef7efc913995ab1ff4779dd64d3b8d669ff92530b08ea11198",
      "rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_static_vm_ports.sv": "00eb5cdc33808a02dbb7a1c9ea272ff6a266521117851ee8ab598581902200ff",
      "rtl/hbm_accel/generic/adapters/static_su/programme/multirate_bridge_split.sv": "b14cc91fa9163092fe700affc00548b1a78c59607fabfb27369472e21ed72e4f",
-     "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pg_stream_split.sv": "d87ea94f4e4e7753d3812f869710170fc8f63bb8932b8afbdabc5c183a2b22b3",
+     "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pg_stream_split.sv": "7e00c37c17fc4cec4329b5cb7fd6a58fddf9bc26454cd19bd43f35118d0a4506",
      "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv": "06107909fe1bbf3d3fe2622e388eefd39964ab10977cf6f8fc4db4da8842db72",
      "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv": "cd766d1e10aba61a57ad0db66d3ddcde16b5ff01bcc2004edbdeeeb6ec559015",
      "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
@@ -126,13 +126,13 @@
       "FAULT_REG": 1,
       "G": 2,
       "QID": 1,
-      "READ_RETURN": 10,
+      "READ_RETURN": 18,
       "STRAP": 1,
-      "WRITE_RETURN": 7
+      "WRITE_RETURN": 15
      },
      "pin_regs": {
       "enable": false,
-      "reason": "Every boundary bit has its register in RTL: vmr_cmd/su_wq go straight into the request bank flops, su_rr / ij_* / pg_fault are serial_rr / ijq / synchroniser flops, the LG tap registers its local/far/near inputs and outputs, inj_rd/inj_addr are decoded into the inject bank flops. A wrapper stage would move the fixed 3:4 seam calendar (windows 2q..7q) and the VM 10/7 calendar."
+      "reason": "Every boundary bit has its register in RTL: vmr_cmd/su_wq go straight into the request bank flops, su_rr / ij_* / pg_fault are serial_rr / ijq / synchroniser flops, the LG tap registers its local/far/near inputs and outputs, inj_rd/inj_addr are decoded into the inject bank flops. A wrapper stage would move the fixed 3:4 seam calendar (windows 2q..7q) and the release VM 18/15 calendar."
      },
      "reset_landing": {
       "clock": "clk_ctl",
@@ -203,9 +203,9 @@
     },
     "yosys": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
    },
-   "created": "2026-10-19T08:16:19-0700",
-   "host": "ot-epyc8",
-   "key": "57757f65bc64c62866a12758982eabfd8d684ab7a2f055b09f14f57b78dd6f04",
+   "created": "2026-10-19T08:47:39-0700",
+   "host": "ot-epyc7",
+   "key": "8d271c34eeb946d2b162826e97f6375619284786d1c9307acd2399a09f790482",
    "record": {
     "counts": {
      "capture": 0,
@@ -57747,14 +57747,14 @@
      "rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_static_vm_bank_leaf_s.sv": "3b0b126340d39eef7efc913995ab1ff4779dd64d3b8d669ff92530b08ea11198",
      "rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_static_vm_ports.sv": "00eb5cdc33808a02dbb7a1c9ea272ff6a266521117851ee8ab598581902200ff",
      "rtl/hbm_accel/generic/adapters/static_su/programme/multirate_bridge_split.sv": "b14cc91fa9163092fe700affc00548b1a78c59607fabfb27369472e21ed72e4f",
-     "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pg_stream_split.sv": "d87ea94f4e4e7753d3812f869710170fc8f63bb8932b8afbdabc5c183a2b22b3",
+     "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pg_stream_split.sv": "7e00c37c17fc4cec4329b5cb7fd6a58fddf9bc26454cd19bd43f35118d0a4506",
      "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv": "06107909fe1bbf3d3fe2622e388eefd39964ab10977cf6f8fc4db4da8842db72",
      "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv": "cd766d1e10aba61a57ad0db66d3ddcde16b5ff01bcc2004edbdeeeb6ec559015",
      "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
      "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
     }
    },
-   "seconds": 6
+   "seconds": 5
   }
  },
  "schema": "opentallas.ref_tile.lint_receipt.v1"

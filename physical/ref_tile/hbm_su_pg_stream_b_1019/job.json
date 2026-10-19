@@ -15,14 +15,14 @@
    "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pg_stream.sv",
    "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pg_lg_tap.sv",
    "rtl/hbm_accel/generic/adapters/static_su/programme/multirate_bridge.sv",
-   "results/rtl/hbm_pgstream_cdc_1019"
+   "results/rtl/hbm_pgstream_cdc_r18_1019"
   ]
  },
  "stages": {
   "bench": [
    {
     "name": "lint",
-    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hbm_su_static_pg_stream_split #(.QID(1), .G(2), .READ_RETURN(10), .WRITE_RETURN(7), .STRAP(1), .FAULT_REG(1)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pg_stream_split.sv rtl/hbm_accel/generic/adapters/static_su/programme/multirate_bridge_split.sv rtl/lib/ot_rst_relay.sv rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_static_vm_bank_leaf_s.sv rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_static_vm_ports.sv rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv rtl/hdc/ot_hdc_delay.sv && echo lint-ok",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hbm_su_static_pg_stream_split #(.QID(1), .G(2), .READ_RETURN(18), .WRITE_RETURN(15), .STRAP(1), .FAULT_REG(1)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pg_stream_split.sv rtl/hbm_accel/generic/adapters/static_su/programme/multirate_bridge_split.sv rtl/lib/ot_rst_relay.sv rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_static_vm_bank_leaf_s.sv rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_static_vm_ports.sv rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv rtl/hdc/ot_hdc_delay.sv && echo lint-ok",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,
@@ -32,7 +32,7 @@
    },
    {
     "name": "pgs_b_lockstep",
-    "cmd": "bash tools/hbm_static/su_pg_stream_split_vl_run.sh {RUN}/bench/m0 0 1500 1 10 7 1",
+    "cmd": "bash tools/hbm_static/su_pg_stream_split_vl_run.sh {RUN}/bench/m0 0 1500 1 18 15 1",
     "threads": 4,
     "peak_ram_gb": 8,
     "needs": [
@@ -41,11 +41,11 @@
     "expect": "pass",
     "pass_regex": "PG_STREAM_SPLIT PASS checks=",
     "min_count_regex": "checks=(\\d+)",
-    "pass_witness": "results/rtl/hbm_pgstream_cdc_1019/m0/bench.log"
+    "pass_witness": "results/rtl/hbm_pgstream_cdc_r18_1019/m0/bench.log"
    },
    {
-    "name": "pgs_b_lockstep_rt18",
-    "cmd": "bash tools/hbm_static/su_pg_stream_split_vl_run.sh {RUN}/bench/rt18 0 1500 1 18 15 1",
+    "name": "pgs_b_lockstep_rr10_regression",
+    "cmd": "bash tools/hbm_static/su_pg_stream_split_vl_run.sh {RUN}/bench/rr10 0 1500 1 10 7 1",
     "threads": 4,
     "peak_ram_gb": 8,
     "needs": [
@@ -54,11 +54,24 @@
     "expect": "pass",
     "pass_regex": "PG_STREAM_SPLIT PASS checks=",
     "min_count_regex": "checks=(\\d+)",
-    "pass_witness": "results/rtl/hbm_pgstream_cdc_1019/rt18/bench.log"
+    "pass_witness": "results/rtl/hbm_pgstream_cdc_r18_1019/rr10/bench.log"
+   },
+   {
+    "name": "pgs_b_lockstep_qid0",
+    "cmd": "bash tools/hbm_static/su_pg_stream_split_vl_run.sh {RUN}/bench/qid0 0 1500 0 18 15 1",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "pass",
+    "pass_regex": "PG_STREAM_SPLIT PASS checks=",
+    "min_count_regex": "checks=(\\d+)",
+    "pass_witness": "results/rtl/hbm_pgstream_cdc_r18_1019/qid0/bench.log"
    },
    {
     "name": "pgs_b_mut12_seam_window",
-    "cmd": "bash tools/hbm_static/su_pg_stream_split_vl_run.sh {RUN}/bench/m12 12 1500 1 10 7 1",
+    "cmd": "bash tools/hbm_static/su_pg_stream_split_vl_run.sh {RUN}/bench/m12 12 1500 1 18 15 1",
     "threads": 4,
     "peak_ram_gb": 8,
     "needs": [
@@ -66,12 +79,12 @@
     ],
     "expect": "fail",
     "fail_regex": "PG_STREAM_SPLIT FAIL errors=",
-    "fail_witness": "results/rtl/hbm_pgstream_cdc_1019/m12/bench.log",
+    "fail_witness": "results/rtl/hbm_pgstream_cdc_r18_1019/m12/bench.log",
     "why": "seam-window mutant: request bank read one stream edge early into a pre-stage (same data, same launch edge) -> setup 1q < the declared 4q seam window; window checker only"
    },
    {
-    "name": "pgs_b_mut13_fault_publish",
-    "cmd": "bash tools/hbm_static/su_pg_stream_split_vl_run.sh {RUN}/bench/m13 13 1500 1 10 7 1",
+    "name": "pgs_b_mut14_cross_reset",
+    "cmd": "bash tools/hbm_static/su_pg_stream_split_vl_run.sh {RUN}/bench/m14 14 1500 1 18 15 1",
     "threads": 4,
     "peak_ram_gb": 8,
     "needs": [
@@ -79,12 +92,25 @@
     ],
     "expect": "fail",
     "fail_regex": "PG_STREAM_SPLIT FAIL errors=",
-    "fail_witness": "results/rtl/hbm_pgstream_cdc_1019/m13/bench.log",
+    "fail_witness": "results/rtl/hbm_pgstream_cdc_r18_1019/m14/bench.log",
+    "why": "serial bridge reset must not clear stream-local sticky fault publication"
+   },
+   {
+    "name": "pgs_b_mut13_fault_publish",
+    "cmd": "bash tools/hbm_static/su_pg_stream_split_vl_run.sh {RUN}/bench/m13 13 1500 1 18 15 1",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "PG_STREAM_SPLIT FAIL errors=",
+    "fail_witness": "results/rtl/hbm_pgstream_cdc_r18_1019/m13/bench.log",
     "why": "registered fault source inverted: independent publication and exact two-stage serial capture scoreboard"
    },
    {
     "name": "pgs_b_mut3",
-    "cmd": "bash tools/hbm_static/su_pg_stream_split_vl_run.sh {RUN}/bench/m3 3 1500 1 10 7 1",
+    "cmd": "bash tools/hbm_static/su_pg_stream_split_vl_run.sh {RUN}/bench/m3 3 1500 1 18 15 1",
     "threads": 4,
     "peak_ram_gb": 8,
     "needs": [
@@ -92,12 +118,12 @@
     ],
     "expect": "fail",
     "fail_regex": "PG_STREAM_SPLIT FAIL errors=",
-    "fail_witness": "results/rtl/hbm_pgstream_cdc_1019/m3/bench.log",
+    "fail_witness": "results/rtl/hbm_pgstream_cdc_r18_1019/m3/bench.log",
     "why": "return staging removed: bank rewritten 0 ps after its read (window checker)"
    },
    {
     "name": "pgs_b_mut2",
-    "cmd": "bash tools/hbm_static/su_pg_stream_split_vl_run.sh {RUN}/bench/m2 2 1500 1 10 7 1",
+    "cmd": "bash tools/hbm_static/su_pg_stream_split_vl_run.sh {RUN}/bench/m2 2 1500 1 18 15 1",
     "threads": 4,
     "peak_ram_gb": 8,
     "needs": [
@@ -105,12 +131,12 @@
     ],
     "expect": "fail",
     "fail_regex": "PG_STREAM_SPLIT FAIL errors=",
-    "fail_witness": "results/rtl/hbm_pgstream_cdc_1019/m2/bench.log",
+    "fail_witness": "results/rtl/hbm_pgstream_cdc_r18_1019/m2/bench.log",
     "why": "stream half reads the wrong request bank"
    },
    {
     "name": "pgs_b_mut8",
-    "cmd": "bash tools/hbm_static/su_pg_stream_split_vl_run.sh {RUN}/bench/m8 8 1500 1 10 7 1",
+    "cmd": "bash tools/hbm_static/su_pg_stream_split_vl_run.sh {RUN}/bench/m8 8 1500 1 18 15 1",
     "threads": 4,
     "peak_ram_gb": 8,
     "needs": [
@@ -118,7 +144,7 @@
     ],
     "expect": "fail",
     "fail_regex": "PG_STREAM_SPLIT FAIL errors=",
-    "fail_witness": "results/rtl/hbm_pgstream_cdc_1019/m8/bench.log",
+    "fail_witness": "results/rtl/hbm_pgstream_cdc_r18_1019/m8/bench.log",
     "why": "serial half reads the wrong inject bank"
    }
   ],

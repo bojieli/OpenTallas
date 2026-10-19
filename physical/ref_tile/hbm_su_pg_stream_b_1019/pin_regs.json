@@ -2,5 +2,5 @@
  "schema": "opentallas.ref_tile.pin_regs.v1",
  "top": "ot_hbm_su_static_pg_stream_split",
  "enable": false,
- "reason": "Every boundary bit has its register in RTL: vmr_cmd/su_wq go straight into the request bank flops, su_rr / ij_* / pg_fault are serial_rr / ijq / synchroniser flops, the LG tap registers its local/far/near inputs and outputs, inj_rd/inj_addr are decoded into the inject bank flops. A wrapper stage would move the fixed 3:4 seam calendar (windows 2q..7q) and the VM 10/7 calendar."
+ "reason": "Every boundary bit has its register in RTL: vmr_cmd/su_wq go straight into the request bank flops, su_rr / ij_* / pg_fault are serial_rr / ijq / synchroniser flops, the LG tap registers its local/far/near inputs and outputs, inj_rd/inj_addr are decoded into the inject bank flops. A wrapper stage would move the fixed 3:4 seam calendar (windows 2q..7q) and the release VM 18/15 calendar."
 }
