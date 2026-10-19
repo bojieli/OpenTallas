@@ -14,7 +14,7 @@ module ot_hbm_svc_sm_group_rel_sram_id #(parameter integer ATTENTION=0,NATIVE_RE
  // strap identity: id_stack = HBM stack / quadrant (SW0 SE1 NW2 NE3), id_sm = SM index k (PCs 4k..4k+3)
  input wire[1:0]id_stack,input wire[2:0]id_sm,
  input wire stream_clk,stream_rst_n,hbm_clk,hbm_rst_n,
- input wire[3:0]return_pair_clk,
+ input wire[3:0]return_pair_clk,return_local_clk,return_pair_hbm_clk,
  input wire[1:0]stream_bank_clk,hbm_fifo_clk,input wire[3:0]hbm_pc_clk,
  input wire program_cfg_we,input wire[PAW-1:0]program_cfg_addr,input wire[255:0]program_cfg_data,
  input wire desc_we,input wire[DAW-1:0]desc_addr,input wire[255:0]desc_data,
@@ -46,7 +46,7 @@ module ot_hbm_svc_sm_group_rel_sram_id #(parameter integer ATTENTION=0,NATIVE_RE
  ot_hbm_svc_sm_feed_programmed_rel_sram_id #(.ATTENTION(ATTENTION),.NATIVE_RETURN(NATIVE_RETURN),.RETURN_MUT(RETURN_MUT),.NATIVE_LANDING(NATIVE_LANDING),.FIFOMUT(FIFOMUT),.LBANKS(LBANKS),.PAW(PAW),.PREL(PREL)) feed(
   .id_stack(id_stack),.id_sm(id_sm),
   .stream_clk(stream_clk),.stream_rst_n(stream_rst_n),.hbm_clk(hbm_clk),.hbm_rst_n(hbm_rst_n),
-  .return_pair_clk(return_pair_clk),.stream_bank_clk(stream_bank_clk),.hbm_fifo_clk(hbm_fifo_clk),.hbm_pc_clk(hbm_pc_clk),
+  .return_pair_clk(return_pair_clk),.return_local_clk(return_local_clk),.return_pair_hbm_clk(return_pair_hbm_clk),.stream_bank_clk(stream_bank_clk),.hbm_fifo_clk(hbm_fifo_clk),.hbm_pc_clk(hbm_pc_clk),
   .reserve_v(reserve_v),.reserve_ready(reserve_ready),.reserve_base(reserve_base),.reserve_row_base(reserve_row_base),
   .reserve_total(reserve_total),.reserve_bank(reserve_bank),.reserve_epoch(reserve_epoch),.reserve_rows(reserve_rows),
   .reserve_tag_base(reserve_tag_base),.block_ready(block_ready),.cache_ready(cache_ready),.cache_owned(cache_owned),

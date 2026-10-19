@@ -23,7 +23,7 @@ module ot_hbm_svc_sm4pc_cdc_rel_sram_id #(parameter integer NATIVE_RETURN=0,RETU
  parameter integer LBANKS=2, parameter integer LB=(LBANKS>2)?2:1)(
  input wire [1:0] id_stack,input wire [2:0] id_sm,
  input wire stream_clk,stream_rst_n,hbm_clk,hbm_rst_n,
- input wire [3:0] return_pair_clk,
+ input wire [3:0] return_pair_clk,return_local_clk,return_pair_hbm_clk,
  input wire [1:0] stream_bank_clk,input wire [1:0] hbm_fifo_clk,input wire [3:0] hbm_pc_clk,
  input wire [14:0] reserve_row_base,
  input wire reserve_v,output wire reserve_ready,input wire [31:0] reserve_base,
@@ -107,6 +107,11 @@ module ot_hbm_svc_sm4pc_cdc_rel_sram_id #(parameter integer NATIVE_RETURN=0,RETU
  assign k_we=0;assign k_wdata=0;assign k_wstrb=0;
  wire [7:0] fifo_wr_ready,fifo_ov;
  reg [7:0] fifo_wr_valid;reg [IW-1:0] fifo_wr_data[0:7];
+ wire[7:0]bank_hbm_roots,bank_stream_roots;
+ generate for(genvar bc=0;bc<8;bc=bc+1)begin:g_bank_roots
+  assign bank_hbm_roots[bc]=NATIVE_RETURN!=0?return_pair_hbm_clk[bc%4]:hbm_fifo_clk[bc/4];
+  assign bank_stream_roots[bc]=NATIVE_RETURN!=0?return_pair_clk[bc%4]:stream_bank_clk[bc/4];
+ end endgenerate
  genvar pc,g;
  generate for(pc=0;pc<4;pc=pc+1)begin:pc_owner
   if(OVERLAP!=0)begin:ov
@@ -126,7 +131,7 @@ module ot_hbm_svc_sm4pc_cdc_rel_sram_id #(parameter integer NATIVE_RETURN=0,RETU
  reg [1:0] arb_cursor[0:7];
  reg [1:0] arb_selected[0:7];
  generate for(g=0;g<8;g=g+1)begin:response_fairness
-  always @(posedge hbm_fifo_clk[g/4] or negedge hrst)begin
+  always @(posedge bank_hbm_roots[g] or negedge hrst)begin
    if(!hrst)arb_cursor[g]<=0;
    else if(fifo_wr_valid[g])arb_cursor[g]<=arb_selected[g]+1'b1;
   end
@@ -185,14 +190,14 @@ module ot_hbm_svc_sm4pc_cdc_rel_sram_id #(parameter integer NATIVE_RETURN=0,RETU
   wire [11:0] candidate={3'b0,drain_ordinal[8:3],3'(g)}+((g<drain_ordinal[2:0])?12'd8:12'd0);
   if(NATIVE_LANDING!=0)begin:g_native
   ot_hbm_svc_sm8_landing_boundary #(.FMUT(FIFOMUT),.BANK(g),.RESPONSE_DEPTH(RESPONSE_DEPTH),.LBANKS(LBANKS)) u_bank(
-   .hbm_clk(hbm_fifo_clk[g/4]),.hbm_rst_n(hrst),.stream_clk(stream_bank_clk[g/4]),.stream_rst_n(srst),
+   .hbm_clk(bank_hbm_roots[g]),.hbm_rst_n(hrst),.stream_clk(bank_stream_roots[g]),.stream_rst_n(srst),
    .in_v(fifo_wr_valid[g]),.in_ready(fifo_wr_ready[g]),.in_data(fifo_wr_data[g]),.overflow(fifo_ov[g]),
    .reserve_v(reserve_fire),.reserve_bank(reserve_bank),.reserve_epoch(reserve_epoch),.reserve_total(reserve_total),.stop(fault),
    .complete_v(bank_complete[g]),.complete_bank(bank_complete_bank[g]),.fault(bank_fault[g]),
    .read_v(draining&&candidate<drain_ordinal+drain_count&&candidate<bank_total[drain_bank]),.read_bank(drain_bank),.read_row(candidate[8:3]),.read_data(macro_data[g]));
   end else begin:g_sram
   ot_hbm_svc_sm8_landing_bank_sram285 #(.FMUT(FIFOMUT),.BANK(g),.RESPONSE_DEPTH(RESPONSE_DEPTH),.LBANKS(LBANKS)) u_bank(
-   .hbm_clk(hbm_fifo_clk[g/4]),.hbm_rst_n(hrst),.stream_clk(stream_bank_clk[g/4]),.stream_rst_n(srst),
+   .hbm_clk(bank_hbm_roots[g]),.hbm_rst_n(hrst),.stream_clk(bank_stream_roots[g]),.stream_rst_n(srst),
    .in_v(fifo_wr_valid[g]),.in_ready(fifo_wr_ready[g]),.in_data(fifo_wr_data[g]),.overflow(fifo_ov[g]),
    .reserve_v(reserve_fire),.reserve_bank(reserve_bank),.reserve_epoch(reserve_epoch),.reserve_total(reserve_total),.stop(fault),
    .complete_v(bank_complete[g]),.complete_bank(bank_complete_bank[g]),.fault(bank_fault[g]),
@@ -217,7 +222,7 @@ module ot_hbm_svc_sm4pc_cdc_rel_sram_id #(parameter integer NATIVE_RETURN=0,RETU
   ot_hbm_svg_meta_delay7 #(.W(MW)) u_labels(.clk(stream_clk),.rst_n(srst),
    .data_in({pre_v,pre_mask,pre_ordinal,pre_bank,pre_epoch,pre_last}),.data_out(delayed_labels));
   ot_hbm_svg_return_regional #(.MUT(RETURN_MUT)) u_return(
-   .pair_clk(return_pair_clk),.pair_rst_n({4{srst}}),.cache_clk(stream_clk),.cache_rst_n(srst),
+   .pair_clk(return_pair_clk),.pair_rst_n({4{srst}}),.return_clk(return_local_clk),.return_rst_n({4{srst}}),.cache_clk(stream_clk),.cache_rst_n(srst),
    .bank_data(banks),.in_ordinal({4{read_ordinal_pick[2:0]}}),.in_valid({4{pre_v}}),
    .out_data(out_data),.out_ordinal(return_ordinal),.out_valid(return_valid),.fault(tree_fault));
   assign {out_v,out_mask,out_ordinal,out_bank,out_epoch,out_last}=delayed_labels;

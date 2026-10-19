@@ -21,7 +21,7 @@ module ot_hbm_svc_sm_feed_programmed_rel_sram_id #(
 )(
  input wire [1:0] id_stack,input wire [2:0] id_sm,
  input wire stream_clk,stream_rst_n,hbm_clk,hbm_rst_n,
- input wire [3:0]return_pair_clk,
+ input wire [3:0]return_pair_clk,return_local_clk,return_pair_hbm_clk,
  input wire [1:0]stream_bank_clk,hbm_fifo_clk,input wire[3:0]hbm_pc_clk,
  input wire reserve_v,output wire reserve_ready,input wire[31:0]reserve_base,
  input wire[14:0]reserve_row_base,input wire[11:0]reserve_total,
@@ -64,7 +64,7 @@ module ot_hbm_svc_sm_feed_programmed_rel_sram_id #(
  wire out_v,out_bank,out_last;wire[3:0]out_mask;wire[1023:0]out_data;wire[10:0]out_ordinal;wire[15:0]out_epoch;
  ot_hbm_svc_sm4pc_cdc_rel_sram_id #(.NATIVE_RETURN(NATIVE_RETURN),.RETURN_MUT(RETURN_MUT),.NATIVE_LANDING(NATIVE_LANDING),.FIFOMUT(FIFOMUT),.OWNER_AW(OWNER_AW),.RESPONSE_DEPTH(RESPONSE_DEPTH),.OVERLAP(OVERLAP),.LBANKS(LBANKS)) producer(
   .id_stack(id_stack),.id_sm(id_sm),
-  .stream_clk(stream_clk),.stream_rst_n(stream_rst_n),.hbm_clk(hbm_clk),.hbm_rst_n(hbm_rst_n),.return_pair_clk(return_pair_clk),.stream_bank_clk(stream_bank_clk),.hbm_fifo_clk(hbm_fifo_clk),.hbm_pc_clk(hbm_pc_clk),
+  .stream_clk(stream_clk),.stream_rst_n(stream_rst_n),.hbm_clk(hbm_clk),.hbm_rst_n(hbm_rst_n),.return_pair_clk(return_pair_clk),.return_local_clk(return_local_clk),.return_pair_hbm_clk(return_pair_hbm_clk),.stream_bank_clk(stream_bank_clk),.hbm_fifo_clk(hbm_fifo_clk),.hbm_pc_clk(hbm_pc_clk),
   .reserve_v(reserve_fire),.reserve_ready(cdc_ready),.reserve_base(reserve_base),.reserve_row_base(reserve_row_base),.reserve_total(reserve_total),.reserve_bank(reserve_bank),.reserve_epoch(reserve_epoch),
   .block_ready(block_ready),.block_ready_v(),.block_ready_bank(),.block_ready_epoch(),.start_v(start_v),.start_bank(start_bank),.start_epoch(start_epoch),
   .out_v(out_v),.out_mask(out_mask),.out_data(out_data),.out_ordinal(out_ordinal),.out_bank(out_bank),.out_epoch(out_epoch),.out_last(out_last),.fault(cdc_fault),

@@ -42,7 +42,7 @@ module tb_hbm_svg_rel_sm;
  `endif
 .LBANKS(4),.NID(NID),.IDW(9),.PAW(11),.PREL(1),.DD(256),.IMUT(`ifdef IMUT `IMUT `else 0 `endif)) svg(
   `ifdef SMB_SRAMFIFO
-  .return_pair_clk({4{stream}}),
+  .return_pair_clk({4{stream}}),.return_local_clk({4{stream}}),.return_pair_hbm_clk({4{hbm}}),
   `endif
   .id_stack(2'd0),.id_sm(3'd0),
   .stream_clk(stream),.stream_rst_n(srst),.hbm_clk(hbm),.hbm_rst_n(hrst),.stream_bank_clk({2{stream}}),.hbm_fifo_clk({2{hbm}}),.hbm_pc_clk({4{hbm}}),
