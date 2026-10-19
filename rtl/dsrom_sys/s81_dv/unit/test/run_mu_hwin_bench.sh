@@ -13,6 +13,7 @@ run() { n=$1; shift
   verilator --binary --timing +define+DSDV_MU_POINTER_ASSERT +define+HEAD_COMPARE -j "${OT_THREADS:-8}" -Wno-fatal -Wno-WIDTH -Wno-lint -Wno-style --top-module tb_dsdv_mu_hwin "$@" $F \
     --Mdir "$O/obj_$n" -o tb > "$O/build_$n.log" 2>&1 || { echo "BUILD_FAIL $n"; bad=1; return; }
   "$O/obj_$n/tb" > "$O/run_$n.log" 2>&1; grep -E '^MUWIN' "$O/run_$n.log" | sed "s/^/[$n] /"; }
+run slots47 +define+NSLOT_TEST=47 +define+MIN_D=1; grep -q '^MUWIN PASS' "$O/run_slots47.log" || bad=1
 run min_d +define+MIN_D=1; grep -q '^MUWIN PASS' "$O/run_min_d.log" || bad=1
 run base;  grep -q '^MUWIN PASS' "$O/run_base.log" || bad=1
 run collision +define+COLLIDE_EVENTS=1; grep -q '^MUWIN COLLISION PASS' "$O/run_collision.log" || bad=1

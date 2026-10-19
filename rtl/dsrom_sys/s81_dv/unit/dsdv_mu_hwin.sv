@@ -39,7 +39,7 @@
 // do not fire or participate in offset-validity checks. Fault meanings and CSR encoding are unchanged.
 // ---------------------------------------------------------------------------------------------------------------------
 module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, parameter integer NEP = 4,
-                      parameter integer NRT = 2, parameter integer MUT = 0, parameter integer HEAD_STAGE = 0) (
+                      parameter integer NRT = 2, parameter integer MUT = 0, parameter integer HEAD_STAGE = 0, parameter integer COMPACT_PTR = 0) (
     input  wire              ck,
     input  wire              rst_n,
     input  wire [52:0]       f_ks,            // tap of the unit start pin {start, user 10, tok 21, pos 21}
@@ -141,6 +141,7 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
     wire [31:0] ts_event[0:NEV-1], tm_event[0:NEV-1];
     wire [23:0] rl_event[0:NEV-1]; wire [NEV-1:0] idle_event, rec_local;
     wire [SI-1:0] cfg_addr[0:NEV-1];
+    wire [1:0] cfg_attr[0:NEV-1];
     wire [SI-1:0] lw_event[0:NEV-1]; wire [NSLOT-1:0] lm_event[0:NEV-1];
     wire [30:0] rt_compare[0:NRT*NC_REC-1];
     reg [NEV-1:0] evld; reg [NEV-1:0] ek; reg [PI-1:0] eep [0:NEV-1]; reg [20:0] eD [0:NEV-1]; reg [EI-1:0] esel;
@@ -302,12 +303,24 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
     // There is no arbitration or serialized prefetch: original registered-read/freshness edges hold.
     genvar se, rce;
     generate for(se=0;se<NEV;se=se+1) begin:g_event_mem
-        reg [NSLOT-1:0] pe_r; reg [SI-1:0] pb_r; reg fresh_r;
+        wire [NSLOT-1:0] pe_r;
+        reg [SI-1:0] pb_r; reg fresh_r;
         assign pe[se]=pe_r; assign pbi[se]=pb_r; assign h_fr[se]=fresh_r;
+        if(COMPACT_PTR!=0) begin:g_binary_head
+            // pb_r was the exact same-edge shadow of the original one-hot pe_r.
+            // Decode its current state; the SRAM read and event edges stay fixed.
+            assign pe_r=OH0 << pb_r;
+        end else begin:g_onehot_head
+            reg [NSLOT-1:0] pointer_r;
+            assign pe_r=pointer_r;
+            always @(posedge ck or negedge rr[se+1])
+                if(!rr[se+1]) pointer_r<=OH0;
+                else if(adv[se]) pointer_r<=rot(pointer_r,lm_event[se]);
+        end
         always @(posedge ck or negedge rr[se+1])
-            if(!rr[se+1]) begin pe_r<=OH0; pb_r<=SI'(0); fresh_r<=1'b0; end
+            if(!rr[se+1]) begin pb_r<=SI'(0); fresh_r<=1'b0; end
             else begin
-                if(adv[se]) begin pe_r<=rot(pe_r,lm_event[se]); pb_r<=((|(pe_r&lm_event[se])) || pe_r[NSLOT-1])?SI'(0):pb_r+1'b1; end
+                if(adv[se]) pb_r<=((|(pe_r&lm_event[se])) || pe_r[NSLOT-1])?SI'(0):pb_r+1'b1;
                 fresh_r<=!adv[se] && !(|(pe_r&rec_slot));
             end
         for(rce=0;rce<NC_REC;rce=rce+1) begin:g_record_copy
@@ -321,7 +334,7 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
             .wa(ssqb),.wd({due_at_start,spq,suq}),.ra(pbi[se]),.q(head));
         dsdv_mu_mem #(.W(2),.AW(SI)) u_attr(.ck(ck),.rst_n(rr[MEM_EVENT_RBASE+MEM_EVENT_STRIDE*se+8]),
             .we(wv && idle_event[se] && mw_q[22:21]==2'd2 && esel==EI'(se)),
-            .wa(cfg_addr[se]),.wd(mw_q[11:10]),.ra(pbi[se]),.q(h_at[se]));
+            .wa(cfg_addr[se]),.wd(cfg_attr[se]),.ra(pbi[se]),.q(h_at[se]));
         assign h_ts[se]=head[62:31]; assign h_ep[se]=head[30:10]; assign h_eu[se]=head[9:0];
     end endgenerate
     // Same-edge physical copies: independent event address, due-time, compare-time,
@@ -337,11 +350,12 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
         // Sharing mc_valid/type AND empty-table produced a 400-load boot enable.
         (* keep *) reg cfg_gap_r,cfg_rl_r,start_r;
         (* keep *) reg [SI-1:0] cfg_addr_r;
-        assign cfg_addr[ce]=cfg_addr_r;
+        (* keep *) reg [1:0] cfg_attr_r;
+        assign cfg_addr[ce]=cfg_addr_r; assign cfg_attr[ce]=cfg_attr_r;
         assign rec_local[ce]=start_r && on_cal && !col && !udup && !(!armed && hcfg_bad);
         always @(posedge ck or negedge rr[COPY_RBASE+7*ce+6])
-            if(!rr[COPY_RBASE+7*ce+6]) begin cfg_gap_r<=1'b0;cfg_rl_r<=1'b0;start_r<=1'b0;cfg_addr_r<=0;end
-            else begin cfg_gap_r<=f_mc[25] && !f_mc[24];cfg_rl_r<=f_mc[25] && f_mc[24];start_r<=f_ks[52];cfg_addr_r<=f_mw[SI-1:0];end
+            if(!rr[COPY_RBASE+7*ce+6]) begin cfg_gap_r<=1'b0;cfg_rl_r<=1'b0;start_r<=1'b0;cfg_addr_r<=0;cfg_attr_r<=0;end
+            else begin cfg_gap_r<=f_mc[25] && !f_mc[24];cfg_rl_r<=f_mc[25] && f_mc[24];start_r<=f_ks[52];cfg_addr_r<=f_mw[SI-1:0];cfg_attr_r<=f_mw[11:10];end
         assign ts_event[ce]=ts_r; assign tm_event[ce]=time_r;
         assign rl_event[ce]=rl_r; assign lw_event[ce]=lw_r;
         assign lm_event[ce]=lm_r; assign idle_event[ce]=!arm_r && !(|vld);
@@ -481,7 +495,7 @@ module dsdv_seq_host_mux (
         .t_kd(t_kd), .f_mc(mc), .t_mf(hmf), .s_j(s_j), .s_jd_w(s_jd_w), .s_jd_e(s_jd_e), .s_hw_w(s_hw_w),
         .s_hw_e(s_hw_e), .s_hc_w(s_hc_w), .s_hc_e(s_hc_e), .st_rg_w(st_rg_w), .st_rg_e(st_rg_e), .cw_v(cw_v),
         .cw_a(cw_a), .cw_d(cw_d));
-    dsdv_mu_hwin #(.NSLOT(47), .NEV(16), .NEP(4), .NRT(2), .HEAD_STAGE(1)) u_win (.ck(ck), .rst_n(rst_n), .f_ks(f_ks), .f_mc(mc), .f_mw(mw),
+    dsdv_mu_hwin #(.NSLOT(47), .NEV(16), .NEP(4), .NRT(2), .HEAD_STAGE(1), .COMPACT_PTR(1)) u_win (.ck(ck), .rst_n(rst_n), .f_ks(f_ks), .f_mc(mc), .f_mw(mw),
         .mu_c({mu_c_0s, mu_c_0n, mu_c_7s, mu_c_7n}), .mu_rc({mu_rc_0s, mu_rc_0n, mu_rc_7s, mu_rc_7n}),
         .mu_rt({mu_rt_0n, mu_rt_7n}), .t_wf(wf));
     assign t_mf = {hmf[3] | wf[1], hmf[2] | wf[0], hmf[1:0]};
