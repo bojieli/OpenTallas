@@ -58,7 +58,11 @@ module tb_hbm_svg_rel_sm;
  wire[31:0]row_v,col_v,col_we,dram_rvalid;wire[95:0]row_op;wire[159:0]row_bank,col_bank,col_col;wire[607:0]row_row;wire[8191:0]col_data,dram_rdata;wire[1023:0]col_strb;wire native_fault;
 `ifdef HBM_MR
  // HBM-BW 2026-10-19: multi-row controller leaves (per-bank open rows, ACT ahead from a 64-entry queue, refresh key)
+`ifdef HBM_SAFE
+ ot_hbm_svc_native_sector_pipeline_leaves_safe controller(.clk(hbm)
+`else
  ot_hbm_svc_native_sector_pipeline_leaves_mr controller(.clk(hbm)
+`endif
 `else
  ot_hbm_svc_native_sector_pipeline_leaves controller(.clk(hbm)
 `endif,.rst_n(hrst),.pc_clk({32{hbm}}),

@@ -1,0 +1,43 @@
+{
+  "schema": "opentallas.hbm_bw_safe_model.v1",
+  "replicas_per_sm": 4,
+  "replicas_per_stack": 32,
+  "clock_GHz": 0.9765625,
+  "stream_clock_GHz": 1.2,
+  "target_bytes_per_stream_edge_per_sm": 98.9,
+  "peak_bytes_per_stream_edge_per_sm": 104.1666667,
+  "macs_per_cycle": 0,
+  "memory_ports": {
+    "metadata_banks": 4,
+    "metadata_read_replicas": 2,
+    "metadata_write_sectors_per_cycle": 4,
+    "aq_metadata_write_and_read_per_cycle": 1,
+    "payload_read_bytes_per_cycle": 32,
+    "pending_and_response_identity_sectors_per_cycle": 1
+  },
+  "boundary_bits": {
+    "K_request": 340,
+    "K_response": 277,
+    "PHY_payload": 256
+  },
+  "macro_count": 13,
+  "macro_area_um2_each": 3893.8528,
+  "macro_area_um2_total": 50620.0864,
+  "area_note": "Macro lower bound only; synthesis determines final tile outline/utilization before gate.",
+  "latency": {
+    "pins_added_vs_mr": 0,
+    "ACT_lookahead_pipeline_edges": 2,
+    "static_go_budget_edges_per_64_lines": 88
+  },
+  "routing": {
+    "proposed_outline_um": [
+      388.8,
+      388.8
+    ],
+    "macro_lattice_um": 43.2,
+    "max_outline_span_um": 388.8,
+    "track_check": "await synthesized pin inventory; full faces <=6 pins/um"
+  },
+  "schedule": "No service-go stall allowed; upstream prefetch lead must absorb the two-stage ACT selection. Production bench must pass exact go slots.",
+  "capacity": "Expert three-copy footprint is being checked against real 32GiB/stack allocation; no adoption until proven."
+}

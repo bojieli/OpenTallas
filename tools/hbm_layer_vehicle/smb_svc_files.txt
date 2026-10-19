@@ -17,3 +17,8 @@ rtl/model_ready_hbm_r14/ot_hbm_r14_aq_pc_mr.sv
 rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_mr.sv
 rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_mr.sv
 rtl/hbm_accel/loader/service_native/ot_hbm_svc_native_sector_pipeline_leaves_mr.sv
+
+rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_safe.sv
+rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_safe.sv
+rtl/model_ready_hbm_r14/ot_hbm_r14_aq_pc_safe.sv
+rtl/hbm_accel/loader/service_native/ot_hbm_svc_native_sector_pipeline_leaves_safe.sv

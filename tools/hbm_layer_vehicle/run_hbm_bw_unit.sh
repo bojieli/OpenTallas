@@ -11,7 +11,7 @@ J="cd $OUT/src && export VERILATOR=\$HOME/.local/opentallas-tools/verilator-5.05
 for c in $CASES; do
   p=${c%%:*}; fl=""; [ "$c" != "$p" ] && fl=${c#*:}
   args="--pattern $p"
-  for f in ${fl//,/ }; do case $f in mr) args+=" --mr";; mrkey0) args+=" --mrkey0";; gaps) args+=" --gaps";; L*) args+=" --layers ${f#L}";; S*) args+=" --seed ${f#S}";; esac; done
+  for f in ${fl//,/ }; do case $f in safe) args+=" --safe";; mr) args+=" --mr";; mrkey0) args+=" --mrkey0";; gaps) args+=" --gaps";; L*) args+=" --layers ${f#L}";; S*) args+=" --seed ${f#S}";; esac; done
   J+="python3 tools/hbm_layer_vehicle/hbm_bw_unit.py run --work $OUT/work $args; "
 done
 /home/ubuntu/bin/ot-run --mem ${MEM:-16} --threads 8 --dir "$OUT" -- bash -c "$J"

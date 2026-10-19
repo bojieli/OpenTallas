@@ -18,7 +18,11 @@ module tb_hbm_bw_pc4;
  reg[3:0]kv;reg[29:0]kaddr[0:3];reg[3:0]klen[0:3];reg[16:0]ktag[0:3];
  for(genvar p=0;p<4;p=p+1)begin:g_pc
 `ifdef MR
+`ifdef SAFE
+  ot_hbm_svc_pc_ctrl_leaf_safe #(.P(p)
+`else
   ot_hbm_svc_pc_ctrl_leaf_mr #(.P(p)
+`endif
 `ifdef MRKEY0
    ,.MRKEY(0)
 `endif
