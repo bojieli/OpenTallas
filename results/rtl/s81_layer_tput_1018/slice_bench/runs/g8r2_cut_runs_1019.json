@@ -70,6 +70,41 @@
      "last_checked_out": 26126,
      "last_driven_in": 26105,
      "unencoded": 829
+    },
+    "7": {
+     "run": "results/rtl/s81_layer_tput_1018/slice_bench/runs/l2_cut_7_g8r2",
+     "verdict": "PASS",
+     "sim_pass": true,
+     "trace_mismatches": 0,
+     "partial": false,
+     "ncyc_sim": 26479,
+     "out_checks": 0,
+     "in_words": 636,
+     "last_checked_out": null,
+     "last_driven_in": 26128,
+     "unencoded": 2,
+     "non_strict_lane_words": [
+      {
+       "port": "o__w_lt_lk_EN0_lnd",
+       "n": 403,
+       "why": "off-die link face (lane into an ot_pdie_* PHY): the end slic"
+      },
+      {
+       "port": "o__w_lt_lk_EN1_lnd",
+       "n": 403,
+       "why": "off-die link face (lane into an ot_pdie_* PHY): the end slic"
+      },
+      {
+       "port": "o__w_lt_lk_ES0_lnd",
+       "n": 405,
+       "why": "off-die link face (lane into an ot_pdie_* PHY): the end slic"
+      },
+      {
+       "port": "o__w_lt_lk_ES1_lnd",
+       "n": 405,
+       "why": "off-die link face (lane into an ot_pdie_* PHY): the end slic"
+      }
+     ]
     }
    }
   },
@@ -102,6 +137,41 @@
      "last_checked_out": 27132,
      "last_driven_in": 27111,
      "unencoded": 829
+    },
+    "7": {
+     "run": "results/rtl/s81_layer_tput_1018/slice_bench/runs/l14_cut_7_g8r2",
+     "verdict": "PASS",
+     "sim_pass": true,
+     "trace_mismatches": 0,
+     "partial": false,
+     "ncyc_sim": 27485,
+     "out_checks": 0,
+     "in_words": 652,
+     "last_checked_out": null,
+     "last_driven_in": 27134,
+     "unencoded": 2,
+     "non_strict_lane_words": [
+      {
+       "port": "o__w_lt_lk_EN0_lnd",
+       "n": 419,
+       "why": "off-die link face (lane into an ot_pdie_* PHY): the end slic"
+      },
+      {
+       "port": "o__w_lt_lk_EN1_lnd",
+       "n": 419,
+       "why": "off-die link face (lane into an ot_pdie_* PHY): the end slic"
+      },
+      {
+       "port": "o__w_lt_lk_ES0_lnd",
+       "n": 419,
+       "why": "off-die link face (lane into an ot_pdie_* PHY): the end slic"
+      },
+      {
+       "port": "o__w_lt_lk_ES1_lnd",
+       "n": 419,
+       "why": "off-die link face (lane into an ot_pdie_* PHY): the end slic"
+      }
+     ]
     }
    }
   },
@@ -134,6 +204,41 @@
      "last_checked_out": 44230,
      "last_driven_in": 44209,
      "unencoded": 829
+    },
+    "7": {
+     "run": "results/rtl/s81_layer_tput_1018/slice_bench/runs/l20_cut_7_g8r2",
+     "verdict": "PASS",
+     "sim_pass": true,
+     "trace_mismatches": 0,
+     "partial": false,
+     "ncyc_sim": 44583,
+     "out_checks": 0,
+     "in_words": 636,
+     "last_checked_out": null,
+     "last_driven_in": 44232,
+     "unencoded": 2,
+     "non_strict_lane_words": [
+      {
+       "port": "o__w_lt_lk_EN0_lnd",
+       "n": 683,
+       "why": "off-die link face (lane into an ot_pdie_* PHY): the end slic"
+      },
+      {
+       "port": "o__w_lt_lk_EN1_lnd",
+       "n": 683,
+       "why": "off-die link face (lane into an ot_pdie_* PHY): the end slic"
+      },
+      {
+       "port": "o__w_lt_lk_ES0_lnd",
+       "n": 683,
+       "why": "off-die link face (lane into an ot_pdie_* PHY): the end slic"
+      },
+      {
+       "port": "o__w_lt_lk_ES1_lnd",
+       "n": 683,
+       "why": "off-die link face (lane into an ot_pdie_* PHY): the end slic"
+      }
+     ]
     }
    }
   }
@@ -143,5 +248,6 @@
   "verdict": "FAIL",
   "trace_mismatches": 857,
   "classification": "bench/replay model (RTL correct): 827 tvN_s_3S HP/SC words checked from an unprogrammed slice producer + 15 unscheduled xr l0 words = G-unit hc.coef/router CTL rows re-injected on the tier line by u_s_3S (ot_s81sl_xr V-CTL both ways)"
- }
+ },
+ "cut_7_note": "TW7-TOKS81 10-19: cut_7 = first non-partial cut (E end slices 7N/7S + lep link ports). 0 on-die out checks: its products leave off-die as RD link frames (offdie events, bench_vpx). Verdict = sim PASS (no landing/schedule faults) + the 11 strict on-die out lanes (hf_7N, xrW_6N/6S) carry no unscheduled word. lt_lk_* (lanes into ot_pdie_serdes) are non-strict: the reliable link layer sends its own gearbox beats (reverse ACK/credit field, keepalive pulses ~149 cyc) -- the pre-fix check FAILed on them (l2_cut_7_g8r2_prefix_fail_witness, replay model, RTL correct). Tool: dv_cut_replay phy_lane (this commit)."
 }

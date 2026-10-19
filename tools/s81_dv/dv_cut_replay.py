@@ -408,6 +408,20 @@ SC_PRODUCER_GAP = ('the router scores the slices send the G-unit (sqrt(softplus)
                    'for them (a cut holding the G-unit is driven with them)')
 
 
+PHY_LANE_WHY = ('off-die link face (lane into an ot_pdie_* PHY): the end slice\'s ot_s81ph_link_ep reliable link layer '
+                'sends gearbox beats every cycle (reverse ACK / credit frame in every beat, keepalive / idle beats on '
+                'its own timer) -- elastic, flow-controlled, not on the compiled timeline; the RD payload frames are '
+                'offdie events (bench_vpx checks them)')
+
+
+def phy_lane(die, L):
+    """TOK-S81-GAPS 10-19 (G8R2 cut_7 L0: 4 x 201 'unscheduled' words on o__w_lt_lk_{EN,ES}{0,1}_lnd): a lane whose
+    consumer is an off-die PHY master (ot_pdie_serdes / ot_pdie_ucie) carries the reliable link layer's own beats
+    (constant reverse-frame field + keepalive pulses every ~149 cycles from reset, before the programme starts), so it
+    is never strict -- the owner's flow-control boundary (static on-die, elastic at SerDes / d2d)"""
+    return any(die.inst.get(x[0], {}).get('master', '').startswith('ot_pdie_') for x in L['dst'])
+
+
 def hp_gap(evs):
     """TOK-S81-GAPS 10-19 (G8R2 cut_3S L0: 827 tvN_s_3S words all-zero): HP beats into the G-unit come from the slices'
     unlowered HC send (lower_gu payload 'fixture slice model') -> producer_gap, like the svc QF q stream; SC (router
@@ -680,6 +694,8 @@ def gen(a):
             b['strict'] = b['lane'] not in gap_lanes and not ({x[0] for x in L['src'] + L['dst']} & loose)
             if th and th & {tuple(x) for x in L['src_bits'] if x}:
                 b['strict'], b['loose_why'] = False, 'host status lane (u_seqhost.t_host): off-die elastic face'
+            elif phy_lane(die, L):
+                b['strict'], b['loose_why'] = False, PHY_LANE_WHY
     by_kind = defaultdict(lambda: defaultdict(int))
     for r in rec_in:
         by_kind[r['kind']]['in_words'] += 1
@@ -755,7 +771,8 @@ def host_boot_words(a, die, prog, S, words, cut=None):
     at t + issue + 11 = issue + 7 in layer cycles (dsdv_seq_host header, check_seqhost.py).  TOK-S81-GAPS/CTL 10-19,
     measured on G8 cut_3S_ctl (ks 2547): vo_n of row 8 (issue 1141) at 3700 = KS + 12 + issue; SVCJ on jw_E / jw_W one
     edge after a KS + 4 anchor."""
-    hs = [int(x, 16) for x in (prog / 'prog/host_boot.memh').read_text().split()]
+    jobs = host_jobs(prog)
+    hs = jobs[0]['words']
     live = seqhost_live(die, cut, a.idle_run) if getattr(a, 'idle_run', None) else None
     if live is not None:
         if a.host_boot is None:
@@ -764,20 +781,57 @@ def host_boot_words(a, die, prog, S, words, cut=None):
             raise SystemExit(f'--host-boot {a.host_boot} lands before u_seqhost leaves reset (live at {live["live"]}, '
                              f'idle run {a.idle_run}): the boot header would be dropped; use >= {live["live"] + 2}')
     ks = a.ks if a.ks is not None else a.host_boot + 5 * len(hs) + 64
-    a.t0 = ks + 5
+    # calendar issue 0 of job 0 = layer cycle layer_issue0 (a split layer's rows are rebased per job)
+    a.t0 = ks + 5 - jobs[0]['li0']
     ksw = int(a.ks_word, 16)
     end = int(max([w['cycle_land'] for w in words] + [0]) + a.t0 + 64)
     out = list(words)
     out += [word_at(die, 'u_seqhost', 'f_host', h, a.host_boot + 5 * i - a.t0, 'HOST', f'host_boot[{i}]')
             for i, h in enumerate(hs)]
     out.append(word_at(die, 'u_seqhost', 'f_ks', ksw, ks - a.t0, 'KS', 'job start'))
+    reboots = []
+    for k, j in enumerate(jobs[1:], 1):
+        # TOK-S81-GAPS 10-19: job k re-boots over the host lane after job k-1's END (dv_layer_compile split_jobs), on
+        # the host-slot grid of job 0's boot, then starts at its compiled layer cycle (its BEGIN carries the start_phase
+        # that makes the free-running mod-4 phase accept it)
+        p = jobs[k - 1]
+        t_end = a.t0 + p['li0'] + p['end_age']
+        b0 = a.host_boot + 5 * math.ceil((t_end + 8 - a.host_boot) / 5)
+        ks_k = a.t0 + j['li0'] - 5
+        if b0 + 5 * (len(j['words']) - 1) + 8 > ks_k:
+            raise SystemExit(f'job {k}: {len(j["words"])} host words from bench {b0} do not fit before its start '
+                             f'(KS {ks_k}, after job {k - 1} END at {t_end}): the compiled reload gap is too short')
+        out += [word_at(die, 'u_seqhost', 'f_host', h, b0 + 5 * i - a.t0, 'HOST', f'job{k} host_boot[{i}]')
+                for i, h in enumerate(j['words'])]
+        out.append(word_at(die, 'u_seqhost', 'f_ks', ksw, ks_k - a.t0, 'KS', f'job {k} start'))
+        reboots.append(dict(job=k, boot_start=b0, words=len(j['words']), ks=ks_k, after_end=t_end,
+                            start_phase=j.get('start_phase')))
     lf_age = max(die.links[die.by_out[n]]['age'] for n, _ in die.port_bits('u_seqhost', 'f_lf') if n in die.by_out)
     c0 = math.ceil(lf_age - 1)                        # the first landed cycle the producer can reach from bench 0
     out += [word_at(die, 'u_seqhost', 'f_lf', 0b0101, c - a.t0, 'LF', 'lane live', hold=c0 - a.t0)
             for c in range(c0, end)]
     return out, dict(boot_start=a.host_boot, seqhost_live=live, words=len(hs), last_word=a.host_boot + 5 * (len(hs) - 1), ks=ks,
-                     ks_word=f'{ksw:x}', t0=a.t0, f_lf=f'0101 held from landed bench cycle {c0}',
-                     memh_sha256=hashlib.sha256((prog / 'prog/host_boot.memh').read_bytes()).hexdigest())
+                     ks_word=f'{ksw:x}', t0=a.t0, f_lf=f'0101 held from landed bench cycle {c0}', jobs=len(jobs),
+                     layer_issue0=jobs[0]['li0'], reboots=reboots,
+                     memh_sha256=[hashlib.sha256(j['path'].read_bytes()).hexdigest() for j in jobs])
+
+
+def host_jobs(prog):
+    """the compiled host boot streams: prog/host_boot.memh (one job) or prog/job<k>/host_boot.memh with calendar.json
+    job[k] layer_issue0 / end_age / start_phase (a layer split over consecutive ot_dsdv_fixed_issue jobs)"""
+    one = prog / 'prog/host_boot.memh'
+    if one.exists():
+        return [dict(path=one, words=[int(x, 16) for x in one.read_text().split()], li0=0, end_age=None)]
+    cal = json.loads((prog / 'prog/calendar.json').read_text())
+    out = []
+    for j in cal['job']:
+        f = prog / f'prog/job{j["job"]}/host_boot.memh'
+        out.append(dict(path=f, words=[int(x, 16) for x in f.read_text().split()], li0=j['layer_issue0'],
+                        end_age=j['end_age'], start_phase=j.get('start_phase')))
+    if len(out) > 1 and any(j.get('start_phase') is None for j in out):
+        raise SystemExit(f'{prog}: a split calendar without per-job start_phase (compiled before TOK-S81-GAPS 10-19): '
+                         'recompile, else job 1 is refused unless its start is 0 mod 4 after job 0')
+    return out
 
 
 def src_ports_of(cut, L):

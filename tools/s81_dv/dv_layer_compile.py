@@ -728,8 +728,12 @@ def split_jobs(prog, cap=NOPS - 2):
     return jobs
 
 
-def finish(prog, stage=0, kit_lead=20):
-    """KIT / END rows + the host boot stream (length, BEGIN, rows, SEAL, templates, gunit rows)"""
+def finish(prog, stage=0, kit_lead=20, start_phase=0):
+    """KIT / END rows + the host boot stream (length, BEGIN, rows, SEAL, templates, gunit rows).  start_phase: the
+    BEGIN / SEAL start_phase field (ot_dsdv_fixed_issue accepts a job start only when phase_q + 1 == start_phase, phase_q
+    free-running mod 4 from reset): a split layer's job k starts (t0_k - t0_0) edges after job 0, so it carries
+    start_phase (t0_k - t0_0) mod 4 relative to job 0's 0 (TOK-S81-GAPS 10-19: every job had 0, so a job 1 whose start
+    is not 0 mod 4 after job 0 -- L0 G8R2: 12,837 -- would be refused, on the die as in a cut replay)"""
     rows = [dict(r) for r in sorted(prog.rows, key=lambda r: (r['issue'], r['eng']))]
     seen = {}
     for r in rows:   # one command per engine per edge (fixed_issue code 9 duplicate issue)
@@ -751,11 +755,11 @@ def finish(prog, stage=0, kit_lead=20):
             if 'tix' in r:
                 r['arg'] = (r['arg'] & ~0x7F) | loc[r['tix']]
     prog.job_templates = tsel
-    hs = [csr_len(len(rows)), csr_pw(0, pw_header(len(rows), stage))]
+    hs = [csr_len(len(rows)), csr_pw(0, pw_header(len(rows), stage, start_phase))]
     for i, r in enumerate(rows):
         r['row76'] = pack_row(r['done'], r['issue'], r['eng'], r['arg'])
         hs += [csr_pw(a, d) for a, d in pw_row_words(i, r['row76'])]
-    hs.append(csr_pw(0, pw_header(len(rows), stage, seal=True)))
+    hs.append(csr_pw(0, pw_header(len(rows), stage, start_phase, seal=True)))
     hs += [csr_template(i, prog.templates[g]) for i, g in enumerate(tsel)]
     hs += [csr_gunit(a, d) for a, d in prog.gunit_rows]
     return rows, hs, endage
@@ -815,7 +819,8 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
         try:
             jobs = [(0, prog, finish(prog))]
         except CalendarFull:
-            jobs = [(t0, jp, finish(jp)) for t0, jp in split_jobs(prog)]
+            sj = split_jobs(prog)
+            jobs = [(t0, jp, finish(jp, start_phase=(t0 - sj[0][0]) % 4)) for t0, jp in sj]
         # TOK-S81-GAPS/CTL (10-19): the svc job tag is {issuer context slot, calendar row index} (dsdv_seq_host j_o =
         # {v, arg, cd[83] slot, cd[6:0] op}; ot_dsdv_fixed_issue OP_BASE 0), known only once the calendar is sorted;
         # the q-frame headers and the SVCJ words carry it (lower_svc tag_rule).  G8 cut_3S_ctl L0: s_j left with tag
@@ -832,7 +837,8 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
             (out / 'prog' / jd).mkdir(parents=True, exist_ok=True)
             (out / f'prog/{jd}host_boot.memh').write_text(memh(hs, 515))
             files[f'prog/{jd}host_boot.memh'] = len(hs)
-            cal.append(dict(job=k, layer_issue0=t0, nops=len(rows), end_age=endage, host_words=len(hs),
+            cal.append(dict(job=k, layer_issue0=t0, start_phase=(t0 - jobs[0][0]) % 4, nops=len(rows), end_age=endage,
+                            host_words=len(hs),
                             templates=list(jp.job_templates),
                             reload_edges=len(hs) * HOST_SLOT,
                             rows=[dict(i=i, issue=r['issue'], done=r['done'], engine=r['eng'], arg=r['arg'],
