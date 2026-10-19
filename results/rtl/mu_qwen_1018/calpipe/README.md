@@ -67,4 +67,4 @@ CE modules/64 identities (maximum direct output load1, followed by local
 32-bit write-enable logic),32 mask modules/32 identities (maximum32loads),
 and48 selectors retained. seq_ce lockstep+dense PASS; MUT33 FAIL. All helpers
 live in the existing SV source. Selector-only fullOPSEG repeated PASS is
-selector_opseg_m0.out; CE/mask fullOPSEG harvest pending in lane log.
+selector_opseg_m0.out; CE/mask fullOPSEG PASS (ce_opseg_m0.out):845548red edges/3677fires,4057900full edges/22146fires plus allctx/negativecases.
