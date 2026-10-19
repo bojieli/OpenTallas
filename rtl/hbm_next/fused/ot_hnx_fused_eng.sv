@@ -154,8 +154,15 @@ module ot_hnx_fused_lane #(
     // ---- responses
     reg [255:0] asb [0:3];
     reg [255:0] op [0:4];
-    reg [255:0] gb [0:NM-1];
-    reg [255:0] xb [0:KX*NM-1];
+    // gain store gb (NM x 256) and x store xb (KX x NM x 256) are 1R1W SRAM macros (ot_sram_1r1w_128x256_m1_r2c2,
+    // 128 rows: gb uses NM = 20, xb KX NM = 80).  Both were runtime-indexed flop arrays read through a registered
+    // 80:1 / 20:1 x 256-b mux; the macro's registered read (rd_out valid the edge after the address edge,
+    // read-before-write) is the same 1-edge registered read, so the calendar, the row II and every result are
+    // unchanged edge for edge (gate 10-19: the flop x store stalled yosys > 2,700 s).
+    wire [255:0] gb_rd, xb_rd;
+    generate if (KX * NM > 128 || NM > 128) begin : g_xb_fit
+        $error("ot_hnx_fused_lane: KX * NM = %0d x-store rows exceed the 128-row macro", KX * NM);
+    end endgenerate
     reg sw; reg [1:0] kk; reg sws; reg mx_v; reg [127:0] pre_q;
     wire [0:0] pslot = (MUT == 1) ? 1'b0 : r_row[0];
     wire pre_last = rsp && !r_g && !post && r_t == 3'd3;
@@ -166,9 +173,16 @@ module ot_hnx_fused_lane #(
             op[0] <= asb[0]; op[1] <= asb[1]; op[2] <= asb[2]; op[3] <= rd_q; pre_q <= ws[pslot][127:0];
         end
         if (post_last) begin op[0] <= asb[0]; op[1] <= asb[1]; op[2] <= asb[2]; op[3] <= asb[3]; op[4] <= rd_q; end
-        if (rsp && r_g) gb[r_m] <= rd_q;
-        if (MUT == 5 && run && !gph && ip == 4'd1 && im == 5'd0 && it == 3'd0) for (integer z = 0; z < NM; z = z + 1) gb[z] <= '0;
     end
+    // MUT 5 (bench negative): the gain is cleared at row 1 -- every gain read issued after that edge returns zero
+    reg g_clr, g_clr_q;
+    always @(posedge clk or negedge rl)
+        if (!rl) begin g_clr <= 1'b0; g_clr_q <= 1'b0; end
+        else begin
+            if (c_job) g_clr <= 1'b0;
+            else if (MUT == 5 && run && !gph && ip == 4'd1 && im == 5'd0 && it == 3'd0) g_clr <= 1'b1;
+            g_clr_q <= g_clr;
+        end
 
     // ---- datapath (the LL lane's flat element pipelines, unchanged)
     wire [7:0] hv; wire [255:0] ho; wire [7:0] hf;
@@ -179,14 +193,18 @@ module ot_hnx_fused_lane #(
     ot_hdc_vline #(.D(DM)) u_vm (.clk(clk), .rst_n(rl), .v(mx_v), .vd(vm));
     wire x_v = vm[DM];
     reg sc_run; reg [4:0] sm; reg [3:0] sr; reg [31:0] rh;
-    reg [255:0] xo; reg xo_v; reg [4:0] xo_m;
     wire [KB-1:0] ss_sl = (MUT == 3) ? '0 : KB'(sr);
-    always @(posedge clk) begin xo <= xb[32'(ss_sl) * NM + 32'(sm)]; xo_m <= sm; end
+    reg [255:0] xo; reg xo_v; reg [4:0] xo_m;
+    wire [6:0] xb_ra = 7'(32'(ss_sl) * NM + 32'(sm));
+    always @(posedge clk) xo_m <= sm;
+    always @* xo = xb_rd;
     always @(posedge clk or negedge rl) if (!rl) xo_v <= 1'b0; else xo_v <= sc_run;
     wire [4:0] wm_d;
     ot_hdc_delay #(.W(5), .D(LMS - 1)) u_wm (.clk(clk), .rst_n(rl), .d(xo_m), .q(wm_d));
-    reg [255:0] wo;
-    always @(posedge clk) wo <= gb[wm_d];
+    wire [255:0] wo = (MUT == 5 && g_clr_q) ? 256'd0 : gb_rd;
+    ot_sram_1r1w_128x256_m1_r2c2 u_gb (.clk(clk), .r_ce_in(1'b1), .r_addr_in(7'(wm_d)), .rd_out(gb_rd),
+        .w_ce_in(rsp && r_g), .w_addr_in(7'(r_m)), .wd_in(rd_q), .w_mask_in({256{1'b1}}),
+        .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
     wire [LMS:0] vx;
     ot_hdc_vline #(.D(LMS)) u_vx (.clk(clk), .rst_n(rl), .v(xo_v), .vd(vx));
     wire [639:0] wsw = ws[sws];
@@ -226,7 +244,9 @@ module ot_hnx_fused_lane #(
     // ---- x slots: written by the mix of row xr (sector xm), freed by the scale of that row
     reg [3:0] xr; reg [4:0] xm; reg [KX-1:0] xbusy;
     wire [KB-1:0] xw_sl = (MUT == 3) ? '0 : KB'(xr);
-    always @(posedge clk) if (x_v) xb[32'(xw_sl) * NM + 32'(xm)] <= xl;
+    ot_sram_1r1w_128x256_m1_r2c2 u_xb (.clk(clk), .r_ce_in(1'b1), .r_addr_in(xb_ra), .rd_out(xb_rd),
+        .w_ce_in(x_v), .w_addr_in(7'(32'(xw_sl) * NM + 32'(xm))), .wd_in(xl), .w_mask_in({256{1'b1}}),
+        .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
     // ---- outputs
     reg [3:0] yr, orow; reg [4:0] ym, om; reg [1:0] ok; reg [15:0] o_y, o_p;
     wire [15:0] y_i = {6'd0, u} + {6'd0, ym, 5'd0}, o_i = {6'd0, u} + {6'd0, om, 5'd0};
