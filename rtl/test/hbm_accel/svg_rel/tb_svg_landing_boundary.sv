@@ -31,10 +31,10 @@ module tb_svg_landing_boundary;
     if(rp>=wp||dut.head!==accepted[rp])begin errors=errors+1;if(errors<8)$display("INGRESS_ORDER_FAIL rp=%0d wp=%0d",rp,wp);end
     rp=rp+1;
    end
-   if(dut.used>2)begin errors=errors+1;if(errors<8)$display("ADMISSION_FAIL used=%0d",dut.used);end
+   if(wp-rp>3)begin errors=errors+1;if(errors<8)$display("ADMISSION_FAIL used=%0d",dut.used);end
    if(!in_ready)stall_cycles=stall_cycles+1;
    #1;
-   if(MUT!=1&&(dut.used!=wp-rp||in_ready!==(dut.used<2)))begin errors=errors+1;$display("RESERVATION_INVARIANT_FAIL used=%0d outstanding=%0d",dut.used,wp-rp);end
+   if(dut.used!=wp-rp||(MUT!=1&&in_ready!==(dut.used<3)))begin errors=errors+1;$display("RESERVATION_INVARIANT_FAIL used=%0d outstanding=%0d",dut.used,wp-rp);end
   end
  end
  // Avoid advancing the reference read pointer in the same active event as its
@@ -66,7 +66,7 @@ module tb_svg_landing_boundary;
    for(b=0;b<4;b=b+1)begin
     @(negedge stream_clk);reserve_v=1;reserve_bank=2'(b);reserve_epoch=16'(b+7);
     @(negedge stream_clk);reserve_v=0;stop=1;idle(3);
-    // Fill the response FIFO and both reserved ingress slots, then release.
+    // Fill the response FIFO and all reserved ingress slots, then release.
     fork
      begin idle(40);stop=0;end
      begin for(r=0;r<34;r=r+1)send(b,r);@(negedge hbm_clk);in_v=0;end
