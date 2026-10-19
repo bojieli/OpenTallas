@@ -236,5 +236,79 @@
     "export_minimum_spread": 0.5,
     "generator_spread_margin": 0.02,
     "current_m5_pitch_um": 5.4
-  }
+  },
+  "pg_width_and_pitch_comparisons": [
+    {
+      "w_um": 6.48,
+      "m5_pitch_um": 5.4,
+      "stripes_per_net": 1,
+      "spread": 0.0,
+      "generator_eligible": false,
+      "unchanged_pdn": true,
+      "adopted": false
+    },
+    {
+      "w_um": 8.64,
+      "m5_pitch_um": 5.4,
+      "stripes_per_net": 1,
+      "spread": 0.0,
+      "generator_eligible": false,
+      "unchanged_pdn": true,
+      "adopted": false
+    },
+    {
+      "w_um": 10.8,
+      "m5_pitch_um": 5.4,
+      "stripes_per_net": 2,
+      "spread": 0.49999999999999994,
+      "generator_eligible": false,
+      "unchanged_pdn": true,
+      "adopted": false
+    },
+    {
+      "w_um": 12.96,
+      "m5_pitch_um": 5.4,
+      "stripes_per_net": 2,
+      "spread": 0.4166666666666666,
+      "generator_eligible": false,
+      "unchanged_pdn": true,
+      "adopted": false
+    },
+    {
+      "w_um": 15.12,
+      "m5_pitch_um": 5.4,
+      "stripes_per_net": 2,
+      "spread": 0.35714285714285715,
+      "generator_eligible": false,
+      "unchanged_pdn": true,
+      "adopted": false
+    },
+    {
+      "w_um": 17.28,
+      "m5_pitch_um": 5.4,
+      "stripes_per_net": 3,
+      "spread": 0.625,
+      "generator_eligible": true,
+      "unchanged_pdn": true,
+      "adopted": false
+    },
+    {
+      "w_um": 12.96,
+      "m5_pitch_um": 2.7,
+      "stripes_per_net": 4,
+      "spread": 0.6249999999999998,
+      "generator_eligible": true,
+      "unchanged_pdn": false,
+      "adopted": false
+    },
+    {
+      "w_um": 10.8,
+      "m5_pitch_um": 1.44,
+      "stripes_per_net": 5,
+      "spread": 0.5333333333333332,
+      "generator_eligible": true,
+      "unchanged_pdn": false,
+      "adopted": false
+    }
+  ]
 }
