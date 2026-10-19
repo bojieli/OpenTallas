@@ -464,7 +464,7 @@ def bound_ages(die_v=None, sidecar=None, model=None):
     out = dict(ectl={}, vport={}, pv_ctl_age=gb.get('pv_ctl_age'), attn=KSD.attn_tile_params(), source={})
     txt = Path(die_v).read_text(errors='replace') if die_v and Path(die_v).exists() else ''
     sc = json.loads(Path(sidecar).read_text()) if sidecar and Path(sidecar).exists() else {}
-    for kind, mod, keys in (('ectl', 'qkd_ectl3_kiss_st', ('RESPONSE_LAT', 'QK_ISSUE_AGE')), ('vport', 'qkd_pv16_vport', ('RT', 'DQ'))):
+    for kind, mod, keys in (('ectl', 'qkd_ectl3_kiss_st', ('RESPONSE_LAT', 'QK_ISSUE_AGE')), ('vport', 'qkd_pv16_vport(?:_b)?', ('RT', 'DQ'))):
         for prm, inst in re.findall(mod + r'\s*#\s*\(([^;]*?)\)\s*(\w+)\s*\(', txt):
             pr = dict(re.findall(r'\.(\w+)\(\s*(\d+)\s*\)', prm))
             out[kind][inst] = {k: int(pr[k]) for k in keys if k in pr}
@@ -474,7 +474,7 @@ def bound_ages(die_v=None, sidecar=None, model=None):
         for inst, pr in (gb.get(kind) or {}).items():
             out[kind].setdefault(inst, {k: int(v) for k, v in pr.items() if k in keys})
         out['source'][kind] = 'die_bound.v' if txt else ('sidecar' if sc else 'generator binding')
-    m = re.search(r'ot_qwen_tp8_pv_wide_ctl_t\s*#\s*\(([^;]*?)\)\s*pvw_\d__u_ctl\s*\(', txt)
+    m = re.search(r'ot_qwen_tp8_pv_wide_ctl_tb?\s*#\s*\(([^;]*?)\)\s*pvw_\d__u_ctl\s*\(', txt)   # KV-BOOTAGE: _tb
     if m and re.search(r'\.FIRST_INPUT_AGE\((\d+)\)', m.group(1)):
         out['pv_ctl_age'] = int(re.search(r'\.FIRST_INPUT_AGE\((\d+)\)', m.group(1)).group(1))
         out['source']['pv_ctl_age'] = 'die_bound.v'
