@@ -1,0 +1,31 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/mu-s81-2-die/src
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/mu-s81-2-die/src
+ot-run: ot-epyc6       admits   410 GB (avail 455, growth 168, headroom 0, waiters 0/0 GB) load 51/128 running 23 disk 6369 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/mu-s81-2-die/src
+ot-run: ot-epyc8       admits   956 GB (avail 866, growth 196, headroom 0, waiters 0/0 GB) load 54/128 running 22 disk 535 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/mu-s81-2-die/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/mu-s81-2-die/src
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-2736470-1792408465 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+[base] MUWIN starts 32 fires 80 expected 80 K 2 t_mf 0000 hslot 0000 hwin 00
+[base] MUWIN PASS
+[badrt] MUWIN starts 32 fires 80 expected 80 K 2 t_mf 0100 hslot 0000 hwin 01
+[badrt] MUWIN BADRT PASS (fault raised)
+[mut3] MUWIN starts 32 fires 80 expected 80 K 2 t_mf 0000 hslot 0000 hwin 00
+[mut3] MUWIN FAIL errs 32
+mutant 3 detected (FAIL as required)
+[mut4] MUWIN starts 32 fires 96 expected 80 K 2 t_mf 0000 hslot 0000 hwin 00
+[mut4] MUWIN FAIL errs 16
+mutant 4 detected (FAIL as required)
+lint hwin: errors 0
+lint seq_host_mux: errors 0
+lint cl_w_a: errors 0
+lint cl_w_ab: errors 0
+lint cl_e_h: errors 0
+lint cl_e_a: errors 0
+lint masters_mu: errors 0
+lint relays: errors 0
+LEP_MU_DIE_LINT PASS
+MU_HWIN_GATE PASS
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-2736470-1792408465): exit 0
