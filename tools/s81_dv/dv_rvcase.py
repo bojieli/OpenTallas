@@ -548,12 +548,17 @@ puts "OT_PLACE_S [expr {{[clock seconds]-$p0}}] insts [llength [get_cells *]]"
 write_db /work/out/place.odb
 source {PLAT}/setRC.tcl
 set_wire_rc -signal -layer M6
-create_clock -name clk -period {T_PS} [get_ports ck_*]
 # top-port nets (regional clock roots, rst_n, PMA, land_fault): special = not die-top routing (DIE-CLOCK roots ideal here)
 set nsp 0
 foreach bt [[ord::get_db_block] getBTerms] {{ set n [$bt getNet]; if {{$n ne "NULL"}} {{ $n setSpecial; incr nsp }} }}
 puts "OT_SPECIAL_TOP_NETS $nsp"
-{repair}set_routing_layers -signal M2-M7 -clock M5-M9
+# S81-DIE8 10-18: the die repeater step runs BEFORE create_clock.  With the region roots declared as clocks, STA
+# propagates them through the hop-0 forward cell (BUFx8 / G1 ICGx4) and repair_design silently skips every hop-0
+# forwarded-clock net even though repeat_nets un-skips it (case_p4l_rv: all 140 hop-0 fclk nets 0 repeaters,
+# 108 > data-1 -> fclk_mismatch FAIL).  Clock / reset distribution stays untouched by the step's own skip list
+# (clock-pin + sigtype + glob dont_touch); no step check reads the SDC clock.
+{repair}create_clock -name clk -period {T_PS} [get_ports ck_*]
+set_routing_layers -signal M2-M7 -clock M5-M9
 set_global_routing_layer_adjustment M2-M3 0.50
 set_global_routing_layer_adjustment M4-M5 0.30
 set_global_routing_layer_adjustment M6-M7 0.20
