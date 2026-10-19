@@ -1,0 +1,100 @@
+{
+ "schema": "opentallas.hbm_next_1019.veh.ar_repro.v1",
+ "lane": "HBM-NEXT-VEH",
+ "rule": "HBM-NEXT-VEH (10-19): the next-die AR layer path must reproduce the d4g AR layer.\n\nSingle-user AR on the P = 4 die issues P = 1 records (STUDY: DS AR 1,905.4 at every P with L = 4), so its RTL path is\nthe d4g path: the forked vehicle (tools/hbm_next/vehicle = 3-way merge of claude/lb2-hbm-cds-1018 @63ef9558e and\ncodex/hbm-vehicle-recovery-1018 @1da79c281 over 128031c2a) must emit BYTE-IDENTICAL slice payloads for the d4g DS L0\nfixture replay.  This tool re-runs the forked compiler (layer_images) + TB generator (gen_slice_tb) on the committed\nreleased-checkpoint fixtures and compares every payload file against the d4g receipt\nresults/rtl/hbm_ds_layer_tput_1018/vehicle_recovery_1018/ds_l0_fixture_replay.json (payload_sha256), fail-closed.\nThe RTL cycles of this replay come from the d4g SW-slice binary (sw5 / sw5e) -- the same binary serves both dies, so\nno second 240 GB build is launched (AGENTS.md: reuse live pinned jobs; simulate the minimum component).\n\n    PYTHONPATH=tools python3 tools/hbm_next/vehicle/ar_repro.py --work DIR --out results/arch/hbm_next_1019/veh/ar_repro.json\n",
+ "verdict": "PASS",
+ "scope": "compiler/TB side of the AR layer path (DS L0, 8 SU.VOP records on released-checkpoint fixtures); RTL cycles = the d4g SW-slice run (pending), not claimed here",
+ "receipt": "results/arch/hbm_next_1019/veh/d4g_receipt/ds_l0_fixture_replay.json",
+ "receipt_sha256": "77f0ba1cb4cc075f28487ea57d8ec58ba020398c0dd4223b4b328fdb6e7bca27",
+ "boundary_sha256": "6a0ba46087894d4fd5f550801183744301b2ef0e6f125a3db1d09e64475ae094",
+ "payload": {
+  "val.mem": {
+   "fork": "1b6d406c38b14a234ec5fa9c5fd670aaf611c0d694663094686914c7780ec022",
+   "d4g": "1b6d406c38b14a234ec5fa9c5fd670aaf611c0d694663094686914c7780ec022",
+   "identical": true
+  },
+  "hdr.mem": {
+   "fork": "a7c29ff58143c60c13abb25f6f4899b499851269c1f731dd11c90a10a85f5002",
+   "d4g": "a7c29ff58143c60c13abb25f6f4899b499851269c1f731dd11c90a10a85f5002",
+   "identical": true
+  },
+  "vm_pre.txt": {
+   "fork": "d6fe35126a15e4796e9330d07f5cc1bd8e2300eb5a14c829c6d8f8dcead80ae7",
+   "d4g": "d6fe35126a15e4796e9330d07f5cc1bd8e2300eb5a14c829c6d8f8dcead80ae7",
+   "identical": true
+  },
+  "msk.mem": {
+   "fork": "1a1df4e8b24b81dacc3eadb960e7d2b1b283788c5ff10263379dc551f9b47bd1",
+   "d4g": "1a1df4e8b24b81dacc3eadb960e7d2b1b283788c5ff10263379dc551f9b47bd1",
+   "identical": true
+  }
+ },
+ "record_counts": {
+  "blocked:format_open": 57,
+  "blocked:unsupported_lowering": 3,
+  "blocked:v1_unsupported": 1,
+  "emitted": 8,
+  "emitted_unparameterised": 1,
+  "unsupported_lowering": 11,
+  "v1_unsupported": 10
+ },
+ "record_counts_equal": true,
+ "index": {
+  "events": 6308,
+  "drives": 4972,
+  "checks": 1336,
+  "vm_preload_words": 1377,
+  "records": [
+   23,
+   31,
+   40,
+   79,
+   82,
+   84,
+   85,
+   87
+  ]
+ },
+ "index_equal": true,
+ "index_json_note": "index.json differs from the receipt only by the scope fields (qualifies_native_* = false, state_seed_provenance) added after the receipt (codex 1da79c281)",
+ "forked_from": {
+  "cds": "claude/lb2-hbm-cds-1018@63ef9558e",
+  "codex": "codex/hbm-vehicle-recovery-1018@1da79c281",
+  "merge_base": "128031c2a"
+ },
+ "fork_sha256": {
+  "__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "ar_repro.py": "59a8b9b0a7d3a8495a84a772905e61ff77dbcb2591262a423eca41e1e3cf4f61",
+  "check_slice_run.py": "5b4a1906f96c29956edbd8c64b6a84676a1d03b4a4cc58182bbf91cc69ae2805",
+  "coll_images.py": "a0f1d94d6a8f299bb2b3292d998927a32bd9e82dabbc2cc20068c0d5938d2c45",
+  "coll_ops_images.py": "e0212efd6267ff6d7806a88c46de261739719d93f1da3324129b18070086f204",
+  "compose_grid.py": "6035704e4576e8fb95af0175cd9365916447e347247aba442b5faf987b0cbf68",
+  "cut_slice.py": "8706f7f7e04ad4bdc1dd8295b1bdfc3a8f7416412c09da49bac763e19887e7af",
+  "die_filelist.py": "88fdd3198b97bb57e414cbd77c7a0d005167b99ffb1356e00d67b97bf15f8851",
+  "ds_layer_fixtures.py": "51629204ed6c3f708e577bba3a2c86e1f7c4d2191cb19faab22f11977515f706",
+  "flatten_masters.py": "93097c5e262edcfb0e293d14a2fbf657111bfb95a80595f335941d1220dba30c",
+  "gen_slice_tb.py": "8164059f5871cbfe9f41f56313ddf511ddfa210e51bf6d91192ef0d3c585f952",
+  "hc_images.py": "3d10344633defc41201fe05913b9daef8266d9c62a4d0c83166eb947d3430f42",
+  "layer_coverage.py": "7d42759493137f28d3b982bd3e537c61b7b3171bd541395834888471a7acabea",
+  "layer_images.py": "74f8bde100912698604302218eeffdd1383d320d81244a890350b7c8948bc06f",
+  "make_bundle.py": "d585ac85624563b0df3f7b40f0ea0a741fbbe3fb2f551addc3beb6e9cf5eb66b",
+  "make_record.py": "aea22e797d360fefe2eac77011b167d583700f25f4c614df9027cb8200c7e390",
+  "priced_layers.py": "9d00b1b1b8a55793240c7e0ee18674e02e0bef90e8b4fd49f5f58192dcfd95d2",
+  "run_die_vehicle.sh": "55b0cb426e92523e25692285e28cfd988bc102fc430ed322d32f91f96237fa56",
+  "run_ds_fixtures.sh": "c77d54f9b1b1b71649e4067378a19edee74d6fd5e4919988c5a99fe188eeae42",
+  "run_slice_vehicle.sh": "85e6c39f6229087da0aadeb6192b524bdb3369f3254cddfa58c4deb8df6f240b",
+  "sfu_images.py": "60e2d94eb666915613ad8bfb3c8cf46a630f05557d3052c1ca87b3460f6ef1d7",
+  "split_replay.py": "337493aab0a93634d39506842fd0b2b3c8f448394dfcc71ec8b0f8151a68988d",
+  "tb_coll_replay.sv": "e9abee5ba1cfe8185080f0e8aa6eaab4f1c3a47e1a28ffe1fea358920a713564",
+  "tb_hc_replay.sv": "07a9935ea286b15a1ab55bd7f10cb24302c4f9a2c9681844cf7c9191100cdeb0",
+  "tb_sfu_collar.sv": "b572fe0403236bce58729fabdedec8e30420a23f29bfa427ea60bd3f8362cc9a",
+  "test_check_slice_run.py": "d6a0abe154cd8b273dc39dcacedb63249eb72b38a161fe3f2877fbd196e52ede",
+  "test_coll_images.py": "01103743e3274fc30fa36306dea0d84cebd0fa3f691c8ee5ad837c306ec5d18e",
+  "test_coll_ops_images.py": "1d0317b1d9db6e741b42e892684051bf587cca727e2cf58703eeab2c6a9dd79e",
+  "test_hc_images.py": "17f788f4972040f61ed07091946d87c5e76d85157d53035dca36394b027c7fb0",
+  "test_layer_images.py": "298dd819616311bf475fdf8acfe3dd8ea9e2a76af208572e0a059307d0713e62",
+  "test_sfu_images.py": "68a3c13c03533a0f9b12c979421794bba0c79414b0e15fb57bf7ac2ce50809fc",
+  "test_split_replay.py": "4a9b86109e5d23892d3633fafcbd533093160d864f53435cba7ae562e2a2ffde",
+  "token_compose.py": "1f8c9c0464ff2d794f1e63f9d3af244d746333f3fc63101b7a6fd4f6e8208fbb"
+ }
+}
