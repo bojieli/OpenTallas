@@ -115,19 +115,35 @@ def hop0_en_reg(row):
     return (HOP0_EN_REG + int(safe_land_reset_cycles(row) != 0)) if int(row.get('n') or 0) >= 1 else 0
 
 
+def _bound_land_width(row, master):
+    # The actual emitted master outranks a stale planner class. Unknown names
+    # may still carry explicit model metadata before a physical bind exists.
+    if master is not None:
+        names = [master]
+    elif row.get('landing_master'):
+        names = [row['landing_master']]
+    else:
+        names = [row.get(k, '') for k in ('class_master', 'cls', 'master')]
+    widths = {int(m.group(1)) for name in names
+              if (m := re.match(r'^qfd_landh0?_(\d+)_[NSEW]{2}_[0-9]+x[0-9]+$', str(name or '')))}
+    if len(widths) > 1:
+        raise ValueError('ambiguous landing master profiles')
+    return next(iter(widths), None)
+
+
 def safe_land_read_cycles(row, master=None):
     """Extra output capture edges of a bound physically gated180 landing.
 
     E always remains total output age. K controls the earlier bank read, so the
     compiler subtracts this priced edge only while deriving the ring strap.
     """
-    masters = [master] if master is not None else [row.get(k, '') for k in ('landing_master', 'class_master', 'cls', 'master')]
-    detected = any(re.match(r'^qfd_landh0?_180_[NSEW]{2}_[0-9]+x[0-9]+$', str(m or '')) for m in masters)
+    width = _bound_land_width(row, master)
+    detected = width == 180
     value = row.get('safe_land_read_cycles', 1 if detected else 0)
     if type(value) is not int or value not in (0, 1):
         raise ValueError('safe landing output capture must be exactly 0 or 1 cycles')
-    if detected and value != 1:
-        raise ValueError('bound gated180 master requires one priced output capture edge')
+    if width is not None and value != int(detected):
+        raise ValueError('bound landing master disagrees with priced output capture edges')
     return value
 
 
@@ -137,13 +153,13 @@ def safe_land_reset_cycles(row, master=None):
     Binding owns this fact. An unbound candidate spec must never silently change
     an existing lane calendar. reset_calendar_audit passes the actual emitted master.
     """
-    masters = [master] if master is not None else [row.get(k, '') for k in ('landing_master', 'class_master', 'cls', 'master')]
-    detected = any(re.match(r'^qfd_landh0?_(?:300|180)_[NSEW]{2}_[0-9]+x[0-9]+$', str(m or '')) for m in masters)
+    width = _bound_land_width(row, master)
+    detected = width in (300, 180)
     value = row.get('safe_land_reset_cycles', 2 if detected else 0)
     if type(value) is not int or value not in (0, 2):
         raise ValueError('safe landing reset release must be exactly 0 (legacy) or 2 (safe landing) cycles')
-    if detected and value != 2:
-        raise ValueError('bound safe landing master requires two receiver reset release edges')
+    if width is not None and value != 2*int(detected):
+        raise ValueError('bound landing master disagrees with receiver reset release edges')
     return value
 
 

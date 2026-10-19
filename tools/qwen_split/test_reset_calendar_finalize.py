@@ -95,3 +95,11 @@ assert a['verdict']=='PASS',a
 mixed['c']['K']=3
 assert RB.audit_rows(mixed,bmap)['verdict']=='FAIL'
 print('SAFE_BUNDLE_CALENDAR PASS: profile survives audit projection; mixed landing ages compare correctly; wrong K rejected')
+
+# Actual bindings outrank stale planner class names and reject stale profiles.
+assert LG.safe_land_read_cycles({'landing_master':'qfd_landh0_600_EN_65x60','class_master':'qfd_landh0_180_EN_39x39'})==0
+for fn,field,value in [(LG.safe_land_read_cycles,'safe_land_read_cycles',1),(LG.safe_land_reset_cycles,'safe_land_reset_cycles',2)]:
+ try: fn({field:value},'qfd_landh0_600_EN_65x60')
+ except ValueError: pass
+ else: raise AssertionError('stale model metadata overrode an actual legacy binding')
+print('SAFE_BIND_PROFILE PASS: actual master owns profile, stale metadata refused')
