@@ -1,0 +1,5 @@
+2026-10-19T04:45:38-07:00 start host=ot-epyc8 bundle=5e2b4ea95
+2026-10-19T05:22:33-07:00 build m6 rc=0 bin=ok
+2026-10-19T05:22:43-07:00 m6 pre_n4_g0: HNX_FUSED_CYCLES op=pre N=4 rgap=0 KX=4 MUT=6 cycles=648 done=1 fault=0 reads=10884 writes=2560 HNX_FUSED FAIL op=pre N=4 mism=15360 fault=0 done=1 bankerr=0 writes=2560 expect_sectors=2560  MISMATCH word 168960: got bfa50000 exp bf8d0000
+2026-10-19T05:22:44-07:00 m6 SUMMARY pass=0 fail=1 noresult=0
+2026-10-19T05:22:44-07:00 done

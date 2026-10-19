@@ -21,6 +21,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[3]
 D4G = ROOT / 'results/arch/hbm_die_d4g'
 FRAME = ROOT / 'physical/hbm_next/die/frame_d4g_copy'
+IDXS_W, IDXS_H = 1508.976, 1509.84     # ot_hbm_idx_score_quarter_static stand-in view outline (GEN size rule)
 
 
 def inside(r, x, y, tol=1.0):
@@ -98,6 +99,10 @@ def legalize(G, P, P0, W, H, moved, G0):
     wk = next(t for t in slots if t['name'] == 'wbk_SW')     # hc_eng E of the PHY-row K-port (as GEN2)
     if 'wbk_SW' in fixed:
         fixed['hc_eng'] = (max(fixed['hc_eng'][0], fixed['wbk_SW'][0] + wk['outline']['w'] + 16.0), fixed['hc_eng'][1])
+    he_x = fixed['hc_eng'][0] + next(t for t in slots if t['name'] == 'hc_eng')['outline']['w']
+    for s in slots:                     # step 5: the S-E score quarter's plan corner holds the single stand-in HC engine
+        if s['name'] == 'idxs_SE' and s['origin']['x'] < he_x and s['origin']['x'] + s['outline']['w'] > fixed['hc_eng'][0]:
+            fixed['idxs_SE'] = (he_x + 60.0, s['origin']['y'])     # -> the free S-E corner E of hc_eng (as the relay-free GEN found)
     for s in slots:
         o = orig.get(s['name'])
         if s['name'] in ('hc_eng_tgt', 'hc_tbl_tgt') and o:
@@ -237,6 +242,23 @@ def main():
         s['hnx_moved_with'] = b
         loc[s['name']] = (o['x'] + s['outline']['w'] / 2, o['y'] + s['outline']['h'] / 2, b)
         moved[rule] += 1
+    # step 5 (10-19): the IDX score quarters get one die slot per quadrant at the plan's IDX corner (idxs_<q>), with the
+    # stand-in view outline, instead of the GEN2 W-corner pair slots idx_s0/idx_s1 (contract slots idx_s<k>_h<j> match no
+    # grant, so GEN placed the 1.5-mm quarters LAST in free area -- after 40,936 relay lane rows had taken it: DIE-P4-1
+    # S7 'no free area for hb_idx__s_SW').  The case scripts slot-map hb_idx__s_<q> -> idxs_<q> (placed before lane rows).
+    tmpl = next(s for s in G['slots'] if s['name'] == 'idx_s0')
+    G['slots'] = [s for s in G['slots'] if s['name'] not in ('idx_s0', 'idx_s1')]
+    for q in ('SW', 'SE', 'NW', 'NE'):
+        b = P.get(f'idxs_{q}')
+        if b is None:
+            continue
+        s = copy.deepcopy(tmpl)
+        s['name'] = f'idxs_{q}'; s['cell'] = 'ot_hbm_idx_score_quarter_static'
+        s['outline'] = dict(w=IDXS_W, h=IDXS_H)
+        s['origin'] = dict(x=round(b['x'] + (b['w'] - IDXS_W) / 2, 3), y=round(b['y'] + (b['h'] - IDXS_H) / 2, 3), orient='R0')
+        s['hnx_moved_with'] = f'idxs_{q}'
+        s['notes'] = f'HBM-NEXT-DIE step 5: score quarter hb_idx__s_{q} (stand-in view outline), plan block idxs_{q}'
+        G['slots'].append(s)
     legal = legalize(G, P, P0, W, H, moved, G0)
     G['hnx_moved'] = dict(moved)
     G['hnx_legalized'] = legal
@@ -259,6 +281,10 @@ def main():
         x0 = min(P[m]['x'] for m in ms); y0 = min(P[m]['y'] for m in ms)
         x1 = max(P[m]['x'] + P[m]['w'] for m in ms); y1 = max(P[m]['y'] + P[m]['h'] for m in ms)
         regions[rg] = dict(site=[round((x0 + x1) / 2, 1), round((y0 + y1) / 2, 1)], members=sorted(ms), box_um=[round(x1 - x0, 1), round(y1 - y0, 1)])
+    for s_ in G['slots']:
+        m_ = re.match(r'^idxs_(SW|SE|NW|NE)$', s_['name'])
+        if m_ and 'idx_' + m_.group(1) in regions:
+            regions['idx_' + m_.group(1)]['site'] = [round(final[s_['name']][0], 1), round(final[s_['name']][1], 1)]
     inst = {}
     for n in M0['instances']:
         if n in P:

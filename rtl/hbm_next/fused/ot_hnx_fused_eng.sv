@@ -154,8 +154,15 @@ module ot_hnx_fused_lane #(
     // ---- responses
     reg [255:0] asb [0:3];
     reg [255:0] op [0:4];
-    reg [255:0] gb [0:NM-1];
-    reg [255:0] xb [0:KX*NM-1];
+    // gain store gb (NM x 256) and x store xb (KX x NM x 256) are 1R1W SRAM macros (ot_sram_1r1w_128x256_m1_r2c2,
+    // 128 rows: gb uses NM = 20, xb KX NM = 80).  Both were runtime-indexed flop arrays read through a registered
+    // 80:1 / 20:1 x 256-b mux; the macro's registered read (rd_out valid the edge after the address edge,
+    // read-before-write) is the same 1-edge registered read, so the calendar, the row II and every result are
+    // unchanged edge for edge (gate 10-19: the flop x store stalled yosys > 2,700 s).
+    wire [255:0] gb_rd, xb_rd;
+    generate if (KX * NM > 128 || NM > 128) begin : g_xb_fit
+        $error("ot_hnx_fused_lane: KX * NM = %0d x-store rows exceed the 128-row macro", KX * NM);
+    end endgenerate
     reg sw; reg [1:0] kk; reg sws; reg mx_v; reg [127:0] pre_q;
     wire [0:0] pslot = (MUT == 1) ? 1'b0 : r_row[0];
     wire pre_last = rsp && !r_g && !post && r_t == 3'd3;
@@ -166,43 +173,50 @@ module ot_hnx_fused_lane #(
             op[0] <= asb[0]; op[1] <= asb[1]; op[2] <= asb[2]; op[3] <= rd_q; pre_q <= ws[pslot][127:0];
         end
         if (post_last) begin op[0] <= asb[0]; op[1] <= asb[1]; op[2] <= asb[2]; op[3] <= asb[3]; op[4] <= rd_q; end
-        if (rsp && r_g) gb[r_m] <= rd_q;
-        if (MUT == 5 && run && !gph && ip == 4'd1 && im == 5'd0 && it == 3'd0) for (integer z = 0; z < NM; z = z + 1) gb[z] <= '0;
     end
+    // MUT 5 (bench negative): the gain is cleared at row 1 -- every gain read issued after that edge returns zero
+    reg g_clr, g_clr_q;
+    always @(posedge clk or negedge rl)
+        if (!rl) begin g_clr <= 1'b0; g_clr_q <= 1'b0; end
+        else begin
+            if (c_job) g_clr <= 1'b0;
+            else if (MUT == 5 && run && !gph && ip == 4'd1 && im == 5'd0 && it == 3'd0) g_clr <= 1'b1;
+            g_clr_q <= g_clr;
+        end
 
     // ---- datapath (the LL lane's flat element pipelines, unchanged)
     wire [7:0] hv; wire [255:0] ho; wire [7:0] hf;
     wire [255:0] xl; wire [7:0] mf, sf; wire [255:0] sq;
-    wire [255:0] pp, qq; wire [7:0] f1, f2;
+    wire [255:0] qq; wire [7:0] f1, f2;
     localparam integer DM = LM + 3 * LA + 1;
     wire [DM:0] vm;
     ot_hdc_vline #(.D(DM)) u_vm (.clk(clk), .rst_n(rl), .v(mx_v), .vd(vm));
     wire x_v = vm[DM];
     reg sc_run; reg [4:0] sm; reg [3:0] sr; reg [31:0] rh;
-    reg [255:0] xo; reg xo_v; reg [4:0] xo_m;
     wire [KB-1:0] ss_sl = (MUT == 3) ? '0 : KB'(sr);
-    always @(posedge clk) begin xo <= xb[32'(ss_sl) * NM + 32'(sm)]; xo_m <= sm; end
+    reg [255:0] xo; reg xo_v; reg [4:0] xo_m;
+    wire [6:0] xb_ra = 7'(32'(ss_sl) * NM + 32'(sm));
+    always @(posedge clk) xo_m <= sm;
+    always @* xo = xb_rd;
     always @(posedge clk or negedge rl) if (!rl) xo_v <= 1'b0; else xo_v <= sc_run;
     wire [4:0] wm_d;
     ot_hdc_delay #(.W(5), .D(LMS - 1)) u_wm (.clk(clk), .rst_n(rl), .d(xo_m), .q(wm_d));
-    reg [255:0] wo;
-    always @(posedge clk) wo <= gb[wm_d];
+    wire [255:0] wo = (MUT == 5 && g_clr_q) ? 256'd0 : gb_rd;
+    ot_sram_1r1w_128x256_m1_r2c2 u_gb (.clk(clk), .r_ce_in(1'b1), .r_addr_in(7'(wm_d)), .rd_out(gb_rd),
+        .w_ce_in(rsp && r_g), .w_addr_in(7'(r_m)), .wd_in(rd_q), .w_mask_in({256{1'b1}}),
+        .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
     wire [LMS:0] vx;
     ot_hdc_vline #(.D(LMS)) u_vx (.clk(clk), .rst_n(rl), .v(xo_v), .vd(vx));
     wire [639:0] wsw = ws[sws];
     genvar e;
     generate for (e = 0; e < 8; e = e + 1) begin : g_el
-        ot_dsrom_su_hcpost_lane #(.ML(ML), .AL(AL)) u_h (.clk(clk), .rst_n(rl), .v(sw),
-            .r0(op[1][32*e +: 32]), .r1(op[2][32*e +: 32]), .r2(op[3][32*e +: 32]), .r3(op[4][32*e +: 32]),
-            .y(op[0][32*e +: 32]), .c0(wsw[32*(4 + 0 + kk) +: 32]), .c1(wsw[32*(4 + 4 + kk) +: 32]),
-            .c2(wsw[32*(4 + 8 + kk) +: 32]), .c3(wsw[32*(4 + 12 + kk) +: 32]), .p(wsw[32*kk +: 32]),
-            .vo(hv[e]), .o(ho[32*e +: 32]), .fault(hf[e]));
-        ot_dsrom_su_norm_mix #(.LM(LM), .LA(LA)) u_mix (.clk(clk), .rst_n(rl), .v(mx_v), .h0(op[0][32*e +: 32]),
-            .h1(op[1][32*e +: 32]), .h2(op[2][32*e +: 32]), .h3(op[3][32*e +: 32]), .pre(pre_q),
-            .x(xl[32*e +: 32]), .fault(mf[e]));
-        ot_hdc_qmul_lat #(LM) u_sq (clk, rl, x_v, xl[32*e +: 32], xl[32*e +: 32], sq[32*e +: 32], sf[e]);
-        ot_hdc_qmul_lat #(LMS) u_xr (clk, rl, xo_v, xo[32*e +: 32], rh, pp[32*e +: 32], f1[e]);
-        ot_hdc_qmul_lat #(LMS) u_w  (clk, rl, vx[LMS], wo[32*e +: 32], pp[32*e +: 32], qq[32*e +: 32], f2[e]);
+        ot_hnx_fused_el u_e (.clk(clk), .rst_n(rl), .sw(sw), .mx_v(mx_v), .x_v(x_v), .xo_v(xo_v), .wv(vx[LMS]),
+            .y(op[0][32*e +: 32]), .r0(op[1][32*e +: 32]), .r1(op[2][32*e +: 32]), .r2(op[3][32*e +: 32]),
+            .r3(op[4][32*e +: 32]), .pre(pre_q), .c0(wsw[32*(4 + 0 + kk) +: 32]), .c1(wsw[32*(4 + 4 + kk) +: 32]),
+            .c2(wsw[32*(4 + 8 + kk) +: 32]), .c3(wsw[32*(4 + 12 + kk) +: 32]), .pc(wsw[32*kk +: 32]),
+            .xo(xo[32*e +: 32]), .rh(rh), .wo(wo[32*e +: 32]),
+            .hv(hv[e]), .ho(ho[32*e +: 32]), .hf(hf[e]), .xl(xl[32*e +: 32]), .mf(mf[e]), .sq(sq[32*e +: 32]),
+            .sf(sf[e]), .qq(qq[32*e +: 32]), .f1(f1[e]), .f2(f2[e]));
     end endgenerate
     // the chunk chain (ot_dsrom_su_norm's, N = 8) over the squares
     localparam integer DS = LM + 7 * LA;
@@ -226,7 +240,9 @@ module ot_hnx_fused_lane #(
     // ---- x slots: written by the mix of row xr (sector xm), freed by the scale of that row
     reg [3:0] xr; reg [4:0] xm; reg [KX-1:0] xbusy;
     wire [KB-1:0] xw_sl = (MUT == 3) ? '0 : KB'(xr);
-    always @(posedge clk) if (x_v) xb[32'(xw_sl) * NM + 32'(xm)] <= xl;
+    ot_sram_1r1w_128x256_m1_r2c2 u_xb (.clk(clk), .r_ce_in(1'b1), .r_addr_in(xb_ra), .rd_out(xb_rd),
+        .w_ce_in(x_v), .w_addr_in(7'(32'(xw_sl) * NM + 32'(xm))), .wd_in(xl), .w_mask_in({256{1'b1}}),
+        .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
     // ---- outputs
     reg [3:0] yr, orow; reg [4:0] ym, om; reg [1:0] ok; reg [15:0] o_y, o_p;
     wire [15:0] y_i = {6'd0, u} + {6'd0, ym, 5'd0}, o_i = {6'd0, u} + {6'd0, om, 5'd0};
@@ -324,6 +340,58 @@ module ot_hnx_fused_lane #(
             if ((|hf) || (|mf) || (|sf) || (|cf) || (|f1) || (|f2)) flt <= 1'b1;
         end
     end
+endmodule
+
+// ---------------------------------------------------------------------------------------------------------------------
+// one FUSED element (lane column e of 8): the LL lane's per-element pipelines, unchanged (HC_POST sweep lane, norm mix,
+// square, x * r, w * (x r)).  (* keep_hierarchy *) + no parameter override: the 8 identical columns are synthesised
+// and ABC-mapped ONCE (the flat lane, 852k cells, ran yosys SHARE 1,476 s + ABC 1,385 s > the 2,700 s gate cap).
+// Latencies are the lane's: ML 7, AL 6 (hcpost), LM 5, LA 6 (mix / square), LMS 6 (scale multipliers).
+// ---------------------------------------------------------------------------------------------------------------------
+(* keep_hierarchy *)
+module ot_hnx_fused_el (
+    input  wire         clk,
+    input  wire         rst_n,
+    input  wire         sw,
+    input  wire         mx_v,
+    input  wire         x_v,
+    input  wire         xo_v,
+    input  wire         wv,
+    input  wire [31:0]  y,
+    input  wire [31:0]  r0,
+    input  wire [31:0]  r1,
+    input  wire [31:0]  r2,
+    input  wire [31:0]  r3,
+    input  wire [127:0] pre,
+    input  wire [31:0]  c0,
+    input  wire [31:0]  c1,
+    input  wire [31:0]  c2,
+    input  wire [31:0]  c3,
+    input  wire [31:0]  pc,
+    input  wire [31:0]  xo,
+    input  wire [31:0]  rh,
+    input  wire [31:0]  wo,
+    output wire         hv,
+    output wire [31:0]  ho,
+    output wire         hf,
+    output wire [31:0]  xl,
+    output wire         mf,
+    output wire [31:0]  sq,
+    output wire         sf,
+    output wire [31:0]  qq,
+    output wire         f1,
+    output wire         f2
+);
+    localparam integer LM = 5, LA = 6, LMS = 6, ML = 7, AL = 6;
+    wire [31:0] pp;
+    ot_dsrom_su_hcpost_lane #(.ML(ML), .AL(AL)) u_h (.clk(clk), .rst_n(rst_n), .v(sw),
+        .r0(r0), .r1(r1), .r2(r2), .r3(r3), .y(y), .c0(c0), .c1(c1), .c2(c2), .c3(c3), .p(pc),
+        .vo(hv), .o(ho), .fault(hf));
+    ot_dsrom_su_norm_mix #(.LM(LM), .LA(LA)) u_mix (.clk(clk), .rst_n(rst_n), .v(mx_v), .h0(y), .h1(r0), .h2(r1),
+        .h3(r2), .pre(pre), .x(xl), .fault(mf));
+    ot_hdc_qmul_lat #(LM) u_sq (clk, rst_n, x_v, xl, xl, sq, sf);
+    ot_hdc_qmul_lat #(LMS) u_xr (clk, rst_n, xo_v, xo, rh, pp, f1);
+    ot_hdc_qmul_lat #(LMS) u_w  (clk, rst_n, wv, wo, pp, qq, f2);
 endmodule
 
 // ---------------------------------------------------------------------------------------------------------------------

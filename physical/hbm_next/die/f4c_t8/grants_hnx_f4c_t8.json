@@ -4149,182 +4149,6 @@
    "hnx_moved_with": "pc_NW7"
   },
   {
-   "name": "idx_s0",
-   "cell": "ot_hbm_idx_score_static",
-   "kind": "cluster",
-   "parent": "die",
-   "outline": {
-    "w": 4763.673,
-    "h": 1952.8
-   },
-   "origin": {
-    "x": 2623.047,
-    "y": 32.4,
-    "orient": "R0"
-   },
-   "io_budget": {
-    "in_delay_frac": 0.2,
-    "out_delay_frac": 0.2
-   },
-   "clock_entry": {
-    "pin": "clk_ctl",
-    "face": "E",
-    "layer": "M4",
-    "offset": 1460.568
-   },
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M7",
-   "layer_cap": "M7",
-   "version": 7,
-   "pins": [],
-   "source": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv",
-   "params": {},
-   "layer_rule": "cluster",
-   "instance": "hb_idx/index/parent/gscore[0]/scorer",
-   "stack": "SW",
-   "children": {
-    "hslice": {
-     "cell": "ot_hbm_idx_hslice_ready_native",
-     "count": 512,
-     "outline": [
-      172.8,
-      103.68
-     ],
-     "view": "CLOSED ready3-2065d438f exact reuse (Codex IDX 08:30)"
-    },
-    "engine_glue": {
-     "cell": "ot_hbm_idx_engine_static",
-     "count": 4,
-     "synth": {
-      "std_um2": 5250.56418,
-      "macros": {},
-      "ff": 0,
-      "stat": "/home/ubuntu/scratch-hdie-v15c/synth/idx_engine/idx_engine.stat"
-     }
-    },
-    "meta": {
-     "cell": "ot_hbm_idx_score_static (local)",
-     "synth": {
-      "std_um2": 2910.35754,
-      "macros": {},
-      "ff": 0,
-      "stat": "/home/ubuntu/scratch-hdie-v15c/synth/idx_score_meta/idx_score_meta.stat"
-     }
-    }
-   },
-   "key_lines_long_return": "8,792 b/scorer from stack SW service lines -> scorer: crosses the SM block through the centre spine (~9-11 mm, relay stations needed, priced by GLOBAL-FP-H / H-IDX)",
-   "own_plan_faces": {
-    "W": 0.029,
-    "E": 0.038,
-    "S": 0.22
-   },
-   "face_utilisation": {
-    "E": 0.029,
-    "W": 0.038,
-    "N": 0.22
-   },
-   "shared_plan": {
-    "reference": "idx_s3",
-    "orient": "R180",
-    "own_face_match_bits": 1.0
-   },
-   "hierarchy_status": "child leaf grants present; complete child placement/registered seams/clock/pin/cut proof OPEN",
-   "plan_block": "idx_s0",
-   "pin_status": "FACES_ONLY",
-   "grant": "d4f_idx_soft_1017",
-   "notes": "IDX scorer: hardened cluster of 16 replicated ~700 um square leaves (4x4, regional roots), view 4.70 mm2 std / 9.45M flops",
-   "hnx_moved_with": "idxs_SW"
-  },
-  {
-   "name": "idx_s1",
-   "cell": "ot_hbm_idx_score_static",
-   "kind": "cluster",
-   "parent": "die",
-   "outline": {
-    "w": 4763.673,
-    "h": 1952.8
-   },
-   "origin": {
-    "x": 2623.047,
-    "y": 27370.0,
-    "orient": "R0"
-   },
-   "io_budget": {
-    "in_delay_frac": 0.2,
-    "out_delay_frac": 0.2
-   },
-   "clock_entry": {
-    "pin": "clk_ctl",
-    "face": "E",
-    "layer": "M4",
-    "offset": 1460.568
-   },
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M7",
-   "layer_cap": "M7",
-   "version": 7,
-   "pins": [],
-   "source": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv",
-   "params": {},
-   "layer_rule": "cluster",
-   "instance": "hb_idx/index/parent/gscore[1]/scorer",
-   "stack": "SE",
-   "children": {
-    "hslice": {
-     "cell": "ot_hbm_idx_hslice_ready_native",
-     "count": 512,
-     "outline": [
-      172.8,
-      103.68
-     ],
-     "view": "CLOSED ready3-2065d438f exact reuse (Codex IDX 08:30)"
-    },
-    "engine_glue": {
-     "cell": "ot_hbm_idx_engine_static",
-     "count": 4,
-     "synth": {
-      "std_um2": 5250.56418,
-      "macros": {},
-      "ff": 0,
-      "stat": "/home/ubuntu/scratch-hdie-v15c/synth/idx_engine/idx_engine.stat"
-     }
-    },
-    "meta": {
-     "cell": "ot_hbm_idx_score_static (local)",
-     "synth": {
-      "std_um2": 2910.35754,
-      "macros": {},
-      "ff": 0,
-      "stat": "/home/ubuntu/scratch-hdie-v15c/synth/idx_score_meta/idx_score_meta.stat"
-     }
-    }
-   },
-   "key_lines_long_return": "8,792 b/scorer from stack SE service lines -> scorer: crosses the SM block through the centre spine (~9-11 mm, relay stations needed, priced by GLOBAL-FP-H / H-IDX)",
-   "own_plan_faces": {
-    "W": 0.029,
-    "E": 0.038,
-    "S": 0.22
-   },
-   "face_utilisation": {
-    "E": 0.029,
-    "W": 0.038,
-    "N": 0.22
-   },
-   "shared_plan": {
-    "reference": "idx_s3",
-    "orient": "R180",
-    "own_face_match_bits": 1.0
-   },
-   "hierarchy_status": "child leaf grants present; complete child placement/registered seams/clock/pin/cut proof OPEN",
-   "plan_block": "idx_s1",
-   "pin_status": "FACES_ONLY",
-   "grant": "d4f_idx_soft_1017",
-   "notes": "IDX scorer: hardened cluster of 16 replicated ~700 um square leaves (4x4, regional roots), view 4.70 mm2 std / 9.45M flops",
-   "hnx_moved_with": "idxs_NW"
-  },
-  {
    "name": "idx_sel",
    "cell": "ot_hbm_idx_selector_static",
    "kind": "tile",
@@ -21574,6 +21398,358 @@
    "pins": [],
    "pin_status": "FACES_ONLY",
    "hnx_moved_with": "host_cp"
+  },
+  {
+   "name": "idxs_SW",
+   "cell": "ot_hbm_idx_score_quarter_static",
+   "kind": "cluster",
+   "parent": "die",
+   "outline": {
+    "w": 1508.976,
+    "h": 1509.84
+   },
+   "origin": {
+    "x": 5454.902,
+    "y": 253.88,
+    "orient": "R0"
+   },
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "clock_entry": {
+    "pin": "clk_ctl",
+    "face": "E",
+    "layer": "M4",
+    "offset": 1460.568
+   },
+   "pg_layer": "M7",
+   "strap_layer": "M8",
+   "signal_max_layer": "M7",
+   "layer_cap": "M7",
+   "version": 7,
+   "pins": [],
+   "source": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv",
+   "params": {},
+   "layer_rule": "cluster",
+   "instance": "hb_idx/index/parent/gscore[0]/scorer",
+   "stack": "SW",
+   "children": {
+    "hslice": {
+     "cell": "ot_hbm_idx_hslice_ready_native",
+     "count": 512,
+     "outline": [
+      172.8,
+      103.68
+     ],
+     "view": "CLOSED ready3-2065d438f exact reuse (Codex IDX 08:30)"
+    },
+    "engine_glue": {
+     "cell": "ot_hbm_idx_engine_static",
+     "count": 4,
+     "synth": {
+      "std_um2": 5250.56418,
+      "macros": {},
+      "ff": 0,
+      "stat": "/home/ubuntu/scratch-hdie-v15c/synth/idx_engine/idx_engine.stat"
+     }
+    },
+    "meta": {
+     "cell": "ot_hbm_idx_score_static (local)",
+     "synth": {
+      "std_um2": 2910.35754,
+      "macros": {},
+      "ff": 0,
+      "stat": "/home/ubuntu/scratch-hdie-v15c/synth/idx_score_meta/idx_score_meta.stat"
+     }
+    }
+   },
+   "key_lines_long_return": "8,792 b/scorer from stack SW service lines -> scorer: crosses the SM block through the centre spine (~9-11 mm, relay stations needed, priced by GLOBAL-FP-H / H-IDX)",
+   "own_plan_faces": {
+    "W": 0.029,
+    "E": 0.038,
+    "S": 0.22
+   },
+   "face_utilisation": {
+    "E": 0.029,
+    "W": 0.038,
+    "N": 0.22
+   },
+   "shared_plan": {
+    "reference": "idx_s3",
+    "orient": "R180",
+    "own_face_match_bits": 1.0
+   },
+   "hierarchy_status": "child leaf grants present; complete child placement/registered seams/clock/pin/cut proof OPEN",
+   "plan_block": "idx_s0",
+   "pin_status": "FACES_ONLY",
+   "grant": "d4f_idx_soft_1017",
+   "notes": "HBM-NEXT-DIE step 5: score quarter hb_idx__s_SW (stand-in view outline), plan block idxs_SW",
+   "hnx_moved_with": "idxs_SW"
+  },
+  {
+   "name": "idxs_SE",
+   "cell": "ot_hbm_idx_score_quarter_static",
+   "kind": "cluster",
+   "parent": "die",
+   "outline": {
+    "w": 1508.976,
+    "h": 1509.84
+   },
+   "origin": {
+    "x": 21905.205,
+    "y": 253.88,
+    "orient": "R0"
+   },
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "clock_entry": {
+    "pin": "clk_ctl",
+    "face": "E",
+    "layer": "M4",
+    "offset": 1460.568
+   },
+   "pg_layer": "M7",
+   "strap_layer": "M8",
+   "signal_max_layer": "M7",
+   "layer_cap": "M7",
+   "version": 7,
+   "pins": [],
+   "source": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv",
+   "params": {},
+   "layer_rule": "cluster",
+   "instance": "hb_idx/index/parent/gscore[0]/scorer",
+   "stack": "SW",
+   "children": {
+    "hslice": {
+     "cell": "ot_hbm_idx_hslice_ready_native",
+     "count": 512,
+     "outline": [
+      172.8,
+      103.68
+     ],
+     "view": "CLOSED ready3-2065d438f exact reuse (Codex IDX 08:30)"
+    },
+    "engine_glue": {
+     "cell": "ot_hbm_idx_engine_static",
+     "count": 4,
+     "synth": {
+      "std_um2": 5250.56418,
+      "macros": {},
+      "ff": 0,
+      "stat": "/home/ubuntu/scratch-hdie-v15c/synth/idx_engine/idx_engine.stat"
+     }
+    },
+    "meta": {
+     "cell": "ot_hbm_idx_score_static (local)",
+     "synth": {
+      "std_um2": 2910.35754,
+      "macros": {},
+      "ff": 0,
+      "stat": "/home/ubuntu/scratch-hdie-v15c/synth/idx_score_meta/idx_score_meta.stat"
+     }
+    }
+   },
+   "key_lines_long_return": "8,792 b/scorer from stack SW service lines -> scorer: crosses the SM block through the centre spine (~9-11 mm, relay stations needed, priced by GLOBAL-FP-H / H-IDX)",
+   "own_plan_faces": {
+    "W": 0.029,
+    "E": 0.038,
+    "S": 0.22
+   },
+   "face_utilisation": {
+    "E": 0.029,
+    "W": 0.038,
+    "N": 0.22
+   },
+   "shared_plan": {
+    "reference": "idx_s3",
+    "orient": "R180",
+    "own_face_match_bits": 1.0
+   },
+   "hierarchy_status": "child leaf grants present; complete child placement/registered seams/clock/pin/cut proof OPEN",
+   "plan_block": "idx_s0",
+   "pin_status": "FACES_ONLY",
+   "grant": "d4f_idx_soft_1017",
+   "notes": "HBM-NEXT-DIE step 5: score quarter hb_idx__s_SE (stand-in view outline), plan block idxs_SE",
+   "hnx_moved_with": "idxs_SE"
+  },
+  {
+   "name": "idxs_NW",
+   "cell": "ot_hbm_idx_score_quarter_static",
+   "kind": "cluster",
+   "parent": "die",
+   "outline": {
+    "w": 1508.976,
+    "h": 1509.84
+   },
+   "origin": {
+    "x": 5454.902,
+    "y": 27591.48,
+    "orient": "R0"
+   },
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "clock_entry": {
+    "pin": "clk_ctl",
+    "face": "E",
+    "layer": "M4",
+    "offset": 1460.568
+   },
+   "pg_layer": "M7",
+   "strap_layer": "M8",
+   "signal_max_layer": "M7",
+   "layer_cap": "M7",
+   "version": 7,
+   "pins": [],
+   "source": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv",
+   "params": {},
+   "layer_rule": "cluster",
+   "instance": "hb_idx/index/parent/gscore[0]/scorer",
+   "stack": "SW",
+   "children": {
+    "hslice": {
+     "cell": "ot_hbm_idx_hslice_ready_native",
+     "count": 512,
+     "outline": [
+      172.8,
+      103.68
+     ],
+     "view": "CLOSED ready3-2065d438f exact reuse (Codex IDX 08:30)"
+    },
+    "engine_glue": {
+     "cell": "ot_hbm_idx_engine_static",
+     "count": 4,
+     "synth": {
+      "std_um2": 5250.56418,
+      "macros": {},
+      "ff": 0,
+      "stat": "/home/ubuntu/scratch-hdie-v15c/synth/idx_engine/idx_engine.stat"
+     }
+    },
+    "meta": {
+     "cell": "ot_hbm_idx_score_static (local)",
+     "synth": {
+      "std_um2": 2910.35754,
+      "macros": {},
+      "ff": 0,
+      "stat": "/home/ubuntu/scratch-hdie-v15c/synth/idx_score_meta/idx_score_meta.stat"
+     }
+    }
+   },
+   "key_lines_long_return": "8,792 b/scorer from stack SW service lines -> scorer: crosses the SM block through the centre spine (~9-11 mm, relay stations needed, priced by GLOBAL-FP-H / H-IDX)",
+   "own_plan_faces": {
+    "W": 0.029,
+    "E": 0.038,
+    "S": 0.22
+   },
+   "face_utilisation": {
+    "E": 0.029,
+    "W": 0.038,
+    "N": 0.22
+   },
+   "shared_plan": {
+    "reference": "idx_s3",
+    "orient": "R180",
+    "own_face_match_bits": 1.0
+   },
+   "hierarchy_status": "child leaf grants present; complete child placement/registered seams/clock/pin/cut proof OPEN",
+   "plan_block": "idx_s0",
+   "pin_status": "FACES_ONLY",
+   "grant": "d4f_idx_soft_1017",
+   "notes": "HBM-NEXT-DIE step 5: score quarter hb_idx__s_NW (stand-in view outline), plan block idxs_NW",
+   "hnx_moved_with": "idxs_NW"
+  },
+  {
+   "name": "idxs_NE",
+   "cell": "ot_hbm_idx_score_quarter_static",
+   "kind": "cluster",
+   "parent": "die",
+   "outline": {
+    "w": 1508.976,
+    "h": 1509.84
+   },
+   "origin": {
+    "x": 17012.362,
+    "y": 27591.48,
+    "orient": "R0"
+   },
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "clock_entry": {
+    "pin": "clk_ctl",
+    "face": "E",
+    "layer": "M4",
+    "offset": 1460.568
+   },
+   "pg_layer": "M7",
+   "strap_layer": "M8",
+   "signal_max_layer": "M7",
+   "layer_cap": "M7",
+   "version": 7,
+   "pins": [],
+   "source": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv",
+   "params": {},
+   "layer_rule": "cluster",
+   "instance": "hb_idx/index/parent/gscore[0]/scorer",
+   "stack": "SW",
+   "children": {
+    "hslice": {
+     "cell": "ot_hbm_idx_hslice_ready_native",
+     "count": 512,
+     "outline": [
+      172.8,
+      103.68
+     ],
+     "view": "CLOSED ready3-2065d438f exact reuse (Codex IDX 08:30)"
+    },
+    "engine_glue": {
+     "cell": "ot_hbm_idx_engine_static",
+     "count": 4,
+     "synth": {
+      "std_um2": 5250.56418,
+      "macros": {},
+      "ff": 0,
+      "stat": "/home/ubuntu/scratch-hdie-v15c/synth/idx_engine/idx_engine.stat"
+     }
+    },
+    "meta": {
+     "cell": "ot_hbm_idx_score_static (local)",
+     "synth": {
+      "std_um2": 2910.35754,
+      "macros": {},
+      "ff": 0,
+      "stat": "/home/ubuntu/scratch-hdie-v15c/synth/idx_score_meta/idx_score_meta.stat"
+     }
+    }
+   },
+   "key_lines_long_return": "8,792 b/scorer from stack SW service lines -> scorer: crosses the SM block through the centre spine (~9-11 mm, relay stations needed, priced by GLOBAL-FP-H / H-IDX)",
+   "own_plan_faces": {
+    "W": 0.029,
+    "E": 0.038,
+    "S": 0.22
+   },
+   "face_utilisation": {
+    "E": 0.029,
+    "W": 0.038,
+    "N": 0.22
+   },
+   "shared_plan": {
+    "reference": "idx_s3",
+    "orient": "R180",
+    "own_face_match_bits": 1.0
+   },
+   "hierarchy_status": "child leaf grants present; complete child placement/registered seams/clock/pin/cut proof OPEN",
+   "plan_block": "idx_s0",
+   "pin_status": "FACES_ONLY",
+   "grant": "d4f_idx_soft_1017",
+   "notes": "HBM-NEXT-DIE step 5: score quarter hb_idx__s_NE (stand-in view outline), plan block idxs_NE",
+   "hnx_moved_with": "idxs_NE"
   }
  ],
  "sub_layouts": {
@@ -30169,11 +30345,9 @@
   "plan_block": 176,
   "contained": 80,
   "name": 3,
-  "legalized": 98
+  "legalized": 99
  },
  "hnx_legalized": {
-  "idx_s0": "gen2_corner",
-  "idx_s1": "gen2_corner",
   "hc_eng": "gen2_corner",
   "hc_eng_tgt": "gen2_corner",
   "hc_tbl_tgt": "gen2_corner",
@@ -30183,6 +30357,8 @@
   "refcfg_NW": "gen2_corner",
   "fs_SW": "gen2_corner",
   "fs_NW": "gen2_corner",
+  "idxs_SE": "gen2_corner",
+  "idxs_NE": "near idxs_NE (86 um)",
   "vmh_SW": "near vmh_SW (130 um)",
   "vmh_NW": "near vmh_NW (130 um)",
   "hb_dbk_SW": "near dbk_SW (0 um)",
