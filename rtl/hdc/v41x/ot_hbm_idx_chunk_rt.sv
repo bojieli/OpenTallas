@@ -79,9 +79,14 @@ module ot_hbm_idx_chunk_rt #(
         for (r = 0; r < 4; r = r + 1) begin : g_rgn
             localparam integer RG = 4 * g + r;
             wire ck = clk_pair[RG];
-            // region reset relay + online (as the old per-slice relay, one per region)
-            wire [0:0] srr; wire rs = srr[0];
-            ot_rst_relay #(.REGIONS(1), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(ck), .rst_n_in(rr[g]), .rst_n(srr));
+            // region reset relay + online (as the old per-slice relay, one per region).  The relay is replicated per adder
+            // group (REGIONS = 1 + 2*NB, all copies released on the same edge, so cycles are unchanged): copy 0 drives
+            // rn_p / onl, copy 1 + hh*NB + bb drives the async clears of one FP32 adder (bb = 0: the head running-sum
+            // adder, bb >= 1: block adder bb).  One copy per region drove ~3,300 DFFASRHQN clears (52,485 in the leaf;
+            // floorplan WNS -154.8 ps at rn_p/D, gate 20261018-215349); each copy now drives one adder (~410 flops).
+            localparam integer NRS = 1 + 2 * NB;
+            wire [NRS-1:0] srr; wire rs = srr[0];
+            ot_rst_relay #(.REGIONS(NRS), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(ck), .rst_n_in(rr[g]), .rst_n(srr));
             reg rn_p, onl;
             always @(posedge ck) rn_p <= rs;
             always @(posedge ck or negedge rs) if (!rs) onl <= 1'b0; else onl <= rs && rn_p;
@@ -113,7 +118,7 @@ module ot_hbm_idx_chunk_rt #(
                     end else begin : g_add
                         wire [1:0] err; wire vo_unused; wire pf, bo_d;
                         ot_hdc_delay #(.W(1), .D(FPL)) u_pf (.clk(ck), .rst_n(1'b1), .d(afault[bb-1]), .q(pf));
-                        ot_hdc_v41x_faddl #(.LAT(FPL)) u_a (.clk(ck), .rst_n(rs), .valid_in(1'b1),
+                        ot_hdc_v41x_faddl #(.LAT(FPL)) u_a (.clk(ck), .rst_n(srr[1 + hh * NB + bb]), .valid_in(1'b1),
                             .a(acc[32*(bb-1) +: 32]), .b(bv), .y(acc[32*bb +: 32]), .err(err), .valid_out(vo_unused));
                         ot_hdc_delay #(.W(1), .D(FPL)) u_bf (.clk(ck), .rst_n(1'b1), .d(bo), .q(bo_d));
                         assign afault[bb] = pf || bo_d || (err != 2'd0);
@@ -149,7 +154,7 @@ module ot_hbm_idx_chunk_rt #(
                     always @(posedge ck) begin cs_o <= seed_d[31:0]; cf_o <= seed_d[32]; end
                 end else begin : g_sum
                     wire [1:0] err; wire vo_unused; wire [31:0] sum; wire pf;
-                    ot_hdc_v41x_faddl #(.LAT(FPL)) u_a (.clk(ck), .rst_n(rs), .valid_in(1'b1),
+                    ot_hdc_v41x_faddl #(.LAT(FPL)) u_a (.clk(ck), .rst_n(srr[1 + hh * NB]), .valid_in(1'b1),
                         .a(csi_p), .b({tm, 16'd0}), .y(sum), .err(err), .valid_out(vo_unused));
                     ot_hdc_delay #(.W(1), .D(FPL)) u_pf (.clk(ck), .rst_n(1'b1), .d(cfi_p || tf), .q(pf));
                     always @(posedge ck) begin cs_o <= sum; cf_o <= pf || (err != 2'd0); end
