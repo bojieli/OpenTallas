@@ -26,7 +26,6 @@ foreach inst [$block getInsts] {
   lappend obstacles [list [expr {[$bb xMin]-1080}] [expr {[$bb yMin]-1080}] [expr {[$bb xMax]+1080}] [expr {[$bb yMax]+1080}]]
  }
 }
-set site [[[lindex [$block getRows] 0] getSite] getName]
 set site [[lindex [$block getRows] 0] getSite]
 ''')
 receipts=[]

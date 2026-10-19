@@ -208,8 +208,8 @@ def build(a):
     region_exact=bool(spec.get('exact_region_bays',False))
     power_sites=None
     if spec.get('pg_safe_clock_bays',False):
-        if not region_exact or not spec.get('spine',{}).get('exact_footprint_bays') or not a.geometry_only:
-            raise ValueError('PG-safe clock bays require exact regional/spine geometry-only model')
+        if not region_exact or (spec.get('spine') and not spec['spine'].get('exact_footprint_bays')) or not a.geometry_only:
+            raise ValueError('PG-safe clock bays require exact regional/optional spine geometry-only model')
         from qwen_clock_power_sites import ClockPowerSites
         power_sites=ClockPowerSites.from_block(blk,odb,[D.design.getDb().findMaster(n) for n in (rt.BUF,rt.PAD)])
         fixed_rows=power_sites.occupied_rows(blk)
