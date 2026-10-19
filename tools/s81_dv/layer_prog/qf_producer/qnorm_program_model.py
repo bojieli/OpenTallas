@@ -25,7 +25,7 @@ def main():
  # A full source reservation check, not free capacity for other programme phases.
  scratch=set(range(608,928));projection=set()
  for x in range(512):
-  e=storage_offset(x);leaf=((e>>6)&15)%5;word=64*(e>>6)//5+(e&63) if False else 64*((e>>6)//5)+(e&63)
+  e=storage_offset(x);leaf=((e>>6)&15)%5;word=64*((e>>6)//5)+(e&63)
   if leaf==2:projection.add(word//4)
  coeff=set(range(17,48,2));qrout=set(range(544,560))
  assert scratch.isdisjoint(projection|coeff|qrout)
@@ -49,8 +49,10 @@ def main():
   for h,(e,codes) in enumerate(q):
    assert (int(qe[h])&1023)==int(e)
    assert np.array_equal(G.E4M3[np.asarray(codes,np.uint8)],qf[32*h:32*h+32])
-   packed|=int.from_bytes(bytes(codes),'little')<<(266*h)
+   code_bytes=bytes(np.asarray(codes,np.uint8));assert len(code_bytes)==32
+   packed|=int.from_bytes(code_bytes,'little')<<(266*h)
    packed|=int(e)<<(256+266*h)
+  assert packed.bit_length()<=532
   gold.append(dict(global_beat=b,payload532=f'{packed:0133x}',scoreboard_only=True))
   epochs.append(dict(beat=b,XR_CTL_pin=ctl,VP_command_pin=C,VS_accept=C+3,
     source_SRAM_reads=[C+6,C+13],VS_u_subbeats=[C+10,C+17],VQ_mode_latch=C+5,
@@ -75,7 +77,7 @@ def main():
   logical_XS_last_source_commit=epochs[-1]['XS_SRAM_commit'],native_first_reset_ready_date=None,
   absolute_selected_dates=None,source_lifetimes=life,beat_epochs=epochs,
   conflicts_with_other_programme='Existing later SW scratch600+ overlaps; no concurrent FFN/MU owner admitted. Must prove actual release before reuse.',
-  causal_model_checks=dict(write_after_read=all(commits[r]<reads[r] for r in reads),mode_stable=True,run_nonoverlap=True,projection_coeff_QR_disjoint=True),
+  causal_model_checks=dict(write_before_read=all(commits[r]<reads[r] for r in reads),mode_stable=True,run_nonoverlap=True,projection_coeff_QR_disjoint=True),
   qualification='PRIVATE_SOURCE_PROGRAMME_MODEL_ONLY; no RTL/quantizer/selected-calendar/deadline/token pass')
  (out/'contract.json').write_text(json.dumps(rec,indent=2)+'\n')
  print('QNORM_PROGRAM_MODEL_PASS raw1280 writes320 QB20 expectedcodes1280/scales40 period46 lastXScommit',rec['logical_XS_last_source_commit'],'STATIC_ONLY native/deadline/MU UNPROVED')
