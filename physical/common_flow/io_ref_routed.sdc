@@ -91,6 +91,136 @@ proc ot_ir_arr {p {cn ""}} {
   set ::ot_ir_last [list $t $shifted]
   return $v
 }
+# Use the same actual generated-clock ancestry and physical tags as CE/native R.
+# BEGIN shared clock_family.tcl (checked byte-for-byte by tests)
+# Actual OpenSTA clock ancestry and physical propagated-clock measurements.
+# OpenSTA's Clock wrapper has no master accessor. Its canonical SDC exporter
+# resolves inferred masters; evaluate only its generated-clock declarations in
+# an isolated safe interpreter, never replay constraints in the live session.
+proc ot_cf_record {args} {
+  set ni [lsearch -exact $args -name]; set mi [lsearch -exact $args -master_clock]
+  set si [lsearch -exact $args -source]
+  if {$ni < 0 || $mi < 0 || $si < 0} {error "OT_CLOCK_FAMILY: canonical generated clock lacks resolved name/master/source"}
+  set name [lindex $args [expr {$ni+1}]]
+  set master [lindex $args [expr {$mi+1}]]; set source [lindex $args [expr {$si+1}]]
+  if {[llength $master] != 1 || [llength $source] != 1 || [dict exists $::ot_cf_master $name]} {
+    error "OT_CLOCK_FAMILY: ambiguous generated clock $name"
+  }
+  set parent [get_full_name $master]
+  if {[sta::object_type $source] eq "Port"} {set source [sta::get_port_pin $source]}
+  set owners {}; foreach c [get_property $source clocks] {lappend owners [get_full_name $c]}
+  if {[lsort -unique $owners] ne [list $parent]} {
+    error "OT_CLOCK_FAMILY: generated source of $name has owners $owners, expected $parent"
+  }
+  dict set ::ot_cf_master $name $parent
+}
+proc ot_cf_refresh {} {
+  set ::ot_cf_master {}; set ::ot_cf_active_cache {}; set generated {}
+  foreach c [all_clocks] {if {[$c is_generated]} {lappend generated [get_full_name $c]}}
+  if {![llength $generated]} {return}
+  sta::update_generated_clks
+  # Iterating paths alone does not initialize generated source insertion.
+  # A native timing search fills the complete root-to-bank physical arrivals.
+  find_timing_paths -group_path_count 1
+  set fd [file tempfile path ot-clock-family-]; close $fd
+  set ip [interp create -safe]
+  try {
+    write_sdc $path
+    foreach cmd {get_ports get_pins get_clocks} {interp alias $ip $cmd {} $cmd}
+    interp alias $ip create_generated_clock {} ot_cf_record
+    set fd [open $path r]; set text [read $fd]; close $fd
+    set command {}
+    foreach line [split $text \n] {
+      append command $line \n
+      if {![info complete $command]} continue
+      if {[regexp {^\s*create_generated_clock\s} $command]} {interp eval $ip $command}
+      set command {}
+    }
+    if {[string trim $command] ne ""} {error "OT_CLOCK_FAMILY: incomplete canonical SDC"}
+    if {[lsort [dict keys $::ot_cf_master]] ne [lsort $generated]} {error "OT_CLOCK_FAMILY: incomplete generated-clock ancestry"}
+    foreach c $generated {ot_cf_root $c}
+  } finally {interp delete $ip; file delete -force $path}
+}
+proc ot_cf_root {name} {
+  set seen {}
+  while {[dict exists $::ot_cf_master $name]} {
+    if {$name in $seen} {error "OT_CLOCK_FAMILY: ancestry cycle $name"}
+    lappend seen $name; set name [dict get $::ot_cf_master $name]
+  }
+  set c [get_clocks -quiet $name]
+  if {[llength $c] != 1 || [$c is_generated]} {error "OT_CLOCK_FAMILY: unresolved root $name"}
+  return $name
+}
+proc ot_cf_pins {root} {
+  set name [get_full_name $root]
+  if {[ot_cf_root $name] ne $name} {error "OT_CLOCK_FAMILY: requested root $name is generated"}
+  set pins {}; set owners {}
+  foreach c [all_clocks] {
+    if {[ot_cf_root [get_full_name $c]] ne $name} continue
+    foreach p [all_registers -clock_pins -clock $c] {
+      set pn [get_full_name $p]
+      set actual {}; foreach owner [get_property $p clocks] {lappend actual [get_full_name $owner]}
+      if {[llength [lsort -unique $actual]] != 1} {
+        error "OT_CLOCK_FAMILY: ambiguous clock sink $pn ($actual)"
+      }
+      if {[ot_cf_root [lindex $actual 0]] ne $name} {error "OT_CLOCK_FAMILY: foreign sink $pn"}
+      if {[lindex $actual 0] ne [get_full_name $c]} continue
+      if {[dict exists $owners $pn]} {error "OT_CLOCK_FAMILY: duplicate sink $pn"}
+      dict set owners $pn $c; lappend pins $p
+    }
+  }
+  return [list $pins $owners]
+}
+proc ot_cf_active {p} {
+  set cell [get_cells -of_objects $p]
+  set key [list [get_property $cell ref_name] [get_property $p lib_pin_name]]
+  if {[dict exists $::ot_cf_active_cache $key]} {return [dict get $::ot_cf_active_cache $key]}
+  sta::redirect_string_begin
+  catch {report_edges -from $p}
+  set report [sta::redirect_string_end]; set on 0; set edges {}
+  foreach line [split $report \n] {
+    if {[regexp {^\S} $line]} {set on [regexp {(Clk|En) to Q} $line]; continue}
+    if {$on && [regexp {^\s+([\^v])\s+->} $line -> edge] && $edge ni $edges} {lappend edges $edge}
+  }
+  if {[llength $edges] > 1} {error "OT_CLOCK_FAMILY: ambiguous active edge [get_full_name $p]"}
+  set active [expr {![llength $edges] || [lindex $edges 0] eq "^" ? "rise" : "fall"}]
+  dict set ::ot_cf_active_cache $key $active
+  return $active
+}
+proc ot_cf_wire {pin clock {scene {}}} {
+  if {$scene eq ""} {set scene [get_property [sta::cmd_scene] name]}
+  set cn [get_full_name $clock]; set waveform {}
+  foreach time [$clock waveform] {lappend waveform [sta::time_sta_ui $time]}
+  if {[llength $waveform] != 2} {error "OT_CLOCK_FAMILY: invalid waveform $cn"}
+  foreach time $waveform {if {![string is double -strict $time] || [regexp -nocase {inf|nan} $time]} {error "OT_CLOCK_FAMILY: nonfinite waveform $cn"}}
+  set transition [ot_cf_active $pin]; set marker [expr {$transition eq "rise" ? "^max" : "vmax"}]
+  set values {}
+  foreach vertex [$pin vertices] {
+    if {$vertex eq "NULL"} continue
+    set paths [$vertex path_iterator $transition max]
+    while {[$paths has_next]} {
+      set path [$paths next]; set tag [$path tag]; set edge [lindex $tag 4]
+      if {[lindex $tag 1] ne $scene || [lindex $tag 2] ne $marker || [lindex $tag 3] ne $cn || $edge ni {^ v} || [string first "(clock prop)" $tag] < 0} continue
+      set arrival [sta::time_sta_ui [$path arrival]]
+      if {![string is double -strict $arrival] || [regexp -nocase {inf|nan} $arrival]} {$paths finish; error "OT_CLOCK_FAMILY: nonfinite clock arrival [get_full_name $pin]"}
+      lappend values [expr {$arrival-[lindex $waveform [expr {$edge eq "^" ? 0 : 1}]]}]
+    }
+    $paths finish
+  }
+  if {[llength $values] != 1} {error "OT_CLOCK_FAMILY: missing unique physical clock arrival [get_full_name $pin] clock=$cn scene=$scene"}
+  return [lindex $values 0]
+}
+# END shared clock_family.tcl
+ot_cf_refresh
+proc ot_ir_arr {p {cn ""}} {
+  set owners [get_property $p clocks]
+  if {[llength $owners] != 1 || ($cn ne "" && [ot_cf_root [get_full_name $owners]] ne $cn)} {
+    error "OT_IOREF: wrong/ambiguous clock ownership [get_full_name $p]"
+  }
+  set scene {}; if {[info exists ::ot_ioref_scene]} {set scene $::ot_ioref_scene}
+  set ::ot_ir_last [list [expr {[ot_cf_active $p] eq "fall" ? "f" : "r"}] 0]
+  return [ot_cf_wire $p $owners $scene]
+}
 if {[ot_ir_multi] && ![info exists ::ot_ioref_scene]} {
   # a run whose own orfs_hold_mm.tcl predates ::ot_ioref_scene: its hold scene is named BC (orfs_hold_mm) or ff (hold_eco)
   foreach ot_ir_n {BC ff} { if {![catch {sta::find_scene $ot_ir_n} ot_ir_o] && $ot_ir_o ne "" && $ot_ir_o ne "NULL"} { set ::ot_ioref_scene $ot_ir_n; break } }
@@ -100,7 +230,7 @@ if {[ot_ir_multi]} {
     puts "OT_IOREF WARNING: multi-scene session without ::ot_ioref_scene: arrivals of the command scene" }
 }
 set ot_ir_real {}
-foreach c [all_clocks] { if {[llength [get_property $c sources]]} { lappend ot_ir_real [get_full_name $c] } }
+foreach c [all_clocks] { if {![$c is_generated] && [llength [get_property $c sources]]} { lappend ot_ir_real [get_full_name $c] } }
 # S81-TAIL 2026-10-08: a data input delay on a REAL clock's source port (route SDCs that budget every non-core input,
 # e.g. s81ph dsfd_ctrl_pc: set_input_delay 316.7 -clock vclk on ckh[0] = hbm_clk) makes the register clock pins of
 # that clock carry a DATA arrival (vclk latency + input delay + tree), and arrival_max_rise below returns it instead
@@ -212,7 +342,8 @@ set ot_ir_arrof [dict create]  ;# real clock -> {register cell -> clock arrival}
 foreach cn $ot_ir_real {
   set b {}; set a {}; set ot_ir_bs {}; set ot_ir_bo {}; set ot_ir_ao [dict create]
   array unset ot_ir_e; array set ot_ir_e {neg 0 noarc 0 half 0}
-  foreach p [all_registers -clock_pins -clock [get_clocks $cn]] {
+  lassign [ot_cf_pins [get_clocks $cn]] ot_ir_family_pins ot_ir_family_owners
+  foreach p $ot_ir_family_pins {
     set v [ot_ir_arr $p $cn]
     if {$v eq "" || $v eq "INF" || $v eq "-INF"} continue
     lappend a $v

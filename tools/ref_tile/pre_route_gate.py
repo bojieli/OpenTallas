@@ -491,7 +491,7 @@ def check_sources(g: Gate, job: dict, extra_seeds=(), commit=None):
     out_all = sorted(p for p in seen if not any(p == s or p.startswith(s + "/") for s in synced))
     if True:   # the loop ships these flow helpers into every job (closure_loop HELPERS / tt_overlay TTB_FILES)
         soft |= {f"physical/common_flow/{n}" for n in ("macro_sliver_block.tcl", "edge_sliver_block.tcl",
-                                                       "macro_cts_cluster.tcl", "io_ref_routed.sdc")}
+                                                       "macro_cts_cluster.tcl", "io_ref_routed.sdc", "clock_family.tcl")}
         soft |= {f"physical/common_flow/{n}" for n in ("cg_pushdown.tcl", "clk_net_protect.tcl", "link_budget_hook.tcl",
                                                        "link_budget_consistent.sdc", "nbr_clk_measured_ttb.sdc")}
     outside = [p for p in out_all if p not in soft]
