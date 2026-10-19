@@ -171,6 +171,31 @@ CASES.update({
 })
 
 
+# XDIE-QTP8-2 10-19: the same compiled-calendar (Q-COLLCAL3) and 4-user (MU-QWEN) cases on the NEWEST compute GEN dv2f15r
+# (DIE-QWEN-LEAD, src 5a789562d; ot-epyc4 qwen-split-compute/dv2f15r/out/case/coll_lane_latency.json copied: lanes identical
+# to dv2f14bi, LX 11/0/10, calendar LS 378 emitted by the GEN).  The collective / IO / lane RTL the bench reads is byte-identical
+# to the GEN source.
+QF = "results/rtl/xdie_qtp8_2_1019/gen_dv2f15r/coll_lane_latency.json"
+_JF = ["--real-lanes", QF]
+CASES.update({
+    "f15r_cal": RLB + _JF + ["--lats", "cal"],
+    "f15r_cal_seqsu": RLB + _JF + ["--lats", "cal", "--seqsu"],
+    "f15r_cal_minus1": RLB + _JF + ["--lats", "cal-1", "--expect-fail"],
+    "f15r_cal_lx707": RLB + _JF + ["--lats", "cal", "--lx", "7", "0", "7", "--expect-fail"],
+    "f15r_cal_ktv2skew": RLB + _JF + ["--real-lanes-override", "KTV2=6", "--lats", "cal", "--expect-fail"],
+    "f15r_cal_mut_rxearly": RLB + _JF + ["--lats", "cal", "--mutant-define", "OT_LCAL_MUT_RX_EARLY", "--expect-fail"],
+    "f15r_cal_mut_rank": RLB + _JF + ["--lats", "cal", "--mutant-define", "OT_TP8S_MUT_RANK", "--only", "qwen_ar_256w|qwen_layer_2x256w$", "--expect-fail"],
+    "f15r_cal_mut_gather": RLB + _JF + ["--lats", "cal", "--mutant-define", "OT_TP8S_MUT_GATHER", "--only", "argmax", "--expect-fail"],
+})
+_MUF = CASES["f15r_cal"] + _MU
+CASES.update({
+    "f15r_mu": _MUF + ["--only", "mu_window($|_ref)"],
+    "f15r_mu_neg_overlap": _MUF + ["--only", "mu_window_neg_overlap", "--expect-fail"],
+    "f15r_mu_mut_rlat": _MUF + ["--only", "^mu_window$", "--mutant-define", "OT_TP8S_MUT_RLAT", "--expect-fail"],
+    "f15r_mu_mut_rank": _MUF + ["--only", "^mu_window$", "--mutant-define", "OT_TP8S_MUT_RANK", "--expect-fail"],
+})
+
+
 if __name__ == "__main__":
     if sys.argv[1] == "list":
         print("\n".join(CASES))
