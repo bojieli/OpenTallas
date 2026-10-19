@@ -1,0 +1,676 @@
+`timescale 1ns/1ps
+// ---------------------------------------------------------------------------------------------------------------------
+// S81-IDXRD (10-18): dsdv_idx_rg, the REGIONAL INDEX READER / SCORER of the S81-DV p4l die (release blocker MU.BAL.SX.3:
+// bind9 had no index reader).  16 instances, one per regional HBM controller dsfd_ctrl_rg2 (2 pseudo-channels each),
+// sid = chain position = region.  The DeepSeek-V4.1 lightning indexer runs where the keys are: every region scores the
+// keys held in ITS two pseudo-channels with the UNCHANGED exact engine ot_hdc_v41x_idx_engine (NK 1: 32 heads x 128
+// FP4 dims a key, the chunk8 golden arithmetic), and the 16 regions' scores meet on one neighbour-only SCORE CHAIN that
+// leaves as selector-native BK beats (dsdv_bk_v format) for the die's selector dsdv_bk_sel (top-k, ties to the lower
+// index).  Keys never cross the die; only scores do (16 b a key).
+//
+// KEY LAYOUT (compiler; the key writer svc_att host writes follows it).  Position p, word j = p >> 4, lane i = p & 15:
+//   region r(p) = i ^ h(j),  h(j) = (j ^ j >> 4 ^ j >> 8 ^ j >> 12) & 15
+// so every 16-position word has EXACTLY ONE key in every region (a full scan feeds all 16 regions evenly), and a
+// gather (re-index) spreads clustered and strided candidate sets over the regions.  Region r stores the key of word j at
+// local cell c = j & 15 of local group g = j >> 4, on PC g & 1, PC-local block n = g >> 1, sector base A = KB + 34 n:
+//   codes  sectors A + 2 c, A + 2 c + 1        (key bits [255:0], [511:256]; 128 E2M1 codes)
+//   scales sector  A + 32 + (c >> 3), bytes 4 (c & 7) .. +3   (key bits [543:512]; 4 x UE8M0)
+// 34 sectors = 16 x 68 B, no padding.  KB = the user's index-key base (PC-local sector address, the same on every PC
+// of the die): per-user bases are job-word content (MU-S81), not RTL state.
+//
+// JOB (one frame on the query chain qi; frame header as the SVC FRAME PROTOCOL v1: [511:508] type, [502:495] tag,
+// [491:480] len, [458:449] user, spec [448:0]):
+//   type 4 IDX_S  full scan of positions [B, B + N)                    len 64
+//   type 8 IDX_G  gather (re-index) of NC candidate positions          len 64 + ceil(NC / 16)
+//   spec [19:0] B (scan; 0 for a gather), [40:20] N (scan count, or NC), [50:41] k (<= 512), [80:51] KB,
+//        [96:81] T0, [100:97] P (>= 2), [103:101] ik (= the selector's ingress-kind strap)
+//   payload 0..63: query, word 2h = head h's 128 FP4 codes, word 2h + 1 = {[47:32] BF16 head weight, [31:0] scales}
+//   payload 64..: (IDX_G) candidate list, 16 entries a word ([32 e +: 20] = position), ascending positions, entry
+//                 e of list word w = candidate ordinal c = 16 w + e.  A gather is scored in ORDINAL space: the
+//                 selector sees ordinal c as its index (the list is ascending, so "ties to the lower index" is the same
+//                 rule on ordinals as on positions); the ordinal -> position map stays with the list's owner.
+// Frames of other types are skipped (len words).  Every frame is forwarded unchanged on qo (2 edges a hop).
+//
+// STATIC SCHEDULE (owner rule: no credit / ready / arbitration on the on-die production path).  Frame END (the last
+// payload word) reaches every region's qi pin flop exactly 2 edges after its upstream neighbour's, and the score chain
+// si -> so is 2 edges a hop as well, so ONE local clock (cycles since END) puts every region's insertions in the same
+// passing beat.  From END + T0 every region drives the same compiled beat sequence (OR on the chain, identical bits):
+//   +0 HDR q0 single (lane 0: [19:0] 16 j0, [29:20] k, [31:30] 0)      j0 = B >> 4, j1 = (B + N - 1) >> 4
+//   +1 HDR q1, +2/+3 empty BEAT q1 (lv 0, last), +4 HDR q2, +5/+6 empty q2, +7 HDR q3, +8/+9 empty q3
+//   +10 + P w  (w = 0 .. j1 - j0): BEAT word w on lane 0, part 0 (16 BF16 scores) then part 1 (lane valid, last on the
+//   final word, the in-band fault flag); the region owning lane i of word w ORs its score / valid bit in.
+// P = 2 is the 276-b rung's maximum (two V beats a word: 8 scores a cycle); the reader alone sustains P >= 1.41 (the
+// stack's measured 11.35 keys a cycle).  A score not ready at its slot is a sticky fault (late) and sets the word's
+// in-band fault flag: the selector fails closed.
+// HBM BOUNDARY (elastic, owner 10-15): reads go through the region's controller; landing is slot-addressed
+// (LG slots x 16 key cells a PC, no overflow possible), keys wait in landing / the engine until their slot.
+//
+// HBM FACES: the tile is the registered station of the region's rq (682 b) / rd (562 b) link between the service slice
+// dsdv_svc_rs and dsfd_ctrl_rg2.  The slice's requests pass with priority (+1 register each way); this reader issues
+// only in cycles the slice does not, while the controller's outstanding count (every request, either owner, until its
+// rk) is below DQ.  Responses tagged [16:15] = 3 are this reader's and are not passed on; rk pulses are returned to their
+// owner in request order (per-PC owner FIFO), so the slice's credit counter sees exactly its own.  Static rule (compiler):
+// the slice's and the reader's HBM windows do not overlap on a PC (a violation overflows the controller: its fault).
+//
+// Pins: every input lands in a flop at the pin, every output leaves a flop.  One clock ck.  Reset rst: async assert,
+// 2-flop synchronous release.
+// MUT (bench negative controls only): 1 lane hash off by one, 2 rk always returned to the slice, 3 scale sector of the
+// neighbouring cell, 4 region 0's part-1 beat one cycle late, 5 response of the slice swallowed.
+// ---------------------------------------------------------------------------------------------------------------------
+module dsdv_idx_rg #(
+    parameter integer MUT = 0,
+    parameter bit SRAM_MACRO = 0,
+    parameter integer DQ = 8,           // controller request buffer entries a PC (dsfd_ctrl_rg2 DQ)
+    parameter integer LG = 8,           // landing slots a PC (16 key cells each)
+    parameter integer IQD = 128,        // key items in flight (item queue)
+    parameter integer SQD = 32,         // scores between the engine and the word assembler
+    parameter integer LFD = 8           // candidate-list words buffered (gather)
+) (
+    input  wire          ck,
+    input  wire          rst,
+    input  wire [3:0]    sid,
+    input  wire [512:0]  qi,            // query chain {d 512, v}
+    output reg  [512:0]  qo,
+    input  wire [275:0]  si,            // score chain (BK V beats)
+    output reg  [275:0]  so,
+    input  wire [681:0]  rqi,           // from dsdv_svc_rs
+    output reg  [681:0]  rqo,           // to dsfd_ctrl_rg2
+    input  wire [561:0]  rdi,           // from dsfd_ctrl_rg2
+    output reg  [561:0]  rdo,           // to dsdv_svc_rs
+    output reg  [9:0]    st             // {fault cause 8, busy, fault}
+);
+    localparam integer SLW = 3;            // slot field of the read tag (LG = 8)
+    initial if (LG != 8) $fatal(1, "dsdv_idx_rg: LG must be 8 (3-bit tag slot field)");
+    localparam integer IQW = $clog2(IQD), SQW = $clog2(SQD), LFW = $clog2(LFD);
+
+    // ------------------------------------------------------------------ reset
+    reg [1:0] rs;
+    always @(posedge ck or negedge rst) if (!rst) rs <= 2'b00; else rs <= {rs[0], 1'b1};
+    wire rn = rs[1];
+    reg [3:0] me;
+    always @(posedge ck or negedge rn) if (!rn) me <= 4'd0; else me <= sid;
+
+    // ------------------------------------------------------------------ pin registers / chains
+    reg [512:0] qr;
+    reg [275:0] sr;
+    reg [681:0] rqr;
+    reg [561:0] rdr;
+    always @(posedge ck or negedge rn)
+        if (!rn) begin qr[0] <= 1'b0; qo[0] <= 1'b0; sr[0] <= 1'b0; rqr[0] <= 1'b0; rqr[341] <= 1'b0;
+                       rdr[277] <= 1'b0; rdr[278] <= 1'b0; rdr[279] <= 1'b0; rdr[557] <= 1'b0; rdr[558] <= 1'b0; rdr[559] <= 1'b0; end
+        else begin qr[0] <= qi[0]; qo[0] <= qr[0]; sr[0] <= si[0]; rqr[0] <= rqi[0]; rqr[341] <= rqi[341];
+                   rdr[277] <= rdi[277]; rdr[278] <= rdi[278]; rdr[279] <= rdi[279];
+                   rdr[557] <= rdi[557]; rdr[558] <= rdi[558]; rdr[559] <= rdi[559]; end
+    always @(posedge ck) begin
+        qr[512:1] <= qi[512:1]; qo[512:1] <= qr[512:1]; sr[275:1] <= si[275:1];
+        rqr[340:1] <= rqi[340:1]; rqr[681:342] <= rqi[681:342];
+        rdr[276:0] <= rdi[276:0]; rdr[556:280] <= rdi[556:280]; rdr[561:560] <= rdi[561:560];
+    end
+
+    function automatic [3:0] hj(input [15:0] j);
+        hj = j[3:0] ^ j[7:4] ^ j[11:8] ^ j[15:12];
+    endfunction
+
+    // ------------------------------------------------------------------ forward declarations
+    reg         wdone_p, wdone, gw_ld;
+    reg  [7:0]  fc_set;
+    // ------------------------------------------------------------------ job registers
+    reg        act, infr, isj;               // job active / in a frame / the frame is an index job
+    reg [11:0] left, pw;
+    reg [3:0]  ftyp;
+    reg        gat;                          // gather job
+    reg [19:0] jb;                           // B
+    reg [20:0] jn;                           // N / NC
+    reg [9:0]  jk;
+    reg [29:0] kb;
+    reg [15:0] t0;
+    reg [3:0]  pp;
+    reg [2:0]  ik;
+    reg [7:0]  tg;
+    reg [15:0] j0, j1, nw;                   // first / last absolute word, word count
+    reg [7:0]  fc;                           // sticky fault causes
+    wire       fault = |fc;
+    wire       q_v = qr[0];
+    wire [511:0] q_d = qr[512:1];
+    wire       is_h = q_v && !infr;
+    wire       is_p = q_v && infr;
+    wire       hdr_job = is_h && (q_d[511:508] == 4'd4 || q_d[511:508] == 4'd8);
+    wire [20:0] h_n = q_d[40:20];
+    wire [20:0] h_end = 21'(q_d[19:0]) + h_n - 21'd1;
+    wire       pay_job = is_p && isj;
+    wire       end_w = pay_job && left == 12'd1;
+    // query load
+    reg [511:0] qhold;
+    reg         ql_v;
+    reg [7:0]   ql_h;
+    reg [511:0] ql_c;
+    reg [31:0]  ql_s;
+    reg [15:0]  ql_w;
+    reg [2:0]   qset;
+    reg         q_done;
+    // candidate list FIFO (gather)
+    reg [511:0] lf [0:LFD-1];
+    reg [LFW:0] lf_n;
+    reg [LFW-1:0] lf_w, lf_r;
+    wire        lf_push = pay_job && pw >= 12'd64;
+    wire        lf_pop;
+    // window clock
+    reg         ended;
+    reg [19:0]  tc;
+
+    always @(posedge ck or negedge rn)
+        if (!rn) begin
+            act <= 1'b0; infr <= 1'b0; isj <= 1'b0; left <= 0; pw <= 0; ftyp <= 0; gat <= 0; jb <= 0; jn <= 0; jk <= 0;
+            kb <= 0; t0 <= 0; pp <= 0; ik <= 0; tg <= 0; j0 <= 0; j1 <= 0; nw <= 0; ql_v <= 1'b0; ql_h <= 0;
+            qset <= 0; q_done <= 1'b0; ended <= 1'b0; tc <= 0;
+        end else begin
+            ql_v <= 1'b0;
+            if (is_h) begin
+                ftyp <= q_d[511:508]; left <= q_d[491:480]; pw <= 0; infr <= q_d[491:480] != 12'd0;
+                isj <= hdr_job;
+                if (hdr_job && !act) begin
+                    act <= 1'b1; gat <= q_d[511]; jb <= q_d[19:0]; jn <= h_n; jk <= q_d[50:41]; kb <= q_d[80:51];
+                    t0 <= q_d[96:81]; pp <= q_d[100:97]; ik <= q_d[103:101]; tg <= q_d[502:495];
+                    if (q_d[511]) begin j0 <= 16'd0; j1 <= 16'((h_n - 21'd1) >> 4); nw <= 16'((h_n + 21'd15) >> 4); end
+                    else begin j0 <= q_d[19:4]; j1 <= h_end[19:4]; nw <= 16'(h_end[19:4] - q_d[19:4] + 16'd1); end
+                    q_done <= 1'b0; ended <= 1'b0; tc <= 0;
+                end
+            end else if (is_p) begin
+                left <= left - 12'd1; pw <= pw + 12'd1;
+                if (left == 12'd1) infr <= 1'b0;
+                if (pay_job && pw < 12'd64) begin
+                    if (!pw[0]) qhold <= q_d;
+                    else begin ql_v <= 1'b1; ql_h <= 8'(pw[6:1]); ql_c <= qhold; ql_s <= q_d[31:0]; ql_w <= q_d[47:32]; end
+                end
+            end
+            if (ql_v && ql_h == 8'd31) qset <= 3'd5;
+            else if (qset != 0) begin qset <= qset - 3'd1; if (qset == 3'd1) q_done <= 1'b1; end
+            if (end_w && act) begin ended <= 1'b1; tc <= 0; end
+            else if (ended && !wdone) tc <= tc + 20'd1;
+            if (wdone_p) act <= 1'b0;
+        end
+
+    // ------------------------------------------------------------------ HBM faces: owner FIFOs, credits, rd filter
+    // rq word (dsfd_ctrl_rg2): {wdata 256, wstrb 32, tag 17, len 4, addr 30, we, v}; rd word: {wd, rk, rv, beat 4,
+    // tag 17, data 256}
+    reg  [1:0]  i_v;                         // this reader's request this cycle (per PC)
+    reg  [29:0] i_a [0:1];
+    reg  [3:0]  i_l [0:1];
+    reg  [16:0] i_t [0:1];
+    reg  [15:0] own [0:1];                   // owner FIFO (1 = this reader), shift register
+    reg  [4:0]  own_n [0:1];
+    wire [1:0]  av_ = {rqr[341], rqr[0]};
+    wire [1:0]  can = {(own_n[1] < 5'(DQ)) && !av_[1], (own_n[0] < 5'(DQ)) && !av_[0]};
+    wire [1:0]  rk_in = {rdr[280 + 278], rdr[278]};
+    wire [1:0]  rv_in = {rdr[280 + 277], rdr[277]};
+    wire [16:0] rt [0:1];
+    assign rt[0] = rdr[272:256];
+    assign rt[1] = rdr[280 + 256 +: 17];
+    wire [1:0]  mine_rv;
+    assign mine_rv[0] = rv_in[0] && rt[0][16:15] == 2'b11;
+    assign mine_rv[1] = rv_in[1] && rt[1][16:15] == 2'b11;
+    wire [1:0]  iss = i_v & can;             // a request leaves this cycle
+    integer p;
+    always @(posedge ck or negedge rn)
+        if (!rn) begin
+            rqo[0] <= 1'b0; rqo[341] <= 1'b0; rdo[277] <= 1'b0; rdo[278] <= 1'b0; rdo[279] <= 1'b0;
+            rdo[557] <= 1'b0; rdo[558] <= 1'b0; rdo[559] <= 1'b0;
+            own[0] <= 0; own[1] <= 0; own_n[0] <= 0; own_n[1] <= 0;
+        end else begin
+            for (p = 0; p < 2; p = p + 1) begin : g_pc
+                reg push, pop, ob;
+                push = av_[p] || iss[p];
+                pop = rk_in[p];
+                ob = own[p][0];
+                rqo[341 * p] <= push;
+                // rk back to its owner, in request order
+                if (MUT == 2) rdo[280 * p + 278] <= rk_in[p];
+                else rdo[280 * p + 278] <= rk_in[p] && (own_n[p] != 0) && !ob;
+                rdo[280 * p + 279] <= rdr[280 * p + 279];
+                if (MUT == 5) rdo[280 * p + 277] <= rv_in[p] && !mine_rv[p] && !rt[p][0];
+                else rdo[280 * p + 277] <= rv_in[p] && !mine_rv[p];
+                if (pop && !push) begin own[p] <= own[p] >> 1; own_n[p] <= own_n[p] - 5'd1; end
+                else if (push && !pop) begin own[p][own_n[p][3:0]] <= iss[p]; own_n[p] <= own_n[p] + 5'd1; end
+                else if (push && pop) begin
+                    own[p] <= (own[p] >> 1) | (16'(iss[p]) << (own_n[p][3:0] - 4'd1));
+                end
+            end
+        end
+    always @(posedge ck) begin
+        for (p = 0; p < 2; p = p + 1) begin
+            if (av_[p]) rqo[341 * p + 1 +: 340] <= rqr[341 * p + 1 +: 340];
+            else rqo[341 * p + 1 +: 340] <= {256'd0, 32'd0, i_t[p], i_l[p], i_a[p], 1'b0};
+            rdo[280 * p +: 277] <= rdr[280 * p +: 277];
+        end
+        rdo[561:560] <= rdr[561:560];
+    end
+
+    // ------------------------------------------------------------------ landing (per PC: LG slots x 16 cells)
+    // code SRAM: entry {slot, cell, sector}; scale registers; arrival bits; slot state
+    reg [31:0]  scl [0:1][0:LG*16-1];
+    reg [1:0]   cdv [0:1][0:LG*16-1];        // code sectors landed
+    reg         scv [0:1][0:LG*16-1];        // scale landed
+    reg         sb  [0:1][0:LG-1];           // slot busy
+    reg         scl_d [0:1][0:LG-1];         // slot closed (no more items)
+    reg [4:0]   sni [0:1][0:LG-1];           // items allocated
+    reg [4:0]   snc [0:1][0:LG-1];           // items consumed
+    reg [5:0]   sne [0:1][0:LG-1];           // beats expected
+    reg [5:0]   snr [0:1][0:LG-1];           // beats received
+    reg [SLW-1:0] sa [0:1];                  // next slot to allocate
+    reg [SLW-1:0] so_ [0:1];                 // open gather slot
+    reg         sopen [0:1];
+    // response decode -> landing writes
+    reg  [1:0]  lw_v;
+    reg  [SLW+4:0] lw_a [0:1];
+    reg  [255:0] lw_d [0:1];
+    wire [255:0] lr_d [0:1];
+    reg  [1:0]  lr_e;
+    reg  [SLW+4:0] lr_a [0:1];
+    genvar gp;
+    generate for (gp = 0; gp < 2; gp = gp + 1) begin : g_land
+        if (SRAM_MACRO) begin : g_m
+            ot_sram_1r1w_256x256_m2_r2c2 u_mem (
+                .clk(ck), .r_ce_in(lr_e[gp]), .r_addr_in(8'(lr_a[gp])), .rd_out(lr_d[gp]),
+                .w_ce_in(lw_v[gp]), .w_addr_in(8'(lw_a[gp])), .wd_in(lw_d[gp]), .w_mask_in({256{1'b1}}),
+                .rr_en(2'b0), .rr_addr(14'b0), .cr_en(2'b0), .cr_sel(16'b0));
+        end else begin : g_b
+            reg [255:0] mem [0:LG*32-1];
+            reg [255:0] q;
+            always @(posedge ck) begin
+                if (lw_v[gp]) mem[lw_a[gp]] <= lw_d[gp];
+                if (lr_e[gp]) q <= mem[lr_a[gp]];
+            end
+            assign lr_d[gp] = q;
+        end
+    end endgenerate
+
+    // ------------------------------------------------------------------ walker (items + requests)
+    // item {pc, slot, cell, w (word - j0), lane, lw}
+    localparam integer IW = 1 + SLW + 4 + 16 + 4 + 1;
+    reg [IW-1:0] iq [0:IQD-1];
+    reg [IQW:0]  iq_n;
+    reg [IQW-1:0] iq_w, iq_r;
+    reg          ipush;
+    reg [IW-1:0] ipd;
+    wire         ipop;
+    // walker state
+    reg [2:0]   ws;                          // 0 idle, 1 scan group setup, 2 scan issue, 3 gather word, 4 gather req, 5 done
+    reg [15:0]  wg;                          // scan: local group (16 words)
+    reg [15:0]  wvm;                         // scan: valid cells of the group
+    reg [4:0]   wc;                          // scan: next item cell
+    reg [3:0]   wk;                          // scan: next request (0 scales, 1..8 codes)
+    reg         wpc;
+    reg [SLW-1:0] wsl;
+    reg [29:0]  wa;                          // block sector base
+    reg [15:0]  gw;                          // gather: list word index
+    reg [15:0]  gm;                          // gather: remaining matches in the head word
+    reg [3:0]   ge;                          // gather: current entry
+    reg         gq;                          // gather: second request (scale) pending
+    reg [3:0]   gcell;
+    reg [3:0]   gkc;
+    reg         gpc;
+    reg [SLW-1:0] gsl;
+    reg [14:0]  gblk;
+    // scan helpers
+    wire        s_pc = wg[0];
+    wire [14:0] s_n = wg[15:1];
+    reg  [15:0] s_vm;
+    integer c;
+    always @* begin
+        for (c = 0; c < 16; c = c + 1) begin : g_vm
+            reg [15:0] jj; reg [20:0] pos;
+            jj = {wg[11:0], 4'(c)};
+            pos = {1'b0, jj, (MUT == 1) ? (me ^ hj(jj) ^ 4'd1) : (me ^ hj(jj))};
+            s_vm[c] = (jj >= j0) && (jj <= j1) && (pos >= 21'(jb)) && (pos < 21'(jb) + jn);
+        end
+    end
+    // gather helpers: matches of the head list word
+    wire [511:0] lh = lf[lf_r];
+    reg  [15:0]  g_mm;
+    always @* begin
+        for (c = 0; c < 16; c = c + 1) begin : g_mt
+            reg [19:0] ps;
+            ps = lh[32 * c +: 20];
+            g_mm[c] = (21'({gw, 4'(c)}) < jn) && ((ps[3:0] ^ hj(ps[19:4])) == me);
+        end
+    end
+    reg [3:0] g_lo;
+    always @* begin
+        g_lo = 4'd0;
+        for (c = 15; c >= 0; c = c - 1) if (gm[c]) g_lo = 4'(c);
+    end
+    wire [19:0] g_p = lh[32 * g_lo +: 20];
+    wire [15:0] g_j = 16'(g_p[19:4]);
+    assign lf_pop = (ws == 3'd3) && lf_n != 0 && gm == 16'd0 && !gq && gw_ld;
+    // slot free condition
+    wire [1:0] sfree;
+    assign sfree[0] = !sb[0][sa[0]];
+    assign sfree[1] = !sb[1][sa[1]];
+    // consumer release (declared below)
+    reg  [1:0]  rel_v, rel0, rel1;
+    reg  [SLW-1:0] rel_s [0:1], rs0 [0:1], rs1 [0:1];
+    // response beats
+    wire [3:0]  rb [0:1];
+    assign rb[0] = rdr[276:273];
+    assign rb[1] = rdr[280 + 273 +: 4];
+    wire [255:0] rdd [0:1];
+    assign rdd[0] = rdr[255:0];
+    assign rdd[1] = rdr[280 +: 256];
+
+    integer q, e;
+    always @(posedge ck or negedge rn)
+        if (!rn) begin
+            ws <= 3'd0; wg <= 0; wvm <= 0; wc <= 0; wk <= 0; wpc <= 0; wsl <= 0; wa <= 0; gw <= 0; gm <= 0; ge <= 0; gblk <= 0; fc <= 8'd0;
+            gq <= 1'b0; gcell <= 0; gkc <= 0; gpc <= 0; gsl <= 0; gw_ld <= 1'b0;
+            i_v <= 2'b00; ipush <= 1'b0;
+            for (q = 0; q < 2; q = q + 1) begin
+                sa[q] <= 0; so_[q] <= 0; sopen[q] <= 1'b0;
+                for (e = 0; e < LG; e = e + 1) begin sb[q][e] <= 1'b0; scl_d[q][e] <= 1'b0; sni[q][e] <= 0; snc[q][e] <= 0;
+                                                     sne[q][e] <= 0; snr[q][e] <= 0; end
+                for (e = 0; e < LG * 16; e = e + 1) begin cdv[q][e] <= 2'b00; scv[q][e] <= 1'b0; end
+            end
+            lw_v <= 2'b00; iq_n <= 0; iq_w <= 0; lf_n <= 0; lf_w <= 0; lf_r <= 0;
+        end else begin : g_walk
+            reg [7:0] fw;
+            fw = 8'd0;
+            ipush <= 1'b0;
+            // requests leave when the PC can take them
+            for (q = 0; q < 2; q = q + 1) if (iss[q]) i_v[q] <= 1'b0;
+            // ---------------- walker
+            if (hdr_job && !act) begin
+                if (q_d[511]) begin ws <= 3'd3; gw <= 0; gw_ld <= 1'b0; end
+                else begin ws <= 3'd1; wg <= {4'd0, q_d[19:8]}; end
+            end else case (ws)
+                3'd1: begin                                      // scan: next group
+                    if (wg > {4'd0, j1[15:4]}) ws <= 3'd5;
+                    else if (s_vm == 16'd0) wg <= wg + 16'd1;
+                    else if (sfree[s_pc] && iq_n <= (IQW+1)'(IQD - 16)) begin
+                        wpc <= s_pc; wsl <= sa[s_pc]; wvm <= s_vm; wc <= 0; wk <= 0;
+                        wa <= kb + 30'(s_n) * 30'd34;
+                        sb[s_pc][sa[s_pc]] <= 1'b1; scl_d[s_pc][sa[s_pc]] <= 1'b1;
+                        sni[s_pc][sa[s_pc]] <= 5'(s_vm[0] + s_vm[1] + s_vm[2] + s_vm[3] + s_vm[4] + s_vm[5] + s_vm[6] + s_vm[7] +
+                                                 s_vm[8] + s_vm[9] + s_vm[10] + s_vm[11] + s_vm[12] + s_vm[13] + s_vm[14] + s_vm[15]);
+                        snc[s_pc][sa[s_pc]] <= 0; sne[s_pc][sa[s_pc]] <= 6'd34; snr[s_pc][sa[s_pc]] <= 0;
+                        for (e = 0; e < 16; e = e + 1) begin cdv[s_pc][{sa[s_pc], 4'(e)}] <= 2'b00; scv[s_pc][{sa[s_pc], 4'(e)}] <= 1'b0; end
+                        sa[s_pc] <= sa[s_pc] + 1'b1;
+                        ws <= 3'd2;
+                    end
+                end
+                3'd2: begin                                      // scan: 9 requests + 16 item slots
+                    if (wc < 5'd16) begin
+                        if (wvm[wc[3:0]]) begin
+                            ipush <= 1'b1;
+                            ipd <= {wpc, wsl, wc[3:0], 16'({wg[11:0], wc[3:0]} - j0),
+                                    (MUT == 1) ? (me ^ hj({wg[11:0], wc[3:0]}) ^ 4'd1) : (me ^ hj({wg[11:0], wc[3:0]})), 1'b1};
+                        end
+                        wc <= wc + 5'd1;
+                    end
+                    if (wk < 4'd9 && !(i_v[wpc] && !iss[wpc])) begin
+                        i_v[wpc] <= 1'b1;
+                        if (wk == 4'd0) begin i_a[wpc] <= wa + 30'd32; i_l[wpc] <= 4'd2;
+                                              i_t[wpc] <= {2'b11, 1'b0, 3'(wsl), 4'd0, 1'b1, 3'd0, 3'd0}; end
+                        else begin i_a[wpc] <= wa + 30'(4 * (wk - 4'd1)); i_l[wpc] <= 4'd4;
+                                   i_t[wpc] <= {2'b11, 1'b0, 3'(wsl), 4'(2 * (wk - 4'd1)), 1'b0, 3'd0, 3'd0}; end
+                        wk <= wk + 4'd1;
+                    end
+                    if (wc >= 5'd15 && (wk == 4'd9 || (wk == 4'd8 && !(i_v[wpc] && !iss[wpc])))) begin
+                        wg <= wg + 16'd1; ws <= 3'd1;
+                    end
+                end
+                3'd3: begin                                      // gather: head list word
+                    if (gw >= nw) begin
+                        for (q = 0; q < 2; q = q + 1) if (sopen[q]) begin scl_d[q][so_[q]] <= 1'b1; sopen[q] <= 1'b0; end
+                        ws <= 3'd5;
+                    end else if (lf_n != 0 && !gw_ld) begin gm <= g_mm; gw_ld <= 1'b1; end
+                    else if (gw_ld && gm == 16'd0) begin gw_ld <= 1'b0; gw <= gw + 16'd1; end
+                    else if (gw_ld) begin                         // one match: cell, 2 requests, item
+                        if ((!sopen[g_j[4]] || sni[g_j[4]][so_[g_j[4]]] == 5'd16) ? sfree[g_j[4]] : 1'b1) begin
+                            if (iq_n < (IQW+1)'(IQD - 1) && !(i_v[g_j[4]] && !iss[g_j[4]])) begin
+                                reg [SLW-1:0] s_; reg [3:0] cl;
+                                if (!sopen[g_j[4]] || sni[g_j[4]][so_[g_j[4]]] == 5'd16) begin
+                                    if (sopen[g_j[4]]) scl_d[g_j[4]][so_[g_j[4]]] <= 1'b1;
+                                    s_ = sa[g_j[4]]; cl = 4'd0;
+                                    sb[g_j[4]][s_] <= 1'b1; scl_d[g_j[4]][s_] <= 1'b0; sni[g_j[4]][s_] <= 5'd1;
+                                    snc[g_j[4]][s_] <= 0; sne[g_j[4]][s_] <= 6'd3; snr[g_j[4]][s_] <= 0;
+                                    so_[g_j[4]] <= s_; sopen[g_j[4]] <= 1'b1; sa[g_j[4]] <= sa[g_j[4]] + 1'b1;
+                                end else begin
+                                    s_ = so_[g_j[4]]; cl = 4'(sni[g_j[4]][s_]);
+                                    sni[g_j[4]][s_] <= sni[g_j[4]][s_] + 5'd1; sne[g_j[4]][s_] <= sne[g_j[4]][s_] + 6'd3;
+                                end
+                                cdv[g_j[4]][{s_, cl}] <= 2'b00; scv[g_j[4]][{s_, cl}] <= 1'b0;
+                                i_v[g_j[4]] <= 1'b1;
+                                i_a[g_j[4]] <= kb + 30'(g_j[15:5]) * 30'd34 + 30'(2 * g_j[3:0]);
+                                i_l[g_j[4]] <= 4'd2;
+                                i_t[g_j[4]] <= {2'b11, 1'b1, 3'(s_), cl, 1'b0, 3'd0, 3'd0};
+                                gpc <= g_j[4]; gsl <= s_; gcell <= cl; gkc <= g_j[3:0]; gblk <= g_j[15:1+4]; gq <= 1'b1;
+                                ipush <= 1'b1;
+                                ipd <= {g_j[4], s_, cl, gw - j0, g_lo, (gm & ~(16'd1 << g_lo)) == 16'd0};
+                                gm <= gm & ~(16'd1 << g_lo);
+                                ws <= 3'd4;
+                            end
+                        end
+                    end
+                end
+                3'd4: if (!(i_v[gpc] && !iss[gpc])) begin       // gather: the scale request
+                    i_v[gpc] <= 1'b1;
+                    i_a[gpc] <= kb + 30'(gblk) * 30'd34 + 30'd32 + 30'(gkc[3]);
+                    i_l[gpc] <= 4'd1;
+                    i_t[gpc] <= {2'b11, 1'b1, 3'(gsl), gcell, 1'b1, gkc[2:0], 3'd0};
+                    gq <= 1'b0; ws <= 3'd3;
+                end
+                default: ;
+            endcase
+            if (wdone_p) ws <= 3'd0;
+            // ---------------- list FIFO
+            if (lf_push) begin
+                lf[lf_w] <= q_d; lf_w <= lf_w + 1'b1;
+                if (lf_n == (LFW+1)'(LFD) && !lf_pop) fw[0] = 1'b1;
+            end
+            if (lf_pop) lf_r <= lf_r + 1'b1;
+            lf_n <= lf_n + (lf_push ? 1'b1 : 1'b0) - (lf_pop ? 1'b1 : 1'b0);
+            // ---------------- item queue
+            if (ipush) begin iq[iq_w] <= ipd; iq_w <= iq_w + 1'b1; end
+            if (ipop) iq_r <= iq_r + 1'b1;
+            iq_n <= iq_n + (ipush ? 1'b1 : 1'b0) - (ipop ? 1'b1 : 1'b0);
+            // ---------------- responses -> landing
+            lw_v <= 2'b00;
+            for (q = 0; q < 2; q = q + 1) if (mine_rv[q]) begin : g_rsp
+                reg g; reg [SLW-1:0] s_; reg [3:0] cl; reg sc; reg [2:0] by; reg [3:0] bt;
+                g = rt[q][14]; s_ = rt[q][11 +: SLW]; cl = rt[q][10:7]; sc = rt[q][6]; by = rt[q][5:3]; bt = rb[q];
+                if (!sb[q][s_] || snr[q][s_] >= sne[q][s_]) fw[1] = 1'b1;   // a response to no read
+                snr[q][s_] <= snr[q][s_] + 6'd1;
+                if (!sc) begin
+                    reg [3:0] cc;
+                    cc = g ? cl : cl + {3'd0, bt[1]};
+                    lw_v[q] <= 1'b1; lw_a[q] <= {s_, cc, bt[0]}; lw_d[q] <= rdd[q];
+                    cdv[q][{s_, cc}] <= cdv[q][{s_, cc}] | (bt[0] ? 2'b10 : 2'b01);
+                end else if (!g) begin
+                    for (e = 0; e < 8; e = e + 1) begin
+                        scl[q][{s_, bt[0], 3'(e) ^ ((MUT == 3) ? 3'd1 : 3'd0)}] <= rdd[q][32 * e +: 32];
+                        scv[q][{s_, bt[0], 3'(e)}] <= 1'b1;
+                    end
+                end else begin
+                    scl[q][{s_, cl}] <= rdd[q][32 * (by ^ ((MUT == 3) ? 3'd1 : 3'd0)) +: 32];
+                    scv[q][{s_, cl}] <= 1'b1;
+                end
+            end
+            for (q = 0; q < 2; q = q + 1) if (rk_in[q] && own_n[q] == 0) fw[1] = 1'b1;  // rk with no request
+            // ---------------- slot release
+            for (q = 0; q < 2; q = q + 1) begin
+                if (rel_v[q]) snc[q][rel_s[q]] <= snc[q][rel_s[q]] + 5'd1;
+                for (e = 0; e < LG; e = e + 1)
+                    if (sb[q][e] && scl_d[q][e] && snc[q][e] == sni[q][e] && snr[q][e] == sne[q][e] && !(rel_v[q] && rel_s[q] == SLW'(e)))
+                        sb[q][e] <= 1'b0;
+            end
+            fc <= fc | fc_set | fw;
+        end
+
+    // ------------------------------------------------------------------ consumer: landing -> engine (one key / 2 cycles)
+    wire [IW-1:0] ih = iq[iq_r];
+    wire          h_pc = ih[IW-1];
+    wire [SLW-1:0] h_sl = ih[IW-2 -: SLW];
+    wire [3:0]    h_cl = ih[IW-2-SLW -: 4];
+    wire [SLW+3:0] h_ci = {h_sl, h_cl};
+    wire          h_ready = (iq_n != 0) && cdv[h_pc][h_ci] == 2'b11 && scv[h_pc][h_ci];
+    reg  [1:0]    cs;                        // 0 idle / read s0, 1 read s1, 2 fire
+    reg           c_pc;
+    reg  [SLW+3:0] c_ci;
+    reg  [15:0]   c_w; reg [3:0] c_ln; reg c_lw;
+    reg  [255:0]  d0;
+    reg  [31:0]   c_sc;
+    reg  [SQW:0]  infl;                      // keys in the engine + scores waiting for the assembler
+    wire          room = infl < (SQW+1)'(SQD - 2);
+    assign ipop = (cs != 2'd1) && h_ready && q_done && room && act;
+    wire          k_ready;
+    reg           k_v;
+    reg  [543:0]  k_key;
+    always @(posedge ck or negedge rn)
+        if (!rn) begin cs <= 2'd0; lr_e <= 2'b00; rel_v <= 2'b00; rel0 <= 2'b00; rel1 <= 2'b00; end
+        else begin
+            lr_e <= 2'b00; rel0 <= 2'b00; rel1 <= rel0; rel_v <= rel1;
+            rs1[0] <= rs0[0]; rs1[1] <= rs0[1]; rel_s[0] <= rs1[0]; rel_s[1] <= rs1[1];
+            if (cs == 2'd1) begin
+                lr_e[c_pc] <= 1'b1; lr_a[c_pc] <= {c_ci, 1'b1}; cs <= 2'd2;
+            end else begin
+                if (cs == 2'd2) d0 <= lr_d[c_pc];
+                if (ipop) begin
+                    c_pc <= h_pc; c_ci <= h_ci; c_w <= ih[20:5]; c_ln <= ih[4:1]; c_lw <= ih[0];
+                    c_sc <= scl[h_pc][h_ci];
+                    lr_e[h_pc] <= 1'b1; lr_a[h_pc] <= {h_ci, 1'b0};
+                    rel0[h_pc] <= 1'b1; rs0[h_pc] <= h_sl;
+                    cs <= 2'd1;
+                end else if (cs == 2'd2) cs <= 2'd0;
+            end
+        end
+    // fire: s0 captured in d0 at cs 2 -> key = {scale, s1 (lr_d one cycle after cs 2), d0}
+    reg f1; reg f_pc; reg [31:0] f_sc; reg [15:0] f_w; reg [3:0] f_ln; reg f_lw;
+    always @(posedge ck or negedge rn)
+        if (!rn) f1 <= 1'b0;
+        else begin
+            f1 <= (cs == 2'd2);
+            if (cs == 2'd2) begin f_pc <= c_pc; f_sc <= c_sc; f_w <= c_w; f_ln <= c_ln; f_lw <= c_lw; end
+        end
+    // engine input register
+    reg [20:0] k_m;
+    always @(posedge ck or negedge rn)
+        if (!rn) k_v <= 1'b0;
+        else begin
+            k_v <= f1;
+            if (f1) begin k_key <= {f_sc, lr_d[f_pc], d0}; k_m <= {f_w, f_ln, f_lw}; end
+        end
+    wire        o_v;
+    wire [0:0]  o_kv, o_f;
+    wire [15:0] o_s;
+    ot_hdc_v41x_idx_engine #(.NK(1), .IH(32), .NB(4), .FD(56)) u_eng (
+        .clk(ck), .rst_n(rn), .ql_v(ql_v), .ql_head(ql_h), .ql_codes(ql_c), .ql_sc(ql_s), .ql_w(ql_w),
+        .k_valid(k_v), .k_ready(k_ready), .k_kv(1'b1), .k_keep(1'b1), .k_key(k_key),
+        .o_valid(o_v), .o_ready(1'b1), .o_kv(o_kv), .o_score(o_s), .o_fault(o_f),
+        .cnt_keys_scored(), .cnt_headsums_fused(), .cnt_faults());
+    // metadata beside the engine (in key order)
+    reg [20:0] mq [0:SQD-1];
+    reg [SQW-1:0] mq_w, mq_r;
+    // score FIFO -> word assembler
+    reg [37:0] sq [0:SQD-1];                  // {w 16, lane 4, lw, fault, score 16}
+    reg [SQW-1:0] sq_w, sq_r;
+    reg [SQW:0]   sq_n;
+    reg           a_v;                       // assembling word
+    reg [15:0]    a_w; reg [15:0] a_lv; reg [255:0] a_s; reg a_f;
+    reg           r_v;                       // ready word
+    reg [15:0]    r_w; reg [15:0] r_lv; reg [255:0] r_s; reg r_f;
+    wire          r_take;
+    wire          sq_pop = (sq_n != 0) && !(a_v && a_done);
+    reg           a_done;
+    always @(posedge ck or negedge rn)
+        if (!rn) begin mq_w <= 0; mq_r <= 0; sq_w <= 0; sq_r <= 0; sq_n <= 0; infl <= 0; a_v <= 1'b0; a_done <= 1'b0;
+                       r_v <= 1'b0; end
+        else begin
+            if (k_v) begin mq[mq_w] <= k_m; mq_w <= mq_w + 1'b1; end
+            if (o_v) begin
+                sq[sq_w] <= {mq[mq_r], o_f[0], o_s}; sq_w <= sq_w + 1'b1; mq_r <= mq_r + 1'b1;
+            end
+            sq_n <= sq_n + (o_v ? 1'b1 : 1'b0) - (sq_pop ? 1'b1 : 1'b0);
+            infl <= infl + (ipop ? 1'b1 : 1'b0) - (sq_pop ? 1'b1 : 1'b0);
+            if (sq_pop) begin : g_as
+                reg [37:0] t; t = sq[sq_r]; sq_r <= sq_r + 1'b1;
+                if (!a_v || a_done) begin
+                    a_v <= 1'b1; a_w <= t[37:22]; a_lv <= 16'd1 << t[21:18]; a_s <= 256'(t[15:0]) << (16 * t[21:18]);
+                    a_f <= t[16]; a_done <= t[17];
+                end else begin
+                    a_lv <= a_lv | (16'd1 << t[21:18]); a_s <= a_s | (256'(t[15:0]) << (16 * t[21:18]));
+                    a_f <= a_f | t[16]; a_done <= t[17];
+                end
+            end
+            if (a_v && a_done && (!r_v || r_take)) begin
+                r_v <= 1'b1; r_w <= a_w; r_lv <= a_lv; r_s <= a_s; r_f <= a_f;
+                if (!sq_pop) a_v <= 1'b0;
+            end else if (r_take) r_v <= 1'b0;
+        end
+
+    // ------------------------------------------------------------------ emission (the compiled window)
+    wire [19:0] th = 20'(t0);
+    reg  [15:0] ew;                          // next word
+    reg  [19:0] et;                          // its part-0 cycle
+    reg         p1;                          // part 1 due
+    reg  [15:0] p1_lv; reg p1_f; reg p1_last;
+    // header beats (identical in every region)
+    function automatic [275:0] bk(input [2:0] kind, input [1:0] lane, input part, input single, input [11:0] tt,
+                                  input [255:0] dd);
+        bk = {dd, tt, single, part, lane, kind, 1'b1};
+    endfunction
+    wire [9:0]   e_ix = 10'(tc - th);
+    wire         in_h = ended && tc >= th && tc < th + 20'd10;
+    reg  [275:0] hb;
+    always @* begin
+        hb = '0;
+        case (e_ix[3:0])
+            4'd0: hb = bk(ik, 2'd0, 1'b0, 1'b1, {4'd1, tg}, {224'd0, 2'd0, jk, 20'({j0, 4'd0})});
+            4'd1: hb = bk(ik, 2'd1, 1'b0, 1'b1, {4'd1, tg}, {224'd0, 2'd1, jk, 20'({j1 + 16'd1, 4'd0})});
+            4'd2: hb = bk(ik, 2'd1, 1'b0, 1'b0, {4'd2, tg}, 256'd0);
+            4'd3: hb = bk(ik, 2'd1, 1'b1, 1'b0, 12'd0, {239'd0, 1'b1, 16'd0});
+            4'd4: hb = bk(ik, 2'd2, 1'b0, 1'b1, {4'd1, tg}, {224'd0, 2'd2, jk, 20'({j1 + 16'd1, 4'd0})});
+            4'd5: hb = bk(ik, 2'd2, 1'b0, 1'b0, {4'd2, tg}, 256'd0);
+            4'd6: hb = bk(ik, 2'd2, 1'b1, 1'b0, 12'd0, {239'd0, 1'b1, 16'd0});
+            4'd7: hb = bk(ik, 2'd3, 1'b0, 1'b1, {4'd1, tg}, {224'd0, 2'd3, jk, 20'({j1 + 16'd1, 4'd0})});
+            4'd8: hb = bk(ik, 2'd3, 1'b0, 1'b0, {4'd2, tg}, 256'd0);
+            4'd9: hb = bk(ik, 2'd3, 1'b1, 1'b0, 12'd0, {239'd0, 1'b1, 16'd0});
+            default: hb = '0;
+        endcase
+    end
+    wire        slot = ended && !wdone && ew < nw && tc == et;
+    wire [15:0] ej = ew + j0;                // absolute word
+    wire [20:0] my_pos = {1'b0, ej, me ^ hj(ej)};
+    wire        own_w = !gat && (my_pos >= 21'(jb)) && (my_pos < 21'(jb) + jn);   // scan: this word has my key
+    assign r_take = slot && r_v && r_w == ew;
+    wire        late = slot && ((own_w && !r_take) || (r_v && r_w < ew));
+    wire [275:0] ins0 = bk(ik, 2'd0, 1'b0, 1'b0, {4'd2, tg}, r_take ? r_s : 256'd0);
+    wire        p1_due = (MUT == 4 && me == 4'd0) ? p1_d : p1;
+    reg         p1_d;
+    wire [275:0] ins1 = bk(ik, 2'd0, 1'b1, 1'b0, {11'd0, p1_f}, {239'd0, p1_last, p1_lv});
+    always @(posedge ck or negedge rn)
+        if (!rn) begin ew <= 0; et <= 0; p1 <= 1'b0; p1_d <= 1'b0; wdone <= 1'b0; wdone_p <= 1'b0; so[0] <= 1'b0; fc_set <= 0; end
+        else begin
+            fc_set <= 0; wdone_p <= 1'b0; p1_d <= p1;
+            if (hdr_job && !act) begin ew <= 0; et <= 20'(q_d[96:81]) + 20'd10; wdone <= 1'b0; end
+            if (slot) begin
+                p1 <= 1'b1; p1_lv <= r_take ? r_lv : 16'd0; p1_f <= (r_take && r_f) || late || fault;
+                p1_last <= ew == nw - 16'd1;
+                ew <= ew + 16'd1; et <= et + 20'(pp);
+            end else p1 <= 1'b0;
+            if (late) fc_set[2] <= 1'b1;
+            if (r_take && r_f) fc_set[3] <= 1'b1;
+            if (k_v && !k_ready) fc_set[4] <= 1'b1;
+            if (hdr_job && act) fc_set[5] <= 1'b1;                          // a job while one is active
+            if (hdr_job && !act && (q_d[100:97] < 4'd2 || h_n == 21'd0 || q_d[50:41] > 10'd512 ||
+                (q_d[511] ? q_d[491:480] != 12'(64 + ((h_n + 21'd15) >> 4)) : q_d[491:480] != 12'd64))) fc_set[6] <= 1'b1;
+            // window end: every slot passed -> nothing may be left
+            if (ended && !wdone && ew == nw && !p1 && !p1_d) begin
+                wdone <= 1'b1; wdone_p <= 1'b1;
+                if (iq_n != 0 || infl != 0 || a_v || r_v || (ws != 3'd5 && ws != 3'd0)) fc_set[7] <= 1'b1;
+            end
+            so[0] <= sr[0] | (in_h ? hb[0] : 1'b0) | slot | p1_due;
+        end
+    always @(posedge ck)
+        so[275:1] <= sr[275:1] | (in_h ? hb[275:1] : 275'd0) | (slot ? ins0[275:1] : 275'd0) | (p1_due ? ins1[275:1] : 275'd0);
+    always @(posedge ck or negedge rn)
+        if (!rn) st <= 10'd0; else st <= {fc, act, fault};
+endmodule
