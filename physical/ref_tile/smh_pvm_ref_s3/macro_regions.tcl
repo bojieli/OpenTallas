@@ -4,16 +4,19 @@
 foreach pin {TIEHIx1_ASAP7_75t_R/H TIELOx1_ASAP7_75t_R/L} {repair_tie_fanout -separation 1 -max_fanout 1 $pin}
 set pb [ord::get_db_block]
 set pdu [[ord::get_db_tech] getDbUnitsPerMicron]
-set pindex [dict create]
+# ORFS sources hooks from inside a proc (source_env_var_if_exists): top-level names are proc-local,
+# so everything a proc needs is stored fully qualified in ::.
+set ::pvm_pindex [dict create]
+set ::pvm_pb $pb
+set ::pvm_pdu $pdu
 foreach pi [$pb getInsts] {
  regsub -all {\\} [$pi getName] {} pn
- if {[dict exists $pindex $pn]} {error "PVM_REGION ambiguous instance $pn"}
- dict set pindex $pn $pi
+ if {[dict exists $::pvm_pindex $pn]} {error "PVM_REGION ambiguous instance $pn"}
+ dict set ::pvm_pindex $pn $pi
 }
 proc pvm_region_inst {sta_name} {
- global pindex
- if {![dict exists $pindex $sta_name]} {error "PVM_REGION missing exact STA/DB instance $sta_name"}
- return [dict get $pindex $sta_name]
+ if {![dict exists $::pvm_pindex $sta_name]} {error "PVM_REGION missing exact STA/DB instance $sta_name"}
+ return [dict get $::pvm_pindex $sta_name]
 }
 set pboundary [dict create]
 set pports [dict create]
@@ -88,7 +91,8 @@ if {$ph<=0 || $ph>45.0} {error "PVM_REGION unmodeled cone area $pa / height $ph"
 set ptop [expr {230.04+$ph}]
 if {$ptop>300.24} {error "PVM_REGION cone region outside sole north band"}
 proc pvm_make_region {name coords cells} {
- global pb pdu
+ set pb $::pvm_pb
+ set pdu $::pvm_pdu
  if {[$pb findRegion $name] ne "NULL"} {error "PVM_REGION duplicate region $name"}
  set rg [odb::dbRegion_create $pb $name]
  $rg setRegionType EXCLUSIVE
