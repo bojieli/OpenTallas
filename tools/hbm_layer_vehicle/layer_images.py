@@ -531,7 +531,9 @@ DIRECT_TARGETS = [("hcollgi_SW", 176, "host_cp_ingress__")]          # COLL gath
 PAYLOAD_COMPILER = {
     "SM": "sm_images.py (cp_svg feed programme + issuer descriptors, xc ext calendar, xl_SW_ctl x-load table, smw_SW "
           "writer table, calendar_SW VM calendar, packed136 HBM image)",
-    "COLL": "tools/hbm_coll_static_calendar.py (transport reservations) + hb_coll_SW programme ABI",
+    "COLL": "ALL_GATHER on-die quadrant phase: hbm_layer_vehicle/coll_images.py (hcollgi_SW gq row + calendar_SW + far-end "
+            "ring replay, VEH-FMT-COLL); cross-die / GROUP_REDUCE_MCAST / TOPK_MERGE / ROW_GATHER: hb_coll_SW 1536-b ISA "
+            "rows (ot_hgi_coll_issuer_m) have no production compiler",
     "DMA": "sm_images.py (hb_dbk_SW command table) + calendar_SW",
     "HC": "hc_SW (ot_hbm_hc_qhub_static) row ABI",
     "FUSED": "hc_SW rows + col_sfu_SW collar (2 striped spaces, tools/hbm_static/su_arith_sfu_compile.py lanes)",
