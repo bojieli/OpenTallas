@@ -61,7 +61,9 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
     localparam integer ID_C=(NSLOT+15)/16;
     localparam integer NC_REC=(NSLOT+23)/24;
     localparam integer MEM_RBASE=NEV+ID_C+4;
-    localparam integer COPY_RBASE=MEM_RBASE+NEV*5+4;
+    localparam integer MEM_EVENT_RBASE=MEM_RBASE+7+NC_REC+4;
+    localparam integer MEM_EVENT_STRIDE=9+NC_REC;
+    localparam integer COPY_RBASE=MEM_EVENT_RBASE+NEV*MEM_EVENT_STRIDE;
     localparam integer SEL_RBASE=COPY_RBASE+NEV*7+NRT*NC_REC;
     localparam integer COPY_END=SEL_RBASE+NEP*NEV*4+NEP;
     wire [COPY_END-1:0] rr; dsdv_mu_reset_tree #(.REGIONS(COPY_END)) u_rr (.clk(ck), .rst_n_in(rst_n), .rst_n(rr)); wire rn = rr[0];
@@ -129,15 +131,16 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
     wire due = rok && h_rfr && h_rts == tmr;                             // hslot's return edge: the entry retires
     wire radv = due || (!rok && !rhold);
     wire [NSLOT-1:0] gxn = (MUT == 5 || |(gx & gm)) ? OH0 : {gx[NSLOT-2:0], 1'b0};   // MUT 5: gap table index stuck at 0
-    dsdv_mu_mem #(.W(24),.AW(SI)) u_gap(.ck(ck),.rst_n(rr[MEM_RBASE +: 2]),
+    dsdv_mu_mem #(.W(24),.AW(SI)) u_gap(.ck(ck),.rst_n(rr[MEM_RBASE +: 3]),
         .we(mc_q[25] && !mc_q[24] && !armed && !(|vld) && gn != SJ'(NSLOT)),
         .wa(gn[SI-1:0]),.wd(mc_q[23:0]-24'd1),.ra(gxb),.q(ng));
-    dsdv_mu_mem #(.W(32),.AW(SI)) u_retire(.ck(ck),.rst_n(rr[MEM_RBASE+2 +: 2]),
+    dsdv_mu_mem #(.W(32),.AW(SI)) u_retire(.ck(ck),.rst_n(rr[MEM_RBASE+3 +: 4]),
         .we(rec_q),.wa(ssqb),.wd(tsq),.ra(rpb),.q(h_rts));
     always @(posedge ck) tmr <= tm1 - {8'd0,crm};
     // ---- event rows
     wire [31:0] ts_event[0:NEV-1], tm_event[0:NEV-1];
-    wire [23:0] rl_event[0:NEV-1]; wire [NEV-1:0] idle_event;
+    wire [23:0] rl_event[0:NEV-1]; wire [NEV-1:0] idle_event, rec_local;
+    wire [SI-1:0] cfg_addr[0:NEV-1];
     wire [SI-1:0] lw_event[0:NEV-1]; wire [NSLOT-1:0] lm_event[0:NEV-1];
     wire [30:0] rt_compare[0:NRT*NC_REC-1];
     reg [NEV-1:0] evld; reg [NEV-1:0] ek; reg [PI-1:0] eep [0:NEV-1]; reg [20:0] eD [0:NEV-1]; reg [EI-1:0] esel;
@@ -275,15 +278,15 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
     genvar ws, wc;
     generate for(wc=0;wc<NC_REC;wc=wc+1) begin:g_compare_copy
         (* keep *) reg [9:0] cmp_r; assign cmp_user[wc]=cmp_r;
-        always @(posedge ck or negedge rr[MEM_RBASE+2+wc])
-            if(!rr[MEM_RBASE+2+wc]) cmp_r<=10'd0; else cmp_r<=f_ks[51:42];
+        always @(posedge ck or negedge rr[MEM_RBASE+7+wc])
+            if(!rr[MEM_RBASE+7+wc]) cmp_r<=10'd0; else cmp_r<=f_ks[51:42];
     end endgenerate
     generate for(ws=0;ws<NSLOT;ws=ws+1) begin:g_write_slot
         assign rec_slot[ws]=id_we[ws][3];
         for(wc=0;wc<4;wc=wc+1) begin:g_copy
             (* keep *) reg we_r; assign id_we[ws][wc]=we_r;
-            always @(posedge ck or negedge rr[MEM_RBASE+4+wc])
-                if(!rr[MEM_RBASE+4+wc]) we_r<=1'b0; else we_r<=rec && ss[ws];
+            always @(posedge ck or negedge rr[MEM_RBASE+7+NC_REC+wc])
+                if(!rr[MEM_RBASE+7+NC_REC+wc]) we_r<=1'b0; else we_r<=rec && ss[ws];
         end
     end endgenerate
     // Parallel RX identity fields have one reset-distinct payload copy per <=16 entries.
@@ -309,16 +312,16 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
             end
         for(rce=0;rce<NC_REC;rce=rce+1) begin:g_record_copy
             (* keep *) reg rec_r; assign rec_event[se][rce]=rec_r;
-            always @(posedge ck or negedge rr[MEM_RBASE+4+5*se+rce])
-                if(!rr[MEM_RBASE+4+5*se+rce]) rec_r<=1'b0; else rec_r<=rec;
+            always @(posedge ck or negedge rr[MEM_EVENT_RBASE+MEM_EVENT_STRIDE*se+9+rce])
+                if(!rr[MEM_EVENT_RBASE+MEM_EVENT_STRIDE*se+9+rce]) rec_r<=1'b0; else rec_r<=rec_local[se];
         end
         wire [62:0] head;
         wire [31:0] due_at_start=ts_event[se]+{11'd0,eD[se]};
-        dsdv_mu_mem #(.W(63),.AW(SI)) u_payload(.ck(ck),.rst_n(rr[MEM_RBASE+4+5*se +: 4]),.we(rec_event[se][0]),
+        dsdv_mu_mem #(.W(63),.AW(SI)) u_payload(.ck(ck),.rst_n(rr[MEM_EVENT_RBASE+MEM_EVENT_STRIDE*se +: 8]),.we(rec_event[se][0]),
             .wa(ssqb),.wd({due_at_start,spq,suq}),.ra(pbi[se]),.q(head));
-        dsdv_mu_mem #(.W(2),.AW(SI)) u_attr(.ck(ck),.rst_n(rr[MEM_RBASE+8+5*se]),
+        dsdv_mu_mem #(.W(2),.AW(SI)) u_attr(.ck(ck),.rst_n(rr[MEM_EVENT_RBASE+MEM_EVENT_STRIDE*se+8]),
             .we(wv && idle_event[se] && mw_q[22:21]==2'd2 && esel==EI'(se)),
-            .wa(mw_q[SI-1:0]),.wd(mw_q[11:10]),.ra(pbi[se]),.q(h_at[se]));
+            .wa(cfg_addr[se]),.wd(mw_q[11:10]),.ra(pbi[se]),.q(h_at[se]));
         assign h_ts[se]=head[62:31]; assign h_ep[se]=head[30:10]; assign h_eu[se]=head[9:0];
     end endgenerate
     // Same-edge physical copies: independent event address, due-time, compare-time,
@@ -332,10 +335,13 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
         (* keep *) reg arm_r;
         // Decode at the existing input landing edge, independently per event.
         // Sharing mc_valid/type AND empty-table produced a 400-load boot enable.
-        (* keep *) reg cfg_gap_r,cfg_rl_r;
+        (* keep *) reg cfg_gap_r,cfg_rl_r,start_r;
+        (* keep *) reg [SI-1:0] cfg_addr_r;
+        assign cfg_addr[ce]=cfg_addr_r;
+        assign rec_local[ce]=start_r && on_cal && !col && !udup && !(!armed && hcfg_bad);
         always @(posedge ck or negedge rr[COPY_RBASE+7*ce+6])
-            if(!rr[COPY_RBASE+7*ce+6]) begin cfg_gap_r<=1'b0;cfg_rl_r<=1'b0;end
-            else begin cfg_gap_r<=f_mc[25] && !f_mc[24];cfg_rl_r<=f_mc[25] && f_mc[24];end
+            if(!rr[COPY_RBASE+7*ce+6]) begin cfg_gap_r<=1'b0;cfg_rl_r<=1'b0;start_r<=1'b0;cfg_addr_r<=0;end
+            else begin cfg_gap_r<=f_mc[25] && !f_mc[24];cfg_rl_r<=f_mc[25] && f_mc[24];start_r<=f_ks[52];cfg_addr_r<=f_mw[SI-1:0];end
         assign ts_event[ce]=ts_r; assign tm_event[ce]=time_r;
         assign rl_event[ce]=rl_r; assign lw_event[ce]=lw_r;
         assign lm_event[ce]=lm_r; assign idle_event[ce]=!arm_r && !(|vld);

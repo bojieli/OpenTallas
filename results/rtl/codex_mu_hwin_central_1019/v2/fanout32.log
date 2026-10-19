@@ -1,0 +1,17 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/codex-mu-hwin-centralv2-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-mu-hwin-centralv2-1019
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-mu-hwin-centralv2-1019
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-mu-hwin-centralv2-1019
+ot-run: ot-epyc8       admits  1145 GB (avail 915, growth 113, headroom 0, waiters 0/0 GB) load 53/128 running 32 disk 327 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-mu-hwin-centralv2-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-mu-hwin-centralv2-1019
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-1694868-1792428595 after 0 s
+textbook_lint: WARN dsdv_mu_hwin cells 48,571 flops 9,953 depth 531.8 ps util None reach None um (1.2 s)
+textbook_lint: INFO reset_landing {"max":2,"ports":[{"port":"rst_n","sinks":1,"flops":1,"macros":0}]}
+textbook_lint: INFO clock_roots max_root_sinks=10037 root=port:ck rule=PASS: 10,037 sinks on the largest root; no measured clock tree (no --cts gate evidence)
+textbook_lint: WARN high_fanout: net u_ot_pr_core.u_rr.g_local[21].local_r$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R): 205 loads (205 flops, e.g. u_ot_pr_core.gxb[0]$_DFFE_PN0P_) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast
+textbook_lint: WARN high_fanout: net u_ot_pr_core.u_rr.g_local[22].local_r$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R): 180 loads (180 flops, e.g. u_ot_pr_core.mu_c[0]$_DFF_PN0_) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast
+textbook_lint: WARN high_fanout: net u_ot_pr_core.u_rr.g_local[0].local_r$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R): 161 loads (161 flops, e.g. u_ot_pr_core.armed$_DFFE_PN0P_) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast
+textbook_lint: WARN high_fanout: net u_ot_pr_core.u_rr.g_local[20].local_r$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R): 96 loads (96 flops, e.g. u_ot_pr_core.tm1[0]$_DFF_PN1_) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-1694868-1792428595): exit 0
