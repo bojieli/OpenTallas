@@ -83,11 +83,12 @@
   "benches": [
    {
     "name": "idxrd_base",
-    "cmd": "bash rtl/dsrom_sys/s81_dv/idx/test/idxrd_campaign.sh {RUN} base '-GMUT=0 -GSRAM_MACRO=1' 6 'pass_small|+N=4096 +T0=400' 'pass_l2|+N=43691 +B=7 +T0=400' 'pass_l20|+N=87382 +B=13 +T0=400' 'pass_g2048|+GATHER=1 +N=2048 +PMAX=262144 +T0=2500' 'pass_p3|+N=4096 +P=3' 'fail_late|+N=4096 +T0=60'",
+    "cmd": "bash rtl/dsrom_sys/s81_dv/idx/test/idxrd_campaign.sh {RUN} base '-GMUT=0 -GSRAM_MACRO=1' 6 'pass_small|+N=4096 +T0=400' 'pass_l2|+N=43691 +B=7 +T0=400 +P=3' 'pass_l20|+N=87382 +B=13 +T0=400 +P=3' 'pass_g2048|+GATHER=1 +N=2048 +PMAX=262144 +T0=1500 +P=4' 'pass_p3|+N=4096 +P=3' 'fail_late|+N=4096 +T0=60'",
     "expect": "pass",
     "pass_regex": "^IDXRD_CAMPAIGN PASS$",
     "threads": 16,
-    "peak_ram_gb": 48
+    "peak_ram_gb": 48,
+    "note": "operating points measured 10-19 on RTL 4cc3975d1 (bench HBM model, refresh-aware): scan P=3 PASS L2/L20 (P=2 FAILs fail-closed even at T0 3000: HBM-bound), gather P=4 PASS (P=3 FAIL)"
    },
    {
     "name": "idxrd_mut1",
