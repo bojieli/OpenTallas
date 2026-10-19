@@ -1,0 +1,10 @@
+case raw PASS descs=1 fenced=1 hing=ok vis_err=0 ck_cycles=1074
+case v41_win PASS descs=1 fenced=1 hing=ok vis_err=0 ck_cycles=9288
+case raw_fenced_b2b PASS descs=8 fenced=8 hing=ok vis_err=0 ck_cycles=538
+case raw_fenced_mixed PASS descs=10 fenced=6 hing=ok vis_err=0 ck_cycles=639
+case raw_fenced_stall PASS descs=8 fenced=6 hing=ok vis_err=0 ck_cycles=1282
+case raw_b16 PASS descs=5 fenced=4 hing=ok vis_err=0 ck_cycles=722
+case ikey_cross_sb PASS descs=1 fenced=1 hing=ok vis_err=0 ck_cycles=4634
+case raw_fenced_stall_boot PASS marks=1 mark_bad=0
+HNP_NEG_MISSED
+RC=0

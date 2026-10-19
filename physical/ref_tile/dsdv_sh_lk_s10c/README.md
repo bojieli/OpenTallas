@@ -25,8 +25,8 @@ The 30.5-um channel is the congestion: both s10 and s10b overflow there, and s10
 
 Mutants (fail witnesses in results/rtl/s81_shlk_s10c_1019):
 
-- seqhost 20 / hnp s10cwa10, `OT_ING_MUT_S10CWA`: computes base | offset instead of the sum.
-- seqhost 21 / hnp s10ciss10, `OT_ING_MUT_S10CISS`: the registered issue counter also counts the IKEY scale-capture step (`p_sc`), so done counts run high. A first mutant that routed the late count through `dq_c1` was missed by hnp: no done lands on the edge right after an issue. It was dropped as unobservable at the boundary.
+- hnp s10cwa10 (seqhost 20 builds but is not exercised by the seqhost stream), `OT_ING_MUT_S10CWA`: computes base | offset instead of the sum.
+- hnp s10ciss10 (seqhost 21 likewise not exercised), `OT_ING_MUT_S10CISS`: the registered issue counter also counts the IKEY scale-capture step (`p_sc`), so done counts run high. A first mutant that routed the late count through `dq_c1` was missed by hnp: no done lands on the edge right after an issue. It was dropped as unobservable at the boundary.
 
 ## SAFE-DESIGN checklist
 
