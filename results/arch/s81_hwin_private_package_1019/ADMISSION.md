@@ -1,0 +1,5 @@
+# Source simulation admission
+
+Current-main base00170ccbe, frozen reference69e7/canonical51e3. Namespace expansion adds definitions, no instantiated DUT state. Prior same full-shape source simulations used16GB reservation; each partition retains16GB/4threads, no address/time limit, all objects retained. Five sweep partitions cover disjoint NS2..47; one original/core campaign and distinct namespace four-state NS2 and NS47 campaigns prove new package. Original live fullshape06 belongs to LEAD-S81, is untouched and is not a package receipt. Source-only build inventory: frozen reference+candidate14 types,84 SRAM per full candidate plus84 reference, actual hslot bench dependencies and two bench tops. No synthesis or physical engine.
+
+Actual ot-run preflight2026-10-19: epyc4..8 admits652..1263GB; epyc8 CPU17/128. Placement unpinned among staged hosts. Fresh case mkdir refusal remains first action. No guessed deadlines. All prior failure packets remain immutable on69e7 and stableartifact; fresh namespace outputs are distinct.
