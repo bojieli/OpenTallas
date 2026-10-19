@@ -1,0 +1,142 @@
+[
+  {
+    "path": "README.md",
+    "sha256": "b5c16ca2abf39b21c227eb141600700f7e485c724ac87f4c57a5a8929a4b773d",
+    "bytes": 10186
+  },
+  {
+    "path": "actual_connections.txt",
+    "sha256": "59f3fdede367c8ba01041a715b08d80bc0f73ec93329181ab31dd5248a08d7eb",
+    "bytes": 26766
+  },
+  {
+    "path": "contract.json",
+    "sha256": "2a6946f5c532d0a3dc52d7fcbe845d05311694227a37e97152d56776b22e5215",
+    "bytes": 605
+  },
+  {
+    "path": "e1_qkd_kvs_emb.sv",
+    "sha256": "ac6ec1ea5d5ce8cc1b08829e6f06310160ed84ffb696919aa6c59626156f728f",
+    "bytes": 2350
+  },
+  {
+    "path": "extract.py",
+    "sha256": "20c07214f08276d579545eccc854a4c270a692929b83b2e087798c8086bca327",
+    "bytes": 3100
+  },
+  {
+    "path": "module_comparison.json",
+    "sha256": "0b3ed71b8d5c3c539024297e9facd1a527a75f08ee429cc7d33b6f2505b55c2a",
+    "bytes": 1679
+  },
+  {
+    "path": "port_latency.json",
+    "sha256": "3754bde09257d5e1a0e9f8709075340446b57f9d65f5270da4b7192c6d8cf10a",
+    "bytes": 2387
+  },
+  {
+    "path": "selected_qkd_kvs_emb.sv",
+    "sha256": "ac6ec1ea5d5ce8cc1b08829e6f06310160ed84ffb696919aa6c59626156f728f",
+    "bytes": 2350
+  },
+  {
+    "path": "source/5f2/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv",
+    "sha256": "1214151aa45994195dc498fa0d1e3932b75f0004f4a6aa3e1a7a7248e4f61a80",
+    "bytes": 57647
+  },
+  {
+    "path": "source/5f2/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_services.sv",
+    "sha256": "88d7c9f0f441e1827b56b5f0bb7996872073011cabbf52a38e45deac89bbb614",
+    "bytes": 14239
+  },
+  {
+    "path": "source/5f2/rtl/qwen_sys/static_embedding_20261014/qkd_embedding_row_tx.sv",
+    "sha256": "65847ac6834b4f06334bd8d636f789031acb3c9fec4cee440a2a5cd032313412",
+    "bytes": 6582
+  },
+  {
+    "path": "source/5f2/rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_join.sv",
+    "sha256": "b4031ee0138af2cf4567626e185d81ded805bb1ba274ee03763a74232dc95a49",
+    "bytes": 1984
+  },
+  {
+    "path": "source/5f2/rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_join4.sv",
+    "sha256": "bfd695637f5bc7297b8a995caa1705dcd62f5823b019aa311b90dcb9e02caaf0",
+    "bytes": 2637
+  },
+  {
+    "path": "source/5f2/rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_join4_cal.sv",
+    "sha256": "ec4a00a9db26c8698770b6cd5c126f66d8302e0013e0861747007842970cea90",
+    "bytes": 3833
+  },
+  {
+    "path": "source/5f2/rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_map.sv",
+    "sha256": "70cd3650131f6d57ad10f21b142208a2b976372ae19ca47755a9a34632e71c45",
+    "bytes": 951
+  },
+  {
+    "path": "source/5f2/rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_pc.sv",
+    "sha256": "b5e9111fc0fe07f580ba611c16ecdc53f603f524505930860d009414f77b5fee",
+    "bytes": 2261
+  },
+  {
+    "path": "source/5f2/rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_return_head.sv",
+    "sha256": "ff824c5232e654f5af107c54416778a79481c30e420d8934801c3800033e61ea",
+    "bytes": 1770
+  },
+  {
+    "path": "source/5f2/rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_return_hop.sv",
+    "sha256": "c6031bb92dce5c170894b53f4933ff151f5b35c8b5c3fb880a10733c5425916c",
+    "bytes": 1354
+  },
+  {
+    "path": "source/5f2/rtl/qwen_sys/static_embedding_20261014/qkd_embgw_boot_s.sv",
+    "sha256": "88f3155cf321bbf1e16decace84595ce9c64a155f6a1a553317b395bc3c56afd",
+    "bytes": 7402
+  },
+  {
+    "path": "source/5f2/rtl/qwen_sys/static_embedding_20261014/qkd_kv_pc_chain_station_b.sv",
+    "sha256": "32d1dda6e0c03103193543fbb0af82cda7b9e7e1f9dcc2daabe43f5a759402bd",
+    "bytes": 10050
+  },
+  {
+    "path": "source/5f2/rtl/qwen_sys/static_embedding_20261014/qkd_static_kv_pc_es_merge_b.sv",
+    "sha256": "f1840155fd8b51c18f5a478106eb3df3e9ea985bcd29c7d729769546d208139a",
+    "bytes": 6306
+  },
+  {
+    "path": "source/5f2/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu_ba.sv",
+    "sha256": "df66545140a103b45170c9132cf19e521945c61c8fc649e836df4bb9c49e6e97",
+    "bytes": 148618
+  },
+  {
+    "path": "source/5f2/tools/qwen_kv_die/kv_static.py",
+    "sha256": "1f2184c34ced2d5f0f60d5c1b1dfbbb9edf6564ebff34058c65c25caaab0ab2a",
+    "bytes": 41510
+  },
+  {
+    "path": "source/5f2/tools/qwen_kv_die/kv_static_die.py",
+    "sha256": "a7063e6b1fbd8c3e3dce453d5447eec5ec7fb4b1286a202dd7611bbefc08c05a",
+    "bytes": 154631
+  },
+  {
+    "path": "source/5f2/tools/qwen_kv_die/kvjc3_pc_chain.py",
+    "sha256": "54cff8410a143550cf4ca69d85936f0002bde5049a7e305ad1eec35db7cd2cdb",
+    "bytes": 6240
+  },
+  {
+    "path": "source/5f2/tools/qwen_split/d2d_link_calendar.py",
+    "sha256": "eb0b7154ddafdc861acb4f3780c838d9e13c5a42ba314f6df33104493f6fcfd4",
+    "bytes": 27297
+  },
+  {
+    "path": "sources.json",
+    "sha256": "1de348da0fa9d64eb91f4575bfd16acaa8c36ab4fea612d360d398952ce13acc",
+    "bytes": 4159
+  },
+  {
+    "path": "verdict.json",
+    "sha256": "eb5015026c8edf4b3824e18764c5e4fb539ea6ad0cd303b0a5996824e6dd6897",
+    "bytes": 31748
+  }
+]
