@@ -1,0 +1,24 @@
+{
+  "schema": "opentallas.qwen.face-provider-age.v1",
+  "source": "1d9be7017",
+  "verilator": "5.050",
+  "unit": "oth-ubuntu-2705338-1792426105",
+  "host": "ot-epyc8",
+  "scope": "actualFACE+preloadface+mappedSRAM provider; existingcomponentfixture, no productionconsumer",
+  "edges": {
+    "last_emb_rx_pin": 1500,
+    "face_word_pin": 1501,
+    "sram_write": 1502,
+    "first_complete_safe_sample": 1503
+  },
+  "rule": "provider core_start/firstread sample >= last emb_rx_pin+3",
+  "production_consumer_bound": false,
+  "d2d_calendar_to_rx_pin_measured": false,
+  "source_hashes": {
+    "rtl/qwen_split/qfd_sys_face.sv": "2aabb1f4a78dcbf31abec5db2be23cc3c8f1be6fcf1023393eb55bb26d47b56e",
+    "rtl/qwen_split/qfd_embedding_word_provider.sv": "f27ee51d3d0957f6fb9558efbd0688eace7d7f865aae081fda1a2eb737c931d1",
+    "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_preload_face.sv": "52afe2023dbe64dbfc331c222b4f16db1f4529d438ca1b0f61ba1a5210dd2b55",
+    "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_core_store.sv": "df2b4c6470ecc68a9795de30072b95185c74f977715db932d4854dddc2cd93f9",
+    "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v": "d4533939f695944bebd6a63a086e3771846bc0c379af52720de8974fee504145"
+  }
+}
