@@ -1,0 +1,62 @@
+import subprocess,json,hashlib,re
+from pathlib import Path
+from collections import Counter
+O=Path(__file__).parent; A=Path('/home/ubuntu/artifacts'); COMMIT='4db097403'
+paths=['rtl/qwen_sys/static_embedding_20261014/'+x+'.sv' for x in ['qkd_kv_pc_chain_station_b','qkd_static_kv_pc_es_merge_b','qkd_static_kv_pc_es_merge','qkd_embedding_static_map']]+['rtl/hdc/nearhbm/'+x+'.sv' for x in ['qkd_ahub_static_dw','ot_qkd_ahub_static_cal_gen','ot_nhb_tiles','ot_qkh_recip_leaf','ot_qwen_nearhbm_sfu_p']]+['rtl/hdc/'+x+'.sv' for x in ['ot_hdc_fp32_add_lat_nr','ot_hdc_fp32_add_lat','ot_hdc_fp32_mul_lat']]+['rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv','rtl/qwen_split/qfd_fwd_lane.sv','rtl/qwen_sys/d2d_static_20261015/qkd_d2d_cal_seq_bootcfg.sv','rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq.sv','rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq_dies_mu.sv','rtl/qwen_sys/kv_die_20261009/qkd_ctrl_strip.sv']
+manifest=[]
+for p in paths:
+ b=subprocess.check_output(['git','-C','/home/ubuntu/OpenTallas','show',COMMIT+':'+p],timeout=30); dest=O/'source'/Path(p).name;dest.write_bytes(b); manifest.append({'selected_commit':COMMIT,'repository_path':p,'snapshot':str(dest),'sha256':hashlib.sha256(b).hexdigest()})
+old=json.loads((A/'kv-health-plane-model-1019/basis/out/successor.json').read_text())['sources']; pcs=json.loads((A/'kv-pc-fault-export-1019/producer_ledger.json').read_text())['records'];die=A/'kv-pc-health-join-1019/die_bound.v'; dt=die.read_text(); rows=[]; aggregates=[]; dependencies=[]
+for r in pcs:
+ i=r['selected_instance']; common={'selected_instance':i,'clock':r['selected_clock'],'selected_reset':r['selected_reset'],'context':'strap cfg_stack/pc; captured token/epoch; no token/status cutoff clear','physical_native_exposure_qualified':False}
+ for suffix,master,register,reset,cause,dep in [
+ ('u_pc.u_chain.bfault','qkd_kv_pc_chain_station_b','bfault','chain rs_q sampled from rst_n, asynchronous low clears bfault','landing credit underflow/overflow, unexpected landing read (ler_v), landing fault (ler_f)',['land_er[0]','land_er[259]','land_er[260]']),
+ ('u_pc.u_chain.fault','qkd_kv_pc_chain_station_b','fault','chain rs_q sampled from rst_n, asynchronous low clears fault','calendar rewrite while active; overlapping start; simultaneous writer/expected hits; boot/writer collision; forwarded bfault',[i+'.u_pc.u_chain.bfault']),
+ ('u_pc.u_pce.u_esm.m_fault','qkd_static_kv_pc_es_merge_b','m_fault','merge rs_q sampled from rst_n, asynchronous low clears m_fault','writer/embedding collision; slice with writer/embedding; slice in run; writer in boot',[]),
+ ('u_pc.u_pce.u_esm.u_emb.fault','qkd_embedding_static_pc_strap','fault','merge rs_q drives endpoint rst_n directly; asynchronous low clears fault','issue before boot, pending, invalid address, wrong home; missing/duplicate/unexpected return; er[260]; uncorrectable eff[258]',['u_esm.er[260]','u_esm.er[258]'])]:
+  rows.append(dict(common,id=i+'.'+suffix,master=master,register=register,kind='sticky_local_detector_register',sticky=True,clear=reset,cause=cause,forwarded_dependencies=dep))
+ aggregates += [dict(common,id=i+'.u_pc.u_pce.u_esm.fault',kind='combinational_aggregate',equation='m_fault | u_emb.fault',primitive_ids=[i+'.u_pc.u_pce.u_esm.m_fault',i+'.u_pc.u_pce.u_esm.u_emb.fault']),dict(common,id=i+'.o_grp[301]',kind='registered_export_aggregate',equation='existing return fault_core sources OR chain.fault OR es_merge.fault when candidate FAULT_EXPORT=1',new_physical_pin=False,primitive_count_addition=0,additional_existing_return_fault_dependencies='not expanded by this bounded chain/ES task')]
+ dependencies.append({'id':i+'.land_er[260]','status':'UNRESOLVED_NESTED_SOURCE','meaning':'HOST slice landing fault input; real source must expand before complete all-primitive inventory','not_new_independent_primitive':True})
+for r in old:
+ if r.get('master','').startswith('qkd_landsh'):
+  rows.append(dict(r,id=r['instance']+'.u_land.fault',legacy_export_id=r['id'],kind='sticky_local_detector_register',primitive_master='ot_qfd_land',clear='asynchronous low selected rs; no token/context clear',cause='warm && vld[expected slot] && epo[slot] != expected epoch',context='receiving clock rc epoch and selected k[2:0]; source forwarding lane ea/write epoch',physical_native_exposure_qualified=False))
+ elif r.get('master')=='qkd_ctrl_kc':
+  rows.append(dict(r,id=r['instance']+'.f_ovf',legacy_export_id=r['id'],kind='sticky_local_detector_register',clear='rsi sampled into rs_q; asynchronous low rs_q clears',cause='kv_q && !w_rdy',context='core ck; FIFO writer reset rs_q, reader pll_hbm/hrst separate',physical_native_exposure_qualified=False))
+  aggregates.append({'id':r['id'],'kind':'registered_export_aggregate','equation':'kf(next)=f2 | f_ovf; f2(next)=f1; f1(next)=fi','primitive_count_addition':0,'unresolved_dependency':r['instance']+'.fi','clear':'asynchronous low rs_q resets f_ovf/f1/f2/kf','sticky':False})
+  dependencies.append({'id':r['instance']+'.fi','status':'UNRESOLVED_FORWARDED_AGGREGATE','meaning':'actual die n_kcf regional chain must expand; fi is not sticky and pulse capture is required'})
+# Exact selected AHUB implementation: two local state detectors, plus 16 Z add error channels and nine reciprocal arithmetic channels.
+for id_,master,clear,cause in [
+ ('ahub.u_io.xf','qkd_ahub_static_io','async low ahub.rr[0]; each start replaces xf with bad_t','invalid export target; publication outside active pass; emit before published; age overflow'),
+ ('ahub.u_core.fault','qkd_ahub_static_core_cal','async low ahub.u_core.rn[3]; start REPLACES with invalid T/parity predicate','identity/calendar/slot/seen checks; Z errors; reciprocal fault or timing mismatch')]:
+ rows.append({'id':id_,'master':master,'kind':'pass_scoped_detector_register','clock':'n_clk_core_c[0]','sticky_within_pass':True,'sticky_across_start':False,'clear':clear,'cause':cause,'context':'hs epoch/layer/T and command calendar; ahub reset port n_rrs_n_rst_die_t8__m_0__g3_s6[0] -> ot_rst_pipe regions; core has its own four-region reset pipe','physical_native_exposure_qualified':False})
+for h in range(4):
+ for l in range(4):
+  rows.append({'id':f'ahub.g_zh[{h}].u_zh.g_z[{l}].u_add.g_nr.u.error_channel','master':'ot_hdc_fp32_add_lat_nr','kind':'valid_qualified_arithmetic_error_channel','clock':'n_clk_core_c[0]','cause':'valid_out && err != 0; 2-bit encoded error is one channel, not two independent sources','sticky':False,'clear':f'ahub.rr[{h+2}] -> u_zh.u_rr rr[{l}] resets arithmetic valid/output; zerr register uses rr[5]','export_path':f'u_zh.zerr[{l}] -> ahub.u_core.zh_err[{4*h+l}] -> u_core.fault -> u_io.fault -> hf -> 34 core_c relays -> kvs_attn.ufh','physical_native_exposure_qualified':False})
+for k in range(3):
+ for name,index in [('m_m',1+3*k),('a_s',2+3*k),('m_y',3+3*k)]:
+  rows.append({'id':f'ahub.u_recip.u_core.g_nr[{k}].{name}.u.error_channel','master':'ot_hdc_fp32_add_lat' if name=='a_s' else 'ot_hdc_fp32_mul_lat','kind':'valid_qualified_arithmetic_error_channel','clock':'n_clk_core_c[0]','cause':'wrapper fault = valid_out && err != 0','sticky':False,'clear':f'ahub.rr[6] -> reciprocal leaf u_rr rr[0] -> core u_rr rr[{index}]','export_path':'OR nine channels -> u_recip fault output register -> u_ry relay -> u_core.fault -> u_io.fault -> hf -> 34 core_c relays -> kvs_attn.ufh','physical_native_exposure_qualified':False})
+aggregates += [{'id':'existing_ufh','kind':'delayed_registered_aggregate','equation':'ahub.u_io.fault(next)=xf || hub_fault; hf then 34 qkd_rlys core_c edges to kvs_attn.ufh','primitive_count_addition':0,'clear':'u_io fault async reset rr[0]; pass scoped inputs may clear/reinitialize on start','sticky':False}, {'id':'ahub.u_recip.fault','kind':'registered_export_aggregate','equation':'registered OR of nine arithmetic fault channels','primitive_count_addition':0}, {'id':'ahub.zh_err[15:0]','kind':'registered_export_channels','equation':'four heads x four zerr registers each copy valid-qualified arithmetic error','primitive_count_addition':0}]
+# DCAL has two separate local detection registers; f_col/f_run/f_stale/f_early are duplicate observation history, not causes consumed by fault.
+dcal=next(r for r in old if r.get('master')=='qkd_d2d_cal_seq_pin_bc')
+for id_,cause in [('dcal.fault','sticky OR of s_fault and n_col/n_run/n_stale/n_early: boot collisions/run/stale/early base'),('dcal.u_seq.u_seq.fault','invalid admission/token start, readiness/base/run violations')]:
+ rows.append({'id':id_,'kind':'sticky_local_detector_register','master':'qkd_d2d_cal_seq_pin_bc' if id_=='dcal.fault' else 'ot_qwen_d2d_cal_seq','clock':dcal['clock'],'selected_reset':dcal['reset'],'clear':'outer release_q[1] (two ck edges after async rst_n) drives rl; inner rst_n=rl; reload does not clear fault','cause':cause,'physical_native_exposure_qualified':False})
+aggregates.append({'id':'dcal.f_col/f_run/f_stale/f_early','kind':'duplicate_observability_history','equation':'four per-cause sticky mirrors; output fault consumes n_* directly, not f_* registers','primitive_count_addition':0})
+# All concrete rows are unique identities, but this is deliberately not a full inventory count.
+assert len({r['id'] for r in rows})==len(rows)
+inputs=[die,A/'kv-pc-fault-export-1019/producer_ledger.json',A/'kv-pc-fault-export-1019/component_source_identity.json',A/'kv-health-plane-model-1019/basis/out/successor.json',A/'kv-kc-dcal-export-1019/source_manifest.json']
+result={'status':'SOURCE_PINNED_PARTIAL_PRIMITIVE_EXPANSION_NOT_QUALIFIED','selected_source_commit':COMMIT,'selected_die_sha256':hashlib.sha256(die.read_bytes()).hexdigest(),'input_files':[{'path':str(p),'sha256':hashlib.sha256(p.read_bytes()).hexdigest()} for p in inputs],'source_manifest':manifest,'counts':{'old_export_objects':len(old),'pc_extra_export_objects':256,'old_plus_pc_export_headline_613_is_not_primitive_count':True,'pc_local_sticky_detector_register_rows':512,'landing_local_sticky_detector_register_rows':351,'KC_local_overflow_register_rows':4,'DCAL_local_detector_register_rows':2,'AHUB_pass_scoped_detector_register_rows':2,'AHUB_arithmetic_error_channels':25,'concrete_rows_in_this_bounded_expansion':len(rows),'qualified_complete_primitive_count':None},'rows':rows,'aggregates_and_duplicates':aggregates,'unresolved_dependencies':dependencies,'other_open_dependencies':['PC existing return path fault_core_s/fault_core_set and HBM-domain fault_hbm are not expanded by this bounded new chain/ES inventory','PC embedding er[260]/eff[258] are input error causes; controller/return producers require source expansion and duplicate identity reconciliation','exact regional reset release/phase/epoch union with host POR retained_request and future admission/STATUS/commit veto remains unqualified','arithmetic error channels are causal outputs; their pipeline error register storage bits are deliberately not counted as independent detectors','no source count determines physical collection tail bound; geometry/forwarded clock phase/native propagation must be rederived']}
+(O/'inventory.json').write_text(json.dumps(result,indent=2)+'\n'); print(json.dumps(result['counts'],indent=2))
+# Concrete source-side unresolved ABI connections, pinned to the selected die rather than guessed from names.
+boundaries=[]
+for line in dt.splitlines():
+ if re.search(r'\b(?:qkd_ctrl_kc kc_|qkd_host_pc_slice_die hsl_|qkd_kvs_pc(?:_h)? kvpc_)',line):
+  pairs=dict(re.findall(r'\.([\w_]+)\(([^()]*)\)',line)); m=re.search(r'^\s*(\w+)\s+(\w+)\s*\(',line)
+  if m:
+   master,inst=m.groups(); keep=['ck','pll_hbm','rsi','hrst','fi'] if master=='qkd_ctrl_kc' else ['ck','host_rst_n','hbm_rst_n','land_er'] if master=='qkd_host_pc_slice_die' else ['ck','hck','rst_n','hrst_n','pc__fi','pc__fo','pc__land_er']
+   boundaries.append({'instance':inst,'master':master,'selected_ports':{p:pairs[p] for p in keep if p in pairs}})
+result['unresolved_selected_boundary_connections']=boundaries
+result['KC_WS_actual_additional_forwarding']='rly_pinfix_kcf_WS_kc_0__s0 uses n_clk_hbm_WS[0] between kvpc_WS_0.pc__fo and kc_WS.fi; receiving KC fi capture uses core_WS. Do not assume a same-clock edge bound.'
+for rec in json.loads((A/'kv-pc-fault-export-1019/component_source_identity.json').read_text())['records']:
+ matches=[m for m in manifest if m['repository_path']==rec['path']]
+ if matches: assert matches[0]['sha256']==rec['selected_sha256']
+(O/'inventory.json').write_text(json.dumps(result,indent=2)+'\n')
