@@ -15,6 +15,11 @@ mutants (applied to the lowered programme, not the RTL):
   lim0      wrong field: SW imm[63:32] lim = 0                            (SW rows + vq beats must mismatch)
   biaslate  shifted cycle: the target-5 bias rows 30 edges later          (RB reads stale bias rows: mismatch)
   swearly   shifted cycle: the leaf's SW command 40 edges earlier         (command while busy: vs sticky fault)
+  wlate     shifted cycle: the gunit weights rows 12 edges AFTER the routed SW command (TOK-S81-GAPS: SW wr reads the
+            stale rows: route_w / quant2 mismatch)
+The routed SW (wr) weights rows are written as the gunit router writes them (dsdv_gunit_l1 CTL target 5 rows R+1 = w0..w3,
+R+2 = w4, w5 from the fixture ffn.weights) W_GUARD edges before the SW command; the q_rope cos / sin rows are the lowered
+target-5 beats (not preloaded).
 """
 import argparse
 import importlib.util
@@ -99,7 +104,7 @@ def main():
     ap.add_argument('--layer', default='L0')
     ap.add_argument('--die-src', default=None)
     ap.add_argument('--out', required=True)
-    ap.add_argument('--mutant', default=None, choices=(None, 'lim0', 'biaslate', 'swearly'))
+    ap.add_argument('--mutant', default=None, choices=(None, 'lim0', 'biaslate', 'swearly', 'wlate'))
     a = ap.parse_args()
     import dv_layer_compile as C
     die = C.Die(C.die_tree(src=a.die_src))
@@ -162,7 +167,16 @@ def main():
         tail = qb[h][-64:]
         cs = [[int(u32([cos[2 * i]])[0]), int(u32([sin[2 * i]])[0]), int(u32([cos[2 * i + 1]])[0]),
                int(u32([sin[2 * i + 1]])[0])] for i in range(16)]
-        b.put(R['QR_IN'], il(rows4(u32(tail)), cs))
+        cs_low = any(x['tgt'] == 5 and R['QR_IN'] <= (x['body'] & 0x3FF) < R['QR_IN'] + 32 for x in beats)
+        if cs_low:                                  # lowered: the target-5 beats write the cs rows; check they are the golden's
+            got = {x['body'] & 0x3FF: (x['body'] >> 14) & ((1 << 128) - 1) for x in beats
+                   if x['tgt'] == 5 and R['QR_IN'] <= (x['body'] & 0x3FF) < R['QR_IN'] + 32}
+            for i in range(16):
+                assert got[R['QR_IN'] + 2 * i + 1] == sum(w << (32 * j) for j, w in enumerate(cs[i])), 'lowered cs row'
+            for i, r in enumerate(rows4(u32(tail))):
+                b.put(R['QR_IN'] + 2 * i, [r])
+        else:
+            b.put(R['QR_IN'], il(rows4(u32(tail)), cs))
         b.expect_rows('attn.q_rope', R['QR_OUT'], rows4(u32(qr[h][-64:])))
     if 'attn.z_quant' in sh:
         lo = sh['attn.z_quant']['lo'] + meta['tp_split']['wo_a_rows'][0][0]
@@ -196,6 +210,15 @@ def main():
         if s['slot'] < 6:
             eid = int(b.f('ops/ffn.top6_order.bin', np.int64)[s['slot']])
             pre, wfx = f'ops/ffn.experts.{eid}', 'route_w'
+            swr = [x for x in beats if x['tgt'] == 0 and x['body'] & 0xF == 8 and (x['body'] >> 57) & 1]
+            assert swr, 'routed SW must be lowered with wr (weights from the gunit rows)'
+            wrow = (swr[0]['body'] >> 14) & 0x3FF
+            wts = [int(v) for v in u32(b.f('ops/ffn.weights.bin')[:6])]
+            t_w = swr[0]['issue'] + (12 if a.mutant == 'wlate' else -LV.W_GUARD)
+            for i, ws in enumerate((wts[0:4], wts[4:6] + [0, 0])):
+                body = (wrow + i) | (0xF if i == 0 else 0x3) << 10 | sum(w << (32 * j) for j, w in enumerate(ws)) << 14
+                beats.append(dict(op='ffn.weights', issue=t_w + i, tgt=5, body=body, dur=0,
+                                  what=f'gunit router weights row {wrow + i} (dsdv_gunit_l1 target 5)'))
         else:
             pre, wfx = 'ops/ffn.shared', 'swiglu'
         gu = b.f(f'{pre}.gu.bin')

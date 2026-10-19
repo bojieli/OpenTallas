@@ -94,13 +94,17 @@ def test_compile_l0():
     tm = json.loads((out / 'prog/ctl_templates.json').read_text())
     assert tm['n'] <= C.NOPS
     assert all((x['arg'] & 0x7F) < tm['n'] for x in cmds if x['engine'] in (0, 1))
-    hs = (out / 'prog/host_boot.memh').read_text().split()
-    assert len(hs) == 2 + 3 * len(rows) + 1 + tm['n']
+    j0 = cal['job'][0]
+    hs = (out / ('prog/host_boot.memh' if cal['jobs'] == 1 else 'prog/job0/host_boot.memh')).read_text().split()
+    ngu = len(json.loads((out / 'prog/gunit_rows.json').read_text())['rows'])
+    assert len(hs) == j0['host_words'] == 2 + 3 * j0['nops'] + 1 + len(j0.get('templates') or range(tm['n'])) + ngu
     # every V command's CTL template targets ONE slice: the smoke slice, or (vpx collective legs) its end slice
     sl = C.Die(tree).slices()
     sid = sl['u_s_0S']['sid']
     for t in tm['templates']:
         m = int(t['payload186'], 16) & 0xFFFF
+        if t['name'].startswith('gu.'):          # gunit job words (engine 2 cw), not CTL beats
+            continue
         if t['name'].startswith('vpx.'):
             assert m == 1 << sl[t['name'].split('.')[1]]['sid'], t['name']
         else:
@@ -140,24 +144,31 @@ def test_events_g8():
     die = C.Die(tree)
     sch = json.loads((out / 'schedule.json').read_text())
     T = json.loads((out / 'prog/ctl_templates.json').read_text())['templates']
-    rows = [r for j in json.loads((out / 'prog/calendar.json').read_text())['job'] for r in j['rows']]
+    # rows: per job; arg[6:0] is the JOB-local template index (job 'templates' = global indices), issue job-relative
+    rows = []
+    for j in json.loads((out / 'prog/calendar.json').read_text())['job']:
+        tm = j.get('templates') or list(range(len(T)))
+        for r in j['rows']:
+            rows.append(dict(r, issue=r['issue'] + j['layer_issue0'], ti=tm[r['arg'] & 0x7F] if r['engine'] in (0, 1, 2) else None))
     ev = sch['events']
-    ctl = {(e['inst'], int(e['payload'].split()[1].rstrip(';')), e['cycle']) for e in ev if e['kind'] == 'CTL'}
+    # gunit CTL row outputs (lower_gu: payload 'row N', the coefficient / router rows on vo_n / vo_s) are not calendar CTL
+    tev = [e for e in ev if e['kind'] == 'CTL' and str(e['payload']).startswith('template')]
+    ctl = {(e['inst'], int(e['payload'].split()[1].rstrip(';')), e['cycle']) for e in tev}
     sid_of = {v['sid']: k for k, v in die.slices().items()}
     n = 0
     for r in rows:
         if r['engine'] not in (0, 1):
             continue
-        ti = r['arg'] & 0x7F
+        ti = r['ti']
         m = int(T[ti]['payload186'], 16) & 0xFFFF
         for sid in range(16):
             sl = sid_of.get(sid)
             if (m >> sid) & 1 and sl and sl.endswith('N' if r['engine'] == 0 else 'S'):
                 assert (sl, ti, r['issue'] + C.ctl_path(die, sl)['edges']) in ctl, (r, sl)
                 n += 1
-    assert n == sum(1 for e in ev if e['kind'] == 'CTL') and sch['row_ctl_events'] > 0
+    assert n == len(tev) and sch['row_ctl_events'] > 0
     for e in ev:
-        if e['kind'] == 'CTL':
+        if e in tev:
             tn = T[int(e['payload'].split()[1].rstrip(';'))]['name']
             assert tn.endswith(e['tag']), (e, tn)
         if e['kind'] == 'VS':

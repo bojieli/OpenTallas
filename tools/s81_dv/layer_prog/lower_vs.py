@@ -27,6 +27,14 @@ parameter: siblings move the die to sid = 2c + r):
   ffn.bias         k == 0:               gathered scores [24 sid, 24 sid + 24) (384 / 16) + their bias rows
   ffn.swiglu (+ route_w, quant2) / ffn.shared_swiglu (+ shared_quant):  G < 63: slot = G // 9 (0..5 routed in id
                    order, 6 shared), ff elements [64 (G % 9), +64) of the rank's 576 -> SW 16 groups, wb + uq (vq)
+TOK-S81-GAPS/VS (10-18):
+  SW wr     ot_s81sl_vs.sv imm[25] wr, imm[28:26] wsel: w0 = w1 = word wsel of the row pair a1 = the gunit router's weights
+            rows (GU_ROWS router + 1 / + 2, dsdv_gunit_l1 CTL target 5, every leaf): routed slots read their weight in a
+            static slot (row pair read at step 0, groups 4 edges later: VS_DUR SW + 4).  The SW command is placed after
+            the bound W_BOUND on the weights rows' write edge at the leaf (gunit vo edge + ctl tree + guard).
+  QR rows   the token position's cos / sin rows ({c, s, c', s'} x 16 at QR_IN + 2 s + 1) are CTL target-5 row writes of
+            the per-token programme (position = the decode token's, fixture meta.position; same rows for every head, one
+            beat per row for all leaves of the slice).
 Status:
   LOWERED  softplus_sqrt (RA), bias (RB + target-5 bias rows), shared_swiglu / shared_quant (SW w = 1.0 + vq),
            z_quant (QB + vq): command words + static rows only, proven by the bench (BENCH below).
@@ -44,7 +52,7 @@ ROOT = Path(__file__).resolve().parents[3]
 BENCH = 'results/rtl/s81_layer_tput_1018/compiler/bench_vs'
 UNIT = 'slice vp (ops 8..13 forward) + vs + vsw + RA lane pair + vq'
 OPS = [r'^attn\.q_rope$', r'^attn\.z_quant$', r'^ffn\.softplus_sqrt$', r'^ffn\.bias$',
-       r'^ffn\.(swiglu|route_w|quant2|shared_swiglu|shared_quant)$']
+       r'^ffn\.(swiglu|route_w|quant2|shared_swiglu|shared_quant)$', r'^eng\.(dot|hh|add)$']
 
 OP = dict(SW=8, QB=9, RA=10, RB=11, QR=12)
 ENG_V = dict(N=0, S=1)                      # dv_layer_compile ENG VN / VS (seq_host vo_n / vo_s)
@@ -57,17 +65,52 @@ VS_ROWS = dict(QR_IN=512, QR_OUT=544, QB_IN=560, RA_IN=576, RA_OUT=578, RB_IN=58
 # fixed op durations, vp command edge -> the last vs result (bench VSOP on the L0 fixtures, bench_vs run.log: QR 16 = 57,
 # QB 8 = 19, RA 6 = 147, RB 6 = 25, SW 16 = 191; the bench fails on measured > model), + GUARD edges before the next
 # command of the same leaf
-VS_DUR = dict(SW=lambda n: 4 * n + 127, QB=lambda n: n + 11, QR=lambda n: 2 * n + 25, RB=lambda n: n + 19,
+VS_DUR = dict(SW=lambda n, wr=0: 4 * n + 127 + 4 * wr, QB=lambda n: n + 11, QR=lambda n: 2 * n + 25, RB=lambda n: n + 19,
               RA=lambda n: n + 141)                   # RA measured for n <= 8 only (one read): plan() asserts it
 GUARD = 3
+W_GUARD = 16                                  # weights row write edge at the leaf: gunit vo + ctl tree (seq_host path) + guard
+POISON = 0                                    # immediate w of a wr SW (ignored by the RTL; 0 makes an RTL that ignores wr fail)
+
+
+def gu_weights_vo_edge(sched):
+    """the gunit vo edge of the router's last weights row (lower_gu: sc_plan after router_allgather + RT_LAT + RW_GAP + 1)"""
+    import importlib.util
+    spec = importlib.util.spec_from_file_location('lower_gu', Path(__file__).with_name('lower_gu.py'))
+    gu = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(gu)
+    ag = next((o for o in sched['ops'] if o['op'] == 'ffn.router_allgather'), None)
+    if ag is None:
+        return None, gu
+    t0 = int(math.ceil(ag['end']))
+    tl = max(p['cycle'] for p in gu.sc_plan(t0) if p['port'] == 'vi_n')
+    return tl + max(gu.RT_LAT_N, gu.RT_LAT_S) + gu.RW_GAP + 1, gu
+
+
+def rope_rows(fixtures):
+    """{c, s, c', s'} rows of the fixture token's position (Model.freqs_yarn / freqs_plain as hdc_golden_v41)"""
+    import json, os, sys
+    sys.path.insert(0, str(ROOT / 'tools'))
+    os.environ.setdefault('HDC_V41_ARITH', 'chunk8')
+    import hdc_golden_v41 as V
+    meta = json.loads((Path(fixtures) / 'meta.json').read_text())
+    c = json.loads((ROOT / 'compiler/models/deepseek-v4.1-flash/inference_config.json').read_text())
+    if c['compress_ratios'][meta['layer_index']] > 0:
+        fr = V.rope_freqs(c['rope_head_dim'], c['original_seq_len'], c['compress_rope_theta'], c['rope_factor'],
+                          c['beta_fast'], c['beta_slow'])
+    else:
+        fr = V.rope_freqs(c['rope_head_dim'], 0, c['rope_theta'], c['rope_factor'], c['beta_fast'], c['beta_slow'])
+    cos, sin = V.rope_cs(fr, meta['position'])
+    cos, sin = u32(cos), u32(sin)
+    return [int(cos[2 * i]) | int(sin[2 * i]) << 32 | int(cos[2 * i + 1]) << 64 | int(sin[2 * i + 1]) << 96 for i in range(16)]
 
 
 def vp_cmd(op, a0=0, a1=0, n=0, imm=0):
     return (op & 0xF) | (a0 & 0x3FF) << 4 | (a1 & 0x3FF) << 14 | (n & 0xFF) << 24 | (imm & ((1 << 128) - 1)) << 32
 
 
-def vs_imm(ob=0, wb=0, uq=0, umq=0, umb=0, umi=0, j0=0, lim=0, w0=0, w1=0):
-    return ob | wb << 10 | uq << 11 | umq << 12 | umb << 13 | umi << 14 | j0 << 22 | lim << 32 | w0 << 64 | w1 << 96
+def vs_imm(ob=0, wb=0, uq=0, umq=0, umb=0, umi=0, j0=0, lim=0, w0=0, w1=0, wr=0, wsel=0):
+    return (ob | wb << 10 | uq << 11 | umq << 12 | umb << 13 | umi << 14 | j0 << 22 | wr << 25 | wsel << 26 | lim << 32 |
+            w0 << 64 | w1 << 96)
 
 
 def ctl_payload(slice_mask, target, leaf_mask, body160):
@@ -110,7 +153,14 @@ def plan(die, sched, sl, fixtures=None):
     sid, tier = info['sid'], sl[-1]
     eng = ENG_V[tier]
     by = {o['op']: o for o in sched['ops']}
-    w_rt = fx(fixtures, 'ops/ffn.weights.bin') if fixtures else None
+    w_vo, gu = gu_weights_vo_edge(sched)
+    w_bound = None
+    if w_vo is not None:
+        import sys
+        C = sys.modules.get('dv_layer_compile') or sys.modules.get('__main__')
+        cp = C.ctl_path(die, sl)['edges'] if hasattr(C, 'ctl_path') else 0
+        w_bound = w_vo + cp + W_GUARD
+    w_row = (gu.GU_ROWS['router'] + 1) if gu is not None else None
     bias = fx(fixtures, 'weights/gate.bias.bin') if fixtures else None
     out = {}
     free = [0] * 5                                     # per leaf: first edge a new command may arrive
@@ -129,6 +179,9 @@ def plan(die, sched, sl, fixtures=None):
             R = VS_ROWS
             if name == 'attn.q_rope':
                 c, kind, n = vp_cmd(OP['QR'], a0=R['QR_IN'], n=16, imm=vs_imm(ob=R['QR_OUT'])), 'QR', 16
+                if fixtures is not None and not any(w == 'cs' for _, _, w in pre):
+                    for r, d in enumerate(rope_rows(fixtures)):
+                        pre.append((None, row_write(R['QR_IN'] + 2 * r + 1, 0xF, d), 'cs'))
             elif name == 'attn.z_quant':
                 c, kind, n = vp_cmd(OP['QB'], a0=R['QB_IN'], n=8, imm=vs_imm(umq=1, umi=s['beat'])), 'QB', 8
             elif name == 'ffn.softplus_sqrt':
@@ -141,31 +194,41 @@ def plan(die, sched, sl, fixtures=None):
                     for r in range(s['n'] // 4):
                         d = sum(int(b[4 * r + w]) << (32 * w) for w in range(4))
                         pre.append((k, row_write(R['RB_IN'] + 2 * r + 1, 0xF, d), f'bias row {r}'))
-            else:
-                w = ONE if s['slot'] == 6 else (int(u32([w_rt[s['slot']]])[0]) if w_rt is not None else 0)
+            elif s['slot'] == 6:
                 c = vp_cmd(OP['SW'], a0=R['SW_IN'], n=16, imm=vs_imm(ob=R['SW_OUT'], wb=1, uq=1, umq=1, umi=s['beat'],
-                                                                     lim=LIM, w0=w, w1=w))
+                                                                     lim=LIM, w0=ONE, w1=ONE))
                 kind, n = 'SW', 16
+            else:
+                # routed slot: the weight comes from the gunit's weights rows in the leaf store (wr), not the immediate
+                c = vp_cmd(OP['SW'], a0=R['SW_IN'], a1=w_row, n=16,
+                           imm=vs_imm(ob=R['SW_OUT'], wb=1, uq=1, umq=1, umi=s['beat'], lim=LIM, w0=POISON, w1=POISON,
+                                      wr=1, wsel=s['slot']))
+                kind, n = 'SWR', 16
             cmds.setdefault(c, []).append((k, kind, n))
         if not cmds:
             out[name] = rec
             continue
         # the target-5 row writes go first (one CTL beat a cycle), on a free leaf, then the commands
         t = max([t_op] + [free[k] + len(pre) for c in cmds for k, _, _ in cmds[c]])
+        if name == 'ffn.swiglu' and w_bound is not None and w_bound > t:
+            rec['notes'].append(f'SW after the gunit weights rows: bound {w_bound} > {t}')
+            t = w_bound
         t_cmd0 = t
         t0 = t - len(pre)
+        lm_all = sum(1 << k for c in cmds for k, _, _ in cmds[c])
         for i, (k, body, what) in enumerate(pre):
-            rec['templates'].append((f'{name}.row.s{sid}k{k}.{i}', ctl_payload(1 << sid, 5, 1 << k, body)))
+            lmk = lm_all if k is None else 1 << k
+            rec['templates'].append((f'{name}.row.s{sid}m{lmk:02x}.{i}', ctl_payload(1 << sid, 5, lmk, body)))
             rec['rows'].append(dict(eng=eng, issue=t0 + i, arg=len(rec['templates']) - 1,
-                                    what=f'vs {name} target-5 {what} leaf {k}'))
+                                    what=f'vs {name} target-5 {what} leaves {lmk:05b}'))
         for c, ks in cmds.items():
             lm = sum(1 << k for k, _, _ in ks)
-            rec['templates'].append((f'{name}.{ks[0][1]}.s{sid}m{lm:02x}', ctl_payload(1 << sid, 0, lm, c)))
+            rec['templates'].append((f'{name}.{ks[0][1][:2]}.s{sid}m{lm:02x}', ctl_payload(1 << sid, 0, lm, c)))
             rec['rows'].append(dict(eng=eng, issue=t, arg=len(rec['templates']) - 1,
                                     what=f'vs {name} {ks[0][1]} n={ks[0][2]} leaves {lm:05b}'))
             for k, kind, n in ks:
-                dur = VS_DUR[kind](n)
-                rec['leaves'][k] = dict(cmd=t, op=kind, n=n, dur=dur, end=t + dur, tix=len(rec['templates']) - 1)
+                dur = VS_DUR['SW'](n, 1) if kind == 'SWR' else VS_DUR[kind](n)
+                rec['leaves'][k] = dict(cmd=t, op=kind[:2], wr=kind == 'SWR', n=n, dur=dur, end=t + dur, tix=len(rec['templates']) - 1)
                 free[k] = t + dur + GUARD
             t += 1
         if t_cmd0 > t_op:
@@ -177,8 +240,63 @@ def plan(die, sched, sl, fixtures=None):
 _cache = {}
 
 
+def w_row_ok(P):
+    """every routed SW of the plan reads its weight from the gunit rows (wr)"""
+    lv = P.get('ffn.swiglu', {}).get('leaves', {})
+    return bool(lv) and all(v.get('wr') for v in lv.values())
+
+
+ENG_HB, ENG_HB2 = 300, 400                   # vp HSTORE base (h for REDUCE) / ADD write-back base (then HLOAD), the slice_eng bench map
+ENG_ADD_DUR = 81                             # ADD command -> last write (tb_s81sl_slice_eng, results/rtl/s81_lbgap_1018/g2_regress/eng)
+ENG_HSTORE_LEAD = 64                         # HSTORE (32 row pairs) completes before the REDUCE reads h
+
+
+def lower_eng(die, op, ctx, sl, sid):
+    """TOK-S81-GAPS/VS: Engram mix words on every leaf of the slice: vp HSTORE -> vs op 14 REDUCE at eng.dot (eng.hh is
+    the same REDUCE: hh partials ride with kk / dd), vs op 14 ADD at eng.add -> vp HLOAD.  A0 = the layer's K / W / V region
+    (results/arch/s81_dv_1016/eng/kv_rowmap.json).  PARTIAL: the xfin ENG go (CTL target 1), the gates (eng.gate: xfin ENG
+    + eg -> g_v) and the K / W / V rows (svc Engram row read, eng.hbm_read) are other families; no family bench yet."""
+    import json
+    name, layer = op['op'], ctx.get('layer')
+    rm = json.loads((ROOT / 'results/arch/s81_dv_1016/eng/kv_rowmap.json').read_text())['layers']
+    base = dict(unit='slice vp + vs op 14 + ve (Engram mix)', insts=[sl], gunit_rows=[], svc_jobs=[], files={}, sid=sid,
+                bench=None, depends='K / W / V rows at A0 (svc Engram read + capture, kv_rowmap), xfin ENG go, eg gates')
+    if layer not in rm:
+        return dict(base, status='GAP', rows=[], templates=[], events=[],
+                    gap=dict(module='results/arch/s81_dv_1016/eng/kv_rowmap.json', port='layers', missing=f'no A0 for {layer}'))
+    A0 = rm[layer]['A0']
+    eng = ENG_V[sl[-1]]
+    t = int(math.floor(op['start']))
+    LM = 0x1F
+    if name == 'eng.hh':
+        return dict(base, status='PARTIAL', rows=[], templates=[], events=[], fused_into='eng.dot',
+                    gap=dict(module='ot_s81sl_vs op 14', port='REDUCE', missing='hh partials leave with the eng.dot REDUCE'))
+    if name == 'eng.dot':
+        cmds = [(t - ENG_HSTORE_LEAD, 'HSTORE', vp_cmd(4, a0=ENG_HB)), (t, 'REDUCE', vp_cmd(14, a0=ENG_HB, a1=A0, n=64))]
+        dur = None
+    else:
+        cmds = [(t, 'ADD', vp_cmd(14, a0=A0, a1=ENG_HB2, n=32, imm=1 << 30)),
+                (t + ENG_ADD_DUR + GUARD, 'HLOAD', vp_cmd(3, a0=ENG_HB2))]
+    tpl, rows, ev = [], [], []
+    for i, (c, what, body) in enumerate(cmds):
+        tpl.append((f'{name}.{what}.s{sid}', ctl_payload(1 << sid, 0, LM, body)))
+        rows.append(dict(eng=eng, issue=c, arg=i, what=f'vs {name} {what} A0 {A0} leaves 11111'))
+        if what in ('REDUCE', 'ADD'):
+            ev += [dict(cycle=c, inst=f'{sl}.leaf{k}.vs', port='s_d', dir='internal', kind='VS', tag=f'{name}.{what}',
+                        payload=f'op 14 {what}', issue=c, carried_by=f'template {i}') for k in range(5)]
+    gap = dict(module='ot_s81sl_xfin (ENG) / ot_s81sl_eg / dsdv_svc_rs',
+               port='CTL target 1 ENG go, g_v gates, K/W/V rows at A0',
+               missing='op 14 words lowered; the xfin ENG go + gate fan-out (eng.gate) and the svc Engram row read '
+                       '(eng.hbm_read) that fills A0 are not lowered, and no family bench runs op 14 at compiler cycles '
+                       '(tb_s81sl_slice_eng proves the words with waits)')
+    return dict(base, status='PARTIAL', rows=rows, templates=tpl, events=ev, gap=gap)
+
+
 def lower(die, op, ctx):
     name = op['op']
+    if name.startswith('eng.'):
+        sl0 = ctx['slice'] if ctx['slice'].startswith('u_') else 'u_' + ctx['slice']
+        return lower_eng(die, op, ctx, sl0, die.slices()[sl0]['sid'])
     sl = ctx['slice'] if ctx['slice'].startswith('u_') else 'u_' + ctx['slice']
     key = (id(die), ctx.get('layer'), sl, str(ctx.get('fixtures')))
     if key not in _cache:
@@ -191,8 +309,8 @@ def lower(die, op, ctx):
     rec = P.get(host or name, dict(templates=[], rows=[], leaves={}, notes=[]))
     if host:
         # fused into the host op's SW command (route_w = the w factor, quant2 = uq -> vq): no rows of its own
-        r = dict(base, rows=[], templates=[], events=[], status='LOWERED' if host == 'ffn.shared_swiglu' else 'PARTIAL',
-                 fused_into=host)
+        r = dict(base, rows=[], templates=[], events=[], fused_into=host,
+                 status='LOWERED' if host == 'ffn.shared_swiglu' or w_row_ok(P) else 'PARTIAL')
     else:
         # LB2-S81/EVENTS: the vs command is slice-internal (vp forward -> s_d); at a cut boundary it is the CTL beat of
         # the calendar row that carries it (dv_layer_compile emits that CTL event from the row): dir 'internal',
@@ -202,7 +320,11 @@ def lower(die, op, ctx):
                    carried_by=f"template {v['tix']}") for k, v in rec['leaves'].items()]
         r = dict(base, rows=rec['rows'], templates=rec['templates'], events=ev, status='LOWERED',
                  leaves=rec['leaves'], notes=rec['notes'])
-    if name in ('ffn.swiglu', 'ffn.route_w', 'ffn.quant2'):
+    if name in ('ffn.swiglu', 'ffn.route_w', 'ffn.quant2') and w_row_ok(P):
+        pass
+    elif name == 'attn.q_rope' and ctx.get('fixtures') is not None:
+        pass
+    elif name in ('ffn.swiglu', 'ffn.route_w', 'ffn.quant2'):
         gap = dict(module='ot_s81sl_vs', port='s_d imm[95:64] / imm[127:96] (SW w0 / w1)',
                    missing='the routing weights are runtime (gunit router, delivered as leaf-store rows by CTL target 5); '
                            'SW takes w only from the command immediate (ot_s81sl_vs.sv:171), so a boot-loaded CTL '

@@ -341,11 +341,19 @@ GAP_HEAD = ('head die (separate die type)', 'no netlist in the p4l DV bind',
             'head.* / draft.* / token.return run on the head dies (LM head 129,280 rows, argmax, MTP draft heads); the '
             'p4l DV die does not contain them, so their programme needs the head-die netlist of record and RTL (not in '
             'results/fleet_viz/die_sources.json), then this compiler targets it the same way')
+GAP_KV_UNIT = ('p4l die.v (no KV / compressor norm unit) / ot_s81sl_vs',
+               'SPEC section 2 slice SU lanes "KV 32" (RMSNorm -> RoPE -> FP8 QDQ, D 512)',
+               'TOK-S81-GAPS/VS 10-18: NOT a compiler encoder gap -- no unit on the p4l die computes these ops.  ot_s81sl_vs '
+               'ops are SW / QB / RA / RB / QR / MOE / ENG (no RMSNorm, no KV QDQ); vn NORM is the hc_pre-mixed h norm '
+               '(4 HC copies, 64-element beats); the hub KV unit ot_s81_su_kv (rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv: '
+               'kvt / kve / qnh / qnr / kvq masters, D 512 exact) has 0 instances in bind_p4l3_g8 die.v.  Die decision '
+               'owed (S81-DIE8 / S81-SLICE): instantiate the KV unit on the die (fed by the kv / compressed rows, result rows '
+               'to the svc KV write) or add a vs RMS / KVQDQ op; then this compiler lowers it')
 OPMAP = [
     (r'^(head\.|draft\.|token\.return)', 'head die', 'GAP', GAP_HEAD),
     (r'attn\.(cmp\.wk|idx\.q)$', 'frames (cfg7) + slice xs / cap (compressor / indexer projections)', 'GAP', GAP_XS_ROM),
     (r'attn\.cmp\.(k_norm\..*|norm\..*|k_rope_qdq|row_qdq|pool)$', 'slice vn / vs (compressor norms, QDQ, pool)', 'GAP',
-     ('ot_s81sl_vs', 'SU op codes 8..15 (s_d)', 'no compiler encoder for the vs SU op words yet')),
+     GAP_KV_UNIT),
     (r'attn\.(idx\.(newkey|score|topk_local|topk_merge|topk_final)|cand\..*|gather)$',
      'bk units dsdv_bk_sel / dsdv_bk_col (index scan, top-k, candidate merge, sparse gather) + svc', 'GAP',
      ('dsdv_bk_sel / dsdv_bk_col', 'bk job / HBM index rows', 'no compiler ABI for the bk index-select / collect jobs '
@@ -361,9 +369,7 @@ OPMAP = [
     (r'\.(a_allgather|out_allreduce|router_allgather|combine_allreduce|rows_allgather)$',
      'end-slice lep link endpoints + ring (cross-die)', 'GAP', GAP_XDIE),
     (r'attn\.q_norm\.|attn\.q_quant$', 'slice vn/vq over 4 adjacent slices (q_lora norm, xfin)', 'PARTIAL', GAP_NORM_PRE),
-    (r'attn\.(q_rope|kv_rope_qdq|kv_norm\..*)$', 'slice vs SU ops (RoPE / QDQ)', 'GAP',
-     ('ot_s81sl_vs', 'SU op codes 8..15 (s_d)', 'no compiler encoder for the vs SU op words yet (tools/s81_slice/vs_gold.py '
-      'drives the leaf bench only); RoPE tables / positions are runtime context (seq_host context splice 1/2)')),
+    (r'attn\.(q_rope|kv_rope_qdq|kv_norm\..*)$', 'KV RMSNorm -> RoPE -> FP8 QDQ (no die unit)', 'GAP', GAP_KV_UNIT),
     (r'attn\.(window_load|own_row_write|scores|max|exp|den|sink|normalize|pv)$',
      'svc_rs HBM service + ot_s81_su_sm attention (svc jobs, engine 4)', 'GAP',
      ('dsdv_svc_rs / dsdv_svc_att', 's_j job {arg 24, tag {slot, op 7}}',
@@ -382,6 +388,7 @@ OPMAP = [
      ('ot_s81sl_vp', 'POST a0 (coefficient rows) / a1 (y rows)', 'POST is a static template; the coefficient rows are '
       'written by the gunit L5 CTL rows (target 5) at their scheduled edge')),
     (r'substage_hop\d+$|head\.hop$', 'end-slice lep stage hop (h ring to the edge link)', 'GAP', GAP_XDIE),
+    (r'^eng\.knorm$', 'Engram key RMSNorm (no die unit)', 'GAP', GAP_KV_UNIT),
     (r'eng\.', 'slice vs op 14 ENG + ve + xfin ENG + eg (Engram mix)', 'GAP',
      ('ot_s81sl_vs', 'op 14 REDUCE / ADD words (tb_s81sl_slice_eng)', 'encoder exists only inside the slice bench; HBM '
       'Engram rows via svc not lowered')),
@@ -445,7 +452,11 @@ class Prog:
     def template(self, name, payload):
         if payload in self.templates:
             return self.templates.index(payload)
-        assert len(self.templates) < NOPS, 'CTL template table full (128)'
+        # TOK-S81-GAPS (10-18): the table is per JOB (128 x 186 b, re-booted with each job's calendar over the host lane:
+        # dsdv_seq_host 0x13, a write is legal while no job is held).  The layer's table is virtual here; finish() boots
+        # only the templates a job's rows use, re-indexed (row 'tix' = the global index), and split_jobs cuts on both
+        # budgets.  ctl_templates.json / events keep the global index.
+        assert len(self.templates) < 1024, 'CTL template table: > 1024 distinct beats in one layer'
         self.templates.append(payload)
         self.tnames.append(name)
         return len(self.templates) - 1
@@ -457,7 +468,8 @@ class Prog:
         for row in r.get('rows', []):
             row = dict(row)
             if row['eng'] in (ENG['VN'], ENG['VS'], ENG['GUNIT']) and remap and not row.get('raw_arg'):
-                row['arg'] = (row['arg'] & ~0x7F) | remap[row['arg'] & 0x7F]
+                row['tix'] = remap[row['arg'] & 0x7F]
+                row['arg'] = (row['arg'] & ~0x7F) | (row['tix'] & 0x7F)
             row.setdefault('done', row['issue'] + SEQ['done_v'])
             row['what'] = f"{op['id']}: {row.get('what', '')}"
             self.rows.append(row)
@@ -477,7 +489,7 @@ class Prog:
 
     def vrow(self, eng, issue, tix, ctx=0, what=''):
         assert eng in (ENG['VN'], ENG['VS'])
-        self.rows.append(dict(eng=eng, issue=issue, done=issue + SEQ['done_v'], arg=(tix & 0x7F) | (ctx & 3) << 7,
+        self.rows.append(dict(eng=eng, issue=issue, done=issue + SEQ['done_v'], arg=(tix & 0x7F) | (ctx & 3) << 7, tix=tix,
                               what=what))
 
 
@@ -591,7 +603,7 @@ def row_ctl_events(die, prog):
     for r in prog.rows:
         if r['eng'] not in (ENG['VN'], ENG['VS']):
             continue
-        ti = r['arg'] & 0x7F
+        ti = r.get('tix', r['arg'] & 0x7F)
         mask = prog.templates[ti] & 0xFFFF
         tier = 'N' if r['eng'] == ENG['VN'] else 'S'
         for sid in range(16):
@@ -629,12 +641,21 @@ def split_jobs(prog, cap=NOPS - 2):
     rows cut in issue order, each job's issue / done rebased to its first issue (the host re-boots the next calendar
     after END: the reload is a host-lane cost the price must carry, reported in calendar.json)"""
     rows = sorted(prog.rows, key=lambda r: (r['issue'], r['eng']))
-    jobs = []
-    for k in range(0, len(rows), cap):
-        ch = rows[k:k + cap]
+    jobs, chunks, cur, used = [], [], [], set()
+    for r in rows:                    # cut on the row budget AND the per-job template budget (TOK-S81-GAPS)
+        t = {r['tix']} if 'tix' in r else set()
+        if cur and (len(cur) >= cap or len(used | t) > NOPS):
+            chunks.append(cur)
+            cur, used = [], set()
+        cur.append(r)
+        used |= t
+    if cur:
+        chunks.append(cur)
+    for k, ch in enumerate(chunks):
         t0 = ch[0]['issue']
         jp = Prog(prog.die)
         jp.templates, jp.tnames, jp.gunit_rows = prog.templates, prog.tnames, (prog.gunit_rows if k == 0 else [])
+        jp.virtual = True
         jp.rows = [dict(r, issue=r['issue'] - t0, done=(r['done'] - t0) if r['done'] else 0) for r in ch]
         jobs.append((t0, jp))
     return jobs
@@ -642,7 +663,7 @@ def split_jobs(prog, cap=NOPS - 2):
 
 def finish(prog, stage=0, kit_lead=20):
     """KIT / END rows + the host boot stream (length, BEGIN, rows, SEAL, templates, gunit rows)"""
-    rows = sorted(prog.rows, key=lambda r: (r['issue'], r['eng']))
+    rows = [dict(r) for r in sorted(prog.rows, key=lambda r: (r['issue'], r['eng']))]
     seen = {}
     for r in rows:   # one command per engine per edge (fixed_issue code 9 duplicate issue)
         key = (r['eng'], r['issue'])
@@ -653,12 +674,22 @@ def finish(prog, stage=0, kit_lead=20):
     rows.append(dict(eng=ENG['END'], issue=endage, done=0, arg=0, what='END'))
     if len(rows) > NOPS:
         raise CalendarFull(len(rows))
+    tsel = list(range(len(prog.templates)))
+    if len(prog.templates) > NOPS or getattr(prog, 'virtual', False):
+        tsel = sorted({r['tix'] for r in rows if 'tix' in r})
+        if len(tsel) > NOPS:
+            raise CalendarFull(f'{len(tsel)} templates')
+        loc = {g: i for i, g in enumerate(tsel)}
+        for r in rows:
+            if 'tix' in r:
+                r['arg'] = (r['arg'] & ~0x7F) | loc[r['tix']]
+    prog.job_templates = tsel
     hs = [csr_len(len(rows)), csr_pw(0, pw_header(len(rows), stage))]
     for i, r in enumerate(rows):
         r['row76'] = pack_row(r['done'], r['issue'], r['eng'], r['arg'])
         hs += [csr_pw(a, d) for a, d in pw_row_words(i, r['row76'])]
     hs.append(csr_pw(0, pw_header(len(rows), stage, seal=True)))
-    hs += [csr_template(i, p) for i, p in enumerate(prog.templates)]
+    hs += [csr_template(i, prog.templates[g]) for i, g in enumerate(tsel)]
     hs += [csr_gunit(a, d) for a, d in prog.gunit_rows]
     return rows, hs, endage
 
@@ -725,6 +756,7 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
             (out / f'prog/{jd}host_boot.memh').write_text(memh(hs, 515))
             files[f'prog/{jd}host_boot.memh'] = len(hs)
             cal.append(dict(job=k, layer_issue0=t0, nops=len(rows), end_age=endage, host_words=len(hs),
+                            templates=list(jp.job_templates),
                             reload_edges=len(hs) * HOST_SLOT,
                             rows=[dict(i=i, issue=r['issue'], done=r['done'], engine=r['eng'], arg=r['arg'],
                                        row76=f"{r['row76']:019x}", what=r['what']) for i, r in enumerate(rows)]))
