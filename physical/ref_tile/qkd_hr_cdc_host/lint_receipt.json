@@ -127,15 +127,15 @@
      "top": "qkd_hr_cdc_host"
     },
     "tool": {
-     "cdc_sync_constraints.py": "eae479d05e11ce815d43b0e44b65b17d1b8a5d61664c28a97e499f39644b76e5",
+     "cdc_sync_constraints.py": "a19cd09032f4060592af8e1590392e673095e686a15c75f0d041018de7bceb22",
      "clock_entry_constraints.py": "1487004dccf79b06df8d1b2c073aacc2df46f19e2db9fa5dbb84fddf732fc29d",
-     "gray_fifo_cdc_constraints.py": "6b831c9ccb649e93a460fcaa0789230b4ec08bf13c86d5439614a13f684431f5"
+     "gray_fifo_cdc_constraints.py": "68a30a8b81306e1a2256bae5ccb79eb18e2238b542ce290de74bc23317ce66f5"
     },
     "yosys": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
    },
-   "created": "2026-10-18T23:48:00-0700",
-   "host": "ot-pve1",
-   "key": "c048fb50c88c548463c999c3538c3e44106c49ee88d64269d0fffe3771b02965",
+   "created": "2026-10-18T23:59:53-0700",
+   "host": "ot-epyc4",
+   "key": "5be3e8c14f58e10d5446203d20a9f367dda7db9a373605beb6bcb64d2b249510",
    "record": {
     "counts": {
      "consumer": 0,
@@ -213,6 +213,10 @@
       "storage_read": true,
       "writer": "core"
      }
+    },
+    "launch_aliases": {
+     "u_rank__u_bridge__u_done.g_afw.u_af.rd_bin[3]": "u_rank__u_bridge__u_done.g_afw.u_af.rd_gray[3]",
+     "u_rank__u_bridge__u_ing.g_afw.u_af.rd_bin[3]": "u_rank__u_bridge__u_ing.g_afw.u_af.rd_gray[3]"
     },
     "periods_ps": {
      "core": 833.333,
@@ -33222,6 +33226,12 @@
       "f0",
       "mem",
       0
+     ],
+     "u_rank__u_bridge__u_done.g_afw.u_af.rd_bin[3]": [
+      "src",
+      "f0",
+      "rptr",
+      3
      ],
      "u_rank__u_bridge__u_done.g_afw.u_af.rd_domain_rst_n": [
       "rst",
@@ -66271,6 +66281,12 @@
       "mem",
       0
      ],
+     "u_rank__u_bridge__u_ing.g_afw.u_af.rd_bin[3]": [
+      "src",
+      "f1",
+      "rptr",
+      3
+     ],
      "u_rank__u_bridge__u_ing.g_afw.u_af.rd_domain_rst_n": [
       "rst",
       "r4",
@@ -67254,7 +67270,7 @@
      "rtl/qwen_sys/host_cluster_cdc_20261018/qkd_hr_visibility_fence_cdc.sv": "40ba47533b84ed2269eccf818b5aab5c7c255e791d45e3292b117d64db66b126"
     }
    },
-   "seconds": 41
+   "seconds": 9
   }
  },
  "schema": "opentallas.ref_tile.lint_receipt.v1"
