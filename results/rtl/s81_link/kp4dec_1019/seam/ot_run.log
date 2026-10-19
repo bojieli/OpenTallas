@@ -1,0 +1,12 @@
+ot-run: -> ot-agidock128
+ot-heavy: waiting for memory on vm-xry57mhfyn: need 0.7 x 16 = 11 GB, admissible 6 GB: available 36 GB, growth charged 32 GB (x0.5), young 22 GB, floor 6 GB
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-3354672-1792393189 after 202 s
+Verilator 5.050 2026-07-01 rev v5.050
+ERR hw mismatch cycle 88
+ERR hw mismatch cycle 89
+ERR hw mismatch cycle 90
+TB_S81_KP4_EQ cycles=1476 ref_beats=1395 rtl_mismatch=0 hw_mismatch=1389 SEAMMUT=1
+TB_S81_KP4 frames_out=140 exact=122 beyond_t_flagged=17 bad=0 miscorrected=0 nerr_bad=0 parity_checked=16 parity_bad=0 lock=1 relocks=1 n_corr=855 n_unc=17 EMUT=0 DMUT=0 FAIL
+TB_S81_KP4_EQ FAIL
+RC=1
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-3354672-1792393189): exit 0

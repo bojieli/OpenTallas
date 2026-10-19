@@ -11,8 +11,10 @@
 //     children's pin registers are the landing); instead ot_s81_kp4_dec lands rst_n on two registers (rst_l0 / rst_l1)
 //     before the children: the reference u_r and kp4_dec_hw take rst_n delayed by the same 2 cycles (rst_d2);
 //   * the original tb_s81_kp4 exactness checks against tools/s81_link/rs544.py still run on u_d.
-// PASS line: TB_S81_KP4_EQ ... PASS.  A mutant (DMUT 2 / 3, SEAMMUT 1: the word seam one register short, or RSTMUT 1:
-// the hardware model's reset landing one register short) must FAIL.
+// PASS line: TB_S81_KP4_EQ ... PASS.  A mutant (DMUT 2 / 3, or SEAMMUT 1: the word seam one register short) must FAIL.
+// RSTMUT 1 (the hardware model's reset landing one register short) is an observability probe, NOT a mutant: it PASSES
+// (S81-KP4DEC 10-19, Verilator 5.050: rtl 0 / hw 0 mismatches) because the decoder re-hunts alignment after reset, so
+// the reset depth is invisible at the outputs; the landing is a timing structure (all four children at equal depth).
 module tb_s81_kp4_eq;
     parameter integer NF = 120, NV = 16, EMUT = 0, DMUT = 0, SEAMMUT = 0, RSTMUT = 0;
     reg clk = 0, rst_n = 0;

@@ -2,7 +2,7 @@
 # S81-TILES2 2026-10-17: bit-exact equivalence of the four-tile KP4 decoder (dsyn / ddly / dchn / dout) vs the frozen
 # two-tile decoder of 33a35eb7d, RTL (same cycle) and hardware view (every tile pin registered, +2 cycles).
 # usage: run_kp4_eq_bench.sh MODE OUTDIR   MODE: base (PASS) | dmut (DMUT 2, FAIL) | amut (DMUT 3, FAIL) | seam (SEAMMUT 1, FAIL)
-#        | rstl (RSTMUT 1: the hardware model's reset landing one register short, FAIL)
+#        | rstl (RSTMUT 1: reset landing one short in the hw model -- observability probe, PASSES: reset depth is not visible)
 set -u
 mode=${1:?base|dmut|amut|seam|rstl}; out=${2:?fresh output directory}; mkdir -p "$out"
 R=$(cd "$(dirname "$0")/../.." && pwd); L=$R/rtl/dsrom_sys/s81_link; M=$R/physical/asap7_memory_macros
