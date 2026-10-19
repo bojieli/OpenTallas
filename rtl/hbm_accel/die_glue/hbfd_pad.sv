@@ -23,7 +23,7 @@ module hbfd_pad #(parameter integer W=17, N=1, SAFE_STORAGE=0,
      wire [6:0] wa=7'(ptr);
      // The extra synchronous macro read edge is paid by this lookahead, never added to N.
      wire [6:0] ra= TEST_MUTANT==4 ? wa :
-          7'((ptr-AW'(N-3+(TEST_MUTANT==1)+(TEST_MUTANT==3))) & AW'(DEPTH-1));
+          7'((ptr-AW'(N-3+(TEST_MUTANT==1))) & AW'(DEPTH-1));
      wire [NB*256-1:0] padded={{(NB*256-W){1'b0}},ingress};
      wire [NB*256-1:0] rd;
      for(genvar b=0;b<NB;b=b+1) begin:g_bank
@@ -43,13 +43,17 @@ module hbfd_pad #(parameter integer W=17, N=1, SAFE_STORAGE=0,
      // Finite circular array: only one row is written per edge, no shift chain or bulk reset.
      reg [W-1:0] mem [0:DEPTH-1];
      wire [AW-1:0] ra = TEST_MUTANT==4 ? ptr :
-         ptr-AW'(N-2+(TEST_MUTANT==1)+(TEST_MUTANT==3));
+         ptr-AW'(N-2+(TEST_MUTANT==1));
      always @(posedge ck) if(rs) mem[ptr]<=ingress;
      always @(posedge ck or negedge rs)
        if(!rs) capture<='0;
        else capture<=ready ? mem[ra] : {W{1'b0}};
    end
-   assign o=capture;
+   if(TEST_MUTANT==3) begin:g_latency_mutant
+     reg[W-1:0] extra;
+     always @(posedge ck or negedge rs) if(!rs) extra<='0; else extra<=capture;
+     assign o=extra;
+   end else assign o=capture;
  end endgenerate
 endmodule
 `default_nettype wire

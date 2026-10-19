@@ -2,12 +2,13 @@
 module pad_case #(parameter W=17,N=3,ID=0)(input ck,rs,input [31:0] seqno,output reg[3:0] caught);
  reg[W-1:0] din; wire[W-1:0] gold,actual; wire[W-1:0] bad[1:4];
  integer b;
- always @* for(integer k=0;k<W;k=k+1) din[k]=((seqno*32'h9e3779b9)>>(k%31))^((seqno+ID*79)>>(k%17));
+ always @* for(integer k=0;k<W;k=k+1) din[k]=((seqno*32'h9e3779b9)>>(k%31))^((seqno+ID*79)>>((k+7)%29));
  hbfd_pad #(.W(W),.N(N)) refpad(ck,rs,din,gold);
  hbfd_pad #(.W(W),.N(N),.SAFE_STORAGE(1)) dut(ck,rs,din,actual);
  for(genvar m=1;m<=4;m=m+1) begin:g_mut
  hbfd_pad #(.W(W),.N(N),.SAFE_STORAGE(1),.TEST_MUTANT(m)) mutant(ck,rs,din,bad[m]);
  end
+ always @(negedge rs) begin #0.02; if(actual!==gold) $fatal(1,"ASYNC_RESET_FAIL W=%0d N=%0d",W,N); end
  initial caught=0;
  always @(negedge ck) begin
    if(actual!==gold) $fatal(1,"PAD_DIFFERENTIAL_FAIL W=%0d N=%0d seq=%0d got=%h expected=%h",W,N,seqno,actual,gold);
