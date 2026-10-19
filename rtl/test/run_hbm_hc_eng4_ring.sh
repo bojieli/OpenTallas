@@ -21,11 +21,17 @@ src=(rtl/test/tb_hbm_hc_eng4_static.sv $H/ot_hbm_hc_root_static.sv $H/ot_hbm_hc_
 # HH-9 10-19: HC_CPR (default 1 = the adopted ring: bank chain pin registers, chain +11 edges -> RAW0 165 + 11)
 cpr=${HC_CPR:-1}; raw0=$((165 + 11 * cpr))
 python3 tools/rtl_hbm_hc_eng_static_gate.py --run "$out/case" --split --npos 1 --raw0 $raw0 --rs 104 > "$out/vectors.log"
+# HCRING 10-19: HC_JOINT_MAP=<dir with hc_joint_map.svh> wires the 8 ring links as the bank tile faces abut
+# (tools/ref_tile/specs_hbm_b_rtl2_1017/hc_ring_joints.py --svh); unset = name-wired (unchanged).
+jm=(); jtag=names
+if [ -n "${HC_JOINT_MAP:-}" ]; then jdir=$(realpath "$HC_JOINT_MAP"); [ -f "$jdir/hc_joint_map.svh" ] || { echo "no $jdir/hc_joint_map.svh"; exit 2; }
+  jm=(+define+OT_HC_JOINT_MAP +incdir+"$jdir"); jtag=$(head -1 "$jdir/hc_joint_map.svh" | tr -d '/'); fi
 "$vl" --binary --timing --hierarchical -j "${HC_BUILD_JOBS:-16}" -Wno-fatal -Wno-lint -Wno-style -Wno-MULTIDRIVEN \
-  --top-module tb_hbm_hc_eng4_static +define+MUT=$mut +define+HC_CPR=$cpr +define+OT_FP_DATA_NORST -Mdir "$out/obj" -o Vring \
+  --top-module tb_hbm_hc_eng4_static +define+MUT=$mut +define+HC_CPR=$cpr +define+OT_FP_DATA_NORST "${jm[@]}" -Mdir "$out/obj" -o Vring \
   rtl/test/tb_hbm_hc_eng4_static_hier.vlt "${src[@]}" > "$out/build.log" 2>&1
 set +e; (cd "$out/case" && "$out/obj/Vring" $(cat plus.txt)) > "$out/run.log" 2>&1; rc=$?; set -e
 grep -E "HC_ENG_DONE|HC_ENG PASS|HC_ENG FAIL|FAULT" "$out/run.log" | head -4
 echo "HC_RING_LOCKSTEP MUT=$mut rc=$rc (CPR=$cpr)"
+echo "HC_RING_JOINTS $jtag"
 rm -rf "$out/obj"
 exit $rc
