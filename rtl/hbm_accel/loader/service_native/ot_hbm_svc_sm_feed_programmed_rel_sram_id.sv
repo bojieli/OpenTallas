@@ -80,12 +80,11 @@ module ot_hbm_svc_sm_feed_programmed_rel_sram_id #(
  wire cache_open_v,cache_open_bank;wire[15:0]cache_open_epoch;
  wire[6:0]cache_open_count;wire[9:0]cache_open_tag;
  wire[OW-1:0] open_native=NATIVE_LANDING!=0?open_d2:open_raw;
- reg[OW-1:0] open_return[0:6];integer oi;
- always @(posedge stream_clk or negedge stream_rst_n)
-  if(!stream_rst_n)begin for(oi=0;oi<7;oi=oi+1)open_return[oi]<=0;end
-  else begin open_return[0]<=open_native;for(oi=1;oi<7;oi=oi+1)open_return[oi]<=open_return[oi-1];end
+ wire[OW-1:0] open_return;
+ ot_hbm_svg_meta_delay7 #(.W(OW)) u_open_labels(.clk(stream_clk),.rst_n(stream_rst_n),
+  .data_in(open_native),.data_out(open_return));
  assign {cache_open_v,cache_open_bank,cache_open_epoch,cache_open_count,cache_open_tag}=
-  NATIVE_RETURN!=0?open_return[6]:open_native;
+  NATIVE_RETURN!=0?open_return:open_native;
  wire[95:0]indices;wire[63:0]epochs;
  for(genvar l=0;l<4;l=l+1)begin:metadata
   assign indices[l*24+:24]=out_ordinal+l;assign epochs[l*16+:16]=out_epoch;

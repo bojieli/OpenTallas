@@ -210,21 +210,17 @@ module ot_hbm_svc_sm4pc_cdc_rel_sram_id #(parameter integer NATIVE_RETURN=0,RETU
   always @(posedge stream_clk or negedge srst)
    if(!srst)alignment_fault<=0;
    else if(out_v!=return_valid||(out_v&&out_ordinal[2:0]!=return_ordinal))alignment_fault<=1;
-  reg[MW-1:0] labels[0:6];integer mi;
+  wire[MW-1:0] delayed_labels;
   for(genvar mb=0;mb<8;mb=mb+1)begin:g_bank
    assign banks[mb*256+:256]=macro_data[mb];
   end
-  always @(posedge stream_clk or negedge srst)
-   if(!srst)begin for(mi=0;mi<7;mi=mi+1)labels[mi]<=0;end
-   else begin
-    labels[0]<={pre_v,pre_mask,pre_ordinal,pre_bank,pre_epoch,pre_last};
-    for(mi=1;mi<7;mi=mi+1)labels[mi]<=labels[mi-1];
-   end
+  ot_hbm_svg_meta_delay7 #(.W(MW)) u_labels(.clk(stream_clk),.rst_n(srst),
+   .data_in({pre_v,pre_mask,pre_ordinal,pre_bank,pre_epoch,pre_last}),.data_out(delayed_labels));
   ot_hbm_svg_return_regional #(.MUT(RETURN_MUT)) u_return(
    .pair_clk(return_pair_clk),.pair_rst_n({4{srst}}),.cache_clk(stream_clk),.cache_rst_n(srst),
    .bank_data(banks),.in_ordinal({4{read_ordinal_pick[2:0]}}),.in_valid({4{pre_v}}),
    .out_data(out_data),.out_ordinal(return_ordinal),.out_valid(return_valid),.fault(tree_fault));
-  assign {out_v,out_mask,out_ordinal,out_bank,out_epoch,out_last}=labels[6];
+  assign {out_v,out_mask,out_ordinal,out_bank,out_epoch,out_last}=delayed_labels;
  end else begin:g_flat
   assign return_fault=0;
   assign {out_v,out_mask,out_ordinal,out_bank,out_epoch,out_last}={pre_v,pre_mask,pre_ordinal,pre_bank,pre_epoch,pre_last};
