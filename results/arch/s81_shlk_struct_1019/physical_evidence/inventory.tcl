@@ -21,14 +21,20 @@ foreach n [$b getNets] {
     if {[$l getName] ni {M3 M4 M5}} {continue}
     puts $f "METAL\t[$n getName]\t[$l getName]\t[$s xMin]\t[$s yMin]\t[$s xMax]\t[$s yMax]"
    } else {
-    set lo 0;set hi 99;set vn UNKNOWN
-    if {![catch {set v [$s getTechVia]}] && $v ne "NULL"} {
+    set lo 99;set hi 0;set vn UNKNOWN;set v NULL
+    catch {set v [$s getTechVia]}
+    if {$v eq "NULL" || $v eq ""} {catch {set v [$s getBlockVia]}}
+    if {$v ne "NULL" && $v ne ""} {
      catch {set vn [$v getName]}
-     catch {set lo [[$v getBottomLayer] getRoutingLevel];set hi [[$v getTopLayer] getRoutingLevel]}
-    } elseif {![catch {set v [$s getVia]}] && $v ne "NULL"} {
-     catch {set vn [$v getName]}
-     catch {set lo [[$v getBottomLayer] getRoutingLevel];set hi [[$v getTopLayer] getRoutingLevel]}
+     foreach vb [$v getBoxes] {
+      set vl [$vb getTechLayer]
+      if {$vl eq "NULL" || $vl eq ""} {continue}
+      set lv [$vl getRoutingLevel]
+      if {$lv<=0} {continue}
+      set lo [expr {min($lo,$lv)}];set hi [expr {max($hi,$lv)}]
+     }
     }
+    if {$hi==0} {set lo 0;set hi 99}
     if {$hi<3 || $lo>5} {continue}
     puts $f "VIA\t[$n getName]\t$vn\t$lo\t$hi\t[$s xMin]\t[$s yMin]\t[$s xMax]\t[$s yMax]"
    }

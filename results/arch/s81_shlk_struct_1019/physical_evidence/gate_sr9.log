@@ -1,0 +1,18 @@
+GATE INFO pin_regs: pin registers opted out: Source-registered (dsdv_seq_host header): every leaf input lands in a flop at the pin and every output is a flop; recipe pin_regs would add a second unpriced stage on every leaf seam.
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO remote: ot-run selected ot-epyc7 for 48 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_dsdv_sh_lk_sr9_20261019-085159.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_dsdv_sh_lk_sr9_20261019-085159.log; host dir ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/dsdv_sh_lk_sr9-20261019-085159
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc7 in 299 s (gate total 347 s)
+GATE INFO floorplan.pin_geometry: actual pin geometry PASS: {'signal_clock_pins': 3107, 'pin_rectangles': 3107, 'pin_track_checked': 3107, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 fe9ffa07ba3458136b5e3d644aa191160297fb0e30471925658db10e34bb3c43
+GATE INFO util: synthesized std area 9897 um2 + macros 42988 in core 142133: util 11% (std-cell density 10.9% of placeable 90439 um2; total fill 37.2%)
+GATE INFO textbook: WARN dsdv_sh_lk cells 82,180 flops 11,158 depth 793.5 ps util 0.3731 reach 1.4 um (3.1 s)
+GATE WARN textbook.logic_depth: reg->reg stage u_ot_pr_core.u_h.host.u_hi.u_eng.ap0_pitch[4]$_DFFE_PN_ -> u_ot_pr_core.u_h.host.u_hi.u_eng.ap1_lp[25]$_DFFE_PN_/D: ~793 ps estimated (23 logic levels) > 600 ps: pipeline / restructure the stage  -> FIX: pipeline to ~700 ps a stage: trees, 2-3 rungs for wide compare / mux / arbitration
+GATE FAIL cts_run: placement / CTS of the kit failed:   -> FIX: the route would fail the same way (DPL-0033 / GPL-0305 / CTS-*): fix the floorplan / density before routing
+GATE WARN cts_calibration: CTS rc=2 ck_insertion rc=1
+GATE INFO clock_rule: root port:ck: 11,158 sinks on the largest root; no measured clock tree (no --cts gate evidence)
+GATE FAIL remote_script: remote script completed with exit 1  -> FIX: read the original terminal log and fix the reported failure
+GATE INFO layout_images: LOOK at these before submitting: floorplan /home/ubuntu/wt/codex-s81-sh-lk-struct/physical/ref_tile/dsdv_sh_lk_sr9/gate_layout/floorplan.png
+GATE FAIL trial_route: trial global route produced no congestion table (GATE_GRT_RC=2)  -> FIX: read the remote grt.log
+PRE_ROUTE_GATE: FAIL (3 fail, 2 warn)
+GATE: dsdv_sh_lk_sr9/gate_result.json written (exact staged source binding; commit it with the kit)

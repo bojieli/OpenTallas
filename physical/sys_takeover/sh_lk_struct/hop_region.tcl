@@ -2,16 +2,32 @@
 set shb [ord::get_db_block]
 set shdbu [$shb getDbUnitsPerMicron]
 set shcells [dict create]
+# Yosys maps positive Q through a QN inverter. Trace ONLY buffers/inverters
+# backward from the kept net, then require a DFF output; arbitrary logic refuses.
+proc sh_hop_driver {net depth} {
+ if {$depth>4} {error "SH hop driver buffer depth exceeded"}
+ set drivers {}
+ foreach it [$net getITerms] {
+  if {[$it getIoType] eq "OUTPUT"} {lappend drivers $it}
+ }
+ if {[llength $drivers]!=1} {error "SH hop requires one driver on [$net getName]"}
+ set inst [[lindex $drivers 0] getInst];set mn [[$inst getMaster] getName]
+ if {[regexp {^DFF} $mn]} {return $inst}
+ if {![regexp {^(INV|BUF)} $mn]} {error "SH hop unexpected combinational driver $mn on [$net getName]"}
+ set inputs {}
+ foreach it [$inst getITerms] {if {[$it getIoType] eq "INPUT"} {lappend inputs $it}}
+ if {[llength $inputs]!=1} {error "SH hop buffer must have one input: $mn"}
+ return [sh_hop_driver [[lindex $inputs 0] getNet] [expr {$depth+1}]]
+}
+set shbits 0
 foreach net [$shb getNets] {
  set name [string map [list "\\" ""] [$net getName]]
  if {![regexp {(^|\.)u_sd\.sd_hop_payload\[[0-9]+\]$} $name]} {continue}
- foreach it [$net getITerms] {
-  if {[$it getIoType] ne "OUTPUT"} {continue}
-  set inst [$it getInst]
-  if {![[$inst getMaster] isSequential]} {error "SH hop payload has nonsequential driver $name"}
-  dict set shcells [$inst getName] $inst
- }
+ incr shbits
+ set inst [sh_hop_driver $net 0]
+ dict set shcells [$inst getName] $inst
 }
+if {$shbits!=291} {error "SH hop requires291 kept net bits, found $shbits"}
 if {[dict size $shcells]!=291} {error "SH hop requires exactly291 mapped payload flops, found [dict size $shcells]"}
 lassign {237.6 129.6 324.0 164.16} x0 y0 x1 y1
 set reg [odb::dbRegion_create $shb sh_sd_hop]
