@@ -44,7 +44,9 @@ BANK_RD, BANK_WR = 6, 3
 READ = {f'rq{k}': f'rr{k}' for k in range(5)}
 READ['pq'] = 'pr'
 WRITE = {'wq0': 'wq_done0', 'wq1': 'wq_done1', 'dq': 'dq_done', 'kq': 'kq_done', 'xq': 'xq_done', 'xq2': 'xq2_done'}
-RELAY = re.compile(r'^hbfd_(rly|lh0?|lnd|land0?)[A-Za-z0-9_]*$')
+RELAY = re.compile(r'^hbfd_(rly|pad|lh0?|lnd|land0?)[A-Za-z0-9_]*$')
+# TW5-BANKLATDIE 10-19: hbfd_pad #(W, N) = N fixed register stages on a narrow lane (die pad, d4g_layers/l12_banklat.py)
+PAD = re.compile(r'^hbfd_pad')
 THRU = {'o': 'i', 'b': 'a'}
 FWD = {'i': 'o', 'a': 'b'}
 
@@ -184,6 +186,8 @@ class Graph:
             m = self.m(h)
             if m.startswith('hbfd_rly'):
                 lat += 1
+            elif PAD.match(m):
+                lat += int(self.I[h].get('params', {}).get('N', 1))
             elif re.match(r'^hbfd_lh0?_', m):
                 half += 1
             elif re.match(r'^hbfd_(land0?|lnd)_', m):
@@ -209,9 +213,9 @@ def param(I, inst, name, dflt):
     return dflt if v is None else int(v)
 
 
-def check(c):
-    """returns (rows, summary).  rows: one per (client inst, request port, kind)."""
-    G = Graph(c); I = G.I
+def check(c, G=None):
+    """returns (rows, summary).  rows: one per (client inst, request port, kind).  G: a Graph of c (built if None)."""
+    G = G or Graph(c); I = G.I
     banks = sorted(k for k, v in I.items() if v['master'] in BANK_PIN)
     paths = collections.defaultdict(list)    # (client, port, kind) -> [(bank, rt, lane_rq, lane_rr, notes)]
     for bk in banks:
@@ -232,7 +236,10 @@ def check(c):
             base = (BANK_RD if kind == 'rd' else BANK_WR) + pin
             paths[(d[0], d[1], kind)].append(dict(bank=bk, bank_port=rq, ret_port=rport, lane_rq=lq, lane_rr=lr,
                                                   rt=None if lr is None else base + lq + lr, pin=pin, notes=nq + nr,
-                                                  req_bit=d[2], ret_bit=rbit))
+                                                  req_bit=d[2], ret_bit=rbit,
+                                                  # lane ends (die pad layer l12_banklat): request sink / return source
+                                                  sink=[bk, rq, 0, I[bk]['ports'][rq].get('bits', 1)],
+                                                  rsrc=[bk, rr, 0, I[bk]['ports'][rr].get('bits', 1)] if ret else None))
     # LG tap chain: extend every tap's bank paths to the tap in front of its far port (repeat: SU -> SFU -> HC)
     todo = [k for k in paths if I[k[0]]['master'] in TAP_CHAIN]
     while todo:
@@ -261,7 +268,9 @@ def check(c):
             paths[key].append(dict(bank=p['bank'], bank_port=p['bank_port'], ret_port=ret[0][0][1] if ret else None,
                                    lane_rq=lq, lane_rr=lr, via=ci, down_rt=down, down_pad=down - p['rt'],
                                    rt=None if lr is None else down + TAP_EDGES + lq + lr, pin=p['pin'],
-                                   notes=p['notes'] + nq + nr, req_bit=d[2], ret_bit=ret[0][0][2] if ret else None))
+                                   notes=p['notes'] + nq + nr, req_bit=d[2], ret_bit=ret[0][0][2] if ret else None,
+                                   sink=[ci, far_q, h * wq_bits, (h + 1) * wq_bits],
+                                   rsrc=[ci, far_r, h * wr_bits, (h + 1) * wr_bits] if ret else None))
             if new and I[d[0]]['master'] in TAP_CHAIN:
                 todo.append(key)
     rows = []
@@ -280,7 +289,7 @@ def check(c):
                 row['status'] = 'FAIL'; row['bad'].append(f'{m}.{cp}: fixed-latency client without a LATENCY rule')
             rows.append(row); continue
         _, _, pname, dflt, ref, ref_rt, why = rule
-        row.update(param=pname, why=why)
+        row.update(param=pname, why=why, ref=ref, ref_rt=ref_rt, rule_kind=rule[1])
         if not rts:
             row['status'] = 'FAIL'; row['bad'].append('no return path traced'); rows.append(row); continue
         need = max(rts)
@@ -337,6 +346,7 @@ def check(c):
             rport = {'index_rq': 'index_rr', 'argmax_rq': 'argmax_m', 'a_rq': 'a_rr', 'b_rq': 'b_rr'}[sport]
             npair = SHARE_PAIRS.get(sm, 1)
             pairs = []                           # (pair, client inst, client port, lane rq, lane rr, notes)
+            pair_ends = []
             for pp in range(npair):
                 d, hq = G.back(si, sport, 34 * pp)
                 if d is None:
@@ -345,6 +355,9 @@ def check(c):
                 ret = [(s, h) for s, h in G.fwd(si, rport, 514 * pp) if s[0] == d[0]]
                 lr, nr = G.lane_latency(ret[0][1]) if ret else (None, [])
                 pairs.append((pp, d[0], d[1], lq, lr, nq + nr))
+                pair_ends.append(dict(pair=pp, sink=[si, sport, 34 * pp if npair > 1 else 0,
+                                                    34 * (pp + 1) if npair > 1 else I[si]['ports'][sport].get('bits', 34)],
+                                      lanes=None if lr is None else lq + lr, notes=nq + nr))
             if not pairs:
                 continue
             ci, cp = pairs[0][1], pairs[0][2]
@@ -353,6 +366,7 @@ def check(c):
                 pname, dflt, ref, ref_lanes = DOWN_PARAM[cm]
             extra = SHARE_EXTRA.get(sm, 0)
             row = dict(client=ci, master=cm, port=cp, kind='rd_via_share', share=si, banks=0, param=pname, why=why,
+                       pair_ends=pair_ends, ref=ref, ref_lanes=ref_lanes, share_excess=ex, share_extra=SHARE_EXTRA.get(sm, 0),
                        unresolved=sorted({n for p in pairs for n in p[5] if 'NO_E' in n})[:4], status='PASS', bad=[])
             if any(p[4] is None for p in pairs):
                 row['status'] = 'FAIL'

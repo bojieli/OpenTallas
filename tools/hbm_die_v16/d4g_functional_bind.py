@@ -47,7 +47,7 @@ import d4g_bank_latency
 
 QS = ('SW', 'SE', 'NW', 'NE')
 EAST = {'SW': 'SE', 'NW': 'NE'}
-RELAY = re.compile(r'^hbfd_(rly|lh0?|lnd|land)[A-Za-z0-9_]*$')   # lane relays (i -> o) / landing hops + landings (a -> b), same bit
+RELAY = re.compile(r'^hbfd_(rly|pad|lh0?|lnd|land)[A-Za-z0-9_]*$')   # lane relays (i -> o) / landing hops + landings (a -> b), same bit
 THRU = {'o': 'i', 'b': 'a'}
 
 
@@ -266,9 +266,11 @@ def check(c, S):
             si, sp, sb = d
             m = I.get(si, {}).get('master', '')
             if RELAY.match(m) and sp in THRU:
-                if not m.startswith('hbfd_rly'):
+                if not m.startswith(('hbfd_rly', 'hbfd_pad')):
                     landed[0] = True
-                i, p, b = si, THRU[sp], sb; st += 1
+                # hbfd_pad #(W, N) (l12_banklat die pad): N fixed register stages, same bit
+                st += int(I[si].get('params', {}).get('N', 1)) if m.startswith('hbfd_pad') else 1
+                i, p, b = si, THRU[sp], sb
                 w = I[si]['ports'].get(p, {}).get('bits')
                 if w and b >= w:   # fork station (hbfd_lh*_f<N>): b[k*W + j] = a[j] (DIE-HBM-LEAD 10-19)
                     b %= w
