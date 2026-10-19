@@ -1,0 +1,240 @@
+{
+ "schema": "opentallas.native_pin_audit.receipt.v1",
+ "lane": "QK-LANDNAT",
+ "generated": "2026-10-19 04:32 PT",
+ "tool": "tools/hier_contract/native_pin_audit.py @ origin/main f573a6d2b (--view --cell --case k0,k1,k2); en from pinreg_audit.pin_metrics",
+ "note": "CLOSED -e1- routes (landh0 en registered on ck_s before the hop-0 ICG, 6610bd1bc): every record PASS; en capture <=190 (was 351-429 ps combinational in the h1/c1 views).",
+ "all_pass": true,
+ "records": [
+  {
+   "cell": "qfd_landh0_1_EN_65x30",
+   "view": "physical/ref_tile/qfwd_landh0_1_en_65x30/views/qfd_landh0_1_EN_65x30",
+   "lib_cell": "qfd_landh0_1_EN_65x30",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 95.4,
+   "spread_ps": 13.7,
+   "outputs": 2,
+   "inputs": 3,
+   "launch_ps": 111.3,
+   "launch_pin": "fault",
+   "capture_ps": 92.4,
+   "capture_pin": "a[0]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "case_patterns": [
+    "k0",
+    "k1",
+    "k2"
+   ],
+   "case_pins": [
+    "k0",
+    "k1",
+    "k2"
+   ],
+   "case_pins_raw_capture_ps": {
+    "k0": 221.5,
+    "k1": 224.2,
+    "k2": 176.0
+   },
+   "ff_spread_ps": 9.4,
+   "ff_launch_min_ps": 66.2,
+   "ff_hold_need_ps": -17.3,
+   "pass": true,
+   "fail_why": "",
+   "job": "qfwd_landh0_1_en_65x30-e1-6b2db6290",
+   "view_source": "origin/codex/closure-record-qfwd_landh0_1_en_65x30-e1-6b2db6290",
+   "mode": "case k0,k1,k2 (die ties the K strap); own R per clock",
+   "en_capture_ps": 40.2,
+   "en_pass": true
+  },
+  {
+   "cell": "qfd_landh0_1_EW_65x30",
+   "view": "physical/ref_tile/qfwd_landh0_1_ew_65x30/views/qfd_landh0_1_EW_65x30",
+   "lib_cell": "qfd_landh0_1_EW_65x30",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 95.6,
+   "spread_ps": 14.9,
+   "outputs": 2,
+   "inputs": 3,
+   "launch_ps": 104.5,
+   "launch_pin": "fault",
+   "capture_ps": 88.0,
+   "capture_pin": "a[0]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "case_patterns": [
+    "k0",
+    "k1",
+    "k2"
+   ],
+   "case_pins": [
+    "k0",
+    "k1",
+    "k2"
+   ],
+   "case_pins_raw_capture_ps": {
+    "k0": 220.3,
+    "k1": 222.0,
+    "k2": 177.7
+   },
+   "ff_spread_ps": 10.5,
+   "ff_launch_min_ps": 56.1,
+   "ff_hold_need_ps": -17.1,
+   "pass": true,
+   "fail_why": "",
+   "job": "qfwd_landh0_1_ew_65x30-e1-5a20260cc",
+   "view_source": "origin/codex/closure-record-qfwd_landh0_1_ew_65x30-e1-5a20260cc",
+   "mode": "case k0,k1,k2 (die ties the K strap); own R per clock",
+   "en_capture_ps": 41.2,
+   "en_pass": true
+  },
+  {
+   "cell": "qfd_landh0_1_NE_65x30",
+   "view": "physical/ref_tile/qfwd_landh0_1_ne_65x30/views/qfd_landh0_1_NE_65x30",
+   "lib_cell": "qfd_landh0_1_NE_65x30",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 96.3,
+   "spread_ps": 15.2,
+   "outputs": 2,
+   "inputs": 3,
+   "launch_ps": 110.0,
+   "launch_pin": "fault",
+   "capture_ps": 87.7,
+   "capture_pin": "a[0]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "case_patterns": [
+    "k0",
+    "k1",
+    "k2"
+   ],
+   "case_pins": [
+    "k0",
+    "k1",
+    "k2"
+   ],
+   "case_pins_raw_capture_ps": {
+    "k0": 220.5,
+    "k1": 233.4,
+    "k2": 176.0
+   },
+   "ff_spread_ps": 10.8,
+   "ff_launch_min_ps": 55.8,
+   "ff_hold_need_ps": -16.3,
+   "pass": true,
+   "fail_why": "",
+   "job": "qfwd_landh0_1_ne_65x30-e1-965cc6dcd",
+   "view_source": "origin/codex/closure-record-qfwd_landh0_1_ne_65x30-e1-965cc6dcd",
+   "mode": "case k0,k1,k2 (die ties the K strap); own R per clock",
+   "en_capture_ps": 41.7,
+   "en_pass": true
+  },
+  {
+   "cell": "qfd_landh0_1_NS_65x30",
+   "view": "physical/ref_tile/qfwd_landh0_1_ns_65x30/views/qfd_landh0_1_NS_65x30",
+   "lib_cell": "qfd_landh0_1_NS_65x30",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 96.7,
+   "spread_ps": 15.7,
+   "outputs": 2,
+   "inputs": 3,
+   "launch_ps": 103.5,
+   "launch_pin": "fault",
+   "capture_ps": 91.0,
+   "capture_pin": "a[0]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "case_patterns": [
+    "k0",
+    "k1",
+    "k2"
+   ],
+   "case_pins": [
+    "k0",
+    "k1",
+    "k2"
+   ],
+   "case_pins_raw_capture_ps": {
+    "k0": 225.5,
+    "k1": 225.4,
+    "k2": 177.9
+   },
+   "ff_spread_ps": 11.2,
+   "ff_launch_min_ps": 66.5,
+   "ff_hold_need_ps": -17.0,
+   "pass": true,
+   "fail_why": "",
+   "job": "qfwd_landh0_1_ns_65x30-e1-965cc6dcd",
+   "view_source": "origin/codex/closure-record-qfwd_landh0_1_ns_65x30-e1-965cc6dcd",
+   "mode": "case k0,k1,k2 (die ties the K strap); own R per clock",
+   "en_capture_ps": 42.1,
+   "en_pass": true
+  },
+  {
+   "cell": "qfd_landh0_548_EW_65x99",
+   "view": "physical/ref_tile/qfwd_landh0_548_ew_65x99/views/qfd_landh0_548_EW_65x99",
+   "lib_cell": "qfd_landh0_548_EW_65x99",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 110.8,
+   "spread_ps": 19.2,
+   "outputs": 549,
+   "inputs": 550,
+   "launch_ps": 110.8,
+   "launch_pin": "fault",
+   "capture_ps": 132.7,
+   "capture_pin": "a[159]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "case_patterns": [
+    "k0",
+    "k1",
+    "k2"
+   ],
+   "case_pins": [
+    "k0",
+    "k1",
+    "k2"
+   ],
+   "case_pins_raw_capture_ps": {
+    "k0": 390.8,
+    "k1": 392.8,
+    "k2": 211.2
+   },
+   "ff_spread_ps": 19.2,
+   "ff_launch_min_ps": 49.2,
+   "ff_hold_need_ps": -23.7,
+   "pass": true,
+   "fail_why": "",
+   "job": "qfwd_landh0_548_ew_65x99-e1-8e6f7fbc3",
+   "view_source": "origin/codex/closure-record-qfwd_landh0_548_ew_65x99-e1-8e6f7fbc3",
+   "mode": "case k0,k1,k2 (die ties the K strap); own R per clock",
+   "en_capture_ps": 49.1,
+   "en_pass": true
+  }
+ ]
+}
