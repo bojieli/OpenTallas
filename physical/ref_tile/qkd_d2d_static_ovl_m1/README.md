@@ -28,3 +28,19 @@ pin assignment, outline, macro position or latency changes. Failed job records
 remain immutable; the source-pinned recovery is on this same kit. SAFE checklist
 above still applies; inherited closed geometry is preserved rather than
 misclassifying a tool refusal as a physical route failure.
+
+## Production registered-codec2 seam
+The KV die lead/root confirmed ATTN_LAND=1 uses codec2: TXDP_K
+0x03030416 ([22,4,3,3]), one more capture edge than codec1. The shared
+compiler emits this with --kv-codec2; compute remains0x0a010308. The same
+kit now uses TXDP50529302 and pair benches KDLY19; codec1 .15 gates are
+historical and cannot bind production. Additional edge is included in shared
+static calendars and the KV die schedule; no unpriced padding/tie introduced.
+
+Reset-capture hook now anchors the actual wrapper landing cells
+por_n__ot_rl[01] and rst_n__ot_rl[01], two per real reset. The inherited
+hook looked for unwrapped u_core.u_por_region.s[01], which became stale
+once kit reset_landing added u_ot_pr_core hierarchy. Its fail-closed
+expected-count check is retained; no timing path is masked.
+
+Codec2 mutant witnesses live separately under results/closure_witness/qkd_d2d_static_ovl_m1_codec2; codec1 witness logs remain preserved.

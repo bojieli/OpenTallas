@@ -16,7 +16,7 @@
  ],
  "params": {
   "NTX": 3,
-  "TXDP": 50529301
+  "TXDP": 50529302
  },
  "clock_port": "ck",
  "reset_ports": [
@@ -174,8 +174,8 @@
  },
  "job": {
   "owner": "Codex:D2D-OVL-TILES 10-19",
-  "branch": "codex/d2d-reset-decl-1019",
-  "tag": "r7wreset",
+  "branch": "codex/d2d-codec2-1019",
+  "tag": "codec2",
   "purpose": "Q-LINK static D2D link end qkd_d2d_static (compiler calendars, 583-bit PHY word slot link with 4x137 SRAM store, explicit recovery mode; no credits/backpressure). PHY on face N.",
   "extra_paths": [
    "rtl/qwen_sys",
@@ -189,7 +189,7 @@
   "benches": [
    {
     "name": "d2d_dies_exact",
-    "cmd": "KDLY=18 bash rtl/test/qwen_split/run_d2d_dies.sh {RUN}/bench/d0 0 && grep -q \"QKD_D2D_TXDP = 32'h03030415\" {RUN}/bench/d0/cal/txdp.svh",
+    "cmd": "KDLY=19 bash rtl/test/qwen_split/run_d2d_dies.sh {RUN}/bench/d0 0 && grep -q \"QKD_D2D_TXDP = 32'h03030416\" {RUN}/bench/d0/cal/txdp.svh",
     "expect": "pass",
     "pass_regex": "D2D_DIES_PASS",
     "threads": 1,
@@ -197,16 +197,16 @@
    },
    {
     "name": "d2d_dies_mut_slot",
-    "cmd": "KDLY=18 bash rtl/test/qwen_split/run_d2d_dies.sh {RUN}/bench/m1 1",
+    "cmd": "KDLY=19 bash rtl/test/qwen_split/run_d2d_dies.sh {RUN}/bench/m1 1",
     "expect": "fail",
     "threads": 1,
     "peak_ram_gb": 8,
     "fail_regex": "^D2D_DIES_FAIL$",
-    "fail_witness": "results/closure_witness/qkd_d2d_static_r7w/d2d_dies_mut_slot.log"
+    "fail_witness": "results/closure_witness/qkd_d2d_static_r7w_codec2/d2d_dies_mut_slot.log"
    },
    {
     "name": "d2d_ntx3_lock",
-    "cmd": "LOCK=1 KDLY=18 bash rtl/test/qwen_split/run_d2d_dies.sh {RUN}/bench/l0 0 && grep -q \"QKD_D2D_TXDP = 32'h03030415\" {RUN}/bench/l0/cal/txdp.svh",
+    "cmd": "LOCK=1 KDLY=19 bash rtl/test/qwen_split/run_d2d_dies.sh {RUN}/bench/l0 0 && grep -q \"QKD_D2D_TXDP = 32'h03030416\" {RUN}/bench/l0/cal/txdp.svh",
     "expect": "pass",
     "pass_regex": "^D2D_DIES_PASS",
     "threads": 1,
@@ -214,19 +214,19 @@
    },
    {
     "name": "d2d_ntx3_lmut1",
-    "cmd": "LOCK=1 LMUT=1 KDLY=18 bash rtl/test/qwen_split/run_d2d_dies.sh {RUN}/bench/l1 0",
+    "cmd": "LOCK=1 LMUT=1 KDLY=19 bash rtl/test/qwen_split/run_d2d_dies.sh {RUN}/bench/l1 0",
     "expect": "fail",
     "fail_regex": "D2D_LOCK edges \\d+ mismatches [1-9]",
-    "fail_witness": "results/closure_witness/qkd_d2d_static_r7w/d2d_ntx3_lmut1.log",
+    "fail_witness": "results/closure_witness/qkd_d2d_static_r7w_codec2/d2d_ntx3_lmut1.log",
     "threads": 1,
     "peak_ram_gb": 8
    },
    {
     "name": "d2d_ntx3_lmut2",
-    "cmd": "LOCK=1 LMUT=2 KDLY=18 bash rtl/test/qwen_split/run_d2d_dies.sh {RUN}/bench/l2 0",
+    "cmd": "LOCK=1 LMUT=2 KDLY=19 bash rtl/test/qwen_split/run_d2d_dies.sh {RUN}/bench/l2 0",
     "expect": "fail",
     "fail_regex": "D2D_LOCK edges \\d+ mismatches [1-9]",
-    "fail_witness": "results/closure_witness/qkd_d2d_static_r7w/d2d_ntx3_lmut2.log",
+    "fail_witness": "results/closure_witness/qkd_d2d_static_r7w_codec2/d2d_ntx3_lmut2.log",
     "threads": 1,
     "peak_ram_gb": 8
    }
@@ -249,16 +249,16 @@
   "enable": false,
   "reason": "RTL is already pin-registered: d2d_pinreg_gen.py PR=1 wraps qkd_d2d_static_core with exactly one flop per functional port (FIRM at the pin via io_flop_at_pins); the link calendar is compiled --pinreg; a second synthesized pin register would add +1 cycle per port with no timing purpose"
  },
- "structural_change": "r7w (TW7-KVD2D 10-19) = r7v (CLOSED 1b609a25c TT +13.55 / FF +7.68, reviewed geometry 83ff32c7) re-hardened at the MU release seam TXDP: qkd_d2d_static #(.NTX(3), .TXDP(32'h03030415 = 50529301)) = d2d_cal_image.svh D2D_TXDP_K [21,4,3,3] (MU-DQ-TXDP / COORD 0ki; KV MU GEN2 claude/mu-die-kv2-1019 219049242 compiles K0 21; K0 24 fails the netlisted pair co-sim). Only the TXDP parameter changes (port-0 TX capture 24 -> 21 flops): outline 475.2x280.8, pins, macros, recipe 4 flop-first pins, hold_budget die, io_hold_margin 0.030, CTS 20/40, MEG guards 2.4/1.2 identical to r7v. Benches run the KV end at the die TXDP: KDLY=18 (calendar --txd-k 19,2,1,1 + pinreg 2 -> [21,4,3,3] = 0x03030415). 0 cycles beyond the compiled TXDP.",
+ "structural_change": "Same reviewed kit/geometry and exact reset-role recovery as 326559dce; production ATTN_LAND=1 registered KV codec has one additional capture edge: TXDP_K 0x03030416 [22,4,3,3], from shared compiler --kv-codec 2 (KV coordinator/root approved). Pair KDLY19 proves this seam; previous .15 source is historical codec1 evidence only. No gratuitous layout changes.",
  "reroute_reason": {
   "kind": "rtl_change",
   "params": {
-   "TXDP": "32'h03030415 (was 32'h03030418 in r7v)"
+   "TXDP": "0x03030416 (registered KV codec2, previously codec1 0x03030415)"
   },
-  "source": "rtl/qwen_sys/d2d_static_20261015/d2d_cal_image.svh@claude/mu-die-kv2-1019 219049242 (D2D_TXDP_K 32'h03030415)",
+  "source": "KV coordinator/root-confirmed ATTN_LAND=1, tools/qwen_static_schedule/mu_d2d_ovl.py --kv-codec 2",
   "cell": "qkd_d2d_static",
-  "fix": "re-harden the KV d2d end at the MU release seam TXDP (port 0 capture 24 -> 21 flops); r7v (0x03030418) cannot bind the MU KV die (d2ds_view_select FAILs closed on TXDP mismatch)",
-  "why": "rtl_change (TXDP parameter): the elaborated port-0 TX capture pipeline differs (21 vs 24 flops); geometry identical to the reviewed r7v"
+  "fix": "Re-harden same master at coherent registered-codec2 capture age; pair bench KDLY19 and shared calendars agree. Preserve reviewed geometry.",
+  "why": "Production codec2 inserts one registered edge upstream of KV TX capture; port0 capture changes21->22, compiler prices it and regenerated shared calendars carry it."
  },
  "io_tcl": "physical/ref_tile/qkd_d2d_static_r7w/assigned_pins.tcl",
  "pin_hook_before_flops": [

@@ -3,7 +3,7 @@
 set rb [ord::get_db_block]
 set ru [[ord::get_db_tech] getDbUnitsPerMicron]
 set reset_owned {}
-foreach {port pattern} {por_n {u_core.u_por_region.s[01]*}} {
+foreach {port pattern} {por_n {por_n__ot_rl[01]*} rst_n {rst_n__ot_rl[01]*}} {
   set bt [$rb findBTerm $port]
   if {$bt eq "NULL"} {error "RESET_CAPTURE missing $port"}
   set box [$bt getBBox];set px [expr {([$box xMin]+[$box xMax])/2.0}];set py [expr {([$box yMin]+[$box yMax])/2.0}]
