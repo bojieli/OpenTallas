@@ -14,6 +14,7 @@ run() { n=$1; shift
     --Mdir "$O/obj_$n" -o tb > "$O/build_$n.log" 2>&1 || { echo "BUILD_FAIL $n"; bad=1; return; }
   "$O/obj_$n/tb" > "$O/run_$n.log" 2>&1; grep -E '^MUWIN' "$O/run_$n.log" | sed "s/^/[$n] /"; }
 run base;  grep -q '^MUWIN PASS' "$O/run_base.log" || bad=1
+run collision +define+COLLIDE_EVENTS=1; grep -q '^MUWIN COLLISION PASS' "$O/run_collision.log" || bad=1
 run badrt +define+BADRT=1; grep -q 'BADRT PASS (fault raised)' "$O/run_badrt.log" || bad=1
 for m in 3 4; do run mut$m +define+WMUT=$m
   if grep -q '^MUWIN PASS' "$O/run_mut$m.log"; then echo "mutant $m NOT detected"; bad=1; else echo "mutant $m detected (FAIL as required)"; fi

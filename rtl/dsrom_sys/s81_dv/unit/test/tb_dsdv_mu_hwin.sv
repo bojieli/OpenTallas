@@ -32,6 +32,10 @@ module tb_dsdv_mu_hwin;
     localparam integer NE = NEV;
     integer DK [0:NE-1], KD [0:NE-1], EP [0:NE-1];        // D / kind / endpoint per event
     integer cfg_e; initial for(cfg_e=0;cfg_e<NE;cfg_e=cfg_e+1) begin DK[cfg_e]=20+13*cfg_e; KD[cfg_e]=(cfg_e%3==2); EP[cfg_e]=cfg_e%4; end
+`ifdef COLLIDE_EVENTS
+    initial begin #0; DK[1]=DK[0]; KD[1]=0; EP[1]=EP[0]; end
+`endif
+    integer first_cfg_fault=-1;
     reg ck = 0, rst_n = 0;
     always #0.5 ck = ~ck;
     integer cyc = 0, errs = 0, i, e, nfire = 0, nexp = 0;
@@ -52,6 +56,7 @@ module tb_dsdv_mu_hwin;
     // ---- monitor: match every output against the starts
     integer s, d, hit, port; reg [1:0] aa; reg [33:0] want_c; reg [10:0] want_r;
     always @(posedge ck) if (rst_n) begin
+        if(wf[1] && first_cfg_fault<0) first_cfg_fault=cyc;
         for(port=0;port<4;port=port+1) begin
             want_c=0; want_r=0;
             for(e=0;e<NE;e=e+1) for(s=0;s<nst;s=s+1)
@@ -94,11 +99,21 @@ module tb_dsdv_mu_hwin;
             end
         repeat (RL + 100) @(posedge ck);
         for(j=0;j<nst;j=j+1) for(e=0;e<NE;e=e+1) if(KD[e]==0 || att(stu[j])/2) nexp=nexp+1;
+`ifdef COLLIDE_EVENTS
+        nexp=nexp-nst; // two TX rows target one output at the same edge
+`endif
         $display("MUWIN starts %0d fires %0d expected %0d K %0d t_mf %b hslot %b hwin %b", nst, nfire, nexp, kconst, mf, hmf, wf);
+`ifdef COLLIDE_EVENTS
+        $display("MUWIN COLLISION first %0d expected %0d",first_cfg_fault,stc[0]+DK[0]+3);
+        if(errs==0 && nfire==nexp && hmf==0 && wf==2'b10 && first_cfg_fault==stc[0]+DK[0]+3)
+            $display("MUWIN COLLISION PASS");
+        else $display("MUWIN COLLISION FAIL");
+`else
         if (BADRT) begin
             if (wf[0] && mf[2] && hmf == 4'd0) $display("MUWIN BADRT PASS (fault raised)"); else $display("MUWIN BADRT FAIL (no fault)");
         end else if (errs == 0 && nfire == nexp && mf == 4'd0) $display("MUWIN PASS");
         else $display("MUWIN FAIL errs %0d", errs);
+ `endif
         $finish;
     end
 endmodule
