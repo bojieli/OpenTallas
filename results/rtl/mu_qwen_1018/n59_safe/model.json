@@ -1,0 +1,45 @@
+{
+  "design": "native59 SAFE NU4 MCTX1",
+  "base_flop_area_um2": 43266,
+  "logic_payload_bits": 16384,
+  "physical_sram_bits": 131072,
+  "sram_capacity_ratio": 8,
+  "seat_owner_bits": 1536,
+  "seen_bits": 512,
+  "sustained_input_fp32_per_edge": 8,
+  "sustained_output_fp32_per_edge": 16,
+  "input_data_bits_per_edge": 256,
+  "input_address_bits_per_edge": 72,
+  "output_data_bits_per_edge": 512,
+  "memory_macros": 8,
+  "macro_area_um2": 101966.68800000001,
+  "macro_outline_each_um": [
+    167.4,
+    76.14
+  ],
+  "outline_um": [
+    518.4,
+    648
+  ],
+  "outline_area_um2": 335923.2,
+  "macro_fill": 0.3035416666666667,
+  "std_area_status": "MEASURE_SYNTH_BEFORE_ADOPTION",
+  "sram_read_write_ports_per_bank": [
+    1,
+    1
+  ],
+  "write_mask_bits": 512,
+  "static_operation": "no arbitration, credits, waits, or stalls; one writer per source lane; highest-writer seat owner",
+  "q_read_external_edge_delta_measured": 0,
+  "formatter_input_internal_pipeline_delta": 1,
+  "formatter_output_external_edge_delta_measured": 0,
+  "benchmark_scope": "NU1 positive and MU14-op/4user overlapped fixed slots pass; full negative controls pending final source",
+  "roots": [
+    "ck",
+    "ck_fmt",
+    "ck_qbuf"
+  ],
+  "related_clock_windows": "ordinary samephase1:1 setup and hold, no masks; linked reference spread<=80psTTFF required",
+  "pin_track_budget": "aggregate N~1800/518.4<6 perum; S~1600/518.4<6; W~600/648<6; actual perbus assigned track gate required",
+  "outline_admission": "Owner-approved spend-area exact writer bank; provisional macro-fit outline. Retarget from measured std area and gate before adoption."
+}
