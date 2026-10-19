@@ -78,7 +78,7 @@ module ot_s81ph_ctrl_pcr #(
 `else
     ot_s81ph_afifo_g #(
 `endif
-.W(QW), .DEPTH(DQ), .AF(1), .G(G)) u_q (
+        .W(QW), .DEPTH(DQ), .AF(1), .G(G)) u_q (
         .wclk(cks), .wrst_n(srst_n), .w_v(rq_v_q), .w_d(rq_d_q), .w_rdy(q_rdy_unused), .w_credit(rk), .w_ovf(s_ovf),
         .rclk(ckh), .rrst_n(hrst_n), .r_v(q_v), .r_pop(h_pop), .r_pop_g(h_pop_g), .r_d(q_d));
     // ---- HBM side: registered k_rdy, present-then-decide issue (master state)
@@ -144,7 +144,7 @@ module ot_s81ph_ctrl_pcr #(
 `else
     ot_s81ph_afifo_g #(
 `endif
-.W(RW), .DEPTH(DR), .AF(2), .G(G)) u_r (
+        .W(RW), .DEPTH(DR), .AF(2), .G(G)) u_r (
         .wclk(ckh), .wrst_n(hrst_n), .w_v(kr_q), .w_d(krd_q), .w_rdy(l_rdy), .w_credit(l_cr), .w_ovf(l_ovf),
         .rclk(cks), .rrst_n(srst_n), .r_v(l_v), .r_pop(1'b1), .r_pop_g({NGR{1'b1}}), .r_d(l_d));
     // response output register: data loads every cycle (rv qualifies it; no enable fan-out on the FIFO's empty flop)

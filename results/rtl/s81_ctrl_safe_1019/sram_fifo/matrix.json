@@ -1,0 +1,50 @@
+[
+ {
+  "case": "w277_p0_base",
+  "rc": 0,
+  "expect": "pass",
+  "qualified": true
+ },
+ {
+  "case": "w277_p180_base",
+  "rc": 0,
+  "expect": "pass",
+  "qualified": true
+ },
+ {
+  "case": "w277_p720_base",
+  "rc": 0,
+  "expect": "pass",
+  "qualified": true
+ },
+ {
+  "case": "w340_p0_base",
+  "rc": 0,
+  "expect": "pass",
+  "qualified": true
+ },
+ {
+  "case": "w340_p0_current",
+  "rc": 1,
+  "expect": "fail",
+  "qualified": true
+ },
+ {
+  "case": "w340_p0_emptyread",
+  "rc": 1,
+  "expect": "fail",
+  "qualified": true
+ },
+ {
+  "case": "w340_p180_base",
+  "rc": 0,
+  "expect": "pass",
+  "qualified": true
+ },
+ {
+  "case": "w340_p720_base",
+  "rc": 0,
+  "expect": "pass",
+  "qualified": true
+ }
+]
