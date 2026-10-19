@@ -2044,7 +2044,7 @@ def record(m):
                     expanded=ASTK_EXPAND, relay_edges=ASTK_RL, z_stride=ASTK_Z_STRIDE,
                     eread_edges=ASTK_ERL, fault_join_edges=1 if ASTK_EXPAND else 0,
                     owner_issue_edges=[2 + e * (2 + ASTK_RL) for e in range(8)] if ASTK_EXPAND else None,
-                    calendar_status='PRODUCTION_CALENDAR_MEASUREMENT_REQUIRED' if ASTK_EXPAND else 'LEGACY',
+                    calendar_status='MEASURED results/arch/qwen_kv_die/hkv_astk_calendar_1018/astk_calendar_law.json (kv_static_programme applies it under OT_KV_ASTK_EXPAND=1; T8192 slot +42 edges)' if ASTK_EXPAND else 'LEGACY',
                     eread_law='7 + 7*(2+RL): 8 owner leaves with input/output flops and resettable inter-owner relays'
                               if ASTK_EXPAND else 'EP3 + request2 + response2')} if ASTK_ST else {}),
                 **{k: v for k, v in m.get('static_die', {}).items()})

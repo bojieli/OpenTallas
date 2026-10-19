@@ -1,0 +1,136 @@
+{
+ "schema": "opentallas.qwen_kv.astk_reprice.v1",
+ "rows": {
+  "1": {
+   "legacy": {
+    "svc": 915,
+    "PV_START": 621,
+    "P": 245,
+    "R": 245
+   },
+   "expanded": {
+    "svc": 955,
+    "PV_START": 626,
+    "P": 280,
+    "R": 280
+   },
+   "d_svc": 40
+  },
+  "1000": {
+   "legacy": {
+    "svc": 976,
+    "PV_START": 634,
+    "P": 293,
+    "R": 293
+   },
+   "expanded": {
+    "svc": 1016,
+    "PV_START": 639,
+    "P": 328,
+    "R": 328
+   },
+   "d_svc": 40
+  },
+  "2048": {
+   "legacy": {
+    "svc": 1038,
+    "PV_START": 632,
+    "P": 357,
+    "R": 357
+   },
+   "expanded": {
+    "svc": 1078,
+    "PV_START": 637,
+    "P": 392,
+    "R": 392
+   },
+   "d_svc": 40
+  },
+  "3000": {
+   "legacy": {
+    "svc": 1100,
+    "PV_START": 630,
+    "P": 421,
+    "R": 421
+   },
+   "expanded": {
+    "svc": 1140,
+    "PV_START": 635,
+    "P": 456,
+    "R": 456
+   },
+   "d_svc": 40
+  },
+  "5000": {
+   "legacy": {
+    "svc": 1340,
+    "PV_START": 742,
+    "P": 549,
+    "R": 549
+   },
+   "expanded": {
+    "svc": 1382,
+    "PV_START": 749,
+    "P": 584,
+    "R": 584
+   },
+   "d_svc": 42
+  },
+  "6144": {
+   "legacy": {
+    "svc": 1450,
+    "PV_START": 788,
+    "P": 613,
+    "R": 613
+   },
+   "expanded": {
+    "svc": 1492,
+    "PV_START": 795,
+    "P": 648,
+    "R": 648
+   },
+   "d_svc": 42
+  },
+  "7000": {
+   "legacy": {
+    "svc": 1560,
+    "PV_START": 834,
+    "P": 677,
+    "R": 677
+   },
+   "expanded": {
+    "svc": 1602,
+    "PV_START": 841,
+    "P": 712,
+    "R": 712
+   },
+   "d_svc": 42
+  },
+  "8192": {
+   "legacy": {
+    "svc": 1670,
+    "PV_START": 880,
+    "P": 741,
+    "R": 741
+   },
+   "expanded": {
+    "svc": 1712,
+    "PV_START": 887,
+    "P": 776,
+    "R": 776
+   },
+   "d_svc": 42
+  }
+ },
+ "slot": "the static attention slot is sized at T=8192 (att8192 -> service_end); every shorter context fits inside it",
+ "token": {
+  "layers": 36,
+  "d_edges_per_layer": 42,
+  "d_edges": 1512,
+  "token_cycles": 249431.0,
+  "e2e_loss_pct": 0.603,
+  "tok_s_before": 4810.95,
+  "tok_s_after": 4781.96,
+  "basis": "results/arch/token_path_20261009/qwen_rom.json (36 layers, attn_kv serial per layer; KV core edges = 1.2 GHz token edges)"
+ }
+}
