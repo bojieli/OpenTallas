@@ -86,13 +86,13 @@ module ot_hnx_argmax_wide_rows #(
     wire [3:0] bcnt = rd_last ? 4'(rem) : 4'(WS - 1);     // sectors in this beat - 1
     wire [17:0] na = (MUT == 1) ? ra : ra + ars_q;     // next row's A base
     wire [17:0] nle = na + n_q - 18'd1;
-    reg [17:0] dp [0:8];                                  // {v, cs3, first, last, off3, lastw3, cnt4}
-    wire [17:0] di = dp[7];
+    reg [15:0] dp [0:8];                                  // {v, cs3, first, last, off3, lastw3, cnt4}
+    wire [15:0] di = dp[7];
     reg cap_v, cap_first, cap_last; reg [2:0] cap_off, cap_lastw; reg [3:0] cap_cnt; reg [LP*32-1:0] cap_d;
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin vm_rq <= 136'd0; cap_v <= 1'b0; for (integer d = 0; d < 9; d = d + 1) dp[d] <= 18'd0; end
+        if (!rst_n) begin vm_rq <= 136'd0; cap_v <= 1'b0; for (integer d = 0; d < 9; d = d + 1) dp[d] <= 16'd0; end
         else begin
-            vm_rq <= 136'd0; dp[0] <= 18'd0;
+            vm_rq <= 136'd0; dp[0] <= 16'd0;
             for (integer d = 1; d < 9; d = d + 1) dp[d] <= dp[d-1];
             if (rd_now) begin
                 for (integer k = 0; k < WS; k = k + 1) if (4'(k) <= bcnt) begin
@@ -100,17 +100,17 @@ module ot_hnx_argmax_wide_rows #(
                 end
                 dp[0] <= {1'b1, i_sec[2:0], i_first, rd_last, i_first ? ra[2:0] : 3'd0, le[2:0], bcnt};
             end
-            cap_v <= di[17];
+            cap_v <= di[15];
         end
     always @(posedge clk) begin
         for (integer k = 0; k < WS; k = k + 1)
-            cap_d[256*k +: 256] <= vm_rr[257*((MUT == 4) ? k : ((di[16:14] + 3'(k)) & 3'(7))) +: 256];
-        {cap_first, cap_last, cap_off, cap_lastw, cap_cnt} <= di[13:0];
+            cap_d[256*k +: 256] <= vm_rr[257*((MUT == 4) ? k : ((di[14:12] + 3'(k)) & 3'(7))) +: 256];
+        {cap_first, cap_last, cap_off, cap_lastw, cap_cnt} <= di[11:0];
     end
     reg rd_bad; reg [7:0] exp_bk;
     always @* begin
         rd_bad = 1'b0; exp_bk = 8'd0;
-        for (integer k = 0; k < WS; k = k + 1) if (di[17] && 4'(k) <= di[3:0]) exp_bk[(di[16:14] + 3'(k)) & 3'(7)] = 1'b1;
+        for (integer k = 0; k < WS; k = k + 1) if (di[15] && 4'(k) <= di[3:0]) exp_bk[(di[14:12] + 3'(k)) & 3'(7)] = 1'b1;
         for (integer l = 0; l < 8; l = l + 1) if (vm_rr[257*l+256] != exp_bk[l]) rd_bad = 1'b1;
     end
     // ---------------------------------------------------------------- engine (closed, parameter LP = 8 WS only)
