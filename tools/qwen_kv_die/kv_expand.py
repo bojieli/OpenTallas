@@ -74,6 +74,10 @@ VIEWS = dict(
     qkd_rlyi_258=f'{RT}/qkd_rlyi_258/views/qkd_rlyi_258', qkd_pv_rs_hd=f'{RT}/qkd_pv_rs_hd/views/qkd_pv_rs_hd',
     # KV-KITS/NATIVE 10-18: their native-pin successors (pv_trunk_gen default; r1 views fail native capture on the selects)
     qkd_rlyi_258s=f'{RT}/qkd_rlyi_258s/views/qkd_rlyi_258s', qkd_pv_rs_hd_r=f'{RT}/qkd_pv_rs_hd_r/views/qkd_pv_rs_hd_r',
+    # AD3-KV-PARENTS 10-18: the static sequencer qkd_seq_static_s (die slot seq, kv_static_die SEQ_S) is a wires-only parent
+    # of 9 CLOSED leaves -> die-placed (the die is its parent), no hardened cluster view
+    qkd_seq_core_static_s=f'{RT}/qkd_seq_core_st_s/views/qkd_seq_core_static_s',
+    qkd_seq_xs_s=f'{RT}/qkd_seq_xs_s/views/qkd_seq_xs_s', qkd_seq_fan_s=f'{RT}/qkd_seq_fan_s/views/qkd_seq_fan_s',
 )
 SR = 'rtl/qwen_sys/split_20261014'
 RTL = dict(ot_qkh_head_frontq_native=f'{SR}/ot_qkh_head_native_r4.sv', ot_qkh_head_score4_native=f'{SR}/ot_qkh_head_native_r4.sv',
@@ -88,7 +92,9 @@ RTL = dict(ot_qkh_head_frontq_native=f'{SR}/ot_qkh_head_native_r4.sv', ot_qkh_he
               ('ot_qwen_tp8_pv_slice_t', 'ot_qwen_tp8_pv_join_t', 'ot_qwen_tp8_pv_wide_ctl')},
            ot_qwen_tp8_pv_wide_ctl_t='rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_ctl_t.sv',
            **{f'qkd_rlys_{w_}': 'rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv' for w_ in (1, 36, 296)},
-           **{m_: 'rtl/qwen_sys/split_20261014/qkd_pv_rtrunk.sv' for m_ in ('qkd_rlyi_258', 'qkd_pv_rs_hd', 'qkd_rlyi_258s', 'qkd_pv_rs_hd_r')})
+           **{m_: 'rtl/qwen_sys/split_20261014/qkd_pv_rtrunk.sv' for m_ in ('qkd_rlyi_258', 'qkd_pv_rs_hd', 'qkd_rlyi_258s', 'qkd_pv_rs_hd_r')},
+           **{m_: 'rtl/qwen_sys/static_kv_20261014/qkd_seq_static_s.sv' for m_ in
+              ('qkd_seq_core_static_s', 'qkd_seq_xs_s', 'qkd_seq_fan_s')})
 # v1.4.4: wires-only sub-levels of an expanded parent (flattened with the parent; never a die instance)
 SUBLEVELS = dict(qkd_pvw_die=(('rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_pair.sv', 'ot_qwen_tp8_pv_wide_pair'),
                              ('rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_pair.sv', 'ot_qwen_tp8_pv_col')))
@@ -157,8 +163,19 @@ def _pv_plan():
                                  pl[cell.split('u_pair.', 1)[-1]][4])
 
 
+# AD3-KV-PARENTS 10-18: qkd_seq_static_s leaf homes in the seq frame (604.8 x 475.2, canonical R0; 43.2-um lattice): W fans
+# (aq_WS / aq_WN faces) at x 43.2, E fans (MY) at x 518.4, the 2 x 2 Q-FIFO block (xs, MX: x_d inputs toward the S prg face)
+# in the middle, the core in the centre gap between the xs rows (it drives x_v / qpop to all 4 xs and aqm / kc to all 4 fans).
+SEQ_S_PLAN = {'u_core': (302.4, 259.2, 'MX'),
+              'g_xs[0].u_xs': (172.8, 129.6, 'MX'), 'g_xs[1].u_xs': (345.6, 129.6, 'MX'),
+              'g_xs[2].u_xs': (172.8, 302.4, 'MX'), 'g_xs[3].u_xs': (345.6, 302.4, 'MX'),
+              'g_fan[1].u_fan': (43.2, 129.6, 'R0'), 'g_fan[0].u_fan': (43.2, 259.2, 'R0'),
+              'g_fan[3].u_fan': (518.4, 129.6, 'MY'), 'g_fan[2].u_fan': (518.4, 259.2, 'MY')}
+
+
 def frames():
     return dict(
+        qkd_seq_st=dict(plan=lambda cell, fw, fh: SEQ_S_PLAN[cell], straps=lambda inst: {}),
         qkd_rhead=dict(plan=_head_plan(), straps=lambda inst: dict(hid=int(inst.rsplit('_', 1)[1]))),
         qkd_rhead_ft=dict(plan=_head_plan(True), straps=lambda inst: dict(hid=int(inst.rsplit('_', 1)[1]))),
         qkd_ectl=dict(plan=_ectl_plan(),
