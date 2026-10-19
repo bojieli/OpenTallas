@@ -22,6 +22,13 @@ Checks (PASS needs all, plus mu_opseg_bench C1..C7):
   K5 no sticky fault on the KV MU port, the reference port, the face receiver or the leaf.
 Mutants (each must FAIL): --kmut 1 wrong user field, --kmut 2 wrong slot (pair order swapped), --kmut 3 producer off;
 --rmut 1 leaf loads into the wrong user.
+CAL mode (MU-DQ-SYSFACE 2026-10-19; DEFAULT, --model-link = the original bench-edge pair): the pair slots come from the
+two dies' REAL D2D sequencers (qfd_d2d_cal_seq = the qfd_sys_face MU kit's, qkd_d2d_cal_seq) built from
+ot_qwen_d2d_cal_seq_dies_mu.sv / d2d_cal_image_mu.svh, played by the real ot_qwen_d2d_cal (C RX, KV TX); each pair = one
+token-run start of both calendars 3 edges before the old pair edge (K TX context beats at token-run cycles 2 / 3), halted
+40 edges later.  The link = LINK_CAL = 16 edges (production image: K TX slot 2 -> C pin arrival 18).  Extra check:
+  K6 no sequencer / calendar fault; the KV TX and C RX calendars each play 2 context events per pair.
+--cmut 1 (CAL only): the face sequencer carries the MU 0 C RX image (a qfd_sys_face kit without the MU image): must FAIL.
 """
 import argparse, json, os, subprocess, sys
 from pathlib import Path
@@ -34,6 +41,8 @@ O = B.O
 
 TB = HERE / 'tb_mu_kvctx.sv'
 LIST = HERE / 'lists/tb_mu_kvctx.f'
+LINK_CAL = 16                  # CAL: K TX context slot (token-run cycle 2) -> C RX pin arrival (18) in the production image
+D2D = ROOT / 'rtl/qwen_sys/d2d_static_20261015'
 NU, LINK = B.NU, 14            # send -> compute RX slot = 2 record-port edges + LINK = 16 = the production image (K cyc 2 -> C arrive 18)
 PRE, U0 = B.PRE, B.U0
 
@@ -50,13 +59,24 @@ SCHED = [  # (cycle of the request; the epoch pulse is one edge before), user, s
 PAIRS = [200, 400, 600, 800]
 
 
+CAL = True
+
+
+def img_const(path, name):
+    import re
+    return re.search(name + r" = (\d+'h[0-9a-f]+)", path.read_text()).group(1)
+
+
 def kv_events():
     ev = []
     for c, u, s, tok, pos in SCHED:
         e = ep(u, s)
         ev.append((c - 1, 4, e))
         ev.append((c, 5, (s & 3) << 59 | tag(e, tok, pos)))
-    ev += [(c, 6, 0) for c in PAIRS]
+    if CAL:
+        ev += [(c - 3, 7, 0) for c in PAIRS] + [(c - 3 + 40, 8, 0) for c in PAIRS]
+    else:
+        ev += [(c, 6, 0) for c in PAIRS]
     return ev
 
 
@@ -72,14 +92,18 @@ def events_for(pb, face, res, users, ctx=True):
 B.events_for = events_for
 
 
-def build(work, vl, kmut, rmut, jobs):
-    d = work / f'b_kvctx_k{kmut}_r{rmut}'
+def build(work, vl, kmut, rmut, jobs, cmut=0):
+    d = work / (f'b_kvctx_k{kmut}_r{rmut}' + (f'_cal_c{cmut}' if CAL else ''))
     exe = d / 'Vtb_mu_kvctx'
     if exe.exists(): return exe
     srcs = [str(ROOT / l.strip()) for l in LIST.read_text().split('\n') if l.strip() and not l.startswith('#')]
     cmd = [vl, '--binary', '--timing', '-O2', '-j', str(jobs), '-Wno-fatal', '-Wno-lint', '-Wno-style', '-Wno-TIMESCALEMOD',
            '-Wno-WIDTHCONCAT', '--x-assign', '0', '--x-initial', '0', '--top-module', 'tb_mu_kvctx',
-           f'-GNU={NU}', '-GMUT=0', '-GOPSEG=1', f'-GKMUT={kmut}', f'-GRMUT={rmut}', f'-GLINK={LINK}', '-Mdir', str(d)] + srcs
+           f'-GNU={NU}', '-GMUT=0', '-GOPSEG=1', f'-GKMUT={kmut}', f'-GRMUT={rmut}', f'-GLINK={LINK_CAL if CAL else LINK}',
+           f'-GCAL={int(CAL)}', f'-GCMUT={cmut}', f'-I{D2D}',
+           '-GCRX_SEG1=' + img_const(D2D / 'd2d_cal_image_mu.svh', 'D2D_CAL_C_RX_SEG1'),
+           '-GKTX_SEG1=' + img_const(D2D / 'd2d_cal_image_mu.svh', 'D2D_CAL_K_TX_SEG1'),
+           '-GCRX_MU0=' + img_const(D2D / 'd2d_cal_image.svh', 'D2D_CAL_C_RX_IMG'), '-Mdir', str(d)] + srcs
     d.mkdir(parents=True, exist_ok=True)
     r = subprocess.run(cmd, capture_output=True, text=True)
     (d / 'build.log').write_text(r.stdout + r.stderr)
@@ -89,7 +113,7 @@ def build(work, vl, kmut, rmut, jobs):
 
 
 def kv_checks(log, mu, fails, summ):
-    ktx, kid, frx, ld, kend, kidn = [], [], [], [], None, None
+    ktx, kid, frx, ld, kend, kidn, kcal = [], [], [], [], None, None, None
     for ln in log.read_text().split('\n'):
         p = ln.split()
         if len(p) < 2: continue
@@ -100,6 +124,7 @@ def kv_checks(log, mu, fails, summ):
         elif k == 'FRX': frx.append((c, int(p[2], 16), int(p[3]), int(p[4])))
         elif k == 'CTXLD': ld.append((c, int(p[2]), int(p[3], 16), int(p[4], 16)))
         elif k == 'KEND': kend = tuple(int(x) for x in p[2:6])
+        elif k == 'KCALEND': kcal = tuple(int(x) for x in p[2:8])
     # K1
     if kid or kidn != len(PAIRS):
         fails.append(f'K1 KV identity: {len(kid)} reference words differ (of {kidn}, want {len(PAIRS)}): {kid[:2]}')
@@ -126,24 +151,33 @@ def kv_checks(log, mu, fails, summ):
     # K5
     if kend != (0, 0, 0, 0):
         fails.append(f'K5 sticky faults kv_mu / kv_ref / face / leaf = {kend}')
-    summ['kv'] = dict(ktx=len(ktx), kid_compared=kidn, kid_bad=len(kid), face_rx=[(c, f'{t:x}') for c, t, v, f in frx],
-                      loads=ld, kend=kend, link=LINK, pairs=PAIRS)
+    # K6 (CAL): real sequencers / calendars
+    if CAL and kcal != (0, 0, 0, 0, 2 * len(PAIRS), 2 * len(PAIRS)):
+        fails.append(f'K6 calendars: faults cseq / kseq / crx / ktx + context events ktx / crx = {kcal} '
+                     f'(want 0 0 0 0 {2 * len(PAIRS)} {2 * len(PAIRS)})')
+    summ['kv'] = dict(kcal=kcal, cal=CAL, ktx=len(ktx), kid_compared=kidn, kid_bad=len(kid), face_rx=[(c, f'{t:x}') for c, t, v, f in frx],
+                      loads=ld, kend=kend, link=LINK_CAL if CAL else LINK, pairs=PAIRS)
 
 
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--work', required=True); ap.add_argument('--kmut', type=int, default=0)
     ap.add_argument('--rmut', type=int, default=0)
+    ap.add_argument('--cmut', type=int, default=0)
+    ap.add_argument('--model-link', action='store_true', help='the original bench-edge pair (no sequencers / calendars)')
     ap.add_argument('--verilator', default=os.environ.get('VERILATOR', 'verilator')); ap.add_argument('--jobs', type=int, default=8)
     a = ap.parse_args()
+    global CAL
+    CAL = not a.model_link
+    if a.cmut and not CAL: sys.exit('--cmut needs CAL mode')
     work = Path(a.work); work.mkdir(parents=True, exist_ok=True)
     e1 = B.build(work, a.verilator, 1, 0, 0, a.jobs)
-    e4 = build(work, a.verilator, a.kmut, a.rmut, a.jobs)
-    fails, summ = [], dict(kmut=a.kmut, rmut=a.rmut)
+    e4 = build(work, a.verilator, a.kmut, a.rmut, a.jobs, a.cmut)
+    fails, summ = [], dict(kmut=a.kmut, rmut=a.rmut, cmut=a.cmut, cal=CAL)
     cal = O.compile_frame(16, layers=2)
     rd = work / 'rom_red'; rd.mkdir(exist_ok=True)
     (rd / f'{B.INST}.viamap.hex').write_text(O.viamap_hex(O.rom_words(cal)))
-    name = f'kvctx_k{a.kmut}_r{a.rmut}'
+    name = f'kvctx_k{a.kmut}_r{a.rmut}' + (f'_cal_c{a.cmut}' if CAL else '')
     B.check_case(name, cal, B.RED_FRAMES + 1, B.S0 + B.RED_FRAMES * cal['H'] + 2000, e1, e4, work, rd, 0, fails, summ)
     # re-read the MU run's log (check_case ran it as <name>_mu)
     log = work / f'{name}_mu.log'
@@ -156,7 +190,7 @@ def main():
     summ['verdict'] = 'PASS' if not fails else 'FAIL'
     summ['fails'] = fails
     (work / f'summary_{name}.json').write_text(json.dumps(summ, indent=1, default=str))
-    print(f"MU_KVCTX_{summ['verdict']} kmut {a.kmut} rmut {a.rmut}" + ('' if not fails else ': ' + ' | '.join(fails)))
+    print(f"MU_KVCTX_{summ['verdict']} kmut {a.kmut} rmut {a.rmut}" + (f' cal cmut {a.cmut}' if CAL else '') + ('' if not fails else ': ' + ' | '.join(fails)))
     print(json.dumps({k: v for k, v in summ.items() if k != 'fails'}, default=str)[:4000])
     return 0 if not fails else 1
 

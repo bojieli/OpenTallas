@@ -14,11 +14,31 @@
 //   5 KREQ {gen2 [60:59], tag59}: request_v (token = tag[36:19], position = tag[18:6]); same routing by tag[44:43]
 //   6 KPAIR: the token run's compiled context slot pair: send_kind 3 at this edge (MU slot) and the next (user-0 slot);
 //          the reference port gets send_kind 3 on the next edge only (the single-user calendar's slot)
+//   7 KCAL (CAL 1): token-run calendar start (segment 1) of BOTH link-end calendars (see CAL below)
+//   8 KHALT (CAL 1): stop both calendars (the bench plays only the token-run prefix that carries the context pair)
+// CAL 1 (MU-DQ-SYSFACE 2026-10-19, the default of mu_kvctx_bench.py): the pair is no longer a bench edge pair.  The
+//   compute face's REAL sequencer qfd_d2d_cal_seq and the KV die's qkd_d2d_cal_seq (ot_qwen_d2d_cal_seq_dies_mu.sv = the
+//   MU image d2d_cal_image_mu.svh, as built into the qfd_sys_face MU kit) write their images through their cfg ports
+//   into the link ends' REAL calendar playback ot_qwen_d2d_cal: the C end's RX calendar and the KV end's TX calendar.
+//   The bench then loads the token-run segment-1 base (the sequencer does that only after an epoch's admission run, at
+//   edge 1172 of the epoch; this ctlm schedule needs the pairs before S0 = 1100) and starts both calendars on one edge
+//   (KCAL), as the two dies' anchored token starts do.  KV TX events port 1 kind 12 drive the MU port's send_kind 3
+//   (both beats; the reference MU 0 port only on beat 0 = the single-user slot); C RX events port 1 kind 12 become
+//   the face's prog_context_slot 2 edges later (ot_qwen_d2d_static_end rx_slot = r1v registered; qfd_d2d_static
+//   prog_context_slot = rxs[1] && kind 12).  The link is the compiled fixed latency LINK = C pin arrival - K TX slot
+//   (16 in the production image, die stages incl. pin registers); the words are NOT aligned by the bench: a C image
+//   without the MU slot, or a slot one edge off, makes the face receiver fault (rx_v != slot).
+//   CMUT 1: the compute face's sequencer image is the MU 0 image (CRX_MU0, the committed d2d_cal_image.svh C RX
+//   entries) = a qfd_sys_face kit built without the MU image; it must FAIL.
 // Extra log: "c KTX obs tag" (MU port word), "c KID BAD ..." (reference word != MU port word on a reference edge),
 //   "c KIDN n" (reference edges compared, at END), "c FRX tag fault" (face receiver after each received slot),
-//   "c CTXLD user tok pos" (leaf load), "c KEND kv_mu kv_ref face leaf" (sticky faults at END).
+//   "c CTXLD user tok pos" (leaf load), "c KEND kv_mu kv_ref face leaf" (sticky faults at END),
+//   CAL 1: "c KCALEND cseq kseq crx_cal ktx_cal n_ktx_ctx n_crx_ctx" (sequencer / calendar faults + context events).
 module tb_mu_kvctx;
     parameter integer NU = 4, MUT = 0, OPSEG = 1, KMUT = 0, RMUT = 0, LINK = 14;
+    parameter integer CAL = 0, CMUT = 0;
+    parameter [31:0] CRX_SEG1 = 32'd0, KTX_SEG1 = 32'd0;     // token-run segment-1 bases (the images' D2D_CAL_*_SEG1)
+    parameter [1023:0] CRX_MU0 = 1024'd0;                   // CMUT 1: the MU 0 C RX image
     reg ck = 1'b0;
     always #5 ck = ~ck;
     reg rst_n = 1'b0;
@@ -34,7 +54,8 @@ module tb_mu_kvctx;
 
     // ------------------------------------------------------------------ KV die: host record ports
     localparam [15:0] PEP = 16'h0A51;  localparam [63:0] PDG = 64'h0123_4567_89AB_CDEF;
-    reg  [1:0]  sk_mu = 0, sk_ref = 0;
+    reg  [1:0]  sk_mu_b = 0, sk_ref_b = 0;
+    wire [1:0]  sk_mu, sk_ref;   // the record ports' send slots (CAL 1: from the KV TX calendar, below)
     reg         tev_mu = 0, tev_ref = 0, rq_mu = 0, rq_ref = 0;
     reg  [15:0] tep = 0; reg [58:0] rtag = 0; reg [1:0] rgen = 0;
     wire        m_tv, m_to, m_f, r_tv, r_to, r_f;
@@ -65,7 +86,36 @@ module tb_mu_kvctx;
         for (li = 1; li < LINK; li = li + 1) lr[li] <= lr[li - 1];
         sl <= {sl[LINK:0], sk_mu == 2'd3};
     end
-    wire         c_slot = sl[LINK + 1];
+    // ---- CAL 1: the two link ends' real sequencers + calendar playback (see the header)
+    reg          kcal = 0, khalt = 0, bwe = 0;
+    wire         cs_txwe, cs_rxwe, ks_txwe, ks_rxwe, cs_f, ks_f, cs_rdy, ks_rdy;
+    wire [5:0]   cs_a, ks_a; wire [31:0] cs_d, ks_d;
+    qfd_d2d_cal_seq u_cseq (.ck(ck), .rst_n(rst_n), .reload(1'b0), .tok_go(1'b0), .epoch_go(1'b0), .halt(1'b0),
+        .cfg_tx_we(cs_txwe), .cfg_rx_we(cs_rxwe), .cfg_addr(cs_a), .cfg_data(cs_d), .cal_start(), .cal_seg(),
+        .cal_ready(cs_rdy), .running(), .layer(), .adm_done(), .tok_start(), .fault(cs_f));
+    qkd_d2d_cal_seq u_kseq (.ck(ck), .rst_n(rst_n), .reload(1'b0), .tok_go(1'b0), .epoch_go(1'b0), .halt(1'b0),
+        .cfg_tx_we(ks_txwe), .cfg_rx_we(ks_rxwe), .cfg_addr(ks_a), .cfg_data(ks_d), .cal_start(), .cal_seg(),
+        .cal_ready(ks_rdy), .running(), .layer(), .adm_done(), .tok_start(), .fault(ks_f));
+    // C RX cfg: the face sequencer's writes (CMUT 1: the same writes carrying the MU 0 image's entries); bwe = the bench's
+    // token-run base write (cfg_addr[5] = 1), on an edge where both sequencers are idle (after cal_ready)
+    wire [31:0]  crx_d = bwe ? CRX_SEG1 : (CMUT == 1 && !cs_a[5]) ? CRX_MU0[32 * cs_a[4:0] +: 32] : cs_d;
+    wire         crv, ktv, crf, ktf, crr, ktr; wire [2:0] crp, ktp; wire [3:0] crk, ktk; wire [4:0] crb, ktb;
+    ot_qwen_d2d_cal #(.NE(32)) u_crx (.ck(ck), .rst_n(rst_n), .cfg_we(cs_rxwe | bwe), .cfg_addr(bwe ? 6'h20 : cs_a),
+        .cfg_data(crx_d), .start(kcal), .start_seg(1'b1), .halt(khalt), .ev_v(crv), .ev_port(crp), .ev_kind(crk),
+        .ev_beat(crb), .running(crr), .fault(crf));
+    ot_qwen_d2d_cal #(.NE(32)) u_ktx (.ck(ck), .rst_n(rst_n), .cfg_we(ks_txwe | bwe), .cfg_addr(bwe ? 6'h20 : ks_a),
+        .cfg_data(bwe ? KTX_SEG1 : ks_d), .start(kcal), .start_seg(1'b1), .halt(khalt), .ev_v(ktv), .ev_port(ktp),
+        .ev_kind(ktk), .ev_beat(ktb), .running(ktr), .fault(ktf));
+    wire         k_ctx = ktv && ktp == 3'd1 && ktk == 4'd12;          // KV TX: the record port's context send slot
+    wire         c_ctx_ev = crv && crp == 3'd1 && crk == 4'd12;       // C RX: a context arrival (pin edge r)
+    // CAL 1: the KV TX calendar's context events are the send slots (MU port: both beats; MU 0 reference: beat 0 only)
+    assign      sk_mu  = CAL ? (k_ctx ? 2'd3 : 2'd0) : sk_mu_b;
+    assign      sk_ref = CAL ? ((k_ctx && ktb == 5'd0) ? 2'd3 : 2'd0) : sk_ref_b;
+    reg  [1:0]   cr_sl = 0;                                          // ot_qwen_d2d_static_end: rx_slot at r + 2
+    always @(posedge ck) cr_sl <= {cr_sl[0], c_ctx_ev};
+    integer nk_ctx = 0, nc_ctx = 0;
+    always @(posedge ck) if (rst_n) begin if (k_ctx) nk_ctx <= nk_ctx + 1; if (c_ctx_ev) nc_ctx <= nc_ctx + 1; end
+    wire         c_slot = CAL ? cr_sl[1] : sl[LINK + 1];
     wire         c_rxv  = lo[LINK - 1];          // the D2D end delivers an OBSERVED word only (tx_valid = observed)
     wire [547:0] c_rec  = lr[LINK - 1];
 
@@ -131,7 +181,12 @@ module tb_mu_kvctx;
             // inputs for the next posedge (cyc + 1)
             pw[74] = 1'b0; dh[118] = 1'b0; dh[186] = 1'b0; dh[42] = 1'b0; ss5 = 107'd0;
             tev_mu = 0; tev_ref = 0; rq_mu = 0; rq_ref = 0;
-            sk_mu = pair2 ? 2'd3 : 2'd0; sk_ref = pair2 ? 2'd3 : 2'd0; pair2 = 0;
+            sk_mu_b = pair2 ? 2'd3 : 2'd0; sk_ref_b = pair2 ? 2'd3 : 2'd0; pair2 = 0;
+            kcal = 0; khalt = 0; bwe = 0;
+            if (CAL && cyc + 1 == 150) begin
+                if (!cs_rdy || !ks_rdy) $fatal(1, "sequencer images not loaded by edge 150");
+                bwe = 1;
+            end
             while (have && ec == cyc + 1) begin
                 case (ek)
                     0: begin pw = {1'b1, ev[73:0]}; dh[118:44] = {1'b1, ev[73:0]}; end
@@ -140,7 +195,9 @@ module tb_mu_kvctx;
                     3: begin ss5[24] = 1'b1; ss5[17:0] = ev[17:0]; ss5[27:26] = ev[43:42]; ss5[97:74] = ev[41:18]; end
                     4: begin tep = ev[15:0]; tev_mu = 1; tev_ref = (ev[1:0] == 2'd0); end
                     5: begin rtag = ev[58:0]; rgen = ev[60:59]; rq_mu = 1; rq_ref = (ev[44:43] == 2'd0); end
-                    6: begin sk_mu = 2'd3; pair2 = 1; end
+                    6: begin if (CAL) $fatal(1, "KPAIR in CAL mode"); sk_mu_b = 2'd3; pair2 = 1; end
+                    7: begin if (!CAL) $fatal(1, "KCAL needs CAL 1"); kcal = 1; end
+                    8: begin if (!CAL) $fatal(1, "KHALT needs CAL 1"); khalt = 1; end
                     default: $fatal(1, "bad kind %0d", ek);
                 endcase
                 r = $fscanf(fd, "%d %d %h\n", ec, ek, ev); have = (r == 3);
@@ -150,6 +207,7 @@ module tb_mu_kvctx;
             if (cyc >= ncyc) begin
                 $fdisplay(lg, "%0d KIDN %0d", cyc, kidn);
                 $fdisplay(lg, "%0d KEND %0d %0d %0d %0d", cyc, m_f, r_f, h_f, x_f);
+                if (CAL) $fdisplay(lg, "%0d KCALEND %0d %0d %0d %0d %0d %0d", cyc, cs_f, ks_f, crf, ktf, nk_ctx, nc_ctx);
                 $fdisplay(lg, "%0d END %0d %b %0d %0d %b", cyc, dut.u_cal.fault, dut.u_cal.fault_code, dut.start_fault,
                           dut.op_fault, dut.l_fcode);
                 $fclose(lg);
