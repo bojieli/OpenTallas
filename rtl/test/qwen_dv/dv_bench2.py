@@ -122,7 +122,7 @@ def run_sim2(name, ev, work, mut, ncyc, n=2):
     work.mkdir(parents=True, exist_ok=True)
     evf, lgf = work / f"{name}.ev", work / f"{name}.log"
     vtag = "".join(c for c in "_".join(f.lstrip("-+") for f in VFLAGS) if c.isalnum() or c in "_=")
-    obj = work / f"obj2_n{n}_nu{MU_NU}_f{FACE}_am{AM_MUT}" / (vtag or "base")
+    obj = work / (f"obj2_n{n}_nu{MU_NU}_f{FACE}_am{AM_MUT}" + ("_sr1" if SAFE_RESET else "")) / (vtag or "base")
     exe = obj / "Vtb"
     ev.write(evf)
     if not exe.exists():
@@ -764,6 +764,8 @@ def main():
     ap.add_argument("--vflags", default="", help="extra Verilator flags (use a separate --work: objects are cached)")
     a = ap.parse_args()
     VFLAGS[:] = a.vflags.split()
+    if SAFE_RESET and not any("OT_QFD_DV_SAFE_STORAGE" in f for f in VFLAGS):
+        raise SystemExit("DV2_SAFE_RESET requires OT_QFD_DV_SAFE_STORAGE: station source is shape-specialized")
     global MU_NU, FACE
     for f in list(VFLAGS):        # MU_NU / FACE are passed by run_sim2 itself (one -G each)
         if f.startswith("-GMU_NU="):
