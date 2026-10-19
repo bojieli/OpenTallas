@@ -1,0 +1,57 @@
+{
+  "phase": "PRE_EDIT_FROZEN",
+  "source": "5f2ce19bc",
+  "selected_GEN8_D2D": "FRAME / bind=NULL",
+  "source_component": "private generated SF splice, not GEN8 binding",
+  "hashes": {
+    "current_safe_fo.sv": "9b3694353d39abc17f83e52f2f6de4273fa3dbe498a138dbee147e436bcefb67",
+    "current_dies_sfo.sv": "8cc1bca311e9aecbe054b7ee8a3667d860374d110dbe752ee7f5db04f51fb7bb",
+    "qkd_d2d_cal_seq_bootcfg.sv": "9c43fc17792f780f3b53d635437ed9a6da37737480e480a2ce95b122c4960ae4",
+    "ot_qwen_d2d_cal_seq.sv": "5edaee7a8c1650c6babfd9fae99b4f83a2cafc3eaed557934721778a5f977688",
+    "ot_qwen_d2d_cal_seq_dies_mu.sv": "5ed298078d7e2592628e0d70b64129254731664a3601b13efb6a8af2d0bd68a1",
+    "qkd_static_kv_boot_dispatch.sv": "d98fa56b2d32b29b12bc5cf8402cdd697d1f61ceeb6b28bd4d736f8e21cd14f6",
+    "d2d_cal_image_mu.svh": "e7d4d2d0f111661d72c5fd96864a18cbba580f5f9b103233f505d7f298dcb3ae"
+  },
+  "baseline_state_bits": {
+    "dispatcher": 984,
+    "two_configuration_relays": 80,
+    "BC_with_inner": 266,
+    "two_SF_calendars": 2580,
+    "SF_configuration_pin_captures": 190,
+    "SF_start_segment_pin_captures": 18
+  },
+  "baseline_total": 4118,
+  "new_state_allocation": {
+    "calendar_guard_pair": 106,
+    "BC_first_and_poison": 2,
+    "guard_reset_landing": 8,
+    "configuration_metadata_six_captures": 102,
+    "request_metadata_three_captures": 51
+  },
+  "new_state_total": 269,
+  "combined_source_state_bits": 4387,
+  "complete_mapped_area": null,
+  "native_phase": null,
+  "variable_image": null,
+  "whole_parent_price": null,
+  "capture_order": [
+    "dispatcher output",
+    "relay r1",
+    "relay r2",
+    "BC input",
+    "BC merge output",
+    "SF pin"
+  ],
+  "combinational_obligations": [
+    "64 exact 32-bit consumed-half constant compares",
+    "2 exact 5-bit base compares plus actual one-hot copies",
+    "64 seen receipt bits and both base receipts",
+    "epoch comparison on every actual accepted write and start",
+    "same-edge veto before ALL original start branches",
+    "runtime base metadata ownership and original SEG anchors",
+    "reset/reload pair invalidation, no queued retry or upload poison clear"
+  ],
+  "baseline_reset_landing": "Excluded from4118: actual SF full-core reset distribution, native binding unknown; private explicit8 guard landing FF allocated separately. Original module local reset inputs retained; no native release certificate.",
+  "transport_return": "common-clock functional local ready/invalidation wires only; physical return topology and cost NULL",
+  "qualification": "Fixed-image functional mechanism only; no complete physical price"
+}
