@@ -197,15 +197,15 @@
   },
   "job": {
     "owner": "Codex:HBM-BW",
-    "branch": "codex/hbm-bw-safe3-band-1019",
-    "tag": "safe4",
-    "purpose": "Source4461ed960 physical successor after safe3 measured critical qhead->cv->conditionalSRAMraddr at1119.9ps. Measure actual area/fanout/TT1024 and FF hold. Singleclock signoff833 tool blocker remains explicit; no submission/fullproductionclose.",
+    "branch": "codex/hbm-bw-fanout-safe-1019",
+    "tag": "composed",
+    "purpose": "Composed native controller plus one regional KR collar, source retained-state repair and measured band proposal. Floorplan diagnostic only until source32/macroaccess/production/geometry close.",
     "extra_paths": [
-      "physical/hbm_bw_safe3_1019",
+      "physical/hbm_bw_composed_1019",
       "physical/dsrom_window_source",
       "physical/qwen_die_masters"
     ],
-    "record_to": "results/rtl/ref_tile/hdie_pc_ctrl_bw_safe4",
+    "record_to": "results/rtl/ref_tile/hdie_pc_ctrl_bw_composed",
     "no_bench_reason": "Synthesis/floorplan diagnostic only; submit remains prohibited until production bench and committed mutant witnesses are bound."
   },
   "params": {
@@ -235,9 +235,9 @@
   },
   "orfs_vars": {
     "OT_MEG_DEPTH_UM": 48,
-    "PRE_GLOBAL_PLACE_TCL": "physical/hbm_bw_safe3_1019/pre_gpl.tcl",
-    "PRE_DETAIL_PLACE_TCL": "physical/hbm_bw_safe3_1019/pre_dpl.tcl",
-    "POST_IO_PLACEMENT_TCL": "physical/hbm_bw_safe3_1019/post_iop.tcl",
+    "PRE_GLOBAL_PLACE_TCL": "physical/hbm_bw_composed_1019/pre_gpl.tcl",
+    "PRE_DETAIL_PLACE_TCL": "physical/hbm_bw_composed_1019/pre_dpl.tcl",
+    "POST_IO_PLACEMENT_TCL": "physical/hbm_bw_composed_1019/post_iop.tcl",
     "OT_OFLOP_HOPS": 8,
     "OT_OFLOP_ALLOW_NONE": 1,
     "OT_OFLOP_COLS": 4,
@@ -256,12 +256,14 @@
   "util_waiver": "Coordinator explicit 10-19: low fill accepted from measured 13-macro face/lattice/channel bound; outline432x475.2. Measure std area before CTS gate.",
   "fill_reason": {
     "lattice_channel_bound": {
-      "why": "13actualstockSRAMs on43.2lattice20umchannels require432x475.2; oldband9006.94um2 retained only for synthesis-only diagnostic. Measure finalstdarea beforeselectingnewband; no arbitraryhighutil squeeze/noCTS.",
+      "why": "13 actual stock SRAMs on43.2 lattice and actual4cc standard area6109.14992um2. Proposed one band12009.2544um2 at50.87%; geometry review OPEN, source repairs require remeasurement.",
       "approved_by": "CODEX full coordinator, HBM-BW message10-19 08:xx; lane/HANDOFF record",
       "std_band_y_um": [
-        270,
-        291.06
-      ]
+        264.6,
+        292.68
+      ],
+      "measured_source": "4cc83303c",
+      "measured_std_area_um2": 6109.14992
     }
   }
 }
