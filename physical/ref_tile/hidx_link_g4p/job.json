@@ -1,13 +1,13 @@
 {
- "name": "hidx_link_g4p-g4p-COMMIT",
+ "name": "hidx_link_g4p-r3-COMMIT",
  "block": "ot_hbm_idx_topk_link_static_p",
  "ref_tile": true,
- "owner": "Claude HBM-IDXPIPE 1018",
- "purpose": "HBM-IDXPIPE 10-18: pipelined successor of idx_link (ot_hbm_idx_topk_link_static_p): historical 1-edge pack/carry/8-bank write (42 levels, 4,096-b runtime part-select, ~7k-load selects; hidx_link_pr never gateable) -> S1 8-lane group compaction + pair merge, S2 quad merge, S3 half merge, S4 loop (10-b total adder) + rotate into the 64-slot record ring, S5 registered bank-write formation with ring register W for partial flits; control delay line keeps the input timeline; every output exactly +5 edges (calendar --link-pipe 5, frame +5 edges). d4g slot 650x500; ONE clock root clk for every flop and the 8 SRAMs (clk_mem kept, unloaded). Banks 0-3 stack W (MY, core pins facing the centre), 4-7 stack E (R0), 264-um centre channel + S/N bands; S selected_line, N tx+controls, E clock. Benches run_link_pipe.sh: +5 miter vs the historical die master + gold records + fault path; MUT1-4 FAIL (V5.050).",
+ "owner": "Claude HBM-TOPKLINK 1019",
+ "purpose": "HBM-TOPKLINK r3 10-19 (route hidx_link_g4p-g4p-c94204038 NEEDS_RTL TT -78.45 / FF -30.81 classified): S1 = per-group compaction only from 4 kept lane-valid pin-flop copies; S2 = pair + quad merge with every shift select from kept registered region copies; per-bank kept fill/f0 copies for the ring-W selects; banks get 21.6-um N-S channels (far-face wd_in detour); SRAM clock pin shares the wd_r bin leaf (spine_macro_leaf false). No latency or function change: outputs historical +5 (calendar --link-pipe 5). Benches run_link_pipe.sh (V5.050): m0 PASS, MUT1-4 FAIL. Base: HBM-IDXPIPE 10-18: pipelined successor of idx_link (ot_hbm_idx_topk_link_static_p): historical 1-edge pack/carry/8-bank write (42 levels, 4,096-b runtime part-select, ~7k-load selects; hidx_link_pr never gateable) -> S1 8-lane group compaction + pair merge, S2 quad merge, S3 half merge, S4 loop (10-b total adder) + rotate into the 64-slot record ring, S5 registered bank-write formation with ring r",
  "threads": 8,
  "peak_ram_gb": 32,
  "source": {
-  "branch": "claude/hbm-idxpipe-1018",
+  "branch": "claude/hbm-topklink-1019",
   "commit": "COMMIT",
   "extra_paths": [
    "rtl/test/hbm_idx_static",
@@ -124,7 +124,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hidx_link_g4p/hidx_link_g4p-g4p-COMMIT"
+   "to": "results/rtl/ref_tile/hidx_link_g4p/hidx_link_g4p-r3-COMMIT"
   }
  ],
  "cycles_added": 0,
