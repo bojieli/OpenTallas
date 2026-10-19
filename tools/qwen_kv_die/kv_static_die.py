@@ -1049,7 +1049,7 @@ def pc_hfx_text(txt):
             '    always @(posedge ck or negedge w_rland__rst_n)\n'
             '        if (!w_rland__rst_n) hfx_q <= 3\'d0;\n'
             '`ifdef OT_KVPC_HFX_MUT\n'
-            '        else hfx_q <= hfx_q | {1\'b0, w_pc__es_merge_fault[0], w_pc__chain_fault[0]};\n'
+            '        else hfx_q <= hfx_q | {w_embr__fault[0], w_pc__es_merge_fault[0], 1\'b0};\n'
             '`else\n'
             '        else hfx_q <= hfx_q | {w_embr__fault[0], w_pc__es_merge_fault[0], w_pc__chain_fault[0]};\n'
             '`endif\n'

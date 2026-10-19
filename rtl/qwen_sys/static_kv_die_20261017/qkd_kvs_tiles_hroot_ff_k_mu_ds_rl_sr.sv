@@ -1279,7 +1279,7 @@ module qkd_kvs_pc (
     always @(posedge ck or negedge w_rland__rst_n)
         if (!w_rland__rst_n) hfx_q <= 3'd0;
 `ifdef OT_KVPC_HFX_MUT
-        else hfx_q <= hfx_q | {1'b0, w_pc__es_merge_fault[0], w_pc__chain_fault[0]};
+        else hfx_q <= hfx_q | {w_embr__fault[0], w_pc__es_merge_fault[0], 1'b0};
 `else
         else hfx_q <= hfx_q | {w_embr__fault[0], w_pc__es_merge_fault[0], w_pc__chain_fault[0]};
 `endif
@@ -1656,7 +1656,7 @@ module qkd_kvs_pc_h (
     always @(posedge ck or negedge w_rland__rst_n)
         if (!w_rland__rst_n) hfx_q <= 3'd0;
 `ifdef OT_KVPC_HFX_MUT
-        else hfx_q <= hfx_q | {1'b0, w_pc__es_merge_fault[0], w_pc__chain_fault[0]};
+        else hfx_q <= hfx_q | {w_embr__fault[0], w_pc__es_merge_fault[0], 1'b0};
 `else
         else hfx_q <= hfx_q | {w_embr__fault[0], w_pc__es_merge_fault[0], w_pc__chain_fault[0]};
 `endif

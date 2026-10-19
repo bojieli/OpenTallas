@@ -12,7 +12,7 @@ Mutants (--mut N, must FAIL): front 1 read +1 / 4 bank permutation / 5 no prefet
 cdc 1 down bank perm / 2 down no prefetch; tq 1 bypass dropped; sched 1 tag-queue read not advanced
 (OT_KVPC_MUT_TQ_NEXT); tile 1 tag-queue read not advanced / 2 front bank permutation / 3 embedding up-FIFO bank permutation inside
 the DUT tile (random tile stimulus reaches 3 only: 1 and 2 are covered by their unit benches) / 4 health export drops the
-embr fault bit (OT_KVPC_HFX_MUT; KV-PC2: DUT pc__hfx = registered sticky {embr, es_merge, chain} of REF's internal faults).
+chain fault bit (OT_KVPC_HFX_MUT; KV-PC2: DUT pc__hfx = registered sticky {embr, es_merge, chain} of REF's internal faults).
 KV-PC2 10-19: front / return banks write on pll_hbm (no storage-root clocks); unit benches unchanged (roots = pll_hbm).
     python3 tools/qwen_kv_die/kvpc_sram_bench.py --unit U [--tile pc|pc_h] [--mut N] [--edges E] [--seed S] --out DIR
 One verdict line 'KVPC_<UNIT> PASS|FAIL ...'; exit 0 only on PASS."""
