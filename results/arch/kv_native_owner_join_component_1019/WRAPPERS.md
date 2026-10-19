@@ -11,3 +11,8 @@ Allocator alloc_fire is request_valid && request_ready, alloc_tag is {next_epoch
 Private coordinator inputs join_client, join_slot and join_pos come from the join core's existing pending owner state. POST association uses actual alloc_fire and those fields, since a queued UNBOUND scheduler issue can arrive while the previous POST owner still exists. Actual allocator/lifecycle admission still serializes allocation behind previous POST retirement; raw retirement, CQ commit, cancellation, terminal and drain checks remain unchanged. POST collector itself remains public original source. This association adds no queue or scheduling decoupling.
 
 No compile or simulation run was launched by this source worker. Bench owner must compose the final core and scheduler ABI, hash the full family, and run actual healthy and causal negative cases on the fleet before claiming functional PASS. Conditional warm/reset tests do not establish a reachable existing reset bug. Production health horizon/calendar remain ineligible until separately derived.
+
+Integration review: ENABLE_NATIVE_OWNER_JOIN defaults0 on both private
+coordinator wrappers. Disabled POST receives the original raw step_issue
+association; enabled POST receives the actual alloc_fire held descriptor join.
+The selection is combinational and adds no holding state.

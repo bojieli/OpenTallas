@@ -3,7 +3,7 @@
 // Coordinator leaf. Admission/retirement are exceptional token boundaries;
 // these signals never stretch the compiler's execution cycle schedule.
 // Rank-indexed inputs use native rank, not physical HOST ID.
-module qkd_host_coordinator_services_rc #(parameter [15:0] INITIAL_EPOCH = 16'd0) (
+module qkd_host_coordinator_services_rc #(parameter integer ENABLE_NATIVE_OWNER_JOIN=0, parameter [15:0] INITIAL_EPOCH = 16'd0) (
  output wire alloc_fire,output wire[58:0]alloc_tag,output wire[1:0]alloc_gen,
  input wire clk, por_n, warm_ready,
  input wire request_valid, output wire request_ready,
@@ -119,7 +119,10 @@ module qkd_host_coordinator_services_rc #(parameter [15:0] INITIAL_EPOCH = 16'd0
  .terminal_accepted(terminal_accepted),
  .lifecycle_fault(lifecycle_fault));
  qkd_host_post_collector u_post(.ck(ck_post),.por_n(por_n),.allocated_valid(allocated_valid),.allocated_delivered(allocated_delivered),.allocated_tag(grant_tag),.allocated_gen(grant_generation),
- .step_issue_v(alloc_fire),.step_client_tag(join_client),.step_slot(join_slot),.step_pos(join_pos),
+ .step_issue_v(ENABLE_NATIVE_OWNER_JOIN ? alloc_fire : step_issue_v),
+ .step_client_tag(ENABLE_NATIVE_OWNER_JOIN ? join_client : step_client_tag),
+ .step_slot(ENABLE_NATIVE_OWNER_JOIN ? join_slot : step_slot),
+ .step_pos(ENABLE_NATIVE_OWNER_JOIN ? join_pos : step_pos),
  .step_retire_v(step_retire_v),.step_retire_cq(step_retire_cq),.step_retire_client_tag(step_retire_client_tag),.step_retire_slot(step_retire_slot),.step_retire_pos(step_retire_pos),.step_retire_token(step_retire_token),
  .cq_commit_v(cq_commit_v),.cq_client_tag(cq_client_tag),.cq_slot(cq_slot),.cq_pos(cq_pos),.cq_token(cq_token),
  .terminal_accepted(terminal_accepted),.terminal_tag(expected_terminal),.terminal_gen(grant_generation),
