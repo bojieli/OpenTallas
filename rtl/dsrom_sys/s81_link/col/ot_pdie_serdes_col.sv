@@ -3,7 +3,7 @@
 // ot_pdie_serdes_col (TW-S81/SERDES 2026-10-19): ot_pdie_serdes as ONE hardened LANDED COLUMN parent, the die master
 // that replaces the pin-only PHY abstract in the S81 lk_* slots (decision results/arch/s81_dv_1016/p4l_lkcol/
 // lk_slot_decision.json; plan results/arch/s81_link_col_1019/serdes_column_plan.json).  SAME PORTS as ot_pdie_serdes.
-//   259.2 um wide along the die edge: analog PMA abstract u_pma (250 x 2250, modelled: owner rule, hard PHY analog may be
+//   259.2 um wide along the die edge: analog PMA abstracts u_ptx / u_prx (2 x ~125 x 2250, modelled: owner rule, hard PHY analog may be
 //   behavioural) at one end, then N-S the closed digital tiles dsyn, ddly, dchn, dout, rate_match, enc (link attach end).
 //   The kp4_dec 2x2 parent level is retired: its four tiles are direct children here, in their own rck clock REGIONS
 //   (syn / dly / chn / out) with every seam LANDED (ot_s81_kp4_dec_native_flat_lp, lp.py: 11 landings D 4 / E 2, fixed
@@ -37,10 +37,11 @@ module ot_pdie_serdes_col #(parameter integer PMA_LAT = 4, parameter integer TXL
     ot_s81_kp4_enc u_enc (.clk(clk), .rst_n(rn_t), .tx_v(rn_t), .tx_d(tx), .p_v(e_v), .p_d(e_d), .fault(e_flt));
     wire [544:0] l_q;
     ot_pl_pad #(.W(545), .N((MUT == 8) ? TXL - 1 : TXL)) u_txl (.ck(clk), .d({e_v, e_d}), .q(l_q));
-    // ---- analog PMA (TX serialiser + RX CDR), abstract in the kit
+    // ---- analog PMA: two abstracts side by side along the edge (rx W half beside the dsyn W channel, tx E half under the
+    //      TX lane drop), each with ONE clock (tx: the forwarded lane clock; rx: the recovered clock)
     wire [543:0] r_d;
-    ot_s81_pma_hm #(.LAT(PMA_LAT)) u_pma (.ck(clk), .d_v(l_q[544]), .d(l_q[543:0]), .pma_tx(pma_tx), .pma_tck(pma_tck),
-        .pma_rx(pma_rx), .pma_rck(pma_rck), .q(r_d));
+    ot_s81_pma_txm #(.LAT(PMA_LAT)) u_ptx (.ck(clk), .d_v(l_q[544]), .d(l_q[543:0]), .pma_tx(pma_tx), .pma_tck(pma_tck));
+    ot_s81_pma_rxm #(.LAT(PMA_LAT)) u_prx (.pma_rck(pma_rck), .pma_rx(pma_rx), .q(r_d));
     // ---- receive: landed KP4 decoder (4 rck regions) -> rate matcher -> clk
     wire q_v, q_first, q_unc, lock; wire [511:0] q_d; wire [4:0] q_nerr; wire [7:0] q_seq; wire [31:0] n_corr, n_unc, n_rl;
     ot_s81_kp4_dec_native_flat_lp #(.MUT((MUT >= 1 && MUT <= 4) ? MUT : 0)) u_dec (.rst_n(rn_r), .p_v(rn_r), .p_d(r_d),
@@ -62,22 +63,26 @@ module ot_pdie_serdes_col #(parameter integer PMA_LAT = 4, parameter integer TXL
 endmodule
 
 // ---------------------------------------------------------------------------------------------------------------
-// ot_s81_pma_hm: the S81 SerDes ANALOG PMA as one hard abstract (250.056 x 2250.216 um in the column; pads on the die-edge
-// face, digital face toward the KP4 stack).  Behavioural model = the two ot_s81_pma_bm of ot_pdie_serdes: TX one 544-b
-// word a cycle -> pads LAT cycles later, TX pad clock = the forwarded lane clock; RX pads -> recovered side LAT cycles
-// later on the recovered clock pma_rck.  Not a synthesis target (abstract view in the kit).
+// ot_s81_pma_txm / ot_s81_pma_rxm: the S81 SerDes ANALOG PMA as two hard abstracts (each ~125 x 2250 um, side by side in the
+// column: pads on the die-edge face, digital face toward the KP4 stack), one clock each.  Behavioural model = the two
+// ot_s81_pma_bm of ot_pdie_serdes: TX one 544-b word a cycle -> pads LAT cycles later, TX pad clock = the lane clock;
+// RX pads -> recovered side LAT cycles later on the recovered clock pma_rck.  Not synthesis targets (abstracts in the kit).
 // ---------------------------------------------------------------------------------------------------------------
-module ot_s81_pma_hm #(parameter integer LAT = 4) (
+module ot_s81_pma_txm #(parameter integer LAT = 4) (
     input  wire          ck,
     input  wire          d_v,
     input  wire [543:0]  d,
     output wire [543:0]  pma_tx,
-    output wire          pma_tck,
-    input  wire [543:0]  pma_rx,
+    output wire          pma_tck
+);
+    ot_s81_pma_bm #(.W(544), .LAT(LAT)) u_m (.clk(ck), .d_v(d_v), .d(d), .q(pma_tx));
+    assign pma_tck = ck;
+endmodule
+
+module ot_s81_pma_rxm #(parameter integer LAT = 4) (
     input  wire          pma_rck,
+    input  wire [543:0]  pma_rx,
     output wire [543:0]  q
 );
-    ot_s81_pma_bm #(.W(544), .LAT(LAT)) u_ptx (.clk(ck), .d_v(d_v), .d(d), .q(pma_tx));
-    ot_s81_pma_bm #(.W(544), .LAT(LAT)) u_prx (.clk(pma_rck), .d_v(1'b1), .d(pma_rx), .q(q));
-    assign pma_tck = ck;
+    ot_s81_pma_bm #(.W(544), .LAT(LAT)) u_m (.clk(pma_rck), .d_v(1'b1), .d(pma_rx), .q(q));
 endmodule
