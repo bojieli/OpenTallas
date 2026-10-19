@@ -68,7 +68,7 @@ module tb_hbm_svg_rel_sm;
   .request(request),.xw_en(xw_en),.xw_addr(xw_addr),.xw_grp(xw_grp),.xw_data(xw_data),
   .rv(sm_rv),.rrow(rrow),.rdata(rdata),.fault(sm_fault),.schedule_fault(sm_sfault));
  // ---------------- checks / trace
- integer nres=0,ngo=0,nrun=0;
+ integer nres=0,ngo=0,nrun=0;reg[1:0]cr_q=0;reg[3:0]br_q=0;
  always @(posedge hbm)if(hrst&&native_fault)begin $display("FAULT dram_aperture cycle %0d",cyc);$fatal(1,"native_fault");end
  always @(posedge stream)if(srst&&hrst)begin
   if(sm_rv)begin $display("R %0d %03h %064h",cyc,rrow,rdata);nres=nres+1;end
@@ -77,6 +77,11 @@ module tb_hbm_svg_rel_sm;
 `endif
   if(svg.program_start_v)begin $display("G %0d %0d %0d",cyc,svg.program_start_base,svg.issuer.rc);ngo=ngo+1;end
   if(run_done)begin $display("D %0d",cyc);nrun=nrun+1;end
+  if(svg.issuer.reserve_v)$display("V %0d %0d",cyc,svg.issuer.reserve_bank);
+  if(svg.issuer.start_v)$display("S %0d %0d",cyc,svg.issuer.start_bank);
+  if(svg.feed.cache_ready!=cr_q)$display("C %0d %b",cyc,svg.feed.cache_ready);
+  if(svg.feed.block_ready!=br_q)$display("B %0d %b",cyc,svg.feed.block_ready);
+  cr_q<=svg.feed.cache_ready;br_q<=svg.feed.block_ready;
   if(sm_sfault)begin $display("FAULT sm_schedule cycle %0d",cyc);$fatal(1,"sm schedule_fault");end
   if(sm_fault)begin $display("FAULT sm_arith cycle %0d",cyc);$fatal(1,"sm fault");end
   if(svg_fault)begin $display("FAULT svg cycle %0d issuer %0d feed %0d (desc %0d cdc %0d cache %0d prog %0d s1 %0d fl %0d)",cyc,svg.issuer.fault,svg.feed.fault,

@@ -57,8 +57,9 @@ MAGIC_ROW, MAGIC_DESC = 0xC7A1, 0x5D15
 # capture, calendar, RELOC); OFF = launch event edge -> issuer rc 0
 LAT_GO, OFF = 7, 3
 X_GAP, OP_GAP, DRAIN = 16, 256, 1200
-FIRST_GO = 520            # first block of a run: HBM first access + copy (elastic boundary, calibrated by the bench)
-PACE_NUM, PACE_DEN, PACE_ADD = 11, 8, 8      # >= 1.375 edges / 136-B line (immutable HBM price) + 8
+FIRST_GO = int(os.environ.get('SMB_FIRST_GO', 520))             # first block of a run: HBM first access + copy (elastic boundary, calibrated by the bench)
+PACE_NUM, PACE_DEN, PACE_ADD = (int(os.environ.get(k, d)) for k, d in (('SMB_PACE_NUM', 11), ('SMB_PACE_DEN', 8), ('SMB_PACE_ADD', 8)))
+# >= 1.375 edges / 136-B line (immutable HBM price) + 8; env overrides for calibration probes
 BUSY = 6                  # calendar done -> issuer go_busy clear -> next go
 
 
