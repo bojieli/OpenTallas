@@ -49,6 +49,7 @@ module qkd_host_native_owner_join_rc #(
   input wire post_retired_v,
   input wire [58:0] post_tag,
   input wire [1:0] post_gen,
+  output wire certificate_key_ok,
   output wire issue_ready, request_allow, binding_valid, protocol_fault,
   output wire [1:0] pending_phase,
   output wire [15:0] pending_client,
@@ -94,6 +95,20 @@ module qkd_host_native_owner_join_rc #(
     allocation_tag[5:0]==6'd0 && p_q.position[17:13]==5'd0 &&
     allocation_tag[36:19]==p_q.input_token &&
     allocation_tag[18:6]==p_q.position[12:0] && allocation_gen==p_q.package_gen;
+
+  // Prospective authority uses only pre-state plus independently validated
+  // CURRENT raw/terminal inputs. Never certificate_v, event_copy_v or a_d.
+  wire certificate_key_match = certificate_key == expected_key;
+  wire raw_current_valid = raw_active_match && !raw_unready && !a_q.raw_seen;
+  wire terminal_current_valid = a_q.valid && !a_q.terminal_seen &&
+    terminal_tag==expected_terminal && terminal_gen==a_q.native_gen;
+  wire current_events_valid = (!raw_done_v || raw_current_valid) &&
+                              (!terminal_v || terminal_current_valid);
+  wire raw_seen_now = a_q.raw_seen || (raw_done_v && raw_current_valid);
+  wire terminal_seen_now = a_q.terminal_seen || (terminal_v && terminal_current_valid);
+  assign certificate_key_ok = !ENABLE_NATIVE_OWNER_JOIN ||
+    (a_q.valid && !fault_q && !a_q.cert_seen && certificate_health_bound &&
+     certificate_key_match && raw_seen_now && terminal_seen_now && current_events_valid);
 
   wire accepted_request_held = a_q.valid && request_position=={5'd0,a_q.request_tag[18:6]} &&
     request_input_token==a_q.request_tag[36:19] && request_gen==a_q.native_gen;
@@ -175,8 +190,7 @@ module qkd_host_native_owner_join_rc #(
         end else fault_d=1'b1;
       end
       if (certificate_v) begin
-        if (!a_q.valid || a_q.cert_seen || certificate_key!=expected_key ||
-            !certificate_health_bound || !a_d.raw_seen || !a_d.terminal_seen) fault_d=1'b1;
+        if (!certificate_key_ok) fault_d=1'b1;
         else a_d.cert_seen=1'b1;
       end
       if (event_copy_v) begin
