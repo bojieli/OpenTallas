@@ -55,7 +55,7 @@ ROM_VIEW = 'physical/asap7_memory_macros_v2/ot_rom_4096x72_m8'
 # binds: compact199 (COORD 0gs; pin-band re-route of the same RTL pending, outline/pins unchanged), qxpq efs (COORD 0gs:
 # the non-RSTP closed view stands in until the RSTP ob2 re-route closes: same outline 510.84 x 221.4)
 VIEWS = {
-    'dsfd_bf_col': 'physical/s81_die_views/bf_compact199/ot_v41_bf_col',
+    'dsfd_bf_col': 'physical/s81_die_views/frame_restub_1019/ot_v41_bf_col',
     'dsfd_bf_front_roots': 'physical/s81_die_views/bf_roots_1016_fg/dsfd_bf_front_roots',
     'ot_v41_rom_elem_q_qxpq_w10': 'physical/s81_die_views/q_elem_qs5f_efs_view/ot_v41_rom_elem_q_qxpq_w10',
     'dsfd_cfifo_crs4': 'physical/ref_tile/s81coll_cfifo_crs4/views/dsfd_cfifo_crs4',
@@ -514,6 +514,7 @@ def kit(master, r, spec, soft=()):
         job=dict(owner='Claude:TW3-S81-FRAMEGATE', branch='claude/tw3-framegate-1019', tag='fg1',
                  purpose=f'S81 {master} landed frame cluster (COORD 0jy, landed-regions standard) -- physical gate',
                  no_bench_reason='frame lockstep + plan benches: frame_l4_cluster/compiler/bench_lp_1019; gate only (critical review)',
+                 extra_paths=['results/arch/s81_dv_1016/frame_l4_cluster/compiler'],
                  views_to=f'physical/ref_tile/{name}/views', record_to=f'results/rtl/ref_tile/{name}'),
     )
     if over:

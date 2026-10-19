@@ -344,7 +344,7 @@
    "orient": "R0"
   },
   {
-   "view": "physical/s81_die_views/bf_compact199/ot_v41_bf_col",
+   "view": "physical/s81_die_views/frame_restub_1019/ot_v41_bf_col",
    "inst": "u_e10e.u_view",
    "at": [
     691.2,
@@ -353,7 +353,7 @@
    "orient": "MY"
   },
   {
-   "view": "physical/s81_die_views/bf_compact199/ot_v41_bf_col",
+   "view": "physical/s81_die_views/frame_restub_1019/ot_v41_bf_col",
    "inst": "u_e10w.u_view",
    "at": [
     43.2,
@@ -407,7 +407,7 @@
    "orient": "R0"
   },
   {
-   "view": "physical/s81_die_views/bf_compact199/ot_v41_bf_col",
+   "view": "physical/s81_die_views/frame_restub_1019/ot_v41_bf_col",
    "inst": "u_e15e.u_view",
    "at": [
     691.2,
@@ -416,7 +416,7 @@
    "orient": "MY"
   },
   {
-   "view": "physical/s81_die_views/bf_compact199/ot_v41_bf_col",
+   "view": "physical/s81_die_views/frame_restub_1019/ot_v41_bf_col",
    "inst": "u_e15w.u_view",
    "at": [
     43.2,
@@ -425,7 +425,7 @@
    "orient": "R0"
   },
   {
-   "view": "physical/s81_die_views/bf_compact199/ot_v41_bf_col",
+   "view": "physical/s81_die_views/frame_restub_1019/ot_v41_bf_col",
    "inst": "u_e1e.u_view",
    "at": [
     691.2,
@@ -434,7 +434,7 @@
    "orient": "MY"
   },
   {
-   "view": "physical/s81_die_views/bf_compact199/ot_v41_bf_col",
+   "view": "physical/s81_die_views/frame_restub_1019/ot_v41_bf_col",
    "inst": "u_e1w.u_view",
    "at": [
     43.2,
@@ -479,7 +479,7 @@
    "orient": "R0"
   },
   {
-   "view": "physical/s81_die_views/bf_compact199/ot_v41_bf_col",
+   "view": "physical/s81_die_views/frame_restub_1019/ot_v41_bf_col",
    "inst": "u_e5e.u_view",
    "at": [
     691.2,
@@ -488,7 +488,7 @@
    "orient": "MY"
   },
   {
-   "view": "physical/s81_die_views/bf_compact199/ot_v41_bf_col",
+   "view": "physical/s81_die_views/frame_restub_1019/ot_v41_bf_col",
    "inst": "u_e5w.u_view",
    "at": [
     43.2,
@@ -2305,7 +2305,10 @@
   "purpose": "S81 col_h10 landed frame cluster (COORD 0jy, landed-regions standard) -- physical gate",
   "no_bench_reason": "frame lockstep + plan benches: frame_l4_cluster/compiler/bench_lp_1019; gate only (critical review)",
   "views_to": "physical/ref_tile/s81frame_col_h10_sr/views",
-  "record_to": "results/rtl/ref_tile/s81frame_col_h10_sr"
+  "record_to": "results/rtl/ref_tile/s81frame_col_h10_sr",
+  "extra_paths": [
+   "results/arch/s81_dv_1016/frame_l4_cluster/compiler"
+  ]
  },
  "slot_change_request": "frame height 3672.0 > p4l slot 3000.24: the c26l arrangement under the ref_tile 20-um channel rule needs it; die plan frame pitch must grow (coordinator)",
  "cluster_level": 2,
