@@ -1,0 +1,4 @@
+Verilator 5.050 2026-07-01 rev v5.050
+case fault_nan kind=inject latu=66 lats=391 xu=0 xs=0 mutant=OT_COLL_SPLIT_MUT_RERR FAIL mismatches=0 extra=0 out_err=4 fault=11111111 code=0000100001000010000100001000010000100001 words_out=256 compiled_span=614
+COLL_TP8S FAIL mutant=OT_COLL_SPLIT_MUT_RERR failed=fault_nan
+RC mut_rerr 1

@@ -62,5 +62,10 @@ no bank-select mux. Every SRAM face is <= 3.81 contacts/um (old 512x128 S macro 
 ## Evidence
 
 - `run_one.sh` / `run_bench.sh`: Verilator 5.050 fleet benches (production 4 + unit 13 at LU66/LS391, production at
-  LU65/LS390) and negative controls LEAD, EX, RERR, SBANK, RANK, RLAT, GATHER. Results: see `bench/`.
+  LU65/LS390) and negative controls LEAD, EX, RERR, SBANK, RANK, RLAT, GATHER. Results `bench/` (fleet ot-epyc7,
+  source = 0613be211 split RTL before token-ring chunking/fold-clock port removal; functionally identical rerun on
+  exact HEAD is v4, pending): unit 13/13 PASS, production 4/4 PASS at LU66/LS391 (AR256 span 838, argmax 472, 2xAR
+  1094) and at LU65/LS390 (835/470/1091 = B4 model +2 per AR, gather +0). Every mutant caught: LEAD 16 mismatches,
+  EX 1024, RANK 704, RLAT 512, GATHER 2112, SBANK all-die faults/0 outputs, RERR out_err 4 of 8 dies. Witnesses in
+  `witness/` (fail regex `COLL_TP8S FAIL mutant=<define>`).
 - Kits: `physical/ref_tile/qfd_coll_split_q`, `physical/ref_tile/qfd_coll_split_c` (specs in tools/ref_tile/specs).

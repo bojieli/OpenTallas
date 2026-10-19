@@ -1,0 +1,7 @@
+Verilator 5.050 2026-07-01 rev v5.050
+case qwen_ar_256w kind=pos latu=66 lats=391 xu=0 xs=0 mutant=- PASS mismatches=0 extra=0 out_err=0 fault=00000000 code=0000000000000000000000000000000000000000 words_out=2048 compiled_span=838
+case qwen_layer_2x256w kind=pos latu=66 lats=391 xu=0 xs=0 mutant=- PASS mismatches=0 extra=0 out_err=0 fault=00000000 code=0000000000000000000000000000000000000000 words_out=4096 compiled_span=1094
+case qwen_argmax_1w kind=pos latu=66 lats=391 xu=0 xs=0 mutant=- PASS mismatches=0 extra=0 out_err=0 fault=00000000 code=0000000000000000000000000000000000000000 words_out=64 compiled_span=472
+case qwen_layer_2x256w_argmax kind=pos latu=66 lats=391 xu=0 xs=0 mutant=- PASS mismatches=0 extra=0 out_err=0 fault=00000000 code=0000000000000000000000000000000000000000 words_out=4160 compiled_span=1102
+COLL_TP8S PASS cases=4 latu=66 lats=391
+RC prod_u66 0
