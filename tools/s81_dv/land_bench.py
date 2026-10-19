@@ -10,12 +10,18 @@ raise fault.  Mutants: NAIVE (bounded-skew retime register without the ring: lat
 slot one late) must FAIL.
 
   python3 tools/s81_dv/land_bench.py [--out results/arch/s81_dv_1016/landing/bench.json] [--widths 70 276]
+
+S81-DIE7/LAND (10-18) tile mode, the kit benches of the hardened landing tiles: the bench drives the tile's own top
+(dsfd_dvland_<W> D 4 / dsfd_dvland_276l D 8 long geometries) and runs ONE variant; the last line is
+"LAND_BENCH PASS|FAIL <top> <variant> ..." = that variant's own verdict (a mutant must print FAIL), exit 0 on PASS.
+  python3 tools/s81_dv/land_bench.py --tile dsfd_dvland_276 --variant base --out RUN/bench.json
 """
 import argparse, json, math, re, subprocess, tempfile
 from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 TB = ROOT / 'rtl/dsrom_sys/s81_dv/land/test/tb_s81_land.sv'
 DUT = ROOT / 'rtl/dsrom_sys/s81_dv/land/ot_s81_land.sv'
+WRAP = ROOT / 'rtl/dsrom_sys/s81_dv/land/dsfd_dvland.sv'
 T, D, R0, G, MARGIN, SKEW = 834, 4, 4, 6, 100, 80
 GEOM = [dict(name='dL0_wrap', N=0, DH=100, LR=100), dict(name='dL_halfT', N=3, DH=135, LR=140),
         dict(name='dL_T_wrap_age1', N=6, DH=131, LR=83), dict(name='dL_2T_wrap_16hop', N=15, DH=115, LR=172)]
@@ -50,21 +56,32 @@ def main():
     ap.add_argument('--out', type=Path, default=ROOT / 'results/arch/s81_dv_1016/landing/bench.json')
     ap.add_argument('--widths', type=int, nargs='+', default=[70, 276])
     ap.add_argument('--long', action='store_true', help='dsfd_dvland_276l: D 8, KW 6, long-lane geometries (GEOM_LONG)')
+    ap.add_argument('--tile', help='S81-DIE7/LAND: drive this hardened tile top (dsfd_dvland_<W> or dsfd_dvland_276l)')
+    ap.add_argument('--variant', choices=['base', 'mut_naive', 'mut_sel'], help='tile mode: run only this variant')
     a = ap.parse_args()
+    if a.tile:
+        m = re.fullmatch(r'dsfd_dvland_(\d+)(l?)', a.tile)
+        assert m, f'--tile {a.tile}: not a dsfd_dvland_<W>[l] top'
+        a.widths, a.long = [int(m.group(1))], bool(m.group(2))
     d_, kw, nmax, geoms = (8, 6, 64, GEOM_LONG) if a.long else (D, 3, 16, GEOM)
-    if a.long:
+    if a.long and not a.tile:
         a.widths = [276]
-    tmp = Path(tempfile.mkdtemp(prefix='s81land_'))
+    tmp = a.out.parent if a.tile else Path(tempfile.mkdtemp(prefix='s81land_'))
+    tmp.mkdir(parents=True, exist_ok=True)
     res = dict(schema='opentallas.s81_land.bench.v1', tb=str(TB.relative_to(ROOT)), dut=str(DUT.relative_to(ROOT)),
                T_ps=T, D=d_, KW=kw, R0=R0, G=G, margin_ps=MARGIN, skew_sweep_ps=SWEEP if not a.long else 'per geometry +-SK, 9 points',
                geometries=geoms, variants={})
     verdict = True
+    if a.tile:
+        res.update(tile=a.tile, wrapper=str(WRAP.relative_to(ROOT)))
     for var, define in (('base', None), ('mut_naive', 'OT_S81_LAND_MUT_NAIVE'), ('mut_sel', 'OT_S81_LAND_MUT_SEL')):
+        if a.variant and var != a.variant:
+            continue
         vr = dict(runs=[], expect='PASS' if var == 'base' else 'FAIL')
         for w in a.widths:
             b = tmp / f'{var}_{w}'
             cmd = ['iverilog', '-g2012', f'-DTB_W={w}', f'-DTB_D={d_}', f'-DTB_KW={kw}', f'-DTB_NMAX={nmax}', '-o', str(b), str(TB),
-                   str(DUT)] + ([f'-D{define}'] if define else [])
+                   str(DUT)] + ([f'-D{define}'] if define else []) + ([f'-DTB_TOP={a.tile}', str(WRAP)] if a.tile else [])
             subprocess.run(cmd, check=True)
             for g in geoms:
                 dl0 = (g['N'] + 1) * g['DH'] - g['LR']
@@ -95,6 +112,11 @@ def main():
     a.out.parent.mkdir(parents=True, exist_ok=True)
     a.out.write_text(json.dumps(res, indent=1) + '\n')
     print('BENCH', res['verdict'], a.out)
+    if a.tile:   # tile mode: the one variant's own verdict (a mutant prints FAIL)
+        vr = res['variants'][a.variant or 'base']
+        print(f"LAND_BENCH {vr['verdict']} {a.tile} {a.variant or 'base'} D={d_} KW={kw} sweep {vr['sweep_pass']}/{vr['sweep_runs']} "
+              f"slip-fault {vr['slip_fault_raised']}/{len(geoms)} latency {vr['latency_by_geom']}")
+        raise SystemExit(0 if vr['verdict'] == 'PASS' else 1)
 
 
 if __name__ == '__main__':
