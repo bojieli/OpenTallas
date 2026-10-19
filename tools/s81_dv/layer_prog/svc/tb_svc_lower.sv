@@ -3,7 +3,8 @@
 // dsdv_svc_rs (p4j entries 5 / 11; protect-lib builds, the same slices tb_dsdv_svc_rs runs), driven ONLY by what
 // tools/s81_dv/layer_prog/lower_svc.py emits for the layer, at the compiler's cycles:
 //   meta.hex  [0] q words, [1] T, [2] / [3] j cycle at the W / E entry, [4] / [5] job word lo / hi, [6] HBM sectors,
-//             [7] expected first P.V word cycle, [8] expected jd done cycle, [9] GO cycle, [10] PV frame cycle, [11] ST
+//             [7] expected first P.V word cycle, [8] / [12] expected jd done cycle at the E / W entry, [9] GO cycle,
+//             [10] PV frame cycle, [11] ST
 //   qcyc.hex / qwd.hex  every q word and the cycle it is driven on BOTH entries' q pins (die: {fault 0, live 0, d, v})
 //   hkey.hex / hdat.hex the HBM window image (127 rows before the position) in the slices' own PCs
 //   sc.hex    expected q.k scores [T] x 16 heads (golden dots of the fixture q / rows; scaled = fixture attn.scores)
@@ -38,7 +39,7 @@ module tb_svc_lower;
     reg [255:0] hbm [longint];
     reg [1023:0] dir;
     integer seed = 1, lat = 40;
-    integer NQ, T, JW, JE, NH, EXP_PV0, EXP_DONE, GO_C, PV_C, i;
+    integer NQ, T, JW, JE, NH, EXP_PV0, EXP_DONE, EXP_DONE_W, GO_C, PV_C, i;
     reg [32:0] JWORD;
     function automatic integer tile_of(input integer sd); reg [21:0] r; r = rs_role(4'(sd)); tile_of = r[3:0]; endfunction
     initial begin
@@ -47,7 +48,7 @@ module tb_svc_lower;
         if ($value$plusargs("lat=%d", lat)) ;
         $readmemh({dir, "/meta.hex"}, meta);
         NQ = meta[0]; T = meta[1]; JW = meta[2]; JE = meta[3]; JWORD = {meta[5][0], meta[4]}; NH = meta[6];
-        EXP_PV0 = meta[7]; EXP_DONE = meta[8]; GO_C = meta[9]; PV_C = meta[10];
+        EXP_PV0 = meta[7]; EXP_DONE = meta[8]; GO_C = meta[9]; PV_C = meta[10]; EXP_DONE_W = meta[12];
         if (meta[11] != ST) begin $display("image ST %0d != bench ST %0d", meta[11], ST); $finish; end
         $readmemh({dir, "/qcyc.hex"}, qcyc, 0, NQ - 1);
         $readmemh({dir, "/qwd.hex"}, qwd, 0, NQ - 1);
@@ -255,10 +256,10 @@ module tb_svc_lower;
                 fl[s] = sflt[s]; if (sflt[s] && fc0 == 0) fc0 = afc[s];
             end
             pv_early = (last_rt >= PV_C) ? 1 : 0;
-            sched_bad = (pv_first != EXP_PV0) + (pv_last != EXP_PV0 + 159) + (done_c[0] != EXP_DONE) + (done_c[1] != EXP_DONE) +
+            sched_bad = (pv_first != EXP_PV0) + (pv_last != EXP_PV0 + 159) + (done_c[0] != EXP_DONE_W) + (done_c[1] != EXP_DONE) +
                         (late_q != 0) + (qi != NQ) + pv_early;
-            $display("SVCLOW_SCHED go=%0d pv_frame=%0d first_score=%0d last_score=%0d pv_first=%0d exp_pv_first=%0d pv_last=%0d done_W=%0d done_E=%0d exp_done=%0d n_done=%0d/%0d q_sent=%0d/%0d late_q=%0d pv_early=%0d hbm_wr=%0d hbm_rd=%0d sched_bad=%0d",
-                GO_C, PV_C, first_rt, last_rt, pv_first, EXP_PV0, pv_last, done_c[0], done_c[1], EXP_DONE, n_done[0], n_done[1],
+            $display("SVCLOW_SCHED go=%0d pv_frame=%0d first_score=%0d last_score=%0d pv_first=%0d exp_pv_first=%0d pv_last=%0d done_W=%0d exp_done_W=%0d done_E=%0d exp_done_E=%0d n_done=%0d/%0d q_sent=%0d/%0d late_q=%0d pv_early=%0d hbm_wr=%0d hbm_rd=%0d sched_bad=%0d",
+                GO_C, PV_C, first_rt, last_rt, pv_first, EXP_PV0, pv_last, done_c[0], EXP_DONE_W, done_c[1], EXP_DONE, n_done[0], n_done[1],
                 qi, NQ, late_q, pv_early, hbm_wr, hbm_rd, sched_bad);
             $display("SVCLOW die=%0d st=%0d T=%0d root_beats=%0d sc_checked=%0d sc_errors=%0d order_errors=%0d se_checked=%0d se_errors=%0d se_bad_slices=%0d sm_rows_bad=%0d pv_checked=%0d pv_errors=%0d pv_words=%0d pv_gaps=%0d pv_other_entry=%0d jd_fault=%0d root_fault=%0d slice_faults=%04x first_fault_code=%08x cred_err=%0d sched_bad=%0d cycles=%0d verdict=%s",
                 DIE, ST, T, rt_beats, sc_chk, sc_err, ord_err, se_chk, se_err, bad_se, bad_w, pv_chk, pv_err, pv_n, pv_gap, pv_other,
