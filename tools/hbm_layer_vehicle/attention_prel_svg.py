@@ -35,10 +35,15 @@ def compile_attention(rec, sm=0, mut='', mixed_context=False, *, native_padding=
         if not 1 <= len(lines) <= 64:
             raise ValueError('attention block exceeds cache capacity')
         svg, xc, literal = [], [], []
+        original_literal = []
         bad_mode_injected = False
         for c in range(first, exp['end'] + 1):
             f = cal.cyc[c] if c < len(cal.cyc) else {}
             cmd = A.E.cmd_word(**f)
+            original_literal.append(cmd)
+            if mut == 'command_class' and cmd != 0 and not bad_mode_injected:
+                cmd ^= 1 << 183
+                bad_mode_injected = True
             if mut == 'invalid_mode' and cmd != 0 and not bad_mode_injected:
                 cmd = (cmd & ~(7 << 181)) | (3 << 181)
                 bad_mode_injected = True
@@ -59,10 +64,15 @@ def compile_attention(rec, sm=0, mut='', mixed_context=False, *, native_padding=
             old = svg[:]
             svg = [(w & ~mask) | ((old[i + 1] & mask) if i + 1 < len(old) else 0)
                    for i, w in enumerate(old)]
-        class_plan = analyse(literal, block_lines=len(lines)) if mixed_context else None
+        # Named causal negatives retain the legal source plan and deliberately
+        # emit the indicated violation for hardware to reject.
+        audit_literal = original_literal if mut in ('command_class', 'invalid_mode') else literal
+        class_plan = analyse(audit_literal, block_lines=len(lines)) if mixed_context else None
         if class_plan and class_plan['extra_descriptors']:
             raise ValueError('explicit priced GO split must be scheduled: ' + json.dumps(class_plan))
-        descriptor_mode = ((literal[0] >> 181) & 7) if mixed_context else 0
+        descriptor_mode = ((original_literal[0] >> 181) & 7) if mixed_context else 0
+        if mixed_context and mut == 'descriptor_class':
+            descriptor_mode ^= 4
         pb, pl = store.add(svg, xc)
         blocks.append(dict(op=op, cal=cal, exp=exp, first=first, lines=lines, prog=(pb, pl), words=len(svg),
                            class_plan=class_plan, descriptor_mode=descriptor_mode))
@@ -126,14 +136,47 @@ def compile_attention(rec, sm=0, mut='', mixed_context=False, *, native_padding=
                 hbm_lines=sum(len(b['lines']) for b in blocks), hbm_sector_bytes=32*len(mem), provider_gap_edges=0))
 
 
+PROFILES = {
+    'storage': dict(native_padding=0, command_extra=0, calendar_extra=0, programme_done_extra=0),
+    'banked-class22': dict(native_padding=22, command_extra=4, calendar_extra=2, programme_done_extra=2),
+}
+
+def bind_profile(a):
+    timing = dict(PROFILES[a.native_profile])
+    for key in timing:
+        value = getattr(a, key)
+        if value is not None and value != timing[key]:
+            raise ValueError(f'{key}={value} disagrees with selected profile {a.native_profile}')
+    binding = None
+    if a.native_profile != 'storage':
+        if not a.mixed_context:
+            raise ValueError('banked-class22 requires --mixed-context')
+        if a.exe:
+            if not a.hardware_manifest:
+                raise ValueError('native executable requires --hardware-manifest')
+            binding = json.loads(Path(a.hardware_manifest).read_text())
+            required = {'SMB_SRAMFIFO','SMB_ATTENTION','SMB_NATIVE_LANDING','SMB_NATIVE_RETURN','SMB_NATIVE_CACHE_SAFE','SMB_BANKED_CLASS'}
+            assert required <= set(binding['defines']), 'hardware defines do not implement selected profile'
+            assert binding['executable_sha256'] == S.sha(Path(a.exe)), 'executable differs from manifest'
+            assert binding['timing'] == dict(**timing, read_admission_calibration=7, actual_read_pin=8, actual_command_pin=11, busy=10), 'hardware timing binding mismatch'
+            assert binding['id_cohort'] == 1
+            assert a.service_build_revision == binding['source_revision'], 'explicit hardware source revision mismatch'
+    return timing, binding
+
 def run(a):
+    timing, hardware_binding = bind_profile(a)
     rec, src = A.load_ds(Path(a.kv), a.layer)
-    c = compile_attention(rec, a.sm, a.mut, a.mixed_context)
+    c = compile_attention(rec, a.sm, a.mut, a.mixed_context, **timing)
+    c['budget']['timing'].update(native_profile=a.native_profile, actual_read_pin=6+timing['calendar_extra'], actual_command_pin=7+timing['command_extra'])
+    if a.native_profile != 'storage':
+        c['budget']['hardware_binding'] = hardware_binding
+    if a.mut in ('descriptor_class','command_class','invalid_mode'):
+        c['budget']['causal_negative'] = dict(kind=a.mut, source_class_plan_preserved=True, deliberate_hardware_violation=True)
     d = Path(a.work).resolve() / a.name
     d.mkdir(parents=True, exist_ok=True)
     counts = S.write_events(c, d)
     (d / 'compile.json').write_text(json.dumps(dict(source=src, budget=c['budget'], events=counts,
-        blocks=[{k:b[k] for k in ('op','prog','words','go_at','first_abs','end_abs','class_plan','descriptor_mode')} for b in c['blocks']]), indent=2) + '\n')
+        blocks=[{k:b[k] for k in ('op','prog','words','go_at','first_abs','end_abs','first_read_pin_abs','class_plan','descriptor_mode')} for b in c['blocks']]), indent=2) + '\n')
     if not a.exe:
         print(json.dumps(c['budget'], indent=2)); return
     exe = Path(a.exe).resolve()
@@ -176,7 +219,11 @@ if __name__ == '__main__':
     p.add_argument('--kv', required=True); p.add_argument('--layer', type=int, default=2)
     p.add_argument('--sm', type=int, default=0); p.add_argument('--work', required=True)
     p.add_argument('--name', default='attention'); p.add_argument('--exe'); p.add_argument('--out', default='attention.json')
-    p.add_argument('--mut', default='', choices=['','wrong_row','read_early','invalid_mode'])
+    p.add_argument('--mut', default='', choices=['','wrong_row','read_early','invalid_mode','descriptor_class','command_class'])
     p.add_argument('--service-build-revision', help='source revision of supplied executable when distinct from compiler snapshot')
     p.add_argument('--mixed-context', action='store_true', help='opt-in descriptor mode197 class contract; requires matching future hardware')
+    p.add_argument('--native-profile', choices=list(PROFILES), default='storage')
+    for key in PROFILES['storage']:
+        p.add_argument('--'+key.replace('_','-'), type=int, default=None)
+    p.add_argument('--hardware-manifest', help='source/defines/executable/timing binding required for native execution')
     run(p.parse_args())
