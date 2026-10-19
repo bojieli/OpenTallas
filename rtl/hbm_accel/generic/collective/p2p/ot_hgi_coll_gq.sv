@@ -44,7 +44,8 @@
 // by both in one edge is a fault.
 module ot_hgi_coll_gq_issue #(
     parameter integer MUT = 0       // bench mutants: 1 rx src of h=1 uses the CW table on CCW, 2 exponent bias 126,
-                                    // 3 publish lands at i+1, 4 self-land skipped, 5 ring-B command one edge late
+                                    // 3 publish lands at i+1, 4 self-land skipped, 5 ring-B command one edge late,
+                                    // 6 quantiser element line one bank short (x one edge early)
 )(
     input  wire          clk, rst_n,
     input  wire [1:0]    qid,
@@ -114,18 +115,24 @@ module ot_hgi_coll_gq_issue #(
     localparam integer S_QR = 0, S_PR = 15, S_QCAP = 8, S_PCAP = 23, S_P = 24;
     localparam integer S_BLP = 24, S_BRD = 25, S_BINJ = 27, S_BRX = 27;   // + 2h
     // ------------------------------------------------------------------ reset relay (3 edges) + straps
-    wire [0:0] rl;
-    ot_rst_relay #(.REGIONS(1)) u_rst(.clk(clk), .rst_n_in(rst_n), .rst_n(rl));
-    wire rn = rl[0];
+    // r4 (TW7-GQISSUE, SAFE-DESIGN items 1/3): the port lands in 2 registered stages at the face (kit reset_landing ->
+    // ot_pin_regs.tcl OT_RST_LAND), then this relay gives one kept copy per region (r3: one relay flop drove 1,154
+    // async loads): rn0 calendar/control, rn1 event + valid pipes + read expectations, rn2 VM read request, rn3 ring
+    // command / merge registers, rn4 / rn5 quantisers 0 / 1 (valid flops only). All copies release on the same edge.
+    wire [5:0] rl;
+    ot_rst_relay #(.REGIONS(6)) u_rst(.clk(clk), .rst_n_in(rst_n), .rst_n(rl));
+    wire rn = rl[0], rn1 = rl[1], rn2 = rl[2], rn3 = rl[3];
     reg [1:0] aq_vo_q, aq_fault_q; reg flt_q; wire flt_n = flt_q;
     reg [135:0] vm_rq; wire [2055:0] vm_rr = {vm_rr_hi, vm_rr_lo};
     assign vm_rq_lo = vm_rq[67:0]; assign vm_rq_hi = vm_rq[135:68];
-    // quantisers: two instances of the CLOSED quantiser tile RTL (ot_hbm_xp_aq_tree13 = ot_hdc_actquant, 13 edges,
-    // input S0 / output registers at its pins), synthesised flat in this leaf (saves 2 x 1,290 leaf pins)
+    // quantisers: two instances of ot_hgi_coll_aq13 = the CLOSED quantiser tile RTL (ot_hbm_xp_aq_tree13 = ot_hdc_actquant,
+    // 13 edges, input S0 / output registers at its pins) with its 1,024 x 9 element shift line replaced by the hold-safe
+    // ot_hdc_delay_hc (same edges; the shift line cost 64,598 CTS hold buffers in this leaf), synthesised flat in this
+    // leaf (saves 2 x 1,290 leaf pins)
     reg [1:0] aq_v; reg [2047:0] aq_x; wire [1:0] aq_vo, aq_fault; wire [511:0] aq_q; wire [19:0] aq_e; wire [1023:0] aq_y;
-    ot_hbm_xp_aq_tree13 u_aq0(.clk(clk), .rst_n(rn), .v(aq_v[0]), .fp4(1'b0), .x(aq_x[1023:0]), .vo(aq_vo[0]),
+    ot_hgi_coll_aq13 #(.LMUT(MUT == 7)) u_aq0(.clk(clk), .rst_n(rl[4]), .v(aq_v[0]), .fp4(1'b0), .x(aq_x[1023:0]), .vo(aq_vo[0]),
         .q(aq_q[255:0]), .e(aq_e[9:0]), .y(aq_y[511:0]), .fault(aq_fault[0]));
-    ot_hbm_xp_aq_tree13 u_aq1(.clk(clk), .rst_n(rn), .v(aq_v[1]), .fp4(1'b0), .x(aq_x[2047:1024]), .vo(aq_vo[1]),
+    ot_hgi_coll_aq13 #(.LMUT(MUT == 7)) u_aq1(.clk(clk), .rst_n(rl[5]), .v(aq_v[1]), .fp4(1'b0), .x(aq_x[2047:1024]), .vo(aq_vo[1]),
         .q(aq_q[511:256]), .e(aq_e[19:10]), .y(aq_y[1023:512]), .fault(aq_fault[1]));
     reg [1:0] q_id;
     always @(posedge clk) q_id <= qid;
@@ -152,7 +159,21 @@ module ot_hgi_coll_gq_issue #(
     always @(posedge clk) if (p_we && p_wa < 8'd16) rf[p_wa[3:0]] <= p_wd[DW-1:0];
     // ------------------------------------------------------------------ calendar
     reg run; reg [3:0] cur, b0; reg [4:0] lim; reg [15:0] tl, per, lps;
-    wire [DW-1:0] rc = rf[cur];
+    // GQISSUE2 (r2 route TT -32 cur -> ld_desc, -7 cur -> g_f): the row is read through a ONE-HOT AND-OR on a registered
+    // one-hot copy of cur (cur_oh == 1 << cur at every edge; b0_oh likewise), not a 4-bit 16:1 mux whose 4 select bits
+    // fan out to 1,616 mux inputs. Same row, same edge.
+    reg [15:0] cur_oh, b0_oh;
+    // r4: the row AND-OR reads 4 kept copies of cur_oh (each bit drives ~26 of the 101 row bits, was 101)
+    (* keep = "true", dont_touch = "true" *) reg [15:0] cur_ohc [0:3];
+    reg [DW-1:0] rc_t;
+    always @* begin : nb_rc
+        rc_t = '0;
+        for (integer j = 0; j < 16; j = j + 1)
+            for (integer c = 0; c < 4; c = c + 1)
+                for (integer x = c * 26; x < (c * 26 + 26 < DW ? c * 26 + 26 : DW); x = x + 1)
+                    rc_t[x] = rc_t[x] | (rf[j][x] & cur_ohc[c][j]);
+    end
+    wire [DW-1:0] rc = rc_t;
     wire fire = run && {1'b0, cur} < lim && tl == rc[18:3];
     // gather state (held while busy)
     reg busy; reg g_qbg, g_r2, g_self; reg [9:0] g_f; reg [7:0] g_bs; reg [15:0] g_src, g_dst, g_str;
@@ -166,20 +187,20 @@ module ot_hgi_coll_gq_issue #(
     always @(posedge clk or negedge rn) begin
         if (!rn) begin
             run <= 1'b0; busy <= 1'b0; iss <= 1'b0; fault <= 1'b0; active <= 1'b0; done <= 1'b0; drain <= 6'd0;
-            cur <= 4'd0; b0 <= 4'd0; lim <= 5'd0; tl <= 16'd0; per <= 16'd0; lps <= 16'd0; ik <= 10'd0; iph <= 2'd0;
+            cur <= 4'd0; b0 <= 4'd0; cur_oh <= 16'd1; b0_oh <= 16'd1; for (integer c = 0; c < 4; c = c + 1) cur_ohc[c] <= 16'd1; lim <= 5'd0; tl <= 16'd0; per <= 16'd0; lps <= 16'd0; ik <= 10'd0; iph <= 2'd0;
         end else begin
             done <= 1'b0;
             active <= run || busy || p_sv;
             if (active && !(run || busy || p_sv)) done <= 1'b1;
             if (p_sv) begin
                 if (run || busy || p_sl > 9'd16 || rf[p_sb[3:0]][100:85] == 16'd0) fault <= 1'b1;
-                run <= 1'b1; cur <= p_sb[3:0]; b0 <= p_sb[3:0]; lim <= p_sl[4:0]; tl <= 16'd0; lps <= p_lp;
+                run <= 1'b1; cur <= p_sb[3:0]; b0 <= p_sb[3:0]; cur_oh <= 16'd1 << p_sb[3:0]; b0_oh <= 16'd1 << p_sb[3:0]; for (integer c = 0; c < 4; c = c + 1) cur_ohc[c] <= 16'd1 << p_sb[3:0]; lim <= p_sl[4:0]; tl <= 16'd0; lps <= p_lp;
                 per <= rf[p_sb[3:0]][100:85];
             end else if (run) begin
-                if (fire) cur <= cur + 4'd1;
+                if (fire) begin cur <= cur + 4'd1; cur_oh <= {cur_oh[14:0], cur_oh[15]}; for (integer c = 0; c < 4; c = c + 1) cur_ohc[c] <= {cur_ohc[c][14:0], cur_ohc[c][15]}; end
                 if (tl == per - 16'd1) begin
                     if (lps <= 16'd1) run <= 1'b0;
-                    else begin lps <= lps - 16'd1; tl <= 16'd0; cur <= b0; end
+                    else begin lps <= lps - 16'd1; tl <= 16'd0; cur <= b0; cur_oh <= b0_oh; for (integer c = 0; c < 4; c = c + 1) cur_ohc[c] <= b0_oh; end
                     if ({1'b0, cur} + (fire ? 5'd1 : 5'd0) != lim) fault <= 1'b1;   // a row never fired this period
                 end else tl <= tl + 16'd1;
             end
@@ -200,18 +221,24 @@ module ot_hgi_coll_gq_issue #(
         end
     end
     always @(posedge clk or negedge rn) if (!rn) ld_fire <= 1'b0; else ld_fire <= fire;
+    (* keep = "true", dont_touch = "true" *) reg fire_q;   // r4: = ld_fire (own kept copy for the exponent-word clear)
+    always @(posedge clk or negedge rn) if (!rn) fire_q <= 1'b0; else fire_q <= fire;
     always @(posedge clk) ld_desc <= {rc[1], rc[2], rc[0], rc[28:19], rc[36:29], rc[68:53], rc[84:69]};
     always @(posedge clk) if (fire) begin
         g_qbg <= rc[0]; g_r2 <= rc[1]; g_self <= rc[2]; g_f <= rc[28:19]; g_bs <= rc[36:29];
         g_src <= rc[52:37]; g_dst <= rc[68:53]; g_str <= rc[84:69]; g_kn <= f_kn;
     end
     // ------------------------------------------------------------------ event pipeline {v, k}
-    reg [ND-1:0] ev_v; reg [9:0] ev_k [0:ND-1];
-    always @(posedge clk or negedge rn)
-        if (!rn) ev_v <= '0; else ev_v <= {ev_v[ND-2:0], ev_in_v};
+    // GQISSUE2: the flit flags fv / is_code of each ring are decoded ONCE, on the issue edge, from registered shadows of ik
+    // (sfv / scd below) and travel with the entry (ev_f / ev_c); no later stage decodes them from g_f / g_bs / g_r2 again
+    // (r2 route: g_f -> rb_rx_* -30, g_f -> vm_rq -32, g_f / g_bs -> ld_p_d -50 / -98).
+    reg [ND-1:0] ev_v; reg [9:0] ev_k [0:ND-1]; reg [1:0] ev_f [0:ND-1], ev_c [0:ND-1];
+    reg [1:0] sfv, scd;                               // = fv(ik, r), is_code(flit_i(ik, r)) at every edge of a gather
+    always @(posedge clk or negedge rn1)
+        if (!rn1) ev_v <= '0; else ev_v <= {ev_v[ND-2:0], ev_in_v};
     always @(posedge clk) begin
-        ev_k[0] <= ik;
-        for (integer s = 1; s < ND; s = s + 1) ev_k[s] <= ev_k[s-1];
+        ev_k[0] <= ik; ev_f[0] <= sfv; ev_c[0] <= scd;
+        for (integer s = 1; s < ND; s = s + 1) begin ev_k[s] <= ev_k[s-1]; ev_f[s] <= ev_f[s-1]; ev_c[s] <= ev_c[s-1]; end
     end
     // flit decode of an entry
     function automatic [10:0] flit_i(input [9:0] k, input integer r); flit_i = g_r2 ? {k, 1'(r)} : (r == 0 ? {1'b0, k} : 11'h7ff); endfunction
@@ -220,28 +247,76 @@ module ot_hgi_coll_gq_issue #(
     endfunction
     function automatic is_code(input [10:0] i); is_code = !g_qbg || i < {3'b0, g_bs}; endfunction
     function automatic [15:0] sec_add(input [15:0] s, input [12:0] a); sec_add = {s[15:13], s[12:0] + a}; endfunction
+    function automatic [7:0] oh8(input [2:0] b); oh8 = 8'd1 << b; endfunction
+    // ------------------------------------------------------------------ issue-edge shadows of ik (GQISSUE2)
+    // Updated on the same edges as ik: at fire (ik <= 0) from the fired row rc (the row the gather state g_* loads), on
+    // every issue edge (ik <= ik + 1) from the held gather state. qa[4r+w] = low 13 b of
+    // sec_add(g_src, {flit_i(ik,r),2'b00} + w) (+4 per index, +8 with two rings; ring 1 of a one-ring gather never issues,
+    // sfv[1] = 0). The QBG read request of the issue edge is then a 3-to-8 decode of registered addresses (was
+    // g_r2 -> flit mux -> 13-b add -> decode in one edge, r2 route -50).
+    reg [12:0] qa [0:7];
+    always @(posedge clk or negedge rn)
+        if (!rn) begin sfv <= 2'd0; scd <= 2'd0; end
+        else if (fire) begin
+            for (integer r = 0; r < 2; r = r + 1) begin : nb_s0
+                reg [10:0] i0; i0 = rc[1] ? 11'(r) : (r == 0 ? 11'd0 : 11'h7ff);
+                sfv[r] <= (r == 0 || rc[1]) && i0 < {1'b0, rc[28:19]};
+                scd[r] <= !rc[0] || i0 < {3'b0, rc[36:29]};
+            end
+        end else if (ev_in_v)
+            for (integer r = 0; r < 2; r = r + 1) begin : nb_s1
+                reg [9:0] kn; kn = ik + 10'd1;
+                sfv[r] <= fv(kn, r); scd[r] <= is_code(flit_i(kn, r));
+            end
+    always @(posedge clk)
+        if (fire) begin
+            for (integer r = 0; r < 2; r = r + 1) begin : nb_q0
+                reg [10:0] i0; i0 = rc[1] ? 11'(r) : (r == 0 ? 11'd0 : 11'h7ff);
+                for (integer w = 0; w < 4; w = w + 1) qa[r*4+w] <= rc[49:37] + 13'({i0, 2'b00} + w);
+            end
+        end else if (ev_in_v)
+            for (integer q = 0; q < 8; q = q + 1) qa[q] <= qa[q] + (g_r2 ? 13'd8 : 13'd4);
+    // plain-read pre-stage (@S_PR-2 -> request @S_PR-1) and quantiser-feed pre-stage (@S_QCAP-1 -> x @S_QCAP): address /
+    // bank one-hots registered one edge ahead (g_src is held for the whole gather, so the result is the same)
+    reg [1:0] pr_v; reg [15:0] pr_s [0:1];
+    reg [1:0] qc_v;
+    // r4: 8 kept copies (one per 32-b slice of the 256-b word) of every feed / P one-hot: each bit drives 32 AND legs
+    // (r3: 256)
+    (* keep = "true", dont_touch = "true" *) reg [7:0] qc_ohc [0:63];      // [q*8 + slice]
+    always @(posedge clk or negedge rn1)
+        if (!rn1) begin pr_v <= 2'd0; qc_v <= 2'd0; end
+        else for (integer r = 0; r < 2; r = r + 1) begin
+            pr_v[r] <= ev_v[S_PR-2] && ev_f[S_PR-2][r];
+            qc_v[r] <= ev_v[S_QCAP-1] && g_qbg && ev_f[S_QCAP-1][r] && ev_c[S_QCAP-1][r];
+        end
+    always @(posedge clk) for (integer r = 0; r < 2; r = r + 1) begin : nb_pq
+        reg [10:0] i; reg [15:0] s;
+        pr_s[r] <= sec_add(g_src, 13'(flit_i(ev_k[S_PR-2], r)));
+        i = flit_i(ev_k[S_QCAP-1], r);
+        for (integer w = 0; w < 4; w = w + 1) begin
+            s = sec_add(g_src, 13'({i, 2'b00} + w));
+            for (integer c = 0; c < 8; c = c + 1) qc_ohc[(r*4+w)*8 + c] <= oh8(s[2:0]);
+        end
+    end
     // ------------------------------------------------------------------ VM reads (issue) + response check
     reg [7:0] rd_exp; reg [7:0] rd_exp_q;
-    always @(posedge clk or negedge rn) begin
-        if (!rn) begin vm_rq <= '0; rd_exp <= 8'd0; rd_exp_q <= 8'd0; end
+    always @(posedge clk or negedge rn2) begin
+        if (!rn2) begin vm_rq <= '0; rd_exp <= 8'd0; rd_exp_q <= 8'd0; end
         else begin
             vm_rq <= '0;
             if (g_qbg && ev_in_v) begin
                 for (integer r = 0; r < 2; r = r + 1) begin : nb_1
-                    reg [10:0] i; reg [15:0] s;
-                    i = flit_i(ik, r);
-                    if (fv(ik, r) && is_code(i))
+                    reg [15:0] s;
+                    if (sfv[r] && scd[r])
                         for (integer w = 0; w < 4; w = w + 1) begin
-                            s = sec_add(g_src, 13'({i, 2'b00} + w));
+                            s = {g_src[15:13], qa[r*4+w]};
                             for (integer b = 0; b < 8; b = b + 1) if (s[2:0] == 3'(b)) vm_rq[b*17 +: 17] <= {1'b1, s};
                         end
                 end
             end
             if (!g_qbg && ev_v[S_PR-1]) begin
                 for (integer r = 0; r < 2; r = r + 1) begin : nb_2
-                    reg [10:0] i; reg [15:0] s;
-                    i = flit_i(ev_k[S_PR-1], r);
-                    if (fv(ev_k[S_PR-1], r)) begin s = sec_add(g_src, 13'(i)); for (integer b = 0; b < 8; b = b + 1) if (s[2:0] == 3'(b)) vm_rq[b*17 +: 17] <= {1'b1, s}; end
+                    if (pr_v[r]) for (integer b = 0; b < 8; b = b + 1) if (pr_s[r][2:0] == 3'(b)) vm_rq[b*17 +: 17] <= {1'b1, pr_s[r]};
                 end
             end
             // expected response valids (one edge before the capture register is loaded)
@@ -251,63 +326,80 @@ module ot_hgi_coll_gq_issue #(
     end
     // read latency: rq register @n -> bank samples n+1 -> registered response n+7 -> pin capture n+8.
     reg [7:0] rdx [0:7];
-    always @(posedge clk or negedge rn)
-        if (!rn) for (integer d = 0; d < 8; d = d + 1) rdx[d] <= 8'd0;
+    always @(posedge clk or negedge rn1)
+        if (!rn1) for (integer d = 0; d < 8; d = d + 1) rdx[d] <= 8'd0;
         else begin rdx[0] <= rd_exp; for (integer d = 1; d < 8; d = d + 1) rdx[d] <= rdx[d-1]; end
     reg [2055:0] rr_q; reg [7:0] rrv_q;
-    function automatic [255:0] rdw(input [2:0] b);       // captured read word of bank b (8:1 select, no runtime part-select)
-        rdw = 256'd0;
-        for (integer j = 0; j < 8; j = j + 1) if (b == 3'(j)) rdw = rr_q[j*257 +: 256];
+    function automatic [255:0] rdw_oh(input [7:0] oh);  // same word through a one-hot AND-OR (registered one-hot select)
+        rdw_oh = 256'd0;
+        for (integer j = 0; j < 8; j = j + 1) rdw_oh = rdw_oh | (rr_q[j*257 +: 256] & {256{oh[j]}});
+    endfunction
+    function automatic [31:0] rdw_oh32(input [7:0] oh, input integer c);  // 32-b slice c of rdw_oh (one copy's legs)
+        rdw_oh32 = 32'd0;
+        for (integer j = 0; j < 8; j = j + 1) rdw_oh32 = rdw_oh32 | (rr_q[j*257 + 32*c +: 32] & {32{oh[j]}});
     endfunction
     always @(posedge clk) rr_q <= vm_rr;
-    always @(posedge clk or negedge rn)
-        if (!rn) rrv_q <= 8'd0; else for (integer b = 0; b < 8; b = b + 1) rrv_q[b] <= vm_rr[b*257+256];
+    always @(posedge clk or negedge rn1)
+        if (!rn1) rrv_q <= 8'd0; else for (integer b = 0; b < 8; b = b + 1) rrv_q[b] <= vm_rr[b*257+256];
     // rdx[6] holds the expectation of the response captured in rr_q this edge
     wire rd_bad = rrv_q != rdx[6];
     // ------------------------------------------------------------------ quantiser feed (@9) and capture (@23)
-    always @(posedge clk or negedge rn)
-        if (!rn) aq_v <= 2'd0;
-        else for (integer r = 0; r < 2; r = r + 1) begin : nb_3
-            reg [10:0] i; i = flit_i(ev_k[S_QCAP], r);
-            aq_v[r] <= ev_v[S_QCAP] && g_qbg && fv(ev_k[S_QCAP], r) && is_code(i);
-        end
-    always @(posedge clk) for (integer r = 0; r < 2; r = r + 1) begin : nb_4
-        reg [10:0] i; reg [15:0] s;
-        i = flit_i(ev_k[S_QCAP], r);
-        for (integer w = 0; w < 4; w = w + 1) begin
-            s = sec_add(g_src, 13'({i, 2'b00} + w));
-            aq_x[r*1024 + w*256 +: 256] <= rdw(s[2:0]);
+    always @(posedge clk or negedge rn1)
+        if (!rn1) aq_v <= 2'd0;
+        else aq_v <= qc_v;
+    always @(posedge clk) for (integer q = 0; q < 8; q = q + 1) for (integer c = 0; c < 8; c = c + 1)
+        aq_x[q*256 + 32*c +: 32] <= rdw_oh32(qc_ohc[q*8 + c], c);
+    // exponent byte (e + 127) formed at the capture register (was added in front of the 512-b ex forwarding mux)
+    reg [511:0] aq_q_q;
+    (* keep = "true", dont_touch = "true" *) reg [7:0] aq_ebc [0:3];      // r4: [r*2 + half] (32 byte lanes each, was 64)
+    always @(posedge clk or negedge rn1) if (!rn1) begin aq_vo_q <= 2'd0; aq_fault_q <= 2'd0; end else begin aq_vo_q <= aq_vo; aq_fault_q <= aq_fault; end
+    always @(posedge clk) begin
+        aq_q_q <= aq_q;
+        for (integer r = 0; r < 2; r = r + 1) begin
+            for (integer c = 0; c < 2; c = c + 1) aq_ebc[r*2 + c] <= 8'(aq_e[r*10 +: 10] + ((MUT == 2) ? 10'sd126 : 10'sd127));
         end
     end
-    reg [511:0] aq_q_q; reg [19:0] aq_e_q;
-    always @(posedge clk or negedge rn) if (!rn) begin aq_vo_q <= 2'd0; aq_fault_q <= 2'd0; end else begin aq_vo_q <= aq_vo; aq_fault_q <= aq_fault; end
-    always @(posedge clk) begin aq_q_q <= aq_q; aq_e_q <= aq_e; end
     // ------------------------------------------------------------------ payload P (@24) + exponent words
     reg [511:0] ex;                                    // exponent words 0, 1 (bytes = e + 127)
     reg [511:0] ex_n;                                  // with this edge's blocks merged (forwarding)
-    wire [9:0] kp = ev_k[S_P-1];
-    always @* begin : nb_5
-        ex_n = ex;
-        for (integer r = 0; r < 2; r = r + 1) begin : nb_6
-            reg [10:0] i; i = flit_i(kp, r);
-            if (ev_v[S_P-1] && g_qbg && fv(kp, r) && is_code(i))
-                for (integer j = 0; j < 64; j = j + 1) if (i[5:0] == 6'(j)) ex_n[j*8 +: 8] = 8'(aq_e_q[r*10 +: 10] + ((MUT == 2) ? 10'sd126 : 10'sd127));
+    // GQISSUE2: every select of P is decoded one edge ahead from ev[S_P-2] into registered one-hots (pp_*): the 64-byte
+    // exponent merge mask, the raw-read bank, and the code / exponent-word-0 / exponent-word-1 kind (was g_bs / g_src /
+    // ev_k -> compare / 13-b add -> decode -> 512-b mux in one edge, r2 route -98).
+    reg [1:0] pp_v; reg [63:0] pp_em [0:1];
+    (* keep = "true", dont_touch = "true" *) reg [7:0] pp_rawc [0:15];     // r4: [r*8 + slice] copies
+    (* keep = "true", dont_touch = "true" *) reg [7:0] pp_codec [0:1];   // [r][slice]
+    (* keep = "true", dont_touch = "true" *) reg [7:0] pp_loc [0:1];
+    (* keep = "true", dont_touch = "true" *) reg [7:0] pp_hic [0:1];
+    always @(posedge clk or negedge rn1)
+        if (!rn1) pp_v <= 2'd0;
+        else for (integer r = 0; r < 2; r = r + 1) pp_v[r] <= ev_v[S_P-2] && ev_f[S_P-2][r];
+    always @(posedge clk) for (integer r = 0; r < 2; r = r + 1) begin : nb_pp
+        reg [10:0] i; reg [15:0] s; i = flit_i(ev_k[S_P-2], r); s = sec_add(g_src, 13'(i));
+        pp_em[r] <= (ev_v[S_P-2] && g_qbg && ev_f[S_P-2][r] && ev_c[S_P-2][r]) ? (64'd1 << i[5:0]) : 64'd0;
+        for (integer c = 0; c < 8; c = c + 1) begin
+            pp_rawc[r*8 + c] <= g_qbg ? 8'd0 : oh8(s[2:0]);
+            pp_codec[r][c] <= g_qbg && ev_c[S_P-2][r];
+            pp_loc[r][c] <= g_qbg && !ev_c[S_P-2][r] && i == {3'b0, g_bs};
+            pp_hic[r][c] <= g_qbg && !ev_c[S_P-2][r] && i != {3'b0, g_bs};
         end
     end
-    reg [1:0] p_v; reg [1:0] p_tag_k; reg [9:0] p_k; reg [255:0] p_d [0:1]; reg [10:0] p_i [0:1];
-    always @(posedge clk or negedge rn)
-        if (!rn) p_v <= 2'd0;
-        else for (integer r = 0; r < 2; r = r + 1) p_v[r] <= ev_v[S_P-1] && fv(kp, r);
+    always @* begin : nb_5
+        ex_n = ex;
+        for (integer r = 0; r < 2; r = r + 1)
+            for (integer j = 0; j < 64; j = j + 1) if (pp_em[r][j]) ex_n[j*8 +: 8] = aq_ebc[r*2 + j/32];
+    end
+    reg [1:0] p_v; reg [255:0] p_d [0:1];
+    always @(posedge clk or negedge rn1)
+        if (!rn1) p_v <= 2'd0;
+        else p_v <= pp_v;
     always @(posedge clk) begin
-        if (fire) ex <= '0; else ex <= ex_n;
-        p_k <= kp;
-        for (integer r = 0; r < 2; r = r + 1) begin : nb_7
-            reg [10:0] i; reg [15:0] s; i = flit_i(kp, r); p_i[r] <= i;
-            s = sec_add(g_src, 13'(i));
-            if (!g_qbg) p_d[r] <= rdw(s[2:0]);
-            else if (is_code(i)) p_d[r] <= aq_q_q[r*256 +: 256];
-            else p_d[r] <= (i == {3'b0, g_bs}) ? ex_n[255:0] : ex_n[511:256];
-        end
+        // r4: the exponent words clear one edge after fire (fire_q; was on fire: 512 loads on the calendar compare). No
+        // exponent flit of the new gather merges before S_P >= 24 edges later, and the previous gather has drained.
+        if (fire_q) ex <= '0; else ex <= ex_n;
+        for (integer r = 0; r < 2; r = r + 1)
+            for (integer c = 0; c < 8; c = c + 1)
+                p_d[r][32*c +: 32] <= rdw_oh32(pp_rawc[r*8 + c], c) | (aq_q_q[r*256 + 32*c +: 32] & {32{pp_codec[r][c]}}) |
+                                      (ex_n[32*c +: 32] & {32{pp_loc[r][c]}}) | (ex_n[256 + 32*c +: 32] & {32{pp_hic[r][c]}});
     end
     // ------------------------------------------------------------------ ring B commands (lp @24, read @25, inject @27, rx @27+2h)
     // and ring-A gather commands (same edges into A1, merge register one edge later)
@@ -319,14 +411,14 @@ module ot_hgi_coll_gq_issue #(
             lpw = 0; lpt = 0; lpd = 0; rd = 0; rdt = 0; inj = 0; fwd = 0; rx = 0; ttg = 0; ttl = 0; kind = 0; src = 0; rtag = 0;
             // lp write of the payload: computed with P (ev[23]); P itself is the data
             k = ev_k[S_BLP-1];
-            if (ev_v[S_BLP-1] && fv(k, r)) begin lpw = 1; lpt = k[2:0]; end
+            if (ev_v[S_BLP-1] && ev_f[S_BLP-1][r]) begin lpw = 1; lpt = k[2:0]; end
             k = ev_k[S_BRD-1];
-            if (ev_v[S_BRD-1] && fv(k, r)) begin rd = 1; rdt = k[2:0]; end
+            if (ev_v[S_BRD-1] && ev_f[S_BRD-1][r]) begin rd = 1; rdt = k[2:0]; end
             k = ev_k[S_BINJ-1];
-            if (ev_v[S_BINJ-1] && fv(k, r)) begin inj[k[0]] = 1; ttg = k[2:0]; ttl[k[0]*2 +: 2] = 2'd3; end
+            if (ev_v[S_BINJ-1] && ev_f[S_BINJ-1][r]) begin inj[k[0]] = 1; ttg = k[2:0]; ttl[k[0]*2 +: 2] = 2'd3; end
             for (integer h = 1; h <= 3; h = h + 1) begin
                 k = ev_k[S_BRX + 2*h - 1];
-                if (ev_v[S_BRX + 2*h - 1] && fv(k, r)) begin
+                if (ev_v[S_BRX + 2*h - 1] && ev_f[S_BRX + 2*h - 1][r]) begin
                     rx[k[0]] = 1; kind[k[0]*2 +: 2] = 2'd3; src[k[0]*2 +: 2] = srcq(q_id, k[0], h); rtag[k[0]*3 +: 3] = k[2:0];
                     if (h < 3) fwd[k[0]] = 1;
                 end
@@ -337,13 +429,13 @@ module ot_hgi_coll_gq_issue #(
     // P is loaded on the lp edge, so the lp data of the registered command word is P (r).
     reg [290:0] a1;             // ring-A gather command (ring B timing)
     reg [290:0] b1;             // ring B command register (MUT 5: one more edge)
-    always @(posedge clk or negedge rn)
-        if (!rn) begin a1 <= '0; b1 <= '0; end
+    always @(posedge clk or negedge rn3)
+        if (!rn3) begin a1 <= '0; b1 <= '0; end
         else begin a1 <= cb[0]; b1 <= cb[1]; end
     wire [255:0] a1_d = p_d[0], b1_d = p_d[1];
     assign ld_ev_v = ev_v[0]; assign ld_ev_k = ev_k[0]; assign ld_p_v = p_v; assign ld_p_d = {p_d[1], p_d[0]};
     reg [290:0] b2; reg [255:0] b2_d;
-    always @(posedge clk or negedge rn) if (!rn) b2 <= '0; else b2 <= b1;
+    always @(posedge clk or negedge rn3) if (!rn3) b2 <= '0; else b2 <= b1;
     always @(posedge clk) b2_d <= b1_d;
     wire [290:0] bo = (MUT == 5) ? b2 : b1;
     wire [255:0] bo_d = (MUT == 5) ? b2_d : b1_d;
@@ -354,11 +446,11 @@ module ot_hgi_coll_gq_issue #(
     end
     // ------------------------------------------------------------------ ring-A merge register (ISA +2 edges)
     reg [57:0] isa_q; reg [255:0] isa_d_q;
-    always @(posedge clk or negedge rn) if (!rn) isa_q <= '0; else isa_q <= isa_ring;
+    always @(posedge clk or negedge rn3) if (!rn3) isa_q <= '0; else isa_q <= isa_ring;
     always @(posedge clk) isa_d_q <= isa_lp_data;
     reg merge_bad;
-    always @(posedge clk or negedge rn) begin
-        if (!rn) begin
+    always @(posedge clk or negedge rn3) begin
+        if (!rn3) begin
             {ra_lp_we, ra_state_read_add, ra_state_read_tx, ra_state_read_rr, ra_add_v, ra_tx_inject, ra_tx_forward,
              ra_tx_gather, ra_rx_slot, ra_rr_local} <= '0;
             merge_bad <= 1'b0;
@@ -390,8 +482,8 @@ module ot_hgi_coll_gq_issue #(
         ra_rx_kind <= isa_q[43:40] | a1[13:10]; ra_rx_src <= isa_q[47:44] | a1[9:6]; ra_rx_tag <= isa_q[53:48] | a1[5:0];
         ra_rr_local_tag <= isa_q[57:55];
     end
-    always @(posedge clk or negedge rn)
-        if (!rn) flt_q <= 1'b0; else flt_q <= rd_bad || merge_bad;
+    always @(posedge clk or negedge rn1)
+        if (!rn1) flt_q <= 1'b0; else flt_q <= rd_bad || merge_bad;
 endmodule
 
 // Landing leaf: captures both rings' publishes and the local payload P, and writes the quadrant VM through the COLL

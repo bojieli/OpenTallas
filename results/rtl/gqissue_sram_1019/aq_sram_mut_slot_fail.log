@@ -1,0 +1,14 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/codex-gqissue-sram-1019/src
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-gqissue-sram-1019/src
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-gqissue-sram-1019/src
+ot-run: ot-epyc7       admits   754 GB (avail 629, growth 101, headroom 0, waiters 0/0 GB) load 68/96 running 25 disk 6470 GB 
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/codex-gqissue-sram-1019/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-gqissue-sram-1019/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-gqissue-sram-1019/src
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-2728287-1792422394 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+[21667000] %Fatal: tb.sv:14: Assertion failed in tb: AQ_TREE13_NUMERIC_MISMATCH block3 fp41 e-22/-22
+%Error: /srv/opentallas-scratch/claude/codex-gqissue-sram-1019/aqmut/tb.sv:14: Verilog $stop
+Aborting...
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-2728287-1792422394): exit 1

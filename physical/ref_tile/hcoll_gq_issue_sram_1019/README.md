@@ -1,0 +1,15 @@
+# Release GQ issue SRAM successor
+
+Prior r4 source and bench are preserved as historical only: its storage checklist PASS was rejected by coordinator because each quantiser used a >9kb flop ring. It was not submitted as safe.
+Pre-build sizing: `results/rtl/gqissue_sram_1019/sizing.json`.
+
+1. FIXED pending gate: existing input/output RTL pin registers retained. Main `ot_keep_regs.tcl` invokes `ot_pin_regs.tcl` whenever OT_RST_LAND=1 even with OT_PIN_REGS disabled; reset-only wrapper provides two plain face stages. Both current helpers were audited. Six kept regional reset copies follow. Raw reset landing and fanout must be confirmed on synthesis.
+2. PASS pending placement:432x345.6um outline, macro-local inputs and shared counter-to4local address copies; no new long one-edge cross-tile path. Measured reach must remain<=405um.
+3. FIXED pending synthesis: retain r4 per-256word one-hot copies/cur copies/exponent copies/S8/S10 controls. Removed wide quantiser ring pointer+flop banks; each4-bit slot counter drives4local negedge address sets,<=8loads/bit. Every data bit drives one SRAM pin. Check kept copies survive and no critical fanout>32.
+4. FIXED pending timing: retain r4 pre-decoded one-hot scale alignment (golden-exact). New path is negedge data/address register -> SRAM input, and SRAM rd_out -> existing next arithmetic stage; no wide ring read mux. No combinational input/output path, no timing masks.
+5. FIXED: both1024b9edge quantiser delays now SRAM16slot rings (eight128x256 macros total). Read slot8behind write; different addresses on every edge, no collision assumptions. Exactly9edge delay; no added ECC under academic policy. Legacy flop ring inactive under OT_COLLQ_SRAM; no indexed flop arrays in successor.
+6. FIXED pending PNG/synthesis:8macros on43.2lattice; x pitch129.6 leaves34.776um channels and y pitch86.4 leaves45.36um. Pin-face halos16.2um.432x345.6um aspect1.25; full-width cell region, no islands. Faces from previous225square already<6pins/um and now longer. Macro hard area31,132.6um2; synthesis must report remaining standard area after removing >20kbflops. No fill waiver assumed for this kit.
+7. PASS pending CTS: one root on sub-mm tile, local macro pin negedge launches protect hold; pin-flop spread<=80ps at TT/FF required. No macro clock gating, io/core hold margins0.03ns. Boundary matched by parent compensation/landing after measured insertion.
+8. PASS: static4bit rotating counters with fixed read offset; no credits/backpressure. Same9edge delay/AQ13lat13/II1. Two reset landing edges were already part of r4. New slot/hard area must go to GEN2E/H-D4G before adoption. Root PNG review before REVIEW or submit.
+
+Integration policy: gate benches use the smallest changed mechanism (AQ13 golden exact + wrong SRAM slot). Full COLLQ at main's registered KQ+2 seam also runs before adoption. Historical r4 old-seam bench is not production qualification. Only the issue module is carried from paused r4; current-main land fault-face register, KQ+2 share, VM read-share variants, model and integration bench are preserved. SRAM-line wrong-slot isMUT7, land-face mutant remainsMUT6.

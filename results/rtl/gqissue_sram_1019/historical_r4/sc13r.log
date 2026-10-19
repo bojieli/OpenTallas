@@ -1,0 +1,5 @@
+SCALE13R_EQ PASS checks=2097152 subnormal_results=52693
+- rtl/hbm_accel/generic/collective/p2p/tb_aq_scale13r_eq.sv:40: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2ms; walltime 1.236 s; speed 1.697 ms/s
+- Verilator: cpu 1.236 s on 1 threads; allocated 7 MB
