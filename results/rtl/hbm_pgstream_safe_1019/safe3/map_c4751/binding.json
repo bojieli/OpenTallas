@@ -1,0 +1,32 @@
+{
+  "top": "ot_hbm_su_static_pg_stream_split_safe3",
+  "source_sha256": {
+    "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pg_stream_split.sv": "7e00c37c17fc4cec4329b5cb7fd6a58fddf9bc26454cd19bd43f35118d0a4506",
+    "rtl/hbm_accel/generic/adapters/static_su/programme/multirate_bridge_split.sv": "b14cc91fa9163092fe700affc00548b1a78c59607fabfb27369472e21ed72e4f",
+    "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+    "rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_static_vm_bank_leaf_s.sv": "3b0b126340d39eef7efc913995ab1ff4779dd64d3b8d669ff92530b08ea11198",
+    "rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_static_vm_ports.sv": "00eb5cdc33808a02dbb7a1c9ea272ff6a266521117851ee8ab598581902200ff",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv": "06107909fe1bbf3d3fe2622e388eefd39964ab10977cf6f8fc4db4da8842db72",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv": "cd766d1e10aba61a57ad0db66d3ddcde16b5ff01bcc2004edbdeeeb6ec559015",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/hbm_accel/generic/adapters/static_su/programme/multirate_bridge_regional.sv": "dcdc54d406db2524a0ad027a19b174851aea3f34bc7be66b903e76c8bbdf3c0d",
+    "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pg_stream_safe3.sv": "dd72e8478426abc26018a3b79d10e6d7a63d4fd3494d26d2e719dd3db08d0b46"
+  },
+  "libraries_sha256": {
+    "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+    "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+    "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+    "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+    "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038"
+  },
+  "params": {
+    "QID": 1,
+    "G": 2,
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15,
+    "STRAP": 1,
+    "FAULT_REG": 1
+  },
+  "native_timing_qualified": false,
+  "physical_qualified": false
+}
