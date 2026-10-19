@@ -37,7 +37,7 @@ for mm in ('col_h9', 'col_h10', 'col_h9_MX'):
     M[mm]['instance_param'] = 'INSTANCE'                   # G4
     M[mm]['port_note'] += '; INSTANCE = "u_<die instance>" (per-frame ROM image, as dv_slice_cut --rom-instance)'
 T['rtl_widths']['dsfd_dvland_512'] = dict(ck_f=1, i=512, ck=1, rs=1, k=3, o=512, fault=1)
-T['land_plan'] = 'results/arch/s81_dv_1016/landing/p4l2/land_plan.json'
+T['land_plan'] = 'results/arch/s81_dv_1016/landing/p4l3/land_plan.json'   # S81-LBGAP/G8: p4l2 + bundle-age K (dv_land_pilot.py agebundle)
 T['note'] = (T['note'] + '; S81-LBGAP/G3 10-18: end-slice + link-tile inbound lanes landed, frame INSTANCE, lep masters '
              'parameter-free, S-tier ports all SerDes (bind/mk_table_p4l3.py)')
 (B / 'bind_table_p4l3.json').write_text(json.dumps(T, indent=1) + '\n')

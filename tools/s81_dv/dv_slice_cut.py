@@ -117,7 +117,7 @@ def main(argv=None):
     ap.add_argument('--no-grow', action='store_true')
     ap.add_argument('--land-plan', help='p4l land_plan.json: back-annotate every landing input (ck_f and i together) with '
                     'the lane flight time at --corner as a CYCLE model (S81-LBGAP/G1): F = ceil(-S1/T) whole periods '
-                    '(E - 1 at the corner that sets E), clipped into the landing window [E-D+1, E-1]. '
+                    '(E - 1 at the corner that sets E), clipped into the landing window [K-D+1, K-1] (K = the plan strap, G8). '
                     'RTL relays are zero-delay, so without it every lane with E >= D aliases its ring.  The model delays the '
                     'lane word by F ck_f edges and opens ck_f F edges late -- the hop-0 gate (die.v ICG, LANDING-CONTRACT '
                     'L3) is what makes the late first edge carry the calendar epoch.  Bench side only (wire flight), never '
@@ -311,11 +311,12 @@ def main(argv=None):
             if s1 is None:
                 raise SystemExit(f'dv_slice_cut: landing {i} has no S1 at {a.corner}')
             E_, D_ = int(r['E']), int(r.get('D', LPJ.get('D', 4)))
+            K_ = int(r.get('K') or E_)      # S81-LBGAP/G8: the landing reads at K (bundle age), the window is K's
             # whole periods the lane clock lags beyond the single-cycle hop, kept inside the window: with the hop-0
-            # gate and the calendar R0 = G + (N mod 2) the ring occupancy is E - 1 - F + (N mod 2), legal for
-            # E - D + 1 <= F <= E - 1
+            # gate and the calendar R0 = G + (N mod 2) the ring occupancy is K - 1 - F + (N mod 2), legal for
+            # K - D + 1 <= F <= K - 1
             f_raw = math.ceil(-float(s1) / T_ps)
-            F = min(max(f_raw, E_ - D_ + 1), E_ - 1) + a.flight_shift
+            F = min(max(f_raw, K_ - D_ + 1), K_ - 1) + a.flight_shift
             F = max(F, 0)
             cm = byname[i][3]
             ln = lines[i]
@@ -325,10 +326,11 @@ def main(argv=None):
                 raise SystemExit(f'dv_slice_cut: landing {i} data is not a whole net: {cm["i"][:60]}')
             # CYCLE flight model (zero-delay RTL): Verilator 5.050 drops transport-delayed clock pulses, so the flight is
             # whole periods on the lane's own (gated) clock
-            body.append(f'  wire {i}__ckf_d; wire [{w - 1}:0] {i}__i_d;   // lane flight {F} cycles ({a.corner}: S1 {float(s1):.1f} ps, E {E_}, D {D_})')
+            body.append(f'  wire {i}__ckf_d; wire [{w - 1}:0] {i}__i_d;   // lane flight {F} cycles ({a.corner}: S1 {float(s1):.1f} ps, E {E_}, K {K_}, D {D_})')
             body.append(f'  dv_flight_sim #(.W({w}), .F({F})) {i}__flight (.ck_in({cm["ck_f"]}), .rs({cm["rs"]}), .i_in({cm["i"]}), .ck_out({i}__ckf_d), .i_out({i}__i_d));')
             lines[i] = ln
-            lane_dl[i] = dict(F=F, F_raw=f_raw, s1_ps=float(s1), E=E_, D=D_, K=r['K'], corner=a.corner, flight_shift=a.flight_shift)
+            lane_dl[i] = dict(F=F, F_raw=f_raw, clipped=F - a.flight_shift != f_raw, s1_ps=float(s1), E=E_, D=D_, K=K_,
+                              corner=a.corner, flight_shift=a.flight_shift)
     lost = sorted(S - set(lines))
     if lost:
         raise SystemExit(f'dv_slice_cut: instance line not found verbatim for {lost[:5]}')

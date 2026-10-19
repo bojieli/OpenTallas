@@ -512,7 +512,7 @@ def main():
         else:
             continue
         link_pins[nm] = pins
-        sdc.append(f'set_multicycle_path -setup {r["E"]} -to {pins}')
+        sdc.append(f'set_multicycle_path -setup {r.get("K") or r["E"]} -to {pins}')   # S81-LBGAP/G8: the landing reads at K
         sdc.append(f'set_multicycle_path -hold {r["D"] - 1} -to {pins}')
     (out / 'landing.sdc').write_text('\n'.join(sdc) + '\n')
     no_model = [r['link'] for r in LP['links'] if r['link'] not in link_pins and f'ld_{r["link"]}' not in loc]
