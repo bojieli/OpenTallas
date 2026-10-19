@@ -36,7 +36,7 @@ module ot_hgi_dma_back_static_vp4_banks #(
     // Wires-only physical parent: nine compensated related clock entries.
     // Banks use identical source and parameters; address constants are resolved in controller registers.
     wire [7:0] rr_valid_i,bank_read_en,bank_output_en;
-    wire [6:0] bank_read_slot,bank_write_slot;
+    wire [6:0] rslot_s,rslot_w,rslot_n,wslot_s,wslot_w,wslot_n;   // per bank-group copies (S 0-2, W 3-4, N 5-7)
     wire [255:0] bank_read_addr;
     // OT_DBK_HARD (hb_dbk wires-only cluster route): the controller is a hard view, instantiated without overrides
     // (its defaults ARE the hardened configuration); simulation keeps the bench MUT/STACK_BYTES pass-through.
@@ -73,16 +73,16 @@ module ot_hgi_dma_back_static_vp4_banks #(
         .wa(wa),
         .rr_valid_i(rr_valid_i),
         .bank_read_en(bank_read_en),
-        .bank_read_slot(bank_read_slot),
-        .bank_write_slot(bank_write_slot),
+        .bank_read_slot_s(rslot_s),.bank_read_slot_w(rslot_w),.bank_read_slot_n(rslot_n),
+        .bank_write_slot_s(wslot_s),.bank_write_slot_w(wslot_w),.bank_write_slot_n(wslot_n),
         .bank_output_en(bank_output_en),
-        .bank_read_addr(bank_read_addr));
+        .bank_read_addr_s(bank_read_addr[95:0]),.bank_read_addr_w(bank_read_addr[159:96]),.bank_read_addr_n(bank_read_addr[255:160]));
     for(genvar b=0;b<8;b=b+1)begin:L
         assign rr_valid_i[b]=rr[b*257+256];
         ot_hgi_dma_back_landing_bank u_bank(
             .clk(clk_bank[b]),.rst_n(rst_n),
-            .read_en(bank_read_en[b]),.read_slot(bank_read_slot),
-            .write_en(rr_valid_i[b]),.write_slot(bank_write_slot),.rr_data(rr[b*257+:256]),
+            .read_en(bank_read_en[b]),.read_slot(b<3?rslot_s:b<5?rslot_w:rslot_n),
+            .write_en(rr_valid_i[b]),.write_slot(b<3?wslot_s:b<5?wslot_w:wslot_n),.rr_data(rr[b*257+:256]),
             .read_addr(bank_read_addr[b*32+:32]),.output_en(bank_output_en[b]),.wd(wd[b*289+:289]));
     end
 endmodule
@@ -109,11 +109,25 @@ module ot_hgi_dma_back_static_vp4_controller #(
     output reg wb_fill_start,
     input wire wb_ready,
     output reg [7:0] bank_read_en,
-    output wire [6:0] bank_read_slot,bank_write_slot,
+    // HH-7 10-19 (hv16_dbk_cpl 65c2387ab TT -12.3: bank_read_addr[166] -> L[5] -12.30, bank_write_slot[6] -> L[2] -11.73,
+    // ~430-460 um parent wires): the bank read address and the two 7-bit slot broadcasts leave on the face of the bank
+    // group they serve (S = banks 0-2 / row 0, W = banks 3-4 / column 0, N = banks 5-7 / row 3), each a point-to-point
+    // copy of the same register (no star net across the cluster). Same registers, same values, same edges: 0 cycles.
+    output wire [6:0] bank_read_slot_s,bank_read_slot_w,bank_read_slot_n,
+    output wire [6:0] bank_write_slot_s,bank_write_slot_w,bank_write_slot_n,
     output wire [7:0] bank_output_en,
-    output reg [255:0] bank_read_addr,
+    output wire [95:0] bank_read_addr_s,
+    output wire [63:0] bank_read_addr_w,
+    output wire [95:0] bank_read_addr_n,
     input wire [11:0] wa
 );
+    wire [6:0] bank_read_slot,bank_write_slot;
+    reg [255:0] bank_read_addr;
+    assign bank_read_addr_s=bank_read_addr[95:0];
+    assign bank_read_addr_w=bank_read_addr[159:96];
+    assign bank_read_addr_n=bank_read_addr[255:160];
+    assign bank_read_slot_s=bank_read_slot;assign bank_read_slot_w=bank_read_slot;assign bank_read_slot_n=bank_read_slot;
+    assign bank_write_slot_s=bank_write_slot;assign bank_write_slot_w=bank_write_slot;assign bank_write_slot_n=bank_write_slot;
     // Reset is exceptional initialization: async assertion, two fixed release
     // edges, then normal compiler-scheduled commands. Only this two-flop leaf
     // touches the external reset pin; no normal command or data cycle is added.

@@ -58,7 +58,7 @@ module ot_hgi_dma_back_static_vp4_banks_rs #(
     input wire [11:0] wa
 );
     wire [7:0] rr_valid_i,bank_read_en,bank_output_en;
-    wire [6:0] bank_read_slot,bank_write_slot;
+    wire [6:0] rslot_s,rslot_w,rslot_n,wslot_s,wslot_w,wslot_n;   // per bank-group copies (S 0-2, W 3-4, N 5-7)
     wire [255:0] bank_read_addr;
 `ifdef OT_DBK_HARD
     ot_hgi_dma_back_static_vp4_controller u_control(
@@ -70,14 +70,16 @@ module ot_hgi_dma_back_static_vp4_banks_rs #(
         .quiet(quiet),.busy(busy),.rq(rq),.wb_reserve_v(wb_reserve_v),.wb_reserve_bank(wb_reserve_bank),
         .wb_fill_bank(wb_fill_bank),.wb_reserve_epoch(wb_reserve_epoch),.wb_fill_epoch(wb_fill_epoch),
         .wb_reserve_sectors(wb_reserve_sectors),.wb_reserve_base(wb_reserve_base),.wb_fill_start(wb_fill_start),
-        .wb_ready(wb_ready),.wa(wa),.rr_valid_i(rr_valid_i),.bank_read_en(bank_read_en),.bank_read_slot(bank_read_slot),
-        .bank_write_slot(bank_write_slot),.bank_output_en(bank_output_en),.bank_read_addr(bank_read_addr));
+        .wb_ready(wb_ready),.wa(wa),.rr_valid_i(rr_valid_i),.bank_read_en(bank_read_en),
+        .bank_read_slot_s(rslot_s),.bank_read_slot_w(rslot_w),.bank_read_slot_n(rslot_n),
+        .bank_write_slot_s(wslot_s),.bank_write_slot_w(wslot_w),.bank_write_slot_n(wslot_n),.bank_output_en(bank_output_en),
+        .bank_read_addr_s(bank_read_addr[95:0]),.bank_read_addr_w(bank_read_addr[159:96]),.bank_read_addr_n(bank_read_addr[255:160]));
     for(genvar b=0;b<8;b=b+1)begin:L
         assign rr_valid_i[b]=rr[b*257+256];
         ot_hgi_dma_back_landing_bank u_bank(
             .clk(clk_bank[b]),.rst_n(rst_bank_n[b]),
-            .read_en(bank_read_en[b]),.read_slot(bank_read_slot),
-            .write_en(rr_valid_i[b]),.write_slot(bank_write_slot),.rr_data(rr[b*257+:256]),
+            .read_en(bank_read_en[b]),.read_slot(b<3?rslot_s:b<5?rslot_w:rslot_n),
+            .write_en(rr_valid_i[b]),.write_slot(b<3?wslot_s:b<5?wslot_w:wslot_n),.rr_data(rr[b*257+:256]),
             .read_addr(bank_read_addr[b*32+:32]),.output_en(bank_output_en[b]),.wd(wd[b*289+:289]));
     end
 endmodule

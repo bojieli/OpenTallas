@@ -98,7 +98,11 @@ def main():
     # failed the gate wire_reach: row-0 banks' unregistered wd ran 654 um to the N face (bank -> pin, > 500 um/stage) and
     # macro->out wd[839] -149.5 ps.  wd stays wires-only (no parent flop, no added cycle); the die takes wd from both faces.
     nseg = {0: (2.4, 262.0), 1: (264.0, 398.0), 2: (432.0, W - 2.4)}
-    for face, rows in (('N', (3, 2)), ('S', (1, 0))):
+    # HH-7 10-19 (hv16_dbk_cpl-q1-65c2387ab TT: L[4].wd[277] -> wd[1433] -7.63 / wd[1415] -6.15): in column 0 the bank
+    # FARTHER from the face takes the channel-side (W-most) range, as on S (row 1 -> 2.4..131.8).  N had it inverted
+    # (row 3 first): row 2's wd climbed the W channel past bank 5 and then ran 46..175 um east (~375 um bank -> pin);
+    # now ~290 um, bank 5's ~270 um.  Wires only, 0 cycles.
+    for face, rows in (('N', (2, 3)), ('S', (1, 0))):
         for c in range(3):
             banks = [b for r in rows for b, (cc, rr) in HOME.items() if cc == c and rr == r]
             names = [f'wd[{b*289+i}]' for b in banks for i in range(289)]
@@ -156,6 +160,8 @@ def main():
             'flops (ot_rst_relay on clk_rst). A parent pin flop would add a cycle to rr/wd/rq and the host bus.')),
         route=dict(pd=0.5, period_ps=833.333, threads=8, peak_ram_gb=16, hold_margin_ns=0.03, io_hold_margin_ns=0.03, macro_halo_um=5.4,
                    pin_balance=dict(h='M4', v='M5', group_max=1)),
+        # HH-7 10-19: 65c2387ab DRC 1 = parent M4 wire in the landing bank's M4 OBS pocket (M2-M4 belong to the child)
+        boundary_tcl=['physical/common_flow/child_pocket_guard.tcl'],
         params={}, inter=[], io_flop_at_pins=dict(cols=4, allow_none=True), inhold=False, outhold=False,
         keep_pin_regs=True, io_tcl=f'results/arch/hbm_die_v16_d4f/dbk_cpl_1017/assigned_pins.tcl',
         slot_change_request=(f'hb_dbk_<q> (d4f slot 560.0 x 400.0) -> {W} x {H} (1.12:1): 8 banks + controller + collar leaf '
@@ -170,10 +176,22 @@ def main():
                  "pins' centroid (rr on the W face 432 um away); fixed: their rr on the N/S face beside wd, wires only"),
         why=why)
     spec['reroute_reason'] = reroute_flow
-    spec['job'] = dict(owner='Claude:OWNERS-HBM/STK', branch='claude/owners-hbm-1018-stk', tag='q1', record_to=f'results/rtl/ref_tile/{NAME}',
+    # HH-7 10-19: valid re-route hv16_dbk_cpl-q1-65c2387ab ended NEEDS_RTL TT -12.30 / FF +20.59 / DRC 1 (routed sign-off,
+    # 4 endpoints, all parent wires of ~360-460 um between hard-child pins): controller faces split per bank group (RTL +
+    # re-hardened hv15_dbk_vp4_ctl view), column-0 N wd order fixed, child pocket guard for the M4 DRC.
+    spec['reroute_reason'] = dict(kind='rtl_change', failed_job='hv16_dbk_cpl-q1-65c2387ab',
+        source='rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks.sv',
+        failure=('TT -12.30: u_control/bank_read_addr[166] -> L[5].read_addr[6] -12.30 (S-face pin, ~457 um U-turn), '
+                 'u_control/bank_write_slot[6] -> L[2].write_slot[6] -11.73 (one W-face 7-bit star to 8 banks), '
+                 'L[4].wd[277] -> wd[1433] -7.63 / wd[1415] -6.15 (N wd order inverted in column 0); DRC 1 M4 Metal '
+                 'Spacing inside u_dbk.L[0].u_bank (parent wire in the bank M4 OBS pocket)'),
+        why=('controller bank_read_addr / slot copies leave on the face of the bank group they serve (S 0-2, W 3-4, '
+             'N 5-7; worst leg ~457 -> ~343 um); column-0 N wd: farther bank on the channel side; parent M2-M4 '
+             'obstructed over hard children between GRT and DRT (child_pocket_guard.tcl). 0 cycles, exact.'))
+    spec['job'] = dict(owner='Claude:HOURLY-HBM/HH-7', branch='claude/hh7-dbkcpl-1019', tag='h7', record_to=f'results/rtl/ref_tile/{NAME}',
         purpose=('HBM die d4g hb_dbk_<q> x4 (per quadrant, master unchanged; F20 tgt 104+QID: SW 104 / SE 105 / NW 106 / NE 107; '
                  'RBH-STK). ' + why),
-        extra_paths=sorted(['physical/common_flow/assigned_pin_exact.tcl', BANK, CTLV, LEAFV,
+        extra_paths=sorted(['physical/common_flow/assigned_pin_exact.tcl', 'physical/common_flow/child_pocket_guard.tcl', BANK, CTLV, LEAFV,
                             'physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2',
                             'physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2',
                             'physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2',
