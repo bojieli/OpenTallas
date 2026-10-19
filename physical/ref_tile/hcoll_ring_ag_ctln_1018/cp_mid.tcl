@@ -11,6 +11,8 @@
 # r5: acc_rr is pin-flopped in RTL (acc_rr_q), so u_core.rr_d is a plain S-face output flop again (no rr class); rx_slot0
 # moved to the W face beside cw_i[278:273]; carry_write0/1 sit at 0.1 from cw_i/ccw_i[274] (r4 probe capture cw_i[273]
 # 211: 3 compare levels + ~24 um; the flop -> carry pin wire is a pure-Q launch).
+# r5b: carry_write = AND2 of flops cw_a<d> (slot & kind) and cw_b<d> (dst == qid); both at 0.1 from cw_i/ccw_i[274]
+# (r5 probe: capture cw_i[273] 213 = 177 ps of logic, not wire).
 # Placement only, 0 cycles.
 set cm_blk [ord::get_db_block]
 set cm_dbu [[ord::get_db_tech] getDbUnitsPerMicron]
@@ -31,7 +33,7 @@ foreach inst [$cm_blk getInsts] {
   if {[regexp {g_cp\\?\[([0-9]+)\\?\][./]u_p([01])[./]} $nm -> b side]} {
     set cls cp; set wt 0.5
     if {$side eq "0"} { set ip "cw_i\[$b\]"; set op "pin0_q\[$b\]" } else { set ip "ccw_i\[$b\]"; set op "pin1_q\[$b\]" }
-  } elseif {[regexp {^carry_write([01])($|[^0-9])} $nm -> d]} {
+  } elseif {[regexp {^cw_[ab]([01])($|[^0-9])} $nm -> d]} {
     set cls cw; set wt 0.1; set ip [expr {$d eq "0" ? "cw_i\[274\]" : "ccw_i\[274\]"}]; set op "carry_write$d"
   } else { continue }
   set bi [$cm_blk findBTerm $ip]; set bo [$cm_blk findBTerm $op]
@@ -56,6 +58,6 @@ foreach inst [$cm_blk getInsts] {
 }
 close $cm_fh
 puts "CP_MID fixed $cm_n flops at their pin midpoints ($cm_cls)"
-if {[dict get $cm_cls cp] != 560 || [dict get $cm_cls cw] != 2} {
-  error "CP_MID: expected cp 560 / cw 2 flops, found $cm_cls (netlist renamed / merged?)"
+if {[dict get $cm_cls cp] != 560 || [dict get $cm_cls cw] != 4} {
+  error "CP_MID: expected cp 560 / cw 4 flops, found $cm_cls (netlist renamed / merged?)"
 }

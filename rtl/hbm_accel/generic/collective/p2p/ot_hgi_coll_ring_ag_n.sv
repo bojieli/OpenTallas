@@ -13,7 +13,7 @@
 //     lane read edge (lp write / acc write of the same tag in that edge);
 //   * the state / add lanes take their commands from dedicated registered copies (cmd_*_o), at the v1 lane timing;
 //   * pin0_q / pin1_q / acc_we / acc_tag are dedicated output flops (same values as v1, no internal fanout);
-//   * carry_write is a flop computed one edge ahead from rx_slot (lead input) and the arriving ring word;
+//   * carry_write is computed one edge ahead from rx_slot (lead input) and the arriving ring word (r5b: AND2 of two flops);
 //   r2 (10-18): pin0_q/pin1_q copies are ot_hgi_coll_ring_cp_ff leaves (keep_hierarchy): in n1 yosys opt_merge folded
 //     each copy into the core's pin_p register of the same D, so pin0_q/pin1_q again left from the shared stop register
 //     (CTS probe launch 286).  carry_write / rx_slot are split per ring direction (carry_write0/rx_slot0 = cw at the NW
@@ -60,7 +60,7 @@ module ot_hgi_coll_ring_ag_ctln #(
     input wire [2:0] rr_local_tag,
     // lane faces (state-capture lanes + add lanes)
     output wire [279:0] pin0_q, pin1_q,
-    output reg carry_write0, carry_write1,
+    output wire carry_write0, carry_write1,
     output wire acc_we,
     output wire [2:0] acc_tag,
     input wire [255:0] state_tx, acc_rr,
@@ -104,6 +104,11 @@ module ot_hgi_coll_ring_ag_ctln #(
     (* keep = "true" *) reg [255:0] st_q;
     (* keep = "true" *) reg [255:0] acc_rr_q;
     (* keep = "true" *) reg [7:0] av_q;
+    // r5b: carry_write = (slot & kind 1) flop AND (dst == qid) flop; r5 probe: cw_i[273] -> in-buf 66 + XOR 43 + AND5 60 ps
+    // into one flop (capture 213, pure logic, 6 um of wire).  Two flops halve the capture logic; the AND2 is on the launch side.
+    (* keep = "true" *) reg cw_a0, cw_b0, cw_a1, cw_b1;
+    assign carry_write0 = cw_a0 & cw_b0;
+    assign carry_write1 = cw_a1 & cw_b1;
     always @(posedge clk) begin
         qid_q<=qid;
         lp_we_q<=lp_we;lp_tag_q<=lp_tag;
@@ -129,11 +134,11 @@ module ot_hgi_coll_ring_ag_ctln #(
         else begin cmd_read_tx_o<=state_read_tx;cmd_tx_tag_o<=state_tx_tag;cmd_tx_acc_o<=state_tx_acc;end
         cmd_add_v_o<=add_v;
         if(MUT_CW!=0)begin
-            carry_write0<=rx_q[0] && pin0_q[278:277]==1 && pin0_q[274:273]==qid_q;
-            carry_write1<=rx_q[1] && pin1_q[278:277]==1 && pin1_q[274:273]==qid_q;
+            cw_a0<=rx_q[0] && pin0_q[278:277]==1; cw_b0<=pin0_q[274:273]==qid_q;
+            cw_a1<=rx_q[1] && pin1_q[278:277]==1; cw_b1<=pin1_q[274:273]==qid_q;
         end else begin
-            carry_write0<=rx_slot0 && cw_i[278:277]==1 && cw_i[274:273]==qid_q;
-            carry_write1<=rx_slot1 && ccw_i[278:277]==1 && ccw_i[274:273]==qid_q;
+            cw_a0<=rx_slot0 && cw_i[278:277]==1; cw_b0<=cw_i[274:273]==qid_q;
+            cw_a1<=rx_slot1 && ccw_i[278:277]==1; cw_b1<=ccw_i[274:273]==qid_q;
         end
     end
     // ring pin-word copies: one keep_hierarchy leaf per bit (never merged with the core's pin_p register)
