@@ -17,7 +17,7 @@ source tools/s81_dv/svc_rs/rs_files.sh
 DEF=(); MUTV=0
 case "$V" in
   base) ;; mut1) MUTV=1;; mut2) MUTV=2;; mut3) MUTV=3;; mutgd) DEF=(-DRS_MUT_GD);; mutro) DEF=(-DRS_MUT_RO);;
-  mut4) MUTV=4;; mut5) MUTV=5;; mutpm) PMEM_E=0;;
+  mut4) MUTV=4;; mut5) MUTV=5;; mut6) MUTV=6;; mutpm) PMEM_E=0;;
   *) echo "variant?" >&2; exit 2;;
 esac
 SRAM_MACRO=${SRAM_MACRO:-0}
@@ -26,13 +26,15 @@ PMEM_E=${PMEM_E:-1}
 B=$O/${V}_d${DIE}s${ST}
 [ "$PMEM_E" = 1 ] || [ "$V" = mutpm ] || B=${B}_pe0
 [ "$SRAM_MACRO" = 1 ] && B=${B}_m1
+# RS_XDEF (S81-CTRL-SVC 10-19): extra defines, e.g. "OT_SVC_LAND_SRAM" (landing in 12 SRAM macros; mut6 = no LVT)
+XDEF=(); for x in ${RS_XDEF:-}; do XDEF+=(-D$x); B=${B}_${x,,}; done
 TOPDEF=(); TAG=obj
 [ -n "${MAXCYC:-}" ] && { TOPDEF+=(-GMAXCYC=$MAXCYC); TAG=${TAG}_m$MAXCYC; }
 [ -n "${PROG:-}" ] && { TOPDEF+=(-DRS_PROG); TAG=${TAG}_prog; }
 mkdir -p "$B"
 COMMON=(-Wno-fatal -Wno-WIDTH -Wno-TIMESCALEMOD --output-split 20000 --output-split-cfuncs 2000 -fno-inline
         --unroll-count 16 --unroll-limit 131072 -MAKEFLAGS OPT_SLOW=-O0 -CFLAGS -O1 -I$D -DRS_OBS ${ENGDEF:+-D$ENGDEF}
-        "${RS_DEF[@]}" -DMUT=$MUTV "${DEF[@]}")
+        "${RS_DEF[@]}" -DMUT=$MUTV "${DEF[@]}" "${XDEF[@]}")
 lib() {  # $1 = module
   local L=$B/pl_$1 PM=1
   [ "$1" = dsdv_svc_rs_entry ] && PM=$PMEM_E

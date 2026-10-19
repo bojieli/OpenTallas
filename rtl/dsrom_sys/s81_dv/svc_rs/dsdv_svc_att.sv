@@ -68,6 +68,7 @@
 // before, pw_q; the compiler PO rule already leaves >= 1 cycle).  PMEM 0 drops the store (the slices that never own
 // P.V: kits for the non-owner positions; pointers and fault checks stay); a PMEM 0 slice whose role is a P.V owner is
 // fault 23 (static configuration error).
+// MUT 6 (OT_SVC_LAND_SRAM only): the landing reads copy 0 (PC 0 writes) whatever the live-value table says.
 // ---------------------------------------------------------------------------------------------------------------------
 module dsdv_svc_att #(
     parameter integer MUT = 0,
@@ -266,7 +267,9 @@ module dsdv_svc_att #(
     end
 
     // ------------------------------------------------------------------ landing (slot-addressed: no overflow)
+`ifndef OT_SVC_LAND_SRAM
     reg [255:0] land [0:TR-1];
+`endif
     reg [TR-1:0] pres;
     reg [1023:0] wsc;                                // window scales, 128 slots x 8
     reg [3:0] spres;
@@ -289,7 +292,13 @@ module dsdv_svc_att #(
     reg [9:0] rc; reg run;                           // program cycle
     wire [9:0] nbeat = (tjob + 10'd3) >> 2;
     // engine ports
-    reg ej_v; reg eq_v; reg [D*16-1:0] eq_w; reg ekv_v; reg [NL-1:0] ekv_m, kc_m; reg [NL*265-1:0] ekv_w, kc_w;
+    reg ej_v; reg eq_v; reg [D*16-1:0] eq_w; reg ekv_v; reg [NL-1:0] ekv_m, kc_m;
+`ifndef OT_SVC_LAND_SRAM
+    reg [NL*265-1:0] ekv_w, kc_w;
+`else
+    wire [NL*265-1:0] ekv_w;
+    reg [NL-1:0] kc_win, kc_need; reg [NL*8-1:0] kc_sc;     // release side information of the 4 lanes
+`endif
     wire ej_ready, eq_ready, kv_ready;
     reg [NL-1:0] rel_bad;
     // row word at release
@@ -304,18 +313,99 @@ module dsdv_svc_att #(
     integer j;
     integer row; reg need, ok;
     always @(*) begin
-        kc_w = '0; kc_m = '0; rel_bad = '0; row = 0; need = 1'b0; ok = 1'b0;
+`ifndef OT_SVC_LAND_SRAM
+        kc_w = '0;
+`else
+        kc_win = '0; kc_need = '0; kc_sc = '0;
+`endif
+        kc_m = '0; rel_bad = '0; row = 0; need = 1'b0; ok = 1'b0;
         for (j = 0; j < NL; j = j + 1) begin
             row = 4 * (32'(rc) - 1) + j; need = 1'b0; ok = 1'b0;
             if (row < 32'(tjob)) begin
                 kc_m[j] = 1'b1;
                 need = (row < 32'(wcount)) || sel_held[row - 32'(wcount)] || tile[3:2] == 2'(ST);
                 ok = pres[row] && (row >= 32'(wcount) || spres[7'(wfirst[6:0] + 7'(row)) >> 5]);
+`ifndef OT_SVC_LAND_SRAM
                 kc_w[265*j +: 265] = rowword(row, land[row], wsc, wcount, wfirst, need);
+`else
+                // rowword() split: the row word itself comes from the land SRAM read at this edge (g_land)
+                kc_win[j] = row < 32'(wcount); kc_need[j] = need;
+                kc_sc[8*j +: 8] = wsc[8*(7'(wfirst[6:0] + 7'(row))) +: 8];
+`endif
                 rel_bad[j] = need && !ok;
             end
         end
     end
+
+`ifdef OT_SVC_LAND_SRAM
+    // ------------------------------------------------------------------ landing in SRAM (S81-CTRL-SVC 10-19, safe-design 5)
+    // The 640 x 256 flop landing (3 runtime writes + 4 runtime reads a cycle: ~164 kb of flops and four 640:1 x 256 b
+    // read muxes, the >8 h yosys OPT loop of the 369345 gates) becomes 12 x ot_sram_1r1w_256x256: bank b = row[1:0]
+    // (the 4 rows a release beat reads, 4 (rc - 1) + j, are one row in each bank at address rc - 1) x write copy c
+    // (c 0 / 1 = PC 0 / 1 responses, c 2 = ROWS: one writer a copy, so no bank write conflict exists by construction),
+    // plus a live-value table lvt[row] (640 x 2 flops) naming the copy that holds the row's last write (same-cycle
+    // priority as the flop version: ROWS > PC 1 > PC 0).  The banks read at the release edge itself (address rc - 1 from
+    // registered rc) and rd_out replaces the ekv_w register: SRAM read-old == the flop version's nonblocking read, so
+    // the engine sees the identical word on the identical cycle (0 cycles added).  Side information (lane mask, window /
+    // need / scale byte, live copy) is registered on the same edge.
+    reg [2:0] lw_v; reg [9:0] lw_a [0:2]; reg [255:0] lw_d [0:2];
+    integer lk;
+    always @(*) begin
+        lw_v = '0;
+        for (lk = 0; lk < 3; lk = lk + 1) begin lw_a[lk] = '0; lw_d[lk] = '0; end
+        for (lk = 0; lk < 2; lk = lk + 1) if (qrv[lk]) begin : g_lw
+            reg [16:0] tg; reg [11:0] o144; reg [511:0] two;
+            tg = qr_tag[17*lk +: 17];
+            o144 = 12'(tg[13:10]) * 12'd144;
+            two = {qr_data[256*lk +: 256], hold[lk]};
+            if (tg[16:15] == 2'd0) begin
+                lw_v[lk] = 1'b1; lw_a[lk] = 10'(tg[7:0]); lw_d[lk] = qr_data[256*lk +: 256];
+            end else if (tg[16:15] == 2'd2) begin
+                lw_a[lk] = 10'(wcount) + tg[9:0];
+                if (32'(o144[7:0]) + 144 <= 256 && qr_beat[4*lk +: 4] == 4'd0) begin
+                    lw_v[lk] = 1'b1; lw_d[lk] = {112'd0, 144'(qr_data[256*lk +: 256] >> o144[7:0])};
+                end else if (qr_beat[4*lk +: 4] == 4'd1) begin
+                    lw_v[lk] = 1'b1; lw_d[lk] = {112'd0, 144'(two >> o144[7:0])};
+                end
+            end
+        end
+        if (rows_mine) begin lw_v[2] = 1'b1; lw_a[2] = 10'(wcount) + q_d[9:0]; lw_d[2] = {112'd0, rows_bits}; end
+        for (lk = 0; lk < 3; lk = lk + 1) if (lw_a[lk] >= 10'(TR)) lw_v[lk] = 1'b0;   // flop version: out-of-range write dropped
+    end
+    reg [1:0] lvt [0:TR-1];
+    always @(posedge clk) for (lk = 0; lk < 3; lk = lk + 1) if (lw_v[lk]) lvt[lw_a[lk]] <= 2'(lk);
+    reg [NL*2-1:0] l_sel; reg [NL-1:0] l_win, l_need; reg [NL*8-1:0] l_sc;
+    wire [9:0] l_row [0:NL-1];
+    genvar lr;
+    for (lr = 0; lr < NL; lr = lr + 1) begin : g_lrow
+        assign l_row[lr] = {rc[7:0] - 8'd1, 2'(lr)};            // 4 (rc - 1) + j: rows of release beat rc
+    end
+    integer lj;
+    always @(posedge clk) begin
+        for (lj = 0; lj < NL; lj = lj + 1)       // only rows < tjob <= TR reach ekv_w (others: lane mask 0)
+            l_sel[2*lj +: 2] <= (l_row[lj] < 10'(TR)) ? lvt[l_row[lj]] : 2'd0;
+        l_win <= kc_win; l_need <= kc_need; l_sc <= kc_sc;
+    end
+    wire [8:0] l_ra = 9'(rc - 10'd1);
+    wire [3*NL*256-1:0] lq;
+    genvar lc, lb;
+    generate for (lc = 0; lc < 3; lc = lc + 1) begin : g_land
+        for (lb = 0; lb < NL; lb = lb + 1) begin : g_b
+            ot_sram_1r1w_256x256_m2_r2c2 u_mem (.clk(clk), .r_ce_in(1'b1), .r_addr_in(l_ra[7:0]),
+                .rd_out(lq[256*(NL*lc + lb) +: 256]),
+                .w_ce_in(lw_v[lc] && lw_a[lc][1:0] == 2'(lb)), .w_addr_in(lw_a[lc][9:2]), .wd_in(lw_d[lc]),
+                .w_mask_in({256{1'b1}}), .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
+        end
+        end
+        for (lb = 0; lb < NL; lb = lb + 1) begin : g_lw_o
+            wire [1:0] s = (MUT == 6) ? 2'd0 : l_sel[2*lb +: 2];      // MUT 6: no live-value table (copy 0 only)
+            wire [255:0] l = (s == 2'd2) ? lq[256*(2*NL + lb) +: 256] : (s == 2'd1) ? lq[256*(NL + lb) +: 256]
+                                                                        : lq[256*lb +: 256];
+            assign ekv_w[265*lb +: 265] = !ekv_m[lb] ? 265'd0 : l_win[lb] ? {1'b0, l_sc[8*lb +: 8], l}
+                                        : l_need[lb] ? {1'b1, 120'd0, l[143:0]} : {1'b1, 264'd0};
+        end
+    endgenerate
+`endif
 
     // ------------------------------------------------------------------ p store (SVCB: 2 SRAM banks even / odd, prefetch)
     reg [PFW:0] pw, pr, pw_q;
@@ -399,29 +489,38 @@ module dsdv_svc_att #(
             reg [16:0] tg; reg [11:0] o144; reg [511:0] two; reg [9:0] slot;
             tg = qr_tag[17*k +: 17];
             case (tg[16:15])
+`ifndef OT_SVC_LAND_SRAM
                 2'd0: land[tg[7:0]] <= qr_data[256*k +: 256];
+`endif
                 2'd1: wsc[256 * {tg[1], tg[0]} +: 256] <= qr_data[256*k +: 256];
                 2'd2: begin
                     o144 = 12'(tg[13:10]) * 12'd144;
                     two = {qr_data[256*k +: 256], hold[k]};
                     slot = 10'(wcount) + tg[9:0];
+`ifndef OT_SVC_LAND_SRAM
                     if (32'(o144[7:0]) + 144 <= 256 && qr_beat[4*k +: 4] == 4'd0)
                         land[slot] <= {112'd0, 144'(qr_data[256*k +: 256] >> o144[7:0])};
                     else if (qr_beat[4*k +: 4] == 4'd1)
                         land[slot] <= {112'd0, 144'(two >> o144[7:0])};
+`endif
                     if (qr_beat[4*k +: 4] == 4'd0) hold[k] <= qr_data[256*k +: 256];
                 end
                 default: ;
             endcase
         end
+`ifndef OT_SVC_LAND_SRAM
         if (rows_mine) land[10'(wcount) + q_d[9:0]] <= {112'd0, rows_bits};
+`endif
         // fetch FIFO push
         if (sw_step && sw_i < sw_n[sw_r[4:0]] && g_own)
             fq[sid_g[8]][fq_w[sid_g[8]][3:0]] <= {sid_g[3:0], s_rank, sid_g[20:9]};
         // SEL words
         // engine program inputs
         eq_w <= qmem[4'(rc - 10'd1)];
-        ekv_w <= kc_w; ekv_m <= kc_m;
+`ifndef OT_SVC_LAND_SRAM
+        ekv_w <= kc_w;
+`endif
+        ekv_m <= kc_m;
         // PC request flops
         for (k = 0; k < 2; k = k + 1) qrq[341*k +: 341] <= nv[k] ? nreq[k] : '0;
     end
