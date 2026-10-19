@@ -1,0 +1,12 @@
+DV_LOWER_MAT od FAIL 17/517 mutant=nostagger fixture=L0_mat_od_tp8.npz {"span_cycles": 1513, "isa_gold": "tp8_isa_gold_words=o:4096/4096,down:4096/4096", "collisions": {"o": 436, "down": 436}, "collective_contract": [{"message": "o", "cmd_tag": 0, "words": 256, "tag_mismatch": 81, "last_set": 3, "last_on_final": 0}, {"message": "down", "cmd_tag": 1, "words": 256, "tag_mismatch": 256, "last_set": 3, "last_on_final": 0}], "stn": {"o": 32, "down": 32}}
+    S0ST fault bits 1000001 (any,su,vm,stn,sc,stm,port)
+    S10ST fault bits 1000001 (any,su,vm,stn,sc,stm,port)
+    S1ST fault bits 1000001 (any,su,vm,stn,sc,stm,port)
+    S2ST fault bits 1000001 (any,su,vm,stn,sc,stm,port)
+    S3ST fault bits 1000001 (any,su,vm,stn,sc,stm,port)
+    S4ST fault bits 1000001 (any,su,vm,stn,sc,stm,port)
+    S5ST fault bits 1000001 (any,su,vm,stn,sc,stm,port)
+    S6ST fault bits 1000001 (any,su,vm,stn,sc,stm,port)
+    S7ST fault bits 1000001 (any,su,vm,stn,sc,stm,port)
+    S8ST fault bits 1000001 (any,su,vm,stn,sc,stm,port)
+rc=1

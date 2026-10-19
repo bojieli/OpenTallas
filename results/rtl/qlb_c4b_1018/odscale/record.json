@@ -1,0 +1,106 @@
+{
+ "schema": "opentallas.qwen.dv-realstg.v1",
+ "lane": "QW-ODSCALE",
+ "date": "2026-10-19",
+ "position": 8191,
+ "layers": [
+  0,
+  1
+ ],
+ "tp8_die": 0,
+ "run_host": "ot-epyc5 (ot-run unit oth-ubuntu-986976-1792416822)",
+ "run_script": "results/rtl/qlb_c4b_1018/odscale/run.sh",
+ "vehicle": "tb_qfd_dv2 N12 fresh Verilator 5.050 build of this branch (origin/main merged, MU_NU 1 default)",
+ "change": "dv_lower_mat.station_row_scales: BTAB row scale BF16 1.0 for o / down (the ISA all-reduces RAW partials; the post-TP scale is the residual pscale); bench takes matrix scales, expectation = compiler station scale",
+ "operands": "L<n>_mat_od_tp8.npz = dv_layer_fixture.py tp8od on the TP8 ISA gold (qwen_tp8_layer_gold P8191, production TP8 fold): o x = die-0 ATTN, down x = die-0 ACT, gold = collective0/1_partial (fixtures/L<n>_tp8od.json: hdc G.matvec split 256 == gold 4096/4096 both). L<n>_mat_od / qkv / gu = the QW-REALSTG tp4 fixtures (regression).",
+ "exactness": "od_tp8 PASS = RTL AR words (tag/last/data) bit-exact vs the bench expectation AND that expectation bit-exact vs the TP8 ISA gold partials (isa_gold tp8_isa_gold_words)",
+ "mutants": {
+  "rawscale": "the pre-fix lowering (o / down BTAB = matrix scales)",
+  "nostagger": "as-built AR delivery"
+ },
+ "verdict": "PASS",
+ "stages": {
+  "L0_gu": {
+   "verdict": "PASS",
+   "checks": "3073/3073",
+   "expected": "PASS",
+   "span_cycles": null,
+   "delivery_span_cycles": 407,
+   "isa_gold": "isa_gold_words=3072/3072",
+   "rc": 0,
+   "first_line": "DV_LOWER_MAT gu PASS 3073/3073 mutant=0 fixture=L0_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 407, \"span_note\": \"VM-landing ops have no output pin: span = last tile word consumed - first lowered edge (station drain = stn_ages); exactness by readback\"}"
+  },
+  "L0_od": {
+   "verdict": "PASS",
+   "checks": "515/515",
+   "expected": "PASS",
+   "span_cycles": 1555,
+   "delivery_span_cycles": null,
+   "isa_gold": "TP8-gold-only (TP8 partial, split 256; no TP4 value)",
+   "rc": 0,
+   "first_line": "DV_LOWER_MAT od PASS 515/515 mutant=0 fixture=L0_mat_od.npz {\"span_cycles\": 1555, \"isa_gold\": \"TP8-gold-only (TP8 partial, split 256; no TP4 value)\", \"collisions\": {\"o\": 0, \"down\": 0}, \"collective_contract\": [{\"message\": \"o\", \"cmd_tag\": 0, \"words\": 256, \"tag_mismatch\": 255, \"last_set\": 32, \"last_on_final\": 1}, {\"message\": \"down\", \"cmd_tag\": 1, \"words\": 256, \"tag_mismatch\": 256, \"last_set\": 32, \"la"
+  },
+  "L0_od_tp8": {
+   "verdict": "PASS",
+   "checks": "517/517",
+   "expected": "PASS",
+   "span_cycles": 1555,
+   "delivery_span_cycles": null,
+   "isa_gold": "tp8_isa_gold_words=o:4096/4096,down:4096/4096",
+   "rc": 0,
+   "first_line": "DV_LOWER_MAT od PASS 517/517 mutant=0 fixture=L0_mat_od_tp8.npz {\"span_cycles\": 1555, \"isa_gold\": \"tp8_isa_gold_words=o:4096/4096,down:4096/4096\", \"collisions\": {\"o\": 0, \"down\": 0}, \"collective_contract\": [{\"message\": \"o\", \"cmd_tag\": 0, \"words\": 256, \"tag_mismatch\": 255, \"last_set\": 32, \"last_on_final\": 1}, {\"message\": \"down\", \"cmd_tag\": 1, \"words\": 256, \"tag_mismatch\": 256, \"last_set\": 32, \"last_"
+  },
+  "L0_qkv": {
+   "verdict": "PASS",
+   "checks": "769/769",
+   "expected": "PASS",
+   "span_cycles": null,
+   "delivery_span_cycles": 407,
+   "isa_gold": "isa_gold_words=768/768",
+   "rc": 0,
+   "first_line": "DV_LOWER_MAT qkv PASS 769/769 mutant=0 fixture=L0_mat_qkv.npz {\"stn\": 12, \"slices\": [0, 2, 4, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 407, \"span_note\": \"VM-landing ops have no output pin: span = last tile word consumed - first lowered edge (station drain = stn_ages); exactness by readback\"}"
+  },
+  "L1_od": {
+   "verdict": "PASS",
+   "checks": "515/515",
+   "expected": "PASS",
+   "span_cycles": 1555,
+   "delivery_span_cycles": null,
+   "isa_gold": "TP8-gold-only (TP8 partial, split 256; no TP4 value)",
+   "rc": 0,
+   "first_line": "DV_LOWER_MAT od PASS 515/515 mutant=0 fixture=L1_mat_od.npz {\"span_cycles\": 1555, \"isa_gold\": \"TP8-gold-only (TP8 partial, split 256; no TP4 value)\", \"collisions\": {\"o\": 0, \"down\": 0}, \"collective_contract\": [{\"message\": \"o\", \"cmd_tag\": 0, \"words\": 256, \"tag_mismatch\": 255, \"last_set\": 32, \"last_on_final\": 1}, {\"message\": \"down\", \"cmd_tag\": 1, \"words\": 256, \"tag_mismatch\": 256, \"last_set\": 32, \"la"
+  },
+  "L1_od_tp8": {
+   "verdict": "PASS",
+   "checks": "517/517",
+   "expected": "PASS",
+   "span_cycles": 1555,
+   "delivery_span_cycles": null,
+   "isa_gold": "tp8_isa_gold_words=o:4096/4096,down:4096/4096",
+   "rc": 0,
+   "first_line": "DV_LOWER_MAT od PASS 517/517 mutant=0 fixture=L1_mat_od_tp8.npz {\"span_cycles\": 1555, \"isa_gold\": \"tp8_isa_gold_words=o:4096/4096,down:4096/4096\", \"collisions\": {\"o\": 0, \"down\": 0}, \"collective_contract\": [{\"message\": \"o\", \"cmd_tag\": 0, \"words\": 256, \"tag_mismatch\": 255, \"last_set\": 32, \"last_on_final\": 1}, {\"message\": \"down\", \"cmd_tag\": 1, \"words\": 256, \"tag_mismatch\": 256, \"last_set\": 32, \"last_"
+  },
+  "MUT_L0_od_tp8_nostagger": {
+   "verdict": "FAIL",
+   "checks": "17/517",
+   "expected": "FAIL",
+   "span_cycles": 1513,
+   "delivery_span_cycles": null,
+   "isa_gold": "tp8_isa_gold_words=o:4096/4096,down:4096/4096",
+   "rc": 1,
+   "first_line": "DV_LOWER_MAT od FAIL 17/517 mutant=nostagger fixture=L0_mat_od_tp8.npz {\"span_cycles\": 1513, \"isa_gold\": \"tp8_isa_gold_words=o:4096/4096,down:4096/4096\", \"collisions\": {\"o\": 436, \"down\": 436}, \"collective_contract\": [{\"message\": \"o\", \"cmd_tag\": 0, \"words\": 256, \"tag_mismatch\": 81, \"last_set\": 3, \"last_on_final\": 0}, {\"message\": \"down\", \"cmd_tag\": 1, \"words\": 256, \"tag_mismatch\": 256, \"last_set\": 3"
+  },
+  "MUT_L0_od_tp8_rawscale": {
+   "verdict": "FAIL",
+   "checks": "5/517",
+   "expected": "FAIL",
+   "span_cycles": 1555,
+   "delivery_span_cycles": null,
+   "isa_gold": "tp8_isa_gold_words=o:4096/4096,down:4096/4096",
+   "rc": 1,
+   "first_line": "DV_LOWER_MAT od FAIL 5/517 mutant=rawscale fixture=L0_mat_od_tp8.npz {\"span_cycles\": 1555, \"isa_gold\": \"tp8_isa_gold_words=o:4096/4096,down:4096/4096\", \"collisions\": {\"o\": 0, \"down\": 0}, \"collective_contract\": [{\"message\": \"o\", \"cmd_tag\": 0, \"words\": 256, \"tag_mismatch\": 255, \"last_set\": 32, \"last_on_final\": 1}, {\"message\": \"down\", \"cmd_tag\": 1, \"words\": 256, \"tag_mismatch\": 256, \"last_set\": 32, \""
+  }
+ },
+ "source_commit": "9f185989e",
+ "collection_scope": "Existing completed run only; L0/L1 TP8 o/down component proof. Full L0 cold layer and TP8 resid/gu/silu remain open."
+}

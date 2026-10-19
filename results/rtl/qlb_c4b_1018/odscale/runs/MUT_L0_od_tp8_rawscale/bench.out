@@ -1,0 +1,12 @@
+DV_LOWER_MAT od FAIL 5/517 mutant=rawscale fixture=L0_mat_od_tp8.npz {"span_cycles": 1555, "isa_gold": "tp8_isa_gold_words=o:4096/4096,down:4096/4096", "collisions": {"o": 0, "down": 0}, "collective_contract": [{"message": "o", "cmd_tag": 0, "words": 256, "tag_mismatch": 255, "last_set": 32, "last_on_final": 1}, {"message": "down", "cmd_tag": 1, "words": 256, "tag_mismatch": 256, "last_set": 32, "last_on_final": 1}], "stn": {"o": 32, "down": 32}}
+    o AR word row 0 edge 282: got 0x0 want tag 0x0
+    o AR word row 16 edge 283: got 0x10 want tag 0x10
+    o AR word row 32 edge 284: got 0x20 want tag 0x20
+    o AR word row 48 edge 285: got 0x30 want tag 0x30
+    o AR word row 64 edge 286: got 0x40 want tag 0x40
+    o AR word row 80 edge 287: got 0x50 want tag 0x50
+    o AR word row 96 edge 288: got 0x60 want tag 0x60
+    o AR word row 112 edge 289: got 0x70 want tag 0x70
+    o AR word row 128 edge 290: got 0x80 want tag 0x80
+    o AR word row 144 edge 291: got 0x90 want tag 0x90
+rc=1
