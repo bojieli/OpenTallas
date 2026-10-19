@@ -48,9 +48,10 @@ SPEC (JSON; paths relative to the repo root):
                  reader sees the flag later than the flat parent); lag < 0 is padded to exact.
   tb_stimulus    optional module-level Verilog include for the lockstep tb: drives fi_<port> and rst (release at
                  bench.reset_cycles) with a real programme instead of random words and ends with lp_finish("<name>")
-  mut_child      child whose reset run MUT 4 makes one stage long (default: the first child with a reset pin)
   sticky_outputs {port: max_lag} outputs fed through loose nets, compared in the bench as sticky (monotone) flags:
                  landed(c) subset of flat(c) and (flat(c - max_lag) & flat(c)) subset of landed(c) (a reset clears).
+  mut_child      child whose reset run MUT 4 lengthens (default: the first child with a reset pin); pick one whose state
+                 outlives the reset (a sticky flag / counter): a pure pipeline register forgets a late reset in one edge
 Child clock pins wider than one bit (a child with several entry clocks in one region) get {W{ck_<r>}}.
 """
 from __future__ import annotations
@@ -556,10 +557,13 @@ class Parent:
         return "\n".join(L) + "\n", dict(reset_region=rr, hops=hops, RB=RB)
 
     def mut_child(self, P):
-        if self.S.get("mut_child"):             # spec: the child whose late reset the bench must see (MUT 4)
-            return self.S["mut_child"]
         kids = [ins["inst"] for ins in self.insts
                 if any(pin in (self.S.get("reset_pins") or []) and ex.strip() == self.rst for pin, ex in ins["conns"].items())]
+        want = self.S.get("mut_child")       # a child whose late reset is observable after warm-up (state that outlives
+        if want:                             # the reset, e.g. a sticky flag); a pure pipeline child forgets it in 1 edge
+            if want not in kids:
+                raise SystemExit(f"mut_child {want} is not a child with a reset pin on {self.rst}: {kids}")
+            return want
         return kids[0] if kids else None
 
     def sdc(self, P, top_lp):

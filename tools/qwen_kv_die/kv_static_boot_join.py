@@ -68,7 +68,8 @@ def boot_join(graph, root=K.ROOT, name='boot'):
     # calendar cfg port (66 words, kv_static_programme.link_cfg_words; bench tools/qwen_static_kv/run_link_cfg_boot.sh)
     # KVJ-SMALL b2 10-17 (KVJ-C3 open): ESCFG=1 adds targets 12 / 13 (order 1..9, 11, 12, 13, 0) -> the shared boot bus of
     # the PC chain root (fanr) and join4_cal (emb_join) (kv_static_programme.es_cfg_words; bench run_es_cfg_boot.sh)
-    params = dict(MUT=0, DIECFG=1, NRST=DIE_CFG_NRST, LINKCFG=1, ESCFG=1)
+    # RTL-BUILD-KV/FAULT 10-18 (P8): DIECAP=1 -> target 10 carries the die cfg capability word (qkd_kv_die_cfg CAP=1)
+    params = dict(MUT=0, DIECFG=1, NRST=DIE_CFG_NRST, LINKCFG=1, ESCFG=1, DIECAP=1)
     pp = K.ports(spec, params)
     ins = {i['name']: i for i in graph['instances']}
     if name in ins:

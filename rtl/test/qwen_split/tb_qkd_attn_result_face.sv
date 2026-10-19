@@ -68,7 +68,7 @@ module tb_qkd_attn_result_face;
   if(qv)begin if(qb!=nq||qd!=512'(nq))$fatal(1,"Q corrupt");nq=nq+1;end
   if(txv)begin
    if(nt<32&&(txp[542:539]!=3||txp[511:0]!==vec[512*nt+:512]))$fatal(1,"TX %0d corrupt",nt);
-   if(nt==32&&(txp[542:539]!=4||txp[511:0]!=0))$fatal(1,"STATUS corrupt");nt=nt+1;
+   if(nt==32&&(txp[542:539]!=4||txp[511:0]!={507'd0,5'b01001}))$fatal(1,"STATUS corrupt (namespace {q_ready,done,fault,busy,ready} = 01001)");nt=nt+1;
   end
  end
  initial begin
