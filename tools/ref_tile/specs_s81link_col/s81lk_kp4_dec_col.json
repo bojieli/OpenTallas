@@ -253,7 +253,12 @@
   "period_ps": 833.333333,
   "macro_halo_um": 5.4,
   "hold_margin_ns": 0.03,
-  "io_hold_margin_ns": 0.03
+  "io_hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  }
  },
  "child_lattice_um": 8.64,
  "structural_change": "TW7-S81SERDES 10-19 (S81.STA.OWN.7): the S81 SerDes RX KP4 decoder as ONE landed-region column cluster (lp.py, landed-regions-standard-1018): the four closed column re-pins dsyn / ddly / dchn / dout stacked N-S in their own recovered-clock regions ck_syn / ck_dly / ck_chn / ck_out, all 11 seams LANDED (D 4 / E 2, 9,978 landing flops, fixed latency, no backpressure), face registers on every port, lp reset runs (depth 3, 2 hops at reach 405).  Replaces the retired 2x2 s81lk_kp4_dec (its one-spine p2 gate failed the clock rule 83.5 / 87.2 ps).  First level of the column parent ot_pdie_serdes_col: the outer column (PMA abstracts + this + rate_match + enc, rck / clk async) needs async regions that lp.py / landed_cluster do not support yet.  Width 302.4 (not the plan's 259.2): the 20-um macro-edge rule with the widest child dout 248.4 needs >= 292.7 um.",
