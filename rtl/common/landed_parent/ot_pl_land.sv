@@ -96,6 +96,68 @@ module ot_pl_land_r #(
 endmodule
 `default_nettype wire
 
+// Opt-in bounded local rings. Slot-major external bank layout and K/reset ages
+// match ot_pl_land_w/r exactly; each small hierarchy owns its selector/counter.
+// Keeping hierarchy prevents synthesis from merging the identical selectors back
+// into a bus-wide high-fanout select. At CHUNK_BITS24 each ring stores96 data bits.
+module ot_pl_land_chunk_w #(
+    parameter integer W = 514, D = 4, CHUNK_BITS = 24,
+    parameter integer AW = (D <= 2) ? 1 : $clog2(D)
+) (
+    input wire ck, rsi,
+    input wire [W-1:0] i,
+    output wire [D*W-1:0] bank,
+    output wire [D*(AW+1)-1:0] epo,
+    output wire [D-1:0] vld
+);
+    genvar c, s;
+    generate for (c = 0; c < (W + CHUNK_BITS - 1) / CHUNK_BITS; c = c + 1) begin : g_chunk
+        localparam integer CW = (W - c*CHUNK_BITS < CHUNK_BITS) ? W - c*CHUNK_BITS : CHUNK_BITS;
+        wire [D*CW-1:0] cb;
+        wire [D*(AW+1)-1:0] ce;
+        wire [D-1:0] cv;
+        (* keep_hierarchy = "yes" *) ot_pl_land_w #(.W(CW), .D(D)) u_local (
+            .ck(ck), .rsi(rsi), .i(i[c*CHUNK_BITS +: CW]), .bank(cb), .epo(ce), .vld(cv));
+        for (s = 0; s < D; s = s + 1) begin : g_slot
+            assign bank[s*W + c*CHUNK_BITS +: CW] = cb[s*CW +: CW];
+        end
+        if (c == 0) begin : g_tags
+            assign epo = ce;
+            assign vld = cv;
+        end
+    end endgenerate
+`ifndef SYNTHESIS
+    initial if (CHUNK_BITS < 1 || CHUNK_BITS > 24)
+        $fatal(1, "ot_pl_land_chunk_w: CHUNK_BITS must be1..24");
+`endif
+endmodule
+
+module ot_pl_land_chunk_r #(
+    parameter integer W = 514, D = 4, K = 2, CHUNK_BITS = 24,
+    parameter integer AW = (D <= 2) ? 1 : $clog2(D)
+) (
+    input wire ck, rsi,
+    input wire [D*W-1:0] bank,
+    input wire [D*(AW+1)-1:0] epo,
+    input wire [D-1:0] vld,
+    output wire [W-1:0] o
+);
+    genvar c, s;
+    generate for (c = 0; c < (W + CHUNK_BITS - 1) / CHUNK_BITS; c = c + 1) begin : g_chunk
+        localparam integer CW = (W - c*CHUNK_BITS < CHUNK_BITS) ? W - c*CHUNK_BITS : CHUNK_BITS;
+        wire [D*CW-1:0] cb;
+        for (s = 0; s < D; s = s + 1) begin : g_slot
+            assign cb[s*CW +: CW] = bank[s*W + c*CHUNK_BITS +: CW];
+        end
+        (* keep_hierarchy = "yes" *) ot_pl_land_r #(.W(CW), .D(D), .K(K)) u_local (
+            .ck(ck), .rsi(rsi), .bank(cb), .epo(epo), .vld(vld), .o(o[c*CHUNK_BITS +: CW]));
+    end endgenerate
+`ifndef SYNTHESIS
+    initial if (CHUNK_BITS < 1 || CHUNK_BITS > 24)
+        $fatal(1, "ot_pl_land_chunk_r: CHUNK_BITS must be1..24");
+`endif
+endmodule
+
 `default_nettype none
 // ot_pl_pad: N-stage register chain (N = 0: a wire).  tools/landed_parent/lp.py uses it for the alignment pads (a net whose
 // reader runs t edges later than its driver plus the landing) and for the regional reset runs (W = 1).  Plain flops, no
