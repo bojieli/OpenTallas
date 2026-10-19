@@ -27,11 +27,10 @@ COLLQ_TRAIN row=5 qbg=0 R=2 F=1 K=1 N=5 rsA=1 rsO=34 span_compiled=47 span_obser
 COLLQ FAIL set=1 errors=10872
 - rtl/hbm_next/coll/tb/tb_hnx_coll_gq.sv:361: Verilog $finish
 - S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 2us; walltime 0.311 s; speed 6.569 us/s
-- Verilator: cpu 0.129 s on 1 threads; allocated 16 MB
+- Verilator: $finish at 2us; walltime 0.103 s; speed 19.754 us/s
+- Verilator: cpu 0.103 s on 1 threads; allocated 16 MB
 RUN_RC=0
-
-2026-10-19T00:29:33-07:00 start host=regular-crane bundle=a2880082
-2026-10-19T00:47:41-07:00 build m6 rc=0 bin=ok
-2026-10-19T00:47:41-07:00 m6: COLLQ FAIL set=1 errors=10872
-2026-10-19T00:47:41-07:00 done
+2026-10-19T06:14:44-07:00 start host=ot-epyc5 bundle=55d5fd113
+2026-10-19T06:15:32-07:00 build m6 rc=0 bin=ok
+2026-10-19T06:15:32-07:00 m6: COLLQ FAIL set=1 errors=10872
+2026-10-19T06:15:32-07:00 done

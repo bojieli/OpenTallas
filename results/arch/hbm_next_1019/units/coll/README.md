@@ -174,3 +174,18 @@ The d4g COLL ISA already runs an N-row record as **one issuer loop**. The loop i
    - add the lane-4 half calendar for L = 5.
 3. **L = 5 COLL body:** fork the qso slices with one more sink (NDEL 5). The ctl_v5 delivery_obase widening (CRITICAL) is report only. Gate the tap and serial leaves (`ot_hnx_su_cxdl_tap_s`, `ot_hnx_su_cxdl_q2`) as hnx kits from `hbm_su_cx_dl_1017`.
 4. **gq train:** the record-adapter decode of ROWX (nm1, rs_A, rs_O + the rs_O = R K mod 8 rule) into the gather descriptor.
+
+## HNX-GQ n2 (10-19): issue leaf timing fix after n1 be0562a05 NEEDS_RTL
+- n1 route (ot-epyc6): TT -111.78 / FF -14.47 / DRC 0; reg->reg only (i2r +414, out +214 TT). Same class as the current-die
+  gq_issue r2 (GQISSUE2): TT = held gather state / row offset -> add + flit decode -> wide select fan-out (soff -> ld_p_d -112,
+  ev_k -> ld_p_d -98 / aq_x -84 (1,344 eps), g_f -> ld_p_d -82 / rb_rx -76, ik/g_r2 -> vm_rq -74, cur -> ld_desc/ex -17);
+  FF = quantiser 1,024 x 9 shift line hold (line->line -13.6, aq_x -> s0_x -14.5; ~44k hold buffers).
+- Fix (GQISSUE2 1c5b70cbb ported to the N-row train, no edge moves): flags fv/is_code decoded once at issue (shadows of the
+  row-local k) and piped (ev_f/ev_c); QBG issue addresses = registered running sums qa, reloaded at a row change from nb
+  (next-row base, one add per row; loaded at fire so a K=1 row 1 issues at fire+2); row-base table sb[r] = src + r rs_A
+  (replaces soff + add) read only by one-edge-ahead pre-stages (pr_s, qc_oh, pp_*); one-hot P/aq_x/read selects;
+  e+127 at capture; one-hot calendar row; quantiser = ot_hgi_coll_aq13 (ot_hdc_delay_hc GATED 0).
+- Bench Verilator 5.050 ot-epyc5 (bundle 55d5fd113, bench_n2/): s0 (d4g rows, N=1) / s1 (trains N 1..6) / s2 (cycles(N))
+  PASS, faults f1-f5 PASS, AQ13 exact PASS, cycles_N identical to n1 (no edge moved); mutants m6/m7/m8 FAIL (same error
+  counts as n1), new m9 (quantiser line one bank short) FAIL; witnesses refreshed.
+- hnx_gq_land_1019-n1-be0562a05 CLOSED TT +10.38 / FF +26.08 (record on claude/hbm-next-units-coll-1019 2d4230d39).

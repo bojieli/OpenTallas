@@ -58,6 +58,8 @@ if [ "$ST" = main ]; then
   rm -rf $O/obj_m
 else
   python3 tools/hbm_next/hnx_coll_gq_train.py vectors-rows $O/vecr > $O/vecr.log 2>&1 || V "vectors-rows FAILED"
-  m=${ST#m}; build $ST $m; if [ "$m" = 9 ]; then run $ST $ST +set=0; else run $ST $ST +set=1; fi; rm -rf $O/obj_$ST
+  m=${ST#m}
+  [ "$m" = 9 ] && { python3 tools/hgi_sim/collq_gather_1018.py vectors $O/vec > $O/vec.log 2>&1 || V "vectors FAILED"; }
+  build $ST $m; if [ "$m" = 9 ]; then run $ST $ST +set=0; else run $ST $ST +set=1; fi; rm -rf $O/obj_$ST
 fi
 V "done"

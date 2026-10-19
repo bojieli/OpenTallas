@@ -1,0 +1,16 @@
+COLLQ FAULT PASS scenario=3 gq0000 ra0000 rb0000 ks0010
+- rtl/hbm_next/coll/tb/tb_hnx_coll_gq.sv:332: Verilog $finish
+COLLQ unexpected fault gq0000 ra0000 rb0000 rs0000 ks0010
+COLLQ missing write q1 b0 cyc178
+COLLQ_TRAIN row=0 qbg=0 R=2 F=72 K=36 N=1 rsA=0 rsO=0 span_compiled=93 span_observed=93
+COLLQ_TRAIN row=1 qbg=0 R=1 F=19 K=19 N=1 rsA=0 rsO=0 span_compiled=68 span_observed=68
+COLLQ_TRAIN row=2 qbg=1 R=2 F=19 K=10 N=1 rsA=0 rsO=0 span_compiled=54 span_observed=54
+COLLQ_TRAIN row=3 qbg=1 R=1 F=9 K=9 N=1 rsA=0 rsO=0 span_compiled=53 span_observed=53
+COLLQ_TRAIN row=4 qbg=1 R=2 F=50 K=25 N=1 rsA=0 rsO=0 span_compiled=77 span_observed=77
+COLLQ_TRAIN row=5 qbg=0 R=2 F=1 K=1 N=1 rsA=0 rsO=0 span_compiled=41 span_observed=41
+COLLQ FAIL set=0 errors=2
+- rtl/hbm_next/coll/tb/tb_hnx_coll_gq.sv:361: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.099 s; speed 20.530 us/s
+- Verilator: cpu 0.099 s on 1 threads; allocated 16 MB
+RUN_RC=0

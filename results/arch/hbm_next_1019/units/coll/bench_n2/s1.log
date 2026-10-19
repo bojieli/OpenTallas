@@ -1,0 +1,12 @@
+COLLQ_TRAIN row=0 qbg=0 R=2 F=72 K=36 N=4 rsA=80 rsO=288 span_compiled=255 span_observed=255
+COLLQ_TRAIN row=1 qbg=0 R=1 F=19 K=19 N=3 rsA=-24 rsO=99 span_compiled=125 span_observed=125
+COLLQ_TRAIN row=2 qbg=1 R=2 F=19 K=10 N=6 rsA=72 rsO=100 span_compiled=129 span_observed=129
+COLLQ_TRAIN row=3 qbg=1 R=1 F=9 K=9 N=2 rsA=40 rsO=65 span_compiled=66 span_observed=66
+COLLQ_TRAIN row=4 qbg=1 R=2 F=50 K=25 N=1 rsA=0 rsO=0 span_compiled=77 span_observed=77
+COLLQ_TRAIN row=5 qbg=0 R=2 F=1 K=1 N=5 rsA=1 rsO=34 span_compiled=47 span_observed=47
+COLLQ PASS set=1 rows=6 loops=2 vm_words_checked=8284 reads=8304 writes=16568 isa_passthrough=38
+- rtl/hbm_next/coll/tb/tb_hnx_coll_gq.sv:361: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.102 s; speed 20.047 us/s
+- Verilator: cpu 0.102 s on 1 threads; allocated 16 MB
+RUN_RC=0
