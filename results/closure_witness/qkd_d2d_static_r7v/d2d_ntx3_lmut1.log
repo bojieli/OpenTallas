@@ -1,0 +1,20 @@
+D2D_LOCK_MISMATCH cyc 16 lay -1 rel 16
+D2D_LOCK_MISMATCH cyc 17 lay -1 rel 17
+D2D_LOCK_MISMATCH cyc 18 lay -1 rel 18
+token run: embedding words 64, terminal results 1
+layer 0 start cyc 223 epoch 1/1
+layer 1 start cyc 354 epoch 1/1
+layer 2 start cyc 485 epoch 1/1
+layer 3 start cyc 616 epoch 1/1
+layer 4 start cyc 747 epoch 1/1
+abort at cyc 877
+drained 877
+reset seen 883
+retrained 916
+RECOVERY abort->epoch_begin KV 147 cycles, compute 0 cycles; HOST-visible 55 cycles
+layer 4 start cyc 933 epoch 2/2
+layer 5 start cyc 1064 epoch 2/2
+frames C->S 198 S->C 198 kvn 24 results 6 host-checks 6 normal-epoch faults 0 errors 0
+D2D_LOCK edges 1208 mismatches 1198 ntx3 tx slots p0 198 p1 0 p2 64; ntx4 port-3 slots 0
+D2D_DIES_FAIL
+/tmp/hkvd2d18/src/rtl/test/qwen_split/tb_qwen_d2d_dies.sv:355: $finish called at 1012476 (1ps)

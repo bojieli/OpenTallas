@@ -252,9 +252,10 @@ module tb_qwen_d2d_dies;
     always @(posedge ck) if (lay >= 0 && rst_n) begin
         // compute codec output at arrival + 3 (end rx at +2, codec register +1): RESULT beats + STATUS
         if (ca_rv) begin
-            if (!((rel - 3 - XL >= 50 && rel - 3 - XL < 82) || rel - 3 - XL == 83)) begin
+            // KV port-0 frames (attention RESULT beats + STATUS) arrive KDLY edges later (die seam stages, TXDP port 0)
+            if (!((rel - 3 - XL - KDLY >= 50 && rel - 3 - XL - KDLY < 82) || rel - 3 - XL - KDLY == 83)) begin
                 errs = errs + 1; $display("ERR compute rx at unplanned rel %0d", rel); end
-            else if (ca_rd !== (rel - 3 - XL == 83 ? st_word : word(lay, 3, rel - 3 - XL - 50))) begin
+            else if (ca_rd !== (rel - 3 - XL - KDLY == 83 ? st_word : word(lay, 3, rel - 3 - XL - KDLY - 50))) begin
                 errs = errs + 1; $display("ERR compute rx data rel %0d", rel); end
             else if (aborted_layer != lay) frames_kc = frames_kc + 1;
         end
