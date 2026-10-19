@@ -53,12 +53,16 @@ import child_lint  # noqa: E402
 import textbook_lint as TL  # noqa: E402
 import pin_fit as PF  # noqa: E402
 import source_binding as SB  # noqa: E402
+import clock_entry_constraints as CE  # noqa: E402
 import keep_module_audit as KA  # noqa: E402
 HO = SB.overlay_module()
 
 DEFAULT_SRC_PATHS = ("tools", "rtl", "physical", "Makefile")
 # the textbook checks whose refuse tier the gate enforces (calibrated: zero closed-set refusals, see README)
-GATE_REFUSE = ("clock_domain", "high_fanout", "wire_reach")
+# reset_landing (ROOT-RST 2026-10-19, Gate-Rule: tightening requires=reset_landing): a reset input reaching more than
+# rst_land_max (2) sinks without a pin landing register FAILS the gate (textbook_lint reset_landing; kit fix: ref_tile
+# "reset_landing": {"enable": true} inserts the 2-stage landing at synthesis)
+GATE_REFUSE = ("clock_domain", "high_fanout", "wire_reach", "reset_landing")
 RELAUNCH_WAIT_S = int(os.environ.get("OT_GATE_RELAUNCH_WAIT_S", "900"))
 DAEMON_TREE = Path(os.environ.get("OT_CLOSURE_DAEMON_TREE", "/home/ubuntu/wt-claude-closure-daemon-1010"))
 # flow helpers the loop ships into every job snapshot (closure_loop.py ship_fpl / HELPERS); the remote gate does the same
@@ -309,6 +313,52 @@ def check_pin_fit(g: Gate, spec: dict, ports: dict | None, outline, lc: dict | N
         g.add("INFO", "pin_fit", f"pin fit not estimated for {len(unknown)} region(s) with a width the RTL parser could "
               f"not resolve ({', '.join(unknown[:4])}): the --remote run places them with the route's settings")
     return st, regs
+
+
+# PIN ORDER (ROOT-PINORDER 2026-10-19, HBM-HCRING finding): an ABUTTED bus needs a defined bit order across its face.
+# The route's PPL placement chunks a region into ordered groups of 32 (OT_PIN_GROUP_MAX) and places the groups
+# independently (closed hbfd_rly_1136_WE: 13 descents in its 1,136-b bus), so two abutted tiles meet chunk-scrambled
+# even when both are R0, and an R180 / MX / MY neighbour meets them fully reversed.  A port is ABUTTED when the kit
+# places it at a planned position facing its neighbour (a "pin_ranges" entry) or lists it in "abutted_ports".  Wider
+# than 32 bits, it must be placed in bit order: route.pin_balance (place_pin, bit k at lo + (hi-lo)(k+.5)/n; for a face
+# against a mirrored neighbour also mirror the range and list the port in pin_order_desc) or an exact io_tcl.  A port
+# that really is channel-routed (not abutted) may be named in "pin_order_waiver" {port: reason}.
+PIN_ORDER_MAX_UNORDERED = 32
+PIN_ORDER_FIX = ("add route.pin_balance {group_max 1, h, v} (disjoint per-port pin_ranges on the face); for a face that "
+                 "abuts an R180 / MX / MY neighbour mirror the range and list the port in pin_order_desc; check the die "
+                 "joint with tools/hier_contract/abutted_joint_audit.py; or name a channel-routed port in "
+                 "pin_order_waiver {port: reason}")
+
+
+def check_pin_order(g: Gate, spec: dict, plan):
+    """FAIL when an abutted bus wider than 32 bits has no defined bit order in the route (see PIN ORDER above)."""
+    if not plan:
+        return
+    st, regs = plan
+    if st["exact"] or st["balance"]:
+        return
+    abut = set(spec.get("pin_ranges") or {}) | set(spec.get("abutted_ports") or [])
+    waive = spec.get("pin_order_waiver") or {}
+    if not isinstance(waive, dict) or any(not isinstance(v, str) or len(v.strip()) < 8 for v in waive.values()):
+        g.add("FAIL", "pin_order", "pin_order_waiver must be {port: reason} with a real reason", PIN_ORDER_FIX)
+        return
+    bad, unknown = [], []
+    for r in regs:
+        for n in r["names"]:
+            if n not in abut or n in waive:
+                continue
+            w = r["n"] if len(r["names"]) == 1 else None
+            if w is None:
+                unknown.append(n)
+            elif w > PIN_ORDER_MAX_UNORDERED:
+                bad.append(f"{n} ({w} b, {r['face']} face)")
+    if bad:
+        g.add("FAIL", "pin_order", f"{len(bad)} abutted bus(es) wider than {PIN_ORDER_MAX_UNORDERED} b without a defined "
+              f"bit order (route OT_PIN_GROUP_MAX {st['group_max']} scatters chunks of 32): {', '.join(bad[:6])}"
+              + (", ..." if len(bad) > 6 else ""), PIN_ORDER_FIX)
+    if unknown:
+        g.add("WARN", "pin_order", f"bit order not judged for {len(unknown)} abutted port(s) with an unresolved width "
+              f"({', '.join(unknown[:4])}); the route places them in chunks of {st['group_max']}", PIN_ORDER_FIX)
 
 
 OFLOP_TCL = "physical/qwen_die_masters/io_flop_at_pins.tcl"
@@ -822,6 +872,7 @@ def check_kit(g: Gate, kd: Path, job: dict | None, commit=None):
     check_pins(g, spec, ports)
     # pin plan vs the ROUTE's pin placement (same settings as the route: one source of truth), recipe-2 pin-flop spread
     plan = check_pin_fit(g, spec, strict_widths(spec["sources"], spec["top"], spec.get("params")), fresh["outline"])
+    check_pin_order(g, spec, plan)
     tcl = ROOT / OFLOP_TCL
     check_oflop(g, spec, plan, rtl_ports(spec["sources"], spec["top"], dirs=True, defines=spec.get("defines")), fresh["outline"],
                 tcl.read_text(errors="replace") if tcl.is_file() else None)
@@ -1211,9 +1262,10 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
                           RC=",".join(GATE_REFUSE), TOP=spec["top"], CTS=1 if cts else 0, PGM=PF.ROUTE_PIN_GROUP_MAX,
                           TRIAL=1, GRTX=trial_grt_make_args(spec), CLKS=",".join(RT.declared_clock_ports(spec)),
                           CLK=spec["clock_port"], ARCHIVE_SHA256=binding["archive_sha256"], STEP_CAP=GATE_STEP_CAP_S)   # ck_insertion (9f48f5ed8): --clock = clock name or its source port; the default 'ck' failed every kit whose port is 'clk'
-    if textbook_reset_args(spec):
+    tbx = textbook_reset_args(spec) + reset_landing_args(spec)
+    if tbx:
         tb = f"--refuse-checks {','.join(GATE_REFUSE)} | sed 's/^/GATE_TB /'"
-        sh = sh.replace(tb, tb.replace(" | sed", textbook_reset_args(spec) + " | sed", 1), 1)
+        sh = sh.replace(tb, tb.replace(" | sed", tbx + " | sed", 1), 1)
     sh = gate_route_clock_hooks(sh, spec)
     sh = gate_route_hold_context(sh, spec, str(kd.relative_to(ROOT)))
     binding["route_hold_context"] = RT.route_hold_context(spec, str(kd.relative_to(ROOT)))
@@ -1530,6 +1582,7 @@ def analyse_remote(g: Gate, kd: Path, spec: dict, out: str, cts: bool, binding: 
     check_port_latency(g, kd, spec, out, binding.get("commit"), binding=binding)
     check_memory_ff(g, out)
     check_keep_modules(g, kd, spec, out)
+    g.reset_landing = reset_landing_record(out)      # a gate without this record predates the reset_landing rule
     for line in re.findall(r"^GATE_TB (.*)$", out, re.M):
         if line.startswith("TEXTBOOK_LINT:"):
             continue
@@ -1647,6 +1700,8 @@ def clock_record(out: str, cts: bool, spec: dict | None = None) -> dict:
                 measured = corner_spreads({}, domain)
                 if landed_cluster:
                     measured.update(root_child_flops(domain, spec, graph))
+                    if measured.get("raw_pin_fail"):
+                        issues.append(f"{domain.get('source')}: " + "; ".join(measured["raw_pin_fail"]))
                 level, why = TL.clock_rule_eval(n, measured)
                 per_root.append(dict(source=domain.get("source"), sinks=n, **measured,
                                      verdict="REFUSE" if level == "FAIL" else level, text=why))
@@ -1991,19 +2046,51 @@ def root_child_flops(domain: dict, spec: dict | None, graph: dict | None) -> dic
         pins = ((cr.get("macros") or {}).get("pins")) or []
         if not pins:
             continue
-        span, ok = {}, True
+        span, ok, raw_rows, eff, cot_rows = {}, True, [], {}, []
         for x in pins:
-            inst = str(x.get("pin", "")).rsplit("/", 1)[0]
+            inst, lpin = (str(x.get("pin", "")).rsplit("/", 1) + [""])[:2]
             kid = next((ch for ch in kids if fnmatch.fnmatchcase(inst, ch["inst"].lstrip("*"))
                         or fnmatch.fnmatchcase(inst, ch["inst"])), None)
             try:
-                b = json.loads((ROOT / kid["view"] / "insertion.json").read_text())[c]["boundary"]
-                lo, hi = float(x["arr"]) + float(b["min"]), float(x["arr"]) + float(b["max"])
+                ins = json.loads((ROOT / kid["view"] / "insertion.json").read_text())
+                # HF-4d 10-19: a multi-clock child is referenced per clock pin (clock_measurements[pin]); a RAW SRAM
+                # clock entry (no routed boundary) takes the leaf's own pin -> SRAM wire from its closed record
+                # (clock_entry_constraints.landed_raw_pins) and is judged against its co-timed CTS-root pin below
+                cm = (ins.get("clock_measurements") or {}).get(lpin)
+                b = ((cm or {}).get(c) or {}).get("boundary") if cm else ins[c]["boundary"]
+                if b:
+                    lo, hi = float(x["arr"]) + float(b["min"]), float(x["arr"]) + float(b["max"])
+                    if b.get("mean") is not None:
+                        eff[(inst, lpin)] = float(x["arr"]) + float(b["mean"])
+                    if cm and any(not ((v or {}).get(cc) or {}).get("boundary")
+                                  for v in (ins.get("clock_measurements") or {}).values() for cc in ("tt", "ff", "ss")):
+                        # ROOT-INF21 10-19: a boundary pin of a multi-root child record is co-timed with its ref too
+                        cot = CE.landed_record_pins(ROOT / kid["view"], ROOT)["cotimed"].get(lpin)
+                        if cot:
+                            cot_rows.append((inst, lpin, cot))
+                else:
+                    raw = CE.landed_raw_pins(ROOT / kid["view"], ROOT)[lpin]
+                    rlo, rmean, rhi = raw["refs"][c]
+                    lo, hi = float(x["arr"]) + rlo, float(x["arr"]) + rhi
+                    raw_rows.append((inst, lpin, float(x["arr"]) + rmean, raw))
             except (TypeError, OSError, ValueError, KeyError, AttributeError):
                 ok = False
                 break
             plo, phi = span.get(kid["inst"], (math.inf, -math.inf))
             span[kid["inst"]] = (min(plo, lo), max(phi, hi))
+        for inst, lpin, cot in cot_rows if ok else []:
+            raw_rows.append((inst, lpin, eff[(inst, lpin)], cot))
+        for inst, lpin, e, raw in raw_rows if ok else []:
+            r = eff.get((inst, raw["ref"]))
+            row = dict(root=src, corner=c, pin=f"{inst}/{lpin}", co_timed=f"{inst}/{raw['ref']}", eff=round(e, 1),
+                       eff_ref=None if r is None else round(r, 1), tol=raw["tol"], record=raw["record"])
+            row["skew"] = None if r is None else round(e - r, 1)
+            row["verdict"] = "FAIL" if r is None or abs(e - r) > raw["tol"] else "PASS"
+            out.setdefault("raw_pins", []).append(row)
+            if row["verdict"] == "FAIL":
+                out.setdefault("raw_pin_fail", []).append(
+                    f"{c.upper()} raw child clock pin {row['pin']} " + (f"not co-measured with {row['co_timed']}" if r is None
+                    else f"{row['skew']:+.1f} ps vs {row['co_timed']} (leaf sign-off tolerance {raw['tol']:g})"))
         if not ok:
             out[f"{c}_pin_spread_basis_note"] = "a hard child clock pin has no insertion.json boundary: measured kept"
             continue
@@ -2108,6 +2195,38 @@ def textbook_reset_args(spec):
     gate script stays byte-identical)."""
     names = [str(x) for x in spec.get("reset_ports") or [] if isinstance(x, str) and re.fullmatch(r"[\w$\[\]:.]+", x)]
     return f" --set reset_ports={shlex.quote(','.join(names))}" if names else ""
+
+
+def reset_landing_args(spec):
+    """ROOT-RST 2026-10-19: the kit's reset_landing record -> textbook_lint args.  {"waive": "<reason>"} -> --waive
+    reset_landing (the finding stays a WARN); {"max_sinks": N, "reason": "..."} -> --set rst_land_max=N.  '' otherwise
+    (enable true / false: the netlist itself is judged).  SpecError-free: a malformed record is judged at the default."""
+    rl = spec.get("reset_landing")
+    if not isinstance(rl, dict):
+        return ""
+    out = ""
+    if str(rl.get("waive") or "").strip():
+        out += " --waive reset_landing"
+    n = rl.get("max_sinks")
+    if isinstance(n, int) and not isinstance(n, bool) and n > 0 and str(rl.get("reason") or "").strip():
+        out += f" --set rst_land_max={n}"
+    return out
+
+
+def reset_landing_record(out: str) -> dict | None:
+    """the gate netlist's reset_landing metrics (textbook_lint INFO line), None when the gate's lint predates the check"""
+    m = re.search(r"^GATE_TB textbook_lint: INFO reset_landing (\{.*\})\s*$", out, re.M)
+    if not m:
+        return None
+    try:
+        d = json.loads(m.group(1))
+    except ValueError:
+        return None
+    ports = [p for p in d.get("ports") or [] if isinstance(p, dict)]
+    mx = d.get("max")
+    waived = bool(re.search(r"^GATE_TB textbook_lint: WAIVED reset_landing:", out, re.M))
+    over = [p["port"] for p in ports if isinstance(mx, (int, float)) and p.get("sinks", 0) > mx]
+    return {"max_sinks": mx, "ports": ports, "over": over, "waived": waived, "ok": not over or waived}
 
 
 def kit_gate_evidence(kd: Path, source_commit=None, why: list | None = None, note: list | None = None) -> dict | None:
@@ -2240,6 +2359,9 @@ TEXTBOOK_FIX = {
     "logic_depth": "pipeline to ~700 ps a stage: trees, 2-3 rungs for wide compare / mux / arbitration",
     "wire_reach": "relay flops every <= 500 um, or move the logic next to its pins/macros",
     "util_channel": "size the outline to util 0.50-0.55 with >= 20 um macro channels",
+    "reset_landing": "land every reset input at its face in 2 registered stages, then fan out at equal depth: kit "
+                     "\"reset_landing\": {\"enable\": true} (ref_tile inserts rst_l0 -> rst_l1 at synthesis) or the RTL's own "
+                     "rst_l0 / rst_l1 (one relay copy per region); reset release latency is a scheduled constant",
 }
 
 
@@ -2307,6 +2429,8 @@ def write_gate_result(g: Gate, kd: Path, cts: bool, host: str):
         out["trial_route"] = g.trial_route      # a gate without this record predates the every-kit trial GRT
     if getattr(g, "port_latency", None):
         out["port_latency"] = g.port_latency
+    if getattr(g, "reset_landing", None):
+        out["reset_landing"] = g.reset_landing  # absent: the gate predates the reset_landing rule (ROOT-RST 10-19)
     previous = kd / CLOCK_RESULT
     if previous.exists():
         import hashlib
@@ -2356,6 +2480,9 @@ def _materialise(repo: str, commit: str, kit: str, dst: Path) -> None:
          # pre_dpl_extra (Q-TILE45b 10-16): ref_tile gen checks each pre-DPL hook exists at ROOT exactly like the pin
          # hooks; without it qfd_tile_{nk,nl}_rp2_g4t (reconcile_sink_owners.tcl at the source commit) was REFUSED
          + [x for x in sp.get("pre_dpl_extra", []) if isinstance(x, str)]
+         # boundary_tcl / pre_cts_extra (RH-DBKCPL 10-19): ref_tile gen reads each at ROOT; without them the submit check
+         # of hv16_dbk_cpl (child_pocket_guard.tcl) went SKIP "gate error FileNotFoundError" -- binding never checked
+         + [x for k in ("boundary_tcl", "pre_cts_extra") for x in sp.get(k, []) if isinstance(x, str)]
          # M6 pin-only grant (S-NET+FILL 10-15): ref_tile gen compares io_tcl / post_synth_tcl / orfs_vars .tcl/.sdc at
          # ROOT with the grant's source commit; without them every granted station was REFUSED "source differs"
          + [sp[k].removeprefix("/src/") for k in ("io_tcl", "post_synth_tcl") if isinstance(sp.get(k), str)]

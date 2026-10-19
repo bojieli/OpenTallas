@@ -137,9 +137,8 @@
  "merge_target": null,
  "structural_change": "Q-DIE11-RLY 10-18 (coordinator HANDOFF 0ea item 1, LANDING-CONTRACT): 128-b forwarded-clock lane frame qfd_landh0_128_EN_65x30: landing with the hop-0 gate (rtl/qwen_split/qfd_fwd_lane.sv); replaces the regional-root qfd_rly_128 relay of the same die frame and faces. Recipe 4 flop-first, hold_budget die, M5 cap. QK-FWD 10-18 CLASS MASTER (tools/qwen_split/fwd_lane_classes.py): one hardened master per family / width class (1, 128, 600; widths quantised up, spare inputs tied low by the die) / direction class (H, V, HV, VH; the die places the rep with MX / MY / R180) / frame; replaces the per-GEN-frame masters (147 on dv2f14bn, 164 on dv2f14bg -> 48 classes). | QK-LANDEN 10-19 e1 (coordinator Q.STA.LAND600.3 option (b), ROOT-RST rule): en (hop-0 ICG enable = the source released reset) is registered on ck_s at the face (one async-clear flop) before the clock gate; the ICG enable and the ring write epoch are that flop, never the input port. +1 reset-release edge (K + 1 in the die calendar, lane_groups.HOP0_EN_REG); steady-state lane latency unchanged. Lane input min credits the lane_ckf tree (f20c82b74); io_hold_margin 0.03.",
  "reroute_reason": {
-  "kind": "native_capture",
+  "kind": "rtl_change",
   "cell": "qfd_landh0_128_EN_65x30",
-  "source": "results/arch/qk_landh548_1018/native_receipts_closed_c1_600_128.json",
-  "fix": "capture side: en (the hop-0 ICG enable, combinational from the input port in the closed view: native capture 351-429 ps > 190) is registered on ck_s at the face before the clock gate (rtl/qwen_split/qfd_fwd_lane.sv ot_qfd_land FIRST=1, QK-LANDEN, coordinator Q.STA.LAND600.3 option (b)); lane data input min = L_min(lane_ckf) + C + U (f20c82b74: no hold pads); io_hold_margin_ns 0.03. Same outline and pin faces."
+  "fix": "rtl/qwen_split/qfd_fwd_lane.sv ot_qfd_land FIRST=1: en registered on ck_s before the hop-0 clock gate (QK-LANDEN, Q.STA.LAND600.3 option (b)); the die calendar straps every landh0 with K + 1, so the closed -h1- view (en -> ICG combinational) no longer matches the die. Lane data input min = L_min(lane_ckf) + C + U; io_hold_margin_ns 0.03. Same outline and pin faces."
  }
 }
