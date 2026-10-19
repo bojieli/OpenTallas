@@ -68,6 +68,12 @@ def main():
                                       note='relay layer ' + L['region']))
     for s in L.get('straps', []):
         c['straps'].append(s)
+        for b in range(s.get('lo', 0), s.get('hi', ports[s['inst']][s['port']]['bits'])):
+            drv[(s['inst'], s['port'], b)] = ('STRAP', s['value'], b)
+    # HBM-LANDING: landing fault outputs -> die status pins (relay_layer_d4f.py --land --land-fault pins)
+    for x in L.get('die_pins', []):
+        c.setdefault('die_pins', []).append(x)
+    c['gaps'] = list(c.get('gaps') or []) + list(L.get('gaps') or [])
     # every relay input bit driven
     und = []
     for x in L['instances']:

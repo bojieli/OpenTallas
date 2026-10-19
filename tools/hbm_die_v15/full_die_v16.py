@@ -304,7 +304,10 @@ def apply_relay_splice_v2(buses, edges, ports, problems):
         bas = f"d4f F1 relay tree {tag} ({b['cls']}, {b['driver']}) -- relay_layer_d4f.py"
         def E(src, dst, bits, nm):
             out.append(dict(name=f'{tag}__{nm}', src=src, dst=dst, bits=bits, clock=ck, basis=bas, region='relays_d4f'))
-        def from_driver(names):
+        def oref(name, o):   # node / stage output: port name, or [port, lo, hi] (fork branch of a lane station, HBM-LANDING)
+            return [name, o] if isinstance(o, str) else [name, o[0], o[1], o[2]]
+
+        def from_driver(names, ip='i'):
             for t in range(T):
                 run = None
                 for L in range(W):
@@ -314,27 +317,28 @@ def apply_relay_splice_v2(buses, edges, ports, problems):
                         run[2] = k; run[4] = L
                     else:
                         if run:
-                            E([b['driver'], run[0], run[1], run[2] + 1], [names[t], 'i', run[3], run[4] + 1], run[4] - run[3] + 1, f'drv_{names[t]}_{run[3]}')
+                            E([b['driver'], run[0], run[1], run[2] + 1], [names[t], ip, run[3], run[4] + 1], run[4] - run[3] + 1, f'drv_{names[t]}_{run[3]}')
                         run = [p, k, k, L, L]
-                E([b['driver'], run[0], run[1], run[2] + 1], [names[t], 'i', run[3], run[4] + 1], run[4] - run[3] + 1, f'drv_{names[t]}_{run[3]}')
+                E([b['driver'], run[0], run[1], run[2] + 1], [names[t], ip, run[3], run[4] + 1], run[4] - run[3] + 1, f'drv_{names[t]}_{run[3]}')
         nodes = {nd['id']: nd for nd in b['nodes']}
         for nd in b['nodes']:
             if nd['parent'] is None:
-                from_driver(nd['names'])
+                from_driver(nd['names'], nd.get('iport', 'i'))
             else:
                 pn = nodes[nd['parent']]
                 for t in range(T):
-                    E([pn['names'][t], pn['outs'][nd['pbranch']]], [nd['names'][t], 'i'], W, f"t_{nd['names'][t]}")
+                    E(oref(pn['names'][t], pn['outs'][nd['pbranch']]), [nd['names'][t], nd.get('iport', 'i')], W, f"t_{nd['names'][t]}")
         for snk, sk in b['sinks'].items():
             src_node, br = sk['src']
             prev = None if src_node is None else (nodes[src_node]['names'], nodes[src_node]['outs'][br])
-            for stage in sk['chain']:
+            cps = sk.get('chain_ports') or [['i', 'o']] * len(sk['chain'])
+            for stage, (ip, op) in zip(sk['chain'], cps):
                 if prev is None:
-                    from_driver(stage)
+                    from_driver(stage, ip)
                 else:
                     for t in range(T):
-                        E([prev[0][t], prev[1]], [stage[t], 'i'], W, f't_{stage[t]}')
-                prev = (stage, 'o')
+                        E(oref(prev[0][t], prev[1]), [stage[t], ip], W, f't_{stage[t]}')
+                prev = (stage, op)
             sk['_last'] = prev
         seq = collections.defaultdict(list)
         for j, ls in enumerate(b['loads']):
@@ -345,6 +349,9 @@ def apply_relay_splice_v2(buses, edges, ports, problems):
                 seq[si].append((j, sp, sb))
         for si, lst in seq.items():
             names, port = b['sinks'][si]['_last']
+            po = 0
+            if not isinstance(port, str):
+                port, po = port[0], port[1]
             lst.sort(key=lambda x: (x[0] // W, x[1], x[2]))
             cur = None
             for j, sp, sb in lst:
@@ -353,10 +360,10 @@ def apply_relay_splice_v2(buses, edges, ports, problems):
                     cur[3] = L; cur[5] = sb
                 else:
                     if cur:
-                        E([names[cur[0]], port, cur[2], cur[3] + 1], [si, cur[1], cur[4], cur[5] + 1], cur[3] - cur[2] + 1, f'ld_{si}_{cur[1]}_{cur[4]}')
+                        E([names[cur[0]], port, po + cur[2], po + cur[3] + 1], [si, cur[1], cur[4], cur[5] + 1], cur[3] - cur[2] + 1, f'ld_{si}_{cur[1]}_{cur[4]}')
                     cur = [t, sp, L, L, sb, sb]
             if cur:
-                E([names[cur[0]], port, cur[2], cur[3] + 1], [si, cur[1], cur[4], cur[5] + 1], cur[3] - cur[2] + 1, f'ld_{si}_{cur[1]}_{cur[4]}')
+                E([names[cur[0]], port, po + cur[2], po + cur[3] + 1], [si, cur[1], cur[4], cur[5] + 1], cur[3] - cur[2] + 1, f'ld_{si}_{cur[1]}_{cur[4]}')
     return out
 
 

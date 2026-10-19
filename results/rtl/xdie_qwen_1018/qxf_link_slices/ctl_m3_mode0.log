@@ -1,0 +1,3 @@
+[1445000] %Fatal: tb_native_attention_static_ctl.sv:42: Assertion failed in tb_native_attention_static_ctl: STATUS corrupt (namespace {q_ready,done,fault,busy,ready} = 01001)
+%Error: rtl/test/qwen_split/tb_native_attention_static_ctl.sv:42: Verilog $stop
+Aborting...

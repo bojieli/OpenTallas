@@ -14,8 +14,12 @@ SIM=${OT_LOCKSTEP_SIM:-verilator}; HOSTS=${OT_LOCKSTEP_HOSTS:-ot-epyc4,ot-agidoc
 VL=${OT_LOCKSTEP_VERILATOR:-/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator}; OTRUN=${OTRUN:-/home/ubuntu/bin/ot-run}
 D=rtl/hbm_accel/die_glue
 src=($D/hbfd_rly_fc_masters.sv $D/hbfd_rly_fcf_masters.sv $D/hbfd_rly_masters.sv $D/ot_hbm_rly_fc.sv $D/ot_hbm_rly_fcf.sv $D/ot_hbm_rly.sv rtl/lib/ot_rst_relay.sv)
-sha256sum "${src[@]}" "$L" tools/hbm_die_v16/relay_lockstep_bench.py "$0" > "$OUT/sources.sha256"
 MUTS=(pos lane_stage bitswap branch_drop)
+# HBM-LANDING 10-18: a --land layer (half-cycle lane stations + landings) adds the lane RTL and the land_k mutant
+if python3 -c "import gzip,json,sys; L=json.load(gzip.open(sys.argv[1]) if sys.argv[1].endswith('.gz') else open(sys.argv[1])); sys.exit(0 if any(i['master'].startswith(('hbfd_lh','hbfd_land')) for i in L['instances']) else 1)" "$L"; then
+  src+=($D/hbfd_lane_masters.sv $D/ot_hbm_lane.sv rtl/qwen_split/qfd_fwd_lane.sv rtl/hdc/ot_hdc_cg.sv); MUTS+=(land_k)
+fi
+sha256sum "${src[@]}" "$L" tools/hbm_die_v16/relay_lockstep_bench.py "$0" > "$OUT/sources.sha256"
 for m in "${MUTS[@]}"; do
   X=; [ $m != pos ] && X="--mut $m"
   python3 tools/hbm_die_v16/relay_lockstep_bench.py --layer "$L" --out "$OUT/$m" --max-buses $MB $X > "$OUT/$m.gen.log" || { cat "$OUT/$m.gen.log"; fail=1; }

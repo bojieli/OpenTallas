@@ -465,8 +465,10 @@ def load_spec(path: str) -> dict:
         raise SpecError("cdc_synchronizers (reviewed CDC mode, cdc_sync_constraints.py) requires a multiple_cts_roots leaf tile")
     if s.get("clock") in ("entries", "hybrid_entries", "multiple_cts_roots"):
         cps = s.get("clock_ports")
-        if (s.get("clock") == "multiple_cts_roots" and s["kind"] != "tile" or s.get("clock") == "entries" and s["kind"] != "cluster") or not isinstance(cps, list) or not cps or s["clock_port"] != cps[0]:
-            raise SpecError('spec: clock entries/hybrid_entries require kind cluster; multiple_cts_roots requires kind tile; '
+        # PL-KIT 10-18: multiple_cts_roots is also a LANDED cluster (tools/landed_parent/lp.py parents): kind cluster with
+        # hard children whose clock pins sit on their region root (clock_entry_constraints.landed_cluster)
+        if (s.get("clock") == "multiple_cts_roots" and s["kind"] not in ("tile", "cluster") or s.get("clock") == "entries" and s["kind"] != "cluster") or not isinstance(cps, list) or not cps or s["clock_port"] != cps[0]:
+            raise SpecError('spec: clock entries/hybrid_entries require kind cluster; multiple_cts_roots requires kind tile or cluster; '
                             'each requires clock_ports and clock_port == clock_ports[0]')
         if len(set(cps)) != len(cps) or not all(re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*(?:\[\d+\])?", c) for c in cps):
             raise SpecError("spec: clock_ports must be distinct scalar names or literal bus bits")
@@ -475,6 +477,11 @@ def load_spec(path: str) -> dict:
                 raise SpecError("multiple_cts_roots owns the clock relationship and boundary; custom timing/clock hooks are unsupported")
             if s.get("clock_cts_roots") is not None:
                 raise SpecError("multiple_cts_roots derives every CTS root from clock_ports")
+            if s["kind"] == "cluster":
+                try:
+                    clock_entry_constraints.landed_record(s, ROOT)
+                except (ValueError, OSError) as error:
+                    raise SpecError(str(error)) from error
             clock_entry_constraints.domains(s)
         elif s.get("clock") == "hybrid_entries":
             roots = s.get("clock_cts_roots")
@@ -1494,7 +1501,7 @@ def gen_sdc(s: dict, period_ps: float) -> str:
             # Extra SDC may declare secondary clocks. Data slew must exclude
             # their sources; explicit source-clock transitions in extra SDC stand.
             + "set_input_transition 150 [all_inputs -no_clocks]\n"
-            + clock_entry_constraints.generate(s, ROOT))
+            + clock_entry_constraints.generate(s, ROOT) + clock_entry_constraints.landed_sdc(s, ROOT))
 
 
 def sdc_extra(s: dict) -> str:
@@ -1526,7 +1533,8 @@ def gen_signoff(s: dict, refglob: str, inter: str) -> str:
             + f"set ::env(OT_REF_GLOB) {{{refglob}}}\nset ::env(OT_IO_INTER) {{{inter}}}\nset ::env(OT_IO_SKEW_INTER) 150\n"
             + io + sdc_extra(s)
             + ("set ::ot_ce_require_wire 1\n" if s.get("clock") in ("entries", "hybrid_entries", "multiple_cts_roots") else "")
-            + clock_entry_constraints.generate(s, ROOT) + "\nset_propagated_clock [all_clocks]\n")
+            + clock_entry_constraints.generate(s, ROOT) + clock_entry_constraints.landed_sdc(s, ROOT)
+            + "\nset_propagated_clock [all_clocks]\n")
 
 
 def io_hold_relief_ps(s: dict) -> int:
@@ -1673,6 +1681,8 @@ def gen_hooks(s: dict, kd: str) -> dict:
         if s.get("clock") in ("hybrid_entries", "multiple_cts_roots"):
             roots = clock_ports(s) if s.get("clock") == "multiple_cts_roots" else s["clock_cts_roots"]
             pre_cts.append("set ::ot_ce_cts_roots {" + " ".join(roots) + "}")
+            if clock_entry_constraints.landed_cluster(s):
+                pre_cts.append("set ::ot_ce_landed_cluster 1")
             pre_cts.extend(raw_macro_clocks.tcl(raw_bindings))
         pre_cts.append("source /src/physical/common_flow/clock_entries.tcl")
     if spine:
@@ -2056,6 +2066,8 @@ def referenced_paths(s: dict, kd: str) -> list:
     if s.get("clock") in ("entries", "hybrid_entries", "multiple_cts_roots"):
         out += ["physical/common_flow/clock_entries.tcl", f"{kd}/clock_entry.sdc"]
         out += [f"{ch['view']}/insertion.json" for ch in s["children"]]
+        if clock_entry_constraints.landed_cluster(s):
+            out.append(s["landed_record"])
     for it in s["macros"] + s["children"]:
         v = it["view"]
         out += [f"{v}/{view_name(v)}.lef"] + [f"{v}/{view_name(v)}_{c}.lib" for c in ("ss", "ff", "tt")]

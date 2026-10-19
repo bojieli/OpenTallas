@@ -6,7 +6,8 @@
 //   CTL decode  CTL beats delivered by the ring stop (tier line E-bound / W-bound, or the V rung at column 3, where the
 //               G-unit injects) whose slice mask holds this slice.  Payload p = beat[21 +: 186]:
 //               [15:0] slice mask, [20:16] target, [25:21] leaf mask, [185:26] body (160 b):
-//                 0 vp command (body = c_d) to the masked beat leaves      1 xfin go (body[31:0] = eps)
+//                 0 vp command (body = c_d) to the masked beat leaves      1 xfin go (body[31:0] = eps, body[32] = mode
+//                   ENG (RTL-BUILD-S81 10-18: the Engram mix exchange), body[95:64] = the Engram scale for eg)
 //                 2 x streamer issuer / phase start (body = is_d)          3 capture phase config (body = cfg_d)
 //                 4 send config (below)                                    5 one leaf-store row write {a 10, m 4, d 128}
 //               A CTL beat from V (the G-unit) is also re-injected on the tier line both ways (hops 0 = line default)
@@ -20,6 +21,10 @@
 //   SC relay    SC beats (kind 5, router scores) delivered on the line at the relay slice (send config bit) leave on V.
 //   norm        the 5 beat partials (equal-latency glue: same edge) -> xfin s port in leaf order 0..4 (xfin injects on
 //               index 4); xfin's rstd -> the 5 vn rb ports.
+//   ENG         the 5 leaves' Engram partial triples of copy j (vs op 14 runs in lockstep on all 5 leaves: same edge)
+//               -> xfin s port, 15 words kind-major then leaf, s_i = (kind * 4 + j) * 5 + leaf (kind 0 hh, 1 kk, 2 dd);
+//               eg's gates (one per copy) -> all 5 leaves' g ports.  A triple while the previous one serialises, a
+//               partial leaf set or mixed copies, or an ENG triple against a norm collection is a sticky fault.
 // Every input lands in a flop; every output leaves a flop.  HB = 1 builds the C3 variant (band port B, attention).
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_s81sl_xr #(
@@ -52,9 +57,21 @@ module ot_s81sl_xr #(
     input  wire [5*32-1:0] p_d,
     output reg  [4:0]      rb_v,
     output reg  [5*32-1:0] rb_d,
+    // Engram: leaf partial triples in, eg gates out to the leaves
+    input  wire [4:0]      e_v,
+    input  wire [5*2-1:0]  e_c,
+    input  wire [5*96-1:0] e_d,
+    input  wire            eg_v,
+    input  wire [1:0]      eg_c,
+    input  wire [31:0]     eg_d,
+    output reg  [4:0]      g_v,
+    output reg  [5*2-1:0]  g_c,
+    output reg  [5*32-1:0] g_d,
     // xfin
     output reg             x_go,
+    output reg             x_mode,
     output reg  [31:0]     x_eps,
+    output reg  [31:0]     x_scale,
     output reg             x_sv,
     output reg  [7:0]      x_si,
     output reg  [31:0]     x_s,
@@ -75,6 +92,11 @@ module ot_s81sl_xr #(
     // ---------------------------------------------------------------- input flops
     reg ev, wv, vv; reg [W-1:0] eb, wb, bb; reg [V-1:0] vb; reg [4:0] lov, pv; reg [5*256-1:0] lod; reg [5*32-1:0] pd;
     reg rbv; reg [31:0] rbd; reg [3:0] sid_c;
+    reg [4:0] ev_c; reg [5*2-1:0] ec_c; reg [5*96-1:0] ed_c; reg egv_c; reg [1:0] egc_c; reg [31:0] egd_c;
+    always @(posedge clk or negedge rs_c)
+        if (!rs_c) begin ev_c <= 5'd0; egv_c <= 1'b0; end
+        else begin ev_c <= e_v; egv_c <= eg_v; end
+    always @(posedge clk) begin ec_c <= e_c; ed_c <= e_d; egc_c <= eg_c; egd_c <= eg_d; end
     always @(posedge clk or negedge rs_c)
         if (!rs_c) begin ev <= 1'b0; wv <= 1'b0; vv <= 1'b0; lov <= 5'd0; pv <= 5'd0; rbv <= 1'b0; end
         else begin ev <= dl_ev; wv <= dl_wv; vv <= dl_vv; lov <= lo_v; pv <= p_v; rbv <= x_rbv; end
@@ -196,38 +218,58 @@ module ot_s81sl_xr #(
 
     // ---------------------------------------------------------------- command fan-out, xfin, streamer, capture
     always @(posedge clk or negedge rs_o)
-        if (!rs_o) begin c_v <= 5'd0; x_go <= 1'b0; is_v <= 1'b0; cfg_v <= 1'b0; end
+        if (!rs_o) begin c_v <= 5'd0; x_go <= 1'b0; is_v <= 1'b0; cfg_v <= 1'b0; x_mode <= 1'b0; end
         else begin
             c_v <= (cvld && tgt == 5'd0) ? lmask : 5'd0;
             x_go <= cvld && tgt == 5'd1;
+            if (cvld && tgt == 5'd1) x_mode <= body[32];
             is_v <= cvld && tgt == 5'd2;
             cfg_v <= cvld && tgt == 5'd3;
         end
     always @(posedge clk) begin
         for (k = 0; k < 5; k = k + 1) c_d[160 * k +: 160] <= body;
-        if (cvld && tgt == 5'd1) x_eps <= body[31:0];
+        if (cvld && tgt == 5'd1) begin x_eps <= body[31:0]; x_scale <= body[95:64]; end
         is_d <= body; cfg_d <= body;
     end
     // partial collector: the 5 partials arrive on one edge; xfin takes them in leaf order 0..4
     reg [31:0] pq [0:4]; reg [2:0] pi; reg prun;
+    // ENG collector: 5 triples of one copy -> 15 words (t = 5 kind + leaf)
+    reg [95:0] eqd [0:4]; reg [1:0] ecp; reg [3:0] et; reg [2:0] el; reg [1:0] ekd; reg erun; reg ebad;
+    always @(*) begin
+        ebad = (|ev_c) && (ev_c != 5'b11111);
+        for (k = 1; k < 5; k = k + 1) if (ev_c[k] && ec_c[2 * k +: 2] != ec_c[1:0]) ebad = 1'b1;
+    end
     always @(posedge clk or negedge rs_o)
-        if (!rs_o) begin prun <= 1'b0; pi <= 3'd0; x_sv <= 1'b0; rb_v <= 5'd0; end
+        if (!rs_o) begin prun <= 1'b0; pi <= 3'd0; x_sv <= 1'b0; rb_v <= 5'd0; erun <= 1'b0; et <= 4'd0; el <= 3'd0;
+                         ekd <= 2'd0; g_v <= 5'd0; end
         else begin
-            x_sv <= prun;
+            x_sv <= prun || erun;
             if (|pv) begin prun <= 1'b1; pi <= 3'd0; end
             else if (prun) begin pi <= pi + 3'd1; if (pi == 3'd4) prun <= 1'b0; end
+            if (|ev_c) begin erun <= 1'b1; et <= 4'd0; el <= 3'd0; ekd <= 2'd0; end
+            else if (erun) begin
+                et <= et + 4'd1;
+                if (el == 3'd4) begin el <= 3'd0; ekd <= ekd + 2'd1; end else el <= el + 3'd1;
+                if (et == 4'd14) erun <= 1'b0;
+            end
             rb_v <= {5{rbv}};
+            g_v <= {5{egv_c}};
         end
     always @(posedge clk) begin
         for (k = 0; k < 5; k = k + 1) if (pv[k]) pq[k] <= pd[32 * k +: 32];
-        x_si <= {5'd0, pi}; x_s <= pq[pi];
+        for (k = 0; k < 5; k = k + 1) if (ev_c[k]) eqd[k] <= ed_c[96 * k +: 96];
+        if (|ev_c) ecp <= ec_c[1:0];
+        if (erun) begin x_si <= ({6'd0, ekd} * 8'd4 + {6'd0, ecp}) * 8'd5 + {5'd0, el}; x_s <= eqd[el][32 * ekd +: 32]; end
+        else begin x_si <= {5'd0, pi}; x_s <= pq[pi]; end
         rb_d <= {5{rbd}};
+        g_c <= {5{egc_c}}; g_d <= {5{egd_c}};
     end
     // ---------------------------------------------------------------- faults
     always @(posedge clk or negedge rs_o)
         if (!rs_o) fault <= 1'b0;
         else fault <= fault | (nctl > 3'd1) | (nrd > 3'd1) | ucol | (nlo > 3'd1) | ((|pv) && pv != 5'b11111) |
-                      ((|pv) && prun) | (v_ctl && (pk_go || sc_rel)) | (pk_go && sc_rel);
+                      ((|pv) && prun) | (v_ctl && (pk_go || sc_rel)) | (pk_go && sc_rel) |
+                      ebad | ((|ev_c) && (erun || prun || (|pv))) | ((|pv) && erun);
 endmodule
 
 // C1 (14 slices): ring E/W + V.  C3 (s_1S, s_6S): + band port B (attention q / P.V).  Hardened masters, no parameters.
@@ -237,7 +279,10 @@ module ot_s81sl_xr1 (
     input  wire dl_vv, input wire [275:0] dl_vb, output wire [2:0] ci_dir, output wire [1103:0] ci_b,
     output wire [4:0] c_v, output wire [799:0] c_d, output wire [4:0] sw_v, output wire [49:0] sw_a, output wire [39:0] sw_m,
     output wire [1279:0] sw_d, input wire [4:0] lo_v, input wire [1279:0] lo_d, input wire [4:0] p_v, input wire [159:0] p_d,
-    output wire [4:0] rb_v, output wire [159:0] rb_d, output wire x_go, output wire [31:0] x_eps, output wire x_sv,
+    output wire [4:0] rb_v, output wire [159:0] rb_d,
+    input  wire [4:0] e_v, input wire [9:0] e_c, input wire [479:0] e_d, input wire eg_v, input wire [1:0] eg_c,
+    input  wire [31:0] eg_d, output wire [4:0] g_v, output wire [9:0] g_c, output wire [159:0] g_d,
+    output wire x_go, output wire x_mode, output wire [31:0] x_eps, output wire [31:0] x_scale, output wire x_sv,
     output wire [7:0] x_si, output wire [31:0] x_s, input wire x_rbv, input wire [31:0] x_rbd,
     output wire is_v, output wire [159:0] is_d, output wire cfg_v, output wire [159:0] cfg_d, output wire fault
 );
@@ -245,7 +290,8 @@ module ot_s81sl_xr1 (
     ot_s81sl_xr #(.HB(0)) u (.clk(clk), .rst_n(rst_n), .sid(sid), .dl_ev(dl_ev), .dl_e(dl_e), .dl_wv(dl_wv), .dl_w(dl_w),
         .dl_vv(dl_vv), .dl_vb(dl_vb), .ci_dir(ci_dir), .ci_b(ci_b), .bi({1104{1'b0}}), .bo(bo_unused), .c_v(c_v), .c_d(c_d),
         .sw_v(sw_v), .sw_a(sw_a), .sw_m(sw_m), .sw_d(sw_d), .lo_v(lo_v), .lo_d(lo_d), .p_v(p_v), .p_d(p_d), .rb_v(rb_v),
-        .rb_d(rb_d), .x_go(x_go), .x_eps(x_eps), .x_sv(x_sv), .x_si(x_si), .x_s(x_s), .x_rbv(x_rbv), .x_rbd(x_rbd),
+        .rb_d(rb_d), .e_v(e_v), .e_c(e_c), .e_d(e_d), .eg_v(eg_v), .eg_c(eg_c), .eg_d(eg_d), .g_v(g_v), .g_c(g_c),
+        .g_d(g_d), .x_go(x_go), .x_mode(x_mode), .x_eps(x_eps), .x_scale(x_scale), .x_sv(x_sv), .x_si(x_si), .x_s(x_s), .x_rbv(x_rbv), .x_rbd(x_rbd),
         .is_v(is_v), .is_d(is_d), .cfg_v(cfg_v), .cfg_d(cfg_d), .fault(fault));
 endmodule
 
@@ -256,13 +302,17 @@ module ot_s81sl_xr3 (
     input  wire [1103:0] bi, output wire [1103:0] bo,
     output wire [4:0] c_v, output wire [799:0] c_d, output wire [4:0] sw_v, output wire [49:0] sw_a, output wire [39:0] sw_m,
     output wire [1279:0] sw_d, input wire [4:0] lo_v, input wire [1279:0] lo_d, input wire [4:0] p_v, input wire [159:0] p_d,
-    output wire [4:0] rb_v, output wire [159:0] rb_d, output wire x_go, output wire [31:0] x_eps, output wire x_sv,
+    output wire [4:0] rb_v, output wire [159:0] rb_d,
+    input  wire [4:0] e_v, input wire [9:0] e_c, input wire [479:0] e_d, input wire eg_v, input wire [1:0] eg_c,
+    input  wire [31:0] eg_d, output wire [4:0] g_v, output wire [9:0] g_c, output wire [159:0] g_d,
+    output wire x_go, output wire x_mode, output wire [31:0] x_eps, output wire [31:0] x_scale, output wire x_sv,
     output wire [7:0] x_si, output wire [31:0] x_s, input wire x_rbv, input wire [31:0] x_rbd,
     output wire is_v, output wire [159:0] is_d, output wire cfg_v, output wire [159:0] cfg_d, output wire fault
 );
     ot_s81sl_xr #(.HB(1)) u (.clk(clk), .rst_n(rst_n), .sid(sid), .dl_ev(dl_ev), .dl_e(dl_e), .dl_wv(dl_wv), .dl_w(dl_w),
         .dl_vv(dl_vv), .dl_vb(dl_vb), .ci_dir(ci_dir), .ci_b(ci_b), .bi(bi), .bo(bo), .c_v(c_v), .c_d(c_d),
         .sw_v(sw_v), .sw_a(sw_a), .sw_m(sw_m), .sw_d(sw_d), .lo_v(lo_v), .lo_d(lo_d), .p_v(p_v), .p_d(p_d), .rb_v(rb_v),
-        .rb_d(rb_d), .x_go(x_go), .x_eps(x_eps), .x_sv(x_sv), .x_si(x_si), .x_s(x_s), .x_rbv(x_rbv), .x_rbd(x_rbd),
+        .rb_d(rb_d), .e_v(e_v), .e_c(e_c), .e_d(e_d), .eg_v(eg_v), .eg_c(eg_c), .eg_d(eg_d), .g_v(g_v), .g_c(g_c),
+        .g_d(g_d), .x_go(x_go), .x_mode(x_mode), .x_eps(x_eps), .x_scale(x_scale), .x_sv(x_sv), .x_si(x_si), .x_s(x_s), .x_rbv(x_rbv), .x_rbd(x_rbd),
         .is_v(is_v), .is_d(is_d), .cfg_v(cfg_v), .cfg_d(cfg_d), .fault(fault));
 endmodule

@@ -1,10 +1,10 @@
 {
  "schema": "opentallas.hier_contract.child_lint.v1",
- "lef": "/srv/opentallas-scratch/claude/closure-loop/hsm_smvm_wrq_t4_r1-q4-bf8dd74e8/record/views/ot_hbm_sm_vm_wr_q_t_lanes4/provenance/ot_hbm_sm_vm_wr_q_t_lanes4.candidate.lef",
+ "lef": "/srv/opentallas-scratch/claude/closure-loop/hsm_smvm_wrq_t4_r1-q5-ea1739b51/record/views/ot_hbm_sm_vm_wr_q_t_lanes4/provenance/ot_hbm_sm_vm_wr_q_t_lanes4.candidate.lef",
  "verdict": "PASS",
  "fails": [],
  "warns": [],
- "summary": "ot_hbm_sm_vm_wr_q_t_lanes4 142.56 x 388.8: PG M5 VDD 26 stripes (95% spread, 100% cov) / VSS 26 stripes (95% spread, 100% cov); strap M6; face pins 3673 blocked-above 0 blocked-same 0; clock clk insertion 174 ps; clock clk_cal insertion 18 ps; clock clk_l0 insertion 231 ps; clock clk_l1 insertion 191 ps; clock clk_l2 insertion 178 ps; clock clk_l3 insertion 272 ps; pockets M5 0 (closed)",
+ "summary": "ot_hbm_sm_vm_wr_q_t_lanes4 142.56 x 388.8: PG M5 VDD 26 stripes (95% spread, 100% cov) / VSS 26 stripes (95% spread, 100% cov); strap M6; face pins 3673 blocked-above 0 blocked-same 0; clock clk insertion 171 ps; clock clk_cal insertion 18 ps; clock clk_l0 insertion 232 ps; clock clk_l1 insertion 191 ps; clock clk_l2 insertion 178 ps; clock clk_l3 insertion 241 ps; pockets M5 0 (closed)",
  "info": {
   "cell": "ot_hbm_sm_vm_wr_q_t_lanes4",
   "W": 142.56,
@@ -47,28 +47,28 @@
   },
   "clock_insertion": {
    "clk": {
-    "max_ps": 173.9,
-    "min_ps": 112.19
+    "max_ps": 170.96,
+    "min_ps": 110.79
    },
    "clk_cal": {
-    "max_ps": 18.33,
-    "min_ps": 18.33
+    "max_ps": 18.46,
+    "min_ps": 18.46
    },
    "clk_l0": {
-    "max_ps": 231.41,
-    "min_ps": 162.49
+    "max_ps": 231.97,
+    "min_ps": 162.47
    },
    "clk_l1": {
-    "max_ps": 190.51,
-    "min_ps": 144.19
+    "max_ps": 190.66,
+    "min_ps": 144.21
    },
    "clk_l2": {
-    "max_ps": 178.43,
-    "min_ps": 126.9
+    "max_ps": 178.04,
+    "min_ps": 126.84
    },
    "clk_l3": {
-    "max_ps": 271.81,
-    "min_ps": 156.16
+    "max_ps": 240.58,
+    "min_ps": 170.58
    }
   },
   "pockets": {
@@ -77,7 +77,7 @@
    "marker": {
     "layer": "M5",
     "d_um": 1.536,
-    "added": 1220
+    "added": 1296
    },
    "count": 0,
    "area_um2": 0,

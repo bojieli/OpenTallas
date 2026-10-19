@@ -1,0 +1,130 @@
+{
+ "stage": "chain",
+ "position": 8191,
+ "mutant": null,
+ "pass_": true,
+ "records": 37,
+ "image_bytes": 3824,
+ "image_sha256": "923df64d3cadd060464c91afb1d2437ff90e3e66080b25fbe26082caa560551f",
+ "executed_records": 66,
+ "wall_s": 17.3,
+ "families": {
+  "prenorm": {
+   "checks": 32,
+   "exact": 32
+  },
+  "qkv+row_scale_qkv": {
+   "checks": 16,
+   "exact": 16
+  },
+  "qknorm": {
+   "checks": 32,
+   "exact": 32
+  },
+  "rope": {
+   "checks": 16,
+   "exact": 16
+  },
+  "round_q": {
+   "checks": 16,
+   "exact": 16
+  },
+  "kv_append": {
+   "checks": 32,
+   "exact": 32
+  },
+  "attention_qk": {
+   "checks": 16,
+   "exact": 16
+  },
+  "softmax": {
+   "checks": 16,
+   "exact": 16
+  },
+  "attention_pv": {
+   "checks": 16,
+   "exact": 16
+  },
+  "pv_normalize": {
+   "checks": 16,
+   "exact": 16
+  },
+  "o": {
+   "checks": 16,
+   "exact": 16
+  },
+  "all_reduce_o+row_scale_o+residual": {
+   "checks": 16,
+   "exact": 16
+  },
+  "gu+row_scale_gu": {
+   "checks": 16,
+   "exact": 16
+  },
+  "swiglu": {
+   "checks": 16,
+   "exact": 16
+  },
+  "act_all_gather": {
+   "checks": 16,
+   "exact": 16
+  },
+  "down": {
+   "checks": 16,
+   "exact": 16
+  },
+  "all_reduce_down+row_scale_down+residual": {
+   "checks": 16,
+   "exact": 16
+  }
+ },
+ "numerics_witness": {
+  "L0.o_tree_8_equals_golden": true,
+  "L0.plain_tp8_even_down_differs": {
+   "down_elems_differ": 1899,
+   "x_out_elems_differ": 1077,
+   "of": 4096
+  },
+  "L1.o_tree_8_equals_golden": true,
+  "L1.plain_tp8_even_down_differs": {
+   "down_elems_differ": 1655,
+   "x_out_elems_differ": 1097,
+   "of": 4096
+  }
+ },
+ "token": 0,
+ "fixture": {
+  "dir": "../fix/chain",
+  "files": 35,
+  "expected": 160,
+  "manifest_sha256": "d11ec3eb7d4eef01bb3e4ee3a49592e47aabfbd4fbbad5f7f5a28857b12ee84e"
+ }
+}
+kv_swap FAILS (expected) 
+qknorm_bf16 FAILS (expected) 
+rkj_wrong FAILS (expected) 
+grm_s8 FAILS (expected) GROUP_REDUCE_MCAST: O does not hold (G / s) sub-group results
+pass
+	Command being timed: "python3 tools/hbm_qwen_layer/qwen_d4g_proof.py --snapshot /home/ubuntu/.cache/huggingface/hub/models--Qwen--Qwen3-8B/snapshots/b968826d9c46dd6066d109eabc6255188de91218 --cache ../img --stage chain --mutants --dump ../fix --out ../out/proof_chain.json"
+	User time (seconds): 2577.04
+	System time (seconds): 665.69
+	Percent of CPU this job got: 596%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 9:03.18
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 6186308
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 25143
+	Minor (reclaiming a frame) page faults: 214174872
+	Voluntary context switches: 758654
+	Involuntary context switches: 89322
+	Swaps: 0
+	File system inputs: 6391512
+	File system outputs: 5295048
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

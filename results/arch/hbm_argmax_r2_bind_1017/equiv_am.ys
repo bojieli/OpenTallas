@@ -1,0 +1,90 @@
+design -reset
+read_verilog -sv -lib /home/ubuntu/wt/hbm-su3-1017/rtl/hbm_accel/index/ot_hbm_idx_calendar_static.sv /home/ubuntu/wt/hbm-su3-1017/rtl/hbm_accel/index/ot_hbm_idx_topk_static.sv /home/ubuntu/wt/hbm-su3-1017/rtl/hbm_accel/index/ot_hbm_idx_vm_share_static.sv /home/ubuntu/wt/hbm-su3-1017/rtl/hbm_accel/index/ot_hbm_idx_vm_query_static.sv /home/ubuntu/wt/hbm-su3-1017/rtl/hbm_accel/index/ot_hbm_idx_query_static.sv /home/ubuntu/wt/hbm-su3-1017/rtl/hbm_accel/index/ot_hbm_idx_score_static.sv /home/ubuntu/wt/hbm-su3-1017/rtl/hbm_accel/index/ot_hbm_idx_selector_static.sv /home/ubuntu/wt/hbm-su3-1017/rtl/hbm_accel/index/ot_hbm_idx_topk_link_static.sv /home/ubuntu/wt/hbm-su3-1017/rtl/hbm_accel/index/ot_hbm_idx_vm_share_static_am.sv
+read_verilog -sv /home/ubuntu/wt/hbm-su3-1017/rtl/hbm_accel/index/ot_hbm_idx_client_static_sw.sv /home/ubuntu/wt/hbm-su3-1017/rtl/hbm_accel/index/ot_hbm_idx_client_static.sv /home/ubuntu/wt/hbm-su3-1017/rtl/hbm_accel/index/ot_hbm_idx_scheduled_static.sv /home/ubuntu/wt/hbm-su3-1017/rtl/hbm_accel/index/ot_hbm_idx_parent_static.sv
+chparam -set N_Q 2 -set TP 192 -set AM_MERGE 1 ot_hbm_idx_client_static_sw
+hierarchy -top ot_hbm_idx_client_static_sw
+proc
+flatten
+cd ot_hbm_idx_client_static_sw
+rename implementation.topk u_topk
+cd
+cd ot_hbm_idx_client_static_sw
+rename implementation.g_share_am.share u_share
+cd
+cd ot_hbm_idx_client_static_sw
+rename implementation.index.parent.query u_query
+cd
+cd ot_hbm_idx_client_static_sw
+rename implementation.index.parent.selector u_selector
+cd
+cd ot_hbm_idx_client_static_sw
+rename implementation.index.parent.link u_link
+cd
+cd ot_hbm_idx_client_static_sw
+rename implementation.index.parent.gscore[0].scorer u_scorer0
+cd
+cd ot_hbm_idx_client_static_sw
+rename implementation.index.parent.gscore[1].scorer u_scorer1
+cd
+cd ot_hbm_idx_client_static_sw
+rename implementation.index.parent.operands u_operands
+cd
+cd ot_hbm_idx_client_static_sw
+rename implementation.index.calendar u_calendar
+cd
+cd ot_hbm_idx_client_static_sw
+rename implementation.index.parent.calendar_fault glue_calendar_fault_q
+cd
+expose -evert ot_hbm_idx_client_static_sw/c:u_*
+opt_clean
+async2sync
+rename ot_hbm_idx_client_static_sw gold
+design -stash gold
+design -reset
+read_verilog -sv -lib /home/ubuntu/wt/hbm-su3-1017/rtl/hbm_accel/index/ot_hbm_idx_calendar_static.sv /home/ubuntu/wt/hbm-su3-1017/rtl/hbm_accel/index/ot_hbm_idx_topk_static.sv /home/ubuntu/wt/hbm-su3-1017/rtl/hbm_accel/index/ot_hbm_idx_vm_share_static.sv /home/ubuntu/wt/hbm-su3-1017/rtl/hbm_accel/index/ot_hbm_idx_vm_query_static.sv /home/ubuntu/wt/hbm-su3-1017/rtl/hbm_accel/index/ot_hbm_idx_query_static.sv /home/ubuntu/wt/hbm-su3-1017/rtl/hbm_accel/index/ot_hbm_idx_score_static.sv /home/ubuntu/wt/hbm-su3-1017/rtl/hbm_accel/index/ot_hbm_idx_selector_static.sv /home/ubuntu/wt/hbm-su3-1017/rtl/hbm_accel/index/ot_hbm_idx_topk_link_static.sv /home/ubuntu/wt/hbm-su3-1017/rtl/hbm_accel/index/ot_hbm_idx_vm_share_static_am.sv
+read_verilog -sv /home/ubuntu/wt/hbm-su3-1017/rtl/hbm_accel/index/soft_1016/ot_hbm_idx_client_static_soft.sv /home/ubuntu/wt/hbm-su3-1017/rtl/hbm_accel/index/soft_1016/ot_hbm_idx_ctl_static.sv
+chparam -set N_Q 2 -set TP 192 -set AM_MERGE 1 ot_hbm_idx_client_static_soft
+hierarchy -top ot_hbm_idx_client_static_soft
+proc
+flatten
+cd ot_hbm_idx_client_static_soft
+rename ctl.topk u_topk
+cd
+cd ot_hbm_idx_client_static_soft
+rename ctl.g_share_am.share u_share
+cd
+cd ot_hbm_idx_client_static_soft
+rename ctl.calendar u_calendar
+cd
+cd ot_hbm_idx_client_static_soft
+rename operands u_operands
+cd
+cd ot_hbm_idx_client_static_soft
+rename query u_query
+cd
+cd ot_hbm_idx_client_static_soft
+rename selector u_selector
+cd
+cd ot_hbm_idx_client_static_soft
+rename link u_link
+cd
+cd ot_hbm_idx_client_static_soft
+rename gscore[0].scorer u_scorer0
+cd
+cd ot_hbm_idx_client_static_soft
+rename gscore[1].scorer u_scorer1
+cd
+cd ot_hbm_idx_client_static_soft
+rename ctl.parent_calendar_fault glue_calendar_fault_q
+cd
+expose -evert ot_hbm_idx_client_static_soft/c:u_*
+opt_clean
+async2sync
+rename ot_hbm_idx_client_static_soft gate
+design -stash gate
+design -reset
+design -copy-from gold -as gold gold
+design -copy-from gate -as gate gate
+miter -equiv -flatten -make_assert -ignore_gold_x gold gate miter
+hierarchy -top miter
+sat -verify -prove-asserts -tempinduct -set-init-zero -seq 1 -maxsteps 8 miter
