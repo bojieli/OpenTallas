@@ -7,7 +7,7 @@ import argparse, hashlib, json, os, pathlib, resource, shutil, sys, time, traceb
 import numpy as np
 
 ROOT = pathlib.Path('/srv/opentallas-scratch/claude/refill-1225/QWLAYER')
-W = ROOT / 'matrix_final_cluster_1019'
+W = ROOT / 'matrix_final_cluster_1019_v2'
 SRC = W / 'src'
 SHA = {1:'7ba89595a8c4d2e77ba02e76479b2703237c426caf994cc8f2911ec698b8ce86',
        4:'2b1db9ca2ff412ea081c66d66d135278960ed3044157e2af8cac96e295d073e1'}
