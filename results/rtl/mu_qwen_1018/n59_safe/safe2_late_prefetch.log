@@ -1,0 +1,15 @@
+N59DV_ERR cycle 131: native_ret(NEW,t+1) != native_ret(OLD,t)
+N59DV_ERR cycle 132: native_ret(NEW,t+1) != native_ret(OLD,t)
+N59DV_ERR cycle 133: native_ret(NEW,t+1) != native_ret(OLD,t)
+N59DV_ERR cycle 134: native_ret(NEW,t+1) != native_ret(OLD,t)
+N59DV_ERR cycle 135: native_ret(NEW,t+1) != native_ret(OLD,t)
+N59DV_ERR cycle 136: native_ret(NEW,t+1) != native_ret(OLD,t)
+N59DV_ERR cycle 137: native_ret(NEW,t+1) != native_ret(OLD,t)
+N59DV_ERR cycle 138: native_ret(NEW,t+1) != native_ret(OLD,t)
+N59DV_ERR cycle 139: native_ret(NEW,t+1) != native_ret(OLD,t)
+N59DV_ERR cycle 140: native_ret(NEW,t+1) != native_ret(OLD,t)
+N59DV_ERR cycle 141: native_ret(NEW,t+1) != native_ret(OLD,t)
+N59DV_FAIL errors=245 x3 4/4 tx 33/1 ar 32/0 emb 65 done 214/-1 fault 1
+[0] %Fatal: tb_qfd_native59_dv_service.sv:211: Assertion failed in TOP.tb_qfd_native59_dv_service
+%Error: /srv/opentallas-scratch/claude/n59-safe-1019/src2b/rtl/test/qwen_split/tb_qfd_native59_dv_service.sv:211: Verilog $stop
+Aborting...
