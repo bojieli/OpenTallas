@@ -29,7 +29,8 @@ module ot_hbm_r14_aq_pc_safe #(
   parameter integer WQ = 32, RW_ROW = 19,
   parameter integer IDLE0 = 3, IDLE1 = 4, IDLE2 = 2, IDLE3 = 5, IDLE4 = 1, IDLE5 = 6, IDLE6 = 0, IDLE7 = 7,
   parameter integer MRKEY = 1,
-  parameter integer PULLIN = 8
+  parameter integer PULLIN = 8,
+  parameter integer ROW_REGIONS = 0
 )(
   input  wire        clk, rst_n, input wire[63:0]reset_regions,
   input  wire        slot_parity, input wire [7:0] refresh_reload,
@@ -37,6 +38,7 @@ module ot_hbm_r14_aq_pc_safe #(
   output wire        col_v, output wire [4:0] col_bank, output wire [4:0] col_col,
   output wire        ref_fault,
   input  wire        wr_v, input wire [4:0] wr_bank, input wire [4:0] wr_col, input wire [RW_ROW-1:0] wr_row,
+  input wire [8*RW_ROW-1:0] wr_row_regions,
   input  wire        wr_rd, output wire wr_r, output wire col_we, output wire col_aq,
   output wire [31:0] dbg_held
 );
@@ -45,6 +47,7 @@ module ot_hbm_r14_aq_pc_safe #(
   localparam integer LEAD = T_RAS + T_RP + 4;
   localparam integer RW = $clog2(2 * PERIOD + 4);
   localparam integer WQW = $clog2(WQ);
+  initial if(ROW_REGIONS!=0&&ROW_REGIONS!=8)$fatal(1,"AQ ROW_REGIONS must be0 or8");
   initial if (PERIOD != 118) $fatal(1, "HBM refresh class mismatch");
   function automatic [2:0] idle_rank(input [2:0] s);
     idle_rank = (s==3'(IDLE0))?0:(s==3'(IDLE1))?1:(s==3'(IDLE2))?2:(s==3'(IDLE3))?3:
@@ -148,7 +151,11 @@ module ot_hbm_r14_aq_pc_safe #(
             look_row[b][k*8+bit_]<=head_local[b/4][k*8+bit_+1];
           else if(qpush&&wr_bank==b&&
               (k==0?bank_n[b]:bank_n_word_local[k-1][b])==0)
-            look_row[b][k*8+bit_]<=wr_row[k*8+bit_];
+            look_row[b][k*8+bit_]<=
+`ifdef BW_AQ_MUT_WRROW
+              ((ROW_REGIONS==8&&b/4==3&&k*8+bit_==0)?1'b1:1'b0)^
+`endif
+              (ROW_REGIONS==8?wr_row_regions[(b/4)*RW_ROW+k*8+bit_]:wr_row[k*8+bit_]);
           if(row_word_act_local[k][b/8]&&c_oh[b])
             orow[b][k*8+bit_]<=row_local[b/8][k*8+bit_];
         end

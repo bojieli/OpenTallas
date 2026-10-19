@@ -85,5 +85,14 @@
   "tail_partition": {
     "delta_ff": 18,
     "architecture": "Eight retained3-bit tail-set states, each owns four-bank refresh key region; capture admission uses existing local occupancy state."
+  },
+  "row_regions_interface": {
+    "parameter": "ROW_REGIONS default0;8 selects eight independent producer-owned row regions",
+    "input": "wr_row_regions[8*RW_ROW-1:0]",
+    "added_internal_wire_bits": 152,
+    "aq_ff_delta": 0,
+    "producer_ff_cost": "BW parent models64 existing-edge selector FF plus actual mux/state census",
+    "latency_delta": 0,
+    "scalar_consumers": "canonical head/queue/fresh only; look_row writes use region bank/4"
   }
 }
