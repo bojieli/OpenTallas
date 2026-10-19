@@ -1,0 +1,31 @@
+{
+  "source_commit": "e7c1d13e0",
+  "params": {
+    "ADM_OFS": 72,
+    "ADM_LEN": 1124,
+    "AW": 12,
+    "MIN_DT": 4
+  },
+  "status": "PASS positive and one-edge-early fault witness",
+  "host": "ot-epyc8",
+  "unit": "oth-ubuntu-1657931-1792428312",
+  "tool": "Verilator5.050",
+  "measured": {
+    "epoch_sample": 105,
+    "adm_done_sample": 1303,
+    "legal_go_sample": 1303,
+    "early_go_sample": 1302,
+    "core_start_pin_sample": 1308,
+    "adm_done_relative_epoch": 1198,
+    "minimum_go_relative_epoch": 1198,
+    "go_to_core_publication": 4,
+    "go_to_core_pin_sample": 5
+  },
+  "scope": "Actual shared sequencer and synchronous ROM/capture boundary with synthetic fixed lists. No die clock/FACE lane phase or final selected image.",
+  "source_hashes": {
+    "rtl/test/qwen_split/tb_ovl_admission_launch.sv": "4bf90623f7885e2a09ba1ae0ddf5f2ad69362172fa74678a2b68b5955e07f142",
+    "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_ovl_seq.sv": "a1be7be2441e149a90d7a4365789df89b1d3f7cc5bfe0b808bb8c34f5b9ded2c",
+    "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq.sv": "5edaee7a8c1650c6babfd9fae99b4f83a2cafc3eaed557934721778a5f977688"
+  },
+  "failed_invocation": "First helper used invalid Verilator -j4; no simulation ran. Corrected helper -j 4 succeeds."
+}

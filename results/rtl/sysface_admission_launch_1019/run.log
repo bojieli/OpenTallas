@@ -1,0 +1,26 @@
+ot-run: ot-epyc4       admits  1028 GB (avail 813, growth 94, headroom 0, waiters 0/0 GB) load 82/128 running 31 disk 319 GB 
+ot-run: ot-epyc5       admits   600 GB (avail 533, growth 113, headroom 0, waiters 0/0 GB) load 69/128 running 13 disk 1043 GB 
+ot-run: ot-epyc6       admits   266 GB (avail 298, growth 111, headroom 0, waiters 0/0 GB) load 39/128 running 16 disk 6040 GB 
+ot-run: ot-epyc7       admits   482 GB (avail 438, growth 101, headroom 0, waiters 0/0 GB) load 64/96 running 17 disk 6451 GB 
+ot-run: ot-epyc8       admits  1159 GB (avail 925, growth 113, headroom 0, waiters 0/0 GB) load 48/128 running 30 disk 332 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/sysface-admission-launch-v2-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/sysface-admission-launch-v2-1019
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-1657931-1792428312 after 0 s
+ADMLAUNCH adm_done_sample1303 rel1198
+ADMLAUNCH go_sample1303 rel1198 adm_preedge1
+ADMLAUNCH core_start_pin_sample1308 rel1203
+ADMLAUNCH_PASS EARLY0 same-edge adm_done/go accepted, MIN_DT4 corepublicationgo+4/samplego+5
+- rtl/test/qwen_split/tb_ovl_admission_launch.sv:38: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 13us; walltime 0.000 s; speed 30.057 ms/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB
+ADMLAUNCH go_sample1302 rel1197 adm_preedge0
+ADMLAUNCH adm_done_sample1303 rel1198
+ADMLAUNCH core_start_pin_sample1307 rel1202
+ADMLAUNCH_PASS EARLY1 rejected go one edge before adm_done
+- rtl/test/qwen_split/tb_ovl_admission_launch.sv:38: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 13us; walltime 0.000 s; speed 30.710 ms/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-1657931-1792428312): exit 0
