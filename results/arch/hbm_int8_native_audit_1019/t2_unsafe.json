@@ -1,0 +1,461 @@
+[
+  {
+    "name": "rst_n__ot_rl1$_DFF_P_/QN",
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "pin": "QN",
+    "xy": [
+      4.374,
+      56.295
+    ],
+    "kind": "ff",
+    "net": "_02450_",
+    "clock": false,
+    "loads": 87,
+    "max_reach_um": 240.084,
+    "sink_roles": {
+      "DFFASRHQNx1_ASAP7_75t_R/RESETN": 87
+    }
+  },
+  {
+    "name": "u_ot_pr_core.pend\\[0\\]$_DFF_PN0_/QN",
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "pin": "QN",
+    "xy": [
+      17.442,
+      103.275
+    ],
+    "kind": "ff",
+    "net": "_02487_",
+    "clock": false,
+    "loads": 97,
+    "max_reach_um": 11.988000000000003,
+    "sink_roles": {
+      "AND2x2_ASAP7_75t_R/A": 32,
+      "AND4x1_ASAP7_75t_R/A": 1,
+      "AND3x1_ASAP7_75t_R/A": 4,
+      "OAI21x1_ASAP7_75t_R/A1": 2,
+      "OA211x2_ASAP7_75t_R/A1": 1,
+      "NAND2x1_ASAP7_75t_R/A": 1,
+      "AOI21x1_ASAP7_75t_R/A1": 21,
+      "OR2x2_ASAP7_75t_R/A": 1,
+      "AO21x1_ASAP7_75t_R/A1": 32,
+      "AO32x1_ASAP7_75t_R/A1": 2
+    }
+  },
+  {
+    "name": "u_ot_pr_core.pend\\[1\\]$_DFF_PN0_/QN",
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "pin": "QN",
+    "xy": [
+      33.588,
+      102.465
+    ],
+    "kind": "ff",
+    "net": "_02488_",
+    "clock": false,
+    "loads": 109,
+    "max_reach_um": 31.482000000000006,
+    "sink_roles": {
+      "AND2x2_ASAP7_75t_R/A": 32,
+      "AND3x1_ASAP7_75t_R/A": 4,
+      "OA33x2_ASAP7_75t_R/A1": 2,
+      "OA21x2_ASAP7_75t_R/A1": 2,
+      "NAND2x1_ASAP7_75t_R/A": 3,
+      "AO32x1_ASAP7_75t_R/A1": 7,
+      "NOR2x1_ASAP7_75t_R/A": 1,
+      "AOI21x1_ASAP7_75t_R/A1": 21,
+      "AO21x1_ASAP7_75t_R/A1": 33,
+      "AOI22x1_ASAP7_75t_R/B2": 3,
+      "AO33x2_ASAP7_75t_R/A1": 1
+    }
+  },
+  {
+    "name": "u_ot_pr_core.pend\\[2\\]$_DFF_PN0_/QN",
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "pin": "QN",
+    "xy": [
+      30.402,
+      58.455
+    ],
+    "kind": "ff",
+    "net": "_02489_",
+    "clock": false,
+    "loads": 98,
+    "max_reach_um": 38.20499999999999,
+    "sink_roles": {
+      "AND2x2_ASAP7_75t_R/A": 31,
+      "OAI21x1_ASAP7_75t_R/A1": 2,
+      "OA211x2_ASAP7_75t_R/A1": 1,
+      "NAND2x1_ASAP7_75t_R/A": 1,
+      "AND3x1_ASAP7_75t_R/A": 3,
+      "AND4x1_ASAP7_75t_R/A": 1,
+      "OR3x1_ASAP7_75t_R/A": 1,
+      "OR2x2_ASAP7_75t_R/A": 1,
+      "AO21x1_ASAP7_75t_R/A1": 32,
+      "AOI21x1_ASAP7_75t_R/A1": 17,
+      "AO32x1_ASAP7_75t_R/A1": 4,
+      "OA21x2_ASAP7_75t_R/A1": 1,
+      "OAI22x1_ASAP7_75t_R/A1": 1,
+      "AO33x2_ASAP7_75t_R/B3": 1,
+      "AOI22x1_ASAP7_75t_R/B2": 1
+    }
+  },
+  {
+    "name": "u_ot_pr_core.pend\\[3\\]$_DFF_PN0_/QN",
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "pin": "QN",
+    "xy": [
+      56.268,
+      103.005
+    ],
+    "kind": "ff",
+    "net": "_02490_",
+    "clock": false,
+    "loads": 94,
+    "max_reach_um": 34.668,
+    "sink_roles": {
+      "AND2x2_ASAP7_75t_R/A": 32,
+      "AO21x1_ASAP7_75t_R/A1": 30,
+      "AND3x1_ASAP7_75t_R/A": 5,
+      "AND4x1_ASAP7_75t_R/A": 2,
+      "OR3x1_ASAP7_75t_R/A": 3,
+      "AO32x1_ASAP7_75t_R/A1": 5,
+      "AOI21x1_ASAP7_75t_R/A1": 15,
+      "OA21x2_ASAP7_75t_R/A1": 1,
+      "AOI211x1_ASAP7_75t_R/A1": 1
+    }
+  },
+  {
+    "name": "u_ot_pr_core.pend\\[4\\]$_DFF_PN0_/QN",
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "pin": "QN",
+    "xy": [
+      67.23,
+      96.525
+    ],
+    "kind": "ff",
+    "net": "_02491_",
+    "clock": false,
+    "loads": 96,
+    "max_reach_um": 88.614,
+    "sink_roles": {
+      "AND2x2_ASAP7_75t_R/A": 31,
+      "AO32x1_ASAP7_75t_R/A1": 6,
+      "NOR2x1_ASAP7_75t_R/A": 1,
+      "OR3x1_ASAP7_75t_R/A": 4,
+      "AND3x1_ASAP7_75t_R/A": 1,
+      "OAI21x1_ASAP7_75t_R/A1": 2,
+      "OA33x2_ASAP7_75t_R/B3": 1,
+      "NAND2x1_ASAP7_75t_R/A": 1,
+      "AOI21x1_ASAP7_75t_R/A1": 20,
+      "AO21x1_ASAP7_75t_R/A1": 27,
+      "OA21x2_ASAP7_75t_R/A1": 1,
+      "AOI22x1_ASAP7_75t_R/B2": 1
+    }
+  },
+  {
+    "name": "u_ot_pr_core.pend\\[5\\]$_DFF_PN0_/QN",
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "pin": "QN",
+    "xy": [
+      75.87,
+      103.005
+    ],
+    "kind": "ff",
+    "net": "_02492_",
+    "clock": false,
+    "loads": 92,
+    "max_reach_um": 21.761999999999986,
+    "sink_roles": {
+      "AND2x2_ASAP7_75t_R/A": 31,
+      "AO32x1_ASAP7_75t_R/A1": 4,
+      "NOR2x1_ASAP7_75t_R/A": 1,
+      "OR3x1_ASAP7_75t_R/A": 1,
+      "AND3x1_ASAP7_75t_R/A": 1,
+      "OAI21x1_ASAP7_75t_R/A1": 2,
+      "OA33x2_ASAP7_75t_R/B3": 1,
+      "NAND2x1_ASAP7_75t_R/A": 1,
+      "AO21x1_ASAP7_75t_R/A1": 29,
+      "AOI21x1_ASAP7_75t_R/A1": 19,
+      "AOI22x1_ASAP7_75t_R/B2": 2
+    }
+  },
+  {
+    "name": "u_ot_pr_core.pend\\[6\\]$_DFF_PN0_/QN",
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "pin": "QN",
+    "xy": [
+      91.584,
+      98.415
+    ],
+    "kind": "ff",
+    "net": "_02493_",
+    "clock": false,
+    "loads": 95,
+    "max_reach_um": 76.302,
+    "sink_roles": {
+      "AND2x2_ASAP7_75t_R/A": 30,
+      "AND3x1_ASAP7_75t_R/A": 3,
+      "OA211x2_ASAP7_75t_R/C": 2,
+      "OAI21x1_ASAP7_75t_R/A1": 2,
+      "OA33x2_ASAP7_75t_R/B3": 1,
+      "NAND2x1_ASAP7_75t_R/A": 3,
+      "OR3x1_ASAP7_75t_R/A": 2,
+      "AO21x1_ASAP7_75t_R/A1": 29,
+      "AOI21x1_ASAP7_75t_R/A1": 17,
+      "AOI22x1_ASAP7_75t_R/B2": 1,
+      "AO32x1_ASAP7_75t_R/A1": 4,
+      "AO21x2_ASAP7_75t_R/A1": 1
+    }
+  },
+  {
+    "name": "u_ot_pr_core.pend\\[7\\]$_DFF_PN0_/QN",
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "pin": "QN",
+    "xy": [
+      102.384,
+      103.275
+    ],
+    "kind": "ff",
+    "net": "_02494_",
+    "clock": false,
+    "loads": 110,
+    "max_reach_um": 35.04600000000001,
+    "sink_roles": {
+      "AND2x2_ASAP7_75t_R/A": 32,
+      "OR3x1_ASAP7_75t_R/A": 13,
+      "AND3x1_ASAP7_75t_R/A": 4,
+      "OR2x2_ASAP7_75t_R/A": 1,
+      "AOI21x1_ASAP7_75t_R/A1": 13,
+      "AO21x1_ASAP7_75t_R/A1": 29,
+      "OA21x2_ASAP7_75t_R/A1": 3,
+      "AO32x1_ASAP7_75t_R/A1": 12,
+      "OA211x2_ASAP7_75t_R/B": 1,
+      "OAI22x1_ASAP7_75t_R/A1": 1,
+      "AO33x2_ASAP7_75t_R/B3": 1
+    }
+  },
+  {
+    "name": "u_ot_pr_core.pend\\[8\\]$_DFF_PN0_/QN",
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "pin": "QN",
+    "xy": [
+      116.1,
+      97.605
+    ],
+    "kind": "ff",
+    "net": "_02495_",
+    "clock": false,
+    "loads": 93,
+    "max_reach_um": 55.242000000000004,
+    "sink_roles": {
+      "AND2x2_ASAP7_75t_R/A": 31,
+      "OR3x1_ASAP7_75t_R/A": 3,
+      "NAND2x1_ASAP7_75t_R/A": 2,
+      "AND3x1_ASAP7_75t_R/A": 1,
+      "AO21x1_ASAP7_75t_R/A1": 28,
+      "AO32x1_ASAP7_75t_R/A1": 5,
+      "AOI21x1_ASAP7_75t_R/A1": 21,
+      "OA21x2_ASAP7_75t_R/A1": 1,
+      "AOI22x1_ASAP7_75t_R/B2": 1
+    }
+  },
+  {
+    "name": "u_ot_pr_core.pend\\[9\\]$_DFF_PN0_/QN",
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "pin": "QN",
+    "xy": [
+      130.248,
+      101.655
+    ],
+    "kind": "ff",
+    "net": "_02496_",
+    "clock": false,
+    "loads": 95,
+    "max_reach_um": 72.09,
+    "sink_roles": {
+      "AND2x2_ASAP7_75t_R/A": 28,
+      "OA21x2_ASAP7_75t_R/A1": 4,
+      "OAI22x1_ASAP7_75t_R/A1": 1,
+      "OAI21x1_ASAP7_75t_R/A1": 1,
+      "NAND2x1_ASAP7_75t_R/A": 5,
+      "OA33x2_ASAP7_75t_R/B3": 2,
+      "OR3x1_ASAP7_75t_R/A": 2,
+      "OA211x2_ASAP7_75t_R/A1": 1,
+      "AND3x1_ASAP7_75t_R/A": 1,
+      "AO32x1_ASAP7_75t_R/A1": 6,
+      "NOR2x1_ASAP7_75t_R/A": 1,
+      "AO21x1_ASAP7_75t_R/A1": 22,
+      "AOI21x1_ASAP7_75t_R/A1": 18,
+      "AO21x2_ASAP7_75t_R/A1": 1,
+      "AO22x1_ASAP7_75t_R/B2": 1,
+      "AO33x2_ASAP7_75t_R/B3": 1
+    }
+  },
+  {
+    "name": "u_ot_pr_core.pend\\[10\\]$_DFF_PN0_/QN",
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "pin": "QN",
+    "xy": [
+      138.942,
+      100.305
+    ],
+    "kind": "ff",
+    "net": "_02497_",
+    "clock": false,
+    "loads": 90,
+    "max_reach_um": 12.311999999999998,
+    "sink_roles": {
+      "AND2x2_ASAP7_75t_R/A": 31,
+      "OR3x1_ASAP7_75t_R/A": 3,
+      "AO32x1_ASAP7_75t_R/A1": 8,
+      "AO21x1_ASAP7_75t_R/A1": 28,
+      "NAND2x1_ASAP7_75t_R/A": 2,
+      "OA21x2_ASAP7_75t_R/A1": 1,
+      "AOI21x1_ASAP7_75t_R/A1": 14,
+      "AOI22x1_ASAP7_75t_R/B2": 3
+    }
+  },
+  {
+    "name": "u_ot_pr_core.pend\\[11\\]$_DFF_PN0_/QN",
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "pin": "QN",
+    "xy": [
+      150.066,
+      99.495
+    ],
+    "kind": "ff",
+    "net": "_02498_",
+    "clock": false,
+    "loads": 105,
+    "max_reach_um": 99.41400000000002,
+    "sink_roles": {
+      "AND2x2_ASAP7_75t_R/A": 28,
+      "OR3x1_ASAP7_75t_R/A": 1,
+      "OR2x2_ASAP7_75t_R/A": 1,
+      "AND2x4_ASAP7_75t_R/A": 1,
+      "AND3x1_ASAP7_75t_R/A": 6,
+      "OAI21x1_ASAP7_75t_R/A1": 3,
+      "OA211x2_ASAP7_75t_R/A1": 1,
+      "NAND2x1_ASAP7_75t_R/A": 5,
+      "AND4x1_ASAP7_75t_R/A": 1,
+      "AOI21x1_ASAP7_75t_R/A1": 17,
+      "OA21x2_ASAP7_75t_R/A1": 3,
+      "OA33x2_ASAP7_75t_R/B3": 1,
+      "AO21x1_ASAP7_75t_R/A1": 31,
+      "OA33x2_ASAP7_75t_R/A1": 1,
+      "AO32x1_ASAP7_75t_R/A1": 2,
+      "AO33x2_ASAP7_75t_R/A1": 1,
+      "OAI22x1_ASAP7_75t_R/A1": 1,
+      "AO21x2_ASAP7_75t_R/A1": 1
+    }
+  },
+  {
+    "name": "u_ot_pr_core.pend\\[12\\]$_DFF_PN0_/QN",
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "pin": "QN",
+    "xy": [
+      164.43,
+      96.525
+    ],
+    "kind": "ff",
+    "net": "_02499_",
+    "clock": false,
+    "loads": 109,
+    "max_reach_um": 58.69800000000001,
+    "sink_roles": {
+      "AO32x1_ASAP7_75t_R/A1": 7,
+      "AND3x1_ASAP7_75t_R/A": 5,
+      "AOI21x1_ASAP7_75t_R/A1": 18,
+      "AO21x1_ASAP7_75t_R/A1": 28,
+      "OA21x2_ASAP7_75t_R/A1": 5,
+      "OR3x1_ASAP7_75t_R/A": 6,
+      "AOI22x1_ASAP7_75t_R/B2": 1,
+      "AO33x2_ASAP7_75t_R/A1": 1,
+      "AND2x2_ASAP7_75t_R/A": 28,
+      "OA33x2_ASAP7_75t_R/B3": 1,
+      "OAI21x1_ASAP7_75t_R/A1": 2,
+      "NAND2x1_ASAP7_75t_R/A": 4,
+      "NOR2x1_ASAP7_75t_R/A": 1,
+      "OA33x2_ASAP7_75t_R/A1": 1,
+      "AND2x4_ASAP7_75t_R/A": 1
+    }
+  },
+  {
+    "name": "u_ot_pr_core.pend\\[13\\]$_DFF_PN0_/QN",
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "pin": "QN",
+    "xy": [
+      177.444,
+      101.385
+    ],
+    "kind": "ff",
+    "net": "_02500_",
+    "clock": false,
+    "loads": 85,
+    "max_reach_um": 58.86000000000002,
+    "sink_roles": {
+      "AO21x1_ASAP7_75t_R/A1": 30,
+      "AO32x1_ASAP7_75t_R/A1": 5,
+      "AO22x1_ASAP7_75t_R/B2": 1,
+      "AOI21x1_ASAP7_75t_R/A1": 13,
+      "OA21x2_ASAP7_75t_R/A1": 1,
+      "OR3x1_ASAP7_75t_R/A": 3,
+      "AND2x2_ASAP7_75t_R/A": 32
+    }
+  },
+  {
+    "name": "u_ot_pr_core.pend\\[14\\]$_DFF_PN0_/QN",
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "pin": "QN",
+    "xy": [
+      186.894,
+      101.925
+    ],
+    "kind": "ff",
+    "net": "_02501_",
+    "clock": false,
+    "loads": 101,
+    "max_reach_um": 12.149999999999977,
+    "sink_roles": {
+      "AO32x1_ASAP7_75t_R/A1": 10,
+      "AO22x1_ASAP7_75t_R/B2": 1,
+      "AOI21x1_ASAP7_75t_R/A1": 16,
+      "AO21x1_ASAP7_75t_R/A1": 30,
+      "OA21x2_ASAP7_75t_R/A1": 3,
+      "AND3x1_ASAP7_75t_R/A": 1,
+      "AOI22x1_ASAP7_75t_R/B2": 1,
+      "AND2x2_ASAP7_75t_R/A": 32,
+      "OR3x1_ASAP7_75t_R/A": 5,
+      "NOR2x1_ASAP7_75t_R/A": 1,
+      "OA211x2_ASAP7_75t_R/C": 1
+    }
+  },
+  {
+    "name": "u_ot_pr_core.pend\\[15\\]$_DFF_PN0_/QN",
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "pin": "QN",
+    "xy": [
+      199.368,
+      101.385
+    ],
+    "kind": "ff",
+    "net": "_02502_",
+    "clock": false,
+    "loads": 96,
+    "max_reach_um": 24.13800000000002,
+    "sink_roles": {
+      "OA21x2_ASAP7_75t_R/A1": 3,
+      "OAI21x1_ASAP7_75t_R/A1": 3,
+      "AND2x2_ASAP7_75t_R/A": 28,
+      "OR3x1_ASAP7_75t_R/A": 4,
+      "AND3x1_ASAP7_75t_R/A": 1,
+      "OA33x2_ASAP7_75t_R/B3": 1,
+      "NAND2x1_ASAP7_75t_R/A": 5,
+      "AO21x1_ASAP7_75t_R/A1": 28,
+      "AOI21x1_ASAP7_75t_R/A1": 18,
+      "AO32x1_ASAP7_75t_R/A1": 4,
+      "AOI22x1_ASAP7_75t_R/B2": 1
+    }
+  }
+]
