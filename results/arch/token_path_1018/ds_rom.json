@@ -8,35 +8,35 @@
    "available": true,
    "title": "DeepSeek-V4.1 ROM, S81 array (p4l DV die), 1M context, AR",
    "clock_hz": 1200000000.0,
-   "T_token_cycles": 1011488.6,
+   "T_token_cycles": 980312.6,
    "tau": null,
-   "per_accepted_cycles": 1011488.6,
-   "tok_s": 1186.4,
+   "per_accepted_cycles": 980312.6,
+   "tok_s": 1224.1,
    "price_of_record": {
-    "tok_s": 1297.6,
-    "cycles": 924780.3,
-    "source": "results/arch/s81_dv_1016/p4l/price_land.json dv_base.ar + MU.S81.SCANCHK 1-stack scan (ledger S81.SCAN_STACKS_P4L, not yet in dv_price)",
+    "tok_s": 1342.9,
+    "cycles": 893604.3,
+    "source": "results/arch/s81_dv_1016/p4l/price_land.json dv_base.ar + S81-SCAND option D 1-stack scan (ledger S81.SCAN_STACKS_P4L, not yet in dv_price)",
     "uncorrected_tok_s": 1365.7,
-    "scan_stacks_correction_cycles": 46110.0
+    "scan_stacks_correction_cycles": 14934.0
    },
-   "vs_price_pct": -8.57,
-   "T_at_price_cycles": 1011488.6,
-   "pct_measured_current_rtl": 9.87,
-   "banner": "9.9% of token cycles measured on current RTL (58.6% on older RTL, 17.1% modelled PHY, 14.5% priced)",
+   "vs_price_pct": -8.85,
+   "T_at_price_cycles": 980312.6,
+   "pct_measured_current_rtl": 10.18,
+   "banner": "10.2% of token cycles measured on current RTL (60.9% on older RTL, 17.6% modelled PHY, 11.3% priced)",
    "by_grade": {
     "measured-current-RTL": 99813.0,
-    "measured-old-RTL": 592268.7,
+    "measured-old-RTL": 596814.7,
     "modelled-PHY": 172975.0,
-    "priced": 146431.9
+    "priced": 110709.9
    },
    "by_grade_share": {
-    "measured-current-RTL": 0.0987,
-    "measured-old-RTL": 0.5855,
-    "modelled-PHY": 0.171,
-    "priced": 0.1448
+    "measured-current-RTL": 0.1018,
+    "measured-old-RTL": 0.6088,
+    "modelled-PHY": 0.1764,
+    "priced": 0.1129
    },
    "by_kind": {
-    "layer": 661635.0,
+    "layer": 630459.0,
     "xdie": 323306.0,
     "adjust": 26547.6
    },
@@ -198,11 +198,11 @@
     },
     "L14": {
      "n": 1,
-     "die": 31433.2,
+     "die": 25631.2,
      "xdie": 7054.0,
      "by_grade": {
-      "priced": 10391.2,
-      "measured-old-RTL": 22248.0,
+      "priced": 3700.2,
+      "measured-old-RTL": 23137.0,
       "measured-current-RTL": 1771.0,
       "modelled-PHY": 4077.0
      }
@@ -231,11 +231,11 @@
     },
     "L2": {
      "n": 1,
-     "die": 30502.0,
+     "die": 24700.0,
      "xdie": 8169.0,
      "by_grade": {
-      "measured-old-RTL": 21377.8,
-      "priced": 10464.2,
+      "measured-old-RTL": 22266.8,
+      "priced": 3773.2,
       "measured-current-RTL": 2299.0,
       "modelled-PHY": 4530.0
      }
@@ -297,11 +297,11 @@
     },
     "L8": {
      "n": 1,
-     "die": 30515.0,
+     "die": 24713.0,
      "xdie": 8169.0,
      "by_grade": {
-      "measured-old-RTL": 21390.8,
-      "priced": 10464.2,
+      "measured-old-RTL": 22279.8,
+      "priced": 3773.2,
       "measured-current-RTL": 2299.0,
       "modelled-PHY": 4530.0
      }
@@ -418,11 +418,11 @@
     },
     "L20": {
      "n": 1,
-     "die": 42791.7,
+     "die": 29021.7,
      "xdie": 7054.0,
      "by_grade": {
-      "measured-old-RTL": 24700.1,
-      "priced": 19297.6,
+      "measured-old-RTL": 26579.1,
+      "priced": 3648.6,
       "measured-current-RTL": 1771.0,
       "modelled-PHY": 4077.0
      }
@@ -3717,132 +3717,196 @@
      "note": "hop-only basis + accepted-cost ledger rows + DAG re-solve: the part of the S81 price of record that is not a per-node term"
     },
     {
-     "slot": "L2.scan_stacks_p4l",
+     "slot": "L2.scan_d_reader",
      "kind": "layer",
      "n": 1,
-     "cycles": 8505.0,
-     "grade": "priced",
-     "total": 8505.0,
+     "cycles": 889,
+     "grade": "measured-old-RTL",
+     "total": 889,
      "source": {
-      "record": "results/arch/s81_scanchk_1018/scan_stacks.json",
-      "pointer": "per_stack_count.1.idx_score_delta_cycles.L2",
+      "record": "results/arch/s81_scand_1018/scand.json",
+      "pointer": "by_k.3.per_layer.L2",
       "commit": "uncommitted",
-      "origin": "claude/s81-scanchk-1018 (MU.S81.SCANCHK: index scan at p4l's real 1 HBM stack a die)"
+      "origin": "claude/s81-scand-1018 (S81-SCAND: option D, measured 1-stack reader, keys over k = 3 TP4 stages)"
      },
      "layer": "L2",
-     "note": "index scan at 1 HBM stack a p4l die (composition basis: 4 stacks a rank die)"
+     "note": "option D k=3: index scan at 1 HBM stack a p4l die, keys over 12 dies (reader)"
     },
     {
-     "slot": "L8.scan_stacks_p4l",
+     "slot": "L2.scan_d_legs_merge",
      "kind": "layer",
      "n": 1,
-     "cycles": 8505.0,
+     "cycles": 1814.0,
      "grade": "priced",
-     "total": 8505.0,
+     "total": 1814.0,
      "source": {
-      "record": "results/arch/s81_scanchk_1018/scan_stacks.json",
-      "pointer": "per_stack_count.1.idx_score_delta_cycles.L8",
+      "record": "results/arch/s81_scand_1018/scand.json",
+      "pointer": "by_k.3.per_layer.L2",
       "commit": "uncommitted",
-      "origin": "claude/s81-scanchk-1018 (MU.S81.SCANCHK: index scan at p4l's real 1 HBM stack a die)"
+      "origin": "claude/s81-scand-1018 (S81-SCAND: option D, measured 1-stack reader, keys over k = 3 TP4 stages)"
+     },
+     "layer": "L2",
+     "note": "option D k=3: index scan at 1 HBM stack a p4l die, keys over 12 dies (legs_merge)"
+    },
+    {
+     "slot": "L8.scan_d_reader",
+     "kind": "layer",
+     "n": 1,
+     "cycles": 889,
+     "grade": "measured-old-RTL",
+     "total": 889,
+     "source": {
+      "record": "results/arch/s81_scand_1018/scand.json",
+      "pointer": "by_k.3.per_layer.L8",
+      "commit": "uncommitted",
+      "origin": "claude/s81-scand-1018 (S81-SCAND: option D, measured 1-stack reader, keys over k = 3 TP4 stages)"
      },
      "layer": "L8",
-     "note": "index scan at 1 HBM stack a p4l die (composition basis: 4 stacks a rank die)"
+     "note": "option D k=3: index scan at 1 HBM stack a p4l die, keys over 12 dies (reader)"
     },
     {
-     "slot": "L14.scan_stacks_p4l",
+     "slot": "L8.scan_d_legs_merge",
      "kind": "layer",
      "n": 1,
-     "cycles": 8505.0,
+     "cycles": 1814.0,
      "grade": "priced",
-     "total": 8505.0,
+     "total": 1814.0,
      "source": {
-      "record": "results/arch/s81_scanchk_1018/scan_stacks.json",
-      "pointer": "per_stack_count.1.idx_score_delta_cycles.L14",
+      "record": "results/arch/s81_scand_1018/scand.json",
+      "pointer": "by_k.3.per_layer.L8",
       "commit": "uncommitted",
-      "origin": "claude/s81-scanchk-1018 (MU.S81.SCANCHK: index scan at p4l's real 1 HBM stack a die)"
+      "origin": "claude/s81-scand-1018 (S81-SCAND: option D, measured 1-stack reader, keys over k = 3 TP4 stages)"
+     },
+     "layer": "L8",
+     "note": "option D k=3: index scan at 1 HBM stack a p4l die, keys over 12 dies (legs_merge)"
+    },
+    {
+     "slot": "L14.scan_d_reader",
+     "kind": "layer",
+     "n": 1,
+     "cycles": 889,
+     "grade": "measured-old-RTL",
+     "total": 889,
+     "source": {
+      "record": "results/arch/s81_scand_1018/scand.json",
+      "pointer": "by_k.3.per_layer.L14",
+      "commit": "uncommitted",
+      "origin": "claude/s81-scand-1018 (S81-SCAND: option D, measured 1-stack reader, keys over k = 3 TP4 stages)"
      },
      "layer": "L14",
-     "note": "index scan at 1 HBM stack a p4l die (composition basis: 4 stacks a rank die)"
+     "note": "option D k=3: index scan at 1 HBM stack a p4l die, keys over 12 dies (reader)"
     },
     {
-     "slot": "L20.scan_stacks_p4l",
+     "slot": "L14.scan_d_legs_merge",
      "kind": "layer",
      "n": 1,
-     "cycles": 17463.0,
+     "cycles": 1814.0,
      "grade": "priced",
-     "total": 17463.0,
+     "total": 1814.0,
      "source": {
-      "record": "results/arch/s81_scanchk_1018/scan_stacks.json",
-      "pointer": "per_stack_count.1.idx_score_delta_cycles.L20",
+      "record": "results/arch/s81_scand_1018/scand.json",
+      "pointer": "by_k.3.per_layer.L14",
       "commit": "uncommitted",
-      "origin": "claude/s81-scanchk-1018 (MU.S81.SCANCHK: index scan at p4l's real 1 HBM stack a die)"
+      "origin": "claude/s81-scand-1018 (S81-SCAND: option D, measured 1-stack reader, keys over k = 3 TP4 stages)"
+     },
+     "layer": "L14",
+     "note": "option D k=3: index scan at 1 HBM stack a p4l die, keys over 12 dies (legs_merge)"
+    },
+    {
+     "slot": "L20.scan_d_reader",
+     "kind": "layer",
+     "n": 1,
+     "cycles": 1879,
+     "grade": "measured-old-RTL",
+     "total": 1879,
+     "source": {
+      "record": "results/arch/s81_scand_1018/scand.json",
+      "pointer": "by_k.3.per_layer.L20",
+      "commit": "uncommitted",
+      "origin": "claude/s81-scand-1018 (S81-SCAND: option D, measured 1-stack reader, keys over k = 3 TP4 stages)"
      },
      "layer": "L20",
-     "note": "index scan at 1 HBM stack a p4l die (composition basis: 4 stacks a rank die)"
+     "note": "option D k=3: index scan at 1 HBM stack a p4l die, keys over 12 dies (reader)"
     },
     {
-     "slot": "L24.scan_stacks_p4l",
+     "slot": "L20.scan_d_legs_merge",
+     "kind": "layer",
+     "n": 1,
+     "cycles": 1814.0,
+     "grade": "priced",
+     "total": 1814.0,
+     "source": {
+      "record": "results/arch/s81_scand_1018/scand.json",
+      "pointer": "by_k.3.per_layer.L20",
+      "commit": "uncommitted",
+      "origin": "claude/s81-scand-1018 (S81-SCAND: option D, measured 1-stack reader, keys over k = 3 TP4 stages)"
+     },
+     "layer": "L20",
+     "note": "option D k=3: index scan at 1 HBM stack a p4l die, keys over 12 dies (legs_merge)"
+    },
+    {
+     "slot": "L24.scan_d_reindex",
      "kind": "layer",
      "n": 1,
      "cycles": 783.0,
      "grade": "priced",
      "total": 783.0,
      "source": {
-      "record": "results/arch/s81_scanchk_1018/scan_stacks.json",
-      "pointer": "per_stack_count.1.idx_score_delta_cycles.L24",
+      "record": "results/arch/s81_scand_1018/scand.json",
+      "pointer": "by_k.3.idx_score_delta_cycles.L24",
       "commit": "uncommitted",
-      "origin": "claude/s81-scanchk-1018 (MU.S81.SCANCHK: index scan at p4l's real 1 HBM stack a die)"
+      "origin": "claude/s81-scand-1018 (S81-SCAND: option D, measured 1-stack reader, keys over k = 3 TP4 stages)"
      },
      "layer": "L24",
-     "note": "index scan at 1 HBM stack a p4l die (composition basis: 4 stacks a rank die)"
+     "note": "option D k=3: index scan at 1 HBM stack a p4l die, keys over 12 dies (reindex)"
     },
     {
-     "slot": "L28.scan_stacks_p4l",
+     "slot": "L28.scan_d_reindex",
      "kind": "layer",
      "n": 1,
      "cycles": 783.0,
      "grade": "priced",
      "total": 783.0,
      "source": {
-      "record": "results/arch/s81_scanchk_1018/scan_stacks.json",
-      "pointer": "per_stack_count.1.idx_score_delta_cycles.L28",
+      "record": "results/arch/s81_scand_1018/scand.json",
+      "pointer": "by_k.3.idx_score_delta_cycles.L28",
       "commit": "uncommitted",
-      "origin": "claude/s81-scanchk-1018 (MU.S81.SCANCHK: index scan at p4l's real 1 HBM stack a die)"
+      "origin": "claude/s81-scand-1018 (S81-SCAND: option D, measured 1-stack reader, keys over k = 3 TP4 stages)"
      },
      "layer": "L28",
-     "note": "index scan at 1 HBM stack a p4l die (composition basis: 4 stacks a rank die)"
+     "note": "option D k=3: index scan at 1 HBM stack a p4l die, keys over 12 dies (reindex)"
     },
     {
-     "slot": "L32.scan_stacks_p4l",
+     "slot": "L32.scan_d_reindex",
      "kind": "layer",
      "n": 1,
      "cycles": 783.0,
      "grade": "priced",
      "total": 783.0,
      "source": {
-      "record": "results/arch/s81_scanchk_1018/scan_stacks.json",
-      "pointer": "per_stack_count.1.idx_score_delta_cycles.L32",
+      "record": "results/arch/s81_scand_1018/scand.json",
+      "pointer": "by_k.3.idx_score_delta_cycles.L32",
       "commit": "uncommitted",
-      "origin": "claude/s81-scanchk-1018 (MU.S81.SCANCHK: index scan at p4l's real 1 HBM stack a die)"
+      "origin": "claude/s81-scand-1018 (S81-SCAND: option D, measured 1-stack reader, keys over k = 3 TP4 stages)"
      },
      "layer": "L32",
-     "note": "index scan at 1 HBM stack a p4l die (composition basis: 4 stacks a rank die)"
+     "note": "option D k=3: index scan at 1 HBM stack a p4l die, keys over 12 dies (reindex)"
     },
     {
-     "slot": "L36.scan_stacks_p4l",
+     "slot": "L36.scan_d_reindex",
      "kind": "layer",
      "n": 1,
      "cycles": 783.0,
      "grade": "priced",
      "total": 783.0,
      "source": {
-      "record": "results/arch/s81_scanchk_1018/scan_stacks.json",
-      "pointer": "per_stack_count.1.idx_score_delta_cycles.L36",
+      "record": "results/arch/s81_scand_1018/scand.json",
+      "pointer": "by_k.3.idx_score_delta_cycles.L36",
       "commit": "uncommitted",
-      "origin": "claude/s81-scanchk-1018 (MU.S81.SCANCHK: index scan at p4l's real 1 HBM stack a die)"
+      "origin": "claude/s81-scand-1018 (S81-SCAND: option D, measured 1-stack reader, keys over k = 3 TP4 stages)"
      },
      "layer": "L36",
-     "note": "index scan at 1 HBM stack a p4l die (composition basis: 4 stacks a rank die)"
+     "note": "option D k=3: index scan at 1 HBM stack a p4l die, keys over 12 dies (reindex)"
     },
     {
      "slot": "embed.xdie.L0.attn.a_allgather",
@@ -19299,35 +19363,35 @@
    "available": true,
    "title": "DeepSeek-V4.1 ROM, S81 array (p4l DV die), 1M context, MTP (DSpark, tau 4.159)",
    "clock_hz": 1200000000.0,
-   "T_token_cycles": 1444640.8,
+   "T_token_cycles": 1344614.8,
    "tau": 4.159,
-   "per_accepted_cycles": 347352.9,
-   "tok_s": 3454.7,
+   "per_accepted_cycles": 323302.4,
+   "tok_s": 3711.7,
    "price_of_record": {
-    "tok_s": 3650.6,
-    "cycles": 1367122.5,
-    "source": "results/arch/s81_dv_1016/p4l/price_land.json dv_base.mtp + MU.S81.SCANCHK 1-stack scan (ledger S81.SCAN_STACKS_P4L, not yet in dv_price)",
+    "tok_s": 3938.8,
+    "cycles": 1267096.5,
+    "source": "results/arch/s81_dv_1016/p4l/price_land.json dv_base.mtp + S81-SCAND option D 1-stack scan (ledger S81.SCAN_STACKS_P4L, not yet in dv_price)",
     "uncorrected_tok_s": 4045.4,
-    "scan_stacks_correction_cycles": 133425.0
+    "scan_stacks_correction_cycles": 33399.0
    },
-   "vs_price_pct": -5.37,
-   "T_at_price_cycles": 1444640.8,
-   "pct_measured_current_rtl": 7.37,
-   "banner": "7.4% of token cycles measured on current RTL (62.5% on older RTL, 13.0% modelled PHY, 17.2% priced)",
+   "vs_price_pct": -5.77,
+   "T_at_price_cycles": 1344614.8,
+   "pct_measured_current_rtl": 7.92,
+   "banner": "7.9% of token cycles measured on current RTL (67.4% on older RTL, 14.0% modelled PHY, 10.7% priced)",
    "by_grade": {
     "measured-current-RTL": 106512.0,
-    "measured-old-RTL": 902298.8,
+    "measured-old-RTL": 906844.8,
     "modelled-PHY": 187823.6,
-    "priced": 248006.4
+    "priced": 143434.4
    },
    "by_grade_share": {
-    "measured-current-RTL": 0.0737,
-    "measured-old-RTL": 0.6246,
-    "modelled-PHY": 0.13,
-    "priced": 0.1717
+    "measured-current-RTL": 0.0792,
+    "measured-old-RTL": 0.6744,
+    "modelled-PHY": 0.1397,
+    "priced": 0.1067
    },
    "by_kind": {
-    "layer": 1063378.1,
+    "layer": 963352.1,
     "xdie": 348337.6,
     "adjust": 32925.1
    },
@@ -21482,11 +21546,11 @@
     },
     "L2": {
      "n": 1,
-     "die": 30502.0,
+     "die": 24700.0,
      "xdie": 8169.0,
      "by_grade": {
-      "measured-old-RTL": 21377.8,
-      "priced": 10464.2,
+      "measured-old-RTL": 22266.8,
+      "priced": 3773.2,
       "measured-current-RTL": 2299.0,
       "modelled-PHY": 4530.0
      }
@@ -21548,11 +21612,11 @@
     },
     "L8": {
      "n": 1,
-     "die": 30515.0,
+     "die": 24713.0,
      "xdie": 8169.0,
      "by_grade": {
-      "measured-old-RTL": 21390.8,
-      "priced": 10464.2,
+      "measured-old-RTL": 22279.8,
+      "priced": 3773.2,
       "measured-current-RTL": 2299.0,
       "modelled-PHY": 4530.0
      }
@@ -21614,11 +21678,11 @@
     },
     "L14": {
      "n": 1,
-     "die": 31433.2,
+     "die": 25631.2,
      "xdie": 7054.0,
      "by_grade": {
-      "measured-old-RTL": 22248.0,
-      "priced": 10391.2,
+      "measured-old-RTL": 23137.0,
+      "priced": 3700.2,
       "measured-current-RTL": 1771.0,
       "modelled-PHY": 4077.0
      }
@@ -21680,11 +21744,11 @@
     },
     "L20": {
      "n": 1,
-     "die": 42791.7,
+     "die": 29021.7,
      "xdie": 7054.0,
      "by_grade": {
-      "measured-old-RTL": 24700.1,
-      "priced": 19297.6,
+      "measured-old-RTL": 26579.1,
+      "priced": 3648.6,
       "measured-current-RTL": 1771.0,
       "modelled-PHY": 4077.0
      }
@@ -21900,11 +21964,11 @@
     },
     "wave": {
      "n": 1,
-     "die": 263498.8,
+     "die": 194648.8,
      "xdie": 5575.0,
      "by_grade": {
       "measured-old-RTL": 176183.8,
-      "priced": 87985.0,
+      "priced": 19135.0,
       "measured-current-RTL": 2640.0,
       "modelled-PHY": 2265.0
      }
@@ -25076,148 +25140,212 @@
      "note": "hop-only basis + accepted-cost ledger rows + DAG re-solve: the part of the S81 price of record that is not a per-node term"
     },
     {
-     "slot": "L2.scan_stacks_p4l",
+     "slot": "L2.scan_d_reader",
      "kind": "layer",
      "n": 1,
-     "cycles": 8505.0,
-     "grade": "priced",
-     "total": 8505.0,
+     "cycles": 889,
+     "grade": "measured-old-RTL",
+     "total": 889,
      "source": {
-      "record": "results/arch/s81_scanchk_1018/scan_stacks.json",
-      "pointer": "per_stack_count.1.idx_score_delta_cycles.L2",
+      "record": "results/arch/s81_scand_1018/scand.json",
+      "pointer": "by_k.3.per_layer.L2",
       "commit": "uncommitted",
-      "origin": "claude/s81-scanchk-1018 (MU.S81.SCANCHK: index scan at p4l's real 1 HBM stack a die)"
+      "origin": "claude/s81-scand-1018 (S81-SCAND: option D, measured 1-stack reader, keys over k = 3 TP4 stages)"
      },
      "layer": "L2",
-     "note": "index scan at 1 HBM stack a p4l die (composition basis: 4 stacks a rank die)"
+     "note": "option D k=3: index scan at 1 HBM stack a p4l die, keys over 12 dies (reader)"
     },
     {
-     "slot": "L8.scan_stacks_p4l",
+     "slot": "L2.scan_d_legs_merge",
      "kind": "layer",
      "n": 1,
-     "cycles": 8505.0,
+     "cycles": 1814.0,
      "grade": "priced",
-     "total": 8505.0,
+     "total": 1814.0,
      "source": {
-      "record": "results/arch/s81_scanchk_1018/scan_stacks.json",
-      "pointer": "per_stack_count.1.idx_score_delta_cycles.L8",
+      "record": "results/arch/s81_scand_1018/scand.json",
+      "pointer": "by_k.3.per_layer.L2",
       "commit": "uncommitted",
-      "origin": "claude/s81-scanchk-1018 (MU.S81.SCANCHK: index scan at p4l's real 1 HBM stack a die)"
+      "origin": "claude/s81-scand-1018 (S81-SCAND: option D, measured 1-stack reader, keys over k = 3 TP4 stages)"
+     },
+     "layer": "L2",
+     "note": "option D k=3: index scan at 1 HBM stack a p4l die, keys over 12 dies (legs_merge)"
+    },
+    {
+     "slot": "L8.scan_d_reader",
+     "kind": "layer",
+     "n": 1,
+     "cycles": 889,
+     "grade": "measured-old-RTL",
+     "total": 889,
+     "source": {
+      "record": "results/arch/s81_scand_1018/scand.json",
+      "pointer": "by_k.3.per_layer.L8",
+      "commit": "uncommitted",
+      "origin": "claude/s81-scand-1018 (S81-SCAND: option D, measured 1-stack reader, keys over k = 3 TP4 stages)"
      },
      "layer": "L8",
-     "note": "index scan at 1 HBM stack a p4l die (composition basis: 4 stacks a rank die)"
+     "note": "option D k=3: index scan at 1 HBM stack a p4l die, keys over 12 dies (reader)"
     },
     {
-     "slot": "L14.scan_stacks_p4l",
+     "slot": "L8.scan_d_legs_merge",
      "kind": "layer",
      "n": 1,
-     "cycles": 8505.0,
+     "cycles": 1814.0,
      "grade": "priced",
-     "total": 8505.0,
+     "total": 1814.0,
      "source": {
-      "record": "results/arch/s81_scanchk_1018/scan_stacks.json",
-      "pointer": "per_stack_count.1.idx_score_delta_cycles.L14",
+      "record": "results/arch/s81_scand_1018/scand.json",
+      "pointer": "by_k.3.per_layer.L8",
       "commit": "uncommitted",
-      "origin": "claude/s81-scanchk-1018 (MU.S81.SCANCHK: index scan at p4l's real 1 HBM stack a die)"
+      "origin": "claude/s81-scand-1018 (S81-SCAND: option D, measured 1-stack reader, keys over k = 3 TP4 stages)"
+     },
+     "layer": "L8",
+     "note": "option D k=3: index scan at 1 HBM stack a p4l die, keys over 12 dies (legs_merge)"
+    },
+    {
+     "slot": "L14.scan_d_reader",
+     "kind": "layer",
+     "n": 1,
+     "cycles": 889,
+     "grade": "measured-old-RTL",
+     "total": 889,
+     "source": {
+      "record": "results/arch/s81_scand_1018/scand.json",
+      "pointer": "by_k.3.per_layer.L14",
+      "commit": "uncommitted",
+      "origin": "claude/s81-scand-1018 (S81-SCAND: option D, measured 1-stack reader, keys over k = 3 TP4 stages)"
      },
      "layer": "L14",
-     "note": "index scan at 1 HBM stack a p4l die (composition basis: 4 stacks a rank die)"
+     "note": "option D k=3: index scan at 1 HBM stack a p4l die, keys over 12 dies (reader)"
     },
     {
-     "slot": "L20.scan_stacks_p4l",
+     "slot": "L14.scan_d_legs_merge",
      "kind": "layer",
      "n": 1,
-     "cycles": 17463.0,
+     "cycles": 1814.0,
      "grade": "priced",
-     "total": 17463.0,
+     "total": 1814.0,
      "source": {
-      "record": "results/arch/s81_scanchk_1018/scan_stacks.json",
-      "pointer": "per_stack_count.1.idx_score_delta_cycles.L20",
+      "record": "results/arch/s81_scand_1018/scand.json",
+      "pointer": "by_k.3.per_layer.L14",
       "commit": "uncommitted",
-      "origin": "claude/s81-scanchk-1018 (MU.S81.SCANCHK: index scan at p4l's real 1 HBM stack a die)"
+      "origin": "claude/s81-scand-1018 (S81-SCAND: option D, measured 1-stack reader, keys over k = 3 TP4 stages)"
+     },
+     "layer": "L14",
+     "note": "option D k=3: index scan at 1 HBM stack a p4l die, keys over 12 dies (legs_merge)"
+    },
+    {
+     "slot": "L20.scan_d_reader",
+     "kind": "layer",
+     "n": 1,
+     "cycles": 1879,
+     "grade": "measured-old-RTL",
+     "total": 1879,
+     "source": {
+      "record": "results/arch/s81_scand_1018/scand.json",
+      "pointer": "by_k.3.per_layer.L20",
+      "commit": "uncommitted",
+      "origin": "claude/s81-scand-1018 (S81-SCAND: option D, measured 1-stack reader, keys over k = 3 TP4 stages)"
      },
      "layer": "L20",
-     "note": "index scan at 1 HBM stack a p4l die (composition basis: 4 stacks a rank die)"
+     "note": "option D k=3: index scan at 1 HBM stack a p4l die, keys over 12 dies (reader)"
     },
     {
-     "slot": "L24.scan_stacks_p4l",
+     "slot": "L20.scan_d_legs_merge",
+     "kind": "layer",
+     "n": 1,
+     "cycles": 1814.0,
+     "grade": "priced",
+     "total": 1814.0,
+     "source": {
+      "record": "results/arch/s81_scand_1018/scand.json",
+      "pointer": "by_k.3.per_layer.L20",
+      "commit": "uncommitted",
+      "origin": "claude/s81-scand-1018 (S81-SCAND: option D, measured 1-stack reader, keys over k = 3 TP4 stages)"
+     },
+     "layer": "L20",
+     "note": "option D k=3: index scan at 1 HBM stack a p4l die, keys over 12 dies (legs_merge)"
+    },
+    {
+     "slot": "L24.scan_d_reindex",
      "kind": "layer",
      "n": 1,
      "cycles": 783.0,
      "grade": "priced",
      "total": 783.0,
      "source": {
-      "record": "results/arch/s81_scanchk_1018/scan_stacks.json",
-      "pointer": "per_stack_count.1.idx_score_delta_cycles.L24",
+      "record": "results/arch/s81_scand_1018/scand.json",
+      "pointer": "by_k.3.idx_score_delta_cycles.L24",
       "commit": "uncommitted",
-      "origin": "claude/s81-scanchk-1018 (MU.S81.SCANCHK: index scan at p4l's real 1 HBM stack a die)"
+      "origin": "claude/s81-scand-1018 (S81-SCAND: option D, measured 1-stack reader, keys over k = 3 TP4 stages)"
      },
      "layer": "L24",
-     "note": "index scan at 1 HBM stack a p4l die (composition basis: 4 stacks a rank die)"
+     "note": "option D k=3: index scan at 1 HBM stack a p4l die, keys over 12 dies (reindex)"
     },
     {
-     "slot": "L28.scan_stacks_p4l",
+     "slot": "L28.scan_d_reindex",
      "kind": "layer",
      "n": 1,
      "cycles": 783.0,
      "grade": "priced",
      "total": 783.0,
      "source": {
-      "record": "results/arch/s81_scanchk_1018/scan_stacks.json",
-      "pointer": "per_stack_count.1.idx_score_delta_cycles.L28",
+      "record": "results/arch/s81_scand_1018/scand.json",
+      "pointer": "by_k.3.idx_score_delta_cycles.L28",
       "commit": "uncommitted",
-      "origin": "claude/s81-scanchk-1018 (MU.S81.SCANCHK: index scan at p4l's real 1 HBM stack a die)"
+      "origin": "claude/s81-scand-1018 (S81-SCAND: option D, measured 1-stack reader, keys over k = 3 TP4 stages)"
      },
      "layer": "L28",
-     "note": "index scan at 1 HBM stack a p4l die (composition basis: 4 stacks a rank die)"
+     "note": "option D k=3: index scan at 1 HBM stack a p4l die, keys over 12 dies (reindex)"
     },
     {
-     "slot": "L32.scan_stacks_p4l",
+     "slot": "L32.scan_d_reindex",
      "kind": "layer",
      "n": 1,
      "cycles": 783.0,
      "grade": "priced",
      "total": 783.0,
      "source": {
-      "record": "results/arch/s81_scanchk_1018/scan_stacks.json",
-      "pointer": "per_stack_count.1.idx_score_delta_cycles.L32",
+      "record": "results/arch/s81_scand_1018/scand.json",
+      "pointer": "by_k.3.idx_score_delta_cycles.L32",
       "commit": "uncommitted",
-      "origin": "claude/s81-scanchk-1018 (MU.S81.SCANCHK: index scan at p4l's real 1 HBM stack a die)"
+      "origin": "claude/s81-scand-1018 (S81-SCAND: option D, measured 1-stack reader, keys over k = 3 TP4 stages)"
      },
      "layer": "L32",
-     "note": "index scan at 1 HBM stack a p4l die (composition basis: 4 stacks a rank die)"
+     "note": "option D k=3: index scan at 1 HBM stack a p4l die, keys over 12 dies (reindex)"
     },
     {
-     "slot": "L36.scan_stacks_p4l",
+     "slot": "L36.scan_d_reindex",
      "kind": "layer",
      "n": 1,
      "cycles": 783.0,
      "grade": "priced",
      "total": 783.0,
      "source": {
-      "record": "results/arch/s81_scanchk_1018/scan_stacks.json",
-      "pointer": "per_stack_count.1.idx_score_delta_cycles.L36",
+      "record": "results/arch/s81_scand_1018/scand.json",
+      "pointer": "by_k.3.idx_score_delta_cycles.L36",
       "commit": "uncommitted",
-      "origin": "claude/s81-scanchk-1018 (MU.S81.SCANCHK: index scan at p4l's real 1 HBM stack a die)"
+      "origin": "claude/s81-scand-1018 (S81-SCAND: option D, measured 1-stack reader, keys over k = 3 TP4 stages)"
      },
      "layer": "L36",
-     "note": "index scan at 1 HBM stack a p4l die (composition basis: 4 stacks a rank die)"
+     "note": "option D k=3: index scan at 1 HBM stack a p4l die, keys over 12 dies (reindex)"
     },
     {
-     "slot": "wave.scan_stacks_p4l",
+     "slot": "wave.scan_d",
      "kind": "layer",
      "n": 1,
-     "cycles": 87315.0,
+     "cycles": 18465.0,
      "grade": "priced",
-     "total": 87315.0,
+     "total": 18465.0,
      "source": {
-      "record": "results/arch/s81_scanchk_1018/scan_stacks.json",
-      "pointer": "per_stack_count.1.dag_1009.mtp",
+      "record": "results/arch/s81_scand_1018/scand.json",
+      "pointer": "by_k.3.dag_1009.mtp",
       "commit": "uncommitted",
-      "origin": "claude/s81-scanchk-1018 (MU.S81.SCANCHK: index scan at p4l's real 1 HBM stack a die)"
+      "origin": "claude/s81-scand-1018 (S81-SCAND: option D, measured 1-stack reader, keys over k = 3 TP4 stages)"
      },
      "layer": "wave",
-     "note": "MTP wavefront: the L20 scan stage stays the slowest verify stage, +delta per position"
+     "note": "MTP wavefront: the slowest verify stage after option D, +delta per position"
     },
     {
      "slot": "draft.xdie.mtp.0.hop_in",

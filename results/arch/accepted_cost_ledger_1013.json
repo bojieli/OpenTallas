@@ -1264,56 +1264,54 @@
   },
   {
    "design": "s81",
-   "unit": "S81 index scan at p4l 1 HBM stack a die (L20 full scan 5,937 -> 23,400 cycles; L2/L8/L14 2,951 -> 11,456; re-index L24-36 873 -> 1,656): the composition charged the 10-04 4-stack reader",
+   "unit": "S81 index scan at p4l 1 HBM stack a die, option D (coordinator 0iq): full-scan keys over k=3 TP4 stages (L20 5,937 -> 9630 cycles = measured 1-stack reader 7700 at 87382 keys + 116 adders + legs/merge 1814; L2/L8/L14 2,951 -> 5654; re-index L24-36 873 -> 1,656 priced)",
    "group": "S81.SCAN_STACKS_P4L",
-   "measured": 23400.0,
+   "measured": 9630.0,
    "price": 5937.0,
    "unit_of_measure": "cycles",
-   "unit_ratio": 3.9414,
-   "e2e_loss_pct": 10.178,
+   "unit_ratio": 1.622,
+   "e2e_loss_pct": 2.758,
    "binding_workload": "mtp",
    "per_workload": {
     "ar": {
      "model": "token-path longest path",
      "base_cycles": 828866.4,
-     "cycles": 874976.4,
-     "added_cycles": 46110.0,
+     "cycles": 843800.4,
+     "added_cycles": 14934.0,
      "runs_per_token": 8,
      "critical_runs": 8,
      "overlapped_runs": 0,
      "wave_positions": 0,
      "wave_added_cycles_per_position": 0.0,
-     "e2e_loss_pct": 5.27,
+     "e2e_loss_pct": 1.77,
      "composition_1018": {
-      "T_cycles": 1011488.6,
-      "tok_s": 1186.4,
-      "vs_composed_pct": -4.56
+      "T_cycles": 980312.6,
+      "tok_s": 1224.1
      }
     },
     "mtp": {
      "model": "token-path longest path",
      "base_cycles": 1177516.1,
-     "cycles": 1310941.1,
-     "added_cycles": 133425.0,
+     "cycles": 1210915.1,
+     "added_cycles": 33399.0,
      "runs_per_token": 8,
      "critical_runs": 8,
      "overlapped_runs": 0,
      "wave_positions": 5,
-     "wave_added_cycles_per_position": 17463.0,
-     "e2e_loss_pct": 10.178,
+     "wave_added_cycles_per_position": 3693.0,
+     "e2e_loss_pct": 2.758,
      "composition_1018": {
-      "T_cycles": 1444640.8,
-      "tok_s": 3454.7,
-      "vs_composed_pct": -9.24
+      "T_cycles": 1344614.8,
+      "tok_s": 3711.7
      }
     }
    },
-   "within_unit_limit": false,
-   "evidence": "results/arch/s81_scanchk_1018/scan_stacks.json (+ results/rtl/dsrom_1m_measured_20261004/reader.json, results/arch/s81_dv_1016/p4l/plan.json)",
-   "evidence_grade": "interim_log",
+   "within_unit_limit": true,
+   "evidence": "results/arch/s81_scand_1018/scand.json + reader_1stack.json (W11 reader, 1 stack a die, Verilator 5.050, ot-epyc5); results/arch/s81_scanchk_1018/scan_stacks.json (1-stack fact, re-index price)",
+   "evidence_grade": "measured-old-RTL reader + priced legs/merge",
    "date": "2026-10-18",
    "status": "proposed",
-   "note": "MU.S81.SCANCHK: price basis correction, not a unit miss. Analysis (no new bench): priced = the committed 4-stack reader bench scaled x4 (per-stack reader, per-PC bound); a 1-stack reader run would make it measured. Over the 5 % unit limit on MTP (wavefront pays the L20 stage 5x more): needs an owner decision or option D (spread the full-scan keys over 3 adjacent stages, modelled AR -1.5 % / MTP -2.5 %). tools/token_compose_xdie.py applies this row to the S81 composition until dv_price is re-run with it."
+   "note": "S81-SCAND: option D measured. The reader term is the measured 1-stack W11 reader at the per-die key count (k=1 reproduces SCANCHK: AR 1,185.6 / MTP 3,455.7); D k=3 -> AR 1.77 % / MTP 2.76 % e2e loss (DAG basis), within the 5 % unit limit. Open: the index reader/scorer is NOT bound on p4l (bind9 has no dsfd_svc_idx successor) and has one query store (no B3 MTP read sharing); the merge legs and the 4k x 512 final select are compiler + priced. tools/token_compose_xdie.py applies this row until dv_price is re-run with it."
   },
   {
    "design": "s81",
@@ -2671,8 +2669,8 @@
   },
   "s81": {
    "accepted_pct": 2.063,
-   "proposed_pct": 11.049,
-   "accepted_plus_proposed_pct": 13.112,
+   "proposed_pct": 3.629,
+   "accepted_plus_proposed_pct": 5.692,
    "limit_pct": 15.0,
    "accepted_rows": 2,
    "proposed_rows": 7,
