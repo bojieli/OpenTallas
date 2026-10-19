@@ -35,8 +35,8 @@ STACKS = [
     ('front', '*u_front.u_mem.g_b?{k}?.u_m', 5, 43.2, 23.76),
     ('return', '*u_return.u_mem.g_b?{k}?.u_m', 5, 43.2, 133.92),
     ('tq', '*u_sched.u_tq.u_{eo}', 2, 43.2, 241.92),
-    ('cdc_down', '*u_ecdc.down.u_mem.g_b?{k}?.u_m', 6, 172.8, 23.76),
-    ('cdc_up', '*u_ecdc.up.u_mem.g_b?{k}?.u_m', 5, 172.8, 151.2),
+    ('cdc_down', '*u_ecdc.down.g_sram.u_mem.g_b?{k}?.u_m', 6, 172.8, 23.76),
+    ('cdc_up', '*u_ecdc.up.g_sram.u_mem.g_b?{k}?.u_m', 5, 172.8, 151.2),
 ]
 WIT = WIT_SR1 = 'results/rtl/qwen_kv_die/kvpc_sram_1019'
 WIT_SR3 = 'results/rtl/qwen_kv_die/kvpc_sram_sr3_1019'   # KV-PC2 sr3+ receipts (Verilator 5.050, @96723d23b / tile @66c85f895)

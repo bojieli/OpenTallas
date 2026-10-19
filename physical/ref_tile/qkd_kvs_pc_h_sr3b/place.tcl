@@ -64,37 +64,37 @@ puts "REF_TILE place: [$i getName] ot_sram_1r1w2c_32x64_m1 at 43.2 241.92 R0"
 set i [ot_ref_pick $ot_ref_by ot_sram_1r1w2c_32x64_m1 {*u_sched.u_tq.u_o}]
 $i setOrient R0; $i setLocation [expr {round(43.2 * $dbu)}] [expr {round(259.248 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_sram_1r1w2c_32x64_m1 at 43.2 259.248 R0"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w2c_32x64_m1 {*u_ecdc.down.u_mem.g_b?0?.u_m}]
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w2c_32x64_m1 {*u_ecdc.down.g_sram.u_mem.g_b?0?.u_m}]
 $i setOrient R0; $i setLocation [expr {round(129.6 * $dbu)}] [expr {round(23.76 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_sram_1r1w2c_32x64_m1 at 129.6 23.76 R0"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w2c_32x64_m1 {*u_ecdc.down.u_mem.g_b?1?.u_m}]
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w2c_32x64_m1 {*u_ecdc.down.g_sram.u_mem.g_b?1?.u_m}]
 $i setOrient R0; $i setLocation [expr {round(129.6 * $dbu)}] [expr {round(41.088 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_sram_1r1w2c_32x64_m1 at 129.6 41.088 R0"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w2c_32x64_m1 {*u_ecdc.down.u_mem.g_b?2?.u_m}]
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w2c_32x64_m1 {*u_ecdc.down.g_sram.u_mem.g_b?2?.u_m}]
 $i setOrient R0; $i setLocation [expr {round(129.6 * $dbu)}] [expr {round(58.416 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_sram_1r1w2c_32x64_m1 at 129.6 58.416 R0"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w2c_32x64_m1 {*u_ecdc.down.u_mem.g_b?3?.u_m}]
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w2c_32x64_m1 {*u_ecdc.down.g_sram.u_mem.g_b?3?.u_m}]
 $i setOrient R0; $i setLocation [expr {round(129.6 * $dbu)}] [expr {round(75.744 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_sram_1r1w2c_32x64_m1 at 129.6 75.744 R0"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w2c_32x64_m1 {*u_ecdc.down.u_mem.g_b?4?.u_m}]
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w2c_32x64_m1 {*u_ecdc.down.g_sram.u_mem.g_b?4?.u_m}]
 $i setOrient R0; $i setLocation [expr {round(129.6 * $dbu)}] [expr {round(93.072 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_sram_1r1w2c_32x64_m1 at 129.6 93.072 R0"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w2c_32x64_m1 {*u_ecdc.down.u_mem.g_b?5?.u_m}]
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w2c_32x64_m1 {*u_ecdc.down.g_sram.u_mem.g_b?5?.u_m}]
 $i setOrient R0; $i setLocation [expr {round(129.6 * $dbu)}] [expr {round(110.4 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_sram_1r1w2c_32x64_m1 at 129.6 110.4 R0"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w2c_32x64_m1 {*u_ecdc.up.u_mem.g_b?0?.u_m}]
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w2c_32x64_m1 {*u_ecdc.up.g_sram.u_mem.g_b?0?.u_m}]
 $i setOrient R0; $i setLocation [expr {round(129.6 * $dbu)}] [expr {round(151.2 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_sram_1r1w2c_32x64_m1 at 129.6 151.2 R0"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w2c_32x64_m1 {*u_ecdc.up.u_mem.g_b?1?.u_m}]
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w2c_32x64_m1 {*u_ecdc.up.g_sram.u_mem.g_b?1?.u_m}]
 $i setOrient R0; $i setLocation [expr {round(129.6 * $dbu)}] [expr {round(168.528 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_sram_1r1w2c_32x64_m1 at 129.6 168.528 R0"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w2c_32x64_m1 {*u_ecdc.up.u_mem.g_b?2?.u_m}]
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w2c_32x64_m1 {*u_ecdc.up.g_sram.u_mem.g_b?2?.u_m}]
 $i setOrient R0; $i setLocation [expr {round(129.6 * $dbu)}] [expr {round(185.856 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_sram_1r1w2c_32x64_m1 at 129.6 185.856 R0"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w2c_32x64_m1 {*u_ecdc.up.u_mem.g_b?3?.u_m}]
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w2c_32x64_m1 {*u_ecdc.up.g_sram.u_mem.g_b?3?.u_m}]
 $i setOrient R0; $i setLocation [expr {round(129.6 * $dbu)}] [expr {round(203.184 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_sram_1r1w2c_32x64_m1 at 129.6 203.184 R0"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w2c_32x64_m1 {*u_ecdc.up.u_mem.g_b?4?.u_m}]
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w2c_32x64_m1 {*u_ecdc.up.g_sram.u_mem.g_b?4?.u_m}]
 $i setOrient R0; $i setLocation [expr {round(129.6 * $dbu)}] [expr {round(220.512 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_sram_1r1w2c_32x64_m1 at 129.6 220.512 R0"
 set nb 0; dict for {k v} $ot_ref_by { incr nb [llength $v] }
