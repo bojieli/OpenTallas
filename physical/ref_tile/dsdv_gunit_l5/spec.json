@@ -244,7 +244,7 @@
     "pass_regex": "^MUT=0: GUNIT PASS cases=8 ",
     "threads": 6,
     "peak_ram_gb": 24,
-    "pass_witness": "results/rtl/s81_gunit_wm_1019/bench/gunit_m0.log"
+    "pass_witness": "results/rtl/s81_gunit_wm_1019/bench_svcgu/gunit_m0.log"
    },
    {
     "name": "gunit_mut8",
@@ -253,7 +253,7 @@
     "fail_regex": "^MUT=8: GUNIT FAIL ",
     "threads": 6,
     "peak_ram_gb": 24,
-    "fail_witness": "results/rtl/s81_gunit_wm_1019/bench/gunit_m8.log"
+    "fail_witness": "results/rtl/s81_gunit_wm_1019/bench_svcgu/gunit_m8.log"
    },
    {
     "name": "gunit_mut10",
@@ -262,7 +262,7 @@
     "fail_regex": "^MUT=10: GUNIT FAIL ",
     "threads": 6,
     "peak_ram_gb": 24,
-    "fail_witness": "results/rtl/s81_gunit_wm_1019/bench/gunit_m10.log"
+    "fail_witness": "results/rtl/s81_gunit_wm_1019/bench_svcgu/gunit_m10.log"
    },
    {
     "name": "sinkhorn_fs_eq",
@@ -271,7 +271,7 @@
     "pass_regex": "^MUT=0 MUTQ4=0: SKF PASS cases=300 ",
     "threads": 4,
     "peak_ram_gb": 8,
-    "pass_witness": "results/rtl/s81_gunit_wm_1019/bench/skf_eq.log"
+    "pass_witness": "results/rtl/s81_gunit_wm_1019/bench_svcgu/skf_eq.log"
    },
    {
     "name": "sinkhorn_fs_mut1",
@@ -280,7 +280,7 @@
     "fail_regex": "^MUT=1 MUTQ4=0: SKF FAIL ",
     "threads": 4,
     "peak_ram_gb": 8,
-    "fail_witness": "results/rtl/s81_gunit_wm_1019/bench/skf_mut1.log"
+    "fail_witness": "results/rtl/s81_gunit_wm_1019/bench_svcgu/skf_mut1.log"
    },
    {
     "name": "sinkhorn_fs_mutq4",
@@ -289,7 +289,7 @@
     "fail_regex": "^MUT=0 MUTQ4=1: SKF FAIL ",
     "threads": 4,
     "peak_ram_gb": 8,
-    "fail_witness": "results/rtl/s81_gunit_wm_1019/bench/skf_mutq4.log"
+    "fail_witness": "results/rtl/s81_gunit_wm_1019/bench_svcgu/skf_mutq4.log"
    }
   ],
   "views_to": "physical/ref_tile/dsdv_gunit_l5/views",

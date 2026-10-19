@@ -1,0 +1,13 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/s81-svcgu-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/s81-svcgu-1019
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/s81-svcgu-1019
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/s81-svcgu-1019
+ot-run: ot-epyc8       admits  1364 GB (avail 1011, growth 46, headroom 0, waiters 0/0 GB) load 15/128 running 10 disk 46 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-svcgu-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-svcgu-1019
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-2385338-1792452678 after 1 s
+Verilator 5.050 2026-07-01 rev v5.050
+MUT=10: GUNIT FAIL 37 (MUT=10)
+BENCH_RC=1
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-2385338-1792452678): exit 0
