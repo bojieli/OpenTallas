@@ -1,6 +1,6 @@
 {
   "source": "private/qkd_host_native_owner_join_rc.sv",
-  "sha256": "d818152edc96cd87aed380e0f09c65740bd97282e47210d7271fc4016672e5ef",
+  "sha256": "8897f2f79cb60592b5a8ee867ac87328d96e4f5338d8c73b9848cd52838fa9a9",
   "state": {
     "pending_t": {
       "fields": {
@@ -36,5 +36,6 @@
   "sticky_protocol_fault_bits": 1,
   "total_register_bits": 162,
   "next_state_variables": "combinational only; not additional registers",
-  "validation": "Python declaration census only. No HDL compile or simulation run."
+  "validation": "Python declaration census only. No HDL compile or simulation run.",
+  "integration_review": "Held accepted VALID, prompt certificate lifetime, raw/terminal certificate witnesses and pre-offer immutable CQ check; no added state"
 }
