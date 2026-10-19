@@ -35,5 +35,26 @@
     "release_edges_unchanged": 5,
     "reset_root_targets": "nativeface secondstage drives96asyncrelay/sync pins, bridgeface secondstage~165loads; localresetroots expected<64 and all<256, classify actualstaticrelease separately fromcriticaldata32.",
     "no_data_edge_change": true
+  },
+  "measured4cc": {
+    "source": "4cc83303c",
+    "standard_area_um2": 6109.14992,
+    "macro_area_um2": 50620.0864,
+    "total_area_um2": 56729.23632,
+    "nonreset_roots_gt32": 38,
+    "max_nonreset_loads": 60,
+    "max_reset_loads": 234,
+    "status": "FAIL_OPEN"
+  },
+  "bounded_next_copies": {
+    "mf_row_bank_kept_bits": 60,
+    "old_mapped_row_bits": 15,
+    "mf_row_delta_bits": 45,
+    "metadata_wp_copies_bits": 12,
+    "head_bank_global_bits": 5,
+    "total_added_ff_bits": 62,
+    "data_edges_added": 0,
+    "estimated_added_ff_area_um2": 43.4,
+    "routing": "Same localmacrobank/post paths, noexternalpins/noports; kept rowbank words prevent actual4-bank FF merge, WPcopies split real writeaddress cones, globalheadcopy separates PHY/global from32bankdecode. Actualall-driver32 required."
   }
 }

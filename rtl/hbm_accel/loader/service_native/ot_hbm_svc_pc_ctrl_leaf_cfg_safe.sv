@@ -228,7 +228,7 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
     // read replicas serve posting and completion independently. No indexed flop
     // storage; forwarding covers same-edge SRAM read/write ambiguity.
     wire[255:0]qh[0:3],qe[0:3];
-    reg[78:0]mf_data[0:3];
+    wire[78:0]mf_data[0:3];reg[63:0]mf_fields[0:3];
     wire[3:0]meta_we;wire[QW-3:0]meta_wa[0:3];
     wire[QW-1:0]next_rp=cv?rp_plus1:rp,next_ep=posted?ep_plus1:ep;
     wire[78:0]mh,me;
@@ -289,12 +289,23 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
       assign qrow_post_regions[g*19+:19]={4'b0,word_data};
     end
     assign queue_head=mh[63:0];assign queue_post=me[63:0];assign qrow_post=me[78:64];
+    // Two real existing-edge write-pointer sources divide fourbank address
+    // consumers; the canonical nextstate drives onlythree D pins per bit.
+    (* keep="true",dont_touch="true" *) reg[QW-1:0]metadata_wp[0:1];
+    wire[QW-1:0]metadata_wp_next=accepted?wp+QW'(length):wp;
+    for(genvar g=0;g<2;g=g+1)begin:META_WRITE_PTR
+      always @(posedge clk or negedge region_rst_n[4+g])
+        if(!region_rst_n[4+g])metadata_wp[g]<=0;
+        else metadata_wp[g]<=metadata_wp_next;
+    end
     for(genvar b=0;b<4;b=b+1)begin:METADATA
-      wire[1:0]j=2'(b)-wp[1:0];wire we=accepted&&{1'b0,j}<length;
-      wire[QW-1:0]wa=wp+QW'(j);
+      wire[1:0]j=2'(b)-metadata_wp[b/2][1:0];wire we=accepted&&{1'b0,j}<length;
+      wire[QW-1:0]wa=metadata_wp[b/2]+QW'(j);
       wire[78:0]wd={incoming[29:15],i_we,incoming[14:12]^incoming[19:17],(2'(incoming[1:0]+j)^incoming[16:15]),incoming[11:7],i_tag,4'(j),i_wstrb};
       assign meta_we[b]=we;assign meta_wa[b]=wa[QW-1:2];
-      always @(posedge clk)mf_data[b]<=wd;
+      (* keep="true",dont_touch="true" *) reg[14:0]row_q;
+      always @(posedge clk)begin row_q<=wd[78:64];mf_fields[b]<=wd[63:0];end
+      assign mf_data[b]={row_q,mf_fields[b]};
       ot_sram_1r1w_128x256_m1_r2c2 u_head(.clk(clk),.r_ce_in(1'b1),.r_addr_in(7'(next_rp>>2)),.rd_out(qh[b]),
         .w_ce_in(we),.w_addr_in(7'(wa>>2)),.wd_in({177'b0,wd}),.w_mask_in({256{1'b1}}),
         .rr_en(2'b0),.rr_addr(14'b0),.cr_en(2'b0),.cr_sel(16'b0));

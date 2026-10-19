@@ -68,6 +68,7 @@ module ot_hbm_r14_aq_pc_safe #(
   reg qfresh; reg [WQW-1:0] qfresh_addr; reg [29:0] qfresh_data;
   reg [29:0] qhead;
   (* keep="true",dont_touch="true" *) reg head_read_global;
+  (* keep="true",dont_touch="true" *) reg[4:0]head_bank_global;
   always @(posedge clk)head_read_global<=head_d[0];
   // Same-edge local head copies: each row bit drives eight comparators and
   // eight look-row capture muxes; each read flag serves eight bank timers.
@@ -95,8 +96,11 @@ module ot_hbm_r14_aq_pc_safe #(
     wire [B-1:0] pref=(fresh_local[g]&&fresh_addr_local[g]==successor_local[g])?
        qfresh_data[LO+:B]:qm[LO+:B];
     wire [29:0] pushed={wr_bank,wr_col,wr_row,wr_rd};
+    wire[B-1:0]held_word;
+    if(g==3)assign held_word={head_bank_global,qhead[24:20]};
+    else assign held_word=qhead[LO+:B];
     assign head_d[LO+:B]=head_capture_regions[g]?
-       (head_push_regions[g]?pushed[LO+:B]:pref):qhead[LO+:B];
+       (head_push_regions[g]?pushed[LO+:B]:pref):held_word;
   end
   for(genvar g=0;g<8;g=g+1)begin:HEAD_LOCAL
     always @(posedge clk)
@@ -118,7 +122,7 @@ module ot_hbm_r14_aq_pc_safe #(
   wire [29:0] head_next=head_from_push?{wr_bank,wr_col,wr_row,wr_rd}:qprefetch;
   always @(posedge clk)begin
     qhead<=head_d;
-    head_bank_local<=head_d[29:25];
+    head_bank_local<=head_d[29:25];head_bank_global<=head_d[29:25];
   end
   ot_sram_1r1w_128x256_m1_r2c2 u_queue(.clk(clk),.r_ce_in(1'b1),.r_addr_in(7'(qread)),.rd_out(qm),
     .w_ce_in(qpush),.w_addr_in(7'(qwp)),.wd_in({226'b0,wr_bank,wr_col,wr_row,wr_rd}),.w_mask_in({256{1'b1}}),
@@ -163,7 +167,7 @@ module ot_hbm_r14_aq_pc_safe #(
     end
   end
   reg [WQW:0] q_n; reg [WQW-1:0] q_rp;
-  wire [4:0] hb=qhead[29:25], hc=qhead[24:20]; wire [RW_ROW-1:0] hrow=qhead[19:1]; wire hr=head_read_global;   // registered head (valid when q_n != 0)
+  wire [4:0] hb=head_bank_global, hc=qhead[24:20]; wire [RW_ROW-1:0] hrow=qhead[19:1]; wire hr=head_read_global;   // registered head (valid when q_n != 0)
   (* keep="true",dont_touch="true" *) reg [2:0] tail_set_regions[0:7];
   for(genvar t=0;t<8;t=t+1)begin:TAIL_SET_REGION
     always @(posedge clk or negedge rst_n)if(!rst_n)tail_set_regions[t]<=0;

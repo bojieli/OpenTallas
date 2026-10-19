@@ -20,7 +20,8 @@
     "bank_n": 224,
     "bank_n_word_local": 448,
     "look_head_bank_local": 10,
-    "tail_set_regions": 24
+    "tail_set_regions": 24,
+    "head_bank_global": 5
   },
   "forbidden_families": [
     "c_oh",
@@ -54,5 +55,6 @@
       "bank_n_word_local"
     ]
   },
-  "known_model_limits": "Extra input logic and post-state decode delay unmeasured; standard area and clock resource admission from mapped candidate, not nominal FF estimate."
+  "known_model_limits": "Extra input logic and post-state decode delay unmeasured; standard area and clock resource admission from mapped candidate, not nominal FF estimate.",
+  "parent_followup": "Composedpost4cc head_bank_global5FF separates PHY/global output andcanonicalheadhold from32bankdecode, noedge."
 }
