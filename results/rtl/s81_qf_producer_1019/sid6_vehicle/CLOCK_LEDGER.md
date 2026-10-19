@@ -1,5 +1,7 @@
 # Actual source-clock/return ledger and bounded marker
 
+**Current correction:** marker03 ages1/4/5 below are route-to-slice-entry samples, not CAP. Marker04 adds actual DR6 and measures logical CAP sample ages7/10/11. The original marker03 receipts remain historical; see FULL_GRAPH.md and marker_dr6. Native phase/regional reset/actual selected ARR remain NULL. Actual source macro commit1260 is now measured by retained_xs_result, replacing the earlier structural-only annotation there.
+
 Selected die SHA61b683b... is rechecked from the immutable ep7 final source.
 `selected_return_cone_inventory.json` preserves exact lines/line numbers and
 external source fingerprints. Routed returns start at ICGx4_ASAP7_75t_R on

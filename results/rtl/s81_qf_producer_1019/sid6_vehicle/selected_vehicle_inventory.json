@@ -1158,10 +1158,10 @@
     "scope": "Measured retained XS component only; cannot extrapolate as six-frame peak"
   },
   "next_build_admission": {
-    "initial_memory_GB": 128,
-    "threads": 8,
+    "resource_reservation_candidate_GB": 128,
+    "threads_candidate": 8,
     "unpinned": true,
-    "qualification": "Proposed cgroup envelope, not measured requirement; no build launched. Preserve source03/retained/reinstall objects; stop on first compile/runtime failure."
+    "qualification": "Candidate admission reservation from actual fleet headroom and1012ROM inventory only; NOT a guessed process/cgroup hardlimit or measured need. Actual frontend CPP/object/RSS census required. No protective memory cap or deadline added; preserve useful objects."
   },
   "native_phase": null,
   "native_regional_reset_dates": null,
