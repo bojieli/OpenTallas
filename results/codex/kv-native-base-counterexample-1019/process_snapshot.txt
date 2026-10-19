@@ -1,0 +1,10 @@
+2026-10-19T15:35:08-07:00
+    PID ELAPSED     TIME   RSS COMMAND
+ 159700      67 00:00:00  3976 /usr/bin/bash -lc set +e; /usr/bin/time -v /home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys -l replay.log -q -s replay.ys > replay.stdout 2> replay.stderr; rc=$?; echo "$rc" > replay.rc; exit "$rc"
+ 160386      67 00:00:00  1700 /usr/bin/time -v /home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys -l replay.log -q -s replay.ys
+ 160435      67 00:08:43 809988 /home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys -l replay.log -q -s replay.ys
+Added wire \S__g_n_10__u_a_g_hs_u_hc_q_17_ to module \gold.
+Added wire \S    PID ELAPSED     TIME   RSS COMMAND
+2323674     829 01:58:13 952508 /home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys -l joint_base.log -q -s joint_base.ys
+Added wire \S__g_d_5__u_a_y_11_ to module \gold.
+Added wire \
