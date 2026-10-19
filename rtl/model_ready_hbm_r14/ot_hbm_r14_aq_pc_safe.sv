@@ -132,7 +132,7 @@ module ot_hbm_r14_aq_pc_safe #(
       else if(qpush&&wr_bank==b&&bank_n[b]==0)look_row[b]<=wr_row;
     end
     for(integer b=0;b<32;b=b+1)
-      if(row_local[b/8][21]&&c_oh[b])orow[b]<=row_local[b/8][18:0];
+      if(row_word_act_local[b/8]&&c_oh[b])orow[b]<=row_local[b/8][18:0];
   end
   reg [WQW:0] q_n; reg [WQW-1:0] q_rp;
   wire [4:0] hb=qhead[29:25], hc=qhead[24:20]; wire [RW_ROW-1:0] hrow=qhead[19:1]; wire hr=qhead[0];   // registered head (valid when q_n != 0)
@@ -151,7 +151,11 @@ module ot_hbm_r14_aq_pc_safe #(
   // Registered decoded commands share the original command capture edge.
   // The three decoded controls and row word are local to sixteen banks.
   (* keep="true",dont_touch="true" *) reg [21:0] row_local[0:3];
+  (* keep="true",dont_touch="true" *) reg [3:0] row_word_act_local;
   for(genvar g=0;g<4;g=g+1)begin:ROW_LOCAL
+    always @(posedge clk or negedge reset_regions[32+g])
+      if(!reset_regions[32+g])row_word_act_local[g]<=0;
+      else row_word_act_local[g]<=slot_next&&r_v&&r_op==ACT;
     // Only validity/opcode flags reset. The row word is consumed only by ACT.
     always @(posedge clk)row_local[g][18:0]<=r_row;
     always @(posedge clk or negedge reset_regions[32+g])
