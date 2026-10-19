@@ -50,7 +50,8 @@
   "rtl/hbm_next/sm/hnx_xs3.sv",
   "rtl/hbm_next/sm/hnx_rp4lp4_leaf.sv",
   "rtl/hbm_next/sm/hnx_rp3lp3.sv",
-  "rtl/hbm_next/sm/lp/hnx_rp3lp3x_flat_lp.sv"
+  "rtl/hbm_next/sm/lp/hnx_rp3lp3x_flat_lp.sv",
+  "rtl/hbm_next/common/hnx_pl_pad_sram.sv"
  ],
  "params": {},
  "defines": [
@@ -77,7 +78,7 @@
  ],
  "outline": {
   "w": 630.72,
-  "h": 2203.2
+  "h": 2289.6
  },
  "child_lattice_um": 43.2,
  "children": [
@@ -86,7 +87,7 @@
    "count": 1,
    "at": [
     43.2,
-    1296.0
+    1382.4
    ],
    "orient": "R0",
    "inst": "u_lf0.g_xs3.u_xs",
@@ -97,7 +98,7 @@
    "count": 1,
    "at": [
     129.6,
-    1598.4
+    1684.8
    ],
    "orient": "R0",
    "inst": "u_lf0.g_ln[0].u_bdc",
@@ -108,7 +109,7 @@
    "count": 1,
    "at": [
     259.2,
-    1598.4
+    1684.8
    ],
    "orient": "R0",
    "inst": "u_lf0.g_ln[1].u_bdc",
@@ -119,7 +120,7 @@
    "count": 1,
    "at": [
     388.8,
-    1598.4
+    1684.8
    ],
    "orient": "R0",
    "inst": "u_lf0.g_ln[2].u_bdc",
@@ -130,7 +131,7 @@
    "count": 1,
    "at": [
     43.2,
-    1771.2
+    1857.6
    ],
    "orient": "R0",
    "inst": "u_lf0.g_ln[0].u_tcc.u_tr",
@@ -141,7 +142,7 @@
    "count": 1,
    "at": [
     43.2,
-    1857.6
+    1944.0
    ],
    "orient": "R0",
    "inst": "u_lf0.g_ln[0].u_tcc.u_h0",
@@ -152,7 +153,7 @@
    "count": 1,
    "at": [
     172.8,
-    1857.6
+    1944.0
    ],
    "orient": "R0",
    "inst": "u_lf0.g_ln[0].u_tcc.u_h1",
@@ -163,7 +164,7 @@
    "count": 1,
    "at": [
     388.8,
-    1771.2
+    1857.6
    ],
    "orient": "R0",
    "inst": "u_lf0.g_ln[2].u_tcc.u_tr",
@@ -174,7 +175,7 @@
    "count": 1,
    "at": [
     388.8,
-    1857.6
+    1944.0
    ],
    "orient": "R0",
    "inst": "u_lf0.g_ln[2].u_tcc.u_h0",
@@ -185,7 +186,7 @@
    "count": 1,
    "at": [
     518.4,
-    1857.6
+    1944.0
    ],
    "orient": "R0",
    "inst": "u_lf0.g_ln[2].u_tcc.u_h1",
@@ -196,7 +197,7 @@
    "count": 1,
    "at": [
     43.2,
-    2030.4
+    2116.8
    ],
    "orient": "R0",
    "inst": "u_lf0.g_ln[1].u_tcc.u_h0",
@@ -207,7 +208,7 @@
    "count": 1,
    "at": [
     172.8,
-    2030.4
+    2116.8
    ],
    "orient": "R0",
    "inst": "u_lf0.g_ln[1].u_tcc.u_h1",
@@ -218,7 +219,7 @@
    "count": 1,
    "at": [
     302.4,
-    2030.4
+    2116.8
    ],
    "orient": "R0",
    "inst": "u_lf0.g_ln[1].u_tcc.u_tr",
@@ -513,7 +514,7 @@
   "branch": "claude/hbm-next-p3sm-1019",
   "tag": "hnx_rp3lp3x",
   "purpose": "NEXT-release HBM die (OWNER 10-19 P3+(a), not a release gate): SM P = 3 matrix tile on the shared 3-lane x store hnx_xs3; CRITICAL tile hnx_rp3*: coordinator PNG review before any submit (report only).",
-  "structural_change": "hnx_rp3lp3x (HBM-NEXT-P3-SM 10-19) = hnx_rp4lp4x at P = 3 (RTL hnx_rp3lp3x_flat_lp, lp.py landed regions n / s): per leaf one hnx_xs3 at the band + 3 bdc on its N face + 3 BF16 lane stacks (lanes 0 / 2 beside each other, lane 1 flat in row B nearest the store's W face) = 2 x 13 leaf hard children + the 8 rp4lp transport children, ALL on the 43.2 lattice; outline 630.72 x 2203.2 = the DIE P3 SM slot (aspect 3.5:1: two landed regional halves 630.72 x ~1,100 each, <= 1.8:1); NREL = 2 gather relays per half (+4 edges on the pass / leaf-0 gather lanes, compiler record) with FIRM stations every ~300 um; publish lane delays as ring buffers.",
+  "structural_change": "hnx_rp3lp3x (HBM-NEXT-P3-SM 10-19) = hnx_rp4lp4x at P = 3 (RTL hnx_rp3lp3x_flat_lp, lp.py landed regions n / s): per leaf one hnx_xs3 at the band + 3 bdc on its N face + 3 BF16 lane stacks (lanes 0 / 2 beside each other, lane 1 flat in row B nearest the store's W face) = 2 x 13 leaf hard children + the 8 rp4lp transport children, ALL on the 43.2 lattice; outline 630.72 x 2289.6 = the DIE P3 SM slot (aspect 3.5:1: two landed regional halves 630.72 x ~1,100 each, <= 1.8:1); NREL = 2 gather relays per half (+4 edges on the pass / leaf-0 gather lanes, compiler record) with FIRM stations every ~300 um; publish lane delays as ring buffers; 818x3 align pad in four SRAM macros, leaf0 lifted86.4um.",
   "extra_paths": [
    "physical/common_flow/anchor_row_packing.tcl",
    "tools/hbm_next",
@@ -539,7 +540,40 @@
    }
   ]
  },
- "macros": [],
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "at": [
+    43.2,
+    1296.0
+   ],
+   "inst": "*u_lpp_0.g_bank?0?.u_mem*"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "at": [
+    172.8,
+    1296.0
+   ],
+   "inst": "*u_lpp_0.g_bank?1?.u_mem*"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "at": [
+    302.4,
+    1296.0
+   ],
+   "inst": "*u_lpp_0.g_bank?2?.u_mem*"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "at": [
+    431.99999999999994,
+    1296.0
+   ],
+   "inst": "*u_lpp_0.g_bank?3?.u_mem*"
+  }
+ ],
  "inter": [],
  "recipe": 3,
  "keep_pin_regs": true,

@@ -34,7 +34,8 @@ STAT_T = ROOT / "physical/hbm_next/sm4/hnx_rp4lp4x_stations.tcl"
 NAME = "hnx_rp3lp3x"
 P = 3
 G = 43.2
-W, H = 630.72, 2203.2
+W, H = 630.72, 2289.6
+SRAM_LIFT = 86.4
 V = {"xs3": "physical/ref_tile/hnx_rp3lp3_xs3/views/hnx_xs3",
      "bdc": "physical/ref_tile/smh_bdc_ref_p50/views/ot_hbm_accel_smh_bdc",
      "tcl": "physical/ref_tile/smh_tcl_ref_p45/views/ot_hbm_accel_smh_tcl",
@@ -86,7 +87,8 @@ def children():
             ("beat", "u_beate", 388.8, 993.6, "R0", "n"),
             ("row_e", "u_rowe1", 475.2, 950.4, "MX", "s"),
             ("row_e", "u_rowe0", 475.2, 1166.4, "R0", "n")]
-    return out
+    return [(k, inst, x, y + (SRAM_LIFT if inst.startswith("u_lf0.") else 0), o, reg)
+            for k, inst, x, y, o, reg in out]
 
 
 def check(ch):
@@ -188,16 +190,21 @@ def main():
     s = json.loads(TEMPLATE.read_text())
     src = json.loads((ROOT / "rtl/hbm_next/sm/sources.json").read_text())
     ch = children()
-    bad = check(ch)
+    pad_boxes = [("pad", f"u_lpp_0.g_bank[{b}].u_mem", 43.2+129.6*b, 1296.0, "R0", "s") for b in range(4)]
+    SZ["pad"] = (94.824, 41.04)
+    bad = check(ch + pad_boxes)
     assert not bad, bad
     s["name"] = NAME
     s["top"] = "hnx_rp3lp3x_flat_lp"
     s["sources"] = [f for f in src["kit_sources"] if not f.endswith("hnx_rp4lp4.sv")] + ["rtl/hbm_next/sm/lp/hnx_rp3lp3x_flat_lp.sv"]
+    s["sources"].append("rtl/hbm_next/common/hnx_pl_pad_sram.sv")
     s["defines"] = src["defines"]
     s["hard_define"] = "SYNTHESIS"
     s["outline"] = {"w": W, "h": H}
     s["child_lattice_um"] = G
     s["children"] = [dict(view=V[k], count=1, at=[r3(x), r3(y)], orient=o, inst=inst, region=reg) for k, inst, x, y, o, reg in ch]
+    s["macros"] = [dict(view="physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+                        at=[43.2 + 129.6*b, 1296.0], inst=f"*u_lpp_0.g_bank?{b}?.u_mem*") for b in range(4)]
     s["landed_record"] = "results/arch/hbm_next_1019/sm4/p3/hnx_rp3lp3x_flat_lp_record.json"
     pt, npins = pins_tcl()
     (OUTD / f"{NAME}_pins.tcl").write_text(pt)
@@ -217,7 +224,7 @@ def main():
             "nearest the store's W face) = 2 x 13 leaf hard children + the 8 rp4lp transport children, ALL on the 43.2 lattice; "
             f"outline {W} x {H} = the DIE P3 SM slot (aspect 3.5:1: two landed regional halves 630.72 x ~1,100 each, <= 1.8:1); "
             "NREL = 2 gather relays per half (+4 edges on the pass / leaf-0 gather lanes, compiler record) with FIRM stations "
-            "every ~300 um; publish lane delays as ring buffers."),
+            "every ~300 um; publish lane delays as ring buffers; 818x3 align pad in four SRAM macros, leaf0 lifted86.4um."),
         "extra_paths": ["physical/common_flow/anchor_row_packing.tcl", "tools/hbm_next", "results/arch/hbm_next_1019/sm4",
                         "rtl/hbm_next"],
         "benches": [
@@ -226,7 +233,7 @@ def main():
             {"name": "leaf_lanes_p3_xs3", "expect": "pass", "pass_regex": "BENCH PASS p3_m0_t0", "threads": 8, "peak_ram_gb": 24,
              "cmd": "bash rtl/hbm_next/sm/tb/run_leaf_bench.sh {RUN}/leaf 3 0 0 -DHNX_XS4"}]}
     (OUTD / f"{NAME}_spec.json").write_text(json.dumps(s, indent=1) + "\n")
-    hard = sum(SZ[k][0] * SZ[k][1] for k, *_ in ch)
+    hard = sum(SZ[k][0] * SZ[k][1] for k, *_ in ch + pad_boxes)
     geo = {"outline_um": [W, H], "area_mm2": round(W * H / 1e6, 4), "aspect": round(H / W, 2), "hard_um2": round(hard),
            "hard_fill": round(hard / (W * H), 3), "children": len(ch), "pins": npins, "all_children_on_43p2": True}
     print(json.dumps(geo))

@@ -64,7 +64,8 @@ KW = {"module", "endmodule", "input", "output", "inout", "wire", "reg", "logic",
       "case", "endcase", "function", "endfunction", "genvar", "integer", "signed", "unsigned", "default_nettype"}
 LIB_PORTS = {"ot_pl_land_w": {"ck": "in", "rsi": "in", "i": "in", "bank": "out", "epo": "out", "vld": "out"},
              "ot_pl_land_r": {"ck": "in", "rsi": "in", "bank": "in", "epo": "in", "vld": "in", "o": "out"},
-             "ot_pl_pad": {"ck": "in", "d": "in", "q": "out"}}
+             "ot_pl_pad": {"ck": "in", "d": "in", "q": "out"},
+             "hnx_pl_pad_sram": {"ck": "in", "rst_n": "in", "d": "in", "q": "out"}}
 
 
 # ----------------------------------------------------------------------------------------------------- verilog parsing
@@ -515,8 +516,11 @@ class Parent:
             src = sub.get((inst, net), net)
             q = f"{net}__p_{inst}"
             kk = f"(MUT == 3) ? {k - 1} : {k}" if j == 0 and mut else f"{k}"
-            w(f"    wire {rng or ''} {q};  ot_pl_pad #(.W({width_text(rng)}), .N({kk})) u_lpp_{j} (.ck(ck_{self.region[inst]}), "
-              f".d({src}), .q({q}));   // align {inst}: +{k}")
+            use_sram = net in S.get("sram_pads", [])
+            pad_type = "hnx_pl_pad_sram" if use_sram else "ot_pl_pad"
+            reset_pin = f".rst_n(lpr_{self.region[inst]}), " if use_sram else ""
+            w(f"    wire {rng or ''} {q};  {pad_type} #(.W({width_text(rng)}), .N({kk})) u_lpp_{j} (.ck(ck_{self.region[inst]}), "
+              f"{reset_pin}.d({src}), .q({q}));   // align {inst}: +{k}")
             sub[(inst, net)] = q
         # child resets
         mc = self.mut_child(P)
@@ -610,7 +614,8 @@ class Parent:
         S = self.S
         t = P["t"]
         flops_land = sum(self.D * L["width"] + self.D + (self.AW + 1) + 1 + L["width"] + (self.AW + 1) + 2 for L in P["lands"])
-        flops_pad = sum(eval_width(self.rng(n), self.env) * k for (n, _), k in P["pads"].items())
+        flops_pad = sum(eval_width(self.rng(n), self.env) * k for (n, _), k in P["pads"].items()
+                        if n not in self.S.get("sram_pads", []))
         flops_rst = 1 + len(self.regions) * (rt["RB"] - 1) + sum(t.get(i["inst"], 0) for i in self.insts)
         pairs = sorted({"-".join(sorted((L["src_region"], L["dst_region"]))) for L in P["lands"]})
         rpairs = sorted({"-".join(sorted((rt["reset_region"], r))) for r in self.regions if r != rt["reset_region"]})

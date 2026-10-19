@@ -12,3 +12,14 @@ by the existing delayed child reset. No numerical arithmetic changes.
 This component is opt-in pending its exact gate. It requires physical placement
 of four macros, registered boundary timing and a parent lockstep run before
 production binding; component simulation alone does not close the parent.
+
+Component bench on Verilator5.050: baseline984 checks/0 errors; MUT1
+(wrong read residue) fails984/984. Witnesses mut0.log and mut1.log. The
+P3 parent opt-in generator has been updated and its unchanged3-edge lockstep
+is running on the fleet. Proposed outline630.72x2289.6um (leaf0 lifted86.4um)
+places four macros at(43.2+129.6*b,1296), all on43.2um lattice. The
+existing34 hardchildren plus SRAMs pass geometry/10.8um halo checks.
+Macroarea706131um2 gives48.9% hardfill. This is a candidate footprint;
+no parent gate or production binding has passed. The legacy landed
+bin_l crossing itself still holds8276bits of flopbank storage; the safe
+SRAM conversion of that dual-root crossing remains open.
