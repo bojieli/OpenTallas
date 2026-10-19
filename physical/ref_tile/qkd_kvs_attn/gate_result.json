@@ -2,13 +2,13 @@
  "schema": "opentallas.ref_tile.gate_result.v2",
  "kit": "qkd_kvs_attn",
  "verdict": "WARN",
- "generated": "2026-10-18T22:39:55-0700",
- "host": "ot-epyc4",
+ "generated": "2026-10-18T23:07:30-0700",
+ "host": "ot-agidock128",
  "cts": true,
  "commit": null,
  "source_binding": {
   "schema": "opentallas.ref_tile.source_snapshot.v1",
-  "start_commit": "28bf6ebfc4d2c42fb94cb44a2b1a2cb64d592288",
+  "start_commit": "25366e7b94f8ca35bd05d883472001ebd8b629f0",
   "commit": null,
   "identity": "exact_content_snapshot",
   "daemon_tree": "/home/ubuntu/wt-claude-closure-daemon-1010",
@@ -21,8 +21,8 @@
    "tools/orfs_hold_mm.tcl",
    "tools/textbook_lint.py"
   ],
-  "archive_sha256": "5456550278c9e0c07d822656f05cad3d4ed12fab6e02d2529c317f45dd8722c1",
-  "manifest_sha256": "92dd06b7de242107a6ade30eac4e1bd8c4631c6cfbce1deadcb22bdd3ab210b9",
+  "archive_sha256": "4b05e8f031c6e020ff1ea823685f75a3995b2fcb287f602e877a3c06f5d6f4c4",
+  "manifest_sha256": "f1e9ed26ad20554a5f555dca8f3b5e9f317289aa32a0c7d8d179514219d0c872",
   "files": [
    {
     "path": "physical/common_flow/anchor_row_packing.tcl",
@@ -139369,30 +139369,6 @@
     "matches_provenance_commit": true
    },
    {
-    "path": "tools/ref_tile/tests/clock_edge_phase_1016/mut-phase.log",
-    "kind": "file",
-    "sha256": "a37ea70a8db8da90aa3fa7538cabf9bb4d1904ef76e8276643497f4cc64013e9",
-    "git_blob": "75611a72cad8d76ec04dac1ceed05a2775a2656e",
-    "source": "working_tree",
-    "matches_provenance_commit": false
-   },
-   {
-    "path": "tools/ref_tile/tests/clock_edge_phase_1016/mut-rise.log",
-    "kind": "file",
-    "sha256": "675d5e7ad0228f0f6385969d51b72d90e4bf078f6c14a7df26dfaaf3a325e2b3",
-    "git_blob": "95f1bcc70b53ba69fb8913afe83484553e7d42ee",
-    "source": "working_tree",
-    "matches_provenance_commit": false
-   },
-   {
-    "path": "tools/ref_tile/tests/clock_edge_phase_1016/positive.log",
-    "kind": "file",
-    "sha256": "5ccc8c85b9e3ef5c77c92ab67e9c751e14754f9f799083c298465f350c59f431",
-    "git_blob": "ce4359dc51deb2ee1728663d6194b617e2519bce",
-    "source": "working_tree",
-    "matches_provenance_commit": false
-   },
-   {
     "path": "tools/ref_tile/tests/make_export_1016/c10/actual_core.sv",
     "kind": "file",
     "sha256": "df1352e845764d966a9ce391b9202c07af4f8c4ecb7f740c3adb23b1150e1f8c",
@@ -139777,14 +139753,6 @@
     "matches_provenance_commit": true
    },
    {
-    "path": "tools/ref_tile/tests/test_cross_clock_gate.py",
-    "kind": "file",
-    "sha256": "4ff33c896fd22be5aaaed67353b56ab96dc7e47ccebd070de55ddc73fc7a207e",
-    "git_blob": "fe0c151a05ec87b41e19be8fa408fbb943b809d4",
-    "source": "working_tree",
-    "matches_provenance_commit": false
-   },
-   {
     "path": "tools/ref_tile/tests/test_cts_native_probe_relative.py",
     "kind": "file",
     "sha256": "75e35cd05f0f5e16c3a14be0f97de63aea48dbafafcf655f52d9f689cef9fcf6",
@@ -139887,14 +139855,6 @@
     "git_blob": "64b2388fc6a03f146a58403978f9b1eef3ecb05d",
     "source": "working_tree",
     "matches_provenance_commit": true
-   },
-   {
-    "path": "tools/ref_tile/tests/test_hybrid_clock_rule_0dq.py",
-    "kind": "file",
-    "sha256": "d16d075e2b8a026fb2fcc338407351ccf5af3970d34ec022114d4f94f08761e3",
-    "git_blob": "0387dd9c714e057857875bf71015c43b0c981499",
-    "source": "working_tree",
-    "matches_provenance_commit": false
    },
    {
     "path": "tools/ref_tile/tests/test_landed_cluster_kit.py",
@@ -140079,14 +140039,6 @@
     "git_blob": "341d277f7489645b926f0a3cf5cfe4bceeca3e2d",
     "source": "working_tree",
     "matches_provenance_commit": true
-   },
-   {
-    "path": "tools/ref_tile/tests/testdata/cross_clock_dl_761317600_replay.log",
-    "kind": "file",
-    "sha256": "76d913848fc57879e6c097d1f6539a831db5b46097b79eb60223a91c45e87be3",
-    "git_blob": "d71c8e0a7ad60d751790a5a55ddfba3c8a52df82",
-    "source": "working_tree",
-    "matches_provenance_commit": false
    },
    {
     "path": "tools/ref_tile/validation/build_val.py",
@@ -165467,14 +165419,14 @@
   ],
   "disk_admission": {
    "reserve_gb": 20,
-   "archive_bytes": 139696900,
-   "unpacked_bytes": 854130688,
+   "archive_bytes": 139687340,
+   "unpacked_bytes": 854024192,
    "pick_gb": 22,
    "runtime_gb": 22
   },
   "route_overlay_plan": {
    "schema": "opentallas.closure_loop.helper_overlay_plan.v1",
-   "origin_main": "c402cb103ddfe19d839aae373ecdd542c27d79d5",
+   "origin_main": "f88200541f9ca5bf62ff35fe30091a6324487541",
    "content_sha256": "aa6fa78f353554802295d16729a817dc591fe74211730466d8c6778b04cf8e67",
    "files": [
     {
@@ -165866,7 +165818,7 @@
   "consumed": {
    "schema": "opentallas.ref_tile.gate_consumed.v1",
    "basis": "staged archive closure at gate time",
-   "count": 18593,
+   "count": 18587,
    "paths": [
     "physical/common_flow/anchor_row_packing.tcl",
     "physical/common_flow/assigned_pin_exact.tcl",
@@ -181199,9 +181151,6 @@
     "tools/ref_tile/test_spec_io_budget.py",
     "tools/ref_tile/test_util_density.py",
     "tools/ref_tile/tests/clock_edge_phase_1016.json",
-    "tools/ref_tile/tests/clock_edge_phase_1016/mut-phase.log",
-    "tools/ref_tile/tests/clock_edge_phase_1016/mut-rise.log",
-    "tools/ref_tile/tests/clock_edge_phase_1016/positive.log",
     "tools/ref_tile/tests/make_export_1016/c10/actual_core.sv",
     "tools/ref_tile/tests/make_export_1016/c10/boundary_config.mk",
     "tools/ref_tile/tests/make_export_1016/c10/dump_make_env.py",
@@ -181250,7 +181199,6 @@
     "tools/ref_tile/tests/test_clock_layer_range.py",
     "tools/ref_tile/tests/test_clock_rule_waiver.py",
     "tools/ref_tile/tests/test_cluster_level2.py",
-    "tools/ref_tile/tests/test_cross_clock_gate.py",
     "tools/ref_tile/tests/test_cts_native_probe_relative.py",
     "tools/ref_tile/tests/test_cts_sink_extra.py",
     "tools/ref_tile/tests/test_gate_actual_pin_geometry.py",
@@ -181264,7 +181212,6 @@
     "tools/ref_tile/tests/test_hold_budget.py",
     "tools/ref_tile/tests/test_hrow_shared_intake.py",
     "tools/ref_tile/tests/test_hybrid_clock_entries.py",
-    "tools/ref_tile/tests/test_hybrid_clock_rule_0dq.py",
     "tools/ref_tile/tests/test_landed_cluster_kit.py",
     "tools/ref_tile/tests/test_landed_root_spread.py",
     "tools/ref_tile/tests/test_lint_receipt.py",
@@ -181288,7 +181235,6 @@
     "tools/ref_tile/tests/test_spine_cts_rest.py",
     "tools/ref_tile/tests/test_staged_remeasurement.py",
     "tools/ref_tile/tests/test_tile_hybrid_raw_entries.py",
-    "tools/ref_tile/tests/testdata/cross_clock_dl_761317600_replay.log",
     "tools/ref_tile/validation/build_val.py",
     "tools/ref_tile/wires_only_ioref.py",
     "tools/refresh_v41_packed_integration_evidence.py",
@@ -199794,9 +199740,6 @@
     "tools/ref_tile/test_spec_io_budget.py": "76f21a89b7645ab63caf92a1fe810613d568999a4d42db3e8d7771d7aea25b2f",
     "tools/ref_tile/test_util_density.py": "b1278a138754bc01441999b7d643474f1513d101396a284c87ceb6452243c45b",
     "tools/ref_tile/tests/clock_edge_phase_1016.json": "c183cf65fa781c04511f29c2cb0f4707fa6b954d623f39c153d1d4beb0a71930",
-    "tools/ref_tile/tests/clock_edge_phase_1016/mut-phase.log": "a37ea70a8db8da90aa3fa7538cabf9bb4d1904ef76e8276643497f4cc64013e9",
-    "tools/ref_tile/tests/clock_edge_phase_1016/mut-rise.log": "675d5e7ad0228f0f6385969d51b72d90e4bf078f6c14a7df26dfaaf3a325e2b3",
-    "tools/ref_tile/tests/clock_edge_phase_1016/positive.log": "5ccc8c85b9e3ef5c77c92ab67e9c751e14754f9f799083c298465f350c59f431",
     "tools/ref_tile/tests/make_export_1016/c10/actual_core.sv": "df1352e845764d966a9ce391b9202c07af4f8c4ecb7f740c3adb23b1150e1f8c",
     "tools/ref_tile/tests/make_export_1016/c10/boundary_config.mk": "ea890bce2e6ce148030583da3a37789dbc0a15f041757072d8d2dac280781ea7",
     "tools/ref_tile/tests/make_export_1016/c10/dump_make_env.py": "0e80a4b52fda579661165cf2f449455ef31ed227587ce4f8ed47b56e7ca1cda6",
@@ -199845,7 +199788,6 @@
     "tools/ref_tile/tests/test_clock_layer_range.py": "25c2de007d4deb583d5e73212abf46049ef2f266c20691f0e91f81e255037752",
     "tools/ref_tile/tests/test_clock_rule_waiver.py": "2207f599dd4db23a540a4833bd7eac2527ef17c7573a3b8c90ada54ad04029c9",
     "tools/ref_tile/tests/test_cluster_level2.py": "76eba8e6f626476696d09485da860ad08230e3ad209ab59919b0b65a57d8f416",
-    "tools/ref_tile/tests/test_cross_clock_gate.py": "4ff33c896fd22be5aaaed67353b56ab96dc7e47ccebd070de55ddc73fc7a207e",
     "tools/ref_tile/tests/test_cts_native_probe_relative.py": "75e35cd05f0f5e16c3a14be0f97de63aea48dbafafcf655f52d9f689cef9fcf6",
     "tools/ref_tile/tests/test_cts_sink_extra.py": "9ac2eca4f260e09b14d2c4307cbcb9ebfc9177500d9b4079e66ea4461597663a",
     "tools/ref_tile/tests/test_gate_actual_pin_geometry.py": "a58eefcc104c4469bf0d72c553ef6ac5ef2acc68cc5751cf006fb9216cd8253e",
@@ -199859,7 +199801,6 @@
     "tools/ref_tile/tests/test_hold_budget.py": "6ca9c8c56e88bb76ce11cd5ed76d6bb71ec7888122d3845bfee2c7cba97eda47",
     "tools/ref_tile/tests/test_hrow_shared_intake.py": "f23423fae23d01e5936924ea6199dc837545a47b6dfe1a450e9da3eee0fa7e21",
     "tools/ref_tile/tests/test_hybrid_clock_entries.py": "57aee4174fce131992b1be1c7402036d4c48fa422ce8f7d926b6fb6d03c436d3",
-    "tools/ref_tile/tests/test_hybrid_clock_rule_0dq.py": "d16d075e2b8a026fb2fcc338407351ccf5af3970d34ec022114d4f94f08761e3",
     "tools/ref_tile/tests/test_landed_cluster_kit.py": "19c554144a6bae9d53e03d7a23552f6c5c201ab5499ebc33f38f044cdd2d7c42",
     "tools/ref_tile/tests/test_landed_root_spread.py": "d5be27ae3d4b54aec3e196e2874d18eb729f3dbbe575a0ccf062c57d40ffd087",
     "tools/ref_tile/tests/test_lint_receipt.py": "a08f34f49bc19b724f46df6c72e7abc4cb3836e0f8043cf953bd975b763d3f5e",
@@ -199883,7 +199824,6 @@
     "tools/ref_tile/tests/test_spine_cts_rest.py": "84034c87a0ba2d720cfdcba733a81616591141f32631855b3a0fd099f1690bd1",
     "tools/ref_tile/tests/test_staged_remeasurement.py": "e834cff206fa49db736fd8ea5995a3bc5a244c0d7ffa352c6f8cd068f53be59c",
     "tools/ref_tile/tests/test_tile_hybrid_raw_entries.py": "cc94a8958ebbfdbf1b2b6f22935c3b32160bfed801f3982c07cdea85523a6b22",
-    "tools/ref_tile/tests/testdata/cross_clock_dl_761317600_replay.log": "76d913848fc57879e6c097d1f6539a831db5b46097b79eb60223a91c45e87be3",
     "tools/ref_tile/validation/build_val.py": "8b03956e520b9e315bd9a3e5c79c9b54f8537488a520e3f91bd764667288926f",
     "tools/ref_tile/wires_only_ioref.py": "3dc12c1160806d2a5b2e14e83c1a4904ab35a5119a21e9ab146ec3d6ed92869c",
     "tools/refresh_v41_packed_integration_evidence.py": "c5619cec114d52519507f7f1d494495368e6b6d8aac22f1b0d7f5b64739d4c1f",
@@ -203057,18 +202997,18 @@
     "tools/wafer_vs_array_study.py": "173b92baecfe94931785e56da36b831cdc4f1af2eebcece0abaa35eb067c3e41",
     "tools/watchdog_contract_model.py": "48d0881d2b5b4ef0c4a219c8ceb0989acc65218e22c40c59902c62b1b2f227c1"
    },
-   "digest": "f7c0cb27a3440d0b70b36dd553263529a88d854a76a8b2e03bbd745161e18268"
+   "digest": "1ed606337f86511f402a7195eedacc992a0d6af37d789e36b535feb6fd264bf1"
   },
-  "captured": "2026-10-18T22:28:41-0700",
+  "captured": "2026-10-18T22:52:13-0700",
   "route_hold_context": {
    "HM": "0.03",
    "OT_ROUTE_HOLD_CORNERS": "mm",
    "OT_MM_FF_SDC": "physical/ref_tile/qkd_kvs_attn/signoff.sdc"
   },
-  "remote_script_sha256": "c7bf5c618d9d8f88c0900921c0d0efe416c2c7dc1f9bc7b9e62ea32623d298b3",
+  "remote_script_sha256": "9d82a29c87b9270629f6a8ce120e25ff3e0a6912450b579e90ae403472f26cc7",
   "tool_image_requested": "openroad/orfs:latest",
-  "remote_host": "ot-epyc4",
-  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/qkd_kvs_attn-20261018-222116",
+  "remote_host": "ot-agidock128",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/qkd_kvs_attn-20261018-224354",
   "remote_archive_verified": true,
   "runtime_tool_provenance": [
    "GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=[\"openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29\"]",
@@ -203190,7 +203130,7 @@
   "kind": "tile",
   "skip_incremental_repair": true,
   "rc": "0",
-  "grt_s": 88,
+  "grt_s": 142,
   "layers": [
    {
     "layer": "M1",
