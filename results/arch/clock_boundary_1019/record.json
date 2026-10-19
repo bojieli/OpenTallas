@@ -1,0 +1,19 @@
+{
+  "source_before": "ed7ba741f3eb6318659f4f9be25f3878f9568fe8",
+  "tool": "tools/closure_loop/ck_insertion.py",
+  "tool_sha256": "8029fafd77560e08d334e0c1951655ac3a12b5df58e849f994fc9d44d59fd68a",
+  "scope": "boundary clock membership only; no timing constraints or signoff thresholds changed",
+  "defect": "timed paths excluded physical data pin flops hidden by false paths",
+  "correction": "structural all-arc fanin/fanout; exclude asynchronous control pins; intersect selected-clock register cells",
+  "validation": {
+    "focused_pass": 6,
+    "broader_pass": 51,
+    "broader_inherited_failures": 7,
+    "new_broader_failures": 0,
+    "host": "ot-epyc8",
+    "unit": "oth-ubuntu-2235387-1792423145",
+    "tools": "Yosys0.68/OpenSTA be771a0",
+    "fixture": "synthesized 5-register two-clock graph plus generic test Liberty; not physical closure"
+  },
+  "historical_closures": "not rewritten; measurements using timed boundary selection retain their original source and scope"
+}
