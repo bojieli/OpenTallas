@@ -183,12 +183,41 @@ proc ot_gf_async {pin cells inputs} {
     puts "OT_GF BOUNDED reset $name -> [get_full_name $pin]"
   }
 }
+proc ot_gf_chain_dir {info c} {
+  # (source family, destination family) of chain c: wptr/wonl publish writer -> reader, rptr/ronl reader -> writer.
+  if {[lsearch -exact {wptr wonl} $c] >= 0} {return [list [dict get $info writer] [dict get $info reader]]}
+  return [list [dict get $info reader] [dict get $info writer]]
+}
+proc ot_gf_online_merged {f c live} {
+  # HKV-HRADM3 10-19 (qkd_hr_cdc_host/pc r5, as OT_ASYNC_GRAY's ot_ag_online_merged, HBMA-SVC 10-17): an online flag
+  # chain is constant 1 after its domain reset, then a two-flop synchroniser.  Two FIFOs whose online chains have the
+  # same launch family, capture family and conditioned reset (u_done host->core ronl == u_ing core->host wonl: core
+  # launch, host stages) are bit-identical, and synthesis' opt_merge keeps ONE chain under one FIFO's names.  A missing
+  # online crossing is admitted only when (a) no mapped register of this FIFO's chain is left (src, stage 1 or stage 2:
+  # merged away, not left unaudited) and (b) another FIFO's online chain in the same direction is live and its crossing
+  # was bounded here.  Gray pointers and storage are never admitted this way.
+  if {$c ni {wonl ronl} || [dict exists $live [list $f $c]]} {return 0}
+  set dir [ot_gf_chain_dir [dict get $::ot_gf_fifos $f] $c]
+  dict for {g ginfo} $::ot_gf_fifos {
+    if {$g eq $f} continue
+    foreach gc {wonl ronl} {
+      if {![dict exists [dict get $ginfo chains] $gc] || [ot_gf_chain_dir $ginfo $gc] ne $dir} continue
+      if {[dict exists $live [list $g $gc]] && [dict exists $::ot_gf_seen [list $g src $gc 0]]} {
+        puts "OT_GF MERGED_ONLINE $f $c -> $g $gc ([join $dir { -> }])"
+        return 1
+      }
+    }
+  }
+  return 0
+}
 proc ot_gf_complete {cells} {
   ot_gf_verify
+  set live {}
   # Every tagged register sits in its tagged family (a tag on a same-family path is refused here).
   dict for {cell domain} $cells {
     lassign [ot_gf_role $cell] k f c i
     if {$k eq "" || $k eq "rst"} continue
+    if {$k in {src sync1 stage}} {dict set live [list $f $c] 1}
     set info [dict get $::ot_gf_fifos $f]
     set w [dict get $info writer]; set r [dict get $info reader]
     set wside [expr {[lsearch -exact {wptr wonl} $c] >= 0}]
@@ -203,7 +232,9 @@ proc ot_gf_complete {cells} {
   dict for {f info} $::ot_gf_fifos {
     dict for {c width} [dict get $info chains] {
       for {set i 0} {$i < $width} {incr i} {
-        if {![dict exists $::ot_gf_seen [list $f src $c $i]]} {error "OT_GF: missing actual synchronised pointer crossing $f $c bit $i"}
+        if {![dict exists $::ot_gf_seen [list $f src $c $i]] && !($i == 0 && $width == 1 && [ot_gf_online_merged $f $c $live])} {
+          error "OT_GF: missing actual synchronised pointer crossing $f $c bit $i"
+        }
       }
     }
     if {[dict get $info store_read] && ![dict exists $::ot_gf_seen [list $f mem mem 0]]} {error "OT_GF: missing actual storage crossing $f"}

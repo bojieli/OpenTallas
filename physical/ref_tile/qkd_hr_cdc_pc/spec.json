@@ -130,7 +130,7 @@
  "hold_budget_reason": "CDC leaf: core/phy family pins; the non-core pins cannot take the single-clock recipe-3 pin register, so the tile repairs its own boundary hold",
  "job": {
   "owner": "Codex:HKV-HROOT",
-  "branch": "claude/hkv-hradm-1019",
+  "branch": "claude/hkv-hradm3-1019",
   "tag": "c3",
   "purpose": "HOST root cluster r2 child qkd_hr_cdc_pc (pre-route gate + route; parent qkd_host_root is CRITICAL)",
   "benches": [
