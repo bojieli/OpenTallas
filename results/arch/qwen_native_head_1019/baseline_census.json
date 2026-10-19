@@ -1,0 +1,111 @@
+{
+  "source": "5753e895b",
+  "cells": 46859,
+  "ff": {
+    "$_DFF_PN0_": 1687,
+    "$_DFF_P_": 8590,
+    "$_SDFF_PP0_": 92,
+    "$_SDFF_PN1_": 8,
+    "$_SDFF_PN0_": 57
+  },
+  "macro_cells": [
+    "u_h.u_lane.g_tls.u_tlm"
+  ],
+  "max_reset_loads": [
+    [
+      1166,
+      1686
+    ],
+    [
+      5457,
+      33
+    ],
+    [
+      5525,
+      32
+    ],
+    [
+      5559,
+      32
+    ],
+    [
+      5466,
+      25
+    ],
+    [
+      5656,
+      16
+    ],
+    [
+      2938,
+      10
+    ],
+    [
+      5492,
+      7
+    ]
+  ],
+  "max_nonclock_loads": [
+    [
+      "u_h.rt",
+      1686
+    ],
+    [
+      "$flatten\\u_h.\\u_lane.$logic_and$rtl/hdc/ot_hdc_vstream_lane.sv:322$6266_Y",
+      136
+    ],
+    [
+      "u_h.u_lane.s1_tag",
+      128
+    ],
+    [
+      "u_h.u_lane.g_tls.ring_on",
+      122
+    ],
+    [
+      "$auto$alumacc.cc:548:replace_alu$13814.BB",
+      118
+    ],
+    [
+      "$auto$alumacc.cc:548:replace_alu$12817.BB",
+      118
+    ],
+    [
+      "$auto$alumacc.cc:548:replace_alu$13247.BB",
+      118
+    ],
+    [
+      "$auto$alumacc.cc:548:replace_alu$12525.BB",
+      114
+    ],
+    [
+      "u_h.u_lane.u_ad.g_l.u.cmp_c",
+      89
+    ],
+    [
+      "u_h.u_lane.u_e1.g_l.u.cmp_c",
+      88
+    ],
+    [
+      "u_h.u_lane.s1_tag",
+      65
+    ],
+    [
+      "u_h.u_lane.s1_tag",
+      64
+    ],
+    [
+      "$auto$share.cc:663:make_supercell$14362.B",
+      52
+    ],
+    [
+      "$auto$alumacc.cc:548:replace_alu$12624.A",
+      51
+    ],
+    [
+      "$auto$share.cc:663:make_supercell$14382.B",
+      51
+    ]
+  ],
+  "qualified": false
+}
