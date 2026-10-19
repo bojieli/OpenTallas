@@ -109,7 +109,69 @@
  "job": {
   "owner": "Claude OWN-IDXSCORE 1018",
   "purpose": "IDX-SCORE leaf master (16 instances in the scorer cluster x 2 scorers)",
-  "branch": "claude/own-idxscore-1018"
+  "branch": "claude/own-idxscore-leafrst-1019",
+  "benches": [
+   {
+    "name": "chunk_rt_pos",
+    "cmd": "bash rtl/test/hbm_idx_static/run_chunk_rt_equiv.sh {RUN}/le_pos pos",
+    "expect": "pass",
+    "pass_regex": "^CHUNK_RT_EQUIV PASS checks ",
+    "pass_witness": "results/rtl/hbm_idx_quarter_split_1018/leaf_exact5/pos.log",
+    "threads": 8,
+    "peak_ram_gb": 28,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "chunk_rt_gap4",
+    "cmd": "bash rtl/test/hbm_idx_static/run_chunk_rt_equiv.sh {RUN}/le_gap4 gap4",
+    "expect": "pass",
+    "pass_regex": "^CHUNK_RT_EQUIV PASS checks ",
+    "pass_witness": "results/rtl/hbm_idx_quarter_split_1018/leaf_exact5/gap4.log",
+    "threads": 8,
+    "peak_ram_gb": 28,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "chunk_rt_qlate1",
+    "cmd": "bash rtl/test/hbm_idx_static/run_chunk_rt_equiv.sh {RUN}/le_qlate1 qlate1",
+    "expect": "fail",
+    "fail_regex": "^MISMATCH cyc",
+    "fail_witness": "results/rtl/hbm_idx_quarter_split_1018/leaf_exact5/qlate1.log",
+    "threads": 8,
+    "peak_ram_gb": 28,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "chunk_rt_seam",
+    "cmd": "bash rtl/test/hbm_idx_static/run_chunk_rt_equiv.sh {RUN}/le_seam seam",
+    "expect": "fail",
+    "fail_regex": "^MISMATCH cyc",
+    "fail_witness": "results/rtl/hbm_idx_quarter_split_1018/leaf_exact5/seam.log",
+    "threads": 8,
+    "peak_ram_gb": 28,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "chunk_rt_swap",
+    "cmd": "bash rtl/test/hbm_idx_static/run_chunk_rt_equiv.sh {RUN}/le_swap swap",
+    "expect": "fail",
+    "fail_regex": "^MISMATCH cyc",
+    "fail_witness": "results/rtl/hbm_idx_quarter_split_1018/leaf_exact5/swap.log",
+    "threads": 8,
+    "peak_ram_gb": 28,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ]
  },
  "clock_entry_domains": {
   "core": {

@@ -22,13 +22,21 @@ module ot_hbm_idx_score_qw_static #(parameter integer TP=96,RANK_W=(TP<=1?1:$clo
  input wire keep_en,input wire[170:0]keep_bitmap,
  input wire ql_v,input wire[7:0]ql_head,input wire[511:0]ql_codes,input wire[31:0]ql_sc,input wire[15:0]ql_w,
  input wire beat_v,input wire[7:0]beat_index,input wire[4395:0]key_lines,
- output wire rst_c,
- output reg o_qv,output reg[567:0]o_q,output reg o_kv,
+ // E face = two row sections (row 0 bottom, row 1 top), each in the leaf's W pin order qv,q,kv,kkv,key,aux,bus, so every
+ // row's pins face its own leaf (0,e) W pins: the query / valid / zero-bus words are REPLICATED per row (one flop set
+ // per row, beside its pins) instead of one pin driving both rows across the 1.12 mm tile height (TW3-IDXSCORE 10-19).
+ output wire rst_c0,output wire rst_c1,
+ output reg o_qv0,output reg[567:0]o_q0,output reg o_kv0,
  output reg[3:0]o_kkv0,output reg[2175:0]o_key0,output reg[29:0]o_aux0,
+ output wire[551:0]o_bus0,
+ output reg o_qv1,output reg[567:0]o_q1,output reg o_kv1,
  output reg[3:0]o_kkv1,output reg[2175:0]o_key1,output reg[29:0]o_aux1,
- output wire[551:0]o_bus0
+ output wire[551:0]o_bus1
 );
- ot_rst_relay #(.REGIONS(1),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst(.clk(clk_ctl),.rst_n_in(rst_n),.rst_n(rst_c));
+ // one relay region per leaf row (same release edge for both rows)
+ wire[1:0]rst_r;
+ ot_rst_relay #(.REGIONS(2),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst(.clk(clk_ctl),.rst_n_in(rst_n),.rst_n(rst_r));
+ assign rst_c0=rst_r[0];assign rst_c1=rst_r[1];
  (* keep *) reg h_r;(* keep *) reg[RANK_W-1:0]rk_r;(* keep *) reg[10:0]fo_r;(* keep *) reg[11:0]nk_r;
  (* keep *) reg ke_r;(* keep *) reg[170:0]kb_r;
  (* keep *) reg qv_r;(* keep *) reg[7:0]qh_r;(* keep *) reg[511:0]qc_r;(* keep *) reg[31:0]qs_r;(* keep *) reg[15:0]qw_r;
@@ -66,7 +74,8 @@ module ot_hbm_idx_score_qw_static #(parameter integer TP=96,RANK_W=(TP<=1?1:$clo
  end
  // registered output stage: every W-tile output pin launches from a flop (+1 edge on all leaf inputs)
  always @(posedge clk_ctl)begin
-  o_qv<=qv_r;o_q<={qh_r,qc_r,qs_r,qw_r};o_kv<=bv_r;
+  o_qv0<=qv_r;o_q0<={qh_r,qc_r,qs_r,qw_r};o_kv0<=bv_r;
+  o_qv1<=qv_r;o_q1<={qh_r,qc_r,qs_r,qw_r};o_kv1<=bv_r;
   o_kkv0<=vk[0];o_key0<=keys[0];
   o_kkv1<=vk[1];o_key1<=keys[1];o_aux1<=aux[1];
  end
@@ -75,7 +84,7 @@ module ot_hbm_idx_score_qw_static #(parameter integer TP=96,RANK_W=(TP<=1?1:$clo
 `else
  always @(posedge clk_ctl) o_aux0<=aux[0];
 `endif
- assign o_bus0='0;
+ assign o_bus0='0;assign o_bus1='0;
 endmodule
 
 module ot_hbm_idx_score_qe_static(
@@ -160,26 +169,27 @@ module ot_hbm_idx_score_quarter_wo #(parameter integer TP=96,RANK_W=(TP<=1?1:$cl
  output wire[305:0]score,output wire fault
 );
  localparam integer QW = 568, KW4 = 2176, SW = 138, AUXW = 30, NCH = 4;
- wire rst_c,w_qv,w_kv;wire[QW-1:0]w_q;wire[3:0]w_kkv0,w_kkv1;wire[KW4-1:0]w_key0,w_key1;wire[AUXW-1:0]w_aux0,w_aux1;
- wire[4*SW-1:0]w_bus0;
+ wire rst_c0,rst_c1,w_qv0,w_qv1,w_kv0,w_kv1;wire[QW-1:0]w_q0,w_q1;wire[3:0]w_kkv0,w_kkv1;wire[KW4-1:0]w_key0,w_key1;
+ wire[AUXW-1:0]w_aux0,w_aux1;wire[4*SW-1:0]w_bus0,w_bus1;
  ot_hbm_idx_score_qw_static #(.TP(TP)) u_w(.clk_ctl(clk_ctl),.rst_n(rst_n),.half(half),.rank(rank),.first_ord(first_ord),
   .nkeys(nkeys),.keep_en(keep_en),.keep_bitmap(keep_bitmap),.ql_v(ql_v),.ql_head(ql_head),.ql_codes(ql_codes),.ql_sc(ql_sc),
-  .ql_w(ql_w),.beat_v(beat_v),.beat_index(beat_index),.key_lines(key_lines),.rst_c(rst_c),
-  .o_qv(w_qv),.o_q(w_q),.o_kv(w_kv),.o_kkv0(w_kkv0),.o_key0(w_key0),.o_aux0(w_aux0),
-  .o_kkv1(w_kkv1),.o_key1(w_key1),.o_aux1(w_aux1),.o_bus0(w_bus0));
+  .ql_w(ql_w),.beat_v(beat_v),.beat_index(beat_index),.key_lines(key_lines),.rst_c0(rst_c0),.rst_c1(rst_c1),
+  .o_qv0(w_qv0),.o_q0(w_q0),.o_kv0(w_kv0),.o_kkv0(w_kkv0),.o_key0(w_key0),.o_aux0(w_aux0),.o_bus0(w_bus0),
+  .o_qv1(w_qv1),.o_q1(w_q1),.o_kv1(w_kv1),.o_kkv1(w_kkv1),.o_key1(w_key1),.o_aux1(w_aux1),.o_bus1(w_bus1));
  wire r_qv[0:1],r_kv[0:1];wire[AUXW-1:0]r_aux[0:1];wire[4*SW-1:0]r_bus[0:1];
  genvar e,c,l;
  for(e=0;e<2;e=e+1)begin:ge
   wire qv_c [0:NCH]; wire [QW-1:0] q_c [0:NCH]; wire kv_c [0:NCH]; wire [3:0] kkv_c [0:NCH]; wire [KW4-1:0] key_c [0:NCH];
   wire [AUXW-1:0] aux_c [0:NCH]; wire [4*SW-1:0] bus_c [0:NCH];
-  assign qv_c[0]=w_qv; assign q_c[0]=w_q; assign kv_c[0]=w_kv; assign bus_c[0]=w_bus0;
+  assign qv_c[0]=(e==0)?w_qv0:w_qv1; assign q_c[0]=(e==0)?w_q0:w_q1; assign kv_c[0]=(e==0)?w_kv0:w_kv1;
+  assign bus_c[0]=(e==0)?w_bus0:w_bus1;
   assign kkv_c[0]=(e==0)?w_kkv0:w_kkv1; assign key_c[0]=(e==0)?w_key0:w_key1; assign aux_c[0]=(e==0)?w_aux0:w_aux1;
   for(c=0;c<NCH;c=c+1)begin:gc
    wire [15:0] cp;
    for(l=0;l<16;l=l+1)begin:gp
     assign cp[l]=clk_hslice[e*128 + c*32 + 2*l];
    end
-   ot_hbm_idx_score_leaf #(.AUXW(AUXW)) leaf(.clk(clk_chunk[e*4+c]), .clk_pair(cp), .rst_n(rst_c), .hb(8'(8*c)),
+   ot_hbm_idx_score_leaf #(.AUXW(AUXW)) leaf(.clk(clk_chunk[e*4+c]), .clk_pair(cp), .rst_n((e==0)?rst_c0:rst_c1), .hb(8'(8*c)),
     .w_qv(qv_c[c]), .w_q(q_c[c]), .w_kv(kv_c[c]), .w_kkv(kkv_c[c]), .w_key(key_c[c]), .w_aux(aux_c[c]), .w_bus(bus_c[c]),
     .e_qv(qv_c[c+1]), .e_q(q_c[c+1]), .e_kv(kv_c[c+1]), .e_kkv(kkv_c[c+1]), .e_key(key_c[c+1]), .e_aux(aux_c[c+1]),
     .e_bus(bus_c[c+1]));

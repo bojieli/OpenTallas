@@ -46,21 +46,26 @@
    "key_lines"
   ],
   "E": [
+   "o_qv0",
+   "o_q0",
+   "o_kv0",
+   "o_kkv0",
+   "o_key0",
+   "o_aux0",
+   "o_bus0",
+   "o_qv1",
+   "o_q1",
+   "o_kv1",
    "o_kkv1",
    "o_key1",
    "o_aux1",
-   "o_qv",
-   "o_q",
-   "o_kv",
-   "rst_c",
-   "o_bus0",
-   "o_kkv0",
-   "o_key0",
-   "o_aux0"
+   "o_bus1",
+   "rst_c0"
   ],
   "N": [
    "clk_ctl",
-   "rst_n"
+   "rst_n",
+   "rst_c1"
   ]
  },
  "clock_port": "clk_ctl",

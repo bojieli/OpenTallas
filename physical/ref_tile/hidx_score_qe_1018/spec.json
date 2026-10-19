@@ -24,9 +24,33 @@
  "inter": [],
  "hold_budget": "die",
  "job": {
-  "owner": "Claude OWN-IDXSCORE 1018",
+  "owner": "Claude TW3-IDXSCORE 1019",
   "purpose": "IDX quarter scorer glue tile (wires-only quarter ot_hbm_idx_score_quarter_wo, x4 per die)",
-  "branch": "claude/own-idxscore-1018"
+  "branch": "claude/own-idxscore-leafrst-1019",
+  "benches": [
+   {
+    "name": "qsplit_pos",
+    "cmd": "bash rtl/test/hbm_idx_static/run_quarter_split_lockstep.sh {RUN}/qs_pos pos",
+    "expect": "pass",
+    "pass_regex": "^IDX_QUARTER_SPLIT_GATE_PASS$",
+    "threads": 16,
+    "peak_ram_gb": 54,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "qsplit_rowswap",
+    "cmd": "QS_BENCH=1 bash rtl/test/hbm_idx_static/run_quarter_split_lockstep.sh {RUN}/qs_rowswap rowswap",
+    "expect": "fail",
+    "fail_regex": "^\\[rowswap\\] QSPLIT_BAD cyc",
+    "threads": 16,
+    "peak_ram_gb": 54,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ]
  },
  "name": "hidx_score_qe_1018",
  "top": "ot_hbm_idx_score_qe_static",
@@ -55,14 +79,14 @@
  },
  "pins": {
   "W": [
-   "r1_qv",
-   "r1_kv",
-   "r1_aux",
-   "r1_bus",
    "r0_qv",
    "r0_kv",
    "r0_aux",
-   "r0_bus"
+   "r0_bus",
+   "r1_qv",
+   "r1_kv",
+   "r1_aux",
+   "r1_bus"
   ],
   "E": [
    "score",
@@ -77,5 +101,39 @@
   "enable": false,
   "reason": "outputs score/fault are registers (as the flat quarter); inputs land in the keep delay / tail / meta input stages and the settle/online/fault registers (E glue verbatim)"
  },
- "structural_change": "OWN-IDXSCORE 2026-10-18: E glue column of the wires-only IDX quarter scorer: both rows' E glue verbatim (keep delay D106, settle/online fault, ot_hbm_idx_tail_native, d123 meta RF), own reset relay, registered score (306 b) + fault; one clock (the E region clock)."
+ "structural_change": "OWN-IDXSCORE 2026-10-18: E glue column of the wires-only IDX quarter scorer: both rows' E glue verbatim (keep delay D106, settle/online fault, ot_hbm_idx_tail_native, d123 meta RF), own reset relay, registered score (306 b) + fault; one clock (the E region clock). TW3-IDXSCORE 10-19: W face re-pinned to the leaf (e,3) E pins: r0_* in the bottom row section, r1_* in the top, each port at its leaf E-face range (shared leaf face table).",
+ "pin_ranges": {
+  "r0_qv": [
+   2.16,
+   3.24
+  ],
+  "r0_kv": [
+   97.857,
+   98.937
+  ],
+  "r0_aux": [
+   462.491,
+   467.489
+  ],
+  "r0_bus": [
+   467.489,
+   559.44
+  ],
+  "r1_qv": [
+   563.76,
+   564.84
+  ],
+  "r1_kv": [
+   659.457,
+   660.537
+  ],
+  "r1_aux": [
+   1024.091,
+   1029.089
+  ],
+  "r1_bus": [
+   1029.089,
+   1121.04
+  ]
+ }
 }

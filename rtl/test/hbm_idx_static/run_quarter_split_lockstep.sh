@@ -1,7 +1,9 @@
 #!/bin/bash
 # OWN-IDXSCORE 2026-10-18: wires-only IDX quarter (W tile + 8 leaves + E tile) vs flat ot_hbm_idx_score_quarter_static.
 # PASS: pos half0 + pos half1 (every edge equal at +1). Must FAIL: keyline (row 1 reads row 0 key lines), auxearly (row 0 aux
-# one edge early), rowswap (E tile swaps the rows' sum buses). Usage: run_quarter_split_lockstep.sh OUT
+# one edge early), rowswap (E tile swaps the rows' sum buses). Usage: run_quarter_split_lockstep.sh OUT [CASE...]
+# CASE: pos (pos0 pos1 + both +poison_payload runs) | keyline | auxearly | rowswap; default = all (the full gate).
+# A case list builds only its own vehicles (closure-loop benches: one expect=pass "pos" + one expect=fail per mutant).
 set -uo pipefail
 root=$(cd "$(dirname "$0")/../../.." && pwd); cd "$root"
 out=$(realpath -m "${1:-/tmp/idx-quarter-split}"); mkdir -p "$out"
@@ -20,7 +22,12 @@ build(){ # tag half defines...
  "$vl" --hierarchical --binary --timing --verilate-jobs "${QS_VJ:-8}" --build-jobs "${QS_BJ:-16}" -O1 -Wno-fatal -Wno-lint -Wno-style \
   -GTP=192 -GHALF=$h "$@" --top-module tb_idx_quarter_split --Mdir "$out/obj_$t" "${src[@]}" > "$out/build_$t.log" 2>&1 || { echo "[$t] BUILD FAILED"; tail -20 "$out/build_$t.log"; }
 }
-build pos0 0; build pos1 1; build keyline 0 -DOT_IDXQS_MUT_KEYLINE; build auxearly 0 -DOT_IDXQS_MUT_AUXEARLY; build rowswap 1 -DOT_IDXQS_MUT_ROWSWAP
+cases=("${@:2}"); [ ${#cases[@]} = 0 ] && cases=(pos keyline auxearly rowswap)
+for c in "${cases[@]}"; do case $c in pos|keyline|auxearly|rowswap) ;; *) echo "bad case $c"; exit 2 ;; esac; done
+has(){ local c; for c in "${cases[@]}"; do [ "$c" = "$1" ] && return 0; done; return 1; }
+has pos && { build pos0 0; build pos1 1; }
+has keyline && build keyline 0 -DOT_IDXQS_MUT_KEYLINE; has auxearly && build auxearly 0 -DOT_IDXQS_MUT_AUXEARLY
+has rowswap && build rowswap 1 -DOT_IDXQS_MUT_ROWSWAP
 echo BUILDS_DONE
 rc=0
 run(){ # executable-tag expected-verdict log-tag [runtime arguments...]
@@ -30,9 +37,14 @@ run(){ # executable-tag expected-verdict log-tag [runtime arguments...]
  if [ "$want" = pass ]; then [ $r = 0 ] && grep -q "IDX_QUARTER_SPLIT PASS" "$out/run_$log.log" || { echo "[$log] FAILED (expected PASS)"; rc=1; }
  else [ $r != 0 ] && grep -q "QSPLIT_BAD" "$out/run_$log.log" && echo "[$log] mutant rejected" || { echo "[$log] MUTANT SURVIVED"; rc=1; }; fi
 }
-run pos0 pass pos0; run pos1 pass pos1
-# Reuse compiled positive vehicles with different unreset output histories.
-run pos0 pass pos0_poison +poison_payload; run pos1 pass pos1_poison +poison_payload
-run keyline fail keyline; run auxearly fail auxearly; run rowswap fail rowswap
+if has pos; then
+ run pos0 pass pos0; run pos1 pass pos1
+ # Reuse compiled positive vehicles with different unreset output histories.
+ run pos0 pass pos0_poison +poison_payload; run pos1 pass pos1_poison +poison_payload
+fi
+# QS_BENCH=1 (closure-loop expect=fail mutant benches): judge a mutant like a positive, so a detected mutant exits non-zero
+# with QSPLIT_BAD + IDX_QUARTER_SPLIT_GATE_FAIL (the bench's fail_regex) and a surviving one exits 0 (daemon: NEEDS_RTL).
+mw=fail; [ "${QS_BENCH:-0}" = 1 ] && mw=pass
+has keyline && run keyline $mw keyline; has auxearly && run auxearly $mw auxearly; has rowswap && run rowswap $mw rowswap
 [ $rc = 0 ] && echo IDX_QUARTER_SPLIT_GATE_PASS || echo IDX_QUARTER_SPLIT_GATE_FAIL
 exit $rc

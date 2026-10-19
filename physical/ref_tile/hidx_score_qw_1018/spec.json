@@ -24,9 +24,45 @@
  "inter": [],
  "hold_budget": "die",
  "job": {
-  "owner": "Claude OWN-IDXSCORE 1018",
+  "owner": "Claude TW3-IDXSCORE 1019",
   "purpose": "IDX quarter scorer glue tile (wires-only quarter ot_hbm_idx_score_quarter_wo, x4 per die)",
-  "branch": "claude/own-idxscore-1018"
+  "branch": "claude/own-idxscore-leafrst-1019",
+  "cycles_added": 1,
+  "benches": [
+   {
+    "name": "qsplit_pos",
+    "cmd": "bash rtl/test/hbm_idx_static/run_quarter_split_lockstep.sh {RUN}/qs_pos pos",
+    "expect": "pass",
+    "pass_regex": "^IDX_QUARTER_SPLIT_GATE_PASS$",
+    "threads": 16,
+    "peak_ram_gb": 54,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "qsplit_keyline",
+    "cmd": "QS_BENCH=1 bash rtl/test/hbm_idx_static/run_quarter_split_lockstep.sh {RUN}/qs_keyline keyline",
+    "expect": "fail",
+    "fail_regex": "^\\[keyline\\] QSPLIT_BAD cyc",
+    "threads": 16,
+    "peak_ram_gb": 54,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "qsplit_auxearly",
+    "cmd": "QS_BENCH=1 bash rtl/test/hbm_idx_static/run_quarter_split_lockstep.sh {RUN}/qs_auxearly auxearly",
+    "expect": "fail",
+    "fail_regex": "^\\[auxearly\\] QSPLIT_BAD cyc",
+    "threads": 16,
+    "peak_ram_gb": 54,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ]
  },
  "name": "hidx_score_qw_1018",
  "top": "ot_hbm_idx_score_qw_static",
@@ -64,26 +100,97 @@
    "key_lines"
   ],
   "E": [
+   "o_qv0",
+   "o_q0",
+   "o_kv0",
+   "o_kkv0",
+   "o_key0",
+   "o_aux0",
+   "o_bus0",
+   "o_qv1",
+   "o_q1",
+   "o_kv1",
    "o_kkv1",
    "o_key1",
    "o_aux1",
-   "o_qv",
-   "o_q",
-   "o_kv",
-   "rst_c",
-   "o_bus0",
-   "o_kkv0",
-   "o_key0",
-   "o_aux0"
+   "o_bus1",
+   "rst_c0"
   ],
   "N": [
    "clk_ctl",
-   "rst_n"
+   "rst_n",
+   "rst_c1"
   ]
  },
  "pin_regs": {
   "enable": false,
   "reason": "the RTL registers every pin: input pin flops *_r (flop-first, no reset), every output o_* from the registered output stage; rst_c from the ot_rst_relay flop; o_bus0 is the constant zero sum-bus head word"
  },
- "structural_change": "OWN-IDXSCORE 2026-10-18: W glue column of the wires-only IDX quarter scorer (landed-regions standard: the 1.12 x 2.25 mm quarter is dissolved into the die, not hardened with one tree). Input pin flops + W glue (key line split, valid/keep lanes, meta input, W fault cause) + registered output stage (+1 edge on every leaf input) + reset relay. Height = the two leaf rows (2 x 561.6); E face feeds leaf (0,0) and (1,0) W faces."
+ "structural_change": "OWN-IDXSCORE 2026-10-18: W glue column of the wires-only IDX quarter scorer (landed-regions standard: the 1.12 x 2.25 mm quarter is dissolved into the die, not hardened with one tree). Input pin flops + W glue (key line split, valid/keep lanes, meta input, W fault cause) + registered output stage (+1 edge on every leaf input) + reset relay. Height = the two leaf rows (2 x 561.6); E face feeds leaf (0,0) and (1,0) W faces. TW3-IDXSCORE 10-19: E face re-pinned to the leaf W pins: two row sections (row 0 bottom, row 1 top), each in the leaf W order qv,q,kv,kkv,key,aux,bus with per-port pin_ranges from the shared leaf face table; query/valid/zero-bus and the reset relay replicated per row (no pin drives both rows). cycles_added 1 = the registered output stage (+1 edge on every leaf input).",
+ "pin_ranges": {
+  "o_qv0": [
+   2.16,
+   3.24
+  ],
+  "o_q0": [
+   3.24,
+   97.857
+  ],
+  "o_kv0": [
+   97.857,
+   98.937
+  ],
+  "o_kkv0": [
+   98.937,
+   100.017
+  ],
+  "o_key0": [
+   100.017,
+   462.491
+  ],
+  "o_aux0": [
+   462.491,
+   467.489
+  ],
+  "o_bus0": [
+   467.489,
+   559.44
+  ],
+  "o_qv1": [
+   563.76,
+   564.84
+  ],
+  "o_q1": [
+   564.84,
+   659.457
+  ],
+  "o_kv1": [
+   659.457,
+   660.537
+  ],
+  "o_kkv1": [
+   660.537,
+   661.617
+  ],
+  "o_key1": [
+   661.617,
+   1024.091
+  ],
+  "o_aux1": [
+   1024.091,
+   1029.089
+  ],
+  "o_bus1": [
+   1029.089,
+   1121.04
+  ],
+  "rst_c0": [
+   559.98,
+   561.06
+  ],
+  "rst_c1": [
+   75.6,
+   81.0
+  ]
+ }
 }

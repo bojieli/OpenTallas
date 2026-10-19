@@ -100,8 +100,9 @@ module tb_idx_quarter_split #(parameter integer TP=192, parameter integer HALF=0
   repeat (20) @(negedge clk);
   $display("IDX_QUARTER_SPLIT half%0d errors%0d old_events%0d nonzero%0d new_events%0d old_first_fault_cyc%0d", HALF, errs, evs, nz, newev, oldfault_cyc);
   $display("IDX_QUARTER_SPLIT coverage row0_nonzero_events%0d row1_nonzero_events%0d lane_fault_events%0d",nz_row0,nz_row1,lane_faults);
+  // else: Verilator runs the statement after $finish in the same block (qs3/qs4 printed a stray FAIL line after PASS)
   if (errs==0 && evs==49 && nz_row0>0 && nz_row1>0 && lane_faults==0 && newev==evs && oldfault_cyc<0) begin $display("IDX_QUARTER_SPLIT PASS"); $finish; end
-  $display("IDX_QUARTER_SPLIT FAIL"); $stop;
+  else begin $display("IDX_QUARTER_SPLIT FAIL"); $stop; end
  end
 endmodule
 `default_nettype wire
