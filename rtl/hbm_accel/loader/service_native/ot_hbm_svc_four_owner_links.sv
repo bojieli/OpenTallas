@@ -3,7 +3,7 @@
 // Input admission promises target capacity TWO edges later; this is not ready/credit flow.
 // All roots must have qualified common frequency/phase; this component is not an async CDC.
 (* keep_hierarchy = "yes" *)
-module ot_hbm_owner_link_slice #(parameter integer W=8)(
+module ot_hbm_owner_link_slice #(parameter integer W=6)(
  input wire clk,first_rst_n,input wire [W-1:0] d,
  output reg [W-1:0] q,output wire [W-1:0] preview
 );
@@ -33,9 +33,9 @@ module ot_hbm_owner_pair_link #(parameter integer J=0,MUT=0)(
   if(!rst_n)first_rst<=0;else first_rst<=2'b11;
  wire [287:0] incoming={target_reserved,in_target,in_packet};
  wire [287:0] outgoing,selected;
- for(genvar k=0;k<36;k=k+1)begin:g_slice
-  ot_hbm_owner_link_slice #(.W(8)) u_slice(
-   .clk(clk),.first_rst_n(first_rst[k/18]),.d(incoming[8*k+:8]),.q(outgoing[8*k+:8]),.preview(selected[8*k+:8]));
+ for(genvar k=0;k<48;k=k+1)begin:g_slice
+  ot_hbm_owner_link_slice #(.W(6)) u_slice(
+   .clk(clk),.first_rst_n(first_rst[k/24]),.d(incoming[6*k+:6]),.q(outgoing[6*k+:6]),.preview(selected[6*k+:6]));
  end
  (* keep = "yes" *) reg ctrl_rst;
  always @(posedge clk or negedge first_rst[0])
