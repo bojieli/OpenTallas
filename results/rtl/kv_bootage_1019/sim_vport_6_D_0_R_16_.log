@@ -1,0 +1,10 @@
+MISMATCH t=55000 vq0 0/0 vq1 0/0 ov 1/0 ot 2d23/261c fault 1/1
+MISMATCH t=57000 vq0 1/1 vq1 0/0 ov 0/1 ot 20cb/20cb fault 1/1
+MISMATCH t=59000 vq0 0/0 vq1 0/0 ov 1/0 ot 1f7d/1f7d fault 1/1
+MISMATCH t=61000 vq0 0/0 vq1 1/1 ov 0/1 ot 2b7b/28be fault 1/1
+MISMATCH t=63000 vq0 0/0 vq1 1/1 ov 1/0 ot 2174/2174 fault 1/1
+KVBA_VPORT FAIL D=0 R=16 mut=6 checks=8000 errors=6961 ref_fault_cycles=0 words=1952 invalid_caught=3/3
+- /srv/opentallas-scratch/claude/kv-bootage/src/rtl/test/kv_bootage_1019/tb_kvba_vport.sv:91: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 16us; walltime 0.016 s; speed 1.021 ms/s
+- Verilator: cpu 0.016 s on 1 threads; allocated 7 MB

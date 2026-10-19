@@ -26,7 +26,7 @@ import kv_bundle_eq as BEQ         # noqa: E402
 
 L1 = ROOT / 'results/rtl/qwen_layer_tput_1018/compiled_L1'
 ASBUILT = L1 / 'die_run/kv_kvs14c_relay_stages.json.gz'
-SCHED_L1 = L1 / 'relay_schedule/kv_compiled.json.gz'
+SCHED_L1 = L1 / 'die_run/kv_kvs14c_compiled_L1_schedule.json.gz'   # kvs14c-era compiled_L1 schedule (compiled_L1 is kvs14p since HKV-DIE 10-19)
 
 
 def compile_like_layer_compile(doc):
@@ -139,6 +139,9 @@ class BundleTables(unittest.TestCase):
     def test_plan(self):
         self.assertEqual(BEQ.plan({'a': 9, 'b': 11}), {'a': 2, 'b': 0})
         self.assertEqual(BEQ.plan({}), {})
+        # HKV-DIE 10-19: offset members (seq KVN check: prg carries S_rx + LAND)
+        self.assertEqual(BEQ.plan({'prg': 5, 'skw': 4}, {'prg': 12}), {'prg': 0, 'skw': 13})
+        self.assertEqual(BEQ.plan({'prg': 5, 'skw': 20}, {'prg': 12}), {'prg': 3, 'skw': 0})
 
 
 # ------------------------------------------------------------------------------------------------ generator plan pass
@@ -205,6 +208,31 @@ class PlanPass(unittest.TestCase):
         clk = next(b for b in m['buses'] if b[0] == 'clk_core_c')
         self.assertTrue(all((p.name, 'ck') in clk[3] for p in pads))
         self.assertEqual(m['bundle_eq']['bundles']['K.rx_record']['stages'], 3)
+
+    def test_seq_kvn_alignment(self):
+        K, F = _stub_K()
+        m = _model(F)
+        BEQ.equalize(K, m, bundles={'K.rx_record': BEQ.MODEL_BUNDLES['K.rx_record']})     # S_rx = 3
+        I = F.Inst
+        m['insts'] += [I('seq', 'qkd_seq', 2600.0, 3100.0, 302.4, 302.4, kind='static'),
+                       I('rly_prg_0', 'qkd_rly_537', 1350.0, 1700.0, 52.68, 30.24, kind='relay', region='relay')]
+        K.masters = (lambda base: (lambda m_, k=1: dict(base(m_, k), qkd_seq=_M({'prg': (0.0, 150.0), 'skw': (10.0, 0.0)}),
+                     qkd_kvs_attn=_M(dict(base(m_, k)['qkd_kvs_attn'].ports, prg=(302.4, 150.0))),
+                     qkd_d2ds=_M(dict(base(m_, k)['qkd_d2ds'].ports, skw=(0.0, 100.0))))))(K.masters)
+        m['buses'] += [('ks_prg', 'kv_oneway', 537, [('kvs_attn', 'prg'), ('rly_prg_0', 'a')]),
+                       ('ks_prg__r1', 'kv_oneway', 537, [('rly_prg_0', 'b'), ('seq', 'prg')]),
+                       ('seqst_kw', 'kv_oneway', 12, [('d2d_kv', 'skw'), ('seq', 'skw')])]
+        m['relay_stages'].update(ks_prg=1, seqst_kw=0)
+        by = {i.name: i for i in m['insts']}
+        b = BEQ.seq_kvn_bundle(m, by, land=1)
+        self.assertEqual(b, {'S.seq_kvn': [('kvs_attn', 'prg', 'seq', 4), ('d2d_kv', 'skw', 'seq', 0)]})
+        BEQ.equalize(K, m, bundles=b)
+        by = {i.name: i for i in m['insts']}
+        self.assertEqual(BEQ._walk(m, by, ('d2d_kv', 'skw'))[('seq', 'skw')][0], 5)    # S_rx 3 + S_prg 1 + LAND 1
+        self.assertEqual(BEQ._walk(m, by, ('kvs_attn', 'prg'))[('seq', 'prg')][0], 1)  # the CMD side untouched
+        self.assertIn('K.rx_record', m['bundle_eq']['bundles'])                         # earlier bundles kept
+        self.assertEqual(m['bundle_eq']['bundles']['S.seq_kvn']['stages'], 5)
+        self.assertIsNone(BEQ.seq_kvn_bundle(_model(F), {i.name: i for i in _model(F)['insts']}, land=1))  # no seq
 
     def test_no_spot_fails_closed(self):
         K, F = _stub_K()
