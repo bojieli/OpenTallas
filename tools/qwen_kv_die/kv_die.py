@@ -4597,6 +4597,8 @@ def static_instance_params(m):
 
 
 def write_netlist(m, k, path, top='qkd_die'):
+    if os.environ.get('OT_KV_GRP_PRIVATE0', '0') == '1' and k != 1:
+        raise ValueError('GRP_PRIVATE0 requires full-width parent nets (k=1)')
     F.write_netlist(m, k, path, top=top)
     if m['geo'].get('static_die'):
         # KVJ-G2: per-instance parameters (ECTL kiss RESPONSE_LAT from this plan's K request / response relays) as a
@@ -4612,6 +4614,10 @@ def write_netlist(m, k, path, top='qkd_die'):
                 raise ValueError(f'extra connection: no instance {inst_}')
             tx = tx[:mt.end(2)] + ', ' + ', '.join(cs) + tx[mt.end(2):]
         p_.write_text(tx)
+    if os.environ.get('OT_KV_GRP_PRIVATE0', '0') == '1':
+        import kv_grp_private0
+        p_ = Path(path)
+        p_.write_text(kv_grp_private0.parent_connections(p_.read_text()))
     if m.get('host_ties'):
         # v1.4: per-slice logical-PC straps and the stack chain terminators (the source parent's constants), as tie cells
         p_ = Path(path)
@@ -4775,6 +4781,9 @@ def _case_ties(m, path):
         if not mt:
             raise ValueError(f'extra connection: no instance {inst_}')
         tx = tx[:mt.end(2)] + ', ' + ', '.join(cs) + tx[mt.end(2):]
+    if os.environ.get('OT_KV_GRP_PRIVATE0', '0') == '1':
+        import kv_grp_private0
+        tx = kv_grp_private0.parent_connections(tx)
     ties = {}
     for b_, lane in (m.get('wq_straps') or {}).items():
         ties[b_] = (3, lane)

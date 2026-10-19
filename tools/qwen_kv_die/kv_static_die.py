@@ -69,6 +69,12 @@ FANFOLD = HROOT and os.environ.get('OT_KV_FANFOLD', '0') == '1'
 #     parameters on a hard child);
 #   KITS-B replicated grp / grp_h / pc / pc_h / hroot (KIT_KINDS, faces KIT_FACE): FLAT leaf kits (kit_clocks).
 KITS = os.environ.get('OT_KV_TILE_KITS', os.environ.get('OT_KV_KVS_CK1', '0')) == '1'
+# Stage 1 private ABI pruning only; no physical/register or schedule adoption.
+GRP_PRIVATE0 = os.environ.get('OT_KV_GRP_PRIVATE0', '0') == '1'
+if GRP_PRIVATE0 and not (ON and HROOT and FANFOLD and KITS and
+        os.environ.get('OT_KV_MU', '0') == '1' and os.environ.get('OT_KV_BOOT_AGES', '0') == '1' and
+        os.environ.get('OT_KV_DOMSPLIT', '0') != '1'):
+    raise ValueError('GRP_PRIVATE0 requires selected static HROOT/FANFOLD/KITS/MU/BOOT_AGES without DOMSPLIT')
 KVS_CK1 = KITS
 CK1_KINDS = ('ctl', 'attn', 'emb')
 KIT_HARD = ('qkd_embedding_row_tx',)
@@ -86,11 +92,13 @@ DOMSPLIT = os.environ.get('OT_KV_DOMSPLIT', '0') == '1'
 DOMSPLIT_DIR = 'results/arch/qwen_kv_domsplit_1019'
 DOMSPLIT_TABLE = DOMSPLIT_DIR + '/producer_domains.json'
 LVL_LAND_RTL = 'rtl/qwen_sys/static_kv_20261014/qkd_kv_lvl_land.sv'
-RTL_FILE = ('rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles' + ('_hroot' if HROOT else '') + ('_ff' if FANFOLD else '') +
+PUBLIC_RTL_FILE = ('rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles' + ('_hroot' if HROOT else '') + ('_ff' if FANFOLD else '') +
             ('_ep' if os.environ.get('OT_KV_ECTL_PAIR', '0') == '1' else '') + ('_k' if KITS else '') +
             ('_mu' if os.environ.get('OT_KV_MU', '0') == '1' else '') +
             ('_ba' if os.environ.get('OT_KV_BOOT_AGES', '0') == '1' else '') +   # MU-ADOPT-KV 10-19 (kv_static.MU); KV-BOOTAGE
             ('_ds' if DOMSPLIT else '') + '.sv')   # KV-DOMSPLIT
+RTL_FILE = PUBLIC_RTL_FILE[:-3] + ('_gp0' if GRP_PRIVATE0 else '') + '.sv'
+GRP_PRIVATE0_RTL = 'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_private0.sv'
 AGES = 'results/arch/qwen_kv_static_programme_1017/die_ages.json'
 STACKS = ('WS', 'WN', 'ES', 'EN')
 ORDER = (4, 5, 0, 1, 2, 3, 6, 7)          # kv_static.template: group g holds PCs 4 * ORDER.index(g) + q
@@ -132,6 +140,8 @@ RESETS = ('rst_n', 'rsi', 'hrst_n', 'hrst', 'cal_rst_n')
 HBM_RST = ('hrst_n', 'hrst', 'cal_rst_n')
 KIND_MASTER = dict(fan='qkd_kvs_fan', grp='qkd_kvs_grp', grp_h='qkd_kvs_grp_h', pc='qkd_kvs_pc', pc_h='qkd_kvs_pc_h', ctl='qkd_kvs_ctl', attn='qkd_kvs_attn',
                    emb='qkd_kvs_emb', hroot='qkd_kvs_hroot')
+if GRP_PRIVATE0:
+    KIND_MASTER.update(grp='qkd_kvs_grp_private0', grp_h='qkd_kvs_grp_h_private0')
 GEN_KINDS = tuple(KIND_MASTER)
 CTL_LOCAL = dict(layer_programme='lprg', wprg='wprg', wrn='wrn', ownership='own', own_obs='oobs', boot='boot',
                  boot_obs='bobs', diecfg='dcfg')
@@ -977,7 +987,7 @@ def module_text(t, name):
          f'module {name} (']
     pl = []
     for pn, v in t['ports'].items():
-        if KITS and t['kind'] in CK1_KINDS + KIT_KINDS and v['cls'] in ('clock', 'reset') and v['width'] == 1:
+        if v.get('scalar') or (KITS and t['kind'] in CK1_KINDS + KIT_KINDS and v['cls'] in ('clock', 'reset') and v['width'] == 1):
             pl.append(f'    {v["dir"]} wire {pn}')         # the kit's CTS root / reset pin: a scalar port
             continue
         pl.append(f'    {v["dir"]} wire [{v["width"] - 1}:0] {pn}')
@@ -1412,7 +1422,11 @@ def kit_clocks(tiles):
 def all_tiles():
     if 'tiles' not in _G:
         t_ = add_fans(pack({d: tile(d) for d in members()}))
-        _G['tiles'] = kit_clocks(t_) if KITS else t_
+        t_ = kit_clocks(t_) if KITS else t_
+        if GRP_PRIVATE0:
+            import kv_grp_private0
+            kv_grp_private0.apply_tiles(t_, module_text)
+        _G['tiles'] = t_
     return _G['tiles']
 
 
@@ -1465,7 +1479,8 @@ def bindings():
         seen[mst] = d
         ports = {pn: [pn] for pn, v in t['ports'].items() if v['cls'] != 'pad'}
         cls = {'por_n': 'by_design: package POR pad (off-chip signal)'} if 'por_n' in t['ports'] else {}
-        out[mst] = dict(module=mst, file=RTL_FILE, ports=ports, sliced={}, classed=cls)
+        source_file = GRP_PRIVATE0_RTL if GRP_PRIVATE0 and t['kind'] in ('grp', 'grp_h') else PUBLIC_RTL_FILE
+        out[mst] = dict(module=mst, file=source_file, ports=ports, sliced={}, classed=cls)
     # ECTL frame re-bound to the fused A + K issuer composition (qkd_ectl3_kiss_s)
     out['qkd_ectlk'] = dict(module='qkd_ectl3_kiss_st' if ASTK_ST else 'qkd_ectl3_kiss_s',
         file=ECTL_ST_FILE if ASTK_ST else 'rtl/qwen_sys/static_kv_20261014/qkd_static_ectla_kiss.sv',
@@ -2018,7 +2033,7 @@ def place(m, K, geo, F):
         for g in range(8):
             idx = ORDER.index(g)
             y0 = up(cy + PC_PITCH * 4 * idx + (PC_PITCH * 4 - GH) / 2, GY)
-            m['insts'].append(F.Inst(f'slg_{st}_{g}', 'qkd_kvs_grp_h' if (FANFOLD and idx == 0) else 'qkd_kvs_grp', round(x_g, 4), round(y0, 4), gw - SH, GH - SH,
+            m['insts'].append(F.Inst(f'slg_{st}_{g}', KIND_MASTER['grp_h' if (FANFOLD and idx == 0) else 'grp'], round(x_g, 4), round(y0, 4), gw - SH, GH - SH,
                                      'R0' if west else 'MY', kind='static', region='strip', domain='hbm'))
         fh = 172.8                  # the stack fan: between groups at slots 3 and 4 (the stack middle)
         yf = up(cy + PC_PITCH * 16 - fh / 2, GY)
@@ -2155,6 +2170,7 @@ KIT_DEFAULT_FACE = dict(qkd_kvs_grp='W', qkd_kvs_grp_h='W', qkd_kvs_pc='E', qkd_
 
 
 def pin_face(master, port):
+    master = master.removesuffix('_private0')
     if KITS and master in KIT_FACE:
         return KIT_FACE[master].get(port, KIT_DEFAULT_FACE[master])
     return _pin_face(master, port)
@@ -2164,6 +2180,7 @@ def _pin_face(master, port):
     """canonical (R0) face of a static tile's port, or None (auto): the K / V words on the group's engine-side face (the
     landing <-> V port / ECTL channel), every control word (fan, PC bundles) on its PHY-side face (the control channel
     between the HOST slices and the groups), so the control traffic never takes the K / V channel's relay spots"""
+    master = master.removesuffix('_private0')
     if master == 'qkd_ectlk':
         return _ECTL_FACE.get(port, 'W')
     if master in ('qkd_kvs_grp', 'qkd_kvs_grp_h'):
@@ -2235,6 +2252,7 @@ def face_order(master, face, ports):
     """KV-PLAN3: along-face order (from the face origin) of a static tile's pins, or the given order.  The group's W face
     carries its four PCs' words: interleave i_pc<j> / o_pc<j> bottom-up so pair j sits level with PC j (PC k of the
     slot = 4 slot + j, bottom-up; the even spread puts pair j's centre within ~125 um of PC j's centre)"""
+    master = master.removesuffix('_private0')
     if KITS and master in ('qkd_kvs_grp', 'qkd_kvs_grp_h') and face == 'W':
         # kit: PC pairs 0 / 1 below, the clocks / resets / straps / pass words mid-face (beside the register mass), 2 / 3 above
         def key(p):
