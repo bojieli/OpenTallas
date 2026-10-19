@@ -1,6 +1,8 @@
 rtl/qwen_dv/qfd_tt_ctlm_dv.sv
 rtl/qwen_dv/qfd_dv_cmd_cal.sv
 rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv
+rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_static_hr.sv
+rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_head_static_rk.sv
 rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv
 rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv
 rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_pw.sv
@@ -19,3 +21,10 @@ rtl/lib/ot_reset_sync.sv
 physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v
 rtl/hdc/ot_hdc_dyn_ttiles.sv
 rtl/hdc/ot_hdc_qwen_int8_embed_decode.sv
+rtl/hdc/ot_hdc_cg.sv
+rtl/hdc/ot_hdc_sfu.sv
+rtl/hdc/ot_qwen_me_spine_h_w12.sv
+rtl/hdc/ot_qwen_w12_arith.sv
+rtl/hdc/ot_qwen_w12_matvec.sv
+rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctl_static.sv
+physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v

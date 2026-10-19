@@ -12,7 +12,7 @@
  },
  "k_issuer": {
   "ki_WS_0": {
-   "RESPONSE_LAT": 10,
+   "RESPONSE_LAT": 80,
    "request_relays": 1,
    "response_relays": 1,
    "landing_seg": 8,
@@ -20,10 +20,12 @@
    "buses": [
     "ectl_WS_0.rq -> land_WS.rq0",
     "land_WS.rs0 -> ectl_WS_0.rs"
-   ]
+   ],
+   "natural_response_lat": 10,
+   "request_pad": 70
   },
   "ki_WS_1": {
-   "RESPONSE_LAT": 10,
+   "RESPONSE_LAT": 80,
    "request_relays": 1,
    "response_relays": 1,
    "landing_seg": 8,
@@ -31,10 +33,12 @@
    "buses": [
     "ectl_WS_1.rq -> land_WS.rq1",
     "land_WS.rs1 -> ectl_WS_1.rs"
-   ]
+   ],
+   "natural_response_lat": 10,
+   "request_pad": 70
   },
   "ki_WS_2": {
-   "RESPONSE_LAT": 10,
+   "RESPONSE_LAT": 80,
    "request_relays": 1,
    "response_relays": 1,
    "landing_seg": 8,
@@ -42,10 +46,12 @@
    "buses": [
     "ectl_WS_2.rq -> land_WS.rq2",
     "land_WS.rs2 -> ectl_WS_2.rs"
-   ]
+   ],
+   "natural_response_lat": 10,
+   "request_pad": 70
   },
   "ki_WS_3": {
-   "RESPONSE_LAT": 10,
+   "RESPONSE_LAT": 80,
    "request_relays": 1,
    "response_relays": 1,
    "landing_seg": 8,
@@ -53,10 +59,12 @@
    "buses": [
     "ectl_WS_3.rq -> land_WS.rq3",
     "land_WS.rs3 -> ectl_WS_3.rs"
-   ]
+   ],
+   "natural_response_lat": 10,
+   "request_pad": 70
   },
   "ki_WS_4": {
-   "RESPONSE_LAT": 32,
+   "RESPONSE_LAT": 80,
    "request_relays": 12,
    "response_relays": 12,
    "landing_seg": 8,
@@ -64,10 +72,12 @@
    "buses": [
     "ectl_WS_4.rq -> land_WS.rq4",
     "land_WS.rs4 -> ectl_WS_4.rs"
-   ]
+   ],
+   "natural_response_lat": 32,
+   "request_pad": 48
   },
   "ki_WS_5": {
-   "RESPONSE_LAT": 47,
+   "RESPONSE_LAT": 80,
    "request_relays": 18,
    "response_relays": 21,
    "landing_seg": 8,
@@ -75,10 +85,12 @@
    "buses": [
     "ectl_WS_5.rq -> land_WS.rq5",
     "land_WS.rs5 -> ectl_WS_5.rs"
-   ]
+   ],
+   "natural_response_lat": 47,
+   "request_pad": 33
   },
   "ki_WS_6": {
-   "RESPONSE_LAT": 47,
+   "RESPONSE_LAT": 80,
    "request_relays": 18,
    "response_relays": 21,
    "landing_seg": 8,
@@ -86,10 +98,12 @@
    "buses": [
     "ectl_WS_6.rq -> land_WS.rq6",
     "land_WS.rs6 -> ectl_WS_6.rs"
-   ]
+   ],
+   "natural_response_lat": 47,
+   "request_pad": 33
   },
   "ki_WS_7": {
-   "RESPONSE_LAT": 33,
+   "RESPONSE_LAT": 80,
    "request_relays": 12,
    "response_relays": 13,
    "landing_seg": 8,
@@ -97,10 +111,12 @@
    "buses": [
     "ectl_WS_7.rq -> land_WS.rq7",
     "land_WS.rs7 -> ectl_WS_7.rs"
-   ]
+   ],
+   "natural_response_lat": 33,
+   "request_pad": 47
   },
   "ki_WN_0": {
-   "RESPONSE_LAT": 10,
+   "RESPONSE_LAT": 80,
    "request_relays": 1,
    "response_relays": 1,
    "landing_seg": 8,
@@ -108,10 +124,12 @@
    "buses": [
     "ectl_WN_0.rq -> land_WN.rq0",
     "land_WN.rs0 -> ectl_WN_0.rs"
-   ]
+   ],
+   "natural_response_lat": 10,
+   "request_pad": 70
   },
   "ki_WN_1": {
-   "RESPONSE_LAT": 11,
+   "RESPONSE_LAT": 80,
    "request_relays": 1,
    "response_relays": 2,
    "landing_seg": 8,
@@ -119,10 +137,12 @@
    "buses": [
     "ectl_WN_1.rq -> land_WN.rq1",
     "land_WN.rs1 -> ectl_WN_1.rs"
-   ]
+   ],
+   "natural_response_lat": 11,
+   "request_pad": 69
   },
   "ki_WN_2": {
-   "RESPONSE_LAT": 11,
+   "RESPONSE_LAT": 80,
    "request_relays": 1,
    "response_relays": 2,
    "landing_seg": 8,
@@ -130,10 +150,12 @@
    "buses": [
     "ectl_WN_2.rq -> land_WN.rq2",
     "land_WN.rs2 -> ectl_WN_2.rs"
-   ]
+   ],
+   "natural_response_lat": 11,
+   "request_pad": 69
   },
   "ki_WN_3": {
-   "RESPONSE_LAT": 10,
+   "RESPONSE_LAT": 80,
    "request_relays": 1,
    "response_relays": 1,
    "landing_seg": 8,
@@ -141,10 +163,12 @@
    "buses": [
     "ectl_WN_3.rq -> land_WN.rq3",
     "land_WN.rs3 -> ectl_WN_3.rs"
-   ]
+   ],
+   "natural_response_lat": 10,
+   "request_pad": 70
   },
   "ki_WN_4": {
-   "RESPONSE_LAT": 32,
+   "RESPONSE_LAT": 80,
    "request_relays": 12,
    "response_relays": 12,
    "landing_seg": 8,
@@ -152,10 +176,12 @@
    "buses": [
     "ectl_WN_4.rq -> land_WN.rq4",
     "land_WN.rs4 -> ectl_WN_4.rs"
-   ]
+   ],
+   "natural_response_lat": 32,
+   "request_pad": 48
   },
   "ki_WN_5": {
-   "RESPONSE_LAT": 47,
+   "RESPONSE_LAT": 80,
    "request_relays": 18,
    "response_relays": 21,
    "landing_seg": 8,
@@ -163,10 +189,12 @@
    "buses": [
     "ectl_WN_5.rq -> land_WN.rq5",
     "land_WN.rs5 -> ectl_WN_5.rs"
-   ]
+   ],
+   "natural_response_lat": 47,
+   "request_pad": 33
   },
   "ki_WN_6": {
-   "RESPONSE_LAT": 47,
+   "RESPONSE_LAT": 80,
    "request_relays": 18,
    "response_relays": 21,
    "landing_seg": 8,
@@ -174,10 +202,12 @@
    "buses": [
     "ectl_WN_6.rq -> land_WN.rq6",
     "land_WN.rs6 -> ectl_WN_6.rs"
-   ]
+   ],
+   "natural_response_lat": 47,
+   "request_pad": 33
   },
   "ki_WN_7": {
-   "RESPONSE_LAT": 33,
+   "RESPONSE_LAT": 80,
    "request_relays": 12,
    "response_relays": 13,
    "landing_seg": 8,
@@ -185,10 +215,12 @@
    "buses": [
     "ectl_WN_7.rq -> land_WN.rq7",
     "land_WN.rs7 -> ectl_WN_7.rs"
-   ]
+   ],
+   "natural_response_lat": 33,
+   "request_pad": 47
   },
   "ki_ES_0": {
-   "RESPONSE_LAT": 10,
+   "RESPONSE_LAT": 80,
    "request_relays": 1,
    "response_relays": 1,
    "landing_seg": 8,
@@ -196,10 +228,12 @@
    "buses": [
     "ectl_ES_0.rq -> land_ES.rq0",
     "land_ES.rs0 -> ectl_ES_0.rs"
-   ]
+   ],
+   "natural_response_lat": 10,
+   "request_pad": 70
   },
   "ki_ES_1": {
-   "RESPONSE_LAT": 10,
+   "RESPONSE_LAT": 80,
    "request_relays": 1,
    "response_relays": 1,
    "landing_seg": 8,
@@ -207,10 +241,12 @@
    "buses": [
     "ectl_ES_1.rq -> land_ES.rq1",
     "land_ES.rs1 -> ectl_ES_1.rs"
-   ]
+   ],
+   "natural_response_lat": 10,
+   "request_pad": 70
   },
   "ki_ES_2": {
-   "RESPONSE_LAT": 10,
+   "RESPONSE_LAT": 80,
    "request_relays": 1,
    "response_relays": 1,
    "landing_seg": 8,
@@ -218,10 +254,12 @@
    "buses": [
     "ectl_ES_2.rq -> land_ES.rq2",
     "land_ES.rs2 -> ectl_ES_2.rs"
-   ]
+   ],
+   "natural_response_lat": 10,
+   "request_pad": 70
   },
   "ki_ES_3": {
-   "RESPONSE_LAT": 10,
+   "RESPONSE_LAT": 80,
    "request_relays": 1,
    "response_relays": 1,
    "landing_seg": 8,
@@ -229,10 +267,12 @@
    "buses": [
     "ectl_ES_3.rq -> land_ES.rq3",
     "land_ES.rs3 -> ectl_ES_3.rs"
-   ]
+   ],
+   "natural_response_lat": 10,
+   "request_pad": 70
   },
   "ki_ES_4": {
-   "RESPONSE_LAT": 34,
+   "RESPONSE_LAT": 80,
    "request_relays": 11,
    "response_relays": 15,
    "landing_seg": 8,
@@ -240,10 +280,12 @@
    "buses": [
     "ectl_ES_4.rq -> land_ES.rq4",
     "land_ES.rs4 -> ectl_ES_4.rs"
-   ]
+   ],
+   "natural_response_lat": 34,
+   "request_pad": 46
   },
   "ki_ES_5": {
-   "RESPONSE_LAT": 51,
+   "RESPONSE_LAT": 80,
    "request_relays": 18,
    "response_relays": 25,
    "landing_seg": 8,
@@ -251,10 +293,12 @@
    "buses": [
     "ectl_ES_5.rq -> land_ES.rq5",
     "land_ES.rs5 -> ectl_ES_5.rs"
-   ]
+   ],
+   "natural_response_lat": 51,
+   "request_pad": 29
   },
   "ki_ES_6": {
-   "RESPONSE_LAT": 49,
+   "RESPONSE_LAT": 80,
    "request_relays": 18,
    "response_relays": 23,
    "landing_seg": 8,
@@ -262,10 +306,12 @@
    "buses": [
     "ectl_ES_6.rq -> land_ES.rq6",
     "land_ES.rs6 -> ectl_ES_6.rs"
-   ]
+   ],
+   "natural_response_lat": 49,
+   "request_pad": 31
   },
   "ki_ES_7": {
-   "RESPONSE_LAT": 35,
+   "RESPONSE_LAT": 80,
    "request_relays": 12,
    "response_relays": 15,
    "landing_seg": 8,
@@ -273,10 +319,12 @@
    "buses": [
     "ectl_ES_7.rq -> land_ES.rq7",
     "land_ES.rs7 -> ectl_ES_7.rs"
-   ]
+   ],
+   "natural_response_lat": 35,
+   "request_pad": 45
   },
   "ki_EN_0": {
-   "RESPONSE_LAT": 10,
+   "RESPONSE_LAT": 80,
    "request_relays": 1,
    "response_relays": 1,
    "landing_seg": 8,
@@ -284,10 +332,12 @@
    "buses": [
     "ectl_EN_0.rq -> land_EN.rq0",
     "land_EN.rs0 -> ectl_EN_0.rs"
-   ]
+   ],
+   "natural_response_lat": 10,
+   "request_pad": 70
   },
   "ki_EN_1": {
-   "RESPONSE_LAT": 10,
+   "RESPONSE_LAT": 80,
    "request_relays": 1,
    "response_relays": 1,
    "landing_seg": 8,
@@ -295,10 +345,12 @@
    "buses": [
     "ectl_EN_1.rq -> land_EN.rq1",
     "land_EN.rs1 -> ectl_EN_1.rs"
-   ]
+   ],
+   "natural_response_lat": 10,
+   "request_pad": 70
   },
   "ki_EN_2": {
-   "RESPONSE_LAT": 11,
+   "RESPONSE_LAT": 80,
    "request_relays": 1,
    "response_relays": 2,
    "landing_seg": 8,
@@ -306,10 +358,12 @@
    "buses": [
     "ectl_EN_2.rq -> land_EN.rq2",
     "land_EN.rs2 -> ectl_EN_2.rs"
-   ]
+   ],
+   "natural_response_lat": 11,
+   "request_pad": 69
   },
   "ki_EN_3": {
-   "RESPONSE_LAT": 10,
+   "RESPONSE_LAT": 80,
    "request_relays": 1,
    "response_relays": 1,
    "landing_seg": 8,
@@ -317,10 +371,12 @@
    "buses": [
     "ectl_EN_3.rq -> land_EN.rq3",
     "land_EN.rs3 -> ectl_EN_3.rs"
-   ]
+   ],
+   "natural_response_lat": 10,
+   "request_pad": 70
   },
   "ki_EN_4": {
-   "RESPONSE_LAT": 34,
+   "RESPONSE_LAT": 80,
    "request_relays": 11,
    "response_relays": 15,
    "landing_seg": 8,
@@ -328,10 +384,12 @@
    "buses": [
     "ectl_EN_4.rq -> land_EN.rq4",
     "land_EN.rs4 -> ectl_EN_4.rs"
-   ]
+   ],
+   "natural_response_lat": 34,
+   "request_pad": 46
   },
   "ki_EN_5": {
-   "RESPONSE_LAT": 51,
+   "RESPONSE_LAT": 80,
    "request_relays": 18,
    "response_relays": 25,
    "landing_seg": 8,
@@ -339,10 +397,12 @@
    "buses": [
     "ectl_EN_5.rq -> land_EN.rq5",
     "land_EN.rs5 -> ectl_EN_5.rs"
-   ]
+   ],
+   "natural_response_lat": 51,
+   "request_pad": 29
   },
   "ki_EN_6": {
-   "RESPONSE_LAT": 49,
+   "RESPONSE_LAT": 80,
    "request_relays": 18,
    "response_relays": 23,
    "landing_seg": 8,
@@ -350,10 +410,12 @@
    "buses": [
     "ectl_EN_6.rq -> land_EN.rq6",
     "land_EN.rs6 -> ectl_EN_6.rs"
-   ]
+   ],
+   "natural_response_lat": 49,
+   "request_pad": 31
   },
   "ki_EN_7": {
-   "RESPONSE_LAT": 36,
+   "RESPONSE_LAT": 80,
    "request_relays": 12,
    "response_relays": 16,
    "landing_seg": 8,
@@ -361,168 +423,170 @@
    "buses": [
     "ectl_EN_7.rq -> land_EN.rq7",
     "land_EN.rs7 -> ectl_EN_7.rs"
-   ]
+   ],
+   "natural_response_lat": 36,
+   "request_pad": 44
   }
  },
  "ectla": {
   "ectl_a_WS_0": {
-   "ROW_RETURN_LAT": 17,
-   "QK_ISSUE_AGE": 62,
+   "ROW_RETURN_LAT": 87,
+   "QK_ISSUE_AGE": 91,
    "cls": "DERIVED"
   },
   "ectl_a_WS_1": {
-   "ROW_RETURN_LAT": 17,
-   "QK_ISSUE_AGE": 62,
+   "ROW_RETURN_LAT": 87,
+   "QK_ISSUE_AGE": 91,
    "cls": "DERIVED"
   },
   "ectl_a_WS_2": {
-   "ROW_RETURN_LAT": 17,
-   "QK_ISSUE_AGE": 62,
+   "ROW_RETURN_LAT": 87,
+   "QK_ISSUE_AGE": 91,
    "cls": "DERIVED"
   },
   "ectl_a_WS_3": {
-   "ROW_RETURN_LAT": 17,
-   "QK_ISSUE_AGE": 62,
+   "ROW_RETURN_LAT": 87,
+   "QK_ISSUE_AGE": 91,
    "cls": "DERIVED"
   },
   "ectl_a_WS_4": {
-   "ROW_RETURN_LAT": 39,
-   "QK_ISSUE_AGE": 62,
+   "ROW_RETURN_LAT": 87,
+   "QK_ISSUE_AGE": 91,
    "cls": "DERIVED"
   },
   "ectl_a_WS_5": {
-   "ROW_RETURN_LAT": 54,
-   "QK_ISSUE_AGE": 62,
+   "ROW_RETURN_LAT": 87,
+   "QK_ISSUE_AGE": 91,
    "cls": "DERIVED"
   },
   "ectl_a_WS_6": {
-   "ROW_RETURN_LAT": 54,
-   "QK_ISSUE_AGE": 62,
+   "ROW_RETURN_LAT": 87,
+   "QK_ISSUE_AGE": 91,
    "cls": "DERIVED"
   },
   "ectl_a_WS_7": {
-   "ROW_RETURN_LAT": 40,
-   "QK_ISSUE_AGE": 62,
+   "ROW_RETURN_LAT": 87,
+   "QK_ISSUE_AGE": 91,
    "cls": "DERIVED"
   },
   "ectl_a_WN_0": {
-   "ROW_RETURN_LAT": 17,
-   "QK_ISSUE_AGE": 62,
+   "ROW_RETURN_LAT": 87,
+   "QK_ISSUE_AGE": 91,
    "cls": "DERIVED"
   },
   "ectl_a_WN_1": {
-   "ROW_RETURN_LAT": 18,
-   "QK_ISSUE_AGE": 62,
+   "ROW_RETURN_LAT": 87,
+   "QK_ISSUE_AGE": 91,
    "cls": "DERIVED"
   },
   "ectl_a_WN_2": {
-   "ROW_RETURN_LAT": 18,
-   "QK_ISSUE_AGE": 62,
+   "ROW_RETURN_LAT": 87,
+   "QK_ISSUE_AGE": 91,
    "cls": "DERIVED"
   },
   "ectl_a_WN_3": {
-   "ROW_RETURN_LAT": 17,
-   "QK_ISSUE_AGE": 62,
+   "ROW_RETURN_LAT": 87,
+   "QK_ISSUE_AGE": 91,
    "cls": "DERIVED"
   },
   "ectl_a_WN_4": {
-   "ROW_RETURN_LAT": 39,
-   "QK_ISSUE_AGE": 62,
+   "ROW_RETURN_LAT": 87,
+   "QK_ISSUE_AGE": 91,
    "cls": "DERIVED"
   },
   "ectl_a_WN_5": {
-   "ROW_RETURN_LAT": 54,
-   "QK_ISSUE_AGE": 62,
+   "ROW_RETURN_LAT": 87,
+   "QK_ISSUE_AGE": 91,
    "cls": "DERIVED"
   },
   "ectl_a_WN_6": {
-   "ROW_RETURN_LAT": 54,
-   "QK_ISSUE_AGE": 62,
+   "ROW_RETURN_LAT": 87,
+   "QK_ISSUE_AGE": 91,
    "cls": "DERIVED"
   },
   "ectl_a_WN_7": {
-   "ROW_RETURN_LAT": 40,
-   "QK_ISSUE_AGE": 62,
+   "ROW_RETURN_LAT": 87,
+   "QK_ISSUE_AGE": 91,
    "cls": "DERIVED"
   },
   "ectl_a_ES_0": {
-   "ROW_RETURN_LAT": 17,
-   "QK_ISSUE_AGE": 62,
+   "ROW_RETURN_LAT": 87,
+   "QK_ISSUE_AGE": 91,
    "cls": "DERIVED"
   },
   "ectl_a_ES_1": {
-   "ROW_RETURN_LAT": 17,
-   "QK_ISSUE_AGE": 62,
+   "ROW_RETURN_LAT": 87,
+   "QK_ISSUE_AGE": 91,
    "cls": "DERIVED"
   },
   "ectl_a_ES_2": {
-   "ROW_RETURN_LAT": 17,
-   "QK_ISSUE_AGE": 62,
+   "ROW_RETURN_LAT": 87,
+   "QK_ISSUE_AGE": 91,
    "cls": "DERIVED"
   },
   "ectl_a_ES_3": {
-   "ROW_RETURN_LAT": 17,
-   "QK_ISSUE_AGE": 62,
+   "ROW_RETURN_LAT": 87,
+   "QK_ISSUE_AGE": 91,
    "cls": "DERIVED"
   },
   "ectl_a_ES_4": {
-   "ROW_RETURN_LAT": 41,
-   "QK_ISSUE_AGE": 62,
+   "ROW_RETURN_LAT": 87,
+   "QK_ISSUE_AGE": 91,
    "cls": "DERIVED"
   },
   "ectl_a_ES_5": {
-   "ROW_RETURN_LAT": 58,
-   "QK_ISSUE_AGE": 62,
+   "ROW_RETURN_LAT": 87,
+   "QK_ISSUE_AGE": 91,
    "cls": "DERIVED"
   },
   "ectl_a_ES_6": {
-   "ROW_RETURN_LAT": 56,
-   "QK_ISSUE_AGE": 62,
+   "ROW_RETURN_LAT": 87,
+   "QK_ISSUE_AGE": 91,
    "cls": "DERIVED"
   },
   "ectl_a_ES_7": {
-   "ROW_RETURN_LAT": 42,
-   "QK_ISSUE_AGE": 62,
+   "ROW_RETURN_LAT": 87,
+   "QK_ISSUE_AGE": 91,
    "cls": "DERIVED"
   },
   "ectl_a_EN_0": {
-   "ROW_RETURN_LAT": 17,
-   "QK_ISSUE_AGE": 62,
+   "ROW_RETURN_LAT": 87,
+   "QK_ISSUE_AGE": 91,
    "cls": "DERIVED"
   },
   "ectl_a_EN_1": {
-   "ROW_RETURN_LAT": 17,
-   "QK_ISSUE_AGE": 62,
+   "ROW_RETURN_LAT": 87,
+   "QK_ISSUE_AGE": 91,
    "cls": "DERIVED"
   },
   "ectl_a_EN_2": {
-   "ROW_RETURN_LAT": 18,
-   "QK_ISSUE_AGE": 62,
+   "ROW_RETURN_LAT": 87,
+   "QK_ISSUE_AGE": 91,
    "cls": "DERIVED"
   },
   "ectl_a_EN_3": {
-   "ROW_RETURN_LAT": 17,
-   "QK_ISSUE_AGE": 62,
+   "ROW_RETURN_LAT": 87,
+   "QK_ISSUE_AGE": 91,
    "cls": "DERIVED"
   },
   "ectl_a_EN_4": {
-   "ROW_RETURN_LAT": 41,
-   "QK_ISSUE_AGE": 62,
+   "ROW_RETURN_LAT": 87,
+   "QK_ISSUE_AGE": 91,
    "cls": "DERIVED"
   },
   "ectl_a_EN_5": {
-   "ROW_RETURN_LAT": 58,
-   "QK_ISSUE_AGE": 62,
+   "ROW_RETURN_LAT": 87,
+   "QK_ISSUE_AGE": 91,
    "cls": "DERIVED"
   },
   "ectl_a_EN_6": {
-   "ROW_RETURN_LAT": 56,
-   "QK_ISSUE_AGE": 62,
+   "ROW_RETURN_LAT": 87,
+   "QK_ISSUE_AGE": 91,
    "cls": "DERIVED"
   },
   "ectl_a_EN_7": {
-   "ROW_RETURN_LAT": 43,
-   "QK_ISSUE_AGE": 62,
+   "ROW_RETURN_LAT": 87,
+   "QK_ISSUE_AGE": 91,
    "cls": "DERIVED"
   }
  },
@@ -770,13 +834,18 @@
  ],
  "qk": {
   "response_lat_range": [
+   80,
+   80
+  ],
+  "natural_response_lat_range": [
    10,
    51
   ],
-  "QK_ISSUE_AGE": 62,
+  "k_rt_budget": 80,
+  "QK_ISSUE_AGE": 91,
   "QK_ISSUE_AGE_kit": 34,
-  "row_latency_for_calendar": 53,
-  "rule": "QK_ISSUE_AGE >= max RESPONSE_LAT + 11 (static_qk_calendar write-before-read); one age for all 32 ECTL A: the slowest group binds the layer anyway, so equal ages cost nothing over it"
+  "row_latency_for_calendar": 82,
+  "rule": "QK_ISSUE_AGE >= max RESPONSE_LAT + 11 (static_qk_calendar write-before-read); one age for all 32 ECTL A: the slowest group binds the layer anyway, so equal ages cost nothing over it; KV-ECTL4: every frame K round trip padded to K_RT_BUDGET on its request chain (kv_k_rt_eq.py)"
  },
  "pv": {
   "RL": 95,

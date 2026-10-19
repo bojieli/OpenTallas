@@ -44,9 +44,69 @@ GITDIR = DC.GITDIR
 PITCH = DC.PIN_PITCH
 PLAT = DC.PLAT
 T_PS = 833.333
+STD_CORNERS = dict(SP.STD, ss=('SEQ_RVT_SS_nldm_220123.lib', 'INVBUF_RVT_SS_nldm_220122.lib.gz',
+                              'SIMPLE_RVT_SS_nldm_211120.lib.gz'))
 C_PS, U_PS = 25.0, 25.0
 CONST_RE = re.compile(r"\b(\d+)'[sS]?[bBhHdDoO][0-9a-fA-F_xXzZ?]+")
 LINK_RE = re.compile(r'^w_(.+)_(src|dst|lnd)$')
+_FULL_CONST = re.compile(r"\s*(\d+)'[sS]?([bBhHdDoO])([0-9a-fA-F_]+)\s*")
+
+
+def clock_sdc(table, top_ports):
+    """Declare core and off-die PHY domains from the same binding contract."""
+    domains = table.get('clock_domains', {})
+    absent = set(domains) - set(top_ports)
+    if absent:
+        raise ValueError(f'domain clock ports missing from bound die: {sorted(absent)}')
+    core = sorted(p for p in top_ports if p.startswith('ck_') and p not in domains)
+    if not core:
+        raise ValueError('bound die has no core clock ports')
+    lines = [f'create_clock -name clk -period {T_PS} [get_ports {{{" ".join(core)}}}]']
+    for port, domain in sorted(domains.items()):
+        period = domain['period_ps']
+        if period <= 0:
+            raise ValueError(f'invalid period for {port}: {period}')
+        lines.append(f'create_clock -name {port} -period {period} [get_ports {{{port}}}]')
+        if domain.get('asynchronous_to_core'):
+            lines.append(f'set_clock_groups -asynchronous -group [get_clocks clk] -group [get_clocks {port}]')
+    return '\n'.join(lines)
+
+
+def const_bits(e):
+    """a full Verilog constant 3'd4 / 12'hb6d -> [bit0, bit1, ...]; anything else (x/z, concatenation, net) -> None"""
+    m = _FULL_CONST.fullmatch(e or '')
+    if not m:
+        return None
+    w, v = int(m.group(1)), int(m.group(3).replace('_', ''), {'b': 2, 'h': 16, 'd': 10, 'o': 8}[m.group(2).lower()])
+    return [(v >> i) & 1 for i in range(w)]
+
+
+def case_strap_sdc(insts, kind, port_bind_json):
+    """NS-CASE: set_case_analysis lines for every declared strap port (strict bind masters[].straps) of every non-stand-in
+    instance whose connection is a full constant.  Guarded with get_pins -quiet (a view lacking the pin is reported in
+    the STA log, never an abort).  Returns the SDC lines (header + one line per bit)."""
+    try:
+        pb = json.load(open(port_bind_json))
+    except (OSError, ValueError):
+        return ['# NS-CASE strap case analysis: no port_bind.json -> none']
+    sp = {m: set(r.get('straps') or []) for m, r in (pb.get('masters') or {}).items()}
+    out, n = [], 0
+    for mst, nm, _, cm in insts:
+        if kind.get(nm) == 'standin' or not sp.get(mst):
+            continue
+        for p in sorted(sp[mst]):
+            bits = const_bits(cm.get(p))
+            if bits is None:
+                continue
+            for i, b in enumerate(bits):
+                pin = f'{nm}/{p}' if len(bits) == 1 else f'{nm}/{p}[{i}]'
+                out.append(f'ot_case {b} {{{pin}}}')
+                n += 1
+    hdr = ['# NS-CASE 10-18: die-constant strap pins (strict-bind straps) case-analysed with the netlist value',
+           'set ::ot_case_n 0; set ::ot_case_miss 0',
+           'proc ot_case {v p} { set q [get_pins -quiet $p]; if {[llength $q]} { set_case_analysis $v $q; incr ::ot_case_n } '
+           'else { incr ::ot_case_miss } }']
+    return hdr + out + ['puts "OT_CASE_STRAPS set $::ot_case_n missing $::ot_case_miss of %d"' % n]
 FCK_RE = re.compile(r'^n(.+)_fck$')
 RST_RE = re.compile(r'^(rs_|rsl_|rst_sync)')
 
@@ -222,7 +282,7 @@ def main():
     ap.add_argument('--die-repair', action='store_true')
     ap.add_argument('--dieflow-ref', default='origin/main')
     ap.add_argument('--dcc-ref', default='origin/main', help='ref of tools/die_clock_check.{py,tcl} (+ hbm_die_v15/die_clock_tree.py)')
-    ap.add_argument('--corners', nargs='+', default=['tt', 'ff'])
+    ap.add_argument('--corners', nargs='+', choices=('tt', 'ff', 'ss'), default=['tt', 'ff'])
     ap.add_argument('--congestion-iterations', type=int, default=30)
     a = ap.parse_args()
     out = a.out
@@ -267,6 +327,7 @@ def main():
                     touch[n_].add(nm)
         ibits[nm] = pb
     top = set(tin) | set(tout)
+    clocks_sdc = clock_sdc(T, top)
     # clock nets: region roots, lane forwarded clocks (relay ck / ck_o, landing ck_f, forward cells), peer clocks (bind clk_peer)
     clocknets = {n for n in top if n.startswith('ck_')}
     for mst, nm, _, cm in insts:
@@ -276,7 +337,7 @@ def main():
         elif mst.startswith('dsfd_dvland_'):
             cps = ['ck_f', 'ck']
         elif mst.endswith('_ASAP7_75t_R') and nm.startswith('fwd_'):
-            cps = ['A', 'Y']
+            cps = ['A', 'Y', 'CLK', 'GCLK']     # BUFx8 forward / ICGx4 hop-0 lane clock gate (S81-LBGAP/G1)
         else:
             tm = T['masters'].get(mod2master.get(mst, ''), {})
             cps = [tm.get('clk')] + [cp['port'] for cp in tm.get('clk_peer', [])]
@@ -512,13 +573,28 @@ def main():
         else:
             continue
         link_pins[nm] = pins
-        sdc.append(f'set_multicycle_path -setup {r["E"]} -to {pins}')
+        sdc.append(f'set_multicycle_path -setup {r.get("K") or r["E"]} -to {pins}')   # S81-LBGAP/G8: the landing reads at K
         sdc.append(f'set_multicycle_path -hold {r["D"] - 1} -to {pins}')
+    # NS-CASE 10-18 (ROOT-2115): the strict bind's declared STRAP ports (port_bind.json masters[].straps: landing k,
+    # pvrd k/nw/rb, col_h* lk) carry die constants; the die STA case-analyses them bit by bit with the netlist's own
+    # value (the tile native audit --case excludes exactly these pins, so die STA must not time them either)
+    case_lines = case_strap_sdc(insts, kind, a.bind_dir / 'port_bind.json')
+    sdc += case_lines
     (out / 'landing.sdc').write_text('\n'.join(sdc) + '\n')
     no_model = [r['link'] for r in LP['links'] if r['link'] not in link_pins and f'ld_{r["link"]}' not in loc]
 
     # ------------------------------------------------------------------ GRT run
     repair = DC.die_repair_tcl(out, a.dieflow_ref, skip=()) if a.die_repair else '# no die repair\n'
+    # Relay RTL's complete forwarded payload is i[W-1:0]; rs is a separate
+    # synchronous reset tree, not payload. Declare the width as well as the port
+    # so a missing/disconnected payload bit fails the structural audit.
+    if a.die_repair:
+        contracts = []
+        for master in sorted({m for m, _, _, _ in insts}):
+            match = re.fullmatch(r'dsfd_dvrlyh?_(\d+)_[A-Z]+', master)
+            if match:
+                contracts.append(f'{{{master}}} {{{{i\\[*\\]}} {int(match[1])}}}')
+        repair = ('set ::ot_die_rep_fclk_data_ports [dict create ' + ' '.join(contracts) + ']\n' + repair)
     post = ('estimate_parasitics -global_routing\n'
             'if {[llength [info procs ot_die_rep_post_grt_audit]]} { ot_die_rep_post_grt_audit /work/die_repeaters.post_grt.json }\n'
             if a.die_repair else 'estimate_parasitics -global_routing\n')
@@ -548,12 +624,17 @@ puts "OT_PLACE_S [expr {{[clock seconds]-$p0}}] insts [llength [get_cells *]]"
 write_db /work/out/place.odb
 source {PLAT}/setRC.tcl
 set_wire_rc -signal -layer M6
-create_clock -name clk -period {T_PS} [get_ports ck_*]
 # top-port nets (regional clock roots, rst_n, PMA, land_fault): special = not die-top routing (DIE-CLOCK roots ideal here)
 set nsp 0
 foreach bt [[ord::get_db_block] getBTerms] {{ set n [$bt getNet]; if {{$n ne "NULL"}} {{ $n setSpecial; incr nsp }} }}
 puts "OT_SPECIAL_TOP_NETS $nsp"
-{repair}set_routing_layers -signal M2-M7 -clock M5-M9
+# S81-DIE8 10-18: the die repeater step runs BEFORE create_clock.  With the region roots declared as clocks, STA
+# propagates them through the hop-0 forward cell (BUFx8 / G1 ICGx4) and repair_design silently skips every hop-0
+# forwarded-clock net even though repeat_nets un-skips it (case_p4l_rv: all 140 hop-0 fclk nets 0 repeaters,
+# 108 > data-1 -> fclk_mismatch FAIL).  Clock / reset distribution stays untouched by the step's own skip list
+# (clock-pin + sigtype + glob dont_touch); no step check reads the SDC clock.
+{repair}{clocks_sdc}
+set_routing_layers -signal M2-M7 -clock M5-M9
 set_global_routing_layer_adjustment M2-M3 0.50
 set_global_routing_layer_adjustment M4-M5 0.30
 set_global_routing_layer_adjustment M6-M7 0.20
@@ -590,7 +671,7 @@ rc=$?; echo $rc > $D/out/run.exit; exit $rc
     link_list = ' '.join(f'{k} {{ld_{k}/i[*]}}' for k, v in sorted(link_pins.items()) if not v.startswith('[get_pins {'))
     lane_list = ' '.join(f'{k} {{{" ".join(lane_bits_mcp[k])}}}' for k in sorted(link_pins) if link_pins[k].startswith('[get_pins {'))
     for c in a.corners:
-        std = ' '.join(SP.STD[c])
+        std = ' '.join(STD_CORNERS[c])
         (out / f'sta_{c}.tcl').write_text(f'''# S81-DIE7 REAL-VIEW die STA {c} (tools/s81_dv/dv_rvcase.py): closed views + labelled stand-ins (case.json census)
 foreach f {{{std}}} {{ read_liberty {PLAT}/lib/NLDM/asap7sc7p5t_$f }}
 foreach f [glob /work/views/sta/*_{c}.lib] {{ read_liberty $f }}
@@ -598,7 +679,7 @@ foreach f [glob /work/views/rv_*.lib] {{ read_liberty $f }}
 read_db /work/out/grt.odb
 source {PLAT}/setRC.tcl
 set_wire_rc -signal -layer M6
-create_clock -name clk -period {T_PS} [get_ports ck_*]
+{clocks_sdc}
 set_propagated_clock [all_clocks]
 set_clock_uncertainty -setup 60 [all_clocks]
 set_clock_uncertainty -hold 25 [all_clocks]
@@ -708,7 +789,7 @@ def klass(ep):
     inst = ep.split('/')[0]
     if inst.startswith('ld_'):
         return ('landing', cls.get(inst[3:], '?'))
-    if re.match(r'st_rs(l)?_|rst_root', inst):
+    if re.match(r'st_rs(l|g)?_|rst_root', inst):     # rsg_: hop-0 gate calendar stations (S81-LBGAP/G1)
         return ('reset', 'station')
     m = re.match(r'st_(.+)_(\d+)$', inst)
     if m:
@@ -747,6 +828,11 @@ for c in corners:
             p, mx, mn = line.rstrip('\n').split('\t')
             arr[c][p] = (float(mx) if mx not in ('-', '') else None, float(mn) if mn not in ('-', '') else None)
     except OSError: pass
+# SS is sensitivity evidence only (owner option B); pair/window verdicts remain TT/FF.
+reported_corners = corners
+corners = [c for c in corners if c in ('tt', 'ff')]
+sensitivity_windows = {nm: {k: v for k, v in w.items() if not k.startswith(('tt_', 'ff_'))} for nm, w in win.items()}
+win = {nm: {k: v for k, v in w.items() if k.startswith(('tt_', 'ff_'))} for nm, w in win.items()}
 landed = {}
 for nm, r in case['landings'].items():
     if not r['inst']: continue
@@ -794,7 +880,7 @@ for c in corners:
         judge[f'die_clock_check_{c}'] = {k: j[k] for k in list(j)[:6] if k != 'tiles'}
     except Exception as e:
         judge[f'die_clock_check_{c}'] = f'unavailable ({e})'
-json.dump(dict(classes=res, judge=judge, landed=landed, frame_lanes=frame_lanes, pairs=pairs), open(f'{D}/sta/classes.json', 'w'), indent=1)
+json.dump(dict(classes=res, judge=judge, sensitivity=dict(corners=[c for c in reported_corners if c not in corners], windows=sensitivity_windows), landed=landed, frame_lanes=frame_lanes, pairs=pairs), open(f'{D}/sta/classes.json', 'w'), indent=1)
 for k, v in res.items():
     print(k); [print(f'  {c:40s} n={a["n"]:7d} neg={a["neg"]:7d} wns={a["wns"]:9.1f} tns={a["tns"]:12.1f} {a["worst"]}') for c, a in list(v.items())[:18]]
 print(json.dumps(judge, indent=1, default=str)[:6000])

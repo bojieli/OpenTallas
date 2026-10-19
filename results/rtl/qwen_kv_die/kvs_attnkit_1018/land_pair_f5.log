@@ -1,0 +1,14 @@
+ot-run: ot-epyc4       admits  1212 GB (avail 905, growth 57, headroom 0, waiters 0/0 GB) load 46/128 running 16 disk 552 GB 
+ot-run: ot-epyc5       admits  1085 GB (avail 849, growth 90, headroom 0, waiters 0/0 GB) load 81/128 running 18 disk 671 GB 
+ot-run: ot-pve1        skipped: no /home/ubuntu/scratch/kvattnkit/src
+ot-run: ot-agidock128  skipped: no /home/ubuntu/scratch/kvattnkit/src
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-111244-1792387193 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+MISMATCH cyc=116 fault
+MISMATCH cyc=116 face flags
+MISMATCH cyc=117 fault
+KVS_LANDPAIR FAIL mode=0 bmut=0 fmut=5 checks=2139 errors=456 fault=0 req=1 Q=32 TX=33
+KVS_LANDPAIR_ALL FAIL bmut=0 fmut=5 pass=0 fail=1 checks=0
+rc=1
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-111244-1792387193): exit 0

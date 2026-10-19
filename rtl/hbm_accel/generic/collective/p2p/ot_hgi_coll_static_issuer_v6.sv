@@ -24,43 +24,54 @@
 // No async reset on rowloops / meta / the cur_* data registers: start loads all of them before the first fetch, and
 // no fetch happens without a successful start (the original's reset of loops[] is unobservable). Control flops and
 // the row-valid bits keep the original's async reset.
+// XDIE-HBM4 (10-19): ROWS (default 64 = the closed issuer, every port/edge unchanged). ROWS=128: 7-bit pc; the row
+// metadata's spare bits carry the pc MSBs (next[6]=m[51], target[6]=m[52], lid[6]=m[53]; m[63:54] must be 0), cfg row
+// select bit 6 = cfg[8] (mode 0) and meta-hi bits [53:51] = cfg[21:19] (mode 3); program banks = 2 x 64-row macros.
+// Same edges, same ISA otherwise (a 64-row programme behaves identically at ROWS 128).
 module ot_hgi_coll_static_issuer_v6 #(
-    parameter integer MUT_DATA=0, MUT_BRANCH=0, MUT_RELOAD=0
+    parameter integer MUT_DATA=0, MUT_BRANCH=0, MUT_RELOAD=0, parameter integer ROWS=64,
+    parameter integer PW=(ROWS>64)?7:6      // derived; never override
 )(
     input wire clk_control,
     input wire [2:0] clk_mem,
     input wire rst_n,
     input wire [36:0] cfg,
     input wire start,
-    input wire [5:0] start_pc,
+    input wire [PW-1:0] start_pc,
     output reg busy,done,fault,
     output reg uop_v,
     output wire [1535:0] uop,
     output reg [31:0] iteration,
-    output reg [5:0] uop_pc
+    output reg [PW-1:0] uop_pc
 );
-    reg [63:0] meta[0:63];
-    reg [31:0] rowloops[0:63];
-    reg [63:0] word_valid[0:2];
-    reg [63:0] meta_lo_valid,meta_hi_valid;
-    reg [5:0] cfg_row,pc;
+    reg [63:0] meta[0:ROWS-1];
+    reg [31:0] rowloops[0:ROWS-1];
+    reg [ROWS-1:0] word_valid[0:2];
+    reg [ROWS-1:0] meta_lo_valid,meta_hi_valid;
+    reg [PW-1:0] cfg_row,pc;
+    // metadata fields (ROWS 64: the original bit positions exactly)
+    function automatic [PW-1:0] f_next(input [63:0] x); f_next=(PW==7)?{x[51],x[5:0]}:x[5:0]; endfunction
+    function automatic [PW-1:0] f_tgt(input [63:0] x); f_tgt=(PW==7)?{x[52],x[11:6]}:x[11:6]; endfunction
+    function automatic [PW-1:0] f_lid(input [63:0] x); f_lid=(PW==7)?{x[53],x[50:45]}:x[50:45]; endfunction
+    localparam integer MHB=(PW==7)?22:19;
+    wire [12:0] spare_mask=(PW==7)?13'h1ff8:13'h1fff;   // m[63:51] bits that must be zero
     reg [1:0] cfg_bank;
     reg cfg_selected;
     reg [3:0] fragment;
     reg [511:0] assemble;
     reg [2:0] write_v;
-    reg [5:0] write_row;
+    reg [PW-1:0] write_row;
     reg [511:0] write_data;
     reg fetching,fetch_v,v1,h0,h1;
-    reg [5:0] fetch_pc,pc1;
+    reg [PW-1:0] fetch_pc,pc1;
     reg [31:0] it0,it1;
     // current row (the row at pc): registered fields
-    reg [5:0] cur_lid,cur_target,cur_next;
+    reg [PW-1:0] cur_lid,cur_target,cur_next;
     reg cur_halt,cur_has;
     reg [31:0] cur_cm1,cur_loops;
-    reg [31:0] rowcm1[0:63];reg [63:0] rowhas;reg dv;reg [5:0] drow;    // pre-decoded loop counts
+    reg [31:0] rowcm1[0:ROWS-1];reg [ROWS-1:0] rowhas;reg dv;reg [PW-1:0] drow;    // pre-decoded loop counts
     for(genvar b=0;b<3;b=b+1)begin:g_mem
-        ot_hgi_coll_static_program_bank #(.MUT_DATA(MUT_DATA && b==0)) u_bank(
+        ot_hgi_coll_static_program_bank #(.MUT_DATA(MUT_DATA && b==0),.ROWS(ROWS)) u_bank(
             .clk(clk_mem[b]),.read_v(fetch_v),.read_row(fetch_pc),
             .write_v(write_v[b]),.write_row(write_row),.write_data(write_data),
             .data(uop[b*512+:512]));
@@ -72,8 +83,8 @@ module ot_hgi_coll_static_issuer_v6 #(
     wire upd=advance && cur_has && MUT_BRANCH==0;              // loops[cur_lid] is written this edge
     // ---- both successors, read in parallel with the decision
     wire [63:0] mt=meta[cur_target], mn=meta[cur_next];
-    wire [31:0] lt=(upd && mt[50:45]==cur_lid) ? wv : rowloops[cur_target];
-    wire [31:0] ln=(upd && mn[50:45]==cur_lid) ? wv : rowloops[cur_next];
+    wire [31:0] lt=(upd && f_lid(mt)==cur_lid) ? wv : rowloops[cur_target];
+    wire [31:0] ln=(upd && f_lid(mn)==cur_lid) ? wv : rowloops[cur_next];
     wire [63:0] ms=meta[start_pc];wire [31:0] cs=rowcm1[start_pc];wire hs=rowhas[start_pc];
     wire [31:0] ct=rowcm1[cur_target],cn=rowcm1[cur_next];wire ht=rowhas[cur_target],hn=rowhas[cur_next];
     wire [63:0] m=meta[pc];
@@ -82,17 +93,17 @@ module ot_hgi_coll_static_issuer_v6 #(
     always @(posedge clk_control)begin
         // data registers without reset (loaded by start before any fetch)
         if(start && !(busy || cfg[36] || fragment!=0))begin
-            for(integer i=0;i<64;i=i+1)rowloops[i]<=0;
-            cur_lid<=ms[50:45];cur_target<=ms[11:6];cur_next<=ms[5:0];cur_halt<=ms[44];
+            for(integer i=0;i<ROWS;i=i+1)rowloops[i]<=0;
+            cur_lid<=f_lid(ms);cur_target<=f_tgt(ms);cur_next<=f_next(ms);cur_halt<=ms[44];
             cur_has<=hs;cur_cm1<=cs;cur_loops<=0;
         end
         if(advance)begin
-            if(upd)for(integer i=0;i<64;i=i+1)if(meta[i][50:45]==cur_lid)rowloops[i]<=wv;
+            if(upd)for(integer i=0;i<ROWS;i=i+1)if(f_lid(meta[i])==cur_lid)rowloops[i]<=wv;
             if(take)begin
-                cur_lid<=mt[50:45];cur_target<=mt[11:6];cur_next<=mt[5:0];cur_halt<=mt[44];
+                cur_lid<=f_lid(mt);cur_target<=f_tgt(mt);cur_next<=f_next(mt);cur_halt<=mt[44];
                 cur_has<=ht;cur_cm1<=ct;cur_loops<=lt;
             end else begin
-                cur_lid<=mn[50:45];cur_target<=mn[11:6];cur_next<=mn[5:0];cur_halt<=mn[44];
+                cur_lid<=f_lid(mn);cur_target<=f_tgt(mn);cur_next<=f_next(mn);cur_halt<=mn[44];
                 cur_has<=hn;cur_cm1<=cn;cur_loops<=ln;
             end
         end
@@ -118,7 +129,7 @@ module ot_hgi_coll_static_issuer_v6 #(
                 if(!word_valid[0][pc] || !word_valid[1][pc] || !word_valid[2][pc] ||
                    !meta_lo_valid[pc] || !meta_hi_valid[pc])fault<=1;
                 fetch_v<=1;fetch_pc<=pc;it0<=cur_loops;h0<=cur_halt;
-                if(m[63:51]!=0)fault<=1;
+                if((m[63:51]&spare_mask)!=0)fault<=1;
                 if(cur_halt)fetching<=0;
                 else pc<=take ? cur_target : cur_next;
             end
@@ -126,8 +137,8 @@ module ot_hgi_coll_static_issuer_v6 #(
                 if(busy || start)fault<=1;
                 else case(cfg[35:32])
                     4'd0:begin
-                        if(fragment!=0 || cfg[31:8]!=0 || cfg[7:6]==3)fault<=1;
-                        cfg_row<=cfg[5:0];cfg_bank<=cfg[7:6];cfg_selected<=cfg[7:6]!=3;
+                        if(fragment!=0 || cfg[31:PW+2]!=0 || cfg[7:6]==3)fault<=1;
+                        cfg_row<=(PW==7)?{cfg[PW+1],cfg[5:0]}:cfg[5:0];cfg_bank<=cfg[7:6];cfg_selected<=cfg[7:6]!=3;
                         fragment<=0;
                     end
                     4'd1:begin
@@ -146,7 +157,7 @@ module ot_hgi_coll_static_issuer_v6 #(
                         else begin meta[cfg_row][31:0]<=cfg[31:0];meta_lo_valid[cfg_row]<=1;dv<=1;drow<=cfg_row;end
                     end
                     4'd3:begin
-                        if(!cfg_selected || fragment!=0 || cfg[31:19]!=0)fault<=1;
+                        if(!cfg_selected || fragment!=0 || cfg[31:MHB]!=0)fault<=1;
                         else begin meta[cfg_row][63:32]<=cfg[31:0];meta_hi_valid[cfg_row]<=1;dv<=1;drow<=cfg_row;end
                     end
                     default:fault<=1;

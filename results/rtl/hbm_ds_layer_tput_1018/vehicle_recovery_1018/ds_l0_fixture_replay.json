@@ -1,0 +1,1900 @@
+{
+  "schema": "opentallas.hbm_slice_fixture_replay.v1",
+  "scope": "eight SU-record probes in an unsplit SW slice replay; not a whole layer",
+  "compiler_dependency": "128031c2a",
+  "compiler_layer_images_sha256": "4f7588040f9280d5300a8f38162e65221e3541030a3f67026beb2db784b2ef3b",
+  "fixture_dir": "results/rtl/hbm_ds_layer_tput_1018/fixtures/L00",
+  "replay_source": "ds_native released-checkpoint fixture",
+  "boundary_sha256": "6a0ba46087894d4fd5f550801183744301b2ef0e6f125a3db1d09e64475ae094",
+  "cycles": 12800,
+  "index": {
+    "events": 6308,
+    "drives": 4972,
+    "checks": 1336,
+    "vm_preload_words": 1377,
+    "last_stream_cyc": 0,
+    "records": [
+      23,
+      31,
+      40,
+      79,
+      82,
+      84,
+      85,
+      87
+    ]
+  },
+  "records": [
+    {
+      "i": 4,
+      "unit": "SU",
+      "op": "SU.VOP",
+      "tag": "q_norm.ss",
+      "start": 1479.31,
+      "end": 1661.49,
+      "cls": "-",
+      "grade": "TB_IMAGE_LOAD_ONLY",
+      "blocked_by": [],
+      "open_gaps": [
+        "G-CIL-HOSTN",
+        "G-HOST-PROGRAM-INSTALL",
+        "G-SMVM-CALISS",
+        "G-SU-PROG-HOST"
+      ],
+      "target_ports": [
+        "su_prog__r_we",
+        "su_prog__r_bank",
+        "su_prog__r_row",
+        "su_prog__r_data",
+        "su_prog__r_start",
+        "su_prog__r_len"
+      ],
+      "status": "v1_unsupported",
+      "reasons": [
+        "reducer_join_calendar_open (su_arith_lower open: scalar_reducer_external_joins; golden csum8 tree order must be matched)"
+      ],
+      "lowering": {
+        "supported": true,
+        "empty": false,
+        "words": 1280,
+        "address_checks": 1280,
+        "issue_groups": 4,
+        "needs_reducer": true,
+        "execution_qualified": false,
+        "open": [
+          "actual_3072_SRAM_bank_calendar",
+          "scalar_reducer_external_joins",
+          "native_global_numerical_proof",
+          "production_timing_price"
+        ]
+      },
+      "inputs_placeholder": false,
+      "fixture": {
+        "matched": true,
+        "k_layer": 6,
+        "checked_words": 0,
+        "mismatched_words": 0,
+        "pad_words_zero": 0
+      },
+      "reducer_bound": {
+        "words": 1280,
+        "ingress_edges": 320,
+        "chunks_per_quarter": 40,
+        "tail_edges": 108,
+        "min_serial_edges": 428,
+        "rule": "1 reducer operand/edge/quarter (pgslice.sv:355-361, lane.sv:119); DEP 10, LAT 9 (reduce_static.sv)",
+        "priced_serial_edges": 137,
+        "bound_over_price": 3.12
+      }
+    },
+    {
+      "i": 8,
+      "unit": "SU",
+      "op": "SU.VOP",
+      "tag": "q_norm.rs",
+      "start": 1661.49,
+      "end": 1804.51,
+      "cls": "-",
+      "grade": "TB_IMAGE_LOAD_ONLY",
+      "blocked_by": [],
+      "open_gaps": [
+        "G-CIL-HOSTN",
+        "G-HOST-PROGRAM-INSTALL",
+        "G-SMVM-CALISS",
+        "G-SU-PROG-HOST"
+      ],
+      "target_ports": [
+        "su_prog__r_we",
+        "su_prog__r_bank",
+        "su_prog__r_row",
+        "su_prog__r_data",
+        "su_prog__r_start",
+        "su_prog__r_len"
+      ],
+      "status": "unsupported_lowering",
+      "reasons": [
+        "native_M128_divider_lane_selection_calendar",
+        "native_SFU_or_scalar_side_control_calendar"
+      ],
+      "lowering": {
+        "supported": false,
+        "reasons": [
+          "native_M128_divider_lane_selection_calendar",
+          "native_SFU_or_scalar_side_control_calendar"
+        ]
+      },
+      "inputs_placeholder": null,
+      "fixture": {
+        "matched": true,
+        "k_layer": 10,
+        "checked_words": 0,
+        "mismatched_words": 0,
+        "pad_words_zero": 0
+      }
+    },
+    {
+      "i": 10,
+      "unit": "SU",
+      "op": "SU.VOP",
+      "tag": "q_norm.y",
+      "start": 1804.51,
+      "end": 1855.69,
+      "cls": "-",
+      "grade": "TB_IMAGE_LOAD_ONLY",
+      "blocked_by": [],
+      "open_gaps": [
+        "G-CIL-HOSTN",
+        "G-HOST-PROGRAM-INSTALL",
+        "G-SMVM-CALISS",
+        "G-SU-PROG-HOST"
+      ],
+      "target_ports": [
+        "su_prog__r_we",
+        "su_prog__r_bank",
+        "su_prog__r_row",
+        "su_prog__r_data",
+        "su_prog__r_start",
+        "su_prog__r_len"
+      ],
+      "status": "v1_unsupported",
+      "reasons": [
+        "operand B broadcast/strided: needs RF-broadcast (srcs) calendar",
+        "operand B group 0 not one aligned VM sector",
+        "operand B group 1 not one aligned VM sector",
+        "operand B group 2 not one aligned VM sector",
+        "operand B group 3 not one aligned VM sector",
+        "operand B group 4 not one aligned VM sector",
+        "operand B group 5 not one aligned VM sector",
+        "operand B group 6 not one aligned VM sector",
+        "operand B group 7 not one aligned VM sector",
+        "operand B group 8 not one aligned VM sector",
+        "operand B group 9 not one aligned VM sector",
+        "operand B group 10 not one aligned VM sector",
+        "operand B group 11 not one aligned VM sector",
+        "operand B group 12 not one aligned VM sector",
+        "operand B group 13 not one aligned VM sector",
+        "operand B group 14 not one aligned VM sector",
+        "operand B group 15 not one aligned VM sector",
+        "operand B group 0 not one aligned VM sector",
+        "operand B group 1 not one aligned VM sector",
+        "operand B group 2 not one aligned VM sector",
+        "operand B group 3 not one aligned VM sector",
+        "operand B group 4 not one aligned VM sector",
+        "operand B group 5 not one aligned VM sector",
+        "operand B group 6 not one aligned VM sector",
+        "operand B group 7 not one aligned VM sector",
+        "operand B group 8 not one aligned VM sector",
+        "operand B group 9 not one aligned VM sector",
+        "operand B group 10 not one aligned VM sector",
+        "operand B group 11 not one aligned VM sector",
+        "operand B group 12 not one aligned VM sector",
+        "operand B group 13 not one aligned VM sector",
+        "operand B group 14 not one aligned VM sector",
+        "operand B group 15 not one aligned VM sector",
+        "operand B group 0 not one aligned VM sector",
+        "operand B group 1 not one aligned VM sector",
+        "operand B group 2 not one aligned VM sector",
+        "operand B group 3 not one aligned VM sector",
+        "operand B group 4 not one aligned VM sector",
+        "operand B group 5 not one aligned VM sector",
+        "operand B group 6 not one aligned VM sector",
+        "operand B group 7 not one aligned VM sector",
+        "operand B group 8 not one aligned VM sector",
+        "operand B group 9 not one aligned VM sector",
+        "operand B group 10 not one aligned VM sector",
+        "operand B group 11 not one aligned VM sector",
+        "operand B group 12 not one aligned VM sector",
+        "operand B group 13 not one aligned VM sector",
+        "operand B group 14 not one aligned VM sector",
+        "operand B group 15 not one aligned VM sector"
+      ],
+      "lowering": {
+        "supported": true,
+        "empty": false,
+        "words": 1280,
+        "address_checks": 5120,
+        "issue_groups": 3,
+        "needs_reducer": false,
+        "execution_qualified": false,
+        "open": [
+          "actual_3072_SRAM_bank_calendar",
+          "scalar_reducer_external_joins",
+          "native_global_numerical_proof",
+          "production_timing_price"
+        ]
+      },
+      "inputs_placeholder": false,
+      "fixture": {
+        "matched": true,
+        "k_layer": 11,
+        "checked_words": 0,
+        "mismatched_words": 0,
+        "pad_words_zero": 0
+      }
+    },
+    {
+      "i": 12,
+      "unit": "SU",
+      "op": "SU.VOP",
+      "tag": "kv_norm.ss",
+      "start": 1893.12,
+      "end": 2061.3,
+      "cls": "-",
+      "grade": "TB_IMAGE_LOAD_ONLY",
+      "blocked_by": [],
+      "open_gaps": [
+        "G-CIL-HOSTN",
+        "G-HOST-PROGRAM-INSTALL",
+        "G-SMVM-CALISS",
+        "G-SU-PROG-HOST"
+      ],
+      "target_ports": [
+        "su_prog__r_we",
+        "su_prog__r_bank",
+        "su_prog__r_row",
+        "su_prog__r_data",
+        "su_prog__r_start",
+        "su_prog__r_len"
+      ],
+      "status": "v1_unsupported",
+      "reasons": [
+        "reducer_join_calendar_open (su_arith_lower open: scalar_reducer_external_joins; golden csum8 tree order must be matched)"
+      ],
+      "lowering": {
+        "supported": true,
+        "empty": false,
+        "words": 512,
+        "address_checks": 512,
+        "issue_groups": 1,
+        "needs_reducer": true,
+        "execution_qualified": false,
+        "open": [
+          "actual_3072_SRAM_bank_calendar",
+          "scalar_reducer_external_joins",
+          "native_global_numerical_proof",
+          "production_timing_price"
+        ]
+      },
+      "inputs_placeholder": false,
+      "fixture": {
+        "matched": true,
+        "k_layer": 13,
+        "checked_words": 0,
+        "mismatched_words": 0,
+        "pad_words_zero": 0
+      },
+      "reducer_bound": {
+        "words": 512,
+        "ingress_edges": 128,
+        "chunks_per_quarter": 16,
+        "tail_edges": 88,
+        "min_serial_edges": 216,
+        "rule": "1 reducer operand/edge/quarter (pgslice.sv:355-361, lane.sv:119); DEP 10, LAT 9 (reduce_static.sv)",
+        "priced_serial_edges": 126,
+        "bound_over_price": 1.71
+      }
+    },
+    {
+      "i": 13,
+      "unit": "SU",
+      "op": "SU.VOP",
+      "tag": "kv_norm.rs",
+      "start": 2061.3,
+      "end": 2204.32,
+      "cls": "-",
+      "grade": "TB_IMAGE_LOAD_ONLY",
+      "blocked_by": [],
+      "open_gaps": [
+        "G-CIL-HOSTN",
+        "G-HOST-PROGRAM-INSTALL",
+        "G-SMVM-CALISS",
+        "G-SU-PROG-HOST"
+      ],
+      "target_ports": [
+        "su_prog__r_we",
+        "su_prog__r_bank",
+        "su_prog__r_row",
+        "su_prog__r_data",
+        "su_prog__r_start",
+        "su_prog__r_len"
+      ],
+      "status": "unsupported_lowering",
+      "reasons": [
+        "native_M128_divider_lane_selection_calendar",
+        "native_SFU_or_scalar_side_control_calendar"
+      ],
+      "lowering": {
+        "supported": false,
+        "reasons": [
+          "native_M128_divider_lane_selection_calendar",
+          "native_SFU_or_scalar_side_control_calendar"
+        ]
+      },
+      "inputs_placeholder": null,
+      "fixture": {
+        "matched": true,
+        "k_layer": 14,
+        "checked_words": 0,
+        "mismatched_words": 0,
+        "pad_words_zero": 0
+      }
+    },
+    {
+      "i": 14,
+      "unit": "SU",
+      "op": "SU.VOP",
+      "tag": "kv_norm.y",
+      "start": 2204.32,
+      "end": 2253.5,
+      "cls": "-",
+      "grade": "TB_IMAGE_LOAD_ONLY",
+      "blocked_by": [],
+      "open_gaps": [
+        "G-CIL-HOSTN",
+        "G-HOST-PROGRAM-INSTALL",
+        "G-SMVM-CALISS",
+        "G-SU-PROG-HOST"
+      ],
+      "target_ports": [
+        "su_prog__r_we",
+        "su_prog__r_bank",
+        "su_prog__r_row",
+        "su_prog__r_data",
+        "su_prog__r_start",
+        "su_prog__r_len"
+      ],
+      "status": "v1_unsupported",
+      "reasons": [
+        "operand B broadcast/strided: needs RF-broadcast (srcs) calendar",
+        "operand B group 0 not one aligned VM sector",
+        "operand B group 1 not one aligned VM sector",
+        "operand B group 2 not one aligned VM sector",
+        "operand B group 3 not one aligned VM sector",
+        "operand B group 4 not one aligned VM sector",
+        "operand B group 5 not one aligned VM sector",
+        "operand B group 6 not one aligned VM sector",
+        "operand B group 7 not one aligned VM sector",
+        "operand B group 8 not one aligned VM sector",
+        "operand B group 9 not one aligned VM sector",
+        "operand B group 10 not one aligned VM sector",
+        "operand B group 11 not one aligned VM sector",
+        "operand B group 12 not one aligned VM sector",
+        "operand B group 13 not one aligned VM sector",
+        "operand B group 14 not one aligned VM sector",
+        "operand B group 15 not one aligned VM sector"
+      ],
+      "lowering": {
+        "supported": true,
+        "empty": false,
+        "words": 512,
+        "address_checks": 2048,
+        "issue_groups": 1,
+        "needs_reducer": false,
+        "execution_qualified": false,
+        "open": [
+          "actual_3072_SRAM_bank_calendar",
+          "scalar_reducer_external_joins",
+          "native_global_numerical_proof",
+          "production_timing_price"
+        ]
+      },
+      "inputs_placeholder": false,
+      "fixture": {
+        "matched": true,
+        "k_layer": 15,
+        "checked_words": 0,
+        "mismatched_words": 0,
+        "pad_words_zero": 0
+      }
+    },
+    {
+      "i": 15,
+      "unit": "SU",
+      "op": "SU.VOP",
+      "tag": "kv_rope.tail",
+      "start": 2253.5,
+      "end": 2302.68,
+      "cls": "-",
+      "grade": "TB_IMAGE_LOAD_ONLY",
+      "blocked_by": [],
+      "open_gaps": [
+        "G-CIL-HOSTN",
+        "G-HOST-PROGRAM-INSTALL",
+        "G-SMVM-CALISS",
+        "G-SU-PROG-HOST"
+      ],
+      "target_ports": [
+        "su_prog__r_we",
+        "su_prog__r_bank",
+        "su_prog__r_row",
+        "su_prog__r_data",
+        "su_prog__r_start",
+        "su_prog__r_len"
+      ],
+      "status": "v1_unsupported",
+      "reasons": [
+        "operand B group 0 not one aligned VM sector",
+        "operand B group 1 not one aligned VM sector",
+        "operand B group 2 not one aligned VM sector",
+        "operand B group 3 not one aligned VM sector",
+        "operand B group 4 not one aligned VM sector",
+        "operand B group 5 not one aligned VM sector",
+        "operand B group 6 not one aligned VM sector",
+        "operand B group 7 not one aligned VM sector",
+        "operand D group 0 not one aligned VM sector",
+        "operand D group 1 not one aligned VM sector",
+        "operand D group 2 not one aligned VM sector",
+        "operand D group 3 not one aligned VM sector",
+        "operand D group 4 not one aligned VM sector",
+        "operand D group 5 not one aligned VM sector",
+        "operand D group 6 not one aligned VM sector",
+        "operand D group 7 not one aligned VM sector"
+      ],
+      "lowering": {
+        "supported": true,
+        "empty": false,
+        "words": 64,
+        "address_checks": 256,
+        "issue_groups": 1,
+        "needs_reducer": false,
+        "execution_qualified": false,
+        "open": [
+          "actual_3072_SRAM_bank_calendar",
+          "scalar_reducer_external_joins",
+          "native_global_numerical_proof",
+          "production_timing_price"
+        ]
+      },
+      "inputs_placeholder": false,
+      "fixture": {
+        "matched": true,
+        "k_layer": 16,
+        "checked_words": 0,
+        "mismatched_words": 0,
+        "pad_words_zero": 0
+      }
+    },
+    {
+      "i": 18,
+      "unit": "SU",
+      "op": "SU.VOP",
+      "tag": "q_rope.tail",
+      "start": 2521.49,
+      "end": 2570.67,
+      "cls": "-",
+      "grade": "TB_IMAGE_LOAD_ONLY",
+      "blocked_by": [],
+      "open_gaps": [
+        "G-CIL-HOSTN",
+        "G-HOST-PROGRAM-INSTALL",
+        "G-SMVM-CALISS",
+        "G-SU-PROG-HOST"
+      ],
+      "target_ports": [
+        "su_prog__r_we",
+        "su_prog__r_bank",
+        "su_prog__r_row",
+        "su_prog__r_data",
+        "su_prog__r_start",
+        "su_prog__r_len"
+      ],
+      "status": "v1_unsupported",
+      "reasons": [
+        "operand B group 0 not one aligned VM sector",
+        "operand B group 1 not one aligned VM sector",
+        "operand B group 2 not one aligned VM sector",
+        "operand B group 3 not one aligned VM sector",
+        "operand B group 4 not one aligned VM sector",
+        "operand B group 5 not one aligned VM sector",
+        "operand B group 6 not one aligned VM sector",
+        "operand B group 7 not one aligned VM sector",
+        "operand D group 0 not one aligned VM sector",
+        "operand D group 1 not one aligned VM sector",
+        "operand D group 2 not one aligned VM sector",
+        "operand D group 3 not one aligned VM sector",
+        "operand D group 4 not one aligned VM sector",
+        "operand D group 5 not one aligned VM sector",
+        "operand D group 6 not one aligned VM sector",
+        "operand D group 7 not one aligned VM sector"
+      ],
+      "lowering": {
+        "supported": true,
+        "empty": false,
+        "words": 64,
+        "address_checks": 256,
+        "issue_groups": 1,
+        "needs_reducer": false,
+        "execution_qualified": false,
+        "open": [
+          "actual_3072_SRAM_bank_calendar",
+          "scalar_reducer_external_joins",
+          "native_global_numerical_proof",
+          "production_timing_price"
+        ]
+      },
+      "inputs_placeholder": false,
+      "fixture": {
+        "matched": true,
+        "k_layer": 19,
+        "checked_words": 0,
+        "mismatched_words": 0,
+        "pad_words_zero": 0
+      }
+    },
+    {
+      "i": 20,
+      "unit": "SU",
+      "op": "SU.VOP",
+      "tag": "attend.max",
+      "start": 3055.5,
+      "end": 3211.68,
+      "cls": "-",
+      "grade": "BLOCKED",
+      "blocked_by": [
+        "G-SFU-OPERAND-JOIN-NE",
+        "G-SFU-OPERAND-JOIN-NW",
+        "G-SFU-OPERAND-JOIN-SE",
+        "G-SFU-OPERAND-JOIN-SW"
+      ],
+      "open_gaps": [
+        "G-CIL-HOSTN",
+        "G-HOST-PROGRAM-INSTALL",
+        "G-SFU-LOADER-NE",
+        "G-SFU-LOADER-NW",
+        "G-SFU-LOADER-SE",
+        "G-SFU-LOADER-SW",
+        "G-SFU-OPERAND-JOIN-NE",
+        "G-SFU-OPERAND-JOIN-NW",
+        "G-SFU-OPERAND-JOIN-SE",
+        "G-SFU-OPERAND-JOIN-SW",
+        "G-SMVM-CALISS",
+        "G-SU-PROG-HOST"
+      ],
+      "target_ports": [
+        "su_prog__r_we",
+        "su_prog__r_bank",
+        "su_prog__r_row",
+        "su_prog__r_data",
+        "su_prog__r_start",
+        "su_prog__r_len"
+      ],
+      "status": "blocked:v1_unsupported",
+      "reasons": [
+        "reducer_join_calendar_open (su_arith_lower open: scalar_reducer_external_joins; golden csum8 tree order must be matched)"
+      ],
+      "lowering": {
+        "supported": true,
+        "empty": false,
+        "words": 128,
+        "address_checks": 128,
+        "issue_groups": 1,
+        "needs_reducer": true,
+        "execution_qualified": false,
+        "open": [
+          "actual_3072_SRAM_bank_calendar",
+          "scalar_reducer_external_joins",
+          "native_global_numerical_proof",
+          "production_timing_price"
+        ]
+      },
+      "inputs_placeholder": false,
+      "fixture": {
+        "matched": true,
+        "k_layer": 21,
+        "checked_words": 0,
+        "mismatched_words": 0,
+        "pad_words_zero": 0
+      },
+      "reducer_bound": {
+        "words": 128,
+        "ingress_edges": 32,
+        "chunks_per_quarter": 4,
+        "tail_edges": 68,
+        "min_serial_edges": 100,
+        "rule": "1 reducer operand/edge/quarter (pgslice.sv:355-361, lane.sv:119); DEP 10, LAT 9 (reduce_static.sv)",
+        "priced_serial_edges": 117,
+        "bound_over_price": 0.85
+      }
+    },
+    {
+      "i": 21,
+      "unit": "SU",
+      "op": "SU.VOP",
+      "tag": "attend.exp_sum",
+      "start": 3211.68,
+      "end": 3463.7,
+      "cls": "-",
+      "grade": "BLOCKED",
+      "blocked_by": [
+        "G-SFU-OPERAND-JOIN-NE",
+        "G-SFU-OPERAND-JOIN-NW",
+        "G-SFU-OPERAND-JOIN-SE",
+        "G-SFU-OPERAND-JOIN-SW"
+      ],
+      "open_gaps": [
+        "G-CIL-HOSTN",
+        "G-HOST-PROGRAM-INSTALL",
+        "G-SFU-LOADER-NE",
+        "G-SFU-LOADER-NW",
+        "G-SFU-LOADER-SE",
+        "G-SFU-LOADER-SW",
+        "G-SFU-OPERAND-JOIN-NE",
+        "G-SFU-OPERAND-JOIN-NW",
+        "G-SFU-OPERAND-JOIN-SE",
+        "G-SFU-OPERAND-JOIN-SW",
+        "G-SMVM-CALISS",
+        "G-SU-PROG-HOST"
+      ],
+      "target_ports": [
+        "su_prog__r_we",
+        "su_prog__r_bank",
+        "su_prog__r_row",
+        "su_prog__r_data",
+        "su_prog__r_start",
+        "su_prog__r_len"
+      ],
+      "status": "blocked:unsupported_lowering",
+      "reasons": [
+        "native_SFU_or_scalar_side_control_calendar"
+      ],
+      "lowering": {
+        "supported": false,
+        "reasons": [
+          "native_SFU_or_scalar_side_control_calendar"
+        ]
+      },
+      "inputs_placeholder": null,
+      "fixture": {
+        "matched": true,
+        "k_layer": 22,
+        "checked_words": 0,
+        "mismatched_words": 0,
+        "pad_words_zero": 0
+      }
+    },
+    {
+      "i": 23,
+      "unit": "SU",
+      "op": "SU.VOP",
+      "tag": "attend.bf16_p",
+      "start": 3463.7,
+      "end": 3512.88,
+      "cls": "-",
+      "grade": "TB_IMAGE_LOAD_ONLY",
+      "blocked_by": [],
+      "open_gaps": [
+        "G-CIL-HOSTN",
+        "G-HOST-PROGRAM-INSTALL",
+        "G-SMVM-CALISS",
+        "G-SU-PROG-HOST"
+      ],
+      "target_ports": [
+        "su_prog__r_we",
+        "su_prog__r_bank",
+        "su_prog__r_row",
+        "su_prog__r_data",
+        "su_prog__r_start",
+        "su_prog__r_len"
+      ],
+      "status": "emitted",
+      "reasons": [],
+      "lowering": {
+        "supported": true,
+        "empty": false,
+        "words": 128,
+        "address_checks": 256,
+        "issue_groups": 1,
+        "needs_reducer": false,
+        "execution_qualified": false,
+        "open": [
+          "actual_3072_SRAM_bank_calendar",
+          "scalar_reducer_external_joins",
+          "native_global_numerical_proof",
+          "production_timing_price"
+        ]
+      },
+      "inputs_placeholder": false,
+      "fixture": {
+        "matched": true,
+        "k_layer": 23,
+        "checked_words": 128,
+        "mismatched_words": 0,
+        "pad_words_zero": 0
+      },
+      "edges": 44,
+      "fill_sectors": 16,
+      "drain_sectors": 16,
+      "programme": 0,
+      "line0_serial": 2674,
+      "compiled_commit_serial": 2728,
+      "priced_end_serial": 2717,
+      "commit_slack_edges": -11
+    },
+    {
+      "i": 25,
+      "unit": "SU",
+      "op": "SU.VOP",
+      "tag": "attend.den",
+      "start": 3537.88,
+      "end": 3682.9,
+      "cls": "-",
+      "grade": "TB_IMAGE_LOAD_ONLY",
+      "blocked_by": [],
+      "open_gaps": [
+        "G-CIL-HOSTN",
+        "G-HOST-PROGRAM-INSTALL",
+        "G-SMVM-CALISS",
+        "G-SU-PROG-HOST"
+      ],
+      "target_ports": [
+        "su_prog__r_we",
+        "su_prog__r_bank",
+        "su_prog__r_row",
+        "su_prog__r_data",
+        "su_prog__r_start",
+        "su_prog__r_len"
+      ],
+      "status": "unsupported_lowering",
+      "reasons": [
+        "native_SFU_or_scalar_side_control_calendar"
+      ],
+      "lowering": {
+        "supported": false,
+        "reasons": [
+          "native_SFU_or_scalar_side_control_calendar"
+        ]
+      },
+      "inputs_placeholder": null,
+      "fixture": {
+        "matched": true,
+        "k_layer": 27,
+        "checked_words": 0,
+        "mismatched_words": 0,
+        "pad_words_zero": 0
+      }
+    },
+    {
+      "i": 26,
+      "unit": "SU",
+      "op": "SU.VOP",
+      "tag": "attend.norm",
+      "start": 4209.69,
+      "end": 4274.87,
+      "cls": "-",
+      "grade": "TB_IMAGE_LOAD_ONLY",
+      "blocked_by": [],
+      "open_gaps": [
+        "G-CIL-HOSTN",
+        "G-HOST-PROGRAM-INSTALL",
+        "G-SMVM-CALISS",
+        "G-SU-PROG-HOST"
+      ],
+      "target_ports": [
+        "su_prog__r_we",
+        "su_prog__r_bank",
+        "su_prog__r_row",
+        "su_prog__r_data",
+        "su_prog__r_start",
+        "su_prog__r_len"
+      ],
+      "status": "unsupported_lowering",
+      "reasons": [
+        "native_M128_divider_lane_selection_calendar"
+      ],
+      "lowering": {
+        "supported": false,
+        "reasons": [
+          "native_M128_divider_lane_selection_calendar"
+        ]
+      },
+      "inputs_placeholder": null,
+      "fixture": {
+        "matched": true,
+        "k_layer": 28,
+        "checked_words": 0,
+        "mismatched_words": 0,
+        "pad_words_zero": 0
+      }
+    },
+    {
+      "i": 27,
+      "unit": "SU",
+      "op": "SU.VOP",
+      "tag": "attend.inv_rope.tail",
+      "start": 4274.87,
+      "end": 4324.05,
+      "cls": "-",
+      "grade": "TB_IMAGE_LOAD_ONLY",
+      "blocked_by": [],
+      "open_gaps": [
+        "G-CIL-HOSTN",
+        "G-HOST-PROGRAM-INSTALL",
+        "G-SMVM-CALISS",
+        "G-SU-PROG-HOST"
+      ],
+      "target_ports": [
+        "su_prog__r_we",
+        "su_prog__r_bank",
+        "su_prog__r_row",
+        "su_prog__r_data",
+        "su_prog__r_start",
+        "su_prog__r_len"
+      ],
+      "status": "v1_unsupported",
+      "reasons": [
+        "operand B group 0 not one aligned VM sector",
+        "operand B group 1 not one aligned VM sector",
+        "operand B group 2 not one aligned VM sector",
+        "operand B group 3 not one aligned VM sector",
+        "operand B group 4 not one aligned VM sector",
+        "operand B group 5 not one aligned VM sector",
+        "operand B group 6 not one aligned VM sector",
+        "operand B group 7 not one aligned VM sector",
+        "operand D group 0 not one aligned VM sector",
+        "operand D group 1 not one aligned VM sector",
+        "operand D group 2 not one aligned VM sector",
+        "operand D group 3 not one aligned VM sector",
+        "operand D group 4 not one aligned VM sector",
+        "operand D group 5 not one aligned VM sector",
+        "operand D group 6 not one aligned VM sector",
+        "operand D group 7 not one aligned VM sector"
+      ],
+      "lowering": {
+        "supported": true,
+        "empty": false,
+        "words": 64,
+        "address_checks": 256,
+        "issue_groups": 1,
+        "needs_reducer": false,
+        "execution_qualified": false,
+        "open": [
+          "actual_3072_SRAM_bank_calendar",
+          "scalar_reducer_external_joins",
+          "native_global_numerical_proof",
+          "production_timing_price"
+        ]
+      },
+      "inputs_placeholder": false,
+      "fixture": {
+        "matched": true,
+        "k_layer": 29,
+        "checked_words": 0,
+        "mismatched_words": 0,
+        "pad_words_zero": 0
+      }
+    },
+    {
+      "i": 31,
+      "unit": "SU",
+      "op": "SU.VOP",
+      "tag": "attn.res_copy",
+      "start": 5005.87,
+      "end": 5094.05,
+      "cls": "-",
+      "grade": "TB_IMAGE_LOAD_ONLY",
+      "blocked_by": [],
+      "open_gaps": [
+        "G-CIL-HOSTN",
+        "G-HOST-PROGRAM-INSTALL",
+        "G-SMVM-CALISS",
+        "G-SU-PROG-HOST"
+      ],
+      "target_ports": [
+        "su_prog__r_we",
+        "su_prog__r_bank",
+        "su_prog__r_row",
+        "su_prog__r_data",
+        "su_prog__r_start",
+        "su_prog__r_len"
+      ],
+      "status": "emitted",
+      "reasons": [],
+      "lowering": {
+        "supported": true,
+        "empty": false,
+        "words": 20480,
+        "address_checks": 40960,
+        "issue_groups": 40,
+        "needs_reducer": false,
+        "execution_qualified": false,
+        "open": [
+          "actual_3072_SRAM_bank_calendar",
+          "scalar_reducer_external_joins",
+          "native_global_numerical_proof",
+          "production_timing_price"
+        ]
+      },
+      "inputs_placeholder": false,
+      "fixture": {
+        "matched": true,
+        "k_layer": 32,
+        "checked_words": 5120,
+        "mismatched_words": 0,
+        "pad_words_zero": 0
+      },
+      "edges": 122,
+      "fill_sectors": 640,
+      "drain_sectors": 640,
+      "programme": 1,
+      "line0_serial": 3831,
+      "compiled_commit_serial": 3963,
+      "priced_end_serial": 3903,
+      "commit_slack_edges": -60
+    },
+    {
+      "i": 37,
+      "unit": "SU",
+      "op": "SU.VOP",
+      "tag": "router_act",
+      "start": 8596.7,
+      "end": 8926.72,
+      "cls": "-",
+      "grade": "BLOCKED",
+      "blocked_by": [
+        "G-SFU-OPERAND-JOIN-NE",
+        "G-SFU-OPERAND-JOIN-NW",
+        "G-SFU-OPERAND-JOIN-SE",
+        "G-SFU-OPERAND-JOIN-SW"
+      ],
+      "open_gaps": [
+        "G-CIL-HOSTN",
+        "G-HOST-PROGRAM-INSTALL",
+        "G-SFU-LOADER-NE",
+        "G-SFU-LOADER-NW",
+        "G-SFU-LOADER-SE",
+        "G-SFU-LOADER-SW",
+        "G-SFU-OPERAND-JOIN-NE",
+        "G-SFU-OPERAND-JOIN-NW",
+        "G-SFU-OPERAND-JOIN-SE",
+        "G-SFU-OPERAND-JOIN-SW",
+        "G-SMVM-CALISS",
+        "G-SU-PROG-HOST"
+      ],
+      "target_ports": [
+        "su_prog__r_we",
+        "su_prog__r_bank",
+        "su_prog__r_row",
+        "su_prog__r_data",
+        "su_prog__r_start",
+        "su_prog__r_len"
+      ],
+      "status": "blocked:unsupported_lowering",
+      "reasons": [
+        "native_SFU_or_scalar_side_control_calendar"
+      ],
+      "lowering": {
+        "supported": false,
+        "reasons": [
+          "native_SFU_or_scalar_side_control_calendar"
+        ]
+      },
+      "inputs_placeholder": null,
+      "fixture": {
+        "matched": true,
+        "k_layer": 43,
+        "checked_words": 0,
+        "mismatched_words": 0,
+        "pad_words_zero": 0
+      }
+    },
+    {
+      "i": 40,
+      "unit": "SU",
+      "op": "SU.VOP",
+      "tag": "route.scores_bias",
+      "start": 9745.24,
+      "end": 9794.42,
+      "cls": "-",
+      "grade": "TB_IMAGE_LOAD_ONLY",
+      "blocked_by": [],
+      "open_gaps": [
+        "G-CIL-HOSTN",
+        "G-HOST-PROGRAM-INSTALL",
+        "G-SMVM-CALISS",
+        "G-SU-PROG-HOST"
+      ],
+      "target_ports": [
+        "su_prog__r_we",
+        "su_prog__r_bank",
+        "su_prog__r_row",
+        "su_prog__r_data",
+        "su_prog__r_start",
+        "su_prog__r_len"
+      ],
+      "status": "emitted",
+      "reasons": [],
+      "lowering": {
+        "supported": true,
+        "empty": false,
+        "words": 384,
+        "address_checks": 1152,
+        "issue_groups": 1,
+        "needs_reducer": false,
+        "execution_qualified": false,
+        "open": [
+          "actual_3072_SRAM_bank_calendar",
+          "scalar_reducer_external_joins",
+          "native_global_numerical_proof",
+          "production_timing_price"
+        ]
+      },
+      "inputs_placeholder": false,
+      "fixture": {
+        "matched": true,
+        "k_layer": 47,
+        "checked_words": 128,
+        "mismatched_words": 0,
+        "pad_words_zero": 0
+      },
+      "edges": 46,
+      "fill_sectors": 32,
+      "drain_sectors": 16,
+      "programme": 2,
+      "line0_serial": 7383,
+      "compiled_commit_serial": 7439,
+      "priced_end_serial": 7428,
+      "commit_slack_edges": -11
+    },
+    {
+      "i": 42,
+      "unit": "SU",
+      "op": "SU.VOP",
+      "tag": "route.gather0",
+      "start": 10111.93,
+      "end": 10161.11,
+      "cls": "-",
+      "grade": "TB_IMAGE_LOAD_ONLY",
+      "blocked_by": [],
+      "open_gaps": [
+        "G-CIL-HOSTN",
+        "G-HOST-PROGRAM-INSTALL",
+        "G-SMVM-CALISS",
+        "G-SU-PROG-HOST"
+      ],
+      "target_ports": [
+        "su_prog__r_we",
+        "su_prog__r_bank",
+        "su_prog__r_row",
+        "su_prog__r_data",
+        "su_prog__r_start",
+        "su_prog__r_len"
+      ],
+      "status": "unsupported_lowering",
+      "reasons": [
+        "MDESC_indexed_scalar_runtime_address_calendar"
+      ],
+      "lowering": {
+        "supported": false,
+        "reasons": [
+          "MDESC_indexed_scalar_runtime_address_calendar"
+        ]
+      },
+      "inputs_placeholder": null,
+      "fixture": {
+        "matched": true,
+        "k_layer": 51,
+        "checked_words": 0,
+        "mismatched_words": 0,
+        "pad_words_zero": 0
+      }
+    },
+    {
+      "i": 43,
+      "unit": "SU",
+      "op": "SU.VOP",
+      "tag": "route.gather1",
+      "start": 10161.11,
+      "end": 10210.29,
+      "cls": "-",
+      "grade": "TB_IMAGE_LOAD_ONLY",
+      "blocked_by": [],
+      "open_gaps": [
+        "G-CIL-HOSTN",
+        "G-HOST-PROGRAM-INSTALL",
+        "G-SMVM-CALISS",
+        "G-SU-PROG-HOST"
+      ],
+      "target_ports": [
+        "su_prog__r_we",
+        "su_prog__r_bank",
+        "su_prog__r_row",
+        "su_prog__r_data",
+        "su_prog__r_start",
+        "su_prog__r_len"
+      ],
+      "status": "unsupported_lowering",
+      "reasons": [
+        "MDESC_indexed_scalar_runtime_address_calendar"
+      ],
+      "lowering": {
+        "supported": false,
+        "reasons": [
+          "MDESC_indexed_scalar_runtime_address_calendar"
+        ]
+      },
+      "inputs_placeholder": null,
+      "fixture": {
+        "matched": true,
+        "k_layer": 52,
+        "checked_words": 0,
+        "mismatched_words": 0,
+        "pad_words_zero": 0
+      }
+    },
+    {
+      "i": 44,
+      "unit": "SU",
+      "op": "SU.VOP",
+      "tag": "route.gather2",
+      "start": 10210.29,
+      "end": 10259.47,
+      "cls": "-",
+      "grade": "TB_IMAGE_LOAD_ONLY",
+      "blocked_by": [],
+      "open_gaps": [
+        "G-CIL-HOSTN",
+        "G-HOST-PROGRAM-INSTALL",
+        "G-SMVM-CALISS",
+        "G-SU-PROG-HOST"
+      ],
+      "target_ports": [
+        "su_prog__r_we",
+        "su_prog__r_bank",
+        "su_prog__r_row",
+        "su_prog__r_data",
+        "su_prog__r_start",
+        "su_prog__r_len"
+      ],
+      "status": "unsupported_lowering",
+      "reasons": [
+        "MDESC_indexed_scalar_runtime_address_calendar"
+      ],
+      "lowering": {
+        "supported": false,
+        "reasons": [
+          "MDESC_indexed_scalar_runtime_address_calendar"
+        ]
+      },
+      "inputs_placeholder": null,
+      "fixture": {
+        "matched": true,
+        "k_layer": 53,
+        "checked_words": 0,
+        "mismatched_words": 0,
+        "pad_words_zero": 0
+      }
+    },
+    {
+      "i": 45,
+      "unit": "SU",
+      "op": "SU.VOP",
+      "tag": "route.gather3",
+      "start": 10259.47,
+      "end": 10308.65,
+      "cls": "-",
+      "grade": "TB_IMAGE_LOAD_ONLY",
+      "blocked_by": [],
+      "open_gaps": [
+        "G-CIL-HOSTN",
+        "G-HOST-PROGRAM-INSTALL",
+        "G-SMVM-CALISS",
+        "G-SU-PROG-HOST"
+      ],
+      "target_ports": [
+        "su_prog__r_we",
+        "su_prog__r_bank",
+        "su_prog__r_row",
+        "su_prog__r_data",
+        "su_prog__r_start",
+        "su_prog__r_len"
+      ],
+      "status": "unsupported_lowering",
+      "reasons": [
+        "MDESC_indexed_scalar_runtime_address_calendar"
+      ],
+      "lowering": {
+        "supported": false,
+        "reasons": [
+          "MDESC_indexed_scalar_runtime_address_calendar"
+        ]
+      },
+      "inputs_placeholder": null,
+      "fixture": {
+        "matched": true,
+        "k_layer": 54,
+        "checked_words": 0,
+        "mismatched_words": 0,
+        "pad_words_zero": 0
+      }
+    },
+    {
+      "i": 48,
+      "unit": "SU",
+      "op": "SU.VOP",
+      "tag": "route.gather4",
+      "start": 10308.65,
+      "end": 10357.83,
+      "cls": "-",
+      "grade": "TB_IMAGE_LOAD_ONLY",
+      "blocked_by": [],
+      "open_gaps": [
+        "G-CIL-HOSTN",
+        "G-HOST-PROGRAM-INSTALL",
+        "G-SMVM-CALISS",
+        "G-SU-PROG-HOST"
+      ],
+      "target_ports": [
+        "su_prog__r_we",
+        "su_prog__r_bank",
+        "su_prog__r_row",
+        "su_prog__r_data",
+        "su_prog__r_start",
+        "su_prog__r_len"
+      ],
+      "status": "unsupported_lowering",
+      "reasons": [
+        "MDESC_indexed_scalar_runtime_address_calendar"
+      ],
+      "lowering": {
+        "supported": false,
+        "reasons": [
+          "MDESC_indexed_scalar_runtime_address_calendar"
+        ]
+      },
+      "inputs_placeholder": null,
+      "fixture": {
+        "matched": true,
+        "k_layer": 55,
+        "checked_words": 0,
+        "mismatched_words": 0,
+        "pad_words_zero": 0
+      }
+    },
+    {
+      "i": 49,
+      "unit": "SU",
+      "op": "SU.VOP",
+      "tag": "route.gather5",
+      "start": 10357.83,
+      "end": 10407.01,
+      "cls": "-",
+      "grade": "TB_IMAGE_LOAD_ONLY",
+      "blocked_by": [],
+      "open_gaps": [
+        "G-CIL-HOSTN",
+        "G-HOST-PROGRAM-INSTALL",
+        "G-SMVM-CALISS",
+        "G-SU-PROG-HOST"
+      ],
+      "target_ports": [
+        "su_prog__r_we",
+        "su_prog__r_bank",
+        "su_prog__r_row",
+        "su_prog__r_data",
+        "su_prog__r_start",
+        "su_prog__r_len"
+      ],
+      "status": "unsupported_lowering",
+      "reasons": [
+        "MDESC_indexed_scalar_runtime_address_calendar"
+      ],
+      "lowering": {
+        "supported": false,
+        "reasons": [
+          "MDESC_indexed_scalar_runtime_address_calendar"
+        ]
+      },
+      "inputs_placeholder": null,
+      "fixture": {
+        "matched": true,
+        "k_layer": 56,
+        "checked_words": 0,
+        "mismatched_words": 0,
+        "pad_words_zero": 0
+      }
+    },
+    {
+      "i": 50,
+      "unit": "SU",
+      "op": "SU.VOP",
+      "tag": "route.total",
+      "start": 10407.01,
+      "end": 10539.19,
+      "cls": "-",
+      "grade": "TB_IMAGE_LOAD_ONLY",
+      "blocked_by": [],
+      "open_gaps": [
+        "G-CIL-HOSTN",
+        "G-HOST-PROGRAM-INSTALL",
+        "G-SMVM-CALISS",
+        "G-SU-PROG-HOST"
+      ],
+      "target_ports": [
+        "su_prog__r_we",
+        "su_prog__r_bank",
+        "su_prog__r_row",
+        "su_prog__r_data",
+        "su_prog__r_start",
+        "su_prog__r_len"
+      ],
+      "status": "v1_unsupported",
+      "reasons": [
+        "reducer_join_calendar_open (su_arith_lower open: scalar_reducer_external_joins; golden csum8 tree order must be matched)"
+      ],
+      "lowering": {
+        "supported": true,
+        "empty": false,
+        "words": 6,
+        "address_checks": 6,
+        "issue_groups": 1,
+        "needs_reducer": true,
+        "execution_qualified": false,
+        "open": [
+          "actual_3072_SRAM_bank_calendar",
+          "scalar_reducer_external_joins",
+          "native_global_numerical_proof",
+          "production_timing_price"
+        ]
+      },
+      "inputs_placeholder": false,
+      "fixture": {
+        "matched": true,
+        "k_layer": 57,
+        "checked_words": 0,
+        "mismatched_words": 0,
+        "pad_words_zero": 2
+      },
+      "reducer_bound": {
+        "words": 6,
+        "ingress_edges": 2,
+        "chunks_per_quarter": 1,
+        "tail_edges": 48,
+        "min_serial_edges": 50,
+        "rule": "1 reducer operand/edge/quarter (pgslice.sv:355-361, lane.sv:119); DEP 10, LAT 9 (reduce_static.sv)",
+        "priced_serial_edges": 99,
+        "bound_over_price": 0.51
+      }
+    },
+    {
+      "i": 58,
+      "unit": "SU",
+      "op": "SU.VOP",
+      "tag": "route.den",
+      "start": 10539.19,
+      "end": 10588.37,
+      "cls": "-",
+      "grade": "TB_IMAGE_LOAD_ONLY",
+      "blocked_by": [],
+      "open_gaps": [
+        "G-CIL-HOSTN",
+        "G-HOST-PROGRAM-INSTALL",
+        "G-SMVM-CALISS",
+        "G-SU-PROG-HOST"
+      ],
+      "target_ports": [
+        "su_prog__r_we",
+        "su_prog__r_bank",
+        "su_prog__r_row",
+        "su_prog__r_data",
+        "su_prog__r_start",
+        "su_prog__r_len"
+      ],
+      "status": "v1_unsupported",
+      "reasons": [
+        "operand A group 0 not one aligned VM sector",
+        "output group 0 not one aligned VM sector"
+      ],
+      "lowering": {
+        "supported": true,
+        "empty": false,
+        "words": 1,
+        "address_checks": 2,
+        "issue_groups": 1,
+        "needs_reducer": false,
+        "execution_qualified": false,
+        "open": [
+          "actual_3072_SRAM_bank_calendar",
+          "scalar_reducer_external_joins",
+          "native_global_numerical_proof",
+          "production_timing_price"
+        ]
+      },
+      "inputs_placeholder": false,
+      "fixture": {
+        "matched": true,
+        "k_layer": 61,
+        "checked_words": 0,
+        "mismatched_words": 0,
+        "pad_words_zero": 0
+      }
+    },
+    {
+      "i": 64,
+      "unit": "SU",
+      "op": "SU.VOP",
+      "tag": "route.weights",
+      "start": 10588.37,
+      "end": 10652.55,
+      "cls": "-",
+      "grade": "TB_IMAGE_LOAD_ONLY",
+      "blocked_by": [],
+      "open_gaps": [
+        "G-CIL-HOSTN",
+        "G-HOST-PROGRAM-INSTALL",
+        "G-SMVM-CALISS",
+        "G-SU-PROG-HOST"
+      ],
+      "target_ports": [
+        "su_prog__r_we",
+        "su_prog__r_bank",
+        "su_prog__r_row",
+        "su_prog__r_data",
+        "su_prog__r_start",
+        "su_prog__r_len"
+      ],
+      "status": "unsupported_lowering",
+      "reasons": [
+        "native_M128_divider_lane_selection_calendar"
+      ],
+      "lowering": {
+        "supported": false,
+        "reasons": [
+          "native_M128_divider_lane_selection_calendar"
+        ]
+      },
+      "inputs_placeholder": null,
+      "fixture": {
+        "matched": true,
+        "k_layer": 63,
+        "checked_words": 0,
+        "mismatched_words": 0,
+        "pad_words_zero": 0
+      }
+    },
+    {
+      "i": 66,
+      "unit": "SU",
+      "op": "SU.VOP",
+      "tag": "swiglu",
+      "start": 10778.8,
+      "end": 10950.82,
+      "cls": "-",
+      "grade": "BLOCKED",
+      "blocked_by": [
+        "G-SFU-OPERAND-JOIN-NE",
+        "G-SFU-OPERAND-JOIN-NW",
+        "G-SFU-OPERAND-JOIN-SE",
+        "G-SFU-OPERAND-JOIN-SW"
+      ],
+      "open_gaps": [
+        "G-CIL-HOSTN",
+        "G-HOST-PROGRAM-INSTALL",
+        "G-SFU-LOADER-NE",
+        "G-SFU-LOADER-NW",
+        "G-SFU-LOADER-SE",
+        "G-SFU-LOADER-SW",
+        "G-SFU-OPERAND-JOIN-NE",
+        "G-SFU-OPERAND-JOIN-NW",
+        "G-SFU-OPERAND-JOIN-SE",
+        "G-SFU-OPERAND-JOIN-SW",
+        "G-SMVM-CALISS",
+        "G-SU-PROG-HOST"
+      ],
+      "target_ports": [
+        "su_prog__r_we",
+        "su_prog__r_bank",
+        "su_prog__r_row",
+        "su_prog__r_data",
+        "su_prog__r_start",
+        "su_prog__r_len"
+      ],
+      "status": "blocked:unsupported_lowering",
+      "reasons": [
+        "native_SFU_or_scalar_side_control_calendar"
+      ],
+      "lowering": {
+        "supported": false,
+        "reasons": [
+          "native_SFU_or_scalar_side_control_calendar"
+        ]
+      },
+      "inputs_placeholder": null,
+      "fixture": {
+        "matched": true,
+        "k_layer": 66,
+        "checked_words": 0,
+        "mismatched_words": 0,
+        "pad_words_zero": 0
+      }
+    },
+    {
+      "i": 79,
+      "unit": "SU",
+      "op": "SU.VOP",
+      "tag": "moe_sum.0",
+      "start": 11839.52,
+      "end": 11888.7,
+      "cls": "-",
+      "grade": "TB_IMAGE_LOAD_ONLY",
+      "blocked_by": [],
+      "open_gaps": [
+        "G-CIL-HOSTN",
+        "G-HOST-PROGRAM-INSTALL",
+        "G-SMVM-CALISS",
+        "G-SU-PROG-HOST"
+      ],
+      "target_ports": [
+        "su_prog__r_we",
+        "su_prog__r_bank",
+        "su_prog__r_row",
+        "su_prog__r_data",
+        "su_prog__r_start",
+        "su_prog__r_len"
+      ],
+      "status": "emitted",
+      "reasons": [],
+      "lowering": {
+        "supported": true,
+        "empty": false,
+        "words": 53,
+        "address_checks": 159,
+        "issue_groups": 1,
+        "needs_reducer": false,
+        "execution_qualified": false,
+        "open": [
+          "actual_3072_SRAM_bank_calendar",
+          "scalar_reducer_external_joins",
+          "native_global_numerical_proof",
+          "production_timing_price"
+        ]
+      },
+      "inputs_placeholder": false,
+      "fixture": {
+        "matched": true,
+        "k_layer": 76,
+        "checked_words": 53,
+        "mismatched_words": 0,
+        "pad_words_zero": 6
+      },
+      "edges": 43,
+      "fill_sectors": 14,
+      "drain_sectors": 7,
+      "programme": 3,
+      "line0_serial": 8956,
+      "compiled_commit_serial": 9009,
+      "priced_end_serial": 8999,
+      "commit_slack_edges": -10
+    },
+    {
+      "i": 82,
+      "unit": "SU",
+      "op": "SU.VOP",
+      "tag": "moe_sum.2",
+      "start": 11952.28,
+      "end": 12001.46,
+      "cls": "-",
+      "grade": "TB_IMAGE_LOAD_ONLY",
+      "blocked_by": [],
+      "open_gaps": [
+        "G-CIL-HOSTN",
+        "G-HOST-PROGRAM-INSTALL",
+        "G-SMVM-CALISS",
+        "G-SU-PROG-HOST"
+      ],
+      "target_ports": [
+        "su_prog__r_we",
+        "su_prog__r_bank",
+        "su_prog__r_row",
+        "su_prog__r_data",
+        "su_prog__r_start",
+        "su_prog__r_len"
+      ],
+      "status": "emitted",
+      "reasons": [],
+      "lowering": {
+        "supported": true,
+        "empty": false,
+        "words": 53,
+        "address_checks": 212,
+        "issue_groups": 1,
+        "needs_reducer": false,
+        "execution_qualified": false,
+        "open": [
+          "actual_3072_SRAM_bank_calendar",
+          "scalar_reducer_external_joins",
+          "native_global_numerical_proof",
+          "production_timing_price"
+        ]
+      },
+      "inputs_placeholder": false,
+      "fixture": {
+        "matched": true,
+        "k_layer": 83,
+        "checked_words": 53,
+        "mismatched_words": 0,
+        "pad_words_zero": 6
+      },
+      "edges": 44,
+      "fill_sectors": 14,
+      "drain_sectors": 7,
+      "programme": 3,
+      "line0_serial": 9040,
+      "compiled_commit_serial": 9094,
+      "priced_end_serial": 9084,
+      "commit_slack_edges": -10
+    },
+    {
+      "i": 84,
+      "unit": "SU",
+      "op": "SU.VOP",
+      "tag": "moe_sum.4",
+      "start": 12042.04,
+      "end": 12091.22,
+      "cls": "-",
+      "grade": "TB_IMAGE_LOAD_ONLY",
+      "blocked_by": [],
+      "open_gaps": [
+        "G-CIL-HOSTN",
+        "G-HOST-PROGRAM-INSTALL",
+        "G-SMVM-CALISS",
+        "G-SU-PROG-HOST"
+      ],
+      "target_ports": [
+        "su_prog__r_we",
+        "su_prog__r_bank",
+        "su_prog__r_row",
+        "su_prog__r_data",
+        "su_prog__r_start",
+        "su_prog__r_len"
+      ],
+      "status": "emitted",
+      "reasons": [],
+      "lowering": {
+        "supported": true,
+        "empty": false,
+        "words": 53,
+        "address_checks": 212,
+        "issue_groups": 1,
+        "needs_reducer": false,
+        "execution_qualified": false,
+        "open": [
+          "actual_3072_SRAM_bank_calendar",
+          "scalar_reducer_external_joins",
+          "native_global_numerical_proof",
+          "production_timing_price"
+        ]
+      },
+      "inputs_placeholder": false,
+      "fixture": {
+        "matched": true,
+        "k_layer": 84,
+        "checked_words": 53,
+        "mismatched_words": 0,
+        "pad_words_zero": 6
+      },
+      "edges": 44,
+      "fill_sectors": 14,
+      "drain_sectors": 7,
+      "programme": 3,
+      "line0_serial": 9107,
+      "compiled_commit_serial": 9161,
+      "priced_end_serial": 9151,
+      "commit_slack_edges": -10
+    },
+    {
+      "i": 85,
+      "unit": "SU",
+      "op": "SU.VOP",
+      "tag": "moe_sum.6",
+      "start": 12130.59,
+      "end": 12179.77,
+      "cls": "-",
+      "grade": "TB_IMAGE_LOAD_ONLY",
+      "blocked_by": [],
+      "open_gaps": [
+        "G-CIL-HOSTN",
+        "G-HOST-PROGRAM-INSTALL",
+        "G-SMVM-CALISS",
+        "G-SU-PROG-HOST"
+      ],
+      "target_ports": [
+        "su_prog__r_we",
+        "su_prog__r_bank",
+        "su_prog__r_row",
+        "su_prog__r_data",
+        "su_prog__r_start",
+        "su_prog__r_len"
+      ],
+      "status": "emitted",
+      "reasons": [],
+      "lowering": {
+        "supported": true,
+        "empty": false,
+        "words": 53,
+        "address_checks": 159,
+        "issue_groups": 1,
+        "needs_reducer": false,
+        "execution_qualified": false,
+        "open": [
+          "actual_3072_SRAM_bank_calendar",
+          "scalar_reducer_external_joins",
+          "native_global_numerical_proof",
+          "production_timing_price"
+        ]
+      },
+      "inputs_placeholder": false,
+      "fixture": {
+        "matched": true,
+        "k_layer": 85,
+        "checked_words": 53,
+        "mismatched_words": 0,
+        "pad_words_zero": 3
+      },
+      "edges": 43,
+      "fill_sectors": 7,
+      "drain_sectors": 7,
+      "programme": 3,
+      "line0_serial": 9174,
+      "compiled_commit_serial": 9227,
+      "priced_end_serial": 9217,
+      "commit_slack_edges": -10
+    },
+    {
+      "i": 87,
+      "unit": "SU",
+      "op": "SU.VOP",
+      "tag": "ffn.res_copy",
+      "start": 12204.77,
+      "end": 12292.95,
+      "cls": "-",
+      "grade": "TB_IMAGE_LOAD_ONLY",
+      "blocked_by": [],
+      "open_gaps": [
+        "G-CIL-HOSTN",
+        "G-HOST-PROGRAM-INSTALL",
+        "G-SMVM-CALISS",
+        "G-SU-PROG-HOST"
+      ],
+      "target_ports": [
+        "su_prog__r_we",
+        "su_prog__r_bank",
+        "su_prog__r_row",
+        "su_prog__r_data",
+        "su_prog__r_start",
+        "su_prog__r_len"
+      ],
+      "status": "emitted",
+      "reasons": [],
+      "lowering": {
+        "supported": true,
+        "empty": false,
+        "words": 20480,
+        "address_checks": 40960,
+        "issue_groups": 40,
+        "needs_reducer": false,
+        "execution_qualified": false,
+        "open": [
+          "actual_3072_SRAM_bank_calendar",
+          "scalar_reducer_external_joins",
+          "native_global_numerical_proof",
+          "production_timing_price"
+        ]
+      },
+      "inputs_placeholder": false,
+      "fixture": {
+        "matched": true,
+        "k_layer": 46,
+        "checked_words": 5120,
+        "mismatched_words": 0,
+        "pad_words_zero": 0
+      },
+      "edges": 122,
+      "fill_sectors": 640,
+      "drain_sectors": 640,
+      "programme": 3,
+      "line0_serial": 9230,
+      "compiled_commit_serial": 9362,
+      "priced_end_serial": 9302,
+      "commit_slack_edges": -60
+    },
+    {
+      "i": 89,
+      "unit": "SU",
+      "op": "SU.VOP",
+      "tag": "pre <- ffn mix pre",
+      "start": 12598.4,
+      "end": 12647.58,
+      "cls": "-",
+      "grade": "TB_IMAGE_LOAD_ONLY",
+      "blocked_by": [],
+      "open_gaps": [
+        "G-CIL-HOSTN",
+        "G-HOST-PROGRAM-INSTALL",
+        "G-SMVM-CALISS",
+        "G-SU-PROG-HOST"
+      ],
+      "target_ports": [
+        "su_prog__r_we",
+        "su_prog__r_bank",
+        "su_prog__r_row",
+        "su_prog__r_data",
+        "su_prog__r_start",
+        "su_prog__r_len"
+      ],
+      "status": "v1_unsupported",
+      "reasons": [
+        "operand A group 0 not one aligned VM sector",
+        "output group 0 not one aligned VM sector"
+      ],
+      "lowering": {
+        "supported": true,
+        "empty": false,
+        "words": 4,
+        "address_checks": 8,
+        "issue_groups": 1,
+        "needs_reducer": false,
+        "execution_qualified": false,
+        "open": [
+          "actual_3072_SRAM_bank_calendar",
+          "scalar_reducer_external_joins",
+          "native_global_numerical_proof",
+          "production_timing_price"
+        ]
+      },
+      "inputs_placeholder": false,
+      "fixture": {
+        "matched": true,
+        "k_layer": 77,
+        "checked_words": 0,
+        "mismatched_words": 0,
+        "pad_words_zero": 0
+      }
+    }
+  ],
+  "all_record_counts": {
+    "blocked:format_open": 57,
+    "blocked:unsupported_lowering": 3,
+    "blocked:v1_unsupported": 1,
+    "emitted": 8,
+    "emitted_unparameterised": 1,
+    "unsupported_lowering": 11,
+    "v1_unsupported": 10
+  },
+  "payload_sha256": {
+    "val.mem": "1b6d406c38b14a234ec5fa9c5fd670aaf611c0d694663094686914c7780ec022",
+    "hdr.mem": "a7c29ff58143c60c13abb25f6f4899b499851269c1f731dd11c90a10a85f5002",
+    "vm_pre.txt": "d6fe35126a15e4796e9330d07f5cc1bd8e2300eb5a14c829c6d8f8dcead80ae7",
+    "msk.mem": "1a1df4e8b24b81dacc3eadb960e7d2b1b283788c5ff10263379dc551f9b47bd1",
+    "index.json": "25e7299926e4267d2b11f602048f21abdaacb68384ce192fa623cf95bb606f03"
+  },
+  "limits": [
+    "No split or prior-part golden carry is used.",
+    "Other-unit producers are checkpoint-fixture initial state, not active measured RTL; no layer/token qualification.",
+    "All emitted SU operands have inputs_placeholder=false and fixture output agreement; unsupported records stay open.",
+    "Existing binary requires independent check_slice_run.py completeness validation after execution."
+  ],
+  "staged_to": [
+    "ot-epyc4:/srv/opentallas-scratch/claude/layerbench-hbm/sw2/slice/replay/ds_l0_fixture",
+    "ot-epyc5:/srv/opentallas-scratch/claude/layerbench-hbm/sw5e/slice/replay/ds_l0_fixture"
+  ]
+}

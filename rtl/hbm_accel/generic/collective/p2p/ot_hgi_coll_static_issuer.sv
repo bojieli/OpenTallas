@@ -118,17 +118,34 @@ endmodule
 // True hardenable macro leaf: one actual catalog SRAM, registered face data.
 // Request/address and write command originate at control registers. Each leaf
 // clock must have the same logical edge, with physical insertion compensated.
-module ot_hgi_coll_static_program_bank #(parameter integer MUT_DATA=0)(
+// XDIE-HBM4 (10-19): ROWS 128 = two 64-row macros (row[6] selects; the read half is registered with the macro read so
+// the output select is a flop -> 2:1 mux -> face flop). ROWS 64 (default): the original single macro, unchanged.
+module ot_hgi_coll_static_program_bank #(parameter integer MUT_DATA=0, parameter integer ROWS=64,
+    parameter integer PW=(ROWS>64)?7:6)(   // PW derived; never override
     input wire clk,read_v,write_v,
-    input wire [5:0] read_row,write_row,
+    input wire [PW-1:0] read_row,write_row,
     input wire [511:0] write_data,
     output reg [511:0] data
 );
     wire [511:0] rq;
+    generate if(ROWS<=64)begin:g64
     ot_sram_1r1w_64x512_m1_r2c2 u_sram(
-        .clk(clk),.r_ce_in(read_v),.r_addr_in(read_row),.rd_out(rq),
-        .w_ce_in(write_v),.w_addr_in(write_row),.wd_in(write_data),.w_mask_in({512{1'b1}}),
+        .clk(clk),.r_ce_in(read_v),.r_addr_in(read_row[5:0]),.rd_out(rq),
+        .w_ce_in(write_v),.w_addr_in(write_row[5:0]),.wd_in(write_data),.w_mask_in({512{1'b1}}),
         .rr_en(2'b0),.rr_addr(12'b0),.cr_en(2'b0),.cr_sel(18'b0));
+    end else begin:g128
+    wire [511:0] rq0,rq1;reg hi_q;
+    always @(posedge clk)if(read_v)hi_q<=read_row[6];
+    ot_sram_1r1w_64x512_m1_r2c2 u_sram0(
+        .clk(clk),.r_ce_in(read_v && !read_row[6]),.r_addr_in(read_row[5:0]),.rd_out(rq0),
+        .w_ce_in(write_v && !write_row[6]),.w_addr_in(write_row[5:0]),.wd_in(write_data),.w_mask_in({512{1'b1}}),
+        .rr_en(2'b0),.rr_addr(12'b0),.cr_en(2'b0),.cr_sel(18'b0));
+    ot_sram_1r1w_64x512_m1_r2c2 u_sram1(
+        .clk(clk),.r_ce_in(read_v && read_row[6]),.r_addr_in(read_row[5:0]),.rd_out(rq1),
+        .w_ce_in(write_v && write_row[6]),.w_addr_in(write_row[5:0]),.wd_in(write_data),.w_mask_in({512{1'b1}}),
+        .rr_en(2'b0),.rr_addr(12'b0),.cr_en(2'b0),.cr_sel(18'b0));
+    assign rq=hi_q?rq1:rq0;
+    end endgenerate
     always @(posedge clk)data<=rq^(MUT_DATA?512'b1:512'b0);
 endmodule
 `default_nettype wire

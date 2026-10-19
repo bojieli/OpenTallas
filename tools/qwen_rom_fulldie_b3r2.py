@@ -1134,6 +1134,12 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
             v.CORR = _corr0
         if getattr(v, 'RELAY_REACH_GATE', False):   # tp8b (die timing by construction)
             _reset_tree(v, m)     # after the relays: legalised against the FINAL placement
+            if m.get('fwd_lanes'):
+                # Final reset taps, rather than the pre-tree G=R0 estimate, own the K straps.
+                from qwen_split.reset_calendar_audit import finalize_model
+                _reset_release_path = os.environ.get('OT_SPLIT_RESET_RELEASE')
+                _reset_release = json.loads(Path(_reset_release_path).read_text()) if _reset_release_path else {}
+                finalize_model(m, _reset_release)
         if before_relays is not None:
             _regions_from_placement(m)   # the relays joined region clocks: re-file + split to the measured cap again
     m['b3r2']['r21_relay_pitch_um'] = relay_pitch
@@ -4279,7 +4285,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                 es_ = int(_lpE.get(bid, {}).get('E') or FWD_LANE_E_STA)
                 e_ = fwd_e_est(n_) + es_ - FWD_LANE_E_STA
                 k_ = _lpE.get(bid, {}).get('K')
-                k_ = (e_ % 8) if k_ is None else int(k_)
+                k_ = ((e_ + (1 if n_ == 1 else 0)) % 8) if k_ is None else int(k_)   # QK-LANDEN: landh0 en registered (+1)
                 if bid in fwd_eq:          # Q-COLLCAL: the bus group's E / landing MCP / total-E K
                     es_, e_, k_ = fwd_eq[bid]['E_sta'], fwd_eq[bid]['E'], fwd_eq[bid]['K']
                 fwd = dict(bid=bid, cl=cl, bits=bits, n=n_, src=si_, dst=di_, src_ck=_fwd_clock(si_), dst_ck=_fwd_clock(di_),
