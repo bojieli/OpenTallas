@@ -1,0 +1,18 @@
+{
+  "source": "71a2b1866",
+  "functional": "PASS bothdefault/FAN32 cases9,edges2360,writes1026,launches4,legacyaliases2,records32; mutants9/10/11/12 FAIL",
+  "mapped_all_roots": 17096,
+  "mapped_over32": 43,
+  "critical_ff_over32": [
+    {
+      "net": "run$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 87,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "ff"
+    }
+  ],
+  "physical_qualified": false,
+  "cts_launched": false,
+  "method": "actualASAP7native mapped netlist;BUF/INVcollapsed roots; protected hierarchical bank ports expanded by textbook_lint"
+}

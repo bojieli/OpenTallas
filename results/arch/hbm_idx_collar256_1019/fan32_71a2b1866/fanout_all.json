@@ -1,0 +1,870 @@
+{
+  "top": "ot_hbm_static_cfg_collar_idx256",
+  "netlist_sha256": "8a88287c8dd75340983993addf6a042cb8efcea68e5a6f91144f8c04a89940ae",
+  "all_roots": 17096,
+  "over32": [
+    {
+      "net": "g_fan32.u_banks.g_bank[0].u_payload._1115_",
+      "loads": 165,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[1].u_payload._1115_",
+      "loads": 165,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[0].u_payload._0582_",
+      "loads": 132,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[1].u_payload._0582_",
+      "loads": 132,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[2].u_payload._0767_",
+      "loads": 129,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.rptr_next[1]",
+      "loads": 128,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.rptr_next[0]",
+      "loads": 128,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[0].u_payload._0585_",
+      "loads": 98,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[1].u_payload._0585_",
+      "loads": 98,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[2].u_payload._0919_",
+      "loads": 96,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "run$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 87,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "ff"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[0].u_payload._1089_",
+      "loads": 73,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[0].u_payload._1097_",
+      "loads": 73,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[1].u_payload._1089_",
+      "loads": 73,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[1].u_payload._1097_",
+      "loads": 73,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[0].u_payload._1122_",
+      "loads": 67,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[1].u_payload._1122_",
+      "loads": 67,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.rptr_next[2]",
+      "loads": 64,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.rptr_next[3]",
+      "loads": 64,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_1238_/Y (AO21x2_ASAP7_75t_R)",
+      "loads": 42,
+      "flops": 1,
+      "example": "start_v$_DFF_PN0_",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[0].u_payload._0576_",
+      "loads": 38,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[1].u_payload._0576_",
+      "loads": 38,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[0].u_payload._1103_",
+      "loads": 35,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[1].u_payload._1103_",
+      "loads": 35,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[10].u_payload._0777_",
+      "loads": 34,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[11].u_payload._0777_",
+      "loads": 34,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[12].u_payload._0777_",
+      "loads": 34,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[13].u_payload._0777_",
+      "loads": 34,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[14].u_payload._0777_",
+      "loads": 34,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[15].u_payload._0777_",
+      "loads": 34,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[2].u_payload._0752_",
+      "loads": 34,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[2].u_payload._0813_",
+      "loads": 34,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[2].u_payload._0913_",
+      "loads": 34,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[2].u_payload._0939_",
+      "loads": 34,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[2].u_payload._1050_",
+      "loads": 34,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[2].u_payload._1091_",
+      "loads": 34,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[3].u_payload._0777_",
+      "loads": 34,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[4].u_payload._0777_",
+      "loads": 34,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[5].u_payload._0777_",
+      "loads": 34,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[6].u_payload._0777_",
+      "loads": 34,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[7].u_payload._0777_",
+      "loads": 34,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[8].u_payload._0777_",
+      "loads": 34,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[9].u_payload._0777_",
+      "loads": 34,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    }
+  ],
+  "top80": [
+    {
+      "net": "g_fan32.u_banks.g_bank[0].u_payload._1115_",
+      "loads": 165,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[1].u_payload._1115_",
+      "loads": 165,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[0].u_payload._0582_",
+      "loads": 132,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[1].u_payload._0582_",
+      "loads": 132,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[2].u_payload._0767_",
+      "loads": 129,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.rptr_next[1]",
+      "loads": 128,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.rptr_next[0]",
+      "loads": 128,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[0].u_payload._0585_",
+      "loads": 98,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[1].u_payload._0585_",
+      "loads": 98,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[2].u_payload._0919_",
+      "loads": 96,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "run$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 87,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "ff"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[0].u_payload._1089_",
+      "loads": 73,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[0].u_payload._1097_",
+      "loads": 73,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[1].u_payload._1089_",
+      "loads": 73,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[1].u_payload._1097_",
+      "loads": 73,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[0].u_payload._1122_",
+      "loads": 67,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[1].u_payload._1122_",
+      "loads": 67,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.rptr_next[2]",
+      "loads": 64,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.rptr_next[3]",
+      "loads": 64,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_1238_/Y (AO21x2_ASAP7_75t_R)",
+      "loads": 42,
+      "flops": 1,
+      "example": "start_v$_DFF_PN0_",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[0].u_payload._0576_",
+      "loads": 38,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[1].u_payload._0576_",
+      "loads": 38,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[0].u_payload._1103_",
+      "loads": 35,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[1].u_payload._1103_",
+      "loads": 35,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[10].u_payload._0777_",
+      "loads": 34,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[11].u_payload._0777_",
+      "loads": 34,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[12].u_payload._0777_",
+      "loads": 34,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[13].u_payload._0777_",
+      "loads": 34,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[14].u_payload._0777_",
+      "loads": 34,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[15].u_payload._0777_",
+      "loads": 34,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[2].u_payload._0752_",
+      "loads": 34,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[2].u_payload._0813_",
+      "loads": 34,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[2].u_payload._0913_",
+      "loads": 34,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[2].u_payload._0939_",
+      "loads": 34,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[2].u_payload._1050_",
+      "loads": 34,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[2].u_payload._1091_",
+      "loads": 34,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[3].u_payload._0777_",
+      "loads": 34,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[4].u_payload._0777_",
+      "loads": 34,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[5].u_payload._0777_",
+      "loads": 34,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[6].u_payload._0777_",
+      "loads": 34,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[7].u_payload._0777_",
+      "loads": 34,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[8].u_payload._0777_",
+      "loads": 34,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[9].u_payload._0777_",
+      "loads": 34,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[0].u_payload._0689_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[0].u_payload._0732_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[0].u_payload._0771_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[0].u_payload._0797_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[0].u_payload._0933_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[10].u_payload._0684_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[10].u_payload._0724_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[10].u_payload._0758_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[10].u_payload._0821_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[10].u_payload._0840_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[10].u_payload._0860_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[10].u_payload._0880_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[10].u_payload._0900_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[10].u_payload._0920_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[10].u_payload._0939_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[10].u_payload._0958_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[10].u_payload._0977_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[10].u_payload._0996_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[11].u_payload._0684_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[11].u_payload._0724_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[11].u_payload._0758_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[11].u_payload._0821_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[11].u_payload._0840_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[11].u_payload._0860_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[11].u_payload._0880_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[11].u_payload._0900_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[11].u_payload._0920_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[11].u_payload._0939_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[11].u_payload._0958_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[11].u_payload._0977_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[11].u_payload._0996_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[12].u_payload._0684_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[12].u_payload._0724_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[12].u_payload._0758_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[12].u_payload._0821_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[12].u_payload._0840_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[12].u_payload._0860_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    }
+  ]
+}
