@@ -1,0 +1,6 @@
+ot-heavy: NOT RUN: no memory on regular-crane within 300 s (need 0.7 x 64 = 45 GB, admissible -33 GB: available 160 GB, growth charged 183 GB (x0.5), young 19 GB, floor 57 GB): bash rtl/test/run_hbm_hc_root_uring.sh /srv/opentallas-scratch/claude/hc-xrdu/out/uring0 0 2 167
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-2118659-1792373002 after 0 s
+HC_ENG_DONE mode=0 npos=1 mixes=24 mixbad=0 outs=4 outbad=0 TB=1944 last_mix_t=2443 first_out_t=2942 last_out_t=2942 HC_MIX_CYCLES=998
+HC_ENG PASS
+HC_ROOT_URING MUT=0 QDRLY=2 RAW0=167 rc=0
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-2118659-1792373002): exit 0
