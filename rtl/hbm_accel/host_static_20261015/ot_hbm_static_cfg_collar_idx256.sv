@@ -112,12 +112,12 @@ module ot_hbm_static_cfg_collar_idx256 #(
         assign rst_c_n = rc[1];
         assign rst_s_n = (MUT == 5) ? 1'b1 : rs[1];
     end endgenerate
-    wire [23:0] regional_reset;
+    wire [24:0] regional_reset;
     generate if(FAN32!=0)begin:g_reset_copies
-        (* keep *) reg [23:0] rr;
-        always @(posedge clk)rr<={24{rst_stage1}};
+        (* keep *) reg [24:0] rr;
+        always @(posedge clk)rr<={25{rst_stage1}};
         assign regional_reset=rr;
-    end else assign regional_reset={24{rst_c_n}};
+    end else assign regional_reset={25{rst_c_n}};
     endgenerate
     // ---------------- pin flops
     reg cv, dv, lv, done_q, xfault;
@@ -255,7 +255,22 @@ module ot_hbm_static_cfg_collar_idx256 #(
     wire record_step = run && !recs_done && cur_off == cmp_cnt;
     wire [RW-1:0] rptr_next = !regional_reset[23] ? {RW{1'b0}} :
         record_step ? rptr + 1'b1 : launch_ok ? {RW{1'b0}} : rptr;
-    wire [31:0] cnt_next = !regional_reset[22] ? 32'd0 : run ? cnt + 1'b1 : launch_ok ? 32'd0 : cnt;
+    wire [3:0] count_run;
+    wire [31:0] count_increment=(MUT==13)?{cnt[31:8],(cnt[7:0]+8'd1)}:cnt+32'd1;
+    wire [31:0] count_unreset_next;
+    generate if(FAN32!=0)begin:g_counter_flags
+        (* keep *) reg [3:0] cr;
+        always @(posedge clk or negedge regional_reset[24])
+            if(!regional_reset[24])cr<=0;else cr<={4{run_next_phase}};
+        assign count_run=cr;
+    end else assign count_run={4{run}};
+    endgenerate
+    genvar cb;
+    generate for(cb=0;cb<4;cb=cb+1)begin:g_counter_chunk
+        assign count_unreset_next[cb*8+:8]=count_run[cb]?count_increment[cb*8+:8]:launch_ok?8'd0:cnt[cb*8+:8];
+    end endgenerate
+    wire [31:0] cnt_next={regional_reset[24]?count_unreset_next[31:16]:16'd0,
+                         regional_reset[22]?count_unreset_next[15:0]:16'd0};
     wire programme_accept = hit && !run && !ca[11] && !depth_write_bad &&
         (((lin == hwm[sel] || MUT == 1) && !hwm[sel][AW]) ||
          (lin != hwm[sel] && MUT != 1 && lin == 0));
@@ -387,7 +402,7 @@ module ot_hbm_static_cfg_collar_idx256 #(
             n_loaded=loaded;
             n_armed=armed;
             n_run=run;
-            n_cnt=cnt;
+            n_cnt=count_unreset_next;
             n_rptr=rptr;
             n_tail=tail;
             n_r_val=r_val;
@@ -441,13 +456,13 @@ module ot_hbm_static_cfg_collar_idx256 #(
                 n_armed = 0;
                 if (!(inst_ok && !fault && !run && !install_depth_bad)) n_fault = 1;
                 else begin
-                    n_start_v = 1; n_run = 1; n_cnt = 0; n_rptr = 0; n_tail = TAIL[7:0];
+                    n_start_v = 1; n_run = 1;  n_rptr = 0; n_tail = TAIL[7:0];
                     n_wait_done = wait_mask;
                 end
             end
             // ------------ execution: fixed record calendar
             if (run) begin
-                n_cnt = cnt + 1'b1;
+                
                 if (tail != 0 && !start_v) n_tail = tail - 1'b1;
                 if (done_q) n_wait_done = 0;
                 if (!recs_done) begin
@@ -560,7 +575,13 @@ endmodule
  (* keep_hierarchy *) ot_hbm_idx256_word u_programme(.clk(clk),.en(programme_accept && cv),.d(cd),.q(pw_data));
  genvar r,b;
  generate for(r=0;r<8;r=r+1)begin:g_record
-  (* keep_hierarchy *) ot_hbm_idx256_word u_word(.clk(clk),.en(record_cfg && ca[8:0]==r),.d(cd),.q(rows[r]));
+  if(LO==32)begin:g_no_duplicate_valid
+   wire [14:0] stored;
+   (* keep_hierarchy *) ot_hbm_idx256_word #(.W(15)) u_word(.clk(clk),.en(record_cfg && ca[8:0]==r),.d(cd[15:1]),.q(stored));
+   assign rows[r]={stored,1'b0};
+  end else begin:g_full_word
+   (* keep_hierarchy *) ot_hbm_idx256_word u_word(.clk(clk),.en(record_cfg && ca[8:0]==r),.d(cd),.q(rows[r]));
+  end
  end endgenerate
  reg [15:0] selected;
  integer j;
@@ -592,7 +613,7 @@ endmodule
  end else assign rec=16'b0;
  endgenerate
 endmodule
-(* keep_hierarchy *) module ot_hbm_idx256_word(input wire clk,en,input wire [15:0] d,output reg [15:0] q);
+(* keep_hierarchy *) module ot_hbm_idx256_word #(parameter integer W=16)(input wire clk,en,input wire [W-1:0] d,output reg [W-1:0] q);
  always @(posedge clk)if(en)q<=d;
 endmodule
 `default_nettype wire

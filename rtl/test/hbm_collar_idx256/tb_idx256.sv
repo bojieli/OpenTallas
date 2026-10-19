@@ -53,11 +53,11 @@ module tb_idx256;
    reset_case();compare=1;
    for(integer j=0;j<6;j++)frame(12'h800+12'(j),{8{32'(trial*100+j)}});
    operands_ready=1;
-   for(integer j=0;j<8;j++)frame(12'hc00+12'(j),{221'({7{32'(trial*1000+j+1)}}),2'(1+j%3),1'b1,32'(j<4?j:(j<6?j+4:j+11))});
+   for(integer j=0;j<8;j++)frame(12'hc00+12'(j),{221'({7{32'(trial*1000+j+1)}}),2'(1+j%3),1'b1,32'(trial==0?(j<4?j:(j<6?j+4:j+11)):(j<2?j:(j<6?j+252:j+504)))});
    frame(12'he00,256'd0);install256();frame(12'he01,256'd256);arm();
-   if(!rd1||f1)$fatal(1,"IDX256_FAIL valid256 not ready");launch();edges(32);
+   if(!rd1||f1)$fatal(1,"IDX256_FAIL valid256 not ready");launch();edges(trial==0?32:530);
    if(f1||ac1)$fatal(1,"IDX256_FAIL valid256 completion");
-   frame(12'd0,256'habc);frame(12'he01,256'd1);arm();launch();edges(32);cases++;
+   frame(12'd0,256'habc);frame(12'he01,256'd1);arm();launch();edges(trial==0?32:530);cases++;
   end
   reset_case();install256();forbid_write=1;frame(12'd256,256'hbad);
   if(!f1)$fatal(1,"IDX256_FAIL missing row256 rejection MUT%0d",MUT);
