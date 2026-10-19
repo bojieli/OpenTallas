@@ -1,0 +1,160 @@
+{
+ "name": "s81dvbk_sq_indexed13-idx13a-COMMIT",
+ "block": "dsdv_bksel_q",
+ "ref_tile": true,
+ "owner": "Codex:S81-TOPK-FINAL",
+ "purpose": "Qualify opt-in exact packed final-select input at production shape; price1037cycles.",
+ "threads": 16,
+ "peak_ram_gb": 48,
+ "source": {
+  "branch": "codex/s81-topk-final-1019",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "results/rtl/s81_dv_1016/bk_units",
+   "results/rtl/s81_dv_1016/bk_units_bk2",
+   "rtl/common",
+   "rtl/dsrom_sys/s81_dv/unit",
+   "rtl/dsrom_sys/s81_glue",
+   "rtl/dsrom_sys/s81_ph",
+   "rtl/hdc",
+   "rtl/link",
+   "tools/s81_dv/layer_prog",
+   "results/arch/s81_topk_final_1019"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; dsdv_bksel_q u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS -DOT_S81PH_SEL_INDEXED13 --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/dsrom_sys/s81_ph/ot_s81ph_sel_pipeline.sv rtl/hdc/ot_hdc_prefix.sv rtl/dsrom_sys/s81_ph/ot_s81ph_sel.sv rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv rtl/hdc/v41x/ot_hdc_v41x_sel.sv rtl/common/ot_fwd_link_stage.sv rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel.sv rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel_lib.sv rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel_slice.sv rtl/dsrom_sys/s81_ph/ot_s81ph_sel_ctl_half.sv rtl/dsrom_sys/s81_ph/ot_s81ph_sel_ctl_pp.sv rtl/dsrom_sys/s81_ph/ot_s81ph_sel_tile.sv rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bksel_c.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "indexed13_production",
+    "cmd": "VL_EXTRA=-DOT_S81PH_SEL_INDEXED13 bash tools/s81_dv/layer_prog/bk/run_bk_layer.sh {RUN}/build results/arch/s81_topk_final_1019/bench/indexed13",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "pass",
+    "pass_regex": "^BK_LAYER PASS"
+   },
+   {
+    "name": "indexed13_identity_mutant",
+    "cmd": "VL_EXTRA=-DOT_S81PH_SEL_INDEXED13 bash tools/s81_dv/layer_prog/bk/run_bk_layer.sh {RUN}/build results/arch/s81_topk_final_1019/bench/indexed13_identity",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "^BK_LAYER FAIL",
+    "fail_witness": "results/arch/s81_topk_final_1019/bench/indexed13_identity/run.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/s81dvbk_sq_indexed13/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/s81dvbk_sq_indexed13/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 48
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/s81dvbk_sq_indexed13 --out {RUN}/record/views/dsdv_bksel_q --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/s81dvbk_sq_indexed13/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/s81dvbk_sq_indexed13/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/s81dvbk_sq_indexed13/s81dvbk_sq_indexed13-idx13a-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "INDEXED13 explicit original-index candidate input; 13 x36b tuples replace sparse REBASE expansion. 27 KEPT format selects cap tuple mux selects at20loads; unchanged native arithmetic and6SRAM. Macro origins43.2lattice, bottom3rows, full-width topband; clockNcentre. 302.4x388.8 fits2quarter widths inside680um column. Opt-in; existing views unchanged.",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "reason": "Default-off INDEXED13 packed original-index input; kept format selects; macros placed43.2grid with full-width stdband. Earlier closed quarter retained."
+ },
+ "sources": [
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
+  "rtl/common/ot_fwd_link_stage.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/dsrom_sys/s81_glue/ot_s81_rly.sv",
+  "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv",
+  "rtl/dsrom_sys/s81_dv/unit/ot_dsdv_vstop.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_sel.sv",
+  "rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel_lib.sv",
+  "rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel_slice.sv",
+  "rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel.sv",
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_sel_pipeline.sv",
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_sel_ctl_half.sv",
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_sel_ctl_pp.sv",
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_sel.sv",
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_sel_tile.sv",
+  "rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bk_v.sv",
+  "rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bk_g.sv",
+  "rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bksel_c.sv",
+  "rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bk_sel.sv",
+  "tools/s81_dv/layer_prog/bk/tb_bk_layer.sv",
+  "tools/s81_dv/layer_prog/bk/run_bk_layer.sh",
+  "tools/s81_dv/layer_prog/lower_bk.py",
+  "results/arch/s81_topk_final_1019/bench/indexed13/stim.txt",
+  "results/arch/s81_topk_final_1019/bench/indexed13/exp.txt",
+  "results/arch/s81_topk_final_1019/bench/indexed13/meta.json",
+  "results/arch/s81_topk_final_1019/bench/indexed13_identity/stim.txt",
+  "results/arch/s81_topk_final_1019/bench/indexed13_identity/exp.txt",
+  "results/arch/s81_topk_final_1019/bench/indexed13_identity/meta.json"
+ ]
+}

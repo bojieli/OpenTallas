@@ -72,6 +72,23 @@ module ot_s81ph_sel_in #(
         s[0] <= u;
         for (i = 1; i <= STG; i = i + 1) s[i] <= s[i-1];
     end
+    // Keep independent format selects beside the tuple registers: <=20 data
+    // loads per copy, rather than one decoded bit driving the whole 468b mux.
+    wire [26:0] indexed_format;
+    genvar fs;
+    generate for (fs = 0; fs < 27; fs = fs + 1) begin : g_indexed_format
+        if (INDEXED13) begin : g_on
+            (* keep = "true" *) reg f [0:STG];
+            integer fi;
+            always @(posedge clk) begin
+                f[0] <= lane[512:509] == 4'd8;
+                for (fi = 1; fi <= STG; fi = fi + 1) f[fi] <= f[fi-1];
+            end
+            assign indexed_format[fs] = f[STG];
+        end else begin : g_off
+            assign indexed_format[fs] = 1'b0;
+        end
+    end endgenerate
     wire [UW-1:0] w = s[STG];
     wire          v    = w[0];
     wire [481:0] d = {{(482-DW){1'b0}}, w[DW:1]};
@@ -128,17 +145,14 @@ module ot_s81ph_sel_in #(
 `else
         for (l = 0; l < 16; l = l + 1) b_idx[20*l +: 20] <= cur + l[19:0];
 `endif
-        if (INDEXED13 && t4 == 4'd8) begin
+        if (INDEXED13 && indexed_format[26]) begin
             b_lv <= {3'b000, d[480:468]};
             b_last <= d[481];
-            for (l = 0; l < 16; l = l + 1) begin
-                if (l < 13) begin
-                    b_val[16*l +: 16] <= d[36*l +: 16];
-                    b_idx[20*l +: 20] <= d[36*l+16 +: 20];
-                end else begin
-                    b_val[16*l +: 16] <= 16'd0;
-                    b_idx[20*l +: 20] <= 20'd0;
-                end
+        end
+        if (INDEXED13) begin
+            for (l = 0; l < 13; l = l + 1) begin
+                if (indexed_format[2*l]) b_val[16*l +: 16] <= d[36*l +: 16];
+                if (indexed_format[2*l+1]) b_idx[20*l +: 20] <= d[36*l+16 +: 20];
             end
         end
         h_k <= d[29:20];

@@ -1,7 +1,7 @@
 {
  "schema": "opentallas.s81_topk_final.v1",
  "date": "2026-10-19",
- "status": "exact production-shape candidate; default OFF; physical qualification pending",
+ "status": "exact production-shape candidate; default OFF; isolated physical CTS gate launching",
  "rtl_define": "OT_S81PH_SEL_INDEXED13",
  "compiler_flag": "--bk-indexed13",
  "vehicle": "real dsdv_bk_sel, 4x512 candidates, pinned Verilator 5.050 on ot-epyc8",
@@ -53,10 +53,11 @@
  },
  "resource_model": {
   "additional_pin_capture_bits_per_quarter": 209,
-  "additional_capture_bits_four_quarters": 836,
+  "additional_capture_bits_four_quarters": 944,
   "new_macro_count": 0,
   "new_storage": "none; existing native line-memory macros",
-  "physical_qualification": "quarter master dsdv_bksel_q needs isolated INDEXED13 kit; all old closed views retained"
+  "physical_qualification": "isolated kit s81dvbk_sq_indexed13;302.4x388.8um;43.2lattice6SRAM;27keptformat-selectcopies",
+  "additional_format_select_kept_registers_per_quarter": 27
  },
  "producer_gaps": [
   "No live RTL producer transports score+index candidates from TP4 all-gather to u_bk_sel.vi_s; compiler stimulus uses fixture scores.",
