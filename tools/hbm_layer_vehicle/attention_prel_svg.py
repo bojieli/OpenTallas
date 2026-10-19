@@ -145,7 +145,7 @@ def run(a):
     pv_merge_exact = bool(A.np.array_equal(A.zb(merged), A.zb(golden_node)))
     fixed_go_exact = [(g[1],g[2]) for g in gos] == [(b['prog'][0],b['go_at']) for b in c['blocks']]
     ok = pv_merge_exact and fixed_go_exact and r.returncode == 0 and not fault and bool(done) and len(gos) == len(c['blocks']) and all(x['mismatches'] == 0 and x['results'] == x['expected'] for x in results)
-    doc = dict(pass_=ok, mutation=a.mut, source=src, service_build_revision=(S.ROOT / 'REV').read_text().strip() if (S.ROOT / 'REV').exists() else None, compiler_sha256=S.sha(Path(__file__)),
+    doc = dict(pass_=ok, mutation=a.mut, source=src, service_build_revision=a.service_build_revision or ((S.ROOT / 'REV').read_text().strip() if (S.ROOT / 'REV').exists() else None), compiler_sha256=S.sha(Path(__file__)),
                event_sha256={p.name:S.sha(p) for p in sorted(d.glob('*.hex'))},
                budget=c['budget'], executable=str(exe),
                executable_sha256=S.sha(exe), rc=r.returncode, fault=fault, done=done, fixed_go_count=len(gos), fixed_go_exact=fixed_go_exact,
@@ -162,5 +162,6 @@ if __name__ == '__main__':
     p.add_argument('--sm', type=int, default=0); p.add_argument('--work', required=True)
     p.add_argument('--name', default='attention'); p.add_argument('--exe'); p.add_argument('--out', default='attention.json')
     p.add_argument('--mut', default='', choices=['','wrong_row','read_early','invalid_mode'])
+    p.add_argument('--service-build-revision', help='source revision of supplied executable when distinct from compiler snapshot')
     p.add_argument('--mixed-context', action='store_true', help='opt-in descriptor mode197 class contract; requires matching future hardware')
     run(p.parse_args())
