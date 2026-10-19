@@ -1,0 +1,60 @@
+{
+  "source_commit": "61f7a0a34",
+  "rtl_commit": "850456dae",
+  "verilator": "5.050 2026-07-01 revv5.050",
+  "fleet": "ot-epyc6 oth-ubuntu-81676-1792427333",
+  "source_archive_sha256": "f8adb528ecef3b6411a991ebd0685c901e94cabdc5bbd12901edb4411f8ac1c5",
+  "actual_manifest_commit": "be5612758",
+  "actual_T_E_manifest_sha256": "a4b4fb3f84c69b89c25376f9e81cffc1b86cc58438ef66b3486a3f3225d19889",
+  "positives": {
+    "n16m0.run.log": {
+      "result": "SYSFACE_SRAM PASS checks=1239 events=306 NE=16 MUT=0",
+      "sha256": "1afcd1315bcc9c07f0b08714f52c1fcd1d8b3f157b06e97900e24f964fba4f28",
+      "fail_regex": null
+    },
+    "n64m0.run.log": {
+      "result": "SYSFACE_SRAM PASS checks=252493 events=193 NE=64 MUT=0",
+      "sha256": "8589f81fcb60ac451e388848edff3b830a15e0e4928ce242bc4c2cb8a0126a43",
+      "fail_regex": null
+    },
+    "n32m0.run.log": {
+      "result": "SYSFACE_SRAM PASS checks=473 events=229 NE=32 MUT=0",
+      "sha256": "681dccb104e8a99dc34f805a5bc89f96587a77375e5e9408c3ea669a30cf616a",
+      "fail_regex": null
+    }
+  },
+  "mutants": {
+    "n64m3.run.log": {
+      "result": "SYSFACE_SRAM FAIL errors=252269 checks=252493 events=193 NE=64 MUT=3",
+      "sha256": "d9b9fb266f1a97d6f3d06106de0201283a88cda9e867246309000ba6da428350",
+      "fail_regex": "SYSFACE_SRAM FAIL errors="
+    },
+    "n64m4.run.log": {
+      "result": "SYSFACE_SRAM FAIL errors=116 checks=252493 events=193 NE=64 MUT=4",
+      "sha256": "f349a802e65e08da5e0ccfd6891adef651a121a36fe0db4cb3f200fa6ffbe637",
+      "fail_regex": "SYSFACE_SRAM FAIL errors="
+    },
+    "n64m1.run.log": {
+      "result": "SYSFACE_SRAM FAIL errors=252273 checks=252493 events=193 NE=64 MUT=1",
+      "sha256": "aa8f51888730251a914875cf3bd0225271d3ac581305eddae89fd90c30932500",
+      "fail_regex": "SYSFACE_SRAM FAIL errors="
+    },
+    "n64m2.run.log": {
+      "result": "SYSFACE_SRAM FAIL errors=11 checks=252493 events=193 NE=64 MUT=2",
+      "sha256": "3ad4d3dbaf65e68b9f85a21db1c32dfe3ce38e3d2f61d1fe3efd496d8d1f7d87",
+      "fail_regex": "SYSFACE_SRAM FAIL errors="
+    },
+    "n64m5.run.log": {
+      "result": "SYSFACE_SRAM FAIL errors=3 checks=252493 events=193 NE=64 MUT=5",
+      "sha256": "b98529ee2e70a363409cf5850a0155751f699ecc62551d51f758ba86fb31f22c",
+      "fail_regex": "SYSFACE_SRAM FAIL errors="
+    }
+  },
+  "production_bound": false,
+  "unbound": [
+    "production L image",
+    "epoch/phase/LEVEL/identity",
+    "parent replicated pin-register controls",
+    "technology area/native clock/physical access/gate"
+  ]
+}

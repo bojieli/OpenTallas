@@ -1,0 +1,90 @@
+{
+  "schema": "opentallas.sysface.sram-player-census.v1",
+  "source_commit": "61f7a0a34",
+  "qualification": "generic-Yosys structural census only; no standard-cell area/CTS/STA",
+  "tool": "Yosys0.68 38e001a6f",
+  "fleet": "ot-epyc4 oth-ubuntu-3841370-1792427341",
+  "shapes": {
+    "64": {
+      "netlist_sha256": "78b73cc1b30223492635d584ff92c6ed6c3670982ec4a6c546d7880ec0fadec2",
+      "remote_netlist": "ot-epyc4:/srv/opentallas-scratch/claude/sysface-sram-players-r2-1019/synth64/netlist.json",
+      "macros": [
+        "hi",
+        "lo"
+      ],
+      "runtime_inferred_memories": 0,
+      "kept_reset_copy_instances": [
+        "zc",
+        "zf",
+        "zs"
+      ],
+      "reset_loads": {
+        "rc": 8,
+        "rs": 31,
+        "rf": 19,
+        "rst_n": 4
+      },
+      "internal_register_max_nonclock_fanout": 14,
+      "top_generic_ff_bits": 224,
+      "parent_boundary_action": {
+        "start_input_loads": 87,
+        "start_seg_input_loads": 70,
+        "required": "replicate parent pin-register drivers to <=32 per kept copy with no new event edge"
+      }
+    },
+    "32": {
+      "netlist_sha256": "8717e79d3e3ecc4036aa2b576f45adcdf9e673758cee48ef216cffffd5a50dbd",
+      "remote_netlist": "ot-epyc4:/srv/opentallas-scratch/claude/sysface-sram-players-r2-1019/synth32/netlist.json",
+      "macros": [
+        "hi",
+        "lo"
+      ],
+      "runtime_inferred_memories": 0,
+      "kept_reset_copy_instances": [
+        "zc",
+        "zf",
+        "zs"
+      ],
+      "reset_loads": {
+        "rc": 8,
+        "rs": 30,
+        "rf": 19,
+        "rst_n": 4
+      },
+      "internal_register_max_nonclock_fanout": 13,
+      "top_generic_ff_bits": 222,
+      "parent_boundary_action": {
+        "start_input_loads": 85,
+        "start_seg_input_loads": 69,
+        "required": "replicate parent pin-register drivers to <=32 per kept copy with no new event edge"
+      }
+    },
+    "16": {
+      "netlist_sha256": "97b3fb4ede5cab975063d4964905654382e8f442b578bde4adcb106fb08599fe",
+      "remote_netlist": "ot-epyc4:/srv/opentallas-scratch/claude/sysface-sram-players-r2-1019/synth16/netlist.json",
+      "macros": [
+        "hi",
+        "lo"
+      ],
+      "runtime_inferred_memories": 0,
+      "kept_reset_copy_instances": [
+        "zc",
+        "zf",
+        "zs"
+      ],
+      "reset_loads": {
+        "rc": 8,
+        "rs": 29,
+        "rf": 19,
+        "rst_n": 4
+      },
+      "internal_register_max_nonclock_fanout": 12,
+      "top_generic_ff_bits": 220,
+      "parent_boundary_action": {
+        "start_input_loads": 83,
+        "start_seg_input_loads": 68,
+        "required": "replicate parent pin-register drivers to <=32 per kept copy with no new event edge"
+      }
+    }
+  }
+}
