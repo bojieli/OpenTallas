@@ -52,9 +52,10 @@
   "hold_snapshot": {
     "iteration": 4760,
     "inserted_buffers": 9552,
-    "wns_ns": -32.474,
-    "tns_ns": -9467.78,
-    "worst_endpoint": "u_rank__u_control__u_packet__htd[157]$_DFF_P_/D"
+    "worst_endpoint": "u_rank__u_control__u_packet__htd[157]$_DFF_P_/D",
+    "wns_flow_ps": -32.474,
+    "tns_flow_ps": -9467.78,
+    "units_correction": "Earliercoordinatorupdates mislabeledunitsns; preCTSreportclockperiod770.00establishesflowpicoseconds, not32nsclockmismatch."
   },
   "next": "Preservelivegate;constraint_auditread-onlyclassificationrequested;collectfinalgate+PNGsandROOTpacketwhencomplete;nosubmit/REVIEW"
 }
