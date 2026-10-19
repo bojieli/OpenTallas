@@ -164,6 +164,9 @@ class RawPinTapTargets(unittest.TestCase):
             finally:
                 RT.ROOT = old
             i, j = pre.find('clock_entries.tcl'), pre.find('landed_raw_tap.tcl')
+            # one mechanism: the CTS-time dicts clock_entries.tcl needs are set BEFORE it (pslice real3 / b895c55d9)
+            self.assertTrue(0 < pre.find('set ::ot_ce_counts [dict create {hard} 1]') < i, pre[:2000])
+            self.assertTrue(0 < pre.find('set ::ot_ce_landed_raw [dict create {hard/CKP} {ref CLK}]') < i, pre[:2000])
             self.assertTrue(0 < i < j, pre[:2000])                 # the tap wraps clock_entries' CTS
             self.assertLess(j, pre.find('rename clock_tree_synthesis ::ot_ref_cts_boundary_orig'))
         with tempfile.TemporaryDirectory() as d:
@@ -171,7 +174,16 @@ class RawPinTapTargets(unittest.TestCase):
             K.view(root)
             s = K.load(root, K.spec(root))
             self.assertEqual(CE.landed_raw_tcl(s, root), [])
-            self.assertNotIn('landed_raw_tap', json.dumps(RT.gen_hooks(s, 'kit')))
+            self.assertEqual(CE.landed_pre_cts_tcl(s, root), ['set ::ot_ce_counts [dict create {hard} 1]'])
+            old = RT.ROOT
+            RT.ROOT = root
+            try:
+                hooks = json.dumps(RT.gen_hooks(s, 'kit'))
+            finally:
+                RT.ROOT = old
+            self.assertNotIn('landed_raw', hooks)
+            self.assertLess(hooks.find('set ::ot_ce_counts'), hooks.find('clock_entries.tcl'))
+        self.assertEqual(CE.landed_pre_cts_tcl(dict(kind='tile', clock='multiple_cts_roots'), ROOT), [])
 
 
 class RawPinGate(unittest.TestCase):
@@ -223,14 +235,19 @@ class RawPinOpenroad(unittest.TestCase):
     """TritonCTS + clock_entries.tcl + the generated SDC: the raw ETM clock pin is visited on its region root (it is not
     in all_registers), judged vs CLK's flops post-CTS; the pre-fix body reproduces 'OT_LANDED: 1 of 2'."""
 
-    def run_flow(self, mutant=''):
+    def run_flow(self, mutant='', plain=False):
         with tempfile.TemporaryDirectory() as d:
             w = Path(d)
-            leaf(w, hold='50.5' if mutant == 'tight_record' else '100')
-            s = spec(w)
+            if plain:
+                K.view(w)
+                s = K.spec(w)
+            else:
+                leaf(w, hold='50.5' if mutant == 'tight_record' else '100')
+                s = spec(w)
             s['children'][0]['view'] = 'hard'
             s['landed_record'] = 'top_lp_record.json'
-            rtl = RTL.replace('u_lpl_0_w.bank_reg', '\\u_lpl_0_w.bank_reg ').replace('u_lpl_0_r.o_reg', '\\u_lpl_0_r.o_reg ')
+            rtl = (K.RTL if plain else RTL).replace('u_lpl_0_w.bank_reg', '\\u_lpl_0_w.bank_reg ').replace(
+                'u_lpl_0_r.o_reg', '\\u_lpl_0_r.o_reg ')
             (w / 't.v').write_text(rtl)
             entries = 'set ::ot_ce_require_wire 1\n' + CE.generate(s, w) + CE.landed_sdc(s, w)
             if mutant == 'pre_fix_body':
@@ -239,10 +256,13 @@ class RawPinOpenroad(unittest.TestCase):
                 self.assertNotIn('RAW_PIN', entries)
             (w / 'clocks.tcl').write_text(CE.clocks(s, 833.333))
             (w / 'entries.tcl').write_text(entries)
-            raw = re.search(r'^set ::ot_ce_landed_raw .*$', entries, re.M)[0]
-            flow = (Path(K.__file__).read_text().split("flow = r'''", 1)[1].split("'''", 1)[0]
-                    .replace('FLAG', 'set ::ot_ce_landed_cluster 1\n' + raw))
-            if mutant not in ('no_tap', 'pre_fix_body'):
+            # the GENERATED pre-CTS dicts (no hand-set ::ot_ce_counts: the real kits had none -> pslice real3 failure)
+            hand = 'set ::ot_ce_counts [dict create hard 1]\n'
+            flow = Path(K.__file__).read_text().split("flow = r\'\'\'", 1)[1].split("\'\'\'", 1)[0]
+            self.assertEqual(flow.count(hand), 1)
+            pre = [] if mutant == 'no_pre_cts_dicts' else CE.landed_pre_cts_tcl(s, w)
+            flow = flow.replace(hand, '').replace('FLAG', 'set ::ot_ce_landed_cluster 1\n' + '\n'.join(pre) + '\n')
+            if mutant not in ('no_tap', 'pre_fix_body') and not plain:
                 hook = 'source /src/physical/common_flow/clock_entries.tcl\n'
                 self.assertEqual(flow.count(hook), 1)
                 flow = flow.replace(hook, hook + '\n'.join(CE.landed_raw_tcl(s, w)) + '\n')
@@ -276,6 +296,14 @@ class RawPinOpenroad(unittest.TestCase):
         self.assertLess(float(m[4]), -50)
         self.assertNotEqual(rc, 0)
         self.assertIn('OT_LANDED: raw child clock pin arrival vs its co-timed CTS-root pin', out)
+
+    def test_plain_landed_kit_with_generated_pre_cts_dicts(self):
+        rc, out = self.run_flow(plain=True)
+        self.assertEqual(rc, 0, out[-6500:])
+        self.assertIn('OT_LANDED CHILD_SINK tt ck_ra h/CLK', out)
+        rc, out = self.run_flow('no_pre_cts_dicts', plain=True)
+        self.assertNotEqual(rc, 0)
+        self.assertIn('must reach only standard-cell clock pins', out)
 
     def test_mutants_fail_closed(self):
         for mutant, why in (('pre_fix_body', r'OT_LANDED: 1 of 2 bound hard-child clock pins reached'),
