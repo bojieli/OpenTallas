@@ -1,0 +1,14 @@
+{
+ "schema": "opentallas.qwk_slice_attn.static_findings.v1",
+ "lane": "QW-KVATTN2 10-19",
+ "die": "kvs14p-fa7fe4ff9 port_bind_v2/die_bound.v; stages = case_kv/relay_stages.json (the table RELAY_CHECK passed on)",
+ "vehicle": "qwk_slice_attn: 20,959 inst (kvs_attn, seq, 4 astk + expanded head leaves, 32 ectl, ahub, pvw x2, 16 vport, pvfin + 13,349 relays/landings/rst regions); edge = slg landing groups (KV store path), kvs_ctl, hroot, d2d_kv",
+ "finding_1_ectl_response_lat": "every qkd_ectl3_kiss_st binds RESPONSE_LAT 14, but the die round trip krq stages + landing 8 + krs stages is 12..70 (only ectl_ES_0 = 14): 31/32 K issuers expect the row on the wrong edge (issuer identity check -> fault; ECTL A ROW_RETURN_LAT = RESPONSE_LAT + 7 -> wrong row). Per-ECTL values in kva_grp_facts.json",
+ "finding_2_vport_rt": "every qkd_pv16_vport binds RT 9 (the abutted-landing value) while vq0->i0 = 1+8+1..2 and vq1->i1 = 4+8+3..4 relays: the two groups of one port differ by 5 edges (the RTL contract says the die pads them equal) -> 16/16 V ports off",
+ "finding_3_pv_starts": "kvs_attn.pvst -> pvw_0 37 stages but -> pvw_1 0 stages (the two PV-wide halves start 37 edges apart); pvfst -> pvfin 40; pvfin.fo -> kvs_attn.fin 45; kvs_attn binds qkd_attn_service_root PV_LEAD 0 and qkd_attn_result_face_s F_DLY 1 (QLB-KV finding confirmed on kvs14p)",
+ "finding_4_pv_request_paths": "pvw_0.vrq0 -> vport_WS_0 51, vrq4 -> vport_ES_0 47, pvw_1.vrq0 -> vport_WN_0 60, vrq4 -> vport_EN_0 56 (RL = 4 + W + DQ + RT must be equal on all 16 ports: pvw FIRST_INPUT_AGE 96 is one value)",
+ "finding_5_hbm_clocked_pinfix": "kv_pin_repair.py gives each pinfix relay the FIRST clock trunk touching the source instance: the 36 pinfix relays on krs_* / pvrs_* (core-domain landing responses) are clocked by n_clk_hbm_* (976.6 MHz) -> unsynchronised core->HBM->core resampling on K/V response lanes WS_4, WN_4, ES_4, EN_4, EN_6 and pvrs *_2/_3 (also slg o_pc / kvpc o_grp pinfix relays); fix: take the clock of the bus's launching pin (or the chain's neighbouring relay)",
+ "finding_6_slg_straps": "all 32 slg cfg_stack / cfg_group straps are tied 0 in the netlist (the landing seg header says the die ties each group's identity) -- check against the VMAP sector mapping",
+ "other_stages": {"o_attn->kvs_attn": 6, "d2d srx/rx_payload->kvs_attn": 11, "d2d att_tx->kvs_attn": 9, "kvs_attn tx->d2d": 11, "acal->astk": 46, "ahs->ahub": 46, "seq.aq_WS->astk_WS": 75, "prg->seq": 5},
+ "land_lag_sim": "tools/qwen_split/land_lag_sim.py annotate exits 1 on the KV slice ('needs exactly one die_glue.sv'): the tool covers the compute die's qfd_landh family only; KV landings (qkd_landsh*) run zero-delay (kvs14p is CLK_UNMEASURED_DIAGNOSTIC, no E_sta)"
+}
