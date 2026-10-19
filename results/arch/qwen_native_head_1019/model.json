@@ -58,5 +58,36 @@
     "new_native_clock_sinks": 4,
     "extra_data_edges": 0,
     "qualified": false
-  }
+  },
+  "interface_bits": {
+    "input": 862,
+    "output": 401
+  },
+  "throughput": {
+    "required_items_per_edge": 1,
+    "actual_arithmetic_units_per_head": {
+      "multiply": 4,
+      "add": 2
+    },
+    "external_ports_bytes_per_edge": {
+      "VM_reads": 12,
+      "WROM_read": 32,
+      "CROM_read": 8,
+      "VM_write": 4,
+      "KV_write": 4,
+      "local_result": 4
+    },
+    "budgeted_extra_data_edges": 0,
+    "production_shape": "8heads/slice,12slices/die,4users; exacta/c/f/g/k/q/m/o/n bench pending",
+    "measured_qualified": false
+  },
+  "safe_design_prerequisites": [
+    "finite >=3edge delay rings",
+    "resetlanding2/balancedleaves<=32",
+    "source-control fanout<=32",
+    "mappedstdcell40-60percentfullwidthband",
+    "native SRAM PG/via escape proof",
+    "allpins registered+native TTFF boundary",
+    "reach<=405/edge"
+  ]
 }

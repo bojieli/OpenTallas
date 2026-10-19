@@ -1,0 +1,26 @@
+{
+  "source": "1bf6e1e1f",
+  "cells": 46860,
+  "flops": 10434,
+  "macro_instances": [
+    "u_h.u_lane.g_tls.g_native_bank[0].u_tlm",
+    "u_h.u_lane.g_tls.g_native_bank[1].u_tlm"
+  ],
+  "macro_dimensions_um": [
+    33.72,
+    27.576
+  ],
+  "total_macro_area_um2": 1859.72544,
+  "steady_delta_edges": 0,
+  "reset_delta_edges": 0,
+  "storage_fixed": "126usefulbits/word in2real128x64 banks;2unusedbits masked0",
+  "still_open": [
+    "reset1686",
+    "shared tag/control highfanout",
+    ">=3shift delay lines",
+    "mapped standard area",
+    "actual SRAM pin escape",
+    "native CTS TTFF"
+  ],
+  "physical_admitted": false
+}
