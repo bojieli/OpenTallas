@@ -54,7 +54,7 @@ def main():
         srcs.append(str(out / 'src' / f))
     srcs += [str(p) for p in REF] + [str(TB)]
     if a.sram:
-        srcs += [str(ROOT/'rtl/qwen_sys/host_20261013/qkd_host_boot_fifo8_sram.sv'),str(ROOT/'physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v')]
+        srcs += [str(ROOT/'rtl/qwen_sys/host_20261013/qkd_host_boot_fifo8_sram.sv'),str(ROOT/'physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192/ot_sram_1r1w_32x128_m1_p192.v')]
     ver = subprocess.run([a.verilator, '--version'], capture_output=True, text=True).stdout.strip()
     print('HRORDER_EQUIV verilator', ver, flush=True)
     cmd = [a.verilator, '--binary', '--timing', '-O2', '--x-assign', '0', '--x-initial', '0', '-Wno-fatal', '-Wno-lint',

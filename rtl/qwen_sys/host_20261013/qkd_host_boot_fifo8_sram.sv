@@ -17,7 +17,7 @@ module qkd_host_boot_fifo8_sram #(parameter integer W=290, MUT=0)(
   if(wr && (wp==ra))raw_data<=wd;
  end
  for(genvar b=0;b<3;b++)begin:g_bank
-  ot_sram_1r1w_32x128_m1 u_mem(.clk(ck),.r_ce_in(1'b1),.r_addr_in({2'b0,ra}),
+  ot_sram_1r1w_32x128_m1_p192 u_mem(.clk(ck),.r_ce_in(1'b1),.r_addr_in({2'b0,ra}),
    .rd_out(mem_q[b*128+:128]),.w_ce_in(wr),.w_addr_in({2'b0,wp}),
    .wd_in(padded[b*128+:128]),.w_mask_in({128{1'b1}}));
  end
