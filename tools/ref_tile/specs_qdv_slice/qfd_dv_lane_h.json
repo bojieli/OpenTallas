@@ -114,12 +114,17 @@
   "threads": 16,
   "peak_ram_gb": 48,
   "hold_margin_ns": 0.03,
-  "macro_halo_um": 5.4
+  "macro_halo_um": 5.4,
+  "cts_sink": {
+   "extra": "-no_obstruction_aware",
+   "why": "QK-SLICE 10-18: dl1 gate (default obstruction-aware H-tree around the TLS SRAM) TT pin-flop 227.3..314.1 (86.8) / FF 80.7 ps > 80. 7-variant re-CTS sweep on the dl1 3_place.odb (ORFS cts + ck_insertion --raw-source, ot-epyc4 /srv/opentallas-scratch/claude/qk-slice/cts_sweep): -no_obstruction_aware TT pin 253.0..262.7 (9.7) all 48.8 / FF 9.3 all 49.2; levels2+dbb40+noobs 23.7/22.9; size30/60 levels2 noobs 15.8/16.2; levels2+dbb25+noobs 24.0/22.7; levels2+dbb40 64.8/61.1; size20/40 90.0/83.7."
+  },
+  "io_hold_margin_ns": 0.03
  },
  "job": {
   "owner": "Claude:S-QSLICE",
   "branch": "claude/qslice2-hard-1018",
-  "tag": "dl1",
+  "tag": "dl2",
   "purpose": "S-QSLICE 10-18: Q-DV slice SU lane head = ot_hdc_vstream_lane_h at the SLICE configuration (WR16 AW24 NW18 KV_FP8 ML 1 RD 2 QLA4 QLM5, TLS ring in one 128x256 SRAM) as the no-parameter wrapper qfd_dv_lane_h; leaf of the slice lane tile qfd_dv_su_lane (x8 per slice, x96 per die). The closed qfd_su_lane_h view is ML 15 (14 edges deeper alignment) and is not this lane. M5 cap, local CTS, recipe 2, pin flops in and out, own reset register. Benches run on the assembled slice (dv_bench2 a..j, slice2 SU_LT=1 HD_W130=1: 8 lane tiles) + 4 mutants.",
   "benches": [
    {
