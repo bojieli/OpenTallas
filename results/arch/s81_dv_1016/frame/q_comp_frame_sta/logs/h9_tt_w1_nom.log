@@ -1,0 +1,373 @@
+FSTA corner tt spef 1 trunk 445.0 q_clk_pins 24
+Startpoint: u_s1 (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_bs1 (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+                   0.00    0.00   clock clk (rise edge)
+                 445.00  445.00   clock source latency
+ 189.87    0.00    0.00  445.00 ^ clk_n (in)
+           0.00    0.00  445.00 ^ u_s1/clk[0] (ot_s81_cfg7_seq)
+  28.40  145.90  270.36  715.36 ^ u_s1/cfg[39] (ot_s81_cfg7_seq)
+         340.84  105.00  820.36 ^ u_bs1/i_cfg[39] (dsfd_qbank_S)
+                         820.36   data arrival time
+
+                 833.00  833.00   clock clk (rise edge)
+                 445.00 1278.00   clock source latency
+ 189.87    0.00    0.00 1278.00 ^ clk_n (in)
+           0.00    0.00 1278.00 ^ u_bs1/ck[0] (dsfd_qbank_S)
+                 -60.00 1218.00   clock uncertainty
+                   0.00 1218.00   clock reconvergence pessimism
+                 -55.33 1162.67   library setup time
+                        1162.67   data required time
+-----------------------------------------------------------------------
+                        1162.67   data required time
+                        -820.36   data arrival time
+-----------------------------------------------------------------------
+                         342.30   slack (MET)
+
+
+Startpoint: u_e0 (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_bn0 (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: min
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+                   0.00    0.00   clock clk (rise edge)
+                   0.00    0.00   clock source latency
+ 237.30    0.00    0.00    0.00 ^ clk_q (in)
+           0.00    0.00    0.00 ^ u_e0/clk (ot_v41_rom_elem_q_qxpq_w10)
+  13.31   59.51  617.05  617.05 v u_e0/pval[12] (ot_v41_rom_elem_q_qxpq_w10)
+          91.30   24.84  641.90 v u_bn0/e_r0[13] (dsfd_qbank_N)
+                         641.90   data arrival time
+
+                   0.00    0.00   clock clk (rise edge)
+                 445.00  445.00   clock source latency
+ 189.87    0.00    0.00  445.00 ^ clk_n (in)
+           0.00    0.00  445.00 ^ u_bn0/ck[0] (dsfd_qbank_N)
+                  25.00  470.00   clock uncertainty
+                   0.00  470.00   clock reconvergence pessimism
+                 -14.68  455.32   library hold time
+                         455.32   data required time
+-----------------------------------------------------------------------
+                         455.32   data required time
+                        -641.90   data arrival time
+-----------------------------------------------------------------------
+                         186.58   slack (MET)
+
+
+FSTA_GROUP q_to_qbankN max
+Startpoint: u_e0 (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_bn0 (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk_q (in)
+   0.00    0.00 ^ u_e0/clk (ot_v41_rom_elem_q_qxpq_w10)
+ 753.60  753.60 ^ u_e0/pnseg[2] (ot_v41_rom_elem_q_qxpq_w10)
+  43.08  796.68 ^ u_bn0/e_r0[56] (dsfd_qbank_N)
+         796.68   data arrival time
+
+ 833.00  833.00   clock clk (rise edge)
+ 445.00 1278.00   clock source latency
+   0.00 1278.00 ^ clk_n (in)
+   0.00 1278.00 ^ u_bn0/ck[0] (dsfd_qbank_N)
+ -60.00 1218.00   clock uncertainty
+   0.00 1218.00   clock reconvergence pessimism
+ -42.20 1175.80   library setup time
+        1175.80   data required time
+---------------------------------------------------------
+        1175.80   data required time
+        -796.68   data arrival time
+---------------------------------------------------------
+         379.11   slack (MET)
+
+
+FSTA_GROUP q_to_qbankN min
+Startpoint: u_e0 (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_bn0 (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk_q (in)
+   0.00    0.00 ^ u_e0/clk (ot_v41_rom_elem_q_qxpq_w10)
+ 617.05  617.05 v u_e0/pval[12] (ot_v41_rom_elem_q_qxpq_w10)
+  24.84  641.90 v u_bn0/e_r0[13] (dsfd_qbank_N)
+         641.90   data arrival time
+
+   0.00    0.00   clock clk (rise edge)
+ 445.00  445.00   clock source latency
+   0.00  445.00 ^ clk_n (in)
+   0.00  445.00 ^ u_bn0/ck[0] (dsfd_qbank_N)
+  25.00  470.00   clock uncertainty
+   0.00  470.00   clock reconvergence pessimism
+ -14.68  455.32   library hold time
+         455.32   data required time
+---------------------------------------------------------
+         455.32   data required time
+        -641.90   data arrival time
+---------------------------------------------------------
+         186.58   slack (MET)
+
+
+FSTA_GROUP qbankS_to_q max
+Startpoint: u_bs0 (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_e0 (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock clk (rise edge)
+ 445.00  445.00   clock source latency
+   0.00  445.00 ^ clk_n (in)
+   0.00  445.00 ^ u_bs0/ck[0] (dsfd_qbank_S)
+ 283.75  728.75 v u_bs0/o_go[0] (dsfd_qbank_S)
+   5.27  734.02 v u_e0/go (ot_v41_rom_elem_q_qxpq_w10)
+         734.02   data arrival time
+
+ 833.00  833.00   clock clk (rise edge)
+   0.00  833.00   clock source latency
+   0.00  833.00 ^ clk_q (in)
+   0.00  833.00 ^ u_e0/clk (ot_v41_rom_elem_q_qxpq_w10)
+ -60.00  773.00   clock uncertainty
+   0.00  773.00   clock reconvergence pessimism
+ 361.61 1134.61   library setup time
+        1134.61   data required time
+---------------------------------------------------------
+        1134.61   data required time
+        -734.02   data arrival time
+---------------------------------------------------------
+         400.59   slack (MET)
+
+
+FSTA_GROUP qbankS_to_q min
+Startpoint: u_bs0 (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_e0 (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock clk (rise edge)
+ 445.00  445.00   clock source latency
+   0.00  445.00 ^ clk_n (in)
+   0.00  445.00 ^ u_bs0/ck[0] (dsfd_qbank_S)
+ 244.06  689.06 v u_bs0/o_x1[95] (dsfd_qbank_S)
+   0.55  689.61 v u_e0/xs_q1[95] (ot_v41_rom_elem_q_qxpq_w10)
+         689.61   data arrival time
+
+   0.00    0.00   clock clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk_q (in)
+   0.00    0.00 ^ u_e0/clk (ot_v41_rom_elem_q_qxpq_w10)
+  25.00   25.00   clock uncertainty
+   0.00   25.00   clock reconvergence pessimism
+ 458.19  483.19   library hold time
+         483.19   data required time
+---------------------------------------------------------
+         483.19   data required time
+        -689.61   data arrival time
+---------------------------------------------------------
+         206.43   slack (MET)
+
+
+FSTA_GROUP q_to_seq max
+Startpoint: u_e1 (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_s1 (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk_q (in)
+   0.00    0.00 ^ u_e1/clk (ot_v41_rom_elem_q_qxpq_w10)
+ 688.26  688.26 ^ u_e1/sh_free (ot_v41_rom_elem_q_qxpq_w10)
+ 108.30  796.56 ^ u_s1/ef[0] (ot_s81_cfg7_seq)
+         796.56   data arrival time
+
+ 833.00  833.00   clock clk (rise edge)
+ 445.00 1278.00   clock source latency
+   0.00 1278.00 ^ clk_n (in)
+   0.00 1278.00 ^ u_s1/clk[0] (ot_s81_cfg7_seq)
+ -60.00 1218.00   clock uncertainty
+   0.00 1218.00   clock reconvergence pessimism
+ -37.22 1180.78   library setup time
+        1180.78   data required time
+---------------------------------------------------------
+        1180.78   data required time
+        -796.56   data arrival time
+---------------------------------------------------------
+         384.22   slack (MET)
+
+
+FSTA_GROUP q_to_seq min
+Startpoint: u_e0 (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_s0 (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk_q (in)
+   0.00    0.00 ^ u_e0/clk (ot_v41_rom_elem_q_qxpq_w10)
+ 680.42  680.42 v u_e0/sh_free (ot_v41_rom_elem_q_qxpq_w10)
+  53.27  733.69 v u_s0/ef[0] (ot_s81_cfg7_seq)
+         733.69   data arrival time
+
+   0.00    0.00   clock clk (rise edge)
+ 445.00  445.00   clock source latency
+   0.00  445.00 ^ clk_n (in)
+   0.00  445.00 ^ u_s0/clk[0] (ot_s81_cfg7_seq)
+  25.00  470.00   clock uncertainty
+   0.00  470.00   clock reconvergence pessimism
+  -9.50  460.50   library hold time
+         460.50   data required time
+---------------------------------------------------------
+         460.50   data required time
+        -733.69   data arrival time
+---------------------------------------------------------
+         273.19   slack (MET)
+
+
+FSTA_GROUP seq_to_q max
+Startpoint: u_s1 (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_e1 (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock clk (rise edge)
+ 445.00  445.00   clock source latency
+   0.00  445.00 ^ clk_n (in)
+   0.00  445.00 ^ u_s1/clk[0] (ot_s81_cfg7_seq)
+ 270.97  715.97 ^ u_s1/go_tag[1] (ot_s81_cfg7_seq)
+ 107.26  823.23 ^ u_e1/go_tag[1] (ot_v41_rom_elem_q_qxpq_w10)
+         823.23   data arrival time
+
+ 833.00  833.00   clock clk (rise edge)
+   0.00  833.00   clock source latency
+   0.00  833.00 ^ clk_q (in)
+   0.00  833.00 ^ u_e1/clk (ot_v41_rom_elem_q_qxpq_w10)
+ -60.00  773.00   clock uncertainty
+   0.00  773.00   clock reconvergence pessimism
+ 405.48 1178.48   library setup time
+        1178.48   data required time
+---------------------------------------------------------
+        1178.48   data required time
+        -823.23   data arrival time
+---------------------------------------------------------
+         355.25   slack (MET)
+
+
+FSTA_GROUP seq_to_q min
+Startpoint: u_s0 (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_e0 (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock clk (rise edge)
+ 445.00  445.00   clock source latency
+   0.00  445.00 ^ clk_n (in)
+   0.00  445.00 ^ u_s0/clk[0] (ot_s81_cfg7_seq)
+ 266.16  711.16 v u_s0/go_tag[0] (ot_s81_cfg7_seq)
+  52.71  763.88 v u_e0/go_tag[0] (ot_v41_rom_elem_q_qxpq_w10)
+         763.88   data arrival time
+
+   0.00    0.00   clock clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk_q (in)
+   0.00    0.00 ^ u_e0/clk (ot_v41_rom_elem_q_qxpq_w10)
+  25.00   25.00   clock uncertainty
+   0.00   25.00   clock reconvergence pessimism
+ 441.78  466.78   library hold time
+         466.78   data required time
+---------------------------------------------------------
+         466.78   data required time
+        -763.88   data arrival time
+---------------------------------------------------------
+         297.09   slack (MET)
+
+
+FSTA_GROUP seq_to_qbankS max
+Startpoint: u_s1 (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_bs1 (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock clk (rise edge)
+ 445.00  445.00   clock source latency
+   0.00  445.00 ^ clk_n (in)
+   0.00  445.00 ^ u_s1/clk[0] (ot_s81_cfg7_seq)
+ 270.36  715.36 ^ u_s1/cfg[39] (ot_s81_cfg7_seq)
+ 105.00  820.36 ^ u_bs1/i_cfg[39] (dsfd_qbank_S)
+         820.36   data arrival time
+
+ 833.00  833.00   clock clk (rise edge)
+ 445.00 1278.00   clock source latency
+   0.00 1278.00 ^ clk_n (in)
+   0.00 1278.00 ^ u_bs1/ck[0] (dsfd_qbank_S)
+ -60.00 1218.00   clock uncertainty
+   0.00 1218.00   clock reconvergence pessimism
+ -55.33 1162.67   library setup time
+        1162.67   data required time
+---------------------------------------------------------
+        1162.67   data required time
+        -820.36   data arrival time
+---------------------------------------------------------
+         342.30   slack (MET)
+
+
+FSTA_GROUP seq_to_qbankS min
+Startpoint: u_s0 (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_bs0 (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock clk (rise edge)
+ 445.00  445.00   clock source latency
+   0.00  445.00 ^ clk_n (in)
+   0.00  445.00 ^ u_s0/clk[0] (ot_s81_cfg7_seq)
+ 264.71  709.71 v u_s0/cfg[44] (ot_s81_cfg7_seq)
+  55.11  764.83 v u_bs0/i_cfg[44] (dsfd_qbank_S)
+         764.83   data arrival time
+
+   0.00    0.00   clock clk (rise edge)
+ 445.00  445.00   clock source latency
+   0.00  445.00 ^ clk_n (in)
+   0.00  445.00 ^ u_bs0/ck[0] (dsfd_qbank_S)
+  25.00  470.00   clock uncertainty
+   0.00  470.00   clock reconvergence pessimism
+  11.66  481.66   library hold time
+         481.66   data required time
+---------------------------------------------------------
+         481.66   data required time
+        -764.83   data arrival time
+---------------------------------------------------------
+         283.17   slack (MET)
+
+
+FSTA_DUMP 9288 endpoints worst_setup 3.423040184635795e-10 worst_hold 1.8657955735967846e-10
+FSTA_DONE

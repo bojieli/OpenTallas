@@ -1,0 +1,300 @@
+{
+ "schema": "opentallas.s81.frame_q_comp_sta.v1",
+ "lane": "QXPQ-FIX/FSTA 10-18 (RELEASE_TREE S81.STA.LEAF.3.4)",
+ "verdict": "PASS",
+ "question": "does the HF-1 frame compensation (q clk at region root, every other region sink on one shared trunk 445 TT / 355.5 FF, C 530/423) hold q<->neighbour FF hold and TT setup in frame STA",
+ "spec": "results/arch/s81_dv_1016/frame/q_clock_comp_hf1.json (claude/hf1-qxpq-1018 86194e879)",
+ "frames": {
+  "col_h9": "rtl/dsrom_sys/s81_dv/frame/col_h9.sv sha256 2c72ec5e69943e8b...",
+  "col_h10": "rtl/dsrom_sys/s81_dv/frame/col_h10.sv sha256 545607e877553c15...",
+  "l4": "col_h9_l4 / col_h10_l4 give byte-identical extracted q-region netlists and SPEF (only the cfifo differs) -> covered by col_h9 / col_h10"
+ },
+ "views": {
+  "q": "physical/s81_die_views/q_elem_qs5f_rstp (claude/ns-qxpq-1018 29e6012d7; routed insertion TT 489.4 / FF 387.5)",
+  "qbank_N": "physical/ref_tile/s81fill2_qbank_n/views/dsfd_qbank_N",
+  "qbank_S": "physical/ref_tile/s81fill2_qbank_s/views/dsfd_qbank_S (case h9/h10); s81fill2_qbank_s_t (case h9t/h10t)",
+  "cfg7_seq": "physical/ref_tile/s81coll_cfg7_seq_pr/views/ot_s81_cfg7_seq"
+ },
+ "etm_clock_insertion": "All four ETMs come from OpenSTA write_timing_model on the routed propagated-clock child: arcs FOLD the child's own insertion (q FF clk->pval[12] 474 ps = ~348 tree + ~126; setup/hold arcs carry it, e.g. q go hold +369 FF) and the min/max_clock_tree_path entries record it. So the frame adds only the frame-level latency. NOTE: run the frame STA with PROPAGATED clocks: with an ideal clock OpenSTA strips each macro's clock_tree_path from its launch arcs and capture checks (ideal = zero insertion), which made a first ideal-mode run report a false -186 ps FF hold (q_to_qbankN launch 126 instead of 474); that run is superseded, not a result.",
+ "method": {
+  "netlist": "fsta_build.py: flat structural netlist from the frame RTL keeping the 12 q + 12 qbank_S + 12 qbank_N + 12 cfg7_seq instances as ETM cells with the frame's real pin-to-pin nets (9492 child->child sinks, all within the slot); nets touching other frame cells or frame ports cut to unconstrained ports; the frame clk net split into clk_q (q clock pins) and clk_n (neighbour clock pins)",
+  "clock": "create_clock 833 ps on {clk_q clk_n}, propagated; set_clock_latency -source 0 clk_q, TRUNK clk_n; uncertainty 60 setup / 25 hold; setup judged at TT, hold at FF (owner option B)",
+  "wire": "w1 = star RC per net from the frame floorplan (c26l cluster boxes + LEF pin positions, Manhattan, unbuffered, ORFS asap7 signal RC 0.0265684 kohm/um, 0.16579 fF/um; nets 8-164 um: qbank_S->q 8-9, q->qbank_N 58-101, q<->cfg7_seq 113-164); w0 = zero wire (hold bound)",
+  "sensitivity": "trunk +-5% at FF and TT (FF 373.3 / 337.7, TT 467.3 / 422.8)",
+  "unconstrained_sinks": "240 per frame: qbank_S.o_cfg -> q.cfg_d (216) and o_x0 -> q.xs_sv (24) land on q pins with capacitance 0 and no arcs in the q ETM (unloaded inside q), so no check exists",
+  "tool": "OpenSTA (openroad/orfs:asap7lock sta) via ot-run on ot-epyc5, run_fsta.sh; aggregation fsta_report.py; per-run logs logs/*.log, per-pin-group detail runs.json"
+ },
+ "result_nominal_qbank_s": {
+  "hold_FF_zero_wire": {
+   "worst_setup": 488.89,
+   "worst_hold": 99.61,
+   "pairs": {
+    "cfg7_seq -> q": {
+     "hold": 167.88,
+     "setup": 545.88
+    },
+    "cfg7_seq -> qbank_S": {
+     "hold": 154.49,
+     "setup": 535.68
+    },
+    "q -> cfg7_seq": {
+     "hold": 151.39,
+     "setup": 557.7
+    },
+    "q -> qbank_N": {
+     "hold": 99.61,
+     "setup": 535.94
+    },
+    "qbank_S -> q": {
+     "hold": 140.85,
+     "setup": 488.89
+    }
+   }
+  },
+  "hold_FF_wire": {
+   "worst_setup": 443.34,
+   "worst_hold": 125.85,
+   "pairs": {
+    "cfg7_seq -> q": {
+     "hold": 219.48,
+     "setup": 444.97
+    },
+    "cfg7_seq -> qbank_S": {
+     "hold": 205.93,
+     "setup": 443.34
+    },
+    "q -> cfg7_seq": {
+     "hold": 203.34,
+     "setup": 462.53
+    },
+    "q -> qbank_N": {
+     "hold": 125.85,
+     "setup": 497.41
+    },
+    "qbank_S -> q": {
+     "hold": 143.37,
+     "setup": 485.47
+    }
+   }
+  },
+  "setup_TT_wire": {
+   "worst_setup": 342.3,
+   "worst_hold": 186.58,
+   "pairs": {
+    "cfg7_seq -> q": {
+     "hold": 297.09,
+     "setup": 355.25
+    },
+    "cfg7_seq -> qbank_S": {
+     "hold": 283.17,
+     "setup": 342.3
+    },
+    "q -> cfg7_seq": {
+     "hold": 273.19,
+     "setup": 384.22
+    },
+    "q -> qbank_N": {
+     "hold": 186.58,
+     "setup": 379.11
+    },
+    "qbank_S -> q": {
+     "hold": 206.43,
+     "setup": 400.59
+    }
+   }
+  },
+  "setup_TT_zero_wire": {
+   "worst_setup": 404.67,
+   "worst_hold": 156.01,
+   "pairs": {
+    "cfg7_seq -> q": {
+     "hold": 240.2,
+     "setup": 465.53
+    },
+    "cfg7_seq -> qbank_S": {
+     "hold": 227.01,
+     "setup": 444.71
+    },
+    "q -> cfg7_seq": {
+     "hold": 216.16,
+     "setup": 488.89
+    },
+    "q -> qbank_N": {
+     "hold": 156.01,
+     "setup": 434.13
+    },
+    "qbank_S -> q": {
+     "hold": 203.06,
+     "setup": 404.67
+    }
+   }
+  }
+ },
+ "result_nominal_qbank_s_t": {
+  "hold_FF_zero_wire": {
+   "worst_setup": 490.45,
+   "worst_hold": 99.61,
+   "pairs": {
+    "cfg7_seq -> q": {
+     "hold": 167.88,
+     "setup": 545.88
+    },
+    "cfg7_seq -> qbank_S": {
+     "hold": 160.21,
+     "setup": 542.84
+    },
+    "q -> cfg7_seq": {
+     "hold": 151.39,
+     "setup": 557.7
+    },
+    "q -> qbank_N": {
+     "hold": 99.61,
+     "setup": 535.94
+    },
+    "qbank_S -> q": {
+     "hold": 134.94,
+     "setup": 490.45
+    }
+   }
+  },
+  "setup_TT_wire": {
+   "worst_setup": 348.67,
+   "worst_hold": 186.58,
+   "pairs": {
+    "cfg7_seq -> q": {
+     "hold": 297.09,
+     "setup": 355.25
+    },
+    "cfg7_seq -> qbank_S": {
+     "hold": 285.21,
+     "setup": 348.67
+    },
+    "q -> cfg7_seq": {
+     "hold": 273.19,
+     "setup": 384.22
+    },
+    "q -> qbank_N": {
+     "hold": 186.58,
+     "setup": 379.11
+    },
+    "qbank_S -> q": {
+     "hold": 201.54,
+     "setup": 397.12
+    }
+   }
+  }
+ },
+ "sensitivity": {
+  "FF_trunk_plus5_zero_wire": {
+   "worst_setup": 471.12,
+   "worst_hold": 81.84,
+   "pairs": {
+    "cfg7_seq -> q": {
+     "hold": 185.65,
+     "setup": 528.1
+    },
+    "cfg7_seq -> qbank_S": {
+     "hold": 154.49,
+     "setup": 535.68
+    },
+    "q -> cfg7_seq": {
+     "hold": 133.62,
+     "setup": 575.47
+    },
+    "q -> qbank_N": {
+     "hold": 81.84,
+     "setup": 553.72
+    },
+    "qbank_S -> q": {
+     "hold": 158.63,
+     "setup": 471.12
+    }
+   }
+  },
+  "FF_trunk_minus5_zero_wire": {
+   "worst_setup": 506.67,
+   "worst_hold": 117.39,
+   "pairs": {
+    "cfg7_seq -> q": {
+     "hold": 150.1,
+     "setup": 563.65
+    },
+    "cfg7_seq -> qbank_S": {
+     "hold": 154.49,
+     "setup": 535.68
+    },
+    "q -> cfg7_seq": {
+     "hold": 169.17,
+     "setup": 539.92
+    },
+    "q -> qbank_N": {
+     "hold": 117.39,
+     "setup": 518.17
+    },
+    "qbank_S -> q": {
+     "hold": 123.08,
+     "setup": 506.67
+    }
+   }
+  },
+  "TT_trunk_plus5_wire": {
+   "worst_setup": 333.0,
+   "worst_hold": 164.33,
+   "pairs": {
+    "cfg7_seq -> q": {
+     "hold": 319.34,
+     "setup": 333.0
+    },
+    "cfg7_seq -> qbank_S": {
+     "hold": 283.17,
+     "setup": 342.3
+    },
+    "q -> cfg7_seq": {
+     "hold": 250.94,
+     "setup": 406.47
+    },
+    "q -> qbank_N": {
+     "hold": 164.33,
+     "setup": 401.36
+    },
+    "qbank_S -> q": {
+     "hold": 228.68,
+     "setup": 378.34
+    }
+   }
+  },
+  "TT_trunk_minus5_wire": {
+   "worst_setup": 342.3,
+   "worst_hold": 184.18,
+   "pairs": {
+    "cfg7_seq -> q": {
+     "hold": 274.84,
+     "setup": 377.5
+    },
+    "cfg7_seq -> qbank_S": {
+     "hold": 283.17,
+     "setup": 342.3
+    },
+    "q -> cfg7_seq": {
+     "hold": 295.44,
+     "setup": 361.97
+    },
+    "q -> qbank_N": {
+     "hold": 208.83,
+     "setup": 356.86
+    },
+    "qbank_S -> q": {
+     "hold": 184.18,
+     "setup": 422.84
+    }
+   }
+  }
+ },
+ "col_h10": "identical numbers to col_h9 in every run (same slot geometry and wiring pattern)",
+ "summary": {
+  "worst_hold_FF": "+99.6 ps (q.pval/prow -> qbank_N, zero wire; +125.8 with wire); +81.8 ps with the trunk 5% late at FF",
+  "worst_setup_TT_q_pairs": "cfg7_seq->q +355.2, q->qbank_N +379.1, q->cfg7_seq +384.2, qbank_S->q +400.6 (wire); worst overall +342.3 (cfg7_seq->qbank_S, both on the trunk)",
+  "fix_needed": "none: no hold pad, trunk change or q-pin landing needed. Margin absorbs ~80 ps extra FF q->qbank_N skew beyond the 25 ps uncertainty."
+ },
+ "not_covered": "frame-internal clock-tree skew between slots beyond the +-5% trunk sensitivity (covered by the uncertainty + >=80 ps margin); repeaters on 100-164 um nets (unbuffered RC used, pessimistic for setup); SS corner (owner sign-off is TT setup / FF hold)"
+}
