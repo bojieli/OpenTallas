@@ -1,0 +1,58 @@
+{
+  "reason": "ROOT authorization via KV coordinator: unregistered aliases, >32 logical fanout and illegal macro contacts cannot qualify through hold repair",
+  "evidence_commit": "f90a7b45c",
+  "started_utc": "2026-10-19T20:21:10.916346+00:00",
+  "stopped": [
+    {
+      "container": "gate_cts_qkd_kvs_grp_sq2-20261019-113454",
+      "id": "534a26320e7a23757acc0fdf1986edc6566e73164fbad715639c80dba64ef507",
+      "pid": 3483679,
+      "rc": 0,
+      "stdout": "Flag --time has been deprecated, use --timeout instead\n534a26320e7a23757acc0fdf1986edc6566e73164fbad715639c80dba64ef507\n",
+      "stderr": "",
+      "running_after": false,
+      "utc": "2026-10-19T20:21:42.285360+00:00"
+    },
+    {
+      "container": "gate_cts_qkd_kvs_grp_sq3-20261019-113455",
+      "id": "e620f9aa0cc091b2938b591535c30f856add9bb666c1f89de5531982cd4af398",
+      "pid": 3439622,
+      "rc": 0,
+      "stdout": "Flag --time has been deprecated, use --timeout instead\ne620f9aa0cc091b2938b591535c30f856add9bb666c1f89de5531982cd4af398\n",
+      "stderr": "",
+      "running_after": false,
+      "utc": "2026-10-19T20:22:13.846608+00:00"
+    },
+    {
+      "container": "gate_cts_qkd_kvs_grp_h_sq2-20261019-113454",
+      "id": "9accf7217963aff4a5a424e2035cc4528a628c678fdb832e6df16a77e2980767",
+      "pid": 3385699,
+      "rc": 0,
+      "stdout": "Flag --time has been deprecated, use --timeout instead\n9accf7217963aff4a5a424e2035cc4528a628c678fdb832e6df16a77e2980767\n",
+      "stderr": "",
+      "running_after": false,
+      "utc": "2026-10-19T20:23:10.008333+00:00"
+    },
+    {
+      "container": "gate_cts_qkd_kvs_grp_h_sq3-20261019-113456",
+      "id": "172c2e4a1495a6ca5d510f6f8322ef22158a05ccfecc54977e0d5e735cf0d55d",
+      "pid": 3388028,
+      "running_after": false,
+      "rc": null,
+      "utc": "2026-10-19T20:23:57.640801+00:00",
+      "receipt_recovery": "docker stop returned, then auto-remove raced two inspect calls; original Python failed before writing its final result. Exact container is now absent; wrapper terminal collected separately. No repeated kill."
+    }
+  ],
+  "verification": {
+    "utc": "2026-10-19T20:24:16.280348+00:00",
+    "local_wrapper_pids_absent": [
+      507085,
+      507086,
+      507087,
+      507088
+    ],
+    "all_original_container_process_pids_absent": true,
+    "terminal_gate_verdicts": "All four FAIL; immutable JSON copies included",
+    "raw_remote_trees_preserved": true
+  }
+}

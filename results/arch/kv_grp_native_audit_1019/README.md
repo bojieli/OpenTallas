@@ -108,3 +108,16 @@ Next owner: choose and size registered boundary + useful-copy reset/logic +
 honest delay/storage implementation, then obtain source/native phase/age proof.
 ROOT decides whether to cancel the four preserved failed-prerequisite gates
 using `live_runs.json`; this audit authorizes no cancellation or new gate.
+
+## ROOT-authorized retirement outcome
+
+After evidence f90a7b45c was pushed, ROOT authorized graceful stop of only
+the four exact sq2/sq3 grp/grp_h containers. Local wrapper command/CWD and
+container ID/PID, source/kit hashes and mounts were checked again before each
+stop. All four containers are now absent and all four original local wrappers
+exited naturally; terminal gate JSONs are copied here without changing their
+verdicts. Raw fleet ODBs, source snapshots, logical pin dumps and logs remain.
+`stop_receipt.json` records IDs and outcomes. Docker mount list ordering
+required semantic sorting; a final auto-remove race required recovering the
+last absent-container receipt, whose stop return code is explicitly unknown.
+No repeated kill was issued. No unrelated or sq1 job was stopped.

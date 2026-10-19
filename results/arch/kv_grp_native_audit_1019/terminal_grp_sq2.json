@@ -1,0 +1,143 @@
+{
+ "verdict": "FAIL",
+ "items": [
+  {
+   "severity": "WARN",
+   "check": "fill",
+   "message": "parent kit without std_area_um2: fill not computed at gen (the gate measures it)",
+   "fix": "pass --area-um2 / std_area_um2 from the synthesis smoke"
+  },
+  {
+   "severity": "INFO",
+   "check": "pin_regs",
+   "message": "pin registers opted out: Generated wires-only composition of the static join: every edge age (die_ages.json, kv_static_ages) is priced on the join + the die relay stages, so a flow-inserted pin stage would add a cycle the compiled calendar does not have (the lockstep bench vs the die tile would fail).  Pin facts measured on",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "pins",
+   "message": "1-bit vector ports ['afk', 'afv', 'afu', 'af__fault', 'y__est__0_1']: retain declared indices for literal clock entries; check actual mapped pin names for a hand pin list",
+   "fix": "use the actual RTL and mapped pin names"
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-run selected ot-epyc7 for 64 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "source_binding",
+   "message": "immutable shipping manifest /tmp/ref_gate_qkd_kvs_grp_sq2_20261019-113454.source_snapshot.json",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/ref_gate_qkd_kvs_grp_sq2_20261019-113454.log; host dir ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/qkd_kvs_grp_sq2-20261019-113454",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "synth + floorplan + PDN OK on ot-epyc7 in 639 s (gate total 6357 s)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "floorplan.pin_geometry",
+   "message": "actual pin geometry PASS: {'signal_clock_pins': 4828, 'pin_rectangles': 4828, 'pin_track_checked': 4828, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 a5efbd67fb5d78cb80486aa83af914fc349e349232f5959af11c38e17aac96c4",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "util",
+   "message": "synthesized std area 9142 um2 + macros 15575 in core 147825: util 7% (std-cell density 7.3% of placeable 125913 um2; total fill 16.7%)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "textbook",
+   "message": "WARN qkd_kvs_grp cells 58,605 flops 18,101 depth 553.4 ps util 0.1543 reach 146.8 um (2.4 s)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.clock_domain",
+   "message": "clock root port ck: 17,480 flops > 15,000 on one root (+0 ICGs, 4 macro clock pins; e.g. u_af.fault$_DFF_PN0_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine",
+   "fix": "hardened sub-tiles with local roots and registered seams (kind cluster), <= ~15k sinks / 600 um a root"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.boundary",
+   "message": "35 output bit(s) combinational from input ports (e.g. x__tok[9]->y__tok[9] 0 lv, x__tok[8]->y__tok[8] 0 lv, x__tok[7]->y__tok[7] 0 lv): register the boundary (pin flops / registered outputs)",
+   "fix": "register every boundary: pin flop in, flop out; never an ICG enable from a port"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.boundary",
+   "message": "360 input->register endpoint(s) > 3 levels (worst i_ctl[192]->u_bcdcf.u_fifo.wr_full$_DFF_PN0_/D 7 lv, i_ctl[192]->u_bcdcf.u_fifo.mem[8][9]$_DFFE_PP_/D 6 lv, i_ctl[192]->u_bcdcf.u_fifo.mem[8][8]$_DFFE_PP_/D 6 lv): register the boundary (pin flops / registered outputs)",
+   "fix": "register every boundary: pin flop in, flop out; never an ICG enable from a port"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.clock_guidance",
+   "message": "clock root port:ck: 17,484 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 17,484 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "cts_run",
+   "message": "placement / CTS of the kit failed: ",
+   "fix": "the route would fail the same way (DPL-0033 / GPL-0305 / CTS-*): fix the floorplan / density before routing"
+  },
+  {
+   "severity": "WARN",
+   "check": "cts_calibration",
+   "message": "CTS rc=137 ck_insertion rc=None",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "density",
+   "message": "effective global-placement target density 0.500 vs spec PD 0.50",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_spine",
+   "message": "OT_SPINE iter 1 (fine) leaves 65 sinks 995 cells 139 leaf arrival 353.9..397.8 ps (spread 43.9) pad 60.0 / 14.2 ps",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_spine",
+   "message": "OT_SPINE iter 2 (fine) leaves 65 sinks 995 cells 155 leaf arrival 369.9..397.8 ps (spread 28.0) pad 60.0 / 16.1 ps",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "clock_rule",
+   "message": "root port:ck: 17,484 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 17,484 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate",
+   "fix": "guidance only (owner 10-17 0dq): match the boundary by parent compensation or a landed link"
+  },
+  {
+   "severity": "INFO",
+   "check": "layout_images",
+   "message": "LOOK at these before submitting: floorplan /home/ubuntu/wt/kv-grp-ctl-1019/physical/ref_tile/qkd_kvs_grp_sq2/gate_layout/floorplan.png",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "fill",
+   "message": "fill 15% = (hard macros 15575.4 + synthesized std cells 7239.9) / outline 151165.4 um2; pin demand per face: S 415 pins over 382.9/388.8 um (98%), N 415 pins over 382.9/388.8 um (98%), W 1899 pins over 383.6/388.8 um (99%), E 2243 pins over 384.1/388.8 um (99%) (< 35%)",
+   "fix": "shrink the outline / regroup the macros, or record \"fill_reason\": {\"pin_bound\": \"<why the perimeter, not the area, sets the outline>\"} if the pin demand above shows the edges are full"
+  }
+ ]
+}
