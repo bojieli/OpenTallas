@@ -8,7 +8,7 @@
 // The 13-bit context cycle faults at 8191 only while witnesses are outstanding;
 // a completed context holds its cycle until retirement (long stage periods).
 module qfd_dv_typed_witness_control #(
- parameter integer ENABLE=0,GROUPS=13,TEMPLATE_BITS=134,
+ parameter integer ENABLE=0,SAFE_COMPARE=0,GROUPS=13,TEMPLATE_BITS=134,
  parameter[63:0] PROFILE_DIGEST=64'h198f7708b478a667,
  parameter[15:0] PROFILE_EPOCH=16'd7
 )(
@@ -27,12 +27,20 @@ module qfd_dv_typed_witness_control #(
  reg[127:0]partial;reg[12:0]loaded;reg[5:0]next_pw;reg[3:0]record_index;reg[1:0]part;
  reg loading,loaded_complete,sealed;
  wire profile_ok=all_copies_authenticated&&fusedcap&&installed_digest==PROFILE_DIGEST&&installed_epoch==PROFILE_EPOCH;
- reg[3:0]active;reg[12:0]cycle[0:3];reg[5:0]stage[0:3];reg[15:0]epoch[0:3];reg[3:0]next_group[0:3];
- reg[133:0]cache[0:7];reg[11:0]seen[0:7];reg[7:0]cache_valid;
+ localparam integer NC=SAFE_COMPARE?6:1;
+ reg[3:0]active;(* keep=1 *) reg[12:0]cycle[0:3][0:NC-1];reg[5:0]stage[0:3];reg[15:0]epoch[0:3];reg[3:0]next_group[0:3];
+ reg[133:0]cache[0:7];
+ reg[24:0]cache_meta[0:7];reg[12:0]cache_due[0:7][0:11];
+ wire[11:0]cache_mask[0:7];wire[6:0]cache_pc[0:7];wire[3:0]cache_group[0:7];reg[11:0]seen[0:7];reg[7:0]cache_valid;
  reg pending;reg[1:0]pending_user;reg pending_slot;reg[3:0]pending_group;reg[5:0]pending_stage;reg[15:0]pending_epoch;reg[1:0]rr;
- reg pick;reg[1:0]pick_user;reg pick_slot;integer k,u,s,b,sl;reg[1:0]scan;
+ reg pick;reg[1:0]pick_user;reg pick_slot;integer k,u,s,b,sl,c;reg[1:0]scan;
  reg matched;reg[11:0]new_seen;reg[12:0]due;reg[133:0]record_word;
  wire[1:0]obs_user=observation[14:13];wire[3:0]obs_slice=observation[12:9];wire[8:0]obs_pc=observation[8:0];
+ genvar m;generate for(m=0;m<8;m=m+1)begin:gm
+  assign cache_mask[m]=SAFE_COMPARE?cache_meta[m][20:9]:cache[m][33:22];
+  assign cache_pc[m]=SAFE_COMPARE?cache_meta[m][6:0]:cache[m][19:13];
+  assign cache_group[m]=SAFE_COMPARE?cache_meta[m][24:21]:cache[m][133:130];
+ end endgenerate
  genvar g;generate for(g=0;g<4;g=g+1)begin:gc
   assign all_witnesses_complete[g]=ENABLE!=0&&active[g]&&next_group[g]==13&&!cache_valid[2*g]&&!cache_valid[2*g+1]&&!(pending&&pending_user==g);
  end endgenerate
@@ -53,7 +61,7 @@ module qfd_dv_typed_witness_control #(
    loaded<=0;next_pw<=0;record_index<=0;part<=0;loading<=0;loaded_complete<=0;sealed<=0;fault<=0;
    active<=0;cache_valid<=0;pending<=0;pending_user<=0;pending_slot<=0;pending_group<=0;pending_stage<=0;pending_epoch<=0;rr<=0;
    group_complete<=0;complete_user<=0;complete_group<=0;
-   for(u=0;u<4;u=u+1)begin cycle[u]<=0;stage[u]<=0;epoch[u]<=0;next_group[u]<=0;end
+   for(u=0;u<4;u=u+1)begin for(c=0;c<NC;c=c+1)cycle[u][c]<=0;stage[u]<=0;epoch[u]<=0;next_group[u]<=0;end
    for(b=0;b<8;b=b+1)seen[b]<=0;
   end else if(ENABLE!=0)begin
    group_complete<=0;
@@ -93,10 +101,10 @@ module qfd_dv_typed_witness_control #(
    if(sealed&&all_copies_authenticated&&!profile_ok)fault<=1; // authenticated other profile
    if(start_v)begin
     if(!sealed||fault||!profile_ok||active[start_user]||start_stage<1||start_stage>36)fault<=1;
-    else begin active[start_user]<=1;cycle[start_user]<=0;stage[start_user]<=start_stage;epoch[start_user]<=start_epoch;next_group[start_user]<=0;end
+    else begin active[start_user]<=1;for(c=0;c<NC;c=c+1)cycle[start_user][c]<=0;stage[start_user]<=start_stage;epoch[start_user]<=start_epoch;next_group[start_user]<=0;end
    end
    for(u=0;u<4;u=u+1)if(active[u])begin
-    if(cycle[u]!=8191)cycle[u]<=cycle[u]+1'b1;
+    if(cycle[u][0]!=8191)begin for(c=0;c<NC;c=c+1)cycle[u][c]<=cycle[u][c]+1'b1;end
     else if(!all_witnesses_complete[u])fault<=1;
    end
    // One FF template lookup port; request -> cache publication+1 -> use+2.
@@ -107,23 +115,27 @@ module qfd_dv_typed_witness_control #(
    end
    if(pending)begin
     b=2*pending_user+pending_slot;
-    if(!active[pending_user]||stage[pending_user]!=pending_stage||epoch[pending_user]!=pending_epoch||cache_valid[b]||cycle[pending_user]>=templates[pending_group][12:0])fault<=1;
-    cache[b]<=templates[pending_group];seen[b]<=0;cache_valid[b]<=1;
+    if(!active[pending_user]||stage[pending_user]!=pending_stage||epoch[pending_user]!=pending_epoch||cache_valid[b]||cycle[pending_user][0]>=templates[pending_group][12:0])fault<=1;
+    if(SAFE_COMPARE)begin
+     cache_meta[b]<={templates[pending_group][133:130],templates[pending_group][33:13]};
+     for(c=0;c<12;c=c+1)cache_due[b][c]<=templates[pending_group][12:0]+{5'd0,templates[pending_group][34+8*c+:8]};
+    end else cache[b]<=templates[pending_group];
+    seen[b]<=0;cache_valid[b]<=1;
    end
    matched=0;
    for(b=0;b<8;b=b+1)if(cache_valid[b]&&active[b/2])begin
     new_seen=seen[b];
-    for(sl=0;sl<12;sl=sl+1)if(cache[b][22+sl])begin
-     due=cache[b][12:0]+{5'd0,cache[b][34+8*sl+:8]};
-     if(cycle[b/2]==due)begin
-      if(!observation[15]||obs_user!=2'(b/2)||obs_slice!=4'(sl)||obs_pc!={2'(b/2),cache[b][19:13]}||event_stage!=stage[b/2]||event_epoch!=epoch[b/2]||seen[b][sl])fault<=1;
+    for(sl=0;sl<12;sl=sl+1)if(cache_mask[b][sl])begin
+     due=SAFE_COMPARE?cache_due[b][sl]:(cache[b][12:0]+{5'd0,cache[b][34+8*sl+:8]});
+     if(cycle[b/2][SAFE_COMPARE?((b%2)*3+sl/4):0]==due)begin
+      if(!observation[15]||obs_user!=2'(b/2)||obs_slice!=4'(sl)||obs_pc!={2'(b/2),cache_pc[b]}||event_stage!=stage[b/2]||event_epoch!=epoch[b/2]||seen[b][sl])fault<=1;
       else begin new_seen[sl]=1;matched=1;end
      end
-     if(cycle[b/2]>due&&!seen[b][sl])fault<=1;
+     if(cycle[b/2][SAFE_COMPARE?((b%2)*3+sl/4):0]>due&&!seen[b][sl])fault<=1;
     end
     seen[b]<=new_seen;
-    if(new_seen==cache[b][33:22])begin
-     cache_valid[b]<=0;group_complete<=1;complete_user<=2'(b/2);complete_group<=cache[b][133:130];
+    if(new_seen==cache_mask[b])begin
+     cache_valid[b]<=0;group_complete<=1;complete_user<=2'(b/2);complete_group<=cache_group[b];
     end
    end
    if(observation[15]&&!matched)fault<=1;

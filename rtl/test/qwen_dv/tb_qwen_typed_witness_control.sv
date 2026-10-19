@@ -5,7 +5,7 @@
 //  0 PW addr data_hi data_lo   1 AUTH level   2 PROFILE digest_hi digest_lo epoch fusedcap
 //  3 START user stage epoch    4 ISSUE user slice pidx stage epoch   5 RETIRE user mexpf
 //  9 END
-module tb_qwen_typed_witness_control #(parameter integer EN=1);
+module tb_qwen_typed_witness_control #(parameter integer EN=1,SAFE=0,PAIR=0);
  reg ck=0,rst_n=0;always #1 ck=~ck;
  reg pw_v=0;reg[9:0]pw_addr=0;reg[63:0]pw_data=0;reg auth=0,fusedcap=0;reg[63:0]dig=0;reg[15:0]pep=0;
  reg start_v=0;reg[1:0]start_user=0;reg[5:0]start_stage=0;reg[15:0]start_epoch=0;
@@ -15,13 +15,56 @@ module tb_qwen_typed_witness_control #(parameter integer EN=1);
  wire[15:0]observation;wire obs_fault;
  wire template_ready;wire[3:0]context_active,all_complete;wire group_complete;wire[1:0]complete_user;wire[3:0]complete_group;wire fault;
  qfd_dv_typed_su_observer #(.ENABLE(EN)) obs(.ck(ck),.rst_n(rst_n),.su_issue(su_issue),.cmd_user(cmd_user),.su_pidx(su_pidx),.cmd_slice(cmd_slice),.observation(observation),.fault(obs_fault));
- qfd_dv_typed_witness_control #(.ENABLE(EN)) dut(.ck(ck),.rst_n(rst_n),.pw_v(pw_v),.pw_addr(pw_addr),.pw_data(pw_data),
+ qfd_dv_typed_witness_control #(.ENABLE(EN),.SAFE_COMPARE(SAFE)) dut(.ck(ck),.rst_n(rst_n),.pw_v(pw_v),.pw_addr(pw_addr),.pw_data(pw_data),
   .all_copies_authenticated(auth),.fusedcap(fusedcap),.installed_digest(dig),.installed_epoch(pep),
   .start_v(start_v),.start_user(start_user),.start_stage(start_stage),.start_epoch(start_epoch),
   .retire_v(retire_v),.retire_user(retire_user),.ME_XPF_retired(mexpf),
   .observation(observation),.event_stage(ev_stage),.event_epoch(ev_epoch),
   .template_ready(template_ready),.context_active(context_active),.all_witnesses_complete(all_complete),
   .group_complete(group_complete),.complete_user(complete_user),.complete_group(complete_group),.fault(fault));
+ generate if(PAIR)begin:refcheck
+ wire rready,rgroup,rfault;wire[3:0]ractive,rall;wire[1:0]ru;wire[3:0]rg;
+ qfd_dv_typed_witness_control #(.ENABLE(EN),.SAFE_COMPARE(0)) reference_dut(
+ .ck(ck),.rst_n(rst_n),.pw_v(pw_v),.pw_addr(pw_addr),.pw_data(pw_data),
+ .all_copies_authenticated(auth),.fusedcap(fusedcap),.installed_digest(dig),.installed_epoch(pep),
+ .start_v(start_v),.start_user(start_user),.start_stage(start_stage),.start_epoch(start_epoch),
+ .retire_v(retire_v),.retire_user(retire_user),.ME_XPF_retired(mexpf),
+ .observation(observation),.event_stage(ev_stage),.event_epoch(ev_epoch),
+ .template_ready(rready),.context_active(ractive),.all_witnesses_complete(rall),
+ .group_complete(rgroup),.complete_user(ru),.complete_group(rg),.fault(rfault));
+ integer overflow_injected=0,overflow_checked=0,overflow_slot=0,oi;
+ always @(negedge ck)if($test$plusargs("OVERFLOW")&&!overflow_injected&&dut.pending)begin
+  // Change the same pending record in both controllers, exercising the actual
+  // cache publication edge with an unsigned carry beyond the 13-bit counter.
+  dut.templates[dut.pending_group][12:0]=13'd8190;
+  reference_dut.templates[dut.pending_group][12:0]=13'd8190;
+  for(oi=0;oi<12;oi=oi+1)begin
+   dut.templates[dut.pending_group][34+8*oi+:8]=8'd255;
+   reference_dut.templates[dut.pending_group][34+8*oi+:8]=8'd255;
+  end
+  overflow_slot=2*dut.pending_user+dut.pending_slot;overflow_injected=1;$display("F16_INJECT_OVERFLOW expected_due=253");
+ end
+ always @(posedge ck)begin
+ #0.1;
+ if(overflow_injected&&!overflow_checked&&dut.cache_valid[overflow_slot])begin
+  for(oi=0;oi<12;oi=oi+1)if(dut.cache_due[overflow_slot][oi]!==13'd253)$fatal(1,"F16_DUE_OVERFLOW_MISMATCH");
+  overflow_checked=1;$display("F16_ACTUAL_CACHE_OVERFLOW_PASS due=253");
+ end
+ if(rst_n&&{template_ready,context_active,all_complete,group_complete,complete_user,complete_group,fault}!==
+ {rready,ractive,rall,rgroup,ru,rg,rfault})$fatal(1,"F16_STRUCTURAL_EDGE_MISMATCH");
+ end
+ end endgenerate
+ integer mech_injected=0,mi;
+ always @(negedge ck)if(SAFE&&EN&&!mech_injected&&dut.cache_valid[0])begin
+  if($test$plusargs("SKEW"))begin
+   dut.cycle[0][0]=dut.cycle[0][0]+13'd1;mech_injected=1;$display("F16_INJECT_COUNTER_SKEW");
+  end
+  if($test$plusargs("DUE_CORRUPT"))begin
+   for(mi=0;mi<12;mi=mi+1)if(!mech_injected&&dut.cache_mask[0][mi])begin
+    dut.cache_due[0][mi]=dut.cache_due[0][mi]+13'd1;mech_injected=1;$display("F16_INJECT_DUE_CORRUPT slice=%0d",mi);
+   end
+  end
+ end
  integer fd,r,edge_i,t,kind,completions,retired,first_fault,ready_seen,starts,maxlive;reg[63:0]a,b,c,d,e;reg done,have;
  reg[3:0]ngrp[0:3];integer q;
  initial begin
