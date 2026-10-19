@@ -313,6 +313,101 @@ area = dict(
     sram_density=dict(mm2_per_MB=SRAM_MM2_PER_MB, src="3.869 MB/mm2 (chip_design_v2.json) x 2 periphery, modelled"),
 )
 
+# ============================================================== touched tiles, closure risk, die floorplan / GRT
+# status = gaps/die_element_table.json (generated 2026-10-18 03:29; re-check before acting); fails = its route fails
+T = lambda **k: k
+touched = [
+    T(design="S81", change="multi-user calendar (N slots, per-slot {user,pos,base} table in the job words)",
+      element="compiler dv_layer_compile.py + ot_dsdv_fixed_issue program image", status="RTL (inside dsdv_seq_host, "
+      "RTL-only; children sh_vc CLOSED native owed, fails 2; sh_lk gating; sh_sq RTL-only)", fails=2,
+      avoid_touching="yes: the issue unit already runs a fixed program with 2 job contexts; slots are program content",
+      area_mm2=0.0, risk="low", why="compiler only; collision is already a fault"),
+    T(design="S81", change="user tag on the stage h message",
+      element="end-slice link endpoint dsdv_slice_lep (s_0S/0N/7S/7N, RTL owed) + ot_s81ph_link_ep",
+      status="RTL owed (price_land end_slice_lep rtl_owed)", fails=0,
+      avoid_touching="yes if the 10-b user rides spare header bits of the existing 512-b lane; the lep is not built yet, "
+                     "so add it there before it is hardened", area_mm2=0.0, risk="low", why="unbuilt leaf, no closed view"),
+    T(design="S81", change="2nd landing message buffer (40,976 B) at the stage ingress",
+      element="NEW leaf dsdv_mu_land (beside each end-slice lep)", status="new", fails=0,
+      avoid_touching="yes: new leaf abutted to the lep; the closed dsfd_dvland_* relays are not touched",
+      area_mm2=0.021, risk="low", why="SRAM + pointer, one clock region with the lep; reuse the MTP wavefront landing "
+                                       "if dsfd_vm_static_landing is the same buffer (then 0 new area)"),
+    T(design="S81", change="per-user window ring (WB + 68 u)", element="dsdv_svc_att (in slice cluster dsdv_svc_rs)",
+      status="exists in RTL; svc_rs RTL-only, no routed version", fails=0, avoid_touching="no change needed",
+      area_mm2=0.0, risk="none", why="already built"),
+    T(design="S81", change="per-user index-key base and KV-row base",
+      element="dsdv_svc_sx_hrow (CLOSED, native owed) / svc_sx", status="CLOSED (native owed), fails 0", fails=0,
+      avoid_touching="yes, preferred: the compiler writes the absolute per-user sector base into each scan job word "
+                     "(as svc_att WIN_LOAD already carries SB[29:0]); fallback: a NEW user-context leaf dsdv_mu_ctx "
+                     "on the job lane at the svc entry (rsv_05 / rsv_11) adds base[u] before the job reaches svc_sx",
+      area_mm2=0.004, risk="low (compiler) / medium if svc_sx itself must change", why="keep the closed hrow closed"),
+    T(design="S81", change="host plane N outstanding tokens",
+      element="dsdv_seq_host host leaves (dsfd_host_sd CLOSED; dsfd_host_native RTL-only NEEDS_HUMAN fails 7)",
+      status="mixed", fails=10, avoid_touching="partly: the start frame already carries {user,tok,pos}; the return "
+      "path needs a user field, put it in the open dsfd_host_native rather than reopening dsfd_host_sd",
+      area_mm2=0.001, risk="medium", why="dsfd_host_native already has 10 fails; fold the change into its next attempt"),
+    T(design="S81", change="draft seed state per MTP user (40 KB each, <= 6)", element="draft dies (no binding today)",
+      status="draft dies unowned in the S81 binding", fails=0, avoid_touching="n/a (draft dies not built)",
+      area_mm2=0.13, risk="low", why="unbuilt"),
+    T(design="S81", change="balancing: replicate the 4 full-scan stages x2", element="die count / chain topology",
+      status="layer dies unchanged; upstream stage needs a 2nd downstream link (A/B)", fails=0,
+      avoid_touching="die design untouched; chain/rack re-plan + the end-slice lep must expose the 2nd tx port",
+      area_mm2=40 * 799.2, risk="medium (system), none (die)", why="no die re-plan; rack and cable plan change"),
+    T(design="S81", change="balancing: 2-4 HBM stacks a scan die", element="p4l die (PHY shoreline)",
+      status="p4l plan 1 stack/die", fails=0, avoid_touching="no", area_mm2=30.0,
+      risk="high", why="FORCES A DIE RE-PLAN: +10-30 mm2 PHY and shoreline on a 799.2 mm2 near-reticle die"),
+    T(design="Qwen", change="host interface NSLOT 1 -> 4", element="qkd_host_if_pins (core ot_host_if_pb2 is already "
+      "parameterised NSLOT 16 / ENG_CTX 16; the pin wrapper $fatal enforces 1)", status="host cluster (KV-HROOT lane "
+      "live 10-18 19:40); qkd_host_rt NOT STARTED", fails=0,
+      avoid_touching="no, but it is a parameter change on an unclosed cluster: do it now in KV-HROOT",
+      area_mm2=0.01, risk="low-medium", why="pins/regs grow with SB=2 bits; cluster not closed yet"),
+    T(design="Qwen", change="KV calendar user dimension + per-user KV base",
+      element="kv_calendar (compiler) + qkd_kvs_ctl / qkd_kvs_hroot (RTL-only)", status="RTL-only, fails 0", fails=0,
+      avoid_touching="yes for the calendar; the base can ride the job word like S81", area_mm2=0.002, risk="low",
+      why="no closed view"),
+    T(design="Qwen", change="KV attention: next request lands while one is in service",
+      element="qkd_kvs_attn (gating) / NEW leaf at the d2d landing (q 1 KB)", status="gating, fails 0", fails=0,
+      avoid_touching="yes: slot 1,721 >= service 1,555, so the service never holds 2 requests; only q of request k+1 "
+                     "must land, in a 1-KB leaf beside qkd_land; capacity-1 buffer unchanged",
+      area_mm2=0.001, risk="low", why="the 128-KB second score slot is NOT needed under the shift calendar"),
+    T(design="Qwen", change="per-user residual on the compute die (4 x 24 KB)", element="VM (compiler regions)",
+      status="VM closed blocks", fails=0, avoid_touching="yes if VM has 96 KB free (check owed); else NEW buffer leaf "
+      "beside the SU spine", area_mm2=0.05, risk="low", why="addressing only"),
+    T(design="Qwen", change="all-reduce engine accepts one collective a slot (1,721 cycles)",
+      element="tree / SerDes collective (qfd collective windows)", status="measured latency-bound 2,184; payload 1.9% busy",
+      fails=0, avoid_touching="likely (pipelined links; check the collective sequencer accepts overlapping epochs)",
+      area_mm2=0.0, risk="medium", why="if it is one-in-flight, Qwen caps at 3 slots (14.0k)"),
+]
+die_impact = dict(
+    s81_p4l=dict(placement="new leaves abut existing consumers: dsdv_mu_land beside each end-slice lep (s_0S/0N/7S/7N), "
+                           "optional dsdv_mu_ctx on the job lane at the svc entries rsv_05/rsv_11; both fit the "
+                           "21.4% / 171 mm2 whitespace (price_land whitespace_before) without moving neighbours",
+                 added_wires="0 die-level bits if the user tag uses spare header bits; else +10 b on the 4 x 276-b "
+                             "stage lanes (abutted, no new crossing)", cut="worst cut 0.5357 -> +<0.001 (10 b)",
+                 long_links="none; no relay stages", area_mm2=0.03, area_pct=0.004, fits_outline=True,
+                 grt_risk="low: no new long wires; die GRT headroom unknown (no S81 die run; bind FAIL 10-18 00:38)",
+                 replan="none for the calendar/buffers; HBM stacks 2-4 would force a die re-plan"),
+    qwen_dv2f14=dict(placement="VM regions (compiler); fallback buffer leaf beside the SU spine", added_wires="0",
+                     cut="unchanged", long_links="none", area_mm2=0.05, area_pct=0.006, fits_outline=True,
+                     grt_risk="low"),
+    qwen_kvs14=dict(placement="1-KB q landing leaf beside qkd_land (d2d entry); host_if NSLOT inside the host cluster",
+                    added_wires="+2 slot bits on the host leaf ports (local)", cut="unchanged", long_links="none",
+                    area_mm2=0.01, area_pct=0.004, fits_outline=True, grt_risk="low"),
+    hbm_d4g_gen2=dict(note="not touched by this study; HBM multi-user = P position lanes (HBM-MTP lane, next die)"),
+    grade="modelled from the plan geometry and RTL reading; no gate run")
+plan = [
+    "1. Compiler only (no tile touched): S81 N-slot calendar + shift-lemma checker; Qwen kv_calendar user dimension; "
+    "per-user absolute bases written into job words (svc_att SB, svc_sx scan base, KV-die base).",
+    "2. Unbuilt / unclosed leaves, folded into their first hardening (no re-closure): S81 end-slice lep user tag; Qwen "
+    "qkd_host_if NSLOT 4 in KV-HROOT; S81 dsfd_host_native return-path user field on its next attempt.",
+    "3. New small leaves beside closed consumers: dsdv_mu_land (40 KB, at each end-slice lep), Qwen 1-KB q landing "
+    "beside qkd_land; dsdv_mu_ctx only if svc_sx cannot take an absolute base.",
+    "4. Bench: two-user calendar on the stage/layer benches (bit-exact per user, reference user's cycle trace "
+    "identical to the single-user trace) = MU.TOK.",
+    "5. Optional throughput: replicate the 4 full-scan stages (chain re-plan, no die change). Do NOT add HBM stacks "
+    "unless the 1-stack scan-rate check shows p4l is scan-bound (that is a die re-plan).",
+]
+
 out = dict(
     schema="opentallas.rom_multiuser_1018.v1", lane="ROM-MULTIUSER", date="2026-10-18",
     question="good single-user tok/s AND many concurrent requests by pipeline interleaving across the ROM chain",
@@ -328,6 +423,7 @@ out = dict(
                               power_w=Q["power_w"], power_grade=Q["power_grade"]),
                   allreduce_pipelined=qp, allreduce_one_in_flight=qs, idle_fraction=q_idle),
     a100=gpu, pareto=pareto, gpu_at_per_user_1000=gpu_at_1000, comparisons=summary_cmp, area=area,
+    touched_tiles=touched, die_impact=die_impact, reclosure_plan=plan,
     grades_legend=__doc__.split("Every number carries a grade:")[1].split("Run:")[0].strip())
 json.dump(out, open(os.path.join(HERE, "summary.json"), "w"), indent=1, default=float)
 
