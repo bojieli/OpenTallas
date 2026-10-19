@@ -26,7 +26,7 @@ set ::ot_ce_landed_raw [dict create {ot_qfd_tt_ctlm_static_hr/ck_pm0} {ref ck_he
 set ::ot_ce_check_only [dict create {ot_qfd_tt_ctlm_static_hr/ck_head} 1]
 set ::ot_ce_refs [dict create {ot_qfd_tt_ctlm_static_hr/ck_head} {tt {271.5 303.1 346.6} ff {219.7 248.2 288.5} ss {357.9 394.3 445.0}} {ot_qfd_tt_ctlm_static_hr/ck_pm0} {tt {15.2 15.2 15.2} ff {16.2 16.2 16.2} ss {14.5 14.5 14.5}} {ot_qfd_tt_ctlm_static_hr/ck_pm1} {tt {14.6 14.6 14.6} ff {15.7 15.7 15.7} ss {13.9 13.9 13.9}}]
 set ::ot_ce_counts [dict create {ot_qfd_tt_ctlm_static_hr} 1]
-set ::ot_ce_domains [dict create {core} {clock core_clk io_budget_ps 166.667 inputs {{rst_n}} outputs {{tl}}} {hr} {clock ot_io_hr io_budget_ps 166.667 inputs {{pw} {dh} {dh_user} {kok} {kwd} {fab} {native_ret} {ss5} {ag5} {ctx_x} {mu_fault}} outputs {{program_obs} {control_stores_ready} {layer_context_v} {native_tok} {native_pos} {command_stage} {cal_program_obs} {cal_descriptor_obs} {cal_image_ready} {dc} {native_cmd} {hr} {cmd} {emb_start} {emb_token} {cf}}}]
+set ::ot_ce_domains [dict create {core} {clock core_clk io_budget_ps 166.667 inputs {{rst_n}} outputs {{tl}}} {hr} {clock ot_io_hr io_budget_ps 166.667 inputs {{pw} {dh} {dh_user} {kok} {kwd} {fab} {native_ret} {ss5} {ag5} {ctx_x} {mu_fault} {init_u0}} outputs {{program_obs} {control_stores_ready} {layer_context_v} {native_tok} {native_pos} {command_stage} {cal_program_obs} {cal_descriptor_obs} {cal_image_ready} {dc} {native_cmd} {hr} {cmd} {emb_start} {emb_token} {cf}}}]
 set ::ot_ce_source_domains [dict create {ck_core} {core} {ck_hr} {hr}]
 set ::ot_ce_explicit_domains 1
 set ::ot_ce_cts_roots {{ck_core} {ck_hr}}
@@ -703,18 +703,14 @@ proc ot_ce_apply {} {
   puts "OT_ENTRIES COMP DONE $corner [llength $rows] entries phi=$ref boundary=$lmin..$lmax"
 }
 ot_ce_apply
-# ---- PL-KIT landed cluster (results/arch/landed_parent_1018/qfd_tt_ctlm_dv_lpf/qfd_tt_ctlm_dv_lpf_lp_record.json): 25 landings, multicycle -setup 2 -hold 3
-set ot_lp_lands {0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24}
-set ot_lp_miss 0
-foreach ot_ln $ot_lp_lands {
-  set ot_lf [get_cells -quiet u_lpl_${ot_ln}_w.*]
-  set ot_lt [get_cells -quiet u_lpl_${ot_ln}_r.*]
-  if {[llength $ot_lf] == 0} { set ot_lf [get_cells -quiet u_lpl_${ot_ln}_w/*] }
-  if {[llength $ot_lt] == 0} { set ot_lt [get_cells -quiet u_lpl_${ot_ln}_r/*] }
-  if {[llength $ot_lf] == 0 || [llength $ot_lt] == 0} { incr ot_lp_miss; continue }
-  set_multicycle_path -setup 2 -from $ot_lf -to $ot_lt
-  set_multicycle_path -hold 3 -from $ot_lf -to $ot_lt
+# PL-KIT direct D4/E2; diagnostic/adoption requires source-pinned native phase receipt.
+set ot_lp_direct_T [get_property [get_clocks core_clk] period]
+foreach a [get_clocks ot_entry_*] {
+ foreach b [get_clocks ot_entry_*] {
+  if {[get_full_name $a] eq [get_full_name $b]} continue
+  set_clock_uncertainty -setup [expr {210.0 + 0.75 * $ot_lp_direct_T}] -from $a -to $b
+  set_clock_uncertainty -hold 175.0 -from $a -to $b
+ }
 }
-puts "OT_LP_LAND_SDC [expr {[llength $ot_lp_lands] - $ot_lp_miss}] of [llength $ot_lp_lands] landings constrained"
 
 set_propagated_clock [all_clocks]

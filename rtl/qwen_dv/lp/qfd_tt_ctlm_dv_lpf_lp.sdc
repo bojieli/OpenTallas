@@ -4,24 +4,21 @@ set ot_lp_per [get_property [get_clocks core_clk] period]
 create_clock -name ck_hr -period $ot_lp_per [get_ports ck_hr]
 set_clock_uncertainty -setup 60 [get_clocks {ck_hr}]
 set_clock_uncertainty -hold 25 [get_clocks {ck_hr}]
-# 1-bit reset runs core -> every region: single-cycle with the 60-ps die residual on top of 60 / 25
-set_clock_uncertainty -setup 120 -from [get_clocks core_clk] -to [get_clocks ck_hr]
-set_clock_uncertainty -hold 85 -from [get_clocks core_clk] -to [get_clocks ck_hr]
-set_clock_uncertainty -setup 120 -from [get_clocks ck_hr] -to [get_clocks core_clk]
-set_clock_uncertainty -hold 85 -from [get_clocks ck_hr] -to [get_clocks core_clk]
-# 26 landings (LANDING-CONTRACT L5): ring -> read multicycle -setup 2 -hold 3, window (2 - 4) T + t_hold < dL < 2 T - t_cq - t_setup
-set ot_lp_lands {0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25}
-set ot_lp_miss 0
-foreach ot_ln $ot_lp_lands {
-  set ot_lf [get_cells -quiet u_lpl_${ot_ln}_w.*]
-  set ot_lt [get_cells -quiet u_lpl_${ot_ln}_r.*]
-  if {[llength $ot_lf] == 0} { set ot_lf [get_cells -quiet u_lpl_${ot_ln}_w/*] }
-  if {[llength $ot_lt] == 0} { set ot_lt [get_cells -quiet u_lpl_${ot_ln}_r/*] }
-  if {[llength $ot_lf] == 0 || [llength $ot_lt] == 0} { incr ot_lp_miss; continue }
-  set_multicycle_path -setup 2 -from $ot_lf -to $ot_lt
-  set_multicycle_path -hold 3 -from $ot_lf -to $ot_lt
-}
-puts "OT_LP_LAND_SDC [expr {[llength $ot_lp_lands] - $ot_lp_miss}] of [llength $ot_lp_lands] landings constrained"
+# 1-bit reset runs core -> every region: single-cycle with the 150-ps die residual on top of 60 / 25
+set_clock_uncertainty -setup 210 -from [get_clocks core_clk] -to [get_clocks ck_hr]
+set_clock_uncertainty -hold 175 -from [get_clocks core_clk] -to [get_clocks ck_hr]
+set_clock_uncertainty -setup 210 -from [get_clocks ck_hr] -to [get_clocks core_clk]
+set_clock_uncertainty -hold 175 -from [get_clocks ck_hr] -to [get_clocks core_clk]
+# D4/E2 directly timed landing: supported compensated phase +/-0.75T; sample age1.25..2.75T, overwrite gap>=1.25T.
+# Conservative quarter-T setup envelope; ordinary60ps/25ps plus residual150ps remains charged. No data exceptions.
+set_clock_uncertainty -setup -from [get_clocks core_clk] -to [get_clocks ck_hr] [expr {210.0 + 0.75 * $ot_lp_per}]
+set_clock_uncertainty -hold -from [get_clocks core_clk] -to [get_clocks ck_hr] 175.0
+set_clock_uncertainty -setup -from [get_clocks ck_hr] -to [get_clocks core_clk] [expr {210.0 + 0.75 * $ot_lp_per}]
+set_clock_uncertainty -hold -from [get_clocks ck_hr] -to [get_clocks core_clk] 175.0
+set_clock_uncertainty -setup -from [get_clocks ck_hr] -to [get_clocks core_clk] [expr {210.0 + 0.75 * $ot_lp_per}]
+set_clock_uncertainty -hold -from [get_clocks ck_hr] -to [get_clocks core_clk] 175.0
+set_clock_uncertainty -setup -from [get_clocks core_clk] -to [get_clocks ck_hr] [expr {210.0 + 0.75 * $ot_lp_per}]
+set_clock_uncertainty -hold -from [get_clocks core_clk] -to [get_clocks ck_hr] 175.0
 set_input_delay [expr {0.2 * $ot_lp_per}] -clock ck_hr [get_ports {pw[*]}]
 set_input_delay [expr {0.2 * $ot_lp_per}] -clock ck_hr [get_ports {dh[*]}]
 set_input_delay [expr {0.2 * $ot_lp_per}] -clock ck_hr [get_ports {init_u0}]

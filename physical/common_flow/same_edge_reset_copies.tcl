@@ -62,7 +62,6 @@ proc ot_lpc::copy_path {path source cacheName prefix} {
         }
         dict set ::ot_lpc::origin $copy $original
         lappend ::ot_lpc::copies [list $copy $original]
-        $copy setDoNotTouch true
         dict set cache $key $next
         set current $next
     }
@@ -82,7 +81,6 @@ while {$changed} {
             set loads [ot_lpc::loads $net]
             if {[llength $loads] <= $ot_lpc::limit} continue
             set inmap [ot_lpc::inputs $inst]
-            $inst setDoNotTouch true
             # Retain the first chunk on the original, move each remaining chunk
             # to an exact same-edge copy. Clones are soft/unplaced for cone placement.
             for {set offset $ot_lpc::limit} {$offset < [llength $loads]} {incr offset $ot_lpc::limit} {
@@ -112,8 +110,7 @@ while {$changed} {
                 if {[$copy getMaster] ne $master || [ot_lpc::inputs $copy] ne $inmap} {
                     error "OT_LPC clone does not preserve master and all inputs of [$inst getName]"
                 }
-                $copy setDoNotTouch true
-                dict set ot_lpc::origin $copy $inst
+                        dict set ot_lpc::origin $copy $inst
                 lappend ot_lpc::copies [list $copy $inst]
             }
             puts "OT_LPC split=[$inst getName]/[[$op getMTerm] getName] original_loads=[llength $loads]"
@@ -173,3 +170,34 @@ foreach inst [$ot_lpc::block getInsts] {
     }
 }
 puts "OT_LPC PASS existing_stages_and_copies=$stages new_copies=$ot_lpc::serial maximum_buffer_tree_terminal_load=$maxload same_master_and_inputs_at_clone=PASS no_added_edges=0"
+# Persist logical input equations, not cell dont_touch flags: CTS and hold
+# repair must be able to reconnect CLK/D. Post-stage audits prove state copies
+# remain and preserve every input equation while transparent buffers may resize.
+set ::ot_lpc_audit_alias {}
+foreach pair $ot_lpc::copies {
+ lassign $pair copy original
+ if {[[$copy getMaster] isSequential]} {dict set ::ot_lpc_audit_alias [$copy getName] [$original getName]}
+}
+set ::ot_lpc_audit_definitions_only 1
+source /src/physical/common_flow/audit_same_edge_reset_copies.tcl
+unset ::ot_lpc_audit_definitions_only
+set ::ot_lpc_audit_records {}
+foreach pair $ot_lpc::copies {
+ lassign $pair copy original
+ if {![[$copy getMaster] isSequential]} continue
+ set expected {}
+ foreach pin [$copy getITerms] {
+  if {[$pin isInputSignal]} {dict set expected [[$pin getMTerm] getName] [ot_lpc_audit::signature [$pin getNet]]}
+ }
+ lappend ::ot_lpc_audit_records [list [$copy getName] [[$copy getMaster] getName] $expected]
+}
+set ::ot_lpc_audit_match $::ot_reset_copy_regexp
+if {[info exists ::env(RESULTS_DIR)]} {
+ set path [file join $::env(RESULTS_DIR) ot_reset_copy_manifest.tcl]
+ set f [open $path w]
+ puts $f [list set ::ot_lpc_audit_alias $::ot_lpc_audit_alias]
+ puts $f [list set ::ot_lpc_audit_records $::ot_lpc_audit_records]
+ puts $f [list set ::ot_lpc_audit_match $::ot_lpc_audit_match]
+ close $f
+ puts "OT_LPC_MANIFEST $path state_copies=[llength $::ot_lpc_audit_records]"
+}

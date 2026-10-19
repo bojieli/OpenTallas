@@ -24,7 +24,7 @@
  "E": 2,
  "K": 2,
  "added_edges_per_landing": 3,
- "window": "(2 - 4) T + t_hold < dL < 2 T - t_cq - t_setup at TT and FF",
+ "window": "direct quarter-T setup envelope; D4/E2 sample age1.25..2.75T at compensated phase +/-0.75T; overwrite gap>=1.25T at TT/FF",
  "landings": [
   {
    "name": "0",
@@ -41,7 +41,7 @@
    "ring": "u_lpl_0_w (ck_hr)",
    "read": "u_lpl_0_r (ck_core)",
    "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_0_w.* -to u_lpl_0_r.*"
+   "sdc": "direct related-root quarter-T setup envelope, setup60+res150ps, hold25+res"
   },
   {
    "name": "1",
@@ -58,7 +58,7 @@
    "ring": "u_lpl_1_w (ck_hr)",
    "read": "u_lpl_1_r (ck_core)",
    "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_1_w.* -to u_lpl_1_r.*"
+   "sdc": "direct related-root quarter-T setup envelope, setup60+res150ps, hold25+res"
   },
   {
    "name": "2",
@@ -75,7 +75,7 @@
    "ring": "u_lpl_2_w (ck_hr)",
    "read": "u_lpl_2_r (ck_core)",
    "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_2_w.* -to u_lpl_2_r.*"
+   "sdc": "direct related-root quarter-T setup envelope, setup60+res150ps, hold25+res"
   },
   {
    "name": "3",
@@ -92,7 +92,7 @@
    "ring": "u_lpl_3_w (ck_hr)",
    "read": "u_lpl_3_r (ck_core)",
    "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_3_w.* -to u_lpl_3_r.*"
+   "sdc": "direct related-root quarter-T setup envelope, setup60+res150ps, hold25+res"
   },
   {
    "name": "4",
@@ -109,7 +109,7 @@
    "ring": "u_lpl_4_w (ck_hr)",
    "read": "u_lpl_4_r (ck_core)",
    "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_4_w.* -to u_lpl_4_r.*"
+   "sdc": "direct related-root quarter-T setup envelope, setup60+res150ps, hold25+res"
   },
   {
    "name": "5",
@@ -126,7 +126,7 @@
    "ring": "u_lpl_5_w (ck_hr)",
    "read": "u_lpl_5_r (ck_core)",
    "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_5_w.* -to u_lpl_5_r.*"
+   "sdc": "direct related-root quarter-T setup envelope, setup60+res150ps, hold25+res"
   },
   {
    "name": "6",
@@ -143,7 +143,7 @@
    "ring": "u_lpl_6_w (ck_hr)",
    "read": "u_lpl_6_r (ck_core)",
    "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_6_w.* -to u_lpl_6_r.*"
+   "sdc": "direct related-root quarter-T setup envelope, setup60+res150ps, hold25+res"
   },
   {
    "name": "7",
@@ -160,7 +160,7 @@
    "ring": "u_lpl_7_w (ck_hr)",
    "read": "u_lpl_7_r (ck_core)",
    "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_7_w.* -to u_lpl_7_r.*"
+   "sdc": "direct related-root quarter-T setup envelope, setup60+res150ps, hold25+res"
   },
   {
    "name": "8",
@@ -177,7 +177,7 @@
    "ring": "u_lpl_8_w (ck_core)",
    "read": "u_lpl_8_r (ck_hr)",
    "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_8_w.* -to u_lpl_8_r.*"
+   "sdc": "direct related-root quarter-T setup envelope, setup60+res150ps, hold25+res"
   },
   {
    "name": "9",
@@ -194,7 +194,7 @@
    "ring": "u_lpl_9_w (ck_core)",
    "read": "u_lpl_9_r (ck_hr)",
    "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_9_w.* -to u_lpl_9_r.*"
+   "sdc": "direct related-root quarter-T setup envelope, setup60+res150ps, hold25+res"
   },
   {
    "name": "10",
@@ -211,7 +211,7 @@
    "ring": "u_lpl_10_w (ck_core)",
    "read": "u_lpl_10_r (ck_hr)",
    "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_10_w.* -to u_lpl_10_r.*"
+   "sdc": "direct related-root quarter-T setup envelope, setup60+res150ps, hold25+res"
   },
   {
    "name": "11",
@@ -232,7 +232,7 @@
    "ring": "u_lpl_11_w (ck_core)",
    "read": "u_lpl_11_r (ck_hr)",
    "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_11_w.* -to u_lpl_11_r.*"
+   "sdc": "direct related-root quarter-T setup envelope, setup60+res150ps, hold25+res"
   },
   {
    "name": "12",
@@ -249,7 +249,7 @@
    "ring": "u_lpl_12_w (ck_core)",
    "read": "u_lpl_12_r (ck_hr)",
    "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_12_w.* -to u_lpl_12_r.*"
+   "sdc": "direct related-root quarter-T setup envelope, setup60+res150ps, hold25+res"
   },
   {
    "name": "13",
@@ -266,7 +266,7 @@
    "ring": "u_lpl_13_w (ck_core)",
    "read": "u_lpl_13_r (ck_hr)",
    "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_13_w.* -to u_lpl_13_r.*"
+   "sdc": "direct related-root quarter-T setup envelope, setup60+res150ps, hold25+res"
   },
   {
    "name": "14",
@@ -283,7 +283,7 @@
    "ring": "u_lpl_14_w (ck_core)",
    "read": "u_lpl_14_r (ck_hr)",
    "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_14_w.* -to u_lpl_14_r.*"
+   "sdc": "direct related-root quarter-T setup envelope, setup60+res150ps, hold25+res"
   },
   {
    "name": "15",
@@ -300,7 +300,7 @@
    "ring": "u_lpl_15_w (ck_core)",
    "read": "u_lpl_15_r (ck_hr)",
    "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_15_w.* -to u_lpl_15_r.*"
+   "sdc": "direct related-root quarter-T setup envelope, setup60+res150ps, hold25+res"
   },
   {
    "name": "16",
@@ -317,7 +317,7 @@
    "ring": "u_lpl_16_w (ck_core)",
    "read": "u_lpl_16_r (ck_hr)",
    "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_16_w.* -to u_lpl_16_r.*"
+   "sdc": "direct related-root quarter-T setup envelope, setup60+res150ps, hold25+res"
   },
   {
    "name": "17",
@@ -334,7 +334,7 @@
    "ring": "u_lpl_17_w (ck_core)",
    "read": "u_lpl_17_r (ck_hr)",
    "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_17_w.* -to u_lpl_17_r.*"
+   "sdc": "direct related-root quarter-T setup envelope, setup60+res150ps, hold25+res"
   },
   {
    "name": "18",
@@ -351,7 +351,7 @@
    "ring": "u_lpl_18_w (ck_core)",
    "read": "u_lpl_18_r (ck_hr)",
    "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_18_w.* -to u_lpl_18_r.*"
+   "sdc": "direct related-root quarter-T setup envelope, setup60+res150ps, hold25+res"
   },
   {
    "name": "19",
@@ -368,7 +368,7 @@
    "ring": "u_lpl_19_w (ck_core)",
    "read": "u_lpl_19_r (ck_hr)",
    "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_19_w.* -to u_lpl_19_r.*"
+   "sdc": "direct related-root quarter-T setup envelope, setup60+res150ps, hold25+res"
   },
   {
    "name": "20",
@@ -385,7 +385,7 @@
    "ring": "u_lpl_20_w (ck_core)",
    "read": "u_lpl_20_r (ck_hr)",
    "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_20_w.* -to u_lpl_20_r.*"
+   "sdc": "direct related-root quarter-T setup envelope, setup60+res150ps, hold25+res"
   },
   {
    "name": "21",
@@ -402,7 +402,7 @@
    "ring": "u_lpl_21_w (ck_core)",
    "read": "u_lpl_21_r (ck_hr)",
    "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_21_w.* -to u_lpl_21_r.*"
+   "sdc": "direct related-root quarter-T setup envelope, setup60+res150ps, hold25+res"
   },
   {
    "name": "22",
@@ -419,7 +419,7 @@
    "ring": "u_lpl_22_w (ck_core)",
    "read": "u_lpl_22_r (ck_hr)",
    "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_22_w.* -to u_lpl_22_r.*"
+   "sdc": "direct related-root quarter-T setup envelope, setup60+res150ps, hold25+res"
   },
   {
    "name": "23",
@@ -436,7 +436,7 @@
    "ring": "u_lpl_23_w (ck_core)",
    "read": "u_lpl_23_r (ck_hr)",
    "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_23_w.* -to u_lpl_23_r.*"
+   "sdc": "direct related-root quarter-T setup envelope, setup60+res150ps, hold25+res"
   },
   {
    "name": "24",
@@ -453,7 +453,7 @@
    "ring": "u_lpl_24_w (ck_core)",
    "read": "u_lpl_24_r (ck_hr)",
    "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_24_w.* -to u_lpl_24_r.*"
+   "sdc": "direct related-root quarter-T setup envelope, setup60+res150ps, hold25+res"
   },
   {
    "name": "25",
@@ -470,7 +470,7 @@
    "ring": "u_lpl_25_w (ck_core)",
    "read": "u_lpl_25_r (ck_hr)",
    "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_25_w.* -to u_lpl_25_r.*"
+   "sdc": "direct related-root quarter-T setup envelope, setup60+res150ps, hold25+res"
   }
  ],
  "pads": [],
@@ -485,7 +485,7 @@
   "note": "flat reference == landed parent with its reset delayed by depth; child c's reset run is depth + t(c)"
  },
  "flops": {
-  "landing": 5098,
+  "landing": 5936,
   "pads": 0,
   "reset": 26
  },
@@ -544,6 +544,19 @@
   "max_added_edges": 6
  },
  "warnings": [],
+ "landing_implementation": {
+  "chunk_bits": 24,
+  "direct_quarter_period_timing": true,
+  "compensated_phase_T": [
+   -0.75,
+   0.75
+  ],
+  "sample_age_T": [
+   1.25,
+   2.75
+  ],
+  "overwrite_gap_min_T": 1.25
+ },
  "die_obligations": [
   "drop one clock per region at the region's clock port (ck_<r>); each region builds its own local tree",
   "communicating regions (landed pairs) need NO phase alignment inside the landing window at TT and FF",

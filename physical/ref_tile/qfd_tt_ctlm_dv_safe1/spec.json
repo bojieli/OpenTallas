@@ -26,7 +26,14 @@
   "NU": 4,
   "OPSEG": 1,
   "CTX_SRC": 1,
-  "FCTX": 1
+  "FCTX": 1,
+  "OPSEG_EXPANDED": 1,
+  "INIT_U0": 1,
+  "INIT_FIRST": 52,
+  "INIT_CNT": 3,
+  "OPSEG_VIAMAP": "results/rtl/mu_qwen_1018/admission/F16_P2/qfd_tt_ctlm_opseg.viamap.hex",
+  "OPSEG_VIAMAP1": "results/rtl/mu_qwen_1018/admission/F16_P2/qfd_tt_ctlm_opseg_b1.viamap.hex",
+  "OPSEG_VIAMAP2": "results/rtl/mu_qwen_1018/admission/F16_P2/qfd_tt_ctlm_opseg_b2.viamap.hex"
  },
  "clock_port": "ck_core",
  "reset_ports": [
@@ -120,6 +127,26 @@
     302.4
    ],
    "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_rom_4096x72_m8",
+   "count": 1,
+   "inst": "u_gi.g_op.u_leaf.g_op.g_banked.u_rom1",
+   "at": [
+    561.6,
+    302.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_rom_4096x72_m8",
+   "count": 1,
+   "inst": "u_gi.g_op.u_leaf.g_op.g_banked.u_rom2",
+   "at": [
+    648.0,
+    302.4
+   ],
+   "orient": "R0"
   }
  ],
  "pins": {
@@ -150,7 +177,8 @@
    "program_obs",
    "pw",
    "ctx_x",
-   "mu_fault"
+   "mu_fault",
+   "init_u0"
   ],
   "S": [
    "tl",
@@ -288,8 +316,12 @@
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4,
   "pin_balance": {
-   "group_max": 1
-  }
+   "group_max": 1,
+   "h": "M2",
+   "v": "M3"
+  },
+  "pin_h": "M2",
+  "pin_v": "M3"
  },
  "job": {
   "owner": "CODEX-QW-CTLM-SAFE",
@@ -304,7 +336,8 @@
    "results/arch/landed_parent_1018/qfd_tt_ctlm_dv_lpf",
    "results/closure_loop/qfd_tt_head_static_h16c-h16c-ae6b0c59a",
    "results/rtl/ref_tile/qfd_tt_head_static_h16c/qfd_tt_head_static_h16c-h16c-ae6b0c59a",
-   "results/rtl/mu_qwen_1018/b1/rom"
+   "results/rtl/mu_qwen_1018/b1/rom",
+   "results/rtl/mu_qwen_1018/admission/F16_P2"
   ],
   "benches": [
    {
@@ -480,7 +513,8 @@
     "ss5",
     "ag5",
     "ctx_x",
-    "mu_fault"
+    "mu_fault",
+    "init_u0"
    ],
    "outputs": [
     "program_obs",
@@ -562,9 +596,19 @@
    "master": "ot_sram_1r1w_64x512_m1_r2c2",
    "clock_pin": "clk",
    "root": "ck_core"
+  },
+  "u_gi.g_op.u_leaf.g_op.g_banked.u_rom1": {
+   "master": "ot_rom_4096x72_m8",
+   "clock_pin": "clk",
+   "root": "ck_core"
+  },
+  "u_gi.g_op.u_leaf.g_op.g_banked.u_rom2": {
+   "master": "ot_rom_4096x72_m8",
+   "clock_pin": "clk",
+   "root": "ck_core"
   }
  },
- "raw_memory_note": "safe1: six raw64x512 SRAMs (two programme,fourper-user FIFO) plus op-start ROM are exact named ck_core sinks; h16c rawclock detach/tap contract unchanged. Source manifest covers all seven raw memory entries.",
+ "raw_memory_note": "Six64x512 SRAMs plus three4096x72 OPROMs; all nine exact named ck_core sinks; h16c contract unchanged.",
  "fill_reason": {
   "pin_bound": "777.6um external slot width retained;432um height fits three SRAM rows on43.2 lattice with51.84um row channels and N/S51.84/43.2um face bands. Six SRAMs+hard h16c+ROM139975um2 and historicalstd12246um2 give45.3% totalfill; actual successorstd area must replace estimate before finalgate."
  },
@@ -581,7 +625,7 @@
  "structural_recut_status": "Unifiedctx/FCTX+guard+CALPIPE integrated; direct LP timing/chunktool corrected proof pending; finite release programme capacity not yet qualified. This is a component candidate only.",
  "io_tcl": "physical/ref_tile/qfd_tt_ctlm_dv_safe1/assigned_pins.tcl",
  "reserved_rom_slots": {
-  "status": "Await actual expanded OPSEG generator instance paths; not declared macro instances yet",
+  "status": "Instantiated three-ROM expanded F16 component candidate; absolute INIT prefix adoption remains unbound.",
   "view": "physical/asap7_memory_macros/ot_rom_4096x72_m8",
   "size_um": [
    38.016,
@@ -604,5 +648,9 @@
   "horizontal_gap_um": 48.384,
   "child_gap_um": 36.72,
   "north_band_um": 66.69
- }
+ },
+ "post_stage_audits": [
+  "physical/common_flow/audit_same_edge_reset_copies.tcl"
+ ],
+ "landing_direct_residual_ps": 150
 }

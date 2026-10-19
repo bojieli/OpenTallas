@@ -1934,9 +1934,18 @@ def gen_hooks(s: dict, kd: str) -> dict:
     # boundary. In particular, POST_CTS must write a correct SDC for the next stage.
     post_plain = ([] if multi else [f"source /src/{QDM}/post_plain.tcl"]) + btcl
     pre_ref = (["estimate_parasitics -placement"] if multi else [f"source /src/{QDM}/pre_ref_skew.tcl"]) + btcl
-    stage_hooks = {"post_cts.tcl": post_plain, "post_grt.tcl": post_plain,
+    stage_hooks = {"post_cts.tcl": list(post_plain), "post_grt.tcl": list(post_plain),
                    "pre_drt.tcl": pre_ref, "pre_fill.tcl": pre_ref,
-                   "post_fill.tcl": post_plain}
+                   "post_fill.tcl": list(post_plain)}
+    # Read-only physical invariants after clock/data repair, with frozen source.
+    for rel in s.get("post_stage_audits", []):
+        if not isinstance(rel, str) or rel.startswith("/") or ".." in Path(rel).parts or not re.fullmatch(r"[A-Za-z0-9_./-]+", rel):
+            raise SpecError("post_stage_audits must name safe relative repo Tcl files")
+        if not (ROOT / rel).is_file():
+            raise SpecError(f"missing post-stage audit: {rel}")
+        for name in ("post_cts.tcl", "post_grt.tcl", "post_fill.tcl"):
+            stage_hooks[name].append(f"source /src/{rel}")
+        post_drt.append(f"source /src/{rel}")
     return {"pre_cts.tcl": "\n".join(pre_cts) + "\n", "pre_grt.tcl": "\n".join(pre_grt) + "\n",
             "post_drt.tcl": "\n".join(post_drt) + "\n",
             **{name: "\n".join(lines) + "\n" for name, lines in stage_hooks.items()},
@@ -2241,7 +2250,7 @@ def pin_balance_env(r: dict, lc: dict | None = None) -> list:
 
 def referenced_paths(s: dict, kd: str) -> list:
     """every repo file the routed flow reads (for the source-sync check of the gate)"""
-    out = [*s["sources"], *s.get("boundary_tcl", []), *s.get("pre_cts_extra", []), *s.get("pin_hook_before_flops", []), *s.get("pin_hook_after_flops", []), *s.get("pre_dpl_extra", []), f"{kd}/kit.env", f"{kd}/clock.sdc", f"{kd}/signoff.sdc", *([f"{kd}/signoff_ffrepair.sdc"] if io_hold_relief_ps(s) else []), f"{kd}/pdn.tcl", f"{kd}/pre_cts.tcl",
+    out = [*s["sources"], *s.get("boundary_tcl", []), *s.get("pre_cts_extra", []), *s.get("pin_hook_before_flops", []), *s.get("pin_hook_after_flops", []), *s.get("post_stage_audits", []), *s.get("pre_dpl_extra", []), f"{kd}/kit.env", f"{kd}/clock.sdc", f"{kd}/signoff.sdc", *([f"{kd}/signoff_ffrepair.sdc"] if io_hold_relief_ps(s) else []), f"{kd}/pdn.tcl", f"{kd}/pre_cts.tcl",
            *[f"{kd}/{f}" for f in ("post_cts.tcl", "post_grt.tcl", "pre_drt.tcl", "pre_fill.tcl", "post_fill.tcl")],
            f"{kd}/pre_grt.tcl", f"{kd}/post_drt.tcl", "tools/ref_tile/ref_route.sh",
            f"{QDM}/io_ref_skew.sdc", f"{QDM}/io_plain.sdc", f"{QDM}/repair_budget.tcl", f"{QDM}/pre_cts_skew.tcl",

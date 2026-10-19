@@ -16,7 +16,7 @@
   429.84
  ],
  "why": "spec outline (exact: the closed view's sub-slot)",
- "std_area_um2": 12246.4,
+ "std_area_um2": null,
  "layer_contract": {
   "children": {
    "ot_qfd_tt_ctlm_static_hr": "M5"
@@ -56,7 +56,8 @@
    "program_obs",
    "pw",
    "ctx_x",
-   "mu_fault"
+   "mu_fault",
+   "init_u0"
   ],
   "S": [
    "tl",
@@ -165,6 +166,32 @@
    "offtrack": 0
   },
   {
+   "kind": "macro",
+   "view": "physical/asap7_memory_macros/ot_rom_4096x72_m8",
+   "master": "ot_rom_4096x72_m8",
+   "inst": "u_gi.g_op.u_leaf.g_op.g_banked.u_rom1",
+   "idx": 0,
+   "x": 561.6,
+   "y": 302.4,
+   "w": 38.016,
+   "h": 62.91,
+   "orient": "R0",
+   "offtrack": 0
+  },
+  {
+   "kind": "macro",
+   "view": "physical/asap7_memory_macros/ot_rom_4096x72_m8",
+   "master": "ot_rom_4096x72_m8",
+   "inst": "u_gi.g_op.u_leaf.g_op.g_banked.u_rom2",
+   "idx": 0,
+   "x": 648.0,
+   "y": 302.4,
+   "w": 38.016,
+   "h": 62.91,
+   "orient": "R0",
+   "offtrack": 0
+  },
+  {
    "kind": "child",
    "view": "physical/ref_tile/qfd_tt_head_static_h16c/views/ot_qfd_tt_ctlm_static_hr",
    "master": "ot_qfd_tt_ctlm_static_hr",
@@ -182,8 +209,8 @@
   [
    "WARN",
    "fill",
-   "fill 45% = (macros/children 139975 + std 12246) / outline 335923 um2 (pin-bound: 777.6um external slot width retained;432um height fits three SRAM rows on43.2 lattice with51.84um row channels and N/S51.84/43.2um face bands. Six SRAMs+hard h16c+ROM139975um2 and historicalstd12246um2 give45.3% totalfill; actual successorstd area must replace estimate before finalgate.)",
-   ""
+   "parent kit without std_area_um2: fill not computed at gen (the gate measures it)",
+   "pass --area-um2 / std_area_um2 from the synthesis smoke"
   ]
  ],
  "referenced": [
@@ -204,6 +231,7 @@
   "physical/ref_tile/qfd_tt_ctlm_dv_safe1/lp_reset_copies.tcl",
   "physical/common_flow/same_edge_reset_copies.tcl",
   "physical/ref_tile/qfd_tt_ctlm_dv_safe1/lp_cone_regions.tcl",
+  "physical/common_flow/audit_same_edge_reset_copies.tcl",
   "physical/ref_tile/qfd_tt_ctlm_dv_safe1/kit.env",
   "physical/ref_tile/qfd_tt_ctlm_dv_safe1/clock.sdc",
   "physical/ref_tile/qfd_tt_ctlm_dv_safe1/signoff.sdc",
@@ -271,6 +299,14 @@
   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_ss.lib",
   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_ff.lib",
   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+  "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8.lef",
+  "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_ss.lib",
+  "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_ff.lib",
+  "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_tt.lib",
+  "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8.lef",
+  "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_ss.lib",
+  "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_ff.lib",
+  "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_tt.lib",
   "physical/ref_tile/qfd_tt_head_static_h16c/views/ot_qfd_tt_ctlm_static_hr/ot_qfd_tt_ctlm_static_hr.lef",
   "physical/ref_tile/qfd_tt_head_static_h16c/views/ot_qfd_tt_ctlm_static_hr/ot_qfd_tt_ctlm_static_hr_ss.lib",
   "physical/ref_tile/qfd_tt_head_static_h16c/views/ot_qfd_tt_ctlm_static_hr/ot_qfd_tt_ctlm_static_hr_ff.lib",

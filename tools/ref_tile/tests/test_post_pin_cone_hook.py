@@ -25,4 +25,25 @@ class PostPinConeHook(unittest.TestCase):
         with self.assertRaisesRegex(RT.SpecError,'safe relative'):
             RT.gen_pin_hooks(s)
 
+
+class PostStageAudit(unittest.TestCase):
+    def test_audits_follow_completed_physical_stages_and_are_frozen(self):
+        with tempfile.TemporaryDirectory() as d:
+            root=pathlib.Path(d)
+            (root/'audit.tcl').write_text('# read-only physical assertion')
+            s={'name':'fixture','kind':'tile','clock':'cts','recipe':1,
+               'pins':{},'route':{},'sources':[],'macros':[],'children':[],
+               'post_stage_audits':['audit.tcl']}
+            with patch.object(RT,'ROOT',root):
+                h=RT.gen_hooks(s,'fixture')
+                for stage in ['post_cts.tcl','post_grt.tcl','post_drt.tcl','post_fill.tcl']:
+                    self.assertTrue(h[stage].endswith('source /src/audit.tcl\n'))
+                self.assertNotIn('audit.tcl',h['pre_cts.tcl'])
+                self.assertIn('audit.tcl',RT.referenced_paths(s,'fixture'))
+    def test_unsafe_audit_path_is_rejected(self):
+        s={'name':'fixture','kind':'tile','clock':'cts','recipe':1,'pins':{},'route':{},
+           'post_stage_audits':['../outside.tcl']}
+        with self.assertRaisesRegex(RT.SpecError,'safe relative'):
+            RT.gen_hooks(s,'fixture')
+
 if __name__=='__main__':unittest.main()

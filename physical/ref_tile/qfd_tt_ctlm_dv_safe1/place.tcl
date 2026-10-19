@@ -49,8 +49,14 @@ puts "REF_TILE place: [$i getName] ot_sram_1r1w_64x512_m1_r2c2 at 43.2 302.4 R0"
 set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_64x512_m1_r2c2 {u_gi.u_cal.g_fifo[3].u_fifo}]
 $i setOrient R0; $i setLocation [expr {round(259.2 * $dbu)}] [expr {round(302.4 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_sram_1r1w_64x512_m1_r2c2 at 259.2 302.4 R0"
+set i [ot_ref_pick $ot_ref_by ot_rom_4096x72_m8 {u_gi.g_op.u_leaf.g_op.g_banked.u_rom1}]
+$i setOrient R0; $i setLocation [expr {round(561.6 * $dbu)}] [expr {round(302.4 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_rom_4096x72_m8 at 561.6 302.4 R0"
+set i [ot_ref_pick $ot_ref_by ot_rom_4096x72_m8 {u_gi.g_op.u_leaf.g_op.g_banked.u_rom2}]
+$i setOrient R0; $i setLocation [expr {round(648.0 * $dbu)}] [expr {round(302.4 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_rom_4096x72_m8 at 648.0 302.4 R0"
 set i [ot_ref_pick $ot_ref_by ot_qfd_tt_ctlm_static_hr {u_hr}]
 $i setOrient R0; $i setLocation [expr {round(475.2 * $dbu)}] [expr {round(43.2 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_qfd_tt_ctlm_static_hr at 475.2 43.2 R0"
 set nb 0; dict for {k v} $ot_ref_by { incr nb [llength $v] }
-if {$nb != 8} { error "ref_tile place: expected 8 macros, netlist has $nb" }
+if {$nb != 10} { error "ref_tile place: expected 10 macros, netlist has $nb" }

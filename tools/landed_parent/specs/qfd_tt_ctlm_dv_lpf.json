@@ -47,7 +47,11 @@
   "NU": 4,
   "OPSEG": 1,
   "CTX_SRC": 1,
-  "FCTX": 1
+  "FCTX": 1,
+  "OPSEG_EXPANDED": 1,
+  "INIT_U0": 1,
+  "INIT_FIRST": 52,
+  "INIT_CNT": 3
  },
  "out_dir": "rtl/qwen_dv/lp",
  "record_dir": "results/arch/landed_parent_1018/qfd_tt_ctlm_dv_lpf",
@@ -108,5 +112,8 @@
   "reset_cycles": 16,
   "sim": "verilator"
  },
- "mut_child": "u_hr"
+ "mut_child": "u_hr",
+ "landing_direct_timing": true,
+ "landing_chunk_bits": 24,
+ "residual_ps": 150
 }
