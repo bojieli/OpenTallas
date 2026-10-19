@@ -268,7 +268,22 @@ def build(a):
                 continue
             leaves = rt.cluster(sinks)
             b_ = rt.Builder(g, 'dc_' + t['name'], r_of=lambda key: (target(*key.rsplit('/', 1)) or [0, 0, 0])[2])
-            model = b_.build(root, rxy, leaves)
+            txy = rxy
+            if t.get('local_root'):
+                # STAND-IN regional clock entry (landed-regions standard): the region tree starts at a local root
+                # (sink median, or the given [x, y]) instead of the shared generator pin; the spine from the generator
+                # to it is NOT built here (the GEN owes a regional clock entry / forwarded spine).  The clock is defined
+                # at the local root buffer input, so only the region tree is measured.
+                lr = t['local_root']
+                if isinstance(lr, (list, tuple)):
+                    txy = (float(lr[0]), float(lr[1]))
+                else:
+                    xs = sorted(z[2] for z in sinks); ys = sorted(z[3] for z in sinks)
+                    txy = (xs[len(xs) // 2], ys[len(ys) // 2])
+                if len(ts) != 1:
+                    raise ValueError(f'local_root needs one tree per root ({root})')
+                rec.setdefault('local_root_xy', {})[root] = [round(txy[0], 3), round(txy[1], 3)]
+            model = b_.build(root, txy, leaves)
             for s in sinks:
                 sink_pins[s[0]] = dict(tree=t['name'], master=s[1], x=round(s[2], 3), y=round(s[3], 3),
                                       R=target(s[1], pin_key(s[0])[1]))
@@ -340,7 +355,8 @@ def build(a):
             continue      # from co driving 350-460 um to the first trunk repeater) drives one buffer beside it
         rb = root_it.getBBox()
         rn = f"dc_root_{ts[0]['name']}"
-        ri = mk(rn, rt.BUF, (rb.xMin() + rb.xMax()) / 2 / u, (rb.yMin() + rb.yMax()) / 2 / u)
+        lxy = rec.get('local_root_xy', {}).get(root)
+        ri = mk(rn, rt.BUF, *(lxy if lxy else ((rb.xMin() + rb.xMax()) / 2 / u, (rb.yMin() + rb.yMax()) / 2 / u)))
         insts[rn] = ri
         rec['cell_tree'][rn] = ''
         nn = odb.dbNet.create(blk, f'n_{rn}')
@@ -352,7 +368,14 @@ def build(a):
             if rec['parent'].get(c) == root:
                 rec['parent'][c] = rn
         ri.findITerm('Y').connect(nn)
-        ri.findITerm('A').connect(rnet)
+        if lxy:
+            # local_root stand-in: the generator->region spine is not built; the root buffer input sits on its own
+            # (undriven) net so STA sees an ideal clock source there, not a mm-long unbuffered wire from the generator
+            sn = odb.dbNet.create(blk, f'n_{rn}_spine')
+            sn.setSigType('CLOCK')
+            ri.findITerm('A').connect(sn)
+        else:
+            ri.findITerm('A').connect(rnet)
         rec['parent'][rn] = root
         rec.setdefault('root_buffer', {})[root] = rn
         log('root buffer', rn, 'drives', len(loads), 'tree inputs of', root)
