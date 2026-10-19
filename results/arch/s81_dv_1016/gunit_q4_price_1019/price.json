@@ -1,0 +1,312 @@
+{
+ "scope": "ROOT_AUTHORIZED_BOUNDED_Q4_MODEL_PRICING_ONLY_NO_SOURCE_GATE_OR_ADOPTION",
+ "model_source_commit": "e6269d90356f61cf4e2a686e48908eb77f5b548c",
+ "mapped_source": "12ab196b6",
+ "die_case": "MU1 eightSerDes9130instances; MU2copyB10slots not independently censused here",
+ "replicas": {
+  "dsdv_gunit_per_die": 1,
+  "l5_per_parent": 1,
+  "q4_l5_per_die": 1,
+  "proof_plan_sha256": "f81acf98fc7f0723a6b360426237ba497435d0b8490955275438eeb09219348e",
+  "proof_parent_source": "rtl/dsrom_sys/s81_dv/unit/dsdv_gunit.sv",
+  "proof_parent_source_sha256": "1d6cc13202a130e0a8b00c71611801e18abf7028e6eb67a20a1090b11c7c692b"
+ },
+ "parent_reservation": {
+  "name": "gunit",
+  "master": "dsdv_gunit",
+  "kind": "unit",
+  "group": "void",
+  "x": 13837.924000000003,
+  "y": 12028.5,
+  "w": 680.0,
+  "h": 4035.294117647059,
+  "reg": false
+ },
+ "parent_area_um2": 2744000.0,
+ "parent_view": null,
+ "parent_fit": "UNPROVEN; wholeparent is estimated standin, no shrinking or fit credit",
+ "leaf_inventory": [
+  {
+   "module": "dsdv_gunit_l5",
+   "count_per_parent": 1,
+   "lef_path": "physical/ref_tile/dsdv_gunit_l5/views/dsdv_gunit_l5/dsdv_gunit_l5.lef",
+   "available": false
+  },
+  {
+   "module": "dsdv_gunit_l5f",
+   "count_per_parent": 1,
+   "lef_path": "physical/ref_tile/dsdv_gunit_l5f/views/dsdv_gunit_l5f/dsdv_gunit_l5f.lef",
+   "available": true,
+   "size_um": [
+    151.2,
+    151.2
+   ],
+   "sha256": "c6dc4a1e7f57ef8338e31502c8825073202579f53c8cb52015798cdb8cc7b2c3"
+  },
+  {
+   "module": "dsdv_gunit_l4",
+   "count_per_parent": 1,
+   "lef_path": "physical/ref_tile/dsdv_gunit_l4/views/dsdv_gunit_l4/dsdv_gunit_l4.lef",
+   "available": true,
+   "size_um": [
+    345.6,
+    64.8
+   ],
+   "sha256": "0de9b57fb4295af2c5509cead307c87feace76cd7159d2c4a7a813786566ddd7"
+  },
+  {
+   "module": "dsdv_gunit_l4r",
+   "count_per_parent": 1,
+   "lef_path": "physical/ref_tile/dsdv_gunit_l4r/views/dsdv_gunit_l4r/dsdv_gunit_l4r.lef",
+   "available": true,
+   "size_um": [
+    129.6,
+    129.6
+   ],
+   "sha256": "34dc8cae92da7db240a5c63f7d39ec7734d0147884c42374d38058269be2ae9e"
+  },
+  {
+   "module": "dsdv_gunit_l0",
+   "count_per_parent": 1,
+   "lef_path": "physical/ref_tile/dsdv_gunit_l0/views/dsdv_gunit_l0/dsdv_gunit_l0.lef",
+   "available": true,
+   "size_um": [
+    345.6,
+    172.8
+   ],
+   "sha256": "aa00a2f7328f5127da7127d1bd5dcc919863f697c3dcb9c697c38d6fd94b2fb9"
+  },
+  {
+   "module": "dsdv_gunit_l0r",
+   "count_per_parent": 1,
+   "lef_path": "physical/ref_tile/dsdv_gunit_l0r/views/dsdv_gunit_l0r/dsdv_gunit_l0r.lef",
+   "available": true,
+   "size_um": [
+    172.8,
+    172.8
+   ],
+   "sha256": "35e0e5a51601540f3bfc929a00df43897a708ee910472bd7d124a0966c191cb3"
+  },
+  {
+   "module": "dsdv_gunit_l2",
+   "count_per_parent": 1,
+   "lef_path": "physical/ref_tile/dsdv_gunit_l2/views/dsdv_gunit_l2/dsdv_gunit_l2.lef",
+   "available": true,
+   "size_um": [
+    345.6,
+    172.8
+   ],
+   "sha256": "3ba2ce294fc9bc54e2bfc5bbc9bc3be4591b77829af6a77e9315edc7fe1fae44"
+  },
+  {
+   "module": "dsdv_gunit_l1",
+   "count_per_parent": 1,
+   "lef_path": "physical/ref_tile/dsdv_gunit_l1/views/dsdv_gunit_l1/dsdv_gunit_l1.lef",
+   "available": false
+  },
+  {
+   "module": "dsdv_gunit_l3",
+   "count_per_parent": 1,
+   "lef_path": "physical/ref_tile/dsdv_gunit_l3/views/dsdv_gunit_l3/dsdv_gunit_l3.lef",
+   "available": true,
+   "size_um": [
+    345.6,
+    172.8
+   ],
+   "sha256": "cf3a9d3b3a37e0470957073a91a33e91696fafb72196748afa7b2681513ed108"
+  }
+ ],
+ "new_leaf_model": {
+  "size_um": [
+   388.8,
+   432.0
+  ],
+  "area_um2": 167961.6,
+  "model_baseline_size_um": [
+   259.2,
+   259.2
+  ],
+  "model_baseline_area_um2": 67184.64,
+  "area_ratio": 2.5,
+  "delta_area_um2_per_die": 100776.96,
+  "std_mass_um2": 35600.7879,
+  "macro_mass_um2": 6643.074816,
+  "total_reserved_mass_um2": 42243.862716,
+  "std_band": [
+   2.16,
+   129.6,
+   386.64,
+   302.4
+  ],
+  "std_band_fill": 0.5298947482638889,
+  "SRAM_banks": 12,
+  "FF_bound": 23096,
+  "macro_clock_pins": 24,
+  "useful_copy_FF_added": 3133,
+  "incremental_clock_cap_ff": 1801.908625,
+  "proof": "candidate outline/storage/CTS/PG/source timing not qualified"
+ },
+ "baseline_warning": "6e355 floorplan forL5 was345.6x302.4 (noLEF); model12ab259.2square is a different diagnostic source, neither is accepted L5 view",
+ "calendar": {
+  "D0": [
+   17,
+   18
+  ],
+  "DS": [
+   15,
+   16
+  ],
+  "LAT": [
+   602,
+   642
+  ],
+  "HOP_N": [
+   975,
+   1015
+  ],
+  "HOP_S": [
+   973,
+   1013
+  ],
+  "extra_edges_per_HC": 40,
+  "HC_jobs_per_serial_layer": 2,
+  "extra_edges_per_serial_layer": 80,
+  "extra_ns_per_HC_at_model1p2GHz": 33.333333333333336,
+  "extra_ns_per_layer_at_model1p2GHz": 66.66666666666667,
+  "gate0p77ns_diagnostic_extra_ns_per_HC": 30.8,
+  "golden_and_old_age_mutants": "new source proof required; old975/973 evidence cannotqualify1015/1013"
+ },
+ "parent_external_links": [
+  {
+   "id": "tvN_s_3S",
+   "lane_bits": 276,
+   "relay_stations": 5,
+   "model_length_um": 2033.6,
+   "model_max_hop_um": 339.0,
+   "endpoint_coordinates": [
+    [
+     128,
+     "vN",
+     14162.900000000001,
+     9994.9,
+     "box"
+    ],
+    [
+     172,
+     "vS",
+     14162.900000000001,
+     12028.5,
+     "box"
+    ]
+   ],
+   "scope": "old provisional parent boundary, not new child pin/routed reach"
+  },
+  {
+   "id": "tvS_gunit",
+   "lane_bits": 276,
+   "relay_stations": 5,
+   "model_length_um": 2033.6,
+   "model_max_hop_um": 339.0,
+   "endpoint_coordinates": [
+    [
+     172,
+     "vS",
+     14192.900000000001,
+     12028.5,
+     "box"
+    ],
+    [
+     128,
+     "vN",
+     14192.900000000001,
+     9994.9,
+     "box"
+    ]
+   ],
+   "scope": "old provisional parent boundary, not new child pin/routed reach"
+  },
+  {
+   "id": "tvN_gunit",
+   "lane_bits": 276,
+   "relay_stations": 1,
+   "model_length_um": 798.3,
+   "model_max_hop_um": 399.1999999999971,
+   "endpoint_coordinates": [
+    [
+     172,
+     "vN",
+     14162.900000000001,
+     16063.8,
+     "box"
+    ],
+    [
+     129,
+     "vS",
+     14162.900000000001,
+     16862.1,
+     "box"
+    ]
+   ],
+   "scope": "old provisional parent boundary, not new child pin/routed reach"
+  },
+  {
+   "id": "tvS_s_3N",
+   "lane_bits": 276,
+   "relay_stations": 1,
+   "model_length_um": 798.3,
+   "model_max_hop_um": 399.1999999999971,
+   "endpoint_coordinates": [
+    [
+     129,
+     "vS",
+     14192.900000000001,
+     16862.1,
+     "box"
+    ],
+    [
+     172,
+     "vN",
+     14192.900000000001,
+     16063.8,
+     "box"
+    ]
+   ],
+   "scope": "old provisional parent boundary, not new child pin/routed reach"
+  },
+  {
+   "id": "cw_seqhost",
+   "lane_bits": 276,
+   "relay_stations": 23,
+   "model_length_um": 9549.4,
+   "model_max_hop_um": 397.90000000000146,
+   "endpoint_coordinates": [
+    [
+     174,
+     "cw",
+     17969.0,
+     16612.1,
+     "box"
+    ],
+    [
+     172,
+     "cw",
+     14517.900000000001,
+     15913.8,
+     "box"
+    ]
+   ],
+   "scope": "old provisional parent boundary, not new child pin/routed reach"
+  }
+ ],
+ "external_relay_stations_model": 35,
+ "external_relay_bitstages_model": 9660,
+ "mandatory_parent_regrant": [
+  "Exact all9 childsource+LEF closure; L5 andL1 unavailable in selected baseline",
+  "Actual child origins on43.2lattice, measuredstd and keepout/channel proof, no area-onlyfit",
+  "Allinternal andexternal register/boundary pin-stage Manhattan<=405 and physical escape; candidate diagonal820.8 alone fails toprove",
+  "Every child clock reference TT/FF and native source/capture/macro electrical; added1.802pF requires freshCTS, no reuse",
+  "PG real12 SRAM macro power pins/vias+full parentVDD/VSS connectivity, signal/PG layers and fullface<=6pins/um",
+  "Reset raw2 ownership/async assertion pulse/recovery/corner proof, localfanoutcopies +parent firstvalid",
+  "Update compilerCTL/END/HC reservation anddieschedule ages together, coherent data+valid, then rederive all changed link station/calendar counts"
+ ]
+}
