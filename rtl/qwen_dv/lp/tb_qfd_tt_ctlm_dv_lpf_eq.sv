@@ -24,7 +24,8 @@ module tb_qfd_tt_ctlm_dv_lpf_eq;
         .hr(b_hr), .cmd(b_cmd), .ss5(ss5), .ag5(ag5), .emb_start(b_es), .emb_token(b_et), .cf(b_cf));
     wire [2047:0] va = {a_program_obs, a_csr, a_lcv, a_nt, a_np, a_cs, a_cpo, a_cdo, a_cir, a_dc, a_nc, a_hr, a_cmd, a_es, a_et, a_cf};
     wire [2047:0] vb = {b_program_obs, b_csr, b_lcv, b_nt, b_np, b_cs, b_cpo, b_cdo, b_cir, b_dc, b_nc, b_hr, b_cmd, b_es, b_et, b_cf};
-    integer cyc, bad, nc;
+    integer cyc, bad, nc, act, act_nc, act_cmd, act_hr;
+    reg [2047:0] vprev;
     task rnd; begin
         pw = {$urandom, $urandom, $urandom}; dh = {$urandom, $urandom, $urandom, $urandom, $urandom, $urandom};
         // stage starts / program writes sparse enough that the calendar and head run segments, not only faults
@@ -33,18 +34,20 @@ module tb_qfd_tt_ctlm_dv_lpf_eq;
         ss5 = {$urandom, $urandom, $urandom, $urandom}; ag5 = $urandom; ag5[8] = ($urandom % 53) == 0;
     end endtask
     initial begin
-        bad = 0; nc = 0; rnd;
+        bad = 0; nc = 0; act = 0; act_nc = 0; act_cmd = 0; act_hr = 0; vprev = 0; rnd;
         for (cyc = 0; cyc < CYC; cyc = cyc + 1) begin
             @(negedge ck);
             if (cyc == 16) rst_n = 1'b1;
             rnd;
             if (cyc > 20) begin
-                nc = nc + 1;
+                nc = nc + 1; if (va !== vprev) act = act + 1; if (va[968:589] !== vprev[968:589]) act_nc = act_nc + 1;
+                vprev = va;
                 if (va !== vb) begin bad = bad + 1;
                     if (bad <= 5) $display("EQ_MISMATCH cycle=%0d dc %h/%h hr_lo %h/%h cmd %h/%h cf %b/%b", cyc, a_dc, b_dc,
                         a_hr[72:0], b_hr[72:0], a_cmd, b_cmd, a_cf, b_cf); end
             end
         end
+        $display("LPF_EQ ACTIVITY output-vector changes %0d of %0d cycles; native_cmd field changes %0d", act, nc, act_nc);
         if (bad == 0 && nc > 0) $display("LPF_EQ PASS DMUT=%0d compared=%0d", DMUT, nc);
         else $display("LPF_EQ FAIL DMUT=%0d mismatches=%0d of %0d", DMUT, bad, nc);
         $finish;

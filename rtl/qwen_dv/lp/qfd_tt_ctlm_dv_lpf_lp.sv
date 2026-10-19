@@ -3,7 +3,7 @@
 // LANDED PARENT (PARENTS-LANDED 10-18): 2 clock regions (core, hr), 20 landed crossings (D 4, E = K = 2, +3 edges each), 0 alignment pads,
 // regional reset runs depth 3 (+ t(child) per child).  Record: results/arch/landed_parent_1018/qfd_tt_ctlm_dv_lpf/qfd_tt_ctlm_dv_lpf_lp_record.json
 // MUT (bench only; 0 in every kit): 1 = landing 0 bypassed, 2 = landing 0 read K+1, 3 = pad 0 one stage short,
-//     4 = child reset run of 'u_gi' one stage long
+//     4 = child reset run of 'u_hr' one stage long
 module qfd_tt_ctlm_dv_lpf_lp #(
     
     parameter integer XPF_TRANSPORT_EDGES = -1,
@@ -163,8 +163,8 @@ module qfd_tt_ctlm_dv_lpf_lp #(
     ot_pl_land_w #(.W(((17) - (0) + 1)), .D(4)) u_lpl_19_w (.ck(ck_core), .rsi(lpr_core), .i(g_emb_token), .bank(lpl_19_bank), .epo(lpl_19_epo), .vld(lpl_19_vld));
     ot_pl_land_r #(.W(((17) - (0) + 1)), .D(4), .K(2)) u_lpl_19_r (.ck(ck_hr), .rsi(lpr_hr), .bank(lpl_19_bank), .epo(lpl_19_epo), .vld(lpl_19_vld), .o(lpl_19_o));
     assign g_emb_token__l_hr = lpl_19_o;
-    wire lpr_c_u_gi;  ot_pl_pad #(.W(1), .N((MUT == 4) ? 1 : 0)) u_lprc_u_gi (.ck(ck_core), .d(lpr_core), .q(lpr_c_u_gi));   // t(u_gi) = 0
-    wire lpr_c_u_hr;  ot_pl_pad #(.W(1), .N(3)) u_lprc_u_hr (.ck(ck_hr), .d(lpr_hr), .q(lpr_c_u_hr));   // t(u_hr) = 3
+    wire lpr_c_u_gi;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_gi (.ck(ck_core), .d(lpr_core), .q(lpr_c_u_gi));   // t(u_gi) = 0
+    wire lpr_c_u_hr;  ot_pl_pad #(.W(1), .N((MUT == 4) ? 4 : 3)) u_lprc_u_hr (.ck(ck_hr), .d(lpr_hr), .q(lpr_c_u_hr));   // t(u_hr) = 3
     wire lpr_c_u_go;  ot_pl_pad #(.W(1), .N(3)) u_lprc_u_go (.ck(ck_hr), .d(lpr_hr), .q(lpr_c_u_go));   // t(u_go) = 3
     wire lpr_c_u_thru;  ot_pl_pad #(.W(1), .N(3)) u_lprc_u_thru (.ck(ck_hr), .d(lpr_hr), .q(lpr_c_u_thru));   // t(u_thru) = 3
     // ---- children (clock pins -> their region root; reset pins -> their reset run; landed / padded inputs)
