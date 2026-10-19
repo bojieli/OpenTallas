@@ -8,12 +8,14 @@ module tb_hbm_su_programme_pslice_c5_flat_eq;
   reg [15:0] cfg_bank = 0, length = 0;  reg [6:0] cfg_row = 0;  reg [255:0] cfg_data = 0;
   wire a_busy, a_valid, a_done, a_fault, b_busy, b_valid, b_done, b_fault;
   wire [15:0] a_ei, b_ei;  wire [2421:0] a_cmd, b_cmd;
+  wire [767:0] b_cl;  wire [1141:0] b_ct;  wire [511:0] b_cb;
+  assign b_cmd = {b_ct, b_cb[511:256], b_cl, b_cb[255:0]};   // the per-region command split re-assembled
   ot_hbm_su_programme_pslice_c5 #(.MUT(MUT)) u_ref (.clk(clk), .rst_n(rst_n), .cfg_we(cfg_we), .cfg_bank(cfg_bank),
     .cfg_row(cfg_row), .cfg_data(cfg_data), .start(start), .length(length), .busy(a_busy), .valid(a_valid), .done(a_done),
     .fault(a_fault), .edge_index(a_ei), .command(a_cmd));
   ot_hbm_su_programme_pslice_c5_flat u_flat (.clk(clk), .rst_n(rst_n), .cfg_we(cfg_we), .cfg_bank(cfg_bank),
     .cfg_row(cfg_row), .cfg_data(cfg_data), .start(start), .length(length), .busy(b_busy), .valid(b_valid), .done(b_done),
-    .fault(b_fault), .edge_index(b_ei), .command(b_cmd));
+    .fault(b_fault), .edge_index(b_ei), .command_l(b_cl), .command_t(b_ct), .command_b(b_cb));
   integer cyc, bad = 0, nc = 0, nv = 0, nf = 0, nz = 0;
   initial begin
     for (cyc = 0; cyc < 20000; cyc = cyc + 1) begin

@@ -5,11 +5,17 @@
 // ot_hbm_su_programme_pghead with the hardened head view's parameters (NC 10, OREG/FREG/HRLY/DLAT 1, CLAT 2).  Same ports
 // and same cycle behaviour as ot_hbm_su_programme_pslice_c5 (bench tb_pslice_c5_flat_eq).  Per-column status nets so
 // every net has one driver region.
+// 10-18 PL-PSLICE (PL-KIT form): the 2,422-bit command bus is split per clock region so every output port has ONE
+// driver region: command_l = {cm3, cm2, cm1} (L row), command_t = {cm9[117:0], cm8, cm7, cm6, cm5} (top S row),
+// command_b = {cm4, cm0} (bottom S pair).  The generate form's bus is
+//   command == {command_t, command_b[511:256], command_l, command_b[255:0]}
+// (the parent die / pslice_q wrapper concatenates; tb_hbm_su_programme_pslice_c5_flat_eq compares exactly that).
 module ot_hbm_su_programme_pslice_c5_flat (
     input logic clk, rst_n,
     input logic cfg_we, input logic [15:0] cfg_bank, input logic [6:0] cfg_row, input logic [255:0] cfg_data,
     input logic start, input logic [15:0] length,
-    output logic busy, valid, done, fault, output logic [15:0] edge_index, output logic [2421:0] command);
+    output logic busy, valid, done, fault, output logic [15:0] edge_index,
+    output logic [767:0] command_l, output logic [1141:0] command_t, output logic [511:0] command_b);
     wire [9:0] we;  wire any;  wire [4:0] bank;  wire [6:0] row;  wire [255:0] data;
     wire bs0, vl0, dn0, ft0;  wire [15:0] ei0;  wire [255:0] cm0;
     wire bs1, vl1, dn1, ft1;  wire [15:0] ei1;  wire [255:0] cm1;
@@ -47,5 +53,7 @@ module ot_hbm_su_programme_pslice_c5_flat (
         .l_valid({vl9, vl8, vl7, vl6, vl5, vl4, vl3, vl2, vl1, vl0}),
         .o_we(we), .o_any(any), .o_bank(bank), .o_row(row), .o_data(data), .fault(fault));
     assign busy = bs0;  assign valid = vl0;  assign done = dn0;  assign edge_index = ei0;
-    assign command = {cm9[117:0], cm8, cm7, cm6, cm5, cm4, cm3, cm2, cm1, cm0};
+    assign command_l = {cm3, cm2, cm1};
+    assign command_t = {cm9[117:0], cm8, cm7, cm6, cm5};
+    assign command_b = {cm4, cm0};
 endmodule

@@ -34,7 +34,7 @@
     86.4,
     561.6
    ],
-   "why": "head (configuration pin stage + column decode + fault OR) alone at the W end of the central channel, beside the W-face cfg pins: every leaf region is landed from it alike (no alignment pads)"
+   "why": "head (configuration pin stage + column decode + fault OR) alone at the W end of the central channel, beside the W-face cfg pins: every leaf region is landed from it alike (no alignment pads); its write rings are fenced beside it (kit fence h)"
   },
   {
    "name": "l",
@@ -47,45 +47,47 @@
     604.8,
     270.0
    ],
-   "why": "the three L leaves (13 dictionary banks, boundary insertion TT 483 / FF 395), bottom-left row"
+   "why": "the three L leaves (13 dictionary banks, boundary insertion TT 442 / FF 361), bottom-left row; clock entry S face at c2's clk pin"
   },
   {
-   "name": "sw",
+   "name": "t",
    "insts": [
     "u_c5",
     "u_c6",
-    "u_c7"
-   ],
-   "centre": [
-    626.4,
-    777.6
-   ],
-   "why": "three S leaves (TT 310 / FF 253), top-left row (MX)"
-  },
-  {
-   "name": "se",
-   "insts": [
-    "u_c0",
-    "u_c4",
+    "u_c7",
     "u_c8",
     "u_c9"
    ],
    "centre": [
-    1512.0,
-    475.2
+    972.0,
+    777.6
    ],
-   "why": "four S leaves on the E side (bottom c0 c4 R0, top c8 c9 MX); column 0 drives busy / valid / done / edge_index"
+   "why": "10-18 PL-KIT re-plan: the whole top S row (5 S leaves, TT 293 / FF 239) is ONE region with its entry on the N face at c7's clk pin (every S clk pin sits on the N face of this MX row); replaces sw {c5,c6,c7} + the top half of se whose E-face entry fed clk pins 950 um apart (ck_se macro pins 645..661 ps)"
+  },
+  {
+   "name": "b",
+   "insts": [
+    "u_c0",
+    "u_c4"
+   ],
+   "centre": [
+    1533.6,
+    151.2
+   ],
+   "why": "10-18 PL-KIT re-plan: the bottom S pair (c0 drives busy / valid / done / edge_index) with its entry on the S face between the two clk pins"
   }
  ],
  "port_regions": {
   "start": "h",
   "length": "h",
-  "command": "se",
-  "busy": "se",
-  "valid": "se",
-  "done": "se",
-  "edge_index": "se",
-  "fault": "h"
+  "fault": "h",
+  "command_l": "l",
+  "command_t": "t",
+  "command_b": "b",
+  "busy": "b",
+  "valid": "b",
+  "done": "b",
+  "edge_index": "b"
  },
  "lag_pins": [
   {
@@ -98,7 +100,7 @@
   }
  ],
  "D": 4,
- "E": 2,
+ "E": 3,
  "bench": {
   "cycles": 20000,
   "reset_cycles": 16,
@@ -112,8 +114,9 @@
    "length": "16'(1 + $urandom % 120)"
   },
   "mut_waivers": {
-   "4": "PL-PSLICE bench 10-18 (ot-epyc5): MUT 4 (u_c0 reset run one stage long) PASSES lockstep over 20,000 edges because every child of this parent is reset-phase-insensitive: no free-running state (the producer is idle until a start; SRAM is not reset), so one more reset edge is invisible unless a write lands on exactly that edge. The reset offsets themselves are proven by MUT 0 (every child reset delayed t(child) + RB) and the flat-eq bench."
+   "4": "PL-PSLICE bench 10-18: MUT 4 (the first reset child's reset run one stage long) PASSES lockstep over 20,000 edges because every child of this parent is reset-phase-insensitive: no free-running state (the producer is idle until a start; SRAM is not reset), so one more reset edge is invisible unless a write lands on exactly that edge. The reset offsets themselves are proven by MUT 0 (every child reset delayed t(child) + RB) and the flat-eq bench."
   }
  },
- "floorplan": "tools/landed_parent/specs/pslice_c5_kit.py (1900.8 x 950.4: bottom row R0 L c1 c2 c3 + S c0 c4, central channel y 496.8..648 with the head at the W end, top row MX S c5..c9)"
+ "floorplan": "tools/landed_parent/specs/pslice_c5_kit.py (1900.8 x 950.4: bottom row R0 L c1 c2 c3 + S c0 c4, central channel y 496.8..648 with the head at the W end, top row MX S c5..c9; regions h / l / t / b)",
+ "why_E": "10-18 PL-KIT re-plan: E = K = 3 (+4 edges per landing, was +3): the write rings are fenced beside the head at the W end of the channel, so the ring -> read hop carries the whole run (up to ~1.7 mm to the E ends of the t and b regions, ~1.1-1.4 ns/mm repeated); 3 T leaves ~2.4 ns. Owner 10-18: landing latency cost accepted."
 }

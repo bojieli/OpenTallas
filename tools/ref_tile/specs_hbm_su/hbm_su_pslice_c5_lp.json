@@ -7,19 +7,92 @@
   "rtl/common/landed_parent/ot_pl_land.sv"
  ],
  "params": {},
- "clock": "cts",
+ "clock": "multiple_cts_roots",
  "clock_port": "ck_h",
  "clock_ports": [
   "ck_h",
   "ck_l",
-  "ck_sw",
-  "ck_se"
+  "ck_t",
+  "ck_b"
  ],
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_h"
+   ],
+   "inputs": [
+    "cfg_we",
+    "cfg_bank",
+    "cfg_row",
+    "cfg_data",
+    "start",
+    "length",
+    "rst_n"
+   ],
+   "outputs": [
+    "fault"
+   ]
+  },
+  "l": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_l"
+   ],
+   "inputs": [],
+   "outputs": [
+    "command_l"
+   ]
+  },
+  "t": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_t"
+   ],
+   "inputs": [],
+   "outputs": [
+    "command_t"
+   ]
+  },
+  "b": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_b"
+   ],
+   "inputs": [],
+   "outputs": [
+    "command_b",
+    "busy",
+    "valid",
+    "done",
+    "edge_index"
+   ]
+  }
+ },
+ "landed_record": "results/arch/landed_parent_1018/pslice_c5/ot_hbm_su_programme_pslice_c5_lp_record.json",
  "reset_ports": [
   "rst_n"
- ],
- "sdc_extra": [
-  "rtl/hbm_accel/generic/adapters/static_su/programme/landed/ot_hbm_su_programme_pslice_c5_lp.sdc"
  ],
  "outline": {
   "w": 1900.8,
@@ -142,12 +215,14 @@
  "inter": [],
  "pins": {
   "S": [
-   "command",
+   "command_l",
+   "command_b",
    "busy",
    "valid",
    "done",
    "edge_index",
-   "ck_l"
+   "ck_l",
+   "ck_b"
   ],
   "W": [
    "cfg_data",
@@ -161,10 +236,8 @@
    "ck_h"
   ],
   "N": [
-   "ck_sw"
-  ],
-  "E": [
-   "ck_se"
+   "command_t",
+   "ck_t"
   ]
  },
  "io_tcl": "tools/ref_tile/specs_hbm_su/hbm_su_pslice_c5_lp_pins.tcl",
@@ -176,30 +249,36 @@
   "pin_h": "M4",
   "pin_v": "M3 M5",
   "hold_margin_ns": 0.03,
-  "io_hold_margin_ns": 0.0
+  "io_hold_margin_ns": 0.03
  },
  "recipe": 4,
  "inhold": false,
  "outhold": false,
- "io_flop_at_pins": false,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "pin_hook_before_flops": [
+  "tools/ref_tile/specs_hbm_su/hbm_su_pslice_c5_lp_fences.tcl"
+ ],
  "pin_regs": {
   "enable": false,
   "reason": "every parent input lands on a child pin register (head c_* / leaf start-length stage) or a landing ring in its region; every output leaves a child register (leaf command / status, head fault); a kit flop stage would add an edge the landed record does not price"
  },
- "slot_change_request": "H-D4G pgp_<q>: slot 939.6 x 760.32 (flat pslice_q4) -> 1900.8 x 950.4 landed cluster (10 leaves 1.03 mm^2 incl. the 345.6-wide L leaf + head + 41 landings); cfg/start/length/fault/rst_n W face, command split S (cols 1,2,3,0,4) / N (cols 5..9) under / over each leaf, busy/valid/done/edge_index S under column 0; 4 region clocks ck_h W / ck_l S / ck_sw N / ck_se E",
+ "slot_change_request": "H-D4G pgp_<q>: slot 939.6 x 760.32 (flat pslice_q4) -> 1900.8 x 950.4 landed cluster (10 leaves 1.03 mm^2 incl. the 345.6-wide L leaf + head + 41 landings); cfg/start/length/fault/rst_n W face; PORT CHANGE: command[2421:0] -> command_l[767:0] (S, cols 1..3) + command_b[511:0] (S, cols 0,4) + command_t[1141:0] (N, cols 5..9); the parent re-assembles command = {command_t, command_b[511:256], command_l, command_b[255:0]}; busy/valid/done/edge_index S under column 0; 4 region clocks ck_h W / ck_l S / ck_b S / ck_t N, each timed on its own region (command_l on ck_l, command_t on ck_t, command_b + status on ck_b, fault on ck_h); every output +4 edges, reset release +6",
  "why_floorplan": "two leaf rows facing one configuration channel: the head broadcasts east along it, every leaf's cfg face touches it, every command bit leaves straight through its own face; regions by insertion class and placement (L leaves TT 483 vs S 310): h = head, l = L row, sw = W S trio, se = E S quad",
  "landed": {
   "record": "results/arch/landed_parent_1018/pslice_c5/ot_hbm_su_programme_pslice_c5_lp_record.json",
   "landings": 41,
   "landing_flops": 5073,
-  "reset_depth": 5,
+  "reset_depth": 6,
   "lp_spec": "tools/landed_parent/specs/pslice_c5.json"
  },
- "structural_change": "PL-PSLICE (PARENTS-LANDED 10-18, landed-regions-standard-1018): pslice_c5 (head + 7 S + 3 L leaves, r5 per-column split) as a LANDED parent: 4 clock regions h / l / sw / se, each its own CTS root; all 41 cross-region nets landed (D 4, E = K = 2, +3 edges; 5,073 landing flops, 0 pads); 1-bit regional reset runs (depth 5). The head's status inputs (l_fault / l_valid) are read 6 edges after its own time (lp.py lag_pins). Compiler: leaves +3 edges, reset release +5, leaf faults reach the fault port +3 later relative to command/done than in the flat cluster.",
+ "structural_change": "PL-PSLICE (PARENTS-LANDED 10-18, landed-regions-standard-1018): pslice_c5 (head + 7 S + 3 L leaves, r5 per-column split) as a LANDED parent: 4 clock regions h / l / t / b, each its own CTS root (PL-KIT form); all 41 cross-region nets landed (D 4, E = K = 3, +4 edges; 5,073 landing flops, 0 pads), landing halves fenced beside source / reader; 1-bit regional reset runs (depth 6). The head's status inputs (l_fault / l_valid) are read 8 edges after its own time (lp.py lag_pins). Compiler: leaves +4 edges, reset release +6, leaf faults reach the fault port +4 later relative to command/done than in the flat cluster.",
  "job": {
   "owner": "Claude:PL-PSLICE",
   "branch": "claude/pl-pslice-1018",
-  "tag": "lp1",
+  "tag": "lp2",
   "purpose": "landed per-quarter SU programme cluster pslice_c5 (pgp_<q>)",
   "views_to": "physical/ref_tile/hbm_su_pslice_c5_lp/views",
   "record_to": "results/rtl/ref_tile/hbm_su_pslice_c5_lp",
