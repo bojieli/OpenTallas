@@ -1,0 +1,168 @@
+{
+  "status": "SOURCE_COMPONENT_MAPPED_PASS_PHYSICAL_OPEN",
+  "source_snapshot": "2210ef72c0419ff36955a19325ff3f2fcac105d5",
+  "model_before_source": "581ffde94",
+  "functional_host": "ot-agidock128",
+  "functional_root": "/srv/opentallas-scratch/claude/banked-class-2210ef72-r4",
+  "functional_verilator": "5.050",
+  "semantic_profiles": 4,
+  "semantic_checked_edges_per_profile": 1046,
+  "semantic_modes": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "coverage": [
+    "SVG47/XC5 PREL0/1",
+    "bank1023/1024 crossing,3loops,18programmes/profile",
+    "opposite-class literal postmrel rewrites",
+    "invalid3 stickyfault",
+    "actualclassmismatch stickyfault",
+    "formatinjection currentdescriptorclass overrides emptyCslot",
+    "MUT4 missingcontextvalid faultinjection positive oracle",
+    "resetclear betweenprogrammes",
+    "same-edge nativeoutputQs;fault1edgeafterpinlaunch"
+  ],
+  "legacy_profiles": 4,
+  "legacy_checked_edges_per_profile": 4263,
+  "legacy_runs_per_profile": 6,
+  "retained_core_proof": "af72bbedb/banked_apps_evidence/fault_df594 opaque3profiles/2100words/6runs and3slot/select/delaymutants; core/helpers BYTEUNCHANGED",
+  "mutants": {
+    "1": {
+      "meaning": "wrongRclass",
+      "fail_regex": "CLASS_FAIL.*MUT=1",
+      "witness": "class1.log"
+    },
+    "2": {
+      "meaning": "wrongformatCassociation",
+      "fail_regex": "CLASS_FAIL.*MUT=2",
+      "witness": "class2.log"
+    },
+    "3": {
+      "meaning": "bypasspostmrelmodeguard",
+      "fail_regex": "CLASS_FAIL.*MUT=3",
+      "witness": "class3.log"
+    }
+  },
+  "mapped_host": "ot-epyc7",
+  "mapped_root": "/srv/opentallas-scratch/claude/banked-cal-map-2210ef72-1019",
+  "mapped_profiles": {
+    "svg_application": {
+      "std_area_um2": 1017.6985800000001,
+      "DFF": 2370,
+      "unknown": {},
+      "over32_direct": 0,
+      "over32_buffer_collapsed": 0,
+      "reset_raw_first_final": [
+        10,
+        9,
+        26
+      ],
+      "reset_release_edges": 2,
+      "native_output_Q": true,
+      "mapped_sha256": "1903657f15e1d4b1b16ce5cb7674252fc09292d552c619c70c32ee92b5729dcd",
+      "source_sha256": {
+        "rtl/hbm_accel/sm/static/ot_smh_calendar_banked_cells.sv": "0a5a09bce4a6db01fa42ac5a89caf65ae73daf2df2ef5fdc688e2925e9c6b7db",
+        "rtl/hbm_accel/sm/static/ot_smh_calendar_bank_leaf.sv": "894253c8d41d7002b10c9d5ebb8edf32644ae146d54e07a2a565e4adfb5a7c5e",
+        "rtl/hbm_accel/sm/static/ot_smh_calendar_banked_central.sv": "517a3aac9d8c289995af447e3f50398f9f3b8e8f5fc2486bc3939ad74da5ec71",
+        "rtl/hbm_accel/sm/static/ot_smh_calendar_banked_native.sv": "62da4315dd2841d30221a64bb0c69cc3d4300dacce117a7bb733cb89c1457502",
+        "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v": "2c59e6878c71304d05b6c79378604d0125de62df5dc84c5c1e7829f1b81ecb3a",
+        "rtl/hbm_accel/sm/static/ot_smh_banked_svg_central.sv": "0f2f01d2e530678774b2cbe3b472fb4a2b297c2b8fd97b540db5068ae05bb96c"
+      }
+    },
+    "xc_application": {
+      "std_area_um2": 871.8840000000001,
+      "DFF": 2183,
+      "unknown": {},
+      "over32_direct": 0,
+      "over32_buffer_collapsed": 0,
+      "reset_raw_first_final": [
+        10,
+        9,
+        24
+      ],
+      "reset_release_edges": 2,
+      "native_output_Q": true,
+      "mapped_sha256": "b2642573959c318dabc62f18b95f77d75a61756836cb249e1da3531205921d93",
+      "source_sha256": {
+        "rtl/hbm_accel/sm/static/ot_smh_calendar_banked_cells.sv": "0a5a09bce4a6db01fa42ac5a89caf65ae73daf2df2ef5fdc688e2925e9c6b7db",
+        "rtl/hbm_accel/sm/static/ot_smh_calendar_bank_leaf.sv": "894253c8d41d7002b10c9d5ebb8edf32644ae146d54e07a2a565e4adfb5a7c5e",
+        "rtl/hbm_accel/sm/static/ot_smh_calendar_banked_central.sv": "517a3aac9d8c289995af447e3f50398f9f3b8e8f5fc2486bc3939ad74da5ec71",
+        "rtl/hbm_accel/sm/static/ot_smh_calendar_banked_native.sv": "62da4315dd2841d30221a64bb0c69cc3d4300dacce117a7bb733cb89c1457502",
+        "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v": "2c59e6878c71304d05b6c79378604d0125de62df5dc84c5c1e7829f1b81ecb3a",
+        "rtl/hbm_accel/sm/static/ot_smh_banked_xc_central.sv": "64dd2647b26e0e6d4e6fa8bbb3429c1984f777d2e575a6e2338e5f1a12ae2f1e"
+      }
+    },
+    "svg_class_application": {
+      "std_area_um2": 1026.66528,
+      "DFF": 2387,
+      "unknown": {},
+      "over32_direct": 0,
+      "over32_buffer_collapsed": 0,
+      "reset_raw_first_final": [
+        10,
+        9,
+        28
+      ],
+      "reset_release_edges": 2,
+      "native_output_Q": true,
+      "mapped_sha256": "4baab7cbadd0999b0a2c652dd5baee414bc5e34b76c0611ce5c715d0362502f8",
+      "source_sha256": {
+        "rtl/hbm_accel/sm/static/ot_smh_calendar_banked_cells.sv": "0a5a09bce4a6db01fa42ac5a89caf65ae73daf2df2ef5fdc688e2925e9c6b7db",
+        "rtl/hbm_accel/sm/static/ot_smh_calendar_bank_leaf.sv": "894253c8d41d7002b10c9d5ebb8edf32644ae146d54e07a2a565e4adfb5a7c5e",
+        "rtl/hbm_accel/sm/static/ot_smh_calendar_banked_central.sv": "517a3aac9d8c289995af447e3f50398f9f3b8e8f5fc2486bc3939ad74da5ec71",
+        "rtl/hbm_accel/sm/static/ot_smh_calendar_banked_native.sv": "62da4315dd2841d30221a64bb0c69cc3d4300dacce117a7bb733cb89c1457502",
+        "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v": "2c59e6878c71304d05b6c79378604d0125de62df5dc84c5c1e7829f1b81ecb3a",
+        "rtl/hbm_accel/sm/static/ot_smh_banked_svg_central.sv": "0f2f01d2e530678774b2cbe3b472fb4a2b297c2b8fd97b540db5068ae05bb96c"
+      }
+    },
+    "xc_class_application": {
+      "std_area_um2": 874.90206,
+      "DFF": 2188,
+      "unknown": {},
+      "over32_direct": 0,
+      "over32_buffer_collapsed": 0,
+      "reset_raw_first_final": [
+        10,
+        9,
+        27
+      ],
+      "reset_release_edges": 2,
+      "native_output_Q": true,
+      "mapped_sha256": "1b4d34176c4d74ab62ce2c722d8b678055ca7ccc4773b126ca7c3e27ca945576",
+      "source_sha256": {
+        "rtl/hbm_accel/sm/static/ot_smh_calendar_banked_cells.sv": "0a5a09bce4a6db01fa42ac5a89caf65ae73daf2df2ef5fdc688e2925e9c6b7db",
+        "rtl/hbm_accel/sm/static/ot_smh_calendar_bank_leaf.sv": "894253c8d41d7002b10c9d5ebb8edf32644ae146d54e07a2a565e4adfb5a7c5e",
+        "rtl/hbm_accel/sm/static/ot_smh_calendar_banked_central.sv": "517a3aac9d8c289995af447e3f50398f9f3b8e8f5fc2486bc3939ad74da5ec71",
+        "rtl/hbm_accel/sm/static/ot_smh_calendar_banked_native.sv": "62da4315dd2841d30221a64bb0c69cc3d4300dacce117a7bb733cb89c1457502",
+        "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v": "2c59e6878c71304d05b6c79378604d0125de62df5dc84c5c1e7829f1b81ecb3a",
+        "rtl/hbm_accel/sm/static/ot_smh_banked_xc_central.sv": "64dd2647b26e0e6d4e6fa8bbb3429c1984f777d2e575a6e2338e5f1a12ae2f1e"
+      }
+    }
+  },
+  "composed_semantic_SVG": {
+    "std_area_um2": 1909.07604,
+    "DFF": 4453,
+    "SRAM": 2,
+    "delta_vs_legacy_std_um2": 16.19838,
+    "delta_vs_legacy_DFF": 31
+  },
+  "composed_semantic_XC": {
+    "std_area_um2": 1558.35414,
+    "DFF": 3870,
+    "SRAM": 2,
+    "delta_vs_legacy_std_um2": 3.01806,
+    "delta_vs_legacy_DFF": 5
+  },
+  "interface": {
+    "SVG": "command_envelope85={valid,class,command83}; ctx47bit46class",
+    "XC": "command_envelope175={valid,class,word173inclKV64}; ctx5bit4class"
+  },
+  "timing": "No dataedgeadded bysemantictransport. LocalXCfaultsamplescurrentR/Cpins atnextedge. Parentcache/mirror+2 mustcarrywhole85/175 envelope andfinalassembledguardconsumeG11. GOgapunchangedN+5; nooverlapcredit.",
+  "remaining": "Publichostwrapper/counterpartphase/done proof,finalG11SVG/XCcoherenceandmodeintegration,physicalgeometry/slot/pinSTA/PGcut. No gate/submit/REVIEW."
+}

@@ -1,0 +1,31 @@
+%Warning-PINMISSING: rtl/hbm_accel/sm/static/ot_smh_banked_xc_central.sv:30:72: Instance has missing pin: 'app_reset_branches'
+   30 |  ot_smh_calendar_banked_central #(.W(173),.AW(11),.XW(5),.MUT(CALMUT)) u_core(
+      |                                                                        ^~~~~~
+                     rtl/hbm_accel/sm/static/ot_smh_calendar_banked_central.sv:12:133: ... Location of port declaration
+   12 |  output reg calendar_lastit,calendar_v,output reg[31:0]ordinal,output reg active,done,fault,output wire app_reset_n,output wire[7:0]app_reset_branches,output wire[W-1:0]app_next_calendar,output wire app_next_valid,output wire app_next_fault
+      |                                                                                                                                     ^~~~~~~~~~~~~~~~~~
+                     ... For warning description see https://verilator.org/warn/PINMISSING?v=5.050
+                     ... Use "/* verilator lint_off PINMISSING */" and lint_on around source to disable this message.
+%Warning-PINMISSING: rtl/hbm_accel/sm/static/ot_smh_banked_xc_central.sv:30:72: Instance has missing pin: 'app_next_calendar'
+   30 |  ot_smh_calendar_banked_central #(.W(173),.AW(11),.XW(5),.MUT(CALMUT)) u_core(
+      |                                                                        ^~~~~~
+                     rtl/hbm_accel/sm/static/ot_smh_calendar_banked_central.sv:12:170: ... Location of port declaration
+   12 |  output reg calendar_lastit,calendar_v,output reg[31:0]ordinal,output reg active,done,fault,output wire app_reset_n,output wire[7:0]app_reset_branches,output wire[W-1:0]app_next_calendar,output wire app_next_valid,output wire app_next_fault
+      |                                                                                                                                                                          ^~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: rtl/hbm_accel/sm/static/ot_smh_banked_xc_central.sv:30:72: Instance has missing pin: 'app_next_valid'
+   30 |  ot_smh_calendar_banked_central #(.W(173),.AW(11),.XW(5),.MUT(CALMUT)) u_core(
+      |                                                                        ^~~~~~
+                     rtl/hbm_accel/sm/static/ot_smh_calendar_banked_central.sv:12:200: ... Location of port declaration
+   12 |  output reg calendar_lastit,calendar_v,output reg[31:0]ordinal,output reg active,done,fault,output wire app_reset_n,output wire[7:0]app_reset_branches,output wire[W-1:0]app_next_calendar,output wire app_next_valid,output wire app_next_fault
+      |                                                                                                                                                                                                        ^~~~~~~~~~~~~~
+%Error: rtl/test/hbm_accel/svg_rel/tb_banked_apps.sv:10:43: Can't find definition of variable: 'command_class_observe'
+   10 |  ot_smh_banked_svg_central #(.PREL(PREL)) dut(.*,.cfg0_we(cw0),.cfg1_we(cw1),.bank_cfg_addr(ca),.bank_cfg_data(cd),.request0(rq0),.request1(rq1),.row0(r0),.row1(r1),.ok0(ok0),.ok1(ok1),.token0(t0),.token1(t1),.programme(newapp),.programme_v(nv),.active(na),.done(nd),.fault(nfault));
+      |                                           ^~~
+        ... See the manual at https://verilator.org/verilator_doc.html?v=5.050 for more assistance.
+%Error: rtl/test/hbm_accel/svg_rel/tb_banked_apps.sv:10:43: Can't find definition of variable: 'command_context_valid_observe'
+   10 |  ot_smh_banked_svg_central #(.PREL(PREL)) dut(.*,.cfg0_we(cw0),.cfg1_we(cw1),.bank_cfg_addr(ca),.bank_cfg_data(cd),.request0(rq0),.request1(rq1),.row0(r0),.row1(r1),.ok0(ok0),.ok1(ok1),.token0(t0),.token1(t1),.programme(newapp),.programme_v(nv),.active(na),.done(nd),.fault(nfault));
+      |                                           ^~~
+%Error: rtl/test/hbm_accel/svg_rel/tb_banked_apps.sv:10:43: Can't find definition of variable: 'command_envelope'
+   10 |  ot_smh_banked_svg_central #(.PREL(PREL)) dut(.*,.cfg0_we(cw0),.cfg1_we(cw1),.bank_cfg_addr(ca),.bank_cfg_data(cd),.request0(rq0),.request1(rq1),.row0(r0),.row1(r1),.ok0(ok0),.ok1(ok1),.token0(t0),.token1(t1),.programme(newapp),.programme_v(nv),.active(na),.done(nd),.fault(nfault));
+      |                                           ^~~
+%Error: Exiting due to 3 error(s)
