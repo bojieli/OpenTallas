@@ -11,3 +11,8 @@ The single XDIE2_SCHED_FAIL line in run_all.log is the m_early mutant witness (r
 
 Open: production RS48/RS144 need ROWS>=128/256 + AR_ITER 1 (step_cosim4/5/6), which the GEN2e die does NOT bind yet;
 the SW parent ot_hfd_coll_q3_hard_v8x (NLINK 2) has no step co-sim.
+
+## step6 (ROWS 256 / AR_ITER 1 build, run_xdie_hbm_step6.sh all; ep7 unit oth-ubuntu-1571683)
+XDIE6_GATE rc=0: reg_ds_ag48 600/594, reg_ds_ag144 760/754, ds_rs144 862/872 (d0/d1) PASS bit-exact, = XDIE-HBM5 /
+HBM-COLL256-RS144; m_nogap and m_vmstep REJECTED. This parameter set is what the die must bind for the DS production
+RS(144) as one static programme.
