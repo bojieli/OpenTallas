@@ -1,0 +1,263 @@
+{
+  "source": "/srv/opentallas-scratch/claude/hbm-native-record23-clock-1019/results/rtl/hbm_ds_layer_tput_1018/fixtures/L00/records.json",
+  "source_sha256": "03f4fca3102a6a6c224041ff33ef5797e76c15a30f65be307d4102b3a14f4dd9",
+  "records": [
+    {
+      "k": 5,
+      "L": 0,
+      "layer": 0,
+      "op": "COLL.ALL_GATHER",
+      "tag": "x_projections_gather.qa",
+      "family": "all_gather",
+      "occ": 0,
+      "desc": {
+        "A": [
+          46336,
+          1280,
+          1,
+          0,
+          1,
+          "VM",
+          "FP32"
+        ],
+        "O": [
+          46336,
+          1280,
+          1,
+          0,
+          1,
+          "VM",
+          "FP32"
+        ]
+      },
+      "inputs": {
+        "A": {
+          "space": "VM",
+          "array": "r0.k5.A",
+          "words": 1280,
+          "sha256": "c5db6f132bd49d830bc82503a2cedf717c26a652efd083d64036dba7bb776274"
+        }
+      },
+      "outputs": {
+        "O": {
+          "space": "VM",
+          "array": "r0.k5.O",
+          "words": 1280,
+          "sha256": "f2d1351fa018cc6708973313ba3d7fb4ac974ea4156553246faa710e04fd89c5"
+        }
+      },
+      "k_layer": 5,
+      "priced": [
+        {
+          "i": 2,
+          "start": 1059.5,
+          "end": 1463.31,
+          "cls": "C1",
+          "unit": "COLL",
+          "base_cost": 382.71
+        }
+      ],
+      "d4g_placement": "rank_local_or_tbd"
+    },
+    {
+      "k": 6,
+      "L": 0,
+      "layer": 0,
+      "op": "SU.VOP",
+      "tag": "q_norm.ss",
+      "family": "q_norm",
+      "occ": 0,
+      "desc": {
+        "A": [
+          46336,
+          160,
+          8,
+          160,
+          1,
+          "VM",
+          "FP32"
+        ],
+        "R": [
+          49920,
+          1,
+          1,
+          0,
+          1,
+          "VM",
+          "FP32"
+        ]
+      },
+      "inputs": {
+        "A": {
+          "space": "VM",
+          "array": "r0.k6.A",
+          "words": 1280,
+          "sha256": "f2d1351fa018cc6708973313ba3d7fb4ac974ea4156553246faa710e04fd89c5"
+        },
+        "R": {
+          "space": "VM",
+          "array": "r0.k6.R",
+          "words": 1,
+          "sha256": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119"
+        }
+      },
+      "outputs": {},
+      "k_layer": 6,
+      "priced": [
+        {
+          "i": 4,
+          "start": 1479.31,
+          "end": 1661.49,
+          "cls": "-",
+          "unit": "SU",
+          "base_cost": 165.0
+        }
+      ],
+      "d4g_placement": "row_split_halves_on_dies_2r_2r+1"
+    },
+    {
+      "k": 10,
+      "L": 0,
+      "layer": 0,
+      "op": "SU.VOP",
+      "tag": "q_norm.rs",
+      "family": "q_norm",
+      "occ": 0,
+      "desc": {
+        "A": [
+          49920,
+          1,
+          1,
+          0,
+          1,
+          "VM",
+          "FP32"
+        ],
+        "O": [
+          49984,
+          1,
+          1,
+          0,
+          1,
+          "VM",
+          "FP32"
+        ]
+      },
+      "inputs": {
+        "A": {
+          "space": "VM",
+          "array": "r0.k10.A",
+          "words": 1,
+          "sha256": "c33ce94b79f8045330ebf323bd510223e29c8c282225f1ee218ceee159d02ee6"
+        }
+      },
+      "outputs": {
+        "O": {
+          "space": "VM",
+          "array": "r0.k10.O",
+          "words": 1,
+          "sha256": "7d0bf8e183f0e8bf822a831398ddcb7078ceba2cd3b05144792560aef4f8459b"
+        }
+      },
+      "k_layer": 10,
+      "priced": [
+        {
+          "i": 8,
+          "start": 1661.49,
+          "end": 1804.51,
+          "cls": "-",
+          "unit": "SU",
+          "base_cost": 152.0
+        }
+      ],
+      "d4g_placement": "row_split_halves_on_dies_2r_2r+1"
+    },
+    {
+      "k": 11,
+      "L": 0,
+      "layer": 0,
+      "op": "SU.VOP",
+      "tag": "q_norm.y",
+      "family": "q_norm",
+      "occ": 0,
+      "desc": {
+        "A": [
+          46336,
+          1280,
+          1,
+          0,
+          1,
+          "VM",
+          "FP32"
+        ],
+        "B": [
+          49984,
+          1280,
+          1,
+          0,
+          0,
+          "VM",
+          "FP32"
+        ],
+        "C": [
+          48128,
+          1280,
+          1,
+          0,
+          1,
+          "VM",
+          "FP32"
+        ],
+        "O": [
+          50048,
+          1280,
+          1,
+          0,
+          1,
+          "VM",
+          "FP32"
+        ]
+      },
+      "inputs": {
+        "A": {
+          "space": "VM",
+          "array": "r0.k11.A",
+          "words": 1280,
+          "sha256": "f2d1351fa018cc6708973313ba3d7fb4ac974ea4156553246faa710e04fd89c5"
+        },
+        "B": {
+          "space": "VM",
+          "array": "r0.k11.B",
+          "words": 1280,
+          "sha256": "595ccfcc554e446667fc31ea71ad8101c6443b8912da60216275609d8174a05d"
+        },
+        "C": {
+          "space": "VM",
+          "array": "r0.k11.C",
+          "words": 1280,
+          "sha256": "43ea136b66952854462e6c9e808a7223551568a95878c06324c49d59871bad77"
+        }
+      },
+      "outputs": {
+        "O": {
+          "space": "VM",
+          "array": "r0.k11.O",
+          "words": 1280,
+          "sha256": "d4daf9681c2490e1a152d7ced0a31cd40a5c2e46125b7f4b6147734f66de8377"
+        }
+      },
+      "k_layer": 11,
+      "priced": [
+        {
+          "i": 10,
+          "start": 1804.51,
+          "end": 1855.69,
+          "cls": "-",
+          "unit": "SU",
+          "base_cost": 62.0
+        }
+      ],
+      "d4g_placement": "row_split_halves_on_dies_2r_2r+1"
+    }
+  ]
+}

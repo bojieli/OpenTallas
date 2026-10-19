@@ -1,0 +1,11 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/hbm-record6-ring-control-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/hbm-record6-ring-control-1019
+ot-run: ot-epyc6       admits  1052 GB (avail 844, growth 108, headroom 0, waiters 0/0 GB) load 34/128 running 29 disk 5762 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/hbm-record6-ring-control-1019
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/hbm-record6-ring-control-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hbm-record6-ring-control-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hbm-record6-ring-control-1019
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-1525199-1792441909 after 1 s
+{"scope": "MODEL ONLY; integer-edge feasibility, no RTL/numerical/native qualification", "words": 1280, "sectors": 160, "banks": 24, "ring_checks": 138240, "ff_pointer_rings": {"independent_streams": 384, "per_stream_payload_width": 33, "max_independent_indexed_bits": 1353, "total_indexed_payload_ff": 297792, "output_ff": 12672, "pointer_ff": 1856, "maturity_ff": 1856, "input_capture_ff": 16896, "payload_capture_area_lower_um2": 95458.176, "payload_capture_tt_clk_cap_ff": 155409.57696, "optional_identity_width": 43, "optional_identity_max_independent_bits": 1763, "indexed_write_ports_per_stream": 1, "indexed_read_ports_per_stream": 1, "old_semantics": "FF nonblocking read-before-write at the same private pointer", "integer_identity_checks": 138240, "physical_qualified": false}, "rings": {"macros": 384, "physical_capacity_bits": 3145728, "occupied_row_bits": 371520, "face_payload_ff": 33024, "prior_capture_ff": 16896, "pointer_ff_upper": 2688, "warmup_ff_upper": 2304, "macro_area_um2": 357067.28448, "macro_clock_contacts": 768, "macro_tt_clock_cap_ff": 7177.5744, "ring_integer_checks": 138240, "timing_qualified": false, "mathematical_aggregate_capacity_bound_not_port_mapping": 37}}
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-1525199-1792441909): exit 0
