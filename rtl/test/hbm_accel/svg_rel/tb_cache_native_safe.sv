@@ -22,6 +22,14 @@ module tb_cache_native_safe #(parameter MUT=0);
  .read_v(read_v),.read_bank(read_bank),.read_epoch(read_epoch),.read_row(read_row),.read_tag(read_tag),
  .retire_v(retire_v),.retire_bank(retire_bank),.retire_epoch(retire_epoch),
  .block_ready(safe_ready),.bank_owned(safe_owned),.busy(safe_busy),.fault(safe_fault),.out_packet(safe_packet));
+ integer release_edges=0;
+ always @(posedge clk)begin
+ if(!rst_n)release_edges=0;
+ else begin release_edges=release_edges+1;#1;
+ if(release_edges==1&&(safe.g_on.reset_phase0!==8'hff||safe.g_on.reset_q!==180'b0))$fatal(1,"RESET_RELEASE wrong first edge");
+ if(release_edges==2&&safe.g_on.reset_q!=={180{1'b1}})$fatal(1,"RESET_RELEASE wrong second edge");
+ end end
+ always @(negedge rst_n)begin #1;if(safe.g_on.reset_phase0!==0||safe.g_on.reset_q!==0)$fatal(1,"RESET_ASSERT not asynchronous");end
  integer maxlive=0,recycles=0,cycles=0,settle=0,safe_packets=0;
  reg [5:0] control_history[0:1];reg [1098:0] packet_history[0:1];
  always @(negedge clk)begin
