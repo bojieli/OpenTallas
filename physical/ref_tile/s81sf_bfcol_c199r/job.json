@@ -43,7 +43,8 @@
     ],
     "pass_regex": "^TXN MATCH$",
     "min_count_regex": "compared=(\\d+)",
-    "pass_witness": "results/rtl/s81_bf_compact_20261010/compact199_rsplit_1019/bench_5050/positive_run.log"
+    "pass_witness": "results/rtl/s81_bf_compact_20261010/compact199_rsplit_1019/bench_5050/positive_run.log",
+    "git_fallback": "bf_txn_bench.py wraps its only git calls (rev-parse/status for the record) in try/except and falls back to SOURCE_COMMIT/'unknown'; --prep names the committed prepared package so the git-using prepare step never runs"
    },
    {
     "name": "rs_mutant_dp",
@@ -55,7 +56,8 @@
      "verilator-5.050"
     ],
     "fail_regex": "%Fatal: .*DIFF TXN lane=",
-    "fail_witness": "results/rtl/s81_bf_compact_20261010/compact199_rsplit_1019/bench_5050/fail_witness/rs_mutant_dp.log"
+    "fail_witness": "results/rtl/s81_bf_compact_20261010/compact199_rsplit_1019/bench_5050/fail_witness/rs_mutant_dp.log",
+    "git_fallback": "bf_txn_bench.py wraps its only git calls (rev-parse/status for the record) in try/except and falls back to SOURCE_COMMIT/'unknown'; --prep names the committed prepared package so the git-using prepare step never runs"
    },
    {
     "name": "rs_mutant_recut",
@@ -67,7 +69,8 @@
      "verilator-5.050"
     ],
     "fail_regex": "%Fatal: .*DIFF TXN lane=",
-    "fail_witness": "results/rtl/s81_bf_compact_20261010/compact199_rsplit_1019/bench_5050/fail_witness/rs_mutant_recut.log"
+    "fail_witness": "results/rtl/s81_bf_compact_20261010/compact199_rsplit_1019/bench_5050/fail_witness/rs_mutant_recut.log",
+    "git_fallback": "bf_txn_bench.py wraps its only git calls (rev-parse/status for the record) in try/except and falls back to SOURCE_COMMIT/'unknown'; --prep names the committed prepared package so the git-using prepare step never runs"
    },
    {
     "name": "rs_mutant_pinlat",
@@ -79,7 +82,8 @@
      "verilator-5.050"
     ],
     "fail_regex": "%Fatal: .*DIFF TXN lane=",
-    "fail_witness": "results/rtl/s81_bf_compact_20261010/compact199_rsplit_1019/bench_5050/fail_witness/rs_mutant_pinlat.log"
+    "fail_witness": "results/rtl/s81_bf_compact_20261010/compact199_rsplit_1019/bench_5050/fail_witness/rs_mutant_pinlat.log",
+    "git_fallback": "bf_txn_bench.py wraps its only git calls (rev-parse/status for the record) in try/except and falls back to SOURCE_COMMIT/'unknown'; --prep names the committed prepared package so the git-using prepare step never runs"
    },
    {
     "name": "rs_mutant_tcg",
@@ -91,7 +95,8 @@
      "verilator-5.050"
     ],
     "fail_regex": "%Fatal: .*DIFF TXN lane=",
-    "fail_witness": "results/rtl/s81_bf_compact_20261010/compact199_rsplit_1019/bench_5050/fail_witness/rs_mutant_tcg.log"
+    "fail_witness": "results/rtl/s81_bf_compact_20261010/compact199_rsplit_1019/bench_5050/fail_witness/rs_mutant_tcg.log",
+    "git_fallback": "bf_txn_bench.py wraps its only git calls (rev-parse/status for the record) in try/except and falls back to SOURCE_COMMIT/'unknown'; --prep names the committed prepared package so the git-using prepare step never runs"
    },
    {
     "name": "rs_mutant_xst",
@@ -103,7 +108,8 @@
      "verilator-5.050"
     ],
     "fail_regex": "%Fatal: .*DIFF TXN lane=",
-    "fail_witness": "results/rtl/s81_bf_compact_20261010/compact199_rsplit_1019/bench_5050/fail_witness/rs_mutant_xst.log"
+    "fail_witness": "results/rtl/s81_bf_compact_20261010/compact199_rsplit_1019/bench_5050/fail_witness/rs_mutant_xst.log",
+    "git_fallback": "bf_txn_bench.py wraps its only git calls (rev-parse/status for the record) in try/except and falls back to SOURCE_COMMIT/'unknown'; --prep names the committed prepared package so the git-using prepare step never runs"
    },
    {
     "name": "rs_mutant_fxst",
@@ -115,7 +121,8 @@
      "verilator-5.050"
     ],
     "fail_regex": "%Fatal: .*DIFF TXN lane=",
-    "fail_witness": "results/rtl/s81_bf_compact_20261010/compact199_rsplit_1019/bench_5050/fail_witness/rs_mutant_fxst.log"
+    "fail_witness": "results/rtl/s81_bf_compact_20261010/compact199_rsplit_1019/bench_5050/fail_witness/rs_mutant_fxst.log",
+    "git_fallback": "bf_txn_bench.py wraps its only git calls (rev-parse/status for the record) in try/except and falls back to SOURCE_COMMIT/'unknown'; --prep names the committed prepared package so the git-using prepare step never runs"
    },
    {
     "name": "rsplit_formal_equiv",
