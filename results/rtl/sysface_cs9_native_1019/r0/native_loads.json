@@ -1,0 +1,2006 @@
+{
+  "source_commit": "fd4aae179",
+  "netlist_sha256": "15083158a537465987dbc34ab8b8f43bcdca920bc678f889c9e45c6eb4058317",
+  "count_method": "actual leaf pin loads, native buffers retained as physical cells; clock excluded",
+  "max_loads": 997,
+  "over32": [
+    {
+      "net": "_07081_",
+      "loads": 997,
+      "driver": "(8518, 'L')",
+      "sinks": [
+        [
+          "_15668_",
+          "A"
+        ],
+        [
+          "_15669_",
+          "A"
+        ],
+        [
+          "_15670_",
+          "A"
+        ]
+      ]
+    },
+    {
+      "net": "_07080_",
+      "loads": 220,
+      "driver": "(8517, 'H')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f1215._6_",
+          "A1"
+        ],
+        [
+          "u_ot_pr_core.f1236._6_",
+          "A1"
+        ],
+        [
+          "u_ot_pr_core.f13177.Q$_DFF_PN0_",
+          "D"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14692",
+      "loads": 48,
+      "driver": "(13207, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f0._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f0._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f1._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14731",
+      "loads": 48,
+      "driver": "(13329, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f1000._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f1000._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f1001._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14749",
+      "loads": 48,
+      "driver": "(13349, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f1008._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f1008._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f1009._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14712",
+      "loads": 48,
+      "driver": "(13309, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f102._4_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f102._5_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f103._4_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14693",
+      "loads": 48,
+      "driver": "(13308, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f1077._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f1077._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f1078._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14694",
+      "loads": 48,
+      "driver": "(13319, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f1084._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f1084._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f1085._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14695",
+      "loads": 48,
+      "driver": "(13330, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f1108._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f1108._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f1109._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14729",
+      "loads": 48,
+      "driver": "(13327, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f1123._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f1123._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f1124._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14759",
+      "loads": 48,
+      "driver": "(13360, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f1145._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f1145._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f1146._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14761",
+      "loads": 48,
+      "driver": "(13362, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f1177._4_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f1177._5_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f1178._4_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14763",
+      "loads": 48,
+      "driver": "(13365, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f1209._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f1209._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f1210._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14765",
+      "loads": 48,
+      "driver": "(13367, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f1218._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f1218._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f1219._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14767",
+      "loads": 48,
+      "driver": "(13369, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f1238._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f1238._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f1239._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14768",
+      "loads": 48,
+      "driver": "(13370, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f1262._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f1262._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f1263._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14723",
+      "loads": 48,
+      "driver": "(13321, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f1302._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f1302._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f1303._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14770",
+      "loads": 48,
+      "driver": "(13372, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f1335._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f1335._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f1336._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14714",
+      "loads": 48,
+      "driver": "(13311, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f134._4_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f134._5_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f135._4_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14771",
+      "loads": 48,
+      "driver": "(13373, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f1360._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f1360._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f1361._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14772",
+      "loads": 48,
+      "driver": "(13375, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f1384._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f1384._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f1385._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14774",
+      "loads": 48,
+      "driver": "(13377, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f1446._4_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f1446._5_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f1447._4_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14776",
+      "loads": 48,
+      "driver": "(13379, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f1478._4_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f1478._5_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f1479._4_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14778",
+      "loads": 48,
+      "driver": "(13381, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f1510._4_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f1510._5_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f1511._4_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14780",
+      "loads": 48,
+      "driver": "(13383, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f1542._4_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f1542._5_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f1543._4_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14782",
+      "loads": 48,
+      "driver": "(13386, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f1575._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f1575._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f1576._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14783",
+      "loads": 48,
+      "driver": "(13387, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f1599._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f1599._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f1600._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14784",
+      "loads": 48,
+      "driver": "(13388, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f1623._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f1623._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f1624._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14701",
+      "loads": 48,
+      "driver": "(13396, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f1653._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f1653._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f1654._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14702",
+      "loads": 48,
+      "driver": "(13218, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f1659._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f1659._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f1660._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14786",
+      "loads": 48,
+      "driver": "(13390, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f1669._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f1669._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f1670._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14703",
+      "loads": 48,
+      "driver": "(13229, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f1715._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f1715._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f1716._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14788",
+      "loads": 48,
+      "driver": "(13392, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f1846._4_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f1846._5_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f1847._4_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14716",
+      "loads": 48,
+      "driver": "(13313, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f210._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f210._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f211._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14699",
+      "loads": 48,
+      "driver": "(13374, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f23._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f23._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f24._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14814",
+      "loads": 48,
+      "driver": "(13232, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f2426._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f2426._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f2427._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n4800",
+      "loads": 48,
+      "driver": "(22291, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f2461._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f2461._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f2462._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14816",
+      "loads": 48,
+      "driver": "(13234, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f2477._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f2477._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f2478._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14700",
+      "loads": 48,
+      "driver": "(13385, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f271._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f271._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f272._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14747",
+      "loads": 48,
+      "driver": "(13347, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f3070._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f3070._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f3071._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14824",
+      "loads": 48,
+      "driver": "(13243, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f3086._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f3086._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f3087._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14825",
+      "loads": 48,
+      "driver": "(13244, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f3110._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f3110._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f3111._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14826",
+      "loads": 48,
+      "driver": "(13245, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f3134._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f3134._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f3135._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14706",
+      "loads": 48,
+      "driver": "(13262, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f3196._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f3196._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f3197._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14707",
+      "loads": 48,
+      "driver": "(13273, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f3220._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f3220._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f3221._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14828",
+      "loads": 48,
+      "driver": "(13247, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f3247._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f3247._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f3248._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14832",
+      "loads": 48,
+      "driver": "(13252, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f3271._4_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f3271._5_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f3272._4_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14834",
+      "loads": 48,
+      "driver": "(13254, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f3303._4_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f3303._5_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f3304._4_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14836",
+      "loads": 48,
+      "driver": "(13256, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f3335._4_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f3335._5_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f3336._4_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14838",
+      "loads": 48,
+      "driver": "(13258, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f3367._4_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f3367._5_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f3368._4_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14840",
+      "loads": 48,
+      "driver": "(13260, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f3405._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f3405._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f3406._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14718",
+      "loads": 48,
+      "driver": "(13315, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f342._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f342._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f343._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14586",
+      "loads": 48,
+      "driver": "(22299, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f3463._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f3463._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f3464._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14587",
+      "loads": 48,
+      "driver": "(22302, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f3487._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f3487._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f3488._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14842",
+      "loads": 48,
+      "driver": "(13263, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f3538._4_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f3538._5_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f3539._4_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14829",
+      "loads": 48,
+      "driver": "(13248, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f3578._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f3578._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f3579._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14830",
+      "loads": 48,
+      "driver": "(13249, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f3602._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f3602._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f3603._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14697",
+      "loads": 48,
+      "driver": "(13352, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f3654._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f3654._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f3655._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14719",
+      "loads": 48,
+      "driver": "(13316, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f366._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f366._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f367._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14721",
+      "loads": 48,
+      "driver": "(13318, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f406._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f406._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f407._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14722",
+      "loads": 48,
+      "driver": "(13320, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f430._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f430._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f431._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14725",
+      "loads": 48,
+      "driver": "(13323, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f470._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f470._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f471._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14727",
+      "loads": 48,
+      "driver": "(13325, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f506._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f506._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f507._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14710",
+      "loads": 48,
+      "driver": "(13306, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f53._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f53._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f54._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14728",
+      "loads": 48,
+      "driver": "(13326, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f530._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f530._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f531._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14733",
+      "loads": 48,
+      "driver": "(13332, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f576._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f576._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f577._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14735",
+      "loads": 48,
+      "driver": "(13334, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f608._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f608._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f609._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14736",
+      "loads": 48,
+      "driver": "(13335, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f736._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f736._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f737._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14737",
+      "loads": 48,
+      "driver": "(13336, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f760._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f760._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f761._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14751",
+      "loads": 48,
+      "driver": "(13351, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f813._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f813._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f814._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14752",
+      "loads": 48,
+      "driver": "(13353, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f837._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f837._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f838._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14753",
+      "loads": 48,
+      "driver": "(13354, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f861._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f861._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f862._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14755",
+      "loads": 48,
+      "driver": "(13356, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f888._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f888._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f889._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14696",
+      "loads": 47,
+      "driver": "(13341, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f1795._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f1795._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f1830._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14705",
+      "loads": 47,
+      "driver": "(13251, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f28.Q$_DFF_PN0_",
+          "D"
+        ],
+        [
+          "u_ot_pr_core.f3173._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f3173._6_",
+          "A2"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14709",
+      "loads": 47,
+      "driver": "(13295, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f29.Q$_DFF_PN0_",
+          "D"
+        ],
+        [
+          "u_ot_pr_core.f30._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f30._6_",
+          "A2"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14704",
+      "loads": 46,
+      "driver": "(13240, 'Y')",
+      "sinks": [
+        [
+          "_15291_",
+          "A"
+        ],
+        [
+          "u_ot_pr_core.f1739._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f1739._6_",
+          "A2"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n3470",
+      "loads": 41,
+      "driver": "(4019, 'Y')",
+      "sinks": [
+        [
+          "_12061_",
+          "A"
+        ],
+        [
+          "u_ot_pr_core.f1036._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f1036._6_",
+          "A2"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n2544",
+      "loads": 40,
+      "driver": "(5439, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f317._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f317._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f318._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14711",
+      "loads": 40,
+      "driver": "(13307, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f77._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f77._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f78._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n3331",
+      "loads": 40,
+      "driver": "(5453, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f920._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f920._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f921._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n2117",
+      "loads": 35,
+      "driver": "(3044, 'Y')",
+      "sinks": [
+        [
+          "_12038_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f1035._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f1035._6_",
+          "A2"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n4543",
+      "loads": 34,
+      "driver": "(4160, 'Y')",
+      "sinks": [
+        [
+          "_11247_",
+          "A"
+        ],
+        [
+          "_12720_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f1814._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n2143",
+      "loads": 34,
+      "driver": "(4034, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f1411._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f1411._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f1412._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n3452",
+      "loads": 33,
+      "driver": "(4017, 'Y')",
+      "sinks": [
+        [
+          "_12701_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f1019._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f1019._6_",
+          "A2"
+        ]
+      ]
+    }
+  ],
+  "top20": [
+    {
+      "net": "_07081_",
+      "loads": 997,
+      "driver": "(8518, 'L')",
+      "sinks": [
+        [
+          "_15668_",
+          "A"
+        ],
+        [
+          "_15669_",
+          "A"
+        ],
+        [
+          "_15670_",
+          "A"
+        ]
+      ]
+    },
+    {
+      "net": "_07080_",
+      "loads": 220,
+      "driver": "(8517, 'H')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f1215._6_",
+          "A1"
+        ],
+        [
+          "u_ot_pr_core.f1236._6_",
+          "A1"
+        ],
+        [
+          "u_ot_pr_core.f13177.Q$_DFF_PN0_",
+          "D"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14692",
+      "loads": 48,
+      "driver": "(13207, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f0._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f0._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f1._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14731",
+      "loads": 48,
+      "driver": "(13329, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f1000._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f1000._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f1001._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14749",
+      "loads": 48,
+      "driver": "(13349, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f1008._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f1008._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f1009._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14712",
+      "loads": 48,
+      "driver": "(13309, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f102._4_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f102._5_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f103._4_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14693",
+      "loads": 48,
+      "driver": "(13308, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f1077._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f1077._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f1078._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14694",
+      "loads": 48,
+      "driver": "(13319, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f1084._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f1084._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f1085._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14695",
+      "loads": 48,
+      "driver": "(13330, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f1108._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f1108._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f1109._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14729",
+      "loads": 48,
+      "driver": "(13327, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f1123._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f1123._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f1124._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14759",
+      "loads": 48,
+      "driver": "(13360, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f1145._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f1145._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f1146._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14761",
+      "loads": 48,
+      "driver": "(13362, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f1177._4_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f1177._5_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f1178._4_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14763",
+      "loads": 48,
+      "driver": "(13365, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f1209._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f1209._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f1210._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14765",
+      "loads": 48,
+      "driver": "(13367, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f1218._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f1218._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f1219._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14767",
+      "loads": 48,
+      "driver": "(13369, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f1238._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f1238._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f1239._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14768",
+      "loads": 48,
+      "driver": "(13370, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f1262._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f1262._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f1263._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14723",
+      "loads": 48,
+      "driver": "(13321, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f1302._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f1302._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f1303._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14770",
+      "loads": 48,
+      "driver": "(13372, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f1335._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f1335._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f1336._5_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14714",
+      "loads": 48,
+      "driver": "(13311, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f134._4_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f134._5_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f135._4_",
+          "B"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.n14771",
+      "loads": 48,
+      "driver": "(13373, 'Y')",
+      "sinks": [
+        [
+          "u_ot_pr_core.f1360._5_",
+          "B"
+        ],
+        [
+          "u_ot_pr_core.f1360._6_",
+          "A2"
+        ],
+        [
+          "u_ot_pr_core.f1361._5_",
+          "B"
+        ]
+      ]
+    }
+  ],
+  "unknown_cells": null
+}
