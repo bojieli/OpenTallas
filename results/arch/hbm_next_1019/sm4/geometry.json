@@ -474,5 +474,38 @@
    "hard fill 52% (base gate 44%, d4g rp4lp 35%): GRT overflow at the 43.2-um operand channels and the bdc row is the gate question",
    "upper BF16 lane stacks take their x operands (512 b each) up the 43.2-um channel to the tcl N faces (as the d4g unit: tcl inputs on the far face)"
   ]
+ },
+ "lever_a_narrow_tile": {
+  "tile": "hnx_rp4lp4n",
+  "top": "hnx_rp4lp4x_flat_lp (same RTL as hnx_rp4lp4x; floorplan-only variant)",
+  "kit": "spec physical/hbm_next/sm4/hnx_rp4lp4n_spec.json (generator tools/hbm_next/sm4/hnx_rp4lp4n_kit.py); ref_tile gen + gate need the CLOSED hnx_xs4 view (xs4c1/xs4c2 gates in GRT 10-19 06:15)",
+  "status": "FLOORPLANNED + overlap/10.8-halo checked (generator assert), NOT gated. PROVES the DIE ask: 673.92 wide, <= 2,203 tall, fill >= 0.51",
+  "outline_um": {
+   "w": 673.92,
+   "h": 2181.6,
+   "area_mm2": 1.4702,
+   "aspect": 3.24
+  },
+  "hard_area_um2": 757096,
+  "hard_fill": 0.515,
+  "pad_to_2203.2": {
+   "h": 2203.2,
+   "hard_fill": 0.51,
+   "note": "if DIE needs the 43.2-lattice height 51 x 43.2"
+  },
+  "leaf": {
+   "h_um": 911.52,
+   "layout": "hnx_xs4 at the band (S landing, unchanged), 4 bdc in one row on its N face (+25.92 XREL band, block-dot on the N face as now), 4 BF16 lane stacks (tct + 2 tcl, d4g arrangement) in two rows above the bdc row: lanes 0/1 W column, 2/3 E column, fed from the store's EXISTING W / E faces through 43.2-um operand channels beside the store + bdc row. xs4 face split UNCHANGED -> the xs4c1/c2 gates stay valid"
+  },
+  "middle_band_um": 237.6,
+  "margins_um": 30.24,
+  "floorplan_png": "results/arch/hbm_next_1019/sm4/floorplan/hnx_rp4lp4n_floorplan.png",
+  "pins": "identical to hnx_rp4lp4x (W/E run centred on the band, 3.57-3.62 pins/um; N/S gin/gout/xs* unchanged; ck_n/ck_s at x = W/2)",
+  "risks": [
+   "BF16 operand reach: store W/E face register -> row-2 stack ~594 um Manhattan (row 1 ~367): above the 405-um planning reach, inside the 600-750 measured repeated reach; if the gate misses on it, +1 operand station on the BF16 path (RTL, +1 cycle on the BF16 column only)",
+   "W/E edge zones (43.2 margin + 43.2 channel) carry both the tile W/E pin fan-in to the band children and the BF16 operands: judge GRT there first",
+   "empty ~190 x 458 um centre pocket above each bdc row (leaf ends, not on a link path)"
+  ],
+  "die_hint": "tile 1.4702 mm2 vs 1080x1339.2 1.4463 (+0.024 mm2/tile); DIE prices the die on its lattice"
  }
 }
