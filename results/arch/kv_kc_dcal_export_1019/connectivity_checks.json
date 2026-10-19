@@ -1,0 +1,16 @@
+{
+  "kind": "STATIC_SOURCE_CONNECTIVITY_ONLY",
+  "checks": {
+    "kc_WS_output_omitted": true,
+    "kc_WN_output_omitted": true,
+    "kc_ES_output_omitted": true,
+    "kc_EN_output_omitted": true,
+    "dcal_output_omitted": true,
+    "KC_registered_equation": true,
+    "KC_sticky_overflow": true,
+    "DCAL_sticky_equation": true,
+    "DCAL_two_release_stages": true
+  },
+  "behavioral_PASS_claimed": false,
+  "joined_component_exists": false
+}
