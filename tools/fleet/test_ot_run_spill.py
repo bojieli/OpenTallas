@@ -26,9 +26,11 @@ a = sys.argv[1:]
 while a and a[0] == "-o":
     a = a[2:]
 host, cmd = a[0], " ".join(a[1:])
-if host == "ot-garbage":                 # a source whose stream breaks mid-copy
+if host == "ot-garbage" and "tar " in cmd:   # a source whose stream breaks mid-copy (its manifest is src's)
     sys.stdout.buffer.write(b"\x28\xb5\x2f\xfd garbage" * 1000)
     sys.exit(0)
+if host == "ot-garbage":
+    host = "src"
 hr = os.environ["OTST_BASE"] + "/h-" + host            # this host's "/"
 tok = os.environ["OTST_TOKEN"]
 cmd = cmd.replace(" -C / ", " -C %s " % hr).replace("cd / ", "cd %s " % hr).replace(tok, hr + tok)
@@ -100,8 +102,25 @@ class Spill(unittest.TestCase):
         return s
 
     def fwd(self, src, dst, stamp):
-        return subprocess.run(["bash", "-o", "pipefail", "-c", self.m.spill_fwd_cmd(src, dst, [self.root], stamp)],
-                              capture_output=True, text=True)
+        return self.m.spill_copy_fwd(src, dst, [self.root], stamp)
+
+    def test_incremental_respill_sends_only_changes(self):
+        """v10 (FLEET-PLACE): a lane re-spilled to a host holding its copy sends only what changed"""
+        r = self.fwd("src", "dst", self.stamp())
+        self.assertEqual(r.returncode, 0, r.stderr[-300:])
+        self.assertGreaterEqual(r.sent, 600)                  # 200 x (3 dirs + 1 file) + root
+        r = self.fwd("src", "dst", self.stamp())
+        self.assertEqual((r.returncode, r.sent), (0, 0), r.stderr[-300:])
+        import time as _t
+        _t.sleep(1.1)
+        open(self.host("src") + "/d7/b/c/f", "w").write("changed")
+        os.makedirs(self.host("src") + "/new/empty")
+        open(self.host("dst") + "/d8/b/c/f", "w").write("dst newer")   # newer on dst: never clobbered
+        r = self.fwd("src", "dst", self.stamp())
+        self.assertEqual((r.returncode, r.sent), (0, 3), r.stderr[-300:])    # d7 file + new + new/empty
+        self.assertEqual(open(self.host("dst") + "/d7/b/c/f").read(), "changed")
+        self.assertEqual(open(self.host("dst") + "/d8/b/c/f").read(), "dst newer")
+        self.assertTrue(os.path.isdir(self.host("dst") + "/new/empty"))
 
     def test_concurrent_spills_of_one_lane_both_copy(self):
         """the MU-SLICE-GATE race: two spills of the same lane to the same host at once"""

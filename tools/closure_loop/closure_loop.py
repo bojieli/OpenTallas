@@ -1932,11 +1932,11 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
         order.sort(key=score, reverse=True)
         why = []
         for h in order:
-            cap = host_cfg(h).get("max_die_jobs")
-            if die_job and cap is not None:     # DIE CAP (FLEET-NEW2 2026-10-19): ot-epyc8 = tile work + ONE die chain
-                n = die_jobs_on(h)
-                if n is None or n >= cap:
-                    why.append(f"{host_cfg(h)['label']} DIE CAP {cap} ({'unknown' if n is None else n} die job(s) there)")
+            if die_job:     # v10 DISK ADMISSION (FLEET-PLACE 2026-10-19): replaces the max_die_jobs count cap
+                dk = (self.probe(h) or {}).get("disk_gb")
+                n = (die_jobs_on(h) or 0) if dk is not None and dk < DIE_DISK_RESERVE_BELOW_GB else 0
+                if dk is not None and dk - n * DIE_DISK_GB < DIE_DISK_GB:
+                    why.append(f"{host_cfg(h)['label']} DISK {dk} GB - {n} die job(s) x {DIE_DISK_GB} GB < {DIE_DISK_GB} GB")
                     continue
             ok, msg = self.fits(h, threads, ram)
             if ok:
@@ -1949,6 +1949,7 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
 
 
 SMALL_HOST_CORES, SMALL_HOST_THREADS = 48, 8   # see Fleet._choose
+DIE_DISK_GB, DIE_DISK_RESERVE_BELOW_GB = 60, 2000   # v10 FLEET-PLACE: same rule as ~/bin/ot-run drop_low_disk
 
 # DIE CAP (FLEET-NEW2 2026-10-19): hosts.json max_die_jobs bounds the die-level jobs on a host = this daemon's die jobs
 # placed there (DIE_SPEC_RE names; only those state files are read) + ot-run die units / die waiters on the host
