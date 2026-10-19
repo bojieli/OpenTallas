@@ -1,0 +1,7 @@
+Verilator 5.050 2026-07-01 rev v5.050
+AHUB_DW FAIL mut=5 first error cycle 1121 pass 0: die hub fault hf
+AHUB_DW FAIL mut=5 errors=9052
+- rtl/test/qwen_kv_die/tb_qkd_ahub_static_dw_s4o.sv:205: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 14us; walltime 0.814 s; speed 16.933 us/s
+- Verilator: cpu 0.812 s on 1 threads; allocated 10 MB
