@@ -17463,7 +17463,7 @@ def hbm_svg_landing_pair_native_model():
     return model()
 
 
-def hbm_generic_banked_calendar_model(serialized_programmes=1):
+def hbm_generic_banked_calendar_model(serialized_programmes=None):
     """Model-only SVG/XC native-bank split and separate cache-command alignment."""
     from hbm_layer_vehicle.xcal_banked_calendar_model import model
     return model(serialized_programmes)

@@ -1,0 +1,683 @@
+{
+  "source": "results/rtl/hbm_ds_layer_tput_1018/smbudget_1019/pos.json",
+  "sha256": "560909e80d3f47199ae7f97d2635d8d5f2fa345a7287bfb7252a0e111f5cf055",
+  "fixture_scope": "Committed matvec service fixture only, no attention-reserved programme execution, not full-depth token",
+  "distinct_resident_programmes": 19,
+  "runtime_SVG_programme_starts": 154,
+  "parallel_XC_mirror_starts": 154,
+  "parallel_mirrors_add_no_serial_boundary_count": true,
+  "per_kind": [
+    {
+      "name": "L00",
+      "layer": 0,
+      "descriptors": 29,
+      "nonexpert_blocks": 17,
+      "routed_expert_descriptors": 12,
+      "lstride": 136,
+      "kbase": 0,
+      "estride": 16,
+      "expert_ids": {
+        "0": 61,
+        "1": 69,
+        "2": 112,
+        "3": 170,
+        "4": 299,
+        "5": 357
+      },
+      "ids_at_rc": 7498,
+      "rc_end": 13208
+    },
+    {
+      "name": "L02",
+      "layer": 2,
+      "descriptors": 32,
+      "nonexpert_blocks": 20,
+      "routed_expert_descriptors": 12,
+      "lstride": 160,
+      "kbase": 6280,
+      "estride": 16,
+      "expert_ids": {
+        "0": 33,
+        "1": 36,
+        "2": 59,
+        "3": 182,
+        "4": 279,
+        "5": 352
+      },
+      "ids_at_rc": 9372,
+      "rc_end": 15082
+    },
+    {
+      "name": "L14",
+      "layer": 14,
+      "descriptors": 39,
+      "nonexpert_blocks": 27,
+      "routed_expert_descriptors": 12,
+      "lstride": 216,
+      "kbase": 25192,
+      "estride": 16,
+      "expert_ids": {
+        "0": 26,
+        "1": 29,
+        "2": 114,
+        "3": 155,
+        "4": 334,
+        "5": 352
+      },
+      "ids_at_rc": 12531,
+      "rc_end": 18241
+    },
+    {
+      "name": "head",
+      "layer": 0,
+      "descriptors": 54,
+      "nonexpert_blocks": 54,
+      "routed_expert_descriptors": 0,
+      "lstride": 432,
+      "kbase": 120592,
+      "estride": 0,
+      "expert_ids": {},
+      "ids_at_rc": null,
+      "rc_end": 22550
+    }
+  ],
+  "per_operation_boundaries": [
+    {
+      "layer": "L00",
+      "k": 4,
+      "tag": "wq_a",
+      "blocks": 1,
+      "fmt": "FP8",
+      "first_cmd_abs": 1190,
+      "last_cmd_abs": 1253
+    },
+    {
+      "layer": "L00",
+      "k": 7,
+      "tag": "wkv",
+      "blocks": 1,
+      "fmt": "FP8",
+      "first_cmd_abs": 1821,
+      "last_cmd_abs": 1884
+    },
+    {
+      "layer": "L00",
+      "k": 12,
+      "tag": "wq_b (head-aligned: head h on die h)",
+      "blocks": 4,
+      "fmt": "FP8",
+      "first_cmd_abs": 2140,
+      "last_cmd_abs": 3415
+    },
+    {
+      "layer": "L00",
+      "k": 30,
+      "tag": "wo_a K-split: the die's head against its o-group's 1,024 rows",
+      "blocks": 4,
+      "fmt": "BF16",
+      "first_cmd_abs": 3756,
+      "last_cmd_abs": 5031
+    },
+    {
+      "layer": "L00",
+      "k": 37,
+      "tag": "wo_b",
+      "blocks": 2,
+      "fmt": "FP8",
+      "first_cmd_abs": 5911,
+      "last_cmd_abs": 6378
+    },
+    {
+      "layer": "L00",
+      "k": 42,
+      "tag": "router gate",
+      "blocks": 2,
+      "fmt": "BF16",
+      "first_cmd_abs": 7466,
+      "last_cmd_abs": 7933
+    },
+    {
+      "layer": "L00",
+      "k": 44,
+      "tag": "expert slot 6 w1+w3",
+      "blocks": 2,
+      "fmt": "FP8",
+      "first_cmd_abs": 8501,
+      "last_cmd_abs": 8968
+    },
+    {
+      "layer": "L00",
+      "k": 49,
+      "tag": "expert slot 0 w1+w3",
+      "blocks": 1,
+      "fmt": "FP4",
+      "first_cmd_abs": 9328,
+      "last_cmd_abs": 9391
+    },
+    {
+      "layer": "L00",
+      "k": 58,
+      "tag": "expert slot 1 w1+w3",
+      "blocks": 1,
+      "fmt": "FP4",
+      "first_cmd_abs": 9751,
+      "last_cmd_abs": 9814
+    },
+    {
+      "layer": "L00",
+      "k": 59,
+      "tag": "expert slot 2 w1+w3",
+      "blocks": 1,
+      "fmt": "FP4",
+      "first_cmd_abs": 10174,
+      "last_cmd_abs": 10237
+    },
+    {
+      "layer": "L00",
+      "k": 62,
+      "tag": "expert slot 3 w1+w3",
+      "blocks": 1,
+      "fmt": "FP4",
+      "first_cmd_abs": 10597,
+      "last_cmd_abs": 10660
+    },
+    {
+      "layer": "L00",
+      "k": 64,
+      "tag": "expert slot 4 w1+w3",
+      "blocks": 1,
+      "fmt": "FP4",
+      "first_cmd_abs": 11020,
+      "last_cmd_abs": 11083
+    },
+    {
+      "layer": "L00",
+      "k": 65,
+      "tag": "expert slot 5 w1+w3",
+      "blocks": 1,
+      "fmt": "FP4",
+      "first_cmd_abs": 11443,
+      "last_cmd_abs": 11506
+    },
+    {
+      "layer": "L00",
+      "k": 71,
+      "tag": "expert slot 0 w2",
+      "blocks": 1,
+      "fmt": "FP4",
+      "first_cmd_abs": 11762,
+      "last_cmd_abs": 11825
+    },
+    {
+      "layer": "L00",
+      "k": 73,
+      "tag": "expert slot 3 w2",
+      "blocks": 1,
+      "fmt": "FP4",
+      "first_cmd_abs": 12081,
+      "last_cmd_abs": 12144
+    },
+    {
+      "layer": "L00",
+      "k": 75,
+      "tag": "expert slot 1 w2",
+      "blocks": 1,
+      "fmt": "FP4",
+      "first_cmd_abs": 12400,
+      "last_cmd_abs": 12463
+    },
+    {
+      "layer": "L00",
+      "k": 78,
+      "tag": "expert slot 2 w2",
+      "blocks": 1,
+      "fmt": "FP4",
+      "first_cmd_abs": 12719,
+      "last_cmd_abs": 12782
+    },
+    {
+      "layer": "L00",
+      "k": 79,
+      "tag": "expert slot 4 w2",
+      "blocks": 1,
+      "fmt": "FP4",
+      "first_cmd_abs": 13038,
+      "last_cmd_abs": 13101
+    },
+    {
+      "layer": "L00",
+      "k": 80,
+      "tag": "expert slot 5 w2",
+      "blocks": 1,
+      "fmt": "FP4",
+      "first_cmd_abs": 13357,
+      "last_cmd_abs": 13420
+    },
+    {
+      "layer": "L00",
+      "k": 82,
+      "tag": "expert slot 6 w2",
+      "blocks": 1,
+      "fmt": "FP8",
+      "first_cmd_abs": 13780,
+      "last_cmd_abs": 13843
+    },
+    {
+      "layer": "L02",
+      "k": 7,
+      "tag": "wq_a",
+      "blocks": 1,
+      "fmt": "FP8",
+      "first_cmd_abs": 14411,
+      "last_cmd_abs": 14474
+    },
+    {
+      "layer": "L02",
+      "k": 9,
+      "tag": "wkv",
+      "blocks": 1,
+      "fmt": "FP8",
+      "first_cmd_abs": 15042,
+      "last_cmd_abs": 15105
+    },
+    {
+      "layer": "L02",
+      "k": 12,
+      "tag": "compressor.wkv|wgate",
+      "blocks": 2,
+      "fmt": "BF16",
+      "first_cmd_abs": 16193,
+      "last_cmd_abs": 16660
+    },
+    {
+      "layer": "L02",
+      "k": 16,
+      "tag": "indexer.wq_b",
+      "blocks": 1,
+      "fmt": "FP8",
+      "first_cmd_abs": 16916,
+      "last_cmd_abs": 16979
+    },
+    {
+      "layer": "L02",
+      "k": 25,
+      "tag": "wq_b (head-aligned: head h on die h)",
+      "blocks": 4,
+      "fmt": "FP8",
+      "first_cmd_abs": 17235,
+      "last_cmd_abs": 18510
+    },
+    {
+      "layer": "L02",
+      "k": 45,
+      "tag": "wo_a K-split: the die's head against its o-group's 1,024 rows",
+      "blocks": 4,
+      "fmt": "BF16",
+      "first_cmd_abs": 18851,
+      "last_cmd_abs": 20126
+    },
+    {
+      "layer": "L02",
+      "k": 47,
+      "tag": "wo_b",
+      "blocks": 2,
+      "fmt": "FP8",
+      "first_cmd_abs": 21006,
+      "last_cmd_abs": 21473
+    },
+    {
+      "layer": "L02",
+      "k": 52,
+      "tag": "router gate",
+      "blocks": 2,
+      "fmt": "BF16",
+      "first_cmd_abs": 22561,
+      "last_cmd_abs": 23028
+    },
+    {
+      "layer": "L02",
+      "k": 56,
+      "tag": "expert slot 6 w1+w3",
+      "blocks": 2,
+      "fmt": "FP8",
+      "first_cmd_abs": 23596,
+      "last_cmd_abs": 24063
+    },
+    {
+      "layer": "L02",
+      "k": 61,
+      "tag": "expert slot 0 w1+w3",
+      "blocks": 1,
+      "fmt": "FP4",
+      "first_cmd_abs": 24423,
+      "last_cmd_abs": 24486
+    },
+    {
+      "layer": "L02",
+      "k": 69,
+      "tag": "expert slot 1 w1+w3",
+      "blocks": 1,
+      "fmt": "FP4",
+      "first_cmd_abs": 24846,
+      "last_cmd_abs": 24909
+    },
+    {
+      "layer": "L02",
+      "k": 71,
+      "tag": "expert slot 2 w1+w3",
+      "blocks": 1,
+      "fmt": "FP4",
+      "first_cmd_abs": 25269,
+      "last_cmd_abs": 25332
+    },
+    {
+      "layer": "L02",
+      "k": 73,
+      "tag": "expert slot 3 w1+w3",
+      "blocks": 1,
+      "fmt": "FP4",
+      "first_cmd_abs": 25692,
+      "last_cmd_abs": 25755
+    },
+    {
+      "layer": "L02",
+      "k": 75,
+      "tag": "expert slot 4 w1+w3",
+      "blocks": 1,
+      "fmt": "FP4",
+      "first_cmd_abs": 26115,
+      "last_cmd_abs": 26178
+    },
+    {
+      "layer": "L02",
+      "k": 76,
+      "tag": "expert slot 5 w1+w3",
+      "blocks": 1,
+      "fmt": "FP4",
+      "first_cmd_abs": 26538,
+      "last_cmd_abs": 26601
+    },
+    {
+      "layer": "L02",
+      "k": 80,
+      "tag": "expert slot 6 w2",
+      "blocks": 1,
+      "fmt": "FP8",
+      "first_cmd_abs": 26961,
+      "last_cmd_abs": 27024
+    },
+    {
+      "layer": "L02",
+      "k": 83,
+      "tag": "expert slot 2 w2",
+      "blocks": 1,
+      "fmt": "FP4",
+      "first_cmd_abs": 27280,
+      "last_cmd_abs": 27343
+    },
+    {
+      "layer": "L02",
+      "k": 85,
+      "tag": "expert slot 3 w2",
+      "blocks": 1,
+      "fmt": "FP4",
+      "first_cmd_abs": 27599,
+      "last_cmd_abs": 27662
+    },
+    {
+      "layer": "L02",
+      "k": 87,
+      "tag": "expert slot 4 w2",
+      "blocks": 1,
+      "fmt": "FP4",
+      "first_cmd_abs": 27918,
+      "last_cmd_abs": 27981
+    },
+    {
+      "layer": "L02",
+      "k": 88,
+      "tag": "expert slot 1 w2",
+      "blocks": 1,
+      "fmt": "FP4",
+      "first_cmd_abs": 28237,
+      "last_cmd_abs": 28300
+    },
+    {
+      "layer": "L02",
+      "k": 89,
+      "tag": "expert slot 0 w2",
+      "blocks": 1,
+      "fmt": "FP4",
+      "first_cmd_abs": 28556,
+      "last_cmd_abs": 28619
+    },
+    {
+      "layer": "L02",
+      "k": 93,
+      "tag": "expert slot 5 w2",
+      "blocks": 1,
+      "fmt": "FP4",
+      "first_cmd_abs": 28875,
+      "last_cmd_abs": 28938
+    },
+    {
+      "layer": "L14",
+      "k": 8,
+      "tag": "engram.wkv",
+      "blocks": 7,
+      "fmt": "FP8",
+      "first_cmd_abs": 29610,
+      "last_cmd_abs": 32097
+    },
+    {
+      "layer": "L14",
+      "k": 27,
+      "tag": "wq_a",
+      "blocks": 1,
+      "fmt": "FP8",
+      "first_cmd_abs": 32665,
+      "last_cmd_abs": 32728
+    },
+    {
+      "layer": "L14",
+      "k": 29,
+      "tag": "wkv",
+      "blocks": 1,
+      "fmt": "FP8",
+      "first_cmd_abs": 33296,
+      "last_cmd_abs": 33359
+    },
+    {
+      "layer": "L14",
+      "k": 32,
+      "tag": "compressor.wkv|wgate",
+      "blocks": 2,
+      "fmt": "BF16",
+      "first_cmd_abs": 34447,
+      "last_cmd_abs": 34914
+    },
+    {
+      "layer": "L14",
+      "k": 36,
+      "tag": "indexer.wq_b",
+      "blocks": 1,
+      "fmt": "FP8",
+      "first_cmd_abs": 35170,
+      "last_cmd_abs": 35233
+    },
+    {
+      "layer": "L14",
+      "k": 41,
+      "tag": "wq_b (head-aligned: head h on die h)",
+      "blocks": 4,
+      "fmt": "FP8",
+      "first_cmd_abs": 35489,
+      "last_cmd_abs": 36764
+    },
+    {
+      "layer": "L14",
+      "k": 63,
+      "tag": "wo_a K-split: the die's head against its o-group's 1,024 rows",
+      "blocks": 4,
+      "fmt": "BF16",
+      "first_cmd_abs": 37105,
+      "last_cmd_abs": 38380
+    },
+    {
+      "layer": "L14",
+      "k": 65,
+      "tag": "wo_b",
+      "blocks": 2,
+      "fmt": "FP8",
+      "first_cmd_abs": 39260,
+      "last_cmd_abs": 39727
+    },
+    {
+      "layer": "L14",
+      "k": 70,
+      "tag": "router gate",
+      "blocks": 2,
+      "fmt": "BF16",
+      "first_cmd_abs": 40815,
+      "last_cmd_abs": 41282
+    },
+    {
+      "layer": "L14",
+      "k": 74,
+      "tag": "expert slot 6 w1+w3",
+      "blocks": 2,
+      "fmt": "FP8",
+      "first_cmd_abs": 41850,
+      "last_cmd_abs": 42317
+    },
+    {
+      "layer": "L14",
+      "k": 79,
+      "tag": "expert slot 0 w1+w3",
+      "blocks": 1,
+      "fmt": "FP4",
+      "first_cmd_abs": 42677,
+      "last_cmd_abs": 42740
+    },
+    {
+      "layer": "L14",
+      "k": 87,
+      "tag": "expert slot 1 w1+w3",
+      "blocks": 1,
+      "fmt": "FP4",
+      "first_cmd_abs": 43100,
+      "last_cmd_abs": 43163
+    },
+    {
+      "layer": "L14",
+      "k": 89,
+      "tag": "expert slot 2 w1+w3",
+      "blocks": 1,
+      "fmt": "FP4",
+      "first_cmd_abs": 43523,
+      "last_cmd_abs": 43586
+    },
+    {
+      "layer": "L14",
+      "k": 91,
+      "tag": "expert slot 3 w1+w3",
+      "blocks": 1,
+      "fmt": "FP4",
+      "first_cmd_abs": 43946,
+      "last_cmd_abs": 44009
+    },
+    {
+      "layer": "L14",
+      "k": 93,
+      "tag": "expert slot 4 w1+w3",
+      "blocks": 1,
+      "fmt": "FP4",
+      "first_cmd_abs": 44369,
+      "last_cmd_abs": 44432
+    },
+    {
+      "layer": "L14",
+      "k": 94,
+      "tag": "expert slot 5 w1+w3",
+      "blocks": 1,
+      "fmt": "FP4",
+      "first_cmd_abs": 44792,
+      "last_cmd_abs": 44855
+    },
+    {
+      "layer": "L14",
+      "k": 98,
+      "tag": "expert slot 6 w2",
+      "blocks": 1,
+      "fmt": "FP8",
+      "first_cmd_abs": 45215,
+      "last_cmd_abs": 45278
+    },
+    {
+      "layer": "L14",
+      "k": 101,
+      "tag": "expert slot 2 w2",
+      "blocks": 1,
+      "fmt": "FP4",
+      "first_cmd_abs": 45534,
+      "last_cmd_abs": 45597
+    },
+    {
+      "layer": "L14",
+      "k": 103,
+      "tag": "expert slot 3 w2",
+      "blocks": 1,
+      "fmt": "FP4",
+      "first_cmd_abs": 45853,
+      "last_cmd_abs": 45916
+    },
+    {
+      "layer": "L14",
+      "k": 105,
+      "tag": "expert slot 4 w2",
+      "blocks": 1,
+      "fmt": "FP4",
+      "first_cmd_abs": 46172,
+      "last_cmd_abs": 46235
+    },
+    {
+      "layer": "L14",
+      "k": 106,
+      "tag": "expert slot 1 w2",
+      "blocks": 1,
+      "fmt": "FP4",
+      "first_cmd_abs": 46491,
+      "last_cmd_abs": 46554
+    },
+    {
+      "layer": "L14",
+      "k": 107,
+      "tag": "expert slot 0 w2",
+      "blocks": 1,
+      "fmt": "FP4",
+      "first_cmd_abs": 46810,
+      "last_cmd_abs": 46873
+    },
+    {
+      "layer": "L14",
+      "k": 111,
+      "tag": "expert slot 5 w2",
+      "blocks": 1,
+      "fmt": "FP4",
+      "first_cmd_abs": 47129,
+      "last_cmd_abs": 47192
+    },
+    {
+      "layer": "head",
+      "k": 1,
+      "tag": "LM head",
+      "blocks": 54,
+      "fmt": "BF16",
+      "first_cmd_abs": 48280,
+      "last_cmd_abs": 69755
+    }
+  ],
+  "critical_path_serial_boundaries": null,
+  "token_latency_delta": null,
+  "required_next_step": "Recompile fixed events with READ+2/command+4, minimum GO gap+2 then recompute golden dependency and token critical path; cannot multiply154 or assume1."
+}
