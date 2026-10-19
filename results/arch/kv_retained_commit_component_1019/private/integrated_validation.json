@@ -1,0 +1,159 @@
+{
+  "verdict": "PASS_COMPONENT_ONLY",
+  "final_unit": "oth-ubuntu-2008982-1792446023",
+  "production_calendar": null,
+  "production_cutoff": null,
+  "production_deadline": null,
+  "H_component": 64,
+  "deadline_component": 48,
+  "host_identity_domain": "HOST_DESCRIPTOR_COMPONENT59, generation2, slot1, position18",
+  "native_identity_domain": "TAG59 epoch16/stage6/token18/position13/segment6; fixture epoch7",
+  "cases": [
+    {
+      "case": 0,
+      "edges": 209,
+      "issues": 1,
+      "native_requests": 8,
+      "result_credit_returns": 8,
+      "CQ_writes": 2,
+      "successes": 1,
+      "errors": 0,
+      "response_edges": 14
+    },
+    {
+      "case": 1,
+      "edges": 210,
+      "issues": 1,
+      "native_requests": 8,
+      "result_credit_returns": 8,
+      "CQ_writes": 2,
+      "successes": 0,
+      "errors": 1,
+      "response_edges": 14
+    },
+    {
+      "case": 2,
+      "edges": 210,
+      "issues": 1,
+      "native_requests": 8,
+      "result_credit_returns": 8,
+      "CQ_writes": 2,
+      "successes": 0,
+      "errors": 1,
+      "response_edges": 14
+    },
+    {
+      "case": 3,
+      "edges": 221,
+      "issues": 1,
+      "native_requests": 8,
+      "result_credit_returns": 8,
+      "CQ_writes": 2,
+      "successes": 0,
+      "errors": 1,
+      "response_edges": 14
+    },
+    {
+      "case": 4,
+      "edges": 221,
+      "issues": 1,
+      "native_requests": 8,
+      "result_credit_returns": 8,
+      "CQ_writes": 2,
+      "successes": 0,
+      "errors": 1,
+      "response_edges": 14
+    }
+  ],
+  "scope": [
+    "actual three changed source modules",
+    "actual ND8 controller and eight endpoint replicas",
+    "real bridge packets and independent conditional packet memory responder"
+  ],
+  "claims_excluded": [
+    "production reset reachability",
+    "root binding or default enable",
+    "complete transport reset retention",
+    "production health coverage/phase/calendar",
+    "MU4",
+    "cache poison distribution",
+    "physical SRAM/pin/fanout/timing qualification"
+  ],
+  "artifacts": [
+    {
+      "file": "integrated_NOTES.md",
+      "sha256": "f6e50b52747afa826c40a81b3dbf69519ea7f44029b726e820bcc6be173a58ac"
+    },
+    {
+      "file": "integrated_bench.sv",
+      "sha256": "a39dfa6f3d05ae9895bd8260b647982c7b6c77be44a833075f7617926a0a52ea"
+    },
+    {
+      "file": "integrated_case0.log",
+      "sha256": "e9bcb5a377930797b64564ee364e251322c88dfe15695ddbec15957f7e8c400d"
+    },
+    {
+      "file": "integrated_case1.log",
+      "sha256": "6d8d0ef94a932a095bbcd654ac747f85bb1985671c0127242bfe2fc680629635"
+    },
+    {
+      "file": "integrated_case2.log",
+      "sha256": "28dd57ca6c0a646f24994f3049b9336302c020765fe81897ef4416c86e53c535"
+    },
+    {
+      "file": "integrated_case3.log",
+      "sha256": "a731449bd2b90ac61a1810c5144507ddab69ac6626906e697d18f5ee641176a3"
+    },
+    {
+      "file": "integrated_case4.log",
+      "sha256": "2507842146ea84231325169358808fa227351d8a4a957ba1ca7c92c958aab4fc"
+    },
+    {
+      "file": "integrated_compile.log",
+      "sha256": "9a562133c30a59e9d1dcb9d0832e7c597138db08fdee6cf0b2ab2ec671811941"
+    },
+    {
+      "file": "integrated_inputs.sha256",
+      "sha256": "8dcbc4c28fe93ed1d62b1703b198111709881d035cf91c72cd9ad609dad3909c"
+    },
+    {
+      "file": "integrated_ot_host_if_pb2_observed_rc.sv",
+      "sha256": "547f8188db0df993799272336b6745c1e2f56a8429107dc9d8d81d5d43bc4416"
+    },
+    {
+      "file": "integrated_ot_qfd_pkgctl.sv",
+      "sha256": "9dc960a01a40d7a4a873599bce8eeb11c12c16d454332e27dcc2533caad9b962"
+    },
+    {
+      "file": "integrated_ot_qwen_host_ctl.sv",
+      "sha256": "122c568729729d8c5ddcca8c5092cf985200c850cc9000962a2ad159674fb436"
+    },
+    {
+      "file": "integrated_preserved_iterations.tar.gz",
+      "sha256": "61cc0e9c318de5c3f0cb89c5635d830b615cc172f9158d89469a30e88f5eabe6"
+    },
+    {
+      "file": "integrated_qkd_host_axi_packet_rc.sv",
+      "sha256": "4fafb0a72ddc6e71d0d0d1d0e29ef842940baddff2033c679867ea8a65ba4bd1"
+    },
+    {
+      "file": "integrated_qkd_host_ctl_service_pins.sv",
+      "sha256": "c43934f9a6f4f13f9872475e9edf36a5b90e1b7a31787c31c0bd4c1b3e258cc8"
+    },
+    {
+      "file": "integrated_qkd_host_native_token_endpoint_cancel_rc.sv",
+      "sha256": "56edccaf12a3dceea1072c884bd72700b31a88eabddb866a00aa3a9779a281b0"
+    },
+    {
+      "file": "integrated_run.sh",
+      "sha256": "2dca3948f18b954b290c16c611c0f64b228c108a6e4c1b70fc87faef1e7e5414"
+    }
+  ],
+  "fleet_admission": {
+    "host": "ot-epyc8",
+    "request_GB": 12,
+    "threads": 8,
+    "host_pinned": false,
+    "terminal_exit": 0
+  }
+}
