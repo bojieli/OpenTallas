@@ -1,0 +1,15 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/refill-1225/S81REG/src_mu3_hs
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/refill-1225/S81REG/src_mu3_hs
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/refill-1225/S81REG/src_mu3_hs
+ot-run: ot-epyc7       admits   927 GB (avail 749, growth 101, headroom 0, waiters 0/0 GB) load 51/96 running 36 disk 6319 GB 
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/refill-1225/S81REG/src_mu3_hs
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/refill-1225/S81REG/src_mu3_hs
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/refill-1225/S81REG/src_mu3_hs
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-4120650-1792438136 after 2 s
+mut_TAGDROP: FAIL lep_mu: recv A 440/280 B 240/240 mismatches 960 identity 0 main faults 0110011 F1 1 F2 1 F3 1 return P 400/240 L 0/160
+mut_WRONGCOPY: FAIL lep_mu: recv A 280/280 B 0/240 mismatches 80 identity 1 main faults 0110011 F1 1 F2 1 F3 1 return P 240/240 L 160/160
+mut_OVR: FAIL lep_mu: recv A 280/280 B 240/240 mismatches 0 identity 1 main faults 0000000 F1 0 F2 1 F3 1 return P 240/240 L 160/160
+LEP_MU_GATE PASS
+LEG lep_mut3 rc=0
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-4120650-1792438136): exit 0
