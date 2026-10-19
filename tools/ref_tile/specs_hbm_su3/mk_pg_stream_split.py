@@ -6,7 +6,12 @@ abutted along a 2,346-b banked seam (HBM-CXDL dl_s/dl_q, S81 x34_s/_t precedent)
 signed off at 833.333 ps (the serial half conservatively at the stream period, as bridge_release_s / cx_dlq). The seam
 arcs are die-level 3:4 arcs with static calendar windows (request >= 4q setup / 2q hold, return 2q / 4q, inject 3q / 7q;
 measured by the bench window checker); die STA owns them.
-Geometry: the pair is 302.4 x 432 (q 86.4 + s 216): the seam is 2,346 b, <= 6/um needs >= 391 um of face.
+Geometry (HBM-SAFE-PGSTREAM 10-19, owner safe-design checklist; SAFE-AUDIT-HBM: q 86.4 x 432 = 5:1 at 3 % util and the
+try4 'GPL routability off' were a squeeze): the pair is ROTATED and stacked, 432 x 432 (q 432 x 216 over s 432 x 216, both
+2:1). The 2,346-b seam runs along the horizontal q S / s N faces on the two vertical pin layers M3 + M5 (5.5/um per face,
+~2.8/um per layer) instead of one M4 column at 5.4/um, which is what the routability loop could not spread (GPL-0305).
+The seam (2 banks per bridge bit, the coordinator's banked windows) sets >= 391 um of face; with <= 2:1 the halves cannot be
+sized from synthesis area (q 1,153 um2, s 2,345 um2): pin-bound, util item waived with that arithmetic (README.md).
 Run from the repo root: python3 tools/ref_tile/specs_hbm_su3/mk_pg_stream_split.py"""
 import json
 from pathlib import Path
@@ -14,7 +19,8 @@ from pathlib import Path
 S_ = 'rtl/hbm_accel/generic/adapters/static_su'
 WIT = 'results/rtl/tw3_pgstream_1019'
 BENCH = 'tools/hbm_static/su_pg_stream_split_vl_run.sh'
-H = 432.0
+WP_ = 432.0   # pair width = seam face (10 x 43.2)
+HQ, HS = 216.0, 216.0   # q / s heights (5 x 43.2): 2:1 each
 SRC_Q = [f'{S_}/top/ot_hbm_su_static_pg_stream_split.sv', f'{S_}/programme/multirate_bridge_split.sv',
          'rtl/lib/ot_rst_relay.sv']
 SRC_S = SRC_Q + [f'{S_}/ot_hbm_su_static_vm_bank_leaf_s.sv', f'{S_}/ot_hbm_su_static_vm_ports.sv',
@@ -87,14 +93,15 @@ EXTRA = [BENCH, 'rtl/test/hbm_accel/generic/tb_hbm_su_pg_stream_split.sv', f'{S_
 # halves abut, so the outline stays; routability-driven GPL off (precedent dsfd_vm_static_wfc_ctl_r4/r5, smn_fcxr_ref_fa r2,
 # smh_fcxr_ref_p35 lf CLOSED). The trial GRT / route GRT still measure congestion.
 PIN_BOUND = {
-    'hbm_su_pg_stream_q_1019': 'E seam 2,346 b at 5.4/um and W slice S band 1,178 b set the 432-um height (abuts s); '
-                               'width 86.4 is the minimum for two 4-column pin-flop bands plus the bank muxes',
-    'hbm_su_pg_stream_s_1019': 'W seam 2,346 b at 5.4/um (abuts q) sets the 432-um height; N far requests + COLL inject '
-                               '762 b and S far returns 516 b set the 216-um width',
+    'hbm_su_pg_stream_q_1019': 'S seam 2,346 b (2 banks per bridge bit, banked 3:4 windows) needs >= 391 um of face at '
+                               '<= 6/um -> 432 wide; <= 2:1 -> 216 tall; 3,527 pins vs 1,153 um2 synthesized: a 40-60 % '
+                               'outline (~48 x 48) holds <= 1,150 pins. Pin-bound, waived (HBM-SAFE-PGSTREAM)',
+    'hbm_su_pg_stream_s_1019': 'N seam 2,346 b needs >= 391 um of face -> 432 wide; <= 2:1 -> 216 tall; ~4,750 pins vs '
+                               '2,345 um2 synthesized: a 40-60 % outline (~69 x 69) holds <= 1,660 pins. Pin-bound, waived',
 }
 
 
-def mk(name, top, params, ck, rsts, land, W, pins, pr, std, srcs, why, keep=None):
+def mk(name, top, params, ck, rsts, land, W, H, pins, pr, std, srcs, why, keep=None):
     route = {'pd': 0.5, 'period_ps': 833.333, 'threads': 8, 'peak_ram_gb': 12, 'hold_margin_ns': 0.03,
              'macro_halo_um': 5.4, 'pin_h': 'M4', 'pin_v': 'M3 M5', 'pin_balance': {'h': 'M4', 'v': 'M3 M5', 'group_max': 1},
              'io_hold_margin_ns': 0.03}
@@ -104,7 +111,7 @@ def mk(name, top, params, ck, rsts, land, W, pins, pr, std, srcs, why, keep=None
          'clock_port': ck, 'reset_ports': rsts, 'reset_landing': land,
          'outline': {'w': W, 'h': H, 'exact': True}, 'std_area_um2': std, 'layer_cap': 'M5', 'signal_max_layer': 'M5',
          'pg_layer': 'M5', 'recipe': 4, 'macros': [], 'children': [], 'inter': [], 'pins': pins, 'pin_ranges': pr,
-         'route': route, 'orfs_vars': {'GPL_ROUTABILITY_DRIVEN': '0'},
+         'route': route,
          'fill_reason': {'pin_bound': PIN_BOUND[name]}, 'io_flop_at_pins': {'cols': 4, 'allow_none': True}, 'inhold': False, 'outhold': False,
          'keep_pin_regs': True, 'hold_budget': 'die',
          'pin_regs': {'enable': False, 'reason': (
@@ -113,11 +120,12 @@ def mk(name, top, params, ck, rsts, land, W, pins, pr, std, srcs, why, keep=None
              '(ij banks, launch, tap) or the synchroniser / sticky-fault OR. A wrapper stage would move the fixed 3:4 '
              'seam calendar (windows 2q..7q) and the VM 10/7 calendar.')},
          'structural_change': why,
-         'job': {'owner': 'Claude:TW3-PGSTREAM', 'branch': 'claude/tw3-pgstream-1019', 'tag': 'p1',
+         'job': {'owner': 'Claude:HBM-SAFE-PGSTREAM', 'branch': 'claude/hbm-safe-pgstream-1019', 'tag': 'p2',
                  'purpose': 'HBM die d4g LIGHT SU slice stream sibling, one-root half: ' + top,
                  'record_to': f'results/rtl/ref_tile/{name}', 'views_to': f'physical/ref_tile/{name}/views',
                  'auto_merge': False,
-                 'reroute_reason': {'kind': 'rtl_change', 'what': 'one-root split of hbm_su_pg_stream_1019 (gate FAIL 0ff805777)',
+                 'reroute_reason': {'kind': 'rtl_change', 'what': 'one-root split of hbm_su_pg_stream_1019 (gate FAIL '
+                                    '0ff805777); safe re-shape 2:1 rotated pair (5:1 / GPL-0305 / routability-off squeeze)',
                                     'why': why[:600]},
                  'extra_paths': EXTRA, 'benches': benches}}
     out = Path('tools/ref_tile/specs_hbm_su3') / f'{name}.json'
@@ -125,32 +133,30 @@ def mk(name, top, params, ck, rsts, land, W, pins, pr, std, srcs, why, keep=None
     print(out)
 
 
-seam_pr = ranges(SEAM, 4.0, H - 4.0)
-# ---- q (serial): W slice S band, E seam, N clocks/resets
-WQ = 86.4
-pins_q = {'W': ['vmr_cmd', 'su_wq', 'su_rr', 'ij_v', 'ij_row', 'ij_bad', 'pg_fault'], 'E': SEAM,
-          'N': ['clk_ctl', 'rst_n', 'bridge_rst_n']}
+seam_pr = ranges(SEAM, 4.0, WP_ - 4.0)   # x ranges: q S face == s N face (abutted, same order)
+# ---- q (serial, clk_ctl): N slice S band 1,178 b (2.7/um, M3/M5), S seam, W clock/resets (centre)
+pins_q = {'N': ['vmr_cmd', 'su_wq', 'su_rr', 'ij_v', 'ij_row', 'ij_bad', 'pg_fault'], 'S': SEAM,
+          'W': ['clk_ctl', 'rst_n', 'bridge_rst_n']}
 pr_q = dict(seam_pr)
-pr_q.update(ranges(pins_q['W'], 4.0, H - 4.0, gap=1.2))
-pr_q.update(centre(pins_q['N'], WQ))
+pr_q.update(ranges(pins_q['N'], 4.0, WP_ - 4.0, gap=1.2))
+pr_q.update(centre(pins_q['W'], HQ))
 mk('hbm_su_pg_stream_q_1019', 'ot_hbm_su_static_pg_stream_q', {'READ_RETURN': 10, 'WRITE_RETURN': 7}, 'clk_ctl',
    ['rst_n', 'bridge_rst_n'],
    {'enable': True, 'stages': 3, 'why': '3 serial stages = one 3:4 epoch (12q): the bridge / inject slot counters release on '
     'the same epoch-aligned edge relative to the stream half (4 pg_clk stages); reset release +1 epoch (H-D4G)'},
-   WQ, pins_q, pr_q, 2600, SRC_Q,
-   WHY + 'q (serial, x8 LIGHT slices): W slice S band 1,178 b (2.7/um), E seam 2,346 b (5.4/um), clocks/resets N centre.')
-# ---- s (stream): W seam, E LG near, N far requests + COLL inject + strap, S far returns + clock/reset
-WS = 216.0
-pins_s = {'W': SEAM, 'E': ['lg_rq', 'lg_wq', 'lg_rr', 'lg_w_done', 'lg_read', 'lg_write', 'lg_fault'],
-          'N': ['far_rq', 'far_wq', 'inj_rd', 'inj_addr', 'pos'], 'S': ['far_rr', 'pg_clk', 'bridge_rst_n', 'far_w_done']}
+   WP_, HQ, pins_q, pr_q, 1153, SRC_Q,
+   WHY + 'q (serial, x8 LIGHT slices) 432 x 216: N slice S band 1,178 b, S seam 2,346 b (M3/M5), W clock/resets.')
+# ---- s (stream, pg_clk): N seam, S LG near 1,117 b + far returns 516 b (3.9/um, M3/M5), W far requests + COLL inject
+# + strap 762 b (3.6/um, M4), E clock / reset (centre)
+pins_s = {'N': SEAM, 'S': ['lg_rq', 'lg_wq', 'lg_rr', 'lg_w_done', 'lg_read', 'lg_write', 'lg_fault', 'far_rr', 'far_w_done'],
+          'W': ['far_rq', 'far_wq', 'inj_rd', 'inj_addr', 'pos'], 'E': ['pg_clk', 'bridge_rst_n']}
 pr_s = dict(seam_pr)
-pr_s.update(ranges(pins_s['E'], 4.0, H - 4.0, gap=1.2))
-pr_s.update(ranges(pins_s['N'], 4.0, WS - 4.0, gap=1.2))
-pr_s.update({'far_rr': [4.0, 103.0], 'pg_clk': [104.0, 105.333], 'bridge_rst_n': [106.0, 107.333],
-             'far_w_done': [113.0, 116.0]})
+pr_s.update(ranges(pins_s['S'], 4.0, WP_ - 4.0, gap=1.2))
+pr_s.update(ranges(pins_s['W'], 4.0, HS - 4.0, gap=1.2))
+pr_s.update(centre(pins_s['E'], HS))
 mk('hbm_su_pg_stream_s_1019', 'ot_hbm_su_static_pg_stream_s', {'QID': 1, 'G': 2, 'READ_RETURN': 10, 'WRITE_RETURN': 7,
    'STRAP': 1}, 'pg_clk', ['bridge_rst_n'],
    {'enable': True, 'stages': 4, 'why': '4 pg_clk stages = one 3:4 epoch (12q), matching the serial half (3 clk_ctl stages)'},
-   WS, pins_s, pr_s, 4200, SRC_S,
-   WHY + 's (stream, x8): W seam 2,346 b (5.4/um), E LG near 1,117 b (2.6/um), N far requests + COLL inject 762 b (3.5/um), '
-   'S far returns 516 b + pg_clk / bridge_rst_n.', keep=['ot_hbm_vm_lg_keep_reg'])
+   WP_, HS, pins_s, pr_s, 2345, SRC_S,
+   WHY + 's (stream, x8) 432 x 216: N seam 2,346 b (M3/M5), S LG near + far returns 1,633 b, W far requests + COLL inject '
+   '762 b, E pg_clk / bridge_rst_n.', keep=['ot_hbm_vm_lg_keep_reg'])

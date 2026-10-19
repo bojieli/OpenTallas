@@ -6,17 +6,17 @@
  "die": [
   0,
   0,
-  216.0,
-  432.0
+  432.0,
+  216.0
  ],
  "core": [
   2.16,
   2.16,
-  213.84,
-  429.84
+  429.84,
+  213.84
  ],
  "why": "spec outline (exact: the closed view's sub-slot)",
- "std_area_um2": 4200,
+ "std_area_um2": 2345,
  "layer_contract": {
   "children": {},
   "pg_layer": "M5",
@@ -30,7 +30,7 @@
   "signal_max_layer": "M5"
  },
  "pins": {
-  "W": [
+  "N": [
    "rc_leaf",
    "rc_tap",
    "rq_b0",
@@ -44,27 +44,27 @@
    "wq_b1",
    "rq_b1"
   ],
-  "E": [
+  "S": [
    "lg_rq",
    "lg_wq",
    "lg_rr",
    "lg_w_done",
    "lg_read",
    "lg_write",
-   "lg_fault"
+   "lg_fault",
+   "far_rr",
+   "far_w_done"
   ],
-  "N": [
+  "W": [
    "far_rq",
    "far_wq",
    "inj_rd",
    "inj_addr",
    "pos"
   ],
-  "S": [
-   "far_rr",
+  "E": [
    "pg_clk",
-   "bridge_rst_n",
-   "far_w_done"
+   "bridge_rst_n"
   ]
  },
  "clock_port": "pg_clk",
@@ -73,7 +73,7 @@
   [
    "WARN",
    "util",
-   "utilisation 5% outside 45%-60% (std 4200 + macro 0 in core 90531 um2)",
+   "utilisation 3% outside 45%-60% (std 2345 + macro 0 in core 90531 um2)",
    "resize the outline to util 0.50-0.55 (drop 'outline', set util)"
   ]
  ],
