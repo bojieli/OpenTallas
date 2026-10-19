@@ -439,6 +439,7 @@ class Parent:
             raise SystemExit(f"unknown synthesis hard instances: {sorted(unknown)}")
         self.env = {k: v for k, v in self.mod["params"].items()}
         self.env.update({k: str(v) for k, v in (spec.get("params") or {}).items()})
+        self.regional_bindings = regional_bindings(spec, self.insts, csrc)
         self.cports, self.cwidth = {}, {}
         for ins in self.insts:
             m = ins["module"]
@@ -449,7 +450,6 @@ class Parent:
         self.ports = {p["name"]: p for p in self.mod["ports"]}
         self.ck = set(spec.get("clock_ports") or [])
         self.rst = spec.get("reset_port")
-        self.regional_bindings = regional_bindings(spec, self.insts, csrc)
         self.static = set(spec.get("static") or [])
         self.loose = set(spec.get("loose") or [])
         self.regions = [r["name"] for r in spec["regions"]]
