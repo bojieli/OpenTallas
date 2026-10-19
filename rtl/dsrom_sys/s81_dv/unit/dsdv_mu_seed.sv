@@ -36,7 +36,7 @@ module dsdv_mu_seed #(parameter integer NUSER = 1, parameter integer SB = 0, par
     input  wire            rst_n,
     input  wire [20:0]     f_c,             // {v, wr, user 10, beat 9} from the draft die calendar
     input  wire [1024:0]   f_d,             // {write data 1024, v}
-    output reg  [AW+1:0]   t_a,             // {v, we, addr AW} to the seed store (1,024-b words)
+    output wire [AW+1:0]   t_a,             // {v, we, addr AW} to the seed store (1,024-b words)
     output reg  [1023:0]   t_d,             // write data, same edge as t_a
     output reg  [2:0]      t_mf             // sticky faults
 );
@@ -48,22 +48,23 @@ module dsdv_mu_seed #(parameter integer NUSER = 1, parameter integer SB = 0, par
     reg [20:0] c_q; reg [1024:0] d_q;
     always @(posedge ck) begin c_q <= {rn & f_c[20], f_c[19:0]}; d_q <= {f_d[1024:1], rn & f_d[0]}; end
     wire cv = c_q[20], cw = c_q[19]; wire [9:0] cu = c_q[18:9]; wire [8:0] cb = c_q[8:0];
-    reg open; reg [9:0] wu; reg [8:0] wb;
+    reg open; reg [9:0] wu; reg [8:0] wb; reg ta_v; reg [AW:0] ta_p;
+    assign t_a = {ta_v, ta_p};
     wire rng = cu >= 10'(NUSER) || cb >= 9'(SW);
     wire seq = open ? (cb == wb && cu == wu) : (cb == 9'd0);
     wire ok = cv && !rng && (seq || MUT == 2);
     wire [9:0] ua = (MUT == 1) ? 10'd0 : cu;
     wire [AW-1:0] ad = AW'(SB) + AW'({ua, 8'd0}) + AW'({ua, 6'd0}) + AW'(cb);
     always @(posedge ck or negedge rn)
-        if (!rn) begin open <= 1'b0; wu <= 10'd0; wb <= 9'd0; t_mf <= 3'd0; t_a[AW+1] <= 1'b0; end
+        if (!rn) begin open <= 1'b0; wu <= 10'd0; wb <= 9'd0; t_mf <= 3'd0; ta_v <= 1'b0; end
         else begin
-            t_a[AW+1] <= ok;
+            ta_v <= ok;
             if (cv && rng) t_mf[1] <= 1'b1;
-            if (cv && !rng && !seq) t_mf[0] <= 1'b1;
+            if (cv && !rng && !seq && MUT != 2) t_mf[0] <= 1'b1;
             if (d_q[0] && !(cv && cw)) t_mf[2] <= 1'b1;
             if (ok) begin
                 open <= cb != 9'(SW - 1); wu <= cu; wb <= cb + 9'd1;
             end
         end
-    always @(posedge ck) begin t_a[AW:0] <= {cw, ad}; t_d <= d_q[1024:1]; end
+    always @(posedge ck) begin ta_p <= {cw, ad}; t_d <= d_q[1024:1]; end
 endmodule
