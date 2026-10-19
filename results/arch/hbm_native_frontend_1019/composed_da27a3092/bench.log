@@ -1,0 +1,22 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/codex-native-owner-issue-da27a3092/src
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-native-owner-issue-da27a3092/src
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-native-owner-issue-da27a3092/src
+ot-run: ot-epyc7       admits  1086 GB (avail 827, growth 66, headroom 0, waiters 0/0 GB) load 31/96 running 18 disk 6407 GB 
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/codex-native-owner-issue-da27a3092/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-native-owner-issue-da27a3092/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-native-owner-issue-da27a3092/src
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-3316929-1792433545 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+ISSUE_RATE phase=0 cycles=2002 accepted=1000
+ISSUE_RATE phase=1 cycles=2584 accepted=1000
+PASS owner_issue checks=2000 pending_slots4 native_ready_history confirmationII2 resets8
+- rtl/test/hbm_accel/native_frontend/tb_owner_issue.sv:40: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 5us; walltime 0.005 s; speed 1.067 ms/s
+- Verilator: cpu 0.005 s on 1 threads; allocated 7 MB
+FAIL owner_issue missing confirmation bubble phase=0 cycle=4 sent=4 received=1
+FAIL owner_issue finite capacity over-admission phase=1 cycle=5 sent=5 received=0
+FAIL owner_issue tag/address/length identity phase=1 cycle=21 sent=4 received=0
+FAIL owner_issue tag/address/length identity phase=0 cycle=3 sent=4 received=0
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-3316929-1792433545): exit 0

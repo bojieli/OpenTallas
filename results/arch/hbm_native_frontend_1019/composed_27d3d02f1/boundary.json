@@ -1,0 +1,126 @@
+{
+  "top": "ot_hbm_owner_return_native",
+  "mapped_sha256": "df5045cc9b09af363144f409265cb12e1b6eb7d5393d710a21833c265f8c30e9",
+  "rule": "Output origins cross BUF/INV only; combinational paths not registered. Input capture counts physical terminal cells. Clock ports exempt only on sequential or SRAM cells.",
+  "input_ports": {
+    "clk": {
+      "width": 1,
+      "bits": {
+        "all_FF_clock": 1
+      },
+      "max_collapsed_load": 8253
+    },
+    "rst_n": {
+      "width": 1,
+      "bits": {
+        "functional_or_mixed": 1
+      },
+      "max_collapsed_load": 7
+    },
+    "alloc_v": {
+      "width": 1,
+      "bits": {
+        "all_FF_D": 1
+      },
+      "max_collapsed_load": 32
+    },
+    "alloc_tag": {
+      "width": 17,
+      "bits": {
+        "all_FF_D": 17
+      },
+      "max_collapsed_load": 32
+    },
+    "alloc_metadata": {
+      "width": 47,
+      "bits": {
+        "all_FF_D": 47
+      },
+      "max_collapsed_load": 32
+    },
+    "return_v": {
+      "width": 1,
+      "bits": {
+        "all_FF_D": 1
+      },
+      "max_collapsed_load": 32
+    },
+    "return_tag": {
+      "width": 17,
+      "bits": {
+        "all_FF_D": 17
+      },
+      "max_collapsed_load": 32
+    },
+    "return_beat": {
+      "width": 4,
+      "bits": {
+        "all_FF_D": 4
+      },
+      "max_collapsed_load": 32
+    },
+    "return_data": {
+      "width": 256,
+      "bits": {
+        "all_FF_D": 256
+      },
+      "max_collapsed_load": 1
+    },
+    "stop": {
+      "width": 1,
+      "bits": {
+        "all_FF_D": 1
+      },
+      "max_collapsed_load": 32
+    },
+    "target_reserved": {
+      "width": 2,
+      "bits": {
+        "all_FF_D": 2
+      },
+      "max_collapsed_load": 1
+    }
+  },
+  "output_ports": {
+    "pair_v": {
+      "width": 1,
+      "origins": {
+        "FF_Q": 1
+      }
+    },
+    "pair_target": {
+      "width": 1,
+      "origins": {
+        "FF_Q": 1
+      }
+    },
+    "pair_packet": {
+      "width": 285,
+      "origins": {
+        "FF_Q": 285
+      }
+    },
+    "fault": {
+      "width": 1,
+      "origins": {
+        "FF_Q": 1
+      }
+    },
+    "live": {
+      "width": 32,
+      "origins": {
+        "FF_Q": 32
+      }
+    }
+  },
+  "clock_roots": [
+    {
+      "net": "clk bit=2",
+      "sinks": 8253,
+      "cell_types": {
+        "DFFASRHQNx1_ASAP7_75t_R": 889,
+        "DFFHQNx1_ASAP7_75t_R": 7364
+      }
+    }
+  ]
+}

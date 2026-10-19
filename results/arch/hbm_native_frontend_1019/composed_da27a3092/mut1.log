@@ -1,0 +1,5 @@
+Verilator 5.050 2026-07-01 rev v5.050
+FAIL owner_issue missing confirmation bubble phase=0 cycle=4 sent=4 received=1
+[12000] %Fatal: tb_owner_issue.sv:10: Assertion failed in tb_owner_issue.fail
+%Error: rtl/test/hbm_accel/native_frontend/tb_owner_issue.sv:10: Verilog $stop
+Aborting...

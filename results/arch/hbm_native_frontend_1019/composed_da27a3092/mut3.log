@@ -1,0 +1,6 @@
+Verilator 5.050 2026-07-01 rev v5.050
+ISSUE_RATE phase=0 cycles=2002 accepted=1000
+FAIL owner_issue tag/address/length identity phase=1 cycle=21 sent=4 received=0
+[2085000] %Fatal: tb_owner_issue.sv:10: Assertion failed in tb_owner_issue.fail
+%Error: rtl/test/hbm_accel/native_frontend/tb_owner_issue.sv:10: Verilog $stop
+Aborting...
