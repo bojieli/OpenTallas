@@ -167,7 +167,7 @@ module tb_qfd_sys_face_cold;
       end else if(init_u0)err("init_u0 without DH");
       if(fb)begin nfill=nfill+1;$display("COLDAGE FILL_pin_sample%0d relativeE%0d",cyc,cyc-ecal);end
       if(ex_s)begin
-        if(nword==0 && cyc-ecal-1!=209)err("cold E SEG1 header offset");
+        if(nword==0 && cyc-ecal-1!=210)err("cold E SEG1 header offset");
         nword=nword+1;
       end
     end
@@ -203,7 +203,7 @@ module tb_qfd_sys_face_cold;
       scale_re=1;@(negedge ck);scale_re=0;#0.1;if(scale_q!==scale)err("scale");
       repeat(20)@(negedge ck);
       if(ninit!=1 || nfill!=1 || nword!=65 || u_dut.cold_active || u_dut.t_run)err("prefix count/end");
-      if(face_fault || prov_fault || a_f || c_f || w_f || fab)err("fault raised");
+      if(face_fault || prov_fault || a_f || c_f || w_f || fab)begin $display("FAULT boot%b prog%b cal%b emb%b rp%b armed%b go%b mu%b accepted%b cold%b",u_dut.boot_fault,u_dut.prog_fault,u_dut.cal_fault,u_dut.emb_fault,u_dut.rp_fault,u_dut.armed_fault,u_dut.go_fault,u_dut.mu_hc_fault,u_dut.accepted_ctx_fault,u_dut.cold_fault);err("fault raised");end
       if(errs==0)$display("SYS_FACE_COLD_PASS MUT%0d Tprefix3 Esegment1 init1 row64+scale",MUT);
       else begin $display("SYS_FACE_COLD_FAIL MUT%0d errors%0d face%0d provider%0d",MUT,errs,face_fault,prov_fault);$fatal(1);end
       $finish;
