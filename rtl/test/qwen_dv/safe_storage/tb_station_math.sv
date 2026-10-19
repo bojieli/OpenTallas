@@ -1,9 +1,13 @@
 `timescale 1ns/1ps
 module tb_station_math;
  reg ck=0,rst=0,v=0;always #5 ck=~ck;
- reg[31:0] a=0,b=0;wire[31:0] ay,ag,my,mg;wire[1:0] ae,age,me,mge,arep;wire av,agv,mv,mgv;
+ reg[31:0] a=0,b=0;wire[31:0] ay,ag,my,mg,abg,agn,abn,mgn;wire[1:0] agne,abne,mgne,nrep;wire[1:0] abge;wire abgv;wire[1:0] ae,age,me,mge,arep;wire av,agv,mv,mgv;
  ot_hdc_fp32_add_lat #(.LAT(7),.DRST(0)) u_a(.clk(ck),.rst_n(rst),.valid_in(v),.a(a),.b(b),.y(ay),.err(ae),.valid_out(av));
  qfd_dv_station_add_g u_ag(.clk(ck),.rst_n(rst),.valid_in(v),.a(a),.b(b),.y(ag),.err(age),.valid_out(agv),.valid_rep(arep));
+ qfd_dv_station_add_base_g u_abg(.clk(ck),.rst_n(rst),.valid_in(v),.a(a),.b(b),.y(abg),.err(abge),.valid_out(abgv));
+ qfd_dv_station_add_nov_g u_agn(.clk(ck),.rst_n(rst),.valid_in(v),.a(a),.b(b),.y(agn),.err(agne),.valid_rep(nrep));
+ qfd_dv_station_add_base_nov_g u_abn(.clk(ck),.a(a),.b(b),.y(abn),.err(abne));
+ qfd_dv_station_mul_nov_g u_mgn(.clk(ck),.a(a),.b(b),.y(mgn),.err(mgne));
  ot_hdc_fp32_mul_lat #(.LAT(6),.DRST(0)) u_m(.clk(ck),.rst_n(rst),.valid_in(v),.a(a),.b(b),.y(my),.err(me),.valid_out(mv));
  qfd_dv_station_mul_g u_mg(.clk(ck),.rst_n(rst),.valid_in(v),.a(a),.b(b),.y(mg),.err(mge),.valid_out(mgv));
  reg[31:0] seed=32'h5e671899;integer cycle=0,age_since_reset=0,ap=0,mp=0;
@@ -27,9 +31,11 @@ module tb_station_math;
   cycle=cycle+1;if(!rst)age_since_reset=0;else age_since_reset=age_since_reset+1;
   #1;
   if(age_since_reset>16) begin
+   if(nrep!={2{av}}) $fatal(1,"NOVALIDOUT_REP_MISMATCH");
    if({av,mv,arep}!={agv,mgv,{2{agv}}}) $fatal(1,"MATH_VALID_AGE_MISMATCH");
-   if(av) begin if({ay,ae}!={ag,age}) $fatal(1,"ADD_BITS_MISMATCH cycle%0d",cycle);ap=ap+1;end
-   if(mv) begin if({my,me}!={mg,mge}) $fatal(1,"MUL_BITS_MISMATCH cycle%0d",cycle);mp=mp+1;end
+   if(av!=abgv) $fatal(1,"BASE_ADD_VALID_MISMATCH");
+   if(av) begin if({ay,ae}!={agn,agne}||{ay,ae}!={abn,abne}) $fatal(1,"DATA_ONLY_ADD_MISMATCH");if({ay,ae}!={abg,abge}) $fatal(1,"BASE_ADD_BITS_MISMATCH");if({ay,ae}!={ag,age}) $fatal(1,"ADD_BITS_MISMATCH cycle%0d",cycle);ap=ap+1;end
+   if(mv) begin if({my,me}!={mgn,mgne}) $fatal(1,"DATA_ONLY_MUL_MISMATCH");if({my,me}!={mg,mge}) $fatal(1,"MUL_BITS_MISMATCH cycle%0d",cycle);mp=mp+1;end
   end
   if(cycle==10000) begin $display("STATION_MATH_EQ PASS cycles10000 resets2 add%0d mul%0d fullwidth/directed/RNE/ties/zero/subnormal/Inf/NaN",ap,mp);$finish;end
  end
