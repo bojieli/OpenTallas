@@ -44,7 +44,7 @@ sys.path.insert(0, str(ROOT / 'tools/s81_dv'))
 
 DIE_REF = 'origin/main'   # p4l bind9 / plan / land plan / unit RTL of record (main 711fb3da3+ = die7 77083deda; byte-identical to die6 3923ae6de)
 DIE_PATHS = ['results/arch/s81_dv_1016/bind9', 'results/arch/s81_dv_1016/p4l', 'results/arch/s81_dv_1016/landing/p4l',
-             'tools/s81_dv', 'rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv', 'rtl/dsrom_sys/s81_dv/unit/ot_dsdv_fixed_issue.sv',
+             'tools/s81_dv', 'rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv', 'rtl/dsrom_sys/s81_dv/unit/ot_dsdv_fixed_issue.sv', 'rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv',
              'rtl/dsrom_sys/s81_dv/slice', 'rtl/dsrom_sys/s81_dv/unit/dsdv_gunit.sv']
 LAYERS = {'L0': 0, 'L2': 2, 'L14': 14, 'L20': 20}
 SPECIAL = ('mtp_draft', 'head')
@@ -53,7 +53,9 @@ SPECIAL = ('mtp_draft', 'head')
 # dsdv_seq_host header (asserted by tb_dsdv_seq_host): f_ks captured at t -> issuer samples job_v at t + 3 -> command of
 # calendar age a leaves the issuer register at t + 4 + a; V command register -> vo pin + 7; svc command -> s_j + 2;
 # gunit job -> cw pin + 3; issuer KIT -> t_kd pin + 3.  Calendar done rows: V / gunit = issue + 5 (posted).
-SEQ = dict(fks_to_job=3, job_to_age0=4, v_cmd_to_vo=7, svc_to_sj=2, gunit_to_cw=3, kit_to_tkd=3, done_v=5)
+SEQ = dict(fks_to_job=3, job_to_age0=4, v_cmd_to_vo=7, svc_to_sj=2, gunit_to_cw=3, kit_to_tkd=3, done_v=5, vo_s_land=1)
+# vo_s_land (S81-SHLK2 10-18): dsdv_sh_lk RL 1 lands the rung at both faces of the L0 leaf (+1 edge each way of the rung);
+# a V SOUTH command leaves vo_s at v_cmd_to_vo + vo_s_land (V north on vo_n unchanged).
 # ot_s81sl_rstop: line in pin -> line out pin 2 edges a stop.
 RSTOP_HOP = 2
 # TOK-S81-GAPS/CTL (10-19, measured on the G8 cut_3S_ctl L0 replay: every S-line CTL word +5 vs this model, vo_n on time):
@@ -554,7 +556,7 @@ def ctl_path(die, sl):
         hops.append(('u_seqhost.vo_s', 'tvS_seqhost'))
         hops.append(('u_bk_sel', 'tvS_bk_sel'))
         entry = 'u_s_4S'
-    t = SEQ['v_cmd_to_vo']
+    t = SEQ['v_cmd_to_vo'] + (SEQ['vo_s_land'] if tier == 'S' else 0)
     path = [dict(at='u_seqhost.vo', edge=t)]
     for where, lk in hops:
         L = die.links.get(lk)
@@ -746,8 +748,35 @@ def finish(prog, stage=0, kit_lead=20):
         assert key not in seen, f'duplicate issue engine {r["eng"]} at {r["issue"]}'
         seen[key] = 1
     endage = max(r['done'] for r in rows) + 4
-    rows.append(dict(eng=ENG['KIT'], issue=max(0, endage - kit_lead), done=0, arg=0, what='KIT'))
+    # S81-SAFE-FIX/SH 10-19 (ot_dsdv_walk_issue, the dsdv_sh_sq ordered SRAM walker; its seal scan refuses anything else,
+    # code 3): rows in non-decreasing issue order (KIT included; END last, alone), at most TWO rows on one edge, one row
+    # per engine per edge, per-engine done strictly increasing, <= 8 commands of an engine outstanding.  KIT moves to the
+    # first edge at or after endage - kit_lead that carries fewer than two rows; more than two native rows on one edge are
+    # a schedule error here (the lowering must stagger them).
+    per_edge = {}
+    for r in rows:
+        per_edge[r['issue']] = per_edge.get(r['issue'], 0) + 1
+    bad = sorted(t for t, n in per_edge.items() if n > 2)
+    if bad:
+        raise SystemExit(f'walker calendar: > 2 rows on edges {bad[:8]} (ot_dsdv_walk_issue issues <= 2 rows an edge)')
+    kit = max(0, endage - kit_lead)
+    while per_edge.get(kit, 0) >= 2:
+        kit += 1
+    if kit >= endage:
+        raise SystemExit(f'walker calendar: no KIT edge in [{endage - kit_lead}, {endage})')
+    rows.append(dict(eng=ENG['KIT'], issue=kit, done=0, arg=0, what='KIT'))
+    rows.sort(key=lambda r: (r['issue'], r['eng']))
     rows.append(dict(eng=ENG['END'], issue=endage, done=0, arg=0, what='END'))
+    last_done, live = {}, {}
+    for r in rows:
+        if r['eng'] < ENG['KIT']:
+            if r['eng'] in last_done and r['done'] <= last_done[r['eng']]:
+                raise SystemExit(f'walker calendar: engine {r["eng"]} done {r["done"]} not after {last_done[r["eng"]]} '
+                                 f'({r.get("what", "")})')
+            last_done[r['eng']] = r['done']
+            live[r['eng']] = [d for d in live.get(r['eng'], []) if d >= r['issue']] + [r['done']]
+            if len(live[r['eng']]) > 8:
+                raise SystemExit(f'walker calendar: engine {r["eng"]} has > 8 commands outstanding at edge {r["issue"]}')
     if len(rows) > NOPS:
         raise CalendarFull(len(rows))
     tsel = list(range(len(prog.templates)))
@@ -822,9 +851,21 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
         (out / rel).parent.mkdir(parents=True, exist_ok=True)
         (out / rel).write_text(text)
     if prog.rows:
+        # S81-SAFE-FIX/SH 10-19: off-path rows before the layer entry (S81-L20: the entry is t0 = 0, Engram prefetch rows
+        # start earlier) have NEGATIVE issue edges; packed as 24-b rows they read as ~16.7M and never issue on any issuer
+        # (ot_dsdv_walk_issue refuses the seal, code 3).  A single job is rebased to its first issue, as split_jobs does.
+        t0s = min(0, min(r['issue'] for r in prog.rows))
+        if t0s < 0:
+            for r in prog.rows:
+                r['issue'] -= t0s
+                r['done'] -= t0s
         try:
-            jobs = [(0, prog, finish(prog))]
+            jobs = [(t0s, prog, finish(prog))]
         except CalendarFull:
+            if t0s < 0:
+                for r in prog.rows:
+                    r['issue'] += t0s
+                    r['done'] += t0s
             jobs = [(t0, jp, finish(jp)) for t0, jp in split_jobs(prog)]
         # TOK-S81-GAPS/CTL (10-19): the svc job tag is {issuer context slot, calendar row index} (dsdv_seq_host j_o =
         # {v, arg, cd[83] slot, cd[6:0] op}; ot_dsdv_fixed_issue OP_BASE 0), known only once the calendar is sorted;
