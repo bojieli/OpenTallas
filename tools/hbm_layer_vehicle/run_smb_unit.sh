@@ -47,5 +47,8 @@ case "$JOB" in
   xmut4) J="$T --layers L14:14 --define XMUT=4 --name xmut4 --out $OUT/out/xmut4.json" ;;
   *) echo "unknown JOB $JOB"; exit 2 ;;
 esac
+if [ "$JOB" = bwsafe_composed ]; then
+ J="export SMB_HBM_REF_BASE=${REFBASE:-0} SMB_HBM_CLOCK_OFFSET_PS=${HOFFSET:-173} SMB_HBM_RESET_EXTRA=${HRESET:-0}; $J"
+fi
 /home/ubuntu/bin/ot-run --mem ${MEM:-64} --threads 16 --dir "$OUT" -- bash -c "$J > $OUT/out/${LOGN:-$JOB}.log 2>&1; echo ${JOB}_RC \$?; tail -n 3 $OUT/out/${LOGN:-$JOB}.log"
 echo "SMB_UNIT_DONE $JOB"
