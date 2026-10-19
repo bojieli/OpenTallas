@@ -54,6 +54,7 @@ import die_relay_stages as DRS   # noqa: E402
 import die_relay_check as DRC    # noqa: E402
 import d2d_link_calendar as L    # noqa: E402
 import record_bundles as RB      # noqa: E402
+import q_readiness as QR         # noqa: E402
 
 CONSUMER = 'tools/qwen_layerbench/layer_compile.py'
 # producer codec edges + PR = 1 pin flops: ONE definition, tools/qwen_split/d2d_link_calendar.py (QXF-LINK), the same the
@@ -284,7 +285,7 @@ def sys_face_events(prog_cal, svh, S, ex, txd, n59_land_edges):
     vis = t31 + 4 + n59_land_edges + 2
     Lev = kvslot + [(vis, 4, 0), (vis + 2, 4, 1)]
     return dict(first_token=first - c0, d2d_first_token=first, go_ofs=c0, T=T, L_compiled=Lev,
-                L_missing=['QSLOT (class 2): no compiler relation for native59 q_slot vs the qkv result landing'],
+                L_missing=['QSLOT (class 2): no production Q landing/request proof; see q_readiness.json'],
                 E_missing=['E calendar (EMBW / FILL): the KV embedding provider row timing is not compiled here'],
                 land_edges_used=n59_land_edges)
 
@@ -316,9 +317,18 @@ def main(argv=None):
     ap.add_argument('--txl', type=int, default=6); ap.add_argument('--phy', type=int, default=5)
     ap.add_argument('--n59-land-edges', type=int, default=8,
                     help='qfd_native59_dv_service LAND_EDGES the die binds (dv2f14bn: default 8; see gaps)')
+    ap.add_argument('--q-prefetch-advance', type=int, choices=(0, 1), default=0,
+                    help='SAFE2 Q prefetch lead; advance1 requires a production readiness proof')
     ap.add_argument('--gz-over', type=int, default=4_000_000, help='write a compiled table gzipped above this many bytes')
     a = ap.parse_args(argv)
     out = Path(a.out); out.mkdir(parents=True, exist_ok=True)
+    qlanes = Path(a.compute_lanes) if a.compute_lanes else Path(a.compute_die_v).parent / 'fwd_lanes.json'
+    readiness = QR.inspect(a.compute_die_v, qlanes, a.compute_commit)
+    write_json(out / 'compute_programme' / 'q_readiness.json', readiness)
+    try:
+        QR.require_advance(readiness, a.q_prefetch_advance)
+    except ValueError as e:
+        raise SystemExit(f'layer_compile: {e}')
     findings, gaps = [], []
     docs = {'qwen_compute': DRS.load(a.compute_stages), 'qwen_kv': DRS.load(a.kv_stages)}
     for k, d in docs.items():
