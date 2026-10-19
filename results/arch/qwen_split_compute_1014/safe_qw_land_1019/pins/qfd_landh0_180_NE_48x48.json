@@ -1,0 +1,246 @@
+{
+ "schema": "opentallas.qwen-tp8.assigned-pins.v1",
+ "master": "qfd_landh0_180_NE_48x48",
+ "outline": {
+  "w": 48.168,
+  "h": 48.168,
+  "exact": true
+ },
+ "instances": null,
+ "pins": {
+  "N": [
+   "a"
+  ],
+  "E": [
+   "b"
+  ]
+ },
+ "pin_ranges": {
+  "a": [
+   5.388,
+   42.78
+  ],
+  "b": [
+   5.388,
+   42.78
+  ]
+ },
+ "ports": {
+  "a": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 300,
+   "range_um": [
+    5.388,
+    48.444
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "b": {
+   "face": "E",
+   "layer": "M4",
+   "bits": 300,
+   "range_um": [
+    5.388,
+    48.444
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null
+  },
+  "ck_s": {
+   "face": "S",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    26.988,
+    26.988
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     26.188,
+     23.988
+    ]
+   ]
+  },
+  "en": {
+   "face": "S",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    26.988,
+    26.988
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     27.788,
+     23.988
+    ]
+   ]
+  },
+  "ck": {
+   "face": "S",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    26.988,
+    26.988
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     26.188,
+     25.588
+    ]
+   ]
+  },
+  "rs": {
+   "face": "S",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    26.988,
+    26.988
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     27.788,
+     25.588
+    ]
+   ]
+  },
+  "k0": {
+   "face": "S",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    26.988,
+    26.988
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     26.188,
+     27.188
+    ]
+   ]
+  },
+  "k1": {
+   "face": "S",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    26.988,
+    26.988
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     27.788,
+     27.188
+    ]
+   ]
+  },
+  "k2": {
+   "face": "S",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    26.988,
+    26.988
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     26.188,
+     28.788
+    ]
+   ]
+  },
+  "tie_hi": {
+   "face": "S",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    26.988,
+    26.988
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     27.788,
+     28.788
+    ]
+   ]
+  },
+  "tie_lo": {
+   "face": "S",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    26.988,
+    26.988
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     26.188,
+     30.388
+    ]
+   ]
+  },
+  "fault": {
+   "face": "S",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    26.988,
+    26.988
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     27.788,
+     30.388
+    ]
+   ]
+  }
+ },
+ "overlapping_pin_pairs": 0,
+ "note": "Candidate gated180 assigned faces; no current die bind. Physical timing pending actual generated-clock scenarios."
+}

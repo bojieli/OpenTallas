@@ -1,0 +1,241 @@
+{
+ "name": "qfwd_landh_180_ns_48x48_g4",
+ "top": "qfd_landh_180_NS_48x48",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_split/qfd_fwd_lane.sv",
+  "rtl/hdc/ot_hdc_cg.sv",
+  "physical/qwen_fwd_lane/qfd_gated_land180_masters.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rs"
+ ],
+ "outline": {
+  "w": 48.168,
+  "h": 48.168,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "pins": {
+  "N": [
+   "a",
+   "ea"
+  ],
+  "S": [
+   "b"
+  ],
+  "E": [
+   "ckf",
+   "ck",
+   "rs",
+   "k0",
+   "k1",
+   "k2",
+   "tie_hi",
+   "tie_lo",
+   "fault"
+  ]
+ },
+ "macros": [],
+ "children": [],
+ "inter": [
+  "*"
+ ],
+ "refglob": "*u_land*u_gated*rc*",
+ "recipe": 4,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true,
+ "forwarded_clock": false,
+ "pin_regs": {
+  "enable": false,
+  "reason": "OWNER RULE 19:50 opt-out (as the coordinator-approved S81 relays): a lane frame is one flip-flop per bit between its pins (station) or the ring + its registered output (landing); a flow pin register would add a stage the die calendar does not price"
+ },
+ "sdc_extra": [],
+ "boundary_tcl": [],
+ "route": {
+  "pd": 0.45,
+  "threads": 2,
+  "peak_ram_gb": 6,
+  "pin_h": "M4",
+  "pin_v": "M3 M5",
+  "m5_pg_pitch": 2.7,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "synth_keep_modules": [
+   "ot_qfd_bank_gate"
+  ]
+ },
+ "assigned_pin_source": {
+  "file": "results/arch/qwen_split_compute_1014/safe_qw_land_1019/pins/qfd_landh_180_NS_48x48.json",
+  "note": "die-assigned faces of the Qwen compute die GEN (OT_SPLIT_FWD_LANES=1); centre area pins moved to the free face; the die adopts the view pins",
+  "owner": "Q-DIE11-RLY"
+ },
+ "structural_change": "GATED180 structural model: eight actualICGs clock four write banks and four shadowread banks at period4T/pulseT/2; root outputmux capture adds1receivercycle. Total1748bits including9ICG latches,180b/cycle;600=>4chunks. Fixed4write readiness boot, source+1/readreset+2; ringK subtracts finalcapture from totalE. SYNTHESIS/FLOORPLAN ONLY UNTIL GENERATEDCLOCK FAMILY/ALLSCENARIO CONSTRAINTS QUALIFIED; no release adoption.",
+ "job": {
+  "owner": "Codex:SAFE-QW-LAND",
+  "branch": "codex/safe-qw-land-1019",
+  "tag": "g180a",
+  "purpose": "Gated180 model synthesis area/fanout; physical phase timing not qualified",
+  "benches": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qfd_landh_180_NS_48x48 u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator -DOT_QFD_LAND_GATED_BANKS --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_split/qfd_fwd_lane.sv rtl/hdc/ot_hdc_cg.sv physical/qwen_fwd_lane/qfd_gated_land180_masters.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "fwd_lane_exact",
+    "cmd": "bash tools/qwen_split/bench_fwd_lane.sh pass_gated {RUN}/bench_p 180",
+    "expect": "pass",
+    "pass_regex": "FWD_BENCH PASS 0 errors in [0-9]+ checks",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "sel_mutant",
+    "cmd": "bash tools/qwen_split/bench_fwd_lane.sh sel_gated {RUN}/bench_sel 180",
+    "expect": "fail",
+    "fail_regex": "FWD_BENCH FAIL",
+    "fail_witness": "results/arch/qwen_split_compute_1014/safe_qw_land_1019/bench_gated/w180_sel.log",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "naive_mutant",
+    "cmd": "bash tools/qwen_split/bench_fwd_lane.sh naive_gated {RUN}/bench_naive 180",
+    "expect": "fail",
+    "fail_regex": "FWD_BENCH FAIL",
+    "fail_witness": "results/arch/qwen_split_compute_1014/safe_qw_land_1019/bench_gated/w180_naive.log",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "wsel_mutant",
+    "cmd": "bash tools/qwen_split/bench_fwd_lane.sh wsel_gated {RUN}/bench_wsel 180",
+    "expect": "fail",
+    "fail_regex": "FWD_BENCH FAIL",
+    "fail_witness": "results/arch/qwen_split_compute_1014/safe_qw_land_1019/bench_gated/w180_wsel.log",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "rsel_mutant",
+    "cmd": "bash tools/qwen_split/bench_fwd_lane.sh rsel_gated {RUN}/bench_rsel 180",
+    "expect": "fail",
+    "fail_regex": "FWD_BENCH FAIL",
+    "fail_witness": "results/arch/qwen_split_compute_1014/safe_qw_land_1019/bench_gated/w180_rsel.log",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "views_to": "physical/ref_tile/qfwd_landh_180_ns_48x48_g4/views",
+  "record_to": "results/rtl/ref_tile/qfwd_landh_180_ns_48x48_g4",
+  "extra_paths": [
+   "physical/qwen_fwd_lane",
+   "rtl/qwen_split/qfd_fwd_lane.sv",
+   "rtl/hdc",
+   "tools/qwen_split",
+   "results/arch/qwen_split_compute_1014/safe_qw_land_1019/bench_gated"
+  ]
+ },
+ "defines": [
+  "OT_QFD_LAND_GATED_BANKS"
+ ],
+ "reset_landing": {
+  "enable": false,
+  "reason": "RTL owns rs0/rs1 plus fixed four-write boot readiness synchronizer; compiler prices two reset edges and finalcapture1, without flow duplicate."
+ },
+ "fill_reason": {
+  "pin_bound": "181pins on datafaces <6pins/um at48.168um. Preliminary synthesis sizing; resize from measured area before CTS."
+ },
+ "clock": "multiple_cts_roots",
+ "clock_ports": [
+  "ck",
+  "ckf"
+ ],
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck"
+   ],
+   "inputs": [
+    "rs",
+    "k0",
+    "k1",
+    "k2"
+   ],
+   "outputs": [
+    "b",
+    "fault",
+    "tie_hi",
+    "tie_lo"
+   ],
+   "io_budget": {
+    "in": 0.2,
+    "out": 0.2
+   }
+  },
+  "lane": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ckf"
+   ],
+   "inputs": [
+    "a",
+    "ea"
+   ],
+   "outputs": [],
+   "io_budget": {
+    "in": 0.2,
+    "out": 0.2
+   }
+  }
+ },
+ "orfs_vars": {
+  "OT_CG_EXCLUDE": "*bank*"
+ }
+}
