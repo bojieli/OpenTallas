@@ -5268,5 +5268,44 @@
   ],
   "audited_at": "9753b97367818cd5748e79f3708895c59b523d29",
   "tool": "tools/hier_contract/native_pin_audit.py --view"
+ },
+ "qkd_astk_rly_296_fl": {
+  "cell": "qkd_astk_rly_296_fl",
+  "view": "physical/ref_tile/qkd_astk_rly_296/views/qkd_astk_rly_296_fl",
+  "lib_cell": "qkd_astk_rly_296_fl",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 72.5,
+  "spread_ps": 4.4,
+  "outputs": 296,
+  "inputs": 297,
+  "launch_ps": 143.4,
+  "launch_pin": "b[1]",
+  "capture_ps": 64.5,
+  "capture_pin": "a[106]",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "ff_spread_ps": 4.5,
+  "ff_launch_min_ps": 63.8,
+  "ff_hold_need_ps": -7.2,
+  "pass": true,
+  "fail_why": "",
+  "view_sha256": {
+   "qkd_astk_rly_296_fl.lef": "061494c716b15b60667ac01a288df27edef3fa23e28ed6705a9bf442855674e6",
+   "qkd_astk_rly_296_fl_ff.lib": "8fa266bf4bc78a9a7c21338b20e2192065ab81275d6c5d10679730b6db47a55b",
+   "qkd_astk_rly_296_fl_ss.lib": "bb9c36dab588dda574848c1734ebe272e9c78314d09d56f9e59235c9b386a27c",
+   "qkd_astk_rly_296_fl_tt.lib": "985a2753664d1b122546648c405e21de3e4764537513f3c5c92c24880d213e0e"
+  },
+  "view_commit": "e63008b4a02a2706e98a0823dc5c8044db72fcf8",
+  "view_commit_subject": "closure-loop AUTO-MERGE record qkd_astk_rly_296-fl1-bd369b99e (qkd_astk_rly_296_fl CLOSED)",
+  "capture_over_pins": [],
+  "audited_at": "fa91551ffde9541a93ddf061b681b8eb5c5fafa9",
+  "tool": "tools/hier_contract/native_pin_audit.py --view",
+  "route": "qkd_astk_rly_296-fl1-bd369b99e",
+  "note": "HKV-RSTCAP2 10-19: fl1 (face_land rst_n relay) CLOSED view; worst capture 64.5 ps (a[106]) so rst_n capture <= 64.5 << 190 (r1 view was rst_n 277.4 FAIL). Native PASS: no re-route."
  }
 }
