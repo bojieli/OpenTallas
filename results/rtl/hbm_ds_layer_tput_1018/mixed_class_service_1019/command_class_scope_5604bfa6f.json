@@ -1,0 +1,24 @@
+{
+  "source": "f2a07fb05",
+  "compiler": "5604bfa6f",
+  "ingress_delta": [
+    {
+      "event_index": 3,
+      "xor": "0x200000000000000000000000000000000000",
+      "hamming": 1
+    }
+  ],
+  "literal_modes": [
+    0,
+    0,
+    0
+  ],
+  "descriptor_modes": [
+    0,
+    4,
+    0
+  ],
+  "scope": "One XC programme commandmode2 bit toggled; both descriptors, allocation, data, schedule remain exact. All commands remain mode-only and valid; assembled guard rejects before arithmetic.",
+  "first_fault": "FAULT svg cycle 1146 issuer 0 feed 0 (desc 0 cdc 0 cache 0 prog 0 s1 0 fl 0)",
+  "physical_claim": "NONE"
+}

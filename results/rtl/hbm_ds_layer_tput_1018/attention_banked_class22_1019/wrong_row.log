@@ -1,0 +1,23 @@
+MEM sectors=2176
+V 1330 0
+V 1333 1
+V 1336 2
+V 1339 3
+S 1461 0
+B 1461 0001
+B 1462 0000
+V 1502 0
+C 1516 01
+S 1598 1
+B 1598 0010
+B 1599 0000
+V 1639 1
+C 1653 11
+B 1734 0100
+G 1869 0 543
+B 1875 1100
+FAULT svg cycle 1889 issuer 0 feed 1 (desc 0 cdc 0 cache 1 prog 0 s1 0 fl 0)
+ISSUER rc 563 sq_n 4 gq_n 1 gh_at 1047 go_busy 1 cache_ready 11 block_ready 1100 a_v 1 p_v 1 st_v 1 s_blk 56 rd_q 0
+[1581249000] %Fatal: tb_hbm_svg_rel_sm.sv:132: Assertion failed in tb_hbm_svg_rel_sm: svg fault
+%Error: /srv/opentallas-scratch/claude/codex-svg-banked-class-1019/src/rtl/test/hbm_accel/svg_rel/tb_hbm_svg_rel_sm.sv:132: Verilog $stop
+Aborting...

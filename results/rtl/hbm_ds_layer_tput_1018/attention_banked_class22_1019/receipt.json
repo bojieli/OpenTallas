@@ -1,0 +1,62 @@
+{
+  "schema": "opentallas.banked-attention-functional.v1",
+  "hardware_source": "f2a07fb050b8dbc253bfd60e48dd853b92c41436",
+  "compiler_source": "74a9d4303",
+  "hardware_manifest": "hardware_manifest.json",
+  "positive": {
+    "kv8": {
+      "exact_go": 16,
+      "actual_result_rows": 520,
+      "QK_rows": 64,
+      "PV_nodes": 8,
+      "PV_merge_exact": true,
+      "scope": "golden software-tree merge of actual RTL nodes; no on-die merge claim"
+    },
+    "kv4": {
+      "exact_go": 16,
+      "actual_result_rows": 520,
+      "QK_rows": 64,
+      "PV_nodes": 8,
+      "PV_merge_exact": true,
+      "scope": "golden software-tree merge of actual RTL nodes; no on-die merge claim"
+    }
+  },
+  "causal_negatives": {
+    "wrong_row": {
+      "expected": "FAIL",
+      "observed": "FAIL",
+      "first_fault": "FAULT svg cycle 1889 issuer 0 feed 1 (desc 0 cdc 0 cache 1 prog 0 s1 0 fl 0)",
+      "check": "cache read identity"
+    },
+    "read_early": {
+      "expected": "FAIL",
+      "observed": "FAIL",
+      "first_fault": "FAULT sm_schedule cycle 1889",
+      "check": "SM packet/command schedule"
+    },
+    "descriptor_class": {
+      "expected": "FAIL",
+      "observed": "FAIL",
+      "first_fault": "FAULT svg cycle 1881 issuer 0 feed 0 (desc 0 cdc 0 cache 0 prog 0 s1 0 fl 0)",
+      "check": "actual assembled command class guard"
+    },
+    "command_class": {
+      "expected": "FAIL",
+      "observed": "FAIL",
+      "first_fault": "FAULT svg cycle 1881 issuer 0 feed 0 (desc 0 cdc 0 cache 0 prog 0 s1 0 fl 0)",
+      "check": "actual assembled command class guard"
+    }
+  },
+  "class_guard_source_proof": "Exact f2 group fault=issuer_fault||feed_fault||command_class_fault. Both class negatives observe SVGfault with issuer0/feed0 before arithmetic, hence guard1.",
+  "infrastructure_retry": "Initial compiler snapshot omitted sm_attn_bench; initial_missing_dependency.log preserved, no simulation verdict. Complete tools from identical compiler74 staged separately; executable unchanged.",
+  "open": [
+    "native frontend control/reset/clock/source proof",
+    "actual route_act/TOPK producer/collector deadline",
+    "production BW successor/bridge composition",
+    "native dense SRAM access and physical/die binding",
+    "general stateful mixed calendar rescheduling",
+    "selected Qwen HBM fixture/calibration"
+  ],
+  "physical_claim": "NONE",
+  "token_throughput_claim": false
+}

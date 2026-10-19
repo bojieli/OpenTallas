@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/codex-svg-class-compiler-74a9-1019/src/tools/hbm_layer_vehicle/attention_prel_svg.py", line 13, in <module>
+    import att_images as A
+  File "/srv/opentallas-scratch/claude/codex-svg-class-compiler-74a9-1019/src/tools/hbm_layer_vehicle/att_images.py", line 47, in <module>
+    import sm_attn_bench as B  # noqa: E402
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+ModuleNotFoundError: No module named 'sm_attn_bench'

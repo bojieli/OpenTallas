@@ -1,0 +1,147 @@
+{
+  "pass_": false,
+  "mutation": "descriptor_class",
+  "rc": 1,
+  "fault": "FAULT svg cycle 1881 issuer 0 feed 0 (desc 0 cdc 0 cache 0 prog 0 s1 0 fl 0)",
+  "done": null,
+  "first_failure": "FAULT svg cycle 1881 issuer 0 feed 0 (desc 0 cdc 0 cache 0 prog 0 s1 0 fl 0)",
+  "causal_review_required": true,
+  "source": {
+    "att_kv_json": "/srv/opentallas-scratch/claude/layerbench-hbm/dsfix/att/L02/att_kv.json",
+    "npz_sha256": "5a5427bb429666291f063415816f89003518c54152d5244865357b4f42af3035",
+    "layer": 2,
+    "rank": 0,
+    "qk_priced": [
+      {
+        "i": 63,
+        "start": 10427.06,
+        "end": 11032.36,
+        "base_cost": 547
+      }
+    ],
+    "pv_priced": [
+      {
+        "i": 67,
+        "start": 11577.74,
+        "end": 12547.17,
+        "base_cost": 808
+      }
+    ],
+    "ring": {
+      "n": 128,
+      "m": 128,
+      "on": true,
+      "first": 0
+    },
+    "c_rows": 512
+  },
+  "budget": {
+    "timing": {
+      "read_admission_calibration": 7,
+      "native_padding": 22,
+      "command_extra": 4,
+      "calendar_extra": 2,
+      "programme_done_extra": 2,
+      "residual_completion_tail": 2,
+      "physical_source_binding": "caller must bind actual native hardware flags; software arguments alone do not select RTL",
+      "native_profile": "banked-class22",
+      "actual_read_pin": 8,
+      "actual_command_pin": 11
+    },
+    "model": {
+      "rows_per_sm": 64,
+      "subrun_rows": 8,
+      "encoded_bytes_per_subrun": 4224,
+      "lines_per_block": 32,
+      "descriptors_per_run": 16,
+      "cache_line_bytes_per_run": 69632,
+      "hbm_bytes_per_run": 69632,
+      "packet_bits_per_edge": 1099,
+      "command_bits_per_edge": 192,
+      "hbm_service_bytes_per_stream_edge": 98.9090909090909,
+      "hbm_fetch_stream_edges_lower_bound": 44,
+      "cache_line_bits": 1088,
+      "svg_word_bits": 135,
+      "xc_word_bits": 173,
+      "programme_words_capacity": 2048,
+      "descriptor_capacity": 256,
+      "programme_replicas": 2,
+      "programme_mux": "existing paired 1024x256 SRAMs",
+      "cache_replicas": 1,
+      "added_hardware_area_um2": 0,
+      "new_boundary_registers": 0,
+      "new_routing_tracks": 0,
+      "cache_read_to_command_edges": 1,
+      "go_to_first_command_edges": 7,
+      "historical_native_landing_padding_edges": 8,
+      "native_landing_padding_edges": 11,
+      "regional_return_edges_unadopted": 7,
+      "selected_return_leaf_read_to_return_edges": 8,
+      "dense_consumer_attention_opt_in": "mask dense valid bit25 only at unused dense decode; keep external command and packet/tag checks",
+      "provider_gap_edges": 0,
+      "retire": "last word after full result tail",
+      "context": {
+        "row_off": 0,
+        "tag_base": 0,
+        "lstep": 0,
+        "fl": 0,
+        "mrel": 0,
+        "loops": 1
+      },
+      "golden": "QK rows exact; each PV node is csum8, merge in original tree order",
+      "latency": "actual compiler calendar length + fixed fetch/x-load/go gaps; measured in receipt",
+      "adoption": "OPEN: residency, descriptor composition, exact RTL, physical parent"
+    },
+    "descriptors": 16,
+    "distinct_programmes": 2,
+    "resident_words": 635,
+    "available_words": 2048,
+    "attention_reserved_legacy": 1019,
+    "fits_legacy_attention_reservation": true,
+    "ingress_install_edges": 1302,
+    "run_edges": 9518,
+    "rows_per_sm": 64,
+    "hbm_lines": 512,
+    "hbm_sector_bytes": 69632,
+    "provider_gap_edges": 0,
+    "hardware_binding": {
+      "source_revision": "f2a07fb050b8dbc253bfd60e48dd853b92c41436",
+      "executable": "/srv/opentallas-scratch/claude/codex-svg-attention-class22-1019/obj_SMB_SRAMFIFO_SMB_ATTENTION_SMB_NATIVE_LANDING_SMB_NATIVE_RETURN_SMB_NATIVE_CACHE_SAFE_SMB_BANKED_CLASS_f2a07fb05/Vtb_hbm_svg_rel_sm",
+      "executable_sha256": "34ff4c631021faffa53ab29414b7cdb9e7363fe518c5a0892e0dae81cd2fd13c",
+      "defines": [
+        "SMB_SRAMFIFO",
+        "SMB_ATTENTION",
+        "SMB_NATIVE_LANDING",
+        "SMB_NATIVE_RETURN",
+        "SMB_NATIVE_CACHE_SAFE",
+        "SMB_BANKED_CLASS"
+      ],
+      "id_cohort": 1,
+      "timing": {
+        "native_padding": 22,
+        "command_extra": 4,
+        "calendar_extra": 2,
+        "programme_done_extra": 2,
+        "read_admission_calibration": 7,
+        "actual_read_pin": 8,
+        "actual_command_pin": 11,
+        "busy": 10
+      },
+      "scope": "flagged functional composition only; physical qualification remains OPEN"
+    },
+    "causal_negative": {
+      "kind": "descriptor_class",
+      "source_class_plan_preserved": true,
+      "deliberate_hardware_violation": true
+    }
+  },
+  "service_build_revision": "f2a07fb050b8dbc253bfd60e48dd853b92c41436",
+  "compiler_sha256": "4b7d1ff864df945cfc02c064a3b2cb85b55eb36799d0a4cceea51ff9c70bbecb",
+  "executable_sha256": "34ff4c631021faffa53ab29414b7cdb9e7363fe518c5a0892e0dae81cd2fd13c",
+  "event_sha256": {
+    "ids.hex": "d3d6ae864989a061a6627f8f0d6f4d95516bf758e684091242e84d9559004f26",
+    "ing.hex": "0818396753b4223065db74ea7f37c61a13b57c0ab9f8156adf9342c1bcfe777f",
+    "mem.hex": "9d1914870899bef78408a726c94dbf2c93c39cda28024376a57652e57c9a230c",
+    "xw.hex": "d1c1f406c4de6af37df9b2eb8a5ccb1676a7854e5c09f90601686ac3caa7221d"
+  }
+}

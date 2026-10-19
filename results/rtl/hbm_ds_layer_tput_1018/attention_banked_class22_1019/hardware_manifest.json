@@ -1,0 +1,25 @@
+{
+  "source_revision": "f2a07fb050b8dbc253bfd60e48dd853b92c41436",
+  "executable": "/srv/opentallas-scratch/claude/codex-svg-attention-class22-1019/obj_SMB_SRAMFIFO_SMB_ATTENTION_SMB_NATIVE_LANDING_SMB_NATIVE_RETURN_SMB_NATIVE_CACHE_SAFE_SMB_BANKED_CLASS_f2a07fb05/Vtb_hbm_svg_rel_sm",
+  "executable_sha256": "34ff4c631021faffa53ab29414b7cdb9e7363fe518c5a0892e0dae81cd2fd13c",
+  "defines": [
+    "SMB_SRAMFIFO",
+    "SMB_ATTENTION",
+    "SMB_NATIVE_LANDING",
+    "SMB_NATIVE_RETURN",
+    "SMB_NATIVE_CACHE_SAFE",
+    "SMB_BANKED_CLASS"
+  ],
+  "id_cohort": 1,
+  "timing": {
+    "native_padding": 22,
+    "command_extra": 4,
+    "calendar_extra": 2,
+    "programme_done_extra": 2,
+    "read_admission_calibration": 7,
+    "actual_read_pin": 8,
+    "actual_command_pin": 11,
+    "busy": 10
+  },
+  "scope": "flagged functional composition only; physical qualification remains OPEN"
+}
