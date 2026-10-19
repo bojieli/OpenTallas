@@ -12,7 +12,53 @@
       "sidx[1]"
     ],
     "exact_match": false,
-    "scope": "Exact final exported LEF rectangles/directions vs prior gate pin snapshot; no parent timing or A0 qualification"
+    "scope": "All prior modeled boundary rectangles/directions are retained exactly; final adds interior access shapes on3pins. This preserves old chosen access-point geometry, not whole-LEF identity or parent clock/timing closure.",
+    "all_earlier_pin_rectangles_retained": true,
+    "all_earlier_pin_centers_valid_access_points": true,
+    "added_pin_rectangles": {
+      "ck": [
+        [
+          "M3",
+          [
+            89.1,
+            0.012,
+            89.118,
+            0.269
+          ]
+        ]
+      ],
+      "rst_n": [
+        [
+          "M3",
+          [
+            88.272,
+            128.429,
+            88.29,
+            129.581
+          ]
+        ]
+      ],
+      "sidx[1]": [
+        [
+          "M5",
+          [
+            89.52,
+            129.397,
+            89.64,
+            129.539
+          ]
+        ],
+        [
+          "M5",
+          [
+            89.616,
+            129.539,
+            89.64,
+            129.552
+          ]
+        ]
+      ]
+    }
   },
   {
     "master": "qfd_c_xstnw_safe",
@@ -27,6 +73,43 @@
       "sidx[1]"
     ],
     "exact_match": false,
-    "scope": "Exact final exported LEF rectangles/directions vs prior gate pin snapshot; no parent timing or A0 qualification"
+    "scope": "All prior modeled boundary rectangles/directions are retained exactly; final adds interior access shapes on3pins. This preserves old chosen access-point geometry, not whole-LEF identity or parent clock/timing closure.",
+    "all_earlier_pin_rectangles_retained": true,
+    "all_earlier_pin_centers_valid_access_points": true,
+    "added_pin_rectangles": {
+      "ck": [
+        [
+          "M3",
+          [
+            89.1,
+            0.012,
+            89.118,
+            0.221
+          ]
+        ]
+      ],
+      "rst_n": [
+        [
+          "M3",
+          [
+            88.272,
+            129.499,
+            88.29,
+            129.581
+          ]
+        ]
+      ],
+      "sidx[1]": [
+        [
+          "M5",
+          [
+            89.616,
+            128.245,
+            89.64,
+            129.552
+          ]
+        ]
+      ]
+    }
   }
 ]
