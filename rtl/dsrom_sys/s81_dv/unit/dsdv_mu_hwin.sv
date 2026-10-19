@@ -402,12 +402,13 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
         // Sharing mc_valid/type AND empty-table produced a 400-load boot enable.
         (* keep *) reg cfg_gap_r,cfg_rl_r,start_r,cfg_w0_r,cfg_w1_r,cfg_w2_r;
         (* keep *) reg [SI-1:0] cfg_addr_r;
+        (* keep *) reg [EI-1:0] cfg_kind_r;
         (* keep *) reg [1:0] cfg_attr_r;
         assign cfg_addr[ce]=cfg_addr_r; assign cfg_attr[ce]=cfg_attr_r;
         assign rec_local[ce]=start_r && on_cal && !col && !udup && !(!armed && hcfg_bad);
         always @(posedge ck or negedge rr[COPY_RBASE+7*ce+6])
-            if(!rr[COPY_RBASE+7*ce+6]) begin cfg_gap_r<=1'b0;cfg_rl_r<=1'b0;start_r<=1'b0;cfg_w0_r<=0;cfg_w1_r<=0;cfg_w2_r<=0;cfg_addr_r<=0;cfg_attr_r<=0;end
-            else begin cfg_w0_r<=f_mw[25] && f_mw[22:21]==2'd0;cfg_w1_r<=f_mw[25] && f_mw[22:21]==2'd1;cfg_w2_r<=f_mw[25] && f_mw[22:21]==2'd2;cfg_gap_r<=f_mc[25] && !f_mc[24];cfg_rl_r<=f_mc[25] && f_mc[24];start_r<=f_ks[52];cfg_addr_r<=f_mw[SI-1:0];cfg_attr_r<=f_mw[11:10];end
+            if(!rr[COPY_RBASE+7*ce+6]) begin cfg_gap_r<=1'b0;cfg_rl_r<=1'b0;start_r<=1'b0;cfg_w0_r<=0;cfg_w1_r<=0;cfg_w2_r<=0;cfg_addr_r<=0;cfg_kind_r<=0;cfg_attr_r<=0;end
+            else begin cfg_w0_r<=f_mw[25] && f_mw[22:21]==2'd0;cfg_w1_r<=f_mw[25] && f_mw[22:21]==2'd1;cfg_w2_r<=f_mw[25] && f_mw[22:21]==2'd2;cfg_gap_r<=f_mc[25] && !f_mc[24];cfg_rl_r<=f_mc[25] && f_mc[24];start_r<=f_ks[52];cfg_addr_r<=f_mw[SI-1:0];cfg_kind_r<=f_mw[EI-1:0];cfg_attr_r<=f_mw[11:10];end
         wire [6:0] boot_count;
         wire d_write,d_check,attr_write,kind_write,rl_write,rl_check,gap_write;
         if(LOCAL_BOOT!=0) begin:g_boot_local
@@ -423,7 +424,7 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
             (* keep=1 *) dsdv_mu_boot_enable u_dwrite(.count(boot_count),.armed(arm_r),.valid(cfg_w1_r),.match(esel==EI'(ce)),.en(d_write));
             (* keep=1 *) dsdv_mu_boot_enable u_dcheck(.count(boot_count),.armed(arm_r),.valid(cfg_w1_r),.match(esel==EI'(ce)),.en(d_check));
             (* keep=1 *) dsdv_mu_boot_enable u_attr(.count(boot_count),.armed(arm_r),.valid(cfg_w2_r),.match(esel==EI'(ce)),.en(attr_write));
-            (* keep=1 *) dsdv_mu_boot_enable u_kind(.count(boot_count),.armed(arm_r),.valid(cfg_w0_r),.match(cfg_addr_r[EI-1:0]==EI'(ce)),.en(kind_write));
+            (* keep=1 *) dsdv_mu_boot_enable u_kind(.count(boot_count),.armed(arm_r),.valid(cfg_w0_r),.match(cfg_kind_r==EI'(ce)),.en(kind_write));
             (* keep=1 *) dsdv_mu_boot_enable u_rlwrite(.count(boot_count),.armed(arm_r),.valid(cfg_rl_r),.match(1'b1),.en(rl_write));
             (* keep=1 *) dsdv_mu_boot_enable u_rlcheck(.count(boot_count),.armed(arm_r),.valid(cfg_rl_r),.match(1'b1),.en(rl_check));
             (* keep=1 *) dsdv_mu_boot_enable u_gap(.count(boot_count),.armed(arm_r),.valid(cfg_gap_r),.match(gn!=SJ'(NSLOT)),.en(gap_write));
