@@ -1,0 +1,191 @@
+{
+ "verdict": "PASS",
+ "mode": "nominal",
+ "lead": 4,
+ "gap": 2,
+ "exact": "64/64",
+ "per_op": {
+  "qkv": {
+   "hr_go": 129,
+   "cw_go": [
+    145
+   ],
+   "rs_edges": [
+    327,
+    328,
+    329,
+    330,
+    331,
+    332,
+    333,
+    334
+   ],
+   "d_head": 16,
+   "cw_go_columns": "f",
+   "d_clu": 126,
+   "first_rs": 142,
+   "first_final": 198,
+   "last_final": 205,
+   "rounds": [
+    {
+     "first": 198,
+     "last": 205,
+     "words": 8
+    }
+   ],
+   "exact": "8/8"
+  },
+  "o": {
+   "hr_go": 1674,
+   "cw_go": [
+    1690
+   ],
+   "rs_edges": [
+    1824,
+    1825,
+    1826,
+    1827,
+    1828,
+    1829,
+    1830,
+    1831,
+    1840,
+    1841,
+    1842,
+    1843,
+    1844,
+    1845,
+    1846,
+    1847,
+    1856,
+    1857,
+    1858,
+    1859,
+    1860,
+    1861,
+    1862,
+    1863
+   ],
+   "d_head": 16,
+   "cw_go_columns": "f",
+   "d_clu": 126,
+   "first_rs": 142,
+   "first_final": 150,
+   "last_final": 189,
+   "rounds": [
+    {
+     "first": 150,
+     "last": 157,
+     "words": 8
+    },
+    {
+     "first": 166,
+     "last": 173,
+     "words": 8
+    },
+    {
+     "first": 182,
+     "last": 189,
+     "words": 8
+    }
+   ],
+   "round_period": [
+    16,
+    16
+   ],
+   "exact": "24/24"
+  },
+  "gu": {
+   "hr_go": 3329,
+   "cw_go": [
+    3345
+   ],
+   "rs_edges": [
+    3719,
+    3720,
+    3721,
+    3722,
+    3723,
+    3724,
+    3725,
+    3726
+   ],
+   "d_head": 16,
+   "cw_go_columns": "f",
+   "d_clu": 126,
+   "first_rs": 142,
+   "first_final": 390,
+   "last_final": 397,
+   "rounds": [
+    {
+     "first": 390,
+     "last": 397,
+     "words": 8
+    }
+   ],
+   "exact": "8/8"
+  },
+  "down": {
+   "hr_go": 4890,
+   "cw_go": [
+    4906
+   ],
+   "rs_edges": [
+    5072,
+    5073,
+    5074,
+    5075,
+    5076,
+    5077,
+    5078,
+    5079,
+    5120,
+    5121,
+    5122,
+    5123,
+    5124,
+    5125,
+    5126,
+    5127,
+    5168,
+    5169,
+    5170,
+    5171,
+    5172,
+    5173,
+    5174,
+    5175
+   ],
+   "d_head": 16,
+   "cw_go_columns": "f",
+   "d_clu": 126,
+   "first_rs": 142,
+   "first_final": 182,
+   "last_final": 285,
+   "rounds": [
+    {
+     "first": 182,
+     "last": 189,
+     "words": 8
+    },
+    {
+     "first": 230,
+     "last": 237,
+     "words": 8
+    },
+    {
+     "first": 278,
+     "last": 285,
+     "words": 8
+    }
+   ],
+   "round_period": [
+    48,
+    48
+   ],
+   "exact": "24/24"
+  }
+ },
+ "errors": [],
+ "end": "6460 END hd_fault 0 stm_fault 0 rs_fault 0"
+}

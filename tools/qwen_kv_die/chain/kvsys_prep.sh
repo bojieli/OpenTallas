@@ -54,8 +54,8 @@ if [ "${OT_KV_SEQ_STATIC:-0}" = 1 ]; then LPV=physical/ref_tile/${OT_KV_LPRG_KIT
   # OT_KV_LPRG_PROGRAM (PW1024 + DW8 hex; default the sys_face bench program) / OT_KV_LPRG_EPOCH (default 0x0b0b) on the
   # link compiler's calendar and refuse a committed image (= the hardened view's constants) that differs
   mkdir -p $O/lprg_image
-  python3 tools/qwen_split/d2d_link_calendar.py --out $O/lprg_image/cal --txl 6 --phy 5 --profile program --txd-c 1,1,1,2 --txd-k 1,2,1,1 \
-    --host-stages 0 --link-handoff results/arch/qwen_split_compute_1014/res_train_decision_1015/decision.json --pinreg > $O/lprg_image/cal.log
+  # QLB-C4 10-18: the PRODUCTION link calendar (d2d_cal_image_production.sh), not the pre-TXDP bench args
+  bash tools/qwen_split/d2d_cal_image_production.sh $O/lprg_image/prod > $O/lprg_image/cal.log 2>&1 && rm -rf $O/lprg_image/cal && cp -r $O/lprg_image/prod/program $O/lprg_image/cal
   python3 tools/qwen_static_kv/layer_roots_from_link.py $O/lprg_image/cal $O/lprg_image/lp ${OT_KV_LPRG_PROGRAM:+--program $OT_KV_LPRG_PROGRAM} \
     --epoch ${OT_KV_LPRG_EPOCH:-0x0b0b} > $O/lprg_image/roots.log
   if cmp -s $O/lprg_image/lp/layer_programme_image.svh rtl/qwen_sys/static_kv_20261014/layer_programme_image.svh; then echo MATCH > $O/lprg_image/verdict

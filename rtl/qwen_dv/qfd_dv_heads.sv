@@ -59,6 +59,28 @@ module qfd_dv_heads #(
         for (ci = 0; ci < 4; ci = ci + 1)
             for (ri = 0; ri < 2 * NH; ri = ri + 1)
                 tids[(ci * 2 * NH + ri) * 16 +: 16] <= 16'(tid(4 * sid + ci, ri));
+    // ---------------------------------------------------------------- corridor station tags (QW-XHEAD 10-19)
+    // The die's cluster master (qfd_c_b16_dv) numbers its row stations sidx = {far, q} (near) / {far, ~q} (far) along its
+    // own bc run (row q = q-th station from the slice), and its tiles carry strap 16 cid + morton(c, q).  The heads'
+    // logical stations (tid above) are N s -> die row NH + s, S s -> die row NH-1-s, so the line for logical station s
+    // must carry the tag of the physical station whose strap is tid(s): N far (s >= 4) and S near (s < 4) are row-
+    // reversed -> tag = s ^ 3 there, s elsewhere.  Pure relabelling of the 3-bit tag fields (static per side, no flop,
+    // no edge).  XT1 witness (as-built): S station 0 served tile 26's x (chunks 104..107) to tile 16 (strap 16, ROM 16).
+    wire [4*CW-1:0] n_raw, s_raw;
+    function automatic [7:0] retag(input [7:0] t, input integer side_s);
+        reg [2:0] a, b;
+        begin
+            a = t[2:0]; b = t[6:4];
+            if (side_s ? !a[2] : a[2]) a = a ^ 3'd3;
+            if (side_s ? !b[2] : b[2]) b = b ^ 3'd3;
+            retag = {t[7], b, t[3], a};
+        end
+    endfunction
+    genvar tc;
+    generate for (tc = 0; tc < 4; tc = tc + 1) begin : g_retag
+        assign n_d[tc*CW +: CW] = {retag(n_raw[tc*CW + 1 + IBW + 128 +: 8], 0), n_raw[tc*CW +: 1 + IBW + 128]};
+        assign s_d[tc*CW +: CW] = {retag(s_raw[tc*CW + 1 + IBW + 128 +: 8], 1), s_raw[tc*CW +: 1 + IBW + 128]};
+    end endgenerate
     // ---------------------------------------------------------------- tap
     wire [HW-1:0] hw, he;
     wire          tap_fault;
@@ -87,7 +109,7 @@ module qfd_dv_heads #(
         ot_qfd_xhead #(.AW(AW), .NW(NW), .XCW(XCW), .NH(NH), .NATIVE_AFFINE(1), .MUT(HEAD_MUT)) u_head (
             .ck(ck), .rst_n(rst_n), .tids(tids[c*16*2*NH +: 16*2*NH]), .fault_i(fch[c+1]),
             .a_d(hw), .a_r(), .b_d(), .b_r(1'b1),
-            .n_d(n_d[c*CW +: CW]), .n_r(1'b1), .s_d(s_d[c*CW +: CW]), .s_r(1'b1),
+            .n_d(n_raw[c*CW +: CW]), .n_r(1'b1), .s_d(s_raw[c*CW +: CW]), .s_r(1'b1),
             .lw_v(lw_v), .lw_ep(lw_ep), .lw_off(lw_off), .lw_m(lw_m), .lw_d(lw_d), .lw_ctl(lw_ctl),
             .lc_v(lc_v), .lc_ep(lc_ep), .lr_v(lr_v), .lr_t(lr_t), .lr_ep(lr_ep), .lr_p(lr_p),
             .lq(lq), .lq_v(lq_v), .lq_bad(lq_bad), .fault(fch[c]));

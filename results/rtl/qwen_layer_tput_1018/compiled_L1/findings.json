@@ -1,20 +1,6 @@
 {
  "findings": [
   {
-   "id": "BUNDLE_AGE C.rx_record",
-   "severity": "FAIL",
-   "owner": "die lead (LAND_CROSS / KV seam)",
-   "what": "C.rx_record members reach the consumer at different ages [0, 2]: the static record is torn",
-   "lanes": [
-    "d2d_rom.native_rx_v -> native59.native_rx_v: stages 0 age 0",
-    "d2d_rom.native_rx_slot -> native59.rx_slot: stages 0 age 0",
-    "d2d_rom.native_rx_slot_kind -> native59.rx_slot_kind: stages 0 age 0",
-    "d2d_rom.native_rx_slot_beat -> native59.rx_slot_beat: stages 0 age 0",
-    "d2d_rom.rx_payload -> native59.native_rx_payload: stages 1 age 2"
-   ],
-   "fix": "land the whole bundle at age 2 (pad the shorter members) or re-plan the seam"
-  },
-  {
    "id": "BUNDLE_AGE K.rx_record",
    "severity": "FAIL",
    "owner": "die lead (LAND_CROSS / KV seam)",
@@ -54,21 +40,14 @@
    "id": "TXDP C",
    "severity": "FAIL",
    "owner": "Q-LINK / die leads",
-   "what": "qfd_d2d_static PR=1 hard-wires TXDP [3, 3, 1, 4] (ports 0..3); the die stages need [6, 3, 1, 9]",
-   "fix": "make TXDP a parameter of the die master set from this compiler (d2d/txdp.svh), or re-harden with the compiled vector"
-  },
-  {
-   "id": "TXDP K",
-   "severity": "FAIL",
-   "owner": "Q-LINK / die leads",
-   "what": "qkd_d2d_static PR=1 hard-wires TXDP [3, 4, 3, 3] (ports 0..3); the die stages need [23, 4, 3, 3]",
+   "what": "qfd_d2d_static is elaborated with TXDP [6, 3, 1, 9] (ports 0..3); the die stages need [8, 3, 1, 9]",
    "fix": "make TXDP a parameter of the die master set from this compiler (d2d/txdp.svh), or re-harden with the compiled vector"
   },
   {
    "id": "L0_WINDOW",
    "severity": "INFO",
    "owner": "Q-LINK + KV",
-   "what": "L0 (token run) priced attn_kv 2038 is 217 edges LONGER than the fixed KV service needs (TX_FIRST 1750): compiled with the window shortened",
+   "what": "L0 (token run) priced attn_kv 2038 is 215 edges LONGER than the fixed KV service needs (TX_FIRST 1750): compiled with the window shortened",
    "note": "TOKEN-XDIE-QWEN F7 (222 at the stimulus codecs); the cold-fill price is not in the RTL service"
   }
  ],
@@ -106,38 +85,19 @@
  ],
  "relay_check": {
   "compute": {
-   "verdict": "FAIL",
-   "fails": [
-    "4 buses with different relay stage counts, e.g. d2d_rom.native_rx_slot -> native59.rx_slot: die 0 vs sched 2, d2d_rom.native_rx_slot_beat -> native59.rx_slot_beat: die 0 vs sched 2, d2d_rom.native_rx_slot_kind -> native59.rx_slot_kind: die 0 vs sched 2"
-   ],
-   "stage_diffs": [
-    {
-     "bus": "d2d_rom.native_rx_slot -> native59.rx_slot",
-     "die_run": 0,
-     "schedule": 2
-    },
-    {
-     "bus": "d2d_rom.native_rx_slot_beat -> native59.rx_slot_beat",
-     "die_run": 0,
-     "schedule": 2
-    },
-    {
-     "bus": "d2d_rom.native_rx_slot_kind -> native59.rx_slot_kind",
-     "die_run": 0,
-     "schedule": 2
-    },
-    {
-     "bus": "d2d_rom.native_rx_v -> native59.native_rx_v",
-     "die_run": 0,
-     "schedule": 2
-    }
-   ],
+   "verdict": "PASS",
+   "fails": [],
+   "stage_diffs": [],
    "schedule": "compute_compiled.json"
   },
   "kv": {
    "verdict": "FAIL",
    "fails": [
-    "5 buses with different relay stage counts, e.g. d2d_kv.att_rx_beat -> kvs_attn.d2d__srx__9_5: die 9 vs sched 11, d2d_kv.att_rx_kind -> kvs_attn.d2d__srx__4_1: die 9 vs sched 11, d2d_kv.att_rx_v -> kvs_attn.d2d__srx__0_0: die 9 vs sched 11"
+    "5 buses with different relay stage counts, e.g. d2d_kv.att_rx_beat -> kvs_attn.d2d__srx__9_5: die 9 vs sched 11, d2d_kv.att_rx_kind -> kvs_attn.d2d__srx__4_1: die 9 vs sched 11, d2d_kv.att_rx_v -> kvs_attn.d2d__srx__0_0: die 9 vs sched 11",
+    "torn record bundle K.rx_record torn: d2d_kv.att_rx_v 9, d2d_kv.att_rx_kind 9, d2d_kv.att_rx_beat 9, d2d_kv.rx_payload 11",
+    "torn record bundle K.tx_slot torn: d2d_kv.att_tx_slot 9, d2d_kv.att_tx_kind 8, d2d_kv.att_tx_beat 9",
+    "torn record bundle K.tx_record torn: kvs_attn.attn__tx_valid 6, kvs_attn.attn__tx_payload 11",
+    "torn record bundle K.kvn_writer torn: d2d_kv.kvn_word_valid 2, d2d_kv.kvn_word_tag 2, d2d_kv.kvn_word_data 4, d2d_kv.kvn_word_identity 4, d2d_kv.kvn_word_generation 3"
    ],
    "stage_diffs": [
     {
@@ -203,39 +163,38 @@
    "members": [
     {
      "bus": "d2d_rom.native_rx_v -> native59.native_rx_v",
-     "stages": 0,
-     "age": 0,
+     "stages": 1,
+     "age": 2,
      "width": 1
     },
     {
      "bus": "d2d_rom.native_rx_slot -> native59.rx_slot",
-     "stages": 0,
-     "age": 0,
+     "stages": 1,
+     "age": 2,
      "width": 1
     },
     {
      "bus": "d2d_rom.native_rx_slot_kind -> native59.rx_slot_kind",
-     "stages": 0,
-     "age": 0,
+     "stages": 1,
+     "age": 2,
      "width": 4
     },
     {
      "bus": "d2d_rom.native_rx_slot_beat -> native59.rx_slot_beat",
-     "stages": 0,
-     "age": 0,
+     "stages": 1,
+     "age": 2,
      "width": 5
     },
     {
      "bus": "d2d_rom.rx_payload -> native59.native_rx_payload",
-     "stages": 1,
+     "stages": 2,
      "age": 2,
      "width": 548
     }
    ],
    "age": 2,
-   "consistent": false,
+   "consistent": true,
    "ages": [
-    0,
     2
    ]
   },
@@ -244,7 +203,7 @@
    "members": [
     {
      "bus": "d2d_rom.kv_x3_slot -> native59.kv_x3_slot",
-     "stages": 1,
+     "stages": 3,
      "age": 2,
      "width": 1
     }
@@ -260,21 +219,21 @@
    "members": [
     {
      "bus": "native59.native_tx_v -> d2d_rom.native_tx_v",
-     "stages": 0,
-     "age": 0,
+     "stages": 1,
+     "age": 2,
      "width": 1
     },
     {
      "bus": "native59.native_tx_payload -> d2d_rom.native_tx_payload",
-     "stages": 0,
-     "age": 0,
+     "stages": 1,
+     "age": 2,
      "width": 548
     }
    ],
-   "age": 0,
+   "age": 2,
    "consistent": true,
    "ages": [
-    0
+    2
    ]
   },
   "C.x3_record": {
@@ -282,19 +241,19 @@
    "members": [
     {
      "bus": "native59.x3 -> d2d_rom.x3",
-     "stages": 1,
+     "stages": 2,
      "age": 2,
      "width": 524
     },
     {
      "bus": "native59.x3_identity -> d2d_rom.x3_identity",
-     "stages": 1,
+     "stages": 2,
      "age": 2,
      "width": 59
     },
     {
      "bus": "native59.x3_generation -> d2d_rom.x3_generation",
-     "stages": 1,
+     "stages": 2,
      "age": 2,
      "width": 2
     }

@@ -1,0 +1,67 @@
+{
+ "schema": "opentallas.q_xpf.record.v1",
+ "lane": "Q-XPF 10-18 (sub of DRIVE-1800)",
+ "die": "dv2f14bi ot-epyc4:/srv/opentallas-scratch/claude/qwen-split-compute/dv2f14bi out/case/die.v (GEN src 230b28bd5, land plan = dv2f14bg chain land_plan.json)",
+ "bench_src": "claude/q-xpf-1018 (230b28bd5 + merge qlb-c4 480b2bc6c + Q-XPF) overlaid on the bi src; Verilator 5.050 on ot-epyc4 via ot-run",
+ "question": "tt_ctlm.hr lane age: zero-delay RTL 15 vs land plan E 18 (GEN XPF_TRANSPORT_EDGES 20)",
+ "answer": "the plan value is the hardware: XPF_TRANSPORT_EDGES 20 = 1 + hr lane 19 (E 18 + landing o). The die ties the hr landing K strap (k2..k0 = 010, K 2) for E 18; ot_qfd_land reads slot (rc-K) mod D=4, so the ZERO-DELAY netlist (which writes the ring at E_sta 2, not the STA residual E_sta 7) reads a slot rewritten 4 edges later: 18 aliases to 14 (lane 15), and the landing's own epoch check FAULTS (hr/cmd/ss/ag landings). With the lane timing (LAG = E_sta - 2 lane periods on the landing write side, sim only) the same netlist measures 19 and no ctlm landing faults. GEN derivation (lane_groups.lane_cycles = E + 1, E = fwd_e_est(n) + E_sta - 2) is right; hops != edges is already handled (25 hops -> fwd_e_est 13).",
+ "xpf_measure": {
+  "zero": {
+   "measured_hr_lane": 15,
+   "xpf_check": "FAIL (zero-delay slice; 1+15 != 20; landings rly_dvw_{hr_wi_24,cmd_wi_24,ss_wo_21,ag_wo_21} faulted)",
+   "dir": "bi_zero"
+  },
+  "plan": {
+   "measured_hr_lane": 19,
+   "xpf_check": "PASS (sidecar 20 = elaborated 20 = 1 + measured 19 = 1 + lane_cycles 19; no ctlm landing fault)",
+   "dir": "bi_plan"
+  },
+  "mxpf": {
+   "mutant": "sidecar XPF 19",
+   "xpf_check": "FAIL",
+   "fail_regex": "^SMOKE_XPF_MISMATCH",
+   "witness": "bi_mxpf/run_m0_s1.log"
+  }
+ },
+ "ctlm_image": {
+  "compiler": "tools/qwen_layerbench/ctlm_image.py --lane-ages results/rtl/qwen_layer_tput_1018/ctlm_prog/lane_ages_dv2f14bi.json",
+  "lane_ages": {
+   "R_CMD": 19,
+   "R_HR": 19,
+   "R_SS": 17,
+   "R_AG": 17,
+   "XPF_TRANSPORT_EDGES": 20
+  },
+  "digest": "18346d27353c0c18",
+  "image": "results/rtl/qwen_layer_tput_1018/ctlm_prog/image_dv2f14bi/ (ctlm_image.json + program.memh; per-die: the generic image/ c36fbf0c46078f2b is the dv2f14bn-age image, XPF 15)"
+ },
+ "cprog": {
+  "m0": "CPROG PASS 116/116 compiled events on their edges, 3 decode stages, lane ages measured R_CMD/R_HR 19 R_SS/R_AG 17, ctlm landing faults 0 (cprog_m0/cprog_check.txt)",
+  "m1": {
+   "mutant": "tt_ctlm MUT 1 (calendar one edge late)",
+   "result": "CPROG FAIL 51/116 (xpf_sch fault)",
+   "fail_regex": "^CPROG FAIL",
+   "witness": "cprog_m1/cprog_check.txt"
+  },
+  "old15": {
+   "mutant": "the zero-delay image (lane_ages_dv2f14bn.json, XPF 15) on this die",
+   "result": "CPROG FAIL 34/116, tt_ctlm xpf_sch fault @6098",
+   "fail_regex": "^CPROG FAIL",
+   "witness": "cprog_old15/cprog_check.txt"
+  }
+ },
+ "other_findings": [
+  "47 short landings (E_sta 1 / n 1-3 E_sta 2: sys_face<->tt_ctlm/d2d_rom/embed_prov/native59) report OT_QFD_LAND_FAULT at reset release (~872/879 ns) in BOTH the zero-delay and lane-timed slice: read epoch != rc - K (G/R0 reset-calendar or E_sta-1 read before the zero-delay write) -- not the XPF lanes; owner Q-DIE14 / Q-COLLCAL (K calendar).",
+  "c_ctl CPROG smoke side (not the CPROG check): kind-14 witness not accepted and sys_face e_cf (E calendar) fault @7461 -- the known LB2-QWEN-C / Q-DIE13 gaps (QLB-PROG finding 3), possibly the sf_prog_tx_* landing faults above.",
+  "dv2f14bi chain FAILED at PDN 18:11 (PDN-0185 M8 straps in grid pg_m8_3 - rstt_rst_d2d__fo1__r3_0: 6.48 um frame height < 4.8 um straps + 2.2 um offset): no GRT/STA for bi."
+ ],
+ "tools": [
+  "rtl/qwen_split/ot_qfd_land_lag.sv (simulation-only lane timing model)",
+  "tools/qwen_split/land_lag_sim.py (annotate | ages | xpf-check)",
+  "tools/qwen_split/die_params.py (records sim_lag + bench rule in the XPF derivation)"
+ ],
+ "scripts": [
+  "results/rtl/q_xpf_1018/xpf.sh",
+  "results/rtl/q_xpf_1018/cprog.sh"
+ ]
+}

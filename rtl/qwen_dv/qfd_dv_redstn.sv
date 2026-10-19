@@ -116,7 +116,15 @@ module qfd_dv_redstn #(
     // ---------------------------------------------------------------- level-9 sender: own level-8 words leave on nb_o
     always @(posedge ck or negedge rst_n)
         if (!rst_n) nb_o <= 514'd0;
+        // LB2-QWEN-C 10-18: the idle word is all zero ("a zero word is no word" on every slice port): the level-8
+        // adder data (DRST 0, unreset by design) leaves only with its valid, so the 514-b die lane carries no
+        // initial-state garbage (c_colW5 smoke RESET_DET: o_n_dv_l9_W4 toggled every idle edge) and idles quiet.
+        // OT_QFD_L9_IDLE_MUT = the as-built ungated word (smoke mutant: reset determinism must FAIL).
+`ifdef OT_QFD_L9_IDLE_MUT
         else nb_o <= {1'b0, v8 && mode == 2'd3, y8};
+`else
+        else nb_o <= (v8 && mode == 2'd3) ? {2'b01, y8} : 514'd0;
+`endif
     // ---------------------------------------------------------------- the finished word of the op's mode
     wire        fv = (mode == 2'd0) ? v7 : (mode == 2'd1) ? v8 : (mode == 2'd2) ? v9 : 1'b0;
     wire [511:0] fd = (mode == 2'd0) ? y7 : (mode == 2'd1) ? y8 : y9;

@@ -1,0 +1,8 @@
+slice_smoke: /srv/opentallas-scratch/claude/qlb-prog-1018/runs/c5/smoke/tb_qwc_slice_ctl.sv: 32 inputs (9 clock, 5 reset), 77 outputs
+SMOKE_FAIL qwc_slice_ctl MUT=0 errors 22820
+RESET_DET ports 77 nondet 5 undeclared_nondet 3
+SMOKE_RESET_NONDETERMINISTIC qwc_slice_ctl
+  UNDECLARED o_n_sf_emb_expected_scale__r1
+  UNDECLARED o_n_sf_emb_expected_slot__r1
+  UNDECLARED o_n_sf_emb_expected_word__r1
+SMOKE_RESULT FAIL qwc_slice_ctl MUT=0

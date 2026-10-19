@@ -11,12 +11,20 @@
 //          (the single 16-lane scale: + 8 edges, priced).  MODE 1 (L8): lo + hi on the same edge.
 //   MODE 2 / 3: level 9 as qfd_dv_redstn (receiver: own L8 + l9_i; sender: own L8 on l9_o).
 // MUT 3 (bench negative control): the scale word of result j is read at sbase + j + 1 (must FAIL).
+// LAST-K SELECTION (QW-DIEFIX 10-19, QW-XHEAD XT1 finding): the tiles stream their running accumulator once per k step,
+//   so a cluster pair delivers JB (8) words per (round, k): rounds x kc x 8 words, and only the k = kc - 1 block is the
+//   level-6 result (XT1 measured qkv 64 / o 48 / gu 256 / down 144 rs words for 8 / 24 / 8 / 24 results).  cfg_kcm1 =
+//   kc - 1 (STN cmd [58:51]; 0 = every word is a result, the pre-fix behaviour for kc = 1).  Each pair stream (lo = rs_s,
+//   hi = rs_n) counts its words in blocks of JB and passes only the last block of every kc to level 7; the dropped words
+//   are still checked (valid pairing, fault bits).  Pure counters on the input valids: no data-path flop, no new edge.
+//   MUT 14 (negative control): kcm1 ignored (every word passes: wrong sums + too many result words -> must FAIL).
 // =====================================================================================================================
 module qfd_dv_redstn2 #(
     parameter integer ADD_LAT   = 7,
     parameter integer SKEW      = 14,
     parameter integer SCALE_LAT = 6,
-    parameter integer MUT       = 0
+    parameter integer MUT       = 0,
+    parameter integer JB        = 8                // words per (round, k) block of one pair
 ) (
     input  wire          ck,
     input  wire          rst_n,
@@ -26,6 +34,7 @@ module qfd_dv_redstn2 #(
     input  wire          cfg_wsrc,
     input  wire [7:0]    cfg_nwords,
     input  wire [8:0]    cfg_sbase,
+    input  wire [7:0]    cfg_kcm1,                 // kc - 1: only every kc-th JB-word block is a result
     // words (pin-registered by the slice top)
     input  wire [1027:0] rs_s,
     input  wire [1027:0] rs_n,
@@ -43,16 +52,42 @@ module qfd_dv_redstn2 #(
     output reg           fault
 );
     // ---------------------------------------------------------------- configuration
-    reg [1:0] mode; reg wsrc; reg [7:0] nwords; reg [8:0] sbase;
+    reg [1:0] mode; reg wsrc; reg [7:0] nwords; reg [8:0] sbase; reg [7:0] kcm1;
     always @(posedge ck or negedge rst_n)
-        if (!rst_n) begin mode <= 2'd0; wsrc <= 1'b0; nwords <= 8'd0; sbase <= 9'd0; end
-        else if (cfg_v) begin mode <= cfg_mode; wsrc <= cfg_wsrc; nwords <= cfg_nwords; sbase <= cfg_sbase; end
+        if (!rst_n) begin mode <= 2'd0; wsrc <= 1'b0; nwords <= 8'd0; sbase <= 9'd0; kcm1 <= 8'd0; end
+        else if (cfg_v) begin mode <= cfg_mode; wsrc <= cfg_wsrc; nwords <= cfg_nwords; sbase <= cfg_sbase;
+                              kcm1 <= (MUT == 14) ? 8'd0 : cfg_kcm1; end
     // ---------------------------------------------------------------- level 7: two pairs in parallel
     wire [513:0] ns, nn;                           // the near words, SKEW edges later
     ot_hdc_delay #(.W(514), .D(SKEW), .RESET(1)) u_sks (.clk(ck), .rst_n(rst_n), .d(rs_s[513:0]), .q(ns));
     ot_hdc_delay #(.W(514), .D(SKEW), .RESET(1)) u_skn (.clk(ck), .rst_n(rst_n), .d(rs_n[513:0]), .q(nn));
     wire [513:0] fs = rs_s[1027:514], fn = rs_n[1027:514];
-    wire vlo_in = fs[512] & ns[512], vhi_in = fn[512] & nn[512];
+    wire plo = fs[512] & ns[512], phi = fn[512] & nn[512];        // a pair word (every k step)
+    // last-k selection: per pair stream, word index in the JB block and k index; klast_* = this block is k = kc - 1
+    localparam integer JBW = (JB > 1) ? $clog2(JB) : 1;
+    reg [JBW-1:0] wlo, whi;
+    reg [7:0]     klo, khi;
+    reg           klast_lo, klast_hi;
+    wire          eblo = plo && wlo == JB - 1, ebhi = phi && whi == JB - 1;
+    always @(posedge ck or negedge rst_n)
+        if (!rst_n) begin
+            wlo <= 0; whi <= 0; klo <= 8'd0; khi <= 8'd0; klast_lo <= 1'b1; klast_hi <= 1'b1;
+        end else if (cfg_v) begin
+            wlo <= 0; whi <= 0; klo <= 8'd0; khi <= 8'd0;
+            klast_lo <= (MUT == 14) || cfg_kcm1 == 8'd0; klast_hi <= (MUT == 14) || cfg_kcm1 == 8'd0;
+        end else begin
+            if (plo) wlo <= eblo ? {JBW{1'b0}} : wlo + 1'b1;
+            if (phi) whi <= ebhi ? {JBW{1'b0}} : whi + 1'b1;
+            if (eblo) begin
+                klo <= klast_lo ? 8'd0 : klo + 8'd1;
+                klast_lo <= klast_lo ? kcm1 == 8'd0 : klo + 8'd1 == kcm1;
+            end
+            if (ebhi) begin
+                khi <= klast_hi ? 8'd0 : khi + 8'd1;
+                klast_hi <= klast_hi ? kcm1 == 8'd0 : khi + 8'd1 == kcm1;
+            end
+        end
+    wire vlo_in = plo & klast_lo, vhi_in = phi & klast_hi;
     wire [511:0] ylo, yhi;
     wire [15:0] vlol, vhil;
     wire [31:0] elo, ehi;
@@ -117,7 +152,15 @@ module qfd_dv_redstn2 #(
     // ---------------------------------------------------------------- level-9 sender: own level-8 words leave on nb_o
     always @(posedge ck or negedge rst_n)
         if (!rst_n) nb_o <= 514'd0;
+        // LB2-QWEN-C 10-18: the idle word is all zero ("a zero word is no word" on every slice port): the level-8
+        // adder data (DRST 0, unreset by design) leaves only with its valid, so the 514-b die lane carries no
+        // initial-state garbage (c_colW5 smoke RESET_DET: o_n_dv_l9_W4 toggled every idle edge) and idles quiet.
+        // OT_QFD_L9_IDLE_MUT = the as-built ungated word (smoke mutant: reset determinism must FAIL).
+`ifdef OT_QFD_L9_IDLE_MUT
         else nb_o <= {1'b0, v8 && mode == 2'd3, y8};
+`else
+        else nb_o <= (v8 && mode == 2'd3) ? {2'b01, y8} : 514'd0;
+`endif
     // ---------------------------------------------------------------- the finished word of the op's mode
     wire        fv = (mode == 2'd0) ? v7 : (mode == 2'd1) ? v8 : (mode == 2'd2) ? v9 : 1'b0;
     wire [511:0] fd = (mode == 2'd0) ? y7 : (mode == 2'd1) ? y8 : y9;
