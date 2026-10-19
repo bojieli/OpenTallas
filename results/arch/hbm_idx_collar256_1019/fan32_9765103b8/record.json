@@ -1,0 +1,25 @@
+{
+ "verdict": "FUNCTIONAL_PASS_MAPPED_CENSUS_OPEN",
+ "source_revision": "9765103b8",
+ "default_and_fan32_identity_edges": 2360,
+ "record_events_per_run": 32,
+ "record_offsets": [
+  0,
+  1,
+  2,
+  3,
+  8,
+  9,
+  17,
+  18
+ ],
+ "successful_added_edges": 0,
+ "mutants": [
+  9,
+  10,
+  11,
+  12
+ ],
+ "canonical_byte_identical": true,
+ "qualification": "pre-cleanup source proof; finalexactsource rerun andactualfanout/area/depth/IOrequired"
+}

@@ -344,11 +344,11 @@ module ot_hbm_idx256_banks #(parameter integer AW=12,MUT=0)(
  genvar g,r;
  generate for(g=0;g<11;g=g+1)begin:g_bank
   (* keep *) reg cv;
-  (* keep *) reg [7:0] ct;
-  (* keep *) reg [11:0] ca;
-  always @(posedge clk)begin ct<=cfg_target;ca<=cfg_addr;end
   always @(posedge clk or negedge rst_c_n)if(!rst_c_n)cv<=0;else cv<=cfg_v;
   if(g<10)begin:g_payload
+   (* keep *) reg [7:0] ct;
+   (* keep *) reg [11:0] ca;
+   always @(posedge clk)begin ct<=cfg_target;ca<=cfg_addr;end
    localparam integer LO=g*28;
    localparam integer B=(256-LO<28)?256-LO:28;
    (* keep *) reg [7:0] rd_oh;

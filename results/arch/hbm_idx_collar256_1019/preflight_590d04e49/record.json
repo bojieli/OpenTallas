@@ -1,0 +1,18 @@
+{
+ "source_revision": "590d04e49",
+ "verdict": "SAFE_FANOUT_FAIL",
+ "scope": "floorplan andplacedIO only; noCTS orphysicaladoption",
+ "pins": 2330,
+ "actual_mapped_std_um2": 2639,
+ "flops": 4460,
+ "depth_ps": 451.8,
+ "high_fanout": [
+  807,
+  739,
+  690,
+  523,
+  442
+ ],
+ "io_geometry": "PASS all2330trackaccessible/inside",
+ "repair_model": "fan32_model.json"
+}

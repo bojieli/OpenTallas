@@ -12,16 +12,17 @@
   "record_banks": 10,
   "bank_bits_max": 28,
   "cfg_landing_copies": 11,
-  "cfg_state_bits_added": 231,
+  "cfg_state_bits_added": 211,
   "onehot_selection_bits_added": 80,
   "counter_bits_added": 288,
-  "total_estimated_added_state_bits": 599,
+  "total_estimated_added_state_bits": 579,
   "held_record_bits": 2048,
   "held_operand_bits": 1536,
   "successful_install_added_edges": 0,
   "successful_data_added_edges": 0,
   "output_hold_semantics": "preserved even outside valid pulses",
-  "critical_fanout_target": 32
+  "critical_fanout_target": 32,
+  "note": "ten valid/address/target copies +one programme-address valid copy; no unusedaddress/target state"
  },
  "retention": "canonical physical/common_flow/ot_keep_regs.tcl marks FF drivers of keep wires beforeopt_merge and per-bit techmap; actual mapped copies/fanout must be counted",
  "qualification": "modelbeforebuild; no CTS until full differentialrecord/operand/programme proof and actualfanout/depth/area/IOcensus"

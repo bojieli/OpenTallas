@@ -1,9 +1,9 @@
 {
- "name": "hdie_col_idx256_1019-g1-COMMIT",
+ "name": "hdie_col_idx256_1019-g2-COMMIT",
  "block": "ot_hbm_static_cfg_collar_idx256",
  "ref_tile": true,
  "owner": "CODEX-HBM-IDX256",
- "purpose": "ActualNF5 guardedIDX256 sourceboundphysicalsuccessor",
+ "purpose": "ActualNF5 IDX256 guards plus optin retained28bitrecord/operand/pin banks;0edges; actualfanoutcensus beforeCTS",
  "threads": 8,
  "peak_ram_gb": 16,
  "source": {
@@ -19,7 +19,7 @@
   "bench": [
    {
     "name": "lint",
-    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hbm_static_cfg_collar_idx256 #(.PAGE_W(1), .NS(1), .NPR(6), .NREC(8), .NGO(2), .NB(2), .NF(5), .XSER(0)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/host_static_20261015/ot_hbm_static_cfg_collar_idx256.sv && echo lint-ok",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hbm_static_cfg_collar_idx256 #(.PAGE_W(1), .NS(1), .NPR(6), .NREC(8), .NGO(2), .NB(2), .NF(5), .XSER(0), .FAN32(1)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/host_static_20261015/ot_hbm_static_cfg_collar_idx256.sv && echo lint-ok",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,
@@ -49,7 +49,7 @@
     ],
     "pass_regex": "IDX256_PASS cases=9",
     "fail_regex": "IDX256_FAIL",
-    "fail_witness": "results/arch/hbm_idx_collar256_1019/run9.log"
+    "fail_witness": "results/arch/hbm_idx_collar256_1019/fan32_9765103b8/runf1_m9.log"
    },
    {
     "name": "idx256_10",
@@ -62,7 +62,7 @@
     ],
     "pass_regex": "IDX256_PASS cases=9",
     "fail_regex": "IDX256_FAIL",
-    "fail_witness": "results/arch/hbm_idx_collar256_1019/run10.log"
+    "fail_witness": "results/arch/hbm_idx_collar256_1019/fan32_9765103b8/runf1_m10.log"
    },
    {
     "name": "idx256_11",
@@ -75,7 +75,20 @@
     ],
     "pass_regex": "IDX256_PASS cases=9",
     "fail_regex": "IDX256_FAIL",
-    "fail_witness": "results/arch/hbm_idx_collar256_1019/run11.log"
+    "fail_witness": "results/arch/hbm_idx_collar256_1019/fan32_9765103b8/runf1_m11.log"
+   },
+   {
+    "name": "idx256_12",
+    "cmd": "bash rtl/test/hbm_collar_idx256/run_idx256_one.sh {RUN}/bench/idx256_12 12",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "IDX256_PASS cases=9",
+    "fail_regex": "IDX256_FAIL",
+    "fail_witness": "results/arch/hbm_idx_collar256_1019/fan32_9765103b8/runf1_m12.log"
    }
   ],
   "calibrate": {
@@ -126,7 +139,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hdie_col_idx256_1019/hdie_col_idx256_1019-g1-COMMIT"
+   "to": "results/rtl/ref_tile/hdie_col_idx256_1019/hdie_col_idx256_1019-g2-COMMIT"
   }
  ],
  "cycles_added": 0,
