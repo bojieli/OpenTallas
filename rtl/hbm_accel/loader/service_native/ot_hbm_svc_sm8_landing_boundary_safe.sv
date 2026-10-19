@@ -1,14 +1,14 @@
 // Opt-in structural fanout candidate; original masters preserved. See fanout model.
 `default_nettype none
-(* keep_hierarchy="yes" *) module ot_hbm_landing_reset_active(input wire clk,active_reset,output wire landed_n);
- (* async_reg="true" *) reg [1:0] q;
- always @(posedge clk or posedge active_reset)if(active_reset)q<=0;else q<={q[0],1'b1};
- assign landed_n=q[1];
+// Same one-FF primitive for first and second reset levels. Actual async-clear FF.
+// D=1: a branch held clear by phase0 remains0 at E1, releases exactly E2.
+(* keep_hierarchy="yes" *) module ot_hbm_pair_reset_phase(input wire clk,rst_n,output reg q);
+ always @(posedge clk or negedge rst_n)if(!rst_n)q<=0;else q<=1'b1;
 endmodule
 (* keep_hierarchy="yes" *) module ot_hbm_landing_safe_slice #(parameter integer W=8)(
- input wire clk,active_reset,push,pop,input wire [W-1:0] data_in,output wire [W-1:0] data_out);
+ input wire clk,phase0,push,pop,input wire [W-1:0] data_in,output wire [W-1:0] data_out);
  wire rst_n;
- ot_hbm_landing_reset_active u_reset(.clk(clk),.active_reset(active_reset),.landed_n(rst_n));
+ ot_hbm_pair_reset_phase u_reset(.clk(clk),.rst_n(phase0),.q(rst_n));
  (* keep="true" *) reg [1:0] wp,rp;
  reg push_q;reg [W-1:0] pin_data,slot0,slot1,slot2;
  always @(posedge clk)begin
@@ -26,15 +26,13 @@ endmodule
  assign data_out=rp==0?slot0:rp==1?slot1:slot2;
 endmodule
 (* keep_hierarchy="yes" *) module ot_hbm_landing_safe_group #(parameter integer W=32)(
- input wire clk,raw_rst_n,in_v,in_ready,input wire [1:0] used,input wire pending,core_ready,
+ input wire clk,input wire [1:0] phase0,input wire in_v,in_ready,input wire [1:0] used,input wire pending,core_ready,
  input wire [W-1:0] data_in,output wire [W-1:0] data_out);
- wire active_reset;
- ot_hbm_landing_field_inverse #(.W(1)) u_reset_polarity(.field(raw_rst_n),.inverse(active_reset));
  wire push=in_v&&in_ready;
  wire pop=(used[1]||(used[0]&&!pending))&&core_ready;
  genvar i;generate for(i=0;i<(W+7)/8;i=i+1)begin:g_slice
   localparam integer SW=W-8*i>=8?8:W-8*i;
-  ot_hbm_landing_safe_slice #(.W(SW)) u_slice(.clk(clk),.active_reset(active_reset),.push(push),.pop(pop),
+  ot_hbm_landing_safe_slice #(.W(SW)) u_slice(.clk(clk),.phase0(phase0[i%2]),.push(push),.pop(pop),
    .data_in(data_in[8*i+:SW]),.data_out(data_out[8*i+:SW]));
  end endgenerate
 endmodule
@@ -43,6 +41,7 @@ endmodule
  parameter integer BMUT=0,LB=(LBANKS>2)?2:1,IW=283+LB
 )(
  input wire hbm_clk,hbm_rst_n,stream_clk,stream_rst_n,
+ input wire [1:0] hbm_phase0,input wire stream_phase0,
  input wire in_v,output reg in_ready,input wire [IW-1:0] in_data,output reg overflow,
  input wire reserve_v,input wire [LB-1:0] reserve_bank,input wire [15:0] reserve_epoch,
  input wire [11:0] reserve_total,input wire stop,
@@ -50,12 +49,9 @@ endmodule
  input wire read_v,input wire [LB-1:0] read_bank,input wire [5:0] read_row,
  output reg [255:0] read_data
 );
- (* async_reg = "true" *) reg [1:0] hr,sr;
- always @(posedge hbm_clk or negedge hbm_rst_n)
-  if(!hbm_rst_n)hr<=0;else hr<={hr[0],1'b1};
- always @(posedge stream_clk or negedge stream_rst_n)
-  if(!stream_rst_n)sr<=0;else sr<={sr[0],1'b1};
- wire hreset=hr[1],sreset=sr[1];
+ wire hreset,sreset;
+ ot_hbm_pair_reset_phase u_hreset(.clk(hbm_clk),.rst_n(hbm_phase0[0]),.q(hreset));
+ ot_hbm_pair_reset_phase u_sreset(.clk(stream_clk),.rst_n(stream_phase0),.q(sreset));
  wire core_ready,core_overflow,core_complete,core_fault;
  wire [LB-1:0] core_bank;
  wire [255:0] core_data;
@@ -79,7 +75,7 @@ endmodule
  generate for(g=0;g<(IW+31)/32;g=g+1)begin:g_pin
   localparam integer W=(IW-32*g>=32)?32:IW-32*g;
   ot_hbm_landing_safe_group #(.W(W)) u_group(
-   .clk(hbm_clk),.raw_rst_n(hbm_rst_n),.in_v(in_v),.in_ready(in_ready),
+   .clk(hbm_clk),.phase0(hbm_phase0),.in_v(in_v),.in_ready(in_ready),
    .used(used),.pending(pending),.core_ready(core_ready),
    .data_in(in_data[32*g+:W]),.data_out(head[32*g+:W]));
  end endgenerate
