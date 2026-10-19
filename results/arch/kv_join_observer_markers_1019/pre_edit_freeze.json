@@ -1,0 +1,66 @@
+{
+  "base": "d93476b97",
+  "stage": "PRE_EDIT_MODEL",
+  "source_sha256": {
+    "results/arch/kv_native_owner_join_component_1019/private/ot_host_if_pb2_observed_rc.sv": "3e780d225ba720ad2a30ce9dd576ebd9ad3f76388be6b69b160c6a5d967a4c86",
+    "results/arch/kv_native_owner_join_component_1019/private/qkd_host_if_pins_observed_rc.sv": "bde9b0f4ae2f10cc85424f7694ce7ff46714cf72954fd0a0338d41bc10a5a261",
+    "results/arch/kv_native_owner_join_component_1019/private/qkd_host_tp8_coordinator_rc.sv": "ab6da4ff7a63621cf371b112ad4c2296710fa97b2da821e00e8b2d9593df458f",
+    "results/arch/kv_native_owner_join_component_1019/private/qkd_host_coordinator_services_rc.sv": "460263b8d04c8be70f0dba82a0a22eac4f654ce64bc913f6b05715de08967bf9",
+    "rtl/qwen_sys/host_integrated_20261014/qkd_host_peer_rank_codec.sv": "e66a6dabed4e5a9e19ddabe6e0179df58053834697127118cadde9d891cbdae7",
+    "rtl/qwen_sys/host_integrated_20261014/qkd_host_peer_coordinator_codec.sv": "a11922a003e5302b39ba4fbc1089dd92b02194c44d071a7ead253983acb5b16f",
+    "rtl/qwen_sys/host_integrated_20261014/qkd_host_post_collector.sv": "1d8e481b09e822cb0b02bf57c9d2906b0c9aa210f102a3908213f32c5dde5cdc"
+  },
+  "state": {
+    "join": 162,
+    "scheduler_metadata": 51,
+    "scheduler_aligned_marker_ff": 2,
+    "coordinator_aligned_marker_ff": 2,
+    "increment_vs_60bb": 217,
+    "H64_prior_component_declared_bits": 1609,
+    "H64_total_declared_bits": 1826,
+    "event_rows": 16,
+    "event_row_bits": 182,
+    "event_indexed_bits": 2912,
+    "rank_existing_packet_bits_repurposed_per_instance": 2,
+    "rank_instances": 8,
+    "rank_existing_packet_bits_repurposed_total": 16,
+    "new_rank_vector_bits": 0,
+    "new_ifpins_or_services_or_post_state": 0
+  },
+  "ports": {
+    "scheduler_outputs": [
+      "step_retire_native_valid",
+      "cq_native_valid_observed"
+    ],
+    "rank_inputs": [
+      "step_retire_native_valid",
+      "cq_native_valid_observed"
+    ],
+    "coordinator_outputs": [
+      "step_retire_native_valid",
+      "cq_native_valid_observed"
+    ],
+    "services_and_post_inputs": [
+      "step_retire_native_valid",
+      "cq_native_valid_observed"
+    ]
+  },
+  "codec": {
+    "opcode6_marker_bit": 91,
+    "opcode6_reserved_zero_range": "511:92",
+    "opcode7_marker_bit": 90,
+    "opcode7_reserved_zero_range": "511:91",
+    "parameter": "ENABLE_NATIVE_OWNER_JOIN=0",
+    "private_modules": [
+      "qkd_host_peer_rank_codec_rc",
+      "qkd_host_peer_coordinator_codec_rc",
+      "qkd_host_post_collector_rc"
+    ]
+  },
+  "production_H": null,
+  "production_deadline": null,
+  "CDC": null,
+  "physical": null,
+  "SU_latency": null,
+  "MU_rate": null
+}
