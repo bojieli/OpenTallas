@@ -36,7 +36,7 @@ module tb_hbm_svg_rel_sm;
  wire[31:0]kv,krdy,kwe,kdone,rv_,rrdy;wire[959:0]ka;wire[127:0]kl,rb;wire[543:0]kt,rt;wire[8191:0]kw,rd;wire[1023:0]ks;
  wire[1098:0]packet;wire[82:0]command;
  `ifdef SMB_SRAMFIFO
- ot_hbm_svc_sm_group_rel_sram_id #(.ATTENTION(`ifdef SMB_ATTENTION 1 `else 0 `endif),.NATIVE_RETURN(`ifdef SMB_NATIVE_RETURN 1 `else 0 `endif),.RETURN_MUT(`ifdef SMB_RETURN_MUT `SMB_RETURN_MUT `else 0 `endif),.NATIVE_LANDING(`ifdef SMB_NATIVE_LANDING 1 `else 0 `endif),.FIFOMUT(`ifdef SMB_FIFOMUT `SMB_FIFOMUT `else 0 `endif),
+ ot_hbm_svc_sm_group_rel_sram_id #(.NATIVE_CACHE_SAFE(`ifdef SMB_NATIVE_CACHE_SAFE 1 `else 0 `endif),.ATTENTION(`ifdef SMB_ATTENTION 1 `else 0 `endif),.NATIVE_RETURN(`ifdef SMB_NATIVE_RETURN 1 `else 0 `endif),.RETURN_MUT(`ifdef SMB_RETURN_MUT `SMB_RETURN_MUT `else 0 `endif),.NATIVE_LANDING(`ifdef SMB_NATIVE_LANDING 1 `else 0 `endif),.FIFOMUT(`ifdef SMB_FIFOMUT `SMB_FIFOMUT `else 0 `endif),
  `else
  ot_hbm_svc_sm_group_rel_id #(
  `endif
@@ -58,7 +58,12 @@ module tb_hbm_svg_rel_sm;
  assign ks[1023:128]=0;assign rrdy[31:4]={28{1'b1}};
  // ---------------- xc (extension calendar, own collar)
  wire[108:0]cmd_ext;wire[63:0]kv_desc;wire xc_done,xc_cfgd,xc_fault,xc_active;
- ot_hbm_svc_sm_xcal_rel_t #(.PAW(11),.PREL(1),.DD(256),.MUT(`ifdef XMUT `XMUT `else 0 `endif)) xc(.clk(stream),.rst_n(srst),.tgt(8'd192),
+ `ifdef SMB_NATIVE_CACHE_SAFE
+ ot_hbm_svc_sm_xcal_rel_cache2_t
+ `else
+ ot_hbm_svc_sm_xcal_rel_t
+ `endif
+ #(.PAW(11),.PREL(1),.DD(256),.MUT(`ifdef XMUT `XMUT `else 0 `endif)) xc(.clk(stream),.rst_n(srst),.tgt(8'd192),
   .cfg_v(cfg_v),.cfg_target(target),.cfg_addr(addr),.cfg_data(data),.desc_v(desc_v),.desc_base(dbase),.desc_limit(dlimit),
   .desc_loops(dloops),.launch_v(launch_v),.cmd_ext(cmd_ext),.kv_desc(kv_desc),.done(xc_done),.configured(xc_cfgd),
   .fault(xc_fault),.active(xc_active));

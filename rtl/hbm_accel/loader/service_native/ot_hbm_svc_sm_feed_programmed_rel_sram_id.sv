@@ -15,7 +15,7 @@
 //     the same +1 stage.
 // Everything else (four-PC producer, landing/cache SRAMs, packed136 rows, S1 consumer copy, faults) is the _id feed.
 module ot_hbm_svc_sm_feed_programmed_rel_sram_id #(
- parameter integer ATTENTION=0,NATIVE_RETURN=0,RETURN_MUT=0,NATIVE_LANDING=0,FIFOMUT=0,PAW=11,PREL=1,
+ parameter integer NATIVE_CACHE_SAFE=0,ATTENTION=0,NATIVE_RETURN=0,RETURN_MUT=0,NATIVE_LANDING=0,FIFOMUT=0,PAW=11,PREL=1,
  parameter integer OWNER_AW=5,RESPONSE_DEPTH=8,DECOUPLE=1,OVERLAP=1,LBANKS=4,
  parameter integer LB=(LBANKS>2)?2:1
 )(
@@ -89,12 +89,19 @@ module ot_hbm_svc_sm_feed_programmed_rel_sram_id #(
  for(genvar l=0;l<4;l=l+1)begin:metadata
   assign indices[l*24+:24]=out_ordinal+l;assign epochs[l*16+:16]=out_epoch;
  end
+ wire calendar_active,calendar_done;
+ reg[1:0] active_tail,done_tail;
+ always @(posedge stream_clk or negedge stream_rst_n)
+  if(!stream_rst_n)begin active_tail<=0;done_tail<=0;end
+  else begin active_tail<={active_tail[0],calendar_active};done_tail<={done_tail[0],calendar_done};end
+ assign program_active=NATIVE_CACHE_SAFE!=0?active_tail[1]:calendar_active;
+ assign program_done=NATIVE_CACHE_SAFE!=0?done_tail[1]:calendar_done;
  wire[134:0]word;wire[45:0]wctx;wire[15:0]wit;wire wlast,word_v;wire[31:0]ordinal;wire cache_busy;
  ot_smh_calendar_static_x #(.W(135),.AW(PAW),.XW(46)) programme_leaf(
   .clk(stream_clk),.rst_n(stream_rst_n),.cfg_we(program_cfg_we),.cfg_addr(program_cfg_addr),.cfg_data(program_cfg_data),
   .start_v(program_start_v),.start_base(program_start_base),.start_limit(program_start_limit),.start_loops(program_start_loops),
   .start_ctx(program_start_ctx),.calendar(word),.calendar_ctx(wctx),.calendar_iter(wit),.calendar_lastit(wlast),
-  .calendar_v(word_v),.ordinal(ordinal),.active(program_active),.done(program_done),.fault(programme_fault));
+  .calendar_v(word_v),.ordinal(ordinal),.active(calendar_active),.done(calendar_done),.fault(programme_fault));
  // RELOC (P2).  Context {row_off12, tag_base10, epoch16, bank1, lstep4, fl1, mode2}; iteration i of a looped body.
  //   R stage (+1 edge): cache READ of word t, relocated: row += i*lstep, tag += tag_base + i*lstep, bank/epoch = context.
  //   C stage (+2 edges): SM COMMAND (+ cache retire) of word t, relocated: row12 / slot += row_off, xaddr += i, first |=
@@ -145,13 +152,28 @@ module ot_hbm_svc_sm_feed_programmed_rel_sram_id #(
  end
  assign programme_v=programme_v_q;
  assign programme_observe=programme;
- assign sm_command=programme[82:0];
+ // The safe row cache captures all READ/retire inputs two edges later.
+ // Preserve their issue edges, and align the entire external command/format.
+ reg[82:0] command_d1,command_d2;
+ always @(posedge stream_clk or negedge stream_rst_n)
+  if(!stream_rst_n)begin command_d1<=0;command_d2<=0;end
+  else begin command_d1<=programme[82:0];command_d2<=command_d1;end
+ assign sm_command=NATIVE_CACHE_SAFE!=0?command_d2:programme[82:0];
+ generate if(NATIVE_CACHE_SAFE!=0)begin:g_safe_cache
+ ot_hbm_svc_static_sm_packed136_native_safe #(.PACKED136(1)) rows(
+  .clk(stream_clk),.rst_n(stream_rst_n),.open_v(cache_open_v),.open_bank(cache_open_bank),.open_epoch(cache_open_epoch),.open_count(cache_open_count),.open_tag_base(cache_open_tag),
+  .sector_v(out_v?out_mask:4'b0),.sector_index(indices),.sector_epoch(epochs),.sector_data(out_data),
+  .read_v(programme_v&&programme[83]),.read_bank(programme[84]),.read_epoch(programme[100:85]),.read_row(programme[106:101]),.read_tag(programme[116:107]),
+  .retire_v(programme[117]),.retire_bank(programme[118]),.retire_epoch(programme[134:119]),
+  .block_ready(cache_ready),.bank_owned(cache_owned),.busy(cache_busy),.fault(cache_fault),.out_packet(packet_observe));
+ end else begin:g_native8_cache
  ot_hbm_svc_static_sm_packed136_native8 #(.PACKED136(1)) rows(
   .clk(stream_clk),.rst_n(stream_rst_n),.open_v(cache_open_v),.open_bank(cache_open_bank),.open_epoch(cache_open_epoch),.open_count(cache_open_count),.open_tag_base(cache_open_tag),
   .sector_v(out_v?out_mask:4'b0),.sector_index(indices),.sector_epoch(epochs),.sector_data(out_data),
   .read_v(programme_v&&programme[83]),.read_bank(programme[84]),.read_epoch(programme[100:85]),.read_row(programme[106:101]),.read_tag(programme[116:107]),
   .retire_v(programme[117]),.retire_bank(programme[118]),.retire_epoch(programme[134:119]),
   .block_ready(cache_ready),.bank_owned(cache_owned),.busy(cache_busy),.fault(cache_fault),.out_packet(packet_observe));
+ end endgenerate
  // Attention command[25] means KV-converter consume, independently of packet arrival.
  // The unused dense decoder receives packet/tag checks but no dense issue requests.
  wire[82:0]dense_check_command=ATTENTION ? (sm_command & ~(83'd1<<25)) : sm_command;

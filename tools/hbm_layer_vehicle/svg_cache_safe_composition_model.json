@@ -1,6 +1,6 @@
 {
   "schema": "opentallas.svg-cache-safe-composition.v1",
-  "status": "MODEL BEFORE COMPOSITION RTL; native-safe cache functional and mapped qualification pending",
+  "status": "COMPONENT QUALIFIED; composition RTL opt-in awaiting whole proof",
   "opt_in_default": false,
   "baseline": {
     "whole_source": "2f13a5b1d",
@@ -10,12 +10,23 @@
     "whole_L00_cycles": 12899
   },
   "cache_candidate_contract": {
-    "child_source": "2933f4642",
+    "child_source": "bb7c14755",
     "all_input_capture_edges_added": 2,
-    "signals": ["OPEN", "sector", "READ", "retire"],
+    "signals": [
+      "OPEN",
+      "sector",
+      "READ",
+      "retire"
+    ],
     "output_edges_added": 2,
-    "outputs": ["packet", "block_ready", "bank_owned", "busy", "fault"],
-    "qualification": "candidate currently has 23 mapped loads above32; not admissible for physical gate"
+    "outputs": [
+      "packet",
+      "block_ready",
+      "bank_owned",
+      "busy",
+      "fault"
+    ],
+    "qualification": "Final asserted e3642b697 positive exact+2/reset and both mutants pass expected; mapped area5751.504um2/unknown0/maxnonclock31/reset8/23/25"
   },
   "composition": {
     "read_issue_change_edges": 0,
@@ -30,7 +41,7 @@
     "retire_alignment": "Existing C-stage retire enters the two-edge cache input collar while the same C-stage command traverses its two extra output registers; issue edge is unchanged.",
     "format_alignment": "Delay the whole83bit command including format-launch bits28:26. Do not delay only dense-issue or request bits.",
     "XC_alignment": "Delay the complete173bit mirror including command, KV payload and format launch. Keep READ programme fields and descriptor/GO issue unchanged.",
-    "completion": "Audit final command/retire versus done; retain exactly one final completion and price any extra drain edges explicitly. Do not reuse existing native programme gate binding after changing source."
+    "completion": "Delay SVG programme_done/active and XC done/active exactly2; add2 to compiler BUSY and final rc_end. Read-admission calibration stays7; recorded command9."
   },
   "required_proof": [
     "Native-safe cache exact old-master miter shifted2 including write/retire/read conflicts, readiness, faults, occupied reset and mutants",
@@ -39,5 +50,6 @@
     "Full attention packet/command identity with identical +2 XC mirror; no pread or req_lead changes",
     "Fresh physical source binding and root geometry/PNG review before submit"
   ],
-  "physical_claim": "NONE"
+  "physical_claim": "NONE",
+  "future_banked_calendar": "Separate model716f5f110 adds2 calendar edges to READ and command, then safe-cache adds2 command-only: eventual SMcommandG11. This cache-only integration uses originalcalendar and commandG9; no physical qualification."
 }
