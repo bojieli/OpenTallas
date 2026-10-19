@@ -9,7 +9,7 @@ What it adds to HGI-1 (docs/HBM_GENERIC_INTERFACE.md section 6; tools/hbm_generi
     the MDESCs).  No HGI-1 op code uses op[5] (largest list: 8 ops), so an HGI-1 decoder FAULTS on an N-row record
     (illegal op, completion status 3) instead of silently running row 0: fail-closed by construction.
   * ROWX: row count N (1..16), 4-bit first slot (DYN bank), per-operand row strides, a row gap for the static
-    schedule, the SM K-split code, and row selection from a VM row table (the expert-union grouped GEMM).
+    schedule, the SM remainder-pass layout (K-split / row-split), and row selection from a VM row table (the expert-union grouped GEMM).
   * New operations: IDX.UNION (op 5: verify expert union + per-expert row tables), CTL.USERS (op 8: per-slot DYN banks
     for independent users).  CTL.TOKX and CTL.ACCEPT (reserved in HGI-1) are defined.  SM.MATVEC param [5:2].
 
@@ -61,7 +61,9 @@ ROWX_FIELDS = [
     ("slot0", 4, 4, False, "first row's DYN bank / slot (0 .. 15); row r uses bank slot0 + rho(r); "
                            "UOP slot must equal slot0[2:0]; slot0 + N - 1 <= 15"),
     ("rgap", 8, 8, False, "extra cycles between row starts beyond the unit's row II (static-schedule spacing; 0 = back to back)"),
-    ("ksp", 16, 2, False, "SM.MATVEC only: K-split of the last lane pass, 2^ksp lanes a row (0 none; see sm_pass_plan); other units 0"),
+    ("rpl", 16, 2, False, "SM.MATVEC only: remainder-pass layout (r = N mod P rows, g = P / r lanes a row, a power of two): "
+                          "0 idle lanes, 1 K-split (lane q of a row group takes K part q), 2 row-split (lane q takes output-row "
+                          "part q), 3 reserved; other units 0 (see sm_pass_plan)"),
     ("rsel", 18, 1, False, "rows from the VM row table at rtab + 32 L: N = U32(word 0) <= nm1 + 1, row r takes entry word 1 + r"),
     ("rsv19", 19, 1, False, "reserved, 0"),
     ("rtab", 20, 18, False, "rsel: VM word address of row-table row 0 (32-word aligned, < 2^18); else 0"),
@@ -132,14 +134,14 @@ class RowX:
     n: int = 1
     slot0: int = 0
     rgap: int = 0
-    ksp: int = 0
+    rpl: int = 0
     rsel: int = 0
     rtab: int = 0
     emask: int = 0
     rs: dict = dataclasses.field(default_factory=dict)     # operand -> signed row stride
 
     def fields(self):
-        v = dict(nm1=self.n - 1, slot0=self.slot0, rgap=self.rgap, ksp=self.ksp, rsel=self.rsel, rsv19=0,
+        v = dict(nm1=self.n - 1, slot0=self.slot0, rgap=self.rgap, rpl=self.rpl, rsel=self.rsel, rsv19=0,
                  rtab=self.rtab, emask=self.emask, rsv45=0)
         for k in OPND:
             v[f"rs_{k}"] = int(self.rs.get(k, 0))
@@ -168,7 +170,7 @@ class RowX:
             v[name] = x
         if v["rsv19"] or v["rsv45"]:
             raise RangeFault("ROWX reserved bits set")
-        return cls(n=v["nm1"] + 1, slot0=v["slot0"], rgap=v["rgap"], ksp=v["ksp"], rsel=v["rsel"], rtab=v["rtab"],
+        return cls(n=v["nm1"] + 1, slot0=v["slot0"], rgap=v["rgap"], rpl=v["rpl"], rsel=v["rsel"], rtab=v["rtab"],
                    emask=v["emask"], rs={k: v[f"rs_{k}"] for k in OPND if v[f"rs_{k}"]})
 
 
@@ -270,12 +272,15 @@ def check(rec: RC.Rec, rx: RowX | None):
         raise RangeFault(f"UOP slot {rec.slot} != slot0[2:0] {rx.slot0 & 7}")
     if rx.slot0 + rx.n - 1 >= SLOTS:
         raise RangeFault(f"slot0 {rx.slot0} + N - 1 > 15")
-    if rx.ksp and rec.unit != "SM":
-        raise RangeFault("ksp is SM.MATVEC only")
-    if rx.ksp:
+    if rx.rpl and rec.unit != "SM":
+        raise RangeFault("rpl is SM.MATVEC only")
+    if rx.rpl == 3:
+        raise RangeFault("rpl 3 reserved")
+    if rx.rpl:
         r = rx.n % P_LANES
-        if rx.rsel or r == 0 or r << rx.ksp != P_LANES:
-            raise RangeFault(f"ksp {rx.ksp} needs a static N with (N mod {P_LANES}) x 2^ksp = {P_LANES}")
+        if rx.rsel or r == 0 or P_LANES % r or (P_LANES // r) & (P_LANES // r - 1):
+            raise RangeFault(f"rpl {rx.rpl} needs a static N whose remainder r = N mod {P_LANES} divides {P_LANES} "
+                             "into a power-of-two group")
     if rx.rsel:
         if rx.rtab % TABLE_ROW_WORDS or rx.rtab >= 1 << 18:
             raise RangeFault(f"rtab {rx.rtab} not 32-word aligned below 2^18")
@@ -397,47 +402,56 @@ def kparts(nc, s):
     return [(min(j * size, nc), min((j + 1) * size, nc)) for j in range(1 << s)]
 
 
-def sm_pass_plan(N, P=P_LANES, ksp=0, nc=None):
+def sm_pass_plan(N, P=P_LANES, rpl=0, nc=None, rows=None):
     """Lane passes of an N-row SM record on P lanes with line hold (one HBM read of a weight line, issued once a pass).
-    Full passes: rows p P .. p P + P - 1 on lanes 0 .. P - 1, whole K.  Last pass (r = N mod P rows): ksp = 0 -> r
-    lanes busy, P - r idle; ksp = s with r 2^s = P -> row j of the remainder on lanes j 2^s .. j 2^s + 2^s - 1, lane q of
-    the group on K part q (kparts), partials combined in tree order.
-    -> dict(passes=[[(lane, row, part, nparts)]], issues=line issues per weight line (pass count, K-split pass
-    counted at its largest part's share of the lines), cost_vs_ar=max(1, issues / 1.374))."""
+    Full passes: rows p P .. p P + P - 1 on lanes 0 .. P - 1, whole K, every output row.  Last pass (r = N mod P rows,
+    g = P / r): rpl 0 -> r lanes busy, P - r idle; rpl 1 (K-split) -> remainder row j on lanes j g .. j g + g - 1, lane q
+    of the group on K part q (kparts(nc, log2 g)), the g partials combined by the tree's top log2 g levels; rpl 2
+    (row-split) -> lane q of the group on output-row part q of the record's `rows` output rows (rows per SM), no
+    combine.  Both need a g-source lane-group broadcast in the remainder pass (two / four held lines at once).
+    -> dict(passes=[[(lane, row, part, nparts)]], issues = line issues per weight line (the remainder pass counted at
+    its largest part's share), cost_vs_ar = max(1, issues / 1.374))."""
     full, r = divmod(N, P)
     passes = [[(ln, p * P + ln, 0, 1) for ln in range(P)] for p in range(full)]
     issues = float(full)
     if r:
-        if ksp:
-            if r << ksp != P:
-                raise RangeFault(f"ksp {ksp} with remainder {r} on {P} lanes")
-            g = 1 << ksp
+        if rpl:
+            if P % r or (P // r) & (P // r - 1):
+                raise RangeFault(f"rpl {rpl} with remainder {r} on {P} lanes")
+            g = P // r
             passes.append([(j * g + q, full * P + j, q, g) for j in range(r) for q in range(g)])
-            if nc is None:
-                issues += 1.0 / g
+            if rpl == 1:
+                if nc is None:
+                    issues += 1.0 / g
+                else:
+                    parts = kparts(nc, int(math.log2(g)))
+                    issues += max(b_ - a_ for a_, b_ in parts) / nc
             else:
-                parts = kparts(nc, ksp)
-                issues += max(b - a for a, b in parts) / nc
+                if rows is None:
+                    issues += 1.0 / g
+                else:
+                    issues += math.ceil(rows / g) / rows
         else:
             passes.append([(ln, full * P + ln, 0, 1) for ln in range(r)])
             issues += 1.0
-    return dict(N=N, P=P, ksp=ksp, nc=nc, passes=passes, issues=round(issues, 6),
+    return dict(N=N, P=P, rpl=rpl, nc=nc, rows=rows, passes=passes, issues=round(issues, 6),
                 cost_vs_ar=round(max(1.0, issues / HBM_LINE_RATIO), 6))
 
 
 HBM_LINE_RATIO = 136 / 98.96      # SM line 136 B at one issue a cycle vs the SM's 98.96 B/cycle HBM share (owner 10-12)
 
 
-def best_ksp(N, P=P_LANES, nc=None):
+def best_rpl(N, P=P_LANES, nc=None, rows=None):
+    """the compiler's remainder-pass layout: the cheapest of idle / K-split / row-split (ties keep the simpler form)"""
     r = N % P
-    if not r:
-        return 0
-    s = int(math.log2(P // r)) if P % r == 0 and (P // r) & (P // r - 1) == 0 else 0
-    if not s:
-        return 0
-    a = sm_pass_plan(N, P, 0, nc)["issues"]
-    b = sm_pass_plan(N, P, s, nc)["issues"]
-    return s if b < a else 0
+    if not r or P % r or (P // r) & (P // r - 1):
+        return 0, sm_pass_plan(N, P, 0, nc, rows)["issues"]
+    best = (0, sm_pass_plan(N, P, 0, nc, rows)["issues"])
+    for m in (2, 1):
+        i = sm_pass_plan(N, P, m, nc, rows)["issues"]
+        if i < best[1] - 1e-9:
+            best = (m, i)
+    return best
 
 
 # ======================================================================================================================
@@ -507,7 +521,7 @@ def selftest():
                                                        O=MD(space="VM", fmt="FP32", base=40960, n=128, m=4, stride=128)))
     assert encode(r, None) == r.encode()
     # 2) N-row records: round trip, op[5] set, HGI-1 decoder faults (fail-closed)
-    rx = RowX(n=6, slot0=0, ksp=1, rs=dict(A=4096, O=128))
+    rx = RowX(n=6, slot0=0, rpl=1, rs=dict(A=4096, O=128))
     r6 = copy.deepcopy(r)
     r6.param = 1 | (5 << 2)
     b = encode(r6, rx)
@@ -526,11 +540,12 @@ def selftest():
         "N 17": lambda: RowX(n=17).encode(),
         "slot overflow": lambda: check(r6, dataclasses.replace(rx, slot0=12)),
         "SM param != N-1": lambda: check(dataclasses.replace(r6, param=1 | (2 << 2)), rx),
-        "ksp on 6 rows / 3-way": lambda: check(r6, dataclasses.replace(rx, ksp=2)),
+        "rpl 3 reserved": lambda: check(r6, dataclasses.replace(rx, rpl=3)),
+        "rpl on N = 7 (r = 3)": lambda: check(dataclasses.replace(r6, param=1 | (6 << 2)), dataclasses.replace(rx, n=7)),
         "stride on absent C": lambda: check(r6, dataclasses.replace(rx, rs=dict(C=8))),
         "HBM stride not 32-B": lambda: check(r6, dataclasses.replace(rx, rs=dict(B=16))),
         "rtab unaligned": lambda: check(dataclasses.replace(r6, param=1), RowX(n=6, rsel=1, rtab=33)),
-        "ksp on SU": lambda: check(RC.Rec("SU", "VOP"), RowX(n=2, ksp=1)),
+        "rpl on SU": lambda: check(RC.Rec("SU", "VOP"), RowX(n=2, rpl=1)),
         "CTL.LOOP rows": lambda: check(RC.Rec("CTL", "LOOP"), RowX(n=2)),
         "reserved bits": lambda: RowX.decode(RowX(n=2).encode() | (1 << 50)),
     }
@@ -591,13 +606,15 @@ def selftest():
                     while len(parts) > 1:
                         parts = [GV.add(parts[i], parts[i + 1]) for i in range(0, len(parts), 2)]
                     assert np.array_equal(full.view(np.uint32), parts[0].view(np.uint32)), (K, fmt, s, kind)
-            shapes[f"K{K}_fmt{fmt}"] = dict(nc=nc, ksp1_issue=sm_pass_plan(6, 4, 1, nc)["issues"],
-                                            ksp2_N5=sm_pass_plan(5, 4, 2, nc)["issues"])
+            shapes[f"K{K}_fmt{fmt}"] = dict(nc=nc, N6_ksplit=sm_pass_plan(6, 4, 1, nc)["issues"],
+                                            N5_ksplit=sm_pass_plan(5, 4, 1, nc)["issues"])
     res["ksplit_bit_exact"] = dict(trials=8 * 2 * 2 * 40, shapes=shapes)
     # 7) pass plans: 6 rows on 4 lanes
-    p0, p1 = sm_pass_plan(6, 4, 0), sm_pass_plan(6, 4, 1)
-    assert p0["issues"] == 2.0 and p1["issues"] == 1.5 and len(p1["passes"][1]) == 4
-    res["pass_plan_N6"] = dict(no_split=p0["cost_vs_ar"], ksplit=p1["cost_vs_ar"], lanes_pass2=p1["passes"][1])
+    p0, p1, p2 = sm_pass_plan(6, 4, 0), sm_pass_plan(6, 4, 1), sm_pass_plan(6, 4, 2, rows=13)
+    assert p0["issues"] == 2.0 and p1["issues"] == 1.5 and len(p1["passes"][1]) == 4 and abs(p2["issues"] - 20 / 13) < 1e-6
+    assert best_rpl(6, 4, nc=20, rows=1) == (1, 1.8) and best_rpl(6, 4, nc=20, rows=40) == (2, 1.5)
+    res["pass_plan_N6"] = dict(no_split=p0["cost_vs_ar"], ksplit=p1["cost_vs_ar"], rowsplit_13rows=p2["cost_vs_ar"],
+                               lanes_pass2=p1["passes"][1])
     # 8) md tables single source
     md = SPEC_MD.read_text() if SPEC_MD.exists() else ""
     res["md_tables_match"] = md_tables() in md
