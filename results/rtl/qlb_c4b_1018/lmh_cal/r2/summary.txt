@@ -1,0 +1,69 @@
+CTLM_PROG MUT=0 BMUT=0 DEFS=- HEAD=0 DECODE=3: PASS 123/123  rom_go-issue [2] nat_go-issue [1] csr@1042
+rc=0
+CTLM_PROG MUT=0 BMUT=1 DEFS=- HEAD=0 DECODE=3: FAIL 123/123  rom_go-issue [2] nat_go-issue [1] csr@1042
+    fault rise at 5062: head 1 reloc 0 cp 0 start 0 xpf_ld 0 xpf_sch 0 cal 0
+    fault rise at 6979: head 1 reloc 0 cp 0 start 0 xpf_ld 0 xpf_sch 0 cal 0
+    fault rise at 11645: head 1 reloc 0 cp 0 start 0 xpf_ld 0 xpf_sch 0 cal 0
+    fault rise at 13562: head 1 reloc 0 cp 0 start 0 xpf_ld 0 xpf_sch 0 cal 0
+    fault rise at 18488: head 1 reloc 0 cp 0 start 0 xpf_ld 0 xpf_sch 0 cal 0
+    fault rise at 20405: head 1 reloc 0 cp 0 start 0 xpf_ld 0 xpf_sch 0 cal 0
+rc=1
+CTLM_PROG MUT=0 BMUT=2 DEFS=- HEAD=0 DECODE=3: FAIL 60/123  rom_go-issue [2] nat_go-issue [1] csr@1042
+    fault rise at 4960: head 0 reloc 0 cp 0 start 0 xpf_ld 0 xpf_sch 1 cal 0
+    missing CMD at 1193 0xf0000000000000000000000000003
+    missing CMD at 1260 0xf0000000000000000000000000023
+    missing CMD at 1467 0xf0000000000000000000000000033
+    missing CMD at 1493 0xf0000000000000000000000000043
+    missing CMD at 1524 0xf0000000000000000000000000053
+    missing CMD at 1549 0xf0000000000000000000000000063
+    missing CMD at 1580 0xf0000000000000000000000000073
+    missing CMD at 1607 0xf0000000000000000000000000083
+    unexpected CMD at 1194 0xf0000000000000000000000000003
+    unexpected CMD at 1261 0xf0000000000000000000000000023
+    unexpected CMD at 1468 0xf0000000000000000000000000033
+rc=1
+CTLM_PROG MUT=1 BMUT=0 DEFS=- HEAD=0 DECODE=3: FAIL 58/123  rom_go-issue [2] nat_go-issue [1] csr@1042
+    fault rise at 4960: head 0 reloc 0 cp 0 start 0 xpf_ld 0 xpf_sch 1 cal 0
+    missing CMD at 1047 0xf000000000000000000000000000f
+    missing LOC at 1111 ('EMB', 0)
+    missing CMD at 1193 0xf0000000000000000000000000003
+    missing CMD at 1260 0xf0000000000000000000000000023
+    missing CMD at 1467 0xf0000000000000000000000000033
+    missing CMD at 1493 0xf0000000000000000000000000043
+    missing CMD at 1524 0xf0000000000000000000000000053
+    missing CMD at 1549 0xf0000000000000000000000000063
+    unexpected CMD at 1048 0xf000000000000000000000000000f
+    unexpected LOC at 1112 ('EMB', 0)
+    unexpected CMD at 1194 0xf0000000000000000000000000003
+rc=1
+CTLM_PROG MUT=0 BMUT=0 DEFS=- HEAD=1 DECODE=3: PASS 131/131  rom_go-issue [2] nat_go-issue [1] csr@1042
+rc=0
+CTLM_PROG MUT=9 BMUT=0 DEFS=- HEAD=1 DECODE=3: FAIL 128/131  rom_go-issue [2] nat_go-issue [1] csr@1042
+    missing ISSUE at 24859 (28, 1)
+    missing ROM at 24861 None
+    missing ISSUE at 27787 (29, 0)
+rc=1
+CTLM_PROG MUT=10 BMUT=0 DEFS=- HEAD=1 DECODE=3: FAIL 130/131  rom_go-issue [2] nat_go-issue [1] csr@1042
+    fault rise at 24667: head 0 reloc 0 cp 0 start 0 xpf_ld 0 xpf_sch 1 cal 0
+    missing XPF at 24765 0x800112002010004001
+rc=1
+CTLM_PROG MUT=0 BMUT=3 DEFS=- HEAD=1 DECODE=3: FAIL 129/131  rom_go-issue [2] nat_go-issue [1] csr@1042
+    missing ISSUE at 24859 (28, 1)
+    missing ROM at 24861 None
+    unexpected ISSUE at 24860 (28, 1)
+    unexpected ROM at 24862 None
+rc=1
+CTLM_PROG MUT=0 BMUT=0 DEFS=OT_SEG_MUT HEAD=1 DECODE=3: FAIL 126/131  rom_go-issue None nat_go-issue None csr@1042
+    fault rise at 24695: head 1 reloc 0 cp 0 start 0 xpf_ld 0 xpf_sch 0 cal 0
+    missing ISSUE at 24859 (28, 1)
+    missing ROM at 24861 None
+    missing ISSUE at 27787 (29, 0)
+    unexpected ISSUE at 24693 (1, 1)
+    unexpected ROM at 24695 None
+    unexpected ISSUE at 25191 (11, 1)
+    unexpected ROM at 25193 None
+    unexpected ISSUE at 26884 (12, 1)
+    unexpected ROM at 26886 None
+    unexpected ISSUE at 27259 (13, 0)
+    ROM command go count 15 vs ROM issues 14 (offsets None)
+rc=1
