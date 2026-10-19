@@ -110,6 +110,18 @@ def build(ab):
         mod = T['masters'][mk]['module']
         T['masters'][mk]['chain_end'] = {'plan_port': 'xo', 'dir': 'o', 'module': mod + '_nx'}
         W[mod + '_nx'] = {k: v for k, v in W[mod].items() if k not in ('xo', 'xok')}
+    # BIND/mu4 10-19: the S81 HBM macro is the K-only variant ot_hbm3e_phy_v41x_aw30_e8p5_k (no W port, no model counter
+    # ports: strict OUTPUT_OPEN w_* / wr_* / w_oor / refreshes / w_reads and the W pads removed at the source; abstract by
+    # tools/s81_dv/phy_k_variant.py, model rtl/dsrom_sys/s81_link/ot_hbm3e_phy_v41x_aw30_e8p5_k.sv, HBM gate PHY_K=1);
+    # its sticky k_oor leaves as the die status pin phy_hbm_k_oor.
+    ph = T['masters']['ot_hbm3e_phy_v41x_aw30_e8p5']
+    ph['module'] = 'ot_hbm3e_phy_v41x_aw30_e8p5_k'
+    ph['mode_unused'] = [u for u in ph.get('mode_unused', []) if not (u['port'].startswith('w_') or u['port'].startswith('wr_'))]
+    ph['top_ports'] = [{'port': 'k_oor', 'dir': 'output', 'bits': 1}]
+    ph['port_note'] = ('k_*/kr_* = abutted faces of the 16 dsfd_ctrl_rg2 (2 PCs each); BIND/mu4: K-only macro (no W port / '
+                       'counters), k_oor -> die status pin phy_hbm_k_oor')
+    W['ot_hbm3e_phy_v41x_aw30_e8p5_k'] = {k: v for k, v in W['ot_hbm3e_phy_v41x_aw30_e8p5'].items()
+                                          if not (k.startswith('w_') or k.startswith('wr_') or k in ('refreshes',))}
     T['spare_out_rules'] = True          # tools/s81_dv/dv_spare_out.py (svc_rs role faces, lane quantisation, clock taps)
     T['rtl_files'] = T['rtl_files'] + ['physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v']   # dsdv_mu_land SRAM 1
     cv = T['child_views']
