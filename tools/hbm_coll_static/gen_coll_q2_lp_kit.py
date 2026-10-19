@@ -14,12 +14,19 @@ d4g slot cannot hold these children with 20-um channels on the 43.2 lattice (lat
   python3 tools/hbm_coll_static/gen_coll_q2_lp_kit.py [q2|q3]  -> tools/ref_tile/specs_hbm_d4g/hcoll_<v>_lp_1018.json
   q3 (SW, ot_hfd_coll_q3_hard_v8x #(NLINK 2, TP 192)): n2s1 ctl / fj / qso views, capture leaf 9 + TP192 argmax E of
   the ring row, TKM interface pins (tkx_* out on N, tkx_w_* into the writer on W).
+
+TW2-COLLAR (10-19): --ar128 -> tools/ref_tile/specs_hbm_d4g/hcoll_<v>_lp_ar128.json for ot_hfd_coll_<v>_lp_ar (XDIE-HBM4
+  AR_ITER 1 / ROWS 128, lp spec spec_<v>_ar.json): issuer 6 SRAMs (3 banks x u_sram + g128.u_sram_hi, the yosys names) in
+  ONE column E (x 1080, y 43.2 .. 510), qo13 / qo14 moved to (1209.6, 561.6) / (950.4, 691.2); fj #(ROWS 128) has
+  no closed view (hcoll_v5_fj*_r128 gate only) -> soft; u_ariter (soft, region sw) beside u_reduce / u_control.
+  The default output (no option) is unchanged.
 """
 import json
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 VARIANT = "q2"
+AR = False          # TW2-COLLAR --ar128
 LP = json.loads((ROOT / "results/arch/landed_parent_1018/collq/spec_q2.json").read_text())
 V = {
     "fj": "physical/ref_tile/hcoll_v5_fj2/views/ot_hgi_coll_fj_q2",
@@ -57,7 +64,8 @@ def children():
     add = lambda v, inst, x, y: c.append({"view": VV[v], "count": 1, "inst": inst, "at": [lat(x), lat(y)]})
     # sw: switch register mass in the middle; control + fj beside the S host face
     add("ctl", "u_control", 4, 1)                         # 172.8, 43.2 (108 x 280.8)
-    add("fj", "u_fj", 8, 1)                               # 345.6, 43.2
+    if not AR:                                            # ROWS 128 fj: no closed view -> soft (TW2-COLLAR)
+        add("fj", "u_fj", 8, 1)                           # 345.6, 43.2
     for s in range(9):
         add("qc", f"u_qc{s}", 4 + 2 * s, 9)               # row y 388.8 (25.92 x 129.6), x 172.8 .. 864
     for k in range(9):
@@ -65,7 +73,12 @@ def children():
     for k in range(9, 12):
         add("qo32", f"u_qo{k}", 22 + 2 * (k - 9), 13)     # x 950.4 / 1036.8 / 1123.2
     for k in range(12, 15):
-        add("qo32", f"u_qo{k}", 22 + 2 * (k - 12), 9)     # row y 388.8 E part
+        if AR:      # the 6-SRAM issuer column (x 1080..1251, y 43.2..510) takes the qo13/qo14 slots (a 1-lattice pitch
+            # leaves a 19.4-um channel < 20): qo12 stays (950.4, 388.8), qo13 -> E end of the qo row (1209.6, 561.6),
+            # qo14 -> above qo9 (950.4, 691.2; clear of the q3 argmax at x >= 1036.8)
+            add("qo32", f"u_qo{k}", *{12: (22, 9), 13: (28, 13), 14: (22, 16)}[k])
+        else:
+            add("qo32", f"u_qo{k}", 22 + 2 * (k - 12), 9)     # row y 388.8 E part
     add("qo32", "u_qo15", 8, 5)                           # 345.6, 216
     add("qo32", "u_qo16", 10, 5)                          # 432, 216
     add("qo1", "u_qo17", 12, 5)                           # 518.4, 216
@@ -89,7 +102,7 @@ def entry_domains(cks):
     """IO domain per port = the region that owns it in the lp.py SDC (ck_wr / ck_rg set_*_delay lines); the rest = core
     (ck_sw, the first region).  Literal base names (PL-KIT refuses wildcards)."""
     import re
-    top = f"ot_hfd_coll_{VARIANT}_lp"
+    top = f"ot_hfd_coll_{VARIANT}_lp" + ("_ar" if AR else "")
     d = ROOT / "rtl/hbm_accel/generic/collective/p2p/landed"
     sv = (d / f"{top}.sv").read_text()
     sdc = (d / f"{top}.sdc").read_text()
@@ -144,8 +157,12 @@ def spec():
               "hgi_fault", "fault", "fault_cause", "done", "stat_cycles", "phy_up", "tx_pin_v", "tx_pin_flit", "rx_pin_v",
               "rx_pin_flit", "retry_requested"],
     }
-    macros = [{"view": SRAM, "count": 1, "inst": f"u_issuer.u_issuer.g_mem[{i}].u_bank.u_sram",
-               "at": [1080.0, round(43.2 + i * 77.808, 3)], "at_exact": True} for i in range(3)]
+    if AR:      # ROWS 128: bank b = u_sram (rows 0-63) + g128.u_sram_hi (64-127), stacked lo/hi per bank
+        macros = [{"view": SRAM, "count": 1, "inst": f"u_issuer.u_issuer.g_mem[{i // 2}].u_bank." + ("g128.u_sram_hi" if i % 2 else "u_sram"),
+                   "at": [1080.0, round(43.2 + i * 77.808, 3)], "at_exact": True} for i in range(6)]
+    else:
+        macros = [{"view": SRAM, "count": 1, "inst": f"u_issuer.u_issuer.g_mem[{i}].u_bank.u_sram",
+                   "at": [1080.0, round(43.2 + i * 77.808, 3)], "at_exact": True} for i in range(3)]
     # link_e x2 (soft) each keep 4 retry-store SRAM banks (g_bank[0..3].u_store.u_native.u_sram): two stacked columns
     # beside the S link pins (tx/rx), between qo17 (x <= 537.8) and the issuer column (x >= 1080); top 354.4 < qc row 388.8
     for l, x in ((0, 561.6), (1, 777.6)):
@@ -199,11 +216,30 @@ def spec():
     }
 
 
+def spec_ar128(s):
+    """TW2-COLLAR: the q2 kit (spec()) re-targeted at ot_hfd_coll_q2_lp_ar (AR_ITER 1 / ROWS 128)"""
+    t = json.dumps(s)
+    for a, b in (("landed/ot_hfd_coll_q2_lp.sv", "landed/ot_hfd_coll_q2_lp_ar.sv"), ('"ot_hfd_coll_q2_lp"', '"ot_hfd_coll_q2_lp_ar"'),
+                 ("ot_hfd_coll_q2_lp_record.json", "ot_hfd_coll_q2_lp_ar_record.json"), ("run_q2_lp_all", "run_q2_lp_ar_all"),
+                 ("bench/q2lp", "bench/q2lpar"), ("hcoll_q2_lp_1018", "hcoll_q2_lp_ar128")):
+        assert a in t, a
+        t = t.replace(a, b)
+    s = json.loads(t)
+    s["route"]["io_hold_margin_ns"] = 0.025
+    s["structural_change"] = ("TW2-COLLAR (10-19): " + s["structural_change"] + "; XDIE-HBM4 AR_ITER 1 / ROWS 128: issuer 6 "
+                              "SRAMs (u_sram + g128.u_sram_hi per bank), fj ROWS 128 soft, u_ariter leaf (sw)")
+    s["job"].update(owner="Claude:TW2-COLLAR", branch="claude/tw2-collar-1019", tag="ar128", submit=False,
+                    purpose=s["job"]["purpose"] + " -- XDIE-HBM4 AR_ITER 1 / ROWS 128 re-gate (gate + PNG review only)")
+    s["job"]["hold_merge"] += "; fj ROWS 128 soft (no closed r128 view yet)"
+    s["job"]["benches"][0].update(name="q2lpar_lockstep", min_count_regex="Q2_LP_AR_ALL_EXIT (0)", peak_ram_gb=96)
+    return s
+
+
 def spec_q3():
     """q3 (SW) kit = the q2 kit with the q3 lp outputs, the n2s1 / TP192 views, capture leaf 9 + argmax, TKM pins"""
-    t = json.dumps(spec())
-    for a, b in (("ot_hfd_coll_q2_lp", "ot_hfd_coll_q3_lp"), ("run_q2_lp_all", "run_q3_lp_all"), ("q2lp", "q3lp"),
-                 ("hcoll_q2_lp_1018", "hcoll_q3_lp_1018"), ("ot_hfd_coll_q2_hard_v8g", "ot_hfd_coll_q3_hard_v8x"),
+    t = json.dumps(spec_ar128(spec()) if AR else spec())
+    for a, b in (("ot_hfd_coll_q2_lp", "ot_hfd_coll_q3_lp"), ("run_q2_lp", "run_q3_lp"), ("q2lp", "q3lp"),
+                 ("Q2_LP_AR_ALL", "Q3_LP_AR_ALL"), ("hcoll_q2_lp_1018", "hcoll_q3_lp_1018"), ("hcoll_q2_lp_ar128", "hcoll_q3_lp_ar128"), ("ot_hfd_coll_q2_hard_v8g", "ot_hfd_coll_q3_hard_v8x"),
                  ("COLL q2 quadrant parent", "COLL q3 (SW, NLINK 2, TP 192) quadrant parent"),
                  ("COLL q2 quadrant engine parent (SE/NW/NE)", "COLL q3 quadrant engine parent (SW, TP 192)"),
                  ("ot_hgi_coll_ctl_v5_q2 leaf", "ot_hgi_coll_ctl_v5_n2s1 leaf")):
@@ -213,9 +249,12 @@ def spec_q3():
 
 if __name__ == "__main__":
     import sys
-    for v in (sys.argv[1:] or ["q2", "q3"]):
+    args = sys.argv[1:]
+    AR = "--ar128" in args
+    for v in ([a for a in args if a != "--ar128"] or ["q2", "q3"]):
         VARIANT = v
-        LP = json.loads((ROOT / f"results/arch/landed_parent_1018/collq/spec_{v}.json").read_text())
-        out = ROOT / f"tools/ref_tile/specs_hbm_d4g/hcoll_{v}_lp_1018.json"
-        out.write_text(json.dumps(spec() if v == "q2" else spec_q3(), indent=1) + "\n")
+        LP = json.loads((ROOT / f"results/arch/landed_parent_1018/collq/spec_{v}{'_ar' if AR else ''}.json").read_text())
+        out = ROOT / f"tools/ref_tile/specs_hbm_d4g/hcoll_{v}_lp_{'ar128' if AR else '1018'}.json"
+        sp = (spec_ar128(spec()) if AR else spec()) if v == "q2" else spec_q3()
+        out.write_text(json.dumps(sp, indent=1) + "\n")
         print("wrote", out)
