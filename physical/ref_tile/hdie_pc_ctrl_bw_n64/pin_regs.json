@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hbm_svc_pc_ctrl_leaf_cfg_safe_legacy",
+ "enable": false,
+ "reason": "Native H9b pure K pin capture, KR registered readiness and outputs, PHY return capture and OREG pin output flops. Custom PRE_GLOBAL_PLACE preserves stock recipe3 pin-split/hold/pin-flop order; generated duplicate wrappers disabled."
+}

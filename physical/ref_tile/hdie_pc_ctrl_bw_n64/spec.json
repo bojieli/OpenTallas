@@ -1,0 +1,397 @@
+{
+ "name": "hdie_pc_ctrl_bw_n64",
+ "top": "ot_hbm_svc_pc_ctrl_leaf_cfg_safe_legacy",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_safe.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_h9b.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pin_skid2_h9.sv",
+  "rtl/model_ready_hbm_r14/ot_hbm_r14_aq_pc_safe.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_bw_safe.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pin_skid2_bw_safe.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_kr_ready_bridge.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_safe_legacy.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sram128_n64.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1/ot_sram_1r1w2c_128x64_m1_bb.v"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "N": [
+   "k_v",
+   "k_rdy",
+   "k_we",
+   "k_addr",
+   "k_len",
+   "k_tag",
+   "k_wdata",
+   "k_wstrb",
+   "kr_v",
+   "kr_rdy",
+   "kr_tag",
+   "kr_beat",
+   "kr_data",
+   "k_wr_done"
+  ],
+  "S": [
+   "row_v",
+   "row_op",
+   "row_bank",
+   "row_row",
+   "col_v",
+   "col_we",
+   "col_bank",
+   "col_col",
+   "col_data",
+   "col_strb",
+   "dram_rvalid",
+   "dram_rdata"
+  ],
+  "W": [
+   "clk",
+   "rst_n",
+   "owner_fault_split"
+  ],
+  "E": [
+   "pc_fault",
+   "pc_id",
+   "refresh_reload"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 3,
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
+   "count": 1,
+   "at": [
+    43.2,
+    43.2
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
+   "count": 1,
+   "at": [
+    129.6,
+    43.2
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
+   "count": 1,
+   "at": [
+    216.0,
+    43.2
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
+   "count": 1,
+   "at": [
+    302.4,
+    43.2
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
+   "count": 1,
+   "at": [
+    388.8,
+    43.2
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
+   "count": 1,
+   "at": [
+    475.2,
+    43.2
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
+   "count": 1,
+   "at": [
+    561.6,
+    43.2
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
+   "count": 1,
+   "at": [
+    43.2,
+    129.6
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
+   "count": 1,
+   "at": [
+    129.6,
+    129.6
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
+   "count": 1,
+   "at": [
+    216.0,
+    129.6
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
+   "count": 1,
+   "at": [
+    302.4,
+    129.6
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
+   "count": 1,
+   "at": [
+    388.8,
+    129.6
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
+   "count": 1,
+   "at": [
+    475.2,
+    129.6
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
+   "count": 1,
+   "at": [
+    561.6,
+    129.6
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
+   "count": 1,
+   "at": [
+    43.2,
+    216.0
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
+   "count": 1,
+   "at": [
+    129.6,
+    216.0
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
+   "count": 1,
+   "at": [
+    216.0,
+    216.0
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
+   "count": 1,
+   "at": [
+    302.4,
+    216.0
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
+   "count": 1,
+   "at": [
+    388.8,
+    216.0
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
+   "count": 1,
+   "at": [
+    475.2,
+    216.0
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
+   "count": 1,
+   "at": [
+    561.6,
+    216.0
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
+   "count": 1,
+   "at": [
+    43.2,
+    302.4
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
+   "count": 1,
+   "at": [
+    129.6,
+    302.4
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
+   "count": 1,
+   "at": [
+    216.0,
+    302.4
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
+   "count": 1,
+   "at": [
+    302.4,
+    302.4
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
+   "count": 1,
+   "at": [
+    388.8,
+    302.4
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
+   "count": 1,
+   "at": [
+    475.2,
+    302.4
+   ],
+   "at_exact": true
+  }
+ ],
+ "route": {
+  "pd": 0.5,
+  "period_ps": 1024,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.03,
+  "pin_balance": {
+   "h": "M4",
+   "v": "M3 M5",
+   "group_max": 32
+  }
+ },
+ "job": {
+  "owner": "Claude:LEAD-HBM/LH-BW",
+  "branch": "claude/lh-bw-n64-1019",
+  "tag": "n64",
+  "purpose": "SAFE n64 structural redesign: 27 right-width 128x64 SRAM macros (3.8 pins/um faces) on the 43.2 lattice, 7 columns x 4 rows at 86.4 um pitch (52.7 um pin channels, 58.8 um row gaps), full-width central std-cell band y157.2..216; replaces the 13 mostly-tied 128x256 macros (10 pins/um). Gate first; submit only after production bench + mutants bound.",
+  "extra_paths": [
+   "physical/hbm_bw_n64_1019",
+   "physical/dsrom_window_source",
+   "physical/qwen_die_masters",
+   "physical/common_flow"
+  ],
+  "record_to": "results/rtl/ref_tile/hdie_pc_ctrl_bw_n64",
+  "no_bench_reason": "Synthesis/floorplan diagnostic only; submit remains prohibited until production bench and committed mutant witnesses are bound."
+ },
+ "params": {
+  "OREG": 1,
+  "KREG": 1,
+  "KRREG": 1,
+  "RREG": 1,
+  "WPAY": 1,
+  "RESET_LANDING": 2
+ },
+ "children": [],
+ "inter": [],
+ "keep_pin_regs": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Native H9b pure K pin capture, KR registered readiness and outputs, PHY return capture and OREG pin output flops. Custom PRE_GLOBAL_PLACE preserves stock recipe3 pin-split/hold/pin-flop order; generated duplicate wrappers disabled."
+ },
+ "structural_change": "SAFE n64: every controller store (write/response payload 256b, 4-bank head/post metadata 79b, pending/response identity 21b, AQ queue 30b) is a ceil(W/64) x ot_sram_1r1w2c_128x64_m1 array (27 macros, 25.1k um2 vs 50.6k). Macro faces 105 pins/27.576 um = 3.8/um (old 410/41.064 = 10/um); no 177/235/226-bit tied padding. Same registered read edge, zero added cycles. Base RTL cc723735d (regional head_bank_cfg/row selector fanout successors).",
+ "clock": "spine",
+ "spine_macro_leaf": true,
+ "outline": {
+  "w": 648.0,
+  "h": 367.2
+ },
+ "orfs_vars": {
+  "OT_MEG_DEPTH_UM": 48,
+  "PRE_GLOBAL_PLACE_TCL": "physical/hbm_bw_n64_1019/pre_gpl.tcl",
+  "PRE_DETAIL_PLACE_TCL": "physical/hbm_bw_n64_1019/pre_dpl.tcl",
+  "POST_IO_PLACEMENT_TCL": "physical/hbm_bw_n64_1019/post_iop.tcl",
+  "OT_OFLOP_HOPS": 8,
+  "OT_OFLOP_ALLOW_NONE": 1,
+  "OT_OFLOP_COLS": 4,
+  "OT_IOHOLD_IN": 1,
+  "OT_INHOLD_DRV": "BUFx4f_ASAP7_75t_R",
+  "OT_INHOLD_MASTER": "HB2xp67_ASAP7_75t_R"
+ },
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "why": "Structural SAFE redesign after failed safe3/safe4 gates and map4-6 fanout/macro-face failures: right-width 128x64 macros, new 648x302.4 macro-row floorplan with central full-width band; no fence."
+ },
+ "reset_landing": {
+  "enable": false,
+  "reason": "RTL top g_reset_face.rst_l0/rst_l1 are two kept same-clock registered face landing stages; native relay adds3; physical release5. Disable duplicate tool2. Source-owned fullnative/adversephase proof required."
+ },
+ "util_waiver": "Macro/channel-bound outline 648x367.2 (238.0k um2, was 205.3k): 52.7 um vertical pin channels, 58.8 um row gaps, aspect 1.76; std area ~6.5k um2 => low fill, as accepted for the 432x475.2 composed outline (coordinator 10-19).",
+ "fill_reason": {
+  "lattice_channel_bound": {
+   "why": "27 128x64 macros on the 43.2 lattice, 7x4 at 86.4 um pitch (tool channel rule >=20 um and track alignment forbid 43.2 row pitch or abutted stacks); outline 648x367.2 (1.76:1) from macro faces/channels, not std area.",
+   "approved_by": "LH-BW SAFE review 10-19 (low fill precedent: coordinator 10-19 composed outline)",
+   "std_band_y_um": [
+    157.176,
+    216.0
+   ],
+   "measured_source": "0b823619b map6",
+   "measured_std_area_um2": 6186.67
+  }
+ }
+}
