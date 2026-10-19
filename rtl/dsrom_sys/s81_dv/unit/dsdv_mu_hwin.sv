@@ -75,7 +75,8 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
     localparam integer NBOOT_GROUPS=(NEV+3)/4;
     localparam integer RBOOT_DATA=RBOOT_BASE+((LOCAL_BOOT!=0)?NEV:0);
     localparam integer RPRED_BASE=RBOOT_DATA+((LOCAL_BOOT!=0)?NBOOT_GROUPS:0);
-    localparam integer RESET_REGIONS=RPRED_BASE+((CHECK_STAGE!=0)?NEV:0);
+    localparam integer RMC_LIMIT=RPRED_BASE+((CHECK_STAGE!=0)?NEV:0);
+    localparam integer RESET_REGIONS=RMC_LIMIT+((CHECK_STAGE!=0)?1:0);
     wire [RESET_REGIONS-1:0] rr; dsdv_mu_reset_tree #(.REGIONS(RESET_REGIONS)) u_rr (.clk(ck), .rst_n_in(rst_n), .rst_n(rr)); wire rn = rr[0];
     // Payload pin flops sample every edge; valid pins are asynchronously held by their
     // landed reset, so the reset does not enter a synchronous data cone.
@@ -150,11 +151,11 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
         end
         for(genvar pc=0;pc<PTR_CTL;pc=pc+1) begin:g_pointer
             (* keep=1 *) dsdv_mu_retire_advance u_retire(.valid(rok),.fresh(h_rfr),.hold_head(rhold),.retire(h_rts),.now_time(tmr),.due(pointer_due[pc]),.advance(pointer_adv[pc]));
-            (* keep=1 *) dsdv_mu_slot_step u_step(.phase(ph),.gap(cg),.armed(armed),.start(st),.bad(hcfg_bad),.slot(slot_step[pc]),.gap_step(gap_step[pc]));
+            (* keep=1 *) dsdv_mu_slot_step u_step(.phase(ph),.gap(cg),.armed(armed_event[pc%NEV]),.start(st),.bad(hcfg_bad),.slot(slot_step[pc]),.gap_step(gap_step[pc]));
         end
         for(genvar cc=0;cc<3;cc=cc+1) begin:g_config
             wire unused_slot;
-            (* keep=1 *) dsdv_mu_slot_step u_cg(.phase(ph),.gap(cg),.armed(armed),.start(st),.bad(hcfg_bad),.slot(unused_slot),.gap_step(cg_step[cc]));
+            (* keep=1 *) dsdv_mu_slot_step u_cg(.phase(ph),.gap(cg),.armed(armed_event[(cc+PTR_CTL)%NEV]),.start(st),.bad(hcfg_bad),.slot(unused_slot),.gap_step(cg_step[cc]));
             (* keep=1 *) dsdv_mu_boot_enable u_crl(.count(global_count),.armed(armed),.valid(mc_q[25]),.match(mc_q[24]),.en(crl_write[cc]));
             (* keep=1 *) dsdv_mu_boot_enable u_crm(.count(global_count),.armed(armed),.valid(mc_q[25]),.match(mc_q[24]),.en(crm_write[cc]));
         end
@@ -205,9 +206,17 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
             adv[e] = fire[e] || (!ok[e] && !hold[e]);
         end
     end
+    wire [PTR_CTL-1:0] fire_region[0:NEV-1];
+    generate for(genvar fe=0;fe<NEV;fe=fe+1) begin:g_fire_region
+        for(genvar fg=0;fg<PTR_CTL;fg=fg+1) begin:g_group
+            if(LOCAL_BOOT!=0) begin:g_local
+                (* keep=1 *) dsdv_mu_fire_flag u_fire(.fresh(h_fr[fe]),.ok(okq[fe]),.equal_time(eqn[fe]),.fire(fire_region[fe][fg]));
+            end else begin:g_direct assign fire_region[fe][fg]=fire[fe];end
+        end
+    end endgenerate
     integer e4;
     always @(posedge ck) for (e4 = 0; e4 < NEV; e4 = e4 + 1) begin
-        for(integer fs=0;fs<NSLOT;fs=fs+1) fd[e4][fs] <= (fd[e4][fs] || (fire[e4] && pe[e4][fs])) && !(rec_event[e4][fs/24] && ssq[fs]);   // no reset: cleared at the staged record, read only on valid entries
+        for(integer fs=0;fs<NSLOT;fs=fs+1) fd[e4][fs] <= (fd[e4][fs] || (fire_region[e4][fs/8] && pe[e4][fs])) && !(rec_event[e4][fs/24] && ssq[fs]);   // no reset: cleared at the staged record, read only on valid entries
         okq[e4] <= ok[e4];                                  // = ok on the next edge while the head stays fresh (legal config)
         // head compares one edge ahead: h_ts == tm + 1 - D (fire on the next edge) / h_ts - (tm + 1 - D) < 0 (late);
         // used only while the head stays fresh across both edges (h_fr now and next), so the entry is the same
@@ -442,8 +451,15 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
             assign boot_data[bg]=data_r;
         end else begin:g_direct assign boot_data[bg]=mw_q[20:0];end
     end endgenerate
-    wire [23:0] mc_limit_word=mc_q[23:0]-24'd2;
-    wire mc_limit_small=mc_q[23:0]<24'd2;
+    wire [23:0] mc_limit_input;
+    generate if(CHECK_STAGE!=0) begin:g_limit_input
+        (* keep *) reg [23:0] payload_r;
+        always @(posedge ck or negedge rr[RMC_LIMIT])
+            if(!rr[RMC_LIMIT]) payload_r<=0;else payload_r<=f_mc[23:0];
+        assign mc_limit_input=payload_r;
+    end else begin:g_limit_direct assign mc_limit_input=mc_q[23:0];end endgenerate
+    wire [23:0] mc_limit_word=mc_limit_input-24'd2;
+    wire mc_limit_small=mc_limit_input<24'd2;
     wire [6:0] min_word=(gn==0)?7'(NSLOT+2):7'(gn)+7'd3;
     genvar ce, rcg;
     generate for(ce=0;ce<NEV;ce=ce+1) begin:g_event_broadcast
@@ -456,13 +472,21 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
         // Sharing mc_valid/type AND empty-table produced a 400-load boot enable.
         (* keep *) reg cfg_gap_r,cfg_rl_r,start_r,cfg_w0_r,cfg_w1_r,cfg_w2_r,cfg_sel_r;
         (* keep *) reg [SI-1:0] cfg_addr_r;
-        (* keep *) reg [EI-1:0] cfg_kind_r;
+        wire [EI-1:0] cfg_kind_r;
+        if(SI>=EI) begin:g_kind_alias
+            assign cfg_kind_r=cfg_addr_r[EI-1:0];
+        end else begin:g_kind_extra
+            (* keep *) reg [EI-1:0] kind_r;
+            always @(posedge ck or negedge rr[COPY_RBASE+7*ce+6])
+                if(!rr[COPY_RBASE+7*ce+6]) kind_r<=0;else kind_r<=f_mw[EI-1:0];
+            assign cfg_kind_r=kind_r;
+        end
         (* keep *) reg [1:0] cfg_attr_r;
         assign cfg_addr[ce]=cfg_addr_r; assign cfg_attr[ce]=cfg_attr_r;
         assign rec_local[ce]=start_r && on_cal && !col && !udup && !(!armed && hcfg_bad);
         always @(posedge ck or negedge rr[COPY_RBASE+7*ce+6])
-            if(!rr[COPY_RBASE+7*ce+6]) begin cfg_gap_r<=1'b0;cfg_rl_r<=1'b0;start_r<=1'b0;cfg_w0_r<=0;cfg_w1_r<=0;cfg_w2_r<=0;cfg_sel_r<=0;cfg_addr_r<=0;cfg_kind_r<=0;cfg_attr_r<=0;end
-            else begin cfg_sel_r<=((wv && idle && mw_q[22:21]==2'd0)?mw_q[EI-1:0]:esel)==EI'(ce);cfg_w0_r<=f_mw[25] && f_mw[22:21]==2'd0;cfg_w1_r<=f_mw[25] && f_mw[22:21]==2'd1;cfg_w2_r<=f_mw[25] && f_mw[22:21]==2'd2;cfg_gap_r<=f_mc[25] && !f_mc[24];cfg_rl_r<=f_mc[25] && f_mc[24];start_r<=f_ks[52];cfg_addr_r<=f_mw[SI-1:0];cfg_kind_r<=f_mw[EI-1:0];cfg_attr_r<=f_mw[11:10];end
+            if(!rr[COPY_RBASE+7*ce+6]) begin cfg_gap_r<=1'b0;cfg_rl_r<=1'b0;start_r<=1'b0;cfg_w0_r<=0;cfg_w1_r<=0;cfg_w2_r<=0;cfg_sel_r<=0;cfg_addr_r<=0;cfg_attr_r<=0;end
+            else begin cfg_sel_r<=((wv && idle && mw_q[22:21]==2'd0)?mw_q[EI-1:0]:esel)==EI'(ce);cfg_w0_r<=f_mw[25] && f_mw[22:21]==2'd0;cfg_w1_r<=f_mw[25] && f_mw[22:21]==2'd1;cfg_w2_r<=f_mw[25] && f_mw[22:21]==2'd2;cfg_gap_r<=f_mc[25] && !f_mc[24];cfg_rl_r<=f_mc[25] && f_mc[24];start_r<=f_ks[52];cfg_addr_r<=f_mw[SI-1:0];cfg_attr_r<=f_mw[11:10];end
         wire [6:0] boot_count;
         wire [2:0] d_write;
         wire attr_write,kind_write,rl_write,gap_write;
@@ -542,7 +566,7 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
         end
         always @(posedge ck or negedge rr[COPY_RBASE+7*ce+5])
             if(!rr[COPY_RBASE+7*ce+5]) arm_r<=1'b0;
-            else if(st && !arm_r && !hcfg_bad) arm_r<=1'b1;
+            else if(start_r && !arm_r && !hcfg_bad) arm_r<=1'b1;
         for(genvar db=0;db<21;db=db+1) begin:g_d_storage
             always @(posedge ck) if(d_write[db/8]) eD[ce][db]<=boot_data[ce/4][db];
         end
@@ -720,4 +744,8 @@ endmodule
 
 (* keep_hierarchy=1 *) module dsdv_mu_decode24(input wire [5:0] address,output wire [23:0] onehot);
  genvar k;generate for(k=0;k<24;k=k+1) begin:g_bit assign onehot[k]=(address==6'(k));end endgenerate
+endmodule
+
+(* keep_hierarchy=1 *) module dsdv_mu_fire_flag(input wire fresh,ok,equal_time,output wire fire);
+ assign fire=fresh && ok && equal_time;
 endmodule
