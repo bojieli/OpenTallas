@@ -69,3 +69,9 @@ addition A/B/Y identities, fragment ownership, genuine root and two distinct
 requests. It cannot replace the full512-lane/native-VM positive. Its manifest
 keeps native_capture_binding PENDING until the first actual native positive
 lane-pin capture checks/traces are matched to these source-pinned inputs.
+
+Station source generation imports tools/hbm_static/su_arith_generate.py for the
+fixed raw control-field ABI used by the reference text generator. Stage the
+same frozen tools directory beside tests/; the station helper adds ROOT/tools
+and ROOT/tools/hbm_static to sys.path. This dependency is source generation
+only, and does not add a compiler/arithmetic model to the station DUT.

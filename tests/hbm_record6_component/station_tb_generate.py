@@ -5,8 +5,10 @@ This is text/integer source generation only. Inputs and per-add expectations
 come from an immutable prior fleet generation; no floating-point evaluation is
 performed here. No source or artifact under --native is changed.
 """
-import argparse, hashlib, json, shutil
+import argparse, hashlib, json, shutil, sys
 from pathlib import Path
+ROOT=Path(__file__).resolve().parents[2]
+sys.path[:0]=[str(ROOT/'tools'),str(ROOT/'tools/hbm_static')]
 from tb_generate import emit
 
 
