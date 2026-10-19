@@ -51,10 +51,11 @@
   "measured_logic_util_fraction": 0.26450668490460155,
   "macro_channel_waiver": "Coordinator 10-19: lowfill accepted from stockmacro43.2lattice20umchannel minimum; final physical evidence still required.",
   "controller_steady_B_per_stream_edge": [
-    91.99,
-    93.12,
-    93.32
+    91.62,
+    92.74,
+    92.94
   ],
-  "controller_source": "0f8aacb5b",
-  "replicas_note": "REPRICE3 capacity config2stacks/die,16SM/die=>64PC/die; confirm physical GEN inventory."
+  "controller_source": "f175c1132",
+  "replicas_note": "REPRICE3 capacity config2stacks/die,16SM/die=>64PC/die; confirm physical GEN inventory.",
+  "sector_conservation": "PASS eachPC: requested8300 columns8300 returns8300; owner starts8HBM edges after reset"
 }
