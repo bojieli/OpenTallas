@@ -355,13 +355,6 @@ def _generate(spec, root):
                     raise ValueError(f'{lib}: routed/Liberty clock pin association mismatch')
                 data = measured.get(corner, {})
                 b = data.get('boundary', {})
-                macros = data.get('macros') or {}
-                if b is None and macros.get('n') and (data.get('all') or {}).get('n') == macros['n']:
-                    # HF-4c 10-18: a raw-macro clock pin (e.g. h16c ck_pm0/ck_pm1 -> one SRAM clk) has no boundary
-                    # flops; its only sinks are the macro clock pins, so the measured 'all' arrival IS its reference.
-                    b = data['all']
-                if not b:
-                    raise ValueError(f'{view}/{pin}/{corner}: missing real routed boundary reference')
                 values = [float(b[k]) for k in ('min', 'mean', 'max')]
                 if not b.get('n') or data.get('errors') or not all(math.isfinite(x) for x in values):
                     raise ValueError(f'{view}/{pin}/{corner}: missing real routed boundary reference')
