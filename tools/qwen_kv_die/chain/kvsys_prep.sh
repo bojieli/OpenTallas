@@ -60,10 +60,18 @@ fi
 if [ "${OT_KV_V143:-0}" = 1 ]; then H14="$H14 --v143"; V14=$V14,v143
   BV="$BV --view qkd_hgs=physical/ref_tile/qkh_head_gather_stage/views/qkh_head_gather_stage --view qkd_hss=physical/ref_tile/qkh_head_sstage/views/qkh_head_sstage"; fi
 # OT_KV_DCAL=1 (Q-KVSYS-DIE 10-16): the link calendar sequencer qkd_d2d_cal_seq_pin on its CLOSED view (kv_die.py DCAL)
-[ "${OT_KV_DCAL:-0}" = 1 ] && BV="$BV --view qkd_dcal=physical/ref_tile/qkd_d2d_cal_seq_pin_ep3/views/qkd_d2d_cal_seq_pin"
-# MU-DIE-KV2 10-19: the MU die's calendar sequencer must be hardened from ot_qwen_d2d_cal_seq_dies_mu.sv (d2d_cal_image_mu.svh:
-# C RX / K TX +1 entry, SEG2 8 -> 9); until that kit closes the ep3 view (production image) is a LABELLED STAND-IN
-[ "${OT_KV_DCAL:-0}" = 1 ] && [ "${OT_KV_MU:-0}" = 1 ] && echo "OT_KV_DCAL STAND-IN: qkd_dcal bound to qkd_d2d_cal_seq_pin_ep3 (production image), MU image kit owed (ot_qwen_d2d_cal_seq_dies_mu.sv)"
+# KV-DCAL-MU 10-19: OT_KV_MU=1 binds the MU calendar kit qkd_d2d_cal_seq_pin_mu (ot_qwen_d2d_cal_seq_dies_mu.sv +
+# d2d_cal_image_mu.svh, recompiled on the MU pair seam: TXDP lines = d2d_cal_image.svh 0x03030415; C RX / K TX +1 entry,
+# SEG2 8 -> 9) once its view is recorded; until then the ep3 view (production image) stays a LABELLED STAND-IN.
+if [ "${OT_KV_DCAL:-0}" = 1 ]; then
+  DCV=physical/ref_tile/qkd_d2d_cal_seq_pin_ep3/views/qkd_d2d_cal_seq_pin
+  if [ "${OT_KV_MU:-0}" = 1 ]; then MDCV=physical/ref_tile/${OT_KV_DCAL_MU_KIT:-qkd_d2d_cal_seq_pin_mu}/views/qkd_d2d_cal_seq_pin
+    if [ -f $MDCV/qkd_d2d_cal_seq_pin.lef ] && [ -f $MDCV/qkd_d2d_cal_seq_pin_tt.lib ] && [ -f $MDCV/qkd_d2d_cal_seq_pin_ff.lib ]; then
+      DCV=$MDCV; echo "OT_KV_DCAL MU: qkd_dcal -> $MDCV (MU calendar image)"
+    else echo "OT_KV_DCAL STAND-IN: no MU view at $MDCV; qkd_dcal bound to qkd_d2d_cal_seq_pin_ep3 (production image)"; fi
+  fi
+  BV="$BV --view qkd_dcal=$DCV"
+fi
 # OT_KV_KVNC=1 (Q-KVSYS PVJOIN 10-16, needs OT_KV_DCAL=1): the KVN context leaf qkd_kvn_ctx_cal (kv_die.py KVNC) on its view
 # when the kit has closed (OT_KV_KVNC_KIT, default qkd_kvn_ctx_cal_r2); without a view the frame stays ASSUMED (diagnostic)
 if [ "${OT_KV_KVNC:-0}" = 1 ]; then KVV=physical/ref_tile/${OT_KV_KVNC_KIT:-qkd_kvn_ctx_cal_r2}/views/qkd_kvn_ctx_cal
