@@ -23,7 +23,7 @@ endmodule
 
 // OFFSET is the output quarter (0..16). Each row advances exactly 17 quarters
 // modulo32, equivalent to native8's sector-head plus phase*64 gather.
-// open_d / advance_d are predictions for the following cycle's local
+// open_d / advance_d0 / advance_d1 are predictions for the following cycle's local
 // controls. They enter native local Q here. Open has priority over advance.
 // Following an open_d sampling edge N, pointer and all four leaf selectors
 // initialize together at N+1; output is valid combinationally after N+1.
@@ -34,18 +34,21 @@ module ot_hbm_cache_kept_read64 #(
  parameter integer MUT=0
 )(
  input wire clk,rst_n,
- input wire open_d,advance_d,
+ input wire open_d,advance_d0,advance_d1,
  input wire [2047:0] ring_data,
  output wire [63:0] data
 );
- (* keep = "true" *) reg open_q,advance_q;
+ (* keep = "true" *) reg open_q;
+ (* keep = "true" *) reg advance_q0,advance_q1;
  (* keep = "true" *) reg [31:0] pointer_q;
  localparam [31:0] INITIAL=32'b1<<((OFFSET+(MUT==1?1:0))%32);
  wire [31:0] advanced={pointer_q[14:0],pointer_q[31:15]};
- wire [31:0] pointer_next=open_q?INITIAL:(advance_q?advanced:pointer_q);
+ wire [31:0] pointer_next;
+ assign pointer_next[15:0]=open_q?INITIAL[15:0]:(advance_q0?advanced[15:0]:pointer_q[15:0]);
+ assign pointer_next[31:16]=open_q?INITIAL[31:16]:(advance_q1?advanced[31:16]:pointer_q[31:16]);
  always @(posedge clk or negedge rst_n)begin
-  if(!rst_n)begin open_q<=0;advance_q<=0;end
-  else begin open_q<=open_d;advance_q<=advance_d;end
+  if(!rst_n)begin open_q<=0;advance_q0<=0;advance_q1<=0;end
+  else begin open_q<=open_d;advance_q0<=advance_d0;advance_q1<=advance_d1;end
  end
  // Copy the NEXT expression into parent and child FFs on the same edge.
  // Copying pointer_q instead would add an accidental selector-delay edge.
