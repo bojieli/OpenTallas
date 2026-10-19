@@ -20,6 +20,10 @@
 #      vectors ab_n1 / ab_n4 / abc_n1 (= d4g bit for bit: same expected writes and edges as stage s0); schedule-parity
 #      witness ws_ab_n4_fw11 (lane writes on the wrong phase -> FAULT, must FAIL). w1 deferral dropped / w2 HI = 1
 #      deferred / w3 deferred address not captured: ws_ab_n4 -> SU_ROWS FAIL (witnesses)
+#  aw  (SUDMA2 10-19) wide ARGMAX.LOCAL ot_hnx_argmax_wide_rows (8 sectors a beat, engine LP 64), same SW VM slice:
+#      vectors hnx_argmax_wide_vectors.py seeds 0..2: MUT 0 PASS (done edges exact: P1 67, P6 177), MUT 1/2/3 (as stage a),
+#      4 beat bank rotation dropped, 5 last-beat sector mask dropped -> ARGMAX_ROWS FAIL; plus WS 1 PMIN 1 on the
+#      ORIGINAL vectors (hnx_argmax_rows_vectors.py) -> PASS = the original reader edge for edge
 set -u
 B=$(pwd); O=$(realpath -m "${1:?OUT}"); ST=${2:?STAGE}; mkdir -p "$O"
 export PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH
@@ -49,6 +53,32 @@ if [ "$ST" = d ]; then
       "${VMB[@]}" physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v > $O/build_d$m.log 2>&1
     ( cd $O && $d/Vd$m > $O/d_m$m.log 2>&1; echo RUN_RC=$? >> $O/d_m$m.log )
     V "d_m$m: $(grep -h 'KVWB_RING\|RUN_RC' $O/d_m$m.log | head -2 | tr '\n' ' ')"; rm -rf $d ) &
+  done
+  wait; V "done"; exit 0
+fi
+if [ "$ST" = aw ]; then
+  AS=(rtl/hbm_next/argmax/ot_hnx_argmax_wide_rows.sv physical/hbm_generic/argmax18/rtl/ot_hgi_argmax18_m.sv
+   physical/hbm_generic/argmax18/rtl/ot_hgi_argmax18_value_m.sv physical/hbm_mtp/rtl/ot_dshbm_argmax_m.sv
+   rtl/gpu/ot_gpu_fadd.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv
+   rtl/hbm_accel/index/ot_hbm_idx_vm_share_static.sv
+   rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static.sv rtl/hbm_accel/generic/vm/static/ot_vms_slice_static.sv
+   rtl/hbm_accel/generic/vm/static/ot_vms_hub_static.sv rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv
+   rtl/hbm_accel/generic/vm/static/ot_vms_rstop_static.sv rtl/hbm_accel/generic/vm/static/ot_vms_rcl_static.sv
+   rtl/hbm_accel/generic/vm/static/ot_vms_status_static.sv
+   physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v
+   rtl/hbm_next/argmax/tb/tb_hnx_argmax_wide.sv)
+  for sd in 0 1 2; do python3 tools/hbm_next/hnx_argmax_wide_vectors.py $O/wvec$sd $sd > $O/wvec$sd.log 2>&1 || V "wide vectors seed $sd FAILED"; done
+  python3 tools/hbm_next/hnx_argmax_rows_vectors.py $O/ovec0 0 > $O/ovec0.log 2>&1 || V "orig vectors FAILED"
+  V "vectors: $(head -1 $O/wvec0.log)"
+  for m in 0 1 2 3 4 5 o; do (
+    d=$O/obj_aw$m; rm -rf $d; P="-GMUT=$m"; [ $m = o ] && P="-GMUT=0 -GWS=1 -GPMIN=1"
+    verilator --binary --timing -j 4 -Wno-fatal -Wno-lint -Wno-style --top-module tb_hnx_argmax_wide $P -Mdir $d -o Vaw$m \
+      "${AS[@]}" > $O/build_aw$m.log 2>&1
+    if [ $m = o ]; then SDS=o; else SDS="0 1 2"; fi
+    for sd in $SDS; do vd=$O/wvec$sd; [ $sd = o ] && vd=$O/ovec0
+      ( cd $vd && $d/Vaw$m > $O/aw_m${m}_s$sd.log 2>&1; echo RUN_RC=$? >> $O/aw_m${m}_s$sd.log )
+      V "aw_m$m seed$sd: $(grep -h 'ARGMAX_ROWS\|RUN_RC' $O/aw_m${m}_s$sd.log | head -2 | tr '\n' ' ')"; done
+    rm -rf $d ) &
   done
   wait; V "done"; exit 0
 fi
