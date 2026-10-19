@@ -1,0 +1,377 @@
+{
+ "schema": "opentallas.hbm_mtp_next_1018.sm_area.v1",
+ "agent": "MTP-AREA (Claude) 2026-10-18",
+ "scope": "sizing only: Yosys 0.68 flatten + ABC mapped std-cell area (ASAP7 RVT TT, 0.833 ns target), OpenSTA on the unplaced, unbuffered netlist; no placement, no routing, not bound into any die",
+ "source": {
+  "base_commit_origin_main": "c90e6bf7f3986113c7ce08c8956c6396fccecb4c",
+  "fleet_dir": "ot-epyc4:/srv/opentallas-scratch/claude/mtp_area_1018"
+ },
+ "current_tile": {
+  "die": "d4g GEN2 (hbm_v16_die, /home/ubuntu/artifacts/hdie-d4/d4g_gen2/pb0/port_bind.json)",
+  "sm_master": "ot_hbm_accel_smh_attn x16 (rtl/hbm_accel/sm/attn/ot_hbm_accel_smh_attn.sv)",
+  "leaf": "ot_hbm_sm_attn_leafh: x store ot_hbm_accel_smh_xs + block-dot ot_hbm_accel_smh_bdc + BF16 column (tcl halves + tct)",
+  "leaves_per_die": 512,
+  "fp8_macs_per_bdc": 64,
+  "bf16_macs_per_tcc": 16,
+  "closed_bdc_view": "physical/ref_tile/smh_bdc_ref_p50 outline 112.32 x 142.56 um = 16012.3 um2",
+  "baseline_production_synth": {
+   "bdc": {
+    "cell_area_um2": 7161.4,
+    "flops": 10667
+   },
+   "tcc": {
+    "cell_area_um2": 16425.1,
+    "flops": 26980
+   }
+  }
+ },
+ "die_translation": {
+  "rule": "added_die_mm2 = delta cell area / util x 512 leaves; util = baseline bdc synth cell area / closed bdc outline",
+  "util": 0.4472,
+  "die_area_mm2": 641.83,
+  "xstore_note": "each lane needs its own activation operand stream: replicating the leaf x store (4 x 128x256 SRAM, 15566 um2/leaf) costs 7.97 mm2 per added lane die-wide; alternative is a P-wide read of a shared deeper store (same macro count growth for the same K capacity)"
+ },
+ "per_unit": {
+  "bdc": {
+   "1": {
+    "cell_area_um2": 7180.8,
+    "flops": 10667,
+    "seq_area_um2": 3118.0,
+    "delta_area_vs_p1_um2": 0.0,
+    "delta_flops_vs_p1": 0,
+    "area_per_added_lane_um2": null,
+    "flops_per_added_lane": null,
+    "area_ratio_vs_p1": 1.0,
+    "added_die_mm2_logic": 0.0,
+    "tt_setup_wns_ns_unbuffered_synth": -2.851,
+    "critical_path_ns_unbuffered_synth": 3.684,
+    "canonical_sha256": "1f4f92ce295a4492fb3b1e2895c1da1fa1438e67420b1fd0ae14bf616cfcec78",
+    "mem_cells": 0,
+    "job": {
+     "unit": "oth-ubuntu-2979817-1792374761",
+     "host": "ot-epyc4",
+     "state": "DONE"
+    }
+   },
+   "2": {
+    "cell_area_um2": 13582.7,
+    "flops": 19336,
+    "seq_area_um2": 5646.1,
+    "delta_area_vs_p1_um2": 6401.8,
+    "delta_flops_vs_p1": 8669,
+    "area_per_added_lane_um2": 6401.8,
+    "flops_per_added_lane": 8669.0,
+    "area_ratio_vs_p1": 1.892,
+    "added_die_mm2_logic": 7.33,
+    "tt_setup_wns_ns_unbuffered_synth": -2.731,
+    "critical_path_ns_unbuffered_synth": 3.565,
+    "canonical_sha256": "1f4f92ce295a4492fb3b1e2895c1da1fa1438e67420b1fd0ae14bf616cfcec78",
+    "mem_cells": 0,
+    "job": {
+     "unit": "oth-ubuntu-2979820-1792374761",
+     "host": "ot-epyc4",
+     "state": "DONE"
+    }
+   },
+   "4": {
+    "cell_area_um2": 26405.1,
+    "flops": 36672,
+    "seq_area_um2": 10701.6,
+    "delta_area_vs_p1_um2": 19224.3,
+    "delta_flops_vs_p1": 26005,
+    "area_per_added_lane_um2": 6408.1,
+    "flops_per_added_lane": 8668.3,
+    "area_ratio_vs_p1": 3.677,
+    "added_die_mm2_logic": 22.01,
+    "tt_setup_wns_ns_unbuffered_synth": -2.729,
+    "critical_path_ns_unbuffered_synth": 3.562,
+    "canonical_sha256": "1f4f92ce295a4492fb3b1e2895c1da1fa1438e67420b1fd0ae14bf616cfcec78",
+    "mem_cells": 0,
+    "job": {
+     "unit": "oth-ubuntu-2979875-1792374761",
+     "host": "ot-epyc4",
+     "state": "DONE"
+    }
+   },
+   "6": {
+    "cell_area_um2": 39201.1,
+    "flops": 54008,
+    "seq_area_um2": 15757.1,
+    "delta_area_vs_p1_um2": 32020.2,
+    "delta_flops_vs_p1": 43341,
+    "area_per_added_lane_um2": 6404.0,
+    "flops_per_added_lane": 8668.2,
+    "area_ratio_vs_p1": 5.459,
+    "added_die_mm2_logic": 36.66,
+    "tt_setup_wns_ns_unbuffered_synth": -2.717,
+    "critical_path_ns_unbuffered_synth": 3.55,
+    "canonical_sha256": "1f4f92ce295a4492fb3b1e2895c1da1fa1438e67420b1fd0ae14bf616cfcec78",
+    "mem_cells": 0,
+    "job": {
+     "unit": "oth-ubuntu-2979786-1792374761",
+     "host": "ot-epyc4",
+     "state": "DONE"
+    }
+   },
+   "8": {
+    "cell_area_um2": 52004.7,
+    "flops": 71344,
+    "seq_area_um2": 20812.7,
+    "delta_area_vs_p1_um2": 44823.8,
+    "delta_flops_vs_p1": 60677,
+    "area_per_added_lane_um2": 6403.4,
+    "flops_per_added_lane": 8668.1,
+    "area_ratio_vs_p1": 7.242,
+    "added_die_mm2_logic": 51.31,
+    "tt_setup_wns_ns_unbuffered_synth": -2.851,
+    "critical_path_ns_unbuffered_synth": 3.684,
+    "canonical_sha256": "1f4f92ce295a4492fb3b1e2895c1da1fa1438e67420b1fd0ae14bf616cfcec78",
+    "mem_cells": 0,
+    "job": {
+     "unit": "oth-ubuntu-2979776-1792374761",
+     "host": "ot-epyc4",
+     "state": "DONE"
+    }
+   }
+  },
+  "tcc": {
+   "1": {
+    "cell_area_um2": 16427.9,
+    "flops": 26980,
+    "seq_area_um2": 7875.8,
+    "delta_area_vs_p1_um2": 0.0,
+    "delta_flops_vs_p1": 0,
+    "area_per_added_lane_um2": null,
+    "flops_per_added_lane": null,
+    "area_ratio_vs_p1": 1.0,
+    "added_die_mm2_logic": 0.0,
+    "tt_setup_wns_ns_unbuffered_synth": -0.545,
+    "critical_path_ns_unbuffered_synth": 1.378,
+    "canonical_sha256": "1f4f92ce295a4492fb3b1e2895c1da1fa1438e67420b1fd0ae14bf616cfcec78",
+    "mem_cells": 0,
+    "job": {
+     "unit": "oth-ubuntu-2979745-1792374761",
+     "host": "ot-epyc4",
+     "state": "DONE"
+    }
+   },
+   "2": {
+    "cell_area_um2": 32132.5,
+    "flops": 52076,
+    "seq_area_um2": 15195.6,
+    "delta_area_vs_p1_um2": 15704.6,
+    "delta_flops_vs_p1": 25096,
+    "area_per_added_lane_um2": 15704.6,
+    "flops_per_added_lane": 25096.0,
+    "area_ratio_vs_p1": 1.956,
+    "added_die_mm2_logic": 17.98,
+    "tt_setup_wns_ns_unbuffered_synth": -1.75,
+    "critical_path_ns_unbuffered_synth": 2.583,
+    "canonical_sha256": "1f4f92ce295a4492fb3b1e2895c1da1fa1438e67420b1fd0ae14bf616cfcec78",
+    "mem_cells": 0,
+    "job": {
+     "unit": "oth-ubuntu-2979739-1792374761",
+     "host": "ot-epyc4",
+     "state": "DONE"
+    }
+   },
+   "4": {
+    "cell_area_um2": 63521.3,
+    "flops": 102266,
+    "seq_area_um2": 29834.7,
+    "delta_area_vs_p1_um2": 47093.4,
+    "delta_flops_vs_p1": 75286,
+    "area_per_added_lane_um2": 15697.8,
+    "flops_per_added_lane": 25095.3,
+    "area_ratio_vs_p1": 3.867,
+    "added_die_mm2_logic": 53.91,
+    "tt_setup_wns_ns_unbuffered_synth": -4.164,
+    "critical_path_ns_unbuffered_synth": 4.997,
+    "canonical_sha256": "1f4f92ce295a4492fb3b1e2895c1da1fa1438e67420b1fd0ae14bf616cfcec78",
+    "mem_cells": 0,
+    "job": {
+     "unit": "oth-ubuntu-2979853-1792374761",
+     "host": "ot-epyc4",
+     "state": "DONE"
+    }
+   },
+   "6": {
+    "status": "MISSING"
+   },
+   "8": {
+    "status": "MISSING"
+   }
+  }
+ },
+ "per_P": {
+  "1": {
+   "tcc_estimated_linear": false,
+   "added_die_mm2_tcc_logic": 0.0,
+   "added_die_mm2_bdc_plus_tcc_logic": 0.0,
+   "added_die_mm2_bdc_only_logic": 0.0,
+   "added_die_mm2_xstore_replicated": 0.0,
+   "added_die_mm2_total_incl_xstore": 0.0,
+   "pct_of_die_641p83": 0.0
+  },
+  "2": {
+   "tcc_estimated_linear": false,
+   "added_die_mm2_tcc_logic": 17.98,
+   "added_die_mm2_bdc_plus_tcc_logic": 25.31,
+   "added_die_mm2_bdc_only_logic": 7.33,
+   "added_die_mm2_xstore_replicated": 7.97,
+   "added_die_mm2_total_incl_xstore": 33.28,
+   "pct_of_die_641p83": 5.2
+  },
+  "4": {
+   "tcc_estimated_linear": false,
+   "added_die_mm2_tcc_logic": 53.91,
+   "added_die_mm2_bdc_plus_tcc_logic": 75.92,
+   "added_die_mm2_bdc_only_logic": 22.01,
+   "added_die_mm2_xstore_replicated": 23.91,
+   "added_die_mm2_total_incl_xstore": 99.83,
+   "pct_of_die_641p83": 15.6
+  },
+  "6": {
+   "tcc_estimated_linear": true,
+   "added_die_mm2_tcc_logic": 89.85,
+   "added_die_mm2_bdc_plus_tcc_logic": 126.51,
+   "added_die_mm2_bdc_only_logic": 36.66,
+   "added_die_mm2_xstore_replicated": 39.85,
+   "added_die_mm2_total_incl_xstore": 166.36,
+   "pct_of_die_641p83": 25.9
+  },
+  "8": {
+   "tcc_estimated_linear": true,
+   "added_die_mm2_tcc_logic": 125.79,
+   "added_die_mm2_bdc_plus_tcc_logic": 177.1,
+   "added_die_mm2_bdc_only_logic": 51.31,
+   "added_die_mm2_xstore_replicated": 55.79,
+   "added_die_mm2_total_incl_xstore": 232.89,
+   "pct_of_die_641p83": 36.3
+  }
+ },
+ "bench": {
+  "verilator": "5.050 (~/.local/opentallas-tools/verilator-5.050)",
+  "runs": {
+   "run_p1_m0.log": [
+    "PASS P-LANE P=1 bdc_results=96 tcc_results=96 chunks=12 K=16 nonzero_bdc=96 xor_bdc=0752cae4 xor_tcc=06f3cc4b (bit-exact vs production single-lane columns)"
+   ],
+   "run_p2_m0.log": [
+    "PASS P-LANE P=2 bdc_results=192 tcc_results=192 chunks=12 K=16 nonzero_bdc=192 xor_bdc=0fbd8567 xor_tcc=84185712 (bit-exact vs production single-lane columns)"
+   ],
+   "run_p2_m1.log": [
+    "[1424000] %Fatal: tb_hbm_sm_bdc_p.sv:99: Assertion failed in tb_hbm_sm_bdc_p: LANE MISMATCH errors=193 P=2 MUT=1"
+   ],
+   "run_p4_m0.log": [
+    "PASS P-LANE P=4 bdc_results=384 tcc_results=384 chunks=12 K=16 nonzero_bdc=384 xor_bdc=0e9896cd xor_tcc=051d92c9 (bit-exact vs production single-lane columns)"
+   ],
+   "run_p4_m1.log": [
+    "[1424000] %Fatal: tb_hbm_sm_bdc_p.sv:99: Assertion failed in tb_hbm_sm_bdc_p: LANE MISMATCH errors=193 P=4 MUT=1"
+   ],
+   "run_p6_m0.log": [
+    "PASS P-LANE P=6 bdc_results=576 tcc_results=576 chunks=12 K=16 nonzero_bdc=576 xor_bdc=07eea418 xor_tcc=0688fe6a (bit-exact vs production single-lane columns)"
+   ],
+   "run_p8_m0.log": [
+    "PASS P-LANE P=8 bdc_results=768 tcc_results=768 chunks=12 K=16 nonzero_bdc=768 xor_bdc=8337f4b8 xor_tcc=078fe9eb (bit-exact vs production single-lane columns)"
+   ]
+  },
+  "logs": "results/arch/hbm_mtp_next_1018/sm_area/bench/"
+ },
+ "jobs": {
+  "bench_p4_m0": {
+   "unit": "oth-ubuntu-2979850-1792374761",
+   "host": "ot-epyc4",
+   "state": "DONE"
+  },
+  "synth_tcc_p8": {
+   "unit": "oth-ubuntu-2979730-1792374761",
+   "host": "ot-epyc4",
+   "state": "RUNNING"
+  },
+  "bench_p6_m0": {
+   "unit": "oth-ubuntu-2979802-1792374761",
+   "host": "ot-epyc4",
+   "state": "DONE"
+  },
+  "synth_bdc_p6": {
+   "unit": "oth-ubuntu-2979786-1792374761",
+   "host": "ot-epyc4",
+   "state": "DONE"
+  },
+  "bench_p4_m1": {
+   "unit": "oth-ubuntu-2979807-1792374761",
+   "host": "ot-epyc4",
+   "state": "DONE"
+  },
+  "synth_bdc_p2": {
+   "unit": "oth-ubuntu-2979820-1792374761",
+   "host": "ot-epyc4",
+   "state": "DONE"
+  },
+  "synth_bdc_p1": {
+   "unit": "oth-ubuntu-2979817-1792374761",
+   "host": "ot-epyc4",
+   "state": "DONE"
+  },
+  "synth_tcc_base": {
+   "unit": "oth-ubuntu-2979757-1792374761",
+   "host": "ot-epyc4",
+   "state": "DONE"
+  },
+  "synth_tcc_p2": {
+   "unit": "oth-ubuntu-2979739-1792374761",
+   "host": "ot-epyc4",
+   "state": "DONE"
+  },
+  "synth_bdc_p4": {
+   "unit": "oth-ubuntu-2979875-1792374761",
+   "host": "ot-epyc4",
+   "state": "DONE"
+  },
+  "bench_p2_m1": {
+   "unit": "oth-ubuntu-2979814-1792374761",
+   "host": "ot-epyc4",
+   "state": "DONE"
+  },
+  "synth_tcc_p1": {
+   "unit": "oth-ubuntu-2979745-1792374761",
+   "host": "ot-epyc4",
+   "state": "DONE"
+  },
+  "bench_p1_m0": {
+   "unit": "oth-ubuntu-2979847-1792374761",
+   "host": "ot-epyc4",
+   "state": "DONE"
+  },
+  "synth_bdc_p8": {
+   "unit": "oth-ubuntu-2979776-1792374761",
+   "host": "ot-epyc4",
+   "state": "DONE"
+  },
+  "synth_tcc_p4": {
+   "unit": "oth-ubuntu-2979853-1792374761",
+   "host": "ot-epyc4",
+   "state": "DONE"
+  },
+  "synth_tcc_p6": {
+   "unit": "oth-ubuntu-2979759-1792374761",
+   "host": "ot-epyc4",
+   "state": "RUNNING"
+  },
+  "synth_bdc_base": {
+   "unit": "oth-ubuntu-2979720-1792374761",
+   "host": "ot-epyc4",
+   "state": "DONE"
+  },
+  "bench_p8_m0": {
+   "unit": "oth-ubuntu-2979774-1792374761",
+   "host": "ot-epyc4",
+   "state": "DONE"
+  },
+  "bench_p2_m0": {
+   "unit": "oth-ubuntu-2979756-1792374761",
+   "host": "ot-epyc4",
+   "state": "DONE"
+  }
+ }
+}

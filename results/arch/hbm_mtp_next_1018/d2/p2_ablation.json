@@ -1,0 +1,199 @@
+{
+ "schema": "opentallas.hbm_mtp_next_1018.d2_p2_ablation.v1",
+ "model": "tools/hgi_sim/hbm_plane_model.py",
+ "union_mean_N6": 24.658,
+ "mh_ctl": 7818.0,
+ "draft": {
+  "draft_cycles": 139787.8,
+  "draft_by_kind": {
+   "dsa": 21322.5,
+   "dsb": 89715.8,
+   "dhead": 11371.5,
+   "markov": 15606.5,
+   "demb": 1771.5
+  },
+  "seed_cycles": 12151.2,
+  "overlap": {
+   "head_alone": 13432.7,
+   "seed_alone": 12151.2,
+   "joint": 24490.3,
+   "orders": {
+    "head_then_seed": 24490.3,
+    "seed_then_head": 25369.9
+   },
+   "credit": 1093.6
+  }
+ },
+ "rows": {
+  "base": {
+   "verify_cycles": 1429323.9,
+   "cycles_saved_by_feature": 0.0,
+   "step_cycles": 1587987.3,
+   "ds_mtp_tok_s": 3142.8,
+   "unit_busy": {
+    "FUSED": 188300.0,
+    "SM": 591654.7,
+    "COLL": 586264.8,
+    "SU": 157093.1,
+    "DMA": 57134.0,
+    "HC": 191652.0,
+    "IDX": 43688.2,
+    "CTL": 0.0,
+    "ARGMAX": 10702.1
+   }
+  },
+  "noSM": {
+   "verify_cycles": 1834826.1,
+   "cycles_saved_by_feature": 405502.2,
+   "step_cycles": 1993489.5,
+   "ds_mtp_tok_s": 2503.5,
+   "unit_busy": {
+    "FUSED": 188300.0,
+    "SM": 1038558.0,
+    "COLL": 586264.8,
+    "SU": 157093.1,
+    "DMA": 57134.0,
+    "HC": 191652.0,
+    "IDX": 34427.9,
+    "CTL": 0.0,
+    "ARGMAX": 4913.2
+   }
+  },
+  "noVM": {
+   "verify_cycles": 1466463.6,
+   "cycles_saved_by_feature": 37139.7,
+   "step_cycles": 1625127.0,
+   "ds_mtp_tok_s": 3071.0,
+   "unit_busy": {
+    "DMA": 260095.2,
+    "FUSED": 188300.0,
+    "SM": 591654.7,
+    "COLL": 586264.8,
+    "SU": 157093.1,
+    "HC": 191652.0,
+    "IDX": 43688.2,
+    "CTL": 0.0,
+    "ARGMAX": 10702.1
+   }
+  },
+  "noATT": {
+   "verify_cycles": 1606711.2,
+   "cycles_saved_by_feature": 177387.3,
+   "step_cycles": 1765374.6,
+   "ds_mtp_tok_s": 2827.0,
+   "unit_busy": {
+    "FUSED": 188300.0,
+    "SM": 769041.3,
+    "COLL": 586264.8,
+    "SU": 157093.1,
+    "DMA": 57134.0,
+    "HC": 191652.0,
+    "IDX": 43688.2,
+    "CTL": 0.0,
+    "ARGMAX": 10702.1
+   }
+  },
+  "noFUSED": {
+   "verify_cycles": 1631307.2,
+   "cycles_saved_by_feature": 201983.3,
+   "step_cycles": 1789970.6,
+   "ds_mtp_tok_s": 2788.2,
+   "unit_busy": {
+    "FUSED": 390281.7,
+    "SM": 591654.7,
+    "COLL": 586264.8,
+    "SU": 157093.1,
+    "DMA": 57134.0,
+    "HC": 191652.0,
+    "IDX": 43688.2,
+    "CTL": 0.0,
+    "ARGMAX": 10702.1
+   }
+  },
+  "noHC": {
+   "verify_cycles": 1698980.3,
+   "cycles_saved_by_feature": 269656.4,
+   "step_cycles": 1857643.7,
+   "ds_mtp_tok_s": 2686.6,
+   "unit_busy": {
+    "FUSED": 188300.0,
+    "SM": 591654.7,
+    "COLL": 586264.8,
+    "SU": 157093.1,
+    "DMA": 57134.0,
+    "HC": 549900.0,
+    "IDX": 43688.2,
+    "CTL": 0.0,
+    "ARGMAX": 10702.1
+   }
+  },
+  "noCOLL": {
+   "verify_cycles": 1592890.5,
+   "cycles_saved_by_feature": 163566.6,
+   "step_cycles": 1751553.9,
+   "ds_mtp_tok_s": 2849.4,
+   "unit_busy": {
+    "FUSED": 188300.0,
+    "SM": 591654.7,
+    "COLL": 751559.9,
+    "SU": 157093.1,
+    "DMA": 57134.0,
+    "HC": 191652.0,
+    "IDX": 43688.2,
+    "CTL": 0.0,
+    "ARGMAX": 10702.1
+   }
+  },
+  "noIDX": {
+   "verify_cycles": 1493066.9,
+   "cycles_saved_by_feature": 63743.0,
+   "step_cycles": 1651730.3,
+   "ds_mtp_tok_s": 3021.6,
+   "unit_busy": {
+    "FUSED": 188300.0,
+    "SM": 591654.7,
+    "COLL": 586264.8,
+    "SU": 157093.1,
+    "DMA": 57134.0,
+    "HC": 191652.0,
+    "IDX": 107433.1,
+    "CTL": 0.0,
+    "ARGMAX": 10702.1
+   }
+  },
+  "noSU_DMA": {
+   "verify_cycles": 1466955.0,
+   "cycles_saved_by_feature": 37631.1,
+   "step_cycles": 1625618.4,
+   "ds_mtp_tok_s": 3070.1,
+   "unit_busy": {
+    "FUSED": 189900.0,
+    "SM": 591654.7,
+    "COLL": 586264.8,
+    "SU": 214909.1,
+    "DMA": 152366.8,
+    "HC": 191652.0,
+    "IDX": 43688.2,
+    "CTL": 0.0,
+    "ARGMAX": 11445.2
+   }
+  },
+  "noVM_ATT": {
+   "verify_cycles": 1643850.8,
+   "cycles_saved_by_feature": 214526.9,
+   "step_cycles": 1802514.2,
+   "ds_mtp_tok_s": 2768.8,
+   "unit_busy": {
+    "DMA": 260095.2,
+    "FUSED": 188300.0,
+    "SM": 769041.3,
+    "COLL": 586264.8,
+    "SU": 157093.1,
+    "HC": 191652.0,
+    "IDX": 43688.2,
+    "CTL": 0.0,
+    "ARGMAX": 10702.1
+   }
+  }
+ }
+}

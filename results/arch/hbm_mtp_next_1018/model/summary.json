@@ -1,0 +1,740 @@
+{
+ "schema": "opentallas.hbm_mtp_next_1018.model_summary.v1",
+ "lane": "HBM-MTP / MTP-MODEL",
+ "date": "2026-10-18",
+ "tool": "tools/hgi_sim/hbm_plane_model.py",
+ "git_head": "02b1651f1",
+ "generated_utc": "2026-10-19T02:26:46Z",
+ "price_basis": "d4g plan (b) price of record: HBM-PRICE5 d4g_2ring_qbg (two rings + QBG, RTL1/2 ledger), S2 CP schedule per layer segment; option-B attention on the SM engines (measured spans)",
+ "validation": {
+  "ds_ar_tok_s": 1905.4,
+  "ds_ar_ref": 1905.4,
+  "ds_ar_err_pct": 0.0,
+  "qwen_ar_tok_s": 946.2,
+  "qwen_ar_ref": 946.2,
+  "qwen_ar_err_pct": 0.0,
+  "ds_mtp_design_point": {
+   "verify_cycles": 1367489.3,
+   "draft_cycles": 144055.0,
+   "seed_cycles": 12151.2,
+   "step_cycles": 1531513.5,
+   "mtp_tok_s": 3258.7
+  },
+  "ds_mtp_design_ref": 3258.7
+ },
+ "stats": {
+  "src": "results/arch/hbm_mtp_next_1018/stats/summary.json",
+  "sha256": "8cf6f7b70f493e0f8de99473aeec59f0f6f7cc6145407c466f34c2437f4f38c1",
+  "verify_union_P6": {
+   "mean": 24.658,
+   "p90": 30.0,
+   "max": 36.0,
+   "strict_mean": 27.598
+  },
+  "users_union": {
+   "2": 11.605,
+   "4": 21.877,
+   "6": 31.142,
+   "8": 39.673,
+   "1": 6.0
+  },
+  "kv_consecutive_measured": false
+ },
+ "area": {
+  "src": "results/arch/hbm_mtp_next_1018/area_composed.json",
+  "measured": true,
+  "by_P": {
+   "1": {
+    "total": 0.0
+   },
+   "2": {
+    "total": 34.56
+   },
+   "4": {
+    "total": 101.11
+   },
+   "6": {
+    "total": 167.64
+   },
+   "8": {
+    "total": 234.51
+   }
+  }
+ },
+ "table": [
+  {
+   "P": 1,
+   "die_added_mm2": 0.0,
+   "ds_ar_tok_s": 1905.4,
+   "ds_mtp_tok_s": 1694.3,
+   "ds_mtp_step_cycles": 2945727.9,
+   "ds_verify_cycles": 2708031.7,
+   "ds_draft_cycles": 208789.1,
+   "ds_seed_cycles": 21089.1,
+   "ds_seed_head_overlap_credit": 0.0,
+   "ds_mh_ctl_cycles": 7818.0,
+   "ds_mtp_over_ar": 0.889,
+   "ds_mu_aggregate_tok_s": 1905.4,
+   "ds_mu_per_user_tok_s": 1905.4,
+   "qwen_ar_tok_s": 946.2,
+   "qwen_dflash16_step_cycles": 20919267.6,
+   "qwen_dflash16_step_over_ar": 16.495,
+   "qwen_dflash16_record_head_slots": [
+    8,
+    4
+   ],
+   "qwen_dflash16_tok_s_published": 459.5,
+   "qwen_dflash16_tok_s_measured": 209.7,
+   "qwen_dflash8_step_cycles": 10423729.0,
+   "qwen_dflash8_step_over_ar": 8.219,
+   "qwen_dflash8_record_head_slots": [
+    8,
+    4
+   ],
+   "qwen_dflash8_tok_s_published": 642.8,
+   "qwen_dflash8_tok_s_measured": 379.4,
+   "qwen_mu_aggregate_tok_s": 946.2,
+   "qwen_mu_per_user_tok_s": 946.2
+  },
+  {
+   "P": 2,
+   "die_added_mm2": 34.56,
+   "ds_ar_tok_s": 1905.4,
+   "ds_mtp_tok_s": 3142.8,
+   "ds_mtp_step_cycles": 1587987.3,
+   "ds_verify_cycles": 1429323.9,
+   "ds_draft_cycles": 139787.8,
+   "ds_seed_cycles": 12151.2,
+   "ds_seed_head_overlap_credit": 1093.6,
+   "ds_mh_ctl_cycles": 7818.0,
+   "ds_mtp_over_ar": 1.649,
+   "ds_mtp_tok_s_kv_lower": 3288.8,
+   "ds_mtp_tok_s_union_p90": 3063.1,
+   "ds_mtp_gammaP_tok_s": 2302.7,
+   "ds_mtp_gammaP_note": "gamma 1 (N = 2), tau 1.753 = 4.159 x walk[1] / walk[5]",
+   "ds_mu_aggregate_tok_s": 3060.3,
+   "ds_mu_per_user_tok_s": 1530.1,
+   "qwen_ar_tok_s": 946.2,
+   "qwen_dflash16_step_cycles": 10993879.8,
+   "qwen_dflash16_step_over_ar": 8.669,
+   "qwen_dflash16_record_head_slots": [
+    8,
+    4
+   ],
+   "qwen_dflash16_tok_s_published": 874.3,
+   "qwen_dflash16_tok_s_measured": 399.1,
+   "qwen_dflash8_step_cycles": 5530034.1,
+   "qwen_dflash8_step_over_ar": 4.36,
+   "qwen_dflash8_record_head_slots": [
+    8,
+    6
+   ],
+   "qwen_dflash8_tok_s_published": 1211.7,
+   "qwen_dflash8_tok_s_measured": 715.1,
+   "qwen_mu_aggregate_tok_s": 1734.2,
+   "qwen_mu_per_user_tok_s": 867.1
+  },
+  {
+   "P": 4,
+   "die_added_mm2": 101.11,
+   "ds_ar_tok_s": 1905.4,
+   "ds_mtp_tok_s": 3363.5,
+   "ds_mtp_step_cycles": 1483826.6,
+   "ds_verify_cycles": 1338146.6,
+   "ds_draft_cycles": 128338.4,
+   "ds_seed_cycles": 10617.3,
+   "ds_seed_head_overlap_credit": 1093.7,
+   "ds_mh_ctl_cycles": 7818.0,
+   "ds_mtp_over_ar": 1.765,
+   "ds_mtp_tok_s_kv_lower": 3597.8,
+   "ds_mtp_tok_s_union_p90": 3272.3,
+   "ds_mtp_gammaP_tok_s": 3268.9,
+   "ds_mtp_gammaP_note": "gamma 3 (N = 4), tau 3.181 = 4.159 x walk[3] / walk[5]",
+   "ds_mu_aggregate_tok_s": 4365.3,
+   "ds_mu_per_user_tok_s": 1091.3,
+   "qwen_ar_tok_s": 946.2,
+   "qwen_dflash16_step_cycles": 6557186.3,
+   "qwen_dflash16_step_over_ar": 5.17,
+   "qwen_dflash16_record_head_slots": [
+    8,
+    6
+   ],
+   "qwen_dflash16_tok_s_published": 1465.9,
+   "qwen_dflash16_tok_s_measured": 669.1,
+   "qwen_dflash8_step_cycles": 3416114.1,
+   "qwen_dflash8_step_over_ar": 2.694,
+   "qwen_dflash8_record_head_slots": [
+    8,
+    6
+   ],
+   "qwen_dflash8_tok_s_published": 1961.5,
+   "qwen_dflash8_tok_s_measured": 1157.7,
+   "qwen_mu_aggregate_tok_s": 2971.4,
+   "qwen_mu_per_user_tok_s": 742.9
+  },
+  {
+   "P": 6,
+   "die_added_mm2": 167.64,
+   "ds_ar_tok_s": 1905.4,
+   "ds_mtp_tok_s": 3519.3,
+   "ds_mtp_step_cycles": 1418116.1,
+   "ds_verify_cycles": 1280713.3,
+   "ds_draft_cycles": 121020.9,
+   "ds_seed_cycles": 9657.6,
+   "ds_seed_head_overlap_credit": 1093.7,
+   "ds_mh_ctl_cycles": 7818.0,
+   "ds_mtp_over_ar": 1.847,
+   "ds_mtp_tok_s_kv_lower": 3841.7,
+   "ds_mtp_tok_s_union_p90": 3419.6,
+   "ds_mu_aggregate_tok_s": 5153.7,
+   "ds_mu_per_user_tok_s": 858.9,
+   "qwen_ar_tok_s": 946.2,
+   "qwen_dflash16_step_cycles": 5467215.6,
+   "qwen_dflash16_step_over_ar": 4.311,
+   "qwen_dflash16_record_head_slots": [
+    12,
+    8
+   ],
+   "qwen_dflash16_tok_s_published": 1758.1,
+   "qwen_dflash16_tok_s_measured": 802.5,
+   "qwen_dflash8_step_cycles": 3268022.8,
+   "qwen_dflash8_step_over_ar": 2.577,
+   "qwen_dflash8_record_head_slots": [
+    8,
+    8
+   ],
+   "qwen_dflash8_tok_s_published": 2050.4,
+   "qwen_dflash8_tok_s_measured": 1210.1,
+   "qwen_mu_aggregate_tok_s": 3898.6,
+   "qwen_mu_per_user_tok_s": 649.8
+  },
+  {
+   "P": 8,
+   "die_added_mm2": 234.51,
+   "ds_ar_tok_s": 1905.4,
+   "ds_mtp_tok_s": 3519.3,
+   "ds_mtp_step_cycles": 1418116.1,
+   "ds_verify_cycles": 1280713.3,
+   "ds_draft_cycles": 121020.9,
+   "ds_seed_cycles": 9657.6,
+   "ds_seed_head_overlap_credit": 1093.7,
+   "ds_mh_ctl_cycles": 7818.0,
+   "ds_mtp_over_ar": 1.847,
+   "ds_mtp_tok_s_kv_lower": 3841.7,
+   "ds_mtp_tok_s_union_p90": 3419.6,
+   "ds_mu_aggregate_tok_s": 5710.4,
+   "ds_mu_per_user_tok_s": 713.8,
+   "qwen_ar_tok_s": 946.2,
+   "qwen_dflash16_step_cycles": 3934838.1,
+   "qwen_dflash16_step_over_ar": 3.103,
+   "qwen_dflash16_record_head_slots": [
+    16,
+    8
+   ],
+   "qwen_dflash16_tok_s_published": 2442.8,
+   "qwen_dflash16_tok_s_measured": 1115.0,
+   "qwen_dflash8_step_cycles": 2171520.3,
+   "qwen_dflash8_step_over_ar": 1.712,
+   "qwen_dflash8_record_head_slots": [
+    8,
+    8
+   ],
+   "qwen_dflash8_tok_s_published": 3085.8,
+   "qwen_dflash8_tok_s_measured": 1821.2,
+   "qwen_mu_aggregate_tok_s": 4619.2,
+   "qwen_mu_per_user_tok_s": 577.4
+  }
+ ],
+ "per_layer_choice": {
+  "2": {
+   "verify_cycles": 1429325.2,
+   "vs_uniform": 1.3,
+   "lanes_used": {
+    "0": 2,
+    "1": 2,
+    "2": 2,
+    "3": 2,
+    "4": 2,
+    "5": 2,
+    "6": 2,
+    "7": 2,
+    "8": 2,
+    "9": 2,
+    "10": 2,
+    "11": 2,
+    "12": 2,
+    "13": 2,
+    "14": 2,
+    "15": 2,
+    "16": 2,
+    "17": 2,
+    "18": 2,
+    "19": 2,
+    "20": 2,
+    "21": 2,
+    "22": 2,
+    "23": 2,
+    "24": 2,
+    "25": 2,
+    "26": 2,
+    "27": 2,
+    "28": 2,
+    "29": 2,
+    "30": 2,
+    "31": 2,
+    "32": 2,
+    "33": 2,
+    "34": 2,
+    "35": 2,
+    "36": 2,
+    "37": 2,
+    "38": 2,
+    "39": 2,
+    "head": 2
+   }
+  },
+  "4": {
+   "verify_cycles": 1338146.4,
+   "vs_uniform": -0.2,
+   "lanes_used": {
+    "0": 4,
+    "1": 4,
+    "2": 4,
+    "3": 4,
+    "4": 4,
+    "5": 4,
+    "6": 4,
+    "7": 4,
+    "8": 4,
+    "9": 4,
+    "10": 4,
+    "11": 4,
+    "12": 4,
+    "13": 4,
+    "14": 4,
+    "15": 4,
+    "16": 4,
+    "17": 4,
+    "18": 4,
+    "19": 4,
+    "20": 4,
+    "21": 4,
+    "22": 4,
+    "23": 4,
+    "24": 4,
+    "25": 4,
+    "26": 4,
+    "27": 4,
+    "28": 4,
+    "29": 4,
+    "30": 4,
+    "31": 4,
+    "32": 4,
+    "33": 4,
+    "34": 4,
+    "35": 4,
+    "36": 4,
+    "37": 4,
+    "38": 4,
+    "39": 4,
+    "head": 4
+   }
+  },
+  "6": {
+   "verify_cycles": 1280712.9,
+   "vs_uniform": -0.4,
+   "lanes_used": {
+    "0": 6,
+    "1": 6,
+    "2": 6,
+    "3": 6,
+    "4": 6,
+    "5": 6,
+    "6": 6,
+    "7": 6,
+    "8": 6,
+    "9": 6,
+    "10": 6,
+    "11": 6,
+    "12": 6,
+    "13": 6,
+    "14": 6,
+    "15": 6,
+    "16": 6,
+    "17": 6,
+    "18": 6,
+    "19": 6,
+    "20": 6,
+    "21": 6,
+    "22": 6,
+    "23": 6,
+    "24": 6,
+    "25": 6,
+    "26": 6,
+    "27": 6,
+    "28": 6,
+    "29": 6,
+    "30": 6,
+    "31": 6,
+    "32": 6,
+    "33": 6,
+    "34": 6,
+    "35": 6,
+    "36": 6,
+    "37": 6,
+    "38": 6,
+    "39": 6,
+    "head": 6
+   }
+  },
+  "8": {
+   "verify_cycles": 1280712.9,
+   "vs_uniform": -0.4,
+   "lanes_used": {
+    "0": 6,
+    "1": 6,
+    "2": 6,
+    "3": 6,
+    "4": 6,
+    "5": 6,
+    "6": 6,
+    "7": 6,
+    "8": 6,
+    "9": 6,
+    "10": 6,
+    "11": 6,
+    "12": 6,
+    "13": 6,
+    "14": 6,
+    "15": 6,
+    "16": 6,
+    "17": 6,
+    "18": 6,
+    "19": 6,
+    "20": 6,
+    "21": 6,
+    "22": 6,
+    "23": 6,
+    "24": 6,
+    "25": 6,
+    "26": 6,
+    "27": 6,
+    "28": 6,
+    "29": 6,
+    "30": 6,
+    "31": 6,
+    "32": 6,
+    "33": 6,
+    "34": 6,
+    "35": 6,
+    "36": 6,
+    "37": 6,
+    "38": 6,
+    "39": 6,
+    "head": 6
+   }
+  }
+ },
+ "ablation_P6": {
+  "SM": {
+   "verify_cycles_without": 1834826.1,
+   "cycles_saved_by_feature": 554112.8
+  },
+  "VM": {
+   "verify_cycles_without": 1317853.0,
+   "cycles_saved_by_feature": 37139.7
+  },
+  "ATT": {
+   "verify_cycles_without": 1469806.1,
+   "cycles_saved_by_feature": 189092.8
+  },
+  "FUSED": {
+   "verify_cycles_without": 1482696.6,
+   "cycles_saved_by_feature": 201983.3
+  },
+  "HC": {
+   "verify_cycles_without": 1564794.9,
+   "cycles_saved_by_feature": 284081.6
+  },
+  "COLL": {
+   "verify_cycles_without": 1444547.3,
+   "cycles_saved_by_feature": 163834.0
+  },
+  "IDX": {
+   "verify_cycles_without": 1344456.3,
+   "cycles_saved_by_feature": 63743.0
+  },
+  "SU_DMA": {
+   "verify_cycles_without": 1319445.3,
+   "cycles_saved_by_feature": 38732.0
+  }
+ },
+ "rtl_change_list": [
+  {
+   "unit": "SM",
+   "owner": "H-SM",
+   "change": "P accumulator lanes per MAC column: each HBM weight word / BDC line broadcast to P lanes (P x MAC, same 99 B/cycle/SM HBM share, SMEM and VM ports); SM.MATVEC slot field (HGI-1 spec 6.7 param [4:2] = N - 1, widen to 4 b for N <= 16) + per-slot x base; P x-slot stores; per-lane result publish (slot-major)",
+   "verify_cycles_saved_P6": 554112.8,
+   "saved_basis": "P = 6 headline verify with this feature removed (ds|abl_*), cycles a DSpark step"
+  },
+  {
+   "unit": "ATT",
+   "owner": "H-SM (SM attention)",
+   "change": "KV-line-stationary multi-query attention: P query slots a SM engine, each KV line streamed once and applied to the lanes whose top-k mask selects it (per-line lane mask from the N IDX top-k lists + window rule), per-lane QK / PV accumulators, fixed spans (first access, dispatch, publish, cross-SM merge) once a record",
+   "verify_cycles_saved_P6": 189092.8,
+   "saved_basis": "P = 6 headline verify with this feature removed (ds|abl_*), cycles a DSpark step"
+  },
+  {
+   "unit": "FUSED",
+   "owner": "H-SU (FUSED)",
+   "change": "FUSED.HC_PRE_NORM / HC_POST row field N on the LL lanes: gain sectors kept across rows, two r slots (row p+1 phase A over row p's tail), per-row scalar set; MEASURED II 197 (P6 RTL)",
+   "verify_cycles_saved_P6": 201983.3,
+   "saved_basis": "P = 6 headline verify with this feature removed (ds|abl_*), cycles a DSpark step"
+  },
+  {
+   "unit": "HC",
+   "owner": "H-SU (HC)",
+   "change": "HC.HC_MIX N rows streamed against stationary mix weights (HCP x6 mode II 250) + Sinkhorn x 3 units (II 634 / 3)",
+   "verify_cycles_saved_P6": 284081.6,
+   "saved_basis": "P = 6 headline verify with this feature removed (ds|abl_*), cycles a DSpark step"
+  },
+  {
+   "unit": "COLL",
+   "owner": "H-COLL",
+   "change": "COLL ROW_GATHER / TOPK_MERGE / kv gather / ARGMAX_MERGE take N rows (one message train, endpoint / crossing / tail once); shared ALL_GATHER / GROUP_REDUCE_MCAST carry N x payload; ring AG flits x N (d4g adders unchanged per record)",
+   "verify_cycles_saved_P6": 163834.0,
+   "saved_basis": "P = 6 headline verify with this feature removed (ds|abl_*), cycles a DSpark step"
+  },
+  {
+   "unit": "IDX",
+   "owner": "H-IDX",
+   "change": "IDX.INDEX N queries over ONE key stream (N x 4,096-word query store), IDX.TOPK heap row reset, verify expert-UNION record (384-b union bitmap, per-expert lane lists for the grouped GEMM)",
+   "verify_cycles_saved_P6": 63743.0,
+   "saved_basis": "P = 6 headline verify with this feature removed (ds|abl_*), cycles a DSpark step"
+  },
+  {
+   "unit": "SU_DMA",
+   "owner": "H-SU / H-DIE / H-IDX",
+   "change": "row counters in SU.VOP (indexed + un-indexed), SFU chains, DMA.KVWB_DS (N rows, window ring 256 slots: +128 HBM rows a layer), position-addressed DMA.LOAD rows, FUSED.QDQ, ARGMAX.LOCAL",
+   "verify_cycles_saved_P6": 38732.0,
+   "saved_basis": "P = 6 headline verify with this feature removed (ds|abl_*), cycles a DSpark step"
+  },
+  {
+   "unit": "VM",
+   "owner": "H-DIE",
+   "change": "VM capacity: N resident verify / user columns (h + PRE): + (N - 1) x ~30k words (N = 6: ~+150k words, VM 2^18 -> ~2^18.9; 4 quadrant slices); else per-layer column swaps",
+   "verify_cycles_saved_P6": 37139.7,
+   "saved_basis": "P = 6 headline verify with this feature removed (ds|abl_*), cycles a DSpark step"
+  },
+  {
+   "unit": "ISA",
+   "owner": "H-ISA",
+   "change": "record header row count N (all units) + per-row descriptor stride; CTL.TOKX (k completion beats, SPEC_GAP Q-MTP-1)",
+   "verify_cycles_saved_P6": null,
+   "saved_basis": "not separately ablated"
+  },
+  {
+   "unit": "DRAFT",
+   "owner": "H-MTP",
+   "change": "DSpark draft on the same die: dsa / dsb / dhead as R = 5-row records (no new unit), SEED of the next step scheduled with the verify head (joint S2 schedule), Markov / demb serial",
+   "verify_cycles_saved_P6": null,
+   "saved_basis": "not separately ablated"
+  }
+ ],
+ "unit_busy": {
+  "1": {
+   "ds_mtp_verify": {
+    "DMA": 355328.0,
+    "FUSED": 391881.7,
+    "SM": 1195889.5,
+    "COLL": 751559.9,
+    "SU": 214909.1,
+    "HC": 549900.0,
+    "IDX": 98169.9,
+    "CTL": 0.0,
+    "ARGMAX": 5656.3
+   },
+   "qwen_dflash16": {
+    "DMA": 22658.9,
+    "SM": 18174262.5,
+    "SU": 3617483.4,
+    "COLL": 637988.5,
+    "FUSED": 242987.9,
+    "ATT": 452537.7,
+    "SFU": 9990.9,
+    "ARGMAX": 2413600.0,
+    "CTL": 19.0
+   },
+   "ds_mu": null
+  },
+  "2": {
+   "ds_mtp_verify": {
+    "FUSED": 188300.0,
+    "SM": 591654.7,
+    "COLL": 586264.8,
+    "SU": 157093.1,
+    "DMA": 57134.0,
+    "HC": 191652.0,
+    "IDX": 43688.2,
+    "CTL": 0.0,
+    "ARGMAX": 10702.1
+   },
+   "qwen_dflash16": {
+    "DMA": 18210.4,
+    "SM": 9186806.5,
+    "SU": 1669704.4,
+    "COLL": 619958.5,
+    "FUSED": 220820.3,
+    "ATT": 330921.4,
+    "SFU": 9990.9,
+    "ARGMAX": 1273674.2,
+    "CTL": 19.0
+   },
+   "ds_mu": {
+    "FUSED": 89912.0,
+    "SM": 258700.4,
+    "COLL": 348640.6,
+    "SU": 134587.1,
+    "DMA": 51566.8,
+    "HC": 111652.0,
+    "IDX": 35015.4,
+    "CTL": 0.0,
+    "ARGMAX": 4913.2
+   }
+  },
+  "4": {
+   "ds_mtp_verify": {
+    "FUSED": 188300.0,
+    "SM": 487631.3,
+    "COLL": 586264.8,
+    "SU": 157093.1,
+    "DMA": 57134.0,
+    "HC": 191652.0,
+    "IDX": 43688.2,
+    "CTL": 0.0,
+    "ARGMAX": 7141.3
+   },
+   "qwen_dflash16": {
+    "DMA": 18210.4,
+    "SM": 4806337.3,
+    "SU": 1213085.2,
+    "COLL": 619958.5,
+    "FUSED": 220820.3,
+    "ATT": 270113.2,
+    "SFU": 9990.9,
+    "ARGMAX": 821774.9,
+    "CTL": 19.0
+   },
+   "ds_mu": {
+    "FUSED": 139106.0,
+    "SM": 372925.9,
+    "COLL": 492543.2,
+    "SU": 146187.1,
+    "DMA": 52494.0,
+    "HC": 151652.0,
+    "IDX": 53802.5,
+    "CTL": 0.0,
+    "ARGMAX": 4913.2
+   }
+  },
+  "6": {
+   "ds_mtp_verify": {
+    "FUSED": 188300.0,
+    "SM": 420542.4,
+    "COLL": 586264.8,
+    "SU": 157093.1,
+    "DMA": 57134.0,
+    "HC": 191652.0,
+    "IDX": 43688.2,
+    "CTL": 0.0,
+    "ARGMAX": 4913.2
+   },
+   "qwen_dflash16": {
+    "DMA": 18262.2,
+    "SM": 3709141.6,
+    "SU": 1060338.1,
+    "COLL": 622582.5,
+    "FUSED": 220820.3,
+    "ATT": 270113.2,
+    "SFU": 9990.9,
+    "ARGMAX": 673747.6,
+    "CTL": 19.0
+   },
+   "ds_mu": {
+    "FUSED": 188300.0,
+    "SM": 482803.8,
+    "COLL": 617943.9,
+    "SU": 157093.1,
+    "DMA": 57134.0,
+    "HC": 191652.0,
+    "IDX": 72589.2,
+    "CTL": 0.0,
+    "ARGMAX": 4913.2
+   }
+  },
+  "8": {
+   "ds_mtp_verify": {
+    "FUSED": 188300.0,
+    "SM": 420542.4,
+    "COLL": 586264.8,
+    "SU": 157093.1,
+    "DMA": 57134.0,
+    "HC": 191652.0,
+    "IDX": 43688.2,
+    "CTL": 0.0,
+    "ARGMAX": 4913.2
+   },
+   "qwen_dflash16": {
+    "DMA": 13408.8,
+    "SM": 2327547.2,
+    "SU": 734113.6,
+    "COLL": 531335.9,
+    "FUSED": 210886.7,
+    "ATT": 270113.2,
+    "SFU": 4995.4,
+    "ARGMAX": 369875.6,
+    "CTL": 19.0
+   },
+   "ds_mu": {
+    "FUSED": 237494.0,
+    "SM": 588107.0,
+    "COLL": 727939.7,
+    "SU": 168149.1,
+    "DMA": 61774.0,
+    "HC": 231652.0,
+    "IDX": 91376.5,
+    "CTL": 0.0,
+    "ARGMAX": 4913.2
+   }
+  }
+ },
+ "assumptions": [
+  "P = 1 = the current d4g die AS BUILT (SM without slot count, no row field, VM column swaps, row-serial draft); P >= 2 = P lanes + row field N + VM-resident columns",
+  "DS MTP: DSpark gamma 5, N = 6 verify positions, tau 4.159 (owner 6-class blend) at every P; P = 8 leaves 2 lanes idle for MTP (no gamma-7 drafter); ds_mtp_gammaP rows = the compiler choosing gamma = P - 1 with tau scaled by the MTP-STATS greedy walk",
+  "expert union: MTP-STATS decorrelated verify estimate (P = 6 mean) headline, p90 as bracket; users: independent users mixed workloads mean",
+  "KV top-512 overlap of consecutive positions is UNMEASURED: headline at the upper bound (N x 512 selected + 128 + N - 1 window lines), kv_lower = full overlap (512 + window); users: N x single (exact)",
+  "row II: FUSED.HC_PRE_NORM measured 197 (P6 RTL); all other II PRICED from tables / structure (ds_mtp_verify.row_ii): FUSED.POST 100, QDQ n/32, HC max(250 HCP x6 measured, Sinkhorn 634/3), COLL c1 - 741.7 fixed, IDX.TOPK 47, IDX.INDEX c1 x 152/658.9 (users: c1), SU nv, DMA c1 - first access, ARGMAX 6; Qwen ROW_NORM 157.6 (anchor scaled 4096/5120), SU nv, all-reduce n/16 (64 B/cycle)",
+  "DSpark draft at P lanes = R = 5-row records (ds_mtp_draft, stage expert union = no sharing 15); seed overlap = joint S2 schedule with the verify head, nothing after the accept overlaps",
+  "Qwen DFlash: dflash.step_program B = 16 (8 info) at pos 8,192 - B, tau published 8.01 (b16) / 5.584 (b8, anchored) and measured cycle-weighted 3.656 / 3.2956; ATT 4-slot groups (16 lanes) are the current record form, a P-lane engine streams the context once for P groups (QCHK fix: group index = slot / 4); P = 1 = every slot re-issues the SM line; P >= 2 = the compiler's record size R in {P, 2P, 8, 16} (SM ceil(R / P) line passes a record, ceil(B / R) per-pass records) and head pass PH in {16, 8, 6, 4}, largest that fits the P-lane VM (2^18 + (P - 1) x 30k words; TP4 map, conservative) (QCHK 10-18: the as-built 8-slot / 4-slot head split had made P = 6 = P = 4)",
+  "multi-user: all users at the same position (DS 1M, Qwen 8K); HBM capacity for P users' 1M KV NOT checked",
+  "area: MTP-AREA measured"
+ ],
+ "rerun": "PYTHONPATH=tools python3 -m hgi_sim.hbm_plane_model --stats results/arch/hbm_mtp_next_1018/stats/summary.json [--area results/arch/hbm_mtp_next_1018/sm_area/summary.json] --out results/arch/hbm_mtp_next_1018/model  (heavy: ~60 S2 schedules, run on the fleet, ~15 min at 24 jobs)",
+ "sources_sha256": {
+  "tools/hgi_sim/hbm_plane_model.py": "5e5e3d8db4ddbae00ba2510eb210ae224f2e313de88b38191be556baf73d4386",
+  "tools/hgi_sim/ds_mtp_verify.py": "35613f56f3f93633e3c5381d2bc3b8c3123734678b038914240078a3c1dff400",
+  "tools/hgi_sim/ds_mtp_draft.py": "1f686040970b8b37ab569392e8adaa051dc8e06669051cdb5f50012683498af8",
+  "tools/hgi_sim/ds_mtp_rows.py": "ccfcec14aa92cacd1bb711b338906a4e8d3e1867747e498eea06d90fd6b04912",
+  "tools/hgi_sim/d4g_price5_1018.py": "e680e506b807451746b68252c0e848e43a8ac41f12fdd41a29be0ff42912c038",
+  "tools/hgi_sim/d4g_quadrant_1017.py": "d88f006a98067585bef80fa4430fbd423f46d740b0891d0bb2d00b40d2e523fd",
+  "tools/hgi_sim/dflash.py": "bde7356ffa11a88d493f44f78463b58420232ad9254b74b8099d43c9173c9d84",
+  "tools/hgi_sim/timing.py": "b53ac4b726e0de68bd4a8c81f675a3ddabe7bf03170228debd5fcfc6839b0826",
+  "results/arch/hgi_programs_20261010/inputs/ds_rank0_program.json": "e888a21dddef6881120d1c232174a67a0c2c53a205873f33000d989577376bef",
+  "results/arch/hbm_plan_study_1017/stages.json": "9aaf96e45fbcb920cb2c95ce35412daaccc96ec492494236d0e744a63d380f6a",
+  "results/arch/hbm_d4g_price_1017/latency_ledger.json": "0c1a6a28509ea7d87830678ce09f1353e76a9d2a5a98be7ec77400badd272ead",
+  "results/hbm_sm_attention_1015/b_measured_model.json": "91d8065138f31e20629bcb3397b3343991bbeb65aabe47b7e05d3e25f82aa5e3",
+  "results/arch/hbm_mtp_1015/draft_rows/draft_bodies.json": "b627d23af85bcc223be0d72fbd917ee523f0410ce22b977ce29ae5def21a4fbf",
+  "results/arch/hbm_mtp_1015/p6_rtl_2330/measurement.json": "818ce8b1bc7e38f4429f0c38db0bf8636c694032bbff283205eb85de23c3fd25",
+  "results/arch/hbm_d4g_price_1017/price5/summary.json": "f98c349298016149bae07a68095a37c35374c466ac8f7c45984a662bcee4ec5d"
+ }
+}

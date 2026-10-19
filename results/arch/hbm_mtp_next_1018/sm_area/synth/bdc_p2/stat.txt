@@ -1,0 +1,58 @@
+
+10. Printing statistics.
+
+=== ot_hbm_sm_bdc_p ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+   111247        - wires
+   111247        - wire bits
+    31827        - public wires
+    31827        - public wire bits
+     1700        - ports
+     1700        - port bits
+   101470 1.36E+04 cells
+     6943  607.374   AND2x2_ASAP7_75t_R
+     3949  345.459   AND3x1_ASAP7_75t_R
+     1012  103.285   AND4x1_ASAP7_75t_R
+      177   20.645   AND5x1_ASAP7_75t_R
+        6      1.4   AO211x2_ASAP7_75t_R
+     9125  798.255   AO21x1_ASAP7_75t_R
+      112    16.33   AO221x1_ASAP7_75t_R
+        9    1.575   AO222x2_ASAP7_75t_R
+       84   11.022   AO22x1_ASAP7_75t_R
+        2    0.467   AO31x2_ASAP7_75t_R
+      316   36.858   AO32x1_ASAP7_75t_R
+        3    0.437   AO33x2_ASAP7_75t_R
+        8      1.4   AOI211x1_ASAP7_75t_R
+     1608  187.557   AOI21x1_ASAP7_75t_R
+      127   18.517   AOI22x1_ASAP7_75t_R
+      208   15.163   BUFx2_ASAP7_75t_R
+       88   33.359   DFFASRHQNx1_ASAP7_75t_R
+    19248 5.61E+03   DFFHQNx1_ASAP7_75t_R
+    15110  660.911   INVx1_ASAP7_75t_R
+     5081  666.729   MAJx2_ASAP7_75t_R
+     3733  326.563   NAND2x1_ASAP7_75t_R
+      246   39.453   NAND3x1_ASAP7_75t_R
+     6679  584.279   NOR2x1_ASAP7_75t_R
+      217   34.802   NOR3x1_ASAP7_75t_R
+      656   76.516   OA211x2_ASAP7_75t_R
+     5637  575.312   OA21x2_ASAP7_75t_R
+        1    0.233   OA221x2_ASAP7_75t_R
+       18    3.149   OA222x2_ASAP7_75t_R
+      405   59.049   OA22x2_ASAP7_75t_R
+       46    10.06   OA31x2_ASAP7_75t_R
+       13    1.895   OA33x2_ASAP7_75t_R
+     3208  374.181   OAI21x1_ASAP7_75t_R
+      480   69.984   OAI22x1_ASAP7_75t_R
+     2306  201.729   OR2x2_ASAP7_75t_R
+     2738   239.52   OR3x1_ASAP7_75t_R
+      960   97.978   OR4x1_ASAP7_75t_R
+       32    3.732   OR5x1_ASAP7_75t_R
+     7791 1.25E+03   XNOR2x2_ASAP7_75t_R
+     3088  495.253   XOR2x2_ASAP7_75t_R
+
+   Chip area for module '\ot_hbm_sm_bdc_p': 13582.669680
+     of which used for sequential elements: 5646.075840 (41.57%)
+
