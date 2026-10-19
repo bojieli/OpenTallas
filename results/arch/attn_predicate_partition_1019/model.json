@@ -1,0 +1,103 @@
+{
+  "verdict": "MODEL_HOLD_NOT_RTL_OR_TIMING_QUALIFICATION",
+  "exact_native_source_sha256": "ac6af21580867b0e1224c7cf7e6476309d5b036cd2ba558ad5014737fbfeddde",
+  "selected_producer_die_sha256": "18464a8b31042bea03b3fc5779d42803ab7b05bebbaab733a4d83d4a714c1ea6",
+  "producer_clock": "n_clk_core_c[0]",
+  "producer_reset": "none on q_rx_payload; preserve unreset flag cohort",
+  "producer_module": "qkd_d2d_static PR=1; q_rx_payload <= c_rx_payload",
+  "candidate": "32 upstream registered partial-zero flags; identical payload-age sideband",
+  "sideband": {
+    "bits": 32,
+    "producer_ff": 32,
+    "existing_relay_hops": 11,
+    "relay_ff": 352,
+    "receiver_landing_ff": 32,
+    "plain_ff": 416,
+    "resettable_ff": 0,
+    "clock_pins": 416,
+    "plain_master": "DFFHQNx1_ASAP7_75t_R",
+    "ff_area_floor_um2": 121.3056,
+    "producer_output_pins": 32,
+    "receiver_input_pins": 32,
+    "per_hop_bus_bits": 32,
+    "added_interface_bus_fraction": 0.058394160583941604,
+    "comb_area": null,
+    "buffer_area": null,
+    "extra_kept_copies": null,
+    "total_area": null,
+    "clock_capacitance": null,
+    "clock_tree_area": null,
+    "dynamic_power": null
+  },
+  "qualification": {
+    "added_payload_edges": 0,
+    "added_q_edges": 0,
+    "added_request_edges": 0,
+    "changed_fault_observation_edges": 0,
+    "calendar_delta_edges": 0,
+    "measured_tt_setup_ps": -569.32,
+    "measured_critical_arrival_ps": 1294.07,
+    "new_native_timing": null,
+    "native_source_equivalence": null,
+    "four_state_equivalence": null,
+    "new_pg_contacts": null,
+    "new_clock_matching": null,
+    "new_all_driver_census": null
+  },
+  "actual_selected_programmes": [
+    {
+      "case": "u1",
+      "attention_admissions": 1,
+      "relative_run_edges": [
+        0
+      ],
+      "candidate_added_edges": 0,
+      "two_stage_fallback_added_work_edges": 2
+    },
+    {
+      "case": "u4cal",
+      "attention_admissions": 8,
+      "relative_run_edges": [
+        0,
+        3283,
+        6886,
+        10169,
+        13772,
+        17055,
+        20658,
+        23941
+      ],
+      "candidate_added_edges": 0,
+      "two_stage_fallback_added_work_edges": 16
+    },
+    {
+      "case": "u4pack",
+      "attention_admissions": 4,
+      "relative_run_edges": [
+        0,
+        1816,
+        3632,
+        5448
+      ],
+      "candidate_added_edges": 0,
+      "two_stage_fallback_added_work_edges": 8
+    }
+  ],
+  "actual_full_token_admissions": null,
+  "actual_production_mu_occupancy": null,
+  "manifest": {
+    "cases_stk.txt": "d6caec64fcd32013398212158b34a37d81b05522fa5b60ba3c015dc9481daa28",
+    "selected_driver.svh": "668c9ade6662818fabaa245305f7fbd960954cfb082c5c29d8834cd4acb30f79",
+    "selected_d2d_producer.sv": "1214151aa45994195dc498fa0d1e3932b75f0004f4a6aa3e1a7a7248e4f61a80",
+    "selected_producer_path.json": "5ffd5db32f3441d08e862bf69295a6fdda52b8f1add892851eb226e64747be98"
+  },
+  "pinned_parser_sha256": "72d4c9571f4a05e2f7c4fe12f26dd716c4b5f25b0a663249b15c145366448dff",
+  "holds": [
+    "actual GEN8 producer/relay identity and lifetime match",
+    "sideband bit/cohort equality on every existing relay and reset transition",
+    "producer c_rx_payload-to-predicate path depth/load/area and physical face grants",
+    "entire receiver immediate observer and all side-cone timing after specialization",
+    "full upstream D2D safe storage/contact/native qualification",
+    "arbitrary first-use/reset and causal malformed-payload/cohort mutants"
+  ]
+}
