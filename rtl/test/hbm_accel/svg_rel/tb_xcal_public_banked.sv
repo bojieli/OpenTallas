@@ -143,7 +143,7 @@ module tb_xcal_public_banked;
    if(done_count!=1||active)begin errors=errors+1;$display("PUBLIC_COMPLETION_FAIL scenario=%0d done=%0d active=%b old_done=%0d",id,done_count,active,old_done_count);end
    if(go_count!=expected_programmes||score_completions!=expected_programmes||score_outstanding!=0)begin errors=errors+1;$display("PUBLIC_LEDGER_COUNTS_FAIL");end
    if(multi&&GAP==9&&naive_premature!=1)begin errors=errors+1;$display("PUBLIC_OLD_DONE_WITNESS_MISSING");end
-   if(multi&&GAP==11&&seen_go_done_simultaneous!=1)begin errors=errors+1;$display("PUBLIC_SIMULTANEOUS_GO_DONE_MISSING");end
+   if(multi&&GAP==10&&seen_go_done_simultaneous!=1)begin errors=errors+1;$display("PUBLIC_SIMULTANEOUS_GO_DONE_MISSING");end
    if(multi&&last_done!=last_cal_done+3)begin errors=errors+1;$display("PUBLIC_FINAL_DONE_EDGE_FAIL final=%0d calendar=%0d",last_done,last_cal_done);end
    $display("PUBLIC_CASE scenario=%0d words=%0d/%0d first_delta=%0d done=%0d old_done=%0d go=%0d naive_early=%0d simultaneous=%0d active_gap_repairs=%0d",id,words,old_words,first_new-first_old,done_count,old_done_count,go_count,naive_premature,seen_go_done_simultaneous,active_gap_repairs);
    checking=0;

@@ -6,6 +6,7 @@ def model():
   defaults=dict(PAW=11,PREL=1,DD=256,DAW=8,CLASS_ENABLE=0,CLASS_MUT=0,MIRROR_MUT=0,MUT=0),
   roots=['clk_core','clk_bank0','clk_bank1'],reset='clone host reset chronology; bank/app own native reset landings; host/descriptor reset tree physically UNQUALIFIED',
   macros=dict(program_1024x256=2,descriptor_128x256=2,total=4,stored_bytes=73728),
+  public_pin_budget=dict(direct_inputs=555,direct_outputs=353,direct_total=908,target_inputs=332,target_outputs=354,target_total=686,extra_observation_outputs=177,observation_aliases='175 envelope plus class and valid; count every retained physical output alias'),
   replicas=dict(program_banks=2,central_app=1,cache_mirror=1,target_collar='only _t'),
   programme_bandwidth=dict(per_bank_read_bytes_per_edge=32,per_bank_write_bytes_per_edge=32,useful_command_word_bits_per_edge=173,public_envelope_bits_per_edge=175),
   boundaries=dict(request_bits_per_bank=67,row_bits_per_bank=173,word_ok_bits_per_bank=11,row_token_bits_per_bank=67,public_envelope_bits=175,full_KV_bits=64),
