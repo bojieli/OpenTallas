@@ -1,0 +1,17 @@
+{
+ "schema": "opentallas.tile_visual_review.v1",
+ "tile": "qkd_d2d_static_ovl_s1",
+ "reviewer": "coordinator",
+ "verdict": "APPROVED",
+ "time": "2026-10-19T11:39:00-07:00",
+ "gate_commit": "353123a8d",
+ "checklist": {
+  "lattice": "PASS: 4 SRAM 2x2 on 43.2, channels 44.7/51.8",
+  "std_cell_band": "PASS: std cells in channels, fill 45%",
+  "pin_spread": "PASS: full S/W faces 4.7/4.3 pins/um",
+  "clock_entry": "PASS: E-face centre; spread 57.2/52.9",
+  "shape": "PASS: 475.2x280.8 KV frame; GRT 0"
+ },
+ "notes": "KV codec2 OVL d2d",
+ "geometry_sha256": "e71bd8c966f88015c9d8915f1608f69adab8b7e4d02204a914a106898d19e133"
+}
