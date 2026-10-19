@@ -1,0 +1,16 @@
+CXDL5 LOCKSTEP runs0-1 checks3060 dw_edges2818 errors0 fault_end ref1111 hnx1111
+LAND MISMATCH run3 slice0 half1 row64 i516 seen0
+LAND MISMATCH run3 slice1 half1 row64 i517 seen0
+LAND MISMATCH run3 slice0 half0 row65 i520 seen0
+LAND MISMATCH run3 slice2 half1 row65 i526 seen0
+LAND MISMATCH run3 slice3 half1 row66 i535 seen0
+LAND MISMATCH run3 slice1 half0 row67 i537 seen0
+LAND MISMATCH run3 slice2 half0 row67 i538 seen0
+RUN3 missing256 fault1111
+CXDL5_CALENDAR F640 M160 X32 L4_last_serial_edge167 L5_last_serial_edge135 speedup1.237 missing256
+CXDL5 FAIL errors129 checks3060 lockn2818 t4 167 t5 135 collision_fault1
+- rtl/hbm_next/coll/tb/tb_hnx_su_cxdl5.sv:161: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 6us; walltime 0.025 s; speed 239.919 us/s
+- Verilator: cpu 0.012 s on 1 threads; allocated 7 MB
+RUN_RC=0
