@@ -83,10 +83,19 @@ DOMSPLIT = os.environ.get('OT_KV_DOMSPLIT', '0') == '1'
 DOMSPLIT_DIR = 'results/arch/qwen_kv_domsplit_1019'
 DOMSPLIT_TABLE = DOMSPLIT_DIR + '/producer_domains.json'
 LVL_LAND_RTL = 'rtl/qwen_sys/static_kv_20261014/qkd_kv_lvl_land.sv'
+# KV-PC 10-19 (OT_KV_PC_RLAND=1; default off: every existing tile file unchanged; suffix '_rl'): the PC kit tiles
+# (pc / pc_h, KIT_KINDS) land each reset input at the face in 2 registered stages ON ITS OWN DOMAIN before any fanout
+# (safe-design item 1; textbook.reset_landing): rst_n -> ot_reset_sync on ck (u_rland_ck), hrst_n -> ot_reset_sync on
+# hck (u_rland_hck); every child reset pin then takes the landed net.  The flow's OT_RST_LAND lands all resets on ONE
+# clock (it would move the hck reset release onto ck), so the landing is RTL.  Cost: reset release +2 ck / +2 hck edges
+# in the PC tiles only (boot-time; no token-schedule edge).  The die GEN must use the same flag (tile text = kit text).
+PC_RLAND = os.environ.get('OT_KV_PC_RLAND', '0') == '1'
+PC_RLAND_KINDS = ('pc', 'pc_h')
+RESET_SYNC_RTL = 'rtl/lib/ot_reset_sync.sv'
 RTL_FILE = ('rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles' + ('_hroot' if HROOT else '') + ('_ff' if FANFOLD else '') +
             ('_ep' if os.environ.get('OT_KV_ECTL_PAIR', '0') == '1' else '') + ('_k' if KITS else '') +
             ('_mu' if os.environ.get('OT_KV_MU', '0') == '1' else '') +   # MU-ADOPT-KV 10-19 (kv_static.MU)
-            ('_ds' if DOMSPLIT else '') + '.sv')
+            ('_ds' if DOMSPLIT else '') + ('_rl' if PC_RLAND else '') + '.sv')
 AGES = 'results/arch/qwen_kv_static_programme_1017/die_ages.json'
 STACKS = ('WS', 'WN', 'ES', 'EN')
 ORDER = (4, 5, 0, 1, 2, 3, 6, 7)          # kv_static.template: group g holds PCs 4 * ORDER.index(g) + q
@@ -965,7 +974,35 @@ def module_text(t, name):
             L.append(f'    assign {pn} = {v["expr"]};')
     L.append('endmodule')
     txt = '\n'.join(L) + '\n'
+    if PC_RLAND and KITS and t['kind'] in PC_RLAND_KINDS:
+        txt = pc_rland_text(txt)
     return txt
+
+
+def pc_rland_text(txt):
+    """OT_KV_PC_RLAND: land rst_n (on ck) and hrst_n (on hck) of ONE generated PC kit module in 2 registered stages
+    (ot_reset_sync) and hand every child reset pin the landed net.  Pure text rewrite of module_text's output, so a
+    committed tile file can be re-derived exactly (test_kv_pc_rland.py)."""
+    lines = txt.split('\n')
+    hdr_end = next(i for i, l in enumerate(lines) if l == ');')
+    head = '\n'.join(lines[:hdr_end])
+    for p_ in ('ck', 'hck', 'rst_n', 'hrst_n'):
+        if not re.search(rf'\b(input) wire {p_}\b', head):
+            raise ValueError(f'kv_static_die PC_RLAND: PC kit module has no scalar input {p_}')
+    body = '\n'.join(lines[hdr_end + 1:])
+    if 'u_rland_ck' in body:
+        raise ValueError('kv_static_die PC_RLAND: module already landed')
+    n0 = len(re.findall(r'\((h?rst_n)\)', body))
+    body = re.sub(r'\(rst_n\)', '(w_rland__rst_n)', body)
+    body = re.sub(r'\(hrst_n\)', '(w_rland__hrst_n)', body)
+    if n0 == 0 or re.search(r'(?<![.\w])h?rst_n\b', re.sub(r'w_rland__h?rst_n', '', body)):
+        raise ValueError('kv_static_die PC_RLAND: a reset port is used outside a plain child pin connection')
+    land = ['    // KV-PC 10-19 OT_KV_PC_RLAND: each reset lands at the face in 2 registered stages on its own domain',
+            '    wire w_rland__rst_n;',
+            '    wire w_rland__hrst_n;',
+            '    ot_reset_sync #(.ASYNC_STAGES(2)) u_rland_ck (.clk(ck), .async_rst_n(rst_n), .sync_rst_n(w_rland__rst_n));',
+            '    ot_reset_sync #(.ASYNC_STAGES(2)) u_rland_hck (.clk(hck), .async_rst_n(hrst_n), .sync_rst_n(w_rland__hrst_n));']
+    return '\n'.join(lines[:hdr_end + 1] + land) + '\n' + body
 
 
 def rel(T, S):
@@ -1423,6 +1460,8 @@ def sources():
         s.update(K.MU_DEPS)
     if DOMSPLIT:
         s.add(LVL_LAND_RTL)
+    if PC_RLAND:
+        s.add(RESET_SYNC_RTL)
     return sorted(s)
 
 
