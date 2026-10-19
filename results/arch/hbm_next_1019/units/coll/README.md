@@ -165,6 +165,13 @@ The d4g COLL ISA already runs an N-row record as **one issuer loop**. The loop i
 - **Watch:** the landing pre-stage adder (+13-b roff).
 - Neither is on a critical list, and ctl_v5 is unchanged.
 
+### Closure verdicts n1 (collected 10-19 06:20, UNITS lead)
+
+- `hnx_gq_land_1019-n1-be0562a05`: **CLOSED** TT +10.38 / FF +26.08 ps, DRC 0 (SS sensitivity -337). The daemon recorded it on `codex/closure-record-hnx_gq_land_1019-n1-be0562a05` (2d4230d39). Its auto-merge to main hit a conflict in 5 tools files; that is on the daemon side.
+- `hnx_gq_issue_1019-n1-be0562a05`: **NEEDS_RTL** TT -111.78 / FF -14.47 ps, DRC 0. The worst path is `soff[13]` -> row base add -> `+ i` -> the 8:1 `rdw` select fanned to the 512 `p_d` bits: the hnx row-offset adder chain feeds a high-fanout select.
+  - **The fix is owned by lane HNX-GQ** (`claude/hnx-gq-1019` @72d501b02: GQISSUE2 class ported to the train, FF hold included), submitted as `hnx_gq_issue_1019-n2-72d501b02`.
+  - A parallel UNITS-lead fix (9042294f5) was reverted here and its job `-n2-9a3cc2166` cancelled as a duplicate.
+
 ## Next
 
 1. **Collect the two closure jobs** (pending_results). On a timing fail of gq_land, check the roff adder path first.
