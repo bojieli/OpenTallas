@@ -1,0 +1,6 @@
+CAP1_CALENDAR_COPY_INSTALL_PASS 1044 RECEIVER_COMMIT 7 b8de77b060896115 1
+CAP1_MUTANT_REJECT cap1_payload_digest_mut
+CAP1_MUTANT_REJECT cap1_clear_cap_mut
+CAP1_MUTANT_REJECT cap1_auth_digest_mut
+CAP1_MUTANT_REJECT cap1_early_execution_mut
+CAP1_MUTANT_REJECT cap1_missing_final_drain_mut

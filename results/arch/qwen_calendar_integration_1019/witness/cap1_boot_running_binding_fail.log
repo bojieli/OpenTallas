@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/qwen-calendar-integration-1019/run/cap1_install.py", line 49, in <module>
+    run('cap1_nominal',events(pw,auth)+[start],True)
+    ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch/claude/qwen-calendar-integration-1019/run/cap1_install.py", line 38, in run
+    assert r.returncode==0,r.stdout+r.stderr
+           ^^^^^^^^^^^^^^^
+AssertionError: [10480000] %Fatal: tb_qfd_dv_calendar_cap1_install.sv:72: Assertion failed in tb_qfd_dv_calendar_cap1_install: CALENDAR_RECEIVER_REJECT
+%Error: /srv/opentallas-scratch/claude/qwen-calendar-integration-1019/src/rtl/test/qwen_dv/tb_qfd_dv_calendar_cap1_install.sv:72: Verilog $stop
+Aborting...
+

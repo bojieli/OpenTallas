@@ -61,3 +61,32 @@ overlap schedule binds. In this diagnostic sweep, user0 first read is loader+96
 (range+105), including two bench driver edges after the103-edge reservation.
 Other first-owned-user read offsets732/1368/2004 include the deliberate native
 resident-bank reread sweep. Those testbench reads are not the production layer.
+
+The cap1 follow-up emits the actual25-word fused ME programme (400PW), its
+source-generated ME/XPF control rows and the cap1 footer. Only the obsolete
+SRAM-calendar interval [400,976) is cleared; the full calendar is in two ROMs.
+The input compiler checks native capability against the sole PC11 native59
+template. Source programme, complete PW metadata, ROMs, descriptor and digest
+are pinned. This does not complete the ME/XPF versus relocated SU-X namespace
+join, head/finalnorm payloads, or all physical receiver copies.
+
+The actual calendar-copy receiver passes epoch7/digestb8de77b060896115/cap1,
+observing actual calendar SRAM PW write interfaces and registered DW receipt.
+Commit1044 precedes BOOT SETID1050, INIT clear1212, LOCAL EMB1261 and all other
+command outputs. The receiver execution_active input uses a real NE32 L player,
+matching existing FACE recordport.execution_active(l_run), with l_go=ev_lay.
+Its one-END L image is a declared diagnostic component fixture, not production
+L timing. SYSFACE owner confirmed current source07174adb1 retains that binding.
+An assertion rejects any command/LOCAL pulse before receiver commitment.
+Payload digest, cap-cleared footer, wrong authorization, early L execution and
+missing final DW/drain controls all fail. No cal.running mask/BOOT hold is added.
+The failed alternative execution_active=cal.running is preserved: BOOT prefetch
+starts before the final observer drain even though its SETID output is later.
+BOOT calendar running and the source-bound execution_active signal are distinct.
+
+The current1009-entry capsule leaves14 entries under the1023-entry ABI ceiling.
+Future lifecycle/production commands must be counted again and fail closed if
+they exceed capacity. Source phase, all ME/XPF receiver copies, actual head,
+global programme/stream allocation, full F16 admission and physical closure
+are open. production_bound remainsfalse. INIT FIRST800/CNT67 is still only
+this capsule's exported range; public F16 timing and CTLM defaults are unchanged.

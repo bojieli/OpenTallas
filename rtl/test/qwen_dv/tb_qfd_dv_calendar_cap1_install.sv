@@ -1,0 +1,116 @@
+`timescale 1ns/1ps
+// MU-QWEN-SEQ bench harness (2026-10-18): qfd_dv_cmd_cal_mu (NU playheads), optionally in LOCKSTEP with the unmodified
+// qfd_dv_cmd_cal (NU must be 1: every output compared on every edge).  Driven by an event file (+EV, sorted
+// "cycle kind hex", applied before posedge `cycle`):
+//   0 PW {addr 10, data 64}   1 DW {addr 3, data 64}   2 START {user 2, stage 6} (start high for that one edge)
+// Log (+LOG), label = the posedge just taken:
+//   "c CMD u hex" (cmd != 0), "c SUI u pidx", "c XCI u", "c EMB u", "c SEG u base", "c DONE u", "c FAULT code" (rise),
+//   "c MISMATCH" (lockstep), and at the end "c END fault code mismatches".
+module tb_qfd_dv_calendar_cap1_install;
+    parameter integer NU = 1, MUT = 0, LOCKSTEP = 0, UVM_STRIDE = 16384, PIDX_STRIDE = 64, BOUNDARY_RELOC = 0, CALENDAR_ROM = 1, CTX_DW = 1;
+    localparam integer UB = (NU > 1) ? $clog2(NU) : 1;
+    reg ck = 1'b0;
+    always #5 ck = ~ck;
+    reg rst_n = 1'b0;
+    reg pw_v = 0, dw_v = 0, start = 0; reg [9:0] pw_addr = 0; reg [63:0] pw_data = 0, dw_data = 0; reg [2:0] dw_addr = 0;
+    reg start_rng=0; reg[9:0] start_first=0,start_cnt=0;
+    reg [5:0] stage = 0; reg [UB-1:0] start_user = 0;
+    wire [115:0] cmd; wire [UB-1:0] cmd_user, done_user; wire loc_emb, loc_seg, su_issue, xc_issue, image_ready, running, done, fault;
+    wire [1087:0] tl, r_tl;
+    wire [11:0] loc_base; wire [8:0] su_pidx; wire [75:0] pobs; wire [68:0] dobs; wire [NU-1:0] running_u; wire [5:0] fcode;
+    qfd_dv_cmd_cal_mu #(.MUT(MUT), .NU(NU), .CALENDAR_ROM(CALENDAR_ROM), .CTX_DW(CTX_DW), .BOUNDARY_RELOC(BOUNDARY_RELOC), .UVM_STRIDE(UVM_STRIDE), .PIDX_STRIDE(PIDX_STRIDE)) dut (.ck(ck), .rst_n(rst_n),
+        .pw_v(pw_v), .pw_addr(pw_addr), .pw_data(pw_data), .dw_v(dw_v), .dw_addr(dw_addr), .dw_data(dw_data),
+        .start(start), .stage(stage), .start_user(start_user), .start_rng(start_rng), .start_first(start_first), .start_cnt(start_cnt), .cmd(cmd), .tl(tl), .cmd_user(cmd_user), .loc_emb(loc_emb),
+        .loc_seg(loc_seg), .loc_base(loc_base), .su_issue(su_issue), .su_pidx(su_pidx), .xc_issue(xc_issue),
+        .program_obs(pobs), .descriptor_obs(dobs), .image_ready(image_ready), .running(running), .running_u(running_u),
+        .done(done), .done_user(done_user), .fault(fault), .fault_code(fcode));
+    // Existing FACE binding is receiver.execution_active(l_run), where
+    // l_go=ev_lay. This real L player has a diagnostic one-END fixture;
+    // no production L image/timing is claimed.
+    reg l_cfg=0;reg[31:0]l_cfg_data=0;wire l_run,l_fault;
+    ot_qwen_d2d_cal #(.NE(32)) u_cal_l(.ck(ck),.rst_n(rst_n),
+      .cfg_we(l_cfg),.cfg_addr(6'd0),.cfg_data(l_cfg_data),
+      .start(start && stage>0 && stage<37),.start_seg(1'b0),.halt(1'b0),
+      .ev_v(),.ev_port(),.ev_kind(),.ev_beat(),.running(l_run),.fault(l_fault));
+    reg begin_v=0,auth_v=0;reg[63:0]auth_digest=0;
+    wire receiver_commit,receiver_ready,receiver_fault,installed_cap;
+    wire[15:0]receiver_epoch;wire[63:0]receiver_digest;
+    qkd_program_commit receiver(.ck(ck),.rst_n(rst_n),.execution_active(l_run),
+      .control_stores_ready(image_ready),.begin_v(begin_v),.begin_epoch(16'd7),
+      .expected_pw(11'd1024),.expected_dw(4'd8),.auth_v(auth_v),.auth_epoch(16'd7),.auth_digest(auth_digest),
+      .pw_v(pobs[75]),.pw_full_word(pobs[74]),.pw_addr(pobs[73:64]),.pw_data(pobs[63:0]),
+      .dw_v(dobs[68]),.dw_full_word(dobs[67]),.dw_addr(dobs[66:64]),.dw_data(dobs[63:0]),
+      .commit_v(receiver_commit),.ready(receiver_ready),.fault(receiver_fault),
+      .installed_fusedcap(installed_cap),.commit_epoch(receiver_epoch),.commit_digest(receiver_digest));
+    // ---------------- reference: the unmodified calendar (lockstep at NU = 1)
+    wire [115:0] r_cmd; wire r_emb, r_seg, r_sui, r_xci, r_ir, r_run, r_done, r_fault; wire [11:0] r_base; wire [8:0] r_pidx;
+    wire [75:0] r_pobs; wire [68:0] r_dobs;
+    generate if (LOCKSTEP != 0) begin : g_ref
+        qfd_dv_cmd_cal u_ref (.ck(ck), .rst_n(rst_n), .pw_v(pw_v), .pw_addr(pw_addr), .pw_data(pw_data), .dw_v(dw_v),
+            .dw_addr(dw_addr), .dw_data(dw_data), .start(start), .stage(stage), .cmd(r_cmd), .tl(r_tl), .loc_emb(r_emb),
+            .loc_seg(r_seg), .loc_base(r_base), .su_issue(r_sui), .su_pidx(r_pidx), .xc_issue(r_xci),
+            .program_obs(r_pobs), .descriptor_obs(r_dobs), .image_ready(r_ir), .running(r_run), .done(r_done),
+            .fault(r_fault));
+    end endgenerate
+    integer fd, lg, cyc, ncyc, ec, ek, r, pre = 0, mism = 0;
+    reg [127:0] ev; reg have; reg [1023:0] evf, lgf; reg flt_l = 0;
+    initial begin
+        if (!$value$plusargs("EV=%s", evf)) $fatal(1, "+EV");
+        if (!$value$plusargs("LOG=%s", lgf)) $fatal(1, "+LOG");
+        if (!$value$plusargs("NCYC=%d", ncyc)) ncyc = 4000;
+        fd = $fopen(evf, "r"); lg = $fopen(lgf, "w"); cyc = 0;
+        r = $fscanf(fd, "%d %d %h\n", ec, ek, ev); have = (r == 3);
+    end
+    always @(negedge ck) begin
+        if (pre < 4) begin pre = pre + 1; if (pre == 4) rst_n = 1'b1; end
+        else begin
+            if (cmd != 116'd0) $fdisplay(lg, "%0d CMD %0d %h", cyc, cmd_user, cmd);
+            if (su_issue) $fdisplay(lg, "%0d SUI %0d %h", cyc, cmd_user, su_pidx);
+            if (xc_issue) $fdisplay(lg, "%0d XCI %0d", cyc, cmd_user);
+            if (tl != 1088'd0) $fdisplay(lg, "%0d TL %0d %h", cyc, cmd_user, tl);
+            if (loc_emb) $fdisplay(lg, "%0d EMB %0d", cyc, cmd_user);
+            if (loc_seg) $fdisplay(lg, "%0d SEG %0d %h", cyc, cmd_user, loc_base);
+            if (done) $fdisplay(lg, "%0d DONE %0d", cyc, done_user);
+            if (fault && !flt_l) $fdisplay(lg, "%0d FAULT %b", cyc, fcode);
+            flt_l = fault;
+            if(receiver_commit)begin
+                $fdisplay(lg,"%0d RECEIVER_COMMIT %0d %h %0d",cyc,receiver_epoch,receiver_digest,installed_cap);
+                if(!installed_cap)$fatal(1,"CALENDAR_RECEIVER_CAP1_REQUIRED");
+            end
+            if(l_fault)$fatal(1,"L_PLAYER_FAULT");
+            if(receiver_fault)$fatal(1,"CALENDAR_RECEIVER_REJECT");
+            if((cmd!=0||loc_emb||loc_seg||su_issue||xc_issue)&&!receiver_ready)
+                $fatal(1,"CALENDAR_ENGINE_BEFORE_COMMIT");
+            if (LOCKSTEP != 0) begin
+                if ({tl, cmd, loc_emb, loc_seg, loc_base, su_issue, su_pidx, xc_issue, pobs, dobs, image_ready, running, done, fault} !==
+                    {r_tl, r_cmd, r_emb, r_seg, r_base, r_sui, r_pidx, r_xci, r_pobs, r_dobs, r_ir, r_run, r_done, r_fault}) begin
+                    mism = mism + 1;
+                    if (mism <= 20) $fdisplay(lg, "%0d MISMATCH", cyc);
+                end
+            end
+            // inputs for the next posedge (cyc + 1)
+            pw_v = 1'b0; dw_v = 1'b0; start = 1'b0; start_rng=0; begin_v=0;auth_v=0;l_cfg=0;
+            while (have && ec == cyc + 1) begin
+                case (ek)
+                    0: begin pw_v = 1'b1; pw_addr = ev[73:64]; pw_data = ev[63:0]; end
+                    1: begin dw_v = 1'b1; dw_addr = ev[66:64]; dw_data = ev[63:0]; end
+                    2: begin start = 1'b1; stage = ev[5:0]; start_user = UB'(ev[7:6]); end
+                    3: begin start=1;start_rng=1;stage=ev[5:0];start_user=UB'(ev[7:6]);start_first=ev[17:8];start_cnt=ev[27:18];end
+                    4: begin begin_v=1;end
+                    5: begin auth_v=1;auth_digest=ev[63:0];end
+                    6: begin l_cfg=1;l_cfg_data=ev[31:0];end
+                    default: $fatal(1, "bad kind %0d", ek);
+                endcase
+                r = $fscanf(fd, "%d %d %h\n", ec, ek, ev); have = (r == 3);
+            end
+            if (have && ec <= cyc) $fatal(1, "event file not sorted at cycle %0d", ec);
+            cyc = cyc + 1;
+            if (cyc >= ncyc) begin
+                if(!receiver_ready||!installed_cap||receiver_epoch!=7)$fatal(1,"CALENDAR_RECEIVER_NOT_COMMITTED");
+                $fdisplay(lg, "%0d END %0d %b %0d", cyc, fault, fcode, mism);
+                $fclose(lg);
+                $finish;
+            end
+        end
+    end
+endmodule

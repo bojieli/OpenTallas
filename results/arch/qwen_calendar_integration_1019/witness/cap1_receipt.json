@@ -1,0 +1,24 @@
+{
+  "schema": "opentallas.qwen.calendar-copy-cap1-install.v1",
+  "source": {
+    "lowerer_sha256": "86dd4262c4b779ded8d007ece3261bc98c2af557afb2b84f68c83166fec490c9",
+    "programme_sha256": "cc5bc8fc17d4068ac9a49e8bf79f34e74350d56d114dd7fe5cde433d2ac82796",
+    "metadata_pw_sha256": "a3ee4a0eb1774e3c2dc00ee1bbedb21e723211758e7529bc8466284829d8c07d",
+    "metadata_words": 25,
+    "native_capability": true,
+    "phase_manifest_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "production_bound": false,
+    "embed_word0_parameter": 300,
+    "head_word0_parameter": 300,
+    "prefix_pw_sha256": "84bba13453c3547be994e66ee3488468c0b82e8d2a8d840cd327e473a0a20216",
+    "prefix_dw_sha256": "5cd6fb2fc743bd6c5b2773233077254c03b5a278d8ce679b3e7de7c7e6c80928",
+    "cap1_metadata_source": true,
+    "cap1_production": false,
+    "reason": "source-lowered body; provider phase and head/finalnorm payload unbound"
+  },
+  "authorized_digest": "b8de77b060896115",
+  "entries": 1009,
+  "metadata_words": 25,
+  "scope": "actual cal_mu macro-observed calendar PW/DW copy only; real L-player execution_active binding matching existing FACE; diagnostic one-END L image; ME/XPF sink acceptance and production phase unbound",
+  "production_bound": false
+}
