@@ -27,7 +27,9 @@ module ot_pl_land_w #(
     reg            rq;
     reg [AW:0]     wc;
     reg [W-1:0]    b [0:D-1];
+`ifndef SYNTHESIS
     reg [AW:0]     e [0:D-1];
+`endif
     reg [D-1:0]    v;
     always @(posedge ck) rq <= rsi;
     always @(posedge ck)
@@ -38,9 +40,14 @@ module ot_pl_land_w #(
         else     v[wc[AW-1:0]] <= 1'b1;
     genvar s;
     generate for (s = 0; s < D; s = s + 1) begin : g_slot
-        always @(posedge ck) if (rq && wc[AW-1:0] == s) begin b[s] <= i; e[s] <= wc; end
+        always @(posedge ck) if (rq && wc[AW-1:0] == s) b[s] <= i;
         assign bank[s*W +: W] = b[s];
+`ifndef SYNTHESIS
+        always @(posedge ck) if (rq && wc[AW-1:0] == s) e[s] <= wc;
         assign epo[s*(AW+1) +: AW+1] = e[s];
+`else
+        assign epo[s*(AW+1) +: AW+1] = 0;
+`endif
     end endgenerate
     assign vld = v;
 `ifndef SYNTHESIS
@@ -165,24 +172,33 @@ module ot_pl_land_local_w #(
     output wire [D-1:0] vld
 );
     reg rq;
+`ifndef SYNTHESIS
     reg [AW:0] wc;
+`endif
     (* keep *) reg [D-1:0] write_oh;
     reg [D-1:0] valid;
     reg [W-1:0] data [0:D-1];
+`ifndef SYNTHESIS
     reg [AW:0] epoch [0:D-1];
+    always @(posedge ck) if (!rq) wc <= 0; else wc <= wc + 1'b1;
+`endif
     always @(posedge ck) rq <= rsi;
     always @(posedge ck)
-        if (!rq) begin wc <= 0; write_oh <= {{(D-1){1'b0}},1'b1}; valid <= 0; end
+        if (!rq) begin write_oh <= {{(D-1){1'b0}},1'b1}; valid <= 0; end
         else begin
-            wc <= wc + 1'b1;
             write_oh <= {write_oh[D-2:0], write_oh[D-1]};
             valid <= valid | write_oh;
         end
     genvar s;
     generate for (s=0;s<D;s=s+1) begin:g_slot
-        always @(posedge ck) if (rq && write_oh[s]) begin data[s] <= i; epoch[s] <= wc; end
+        always @(posedge ck) if (rq && write_oh[s]) data[s] <= i;
         assign bank[s*W+:W] = data[s];
+`ifndef SYNTHESIS
+        always @(posedge ck) if (rq && write_oh[s]) epoch[s] <= wc;
         assign epo[s*(AW+1)+:AW+1] = epoch[s];
+`else
+        assign epo[s*(AW+1)+:AW+1] = 0;
+`endif
     end endgenerate
     assign vld = valid;
 endmodule

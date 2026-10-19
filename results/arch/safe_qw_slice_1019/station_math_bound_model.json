@@ -65,7 +65,7 @@
     "metadata_added_edges": 0,
     "valid_shadow_pipeline_rule": "technical lead classification pending; no physical qualification"
   },
-  "revision": "R7 data-only kernels with finite holding rings",
+  "revision": "R9 actual-state synthesis after assertion-only epoch removal",
   "ADD_LAT": 7,
   "SCALE_LAT": 6,
   "DRST": 0,
@@ -98,5 +98,12 @@
   "R8_actual_primitive_cells": 432074,
   "R8_actual_added_prefix_boundary_flops": 94,
   "R8_max_driven_data_control_loads": 32,
-  "R8_ghost_assertion_epoch_flops": 9900
+  "R8_ghost_assertion_epoch_flops": 9900,
+  "R9_actual_station_flops": 76682,
+  "R9_actual_functional_generic_cells": 413104,
+  "R9_actual_ff_removed": 12375,
+  "R9_no_direct_unread_ff": true,
+  "R9_all_ff_in_functional_boundary_cones": true,
+  "R9_max_driven_data_control_loads": 32,
+  "R9_native_qualification": "Generic fanout/liveness PASS; mapped area/native TT/FF/CTS/physical pending"
 }
