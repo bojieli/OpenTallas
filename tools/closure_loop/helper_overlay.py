@@ -116,6 +116,14 @@ def compare_plans(frozen, effective):
 # the strict guard.  (s81net_sstn_e0c0sinf-n6-790b63257: frozen ba24e51 pre-3c31fb285, fleet/main 8c1b35bb.)
 FLEET_RUN = ("tools/closure_loop/tt_overlay.py",)
 
+# POST-ROUTE PUBLISH HELPERS (RLYH0-NE 2026-10-19): the view exporter runs only in collect / re-export, after the
+# route's verdict, and never changes routed geometry or timing (its sessions are checked against the verdict).  It is
+# the loop's publish step (EXPORT-SDC: every collect runs the loop's copy), so a fix there must reach routes already
+# closed: qfwd_rlyh0_128_ne_65x30-f1-fc2236d82 lost a CLOSED result to the default abstract's merged pin-column OBS
+# and its frozen exporter would replay the same failure on every re-collect.  Same rule as FLEET_RUN: drift sanctioned
+# only to exactly origin/main's blob from an earlier main revision; the current bytes ship.
+PUBLISH_ONLY = ("tools/tt_views/view_export.py",)
+
 
 # LINT-ONLY HELPERS (ROOT 2026-10-16 URGENT, 9 jobs NEEDS_HUMAN after 2c5779073 added the native_capture CLOSED-STANDS kind):
 # textbook_lint.py holds lint/gate constants and rule text; it never changes routed geometry or timing.  A frozen plan
@@ -514,14 +522,15 @@ def compare_plans_sanctioned(frozen, effective, repo, head=None):
                                        frozen_sha256=o["sha256"], current_git_blob=n["git_blob"],
                                        current_sha256=n["sha256"], origin_main=head))
                 continue
-        if rel not in FLEET_RUN or o is None or n is None or not head:
+        if rel not in FLEET_RUN + PUBLISH_ONLY or o is None or n is None or not head:
             return False, f"effective route helper drift: {rel} (frozen {o}, current {n})", []
         p = subprocess.run(["git", "-C", str(repo), "rev-parse", f"{head}:{rel}"], capture_output=True, text=True, timeout=60)
         tip = p.stdout.strip() if not p.returncode else None
         if n["git_blob"] != tip or o["mode"] != n["mode"] or o["git_blob"] not in _main_blobs(repo, head, rel):
             return False, (f"effective route helper drift: {rel} (frozen {o}, current {n}; fleet-run path, but current is "
                            f"not origin/main {str(tip)[:9]} or frozen is not an earlier main revision)"), []
-        sanctioned.append(dict(path=rel, kind="fleet_run", frozen_git_blob=o["git_blob"], frozen_sha256=o["sha256"],
+        sanctioned.append(dict(path=rel, kind="publish" if rel in PUBLISH_ONLY else "fleet_run",
+                               frozen_git_blob=o["git_blob"], frozen_sha256=o["sha256"],
                                current_git_blob=n["git_blob"], current_sha256=n["sha256"], origin_main=head))
     return True, "helper bytes match the frozen plan except sanctioned fleet-run / lint-only paths", sanctioned
 
@@ -633,6 +642,9 @@ def stored_frozen_payloads(store, plan, only=None):
 
 
 UNCOMMITTED_RESOLUTIONS = ("daemon_only", "not_on_main", "no_git")
+# rows whose bytes come from the content store on a reinstall: uncommitted at freeze, or a PUBLISH_ONLY row refreshed
+# to a later origin/main blob on an installed run (closure_loop._publish_refresh; the plan keeps its original origin tree)
+STORE_RESOLUTIONS = UNCOMMITTED_RESOLUTIONS + ("publish_refresh",)
 
 
 def recover_frozen_payloads(repo, store, plan):
@@ -645,7 +657,7 @@ def recover_frozen_payloads(repo, store, plan):
     """
     rows = frozen_rows(plan)
     resolution = {f.get("path"): f.get("resolution") for f in plan.get("files", []) if isinstance(f, dict)}
-    loose = {r["path"] for r in rows if resolution.get(r["path"]) in UNCOMMITTED_RESOLUTIONS}
+    loose = {r["path"] for r in rows if resolution.get(r["path"]) in STORE_RESOLUTIONS}
     if not loose:
         return committed_frozen_payloads(repo, plan), "committed_origin"
     if store is None:
@@ -684,6 +696,43 @@ def verify_installed_plan(directory, plan):
             raise ValueError(f"original helper bytes mismatch: {row['path']}")
     return {"status": "verified_original", "origin_main": plan["origin_main"],
             "content_sha256": plan["content_sha256"], "files": len(rows)}
+
+
+def publish_only_pair(a, b):
+    """True when plans a and b (both self-consistent) differ ONLY in PUBLISH_ONLY rows of the same mode: one is a
+    publish refresh of the other (closure_loop._publish_refresh)."""
+    try:
+        ra = {r["path"]: r for r in frozen_rows(a)}
+        rb = {r["path"]: r for r in frozen_rows(b)}
+    except ValueError:
+        return False
+    if set(ra) != set(rb) or a.get("origin_main") != b.get("origin_main"):
+        return False
+    diff = [p for p in ra if ra[p] != rb[p]]
+    return bool(diff) and all(p in PUBLISH_ONLY and ra[p]["mode"] == rb[p]["mode"] for p in diff)
+
+
+def installed_plan_receipt(directory, plan):
+    """verify_installed_plan, except that an installed sidecar which is a PUBLISH_ONLY refresh of the job's plan (or the
+    reverse) is verified on its own rows and returned as receipt["installed_plan"] for the caller to sanction and adopt.
+
+    QXPQ-UNSTICK 2026-10-19: a publish refresh rewrites cl/ (view_export.py + sidecar) on the host BEFORE the daemon saves
+    the job; the daemon restarted at 06:25 between the two, so dsrom-qelem-qs5f-ob2-tc-hm25-cl-4b2f835cb kept the old plan
+    while its routed run held the refreshed one, and every later step failed 'sidecar differs' -> NEEDS_HUMAN."""
+    try:
+        return verify_installed_plan(directory, plan)
+    except ValueError as ex:
+        if "sidecar differs" not in str(ex):
+            raise
+        sidecar = Path(directory) / "helper_overlay_plan.json"
+        try:
+            installed = json.loads(sidecar.read_text())
+        except (OSError, ValueError):
+            raise ex
+        if not publish_only_pair(plan, installed):
+            raise
+        receipt = verify_installed_plan(directory, installed)
+        return dict(receipt, installed_plan=installed, sidecar_mismatch="publish_only")
 
 
 def verify_staged_helpers(directory, plan, paths):

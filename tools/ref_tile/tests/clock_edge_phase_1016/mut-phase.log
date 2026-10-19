@@ -1,0 +1,103 @@
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 4_1_cts cts
+Running cts.tcl, stage 4_1_cts
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_db /work/results/asap7/opentallas_dsfd_vm_wfc_fault_bridge_asap7_ref_gate/base/3_place.odb
+read_sdc -mode ss /work/results/asap7/opentallas_dsfd_vm_wfc_fault_bridge_asap7_ref_gate/base/3_place.sdc
+read_sdc -mode ff /work/results/asap7/opentallas_dsfd_vm_wfc_fault_bridge_asap7_ref_gate/base/3_place.sdc
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_dsfd_vm_wfc_fault_bridge_asap7_ref_gate/base/3_place.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+source /work/hooks/pre_cts_ot_cts_fix.tcl
+clock_tree_synthesis -sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.75
+OT_CG_PUSHDOWN total gates=0 clones=0 K=48 MIN=64
+OT_MACRO_CTS skipped: 0 clocked macro(s)
+[INFO CTS-0050] Root buffer is BUFx8_ASAP7_75t_R.
+[INFO CTS-0051] Sink buffer is BUFx16f_ASAP7_75t_R.
+[INFO CTS-0052] The following clock buffers will be used for CTS:
+                    BUFx10_ASAP7_75t_R
+                    BUFx16f_ASAP7_75t_R
+[INFO CTS-0049] Characterization buffer is BUFx16f_ASAP7_75t_R.
+[INFO CTS-0001] Running TritonCTS with user-specified clock roots: ck_t ck_s.
+[INFO CTS-0095] Net "ck_s" found.
+[INFO CTS-0010]  Clock net "ck_s" has 10 sinks.
+[INFO CTS-0095] Net "ck_t" found.
+[INFO CTS-0010]  Clock net "ck_t" has 6 sinks.
+[INFO CTS-0008] TritonCTS found 2 clock nets.
+[INFO CTS-0097] Characterization used 2 buffer(s) types.
+[INFO CTS-0201] 0 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net ck_s.
+[INFO CTS-0028]  Total number of sinks: 10.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 32 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(7123, 21778), (39595, 23625)].
+[INFO CTS-0024]  Normalized sink region: [(5.2763, 16.1319), (29.3296, 17.5)].
+[INFO CTS-0025]     Width:  24.0533.
+[INFO CTS-0026]     Height: 1.3681.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 5
+    Sub-region size: 12.0267 X 1.3681
+[INFO CTS-0034]     Segment length (rounded): 6.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (162.640 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 10.
+[INFO CTS-0201] 0 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net ck_t.
+[INFO CTS-0028]  Total number of sinks: 6.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 32 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(3064, 19078), (4774, 20881)].
+[INFO CTS-0024]  Normalized sink region: [(2.26963, 14.1319), (3.5363, 15.4674)].
+[INFO CTS-0025]     Width:  1.2667.
+[INFO CTS-0026]     Height: 1.3356.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 3
+    Sub-region size: 1.2667 X 0.6678
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (162.640 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 6.
+[INFO CTS-0018]     Created 3 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 2.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 2.
+[INFO CTS-0015]     Created 3 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 4:1, 6:1..
+[INFO CTS-0017]     Max level of the clock tree: 1.
+[INFO CTS-0018]     Created 3 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 2.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 2.
+[INFO CTS-0015]     Created 3 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 3:2..
+[INFO CTS-0017]     Max level of the clock tree: 1.
+[INFO CTS-0098] Clock net "ck_s"
+[INFO CTS-0099]  Sinks 11
+[INFO CTS-0100]  Leaf buffers 0
+[INFO CTS-0101]  Average sink wire length 36.90 um
+[INFO CTS-0102]  Path depth 2 - 2
+[INFO CTS-0207]  Dummy loads inserted 1
+[INFO CTS-0098] Clock net "ck_t"
+[INFO CTS-0099]  Sinks 7
+[INFO CTS-0100]  Leaf buffers 0
+[INFO CTS-0101]  Average sink wire length 7.45 um
+[INFO CTS-0102]  Path depth 2 - 2
+[INFO CTS-0207]  Dummy loads inserted 1
+[INFO CTS-0500] Runtime: 3.29s
+OT_HYBRID CTS roots ck_t ck_s; hard-child entries excluded
+OT_ENTRIES done: 0 independent hard entries, 2 glue CTS roots, 0 entry wires over 60.0 um
+EDGE_WAVEFORM ot_entry_0 0.0 3.850000040994672e-10
+EDGE_TAG core_lock$_DFF_NN0_/CLK 20 WC ^max ot_entry_0 v (clock prop) clk_src ck_t crpr_pin null arrival=438.24885562460236
+EDGE_TAG core_lock$_DFF_NN0_/CLK 17 WC vmax ot_entry_0 ^ (clock prop) clk_src ck_t crpr_pin null arrival=47.52963319705635
+Error: cts.tcl, 36 EDGE_PHASE_ASSERT: actual small-leaf negedge insertion contains source waveform phase: 438.24885562460236
+Elapsed time: 0:06.56[h:]min:sec. CPU time: user 6.36 sys 0.21 (100%). Peak memory: 349008KB.
+make[1]: *** [Makefile:548: do-4_1_cts] Error 1
+make: *** [Makefile:548: /work/results/asap7/opentallas_dsfd_vm_wfc_fault_bridge_asap7_ref_gate/base/4_1_cts.odb] Error 2

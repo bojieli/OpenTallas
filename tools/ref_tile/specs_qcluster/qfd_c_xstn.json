@@ -70,7 +70,8 @@
    "group_max": 1,
    "h": "M4",
    "v": "M3 M5"
-  }
+  },
+  "io_hold_margin_ns": 0.0
  },
  "macros": [],
  "children": [],
@@ -86,8 +87,8 @@
  },
  "structural_change": "Q-CLUSTER3 (coordinator 0de+5): qfd_c_b16_dv 8-root gates failed the clock rule (TritonCTS 1.5-1.9 ns insertion, 400-530 ps spread; spine 4.1 ns) because ~78k loose fabric flops sat at 282 stage sites over the whole cluster; the stations are hardened as small replicated tiles with their own clock pin and local tree, and the cluster clock reaches only child clock pins.",
  "job": {
-  "owner": "Claude:Q-CLUSTER3",
-  "branch": "claude/qcluster-1017",
+  "owner": "Claude:S-QSTN",
+  "branch": "claude/qstn-1018",
   "tag": "s0",
   "purpose": "qfd_c_b16_dv column station (qfd_xcst_n logic), tap on the E face (columns 0 / 2; x8 per cluster)",
   "submit": false,
@@ -99,7 +100,40 @@
     "pass_regex": "LOCKSTEP_EXIT 0",
     "threads": 8,
     "peak_ram_gb": 12
+   },
+   {
+    "name": "stn_exact",
+    "cmd": "bash tools/qwen_cluster/bench_stn.sh pass qfd_c_xstn {RUN}/stn_p",
+    "expect": "pass",
+    "pass_regex": "STN_BENCH PASS qfd_c_xstn 0 errors in 20000 cycles .*hold_loads=[1-9]",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "pass_witness": "results/rtl/qcluster_stn_1018/run_pass_qfd_c_xstn.log"
+   },
+   {
+    "name": "stn_mutant",
+    "cmd": "bash tools/qwen_cluster/bench_stn.sh mut qfd_c_xstn {RUN}/stn_m",
+    "expect": "fail",
+    "fail_regex": "STN_BENCH FAIL qfd_c_xstn [1-9]\\d* errors in 20000 cycles",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/qcluster_stn_1018/run_mut_qfd_c_xstn.log"
    }
+  ],
+  "extra_paths": [
+   "tools/qwen_cluster/bench_stn.sh",
+   "results/arch/qwen_cluster_1017/cluster_contract_dv.json",
+   "rtl/test/tb_qfd_c_stn.sv",
+   "rtl/test/qfd_c_stn_mut_tile.sv",
+   "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "results/rtl/qcluster_stn_1018"
   ]
  }
 }
