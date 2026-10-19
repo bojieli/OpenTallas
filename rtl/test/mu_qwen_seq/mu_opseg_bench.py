@@ -17,6 +17,11 @@ Cases:
   ctx_part   red (1 + 1 frames) with the boot context record loading users 1 and 3 only (mask 0b101): user 2's bank starts
              at 0 (MU-QW-DIE 10-19).
   neg_ctx    red, the context record with a bad tag: the cluster must raise op_fault on the seal edge (and load nothing).
+  d2d_ctx    red (RED_FRAMES frames) + the RUNTIME filler context (MU-DQ-BOOTCTX 10-19, coordinator 0kg; CTX_SRC 1): for users
+             1..3 one KV-die MU-slot kind-12 HOST context record (MU-KV-CTX format, TAG user = epoch[1:0]) through the REAL
+             face receiver qfd_host_native_context_rx (must accept it) and the die-top leaf qfd_mu_ctx_rx_die -> ctlm ctx_x;
+             each loads that filler's tok / pos (slot + 2 edges) while the filler is idle; the bank model follows.
+  neg_xcoll  red, a record whose load edge is the bank-write edge of a result of the SAME filler: op_fault, nothing loaded.
 Checks (PASS needs all; positive cases):
   C1 no calendar fault, no start_fault, no op_fault / leaf fault code;
   C2 latency user identity vs the NU 1 reference: user 0's CMD (cycle + word), EMB / SEG / MES, the head SU accepted
@@ -43,7 +48,10 @@ Negative cases: the named fault rises on the named edge.
 Mutants (--mut, each must FAIL): 21 range ignored (descriptor plays), 22 collision not flagged, 23 filler result into
 the next filler's bank, 24 leaf entry one edge late, 25 leaf re-anchors on every L0 start (anchor drift), 26 leaf drift
 check dropped, 27 context record never loaded (red), 28 records rotated between fillers (red), 29 record not checked
-(neg_ctx).
+(neg_ctx), 32 runtime-load same-filler rule not checked (neg_xcoll), 33 = the ctx leaf's MUT 1: record loaded into
+the wrong user (d2d_ctx).
+C8 (d2d_ctx): every record loaded (XLD log, label = slot + 1, load on slot + 2, mask = its user) and no face-receiver /
+leaf fault (RXF).
 """
 import argparse, json, os, subprocess, sys
 from pathlib import Path
@@ -65,6 +73,8 @@ RES_SKEW = 0                    # bench witness --res-skew
 NU = 4
 PRE = {u: (0x2000 + 0x111 * u, 8186 - 6 * u) for u in range(1, NU)}   # filler boot context record (tok, pos): image DW5 / DW6
 CTX = dict(mask=None, tag=O.CTX_TAG)                                   # per case (ctx_part: mask {1, 3}; neg_ctx: bad tag)
+RT = dict(recs=[])                  # d2d_ctx / neg_xcoll: runtime records [(event cycle, user, tok, pos13)]
+RT_LD = 2                           # record slot event -> bank load edge (leaf register, ctlm ctx_x pin register)
 U0 = (0x1100, 8186)
 
 
@@ -77,9 +87,12 @@ def build(work, vl, nu, opseg, mut, jobs):
     exe = d / 'Vtb_mu_opseg_dv'
     if exe.exists(): return exe
     srcs = [str(ROOT / l.strip()) for l in SRCF.read_text().split('\n') if l.strip()]
+    srcs += [str(ROOT / 'rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv'),
+             str(ROOT / 'rtl/qwen_split/mu/qfd_mu_ctx_rx.sv')]
+    dmut, lmut = (0, 1) if mut == 33 else (mut, 0)
     cmd = [vl, '--binary', '--timing', '-O2', '-j', str(jobs), '-Wno-fatal', '-Wno-lint', '-Wno-style', '-Wno-TIMESCALEMOD',
            '-Wno-WIDTHCONCAT', '--x-assign', '0', '--x-initial', '0', '--top-module', 'tb_mu_opseg_dv',
-           f'-GNU={nu}', f'-GMUT={mut}', f'-GOPSEG={opseg}', '-Mdir', str(d)] + srcs + [str(TB)]
+           f'-GNU={nu}', f'-GMUT={dmut}', f'-GOPSEG={opseg}', f'-GCTX_SRC={opseg}', f'-GLMUT={lmut}', '-Mdir', str(d)] + srcs + [str(TB)]
     d.mkdir(parents=True, exist_ok=True)
     r = subprocess.run(cmd, capture_output=True, text=True)
     (d / 'build.log').write_text(r.stdout + r.stderr)
@@ -95,7 +108,7 @@ def run(work, exe, name, events, ncyc, romdir):
     args = [str(exe), f'+EV={evf}', f'+LOG={lg}', f'+NCYC={ncyc}', f'+OT_ROM_DIR={romdir}']
     r = subprocess.run(args, capture_output=True, text=True)
     if r.returncode != 0: sys.exit(f'RUN FAILED {name}: {r.stdout[-2000:]} {r.stderr[-2000:]}')
-    out = {k: [] for k in ('cmd', 'emb', 'seg', 'mes', 'sua', 'hd', 'cst', 'dc', 'sta', 'faults', 'opf')}
+    out = {k: [] for k in ('cmd', 'emb', 'seg', 'mes', 'sua', 'hd', 'cst', 'dc', 'sta', 'faults', 'opf', 'xld', 'rxf')}
     out['end'] = None
     for ln in lg.read_text().split('\n'):
         p = ln.split()
@@ -112,6 +125,8 @@ def run(work, exe, name, events, ncyc, romdir):
         elif k == 'STA': out['sta'].append((c,) + tuple(int(x) for x in p[2:7]))
         elif k == 'FAULT': out['faults'].append((c, p[2]))
         elif k == 'OPF': out['opf'].append((c, p[2], int(p[3])))
+        elif k == 'XLD': out['xld'].append((c, int(p[2])))
+        elif k == 'RXF': out['rxf'].append((c, int(p[2]), int(p[3])))
         elif k == 'END': out['end'] = (int(p[2]), p[3], int(p[4]), int(p[5]), p[6])
     return out
 
@@ -181,7 +196,24 @@ def events_for(pb, face, res, users, ctx=True):
         ev.append((c, 2, (u << 43) | (1 << 42) | (stg << 36) | (tok << 18) | pos))
     for c, u, tok, val in res:
         if u in users: ev.append((c, 3, (u << 42) | (val << 18) | tok))
+    if ctx:
+        for c, u, tok, pos in RT['recs']:
+            ev.append((c, 4, (u << 36) | (tok << 18) | pos))
     return ev
+
+
+def rt_records(starts, res):
+    """one runtime record per filler while it is idle: midway between its 2nd and 3rd results, moved off any edge
+    within 6 of one of its starts / results (the compiler rule: a request lands while the filler is idle)"""
+    recs = []
+    for u in range(1, NU):
+        busy = sorted([c for c, uu, *_ in starts if uu == u] + [c for c, uu, tok, val in res if uu == u])
+        rs = sorted(c for c, uu, tok, val in res if uu == u)
+        c = (rs[1] + rs[2]) // 2
+        while any(abs(c + RT_LD - b) <= 6 for b in busy): c += 7
+        assert rs[1] < c < rs[2], (u, c, rs[:3])
+        recs.append((c, u, 0x10000 + 0x101 * u, 4000 + 17 * u))
+    return recs
 
 
 def check_case(name, cal, nfr, ncyc_ev, e1, e4, work, romdir, mut, fails, summ):
@@ -194,8 +226,12 @@ def check_case(name, cal, nfr, ncyc_ev, e1, e4, work, romdir, mut, fails, summ):
     # C1
     for n, r in (('solo', sol), ('mu', mu)):
         e = r['end']
-        if r['faults'] or r['opf'] or e is None or e[0] or e[2] or e[3] or e[4] != '0000':
-            fails.append(f'{name} C1 {n} faulted: cal {r["faults"][:3]} opf {r["opf"][:3]} end {e}')
+        if r['faults'] or r['opf'] or r['rxf'] or e is None or e[0] or e[2] or e[3] or e[4] != '0000':
+            fails.append(f'{name} C1 {n} faulted: cal {r["faults"][:3]} opf {r["opf"][:3]} rxf {r["rxf"][:2]} end {e}')
+    # C8 runtime records: each loaded on slot + RT_LD (XLD label = the posedge before), mask = its user
+    w8 = sorted((c + RT_LD - 1, 1 << (u - 1)) for c, u, tok, pos in RT['recs'])
+    if sorted(mu['xld']) != w8:
+        fails.append(f'{name} C8 runtime context loads {sorted(mu["xld"])[:4]} != records {w8[:4]}')
     # calibration from the reference: K = STA log cycle - event cycle, C = fire log cycle - (start log + entry time)
     sta1 = sol['sta']
     K = sta1[0][0] - S0 if sta1 else 0
@@ -232,8 +268,10 @@ def check_case(name, cal, nfr, ncyc_ev, e1, e4, work, romdir, mut, fails, summ):
             v = [x for x in flog if x[0] < c]
             return (v[-1][1], v[-1][2]) if v else (0, 0)
         tok, pos = PRE[u] if (CTX['mask'] is None or u in CTX['mask']) else (0, 0)
-        for rc, rt in rlog[u]:
-            if rc <= c: tok, pos = rt, pos + 1
+        for rc, kind, rt, rp in sorted([(rc, 0, rt, None) for rc, rt in rlog[u]] +
+                                       [(lc + RT_LD, 1, lt, lp) for lc, lu, lt, lp in RT['recs'] if lu == u]):
+            if rc <= c:
+                tok, pos = (rt, pos + 1) if kind == 0 else (rt, rp)
         return tok, pos
     w_emb = sorted((t, u, bank(u, t - 1)[0]) for t, u, k, b in w_loc if k == 'EMB' and t < end_cut)
     w_seg = sorted((t, u, b) + bank(u, t - 1) for t, u, k, b in w_loc if k == 'SEG' and t < end_cut)
@@ -302,7 +340,13 @@ def check_case(name, cal, nfr, ncyc_ev, e1, e4, work, romdir, mut, fails, summ):
 def neg_case(name, cal, e4, work, romdir, fails, summ):
     H, T = cal['H'], cal['T']
     pb, L, face, starts, res = model(cal, 1, S0 + 2 * T + 2000)
-    if name == 'neg_ctx':
+    if name == 'neg_xcoll':
+        # user 1's record loading on the bank-write edge of its own result 1 (result event r -> write edge r + 1)
+        pb, L, face, starts, res = model(cal, 2, S0 + 2 * H)
+        r1 = sorted(c for c, u, tok, val in res if u == 1)
+        RT['recs'] = [(r1[1] + 1 - RT_LD, 1, 0x10101, 4017)]
+        want_edge = r1[1] + 1
+    elif name == 'neg_ctx':
         # the context record with a bad tag: op_fault on the seal edge (DW7 event at 2 + 1024 + 7, + dh_q + seal + load)
         want_edge = 2 + 1024 + 7 + 2
     elif name == 'neg_drift':
@@ -317,15 +361,18 @@ def neg_case(name, cal, e4, work, romdir, fails, summ):
     ncyc = want_edge + 3000
     if name == 'neg_ctx':
         CTX['tag'] = O.CTX_TAG ^ 0x0100
+    if name == 'neg_xcoll':
+        ncyc = max(ncyc, RT['recs'][0][0] + 3000)
     r = run(work, e4, name, events_for(pb, face, res, set(range(NU))), ncyc, romdir)
     CTX['tag'] = O.CTX_TAG
-    if name == 'neg_ctx':
+    RT['recs'] = []
+    if name in ('neg_ctx', 'neg_xcoll'):
         hit = [x for x in r['opf'] if x[1] == '0000' and x[2] == 0]   # op_fault, no leaf code, no collision
     elif name == 'neg_drift':
         hit = [x for x in r['opf'] if x[1][2] == '1']          # op_fcode[1] (string is MSB first: [3][2][1][0])
     else:
         hit = [x for x in r['opf'] if x[1] == '0000']           # op_fault rose with no leaf fault: the collision
-    ok = bool(hit) and abs(hit[0][0] - want_edge) <= 4
+    ok = bool(hit) and abs(hit[0][0] - want_edge) <= 4 and not (name == 'neg_xcoll' and r['xld'])
     if not ok:
         fails.append(f'{name}: required fault not raised at ~{want_edge} (opf log {r["opf"][:4]})')
     summ[name] = dict(want_edge=want_edge, opf=r['opf'][:4], raised=ok)
@@ -334,7 +381,8 @@ def neg_case(name, cal, e4, work, romdir, fails, summ):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--work', required=True); ap.add_argument('--mut', type=int, default=0)
-    ap.add_argument('--cases', nargs='+', default=['red', 'ctx_part', 'neg_drift', 'neg_coll', 'neg_ctx', 'full'])
+    ap.add_argument('--cases', nargs='+', default=['red', 'ctx_part', 'd2d_ctx', 'neg_drift', 'neg_coll', 'neg_ctx',
+                                                   'neg_xcoll', 'full'])
     ap.add_argument('--full-frames', type=int, default=1)
     ap.add_argument('--verilator', default=os.environ.get('VERILATOR', 'verilator')); ap.add_argument('--jobs', type=int, default=8)
     ap.add_argument('--emb-t', type=int, default=None, help='witness: image EMB at this T (compiler assertion bypassed)')
@@ -368,6 +416,12 @@ def main():
             rd = romdir_for('red', cal)
             if case == 'red':
                 check_case('red', cal, RED_FRAMES + 1, S0 + RED_FRAMES * cal['H'] + 2000, e1, e4, work, rd, m, fails, summ)
+            elif case == 'd2d_ctx':
+                _pb, _L, _face, st_, res_ = model(cal, RED_FRAMES + 1, S0 + RED_FRAMES * cal['H'] + 2000)
+                RT['recs'] = rt_records(st_, res_)
+                summ['d2d_records'] = RT['recs']
+                check_case('d2d_ctx', cal, RED_FRAMES + 1, S0 + RED_FRAMES * cal['H'] + 2000, e1, e4, work, rd, m, fails, summ)
+                RT['recs'] = []
             elif case == 'ctx_part':
                 CTX['mask'] = {1, 3}
                 check_case('ctx_part', cal, 2, S0 + cal['H'] + 2000, e1, e4, work, rd, m, fails, summ)
