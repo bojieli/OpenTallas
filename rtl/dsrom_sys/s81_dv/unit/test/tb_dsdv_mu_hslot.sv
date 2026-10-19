@@ -115,8 +115,7 @@ module tb_dsdv_mu_hslot;
         if (COLLIDE || OFFCAL) begin
             if ((COLLIDE && mf[0]) || (OFFCAL && mf[1])) $display("MUHSLOT %s NS %0d PASS (fault raised) t_mf %b", COLLIDE ? "COLLIDE" : "OFFCAL", NS, mf);
             else $display("MUHSLOT %s NS %0d FAIL (no fault) t_mf %b", COLLIDE ? "COLLIDE" : "OFFCAL", NS, mf);
-            $finish;
-        end
+        end else begin
         ndone = 0;
         for (u = 0; u < NU; u = u + 1) begin
             if (tok_u[u] != gtok[u]) begin errs = errs + 1; $display("ERR user %0d final tok %0d != golden %0d", u, tok_u[u], gtok[u]); end
@@ -127,6 +126,7 @@ module tb_dsdv_mu_hslot;
         $display("MUHSLOT NS %0d NP %0d NU %0d RL %0d: %0d starts, %0d returns, %0d/%0d users exact, max outstanding %0d, errs %0d",
                  NS, NP, NU, RL, nst, nret, ndone, NU, (RL + S - 1) / S, errs);
         if (errs == 0) $display("MUHSLOT PASS"); else $display("MUHSLOT FAIL");
+        end
         $finish;
     end
 endmodule

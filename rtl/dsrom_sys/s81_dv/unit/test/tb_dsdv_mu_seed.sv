@@ -90,13 +90,13 @@ module tb_dsdv_mu_seed;
         if (COLLIDE) begin
             if (mf[0]) $display("MUSEED COLLIDE NU %0d PASS (fault raised) t_mf %b", NU, mf);
             else $display("MUSEED COLLIDE NU %0d FAIL (no fault) t_mf %b", NU, mf);
-            $finish;
-        end
+        end else begin
         if (mf != 3'd0) begin errs = errs + 1; $display("ERR t_mf %b", mf); end
         if (nrd != NU * (R - 1) * SW || nwr != NU * R * SW) begin errs = errs + 1; $display("ERR beats rd %0d wr %0d", nrd, nwr); end
         $display("U0 TRACE n %0d hash %h", n0, h0);
         $display("MUSEED NU %0d NUP %0d: %0d read beats, %0d write beats, errs %0d", NU, NUP, nrd, nwr, errs);
         if (errs == 0) $display("MUSEED PASS"); else $display("MUSEED FAIL");
+        end
         $finish;
     end
 endmodule
