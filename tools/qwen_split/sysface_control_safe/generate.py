@@ -8,7 +8,7 @@ No scheduling parameter is inferred. Clock fanout belongs to CTS, not this pass.
 import argparse, collections, copy, hashlib, json
 from pathlib import Path
 
-LIMIT = 24
+LIMIT = 12  # Native DFFE enable mapping can consume two input pins per abstract load.
 BUF = 'BUFx2_ASAP7_75t_R'
 FF = {'$_DFF_P_', '$_DFF_PN0_', '$_DFF_PN1_', '$_DFFE_PP_',
       '$_DFFE_PN0P_', '$_DFFE_PN0N_', '$_SDFF_PP0_', '$_SDFF_PN0_'}
