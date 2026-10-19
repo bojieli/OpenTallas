@@ -80,7 +80,7 @@
  },
  "outline": {
   "w": 259.2,
-  "h": 259.2
+  "h": 302.4
  },
  "recipe": 4,
  "clock": "cts",
@@ -96,10 +96,10 @@
    "extra": "-no_obstruction_aware"
   }
  },
- "structural_change": "S81U-GUNIT-L1 (10-17): new E-side leaf L1f of dsdv_gunit (hardened once, 4 instances, q-agnostic: q-specific enables / hits on their own wires): SC store slice (112 x fp32), bias in 2 x ot_sram_1r1w_128x256_m1_r2c2 (read one beat ahead, no added edge), 16 bias adds, key, 2 x bitonic sort8 + merge8 at two compare-exchanges per registered stage (13,564 generic flops < 15k), gather of the chosen scores. Flop-first / flop-last; no ready / credit. | S81U-GUNIT-L1b (10-17): NATIVE-2 pin rules (relayed reset, pin flops) + one-compare-deep select stages + LAT-5 bias add (+1 edge) + registered gather decode; clk / rst_n pins at the S-face centre (pin_ranges; the gate put clk at the SW corner: TT spread 132.6 ps) | PL-GULEAF (10-18): route.cts_sink extra -no_obstruction_aware (s81 gather leaf 10-14 precedent): the gate @103f9cf73 measured boundary pin-flop spread TT 278.1..391.9 ps (113.8 > 80) with the H-tree detouring around the abutted 2-SRAM stack in the tile centre | S81-GUSEQ (10-18): -no_obstruction_aware fixed the spread (gate @712ed0fe8 boundary TT 284..329 = 45 / FF 41 ps) but trial GRT overflowed 117,519 (M2 89% / M3 91% / M4 83%): synth std area 27,193 um2 in a 216 x 216 core minus the 2-SRAM stack = ~71% std util. Outline -> 259.2 x 259.2 (6 x 6 lattice; = the dsdv_gunit_lp col-B pitch, so the four L1f tiles abut with no gap) -> ~46% util; clk / rst_n stay at the S-face centre; io_hold_margin 0.025 (kit rule 10-18).",
+ "structural_change": "S81U-GUNIT-L1 (10-17): new E-side leaf L1f of dsdv_gunit (hardened once, 4 instances, q-agnostic: q-specific enables / hits on their own wires): SC store slice (112 x fp32), bias in 2 x ot_sram_1r1w_128x256_m1_r2c2 (read one beat ahead, no added edge), 16 bias adds, key, 2 x bitonic sort8 + merge8 at two compare-exchanges per registered stage (13,564 generic flops < 15k), gather of the chosen scores. Flop-first / flop-last; no ready / credit. | S81U-GUNIT-L1b (10-17): NATIVE-2 pin rules (relayed reset, pin flops) + one-compare-deep select stages + LAT-5 bias add (+1 edge) + registered gather decode; clk / rst_n pins at the S-face centre (pin_ranges; the gate put clk at the SW corner: TT spread 132.6 ps) | PL-GULEAF (10-18): route.cts_sink extra -no_obstruction_aware (s81 gather leaf 10-14 precedent): the gate @103f9cf73 measured boundary pin-flop spread TT 278.1..391.9 ps (113.8 > 80) with the H-tree detouring around the abutted 2-SRAM stack in the tile centre | S81-GUSEQ (10-18): -no_obstruction_aware fixed the spread (gate @712ed0fe8 boundary TT 284..329 = 45 / FF 41 ps) but trial GRT overflowed 117,519 (M2 89% / M3 91% / M4 83%): synth std area 27,193 um2 in a 216 x 216 core minus the 2-SRAM stack = ~71% std util. Outline -> 259.2 x 259.2 (6 x 6 lattice; = the dsdv_gunit_lp col-B pitch, so the four L1f tiles abut with no gap) -> ~46% util; clk / rst_n stay at the S-face centre; io_hold_margin 0.025 (kit rule 10-18). | variant B (S81-GUSEQ 10-18): 259.2 x 302.4 (~39% util) gated in parallel with 259.2 x 259.2; the cheaper one that clears GRT overflow 0 is submitted.",
  "job": {
   "owner": "Claude:S81U-GUNIT-L1",
-  "branch": "claude/s81u-gunit-l1-1017",
+  "branch": "claude/s81-guseq-l1fb-1018",
   "tag": "gl1",
   "purpose": "S81-DV G-unit router leaf L1F to closure (TT setup / FF hold / DRC 0 + native audit).",
   "extra_paths": [
