@@ -31,9 +31,9 @@ module tb_static_run_target;
   @(negedge clk);desc_v=0;idle(3);
   if(!configured)errors=errors+1;
   @(negedge clk);launch_v=1;@(negedge clk);launch_v=0;idle(4);
-  // An armed descriptor is consumed once. A second launch faults and must not rerun.
+  // An armed descriptor is consumed once. A second unarmed launch is ignored and must not rerun.
   @(negedge clk);launch_v=1;@(negedge clk);launch_v=0;idle(4);
-  if(aw!=1||bw!=1||runs!=1||!fault)errors=errors+1;
+  if(aw!=1||bw!=1||runs!=1||fault)errors=errors+1;
   $display("RUN_TARGET %s mut=%0d errors=%0d programme=%0d descriptor=%0d runs=%0d",errors==0?"PASS":"FAIL",MUT,errors,aw,bw,runs);
   if(errors)$fatal(1,"run target mismatch");$finish;
  end
