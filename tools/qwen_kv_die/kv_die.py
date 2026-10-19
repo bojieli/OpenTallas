@@ -1162,9 +1162,13 @@ if KSD.ASTK_ST:
     ENG_IN, ENG_OUT = 633, 413
     HEAD_CLK[:] = [c_ for c_ in HEAD_CLK if not c_.startswith(('ck_a', 'ck_b'))]
     KS.ASTK_CLK[:] = [c_ for c_ in KS.ASTK_CLK if not c_.startswith('ck_v')] + ['ck_d']
+    # KV-DCAL2 10-19 (K.STA.ECTL KPV_LOCKSTEP): OT_KV_KPV_LK=1 binds the _lk heads (u_kt = ot_qkh_ktree_lk: every lane's
+    # kpv read, lane mismatch -> lane fault, +0 cycles); needs the CLOSED ot_qkh_ktree_lk view (kv_expand.VIEWS)
+    _LK = __import__('os').environ.get('OT_KV_KPV_LK', '0') == '1'
     for _mn, _mod in (('qkd_rhead', 'ot_qkh_head_native_r4_s'), ('qkd_rhead_ft', 'ot_qkh_head_native_r4_ft_s')):
         _hb = SPLIT_BINDINGS[_mn]
-        SPLIT_BINDINGS[_mn] = dict(_hb, module=_mod, file='rtl/qwen_sys/split_20261014/ot_qkh_head_native_r4_s.sv',
+        SPLIT_BINDINGS[_mn] = dict(_hb, module=_mod + ('_lk' if _LK else ''),
+            file='rtl/qwen_sys/split_20261014/ot_qkh_head_native_r4_s' + ('_lk' if _LK else '') + '.sv',
             ports={k_: v_ for k_, v_ in _hb['ports'].items() if k_ not in ('nb', 'ck_a0', 'ck_b0')},
             sliced={k_: v_ for k_, v_ in _hb['sliced'].items() if not k_.startswith(('ck_a', 'ck_b'))})
     for _mn in ('qkd_pvw_s', 'qkd_pvw_n'):      # in_e: W stack lanes (ie) + E stack lanes (iee), 256 b each

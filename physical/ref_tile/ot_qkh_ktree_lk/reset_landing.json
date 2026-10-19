@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "ot_qkh_ktree_lk",
+ "enable": false,
+ "reason": "The RTL owns the landing: ot_rst_relay REGIONS 17 / SYNC_STAGES 2 / TREE_STAGES 1 lands rst_n in 2 registered stages and gives one kept copy per adder + one for control (closed ot_qkh_ktree structure, one copy drove 1,004 before idle1012). A flow landing would add 2 release edges."
+}
