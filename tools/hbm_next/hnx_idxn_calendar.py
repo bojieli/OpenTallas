@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
 """HBM-NEXT-UNITS-IDXN 2026-10-19: IDX.INDEX row frame + row II for ONE key stream (ot_hnx_idxn_calendar / _parent).
 
-    hnx_idxn_calendar.py OUT [--gap G] [--g2 G2] [--sel S] [--streams K] [--pitch P] [--score-chain C]
+    hnx_idxn_calendar.py OUT [--gap G] [--g2 G2] [--sel S] [--streams K] [--pitch P] [--score-chain C] [--kb-pipe B]
 
 --score-chain C (IDXQ 2026-10-19): the d4g compiler's scorer->selector chain (0 = the IDXN bench's score_static; 8 = the
 chained 16-leaf cluster; 14 = the quad form: cluster 8 + quarter pins 2 + XQ tree 4). Default 0 = unchanged output.
+--kb-pipe B (IDXQ 2026-10-19): the key buffer tile is pin-registered (ot_hnx_idxn_keybuf PR = 1: key path and the scorer's
+beat strobe + B = 2 edges). Every KEY beat (bit 28 + its index field) is issued B edges EARLIER, so the scorer core sees
+the unchanged timeline; the query-reload span uses G2 + B issue slots. Default 0 = unchanged output.
 
 Takes the d4g single-row INDEX microprogram (tools/hbm_idx_static_calendar.py compile_program, registered pins,
 UNCHANGED fields and latencies) with the head-emit -> first-key gap G (d4g 100; the scorer needs >= 3: engine settle
@@ -43,7 +46,23 @@ def write(d, prog, meta):
     (d / 'calendar.json').write_text(json.dumps(meta, indent=1) + '\n')
 
 
-def frame(gap, chain=0):
+def kb_shift(w, b):
+    """issue every KEY beat (bit 28 + index[27:20]) b edges earlier; the edge it leaves keeps its other fields"""
+    if not b:
+        return w
+    w = list(w)
+    beats = [t for t in range(len(w)) if f(w[t], 28, 1)]
+    moved = {t: f(w[t], 20, 8) for t in beats}
+    for t in beats:
+        w[t] &= ~((1 << 28) | (255 << 20))
+    for t, ix in moved.items():
+        u = t - b
+        assert u >= 0 and not f(w[u], 28, 1) and f(w[u], 20, 8) == 0 and not f(w[u], 29, 3), (t, hex(w[u]))
+        w[u] |= (1 << 28) | (ix << 20)
+    return w
+
+
+def frame(gap, chain=0, kbp=0):
     prog, meta = CAL.compile_program('registered', gap, chain)
     sh, F = meta['calendar_shift'], len(prog)
     w = list(prog)
@@ -61,6 +80,7 @@ def frame(gap, chain=0):
     c = op6[0] - 8
     assert f(w[c], 0, 6) == 0
     w[c] |= (1 << 5) | (1 << 4)
+    w = kb_shift(w, kbp)
     return w, meta, dict(sel_clear=op2[0] - 3, hist_clear=op2[0] - 2, link_clear=c)
 
 
@@ -113,14 +133,15 @@ def main():
     ap.add_argument('--sel', type=int, default=4)
     ap.add_argument('--streams', type=int, default=8)
     ap.add_argument('--score-chain', type=int, default=0)
+    ap.add_argument('--kb-pipe', type=int, default=0)
     ap.add_argument('--pitch', type=int, default=0, help='force this pitch (bench mutants), 0 = the compiled row II')
     a = ap.parse_args()
     out = Path(a.out)
     prog, meta = CAL.compile_program('registered', 100, a.score_chain)
     write(out / 'd4g', prog, meta)
-    w, fm, moved = frame(a.gap, a.score_chain)
+    w, fm, moved = frame(a.gap, a.score_chain, a.kb_pipe)
     F = len(w)
-    ii, bad, ex, sel_span = min_pitch(w, a.g2, a.sel, a.streams)
+    ii, bad, ex, sel_span = min_pitch(w, a.g2 + a.kb_pipe, a.sel, a.streams)
     pitch = a.pitch or ii
     spans = {k: dict(first=x, last=b, span=b - x + 1) for k, (x, b) in ex.items()}
     spans['selector'] = dict(first=sel_span[0], last=sel_span[1], span=sel_span[1] - sel_span[0] + 1,
@@ -129,9 +150,9 @@ def main():
     pred = fm['predicted']
     fm.update(scope='HBM-NEXT-UNITS-IDXN row frame (ot_hnx_idxn_calendar): d4g programme at gap G, selector clears '
                     'before the first ingest, link row clear before the first compaction; rows pipelined, ONE key stream',
-              frame_length=F, score_chain=a.score_chain, gap=a.gap, g2=a.g2, selectors=a.sel, streams=a.streams, row_ii=ii, pitch=pitch,
+              frame_length=F, score_chain=a.score_chain, kb_pipe=a.kb_pipe, gap=a.gap, g2=a.g2, selectors=a.sel, streams=a.streams, row_ii=ii, pitch=pitch,
               binding_unit=bind, unit_spans=spans, moved=moved, collisions_at_pitch=len(bad(pitch)),
-              first_key_edge_row0=pred['first_key_instruction'] + 3, first_tx_edge_row0=pred['first_tx_from_instruction0'] + 3,
+              first_key_edge_row0=pred['first_key_instruction'] + 3 - a.kb_pipe, first_tx_edge_row0=pred['first_tx_from_instruction0'] + 3,
               cycles_formula='record edges(N) = (N - 1) x pitch + last TX of row 0 (measured by tb_hnx_idxn_rows)')
     write(out / 'frame', w, fm)
     print(json.dumps(dict(F=F, gap=a.gap, g2=a.g2, row_ii=ii, pitch=pitch, binding=bind, spans=spans,

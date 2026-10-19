@@ -19,7 +19,10 @@
 // (key beats +2, scores +4, TX +2 + 6, done +2; programme --score-chain 14 instead of 8).
 module ot_hnx_idxq_client_quad #(parameter integer TP=96,K=8,RANK_W=(TP<=1?1:$clog2(TP)),
  parameter [3:0] QS=4'b1100,     // stack (KV ordinal slot) of quadrant q
- parameter [3:0] QH=4'b1010)(    // half (PCs 4H..4H+3 of that stack) of quadrant q
+ parameter [3:0] QH=4'b1010,     // half (PCs 4H..4H+3 of that stack) of quadrant q
+ // KBP (IDXQ 10-19): 0 = combinational key buffer (RS=1 tile hnx_idxq_kb); 2 = pin-registered key buffer (PR=1, tile
+ // hnx_idxq_kb2): key path +2 edges, the scorer beat strobe rides the buffer, programme compiled with --kb-pipe 2.
+ parameter integer KBP=0)(
  input wire clk_program,clk_program_mem,input wire[3:0]clk_qprog,clk_qprog_mem,
  input wire program_we,input wire[7:0]program_addr,input wire[255:0]program_data,
  input wire start,input wire[11:0]length,input wire[4:0]n_rows,input wire[11:0]row_pitch,
@@ -71,8 +74,10 @@ module ot_hnx_idxq_client_quad #(parameter integer TP=96,K=8,RANK_W=(TP<=1?1:$cl
   // key stream: row 0 = the live service lines (captured), rows >= 1 = replay (named wires: bench mutants)
   wire live_v=kv&&kr==5'd0,replay_v=kv&&kr!=5'd0;
   wire[4395:0]klines;
-  ot_hnx_idxn_keybuf #(.NP(4),.RS(1)) kbuf(.clk(clk_kb[q]),.rst_n(rst_n),.clear(fs),.pbase(3'(4*H)),.live_v(live_v),.live_index(ki),
+  wire bov;wire[7:0]boi;
+  ot_hnx_idxn_keybuf #(.NP(4),.RS(1),.PR(KBP!=0)) kbuf(.clk(clk_kb[q]),.rst_n(rst_n),.clear(fs),.pbase(3'(4*H)),.live_v(live_v),.live_index(ki),
    .key_in(key_lines[SQ*8792+H*4396+:4396]),.pre_v(pv),.pre_index(pi),.replay_v(replay_v),.replay_index(ki),
+   .beat_in_v(kv),.beat_in_index(ki),.beat_out_v(bov),.beat_out_index(boi),
    .key_out(klines),.fault(kbf));
   wire[170:0]kb;
   for(genvar a=0;a<171;a=a+1)begin:gkb assign kb[a]=keep_bitmap[SQ*342+2*a+H];end
@@ -80,7 +85,7 @@ module ot_hnx_idxq_client_quad #(parameter integer TP=96,K=8,RANK_W=(TP<=1?1:$cl
   ot_hbm_idx_score_quarter_static #(.TP(TP)) scorer(.clk_ctl(clk_score[q]),.clk_engine(clk_engine[q*2+:2]),.clk_meta(clk_meta[q*2+:2]),
    .clk_tail(clk_tail[q*2+:2]),.clk_chunk(clk_chunk[q*8+:8]),.clk_hslice(clk_hslice[q*256+:256]),.rst_n(rst_n),.half(1'(H)),
    .rank(rank),.first_ord(11'(SQ*342)),.nkeys(nq),.keep_en(keep_en),.keep_bitmap(kb),
-   .ql_v(qv),.ql_head(qh),.ql_codes(qc),.ql_sc(qsc),.ql_w(qw),.beat_v(kv),.beat_index(ki),
+   .ql_v(qv),.ql_head(qh),.ql_codes(qc),.ql_sc(qsc),.ql_w(qw),.beat_v(bov),.beat_index(boi),
    .key_lines(klines),.score(sc),.fault(scf));
   assign score_observe[q*306+:306]=sc;
   for(genvar l=0;l<8;l=l+1)begin:gl assign list[q*297+l*37+:37]={sc[146+l*20+:20],sc[18+l*16+:16],sc[10+l]};end

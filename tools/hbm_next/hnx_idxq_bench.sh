@@ -10,7 +10,11 @@
 #    m4            N = 2, quadrant 1 replay buffer bypassed (rows >= 1 score the idle live lines)   -> FAIL
 #    m6 / m7       N = 4, link row slots dropped / every row on selector 0                          -> FAIL
 #    m8            N = 2, quadrant 2 calendar copy at pitch + 1 (copies out of lockstep)            -> FAIL
+#  KBP=2 (env, IDXQ 10-19): DUT built with the pin-registered key buffer (client_quad KBP = 2, keybuf PR = 1); the new
+#  programmes (chain 13 / 14) are compiled with --kb-pipe 2; extra compiler mutant:
+#    kbp1          N = 2, new programme compiled with --kb-pipe 1 (key buffer pipe mis-priced)                -> FAIL
 set -u
+KBP=${KBP:-0}
 B=$(pwd); O=$(realpath -m "${1:?OUT}"); ST=${2:?STAGE}; mkdir -p "$O"
 export PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH
 VL=$(command -v verilator); echo "verilator: $VL $($VL --version)" > "$O/verilator.txt"
@@ -45,7 +49,10 @@ if [ "$ST" = lint ]; then
 fi
 OPENBLAS_NUM_THREADS=1 python3 tools/hbm_next/hnx_idxq_vectors.py $O/vec 6 191 > $O/vectors.log 2>&1 || { V "vectors FAILED"; cat $O/vectors.log; exit 1; }
 NK=$(cat $O/vec/nkeys.txt)
-for c in 8 13 14; do python3 tools/hbm_next/hnx_idxn_calendar.py $O/cal_c$c --score-chain $c > $O/cal_c$c.log 2>&1 || { V "calendar c$c FAILED"; exit 1; }; done
+for c in 8 13 14; do kb=$KBP; [ $c = 8 ] && kb=0
+  python3 tools/hbm_next/hnx_idxn_calendar.py $O/cal_c$c --score-chain $c --kb-pipe $kb > $O/cal_c$c.log 2>&1 || { V "calendar c$c FAILED"; exit 1; }; done
+if [ $KBP != 0 ]; then python3 tools/hbm_next/hnx_idxn_calendar.py $O/cal_ck1 --score-chain 14 --kb-pipe 1 > $O/cal_ck1.log 2>&1 || { V "calendar kbp1 FAILED"; exit 1; }; fi
+V "KBP=$KBP (key buffer pipe; programmes chain 13/14 --kb-pipe $KBP)"
 V "vectors (n $NK): $(tr '\n' ' ' < $O/vectors.log)"; for c in 8 13 14; do V "calendar chain $c: $(cut -c1-160 $O/cal_c$c.log)"; done
 J(){ python3 -c "import json,sys;d=json.load(open(sys.argv[1]));print(eval(sys.argv[2]))" "$@"; }
 L8=$(J $O/cal_c8/frame/calendar.json "d['length']"); L13=$(J $O/cal_c13/frame/calendar.json "d['length']"); L14=$(J $O/cal_c14/frame/calendar.json "d['length']")
@@ -54,16 +61,16 @@ V "frames: chain8 F=$L8 II=$I8, chain14 F=$L14 II=$I14 -> pitch $II"
 TV=""; [ -x /usr/bin/time ] && TV="/usr/bin/time -v"
 d=$O/obj; rm -rf $d
 $TV verilator -DOT_IDX_SCORE_CLUSTER --hierarchical --binary --timing --verilate-jobs 4 --build-jobs ${IDX_BUILD_JOBS:-8} -O1 -Wno-fatal -Wno-lint -Wno-style \
-  -GTP=192 -GRANK=191 -GNKEYS=$NK -GCHAIN=6 $TOP -Mdir $d -o Vq "${SRC[@]}" $VLT > $O/build.log 2>&1; rc=$?
+  -GTP=192 -GRANK=191 -GNKEYS=$NK -GCHAIN=6 -GKBP=$KBP $TOP -Mdir $d -o Vq "${SRC[@]}" $VLT > $O/build.log 2>&1; rc=$?
 if [ ! -x $d/Vq ]; then V "build rc=$rc: retry once (PCH race)"; $TV verilator -DOT_IDX_SCORE_CLUSTER --hierarchical --binary --timing \
-  --verilate-jobs 2 --build-jobs 8 -O1 -Wno-fatal -Wno-lint -Wno-style -GTP=192 -GRANK=191 -GNKEYS=$NK -GCHAIN=6 $TOP -Mdir $d -o Vq \
+  --verilate-jobs 2 --build-jobs 8 -O1 -Wno-fatal -Wno-lint -Wno-style -GTP=192 -GRANK=191 -GNKEYS=$NK -GCHAIN=6 -GKBP=$KBP $TOP -Mdir $d -o Vq \
   "${SRC[@]}" $VLT > $O/build_retry.log 2>&1; fi
 V "build rc=$rc bin=$( [ -x $d/Vq ] && echo ok || echo MISSING) maxrss_kb=$(grep -h 'Maximum resident' $O/build*.log | tail -1 | awk '{print $NF}')"
 [ -x $d/Vq ] || { tail -30 $O/build.log | tee -a $O/verdict_$ST.txt; exit 1; }
 run(){ # tag newchain want plusargs...
   local t=$1 c=$2 want=$3; shift 3; local od=$O/run_$t; rm -rf $od; mkdir -p $od
   cp $O/vec/*.hex $od/; cp $O/cal_c8/frame/calendar_instructions.hex $od/cal_old.hex; cp $O/cal_c$c/frame/calendar_instructions.hex $od/cal_new.hex
-  local ln=$L14; [ $c = 13 ] && ln=$L13
+  local ln=$L14; [ $c = 13 ] && ln=$L13; [ $c = k1 ] && ln=$(J $O/cal_ck1/frame/calendar.json "d['length']")
   ( cd $od && $d/Vq +NO=$L8 +NN=$ln +PITCH=$II "$@" > $od/run.log 2>&1; echo RUN_RC=$? >> $od/run.log )
   local got=PASS; grep -q 'IDXQ_LOCKSTEP PASS' $od/run.log || got=FAIL
   local ok=OK; [ "$got" = "$want" ] || ok=UNEXPECTED
@@ -75,6 +82,7 @@ if [ "$ST" = lockstep ]; then
   run chain13 13 FAIL +ROWS=2 &
   for m in 2 3 4 8; do run m$m 14 FAIL +ROWS=2 +MUT=$m & done
   for m in 6 7; do run m$m 14 FAIL +ROWS=4 +MUT=$m & done
+  [ $KBP != 0 ] && run kbp1 k1 FAIL +ROWS=2 &
   wait
   rm -rf $d
   V "SUMMARY unexpected=$(grep -c UNEXPECTED $O/verdict_$ST.txt)"

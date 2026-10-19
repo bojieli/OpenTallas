@@ -12,8 +12,11 @@
 // Mutants (one build; new design only): +MUT=2 key bit flip on the live beat 100, +MUT=3 quadrant halves swapped on
 // the key lines, +MUT=4 quadrant 1 replay buffer bypassed (replay_v forced 0), +MUT=6 link row slots dropped, +MUT=7
 // every row on selector 0, +MUT=8 quadrant 2 calendar copy at pitch + 1; compiler mutant: new programme --score-chain 13.
+// KBP (IDXQ 10-19): the DUT's key buffer pin-registered (client_quad KBP = 2, programme --kb-pipe 2): the new design's
+// key_slot / KEY beats are issued KBP edges earlier, so they are compared after a KBP-edge delay (scores, TX, done
+// unchanged); compiler mutant kbp1 (programme --kb-pipe 1 on KBP = 2 hardware) must FAIL.
 module tb_hnx_idxq_lockstep;
- parameter integer TP=192,RANK=191,NKEYS=5456,CHAIN=6,MAXR=6,WSEC=4096;
+ parameter integer TP=192,RANK=191,NKEYS=5456,CHAIN=6,MAXR=6,WSEC=4096,KBP=0;
  localparam integer RW=$clog2(TP),GB=(TP==192?0:1),DK=2,DS=4,DTX=2+CHAIN,DD=2+CHAIN;
  reg clk=0;always #5 clk=~clk;
  reg rst_n=0,start=0;reg[7:0]paddr=0;reg[255:0]pdo=0,pdn=0;reg[11:0]len_o=0,len_n=0;
@@ -35,7 +38,7 @@ module tb_hnx_idxq_lockstep;
  wire[135:0]vrq_n;wire[2055:0]vrr_n;wire[3*136-1:0]vrq_q;wire[3*2056-1:0]vrr_q;wire[3:0]ks_n;wire[31:0]ki_n;reg[2*8792-1:0]kl_n;
  wire[3:0]txv_n;wire[2179:0]tx_n;wire[4*306-1:0]so_n;wire done_n,fault_n;
  wire[337:0]cq;wire[1:0]cq_seq;wire tb_busy,tk_done,tk_fault,share_fault;wire[2055:0]amr;
- ot_hnx_idxq_client_quad #(.TP(TP),.QS(4'b1100),.QH(4'b1010)) dut(.clk_program(clk),.clk_program_mem(clk),
+ ot_hnx_idxq_client_quad #(.TP(TP),.QS(4'b1100),.QH(4'b1010),.KBP(KBP)) dut(.clk_program(clk),.clk_program_mem(clk),
  .clk_qprog({4{clk}}),.clk_qprog_mem({4{clk}}),.program_we(pwe_n),.program_addr(paddr),.program_data(pdn),.start(start),.length(len_n),
  .n_rows(5'(rows)),.row_pitch(12'(pitch)),.weight_row_stride(16'(wstr)),.query_row_stride(16'(qstr)),
  .clk_operand({4{clk}}),.clk_query({4{clk}}),.clk_quant({4{clk}}),.clk_quant_delay({4{clk}}),.clk_query_bank({16{clk}}),
@@ -83,6 +86,7 @@ module tb_hnx_idxq_lockstep;
  localparam integer DMAX=16;
  wire kv_o=old.kv;wire[4:0]kr_o=old.kr;wire kv_n=dut.gq[0].kv;wire[4:0]kr_n=dut.gq[0].kr;
  reg[2*610-1:0]so_d[0:DMAX];reg[3:0]txv_d[0:DMAX];reg[2179:0]tx_d[0:DMAX];reg ks_d[0:DMAX],kv_d[0:DMAX],done_d[0:DMAX];reg[7:0]ki_d[0:DMAX];reg[4:0]kr_d[0:DMAX];
+ reg nks_d[0:3],nkv_d[0:3];reg[7:0]nki_d[0:3];reg[4:0]nkr_d[0:3];
  integer cyc=0,errors=0,oerr=0,scores_n=0,flits_n=0,beats_o=0,beats_n=0,live_o=0,live_n=0,tstart=0,ftx_o=-1,ftx_n=-1,fk_o=-1,fk_n=-1,dn_o=-1,dn_n=-1;
  integer checked=0,records=0,flits_o=0;
  always @(posedge clk)begin
@@ -90,7 +94,12 @@ module tb_hnx_idxq_lockstep;
   so_d[0]<=so_o;txv_d[0]<=txv_o;tx_d[0]<=tx_o;ks_d[0]<=ks_o;ki_d[0]<=ki_o;kv_d[0]<=kv_o;kr_d[0]<=kr_o;done_d[0]<=done_o;
   for(integer i=1;i<=DMAX;i=i+1)begin so_d[i]<=so_d[i-1];txv_d[i]<=txv_d[i-1];tx_d[i]<=tx_d[i-1];ks_d[i]<=ks_d[i-1];ki_d[i]<=ki_d[i-1];
    kv_d[i]<=kv_d[i-1];kr_d[i]<=kr_d[i-1];done_d[i]<=done_d[i-1];end
+  nks_d[0]<=ks_n[0];nki_d[0]<=ki_n[0+:8];nkv_d[0]<=kv_n;nkr_d[0]<=kr_n;
+  for(integer i=1;i<=3;i=i+1)begin nks_d[i]<=nks_d[i-1];nki_d[i]<=nki_d[i-1];nkv_d[i]<=nkv_d[i-1];nkr_d[i]<=nkr_d[i-1];end
  end
+ // new-design issue-side beats seen KBP edges later (the key buffer's pipe): compared with the old design + DK
+ wire ks0_n=(KBP==0)?ks_n[0]:nks_d[KBP-1];wire[7:0]ki0_n=(KBP==0)?ki_n[0+:8]:nki_d[KBP-1];
+ wire kv0_n=(KBP==0)?kv_n:nkv_d[KBP-1];wire[4:0]kr0_n=(KBP==0)?kr_n:nkr_d[KBP-1];
  always @(negedge clk)if(rst_n)begin
   if(ks_o)live_o++; if(ks_n[0])live_n++; if(kv_o)beats_o++; if(kv_n)beats_n++;
   if(ks_o&&fk_o<0)fk_o=cyc; if(ks_n[0]&&fk_n<0)fk_n=cyc;
@@ -98,8 +107,8 @@ module tb_hnx_idxq_lockstep;
   if(done_o&&dn_o<0)dn_o=cyc; if(done_n&&dn_n<0)dn_n=cyc;
   // key beats: service (row 0) and every row's scorer beat, 4 quadrants identical
   if(ks_n!={4{ks_n[0]}}||ki_n!={4{ki_n[0+:8]}})begin errors++;if(errors<8)$display("QBEAT disagree cyc%0d",cyc);end
-  if(ks_n[0]!==ks_d[DK-1]||(ks_n[0]&&ki_n[0+:8]!==ki_d[DK-1]))begin errors++;if(errors<8)$display("BEATBAD cyc%0d",cyc);end
-  if(kv_n!==kv_d[DK-1]||(kv_n&&kr_n!==kr_d[DK-1]))begin errors++;if(errors<8)$display("ROWBEATBAD cyc%0d new%b/%0d old%b/%0d",cyc,kv_n,kr_n,kv_d[DK-1],kr_d[DK-1]);end
+  if(ks0_n!==ks_d[DK-1]||(ks0_n&&ki0_n!==ki_d[DK-1]))begin errors++;if(errors<8)$display("BEATBAD cyc%0d",cyc);end
+  if(kv0_n!==kv_d[DK-1]||(kv0_n&&kr0_n!==kr_d[DK-1]))begin errors++;if(errors<8)$display("ROWBEATBAD cyc%0d new%b/%0d old%b/%0d",cyc,kv0_n,kr0_n,kv_d[DK-1],kr_d[DK-1]);end
   // scores: quarter (s,h) lanes = stack scorer s lanes 8h..8h+7
   for(integer q=0;q<4;q=q+1)begin:sq
    integer s,h;reg[609:0]o;reg[305:0]n;
