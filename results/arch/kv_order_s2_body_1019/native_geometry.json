@@ -1,0 +1,65 @@
+{
+  "schema": "opentallas.kv_order_s2_body_native_geometry.v1",
+  "native_signal_clock_pins": 2280,
+  "faces": {
+    "E": {
+      "count": 1036,
+      "length_um": 267.84,
+      "density_per_um": 3.8679808841099166,
+      "actual_centre_span_um": [
+        1.116,
+        266.7
+      ]
+    },
+    "N": {
+      "count": 1165,
+      "length_um": 302.4,
+      "density_per_um": 3.852513227513228,
+      "actual_centre_span_um": [
+        1.116,
+        301.26
+      ]
+    },
+    "W": {
+      "count": 5,
+      "length_um": 267.84,
+      "density_per_um": 0.018667861409796895,
+      "actual_centre_span_um": [
+        27.564,
+        240.252
+      ]
+    },
+    "S": {
+      "count": 74,
+      "length_um": 302.4,
+      "density_per_um": 0.24470899470899474,
+      "actual_centre_span_um": [
+        3.036,
+        299.388
+      ]
+    }
+  },
+  "horizontal_macro_body_channel_um": 34.992,
+  "horizontal_after_two_5p4_halos_um": 24.192,
+  "vertical_macro_body_channel_um": 46.44,
+  "vertical_after_two_5p4_halos_um": 35.64,
+  "native_macro_top_to_body_um": 20.52,
+  "native_macro_top_halo_to_body_um": 15.12,
+  "macro_pitch_um": 43.2,
+  "macro_contact_m4_area_nm2": 576,
+  "macro_contact_minarea_nm2": 2000,
+  "external_access_qualification": "OPEN",
+  "routed_reach_qualification": "OPEN: outline diagonal is not a Manhattan/routed wire bound",
+  "source_model": {
+    "MAC_per_cycle": 0,
+    "II_edges": 1,
+    "extra_data_edges": 0,
+    "macros_1R1W": 6,
+    "read_bytes_per_cycle": 96,
+    "write_bytes_per_cycle": 96,
+    "logical_fifo_depth_each": 8,
+    "declared_internal_32deep_hard_capacity_bits": 24576,
+    "clock_sinks_expected_FF_plus_macro": 18235
+  },
+  "parent_slot_regrant": null
+}
