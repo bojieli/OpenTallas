@@ -457,8 +457,8 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
             if(!rr[COPY_RBASE+7*ce+6]) begin cfg_gap_r<=1'b0;cfg_rl_r<=1'b0;start_r<=1'b0;cfg_w0_r<=0;cfg_w1_r<=0;cfg_w2_r<=0;cfg_sel_r<=0;cfg_addr_r<=0;cfg_kind_r<=0;cfg_attr_r<=0;end
             else begin cfg_sel_r<=((wv && idle && mw_q[22:21]==2'd0)?mw_q[EI-1:0]:esel)==EI'(ce);cfg_w0_r<=f_mw[25] && f_mw[22:21]==2'd0;cfg_w1_r<=f_mw[25] && f_mw[22:21]==2'd1;cfg_w2_r<=f_mw[25] && f_mw[22:21]==2'd2;cfg_gap_r<=f_mc[25] && !f_mc[24];cfg_rl_r<=f_mc[25] && f_mc[24];start_r<=f_ks[52];cfg_addr_r<=f_mw[SI-1:0];cfg_kind_r<=f_mw[EI-1:0];cfg_attr_r<=f_mw[11:10];end
         wire [6:0] boot_count;
-        wire [2:0] d_write,d_check;
-        wire attr_write,kind_write,rl_write,rl_check,gap_write;
+        wire [2:0] d_write;
+        wire attr_write,kind_write,rl_write,gap_write;
         if(LOCAL_BOOT!=0) begin:g_boot_local
             (* keep *) reg [SJ-1:0] count_r;
             always @(posedge ck or negedge rr[RBOOT_BASE+ce])
@@ -471,22 +471,18 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
 `endif
             for(genvar dg=0;dg<3;dg=dg+1) begin:g_d_enable
                 (* keep=1 *) dsdv_mu_boot_enable u_write(.count(boot_count),.armed(arm_r),.valid(cfg_w1_r),.match(cfg_sel_r),.en(d_write[dg]));
-                (* keep=1 *) dsdv_mu_boot_enable u_check(.count(boot_count),.armed(arm_r),.valid(cfg_w1_r),.match(cfg_sel_r),.en(d_check[dg]));
             end
             (* keep=1 *) dsdv_mu_boot_enable u_attr(.count(boot_count),.armed(arm_r),.valid(cfg_w2_r),.match(esel==EI'(ce)),.en(attr_write));
             (* keep=1 *) dsdv_mu_boot_enable u_kind(.count(boot_count),.armed(arm_r),.valid(cfg_w0_r),.match(cfg_kind_r==EI'(ce)),.en(kind_write));
             if(CHECK_STAGE==0) begin:g_reference_rl
                 (* keep=1 *) dsdv_mu_boot_enable u_rlwrite(.count(boot_count),.armed(arm_r),.valid(cfg_rl_r),.match(1'b1),.en(rl_write));
             end else begin:g_unused_rl assign rl_write=1'b0;end
-            assign rl_check=rl_write;
             (* keep=1 *) dsdv_mu_boot_enable u_gap(.count(boot_count),.armed(arm_r),.valid(cfg_gap_r),.match(gn!=SJ'(NSLOT)),.en(gap_write));
         end else begin:g_boot_direct
             assign boot_count=global_count;
             assign d_write={3{wv && idle_event[ce] && mw_q[22:21]==2'd1 && esel==EI'(ce)}};
-            assign d_check=d_write;
             assign attr_write=wv && idle_event[ce] && mw_q[22:21]==2'd2 && esel==EI'(ce);
             assign kind_write=wv && idle_event[ce] && mw_q[22:21]==2'd0 && mw_q[EI-1:0]==EI'(ce);
-            assign rl_write=cfg_rl_r && idle_event[ce];assign rl_check=rl_write;
             assign gap_write=cfg_gap_r && idle_event[ce] && gn!=SJ'(NSLOT);
         end
         assign attr_boot[ce]=attr_write;
