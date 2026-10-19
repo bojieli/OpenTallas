@@ -28,7 +28,7 @@ proc ot_ref_pick {by master pat} {
   error "ref_tile place: no unplaced instance of $master matching '$pat'"
 }
 set ot_ref_n 0
-set i [ot_ref_pick $ot_ref_by ot_qwen_tile_node {u_g.u_tile.u_tile.u_logic.genblk4.g_ndh.u_node}]
+set i [ot_ref_pick $ot_ref_by ot_qwen_tile_node {u_g.u_tile.u_tile.u_logic.genblk5.g_ndh.u_node}]
 $i setOrient R0; $i setLocation [expr {round(22.464 * $dbu)}] [expr {round(50.88 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_qwen_tile_node at 22.464 50.88 R0"
 set i [ot_ref_pick $ot_ref_by ot_qwen_tile_lsl_fp1 {u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh}]
