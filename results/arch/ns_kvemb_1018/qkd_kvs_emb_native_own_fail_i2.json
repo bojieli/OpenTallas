@@ -1,0 +1,43 @@
+[
+ {
+  "cell": "qkd_kvs_emb",
+  "view": "physical/ref_tile/qkd_kvs_emb/views/qkd_kvs_emb",
+  "lib_cell": "qkd_kvs_emb",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 696.5,
+  "spread_ps": 341.9,
+  "outputs": 537,
+  "inputs": 1263,
+  "launch_ps": 97.1,
+  "launch_pin": "rowtx__emb_tx_payload[58]",
+  "capture_ps": 465.2,
+  "capture_pin": "rst_n",
+  "launch_over": 0,
+  "capture_over": 95,
+  "comb_pins": 34,
+  "comb_first": [
+   "px_tep[0]",
+   "px_tep[10]",
+   "px_tep[11]"
+  ],
+  "ff_spread_ps": 240.7,
+  "ff_launch_min_ps": 70.2,
+  "ff_hold_need_ps": -70.5,
+  "pass": false,
+  "fail_why": "capture 465.21071 > 190 (95 pins); 34 combinational pins; TT pin-flop spread 341.9 > 80; FF pin-flop spread 240.7 > 80",
+  "job": "qkd_kvs_emb-i2-5561116d2",
+  "record": "origin/codex/closure-record-qkd_kvs_emb-i2-5561116d2 @905c58b88",
+  "mode": "own-R (insertion.json boundary mean), tools/hier_contract/native_pin_audit.py origin/main",
+  "classification": {
+   "comb_pins": "px_tok[17:0] / px_tep[15:0] = assign px_tok=d2d__svc[109:92], px_tep=d2d__svc[89:74]: pure E-face feedthroughs, no register",
+   "capture_d2d": "d2d__svc[24,74..89,92..109] (35) + d2d__emb_tx_slot (1) drive the HARD child u_rowtx pins directly (233-327 ps): macro input flops behind the macro clock pin (arrival 379.8 TT vs soft 655-722)",
+   "capture_hroot": "i_hroot_{EN,ES,WN,WS} 58 pins 190-211 ps: soft join inputs with no pin flop (pin_regs disabled in kvs_tile_kits.py)",
+   "capture_rst": "rst_n 465.2 ps: one pin fanning to every async clear of the join + u_rowtx rst (no reset capture flop)",
+   "spread": "boundary min 379.8 = u_rowtx/ck (the hard child launches rowtx__emb_tx_* straight to pins) vs soft flops 655.6-721.7 TT (FF 307.5 vs 508-548): the macro is a boundary sink",
+   "fix": "NS-KVEMB e1: recipe-3 pin registers on every pin incl. rst_n (registered reset release), macro off the boundary; +1 cycle every input, +1 every output (KV-PLAN5)"
+  }
+ }
+]
