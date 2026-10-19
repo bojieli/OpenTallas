@@ -1,0 +1,14 @@
+TP8SL_LANE die0 port0 tx N 3/3 K 2/2 meas 3 | rx(die2 port2) N 8/8 K 5/5 meas 6
+TP8SL_LANE die0 port1 tx N 0/0 K 0/0 meas 0 | rx(die4 port1) N 0/0 K 0/0 meas 0
+TP8SL_LANE die0 port2 tx N 8/10 K 6/6 meas 7 | rx(die6 port0) N 3/2 K 2/2 meas 3
+TP8SL dies=8 latu=53 lats=380 pu=20 ps=339 xu=0 xs=0 msgs=1 drop=-1 corrupt=-1 mismatches=0 extra=0 out_err=0 cmd_bad=0 coll_fault=00000000 issuer_fault=00000000 die_fault=00000000 words_out=2048 meas_lu=53 meas_ls=380 pr_overlap=0 issuer_done=00000000
+DIE 0 code=00000 cdc=00000000000000000000 abort=00000 cause=0000000000
+DIE 1 code=00000 cdc=00000000000000000000 abort=00000 cause=0000000000
+DIE 2 code=00000 cdc=00000000000000000000 abort=00000 cause=0000000000
+DIE 3 code=00000 cdc=00000000000000000000 abort=00000 cause=0000000000
+DIE 4 code=00000 cdc=00000000000000000000 abort=00000 cause=0000000000
+DIE 5 code=00000 cdc=00000000000000000000 abort=00000 cause=0000000000
+DIE 6 code=00000 cdc=00000000000000000000 abort=00000 cause=0000000000
+DIE 7 code=00000 cdc=00000000000000000000 abort=00000 cause=0000000000
+PASS
+- /srv/opentallas-scratch/claude/qcollcal-rl-1018/src5/rtl/test/tb_coll_tp8_static_links.sv:417: Verilog $finish

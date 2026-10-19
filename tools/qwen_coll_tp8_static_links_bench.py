@@ -156,7 +156,9 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", type=Path, required=True)
     ap.add_argument("--latu", type=int, default=KC + KW + 17 + PU)
-    ap.add_argument("--lats", type=int, default=KC + KW + 17 + PS)
+    ap.add_argument("--lats", default=str(KC + KW + 17 + PS),
+                    help="SerDes calendar LS: an integer, or 'cal' / 'cal-N' = the COMPILED calendar (Q-COLLCAL3: "
+                         "tools/qwen_split/lane_groups.collective_calendar of the --real-lanes LX (else --lx) and --relays)")
     ap.add_argument("--xu", type=int, default=0)
     ap.add_argument("--xs", type=int, default=0)
     ap.add_argument("--phi", type=int, default=0, choices=(0, 1))
@@ -200,6 +202,18 @@ def main():
             a.lx = list(cll["LX"])
     if a.lx is None:
         a.lx = [0, 0, 0]
+    CAL = None
+    if str(a.lats).startswith("cal"):
+        sys.path.insert(0, str(ROOT / "tools" / "qwen_split"))
+        import lane_groups as LGC
+        lx_c = list(cll["LX"]) if a.real_lanes else list(a.lx)   # the lanes AS BUILT (a --lx mutant is a wrong calendar LX)
+        CAL = LGC.collective_calendar(lx_c, dict(PS=PS, KC=KC, KW=KW, RU=a.relays[0], RS0=a.relays[1], RS1=a.relays[2],
+                                                 RS2=a.relays[3]))
+        off = int(a.lats[3:] or 0)
+        a.lats = CAL["LS"] + off
+        print(f"COLL_CALENDAR compiled LS={CAL['LS']} (binding port {CAL['binding_port']}, LX {lx_c}, RS {CAL['RS']}) "
+              f"-> lats {a.lats}", flush=True)
+    a.lats = int(a.lats)
     XD.update(lanes=tuple(a.lanes), ev2=a.valid_skew, tok_reg=a.tok_reg, lx=tuple(a.lx))
     D50["on"] = a.duty50
     if a.six_five:
@@ -259,7 +273,7 @@ def main():
     (a.out / "record.json").write_text(json.dumps(dict(
         schema="opentallas.qwen.tp8.collective.static_links.v1", ranks=ND, latu=a.latu, lats=a.lats, kc=KC, kw=KW,
         phy_ucie=PU, phy_serdes=PS, xu=a.xu, xs=a.xs, phi=a.phi, die_name_master=a.qfd, production_parent=a.parent, relays=a.relays, shared_ucie=a.shared_ucie, six_five=a.six_five, FDI_phase_ticks=a.fdi_phase, unsafe_shared_calendar=a.unsafe_shared_calendar, mutant=a.mutant_define, sequencer_face=a.seqsu, plusargs=a.plusarg,
-        real_lanes=RL['params'], real_lanes_source=RL['src'], lane_meas=lane_meas,
+        real_lanes=RL['params'], real_lanes_source=RL['src'], lane_meas=lane_meas, compiled_calendar=CAL,
         die_lanes=list(XD['lanes']), valid_skew_port2=XD['ev2'], tok_reg=XD['tok_reg'], calendar_lane_cycles=list(XD['lx']), duty50=D50['on'],
         verilator=VERILATOR, verilator_version=subprocess.run([VERILATOR, '--version'], capture_output=True, text=True).stdout.strip(),
         expect_fail=a.expect_fail, production=a.production, issuer_depth=DEPTH, stage_start=START, cmd_pin_stages=int(a.qfd),
@@ -268,7 +282,7 @@ def main():
                   "backpressure; observed validity, CRC and publication are fault-only checks",
         cases=records, source_sha256={str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in SRC},
         helper_sha256={f:hashlib.sha256((ROOT/f).read_bytes()).hexdigest() for f in
-          ("tools/qwen_coll_tp8_static_links_bench.py","tools/qwen_coll_tp8_static_bench.py","tools/qwen_coll_tp8_bench.py","tools/hdc_golden.py")},
+          ("tools/qwen_coll_tp8_static_links_bench.py","tools/qwen_coll_tp8_static_bench.py","tools/qwen_coll_tp8_bench.py","tools/hdc_golden.py","tools/qwen_split/lane_groups.py")},
         executable_sha256=hashlib.sha256(exe.read_bytes()).hexdigest(), native_layer_qualified=False,
         physical_qualified=False), indent=2) + "\n")
     if bad:
