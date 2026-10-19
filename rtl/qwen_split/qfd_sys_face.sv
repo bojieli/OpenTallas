@@ -80,6 +80,7 @@
 // =====================================================================================================================
 module qfd_sys_face #(
     parameter integer MUT = 0,
+    parameter integer CTX_ACCEPTED = 0,        // opt-in actual accepted MU observer, +1 output edge
     parameter integer OVL = 0,                 // separate TX/RX compiled start lists (MU-D2D-OVL)
     parameter OVL_ROM_DIR = "",
     parameter integer MU = 0,                  // MU-DQ-SYSFACE 10-19: 1 = Qwen ROM 4-user release (filler head contexts, see below)
@@ -147,6 +148,7 @@ module qfd_sys_face #(
     output reg           tt_kwd,
     output reg           tt_fab,
     // ---------------- native59 service ----------------
+    output wire [128:0]  ctx_x,
     output wire          host_epoch_valid,
     output wire          host_fused_capability,
     output wire [15:0]   host_epoch,
@@ -335,7 +337,7 @@ module qfd_sys_face #(
     wire hc_user0 = (MU == 0) || (MUT == 6) || tt_native_pos[17:16] == 2'd0;
     wire hc_v_u0 = tt_layer_context_v && hc_user0;
     // ================================================================ program record port (existing RTL)
-    wire        rp_program_ready, rp_fault;
+    wire        rp_program_ready, rp_fault, host_accept_v;
     wire        rp_commit_v, rp_cap;
     wire [15:0] rp_begin_epoch, rp_auth_epoch, rp_program_epoch;
     wire [10:0] rp_expected_pw; wire [3:0] rp_expected_dw; wire [63:0] rp_auth_digest, rp_program_digest;
@@ -351,9 +353,20 @@ module qfd_sys_face #(
         .expected_pw(rp_expected_pw), .expected_dw(rp_expected_dw), .auth_digest(rp_auth_digest),
         .program_ready(rp_program_ready), .installed_fusedcap(rp_cap), .commit_v(rp_commit_v),
         .program_epoch(rp_program_epoch), .program_digest(rp_program_digest),
-        .host_epoch_valid(host_epoch_valid), .host_epoch(host_epoch), .host_tag(host_tag), .host_gen(host_generation),
+        .host_accept_v(host_accept_v), .host_epoch_valid(host_epoch_valid), .host_epoch(host_epoch), .host_tag(host_tag), .host_gen(host_generation),
         .tx_v(rp_tx_v), .tx_observed_v(prog_tx_observed_v), .tx_record(prog_tx_record), .fault(rp_fault));
     assign host_fused_capability = rp_cap;
+    wire accepted_ctx_fault;
+    generate if (MU && CTX_ACCEPTED) begin : g_accepted_ctx
+      qfd_sys_face_accepted_mu_ctx u_observer(
+        .ck(ck),.rst_n(rst_rec[4]),.offer_slot(prog_context_slot),.offer_v(prog_rx_v),.offer_record(rx_payload),
+        .host_accept_v(host_accept_v),.host_epoch_valid(host_epoch_valid),.host_epoch(host_epoch),.host_tag(host_tag),.host_gen(host_generation),
+        .program_ready(rp_program_ready),.program_cap(rp_cap),.program_fault(rp_fault),
+        .program_epoch(rp_program_epoch),.program_digest(rp_program_digest),.ctx_x(ctx_x),.fault(accepted_ctx_fault));
+    end else begin : g_no_accepted_ctx
+      assign ctx_x=129'd0;assign accepted_ctx_fault=1'b0;
+    end endgenerate
+
     // MU filler head-context check (see "MU head contexts" above)
     wire mu_hc_fault;
     if (MU != 0) begin : g_mu_hc
@@ -580,6 +593,6 @@ module qfd_sys_face #(
     always @(posedge ck or negedge rst_emb)
         if (!rst_emb) prov_fault_q <= 1'b0;
         else if (emb_prov_fault) prov_fault_q <= 1'b1;
-    assign face_fault = boot_fault | prog_fault | cal_fault | emb_fault | prov_fault_q | rp_fault | armed_fault | go_fault | mu_hc_fault;
+    assign face_fault = boot_fault | prog_fault | cal_fault | emb_fault | prov_fault_q | rp_fault | armed_fault | go_fault | mu_hc_fault | accepted_ctx_fault;
     assign fault = face_fault;
 endmodule
