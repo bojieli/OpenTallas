@@ -1218,7 +1218,7 @@ def bindings():
     if ASTK_ST:
         for mn in ('qkd_astk', 'qkd_astk_n'):
             out[mn] = dict(module='qkd_astk_strip_er_die', file=ASTK_FILE,
-                parameters=dict(RL=ASTK_RL, Z_STRIDE=ASTK_Z_STRIDE),
+                parameters=dict(RL=ASTK_RL, Z_STRIDE=ASTK_Z_STRIDE, **(dict(DISTRIBUTED_ER=1) if ASTK_EXPAND else {})),
                 ports=dict(st=['st'], aq=['aq'], am=['am'], ap=['ap'], af=['af'], lt=['lt'], cal=['cal'], erd=['erd'],
                            **{f'e{e}i': [f'so{e}'] for e in range(8)}, **{f'e{e}o': [f'si{e}'] for e in range(8)},
                            **{f'vh{k}': [f'vh{k}'] for k in range(4)},
