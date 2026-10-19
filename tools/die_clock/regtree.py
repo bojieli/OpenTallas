@@ -219,7 +219,9 @@ class ForwardedBuilder(Builder):
     """
 
     def path(self, a, b):
-        return self.g._route(a, b, MAX_RUN)
+        # The router counts blocked cells; include the two boundary grid steps
+        # between the last legal repeater sites in the physical reach budget.
+        return self.g._route(a, b, MAX_RUN - 2 * GRID)
 
     def chain(self, src, path, tag):
         reps, delay = self.plan(path)
