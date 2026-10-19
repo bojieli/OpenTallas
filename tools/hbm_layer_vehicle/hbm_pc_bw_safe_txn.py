@@ -60,6 +60,7 @@ def main():
     passed = (run.returncode != 0 and bool(re.search(FAIL_REGEX, log))) if a.mutant else (
         run.returncode == 0 and 'BW_SAFE_TXN PASS' in log)
     result = dict(schema='opentallas.hbm_pc_bw_safe_txn.v1', verdict='PASS' if passed else 'FAIL',
+                  data_equivalence_pass='BW_SAFE_TXN_DATA_PASS' in log,
                   mutant=a.mutant, mutant_parameter='BW_MUT_ID_TAG', fail_regex=FAIL_REGEX,
                   returncode=run.returncode, source_base_revision=a.source_revision,
                   source_sha256=pins, verilator=version, log=log_name,

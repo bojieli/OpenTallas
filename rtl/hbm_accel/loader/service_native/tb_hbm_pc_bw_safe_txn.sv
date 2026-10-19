@@ -67,6 +67,7 @@ module tb;
     for(i=0;i<nb[0]&&i<nb[1];i=i+1) if(beat_log[0][i]!==beat_log[1][i]) begin errors=errors+1; if(errors<5) $display("BW_SAFE_TXN_BEAT_MISMATCH i%0d h9b tag%h beat%h d%h safe tag%h beat%h d%h",i,beat_log[0][i][276:260],beat_log[0][i][259:256],beat_log[0][i][31:0],beat_log[1][i][276:260],beat_log[1][i][259:256],beat_log[1][i][31:0]); end
     for(i=0;i<nw[0]&&i<nw[1];i=i+1) if(wcol_log[0][i]!==wcol_log[1][i]) begin errors=errors+1; if(errors<5) $display("BW_SAFE_TXN_WCOL_MISMATCH i%0d",i); end
     if(nb[0]!=nrd || nb[1]!=nrd || nw[0]!=nwr || nw[1]!=nwr || nwd[0]!=nwr || nwd[1]!=nwr) begin errors=errors+1; $display("BW_SAFE_TXN_VACUOUS beats%0d wcols%0d",nb[0],nw[0]); end
+    if(errors==0)$display("BW_SAFE_TXN_DATA_PASS reqs=%0d beats=%0d wcols=%0d wdone=%0d",NREQ,nb[1],nw[1],nwd[1]);
     if(done_at[0]==0||done_at[1]==0||done_at[1]>done_at[0]+done_at[0]/10+64) begin errors=errors+1; $display("BW_SAFE_TXN_RATE h9b %0d safe %0d",done_at[0],done_at[1]); end
     if(errors) $fatal(1,"BW_SAFE_TXN FAIL errors=%0d MUT_ID_TAG=%0d",errors,MUT_ID_TAG);
     $display("BW_SAFE_TXN PASS reqs=%0d beats=%0d wcols=%0d wdone=%0d edges_h9b=%0d edges_safe=%0d",NREQ,nb[1],nw[1],nwd[1],done_at[0],done_at[1]);
