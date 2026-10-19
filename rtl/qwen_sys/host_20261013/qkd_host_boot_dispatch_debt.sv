@@ -1,8 +1,14 @@
 `timescale 1ns/1ps
+`ifndef OT_HOST_BOOT_FIFO_DEFAULT
+`define OT_HOST_BOOT_FIFO_DEFAULT 0
+`endif
+`ifndef OT_HOST_BOOT_FIFO_MUT
+`define OT_HOST_BOOT_FIFO_MUT 0
+`endif
 // Credit-delimited, ordered split of real native QM output: KV goes to static
 // host stations, embedding to gateway hb. Real completion owners, not hb_cr,
 // advance the shared per-PC retirement ledger. BOOT_END waits for that prefix.
-module qkd_host_boot_dispatch_debt #(parameter integer MUT=0)(
+module qkd_host_boot_dispatch_debt #(parameter integer MUT=0,SRAM_FIFO=`OT_HOST_BOOT_FIFO_DEFAULT,SRAM_MUT=`OT_HOST_BOOT_FIFO_MUT)(
  input wire ck,ck_order,rst_n,boot_release,input wire[289:0]ing,output reg ing_cr,
  output reg[289:0]kv,input wire kv_cr,
  output reg[282:0]hb,input wire hb_cr,output reg image_check,
@@ -12,7 +18,7 @@ module qkd_host_boot_dispatch_debt #(parameter integer MUT=0)(
   if(!rst_n)dispatch_quiet<=0;
   else dispatch_quiet<=count==0&&kc==8&&hc==4&&oc==256&&!ing[0]&&!iv_q&&!kv[0]&&!hb[0]&&
    !boot_hold&&!issue_v&&!ing_cr&&!kv_cr&&!hb_cr&&!kcr_q&&!hcr_q&&!fault;
- reg[289:0]q[0:7];reg[2:0]wp,rp;reg[3:0]count;
+ reg[2:0]wp,rp;reg[3:0]count;
  reg[3:0]kc;reg[2:0]hc;reg[8:0]oc;
  reg iv_q,kcr_q,hcr_q,boot_hold,image_dirty;reg[289:0]id_q;reg ff;
  // HRORDER 10-18 (route qkd_hr_core_order-r2-c420f015e TT -17 ps: rp -> q[rp] -> address decode -> send -> issued):
@@ -27,7 +33,16 @@ module qkd_host_boot_dispatch_debt #(parameter integer MUT=0)(
  wire i_good=i_we&&(i_marker||(i_embed?(i_addr[30:25]==0&&i_le<25'd19457304):(i_addr[30:24]==0)));
  wire[9:0]id_dec={i_target,i_good,i_embed,i_marker};
  reg[9:0]qd[0:7];reg[9:0]hd;
- wire[289:0]head=q[rp];wire[24:0]logical_e=head[26:2];
+ wire[289:0]head;
+ generate if(SRAM_FIFO)begin:g_sram_fifo
+  qkd_host_boot_fifo8_sram #(.W(290),.MUT(SRAM_MUT))u_payload(.ck(ck),.wr(iv_q&&count<8),.wp(wp),
+   .wd(id_q),.next_rp(send?rp+3'd1:rp),.head(head));
+ end else begin:g_flop_fifo
+  reg[289:0]q[0:7];
+  always @(posedge ck)if(iv_q&&count<8)q[wp]<=id_q;
+  assign head=q[rp];
+ end endgenerate
+ wire[24:0]logical_e=head[26:2];
  wire marker=hd[0],embed=hd[1],good=hd[2];wire[6:0]target=hd[9:3];
  wire send=count!=0&&!fault&&(!boot_hold||MUT==2)&&good&&(marker?(issued==landed&&kc!=0&&(!image_dirty||hc!=0)):(oc!=0&&(embed?hc!=0:kc!=0)));
  reg issue_v;reg[6:0]issue_pc;wire order_fault;
@@ -35,7 +50,7 @@ module qkd_host_boot_dispatch_debt #(parameter integer MUT=0)(
  assign fault=ff|order_fault;
  wire wr=iv_q&&count<8;wire[2:0]rp1=rp+3'd1;
  always @(posedge ck)begin
-  id_q<=ing;if(wr)begin q[wp]<=id_q;qd[wp]<=id_dec;end
+  id_q<=ing;if(wr)begin qd[wp]<=id_dec;end
   if(send)hd<=(wr&&wp==rp1)?id_dec:qd[rp1];
   else hd<=(wr&&wp==rp)?id_dec:qd[rp];
  end

@@ -34,6 +34,8 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('mode', choices=['exact', 'mutant'])
     ap.add_argument('--out', required=True)
+    ap.add_argument('--sram', action='store_true')
+    ap.add_argument('--sram-mut',type=int,default=0)
     ap.add_argument('--m', choices=sorted(MUTANTS))
     ap.add_argument('--cycles', type=int, default=200000)
     ap.add_argument('--verilator', default=str(Path.home() / '.local/opentallas-tools/verilator-5.050/bin/verilator'))
@@ -51,10 +53,12 @@ def main():
         (out / 'src' / f).write_text(t)
         srcs.append(str(out / 'src' / f))
     srcs += [str(p) for p in REF] + [str(TB)]
+    if a.sram:
+        srcs += [str(ROOT/'rtl/qwen_sys/host_20261013/qkd_host_boot_fifo8_sram.sv'),str(ROOT/'physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v')]
     ver = subprocess.run([a.verilator, '--version'], capture_output=True, text=True).stdout.strip()
     print('HRORDER_EQUIV verilator', ver, flush=True)
     cmd = [a.verilator, '--binary', '--timing', '-O2', '--x-assign', '0', '--x-initial', '0', '-Wno-fatal', '-Wno-lint',
-           '-Wno-style', '-j', '0', '--top-module', 'tb_hrorder_equiv', '-Mdir', str(out / 'obj'), '-o', 'tb'] + srcs
+           '-Wno-style', '-j', '4', '--top-module', 'tb_hrorder_equiv', '-Mdir', str(out / 'obj'), '-o', 'tb'] + (['-DOT_HOST_BOOT_FIFO_DEFAULT=1',f'-DOT_HOST_BOOT_FIFO_MUT={a.sram_mut}'] if a.sram else []) + srcs
     with open(out / 'vl.log', 'w') as f:
         r = subprocess.run(cmd, stdout=f, stderr=subprocess.STDOUT)
     if r.returncode:

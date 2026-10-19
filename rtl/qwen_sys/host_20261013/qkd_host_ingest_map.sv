@@ -1,11 +1,17 @@
 `timescale 1ns/1ps
+`ifndef OT_HOST_BOOT_FIFO_DEFAULT
+`define OT_HOST_BOOT_FIFO_DEFAULT 0
+`endif
+`ifndef OT_HOST_BOOT_FIFO_MUT
+`define OT_HOST_BOOT_FIFO_MUT 0
+`endif
 // Production KV and embedding sector map. See original qkd_ctrl_pc wj/wrow
 // and ot_qfd_emb_pkg.emb_loc; logical PC is preserved for local lpc strap.
 // Eight input word credits initially; returns after registered decode is emitted.
 // Output per stack is {data256,row19,col5,bank5,lpc5,v}291, four initial
 // downstream credits per logical PC. End marker66 is held until real commit count reaches
 // all previously emitted sectors. Host QPIPE is write-only; RMW faults.
-module qkd_host_ingest_map #(parameter integer MUT=0,ORDERED=0,BOOT_SCRATCH_ROW=0)(
+module qkd_host_ingest_map #(parameter integer MUT=0,SRAM_FIFO=`OT_HOST_BOOT_FIFO_DEFAULT,SRAM_MUT=`OT_HOST_BOOT_FIFO_MUT,ORDERED=0,BOOT_SCRATCH_ROW=0)(
  input wire ck,rst_n,
  input wire[289:0]ing,output reg ing_cr,
  output reg[1163:0]out,input wire[127:0]out_cr,
@@ -21,9 +27,19 @@ module qkd_host_ingest_map #(parameter integer MUT=0,ORDERED=0,BOOT_SCRATCH_ROW=
  // previous form (bench tools/qwen_kv_die/host_cluster/bench/hrorder_equiv); no added latency.
  reg[3:0]count;reg[2:0]wp,rp;
  wire pending=count!=0;
- reg[293:0]q[0:7];       // {data256,row19,col5,bank5,pc5,stack2,good,mark}
+ reg[8:0]q_ctl[0:7];       // {data256,row19,col5,bank5,pc5,stack2,good,mark}
  reg[8:0]hd;             // {pc5,stack2,good,mark} of q[rp]
- wire[293:0]word=q[rp];
+ wire[293:0]word;
+ generate if(SRAM_FIFO)begin:g_sram_fifo
+  wire[284:0]payload;
+  qkd_host_boot_fifo8_sram #(.W(285),.MUT(SRAM_MUT))u_payload(.ck(ck),.wr(wr),.wp(wp),
+   .wd(iq_dec[293:9]),.next_rp(adv?rp1:rp),.head(payload));
+  assign word={payload,hd};
+ end else begin:g_flop_fifo
+  reg[293:0]q[0:7];
+  always @(posedge ck)if(wr)q[wp]<=iq_dec;
+  assign word=q[rp];
+ end endgenerate
  wire[255:0]data=word[293:38];wire[18:0]row=word[37:19];wire[4:0]col=word[18:14],bank=word[13:9];
  wire[4:0]pc=hd[8:4];wire[1:0]stack=hd[3:2];wire good=hd[1],hmark=hd[0];
  reg[2:0]credits[0:127];reg marker_credit;
@@ -77,9 +93,9 @@ module qkd_host_ingest_map #(parameter integer MUT=0,ORDERED=0,BOOT_SCRATCH_ROW=
  wire adv=emit||emit_marker;
  wire[2:0]rp1=rp+3'd1;
  always @(posedge ck)begin
-  if(wr)q[wp]<=iq_dec;
-  if(adv)hd<=(wr&&wp==rp1)?iq_dec[8:0]:q[rp1][8:0];
-  else hd<=(wr&&wp==rp)?iq_dec[8:0]:q[rp][8:0];
+  if(wr)q_ctl[wp]<=iq_dec[8:0];
+  if(adv)hd<=(wr&&wp==rp1)?iq_dec[8:0]:q_ctl[rp1];
+  else hd<=(wr&&wp==rp)?iq_dec[8:0]:q_ctl[rp];
  end
  always @(posedge ck or negedge rst_n)begin
   if(!rst_n)begin
