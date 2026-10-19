@@ -29,6 +29,7 @@ module native_join_bench;
   wire cq_commit_v;wire[15:0]cq_client_tag;wire[7:0]cq_slot;wire[17:0]cq_pos,cq_token;wire[1:0]cq_kind;wire[3:0]cq_status;
   wire step_issue_v,step_retire_v,step_retire_cq;wire[15:0]step_client_tag,step_retire_client_tag;
   wire[7:0]step_slot,step_retire_slot;wire[17:0]step_pos,step_retire_pos,step_retire_token;wire host_idle,host_observer_fault;
+ wire step_retire_native_valid,cq_native_valid_observed;
  wire  native_issue_ready;
  wire  native_cq_offer_ok;
  wire  native_cq_prospective_v,native_cq_prospective_native_valid;
@@ -71,7 +72,7 @@ module native_join_bench;
  wire [1:0] report_drained_gen,report_drained_descgen;
   qkd_host_if_pins_observed_rc #(.ENABLE_RETAINED_COMMIT(1),.ENABLE_NATIVE_OWNER_JOIN(1),.PB_READ_PIPE(5),.PB_VALID_ONLY(1),.HEALTH_CUTOFF_EDGES(H),.STEP_RESPONSE_DEADLINE_EDGES(RESPONSE_DEADLINE),.COMPONENT_FIXTURE(1),
     .NSLOT(1),.ENG_CTX(1),.MODE(0),.MU_OUT(0),.NW(18),.PLB(13),.CTX_MAX(8192),.FMT(1)) dut (
-    .die_id(3'd0),.native_issue_ready(native_issue_ready),.native_cq_offer_ok(native_cq_offer_ok),.native_cq_prospective_v(native_cq_prospective_v),.native_cq_prospective_native_valid(native_cq_prospective_native_valid),.native_cq_prospective_key(native_cq_prospective_key),.native_bound_valid(native_bound_valid),.native_bound_tag(native_bound_tag),.native_bound_gen(native_bound_gen),.native_bound_descgen(native_bound_descgen),.native_bound_client(native_bound_client),.native_bound_slot(native_bound_slot),.native_bound_pos(native_bound_pos),.native_join_fault(native_join_fault),.health_native_valid(health_native_valid),.health_native_tag(health_native_tag),.health_native_gen(health_native_gen),.issue_fire_v(issue_fire_v),.issue_token(issue_token),.issue_pos(issue_pos),.issue_client(issue_client),.issue_slot(issue_slot),.issue_descgen(issue_descgen),.event_insert_v(event_insert_v),.event_native_valid(event_native_valid),.event_native_tag(event_native_tag),.event_native_gen(event_native_gen),.event_descgen(event_descgen),.cq_offer_v(cq_offer_v),.cq_native_valid(cq_native_valid),.cq_native_tag(cq_native_tag),.cq_native_gen(cq_native_gen),.cq_descgen(cq_descgen),.raw_done_v(raw_done_v),.raw_done_native_valid(raw_done_native_valid),.raw_done_report_needed(raw_done_report_needed),.native_certificate_v(native_certificate_v),.raw_done_tag(raw_done_tag),.raw_done_gen(raw_done_gen),.raw_done_descgen(raw_done_descgen),.raw_done_client(raw_done_client),.raw_done_slot(raw_done_slot),.raw_done_pos(raw_done_pos),.native_certificate_tag(native_certificate_tag),.native_certificate_gen(native_certificate_gen),.native_certificate_descgen(native_certificate_descgen),.native_certificate_client(native_certificate_client),.native_certificate_slot(native_certificate_slot),.event_client(event_client),.cq_offer_client(cq_offer_client),.report_drained_client(report_drained_client),.event_slot(event_slot),.cq_offer_slot(cq_offer_slot),.report_drained_slot(report_drained_slot),.report_drained_v(report_drained_v),.report_drained_cq(report_drained_cq),.report_drained_native_valid(report_drained_native_valid),.report_drained_tag(report_drained_tag),.report_drained_gen(report_drained_gen),.report_drained_descgen(report_drained_descgen),
+    .step_retire_native_valid(step_retire_native_valid),.cq_native_valid_observed(cq_native_valid_observed),.die_id(3'd0),.native_issue_ready(native_issue_ready),.native_cq_offer_ok(native_cq_offer_ok),.native_cq_prospective_v(native_cq_prospective_v),.native_cq_prospective_native_valid(native_cq_prospective_native_valid),.native_cq_prospective_key(native_cq_prospective_key),.native_bound_valid(native_bound_valid),.native_bound_tag(native_bound_tag),.native_bound_gen(native_bound_gen),.native_bound_descgen(native_bound_descgen),.native_bound_client(native_bound_client),.native_bound_slot(native_bound_slot),.native_bound_pos(native_bound_pos),.native_join_fault(native_join_fault),.health_native_valid(health_native_valid),.health_native_tag(health_native_tag),.health_native_gen(health_native_gen),.issue_fire_v(issue_fire_v),.issue_token(issue_token),.issue_pos(issue_pos),.issue_client(issue_client),.issue_slot(issue_slot),.issue_descgen(issue_descgen),.event_insert_v(event_insert_v),.event_native_valid(event_native_valid),.event_native_tag(event_native_tag),.event_native_gen(event_native_gen),.event_descgen(event_descgen),.cq_offer_v(cq_offer_v),.cq_native_valid(cq_native_valid),.cq_native_tag(cq_native_tag),.cq_native_gen(cq_native_gen),.cq_descgen(cq_descgen),.raw_done_v(raw_done_v),.raw_done_native_valid(raw_done_native_valid),.raw_done_report_needed(raw_done_report_needed),.native_certificate_v(native_certificate_v),.raw_done_tag(raw_done_tag),.raw_done_gen(raw_done_gen),.raw_done_descgen(raw_done_descgen),.raw_done_client(raw_done_client),.raw_done_slot(raw_done_slot),.raw_done_pos(raw_done_pos),.native_certificate_tag(native_certificate_tag),.native_certificate_gen(native_certificate_gen),.native_certificate_descgen(native_certificate_descgen),.native_certificate_client(native_certificate_client),.native_certificate_slot(native_certificate_slot),.event_client(event_client),.cq_offer_client(cq_offer_client),.report_drained_client(report_drained_client),.event_slot(event_slot),.cq_offer_slot(cq_offer_slot),.report_drained_slot(report_drained_slot),.report_drained_v(report_drained_v),.report_drained_cq(report_drained_cq),.report_drained_native_valid(report_drained_native_valid),.report_drained_tag(report_drained_tag),.report_drained_gen(report_drained_gen),.report_drained_descgen(report_drained_descgen),
     .clk(clk),.rst_n(rst_n),.raw_por_n(raw_por_n),.warm_rst_n(warm_rst_n),.pll_locked_i(pll_locked_i),
     .health_bad_i(health_bad_i),.health_armed_i(health_armed_i),.health_identity_i(health_identity_i),.health_cutoff_i(health_cutoff_i),
     .execution_restart_i(execution_restart_i),.role_fault_i(role_fault_i),.owner_drained_i(owner_drained_i),
@@ -140,7 +141,7 @@ reg allow_aw=1,allow_w=1;
    .ck(clk),.rst_n(rst_n),.die_id(3'(d)),.rx_v(ctrl_rx_v[d]),.rx_d(ctrl_rx_d[512*d+:512]),.rx_cr(ctrl_rx_cr[d]),.tx_v(ctrl_tx_v[d]),.tx_d(ctrl_tx_d[512*d+:512]),.tx_cr(ctrl_tx_cr[d]),
    .local_tk(local_tk[d]),.local_kst(10'd0),.local_boot(2'b11),.cmd_v(d==0?cmd_v:1'b0),.cmd_hc(cmd_hc),.cmd_cr(cr_unused),.hc(local_hc[d]),.tk8(ctk),.kst8(),.boot8(),.seen(),.fault(ctrl_fault[d]),
    .startup_allowed(1'b1),.local_service_ready(1'b1),.local_service_epoch(16'd0),.begin_v(1'b0),.begin_epoch(16'd0),.begin_cr(),.begin_available(),.service_begin_v(),.service_begin_epoch(),.pending_advertised(),.pending_epoch(),.service_ready8(cready),.pending_ack8(),.service_epoch8(cepoch),.ingest_permission(),
-   .por_n(raw_por_n),.token_wrap_fence_valid(1'b0),.token_wrap_drained(1'b0),.token_wrap_link_reset_seen(1'b0),.token_wrap_retraining_done(1'b0),.token_allocator_fault(coordinator_fault),.package_abort(fixture_abort),.abort_drained({4{fixture_drains[d]}}),
+   .por_n(raw_por_n),.token_wrap_fence_valid(1'b0),.token_wrap_drained(1'b0),.token_wrap_link_reset_seen(1'b0),.token_wrap_retraining_done(1'b0),.token_allocator_fault(coordinator_fault),.package_abort(eng_fault),.abort_drained({4{fixture_drains[d]}}),
    .token_request_valid(token_request_v[d]),.token_request_ready(d==0?(coordinator_request_ready&&request_allow):1'b0),.token_request_token(token_request_token[d]),.token_request_position(token_request_pos[d]),.token_request_generation(token_request_gen[d]),
    .token_grant_valid(d==0?grant_valid:1'b0),.token_grant_ready(token_grant_ready[d]),.token_grant_epoch(grant_epoch),.token_grant_token(grant_token),.token_grant_position(grant_pos),.token_grant_generation(grant_gen),.token_grant_tag(grant_tag),
    .allocated_valid(d==0?allocated_valid:allocated_rank_v[d]),.allocated_delivered(d==0?allocated_delivered:allocated_rank_delivered[d]),.allocated_epoch(d==0?grant_epoch:allocated_rank_epoch[d]),.allocated_token(d==0?grant_token:allocated_rank_token[d]),.allocated_position(d==0?grant_pos:allocated_rank_pos[d]),.allocated_generation(d==0?grant_gen:allocated_rank_gen[d]),
@@ -152,13 +153,13 @@ reg allow_aw=1,allow_w=1;
    .request_v(ep_request_v[d]),.request_tag(ep_request_tag[d]),.request_trace(ep_trace[d]),.request_gen(ep_request_gen[d]),.request_token(ep_request_token[d]),.request_pos(ep_request_pos[d]),.request_cr(ep_request_cr[d]),.native_pr(),
    .result_v(ep_result_v[d]),.result_tag(ep_result_tag[d]),.result_gen(ep_result_gen[d]),.result_done(ep_result_done[d]),.result_fault(ep_result_fault[d]),.result_cause(ep_result_cause[d]),.result_token(ep_result_token[d]),.result_value(ep_result_value[d]),.result_cycles(ep_result_cycles[d]),.result_cr(ep_result_cr[d]),
    .kv_drained(fixture_drains[d]),.vm_drained(fixture_drains[d]),.collective_drained(fixture_drains[d]),.host_drained(fixture_drains[d]),.collective_busy(1'b0),.kv_flush(1'b0),.recovery_clear(recovery_clear[d]),.cancel_release_v(cancel_release_v[d]),.cancel_release_tag(release_tag[d]),.cancel_release_gen(release_gen[d]),.context_owned(ep_owned[d]),.cancel_released(ep_cancel_released[d]),.local_tk(local_tk[d]),.protocol_fault(ep_protocol_fault[d]));
-  qkd_host_peer_rank_codec #(.RANK(d)) codec(
+  qkd_host_peer_rank_codec_rc #(.RANK(d),.ENABLE_NATIVE_OWNER_JOIN(1)) codec(
    .ck(clk),.por_n(raw_por_n),.tx_valid(peer_rx_valid[d]),.tx_data(peer_rx_data[512*d+:512]),.tx_ready(peer_rx_ready[d]),.rx_valid(peer_tx_valid[d]),.rx_data(peer_tx_data[512*d+:512]),.rx_ready(peer_tx_ready[d]),
    .request_v(ep_request_v[d]),.request_tag(ep_request_tag[d]),.request_gen(ep_request_gen[d]),.request_trace(ep_trace[d]),.request_token(ep_request_token[d]),.request_pos(ep_request_pos[d]),.request_cr(ep_request_cr[d]),.request_aborted(),
    .cancel_valid(ctrl_cancel_v[d]),.cancel_tag(ctrl_cancel_tag[d]),.cancel_gen(ctrl_cancel_gen[d]),.cancel_done(ctrl_cancel_done[d]),.cancel_fault(ctrl_cancel_fault[d]),.cancel_drained(ctrl_cancel_drained[d]),.cancel_accepted(),.cancel_release_v(cancel_release_v[d]),.cancel_release_tag(release_tag[d]),.cancel_release_gen(release_gen[d]),.cancel_released(ep_cancel_released[d]),
    .result_v(ep_result_v[d]),.result_tag(ep_result_tag[d]),.result_gen(ep_result_gen[d]),.result_done(ep_result_done[d]),.result_fault(ep_result_fault[d]),.result_cause(ep_result_cause[d]),.result_token(ep_result_token[d]),.result_value(ep_result_value[d]),.result_cycles(ep_result_cycles[d]),.result_cr(ep_result_cr[d]),
    .service_ready(1'b1),.native_ready(fixture_native_ready[d]),.service_epoch(16'd0),.drained({4{fixture_drains[d]}}),.context_owned(ep_owned[d]),.links_drained(1'b1),.link_reset_seen(reset_request[d]),.retrained(retrain_request[d]),.program_ready(1'b1),.program_epoch(16'd0),.program_digest(64'h0123456789abcdef),
-   .step_issue_v(d==0?step_issue_v:1'b0),.step_client_tag(step_client_tag),.step_slot(step_slot),.step_pos(step_pos),
+   .step_retire_native_valid(d==0?step_retire_native_valid:1'b0),.cq_native_valid_observed(d==0?cq_native_valid_observed:1'b0),.step_issue_v(d==0?step_issue_v:1'b0),.step_client_tag(step_client_tag),.step_slot(step_slot),.step_pos(step_pos),
    .step_retire_v(d==0?step_retire_v:1'b0),.step_retire_cq(step_retire_cq),.step_retire_client_tag(step_retire_client_tag),.step_retire_slot(step_retire_slot),.step_retire_pos(step_retire_pos),.step_retire_token(step_retire_token),
    .cq_commit_v(d==0?cq_commit_v:1'b0),.cq_client_tag(cq_client_tag),.cq_slot(cq_slot),.cq_pos(cq_pos),.cq_token(cq_token),
    .certificate_v(fixture_certificate_v),.certificate(66'd0),.certificate_prefix(32'd0),.allocated_valid(allocated_rank_v[d]),.allocated_delivered(allocated_rank_delivered[d]),.allocated_epoch(allocated_rank_epoch[d]),.allocated_token(allocated_rank_token[d]),.allocated_position(allocated_rank_pos[d]),.allocated_gen(allocated_rank_gen[d]),.reset_request(reset_request[d]),.retrain_request(retrain_request[d]),.recovery_clear(recovery_clear[d]),.fault(rank_fault[d]));
@@ -206,6 +207,37 @@ reg allow_aw=1,allow_w=1;
  reg hold_dma_b=0;
  integer csr_acks,read_beats,write_beats,cq_entries,cq_successes,cq_errors;wire[63:0]last_cq_w0,last_cq_w1;
  native_join_host_memory memory(.clk(clk),.por_n(raw_por_n),.tx_v(tx_v),.tx_d(tx_d),.tx_cr(tx_cr),.rx_v(rx_v),.rx_d(rx_d),.rx_cr(rx_cr),.hold_dma_b(hold_dma_b),.csr_acks(csr_acks),.read_beats(read_beats),.write_beats(write_beats),.cq_entries(cq_entries),.cq_successes(cq_successes),.cq_errors(cq_errors),.last_cq_w0(last_cq_w0),.last_cq_w1(last_cq_w1));
+ reg expected_retire_v=0,expected_retire_native=0,expected_cq_v=0,expected_cq_native=0,expected_missing_binding_fault=0;
+ bit retire_markers[$],cq_markers[$];bit marker;
+ always @(posedge clk)begin
+  if(raw_por_n)begin
+   if(step_retire_v!==expected_retire_v)$fatal(1,"RETIRE_OBSERVER_EDGE_CHANGED");
+   if(step_retire_v)begin
+    if(step_retire_native_valid!==expected_retire_native)$fatal(1,"RETIRE_MARKER_ALIGNMENT");
+    retire_markers.push_back(step_retire_native_valid);
+   end
+   if(cq_commit_v!==expected_cq_v)$fatal(1,"CQ_OBSERVER_EDGE_CHANGED");
+   if(cq_commit_v)begin
+    if(cq_native_valid_observed!==expected_cq_native)$fatal(1,"CQ_MARKER_ALIGNMENT");
+    cq_markers.push_back(cq_native_valid_observed);
+   end
+   if(peer_rx_valid[0]&&peer_rx_ready[0])begin
+    if(peer_rx_data[7:0]==8'd6)begin
+     if(retire_markers.size()==0)$fatal(1,"RETIRE_PACKET_WITHOUT_SOURCE");
+     marker=retire_markers.pop_front();if(peer_rx_data[91]!==marker)$fatal(1,"RETIRE_PACKET_MARKER");
+    end
+    if(peer_rx_data[7:0]==8'd7)begin
+     if(cq_markers.size()==0)$fatal(1,"CQ_PACKET_WITHOUT_SOURCE");
+     marker=cq_markers.pop_front();if(peer_rx_data[90]!==marker)$fatal(1,"CQ_PACKET_MARKER");
+    end
+   end
+   if(expected_missing_binding_fault&&!join_fault)$fatal(1,"MISSING_NATIVE_BINDING_WAS_NOT_FAULT");
+   expected_retire_v<=raw_done_v;expected_retire_native<=raw_done_native_valid;
+   expected_cq_v<=report_drained_cq&&m_bvalid&&m_bresp==0;
+   expected_cq_native<=native_cq_prospective_native_valid;
+   expected_missing_binding_fault<=raw_done_v&&!raw_done_native_valid&&!ctl_res[86];
+  end
+ end
  integer edges=0,issues=0,allocations=0,dispatches=0,raw_completions=0,post_completions=0,certificates=0,event_copies=0,cq_offers=0;
  integer request_counts[8],request_returns[8],result_returns[8],releases[8];
  integer response_due=-1,response_step=-1,first_issue_edge=0,max_response=0;
