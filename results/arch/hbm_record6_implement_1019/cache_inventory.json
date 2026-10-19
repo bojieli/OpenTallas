@@ -1,0 +1,386 @@
+{
+  "source_files": [
+    {
+      "path": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator_bin",
+      "size": 19505384,
+      "sha256": "d3f42fa3b523cf1d7e38827134ac8560ac03b52466392eaf0001141ed4d9fe41"
+    },
+    {
+      "path": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_std.sv",
+      "size": 7968,
+      "sha256": "1872ad8e8a22c658b652850ef2557669a1b7909684089691d5447cbf4bbacf94"
+    },
+    {
+      "path": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_std_waiver.vlt",
+      "size": 3224,
+      "sha256": "1f277392ff57efb247d3727265e162eed0459d068757bca49d743105916b7ce8"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/hbm-native-record23-clock-1019/ckgen.sv",
+      "size": 2957,
+      "sha256": "8b94242114190216d1769bd344b4bdd0a40d3b721ed5a06397e9bd76be75df4f"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/hbm-native-record23-clock-1019/current53cb/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+      "size": 6668,
+      "sha256": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/hbm-native-record23-clock-1019/current53cb/physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v",
+      "size": 6684,
+      "sha256": "25ca11845381ce089cc5f2fbab82a90672d8704fe6c66f4445814b33b4b7d51e"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/hbm-native-record23-clock-1019/current53cb/rtl/hbm_accel/die_glue/hbfd_pad.sv",
+      "size": 1167,
+      "sha256": "7ce5f156514b741380f6e3df96fef21b3029de1b0225a014c27e7bda3f19a3e9"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/hbm-native-record23-clock-1019/current53cb/rtl/hbm_accel/die_glue/hbfd_rly_masters.sv",
+      "size": 4308,
+      "sha256": "c181eaddb3787a958397b9e4a58246779d1db921c29ee7b6d1c1d87f31abc86d"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/hbm-native-record23-clock-1019/current53cb/rtl/hbm_accel/die_glue/ot_hbm_rly.sv",
+      "size": 2799,
+      "sha256": "6885ac1a168df5f58537cad363cf59ccde05bfcd253046080fe425b0ac3e63aa"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/hbm-native-record23-clock-1019/current53cb/rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_ins.sv",
+      "size": 3343,
+      "sha256": "5689f7f3baad5435b2bac95cb31d908600a5434d2768a145fb5fe93276ba8bd2"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/hbm-native-record23-clock-1019/current53cb/rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_lane.sv",
+      "size": 41621,
+      "sha256": "24fb5a39f64796a9471f50973d0b2436d9561ce27df0e19d0061157d03bde53d"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/hbm-native-record23-clock-1019/current53cb/rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_lane_pinreg.sv",
+      "size": 9362,
+      "sha256": "00d43c502abb3d308c359c1d82bf053233113c62a83562e8adbf9efb7a9aa6ea"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/hbm-native-record23-clock-1019/current53cb/rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_side.sv",
+      "size": 7590,
+      "sha256": "2e6c4f37354ca789ae7178eac57dc6b5c1abdf7a12858812200e10fb93f04a44"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/hbm-native-record23-clock-1019/current53cb/rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_data_store.sv",
+      "size": 3284,
+      "sha256": "2c061c815a470df94e21b149fc02e9e352be722f31cb28e51440ced123f88219"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/hbm-native-record23-clock-1019/current53cb/rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_pinned_bank.sv",
+      "size": 3844,
+      "sha256": "d2a4968e067d60f16349357bfbe0aadc58edd22d8b7cb89f1142a9f62ad7982a"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/hbm-native-record23-clock-1019/current53cb/rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_static_vm_bank_leaf_s.sv",
+      "size": 2124,
+      "sha256": "3b0b126340d39eef7efc913995ab1ff4779dd64d3b8d669ff92530b08ea11198"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/hbm-native-record23-clock-1019/current53cb/rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_static_vm_ports.sv",
+      "size": 5084,
+      "sha256": "00eb5cdc33808a02dbb7a1c9ea272ff6a266521117851ee8ab598581902200ff"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/hbm-native-record23-clock-1019/current53cb/rtl/hbm_accel/generic/adapters/static_su/programme/multirate_bridge.sv",
+      "size": 4666,
+      "sha256": "5211e5d9ce5e3803d5adc272155cc87a7be2b931e08e78958727250ec89f5f74"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/hbm-native-record23-clock-1019/current53cb/rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme.sv",
+      "size": 20211,
+      "sha256": "e1a7343e0253f19e646c9c5aa9eaf370a824d8311078d3f75e863ab55ce977d0"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/hbm-native-record23-clock-1019/current53cb/rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme_pgcol.sv",
+      "size": 13645,
+      "sha256": "de834bcd0dc4e267bad87ea0a5283ee873f30e0ae94ae6fa34a8588965eeb255"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/hbm-native-record23-clock-1019/current53cb/rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pg_lg_tap.sv",
+      "size": 3475,
+      "sha256": "332ddd8dae6c96a5b84d32efc2b7a0298e86843038df13c810e77333d6592192"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/hbm-native-record23-clock-1019/current53cb/rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
+      "size": 35106,
+      "sha256": "4bb48f44f4548e2d1cb96333edb66010090b761fd8e3e70cb99f7541d590ea75"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/hbm-native-record23-clock-1019/current53cb/rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice_lg.sv",
+      "size": 5300,
+      "sha256": "bfed04ce314db9a16958b6abab474f6fa1e6dc4259af473b568751d142bc9a8e"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/hbm-native-record23-clock-1019/current53cb/rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+      "size": 4413,
+      "sha256": "2a7d478da253fb741749607d8a803ebb5bb2186dc2825f0aa78055f4dfa1dfc4"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/hbm-native-record23-clock-1019/current53cb/rtl/hbm_accel/generic/vm/static/faces_q0/ot_vms_bank_q0_faces_body.sv",
+      "size": 27875,
+      "sha256": "b069136bfe9572147c212d2c9ba2a11ad162663f777b8a52829e9327b7483a17"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/hbm-native-record23-clock-1019/current53cb/rtl/hbm_accel/generic/vm/static/faces_q0/ot_vms_bank_q0_faces_core.sv",
+      "size": 1951,
+      "sha256": "c55ad634a94838dc57e4c8111e97dcb8319fb2d7474dfe1e3bce3a115b16e621"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/hbm-native-record23-clock-1019/current53cb/rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar.sv",
+      "size": 3067,
+      "sha256": "e4ccfb648bf5c4b642ca9a4610d55558447fdd4ce93be1e07048bef2aa64349b"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/hbm-native-record23-clock-1019/current53cb/rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+      "size": 3807,
+      "sha256": "9e4e60326d3e9c7be30ae746ba44fd2a7943f126a4c54e6e37ac56f7a92f72a7"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/hbm-native-record23-clock-1019/current53cb/rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv",
+      "size": 3614,
+      "sha256": "06107909fe1bbf3d3fe2622e388eefd39964ab10977cf6f8fc4db4da8842db72"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/hbm-native-record23-clock-1019/current53cb/rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv",
+      "size": 7638,
+      "sha256": "cd766d1e10aba61a57ad0db66d3ddcde16b5ff01bcc2004edbdeeeb6ec559015"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/hbm-native-record23-clock-1019/current53cb/rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank_term.sv",
+      "size": 3824,
+      "sha256": "a531865c61e55476aef9b13ccbff4d8389ae33f6a836edc95d1e33f5502f1245"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/hbm-native-record23-clock-1019/current53cb/rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
+      "size": 6239,
+      "sha256": "a36c62a72205f4359b58a832deab23736baa320ba5b2d0153ac99278779c6c21"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/hbm-native-record23-clock-1019/current53cb/rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static_xcap.sv",
+      "size": 4651,
+      "sha256": "2d9fc6c6bd4e145ce98ba5cffa785559bdab880e4d39bb6759a2bfd8deb1f960"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/hbm-native-record23-clock-1019/current53cb/rtl/hbm_accel/generic/vm/static/ot_vms_ce_counter_pipe.sv",
+      "size": 990,
+      "sha256": "de10f3eea0f6b8bb0a652ec30621ba4d919b64f7a96651dbc94a4fc7b7ff09fa"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/hbm-native-record23-clock-1019/current53cb/rtl/hdc/ot_hdc_delay.sv",
+      "size": 1395,
+      "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/hbm-native-record23-clock-1019/current53cb/rtl/hdc/ot_hdc_fastfp.sv",
+      "size": 20092,
+      "sha256": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/hbm-native-record23-clock-1019/current53cb/rtl/hdc/ot_hdc_fastfp_lat.sv",
+      "size": 5423,
+      "sha256": "e09be17358e95ebcfe64c2ecc01090410ec81542e737fc96207244cc134f5cbc"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/hbm-native-record23-clock-1019/current53cb/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+      "size": 13769,
+      "sha256": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/hbm-native-record23-clock-1019/current53cb/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+      "size": 16758,
+      "sha256": "ddc4c3bfb4f22788534148049bf381d469053ff5b54c6197548636a3f4aac8e3"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/hbm-native-record23-clock-1019/current53cb/rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+      "size": 10519,
+      "sha256": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/hbm-native-record23-clock-1019/current53cb/rtl/hdc/ot_hdc_fpu.sv",
+      "size": 5251,
+      "sha256": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/hbm-native-record23-clock-1019/current53cb/rtl/hdc/ot_hdc_prefix.sv",
+      "size": 2803,
+      "sha256": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/hbm-native-record23-clock-1019/current53cb/rtl/hdc/ot_hdc_sfu.sv",
+      "size": 7751,
+      "sha256": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/hbm-native-record23-clock-1019/current53cb/rtl/hdc/v41/ot_hdc_fsqrt.sv",
+      "size": 7078,
+      "sha256": "9b2a87e62b62bcaf3fc9b901b2dcde63f966d13925126711aa2ebf6b7b1aff8f"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/hbm-native-record23-clock-1019/current53cb/rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+      "size": 42441,
+      "sha256": "804cf233a0e051d0d72fb3cf1a8b11d3e8c65bdbab3d8f664d98c07ae7c8797b"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/hbm-native-record23-clock-1019/current53cb/rtl/lib/ot_rst_relay.sv",
+      "size": 2883,
+      "sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/hbm-native-record23-clock-1019/current53cb/rtl/proto/ot_fp32_add_rne_pipe.sv",
+      "size": 11904,
+      "sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/hbm-native-record23-clock-1019/native_record23_tb.sv",
+      "size": 10023,
+      "sha256": "a3f24f56433f85431e274315cb59f0014d12e35b48fc376d697d55fd6e1789a3"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/hbm-native-record23-clock-1019/ot_hbm_host_cfg_leaf_sw.sv",
+      "size": 14944,
+      "sha256": "1c50d151d1eb06645b277bc795d81b0c82837635d7e40d8db115359985d825ef"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/hbm-native-record23-clock-1019/pll_functional_model.sv",
+      "size": 1085,
+      "sha256": "fda83db255023005ce82a501d56b88ea2c45081a80af2a3d5373c00e0f9c0b11"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/hbm-native-record23-clock-1019/release.sv",
+      "size": 3402,
+      "sha256": "f49291fd08950a1191d1d7937783ac5559fbcea9b0cb4d06065fefee4acbb485"
+    }
+  ],
+  "archive_sha256": "72f3650a23115179a7c51dbe811f1b181c3e3ef24a69b3b247316035e16784b5",
+  "archive_size": 52237814,
+  "archive_members": [
+    {
+      "name": "Vtb_vm_classes_0.o",
+      "size": 7232768,
+      "sha256": "669f8147fd1f5449101fb60ae9742de1e64989e97b6215ebe01d9278584299f2",
+      "reuse": "immutable existing RTL shape only; new top elaboration may require regenerate"
+    },
+    {
+      "name": "Vtb_vm_classes_1.o",
+      "size": 5883672,
+      "sha256": "eda46339861fac6994d58ca1c263dfa6c9579f24f513113d0281e78d7fb1b34e",
+      "reuse": "immutable existing RTL shape only; new top elaboration may require regenerate"
+    },
+    {
+      "name": "Vtb_vm_classes_2.o",
+      "size": 4906232,
+      "sha256": "30ea35ea6b5784c3bab1f6838e520ef974b9e91e43412775a46bb63c6173f0c9",
+      "reuse": "immutable existing RTL shape only; new top elaboration may require regenerate"
+    },
+    {
+      "name": "Vtb_vm_classes_3.o",
+      "size": 4898552,
+      "sha256": "37333d104850214e7134997f36516d09d02f98e195b9bdd67c6556f6cb47010d",
+      "reuse": "immutable existing RTL shape only; new top elaboration may require regenerate"
+    },
+    {
+      "name": "Vtb_vm_classes_4.o",
+      "size": 4800576,
+      "sha256": "e949274f4f0f81e32d9220a96dad89af139c9be72cc5aa25ff3d5878f9014390",
+      "reuse": "immutable existing RTL shape only; new top elaboration may require regenerate"
+    },
+    {
+      "name": "Vtb_vm_classes_5.o",
+      "size": 4661600,
+      "sha256": "1c8ca5997e130394ede2f5668be694974fc0830192dcf3478c6c8830ac7984f7",
+      "reuse": "immutable existing RTL shape only; new top elaboration may require regenerate"
+    },
+    {
+      "name": "Vtb_vm_classes_Slow_0.o",
+      "size": 4194208,
+      "sha256": "5ac46ab002ce7b43c7bd7e23c11fea23b12bf157afa76e9af39bff28a6d0b451",
+      "reuse": "immutable existing RTL shape only; new top elaboration may require regenerate"
+    },
+    {
+      "name": "Vtb_vm_classes_Slow_1.o",
+      "size": 3177808,
+      "sha256": "141b8e86c6a9910fdd63128a71b21f61f49a3d68bd83a3426ce670607b6ded1d",
+      "reuse": "immutable existing RTL shape only; new top elaboration may require regenerate"
+    },
+    {
+      "name": "Vtb_vm_classes_Slow_2.o",
+      "size": 3187368,
+      "sha256": "2b4bbfcb24f6c8ba86a0262a3bd480a7f643e83b02d46b33dd98be1eeeb80d27",
+      "reuse": "immutable existing RTL shape only; new top elaboration may require regenerate"
+    },
+    {
+      "name": "Vtb_vm_classes_Slow_3.o",
+      "size": 3232784,
+      "sha256": "a2d728812c8f998f9fe6f5c2f6bfe65e13cff99731aacfdf0bdf1973e6a2d875",
+      "reuse": "immutable existing RTL shape only; new top elaboration may require regenerate"
+    },
+    {
+      "name": "Vtb_vm_classes_Slow_4.o",
+      "size": 2659160,
+      "sha256": "901531ebbc4ec9888bc815da715313adf41c3fe851be0db4a6295d4139efa7b3",
+      "reuse": "immutable existing RTL shape only; new top elaboration may require regenerate"
+    },
+    {
+      "name": "Vtb_vm_classes_Slow_5.o",
+      "size": 3056744,
+      "sha256": "f7a5973b958b1c5ba254e8e93057b8fe30657c669b84868855d8b90d6e16c42e",
+      "reuse": "immutable existing RTL shape only; new top elaboration may require regenerate"
+    },
+    {
+      "name": "Vtb__Syms__Slow.o",
+      "size": 32016,
+      "sha256": "ef65a0c55aa17bab8d8181e78dc599c0c4afcb0348b30ae5971771ae24801f7c",
+      "reuse": "immutable existing RTL shape only; new top elaboration may require regenerate"
+    }
+  ],
+  "cpp_count": 352,
+  "cpp_total_bytes": 339405073,
+  "cpp_largest": [
+    {
+      "name": "Vtb___024root__7.cpp",
+      "size": 3694821
+    },
+    {
+      "name": "Vtb___024root__9.cpp",
+      "size": 3694814
+    },
+    {
+      "name": "Vtb___024root__8.cpp",
+      "size": 3694814
+    },
+    {
+      "name": "Vtb___024root__10.cpp",
+      "size": 3685795
+    },
+    {
+      "name": "Vtb___024root__11.cpp",
+      "size": 3674717
+    },
+    {
+      "name": "Vtb___024root__3.cpp",
+      "size": 3374911
+    },
+    {
+      "name": "Vtb___024root__13__Slow.cpp",
+      "size": 2891146
+    },
+    {
+      "name": "Vtb___024root__2.cpp",
+      "size": 2073298
+    }
+  ],
+  "host_memory": {
+    "MemTotal": "1188233668 kB",
+    "MemAvailable": "970378720 kB",
+    "SwapFree": "142604572 kB"
+  },
+  "inventory_maxrss_kb": 17768,
+  "native_r23": "selectedquarter two native VM banks; no qcore reducer; 11 RTL archive members plus2 TB objects",
+  "candidate": "512lanes all4quarters native24bank identities +41nodes +qcoreRFscratch +actual32edge tree; no original archive mutation",
+  "cached_binary_reuse": false
+}

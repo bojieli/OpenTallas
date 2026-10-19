@@ -1,0 +1,44 @@
+{
+  "phase": "PRE_EDIT_MANIFEST",
+  "authorization": "ROOT bounded private source + numerical exact6f226591b; no synthesis/physical/gate/adoption",
+  "base": "6f226591b",
+  "existing_edit_allowlist": {
+    "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore.sv": "6c2baeafe0b6aa44f2b51218970f2da25153b5c4f1849a7c41359c687734705c"
+  },
+  "new_source_allowlist": [
+    "rtl/hbm_accel/generic/adapters/static_su/reduction/ot_hbm_r6_station41.sv",
+    "rtl/hbm_accel/generic/adapters/static_su/reduction/ot_hbm_r6_station41_schedule.svh",
+    "tools/hbm_record6_station41/*",
+    "tests/hbm_record6_component/*"
+  ],
+  "source_default_binding": {
+    "rtl/hbm_accel/generic/adapters/static_su/reduction/ot_hbm_su_reduce_static.sv": "75b38ab7103ca40f4784e47559f70e659851f7184a18a05e43653336b03d0a32",
+    "rtl/hbm_accel/generic/adapters/static_su/register_file/ot_hbm_su_static_rf.sv": "9689c5640d72f23d411171e58b17680d1ee6a59e893271c8b0bf121fc98d2ca9",
+    "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_stree.sv": "f5f2c1c46e2b269cee1ad907ca4d446186e0cc905ee3913be9a4b25b12b65670",
+    "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv": "856f03008f5278674383e43b68ebf64ae3f82fc3bfbdfc81b6d5728ed259f02d",
+    "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore.sv": "6c2baeafe0b6aa44f2b51218970f2da25153b5c4f1849a7c41359c687734705c",
+    "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_lane_pinreg.sv": "00d43c502abb3d308c359c1d82bf053233113c62a83562e8adbf9efb7a9aa6ea",
+    "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_lane.sv": "24fb5a39f64796a9471f50973d0b2436d9561ce27df0e19d0061157d03bde53d",
+    "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv": "32e68bbd89af6e890132e022800d3ac096371a040caa94b1253602d51200d567"
+  },
+  "mandatory_front_sha256": "32e68bbd89af6e890132e022800d3ac096371a040caa94b1253602d51200d567",
+  "default_unchanged": [
+    "production R-mode compiler guard",
+    "original fixture1280A words",
+    "authentic original R40a2a1ed",
+    "R23 test/default image",
+    "SFU/COLL existing selectors",
+    "native macro models/calendars archived evidence"
+  ],
+  "new_parameter": "ROOT_OPERAND default0; distinct component explicit1",
+  "cached_archive": "ot-epyc6:/srv/opentallas-scratch/claude/hbm-native-record23-clock-1019/obj_arithmetic_clock/Vtb__ALL.a",
+  "reuse_eligibility": "11 RTL objects immutable and only selected-quarter/two-bank shape; not wholeR6. ABI-compatible repeated modules may be reused only hash/elaboration/API equivalence; new roots/stations/qcore/all4quarters require new elaboration. No C++ functional patching/substitution. Original native archive untouched.",
+  "build_plan": "Inventory archive source/object sizes and source hashes first; measure actual RSS/headroom via fleet. Incremental Mdir distinct. Actual native24banks+512lanes inventory, no guessed process caps, no CPU-load holds. Verilator5.050. Unpinned ot-run only.",
+  "physical_holds": [
+    "coherent RF8192b x6 baseline functional only",
+    "source FF/copy/mux count not SAFE",
+    "prelanding tree32edges functional only",
+    "macro CQ unqualified",
+    "producer arrival/parent H/calendar open"
+  ]
+}
