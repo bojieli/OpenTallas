@@ -13,6 +13,11 @@ master, lane padding").  Only three classes, each with its own proof; everything
      bits [cov, b-1] tied 0 (declared station pads); the landing output bits [cov, b-1] carry those zeros -> spare.
   C  forwarded-clock taps: clock output ports (name starts with `ck`) of a master emitted as a full-width wire whose bit k is
      a per-lane forwarded clock; bits no die cell reads belong to lanes the plan does not build -> spare.
+     C' slice ck_rt (`assign ck_rt = {8{clk}}` in ot_s81sl_slice, a pure copy of the slice root): the rt return lanes are
+     inbound and forwarded by their source frames, so no die lane takes the slice's ck_rt -> whole port spare when unbound.
+  D  band output bo of a C1 slice (ot_s81sl_slice HB = 0, also the u_sl of every lep wrapper, which takes the default HB 0):
+     the RTL drives `assign bo = 1104'd0` (C1 has no band port) -> whole port spare when unbound.  (HB = 1 slices keep
+     their bo; any of its bits the die leaves unread stays a failure.)
 """
 from __future__ import annotations
 
@@ -76,7 +81,7 @@ def declare(lines, pads, root):
         m = INST_RE.match(ln)
         if m:
             insts[m.group(2)] = (m.group(1), _ports(m.group(3)))
-    rec = dict(A_svc_rs_faces=[], B_lane_quantisation=[], C_forwarded_clock_taps=[], gaps=[])
+    rec = dict(A_svc_rs_faces=[], B_lane_quantisation=[], C_forwarded_clock_taps=[], D_c1_band_out=[], gaps=[])
     base = Path(root) / 'results/arch/s81_dv_1016/svc_rs'
     tree = json.loads((base / 'tree.json').read_text())['slices']
     emb = json.loads((base / 'embed.json').read_text())['roles']
@@ -143,6 +148,21 @@ def declare(lines, pads, root):
             for k in range(w):
                 if k not in used:
                     add(inst, mod, 'forwarded-clock tap of a lane the plan does not build', port, k, k, 'C_forwarded_clock_taps')
+    # ---- C' / D: slice clock-copy and C1 band outputs (proof = the RTL text, checked here)
+    sl = (Path(root) / 'rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv').read_text()
+    ck_rt_copy = 'assign ck_rt = {8{clk}};' in sl
+    c1_bo_zero = "assign bo = 1104'd0;" in sl and re.search(r'parameter\s+integer\s+HB\s*=\s*0', sl) is not None
+    for ln in lines:
+        m = INST_RE.match(ln)
+        if not m or not m.group(1).startswith('ot_s81sl_slice'):
+            continue
+        mod, inst, ps = m.group(1), m.group(2), _ports(m.group(3))
+        hb = re.search(r'#\(.*?\.HB\((\d+)\)', ln)
+        if ck_rt_copy and 'ck_rt' not in ps:
+            add(inst, mod, 'slice ck_rt = {8{clk}} root copy; rt lanes are forwarded by their source frames', 'ck_rt', 0, 7,
+                'C_forwarded_clock_taps')
+        if c1_bo_zero and 'bo' not in ps and (mod != 'ot_s81sl_slice' or (hb and hb.group(1) == '0')):
+            add(inst, mod, "C1 slice (HB 0): bo = 1104'd0 in ot_s81sl_slice g_c1 (no band port)", 'bo', 0, 1103, 'D_c1_band_out')
     rec['summary'] = {k: dict(entries=len(v), bits=sum(x.get('bits', 0) for x in v)) for k, v in rec.items() if k != 'gaps'}
     rec['summary']['gaps'] = len(rec['gaps'])
     return rec
