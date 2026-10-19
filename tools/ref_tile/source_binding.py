@@ -23,7 +23,9 @@ GATE_TOOLS = ("tools/ref_tile/ref_route.sh", "tools/textbook_lint.py", "tools/cl
               "tools/ref_tile/path_classes.tcl", "tools/ref_tile/keep_module_audit.py",
               "tools/ref_tile/measured_band_fill.py")
 # Non-Python source read by an imported generator and embedded in its kit.
-PY_DATA = {"tools/ref_tile/direct_macro_clock_entries.py": ("tools/ref_tile/sta_scene_binding.cc",)}
+PY_DATA = {"tools/ref_tile/direct_macro_clock_entries.py": ("tools/ref_tile/sta_scene_binding.cc",),
+           "tools/ref_tile/clock_entry_constraints.py": ("physical/common_flow/clock_family.tcl",),
+           "tools/closure_loop/ck_insertion.py": ("physical/common_flow/clock_family.tcl",)}
 PY_DIRS = ("tools", "tools/ref_tile", "tools/closure_loop", "tools/w18")
 SCAN = (".tcl", ".sdc", ".sh", ".env", ".mk", ".cfg", ".f")    # flow scripts: every repo path they name is consumed
 HDL = (".v", ".sv", ".svh", ".vh")
