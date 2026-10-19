@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qkd_host_ctl",
+ "enable": false,
+ "reason": "RTL registers every pin: ready/req/pr/tk are captured into ready_q/req_q/pr_q/tk_q with no input logic, res leaves a register, hc = pr_q + the pkgctl registered d_* fields (rtl/physical/ot_qwen_host_ctl.sv header; closed hc1-71ffdaf23 view had the same boundary). A flow pin stage would add a cycle the host calendar does not have."
+}
