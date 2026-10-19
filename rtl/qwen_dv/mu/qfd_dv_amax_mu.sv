@@ -19,7 +19,13 @@
 // Command fields (opt-in, NU > 1; spare bits today): STN (kind 2) user = cmd[52:51]; AMAX (kind 6) user = cmd[9:8].
 // MUT (bench only, NU > 1 only): 1 the run merge takes a tie for the LATER chunk (okey >=, no index rule);
 //   2 results merge into the user of the CURRENT STN register instead of the user carried down the tree;
-//   3 an AMAX clear clears every user;  4 emit selects the current STN user instead of the AMAX command's user.
+//   3 an AMAX clear clears every user;  4 emit selects the current STN user instead of the AMAX command's user;
+//   5 the STN-overlap fault (below) is dropped.
+// STN overlap (MU-ADOPT-SLICE 10-19, F-TOK-1 / blocker B2 of MU-ADOPT-TOK): results are gated and attributed by the
+//   CURRENT STN register (amax bit, user), as in today's slice; an STN of ANY user issued while the previous op's
+//   station results are still pending (stn_pend) would silently drop or misattribute them (and the slice's r_addr
+//   base moves with it).  NU > 1: such an STN is a sticky mu_fault when either op is amax-armed (static schedule:
+//   fault, never stall; the compiler reserves the station from an amax STN's issue to its last result).
 // =====================================================================================================================
 module qfd_dv_amax_mu #(
     parameter integer NU  = 1,
@@ -30,6 +36,7 @@ module qfd_dv_amax_mu #(
     input  wire          c_stn,         // STN command on its issue edge
     input  wire          stn_amax_bit,  // cmd[50]
     input  wire [1:0]    stn_user,      // cmd[52:51] (NU > 1)
+    input  wire          stn_pend,      // station results of the previous STN still pending on this edge (slice stn_left)
     input  wire          r_v,           // station result word
     input  wire [23:0]   r_addr,
     input  wire [511:0]  r_d,
@@ -116,7 +123,8 @@ module qfd_dv_amax_mu #(
                     (al4[56] && (au4 >= NU || !open[au4])) ||
                     (c_am && am_emit_cmd && (am_user >= NU || !open[am_user])) ||
                     (clr && al4[56] && au4 == am_user) ||
-                    (c_stn && stn_amax_bit && stn_user >= NU))
+                    (c_stn && stn_amax_bit && stn_user >= NU) ||
+                    (MUT != 5 && c_stn && stn_pend && (stn_amax || stn_amax_bit)))
                     fault_q <= 1'b1;
             end
         wire [56:0] sel = run[am_eu];
@@ -127,5 +135,5 @@ module qfd_dv_amax_mu #(
         assign mu_fault = fault_q;
     end endgenerate
     initial if (NU < 1 || NU > 4) $fatal(1, "qfd_dv_amax_mu: NU %0d outside 1..4", NU);
-    initial if (MUT < 0 || MUT > 4) $fatal(1, "qfd_dv_amax_mu: MUT %0d undefined", MUT);
+    initial if (MUT < 0 || MUT > 5) $fatal(1, "qfd_dv_amax_mu: MUT %0d undefined", MUT);
 endmodule
