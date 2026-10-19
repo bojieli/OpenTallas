@@ -1,5 +1,5 @@
 {
- "name": "hbm_wbk_q_1018-q1-22961d638",
+ "name": "hbm_wbk_q_1018-q1-COMMIT",
  "block": "ot_hbm_svc_wb_kport_q",
  "ref_tile": true,
  "owner": "Claude:HBM-WBK",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 96,
  "source": {
   "branch": "claude/hbm-wbk-1018",
-  "commit": "22961d638",
+  "commit": "COMMIT",
   "extra_paths": [
    "rtl/hbm_accel/loader/service_native/run_stk_quadrant_bench.sh",
    "rtl/hbm_accel/loader/service_native/tb_hbm_svc_wb_kshare_qh.sv",
@@ -185,7 +185,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hbm_wbk_q_1018/hbm_wbk_q_1018-q1-22961d638"
+   "to": "results/rtl/ref_tile/hbm_wbk_q_1018/hbm_wbk_q_1018-q1-COMMIT"
   }
  ],
  "cycles_added": 0,

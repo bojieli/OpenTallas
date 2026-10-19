@@ -39,7 +39,10 @@ module ot_hbm_svc_wb_cutthrough_cdc #(parameter [1:0] STACK=0, parameter integer
  wire [28:0] meta_data,ack_data;wire meta_full,meta_empty,ack_full,ack_empty;
  wire meta_we,meta_re,ack_we,ack_re;
  reg meta_active,ack_pending;reg [28:0] meta_q;reg [11:0] ack_count;
- reg [NPC-1:0] req_valid;reg [6:0] outstanding[0:NPC-1];reg [4:0] req_lane[0:NPC-1];
+ // req_lane is the K-skid FIFO index a stalled PC holds; it selects FIFO storage words read across the CDC.  Keep it
+ // the RTL register: yosys FSM extraction would recode it into unnamed state flops the reviewed-gray-FIFO audit
+ // cannot bind to this gated consumer (gate 10-18: 80 auto-named hbm_clk flops behind u_fifo.mem).
+ reg [NPC-1:0] req_valid;reg [6:0] outstanding[0:NPC-1];(* fsm_encoding = "none" *) reg [4:0] req_lane[0:NPC-1];
  reg [NPC-1:0] pick_v;reg [4:0] pick_lane[0:NPC-1];reg [31:0] pop;reg [4:0] selected_lane[0:NPC-1];
  integer pc,l,acks;wire hbm_fault=hbm_sticky||sf2||!hrst;
  assign fault=stream_sticky||hf2;assign bank_owned=allocated;
