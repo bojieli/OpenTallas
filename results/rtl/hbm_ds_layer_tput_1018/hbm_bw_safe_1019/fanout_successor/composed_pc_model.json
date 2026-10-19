@@ -125,5 +125,14 @@
     "extra_ff": 0,
     "data_edges_added": 0,
     "status": "modelbeforeRTL; exact23968 andactualcensus required"
+  },
+  "fault_stop_regions_successor": {
+    "actual_map4_failure": "globalstickyORref_fault root36 actualnonbufferloads, mostly35KRskid8bvalid decisions",
+    "structure": "Two real existing-edge sticky captures plus two existing-edge AQref_fault captures, equal canonicalnextstate; eachlocalstop groupowns11Kcontrolregions and9KRcontrolregions, target<=29actualloads. Canonicalfault outputs unchanged.",
+    "extra_ff": 4,
+    "data_edges_added": 0,
+    "reset": "identical canonical sticky/AQfault reset signals/releaseedge, no newdomain",
+    "proof": "Simulation assertions check everyreplica againstcanonical on eachnegedge includingfaults andresets; mixed6000/identitymutant, AQ64+causalmutants andactualmappedD/CLK/reset/fanout required",
+    "status": "modelbeforeRTL"
   }
 }

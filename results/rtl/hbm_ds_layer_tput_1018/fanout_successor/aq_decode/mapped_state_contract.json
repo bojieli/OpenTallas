@@ -27,7 +27,8 @@
     "blk_bank_regions": 15,
     "blk_valid_regions": 3,
     "look_bank_regions": 105,
-    "look_valid_regions": 24
+    "look_valid_regions": 24,
+    "fault_regions_q": 2
   },
   "forbidden_families": [
     "c_oh",
@@ -52,7 +53,8 @@
       "blk_valid",
       "command_bank_local",
       "command_bank_valid",
-      "tail_set_regions"
+      "tail_set_regions",
+      "fault_regions_q"
     ],
     "regional_async": [
       "row_local[21:19]",

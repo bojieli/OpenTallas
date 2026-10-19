@@ -98,6 +98,8 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
     wire legal;wire raw_legal=length>=1 && length<=4 && (!i_we || length==1) &&
         {1'b0,incoming[1:0]}+length<=4 && incoming_pc==pc_id_q && {1'b0,incoming}+length<=31'd703125000;
     wire wr,cv,cwe,caq;wire[4:0]cb,cc;
+    wire[1:0]pc_fault_regions;
+    (* keep="true",dont_touch="true" *) reg[1:0]sticky_regions;
     wire[319:0]head={queue_head,head_wdata},push={queue_post,256'b0};
     wire push_read=!push[319];
     wire enqueue=unposted!=0 && (!push_read || read_reserved<RQ) && !sticky;
@@ -144,7 +146,7 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
           // acceptance uses independent state; shared next-count arithmetic
           // drives only23 D pins per bit, never wide pointer enables.
           (* keep="true",dont_touch="true" *) reg[QW:0]count_q;
-          wire ready_local=!sticky&&!pc_fault&&legal&&credit_room(count_q,length);
+          wire ready_local=!sticky_regions[r/11]&&!pc_fault_regions[r/11]&&legal&&credit_room(count_q,length);
           assign push_regions[r]=kv_regions[r]&&ready_seen_regions[r];
           assign pop_regions[r]=valid_regions[r]&&ready_local;
           always @(posedge clk or negedge region_rst_n[72+r])
@@ -174,7 +176,7 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
           always @(posedge clk or negedge lrst_n)
             if(!lrst_n)head_valid_regions[r]<=0;
             else head_valid_regions[r]<=head_valid_next;
-          assign admission_regions[r]=head_valid_regions[r]&&!sticky&&!pc_fault;
+          assign admission_regions[r]=head_valid_regions[r]&&!sticky_regions[r/9]&&!pc_fault_regions[r/9];
         end
         always @(posedge clk)if(!region_rst_n[3])ready_q<=0;else ready_q<={18{kr_rdy}};
         ot_hbm_svc_pin_skid2_bw_safe #(.WIDTH(277),.REGIONAL(1)) u_skid(
@@ -332,9 +334,21 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
     ot_hbm_r14_aq_pc_safe #(.ROW_REGIONS(8),.WQ(QD),.MRKEY(MRKEY)) controller(
         .clk(clk),.rst_n(region_rst_n[7]),.reset_regions(region_rst_n[71:8]),.slot_parity(pc_id_q[0]),.refresh_reload(refresh_reload_q),
         .row_v(r_v),.row_op(r_op),.row_bank(r_bank),.row_row(r_row),
-        .col_v(cv),.col_bank(cb),.col_col(cc),.ref_fault(pc_fault),
+        .col_v(cv),.col_bank(cb),.col_col(cc),.ref_fault(pc_fault),.ref_fault_regions(pc_fault_regions),
         .wr_v(enqueue),.wr_bank(push[318:314]),.wr_col(push[313:309]),.wr_row({4'b0,qrow_post}),.wr_row_regions(qrow_post_regions),.wr_rd(push_read),.wr_r(wr),
         .col_we(cwe),.col_aq(caq),.dbg_held());
+    wire sticky_next=sticky||(i_v&&!legal)||kfront_fault||
+      (cv&&(count==0||cwe!=head[319]||cb!=head[318:314]||cc!=head[313:309]||(!cwe&&!caq)||
+       (WPAY!=0&&cwe&&fresh_v&&fresh_slot==rp)||(!cwe&&pending_count>=RQ)))||
+      (ret_v&&(pending_count==0||(response_count>=RQ&&!response_take)))||
+      (response_take&&(read_reserved==0||response_count==0))||
+      read_reserved>RQ||pending_count>RQ||response_count>RQ;
+    always @(posedge clk or negedge lrst_n)
+      if(!lrst_n)sticky_regions<=0;else sticky_regions<={2{sticky_next}};
+`ifndef SYNTHESIS
+    always @(negedge clk)if(lrst_n&&sticky_regions!=={2{sticky}})
+      $fatal(1,"BW_CFG_FAULT_REGION_MISMATCH");
+`endif
     always @(posedge clk or negedge lrst_n)begin
         if(!lrst_n)begin
             sticky<=0;wp<=0;rp<=0;ep<=0;rp_plus1<=1;ep_plus1<=1;count<=0;unposted<=0;

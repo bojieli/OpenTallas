@@ -36,7 +36,7 @@ module ot_hbm_r14_aq_pc_safe #(
   input  wire        slot_parity, input wire [7:0] refresh_reload,
   output wire        row_v, output wire [2:0] row_op, output wire [4:0] row_bank, output wire [RW_ROW-1:0] row_row,
   output wire        col_v, output wire [4:0] col_bank, output wire [4:0] col_col,
-  output wire        ref_fault,
+  output wire        ref_fault, output wire[1:0]ref_fault_regions,
   input  wire        wr_v, input wire [4:0] wr_bank, input wire [4:0] wr_col, input wire [RW_ROW-1:0] wr_row,
   input wire [8*RW_ROW-1:0] wr_row_regions,
   input  wire        wr_rd, output wire wr_r, output wire col_we, output wire col_aq,
@@ -498,6 +498,17 @@ module ot_hbm_r14_aq_pc_safe #(
   end
   assign row_v = c_v; assign row_op = c_op; assign row_bank = c_bank; assign row_row = c_row;
   assign ref_fault = fault_r;
+  wire fault_next=fault_r||(ref_due&&!skip&&
+    (!row_fire||c_op!=REFPB|||(blk&open)|||(blk&~aok_z)));
+  (* keep="true",dont_touch="true" *) reg[1:0]fault_regions_q;
+  always @(posedge clk or negedge rst_n)
+    if(!rst_n)fault_regions_q<=0;else fault_regions_q<={2{fault_next}};
+  assign ref_fault_regions=fault_regions_q;
+`ifndef SYNTHESIS
+  always @(negedge clk)if(rst_n&&fault_regions_q!=={2{fault_r}})
+    $fatal(1,"BW_AQ_FAULT_REGION_MISMATCH");
+`endif
+
   always @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
       q_n <= 0; q_rp <= 0;q_rp_plus1<=1;q_rp_plus2<=2;
