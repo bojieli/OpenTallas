@@ -68,13 +68,22 @@ def model_lite(m):
     seq = None
     if all(i in by for i in ('seq', 'kvs_attn', 'd2d_kv')):
         seq = dict(rx=_first_hop_bid(m, 'd2d_kv', 'srx'), prg=_first_hop_bid(m, 'kvs_attn', 'prg'),
-                   kw=_first_hop_bid(m, 'd2d_kv', 'skw'), land=int(KSD.ATTN_LAND),
+                   kw=_first_hop_bid(m, 'd2d_kv', 'skw'), dst=dict(rx='kvs_attn', prg='seq', kw='seq'), land=int(KSD.ATTN_LAND),
                    bundle=(m.get('bundle_eq') or {}).get('bundles', {}).get('S.seq_kvn'))
     hub = None
     if 'ahub' in by:
         hub = dict(inst='ahub', master=by['ahub'].master,
                    parameters=(KSD.bindings().get('qkd_ahub') or {}).get('parameters'))
-    return dict(schema=SCHEMA_MODEL, relay_stages=rs, fork_stages=fs, forks=forks, seq_kvn=seq, hub=hub, plan=plan,
+    dsts = {}                                     # bid -> its non-relay destination pins (expanded sources: dst fallback)
+    for b in m['buses']:
+        if b is None or not b[3]:
+            continue
+        base = re.sub(r'__r\d+$', '', b[0])
+        if base in rs:
+            for e in b[3][1:]:
+                if not str(e[0]).startswith('rly_'):
+                    dsts.setdefault(base, []).append(list(e))
+    return dict(schema=SCHEMA_MODEL, relay_stages=rs, fork_stages=fs, forks=forks, seq_kvn=seq, hub=hub, plan=plan, dsts=dsts,
                 face_land=dict(enabled=KSD.FACE_LAND, tiles=KSD.FACE_LAND_TILES),
                 flags=dict(attn_land=KSD.ATTN_LAND, astk_expand=KSD.ASTK_EXPAND, astk_rl=KSD.ASTK_RL,
                            astk_erl=KSD.ASTK_ERL, afault=KSD.AFAULT, ahub_static=KSD.AHUB_STATIC))
@@ -133,8 +142,23 @@ def post_stages(model, doc, fwd=None):
         return (max(vals), None) if vals else (None, f'{bid}: no table record')
 
     rs, fs, unresolved, src = {}, {}, [], {}
+    deps = set(_deps(model))
+    by_dst = {}
+    for b in doc['buses']:
+        by_dst.setdefault((b['dst']['inst'], b['dst']['port'].split('__')[0]), []).append(b)
+
+    def dst_recs(eps):
+        out = []
+        for inst, port in eps:
+            out += by_dst.get((inst, port), [])
+        return out
     for bid in model['relay_stages']:
+        if bid not in deps and bid.split('__')[0] not in deps:
+            continue
         recs = by_bid.get(bid, [])
+        if not recs:                              # source expanded (e.g. pvfork children): the bid's destination pins
+            recs = dst_recs([tuple(e) for e in (model.get('dsts') or {}).get(bid, [])]
+                            + [tuple(f) for f in forks.get(bid, [])])
         fdst = {f[0] for f in forks.get(bid, [])}
         main = [r for r in recs if not any(_inst_is(r['dst']['inst'], d) for d in fdst)] or recs
         v, why = age(main, bid)
@@ -150,6 +174,14 @@ def post_stages(model, doc, fwd=None):
             src[fb] = sorted({r['id'] for r in frecs})[:4]
             if fv is None:
                 unresolved.append(fwhy)
+    sq = model.get('seq_kvn') or {}
+    for k, d in (sq.get('dst') or {}).items():      # seq bundle members: the age INTO the named instance only
+        bid = sq.get(k)
+        recs = [r for r in by_bid.get(bid, []) if _inst_is(r['dst']['inst'], d)]
+        v, why = age(recs, bid)
+        rs[f'{bid}@{d}'] = v
+        if v is None:
+            unresolved.append(why)
     return rs, fs, unresolved, src
 
 
@@ -165,7 +197,8 @@ def params(model, rs, fs):
                attn_fault=KSD.afault_latency(mm) if model['flags'].get('afault') else None)
     sq = model.get('seq_kvn')
     if sq and all(sq.get(k) for k in ('rx', 'prg', 'kw')):
-        S = {k: rs.get(sq[k]) for k in ('rx', 'prg', 'kw')}
+        dd = sq.get('dst') or {}
+        S = {k: rs.get(f'{sq[k]}@{dd[k]}', rs.get(sq[k])) if k in dd else rs.get(sq[k]) for k in ('rx', 'prg', 'kw')}
         ok = None if None in S.values() else S['kw'] == S['rx'] + S['prg'] + sq['land']
         out['seq_kvn'] = dict(S_rx=S['rx'], S_prg=S['prg'], S_kw=S['kw'], LAND=sq['land'], aligned=ok,
                               rule='S_kw == S_rx + S_prg + LAND (qkd_seq_core_st_s KVN_A0 fixed after the CMD decode)')
@@ -267,7 +300,7 @@ def check(model, rs, fs, unresolved, actual, die_v=None):
     if stale:
         fails.append(dict(id='PLAN_PARAMS_STALE', what=f'{len(stale)} generator-recorded parameters differ from the '
                           'post-station die table (consumers must take static_params.json)', diffs=stale[:200]))
-    changed = sorted(b for b, v in rs.items() if v is not None and v != model['relay_stages'].get(b))
+    changed = sorted(b for b, v in rs.items() if v is not None and b in model['relay_stages'] and v != model['relay_stages'][b])
     info.append(dict(id='STAGES_CHANGED', buses=len(changed), examples=[(b, model['relay_stages'].get(b), rs[b])
                                                                         for b in changed[:40]]))
     return fails, info
