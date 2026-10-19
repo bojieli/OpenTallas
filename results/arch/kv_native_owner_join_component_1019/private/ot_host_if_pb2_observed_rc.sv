@@ -104,6 +104,9 @@ module ot_host_if_pb2_observed_rc #(
 ) (
     // Private common-clock functional join. Descriptor and native namespaces differ.
     input wire native_issue_ready,
+    input wire native_cq_offer_ok,
+    output wire native_cq_prospective_v, native_cq_prospective_native_valid,
+    output wire [86:0] native_cq_prospective_key,
     input wire native_bound_valid,
     input wire [58:0] native_bound_tag,
     input wire [1:0] native_bound_gen, native_bound_descgen,
@@ -412,7 +415,7 @@ module ot_host_if_pb2_observed_rc #(
     wire word0_cut_ok = !bad_next && armed_q && !poison_q &&
         ((eh_kind == EV_ERROR && eh_st != ST_FAULT) ||
         (ENABLE_NATIVE_OWNER_JOIN ?
-            (saved_descriptor_matches && cq_saved_native_valid && cq_saved_lineage[0] &&
+            (native_cq_offer_ok && saved_descriptor_matches && cq_saved_native_valid && cq_saved_lineage[0] &&
              cq_saved_lineage[45:40] == 6'd37 && cq_saved_lineage[8:3] == 0) :
             (cq_saved_owner_record && cq_saved_lineage[0] && cq_saved_lineage[61:3] == owner_tag && cq_saved_lineage[2:1] == owner_gen)));
     assign rc_bad = ENABLE_RETAINED_COMMIT && bad_q;
@@ -444,6 +447,12 @@ module ot_host_if_pb2_observed_rc #(
     assign event_native_tag = pending_terminal_tag;
     assign event_native_gen = pending_native_gen;
     assign event_descgen = ep_v ? owner_gen : 2'd0;
+    // Prospective key does not depend on eligibility or current certify/fault feedback.
+    // Core validates against its retained prior active identity before word0 offer.
+    assign native_cq_prospective_v = ENABLE_NATIVE_OWNER_JOIN && rc_word0_offer;
+    assign native_cq_prospective_native_valid = cq_saved_native_valid;
+    assign native_cq_prospective_key = {eh_tag,eh_slot8,cq_saved_desc_gen,
+                                      cq_saved_lineage[61:3],cq_saved_lineage[2:1]};
     assign cq_offer_v = ENABLE_NATIVE_OWNER_JOIN && rc_word0_offer;
     assign cq_native_valid = cq_saved_native_valid;
     assign cq_native_tag = cq_saved_lineage[61:3];
