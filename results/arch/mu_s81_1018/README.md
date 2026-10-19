@@ -24,8 +24,8 @@ reproduction. Regenerate the records with `dv_mu_calendar.py`, then `dv_mu_chain
 
 | mode | users | per-user | aggregate | slot (cycles) | period (cycles) | lemma |
 |---|---|---|---|---|---|---|
-| AR | **46** (model said 47) | 1,224.0 (calendar model) / 1,243.0 (composition) | **56.3k** / **57.2k** | 21,313.6 (uniform P/46) | 980,425 | PASS, 5,474 windows, 0 collisions |
-| MTP | 10 + 1 AR filler | 3,829.1 / 3,806.2; filler 920.7 | 39.2k / 39.0k | 124,521 | 1,303,398 | PASS, 1,309 windows, 0 collisions |
+| AR | **46** (model said 47) | 1,224.0 (calendar model) / 1,243.0 (composition) | **56.3k** / **57.2k** | 21,313.7 (P/46 on the 4-edge issuer grid) | 980,428 | PASS, 5,474 windows, 0 collisions |
+| MTP | 10 + 1 AR filler | 3,829.1 / 3,806.2; filler 920.7 | 39.2k / 39.0k | 124,524 | 1,303,400 | PASS, 1,309 windows, 0 collisions |
 
 **Finding: 47 AR users do not fit; the exact calendar gives 46 (−2.1% aggregate against the model).**
 - The study's `floor(T / II)` treats a duplicated group as one stage with half the occupancy. A real copy holds one
@@ -106,3 +106,16 @@ The `multi_user` block of `token_path_1018/ds_rom.json` is priced as follows:
 
 On main today this gives AR 46 x 1,243.0 = 57,178 and MTP 10 x 3,806.2 + 1 x 915.2 = 38,977. When S81-SCANCHK and
 S81-SCAND re-price the single-user rate (1,186 corrected, 1,224 B3), the block follows automatically.
+
+## Issuer grid (MU-S81/TOK, 10-19)
+
+`ot_dsdv_fixed_issue` accepts a job start only on its 4-edge start phase (otherwise it raises fault 5). Every shift
+and the period are therefore multiples of 4. That is now the default (`--phase-q 4`): AR period 980,428 (+3 cycles),
+MTP 1,303,400. The rate is unchanged at the shown precision.
+
+The TOK bench (`results/rtl/s81_mu_1018`) passes on this calendar on the real `dsdv_seq_host` + `ot_dsdv_fixed_issue`:
+- 46 users on S000, and S002 copy A / copy B 23 + 23;
+- user 0's log is line-identical to the single-user run;
+- 4 mutants fail.
+
+The 1-cycle grid (`--phase-q 1`) is kept only as a diagnostic; it is not issuer-feasible.

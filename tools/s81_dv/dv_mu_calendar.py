@@ -51,10 +51,10 @@ COPIES = ('A', 'B')
 # MU-S81/TOK 10-19: the start-phase quantum of ot_dsdv_fixed_issue (dsdv_seq_host u_iss): a job is accepted only on the
 # edge where the free-running 2-bit phase_q + 1 == the sealed start_phase (else fault code 5), so on every die user k's
 # start must sit a multiple of 4 edges after user 0's: every shift AND the period (pass p + 1 = pass p + P) must be
-# multiples of PHASE_Q.  --phase-q 4 builds the issuer-feasible calendar (calendar_<mode>_q4.json); the default 1 keeps
-# the original 1-cycle grid (calendar_<mode>.json byte-identical).  Witness: results/rtl/s81_mu_1018 (raw shift 21313 ->
+# multiples of PHASE_Q.  --phase-q 4 (DEFAULT, the record calendar_<mode>.json; calendar_<mode>_q4.json = TOK's bench copy, same content)
+# --phase-q 1 = the original 1-cycle grid (calendar_<mode>_q1.json, NOT issuer-feasible: fault 5).  Witness: results/rtl/s81_mu_1018 (raw shift 21313 ->
 # fault 5).
-PHASE_Q = 1
+PHASE_Q = 4            # MU-S81 10-19: the issuer-feasible grid is the record (calendar_<mode>.json)
 
 
 def qup(x):
@@ -333,7 +333,7 @@ def main(argv=None):
     ap.add_argument('--fillers', type=int)
     ap.add_argument('--out', default=str(OUT))
     ap.add_argument('--check', action='store_true')
-    ap.add_argument('--phase-q', type=int, default=1, help='shift / period quantum (4 = ot_dsdv_fixed_issue start phase)')
+    ap.add_argument('--phase-q', type=int, default=4, help='shift / period quantum (4 = ot_dsdv_fixed_issue start phase)')
     a = ap.parse_args(argv)
     global PHASE_Q
     PHASE_Q = a.phase_q
@@ -341,7 +341,7 @@ def main(argv=None):
     rc = 0
     for mode in modes:
         rec = build(mode, a.users, a.fillers)
-        f = Path(a.out) / (f'calendar_{mode}.json' if PHASE_Q == 1 else f'calendar_{mode}_q{PHASE_Q}.json')
+        f = Path(a.out) / (f'calendar_{mode}.json' if PHASE_Q == 4 else f'calendar_{mode}_q{PHASE_Q}.json')
         txt = json.dumps(rec, indent=1) + '\n'
         if a.check:
             same = f.exists() and f.read_text() == txt
