@@ -1,0 +1,62 @@
+{
+  "source_commit": "76c6a425d",
+  "dut_origin_commit": "5c8ae06a3",
+  "host": "ot-agidock128",
+  "remote_root": "/srv/opentallas-scratch/claude/codex-banked-calendar-bench-1019-r1",
+  "tool": "Verilator 5.050 2026-07-01 rev v5.050",
+  "positive": "PASS",
+  "profiles": [
+    {
+      "W": 135,
+      "XW": 46
+    },
+    {
+      "W": 173,
+      "XW": 5
+    }
+  ],
+  "per_profile_valid_words_before_fault_tests": 2100,
+  "per_profile_runs_before_fault_tests": 6,
+  "calendar_shift_edges": 2,
+  "done_shift_edges": 2,
+  "tight_GO_gap_edges": 9,
+  "tight_programme_words": 4,
+  "protected_word_fault_tests": 4,
+  "reset_sequences": 6,
+  "mutants": [
+    {
+      "mut": 1,
+      "verdict": "FAIL",
+      "fail_regex": "BANKED_FAIL tuple",
+      "cycle": 2078
+    },
+    {
+      "mut": 2,
+      "verdict": "FAIL",
+      "fail_regex": "BANKED_FAIL tuple",
+      "cycle": 2078
+    },
+    {
+      "mut": 3,
+      "verdict": "FAIL",
+      "fail_regex": "BANKED_FAIL active envelope",
+      "cycle": 2074,
+      "note": "Compatibility mutant delays all outputs; active assertion fails before calendar timing assertion."
+    }
+  ],
+  "source_sha256": {
+    "rtl/hbm_accel/sm/static/ot_smh_calendar_banked_cells.sv": "4ab3cb995b41451d34f918c963129a58863721c71b548ea72e46507f1403c6c4",
+    "rtl/hbm_accel/sm/static/ot_smh_calendar_bank_leaf.sv": "894253c8d41d7002b10c9d5ebb8edf32644ae146d54e07a2a565e4adfb5a7c5e",
+    "rtl/hbm_accel/sm/static/ot_smh_calendar_banked_central.sv": "b87138f7df517758ad1e428291c29a576ad3c5e036a865fc6b79fc1cd19e258c",
+    "rtl/hbm_accel/sm/static/ot_smh_calendar_banked_native.sv": "62da4315dd2841d30221a64bb0c69cc3d4300dacce117a7bb733cb89c1457502",
+    "rtl/hbm_accel/sm/static/ot_smh_calendar_static_x.sv": "53e9b0be9dcdd7a405a7b53a8d359df3413a305a6c24eb03118b162e577b8d40",
+    "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+    "rtl/test/hbm_accel/svg_rel/run_banked_calendar.sh": "1b0354065ae453f14b36f3400ae3cff57250710e26706a9a0709951aa2f11f39",
+    "rtl/test/hbm_accel/svg_rel/tb_banked_calendar.sv": "9f68870712ae066ac3a47ae6460079f05203d3f559da019fc335159cc9b3d0df"
+  },
+  "limitations": [
+    "Component proof, not physical closure or parent integration.",
+    "Tuple fields compared while calendar_v; invalid ordinal values have no transaction meaning.",
+    "Active may extend old tail by up to2 edges, but may not assert late."
+  ]
+}
