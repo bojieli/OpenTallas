@@ -311,3 +311,39 @@ relaxation: no existing production calendar was changed. `return_calendar/`
 pins the measured XS packet and records the required actual native delivery,
 slot/key lifetime, dual-port, final-write and MU retirement proof before a
 production imagewriter grant. Whole-source and token qualification remain open.
+
+
+Conditional source occupancy and real packed ports
+-------------------------------------------------
+
+`source_epoch_contract.py` extracts all122 actual return ports from the exact
+selected die's packed `rt` expressions, preserving literal absent lanes and
+source-versus-landing endpoints. Geographic side is insufficient: sid6/8
+pack L01/L02/L03/R01/R02/R03 into lanes0..5, so R01 enters the CAP W tree
+(lanes0..3). No missing frame is replaced by a fabricated return.
+
+The source contract now expresses the actual prerequisite event graph:
+frame emission→native sampled ARR→legal fixed-slot tree→partial completion
+with the unchanged row/key→CW after4 edges→actual routed SRAM commit→QR or
+RDOUT readiness→gather/consumer. Store slot `(row+8*pos)&63` retains full
+`(pos,row16,nseg)` identity through parent re-entry; no conflicting key can
+reuse it while live. A new CAP configuration must wait for open partials and
+old configuration consumers to drain. Both final write ports and VP read
+ports require real schedules. For nseg3, conditional on a legal complete
+arrival/tree/port schedule, the CAP pipeline tail is bounded by lastARR+64
+(40 tree/pin, at most two10-edge reentries,4 write). This upper bound is not
+a native return-link estimate, deadline extension or chosen calendar.
+
+A conservative source epoch ends after the maximum of last XS tag use,
+frame/capture pipeline return, final SRAM write, and dependent QR/read/gather
+uses. An issuer-only RETIRE may precede that only if a separate proof shows
+its reused tag/config state cannot affect those returns; early retirement
+alone is not asserted to be an RTL fault. The existing heuristic RETIRE
+and end_iter cannot stand in for this source completion condition. Every
+selected arrival phase, per-port emission plan and exact end date remains
+NULL. The smallest next mechanism is a selected-plan compiler model of one
+real six-frame head (sid6) with all512 original rows across15 epochs, actual
+return-lane clocks and conditional CAP configuration/port lifetime checks.
+Production imagewriter remains HOLD until that model is complete and
+reviewed. This packet adds no FF, gate, macro, image array or RTL. Unpinned
+remote model job oth-ubuntu-3673685-1792442525 exited0.
