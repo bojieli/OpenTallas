@@ -1,0 +1,184 @@
+{
+ "schema": "opentallas.closure_loop.ck_insertion.v1",
+ "base": "/srv/opentallas-scratch/claude/closure-loop/dsdv_mu_hslot-dsdv_mu_hslot-28a8118d5/routes/dsdv_mu_hslot_dsdv_mu_hslot_28a8118d5/work/orfs/results/asap7/opentallas_dsdv_mu_hslot_asap7_ref_dsdv_mu_hslot_dsdv_mu_hslot_28a8118d5/base",
+ "db": "6_final.odb",
+ "sdc": "6_final.sdc",
+ "clock": "core_clk",
+ "parasitics": "spef",
+ "raw_source": true,
+ "ss": {
+  "boundary": {
+   "n": 98,
+   "mean": 181.4,
+   "min": 178.1,
+   "max": 189.7
+  },
+  "all": {
+   "n": 3394,
+   "mean": 180.3,
+   "min": 174.0,
+   "max": 190.0
+  },
+  "errors": [],
+  "macros": null,
+  "macro_libs": 0
+ },
+ "tt": {
+  "boundary": {
+   "n": 98,
+   "mean": 135.8,
+   "min": 132.8,
+   "max": 143.5
+  },
+  "all": {
+   "n": 3394,
+   "mean": 134.5,
+   "min": 128.0,
+   "max": 143.8
+  },
+  "errors": [],
+  "macros": null,
+  "macro_libs": 0
+ },
+ "ff": {
+  "boundary": {
+   "n": 98,
+   "mean": 109.7,
+   "min": 106.5,
+   "max": 117.5
+  },
+  "all": {
+   "n": 3394,
+   "mean": 108.3,
+   "min": 101.7,
+   "max": 118.2
+  },
+  "errors": [],
+  "macros": null,
+  "macro_libs": 0
+ },
+ "route_corner": null,
+ "macro_clk": {
+  "n": 0,
+  "slew_ps": 120.0,
+  "late_ps": 30.0,
+  "flag": false,
+  "outliers": []
+ },
+ "env": {
+  "CK_SS_MEAN": 181,
+  "CK_SS_ALL_MEAN": 180,
+  "CK_SS_MIN": 178,
+  "CK_SS_ALL_MIN": 174,
+  "CK_SS_MAX": 190,
+  "CK_SS_ALL_MAX": 190,
+  "CK_TT_MEAN": 136,
+  "CK_TT_ALL_MEAN": 134,
+  "CK_TT_MIN": 133,
+  "CK_TT_ALL_MIN": 128,
+  "CK_TT_MAX": 144,
+  "CK_TT_ALL_MAX": 144,
+  "CK_FF_MEAN": 110,
+  "CK_FF_ALL_MEAN": 108,
+  "CK_FF_MIN": 106,
+  "CK_FF_ALL_MIN": 102,
+  "CK_FF_MAX": 118,
+  "CK_FF_ALL_MAX": 118,
+  "CK_ROUTE_REF": "SS"
+ },
+ "lib_clock_pin": "ck",
+ "clock_mapping_basis": "6_final.sdc create_clock -name core_clk [get_ports {ck}]",
+ "clock_measurements": {
+  "ck": {
+   "schema": "opentallas.closure_loop.ck_insertion.v1",
+   "base": "/srv/opentallas-scratch/claude/closure-loop/dsdv_mu_hslot-dsdv_mu_hslot-28a8118d5/routes/dsdv_mu_hslot_dsdv_mu_hslot_28a8118d5/work/orfs/results/asap7/opentallas_dsdv_mu_hslot_asap7_ref_dsdv_mu_hslot_dsdv_mu_hslot_28a8118d5/base",
+   "db": "6_final.odb",
+   "sdc": "6_final.sdc",
+   "clock": "core_clk",
+   "parasitics": "spef",
+   "raw_source": true,
+   "ss": {
+    "boundary": {
+     "n": 98,
+     "mean": 181.4,
+     "min": 178.1,
+     "max": 189.7
+    },
+    "all": {
+     "n": 3394,
+     "mean": 180.3,
+     "min": 174.0,
+     "max": 190.0
+    },
+    "errors": [],
+    "macros": null,
+    "macro_libs": 0
+   },
+   "tt": {
+    "boundary": {
+     "n": 98,
+     "mean": 135.8,
+     "min": 132.8,
+     "max": 143.5
+    },
+    "all": {
+     "n": 3394,
+     "mean": 134.5,
+     "min": 128.0,
+     "max": 143.8
+    },
+    "errors": [],
+    "macros": null,
+    "macro_libs": 0
+   },
+   "ff": {
+    "boundary": {
+     "n": 98,
+     "mean": 109.7,
+     "min": 106.5,
+     "max": 117.5
+    },
+    "all": {
+     "n": 3394,
+     "mean": 108.3,
+     "min": 101.7,
+     "max": 118.2
+    },
+    "errors": [],
+    "macros": null,
+    "macro_libs": 0
+   },
+   "route_corner": null,
+   "macro_clk": {
+    "n": 0,
+    "slew_ps": 120.0,
+    "late_ps": 30.0,
+    "flag": false,
+    "outliers": []
+   },
+   "env": {
+    "CK_SS_MEAN": 181,
+    "CK_SS_ALL_MEAN": 180,
+    "CK_SS_MIN": 178,
+    "CK_SS_ALL_MIN": 174,
+    "CK_SS_MAX": 190,
+    "CK_SS_ALL_MAX": 190,
+    "CK_TT_MEAN": 136,
+    "CK_TT_ALL_MEAN": 134,
+    "CK_TT_MIN": 133,
+    "CK_TT_ALL_MIN": 128,
+    "CK_TT_MAX": 144,
+    "CK_TT_ALL_MAX": 144,
+    "CK_FF_MEAN": 110,
+    "CK_FF_ALL_MEAN": 108,
+    "CK_FF_MIN": 106,
+    "CK_FF_ALL_MIN": 102,
+    "CK_FF_MAX": 118,
+    "CK_FF_ALL_MAX": 118,
+    "CK_ROUTE_REF": "SS"
+   },
+   "lib_clock_pin": "ck",
+   "clock_mapping_basis": "6_final.sdc create_clock -name core_clk [get_ports {ck}]"
+  }
+ }
+}

@@ -19,6 +19,9 @@
 // Every remaining data input is captured in a pin register (unchanged from the masters).  Bench (lockstep against the
 // selected composition qkd_astk_native_stack_cal): rtl/test/qwen_kv_die/tb_qkd_astk_strip_st.sv.
 // Mutants (`KVD_STMUT): 1 ep_s e rows written one address off; 2 ex_s e one ulp off; 3 ctl_s Z word one ulp off.
+// ST3 (S-KVASTK 10-18): ep_s physically retimed at 0 cycles (operand stage at the join, zo = the adders' y, Kogge-Stone
+// running-max compare, registered command-static T terms; qkd_astk_seq_s) -- see gen_astk_static.py.
+// ST3 mutants: 4 ep_s row / tag delay one edge short (the join retiming), 5 ep_s running-max compare on the wrong chain.
 // ---------------------------------------------------------------------------------------------------------------------
 
 module qkd_astk_ep_s (
@@ -34,7 +37,7 @@ module qkd_astk_ep_s (
     input  wire [266:0]  xi,
     output reg  [266:0]  xo,
     input  wire [650:0]  zi,
-    output reg  [650:0]  zo,
+    output wire [650:0]  zo,
     input  wire [521:0]  ri,
     output reg  [263:0]  xa,
     input  wire [135:0]  xe
@@ -113,9 +116,9 @@ module qkd_astk_ep_s (
     reg  [DT-1:0] tb_sr;
     always @(posedge ck or negedge rn_q) if (!rn_q) tb_sr <= {DT{1'b0}}; else tb_sr <= start ? {DT{1'b0}} : {tb_sr[DT-2:0], trig};
     wire         trig_b = tb_sr[DT-1];
-    qkd_astk_seq u_sa (.ck(ck), .rn(rn_q), .start(start), .trig(trig), .T(T), .S(S), .v(a_v), .g(a_g), .gam(a_gam), .k(a_k),
+    qkd_astk_seq_s u_sa (.ck(ck), .rn(rn_q), .start(start), .trig(trig), .T(T), .S(S), .v(a_v), .g(a_g), .gam(a_gam), .k(a_k),
                        .klst(a_kl), .busy(a_busy), .sg_o(a_sg));
-    qkd_astk_seq u_sb (.ck(ck), .rn(rn_q), .start(start), .trig(trig_b), .T(T), .S(S), .v(b_v), .g(b_g), .gam(b_gam), .k(b_k),
+    qkd_astk_seq_s u_sb (.ck(ck), .rn(rn_q), .start(start), .trig(trig_b), .T(T), .S(S), .v(b_v), .g(b_g), .gam(b_gam), .k(b_k),
                        .klst(b_kl), .busy(b_busy), .sg_o(b_sg));
     // ---- score memory (this engine's positions j = Q), the read towards the exp datapath -------------------------------
     // two 256 x 128 macros, one a pass g (a pass is written by the K pass and read by its exp pass: never both), {k, gam}
@@ -149,30 +152,44 @@ module qkd_astk_ep_s (
     wire [127:0] e = {eq[135:104], eq[101:70], eq[67:36], eq[33:2]};
     wire         e_v = eqc[0];
     wire         e_f = eqc[1] | eqc[3] | eqc[5] | eqc[7];
-    wire [63:0]  e16 = b_pos ? {bf16(e[127:96]), bf16(e[95:64]), bf16(e[63:32]), bf16(e[31:0])} : 64'd0;
-    wire [511:0] row_in = first ? 512'd0 : zq[650:139];
+    // ST3: the join operand stage (the bf16 rounding, the slot's b_pos, the incoming row, the tags, the adder operands)
+    reg  [63:0]  eb_q;
+    reg          bp_q, jv_q;
+    reg  [511:0] row_in_q;
+    reg  [8:0]   tag_q;
+    always @(posedge ck) begin
+        eb_q <= {bf16(e[127:96]), bf16(e[95:64]), bf16(e[63:32]), bf16(e[31:0])};
+        bp_q <= b_pos; row_in_q <= first ? 512'd0 : zq[650:139]; tag_q <= {b_gam, b_k, b_g};
+    end
+    always @(posedge ck or negedge rn_q) if (!rn_q) jv_q <= 1'b0; else jv_q <= b_v;
+    wire [63:0]  e16 = bp_q ? eb_q : 64'd0;
+    wire [511:0] row_in = row_in_q;
     wire [511:0] row_m;
     genvar gj;
     generate for (gj = 0; gj < 8; gj = gj + 1) begin : g_slot
         assign row_m[64*gj +: 64] = (Q == gj) ? e16 : row_in[64*gj +: 64];
     end endgenerate
     wire [520:0] jd;
-    ot_hdc_delay #(.W(521), .D(ADD_LAT)) u_row (.clk(ck), .rst_n(rn_q), .d({row_m, b_gam, b_k, b_g}), .q(jd));
+    ot_hdc_delay #(.W(521), .D(ADD_LAT - 1 - ((`KVD_STMUT == 4) ? 1 : 0))) u_row (.clk(ck), .rst_n(rn_q), .d({row_m, tag_q}), .q(jd));
     wire [127:0] sum;
     wire [3:0]   sv_, se;
     genvar h;
     generate for (h = 0; h < 4; h = h + 1) begin : g_ch
         wire [1:0] err;
-        ot_hdc_fp32_add_lat #(.LAT(ADD_LAT)) u_chain (.clk(ck), .rst_n(rn_q), .valid_in(b_v),
-            .a(first ? 32'd0 : zq[11 + 32*h +: 32]), .b(b_pos ? e[32*h +: 32] : 32'd0), .y(sum[32*h +: 32]), .err(err),
-            .valid_out(sv_[h]));
+        reg [31:0] ja_q, jb_q;
+        always @(posedge ck) begin ja_q <= first ? 32'd0 : zq[11 + 32*h +: 32]; jb_q <= b_pos ? e[32*h +: 32] : 32'd0; end
+        ot_hdc_fp32_add_lat_nr #(.LAT(ADD_LAT)) u_chain (.clk(ck), .rst_n(rn_q), .valid_in(jv_q), .a(ja_q), .b(jb_q),
+            .y(sum[32*h +: 32]), .err(err), .valid_out(sv_[h]));
         assign se[h] = sv_[h] && err != 2'd0;
     end endgenerate
-    reg          tok1;
+    reg          tok1, zo_tok, st_d;
+    wire         se_f = (|se) && !st_d;              // ST3: the adder error at its original edge
     wire         j_bad = quiet && ((b_v != e_v) || (eqc[2] != e_v) || (eqc[4] != e_v) || (eqc[6] != e_v) || (!first && (b_v != zq[0] || (b_v && {zq[10:7], zq[6:3], zq[2]} != {b_gam, b_k, b_g}))));
     // ---- e rows: this engine's groups (gam = Q, Q + 8), one 512-b row a chunk --------------------------------------------
     wire         r_me = rq[0] && rq[8:6] == Q && quiet;
-    wire [13:0]  rkb = T - 14'd1 - {5'd0, S, 7'd0} - {6'd0, rq[9:6], 3'd0};
+    reg  [13:0]  tb_q;                                 // ST3: T - 1 - S x 128 (command-static), registered
+    always @(posedge ck) tb_q <= T - 14'd1 - {5'd0, S, 7'd0};
+    wire [13:0]  rkb = tb_q - {6'd0, rq[9:6], 3'd0};
     wire [511:0] e_row;
     reg  [2:0]   jq;
     reg  [63:0]  e_rdq;
@@ -197,21 +214,24 @@ module qkd_astk_ep_s (
                         (jq == 3'd6) ? e_row[384 +: 64] : e_row[448 +: 64];
     always @(posedge ck or negedge rn_q)
         if (!rn_q) begin mc0 <= 3'd0; mc1 <= 3'd0; cyc8 <= 3'd0; xd <= 4'd0; gone <= 2'b00; tokd <= 6'd0; tok1 <= 1'b0; f <= 1'b0;
-                         zo[1:0] <= 2'b00; stl <= 8'd0; end
+                         zo_tok <= 1'b0; st_d <= 1'b0; stl <= 8'd0; end
         else begin
             cyc8 <= cyc8 + 3'd1;
             tokd <= {tokd[4:0], zq[1] && quiet};
             if (stl != 8'd0) stl <= stl - 8'd1;
-            tok1 <= trig; zo[1] <= tok1; zo[0] <= sv_[0];
+            tok1 <= trig; zo_tok <= tok1; st_d <= start;
             if (trig && first) gone[a_sg] <= 1'b1;
-            if (j_bad || (|se) || (trig && a_busy) || cal_bad ||
+            if (j_bad || se_f || (trig && a_busy) || cal_bad ||
                 (STATIC_SCHEDULE && trig && (!quiet || !go[0] || a_sg)) ||
                 (STATIC_SCHEDULE && !first && (tokd[5] != static_trigger))) f <= 1'b1;
             if (mv) begin if (mg) mc1 <= mc1 + 3'd1; else mc0 <= mc0 + 3'd1; end
             if (r_me && rq[5:2] == rkb[12:9]) xd[{rq[1], rq[9]}] <= 1'b1;
-            if (start) begin mc0 <= 3'd0; mc1 <= 3'd0; xd <= 4'd0; gone <= 2'b00; tokd <= 6'd0; f <= 1'b0; stl <= 8'(DT + 16); tok1 <= 1'b0; zo[1] <= 1'b0; end
+            if (start) begin mc0 <= 3'd0; mc1 <= 3'd0; xd <= 4'd0; gone <= 2'b00; tokd <= 6'd0; f <= 1'b0; stl <= 8'(DT + 16); tok1 <= 1'b0; zo_tok <= 1'b0; end
         end
-    always @(posedge ck) zo[650:2] <= {jd[520:9], sum, jd[8:5], jd[4:1], jd[0]};
+    // ST3: zo = the row / tags behind their pin register and the adders' output registers (y, valid_out) at the pin
+    reg  [520:0] jd_q;
+    always @(posedge ck) jd_q <= jd;
+    assign zo = {jd_q[520:9], sum, jd_q[8:0], zo_tok, sv_[0]};
     // ---- the engine's inputs ---------------------------------------------------------------------------------------------
     reg  [31:0]  xdq;
     integer b_;
@@ -231,16 +251,27 @@ module qkd_astk_ep_s (
     endfunction
     wire [255:0] lm = so_q[409:154];
     wire [1:0]   la = so_q[411:410];
+    // ST3: fgt on two Kogge-Stone carry chains (log depth; the behavioural > / < mapped as a 13-cell ripple)
+    wire [7:0]   lm_gt;
+    genvar gw;
+    generate for (gw = 0; gw < 8; gw = gw + 1) begin : g_lmax
+        wire [31:0] la_ = lm[32*gw +: 32], lb_ = xq[11 + 32*gw +: 32];
+        wire        ab_ge, ba_ge;
+        wire [30:0] ab_s, ba_s;
+        ot_hdc_ksadd_k #(.W(31)) u_ab (.a(la_[30:0]), .b(~lb_[30:0]), .cin(1'b1), .s(ab_s), .cout(ab_ge));
+        ot_hdc_ksadd_k #(.W(31)) u_ba (.a(lb_[30:0]), .b(~la_[30:0]), .cin(1'b1), .s(ba_s), .cout(ba_ge));
+        assign lm_gt[gw] = (la_[31] != lb_[31]) ? !la_[31] : (!la_[31] ? ((`KVD_STMUT == 5) ? !ab_ge : !ba_ge) : !ab_ge);   // = fgt(la_, lb_)
+    end endgenerate
     integer g_, h_;
     always @(posedge ck) begin
         for (g_ = 0; g_ < 2; g_ = g_ + 1) for (h_ = 0; h_ < 4; h_ = h_ + 1)
-            xo[11 + 32*(4*g_ + h_) +: 32] <= (la[g_] && (!xq[9 + g_] || fgt(lm[32*(4*g_ + h_) +: 32], xq[11 + 32*(4*g_ + h_) +: 32])))
-                                              ? lm[32*(4*g_ + h_) +: 32] : xq[11 + 32*(4*g_ + h_) +: 32];
+            xo[11 + 32*(4*g_ + h_) +: 32] <= (la[g_] && (!xq[9 + g_] || lm_gt[4*g_ + h_])) ? lm[32*(4*g_ + h_) +: 32]
+                                                                                          : xq[11 + 32*(4*g_ + h_) +: 32];
     end
     always @(posedge ck or negedge rn_q)
         if (!rn_q) xo[10:0] <= 11'd0;
         else begin
-            xo[0] <= xq[0] | so_q[424] | e_f | f;
+            xo[0] <= xq[0] | so_q[424] | e_f | f | se_f;
             xo[4:1] <= xq[4:1] + {3'd0, sc_v && !sc_a[11]};
             xo[8:5] <= xq[8:5] + {3'd0, sc_v && sc_a[11]};
             xo[10:9] <= xq[10:9] | la;
@@ -255,6 +286,50 @@ module qkd_astk_ep_s (
         if (trig) $display("AKDBG %m t=%0t pass start sg=%b", $time, a_sg);
     end
 `endif
+endmodule
+
+module qkd_astk_seq_s (
+    input  wire          ck,
+    input  wire          rn,
+    input  wire          start,
+    input  wire          trig,
+    input  wire [13:0]   T,
+    input  wire [1:0]    S,
+    output reg           v,
+    output reg           g,
+    output reg  [3:0]    gam,
+    output reg  [3:0]    k,
+    output reg           klst,               // the group's last block
+    output wire          busy,
+    output wire          sg_o
+);
+    wire [13:0] base_s = {5'd0, S, 7'd0};
+    wire        any_s = T > base_s;
+    wire [13:0] rem = T - base_s;
+    // ST3 (S-KVASTK 10-18): T / S are held from the start edge; a pass starts DT + 16 edges or more after it
+    reg  [4:0]  gmax;
+    reg  [13:0] tb;
+    always @(posedge ck) begin gmax <= !any_s ? 5'd0 : ((rem >= 14'd128) ? 5'd16 : ((rem + 14'd7) >> 3));
+                               tb <= T - 14'd1 - base_s; end
+    reg         act, sg;
+    reg  [4:0]  gm;
+    reg  [3:0]  kk;
+    wire [13:0] kb = tb - {6'd0, gm[3:0], 3'd0};
+    wire [3:0]  kl = kb[12:9];
+    wire        emit = act && gm < gmax;
+    assign busy = act; assign sg_o = sg;
+    always @(posedge ck or negedge rn)
+        if (!rn) begin act <= 1'b0; sg <= 1'b0; v <= 1'b0; gm <= 5'd0; kk <= 4'd0; end
+        else begin
+            v <= emit;
+            if (act) begin
+                if (!emit) begin act <= 1'b0; sg <= !sg; end
+                else if (kk == kl) begin kk <= 4'd0; gm <= gm + 5'd1; end
+                else kk <= kk + 4'd1;
+            end else if (trig) begin act <= 1'b1; gm <= 5'd0; kk <= 4'd0; end
+            if (start) begin act <= 1'b0; sg <= 1'b0; v <= 1'b0; end
+        end
+    always @(posedge ck) begin g <= sg; gam <= gm[3:0]; k <= kk; klst <= kk == kl; end
 endmodule
 
 module qkd_astk_ex_s (

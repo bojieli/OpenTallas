@@ -1,0 +1,7 @@
+# run_stk_quadrant_bench.sh OUT sf_mut_share (iverilog, CDC file lists)
+STACK_FAULT_Q_MISMATCH epoch 4 W 0/0000000 ref 0/0000000  E 0/0000000 ref 1/0010000
+STACK_FAULT_Q_MISMATCH epoch 4 W 0/0000000 ref 0/0000000  E 0/0000000 ref 1/0010000
+STACK_FAULT_Q_MISMATCH epoch 4 W 0/0000000 ref 0/0000000  E 0/0000000 ref 1/0010000
+FATAL: /srv/opentallas-scratch/claude/hkb-sfault-1018/out/stk_sf_mut_share/tb_sf_mut.sv:67: STACK_FAULT_Q FAIL errors=1630 MUT=0
+       Time: 20959200  Scope: tb_hbm_svc_stack_fault_q
+STK_IVL MUTANT_REJECTED sf_mut_share

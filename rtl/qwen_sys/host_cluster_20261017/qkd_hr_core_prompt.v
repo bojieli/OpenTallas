@@ -653,7 +653,7 @@ module qkd_hr_core_prompt(ck_core, static_setup_ready, boot_pr, boot_image_targe
   assign _34_ = _30_ ? _33_ : u_rank__committed;
   assign _35_ = _32_ ? 1'h0 : _34_;
   assign u_rank__u_control__pr = _28_ ? boot_pr : 143'h000000000000000000000000000000000000;
-  qkd_host_control_prompt_observed #(.T_LINK(200000), .T_HBM(200000), .WDOG(4194304), .PROMPT_MUT(0), .PROMPT_BIND_LATENCY(4), .ENABLE_SERVICE(1), .NL(2))  u_rank__u_control__u_control  (
+  qkd_host_control_prompt_observed_rr #(.T_LINK(200000), .T_HBM(200000), .WDOG(4194304), .PROMPT_MUT(0), .PROMPT_BIND_LATENCY(4), .ENABLE_SERVICE(1), .NL(2))  u_rank__u_control__u_control  (
     .begin_available(u_rank__u_control__begin_available),
     .begin_epoch(u_rank__u_control__begin_epoch),
     .begin_fault(u_rank__begin_fault),
@@ -758,7 +758,7 @@ module qkd_hr_core_prompt(ck_core, static_setup_ready, boot_pr, boot_image_targe
     .tk8(u_rank__u_control__tk8),
     .transport_fault(u_rank__guarded_transport)
   );
-  qkd_host_hc_station #(.MUT(0))  u_rank__u_control__u_hc  (
+  qkd_host_hc_station_rr #(.MUT(0))  u_rank__u_control__u_hc  (
     .available(available),
     .ck(ck_core),
     .cmd_cr(u_rank__u_control__cmd_cr),
@@ -770,7 +770,7 @@ module qkd_hr_core_prompt(ck_core, static_setup_ready, boot_pr, boot_image_targe
     .rst_n(host_rst_n),
     .source_cr(source_cr)
   );
-  qkd_host_axi_packet u_rank__u_control__u_packet__u_axi  (
+  qkd_host_axi_packet_rr u_rank__u_control__u_packet__u_axi  (
     .ck(ck_core),
     .fault(service_faults),
     .m_araddr(u_rank__u_control__u_packet__m_araddr),
@@ -816,7 +816,7 @@ module qkd_hr_core_prompt(ck_core, static_setup_ready, boot_pr, boot_image_targe
     .tx_d(u_rank__u_control__u_packet__htd),
     .tx_v(u_rank__u_control__u_packet__ht)
   );
-  qkd_host_program_loader_target u_rank__u_program  (
+  qkd_host_program_loader_target_rr u_rank__u_program  (
     .auth_digest(program_auth_digest),
     .auth_epoch(program_auth_epoch),
     .auth_target(u_rank__auth_target),
@@ -843,7 +843,7 @@ module qkd_hr_core_prompt(ck_core, static_setup_ready, boot_pr, boot_image_targe
     .word_desc(u_rank__word_desc),
     .word_v(u_rank__word_v)
   );
-  qkd_host_program_rx_target u_rank__u_program_rx  (
+  qkd_host_program_rx_target_rr u_rank__u_program_rx  (
     .auth_digest(program_auth_digest),
     .auth_epoch(program_auth_epoch),
     .auth_target(u_rank__auth_target),
@@ -868,7 +868,7 @@ module qkd_hr_core_prompt(ck_core, static_setup_ready, boot_pr, boot_image_targe
     .word_desc(u_rank__word_desc),
     .word_v(u_rank__word_v)
   );
-  qkd_host_record_port root__u_records  (
+  qkd_host_record_port_rr root__u_records  (
     .auth_digest(program_auth_digest),
     .auth_epoch(program_auth_epoch),
     .auth_v(program_auth_v),

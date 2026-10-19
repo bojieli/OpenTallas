@@ -233,7 +233,7 @@ def elaborate(mod, file, leaf, parameters=None):
             if cm.group(1) in leaf:
                 params[cm.group(1)] |= set(re.findall(r'\.(\w+)\s*\(', cm.group(2)))
     chp = ''.join(f'chparam -set {k_} {int(v_)} {mod}\n' for k_, v_ in sorted((parameters or {}).items())) \
-        if (subs or mod == 'qkd_pvw_die_t') else ''
+        if parameters else ''
     with tempfile.TemporaryDirectory() as td:
         td = Path(td)
         (td / 'stubs.v').write_text('\n'.join(stub_text(m_, leaf[m_]['ports'], params[m_]) for m_ in leaf))
@@ -319,12 +319,17 @@ def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument('--run', type=Path, required=True)
     ap.add_argument('--only', default='')
+    ap.add_argument('--astk-static', action='store_true', help='expand only the actual RL3 static ASTK source, with native leaf views')
     a = ap.parse_args(argv)
     if __import__('os').environ.get('OT_KV_STATIC', '0') == '1' or (a.run / 'static_bind.json').exists():
         ap.error('static source graph cannot inherit legacy frame/leaf views; actual static physical bindings/clock homes remain required')
-    K._set_geometry(True)
+    K._set_geometry(True, reserve_native_astk=a.astk_static)
     case, libs = a.run / 'case_kv', a.run / 'libs'
     FR = frames()
+    if a.astk_static:
+        import kv_astk_expand as ASTK
+        FR = ASTK.configure(K, VIEWS, RTL, SUBLEVELS)
+        ASTK.require_views(ROOT)
     only = [x for x in a.only.split(',') if x] or list(FR)
     dv = (case / 'die.v').read_text()
     lines = dv.split('\n')
@@ -390,6 +395,8 @@ def main(argv=None):
         if mst not in jcache:
             jcache[mst] = elaborate(b['module'], b['file'], leaf, b.get('parameters'))
         J = jcache[mst]
+        if 'prepare' in spec:
+            spec['plan'] = spec['prepare'](J, leaf, *fsize[mst])
         rtl_w = {p: len(v['bits']) for p, v in J['ports'].items()}
         conns = parse_conns(body)
         dpw = {p: len(net_bits(e, wires)) for p, e in conns}
@@ -550,6 +557,9 @@ def main(argv=None):
     views.setdefault('expanded', {}).update({f: r['module'] for f, r in rep['frames'].items()})
     (libs / 'views.json').write_text(json.dumps(views, indent=1) + '\n')
     rep['leaves'] = {m_: dict(view=leaf[m_]['view'], rtl=RTL[m_]) for m_ in sorted(used_leaf)}
+    if a.astk_static:
+        rep['source_sha256'] = ASTK.provenance(ROOT)
+        rep['profile'] = dict(RL=3, Z_STRIDE=4, measured_Z_start_age=1016, fault_join_edges=1)
     if standin:
         rep['standin'] = standin
     rep['instances_removed'] = len(drop_inst)
