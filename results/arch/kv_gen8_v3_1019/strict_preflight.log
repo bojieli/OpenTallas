@@ -1,0 +1,11 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/kv-gen8-v3-1019/tests
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/kv-gen8-v3-1019/tests
+ot-run: ot-epyc6       admits  1070 GB (avail 856, growth 107, headroom 0, waiters 0/0 GB) load 89/128 running 33 disk 5802 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/kv-gen8-v3-1019/tests
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/kv-gen8-v3-1019/tests
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/kv-gen8-v3-1019/tests
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/kv-gen8-v3-1019/tests
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-757883-1792440283 after 0 s
+STRICT_NATIVE_PROFILE_REFUSAL_PRESERVED ot_qkh_ktree: missing selected parameter profile
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-757883-1792440283): exit 0
