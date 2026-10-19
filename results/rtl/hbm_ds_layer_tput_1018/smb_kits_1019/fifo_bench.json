@@ -1,0 +1,24 @@
+{
+ "source_commit": "087cb29c6",
+ "host": "ot-agidock128",
+ "simulator": "Icarus g2012",
+ "positive_profiles": [
+  "prod512/417phase17",
+  "fastwrite3/5phase2",
+  "fastread7/3phase1",
+  "equal5/5phase0"
+ ],
+ "per_profile_resets": 3,
+ "profile_pops": [
+  3575,
+  3693,
+  1936,
+  3690
+ ],
+ "pass": "Cycle-identical wr_ready/rd_valid/flags and all consumed285bits vs unchanged flop FIFO",
+ "mutants": {
+  "1": "FAIL3060 popped words: no head lookahead",
+  "2": "FAIL3575 popped words: wrong SRAM slot"
+ },
+ "scope": "Actual dual-clock SRAM behavioural model, no physical qualification. Data observed on valid pop edges, not during empty."
+}

@@ -1,0 +1,40 @@
+ot-run: ot-epyc4       admits   982 GB (avail 800, growth 113, headroom 0, waiters 0/0 GB) load 70/128 running 35 disk 412 GB 
+ot-run: ot-epyc5       admits   923 GB (avail 760, growth 113, headroom 0, waiters 0/0 GB) load 75/128 running 21 disk 564 GB 
+ot-run: ot-epyc6       admits   388 GB (avail 385, growth 113, headroom 0, waiters 0/0 GB) load 59/128 running 24 disk 563 GB 
+ot-run: ot-epyc7       admits   759 GB (avail 632, growth 101, headroom 0, waiters 0/0 GB) load 87/96 running 26 disk 502 GB 
+ot-run: ot-epyc8       admits  1022 GB (avail 828, growth 113, headroom 0, waiters 0/0 GB) load 56/128 running 27 disk 566 GB 
+ot-run: ot-pve1        admits    51 GB (avail 54, growth 18, headroom 0, waiters 0/0 GB) load 43/28 running 6 disk 1198 GB 
+ot-run: ot-agidock128  admits    93 GB (avail 78, growth 13, headroom 0, waiters 0/0 GB) load 14/64 running 7 disk 48 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-989980-1792422785 after 0 s
+SVG_FIFO_SRAM PASS mut=0 wp=512 rp=417 phase=17 errors=0 tx=3588 rx=3575 resets=3
+rtl/test/hbm_accel/svg_rel/tb_svg_fifo_sram.sv:31: $finish called at 4945637 (1ps)
+CASE=prod RC=0
+SVG_FIFO_SRAM PASS mut=0 wp=3 rp=5 phase=2 errors=0 tx=3711 rx=3693 resets=3
+rtl/test/hbm_accel/svg_rel/tb_svg_fifo_sram.sv:31: $finish called at 59202 (1ps)
+CASE=fastwrite RC=0
+SVG_FIFO_SRAM PASS mut=0 wp=7 rp=3 phase=1 errors=0 tx=1940 rx=1936 resets=3
+rtl/test/hbm_accel/svg_rel/tb_svg_fifo_sram.sv:31: $finish called at 35695 (1ps)
+CASE=fastread RC=0
+SVG_FIFO_SRAM PASS mut=0 wp=5 rp=5 phase=0 errors=0 tx=3709 rx=3690 resets=3
+rtl/test/hbm_accel/svg_rel/tb_svg_fifo_sram.sv:31: $finish called at 59290 (1ps)
+CASE=equal RC=0
+MISMATCH rc=56 old=1a5a5a5b00000001fffffffe00000011deadbeee000000640000001f1234567955aa55ab new=1a5a5a5a00000000ffffffff00000000deadbeef00000063000000001234567855aa55aa
+MISMATCH rc=57 old=1a5a5a5800000002fffffffd00000022deadbeed000000650000003e1234567a55aa55ac new=1a5a5a5b00000001fffffffe00000011deadbeee000000640000001f1234567955aa55ab
+MISMATCH rc=58 old=1a5a5a5900000003fffffffc00000033deadbeec000000660000005d1234567b55aa55ad new=1a5a5a5800000002fffffffd00000022deadbeed000000650000003e1234567a55aa55ac
+MISMATCH rc=59 old=1a5a5a5e00000004fffffffb00000044deadbeeb000000670000007c1234567c55aa55ae new=1a5a5a5900000003fffffffc00000033deadbeec000000660000005d1234567b55aa55ad
+MISMATCH rc=60 old=1a5a5a5f00000005fffffffa00000055deadbeea000000680000009b1234567d55aa55af new=1a5a5a5e00000004fffffffb00000044deadbeeb000000670000007c1234567c55aa55ae
+SVG_FIFO_SRAM FAIL mut=1 wp=512 rp=417 phase=17 errors=3060 tx=3588 rx=3575 resets=3
+FATAL: rtl/test/hbm_accel/svg_rel/tb_svg_fifo_sram.sv:31: macro FIFO mismatch
+       Time: 4945637  Scope: tb_svg_fifo_sram
+CASE=mut1 RC=1
+MISMATCH rc=55 old=1a5a5a5a00000000ffffffff00000000deadbeef00000063000000001234567855aa55aa new=1a5a5a5b00000001fffffffe00000011deadbeee000000640000001f1234567955aa55ab
+MISMATCH rc=56 old=1a5a5a5b00000001fffffffe00000011deadbeee000000640000001f1234567955aa55ab new=1a5a5a5800000002fffffffd00000022deadbeed000000650000003e1234567a55aa55ac
+MISMATCH rc=57 old=1a5a5a5800000002fffffffd00000022deadbeed000000650000003e1234567a55aa55ac new=1a5a5a5900000003fffffffc00000033deadbeec000000660000005d1234567b55aa55ad
+MISMATCH rc=58 old=1a5a5a5900000003fffffffc00000033deadbeec000000660000005d1234567b55aa55ad new=1a5a5a5e00000004fffffffb00000044deadbeeb000000670000007c1234567c55aa55ae
+MISMATCH rc=59 old=1a5a5a5e00000004fffffffb00000044deadbeeb000000670000007c1234567c55aa55ae new=1a5a5a5f00000005fffffffa00000055deadbeea000000680000009b1234567d55aa55af
+SVG_FIFO_SRAM FAIL mut=2 wp=512 rp=417 phase=17 errors=3575 tx=3588 rx=3575 resets=3
+FATAL: rtl/test/hbm_accel/svg_rel/tb_svg_fifo_sram.sv:31: macro FIFO mismatch
+       Time: 4945637  Scope: tb_svg_fifo_sram
+CASE=mut2 RC=1
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-989980-1792422785): exit 0

@@ -1,0 +1,4 @@
+SVG_FIFO_SRAM FAIL mut=1 wp=512 rp=417 phase=17 errors=3060 tx=3588 rx=3575 resets=3
+FATAL: rtl/test/hbm_accel/svg_rel/tb_svg_fifo_sram.sv:31: macro FIFO mismatch
+       Time: 4945637  Scope: tb_svg_fifo_sram
+CASE=mut1 RC=1
