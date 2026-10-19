@@ -1,0 +1,12 @@
+FIRST_CODE_RE cycle=95 token=65536 epoch=0 resident=65536/0 complete=1
+ROUND_PASS user=0 token=65536 epoch=0 reads=64 output=65
+FIRST_CODE_RE cycle=295 token=65536 epoch=1 resident=65536/1 complete=1
+ROUND_PASS user=1 token=65536 epoch=1 reads=64 output=65
+FIRST_CODE_RE cycle=495 token=65536 epoch=2 resident=65536/2 complete=1
+ROUND_PASS user=2 token=65536 epoch=2 reads=64 output=65
+FIRST_CODE_RE cycle=695 token=65536 epoch=3 resident=65536/3 complete=1
+ROUND_PASS user=3 token=65536 epoch=3 reads=64 output=65
+FIRST_CODE_RE cycle=895 token=65536 epoch=4 resident=65536/4 complete=1
+[818000] %Fatal: tb_mu_embedding_publication.sv:82: Assertion failed in tb_mu_embedding_publication: JOIN_FAIL identity/residency provider=0 native=0 ledger=1 epoch_publication=0
+%Error: rtl/test/qwen_split/tb_mu_embedding_publication.sv:82: Verilog $stop
+Aborting...

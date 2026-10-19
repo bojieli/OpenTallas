@@ -1,0 +1,4 @@
+FIRST_CODE_RE cycle=95 token=65536 epoch=0 resident=65536/0 complete=1
+[151000] %Fatal: tb_mu_embedding_publication.sv:82: Assertion failed in tb_mu_embedding_publication: JOIN_FAIL identity/residency provider=1 native=0 ledger=1 epoch_publication=1
+%Error: rtl/test/qwen_split/tb_mu_embedding_publication.sv:82: Verilog $stop
+Aborting...

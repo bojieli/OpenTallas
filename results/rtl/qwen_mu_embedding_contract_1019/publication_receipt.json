@@ -1,0 +1,59 @@
+{
+  "schema": "opentallas.qwen-mu-epoch-publication-proof.v1",
+  "source_commit": "7d59eca15",
+  "fleet_unit": "oth-ubuntu-1705837-1792428702",
+  "host": "ot-epyc8",
+  "verilator": "5.050",
+  "rows": [
+    0,
+    65536,
+    151935
+  ],
+  "rounds_each": 8,
+  "mutants": 16,
+  "all_mutants_failed": true,
+  "source_hashes_match": true,
+  "source_sha256": {
+    "rtl/qwen_sys/mu_embedding_20261019/qfd_mu_embedding_epoch_publication.sv": "426a25939f0752f69e716029da08c88cb693bc20c8da82d747984f0f8f574f33",
+    "rtl/qwen_sys/mu_embedding_20261019/qfd_mu_embedding_ledger.sv": "48fc8fa1b9a7aebb516f7c6eedc1abadba6599ba1e0256224cb981669616c0d3",
+    "rtl/test/qwen_split/tb_mu_embedding_publication.sv": "54c13c9dabab913c3c6f553845f1011c038ee85e7d4c44475582bceedb03fbd9",
+    "rtl/qwen_split/qfd_native59_dv_service.sv": "37e6b82479b62e20cf86d477eb9e72d2cc3aea1b64a8e64ef7d45ed27bf11f1e",
+    "rtl/qwen_split/qfd_native59_q_export_control.sv": "8d13fcf0ee24972c9c0c823330b005baddf76c87f67898f1ff8034a0f0fd091d",
+    "rtl/qwen_split/qfd_native59_command_context.sv": "33b133a4828cfaf47ad35ebbb9472c03fb04d87044eb89e13b559298e8a86c20",
+    "rtl/qwen_split/qfd_native59_static_service.sv": "ce25ab965f10576e0c160c519ff005231cc1af6e24052a47c1051f0a7baa5002",
+    "rtl/qwen_split/qfd_native59_record_endpoint.sv": "d5f51560f5a562bf4982ede0c6a44c62575e2689ff6908eb0276ea1e526c4991",
+    "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+    "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv": "e8dbf12c7223b1f05379b1f17b357f91c0b0504e0a38b7d52f2c97d8063b8c12",
+    "rtl/qwen_sys/vm_nox_20261014/qfd_vm_attention_commit_fence.sv": "ac30b638f8cf33c17f1bd534e7696ea2dfabd2c37a8c873b158e4b8b62f8429b",
+    "rtl/qwen_sys/split_20261014/qkd_native_attention_record.sv": "8b05cb0bcd886af069d6d62026f05b3229edd568eab38ea97c92879ff6c425c0",
+    "rtl/qwen_split/qfd_embedding_word_provider.sv": "f27ee51d3d0957f6fb9558efbd0688eace7d7f865aae081fda1a2eb737c931d1",
+    "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_preload_face.sv": "52afe2023dbe64dbfc331c222b4f16db1f4529d438ca1b0f61ba1a5210dd2b55",
+    "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_core_store.sv": "df2b4c6470ecc68a9795de30072b95185c74f977715db932d4854dddc2cd93f9",
+    "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v": "d4533939f695944bebd6a63a086e3771846bc0c379af52720de8974fee504145"
+  },
+  "model": {
+    "state_bits": 157,
+    "pending_epochs": 64,
+    "active_epochs": 64,
+    "valid": 8,
+    "resident_identity": 18,
+    "reservation": 2,
+    "fault": 1,
+    "payload_bytes": 0,
+    "logical_added_edges": 0,
+    "physical_landing_edges": null,
+    "physical_area_um2": null,
+    "CTLM_new_output_bits": 2,
+    "local_epoch_ledger_event_input_bits": 32,
+    "local_epoch_output_bits": 48
+  },
+  "proof": "Each round accepts pending epoch+4 at15, fetches active oldepoch at20, consumes oldepoch90, releases170, publishes pending175 for next pass; final retire171 after release cancels pending",
+  "new_mutants": {
+    "14": "latest pending value (active+4 in this trace) incorrectly used as core epoch",
+    "15": "scheduled reload publication while sameuser rowresident",
+    "16": "scheduled retirement while sameuser rowresident"
+  },
+  "production_bound": false,
+  "enabled_abi": false,
+  "full_token_qualified": false
+}
