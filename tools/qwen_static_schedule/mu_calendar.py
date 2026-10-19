@@ -293,6 +293,54 @@ def verify(sched, ref):
     return clashes, ident
 
 
+# ---- argmax root merge: one user's candidates at a time (MU-QW-AMIX 10-19, coordinator item 2) --------------------
+# The DV root (qfd_dv_scalar2) merges the slices' LM-head argmax candidates of ONE token; the RTL now carries the user
+# with each candidate and raises a sticky fault when a merge holds two users' candidates (MU_NU > 1).  The compiler side
+# is this assertion: two users' root-merge windows never overlap.
+AM_EMIT_T = 8          # the token-start ("head") block issues the previous token's AMAX emit at T = 8 (= mu_opcal)
+AM_SLICES = 12         # DV slices on the scalar chain (W5 .. W0 E0 .. E5), commands enter at W5 = slice 0
+
+
+def am_root_window(n_slices=AM_SLICES):
+    """[lo, hi): the edges, relative to the edge the AMAX emit enters slice 0's command pin register (cmd_q), on which
+    the root can merge a candidate of that emit -- worst case over the root position (ROOT cfg, any slice).
+    Derivation from the RTL (rtl/qwen_dv/qfd_dv_slice2.sv, qfd_dv_scalar2.sv, mu/qfd_dv_amax_mu.sv):
+      command chain    cmd_o <= cmd_q, next slice cmd_q <= cmd_i: 2 edges a hop -> slice k decodes the emit at e + 2k
+                       (one broadcast AMAX, dst 15)
+      slice argmax     c_am at cmd_q -> am_emit register (+1) -> am_v (comb.) -> the scalar out register dn_o / up_o
+                       takes the AMI beat (+1), the AMV beat one edge later (am2 register, +1): AMV leaves at e + 2k + 3
+      scalar chain     a hop = the neighbour's pin register scd_q / scu_q (+1) + its pass register dn_o / up_o (+1)
+      root merge       the AMV beat in the root's pin register merges into am_best on the next edge (+1); the root's own
+                       candidate (o_am) merges the edge after am_emit (e + 2r + 2)
+      => a candidate of slice k reaches root r at  e + 2k + 2|k - r| + 3  (k != r),  the root's own at  e + 2r + 2.
+    n = 12: root at W5 (r = 0): own at e + 2, slice 11 at e + 47 -> [2, 48); every other root position lies inside.
+    Two users' emits e1 < e2 are legal iff [e1 + lo, e1 + hi) and [e2 + lo, e2 + hi) are disjoint (e2 - e1 >= 46).
+    (mu_opcal.AM_ROOT_SPAN = 48 >= 46: its reserved window covers this one.)"""
+    lo, hi = None, None
+    for r in range(n_slices):
+        arr = [2 * r + 2] + [2 * k + 2 * abs(k - r) + 3 for k in range(n_slices) if k != r]
+        lo = min(arr) if lo is None else min(lo, min(arr))
+        hi = max(arr) + 1 if hi is None else max(hi, max(arr) + 1)
+    return lo, hi
+
+
+def check_root_merge(sched, n_slices=AM_SLICES):
+    """assert: no two users' argmax root-merge windows overlap.  Every user's token-start block ("head") emits at
+    t0 + AM_EMIT_T and occupies the root on [emit + lo, emit + hi) (am_root_window).  Raises ScheduleError naming the
+    users, the emit cycles and the window; returns the number of emits checked."""
+    lo, hi = am_root_window(n_slices)
+    iv = sorted((t0 + AM_EMIT_T + lo, t0 + AM_EMIT_T + hi, u, t0 + AM_EMIT_T)
+                for u, blocks in sched.items() for name, t0, _ in blocks if name == "head")
+    for i, (a, b, u, e) in enumerate(iv):
+        for a2, b2, u2, e2 in iv[i + 1:]:
+            if a2 >= b:
+                break
+            if u2 != u:
+                raise ScheduleError(f"argmax root merge mixes users {u} and {u2}: emits at cycles {e} and {e2}, root "
+                                    f"windows [{a}, {b}) and [{a2}, {b2}) overlap (window [{lo}, {hi}) after the emit)")
+    return len(iv)
+
+
 def compile_calendar(p=None, tokens=3, layers=36, eps_max=400, granularity="op", starts=None, policy="joint"):
     """emit the NU-user calendar over `tokens` reference tokens; raise ScheduleError on any collision"""
     p = _need(dict(SOURCED, **(p or {})))
@@ -344,6 +392,7 @@ def compile_calendar(p=None, tokens=3, layers=36, eps_max=400, granularity="op",
         raise ScheduleError(f"calendar collision: {clashes[:3]}")
     if not ident:
         raise ScheduleError("latency user timeline differs from the single-user timeline")
+    root_emits = check_root_merge(sched)
     # rates: steady-state token period per user = mean spacing of its token completions
     clk = 1.2e9
     users = []
@@ -356,7 +405,8 @@ def compile_calendar(p=None, tokens=3, layers=36, eps_max=400, granularity="op",
     agg = sum(x["tok_s"] for x in users if x["tok_s"])
     return dict(schema="opentallas.qwen.mu_calendar.v1", inputs=p, layer_source=SRC_LAYER, granularity=granularity, users=users,
                 single_user_token_cycles=T, single_user_tok_s=clk / T, aggregate_tok_s=agg, horizon_cycles=horizon,
-                lemma_frame_violations=lemma, schedule_collisions=0, latency_user_identical=True, schedule=sched)
+                lemma_frame_violations=lemma, schedule_collisions=0, latency_user_identical=True,
+                root_merge=dict(window=am_root_window(), emits_checked=root_emits, mixed=0), schedule=sched)
 
 
 # ---- per-user collective commands for the RTL bench ------------------------------------------------------------------
