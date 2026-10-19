@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 // Compute face's overlapping calendar producer. Lists are mask ROMs; only the next list word is held in flops.
-module qfd_d2d_cal_seq_ovl #(parameter ROM_DIR = "") (
+module qfd_d2d_cal_seq_ovl #(parameter ROM_DIR = "", parameter integer MUT_HALT_REWIND = 0) (
     input wire ck, rst_n, reload, epoch_go, halt,
     output wire cfg_tx_we, cfg_rx_we, output wire [5:0] cfg_addr, output wire [31:0] cfg_data,
     output wire cal_start, cal_seg, cal_start_rx, cal_seg_rx,
@@ -22,7 +22,7 @@ module qfd_d2d_cal_seq_ovl #(parameter ROM_DIR = "") (
     ot_rom_4096x72_m8 #(.VIAMAP({ROM_DIR,"/ovl_c_rx.viamap.hex"}), .INSTANCE("ovl_c_rx")) u_rx_rom
         (.clk(ck), .ce_in(1'b1), .addr_in({1'b0,ra}), .rd_out(rq));
 `endif
-    ot_qwen_d2d_ovl_seq #(.TX_IMG(OVL_C_TX_IMG), .RX_IMG(OVL_C_RX_IMG),
+    ot_qwen_d2d_ovl_seq #(.MUT_HALT_REWIND(MUT_HALT_REWIND), .TX_IMG(OVL_C_TX_IMG), .RX_IMG(OVL_C_RX_IMG),
         .TX_SEG1(OVL_C_TX_SEG1), .RX_SEG1(OVL_C_RX_SEG1), .ADM(1), .TX_SEG2(32'd16), .RX_SEG2(32'd16),
         .ADM_OFS(72), .ADM_LEN(1100), .FIRST_OFS(1176), .EP_SKEW(0)) u_seq (
         .ck(ck), .rst_n(rst_n), .reload(reload), .epoch_go(epoch_go), .halt(halt),
