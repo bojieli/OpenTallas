@@ -36,6 +36,7 @@ sys.path.insert(0, str(ROOT / 'tools'))
 import lane_groups as LG  # noqa: E402
 
 TT_MASTER, TT_PORT, TT_SINK = 'qfd_tt_ctlm_dv', 'hr', 'dvs_W5'
+TT_STAGE_ME = 1                                  # Q-DIE14 (QLB-PROG 3fac5f0ef): the compiled ctlm image needs STAGE_ME 1
 HR_PIN_REG = 1                                   # qfd_tt_ctlm_dv: hr is one register after xpf (header 'hr -> W5 hr_wi')
 D2D_MASTER = 'qfd_d2d_static'
 IMAGE = ROOT / 'rtl/qwen_sys/d2d_static_20261015/d2d_cal_image.svh'
@@ -88,8 +89,10 @@ def gen_params(insts, hr_rows, image=IMAGE):
     out, rec = {}, {}
     if TT_MASTER in masters:
         T, r = xpf_transport_edges(hr_rows)
-        out[TT_MASTER] = dict(XPF_TRANSPORT_EDGES=T, _source='QLB-GEN G-C1: 1 hr pin register + hr lane cycles as built '
-                              f"({', '.join(f'{b[0]} {b[1]}' for b in [(x['bid'], x['kind']) for x in r['buses']])})")
+        out[TT_MASTER] = dict(XPF_TRANSPORT_EDGES=T, STAGE_ME=TT_STAGE_ME,
+                              _source='QLB-GEN G-C1: 1 hr pin register + hr lane cycles as built '
+                              f"({', '.join(f'{b[0]} {b[1]}' for b in [(x['bid'], x['kind']) for x in r['buses']])}); "
+                              'Q-DIE14: STAGE_ME 1 = the QLB-PROG deployment image (one image runs every stage)')
         rec['xpf'] = r
     if D2D_MASTER in masters:
         v, r = txdp_from_image(image)
@@ -188,6 +191,10 @@ def audit(die_v, port_bind, params=None, lanes=None, image=IMAGE, src=ROOT, comp
         if T is not None and got is not None and int(got) != T:
             fails.append(f'{TT_MASTER}.XPF_TRANSPORT_EDGES {got} != {T} re-derived from die.v (1 hr reg + lane cycles '
                          f'{xr["lane_cycles"]})')
+    # (b2) Q-DIE14: tt_ctlm runs the QLB-PROG deployment image (ctlm_image.py) -> STAGE_ME must be 1 (as built 0 starts
+    # the layer programme in stage 0 and faults 'start while active' in stage 1)
+    if tt and prm.get(TT_MASTER, {}).get('STAGE_ME') != TT_STAGE_ME:
+        fails.append(f'{TT_MASTER}.STAGE_ME = {prm.get(TT_MASTER, {}).get("STAGE_ME")} (the deployment image needs {TT_STAGE_ME})')
     # (c) TXDP == the committed production image
     tr = None
     if any(mst == D2D_MASTER for mst, _ in ins.values()):
