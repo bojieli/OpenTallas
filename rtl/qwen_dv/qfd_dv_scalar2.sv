@@ -11,9 +11,22 @@
 // TOK both ways; every slice passes broadcast words on in their direction and taps RB into its VM.  One word per
 // direction per edge (static schedule; a pass and an own word on one edge in one direction is a sticky fault).
 // MUT 1 / 6 / 7: as qfd_dv_scalar (sequential fold / level-1 pairing / argmax ties to the higher index).
+// MU_NU > 1 (MU-ADOPT-SLICE2 10-19, MU-QWEN R4): one token per user is merged back to back, so the root's argmax merge
+//   restarts after each token (am_best / amc cleared on the token edge; the TOK broadcast takes the latched tok_idx)
+//   instead of only at a ROOT cfg (a ROOT cfg per user token would also clear the PSUM slots of other users' reductions
+//   in flight).  MU_NU 1: today, statement for statement.  MU_MUT 1 (bench only): no restart (the pre-fix behaviour).
+// MU_NU > 1 user check (MU-QW-AMIX 10-19): "one token per user at the root at a time" is CHECKED, not only scheduled.
+//   The candidate's user (am_u, from qfd_dv_amax_mu = the AMAX emit's cmd[9:8]) rides in the tag of the AMI and AMV
+//   beats (tag[1:0] = word[33:32]; tag is 0 on these kinds at MU_NU 1).  The root opens a merge with the first
+//   candidate after a token / ROOT cfg (amc == 0) and latches its user; a candidate of another user while the merge is
+//   open (or two users' candidates on one edge) is a sticky fault (the fault output -> slice sc_fault / any_fault).
+//   tok_user = the merge's user; the TOK broadcast carries it in its tag[1:0], non-root slices latch it as it passes.
+//   MU_MUT 2 (bench only): the mixed-merge check is dropped.
 // =====================================================================================================================
 module qfd_dv_scalar2 #(
-    parameter integer MUT = 0
+    parameter integer MUT = 0,
+    parameter integer MU_NU = 1,
+    parameter integer MU_MUT = 0
 ) (
     input  wire          ck,
     input  wire          rst_n,
@@ -39,6 +52,7 @@ module qfd_dv_scalar2 #(
     input  wire          am_v,
     input  wire [23:0]   am_idx,
     input  wire [31:0]   am_val,
+    input  wire [1:0]    am_u,          // user of the own candidate (MU_NU > 1; 0 at MU_NU 1)
     output reg           w1_we,
     output reg  [23:0]   w1_addr,
     output reg  [31:0]   w1_data,
@@ -46,6 +60,7 @@ module qfd_dv_scalar2 #(
     output reg  [23:0]   tok_idx,
     output reg           tok_own,       // tok_v is this root's own die-wide merge (not a passing broadcast)
     output reg  [31:0]   tok_val,       // the merged value (root, with tok_own)
+    output reg  [1:0]    tok_user,      // user of tok_idx (MU_NU > 1: the merge's user / the TOK tag; 0 at MU_NU 1)
     output reg           busy,
     output reg           fault
 );
@@ -70,15 +85,19 @@ module qfd_dv_scalar2 #(
     reg  [56:0] am_best;
     reg         am2;                                // second (value) beat of the own candidate pending
     reg  [31:0] am2_val;
+    reg  [1:0]  am2_u;
+    wire [11:0] am_tag = (MU_NU > 1) ? {10'd0, am_u} : 12'd0;      // MU-QW-AMIX: the candidate's user
+    wire [11:0] am2_tag = (MU_NU > 1) ? {10'd0, am2_u} : 12'd0;
+    wire [11:0] tk_tag = (MU_NU > 1) ? {10'd0, tok_user} : 12'd0;
     wire        own_tw = (ps_v || am_v || am2) && !root;   // toward the root
     wire [47:0] own_tw_w = ps_v ? {1'b1, K_PSUM, ps_idx[11:0], ps_val} :
-                           am_v ? {1'b1, K_AMI, 12'd0, 8'd0, am_idx} : {1'b1, K_AMV, 12'd0, am2_val};
+                           am_v ? {1'b1, K_AMI, am_tag, 8'd0, am_idx} : {1'b1, K_AMV, am2_tag, am2_val};
     wire        own_bc = rb_v || rr_v || tk_send;
     wire [47:0] own_bc_w = rb_v ? {1'b1, K_RB, 12'd0, rb_val} : rr_v ? {1'b1, K_RB, 12'd0, rr_y} :
-                           {1'b1, K_TOK, 12'd0, 8'd0, am_best[55:32]};
+                           {1'b1, K_TOK, tk_tag, 8'd0, (MU_NU > 1) ? tok_idx : am_best[55:32]};
     always @(posedge ck or negedge rst_n)
-        if (!rst_n) begin am2 <= 1'b0; am2_val <= 32'd0; end
-        else begin am2 <= am_v && !root; am2_val <= am_val; end
+        if (!rst_n) begin am2 <= 1'b0; am2_val <= 32'd0; am2_u <= 2'd0; end
+        else begin am2 <= am_v && !root; am2_val <= am_val; am2_u <= (MU_NU > 1) ? am_u : 2'd0; end
     always @(posedge ck or negedge rst_n)
         if (!rst_n) begin dn_o <= 48'd0; up_o <= 48'd0; end
         else begin
@@ -182,9 +201,20 @@ module qfd_dv_scalar2 #(
     wire [56:0] m3 = (o_am && better(co, m2)) ? co : m2;
     reg  [5:0]  amc;
     wire [5:0]  amc_n = amc + (d_amv ? 6'd1 : 6'd0) + (u_amv ? 6'd1 : 6'd0) + (o_am ? 6'd1 : 6'd0);
+    // MU-QW-AMIX (MU_NU > 1): the users of the arriving candidates (AMV tag[1:0]; own = am_u) and the open merge's user
+    wire [1:0]  du = dn_i[33:32], uu = up_i[33:32];
+    wire        a_any = d_amv || u_amv || o_am;
+    wire [1:0]  f_u = d_amv ? du : u_amv ? uu : am_u;                 // user of this edge's first arriving candidate
+    reg  [1:0]  mg_u;                                                 // user of the open merge (amc != 0)
+    wire [1:0]  cur_u = (amc == 6'd0) ? f_u : mg_u;
+    wire        am_mix = (MU_NU > 1) && (MU_MUT != 2) && a_any &&
+                         ((d_amv && du != cur_u) || (u_amv && uu != cur_u) || (o_am && am_u != cur_u));
+    always @(posedge ck or negedge rst_n)
+        if (!rst_n) mg_u <= 2'd0;
+        else if (MU_NU > 1 && a_any && amc == 6'd0 && !cfg_v) mg_u <= f_u;
     always @(posedge ck or negedge rst_n)
         if (!rst_n) begin am_best <= 57'd0; amc <= 6'd0; tk_send <= 1'b0; tok_v <= 1'b0; tok_idx <= 24'd0;
-                          di <= 24'd0; ui <= 24'd0; tok_own <= 1'b0; tok_val <= 32'd0; end
+                          di <= 24'd0; ui <= 24'd0; tok_own <= 1'b0; tok_val <= 32'd0; tok_user <= 2'd0; end
         else begin
             tk_send <= 1'b0; tok_v <= 1'b0; tok_own <= 1'b0;
             if (dv && dk == K_AMI && root) di <= dn_i[23:0];
@@ -193,12 +223,14 @@ module qfd_dv_scalar2 #(
             else if (d_amv || u_amv || o_am) begin
                 am_best <= m3;
                 if (amc_n == amnb && amnb != 6'd0) begin amc <= 6'd0; tk_send <= 1'b1; tok_v <= 1'b1; tok_idx <= m3[55:32];
-                                                          tok_own <= 1'b1; tok_val <= m3[31:0]; end
+                                                          tok_own <= 1'b1; tok_val <= m3[31:0];
+                                                          if (MU_NU > 1) tok_user <= cur_u;
+                                                          if (MU_NU > 1 && MU_MUT != 1) am_best <= 57'd0; end
                 else amc <= amc_n;
             end
             // a non-root slice records the broadcast token as it passes
-            if (!root && dv && dk == K_TOK) begin tok_v <= 1'b1; tok_idx <= dn_i[23:0]; end
-            if (!root && uv && uk == K_TOK) begin tok_v <= 1'b1; tok_idx <= up_i[23:0]; end
+            if (!root && dv && dk == K_TOK) begin tok_v <= 1'b1; tok_idx <= dn_i[23:0]; if (MU_NU > 1) tok_user <= dn_i[33:32]; end
+            if (!root && uv && uk == K_TOK) begin tok_v <= 1'b1; tok_idx <= up_i[23:0]; if (MU_NU > 1) tok_user <= up_i[33:32]; end
         end
     // -------------------------------------------------------------- VM writes: RB tap (either way), root total, fused r
     wire tap_rb = (dv && dk == K_RB) || (uv && uk == K_RB);
@@ -225,7 +257,8 @@ module qfd_dv_scalar2 #(
                ((dv && dk == K_RB) && (uv && uk == K_RB)) || (tap_rb && (tot_w || rr_v)) || (tot_w && rr_v) ||
                ((d_ps || u_ps || o_ps) && trig) || (tot_v && |tf) || (vd1[3] && f1) || (vd2[3] && f2) || (rr_v && f3) ||
                (d_ps && dn_i[37:32] >= nb && nb != 6'd32) || (u_ps && up_i[37:32] >= nb && nb != 6'd32) ||
-               (o_ps && (ps_idx[23:5] != 0 || ps_idx[5:0] >= nb && nb != 6'd32));
+               (o_ps && (ps_idx[23:5] != 0 || ps_idx[5:0] >= nb && nb != 6'd32)) ||
+               am_mix;                                          // MU-QW-AMIX: one merge holds two users' candidates
     always @(posedge ck or negedge rst_n)
         if (!rst_n) fault <= 1'b0;
         else fault <= fault | bad;

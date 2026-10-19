@@ -1,0 +1,44 @@
+{
+ "rule": "L_j = KC + KW + 17 + PS + LX_j + R_j + R_peer(j); LS = max_j L_j; LU = KC + KW + 17 + PU + 2 RU",
+ "KC": 4,
+ "KW": 2,
+ "PS": 339,
+ "PU": 20,
+ "RU": 5,
+ "RS": [
+  0,
+  0,
+  5
+ ],
+ "ports": {
+  "0": {
+   "LX": 10,
+   "R": 0,
+   "R_peer": 5,
+   "L_min": 377
+  },
+  "1": {
+   "LX": 0,
+   "R": 0,
+   "R_peer": 0,
+   "L_min": 362
+  },
+  "2": {
+   "LX": 9,
+   "R": 5,
+   "R_peer": 0,
+   "L_min": 376
+  }
+ },
+ "LS": 377,
+ "LU": 53,
+ "binding_port": 0,
+ "rtl_default_LS": 376,
+ "delta_vs_default": 1,
+ "source": "results/rtl/qcollcal_rl_1018/gen_dv2f14bq/coll_lane_latency.json",
+ "LX": [
+  10,
+  0,
+  9
+ ]
+}

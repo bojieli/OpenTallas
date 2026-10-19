@@ -18,7 +18,8 @@ module qkd_host_if_pins_observed_rr #(
   parameter integer AW = 24,
   parameter integer KVW = 1024,
   parameter integer EVQ = 4,
-  parameter integer FMT = 0
+  parameter integer FMT = 0,
+  parameter integer MU_OUT = 0
 )(
  input wire clk,
  input wire rst_n,
@@ -121,7 +122,7 @@ module qkd_host_if_pins_observed_rr #(
 `else
  ot_rst_relay #(.REGIONS(1),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst_relay(.clk(clk),.rst_n_in(rst_n),.rst_n(rst_q));
 `endif
- qkd_host_if_pins_observed #(.PB_READ_PIPE(PB_READ_PIPE),.MUT_DONE_GUARD(MUT_DONE_GUARD),.PB_VALID_ONLY(PB_VALID_ONLY),.NSLOT(NSLOT),.MODE(MODE),.ENG_CTX(ENG_CTX),.NW(NW),.PLB(PLB),.CTX_MAX(CTX_MAX),.AW(AW),.KVW(KVW),.EVQ(EVQ),.FMT(FMT)) u_m(
+ qkd_host_if_pins_observed #(.PB_READ_PIPE(PB_READ_PIPE),.MUT_DONE_GUARD(MUT_DONE_GUARD),.PB_VALID_ONLY(PB_VALID_ONLY),.NSLOT(NSLOT),.MODE(MODE),.ENG_CTX(ENG_CTX),.NW(NW),.PLB(PLB),.CTX_MAX(CTX_MAX),.AW(AW),.KVW(KVW),.EVQ(EVQ),.FMT(FMT),.MU_OUT(MU_OUT)) u_m(
   .clk(clk),
   .rst_n(rst_q),
   .die_id(die_id),

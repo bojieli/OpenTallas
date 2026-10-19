@@ -1,0 +1,16 @@
+ERR retire 1 at 47 (last report 45) tok 20003/21003 n 1
+ERR retire 2 at 48 (last report 46) tok 20003/22003 n 1
+ERR retire 3 at 49 (last report 47) tok 21003/23003 n 2
+ERR retire 4 at 50 (last report 89) tok 22003/20008 n 3
+ERR retire 5 at 51 (last report 90) tok 23003/21008 n 4
+ERR main run retired 399 started 399 max_out 4 res=00000004d000000013f82000288037
+MAIN users 4 steps 399 retired 399 max_outstanding 4 errors 200400
+ERR fault mode 1 bit 87 first 0100 res=00000001c000000013f82000188023 faults_seen 1 started 39 retired 39
+ERR fault mode 2 bit 84 first 0100 res=00000004d000000013f81000284037 faults_seen 1 started 38 retired 38
+FAULT mode 3 cause bit 86 (first fault bits 0100); 38 steps started, all retired (30 flushed with fault)
+ERR fault mode 4 bit 85 first 0100 res=00000003c000000013f8200008800f faults_seen 1 started 39 retired 39
+ERR fault mode 5 bit 87 first 0100 res=00000004c000000013f8200008800f faults_seen 1 started 39 retired 39
+FAIL qkd_host_ctl MU errors=300363
+[250407000] %Fatal: tb_qkd_host_ctl_mu.sv:147: Assertion failed in tb_qkd_host_ctl_mu
+%Error: rtl/test/mu_qwen_1018/tb_qkd_host_ctl_mu.sv:147: Verilog $stop
+Aborting...
