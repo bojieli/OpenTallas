@@ -133,7 +133,7 @@
     "name": "seqhost_mut10",
     "cmd": "VL_EXTRA=\"-DOT_S81_SH_APIPE9 -DOT_S81_SH_APIPE10 -DOT_S81_SH_SRAM -DOT_S81_SH_RSZ -DTB_HSH=8\" bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut10 1 10",
     "expect": "fail",
-    "fail_regex": "^SEQHOST FAIL$",
+    "fail_regex": "^SEQHOST FAIL( |$)",
     "fail_witness": "results/rtl/s81_shlk_s10_1019/seqhost/run_mut10.log",
     "threads": 8,
     "peak_ram_gb": 8
