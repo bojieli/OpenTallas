@@ -12,9 +12,23 @@
 // reset -> retrain -> forwarded epoch -> exact replay of the layer; witnesses and typed faults checked.
 // MUT: 1 compute write slot +1, 2 KV RX demux swap, 3 producer fires 1 cycle late, 4 calendar compiled with a wrong TXL
 //      (run script), 5 kind-15 status levels forced stale (fresh gating mutant in the bench reference) -> must FAIL.
+// LOCK = 1 (S-QTIES QC-12, 10-18): a shadow qkd_d2d_static #(.NTX(3)) (port-3 TX lane removed) runs in lockstep with
+//      u_k (NTX 4, the closed r7q form) on identical inputs; every output is compared every edge (D2D_LOCK_MISMATCH).
+//      LMUT 1: shadow TX write slot +1 (MUT 1); LMUT 2: shadow embedding (port 2) producer one edge late -> must FAIL.
+// KDLY (HKV-D2D18 10-19): KDLY extra edges between the KV attention-record producer (port 0) and the KV end's att_tx
+//      pins = the die seam stages; run_d2d_dies.sh compiles --txd-k (1+KDLY),2,1,1 so QKD_D2D_TXDP is the die's TXDP
+//      (KDLY 21 + pinreg 2 -> port 0 = 24: D2D_TXDP_K 32'h03030418, the KV die GEN with OT_KV_ATTN_LAND).
+// OVLM (TW7-KVD2D 10-19, compile with -DOVLM): the KV end is the MU overlap master qkd_d2d_static_ovl #(.NTX(3)) (MU-D2D-OVL
+//      0fc36caf5: separate RX calendar start / segment pins and per-user tag pins, each pin-registered like cal_start).
+//      The bench starts the RX calendar with the TX one (cal_start_rx = cal_start: the one-playhead frame, so every
+//      exact-cycle check above holds unchanged) and tags each segment with user 2'(layer) (token run: 3); every KV TX slot
+//      must carry tx_user and every KV RX event rx_user == the segment's user (D2D_OVL_USER counts).  Overlapping frames
+//      themselves are proven at the end level by tb_d2d_ovl_mu (same ot_qwen_d2d_static_end RTL).
+//      OMUT 1: cal_user_rx pin driven with another user (rx tag path)  2: cal_start_rx one edge late (RX calendar start
+//      pin path)  -> must FAIL.
 module tb_qwen_d2d_dies;
     `include "txdp.svh"   // QXF-LINK F4: the masters' TXDP from the same compile (d2d_link_calendar.py)
-    parameter integer MUT = 0, PR = 1, TXL = 6, PHY = 5, P = 110, NLAY = 6, BAD_LAYER = 4;
+    parameter integer MUT = 0, PR = 1, TXL = 6, PHY = 5, P = 110, NLAY = 6, BAD_LAYER = 4, LOCK = 0, LMUT = 0, KDLY = 0, OMUT = 0;
     parameter CALDIR = "cal";
     localparam integer FW = 548, PW = 583;
     reg ck = 0; always #0.4167 ck = ~ck;
@@ -47,7 +61,7 @@ module tb_qwen_d2d_dies;
     integer tok = 0, tstart = 0, trel = 0, emb_ok = 0, tok_res = 0;
     always @* trel = cyc - tstart;
     wire c_txs0, c_rxe0, c_rxs0, k_txs0, k_rxe0, k_rxs0; wire [3:0] c_tk, k_tk, c_rk, k_rk; wire [4:0] c_tb, k_tb, c_rb, k_rb;
-    wire [FW-1:0] c_rxp, k_rxp; wire c_tv0, k_tv0; wire [FW-1:0] c_tp0, k_tp0;
+    wire [FW-1:0] c_rxp, k_rxp; wire c_tv0, k_tv0, k_tv0r; wire [FW-1:0] c_tp0, k_tp0, k_tp0r;
     wire c_abort, k_abort, c_f, k_f; wire [7:0] c_tf, h_tf; wire [31:0] k_rcyc;
     wire [1:0] h_lu; wire h_ld, h_ls, h_rt; wire [3:0] h_ad;
     wire h_kvd, h_vmd, h_cod, h_hd, h_cb, h_kf, h_ar, h_cf, h_ea, h_wv, h_rxv; wire [1:0] h_sk; wire [547:0] h_rx;
@@ -86,8 +100,20 @@ module tb_qwen_d2d_dies;
         .result_gen(2'(lay)), .result_token(18'(lay * 1001)), .result_value(32'(lay * 77)), .result_cycles(32'(lay * 1052)),
         .fdi_tx_up(c_up), .fdi_tx_v(c_ptx_v), .fdi_tx_flit(c_ptx), .fdi_rx_v(c_prx_v), .fdi_rx_flit(c_prx),
         .phy_rst_n(c_phy_rst_n), .epoch_abort(c_abort), .transport_fault(c_tf), .fault(c_f));
+`ifdef OVLM
+    // ---------------- MU overlap KV master: RX start / segment / user pins ----------------
+    wire [1:0] seg_user = 2'(lay);
+    reg cstart_d = 0, cseg_d = 0; always @(posedge ck) begin cstart_d <= cstart; cseg_d <= cseg; end
+    wire cstart_rx = (OMUT == 2) ? cstart_d : cstart, cseg_rx = (OMUT == 2) ? cseg_d : cseg;
+    wire [1:0] k_tu, k_ru;
+    qkd_d2d_static_ovl #(.MUT(MUT == 2 ? 2 : 0), .NTX(3), .PR(PR), .TXDP(QKD_D2D_TXDP)) u_k (.ck(ck), .por_n(por_n), .rst_n(rst_n),
+        .cfg_tx_we(cfg_k_tx), .cfg_rx_we(cfg_k_rx), .cfg_addr({cfg_hi, cfg_a}), .cfg_data(cfg_dk), .cal_start(cstart), .cal_seg(cseg),
+        .cal_start_rx(cstart_rx), .cal_seg_rx(cseg_rx), .cal_user_tx(seg_user), .cal_user_rx((OMUT == 1) ? seg_user ^ 2'd1 : seg_user),
+        .tx_user(k_tu), .rx_user(k_ru),
+`else
     qkd_d2d_static #(.MUT(MUT == 2 ? 2 : 0), .PR(PR), .TXDP(QKD_D2D_TXDP)) u_k (.ck(ck), .por_n(por_n), .rst_n(rst_n),
         .cfg_tx_we(cfg_k_tx), .cfg_rx_we(cfg_k_rx), .cfg_addr({cfg_hi, cfg_a}), .cfg_data(cfg_dk), .cal_start(cstart), .cal_seg(cseg),
+`endif
         .host_link_reset_req(host_reset_req), .host_recovery_clear(host_clear), .host_boot_begin(host_boot),
         .fwd_epoch(fwd_ep), .fwd_link_rst_n(fwd_lrst_n),
         .att_tx_slot(k_txs0), .att_tx_kind(k_tk), .att_tx_beat(k_tb), .att_tx_v(k_tv0), .att_tx_payload(k_tp0),
@@ -109,6 +135,73 @@ module tb_qwen_d2d_dies;
         .engine_result_value(s_rval), .engine_result_cycles(s_rcyc),
         .fdi_tx_up(k_up), .fdi_tx_v(k_ptx_v), .fdi_tx_flit(k_ptx), .fdi_rx_v(k_prx_v), .fdi_rx_flit(k_prx),
         .phy_rst_n(k_phy_rst_n), .epoch_abort(k_abort), .recovery_cycles(k_rcyc), .fault(k_f));
+    // ---------------- S-QTIES QC-12 lockstep shadow: KV end without the dead port-3 TX lane (NTX = 3) ----------------
+    integer lock_mm = 0, lock_cmp = 0; integer lock_tx [0:3];
+    initial begin lock_tx[0] = 0; lock_tx[1] = 0; lock_tx[2] = 0; lock_tx[3] = 0; end
+    if (LOCK) begin : g_lock
+        reg emb_v_d = 0; reg [547:0] emb_p_d = 0;
+        always @(posedge ck) begin emb_v_d <= k_emb_v; emb_p_d <= k_emb_p; end
+        wire s_emb_v = (LMUT == 2) ? emb_v_d : k_emb_v; wire [547:0] s_emb_p = (LMUT == 2) ? emb_p_d : k_emb_p;
+        wire o_fe, o_fl, o_ats, o_arv, o_ars, o_es, o_rsw, o_rrv, o_kv, o_kslot, o_ld, o_ls, o_rt, o_kd, o_vd, o_cd, o_hd,
+             o_cb, o_kf, o_ar, o_cf, o_ea, o_rv, o_rd, o_rf, o_txv, o_prst, o_ab, o_f;
+        wire [3:0] o_atk, o_ark, o_rc, o_ad; wire [4:0] o_atb, o_arb; wire [547:0] o_rxp, o_rrx; wire [1:0] o_rsk, o_kg, o_ki, o_lu, o_rg;
+        wire [10:0] o_kt; wire [511:0] o_kdat; wire [58:0] o_kid, o_rtag; wire [7:0] o_tf; wire [17:0] o_rtok;
+        wire [31:0] o_rval, o_rcyc, o_recc; wire [PW-1:0] o_txf;
+        qkd_d2d_static #(.MUT(LMUT == 1 ? 1 : 0), .NTX(3), .PR(PR), .TXDP(QKD_D2D_TXDP)) u_k3 (.ck(ck), .por_n(por_n), .rst_n(rst_n),
+            .cfg_tx_we(cfg_k_tx), .cfg_rx_we(cfg_k_rx), .cfg_addr({cfg_hi, cfg_a}), .cfg_data(cfg_dk), .cal_start(cstart), .cal_seg(cseg),
+            .host_link_reset_req(host_reset_req), .host_recovery_clear(host_clear), .host_boot_begin(host_boot),
+            .fwd_epoch(o_fe), .fwd_link_rst_n(o_fl),
+            .att_tx_slot(o_ats), .att_tx_kind(o_atk), .att_tx_beat(o_atb), .att_tx_v(k_tv0), .att_tx_payload(k_tp0),
+            .att_rx_v(o_arv), .att_rx_slot(o_ars), .att_rx_kind(o_ark), .att_rx_beat(o_arb), .rx_payload(o_rxp),
+            .emb_tx_slot(o_es), .emb_tx_v(s_emb_v), .emb_tx_payload(s_emb_p),
+            .record_tx_observed_v(1'b0), .record_tx(548'd0), .record_send_kind(o_rsk), .record_witness_slot(o_rsw),
+            .record_rx_v(o_rrv), .record_rx(o_rrx),
+            .kvn_compiled_identity(op_tag), .kvn_compiled_generation(2'(lay)),
+            .kvn_word_valid(o_kv), .kvn_word_tag(o_kt), .kvn_word_data(o_kdat), .kvn_word_identity(o_kid),
+            .kvn_word_generation(o_kg), .kvn_word_slot(o_kslot), .kvn_word_index(o_ki),
+            .status_epoch16(op_epoch), .serdes_up(1'b1), .kv_drained_local(1'b1), .kv_flush_local(1'b0),
+            .host_drained_local(1'b1), .kv_active_local(1'b0),
+            .link_up(o_lu), .transport_fault(o_tf), .native_links_drained(o_ld), .native_link_reset_seen(o_ls),
+            .native_retrained(o_rt), .abort_drained(o_ad), .native_kv_drained(o_kd), .native_vm_drained(o_vd),
+            .native_collective_drained(o_cd), .native_host_drained(o_hd), .native_collective_busy(o_cb),
+            .native_kv_flush(o_kf), .native_admit_ready(o_ar), .crom_fault(o_cf), .execution_active(o_ea),
+            .engine_result_v(o_rv), .engine_result_done(o_rd), .engine_result_fault(o_rf), .engine_result_cause(o_rc),
+            .engine_result_tag(o_rtag), .engine_result_gen(o_rg), .engine_result_token(o_rtok),
+            .engine_result_value(o_rval), .engine_result_cycles(o_rcyc),
+            .fdi_tx_up(k_up), .fdi_tx_v(o_txv), .fdi_tx_flit(o_txf), .fdi_rx_v(k_prx_v), .fdi_rx_flit(k_prx),
+            .phy_rst_n(o_prst), .epoch_abort(o_ab), .recovery_cycles(o_recc), .fault(o_f));
+        // every u_k output (the PHY-side TX word included) against the shadow's, same edge
+        wire [4095:0] ref_o = {fwd_ep, fwd_lrst_n, k_txs0, k_tk, k_tb, k_rxe0, k_rxs0, k_rk, k_rb, k_rxp, k_emb_slot, h_sk, h_wv,
+            h_rxv, h_rx, kw_v, kw_tag, kw_data, kw_id, kw_gen, kw_slot, kw_idx, h_lu, h_tf, h_ld, h_ls, h_rt, h_ad, h_kvd, h_vmd,
+            h_cod, h_hd, h_cb, h_kf, h_ar, h_cf, h_ea, s_rv, s_rd, s_rf, s_rc, s_rt, s_rg, s_rtok, s_rval, s_rcyc, k_ptx_v, k_ptx,
+            k_phy_rst_n, k_abort, k_rcyc, k_f};
+        wire [4095:0] shd_o = {o_fe, o_fl, o_ats, o_atk, o_atb, o_arv, o_ars, o_ark, o_arb, o_rxp, o_es, o_rsk, o_rsw,
+            o_rrv, o_rrx, o_kv, o_kt, o_kdat, o_kid, o_kg, o_kslot, o_ki, o_lu, o_tf, o_ld, o_ls, o_rt, o_ad, o_kd, o_vd,
+            o_cd, o_hd, o_cb, o_kf, o_ar, o_cf, o_ea, o_rv, o_rd, o_rf, o_rc, o_rtag, o_rg, o_rtok, o_rval, o_rcyc, o_txv, o_txf,
+            o_prst, o_ab, o_recc, o_f};
+        integer q;
+        always @(posedge ck) if (rst_n) begin
+            lock_cmp = lock_cmp + 1;
+            if (ref_o !== shd_o) begin
+                lock_mm = lock_mm + 1;
+                if (lock_mm < 4) $display("D2D_LOCK_MISMATCH cyc %0d lay %0d rel %0d", cyc, lay, rel);
+            end
+            for (q = 0; q < 3; q = q + 1) if (u_k3.u_core.u_end.tx_slot[q]) lock_tx[q] = lock_tx[q] + 1;
+            if (u_k.u_core.u_end.tx_slot[3]) lock_tx[3] = lock_tx[3] + 1;
+        end
+    end
+    // KV port-0 die seam stages (KDLY edges, record producer -> att_tx pins)
+    generate if (KDLY == 0) begin : g_kdly0
+        assign k_tv0 = k_tv0r; assign k_tp0 = k_tp0r;
+    end else begin : g_kdly
+        reg kd_v [0:KDLY-1]; reg [FW-1:0] kd_p [0:KDLY-1]; integer kq;
+        initial for (kq = 0; kq < KDLY; kq = kq + 1) begin kd_v[kq] = 1'b0; kd_p[kq] = '0; end
+        always @(posedge ck) begin
+            kd_v[0] <= k_tv0r; kd_p[0] <= k_tp0r;
+            for (kq = 1; kq < KDLY; kq = kq + 1) begin kd_v[kq] <= kd_v[kq-1]; kd_p[kq] <= kd_p[kq-1]; end
+        end
+        assign k_tv0 = kd_v[KDLY-1]; assign k_tp0 = kd_p[KDLY-1];
+    end endgenerate
     // real KVN producer: the compute die's fixed-slot KVN transport (2 seats), words pushed 1 cycle before their slot
     wire kvn_push = lay >= 0 && rel >= 41 && rel < 45;
     qfd_kvn_static_transport u_kvt (.ck(ck), .rst_n(rst_n & ~c_eb), .word_v(kvn_push), .word_tag({3'd2, 8'(rel - 41)}),
@@ -147,7 +240,7 @@ module tb_qwen_d2d_dies;
     qkd_native_attention_record #(.KV_SIDE(1)) u_ka (.ck(ck), .rst_n(rst_n & ~k_eb),
         .tx_event(k_r_ev), .tx_expected(k_txs0), .tx_kind(k_r_kind), .tx_expected_kind(k_tk),
         .tx_epoch(op_epoch), .tx_expected_epoch(op_epoch), .tx_layer(op_layer), .tx_expected_layer(op_layer),
-        .tx_beat(k_r_beat), .tx_expected_beat(k_tb), .tx_data(k_r_data), .tx_valid(k_tv0), .tx_payload(k_tp0),
+        .tx_beat(k_r_beat), .tx_expected_beat(k_tb), .tx_data(k_r_data), .tx_valid(k_tv0r), .tx_payload(k_tp0r),
         .rx_event(k_rxe0), .rx_expected(k_rxs0), .rx_payload(k_rxp), .rx_expected_kind(k_rk),
         .rx_expected_epoch(op_epoch), .rx_expected_layer(op_layer), .rx_expected_beat(k_rb),
         .rx_valid(ka_rv), .rx_kind(ka_rk), .rx_epoch(ka_re), .rx_layer(ka_rl), .rx_beat(ka_rb), .rx_data(ka_rd),
@@ -159,6 +252,17 @@ module tb_qwen_d2d_dies;
     integer errs = 0, frames_ck = 0, frames_kc = 0, statuses = 0, results = 0, normal_aborts = 0;
     integer aborted_layer = -1;
     reg first_after_eb = 0;
+    integer ovl_tx = 0, ovl_rx = 0;
+`ifdef OVLM
+    // user of the segment that owns each KV slot / event (segments never overlap in this frame); pins registered (PR)
+    reg [1:0] u_seg = 2'd3; always @(posedge ck) if (cstart) u_seg <= seg_user;
+    always @(posedge ck) if (rst_n) begin
+        if (k_txs0) begin if (k_tu !== u_seg) begin errs = errs + 1; if (errs < 4) $display("ERR tx_user %0d != segment user %0d cyc %0d", k_tu, u_seg, cyc); end
+                          else ovl_tx = ovl_tx + 1; end
+        if (k_rxe0) begin if (k_ru !== u_seg) begin errs = errs + 1; if (errs < 4) $display("ERR rx_user %0d != segment user %0d cyc %0d", k_ru, u_seg, cyc); end
+                          else ovl_rx = ovl_rx + 1; end
+    end
+`endif
     // token run (segment 1): terminal RESULT C->S at token cycle 2, embedding row S->C words 0..63 from cycle 20
     always @(posedge ck) if (tok && rst_n) begin
         if (c_emb_v) begin
@@ -179,9 +283,10 @@ module tb_qwen_d2d_dies;
     always @(posedge ck) if (lay >= 0 && rst_n) begin
         // compute codec output at arrival + 3 (end rx at +2, codec register +1): RESULT beats + STATUS
         if (ca_rv) begin
-            if (!((rel - 3 - XL >= 50 && rel - 3 - XL < 82) || rel - 3 - XL == 83)) begin
+            // KV port-0 frames (attention RESULT beats + STATUS) arrive KDLY edges later (die seam stages, TXDP port 0)
+            if (!((rel - 3 - XL - KDLY >= 50 && rel - 3 - XL - KDLY < 82) || rel - 3 - XL - KDLY == 83)) begin
                 errs = errs + 1; $display("ERR compute rx at unplanned rel %0d", rel); end
-            else if (ca_rd !== (rel - 3 - XL == 83 ? st_word : word(lay, 3, rel - 3 - XL - 50))) begin
+            else if (ca_rd !== (rel - 3 - XL - KDLY == 83 ? st_word : word(lay, 3, rel - 3 - XL - KDLY - 50))) begin
                 errs = errs + 1; $display("ERR compute rx data rel %0d", rel); end
             else if (aborted_layer != lay) frames_kc = frames_kc + 1;
         end
@@ -272,7 +377,13 @@ module tb_qwen_d2d_dies;
         lay = -1; tick(20);
         $display("frames C->S %0d S->C %0d kvn %0d results %0d host-checks %0d normal-epoch faults %0d errors %0d",
             frames_ck, frames_kc, kvn_ok, results, statuses, normal_aborts, errs);
-        if (errs == 0 && normal_aborts == 0 && frames_ck == 33 * NLAY && frames_kc == 33 * NLAY && kvn_ok == 4 * NLAY && results == NLAY &&
+        if (LOCK) $display("D2D_LOCK edges %0d mismatches %0d ntx3 tx slots p0 %0d p1 %0d p2 %0d; ntx4 port-3 slots %0d",
+            lock_cmp, lock_mm, lock_tx[0], lock_tx[1], lock_tx[2], lock_tx[3]);
+`ifdef OVLM
+        $display("D2D_OVL_USER tx %0d rx %0d", ovl_tx, ovl_rx);
+        if (ovl_tx == 0 || ovl_rx == 0) errs = errs + 1;
+`endif
+        if (errs == 0 && normal_aborts == 0 && lock_mm == 0 && frames_ck == 33 * NLAY && frames_kc == 33 * NLAY && kvn_ok == 4 * NLAY && results == NLAY &&
             emb_ok == 64 && tok_res == 1)
             $display("D2D_DIES_PASS");
         else $display("D2D_DIES_FAIL");
