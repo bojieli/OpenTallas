@@ -64,3 +64,19 @@ rows are not a global site grid. Free hard-macro rectangles and a legal lattice
 are insufficient to prove physical row legality. The final whole-spine ODB audit
 must check actual row containment as well as overlaps, endpoint coverage, fanout
 and405um reach. No timing proposal is authorized from the single-pair witness.
+
+The independent auditor was validated on the completed historical DME ODB,
+not the new candidate. `physical/legacy_geometry_audit/proof.json` records
+109480 clock cells,36819 spine cells, zero bounding-box overlaps, but36766
+spine cells and109395 total clock cells lacking physical rows. It also finds
+865 inherited regional connections with direct distance>405um, the worst
+`dc_r343_L1/Y -> rstt_rst_field_2495/clk` at2472.043um. The legacy control fails
+the new proof as expected. These native regional and row/rail obligations
+remain separate from the new spine's routed stage proof.
+
+`qwen_spine_geometry_proof.py` independently reads the final actual ODB and
+checks full footprints, actual net connectivity, required endpoint coverage,
+fanout, actual placed-pin routed reach and containing physical rows. It can
+emit a readonly row/rail requirements model with source-bound coordinates,
+area and existing row descriptors that would be superseded. It creates no rows
+or PDN and cannot qualify a timing run from missing physical infrastructure.
