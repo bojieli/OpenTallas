@@ -183,6 +183,12 @@ def main():
         mean, mn, mx = R[cks[0]][c]
         ins[c] = {"boundary": {"n": len(pins), "mean": mean, "min": mn, "max": mx}, "errors": [],
                   "per_clock": {ck: dict(zip(("mean", "min", "max"), R[ck][c])) for ck in cks}}
+    if len(cks) > 1:
+        # multi-root child (ck_insertion.py form): one record per Liberty clock pin, so a parent's clock_entry_constraints
+        # binds each pin to its own boundary (else: 'ambiguous routed clock pin association')
+        ins["clock_measurements"] = {ck: {"lib_clock_pin": ck, "clock": ck, "standin": True, **{
+            c: {"boundary": {"n": len(pins), **dict(zip(("mean", "min", "max"), R[ck][c]))}, "errors": []}
+            for c in ("tt", "ff", "ss")}} for ck in cks}
     (out / "insertion.json").write_text(json.dumps(ins, indent=1) + "\n")
     widths = {}
     for p, base, *_ in pins:

@@ -13,7 +13,7 @@
   "physical/ref_tile/hcoll_v7_tkm_m_tp192_lp/standin/ot_hgi_coll_tkm_tile_e86/ot_hgi_coll_tkm_tile_e86_bb.v"
  ],
  "params": {},
- "clock": "cts",
+ "clock": "multiple_cts_roots",
  "clock_port": "ck_SW",
  "clock_ports": [
   "ck_SW",
@@ -21,9 +21,87 @@
   "ck_NE",
   "ck_SE"
  ],
- "sdc_extra": [
-  "rtl/hbm_accel/generic/collective/tkm/lp/ot_hgi_coll_tkm_m_tp192_lp.sdc"
- ],
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_SW"
+   ],
+   "inputs": [
+    "rst_n",
+    "start",
+    "arg_mode",
+    "cfg_n",
+    "cfg_k",
+    "cfg_nout",
+    "cfg_g",
+    "cfg_gbase",
+    "cfg_pf",
+    "cfg_obase",
+    "cfg_rbase",
+    "cfg_has_r",
+    "del_slot",
+    "del_valid",
+    "del_flit"
+   ],
+   "outputs": [
+    "w_v",
+    "w_addr",
+    "w_mask",
+    "w_data",
+    "busy",
+    "done",
+    "fault",
+    "stat_cycles"
+   ]
+  },
+  "NW": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_NW"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "NE": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_NE"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "SE": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_SE"
+   ],
+   "inputs": [],
+   "outputs": []
+  }
+ },
+ "landed_record": "results/arch/pl_tp192_1018/ot_hgi_coll_tkm_m_tp192_lp_record.json",
  "reset_ports": [
   "rst_n"
  ],
@@ -527,7 +605,7 @@
   "pin_h": "M4 M6",
   "macro_halo_um": 5.4,
   "hold_margin_ns": 0.03,
-  "io_hold_margin_ns": 0.0
+  "io_hold_margin_ns": 0.03
  },
  "recipe": 4,
  "inhold": false,
@@ -543,12 +621,15 @@
   "tag": "pl1018",
   "purpose": "HBM d4g tkm_SW sub-cluster (TP192 top-k merge, 32 x e86) as a landed parent",
   "submit": false,
+  "extra_paths": [
+   "results/arch/pl_tp192_1018"
+  ],
   "hold_merge": "diagnostic: e86 stand-in abstract (standin_from_gate.py) until hcoll_v7_tkm_tile_e86 closes",
   "benches": [
    {
     "name": "tkm_tp192_lp_lockstep",
     "expect": "pass",
-    "cmd": "LP_ROOT=$PWD SIM=verilator LP_VFLAGS='--timing --hierarchical rtl/hbm_accel/generic/collective/p2p/qtkm_hier.vlt -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-WIDTHCONCAT' bash rtl/hbm_accel/generic/collective/tkm/lp/ot_hgi_coll_tkm_m_tp192_lp_bench.sh bench_out/lockstep"
+    "cmd": "LP_ROOT=$PWD SIM=verilator MAKEFLAGS='--eval=.NOTPARALLEL: hier_build' LP_VFLAGS='--timing --hierarchical rtl/hbm_accel/generic/collective/tkm/tkm_tp192_hier.vlt -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-WIDTHCONCAT' bash rtl/hbm_accel/generic/collective/tkm/lp/ot_hgi_coll_tkm_m_tp192_lp_bench.sh bench_out/lockstep"
    },
    {
     "name": "tkm_tp192_seg_golden",

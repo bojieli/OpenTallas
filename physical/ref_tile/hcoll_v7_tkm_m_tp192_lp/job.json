@@ -8,7 +8,10 @@
  "peak_ram_gb": 256,
  "source": {
   "branch": "claude/pl-tp192-1018",
-  "commit": "COMMIT"
+  "commit": "COMMIT",
+  "extra_paths": [
+   "results/arch/pl_tp192_1018"
+  ]
  },
  "stages": {
   "bench": [
@@ -25,7 +28,7 @@
    {
     "name": "tkm_tp192_lp_lockstep",
     "expect": "pass",
-    "cmd": "LP_ROOT=$PWD SIM=verilator LP_VFLAGS='--timing --hierarchical rtl/hbm_accel/generic/collective/p2p/qtkm_hier.vlt -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-WIDTHCONCAT' bash rtl/hbm_accel/generic/collective/tkm/lp/ot_hgi_coll_tkm_m_tp192_lp_bench.sh bench_out/lockstep"
+    "cmd": "LP_ROOT=$PWD SIM=verilator MAKEFLAGS='--eval=.NOTPARALLEL: hier_build' LP_VFLAGS='--timing --hierarchical rtl/hbm_accel/generic/collective/tkm/tkm_tp192_hier.vlt -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-WIDTHCONCAT' bash rtl/hbm_accel/generic/collective/tkm/lp/ot_hgi_coll_tkm_m_tp192_lp_bench.sh bench_out/lockstep"
    },
    {
     "name": "tkm_tp192_seg_golden",
@@ -38,7 +41,7 @@
    "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
   },
   "route": {
-   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hcoll_v7_tkm_m_tp192_lp/signoff_ffrepair.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hcoll_v7_tkm_m_tp192_lp/kit.env {LABEL} {RUN}/routes",
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hcoll_v7_tkm_m_tp192_lp/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hcoll_v7_tkm_m_tp192_lp/kit.env {LABEL} {RUN}/routes",
    "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
    "logs": [
     "{RUN}/routes/{LABEL}/flow.log"

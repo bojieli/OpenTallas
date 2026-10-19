@@ -4,8 +4,10 @@
 Children = 32 e86 tiles at the gen_tkm_seg.py sites on the 43.2-um lattice: pitch 302.4 (259.2 tile + 43.2 channel),
 array origin (86.4, 86.4), outline 1944 x 1944 (45 x 43.2).  Even columns MX (chain runs up: ins / up_out on S), odd
 columns R0 (chain runs down).  ctl (soft) + landing halves (soft) between; buffer SRAMs (2 x 1024x256) at site (2,0).
-Clock: one TritonCTS tree per region root ck_SW/NW/NE/SE (Q-CLUSTER-LANDALL form: clock "cts", clock_ports, the lp.py SDC
-as sdc_extra; ref_tile refuses multiple_cts_roots on a cluster and sdc_extra with it).  Pins: del_* + cfg S (ingress from
+Clock: PL-KIT landed-cluster form (origin/main 112f518d5): clock "multiple_cts_roots", one TritonCTS tree per region root
+ck_SW (core) / NW / NE / SE, "landed_record" = the lp.py record (ref_tile emits the 14 landing multicycles itself: no
+sdc_extra), related_same_frequency same_pll_fixed_phase; every e86 clock pin (clk, clk_r0..r3) is a sink of its region
+root, judged at e86 flops via its insertion.json (pre_route_gate per root, TT AND FF <= 80 ps).  All IO is in SW.  Pins: del_* + cfg S (ingress from
 coll_SW), w_* + status W (egress to coll_SW vmwrite), region clocks beside each region's register mass.
 
     kit_spec.py [--view DIR]   (default: the diagnostic stand-in physical/ref_tile/hcoll_v7_tkm_m_tp192_lp/standin/...;
@@ -20,6 +22,10 @@ NAME = "hcoll_v7_tkm_m_tp192_lp"
 P, O, TILE = 302.4, 86.4, 259.2
 C = "rtl/hbm_accel/generic/collective/tkm"
 STANDIN = f"physical/ref_tile/{NAME}/standin/ot_hgi_coll_tkm_tile_e86"
+REC = "results/arch/pl_tp192_1018/ot_hgi_coll_tkm_m_tp192_lp_record.json"
+INS = ["rst_n", "start", "arg_mode", "cfg_n", "cfg_k", "cfg_nout", "cfg_g", "cfg_gbase", "cfg_pf", "cfg_obase", "cfg_rbase",
+       "cfg_has_r", "del_slot", "del_valid", "del_flit"]
+OUTS = ["w_v", "w_addr", "w_mask", "w_data", "busy", "done", "fault", "stat_cycles"]
 
 
 def main():
@@ -51,13 +57,18 @@ def main():
         sources=[f"{C}/lp/ot_hgi_coll_tkm_m_tp192_lp.sv", f"{C}/ot_hgi_coll_tkm_ctl.sv", f"{C}/ot_hgi_coll_tkm_buffer.sv",
                  "rtl/lib/ot_rst_relay.sv", "rtl/common/landed_parent/ot_pl_land.sv", f"{sram}/ot_sram_1r1w_1024x256_m2_r2c2_bb.v",
                  f"{a.view}/ot_hgi_coll_tkm_tile_e86_bb.v" if standin else f"{C}/ot_hgi_coll_tkm_static.sv"],
-        params={}, clock="cts", clock_port="ck_SW", clock_ports=["ck_SW", "ck_NW", "ck_NE", "ck_SE"],
-        sdc_extra=[f"{C}/lp/ot_hgi_coll_tkm_m_tp192_lp.sdc"], reset_ports=["rst_n"],
+        params={}, clock="multiple_cts_roots", clock_port="ck_SW", clock_ports=["ck_SW", "ck_NW", "ck_NE", "ck_SE"],
+        clock_data_paths="related_same_frequency",
+        clock_relationship=dict(kind="same_pll_fixed_phase", ratio=[1, 1], phase_ps=0),
+        clock_entry_domains=dict(
+            core=dict(ratio=[1, 1], ports=["ck_SW"], inputs=[p for p in INS], outputs=[p for p in OUTS]),
+            **{r: dict(ratio=[1, 1], ports=[f"ck_{r}"], inputs=[], outputs=[]) for r in ("NW", "NE", "SE")}),
+        landed_record=REC, reset_ports=["rst_n"],
         outline=dict(w=1944.0, h=1944.0, exact=True), child_lattice_um=43.2, children=kids,
         macros=[dict(view=sram, count=1, at=[734.4, 108.0]), dict(view=sram, count=1, at=[734.4, 216.0])],
         pins=pins, pin_ranges=rng,
         route=dict(pd=0.5, threads=32, peak_ram_gb=256, pin_v="M5", pin_h="M4 M6", macro_halo_um=5.4, hold_margin_ns=0.03,
-                   io_hold_margin_ns=0.0),
+                   io_hold_margin_ns=0.03),
         recipe=4, inhold=False, outhold=False,
         pin_regs=dict(enable=False, reason="every port is registered in the ctl leaf (del_flit beat / cfg capture / w_* "
                                            "output regs) or is a region clock / reset"),
@@ -67,11 +78,12 @@ def main():
                           "(14 landings, 4-slot, +3 edges, no backpressure); flat lockstep + golden benches",
         job=dict(owner="Claude PL-TP192 1018", branch="claude/pl-tp192-1018", tag="pl1018",
                  purpose="HBM d4g tkm_SW sub-cluster (TP192 top-k merge, 32 x e86) as a landed parent",
-                 submit=not standin, **({"hold_merge": "diagnostic: e86 stand-in abstract (standin_from_gate.py) until "
+                 submit=not standin, extra_paths=[str(Path(REC).parent)],   # the landed_record (ref_tile reads it in the loop)
+                 **({"hold_merge": "diagnostic: e86 stand-in abstract (standin_from_gate.py) until "
                                                        "hcoll_v7_tkm_tile_e86 closes"} if standin else {}),
                  benches=[dict(name="tkm_tp192_lp_lockstep", expect="pass",
-                               cmd="LP_ROOT=$PWD SIM=verilator LP_VFLAGS='--timing --hierarchical rtl/hbm_accel/generic/"
-                                   "collective/p2p/qtkm_hier.vlt -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-WIDTHCONCAT' "
+                               cmd="LP_ROOT=$PWD SIM=verilator MAKEFLAGS='--eval=.NOTPARALLEL: hier_build' LP_VFLAGS='--timing --hierarchical rtl/hbm_accel/generic/"
+                                   "collective/tkm/tkm_tp192_hier.vlt -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-WIDTHCONCAT' "
                                    f"bash {C}/lp/ot_hgi_coll_tkm_m_tp192_lp_bench.sh bench_out/lockstep"),
                           dict(name="tkm_tp192_seg_golden", expect="pass", cmd=f"bash {C}/run_tp192_seg.sh bench_out/golden")]),
         inter=[])
