@@ -97,6 +97,7 @@ module qfd_native59_dv_service #(
  // so the window opens on the accepted request edge itself: q_slot may be the edge after request_slot, and the Q record
  // follows the CMD record on consecutive codec edges.  MUT 4 (bench): the legacy window from the registered vm_q_start
  // (Q beat 0 >= 2 edges after the CMD, i.e. one idle link slot), which the compiled calendar does not reserve.
+ reg[16383:0]qbuf;reg[511:0]qseen;reg qctx,qlock;   // ROOT-N59 10-19: restored (as MU-DQ-TOK 16299df8a); merge e28fa950f dropped it -> no elaboration
  wire vm_q_epoch,vm_q_start;
  wire q_open=(MUT==4)?vm_q_start:request_slot;
  // Decoded constant-index form (S-QWCOL 10-18): the n1c gate's synthesis smoke timed out (2700 s, yosys SHARE on the

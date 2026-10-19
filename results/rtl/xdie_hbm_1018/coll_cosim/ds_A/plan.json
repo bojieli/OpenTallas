@@ -1,0 +1,139 @@
+{
+ "plan": {
+  "0": {
+   "C": {
+    "K1": 11,
+    "K2": 7,
+    "gcL": 0
+   },
+   "ready_assumed": 520,
+   "release_word": 521,
+   "guard": 8,
+   "order": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "rows": 38,
+   "unrolled": 567,
+   "cal_words": 534,
+   "wr": [
+    17,
+    18
+   ],
+   "rd": [
+    26,
+    27
+   ],
+   "rx_expect": [
+    534,
+    544
+   ],
+   "drain_slots": [
+    522,
+    532
+   ],
+   "ops": [
+    [
+     0,
+     17
+    ],
+    [
+     1,
+     18
+    ],
+    [
+     2,
+     540
+    ],
+    [
+     3,
+     550
+    ]
+   ],
+   "publication_row": 563
+  },
+  "1": {
+   "C": {
+    "K1": 11,
+    "K2": 7,
+    "gcL": 0
+   },
+   "ready_assumed": 520,
+   "release_word": 521,
+   "guard": 8,
+   "order": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "rows": 44,
+   "unrolled": 578,
+   "cal_words": 525,
+   "wr": [
+    17,
+    18
+   ],
+   "rd": [
+    26,
+    27
+   ],
+   "rx_expect": [
+    534,
+    535
+   ],
+   "drain_slots": [
+    522,
+    523
+   ],
+   "ops": [
+    [
+     0,
+     540
+    ],
+    [
+     1,
+     541
+    ],
+    [
+     2,
+     551
+    ],
+    [
+     3,
+     561
+    ]
+   ],
+   "publication_row": 574
+  }
+ },
+ "mut": "",
+ "release_early": 0,
+ "golden_order": [
+  0,
+  1,
+  2,
+  3
+ ],
+ "order_sensitive_lanes": 6,
+ "golden_hex": [
+  "c130282f",
+  "4319aa11",
+  "442aef96",
+  "c22e82fc",
+  "be031448",
+  "418dc579",
+  "c2be5b7c",
+  "442cae24",
+  "c2afb42d",
+  "c4660990",
+  "c33d307e",
+  "40a1e18c",
+  "3d037b3a",
+  "42aa0282",
+  "43f2d4b4",
+  "c2aae722"
+ ]
+}

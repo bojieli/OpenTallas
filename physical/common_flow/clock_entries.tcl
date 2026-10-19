@@ -47,6 +47,7 @@ if {[info procs clock_tree_synthesis] ne "" && [info procs ot_ce_cts_orig] eq ""
     set dbu [expr {double([$block getDbUnitsPerMicron])}]
     set n 0; set bad 0; set far 0; set cts_nets {}; set cts_seen {}; set entry_nets {}
     set ::ot_ce_raw_memory_seen [dict create]
+    set ot_ce_unused_hits 0
     set roots [expr {[info exists ::ot_ce_cts_roots] ? $::ot_ce_cts_roots : {}}]
     foreach clk [all_clocks] {
       foreach src [get_property $clk sources] {
@@ -81,6 +82,16 @@ if {[info procs clock_tree_synthesis] ne "" && [info procs ot_ce_cts_orig] eq ""
                     || [ot_ce_check_only_clock_pin $pin]
                     || ([info exists ::ot_ce_landed_raw]
                         && [dict exists $::ot_ce_landed_raw "[[$inst getMaster] getName]/[get_property $pin lib_pin_name]"]))} {continue}
+            # HBM-PGLG2 10-19: an UNLOADED input pin of a bound landed hard child (::ot_ce_landed_unused, from the
+            # child's closed-route ROUTED NETLIST via ref_tile clock_entry_constraints.landed_unused_pins: no load, no
+            # arc, never by name) may hang on its region root: not a sink, nothing to time (KIND0 clk_insert_0..3)
+            if {[info exists ::ot_ce_landed_cluster] && $::ot_ce_landed_cluster && $inst ne "NULL" && [[$inst getMaster] isBlock]
+                && [info exists ::ot_ce_counts] && [dict exists $::ot_ce_counts [[$inst getMaster] getName]]
+                && [info exists ::ot_ce_landed_unused]
+                && [dict exists $::ot_ce_landed_unused "[[$inst getMaster] getName]/[get_property $pin lib_pin_name]"]} {
+              incr ot_ce_unused_hits
+              continue
+            }
             if {$inst eq "NULL" || [[$inst getMaster] isBlock] || [get_full_name $pin] ni $regnames} {
               error "OT_HYBRID: CTS source $pname must reach only standard-cell clock pins"
             }
@@ -114,6 +125,7 @@ if {[info procs clock_tree_synthesis] ne "" && [info procs ot_ce_cts_orig] eq ""
         && [lsort [dict keys $::ot_ce_raw_memory_bindings]] ne [lsort [dict keys $::ot_ce_raw_memory_seen]]} {
       error "OT_HYBRID: declared raw-memory clock sinks were not all reached from their granted source roots"
     }
+    if {$ot_ce_unused_hits} { puts "OT_LANDED UNUSED_PINS $ot_ce_unused_hits unloaded hard-child input pins on region roots (routed-netlist proven; not sinks)" }
     if {$bad} { error "OT_ENTRIES: $bad clock entries are not port -> one hard-child clock pin" }
     if {[lsort $cts_seen] ne [lsort $roots]} { error "OT_HYBRID: declared CTS root coverage mismatch" }
     if {[llength $cts_nets]} {
