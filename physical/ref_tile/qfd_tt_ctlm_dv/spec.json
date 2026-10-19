@@ -13,8 +13,8 @@
   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v"
  ],
  "params": {
-  "XPF_TRANSPORT_EDGES": 15,
-  "STAGE_ME": 0,
+  "XPF_TRANSPORT_EDGES": 20,
+  "STAGE_ME": 1,
   "HARD_HR": 1
  },
  "clock_port": "ck",
@@ -342,5 +342,6 @@
   ],
   "views_to": "physical/ref_tile/qfd_tt_ctlm_dv/views",
   "record_to": "results/rtl/ref_tile/qfd_tt_ctlm_dv"
- }
+ },
+ "params_source": "Q-H16C 10-18: XPF_TRANSPORT_EDGES and STAGE_ME are GEN-assigned (tools/qwen_split/die_params.py -> die.v.params.json masters.qfd_tt_ctlm_dv); values = dv2f14bi ot-epyc4:/srv/opentallas-scratch/claude/qwen-split-compute/dv2f14bi/chain/case_r22k/die.v.params.json (XPF 20 = 1 hr pin reg + fwd hr lane E 18 + 1 landing; STAGE_ME 1). Re-take them from the GEN sidecar of the die this cluster is hardened for; never hand-set (the old 15 = QLB-PROG zero-delay dv2f14bn estimate). HARD_HR 1 && STAGE_ME 1 legal from h16c h17 (stage_start/stage ports)."
 }
