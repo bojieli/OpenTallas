@@ -95,11 +95,11 @@
   "h": 302.40000000000003,
   "exact": true
  },
- "structural_change": "NEW kit (RTL-BUILD-KV M1, KV-INTEG/KITS-A): generated static tile qkd_kvs_attn of the KV die (5 children: qkd_attn_cal_gen, qkd_attn_fault_root, qkd_attn_result_face_s, qkd_attn_service_root, qkd_native_attention_programme; hard: none), from rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv (sha256 4db849c89d25) by tools/qwen_kv_die/kvs_tile_kits.py; one clock port ck (OT_KV_TILE_KITS).  Faces {'S': 1546, 'N': 1080, 'E': 626} pins on 302.4 x 302.4 um (die frame record (302.4, 302.4) ASSUMED -> this outline for KV-PLAN3).",
+ "structural_change": "NEW kit (RTL-BUILD-KV M1, KV-INTEG/KITS-A): generated static tile qkd_kvs_attn of the KV die (5 children: qkd_attn_cal_gen, qkd_attn_fault_root, qkd_attn_result_face_s, qkd_attn_service_root, qkd_native_attention_programme; hard: none), from rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv (sha256 77831bc28446) by tools/qwen_kv_die/kvs_tile_kits.py; one clock port ck (OT_KV_TILE_KITS).  Faces {'S': 1546, 'N': 1080, 'E': 626} pins on 302.4 x 302.4 um (die frame record (302.4, 302.4) ASSUMED -> this outline for KV-PLAN3).",
  "job": {
-  "owner": "Claude:KV-KITS-ATTN",
-  "branch": "claude/kv-kits-attn-1018",
-  "tag": "g1",
+  "owner": "Claude:KV-ATTNKIT",
+  "branch": "claude/kv-attnkit-1018",
+  "tag": "g2",
   "purpose": "KV-INTEG/KITS-A 10-18 (RTL-BUILD-KV M1): kit of the generated singleton static tile qkd_kvs_attn.  Bench: LOCKSTEP of the kit top (one ck) against the die-bound tile of the same design point without OT_KV_TILE_KITS (per-child clock ports, all on the one die trunk), random inputs from reset + a phase with every child output wire forced random; mutants: a dropped child wire (1), two swapped wire slices (2), a missing child (3).",
   "benches": [
    {
@@ -113,7 +113,7 @@
     ],
     "pass_regex": "^KVS_TILE PASS tile=attn .* errors=0 mut=0",
     "min_count_regex": "checks=(\\d+)",
-    "pass_witness": "results/rtl/qwen_kv_die/kvs_kits_gsrc_1018/attn_m0.log"
+    "pass_witness": "results/rtl/qwen_kv_die/kvs_attnkit_1018/attn_m0.log"
    },
    {
     "name": "attn_mut1",
@@ -126,7 +126,7 @@
     ],
     "pass_regex": "^KVS_TILE PASS tile=attn ",
     "fail_regex": "^KVS_TILE FAIL tile=attn .* mut=1 ",
-    "fail_witness": "results/rtl/qwen_kv_die/kvs_kits_gsrc_1018/attn_m1.log"
+    "fail_witness": "results/rtl/qwen_kv_die/kvs_attnkit_1018/attn_m1.log"
    },
    {
     "name": "attn_mut2",
@@ -139,7 +139,7 @@
     ],
     "pass_regex": "^KVS_TILE PASS tile=attn ",
     "fail_regex": "^KVS_TILE FAIL tile=attn .* mut=2 ",
-    "fail_witness": "results/rtl/qwen_kv_die/kvs_kits_gsrc_1018/attn_m2.log"
+    "fail_witness": "results/rtl/qwen_kv_die/kvs_attnkit_1018/attn_m2.log"
    },
    {
     "name": "attn_mut3",
@@ -152,7 +152,7 @@
     ],
     "pass_regex": "^KVS_TILE PASS tile=attn ",
     "fail_regex": "^KVS_TILE FAIL tile=attn .* mut=3 ",
-    "fail_witness": "results/rtl/qwen_kv_die/kvs_kits_gsrc_1018/attn_m3.log"
+    "fail_witness": "results/rtl/qwen_kv_die/kvs_attnkit_1018/attn_m3.log"
    }
   ],
   "extra_paths": [
@@ -161,7 +161,7 @@
    "results/arch/qwen_kv_static_programme_1017",
    "results/arch/qwen_kv_die",
    "results/arch/qwen_kv_pvfin_1017",
-   "results/rtl/qwen_kv_die/kvs_kits_gsrc_1018"
+   "results/rtl/qwen_kv_die/kvs_attnkit_1018"
   ],
   "views_to": "physical/ref_tile/qkd_kvs_attn/views",
   "record_to": "results/rtl/ref_tile/qkd_kvs_attn"
