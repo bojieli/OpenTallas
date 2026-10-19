@@ -1,0 +1,621 @@
+{
+  "schema": "oldGEN0d4c.source-ancestry-only",
+  "adoption": false,
+  "sources": {
+    "die.v": "7b1bdfc5fd26c2e6f17fe6aa5b1d68bd9e2fa05bc3ecf408b9f163eb600bbde7",
+    "die_glue.sv": "dbe2c684fddd543ed43994211ef389192cc46a25d6664c46932a05ffcacf2dc3"
+  },
+  "actual_d2d_type": "qfd_d2d_static",
+  "candidate_d2d_type": "qfd_d2d_static_ovl",
+  "traces": {
+    "d2d_rom.ck": [
+      {
+        "net": "n_clk_d2d",
+        "instance": "clk_rx",
+        "type": "qfd_clkrx",
+        "port": "pll_d2d",
+        "line": 12818,
+        "input": "n_pll_fwd",
+        "clock_behavior": "assign,sourceblackbox"
+      },
+      {
+        "net": "n_pll_fwd",
+        "instance": "ckb_rom",
+        "type": "qfd_ckbump",
+        "port": "pll_ck",
+        "line": 12819
+      }
+    ],
+    "d2d_rom.por_n": [
+      {
+        "net": "n_rst_d2d__r4",
+        "instance": "rly_rst_d2d_3",
+        "type": "qfd_rlyrl_1_EW_65x30",
+        "port": "b",
+        "line": 12897,
+        "input": "n_rst_d2d__r3",
+        "clock": "n_clk_d2d",
+        "edge_kind": "forwarded-reset-stage"
+      },
+      {
+        "net": "n_rst_d2d__r3",
+        "instance": "rly_rst_d2d_2",
+        "type": "qfd_rlyr_1_NW_65x30",
+        "port": "b",
+        "line": 12896,
+        "input": "n_rst_d2d__r2",
+        "clock": "n_fck_rst_d2d__h2",
+        "edge_kind": "forwarded-reset-stage"
+      },
+      {
+        "net": "n_rst_d2d__r2",
+        "instance": "rly_rst_d2d_1",
+        "type": "qfd_rlyr_1_NS_65x30",
+        "port": "b",
+        "line": 12895,
+        "input": "n_rst_d2d__r1",
+        "clock": "n_fck_rst_d2d__h1",
+        "edge_kind": "forwarded-reset-stage"
+      },
+      {
+        "net": "n_rst_d2d__r1",
+        "instance": "rly_rst_d2d_0",
+        "type": "qfd_rlyr0_1_NS_65x30",
+        "port": "b",
+        "line": 12894,
+        "input": "n_rst_d2d",
+        "clock": "n_clk_d2d",
+        "edge_kind": "forwarded-reset-stage"
+      },
+      {
+        "net": "n_rst_d2d",
+        "instance": "rs_bump",
+        "type": "qfd_rstsync",
+        "port": "rso_d",
+        "line": 12820,
+        "input": "n_rst_fwd",
+        "clock": "n_clk_d2d",
+        "registered_edges": 2,
+        "asynchronous_assertion": true
+      },
+      {
+        "net": "n_rst_fwd",
+        "instance": "ckb_rom",
+        "type": "qfd_ckbump",
+        "port": "rs",
+        "line": 12819
+      }
+    ],
+    "d2d_rom.rst_n": [
+      {
+        "net": "n_rst_d2d__fo1__r3__t5",
+        "instance": "rstt_rst_d2d__fo1__r3_12",
+        "type": "qfd_rst_rep",
+        "port": "q0",
+        "line": 13482,
+        "input": "n_rst_d2d__fo1__r3__t4",
+        "clock": "n_clk_d2d",
+        "registered_edges": 2
+      },
+      {
+        "net": "n_rst_d2d__fo1__r3__t4",
+        "instance": "rstt_rst_d2d__fo1__r3_41",
+        "type": "qfd_rst_rep_p8",
+        "port": "q0",
+        "line": 13510,
+        "input": "n_rst_d2d__fo1__r3__t3",
+        "clock": "n_clk_d2d",
+        "registered_edges": 10
+      },
+      {
+        "net": "n_rst_d2d__fo1__r3__t3",
+        "instance": "rstt_rst_d2d__fo1__r3_19",
+        "type": "qfd_rst_rep",
+        "port": "q1",
+        "line": 13489,
+        "input": "n_rst_d2d__fo1__r3__t1",
+        "clock": "n_clk_d2d",
+        "registered_edges": 2
+      },
+      {
+        "net": "n_rst_d2d__fo1__r3__t1",
+        "instance": "rstt_rst_d2d__fo1__r3_18",
+        "type": "qfd_rst_rep",
+        "port": "q0",
+        "line": 13488,
+        "input": "n_rst_d2d__fo1__r3",
+        "clock": "n_clk_d2d",
+        "registered_edges": 2
+      },
+      {
+        "net": "n_rst_d2d__fo1__r3",
+        "instance": "rly_rst_d2d__fo1_2",
+        "type": "qfd_rlyrl_1_EW_65x30",
+        "port": "b",
+        "line": 12900,
+        "input": "n_rst_d2d__fo1__r2",
+        "clock": "n_clk_d2d",
+        "edge_kind": "forwarded-reset-stage"
+      },
+      {
+        "net": "n_rst_d2d__fo1__r2",
+        "instance": "rly_rst_d2d__fo1_1",
+        "type": "qfd_rlyr_1_NW_65x30",
+        "port": "b",
+        "line": 12899,
+        "input": "n_rst_d2d__fo1__r1",
+        "clock": "n_fck_rst_d2d__fo1__h1",
+        "edge_kind": "forwarded-reset-stage"
+      },
+      {
+        "net": "n_rst_d2d__fo1__r1",
+        "instance": "rly_rst_d2d__fo1_0",
+        "type": "qfd_rlyr0_1_NS_65x30",
+        "port": "b",
+        "line": 12898,
+        "input": "n_rst_d2d",
+        "clock": "n_clk_d2d",
+        "edge_kind": "forwarded-reset-stage"
+      },
+      {
+        "net": "n_rst_d2d",
+        "instance": "rs_bump",
+        "type": "qfd_rstsync",
+        "port": "rso_d",
+        "line": 12820,
+        "input": "n_rst_fwd",
+        "clock": "n_clk_d2d",
+        "registered_edges": 2,
+        "asynchronous_assertion": true
+      },
+      {
+        "net": "n_rst_fwd",
+        "instance": "ckb_rom",
+        "type": "qfd_ckbump",
+        "port": "rs",
+        "line": 12819
+      }
+    ],
+    "d2d_rom.cfg_tx_we": [
+      {
+        "net": "n_sf_cfg_tx_we__r4",
+        "instance": "rly_sf_cfg_tx_we_3",
+        "type": "qfd_landh_1_EW_65x30",
+        "port": "b",
+        "line": 13006,
+        "input": "n_sf_cfg_tx_we__r3",
+        "clock": "n_clk_d2d",
+        "edge_kind": "forwarded-data/landing-stage"
+      },
+      {
+        "net": "n_sf_cfg_tx_we__r3",
+        "instance": "rly_sf_cfg_tx_we_2",
+        "type": "qfd_rlyh_1_SW_65x30",
+        "port": "b",
+        "line": 13005,
+        "input": "n_sf_cfg_tx_we__r2",
+        "clock": "n_fck_sf_cfg_tx_we__h2",
+        "edge_kind": "forwarded-data/landing-stage"
+      },
+      {
+        "net": "n_sf_cfg_tx_we__r2",
+        "instance": "rly_sf_cfg_tx_we_1",
+        "type": "qfd_rlyh_1_SN_65x30",
+        "port": "b",
+        "line": 13004,
+        "input": "n_sf_cfg_tx_we__r1",
+        "clock": "n_fck_sf_cfg_tx_we__h1",
+        "edge_kind": "forwarded-data/landing-stage"
+      },
+      {
+        "net": "n_sf_cfg_tx_we__r1",
+        "instance": "rly_sf_cfg_tx_we_0",
+        "type": "qfd_rlyh0_1_EN_65x30",
+        "port": "b",
+        "line": 13003,
+        "input": "n_sf_cfg_tx_we",
+        "clock": "n_clk_d2d",
+        "edge_kind": "forwarded-data/landing-stage"
+      },
+      {
+        "net": "n_sf_cfg_tx_we",
+        "instance": "sys_face",
+        "type": "qfd_sys_face",
+        "port": "cfg_tx_we",
+        "line": 12829
+      }
+    ],
+    "d2d_rom.cfg_rx_we": [
+      {
+        "net": "n_sf_cfg_rx_we__r3",
+        "instance": "rly_sf_cfg_rx_we_2",
+        "type": "qfd_landh_1_EW_65x30",
+        "port": "b",
+        "line": 13009,
+        "input": "n_sf_cfg_rx_we__r2",
+        "clock": "n_clk_d2d",
+        "edge_kind": "forwarded-data/landing-stage"
+      },
+      {
+        "net": "n_sf_cfg_rx_we__r2",
+        "instance": "rly_sf_cfg_rx_we_1",
+        "type": "qfd_rlyh_1_SW_65x30",
+        "port": "b",
+        "line": 13008,
+        "input": "n_sf_cfg_rx_we__r1",
+        "clock": "n_fck_sf_cfg_rx_we__h1",
+        "edge_kind": "forwarded-data/landing-stage"
+      },
+      {
+        "net": "n_sf_cfg_rx_we__r1",
+        "instance": "rly_sf_cfg_rx_we_0",
+        "type": "qfd_rlyh0_1_SN_65x30",
+        "port": "b",
+        "line": 13007,
+        "input": "n_sf_cfg_rx_we",
+        "clock": "n_clk_d2d",
+        "edge_kind": "forwarded-data/landing-stage"
+      },
+      {
+        "net": "n_sf_cfg_rx_we",
+        "instance": "sys_face",
+        "type": "qfd_sys_face",
+        "port": "cfg_rx_we",
+        "line": 12829
+      }
+    ],
+    "d2d_rom.cfg_addr": [
+      {
+        "net": "n_sf_cfg_addr__r3",
+        "instance": "rly_sf_cfg_addr_2",
+        "type": "qfd_landh_6_EW_65x30",
+        "port": "b",
+        "line": 13012,
+        "input": "n_sf_cfg_addr__r2",
+        "clock": "n_clk_d2d",
+        "edge_kind": "forwarded-data/landing-stage"
+      },
+      {
+        "net": "n_sf_cfg_addr__r2",
+        "instance": "rly_sf_cfg_addr_1",
+        "type": "qfd_rlyh_6_SW_65x30",
+        "port": "b",
+        "line": 13011,
+        "input": "n_sf_cfg_addr__r1",
+        "clock": "n_fck_sf_cfg_addr__h1",
+        "edge_kind": "forwarded-data/landing-stage"
+      },
+      {
+        "net": "n_sf_cfg_addr__r1",
+        "instance": "rly_sf_cfg_addr_0",
+        "type": "qfd_rlyh0_6_SN_65x30",
+        "port": "b",
+        "line": 13010,
+        "input": "n_sf_cfg_addr",
+        "clock": "n_clk_d2d",
+        "edge_kind": "forwarded-data/landing-stage"
+      },
+      {
+        "net": "n_sf_cfg_addr",
+        "instance": "sys_face",
+        "type": "qfd_sys_face",
+        "port": "cfg_addr",
+        "line": 12829
+      }
+    ],
+    "d2d_rom.cfg_data": [
+      {
+        "net": "n_sf_cfg_data__r3",
+        "instance": "rly_sf_cfg_data_2",
+        "type": "qfd_landh_32_SW_65x30",
+        "port": "b",
+        "line": 13015,
+        "input": "n_sf_cfg_data__r2",
+        "clock": "n_clk_d2d",
+        "edge_kind": "forwarded-data/landing-stage"
+      },
+      {
+        "net": "n_sf_cfg_data__r2",
+        "instance": "rly_sf_cfg_data_1",
+        "type": "qfd_rlyh_32_EN_65x30",
+        "port": "b",
+        "line": 13014,
+        "input": "n_sf_cfg_data__r1",
+        "clock": "n_fck_sf_cfg_data__h1",
+        "edge_kind": "forwarded-data/landing-stage"
+      },
+      {
+        "net": "n_sf_cfg_data__r1",
+        "instance": "rly_sf_cfg_data_0",
+        "type": "qfd_rlyh0_32_SW_65x30",
+        "port": "b",
+        "line": 13013,
+        "input": "n_sf_cfg_data",
+        "clock": "n_clk_d2d",
+        "edge_kind": "forwarded-data/landing-stage"
+      },
+      {
+        "net": "n_sf_cfg_data",
+        "instance": "sys_face",
+        "type": "qfd_sys_face",
+        "port": "cfg_data",
+        "line": 12829
+      }
+    ],
+    "d2d_rom.cal_start": [
+      {
+        "net": "n_sf_cal_start__r3",
+        "instance": "rly_sf_cal_start_2",
+        "type": "qfd_landh_1_SW_65x30",
+        "port": "b",
+        "line": 13018,
+        "input": "n_sf_cal_start__r2",
+        "clock": "n_clk_d2d",
+        "edge_kind": "forwarded-data/landing-stage"
+      },
+      {
+        "net": "n_sf_cal_start__r2",
+        "instance": "rly_sf_cal_start_1",
+        "type": "qfd_rlyh_1_EN_65x30",
+        "port": "b",
+        "line": 13017,
+        "input": "n_sf_cal_start__r1",
+        "clock": "n_fck_sf_cal_start__h1",
+        "edge_kind": "forwarded-data/landing-stage"
+      },
+      {
+        "net": "n_sf_cal_start__r1",
+        "instance": "rly_sf_cal_start_0",
+        "type": "qfd_rlyh0_1_SW_65x30",
+        "port": "b",
+        "line": 13016,
+        "input": "n_sf_cal_start",
+        "clock": "n_clk_d2d",
+        "edge_kind": "forwarded-data/landing-stage"
+      },
+      {
+        "net": "n_sf_cal_start",
+        "instance": "sys_face",
+        "type": "qfd_sys_face",
+        "port": "cal_start",
+        "line": 12829
+      }
+    ],
+    "d2d_rom.cal_seg": [
+      {
+        "net": "n_sf_cal_seg__r3",
+        "instance": "rly_sf_cal_seg_2",
+        "type": "qfd_landh_1_EW_65x30",
+        "port": "b",
+        "line": 13021,
+        "input": "n_sf_cal_seg__r2",
+        "clock": "n_clk_d2d",
+        "edge_kind": "forwarded-data/landing-stage"
+      },
+      {
+        "net": "n_sf_cal_seg__r2",
+        "instance": "rly_sf_cal_seg_1",
+        "type": "qfd_rlyh_1_SW_65x30",
+        "port": "b",
+        "line": 13020,
+        "input": "n_sf_cal_seg__r1",
+        "clock": "n_fck_sf_cal_seg__h1",
+        "edge_kind": "forwarded-data/landing-stage"
+      },
+      {
+        "net": "n_sf_cal_seg__r1",
+        "instance": "rly_sf_cal_seg_0",
+        "type": "qfd_rlyh0_1_SN_65x30",
+        "port": "b",
+        "line": 13019,
+        "input": "n_sf_cal_seg",
+        "clock": "n_clk_d2d",
+        "edge_kind": "forwarded-data/landing-stage"
+      },
+      {
+        "net": "n_sf_cal_seg",
+        "instance": "sys_face",
+        "type": "qfd_sys_face",
+        "port": "cal_seg",
+        "line": 12829
+      }
+    ],
+    "d2d_rom.result_v": [
+      {
+        "net": "n_sf_result_v__r3",
+        "instance": "rly_sf_result_v_2",
+        "type": "qfd_landh_1_EN_65x30",
+        "port": "b",
+        "line": 13047,
+        "input": "n_sf_result_v__r2",
+        "clock": "n_clk_d2d",
+        "edge_kind": "forwarded-data/landing-stage"
+      },
+      {
+        "net": "n_sf_result_v__r2",
+        "instance": "rly_sf_result_v_1",
+        "type": "qfd_rlyh_1_EW_65x30",
+        "port": "b",
+        "line": 13046,
+        "input": "n_sf_result_v__r1",
+        "clock": "n_fck_sf_result_v__h1",
+        "edge_kind": "forwarded-data/landing-stage"
+      },
+      {
+        "net": "n_sf_result_v__r1",
+        "instance": "rly_sf_result_v_0",
+        "type": "qfd_rlyh0_1_EW_65x30",
+        "port": "b",
+        "line": 13045,
+        "input": "n_sf_result_v",
+        "clock": "n_clk_d2d",
+        "edge_kind": "forwarded-data/landing-stage"
+      },
+      {
+        "net": "n_sf_result_v",
+        "instance": "sys_face",
+        "type": "qfd_sys_face",
+        "port": "result_v",
+        "line": 12829
+      }
+    ],
+    "sys_face.ck": [
+      {
+        "net": "n_clk_d2d",
+        "instance": "clk_rx",
+        "type": "qfd_clkrx",
+        "port": "pll_d2d",
+        "line": 12818,
+        "input": "n_pll_fwd",
+        "clock_behavior": "assign,sourceblackbox"
+      },
+      {
+        "net": "n_pll_fwd",
+        "instance": "ckb_rom",
+        "type": "qfd_ckbump",
+        "port": "pll_ck",
+        "line": 12819
+      }
+    ],
+    "sys_face.rst_n": [
+      {
+        "net": "n_rst_d2d__fo2__r4__t24",
+        "instance": "rstt_rst_d2d__fo2__r4_9",
+        "type": "qfd_rst_rep",
+        "port": "q0",
+        "line": 13550,
+        "input": "n_rst_d2d__fo2__r4__t23",
+        "clock": "n_clk_d2d",
+        "registered_edges": 2
+      },
+      {
+        "net": "n_rst_d2d__fo2__r4__t23",
+        "instance": "rstt_rst_d2d__fo2__r4_54",
+        "type": "qfd_rst_rep",
+        "port": "q0",
+        "line": 13594,
+        "input": "n_rst_d2d__fo2__r4__t22",
+        "clock": "n_clk_d2d",
+        "registered_edges": 2
+      },
+      {
+        "net": "n_rst_d2d__fo2__r4__t22",
+        "instance": "rstt_rst_d2d__fo2__r4_53",
+        "type": "qfd_rst_rep",
+        "port": "q0",
+        "line": 13593,
+        "input": "n_rst_d2d__fo2__r4__t21",
+        "clock": "n_clk_d2d",
+        "registered_edges": 2
+      },
+      {
+        "net": "n_rst_d2d__fo2__r4__t21",
+        "instance": "rstt_rst_d2d__fo2__r4_29",
+        "type": "qfd_rst_rep",
+        "port": "q1",
+        "line": 13569,
+        "input": "n_rst_d2d__fo2__r4__t19",
+        "clock": "n_clk_d2d",
+        "registered_edges": 2
+      },
+      {
+        "net": "n_rst_d2d__fo2__r4__t19",
+        "instance": "rstt_rst_d2d__fo2__r4_40",
+        "type": "qfd_rst_rep",
+        "port": "q0",
+        "line": 13580,
+        "input": "n_rst_d2d__fo2__r4__t18",
+        "clock": "n_clk_d2d",
+        "registered_edges": 2
+      },
+      {
+        "net": "n_rst_d2d__fo2__r4__t18",
+        "instance": "rstt_rst_d2d__fo2__r4_16",
+        "type": "qfd_rst_rep",
+        "port": "q1",
+        "line": 13557,
+        "input": "n_rst_d2d__fo2__r4__t2",
+        "clock": "n_clk_d2d",
+        "registered_edges": 2
+      },
+      {
+        "net": "n_rst_d2d__fo2__r4__t2",
+        "instance": "rstt_rst_d2d__fo2__r4_15",
+        "type": "qfd_rst_rep",
+        "port": "q0",
+        "line": 13556,
+        "input": "n_rst_d2d__fo2__r4__t1",
+        "clock": "n_clk_d2d",
+        "registered_edges": 2
+      },
+      {
+        "net": "n_rst_d2d__fo2__r4__t1",
+        "instance": "rstt_rst_d2d__fo2__r4_14",
+        "type": "qfd_rst_rep",
+        "port": "q0",
+        "line": 13555,
+        "input": "n_rst_d2d__fo2__r4",
+        "clock": "n_clk_d2d",
+        "registered_edges": 2
+      },
+      {
+        "net": "n_rst_d2d__fo2__r4",
+        "instance": "rly_rst_d2d__fo2_3",
+        "type": "qfd_rlyrl_1_WS_65x30",
+        "port": "b",
+        "line": 12904,
+        "input": "n_rst_d2d__fo2__r3",
+        "clock": "n_clk_d2d",
+        "edge_kind": "forwarded-reset-stage"
+      },
+      {
+        "net": "n_rst_d2d__fo2__r3",
+        "instance": "rly_rst_d2d__fo2_2",
+        "type": "qfd_rlyr_1_NE_65x30",
+        "port": "b",
+        "line": 12903,
+        "input": "n_rst_d2d__fo2__r2",
+        "clock": "n_fck_rst_d2d__fo2__h2",
+        "edge_kind": "forwarded-reset-stage"
+      },
+      {
+        "net": "n_rst_d2d__fo2__r2",
+        "instance": "rly_rst_d2d__fo2_1",
+        "type": "qfd_rlyr_1_NS_65x30",
+        "port": "b",
+        "line": 12902,
+        "input": "n_rst_d2d__fo2__r1",
+        "clock": "n_fck_rst_d2d__fo2__h1",
+        "edge_kind": "forwarded-reset-stage"
+      },
+      {
+        "net": "n_rst_d2d__fo2__r1",
+        "instance": "rly_rst_d2d__fo2_0",
+        "type": "qfd_rlyr0_1_NS_65x30",
+        "port": "b",
+        "line": 12901,
+        "input": "n_rst_d2d",
+        "clock": "n_clk_d2d",
+        "edge_kind": "forwarded-reset-stage"
+      },
+      {
+        "net": "n_rst_d2d",
+        "instance": "rs_bump",
+        "type": "qfd_rstsync",
+        "port": "rso_d",
+        "line": 12820,
+        "input": "n_rst_fwd",
+        "clock": "n_clk_d2d",
+        "registered_edges": 2,
+        "asynchronous_assertion": true
+      },
+      {
+        "net": "n_rst_fwd",
+        "instance": "ckb_rom",
+        "type": "qfd_ckbump",
+        "port": "rs",
+        "line": 12819
+      }
+    ]
+  }
+}

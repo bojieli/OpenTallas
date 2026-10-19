@@ -1,0 +1,12 @@
+d2d_rom.ck clk_rx.pll_d2d -> ckb_rom.pll_ck plain_edges 0 forwarded_steps 0
+d2d_rom.por_n rly_rst_d2d_3.b -> rly_rst_d2d_2.b -> rly_rst_d2d_1.b -> rly_rst_d2d_0.b -> rs_bump.rso_d -> ckb_rom.rs plain_edges 2 forwarded_steps 4
+d2d_rom.rst_n rstt_rst_d2d__fo1__r3_12.q0 -> rstt_rst_d2d__fo1__r3_41.q0 -> rstt_rst_d2d__fo1__r3_19.q1 -> rstt_rst_d2d__fo1__r3_18.q0 -> rly_rst_d2d__fo1_2.b -> rly_rst_d2d__fo1_1.b -> rly_rst_d2d__fo1_0.b -> rs_bump.rso_d -> ckb_rom.rs plain_edges 18 forwarded_steps 3
+d2d_rom.cfg_tx_we rly_sf_cfg_tx_we_3.b -> rly_sf_cfg_tx_we_2.b -> rly_sf_cfg_tx_we_1.b -> rly_sf_cfg_tx_we_0.b -> sys_face.cfg_tx_we plain_edges 0 forwarded_steps 4
+d2d_rom.cfg_rx_we rly_sf_cfg_rx_we_2.b -> rly_sf_cfg_rx_we_1.b -> rly_sf_cfg_rx_we_0.b -> sys_face.cfg_rx_we plain_edges 0 forwarded_steps 3
+d2d_rom.cfg_addr rly_sf_cfg_addr_2.b -> rly_sf_cfg_addr_1.b -> rly_sf_cfg_addr_0.b -> sys_face.cfg_addr plain_edges 0 forwarded_steps 3
+d2d_rom.cfg_data rly_sf_cfg_data_2.b -> rly_sf_cfg_data_1.b -> rly_sf_cfg_data_0.b -> sys_face.cfg_data plain_edges 0 forwarded_steps 3
+d2d_rom.cal_start rly_sf_cal_start_2.b -> rly_sf_cal_start_1.b -> rly_sf_cal_start_0.b -> sys_face.cal_start plain_edges 0 forwarded_steps 3
+d2d_rom.cal_seg rly_sf_cal_seg_2.b -> rly_sf_cal_seg_1.b -> rly_sf_cal_seg_0.b -> sys_face.cal_seg plain_edges 0 forwarded_steps 3
+d2d_rom.result_v rly_sf_result_v_2.b -> rly_sf_result_v_1.b -> rly_sf_result_v_0.b -> sys_face.result_v plain_edges 0 forwarded_steps 3
+sys_face.ck clk_rx.pll_d2d -> ckb_rom.pll_ck plain_edges 0 forwarded_steps 0
+sys_face.rst_n rstt_rst_d2d__fo2__r4_9.q0 -> rstt_rst_d2d__fo2__r4_54.q0 -> rstt_rst_d2d__fo2__r4_53.q0 -> rstt_rst_d2d__fo2__r4_29.q1 -> rstt_rst_d2d__fo2__r4_40.q0 -> rstt_rst_d2d__fo2__r4_16.q1 -> rstt_rst_d2d__fo2__r4_15.q0 -> rstt_rst_d2d__fo2__r4_14.q0 -> rly_rst_d2d__fo2_3.b -> rly_rst_d2d__fo2_2.b -> rly_rst_d2d__fo2_1.b -> rly_rst_d2d__fo2_0.b -> rs_bump.rso_d -> ckb_rom.rs plain_edges 18 forwarded_steps 4
