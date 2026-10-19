@@ -1,0 +1,67 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/pg-placement-rc-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/pg-placement-rc-1019
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/pg-placement-rc-1019
+ot-run: ot-epyc7       admits   939 GB (avail 730, growth 72, headroom 0, waiters 0/0 GB) load 35/96 running 22 disk 6269 GB 
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/pg-placement-rc-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/pg-placement-rc-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/pg-placement-rc-1019
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-111287-1792444994 after 1 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+[WARNING ORD-2056] The following 1 liberty cell(s) do not have LEF masters and will be marked as dont-use:
+  TAP_CANARY
+[INFO ODB-0227] LEF file: /proof/fixture/tap.lef, created 1 library cells
+CANARY_ESTIMATE index=1 checked=0 missing=0
+OT_LRT tt tap_canary/RAW BUFx4_ASAP7_75t_R buffers=0 raw-ref=-0.0 target=80.0
+CANARY_ESTIMATE index=2 checked=2 missing=2
+OT_LRT tt tap_canary/RAW BUFx4_ASAP7_75t_R buffers=1 raw-ref=44.2 target=80.0
+CANARY_ESTIMATE index=3 checked=4 missing=4
+OT_LRT tt tap_canary/RAW BUFx4_ASAP7_75t_R buffers=2 raw-ref=67.1 target=80.0
+CANARY_ESTIMATE index=4 checked=6 missing=6
+OT_LRT tt tap_canary/RAW BUFx4_ASAP7_75t_R buffers=3 raw-ref=89.0 target=80.0
+OT_LRT DONE tt tap_canary/RAW buffers=3 raw-ref=89.0 target=80.0 residual=9.0
+[INFO DPL-0006] Core area: 15695.08 um^2
+[INFO DPL-0007] Movable instances area: 5.67 um^2
+[INFO DPL-0008] Fixed instances area within core: 0.29 um^2
+[INFO DPL-0009] Utilization: 0.0%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (2 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 19 cells
+[INFO DPL-0393]   height 2 row(s): 1 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 0.
+[INFO DPL-0500] Runtime: 0.06s
+Placement Analysis
+---------------------------------
+total displacement          3.9 u
+average displacement        0.2 u
+max displacement            0.7 u
+original HPWL             251.0 u
+legalized HPWL            252.9 u
+delta HPWL                    1 %
+
+CANARY_ESTIMATE index=5 checked=6 missing=6
+OT_LRT tapped 1 raw child clock pins
+CANARY_DONE buffers=3 missing=6 estimates=5 bad=18 rc_apply=0 rc_restore=0
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-111287-1792444994): exit 0

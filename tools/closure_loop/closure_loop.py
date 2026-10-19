@@ -350,6 +350,8 @@ def validate(spec: dict) -> list[str]:
         e.append("host_require must be a nonempty list of host names, not a boolean")
     elif required and any(x not in {h["name"] for h in hosts_table()} for x in required):
         e.append("host_require contains an unknown host")
+    if "pg_strict" in spec and type(spec["pg_strict"]) is not bool:
+        e.append("pg_strict must be an explicit boolean")
     src = spec["source"]
     if not isinstance(src, dict) or not src.get("branch") or not re.match(r"^[0-9a-f]{7,40}$", str(src.get("commit", ""))):
         e.append("source needs branch and a hex commit")
@@ -2966,7 +2968,8 @@ def _publish_refresh(frozen):
     child_lint FAIL) although the exact-window exporter fix ff7aa2deb was on main.  Refreshed rows carry resolution
     "publish_refresh": their bytes come from the content store on a later reinstall (not the plan's origin tree)."""
     try:
-        current, cur_payloads = HO.capture_plan(HERE.parents[1], REPO, head=_ovl_head(), cache=_OVL["hist"])
+        current, cur_payloads = HO.capture_plan(HERE.parents[1], REPO, head=_ovl_head(), cache=_OVL["hist"],
+                                               pg_strict=bool(frozen.get("pg_strict", False)))
         if HO.compare_plans(frozen, current)[0]:
             return None
         frows = {f["path"]: f for f in frozen["files"]}
@@ -3066,6 +3069,12 @@ def ship_helpers(host, run, job=None):
     payloads = None
     modes = None
     frozen = None
+    if job is not None:
+        existing = job.get("route_overlay_plan")
+        if pg_strict(job) and (not job.get("freeze_helper_overlay") or existing is None):
+            raise ValueError("PG_STRICT: source-bound frozen strict helper plan required; no old-job fallback")
+        if existing is not None:
+            HO.validate_pg_policy(existing, pg_strict=pg_strict(job))
     if job is not None and job.get("freeze_helper_overlay"):
         frozen = job.get("route_overlay_plan")
         if frozen is None and (job.get("source_synced") or job.get("helper_overlay_installed")
@@ -3142,7 +3151,8 @@ def ship_helpers(host, run, job=None):
             event(job, f"FROZEN-REPLAY: shipping the gate-frozen helper set {str(frozen.get('content_sha256'))[:12]} "
                        f"(origin {str(frozen.get('origin_main'))[:9]}, {src_}) by human request")
         if payloads is None:
-            current, payloads = HO.capture_plan(HERE.parents[1], REPO, head=_ovl_head(), cache=_OVL["hist"])
+            current, payloads = HO.capture_plan(HERE.parents[1], REPO, head=_ovl_head(), cache=_OVL["hist"],
+                                                pg_strict=pg_strict(job))
             modes = {f["path"]: f["mode"] for f in current["files"]}
             frozen = job.setdefault("route_overlay_plan", current)
             ok, why, sanctioned = HO.compare_plans_sanctioned(frozen, current, REPO, head=current.get("origin_main"))
@@ -3620,6 +3630,12 @@ def launch_stage(j, st, cmd):
         BLOCK=j["spec"]["block"], COMMIT=rebound["source_commit"] if rebound else j["commit_full"], THREADS=str(st.get("threads", 4)),
         CL_PHASE=st["kind"], CL_LABEL_SUFFIX="_cal" if st["kind"] == "calibrate" else "",
         CL_STOP_AFTER="--pnr-stop-after cts" if st["kind"] == "calibrate" else "").items())
+    env += f"export OT_PG_JOB_STRICT={int(pg_strict(j))}\n"
+    if not pg_strict(j):
+        env += "export OT_PG_STRICT=0\n"
+    if pg_strict(j):
+        env += ("export OT_PG_STRICT=1\nexport OT_PG_HELPER={CL}/native_pg_binding.tcl\n"
+                "export OT_PG_RUNNER={CL}/pg_receipt.py\nexport OT_PG_COLLECTOR={CL}/audit_native_pg.tcl\n")
     # OOM-FIRST (drive-0849 2026-10-09): synth runs NATIVELY (host yosys, outside any container cgroup) -- the 208 GB
     # yosys that took the EPYC1 die GRT was one.  Every loop stage raises its own oom_score_adj (inherited by its
     # children; non-root may raise it) so a host OOM picks a loop stage, never a die run (-900) or an interactive job.
@@ -5468,7 +5484,12 @@ def launch_ready(j, fleet, spec, stl, st):
 def launch_now(j, fleet, st):
     """launch a reserved stage (no FLEET_LOCK held: the ssh calls of one launch no longer stall every other job)"""
     try:
-        launch_stage(j, st, st["cmd"])
+        cmd = st["cmd"]
+        if pg_strict(j) and st["kind"] in ("collect", "export", "record"):
+            ship_helpers(j["host"], j["run"], j)
+            cmd = ("export OT_PG_STRICT=1\nexport OT_PG_RUNNER={CL}/pg_receipt.py\n"
+                   "export OT_PG_COLLECTOR={CL}/audit_native_pg.tcl\n" + active_pg_cmd(j)) + " || exit $?\n" + cmd
+        launch_stage(j, st, cmd)
     finally:
         fleet.launch_complete(j["host"], st["admission_launch_token"])
     j["status"] = "RUNNING"
@@ -6581,6 +6602,51 @@ def hm_auto_events(j):
 RECORD_DIR = "{RUN}/record"
 
 
+def pg_strict(job_or_spec):
+    """The source-bound job/spec policy is authoritative, never daemon env."""
+    return HO.pg_strict(job_or_spec.get("spec", job_or_spec))
+
+
+def native_pg_cmd(odb):
+    """Execute the frozen native collector afresh, never accept a supplied PASS JSON."""
+    return ("python3 {CL}/pg_receipt.py verify " + odb
+            + " --collector {CL}/audit_native_pg.tcl"
+              " --receipt-dir {CL}/pg_receipts")
+
+
+def active_pg_cmd(j):
+    """Resolve the exact installed route database; ambiguous or unsupported layouts refuse."""
+    e = j.get("eco") or {}
+    base = e.get("rb") if e.get("installed") else route_bases_glob(j, j["run"])
+    if not base:
+        return "echo 'PG_HOLD: exact active final ODB cannot be resolved' >&2; exit 86"
+    # Route base may be a glob from the frozen verdict spec. Require one actual
+    # database instead of selecting whichever directory happens to sort first.
+    cmd = (f"set -- {base}/6_final.odb\n"
+           "[ \"$#\" -eq 1 ] && [ -f \"$1\" ] || "
+           "{ echo 'PG_HOLD: missing or ambiguous active final ODB' >&2; exit 86; }\n"
+           + native_pg_cmd('"$1"') + " || exit $?")
+    if e.get("installed") and e.get("ob") and e["ob"] != base:
+        installed = shlex.quote(e["ob"] + "/6_final.odb")
+        installed_spef = shlex.quote(e["ob"] + "/6_final.spef")
+        cmd += (f'\ncmp -- "$1" {installed} || exit $?\n'
+                f'cmp -- "${{1%.odb}}.spef" {installed_spef} || exit $?\n'
+                + native_pg_cmd(installed) + " || exit $?")
+    return cmd
+
+
+def require_job_pg(j):
+    if not pg_strict(j):
+        return True
+    ship_helpers(j["host"], j["run"], j)
+    ok, out = remote_ok(j, active_pg_cmd(j), timeout=1800)
+    j["pg_status"] = dict(status="PASS" if ok else "PG_HOLD", at=now_iso(), output=out)
+    if not ok:
+        finish(j, "NEEDS_HUMAN", "PG_HOLD: native final ODB terminal audit refused publication",
+               f"PG_HOLD: fresh audit of the active final ODB failed; timing remains independent: {out}")
+    return ok
+
+
 def precollect_cmd(spec):
     """drive-0212 2026-10-09: the collect stage runs AFTER the verdict, but a verdict check may read what collect writes
     (s81-dsfd-hstnh-515-pe-4a12f4d5d-tc-cl: lef_check_MATCH on {RUN}/record/check.json, written only by collect's
@@ -6632,6 +6698,8 @@ def route_corner_check_cmd(c):
 def do_verdict(j, fleet, stl):
     if adoption_held(j):
         return
+    if not require_job_pg(j):
+        return
     v = j["spec"].get("verdict", {})
     m = get_metrics(j)
     if re.search(r"kex_exchange|Connection (reset|refused|closed|timed out)|ssh:", str(m.get("error", ""))):
@@ -6643,6 +6711,9 @@ def do_verdict(j, fleet, stl):
     checks, failed = {}, []
     pre = precollect_cmd(j["spec"])
     if pre:
+        if pg_strict(j):
+            pre = ("export OT_PG_STRICT=1\nexport OT_PG_RUNNER={CL}/pg_receipt.py\n"
+                   "export OT_PG_COLLECTOR={CL}/audit_native_pg.tcl\n" + pre)
         ok, out = remote_ok(j, pre, timeout=3600)
         if not ok and TRANSIENT_RE.search(out):
             raise RuntimeError(f"verdict pre-collect: ssh/network failure: {out.strip()[-200:]}")
@@ -7188,6 +7259,15 @@ def eco_install_cmd(j):
     if j.get("eco_overlay_recovery"):
         lines.append(f"python3 {{CL}}/eco_recovery.py verify {shlex.quote(j['eco_overlay_recovery']['guard'])}")
     lines.append(f"EB=$(ls -d {out}/orfs/results/asap7/*/base)")
+    if pg_strict(j):
+        lines += ["export OT_PG_STRICT=1", "export OT_PG_RUNNER={CL}/pg_receipt.py",
+                  "export OT_PG_COLLECTOR={CL}/audit_native_pg.tcl",
+                  'EB_PG_SHA=$(sha256sum "$EB/6_final.odb" | cut -d " " -f 1)',
+                  'EB_PG_SPEF_SHA=$(sha256sum "$EB/6_final.spef" | cut -d " " -f 1)',
+                  native_pg_cmd('"$EB/6_final.odb"'),
+                  '[ "$EB_PG_SHA" = "$(sha256sum "$EB/6_final.odb" | cut -d " " -f 1)" ]',
+                  '[ "$EB_PG_SPEF_SHA" = "$(sha256sum "$EB/6_final.spef" | cut -d " " -f 1)" ]']
+
     # ECO-DEF (ROOT 2026-10-16, qkd_static_kv_landing_seg ls5 / qkd_ctrl_pc_core s4): f181bfa99 made install copy
     # 6_final.def, but a job whose FROZEN hold_eco.tcl predates it writes no DEF -> 'cp: cannot stat 6_final.def', rc=1
     # after a PASSING ECO.  Write the DEF from the ECO's own 6_final.odb (same database, so the same geometry) first.
@@ -7196,8 +7276,20 @@ def eco_install_cmd(j):
                  f'/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /tmp/ot_wdef.tcl" '
                  f'> $EB/install_write_def.log 2>&1')
     for b in sorted({rb, ob}):
+        if pg_strict(j):
+            lines += ['[ "$EB_PG_SHA" = "$(sha256sum "$EB/6_final.odb" | cut -d " " -f 1)" ]',
+                      '[ "$EB_PG_SPEF_SHA" = "$(sha256sum "$EB/6_final.spef" | cut -d " " -f 1)" ]']
         for f in ("6_final.odb", "6_final.spef", "6_final.v", "6_final.def"):
             lines.append(f"[ -f {b}/{f} ] && [ ! -f {b}/{f}.pre_eco ] && mv {b}/{f} {b}/{f}.pre_eco; cp $EB/{f} {b}/{f}")
+    if pg_strict(j):
+        for b in sorted({rb, ob}):
+            # Verify the installed bytes against the audited candidate before
+            # any custom or default re-export. Each destination is audited too.
+            lines += [f'[ "$EB_PG_SHA" = "$(sha256sum {shlex.quote(b + "/6_final.odb")} | cut -d " " -f 1)" ]',
+                      f'cmp -- "$EB/6_final.odb" {shlex.quote(b + "/6_final.odb")}',
+                      f'[ "$EB_PG_SPEF_SHA" = "$(sha256sum {shlex.quote(b + "/6_final.spef")} | cut -d " " -f 1)" ]',
+                      f'cmp -- "$EB/6_final.spef" {shlex.quote(b + "/6_final.spef")}',
+                      native_pg_cmd(shlex.quote(b + "/6_final.odb"))]
     lines.append(f"for c in {cs}; do [ -f $c.pre_eco ] || cp $c $c.pre_eco; cp {out}/corner_sta.json $c; done")
     if e.get("kind") in ("combo", "combo_hold") or e.get("combo_vtswap"):
         # drive-0849 2026-10-09: a combo db carries LVT masters, but its VT-swap stage alone never scored >= 0, so
@@ -7342,6 +7434,8 @@ def child_lint_gate(j):
 
 def do_commit(j):
     if adoption_held(j):
+        return
+    if not require_job_pg(j):
         return
     m = j["metrics"]
     if not j.get("spec", {}).get("smoke") and (j.get("spec", {}).get("m6_pin_grant") is not None
