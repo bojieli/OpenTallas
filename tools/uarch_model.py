@@ -17455,3 +17455,9 @@ def hbm_svg_cache_native8_model():
     """Packed136 assembler occupancy model, before cycle-equivalent native8 RTL."""
     from hbm_layer_vehicle.cache_native8_model import model
     return model()
+
+
+def hbm_svg_landing_pair_native_model():
+    """Source-bound four-macro native landing/local-return leaf."""
+    from hbm_layer_vehicle.svg_landing_pair_model import model
+    return model()
