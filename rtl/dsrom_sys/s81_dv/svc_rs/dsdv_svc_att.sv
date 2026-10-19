@@ -74,8 +74,12 @@
 // ot_sram_1r1w_32x128_m1 (registered read at the next-cycle address + one-word write-through = the flop array's
 // combinational read, 0 cycles); the live-value table becomes 3 single-writer written-this-job vectors.
 // MUT 7 (OT_SVC_ATT_SRAM only): no write-through (a word written and read on the same edge reads the old content).
+// SVC2 (10-19, safe-design 1): dsdv_svc_att is a thin wrapper of dsdv_svc_att_core.  -DOT_SVC_ATT_PINREG registers every
+// input pin (the broadcast stream copy q / hw and the two PC faces: +1 edge on each, priced in the compiler) and the
+// fault OR (+1 edge on the sticky fault status); every other output is already a core flop.  Without the define the
+// wrapper is wires only (existing users unchanged).
 // ---------------------------------------------------------------------------------------------------------------------
-module dsdv_svc_att #(
+module dsdv_svc_att_core #(
     parameter integer MUT = 0,
     parameter integer DIE_ID = 0,
     parameter integer ST = 0,
@@ -828,4 +832,47 @@ module dsdv_svc_fmem #(parameter integer W = 128, parameter integer BYP = 1) (
     end else begin : g_nobyp
         assign rd = q[W-1:0];
     end endgenerate
+endmodule
+
+// ---------------------------------------------------------------------------------------------------------------------
+module dsdv_svc_att #(
+    parameter integer MUT = 0, parameter integer DIE_ID = 0, parameter integer ST = 0, parameter integer PFIFO = 512,
+    parameter integer PMEM = 1, parameter integer PVQ = 8, parameter integer DQ = 8,
+    parameter bit SRAM_MACRO = 0, parameter bit QMEM_SRAM = 0
+) (
+    input  wire clk, input wire rst_n, input wire [3:0] sid, input wire [3:0] tile, input wire [7:0] gd,
+    input  wire [7:0] pvs, input wire root,
+    input  wire q_v, input wire [511:0] q_d, input wire hw_v, input wire [290:0] hw_d,
+    output wire [2*341-1:0] qrq, input wire [1:0] qrk, input wire [1:0] qwd, input wire [1:0] qrv,
+    input  wire [2*256-1:0] qr_data, input wire [2*17-1:0] qr_tag, input wire [2*4-1:0] qr_beat,
+    output wire l_v, output wire [2131:0] l_d, output wire pv_ov, output wire [512:0] pv_od,
+    output wire sm_st, output wire [3:0] sm_kind, output wire [7:0] sm_jid, output wire sm_rv, output wire sm_rp,
+    output wire [2:0] sm_rj, output wire [511:0] sm_rd,
+    output wire go_o, output wire [9:0] tjob_o, output wire done, output wire [7:0] tagj,
+    output wire [1:0] hcr, output wire [1:0] hack, output wire fault, output wire [31:0] fault_code
+);
+`ifdef OT_SVC_ATT_PINREG
+    reg pq_v, phw_v; reg [511:0] pq_d; reg [290:0] phw_d;
+    reg [1:0] pqrk, pqwd, pqrv; reg [2*256-1:0] pqr_data; reg [2*17-1:0] pqr_tag; reg [2*4-1:0] pqr_beat;
+    reg fault_q; wire fault_c;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin pq_v <= 1'b0; phw_v <= 1'b0; pqrk <= '0; pqwd <= '0; pqrv <= '0; fault_q <= 1'b0; end
+        else begin pq_v <= q_v; phw_v <= hw_v; pqrk <= qrk; pqwd <= qwd; pqrv <= qrv; fault_q <= fault_c; end
+    always @(posedge clk) begin pq_d <= q_d; phw_d <= hw_d; pqr_data <= qr_data; pqr_tag <= qr_tag; pqr_beat <= qr_beat; end
+    assign fault = fault_q;
+`else
+    wire pq_v = q_v, phw_v = hw_v; wire [511:0] pq_d = q_d; wire [290:0] phw_d = hw_d;
+    wire [1:0] pqrk = qrk, pqwd = qwd, pqrv = qrv; wire [2*256-1:0] pqr_data = qr_data; wire [2*17-1:0] pqr_tag = qr_tag;
+    wire [2*4-1:0] pqr_beat = qr_beat; wire fault_c;
+    assign fault = fault_c;
+`endif
+    dsdv_svc_att_core #(.MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .PFIFO(PFIFO), .PMEM(PMEM), .PVQ(PVQ), .DQ(DQ),
+                        .SRAM_MACRO(SRAM_MACRO), .QMEM_SRAM(QMEM_SRAM)) u_core (
+        .clk(clk), .rst_n(rst_n), .sid(sid), .tile(tile), .gd(gd), .pvs(pvs), .root(root),
+        .q_v(pq_v), .q_d(pq_d), .hw_v(phw_v), .hw_d(phw_d),
+        .qrq(qrq), .qrk(pqrk), .qwd(pqwd), .qrv(pqrv), .qr_data(pqr_data), .qr_tag(pqr_tag), .qr_beat(pqr_beat),
+        .l_v(l_v), .l_d(l_d), .pv_ov(pv_ov), .pv_od(pv_od),
+        .sm_st(sm_st), .sm_kind(sm_kind), .sm_jid(sm_jid), .sm_rv(sm_rv), .sm_rp(sm_rp), .sm_rj(sm_rj), .sm_rd(sm_rd),
+        .go_o(go_o), .tjob_o(tjob_o), .done(done), .tagj(tagj), .hcr(hcr), .hack(hack), .fault(fault_c),
+        .fault_code(fault_code));
 endmodule
