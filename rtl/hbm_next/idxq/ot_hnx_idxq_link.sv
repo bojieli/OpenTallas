@@ -4,14 +4,17 @@
 // schedule gives the link ONE delivering selector per edge: OR of one; two on one edge = collision = fault, as in
 // ot_hnx_idxn_parent) and feeds the IDXN row-slot link ot_hnx_idxn_link (pin-registered shell, unchanged). The merge is
 // the glue the IDXN parent held; in the quad form it lives in the link tile (owner rule: glue into tiles).
-module ot_hnx_idxq_link #(parameter integer S=4)(
+// S = 4 selectors: 0, 1 on the W face (sel_*_w), 2, 3 on the E face (sel_*_e): 2 x 2,368 b per face.
+module ot_hnx_idxq_link(
  input wire clk,input wire[7:0]clk_mem,input wire rst_n,
  input wire clear,row_clear,input wire[2:0]in_slot,
- input wire[4*S-1:0]selected_v,input wire[2368*S-1:0]selected_line,
+ input wire[7:0]sel_v_w,input wire[2*2368-1:0]sel_line_w,input wire[7:0]sel_v_e,input wire[2*2368-1:0]sel_line_e,
  input wire flush,emit_v,input wire[3:0]emit_group,input wire[2:0]emit_slot,input wire[7:0]rank,gbase,
  output wire[3:0]tx_v,output wire[2179:0]tx,
  output wire fault,output wire[9:0]selected_count
 );
+ localparam integer S=4;
+ wire[4*S-1:0]selected_v={sel_v_e,sel_v_w};wire[2368*S-1:0]selected_line={sel_line_e,sel_line_w};
  reg[2367:0]line;reg ingest;reg coll;integer nsel;
  always @*begin
   line=0;ingest=0;nsel=0;

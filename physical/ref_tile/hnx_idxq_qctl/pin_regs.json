@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hnx_idxq_qctl",
+ "enable": false,
+ "reason": "every input lands in a kept pin flop and every output leaves a flop in the RTL (+1/+1 edge, the d4g ot_hbm_idx_qctl_static pin rule, lockstep-proven); automatic pin registers would add an unpriced edge"
+}

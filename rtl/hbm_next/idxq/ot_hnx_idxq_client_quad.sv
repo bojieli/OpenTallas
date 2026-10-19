@@ -6,7 +6,7 @@
 //     idx_ctl<q>  ot_hnx_idxq_qctl                 IDXN calendar copy: OPR / QEM / KEY (+row) / PRE / row_start
 //     idx_op<q>   ot_hnx_idx_vm_query_static       operand reader with the HGI-1R row strides (q0: via the SW share)
 //     idx_q<q>    ot_hbm_idx_query_static          d4g query unit (seen bits clear per row)
-//     idx_kb<q>   ot_hnx_idxn_keybuf NP=4 PB=4H     key replay buffer of the quarter's 4 PC key lines (17 macros):
+//     idx_kb<q>   ot_hnx_idxn_keybuf NP=4 (strap pbase 4H) key replay buffer of the quarter's 4 PC key lines (17 macros):
 //                                                  row 0 scores (and captures) the live lines, rows >= 1 replay them
 //     idx_s<q>    ot_hbm_idx_score_quarter_static  d4g quarter scorer, UNCHANGED (beats of every row)
 //   cross-quadrant registered tree idx_xq<s> / idx_xqr (d4g, unchanged), then
@@ -17,7 +17,7 @@
 // Equivalent (lockstep, rtl/hbm_next/idxq/tb/tb_hnx_idxq_lockstep.sv) to ot_hnx_idxn_scheduled N_Q=2 TP=192
 // (OT_IDX_SCORE_CLUSTER) for N = 1..6 rows: same scores / selected records / TX flits; timeline as the d4g quad
 // (key beats +2, scores +4, TX +2 + 6, done +2; programme --score-chain 14 instead of 8).
-module ot_hnx_idxq_client_quad #(parameter integer TP=96,S=4,K=8,RANK_W=(TP<=1?1:$clog2(TP)),
+module ot_hnx_idxq_client_quad #(parameter integer TP=96,K=8,RANK_W=(TP<=1?1:$clog2(TP)),
  parameter [3:0] QS=4'b1100,     // stack (KV ordinal slot) of quadrant q
  parameter [3:0] QH=4'b1010)(    // half (PCs 4H..4H+3 of that stack) of quadrant q
  input wire clk_program,clk_program_mem,input wire[3:0]clk_qprog,clk_qprog_mem,
@@ -43,6 +43,7 @@ module ot_hnx_idxq_client_quad #(parameter integer TP=96,S=4,K=8,RANK_W=(TP<=1?1
  output wire topk_busy,topk_done,topk_fault,output wire share_fault,
  input wire[135:0]argmax_rq,output wire[2055:0]argmax_rr
 );
+ localparam integer S=4;                 // time-shared selectors (the link tile takes 2 on its W face, 2 on its E face)
  wire[135:0]index_rq;wire[2055:0]index_rr;
  wire[3:0]qfault;wire[4*297-1:0]list;
  for(genvar q=0;q<4;q=q+1)begin:gq
@@ -70,7 +71,7 @@ module ot_hnx_idxq_client_quad #(parameter integer TP=96,S=4,K=8,RANK_W=(TP<=1?1
   // key stream: row 0 = the live service lines (captured), rows >= 1 = replay (named wires: bench mutants)
   wire live_v=kv&&kr==5'd0,replay_v=kv&&kr!=5'd0;
   wire[4395:0]klines;
-  ot_hnx_idxn_keybuf #(.NP(4),.PB(4*H)) kbuf(.clk(clk_kb[q]),.rst_n(rst_n),.clear(fs),.live_v(live_v),.live_index(ki),
+  ot_hnx_idxn_keybuf #(.NP(4)) kbuf(.clk(clk_kb[q]),.rst_n(rst_n),.clear(fs),.pbase(3'(4*H)),.live_v(live_v),.live_index(ki),
    .key_in(key_lines[SQ*8792+H*4396+:4396]),.pre_v(pv),.pre_index(pi),.replay_v(replay_v),.replay_index(ki),
    .key_out(klines),.fault(kbf));
   wire[170:0]kb;
@@ -123,8 +124,8 @@ module ot_hnx_idxq_client_quad #(parameter integer TP=96,S=4,K=8,RANK_W=(TP<=1?1
  end
  wire[2:0]link_in_slot=lin_row[2:0],link_out_slot=lout_row[2:0];   // named wires (bench mutant: slots dropped)
  wire[9:0]total;
- ot_hnx_idxq_link #(.S(S)) link(.clk(clk_link),.clk_mem(clk_link_mem),.rst_n(rst_n),.clear(link_clear),.row_clear(lin_clear),
-  .in_slot(link_in_slot),.selected_v(sv),.selected_line(sl),.flush(lin_flush),.emit_v(lout_emit),.emit_group(lout_group),
+ ot_hnx_idxq_link link(.clk(clk_link),.clk_mem(clk_link_mem),.rst_n(rst_n),.clear(link_clear),.row_clear(lin_clear),
+  .in_slot(link_in_slot),.sel_v_w(sv[0+:8]),.sel_line_w(sl[0+:2*2368]),.sel_v_e(sv[8+:8]),.sel_line_e(sl[2*2368+:2*2368]),.flush(lin_flush),.emit_v(lout_emit),.emit_group(lout_group),
   .emit_slot(link_out_slot),.rank(8'(rank)),.gbase(gbase),.tx_v(tx_v),.tx(tx),.fault(lf),.selected_count(total));
 endmodule
 `default_nettype wire

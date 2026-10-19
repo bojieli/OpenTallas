@@ -48,7 +48,7 @@ module ot_hnx_idxn_parent #(parameter integer N_Q=4,TP=96,S=4,RANK_W=(TP<=1?1:$c
  for(genvar q=0;q<N_Q;q=q+1)begin:gscore
   wire[11:0]nq=(nkeys<=q*2736)?12'd0:((nkeys-q*2736>=2736)?12'd2736:12'(nkeys-q*2736));
   wire[609:0]score;wire[8791:0]klines;
-  ot_hnx_idxn_keybuf kb(.clk(clk_score[q]),.rst_n(rst_n),.clear(frame_start),.live_v(live_v),.live_index(key_index),
+  ot_hnx_idxn_keybuf kb(.clk(clk_score[q]),.rst_n(rst_n),.clear(frame_start),.pbase(3'd0),.live_v(live_v),.live_index(key_index),
    .key_in(key_lines[q*8792+:8792]),.pre_v(kb_pre_v),.pre_index(kb_pre_index),.replay_v(replay_v),.replay_index(key_index),
    .key_out(klines),.fault(kbf[q]));
 `ifdef OT_IDX_SCORE_CLUSTER
