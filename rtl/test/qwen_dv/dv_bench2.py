@@ -452,6 +452,7 @@ def bench_m(work, mut, seed=21, rounds=2, nu=4, nch=4):
     the user must travel down the tree).  Check: per emit, the root token, the ring broadcast and slice 1's token
     equal the golden single-shot argmax of that user's rows (np.argmax: lowest index of the maximum); no fault.
     At MU_NU 1 (no per-user state) the heads collide and the bench must FAIL."""
+    seed = int(os.environ.get("DV2_SEED", seed))
     rng = np.random.default_rng(seed)
     gap = int(os.environ.get("DV2_GAP", "18"))
     ev = B.Ev()
