@@ -1,4 +1,5 @@
 {
+  "schema": "opentallas.qwen.su8_landed_timing.v1",
   "status": "SOURCE_EXACT_W_FUNCTIONAL_TIMING_PASS_NOT_NATIVE_GATE",
   "baseline_core": "9b41881fe",
   "landed_candidate": "c4adbc1c3",
@@ -52,7 +53,7 @@
     "result_return": 1,
     "total": 6
   },
-  "native_clock_phase_reach_and_final_45_bank_source_qualified": false,
+  "native_clock_phase_reach_and_final_banked_source_qualified": false,
   "traces_sha256": {
     "base_g.ev": "8da5676729b5be0a7b0a54d1031d4dbbb0c89813b230268fcb4322bb4a69cf9a",
     "base_g.log": "bdc7d797d94592907729564b91e9cb462dd5fa18b6d3b640c7c9b4e18ec700b9",

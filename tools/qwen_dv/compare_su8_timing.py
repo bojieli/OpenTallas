@@ -33,13 +33,13 @@ def main():
         assert delta=={expected:len(values)},f'{port}: nonuniform/unexpected age {delta}'
         rows[port]=dict(words=len(values),delta_edges=expected,all_values_and_order_exact=True)
     assert rows['S0DD']['words']>=16 and rows['S1SD']['words']>=1
-    result=dict(status='SOURCE_EXACT_W_FUNCTIONAL_TIMING_PASS_NOT_NATIVE_GATE',
+    result=dict(schema='opentallas.qwen.su8_landed_timing.v1',status='SOURCE_EXACT_W_FUNCTIONAL_TIMING_PASS_NOT_NATIVE_GATE',
                 baseline_core='9b41881fe',landed_candidate='c4adbc1c3',
                 fixture='dv_bench2 g SU_LT1 HD_W1301 MU_NU4 FACE1 SAFE_STORAGE SAFE_RESET',
                 boot_offsets=dict(baseline=8,landed=10),input_events_normalized_exact=True,
                 ports=rows,source_read_loop_edges=dict(old=8,new=12,head_inner_ML_old=7,head_inner_ML_new=11),
                 edge_budget=dict(issue_control=1,read_roundtrip=4,result_return=1,total=6),
-                native_clock_phase_reach_and_final_45_bank_source_qualified=False,
+                native_clock_phase_reach_and_final_banked_source_qualified=False,
                 traces_sha256={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(d.iterdir()) if p.suffix in ('.log','.ev')})
     Path(a.out).write_text(json.dumps(result,indent=2)+'\n');print(json.dumps(rows,sort_keys=True))
 

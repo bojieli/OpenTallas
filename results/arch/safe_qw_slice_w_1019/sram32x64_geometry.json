@@ -13,12 +13,30 @@
     "W": 5.960648148148148,
     "E": 5.902777777777778
   },
-  "physical_banks": 45,
+  "physical_banks": 42,
   "logical_ports": 5,
-  "bits_per_port": 546,
-  "physical_bits_per_port": 576,
-  "padded_masked_bits": 30,
-  "total_area_um2": 24858.3168,
+  "bits_per_port": [
+    514,
+    514,
+    512,
+    512,
+    512
+  ],
+  "physical_bits_per_port": [
+    576,
+    576,
+    512,
+    512,
+    512
+  ],
+  "padded_masked_bits": [
+    62,
+    62,
+    0,
+    0,
+    0
+  ],
+  "total_area_um2": 23201.095680000002,
   "SS_clk_to_q_ps": 317.7647673045979,
   "SS_min_period_ps": 318.1277631204382,
   "pin_channel_min_um": 20,
@@ -32,7 +50,48 @@
   ],
   "gross_group_allocation_total_um2": 261273.6,
   "native_group_layout": "3x3 origins at43.2+86.4*x and43.2+43.2*y inside allocated302.4x172.8; pinface20um halo after all bodies, group entry reach<=405um; PG/via/pin-access and actual clock proof owed",
-  "native_clock_sinks": 45,
+  "native_clock_sinks": 42,
   "independent_exposed_roots": 0,
-  "clock_plan": "One core CTS root;45real macro clk pin arrivals+soft boundary co-time and last unbuffered reach require actual TT/FF proof. No9-clockvectorinterface exists."
+  "clock_plan": "One core CTS root;42actualmacro clk pins require TT/FF co-time, phase/reach and actualnativecellcount proof. No per-bank exposedclockvector.",
+  "previous_generic_546_port_bank_count": 45,
+  "physical_clock_sinks": 42,
+  "client_contracts": [
+    {
+      "client": "u_sks",
+      "useful_bits": 514,
+      "banks": 9,
+      "masked_padding_bits": 62
+    },
+    {
+      "client": "u_skn",
+      "useful_bits": 514,
+      "banks": 9,
+      "masked_padding_bits": 62
+    },
+    {
+      "client": "u_hb",
+      "useful_bits": 512,
+      "banks": 8,
+      "masked_padding_bits": 0
+    },
+    {
+      "client": "u_h9",
+      "useful_bits": 512,
+      "banks": 8,
+      "masked_padding_bits": 0
+    },
+    {
+      "client": "u_scale_wait",
+      "useful_bits": 512,
+      "banks": 8,
+      "masked_padding_bits": 0
+    }
+  ],
+  "wrapper_status": "width-aware helper source pending seam_source; no padding-only banks retained",
+  "generic_full546_reference": {
+    "banks_per_port": 9,
+    "masked_padding_bits": 30,
+    "area_per_port_um2": 4971.6633600000005
+  },
+  "native_count_evidence": "seam_source confirms e0 targetedYosys lookaheadW512=8/delayW514=9; explicit width-aware source receipt pending"
 }
