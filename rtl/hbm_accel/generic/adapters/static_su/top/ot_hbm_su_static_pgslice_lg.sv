@@ -11,6 +11,8 @@
 // taps in the hardened leaf ot_hbm_su_static_pg_lg_tap, the leaves by pgslice PG_RSYNC=1. RSYNC=0 = the r8b structure
 // (one pg_clk flop of rst_n for the taps, raw async rst_n on the leaves), kept only as the bench reference.
 // Datapath edges unchanged; reset assert/release on the stream side move to the synchronised edges.
+// STRAP (OWN-PGLG 2026-10-18, default 0): pgslice STRAP -- {QID,G} from the position strap pos = {qid, g}; QID/G
+// parameters then only pick the structure class (LIGHT G2/3, HEAVY G0/1, Q0G0), so 16 slices are 3 masters.
 module ot_hbm_su_static_pgslice_lg #(
  parameter integer QID=0,G=0,READ_RETURN=10,WRITE_RETURN=7,FETCH_EXTRA_EDGES=2,MLAT=3,ALAT=3,LEAF=0,MUT=0,MULTIRATE=0,
  parameter integer PIN_REG=0,
@@ -18,7 +20,10 @@ module ot_hbm_su_static_pgslice_lg #(
  parameter integer B39_NOOP=(QID==0),
  parameter integer RF_LOCAL=0,
  parameter integer RSYNC=1,
- parameter integer RSYNC_MUT=0
+ parameter integer RSYNC_MUT=0,
+ parameter integer STRAP=0,
+ // PRETREE (HH-6 / TW-HBM-PGLG 10-19, default 0): pgslice PRETREE pass-through (tree_cmd in, tree_o out)
+ parameter integer PRETREE=0
 )(
  input wire pg_clk,
  input wire [255:0] clk_lane,
@@ -31,6 +36,7 @@ module ot_hbm_su_static_pgslice_lg #(
  input wire clk_ctl,
  input wire [5:0] clk_side,
  input wire rst_n,
+ input wire [3:0] pos,
  input wire bridge_rst_n,
  input wire [1741:0] control,
  input wire [2*30-1:0] vmr_cmd,
@@ -40,6 +46,8 @@ module ot_hbm_su_static_pgslice_lg #(
  input wire [255:0] rf_dsec,
  input wire [11:0] red_sel,
  output wire [31:0] slice_x,
+ input wire [11:0] tree_cmd,
+ output wire [66:0] tree_o,
  input wire [1:0] inj_rd,
  input wire [159:0] inj_addr,
  output wire [1023:0] inj_q,
@@ -59,7 +67,7 @@ module ot_hbm_su_static_pgslice_lg #(
  output wire lg_fault
 );
  wire [33:0] s_rq; wire [561:0] s_wq; wire [513:0] s_rr; wire [1:0] s_done;
- ot_hbm_su_static_pgslice #(.QID(QID),.G(G),.READ_RETURN(READ_RETURN),.WRITE_RETURN(WRITE_RETURN),.FETCH_EXTRA_EDGES(FETCH_EXTRA_EDGES),.MLAT(MLAT),.ALAT(ALAT),.LEAF(LEAF),.MUT(MUT),.MULTIRATE(MULTIRATE),.PIN_REG(PIN_REG),.COLLPORT(COLLPORT),.B39_NOOP(B39_NOOP),.RF_LOCAL(RF_LOCAL),.PG_RSYNC(RSYNC)) u_slice(
+ ot_hbm_su_static_pgslice #(.QID(QID),.G(G),.READ_RETURN(READ_RETURN),.WRITE_RETURN(WRITE_RETURN),.FETCH_EXTRA_EDGES(FETCH_EXTRA_EDGES),.MLAT(MLAT),.ALAT(ALAT),.LEAF(LEAF),.MUT(MUT),.MULTIRATE(MULTIRATE),.PIN_REG(PIN_REG),.COLLPORT(COLLPORT),.B39_NOOP(B39_NOOP),.RF_LOCAL(RF_LOCAL),.PG_RSYNC(RSYNC),.STRAP(STRAP),.PRETREE(PRETREE)) u_slice(
   .pg_clk(pg_clk),
   .clk_lane(clk_lane),
   .clk_insert(clk_insert),
@@ -71,6 +79,7 @@ module ot_hbm_su_static_pgslice_lg #(
   .clk_ctl(clk_ctl),
   .clk_side(clk_side),
   .rst_n(rst_n),
+  .pos(pos),
   .bridge_rst_n(bridge_rst_n),
   .control(control),
   .vmr_cmd(vmr_cmd),
@@ -80,6 +89,8 @@ module ot_hbm_su_static_pgslice_lg #(
   .rf_dsec(rf_dsec),
   .red_sel(red_sel),
   .slice_x(slice_x),
+  .tree_cmd(tree_cmd),
+  .tree_o(tree_o),
   .lg_rq(s_rq),
   .lg_wq(s_wq),
   .lg_rr(s_rr),

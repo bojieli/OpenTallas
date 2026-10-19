@@ -1,0 +1,21 @@
+WINDOW hold group 1 bank 0 rewritten 0.556 ns after its read t=102000
+WINDOW hold group 1 bank 1 rewritten 0.278 ns after its read t=103000
+WINDOW hold group 1 bank 0 rewritten 0.000 ns after its read t=103000
+MISMATCH su_rr t=105000 sk=85
+WINDOW hold group 1 bank 1 rewritten 0.556 ns after its read t=105000
+MISMATCH su_rr t=106000 sk=86
+WINDOW hold group 1 bank 0 rewritten 0.278 ns after its read t=106000
+MISMATCH su_rr t=107000 sk=87
+WINDOW hold group 1 bank 1 rewritten 0.000 ns after its read t=107000
+MISMATCH su_rr t=108000 sk=88
+MISMATCH su_rr t=109000 sk=89
+MISMATCH su_rr t=110000 sk=90
+MISMATCH su_rr t=111000 sk=91
+MISMATCH su_rr t=112000 sk=92
+windows (ns): request setup 1.112 hold 0.556 | return setup 1.668 hold 0.000 | inject setup 0.834 hold 1.946
+ref faults pg=1 lg=1 (sticky; raised during traffic); coverage: serial fill returns 1275, inject hits 1188 (conflicts 90), LG near requests 2720
+PG_STREAM_SPLIT FAIL errors=3002 window_errors=3008 MUT=1
+- rtl/test/hbm_accel/generic/tb_hbm_su_pg_stream_safe2.sv:198: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4us; walltime 0.034 s; speed 105.522 us/s
+- Verilator: cpu 0.034 s on 1 threads; allocated 7 MB

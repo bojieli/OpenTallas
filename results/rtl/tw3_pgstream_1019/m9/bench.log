@@ -1,0 +1,16 @@
+Verilator 5.050 2026-07-01 rev v5.050
+MISMATCH ij (+1 serial) t=102000 sk=83
+MISMATCH ij (+1 serial) t=110000 sk=90
+MISMATCH ij (+1 serial) t=113000 sk=93
+MISMATCH ij (+1 serial) t=125000 sk=103
+MISMATCH ij (+1 serial) t=128000 sk=106
+MISMATCH ij (+1 serial) t=131000 sk=109
+MISMATCH ij (+1 serial) t=141000 sk=118
+MISMATCH ij (+1 serial) t=145000 sk=121
+windows (ns): request setup 1.112 hold 0.556 | return setup 0.556 hold 1.112 | inject setup 0.834 hold 1.946
+ref faults pg=1 lg=1 (sticky; raised during traffic); coverage: serial fill returns 1282, inject hits 649 (conflicts 43), LG near requests 2720
+PG_STREAM_SPLIT FAIL errors=630 window_errors=0 MUT=9
+- rtl/test/hbm_accel/generic/tb_hbm_su_pg_stream_split.sv:146: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4us; walltime 0.016 s; speed 223.544 us/s
+- Verilator: cpu 0.016 s on 1 threads; allocated 7 MB

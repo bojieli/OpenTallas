@@ -1,0 +1,214 @@
+{
+ "name": "hbm_su_pg_stream_b_1019-b2-COMMIT",
+ "block": "ot_hbm_su_static_pg_stream_split",
+ "ref_tile": true,
+ "owner": "Codex:PGSTREAM-CDC",
+ "purpose": "HBM die d4g LIGHT SU slice stream sibling: one two-root tile, banked seam inside (landed crossings)",
+ "threads": 8,
+ "peak_ram_gb": 12,
+ "source": {
+  "branch": "codex/pgstream-cdc-1019",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "tools/hbm_static/su_pg_stream_split_vl_run.sh",
+   "rtl/test/hbm_accel/generic/tb_hbm_su_pg_stream_split.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pg_stream.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pg_lg_tap.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/programme/multirate_bridge.sv",
+   "results/rtl/hbm_pgstream_cdc_r18_1019"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hbm_su_static_pg_stream_split #(.QID(1), .G(2), .READ_RETURN(18), .WRITE_RETURN(15), .STRAP(1), .FAULT_REG(1)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pg_stream_split.sv rtl/hbm_accel/generic/adapters/static_su/programme/multirate_bridge_split.sv rtl/lib/ot_rst_relay.sv rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_static_vm_bank_leaf_s.sv rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_static_vm_ports.sv rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv rtl/hdc/ot_hdc_delay.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "pgs_b_lockstep",
+    "cmd": "bash tools/hbm_static/su_pg_stream_split_vl_run.sh {RUN}/bench/m0 0 1500 1 18 15 1",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "pass",
+    "pass_regex": "PG_STREAM_SPLIT PASS checks=",
+    "min_count_regex": "checks=(\\d+)",
+    "pass_witness": "results/rtl/hbm_pgstream_cdc_r18_1019/m0/bench.log"
+   },
+   {
+    "name": "pgs_b_lockstep_rr10_regression",
+    "cmd": "bash tools/hbm_static/su_pg_stream_split_vl_run.sh {RUN}/bench/rr10 0 1500 1 10 7 1",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "pass",
+    "pass_regex": "PG_STREAM_SPLIT PASS checks=",
+    "min_count_regex": "checks=(\\d+)",
+    "pass_witness": "results/rtl/hbm_pgstream_cdc_r18_1019/rr10/bench.log"
+   },
+   {
+    "name": "pgs_b_lockstep_qid0",
+    "cmd": "bash tools/hbm_static/su_pg_stream_split_vl_run.sh {RUN}/bench/qid0 0 1500 0 18 15 1",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "pass",
+    "pass_regex": "PG_STREAM_SPLIT PASS checks=",
+    "min_count_regex": "checks=(\\d+)",
+    "pass_witness": "results/rtl/hbm_pgstream_cdc_r18_1019/qid0/bench.log"
+   },
+   {
+    "name": "pgs_b_mut12_seam_window",
+    "cmd": "bash tools/hbm_static/su_pg_stream_split_vl_run.sh {RUN}/bench/m12 12 1500 1 18 15 1",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "PG_STREAM_SPLIT FAIL errors=",
+    "fail_witness": "results/rtl/hbm_pgstream_cdc_r18_1019/m12/bench.log",
+    "why": "seam-window mutant: request bank read one stream edge early into a pre-stage (same data, same launch edge) -> setup 1q < the declared 4q seam window; window checker only"
+   },
+   {
+    "name": "pgs_b_mut14_cross_reset",
+    "cmd": "bash tools/hbm_static/su_pg_stream_split_vl_run.sh {RUN}/bench/m14 14 1500 1 18 15 1",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "PG_STREAM_SPLIT FAIL errors=",
+    "fail_witness": "results/rtl/hbm_pgstream_cdc_r18_1019/m14/bench.log",
+    "why": "serial bridge reset must not clear stream-local sticky fault publication"
+   },
+   {
+    "name": "pgs_b_mut13_fault_publish",
+    "cmd": "bash tools/hbm_static/su_pg_stream_split_vl_run.sh {RUN}/bench/m13 13 1500 1 18 15 1",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "PG_STREAM_SPLIT FAIL errors=",
+    "fail_witness": "results/rtl/hbm_pgstream_cdc_r18_1019/m13/bench.log",
+    "why": "registered fault source inverted: independent publication and exact two-stage serial capture scoreboard"
+   },
+   {
+    "name": "pgs_b_mut3",
+    "cmd": "bash tools/hbm_static/su_pg_stream_split_vl_run.sh {RUN}/bench/m3 3 1500 1 18 15 1",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "PG_STREAM_SPLIT FAIL errors=",
+    "fail_witness": "results/rtl/hbm_pgstream_cdc_r18_1019/m3/bench.log",
+    "why": "return staging removed: bank rewritten 0 ps after its read (window checker)"
+   },
+   {
+    "name": "pgs_b_mut2",
+    "cmd": "bash tools/hbm_static/su_pg_stream_split_vl_run.sh {RUN}/bench/m2 2 1500 1 18 15 1",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "PG_STREAM_SPLIT FAIL errors=",
+    "fail_witness": "results/rtl/hbm_pgstream_cdc_r18_1019/m2/bench.log",
+    "why": "stream half reads the wrong request bank"
+   },
+   {
+    "name": "pgs_b_mut8",
+    "cmd": "bash tools/hbm_static/su_pg_stream_split_vl_run.sh {RUN}/bench/m8 8 1500 1 18 15 1",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "PG_STREAM_SPLIT FAIL errors=",
+    "fail_witness": "results/rtl/hbm_pgstream_cdc_r18_1019/m8/bench.log",
+    "why": "serial half reads the wrong inject bank"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hbm_su_pg_stream_b_1019/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hbm_su_pg_stream_b_1019/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 12
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hbm_su_pg_stream_b_1019 --out {RUN}/record/views/ot_hbm_su_static_pg_stream_split  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/hbm_su_pg_stream_b_1019/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/hbm_su_pg_stream_b_1019/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/hbm_su_pg_stream_b_1019/hbm_su_pg_stream_b_1019-b2-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "HBM-PGSTREAM-B 10-19 (coordinator 07:11, HBM-SAFE-PGSTREAM option b): ONE tile = ot_hbm_su_static_pg_stream_split (pg_stream_q on clk_ctl + pg_stream_s on pg_clk) with the banked 2,346-b seam INSIDE as landed crossings, two regional roots. Replaces the abutted q/s halves (2 x 432 x 216; 2 x 2,346 seam pins; pin-legal outlines 1-3 % util; GPL-0305 under routability ON, gates 20261019-063054) and supersedes hbm_su_pg_stream_1019 (FAIL 0ff805777: cross_clock -126.9 / -479.3 ps on the 1q related default with logic in the crossing). The seam arcs are now bank -> mux -> register with calendar windows request 4q/2q, return 2q/4q, inject 3q/7q, constrained by spec seam_windows (set_max/min_delay, latency included, sign-off inter-clock reserve on top). RTL edges = TW3-PGSTREAM split (ij +1 serial, pg_fault +2 serial, given to H-D4G).",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "what": "merge of the one-root halves hbm_su_pg_stream_q/_s_1019 into one two-root tile with the banked seam inside (coordinator 07:11 option b)",
+  "why": "HBM-PGSTREAM-B 10-19 (coordinator 07:11, HBM-SAFE-PGSTREAM option b): ONE tile = ot_hbm_su_static_pg_stream_split (pg_stream_q on clk_ctl + pg_stream_s on pg_clk) with the banked 2,346-b seam INSIDE as landed crossings, two regional roots. Replaces the abutted q/s halves (2 x 432 x 216; 2 x 2,346 seam pins; pin-legal outlines 1-3 % util; GPL-0305 under routability ON, gates 20261019-063054) and supersedes hbm_su_pg_stream_1019 (FAIL 0ff805777: cross_clock -126.9 / -479.3 ps on the 1q related default with logic in the crossing). The seam arcs are now bank -> mux -> register with calendar window"
+ }
+}

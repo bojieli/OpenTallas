@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hbm_su_red_pretree_s",
+ "enable": false,
+ "reason": "Every input lands in the capture register (x1/v1/m1) at the block edge E and tree_o / fault are registers; a wrapper stage would move the fixed E+69 tree edge the compiler (su_pretree_lower PT_RED) and the reducer calendar use."
+}

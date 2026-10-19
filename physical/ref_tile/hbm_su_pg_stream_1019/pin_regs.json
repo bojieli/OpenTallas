@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hbm_su_static_pg_stream",
+ "enable": false,
+ "reason": "Every boundary bit already has its register in RTL: the multirate bridges write their serial slots straight from vmr_cmd/su_wq and drive su_rr from serial_rr registers; the LG tap registers its local/far/near inputs at the pins and its mux/output stage; the inject slots capture inj_rd/inj_addr on pg_clk. ij_*/pg_fault are decoded from those registers (timed as the related 4:3 crossing into the slice S band). Wrapper flops would add edges to the fixed VM calendar (10/7) and the slice offsets of the lockstep bench."
+}

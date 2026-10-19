@@ -1,0 +1,58 @@
+{
+  "tool": "Verilator5.050",
+  "remote": "ot-epyc7",
+  "unit": "oth-ubuntu-2882283-1792424693",
+  "exit": 0,
+  "cases": [
+    {
+      "case": "legacy",
+      "verdict": "PG_STREAM_SPLIT PASS checks=7178 windows=9228 MUT=0 RR=10/7",
+      "sha256": "23bfebf2e8b83a25a3d402803564077b6114d70bce076450ba58aa8476f34d08"
+    },
+    {
+      "case": "m0",
+      "verdict": "PG_STREAM_SPLIT PASS checks=7194 windows=9228 MUT=0 RR=18/15",
+      "sha256": "ae07f969862b07905bb177cd449e297182a0ea1b5f5e2a54a21fb96b7fd89b84"
+    },
+    {
+      "case": "rr10",
+      "verdict": "PG_STREAM_SPLIT PASS checks=7194 windows=9228 MUT=0 RR=10/7",
+      "sha256": "487841003c5a87f3cb4a0b466d25c670db686fe73bf675f9e3b2c17911ae2aa3"
+    },
+    {
+      "case": "qid0",
+      "verdict": "PG_STREAM_SPLIT PASS checks=7194 windows=9228 MUT=0 RR=18/15",
+      "sha256": "9ef21d147a5c53464e1e1a8e6b9008f360815c144a22ef08c5f5b6fe8bd8ad92"
+    },
+    {
+      "case": "m13",
+      "verdict": "PG_STREAM_SPLIT FAIL errors=3092 window_errors=0 MUT=13",
+      "sha256": "9b271315a54f031e783a43a17dddda9eada410e35bcfe5f7f1e3efb308ca6ea7"
+    },
+    {
+      "case": "m14",
+      "verdict": "PG_STREAM_SPLIT FAIL errors=8 window_errors=0 MUT=14",
+      "sha256": "aa116701b5489a10d36aa3ff9763d8fe312c820d6f4f58879c3fb069e01b26ef"
+    },
+    {
+      "case": "m12",
+      "verdict": "PG_STREAM_SPLIT FAIL errors=0 window_errors=3004 MUT=12",
+      "sha256": "23eaa34f38fd747708b2b128375f6b662daad70cfdd423bed28b725266392678"
+    },
+    {
+      "case": "m3",
+      "verdict": "PG_STREAM_SPLIT FAIL errors=0 window_errors=3008 MUT=3",
+      "sha256": "d9d17d906ca2ece60014ff377245602924673387a20b47502f9648a2f41fc42f"
+    },
+    {
+      "case": "m2",
+      "verdict": "PG_STREAM_SPLIT FAIL errors=7162 window_errors=3004 MUT=2",
+      "sha256": "a20278f1279455167f4c1f68fcb9572a2830169a5d216928be34a9eb9be04f07"
+    },
+    {
+      "case": "m8",
+      "verdict": "PG_STREAM_SPLIT FAIL errors=1924 window_errors=1904 MUT=8",
+      "sha256": "0d79f46ce940ee6b6637573998c17cada8992fe627b573bf20b1c68fd1d735eb"
+    }
+  ]
+}

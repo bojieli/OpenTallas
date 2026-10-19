@@ -1,0 +1,129 @@
+%Error: rtl/test/hbm_accel/generic/tb_hbm_su_pg_stream_regional.sv:77:7: Dotted reference to instance that refers to missing module/interface: 'ot_hbm_su_static_pg_stream_split_regional'
+   77 |   if(!dut.u_s.leaf_rst_n) pgf_source_ref<=0;
+      |       ^~~
+        ... See the manual at https://verilator.org/verilator_doc.html?v=5.050 for more assistance.
+%Error: rtl/test/hbm_accel/generic/tb_hbm_su_pg_stream_regional.sv:77:11: Can't find definition of 'u_s' in dotted scope/variable: 'dut.u_s'
+   77 |   if(!dut.u_s.leaf_rst_n) pgf_source_ref<=0;
+      |           ^~~
+        ... Known scopes under 'dut': <no instances found>
+%Error: rtl/test/hbm_accel/generic/tb_hbm_su_pg_stream_regional.sv:78:28: Dotted reference to instance that refers to missing module/interface: 'ot_hbm_su_static_pg_stream_split_regional'
+   78 |   else pgf_source_ref <= (|dut.u_s.leaf_fault)||(|dut.u_s.bridge_fault);
+      |                            ^~~
+%Error: rtl/test/hbm_accel/generic/tb_hbm_su_pg_stream_regional.sv:78:32: Can't find definition of 'u_s' in dotted scope/variable: 'dut.u_s'
+   78 |   else pgf_source_ref <= (|dut.u_s.leaf_fault)||(|dut.u_s.bridge_fault);
+      |                                ^~~
+        ... Known scopes under 'dut': <no instances found>
+%Error: rtl/test/hbm_accel/generic/tb_hbm_su_pg_stream_regional.sv:78:51: Dotted reference to instance that refers to missing module/interface: 'ot_hbm_su_static_pg_stream_split_regional'
+   78 |   else pgf_source_ref <= (|dut.u_s.leaf_fault)||(|dut.u_s.bridge_fault);
+      |                                                   ^~~
+%Error: rtl/test/hbm_accel/generic/tb_hbm_su_pg_stream_regional.sv:78:55: Can't find definition of 'u_s' in dotted scope/variable: 'dut.u_s'
+   78 |   else pgf_source_ref <= (|dut.u_s.leaf_fault)||(|dut.u_s.bridge_fault);
+      |                                                       ^~~
+        ... Known scopes under 'dut': <no instances found>
+%Error: rtl/test/hbm_accel/generic/tb_hbm_su_pg_stream_regional.sv:136:12: Dotted reference to instance that refers to missing module/interface: 'ot_hbm_su_static_pg_stream_split_regional'
+  136 |  always @({dut.rq_b0,dut.wq_b0}) wchg(0,0);
+      |            ^~~
+%Error: rtl/test/hbm_accel/generic/tb_hbm_su_pg_stream_regional.sv:136:16: Can't find definition of 'rq_b0' in dotted variable/method: 'dut.rq_b0'
+  136 |  always @({dut.rq_b0,dut.wq_b0}) wchg(0,0);
+      |                ^~~~~
+%Error: rtl/test/hbm_accel/generic/tb_hbm_su_pg_stream_regional.sv:136:22: Dotted reference to instance that refers to missing module/interface: 'ot_hbm_su_static_pg_stream_split_regional'
+  136 |  always @({dut.rq_b0,dut.wq_b0}) wchg(0,0);
+      |                      ^~~
+%Error: rtl/test/hbm_accel/generic/tb_hbm_su_pg_stream_regional.sv:136:26: Can't find definition of 'wq_b0' in dotted variable/method: 'dut.wq_b0'
+  136 |  always @({dut.rq_b0,dut.wq_b0}) wchg(0,0);
+      |                          ^~~~~
+%Error: rtl/test/hbm_accel/generic/tb_hbm_su_pg_stream_regional.sv:137:12: Dotted reference to instance that refers to missing module/interface: 'ot_hbm_su_static_pg_stream_split_regional'
+  137 |  always @({dut.rq_b1,dut.wq_b1}) wchg(0,1);
+      |            ^~~
+%Error: rtl/test/hbm_accel/generic/tb_hbm_su_pg_stream_regional.sv:137:16: Can't find definition of 'rq_b1' in dotted variable/method: 'dut.rq_b1'
+  137 |  always @({dut.rq_b1,dut.wq_b1}) wchg(0,1);
+      |                ^~~~~
+%Error: rtl/test/hbm_accel/generic/tb_hbm_su_pg_stream_regional.sv:137:22: Dotted reference to instance that refers to missing module/interface: 'ot_hbm_su_static_pg_stream_split_regional'
+  137 |  always @({dut.rq_b1,dut.wq_b1}) wchg(0,1);
+      |                      ^~~
+%Error: rtl/test/hbm_accel/generic/tb_hbm_su_pg_stream_regional.sv:137:26: Can't find definition of 'wq_b1' in dotted variable/method: 'dut.wq_b1'
+  137 |  always @({dut.rq_b1,dut.wq_b1}) wchg(0,1);
+      |                          ^~~~~
+%Error: rtl/test/hbm_accel/generic/tb_hbm_su_pg_stream_regional.sv:138:11: Dotted reference to instance that refers to missing module/interface: 'ot_hbm_su_static_pg_stream_split_regional'
+  138 |  always @(dut.rr_b0) wchg(1,0);
+      |           ^~~
+%Error: rtl/test/hbm_accel/generic/tb_hbm_su_pg_stream_regional.sv:138:15: Can't find definition of 'rr_b0' in dotted variable/method: 'dut.rr_b0'
+  138 |  always @(dut.rr_b0) wchg(1,0);
+      |               ^~~~~
+%Error: rtl/test/hbm_accel/generic/tb_hbm_su_pg_stream_regional.sv:139:11: Dotted reference to instance that refers to missing module/interface: 'ot_hbm_su_static_pg_stream_split_regional'
+  139 |  always @(dut.rr_b1) wchg(1,1);
+      |           ^~~
+%Error: rtl/test/hbm_accel/generic/tb_hbm_su_pg_stream_regional.sv:139:15: Can't find definition of 'rr_b1' in dotted variable/method: 'dut.rr_b1'
+  139 |  always @(dut.rr_b1) wchg(1,1);
+      |               ^~~~~
+%Error: rtl/test/hbm_accel/generic/tb_hbm_su_pg_stream_regional.sv:140:11: Dotted reference to instance that refers to missing module/interface: 'ot_hbm_su_static_pg_stream_split_regional'
+  140 |  always @(dut.ijb0) wchg(2,0);
+      |           ^~~
+%Error: rtl/test/hbm_accel/generic/tb_hbm_su_pg_stream_regional.sv:140:15: Can't find definition of 'ijb0' in dotted variable/method: 'dut.ijb0'
+  140 |  always @(dut.ijb0) wchg(2,0);
+      |               ^~~~
+%Error: rtl/test/hbm_accel/generic/tb_hbm_su_pg_stream_regional.sv:141:11: Dotted reference to instance that refers to missing module/interface: 'ot_hbm_su_static_pg_stream_split_regional'
+  141 |  always @(dut.ijb1) wchg(2,1);
+      |           ^~~
+%Error: rtl/test/hbm_accel/generic/tb_hbm_su_pg_stream_regional.sv:141:15: Can't find definition of 'ijb1' in dotted variable/method: 'dut.ijb1'
+  141 |  always @(dut.ijb1) wchg(2,1);
+      |               ^~~~
+%Error: rtl/test/hbm_accel/generic/tb_hbm_su_pg_stream_regional.sv:142:11: Dotted reference to instance that refers to missing module/interface: 'ot_hbm_su_static_pg_stream_split_regional'
+  142 |  always @(dut.ijb2) wchg(2,2);
+      |           ^~~
+%Error: rtl/test/hbm_accel/generic/tb_hbm_su_pg_stream_regional.sv:142:15: Can't find definition of 'ijb2' in dotted variable/method: 'dut.ijb2'
+  142 |  always @(dut.ijb2) wchg(2,2);
+      |               ^~~~
+%Error: rtl/test/hbm_accel/generic/tb_hbm_su_pg_stream_regional.sv:143:37: Dotted reference to instance that refers to missing module/interface: 'ot_hbm_su_static_pg_stream_split_regional'
+  143 |  always @(posedge pg_clk) if(chk && dut.u_s.g_leaf[0].u_bs.rd_v) wrd(0, dut.u_s.g_leaf[0].u_bs.rd_b);
+      |                                     ^~~
+%Error: rtl/test/hbm_accel/generic/tb_hbm_su_pg_stream_regional.sv:143:41: Can't find definition of 'u_s' in dotted scope/variable: 'dut.u_s'
+  143 |  always @(posedge pg_clk) if(chk && dut.u_s.g_leaf[0].u_bs.rd_v) wrd(0, dut.u_s.g_leaf[0].u_bs.rd_b);
+      |                                         ^~~
+        ... Known scopes under 'dut': <no instances found>
+%Error: rtl/test/hbm_accel/generic/tb_hbm_su_pg_stream_regional.sv:143:45: Can't find definition of 'g_leaf' in dotted scope/variable: 'dut.g_leaf'
+  143 |  always @(posedge pg_clk) if(chk && dut.u_s.g_leaf[0].u_bs.rd_v) wrd(0, dut.u_s.g_leaf[0].u_bs.rd_b);
+      |                                             ^~~~~~
+        ... Known scopes under 'dut': <no instances found>
+%Error: rtl/test/hbm_accel/generic/tb_hbm_su_pg_stream_regional.sv:143:55: Can't find definition of 'u_bs' in dotted scope/variable: 'dut__BRA__??__KET__.u_bs'
+  143 |  always @(posedge pg_clk) if(chk && dut.u_s.g_leaf[0].u_bs.rd_v) wrd(0, dut.u_s.g_leaf[0].u_bs.rd_b);
+      |                                                       ^~~~
+        ... Known scopes under 'dut[??]': <no instances found>
+%Error: rtl/test/hbm_accel/generic/tb_hbm_su_pg_stream_regional.sv:143:73: Dotted reference to instance that refers to missing module/interface: 'ot_hbm_su_static_pg_stream_split_regional'
+  143 |  always @(posedge pg_clk) if(chk && dut.u_s.g_leaf[0].u_bs.rd_v) wrd(0, dut.u_s.g_leaf[0].u_bs.rd_b);
+      |                                                                         ^~~
+%Error: rtl/test/hbm_accel/generic/tb_hbm_su_pg_stream_regional.sv:143:77: Can't find definition of 'u_s' in dotted scope/variable: 'dut.u_s'
+  143 |  always @(posedge pg_clk) if(chk && dut.u_s.g_leaf[0].u_bs.rd_v) wrd(0, dut.u_s.g_leaf[0].u_bs.rd_b);
+      |                                                                             ^~~
+        ... Known scopes under 'dut': <no instances found>
+%Error: rtl/test/hbm_accel/generic/tb_hbm_su_pg_stream_regional.sv:143:81: Can't find definition of 'g_leaf' in dotted scope/variable: 'dut.g_leaf'
+  143 |  always @(posedge pg_clk) if(chk && dut.u_s.g_leaf[0].u_bs.rd_v) wrd(0, dut.u_s.g_leaf[0].u_bs.rd_b);
+      |                                                                                 ^~~~~~
+        ... Known scopes under 'dut': <no instances found>
+%Error: rtl/test/hbm_accel/generic/tb_hbm_su_pg_stream_regional.sv:143:91: Can't find definition of 'u_bs' in dotted scope/variable: 'dut__BRA__??__KET__.u_bs'
+  143 |  always @(posedge pg_clk) if(chk && dut.u_s.g_leaf[0].u_bs.rd_v) wrd(0, dut.u_s.g_leaf[0].u_bs.rd_b);
+      |                                                                                           ^~~~
+        ... Known scopes under 'dut[??]': <no instances found>
+%Error: rtl/test/hbm_accel/generic/tb_hbm_su_pg_stream_regional.sv:145:10: Dotted reference to instance that refers to missing module/interface: 'ot_hbm_su_static_pg_stream_split_regional'
+  145 |   wrd(1, dut.u_q.g_br[0].u_bq.rsel);
+      |          ^~~
+%Error: rtl/test/hbm_accel/generic/tb_hbm_su_pg_stream_regional.sv:145:14: Can't find definition of 'u_q' in dotted scope/variable: 'dut.u_q'
+  145 |   wrd(1, dut.u_q.g_br[0].u_bq.rsel);
+      |              ^~~
+        ... Known scopes under 'dut': <no instances found>
+%Error: rtl/test/hbm_accel/generic/tb_hbm_su_pg_stream_regional.sv:145:18: Can't find definition of 'g_br' in dotted scope/variable: 'dut.g_br'
+  145 |   wrd(1, dut.u_q.g_br[0].u_bq.rsel);
+      |                  ^~~~
+        ... Known scopes under 'dut': <no instances found>
+%Error: rtl/test/hbm_accel/generic/tb_hbm_su_pg_stream_regional.sv:145:26: Can't find definition of 'u_bq' in dotted scope/variable: 'dut__BRA__??__KET__.u_bq'
+  145 |   wrd(1, dut.u_q.g_br[0].u_bq.rsel);
+      |                          ^~~~
+        ... Known scopes under 'dut[??]': <no instances found>
+%Error: rtl/test/hbm_accel/generic/tb_hbm_su_pg_stream_regional.sv:146:10: Dotted reference to instance that refers to missing module/interface: 'ot_hbm_su_static_pg_stream_split_regional'
+  146 |   wrd(2, dut.u_q.ib);
+      |          ^~~
+%Error: rtl/test/hbm_accel/generic/tb_hbm_su_pg_stream_regional.sv:146:14: Can't find definition of 'u_q' in dotted scope/variable: 'dut.u_q'
+  146 |   wrd(2, dut.u_q.ib);
+      |              ^~~
+        ... Known scopes under 'dut': <no instances found>
+%Error: Exiting due to 38 error(s)

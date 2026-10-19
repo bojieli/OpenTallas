@@ -22,7 +22,13 @@
 // FAULT: write-conflict and drain-check faults report one edge later (computed on registered inputs); reducer unchanged.
 // MUT (bench, must FAIL): 256 = an extra read stage (reads k+4); 16/32/64/128 as the hub.
 // ---------------------------------------------------------------------------------------------------------------------
-module ot_hbm_su_static_qcore_r5 #(parameter integer MUT=0,COLLPORT=1,RF_LOCAL=1)(
+// PRETREE (HH-6 / HBM-SURED 2026-10-18; default 0 = unchanged): slice_t = the four pgslices' pre-tree outputs
+//   (ot_hbm_su_red_pretree_s); ot_hbm_su_red_pretree_j joins them (pin register + 3 node levels) into the quarter's
+//   128-word csum8 subtree. A reducer command with osel=1, red_cmd[5]=1, red_cmd[6]=0 takes that subtree as its external
+//   operand (rc_x) -- issued at E+PT_RED for the block whose tree_cmd was at E (PT_RED 69 at LAT 6, bench-measured);
+//   ops 0 LOAD / 1 ADD_EXT / 3 MAX_EXT as for a lane operand. FAULT: an operand taken while the subtree is not valid,
+//   a join adder error. MUT 512: tree operand taken one edge late; 1024: join pairing (s0+s2),(s1+s3).
+module ot_hbm_su_static_qcore_r5 #(parameter integer MUT=0,COLLPORT=1,RF_LOCAL=1,PRETREE=0)(
  input wire clk_ctl,rst_n,
  input wire [6*9-1:0] rf_rd_cmd,
  input wire [73:0] red_cmd,
@@ -38,6 +44,7 @@ module ot_hbm_su_static_qcore_r5 #(parameter integer MUT=0,COLLPORT=1,RF_LOCAL=1
  input wire [4:0] rr_wa,
  input wire [255:0] rr_wd,
  input wire [31:0] sfu_x,
+ input wire [4*67-1:0] slice_t,        // PRETREE: {max, vB, xB, vA, xA} per slice
  output reg fault
 );
  wire rf_drain_now=rf_drain_cmd[1]&&(rf_drain_cmd[0]||MUT==16);
@@ -99,14 +106,34 @@ module ot_hbm_su_static_qcore_r5 #(parameter integer MUT=0,COLLPORT=1,RF_LOCAL=1
  reg c5_lead_q; always @(posedge clk_ctl or negedge rst_n) if(!rst_n) c5_lead_q<=1'b0; else c5_lead_q<=c5_lead;
  wire dbad=(drain_p&&!c5_lead_q)||(cmd_p[5*9+8]&&cmd_p[5*9+:3]!=3'd0);
  reg rc_v; reg [2:0] rc_op; reg [9:0] rc_a,rc_b,rc_d; reg [31:0] rc_tag,rc_x;
- reg [1:0] e_sl; reg e_os,e_sfu; reg [72:8] e_f;
- always @(posedge clk_ctl)begin e_sl<=red_cmd[5:4];e_os<=red_cmd[7];e_sfu<=(COLLPORT!=0)&&red_cmd[6]&&(MUT!=64);e_f<=red_cmd[72:8];end
+ reg [1:0] e_sl; reg e_os,e_sfu,e_tr; reg [72:8] e_f;
+ always @(posedge clk_ctl)begin e_sl<=red_cmd[5:4];e_os<=red_cmd[7];e_sfu<=(COLLPORT!=0)&&red_cmd[6]&&(MUT!=64);e_f<=red_cmd[72:8];
+  e_tr<=(PRETREE!=0)&&red_cmd[7]&&red_cmd[5]&&!red_cmd[6];end
+ // ---------------------------------------------------------------- PRETREE join (quarter 128-word subtree)
+ wire pt_v,pt_max,pt_fault; wire [31:0] pt_x;
+ if(PRETREE!=0)begin:g_pretree
+  wire jv,jm; wire [31:0] jx;
+  ot_hbm_su_red_pretree_j #(.LAT(6),.MUT((MUT==1024)?2:0)) u_ptj(.clk(clk_ctl),.rst_n(rst_n),.slice_t(slice_t),.tree_v(jv),.tree_x(jx),
+   .tree_max(jm),.fault(pt_fault));
+  if(MUT==512)begin:g_mut_late
+   reg lv,lm; reg [31:0] lx; always @(posedge clk_ctl)begin lv<=jv;lm<=jm;lx<=jx;end
+   assign pt_v=lv; assign pt_max=lm; assign pt_x=lx;
+  end else begin:g_on_time
+   assign pt_v=jv; assign pt_max=jm; assign pt_x=jx;
+  end
+ end else begin:g_no_pretree
+  assign pt_v=1'b0; assign pt_max=1'b0; assign pt_x=32'd0; assign pt_fault=1'b0;
+ end
  reg e_v;
  always @(posedge clk_ctl or negedge rst_n)if(!rst_n)e_v<=1'b0; else e_v<=red_cmd[73];
  always @(posedge clk_ctl or negedge rst_n)if(!rst_n)rc_v<=1'b0; else rc_v<=e_v;
+ // tree operand checks (sampled with rc_x): subtree valid, and its mode matches the op (MAX_EXT <-> max tree)
+ reg pt_bad; always @(posedge clk_ctl or negedge rst_n) if(!rst_n) pt_bad<=1'b0;
+  else pt_bad<=e_v&&e_tr&&(!pt_v||(e_f[72:70]==3'd1&&pt_max)||(e_f[72:70]==3'd3&&!pt_max)||
+                (e_f[72:70]!=3'd0&&e_f[72:70]!=3'd1&&e_f[72:70]!=3'd3));
  always @(posedge clk_ctl)begin
   rc_op<=e_f[72:70];rc_a<=e_f[69:60];rc_b<=e_f[59:50];rc_d<=e_f[49:40];rc_tag<=e_f[39:8];
-  rc_x<=e_os?(e_sfu?sfu_x:rf_word[4]):slice_x[e_sl*32+:32];
+  rc_x<=e_os?(e_tr?pt_x:e_sfu?sfu_x:rf_word[4]):slice_x[e_sl*32+:32];
  end
  wire red_fault;
  ot_hbm_su_reduce_static #(.AW(10)) u_red(.clk(clk_ctl),.rst_n(rst_n),.cmd_valid(rc_v),.cmd_op(rc_op),.cmd_a(rc_a),
@@ -114,6 +141,6 @@ module ot_hbm_su_static_qcore_r5 #(parameter integer MUT=0,COLLPORT=1,RF_LOCAL=1
   .scalar_fp32(red_x),.scalar_bf16(),.fault(red_fault));
  assign red_rf_v=red_sv&&(red_tag[8]||MUT==32);
  always @(posedge clk_ctl or negedge rst_n)
-  if(!rst_n)fault<=1'b0; else if((|rf_wconf)||dbad||red_fault)fault<=1'b1;
+  if(!rst_n)fault<=1'b0; else if((|rf_wconf)||dbad||red_fault||pt_fault||pt_bad)fault<=1'b1;
 endmodule
 `default_nettype wire

@@ -1,0 +1,152 @@
+{
+ "top": "ot_hbm_su_static_pgslice_rgf",
+ "sources": [
+  "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice_rgf.sv"
+ ],
+ "child_sources": [
+  "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_pgrg_parts.sv",
+  "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_kind0_lat4_leaf1_physical.sv",
+  "rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_bank6_clock_physical.sv"
+ ],
+ "defines": [
+  "OT_HARD_CHILDREN",
+  "OT_SU_SYNC_RST"
+ ],
+ "params": {},
+ "out_dir": "rtl/hbm_accel/generic/adapters/static_su/top/lp",
+ "record_dir": "results/rtl/tw_hbm_pglg_1019/lp",
+ "clock_ports": [
+  "ck"
+ ],
+ "clock_pins": [
+  "clk_stage_0",
+  "clk_stage_1",
+  "clk_stage_2",
+  "clk_stage_3",
+  "clk_stage_4",
+  "clk_stage_5",
+  "clk_stage_6",
+  "clk_stage_7",
+  "clk_insert_0",
+  "clk_insert_1",
+  "clk_insert_2",
+  "clk_insert_3",
+  "clk",
+  "clk_rd",
+  "clk_ws",
+  "clk_macro0",
+  "clk_macro1",
+  "clk_macro2",
+  "clk_macro3",
+  "clk_macro4",
+  "clk_macro5",
+  "ck"
+ ],
+ "reset_port": "rst_n",
+ "reset_pins": [
+  "rst_n"
+ ],
+ "reset_region": "s",
+ "regions": [
+  {
+   "name": "s",
+   "insts": [
+    "u_sin",
+    "u_sout"
+   ],
+   "centre": [
+    617.76,
+    1533.6000000000001
+   ]
+  },
+  {
+   "name": "r0",
+   "insts": [
+    "u_rg0",
+    "u_ln_r0_*",
+    "u_bk_r0_*"
+   ],
+   "centre": [
+    617.76,
+    388.8
+   ]
+  },
+  {
+   "name": "r1",
+   "insts": [
+    "u_rg1",
+    "u_ln_r1_*",
+    "u_bk_r1_*",
+    "u_rly1",
+    "u_rlyb1",
+    "u_dly1"
+   ],
+   "centre": [
+    617.76,
+    1080.0
+   ]
+  },
+  {
+   "name": "r2",
+   "insts": [
+    "u_rg2",
+    "u_ln_r2_*",
+    "u_bk_r2_*",
+    "u_rly2",
+    "u_rlyb2",
+    "u_dly2"
+   ],
+   "centre": [
+    617.76,
+    1987.2000000000003
+   ]
+  },
+  {
+   "name": "r3",
+   "insts": [
+    "u_rg3",
+    "u_ln_r3_*",
+    "u_bk_r3_*"
+   ],
+   "centre": [
+    617.76,
+    2678.4
+   ]
+  }
+ ],
+ "port_regions": {
+  "control": "s",
+  "vmr_cmd": "s",
+  "vmw_cmd": "s",
+  "rf_bword": "s",
+  "rf_bcmd": "s",
+  "rf_dsec": "s",
+  "red_sel": "s",
+  "tree_cmd": "s",
+  "dw_v": "s",
+  "dw_row": "s",
+  "dw_d": "s",
+  "su_rr": "s",
+  "ij_v": "s",
+  "ij_row": "s",
+  "ij_bad": "s",
+  "pg_fault": "s"
+ },
+ "static": [
+  "pos",
+  "pos_r0",
+  "pos_r1",
+  "pos_r2",
+  "pos_r3"
+ ],
+ "D": 2,
+ "E": 1,
+ "reach_um": 405,
+ "mut_child": "u_sout",
+ "bench": {
+  "cycles": 1500,
+  "reset_cycles": 8,
+  "sim": "verilator"
+ },
+ "why": "TW-HBM-PGLG 10-19: LIGHT SU slice region form (landed-regions-standard-1018). D 2 / E 1: per-seam cut D x W <= 0.5 of the vertical tracks (results/rtl/tw_hbm_pglg_1019/region_plan.json); outer regions chained through inner-region relays (seam-to-seam hops <= 405 um plan reach x 1111/833)"
+}

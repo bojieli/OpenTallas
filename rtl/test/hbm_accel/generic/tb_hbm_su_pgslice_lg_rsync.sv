@@ -42,7 +42,7 @@ module tb_hbm_su_pgslice_lg_rsync;
   .RSYNC(RS),.RSYNC_MUT(RM)) NAME( \
   .pg_clk(pclk),.clk_lane({256{sclk}}),.clk_insert({128{sclk}}),.rst_lane_n({32{por}}),.clk_bcast({4{sclk}}), \
   .rst_bcast_n({4{por}}),.clk_bank({32{sclk}}),.clk_bank_macro({192{sclk}}),.clk_ctl(sclk),.clk_side({6{sclk}}), \
-  .rst_n(por),.bridge_rst_n(brst),.control(control),.vmr_cmd(vmr),.vmw_cmd(vmw),.rf_bword(rfw),.rf_bcmd(rfc), \
+  .rst_n(por),.pos({2'd2,2'd0}),.bridge_rst_n(brst),.control(control),.vmr_cmd(vmr),.vmw_cmd(vmw),.rf_bword(rfw),.rf_bcmd(rfc), \
   .rf_dsec(rfd),.red_sel(rsel),.slice_x(NAME``_sx),.inj_rd(injrd),.inj_addr(inja),.inj_q(NAME``_iq),.dw_v(dwv), \
   .dw_row(dwr),.dw_d(dwd),.fault(NAME``_f),.lg_rq(NAME``_rq),.lg_wq(NAME``_wq),.lg_rr(lgrr),.lg_w_done(lgwd), \
   .lg_read(lgr),.lg_write(lgw),.far_rq(farrq),.far_wq(farwq),.far_rr(NAME``_frr),.far_w_done(NAME``_fwd), \

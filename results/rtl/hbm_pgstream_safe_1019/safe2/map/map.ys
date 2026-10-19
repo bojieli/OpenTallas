@@ -1,0 +1,18 @@
+read_verilog -sv -defer -D SYNTHESIS rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pg_stream_split.sv rtl/hbm_accel/generic/adapters/static_su/programme/multirate_bridge_split.sv rtl/lib/ot_rst_relay.sv rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_static_vm_bank_leaf_s.sv rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_static_vm_ports.sv rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv rtl/hdc/ot_hdc_delay.sv rtl/hbm_accel/generic/adapters/static_su/programme/multirate_bridge_regional.sv rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pg_stream_safe2.sv
+hierarchy -check -top ot_hbm_su_static_pg_stream_split_safe2 -chparam QID 1 -chparam G 2 -chparam READ_RETURN 18 -chparam WRITE_RETURN 15 -chparam STRAP 1 -chparam FAULT_REG 1
+synth -top ot_hbm_su_static_pg_stream_split_safe2 -flatten
+read_liberty -lib -ignore_miss_func /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib
+read_liberty -lib -ignore_miss_func /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib
+read_liberty -lib -ignore_miss_func /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib
+read_liberty -lib -ignore_miss_func /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty -lib -ignore_miss_func /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib
+dfflibmap -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+abc -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib -D 833
+clean
+write_json /srv/opentallas-scratch/claude/lh-pgvm-pgsafe/map_165fb/hier_mapped.json
+setattr -mod -unset keep_hierarchy
+flatten
+check -assert
+stat -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib
+write_json /srv/opentallas-scratch/claude/lh-pgvm-pgsafe/map_165fb/mapped.json
+write_verilog -noattr -noexpr /srv/opentallas-scratch/claude/lh-pgvm-pgsafe/map_165fb/mapped.v

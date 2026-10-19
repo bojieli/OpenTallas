@@ -55,7 +55,7 @@ module tb_hbm_su_collport #(parameter integer QID=1, INJ_RET=11, SD=0, MUT_CX=0,
    .LEAF(1),.MUT(MUT_PG),.MULTIRATE(1),.COLLPORT(1)) u_slice(
    .pg_clk(clk_s),.clk_lane({256{clk_q}}),.clk_insert({128{clk_q}}),.rst_lane_n({32{rst}}),.clk_bcast({4{clk_q}}),
    .rst_bcast_n({4{rst}}),.clk_bank({32{clk_q}}),.clk_bank_macro({192{clk_q}}),.clk_ctl(clk_q),.clk_side({6{clk_q}}),
-   .rst_n(rst),.bridge_rst_n(rst),.control(1742'd0),.vmr_cmd(60'd0),.vmw_cmd(vmw_cmd[78*g+:78]),
+   .rst_n(rst),.pos({2'(QID),2'(g)}),.bridge_rst_n(rst),.control(1742'd0),.vmr_cmd(60'd0),.vmw_cmd(vmw_cmd[78*g+:78]),
    .rf_bword(rf_bword),.rf_bcmd(rf_bcmd),.rf_dsec(rf_dsec),.red_sel(red_sel),.slice_x(slice_x[32*g+:32]),
    .lg_rq(),.lg_wq(),.lg_rr(514'd0),.lg_w_done(2'd0),.fault(sl_fault[g]),
    .inj_rd(inj_rd),.inj_addr(inj_addr),.inj_q(inj_q[1024*g+:1024]),

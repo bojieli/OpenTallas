@@ -1,0 +1,283 @@
+{
+ "name": "hbm_su_pg_stream_q_1019",
+ "top": "ot_hbm_su_static_pg_stream_q",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pg_stream_split.sv",
+  "rtl/hbm_accel/generic/adapters/static_su/programme/multirate_bridge_split.sv",
+  "rtl/lib/ot_rst_relay.sv"
+ ],
+ "params": {
+  "READ_RETURN": 10,
+  "WRITE_RETURN": 7
+ },
+ "clock_port": "clk_ctl",
+ "reset_ports": [
+  "rst_n",
+  "bridge_rst_n"
+ ],
+ "reset_landing": {
+  "enable": true,
+  "stages": 3,
+  "why": "3 serial stages = one 3:4 epoch (12q): the bridge / inject slot counters release on the same epoch-aligned edge relative to the stream half (4 pg_clk stages); reset release +1 epoch (H-D4G)"
+ },
+ "outline": {
+  "w": 432.0,
+  "h": 216.0,
+  "exact": true
+ },
+ "std_area_um2": 1153,
+ "layer_cap": "M5",
+ "signal_max_layer": "M5",
+ "pg_layer": "M5",
+ "recipe": 4,
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "pins": {
+  "N": [
+   "vmr_cmd",
+   "su_wq",
+   "su_rr",
+   "ij_v",
+   "ij_row",
+   "ij_bad",
+   "pg_fault"
+  ],
+  "S": [
+   "rc_leaf",
+   "rc_tap",
+   "rq_b0",
+   "wq_b0",
+   "rr_b0",
+   "ijb0",
+   "ijb1",
+   "ijb2",
+   "pgf_s",
+   "rr_b1",
+   "wq_b1",
+   "rq_b1"
+  ],
+  "W": [
+   "clk_ctl",
+   "rst_n",
+   "bridge_rst_n"
+  ]
+ },
+ "pin_ranges": {
+  "rc_leaf": [
+   4.0,
+   4.355
+  ],
+  "rc_tap": [
+   4.955,
+   5.311
+  ],
+  "rq_b0": [
+   5.911,
+   11.952
+  ],
+  "wq_b0": [
+   12.552,
+   112.416
+  ],
+  "rr_b0": [
+   113.016,
+   204.35
+  ],
+  "ijb0": [
+   204.95,
+   212.235
+  ],
+  "ijb1": [
+   212.835,
+   220.12
+  ],
+  "ijb2": [
+   220.72,
+   228.006
+  ],
+  "pgf_s": [
+   228.606,
+   228.961
+  ],
+  "rr_b1": [
+   229.561,
+   320.895
+  ],
+  "wq_b1": [
+   321.495,
+   421.358
+  ],
+  "rq_b1": [
+   421.958,
+   428.0
+  ],
+  "vmr_cmd": [
+   4.0,
+   25.193
+  ],
+  "su_wq": [
+   26.393,
+   224.903
+  ],
+  "su_rr": [
+   226.103,
+   407.658
+  ],
+  "ij_v": [
+   408.858,
+   410.271
+  ],
+  "ij_row": [
+   411.471,
+   424.187
+  ],
+  "ij_bad": [
+   425.387,
+   426.094
+  ],
+  "pg_fault": [
+   427.294,
+   428.0
+  ],
+  "clk_ctl": [
+   105.0,
+   106.333
+  ],
+  "rst_n": [
+   107.0,
+   108.333
+  ],
+  "bridge_rst_n": [
+   109.0,
+   110.333
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 12,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_h": "M4",
+  "pin_v": "M3 M5",
+  "pin_balance": {
+   "h": "M4",
+   "v": "M3 M5",
+   "group_max": 1
+  },
+  "io_hold_margin_ns": 0.03
+ },
+ "fill_reason": {
+  "pin_bound": "S seam 2,346 b (2 banks per bridge bit, banked 3:4 windows) needs >= 391 um of face at <= 6/um -> 432 wide; <= 2:1 -> 216 tall; 3,527 pins vs 1,153 um2 synthesized: a 40-60 % outline (~48 x 48) holds <= 1,150 pins. Pin-bound, waived (HBM-SAFE-PGSTREAM)"
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": false,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "hold_budget": "die",
+ "pin_regs": {
+  "enable": false,
+  "reason": "Every boundary bit has its register in RTL: request/return/inject banks are written straight from the pins / seam and read by a mux into a register (serial_rr, stream launch, ijq); every output is a register (ij banks, launch, tap) or the synchroniser / sticky-fault OR. A wrapper stage would move the fixed 3:4 seam calendar (windows 2q..7q) and the VM 10/7 calendar."
+ },
+ "structural_change": "TW3-PGSTREAM 10-19 (coordinator 10-19): hbm_su_pg_stream_1019 (two-root 4:3 leaf, gate FAIL committed 0ff805777: cross_clock TT setup -126.9 ps bridge rr_slot -> serial_rr, -479.3 ps sq -> ij register; a 3:4 crossing with logic cannot close inside one leaf, related-clock STA times it at the 1q VCO tick less the 150 ps distinct-entry reserve) split into ONE-ROOT halves pg_stream_q (clk_ctl) + pg_stream_s (pg_clk) over a 2,346-b banked seam: bridges = 2-bank request/return seams (request bank n mod 2 written at serial n, read at the old stream launch edge; return banks read one serial edge early into a staging register), inject = 3 decode banks (stream slots 0/1/3) read by a serial register, resets = the old synchronisers cut between their source and pg_clk stages, pg fault = 2-flop synchroniser. Lockstep vs the current pg_stream (tb_hbm_su_pg_stream_split, Verilator 5.050): PASS checks=7178 at RR 10/7, 18/15 and QID 0; seam windows measured request 4q/2q, return 2q/4q, inject 3q/7q; edges unchanged except ij +1 serial and pg_fault +2 serial (H-D4G). Mutants 1/2/3/6/8/9 FAIL (3 = staging removed: functionally equal, caught by the window checker). q (serial, x8 LIGHT slices) 432 x 216: N slice S band 1,178 b, S seam 2,346 b (M3/M5), W clock/resets.",
+ "job": {
+  "owner": "Claude:HBM-SAFE-PGSTREAM",
+  "branch": "claude/hbm-safe-pgstream-1019",
+  "tag": "p2",
+  "purpose": "HBM die d4g LIGHT SU slice stream sibling, one-root half: ot_hbm_su_static_pg_stream_q",
+  "record_to": "results/rtl/ref_tile/hbm_su_pg_stream_q_1019",
+  "views_to": "physical/ref_tile/hbm_su_pg_stream_q_1019/views",
+  "auto_merge": false,
+  "reroute_reason": {
+   "kind": "rtl_change",
+   "what": "one-root split of hbm_su_pg_stream_1019 (gate FAIL 0ff805777); safe re-shape 2:1 rotated pair (5:1 / GPL-0305 / routability-off squeeze)",
+   "why": "TW3-PGSTREAM 10-19 (coordinator 10-19): hbm_su_pg_stream_1019 (two-root 4:3 leaf, gate FAIL committed 0ff805777: cross_clock TT setup -126.9 ps bridge rr_slot -> serial_rr, -479.3 ps sq -> ij register; a 3:4 crossing with logic cannot close inside one leaf, related-clock STA times it at the 1q VCO tick less the 150 ps distinct-entry reserve) split into ONE-ROOT halves pg_stream_q (clk_ctl) + pg_stream_s (pg_clk) over a 2,346-b banked seam: bridges = 2-bank request/return seams (request bank n mod 2 written at serial n, read at the old stream launch edge; return banks read one serial edge early"
+  },
+  "extra_paths": [
+   "tools/hbm_static/su_pg_stream_split_vl_run.sh",
+   "rtl/test/hbm_accel/generic/tb_hbm_su_pg_stream_split.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pg_stream.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pg_lg_tap.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/programme/multirate_bridge.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_static_vm_bank_leaf_s.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_static_vm_ports.sv",
+   "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv",
+   "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "results/rtl/tw3_pgstream_1019"
+  ],
+  "benches": [
+   {
+    "name": "pgs_split_lockstep",
+    "cmd": "bash tools/hbm_static/su_pg_stream_split_vl_run.sh {RUN}/bench/m0 0 1500 1 10 7",
+    "expect": "pass",
+    "pass_regex": "PG_STREAM_SPLIT PASS checks=",
+    "min_count_regex": "checks=(\\d+)",
+    "pass_witness": "results/rtl/tw3_pgstream_1019/m0/bench.log",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "pgs_split_lockstep_rt18",
+    "cmd": "bash tools/hbm_static/su_pg_stream_split_vl_run.sh {RUN}/bench/rt18 0 1500 1 18 15",
+    "expect": "pass",
+    "pass_regex": "PG_STREAM_SPLIT PASS checks=",
+    "min_count_regex": "checks=(\\d+)",
+    "pass_witness": "results/rtl/tw3_pgstream_1019/rt18/bench.log",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "pgs_split_mut3",
+    "cmd": "bash tools/hbm_static/su_pg_stream_split_vl_run.sh {RUN}/bench/m3 3 1500 1 10 7",
+    "expect": "fail",
+    "fail_regex": "PG_STREAM_SPLIT FAIL errors=",
+    "fail_witness": "results/rtl/tw3_pgstream_1019/m3/bench.log",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "why": "return staging removed: bank rewritten 0 ps after its read (seam window checker)"
+   },
+   {
+    "name": "pgs_split_mut2",
+    "cmd": "bash tools/hbm_static/su_pg_stream_split_vl_run.sh {RUN}/bench/m2 2 1500 1 10 7",
+    "expect": "fail",
+    "fail_regex": "PG_STREAM_SPLIT FAIL errors=",
+    "fail_witness": "results/rtl/tw3_pgstream_1019/m2/bench.log",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "why": "stream half reads the wrong request bank"
+   },
+   {
+    "name": "pgs_split_mut8",
+    "cmd": "bash tools/hbm_static/su_pg_stream_split_vl_run.sh {RUN}/bench/m8 8 1500 1 10 7",
+    "expect": "fail",
+    "fail_regex": "PG_STREAM_SPLIT FAIL errors=",
+    "fail_witness": "results/rtl/tw3_pgstream_1019/m8/bench.log",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "why": "serial half reads the wrong inject bank"
+   }
+  ]
+ }
+}
