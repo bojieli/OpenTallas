@@ -40,6 +40,10 @@ module banked_app_case #(parameter SVG=1,PREL=1,W=SVG?135:173,XW=SVG?46:5,TW=62+
  @(negedge clk);cfg_we=0;idle(8);
  run(1024,1031,1,XW'(43));run(2044,2048,3,{XW{1'b1}});run(1022,1027,5,XW'(64'h2d35ac78e19b));run(0,2048,1,XW'(64'h136b9d725ae3));
  reset();run(1023,1025,4,XW'(43));reset();
+ // Actual protected-word fault transition, sticky state and reset clearing.
+ @(negedge clk);cfg_we=1;cfg_addr=1024;cfg_data=word(1024);cfg_data[255]=~cfg_data[255];
+ @(negedge clk);cfg_we=0;idle(8);run(1024,1025,1,XW'(43));
+ if(!ofault||!nfault)$fatal(1,"APP_FAIL fault witness missing");reset();
  $display("BANKED_APP_PROFILE_PASS SVG=%0d PREL=%0d checked=%0d completed=%0d",SVG,PREL,checked,completed);finished=1;end
 endmodule
 module tb_banked_apps;
