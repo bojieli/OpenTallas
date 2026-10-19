@@ -2008,6 +2008,7 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
         *([f"CLOCK_RLAYERS={shq(' '.join(clock_rlayers(lc)))}"] if clock_rlayers(lc) else []),
         f"KIT=/src/{kd}", f"MACROS=({' '.join(views)})", f"EXTRA=({shell_array(extra)})", *pin_balance_env(r, lc),
         *([f"export OT_PIN_GROUP_MAX={pin_group_max(s)}"] if "pin_group_max" in r else []),
+        *pin_order_desc_env(s),
         *cts_sink_env(r), *([f"RECIPE={int(s['recipe'])}"] if s.get("recipe", 1) >= 2 else []), ""])
 
 
@@ -2075,6 +2076,24 @@ def cts_sink_env(r: dict) -> list:
         raise SpecError("spec: route.cts_sink: empty (no size / diameter_um and no extra)")
     base = ('-sink_clustering_enable ' if clus else '') + '-repair_clock_nets -delay_buffer_derate 0.75'
     return [f"CTSA={shq(base + sz + (' ' + extra if extra else ''))}"]
+
+
+def pin_order_desc_env(s: dict) -> list:
+    """optional "pin_order_desc": [port, ...] (HCRING 10-19): these ranged bus ports are laid out high bit first from the
+    range's low end (run_abi3_physical OT_PIN_ORDER_DESC).  For a face that abuts a neighbour placed R180 (or MX / MY
+    across that face): mirror the port's range AND list it here, so bit i meets bit i (HC ring e0 S -> b5, b7 -> b0 S).
+    Needs route.pin_balance: PPL chunked groups (route default OT_PIN_GROUP_MAX 32) do not keep chunk order, so no
+    bit order across a face is defined without it."""
+    d = s.get("pin_order_desc") or []
+    if not d:
+        return []
+    rng = s.get("pin_ranges") or {}
+    bad = [n for n in d if n not in rng or not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", n)]
+    if bad:
+        raise SpecError(f"spec: pin_order_desc {bad}: each entry must be a port with its own pin_ranges entry")
+    if not s.get("route", {}).get("pin_balance"):
+        raise SpecError("spec: pin_order_desc needs route.pin_balance (an ordered bit layout across the face)")
+    return [f"export OT_PIN_ORDER_DESC={shq(' '.join(d))}"]
 
 
 def pin_balance_env(r: dict, lc: dict | None = None) -> list:
