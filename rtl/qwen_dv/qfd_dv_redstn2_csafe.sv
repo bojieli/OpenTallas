@@ -235,7 +235,7 @@ always @(posedge ck or negedge sr_reset[10])
         end
     wire vlo_in = plo & klast_lo, vhi_in = phi & klast_hi;
     wire [511:0] ylo, yhi;
-    wire [15:0] vlol, vhil; wire[31:0] vlo_rep,vhi_rep; wire[31:0] vlo_rep,vhi_rep; wire[31:0] vlo_rep,vhi_rep; wire[31:0] vlo_rep,vhi_rep;
+    wire [15:0] vlol, vhil; wire[31:0] vlo_rep,vhi_rep;
     wire [31:0] elo, ehi;
     genvar l;
     generate for (l = 0; l < 16; l = l + 1) begin : g_l7

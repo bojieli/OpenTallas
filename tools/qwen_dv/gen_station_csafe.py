@@ -15,7 +15,7 @@ s=s.replace('ot_hdc_fp32_add_lat #','qfd_dv_station_add_lat #')
 for name,prefix in [('vlol','vlo'),('vhil','vhi'),('v8l','v8'),('v9l','v9')]:
  s=s.replace(f'wire [15:0] {name};',f'wire [15:0] {name}; wire[31:0] {prefix}_rep;')
  # The declaration of L7 lists two signals in one statement.
- s=s.replace('wire [15:0] vlol, vhil;', 'wire [15:0] vlol, vhil; wire[31:0] vlo_rep,vhi_rep;')
+ s=s.replace('wire [15:0] vlol, vhil;', 'wire [15:0] vlol, vhil; wire[31:0] vlo_rep,vhi_rep;',1) if 'wire[31:0] vlo_rep,vhi_rep;' not in s else s
  s=s.replace(f'.valid_out({name}[l]))',f'.valid_rep({prefix}_rep[2*l+:2]), .valid_out({name}[l]))')
 # Each 16-bit selection uses a separately retained state driver.
 a=s.index('    wire [511:0] y7 =');b=s.index(';',a)+1
