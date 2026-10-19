@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.token_compose_xdie.v1.index",
- "generated_from": "1e4c81449",
+ "generated_from": "ef4ed3044",
  "tool": "tools/token_compose_xdie.py",
  "clock_hz": 1200000000.0,
  "formula": "T_token = sum_l n_l C_die(l) + sum_l n_l sum_x max(0, E_meas(x) - O_meas(l,x)); tok/s = f_clk / T (MTP: per accepted token = step / tau)",
@@ -90,65 +90,143 @@
    "commit": "1e4c81449"
   }
  },
- "records_seen": [],
+ "records_seen": [
+  {
+   "record": "results/rtl/hbm_ds_layer_tput_1018/record.json",
+   "family": "pass",
+   "used": false,
+   "n_terms": 0,
+   "why": "no measured layer term yet: SW slice build pending (sw2); the composition keeps the priced terms"
+  },
+  {
+   "record": "results/rtl/hbm_qwen_layer_tput_1018/record.json",
+   "family": "pass",
+   "used": false,
+   "n_terms": 0,
+   "why": "no token_compose block (record not yet in the override format)"
+  },
+  {
+   "record": "results/rtl/qwen_layer_tput_1013/record.json",
+   "family": "pass",
+   "used": false,
+   "n_terms": 0,
+   "why": "no token_compose block (record not yet in the override format)"
+  },
+  {
+   "record": "results/rtl/qwen_layer_tput_1018/record.json",
+   "family": "pass",
+   "used": false,
+   "n_terms": 0,
+   "why": "LAYERBENCH-QWEN 10-18: no term is measured on CURRENT die RTL yet (the die slices only reached reset/idle/programme-load smoke, which fails at die gaps G-C1/G-C2/G-C3); base terms keep their grades."
+  },
+  {
+   "record": "results/rtl/s81_layer_tput_1013/record.json",
+   "family": "pass",
+   "used": false,
+   "n_terms": 0,
+   "why": "no token_compose block (record not yet in the override format)"
+  },
+  {
+   "record": "results/rtl/s81_layer_tput_1018/record.json",
+   "family": "pass",
+   "used": false,
+   "n_terms": 0,
+   "why": "no term measured yet: no representative layer has run bit-exact on p4l RTL (blocked on die gaps G1/G2/G3 in slice_bench/gaps.json, compiler lowering gaps in compiler/summary.json). Grades stay at the priced p4l values."
+  },
+  {
+   "record": "results/rtl/xdie_hbm_1018/record.json",
+   "family": "xdie",
+   "used": false,
+   "n_terms": 0,
+   "why": "no token_compose block (record not yet in the override format)"
+  },
+  {
+   "record": "results/rtl/xdie_qtp8_1018/record.json",
+   "family": "xdie",
+   "used": false,
+   "n_terms": 0,
+   "why": "no token_compose block (record not yet in the override format)"
+  },
+  {
+   "record": "results/rtl/xdie_qwen_1018/pair_r1/record.json",
+   "family": "xdie",
+   "used": true,
+   "n_terms": 2,
+   "why": null
+  },
+  {
+   "record": "results/rtl/xdie_qwen_1018/record.json",
+   "family": "xdie",
+   "used": false,
+   "n_terms": 0,
+   "why": "no token_compose block (record not yet in the override format)"
+  },
+  {
+   "record": "results/rtl/xdie_s81_1018/record.json",
+   "family": "xdie",
+   "used": true,
+   "n_terms": 527,
+   "why": null
+  }
+ ],
  "designs": {
   "ds_rom": {
    "ar": {
     "title": "DeepSeek-V4.1 ROM, S81 array (p4l DV die), 1M context, AR",
-    "tok_s": 1365.7,
-    "T_token_cycles": 878670.3,
-    "per_accepted_cycles": 878670.3,
+    "tok_s": 1243.0,
+    "T_token_cycles": 965378.6,
+    "per_accepted_cycles": 965378.6,
     "tau": null,
-    "pct_measured_current_rtl": 0.0,
-    "banner": "0.0% of token cycles measured on current RTL (80.3% on older RTL, 14.0% modelled PHY, 5.7% priced)",
+    "pct_measured_current_rtl": 10.34,
+    "banner": "10.3% of token cycles measured on current RTL (61.4% on older RTL, 17.9% modelled PHY, 10.4% priced)",
     "by_grade": {
-     "measured-current-RTL": 0,
-     "measured-old-RTL": 705675.2,
-     "modelled-PHY": 123191.2,
-     "priced": 49803.9
+     "measured-current-RTL": 99813.0,
+     "measured-old-RTL": 592268.7,
+     "modelled-PHY": 172975.0,
+     "priced": 100321.9
     },
     "price_of_record": {
      "tok_s": 1365.7,
      "cycles": 878670.3,
      "source": "results/arch/s81_dv_1016/p4l/price_land.json dv_base.ar"
     },
-    "vs_price_pct": -0.0
+    "vs_price_pct": -8.98
    },
    "mtp": {
     "title": "DeepSeek-V4.1 ROM, S81 array (p4l DV die), 1M context, MTP (DSpark, tau 4.159)",
-    "tok_s": 4045.4,
-    "T_token_cycles": 1233697.5,
-    "per_accepted_cycles": 296633.2,
+    "tok_s": 3806.2,
+    "T_token_cycles": 1311215.8,
+    "per_accepted_cycles": 315271.9,
     "tau": 4.159,
-    "pct_measured_current_rtl": 0.0,
-    "banner": "0.0% of token cycles measured on current RTL (84.1% on older RTL, 10.9% modelled PHY, 4.9% priced)",
+    "pct_measured_current_rtl": 8.12,
+    "banner": "8.1% of token cycles measured on current RTL (68.8% on older RTL, 14.3% modelled PHY, 8.7% priced)",
     "by_grade": {
-     "measured-current-RTL": 0,
-     "measured-old-RTL": 1038127.0,
-     "modelled-PHY": 134991.1,
-     "priced": 60579.4
+     "measured-current-RTL": 106512.0,
+     "measured-old-RTL": 902298.8,
+     "modelled-PHY": 187823.6,
+     "priced": 114581.4
     },
     "price_of_record": {
      "tok_s": 4045.4,
      "cycles": 1233697.5,
      "source": "results/arch/s81_dv_1016/p4l/price_land.json dv_base.mtp"
     },
-    "vs_price_pct": 0.0
+    "vs_price_pct": -5.91
    }
   },
   "qwen_rom": {
    "ar": {
     "title": "Qwen3-8B ROM (compute dies + KV die + D2D), 8K context, AR",
-    "tok_s": 4767.1,
-    "T_token_cycles": 251723.0,
-    "per_accepted_cycles": 251723.0,
+    "tok_s": 4769.2,
+    "T_token_cycles": 251615.0,
+    "per_accepted_cycles": 251615.0,
     "tau": null,
-    "pct_measured_current_rtl": 0.0,
-    "banner": "0.0% of token cycles measured on current RTL (99.3% on older RTL, 0.0% modelled PHY, 0.7% priced)",
+    "pct_measured_current_rtl": 0.74,
+    "banner": "0.7% of token cycles measured on current RTL (98.5% on older RTL, 0.1% modelled PHY, 0.7% priced)",
     "by_grade": {
-     "measured-current-RTL": 0,
-     "measured-old-RTL": 250083.0,
-     "modelled-PHY": 0,
+     "measured-current-RTL": 1872.0,
+     "measured-old-RTL": 247743.0,
+     "modelled-PHY": 360.0,
      "priced": 1640.0
     },
     "price_of_record": {
@@ -156,7 +234,7 @@
      "cycles": 249431.0,
      "source": "results/rtl/qwen_layer_tput_1013/record.json end_to_end.base_cycles (6,835-cycle production layer)"
     },
-    "vs_price_pct": -0.91
+    "vs_price_pct": -0.87
    },
    "mtp": {
     "available": false,

@@ -94,9 +94,12 @@ on claude/xdie-hbm-1018.
 
 ## Override records (how the grades rise)
 
-By default the tool reads `results/rtl/*_layer_tput_1018/record.json` and `results/rtl/xdie_*_1018/record.json`, or
-the files given with `--pass-records` / `--xdie-records`. A record that carries a `token_compose` block replaces base
-terms by slot:
+By default the tool reads EVERY record by discovery, with no path list (`--list-records` prints them):
+every `results/rtl/*_layer_tput_*/**/*.json` (TOKEN-PASS, LAYERBENCH, LB2 per-layer layer-bench records) and every
+`results/rtl/xdie_*/**/*.json` (TOKEN-XDIE, e.g. `xdie_qwen_1018/pair_r1/record.json`) that carries a `token_compose`
+block, each family's top-level `record.json` (listed even without a block), and any committed `results/**/*.json` with
+a block. `--pass-records` / `--xdie-records` replace discovery with exactly the given files (what-ifs). A record that
+carries a `token_compose` block replaces base terms by slot:
 
 ```json
 {"token_compose": {"terms": [
@@ -107,7 +110,11 @@ terms by slot:
    "O_source": "dv2f14 compiler schedule issue cycles"}]}}
 ```
 
-- A term gives either `cycles` (a layer term) or `E` parts plus `O` and `O_source` (an exchange). `n` defaults to
+- A term gives either `cycles` (a layer term) or `E` parts plus O_meas (an exchange). O_meas is never assumed: give
+  `O` with a non-empty `O_source` naming the compiler schedule / calendar it was read from, or
+  `"O_ref": {"record": "<path, repo- or record-relative; omit = this record>", "pointer": "a.b.0.c"}`. An exchange
+  term without either is rejected (listed under `records_seen[].rejected`) and the base term is kept.
+- Two records that replace the same slot are reported in `overrides_used[].replaces_override_from` (the later path wins). `n` defaults to
   the multiplicity of the slot it replaces.
 - Slots are listed in `<design>.json` `terms[].slot`, for example `L14.die`, `L2.xdie.96x512 index TOPK_MERGE`,
   `Lc.xdie.tp_allreduce`, `L0.xdie.L0.attn.out_allreduce`.
