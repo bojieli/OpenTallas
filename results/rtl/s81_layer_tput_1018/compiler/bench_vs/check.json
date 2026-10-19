@@ -7,18 +7,17 @@
   "L2",
   "L20"
  ],
- "pass": true,
- "vehicle": "real ot_s81sl_vp + ot_s81sl_vs + ot_s81sl_vsw + dsfd_su_t_rxsf/_rxsb + ot_s81sl_vq (one beat leaf); CTL beats driven as ot_s81sl_xr does (target 0 / 5) at the calendar edges lower_vs.py emits; operands + expected = layer fixtures TP4 rank 0 (manifests results/rtl/s81_layer_tput_1018/fixtures/<L>.sha256.json)",
+ "vehicle": "real ot_s81sl_vp + ot_s81sl_vs (SW wr, TOK-S81-GAPS/VS) + ot_s81sl_vsw + dsfd_su_t_rxsf/_rxsb + ot_s81sl_vq (one beat leaf); CTL beats driven as ot_s81sl_xr does (target 0 / 5) at the calendar edges lower_vs.py emits; operands + expected = layer fixtures TP4 rank 0",
  "verilator": "Verilator 5.050 2026-07-01 rev v5.050",
- "host": "ot-epyc5 (ot-run, out3)",
+ "host": "ot-epyc5 (ot-run, /srv/opentallas-scratch/claude/tok-s81-gaps/vs)",
  "run": "tools/s81_dv/layer_prog/vs/run_vs_bench.sh",
- "generator": "tools/s81_dv/layer_prog/vs/gen_vs_bench.py (L0 sched results/rtl/s81_layer_tput_1018/compiler/prog_L0_s0S/schedule.json; L2/L14/L20 sched = dv_layer_compile output)",
+ "generator": "tools/s81_dv/layer_prog/vs/gen_vs_bench.py --die-src G8 tree (bind_p4l3_g8 + p4l3 land plan); sched = dv_layer_compile --fixtures output per layer on the G8 tree (claude/tok-s81-vs-1018)",
  "ops_proven": [
-  "attn.q_rope (QR, golden cos/sin rows: PARTIAL)",
+  "attn.q_rope (QR; cos/sin rows = lowered target-5 beats of the token position, checked == golden rope_cs)",
   "attn.z_quant (QB -> vq)",
   "ffn.softplus_sqrt (RA)",
   "ffn.bias (RB + target-5 bias rows)",
-  "ffn.swiglu + route_w + quant2 (SW with the fixture weight -> vq: PARTIAL)",
+  "ffn.swiglu + route_w + quant2 (SW wr: routing weight from the gunit router weights rows R+1/R+2 in the leaf store, -> vq)",
   "ffn.shared_swiglu + shared_quant (SW w = 1.0 -> vq)"
  ],
  "measured_cycles": {
@@ -26,804 +25,134 @@
   "QB_8": 19,
   "RA_6": 147,
   "RB_6": 25,
-  "SW_16": 191
+  "SW_16": 191,
+  "SW_16_wr": 195
+ },
+ "slice_bench": {
+  "run": "tools/s81_slice/vs_bench.sh <out> <MUT> L0",
+  "logs": "results/rtl/s81_slice_1017/vs/bench/m{0..6,9}_L0.run.log",
+  "verdict": "MUT 0 PASS (SW incl. 7 wr commands: 6 slots + 16-group wsel 5 with poisoned immediates, xq=3); MUT 1..6 and 9 (wr w1 from word wsel^1) FAIL"
  },
  "vectors": [
+  {
+   "vec": "m0_L0_s_0S_k0",
+   "layer": "L0",
+   "slice": "u_s_0S",
+   "leaf": 0,
+   "summary": "SLVSL sid=0 k=0 cmds=5 rowwrites=24 checked_pairs=20 xq=2/2 errors=0 slot_overruns=0 missed=0 fault=vp0/vs0/vq0",
+   "vsop": [
+    "VSOP op=12 cmd=616 cycles_cmd_to_last_result=57 slot=57",
+    "VSOP op=9 cmd=4250 cycles_cmd_to_last_result=19 slot=19",
+    "VSOP op=10 cmd=8360 cycles_cmd_to_last_result=147 slot=147",
+    "VSOP op=11 cmd=8968 cycles_cmd_to_last_result=25 slot=25",
+    "VSOP op=8 cmd=10544 cycles_cmd_to_last_result=195 slot=195"
+   ],
+   "log": "results/rtl/s81_layer_tput_1018/compiler/bench_vs/m0_L0_s_0S_k0.run.log",
+   "pass": true
+  },
+  {
+   "vec": "m0_L0_s_5N_k0",
+   "layer": "L0",
+   "slice": "u_s_5N",
+   "leaf": 0,
+   "summary": "SLVSL sid=11 k=0 cmds=3 rowwrites=6 checked_pairs=12 xq=1/1 errors=0 slot_overruns=0 missed=0 fault=vp0/vs0/vq0",
+   "vsop": [
+    "VSOP op=10 cmd=600 cycles_cmd_to_last_result=147 slot=147",
+    "VSOP op=11 cmd=1208 cycles_cmd_to_last_result=25 slot=25",
+    "VSOP op=8 cmd=1267 cycles_cmd_to_last_result=191 slot=191"
+   ],
+   "log": "results/rtl/s81_layer_tput_1018/compiler/bench_vs/m0_L0_s_5N_k0.run.log",
+   "pass": true
+  },
   {
    "vec": "m0_L14_s_0S_k0",
    "layer": "L14",
    "slice": "u_s_0S",
-   "sid": 0,
    "leaf": 0,
-   "G": 0,
-   "pass": true,
-   "summary": "SLVSL sid=0 k=0 cmds=5 rowwrites=6 checked_pairs=20 xq=2/2 errors=0 slot_overruns=0 missed=0 fault=vp0/vs0/vq0",
+   "summary": "SLVSL sid=0 k=0 cmds=5 rowwrites=24 checked_pairs=20 xq=2/2 errors=0 slot_overruns=0 missed=0 fault=vp0/vs0/vq0",
    "vsop": [
-    "VSOP op=12 cmd=600 cycles_cmd_to_last_result=57 slot=57",
-    "VSOP op=9 cmd=11693 cycles_cmd_to_last_result=19 slot=19",
-    "VSOP op=10 cmd=15777 cycles_cmd_to_last_result=147 slot=147",
-    "VSOP op=11 cmd=16385 cycles_cmd_to_last_result=25 slot=25",
-    "VSOP op=8 cmd=18495 cycles_cmd_to_last_result=191 slot=191"
+    "VSOP op=12 cmd=616 cycles_cmd_to_last_result=57 slot=57",
+    "VSOP op=9 cmd=11737 cycles_cmd_to_last_result=19 slot=19",
+    "VSOP op=10 cmd=15847 cycles_cmd_to_last_result=147 slot=147",
+    "VSOP op=11 cmd=16455 cycles_cmd_to_last_result=25 slot=25",
+    "VSOP op=8 cmd=18582 cycles_cmd_to_last_result=195 slot=195"
    ],
-   "ops": [
-    {
-     "op": "attn.q_rope",
-     "calendar_issue": 6991,
-     "bench_edge": 600,
-     "target": 0
-    },
-    {
-     "op": "attn.z_quant",
-     "calendar_issue": 18084,
-     "bench_edge": 11693,
-     "target": 0
-    },
-    {
-     "op": "ffn.softplus_sqrt",
-     "calendar_issue": 22168,
-     "bench_edge": 15777,
-     "target": 0
-    },
-    {
-     "op": "ffn.bias",
-     "calendar_issue": 22770,
-     "bench_edge": 16379,
-     "target": 5
-    },
-    {
-     "op": "ffn.bias",
-     "calendar_issue": 22771,
-     "bench_edge": 16380,
-     "target": 5
-    },
-    {
-     "op": "ffn.bias",
-     "calendar_issue": 22772,
-     "bench_edge": 16381,
-     "target": 5
-    },
-    {
-     "op": "ffn.bias",
-     "calendar_issue": 22773,
-     "bench_edge": 16382,
-     "target": 5
-    },
-    {
-     "op": "ffn.bias",
-     "calendar_issue": 22774,
-     "bench_edge": 16383,
-     "target": 5
-    },
-    {
-     "op": "ffn.bias",
-     "calendar_issue": 22775,
-     "bench_edge": 16384,
-     "target": 5
-    },
-    {
-     "op": "ffn.bias",
-     "calendar_issue": 22776,
-     "bench_edge": 16385,
-     "target": 0
-    },
-    {
-     "op": "ffn.swiglu",
-     "calendar_issue": 24886,
-     "bench_edge": 18495,
-     "target": 0
-    }
-   ],
-   "checks": [
-    {
-     "op": "attn.q_rope",
-     "base": 544,
-     "rows": 16
-    },
-    {
-     "op": "ffn.softplus_sqrt",
-     "base": 578,
-     "rows": 2
-    },
-    {
-     "op": "ffn.bias",
-     "base": 592,
-     "rows": 6
-    },
-    {
-     "op": "ffn.swiglu",
-     "base": 632,
-     "rows": 16
-    }
-   ],
-   "xq": 2,
-   "log": "results/rtl/s81_layer_tput_1018/compiler/bench_vs/m0_L14_s_0S_k0.run.log"
+   "log": "results/rtl/s81_layer_tput_1018/compiler/bench_vs/m0_L14_s_0S_k0.run.log",
+   "pass": true
   },
   {
    "vec": "m0_L14_s_5N_k0",
    "layer": "L14",
    "slice": "u_s_5N",
-   "sid": 11,
    "leaf": 0,
-   "G": 55,
-   "pass": true,
    "summary": "SLVSL sid=11 k=0 cmds=3 rowwrites=6 checked_pairs=12 xq=1/1 errors=0 slot_overruns=0 missed=0 fault=vp0/vs0/vq0",
    "vsop": [
     "VSOP op=10 cmd=600 cycles_cmd_to_last_result=147 slot=147",
     "VSOP op=11 cmd=1208 cycles_cmd_to_last_result=25 slot=25",
-    "VSOP op=8 cmd=1260 cycles_cmd_to_last_result=191 slot=191"
+    "VSOP op=8 cmd=1267 cycles_cmd_to_last_result=191 slot=191"
    ],
-   "ops": [
-    {
-     "op": "ffn.softplus_sqrt",
-     "calendar_issue": 22168,
-     "bench_edge": 600,
-     "target": 0
-    },
-    {
-     "op": "ffn.bias",
-     "calendar_issue": 22770,
-     "bench_edge": 1202,
-     "target": 5
-    },
-    {
-     "op": "ffn.bias",
-     "calendar_issue": 22771,
-     "bench_edge": 1203,
-     "target": 5
-    },
-    {
-     "op": "ffn.bias",
-     "calendar_issue": 22772,
-     "bench_edge": 1204,
-     "target": 5
-    },
-    {
-     "op": "ffn.bias",
-     "calendar_issue": 22773,
-     "bench_edge": 1205,
-     "target": 5
-    },
-    {
-     "op": "ffn.bias",
-     "calendar_issue": 22774,
-     "bench_edge": 1206,
-     "target": 5
-    },
-    {
-     "op": "ffn.bias",
-     "calendar_issue": 22775,
-     "bench_edge": 1207,
-     "target": 5
-    },
-    {
-     "op": "ffn.bias",
-     "calendar_issue": 22776,
-     "bench_edge": 1208,
-     "target": 0
-    },
-    {
-     "op": "ffn.shared_swiglu",
-     "calendar_issue": 22828,
-     "bench_edge": 1260,
-     "target": 0
-    }
-   ],
-   "checks": [
-    {
-     "op": "ffn.softplus_sqrt",
-     "base": 578,
-     "rows": 2
-    },
-    {
-     "op": "ffn.bias",
-     "base": 592,
-     "rows": 6
-    },
-    {
-     "op": "ffn.shared_swiglu",
-     "base": 632,
-     "rows": 16
-    }
-   ],
-   "xq": 1,
-   "log": "results/rtl/s81_layer_tput_1018/compiler/bench_vs/m0_L14_s_5N_k0.run.log"
+   "log": "results/rtl/s81_layer_tput_1018/compiler/bench_vs/m0_L14_s_5N_k0.run.log",
+   "pass": true
   },
   {
    "vec": "m0_L20_s_0S_k0",
    "layer": "L20",
    "slice": "u_s_0S",
-   "sid": 0,
    "leaf": 0,
-   "G": 0,
-   "pass": true,
-   "summary": "SLVSL sid=0 k=0 cmds=5 rowwrites=6 checked_pairs=20 xq=2/2 errors=0 slot_overruns=0 missed=0 fault=vp0/vs0/vq0",
+   "summary": "SLVSL sid=0 k=0 cmds=5 rowwrites=24 checked_pairs=20 xq=2/2 errors=0 slot_overruns=0 missed=0 fault=vp0/vs0/vq0",
    "vsop": [
-    "VSOP op=12 cmd=600 cycles_cmd_to_last_result=57 slot=57",
-    "VSOP op=9 cmd=16739 cycles_cmd_to_last_result=19 slot=19",
-    "VSOP op=10 cmd=20824 cycles_cmd_to_last_result=147 slot=147",
-    "VSOP op=11 cmd=21431 cycles_cmd_to_last_result=25 slot=25",
-    "VSOP op=8 cmd=23589 cycles_cmd_to_last_result=191 slot=191"
+    "VSOP op=12 cmd=616 cycles_cmd_to_last_result=57 slot=57",
+    "VSOP op=9 cmd=16783 cycles_cmd_to_last_result=19 slot=19",
+    "VSOP op=10 cmd=20894 cycles_cmd_to_last_result=147 slot=147",
+    "VSOP op=11 cmd=21501 cycles_cmd_to_last_result=25 slot=25",
+    "VSOP op=8 cmd=23690 cycles_cmd_to_last_result=195 slot=195"
    ],
-   "ops": [
-    {
-     "op": "attn.q_rope",
-     "calendar_issue": 4732,
-     "bench_edge": 600,
-     "target": 0
-    },
-    {
-     "op": "attn.z_quant",
-     "calendar_issue": 20871,
-     "bench_edge": 16739,
-     "target": 0
-    },
-    {
-     "op": "ffn.softplus_sqrt",
-     "calendar_issue": 24956,
-     "bench_edge": 20824,
-     "target": 0
-    },
-    {
-     "op": "ffn.bias",
-     "calendar_issue": 25557,
-     "bench_edge": 21425,
-     "target": 5
-    },
-    {
-     "op": "ffn.bias",
-     "calendar_issue": 25558,
-     "bench_edge": 21426,
-     "target": 5
-    },
-    {
-     "op": "ffn.bias",
-     "calendar_issue": 25559,
-     "bench_edge": 21427,
-     "target": 5
-    },
-    {
-     "op": "ffn.bias",
-     "calendar_issue": 25560,
-     "bench_edge": 21428,
-     "target": 5
-    },
-    {
-     "op": "ffn.bias",
-     "calendar_issue": 25561,
-     "bench_edge": 21429,
-     "target": 5
-    },
-    {
-     "op": "ffn.bias",
-     "calendar_issue": 25562,
-     "bench_edge": 21430,
-     "target": 5
-    },
-    {
-     "op": "ffn.bias",
-     "calendar_issue": 25563,
-     "bench_edge": 21431,
-     "target": 0
-    },
-    {
-     "op": "ffn.swiglu",
-     "calendar_issue": 27721,
-     "bench_edge": 23589,
-     "target": 0
-    }
-   ],
-   "checks": [
-    {
-     "op": "attn.q_rope",
-     "base": 544,
-     "rows": 16
-    },
-    {
-     "op": "ffn.softplus_sqrt",
-     "base": 578,
-     "rows": 2
-    },
-    {
-     "op": "ffn.bias",
-     "base": 592,
-     "rows": 6
-    },
-    {
-     "op": "ffn.swiglu",
-     "base": 632,
-     "rows": 16
-    }
-   ],
-   "xq": 2,
-   "log": "results/rtl/s81_layer_tput_1018/compiler/bench_vs/m0_L20_s_0S_k0.run.log"
+   "log": "results/rtl/s81_layer_tput_1018/compiler/bench_vs/m0_L20_s_0S_k0.run.log",
+   "pass": true
   },
   {
    "vec": "m0_L20_s_5N_k0",
    "layer": "L20",
    "slice": "u_s_5N",
-   "sid": 11,
    "leaf": 0,
-   "G": 55,
-   "pass": true,
    "summary": "SLVSL sid=11 k=0 cmds=3 rowwrites=6 checked_pairs=12 xq=1/1 errors=0 slot_overruns=0 missed=0 fault=vp0/vs0/vq0",
    "vsop": [
     "VSOP op=10 cmd=600 cycles_cmd_to_last_result=147 slot=147",
     "VSOP op=11 cmd=1207 cycles_cmd_to_last_result=25 slot=25",
-    "VSOP op=8 cmd=1260 cycles_cmd_to_last_result=191 slot=191"
+    "VSOP op=8 cmd=1267 cycles_cmd_to_last_result=191 slot=191"
    ],
-   "ops": [
-    {
-     "op": "ffn.softplus_sqrt",
-     "calendar_issue": 24956,
-     "bench_edge": 600,
-     "target": 0
-    },
-    {
-     "op": "ffn.bias",
-     "calendar_issue": 25557,
-     "bench_edge": 1201,
-     "target": 5
-    },
-    {
-     "op": "ffn.bias",
-     "calendar_issue": 25558,
-     "bench_edge": 1202,
-     "target": 5
-    },
-    {
-     "op": "ffn.bias",
-     "calendar_issue": 25559,
-     "bench_edge": 1203,
-     "target": 5
-    },
-    {
-     "op": "ffn.bias",
-     "calendar_issue": 25560,
-     "bench_edge": 1204,
-     "target": 5
-    },
-    {
-     "op": "ffn.bias",
-     "calendar_issue": 25561,
-     "bench_edge": 1205,
-     "target": 5
-    },
-    {
-     "op": "ffn.bias",
-     "calendar_issue": 25562,
-     "bench_edge": 1206,
-     "target": 5
-    },
-    {
-     "op": "ffn.bias",
-     "calendar_issue": 25563,
-     "bench_edge": 1207,
-     "target": 0
-    },
-    {
-     "op": "ffn.shared_swiglu",
-     "calendar_issue": 25616,
-     "bench_edge": 1260,
-     "target": 0
-    }
-   ],
-   "checks": [
-    {
-     "op": "ffn.softplus_sqrt",
-     "base": 578,
-     "rows": 2
-    },
-    {
-     "op": "ffn.bias",
-     "base": 592,
-     "rows": 6
-    },
-    {
-     "op": "ffn.shared_swiglu",
-     "base": 632,
-     "rows": 16
-    }
-   ],
-   "xq": 1,
-   "log": "results/rtl/s81_layer_tput_1018/compiler/bench_vs/m0_L20_s_5N_k0.run.log"
+   "log": "results/rtl/s81_layer_tput_1018/compiler/bench_vs/m0_L20_s_5N_k0.run.log",
+   "pass": true
   },
   {
    "vec": "m0_L2_s_0S_k0",
    "layer": "L2",
    "slice": "u_s_0S",
-   "sid": 0,
    "leaf": 0,
-   "G": 0,
-   "pass": true,
-   "summary": "SLVSL sid=0 k=0 cmds=5 rowwrites=6 checked_pairs=20 xq=2/2 errors=0 slot_overruns=0 missed=0 fault=vp0/vs0/vq0",
+   "summary": "SLVSL sid=0 k=0 cmds=5 rowwrites=24 checked_pairs=20 xq=2/2 errors=0 slot_overruns=0 missed=0 fault=vp0/vs0/vq0",
    "vsop": [
-    "VSOP op=12 cmd=600 cycles_cmd_to_last_result=57 slot=57",
-    "VSOP op=9 cmd=11694 cycles_cmd_to_last_result=19 slot=19",
-    "VSOP op=10 cmd=16852 cycles_cmd_to_last_result=147 slot=147",
-    "VSOP op=11 cmd=17460 cycles_cmd_to_last_result=25 slot=25",
-    "VSOP op=8 cmd=19570 cycles_cmd_to_last_result=191 slot=191"
+    "VSOP op=12 cmd=616 cycles_cmd_to_last_result=57 slot=57",
+    "VSOP op=9 cmd=11738 cycles_cmd_to_last_result=19 slot=19",
+    "VSOP op=10 cmd=16928 cycles_cmd_to_last_result=147 slot=147",
+    "VSOP op=11 cmd=17536 cycles_cmd_to_last_result=25 slot=25",
+    "VSOP op=8 cmd=19663 cycles_cmd_to_last_result=195 slot=195"
    ],
-   "ops": [
-    {
-     "op": "attn.q_rope",
-     "calendar_issue": 5991,
-     "bench_edge": 600,
-     "target": 0
-    },
-    {
-     "op": "attn.z_quant",
-     "calendar_issue": 17085,
-     "bench_edge": 11694,
-     "target": 0
-    },
-    {
-     "op": "ffn.softplus_sqrt",
-     "calendar_issue": 22243,
-     "bench_edge": 16852,
-     "target": 0
-    },
-    {
-     "op": "ffn.bias",
-     "calendar_issue": 22845,
-     "bench_edge": 17454,
-     "target": 5
-    },
-    {
-     "op": "ffn.bias",
-     "calendar_issue": 22846,
-     "bench_edge": 17455,
-     "target": 5
-    },
-    {
-     "op": "ffn.bias",
-     "calendar_issue": 22847,
-     "bench_edge": 17456,
-     "target": 5
-    },
-    {
-     "op": "ffn.bias",
-     "calendar_issue": 22848,
-     "bench_edge": 17457,
-     "target": 5
-    },
-    {
-     "op": "ffn.bias",
-     "calendar_issue": 22849,
-     "bench_edge": 17458,
-     "target": 5
-    },
-    {
-     "op": "ffn.bias",
-     "calendar_issue": 22850,
-     "bench_edge": 17459,
-     "target": 5
-    },
-    {
-     "op": "ffn.bias",
-     "calendar_issue": 22851,
-     "bench_edge": 17460,
-     "target": 0
-    },
-    {
-     "op": "ffn.swiglu",
-     "calendar_issue": 24961,
-     "bench_edge": 19570,
-     "target": 0
-    }
-   ],
-   "checks": [
-    {
-     "op": "attn.q_rope",
-     "base": 544,
-     "rows": 16
-    },
-    {
-     "op": "ffn.softplus_sqrt",
-     "base": 578,
-     "rows": 2
-    },
-    {
-     "op": "ffn.bias",
-     "base": 592,
-     "rows": 6
-    },
-    {
-     "op": "ffn.swiglu",
-     "base": 632,
-     "rows": 16
-    }
-   ],
-   "xq": 2,
-   "log": "results/rtl/s81_layer_tput_1018/compiler/bench_vs/m0_L2_s_0S_k0.run.log"
+   "log": "results/rtl/s81_layer_tput_1018/compiler/bench_vs/m0_L2_s_0S_k0.run.log",
+   "pass": true
   },
   {
    "vec": "m0_L2_s_5N_k0",
    "layer": "L2",
    "slice": "u_s_5N",
-   "sid": 11,
    "leaf": 0,
-   "G": 55,
-   "pass": true,
    "summary": "SLVSL sid=11 k=0 cmds=3 rowwrites=6 checked_pairs=12 xq=1/1 errors=0 slot_overruns=0 missed=0 fault=vp0/vs0/vq0",
    "vsop": [
     "VSOP op=10 cmd=600 cycles_cmd_to_last_result=147 slot=147",
     "VSOP op=11 cmd=1208 cycles_cmd_to_last_result=25 slot=25",
-    "VSOP op=8 cmd=1260 cycles_cmd_to_last_result=191 slot=191"
+    "VSOP op=8 cmd=1267 cycles_cmd_to_last_result=191 slot=191"
    ],
-   "ops": [
-    {
-     "op": "ffn.softplus_sqrt",
-     "calendar_issue": 22243,
-     "bench_edge": 600,
-     "target": 0
-    },
-    {
-     "op": "ffn.bias",
-     "calendar_issue": 22845,
-     "bench_edge": 1202,
-     "target": 5
-    },
-    {
-     "op": "ffn.bias",
-     "calendar_issue": 22846,
-     "bench_edge": 1203,
-     "target": 5
-    },
-    {
-     "op": "ffn.bias",
-     "calendar_issue": 22847,
-     "bench_edge": 1204,
-     "target": 5
-    },
-    {
-     "op": "ffn.bias",
-     "calendar_issue": 22848,
-     "bench_edge": 1205,
-     "target": 5
-    },
-    {
-     "op": "ffn.bias",
-     "calendar_issue": 22849,
-     "bench_edge": 1206,
-     "target": 5
-    },
-    {
-     "op": "ffn.bias",
-     "calendar_issue": 22850,
-     "bench_edge": 1207,
-     "target": 5
-    },
-    {
-     "op": "ffn.bias",
-     "calendar_issue": 22851,
-     "bench_edge": 1208,
-     "target": 0
-    },
-    {
-     "op": "ffn.shared_swiglu",
-     "calendar_issue": 22903,
-     "bench_edge": 1260,
-     "target": 0
-    }
-   ],
-   "checks": [
-    {
-     "op": "ffn.softplus_sqrt",
-     "base": 578,
-     "rows": 2
-    },
-    {
-     "op": "ffn.bias",
-     "base": 592,
-     "rows": 6
-    },
-    {
-     "op": "ffn.shared_swiglu",
-     "base": 632,
-     "rows": 16
-    }
-   ],
-   "xq": 1,
-   "log": "results/rtl/s81_layer_tput_1018/compiler/bench_vs/m0_L2_s_5N_k0.run.log"
-  },
-  {
-   "vec": "m0_s0S_k0",
-   "layer": "L0",
-   "slice": "u_s_0S",
-   "sid": 0,
-   "leaf": 0,
-   "G": 0,
-   "pass": true,
-   "summary": "SLVSL sid=0 k=0 cmds=5 rowwrites=6 checked_pairs=20 xq=2/2 errors=0 slot_overruns=0 missed=0 fault=vp0/vs0/vq0",
-   "vsop": [
-    "VSOP op=12 cmd=600 cycles_cmd_to_last_result=57 slot=57",
-    "VSOP op=9 cmd=4205 cycles_cmd_to_last_result=19 slot=19",
-    "VSOP op=10 cmd=8289 cycles_cmd_to_last_result=147 slot=147",
-    "VSOP op=11 cmd=8897 cycles_cmd_to_last_result=25 slot=25",
-    "VSOP op=8 cmd=10442 cycles_cmd_to_last_result=191 slot=191"
-   ],
-   "ops": [
-    {
-     "op": "attn.q_rope",
-     "calendar_issue": 2896,
-     "bench_edge": 600,
-     "target": 0
-    },
-    {
-     "op": "attn.z_quant",
-     "calendar_issue": 6501,
-     "bench_edge": 4205,
-     "target": 0
-    },
-    {
-     "op": "ffn.softplus_sqrt",
-     "calendar_issue": 10585,
-     "bench_edge": 8289,
-     "target": 0
-    },
-    {
-     "op": "ffn.bias",
-     "calendar_issue": 11187,
-     "bench_edge": 8891,
-     "target": 5
-    },
-    {
-     "op": "ffn.bias",
-     "calendar_issue": 11188,
-     "bench_edge": 8892,
-     "target": 5
-    },
-    {
-     "op": "ffn.bias",
-     "calendar_issue": 11189,
-     "bench_edge": 8893,
-     "target": 5
-    },
-    {
-     "op": "ffn.bias",
-     "calendar_issue": 11190,
-     "bench_edge": 8894,
-     "target": 5
-    },
-    {
-     "op": "ffn.bias",
-     "calendar_issue": 11191,
-     "bench_edge": 8895,
-     "target": 5
-    },
-    {
-     "op": "ffn.bias",
-     "calendar_issue": 11192,
-     "bench_edge": 8896,
-     "target": 5
-    },
-    {
-     "op": "ffn.bias",
-     "calendar_issue": 11193,
-     "bench_edge": 8897,
-     "target": 0
-    },
-    {
-     "op": "ffn.swiglu",
-     "calendar_issue": 12738,
-     "bench_edge": 10442,
-     "target": 0
-    }
-   ],
-   "checks": [
-    {
-     "op": "attn.q_rope",
-     "base": 544,
-     "rows": 16
-    },
-    {
-     "op": "ffn.softplus_sqrt",
-     "base": 578,
-     "rows": 2
-    },
-    {
-     "op": "ffn.bias",
-     "base": 592,
-     "rows": 6
-    },
-    {
-     "op": "ffn.swiglu",
-     "base": 632,
-     "rows": 16
-    }
-   ],
-   "xq": 2,
-   "log": "results/rtl/s81_layer_tput_1018/compiler/bench_vs/m0_s0S_k0.run.log"
-  },
-  {
-   "vec": "m0_s5N_k0",
-   "layer": "L0",
-   "slice": "u_s_5N",
-   "sid": 11,
-   "leaf": 0,
-   "G": 55,
-   "pass": true,
-   "summary": "SLVSL sid=11 k=0 cmds=3 rowwrites=6 checked_pairs=12 xq=1/1 errors=0 slot_overruns=0 missed=0 fault=vp0/vs0/vq0",
-   "vsop": [
-    "VSOP op=10 cmd=600 cycles_cmd_to_last_result=147 slot=147",
-    "VSOP op=11 cmd=1208 cycles_cmd_to_last_result=25 slot=25",
-    "VSOP op=8 cmd=1260 cycles_cmd_to_last_result=191 slot=191"
-   ],
-   "ops": [
-    {
-     "op": "ffn.softplus_sqrt",
-     "calendar_issue": 10585,
-     "bench_edge": 600,
-     "target": 0
-    },
-    {
-     "op": "ffn.bias",
-     "calendar_issue": 11187,
-     "bench_edge": 1202,
-     "target": 5
-    },
-    {
-     "op": "ffn.bias",
-     "calendar_issue": 11188,
-     "bench_edge": 1203,
-     "target": 5
-    },
-    {
-     "op": "ffn.bias",
-     "calendar_issue": 11189,
-     "bench_edge": 1204,
-     "target": 5
-    },
-    {
-     "op": "ffn.bias",
-     "calendar_issue": 11190,
-     "bench_edge": 1205,
-     "target": 5
-    },
-    {
-     "op": "ffn.bias",
-     "calendar_issue": 11191,
-     "bench_edge": 1206,
-     "target": 5
-    },
-    {
-     "op": "ffn.bias",
-     "calendar_issue": 11192,
-     "bench_edge": 1207,
-     "target": 5
-    },
-    {
-     "op": "ffn.bias",
-     "calendar_issue": 11193,
-     "bench_edge": 1208,
-     "target": 0
-    },
-    {
-     "op": "ffn.shared_swiglu",
-     "calendar_issue": 11245,
-     "bench_edge": 1260,
-     "target": 0
-    }
-   ],
-   "checks": [
-    {
-     "op": "ffn.softplus_sqrt",
-     "base": 578,
-     "rows": 2
-    },
-    {
-     "op": "ffn.bias",
-     "base": 592,
-     "rows": 6
-    },
-    {
-     "op": "ffn.shared_swiglu",
-     "base": 632,
-     "rows": 16
-    }
-   ],
-   "xq": 1,
-   "log": "results/rtl/s81_layer_tput_1018/compiler/bench_vs/m0_s5N_k0.run.log"
+   "log": "results/rtl/s81_layer_tput_1018/compiler/bench_vs/m0_L2_s_5N_k0.run.log",
+   "pass": true
   }
  ],
  "mutants": [
@@ -833,16 +162,16 @@
    "mutation": "SW imm[63:32] lim = 0",
    "failed": true,
    "fail_regex": "^FAIL$",
-   "summary": "SLVSL sid=0 k=0 cmds=5 rowwrites=6 checked_pairs=20 xq=2/2 errors=65 slot_overruns=0 missed=0 fault=vp0/vs0/vq0",
+   "summary": "SLVSL sid=0 k=0 cmds=5 rowwrites=24 checked_pairs=20 xq=2/2 errors=65 slot_overruns=0 missed=0 fault=vp0/vs0/vq0",
    "witness": "results/rtl/s81_layer_tput_1018/compiler/bench_vs/witness/mut_lim0_s0S_k0.run.log"
   },
   {
    "name": "biaslate_s0S_k0",
    "kind": "shifted cycle",
-   "mutation": "target-5 bias rows +30 edges",
+   "mutation": "target-5 rows (bias, cs, gunit weights) +30 edges",
    "failed": true,
    "fail_regex": "^FAIL$",
-   "summary": "SLVSL sid=0 k=0 cmds=5 rowwrites=6 checked_pairs=20 xq=2/2 errors=24 slot_overruns=0 missed=0 fault=vp1/vs0/vq0",
+   "summary": "SLVSL sid=0 k=0 cmds=5 rowwrites=24 checked_pairs=20 xq=2/2 errors=68 slot_overruns=0 missed=0 fault=vp1/vs0/vq0",
    "witness": "results/rtl/s81_layer_tput_1018/compiler/bench_vs/witness/mut_biaslate_s0S_k0.run.log"
   },
   {
@@ -853,6 +182,16 @@
    "fail_regex": "^FAIL$",
    "summary": "SLVSL sid=11 k=0 cmds=3 rowwrites=6 checked_pairs=12 xq=0/1 errors=64 slot_overruns=0 missed=0 fault=vp0/vs1/vq0",
    "witness": "results/rtl/s81_layer_tput_1018/compiler/bench_vs/witness/mut_swearly_s5N_k0.run.log"
+  },
+  {
+   "name": "wlate_s0S_k0",
+   "kind": "shifted cycle",
+   "mutation": "gunit weights rows 12 edges AFTER the routed SW (wr) command: SW reads stale rows",
+   "failed": true,
+   "fail_regex": "^FAIL$",
+   "summary": "SLVSL sid=0 k=0 cmds=5 rowwrites=24 checked_pairs=20 xq=2/2 errors=65 slot_overruns=0 missed=0 fault=vp0/vs0/vq0",
+   "witness": "results/rtl/s81_layer_tput_1018/compiler/bench_vs/witness/mut_wlate_s0S_k0.run.log"
   }
- ]
+ ],
+ "pass": true
 }

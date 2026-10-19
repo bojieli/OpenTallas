@@ -124,6 +124,8 @@ def main():
     for o in sched['ops']:
         if not any(re.search(rx, o['op']) for rx in LV.OPS):
             continue
+        if o['op'].startswith('eng.'):      # Engram op 14 words (PARTIAL): proven by tb_s81sl_slice_eng, not this bench
+            continue
         r = LV.lower(die, o, dict(ctx, t_issue=int(o['start'])))
         lowered[o['op']] = dict(status=r['status'], rows=len(r['rows']), gap=r['gap'], leaves=r.get('leaves', {}),
                                 fused_into=r.get('fused_into'))

@@ -68,7 +68,18 @@ VS_ROWS = dict(QR_IN=512, QR_OUT=544, QB_IN=560, RA_IN=576, RA_OUT=578, RB_IN=58
 VS_DUR = dict(SW=lambda n, wr=0: 4 * n + 127 + 4 * wr, QB=lambda n: n + 11, QR=lambda n: 2 * n + 25, RB=lambda n: n + 19,
               RA=lambda n: n + 141)                   # RA measured for n <= 8 only (one read): plan() asserts it
 GUARD = 3
-W_GUARD = 16                                  # weights row write edge at the leaf: gunit vo + ctl tree (seq_host path) + guard
+W_GUARD = 16                                  # bench: the weights rows are written this many edges before the SW command
+
+
+def _dvc():
+    import sys
+    m = sys.modules.get('dv_layer_compile')
+    if m is None and hasattr(sys.modules.get('__main__'), 'ctl_path'):
+        m = sys.modules['__main__']
+    if m is None:
+        sys.path.insert(0, str(ROOT / 'tools/s81_dv'))
+        import dv_layer_compile as m
+    return m
 POISON = 0                                    # immediate w of a wr SW (ignored by the RTL; 0 makes an RTL that ignores wr fail)
 
 
@@ -156,10 +167,14 @@ def plan(die, sched, sl, fixtures=None):
     w_vo, gu = gu_weights_vo_edge(sched)
     w_bound = None
     if w_vo is not None:
-        import sys
-        C = sys.modules.get('dv_layer_compile') or sys.modules.get('__main__')
-        cp = C.ctl_path(die, sl)['edges'] if hasattr(C, 'ctl_path') else 0
-        w_bound = w_vo + cp + W_GUARD
+        # the weights rows land in this slice's leaves at vo + the gunit tier link + the line path from the column-4
+        # entry (ctl_path minus its seq_host head), as lower_norm_smoke's NORMR row-R dependency; the SW command's CTL
+        # beat (issue + ctl_path) must arrive after them: issue >= land + 1 - ctl_path (+ GUARD)
+        C = _dvc()
+        lat = C.ctl_path(die, sl)['edges']
+        head = C.SEQ['v_cmd_to_vo'] + (die.links.get(f'tv{tier}_seqhost') or {}).get('age_edges', 0)
+        gl = (die.links.get(f'tv{tier}_gunit') or {}).get('age_edges', 0)
+        w_bound = w_vo + gl + (lat - head) + 1 - lat + GUARD
     w_row = (gu.GU_ROWS['router'] + 1) if gu is not None else None
     bias = fx(fixtures, 'weights/gate.bias.bin') if fixtures else None
     out = {}

@@ -6,12 +6,156 @@
  "G": 0,
  "mutant": null,
  "base": 600,
- "first_issue": 4732,
+ "first_issue": 4759,
  "beats": [
   {
    "op": "attn.q_rope",
-   "issue": 4732,
+   "issue": 4759,
    "bench_edge": 600,
+   "target": 5,
+   "body": "00000fc3b1d80fd51f176fc766564fd26f48fe01",
+   "what": "vs attn.q_rope target-5 cs leaves 11111",
+   "model_dur": 57
+  },
+  {
+   "op": "attn.q_rope",
+   "issue": 4760,
+   "bench_edge": 601,
+   "target": 5,
+   "body": "00002fdc9915efa92d478f956498efde97b03e03",
+   "what": "vs attn.q_rope target-5 cs leaves 11111",
+   "model_dur": 57
+  },
+  {
+   "op": "attn.q_rope",
+   "issue": 4761,
+   "bench_edge": 602,
+   "target": 5,
+   "body": "00000fd03cfb8fca0f746fd9c6920fb710067e05",
+   "what": "vs attn.q_rope target-5 cs leaves 11111",
+   "model_dur": 57
+  },
+  {
+   "op": "attn.q_rope",
+   "issue": 4762,
+   "bench_edge": 603,
+   "target": 5,
+   "body": "00000fc49c39afd47ea20f9519f7cfde9ba7be07",
+   "what": "vs attn.q_rope target-5 cs leaves 11111",
+   "model_dur": 57
+  },
+  {
+   "op": "attn.q_rope",
+   "issue": 4763,
+   "bench_edge": 604,
+   "target": 5,
+   "body": "00000f396093cfdff9918fdd7d652fa37f20be09",
+   "what": "vs attn.q_rope target-5 cs leaves 11111",
+   "model_dur": 57
+  },
+  {
+   "op": "attn.q_rope",
+   "issue": 4764,
+   "bench_edge": 605,
+   "target": 5,
+   "body": "00000fd71573efc095bbafdf4f61cf857cda7e0b",
+   "what": "vs attn.q_rope target-5 cs leaves 11111",
+   "model_dur": 57
+  },
+  {
+   "op": "attn.q_rope",
+   "issue": 4765,
+   "bench_edge": 606,
+   "target": 5,
+   "body": "00000facb67f8fdbf7deafd5c8f20fc2afd7be0d",
+   "what": "vs attn.q_rope target-5 cs leaves 11111",
+   "model_dur": 57
+  },
+  {
+   "op": "attn.q_rope",
+   "issue": 4766,
+   "bench_edge": 607,
+   "target": 5,
+   "body": "00002fdedf8faf8fd3230fdca4caafa8e81e7e0f",
+   "what": "vs attn.q_rope target-5 cs leaves 11111",
+   "model_dur": 57
+  },
+  {
+   "op": "attn.q_rope",
+   "issue": 4767,
+   "bench_edge": 608,
+   "target": 5,
+   "body": "00000fc7af214fd236160fc5e54f4fd393083e11",
+   "what": "vs attn.q_rope target-5 cs leaves 11111",
+   "model_dur": 57
+  },
+  {
+   "op": "attn.q_rope",
+   "issue": 4768,
+   "bench_edge": 609,
+   "target": 5,
+   "body": "00002fddd0534fa12b73efdcb6a6cfa87d9abe13",
+   "what": "vs attn.q_rope target-5 cs leaves 11111",
+   "model_dur": 57
+  },
+  {
+   "op": "attn.q_rope",
+   "issue": 4769,
+   "bench_edge": 610,
+   "target": 5,
+   "body": "00000fb43568cfda6f2cefb02a9eafdb4bbcfe15",
+   "what": "vs attn.q_rope target-5 cs leaves 11111",
+   "model_dur": 57
+  },
+  {
+   "op": "attn.q_rope",
+   "issue": 4770,
+   "bench_edge": 611,
+   "target": 5,
+   "body": "00002fc03b746fd74a77cfd6ff54cfc0bb03fe17",
+   "what": "vs attn.q_rope target-5 cs leaves 11111",
+   "model_dur": 57
+  },
+  {
+   "op": "attn.q_rope",
+   "issue": 4771,
+   "bench_edge": 612,
+   "target": 5,
+   "body": "00002fc6ba3c0fd2f3e74fdfe2e0ef5d06eafe19",
+   "what": "vs attn.q_rope target-5 cs leaves 11111",
+   "model_dur": 57
+  },
+  {
+   "op": "attn.q_rope",
+   "issue": 4772,
+   "bench_edge": 613,
+   "target": 5,
+   "body": "00000fbadb186fd8d5442fcac85bafcf994abe1b",
+   "what": "vs attn.q_rope target-5 cs leaves 11111",
+   "model_dur": 57
+  },
+  {
+   "op": "attn.q_rope",
+   "issue": 4773,
+   "bench_edge": 614,
+   "target": 5,
+   "body": "00000fdced3bcfa7304c8fddd5292fa10753be1d",
+   "what": "vs attn.q_rope target-5 cs leaves 11111",
+   "model_dur": 57
+  },
+  {
+   "op": "attn.q_rope",
+   "issue": 4774,
+   "bench_edge": 615,
+   "target": 5,
+   "body": "00000fc3e823cfd4fa730fd0c2810fc97460be1f",
+   "what": "vs attn.q_rope target-5 cs leaves 11111",
+   "model_dur": 57
+  },
+  {
+   "op": "attn.q_rope",
+   "issue": 4775,
+   "bench_edge": 616,
    "target": 0,
    "body": "000000000000000000000000000002201000200c",
    "what": "vs attn.q_rope QR n=16 leaves 11111",
@@ -19,8 +163,8 @@
   },
   {
    "op": "attn.z_quant",
-   "issue": 20871,
-   "bench_edge": 16739,
+   "issue": 20942,
+   "bench_edge": 16783,
    "target": 0,
    "body": "0000000000000000000000000000100008002309",
    "what": "vs attn.z_quant QB n=8 leaves 00001",
@@ -28,8 +172,8 @@
   },
   {
    "op": "ffn.softplus_sqrt",
-   "issue": 24956,
-   "bench_edge": 20824,
+   "issue": 25053,
+   "bench_edge": 20894,
    "target": 0,
    "body": "000000000000000000000000000002420600240a",
    "what": "vs ffn.softplus_sqrt RA n=6 leaves 00001",
@@ -37,75 +181,93 @@
   },
   {
    "op": "ffn.bias",
-   "issue": 25557,
-   "bench_edge": 21425,
+   "issue": 25654,
+   "bench_edge": 21495,
    "target": 5,
    "body": "00001058aa14d058894cd058b45350589bbd7e45",
-   "what": "vs ffn.bias target-5 bias row 0 leaf 0",
+   "what": "vs ffn.bias target-5 bias row 0 leaves 00001",
    "model_dur": 25
   },
   {
    "op": "ffn.bias",
-   "issue": 25558,
-   "bench_edge": 21426,
+   "issue": 25655,
+   "bench_edge": 21496,
    "target": 5,
    "body": "000010588d65d058b246d058ac21505841977e47",
-   "what": "vs ffn.bias target-5 bias row 1 leaf 0",
+   "what": "vs ffn.bias target-5 bias row 1 leaves 00001",
    "model_dur": 25
   },
   {
    "op": "ffn.bias",
-   "issue": 25559,
-   "bench_edge": 21427,
+   "issue": 25656,
+   "bench_edge": 21497,
    "target": 5,
    "body": "00001058b03a50589dc9d058b45350588533fe49",
-   "what": "vs ffn.bias target-5 bias row 2 leaf 0",
+   "what": "vs ffn.bias target-5 bias row 2 leaves 00001",
    "model_dur": 25
   },
   {
    "op": "ffn.bias",
-   "issue": 25560,
-   "bench_edge": 21428,
+   "issue": 25657,
+   "bench_edge": 21498,
    "target": 5,
    "body": "000010589fd650589fd65058ac21505804207e4b",
-   "what": "vs ffn.bias target-5 bias row 3 leaf 0",
+   "what": "vs ffn.bias target-5 bias row 3 leaves 00001",
    "model_dur": 25
   },
   {
    "op": "ffn.bias",
-   "issue": 25561,
-   "bench_edge": 21429,
+   "issue": 25658,
+   "bench_edge": 21499,
    "target": 5,
    "body": "00001058938b50580a45d0589bbd5058b03a7e4d",
-   "what": "vs ffn.bias target-5 bias row 4 leaf 0",
+   "what": "vs ffn.bias target-5 bias row 4 leaves 00001",
    "model_dur": 25
   },
   {
    "op": "ffn.bias",
-   "issue": 25562,
-   "bench_edge": 21430,
+   "issue": 25659,
+   "bench_edge": 21500,
    "target": 5,
    "body": "000010582d1a5058b4535058b246d0589fd67e4f",
-   "what": "vs ffn.bias target-5 bias row 5 leaf 0",
+   "what": "vs ffn.bias target-5 bias row 5 leaves 00001",
    "model_dur": 25
   },
   {
    "op": "ffn.bias",
-   "issue": 25563,
-   "bench_edge": 21431,
+   "issue": 25660,
+   "bench_edge": 21501,
    "target": 0,
    "body": "000000000000000000000000000002500600244b",
    "what": "vs ffn.bias RB n=6 leaves 00001",
    "model_dur": 25
   },
   {
+   "op": "ffn.weights",
+   "issue": 27833,
+   "bench_edge": 23674,
+   "target": 5,
+   "body": "00000f9b260d4f9540e80f9cb2374f9eaf06bff9",
+   "what": "gunit router weights row 1017 (dsdv_gunit_l1 target 5)",
+   "model_dur": 0
+  },
+  {
+   "op": "ffn.weights",
+   "issue": 27834,
+   "bench_edge": 23675,
+   "target": 5,
+   "body": "000000000000000000000fa301a30fa71a42cffa",
+   "what": "gunit router weights row 1018 (dsdv_gunit_l1 target 5)",
+   "model_dur": 0
+  },
+  {
    "op": "ffn.swiglu",
-   "issue": 27721,
-   "bench_edge": 23589,
+   "issue": 27849,
+   "bench_edge": 23690,
    "target": 0,
-   "body": "3e7abc1a3e7abc1a4120000000001e7810002588",
-   "what": "vs ffn.swiglu SW n=16 leaves 00001",
-   "model_dur": 191
+   "body": "00000000000000004120000002001e7810fe6588",
+   "what": "vs ffn.swiglu SWR n=16 leaves 00001",
+   "model_dur": 195
   }
  ],
  "checks": [
@@ -139,49 +301,54 @@
  "xq": 2,
  "lowered": {
   "attn.q_rope": {
-   "status": "PARTIAL",
-   "rows": 1,
-   "gap": {
-    "module": "ot_s81sl_vs",
-    "port": "QR operand rows a0 + 2 s + 1 ({cos, sin, cos', sin'})",
-    "missing": "cos / sin of the token position are runtime rows (32 FP32 per position, all heads); no lowered producer writes them into the QR leaves (seq_host context splice / host row write not emitted); the bench proves QR with the golden rope_cs rows",
-    "file_line": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vs.sv:22-23"
-   },
+   "status": "LOWERED",
+   "rows": 17,
+   "gap": null,
    "leaves": {
     "0": {
-     "cmd": 4732,
+     "cmd": 4775,
      "op": "QR",
+     "wr": false,
      "n": 16,
      "dur": 57,
-     "end": 4789
+     "end": 4832,
+     "tix": 16
     },
     "1": {
-     "cmd": 4732,
+     "cmd": 4775,
      "op": "QR",
+     "wr": false,
      "n": 16,
      "dur": 57,
-     "end": 4789
+     "end": 4832,
+     "tix": 16
     },
     "2": {
-     "cmd": 4732,
+     "cmd": 4775,
      "op": "QR",
+     "wr": false,
      "n": 16,
      "dur": 57,
-     "end": 4789
+     "end": 4832,
+     "tix": 16
     },
     "3": {
-     "cmd": 4732,
+     "cmd": 4775,
      "op": "QR",
+     "wr": false,
      "n": 16,
      "dur": 57,
-     "end": 4789
+     "end": 4832,
+     "tix": 16
     },
     "4": {
-     "cmd": 4732,
+     "cmd": 4775,
      "op": "QR",
+     "wr": false,
      "n": 16,
      "dur": 57,
-     "end": 4789
+     "end": 4832,
+     "tix": 16
     }
    },
    "fused_into": null
@@ -192,39 +359,49 @@
    "gap": null,
    "leaves": {
     "0": {
-     "cmd": 20871,
+     "cmd": 20942,
      "op": "QB",
+     "wr": false,
      "n": 8,
      "dur": 19,
-     "end": 20890
+     "end": 20961,
+     "tix": 0
     },
     "1": {
-     "cmd": 20872,
+     "cmd": 20943,
      "op": "QB",
+     "wr": false,
      "n": 8,
      "dur": 19,
-     "end": 20891
+     "end": 20962,
+     "tix": 1
     },
     "2": {
-     "cmd": 20873,
+     "cmd": 20944,
      "op": "QB",
+     "wr": false,
      "n": 8,
      "dur": 19,
-     "end": 20892
+     "end": 20963,
+     "tix": 2
     },
     "3": {
-     "cmd": 20874,
+     "cmd": 20945,
      "op": "QB",
+     "wr": false,
      "n": 8,
      "dur": 19,
-     "end": 20893
+     "end": 20964,
+     "tix": 3
     },
     "4": {
-     "cmd": 20875,
+     "cmd": 20946,
      "op": "QB",
+     "wr": false,
      "n": 8,
      "dur": 19,
-     "end": 20894
+     "end": 20965,
+     "tix": 4
     }
    },
    "fused_into": null
@@ -235,11 +412,13 @@
    "gap": null,
    "leaves": {
     "0": {
-     "cmd": 24956,
+     "cmd": 25053,
      "op": "RA",
+     "wr": false,
      "n": 6,
      "dur": 147,
-     "end": 25103
+     "end": 25200,
+     "tix": 0
     }
    },
    "fused_into": null
@@ -250,11 +429,13 @@
    "gap": null,
    "leaves": {
     "0": {
-     "cmd": 25563,
+     "cmd": 25660,
      "op": "RB",
+     "wr": false,
      "n": 6,
      "dur": 25,
-     "end": 25588
+     "end": 25685,
+     "tix": 6
     }
    },
    "fused_into": null
@@ -274,74 +455,69 @@
    "fused_into": "ffn.shared_swiglu"
   },
   "ffn.swiglu": {
-   "status": "PARTIAL",
+   "status": "LOWERED",
    "rows": 5,
-   "gap": {
-    "module": "ot_s81sl_vs",
-    "port": "s_d imm[95:64] / imm[127:96] (SW w0 / w1)",
-    "missing": "the routing weights are runtime (gunit router, delivered as leaf-store rows by CTL target 5); SW takes w only from the command immediate (ot_s81sl_vs.sv:171), so a boot-loaded CTL template cannot carry them (the bench proves the SW / vq path with the fixture weights)",
-    "file_line": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vs.sv:171"
-   },
+   "gap": null,
    "leaves": {
     "0": {
-     "cmd": 27721,
+     "cmd": 27849,
      "op": "SW",
+     "wr": true,
      "n": 16,
-     "dur": 191,
-     "end": 27912
+     "dur": 195,
+     "end": 28044,
+     "tix": 0
     },
     "1": {
-     "cmd": 27722,
+     "cmd": 27850,
      "op": "SW",
+     "wr": true,
      "n": 16,
-     "dur": 191,
-     "end": 27913
+     "dur": 195,
+     "end": 28045,
+     "tix": 1
     },
     "2": {
-     "cmd": 27723,
+     "cmd": 27851,
      "op": "SW",
+     "wr": true,
      "n": 16,
-     "dur": 191,
-     "end": 27914
+     "dur": 195,
+     "end": 28046,
+     "tix": 2
     },
     "3": {
-     "cmd": 27724,
+     "cmd": 27852,
      "op": "SW",
+     "wr": true,
      "n": 16,
-     "dur": 191,
-     "end": 27915
+     "dur": 195,
+     "end": 28047,
+     "tix": 3
     },
     "4": {
-     "cmd": 27725,
+     "cmd": 27853,
      "op": "SW",
+     "wr": true,
      "n": 16,
-     "dur": 191,
-     "end": 27916
+     "dur": 195,
+     "end": 28048,
+     "tix": 4
     }
    },
    "fused_into": null
   },
   "ffn.route_w": {
-   "status": "PARTIAL",
+   "status": "LOWERED",
    "rows": 0,
-   "gap": {
-    "module": "ot_s81sl_vs",
-    "port": "s_d imm[95:64] / imm[127:96] (SW w0 / w1)",
-    "missing": "the routing weights are runtime (gunit router, delivered as leaf-store rows by CTL target 5); SW takes w only from the command immediate (ot_s81sl_vs.sv:171), so a boot-loaded CTL template cannot carry them (the bench proves the SW / vq path with the fixture weights)",
-    "file_line": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vs.sv:171"
-   },
+   "gap": null,
    "leaves": {},
    "fused_into": "ffn.swiglu"
   },
   "ffn.quant2": {
-   "status": "PARTIAL",
+   "status": "LOWERED",
    "rows": 0,
-   "gap": {
-    "module": "ot_s81sl_vs",
-    "port": "s_d imm[95:64] / imm[127:96] (SW w0 / w1)",
-    "missing": "the routing weights are runtime (gunit router, delivered as leaf-store rows by CTL target 5); SW takes w only from the command immediate (ot_s81sl_vs.sv:171), so a boot-loaded CTL template cannot carry them (the bench proves the SW / vq path with the fixture weights)",
-    "file_line": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vs.sv:171"
-   },
+   "gap": null,
    "leaves": {},
    "fused_into": "ffn.swiglu"
   }

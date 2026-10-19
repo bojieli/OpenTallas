@@ -6,11 +6,11 @@
  "G": 55,
  "mutant": null,
  "base": 600,
- "first_issue": 22168,
+ "first_issue": 22278,
  "beats": [
   {
    "op": "ffn.softplus_sqrt",
-   "issue": 22168,
+   "issue": 22278,
    "bench_edge": 600,
    "target": 0,
    "body": "000000000000000000000000000002420600240a",
@@ -19,61 +19,61 @@
   },
   {
    "op": "ffn.bias",
-   "issue": 22770,
+   "issue": 22880,
    "bench_edge": 1202,
    "target": 5,
    "body": "0000104eeca8504eb34a504ee476504eeca87e45",
-   "what": "vs ffn.bias target-5 bias row 0 leaf 0",
+   "what": "vs ffn.bias target-5 bias row 0 leaves 00001",
    "model_dur": 25
   },
   {
    "op": "ffn.bias",
-   "issue": 22771,
+   "issue": 22881,
    "bench_edge": 1203,
    "target": 5,
    "body": "0000104ecff9504ecbe0504eea9bd04ed4127e47",
-   "what": "vs ffn.bias target-5 bias row 1 leaf 0",
+   "what": "vs ffn.bias target-5 bias row 1 leaves 00001",
    "model_dur": 25
   },
   {
    "op": "ffn.bias",
-   "issue": 22772,
+   "issue": 22882,
    "bench_edge": 1204,
    "target": 5,
    "body": "0000104ecbe0504eea9bd04e9cc0d04ed205fe49",
-   "what": "vs ffn.bias target-5 bias row 2 leaf 0",
+   "what": "vs ffn.bias target-5 bias row 2 leaves 00001",
    "model_dur": 25
   },
   {
    "op": "ffn.bias",
-   "issue": 22773,
+   "issue": 22883,
    "bench_edge": 1205,
    "target": 5,
    "body": "0000104ec9d3d04ee05d504ec5bad04ec7c77e4b",
-   "what": "vs ffn.bias target-5 bias row 3 leaf 0",
+   "what": "vs ffn.bias target-5 bias row 3 leaves 00001",
    "model_dur": 25
   },
   {
    "op": "ffn.bias",
-   "issue": 22774,
+   "issue": 22884,
    "bench_edge": 1206,
    "target": 5,
    "body": "0000104ebf95504eaf31504eea9bd04ead24fe4d",
-   "what": "vs ffn.bias target-5 bias row 4 leaf 0",
+   "what": "vs ffn.bias target-5 bias row 4 leaves 00001",
    "model_dur": 25
   },
   {
    "op": "ffn.bias",
-   "issue": 22775,
+   "issue": 22885,
    "bench_edge": 1207,
    "target": 5,
    "body": "0000104e6fadd04ee05d504ede50d04ee88f7e4f",
-   "what": "vs ffn.bias target-5 bias row 5 leaf 0",
+   "what": "vs ffn.bias target-5 bias row 5 leaves 00001",
    "model_dur": 25
   },
   {
    "op": "ffn.bias",
-   "issue": 22776,
+   "issue": 22886,
    "bench_edge": 1208,
    "target": 0,
    "body": "000000000000000000000000000002500600244b",
@@ -82,8 +82,8 @@
   },
   {
    "op": "ffn.shared_swiglu",
-   "issue": 22828,
-   "bench_edge": 1260,
+   "issue": 22945,
+   "bench_edge": 1267,
    "target": 0,
    "body": "3f8000003f80000041200000000dde7810002588",
    "what": "vs ffn.shared_swiglu SW n=16 leaves 00001",
@@ -115,14 +115,9 @@
  "xq": 1,
  "lowered": {
   "attn.q_rope": {
-   "status": "PARTIAL",
+   "status": "LOWERED",
    "rows": 0,
-   "gap": {
-    "module": "ot_s81sl_vs",
-    "port": "QR operand rows a0 + 2 s + 1 ({cos, sin, cos', sin'})",
-    "missing": "cos / sin of the token position are runtime rows (32 FP32 per position, all heads); no lowered producer writes them into the QR leaves (seq_host context splice / host row write not emitted); the bench proves QR with the golden rope_cs rows",
-    "file_line": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vs.sv:22-23"
-   },
+   "gap": null,
    "leaves": {},
    "fused_into": null
   },
@@ -139,11 +134,13 @@
    "gap": null,
    "leaves": {
     "0": {
-     "cmd": 22168,
+     "cmd": 22278,
      "op": "RA",
+     "wr": false,
      "n": 6,
      "dur": 147,
-     "end": 22315
+     "end": 22425,
+     "tix": 0
     }
    },
    "fused_into": null
@@ -154,11 +151,13 @@
    "gap": null,
    "leaves": {
     "0": {
-     "cmd": 22776,
+     "cmd": 22886,
      "op": "RB",
+     "wr": false,
      "n": 6,
      "dur": 25,
-     "end": 22801
+     "end": 22911,
+     "tix": 6
     }
    },
    "fused_into": null
@@ -169,39 +168,49 @@
    "gap": null,
    "leaves": {
     "0": {
-     "cmd": 22828,
+     "cmd": 22945,
      "op": "SW",
+     "wr": false,
      "n": 16,
      "dur": 191,
-     "end": 23019
+     "end": 23136,
+     "tix": 0
     },
     "1": {
-     "cmd": 22829,
+     "cmd": 22946,
      "op": "SW",
+     "wr": false,
      "n": 16,
      "dur": 191,
-     "end": 23020
+     "end": 23137,
+     "tix": 1
     },
     "2": {
-     "cmd": 22830,
+     "cmd": 22947,
      "op": "SW",
+     "wr": false,
      "n": 16,
      "dur": 191,
-     "end": 23021
+     "end": 23138,
+     "tix": 2
     },
     "3": {
-     "cmd": 22831,
+     "cmd": 22948,
      "op": "SW",
+     "wr": false,
      "n": 16,
      "dur": 191,
-     "end": 23022
+     "end": 23139,
+     "tix": 3
     },
     "4": {
-     "cmd": 22832,
+     "cmd": 22949,
      "op": "SW",
+     "wr": false,
      "n": 16,
      "dur": 191,
-     "end": 23023
+     "end": 23140,
+     "tix": 4
     }
    },
    "fused_into": null

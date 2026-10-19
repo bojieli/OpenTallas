@@ -1,7 +1,7 @@
 #!/bin/bash
-# vs_bench.sh <outdir> [MUT 0..6] [L0|L2] [BEAT]  (cwd = repo root): S81-SLICE vs bench (vp + vs + vsw + hub RA lane pair + vq)
+# vs_bench.sh <outdir> [MUT 0..6, 9] [L0|L2] [BEAT]  (cwd = repo root): S81-SLICE vs bench (vp + vs + vsw + hub RA lane pair + vq)
 # on one layer's 1M-token SU cases (tools/s81_slice/vs_gold.py).  MUT 0 must PASS; MUT 1..6 (SW w, RB bias, QR inverse,
-# MOE early BF16 partials, QB halves, RA row shift) must FAIL.  Exit 0 = the expected verdict.
+# MOE early BF16 partials, QB halves, RA row shift, 9 SW wr w1 from the wrong word) must FAIL.  Exit 0 = the expected verdict.
 set -u; O=$1; M=${2:-0}; L=${3:-L0}; B=${4:-37}; mkdir -p $O/run
 V=verilator; [ -x ~/.local/opentallas-tools/verilator-5.050/bin/verilator ] && V=~/.local/opentallas-tools/verilator-5.050/bin/verilator
 CASES=${S81_SU_CASES:-tools/s81_suhc/fixtures/su_cases_v2_ildr.pkl}
