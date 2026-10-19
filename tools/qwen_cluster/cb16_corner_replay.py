@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """Read-only native corner replay in own audit directory; fleet runner required."""
 from pathlib import Path
-import subprocess,hashlib,json
-out=[]
-for h in 'wr':
- r=Path('/srv/opentallas-scratch/claude/ref_gate')/f'qfd_c_land_{h}258_narrow-20261019-084057'
- work=r/'routes/gate/work/orfs'; base=next((work/'results/asap7').glob('*/base')); kit=f'physical/ref_tile/qfd_c_land_{h}258_narrow/signoff.sdc'
+import subprocess,hashlib,json,argparse
+p=argparse.ArgumentParser();p.add_argument('--manifest');a=p.parse_args();out=[]
+records=json.loads(Path(a.manifest).read_text())if a.manifest else [dict(half=h,run=f'/srv/opentallas-scratch/claude/ref_gate/qfd_c_land_{h}258_narrow-20261019-084057',kit=f'physical/ref_tile/qfd_c_land_{h}258_narrow/signoff.sdc')for h in 'wr']
+for record in records:
+ h=record['half'];r=Path(record['run']);kit=record['kit']
+ work=r/'routes/gate/work/orfs'; base=next((work/'results/asap7').glob('*/base'))
  for c in ['TT','FF']:
   log=Path(f'corner_{h}_{c}.log')
   cmd=['docker','run','--rm','-e',f'CB16_CORNER={c}','-e',f'CB16_SIGNOFF=/src/{kit}','-v',f'{r}/src:/src:ro','-v',f'{work}:/work:ro','-v',f'{Path.cwd()}:/audit','openroad/orfs:latest','/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad','-no_init','-exit','/audit/cb16_corner_replay.tcl']
