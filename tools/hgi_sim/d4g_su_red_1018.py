@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""HH-5 (10-19, coordinator 0ix (5)): re-price the adopted d4g token (two rings + QBG, every d4g adder, RTL ledger) with
+"""HH-5 (10-18, coordinator 0ix (5)): re-price the adopted d4g token (two rings + QBG, every d4g adder, RTL ledger) with
 the HBM SU reducer ingress AS BUILT, on the HBM-B-RTL3 d4g pricer (hgi_sim.d4g_quadrant_1017).
 
 ORIGIN (LB2-HBM-CDS 10-18, claude/lb2-hbm-cds-1018 @1b82239d6, tools/hbm_layer_vehicle/layer_images.py reducer_bound):
@@ -26,7 +26,7 @@ RE-PRICE (knob `su_red` on the d4g knob, applied to every SU.VOP with sut.red, a
 
     PYTHONPATH=tools python3 -m hgi_sim.d4g_su_red_1018 --jobs 40 --widths 2,4,8,16,32 \
         --out results/arch/hbm_d4g_price_1017/su_red/price_su_red_w.json
-    (run 10-19 on ot-epyc5, bundle /srv/opentallas-scratch/claude/hh5-sured/src = the HBM-PRICE5 bundle + tools/hgi_sim
+    (run 10-18 on ot-epyc5, bundle /srv/opentallas-scratch/claude/hh5-sured/src = the HBM-PRICE5 bundle + tools/hgi_sim
     of claude/hh5-su-reducer-1018; the d4g base reproduces HBM-PRICE5 d4g_2ring_qbg 1905.4 / 3258.7 / 946.2 exactly)
 
 RESULT (vs d4g_2ring_qbg): as built DS AR 1905.4 -> 1796.6 (-5.71%), DS MTP 3258.7 -> 2685.7 (-17.58%), Qwen 946.2 ->
