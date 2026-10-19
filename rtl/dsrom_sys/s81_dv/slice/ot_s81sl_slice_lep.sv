@@ -164,8 +164,8 @@ module ot_s81sl_lep_core #(
     localparam integer RX_NS=(H+16)/16;
     localparam integer NRX_MEMRST=(MU_EN!=0 && RX_SRAM!=0)?NL*RX_NS:0;
     localparam integer NRX_OUTRST=(MU_EN!=0 && RX_SRAM!=0)?((1103+15)/16):0;
-    localparam integer TX_NS=(H+16)/16;
-    localparam integer FRAME_NS=(2*H+15)/16;
+    localparam integer TX_NS=(H+8)/8;
+    localparam integer FRAME_NS=(2*H+7)/8;
     localparam integer NTX_MEMRST=(MU_EN!=0 && RX_SRAM!=0)?NL*TX_NS:0;
     localparam integer NFRAME_RST=(MU_EN!=0 && RX_SRAM!=0)?FRAME_NS:0;
     localparam integer NHOST_RST=(MU_EN!=0 && RX_SRAM!=0 && HOST_EN!=0 )?37:0;
@@ -270,14 +270,14 @@ module ot_s81sl_lep_core #(
               if(kp) pk_r<=0;if(kevent_r) pk_r<=1;
             end
           end
-        for(fb=16*fc;fb<16*(fc+1) && fb<2*H;fb=fb+1) begin:g_bit
+        for(fb=8*fc;fb<8*(fc+1) && fb<2*H;fb=fb+1) begin:g_bit
           wire hd,kd;
-          if(fb>=4 && fb<81) assign hd=ph_d[fb-4];
-          else if(fb>=1 && fb<=3) assign hd=(3'd3>>(fb-1))&1'b1;
-          else assign hd=1'b0;
-          if(fb>=4 && fb<58) assign kd=pk_d[fb-4];
-          else if(fb>=1 && fb<=3) assign kd=(3'd4>>(fb-1))&1'b1;
-          else assign kd=1'b0;
+          if(fb>=4 && fb<81) begin:g_host_payload assign hd=ph_d[fb-4]; end
+          else if(fb>=1 && fb<=3) begin:g_host_kind assign hd=1'(3'd3>>(fb-1)); end
+          else begin:g_host_zero assign hd=1'b0; end
+          if(fb>=4 && fb<58) begin:g_key_payload assign kd=pk_d[fb-4]; end
+          else if(fb>=1 && fb<=3) begin:g_key_kind assign kd=1'(3'd4>>(fb-1)); end
+          else begin:g_key_zero assign kd=1'b0; end
           wire base=rov_r?roq[fb]:(hp?hd:(kp?kd:1'b0));
           if(fb>=TG && fb<TG+33) begin:g_tag
 `ifdef OT_S81SL_LEP_MUT_HSTAMP
@@ -287,7 +287,7 @@ module ot_s81sl_lep_core #(
 `else
             assign fr[fb]=(rov_r && wopen)?wtag[fb-TG]:base;
 `endif
-          end else assign fr[fb]=base;
+          end else begin:g_plain assign fr[fb]=base; end
         end
       end
     end else begin:g_frame_legacy
@@ -337,20 +337,36 @@ module ot_s81sl_lep_core #(
         wire psh = pp[t / 2];
         wire wr = psh && (n != DT || iss);
         if(MU_EN!=0 && RX_SRAM!=0 && SRAM!=0) begin:g_safe_write
-            localparam integer NA=(TX_NS+15)/16;
+            localparam integer GA=4, NA=(TX_NS+GA-1)/GA;
             wire [NA*AT-1:0] wa_copy,ra_copy;
+            wire [NA-1:0] wr_group,rd_group;
             for(c=0;c<NA;c=c+1) begin:g_address
                 (* keep="true" *) reg [AT-1:0] wp_r,rp_r;
-                always @(posedge clk or negedge rr[TX_RSTBASE+t*TX_NS+16*c])
-                    if(!rr[TX_RSTBASE+t*TX_NS+16*c]) begin wp_r<=0;rp_r<=0;end
-                    else begin
-                        if(wr) wp_r<=(wp_r==AT'(DT-1))?AT'(0):wp_r+1'b1;
-                        if(iss) rp_r<=(rp_r==AT'(DT-1))?AT'(0):rp_r+1'b1;
+                (* keep="true" *) reg [AT:0] count_r;
+                (* keep="true" *) reg [CW-1:0] credit_r;
+                (* keep="true" *) reg credit_pin_r;
+                assign rd_group[c]=(count_r!=0 && credit_r!=0);
+                assign wr_group[c]=psh && (count_r!=(AT+1)'(DT) || rd_group[c]);
+                always @(posedge clk or negedge rr[TX_RSTBASE+t*TX_NS+GA*c])
+                    if(!rr[TX_RSTBASE+t*TX_NS+GA*c]) begin
+                        wp_r<=0;rp_r<=0;count_r<=0;credit_r<=CW'(CRED);credit_pin_r<=0;
+                    end else begin
+                        credit_pin_r<=lo_r[t];
+                        credit_r<=credit_r+CW'(credit_pin_r)-CW'(rd_group[c]);
+                        count_r<=count_r+(AT+1)'(wr_group[c])-(AT+1)'(rd_group[c]);
+                        wp_r<=(wp_r==AT'(DT-1) && wr_group[c])?AT'(0):wp_r+AT'(wr_group[c]);
+                        rp_r<=(rp_r==AT'(DT-1) && rd_group[c])?AT'(0):rp_r+AT'(rd_group[c]);
                     end
+`ifdef OT_S81SL_TX_GROUP_ASSERT
+                always @(posedge clk) if(rt && rr[TX_RSTBASE+t*TX_NS+GA*c]) begin
+                    if({wr_group[c],rd_group[c],wp_r,rp_r,count_r,credit_r} !== {wr,iss,wp,rp,n,cnt})
+                        $fatal(1,"TX regional state differs lane%0d group%0d",t,c);
+                end
+`endif
                 assign wa_copy[c*AT+:AT]=wp_r;assign ra_copy[c*AT+:AT]=rp_r;
             end
-            ot_sram_oldread_wreg #(.W(H+1),.AW(AT)) u_m(.clk(clk),.rst_n(rr[TX_RSTBASE+t*TX_NS+:TX_NS]),
-                .we(wr),.wa(wa_copy),.wd({sq[t/2],(t%2==0)?hf0:hf1}),.re(iss),.ra(ra_copy),.q(q));
+            ot_sram_oldread_wreg #(.W(H+1),.AW(AT),.SB(8),.GA(GA),.GROUP_IO(1)) u_m(.clk(clk),.rst_n(rr[TX_RSTBASE+t*TX_NS+:TX_NS]),
+                .we(wr),.we_group(wr_group),.re_group(rd_group),.wa(wa_copy),.wd({sq[t/2],(t%2==0)?hf0:hf1}),.re(iss),.ra(ra_copy),.q(q));
         end else begin:g_legacy_write
         ot_s81ph_mem1r1w #(.W(H + 1), .DEPTH(DT), .SRAM(SRAM), .WREG(1)) u_m (.clk(clk), .rst_n(rt), .we(wr), .wa(wp),
             .wd({sq[t / 2], (t % 2 == 0) ? hf0 : hf1}), .re(iss), .ra(rp), .q(q));
@@ -699,11 +715,11 @@ module ot_s81sl_lep_core #(
         always @(posedge clk or negedge rr[HOST_RSTBASE+c])
           if(!rr[HOST_RSTBASE+c]) enable_r<=0;else enable_r<=rnex[0] && rnex[1] && hit;
         if(c<33) begin:g_host
-          localparam integer LO=16*c,SW=(514-LO<16)?514-LO:16;
-          always @(posedge clk) if(enable_r) fh_d[LO+:SW]<=h0[4+LO+:SW];
+          localparam integer LO=16*c,HSW=(514-LO<16)?514-LO:16;
+          always @(posedge clk) if(enable_r) fh_d[LO+:HSW]<=h0[4+LO+:HSW];
         end else begin:g_key
-          localparam integer LO=16*(c-33),SW=(52-LO<16)?52-LO:16;
-          always @(posedge clk) if(enable_r) fk_d[LO+:SW]<=ksp[LO+:SW];
+          localparam integer LO=16*(c-33),KSW=(52-LO<16)?52-LO:16;
+          always @(posedge clk) if(enable_r) fk_d[LO+:KSW]<=ksp[LO+:KSW];
         end
       end
     end else begin:g_host_legacy

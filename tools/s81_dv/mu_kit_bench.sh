@@ -30,7 +30,7 @@ lepmu|lepmuh)
    $SL/ot_s81sl_slice_lep.sv $SL/dsdv_mu_land.sv"
   TB=tb_s81sl_lep_mu; VR=lep_mu; [ $B = lepmuh ] && { TB=tb_s81sl_lep_muh; VR=lep_muh; }
   SRCS="$SRCS $SL/test/$TB.sv"
-  D="+define+OT_S81PH_GBX_FMT1 +define+OT_S81PH_EP_PIPE2"
+  D="+define+OT_S81SL_TX_GROUP_ASSERT +define+OT_S81PH_GBX_FMT1 +define+OT_S81PH_EP_PIPE2"
   case $M in none) ;; LANDOVR) D="$D +define+OT_DSDV_MU_LAND_MUT_OVR" ;; *) D="$D +define+OT_S81SL_LEP_MUT_$M" ;; esac
   R=${B}_${M}_$S
   $V --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-lint -Wno-style +incdir+$L $D -GSEED=$S -GRXSRAM=${MU_RX_SRAM:-0} \
