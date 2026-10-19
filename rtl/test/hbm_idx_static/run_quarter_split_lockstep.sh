@@ -23,12 +23,16 @@ build(){ # tag half defines...
 build pos0 0; build pos1 1; build keyline 0 -DOT_IDXQS_MUT_KEYLINE; build auxearly 0 -DOT_IDXQS_MUT_AUXEARLY; build rowswap 1 -DOT_IDXQS_MUT_ROWSWAP
 echo BUILDS_DONE
 rc=0
-run(){ # tag want
- local r; "$out/obj_$1/Vtb_idx_quarter_split" > "$out/run_$1.log" 2>&1; r=$?
- grep -E "IDX_QUARTER_SPLIT|QSPLIT_BAD|Error" "$out/run_$1.log" | head -5 | sed "s/^/[$1] /"
- if [ "$2" = pass ]; then [ $r = 0 ] && grep -q "IDX_QUARTER_SPLIT PASS" "$out/run_$1.log" || { echo "[$1] FAILED (expected PASS)"; rc=1; }
- else [ $r != 0 ] && grep -q "QSPLIT_BAD" "$out/run_$1.log" && echo "[$1] mutant rejected" || { echo "[$1] MUTANT SURVIVED"; rc=1; }; fi
+run(){ # executable-tag expected-verdict log-tag [runtime arguments...]
+ local t=$1 want=$2 log=$3 r; shift 3
+ "$out/obj_$t/Vtb_idx_quarter_split" "$@" > "$out/run_$log.log" 2>&1; r=$?
+ grep -E "IDX_QUARTER_SPLIT|QSPLIT_BAD|Error" "$out/run_$log.log" | head -5 | sed "s/^/[$log] /"
+ if [ "$want" = pass ]; then [ $r = 0 ] && grep -q "IDX_QUARTER_SPLIT PASS" "$out/run_$log.log" || { echo "[$log] FAILED (expected PASS)"; rc=1; }
+ else [ $r != 0 ] && grep -q "QSPLIT_BAD" "$out/run_$log.log" && echo "[$log] mutant rejected" || { echo "[$log] MUTANT SURVIVED"; rc=1; }; fi
 }
-run pos0 pass; run pos1 pass; run keyline fail; run auxearly fail; run rowswap fail
+run pos0 pass pos0; run pos1 pass pos1
+# Reuse compiled positive vehicles with different unreset output histories.
+run pos0 pass pos0_poison +poison_payload; run pos1 pass pos1_poison +poison_payload
+run keyline fail keyline; run auxearly fail auxearly; run rowswap fail rowswap
 [ $rc = 0 ] && echo IDX_QUARTER_SPLIT_GATE_PASS || echo IDX_QUARTER_SPLIT_GATE_FAIL
 exit $rc

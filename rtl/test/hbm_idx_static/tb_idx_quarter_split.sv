@@ -81,6 +81,16 @@ module tb_idx_quarter_split #(parameter integer TP=192, parameter integer HALF=0
   end
   beat_v=0; key_lines=0; repeat (420) @(negedge clk);
  endtask
+ // Poison ONLY the deliberately unreset output payload, with different histories.
+ // Reset controls remain driven by RTL; normal clock assignments flush poison.
+ initial if ($test$plusargs("poison_payload")) begin
+  force u_old.score[305:1] = {305{1'b1}};
+  force u_new.u_e.score[305:1] = {305{1'b0}};
+  repeat(2) @(negedge clk);
+  release u_old.score[305:1];
+  release u_new.u_e.score[305:1];
+  $display("IDX_QUARTER_SPLIT payload_poison_released");
+ end
  initial begin
   void'($urandom(32'h1d5c0de + HALF));
   repeat (10) @(negedge clk); rst_n=1; repeat (40) @(negedge clk);
