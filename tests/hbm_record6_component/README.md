@@ -54,3 +54,18 @@ real padding-zero subtrees, and emits adds.mem/adds.json. The bench checks and
 logs each real node's OPR1 registered oa/ob and subsequent native LAT6 output,
 with operation/station/episode/aborted-prefix identities. Top STATION_MUT forwards
 to the genuine station RTL parameter for its three source mutation builds.
+
+Supporting station causal source generator (separate output, no frozen changes):
+
+    python3 tests/hbm_record6_component/station_tb_generate.py \
+      --native FROZEN_GENERATED_DIRECTORY --station-ledger source_ledger.json \
+      --source-binding source_binding.json NEW_SUPPORT_DIRECTORY
+
+Compile only NEW_SUPPORT_DIRECTORY/station_tb.sv, the actual41-node station RTL
+and native FP32 adder/clock dependencies. Do not compile the generated
+native_reference_not_compiled.sv. This support bench supplies expected squared
+words at the station input, checks actual captured held words, all1281 real
+addition A/B/Y identities, fragment ownership, genuine root and two distinct
+requests. It cannot replace the full512-lane/native-VM positive. Its manifest
+keeps native_capture_binding PENDING until the first actual native positive
+lane-pin capture checks/traces are matched to these source-pinned inputs.
