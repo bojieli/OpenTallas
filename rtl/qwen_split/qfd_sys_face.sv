@@ -80,6 +80,10 @@
 // =====================================================================================================================
 module qfd_sys_face #(
     parameter integer MUT = 0,
+    parameter integer COLD_PREFIX=0,
+    parameter integer COLD_START_OFS=0, // explicit immutable manifest epoch->prefix T-start edge
+    parameter integer OVL_AW=11, parameter integer OVL_TX_WRAP_BASE=0, parameter integer OVL_RX_WRAP_BASE=0,
+    parameter integer OVL_FIRST_OFS=1176, parameter integer OVL_ADM_LEN=1100,
     parameter integer CTX_ACCEPTED = 0,        // opt-in actual accepted MU observer, +1 output edge
     parameter integer OVL = 0,                 // separate TX/RX compiled start lists (MU-D2D-OVL)
     parameter OVL_ROM_DIR = "",
@@ -135,6 +139,7 @@ module qfd_sys_face #(
     input  wire [75:0]   seq_program_obs,
     input  wire [68:0]   seq_descriptor_obs,
     input  wire          seq_cfg_image_ready,
+    output reg          init_u0, // same registered edge as the immutable cold prefix stage0 DH
     output reg  [186:0]  seq_dh,
     // ---------------- ME controller (qfd_tt_ctlm_static_s) ----------------
     input  wire [75:0]   tt_program_obs,
@@ -384,10 +389,11 @@ module qfd_sys_face #(
     // ================================================================ calendars
     wire halt = d2d_epoch_abort;
     wire        t_go, l_go, ecal_go;
+    wire cold_t_go; reg cold_active; reg cold_fault;
     wire        t_ev, l_ev, e_ev, t_run, l_run, e_run, t_cf, l_cf, e_cf;
     wire [2:0]  t_p, l_p, e_p; wire [3:0] t_k, l_k, e_k; wire [4:0] t_b, l_b, e_b;
     ot_qwen_d2d_cal #(.NE(64)) u_cal_t (.ck(ck), .rst_n(rst_calt), .cfg_we(t_we), .cfg_addr({c_addr[7], c_addr[5:0]}), .cfg_data(c_data),
-        .start(t_go), .start_seg(1'b0), .halt(halt), .ev_v(t_ev), .ev_port(t_p), .ev_kind(t_k), .ev_beat(t_b), .running(t_run), .fault(t_cf));
+        .start(t_go | cold_t_go), .start_seg(cold_t_go), .halt(halt), .ev_v(t_ev), .ev_port(t_p), .ev_kind(t_k), .ev_beat(t_b), .running(t_run), .fault(t_cf));
     ot_qwen_d2d_cal #(.NE(32)) u_cal_l (.ck(ck), .rst_n(rst_calle), .cfg_we(l_we), .cfg_addr({c_addr[7], c_addr[4:0]}), .cfg_data(c_data),
         .start(l_go), .start_seg(1'b0), .halt(halt), .ev_v(l_ev), .ev_port(l_p), .ev_kind(l_k), .ev_beat(l_b), .running(l_run), .fault(l_cf));
     ot_qwen_d2d_cal #(.NE(16)) u_cal_e (.ck(ck), .rst_n(rst_calle), .cfg_we(e_we), .cfg_addr({c_addr[7], c_addr[3:0]}), .cfg_data(c_data),
@@ -398,7 +404,7 @@ module qfd_sys_face #(
     // abort (the HOST's recovery: the images are re-written before the new epoch's first token, first_ofs > 2 NE + 2).
     wire cal_ready, cs_running, cs_fault, cs_adm_done; wire [5:0] cs_layer;   // r2: admission run once per epoch (D2D_ADM_OFS after fwd_epoch)
     generate if (OVL) begin : g_ovl
-        qfd_d2d_cal_seq_ovl #(.ROM_DIR(OVL_ROM_DIR)) u_cseq (
+        qfd_d2d_cal_seq_ovl #(.ROM_DIR(OVL_ROM_DIR),.AW(OVL_AW),.TX_WRAP_BASE(OVL_TX_WRAP_BASE),.RX_WRAP_BASE(OVL_RX_WRAP_BASE),.FIRST_OFS(OVL_FIRST_OFS),.ADM_LEN(OVL_ADM_LEN)) u_cseq (
             .ck(ck), .rst_n(rst_loop), .reload(fwd_epoch && !fe_q && aborted),
             .epoch_go(fwd_epoch), .halt(halt), .cfg_tx_we(cfg_tx_we), .cfg_rx_we(cfg_rx_we),
             .cfg_addr(cfg_addr), .cfg_data(cfg_data), .cal_start(cal_start), .cal_seg(cal_seg),
@@ -460,9 +466,36 @@ module qfd_sys_face #(
     // token calendar's END (the compiled token period).  A go that finds the program not installed faults (no wait).
     reg  [31:0] ecnt; reg ewait, fe_q;
     wire        e_go = ewait && ecnt == 32'd1;
-    wire        loop_go = ev_end && !halt;
+    wire        loop_go = ev_end && !halt && !(COLD_PREFIX && cold_active);
     assign t_go = (e_go || loop_go) && !face_fault;
     reg         go_fault, aborted;
+    // Cold prefix occupies T SEG1, whose exact entries/base belong to the shared
+    // immutable manifest. Steady tokens use T SEG0, so normal END never replays
+    // context prefetch or INIT. Halt/re-epoch replays the entire prefix.
+    reg [31:0] cold_count;reg cold_wait;
+    initial if(COLD_PREFIX && (!MU || !OVL || COLD_START_OFS<1))
+      $error("cold prefix requires MU/OVL and a bound positive manifest offset");
+    assign cold_t_go=COLD_PREFIX && cold_wait && cold_count==32'd1 && !halt;
+    always @(posedge ck or negedge rst_loop)
+      if(!rst_loop)begin cold_count<=0;cold_wait<=0;cold_active<=0;cold_fault<=0;end
+      else begin
+        if(halt)begin cold_wait<=0;cold_active<=0;end
+        else if(COLD_PREFIX && fwd_epoch && !fe_q)begin
+          cold_count<=COLD_START_OFS;cold_wait<=1;
+          if(cold_active || t_running_q)cold_fault<=1;
+        end else if(cold_wait)begin
+          cold_count<=cold_count-1'b1;
+          if(cold_count==1)begin
+            cold_wait<=0;cold_active<=1;
+            if(!boot_done || !cal_ready || !rp_program_ready || prog_busy || t_run)cold_fault<=1;
+          end
+        end
+        if(COLD_PREFIX && cold_active && ev_end)cold_active<=0;
+        if(COLD_PREFIX && cold_active && ev_stage &&
+           (ta[5:0]!=0 || !host_epoch_valid || !rp_cap || host_tag[44:43]!=0 || host_tag[42:37]!=0))cold_fault<=1;
+        if(COLD_PREFIX && cold_active && t_go)cold_fault<=1;
+      end
+
     always @(posedge ck or negedge rst_loop)
         if (!rst_loop) aborted <= 1'b0; else if (halt) aborted <= 1'b1; else if (fwd_epoch && !fe_q) aborted <= 1'b0;
     reg ctx_slot_q; reg [1:0] tstart_q;
@@ -496,7 +529,7 @@ module qfd_sys_face #(
     // ================================================================ event outputs (registered)
     always @(posedge ck or negedge rst_out) begin
         if (!rst_out) begin
-            cal_exp <= 1'b0; seg_exp <= 1'b0; dh_run <= 44'd0; tt_kok <= 1'b0; tt_kwd <= 1'b0;
+            cal_exp <= 1'b0; seg_exp <= 1'b0; dh_run <= 44'd0; init_u0<=0; tt_kok <= 1'b0; tt_kwd <= 1'b0;
             q_slot <= 1'b0; q_slot_beat <= 5'd0; kv_word_slot <= 1'b0; kv_word_index <= 2'd0;
             visibility_slot <= 1'b0; complete_slot <= 1'b0;
             emb_expected_slot <= 1'b0; emb_expected_word <= 6'd0; emb_expected_scale <= 1'b0; emb_expected_token <= 18'd0;
@@ -506,6 +539,7 @@ module qfd_sys_face #(
             // the D2D sequencer's start must coincide with this calendar's layer / token-run flag (layer 1 = L0 rides the
             // token run): the two compiler images cannot drift apart unnoticed
             cal_exp <= ev_tok | (ev_lay && ta[5:0] != 6'd1); seg_exp <= ev_tok;
+            init_u0 <= COLD_PREFIX && cold_active && ev_stage && ta[5:0]==0;
             dh_run[42] <= ev_stage; dh_run[41:36] <= ev_stage ? ta[5:0] : dh_run[41:36];
             dh_run[35:18] <= tok; dh_run[17:0] <= pos;
             if (ev_tlev) begin tt_kok <= ta[0]; tt_kwd <= ta[1]; end
@@ -593,6 +627,6 @@ module qfd_sys_face #(
     always @(posedge ck or negedge rst_emb)
         if (!rst_emb) prov_fault_q <= 1'b0;
         else if (emb_prov_fault) prov_fault_q <= 1'b1;
-    assign face_fault = boot_fault | prog_fault | cal_fault | emb_fault | prov_fault_q | rp_fault | armed_fault | go_fault | mu_hc_fault | accepted_ctx_fault;
+    assign face_fault = boot_fault | prog_fault | cal_fault | emb_fault | prov_fault_q | rp_fault | armed_fault | go_fault | mu_hc_fault | accepted_ctx_fault | cold_fault;
     assign fault = face_fault;
 endmodule
