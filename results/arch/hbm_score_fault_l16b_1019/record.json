@@ -1,0 +1,52 @@
+{
+ "schema": "opentallas.hbm_score_fault_l16b_1019.v1",
+ "verdict": "PASS",
+ "source_sha256": {
+  "rtl/hbm_accel/index/quad_1017/ot_hbm_idx_score_fault_static.sv": "11f55322ed3110312ab56645a6a9900efabb70f2e6df99b18ad9fbb81b244f06",
+  "rtl/hbm_accel/index/quad_1017/ot_hbm_idx_score_quarter_static.sv": "5e8bca20789994495dcbf35ff6f43dc6e2df51261a67212fd14e482d55b6c395",
+  "rtl/hbm_accel/index/quad_1017/test/tb_idx_score_fault.sv": "ca3439c94bc48c155072b4c279a57fb310457d6cdcd9ef2917fb4d19bce31270",
+  "rtl/hbm_accel/index/quad_1017/test/tb_idx_tail_score_fault.sv": "11528f4c2ddfe86773595092a1fd37ad5f24906cbc7f84c63db47dfe6e37c6cf",
+  "tools/hbm_die_v16/d4g_layers/l16b_score_fault.py": "319dd4394d1d0a3ee9ad895c1fc6fdba8042d1242c11ba66e16d0a7c40b326b1",
+  "tools/hbm_die_v16/run_idx_score_fault_1019.sh": "760ff732566e20e56002352237b93cd00113444edaab463e6a87f9370ae19f07",
+  "rtl/hdc/v41x/ot_hbm_idx_owned_native.sv": "c6db045a09c977c1a5bd5e675ae940c9703734d3a0b182212eb0a723d589d0b9",
+  "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv": "54bfaf33b25845f763b43d198e348647b7e53c460af05f8fc1024a7726eb139f"
+ },
+ "positive_cases": 37,
+ "real_tail_cases": 4,
+ "mutants": {
+  "1": "drop arithmetic flag: FAIL valid error",
+  "2": "ignore key valid: FAIL padded lane",
+  "3": "ignore beat valid: FAIL stale flags"
+ },
+ "semantics": {
+  "registered_score_bits": "[0]valid,[1]last,[9:2]arithmetic faults,[17:10]keyvalid",
+  "old_bug": "tail zeroes numeric output on arithmetic error; quarter fault ignored flags, permitting zero into valid topk",
+  "repair": "sticky fault |= valid && any(keyvalid & arithmetic_fault)",
+  "existing_protocol_fault": "efault[1:0],engine-valid mismatch,wf_d0 preserved",
+  "exception_policy": "real native tail emits zero + fault on arithmetic exception; native cnt_faults gates with keyvalid; not telemetry",
+  "host_path": "quarter.fault -> qctl.scf -> rootctl.qfault -> col_idx.c_fault -> hleafSE -> host_status -> host_cp_rxs.fault"
+ },
+ "successful_data_added_cycles": 0,
+ "diagnostic_edges_after_registered_score": 1,
+ "resources": {
+  "fault_flops": "same one existing quarter sticky flop; moved to helper",
+  "estimated_new_combination": "8 AND +8 reductionOR +validgate ~=17 twoinput gates per quarter; actual physical area/timing requires regeneration"
+ },
+ "physical_qualification": "fresh quarter source-bound synthesis/physical qualification required; no old view binding",
+ "external_unread_policy": "32 arithmetic flags may be internal-check candidates only with repaired source; four last-marker bits remain unresolved; no gate relaxed",
+ "fleet": {
+  "host": "ot-epyc6",
+  "directory": "/srv/opentallas-scratch/claude/codex-vm-fault/score_fault",
+  "verilator": "5.050"
+ },
+ "full_quarter_elaboration": {
+  "verdict": "PASS",
+  "source": "actual quarter and all47 real dependency modules; no stubs",
+  "parameter": "default TP96; new18bit metadata and helper are TP-independent; die contractTP192 requires fresh physical qualification",
+  "verilator": "5.050",
+  "wall_seconds": 175.892,
+  "allocated_mb": 14143.969,
+  "warnings": "pre-existing TIMESCALEMOD and split data/reset MULTIDRIVEN score bus; no errors"
+ },
+ "layer_idempotence": true
+}

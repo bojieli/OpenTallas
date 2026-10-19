@@ -12,6 +12,7 @@ the one-edge done delay is not observed), and the registered monotonic check onl
 RAW multi-descriptor cases also check every done word's count EXACTLY (cumulative sectors up to that descriptor).
 pos: pipeline ON, must pass; base: pipeline OFF (the original), must pass; fence / apstale: mutants OT_FENCE_MUT_HRSTALE
 (release flag not cleared on a pop) / OT_ING_MUT_APSTALE (stale row address across rows), must fail.
+S81-SHLK 10-18: pos7 (OT_HOSTNATIVE_PIPE7 = FPIPE 2 / APIPE 7) must pass; hreg7 / hregv7 / rac7 must be caught.
 Prints HNP_PASS / HNP_FAIL (pos, base) or HNP_NEG_DETECTED (rc 1) / HNP_NEG_MISSED (rc 0) and the ck cycles per case."""
 import re
 import sys
@@ -79,7 +80,13 @@ defs = {"pos2": P2, "fencevis2": P2 + ["-DOT_FENCE_MUT_HRSTALE"], "apstale2": P2
         "nseclag2": P2 + ["-DOT_ING_MUT_NSECLAG"], "ltstale2": P2 + ["-DOT_FENCE_MUT_LTSTALE"],
         "pos": ["-DOT_HOSTNATIVE_PIPE"], "base": [], "fence": ["-DOT_HOSTNATIVE_PIPE", "-DOT_FENCE_MUT_HRSTALE"],
         "fencevis": ["-DOT_HOSTNATIVE_PIPE", "-DOT_FENCE_MUT_HRSTALE"],
-        "apstale": ["-DOT_HOSTNATIVE_PIPE", "-DOT_ING_MUT_APSTALE"]}[mode]
+        "apstale": ["-DOT_HOSTNATIVE_PIPE", "-DOT_ING_MUT_APSTALE"],
+        # S81-SHLK 10-18: dsdv_sh_lk's ingest (FPIPE 2, APIPE 7: registered host-FIFO head + realigner pointer copies)
+        "pos7": ["-DOT_HOSTNATIVE_PIPE7"], "hreg7": ["-DOT_HOSTNATIVE_PIPE7", "-DOT_ING_MUT_HREG"],
+        "hregv7": ["-DOT_HOSTNATIVE_PIPE7", "-DOT_ING_MUT_HREGV"], "rac7": ["-DOT_HOSTNATIVE_PIPE7", "-DOT_ING_MUT_RAC"],
+        # S81-SAFE-FIX/SH 10-19: APIPE 8 (IKEY address stage split): pos8 must pass, apbskip8 / apstale8 must be caught
+        "pos8": ["-DOT_HOSTNATIVE_PIPE8"], "apbskip8": ["-DOT_HOSTNATIVE_PIPE8", "-DOT_ING_MUT_APBSKIP"],
+        "apstale8": ["-DOT_HOSTNATIVE_PIPE8", "-DOT_ING_MUT_APSTALE"]}[mode]
 srcs = [R / s for s in [B.SECDED] + B.HOST_RTL + ["rtl/dsrom_sys/s81_ingest/ot_s81_ingest_visibility_fence.sv",
                                                   "rtl/dsrom_sys/s81_ingest/dsfd_host_native.sv"]] + [w / "tb.sv"]
 ok_all = True
@@ -115,7 +122,7 @@ for name, c in cases.items():
 if mode in ("fencevis", "fencevis2"):
     print("HNP_NEG_DETECTED (visibility check)" if vis_only else "HNP_NEG_MISSED (no visibility-only catch)")
     sys.exit(1 if vis_only else 0)
-if mode in ("pos", "base", "pos2"):
+if mode in ("pos", "base", "pos2", "pos7", "pos8"):
     print("HNP_PASS" if ok_all else "HNP_FAIL")
     sys.exit(0 if ok_all else 1)
 print("HNP_NEG_DETECTED" if not ok_all else "HNP_NEG_MISSED")

@@ -1,0 +1,7 @@
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-1776596-1792351120 after 0 s
+XDIE_STATS beats 1380 landed 1380 mismatches 0 late 0 maxlate -3 extra 0 faults 0000000000000000 live 32/32 last_cycle 18991
+PASS xdie_s81: 1380 beats of the TP4 calendar landed bit-exact, in order, by their compiled deadlines, no fault
+BENCH_PASS min
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1776596-1792351120): exit 0
+EXIT 0

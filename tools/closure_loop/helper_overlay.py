@@ -12,7 +12,7 @@ from pathlib import Path
 HELPERS = ("m6_stub_config.py", "eco_recovery.py", "path_summary.py", "macro_views.py", "ck_insertion.py", "hold_eco.sh", "hold_eco.tcl", "hold_eco_corner.tcl",
            "hold_eco_sdc.py", "hold_eco_window.tcl", "hold_corners_patch.py", "h1_patch.py", "cal_classify.sh", "resume_patch.py", "resume_check.sh",
            "../orfs_hold_mm.py", "../orfs_hold_mm.tcl", "tt_resta.sh", "meas_resta.py", "lane_kh_overlay.py",
-           "../../physical/common_flow/io_ref_routed.sdc", "../fp_margin_lint.py", "../fp_margin_lint.tcl",
+           "../../physical/common_flow/io_ref_routed.sdc", "../../physical/common_flow/clock_family.tcl", "../fp_margin_lint.py", "../fp_margin_lint.tcl",
            "../preroute_gate.py", "../preroute_gate.tcl", "../textbook_lint.py", "tt_overlay.py", "vtswap_eco.sh", "vtswap_eco.tcl",
            "pinflop_overlay.py", "../../physical/qwen_die_masters/pinflop_ref.tcl", "../w18/corner_sta.py", "route_corner_check.py", "../hier_contract/child_lint.py",
            "../hier_contract/abstract_pin_stub.py", "../hier_contract/m6_pin_grant.py", "../../physical/common_flow/grt_macro_top_layer.tcl", "../../physical/common_flow/m6_pin_access.tcl",
@@ -642,6 +642,9 @@ def stored_frozen_payloads(store, plan, only=None):
 
 
 UNCOMMITTED_RESOLUTIONS = ("daemon_only", "not_on_main", "no_git")
+# rows whose bytes come from the content store on a reinstall: uncommitted at freeze, or a PUBLISH_ONLY row refreshed
+# to a later origin/main blob on an installed run (closure_loop._publish_refresh; the plan keeps its original origin tree)
+STORE_RESOLUTIONS = UNCOMMITTED_RESOLUTIONS + ("publish_refresh",)
 
 
 def recover_frozen_payloads(repo, store, plan):
@@ -654,7 +657,7 @@ def recover_frozen_payloads(repo, store, plan):
     """
     rows = frozen_rows(plan)
     resolution = {f.get("path"): f.get("resolution") for f in plan.get("files", []) if isinstance(f, dict)}
-    loose = {r["path"] for r in rows if resolution.get(r["path"]) in UNCOMMITTED_RESOLUTIONS}
+    loose = {r["path"] for r in rows if resolution.get(r["path"]) in STORE_RESOLUTIONS}
     if not loose:
         return committed_frozen_payloads(repo, plan), "committed_origin"
     if store is None:
@@ -693,6 +696,43 @@ def verify_installed_plan(directory, plan):
             raise ValueError(f"original helper bytes mismatch: {row['path']}")
     return {"status": "verified_original", "origin_main": plan["origin_main"],
             "content_sha256": plan["content_sha256"], "files": len(rows)}
+
+
+def publish_only_pair(a, b):
+    """True when plans a and b (both self-consistent) differ ONLY in PUBLISH_ONLY rows of the same mode: one is a
+    publish refresh of the other (closure_loop._publish_refresh)."""
+    try:
+        ra = {r["path"]: r for r in frozen_rows(a)}
+        rb = {r["path"]: r for r in frozen_rows(b)}
+    except ValueError:
+        return False
+    if set(ra) != set(rb) or a.get("origin_main") != b.get("origin_main"):
+        return False
+    diff = [p for p in ra if ra[p] != rb[p]]
+    return bool(diff) and all(p in PUBLISH_ONLY and ra[p]["mode"] == rb[p]["mode"] for p in diff)
+
+
+def installed_plan_receipt(directory, plan):
+    """verify_installed_plan, except that an installed sidecar which is a PUBLISH_ONLY refresh of the job's plan (or the
+    reverse) is verified on its own rows and returned as receipt["installed_plan"] for the caller to sanction and adopt.
+
+    QXPQ-UNSTICK 2026-10-19: a publish refresh rewrites cl/ (view_export.py + sidecar) on the host BEFORE the daemon saves
+    the job; the daemon restarted at 06:25 between the two, so dsrom-qelem-qs5f-ob2-tc-hm25-cl-4b2f835cb kept the old plan
+    while its routed run held the refreshed one, and every later step failed 'sidecar differs' -> NEEDS_HUMAN."""
+    try:
+        return verify_installed_plan(directory, plan)
+    except ValueError as ex:
+        if "sidecar differs" not in str(ex):
+            raise
+        sidecar = Path(directory) / "helper_overlay_plan.json"
+        try:
+            installed = json.loads(sidecar.read_text())
+        except (OSError, ValueError):
+            raise ex
+        if not publish_only_pair(plan, installed):
+            raise
+        receipt = verify_installed_plan(directory, installed)
+        return dict(receipt, installed_plan=installed, sidecar_mismatch="publish_only")
 
 
 def verify_staged_helpers(directory, plan, paths):

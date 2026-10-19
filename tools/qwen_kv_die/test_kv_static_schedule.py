@@ -78,6 +78,36 @@ def test_pvfin_start_misaligned_fails():
     assert got == ['PVFIN_START_ALIGN']
 
 
+def test_pvfst_pad_aligns_pvfin_start():
+    """KV-PVFST: the generator pads ks_pvfst / the shorter pvp trunk up to T = max(pvfst - PV_LEAD, pvp_0, pvp_1)
+    (kv_k_rt_eq.pvfin_pads); the padded die derives align [0, 0]"""
+    import kv_k_rt_eq as KRT
+
+    def apply(p, pads):
+        p = dict(p)
+        p['pvfst'] += pads['pvfst']
+        p['pvp_0'] += pads['pvp_0']
+        p['pvp_1'] += pads['pvp_1']
+        return p
+    p = paths(pvfst=8, fin=11)                 # start word one edge early on both pairs
+    n, before = KRT.pvfin_pads(p)
+    assert (n, before) == (dict(pvfst=1, pvp_0=0, pvp_1=0), [-1, -1])
+    q = apply(p, n)
+    assert KSP.schedule(q)['attn']['pvfin_start_align'] == [0, 0] and 'PVFIN_START_ALIGN' not in ids(q)
+    # the kvs14r-bccc561e3-pvfst plan: pvp_0 one longer than pvp_1 -> align [-1, 0]; pvfst +1 AND pvp_1 +1
+    p = paths(pvst_0=37, pvst_1=0, pvp_0=5, pvp_1=4, pvfst=41, fin=45)
+    n, before = KRT.pvfin_pads(p)
+    assert (n, before) == (dict(pvfst=1, pvp_0=0, pvp_1=1), [-1, 0])
+    s = KSP.schedule(apply(p, n))['attn']
+    assert s['pvfin_start_align'] == [0, 0] and s['F_DLY'] == 1 + 5 + 45
+    # a late start word pads both trunks
+    assert KRT.pvfin_pads(paths(pvfst=10, fin=9))[0] == dict(pvfst=0, pvp_0=1, pvp_1=1)
+    # mutants: no pad -> FAIL; pvfst-only pad on unequal trunks moves the skew to pair 1 -> FAIL
+    assert 'PVFIN_START_ALIGN' in ids(paths(pvfst=8, fin=11))
+    assert KSP.schedule(dict(p, pvfst=42))['attn']['pvfin_start_align'] == [0, 1]
+    assert KRT.pvfin_pads(paths(pvp_0=None))[0] is None
+
+
 def test_f_dly_fails():
     assert ids(paths(fin=11)) == ['F_DLY']
 

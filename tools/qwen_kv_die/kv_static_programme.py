@@ -228,7 +228,9 @@ def profile(kind, ages=None):
                 qk_age=ages['qk']['QK_ISSUE_AGE'], qk_row_latency=ages['qk']['row_latency_for_calendar'],
                 v_rl=ages['pv']['RL'], d_rl=ages['pv']['RL'] - 19, d_qk=ages['qk']['QK_ISSUE_AGE'] - AC.QK_CONSUME,
                 phase=ages['phase_launch'], link_ages=L, ld=L['return_to_landing_ld']['LD'], rc=3, landing_uncertainty=1,
-                rd_shape=dict(K=RD_SHAPE_K, V=RD_SHAPE_V), astk_law=astk_law() if ASTK_EXPAND else None)
+                rd_shape=dict(K=RD_SHAPE_K, V=RD_SHAPE_V), astk_law=astk_law() if ASTK_EXPAND else None,
+                # KV-BOOTAGE 10-19: the result face's boot F_DLY (kv_bootage image; 1 = the closed face law, unchanged)
+                f_dly=((ages.get('boot_ages') or {}).get('attn') or {}).get('F_DLY') or 1)
 
 
 def kv_params(pr):
@@ -276,7 +278,9 @@ def attention_calendar(T, pr, service_end=None):
     pv = max(c['EXP'] + AC.pv_after_exp_w16(T) + d_gap, c['HUB_PUB'] + mg - max(po))
     r = max(max(po), c['HUB_PUB'] + mg - pv)
     if service_end is not None:
-        r_link = service_end - 49 - pv                      # service_cycles = PV_START + max(P, R) + 16 + 33
+        # service_cycles = PV_START + max(P, R) + 16 + 32 + F_DLY (KV-BOOTAGE: the face's RESULT_AGE PV_START + R + 16 +
+        # F_DLY stays on the link slot service_end - 32; F_DLY 1 = the closed law service_end - 49 - PV_START)
+        r_link = service_end - 48 - pr.get('f_dly', 1) - pv
         if r_link < r:
             raise ValueError(f'T={T}: attention service needs {pv + r + 49} edges, the link slot gives {service_end}')
         r = r_link

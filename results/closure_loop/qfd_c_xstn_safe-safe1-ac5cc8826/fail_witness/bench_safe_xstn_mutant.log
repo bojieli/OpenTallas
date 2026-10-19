@@ -1,0 +1,11 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job qfd_c_xstn_safe-safe1-ac5cc8826 bench bench_safe_xstn_mutant host ot-epyc7 run /srv/opentallas-scratch/claude/closure-loop/qfd_c_xstn_safe-safe1-ac5cc8826 log cl/bench_safe_xstn_mutant.a1b1.log captured 2026-10-19T10:01:16-07:00
+# fail_regex 'SAFE_XSTN_FAIL MUT1 errors[1-9][0-9]*'
+Verilator 5.050 2026-07-01 rev v5.050
+SAFE_XSTN_MISMATCH n6
+SAFE_XSTN_MISMATCH n7
+SAFE_XSTN_MISMATCH n8
+SAFE_XSTN_MISMATCH n9
+[60006000] %Fatal: tb_qfd_c_xstn_safe.sv:26: Assertion failed in tb: SAFE_XSTN_FAIL MUT1 errors5994
+%Error: rtl/test/tb_qfd_c_xstn_safe.sv:26: Verilog $stop
+Aborting...

@@ -20,7 +20,7 @@ n_<bid> at its source pin, so post-relay / post-station consumers (kv_static_par
 Domain: the clock net on the source instance's first clock port mapped by --domain-map (default: n_clk_coll* ->
 serial_0p9, everything else on the die core -> stream_1p2, n_clk_hbm* -> hbm_cdc).
 """
-import argparse, json, re, subprocess, sys
+import argparse, hashlib, json, re, subprocess, sys
 from collections import defaultdict
 from pathlib import Path
 
@@ -28,10 +28,15 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'tools'))
 import die_port_bind as P   # noqa: E402
 import die_relay_stages as DRS   # noqa: E402
+from qwen_split import lane_groups as LG  # noqa: E402
 
 # QXF-SEAMK 10-18: + the KV forwarded-lane stations / landings (tools/qwen_kv_die/kv_fwd_lanes.py, qkd_rlysh0?_<S> /
 # qkd_landsh0?_<S>: same instance per relay station, a -> b, one stage each as the generator counts them)
 RELAY_RE = re.compile(r'^(qkd_rlys_\d+|qkd_rlysh0?_\d+|qkd_landsh0?_\d+|qfd_rly_|qfd_rlyh0?_|qfd_landh?0?_)')
+FORWARDED_RE = re.compile(r'^(qkd_rlysh0?_\d+|qkd_landsh0?_\d+|qfd_rlyh0?_|qfd_landh?0?_)')
+# The inject port has three independently scheduled roles: held data, V
+# (delayed inject select), and T (passing trunk token). It is not one record.
+PV_TRUNK_ROLE_SHA = '1a40cdf372693347a66fce51f0cbe77b856af0cc7f4519eea97c2b0ac4916669'
 RESET_MASTER_RE = re.compile(r'^(qfd_rst_rep|qkd_rst_region)')
 CLOCK_PORT_RE = re.compile(r'^(ck|clk|ck_\w+|clk_\w+|\w+_ck|\w+_clk|gclk|ck\d+|refclk|face_ck|fdi_ck|hck)$')
 RELAY_CTRL = {'ea', 'eb', 'en', 'k0', 'k1', 'k2', 'tie_hi', 'tie_lo', 'ck_o', 'ckf', 'ck_s', 'fault', 'ck', 'rs'}
@@ -81,6 +86,7 @@ def load_ports(pb, commit, src_prefixes, local_dirs):
     for f in sorted(files):
         txt, how = rtl_text(f, commit, src_prefixes, local_dirs)
         for mod in P.parse_modules(P.preprocess(P.strip_comments(txt), dict(defines)), f):
+            mod.source_sha256 = hashlib.sha256(txt.encode()).hexdigest()
             mods.setdefault(mod.name, mod)
         srcs[f] = how
     missing = sorted(m for m in pb['masters'] if m not in mods)
@@ -96,38 +102,70 @@ def domain_of(net, dmap=DOMAIN_MAP):
     return None
 
 
+def lane_chain(row, landing):
+    """Canonical physical order: compute stations exclude landing; KV includes it."""
+    if not row or not isinstance(row.get('stations'), list):
+        return None
+    chain = list(row['stations'])
+    if landing not in chain:
+        chain.append(landing)
+    if (not chain or chain[-1] != landing or len(chain) != int(row.get('n', -1))
+            or len(set(chain)) != len(chain)):
+        return None
+    return tuple(chain)
+
+
 def age_fields(r, land_k, land_e=None):
-    """core-clock age of the bus at the destination pin (not part of the digest):
-    no landing on the path -> age_edges = stages (every relay flop one core edge);
-    one landing and stages == 1 (an n = 1 lane: the landing carries the hop-0 gate) -> age_edges = K (the landing
-    delivers L = K + 1 - h0 - cal = K: h0 = 1 for the landh0 en register (QK-LANDEN), cal = G - R0 = 0 with the
-    generator's G = R0 strap rule K = E + 1 (KVR-FWDAGE 10-19), so L = E + 1 = the lane age, 1 <= K < 2D = 8);
-    a longer landed lane -> age_edges None: E = K (mod 8) only; the lane's E needs the die's land plan (land_plan.json)."""
+    """Prove exact ordered forwarded occurrences and every plain flop."""
     lands = {l for l in r['lands'] if l}
     if not lands:
-        return dict(age_edges=max(r['st']), age_basis='relay flops')
-    ks = sorted({land_k.get(l[-1]) for l in lands})
-    if len(lands) == 1 and max(r['st']) == 1 and len(next(iter(lands))) == 1 and None not in ks:
-        return dict(age_edges=ks[0], landing_k=ks[0], age_basis='n=1 landed lane: E = K')
-    # QLB-GEN 10-18: a longer landed lane takes the GEN's own E (fwd_lanes.json of the same build, --lanes), the age
-    # the generator equalized the bundle to (K = total E + cal mod 8 is checked against the straps)
-    es = sorted({(land_e or {}).get(l[-1], (None, None))[0] for l in lands}, key=str)
-    if land_e and len(lands) == 1 and len(es) == 1 and es[0] is not None:
-        e, k = land_e[next(iter(lands))[-1]]
-        if k is not None and None not in ks and ks != [k % 8]:
-            return dict(age_edges=None, landing_k=ks[0], age_basis=f'fwd_lanes.json E {e} but straps K {ks} != lane K {k}')
-        return dict(age_edges=e, landing_k=ks[0] if len(ks) == 1 else ks, age_basis='landed lane n>1: E from fwd_lanes.json (GEN)')
-    return dict(age_edges=None, landing_k=ks if len(ks) > 1 else ks[0],
-                age_basis='landed lane n>1: E = K mod 8; needs land_plan.json')
+        return dict(age_edges=LG.lane_cycles(dict(n=max(r['st']))), age_basis='relay flops')
+    ks = sorted({land_k.get(l[-1]) for l in lands}, key=str)
+    if len(r['lands']) == 1 and len(lands) == 1:
+        sequence = next(iter(lands))
+        rows = [(land_e or {}).get(name) for name in sequence]
+        plain = r.get('plain_counts', set())
+        chains = [lane_chain(row, name) for name, row in zip(sequence, rows)]
+        if len(set(sequence)) == len(sequence) and all(rows) and all(chains) and len(plain) == 1:
+            chain = tuple(inst for part in chains for inst in part)
+            posts = [int(row.get('post_stages', 0)) for row in rows]
+            valid = (len(set(chain)) == len(chain) and all(p >= 0 for p in posts)
+                     and all(land_k.get(name) == int(row.get('K', -1)) % 8
+                             for name, row in zip(sequence, rows)))
+            if (valid and r.get('forwarded_paths') == {chain}
+                    and r['st'] == {len(chain) + min(plain)} and sum(posts) <= min(plain)):
+                return dict(age_edges=sum(LG.lane_cycles(row) for row in rows) + min(plain),
+                            landing_k=ks[0] if len(sequence) == 1 else [land_k[name] for name in sequence],
+                            plain_relay_stages=min(plain),
+                            age_basis='ordered exact GEN forwarded occurrences + individually walked plain relay flops')
+    return dict(age_edges=None, landing_k=ks[0] if len(ks) == 1 else ks,
+                age_basis='landed path: missing lane metadata, mixed paths, or actual K/order differs from recorded chain',
+                age_diagnostic=dict(stages=sorted(r['st']), land_sequences=[list(q) for q in sorted(lands)],
+                    plain_counts=sorted(r.get('plain_counts', [])),
+                    forwarded_paths=[list(q) for q in sorted(r.get('forwarded_paths', []))],
+                    metadata={name: {k: row.get(k) for k in ('n', 'E', 'cal', 'K', 'post_stages', 'stations')}
+                              for name in sorted({n for seq in lands for n in seq})
+                              if (row := (land_e or {}).get(name)) is not None}))
 
 
 def export_lanes(path):
-    """{landing instance: (E, K)} of a GEN fwd_lanes.json (forwarded data lanes with an E)."""
+    """Landing -> checked GEN lane row, retaining E/calendar/K evidence."""
     if not path:
         return None
     fl = json.loads(Path(path).read_text())
-    return {r['landing']: (int(r['E']), None if r.get('K') is None else int(r['K'])) for r in fl.get('lanes', [])
-            if r.get('E') is not None and r.get('landing')}
+    result = {}
+    for r in fl.get('lanes', []):
+        if r.get('E') is None or not r.get('landing'):
+            continue
+        if r.get('K') is None or r.get('cal') is None:
+            raise ValueError(f"{r['bid']}: missing K/reset calendar")
+        e, k, cal = int(r['E']), int(r['K']) % 8, int(r['cal'])
+        if k != (e + cal) % 8:
+            raise ValueError(f"{r['bid']}: K {k} != (E {e} + calendar {cal}) mod8")
+        if r['landing'] in result:
+            raise ValueError(f"{r['bid']}: duplicate landing {r['landing']}")
+        result[r['landing']] = dict(r, E=e, K=k)
+    return result
 
 
 def export(die_v, pb, design, commit, src_prefixes, local_dirs, plan_id, reach=None, skip_inst=None, land_e=None):
@@ -171,10 +209,11 @@ def export(die_v, pb, design, commit, src_prefixes, local_dirs, plan_id, reach=N
             if pn in mod.ports and CLOCK_PORT_RE.match(pn) and name not in inst_clk and b and b[0][0] not in ('CONST', 'Z', 'UNDECL'):
                 inst_clk[name] = b[0][0]
         relay = is_relay(mst)
-        if mst.startswith('qfd_land'):
+        if re.match(r'^(qfd_land|qkd_land)', mst):
             ks = [cm.get(k, '').strip() for k in ('k2', 'k1', 'k0')]
-            if all(re.search(r'_(hi|lo)$', k) for k in ks):    # K strap from the instance's own tie cells (ot_qfd_land k)
-                land_k[name] = sum((1 << (2 - i)) for i, k in enumerate(ks) if k.endswith('_hi'))
+            hi, lo = cm.get('tie_hi'), cm.get('tie_lo')
+            if hi and lo and hi != lo and all(k in (hi, lo) for k in ks):
+                land_k[name] = sum((1 << (2 - i)) for i, k in enumerate(ks) if k == hi)
             else:
                 problems.append(f'{name}: landing K strap not tied from tie_hi / tie_lo: {ks}')
         for pn, b in bits.items():
@@ -203,7 +242,7 @@ def export(die_v, pb, design, commit, src_prefixes, local_dirs, plan_id, reach=N
             for i in range(na):
                 relay_out[(name, 'a', na - 1 - i)] = outpos.get(na - 1 - i)
     # resolve aliases: ('ALIAS', x) means the load continues on bit x with no stage
-    pairs = {}
+    pairs, path_ages = {}, {}
 
     def terminal(inst, port, mst):
         if mst == '__alias__':
@@ -217,27 +256,41 @@ def export(die_v, pb, design, commit, src_prefixes, local_dirs, plan_id, reach=N
     for bit, (si, sp, sm, spos) in drv.items():
         if is_relay(sm) or skip_pin(si, sp, sm):
             continue
-        stack = [(bit, 0, frozenset(), ())]
+        stack = [(bit, 0, frozenset(), (), (), 0)]
         while stack:
-            b, n, seen, lands = stack.pop()
+            b, n, seen, lands, forwarded, plain = stack.pop()
             for (li, lp, lm, lpos) in loads.get(b, ()):
                 if lm == '__alias__':
                     nx = relay_out.get((li, 'a', lpos))
                     if nx:
-                        stack.append((nx[1], n, seen, lands))
+                        stack.append((nx[1], n, seen, lands, forwarded, plain))
                     continue
                 if is_relay(lm) and lp == 'a':
-                    if li in seen:
-                        problems.append(f'relay loop at {li} from {si}.{sp}'); continue
+                    node = (li, lpos)
+                    if node in seen:
+                        problems.append(f'relay loop at {li}.a[{lpos}] from {si}.{sp}'); continue
                     nx = relay_out.get((li, 'a', lpos))
                     if nx is None or nx[0] in ('CONST', 'Z', 'UNDECL'):
                         problems.append(f'relay {li}.b bit {lpos} open (chain from {si}.{sp})'); continue
-                    stack.append((nx, n + 1, seen | {li}, lands + ((li,) if lm.startswith('qfd_land') else ())))
+                    is_fwd = bool(FORWARDED_RE.match(lm))
+                    stack.append((nx, n + 1, seen | {node}, lands + ((li,) if re.match(r'^(qfd_land|qkd_land)', lm) else ()),
+                                  forwarded + ((li,) if is_fwd else ()), plain + int(not is_fwd)))
                     continue
                 if skip_pin(li, lp, lm):
                     continue
-                r = pairs.setdefault((si, sp, li, lp), dict(st=set(), bits=set(), sm=sm, lm=lm, lands=set(), nets=set()))
+                age_key = (n, lands, forwarded, plain)
+                if age_key not in path_ages:
+                    path_ages[age_key] = age_fields(dict(st={n}, lands={lands}, forwarded_paths={forwarded},
+                                                        plain_counts={plain}), land_k, land_e)
+                logical_port = lp
+                if (lm in ('qkd_rlyi_258', 'qkd_rlyi_258s') and lp == 'y'
+                        and getattr(mods[lm], 'source_sha256', None) == PV_TRUNK_ROLE_SHA):
+                    logical_port = f'y__{lpos}_{lpos}' if lpos >= 256 else 'y__255_0'
+                r = pairs.setdefault((si, sp, li, logical_port), dict(st=set(), bits=set(), sm=sm, lm=lm, lands=set(),
+                                                           forwarded_paths=set(), plain_counts=set(), effective_ages=set(), nets=set()))
                 r['st'].add(n); r['bits'].add(lpos); r['lands'].add(lands); r['nets'].add(bit[0])
+                r['forwarded_paths'].add(forwarded); r['plain_counts'].add(plain)
+                r['effective_ages'].add(path_ages[age_key]['age_edges'])
     recs = []
     feeders = defaultdict(list)
     for (si, sp, li, lp) in pairs:
@@ -247,12 +300,22 @@ def export(die_v, pb, design, commit, src_prefixes, local_dirs, plan_id, reach=N
         if len(feeders[(li, lp)]) > 1:            # a concatenated input fed by several sources: name the slice (generator rule)
             dp = f"{lp}__{max(r['bits'])}_{min(r['bits'])}"
         bid = DRS.bus_id(si, sp, li, dp)
-        if len(r['st']) > 1:
+        coherent = len(r['effective_ages']) == 1 and None not in r['effective_ages']
+        if len(r['st']) > 1 and not coherent:
             problems.append(f'{bid}: bits with different stages {sorted(r["st"])} (max taken)')
+        ages = age_fields(r, land_k, land_e)
+        if coherent and (ages['age_edges'] is None or len(r['st']) > 1):
+            ages = dict(age_edges=next(iter(r['effective_ages'])),
+                        age_basis='every physical bit path individually proved at the same source-to-pin age')
+        elif len(r['effective_ages'] - {None}) > 1:
+            problems.append(f'{bid}: bits with different proved ages {sorted(r["effective_ages"] - {None})}')
+            ages['age_edges'] = None
+        if ages['age_edges'] is None:
+            problems.append(f"{bid}: unresolved landed age ({ages['age_basis']})")
         recs.append(dict(id=bid, src=dict(inst=si, port=sp, master=r['sm']), dst=dict(inst=li, port=dp, master=r['lm']),
                          width=len(r['bits']), stages=max(r['st']), stage_spread=sorted(r['st']) if len(r['st']) > 1 else None,
                          domain=domain_of(inst_clk.get(si) or inst_clk.get(li)) or 'stream_1p2', eq_age_group=None,
-                         src_nets=sorted(r['nets']), **age_fields(r, land_k, land_e)))
+                         src_nets=sorted(r['nets']), **ages))
     doc = DRS.make_doc(design, dict(id=plan_id, commit=commit, generator='tools/qwen_layerbench/netlist_relay_stages.py',
                                     sources=[str(die_v)] + sorted(set(srcs.values()))[:400], kind='GEN netlist walk (die run)'),
                        CLOCK_PERIOD_PS, reach, recs, coverage='complete', problems=problems[:200],

@@ -29,42 +29,22 @@ from pathlib import Path
 
 PLAT = "/OpenROAD-flow-scripts/flow/platforms/asap7"
 
-# FLOW-FIX-0410 2026-10-09: the arrival of the sink's ACTIVE transition (from-transition of its clock->output arc),
-# measured from the source edge that produces it, on the rise-edge time base (an arrival from the source FALL edge has
-# the half period removed).  Same rule as physical/common_flow/io_ref_routed.sdc: behind an odd clock inversion
-# (ot_fwd_link_stage, fck = ~ck) arrival_max_rise is T/2 + tree (dsfd_hstnh_515: 603 vs ~190 ps).
-ACTIVE_TCL = r"""
-set ::ot_ck_act [dict create]
-proc ot_ck_active {p} {
-  set c [get_cells -quiet -of_objects $p]
-  if {![llength $c]} { return "" }
-  set k "[get_property $c ref_name]/[get_property $p lib_pin_name]"
-  if {[dict exists $::ot_ck_act $k]} { return [dict get $::ot_ck_act $k] }
-  sta::redirect_string_begin
-  catch {report_edges -from $p}
-  set r [sta::redirect_string_end]
-  set on 0; set fr {}
-  foreach l [split $r "\n"] {
-    if {[regexp {^\S} $l]} { set on [regexp {(Clk|En) to Q} $l]; continue }
-    if {$on && [regexp {^\s+([\^v])\s+->} $l -> e]} { if {[lsearch -exact $fr $e] < 0} { lappend fr $e } }
-  }
-  set a [expr {[llength $fr] == 1 ? ([lindex $fr 0] eq "^" ? "r" : "f") : ""}]
-  dict set ::ot_ck_act $k $a
-  return $a
-}
+# Shared physical clock tags: remove the actual source waveform phase,
+# including generated bank phases, rather than guessing from data arrivals.
+# Routes ship helpers flat under cl/; source-tree invocation uses common_flow.
+_family_paths = (Path(__file__).resolve().with_name("clock_family.tcl"),
+                 Path(__file__).resolve().parents[2] / "physical/common_flow/clock_family.tcl")
+_family_path = next((p for p in _family_paths if p.is_file()), None)
+if _family_path is None:
+    raise FileNotFoundError("clock_family.tcl missing from source tree / shipped helper plan")
+CLOCK_FAMILY_TCL = _family_path.read_text()
+ACTIVE_TCL = CLOCK_FAMILY_TCL + r"""
 proc ot_ck_arr {p clk} {
-  set half 0.0
-  if {![catch {list [$clk waveform] [$clk period] [get_property $clk period]} w]} {
-    lassign $w wf ps pu
-    if {[llength $wf] >= 2 && $ps > 0} { set half [expr {([lindex $wf 1] - [lindex $wf 0]) * $pu / $ps}] } }
-  set ar [get_property $p arrival_max_rise]; set af [get_property $p arrival_max_fall]
-  set okr [string is double -strict $ar]; set okf [string is double -strict $af]
-  if {!($okr && $okf)} { return [expr {$okr ? $ar : ($okf ? $af : "")}] }
-  set t [ot_ck_active $p]
-  set lo [expr {$ar <= $af ? "r" : "f"}]
-  if {$t eq ""} { set t $lo }
-  set v [expr {$t eq "r" ? $ar : $af}]
-  return [expr {$t eq $lo ? $v : $v - $half}]
+  set owners [get_property $p clocks]
+  if {[llength $owners] != 1 || [ot_cf_root [get_full_name $owners]] ne [get_full_name $clk]} {
+    error "CK_INSERTION: wrong/ambiguous clock ownership [get_full_name $p]"
+  }
+  return [ot_cf_wire $p $owners]
 }
 """
 
@@ -145,34 +125,33 @@ proc ot_ck_macro_owned {p selected} {
     error "CK_INSERTION: macro clock pin '[get_full_name $p]' requires one timing clock, found $owners"
   }
   puts "OT_MC_SOURCE [get_full_name $p] [lindex $owners 0]"
-  return [expr {[lindex $owners 0] eq [get_full_name $selected]}]
+  set owner [lindex $owners 0]
+  if {[info exists ::ot_cf_master] && [dict size $::ot_cf_master]} {set owner [ot_cf_root $owner]}
+  return [expr {$owner eq [get_full_name $selected]}]
 }
 """
 
 
-# Boundary membership is structural. Clock groups / false paths may suppress
-# STA paths at a legitimate forwarded-clock input; they cannot remove a pin
-# register from the measured physical boundary. Stop at sequential endpoints
-# and intersect real data pins, so an asynchronous reset cannot select every
-# internal register sharing its reset tree. OpenSTA's `all_registers -data_pins`
-# also returns asynchronous set/clear pins (they are timing-check endpoints), so
-# the async and clock pins are subtracted explicitly (review 10-19).
+# Boundary membership is physical connectivity, including disabled/false-path
+# arcs. Timing-path enumeration omits precisely the paths an exception hides.
+# OpenSTA includes asynchronous controls in -data_pins, so remove those before
+# intersecting the structural input fanout with the selected clock's registers.
 BOUNDARY_TCL = r"""
 set bnd {}
-set data_pins {}
-set ot_ck_nondata {}
-foreach p [all_registers -async_pins] { dict set ot_ck_nondata [get_full_name $p] 1 }
-foreach p [all_registers -clock_pins] { dict set ot_ck_nondata [get_full_name $p] 1 }
+set ot_ck_data {}
+set ot_ck_async {}
+foreach p [all_registers -async_pins] { dict set ot_ck_async [get_full_name $p] 1 }
 foreach p [all_registers -data_pins] {
   set n [get_full_name $p]
-  if {![dict exists $ot_ck_nondata $n]} { dict set data_pins $n 1 }
+  if {![dict exists $ot_ck_async $n]} { dict set ot_ck_data $n 1 }
 }
 set din [all_inputs -no_clocks]
 if {[llength $din]} {
   foreach p [get_fanout -from $din -flat -endpoints_only -trace_arcs all] {
     set n [get_full_name $p]
+    if {![dict exists $ot_ck_data $n]} continue
     set i [regsub {/[^/]+$} $n {}]
-    if {[dict exists $data_pins $n] && [dict exists $regs $i]} { dict set bnd $i 1 }
+    if {[dict exists $regs $i]} { dict set bnd $i 1 }
   }
 }
 set dout [all_outputs]
@@ -199,8 +178,14 @@ read_sdc /base/{sdc}
 set_propagated_clock [all_clocks]
 {RAW_SOURCE_TCL if raw_source else ''}
 {CLOCK_SETUP_TCL.replace('CLOCK_REQUEST', clock)}
+{CLOCK_FAMILY_TCL}
+ot_cf_refresh
+lassign [ot_cf_pins $ot_ck_selected] ot_ck_family_pins ot_ck_family_owners
+set ot_ck_family_counts {{}}
+dict for {{pin owner}} $ot_ck_family_owners {{dict incr ot_ck_family_counts [get_full_name $owner]}}
+dict for {{owner count}} $ot_ck_family_counts {{puts "OT_CK_FAMILY $owner $count"}}
 set regs {{}}
-foreach p [all_registers -clock_pins -clock $ot_ck_selected] {{ set n [get_full_name $p]; dict set regs [regsub {{/[^/]+$}} $n {{}}] $n }}
+foreach p $ot_ck_family_pins {{ set n [get_full_name $p]; dict set regs [regsub {{/[^/]+$}} $n {{}}] $n }}
 {BOUNDARY_TCL}
 {ACTIVE_TCL}
 {MACRO_CLOCK_SCOPE_TCL}
@@ -407,7 +392,6 @@ def main():
         if not (base / db).exists() or not sdc:
             raise SystemExit(f"no {db} / SDC under {base}")
     rec = dict(schema="opentallas.closure_loop.ck_insertion.v1", base=str(base), db=db, sdc=sdc, clock=a.clock,
-               boundary_basis="structural first/last sequential data cone, all arcs; selected clock domain",
                parasitics="spef" if a.routed else "placement-estimated", raw_source=bool(a.raw_source))
     env = {}
     need_tt = a.route_corner.upper() in ("TC", "TT")
@@ -443,7 +427,8 @@ def main():
                 cb.append(x)
         mrows = [(m[1], float(m[2]), float(m[3]), m[4])
                  for m in re.finditer(r"^OT_MC (\S+) (\S+) (\S+) (\S+)", out, re.M)]
-        rec[corner] = dict(boundary=stats(b), all=stats(al), errors=re.findall(r"\[ERROR[^\n]*", out)[:5],
+        rec[corner] = dict(clock_family={name: int(n) for name, n in re.findall(r"^OT_CK_FAMILY (\S+) (\d+)$", out, re.M)},
+                           boundary=stats(b), all=stats(al), errors=re.findall(r"\[ERROR[^\n]*", out)[:5],
                            macros=macro_summary(mrows, round(sum(al) / len(al), 1) if al else None),
                            macro_libs=len(mlibs))
         if craw:

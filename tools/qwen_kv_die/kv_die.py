@@ -1006,9 +1006,27 @@ DCAL_CFG = ['cfg_tx_we', 'cfg_rx_we', 'cfg_addr', 'cfg_data', 'cal_start', 'cal_
 DCAL_CS = ['cal_start', 'cal_seg']
 DCAL_CFGW = ['cfg_tx_we', 'cfg_rx_we', 'cfg_addr', 'cfg_data']
 DCAL_WH = (18.792, 28.08)
+# KV-DCAL-BOOTCFG 10-19 (OT_KV_DCAL_BC=1, needs OT_KV_DCAL=1 + OT_KV_STATIC_DIE=1; default off): the boot-only producer above
+# lost the sequencer's RUNTIME segment-1 base writes (SEG1 after each admission, SEG2 at each epoch), so every KV token run
+# replayed the admission segment.  With DCAL_BC the dcal slot is qkd_d2d_cal_seq_pin_bc (qkd_d2d_cal_seq_bootcfg.sv, kit
+# physical/ref_tile/qkd_d2d_cal_seq_pin_bc): the boot dispatcher's link_cfg_* die nets end on its bcfg_* pins
+# (kv_static_die re-targets the four ks_kvs_ctl__boot__link_cfg_* buses), and its cfg_* word (the boot write, else the
+# sequencer's runtime base write) drives the D2D end's cfg port: one producer per pin, no load-less cfg output.
+DCAL_BC = __import__('os').environ.get('OT_KV_DCAL_BC', '0') == '1'
+DCAL_BC_FILE = 'rtl/qwen_sys/d2d_static_20261015/qkd_d2d_cal_seq_bootcfg.sv'
+DCAL_BC_GROUPS = dict(btx='bcfg_tx_we', brx='bcfg_rx_we', bad='bcfg_addr', bdt='bcfg_data')   # die group -> RTL port
+DCAL_BC_LINK = dict(cfg_tx_we='btx', cfg_rx_we='brx', cfg_addr='bad', cfg_data='bdt')         # d2ds cfg port -> dcal group
+if DCAL_BC:
+    DCAL_FILE = DCAL_BC_FILE
+    DCAL_WH = (21.6, 34.56)          # the bc kit outline (+94 flops vs ep3 / _mu; MU-DIE-KV2 notified)
 
 
 def dcal_binding():
+    if DCAL_BC:
+        return dict(module='qkd_d2d_cal_seq_pin_bc', file=DCAL_BC_FILE, parameters=dict(EP_SKEW=3, GO_OFS=0, MUT=0),
+                    ports=dict(ck=['ck'], rst_n=['rst_n'], cal=list(DCAL_CS), dcfg=list(DCAL_CFGW), ego=['epoch_go'],
+                               hlt=['halt'], rld=['reload'], **{g: [p] for g, p in DCAL_BC_GROUPS.items()}),
+                    sliced={}, classed={})
     return dict(module='qkd_d2d_cal_seq_pin', file=DCAL_FILE, parameters=dict(EP_SKEW=3, GO_OFS=0),
                 ports=dict(ck=['ck'], rst_n=['rst_n'], cal=list(DCAL_CS), dcfg=list(DCAL_CFGW), ego=['epoch_go'], hlt=['halt'],
                            rld=['reload']),
@@ -1018,8 +1036,11 @@ def dcal_binding():
 def _d2ds_binding_dcal():
     # always bound (a die without the dcal instance has no cal / eab pins, so the groups are unused): the post-prep
     # chain re-runs the strict bind without the OT_KV_* environment and must see the same bindings
+    # (KV-DCAL-BOOTCFG: dcfg only under OT_KV_DCAL_BC, which kvsys_prep records in kv_flags.env for the re-run)
     b = d2ds_binding()
     b['ports'].update(cal=list(DCAL_CS), eab=['epoch_abort'])
+    if DCAL_BC:
+        b['ports'].update(dcfg=list(DCAL_CFGW))
     return b
 
 
@@ -1134,7 +1155,7 @@ if KSD.ASTK_ST:
         SPLIT_BINDINGS[_mn]['sliced'] = dict(SPLIT_BINDINGS[_mn].get('sliced') or {}, iee='ie')
 if KSD.ON:
     SPLIT_BINDINGS.update(KSD.bindings())
-    if V144_R6:
+    if V144_R6 and not KSD.KB.ON:
         # KVR-DERIVE 10-19 (coordinator): bind exactly the closed kit's RT (the die-derived 9 + relays is checked against
         # it by kv_static_params VPORT_RT, never bound in its place)
         SPLIT_BINDINGS['qkd_pv16_vport']['parameters'] = dict(SPLIT_BINDINGS['qkd_pv16_vport']['parameters'],
@@ -1143,6 +1164,19 @@ if KSD.ON:
             for _mn in ('qkd_pvw_s', 'qkd_pvw_n'):
                 SPLIT_BINDINGS[_mn]['parameters'] = dict(SPLIT_BINDINGS[_mn]['parameters'],
                                                          FIRST_INPUT_AGE=KSD.tile_ages()['PV_FIRST_INPUT_AGE'])
+    if KSD.KB.ON:
+        # KV-BOOTAGE 10-19: the V ports and the pair control take their static ages from the sealed die cfg (boot image),
+        # not from RTL parameters: bind the boot-age successors at their hardware BOUNDS (kv_bootage.BOUNDS) + cfg pins
+        _vb = SPLIT_BINDINGS['qkd_pv16_vport']
+        SPLIT_BINDINGS['qkd_pv16_vport'] = dict(_vb, module=KSD.KB.SUCC['vport'][1], file=KSD.KB.SUCC['vport'][0],
+            parameters=dict(MUT=0, DQ=KSD.KB.BOUNDS['VPORT_DQ'], RT=KSD.KB.BOUNDS['VPORT_RT']),
+            ports=dict(_vb['ports'], cfg=['cfg_age']))
+        if PV_T:
+            for _mn in ('qkd_pvw_s', 'qkd_pvw_n'):
+                _pb = SPLIT_BINDINGS[_mn]
+                SPLIT_BINDINGS[_mn] = dict(_pb, module='qkd_pvw_die_tb', file=KSD.KB.pvw_file(_pb['file']),
+                    parameters=dict(_pb['parameters'], FIRST_INPUT_AGE=KSD.KB.BOUNDS['PV_FIRST_INPUT_AGE']),
+                    ports=dict(_pb['ports'], cfa=['cfg_age']))
     for _p in ('att_tx_v', 'att_tx_payload', 'emb_tx_v', 'emb_tx_payload', 'kv_drained_local', 'kv_flush_local',
                'kv_active_local', 'rx_payload', 'att_tx_slot', 'att_tx_kind', 'att_tx_beat', 'emb_tx_slot',
                'kvn_word_identity', 'kvn_word_generation'):
@@ -1659,6 +1693,11 @@ def build(*args, **kwargs):
         r_ = m['vport_side_eq']
         print(f"kv die VPORT_SIDE_EQ: RT {sorted(set(r_['RT'].values()))} (tile {KSD.tile_ages()['VPORT_RT']}), "
               f"{len(r_['added'])} pad relays", file=sys.stderr)
+    if KSD.ON and KSD.PVFIN and kv_k_rt_eq.pvfin_align_on() and kwargs.get('split', len(args) > 7 and args[7]):
+        m = kv_k_rt_eq.equalize_pvfin_start(sys.modules[__name__], m)     # KV-PVFST: pvfin start word on the PV streams
+        r_ = m.get('pvfin_align') or {}
+        print(f"kv die PVFIN_ALIGN: align {r_.get('before')} -> {r_.get('after')}, pads {r_.get('pads')}",
+              file=sys.stderr)
     if LANDSLOT and kwargs.get('split', len(args) > 7 and args[7]):
         if os.environ.get('OT_KV_RLY_STD', '0') != '1' or not SEAM:
             raise ValueError('OT_KV_LANDSLOT=1 needs OT_KV_RLY_STD=1 and OT_KV_SEAM=1 (landing slots are relay-standard rows '
@@ -2509,6 +2548,8 @@ def _d2ds_swap(m):
                     'R0', kind='ctl', region='io')
         m['insts'].append(it)
         add(('dcal_cfg', 'spine_local', len(DCAL_CS), [('dcal', 'cal'), ('d2d_kv', 'cal')]))
+        if DCAL_BC:      # KV-DCAL-BOOTCFG: the merged cfg word (boot + runtime base writes) -> the D2D end's cfg port
+            add(('dcal_dcfg', 'spine_local', 1 + 1 + 6 + 32, [('dcal', 'dcfg'), ('d2d_kv', 'dcfg')]))
         add(('dcal_hlt', 'spine_local', 1, [('d2d_kv', 'eab'), ('dcal', 'hlt')]))
         add(('dcal_rld', 'kv_oneway', 1, [('host', 'program_begin_v'), ('dcal', 'rld')]))
         for i_, (bid, cl, bits, eps) in enumerate(B):
@@ -4531,10 +4572,11 @@ def static_instance_params(m):
     t = KSD.tile_ages()
     out = {i.name: dict(RESPONSE_LAT=t['ECTL_RESPONSE_LAT'], QK_ISSUE_AGE=t['ECTL_QK_ISSUE_AGE'])
            for i in m['insts'] if i.master == 'qkd_ectlk'}
-    out.update({i.name: dict(RT=t['VPORT_RT'], DQ=t['VPORT_DQ']) for i in m['insts'] if i.master == 'qkd_pv16_vport'})
+    out.update({i.name: (dict(RT=KSD.KB.BOUNDS['VPORT_RT'], DQ=KSD.KB.BOUNDS['VPORT_DQ']) if KSD.KB.ON else
+                         dict(RT=t['VPORT_RT'], DQ=t['VPORT_DQ'])) for i in m['insts'] if i.master == 'qkd_pv16_vport'})
     m['static_bindings'] = dict(ectl={k_: v for k_, v in out.items() if k_.startswith('ectl_')},
                                 vport={k_: v for k_, v in out.items() if k_.startswith('vport_')},
-                                pv_ctl_age=t['PV_FIRST_INPUT_AGE'])
+                                pv_ctl_age=KSD.KB.BOUNDS['PV_FIRST_INPUT_AGE'] if KSD.KB.ON else t['PV_FIRST_INPUT_AGE'])
     return out
 
 
@@ -5060,9 +5102,14 @@ def main(argv=None):
             # KVR-DERIVE 10-19 (coordinator): the plan's static-schedule ages vs the closed tiles' hard ages and the
             # generator's own bindings -- any mismatch fails the GEN (OT_KV_STATIC_SCHED_STRICT=1, default); =0 records it
             # (STATIC_SCHEDULE FAIL in case.log + static_model.json) and lets a placement-only run continue
+            boot_ = None
+            if KSD.KB.ON:     # KV-BOOTAGE 10-19: the compiler boot image's age words from THIS plan (case boot_ages.json)
+                boot_ = KSD.KB.image_ages(ml['static_schedule']['schedule'], ml['tile_ages'])
+                ml['boot_ages'] = boot_
+                (a.out / 'boot_ages.json').write_text(json.dumps(boot_, indent=1) + '\n')
             sf = KSP.schedule_check(ml['static_schedule']['schedule'], ml['tile_ages'],
                                     dict(ectl=ml['bindings']['ectl'], vport=ml['bindings']['vport'],
-                                         pv_ctl_age=ml['bindings']['pv_ctl_age'], attn=KSD.attn_tile_params()))
+                                         pv_ctl_age=ml['bindings']['pv_ctl_age'], attn=KSD.attn_tile_params()), boot=boot_)
             ml['static_schedule']['fails'] = sf
             (a.out / 'static_model.json').write_text(json.dumps(ml, indent=1, default=str) + '\n')
             print('kv die STATIC_SCHEDULE ' + ('FAIL: ' + '; '.join(f"{f_['id']} {f_['what'][:160]}" for f_ in sf) if sf

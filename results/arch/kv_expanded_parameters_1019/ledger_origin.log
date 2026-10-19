@@ -1,0 +1,33 @@
+test_dynamic_indexed_leaf_cannot_vanish_with_report (__main__.ExpansionParameters.test_dynamic_indexed_leaf_cannot_vanish_with_report) ... ok
+test_dynamic_leaf_also_in_native_bindings_requires_ledger (__main__.ExpansionParameters.test_dynamic_leaf_also_in_native_bindings_requires_ledger) ... ok
+test_each_changed_profile (__main__.ExpansionParameters.test_each_changed_profile) ... ok
+test_entire_or_single_ledger_removal_refused (__main__.ExpansionParameters.test_entire_or_single_ledger_removal_refused) ... ok
+test_forged_qualified_report_refused (__main__.ExpansionParameters.test_forged_qualified_report_refused) ... ok
+test_genuinely_nonexpanded_native_binding_compatible (__main__.ExpansionParameters.test_genuinely_nonexpanded_native_binding_compatible) ... ok
+test_genuinely_parameterless_legacy_leaf_compatible (__main__.ExpansionParameters.test_genuinely_parameterless_legacy_leaf_compatible) ... ok
+test_missing_profile_atomic (__main__.ExpansionParameters.test_missing_profile_atomic) ... ok
+test_native_artifact_mutation (__main__.ExpansionParameters.test_native_artifact_mutation) ... ok
+test_native_missing_instance (__main__.ExpansionParameters.test_native_missing_instance) ... ok
+test_real_main_yosys_to_native (__main__.ExpansionParameters.test_real_main_yosys_to_native) ... ok
+test_signed_profile_conflict (__main__.ExpansionParameters.test_signed_profile_conflict) ... ok
+test_source_view_mutation (__main__.ExpansionParameters.test_source_view_mutation) ... ok
+test_stale_child_and_duplicate_instance (__main__.ExpansionParameters.test_stale_child_and_duplicate_instance) ... ok
+test_strict_missing_qualification (__main__.ExpansionParameters.test_strict_missing_qualification) ... ok
+test_unknown_bits_and_signed (__main__.ExpansionParameters.test_unknown_bits_and_signed) ... ok
+
+----------------------------------------------------------------------
+Ran 16 tests in 0.180s
+
+OK
+{"removed": 1, "added": 3, "wires": 0, "frames": {"frame": [1, 3, 0]}}
+{"removed": 1, "added": 3, "wires": 0, "frames": {"frame": [1, 3, 0]}}
+{"removed": 1, "added": 3, "wires": 0, "frames": {"frame": [1, 3, 0]}}
+{"removed": 1, "added": 3, "wires": 0, "frames": {"frame": [1, 3, 0]}}
+{"removed": 1, "added": 3, "wires": 0, "frames": {"frame": [1, 3, 0]}}
+kv_bound_netlist: 5 instances, 4 masters, 0 rewritten, 0 constant bits folded ({}), 0 strap ports, off-chip [], problems []
+{"removed": 1, "added": 3, "wires": 0, "frames": {"frame": [1, 3, 0]}}
+kv_bound_netlist: 4 instances, 4 masters, 0 rewritten, 0 constant bits folded ({}), 0 strap ports, off-chip [], problems []
+{"removed": 1, "added": 3, "wires": 0, "frames": {"frame": [1, 3, 0]}}
+{"removed": 1, "added": 3, "wires": 0, "frames": {"frame": [1, 3, 0]}}
+{"removed": 1, "added": 3, "wires": 0, "frames": {"frame": [1, 3, 0]}}
+kv_bound_netlist: 4 instances, 4 masters, 0 rewritten, 0 constant bits folded ({}), 0 strap ports, off-chip [], problems []

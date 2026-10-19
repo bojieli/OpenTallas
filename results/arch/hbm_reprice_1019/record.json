@@ -1,46 +1,82 @@
 {
  "schema": "opentallas.hbm_d4g_reprice_1019.record.v1",
- "lane": "HBM-REPRICE2",
+ "lane": "HBM-REPRICE3",
  "date": "2026-10-19",
- "tool": "tools/hgi_sim/d4g_reprice_1019.py",
- "price": "results/arch/hbm_reprice_1019/price.json",
+ "tool": "tools/hgi_sim/d4g_reprice3_1019.py",
+ "price": "results/arch/hbm_reprice_1019/reprice3_current.json",
  "basis": "d4g_2ring_qbg (1905.4 / 946.2) = the hds_sched / hq basis of token_compose_xdie; each term priced alone on it, interaction = all - sum",
  "composed": {
-  "ds_ar_tok_s": 1631.5,
-  "qwen_tok_s": 818.7,
-  "ds_ar_pct_vs_base": -14.37,
-  "qwen_pct_vs_base": -13.47,
-  "ds_ar_pct_vs_record": -11.77,
-  "groups": {
-   "rec_lat": {
-    "ds_ar_tok_s": 1785.7,
-    "qwen_tok_s": 936.8,
-    "ds_ar_pct_vs_record": -3.43,
-    "qwen_pct_vs_record": -0.99
+  "ds_ar_cycles": 986829.9,
+  "qwen_cycles": 2940246.2,
+  "ds_ar_tok_s": 1216.0,
+  "qwen_tok_s": 408.1,
+  "terms": [
+   "att_desc",
+   "att_merge",
+   "att_prog",
+   "att_qwen",
+   "att_s32",
+   "bank_pin",
+   "collq",
+   "e86_tkm",
+   "hbm_bw",
+   "hc_tree",
+   "hc_xr",
+   "idx_link",
+   "idx_pin",
+   "land",
+   "pg_cmd",
+   "pg_fault",
+   "pg_inject",
+   "pg_operand",
+   "pg_reset",
+   "pg_vmwrite",
+   "pt_p2",
+   "pvm_fold",
+   "qcore_r6",
+   "qwen_int8",
+   "sm_svc",
+   "su_red"
+  ],
+  "rp_added_sum": {
+   "ds": {
+    "hc_tree": 2093.0,
+    "hc_xr": 521.6,
+    "bank_pin": 3558.0,
+    "hbm_bw": 173452.9,
+    "pg_cmd": 8136.0,
+    "pg_operand": 2266.0,
+    "pg_inject": 1356.0,
+    "pg_vmwrite": 14280.0,
+    "att_s32": 33097.8,
+    "att_merge": 9500.0,
+    "idx_link": 240.0,
+    "idx_pin": 232.0,
+    "bl_idx": 8763.0,
+    "e86_tkm": 576.0
    },
-   "rec_att": {
-    "ds_ar_tok_s": 1686.1,
-    "qwen_tok_s": 826.0,
-    "ds_ar_pct_vs_record": -8.82,
-    "qwen_pct_vs_record": -12.7
-   },
-   "rec_att_bigprog": {
-    "ds_ar_tok_s": 1738.0,
-    "qwen_tok_s": 826.0,
-    "ds_ar_pct_vs_record": -6.01,
-    "qwen_pct_vs_record": -12.7
-   },
-   "all_bigprog": {
-    "ds_ar_tok_s": 1680.7,
-    "qwen_tok_s": 818.7,
-    "ds_ar_pct_vs_record": -9.11,
-    "qwen_pct_vs_record": -13.47
+   "qwen": {
+    "hbm_bw": 1451202.5,
+    "pg_cmd": 3042.0,
+    "pg_vmwrite": 5640.0,
+    "bank_pin": 978.0,
+    "pg_inject": 507.0,
+    "att_qwen": 176165.9,
+    "pg_operand": 792.0,
+    "att_merge": 8461.4,
+    "pvm_fold": 288.0,
+    "bl_idx": 75.0,
+    "idx_pin": 8.0
    }
-  }
+  },
+  "d_ds_ar_pct": -36.18,
+  "d_qwen_pct": -56.87,
+  "d_ds_ar_cycles": 357054.8,
+  "d_qwen_cycles": 1672024.4
  },
  "grades_note": "measured = latency measured on current RTL (bench), exposure from the S2 static schedule; priced = analytic rule on a measured anchor; modelled = estimate pending RTL/lane decision (token_compose grade \"priced\")",
  "token_compose": {
-  "note": "HBM d4g re-price since GEN2 (HBM-REPRICE 10-19, HBM-REPRICE2 10-19: ATTGAP S32 + merge, VEH-ATT3 Qwen measured, PRETREE p2): one adjust term per change, graded",
+  "note": "REPRICE3 provisional current-master physical BW45.03; conservative bank-client budgets; successor95.19 conditional, see qualification",
   "terms": [
    {
     "design": "hbm_gen_ds",
@@ -51,7 +87,7 @@
     "cycles": 19159.1,
     "grade": "measured-current-RTL",
     "pointer": "attribution.collq.ds_ar_cycles",
-    "note": "HBM-REPRICE2 10-19 [measured] C1 gathers: measured gather-master span; non-gather COLL +2 (ring-A merge register); source d4g_collq_price_1018 ag_collq + ra_extra 2 (HBM-COLLQ c8d42a3a4; ledger HBM.D4G_PLAN_B)"
+    "note": "REPRICE3 [measured] C1 gathers: measured gather-master span; non-gather COLL +2 (ring-A merge register); d4g_collq_price_1018 ag_collq + ra_extra 2 (HBM-COLLQ c8d42a3a4; ledger HBM.D4G_PLAN_B)"
    },
    {
     "design": "hbm_gen_ds",
@@ -59,10 +95,10 @@
     "slot": "reprice.pg_cmd",
     "kind": "adjust",
     "n": 1,
-    "cycles": 2985.0,
+    "cycles": 3582.0,
     "grade": "measured-current-RTL",
     "pointer": "attribution.pg_cmd.ds_ar_cycles",
-    "note": "HBM-REPRICE2 10-19 [measured] +5 an SU-executed record (lane commands r0/r3 +5, r1/r2 +2; lockstep lanes); source TW-HBM-PGLG e7ea9096c region form, bench m0 PASS 8db52396a (lanes/TW-HBM-PGLG.md)"
+    "note": "REPRICE3 [measured] +6 slowest SU command region (+3 inner, +6 outer); HBM-PGLG2 6799b58ee face relay"
    },
    {
     "design": "hbm_gen_ds",
@@ -70,10 +106,10 @@
     "slot": "reprice.pg_operand",
     "kind": "adjust",
     "n": 1,
-    "cycles": 1270.0,
+    "cycles": 1397.0,
     "grade": "measured-current-RTL",
     "pointer": "attribution.pg_operand.ds_ar_cycles",
-    "note": "HBM-REPRICE2 10-19 [measured] +10 an SU reduction record (red_sel/tree_cmd/slice_x/tree_o +10); source TW-HBM-PGLG e7ea9096c (lanes/H-D4G.md [TW-HBM-PGLG -> H-D4G-GEN2])"
+    "note": "REPRICE3 [measured] +11 SU reduction operand; tree/control relative issue +10 unchanged; HBM-PGLG2 6799b58ee"
    },
    {
     "design": "hbm_gen_ds",
@@ -84,7 +120,7 @@
     "cycles": 6108.0,
     "grade": "measured-current-RTL",
     "pointer": "attribution.pg_vmwrite.ds_ar_cycles",
-    "note": "HBM-REPRICE2 10-19 [measured] +12 an SU-executed record writing VM (drain write +12 serial; +16 stream); source TW-HBM-PGLG e7ea9096c / HH-14 tb r2 4a91027b0 (SWQ 16)"
+    "note": "REPRICE3 [measured] +12 an SU-executed record writing VM (drain write +12 serial; +16 stream); TW-HBM-PGLG e7ea9096c / HH-14 tb r2 4a91027b0 (SWQ 16)"
    },
    {
     "design": "hbm_gen_ds",
@@ -95,7 +131,7 @@
     "cycles": 4.0,
     "grade": "priced",
     "pointer": "attribution.pg_reset.ds_ar_cycles",
-    "note": "HBM-REPRICE2 10-19 [modelled] +4 once per token (pg_stream +1 epoch of the 4:3 pg_clk); source TW-HBM-PGLG pg_stream split (lanes/TW-HBM-PGLG.md)"
+    "note": "REPRICE3 [modelled] +4 once per token (pg_stream +1 epoch of the 4:3 pg_clk); TW-HBM-PGLG pg_stream split (lanes/TW-HBM-PGLG.md)"
    },
    {
     "design": "hbm_gen_ds",
@@ -106,7 +142,7 @@
     "cycles": 1053.0,
     "grade": "measured-current-RTL",
     "pointer": "attribution.hc_tree.ds_ar_cycles",
-    "note": "HBM-REPRICE2 10-19 [measured] hc_tree 28 -> 41 (+13 a HC_MIX / HC_PRE_NORM record); closed ring keeps 41 (b0 DRLY 2); source HH-9 c4e9df3fe RAW0 176, HBM-RTL5 U +2, HBM-HCRING fc916e52b, DIE-HBM-LEAD 10-19 01:40, HC-RINGPLAN 9d1689ba4"
+    "note": "REPRICE3 [measured] hc_tree 28 -> 41 (+13 a HC_MIX / HC_PRE_NORM record); closed ring keeps 41 (b0 DRLY 2); HH-9 c4e9df3fe RAW0 176, HBM-RTL5 U +2, HBM-HCRING fc916e52b, DIE-HBM-LEAD 10-19 01:40, HC-RINGPLAN 9d1689ba4"
    },
    {
     "design": "hbm_gen_ds",
@@ -117,7 +153,7 @@
     "cycles": 262.4,
     "grade": "priced",
     "pointer": "attribution.hc_xr.ds_ar_cycles",
-    "note": "HBM-REPRICE2 10-19 [modelled] HC root<->quarter crossings XRD 11 + XRU 11 landed vs 2 x COLL_RING priced; source HC-XRDU cca87123f l7_wire land smoke (GEN2b), hc_eng XRD/XRU 11/11"
+    "note": "REPRICE3 [modelled] HC root<->quarter crossings XRD 11 + XRU 11 landed vs 2 x COLL_RING priced; HC-XRDU cca87123f l7_wire land smoke (GEN2b), hc_eng XRD/XRU 11/11"
    },
    {
     "design": "hbm_gen_ds",
@@ -128,7 +164,7 @@
     "cycles": 2141.0,
     "grade": "priced",
     "pointer": "attribution.bank_pin.ds_ar_cycles",
-    "note": "HBM-REPRICE2 10-19 [priced] +1 a record with a VM-space operand read (bank pin flop on every answer); source HBM-BANKLAT main 01636549a (contract rule), measured on IDX TOPK (VEH-TOPKFIX2 05b86e194)"
+    "note": "REPRICE3 [priced] +1 a record with a VM-space operand read (bank pin flop on every answer); HBM-BANKLAT main 01636549a (contract rule), measured on IDX TOPK (VEH-TOPKFIX2 05b86e194)"
    },
    {
     "design": "hbm_gen_ds",
@@ -139,7 +175,7 @@
     "cycles": 0.0,
     "grade": "priced",
     "pointer": "attribution.su_red.ds_ar_cycles",
-    "note": "HBM-REPRICE2 10-19 [priced] SU reduction = 128-word pre-tree (PT 70 edges) + reducer pairwise tree; source HH-6 claude/hh6-sured-1018 bc43419eb, d4g_su_red_1018 pretree (bench 211 vs model 234 edges)"
+    "note": "REPRICE3 [priced] SU reduction = 128-word pre-tree (PT 70 edges) + reducer pairwise tree; HH-6 claude/hh6-sured-1018 bc43419eb, d4g_su_red_1018 pretree (bench 211 vs model 234 edges)"
    },
    {
     "design": "hbm_gen_ds",
@@ -150,7 +186,7 @@
     "cycles": 576.0,
     "grade": "measured-current-RTL",
     "pointer": "attribution.e86_tkm.ds_ar_cycles",
-    "note": "HBM-REPRICE2 10-19 [measured] +64 a COLL.TOPK_MERGE record (+2 NT at TP192); source HH-4 claude/hh4-e86-1018 a5f17ebc7 tkm_static TLAT 4, calendar mutant MUT 3"
+    "note": "REPRICE3 [measured] +64 a COLL.TOPK_MERGE record (+2 NT at TP192); HH-4 claude/hh4-e86-1018 a5f17ebc7 tkm_static TLAT 4, calendar mutant MUT 3"
    },
    {
     "design": "hbm_gen_ds",
@@ -161,7 +197,7 @@
     "cycles": 0.0,
     "grade": "measured-current-RTL",
     "pointer": "attribution.qcore_r6.ds_ar_cycles",
-    "note": "HBM-REPRICE2 10-19 [measured] write-conflict fault flag +1 edge: status only, 0 token cycles; source HH-11 c663070f1; coordinator ACCEPTED (HBM-HCBANK 10-19 02:40)"
+    "note": "REPRICE3 [measured] write-conflict fault flag +1 edge: status only, 0 token cycles; HH-11 c663070f1; coordinator ACCEPTED (HBM-HCBANK 10-19 02:40)"
    },
    {
     "design": "hbm_gen_ds",
@@ -169,10 +205,10 @@
     "slot": "reprice.att_s32",
     "kind": "adjust",
     "n": 1,
-    "cycles": 51081.8,
+    "cycles": 32248.8,
     "grade": "measured-current-RTL",
     "pointer": "attribution.att_s32.ds_ar_cycles",
-    "note": "HBM-REPRICE2 10-19 [measured] DS T640 SM component qk 288 -> 861, pv 386 -> 1,171 (HBM-ATTGAP S32: busiest SM, 2 x 32-row sub-runs + 5 go bubble; fa 259 / publish 64 kept at price -- the span excludes HBM first access, x-load, publish, merge); T128 at the one-op ratio 684/288, 839/386 (modelled); BIGPROG variant: one op 684 / 839; source HBM-ATTGAP main 7f35a3e4b results/rtl/hbm_ds_layer_tput_1018/hbm_attgap_1019/unit/L2_s32_pos.json (40/40 bit-exact, resident 1,019 / 971 words); one-op VEH-ATT 07a99bc0a"
+    "note": "REPRICE3 [measured] DS T640 SM component qk 288 -> 861, pv 386 -> 1,171 (HBM-ATTGAP S32: busiest SM, 2 x 32-row sub-runs + 5 go bubble; fa 259 / publish 64 kept at price -- the span excludes HBM first access, x-load, publish, merge); T128 at the one-op ratio 684/288, 839/386 (modelled); BIGPROG variant: one op 684 / 839; HBM-ATTGAP main 7f35a3e4b results/rtl/hbm_ds_layer_tput_1018/hbm_attgap_1019/unit/L2_s32_pos.json (40/40 bit-exact, resident 1,019 / 971 words); one-op VEH-ATT 07a99bc0a"
    },
    {
     "design": "hbm_gen_ds",
@@ -180,10 +216,10 @@
     "slot": "reprice.att_merge",
     "kind": "adjust",
     "n": 1,
-    "cycles": 11679.6,
+    "cycles": 9263.5,
     "grade": "priced",
     "pointer": "attribution.att_merge.ds_ar_cycles",
-    "note": "HBM-REPRICE2 10-19 [modelled] DS PV + (HBM-ATTGAP SU merge 400.8 T640 / 335.5 T128 [one-op 335.5] - priced merge 99 / 79); Qwen PV + 4 x (1 XQ + DEP 10 + LAT 9) (16-SM pairwise tree, no priced merge); source HBM-ATTGAP att_gap_price.py merge model (SU quadrant programme + ring AG + top levels in norm; SU RTL bench pending); Qwen VEH-ATT finding (3)"
+    "note": "REPRICE3 [modelled] DS PV + (HBM-ATTGAP SU merge 400.8 T640 / 335.5 T128 [one-op 335.5] - priced merge 99 / 79); Qwen PV + 4 x (1 XQ + DEP 10 + LAT 9) (16-SM pairwise tree, no priced merge); HBM-ATTGAP att_gap_price.py merge model (SU quadrant programme + ring AG + top levels in norm; SU RTL bench pending); Qwen VEH-ATT finding (3)"
    },
    {
     "design": "hbm_gen_ds",
@@ -194,7 +230,7 @@
     "cycles": 0.0,
     "grade": "measured-current-RTL",
     "pointer": "attribution.att_qwen.ds_ar_cycles",
-    "note": "HBM-REPRICE2 10-19 [measured] Qwen ATT at the measured per-SM line rate (QK 54.84 / PV 27.72 B/cyc/SM, P 8192, 512 rows/SM) on 16 SMs instead of the die HBM rate (spans measured; exposure from the S2 schedule); source VEH-ATT3 claude/veh-att3-1019 fb8fd695b results/rtl/hbm_qwen_layer_tput_1018/veh_att3_1019/unit/{L0_L0_pos,chain_L1_pos}.json (80/80 bit-exact; QK 1,195 / PV 4 x 591 = 2,364)"
+    "note": "REPRICE3 [measured] Qwen ATT at the measured per-SM line rate (QK 54.84 / PV 27.72 B/cyc/SM, P 8192, 512 rows/SM) on 16 SMs instead of the die HBM rate (spans measured; exposure from the S2 schedule); VEH-ATT3 claude/veh-att3-1019 fb8fd695b results/rtl/hbm_qwen_layer_tput_1018/veh_att3_1019/unit/{L0_L0_pos,chain_L1_pos}.json (80/80 bit-exact; QK 1,195 / PV 4 x 591 = 2,364)"
    },
    {
     "design": "hbm_gen_ds",
@@ -205,7 +241,7 @@
     "cycles": 0.0,
     "grade": "measured-current-RTL",
     "pointer": "attribution.att_prog.ds_ar_cycles",
-    "note": "HBM-REPRICE2 10-19 [measured] 0: S32 sub-runs keep QK+PV resident (1,019 KV8 / 971 KV4 words <= 1,024); source HBM-ATTGAP L2_s32_pos.json calendars word-identical"
+    "note": "REPRICE3 [measured] 2048 words: 1019 attention + 152 matvec resident; one-op spans enabled; HBM-SMBUDGET main e248c89e7"
    },
    {
     "design": "hbm_gen_ds",
@@ -214,9 +250,9 @@
     "kind": "adjust",
     "n": 1,
     "cycles": 0.0,
-    "grade": "priced",
+    "grade": "measured-current-RTL",
     "pointer": "attribution.att_desc.ds_ar_cycles",
-    "note": "HBM-REPRICE2 10-19 [modelled] 0: window staging (fixed descriptors, DMA refresh i+1 -> i off-path; Qwen has no window ring); source HBM-ATTGAP window_staging_check.json PASS (260 tokens); DMA ~134 KB/layer/token"
+    "note": "REPRICE3 [measured] 256 token-resident relative descriptors; no rewrite; HBM-SMBUDGET main e248c89e7"
    },
    {
     "design": "hbm_gen_ds",
@@ -227,7 +263,7 @@
     "cycles": 0.0,
     "grade": "measured-current-RTL",
     "pointer": "attribution.pt_p2.ds_ar_cycles",
-    "note": "HBM-REPRICE2 10-19 [measured] SU pre-tree PT 70 -> 81 edges (p2 registered operand select, PT_RED 69 -> 80); only with su_red; source HBM-PRETREE claude/hh6-sured-1018 0d52a4877 (bench MUT 0 PASS / MUT 512 FAIL); COORD 0kb"
+    "note": "REPRICE3 [measured] SU pre-tree PT 70 -> 81 edges (p2 registered operand select, PT_RED 69 -> 80); only with su_red; p3 PT_RED80 retained; HBM-PRETREE claude/hh6-sured-1018 0d52a4877 (bench MUT 0 PASS / MUT 512 FAIL); COORD 0kb; HBM-SAFE-PRETREE 9d56cae39"
    },
    {
     "design": "hbm_gen_ds",
@@ -238,7 +274,7 @@
     "cycles": 240.0,
     "grade": "measured-current-RTL",
     "pointer": "attribution.idx_link.ds_ar_cycles",
-    "note": "HBM-REPRICE2 10-19 [measured] +5 an IDX.INDEX / IDX.TOPK record (link outputs +5); source HBM-IDXPIPE b4717e464 / AD-HBM-IDXK c94204038 (frame 1397 -> 1402)"
+    "note": "REPRICE3 [measured] +5 an IDX.INDEX / IDX.TOPK record (link outputs +5); HBM-IDXPIPE b4717e464 / AD-HBM-IDXK c94204038 (frame 1397 -> 1402)"
    },
    {
     "design": "hbm_gen_ds",
@@ -249,7 +285,7 @@
     "cycles": 224.0,
     "grade": "measured-current-RTL",
     "pointer": "attribution.idx_pin.ds_ar_cycles",
-    "note": "HBM-REPRICE2 10-19 [measured] IDX.INDEX +3, IDX.TOPK +(m + 4), ARGMAX +8; source HBM-IDXAM2 r3 bench + VEH-TOPKFIX2 am_pin bench (RT_EXTRA 2 / ACK 14, VMX 6, op_SW n13)"
+    "note": "REPRICE3 [measured] IDX.INDEX +3, IDX.TOPK +(m + 4), ARGMAX +8; HBM-IDXAM2 r3 bench + VEH-TOPKFIX2 am_pin bench (RT_EXTRA 2 / ACK 14, VMX 6, op_SW n13)"
    },
    {
     "design": "hbm_gen_ds",
@@ -260,7 +296,73 @@
     "cycles": 7197.8,
     "grade": "priced",
     "pointer": "attribution.land.ds_ar_cycles",
-    "note": "HBM-REPRICE2 10-19 [priced] recorded factor on tok/s (half-cycle landed hops); source HBM-LANDING/DCC hland-dcc 447dfe960 (HANDOFF 10-18 07:35)"
+    "note": "REPRICE3 [priced] recorded factor on tok/s (half-cycle landed hops); HBM-LANDING/DCC hland-dcc 447dfe960 (HANDOFF 10-18 07:35)"
+   },
+   {
+    "design": "hbm_gen_ds",
+    "workload": "ar",
+    "slot": "reprice.hbm_bw",
+    "kind": "adjust",
+    "n": 1,
+    "cycles": 163312.7,
+    "grade": "priced",
+    "pointer": "attribution.hbm_bw.ds_ar_cycles",
+    "note": "REPRICE3 [priced] SM, attention and DMA stream floor at measured per-SM bandwidth; incremental exposure over99; HBM-BW9e8fcf77e controller production stream"
+   },
+   {
+    "design": "hbm_gen_ds",
+    "workload": "ar",
+    "slot": "reprice.pg_inject",
+    "kind": "adjust",
+    "n": 1,
+    "cycles": 597.0,
+    "grade": "priced",
+    "pointer": "attribution.pg_inject.ds_ar_cycles",
+    "note": "REPRICE3 [priced] +1 SU VM read record conservatively exposes split-stream inject edge; only inject users pay physically; TW3-PGSTREAM 5ac202325; HBM-PGSTREAM-B unchanged edges"
+   },
+   {
+    "design": "hbm_gen_ds",
+    "workload": "ar",
+    "slot": "reprice.pg_fault",
+    "kind": "adjust",
+    "n": 1,
+    "cycles": 0.0,
+    "grade": "measured-current-RTL",
+    "pointer": "attribution.pg_fault.ds_ar_cycles",
+    "note": "REPRICE3 [measured] fault +2 serial is status only, no successful token latency; TW3-PGSTREAM"
+   },
+   {
+    "design": "hbm_gen_ds",
+    "workload": "ar",
+    "slot": "reprice.sm_svc",
+    "kind": "adjust",
+    "n": 1,
+    "cycles": 16688.0,
+    "grade": "priced",
+    "pointer": "attribution.sm_svc.ds_ar_cycles",
+    "note": "REPRICE3 [priced] fully exposed partial block granularity, worst layer 388 x43 + head4; HBM-SMBUDGET sm_svc_granularity.json"
+   },
+   {
+    "design": "hbm_gen_ds",
+    "workload": "ar",
+    "slot": "reprice.qwen_int8",
+    "kind": "adjust",
+    "n": 1,
+    "cycles": 0.0,
+    "grade": "measured-current-RTL",
+    "pointer": "attribution.qwen_int8.ds_ar_cycles",
+    "note": "REPRICE3 [measured] INT8 path within price; opt-in successor, all9984 rows bit-exact; SMB-INT8 e592ae5d0; default-off die adoption owed"
+   },
+   {
+    "design": "hbm_gen_ds",
+    "workload": "ar",
+    "slot": "reprice.pvm_fold",
+    "kind": "adjust",
+    "n": 1,
+    "cycles": 0.0,
+    "grade": "priced",
+    "pointer": "attribution.pvm_fold.ds_ar_cycles",
+    "note": "REPRICE3 [priced] +1 per Qwen PV 128-token block per SM column; DS no fold; HBM-PVM-SAFE node0 publication F0+23 vs22; node1 unchanged"
    },
    {
     "design": "hbm_gen_ds",
@@ -268,10 +370,21 @@
     "slot": "reprice.interaction",
     "kind": "adjust",
     "n": 1,
-    "cycles": 1741.3,
+    "cycles": -4969.7,
     "grade": "priced",
     "pointer": "interaction.ds_ar_cycles",
-    "note": "HBM-REPRICE2 10-19: S2 schedule of all terms together minus the sum of the single-term deltas"
+    "note": "Composed schedule interaction; mixed measured and analytic terms"
+   },
+   {
+    "design": "hbm_gen_ds",
+    "workload": "ar",
+    "slot": "reprice.banklat_budget",
+    "kind": "adjust",
+    "n": 1,
+    "cycles": 97970.2,
+    "grade": "priced",
+    "pointer": "banklat_budget.ds_ar_cycles",
+    "note": "Conservative exposed GEN2c client budgets/pads incl VMGLUEg4 +10; not measured GEN2d die STA; SU/SFU/HC tap growth beyond these categories remains pending"
    },
    {
     "design": "hbm_gen_qwen",
@@ -282,7 +395,7 @@
     "cycles": 2.0,
     "grade": "measured-current-RTL",
     "pointer": "attribution.collq.qwen_cycles",
-    "note": "HBM-REPRICE2 10-19 [measured] C1 gathers: measured gather-master span; non-gather COLL +2 (ring-A merge register); source d4g_collq_price_1018 ag_collq + ra_extra 2 (HBM-COLLQ c8d42a3a4; ledger HBM.D4G_PLAN_B)"
+    "note": "REPRICE3 [measured] C1 gathers: measured gather-master span; non-gather COLL +2 (ring-A merge register); d4g_collq_price_1018 ag_collq + ra_extra 2 (HBM-COLLQ c8d42a3a4; ledger HBM.D4G_PLAN_B)"
    },
    {
     "design": "hbm_gen_qwen",
@@ -290,10 +403,10 @@
     "slot": "reprice.pg_cmd",
     "kind": "adjust",
     "n": 1,
-    "cycles": 2530.0,
+    "cycles": 3036.0,
     "grade": "measured-current-RTL",
     "pointer": "attribution.pg_cmd.qwen_cycles",
-    "note": "HBM-REPRICE2 10-19 [measured] +5 an SU-executed record (lane commands r0/r3 +5, r1/r2 +2; lockstep lanes); source TW-HBM-PGLG e7ea9096c region form, bench m0 PASS 8db52396a (lanes/TW-HBM-PGLG.md)"
+    "note": "REPRICE3 [measured] +6 slowest SU command region (+3 inner, +6 outer); HBM-PGLG2 6799b58ee face relay"
    },
    {
     "design": "hbm_gen_qwen",
@@ -301,10 +414,10 @@
     "slot": "reprice.pg_operand",
     "kind": "adjust",
     "n": 1,
-    "cycles": 720.0,
+    "cycles": 792.0,
     "grade": "measured-current-RTL",
     "pointer": "attribution.pg_operand.qwen_cycles",
-    "note": "HBM-REPRICE2 10-19 [measured] +10 an SU reduction record (red_sel/tree_cmd/slice_x/tree_o +10); source TW-HBM-PGLG e7ea9096c (lanes/H-D4G.md [TW-HBM-PGLG -> H-D4G-GEN2])"
+    "note": "REPRICE3 [measured] +11 SU reduction operand; tree/control relative issue +10 unchanged; HBM-PGLG2 6799b58ee"
    },
    {
     "design": "hbm_gen_qwen",
@@ -315,7 +428,7 @@
     "cycles": 5640.0,
     "grade": "measured-current-RTL",
     "pointer": "attribution.pg_vmwrite.qwen_cycles",
-    "note": "HBM-REPRICE2 10-19 [measured] +12 an SU-executed record writing VM (drain write +12 serial; +16 stream); source TW-HBM-PGLG e7ea9096c / HH-14 tb r2 4a91027b0 (SWQ 16)"
+    "note": "REPRICE3 [measured] +12 an SU-executed record writing VM (drain write +12 serial; +16 stream); TW-HBM-PGLG e7ea9096c / HH-14 tb r2 4a91027b0 (SWQ 16)"
    },
    {
     "design": "hbm_gen_qwen",
@@ -326,7 +439,7 @@
     "cycles": 4.0,
     "grade": "priced",
     "pointer": "attribution.pg_reset.qwen_cycles",
-    "note": "HBM-REPRICE2 10-19 [modelled] +4 once per token (pg_stream +1 epoch of the 4:3 pg_clk); source TW-HBM-PGLG pg_stream split (lanes/TW-HBM-PGLG.md)"
+    "note": "REPRICE3 [modelled] +4 once per token (pg_stream +1 epoch of the 4:3 pg_clk); TW-HBM-PGLG pg_stream split (lanes/TW-HBM-PGLG.md)"
    },
    {
     "design": "hbm_gen_qwen",
@@ -337,7 +450,7 @@
     "cycles": 0.0,
     "grade": "measured-current-RTL",
     "pointer": "attribution.hc_tree.qwen_cycles",
-    "note": "HBM-REPRICE2 10-19 [measured] hc_tree 28 -> 41 (+13 a HC_MIX / HC_PRE_NORM record); closed ring keeps 41 (b0 DRLY 2); source HH-9 c4e9df3fe RAW0 176, HBM-RTL5 U +2, HBM-HCRING fc916e52b, DIE-HBM-LEAD 10-19 01:40, HC-RINGPLAN 9d1689ba4"
+    "note": "REPRICE3 [measured] hc_tree 28 -> 41 (+13 a HC_MIX / HC_PRE_NORM record); closed ring keeps 41 (b0 DRLY 2); HH-9 c4e9df3fe RAW0 176, HBM-RTL5 U +2, HBM-HCRING fc916e52b, DIE-HBM-LEAD 10-19 01:40, HC-RINGPLAN 9d1689ba4"
    },
    {
     "design": "hbm_gen_qwen",
@@ -348,7 +461,7 @@
     "cycles": 0.0,
     "grade": "priced",
     "pointer": "attribution.hc_xr.qwen_cycles",
-    "note": "HBM-REPRICE2 10-19 [modelled] HC root<->quarter crossings XRD 11 + XRU 11 landed vs 2 x COLL_RING priced; source HC-XRDU cca87123f l7_wire land smoke (GEN2b), hc_eng XRD/XRU 11/11"
+    "note": "REPRICE3 [modelled] HC root<->quarter crossings XRD 11 + XRU 11 landed vs 2 x COLL_RING priced; HC-XRDU cca87123f l7_wire land smoke (GEN2b), hc_eng XRD/XRU 11/11"
    },
    {
     "design": "hbm_gen_qwen",
@@ -359,7 +472,7 @@
     "cycles": 977.0,
     "grade": "priced",
     "pointer": "attribution.bank_pin.qwen_cycles",
-    "note": "HBM-REPRICE2 10-19 [priced] +1 a record with a VM-space operand read (bank pin flop on every answer); source HBM-BANKLAT main 01636549a (contract rule), measured on IDX TOPK (VEH-TOPKFIX2 05b86e194)"
+    "note": "REPRICE3 [priced] +1 a record with a VM-space operand read (bank pin flop on every answer); HBM-BANKLAT main 01636549a (contract rule), measured on IDX TOPK (VEH-TOPKFIX2 05b86e194)"
    },
    {
     "design": "hbm_gen_qwen",
@@ -370,7 +483,7 @@
     "cycles": 1512.0,
     "grade": "priced",
     "pointer": "attribution.su_red.qwen_cycles",
-    "note": "HBM-REPRICE2 10-19 [priced] SU reduction = 128-word pre-tree (PT 70 edges) + reducer pairwise tree; source HH-6 claude/hh6-sured-1018 bc43419eb, d4g_su_red_1018 pretree (bench 211 vs model 234 edges)"
+    "note": "REPRICE3 [priced] SU reduction = 128-word pre-tree (PT 70 edges) + reducer pairwise tree; HH-6 claude/hh6-sured-1018 bc43419eb, d4g_su_red_1018 pretree (bench 211 vs model 234 edges)"
    },
    {
     "design": "hbm_gen_qwen",
@@ -381,7 +494,7 @@
     "cycles": 0.0,
     "grade": "measured-current-RTL",
     "pointer": "attribution.e86_tkm.qwen_cycles",
-    "note": "HBM-REPRICE2 10-19 [measured] +64 a COLL.TOPK_MERGE record (+2 NT at TP192); source HH-4 claude/hh4-e86-1018 a5f17ebc7 tkm_static TLAT 4, calendar mutant MUT 3"
+    "note": "REPRICE3 [measured] +64 a COLL.TOPK_MERGE record (+2 NT at TP192); HH-4 claude/hh4-e86-1018 a5f17ebc7 tkm_static TLAT 4, calendar mutant MUT 3"
    },
    {
     "design": "hbm_gen_qwen",
@@ -392,7 +505,7 @@
     "cycles": 0.0,
     "grade": "measured-current-RTL",
     "pointer": "attribution.qcore_r6.qwen_cycles",
-    "note": "HBM-REPRICE2 10-19 [measured] write-conflict fault flag +1 edge: status only, 0 token cycles; source HH-11 c663070f1; coordinator ACCEPTED (HBM-HCBANK 10-19 02:40)"
+    "note": "REPRICE3 [measured] write-conflict fault flag +1 edge: status only, 0 token cycles; HH-11 c663070f1; coordinator ACCEPTED (HBM-HCBANK 10-19 02:40)"
    },
    {
     "design": "hbm_gen_qwen",
@@ -403,7 +516,7 @@
     "cycles": 0.0,
     "grade": "measured-current-RTL",
     "pointer": "attribution.att_s32.qwen_cycles",
-    "note": "HBM-REPRICE2 10-19 [measured] DS T640 SM component qk 288 -> 861, pv 386 -> 1,171 (HBM-ATTGAP S32: busiest SM, 2 x 32-row sub-runs + 5 go bubble; fa 259 / publish 64 kept at price -- the span excludes HBM first access, x-load, publish, merge); T128 at the one-op ratio 684/288, 839/386 (modelled); BIGPROG variant: one op 684 / 839; source HBM-ATTGAP main 7f35a3e4b results/rtl/hbm_ds_layer_tput_1018/hbm_attgap_1019/unit/L2_s32_pos.json (40/40 bit-exact, resident 1,019 / 971 words); one-op VEH-ATT 07a99bc0a"
+    "note": "REPRICE3 [measured] DS T640 SM component qk 288 -> 861, pv 386 -> 1,171 (HBM-ATTGAP S32: busiest SM, 2 x 32-row sub-runs + 5 go bubble; fa 259 / publish 64 kept at price -- the span excludes HBM first access, x-load, publish, merge); T128 at the one-op ratio 684/288, 839/386 (modelled); BIGPROG variant: one op 684 / 839; HBM-ATTGAP main 7f35a3e4b results/rtl/hbm_ds_layer_tput_1018/hbm_attgap_1019/unit/L2_s32_pos.json (40/40 bit-exact, resident 1,019 / 971 words); one-op VEH-ATT 07a99bc0a"
    },
    {
     "design": "hbm_gen_qwen",
@@ -414,7 +527,7 @@
     "cycles": 8461.4,
     "grade": "priced",
     "pointer": "attribution.att_merge.qwen_cycles",
-    "note": "HBM-REPRICE2 10-19 [modelled] DS PV + (HBM-ATTGAP SU merge 400.8 T640 / 335.5 T128 [one-op 335.5] - priced merge 99 / 79); Qwen PV + 4 x (1 XQ + DEP 10 + LAT 9) (16-SM pairwise tree, no priced merge); source HBM-ATTGAP att_gap_price.py merge model (SU quadrant programme + ring AG + top levels in norm; SU RTL bench pending); Qwen VEH-ATT finding (3)"
+    "note": "REPRICE3 [modelled] DS PV + (HBM-ATTGAP SU merge 400.8 T640 / 335.5 T128 [one-op 335.5] - priced merge 99 / 79); Qwen PV + 4 x (1 XQ + DEP 10 + LAT 9) (16-SM pairwise tree, no priced merge); HBM-ATTGAP att_gap_price.py merge model (SU quadrant programme + ring AG + top levels in norm; SU RTL bench pending); Qwen VEH-ATT finding (3)"
    },
    {
     "design": "hbm_gen_qwen",
@@ -425,7 +538,7 @@
     "cycles": 176165.9,
     "grade": "measured-current-RTL",
     "pointer": "attribution.att_qwen.qwen_cycles",
-    "note": "HBM-REPRICE2 10-19 [measured] Qwen ATT at the measured per-SM line rate (QK 54.84 / PV 27.72 B/cyc/SM, P 8192, 512 rows/SM) on 16 SMs instead of the die HBM rate (spans measured; exposure from the S2 schedule); source VEH-ATT3 claude/veh-att3-1019 fb8fd695b results/rtl/hbm_qwen_layer_tput_1018/veh_att3_1019/unit/{L0_L0_pos,chain_L1_pos}.json (80/80 bit-exact; QK 1,195 / PV 4 x 591 = 2,364)"
+    "note": "REPRICE3 [measured] Qwen ATT at the measured per-SM line rate (QK 54.84 / PV 27.72 B/cyc/SM, P 8192, 512 rows/SM) on 16 SMs instead of the die HBM rate (spans measured; exposure from the S2 schedule); VEH-ATT3 claude/veh-att3-1019 fb8fd695b results/rtl/hbm_qwen_layer_tput_1018/veh_att3_1019/unit/{L0_L0_pos,chain_L1_pos}.json (80/80 bit-exact; QK 1,195 / PV 4 x 591 = 2,364)"
    },
    {
     "design": "hbm_gen_qwen",
@@ -436,7 +549,7 @@
     "cycles": 0.0,
     "grade": "measured-current-RTL",
     "pointer": "attribution.att_prog.qwen_cycles",
-    "note": "HBM-REPRICE2 10-19 [measured] 0: S32 sub-runs keep QK+PV resident (1,019 KV8 / 971 KV4 words <= 1,024); source HBM-ATTGAP L2_s32_pos.json calendars word-identical"
+    "note": "REPRICE3 [measured] 2048 words: 1019 attention + 152 matvec resident; one-op spans enabled; HBM-SMBUDGET main e248c89e7"
    },
    {
     "design": "hbm_gen_qwen",
@@ -445,9 +558,9 @@
     "kind": "adjust",
     "n": 1,
     "cycles": 0.0,
-    "grade": "priced",
+    "grade": "measured-current-RTL",
     "pointer": "attribution.att_desc.qwen_cycles",
-    "note": "HBM-REPRICE2 10-19 [modelled] 0: window staging (fixed descriptors, DMA refresh i+1 -> i off-path; Qwen has no window ring); source HBM-ATTGAP window_staging_check.json PASS (260 tokens); DMA ~134 KB/layer/token"
+    "note": "REPRICE3 [measured] 256 token-resident relative descriptors; no rewrite; HBM-SMBUDGET main e248c89e7"
    },
    {
     "design": "hbm_gen_qwen",
@@ -458,7 +571,7 @@
     "cycles": 396.0,
     "grade": "measured-current-RTL",
     "pointer": "attribution.pt_p2.qwen_cycles",
-    "note": "HBM-REPRICE2 10-19 [measured] SU pre-tree PT 70 -> 81 edges (p2 registered operand select, PT_RED 69 -> 80); only with su_red; source HBM-PRETREE claude/hh6-sured-1018 0d52a4877 (bench MUT 0 PASS / MUT 512 FAIL); COORD 0kb"
+    "note": "REPRICE3 [measured] SU pre-tree PT 70 -> 81 edges (p2 registered operand select, PT_RED 69 -> 80); only with su_red; p3 PT_RED80 retained; HBM-PRETREE claude/hh6-sured-1018 0d52a4877 (bench MUT 0 PASS / MUT 512 FAIL); COORD 0kb; HBM-SAFE-PRETREE 9d56cae39"
    },
    {
     "design": "hbm_gen_qwen",
@@ -469,7 +582,7 @@
     "cycles": 0.0,
     "grade": "measured-current-RTL",
     "pointer": "attribution.idx_link.qwen_cycles",
-    "note": "HBM-REPRICE2 10-19 [measured] +5 an IDX.INDEX / IDX.TOPK record (link outputs +5); source HBM-IDXPIPE b4717e464 / AD-HBM-IDXK c94204038 (frame 1397 -> 1402)"
+    "note": "REPRICE3 [measured] +5 an IDX.INDEX / IDX.TOPK record (link outputs +5); HBM-IDXPIPE b4717e464 / AD-HBM-IDXK c94204038 (frame 1397 -> 1402)"
    },
    {
     "design": "hbm_gen_qwen",
@@ -480,7 +593,7 @@
     "cycles": 0.0,
     "grade": "measured-current-RTL",
     "pointer": "attribution.idx_pin.qwen_cycles",
-    "note": "HBM-REPRICE2 10-19 [measured] IDX.INDEX +3, IDX.TOPK +(m + 4), ARGMAX +8; source HBM-IDXAM2 r3 bench + VEH-TOPKFIX2 am_pin bench (RT_EXTRA 2 / ACK 14, VMX 6, op_SW n13)"
+    "note": "REPRICE3 [measured] IDX.INDEX +3, IDX.TOPK +(m + 4), ARGMAX +8; HBM-IDXAM2 r3 bench + VEH-TOPKFIX2 am_pin bench (RT_EXTRA 2 / ACK 14, VMX 6, op_SW n13)"
    },
    {
     "design": "hbm_gen_qwen",
@@ -491,7 +604,73 @@
     "cycles": 888.4,
     "grade": "priced",
     "pointer": "attribution.land.qwen_cycles",
-    "note": "HBM-REPRICE2 10-19 [priced] recorded factor on tok/s (half-cycle landed hops); source HBM-LANDING/DCC hland-dcc 447dfe960 (HANDOFF 10-18 07:35)"
+    "note": "REPRICE3 [priced] recorded factor on tok/s (half-cycle landed hops); HBM-LANDING/DCC hland-dcc 447dfe960 (HANDOFF 10-18 07:35)"
+   },
+   {
+    "design": "hbm_gen_qwen",
+    "workload": "ar",
+    "slot": "reprice.hbm_bw",
+    "kind": "adjust",
+    "n": 1,
+    "cycles": 1545856.2,
+    "grade": "priced",
+    "pointer": "attribution.hbm_bw.qwen_cycles",
+    "note": "REPRICE3 [priced] SM, attention and DMA stream floor at measured per-SM bandwidth; incremental exposure over99; HBM-BW9e8fcf77e controller production stream"
+   },
+   {
+    "design": "hbm_gen_qwen",
+    "workload": "ar",
+    "slot": "reprice.pg_inject",
+    "kind": "adjust",
+    "n": 1,
+    "cycles": 506.0,
+    "grade": "priced",
+    "pointer": "attribution.pg_inject.qwen_cycles",
+    "note": "REPRICE3 [priced] +1 SU VM read record conservatively exposes split-stream inject edge; only inject users pay physically; TW3-PGSTREAM 5ac202325; HBM-PGSTREAM-B unchanged edges"
+   },
+   {
+    "design": "hbm_gen_qwen",
+    "workload": "ar",
+    "slot": "reprice.pg_fault",
+    "kind": "adjust",
+    "n": 1,
+    "cycles": 0.0,
+    "grade": "measured-current-RTL",
+    "pointer": "attribution.pg_fault.qwen_cycles",
+    "note": "REPRICE3 [measured] fault +2 serial is status only, no successful token latency; TW3-PGSTREAM"
+   },
+   {
+    "design": "hbm_gen_qwen",
+    "workload": "ar",
+    "slot": "reprice.sm_svc",
+    "kind": "adjust",
+    "n": 1,
+    "cycles": 0.0,
+    "grade": "priced",
+    "pointer": "attribution.sm_svc.qwen_cycles",
+    "note": "REPRICE3 [priced] fully exposed partial block granularity, worst layer 388 x43 + head4; HBM-SMBUDGET sm_svc_granularity.json"
+   },
+   {
+    "design": "hbm_gen_qwen",
+    "workload": "ar",
+    "slot": "reprice.qwen_int8",
+    "kind": "adjust",
+    "n": 1,
+    "cycles": 0.0,
+    "grade": "measured-current-RTL",
+    "pointer": "attribution.qwen_int8.qwen_cycles",
+    "note": "REPRICE3 [measured] INT8 path within price; opt-in successor, all9984 rows bit-exact; SMB-INT8 e592ae5d0; default-off die adoption owed"
+   },
+   {
+    "design": "hbm_gen_qwen",
+    "workload": "ar",
+    "slot": "reprice.pvm_fold",
+    "kind": "adjust",
+    "n": 1,
+    "cycles": 288.0,
+    "grade": "priced",
+    "pointer": "attribution.pvm_fold.qwen_cycles",
+    "note": "REPRICE3 [priced] +1 per Qwen PV 128-token block per SM column; DS no fold; HBM-PVM-SAFE node0 publication F0+23 vs22; node1 unchanged"
    },
    {
     "design": "hbm_gen_qwen",
@@ -499,93 +678,1336 @@
     "slot": "reprice.interaction",
     "kind": "adjust",
     "n": 1,
-    "cycles": 137.6,
+    "cycles": -94420.2,
     "grade": "priced",
     "pointer": "interaction.qwen_cycles",
-    "note": "HBM-REPRICE2 10-19: S2 schedule of all terms together minus the sum of the single-term deltas"
+    "note": "Composed schedule interaction; mixed measured and analytic terms"
+   },
+   {
+    "design": "hbm_gen_qwen",
+    "workload": "ar",
+    "slot": "reprice.banklat_budget",
+    "kind": "adjust",
+    "n": 1,
+    "cycles": 21919.7,
+    "grade": "priced",
+    "pointer": "banklat_budget.qwen_cycles",
+    "note": "Conservative exposed GEN2c client budgets/pads incl VMGLUEg4 +10; not measured GEN2d die STA; SU/SFU/HC tap growth beyond these categories remains pending"
    }
   ]
  },
  "variants": {
-  "all": {
-   "ds_ar_tok_s": 1631.5,
-   "qwen_tok_s": 818.7,
-   "d_ds_ar_pct": -14.37,
-   "d_qwen_pct": -13.47
+  "base": {
+   "ds_ar_cycles": 629775.1,
+   "qwen_cycles": 1268221.8,
+   "ds_ar_tok_s": 1905.4,
+   "qwen_tok_s": 946.2,
+   "terms": [],
+   "rp_added_sum": {
+    "ds": {},
+    "qwen": {}
+   },
+   "d_ds_ar_pct": 0.0,
+   "d_qwen_pct": 0.0,
+   "d_ds_ar_cycles": 0.0,
+   "d_qwen_cycles": 0.0
   },
-  "all_bigprog": {
-   "ds_ar_tok_s": 1680.7,
-   "qwen_tok_s": 818.7,
-   "d_ds_ar_pct": -11.79,
-   "d_qwen_pct": -13.47
-  },
-  "rec": {
+  "only_collq": {
+   "ds_ar_cycles": 648934.2,
+   "qwen_cycles": 1268223.8,
    "ds_ar_tok_s": 1849.2,
    "qwen_tok_s": 946.2,
+   "terms": [
+    "collq"
+   ],
+   "rp_added_sum": {
+    "ds": {},
+    "qwen": {}
+   },
    "d_ds_ar_pct": -2.95,
-   "d_qwen_pct": 0.0
+   "d_qwen_pct": 0.0,
+   "d_ds_ar_cycles": 19159.1,
+   "d_qwen_cycles": 2.0
+  },
+  "only_pg_cmd": {
+   "ds_ar_cycles": 633357.1,
+   "qwen_cycles": 1271257.8,
+   "ds_ar_tok_s": 1894.7,
+   "qwen_tok_s": 943.9,
+   "terms": [
+    "pg_cmd"
+   ],
+   "rp_added_sum": {
+    "ds": {
+     "pg_cmd": 8136.0
+    },
+    "qwen": {
+     "pg_cmd": 3042.0
+    }
+   },
+   "d_ds_ar_pct": -0.56,
+   "d_qwen_pct": -0.24,
+   "d_ds_ar_cycles": 3582.0,
+   "d_qwen_cycles": 3036.0
+  },
+  "only_pg_operand": {
+   "ds_ar_cycles": 631172.1,
+   "qwen_cycles": 1269013.8,
+   "ds_ar_tok_s": 1901.2,
+   "qwen_tok_s": 945.6,
+   "terms": [
+    "pg_operand"
+   ],
+   "rp_added_sum": {
+    "ds": {
+     "pg_operand": 2266.0
+    },
+    "qwen": {
+     "pg_operand": 792.0
+    }
+   },
+   "d_ds_ar_pct": -0.22,
+   "d_qwen_pct": -0.06,
+   "d_ds_ar_cycles": 1397.0,
+   "d_qwen_cycles": 792.0
+  },
+  "only_pg_vmwrite": {
+   "ds_ar_cycles": 635883.1,
+   "qwen_cycles": 1273861.8,
+   "ds_ar_tok_s": 1887.1,
+   "qwen_tok_s": 942.0,
+   "terms": [
+    "pg_vmwrite"
+   ],
+   "rp_added_sum": {
+    "ds": {
+     "pg_vmwrite": 14280.0
+    },
+    "qwen": {
+     "pg_vmwrite": 5640.0
+    }
+   },
+   "d_ds_ar_pct": -0.96,
+   "d_qwen_pct": -0.44,
+   "d_ds_ar_cycles": 6108.0,
+   "d_qwen_cycles": 5640.0
+  },
+  "only_hc_tree": {
+   "ds_ar_cycles": 630828.1,
+   "qwen_cycles": 1268221.8,
+   "ds_ar_tok_s": 1902.3,
+   "qwen_tok_s": 946.2,
+   "terms": [
+    "hc_tree"
+   ],
+   "rp_added_sum": {
+    "ds": {
+     "hc_tree": 2093.0
+    },
+    "qwen": {}
+   },
+   "d_ds_ar_pct": -0.16,
+   "d_qwen_pct": 0.0,
+   "d_ds_ar_cycles": 1053.0,
+   "d_qwen_cycles": 0.0
+  },
+  "only_hc_xr": {
+   "ds_ar_cycles": 630037.5,
+   "qwen_cycles": 1268221.8,
+   "ds_ar_tok_s": 1904.6,
+   "qwen_tok_s": 946.2,
+   "terms": [
+    "hc_xr"
+   ],
+   "rp_added_sum": {
+    "ds": {
+     "hc_xr": 521.6
+    },
+    "qwen": {}
+   },
+   "d_ds_ar_pct": -0.04,
+   "d_qwen_pct": 0.0,
+   "d_ds_ar_cycles": 262.4,
+   "d_qwen_cycles": 0.0
+  },
+  "only_bank_pin": {
+   "ds_ar_cycles": 631916.1,
+   "qwen_cycles": 1269198.8,
+   "ds_ar_tok_s": 1899.0,
+   "qwen_tok_s": 945.5,
+   "terms": [
+    "bank_pin"
+   ],
+   "rp_added_sum": {
+    "ds": {
+     "bank_pin": 3558.0
+    },
+    "qwen": {
+     "bank_pin": 978.0
+    }
+   },
+   "d_ds_ar_pct": -0.34,
+   "d_qwen_pct": -0.07,
+   "d_ds_ar_cycles": 2141.0,
+   "d_qwen_cycles": 977.0
+  },
+  "only_su_red": {
+   "ds_ar_cycles": 629775.1,
+   "qwen_cycles": 1269733.8,
+   "ds_ar_tok_s": 1905.4,
+   "qwen_tok_s": 945.1,
+   "terms": [
+    "su_red"
+   ],
+   "rp_added_sum": {
+    "ds": {},
+    "qwen": {}
+   },
+   "d_ds_ar_pct": 0.0,
+   "d_qwen_pct": -0.12,
+   "d_ds_ar_cycles": 0.0,
+   "d_qwen_cycles": 1512.0
+  },
+  "only_e86_tkm": {
+   "ds_ar_cycles": 630351.1,
+   "qwen_cycles": 1268221.8,
+   "ds_ar_tok_s": 1903.7,
+   "qwen_tok_s": 946.2,
+   "terms": [
+    "e86_tkm"
+   ],
+   "rp_added_sum": {
+    "ds": {
+     "e86_tkm": 576.0
+    },
+    "qwen": {}
+   },
+   "d_ds_ar_pct": -0.09,
+   "d_qwen_pct": 0.0,
+   "d_ds_ar_cycles": 576.0,
+   "d_qwen_cycles": 0.0
+  },
+  "only_att_s32": {
+   "ds_ar_cycles": 662023.9,
+   "qwen_cycles": 1268221.8,
+   "ds_ar_tok_s": 1812.6,
+   "qwen_tok_s": 946.2,
+   "terms": [
+    "att_s32"
+   ],
+   "rp_added_sum": {
+    "ds": {
+     "att_s32": 33097.8
+    },
+    "qwen": {}
+   },
+   "d_ds_ar_pct": -4.87,
+   "d_qwen_pct": 0.0,
+   "d_ds_ar_cycles": 32248.8,
+   "d_qwen_cycles": 0.0
+  },
+  "only_att_merge": {
+   "ds_ar_cycles": 639038.6,
+   "qwen_cycles": 1276683.2,
+   "ds_ar_tok_s": 1877.8,
+   "qwen_tok_s": 939.9,
+   "terms": [
+    "att_merge"
+   ],
+   "rp_added_sum": {
+    "ds": {
+     "att_merge": 9500.0
+    },
+    "qwen": {
+     "att_merge": 8461.4
+    }
+   },
+   "d_ds_ar_pct": -1.45,
+   "d_qwen_pct": -0.67,
+   "d_ds_ar_cycles": 9263.5,
+   "d_qwen_cycles": 8461.4
+  },
+  "only_att_qwen": {
+   "ds_ar_cycles": 629775.1,
+   "qwen_cycles": 1444387.7,
+   "ds_ar_tok_s": 1905.4,
+   "qwen_tok_s": 830.8,
+   "terms": [
+    "att_qwen"
+   ],
+   "rp_added_sum": {
+    "ds": {},
+    "qwen": {
+     "att_qwen": 176165.9
+    }
+   },
+   "d_ds_ar_pct": 0.0,
+   "d_qwen_pct": -12.2,
+   "d_ds_ar_cycles": 0.0,
+   "d_qwen_cycles": 176165.9
+  },
+  "only_idx_link": {
+   "ds_ar_cycles": 630015.1,
+   "qwen_cycles": 1268221.8,
+   "ds_ar_tok_s": 1904.7,
+   "qwen_tok_s": 946.2,
+   "terms": [
+    "idx_link"
+   ],
+   "rp_added_sum": {
+    "ds": {
+     "idx_link": 240.0
+    },
+    "qwen": {}
+   },
+   "d_ds_ar_pct": -0.04,
+   "d_qwen_pct": 0.0,
+   "d_ds_ar_cycles": 240.0,
+   "d_qwen_cycles": 0.0
+  },
+  "only_idx_pin": {
+   "ds_ar_cycles": 629999.1,
+   "qwen_cycles": 1268221.8,
+   "ds_ar_tok_s": 1904.8,
+   "qwen_tok_s": 946.2,
+   "terms": [
+    "idx_pin"
+   ],
+   "rp_added_sum": {
+    "ds": {
+     "idx_pin": 232.0
+    },
+    "qwen": {
+     "idx_pin": 8.0
+    }
+   },
+   "d_ds_ar_pct": -0.03,
+   "d_qwen_pct": 0.0,
+   "d_ds_ar_cycles": 224.0,
+   "d_qwen_cycles": 0.0
+  },
+  "only_hbm_bw": {
+   "ds_ar_cycles": 793087.8,
+   "qwen_cycles": 2814078.0,
+   "ds_ar_tok_s": 1513.1,
+   "qwen_tok_s": 426.4,
+   "terms": [
+    "hbm_bw"
+   ],
+   "rp_added_sum": {
+    "ds": {
+     "hbm_bw": 181600.7
+    },
+    "qwen": {
+     "hbm_bw": 1546777.1
+    }
+   },
+   "d_ds_ar_pct": -20.59,
+   "d_qwen_pct": -54.94,
+   "d_ds_ar_cycles": 163312.7,
+   "d_qwen_cycles": 1545856.2
+  },
+  "only_pg_inject": {
+   "ds_ar_cycles": 630372.1,
+   "qwen_cycles": 1268727.8,
+   "ds_ar_tok_s": 1903.6,
+   "qwen_tok_s": 945.8,
+   "terms": [
+    "pg_inject"
+   ],
+   "rp_added_sum": {
+    "ds": {
+     "pg_inject": 1356.0
+    },
+    "qwen": {
+     "pg_inject": 507.0
+    }
+   },
+   "d_ds_ar_pct": -0.09,
+   "d_qwen_pct": -0.04,
+   "d_ds_ar_cycles": 597.0,
+   "d_qwen_cycles": 506.0
+  },
+  "only_pg_fault": {
+   "ds_ar_cycles": 629775.1,
+   "qwen_cycles": 1268221.8,
+   "ds_ar_tok_s": 1905.4,
+   "qwen_tok_s": 946.2,
+   "terms": [
+    "pg_fault"
+   ],
+   "rp_added_sum": {
+    "ds": {},
+    "qwen": {}
+   },
+   "d_ds_ar_pct": 0.0,
+   "d_qwen_pct": 0.0,
+   "d_ds_ar_cycles": 0.0,
+   "d_qwen_cycles": 0.0
+  },
+  "only_sm_svc": {
+   "ds_ar_cycles": 646463.1,
+   "qwen_cycles": 1268221.8,
+   "ds_ar_tok_s": 1856.3,
+   "qwen_tok_s": 946.2,
+   "terms": [
+    "sm_svc"
+   ],
+   "rp_added_sum": {
+    "ds": {},
+    "qwen": {}
+   },
+   "d_ds_ar_pct": -2.58,
+   "d_qwen_pct": 0.0,
+   "d_ds_ar_cycles": 16688.0,
+   "d_qwen_cycles": 0.0
+  },
+  "only_qwen_int8": {
+   "ds_ar_cycles": 629775.1,
+   "qwen_cycles": 1268221.8,
+   "ds_ar_tok_s": 1905.4,
+   "qwen_tok_s": 946.2,
+   "terms": [
+    "qwen_int8"
+   ],
+   "rp_added_sum": {
+    "ds": {},
+    "qwen": {}
+   },
+   "d_ds_ar_pct": 0.0,
+   "d_qwen_pct": 0.0,
+   "d_ds_ar_cycles": 0.0,
+   "d_qwen_cycles": 0.0
+  },
+  "only_pvm_fold": {
+   "ds_ar_cycles": 629775.1,
+   "qwen_cycles": 1268509.8,
+   "ds_ar_tok_s": 1905.4,
+   "qwen_tok_s": 946.0,
+   "terms": [
+    "pvm_fold"
+   ],
+   "rp_added_sum": {
+    "ds": {},
+    "qwen": {
+     "pvm_fold": 288.0
+    }
+   },
+   "d_ds_ar_pct": 0.0,
+   "d_qwen_pct": -0.02,
+   "d_ds_ar_cycles": 0.0,
+   "d_qwen_cycles": 288.0
+  },
+  "all": {
+   "ds_ar_cycles": 888859.7,
+   "qwen_cycles": 2918326.5,
+   "ds_ar_tok_s": 1350.0,
+   "qwen_tok_s": 411.2,
+   "terms": [
+    "att_desc",
+    "att_merge",
+    "att_prog",
+    "att_qwen",
+    "att_s32",
+    "bank_pin",
+    "collq",
+    "e86_tkm",
+    "hbm_bw",
+    "hc_tree",
+    "hc_xr",
+    "idx_link",
+    "idx_pin",
+    "land",
+    "pg_cmd",
+    "pg_fault",
+    "pg_inject",
+    "pg_operand",
+    "pg_reset",
+    "pg_vmwrite",
+    "pt_p2",
+    "pvm_fold",
+    "qcore_r6",
+    "qwen_int8",
+    "sm_svc",
+    "su_red"
+   ],
+   "rp_added_sum": {
+    "ds": {
+     "hc_tree": 2093.0,
+     "hc_xr": 521.6,
+     "bank_pin": 3558.0,
+     "hbm_bw": 181428.7,
+     "pg_cmd": 8136.0,
+     "pg_operand": 2266.0,
+     "pg_inject": 1356.0,
+     "pg_vmwrite": 14280.0,
+     "att_s32": 33097.8,
+     "att_merge": 9500.0,
+     "idx_link": 240.0,
+     "idx_pin": 232.0,
+     "e86_tkm": 576.0
+    },
+    "qwen": {
+     "hbm_bw": 1451202.5,
+     "pg_cmd": 3042.0,
+     "pg_vmwrite": 5640.0,
+     "bank_pin": 978.0,
+     "pg_inject": 507.0,
+     "att_qwen": 176165.9,
+     "pg_operand": 792.0,
+     "att_merge": 8461.4,
+     "pvm_fold": 288.0,
+     "idx_pin": 8.0
+    }
+   },
+   "d_ds_ar_pct": -29.15,
+   "d_qwen_pct": -56.54,
+   "d_ds_ar_cycles": 259084.6,
+   "d_qwen_cycles": 1650104.7
+  },
+  "all_no_collq": {
+   "ds_ar_cycles": 875853.1,
+   "qwen_cycles": 2918324.5,
+   "ds_ar_tok_s": 1370.1,
+   "qwen_tok_s": 411.2,
+   "terms": [
+    "att_desc",
+    "att_merge",
+    "att_prog",
+    "att_qwen",
+    "att_s32",
+    "bank_pin",
+    "e86_tkm",
+    "hbm_bw",
+    "hc_tree",
+    "hc_xr",
+    "idx_link",
+    "idx_pin",
+    "land",
+    "pg_cmd",
+    "pg_fault",
+    "pg_inject",
+    "pg_operand",
+    "pg_reset",
+    "pg_vmwrite",
+    "pt_p2",
+    "pvm_fold",
+    "qcore_r6",
+    "qwen_int8",
+    "sm_svc",
+    "su_red"
+   ],
+   "rp_added_sum": {
+    "ds": {
+     "hc_tree": 2093.0,
+     "hc_xr": 521.6,
+     "bank_pin": 3558.0,
+     "hbm_bw": 181428.7,
+     "pg_cmd": 8136.0,
+     "pg_operand": 2266.0,
+     "pg_inject": 1356.0,
+     "pg_vmwrite": 14280.0,
+     "att_s32": 33097.8,
+     "att_merge": 9500.0,
+     "idx_link": 240.0,
+     "idx_pin": 232.0,
+     "e86_tkm": 576.0
+    },
+    "qwen": {
+     "hbm_bw": 1451202.5,
+     "pg_cmd": 3042.0,
+     "pg_vmwrite": 5640.0,
+     "bank_pin": 978.0,
+     "pg_inject": 507.0,
+     "att_qwen": 176165.9,
+     "pg_operand": 792.0,
+     "att_merge": 8461.4,
+     "pvm_fold": 288.0,
+     "idx_pin": 8.0
+    }
+   },
+   "d_ds_ar_pct": -28.09,
+   "d_qwen_pct": -56.54,
+   "d_ds_ar_cycles": 246078.0,
+   "d_qwen_cycles": 1650102.7
+  },
+  "all_bigprog": {
+   "ds_ar_cycles": 888859.7,
+   "qwen_cycles": 2918326.5,
+   "ds_ar_tok_s": 1350.0,
+   "qwen_tok_s": 411.2,
+   "terms": [
+    "att_desc",
+    "att_merge",
+    "att_prog",
+    "att_qwen",
+    "att_s32",
+    "bank_pin",
+    "collq",
+    "e86_tkm",
+    "hbm_bw",
+    "hc_tree",
+    "hc_xr",
+    "idx_link",
+    "idx_pin",
+    "land",
+    "pg_cmd",
+    "pg_fault",
+    "pg_inject",
+    "pg_operand",
+    "pg_reset",
+    "pg_vmwrite",
+    "pt_p2",
+    "pvm_fold",
+    "qcore_r6",
+    "qwen_int8",
+    "sm_svc",
+    "su_red"
+   ],
+   "rp_added_sum": {
+    "ds": {
+     "hc_tree": 2093.0,
+     "hc_xr": 521.6,
+     "bank_pin": 3558.0,
+     "hbm_bw": 181428.7,
+     "pg_cmd": 8136.0,
+     "pg_operand": 2266.0,
+     "pg_inject": 1356.0,
+     "pg_vmwrite": 14280.0,
+     "att_s32": 33097.8,
+     "att_merge": 9500.0,
+     "idx_link": 240.0,
+     "idx_pin": 232.0,
+     "e86_tkm": 576.0
+    },
+    "qwen": {
+     "hbm_bw": 1451202.5,
+     "pg_cmd": 3042.0,
+     "pg_vmwrite": 5640.0,
+     "bank_pin": 978.0,
+     "pg_inject": 507.0,
+     "att_qwen": 176165.9,
+     "pg_operand": 792.0,
+     "att_merge": 8461.4,
+     "pvm_fold": 288.0,
+     "idx_pin": 8.0
+    }
+   },
+   "d_ds_ar_pct": -29.15,
+   "d_qwen_pct": -56.54,
+   "d_ds_ar_cycles": 259084.6,
+   "d_qwen_cycles": 1650104.7
+  },
+  "rec": {
+   "ds_ar_cycles": 648934.2,
+   "qwen_cycles": 1268223.8,
+   "ds_ar_tok_s": 1849.2,
+   "qwen_tok_s": 946.2,
+   "terms": [
+    "collq"
+   ],
+   "rp_added_sum": {
+    "ds": {},
+    "qwen": {}
+   },
+   "d_ds_ar_pct": -2.95,
+   "d_qwen_pct": 0.0,
+   "d_ds_ar_cycles": 19159.1,
+   "d_qwen_cycles": 2.0
   },
   "rec_lat": {
-   "ds_ar_tok_s": 1785.7,
-   "qwen_tok_s": 936.8,
-   "d_ds_ar_pct": -6.28,
-   "d_qwen_pct": -0.99
+   "ds_ar_cycles": 846873.0,
+   "qwen_cycles": 2829211.4,
+   "ds_ar_tok_s": 1417.0,
+   "qwen_tok_s": 424.1,
+   "terms": [
+    "bank_pin",
+    "collq",
+    "e86_tkm",
+    "hbm_bw",
+    "hc_tree",
+    "hc_xr",
+    "idx_link",
+    "idx_pin",
+    "land",
+    "pg_cmd",
+    "pg_fault",
+    "pg_inject",
+    "pg_operand",
+    "pg_reset",
+    "pg_vmwrite",
+    "pt_p2",
+    "pvm_fold",
+    "qcore_r6",
+    "qwen_int8",
+    "sm_svc",
+    "su_red"
+   ],
+   "rp_added_sum": {
+    "ds": {
+     "hc_tree": 2093.0,
+     "hc_xr": 521.6,
+     "bank_pin": 3558.0,
+     "hbm_bw": 181428.7,
+     "pg_cmd": 8136.0,
+     "pg_operand": 2266.0,
+     "pg_inject": 1356.0,
+     "pg_vmwrite": 14280.0,
+     "idx_link": 240.0,
+     "idx_pin": 232.0,
+     "e86_tkm": 576.0
+    },
+    "qwen": {
+     "hbm_bw": 1546777.1,
+     "pg_cmd": 3042.0,
+     "pg_vmwrite": 5640.0,
+     "bank_pin": 978.0,
+     "pg_inject": 507.0,
+     "pg_operand": 792.0,
+     "pvm_fold": 288.0,
+     "idx_pin": 8.0
+    }
+   },
+   "d_ds_ar_pct": -25.63,
+   "d_qwen_pct": -55.18,
+   "d_ds_ar_cycles": 217097.9,
+   "d_qwen_cycles": 1560989.6
   },
   "rec_att": {
-   "ds_ar_tok_s": 1686.1,
-   "qwen_tok_s": 826.0,
-   "d_ds_ar_pct": -11.51,
-   "d_qwen_pct": -12.7
-  },
-  "rec_att_bigprog": {
+   "ds_ar_cycles": 690446.5,
+   "qwen_cycles": 1452851.1,
    "ds_ar_tok_s": 1738.0,
    "qwen_tok_s": 826.0,
+   "terms": [
+    "att_desc",
+    "att_merge",
+    "att_prog",
+    "att_qwen",
+    "att_s32",
+    "collq"
+   ],
+   "rp_added_sum": {
+    "ds": {
+     "att_s32": 33097.8,
+     "att_merge": 9500.0
+    },
+    "qwen": {
+     "att_qwen": 176165.9,
+     "att_merge": 8461.4
+    }
+   },
    "d_ds_ar_pct": -8.79,
-   "d_qwen_pct": -12.7
+   "d_qwen_pct": -12.7,
+   "d_ds_ar_cycles": 60671.4,
+   "d_qwen_cycles": 184629.3
+  },
+  "rec_att_bigprog": {
+   "ds_ar_cycles": 690446.5,
+   "qwen_cycles": 1452851.1,
+   "ds_ar_tok_s": 1738.0,
+   "qwen_tok_s": 826.0,
+   "terms": [
+    "att_desc",
+    "att_merge",
+    "att_prog",
+    "att_qwen",
+    "att_s32",
+    "collq"
+   ],
+   "rp_added_sum": {
+    "ds": {
+     "att_s32": 33097.8,
+     "att_merge": 9500.0
+    },
+    "qwen": {
+     "att_qwen": 176165.9,
+     "att_merge": 8461.4
+    }
+   },
+   "d_ds_ar_pct": -8.79,
+   "d_qwen_pct": -12.7,
+   "d_ds_ar_cycles": 60671.4,
+   "d_qwen_cycles": 184629.3
+  },
+  "only_su_red_p2": {
+   "ds_ar_cycles": 629775.1,
+   "qwen_cycles": 1270129.8,
+   "ds_ar_tok_s": 1905.4,
+   "qwen_tok_s": 944.8,
+   "terms": [
+    "pt_p2",
+    "su_red"
+   ],
+   "rp_added_sum": {
+    "ds": {},
+    "qwen": {}
+   },
+   "d_ds_ar_pct": 0.0,
+   "d_qwen_pct": -0.15,
+   "d_ds_ar_cycles": 0.0,
+   "d_qwen_cycles": 1908.0
+  },
+  "only_att_s32_bigprog": {
+   "ds_ar_cycles": 662023.9,
+   "qwen_cycles": 1268221.8,
+   "ds_ar_tok_s": 1812.6,
+   "qwen_tok_s": 946.2,
+   "terms": [
+    "att_s32"
+   ],
+   "rp_added_sum": {
+    "ds": {
+     "att_s32": 33097.8
+    },
+    "qwen": {}
+   },
+   "d_ds_ar_pct": -4.87,
+   "d_qwen_pct": 0.0,
+   "d_ds_ar_cycles": 32248.8,
+   "d_qwen_cycles": 0.0
+  },
+  "only_att_merge_bigprog": {
+   "ds_ar_cycles": 639038.6,
+   "qwen_cycles": 1276683.2,
+   "ds_ar_tok_s": 1877.8,
+   "qwen_tok_s": 939.9,
+   "terms": [
+    "att_merge"
+   ],
+   "rp_added_sum": {
+    "ds": {
+     "att_merge": 9500.0
+    },
+    "qwen": {
+     "att_merge": 8461.4
+    }
+   },
+   "d_ds_ar_pct": -1.45,
+   "d_qwen_pct": -0.67,
+   "d_ds_ar_cycles": 9263.5,
+   "d_qwen_cycles": 8461.4
   },
   "info_attgap_total": {
-   "ds_ar_tok_s": 1790.2,
-   "qwen_tok_s": 939.9,
-   "d_ds_ar_pct": -6.05,
-   "d_qwen_pct": -0.67
-  },
-  "info_attgap_total_bigprog": {
+   "ds_ar_cycles": 649075.6,
+   "qwen_cycles": 1276683.2,
    "ds_ar_tok_s": 1848.8,
    "qwen_tok_s": 939.9,
+   "terms": [
+    "att_merge",
+    "att_s32"
+   ],
+   "rp_added_sum": {
+    "ds": {
+     "att_merge": 13420.0,
+     "att_s32": 6384.0
+    },
+    "qwen": {
+     "att_merge": 8461.4
+    }
+   },
    "d_ds_ar_pct": -2.97,
-   "d_qwen_pct": -0.67
+   "d_qwen_pct": -0.67,
+   "d_ds_ar_cycles": 19300.5,
+   "d_qwen_cycles": 8461.4
+  },
+  "info_attgap_total_bigprog": {
+   "ds_ar_cycles": 649075.6,
+   "qwen_cycles": 1276683.2,
+   "ds_ar_tok_s": 1848.8,
+   "qwen_tok_s": 939.9,
+   "terms": [
+    "att_merge",
+    "att_s32"
+   ],
+   "rp_added_sum": {
+    "ds": {
+     "att_merge": 13420.0,
+     "att_s32": 6384.0
+    },
+    "qwen": {
+     "att_merge": 8461.4
+    }
+   },
+   "d_ds_ar_pct": -2.97,
+   "d_qwen_pct": -0.67,
+   "d_ds_ar_cycles": 19300.5,
+   "d_qwen_cycles": 8461.4
   },
   "info_gen2c_xload": {
-   "ds_ar_tok_s": 1821.8,
-   "qwen_tok_s": 939.6,
-   "d_ds_ar_pct": -4.39,
-   "d_qwen_pct": -0.7
+   "ds_ar_cycles": 673028.4,
+   "qwen_cycles": 1281134.3,
+   "ds_ar_tok_s": 1783.0,
+   "qwen_tok_s": 936.7,
+   "terms": [],
+   "rp_added_sum": {
+    "ds": {},
+    "qwen": {}
+   },
+   "d_ds_ar_pct": -6.42,
+   "d_qwen_pct": -1.0,
+   "d_ds_ar_cycles": 43253.3,
+   "d_qwen_cycles": 12912.5
   },
   "info_bl_coll": {
-   "ds_ar_tok_s": 1802.8,
-   "qwen_tok_s": 942.6,
-   "d_ds_ar_pct": -5.38,
-   "d_qwen_pct": -0.38
+   "ds_ar_cycles": 673582.0,
+   "qwen_cycles": 1274154.5,
+   "ds_ar_tok_s": 1781.5,
+   "qwen_tok_s": 941.8,
+   "terms": [],
+   "rp_added_sum": {
+    "ds": {},
+    "qwen": {}
+   },
+   "d_ds_ar_pct": -6.5,
+   "d_qwen_pct": -0.47,
+   "d_ds_ar_cycles": 43806.9,
+   "d_qwen_cycles": 5932.7
   },
   "info_bl_dma": {
-   "ds_ar_tok_s": 1884.2,
-   "qwen_tok_s": 944.3,
-   "d_ds_ar_pct": -1.11,
-   "d_qwen_pct": -0.2
+   "ds_ar_cycles": 639724.8,
+   "qwen_cycles": 1271280.9,
+   "ds_ar_tok_s": 1875.8,
+   "qwen_tok_s": 943.9,
+   "terms": [],
+   "rp_added_sum": {
+    "ds": {},
+    "qwen": {}
+   },
+   "d_ds_ar_pct": -1.55,
+   "d_qwen_pct": -0.24,
+   "d_ds_ar_cycles": 9949.7,
+   "d_qwen_cycles": 3059.1
   },
   "info_bl_idx": {
-   "ds_ar_tok_s": 1880.9,
+   "ds_ar_cycles": 638463.1,
+   "qwen_cycles": 1268221.8,
+   "ds_ar_tok_s": 1879.5,
    "qwen_tok_s": 946.2,
-   "d_ds_ar_pct": -1.29,
-   "d_qwen_pct": 0.0
+   "terms": [],
+   "rp_added_sum": {
+    "ds": {
+     "bl_idx": 8763.0
+    },
+    "qwen": {
+     "bl_idx": 75.0
+    }
+   },
+   "d_ds_ar_pct": -1.36,
+   "d_qwen_pct": 0.0,
+   "d_ds_ar_cycles": 8688.0,
+   "d_qwen_cycles": 0.0
   },
   "info_banklat_all": {
-   "ds_ar_tok_s": 1474.7,
-   "qwen_tok_s": 809.8,
-   "d_ds_ar_pct": -22.6,
-   "d_qwen_pct": -14.42
+   "ds_ar_cycles": 986829.9,
+   "qwen_cycles": 2940246.2,
+   "ds_ar_tok_s": 1216.0,
+   "qwen_tok_s": 408.1,
+   "terms": [
+    "att_desc",
+    "att_merge",
+    "att_prog",
+    "att_qwen",
+    "att_s32",
+    "bank_pin",
+    "collq",
+    "e86_tkm",
+    "hbm_bw",
+    "hc_tree",
+    "hc_xr",
+    "idx_link",
+    "idx_pin",
+    "land",
+    "pg_cmd",
+    "pg_fault",
+    "pg_inject",
+    "pg_operand",
+    "pg_reset",
+    "pg_vmwrite",
+    "pt_p2",
+    "pvm_fold",
+    "qcore_r6",
+    "qwen_int8",
+    "sm_svc",
+    "su_red"
+   ],
+   "rp_added_sum": {
+    "ds": {
+     "hc_tree": 2093.0,
+     "hc_xr": 521.6,
+     "bank_pin": 3558.0,
+     "hbm_bw": 173452.9,
+     "pg_cmd": 8136.0,
+     "pg_operand": 2266.0,
+     "pg_inject": 1356.0,
+     "pg_vmwrite": 14280.0,
+     "att_s32": 33097.8,
+     "att_merge": 9500.0,
+     "idx_link": 240.0,
+     "idx_pin": 232.0,
+     "bl_idx": 8763.0,
+     "e86_tkm": 576.0
+    },
+    "qwen": {
+     "hbm_bw": 1451202.5,
+     "pg_cmd": 3042.0,
+     "pg_vmwrite": 5640.0,
+     "bank_pin": 978.0,
+     "pg_inject": 507.0,
+     "att_qwen": 176165.9,
+     "pg_operand": 792.0,
+     "att_merge": 8461.4,
+     "pvm_fold": 288.0,
+     "bl_idx": 75.0,
+     "idx_pin": 8.0
+    }
+   },
+   "d_ds_ar_pct": -36.18,
+   "d_qwen_pct": -56.87,
+   "d_ds_ar_cycles": 357054.8,
+   "d_qwen_cycles": 1672024.4
   }
  },
- "pending": "when HBM-SMBUDGET (claude/hbm-smbudget-1019: 2,048-word programme store, COORD 0jx) lands with measured SM spans: swap att_s32 S32 -> its measured one-op row (expected = all_bigprog DS 1,680.7)",
- "attention_accounting": "measured span replaces the SM COMPONENT (288/386) of the priced record; fa 259 + publish 64 stay (span excludes first access / x-load / publish / merge, LB2-HBM VEH-ATT). HBM-ATTGAP compared the span to the whole record (547/808): info_attgap_total reproduces its 1,787.3 (here 1,790.2) -> that accounting under-counts by ~23k DS cycles."
+ "pending": "GEN2d measured lane depths; SU/SFU/HC tap latency exposure; successor BW capacity/SAFE closure; physical binding of INT8/relative-service/safe tiles",
+ "attention_accounting": "measured span replaces the SM COMPONENT (288/386) of the priced record; fa 259 + publish 64 stay (span excludes first access / x-load / publish / merge, LB2-HBM VEH-ATT). HBM-ATTGAP compared the span to the whole record (547/808): info_attgap_total reproduces its 1,787.3 (here 1,790.2) -> that accounting under-counts by ~23k DS cycles.",
+ "attribution": {
+  "collq": {
+   "value": 1,
+   "grade": "measured",
+   "applies": "C1 gathers: measured gather-master span; non-gather COLL +2 (ring-A merge register)",
+   "source": "d4g_collq_price_1018 ag_collq + ra_extra 2 (HBM-COLLQ c8d42a3a4; ledger HBM.D4G_PLAN_B)",
+   "ds_ar_cycles": 19159.1,
+   "qwen_cycles": 2.0,
+   "ds_ar_pct": -2.95,
+   "qwen_pct": -0.0,
+   "flag_over_5pct": false
+  },
+  "pg_cmd": {
+   "value": 6,
+   "grade": "measured",
+   "applies": "+6 slowest SU command region (+3 inner, +6 outer)",
+   "source": "HBM-PGLG2 6799b58ee face relay",
+   "ds_ar_cycles": 3582.0,
+   "qwen_cycles": 3036.0,
+   "ds_ar_pct": -0.57,
+   "qwen_pct": -0.24,
+   "flag_over_5pct": false
+  },
+  "pg_operand": {
+   "value": 11,
+   "grade": "measured",
+   "applies": "+11 SU reduction operand; tree/control relative issue +10 unchanged",
+   "source": "HBM-PGLG2 6799b58ee",
+   "ds_ar_cycles": 1397.0,
+   "qwen_cycles": 792.0,
+   "ds_ar_pct": -0.22,
+   "qwen_pct": -0.06,
+   "flag_over_5pct": false
+  },
+  "pg_vmwrite": {
+   "value": 12,
+   "grade": "measured",
+   "applies": "+12 an SU-executed record writing VM (drain write +12 serial; +16 stream)",
+   "source": "TW-HBM-PGLG e7ea9096c / HH-14 tb r2 4a91027b0 (SWQ 16)",
+   "ds_ar_cycles": 6108.0,
+   "qwen_cycles": 5640.0,
+   "ds_ar_pct": -0.96,
+   "qwen_pct": -0.44,
+   "flag_over_5pct": false
+  },
+  "pg_reset": {
+   "value": 4,
+   "grade": "modelled",
+   "applies": "+4 once per token (pg_stream +1 epoch of the 4:3 pg_clk)",
+   "source": "TW-HBM-PGLG pg_stream split (lanes/TW-HBM-PGLG.md)",
+   "ds_ar_cycles": 4.0,
+   "qwen_cycles": 4.0,
+   "ds_ar_pct": -0.0,
+   "qwen_pct": -0.0,
+   "flag_over_5pct": false
+  },
+  "hc_tree": {
+   "value": 41,
+   "grade": "measured",
+   "applies": "hc_tree 28 -> 41 (+13 a HC_MIX / HC_PRE_NORM record); closed ring keeps 41 (b0 DRLY 2)",
+   "source": "HH-9 c4e9df3fe RAW0 176, HBM-RTL5 U +2, HBM-HCRING fc916e52b, DIE-HBM-LEAD 10-19 01:40, HC-RINGPLAN 9d1689ba4",
+   "ds_ar_cycles": 1053.0,
+   "qwen_cycles": 0.0,
+   "ds_ar_pct": -0.17,
+   "qwen_pct": 0.0,
+   "flag_over_5pct": false
+  },
+  "hc_xr": {
+   "value": 22,
+   "grade": "modelled",
+   "applies": "HC root<->quarter crossings XRD 11 + XRU 11 landed vs 2 x COLL_RING priced",
+   "source": "HC-XRDU cca87123f l7_wire land smoke (GEN2b), hc_eng XRD/XRU 11/11",
+   "ds_ar_cycles": 262.4,
+   "qwen_cycles": 0.0,
+   "ds_ar_pct": -0.04,
+   "qwen_pct": 0.0,
+   "flag_over_5pct": false
+  },
+  "bank_pin": {
+   "value": 1,
+   "grade": "priced",
+   "applies": "+1 a record with a VM-space operand read (bank pin flop on every answer)",
+   "source": "HBM-BANKLAT main 01636549a (contract rule), measured on IDX TOPK (VEH-TOPKFIX2 05b86e194)",
+   "ds_ar_cycles": 2141.0,
+   "qwen_cycles": 977.0,
+   "ds_ar_pct": -0.34,
+   "qwen_pct": -0.08,
+   "flag_over_5pct": false
+  },
+  "su_red": {
+   "value": "pretree",
+   "grade": "priced",
+   "applies": "SU reduction = 128-word pre-tree (PT 70 edges) + reducer pairwise tree",
+   "source": "HH-6 claude/hh6-sured-1018 bc43419eb, d4g_su_red_1018 pretree (bench 211 vs model 234 edges)",
+   "ds_ar_cycles": 0.0,
+   "qwen_cycles": 1512.0,
+   "ds_ar_pct": 0.0,
+   "qwen_pct": -0.12,
+   "flag_over_5pct": false
+  },
+  "e86_tkm": {
+   "value": 64,
+   "grade": "measured",
+   "applies": "+64 a COLL.TOPK_MERGE record (+2 NT at TP192)",
+   "source": "HH-4 claude/hh4-e86-1018 a5f17ebc7 tkm_static TLAT 4, calendar mutant MUT 3",
+   "ds_ar_cycles": 576.0,
+   "qwen_cycles": 0.0,
+   "ds_ar_pct": -0.09,
+   "qwen_pct": 0.0,
+   "flag_over_5pct": false
+  },
+  "qcore_r6": {
+   "value": 0,
+   "grade": "measured",
+   "applies": "write-conflict fault flag +1 edge: status only, 0 token cycles",
+   "source": "HH-11 c663070f1; coordinator ACCEPTED (HBM-HCBANK 10-19 02:40)",
+   "ds_ar_cycles": 0.0,
+   "qwen_cycles": 0.0,
+   "ds_ar_pct": 0.0,
+   "qwen_pct": 0.0,
+   "flag_over_5pct": false
+  },
+  "att_s32": {
+   "value": {
+    "qk": 861,
+    "pv": 1171,
+    "qk1": 684,
+    "pv1": 839
+   },
+   "grade": "measured",
+   "applies": "DS T640 SM component qk 288 -> 861, pv 386 -> 1,171 (HBM-ATTGAP S32: busiest SM, 2 x 32-row sub-runs + 5 go bubble; fa 259 / publish 64 kept at price -- the span excludes HBM first access, x-load, publish, merge); T128 at the one-op ratio 684/288, 839/386 (modelled); BIGPROG variant: one op 684 / 839",
+   "source": "HBM-ATTGAP main 7f35a3e4b results/rtl/hbm_ds_layer_tput_1018/hbm_attgap_1019/unit/L2_s32_pos.json (40/40 bit-exact, resident 1,019 / 971 words); one-op VEH-ATT 07a99bc0a",
+   "ds_ar_cycles": 32248.8,
+   "qwen_cycles": 0.0,
+   "ds_ar_pct": -4.87,
+   "qwen_pct": 0.0,
+   "flag_over_5pct": false
+  },
+  "att_merge": {
+   "value": {
+    "ds640": 400.8,
+    "ds128": 335.5,
+    "ds640_one": 335.5,
+    "levels": 4,
+    "dep": 10,
+    "lat": 9
+   },
+   "grade": "modelled",
+   "applies": "DS PV + (HBM-ATTGAP SU merge 400.8 T640 / 335.5 T128 [one-op 335.5] - priced merge 99 / 79); Qwen PV + 4 x (1 XQ + DEP 10 + LAT 9) (16-SM pairwise tree, no priced merge)",
+   "source": "HBM-ATTGAP att_gap_price.py merge model (SU quadrant programme + ring AG + top levels in norm; SU RTL bench pending); Qwen VEH-ATT finding (3)",
+   "ds_ar_cycles": 9263.5,
+   "qwen_cycles": 8461.4,
+   "ds_ar_pct": -1.45,
+   "qwen_pct": -0.66,
+   "flag_over_5pct": false
+  },
+  "att_qwen": {
+   "value": {
+    "qk_bytes_rate": 54.8418410041841,
+    "pv_bytes_rate": 27.722504230118442,
+    "nsm": 16
+   },
+   "grade": "measured",
+   "applies": "Qwen ATT at the measured per-SM line rate (QK 54.84 / PV 27.72 B/cyc/SM, P 8192, 512 rows/SM) on 16 SMs instead of the die HBM rate (spans measured; exposure from the S2 schedule)",
+   "source": "VEH-ATT3 claude/veh-att3-1019 fb8fd695b results/rtl/hbm_qwen_layer_tput_1018/veh_att3_1019/unit/{L0_L0_pos,chain_L1_pos}.json (80/80 bit-exact; QK 1,195 / PV 4 x 591 = 2,364)",
+   "ds_ar_cycles": 0.0,
+   "qwen_cycles": 176165.9,
+   "ds_ar_pct": 0.0,
+   "qwen_pct": -12.2,
+   "flag_over_5pct": true
+  },
+  "att_prog": {
+   "value": 0,
+   "grade": "measured",
+   "applies": "2048 words: 1019 attention + 152 matvec resident; one-op spans enabled",
+   "source": "HBM-SMBUDGET main e248c89e7",
+   "ds_ar_cycles": 0.0,
+   "qwen_cycles": 0.0,
+   "ds_ar_pct": 0.0,
+   "qwen_pct": 0.0,
+   "flag_over_5pct": false
+  },
+  "att_desc": {
+   "value": 0,
+   "grade": "measured",
+   "applies": "256 token-resident relative descriptors; no rewrite",
+   "source": "HBM-SMBUDGET main e248c89e7",
+   "ds_ar_cycles": 0.0,
+   "qwen_cycles": 0.0,
+   "ds_ar_pct": 0.0,
+   "qwen_pct": 0.0,
+   "flag_over_5pct": false
+  },
+  "pt_p2": {
+   "value": 81,
+   "grade": "measured",
+   "applies": "SU pre-tree PT 70 -> 81 edges (p2 registered operand select, PT_RED 69 -> 80); only with su_red; p3 PT_RED80 retained",
+   "source": "HBM-PRETREE claude/hh6-sured-1018 0d52a4877 (bench MUT 0 PASS / MUT 512 FAIL); COORD 0kb; HBM-SAFE-PRETREE 9d56cae39",
+   "ds_ar_cycles": 0.0,
+   "qwen_cycles": 396.0,
+   "ds_ar_pct": 0.0,
+   "qwen_pct": -0.03,
+   "flag_over_5pct": false
+  },
+  "idx_link": {
+   "value": 5,
+   "grade": "measured",
+   "applies": "+5 an IDX.INDEX / IDX.TOPK record (link outputs +5)",
+   "source": "HBM-IDXPIPE b4717e464 / AD-HBM-IDXK c94204038 (frame 1397 -> 1402)",
+   "ds_ar_cycles": 240.0,
+   "qwen_cycles": 0.0,
+   "ds_ar_pct": -0.04,
+   "qwen_pct": 0.0,
+   "flag_over_5pct": false
+  },
+  "idx_pin": {
+   "value": {
+    "index": 3,
+    "topk_fixed": 4,
+    "argmax": 8
+   },
+   "grade": "measured",
+   "applies": "IDX.INDEX +3, IDX.TOPK +(m + 4), ARGMAX +8",
+   "source": "HBM-IDXAM2 r3 bench + VEH-TOPKFIX2 am_pin bench (RT_EXTRA 2 / ACK 14, VMX 6, op_SW n13)",
+   "ds_ar_cycles": 224.0,
+   "qwen_cycles": 0.0,
+   "ds_ar_pct": -0.04,
+   "qwen_pct": 0.0,
+   "flag_over_5pct": false
+  },
+  "land": {
+   "value": {
+    "ds": -1.13,
+    "qwen": -0.07
+   },
+   "grade": "priced",
+   "applies": "recorded factor on tok/s (half-cycle landed hops)",
+   "source": "HBM-LANDING/DCC hland-dcc 447dfe960 (HANDOFF 10-18 07:35)",
+   "ds_ar_cycles": 7197.8,
+   "qwen_cycles": 888.4,
+   "ds_ar_pct": -1.13,
+   "qwen_pct": -0.07,
+   "flag_over_5pct": false
+  },
+  "hbm_bw": {
+   "value": 45.03,
+   "grade": "priced",
+   "applies": "SM, attention and DMA stream floor at measured per-SM bandwidth; incremental exposure over99",
+   "source": "HBM-BW9e8fcf77e controller production stream",
+   "ds_ar_cycles": 163312.7,
+   "qwen_cycles": 1545856.2,
+   "ds_ar_pct": -20.59,
+   "qwen_pct": -54.93,
+   "flag_over_5pct": true
+  },
+  "pg_inject": {
+   "value": 1,
+   "grade": "priced",
+   "applies": "+1 SU VM read record conservatively exposes split-stream inject edge; only inject users pay physically",
+   "source": "TW3-PGSTREAM 5ac202325; HBM-PGSTREAM-B unchanged edges",
+   "ds_ar_cycles": 597.0,
+   "qwen_cycles": 506.0,
+   "ds_ar_pct": -0.09,
+   "qwen_pct": -0.04,
+   "flag_over_5pct": false
+  },
+  "pg_fault": {
+   "value": 0,
+   "grade": "measured",
+   "applies": "fault +2 serial is status only, no successful token latency",
+   "source": "TW3-PGSTREAM",
+   "ds_ar_cycles": 0.0,
+   "qwen_cycles": 0.0,
+   "ds_ar_pct": 0.0,
+   "qwen_pct": 0.0,
+   "flag_over_5pct": false
+  },
+  "sm_svc": {
+   "value": 16688,
+   "grade": "priced",
+   "applies": "fully exposed partial block granularity, worst layer 388 x43 + head4",
+   "source": "HBM-SMBUDGET sm_svc_granularity.json",
+   "ds_ar_cycles": 16688.0,
+   "qwen_cycles": 0.0,
+   "ds_ar_pct": -2.58,
+   "qwen_pct": 0.0,
+   "flag_over_5pct": false
+  },
+  "qwen_int8": {
+   "value": 0,
+   "grade": "measured",
+   "applies": "INT8 path within price; opt-in successor, all9984 rows bit-exact",
+   "source": "SMB-INT8 e592ae5d0; default-off die adoption owed",
+   "ds_ar_cycles": 0.0,
+   "qwen_cycles": 0.0,
+   "ds_ar_pct": 0.0,
+   "qwen_pct": 0.0,
+   "flag_over_5pct": false
+  },
+  "pvm_fold": {
+   "value": 1,
+   "grade": "priced",
+   "applies": "+1 per Qwen PV 128-token block per SM column; DS no fold",
+   "source": "HBM-PVM-SAFE node0 publication F0+23 vs22; node1 unchanged",
+   "ds_ar_cycles": 0.0,
+   "qwen_cycles": 288.0,
+   "ds_ar_pct": 0.0,
+   "qwen_pct": -0.02,
+   "flag_over_5pct": false
+  }
+ },
+ "interaction": {
+  "ds_ar_cycles": -4969.7,
+  "qwen_cycles": -94420.2
+ },
+ "by_grade": {
+  "measured": {
+   "ds_ar_cycles": 64587.9,
+   "qwen_cycles": 186031.9
+  },
+  "modelled": {
+   "ds_ar_cycles": 9529.9,
+   "qwen_cycles": 8465.4
+  },
+  "priced": {
+   "ds_ar_cycles": 189936.5,
+   "qwen_cycles": 1550027.6
+  }
+ },
+ "qualification": "Provisional model price: current bandwidth measured; successor INT8/relative-service/safe tiles require die binding and physical closure. Bank pads are conservative fully exposed budgets, not measured die latency.",
+ "bandwidth": {
+  "bytes_per_cycle_per_sm": 45.03,
+  "previous_die_bytes_per_cycle": 3166.7,
+  "measured_current_master": true,
+  "successor_not_physically_qualified": false,
+  "source": "HBM-BW 9e8fcf77e: baseline45.03; production3seed95.19/95.69/95.25; successor capacity/SAFE closure outstanding; full4layer MR@88 FAIL24/66ops,37/154gos; L14 only PASS"
+ },
+ "banklat_budget": {
+  "ds_ar_cycles": 97970.2,
+  "qwen_cycles": 21919.7
+ }
 }

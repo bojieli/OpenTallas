@@ -60,7 +60,25 @@ fi
 if [ "${OT_KV_V143:-0}" = 1 ]; then H14="$H14 --v143"; V14=$V14,v143
   BV="$BV --view qkd_hgs=physical/ref_tile/qkh_head_gather_stage/views/qkh_head_gather_stage --view qkd_hss=physical/ref_tile/qkh_head_sstage/views/qkh_head_sstage"; fi
 # OT_KV_DCAL=1 (Q-KVSYS-DIE 10-16): the link calendar sequencer qkd_d2d_cal_seq_pin on its CLOSED view (kv_die.py DCAL)
-[ "${OT_KV_DCAL:-0}" = 1 ] && BV="$BV --view qkd_dcal=physical/ref_tile/qkd_d2d_cal_seq_pin_ep3/views/qkd_d2d_cal_seq_pin"
+# KV-DCAL-MU 10-19: OT_KV_MU=1 binds the MU calendar kit qkd_d2d_cal_seq_pin_mu (ot_qwen_d2d_cal_seq_dies_mu.sv +
+# d2d_cal_image_mu.svh, recompiled on the MU pair seam: TXDP lines = d2d_cal_image.svh 0x03030415; C RX / K TX +1 entry,
+# SEG2 8 -> 9) once its view is recorded; until then the ep3 view (production image) stays a LABELLED STAND-IN.
+if [ "${OT_KV_DCAL:-0}" = 1 ]; then
+  DCV=physical/ref_tile/qkd_d2d_cal_seq_pin_ep3/views/qkd_d2d_cal_seq_pin
+  if [ "${OT_KV_MU:-0}" = 1 ]; then MDCV=physical/ref_tile/${OT_KV_DCAL_MU_KIT:-qkd_d2d_cal_seq_pin_mu}/views/qkd_d2d_cal_seq_pin
+    if [ -f $MDCV/qkd_d2d_cal_seq_pin.lef ] && [ -f $MDCV/qkd_d2d_cal_seq_pin_tt.lib ] && [ -f $MDCV/qkd_d2d_cal_seq_pin_ff.lib ]; then
+      DCV=$MDCV; echo "OT_KV_DCAL MU: qkd_dcal -> $MDCV (MU calendar image)"
+    else echo "OT_KV_DCAL STAND-IN: no MU view at $MDCV; qkd_dcal bound to qkd_d2d_cal_seq_pin_ep3 (production image)"; fi
+  fi
+  # KV-DCAL-BOOTCFG 10-19 (OT_KV_DCAL_BC=1, kv_die.DCAL_BC): the dcal slot is qkd_d2d_cal_seq_pin_bc (boot target 11 merged:
+  # bcfg_* in, the D2D end's cfg port out); only its OWN view binds (the ep3 / _mu views have no bcfg pins): frame until then
+  if [ "${OT_KV_DCAL_BC:-0}" = 1 ]; then BCV=physical/ref_tile/qkd_d2d_cal_seq_pin_bc/views/qkd_d2d_cal_seq_pin_bc; DCV=
+    if [ -f $BCV/qkd_d2d_cal_seq_pin_bc.lef ] && [ -f $BCV/qkd_d2d_cal_seq_pin_bc_tt.lib ] && [ -f $BCV/qkd_d2d_cal_seq_pin_bc_ff.lib ]; then
+      DCV=$BCV; echo "OT_KV_DCAL_BC: qkd_dcal -> $BCV (boot cfg merged)"
+    else echo "OT_KV_DCAL_BC FRAME: no view at $BCV yet; qkd_dcal stays an ASSUMED frame (kit qkd_d2d_cal_seq_pin_bc not closed)"; fi
+  fi
+  [ -z "$DCV" ] || BV="$BV --view qkd_dcal=$DCV"
+fi
 # OT_KV_KVNC=1 (Q-KVSYS PVJOIN 10-16, needs OT_KV_DCAL=1): the KVN context leaf qkd_kvn_ctx_cal (kv_die.py KVNC) on its view
 # when the kit has closed (OT_KV_KVNC_KIT, default qkd_kvn_ctx_cal_r2); without a view the frame stays ASSUMED (diagnostic)
 if [ "${OT_KV_KVNC:-0}" = 1 ]; then KVV=physical/ref_tile/${OT_KV_KVNC_KIT:-qkd_kvn_ctx_cal_r2}/views/qkd_kvn_ctx_cal
@@ -91,8 +109,11 @@ fi
 # by kv_expand) + the 16 V ports qkd_pv16_vport bound to their closed view (r5, the V issuer)
 if [ "${OT_KV_V144:-0}" = 1 ]; then
   VPK=qkd_pv16_vport_r5; [ "${OT_KV_V144_R6:-0}" = 1 ] && VPK=qkd_pv16_vport_r6   # kvs13d: r6 (DQ 0 / RT 8, epoch on the V word)
-  VP=physical/ref_tile/${OT_KV_VPORT_KIT:-$VPK}/views/qkd_pv16_vport
-  [ -f $VP/qkd_pv16_vport.lef ] || { echo "v1.4.4: no closed V port view at $VP"; exit 4; }
+  VPM=qkd_pv16_vport
+  # MU-DIE-KV2 10-19: OT_KV_BOOT_AGES=1 binds the boot-age successor qkd_pv16_vport_b (CLOSED qkd_pv16_vport_b1-b1-cebb296c4)
+  [ "${OT_KV_BOOT_AGES:-0}" = 1 ] && { VPK=qkd_pv16_vport_b1; VPM=qkd_pv16_vport_b; }
+  VP=physical/ref_tile/${OT_KV_VPORT_KIT:-$VPK}/views/$VPM
+  [ -f $VP/$VPM.lef ] || { echo "v1.4.4: no closed V port view at $VP"; exit 4; }
   BV="$BV --view qkd_pv16_vport=$VP"
 fi
 # HKV-DIE3 10-19 (coordinator: OT_KV_ASTK_EXPAND production, option B; default ON = kv_static_die): the ASTK strip slots

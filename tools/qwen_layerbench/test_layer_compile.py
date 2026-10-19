@@ -12,6 +12,8 @@ import layer_compile as C          # noqa: E402
 import die_relay_stages as DRS     # noqa: E402
 import die_relay_check as DRC      # noqa: E402
 import d2d_link_calendar as L      # noqa: E402
+import record_bundles as RB        # noqa: E402
+import die_params as DP            # noqa: E402
 
 RTL = """
 module src (input wire ck, output wire [3:0] o, output wire v);
@@ -35,6 +37,92 @@ endmodule
 
 
 class NetlistWalk(unittest.TestCase):
+    def test_word_alignment_uses_every_actual_bit_age(self):
+        rtl = RTL + '''
+module dst2(input wire ck, input wire [1:0] i); endmodule
+module qkd_rlysh0_1(input wire ck, a, output wire b); endmodule
+module qkd_rlysh_1(input wire ck, a, output wire b); endmodule
+module qkd_landsh_1(input wire ck, a, k0, k1, k2, output wire b, tie_hi, tie_lo); endmodule
+'''
+        for actual_k, recorded_e, expected in [(3, 3, 4), (2, 3, None), (4, 4, None)]:
+            kports = ', '.join(f'.k{q}({"hi1" if actual_k & (1 << q) else "lo1"})' for q in range(3))
+            die = f'''module die();
+wire n_clk_core_c, a0, a1, a2, b0, b1, hi0, lo0, hi1, lo1; wire [3:0] n_src;
+src s (.ck(n_clk_core_c), .o(n_src));
+qkd_rlysh0_1 h0 (.ck(n_clk_core_c), .a(n_src[0]), .b(a0));
+qkd_landsh_1 l0 (.ck(n_clk_core_c), .a(a0), .b(b0), .k0(hi0), .k1(hi0), .k2(lo0), .tie_hi(hi0), .tie_lo(lo0));
+qkd_rlysh0_1 h1 (.ck(n_clk_core_c), .a(n_src[1]), .b(a1));
+qkd_rlysh_1 mid (.ck(n_clk_core_c), .a(a1), .b(a2));
+qkd_landsh_1 l1 (.ck(n_clk_core_c), .a(a2), .b(b1), {kports}, .tie_hi(hi1), .tie_lo(lo1));
+dst2 d (.ck(n_clk_core_c), .i({{b1,b0}}));
+endmodule'''
+            rows = dict(l0=dict(E=3, K=3, cal=0, n=2, stations=['h0', 'l0']),
+                        l1=dict(E=recorded_e, K=recorded_e, cal=0, n=3, stations=['h1', 'mid', 'l1']))
+            with tempfile.TemporaryDirectory() as t:
+                Path(t, 'm.sv').write_text(rtl)
+                Path(t, 'die.v').write_text(die)
+                pb = dict(masters={m: dict(rtl=f'{t}/m.sv', kind='real')
+                                   for m in ('src', 'dst2', 'qkd_rlysh0_1', 'qkd_rlysh_1', 'qkd_landsh_1')}, defines=[])
+                doc = N.export(f'{t}/die.v', pb, 'qwen_kv', 'HEAD', [], [t], 'bits', land_e=rows)
+            self.assertEqual(doc['buses'][0]['age_edges'], expected)
+            self.assertEqual(doc['buses'][0]['src_nets'], ['n_src'])
+            self.assertEqual(doc['problem_count'] == 0, expected is not None, doc['problems'])
+
+    def test_native_trunk_inject_has_independent_v_and_token_ages(self):
+        trunk = ROOT / 'rtl/qwen_sys/split_20261014/qkd_pv_rtrunk.sv'
+        die = '''module die();
+wire n_clk_core_c, n_d, q0, q1; wire [257:0] bo;
+src s (.ck(n_clk_core_c), .v(n_d));
+qkd_rlys_1 p0 (.ck(n_clk_core_c), .a(n_d), .b(q0));
+qkd_rlys_1 p1 (.ck(n_clk_core_c), .a(q0), .b(q1));
+qkd_rlyi_258s inject (.ck(n_clk_core_c), .s(n_d), .a(258'd0), .y({q1,q0,256'd0}), .b(bo));
+endmodule'''
+        with tempfile.TemporaryDirectory() as t:
+            Path(t, 'm.sv').write_text(RTL)
+            Path(t, trunk.name).write_text(trunk.read_text())
+            Path(t, 'die.v').write_text(die)
+            pb = dict(masters={m: dict(rtl=f'{t}/m.sv', kind='real') for m in ('src', 'qkd_rlys_1')}, defines=[])
+            pb['masters']['qkd_rlyi_258s'] = dict(rtl=f'{t}/{trunk.name}', kind='real')
+            doc = N.export(f'{t}/die.v', pb, 'qwen_kv', 'HEAD', [], [t], 'roles')
+        roles = {b['dst']['port']: b['age_edges'] for b in doc['buses'] if b['dst']['port'].startswith('y__')}
+        self.assertEqual(roles, {'y__256_256': 1, 'y__257_257': 2})
+        self.assertEqual(doc['problem_count'], 0, doc['problems'])
+
+    def test_packed_relay_bits_are_distinct_pipeline_flops(self):
+        rtl = RTL + 'module qkd_rlys_4(input wire ck, input wire [3:0] a, output wire [3:0] b); endmodule'
+        die = '''module die();
+wire n_clk_core_c, n_d, n_out; wire [3:0] q;
+src s (.ck(n_clk_core_c), .v(n_d));
+qkd_rlys_4 pipe (.ck(n_clk_core_c), .a({q[2:0],n_d}), .b(q));
+dst d (.ck(n_clk_core_c), .v(q[3]));
+endmodule'''
+        with tempfile.TemporaryDirectory() as t:
+            Path(t, 'm.sv').write_text(rtl)
+            Path(t, 'die.v').write_text(die)
+            pb = dict(masters={m: dict(rtl=f'{t}/m.sv', kind='real') for m in ('src', 'dst', 'qkd_rlys_4')}, defines=[])
+            doc = N.export(f'{t}/die.v', pb, 'qwen_kv', 'HEAD', [], [t], 'packed')
+        self.assertEqual(doc['problem_count'], 0, doc['problems'])
+        self.assertEqual(doc['buses'][0]['age_edges'], 4)
+
+    def test_revisited_forwarded_bits_are_not_plain_flops(self):
+        rtl=RTL+"module qkd_landsh_2(input wire ck,input wire [1:0] a,output wire [1:0] b,input wire k0,k1,k2,tie_hi,tie_lo); endmodule"
+        die="""module die();
+wire n_clk_core_c,n_d,hi,lo;wire [1:0] q;
+src s (.ck(n_clk_core_c), .v(n_d));
+qkd_landsh_2 land (.ck(n_clk_core_c), .a({q[0],n_d}), .b(q), .k0(lo), .k1(hi), .k2(lo), .tie_hi(hi), .tie_lo(lo));
+dst d (.ck(n_clk_core_c), .v(q[1]));
+endmodule"""
+        with tempfile.TemporaryDirectory() as t:
+            Path(t,'m.sv').write_text(rtl);Path(t,'die.v').write_text(die)
+            pb=dict(masters={m:dict(rtl=f'{t}/m.sv',kind='real') for m in ('src','dst','qkd_landsh_2')},defines=[])
+            doc=N.export(f'{t}/die.v',pb,'qwen_kv','HEAD',[],[t],'revisited',
+                         land_e={'land':dict(E=1,K=2,cal=1,n=1,stations=['land'])})
+        self.assertGreater(doc['problem_count'],0)
+        bus=doc['buses'][0]
+        self.assertIsNone(bus['age_edges'])
+        self.assertEqual(bus['age_diagnostic']['plain_counts'],[0])
+        self.assertEqual(bus['age_diagnostic']['forwarded_paths'],[['land','land']])
+
     def test_stages_from_netlist(self):
         with tempfile.TemporaryDirectory() as t:
             (Path(t) / 'm.sv').write_text(RTL)
@@ -51,10 +139,100 @@ class NetlistWalk(unittest.TestCase):
 
     def test_age_fields(self):
         r = dict(st={1}, lands={('rly_x_0',)})
-        self.assertEqual(N.age_fields(r, {'rly_x_0': 2})['age_edges'], 2)          # n = 1 landed lane: E = K
+        self.assertIsNone(N.age_fields(r, {'rly_x_0': 2})['age_edges'])  # K alone is not an age
         r = dict(st={5}, lands={('rly_x_4',)})
         self.assertIsNone(N.age_fields(r, {'rly_x_4': 3})['age_edges'])            # n > 1: needs the land plan
         self.assertEqual(N.age_fields(dict(st={3}, lands={()}), {})['age_edges'], 3)
+
+    def test_explicit_plain_post_stages(self):
+        row = dict(E=3, K=3, cal=0, n=5, post_stages=2, stations=['h0','h1','h2','h3','landing'])
+        record = dict(st={7}, lands={('landing',)}, forwarded_paths={tuple(row['stations'])}, plain_counts={2})
+        self.assertEqual(N.age_fields(record, {'landing': 3}, {'landing': row})['age_edges'], 6)
+        # Unexplained extra frames remain unknown rather than silently charged.
+        self.assertIsNone(N.age_fields(record, {'landing': 3},
+                                      {'landing': dict(E=3, K=3, cal=0, n=5)})['age_edges'])
+        self.assertIsNone(N.age_fields(dict(st={8}, lands={('landing',)}), {'landing': 3},
+                                      {'landing': row})['age_edges'])
+
+    def test_zero_strap_encoding(self):
+        with tempfile.TemporaryDirectory() as t:
+            path = Path(t, 'lanes.json')
+            path.write_text(json.dumps(dict(lanes=[dict(bid='kv', landing='land', E=8, K=8, cal=0, n=15, stations=[f'h{i}' for i in range(14)])])))
+            metadata = N.export_lanes(path)
+        self.assertEqual(metadata['land']['K'], 0)
+        self.assertEqual(N.age_fields(dict(st={15}, lands={('land',)}, forwarded_paths={tuple([f'h{i}' for i in range(14)]+['land'])}, plain_counts={0}), {'land': 0}, metadata)['age_edges'], 9)
+
+    def test_walked_plain_prefix_requires_exact_forwarded_chain(self):
+        row = dict(E=3, K=3, cal=0, n=2, stations=['hop', 'land'], post_stages=1)
+        record = dict(st={6}, lands={('land',)}, forwarded_paths={('hop', 'land')}, plain_counts={4})
+        self.assertEqual(N.age_fields(record, {'land': 3}, {'land': row})['age_edges'], 8)
+        record['forwarded_paths'] = {('foreign_hop', 'land')}
+        self.assertIsNone(N.age_fields(record, {'land': 3}, {'land': row})['age_edges'])
+
+    def test_forwarded_order_and_occurrences_are_required(self):
+        row=dict(E=3,K=3,cal=0,n=3,stations=['h0','h1','land'])
+        record=dict(st={3},lands={('land',)},forwarded_paths={('h0','h1','land')},plain_counts={0})
+        self.assertEqual(N.age_fields(record,{'land':3},{'land':row})['age_edges'],4)
+        row['stations']=['h1','h0','land']
+        self.assertIsNone(N.age_fields(record,{'land':3},{'land':row})['age_edges'])
+        row['stations']=['h0','h1','land']
+        record.update(st={4},forwarded_paths={('h0','h0','h1','land')})
+        self.assertIsNone(N.age_fields(record,{'land':3},{'land':row})['age_edges'])
+
+    def test_multiple_landings_require_disjoint_exact_chains_and_straps(self):
+        rows = dict(l1=dict(E=3, K=3, cal=0, n=2, stations=['h1', 'l1']),
+                    l2=dict(E=4, K=5, cal=1, n=1, stations=['l2']))
+        record = dict(st={5}, lands={('l1', 'l2')},
+                      forwarded_paths={('h1', 'l1', 'l2')}, plain_counts={2})
+        self.assertEqual(N.age_fields(record, {'l1': 3, 'l2': 5}, rows)['age_edges'], 11)
+        self.assertIsNone(N.age_fields(record, {'l1': 3, 'l2': 4}, rows)['age_edges'])
+        rows['l2']['stations'] = ['l1']
+        self.assertIsNone(N.age_fields(record, {'l1': 3, 'l2': 5}, rows)['age_edges'])
+
+    def test_shared_age_source_on_compute_seam(self):
+        import record_bundles as RB
+        f = ROOT / 'results/rtl/qwen_layer_tput_1018/fixtures/dv2f18dh2_seam'
+        metadata = N.export_lanes(f / 'fwd_lanes.json')
+        _, _, rows, problems = RB.rows_from_netlist(f / 'die.v', f / 'fwd_lanes.json')
+        self.assertEqual(problems, [])
+        self.assertTrue(any(row['n'] == 1 for row in rows.values()))
+        self.assertTrue(any(row['n'] > 1 for row in rows.values()))
+        lanes = {r['bid']: r for r in metadata.values()}
+        for bid, row in rows.items():
+            if row.get('E') is None:
+                continue
+            land = lanes[bid]['landing']
+            record = dict(st={row['n']}, lands={(land,)}, forwarded_paths={N.lane_chain(metadata[land], land)}, plain_counts={0})
+            self.assertEqual(N.age_fields(record, {land: row['K']}, metadata)['age_edges'], RB.cycles(row), bid)
+            self.assertIsNone(N.age_fields(record, {land: (row['K'] + 1) % 8}, metadata)['age_edges'])
+
+    def test_kv_and_compute_landing_walk(self):
+        for master, design in [('qfd_landh0_1', 'qwen_compute'), ('qkd_landsh0_1', 'qwen_kv')]:
+            rtl = RTL + f"module {master} (input wire ck, input wire a, output wire b, input wire k0, k1, k2, tie_hi, tie_lo); endmodule"
+            die = f"""module die();
+wire n_clk_core_c, n_d, n_v, n_out, hi, lo;
+src s (.ck(n_clk_core_c), .v(n_d));
+{master} land (.ck(n_clk_core_c), .a(n_d), .b(n_out), .k0(lo), .k1(hi), .k2(lo), .tie_hi(hi), .tie_lo(lo));
+dst d (.ck(n_clk_core_c), .v(n_out));
+endmodule"""
+            with tempfile.TemporaryDirectory() as t:
+                Path(t, 'm.sv').write_text(rtl)
+                Path(t, 'die.v').write_text(die)
+                pb = dict(masters={m: dict(rtl=f'{t}/m.sv', kind='real') for m in ('src', 'dst', master)}, defines=[])
+                doc = N.export(f'{t}/die.v', pb, design, 'HEAD', [], [t], 'unit',
+                               land_e={'land': dict(E=1, K=2, cal=1, n=1, stations=['land'])})
+            self.assertEqual(doc['problem_count'], 0, doc['problems'])
+            self.assertEqual(len(doc['buses']), 1)
+            self.assertEqual(doc['buses'][0]['age_edges'], 2)
+
+    def test_lane_calendar_required_and_checked(self):
+        for row in [dict(bid='x', landing='land', E=3, K=1),
+                    dict(bid='x', landing='land', E=3, K=1, cal=0)]:
+            with tempfile.TemporaryDirectory() as t:
+                path = Path(t, 'lanes.json')
+                path.write_text(json.dumps(dict(lanes=[row])))
+                with self.assertRaises(ValueError):
+                    N.export_lanes(path)
 
 
 def table(design, buses):
@@ -62,7 +240,8 @@ def table(design, buses):
 
 
 def bus(si, sp, di, dp, st, age=None, w=1):
-    b = dict(id=DRS.bus_id(si, sp, di, dp), src=dict(inst=si, port=sp), dst=dict(inst=di, port=dp), width=w, stages=st, domain='stream_1p2')
+    b = dict(id=DRS.bus_id(si, sp, di, dp), src=dict(inst=si, port=sp), dst=dict(inst=di, port=dp), width=w, stages=st,
+             domain='stream_1p2', bid=f'lnk_{sp}')
     if age is not None:
         b.update(age_edges=age, age_basis='n=1 landed lane: E = K')
     return b
@@ -122,7 +301,11 @@ class Compile(unittest.TestCase):
         k += [bus('d2d_kv', 'rx_payload', 'kvs_attn', 'rx_payload', 11)]
         k += [bus('kvs_attn', p, 'd2d_kv', p, 11) for p in ('attn__tx_valid', 'attn__tx_payload')]
         T = {'qwen_compute': table('qwen_compute', c), 'qwen_kv': table('qwen_kv', k)}
-        ba = C.bundle_ages(T)
+        with self.assertRaises(SystemExit):                               # compute ages never from hop counts
+            C.bundle_ages(T)
+        # the as-built seam (record_bundles lane cycles; F5: rx_v direct 0, payload landed 2)
+        seam = {(b['src']['inst'], b['src']['port'], b['dst']['inst']): b.get('age_edges', b['stages']) for b in c}
+        ba = C.bundle_ages(T, seam)
         self.assertFalse(ba['C.rx_record']['consistent'])                 # rx_v direct, payload landed E 2 (F5)
         self.assertEqual(ba['C.rx_record']['age'], 2)
         self.assertFalse(ba['K.rx_record']['consistent'])                 # 9 vs 11 (F6)
@@ -143,6 +326,79 @@ class Compile(unittest.TestCase):
         g = {x['id']: x for x in d['groups']}
         self.assertEqual(g['L1']['start'], {x['id']: x for x in tp['groups']}['L1']['start'] - 10)
         self.assertEqual(d['totals']['cycles'], tp['totals']['cycles'] - 5)
+
+
+LT = ROOT / 'results/rtl/qwen_layer_tput_1018'
+# dv2f18dh2 (0d4c9808f): compute seam cut from the GEN die.v + fwd_lanes.json, the die's netlist relay table
+# (netlist_relay_stages.py) and its die.v.params.json
+FXS = LT / 'fixtures/dv2f18dh2_seam'
+
+
+class SeamOneSource(unittest.TestCase):
+    """QW-L1SEAM 10-19: layer_compile and the strict bind (DIE_PARAM_AUDIT (e) / RECORD_BUNDLE_AUDIT) read the compute
+    D2D seam from ONE source, record_bundles.seam_stages(die.v, fwd_lanes.json).  dv2f18dh2: layer_compile counted relay
+    HOPS (one-frame landings = 1) and asked TXDP C [6,3,1,10] + flagged C.rx_record ages [1,2], while the bind PASSED
+    [8,3,1,10].  Any divergence of selectors, stage map, ages or TXD formula fails here."""
+
+    def test_selectors_and_stage_map_are_record_bundles(self):
+        for b in RB.COMPILER_BUNDLES:
+            self.assertEqual(C.BUNDLES[b], ('qwen_compute', [(s, sp, d) for s, sp, d, _ in RB.BUNDLES[b]]), b)
+        for b, mem in RB.SEAM_SINGLE.items():
+            self.assertEqual(C.BUNDLES[b], ('qwen_compute', [(s, sp, d) for s, sp, d, _ in mem]), b)
+        self.assertEqual(sorted(b for b, (d, _) in C.BUNDLES.items() if d == 'qwen_compute'),
+                         sorted(list(RB.COMPILER_BUNDLES) + list(RB.SEAM_SINGLE)))
+        self.assertEqual({k: v for k, v in C.STAGE_OF.items() if k[:2] in ('CS', 'SC')}, dict(RB.SEAM_STAGE_OF))
+        self.assertEqual((C.N59_TX, C.N59_X3, C.PINREG_EXT), (L.N59_TX, L.N59_X3, L.PINREG_EXT))
+
+    def tables(self):
+        k = [bus('d2d_kv', p, 'kvs_attn', p, 9) for p in ('att_rx_v', 'att_rx_kind', 'att_rx_beat', 'att_tx_slot', 'att_tx_kind',
+                                                          'att_tx_beat', 'rx_payload')]
+        k += [bus('kvs_attn', p, 'd2d_kv', p, 11) for p in ('attn__tx_valid', 'attn__tx_payload')]
+        return {'qwen_compute': DRS.Table(DRS.load(FXS / 'relay_stages.json')), 'qwen_kv': table('qwen_kv', k)}
+
+    def test_dv2f18dh2_compiler_equals_strict_bind(self):
+        st, per_key, _ = C.compute_seam(FXS / 'die.v')
+        bind_st, _, probs = RB.seam_stages(FXS / 'die.v', FXS / 'fwd_lanes.json')     # the strict-bind call
+        self.assertEqual(probs, [])
+        self.assertEqual(st, bind_st)
+        self.assertEqual(st, dict(CS_TXS=2, CS_RXV=2, CS_RXP=2, CS_X3S=3, SC_TX=2, SC_X3=2))
+        T = self.tables()
+        ba = C.bundle_ages(T, per_key)
+        for b in C.COMPUTE_SEAM:
+            self.assertTrue(ba[b]['consistent'], (b, ba[b]['ages']))
+        self.assertEqual(ba['C.rx_record']['ages'], [2])
+        S = C.compile_stages(ba)
+        self.assertEqual({k: S[k] for k in st}, st)
+        txd_c = C.txd_of(S)[1]['C']
+        self.assertEqual(txd_c, DP.seam_txd_c(bind_st))                                # DIE_PARAM_AUDIT (e) formula
+        self.assertEqual(txd_c, [8, 3, 1, 10])
+        bound = json.loads((FXS / 'die.v.params.json').read_text())['masters']['qfd_d2d_static']['TXDP']
+        self.assertEqual(L.txdp_word(txd_c), int(bound))                                # 0x0a010308, the GEN's TXDP
+        # the hop counts layer_compile used before: one-frame landings read 1 -> [6,3,1,10] + a false torn rx_record
+        hops = {(b['src']['inst'], b['src']['port'], b['dst']['inst']): b['stages'] for b in T['qwen_compute'].doc['buses']}
+        self.assertEqual((hops[('d2d_rom', 'native_rx_v', 'native59')], hops[('d2d_rom', 'rx_payload', 'native59')],
+                          hops[('d2d_rom', 'native_tx_slot', 'native59')]), (1, 2, 1))
+        # the exporter's own ages are torn too (n > 1: E, n = 1: K) -> die_relay_check on the raw table FAILS ...
+        raw = T['qwen_compute'].doc
+        self.assertIn('C.rx_record', [n for n, _ in DRC.DRB.torn(raw)])
+        # ... and on the seam-annotated table (record_bundles ages) the compiled schedule (whole bundles) PASSES
+        doc, diff = C.annotate_seam_ages(raw, per_key)
+        self.assertTrue(diff)
+        sched = {m['bus']: m['stages'] + ba[b]['age'] - m['age'] for b in C.COMPUTE_SEAM for m in ba[b]['members']}
+        self.assertEqual(DRC.check(doc, DRS.compiled(doc, 'unit', scheduled=sched))['verdict'], 'PASS')
+
+    def test_torn_seam_fails_closed(self):
+        txt = (FXS / 'die.v').read_text()
+        ln = next(x for x in txt.splitlines() if ' rly_lnk_native_rx_v_0 ' in x)
+        mut = ln.replace('.k1(n_ftk_lnk_native_rx_v_hi)', '.k1(n_ftk_lnk_native_rx_v_lo)')
+        self.assertNotEqual(mut, ln)
+        fl = json.loads((FXS / 'fwd_lanes.json').read_text())
+        fl['lanes'] = [r for r in fl['lanes'] if r['bid'] != 'lnk_native_rx_v']       # E from the (mutated) K straps
+        with tempfile.TemporaryDirectory() as t:
+            (Path(t) / 'die.v').write_text(txt.replace(ln, mut))
+            (Path(t) / 'fwd_lanes.json').write_text(json.dumps(fl))
+            with self.assertRaises(SystemExit):
+                C.compute_seam(Path(t) / 'die.v')
 
 
 if __name__ == '__main__':

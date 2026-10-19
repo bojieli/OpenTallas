@@ -1264,6 +1264,63 @@
   },
   {
    "design": "s81",
+   "unit": "S81 L20 index scan split over 2x the dies (coordinator 0li): L20 rank keys over k=6 TP4 stages (43,691 a die; record D k=3 87,382), static rank tree: per-die measured reader (dsdv_idx_rg P=3) -> bk_sel, children merged on lane 3, 729-cycle legs (L20 idx path 19391 vs record D 13855 cycles; decision price 18309)",
+   "group": "S81.L20_SPLIT",
+   "measured": 19391.0,
+   "price": 13855.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": 1.3996,
+   "e2e_loss_pct": 2.41,
+   "binding_workload": "mtp",
+   "per_workload": {
+    "ar": {
+     "model": "B3.compose (10-09 DS ROM DAG + 10-18 composition) with the L20 idx path = the compiled k=6 rank tree",
+     "base_cycles": 980312.6,
+     "cycles": 985848.6,
+     "added_cycles": 5536.0,
+     "e2e_loss_pct": 0.56,
+     "composition_1018": {
+      "T_cycles": 985848.6,
+      "tok_s": 1217.2
+     },
+     "multi_user": {
+      "users": 46,
+      "fillers": 0,
+      "aggregate_tok_s": 56297,
+      "vs_record_agg_pct": -0.01,
+      "helper_check": "PASS"
+     }
+    },
+    "mtp": {
+     "model": "B3.compose (10-09 DS ROM DAG + 10-18 composition) with the L20 idx path = the compiled k=6 rank tree",
+     "base_cycles": 1344614.8,
+     "cycles": 1377830.8,
+     "added_cycles": 33216.0,
+     "e2e_loss_pct": 2.41,
+     "composition_1018": {
+      "T_cycles": 1377830.8,
+      "tok_s": 3622.2
+     },
+     "multi_user": {
+      "users": 10,
+      "fillers": 1,
+      "aggregate_tok_s": 39225,
+      "vs_record_agg_pct": 0.04,
+      "helper_check": "PASS"
+     }
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/arch/s81_l20_1019/split/split.json",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-19",
+   "status": "proposed",
+   "note": "Incremental over S81.SCAN_STACKS_P4L (which charges L20 at k=3 with the OLD W11 reader 7,700): the current p4l reader (dsdv_idx_rg, measured 16,895 at 87,382 keys) made L20 k=3 cost 1u AR -0.90 % / MTP -3.81 % and MU AR 46 -> 40 users (-13.98 %, out of rule); the split restores 46 AR / 10+1 MTP users (MU calendar with the helper S030 windows: PASS) at 1u AR -0.56 % / MTP -2.41 % (decision price -0.45 / -1.95). Bench: PASS 5/5 bit-exact at the compiled edges, mutants FAIL 2/2. Sensitivity: without a shared 6-query read (p4l has one query store, MU.BAL.SX.4) the MTP filler collides on the helper (10 MTP users still fit). Applied by tools/token_compose_xdie.py until dv_price carries the row.",
+   "evidence_grade_detail": "compiled static plan + RTL bk_sel bench (Verilator 5.050) + measured reader law + measured leg",
+   "decision": "coordinator 0li (HANDOFF 10-19 ~15:45): adopted"
+  },
+  {
+   "design": "s81",
    "unit": "S81 index scan at p4l 1 HBM stack a die, option D (coordinator 0iq): full-scan keys over k=3 TP4 stages (L20 5,937 -> 9630 cycles = measured 1-stack reader 7700 at 87382 keys + 116 adders + legs/merge 1814; L2/L8/L14 2,951 -> 5654; re-index L24-36 873 -> 1,656 priced)",
    "group": "S81.SCAN_STACKS_P4L",
    "measured": 9630.0,
@@ -2946,11 +3003,11 @@
   },
   "s81": {
    "accepted_pct": 2.063,
-   "proposed_pct": 3.629,
-   "accepted_plus_proposed_pct": 5.692,
+   "proposed_pct": 6.039,
+   "accepted_plus_proposed_pct": 8.102,
    "limit_pct": 15.0,
    "accepted_rows": 2,
-   "proposed_rows": 7,
+   "proposed_rows": 8,
    "headroom_pct": 12.937,
    "owner_exception_rows": 1,
    "over_limit_by_owner_exception": false,
@@ -2959,8 +3016,8 @@
   },
   "r25gq": {
    "accepted_pct": 10.915,
-   "proposed_pct": 123.773,
-   "accepted_plus_proposed_pct": 134.688,
+   "proposed_pct": 123.856,
+   "accepted_plus_proposed_pct": 134.771,
    "limit_pct": 15.0,
    "accepted_rows": 3,
    "proposed_rows": 23,

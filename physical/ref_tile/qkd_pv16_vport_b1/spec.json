@@ -1,0 +1,209 @@
+{
+ "name": "qkd_pv16_vport_b1",
+ "top": "qkd_pv16_vport_b",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/kv_bootage_20261019/qkd_pv16_vport_b.sv"
+ ],
+ "params": {
+  "MUT": 0,
+  "DQ": 15,
+  "RT": 31
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 86.4,
+  "h": 172.8
+ },
+ "layer_cap": "M5",
+ "macros": [],
+ "pins": {
+  "W": [
+   "in0_valid",
+   "in0_vflag",
+   "in0_t",
+   "in0_epoch",
+   "in0_d",
+   "vq0_valid",
+   "vq0_t"
+  ],
+  "E": [
+   "in1_valid",
+   "in1_vflag",
+   "in1_t",
+   "in1_epoch",
+   "in1_d",
+   "vq1_valid",
+   "vq1_t"
+  ],
+  "N": [
+   "out_valid",
+   "out_t",
+   "out_epoch",
+   "out_v_hi",
+   "ck",
+   "pr_valid",
+   "pr_t"
+  ],
+  "S": [
+   "out_v_lo",
+   "rst_n",
+   "fault",
+   "cfg_age"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_min_tracks": 3,
+  "io_hold_margin_ns": 0.03
+ },
+ "recipe": 3,
+ "purpose": "Q-ATTN-RATE 2026-10-16: PV16 V port of the KV die (16 per die, ONE master). Replaces the 8-sector double-buffered transposer: with the VMAP=1 V placement each w16 port reads only groups {lane,0}/{lane,1}, every PC streams in the controller's v_consumer_order; the port is a static 2:1 quad select with input + output pin registers and tag checks. Pin-bound (3,276 pins, ~1,230 um2 of cells): 86.4 x 172.8 is the smallest outline at ~6 pins/um per face.",
+ "pin_regs": {
+  "enable": false,
+  "reason": "the RTL registers every port at the module boundary: every input (pr_*/in0_*/in1_*/rst_n) lands on a flop, every output (vq0_*/vq1_*/out_*/fault) is a flop; cfg_age (static boot-age word) lands on its pin register cfg_q"
+ },
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R",
+  "out_cell": "HB1xp67_ASAP7_75t_R"
+ },
+ "structural_change": "KV-BOOTAGE 10-19 (coordinator decision, lanes/KVR-DERIVE.md re-harden spec): boot-programmable static-schedule ages. qkd_pv16_vport_b = r6 with DQ / RT taken from cfg_age = {DQ, RT} (sealed die cfg, pre-boot image target 10; no handshake): request wait line DQ<=15 deep, slot/sel line DQ+RT+1<=47 deep, the word selects the tap (die-derived RT 16-17 vs the r6 hard 8). +16 pins (cfg_age, S face). Same outline 86.4 x 172.8. Edge-for-edge = r6 #(DQ d, RT r) (lockstep bench, results/rtl/kv_bootage_1019). r6 (Q-VMWB 10-16, closure-first): params DQ 0 / RT 8 only (slot = request + DQ + RT + 1; RL = 4 + W + DQ + RT, W = WP + O is die relays, measured W 59 -> RL 71); the word's epoch travels with it (in{g}_epoch from landing rsp_epoch -> out_epoch -> pair in_epoch check). +48 pins (16 epoch per side, W/E/N). Same outline 86.4 x 172.8, 3-track pins, HB1 out pad, rst_n pin capture. 0 production cycles in the tile.",
+ "job": {
+  "owner": "Claude:KV-BOOTAGE",
+  "branch": "claude/kv-bootage-1019",
+  "tag": "b1",
+  "purpose": "KV-BOOTAGE 10-19 (coordinator decision, lanes/KVR-DERIVE.md re-harden spec): boot-programmable static-schedule ages. qkd_pv16_vport_b = r6 with DQ / RT taken from cfg_age = {DQ, RT} (sealed die cfg, pre-boot image target 10; no handshake): request wait line DQ<=15 deep, slot/sel line DQ+RT+1<=47 deep, the word selects the tap (die-derived RT 16-17 vs the r6 hard 8). +16 pins (cfg_age, S face). Same outline 86.4 x 172.8. Edge-for-edge = r6 #(DQ d, RT r) (lockstep bench, results/rtl/kv_bootage_1019). r6 (Q-VMWB 10-16, closure-first): params DQ 0 / RT 8 only (slot = request + DQ + RT + 1; RL = 4 ",
+  "benches": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qkd_pv16_vport_b #(.MUT(0), .DQ(15), .RT(31)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_sys/kv_bootage_20261019/qkd_pv16_vport_b.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "vport_r8",
+    "cmd": "bash tools/qwen_kv_die/kv_bootage_bench.sh {RUN}/bench/vport_r8 vport 0 D=0 R=8",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVBA_VPORT PASS",
+    "min_count_regex": "checks=(\\d+)"
+   },
+   {
+    "name": "vport_r16",
+    "cmd": "bash tools/qwen_kv_die/kv_bootage_bench.sh {RUN}/bench/vport_r16 vport 0 D=0 R=16",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVBA_VPORT PASS",
+    "min_count_regex": "checks=(\\d+)"
+   },
+   {
+    "name": "vport_d3r17",
+    "cmd": "bash tools/qwen_kv_die/kv_bootage_bench.sh {RUN}/bench/vport_d3r17 vport 0 D=3 R=17",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVBA_VPORT PASS",
+    "min_count_regex": "checks=(\\d+)"
+   },
+   {
+    "name": "vport_d15r31",
+    "cmd": "bash tools/qwen_kv_die/kv_bootage_bench.sh {RUN}/bench/vport_d15r31 vport 0 D=15 R=31",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVBA_VPORT PASS",
+    "min_count_regex": "checks=(\\d+)"
+   },
+   {
+    "name": "vport_mut_tap",
+    "cmd": "bash tools/qwen_kv_die/kv_bootage_bench.sh {RUN}/bench/vport_mut_tap vport 6 D=0 R=16",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVBA_VPORT PASS",
+    "fail_regex": "^KVBA_VPORT FAIL",
+    "fail_witness": "results/rtl/kv_bootage_1019/sim_vport_6_D_0_R_16_.log"
+   },
+   {
+    "name": "vport_mut_dq",
+    "cmd": "bash tools/qwen_kv_die/kv_bootage_bench.sh {RUN}/bench/vport_mut_dq vport 7 D=3 R=17",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVBA_VPORT PASS",
+    "fail_regex": "^KVBA_VPORT FAIL",
+    "fail_witness": "results/rtl/kv_bootage_1019/sim_vport_7_D_3_R_17_.log"
+   },
+   {
+    "name": "vport_mut_range",
+    "cmd": "bash tools/qwen_kv_die/kv_bootage_bench.sh {RUN}/bench/vport_mut_range vport 8 D=0 R=16",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVBA_VPORT PASS",
+    "fail_regex": "^KVBA_VPORT FAIL",
+    "fail_witness": "results/rtl/kv_bootage_1019/sim_vport_8_D_0_R_16_.log"
+   }
+  ],
+  "extra_paths": [
+   "rtl",
+   "tools/qwen_kv_die/kv_bootage_bench.sh",
+   "rtl/test/kv_bootage_1019",
+   "results/rtl/kv_bootage_1019"
+  ],
+  "views_to": "physical/ref_tile/qkd_pv16_vport_b1/views",
+  "record_to": "results/rtl/ref_tile/qkd_pv16_vport_b1",
+  "reroute_reason": {
+   "kind": "rtl_change",
+   "why": "KV-BOOTAGE: boot-programmable DQ/RT (cfg_age pin, delay lines sized for the bounds); the r6 view hard-codes RT 8 while the die derives 16-17"
+  }
+ },
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ }
+}

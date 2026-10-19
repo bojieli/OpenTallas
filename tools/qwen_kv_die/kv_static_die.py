@@ -43,6 +43,9 @@ ROOT = HERE.parents[1]
 sys.path.insert(0, str(HERE))
 
 ON = os.environ.get('OT_KV_STATIC_DIE', '0') == '1'
+# KV-DCAL-BOOTCFG 10-19 (= kv_die.DCAL_BC / DCAL_BC_LINK): the D2D end's cfg port <- dcal cfg; boot link_cfg_* -> dcal bcfg
+DCAL_BC = os.environ.get('OT_KV_DCAL_BC', '0') == '1'
+DCAL_BC_LINK = dict(cfg_tx_we='btx', cfg_rx_we='brx', cfg_addr='bad', cfg_data='bdt')
 # KV-PLAN 10-17 (HANDOFF 0cx+4 decision 1): one control root per die half (kvs_hroot_N / kvs_hroot_S), each serving its
 # own two stacks (es chain heads, fan words, group gathers, embedding return trains); off = the single top-centre root
 HROOT = os.environ.get('OT_KV_HROOT', '0') == '1'
@@ -94,8 +97,9 @@ PC_RLAND_KINDS = ('pc', 'pc_h')
 RESET_SYNC_RTL = 'rtl/lib/ot_reset_sync.sv'
 RTL_FILE = ('rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles' + ('_hroot' if HROOT else '') + ('_ff' if FANFOLD else '') +
             ('_ep' if os.environ.get('OT_KV_ECTL_PAIR', '0') == '1' else '') + ('_k' if KITS else '') +
-            ('_mu' if os.environ.get('OT_KV_MU', '0') == '1' else '') +   # MU-ADOPT-KV 10-19 (kv_static.MU)
-            ('_ds' if DOMSPLIT else '') + ('_rl' if PC_RLAND else '') + '.sv')
+            ('_mu' if os.environ.get('OT_KV_MU', '0') == '1' else '') +
+            ('_ba' if os.environ.get('OT_KV_BOOT_AGES', '0') == '1' else '') +   # MU-ADOPT-KV 10-19 (kv_static.MU); KV-BOOTAGE
+            ('_ds' if DOMSPLIT else '') + ('_rl' if PC_RLAND else '') + '.sv')   # KV-DOMSPLIT; KV-PC
 AGES = 'results/arch/qwen_kv_static_programme_1017/die_ages.json'
 STACKS = ('WS', 'WN', 'ES', 'EN')
 ORDER = (4, 5, 0, 1, 2, 3, 6, 7)          # kv_static.template: group g holds PCs 4 * ORDER.index(g) + q
@@ -239,6 +243,8 @@ ATTN_LAND_EDGES = {'K.tx_record': 1, 'ks_prg': 1, 'ks_arh': 1, 'K.rx_record': 0,
 FACE_LAND_TILES = {'kvs_attn': dict(master='qkd_kvs_attn', kit='qkd_kvs_attn', rst_release=3, fin=1, i_ctl=1),
                    'astk_rly_296': dict(master='qkd_astk_rly_296', kit='qkd_astk_rly_296', rst_release=3),
                    'hr_core_queue': dict(master='qkd_hr_core_queue', kit='qkd_hr_core_queue', rst_release=3)}
+if os.environ.get('OT_KV_BOOT_AGES', '0') == '1':     # KV-BOOTAGE 10-19: the boot-age attention tile's landed view
+    FACE_LAND_TILES['kvs_attn'] = dict(FACE_LAND_TILES['kvs_attn'], kit='qkd_kvs_attn_ba1')
 _FL_ENV = os.environ.get('OT_KV_FACE_LAND', '0').strip()
 FACE_LAND_SEL = (set(FACE_LAND_TILES) if _FL_ENV == '1' else set() if _FL_ENV in ('', '0')
                  else {t.strip() for t in _FL_ENV.split(',') if t.strip()})
@@ -389,6 +395,9 @@ def graph():
             _afault_join(g)
         if ATTN_LAND:
             _attn_land_join(g)
+        import kv_bootage as _KB              # KV-BOOTAGE 10-19 (OT_KV_BOOT_AGES=1): boot-programmable schedule ages
+        if _KB.ON:
+            _KB.boot_ages_join(g)
         _G['g'], _G['unpriced'] = g, left
         _G['ins'] = {i['name']: i for i in g['instances']}
         _G['spec'] = {}
@@ -770,6 +779,10 @@ def tile(die_inst):
                 if ckind == 'ectl' and it['port'] in KG and kind == 'ctl':
                     outs.setdefault('kg', (rsp_expr('lprg', KG), 23, []))[2].append((cd, 'kg'))
                     continue
+                if ckind == 'vport' and p == 'cfg_age':          # KV-BOOTAGE: die cfg {DQ, RT} -> the V port's cfg pin
+                    pn = f'{loc[src]}__{it["port"]}__{lo}_{w}'
+                    outs.setdefault(pn, (f'w_{loc[src]}__{it["port"]}[{lo + w - 1}:{lo}]', w, []))[2].append((cd, 'cfg'))
+                    continue
                 if ckind == 'ectl' and p == 'cfg':
                     pn = f'{loc[src]}__{it["port"]}__{lo}_{w}'
                     outs.setdefault(pn, (f'w_{loc[src]}__{it["port"]}[{lo + w - 1}:{lo}]', w, []))[2].append((cd, 'cfg'))
@@ -880,6 +893,9 @@ if SEQ_S:         # KV-WIRE2 SEQ: the attention programme's request / Q beat fac
 if BOOT:    # the pc_path's slice-facing outputs (note s5.5)
     DIE_EXPORTS['pc'].update({('pc', p[4:]): (p, w) for _b, p, _s, w, out in BOOT_HSL if out})
 DIE_EXPORTS['pc_h'] = DIE_EXPORTS['pc']
+import kv_bootage as KB   # noqa: E402  KV-BOOTAGE 10-19 (OT_KV_BOOT_AGES=1)
+if KB.ON:   # the pair FIRST_INPUT_AGE bytes {pair 1, pair 0} -> both PV pair clusters (pvw cfa, a die join: kv_bootage)
+    DIE_EXPORTS['ctl'][('dcfg', 'age_pv')] = ('dcfg__age_pv', 16)
 if AFAULT:   # P7: each group's chain node -> the next slot's group (or, slot 7, the attention control tile)
     DIE_EXPORTS['grp'] = {('af', 'fault'): ('af__fault', 1)}
 
@@ -1694,6 +1710,13 @@ def inject(m, K):
             continue
         if bits is None:
             raise ValueError(f'kv_static_die: no width for {dinst}.{dport}')
+        if DCAL_BC and any(l_[0] == 'd2d_kv' and l_[1] in DCAL_BC_LINK for l_ in loads):
+            # KV-DCAL-BOOTCFG (OT_KV_DCAL_BC=1): boot target 11 (link_cfg_*) ends on the calendar sequencer's bcfg pins;
+            # the sequencer's merged cfg word (dcal_dcfg, kv_die) is the D2D end's only cfg producer
+            if 'dcal' not in {i_.name for i_ in m['insts']}:
+                raise ValueError('OT_KV_DCAL_BC needs the dcal instance (OT_KV_DCAL=1)')
+            loads = [('dcal', DCAL_BC_LINK[l_[1]]) if l_[0] == 'd2d_kv' and l_[1] in DCAL_BC_LINK else l_ for l_ in loads]
+            rec.setdefault('dcal_bc', []).append(f'{dinst}.{dport} -> ' + ', '.join(f'{a}.{b}' for a, b in loads))
         bid = _bid(dinst, dport, seen_buses)
         add((bid, 'kv_oneway', bits, [(dinst, dport), loads[0]]))
         if len(loads) > 1:
@@ -1762,6 +1785,10 @@ def _die_joins(m, K, B, add, fk, rec):
     if 'pvw_0' in by and 'pvw_1' in by:
         bus('ks_pvst', 'kv_oneway', 31, [('kvs_attn', 'pvst'), ('pvw_0', 'st')])
         fk['ks_pvst'] = [('pvw_1', 'st')]
+    # KV-BOOTAGE: the sealed die cfg's pair ages -> both PV pair clusters (static configuration word, no handshake)
+    if KB.ON and 'pvw_0' in by and 'pvw_1' in by:
+        bus('ks_age_pv', 'kv_oneway', 16, [('kvs_ctl', 'dcfg__age_pv'), ('pvw_0', 'cfa')])
+        fk['ks_age_pv'] = [('pvw_1', 'cfa')]
     # KV-PLAN-FIN: attention root -> final join command word; final join beat stream -> the stream face (kvs_attn fin)
     if PVFIN and 'pvfin' in by:
         bus('ks_pvfst', 'kv_oneway', 65, [('kvs_attn', 'pvfst'), ('pvfin', 'fs')])

@@ -1,13 +1,13 @@
 {
- "name": "hgi_sm_xl2_ctlx-x1-COMMIT",
+ "name": "hgi_sm_xl2_ctlx-n3c3-COMMIT",
  "block": "ot_hgi_sm_xload_cl2_ctlx",
  "ref_tile": true,
- "owner": "Claude HBM-B lane",
- "purpose": "x-load ctl die master for d4f under XQL (H-SM aeff7691c / 8d98d5225): ctlw EGRESS_SPLIT 1 with the die-connected ports only, kept rotation-select replicas, recipe 4. Replaces xl_<q>_ctl ot_hgi_sm_xload_cl2_ctlw (contract remaster to ot_hgi_sm_xload_cl2_ctlx by H-NETLIST: same edges, the open/undriven xw_*/x_done/rwq/bq_d ports and clk_eg dropped).",
+ "owner": "Claude ELEM-GAPS/HBMN1-ctlx",
+ "purpose": "native re-close of the d4g quadrant x-load ctl ot_hgi_sm_xload_cl2_ctlx (CLOSED q1-7af6f4406 native FAIL: l_d_o launch 403 ps on 580 pins, rst_n capture 455.7 ps): l_d_o from a dedicated kept pin-register copy of L1 (same edge), rst_n drives one kept async-clear flop at the S face + 2 plain release flops (issuer and ctl body clear from the relayed reset; release 3 edges for both, assert 2 edges). Data/command edges unchanged. n2 (10-18 gate n1 FAIL): opt_merge had folded the plain l_d into the kept l_d_o copy (one flop drove the E-face pins AND the W-side C stage, sat mid-tile, l_d_o not anchored); now the C stage reads its own kept copy l_dc, rn_o leaves from its own kept flop rn_q (= rq_n, same edge) instead of the 1,310-load reset net, CTS -no_obstruction_aware (SW macro-corner leaves 605 ps). Edges unchanged vs n1. n3: OT_OFLOP_HOPS 2 -> 3 (n2 probe: l_d_o[k] = flop -QN-> INV -> kept wire -> BUF -> port is 3 cells, so io_flop_at_pins left all 2,048 l_d_o flops unanchored: launch 310 ps on 194 pins).",
  "threads": 8,
  "peak_ram_gb": 16,
  "source": {
-  "branch": "claude/hbmb-lane-1017",
+  "branch": "claude/eg-hbmn1-ctlx-1018",
   "commit": "COMMIT",
   "extra_paths": [
    "physical/asap7_memory_macros",
@@ -23,7 +23,9 @@
    "rtl/lib/ot_rst_relay.sv",
    "rtl/link/ot_fifo_sram_fwft.sv",
    "tools/hbm_sm_xload_static_timing.py",
-   "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_xql.sv"
+   "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_xql.sv",
+   "results/rtl/rbh_xql_1018",
+   "results/rtl/eg_hbmn1_1018"
   ]
  },
  "stages": {
@@ -39,39 +41,112 @@
     ]
    },
    {
-    "name": "xql_lock_exact",
-    "cmd": "XLOAD_F20=1 XLOAD_CL2=1 XLOAD_CLOCK_LEAVES=1 XLOAD_XQL=1 XQL_MUT=0 bash rtl/hbm_accel/generic/adapters/tb/run_xload_static_lock.sh {RUN}/xql_lock_exact",
+    "name": "quad_lock_exact",
+    "cmd": "bash rtl/hbm_accel/generic/adapters/tb/run_xload_xql_quad_lock.sh {RUN}/qlock0 0",
     "expect": "pass",
+    "pass_regex": "^XQL_QUAD_LOCK PASS",
+    "pass_witness": "results/rtl/eg_hbmn1_1018/witness/n2_qlock_q0.log",
     "threads": 8,
-    "peak_ram_gb": 24
+    "peak_ram_gb": 32
    },
    {
-    "name": "xql_drop_pair_write_mutant",
-    "cmd": "XLOAD_F20=1 XLOAD_CL2=1 XLOAD_CLOCK_LEAVES=1 XLOAD_XQL=1 XQL_MUT=1 bash rtl/hbm_accel/generic/adapters/tb/run_xload_static_lock.sh {RUN}/xql_mut1",
+    "name": "quad_drop_pair_write_mutant",
+    "cmd": "bash rtl/hbm_accel/generic/adapters/tb/run_xload_xql_quad_lock.sh {RUN}/qlock1 1",
     "expect": "fail",
+    "fail_regex": "^XQL_QUAD_LOCK FAIL",
+    "fail_witness": "results/rtl/eg_hbmn1_1018/witness/n2_qlock_q1.log",
     "threads": 8,
-    "peak_ram_gb": 24
+    "peak_ram_gb": 32
    },
    {
-    "name": "xql_skew_pair_mutant",
-    "cmd": "XLOAD_F20=1 XLOAD_CL2=1 XLOAD_CLOCK_LEAVES=1 XLOAD_XQL=1 XQL_MUT=2 bash rtl/hbm_accel/generic/adapters/tb/run_xload_static_lock.sh {RUN}/xql_mut2",
+    "name": "quad_ctl_rotation_mutant",
+    "cmd": "bash rtl/hbm_accel/generic/adapters/tb/run_xload_xql_quad_lock.sh {RUN}/qlock2 2",
     "expect": "fail",
+    "fail_regex": "^XQL_QUAD_LOCK FAIL",
+    "fail_witness": "results/rtl/eg_hbmn1_1018/witness/n2_qlock_q2.log",
     "threads": 8,
-    "peak_ram_gb": 24
+    "peak_ram_gb": 32
    },
    {
-    "name": "xql_swap_quarter_mutant",
-    "cmd": "XLOAD_F20=1 XLOAD_CL2=1 XLOAD_CLOCK_LEAVES=1 XLOAD_XQL=1 XQL_MUT=3 bash rtl/hbm_accel/generic/adapters/tb/run_xload_static_lock.sh {RUN}/xql_mut3",
+    "name": "quad_issuer_late_mutant",
+    "cmd": "bash rtl/hbm_accel/generic/adapters/tb/run_xload_xql_quad_lock.sh {RUN}/qlock3 3",
     "expect": "fail",
+    "fail_regex": "^XQL_QUAD_LOCK FAIL",
+    "fail_witness": "results/rtl/eg_hbmn1_1018/witness/n2_qlock_q3.log",
     "threads": 8,
-    "peak_ram_gb": 24
+    "peak_ram_gb": 32
    },
    {
-    "name": "xql_rotation_mutant",
-    "cmd": "XLOAD_F20=1 XLOAD_CL2=1 XLOAD_CLOCK_LEAVES=1 XLOAD_XQL=1 XQL_MUT=0 bash rtl/hbm_accel/generic/adapters/tb/run_xload_static_lock.sh {RUN}/xql_rot MUT1",
+    "name": "quad_sw_bank_binding_mutant",
+    "cmd": "bash rtl/hbm_accel/generic/adapters/tb/run_xload_xql_quad_lock.sh {RUN}/qlock4 4",
     "expect": "fail",
+    "fail_regex": "^XQL_QUAD_LOCK FAIL",
+    "fail_witness": "results/rtl/eg_hbmn1_1018/witness/n2_qlock_q4.log",
     "threads": 8,
-    "peak_ram_gb": 24
+    "peak_ram_gb": 32
+   },
+   {
+    "name": "quad_tgt_strap_mutant",
+    "cmd": "bash rtl/hbm_accel/generic/adapters/tb/run_xload_xql_quad_lock.sh {RUN}/qlock5 5",
+    "expect": "fail",
+    "fail_regex": "^XQL_QUAD_LOCK FAIL",
+    "fail_witness": "results/rtl/eg_hbmn1_1018/witness/n2_qlock_q5.log",
+    "threads": 8,
+    "peak_ram_gb": 32
+   },
+   {
+    "name": "oldref_lock_exact",
+    "cmd": "XQL_OLDREF=1 bash rtl/hbm_accel/generic/adapters/tb/run_xload_xql_quad_lock.sh {RUN}/oldref0 0",
+    "expect": "pass",
+    "pass_regex": "^XQL_QUAD_LOCK PASS",
+    "pass_witness": "results/rtl/eg_hbmn1_1018/witness/n2_oldref_q0.log",
+    "threads": 8,
+    "peak_ram_gb": 32
+   },
+   {
+    "name": "oldref_drop_pair_write_mutant",
+    "cmd": "XQL_OLDREF=1 bash rtl/hbm_accel/generic/adapters/tb/run_xload_xql_quad_lock.sh {RUN}/oldref1 1",
+    "expect": "fail",
+    "fail_regex": "^XQL_QUAD_LOCK FAIL",
+    "fail_witness": "results/rtl/eg_hbmn1_1018/witness/n2_oldref_q1.log",
+    "threads": 8,
+    "peak_ram_gb": 32
+   },
+   {
+    "name": "oldref_ctl_rotation_mutant",
+    "cmd": "XQL_OLDREF=1 bash rtl/hbm_accel/generic/adapters/tb/run_xload_xql_quad_lock.sh {RUN}/oldref2 2",
+    "expect": "fail",
+    "fail_regex": "^XQL_QUAD_LOCK FAIL",
+    "fail_witness": "results/rtl/eg_hbmn1_1018/witness/n2_oldref_q2.log",
+    "threads": 8,
+    "peak_ram_gb": 32
+   },
+   {
+    "name": "oldref_issuer_late_mutant",
+    "cmd": "XQL_OLDREF=1 bash rtl/hbm_accel/generic/adapters/tb/run_xload_xql_quad_lock.sh {RUN}/oldref3 3",
+    "expect": "fail",
+    "fail_regex": "^XQL_QUAD_LOCK FAIL",
+    "fail_witness": "results/rtl/eg_hbmn1_1018/witness/n2_oldref_q3.log",
+    "threads": 8,
+    "peak_ram_gb": 32
+   },
+   {
+    "name": "oldref_sw_bank_binding_mutant",
+    "cmd": "XQL_OLDREF=1 bash rtl/hbm_accel/generic/adapters/tb/run_xload_xql_quad_lock.sh {RUN}/oldref4 4",
+    "expect": "fail",
+    "fail_regex": "^XQL_QUAD_LOCK FAIL",
+    "fail_witness": "results/rtl/eg_hbmn1_1018/witness/n2_oldref_q4.log",
+    "threads": 8,
+    "peak_ram_gb": 32
+   },
+   {
+    "name": "oldref_tgt_strap_mutant",
+    "cmd": "XQL_OLDREF=1 bash rtl/hbm_accel/generic/adapters/tb/run_xload_xql_quad_lock.sh {RUN}/oldref5 5",
+    "expect": "fail",
+    "fail_regex": "^XQL_QUAD_LOCK FAIL",
+    "fail_witness": "results/rtl/eg_hbmn1_1018/witness/n2_oldref_q5.log",
+    "threads": 8,
+    "peak_ram_gb": 32
    }
   ],
   "calibrate": {
@@ -124,14 +199,19 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hgi_sm_xl2_ctlx/hgi_sm_xl2_ctlx-x1-COMMIT"
+   "to": "results/rtl/ref_tile/hgi_sm_xl2_ctlx/hgi_sm_xl2_ctlx-q1-7af6f4406"
   }
  ],
- "cycles_added": 0,
+ "cycles_added": {
+  "data_command_edges": 0,
+  "reset_assert_edges": "+2 (issuer and ctl body; rst_n must be held low >= 2 edges)",
+  "reset_release_edges": "issuer 0 -> 3, ctl body 3 -> 3, rn_o 3 -> 3"
+ },
  "route_hold_corners": "mm",
  "route_hold_margin_ns": 0.03,
  "route_corner": "TC",
  "notes": "generated by tools/ref_tile/ref_tile.py",
  "merge_target": null,
- "structural_change": "ctlw f20a (ba27075db) TT -58.79/FF -11.98: 399 TT paths rr_c/s0r/md -> rotation mux -> ~300 um -> l_d_o; textbook lint high_fanout u_ctl.s0r[26][*] 5,045 loads (opt_merge folded the NR=32 select replicas into one); 11,007 pins at 8-9.5/um on W/E; util 0.14; TT clock insertion 458 / spread 90.8. cl2g (+L1 landing, on main) was never routed. ctlx: cl2g + SEL_KEEP (32 kept select replicas, ot_keep_regs hook) + the die-connected ports only (EGRESS_SPLIT 1: the xw egress datapath and its 5,121 pins leave the tile) + one data clock root (clk_eg = clk as in the XQL binding) + recipe 4 square 388.8 outline."
+ "structural_change": "ctlw f20a (ba27075db) TT -58.79/FF -11.98: 399 TT paths rr_c/s0r/md -> rotation mux -> ~300 um -> l_d_o; textbook lint high_fanout u_ctl.s0r[26][*] 5,045 loads (opt_merge folded the NR=32 select replicas into one); 11,007 pins at 8-9.5/um on W/E; util 0.14; TT clock insertion 458 / spread 90.8. cl2g (+L1 landing, on main) was never routed. ctlx: cl2g + SEL_KEEP (32 kept select replicas, ot_keep_regs hook) + the die-connected ports only (EGRESS_SPLIT 1: the xw egress datapath and its 5,121 pins leave the tile) + one data clock root (clk_eg = clk as in the XQL binding) + recipe 4 square 388.8 outline. | q1 (RBH-XQL 10-18): no RTL change; bench = quadrant lock (xql NP 2 per quadrant vs today's NP 4, RTL1 2-bank-per-SM images).",
+ "reroute_reason": "native: l_d_o launch 403>220 + rst_n capture 456 on CLOSED q1-7af6f4406"
 }
