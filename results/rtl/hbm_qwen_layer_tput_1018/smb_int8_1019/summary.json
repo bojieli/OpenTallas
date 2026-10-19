@@ -68,6 +68,6 @@
   "delta": "-17.6 %"
  },
  "area_estimate_int8_adapter": "per SM: ~2.7k flops (converter a_data 1088 + m_data 1088 + high-half codes 512 + tags/valids ~34) + 64 x (8-bit magnitude/priority-encode/shift) lanes + 1099-bit 2:1 packet mux; x16 SM / die. No closed physical view of ot_smh_static_int8 exists (estimate only).",
- "open": "coverage run --all (every row of the die per record; qkv + o all-rows PASS so far) still running: ot-epyc5:/srv/opentallas-scratch/claude/smb-int8/unit/out/L0_all.{log,json}",
- "default_off_regression": "PASS: sm_mv_unit DS L00 k4 sm0 smoke with this tree's ot_hbm_accel_smh_attn at default params (unit/regress_default.json)"
+ "default_off_regression": "PASS: sm_mv_unit DS L00 k4 sm0 smoke with this tree's ot_hbm_accel_smh_attn at default params (unit/regress_default.json)",
+ "coverage_all_rows": "PASS: every row of the rank-0 die bit-exact (qkv 768, o 4096, gu 3072, down 2048 = 9,984 rows; unit/L0_all.json)"
 }
