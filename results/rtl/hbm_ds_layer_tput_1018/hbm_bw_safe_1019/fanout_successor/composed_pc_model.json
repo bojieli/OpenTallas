@@ -1,0 +1,28 @@
+{
+  "schema": "opentallas.hbm_bw_composed_pc_model.v1",
+  "top": "ot_hbm_svc_pc_ctrl_leaf_cfg_safe_legacy",
+  "native_controller": "CurrentCFGmetadata4+64rowselectors, regionalK/KR and AQ625FF; actualcombinedcensus pending",
+  "macros": 13,
+  "external_ports": "SameCFGconfiguration/K/PHY/status,legacy same-edgeKR; native18valid wires internal",
+  "internal_additional_valid_wires": 17,
+  "bridge_absolute_mapped_ff_bits": 1114,
+  "bridge_payload_bits": 831,
+  "bridge_increment_vs_matched_baseline_ff_bits": 68,
+  "clock_period_ps": 1024,
+  "data_latency_hbm_edges_added_by_bridge": 1,
+  "reset": {
+    "explicit_face_landing_edges": 2,
+    "native_reset_relay_edges": 3,
+    "native_release_edges_total": 5,
+    "tool_reset_landing": "MUST disable duplicate automatic2edge insertion with exactRTLreason/sourceproof",
+    "diagnostic_RESET_LANDING0": "Only equivalence/history, not physicalcontract"
+  },
+  "pipeline_other_changes": "Zeroedges fromfanoutcopies; stockOREG/KREG/KRREG/RREG unchanged",
+  "outline_um": [
+    432,
+    475.2
+  ],
+  "estimated_bridge_ff_area_um2": 779.8,
+  "floorplan": "Priorcoreband9006.94um2 mayneedlarger band forfullcombinedstdarea; actualarea/placement/fanout/access/TTFF OPEN. Noarbitrary util squeeze.",
+  "all_eight": "Model beforebuild; sourcehardwareboundary/finiteoccupancy+reset/proof obligations retained; noCTS/adoption untilrootreview."
+}
