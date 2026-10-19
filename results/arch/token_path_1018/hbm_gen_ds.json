@@ -8,34 +8,34 @@
    "available": true,
    "title": "HBM d4g GEN2 die, DeepSeek-V4.1 (TP96 x quadrants), 1M context, AR",
    "clock_hz": 1200000000.0,
-   "T_token_cycles": 715485.2,
+   "T_token_cycles": 713645.2,
    "tau": null,
-   "per_accepted_cycles": 715485.2,
-   "tok_s": 1677.2,
+   "per_accepted_cycles": 713645.2,
+   "tok_s": 1681.5,
    "price_of_record": {
     "tok_s": 1905.4,
     "cycles": 629775.1,
     "source": "results/arch/token_path_1018/inputs/hbm_ds_priced_layers_all.json"
    },
-   "vs_price_pct": -11.98,
-   "T_at_price_cycles": 715582.8,
-   "pct_measured_current_rtl": 20.83,
-   "banner": "20.8% of token cycles measured on current RTL (0.0% on older RTL, 7.2% modelled PHY, 72.0% priced)",
+   "vs_price_pct": -11.75,
+   "T_at_price_cycles": 713742.8,
+   "pct_measured_current_rtl": 20.68,
+   "banner": "20.7% of token cycles measured on current RTL (0.0% on older RTL, 7.1% modelled PHY, 72.2% priced)",
    "by_grade": {
-    "measured-current-RTL": 149035.8,
+    "measured-current-RTL": 147615.6,
     "measured-old-RTL": 0,
-    "modelled-PHY": 51244.2,
-    "priced": 515205.2
+    "modelled-PHY": 50881.6,
+    "priced": 515148.0
    },
    "by_grade_share": {
-    "measured-current-RTL": 0.2083,
+    "measured-current-RTL": 0.2068,
     "measured-old-RTL": 0.0,
-    "modelled-PHY": 0.0716,
-    "priced": 0.7201
+    "modelled-PHY": 0.0713,
+    "priced": 0.7219
    },
    "by_kind": {
     "layer": 458493.3,
-    "xdie": 151268.8,
+    "xdie": 149428.8,
     "adjust": 105723.0
    },
    "o_rule": "O from the S2 compiler schedule of record (priced_layers.py: the HBMDS vehicle's schedule contract)",
@@ -49,11 +49,11 @@
      }
     },
     "o-group reduce-mcast (8 contributors)": {
-     "exposed": 34671.8,
+     "exposed": 32831.8,
      "by_grade": {
-      "measured-current-RTL": 19676.8,
-      "modelled-PHY": 12948.4,
-      "priced": 2047.2
+      "measured-current-RTL": 18256.0,
+      "modelled-PHY": 12585.6,
+      "priced": 1991.2
      }
     },
     "priced:selected compressed-KV rows to the head dies": {
@@ -157,401 +157,401 @@
     "L0": {
      "n": 1,
      "die": 10500.0,
-     "xdie": 2442.8,
+     "xdie": 2396.8,
      "by_grade": {
-      "priced": 10721.5,
-      "measured-current-RTL": 1110.8,
-      "modelled-PHY": 1110.8
+      "priced": 10719.7,
+      "measured-current-RTL": 1077.9,
+      "modelled-PHY": 1099.3
      }
     },
     "L1": {
      "n": 1,
      "die": 16363.3,
-     "xdie": 2442.8,
+     "xdie": 2396.8,
      "by_grade": {
-      "priced": 16584.8,
-      "measured-current-RTL": 1110.8,
-      "modelled-PHY": 1110.8
+      "priced": 16583.0,
+      "measured-current-RTL": 1077.9,
+      "modelled-PHY": 1099.3
      }
     },
     "L2": {
      "n": 1,
      "die": 11746.0,
-     "xdie": 7829.0,
+     "xdie": 7783.0,
      "by_grade": {
       "priced": 14719.8,
-      "measured-current-RTL": 3089.8,
+      "measured-current-RTL": 3043.8,
       "modelled-PHY": 1765.1
      }
     },
     "L3": {
      "n": 1,
      "die": 11029.1,
-     "xdie": 2442.8,
+     "xdie": 2396.8,
      "by_grade": {
-      "priced": 11250.6,
-      "measured-current-RTL": 1110.8,
-      "modelled-PHY": 1110.8
+      "priced": 11248.8,
+      "measured-current-RTL": 1077.9,
+      "modelled-PHY": 1099.3
      }
     },
     "L4": {
      "n": 1,
      "die": 11029.1,
-     "xdie": 2442.8,
+     "xdie": 2396.8,
      "by_grade": {
-      "priced": 11250.6,
-      "measured-current-RTL": 1110.8,
-      "modelled-PHY": 1110.8
+      "priced": 11248.8,
+      "measured-current-RTL": 1077.9,
+      "modelled-PHY": 1099.3
      }
     },
     "L5": {
      "n": 1,
      "die": 11029.1,
-     "xdie": 2442.8,
+     "xdie": 2396.8,
      "by_grade": {
-      "priced": 11250.6,
-      "measured-current-RTL": 1110.8,
-      "modelled-PHY": 1110.8
+      "priced": 11248.8,
+      "measured-current-RTL": 1077.9,
+      "modelled-PHY": 1099.3
      }
     },
     "L6": {
      "n": 1,
      "die": 11029.1,
-     "xdie": 2442.8,
+     "xdie": 2396.8,
      "by_grade": {
-      "priced": 11250.6,
-      "measured-current-RTL": 1110.8,
-      "modelled-PHY": 1110.8
+      "priced": 11248.8,
+      "measured-current-RTL": 1077.9,
+      "modelled-PHY": 1099.3
      }
     },
     "L7": {
      "n": 1,
      "die": 11029.1,
-     "xdie": 2442.8,
+     "xdie": 2396.8,
      "by_grade": {
-      "priced": 11250.6,
-      "measured-current-RTL": 1110.8,
-      "modelled-PHY": 1110.8
+      "priced": 11248.8,
+      "measured-current-RTL": 1077.9,
+      "modelled-PHY": 1099.3
      }
     },
     "L8": {
      "n": 1,
      "die": 11746.0,
-     "xdie": 7829.0,
+     "xdie": 7783.0,
      "by_grade": {
       "priced": 14719.8,
-      "measured-current-RTL": 3089.8,
+      "measured-current-RTL": 3043.8,
       "modelled-PHY": 1765.1
      }
     },
     "L9": {
      "n": 1,
      "die": 11029.1,
-     "xdie": 2442.8,
+     "xdie": 2396.8,
      "by_grade": {
-      "priced": 11250.6,
-      "measured-current-RTL": 1110.8,
-      "modelled-PHY": 1110.8
+      "priced": 11248.8,
+      "measured-current-RTL": 1077.9,
+      "modelled-PHY": 1099.3
      }
     },
     "L10": {
      "n": 1,
      "die": 11029.1,
-     "xdie": 2442.8,
+     "xdie": 2396.8,
      "by_grade": {
-      "priced": 11250.6,
-      "measured-current-RTL": 1110.8,
-      "modelled-PHY": 1110.8
+      "priced": 11248.8,
+      "measured-current-RTL": 1077.9,
+      "modelled-PHY": 1099.3
      }
     },
     "L11": {
      "n": 1,
      "die": 11029.1,
-     "xdie": 2442.8,
+     "xdie": 2396.8,
      "by_grade": {
-      "priced": 11250.6,
-      "measured-current-RTL": 1110.8,
-      "modelled-PHY": 1110.8
+      "priced": 11248.8,
+      "measured-current-RTL": 1077.9,
+      "modelled-PHY": 1099.3
      }
     },
     "L12": {
      "n": 1,
      "die": 11029.1,
-     "xdie": 2442.8,
+     "xdie": 2396.8,
      "by_grade": {
-      "priced": 11250.6,
-      "measured-current-RTL": 1110.8,
-      "modelled-PHY": 1110.8
+      "priced": 11248.8,
+      "measured-current-RTL": 1077.9,
+      "modelled-PHY": 1099.3
      }
     },
     "L13": {
      "n": 1,
      "die": 11029.1,
-     "xdie": 2442.8,
+     "xdie": 2396.8,
      "by_grade": {
-      "priced": 11250.6,
-      "measured-current-RTL": 1110.8,
-      "modelled-PHY": 1110.8
+      "priced": 11248.8,
+      "measured-current-RTL": 1077.9,
+      "modelled-PHY": 1099.3
      }
     },
     "L14": {
      "n": 1,
      "die": 16445.4,
-     "xdie": 8687.3,
+     "xdie": 8641.3,
      "by_grade": {
       "priced": 19030.6,
-      "measured-current-RTL": 4170.0,
+      "measured-current-RTL": 4124.0,
       "modelled-PHY": 1932.1
      }
     },
     "L15": {
      "n": 1,
      "die": 11029.1,
-     "xdie": 2442.8,
+     "xdie": 2396.8,
      "by_grade": {
-      "priced": 11250.6,
-      "measured-current-RTL": 1110.8,
-      "modelled-PHY": 1110.8
+      "priced": 11248.8,
+      "measured-current-RTL": 1077.9,
+      "modelled-PHY": 1099.3
      }
     },
     "L16": {
      "n": 1,
      "die": 11029.1,
-     "xdie": 2442.8,
+     "xdie": 2396.8,
      "by_grade": {
-      "priced": 11250.6,
-      "measured-current-RTL": 1110.8,
-      "modelled-PHY": 1110.8
+      "priced": 11248.8,
+      "measured-current-RTL": 1077.9,
+      "modelled-PHY": 1099.3
      }
     },
     "L17": {
      "n": 1,
      "die": 11029.1,
-     "xdie": 2442.8,
+     "xdie": 2396.8,
      "by_grade": {
-      "priced": 11250.6,
-      "measured-current-RTL": 1110.8,
-      "modelled-PHY": 1110.8
+      "priced": 11248.8,
+      "measured-current-RTL": 1077.9,
+      "modelled-PHY": 1099.3
      }
     },
     "L18": {
      "n": 1,
      "die": 11029.1,
-     "xdie": 2442.8,
+     "xdie": 2396.8,
      "by_grade": {
-      "priced": 11250.6,
-      "measured-current-RTL": 1110.8,
-      "modelled-PHY": 1110.8
+      "priced": 11248.8,
+      "measured-current-RTL": 1077.9,
+      "modelled-PHY": 1099.3
      }
     },
     "L19": {
      "n": 1,
      "die": 11029.1,
-     "xdie": 2442.8,
+     "xdie": 2396.8,
      "by_grade": {
-      "priced": 11250.6,
-      "measured-current-RTL": 1110.8,
-      "modelled-PHY": 1110.8
+      "priced": 11248.8,
+      "measured-current-RTL": 1077.9,
+      "modelled-PHY": 1099.3
      }
     },
     "L20": {
      "n": 1,
      "die": 11759.6,
-     "xdie": 10178.0,
+     "xdie": 10132.0,
      "by_grade": {
       "priced": 16701.7,
-      "measured-current-RTL": 3310.0,
+      "measured-current-RTL": 3264.0,
       "modelled-PHY": 1925.8
      }
     },
     "L21": {
      "n": 1,
      "die": 11029.1,
-     "xdie": 2442.8,
+     "xdie": 2396.8,
      "by_grade": {
-      "priced": 11250.6,
-      "measured-current-RTL": 1110.8,
-      "modelled-PHY": 1110.8
+      "priced": 11248.8,
+      "measured-current-RTL": 1077.9,
+      "modelled-PHY": 1099.3
      }
     },
     "L22": {
      "n": 1,
      "die": 11029.1,
-     "xdie": 2442.8,
+     "xdie": 2396.8,
      "by_grade": {
-      "priced": 11250.6,
-      "measured-current-RTL": 1110.8,
-      "modelled-PHY": 1110.8
+      "priced": 11248.8,
+      "measured-current-RTL": 1077.9,
+      "modelled-PHY": 1099.3
      }
     },
     "L23": {
      "n": 1,
      "die": 11029.1,
-     "xdie": 2442.8,
+     "xdie": 2396.8,
      "by_grade": {
-      "priced": 11250.6,
-      "measured-current-RTL": 1110.8,
-      "modelled-PHY": 1110.8
+      "priced": 11248.8,
+      "measured-current-RTL": 1077.9,
+      "modelled-PHY": 1099.3
      }
     },
     "L24": {
      "n": 1,
      "die": 10823.6,
-     "xdie": 9247.9,
+     "xdie": 9201.9,
      "by_grade": {
       "priced": 13854.6,
-      "measured-current-RTL": 4221.1,
+      "measured-current-RTL": 4175.1,
       "modelled-PHY": 1995.8
      }
     },
     "L25": {
      "n": 1,
      "die": 11029.1,
-     "xdie": 2442.8,
+     "xdie": 2396.8,
      "by_grade": {
-      "priced": 11250.6,
-      "measured-current-RTL": 1110.8,
-      "modelled-PHY": 1110.8
+      "priced": 11248.8,
+      "measured-current-RTL": 1077.9,
+      "modelled-PHY": 1099.3
      }
     },
     "L26": {
      "n": 1,
      "die": 11029.1,
-     "xdie": 2442.8,
+     "xdie": 2396.8,
      "by_grade": {
-      "priced": 11250.6,
-      "measured-current-RTL": 1110.8,
-      "modelled-PHY": 1110.8
+      "priced": 11248.8,
+      "measured-current-RTL": 1077.9,
+      "modelled-PHY": 1099.3
      }
     },
     "L27": {
      "n": 1,
      "die": 11029.1,
-     "xdie": 2442.8,
+     "xdie": 2396.8,
      "by_grade": {
-      "priced": 11250.6,
-      "measured-current-RTL": 1110.8,
-      "modelled-PHY": 1110.8
+      "priced": 11248.8,
+      "measured-current-RTL": 1077.9,
+      "modelled-PHY": 1099.3
      }
     },
     "L28": {
      "n": 1,
      "die": 10823.6,
-     "xdie": 9916.9,
+     "xdie": 9870.9,
      "by_grade": {
       "priced": 14523.7,
-      "measured-current-RTL": 4221.1,
+      "measured-current-RTL": 4175.1,
       "modelled-PHY": 1995.8
      }
     },
     "L29": {
      "n": 1,
      "die": 11029.1,
-     "xdie": 2442.8,
+     "xdie": 2396.8,
      "by_grade": {
-      "priced": 11250.6,
-      "measured-current-RTL": 1110.8,
-      "modelled-PHY": 1110.8
+      "priced": 11248.8,
+      "measured-current-RTL": 1077.9,
+      "modelled-PHY": 1099.3
      }
     },
     "L30": {
      "n": 1,
      "die": 11029.1,
-     "xdie": 2442.8,
+     "xdie": 2396.8,
      "by_grade": {
-      "priced": 11250.6,
-      "measured-current-RTL": 1110.8,
-      "modelled-PHY": 1110.8
+      "priced": 11248.8,
+      "measured-current-RTL": 1077.9,
+      "modelled-PHY": 1099.3
      }
     },
     "L31": {
      "n": 1,
      "die": 11029.1,
-     "xdie": 2442.8,
+     "xdie": 2396.8,
      "by_grade": {
-      "priced": 11250.6,
-      "measured-current-RTL": 1110.8,
-      "modelled-PHY": 1110.8
+      "priced": 11248.8,
+      "measured-current-RTL": 1077.9,
+      "modelled-PHY": 1099.3
      }
     },
     "L32": {
      "n": 1,
      "die": 10823.6,
-     "xdie": 9247.9,
+     "xdie": 9201.9,
      "by_grade": {
       "priced": 13854.6,
-      "measured-current-RTL": 4221.1,
+      "measured-current-RTL": 4175.1,
       "modelled-PHY": 1995.8
      }
     },
     "L33": {
      "n": 1,
      "die": 11029.1,
-     "xdie": 2442.8,
+     "xdie": 2396.8,
      "by_grade": {
-      "priced": 11250.6,
-      "measured-current-RTL": 1110.8,
-      "modelled-PHY": 1110.8
+      "priced": 11248.8,
+      "measured-current-RTL": 1077.9,
+      "modelled-PHY": 1099.3
      }
     },
     "L34": {
      "n": 1,
      "die": 11029.1,
-     "xdie": 2442.8,
+     "xdie": 2396.8,
      "by_grade": {
-      "priced": 11250.6,
-      "measured-current-RTL": 1110.8,
-      "modelled-PHY": 1110.8
+      "priced": 11248.8,
+      "measured-current-RTL": 1077.9,
+      "modelled-PHY": 1099.3
      }
     },
     "L35": {
      "n": 1,
      "die": 11029.1,
-     "xdie": 2442.8,
+     "xdie": 2396.8,
      "by_grade": {
-      "priced": 11250.6,
-      "measured-current-RTL": 1110.8,
-      "modelled-PHY": 1110.8
+      "priced": 11248.8,
+      "measured-current-RTL": 1077.9,
+      "modelled-PHY": 1099.3
      }
     },
     "L36": {
      "n": 1,
      "die": 10823.6,
-     "xdie": 9486.8,
+     "xdie": 9440.8,
      "by_grade": {
       "priced": 14093.6,
-      "measured-current-RTL": 4221.1,
+      "measured-current-RTL": 4175.1,
       "modelled-PHY": 1995.8
      }
     },
     "L37": {
      "n": 1,
      "die": 11029.1,
-     "xdie": 2442.8,
+     "xdie": 2396.8,
      "by_grade": {
-      "priced": 11250.6,
-      "measured-current-RTL": 1110.8,
-      "modelled-PHY": 1110.8
+      "priced": 11248.8,
+      "measured-current-RTL": 1077.9,
+      "modelled-PHY": 1099.3
      }
     },
     "L38": {
      "n": 1,
      "die": 11029.1,
-     "xdie": 2442.8,
+     "xdie": 2396.8,
      "by_grade": {
-      "priced": 11250.6,
-      "measured-current-RTL": 1110.8,
-      "modelled-PHY": 1110.8
+      "priced": 11248.8,
+      "measured-current-RTL": 1077.9,
+      "modelled-PHY": 1099.3
      }
     },
     "L39": {
      "n": 1,
      "die": 11029.1,
-     "xdie": 2442.8,
+     "xdie": 2396.8,
      "by_grade": {
-      "priced": 11250.6,
-      "measured-current-RTL": 1110.8,
-      "modelled-PHY": 1110.8
+      "priced": 11248.8,
+      "measured-current-RTL": 1077.9,
+      "modelled-PHY": 1099.3
      }
     },
     "head": {
@@ -4228,17 +4228,17 @@
      "slot": "L0.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 361.87,
+     "cycles": 328.99,
      "grade": "measured-current-RTL",
-     "total": 361.87,
+     "total": 328.99,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
       "commit": "7aa4d967e",
       "origin": "override"
      },
-     "E": 1012.0,
-     "E_total": 1783.3,
+     "E": 966.0,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -4247,9 +4247,9 @@
      "slot": "L0.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 238.15,
+     "cycles": 226.82,
      "grade": "modelled-PHY",
-     "total": 238.15,
+     "total": 226.82,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
@@ -4257,7 +4257,7 @@
       "origin": "override"
      },
      "E": 666.0,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -4266,9 +4266,9 @@
      "slot": "L0.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 37.65,
+     "cycles": 35.86,
      "grade": "priced",
-     "total": 37.65,
+     "total": 35.86,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
@@ -4276,7 +4276,7 @@
       "origin": "override"
      },
      "E": 105.3,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -4570,17 +4570,17 @@
      "slot": "L1.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 361.87,
+     "cycles": 328.99,
      "grade": "measured-current-RTL",
-     "total": 361.87,
+     "total": 328.99,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
       "commit": "7aa4d967e",
       "origin": "override"
      },
-     "E": 1012.0,
-     "E_total": 1783.3,
+     "E": 966.0,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -4589,9 +4589,9 @@
      "slot": "L1.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 238.15,
+     "cycles": 226.82,
      "grade": "modelled-PHY",
-     "total": 238.15,
+     "total": 226.82,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
@@ -4599,7 +4599,7 @@
       "origin": "override"
      },
      "E": 666.0,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -4608,9 +4608,9 @@
      "slot": "L1.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 37.65,
+     "cycles": 35.86,
      "grade": "priced",
-     "total": 37.65,
+     "total": 35.86,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
@@ -4618,7 +4618,7 @@
       "origin": "override"
      },
      "E": 105.3,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -4912,17 +4912,17 @@
      "slot": "L10.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 361.87,
+     "cycles": 328.99,
      "grade": "measured-current-RTL",
-     "total": 361.87,
+     "total": 328.99,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
       "commit": "7aa4d967e",
       "origin": "override"
      },
-     "E": 1012.0,
-     "E_total": 1783.3,
+     "E": 966.0,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -4931,9 +4931,9 @@
      "slot": "L10.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 238.15,
+     "cycles": 226.82,
      "grade": "modelled-PHY",
-     "total": 238.15,
+     "total": 226.82,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
@@ -4941,7 +4941,7 @@
       "origin": "override"
      },
      "E": 666.0,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -4950,9 +4950,9 @@
      "slot": "L10.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 37.65,
+     "cycles": 35.86,
      "grade": "priced",
-     "total": 37.65,
+     "total": 35.86,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
@@ -4960,7 +4960,7 @@
       "origin": "override"
      },
      "E": 105.3,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -5254,17 +5254,17 @@
      "slot": "L11.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 361.87,
+     "cycles": 328.99,
      "grade": "measured-current-RTL",
-     "total": 361.87,
+     "total": 328.99,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
       "commit": "7aa4d967e",
       "origin": "override"
      },
-     "E": 1012.0,
-     "E_total": 1783.3,
+     "E": 966.0,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -5273,9 +5273,9 @@
      "slot": "L11.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 238.15,
+     "cycles": 226.82,
      "grade": "modelled-PHY",
-     "total": 238.15,
+     "total": 226.82,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
@@ -5283,7 +5283,7 @@
       "origin": "override"
      },
      "E": 666.0,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -5292,9 +5292,9 @@
      "slot": "L11.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 37.65,
+     "cycles": 35.86,
      "grade": "priced",
-     "total": 37.65,
+     "total": 35.86,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
@@ -5302,7 +5302,7 @@
       "origin": "override"
      },
      "E": 105.3,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -5596,17 +5596,17 @@
      "slot": "L12.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 361.87,
+     "cycles": 328.99,
      "grade": "measured-current-RTL",
-     "total": 361.87,
+     "total": 328.99,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
       "commit": "7aa4d967e",
       "origin": "override"
      },
-     "E": 1012.0,
-     "E_total": 1783.3,
+     "E": 966.0,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -5615,9 +5615,9 @@
      "slot": "L12.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 238.15,
+     "cycles": 226.82,
      "grade": "modelled-PHY",
-     "total": 238.15,
+     "total": 226.82,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
@@ -5625,7 +5625,7 @@
       "origin": "override"
      },
      "E": 666.0,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -5634,9 +5634,9 @@
      "slot": "L12.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 37.65,
+     "cycles": 35.86,
      "grade": "priced",
-     "total": 37.65,
+     "total": 35.86,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
@@ -5644,7 +5644,7 @@
       "origin": "override"
      },
      "E": 105.3,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -5938,17 +5938,17 @@
      "slot": "L13.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 361.87,
+     "cycles": 328.99,
      "grade": "measured-current-RTL",
-     "total": 361.87,
+     "total": 328.99,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
       "commit": "7aa4d967e",
       "origin": "override"
      },
-     "E": 1012.0,
-     "E_total": 1783.3,
+     "E": 966.0,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -5957,9 +5957,9 @@
      "slot": "L13.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 238.15,
+     "cycles": 226.82,
      "grade": "modelled-PHY",
-     "total": 238.15,
+     "total": 226.82,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
@@ -5967,7 +5967,7 @@
       "origin": "override"
      },
      "E": 666.0,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -5976,9 +5976,9 @@
      "slot": "L13.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 37.65,
+     "cycles": 35.86,
      "grade": "priced",
-     "total": 37.65,
+     "total": 35.86,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
@@ -5986,7 +5986,7 @@
       "origin": "override"
      },
      "E": 105.3,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -6337,17 +6337,17 @@
      "slot": "L14.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 1012.0,
+     "cycles": 966.0,
      "grade": "measured-current-RTL",
-     "total": 1012.0,
+     "total": 966.0,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
       "commit": "7aa4d967e",
       "origin": "override"
      },
-     "E": 1012.0,
-     "E_total": 1783.3,
+     "E": 966.0,
+     "E_total": 1737.3,
      "O": 0.0,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -6366,7 +6366,7 @@
       "origin": "override"
      },
      "E": 666.0,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 0.0,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -6385,7 +6385,7 @@
       "origin": "override"
      },
      "E": 105.3,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 0.0,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -6679,17 +6679,17 @@
      "slot": "L15.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 361.87,
+     "cycles": 328.99,
      "grade": "measured-current-RTL",
-     "total": 361.87,
+     "total": 328.99,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
       "commit": "7aa4d967e",
       "origin": "override"
      },
-     "E": 1012.0,
-     "E_total": 1783.3,
+     "E": 966.0,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -6698,9 +6698,9 @@
      "slot": "L15.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 238.15,
+     "cycles": 226.82,
      "grade": "modelled-PHY",
-     "total": 238.15,
+     "total": 226.82,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
@@ -6708,7 +6708,7 @@
       "origin": "override"
      },
      "E": 666.0,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -6717,9 +6717,9 @@
      "slot": "L15.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 37.65,
+     "cycles": 35.86,
      "grade": "priced",
-     "total": 37.65,
+     "total": 35.86,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
@@ -6727,7 +6727,7 @@
       "origin": "override"
      },
      "E": 105.3,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -7021,17 +7021,17 @@
      "slot": "L16.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 361.87,
+     "cycles": 328.99,
      "grade": "measured-current-RTL",
-     "total": 361.87,
+     "total": 328.99,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
       "commit": "7aa4d967e",
       "origin": "override"
      },
-     "E": 1012.0,
-     "E_total": 1783.3,
+     "E": 966.0,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -7040,9 +7040,9 @@
      "slot": "L16.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 238.15,
+     "cycles": 226.82,
      "grade": "modelled-PHY",
-     "total": 238.15,
+     "total": 226.82,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
@@ -7050,7 +7050,7 @@
       "origin": "override"
      },
      "E": 666.0,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -7059,9 +7059,9 @@
      "slot": "L16.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 37.65,
+     "cycles": 35.86,
      "grade": "priced",
-     "total": 37.65,
+     "total": 35.86,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
@@ -7069,7 +7069,7 @@
       "origin": "override"
      },
      "E": 105.3,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -7363,17 +7363,17 @@
      "slot": "L17.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 361.87,
+     "cycles": 328.99,
      "grade": "measured-current-RTL",
-     "total": 361.87,
+     "total": 328.99,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
       "commit": "7aa4d967e",
       "origin": "override"
      },
-     "E": 1012.0,
-     "E_total": 1783.3,
+     "E": 966.0,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -7382,9 +7382,9 @@
      "slot": "L17.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 238.15,
+     "cycles": 226.82,
      "grade": "modelled-PHY",
-     "total": 238.15,
+     "total": 226.82,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
@@ -7392,7 +7392,7 @@
       "origin": "override"
      },
      "E": 666.0,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -7401,9 +7401,9 @@
      "slot": "L17.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 37.65,
+     "cycles": 35.86,
      "grade": "priced",
-     "total": 37.65,
+     "total": 35.86,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
@@ -7411,7 +7411,7 @@
       "origin": "override"
      },
      "E": 105.3,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -7705,17 +7705,17 @@
      "slot": "L18.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 361.87,
+     "cycles": 328.99,
      "grade": "measured-current-RTL",
-     "total": 361.87,
+     "total": 328.99,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
       "commit": "7aa4d967e",
       "origin": "override"
      },
-     "E": 1012.0,
-     "E_total": 1783.3,
+     "E": 966.0,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -7724,9 +7724,9 @@
      "slot": "L18.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 238.15,
+     "cycles": 226.82,
      "grade": "modelled-PHY",
-     "total": 238.15,
+     "total": 226.82,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
@@ -7734,7 +7734,7 @@
       "origin": "override"
      },
      "E": 666.0,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -7743,9 +7743,9 @@
      "slot": "L18.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 37.65,
+     "cycles": 35.86,
      "grade": "priced",
-     "total": 37.65,
+     "total": 35.86,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
@@ -7753,7 +7753,7 @@
       "origin": "override"
      },
      "E": 105.3,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -8047,17 +8047,17 @@
      "slot": "L19.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 361.87,
+     "cycles": 328.99,
      "grade": "measured-current-RTL",
-     "total": 361.87,
+     "total": 328.99,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
       "commit": "7aa4d967e",
       "origin": "override"
      },
-     "E": 1012.0,
-     "E_total": 1783.3,
+     "E": 966.0,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -8066,9 +8066,9 @@
      "slot": "L19.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 238.15,
+     "cycles": 226.82,
      "grade": "modelled-PHY",
-     "total": 238.15,
+     "total": 226.82,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
@@ -8076,7 +8076,7 @@
       "origin": "override"
      },
      "E": 666.0,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -8085,9 +8085,9 @@
      "slot": "L19.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 37.65,
+     "cycles": 35.86,
      "grade": "priced",
-     "total": 37.65,
+     "total": 35.86,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
@@ -8095,7 +8095,7 @@
       "origin": "override"
      },
      "E": 105.3,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -8446,17 +8446,17 @@
      "slot": "L2.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 1012.0,
+     "cycles": 966.0,
      "grade": "measured-current-RTL",
-     "total": 1012.0,
+     "total": 966.0,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
       "commit": "7aa4d967e",
       "origin": "override"
      },
-     "E": 1012.0,
-     "E_total": 1783.3,
+     "E": 966.0,
+     "E_total": 1737.3,
      "O": 0.0,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -8475,7 +8475,7 @@
       "origin": "override"
      },
      "E": 666.0,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 0.0,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -8494,7 +8494,7 @@
       "origin": "override"
      },
      "E": 105.3,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 0.0,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -8845,17 +8845,17 @@
      "slot": "L20.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 1012.0,
+     "cycles": 966.0,
      "grade": "measured-current-RTL",
-     "total": 1012.0,
+     "total": 966.0,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
       "commit": "7aa4d967e",
       "origin": "override"
      },
-     "E": 1012.0,
-     "E_total": 1783.3,
+     "E": 966.0,
+     "E_total": 1737.3,
      "O": 0.0,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -8874,7 +8874,7 @@
       "origin": "override"
      },
      "E": 666.0,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 0.0,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -8893,7 +8893,7 @@
       "origin": "override"
      },
      "E": 105.3,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 0.0,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -9187,17 +9187,17 @@
      "slot": "L21.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 361.87,
+     "cycles": 328.99,
      "grade": "measured-current-RTL",
-     "total": 361.87,
+     "total": 328.99,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
       "commit": "7aa4d967e",
       "origin": "override"
      },
-     "E": 1012.0,
-     "E_total": 1783.3,
+     "E": 966.0,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -9206,9 +9206,9 @@
      "slot": "L21.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 238.15,
+     "cycles": 226.82,
      "grade": "modelled-PHY",
-     "total": 238.15,
+     "total": 226.82,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
@@ -9216,7 +9216,7 @@
       "origin": "override"
      },
      "E": 666.0,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -9225,9 +9225,9 @@
      "slot": "L21.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 37.65,
+     "cycles": 35.86,
      "grade": "priced",
-     "total": 37.65,
+     "total": 35.86,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
@@ -9235,7 +9235,7 @@
       "origin": "override"
      },
      "E": 105.3,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -9529,17 +9529,17 @@
      "slot": "L22.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 361.87,
+     "cycles": 328.99,
      "grade": "measured-current-RTL",
-     "total": 361.87,
+     "total": 328.99,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
       "commit": "7aa4d967e",
       "origin": "override"
      },
-     "E": 1012.0,
-     "E_total": 1783.3,
+     "E": 966.0,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -9548,9 +9548,9 @@
      "slot": "L22.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 238.15,
+     "cycles": 226.82,
      "grade": "modelled-PHY",
-     "total": 238.15,
+     "total": 226.82,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
@@ -9558,7 +9558,7 @@
       "origin": "override"
      },
      "E": 666.0,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -9567,9 +9567,9 @@
      "slot": "L22.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 37.65,
+     "cycles": 35.86,
      "grade": "priced",
-     "total": 37.65,
+     "total": 35.86,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
@@ -9577,7 +9577,7 @@
       "origin": "override"
      },
      "E": 105.3,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -9871,17 +9871,17 @@
      "slot": "L23.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 361.87,
+     "cycles": 328.99,
      "grade": "measured-current-RTL",
-     "total": 361.87,
+     "total": 328.99,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
       "commit": "7aa4d967e",
       "origin": "override"
      },
-     "E": 1012.0,
-     "E_total": 1783.3,
+     "E": 966.0,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -9890,9 +9890,9 @@
      "slot": "L23.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 238.15,
+     "cycles": 226.82,
      "grade": "modelled-PHY",
-     "total": 238.15,
+     "total": 226.82,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
@@ -9900,7 +9900,7 @@
       "origin": "override"
      },
      "E": 666.0,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -9909,9 +9909,9 @@
      "slot": "L23.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 37.65,
+     "cycles": 35.86,
      "grade": "priced",
-     "total": 37.65,
+     "total": 35.86,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
@@ -9919,7 +9919,7 @@
       "origin": "override"
      },
      "E": 105.3,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -10270,17 +10270,17 @@
      "slot": "L24.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 1012.0,
+     "cycles": 966.0,
      "grade": "measured-current-RTL",
-     "total": 1012.0,
+     "total": 966.0,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
       "commit": "7aa4d967e",
       "origin": "override"
      },
-     "E": 1012.0,
-     "E_total": 1783.3,
+     "E": 966.0,
+     "E_total": 1737.3,
      "O": 0.0,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -10299,7 +10299,7 @@
       "origin": "override"
      },
      "E": 666.0,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 0.0,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -10318,7 +10318,7 @@
       "origin": "override"
      },
      "E": 105.3,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 0.0,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -10612,17 +10612,17 @@
      "slot": "L25.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 361.87,
+     "cycles": 328.99,
      "grade": "measured-current-RTL",
-     "total": 361.87,
+     "total": 328.99,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
       "commit": "7aa4d967e",
       "origin": "override"
      },
-     "E": 1012.0,
-     "E_total": 1783.3,
+     "E": 966.0,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -10631,9 +10631,9 @@
      "slot": "L25.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 238.15,
+     "cycles": 226.82,
      "grade": "modelled-PHY",
-     "total": 238.15,
+     "total": 226.82,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
@@ -10641,7 +10641,7 @@
       "origin": "override"
      },
      "E": 666.0,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -10650,9 +10650,9 @@
      "slot": "L25.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 37.65,
+     "cycles": 35.86,
      "grade": "priced",
-     "total": 37.65,
+     "total": 35.86,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
@@ -10660,7 +10660,7 @@
       "origin": "override"
      },
      "E": 105.3,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -10954,17 +10954,17 @@
      "slot": "L26.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 361.87,
+     "cycles": 328.99,
      "grade": "measured-current-RTL",
-     "total": 361.87,
+     "total": 328.99,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
       "commit": "7aa4d967e",
       "origin": "override"
      },
-     "E": 1012.0,
-     "E_total": 1783.3,
+     "E": 966.0,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -10973,9 +10973,9 @@
      "slot": "L26.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 238.15,
+     "cycles": 226.82,
      "grade": "modelled-PHY",
-     "total": 238.15,
+     "total": 226.82,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
@@ -10983,7 +10983,7 @@
       "origin": "override"
      },
      "E": 666.0,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -10992,9 +10992,9 @@
      "slot": "L26.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 37.65,
+     "cycles": 35.86,
      "grade": "priced",
-     "total": 37.65,
+     "total": 35.86,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
@@ -11002,7 +11002,7 @@
       "origin": "override"
      },
      "E": 105.3,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -11296,17 +11296,17 @@
      "slot": "L27.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 361.87,
+     "cycles": 328.99,
      "grade": "measured-current-RTL",
-     "total": 361.87,
+     "total": 328.99,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
       "commit": "7aa4d967e",
       "origin": "override"
      },
-     "E": 1012.0,
-     "E_total": 1783.3,
+     "E": 966.0,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -11315,9 +11315,9 @@
      "slot": "L27.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 238.15,
+     "cycles": 226.82,
      "grade": "modelled-PHY",
-     "total": 238.15,
+     "total": 226.82,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
@@ -11325,7 +11325,7 @@
       "origin": "override"
      },
      "E": 666.0,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -11334,9 +11334,9 @@
      "slot": "L27.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 37.65,
+     "cycles": 35.86,
      "grade": "priced",
-     "total": 37.65,
+     "total": 35.86,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
@@ -11344,7 +11344,7 @@
       "origin": "override"
      },
      "E": 105.3,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -11695,17 +11695,17 @@
      "slot": "L28.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 1012.0,
+     "cycles": 966.0,
      "grade": "measured-current-RTL",
-     "total": 1012.0,
+     "total": 966.0,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
       "commit": "7aa4d967e",
       "origin": "override"
      },
-     "E": 1012.0,
-     "E_total": 1783.3,
+     "E": 966.0,
+     "E_total": 1737.3,
      "O": 0.0,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -11724,7 +11724,7 @@
       "origin": "override"
      },
      "E": 666.0,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 0.0,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -11743,7 +11743,7 @@
       "origin": "override"
      },
      "E": 105.3,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 0.0,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -12037,17 +12037,17 @@
      "slot": "L29.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 361.87,
+     "cycles": 328.99,
      "grade": "measured-current-RTL",
-     "total": 361.87,
+     "total": 328.99,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
       "commit": "7aa4d967e",
       "origin": "override"
      },
-     "E": 1012.0,
-     "E_total": 1783.3,
+     "E": 966.0,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -12056,9 +12056,9 @@
      "slot": "L29.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 238.15,
+     "cycles": 226.82,
      "grade": "modelled-PHY",
-     "total": 238.15,
+     "total": 226.82,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
@@ -12066,7 +12066,7 @@
       "origin": "override"
      },
      "E": 666.0,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -12075,9 +12075,9 @@
      "slot": "L29.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 37.65,
+     "cycles": 35.86,
      "grade": "priced",
-     "total": 37.65,
+     "total": 35.86,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
@@ -12085,7 +12085,7 @@
       "origin": "override"
      },
      "E": 105.3,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -12379,17 +12379,17 @@
      "slot": "L3.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 361.87,
+     "cycles": 328.99,
      "grade": "measured-current-RTL",
-     "total": 361.87,
+     "total": 328.99,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
       "commit": "7aa4d967e",
       "origin": "override"
      },
-     "E": 1012.0,
-     "E_total": 1783.3,
+     "E": 966.0,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -12398,9 +12398,9 @@
      "slot": "L3.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 238.15,
+     "cycles": 226.82,
      "grade": "modelled-PHY",
-     "total": 238.15,
+     "total": 226.82,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
@@ -12408,7 +12408,7 @@
       "origin": "override"
      },
      "E": 666.0,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -12417,9 +12417,9 @@
      "slot": "L3.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 37.65,
+     "cycles": 35.86,
      "grade": "priced",
-     "total": 37.65,
+     "total": 35.86,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
@@ -12427,7 +12427,7 @@
       "origin": "override"
      },
      "E": 105.3,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -12721,17 +12721,17 @@
      "slot": "L30.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 361.87,
+     "cycles": 328.99,
      "grade": "measured-current-RTL",
-     "total": 361.87,
+     "total": 328.99,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
       "commit": "7aa4d967e",
       "origin": "override"
      },
-     "E": 1012.0,
-     "E_total": 1783.3,
+     "E": 966.0,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -12740,9 +12740,9 @@
      "slot": "L30.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 238.15,
+     "cycles": 226.82,
      "grade": "modelled-PHY",
-     "total": 238.15,
+     "total": 226.82,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
@@ -12750,7 +12750,7 @@
       "origin": "override"
      },
      "E": 666.0,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -12759,9 +12759,9 @@
      "slot": "L30.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 37.65,
+     "cycles": 35.86,
      "grade": "priced",
-     "total": 37.65,
+     "total": 35.86,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
@@ -12769,7 +12769,7 @@
       "origin": "override"
      },
      "E": 105.3,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -13063,17 +13063,17 @@
      "slot": "L31.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 361.87,
+     "cycles": 328.99,
      "grade": "measured-current-RTL",
-     "total": 361.87,
+     "total": 328.99,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
       "commit": "7aa4d967e",
       "origin": "override"
      },
-     "E": 1012.0,
-     "E_total": 1783.3,
+     "E": 966.0,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -13082,9 +13082,9 @@
      "slot": "L31.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 238.15,
+     "cycles": 226.82,
      "grade": "modelled-PHY",
-     "total": 238.15,
+     "total": 226.82,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
@@ -13092,7 +13092,7 @@
       "origin": "override"
      },
      "E": 666.0,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -13101,9 +13101,9 @@
      "slot": "L31.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 37.65,
+     "cycles": 35.86,
      "grade": "priced",
-     "total": 37.65,
+     "total": 35.86,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
@@ -13111,7 +13111,7 @@
       "origin": "override"
      },
      "E": 105.3,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -13462,17 +13462,17 @@
      "slot": "L32.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 1012.0,
+     "cycles": 966.0,
      "grade": "measured-current-RTL",
-     "total": 1012.0,
+     "total": 966.0,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
       "commit": "7aa4d967e",
       "origin": "override"
      },
-     "E": 1012.0,
-     "E_total": 1783.3,
+     "E": 966.0,
+     "E_total": 1737.3,
      "O": 0.0,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -13491,7 +13491,7 @@
       "origin": "override"
      },
      "E": 666.0,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 0.0,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -13510,7 +13510,7 @@
       "origin": "override"
      },
      "E": 105.3,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 0.0,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -13804,17 +13804,17 @@
      "slot": "L33.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 361.87,
+     "cycles": 328.99,
      "grade": "measured-current-RTL",
-     "total": 361.87,
+     "total": 328.99,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
       "commit": "7aa4d967e",
       "origin": "override"
      },
-     "E": 1012.0,
-     "E_total": 1783.3,
+     "E": 966.0,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -13823,9 +13823,9 @@
      "slot": "L33.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 238.15,
+     "cycles": 226.82,
      "grade": "modelled-PHY",
-     "total": 238.15,
+     "total": 226.82,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
@@ -13833,7 +13833,7 @@
       "origin": "override"
      },
      "E": 666.0,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -13842,9 +13842,9 @@
      "slot": "L33.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 37.65,
+     "cycles": 35.86,
      "grade": "priced",
-     "total": 37.65,
+     "total": 35.86,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
@@ -13852,7 +13852,7 @@
       "origin": "override"
      },
      "E": 105.3,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -14146,17 +14146,17 @@
      "slot": "L34.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 361.87,
+     "cycles": 328.99,
      "grade": "measured-current-RTL",
-     "total": 361.87,
+     "total": 328.99,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
       "commit": "7aa4d967e",
       "origin": "override"
      },
-     "E": 1012.0,
-     "E_total": 1783.3,
+     "E": 966.0,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -14165,9 +14165,9 @@
      "slot": "L34.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 238.15,
+     "cycles": 226.82,
      "grade": "modelled-PHY",
-     "total": 238.15,
+     "total": 226.82,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
@@ -14175,7 +14175,7 @@
       "origin": "override"
      },
      "E": 666.0,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -14184,9 +14184,9 @@
      "slot": "L34.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 37.65,
+     "cycles": 35.86,
      "grade": "priced",
-     "total": 37.65,
+     "total": 35.86,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
@@ -14194,7 +14194,7 @@
       "origin": "override"
      },
      "E": 105.3,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -14488,17 +14488,17 @@
      "slot": "L35.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 361.87,
+     "cycles": 328.99,
      "grade": "measured-current-RTL",
-     "total": 361.87,
+     "total": 328.99,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
       "commit": "7aa4d967e",
       "origin": "override"
      },
-     "E": 1012.0,
-     "E_total": 1783.3,
+     "E": 966.0,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -14507,9 +14507,9 @@
      "slot": "L35.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 238.15,
+     "cycles": 226.82,
      "grade": "modelled-PHY",
-     "total": 238.15,
+     "total": 226.82,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
@@ -14517,7 +14517,7 @@
       "origin": "override"
      },
      "E": 666.0,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -14526,9 +14526,9 @@
      "slot": "L35.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 37.65,
+     "cycles": 35.86,
      "grade": "priced",
-     "total": 37.65,
+     "total": 35.86,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
@@ -14536,7 +14536,7 @@
       "origin": "override"
      },
      "E": 105.3,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -14887,17 +14887,17 @@
      "slot": "L36.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 1012.0,
+     "cycles": 966.0,
      "grade": "measured-current-RTL",
-     "total": 1012.0,
+     "total": 966.0,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
       "commit": "7aa4d967e",
       "origin": "override"
      },
-     "E": 1012.0,
-     "E_total": 1783.3,
+     "E": 966.0,
+     "E_total": 1737.3,
      "O": 0.0,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -14916,7 +14916,7 @@
       "origin": "override"
      },
      "E": 666.0,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 0.0,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -14935,7 +14935,7 @@
       "origin": "override"
      },
      "E": 105.3,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 0.0,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -15229,17 +15229,17 @@
      "slot": "L37.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 361.87,
+     "cycles": 328.99,
      "grade": "measured-current-RTL",
-     "total": 361.87,
+     "total": 328.99,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
       "commit": "7aa4d967e",
       "origin": "override"
      },
-     "E": 1012.0,
-     "E_total": 1783.3,
+     "E": 966.0,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -15248,9 +15248,9 @@
      "slot": "L37.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 238.15,
+     "cycles": 226.82,
      "grade": "modelled-PHY",
-     "total": 238.15,
+     "total": 226.82,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
@@ -15258,7 +15258,7 @@
       "origin": "override"
      },
      "E": 666.0,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -15267,9 +15267,9 @@
      "slot": "L37.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 37.65,
+     "cycles": 35.86,
      "grade": "priced",
-     "total": 37.65,
+     "total": 35.86,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
@@ -15277,7 +15277,7 @@
       "origin": "override"
      },
      "E": 105.3,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -15571,17 +15571,17 @@
      "slot": "L38.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 361.87,
+     "cycles": 328.99,
      "grade": "measured-current-RTL",
-     "total": 361.87,
+     "total": 328.99,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
       "commit": "7aa4d967e",
       "origin": "override"
      },
-     "E": 1012.0,
-     "E_total": 1783.3,
+     "E": 966.0,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -15590,9 +15590,9 @@
      "slot": "L38.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 238.15,
+     "cycles": 226.82,
      "grade": "modelled-PHY",
-     "total": 238.15,
+     "total": 226.82,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
@@ -15600,7 +15600,7 @@
       "origin": "override"
      },
      "E": 666.0,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -15609,9 +15609,9 @@
      "slot": "L38.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 37.65,
+     "cycles": 35.86,
      "grade": "priced",
-     "total": 37.65,
+     "total": 35.86,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
@@ -15619,7 +15619,7 @@
       "origin": "override"
      },
      "E": 105.3,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -15913,17 +15913,17 @@
      "slot": "L39.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 361.87,
+     "cycles": 328.99,
      "grade": "measured-current-RTL",
-     "total": 361.87,
+     "total": 328.99,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
       "commit": "7aa4d967e",
       "origin": "override"
      },
-     "E": 1012.0,
-     "E_total": 1783.3,
+     "E": 966.0,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -15932,9 +15932,9 @@
      "slot": "L39.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 238.15,
+     "cycles": 226.82,
      "grade": "modelled-PHY",
-     "total": 238.15,
+     "total": 226.82,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
@@ -15942,7 +15942,7 @@
       "origin": "override"
      },
      "E": 666.0,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -15951,9 +15951,9 @@
      "slot": "L39.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 37.65,
+     "cycles": 35.86,
      "grade": "priced",
-     "total": 37.65,
+     "total": 35.86,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
@@ -15961,7 +15961,7 @@
       "origin": "override"
      },
      "E": 105.3,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -16255,17 +16255,17 @@
      "slot": "L4.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 361.87,
+     "cycles": 328.99,
      "grade": "measured-current-RTL",
-     "total": 361.87,
+     "total": 328.99,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
       "commit": "7aa4d967e",
       "origin": "override"
      },
-     "E": 1012.0,
-     "E_total": 1783.3,
+     "E": 966.0,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -16274,9 +16274,9 @@
      "slot": "L4.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 238.15,
+     "cycles": 226.82,
      "grade": "modelled-PHY",
-     "total": 238.15,
+     "total": 226.82,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
@@ -16284,7 +16284,7 @@
       "origin": "override"
      },
      "E": 666.0,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -16293,9 +16293,9 @@
      "slot": "L4.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 37.65,
+     "cycles": 35.86,
      "grade": "priced",
-     "total": 37.65,
+     "total": 35.86,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
@@ -16303,7 +16303,7 @@
       "origin": "override"
      },
      "E": 105.3,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -16597,17 +16597,17 @@
      "slot": "L5.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 361.87,
+     "cycles": 328.99,
      "grade": "measured-current-RTL",
-     "total": 361.87,
+     "total": 328.99,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
       "commit": "7aa4d967e",
       "origin": "override"
      },
-     "E": 1012.0,
-     "E_total": 1783.3,
+     "E": 966.0,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -16616,9 +16616,9 @@
      "slot": "L5.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 238.15,
+     "cycles": 226.82,
      "grade": "modelled-PHY",
-     "total": 238.15,
+     "total": 226.82,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
@@ -16626,7 +16626,7 @@
       "origin": "override"
      },
      "E": 666.0,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -16635,9 +16635,9 @@
      "slot": "L5.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 37.65,
+     "cycles": 35.86,
      "grade": "priced",
-     "total": 37.65,
+     "total": 35.86,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
@@ -16645,7 +16645,7 @@
       "origin": "override"
      },
      "E": 105.3,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -16939,17 +16939,17 @@
      "slot": "L6.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 361.87,
+     "cycles": 328.99,
      "grade": "measured-current-RTL",
-     "total": 361.87,
+     "total": 328.99,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
       "commit": "7aa4d967e",
       "origin": "override"
      },
-     "E": 1012.0,
-     "E_total": 1783.3,
+     "E": 966.0,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -16958,9 +16958,9 @@
      "slot": "L6.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 238.15,
+     "cycles": 226.82,
      "grade": "modelled-PHY",
-     "total": 238.15,
+     "total": 226.82,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
@@ -16968,7 +16968,7 @@
       "origin": "override"
      },
      "E": 666.0,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -16977,9 +16977,9 @@
      "slot": "L6.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 37.65,
+     "cycles": 35.86,
      "grade": "priced",
-     "total": 37.65,
+     "total": 35.86,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
@@ -16987,7 +16987,7 @@
       "origin": "override"
      },
      "E": 105.3,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -17281,17 +17281,17 @@
      "slot": "L7.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 361.87,
+     "cycles": 328.99,
      "grade": "measured-current-RTL",
-     "total": 361.87,
+     "total": 328.99,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
       "commit": "7aa4d967e",
       "origin": "override"
      },
-     "E": 1012.0,
-     "E_total": 1783.3,
+     "E": 966.0,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -17300,9 +17300,9 @@
      "slot": "L7.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 238.15,
+     "cycles": 226.82,
      "grade": "modelled-PHY",
-     "total": 238.15,
+     "total": 226.82,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
@@ -17310,7 +17310,7 @@
       "origin": "override"
      },
      "E": 666.0,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -17319,9 +17319,9 @@
      "slot": "L7.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 37.65,
+     "cycles": 35.86,
      "grade": "priced",
-     "total": 37.65,
+     "total": 35.86,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
@@ -17329,7 +17329,7 @@
       "origin": "override"
      },
      "E": 105.3,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -17680,17 +17680,17 @@
      "slot": "L8.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 1012.0,
+     "cycles": 966.0,
      "grade": "measured-current-RTL",
-     "total": 1012.0,
+     "total": 966.0,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
       "commit": "7aa4d967e",
       "origin": "override"
      },
-     "E": 1012.0,
-     "E_total": 1783.3,
+     "E": 966.0,
+     "E_total": 1737.3,
      "O": 0.0,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -17709,7 +17709,7 @@
       "origin": "override"
      },
      "E": 666.0,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 0.0,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -17728,7 +17728,7 @@
       "origin": "override"
      },
      "E": 105.3,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 0.0,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -18022,17 +18022,17 @@
      "slot": "L9.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 361.87,
+     "cycles": 328.99,
      "grade": "measured-current-RTL",
-     "total": 361.87,
+     "total": 328.99,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
       "commit": "7aa4d967e",
       "origin": "override"
      },
-     "E": 1012.0,
-     "E_total": 1783.3,
+     "E": 966.0,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -18041,9 +18041,9 @@
      "slot": "L9.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 238.15,
+     "cycles": 226.82,
      "grade": "modelled-PHY",
-     "total": 238.15,
+     "total": 226.82,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
@@ -18051,7 +18051,7 @@
       "origin": "override"
      },
      "E": 666.0,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""
@@ -18060,9 +18060,9 @@
      "slot": "L9.xdie.o-group reduce-mcast (8 contributors)",
      "kind": "xdie",
      "n": 1,
-     "cycles": 37.65,
+     "cycles": 35.86,
      "grade": "priced",
-     "total": 37.65,
+     "total": 35.86,
      "source": {
       "record": "results/rtl/xdie_hbm_1019/record.json",
       "pointer": "rows.o-group reduce-mcast (8 contributors)",
@@ -18070,7 +18070,7 @@
       "origin": "override"
      },
      "E": 105.3,
-     "E_total": 1783.3,
+     "E_total": 1737.3,
      "O": 1145.63,
      "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
      "part": ""

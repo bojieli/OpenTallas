@@ -274,24 +274,24 @@
   "hbm_gen_ds": {
    "ar": {
     "title": "HBM d4g GEN2 die, DeepSeek-V4.1 (TP96 x quadrants), 1M context, AR",
-    "tok_s": 1677.2,
-    "T_token_cycles": 715485.2,
-    "per_accepted_cycles": 715485.2,
+    "tok_s": 1681.5,
+    "T_token_cycles": 713645.2,
+    "per_accepted_cycles": 713645.2,
     "tau": null,
-    "pct_measured_current_rtl": 20.83,
-    "banner": "20.8% of token cycles measured on current RTL (0.0% on older RTL, 7.2% modelled PHY, 72.0% priced)",
+    "pct_measured_current_rtl": 20.68,
+    "banner": "20.7% of token cycles measured on current RTL (0.0% on older RTL, 7.1% modelled PHY, 72.2% priced)",
     "by_grade": {
-     "measured-current-RTL": 149035.8,
+     "measured-current-RTL": 147615.6,
      "measured-old-RTL": 0,
-     "modelled-PHY": 51244.2,
-     "priced": 515205.2
+     "modelled-PHY": 50881.6,
+     "priced": 515148.0
     },
     "price_of_record": {
      "tok_s": 1905.4,
      "cycles": 629775.1,
      "source": "results/arch/token_path_1018/inputs/hbm_ds_priced_layers_all.json"
     },
-    "vs_price_pct": -11.98
+    "vs_price_pct": -11.75
    },
    "mtp": {
     "title": "HBM d4g GEN2 die, DeepSeek-V4.1, 1M context, MTP (priced only)",
