@@ -1,0 +1,533 @@
+{
+  "odb_sha256": "b4cf728180a1f9c9bd660ddba67658d472233f625511f8e877b5acd6b8c3f03f",
+  "macros": {
+    "u_ot_pr_core.u_core.u_end.u_link.g_bank\\[0\\].u_store.u_sram": {
+      "groups": {
+        "clk": {
+          "pins": 1,
+          "connected": 1,
+          "constant": 0,
+          "used_outputs": 0,
+          "rects": 1,
+          "minimum_rect_area_dbu2": null
+        },
+        "r_ce_in": {
+          "pins": 1,
+          "connected": 1,
+          "constant": 1,
+          "used_outputs": 0,
+          "rects": 1,
+          "minimum_rect_area_dbu2": null
+        },
+        "r_addr_in": {
+          "pins": 6,
+          "connected": 6,
+          "constant": 0,
+          "used_outputs": 0,
+          "rects": 6,
+          "minimum_rect_area_dbu2": null
+        },
+        "rd_out": {
+          "pins": 512,
+          "connected": 512,
+          "constant": 0,
+          "used_outputs": 137,
+          "rects": 512,
+          "minimum_rect_area_dbu2": null
+        },
+        "w_ce_in": {
+          "pins": 1,
+          "connected": 1,
+          "constant": 0,
+          "used_outputs": 0,
+          "rects": 1,
+          "minimum_rect_area_dbu2": null
+        },
+        "w_addr_in": {
+          "pins": 6,
+          "connected": 6,
+          "constant": 0,
+          "used_outputs": 0,
+          "rects": 6,
+          "minimum_rect_area_dbu2": null
+        },
+        "wd_in": {
+          "pins": 512,
+          "connected": 512,
+          "constant": 375,
+          "used_outputs": 0,
+          "rects": 512,
+          "minimum_rect_area_dbu2": null
+        },
+        "w_mask_in": {
+          "pins": 512,
+          "connected": 512,
+          "constant": 512,
+          "used_outputs": 0,
+          "rects": 512,
+          "minimum_rect_area_dbu2": null
+        },
+        "rr_en": {
+          "pins": 2,
+          "connected": 2,
+          "constant": 2,
+          "used_outputs": 0,
+          "rects": 2,
+          "minimum_rect_area_dbu2": null
+        },
+        "rr_addr": {
+          "pins": 12,
+          "connected": 12,
+          "constant": 12,
+          "used_outputs": 0,
+          "rects": 12,
+          "minimum_rect_area_dbu2": null
+        },
+        "cr_en": {
+          "pins": 2,
+          "connected": 2,
+          "constant": 2,
+          "used_outputs": 0,
+          "rects": 2,
+          "minimum_rect_area_dbu2": null
+        },
+        "cr_sel": {
+          "pins": 18,
+          "connected": 18,
+          "constant": 18,
+          "used_outputs": 0,
+          "rects": 18,
+          "minimum_rect_area_dbu2": null
+        },
+        "VDD": {
+          "pins": 1,
+          "connected": 1,
+          "constant": 0,
+          "used_outputs": 0,
+          "rects": 101,
+          "minimum_rect_area_dbu2": null
+        },
+        "VSS": {
+          "pins": 1,
+          "connected": 1,
+          "constant": 0,
+          "used_outputs": 0,
+          "rects": 101,
+          "minimum_rect_area_dbu2": null
+        }
+      },
+      "pg": [
+        {
+          "pin": "VDD",
+          "net": "VDD"
+        },
+        {
+          "pin": "VSS",
+          "net": "VSS"
+        }
+      ],
+      "clock": [
+        {
+          "pin": "clk",
+          "net": "clknet_1_0_0_ck"
+        }
+      ]
+    },
+    "u_ot_pr_core.u_core.u_end.u_link.g_bank\\[1\\].u_store.u_sram": {
+      "groups": {
+        "clk": {
+          "pins": 1,
+          "connected": 1,
+          "constant": 0,
+          "used_outputs": 0,
+          "rects": 1,
+          "minimum_rect_area_dbu2": null
+        },
+        "r_ce_in": {
+          "pins": 1,
+          "connected": 1,
+          "constant": 1,
+          "used_outputs": 0,
+          "rects": 1,
+          "minimum_rect_area_dbu2": null
+        },
+        "r_addr_in": {
+          "pins": 6,
+          "connected": 6,
+          "constant": 0,
+          "used_outputs": 0,
+          "rects": 6,
+          "minimum_rect_area_dbu2": null
+        },
+        "rd_out": {
+          "pins": 512,
+          "connected": 512,
+          "constant": 0,
+          "used_outputs": 137,
+          "rects": 512,
+          "minimum_rect_area_dbu2": null
+        },
+        "w_ce_in": {
+          "pins": 1,
+          "connected": 1,
+          "constant": 0,
+          "used_outputs": 0,
+          "rects": 1,
+          "minimum_rect_area_dbu2": null
+        },
+        "w_addr_in": {
+          "pins": 6,
+          "connected": 6,
+          "constant": 0,
+          "used_outputs": 0,
+          "rects": 6,
+          "minimum_rect_area_dbu2": null
+        },
+        "wd_in": {
+          "pins": 512,
+          "connected": 512,
+          "constant": 375,
+          "used_outputs": 0,
+          "rects": 512,
+          "minimum_rect_area_dbu2": null
+        },
+        "w_mask_in": {
+          "pins": 512,
+          "connected": 512,
+          "constant": 512,
+          "used_outputs": 0,
+          "rects": 512,
+          "minimum_rect_area_dbu2": null
+        },
+        "rr_en": {
+          "pins": 2,
+          "connected": 2,
+          "constant": 2,
+          "used_outputs": 0,
+          "rects": 2,
+          "minimum_rect_area_dbu2": null
+        },
+        "rr_addr": {
+          "pins": 12,
+          "connected": 12,
+          "constant": 12,
+          "used_outputs": 0,
+          "rects": 12,
+          "minimum_rect_area_dbu2": null
+        },
+        "cr_en": {
+          "pins": 2,
+          "connected": 2,
+          "constant": 2,
+          "used_outputs": 0,
+          "rects": 2,
+          "minimum_rect_area_dbu2": null
+        },
+        "cr_sel": {
+          "pins": 18,
+          "connected": 18,
+          "constant": 18,
+          "used_outputs": 0,
+          "rects": 18,
+          "minimum_rect_area_dbu2": null
+        },
+        "VDD": {
+          "pins": 1,
+          "connected": 1,
+          "constant": 0,
+          "used_outputs": 0,
+          "rects": 101,
+          "minimum_rect_area_dbu2": null
+        },
+        "VSS": {
+          "pins": 1,
+          "connected": 1,
+          "constant": 0,
+          "used_outputs": 0,
+          "rects": 101,
+          "minimum_rect_area_dbu2": null
+        }
+      },
+      "pg": [
+        {
+          "pin": "VDD",
+          "net": "VDD"
+        },
+        {
+          "pin": "VSS",
+          "net": "VSS"
+        }
+      ],
+      "clock": [
+        {
+          "pin": "clk",
+          "net": "clknet_1_1_0_ck"
+        }
+      ]
+    },
+    "u_ot_pr_core.u_core.u_end.u_link.g_bank\\[2\\].u_store.u_sram": {
+      "groups": {
+        "clk": {
+          "pins": 1,
+          "connected": 1,
+          "constant": 0,
+          "used_outputs": 0,
+          "rects": 1,
+          "minimum_rect_area_dbu2": null
+        },
+        "r_ce_in": {
+          "pins": 1,
+          "connected": 1,
+          "constant": 1,
+          "used_outputs": 0,
+          "rects": 1,
+          "minimum_rect_area_dbu2": null
+        },
+        "r_addr_in": {
+          "pins": 6,
+          "connected": 6,
+          "constant": 0,
+          "used_outputs": 0,
+          "rects": 6,
+          "minimum_rect_area_dbu2": null
+        },
+        "rd_out": {
+          "pins": 512,
+          "connected": 512,
+          "constant": 0,
+          "used_outputs": 137,
+          "rects": 512,
+          "minimum_rect_area_dbu2": null
+        },
+        "w_ce_in": {
+          "pins": 1,
+          "connected": 1,
+          "constant": 0,
+          "used_outputs": 0,
+          "rects": 1,
+          "minimum_rect_area_dbu2": null
+        },
+        "w_addr_in": {
+          "pins": 6,
+          "connected": 6,
+          "constant": 0,
+          "used_outputs": 0,
+          "rects": 6,
+          "minimum_rect_area_dbu2": null
+        },
+        "wd_in": {
+          "pins": 512,
+          "connected": 512,
+          "constant": 375,
+          "used_outputs": 0,
+          "rects": 512,
+          "minimum_rect_area_dbu2": null
+        },
+        "w_mask_in": {
+          "pins": 512,
+          "connected": 512,
+          "constant": 512,
+          "used_outputs": 0,
+          "rects": 512,
+          "minimum_rect_area_dbu2": null
+        },
+        "rr_en": {
+          "pins": 2,
+          "connected": 2,
+          "constant": 2,
+          "used_outputs": 0,
+          "rects": 2,
+          "minimum_rect_area_dbu2": null
+        },
+        "rr_addr": {
+          "pins": 12,
+          "connected": 12,
+          "constant": 12,
+          "used_outputs": 0,
+          "rects": 12,
+          "minimum_rect_area_dbu2": null
+        },
+        "cr_en": {
+          "pins": 2,
+          "connected": 2,
+          "constant": 2,
+          "used_outputs": 0,
+          "rects": 2,
+          "minimum_rect_area_dbu2": null
+        },
+        "cr_sel": {
+          "pins": 18,
+          "connected": 18,
+          "constant": 18,
+          "used_outputs": 0,
+          "rects": 18,
+          "minimum_rect_area_dbu2": null
+        },
+        "VDD": {
+          "pins": 1,
+          "connected": 1,
+          "constant": 0,
+          "used_outputs": 0,
+          "rects": 101,
+          "minimum_rect_area_dbu2": null
+        },
+        "VSS": {
+          "pins": 1,
+          "connected": 1,
+          "constant": 0,
+          "used_outputs": 0,
+          "rects": 101,
+          "minimum_rect_area_dbu2": null
+        }
+      },
+      "pg": [
+        {
+          "pin": "VDD",
+          "net": "VDD"
+        },
+        {
+          "pin": "VSS",
+          "net": "VSS"
+        }
+      ],
+      "clock": [
+        {
+          "pin": "clk",
+          "net": "clknet_1_0_0_ck"
+        }
+      ]
+    },
+    "u_ot_pr_core.u_core.u_end.u_link.g_bank\\[3\\].u_store.u_sram": {
+      "groups": {
+        "clk": {
+          "pins": 1,
+          "connected": 1,
+          "constant": 0,
+          "used_outputs": 0,
+          "rects": 1,
+          "minimum_rect_area_dbu2": null
+        },
+        "r_ce_in": {
+          "pins": 1,
+          "connected": 1,
+          "constant": 1,
+          "used_outputs": 0,
+          "rects": 1,
+          "minimum_rect_area_dbu2": null
+        },
+        "r_addr_in": {
+          "pins": 6,
+          "connected": 6,
+          "constant": 0,
+          "used_outputs": 0,
+          "rects": 6,
+          "minimum_rect_area_dbu2": null
+        },
+        "rd_out": {
+          "pins": 512,
+          "connected": 512,
+          "constant": 0,
+          "used_outputs": 137,
+          "rects": 512,
+          "minimum_rect_area_dbu2": null
+        },
+        "w_ce_in": {
+          "pins": 1,
+          "connected": 1,
+          "constant": 0,
+          "used_outputs": 0,
+          "rects": 1,
+          "minimum_rect_area_dbu2": null
+        },
+        "w_addr_in": {
+          "pins": 6,
+          "connected": 6,
+          "constant": 0,
+          "used_outputs": 0,
+          "rects": 6,
+          "minimum_rect_area_dbu2": null
+        },
+        "wd_in": {
+          "pins": 512,
+          "connected": 512,
+          "constant": 375,
+          "used_outputs": 0,
+          "rects": 512,
+          "minimum_rect_area_dbu2": null
+        },
+        "w_mask_in": {
+          "pins": 512,
+          "connected": 512,
+          "constant": 512,
+          "used_outputs": 0,
+          "rects": 512,
+          "minimum_rect_area_dbu2": null
+        },
+        "rr_en": {
+          "pins": 2,
+          "connected": 2,
+          "constant": 2,
+          "used_outputs": 0,
+          "rects": 2,
+          "minimum_rect_area_dbu2": null
+        },
+        "rr_addr": {
+          "pins": 12,
+          "connected": 12,
+          "constant": 12,
+          "used_outputs": 0,
+          "rects": 12,
+          "minimum_rect_area_dbu2": null
+        },
+        "cr_en": {
+          "pins": 2,
+          "connected": 2,
+          "constant": 2,
+          "used_outputs": 0,
+          "rects": 2,
+          "minimum_rect_area_dbu2": null
+        },
+        "cr_sel": {
+          "pins": 18,
+          "connected": 18,
+          "constant": 18,
+          "used_outputs": 0,
+          "rects": 18,
+          "minimum_rect_area_dbu2": null
+        },
+        "VDD": {
+          "pins": 1,
+          "connected": 1,
+          "constant": 0,
+          "used_outputs": 0,
+          "rects": 101,
+          "minimum_rect_area_dbu2": null
+        },
+        "VSS": {
+          "pins": 1,
+          "connected": 1,
+          "constant": 0,
+          "used_outputs": 0,
+          "rects": 101,
+          "minimum_rect_area_dbu2": null
+        }
+      },
+      "pg": [
+        {
+          "pin": "VDD",
+          "net": "VDD"
+        },
+        {
+          "pin": "VSS",
+          "net": "VSS"
+        }
+      ],
+      "clock": [
+        {
+          "pin": "clk",
+          "net": "clknet_1_1_0_ck"
+        }
+      ]
+    }
+  }
+}

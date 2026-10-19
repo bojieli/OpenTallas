@@ -1,0 +1,548 @@
+{
+  "odb": "/r/routes/gate/work/orfs/results/asap7/opentallas_qkd_d2d_static_asap7_ref_gate/base/1_synth.odb",
+  "sha256": "d63c51f7cff268b0d64ef0e257a50a46930d53129e2d7fa19c758da50be36992",
+  "dbu": 1000,
+  "functional_instances": 40694,
+  "macros": {
+    "u_ot_pr_core.u_core.u_end.u_link.g_bank\\[3\\].u_store.u_sram": {
+      "master": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin": [
+        0,
+        0
+      ],
+      "orient": "R0",
+      "width": 171288,
+      "height": 77784,
+      "pins": 1587
+    },
+    "u_ot_pr_core.u_core.u_end.u_link.g_bank\\[2\\].u_store.u_sram": {
+      "master": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin": [
+        0,
+        0
+      ],
+      "orient": "R0",
+      "width": 171288,
+      "height": 77784,
+      "pins": 1587
+    },
+    "u_ot_pr_core.u_core.u_end.u_link.g_bank\\[1\\].u_store.u_sram": {
+      "master": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin": [
+        0,
+        0
+      ],
+      "orient": "R0",
+      "width": 171288,
+      "height": 77784,
+      "pins": 1587
+    },
+    "u_ot_pr_core.u_core.u_end.u_link.g_bank\\[0\\].u_store.u_sram": {
+      "master": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin": [
+        0,
+        0
+      ],
+      "orient": "R0",
+      "width": 171288,
+      "height": 77784,
+      "pins": 1587
+    }
+  },
+  "nonclock_over32": [
+    {
+      "net": "ck",
+      "sinks": 11058,
+      "drivers": [],
+      "sample_loads": [
+        [
+          "u_ot_pr_core.u_core.u_st.vm_drained$_DFFE_PN0P_",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "CLK"
+        ],
+        [
+          "u_ot_pr_core.u_core.u_st.status_fresh$_DFF_PN0_",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "CLK"
+        ],
+        [
+          "u_ot_pr_core.u_core.u_st.result_value\\[9\\]$_DFFE_PN0P_",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "CLK"
+        ],
+        [
+          "u_ot_pr_core.u_core.u_st.result_value\\[8\\]$_DFFE_PN0P_",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "CLK"
+        ],
+        [
+          "u_ot_pr_core.u_core.u_st.result_value\\[7\\]$_DFFE_PN0P_",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "CLK"
+        ],
+        [
+          "u_ot_pr_core.u_core.u_st.result_value\\[6\\]$_DFFE_PN0P_",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "CLK"
+        ],
+        [
+          "u_ot_pr_core.u_core.u_st.result_value\\[5\\]$_DFFE_PN0P_",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "CLK"
+        ],
+        [
+          "u_ot_pr_core.u_core.u_st.result_value\\[4\\]$_DFFE_PN0P_",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "CLK"
+        ]
+      ]
+    },
+    {
+      "net": "_33204_",
+      "sinks": 3140,
+      "drivers": [
+        [
+          "_62283_",
+          "TIELOx1_ASAP7_75t_R",
+          "L"
+        ]
+      ],
+      "sample_loads": [
+        [
+          "u_ot_pr_core.u_core.u_end.u_link.g_bank\\[3\\].u_store.u_sram",
+          "ot_sram_1r1w_64x512_m1_r2c2",
+          "wd_in[511]"
+        ],
+        [
+          "u_ot_pr_core.u_core.u_end.u_link.g_bank\\[3\\].u_store.u_sram",
+          "ot_sram_1r1w_64x512_m1_r2c2",
+          "wd_in[510]"
+        ],
+        [
+          "u_ot_pr_core.u_core.u_end.u_link.g_bank\\[3\\].u_store.u_sram",
+          "ot_sram_1r1w_64x512_m1_r2c2",
+          "wd_in[509]"
+        ],
+        [
+          "u_ot_pr_core.u_core.u_end.u_link.g_bank\\[3\\].u_store.u_sram",
+          "ot_sram_1r1w_64x512_m1_r2c2",
+          "wd_in[508]"
+        ],
+        [
+          "u_ot_pr_core.u_core.u_end.u_link.g_bank\\[3\\].u_store.u_sram",
+          "ot_sram_1r1w_64x512_m1_r2c2",
+          "wd_in[507]"
+        ],
+        [
+          "u_ot_pr_core.u_core.u_end.u_link.g_bank\\[3\\].u_store.u_sram",
+          "ot_sram_1r1w_64x512_m1_r2c2",
+          "wd_in[506]"
+        ],
+        [
+          "u_ot_pr_core.u_core.u_end.u_link.g_bank\\[3\\].u_store.u_sram",
+          "ot_sram_1r1w_64x512_m1_r2c2",
+          "wd_in[505]"
+        ],
+        [
+          "u_ot_pr_core.u_core.u_end.u_link.g_bank\\[3\\].u_store.u_sram",
+          "ot_sram_1r1w_64x512_m1_r2c2",
+          "wd_in[504]"
+        ]
+      ]
+    },
+    {
+      "net": "_33203_",
+      "sinks": 1122,
+      "drivers": [
+        [
+          "_62282_",
+          "TIEHIx1_ASAP7_75t_R",
+          "H"
+        ]
+      ],
+      "sample_loads": [
+        [
+          "u_ot_pr_core.u_core.u_st.vm_drained$_DFFE_PN0P_",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "SETN"
+        ],
+        [
+          "u_ot_pr_core.u_core.u_st.status_fresh$_DFF_PN0_",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "SETN"
+        ],
+        [
+          "u_ot_pr_core.u_core.u_st.result_value\\[9\\]$_DFFE_PN0P_",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "SETN"
+        ],
+        [
+          "u_ot_pr_core.u_core.u_st.result_value\\[8\\]$_DFFE_PN0P_",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "SETN"
+        ],
+        [
+          "u_ot_pr_core.u_core.u_st.result_value\\[7\\]$_DFFE_PN0P_",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "SETN"
+        ],
+        [
+          "u_ot_pr_core.u_core.u_st.result_value\\[6\\]$_DFFE_PN0P_",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "SETN"
+        ],
+        [
+          "u_ot_pr_core.u_core.u_st.result_value\\[5\\]$_DFFE_PN0P_",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "SETN"
+        ],
+        [
+          "u_ot_pr_core.u_core.u_st.result_value\\[4\\]$_DFFE_PN0P_",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "SETN"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.u_core.u_reset_regions.g_p\\[1\\].q\\[2\\]",
+      "sinks": 158,
+      "drivers": [
+        [
+          "_45131_",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "sample_loads": [
+        [
+          "u_ot_pr_core.u_core.u_st.vm_drained$_DFFE_PN0P_",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.u_core.u_st.status_fresh$_DFF_PN0_",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.u_core.u_st.result_value\\[9\\]$_DFFE_PN0P_",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.u_core.u_st.result_value\\[8\\]$_DFFE_PN0P_",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.u_core.u_st.result_value\\[7\\]$_DFFE_PN0P_",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.u_core.u_st.result_value\\[6\\]$_DFFE_PN0P_",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.u_core.u_st.result_value\\[5\\]$_DFFE_PN0P_",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.u_core.u_st.result_value\\[4\\]$_DFFE_PN0P_",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "RESETN"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.u_core.u_reset_regions.g_p\\[1\\].q\\[5\\]",
+      "sinks": 136,
+      "drivers": [
+        [
+          "_45133_",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "sample_loads": [
+        [
+          "u_ot_pr_core.u_core.u_end.u_link.u_ctl.written\\[9\\]$_DFF_PN0_",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.u_core.u_end.u_link.u_ctl.written\\[8\\]$_DFF_PN0_",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.u_core.u_end.u_link.u_ctl.written\\[7\\]$_DFF_PN0_",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.u_core.u_end.u_link.u_ctl.written\\[6\\]$_DFF_PN0_",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.u_core.u_end.u_link.u_ctl.written\\[63\\]$_DFF_PN0_",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.u_core.u_end.u_link.u_ctl.written\\[62\\]$_DFF_PN0_",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.u_core.u_end.u_link.u_ctl.written\\[61\\]$_DFF_PN0_",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.u_core.u_end.u_link.u_ctl.written\\[60\\]$_DFF_PN0_",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "RESETN"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.u_core.u_reset_regions.g_p\\[1\\].q\\[4\\]",
+      "sinks": 78,
+      "drivers": [
+        [
+          "_45132_",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "sample_loads": [
+        [
+          "u_ot_pr_core.u_core.u_end.wcnt\\[5\\]$_DFFE_PN0P_",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.u_core.u_end.wcnt\\[4\\]$_DFFE_PN0P_",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.u_core.u_end.wcnt\\[3\\]$_DFFE_PN0P_",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.u_core.u_end.wcnt\\[2\\]$_DFFE_PN0P_",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.u_core.u_end.wcnt\\[1\\]$_DFFE_PN0P_",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.u_core.u_end.wcnt\\[0\\]$_DFFE_PN0P_",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.u_core.u_end.rx_slot\\[3\\]$_DFF_PN0_",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.u_core.u_end.rx_slot\\[2\\]$_DFF_PN0_",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "RESETN"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.u_core.u_reset_regions.g_p\\[1\\].q\\[0\\]",
+      "sinks": 73,
+      "drivers": [
+        [
+          "_45097_",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "sample_loads": [
+        [
+          "u_ot_pr_core.u_core.u_rec.transport_fault\\[7\\]$_DFF_PN0_",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.u_core.u_rec.transport_fault\\[6\\]$_DFF_PN0_",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.u_core.u_rec.transport_fault\\[5\\]$_DFF_PN0_",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.u_core.u_rec.transport_fault\\[4\\]$_DFF_PN0_",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.u_core.u_rec.transport_fault\\[3\\]$_DFF_PN0_",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.u_core.u_rec.transport_fault\\[2\\]$_DFF_PN0_",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.u_core.u_rec.transport_fault\\[1\\]$_DFF_PN0_",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.u_core.u_rec.transport_fault\\[0\\]$_DFF_PN0_",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "RESETN"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.u_core.u_reset_regions.g_p\\[1\\].q\\[1\\]",
+      "sinks": 53,
+      "drivers": [
+        [
+          "_45130_",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "sample_loads": [
+        [
+          "u_ot_pr_core.u_core.u_end.u_txcal.running$_DFF_PN0_",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.u_core.u_end.u_txcal.rep\\[4\\]$_DFFE_PN0P_",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.u_core.u_end.u_txcal.rep\\[3\\]$_DFFE_PN0P_",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.u_core.u_end.u_txcal.rep\\[2\\]$_DFFE_PN0P_",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.u_core.u_end.u_txcal.rep\\[1\\]$_DFFE_PN0P_",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.u_core.u_end.u_txcal.rep\\[0\\]$_DFFE_PN0P_",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.u_core.u_end.u_txcal.ptr\\[5\\]$_DFFE_PN0P_",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.u_core.u_end.u_txcal.ptr\\[4\\]$_DFFE_PN0P_",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "RESETN"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.u_core.u_reset_regions.g_p\\[1\\].q\\[6\\]",
+      "sinks": 53,
+      "drivers": [
+        [
+          "_45134_",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "sample_loads": [
+        [
+          "u_ot_pr_core.u_core.u_end.u_rxcal.running$_DFF_PN0_",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.u_core.u_end.u_rxcal.rep\\[4\\]$_DFFE_PN0P_",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.u_core.u_end.u_rxcal.rep\\[3\\]$_DFFE_PN0P_",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.u_core.u_end.u_rxcal.rep\\[2\\]$_DFFE_PN0P_",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.u_core.u_end.u_rxcal.rep\\[1\\]$_DFFE_PN0P_",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.u_core.u_end.u_rxcal.rep\\[0\\]$_DFFE_PN0P_",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.u_core.u_end.u_rxcal.ptr\\[5\\]$_DFFE_PN0P_",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.u_core.u_end.u_rxcal.ptr\\[4\\]$_DFFE_PN0P_",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "RESETN"
+        ]
+      ]
+    }
+  ],
+  "histogram": {
+    "1": 31225,
+    "5": 247,
+    "4": 787,
+    "3": 2170,
+    "2": 4795,
+    "6": 36,
+    "10": 2321,
+    "7": 19,
+    "9": 15,
+    "8": 18,
+    "1122": 1,
+    "3140": 1,
+    "0": 3455,
+    "11058": 1,
+    "13": 2,
+    "11": 1,
+    "73": 1,
+    "53": 2,
+    "158": 1,
+    "78": 1,
+    "136": 1
+  }
+}

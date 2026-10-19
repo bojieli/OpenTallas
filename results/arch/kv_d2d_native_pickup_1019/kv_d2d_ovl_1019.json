@@ -1,0 +1,88 @@
+{
+  "odb": "/r/routes/gate/work/orfs/results/asap7/opentallas_qkd_d2d_static_ovl_asap7_ref_gate/base/4_cts.odb",
+  "sha256": "8ac4476a1188bfe655983fc12b9df1aac0657932c26c8da6259b0ac176685fa1",
+  "dbu": 1000,
+  "functional_instances": 69212,
+  "macros": {
+    "u_ot_pr_core.u_core.u_end.u_link.g_bank\\[1\\].u_store.u_sram": {
+      "master": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin": [
+        259200,
+        43200
+      ],
+      "orient": "R0",
+      "width": 171288,
+      "height": 77784,
+      "pins": 1587
+    },
+    "u_ot_pr_core.u_core.u_end.u_link.g_bank\\[3\\].u_store.u_sram": {
+      "master": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin": [
+        259200,
+        172800
+      ],
+      "orient": "R0",
+      "width": 171288,
+      "height": 77784,
+      "pins": 1587
+    },
+    "u_ot_pr_core.u_core.u_end.u_link.g_bank\\[0\\].u_store.u_sram": {
+      "master": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin": [
+        43200,
+        43200
+      ],
+      "orient": "R0",
+      "width": 171288,
+      "height": 77784,
+      "pins": 1587
+    },
+    "u_ot_pr_core.u_core.u_end.u_link.g_bank\\[2\\].u_store.u_sram": {
+      "master": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin": [
+        43200,
+        172800
+      ],
+      "orient": "R0",
+      "width": 171288,
+      "height": 77784,
+      "pins": 1587
+    }
+  },
+  "nonclock_over32": [],
+  "histogram": {
+    "1": 58257,
+    "4": 629,
+    "3": 2280,
+    "2": 6041,
+    "5": 269,
+    "6": 64,
+    "7": 46,
+    "15": 38,
+    "10": 40,
+    "13": 42,
+    "18": 45,
+    "8": 53,
+    "24": 31,
+    "12": 51,
+    "9": 32,
+    "21": 308,
+    "14": 49,
+    "11": 33,
+    "17": 45,
+    "0": 4011,
+    "16": 44,
+    "20": 384,
+    "19": 43,
+    "23": 39,
+    "22": 46,
+    "26": 41,
+    "31": 42,
+    "29": 40,
+    "28": 42,
+    "25": 36,
+    "32": 97,
+    "27": 42,
+    "30": 50
+  }
+}
