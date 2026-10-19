@@ -17,7 +17,7 @@ verilator --version > $W/verilator.version
 cp $CASES $W/cases.txt
 O=$W/obj
 if [ ! -x $O/Vtb_$TOP ] || [ -n "${KVA_REBUILD:-}" ]; then
-/usr/bin/time -f "%e s %M KB" -o $W/build.time verilator --binary --timing -j ${KVA_J:-32} -O1 -Wno-fatal -Wno-lint -Wno-style \
+/usr/bin/time -f "%e s %M KB" -o $W/build.time verilator --binary --timing -j ${KVA_J:-32} -O1 ${KVA_VFLAGS:--fno-dfg} -Wno-fatal -Wno-lint -Wno-style \
     -Wno-TIMESCALEMOD -Wno-WIDTHCONCAT -Wno-MULTIDRIVEN --x-assign unique --x-initial unique \
     --top-module tb_$TOP -GMUT=0 -Mdir $O +define+SLICE_DRIVE=\"$H/drive_qwk_slice_attn_mu.svh\" +define+IDLE_EDGES=200 \
     +define+TAIL_EDGES=50 +incdir+$H +incdir+$SL \
