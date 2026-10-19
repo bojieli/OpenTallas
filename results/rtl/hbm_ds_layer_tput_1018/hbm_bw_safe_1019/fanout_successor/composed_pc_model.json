@@ -56,5 +56,15 @@
     "data_edges_added": 0,
     "estimated_added_ff_area_um2": 43.4,
     "routing": "Same localmacrobank/post paths, noexternalpins/noports; kept rowbank words prevent actual4-bank FF merge, WPcopies split real writeaddress cones, globalheadcopy separates PHY/global from32bankdecode. Actualall-driver32 required."
+  },
+  "regional_bank_control_successor": {
+    "base": "f84b1ab35",
+    "measured_failure": "command_bank_local[1]37loads;blk_bank[1:2]35loads;4cc/f84mapped actual32 gate",
+    "extra_ff": 36,
+    "structure": "three additional6-bit command bank+valid and refresh bank+valid copies, existing command/state edge, canonical group0; each copy decodes only8banks",
+    "data_edges_added": 0,
+    "sram_ports_added": 0,
+    "reset": "existing same-edge bank reset_regions[32+g] for g1..3; no new release edge",
+    "physical_status": "model only; exact next-state proof and actual D/CLK/reset/fanout census required"
   }
 }

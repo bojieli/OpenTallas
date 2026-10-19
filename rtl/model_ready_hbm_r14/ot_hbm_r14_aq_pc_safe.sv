@@ -177,13 +177,42 @@ module ot_hbm_r14_aq_pc_safe #(
   reg [31:0] open, refreshed;
   (* keep="true",dont_touch="true" *) reg [4:0] blk_bank;
   (* keep="true",dont_touch="true" *) reg blk_valid;
-  wire [31:0] blk=blk_valid?(32'b1<<blk_bank):32'b0;
+  wire [31:0] blk;
+  (* keep="true",dont_touch="true" *) reg[4:0]blk_bank_regions[1:3];
+  (* keep="true",dont_touch="true" *) reg[3:1]blk_valid_regions;
   reg [RW_ROW-1:0] orow [0:31];
   reg [1:0] rrds_c; reg [3:0] noact_c; reg [RW-1:0] ref_c; reg ref_pend; reg [4:0] rb; reg fault_r;
   reg [3:0] rtw_c, wtr_c; reg phase;
-  reg c_v; reg [2:0] c_op; reg [4:0] c_bank; wire [31:0] c_oh=command_bank_valid?(32'b1<<command_bank_local):32'b0;
+  reg c_v; reg [2:0] c_op; reg [4:0] c_bank; wire [31:0] c_oh;
   (* keep="true",dont_touch="true" *) reg [4:0] command_bank_local;
   (* keep="true",dont_touch="true" *) reg command_bank_valid; reg [RW_ROW-1:0] c_row;
+  (* keep="true",dont_touch="true" *) reg[4:0]command_bank_regions[1:3];
+  (* keep="true",dont_touch="true" *) reg[3:1]command_valid_regions;
+  wire blk_set=(ref_c==RW'(LEAD))?
+     (!ep&&!(pin!=0&&(bkey>=7'd32||ref_choice_protected))):ep_start;
+  wire blk_clear=((ref_c!=RW'(LEAD))&&!ep_start&&ep&&|(blk&open))||
+     (row_fire&&c_op==REFPB);
+  for(genvar g=1;g<4;g=g+1)begin:BANK_CONTROL_REGION
+    always @(posedge clk or negedge reset_regions[32+g])
+      if(!reset_regions[32+g])begin
+        command_bank_regions[g]<=0;command_valid_regions[g]<=0;
+        blk_bank_regions[g]<=0;blk_valid_regions[g]<=0;
+      end else begin
+        command_bank_regions[g]<=r_bank;command_valid_regions[g]<=slot_next&&r_v;
+        blk_bank_regions[g]<=blk_set?bsel:blk_bank;
+        blk_valid_regions[g]<=blk_clear?1'b0:(blk_set?1'b1:blk_valid);
+      end
+  end
+  for(genvar b=0;b<32;b=b+1)begin:BANK_CONTROL_DECODE
+    if(b/8==0)begin
+      assign c_oh[b]=command_bank_valid&&command_bank_local==5'(b);
+      assign blk[b]=blk_valid&&blk_bank==5'(b);
+    end else begin
+      assign c_oh[b]=command_valid_regions[b/8]&&command_bank_regions[b/8]==5'(b);
+      assign blk[b]=blk_valid_regions[b/8]&&blk_bank_regions[b/8]==5'(b);
+    end
+  end
+
   // Registered decoded commands share the original command capture edge.
   // The three decoded controls and row word are local to sixteen banks.
   (* keep="true",dont_touch="true" *) reg [21:0] row_local[0:3];
