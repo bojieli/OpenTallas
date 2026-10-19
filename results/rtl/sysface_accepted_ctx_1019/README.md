@@ -1,0 +1,7 @@
+Actual accepted-context observer proof (source72bf7edeb)
+
+Fleet Verilator5.050 epyc4 unitoth-ubuntu-3704788-1792425338 PASS. The REAL qfd_host_native_context_rx provides a fresh accepted_v pulse only from its existing successful acceptance branch. Acceptance semantics are unchanged; the observer checks freshpulse, valid, fulltag59/gen2, explicit epoch, currentprogramme epoch/digest/cap, ready and fault. OfferedE -> registeredctx_x atE+1. Tests cover allthree fillerusers, repeatedgood records, consecutive user0restore, eight rejected sameTAG records while that exact oldTAG remains valid before rejection (bad imageepoch/digest/cap, nativeactive, headerepoch/reserved, stage, segment), and reset cancelling pendingoffer. Rawaccept mutant1 and wrongusermask mutant2 FAIL with witnesses. No invalid record produces a loaderwrite.
+
+The payload registers are not reset; load resets low and gates all consumers. Payload is zeroed each idleedge, so no large reset-fanout cone is added by the129bit record. Physical fanout/sizing/clock/gate remain pending. FACE CTX_ACCEPTED=1 opt-in integrates the actualobserver output; legacy default0 retains behavior. The CTLM input landing/bank edge is a separate actualGI bench obligation; this bench does not substitute a bank or claim a measured E+3.
+
+Remaining production blockers: shared cold/re-admission prefix plus accepted user0 embedding, absoluteorigin, explicit init_u0, finalcontexts+23bitperiod+AW12 manifest, sourcepinned safephysicalkit and nativeTTFF. No final token or physical qualification claimed.

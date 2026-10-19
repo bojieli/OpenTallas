@@ -1,0 +1,4 @@
+ACCEPTCTX_FAIL MUT1 rejected identical TAG never loads; sticky observer fault
+[500000] %Fatal: tb_sysface_accepted_ctx.sv:18: Assertion failed in tb_sysface_accepted_ctx.check
+%Error: rtl/test/qwen_split/tb_sysface_accepted_ctx.sv:18: Verilog $stop
+Aborting...

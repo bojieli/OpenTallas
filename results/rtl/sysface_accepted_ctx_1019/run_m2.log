@@ -1,0 +1,4 @@
+ACCEPTCTX_FAIL MUT2 exact MU load E+1 before user0 restore
+[70000] %Fatal: tb_sysface_accepted_ctx.sv:18: Assertion failed in tb_sysface_accepted_ctx.check
+%Error: rtl/test/qwen_split/tb_sysface_accepted_ctx.sv:18: Verilog $stop
+Aborting...

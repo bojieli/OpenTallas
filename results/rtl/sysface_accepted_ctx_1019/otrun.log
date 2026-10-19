@@ -1,0 +1,25 @@
+ot-run: ot-epyc4       admits   951 GB (avail 779, growth 113, headroom 0, waiters 0/0 GB) load 80/128 running 36 disk 285 GB 
+ot-run: ot-epyc5       admits   731 GB (avail 625, growth 113, headroom 0, waiters 0/0 GB) load 87/128 running 17 disk 1146 GB 
+ot-run: ot-epyc6       admits   606 GB (avail 537, growth 113, headroom 0, waiters 0/0 GB) load 39/128 running 21 disk 6075 GB 
+ot-run: ot-epyc7       admits   835 GB (avail 685, growth 101, headroom 0, waiters 0/0 GB) load 60/96 running 24 disk 6397 GB 
+ot-run: ot-epyc8       admits  1000 GB (avail 813, growth 113, headroom 0, waiters 0/0 GB) load 61/128 running 28 disk 385 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/sysface-accepted-ctx-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/sysface-accepted-ctx-1019
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-3704788-1792425338 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+ACCEPTCTX_PASS MUT0 checks109 offerE ctxEplus1; actualbank timing still GI obligation
+- rtl/test/qwen_split/tb_sysface_accepted_ctx.sv:72: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.000 s; speed 17.241 ms/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB
+ACCEPTCTX_FAIL MUT1 rejected identical TAG never loads; sticky observer fault
+[500000] %Fatal: tb_sysface_accepted_ctx.sv:18: Assertion failed in tb_sysface_accepted_ctx.check
+%Error: rtl/test/qwen_split/tb_sysface_accepted_ctx.sv:18: Verilog $stop
+Aborting...
+ACCEPTCTX_FAIL MUT2 exact MU load E+1 before user0 restore
+[70000] %Fatal: tb_sysface_accepted_ctx.sv:18: Assertion failed in tb_sysface_accepted_ctx.check
+%Error: rtl/test/qwen_split/tb_sysface_accepted_ctx.sv:18: Verilog $stop
+Aborting...
+ACCEPTCTX_MATRIX_PASS
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-3704788-1792425338): exit 0
