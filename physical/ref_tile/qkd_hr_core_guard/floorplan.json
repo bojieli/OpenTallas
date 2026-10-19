@@ -123,7 +123,7 @@
  "blocks": [],
  "findings": [],
  "referenced": [
-  "rtl/qwen_sys/host_cluster_20261017/qkd_hr_core_guard.v",
+  "rtl/qwen_sys/mu_qwen_20261018/host_cluster_mu/qkd_hr_core_guard.v",
   "rtl/qwen_sys/host_20261013/qkd_host_rst_role_pins.sv",
   "rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv",
   "rtl/hdc/ingest/ot_hdc_ingest_fp8q.sv",
@@ -207,6 +207,7 @@
   "rtl/qwen_sys/system_20261008/ot_qfd_pkgctl.sv",
   "rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target.sv",
   "rtl/qwen_sys/host_20261013/qkd_host_program_loader_target.sv",
+  "rtl/qwen_sys/mu_qwen_20261018/qkd_host_native_token_endpoint_cancel_mu.sv",
   "physical/ref_tile/qkd_hr_core_guard/kit.env",
   "physical/ref_tile/qkd_hr_core_guard/clock.sdc",
   "physical/ref_tile/qkd_hr_core_guard/signoff.sdc",

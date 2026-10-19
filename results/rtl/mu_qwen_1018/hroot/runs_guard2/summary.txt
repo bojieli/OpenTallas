@@ -1,0 +1,5 @@
+# MU-KV-GUARD2 10-19: guard MU1 benches on origin/main f573a6d2b (endpoint_mu with MU-KV-PEER edit), Verilator 5.050, fleet ot-epyc8 (ot-run)
+MU_HROOT lint_guard_mu: PASS LINT_GUARD_MU qkd_hr_core_guard (u_rank__u_native = qkd_host_native_token_endpoint_cancel_mu, MU 1)
+MU_HROOT tb_mu_hroot_e2e rc=0: PASS MU_HROOT_E2E rounds=3 steps=12 writer_stages=432 rows=64+l+256u epochs={seq14,user2} retire=acceptance order
+MU_HROOT ep1 rc=0: FAIL MU_HROOT_E2E fails=134994 retires=0 requests=1 writer_stages=145
+MU_HROOT ep2 rc=0: FAIL MU_HROOT_E2E fails=18 retires=12 requests=12 writer_stages=432
