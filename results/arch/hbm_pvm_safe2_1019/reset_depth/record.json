@@ -1,0 +1,31 @@
+{
+  "schema": "opentallas.pvm_reset_depth_1019.v1",
+  "method": "Source-extracted actual s3 sixteen-copy reset assignments versus source-extracted actual old s2 two-stage landing; actualYosys0.68 fourstepSAT -set-init-zero -prove eq1 -verify",
+  "unit": "ot-epyc4:oth-ubuntu-4005186-1792429356",
+  "positive": "all16 familybits equal old2stage for arbitraryrstsequence fromreset-clearedinitialstate",
+  "mutants": {
+    "m1": "All15extra copies D=rst_n rather thanstage0:proofFAIL",
+    "m2": "All15extra copies D=stage1 rather thanstage0:proofFAIL"
+  },
+  "equations": [
+    "L0[n+1]=rst_n[n]",
+    "L1[n+1]=L0[n]",
+    "C[j,n+1]=L0[n] forj0..14",
+    "Everyfamilybit[n]=rst_n[n-2] afternochangebootguard"
+  ],
+  "guard": "Parent samplesrst low>=2edges, sameasoldlanding; no data/calendar orresetage addition",
+  "evidence_sha256": {
+    "original_s2_wrapper.v": "e584174807692e902e7d1ced842318e1b7c328ccf049cf593ea0a725d1275681",
+    "reset_depth_m1.sv": "2aec9d330f51f734f70fae55fa955adb750b24f3e2d62141c806610e54902971",
+    "reset_depth_m0.log": "9c7978fa62b2bc406fe020a84b5f03a7a80ebe79f5abfe73d2f9785fbe8a1672",
+    "reset_depth_m0.sv": "79ace1a807ef343804f1550244038728e68f14ad5f35f92c0ae1ed0c50bd568d",
+    "reset_depth_m1.log": "bb36c13e9328de895120a9982ab6d0d6c651124cb099964b33d6bcb1d15b10b4",
+    "run_reset_depth.sh": "3dc731c88ddf1cbc418d8e05c0ace602ca989353d9e573b7b39076010323a1c9",
+    "ot_rst_land.tsv": "f5c88526b38072d62b5dd3de3bbf37a65951af5e87ace08a374c7bc638502cfb",
+    "ot_rst_copies.ys": "bc0678aaf7b41cd5c10a7854b0b4b19920a66ef23f3b687e751b7b85e7d34ce3",
+    "reset_depth_m2.sv": "37b29ae9447664fad88af29a112b3d88c5a8d7e097ff17eba12888c19dc34cb2",
+    "reset_depth_m2.log": "0828ca4ed5c4663aa68a22e4b6b435f08a80f27eb3638fc6cd85af0220ed607a",
+    "ot_pin_regs_wrapper.v": "c283c6b1048c25eb8c5300426ca0bf9b63f0a9dfe576ea127dbc23ddcdfbcdd3"
+  },
+  "scope": "Reset phase proof only; no physicalclock/accessqualification"
+}
