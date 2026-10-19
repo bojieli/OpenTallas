@@ -1,0 +1,15 @@
+test_exact_binary_spine_reserves_and_bounds_every_stage (test_qwen_exact_corridor.ExactCorridor.test_exact_binary_spine_reserves_and_bounds_every_stage) ... ok
+test_full_footprint_overlap_not_origin_only (test_qwen_exact_corridor.ExactCorridor.test_full_footprint_overlap_not_origin_only) ... ok
+test_post_placement_reach_mutant_rejected (test_qwen_exact_corridor.ExactCorridor.test_post_placement_reach_mutant_rejected) ... ok
+test_region_tree_buffers_after_floorplan_are_obstacles (test_qwen_exact_corridor.ExactCorridor.test_region_tree_buffers_after_floorplan_are_obstacles) ... ok
+test_reserve_occupied_bays (test_qwen_exact_corridor.ExactCorridor.test_reserve_occupied_bays) ... ok
+test_actual_gen_clock_pins_and_missing_safe_ports (test_qwen_qphase.QPhase.test_actual_gen_clock_pins_and_missing_safe_ports) ... ok
+test_assumed_views_and_missing_corners_never_admit (test_qwen_qphase.QPhase.test_assumed_views_and_missing_corners_never_admit) ... ok
+test_cross_corner_receipt_rejected (test_qwen_qphase.QPhase.test_cross_corner_receipt_rejected) ... ok
+test_different_gen_cannot_join_qready (test_qwen_qphase.QPhase.test_different_gen_cannot_join_qready) ... ok
+test_tampered_arrival_rejected (test_qwen_qphase.QPhase.test_tampered_arrival_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.008s
+
+OK

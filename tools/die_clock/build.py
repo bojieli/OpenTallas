@@ -304,12 +304,18 @@ def build(a):
     # instantiate
     masters, cell_xy = {}, {}
 
-    def mk(name, cell, x, y):
+    def mk(name, cell, x, y, exact=False):
         if cell not in masters:
             masters[cell] = D.design.getDb().findMaster(cell)
             if not masters[cell]:
                 raise ValueError(f'no master {cell}')
-        sx, sy = sites.take(x, y)
+        if exact:
+            if masters[cell].getWidth()/u>XPITCH or masters[cell].getHeight()/u>YPITCH:
+                raise ValueError(f'exact bay too small for {cell}')
+            sx,sy=x,y
+            sites.occ.add((round(sx/XPITCH),round(sy/YPITCH)))
+        else:
+            sx, sy = sites.take(x, y)
         inst = odb.dbInst.create(blk, masters[cell], name)
         inst.setOrient('R0' if round(sy / YPITCH) % 2 == 0 else 'MX')
         inst.setLocation(round(sx * u), round(sy * u))
@@ -436,18 +442,36 @@ def build(a):
         rmodel = {t['name']: rec['trees'][t['name']]['model'].get('model_insertion_ps', 0.0) for t, _ in members}
         # Forwarded delivery does not balance the entire die against regional
         # insertion estimates. Neighbour matching remains a measured obligation.
-        sb = (rt.ForwardedBuilder(g, 'dc_spine') if topology == 'forwarded'
-              else rt.Builder(g, 'dc_spine', r_of=lambda key: rmodel.get(key, 0.0)))
+        exact=bool(sp_.get('exact_footprint_bays',False))
+        if exact and topology!='forwarded':raise ValueError('exact bays require strict forwarded topology')
+        if exact:
+            from qwen_exact_corridor import ExactBayGrid,ExactForwardedBuilder,check_reach
+            rows=[]
+            for obj in blk.getInsts():
+                if obj.getMaster().isBlock() or obj.isPlaced():
+                    bx=obj.getBBox();rows.append((obj.getName(),(bx.xMin()/u,bx.yMin()/u,bx.xMax()/u,bx.yMax()/u)))
+            eg=ExactBayGrid(D.W,D.H,rows)
+            sb=ExactForwardedBuilder(eg,'dc_spine')
+        else:
+            sb = (rt.ForwardedBuilder(g, 'dc_spine') if topology == 'forwarded'
+                  else rt.Builder(g, 'dc_spine', r_of=lambda key: rmodel.get(key, 0.0)))
         sxy = ((src_it.getBBox().xMin() + src_it.getBBox().xMax()) / 2 / u,
                (src_it.getBBox().yMin() + src_it.getBBox().yMax()) / 2 / u)
-        smodel = sb.build(src, sxy, rt.spine_leaves(members, cell_xy))
+        source_xy=sxy
+        sbn = 'dc_spine_src'
+        if exact:
+            source_xy=eg.reserve(eg.nearest_free(*sxy))
+            insts[sbn]=mk(sbn,rt.BUF,*source_xy,exact=True)
+            source_box=insts[sbn].findITerm('A').getBBox()
+            source_input=((source_box.xMin()+source_box.xMax())/2/u,(source_box.yMin()+source_box.yMax())/2/u)
+            source_reach=check_reach(eg.route_reserved(eg.cell(*sxy),eg.cell(*source_input)),sxy,source_input,eg)
+        smodel = sb.build(src, source_xy, rt.spine_leaves(members, cell_xy))
         for n, cell, x, y in sb.bufs:
-            insts[n] = mk(n, cell, x, y)
+            insts[n] = mk(n, cell, x, y,exact=exact)
             rec['cell_tree'][n] = 'spine'
         # the generator pin drives ONE spine source buffer beside it (a generator model without output drive left the
         # first trunk input at 382-413 ps slew); the spine starts at its output
-        sbn = 'dc_spine_src'
-        insts[sbn] = mk(sbn, rt.BUF, *sxy)
+        if not exact:insts[sbn] = mk(sbn, rt.BUF, *sxy)
         rec['cell_tree'][sbn] = 'spine'
         insts[sbn].findITerm('A').connect(src_net)
         spine_net = odb.dbNet.create(blk, 'n_dc_spine_src')
@@ -490,9 +514,28 @@ def build(a):
         rec['spine'] = dict(source=src, topology=topology, period=float(sp_.get('period', 833.333333)), members=[t['name'] for t, _ in members],
                             cells=len(sb.bufs) + 1, levels=max(lv.values(), default=0), model=smodel,
                             generator_pins_without_loads=orphan)
+        if exact:
+            # Measure actual placed pin coordinates; legal origins alone do not
+            # account for library pin offsets and must not waive reach.
+            for edge in sb.edges:
+                def endpoint(ref,output):
+                    kind,name=ref
+                    pin=(sbn+'/Y' if name==src else name) if kind=='pin' else name+('/Y' if output else '/A')
+                    it=blk.findITerm(pin)
+                    if not it:raise ValueError('exact corridor pin missing: '+pin)
+                    bb=it.getBBox();return ((bb.xMin()+bb.xMax())/2/u,(bb.yMin()+bb.yMax())/2/u)
+                edge['placed_pin_routed_bound_um']=check_reach(edge['route_cells'],endpoint(edge['driver'],True),endpoint(edge['load'],False),eg)
+            rec['spine']['exact_bay_edges']=sb.edges
+            rec['spine']['source_input_routed_bound_um']=source_reach
         log('SPINE', src, 'members', len(members), 'cells', len(sb.bufs) + 1, 'levels', rec['spine']['levels'],
             'model', json.dumps(smodel), 'generator pins left without loads', len(orphan), ' '.join(orphan[:20]))
     log('instantiated', len(rec['cells']), 'cells')
+    if getattr(a,'geometry_only',False):
+        rec['geometry_only']=True;rec['timing_qualified']=False
+        (out/'geometry_manifest.json').write_text(json.dumps(rec)+'\n')
+        if a.write_odb:D.design.writeDb(str(out/'geometry.odb'))
+        log('DIE_CLOCK_GEOMETRY_DONE',len(rec['cells']),'cells; no STA/admission')
+        return
     clocks_orig = list(clocks)
     if spec.get('clock_at_root_buffer'):
         # the PLL model has no output drive / timing arc (Qwen KV qkd_pllm: STA slew 114 ns at the root buffer input);
@@ -827,6 +870,7 @@ def main():
     ap.add_argument('--corner', default='tt')
     ap.add_argument('--only', default='')
     ap.add_argument('--write-odb', action='store_true')
+    ap.add_argument('--geometry-only', action='store_true',help='replay complete occupied topology; no timing/admission')
     ap.add_argument('--measure')
     a = ap.parse_args()
     if a.measure:

@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+    from qwen_exact_corridor import ExactBayGrid,check_reach; g=ExactBayGrid(500,30,[]); check_reach([(x,0) for x in range(40)],(-15,5),(395,5),g)
+                                                                                         ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch/claude/qwen-clock-phase-1019/baseline_measure/tools/die_clock/qwen_exact_corridor.py", line 64, in check_reach
+    if length>405+1e-7:raise ValueError(f'placed forwarded clock routed reach {length:.3f}um >405')
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: placed forwarded clock routed reach 410.000um >405

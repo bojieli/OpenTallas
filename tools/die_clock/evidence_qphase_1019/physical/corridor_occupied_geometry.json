@@ -1,0 +1,280 @@
+{
+ "schema": "opentallas.qwen.exact_corridor_geometry.v1",
+ "blocks_sha256": "efeda305ec8b150318215cfe0197f23f68f1ae43586f24157f46e9406fdd3f81",
+ "occupancy_sha256": "e5a6e1aa0a4b8d31726d2a87db17df38103a0bba41ef98cf57bbcd16a2bad810",
+ "clock_master_um": {
+  "BUFx24_ASAP7_75t_R": [
+   1.62,
+   0.27
+  ],
+  "BUFx12f_ASAP7_75t_R": [
+   0.972,
+   0.27
+  ]
+ },
+ "placed_std_count": 18333,
+ "start": [
+  1940,
+  854
+ ],
+ "end": [
+  1691,
+  877
+ ],
+ "grid_um": 10.0,
+ "strict_blocked_run_um": 380,
+ "restored_reset_bay_cells": 26637,
+ "path_steps": 670,
+ "witness_stations": [
+  {
+   "path_index": 0,
+   "cell": [
+    1940,
+    854
+   ],
+   "site": [
+    19401.12,
+    8540.1
+   ]
+  },
+  {
+   "path_index": 39,
+   "cell": [
+    1940,
+    893
+   ],
+   "site": [
+    19401.12,
+    8933.76
+   ]
+  },
+  {
+   "path_index": 78,
+   "cell": [
+    1940,
+    932
+   ],
+   "site": [
+    19401.12,
+    9320.13
+   ]
+  },
+  {
+   "path_index": 116,
+   "cell": [
+    1940,
+    970
+   ],
+   "site": [
+    19401.12,
+    9700.02
+   ]
+  },
+  {
+   "path_index": 154,
+   "cell": [
+    1940,
+    1008
+   ],
+   "site": [
+    19401.12,
+    10080.18
+   ]
+  },
+  {
+   "path_index": 192,
+   "cell": [
+    1940,
+    1046
+   ],
+   "site": [
+    19401.12,
+    10460.07
+   ]
+  },
+  {
+   "path_index": 220,
+   "cell": [
+    1939,
+    1073
+   ],
+   "site": [
+    19397.88,
+    10730.07
+   ]
+  },
+  {
+   "path_index": 259,
+   "cell": [
+    1902,
+    1075
+   ],
+   "site": [
+    19020.42,
+    10756.8
+   ]
+  },
+  {
+   "path_index": 298,
+   "cell": [
+    1863,
+    1075
+   ],
+   "site": [
+    18630.0,
+    10756.8
+   ]
+  },
+  {
+   "path_index": 309,
+   "cell": [
+    1852,
+    1075
+   ],
+   "site": [
+    18521.46,
+    10756.8
+   ]
+  },
+  {
+   "path_index": 348,
+   "cell": [
+    1814,
+    1076
+   ],
+   "site": [
+    18140.76,
+    10760.04
+   ]
+  },
+  {
+   "path_index": 386,
+   "cell": [
+    1776,
+    1076
+   ],
+   "site": [
+    17760.06,
+    10760.04
+   ]
+  },
+  {
+   "path_index": 424,
+   "cell": [
+    1738,
+    1076
+   ],
+   "site": [
+    17380.98,
+    10760.04
+   ]
+  },
+  {
+   "path_index": 462,
+   "cell": [
+    1700,
+    1076
+   ],
+   "site": [
+    17000.28,
+    10760.04
+   ]
+  },
+  {
+   "path_index": 500,
+   "cell": [
+    1691,
+    1047
+   ],
+   "site": [
+    16911.18,
+    10470.06
+   ]
+  },
+  {
+   "path_index": 538,
+   "cell": [
+    1691,
+    1009
+   ],
+   "site": [
+    16911.18,
+    10090.17
+   ]
+  },
+  {
+   "path_index": 576,
+   "cell": [
+    1691,
+    971
+   ],
+   "site": [
+    16911.18,
+    9710.01
+   ]
+  },
+  {
+   "path_index": 614,
+   "cell": [
+    1691,
+    933
+   ],
+   "site": [
+    16911.18,
+    9330.12
+   ]
+  },
+  {
+   "path_index": 652,
+   "cell": [
+    1691,
+    895
+   ],
+   "site": [
+    16911.18,
+    8950.23
+   ]
+  },
+  {
+   "path_index": 670,
+   "cell": [
+    1691,
+    877
+   ],
+   "site": [
+    16911.18,
+    8770.14
+   ]
+  }
+ ],
+ "conservative_route_segment_um": [
+  403.90000000000146,
+  403.8700000000026,
+  397.6100000000024,
+  397.5600000000013,
+  397.51000000000204,
+  296.6200000000026,
+  404.1900000000023,
+  403.1800000000003,
+  122.13999999999942,
+  404.5400000000009,
+  399.09999999999854,
+  398.8799999999974,
+  398.65999999999985,
+  398.4400000000005,
+  397.40999999999985,
+  397.4599999999991,
+  397.5099999999984,
+  397.28999999999905,
+  197.27000000000044
+ ],
+ "max_conservative_segment_um": 404.5400000000009,
+ "reach_pass": true,
+ "placement_qualified": false,
+ "physical_retry_admitted": false,
+ "remaining": [
+  "Recompute exact bays after placing all765 new local root trees (failed run has no ODB)",
+  "Use exact bays during actual placement and check placed routed stage lengths <=405um",
+  "Rebuild whole spine and sign off actual TT/FF plus SS sensitivity"
+ ]
+}

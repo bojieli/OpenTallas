@@ -1,0 +1,353 @@
+{
+ "schema": "opentallas.qwen.q_phase_pin_plan.v1",
+ "identity": {
+  "source_commit": "1075e50e2dcc1c25d15ab8232757bac665f11a1a",
+  "die_v_sha256": "fe1f963ef3fb89514981e3bfbc5032590de349a1e289e241ac9b51d0ca0e7f49",
+  "fwd_lanes_sha256": "d04b7d31688b3d440d0c5760a0903d067dacbeb844eb4f08ffb4e671afb92b70",
+  "qready_sha256": "e18a5232d9e9dc286f01f0ea271d4c406116cc4690801d15492108a791482227"
+ },
+ "lanes": {
+  "dvw_dd_wo": {
+   "source": "dvs_W5.dd_wo",
+   "consumer": "native59.dd_i",
+   "frames": 26,
+   "E": 19,
+   "K": 2,
+   "planned_age_edges": 20,
+   "G_effective": 1267,
+   "R0": 1596,
+   "source_reset_raw": 1266,
+   "clock_ports": {
+    "dvs_W5": {
+     "master": "qfd_dv_slice2_w",
+     "pins": {
+      "ck": "dvs_W5/ck"
+     }
+    },
+    "rly_dvw_dd_wo_0": {
+     "master": "qfd_rlyh0_548_SW_95x60",
+     "pins": {
+      "ck": "rly_dvw_dd_wo_0/ck",
+      "ck_o": "rly_dvw_dd_wo_0/ck_o"
+     }
+    },
+    "rly_dvw_dd_wo_1": {
+     "master": "qfd_rlyh_548_EN_95x60",
+     "pins": {
+      "ckf": "rly_dvw_dd_wo_1/ckf",
+      "ck_o": "rly_dvw_dd_wo_1/ck_o"
+     }
+    },
+    "rly_dvw_dd_wo_2": {
+     "master": "qfd_rlyh_548_SN_95x60",
+     "pins": {
+      "ckf": "rly_dvw_dd_wo_2/ckf",
+      "ck_o": "rly_dvw_dd_wo_2/ck_o"
+     }
+    },
+    "rly_dvw_dd_wo_3": {
+     "master": "qfd_rlyh_548_SN_95x60",
+     "pins": {
+      "ckf": "rly_dvw_dd_wo_3/ckf",
+      "ck_o": "rly_dvw_dd_wo_3/ck_o"
+     }
+    },
+    "rly_dvw_dd_wo_4": {
+     "master": "qfd_rlyh_548_SN_95x60",
+     "pins": {
+      "ckf": "rly_dvw_dd_wo_4/ckf",
+      "ck_o": "rly_dvw_dd_wo_4/ck_o"
+     }
+    },
+    "rly_dvw_dd_wo_5": {
+     "master": "qfd_rlyh_548_SN_95x60",
+     "pins": {
+      "ckf": "rly_dvw_dd_wo_5/ckf",
+      "ck_o": "rly_dvw_dd_wo_5/ck_o"
+     }
+    },
+    "rly_dvw_dd_wo_6": {
+     "master": "qfd_rlyh_548_SN_95x60",
+     "pins": {
+      "ckf": "rly_dvw_dd_wo_6/ckf",
+      "ck_o": "rly_dvw_dd_wo_6/ck_o"
+     }
+    },
+    "rly_dvw_dd_wo_7": {
+     "master": "qfd_rlyh_548_SN_95x60",
+     "pins": {
+      "ckf": "rly_dvw_dd_wo_7/ckf",
+      "ck_o": "rly_dvw_dd_wo_7/ck_o"
+     }
+    },
+    "rly_dvw_dd_wo_8": {
+     "master": "qfd_rlyh_548_SN_95x60",
+     "pins": {
+      "ckf": "rly_dvw_dd_wo_8/ckf",
+      "ck_o": "rly_dvw_dd_wo_8/ck_o"
+     }
+    },
+    "rly_dvw_dd_wo_9": {
+     "master": "qfd_rlyh_548_SN_95x60",
+     "pins": {
+      "ckf": "rly_dvw_dd_wo_9/ckf",
+      "ck_o": "rly_dvw_dd_wo_9/ck_o"
+     }
+    },
+    "rly_dvw_dd_wo_10": {
+     "master": "qfd_rlyh_548_SN_95x60",
+     "pins": {
+      "ckf": "rly_dvw_dd_wo_10/ckf",
+      "ck_o": "rly_dvw_dd_wo_10/ck_o"
+     }
+    },
+    "rly_dvw_dd_wo_11": {
+     "master": "qfd_rlyh_548_SN_95x60",
+     "pins": {
+      "ckf": "rly_dvw_dd_wo_11/ckf",
+      "ck_o": "rly_dvw_dd_wo_11/ck_o"
+     }
+    },
+    "rly_dvw_dd_wo_12": {
+     "master": "qfd_rlyh_548_SN_95x60",
+     "pins": {
+      "ckf": "rly_dvw_dd_wo_12/ckf",
+      "ck_o": "rly_dvw_dd_wo_12/ck_o"
+     }
+    },
+    "rly_dvw_dd_wo_13": {
+     "master": "qfd_rlyh_548_SN_95x60",
+     "pins": {
+      "ckf": "rly_dvw_dd_wo_13/ckf",
+      "ck_o": "rly_dvw_dd_wo_13/ck_o"
+     }
+    },
+    "rly_dvw_dd_wo_14": {
+     "master": "qfd_rlyh_548_SN_95x60",
+     "pins": {
+      "ckf": "rly_dvw_dd_wo_14/ckf",
+      "ck_o": "rly_dvw_dd_wo_14/ck_o"
+     }
+    },
+    "rly_dvw_dd_wo_15": {
+     "master": "qfd_rlyh_548_SN_95x60",
+     "pins": {
+      "ckf": "rly_dvw_dd_wo_15/ckf",
+      "ck_o": "rly_dvw_dd_wo_15/ck_o"
+     }
+    },
+    "rly_dvw_dd_wo_16": {
+     "master": "qfd_rlyh_548_SN_95x60",
+     "pins": {
+      "ckf": "rly_dvw_dd_wo_16/ckf",
+      "ck_o": "rly_dvw_dd_wo_16/ck_o"
+     }
+    },
+    "rly_dvw_dd_wo_17": {
+     "master": "qfd_rlyh_548_SN_95x60",
+     "pins": {
+      "ckf": "rly_dvw_dd_wo_17/ckf",
+      "ck_o": "rly_dvw_dd_wo_17/ck_o"
+     }
+    },
+    "rly_dvw_dd_wo_18": {
+     "master": "qfd_rlyh_548_SN_95x60",
+     "pins": {
+      "ckf": "rly_dvw_dd_wo_18/ckf",
+      "ck_o": "rly_dvw_dd_wo_18/ck_o"
+     }
+    },
+    "rly_dvw_dd_wo_19": {
+     "master": "qfd_rlyh_548_SN_95x60",
+     "pins": {
+      "ckf": "rly_dvw_dd_wo_19/ckf",
+      "ck_o": "rly_dvw_dd_wo_19/ck_o"
+     }
+    },
+    "rly_dvw_dd_wo_20": {
+     "master": "qfd_rlyh_548_SN_95x60",
+     "pins": {
+      "ckf": "rly_dvw_dd_wo_20/ckf",
+      "ck_o": "rly_dvw_dd_wo_20/ck_o"
+     }
+    },
+    "rly_dvw_dd_wo_21": {
+     "master": "qfd_rlyh_548_SN_95x60",
+     "pins": {
+      "ckf": "rly_dvw_dd_wo_21/ckf",
+      "ck_o": "rly_dvw_dd_wo_21/ck_o"
+     }
+    },
+    "rly_dvw_dd_wo_22": {
+     "master": "qfd_rlyh_548_SN_95x60",
+     "pins": {
+      "ckf": "rly_dvw_dd_wo_22/ckf",
+      "ck_o": "rly_dvw_dd_wo_22/ck_o"
+     }
+    },
+    "rly_dvw_dd_wo_23": {
+     "master": "qfd_rlyh_548_SW_95x60",
+     "pins": {
+      "ckf": "rly_dvw_dd_wo_23/ckf",
+      "ck_o": "rly_dvw_dd_wo_23/ck_o"
+     }
+    },
+    "rly_dvw_dd_wo_24": {
+     "master": "qfd_rlyh_548_EW_95x60",
+     "pins": {
+      "ckf": "rly_dvw_dd_wo_24/ckf",
+      "ck_o": "rly_dvw_dd_wo_24/ck_o"
+     }
+    },
+    "rly_dvw_dd_wo_25": {
+     "master": "qfd_landh_548_EN_95x60",
+     "pins": {
+      "ck": "rly_dvw_dd_wo_25/ck",
+      "ckf": "rly_dvw_dd_wo_25/ckf"
+     }
+    },
+    "native59": {
+     "master": "qfd_native59_dv_service",
+     "pins": {
+      "ck": "native59/ck"
+     }
+    }
+   },
+   "note": "G includes HOP0_EN_REG=1; measured source/forwarded/read phases must realize the planned age"
+  },
+  "sf_q_slot": {
+   "source": "sys_face.q_slot",
+   "consumer": "native59.q_slot",
+   "frames": 1,
+   "E": 1,
+   "K": 3,
+   "planned_age_edges": 2,
+   "G_effective": 22,
+   "R0": 1596,
+   "source_reset_raw": 21,
+   "clock_ports": {
+    "sys_face": {
+     "master": "qfd_sys_face",
+     "pins": {
+      "ck": "sys_face/ck"
+     }
+    },
+    "rly_sf_q_slot_0": {
+     "master": "qfd_landh0_1_SW_65x30",
+     "pins": {
+      "ck": "rly_sf_q_slot_0/ck",
+      "ck_s": "rly_sf_q_slot_0/ck_s"
+     }
+    },
+    "native59": {
+     "master": "qfd_native59_dv_service",
+     "pins": {
+      "ck": "native59/ck"
+     }
+    }
+   },
+   "note": "G includes HOP0_EN_REG=1; measured source/forwarded/read phases must realize the planned age"
+  },
+  "sf_q_slot_beat": {
+   "source": "sys_face.q_slot_beat",
+   "consumer": "native59.q_slot_beat",
+   "frames": 1,
+   "E": 1,
+   "K": 3,
+   "planned_age_edges": 2,
+   "G_effective": 22,
+   "R0": 1596,
+   "source_reset_raw": 21,
+   "clock_ports": {
+    "sys_face": {
+     "master": "qfd_sys_face",
+     "pins": {
+      "ck": "sys_face/ck"
+     }
+    },
+    "rly_sf_q_slot_beat_0": {
+     "master": "qfd_landh0_5_NW_65x30",
+     "pins": {
+      "ck": "rly_sf_q_slot_beat_0/ck",
+      "ck_s": "rly_sf_q_slot_beat_0/ck_s"
+     }
+    },
+    "native59": {
+     "master": "qfd_native59_dv_service",
+     "pins": {
+      "ck": "native59/ck"
+     }
+    }
+   },
+   "note": "G includes HOP0_EN_REG=1; measured source/forwarded/read phases must realize the planned age"
+  }
+ },
+ "pins": [
+  "dvs_W5/ck",
+  "native59/ck",
+  "rly_dvw_dd_wo_0/ck",
+  "rly_dvw_dd_wo_0/ck_o",
+  "rly_dvw_dd_wo_1/ck_o",
+  "rly_dvw_dd_wo_1/ckf",
+  "rly_dvw_dd_wo_10/ck_o",
+  "rly_dvw_dd_wo_10/ckf",
+  "rly_dvw_dd_wo_11/ck_o",
+  "rly_dvw_dd_wo_11/ckf",
+  "rly_dvw_dd_wo_12/ck_o",
+  "rly_dvw_dd_wo_12/ckf",
+  "rly_dvw_dd_wo_13/ck_o",
+  "rly_dvw_dd_wo_13/ckf",
+  "rly_dvw_dd_wo_14/ck_o",
+  "rly_dvw_dd_wo_14/ckf",
+  "rly_dvw_dd_wo_15/ck_o",
+  "rly_dvw_dd_wo_15/ckf",
+  "rly_dvw_dd_wo_16/ck_o",
+  "rly_dvw_dd_wo_16/ckf",
+  "rly_dvw_dd_wo_17/ck_o",
+  "rly_dvw_dd_wo_17/ckf",
+  "rly_dvw_dd_wo_18/ck_o",
+  "rly_dvw_dd_wo_18/ckf",
+  "rly_dvw_dd_wo_19/ck_o",
+  "rly_dvw_dd_wo_19/ckf",
+  "rly_dvw_dd_wo_2/ck_o",
+  "rly_dvw_dd_wo_2/ckf",
+  "rly_dvw_dd_wo_20/ck_o",
+  "rly_dvw_dd_wo_20/ckf",
+  "rly_dvw_dd_wo_21/ck_o",
+  "rly_dvw_dd_wo_21/ckf",
+  "rly_dvw_dd_wo_22/ck_o",
+  "rly_dvw_dd_wo_22/ckf",
+  "rly_dvw_dd_wo_23/ck_o",
+  "rly_dvw_dd_wo_23/ckf",
+  "rly_dvw_dd_wo_24/ck_o",
+  "rly_dvw_dd_wo_24/ckf",
+  "rly_dvw_dd_wo_25/ck",
+  "rly_dvw_dd_wo_25/ckf",
+  "rly_dvw_dd_wo_3/ck_o",
+  "rly_dvw_dd_wo_3/ckf",
+  "rly_dvw_dd_wo_4/ck_o",
+  "rly_dvw_dd_wo_4/ckf",
+  "rly_dvw_dd_wo_5/ck_o",
+  "rly_dvw_dd_wo_5/ckf",
+  "rly_dvw_dd_wo_6/ck_o",
+  "rly_dvw_dd_wo_6/ckf",
+  "rly_dvw_dd_wo_7/ck_o",
+  "rly_dvw_dd_wo_7/ckf",
+  "rly_dvw_dd_wo_8/ck_o",
+  "rly_dvw_dd_wo_8/ckf",
+  "rly_dvw_dd_wo_9/ck_o",
+  "rly_dvw_dd_wo_9/ckf",
+  "rly_sf_q_slot_0/ck",
+  "rly_sf_q_slot_0/ck_s",
+  "rly_sf_q_slot_beat_0/ck",
+  "rly_sf_q_slot_beat_0/ck_s",
+  "sys_face/ck"
+ ],
+ "blockers": [
+  "Q readiness certificate belongs to a different GEN",
+  "SAFE2 native clock port absent from GEN: native59/ck_fmt",
+  "SAFE2 native clock port absent from GEN: native59/ck_qbuf"
+ ],
+ "phase_qualified": false,
+ "advance_admitted": false
+}
