@@ -313,6 +313,10 @@ def kv_params(pr):
 #    has 0 / 16 / 32 fewer issue cycles when T <= 128 or T mod 256 in 1..128) -- no compiled field moves it; attention_checks
 #    reports those contexts and kv_static_params FAILS (ATTN_CALENDAR PVFIN_PAIR_SKEW) until the RTL absorbs the skew.
 HUB_EXPORT_AFTER_PUB = 3
+# CLOSED qkd_ahub_sdw a7 (c6c412b4c): root-select relay 1, RX 1,
+# reciprocal return relay 2, reciprocal leaf 67, final commit 4.
+# This is specific to the die hub; the native reference calendar keeps its law.
+HUB_PUBLISH_AFTER_RECIP = 67 + 1 + 1 + 2 + 4
 PVFIN_SKEW = 1            # kv_static_die bindings qkd_pvfin SKEW
 
 
@@ -327,6 +331,7 @@ def attention_calendar(T, pr, service_end=None):
     the link's fixed RESULT slot (static: a context-dependent service end would miss the compiled TX slot)."""
     lmax = AC.lmax_min(T) + pr['d_qk']
     c = AC.calendar(T, lmax=lmax, pv='w1')
+    c['HUB_PUB'] = c['HUB_RECIP'] + HUB_PUBLISH_AFTER_RECIP
     for f in ('LMAX', 'EXP', 'Z', 'HUB_LMAX', 'HUB_Z', 'HUB_RECIP', 'HUB_PUB'):
         c[f] += AC.HEAD_G3S2_SHIFT
     law = pr.get('astk_law')
