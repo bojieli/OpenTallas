@@ -114,7 +114,7 @@
   "sim": "verilator"
  },
  "mut_child": "u_hr",
- "landing_direct_timing": true,
+ "landing_direct_timing": false,
  "landing_chunk_bits": 24,
  "residual_ps": 150,
  "synthesis_hard_instances": [
