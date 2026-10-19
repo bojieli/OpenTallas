@@ -1,0 +1,4 @@
+FIRST_CODE_RE cycle=95 token=65536 epoch=77 resident=65536/77 complete=1
+[151000] %Fatal: tb_embedding_join.sv:60: Assertion failed in tb_embedding_join: JOIN_FAIL identity/residency provider=1 native=0
+%Error: rtl/test/qwen_split/tb_embedding_join.sv:60: Verilog $stop
+Aborting...
