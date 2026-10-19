@@ -60,6 +60,28 @@ class RegisteredCluster(unittest.TestCase):
             f.write(json.dumps(g).encode());f.flush()
             self.altered_receipt(lambda r:r.update(gate=dict(path=str(Path(f.name).relative_to(ROOT)),
                 sha256=hashlib.sha256(Path(f.name).read_bytes()).hexdigest())))
+    def dropped_both_models(self):
+        r=json.loads(RECEIPT.read_text())
+        binding=json.loads((ROOT/r['native_binding']['path']).read_text())
+        with tempfile.TemporaryDirectory(dir=RECEIPT.parent) as tmp:
+            tmp=Path(tmp)
+            for corner in ('tt','ff'):
+                t=(ROOT/r[corner+'_lib']['path']).read_text()
+                match=re.search(r'pin\s*\(\s*"?cw_n_v\[0\]"?\s*\)\s*\{',t)
+                self.assertIsNotNone(match)
+                level=1;end=match.end()
+                while level:
+                    level+=(t[end]=='{')-(t[end]=='}');end+=1
+                path=tmp/(corner+'.lib');path.write_text(t[:match.start()]+t[end:])
+                digest=hashlib.sha256(path.read_bytes()).hexdigest()
+                r[corner+'_lib']=dict(path=str(path.relative_to(ROOT)),sha256=digest)
+                for item in binding['files']:
+                    if item['path'].endswith('/native_probe_'+corner+'.lib'):item['sha256']=digest
+            path=tmp/'binding.json';path.write_text(json.dumps(binding))
+            r['native_binding']=dict(path=str(path.relative_to(ROOT)),sha256=hashlib.sha256(path.read_bytes()).hexdigest())
+            path=tmp/'receipt.json';path.write_text(json.dumps(r))
+            self.reject(lambda s:s.update(registered_cluster_candidate=dict(path=str(path.relative_to(ROOT)),
+                sha256=hashlib.sha256(path.read_bytes()).hexdigest())))
     def test_01_actual_sta_admits_candidate_not_native_pass(self):
         RT.check_hold_budget(self.spec)
         census=B.check(self.spec, ROOT)
@@ -81,6 +103,7 @@ class RegisteredCluster(unittest.TestCase):
         self.spec['children'][0]['view']='unproved-child'
         self.altered_receipt(lambda r:r['identity']['children'][0].update(view='unproved-child'))
     def test_04_missing_tt_or_ff_or_comb_census_refuses(self):
+        self.dropped_both_models()
         self.altered_receipt(lambda r:r.pop('tt_lib'))
         self.altered_receipt(lambda r:r.pop('ff_lib'))
         self.altered_receipt(lambda r:r.pop('insertion'))

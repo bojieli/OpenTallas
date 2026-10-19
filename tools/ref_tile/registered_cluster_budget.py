@@ -7,6 +7,7 @@ still owes its own native TT/FF and die-link/routed closure evidence.
 import hashlib
 import importlib.util
 import json
+import itertools
 import math
 from pathlib import Path
 
@@ -31,7 +32,20 @@ def source_ports(spec, root):
             if m.name == spec['top']]
     if len(tops) != 1 or tops[0].port_parse_errors or not tops[0].ports:
         raise ValueError('registered cluster candidate: source top ports must be unambiguous')
-    return set(tops[0].ports)
+    top=tops[0];env=top.env(spec.get('params'))
+    bits={}
+    for name,(direction,ranges) in top.ports.items():
+        if direction not in ('input','output'):
+            raise ValueError('registered cluster candidate: unknown/inout source port')
+        axes=[]
+        for hi,lo in ranges:
+            a,b=binder.ev(hi,env),binder.ev(lo,env)
+            if a is None or b is None:
+                raise ValueError('registered cluster candidate: unresolved source port range')
+            axes.append(range(min(a,b),max(a,b)+1))
+        for index in itertools.product(*axes):
+            bits[name+''.join('['+str(i)+']' for i in index)]=direction
+    return bits
 
 
 def remove_supply_pins(pins, lib, data_ports):
@@ -149,6 +163,8 @@ def check(spec, root):
         need(pins and not any(p['comb'] or p['dir'] not in ('input', 'output') for p in pins.values()), 'combinational or unknown boundary')
         need(all(p['out'] is not None and p['lmin'] is not None if p['dir'] == 'output' else
                  p['inp'] is not None and p['hold'] is not None for p in pins.values()), 'unregistered or unconstrained boundary')
+        expected = {n:d for n,d in data_ports.items() if n.split('[')[0] not in clocks}
+        need({n:p['dir'] for n,p in pins.items()} == expected, 'native pin inventory/directions differs from exact source boundary')
         census[corner] = pins
     need(set(census['tt']) == set(census['ff']), 'TT/FF pin census mismatch')
     need(min(p['lmin'] for p in census['ff'].values() if p['dir'] == 'output') >= 25, 'actual FF output launch below C25')
