@@ -1,0 +1,16 @@
+{
+  "source_image": "openroad/orfs:asap7lock",
+  "source_image_path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+  "derived_from_actual_gate": "sram_escape64_1019-20261019-091740 config.mk/orfs_synth.log",
+  "liberty_sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+  "cell": "BUFx2_ASAP7_75t_R",
+  "area_um2": 0.0729,
+  "signal_pins": {
+    "A": "input",
+    "Y": "output"
+  },
+  "Y_function": "A",
+  "candidate_buffers": 190,
+  "candidate_buffer_area_um2": 13.851,
+  "qualification": "real cell/function verified; mapped slew/load/route and TT/FF timing remain open"
+}

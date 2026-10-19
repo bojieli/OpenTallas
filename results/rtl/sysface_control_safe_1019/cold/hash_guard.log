@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/sysface-control-safe-1019/src/tools/qwen_split/sysface_control_safe/generate.py", line 199, in <module>
+    if __name__=='__main__':main()
+                            ~~~~^^
+  File "/srv/opentallas-scratch/claude/sysface-control-safe-1019/src/tools/qwen_split/sysface_control_safe/generate.py", line 190, in main
+    for p,h in manifest['source_sha256'].items():assert digest(p)==h, 'source hash mismatch: '+p
+                                                        ^^^^^^^^^^^^
+AssertionError: source hash mismatch: physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_bb.v
+SYSFACE_SAFE_HASH_GUARD_REJECTED
