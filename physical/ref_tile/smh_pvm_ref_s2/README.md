@@ -9,3 +9,5 @@ The302.4um square outline reserves one full-width north logic band at y216..302.
 No new data edge is added. Existing SAFE1 Qwen fold publication node0 at F0+23 (one edge later than old), node1 unchanged and DS zero, remains priced in REPRICE3. Tile area increases0.046656mm2, or0.746496mm2 at16copies. Die lead must re-slot the expanded tile.
 
 See design_review.json for all eight SAFE checklist items, actual per-corner macro timing and outstanding gate qualification. Clock spread, fanout/depth and actual synthesis area are pending gate results. Critical tile: no REVIEW.json or submit without coordinator review of the gate PNGs and checklist.
+
+Fleet Verilator5.050 evidence now committed: exact240/tight192PASS; mut1FAIL240,mut4FAIL32,mut5FAIL121 with RTLstop, pubearlyFAIL33. Full-cycle SS read-path sizing: macro515.506 + calibrated DFFsetup16.207 + uncertainty60 leaves241.620ps for local interconnect. A380um M4 external lead including SSdriver gives the conservative bound in design_review.json (no half-cycle). Actual gate placement must verify reach and timing; this is a sizing bound, not closure.

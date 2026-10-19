@@ -156,7 +156,7 @@
  "existing_safe1_latency": "Qwen node0 pubF0+23 (+1vsold); node1unchanged; DS0",
  "checklist": {
   "pins": "registered;resetlanding2;fullNface",
-  "reach": "302.4square, diagonal427.7 but occupied logicband<315um spans; macro-to-band max~366um",
+  "reach": "Planned macro-read\u2192operand route<=380um for full-cycleSSbudget; actual placed path/reach must verify at gate. No new cycle.",
   "fanout": "SAFE1 sameoperandregs,DRST0; actual synth/gate pending",
   "depth": "SAFE1 operands reg beforeadder; newmacro TTclktoq408.76; gate pending",
   "storage": "64x512SRAM plus smallring; no largefloparray",
@@ -164,5 +164,15 @@
   "clock": "northcentreentry; requiredTT/FFspread<=80; hold0.03; gate pending",
   "schedule": "identical toSAFE1; price+1fold remains"
  },
- "qualification": "Sizing/review packet; not timing or physical closure. No gate or submit launched yet."
+ "qualification": "Ready for pre-route gate; golden exact240/tight192PASS,mut1FAIL240,mut4FAIL32,mut5FAIL121,pubearlyFAIL33. Physical closure and actual placement/path reach pending; no submit before coordinator PNG review.",
+ "ss_read_path_budget": {
+  "cycle_ps": 833.333,
+  "macro_clk_q_ps": 515.5061732178556,
+  "calibrated_dff_setup_ps": 16.2073,
+  "setup_uncertainty_ps": 60,
+  "max_external_wire_um": 380,
+  "external_m4_rc_bound_ps": 224.6770912212978,
+  "total_ps": 816.3905644391534,
+  "claim": "Sizing bound only; gate actual placement reach/path report must verify. No half-cycle assumption. Standard operand flop captures macro read, no adder on this stage."
+ }
 }
