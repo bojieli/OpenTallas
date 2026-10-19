@@ -1,0 +1,27 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/mu-die-s81-hop
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/mu-die-s81-hop
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/mu-die-s81-hop
+ot-run: ot-epyc7       admits  1087 GB (avail 821, growth 60, headroom 0, waiters 0/0 GB) load 68/96 running 23 disk 6504 GB 
+ot-run: ot-epyc8       admits   909 GB (avail 742, growth 106, headroom 0, waiters 0/0 GB) load 64/128 running 22 disk 451 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/mu-die-s81-hop
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/mu-die-s81-hop
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-2522427-1792419861 after 0 s
+build rc 0
+run rc 0
+rate 13.4 cyc/s
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 5:02:07
+	Maximum resident set size (kbytes): 113657488
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 1:19:58
+	Maximum resident set size (kbytes): 722276
+DV_SLICE cycles=64286 in_events=693 out_checks=0 mismatches=0 fault_cycles=0 first_fault=-1
+TB_DV_SLICE PASS
+RUN R_cut_7_L0_hop012 -> out_base rc 0
+build reused /srv/opentallas-scratch/claude/mu-die-s81-hop/out_base/obj
+run rc 0
+rate 25.1 cyc/s
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 42:43.88
+	Maximum resident set size (kbytes): 722276
+DV_SLICE cycles=64286 in_events=687 out_checks=0 mismatches=0 fault_cycles=0 first_fault=-1
+TB_DV_SLICE PASS
+RUN R_cut_7_L0_hop012_tagdrop -> out_base_tagdrop rc 0

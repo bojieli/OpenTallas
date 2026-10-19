@@ -1,0 +1,14 @@
+    PID    PPID     ELAPSED %CPU   RSS COMMAND
+ 120653  120652       16:09 99.9 723532 /srv/opentallas-scratch/claude/mu-die-s81-hop/out_base/obj/sim +IN=/srv/opentallas-scratch/claude/mu-die-s81-hop/R/R_cut_7_L0_hop012_wrongcopy/in.txt +OUT=/srv/opentallas-scratch/claude/mu-die-s81-hop/R/R_cut_7_L0_hop012_wrongcopy/out.txt +NCYC=64286 +TRACE=/srv/opentallas-scratch/claude/mu-die-s81-hop/out_base_wrongcopy/trace.txt +EP=/srv/opentallas-scratch/claude/mu-die-s81-hop/out_base_wrongcopy/ep.txt
+2329250 2329248    07:54:35  109 48048792 openroad -threads 16 -no_init -exit /work/run.tcl
+3654923 3654922    02:56:29  105 44601828 openroad -threads 16 -no_init -exit /work/run.tcl
+3743357 3743354    02:50:46  103 32077412 /OpenROAD-flow-scripts/tools/install/yosys/bin/yosys -v 3 -c /OpenROAD-flow-scripts/flow/scripts/synth.tcl
+3743383 3743382    02:50:46  103 32190804 /OpenROAD-flow-scripts/tools/install/yosys/bin/yosys -v 3 -c /OpenROAD-flow-scripts/flow/scripts/synth.tcl
+/srv/opentallas-scratch/claude/mu-die-s81/case_mu2/out/run.log 2026-10-19 14:10:43.155389008 -0700 26141
+[INFO GRT-0102] Start extra iteration 10/30
+[INFO GRT-0102] Start extra iteration 11/30
+[INFO GRT-0102] Start extra iteration 12/30
+/srv/opentallas-scratch/claude/s81-diechain/mu3c/case_mu3/out/run.log 2026-10-19 14:44:40.840324235 -0700 25751
+[INFO GRT-0102] Start extra iteration 1/30
+[INFO GRT-0102] Start extra iteration 2/30
+[INFO GRT-0102] Start extra iteration 3/30

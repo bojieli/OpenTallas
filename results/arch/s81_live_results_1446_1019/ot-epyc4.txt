@@ -1,0 +1,8 @@
+  72314  912005    03:00:14  0.0  3888 bash -c export OT_SCRATCH=$(for r in /srv/opentallas-scratch /srv/opentallas-scratch2; do test -d $r/claude && echo $(df -BG --output=avail $r | tail -1) $r; done | sort -n | tail -1 | awk '{print $2}'); OT_SCRATCH=${OT_SCRATCH:-/srv/opentallas-scratch}; cd /srv/opentallas-scratch/claude/ref_gate || { echo OT_RUN_NOCD otrun-ubuntu-599667-435506400 >&2; exit 96; }; /usr/local/bin/ot-heavy --mem 48 --tag otrun-ubuntu-599667-435506400 --max-wait 900 -- bash /tmp/ref_gate_s81dvbk_sq_succb_20261019-114414.sh; rc=$?; echo "OT_RUN_EXIT otrun-ubuntu-599667-435506400 $rc" >&2; exit $rc
+  72455   72314    03:00:14  0.0  3888 /usr/bin/bash /tmp/ref_gate_s81dvbk_sq_succb_20261019-114414.sh
+  72472   72455    03:00:14  0.0  7736 tee -p /srv/opentallas-scratch/claude/ref_gate/s81dvbk_sq_succb-20261019-114414/execution.log
+3767801       2       01:04  0.0     0 [kworker/88:2-events]
+3767803       2       01:04  0.0     0 [kworker/88:3]
+3767811       2       01:04  0.0     0 [kworker/35:0]
+3767814       2       01:04  0.0     0 [kworker/29:2]
+3767821       2       01:04  0.0     0 [kworker/u513:0-flush-9:0]

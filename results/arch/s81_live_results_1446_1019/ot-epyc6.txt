@@ -1,0 +1,3 @@
+    PID    PPID     ELAPSED %CPU   RSS COMMAND
+4069913 4069904    02:50:30  103 31822056 /OpenROAD-flow-scripts/tools/install/yosys/bin/yosys -v 3 -c /OpenROAD-flow-scripts/flow/scripts/synth.tcl
+4183827 4183528    02:15:31  133 2416952 /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 8 -no_splash /OpenROAD-flow-scripts/flow/scripts/global_route.tcl -metrics /work/logs/asap7/opentallas_dsdv_sh_lk_asap7_ref_gate/base/5_1_grt.json
