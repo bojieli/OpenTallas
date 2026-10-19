@@ -293,41 +293,53 @@ module qkd_ahub_static_dec #(
     output wire [1:0] recip_head,return_head,
     output wire pub_hit
 );
+    // KV-AHUBDW3 a3 10-18 (route a2 b698f22ab TT -55.2 / -26.5): every window is decoded from ONE subtraction
+    // d = edge_age - START (17 b) compared against constants / nblk, not START + width added and compared (two carry
+    // chains).  Exact: for d >= 0, edge_age < START + c <=> d < c; edge_age < Z + 16 n <=> d / 16 < n; edge_age == Z + 16 n
+    // <=> d % 16 == 0 && d / 16 == n; (edge_age - Z) % 16 = d % 16; 2'(edge_age - X) = d[1:0].  The Z-tree issue levels
+    // l = 1..6 start at Z_START_AGE + B_l with B_l elaboration constants (B_1 = 0, B_l+1 = B_l + burst_l + Z_LEVEL_GAP).
     wire [4:0] nblk[0:3];
     for(genvar s=0;s<4;s=s+1)assign nblk[s]=nblk_v[5*s+:5];
+    wire [17:0] dl[0:3], dz[0:3];
+    for(genvar s=0;s<4;s=s+1)begin:g_d
+        assign dl[s]={1'b0,edge_age}-{2'b0,LMAX_IN_AGE[16*s+:16]};
+        assign dz[s]={1'b0,edge_age}-{2'b0,Z_IN_AGE[16*s+:16]};
+    end
+    wire [17:0] dmi={1'b0,edge_age}-{2'b0,LMAX_ISSUE_AGE}, dzs={1'b0,edge_age}-{2'b0,Z_START_AGE},
+                dri={1'b0,edge_age}-{2'b0,RECIP_ISSUE_AGE}, drr={1'b0,edge_age}-{2'b0,RECIP_RETURN_AGE};
     integer base,np,burst;
     always @* begin
         lm_slot=0;z_slot=0;done_slot=0;slot_h=0;slot_k=0;
         for(integer s=0;s<4;s=s+1)begin
-            if(active && edge_age>=LMAX_IN_AGE[16*s+:16] && edge_age<LMAX_IN_AGE[16*s+:16]+4)begin
-                lm_slot[s]=1;slot_h[2*s+:2]=2'(edge_age-LMAX_IN_AGE[16*s+:16]);
+            if(active && !dl[s][17] && dl[s][16:0]<4)begin
+                lm_slot[s]=1;slot_h[2*s+:2]=dl[s][1:0];
             end
-            if(active && edge_age>=Z_IN_AGE[16*s+:16] && edge_age<Z_IN_AGE[16*s+:16]+nblk[s]*Z_IN_STRIDE)begin
-                if((edge_age-Z_IN_AGE[16*s+:16])%Z_IN_STRIDE<4)begin
-                    z_slot[s]=1;slot_h[2*s+:2]=2'((edge_age-Z_IN_AGE[16*s+:16])%Z_IN_STRIDE);
-                    slot_k[4*s+:4]=4'((edge_age-Z_IN_AGE[16*s+:16])/Z_IN_STRIDE);
+            if(active && !dz[s][17] && (dz[s][16:0]/Z_IN_STRIDE)<nblk[s])begin
+                if(dz[s][16:0]%Z_IN_STRIDE<4)begin
+                    z_slot[s]=1;slot_h[2*s+:2]=2'(dz[s][16:0]%Z_IN_STRIDE);
+                    slot_k[4*s+:4]=4'(dz[s][16:0]/Z_IN_STRIDE);
                 end
             end
-            done_slot[s]=active && edge_age==Z_IN_AGE[16*s+:16]+nblk[s]*Z_IN_STRIDE;
+            done_slot[s]=active && !dz[s][17] && dz[s][16:0]%Z_IN_STRIDE==0 && (dz[s][16:0]/Z_IN_STRIDE)==nblk[s];
         end
     end
-    assign m_issue=active && edge_age>=LMAX_ISSUE_AGE && edge_age<LMAX_ISSUE_AGE+4;
-    assign mh=2'(edge_age-LMAX_ISSUE_AGE);
+    assign m_issue=active && !dmi[17] && dmi[16:0]<4;
+    assign mh=dmi[1:0];
     always @*begin
-        issue=0;pair_base=0;base=Z_START_AGE;
+        issue=0;pair_base=0;base=0;
         for(integer l=1;l<=6;l=l+1)begin
             np=64>>l;burst=(np+3)/4;
-            if(active && edge_age>=base && edge_age<base+burst)begin
-                pair_base=6'((edge_age-base)*4);
-                for(integer a=0;a<4;a=a+1)issue[a]=((edge_age-base)*4+a)<np;
+            if(active && !dzs[17] && dzs[16:0]>=base && dzs[16:0]<base+burst)begin
+                pair_base=6'((dzs[16:0]-base)*4);
+                for(integer a=0;a<4;a=a+1)issue[a]=((dzs[16:0]-base)*4+a)<np;
             end
             base=base+burst+Z_LEVEL_GAP;
         end
     end
-    assign recip_issue=active && edge_age>=RECIP_ISSUE_AGE && edge_age<RECIP_ISSUE_AGE+4;
-    assign recip_return=active && edge_age>=RECIP_RETURN_AGE && edge_age<RECIP_RETURN_AGE+4;
-    assign recip_head=2'(edge_age-RECIP_ISSUE_AGE);
-    assign return_head=2'(edge_age-RECIP_RETURN_AGE);
+    assign recip_issue=active && !dri[17] && dri[16:0]<4;
+    assign recip_return=active && !drr[17] && drr[16:0]<4;
+    assign recip_head=dri[1:0];
+    assign return_head=drr[1:0];
     assign pub_hit=edge_age==RZ_PUBLISH_AGE;
 endmodule
 
@@ -369,6 +381,8 @@ module qkd_ahub_static_core_la #(
     reg [63:0] LMAX_IN_AGE,Z_IN_AGE;reg [15:0] LMAX_ISSUE_AGE,Z_START_AGE,RECIP_ISSUE_AGE,RECIP_RETURN_AGE,RZ_PUBLISH_AGE;
     always @(posedge clk)if(start)
         {RZ_PUBLISH_AGE,RECIP_RETURN_AGE,RECIP_ISSUE_AGE,Z_START_AGE,LMAX_ISSUE_AGE,Z_IN_AGE,LMAX_IN_AGE}<=cal;
+    wire [15:0] c_rzp,c_rra,c_ria,c_zsa,c_lis;wire [63:0] c_zin,c_lin;
+    assign {c_rzp,c_rra,c_ria,c_zsa,c_lis,c_zin,c_lin}=cal;
     // nblk(T) registered from the held command T (u_io); zmask from it
     reg [19:0] nblk_q;
     always @(posedge clk)
@@ -401,14 +415,22 @@ module qkd_ahub_static_core_la #(
     reg [3:0] q_lm,q_z,q_dn,q_is;reg [7:0] q_sh;reg [15:0] q_sk;reg q_mi,q_ri,q_rr,q_pb;reg [1:0] q_mh,q_rh,q_th;
     reg [5:0] q_pa;
     always @(posedge clk)begin
-        q_lm<=n_lm;q_z<=n_z;q_dn<=n_dn;q_sh<=n_sh;q_sk<=n_sk;q_mi<=n_mi;q_mh<=n_mh;q_is<=n_is;q_pa<=n_pa;
-        q_ri<=n_ri;q_rr<=n_rr;q_rh<=n_rh;q_th<=n_th;q_pb<=n_pb;
+        q_lm<=n_lm;q_z<=n_z;q_dn<=n_dn;q_sh<=n_sh;q_sk<=n_sk;q_mi<=n_mi;q_is<=n_is;q_pa<=n_pa;
+        q_ri<=n_ri;q_rr<=n_rr;q_pb<=n_pb;
+        // KV-AHUBDW3 a3: the three 2-bit heads that select wide muxes (mh: 16 lm words -> ma_x; recip_head: 4 roots ->
+        // rc_x; return_head: rz[] / rz_head) are registered for EVERY cycle, the first one included: on a start edge they
+        // load the edge-age-1 head of the calendar being latched (2'(1 - X) of cal, exactly u_d1's head once X <= cal), so
+        // no first_q mux and no calendar-register subtract sits in front of the 64-load selects (route a2: RECIP_ISSUE_AGE
+        // -> u_d1 -> first_q mux -> 32 x 4:1 -> rc_x, TT -55.2 ps).  Same values on every edge as before.
+        q_mh<=start?2'(2'd1-c_lis[1:0]):n_mh;
+        q_rh<=start?2'(2'd1-c_ria[1:0]):n_rh;
+        q_th<=start?2'(2'd1-c_rra[1:0]):n_th;
     end
     wire [3:0] lm_slot=first_q?o_lm:q_lm, z_slot=first_q?o_z:q_z, done_slot=first_q?o_dn:q_dn, issue=first_q?o_is:q_is;
     wire [7:0] slot_h=first_q?o_sh:q_sh;
     wire [15:0] slot_k=first_q?o_sk:q_sk;
     wire m_issue=first_q?o_mi:q_mi, recip_issue=first_q?o_ri:q_ri, recip_return=first_r?o_rr:q_rr, pub_hit=first_q?o_pb:q_pb;
-    wire [1:0] mh=first_q?o_mh:q_mh, recip_head=first_q?o_rh:q_rh, return_head=first_r?o_th:q_th;
+    wire [1:0] mh=q_mh, recip_head=q_rh, return_head=q_th;
     wire [5:0] pair_base=first_q?o_pa:q_pa;
     reg [3:0] lm_b,z_b,any_b;
     reg [7:0] hh_b;

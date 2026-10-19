@@ -1,10 +1,10 @@
-ot-run: ot-epyc4       admits   427 GB (avail 541, growth 243, headroom 0, waiters 0/0 GB) load 27/128 running 13 disk 563 GB 
-ot-run: ot-epyc5       skipped: no /home/ubuntu/scratch/kvahubdw2/src4
-ot-run: ot-pve1        skipped: no /home/ubuntu/scratch/kvahubdw2/src4
-ot-run: ot-agidock128  skipped: no /home/ubuntu/scratch/kvahubdw2/src4
+ot-run: ot-epyc4       admits   861 GB (avail 711, growth 108, headroom 0, waiters 0/0 GB) load 45/128 running 17 disk 551 GB 
+ot-run: ot-epyc5       skipped: no /home/ubuntu/scratch/kvahub3/src
+ot-run: ot-pve1        skipped: no /home/ubuntu/scratch/kvahub3/src
+ot-run: ot-agidock128  skipped: no /home/ubuntu/scratch/kvahub3/src
 ot-run: -> ot-epyc4
-ot-heavy: admitted on regular-crane as oth-ubuntu-2060746-1792371740 after 0 s
+ot-heavy: admitted on regular-crane as oth-ubuntu-3855908-1792382554 after 1 s
 AHUB_DW FAIL mut=2 first error cycle 741 pass 0: reciprocals at pvfin.fr != reference rz_vector
 AHUB_DW FAIL mut=2 errors=72
-ot-run: RAN on ot-epyc4 (unit oth-ubuntu-2060746-1792371740): exit 1
-EXIT 1
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-3855908-1792382554): exit 1
+rc=1

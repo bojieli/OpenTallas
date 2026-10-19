@@ -1,9 +1,9 @@
-ot-run: ot-epyc4       admits   427 GB (avail 541, growth 243, headroom 0, waiters 0/0 GB) load 27/128 running 13 disk 563 GB 
-ot-run: ot-epyc5       skipped: no /home/ubuntu/scratch/kvahubdw2/src4
-ot-run: ot-pve1        skipped: no /home/ubuntu/scratch/kvahubdw2/src4
-ot-run: ot-agidock128  skipped: no /home/ubuntu/scratch/kvahubdw2/src4
+ot-run: ot-epyc4       admits   861 GB (avail 711, growth 108, headroom 0, waiters 0/0 GB) load 45/128 running 17 disk 551 GB 
+ot-run: ot-epyc5       skipped: no /home/ubuntu/scratch/kvahub3/src
+ot-run: ot-pve1        skipped: no /home/ubuntu/scratch/kvahub3/src
+ot-run: ot-agidock128  skipped: no /home/ubuntu/scratch/kvahub3/src
 ot-run: -> ot-epyc4
-ot-heavy: admitted on regular-crane as oth-ubuntu-2060747-1792371740 after 1 s
+ot-heavy: admitted on regular-crane as oth-ubuntu-3855853-1792382554 after 0 s
 AHUB_DW PASS mut=0 passes=4 fr=1/1/1/1 beats=32/32/32/32 am=16 FR_OFS=-4 AP_OFS=0002000100000003
-ot-run: RAN on ot-epyc4 (unit oth-ubuntu-2060747-1792371740): exit 0
-EXIT 0
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-3855853-1792382554): exit 0
+rc=0
