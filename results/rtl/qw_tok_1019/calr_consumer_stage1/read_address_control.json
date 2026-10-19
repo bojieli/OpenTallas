@@ -1,0 +1,9 @@
+{
+  "original_cycle": 135,
+  "port": 1,
+  "field": "first accepted source GO instruction xbase[0] at hr[277]; actual ib b_xbase source bits[204+:24], global hr ib starts73",
+  "original_value": "0x100c00000100020000000000080000010000002002000000002000000000010240000020006000000100000028000000000000000000000001",
+  "mutant_value": "0x100c00000100020000000000080000010000002002002000002000000000010240000020006000000100000028000000000000000000000001",
+  "nominal_unchanged": true,
+  "expected": "actual head descriptor/instruction mismatch or leaf read fault; require DUT marker, never rc only"
+}
