@@ -344,6 +344,9 @@ def spec(S, kind):
         # MEASURED arrival; OT_SPINE_PORTS builds ck and hck each on its own spine; SRAM clock pins are their own leaves)
         sp['clock'] = 'spine'
         sp['orfs_vars'] = dict(OT_SPINE_PORTS='ck,hck')
+        # PIN ORDER (main pre_route_gate): the wide face buses (i_ctl / o_dn 271 b, krsp 1,062 b, ...) get a defined bit
+        # order: the balanced pin placer, one pin per group, on the kit's existing pin layers (H M4 / V M5)
+        sp['route']['pin_balance'] = dict(group_max=1, h='M4', v='M5')
         if getattr(S, 'GRP_RST', False):
             sp['reset_landing'] = dict(enable=False, reason=(
                 'the RTL lands it (TW2-KVGRP 10-19): qkd_kv_rst_land u_rrc (ck) / u_rrh (hck) = a 2-flop async-assert '
