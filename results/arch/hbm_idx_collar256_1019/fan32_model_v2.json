@@ -15,7 +15,7 @@
     "cfg_state_bits_added": 337,
     "onehot_selection_bits_added": 128,
     "counter_bits_added": 448,
-    "total_estimated_added_state_bits": 937,
+    "total_estimated_added_state_bits": 953,
     "held_record_bits": 2048,
     "held_operand_bits": 1536,
     "successful_install_added_edges": 0,
@@ -43,5 +43,12 @@
     },
     "stage1_load_budget": 26,
     "qualification": "FAN32only; exactdefaultsource path retained; fullreset/reinstall differential and actualmappedrootcensus required"
+  },
+  "run_replication": {
+    "basis": "71a mapped run87loads; same-nextstate kept16runFFs, oneperpayloadbank",
+    "reset": "same regional_reset[18] state-control leaf: previous12+16=28 <=32",
+    "edges_added": 0,
+    "state_bits_added": 16,
+    "proof": "allcopies capture exact n_run, same reset edge; defaultmode unchanged; mapped per-copy roots counted beforegate"
   }
 }
