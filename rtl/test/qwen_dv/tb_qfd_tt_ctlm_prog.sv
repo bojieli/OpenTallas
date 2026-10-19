@@ -78,5 +78,40 @@ module tb_qfd_tt_ctlm_prog (input wire ck);
             end
         end
     end
+`ifdef TB_LANDED
+    // HF-4 10-18: the landed cluster qfd_tt_ctlm_dv_lpf_lp (lp.py) in lockstep with dut on the same compiled stimulus.
+    // lp record: landed(rst) == flat(rst delayed RB = 3) with every output 3 edges later, every input on time.  So the
+    // landed copy is released 3 edges BEFORE dut and its outputs are compared with dut's 3 edges later.  LMUT = lp MUT.
+    parameter integer LMUT = 0;
+    localparam integer LOFF = 3;
+    reg rst_early = 1'b0;
+    wire [452:0] l_hr; wire [115:0] l_cmd; wire l_emb_start; wire [17:0] l_emb_token; wire [55:0] l_dc; wire l_cf;
+    wire [75:0] l_pobs, l_cobs; wire [68:0] l_dobs; wire l_csr, l_cir, l_lcv; wire [17:0] l_ntk, l_nps; wire [5:0] l_cst;
+    wire [379:0] l_ncmd;
+    qfd_tt_ctlm_dv_lpf_lp #(.XPF_TRANSPORT_EDGES(XPF_EDGES), .STAGE_ME(STAGE_ME), .MUT(LMUT)) u_lp (.ck_core(ck), .ck_hr(ck),
+        .rst_n(rst_early), .pw(pw), .dh(dh), .kok(kok), .kwd(kwd), .fab(1'b0), .program_obs(l_pobs),
+        .control_stores_ready(l_csr), .layer_context_v(l_lcv), .native_tok(l_ntk), .native_pos(l_nps), .command_stage(l_cst),
+        .cal_program_obs(l_cobs), .cal_descriptor_obs(l_dobs), .cal_image_ready(l_cir), .dc(l_dc), .native_cmd(l_ncmd),
+        .native_ret(nret), .hr(l_hr), .cmd(l_cmd), .ss5(ss5), .ag5(ag5), .emb_start(l_emb_start), .emb_token(l_emb_token), .cf(l_cf));
+    wire [1290:0] v_d = {pobs, csr, lcv, ntk, nps, cst, cobs, dobs, cir, dc, ncmd, hr, cmd, emb_start, emb_token, cf};
+    wire [1290:0] v_l = {l_pobs, l_csr, l_lcv, l_ntk, l_nps, l_cst, l_cobs, l_dobs, l_cir, l_dc, l_ncmd, l_hr, l_cmd,
+                         l_emb_start, l_emb_token, l_cf};
+    reg [1290:0] v_h [0:LOFF-1];
+    integer l_nc = 0, l_bad = 0, l_act = 0, hj;
+    always @(negedge ck) begin
+        if (pre >= 1) rst_early = 1'b1;
+        if (pre >= 4 && cyc > LOFF + 2) begin
+            l_nc = l_nc + 1;
+            if (v_l !== v_h[LOFF-1]) begin l_bad = l_bad + 1;
+                if (l_bad <= 5) $fdisplay(lg, "%0d LANDED_MISMATCH dc %h/%h cmd %h/%h hr_lo %h/%h", cyc, v_h[LOFF-1][1024:969],
+                    v_l[1024:969], v_h[LOFF-1][135:20], v_l[135:20], v_h[LOFF-1][208:136], v_l[208:136]); end
+            if (v_h[LOFF-1] !== v_h[LOFF-2]) l_act = l_act + 1;
+            if (cyc == ncyc - 1) $fdisplay(lg, "%0d LANDED_LOCKSTEP %s LMUT=%0d compared=%0d mismatches=%0d active=%0d", cyc,
+                (l_bad == 0 && l_nc > 0) ? "PASS" : "FAIL", LMUT, l_nc, l_bad, l_act);
+        end
+        for (hj = LOFF - 1; hj > 0; hj = hj - 1) v_h[hj] = v_h[hj - 1];
+        v_h[0] = v_d;
+    end
+`endif
     always @(posedge ck) if (pre >= 4) cyc <= cyc + 1;
 endmodule

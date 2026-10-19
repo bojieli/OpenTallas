@@ -126,14 +126,18 @@ def run(a):
     with open(evf, 'w') as f:
         for cy, k, v in sorted(ev, key=lambda e: (e[0], e[1])):
             f.write(f'{cy} {k} {v:x}\n')
-    obj = work / f'obj_m{a.mut}_h{a.hard}'
+    obj = work / (f'obj_m{a.mut}_h{a.hard}' + (f'_l{a.lmut}' if a.landed else ''))
     srcs = [str(ROOT / l.strip()) for l in open(HERE / 'tt_ctlm_dv_sources.f') if l.strip()]
+    if a.landed:    # HF-4 10-18: + the landed cluster (lp.py) in lockstep, LMUT = its mutant
+        srcs += [str(ROOT / f) for f in ('rtl/qwen_dv/qfd_tt_ctlm_dv_lpf_parts.sv', 'rtl/common/landed_parent/ot_pl_land.sv',
+                                         'rtl/qwen_dv/lp/qfd_tt_ctlm_dv_lpf_lp.sv')]
     srcs.append(str(HERE / 'tb_qfd_tt_ctlm_prog.sv'))
     if not (obj / 'Vtb').exists():
         cmd = ['verilator', '--cc', '--exe', '--build', '-O2', '-j', '8', '-Wno-fatal', '-Wno-lint', '-Wno-style',
                '-Wno-TIMESCALEMOD', '-Wno-WIDTHCONCAT', '--x-assign', '0', '--x-initial', '0',
                '--top-module', 'tb_qfd_tt_ctlm_prog', '--prefix', 'Vtb', f'-GMUT={a.mut}',
-               f'-GXPF_EDGES={img["xpf_transport_edges"]}', '-GSTAGE_ME=1', f'-GHARD_HR={a.hard}', *(['+define+TB_HARD'] if a.hard else []), '-Mdir', str(obj), str(HERE / 'main2.cpp')] + srcs
+               f'-GXPF_EDGES={img["xpf_transport_edges"]}', '-GSTAGE_ME=1', f'-GHARD_HR={a.hard}', *(['+define+TB_HARD'] if a.hard else []),
+               *(['+define+TB_LANDED', f'-GLMUT={a.lmut}'] if a.landed else []), '-Mdir', str(obj), str(HERE / 'main2.cpp')] + srcs
         p = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True)
         (work / f'build_m{a.mut}.log').write_text(p.stdout + p.stderr)
         if p.returncode:
@@ -169,6 +173,10 @@ def run(a):
             info['csr'] = cy
         elif k == 'END':
             info['end'] = line.strip()
+        elif k == 'LANDED_LOCKSTEP':
+            info['landed'] = ' '.join(p[1:])
+        elif k == 'LANDED_MISMATCH':
+            info.setdefault('landed_mismatch', []).append(' '.join(p))
     exp = [(cy, k, None) if k in ('ROM', 'NAT') else (cy, k, v) for cy, k, v in exp]
     se, sg = set(exp), set(got)
     miss, extra = sorted(se - sg), sorted(sg - se)
@@ -206,6 +214,9 @@ def main():
     # Q-H16C 10-18: 1 = the hard head leaf ot_qfd_tt_ctlm_static_hr (h16c h17, running-stage port), 0 = inline head
     ap.add_argument('--hard', type=int, default=0)
     ap.add_argument('--work', default='/tmp/qlbprog_bench')
+    # HF-4 10-18: 1 = also run the landed cluster qfd_tt_ctlm_dv_lpf_lp in lockstep (needs --hard 1); --lmut = its mutant
+    ap.add_argument('--landed', type=int, default=0)
+    ap.add_argument('--lmut', type=int, default=0)
     a = ap.parse_args()
     ok, n, errs, info = run(a)
     v = 'PASS' if ok == n and not errs else 'FAIL'
@@ -213,6 +224,10 @@ def main():
           f'nat_go-issue {info.get("nat_go_minus_issue")} csr@{info.get("csr")}')
     for e in errs[:12]:
         print('   ', e)
+    if a.landed:
+        print(info.get('landed', 'LANDED_LOCKSTEP NO_RESULT'))
+        for m in info.get('landed_mismatch', [])[:5]:
+            print('   ', m)
     sys.exit(0 if v == 'PASS' else 1)
 
 
