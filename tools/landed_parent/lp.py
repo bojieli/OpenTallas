@@ -81,6 +81,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 LIB_RTL = "rtl/common/landed_parent/ot_pl_land.sv"
+RESET_FOREST_RTL = ["rtl/common/landed_parent/ot_pl_land_field_copies.sv",
+                    "rtl/common/landed_parent/ot_pl_land_reset_forest.sv"]
 KW = {"module", "endmodule", "input", "output", "inout", "wire", "reg", "logic", "assign", "always", "always_ff",
       "always_comb", "initial", "generate", "endgenerate", "parameter", "localparam", "if", "else", "for", "begin", "end",
       "case", "endcase", "function", "endfunction", "genvar", "integer", "signed", "unsigned", "default_nettype"}
@@ -90,6 +92,9 @@ LIB_PORTS = {"ot_pl_land_w": {"ck": "in", "rsi": "in", "i": "in", "bank": "out",
 # Chunked primitives preserve the same top-level source/read contract.
 LIB_PORTS['ot_pl_land_chunk_w'] = dict(LIB_PORTS['ot_pl_land_w'])
 LIB_PORTS['ot_pl_land_chunk_r'] = dict(LIB_PORTS['ot_pl_land_r'])
+LIB_PORTS['ot_pl_land_vector_reset_w'] = dict(LIB_PORTS['ot_pl_land_w'])
+LIB_PORTS['ot_pl_land_vector_reset_r'] = dict(LIB_PORTS['ot_pl_land_r'])
+LIB_PORTS['ot_pl_land_reset_forest'] = dict(LIB_PORTS['ot_pl_pad'])
 
 
 
@@ -398,6 +403,11 @@ class Parent:
         self.K = self.E
         self.direct_timing = bool(spec.get("landing_direct_timing", False))
         self.chunk_bits = int(spec.get("landing_chunk_bits", 0))
+        self.reset_forest = spec.get("landing_reset_forest", False)
+        if type(self.reset_forest) is not bool:
+            raise SystemExit("landing_reset_forest must be an explicit boolean")
+        if self.reset_forest and not self.chunk_bits:
+            raise SystemExit("landing_reset_forest requires explicit landing_chunk_bits")
         if self.chunk_bits and not 1 <= self.chunk_bits <= 24:
             raise SystemExit("landing_chunk_bits must be 1..24 (kept local selector fanout)")
         if self.direct_timing and (self.D != 4 or self.E != 2):
@@ -620,9 +630,54 @@ class Parent:
         RB = 1 + max(max(hops.values()), 1)
         return rr, hops, RB
 
+    def reset_forest_plan(self, P):
+        """Exact per-chunk leaf allocation at unchanged regional reset depth."""
+        if not self.reset_forest:
+            return None
+        _, _, RB = self.reset_tree()
+        depth = RB - 1
+        if depth < 2:
+            raise SystemExit("landing_reset_forest needs at least two already-priced regional stages; no free reset edge")
+        regions = {r: dict(leaves=1, terms=['1'], bindings=[]) for r in self.regions}
+        for land in P['lands']:
+            n = land['name']
+            roles = [('r', land['dst_region'])]
+            if land.get('ring_of', n) == n:
+                roles.insert(0, ('w', land['src_region']))
+            wt = width_text(self.rng(land['net']))
+            count_expr = f'((({wt})+{self.chunk_bits}-1)/{self.chunk_bits})'
+            count = math.ceil(land['width'] / self.chunk_bits)
+            for role, region in roles:
+                row = regions[region]
+                row['bindings'].append(dict(landing=n, role=role, first_leaf=row['leaves'],
+                    chunks=count, first_expr='+'.join(row['terms']), chunks_expr=count_expr))
+                row['leaves'] += count
+                row['terms'].append(count_expr)
+        for region, row in regions.items():
+            if row['leaves'] > 1024:
+                raise SystemExit(f'landing_reset_forest {region}: {row["leaves"]} leaves exceeds1024')
+            row['branches'] = math.ceil(row['leaves'] / 32)
+            row['FFs'] = depth - 2 + row['branches'] + row['leaves']
+            scalar_uses = sum(self.region[ins['inst']] == region and any(
+                pin in (self.S.get('reset_pins') or []) and ex.strip() == self.rst
+                for pin, ex in ins['conns'].items()) for ins in self.insts)
+            scalar_uses += sum(binding['regions'].count(region) for binding in self.regional_bindings.values()
+                               if binding['role'] == 'resets')
+            row['scalar_child_pad_port_uses'] = scalar_uses
+            if scalar_uses > 32:
+                raise SystemExit(f'landing_reset_forest {region} scalar child reset boundary has {scalar_uses} ports; partition still required')
+        root_loads = sum(v['branches'] if depth == 2 else 1 for v in regions.values())
+        if root_loads > 32:
+            raise SystemExit(f'landing_reset_forest root has {root_loads} registered loads; no added edge credited')
+        return dict(regional_stages=depth, root_D_loads=root_loads, regions=regions,
+                    incremental_FFs=sum(v['FFs']-depth for v in regions.values()),
+                    required_rtl_sources=RESET_FOREST_RTL,
+                    scope='Source leaf allocation only. Scalar child internals, actual parameter binding, native reset phase/reach and all clock entries remain unqualified.')
+
     def emit(self, P, top_lp, mut=True):
         S, D, E, K, AW = self.S, self.D, self.E, self.K, self.AW
         rr, hops, RB = self.reset_tree()
+        forest = self.reset_forest_plan(P)
         L = []
         w = L.append
         # header
@@ -651,16 +706,32 @@ class Parent:
         # reset tree
         w(f"    // ---- regional reset runs (1-bit plain hops: they define the landing epochs; region {rr} holds the root)")
         w(f"    wire lpr_root;  ot_pl_pad #(.W(1), .N(1)) u_lpr_root (.ck(ck_{rr}), .d({self.rst}), .q(lpr_root));")
+        if forest:
+            for r in self.regions:
+                expression = '+'.join(forest['regions'][r]['terms'])
+                w(f'    localparam integer LPR_LEAVES_{r} = {expression};')
+            root_load_expr = ('+'.join(f'((LPR_LEAVES_{r}+31)/32)' for r in self.regions)
+                              if RB-1 == 2 else str(len(self.regions)))
         for r in self.regions:
-            w(f"    wire lpr_{r};  ot_pl_pad #(.W(1), .N({RB - 1})) u_lpr_{r} (.ck(ck_{r}), .d(lpr_root), .q(lpr_{r}));"
-              f"   // {hops[r]} hop(s) from {rr}")
+            if forest:
+                w(f'    wire [LPR_LEAVES_{r}-1:0] lpr_{r}_leaves; wire lpr_{r} = lpr_{r}_leaves[0];')
+                w(f'    ot_pl_land_reset_forest #(.DEPTH({RB-1}), .LEAVES(LPR_LEAVES_{r}), .ROOT_LOADS({root_load_expr})) u_lpr_{r} '
+                  f'(.ck(ck_{r}), .d(lpr_root), .q(lpr_{r}_leaves)); // same reset age; physical reach unproved')
+            else:
+                w(f"    wire lpr_{r};  ot_pl_pad #(.W(1), .N({RB - 1})) u_lpr_{r} (.ck(ck_{r}), .d(lpr_root), .q(lpr_{r}));"
+                  f"   // {hops[r]} hop(s) from {rr}")
         # landings
         sub = {}            # (inst, net) -> replacement net
         for Ld in P["lands"]:
             n, net, s, r = Ld["name"], Ld["net"], Ld["src_region"], Ld["dst_region"]
             rng = self.rng(net)
             wt = width_text(rng)
-            primitive = "ot_pl_land_chunk" if self.chunk_bits else "ot_pl_land"
+            primitive = "ot_pl_land_vector_reset" if forest else ("ot_pl_land_chunk" if self.chunk_bits else "ot_pl_land")
+            def reset_input(role, region):
+                if not forest:
+                    return f'lpr_{region}'
+                binding = next(v for v in forest['regions'][region]['bindings'] if v['landing']==n and v['role']==role)
+                return f'lpr_{region}_leaves[({binding["first_expr"]}) +: {binding["chunks_expr"]}]'
             cp = f", .CHUNK_BITS({self.chunk_bits})" if self.chunk_bits else ""
             vld_hi = f"{D}*((({wt})+{self.chunk_bits}-1)/{self.chunk_bits})-1" if self.chunk_bits else str(D - 1)
             decl = rng or ""
@@ -671,12 +742,12 @@ class Parent:
             if g == n:
                 w(f"    wire [{D}*{wt}-1:0] lpl_{n}_bank;  wire [{D * (AW + 1) - 1}:0] lpl_{n}_epo;  wire [{vld_hi}:0] lpl_{n}_vld;"
                   f"  wire {decl} {out}, lpl_{n}_o;")
-                w(f"    {primitive}_w #(.W({wt}), .D({D}){cp}) u_lpl_{n}_w (.ck(ck_{s}), .rsi(lpr_{s}), .i({net}), "
+                w(f"    {primitive}_w #(.W({wt}), .D({D}){cp}) u_lpl_{n}_w (.ck(ck_{s}), .rsi({reset_input('w',s)}), .i({net}), "
                   f".bank(lpl_{n}_bank), .epo(lpl_{n}_epo), .vld(lpl_{n}_vld));")
             else:
                 w(f"    wire {decl} {out}, lpl_{n}_o;")
             kk = f"(MUT == 2) ? {K + 1} : {K}" if n == "0" and mut else f"{K}"
-            w(f"    {primitive}_r #(.W({wt}), .D({D}), .K({kk}){cp}) u_lpl_{n}_r (.ck(ck_{r}), .rsi(lpr_{r}), "
+            w(f"    {primitive}_r #(.W({wt}), .D({D}), .K({kk}){cp}) u_lpl_{n}_r (.ck(ck_{r}), .rsi({reset_input('r',r)}), "
               f".bank(lpl_{g}_bank), .epo(lpl_{g}_epo), .vld(lpl_{g}_vld), .o(lpl_{n}_o));")
             if Ld.get("unlanded_mutant"):
                 w(f"    assign {out} = {net};   // --mut-unland: the region audit must FAIL on this crossing")
@@ -849,6 +920,9 @@ class Parent:
             if binding['role'] == 'resets' for bit in range(len(binding['regions']))]
         regional_reset_FFs = sum(pad['stages'] for pad in regional_reset_pads)
         flops_rst += regional_reset_FFs
+        forest = self.reset_forest_plan(P)
+        if forest:
+            flops_rst += forest['incremental_FFs']
         pairs = sorted({"-".join(sorted((L["src_region"], L["dst_region"]))) for L in P["lands"]})
         rpairs = sorted({"-".join(sorted((rt["reset_region"], r))) for r in self.regions if r != rt["reset_region"]})
         port_in = {p["name"]: t.get(f"port:{p['name']}", 0) for p in self.mod["ports"]
@@ -873,6 +947,7 @@ class Parent:
                       for L in P["lands"]],
             pads=[dict(net=n, reader=i, stages=k) for (n, i), k in sorted(P["pads"].items())],
             reset=dict(port=self.rst, root_region=rt["reset_region"], depth=rt["RB"], hops=rt["hops"],
+                       **(dict(same_depth_forest=forest) if forest else {}),
                        **(dict(regional_vector_padding_FFs=regional_reset_FFs,
                                regional_vector_padding=regional_reset_pads) if regional_reset_pads else {}),
                        note="flat reference == landed parent with its reset delayed by depth; child c's reset run is "
@@ -1018,6 +1093,7 @@ class Parent:
         muts = [m for m in muts if m not in waived]
         up = "/".join([".."] * len(Path(rel_out).parts))
         srcs = " ".join(self.S["sources"] + self.S.get("child_sources", []) + [LIB_RTL] +
+                        (RESET_FOREST_RTL if self.reset_forest else []) +
                         ([f"{rel_out}/{self.S['top']}_lagref.sv"] if P and P.get("lag") else []))
         defs = " ".join(f"-D{d}" for d in self.S.get("defines") or [])
         return f"""#!/usr/bin/env bash
@@ -1109,7 +1185,7 @@ def audit(spec: dict, rtl_text: str) -> dict:
                         fails.append(f"UNLANDED {n}: {d} ({reg[d]}) -> {i['inst']}.{pin} ({reg[i['inst']]})")
                         continue
                     di = next(x for x in insts if x["inst"] == d)
-                    if di["module"] in ("ot_pl_land_w", "ot_pl_land_chunk_w") and i["module"] in ("ot_pl_land_r", "ot_pl_land_chunk_r") and \
+                    if di["module"] in ("ot_pl_land_w", "ot_pl_land_chunk_w", "ot_pl_land_vector_reset_w") and i["module"] in ("ot_pl_land_r", "ot_pl_land_chunk_r", "ot_pl_land_vector_reset_r") and \
                             (d[:-2] == i["inst"][:-2] or n in {f"lpl_{d[6:-2]}_{x}" for x in ("bank", "epo", "vld")}):
                         landed += pin == "bank"
                     elif n.startswith("lpr_") and d.startswith("u_lpr_"):

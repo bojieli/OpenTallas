@@ -2,13 +2,13 @@
 // Requires ot_pl_land_field_copy_bit from ot_pl_land_field_copies.sv.
 `default_nettype none
 module ot_pl_land_reset_forest #(
-    parameter integer DEPTH=8, LEAVES=47
+    parameter integer DEPTH=8, LEAVES=47, ROOT_LOADS=1
 )(input wire ck,d, output wire [LEAVES-1:0] q);
     localparam integer BRANCHES=(LEAVES+31)/32;
     wire [DEPTH-2:0] prefix;
     wire [BRANCHES-1:0] branch;
     assign prefix[0]=d;
-    generate if(DEPTH<2 || LEAVES<1 || LEAVES>1024) begin:g_invalid_shape
+    generate if(DEPTH<2 || LEAVES<1 || LEAVES>1024 || ROOT_LOADS<1 || ROOT_LOADS>32) begin:g_invalid_shape
         OT_LAND_RESET_FOREST_REQUIRES_DEPTH2_LEAVES1_TO1024 u_bad();
     end endgenerate
     generate for(genvar s=0;s<DEPTH-2;s=s+1) begin:g_prefix
@@ -24,7 +24,7 @@ module ot_pl_land_reset_forest #(
             .ck(ck),.d(branch[l/32]),.q(q[l]));
     end endgenerate
 `ifndef SYNTHESIS
-    initial if(DEPTH<2 || LEAVES<1 || LEAVES>1024) $fatal(1,"LAND_RESET_FOREST_SHAPE");
+    initial if(DEPTH<2 || LEAVES<1 || LEAVES>1024 || ROOT_LOADS<1 || ROOT_LOADS>32) $fatal(1,"LAND_RESET_FOREST_SHAPE");
 `endif
 endmodule
 
