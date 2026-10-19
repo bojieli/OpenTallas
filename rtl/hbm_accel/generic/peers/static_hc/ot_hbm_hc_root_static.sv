@@ -93,15 +93,18 @@ module ot_hbm_hc_root_static #(
         if (padq(XRDQ, XRD, q) < 0 || padq(XRUQ, XRU, q) < 0) $fatal(1, "XRDQ/XRUQ byte above XRD/XRU");
 
     // ------------------------------------------------------------------ synced reset
-    wire [1:0] rn;
-    ot_rst_relay #(.REGIONS(2)) u_rst (.clk(clk), .rst_n_in(rst_n), .rst_n(rn));
-    wire rst_c = rn[0];
+    // L2H-HC 10-19 (SAFE item 3, reset cohorts): eight kept relay regions instead of one rn[0] for the whole root;
+    // every copy releases on the same edge (SYNC 2 + TREE 1), so the schedule is unchanged.
+    wire [7:0] rn;
+    ot_rst_relay #(.REGIONS(8)) u_rst (.clk(clk), .rst_n_in(rst_n), .rst_n(rn));
+    wire rst_pin = rn[0], rst_tgt = rn[1], rst_seq = rn[2], rst_dn = rn[3];
+    wire rst_core = rn[4], rst_mix = rn[5], rst_tbl = rn[6], rst_tail = rn[7];
 
     // ------------------------------------------------------------------ pin registers
     reg [3:0] gv_p; reg [19:0] gr_p; reg [11:0] gp_p; reg [127:0] gd_p;
     reg [3:0] psv_p, psf_p, qf_p; reg [127:0] ps_p;
-    always @(posedge clk or negedge rst_c)
-        if (!rst_c) begin gv_p <= 0; psv_p <= 0; psf_p <= 0; qf_p <= 0; end
+    always @(posedge clk or negedge rst_pin)
+        if (!rst_pin) begin gv_p <= 0; psv_p <= 0; psf_p <= 0; qf_p <= 0; end
         else begin gv_p <= gathered_mix_v; psv_p <= qps_v; psf_p <= qps_f; qf_p <= q_fault; end
     always @(posedge clk) begin
         gr_p <= gathered_mix_row; gp_p <= gathered_mix_pos; gd_p <= gathered_mix_data; ps_p <= qps;
@@ -112,10 +115,10 @@ module ot_hbm_hc_root_static #(
     genvar gxu;
     for (gxu = 0; gxu < 4; gxu = gxu + 1) begin : g_xru
         localparam integer PU = padq(XRUQ, XRU, gxu);
-        ot_hdc_delay #(.W(4), .D(PU), .RESET(1)) u_v (.clk(clk), .rst_n(rst_c),
+        ot_hdc_delay #(.W(4), .D(PU), .RESET(1)) u_v (.clk(clk), .rst_n(rst_pin),
             .d({gv_p[gxu], psv_p[gxu], psf_p[gxu], qf_p[gxu]}),
             .q({gv_q[gxu], psv_q[gxu], psf_q[gxu], qf_q[gxu]}));
-        ot_hdc_delay #(.W(72), .D(PU), .RESET(0)) u_d (.clk(clk), .rst_n(rst_c),
+        ot_hdc_delay #(.W(72), .D(PU), .RESET(0)) u_d (.clk(clk), .rst_n(rst_pin),
             .d({gr_p[gxu*5 +: 5], gp_p[gxu*3 +: 3], gd_p[gxu*32 +: 32], ps_p[gxu*32 +: 32]}),
             .q({gr_q[gxu*5 +: 5], gp_q[gxu*3 +: 3], gd_q[gxu*32 +: 32], ps_q[gxu*32 +: 32]}));
     end
@@ -123,14 +126,14 @@ module ot_hbm_hc_root_static #(
     wire cfg_we, start_v, tbl_we_q, ptgt_fault, ttgt_fault, seq_active;
     wire [9:0] p_addr, start_base, tbl_addr_q; wire [255:0] p_data, tbl_data_q;
     wire [10:0] start_limit; wire [15:0] start_loops;
-    ot_static_program_target #(.PCW(10), .TGT_PIN(1)) u_ptgt (.clk(clk), .rst_n(rst_c), .tgt(tgt), .cfg_v(cfg_v),
+    ot_static_program_target #(.PCW(10), .TGT_PIN(1)) u_ptgt (.clk(clk), .rst_n(rst_tgt), .tgt(tgt), .cfg_v(cfg_v),
         .cfg_target(cfg_target), .cfg_addr(cfg_addr), .cfg_data(cfg_data), .desc_v(desc_v), .desc_base(desc_base),
         .desc_limit(desc_limit), .desc_loops(desc_loops), .launch_v(launch_v), .program_active(seq_active),
         .program_cfg_we(cfg_we), .program_cfg_addr(p_addr), .program_cfg_data(p_data), .program_start_v(start_v),
         .program_start_base(start_base), .program_start_limit(start_limit), .program_start_loops(start_loops),
         .configured(configured), .fault(ptgt_fault));
     // table target: only its row-write port has a consumer (a table is data; a launch on id tgt + 1 is never issued)
-    ot_static_program_target #(.PCW(10), .TGT_PIN(1)) u_ttgt (.clk(clk), .rst_n(rst_c), .tgt(tgt + 8'd1), .cfg_v(cfg_v),
+    ot_static_program_target #(.PCW(10), .TGT_PIN(1)) u_ttgt (.clk(clk), .rst_n(rst_tgt), .tgt(tgt + 8'd1), .cfg_v(cfg_v),
         .cfg_target(cfg_target), .cfg_addr(cfg_addr), .cfg_data(cfg_data), .desc_v(desc_v), .desc_base(desc_base),
         .desc_limit(desc_limit), .desc_loops(desc_loops), .launch_v(launch_v), .program_active(seq_active),
         .program_cfg_we(tbl_we_q), .program_cfg_addr(tbl_addr_q), .program_cfg_data(tbl_data_q), .program_start_v(),
@@ -139,7 +142,7 @@ module ot_hbm_hc_root_static #(
     // ------------------------------------------------------------------ programme
     localparam integer EW = 124;
     wire [EW-1:0] ev; wire ev_v; wire [19:0] ev_t; wire seq_done, seq_fault;
-    ot_hbm_hc_eng_seq_static #(.W(EW)) u_seq (.clk(clk), .rst_n(rst_c), .cfg_we(cfg_we), .cfg_addr(p_addr),
+    ot_hbm_hc_eng_seq_static #(.W(EW)) u_seq (.clk(clk), .rst_n(rst_seq), .cfg_we(cfg_we), .cfg_addr(p_addr),
         .cfg_data(p_data), .start_v(start_v), .start_base(start_base), .start_limit(start_limit),
         .start_loops(start_loops), .event_word(ev), .event_v(ev_v), .t(ev_t), .active(seq_active), .done(seq_done),
         .fault(seq_fault));
@@ -178,29 +181,29 @@ module ot_hbm_hc_root_static #(
     genvar gxd;
     for (gxd = 0; gxd < 4; gxd = gxd + 1) begin : g_xrd
         localparam integer PD = padq(XRDQ, XRD, gxd);
-        ot_hdc_delay #(.W(2), .D(PD), .RESET(1)) u_v (.clk(clk), .rst_n(rst_c),
+        ot_hdc_delay #(.W(2), .D(PD), .RESET(1)) u_v (.clk(clk), .rst_n(rst_dn),
             .d({e_ing && e_ingq == 2'(gxd), sd_v}), .q({dg_v[gxd], dd_v[gxd]}));
-        ot_hdc_delay #(.W(56 + NVW), .D(PD), .RESET(0)) u_d (.clk(clk), .rst_n(rst_c),
+        ot_hdc_delay #(.W(56 + NVW), .D(PD), .RESET(0)) u_d (.clk(clk), .rst_n(rst_dn),
             .d({e_kind, e_slot, e_lo, e_w[4:0], e_cnt, e_word, sd_ss, sd_wa, sd_xa, sd_nv}),
             .q({dg_kind[gxd], dg_slot[gxd*2 +: 2], dg_lo[gxd*5 +: 5], dg_w[gxd*5 +: 5], dg_cnt[gxd*12 +: 12],
                 dg_word[gxd*10 +: 10], dd_ss[gxd], dd_wa[gxd*10 +: 10], dd_xa[gxd*10 +: 10], dd_nv[gxd*NVW +: NVW]}));
     end
-    always @(posedge clk or negedge rst_c)
-        if (!rst_c) qi_v <= 4'd0; else qi_v <= dg_v;
+    always @(posedge clk or negedge rst_dn)
+        if (!rst_dn) qi_v <= 4'd0; else qi_v <= dg_v;
     // decoded constant-index destinations (no runtime part-selects: yosys SHARE stall class)
     always @(posedge clk) for (integer q = 0; q < 4; q = q + 1) if (dg_v[q]) begin
         qi_kind[q] <= dg_kind[q]; qi_slot[q*2 +: 2] <= dg_slot[q*2 +: 2]; qi_lo[q*5 +: 5] <= dg_lo[q*5 +: 5];
         qi_w[q*5 +: 5] <= dg_w[q*5 +: 5]; qi_cnt[q*12 +: 12] <= dg_cnt[q*12 +: 12]; qi_word[q*10 +: 10] <= dg_word[q*10 +: 10];
     end
     reg ev_fault;
-    always @(posedge clk or negedge rst_c)
-        if (!rst_c) ev_fault <= 1'b0; else if (e_ing && e_w[6:5] != 2'd0) ev_fault <= 1'b1;   // quarter wave index < 32
+    always @(posedge clk or negedge rst_core)
+        if (!rst_core) ev_fault <= 1'b0; else if (e_ing && e_w[6:5] != 2'd0) ev_fault <= 1'b1;   // quarter wave index < 32
 
     // ------------------------------------------------------------------ HCP core (TPRE = 6: partial-sum tree root)
     wire o_valid, o_last, core_fault, core_idle; wire [2:0] o_pos; wire [4:0] o_idx; wire [31:0] o_data;
     ot_hdc_v41x_hcp_sys1_static #(.W(W), .TL(4), .PMAX(8), .OMAX(32), .AW(AW), .CW(16), .ML(ML), .DF(32),
         .STATIC_CALENDAR(1), .SYS(1), .SYS_LAT(SYS_LAT), .TPRE(6)) u_core (
-        .clk(clk), .reduction_clk(clk), .scalar_clk(clk), .rst_n(rst_c), .calendar_pop(e_pop),
+        .clk(clk), .reduction_clk(clk), .scalar_clk(clk), .rst_n(rst_core), .calendar_pop(e_pop),
         .cmd_valid(e_launch), .cmd_ready(), .cmd_npos(e_npos), .cmd_nout(6'd24), .cmd_nchunk(16'(K / 8)),
         .cmd_scale(1'b1), .cmd_nf(NF), .cmd_eps(e_eps), .cmd_wbase(AW'({e_wslot, 8'd0})), .cmd_xbase({AW{1'b0}}),
         .w_re(), .x_re(), .w_addr(), .x_addr(), .w_data({(8*W*32){1'b0}}), .x_data({(8*W*16){1'b0}}),
@@ -208,7 +211,7 @@ module ot_hbm_hc_root_static #(
         .fault(core_fault), .idle(core_idle),
         .sd_v(sd_v), .sd_ss(sd_ss), .sd_nv(sd_nv), .sd_wa(sd_wa), .sd_xa(sd_xa), .sys_sum(ps_q), .sys_fault(|psf_q));
     // descriptor -> the 4 quarters (out flops); quarter q's lanes are 64q .. 64q + 63 of the run
-    always @(posedge clk or negedge rst_c) if (!rst_c) qd_v <= 4'd0; else qd_v <= dd_v;
+    always @(posedge clk or negedge rst_dn) if (!rst_dn) qd_v <= 4'd0; else qd_v <= dd_v;
     always @(posedge clk) for (integer q = 0; q < 4; q = q + 1) begin
         qd_ss[q] <= dd_ss[q]; qd_wa[q*10 +: 10] <= dd_wa[q*10 +: 10]; qd_xa[q*10 +: 10] <= dd_xa[q*10 +: 10];
         qd_nv[q*7 +: 7] <= (dd_nv[q*NVW +: NVW] <= NVW'(64 * q)) ? 7'd0 : (dd_nv[q*NVW +: NVW] >= NVW'(64 * q + 64)) ? 7'd64
@@ -216,8 +219,8 @@ module ot_hbm_hc_root_static #(
     end
     // the subtree sums of the task issued SYS_LAT edges ago must be in the pin flops now (all 4 quarters)
     reg [SYS_LAT-1:0] xv; reg ps_fault;
-    always @(posedge clk or negedge rst_c)
-        if (!rst_c) begin xv <= 0; ps_fault <= 1'b0; end
+    always @(posedge clk or negedge rst_mix)
+        if (!rst_mix) begin xv <= 0; ps_fault <= 1'b0; end
         else begin
             xv <= {xv[SYS_LAT-2:0], sd_v};
             if (psv_q != {4{xv[SYS_LAT-1]}}) ps_fault <= 1'b1;
@@ -225,8 +228,8 @@ module ot_hbm_hc_root_static #(
 
     // ------------------------------------------------------------------ mix store
     reg [8*24*32-1:0] mixes; reg [191:0] have; reg mix_fault; reg [3:0] gm_open;
-    always @(posedge clk or negedge rst_c) begin
-        if (!rst_c) begin have <= 0; mix_fault <= 0; gm_open <= 0; end
+    always @(posedge clk or negedge rst_mix) begin
+        if (!rst_mix) begin have <= 0; mix_fault <= 0; gm_open <= 0; end
         else begin
             if (e_clear) have <= 0;
             if (e_gm) gm_open[e_gmq] <= e_gmo;
@@ -259,8 +262,8 @@ module ot_hbm_hc_root_static #(
     ot_sram_1r1w_1024x256_m2_r2c2 u_tbl (.clk(clk), .r_ce_in(tf_rd), .r_addr_in({1'b0, tf_set, tf_row}),
         .rd_out(tbl_rd), .w_ce_in(tbl_we_q && !seq_active), .w_addr_in(tbl_addr_q), .wd_in(tbl_data_q),
         .w_mask_in({256{1'b1}}), .rr_en(2'b00), .rr_addr(18'd0), .cr_en(2'b00), .cr_sel(16'd0));
-    always @(posedge clk or negedge rst_c) begin
-        if (!rst_c) begin tf_cnt <= 0; tf_rd_q <= 0; tbl_fault <= 0; end
+    always @(posedge clk or negedge rst_tbl) begin
+        if (!rst_tbl) begin tf_cnt <= 0; tf_rd_q <= 0; tbl_fault <= 0; end
         else begin
             tf_rd_q <= tf_rd; tf_row_q <= tf_row;
             if (tf_rd) tf_cnt <= tf_cnt - 1'b1;
@@ -287,12 +290,12 @@ module ot_hbm_hc_root_static #(
     genvar gu;
     for (gu = 0; gu < 2; gu = gu + 1) begin : g_tail
         wire go = e_tl && e_tunit == gu;
-        ot_hbm_hc_tail_unit_static #(.MUT_PRE((MUT == 2 && gu == 0) ? 1 : 0)) u_t (.clk(clk), .rst_n(rst_c),
+        ot_hbm_hc_tail_unit_static #(.MUT_PRE((MUT == 2 && gu == 0) ? 1 : 0)) u_t (.clk(clk), .rst_n(rst_tail),
             .launch(go), .mixes(mix_at), .bases(t_bases), .scales(t_scales),
             .result_v(tv[gu]), .result(tres[gu*768 +: 768]), .fault(tfl[gu]));
     end
-    always @(posedge clk or negedge rst_c) begin
-        if (!rst_c) begin tready <= 0; tail_fault <= 0; end
+    always @(posedge clk or negedge rst_tail) begin
+        if (!rst_tail) begin tready <= 0; tail_fault <= 0; end
         else begin
             for (integer u = 0; u < 2; u = u + 1) begin
                 if (tv[u]) tready[u] <= 1'b1;
@@ -304,8 +307,8 @@ module ot_hbm_hc_root_static #(
     end
 
     // ------------------------------------------------------------------ result pins (all flops)
-    always @(posedge clk or negedge rst_c) begin
-        if (!rst_c) result_v <= 4'd0;
+    always @(posedge clk or negedge rst_pin) begin
+        if (!rst_pin) result_v <= 4'd0;
         else result_v <= e_emit ? e_qmask : 4'd0;
     end
     always @(posedge clk) if (e_emit) for (integer q = 0; q < 4; q = q + 1) if (e_qmask[q]) begin
@@ -313,8 +316,8 @@ module ot_hbm_hc_root_static #(
     end
 
     // ------------------------------------------------------------------ status
-    always @(posedge clk or negedge rst_c) begin
-        if (!rst_c) begin fault <= 0; program_active <= 0; program_done <= 0; end
+    always @(posedge clk or negedge rst_pin) begin
+        if (!rst_pin) begin fault <= 0; program_active <= 0; program_done <= 0; end
         else begin
             program_active <= seq_active; program_done <= seq_done;
             if (seq_fault || ev_fault || ps_fault || (|qf_q) || core_fault || mix_fault || tbl_fault || tail_fault ||

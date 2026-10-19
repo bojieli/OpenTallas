@@ -1,0 +1,173 @@
+{
+ "name": "hbm_hc_root_d4g_xr2-s1-COMMIT",
+ "block": "ot_hbm_hc_root_static",
+ "ref_tile": true,
+ "owner": "Claude:LEAD2-HBM/L2H-HC",
+ "purpose": "d4g HC root with the LANDED root<->hub latency (per-quarter pads, XRD/XRU 11/11)",
+ "threads": 16,
+ "peak_ram_gb": 48,
+ "source": {
+  "branch": "claude/l2h-hcroot-1019",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/test/run_hbm_hc_root_uring.sh",
+   "rtl/test/tb_hbm_hc_eng4_static.sv",
+   "rtl/test/tb_hbm_hc_eng4_static_hier.vlt",
+   "tools/rtl_hbm_hc_eng_static_gate.py",
+   "tools/hdc_golden_v41.py",
+   "tools/hdc_golden.py",
+   "tools/rtl_hdc_v41x_hcp_campaign.py",
+   "rtl/hbm_accel/generic/peers/static_hc",
+   "rtl/hdc",
+   "rtl/lib",
+   "rtl/hbm_accel/generic/vm/static",
+   "rtl/hbm_accel/die_glue/ot_hbm_rly.sv",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "rtl/test/run_hbm_hc_root_landed.sh",
+   "results/rtl/hbm_hc_root_d4g_xr_1018",
+   "tools/hbm_die_v16/d4g_hc_xr.py"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hbm_hc_root_static #(.QDRLY(2), .XRD(11), .XRU(11), .XRDQ(101385739), .XRUQ(84543243)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_root_static.sv rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_eng_seq_static.sv rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_tail_unit_static.sv rtl/hbm_accel/generic/peers/static_hc/ot_hdc_v41x_hcp_sys1_static.sv rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_tail_static.sv rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv rtl/hdc/v41x/ot_hdc_v41x_hcp.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fastfp_lat.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/v41x/ot_hdc_v41x_sfu.sv rtl/hdc/v41/ot_hdc_fdiv.sv rtl/hdc/v41/ot_hdc_sinkhorn.sv rtl/hdc/v41/ot_hdc_sk_arith.sv rtl/hdc/v41/ot_hdc_sk_recip_rom.sv rtl/lib/ot_rst_relay.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "hcxr_m0",
+    "cmd": "bash rtl/test/run_hbm_hc_root_landed.sh {RUN}/bench/hcxr_m0 0 11 11 060b060b 050a070b 060b060b 050a070b",
+    "expect": "pass",
+    "pass_regex": "^HC_ROOT_LANDED MUT=0 .* rc=0",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "min_count_regex": "HC_ENG_DONE mode=0 npos=1 mixes=(\\d+) mixbad=0"
+   },
+   {
+    "name": "hcxr_unl",
+    "cmd": "bash rtl/test/run_hbm_hc_root_landed.sh {RUN}/bench/hcxr_unl 0 0 0 ffffffff ffffffff 060b060b 050a070b",
+    "expect": "fail",
+    "pass_regex": "^HC_ROOT_LANDED MUT=0 .* rc=0",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "HC_ENG FAIL|HC_ENG_FAULT|MISMATCH",
+    "fail_witness": "results/rtl/hbm_hc_root_d4g_xr_1018/hcxr_unl.log",
+    "note": "root left at XRD = XRU = 0 (the unlanded kit) on the landed die links -> fault"
+   },
+   {
+    "name": "hcxr_xruse",
+    "cmd": "bash rtl/test/run_hbm_hc_root_landed.sh {RUN}/bench/hcxr_xruse 0 11 11 060b060b 050a060b 060b060b 050a070b",
+    "expect": "fail",
+    "pass_regex": "^HC_ROOT_LANDED MUT=0 .* rc=0",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "HC_ENG FAIL|HC_ENG_FAULT|MISMATCH",
+    "fail_witness": "results/rtl/hbm_hc_root_d4g_xr_1018/hcxr_xruse.log",
+    "note": "root told XRUQ SE 6, the landed SE up-link is 7 -> SE subtree sum 1 edge late -> ps_fault"
+   },
+   {
+    "name": "hcxr_xrdne",
+    "cmd": "bash rtl/test/run_hbm_hc_root_landed.sh {RUN}/bench/hcxr_xrdne 0 11 11 070b060b 050a070b 060b060b 050a070b",
+    "expect": "fail",
+    "pass_regex": "^HC_ROOT_LANDED MUT=0 .* rc=0",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "HC_ENG FAIL|HC_ENG_FAULT|MISMATCH",
+    "fail_witness": "results/rtl/hbm_hc_root_d4g_xr_1018/hcxr_xrdne.log",
+    "note": "root told XRDQ NE 7, the landed NE down-link is 6 -> NE descriptor/ingest 1 edge early -> fault/mismatch"
+   },
+   {
+    "name": "hcxr_mut2",
+    "cmd": "bash rtl/test/run_hbm_hc_root_landed.sh {RUN}/bench/hcxr_mut2 2 11 11 060b060b 050a070b 060b060b 050a070b",
+    "expect": "fail",
+    "pass_regex": "^HC_ROOT_LANDED MUT=2 .* rc=0",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "HC_ENG FAIL|HC_ENG_FAULT|MISMATCH",
+    "fail_witness": "results/rtl/hbm_hc_root_d4g_xr_1018/hcxr_mut2.log",
+    "note": "root tail unit 0 pre-sigmoid eps dropped (MUT 2) on the landed configuration"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hbm_hc_root_d4g_xr2/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hbm_hc_root_d4g_xr2/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 48
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hbm_hc_root_d4g_xr2 --out {RUN}/record/views/ot_hbm_hc_root_static --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/hbm_hc_root_d4g_xr2/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/hbm_hc_root_d4g_xr2/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/hbm_hc_root_d4g_xr2/hbm_hc_root_d4g_xr2-s1-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "L2H-HC 10-19 (H.STA.BLK.1): successor of hbm_hc_root_d4g_xr (route r1-88f1fa301 crashed twice in macro_place.tcl 'expected 1 macros, netlist has 2'). The root has TWO ot_sram_1r1w_1024x256 macros: u_tbl (bases/scales table) and u_seq.u_program (HC event programme); the kit now names both instances explicitly on the 43.2 um lattice, side by side at mid-height (programme x86.4, table x388.8, y302.4; 127.7 um channel between their pin faces, 86.4/84.5 um to W/E), W/E pin-face halo 10.8 um (macro_halo_x_um) for the native 57 contacts/5.4 um faces; io_hold_margin 0.03. Same RTL/params/pins/outline as xr. HC-XRDU 10-18 (RELEASE_TREE H.STA.WIRE.8): the d4g HC root hbm_hc_root_d4g with the LANDED root <-> quarter-hub latency compiled in: XRD 11 / XRU 11 (compiler constants = per-quarter maxima) and per-quarter XRDQ = SW/SE/NW/NE 11/6/11/6 (32'h060b060b), XRUQ = 11/7/10/5 (32'h050a070b), derived by tools/hbm_die_v16/d4g_hc_xr.py from the GEN2 landed smoke contract (landed lane latency ceil(N/2) + 1 + E from each landing's K strap; N = 17/7/18/8 down, 18/9/16/5 up). The root pads quarter q by XRD - XRDQ[q] stages before its qd/qi out flops and XRU - XRUQ[q] after its qps/q_fault/gathered-mix pin flops (ot_hdc_delay, 65 + 76 b per quarter, max 5 stages), so every quarter runs on one compiled timeline (RAW0 167 + 22 = 189, ingest lead 13). Same RTL/ports/outline/pins as hbm_hc_root_d4g; only the four parameters differ. Re-derive (and re-kit) when the GEN2 stations replace the smoke stations (root moves to the centre slot): l7_wire.py applies d4g_hc_xr.py to the landed contract."
+}
