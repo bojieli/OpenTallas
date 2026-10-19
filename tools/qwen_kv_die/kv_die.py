@@ -604,9 +604,57 @@ BINDINGS['qkd_lnk'] = dict(module='ot_qkvd_split_kvlink_se', file='rtl/qwen_sys/
 _BASE = dict(HEAD=HEAD, ECTL=ECTL, ENG_H=ENG_H, RENG=RENG, TILE_Y=dict(TILE_Y), FRAMES=dict(FRAMES))
 
 
+def _ectl_st_frame(split):
+    """KV-ECTL4 10-18 (coordinator 0gs (d), 'the KV die may grow'): the ECTL slot takes the hardened frame of
+    qkd_ectl3_kiss_st (physical/ref_tile/qkd_ectl3_kiss_st, 725.76 x 261.36: A k3 172.8 x 194.4 | B pg16 | C on the 43.2
+    lattice) instead of the 648 x 129.6 A | B | C abutment, and its pins at the kit's exact pin plan (_split_pins).
+    Default on with the static die's kiss_st binding (OT_KV_STATIC_DIE=1, OT_KV_ASTK_ST default 1); OT_KV_ECTL_ST_FRAME=0
+    keeps the old slot (comparison only)."""
+    d = '1' if (split and KSD.ON and KSD.ASTK_ST) else '0'
+    return os.environ.get('OT_KV_ECTL_ST_FRAME', d) == '1' and split and KSD.ON and KSD.ASTK_ST
+
+
+ECTL_ST = (725.76, 261.36)
+ECTL_ST_PINS = 'results/arch/qwen_kv_ectl3_kiss_st_1018/qkd_ectl3_kiss_st.tcl'
+# die port of qkd_ectlk -> kit pins (bases) of qkd_ectl3_kiss_st
+ECTL_ST_PORTS = dict(si=['si'], so=['so'], t0=['t0'], t1=['t1'], e0=['e0'], e1=['e1'], e2=['e2'], e3=['e3'], s0=['s0'],
+                     s1=['s1'], s2=['s2'], s3=['s3'], rq=['req_valid', 'req_t', 'req_v', 'req_epoch', 'req_layer'],
+                     rs=['rsp_valid', 'rsp_data', 'rsp_t', 'rsp_v', 'rsp_epoch', 'rsp_layer'], kg=['kgo', 'epoch', 'layer'],
+                     kf=['fault'], cfg=['cfg'], rst_n=['rst_n'], ck_a=['ck[0]'], ck_b=['ck[1]'], ck_c=['ck[2]'])
+
+
+def _ectl_st_ports():
+    """{die port: ('face', bits, face, layer, centre along the face, pitch tracks)} from the kit's exact io_tcl"""
+    pins = {}
+    for ln in (ROOT / ECTL_ST_PINS).read_text().splitlines():
+        mt = re.match(r'place_pin -pin_name \{(\S+)\} -layer (\S+) -location \{([\d.]+) ([\d.]+)\}', ln)
+        if not mt:
+            continue
+        n, lay, x, y = mt.group(1), mt.group(2), float(mt.group(3)), float(mt.group(4))
+        face = 'S' if y < 0.1 else 'N' if y > ECTL_ST[1] - 0.1 else 'W' if x < 0.1 else 'E'
+        pins[n] = (face, lay, x if face in 'NS' else y)
+    out = {}
+    for dp, bases in ECTL_ST_PORTS.items():
+        sel = [v for n, v in pins.items() if n in bases or re.sub(r'\[\d+\]$', '', n) in bases]
+        if not sel:
+            raise ValueError(f'kv_die: ECTL_ST port {dp}: no kit pin {bases} in {ECTL_ST_PINS}')
+        faces = {v[0] for v in sel}
+        if len(faces) != 1:
+            raise ValueError(f'kv_die: ECTL_ST port {dp} spans faces {faces}')
+        lays = sorted({v[1] for v in sel}, key=lambda L: -sum(1 for v in sel if v[1] == L))
+        a = [v[2] for v in sel]
+        span = max(a) - min(a)
+        pitch = max(1, int(round(span / (len(sel) * (0.064 if lays[0] == 'M6' else 0.048))))) if len(sel) > 1 else 1
+        out[dp] = ('face', len(sel), faces.pop(), lays[0], round((max(a) + min(a)) / 2, 3), pitch)
+    return out
+
+
 def _set_geometry(split, reserve_static_memory=False, reserve_native_astk=False):
     """module geometry for the plain KV die (split False) or the split KV/system die (split True)"""
-    global HEAD, ENG_H, RENG, TILE_Y, FRAMES, LAND_W, ASTK_W
+    global HEAD, ENG_H, RENG, TILE_Y, FRAMES, LAND_W, ASTK_W, ECTL
+    ECTL = ECTL_ST if _ectl_st_frame(split) else _BASE['ECTL']
+    if ECTL[0] > (SPLIT_HEAD_V11 if split else _BASE['HEAD'])[0]:
+        raise ValueError(f'kv_die: ECTL frame {ECTL} wider than the head column')
     if reserve_static_memory and not split:
         raise ValueError('native static memory reservation requires split KV/system die')
     if reserve_native_astk and not split:
@@ -884,8 +932,26 @@ D2DS_REC_TX = ['record_tx_observed_v', 'record_tx']
 D2DS_REC_RX = ['record_send_kind', 'record_witness_slot', 'record_rx_v', 'record_rx']
 
 
+# QLB-KV 10-18 (QXF-LINK 6ef1a097f F4): TXDP is a REQUIRED parameter of qkd_d2d_static (PR = 1; a zero byte does not
+# elaborate: D2D_TXDP_NOT_COMPILED).  The die binds the compiler's KV vector D2D_TXDP_K from the committed calendar image
+# (rtl/qwen_sys/d2d_static_20261015/d2d_cal_image.svh, tools/qwen_split/d2d_cal_seq_image.py); OT_KV_D2D_TXDP_K=0x...
+# overrides it with the vector layer_compile.py derives for THIS die (RUN/layer_compile/d2d/txdp.svh QKD_D2D_TXDP).
+# kv_relay_check.sh gates bound == compiled.
+D2D_CAL_IMAGE = 'rtl/qwen_sys/d2d_static_20261015/d2d_cal_image.svh'
+
+
+def d2d_txdp_k():
+    import kv_static as _ks          # one source of the vector (kv_static.d2d_txdp_k)
+    return _ks.d2d_txdp_k()
+
+
+def _ks_ntx():
+    import kv_static as _ks          # KV-PLAN5: one source of the TX lane count (kv_static.d2d_ntx_k, closed r7t = 3)
+    return _ks.d2d_ntx_k()
+
+
 def d2ds_binding():
-    return dict(module='qkd_d2d_static', file=D2DS_FILE, parameters=dict(NL=2),
+    return dict(module='qkd_d2d_static', file=D2DS_FILE, parameters=dict(NL=2, NTX=_ks_ntx(), TXDP=d2d_txdp_k()),
                 ports=dict(ck0=['ck'], rst_n=['rst_n'], fdi=['fdi_tx_up', 'fdi_tx_v', 'fdi_tx_flit', 'fdi_rx_v', 'fdi_rx_flit'],
                            phy_rst_n=['phy_rst_n'], svc=list(D2DS_SVC), lup=['link_up'], rec_tx=list(D2DS_REC_TX),
                            rec_rx=list(D2DS_REC_RX), lrc=['host_link_reset_req', 'host_recovery_clear'],
@@ -1515,6 +1581,14 @@ def build(*args, **kwargs):
         print('kv die BUNDLE_EQ: ' + ', '.join(f"{n_} {r_.get('stages', r_.get('skipped'))}"
                                                for n_, r_ in m['bundle_eq']['bundles'].items())
               + f" ({len(m['bundle_eq']['added'])} pad relays)", file=sys.stderr)
+    # KV-ECTL4 10-18 (coordinator 0gs (d)): one K round trip (KSD.ECTLK_RESPONSE_LAT) for every ECTL frame -- the frame's
+    # hardened children carry RESPONSE_LAT / ROW_RETURN_LAT / QK_ISSUE_AGE as RTL parameters; pads on the 38-b request chain
+    import kv_k_rt_eq
+    if KSD.ON and kv_k_rt_eq.on() and kwargs.get('split', len(args) > 7 and args[7]):
+        m = kv_k_rt_eq.equalize(sys.modules[__name__], m)
+        r_ = m['k_rt_eq']
+        print(f"kv die K_RT_EQ: target {r_['target']} (QK_ISSUE_AGE {r_['qk_issue_age']}), natural "
+              f"{r_['natural_min']}..{r_['natural_max']}, {len(r_['added'])} pad relays", file=sys.stderr)
     if LANDSLOT and kwargs.get('split', len(args) > 7 and args[7]):
         if os.environ.get('OT_KV_RLY_STD', '0') != '1' or not SEAM:
             raise ValueError('OT_KV_LANDSLOT=1 needs OT_KV_RLY_STD=1 and OT_KV_SEAM=1 (landing slots are relay-standard rows '
@@ -3581,6 +3655,13 @@ def _split_pins(M, m=None):
                 mm.ports[x_] = ('area', 1, c_, ECTL[1] / 2, 1)
         if 'rst_n' in mm.ports:
             mm.ports['rst_n'] = ('area', 1, ECTL[0] / 2, ECTL[1] / 2 + 8.0, 1)
+        if ectl_ == 'qkd_ectlk' and ECTL == ECTL_ST:
+            # KV-ECTL4: the hardened qkd_ectl3_kiss_st frame's exact pins (kit io_tcl), every port it has
+            for p_, v_ in _ectl_st_ports().items():
+                if p_ in mm.ports:
+                    if mm.ports[p_][1] != v_[1]:
+                        raise ValueError(f'kv_die: qkd_ectlk {p_} {mm.ports[p_][1]} b vs kit {v_[1]} b')
+                    mm.ports[p_] = v_
     if ectls_:
         exo = up((HEAD[0] - ECTL[0]) / 2, GX)
         if 'qkd_rhead' in M:
@@ -4745,13 +4826,28 @@ def main(argv=None):
     a.kv_wq_binary = a.kv_wq_binary or a.kv_wq_leaf_s
     a.kv_wq_leaves = a.kv_wq_leaves or a.kv_wq_binary
     if a.mode == 'case' and a.reserve_native_astk:
-        ap.error('native ASTK envelope reservation is plan-only until selected profile/clock/pin binding closes')
+        if not KSD.ON or not KSD.ASTK_ST or os.environ.get('OT_KV_ASTK_EXPAND', '0') != '1':
+            ap.error('native ASTK case requires the actual static ASTK EXPAND profile (OT_KV_ASTK_EXPAND=1)')
+        import kv_astk_expand
+        kv_astk_expand.require_views(ROOT)
+        ap.error('expanded ASTK production calendar qualification remains required before physical case generation')
     if a.mode == 'case' and a.kv_wq_leaves and not a.kv_wq_mirror:
         ap.error('per-PC leaf candidate is plan-only: encoder and closed-view pin/context gates remain open')
     m = build(a.r, kv_wq_leaves=a.kv_wq_leaves, kv_wq_binary=a.kv_wq_binary, kv_wq_leaf_s=a.kv_wq_leaf_s, kv_wq_head=a.kv_wq_head, kv_wq_wide=a.kv_wq_wide, kv_wq_mirror=a.kv_wq_mirror, split=a.split, reserve_static_memory=a.reserve_static_memory, reserve_native_astk=a.reserve_native_astk)
     if a.mode == 'case':
         m['buses'] = [(bid, cls, bits, eps) for bid, cls, bits, eps in m['buses']]
         print(json.dumps(case(m, a.out)))
+        # QLB-KV 10-18: the case writes its generator-model die-run table too (case_kv/relay_stages.json; kvs14c had none).
+        # The relay check still walks the BOUND netlist (kv_relay_check.sh); this table is the cross-check of the model.
+        try:
+            sys.path.insert(0, str(ROOT / 'tools'))
+            from qwen_kv_die import relay_stages_export as _rsx
+            import die_relay_stages as _drs
+            _doc = _rsx.export_model(m, f'qwen_kv:{a.out.name}', sources=['tools/qwen_kv_die/kv_die.py'])
+            _drs.write(a.out / 'relay_stages.json', _doc)
+            print(f"kv die relay_stages.json: {_doc['bus_count']} buses, {_doc['problem_count']} problems, digest {_doc['digest']}")
+        except Exception as _e:                      # noqa: BLE001
+            print(f'kv die relay_stages.json export FAILED: {_e!r}'[:600])
         if m.get('land_slots'):
             (a.out / 'land_slots.json').write_text(json.dumps(m['land_slots'], indent=1, default=str) + '\n')
         return 0

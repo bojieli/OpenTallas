@@ -1,0 +1,18 @@
+ot-run: ot-epyc4       admits  -129 GB (avail 119, growth 209, headroom 0, waiters 6/692 GB) load 152/128 running 44 disk 589 GB 
+ot-run: ot-epyc5       admits    28 GB (avail 317, growth 297, headroom 0, waiters 8/835 GB) load 147/128 running 43 disk 1721 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/rlyh0-en-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/rlyh0-en-1019
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-3300900-1792397412 after 0 s
+FWD_LANE NF=27 CD=4.50 XL=0.00 DOFF=2.00 G=12 R0=11 L=26 K=3
+FWD_LANE NF=8 CD=4.00 XL=0.00 DOFF=2.00 G=10 R0=14 L=8 K=4
+FWD_LANE NF=5 CD=4.40 XL=0.00 DOFF=2.00 G=9 R0=45 L=5 K=1
+FWD_LANE NF=5 CD=4.40 XL=0.00 DOFF=2.00 G=40 R0=9 L=7 K=6
+FWD_LANE NF=5 CD=3.60 XL=0.00 DOFF=2.00 G=10 R0=12 L=7 K=5
+FWD_LANE NF=5 CD=3.60 XL=20.00 DOFF=2.00 G=10 R0=12 L=7 K=5
+FWD_LANE NF=2 CD=3.60 XL=0.00 DOFF=2.00 G=10 R0=12 L=2 K=0
+FWD_LANE NF=1 CD=0.00 XL=0.00 DOFF=2.00 G=9 R0=45 L=2 K=6
+FWD_LANE NF=1 CD=0.00 XL=0.00 DOFF=2.00 G=40 R0=9 L=2 K=1
+FWD_LANE NF=1 CD=0.00 XL=0.00 DOFF=2.00 G=10 R0=12 L=2 K=0
+FWD_BENCH FAIL 5666 errors in 5709 checks (faults 0)
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-3300900-1792397412): exit 1

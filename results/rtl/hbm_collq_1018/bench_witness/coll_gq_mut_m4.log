@@ -1,35 +1,35 @@
-COLLQ missing write q0 b0 cyc169
-COLLQ missing write q0 b0 cyc175
-COLLQ missing write q0 b0 cyc181
-COLLQ missing write q0 b0 cyc187
-COLLQ missing write q0 b0 cyc193
-COLLQ missing write q0 b0 cyc199
-COLLQ missing write q0 b0 cyc205
-COLLQ missing write q0 b0 cyc211
-COLLQ missing write q0 b0 cyc217
-COLLQ missing write q0 b0 cyc469
-COLLQ missing write q0 b0 cyc475
-COLLQ missing write q0 b0 cyc481
-COLLQ missing write q0 b0 cyc619
-COLLQ missing write q0 b0 cyc631
-COLLQ missing write q0 b0 cyc769
-COLLQ missing write q0 b0 cyc775
-COLLQ missing write q0 b0 cyc781
-COLLQ missing write q0 b0 cyc787
-COLLQ missing write q0 b0 cyc793
-COLLQ missing write q0 b0 cyc799
-COLLQ missing write q0 b0 cyc805
-COLLQ missing write q0 b0 cyc949
-COLLQ missing write q0 b0 cyc1069
-COLLQ missing write q0 b0 cyc1075
-COLLQ missing write q0 b0 cyc1081
-COLLQ missing write q0 b0 cyc1087
-COLLQ missing write q0 b0 cyc1093
-COLLQ missing write q0 b0 cyc1099
-COLLQ missing write q0 b0 cyc1105
-COLLQ missing write q0 b0 cyc1111
+COLLQ missing write q0 b0 cyc171
+COLLQ missing write q0 b0 cyc177
+COLLQ missing write q0 b0 cyc183
+COLLQ missing write q0 b0 cyc189
+COLLQ missing write q0 b0 cyc195
+COLLQ missing write q0 b0 cyc201
+COLLQ missing write q0 b0 cyc207
+COLLQ missing write q0 b0 cyc213
+COLLQ missing write q0 b0 cyc219
+COLLQ missing write q0 b0 cyc471
+COLLQ missing write q0 b0 cyc477
+COLLQ missing write q0 b0 cyc483
+COLLQ missing write q0 b0 cyc621
+COLLQ missing write q0 b0 cyc633
+COLLQ missing write q0 b0 cyc771
+COLLQ missing write q0 b0 cyc777
+COLLQ missing write q0 b0 cyc783
+COLLQ missing write q0 b0 cyc789
+COLLQ missing write q0 b0 cyc795
+COLLQ missing write q0 b0 cyc801
+COLLQ missing write q0 b0 cyc807
+COLLQ missing write q0 b0 cyc951
+COLLQ missing write q0 b0 cyc1071
+COLLQ missing write q0 b0 cyc1077
+COLLQ missing write q0 b0 cyc1083
+COLLQ missing write q0 b0 cyc1089
+COLLQ missing write q0 b0 cyc1095
+COLLQ missing write q0 b0 cyc1101
+COLLQ missing write q0 b0 cyc1107
+COLLQ missing write q0 b0 cyc1113
 COLLQ FAIL errors=1784
-- rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_gq.sv:278: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
-- Verilator: $finish at 2us; walltime 0.140 s; speed 14.497 us/s
-- Verilator: cpu 0.141 s on 1 threads; alloced 1023 MB
+- rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_gq.sv:285: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.067 s; speed 30.606 us/s
+- Verilator: cpu 0.067 s on 1 threads; allocated 13 MB

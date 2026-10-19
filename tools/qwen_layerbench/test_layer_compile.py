@@ -69,6 +69,21 @@ def bus(si, sp, di, dp, st, age=None, w=1):
 
 
 class Compile(unittest.TestCase):
+    def test_landed_codec_source_and_calendar(self):
+        def tile(params):
+            return ('module qkd_kvs_attn (); qkd_native_attention_programme #(' + params + ') u_attn (); endmodule')
+        self.assertEqual(C.kv_codec_edges(tile('.MUT(0)')), 1)
+        self.assertEqual(C.kv_codec_edges(tile('.MUT(0), .LAND(1)')), 2)
+        with self.assertRaises(SystemExit):
+            C.kv_codec_edges(tile('.LAND(MISSING)'))
+        with self.assertRaises(SystemExit):
+            C.kv_codec_edges('module stub; endmodule')
+        stages = dict(CS_TXS=2, SC_TX=2, CS_X3S=2, SC_X3=2, KS_TXS=9, SK_TXP=11)
+        legacy = C.txd_of(stages, kv_codec=1)[1]
+        landed = C.txd_of(stages, kv_codec=2)[1]
+        self.assertEqual(landed['K'], [24, 4, 3, 3])
+        self.assertEqual(landed['C'], legacy['C'])
+
     def test_xdie_plan_cross_check(self):
         # TOKEN-XDIE-QWEN plan stages (every seam bundle at its netlisted max) -> its record: TXD C [8,3,1,9] K [23,4,3,3], X 7
         S = dict(CS_TXS=2, CS_RXV=2, CS_RXP=2, CS_X3S=2, SC_TX=2, SC_X3=2, KS_RXV=11, KS_RXP=11, KS_TXS=9, KS_TXK=9,

@@ -40,7 +40,19 @@ SPEC (JSON; paths relative to the repo root):
   static         [ports / nets] identity straps: never landed (case-analysed), constant in the bench (tb_static {p: v})
   D, E           ring depth / read offset (default 4 / 2: as Q-CLUSTER-LANDALL)
   reach_um       reset-run hop reach (default 405)         residual_ps: inter-region die residual on the 1-bit reset hops (60)
-  bench          {cycles, reset_cycles, sim: iverilog|verilator}
+  bench          {cycles, reset_cycles, sim: iverilog|verilator, child_lockstep: [fnmatch patterns]}
+                 child_lockstep (schedule "reference" only; default none): also compare every non-clock pin of the
+                 matching children, landed vs flat, at the child (hierarchical u_lp.<inst>.<pin> vs u_flat.<inst>.<pin>):
+                 reset pins from reset_cycles on, the rest after warm-up.  Use it when the parent's own outputs do not
+                 expose a landed bundle under random stimulus (a centre that ignores ill-formed commands): the
+                 landing / reset mutants are then seen where they act, at the child's pins.
+  schedule       "offsets" (default: the time-offset method above) | "reference" (cross-region LOOPS, e.g. a centre that
+                 commands leaves and collects their results): no offsets / pads; every child's reset run is held
+                 reset_extra (default E + 1 + D) more stages so all landings are warm before any child leaves reset, and
+                 the lockstep REFERENCE is the flat parent with ref_params (the flat parent's own latency parameters
+                 re-scheduled by +E+1 per landed crossing, e.g. relay depths), reset delayed RB + reset_extra, ports at
+                 offset 0.  The record's "compiler" block carries ref_params as the re-schedule.
+  ref_params     {name: value} parameters of the reference flat instance (schedule "reference"; default = params)
   mut_child      child whose reset run MUT 4 lengthens (default: the first child with a reset pin); pick one whose state
                  outlives the reset (a sticky flag / counter): a pure pipeline register forgets a late reset in one edge
 """
@@ -308,6 +320,8 @@ class Parent:
         self.K = self.E
         self.A = self.E + 1
         self.AW = 1 if self.D <= 2 else math.ceil(math.log2(self.D))
+        self.reference = spec.get("schedule", "offsets") == "reference"
+        self.rx = int(spec.get("reset_extra", self.A + self.D)) if self.reference else 0
 
     def rng(self, n):
         if n in self.wires:
@@ -399,6 +413,11 @@ class Parent:
                 edges.append((d, f"port:{p}", p, 0, False, None))
         nodes = sorted({e[0] for e in edges} | {e[1] for e in edges} | set(self.region))
         t = {v: 0 for v in nodes}
+        if self.reference:
+            lst = sorted(lands.values(), key=lambda L: int(L["name"]))
+            if mut_unland and lst:
+                lst[0]["unlanded_mutant"] = True
+            return dict(t=t, edges=edges, lands=lst, landkey=lands, pads={}, nreg=nreg, drv=drv, rd=rd, out_drv=out_drv)
         for it in range(len(nodes) + 1):
             ch = False
             for a, b, n, add, _, _ in edges:
@@ -523,11 +542,11 @@ class Parent:
         rsub = {}
         for ins in self.insts:
             i, r = ins["inst"], self.region[ins["inst"]]
-            tc = P["t"].get(i, 0)
+            tc = P["t"].get(i, 0) + self.rx
             if any(pin in (S.get("reset_pins") or []) and ex.strip() == self.rst for pin, ex in ins["conns"].items()):
                 kk = f"(MUT == 4) ? {tc + 1} : {tc}" if i == mc and mut else f"{tc}"
                 w(f"    wire lpr_c_{i};  ot_pl_pad #(.W(1), .N({kk})) u_lprc_{i} (.ck(ck_{r}), .d(lpr_{r}), .q(lpr_c_{i}));"
-                  f"   // t({i}) = {tc}")
+                  + (f"   // t({i}) = {tc}" if not self.reference else f"   // reference schedule: held {tc} past the landing epochs"))
                 rsub[i] = f"lpr_c_{i}"
         # children
         w("    // ---- children (clock pins -> their region root; reset pins -> their reset run; landed / padded inputs)")
@@ -611,7 +630,8 @@ class Parent:
         t = P["t"]
         flops_land = sum(self.D * L["width"] + self.D + (self.AW + 1) + 1 + L["width"] + (self.AW + 1) + 2 for L in P["lands"])
         flops_pad = sum(eval_width(self.rng(n), self.env) * k for (n, _), k in P["pads"].items())
-        flops_rst = 1 + len(self.regions) * (rt["RB"] - 1) + sum(t.get(i["inst"], 0) for i in self.insts)
+        flops_rst = 1 + len(self.regions) * (rt["RB"] - 1) + sum(t.get(i["inst"], 0) + self.rx for i in self.insts if any(
+            pin in (S.get("reset_pins") or []) and ex.strip() == self.rst for pin, ex in i["conns"].items()))
         pairs = sorted({"-".join(sorted((L["src_region"], L["dst_region"]))) for L in P["lands"]})
         rpairs = sorted({"-".join(sorted((rt["reset_region"], r))) for r in self.regions if r != rt["reset_region"]})
         port_in = {p["name"]: t.get(f"port:{p['name']}", 0) for p in self.mod["ports"]
@@ -642,7 +662,11 @@ class Parent:
                      "runtime flow control)",
                 child_offset_edges={i["inst"]: t.get(i["inst"], 0) for i in self.insts},
                 input_port_offset_edges=port_in, output_port_offset_edges=port_out,
-                reset_release_added_edges=rt["RB"],
+                reset_release_added_edges=rt["RB"] + self.rx,
+                schedule=("reference: cross-region loops re-scheduled; the landed parent == the flat parent with ref_params "
+                          "(+E+1 per landed crossing on that path), reset delayed reset_release_added_edges, ports at offset 0"
+                          if self.reference else "offsets"),
+                ref_params=dict(S.get("ref_params") or S.get("params") or {}) if self.reference else None,
                 max_added_edges=max([0] + list(port_out.values()))),
             warnings=[f"child {i} runs t = {t[i]} edges late but has no reset pin on {self.rst}: its free-running state "
                       "is NOT re-aligned (check it in the bench)" for i in no_rst],
@@ -656,7 +680,7 @@ class Parent:
         S = self.S
         B = S.get("bench") or {}
         cyc, rcy = int(B.get("cycles", 2000)), int(B.get("reset_cycles", 16))
-        RB = rt["RB"]
+        RB = rt["RB"] + self.rx
         t = P["t"]
         act_low = S.get("reset_active_low", True)
         ins = [p for p in self.mod["ports"] if p["dir"] == "in" and p["name"] not in self.ck and p["name"] != self.rst]
@@ -694,7 +718,8 @@ class Parent:
         lc = [f".ck_{r}(clk)" for r in self.regions] + [f".{self.rst}(rst)"] + [f".{p['name']}(li_{p['name']})" for p in ins] + \
              [f".{p['name']}(lo_{p['name']})" for p in outs]
         pv = ", ".join(f".{k}({v})" for k, v in (S.get("params") or {}).items())
-        L.append(f"    {S['top']} {('#(' + pv + ') ') if pv else ''}u_flat (" + ", ".join(fc) + ");")
+        pr = ", ".join(f".{k}({v})" for k, v in ((S.get("ref_params") if self.reference else None) or S.get("params") or {}).items())
+        L.append(f"    {S['top']} {('#(' + pr + ') ') if pr else ''}u_flat (" + ", ".join(fc) + ");")
         L.append(f"    {top_lp} #({(pv + ', ') if pv else ''}.MUT(MUT)) u_lp (" + ", ".join(lc) + ");")
         L.append("    function [31:0] rnd; input integer k; rnd = $urandom; endfunction")
         L.append("    integer cyc, nc, bad;")
@@ -719,6 +744,24 @@ class Parent:
             L.append(f"                nc = nc + 1; if (lo_{n} !== {ref}) begin bad = bad + 1; "
                      f"if (bad <= 5) $display(\"LP_MISMATCH port={n} cycle=%0d flat=%h landed=%h\", cyc, {ref}, lo_{n}); end")
         L.append("            end")
+        cls = B.get("child_lockstep") or []
+        if cls:
+            if not self.reference:
+                raise SystemExit("bench.child_lockstep needs schedule 'reference' (children are not time-shifted there)")
+            ckp = set(S.get("clock_pins") or [])
+            rsp = set(S.get("reset_pins") or [])
+            hit = [i for i in self.insts if any(fnmatch.fnmatchcase(i["inst"], q) for q in cls)]
+            if not hit:
+                raise SystemExit(f"bench.child_lockstep {cls} matches no child")
+            for i in hit:
+                for pin in sorted(i["conns"]):
+                    if pin in ckp:
+                        continue
+                    f_, l_ = f"u_flat.{i['inst']}.{pin}", f"u_lp.{i['inst']}.{pin}"
+                    gate = f"cyc > {rcy}" if pin in rsp else f"cyc > {warm}"
+                    L.append(f"            if ({gate}) begin nc = nc + 1; if ({l_} !== {f_}) begin bad = bad + 1; "
+                             f"if (bad <= 5) $display(\"LP_MISMATCH child={i['inst']}.{pin} cycle=%0d flat=%h landed=%h\", "
+                             f"cyc, {f_}, {l_}); end end")
         L.append("        end")
         L.append(f"        if (bad == 0 && nc > 0) $display(\"LP_LOCKSTEP PASS MUT=%0d compared=%0d cycles={cyc} warm={warm}\", MUT, nc);")
         L.append("        else $display(\"LP_LOCKSTEP FAIL MUT=%0d mismatches=%0d of %0d\", MUT, bad, nc);")
@@ -735,7 +778,8 @@ class Parent:
         return f"""#!/usr/bin/env bash
 # GENERATED by tools/landed_parent/lp.py: lockstep bench {self.S['top']} (flat) vs {top_lp} + mutants {muts[1:]} + region audit.
 # Run on the FLEET (ot-run), never on localhost.  Exit 0 iff MUT 0 PASSES, every mutant FAILS and the audit PASSES.
-#   bash {rel_out}/{top_lp}_bench.sh OUTDIR        (SIM=iverilog default | verilator)
+#   bash {rel_out}/{top_lp}_bench.sh OUTDIR        (SIM=iverilog default | verilator; VERILATOR, VL_JOBS, VL_EXTRA,
+#   MUTS="0 1 .." optional overrides)
 set -u
 cd "${{LP_ROOT:-$(git -C "$(dirname "$0")" rev-parse --show-toplevel 2>/dev/null || (cd "$(dirname "$0")/{up}" && pwd))}}"
 OUT=${{1:-lp_bench_out}}; mkdir -p "$OUT"; SIM=${{SIM:-iverilog}}; rc=0
@@ -743,9 +787,9 @@ SRCS="{srcs} {rel_out}/{top_lp}.sv {rel_out}/tb_{top_lp}.sv"
 python3 tools/landed_parent/lp.py audit {self.S['_spec_path']} > "$OUT/audit.log" 2>&1 && echo "AUDIT PASS" || {{ echo "AUDIT FAIL"; rc=1; }}
 python3 tools/landed_parent/lp.py audit {self.S['_spec_path']} --rtl "$OUT/unland.sv" --make-unland > "$OUT/audit_unland.log" 2>&1 \\
   && {{ echo "AUDIT-UNLAND PASSED (should FAIL)"; rc=1; }} || echo "AUDIT-UNLAND FAIL (expected)"
-for m in {" ".join(map(str, muts))}; do
+for m in ${{MUTS:-{" ".join(map(str, muts))}}}; do
   if [ "$SIM" = verilator ]; then
-    verilator --binary -j 8 -Wno-fatal --top-module tb_{top_lp} -GMUT=$m {defs} $SRCS -Mdir "$OUT/obj$m" > "$OUT/build_$m.log" 2>&1 \\
+    ${{VERILATOR:-verilator}} --binary -j ${{VL_JOBS:-8}} -Wno-fatal ${{VL_EXTRA:-}} --top-module tb_{top_lp} -GMUT=$m {defs} $SRCS -Mdir "$OUT/obj$m" > "$OUT/build_$m.log" 2>&1 \\
       && "$OUT/obj$m/Vtb_{top_lp}" > "$OUT/mut$m.log" 2>&1
   else
     iverilog -g2012 -o "$OUT/sim$m" -s tb_{top_lp} -Ptb_{top_lp}.MUT=$m {defs} $SRCS > "$OUT/build_$m.log" 2>&1 \\
@@ -774,9 +818,10 @@ def audit(spec: dict, rtl_text: str) -> dict:
     for i in insts:
         if i["module"] not in dirs:
             dirs[i["module"]] = {p["name"]: p["dir"] for p in parse_module(csrc, i["module"])["ports"]}
+    rcks = {f"ck_{r['name']}" for r in spec["regions"]}     # region clocks only (a parent port may be named ck_*)
     reg = {}
     for i in insts:
-        cks = [ex.strip() for pin, ex in i["conns"].items() if re.fullmatch(r"ck_\w+", ex.strip())]
+        cks = [ex.strip() for pin, ex in i["conns"].items() if ex.strip() in rcks]
         if len(set(cks)) != 1:
             return dict(ok=False, fails=[f"{i['inst']}: clock pins on {sorted(set(cks)) or 'no region clock'}"])
         reg[i["inst"]] = cks[0][3:]
@@ -794,7 +839,7 @@ def audit(spec: dict, rtl_text: str) -> dict:
     fails, landed, rst = [], 0, 0
     for i in insts:
         for pin, ex in i["conns"].items():
-            if dirs[i["module"]].get(pin) != "in" or re.fullmatch(r"ck_\w+", ex.strip()):
+            if dirs[i["module"]].get(pin) != "in" or ex.strip() in rcks:
                 continue
             for n in idents(ex):
                 for d in drv.get(n, ()):

@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "qkd_kvs_attn",
+ "top": "qkd_kvs_attn_fl",
  "enable": false,
  "reason": "Generated wires-only parent of the static join: every tile <-> tile / die-master hop is priced in the compiled join ages with the die relays only (kv_relays, die_ages.json); a recipe-3 pin register would add an unpriced edge to every crossing.  The children land / launch their boundary nets in their own flops."
 }

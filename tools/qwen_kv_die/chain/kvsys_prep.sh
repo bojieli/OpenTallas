@@ -30,6 +30,14 @@ if [ "${OT_KV_RST_PIN_REG:-1}" = 1 ]; then   # default ON (KV-KITS/NATIVE 10-18,
   }
   BV="$BV --view qkd_rst_region=$RPV"
 fi
+# KV-PLAN5 10-18 (OT_KV_D2DS_VIEW=1): the static D2D end qkd_d2ds on the CLOSED qkd_d2d_static r7t view (NTX = 3,
+# qkd_d2d_static_r7t-r7t-28642e9aa, TT +22.73 / FF +10.31; committed from its closure record).  The die binds .NTX(3) +
+# the compiled TXDP; the view was hardened at the r7t wrapper's TXDP {3,3,4,3} (port 0 shift 3 vs the die's 23: +20 one-bit
+# flops inside, same ports) -> re-harden owed (lanes/KV-PLAN5.md).  The prep FAILS if the view does not bind.
+D2DSV=
+if [ "${OT_KV_D2DS_VIEW:-0}" = 1 ]; then D2DSV=physical/ref_tile/qkd_d2d_static_r5_native/views/qkd_d2d_static
+  [ -f $D2DSV/qkd_d2d_static.lef ] || { echo "OT_KV_D2DS_VIEW: no closed view at $D2DSV"; exit 7; }
+  BV="$BV --view qkd_d2ds=$D2DSV"; fi
 if [ "${OT_KV_V143:-0}" = 1 ]; then H14="$H14 --v143"; V14=$V14,v143
   BV="$BV --view qkd_hgs=physical/ref_tile/qkh_head_gather_stage/views/qkh_head_gather_stage --view qkd_hss=physical/ref_tile/qkh_head_sstage/views/qkh_head_sstage"; fi
 # OT_KV_DCAL=1 (Q-KVSYS-DIE 10-16): the link calendar sequencer qkd_d2d_cal_seq_pin on its CLOSED view (kv_die.py DCAL)
@@ -81,6 +89,8 @@ python3 tools/qwen_kv_die/bind_views.py --split --case $O/case_kv --libs $O/libs
   --view qkd_kvwq_leaf_s_w129_m=physical/ref_tile/qkd_kvwq_leaf_s_w129_m/views/qkd_kvwq_leaf_s_w129_m \
   --view qkd_kvwq_ctl_bin=physical/ref_tile/qkd_kvwq_ctl_bin/views/qkd_kvwq_ctl_bin $BV \
   --out $O/libs/views.json > $O/bind.log
+if [ -n "$D2DSV" ]; then python3 -c "import json,sys; d=json.load(open(sys.argv[1])); sys.exit(0 if 'qkd_d2ds' in d['bound'] else 1)" $O/libs/views.json \
+  || { echo "OT_KV_D2DS_VIEW: qkd_d2ds view did not bind (bind.log)"; exit 7; }; echo "OT_KV_D2DS_VIEW: qkd_d2ds bound to $D2DSV"; fi
 # v1.3: DIE-PLACED LEAVES: wires-only parent frames -> their CLOSED leaves at the planned sub-slots, each on its own view
 # (OT_KV_EXPAND = comma list of frame masters, default all that kv_expand.py knows; 'none' keeps the frames)
 EXP=

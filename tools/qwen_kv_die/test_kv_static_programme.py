@@ -7,6 +7,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import kv_static_programme as C
+import kv_static_ages as A_  # noqa: E402
 
 ROOT = C.ROOT
 
@@ -149,7 +150,7 @@ class Programme(unittest.TestCase):
 
     def test_ectla_qk_issue_age_and_attention_control(self):
         pt = C.priced_template(self.die['profile'])
-        self.assertEqual((pt['ectla'], pt['QK_ISSUE_AGE'], pt['unpriced_left']), (32, 62, []))
+        self.assertEqual((pt['ectla'], pt['QK_ISSUE_AGE'], pt['unpriced_left']), (32, A_.K_RT_BUDGET + 11, []))
         ctl = self.die['attention']['control']
         self.assertGreaterEqual(ctl['cal_gen']['first_issue_token_cycle'] - ctl['cal_gen']['go_token_cycle'], C.CAL_GEN_LAT)
         self.assertGreater(ctl['service_root']['pv_start_min'], 0)

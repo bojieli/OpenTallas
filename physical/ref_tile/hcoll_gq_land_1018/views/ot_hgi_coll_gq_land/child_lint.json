@@ -1,10 +1,10 @@
 {
  "schema": "opentallas.hier_contract.child_lint.v1",
- "lef": "/srv/opentallas-scratch/claude/closure-loop/hcoll_gq_land_1018-r1-b7918441e/record/views/ot_hgi_coll_gq_land/provenance/ot_hgi_coll_gq_land.candidate.lef",
+ "lef": "/srv/opentallas-scratch2/claude/closure-loop/hcoll_gq_land_1018-n1-537e21701/record/views/ot_hgi_coll_gq_land/provenance/ot_hgi_coll_gq_land.candidate.lef",
  "verdict": "PASS",
  "fails": [],
  "warns": [],
- "summary": "ot_hgi_coll_gq_land 237.6 x 237.6: PG M5 VDD 44 stripes (98% spread, 100% cov) / VSS 44 stripes (98% spread, 100% cov); strap M6; face pins 3880 blocked-above 0 blocked-same 0; clock clk insertion 375 ps; pockets M5 0 (closed)",
+ "summary": "ot_hgi_coll_gq_land 237.6 x 237.6: PG M5 VDD 44 stripes (98% spread, 100% cov) / VSS 44 stripes (98% spread, 100% cov); strap M6; face pins 3880 blocked-above 0 blocked-same 0; clock clk insertion 388 ps; pockets M5 0 (closed)",
  "info": {
   "cell": "ot_hgi_coll_gq_land",
   "W": 237.6,
@@ -38,7 +38,7 @@
   "face": {
    "face_pins": 3880,
    "blocked_above": 0,
-   "covered_below": 357,
+   "covered_below": 317,
    "examples": [],
    "blocked_same": 0,
    "same_examples": [],
@@ -47,8 +47,8 @@
   },
   "clock_insertion": {
    "clk": {
-    "max_ps": 374.95,
-    "min_ps": 272.38
+    "max_ps": 387.8,
+    "min_ps": 278.16
    }
   },
   "pockets": {
@@ -57,7 +57,7 @@
    "marker": {
     "layer": "M5",
     "d_um": 1.536,
-    "added": 907
+    "added": 861
    },
    "count": 0,
    "area_um2": 0,
