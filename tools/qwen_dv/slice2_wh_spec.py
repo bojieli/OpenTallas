@@ -73,7 +73,7 @@ def main():
         "sources": flat["sources"] + ["rtl/qwen_dv/qfd_dv_su_lane.sv"],
         "params": {"SU_LT": 1, "HD_W130": 1},
         "defines": ["OT_DV_SU_LANE_HARD", "OT_DV_HEADS_HARD"],
-        "hard_define": "OT_DV_SLICE_HARD",
+        "hard_define": "OT_DV_HEADS_HARD",   # the define the hard-child #() lint checks (OT_DV_SU_LANE_HARD: no #() on lane_h / SFU)
         "clock_port": flat["clock_port"],
         "reset_ports": flat["reset_ports"],
         "outline": flat["outline"],
