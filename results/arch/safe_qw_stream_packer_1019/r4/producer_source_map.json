@@ -1,0 +1,63 @@
+{
+  "scope": "Read-only current source map for fresh continuation owner. No new ports, candidate state, RTL edits, compiles, gate or native qualification.",
+  "source_hashes": {
+    "/home/ubuntu/wt/codex-qwen-stream-pickup-1019/rtl/qwen_dv/qfd_dv_slice2.sv": "324170e0fedf92e3337cc574cba6ae03d0eb595924d91494fbb1adeb315e4f0f",
+    "/home/ubuntu/wt/codex-qwen-stream-pickup-1019/rtl/qwen_dv/qfd_dv_stream_packer.sv": "801dee09634b15bcac9e49489eef7d58011030b494d6639350aedcfd63eafebc",
+    "/home/ubuntu/wt/codex-safe-qw-slice-wkit-1019/rtl/qwen_dv/qfd_dv_slice2_regional_parts.sv": "d49de3010e1f542f4b3639be5c35fec2df839e833438d0ee6fe075f043bf5923",
+    "/home/ubuntu/wt/codex-safe-qw-slice-wkit-1019/rtl/qwen_dv/qfd_dv_su8_landed.sv": "403ff48024e306bfaaf7bd02e950bdd59841928410cc41615e132fe1f865ef5a",
+    "/home/ubuntu/wt/codex-safe-qw-slice-wkit-1019/rtl/common/landed_parent/ot_pl_stream_land.sv": "5fefa666adf4533bf33e86601f40571cdf80f4755f60176ed65009e6034a7dab"
+  },
+  "predecessors": [
+    {
+      "consumer": "u_c.u_stm.sw_i",
+      "source_register": "u_c.sw_q[1087:0]",
+      "D": "st_up_i",
+      "clock": "u_c.ck",
+      "edge": "existing positive edge",
+      "source_reference": "qfd_dv_slice2.sv pin-register block; regional reset partitions preserve data edge",
+      "reset": "flat rst; actual regional sr_reset leaves require exact mapped source/reset proof"
+    },
+    {
+      "consumer": "u_c.u_stm.se_i",
+      "source_register": "u_c.se_q[1087:0]",
+      "D": "st_dn_i",
+      "clock": "u_c.ck",
+      "edge": "existing positive edge"
+    },
+    {
+      "consumer": "u_c.u_stm.xw_data/xw_addr",
+      "source": "u_su.vm_wdata/vm_waddr",
+      "regional_path": "qfd_dv_su8_landed g_lane.g_tile_ld.u_result.ot_pl_stream_land output o_vq/o_dq, ck_dst=clk; actual source read receiver u_r. The primitive/hierarchy endpoint must be resolved from exact mapped regional profile, not inferred from this source string.",
+      "profile_scope": "R4 production receipt uses sameclock SU_LT1/HD_W130 vehicle; regional ML5/HOPS graph is independently unqualified."
+    },
+    {
+      "consumer": "u_c.u_stm.xw_we",
+      "source": "su_x_we=(|vm_we && vm_waddr[23:22]==01)?vm_we:0",
+      "note": "Shared window decode and all consumers must enter upstream load census."
+    }
+  ],
+  "control_fields": {
+    "each_incoming_side": [
+      "valid1087",
+      "kind1086:1084",
+      "destination1083:1080"
+    ],
+    "local_sid": "sid_q updated on SETID from cmd_q7:4; raw copies and comparisons must use same current age, including concurrent SETID. Predecoding against previous SID changes behavior.",
+    "own_direction": "dir2 registered on cfg_v(c_stm); cfg_dir=cmd_q5:4; c_stm=go && kind5",
+    "own_emit": "emit registered from any own writes && all next mask bits; must preserve same completion age",
+    "completed_snapshot": "eword1024 and ebeat16 captured on any writes && all next mask bits; wide enable remains unqualified independently of incoming raw copies"
+  },
+  "measured_open_loads": {
+    "incoming_valid_each": 1092,
+    "own_direction_select_each": 1078,
+    "table_select": 1052,
+    "completion_enable": 1041,
+    "note": "These are original/generic source obligations, not R4 native values. R4 mapped register Q maximum24 does not waive the buffer-transparent producer/control obligations."
+  },
+  "fresh_owner_next": [
+    "Resolve actual native predecessor instance/port/clock/arrival/reset ownership under final regional source hash.",
+    "Model retained existing-edge producer copies and local decode. Any sideband API must price actual extra FFs/wires/reset sinks, <=405um crossings and all upstream loads.",
+    "Own emit/dir/completion distribution is separate. Any added data/capture edge requires explicit compiler/calendar/whole-path pricing before enable.",
+    "Preserve original default, priority, identity, same-edge config/SID semantics; full E/W proof and native load census after changes."
+  ]
+}
