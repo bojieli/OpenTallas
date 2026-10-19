@@ -176,7 +176,8 @@ module ot_s81sl_lep_core #(
     localparam integer FRAME_RSTBASE=TX_RSTBASE+NTX_MEMRST;
     localparam integer HOST_RSTBASE=FRAME_RSTBASE+NFRAME_RST;
     localparam integer CTRL_RSTBASE=HOST_RSTBASE+NHOST_RST;
-    localparam integer NCTRL_RST=(MU_EN!=0 && RX_SRAM!=0)?NL+8+PUSH_GROUPS+NL:0;
+    localparam integer NCTRL_RST=(MU_EN!=0 && RX_SRAM!=0)?NL+8+PUSH_GROUPS+NL+((HOST_EN!=0)?17:0):0;
+    localparam integer PAYLOAD_RSTBASE=CTRL_RSTBASE+NL+8+PUSH_GROUPS+NL;
     localparam integer NRX_RST=NRX_MEMRST+NRX_OUTRST+NTX_MEMRST+NFRAME_RST+NHOST_RST+NCTRL_RST;
     wire [3+NRX_RST:0] rr;
     generate if(MU_EN!=0 && RX_SRAM!=0) begin:g_reset_balanced
@@ -223,14 +224,29 @@ module ot_s81sl_lep_core #(
             if (ev_h) begin
                 ph_v <= 1'b1;
 `ifdef OT_S81SL_LEP_MUT_HDROP
-                pd <= thq;                                             // MUTANT: a pending t_v word is overwritten
+                if(MU_EN==0 || RX_SRAM==0) pd <= thq;                  // MUTANT: a pending t_v word is overwritten
 `else
-                pd <= (ph_v && !hp_go && pd[64] && !thq[64]) ? {thq[76:65], pd[64:0]} : thq;
+                if(MU_EN==0 || RX_SRAM==0) pd <= (ph_v && !hp_go && pd[64] && !thq[64]) ? {thq[76:65], pd[64:0]} : thq;
                 if (ph_v && !hp_go && pd[64] && thq[64]) he <= 1'b1;
 `endif
             end
-            if (ev_k) begin pk_v <= 1'b1; kd <= tkq; if (pk_v && !kp_go) he <= 1'b1; end
+            if (ev_k) begin pk_v <= 1'b1; if(MU_EN==0 || RX_SRAM==0) kd <= tkq; if (pk_v && !kp_go) he <= 1'b1; end
         end
+    if(MU_EN!=0 && RX_SRAM!=0) begin:g_payload_regions
+      wire [79:0] old_host={3'd0,pd},new_host={3'd0,thq},next_host;
+      wire [55:0] old_key={2'd0,kd},new_key={2'd0,tkq},next_key;
+      for(genvar hh=0;hh<10;hh=hh+1) begin:g_host
+        localparam [7:0] KM=(hh<8)?8'hff:((hh==8)?8'h01:8'h00);
+        (* keep=1 *) ot_s81sl_lep_host_hold8 u_hold(.now_status(thq[76:65]),.old_status(st_l),.valid(thq[64]),
+          .rn(rr[PAYLOAD_RSTBASE+hh]),.pending(ph_v),.send_now(hp_go),.old_valid(pd[64]),.keep_mask(KM),
+          .old_data(old_host[8*hh+:8]),.new_data(new_host[8*hh+:8]),.next_data(next_host[8*hh+:8]));
+      end
+      for(genvar kh=0;kh<7;kh=kh+1) begin:g_key
+        (* keep=1 *) ot_s81sl_lep_key_hold8 u_hold(.rn(rr[PAYLOAD_RSTBASE+10+kh]),.valid(tkq[53]),
+          .old_data(old_key[8*kh+:8]),.new_data(new_key[8*kh+:8]),.next_data(next_key[8*kh+:8]));
+      end
+      always @(posedge clk) begin pd<=next_host[76:0];kd<=next_key[53:0];end
+    end
     end else begin : g_nhtx                            // HOST_EN 0: ring beats only (t_host / t_kd unread)
     assign h_event=1'b0;assign k_event=1'b0;
     assign h_status_now=0;assign h_status_old=0;assign h_status_valid=0;
@@ -1294,4 +1310,20 @@ endmodule
 
 (* keep_hierarchy=1 *) module ot_s81sl_lep_stamp(input wire [31:0] count,input wire ring,output wire stamp);
  assign stamp=ring && count!=0;
+endmodule
+
+(* keep_hierarchy=1 *) module ot_s81sl_lep_host_hold8(
+ input wire [11:0] now_status,old_status,input wire valid,rn,pending,send_now,old_valid,
+ input wire [7:0] keep_mask,old_data,new_data,output wire [7:0] next_data);
+ wire event_h=valid || now_status!=old_status;
+`ifdef OT_S81SL_LEP_MUT_HDROP
+ wire preserve=1'b0;
+`else
+ wire preserve=pending && !send_now && old_valid && !valid;
+`endif
+ wire [7:0] merged=new_data ^ ((new_data ^ old_data) & {8{preserve}} & keep_mask);
+ assign next_data=(rn && event_h)?merged:old_data;
+endmodule
+(* keep_hierarchy=1 *) module ot_s81sl_lep_key_hold8(input wire rn,valid,input wire [7:0] old_data,new_data,output wire [7:0] next_data);
+ assign next_data=(rn && valid)?new_data:old_data;
 endmodule
