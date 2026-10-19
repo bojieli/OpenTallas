@@ -240,7 +240,8 @@ def kit_spec(ram_gb=56):  # 10-19: 24 GB was SIGTERMed (24.5 GB RSS, 2 instances
                   S=["ck_r0"], N=["ck_r3"]),
         pin_ranges=pr, pg_layer="M7", refglob="*", recipe=1, inhold=False, outhold=False,
         route=dict(pd=0.5, period_ps=1111.111, threads=16, peak_ram_gb=96, hold_margin_ns=0.03, io_hold_margin_ns=0.03,
-                   macro_halo_um=5.4, pin_h="M4", pin_v="M3 M5"),
+                   macro_halo_um=5.4, pin_h="M4", pin_v="M3 M5",
+                   pin_balance=dict(h="M4", v="M3 M5", group_max=1)),
         clock="multiple_cts_roots", clock_ports=["ck_s", "ck_r0", "ck_r1", "ck_r2", "ck_r3"],
         clock_data_paths="related_same_frequency",
         clock_relationship=dict(kind="same_pll_fixed_phase", ratio=[1, 1], phase_ps=0),
@@ -267,7 +268,12 @@ def kit_spec(ram_gb=56):  # 10-19: 24 GB was SIGTERMed (24.5 GB RSS, 2 instances
                               "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
                               "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
                               "physical/ref_tile/hbm_su_static_kind0_l4_leaf1_1015",
-                              "physical/ref_tile/hbm_su_static_bank6_clock7_1015", WIT],
+                              "physical/ref_tile/hbm_su_static_bank6_clock7_1015", WIT,
+                              # children's closed records (multi-root landed reference, ROOT-INF21)
+                              "results/arch/hbm_su_f2_static_1014/arithmetic/physical/bank_clock7/hbm_su_static_bank6_clock7_1015-r12-0a5f7732e",
+                              "results/arch/hbm_su_f2_static_1014/arithmetic/physical/lat4_kind0_route/hbm_su_static_kind0_l4_leaf1_1015-r2-18978c835",
+                              "results/closure_loop/hbm_su_static_bank6_clock7_1015-r12-0a5f7732e",
+                              "results/closure_loop/hbm_su_static_kind0_l4_leaf1_1015-r2-18978c835"],
                  benches=benches))
 
 

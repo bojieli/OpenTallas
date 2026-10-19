@@ -848,7 +848,12 @@
   "io_hold_margin_ns": 0.03,
   "macro_halo_um": 5.4,
   "pin_h": "M4",
-  "pin_v": "M3 M5"
+  "pin_v": "M3 M5",
+  "pin_balance": {
+   "h": "M4",
+   "v": "M3 M5",
+   "group_max": 1
+  }
  },
  "clock": "multiple_cts_roots",
  "clock_ports": [
@@ -982,7 +987,11 @@
    "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
    "physical/ref_tile/hbm_su_static_kind0_l4_leaf1_1015",
    "physical/ref_tile/hbm_su_static_bank6_clock7_1015",
-   "results/rtl/tw_hbm_pglg_1019"
+   "results/rtl/tw_hbm_pglg_1019",
+   "results/arch/hbm_su_f2_static_1014/arithmetic/physical/bank_clock7/hbm_su_static_bank6_clock7_1015-r12-0a5f7732e",
+   "results/arch/hbm_su_f2_static_1014/arithmetic/physical/lat4_kind0_route/hbm_su_static_kind0_l4_leaf1_1015-r2-18978c835",
+   "results/closure_loop/hbm_su_static_bank6_clock7_1015-r12-0a5f7732e",
+   "results/closure_loop/hbm_su_static_kind0_l4_leaf1_1015-r2-18978c835"
   ],
   "benches": [
    {
