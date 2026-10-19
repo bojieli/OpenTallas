@@ -1,0 +1,8 @@
+vm-xry57mhfyn
+Verilator 5.050 2026-07-01 rev v5.050
+Mon Oct 19 04:30:29 PDT 2026
+CTLM_PROG MUT=0 BMUT=0 HARD_HR=1 HRA=0 DECODE=2: PASS 96/96  rom_go-issue [2] nat_go-issue [1] csr@1042 tl got/exp (12, 12) stage1_xt1 [True, True, True, True]
+    ROM fields (slice layout): [{"edge": 1224, "nout": 768, "tiles": 1, "k": 8, "split": 9, "wbase": 0, "xbase": 4096}, {"edge": 3415, "nout": 4096, "tiles": 3, "k": 2, "split": 8, "wbase": 64, "xbase": 50672}, {"edge": 5062, "nout": 3072, "tiles": 1, "k": 32, "split": 7, "wbase": 112, "xbase": 4096}, {"edge": 5746, "nout": 4096, "tiles": 3, "k": 6, "split": 8, "wbase": 368, "xbase": 55280}]
+LANDED_LOCKSTEP PASS LMUT=0 compared=18003 mismatches=0 active=1198
+Mon Oct 19 04:30:43 PDT 2026
+exit 0

@@ -1,0 +1,10 @@
+REFILL-0730/PROG 10-19 (owner MU-DIE-QW): rerun owed on claude/mu-die-qw-1019 1f09d70af (prog tb TB_LANDED lp = MU lp at NU 1 / OPSEG 0, tl + dh_user connected).
+tt_ctlm_prog_bench.py --img results/rtl/qwen_layer_tput_1018/ctlm_prog/image --hard 1; Verilator 5.050, ot-agidock128 via ot-run (leg.sh). fail regex: 'CTLM_PROG .*: FAIL' / 'LANDED_LOCKSTEP FAIL'
+p_m0   CTLM_PROG MUT=0: PASS 96/96 (TL 12/12)                                           expected PASS -> OK
+p_l0   CTLM_PROG PASS 96/96 + LANDED_LOCKSTEP PASS LMUT=0 compared=18003 mismatches=0    expected PASS -> OK (prog --landed 1 now PASS)
+p_l1   LANDED_LOCKSTEP FAIL LMUT=1 mismatches=16819                                     expected FAIL -> OK
+p_l2   LANDED_LOCKSTEP FAIL LMUT=2 mismatches=3                                         expected FAIL -> OK
+p_m1   CTLM_PROG MUT=1: FAIL 40/96                                                      expected FAIL -> OK
+p_m27  CTLM_PROG MUT=27: FAIL 84/96                                                     expected FAIL -> OK
+p_m28  CTLM_PROG MUT=28: FAIL 84/96                                                     expected FAIL -> OK
+p_hra  CTLM_PROG HRA=1: FAIL 87/96                                                      expected FAIL -> OK
