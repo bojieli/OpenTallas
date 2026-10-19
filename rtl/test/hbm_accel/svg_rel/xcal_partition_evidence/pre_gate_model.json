@@ -1,0 +1,123 @@
+{
+  "schema": "hbm.xcal.partition.model.v1",
+  "status": "PROTOTYPE_NOT_GATE_READY",
+  "replicas_per_sm": 1,
+  "sm_per_die": 16,
+  "MACs_per_cycle": 0,
+  "memory_ports_bytes_per_edge": {
+    "programme_read": 32,
+    "programme_write": 32,
+    "descriptor_read": 32,
+    "descriptor_write": 32
+  },
+  "tiles": {
+    "descriptor": {
+      "outline_um": [
+        164.16,
+        198.72
+      ],
+      "macros": 2,
+      "macro_um": [
+        94.824,
+        41.04
+      ],
+      "origins_um": [
+        [
+          43.2,
+          43.2
+        ],
+        [
+          43.2,
+          129.6
+        ]
+      ],
+      "macro_area_um2": 7783.15392,
+      "clock_port": "clk_desc",
+      "input_bits_per_edge": 328,
+      "output_link_bits_per_edge": 313,
+      "macro_face_density_W_E": [
+        9.990253411306043,
+        10.014619883040936
+      ],
+      "outline_area_um2": 32621.8752,
+      "worst_diagonal_reach_um": 257.7559776222464,
+      "macro_only_fill": 0.23858695652173914,
+      "std_area_um2": null,
+      "full_width_cell_band_y_um": [
+        84.24000000000001,
+        129.6
+      ]
+    },
+    "programme": {
+      "outline_um": [
+        241.92,
+        267.84
+      ],
+      "macros": 2,
+      "macro_um": [
+        174.744,
+        70.47
+      ],
+      "origins_um": [
+        [
+          43.2,
+          43.2
+        ],
+        [
+          43.2,
+          172.8
+        ]
+      ],
+      "macro_area_um2": 24628.41936,
+      "clock_port": "clk_prog",
+      "input_link_bits_per_edge": 313,
+      "output_bits_per_edge": 176,
+      "macro_face_density_W_E": [
+        5.917411664538101,
+        5.874840357598979
+      ],
+      "outline_area_um2": 64795.85279999999,
+      "worst_diagonal_reach_um": 360.9204233622697,
+      "macro_only_fill": 0.38009252592165904,
+      "std_area_um2": null,
+      "full_width_cell_band_y_um": [
+        113.67,
+        172.8
+      ]
+    }
+  },
+  "link": {
+    "payload_bits": 313,
+    "registered_captures": 2,
+    "storage_bits": 626,
+    "input_to_output_edges": 2,
+    "flow_control": "fixed latency, no credits or ready",
+    "control_replication": "one kept valid copy per <=16 data bits; verify mapped survival",
+    "routing_signal_tracks": 313,
+    "channel_capacity_tracks": null,
+    "channel_note": "one complete facing edge; multilayer detailed capacity audit remains OPEN",
+    "clock_policy": "two actual same-frequency phase0 roots; adjacent native pin captures; normal one-edge STA, no MCP/false paths"
+  },
+  "schedule": {
+    "added_programme_cfg_edges": 2,
+    "added_GO_edges": 2,
+    "early_internal_GO_edges": 2,
+    "external_command_delta_edges_if_eligible": 0,
+    "eligibility": "descriptor available before e_at-2; e_at>=2; next GO does not overlap programme busy",
+    "ineligible": "fault, never silently issue late; compiler must separately price any launch shift",
+    "status_return_edges": 2,
+    "token_latency_credit": 0
+  },
+  "safe_design": {
+    "reach": "PASS model bounding diagonal <405um within either tile; parent final pin hop must be <=100um",
+    "pins": "planned registered interfaces; existing programme and RELOC capture retained",
+    "reset": "two registered release stages per root; no operation before both roots settled",
+    "storage": "all table storage remains canonical SRAM; two313bit register captures=626bits below2kb",
+    "fanout": "OPEN mapped kept-copy audit; RTL bank-select copies16bits and output identity/valid copies16bits; SRAM strobes need audit",
+    "depth": "OPEN synthesis <=600ps/20levels; descriptor compare/GO only in control tile",
+    "floorplan": "origins43.2 lattice; macro-pin face clearance>=20um; actual std area OPEN",
+    "clock": "OPEN TT/FF <=80ps spread, root boundary matched and >=0.03ns hold margin",
+    "canonical_descriptor_face": "BLOCKED: canonical128x256 master W/E 9.99/10.015pins/um exceeds6; preserve abstract pending explicit owner scope decision"
+  },
+  "adoption": "No gate, REVIEW, physical claim, or calendar adoption from this model alone."
+}
