@@ -17431,3 +17431,9 @@ def hbm_svg_return_regional_model():
     """Opt-in seven-edge source-pair/ring/cache SVG return prototype."""
     from hbm_layer_vehicle.svg_return_model import model
     return model()
+
+
+def hbm_svg_element_sizing_model():
+    """Source-bound landing/local-pair and separate cache element outline proposal."""
+    from hbm_layer_vehicle.svg_element_sizing_model import model
+    return model()

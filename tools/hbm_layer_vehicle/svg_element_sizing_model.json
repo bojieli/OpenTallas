@@ -1,0 +1,365 @@
+{
+  "schema": "opentallas.svg-source-bound-element-sizing.v1",
+  "macros": {
+    "fifo": {
+      "name": "ot_sram_1r1w2c_8x285_m1",
+      "source": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_8x285_m1/ot_sram_1r1w2c_8x285_m1.lef",
+      "sha256": "77851be67e3c1b578009066dd1b8cac447a42228062513af5c5ca71a92a3ea9e",
+      "width_um": 96.984,
+      "height_um": 43.224,
+      "area_um2": 4192.036415999999,
+      "signal_clock_pins": 865,
+      "canonical_faces": {
+        "W": 433,
+        "E": 432
+      },
+      "canonical_face_density": {
+        "W": 10.01758282435684,
+        "E": 9.994447529150472
+      },
+      "fullface_compiler_proposal": {
+        "pins": {
+          "W": 10,
+          "N": 285,
+          "S": 570
+        },
+        "density": {
+          "W": 0.23135295206366835,
+          "N": 2.9386290522147984,
+          "S": 5.877258104429597
+        },
+        "status": "PROPOSAL ONLY: regenerate real pin/periphery routing and macro abstracts/timing; preserve canonical views"
+      }
+    },
+    "landing": {
+      "name": "ot_sram_1r1w_256x256_m2_r2c2",
+      "source": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.lef",
+      "sha256": "5bddc67f77da42e5964b6537ee70069c8a7f60965b36d89cc0a849dce85c4131",
+      "width_um": 172.824,
+      "height_um": 41.064,
+      "area_um2": 7096.844736000001,
+      "signal_clock_pins": 821,
+      "canonical_faces": {
+        "W": 411,
+        "E": 410
+      },
+      "canonical_face_density": {
+        "W": 10.008766803039158,
+        "E": 9.98441457237483
+      },
+      "fullface_compiler_proposal": {
+        "pins": {
+          "W": 53,
+          "N": 256,
+          "S": 512
+        },
+        "density": {
+          "W": 1.2906682252094293,
+          "N": 1.481275748738601,
+          "S": 2.962551497477202
+        },
+        "status": "PROPOSAL ONLY: regenerate real pin/periphery routing and macro abstracts/timing; preserve canonical views"
+      }
+    },
+    "cache": {
+      "name": "ot_sram_1r1w_128x256_m1_r2c2",
+      "source": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",
+      "sha256": "86f2608011f6d5903bea0aad4da167ff9d9bf120d23508d10b69db450a816eaf",
+      "width_um": 94.824,
+      "height_um": 41.064,
+      "area_um2": 3893.852736,
+      "signal_clock_pins": 819,
+      "canonical_faces": {
+        "W": 410,
+        "E": 409
+      },
+      "canonical_face_density": {
+        "W": 9.98441457237483,
+        "E": 9.9600623417105
+      },
+      "fullface_compiler_proposal": {
+        "pins": {
+          "W": 51,
+          "N": 256,
+          "S": 512
+        },
+        "density": {
+          "W": 1.2419637638807715,
+          "N": 2.6997384628364127,
+          "S": 5.3994769256728254
+        },
+        "status": "PROPOSAL ONLY: regenerate real pin/periphery routing and macro abstracts/timing; preserve canonical views"
+      }
+    },
+    "program": {
+      "name": "ot_sram_1r1w_1024x256_m2_r2c2",
+      "source": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.lef",
+      "sha256": "bf6dcf70da6aa07d62dbf642e266663c58034b2a938b7277c2fbc558a1e868a9",
+      "width_um": 174.744,
+      "height_um": 70.488,
+      "area_um2": 12317.355072,
+      "signal_clock_pins": 829,
+      "canonical_faces": {
+        "W": 415,
+        "E": 414
+      },
+      "canonical_face_density": {
+        "W": 5.887526954942685,
+        "E": 5.873340143003064
+      },
+      "fullface_compiler_proposal": {
+        "pins": {
+          "W": 61,
+          "N": 256,
+          "S": 512
+        },
+        "density": {
+          "W": 0.8653955283168766,
+          "N": 1.4650002289062858,
+          "S": 2.9300004578125716
+        },
+        "status": "PROPOSAL ONLY: regenerate real pin/periphery routing and macro abstracts/timing; preserve canonical views"
+      }
+    }
+  },
+  "pair_element": {
+    "replica_count": 4,
+    "banks": [
+      "j",
+      "j+4"
+    ],
+    "actual_macros": 4,
+    "macro_area_um2": 22577.762304,
+    "landing_capacity": "two 256x256 macros, each packs FOUR 64-row landing blocks; never four macros/bank",
+    "fifo_capacity": "two actual 8x285 dual-clock SRAMs",
+    "outline_proposal_um": [
+      432.0,
+      259.2
+    ],
+    "aspect": 1.6666666666666667,
+    "macro_only_fill": 0.20163325102880658,
+    "macro_placements": [
+      {
+        "kind": "landing",
+        "bank": "j",
+        "origin_um": [
+          43.2,
+          43.2
+        ],
+        "orientation": "R0"
+      },
+      {
+        "kind": "fifo",
+        "bank": "j",
+        "origin_um": [
+          259.2,
+          43.2
+        ],
+        "orientation": "R0"
+      },
+      {
+        "kind": "landing",
+        "bank": "j+4",
+        "origin_um": [
+          43.2,
+          172.8
+        ],
+        "orientation": "MX"
+      },
+      {
+        "kind": "fifo",
+        "bank": "j+4",
+        "origin_um": [
+          259.2,
+          172.8
+        ],
+        "orientation": "MX"
+      }
+    ],
+    "all_macro_origins_on_43p2_lattice": true,
+    "full_width_cell_band_y_um": [
+      86.424,
+      172.8
+    ],
+    "band_area_um2": 37314.432,
+    "placement_util_target": [
+      0.4,
+      0.6
+    ],
+    "measured_stdcell_area_um2": null,
+    "stdcell_band_height_at_50pct_um": null,
+    "stdcell_band_rule": "select a single connected full-width placement band from measured area; unused access channels are routing reservations; final dimensions OPEN until synthesis",
+    "access_channels_um": {
+      "left": 43.2,
+      "between_macro_columns": 43.17599999999999,
+      "right": 75.81600000000003,
+      "central_read_face_channel": 86.376
+    },
+    "proposed_fullface_orientation": "bottom row R0 North-read faces band; upper row MX South-read faces band; write/mask face outward; canonical WE faces retain generous side channels",
+    "clocks": [
+      "pair_hbm_clk[j]",
+      "pair_clk[j]",
+      "return_clk[j]"
+    ],
+    "reset": "separate two-stage release per root; balanced raw reset of HBM/stream FIFO and all return/cache roots",
+    "REQUIRED_source_remap": "old bank g/4 stream_bank_clk/hbm_fifo_clk mapping spans BOTH roots for {j,j+4}; map BOTH banks to pair_clk[j] and explicit pair_hbm_clk[j]",
+    "return_partition": "ENTIRE ringSlice inside pair: source wp/slots + forwarded-return rp/readmux/outputQ; registered261-wire output; no select feedback",
+    "port_budget": {
+      "HBM_data_valid_inputs": 572,
+      "HBM_ready_overflow_outputs": 4,
+      "stream_reserve_stop_read_inputs_per_bank": 41,
+      "stream_control_inputs_two_banks": 82,
+      "local_ordinal_valid_inputs": 4,
+      "root_clock_reset_inputs": 6,
+      "completion_bank_fault_outputs": 8,
+      "registered_return_data_ordinal_valid_phasefault_outputs": 261,
+      "total_inputs": 664,
+      "total_outputs": 273,
+      "total": 937
+    },
+    "face_proposal": "return261+stream-control copies on cache-facing full E/W face; split572 HBM inputs across remaining full faces; pin-register collars stay connected to central band",
+    "return_face_density_all261_over_full_height": 1.0069444444444444,
+    "communication": {
+      "HBM_response_input_bits_per_edge": 570,
+      "stream_landing_read_bits_per_edge": 512,
+      "registered_return_bits_per_edge": 261,
+      "useful_return_bytes_per_stream_edge": 32,
+      "pair_target_bytes_per_stream_edge": 24.75,
+      "return_payload_util_at_target": 0.7734375,
+      "minimum_tracks_for_registered_bus": 261,
+      "one_layer_channel_width_um_at_048_pitch": 12.528,
+      "full_face_length_um_at_6pins_per_um": 43.5
+    },
+    "max_external_density_at_capacity_6": "one face may carry <=1555 pins at259.2um, <=2592 at432um; explicit final pin enumeration and collar placement remain OPEN",
+    "reach": "put selected-data/return-Q mass at cache-facing edge; place both landing output capture/select slices adjacent; no logical end-to-end tile wire assumed; mapped <=405um audit OPEN",
+    "critical_fanout": "kept per16bit selection/ring slices; replicated reset/control distribution and inherited epoch/seen/count bank-mux fanout require mapped audit",
+    "gate_ready": false
+  },
+  "cache_rotator_element": {
+    "actual_macros": 0,
+    "outline_proposal_um": [
+      129.6,
+      129.6
+    ],
+    "aspect": 1.0,
+    "diagonal_um": 183.28207768355313,
+    "inputs": 1046,
+    "outputs": 1029,
+    "functional_data_registers": 3072,
+    "metadata_ring_bits": 16,
+    "native_root": "cache_clk",
+    "reset": "two stages, balanced with pair/local-return roots; no payload reset mass",
+    "face_split": {
+      "N_input_pair01": 522,
+      "S_input_pair23": 522,
+      "E_outputs": 515,
+      "W_outputs": 514
+    },
+    "max_face_density": 4.027777777777778,
+    "pin_limited_min_face_um": 87.0,
+    "full_width_connected_cell_region": true,
+    "clock_entry": "beside input/rotate mass, centre-fed local root",
+    "measured_stdcell_area_um2": null,
+    "placement_util_target": [
+      0.4,
+      0.6
+    ],
+    "outline_rule": "129.6 is pin-envelope proposal only; enlarge from measured synthesis area if >60%, reserve connected routing collar if pin-limited; no final utilization claim",
+    "gate_ready": false
+  },
+  "remaining_nine_macros": {
+    "payload_cache": {
+      "actual_macros": 5,
+      "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+      "macro_area_um2": 19469.26368,
+      "separate_from_rotator": true,
+      "outline_proposal_um": [
+        475.2,
+        259.2
+      ],
+      "macro_origins_um": [
+        [
+          43.2,
+          43.2
+        ],
+        [
+          172.8,
+          43.2
+        ],
+        [
+          302.4,
+          43.2
+        ],
+        [
+          43.2,
+          172.8
+        ],
+        [
+          302.4,
+          172.8
+        ]
+      ],
+      "full_width_cell_band_y_um": [
+        84.264,
+        172.8
+      ],
+      "orientation_bottom": "R0",
+      "orientation_top": "MX",
+      "utilization": "OPEN: derive placement band from synthesis after assembler storage redesign",
+      "OPEN_STORAGE_BLOCKER": {
+        "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_sm_packed136.sv",
+        "object": "words[0:15][255:0]",
+        "runtime_bits": 4096,
+        "writes_per_edge_max": 4,
+        "gather_reads_per_edge": 5,
+        "head_advance": [
+          4,
+          4,
+          4,
+          5
+        ],
+        "input_pulses": [
+          4,
+          4,
+          4,
+          4,
+          1
+        ],
+        "requirement": "must become actual SRAM/banked prefetch storage, or a <=2kb ring only AFTER live-window proof + full burst bench; no speculative reduction"
+      }
+    },
+    "descriptor": {
+      "count": 2,
+      "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+      "area_um2": 7787.705472,
+      "source": "ot_hbm_svc_sm_issuer_rel DD=256"
+    },
+    "program": {
+      "count": 2,
+      "macro": "ot_sram_1r1w_1024x256_m2_r2c2",
+      "area_um2": 24634.710144,
+      "source": "ot_smh_calendar_static_x AW=11"
+    }
+  },
+  "whole_SM_current_inventory": {
+    "landing": 8,
+    "fifo": 8,
+    "cache": 5,
+    "program": 2,
+    "descriptor": 2
+  },
+  "current_macro_count": 25,
+  "current_macro_area_um2": 142202.728512,
+  "macro_inventory_warning": "25 describes CURRENT source; resolving4096bit assembler may add macros. Not production-qualified.",
+  "canonical_pin_access_audit": "OPEN: actual canonical LEFs are~10pins/um on WE M4 faces; 6/um applicability to macro versus external faces awaits owner interpretation. No cosmetic LEF edit or SAFE claim.",
+  "fullface_proposal": "real compiler variant: all rd_out North, wd_in+w_mask_in South, controls/repair West; all counted faces<=6/um for these four macros except verify generated periphery timing",
+  "regional_clock_trees": {
+    "stream": 9,
+    "HBM": 4,
+    "total": 13,
+    "source_domains": "four pair HBM, four pair stream, four local forwarded cache-phase, one cache core",
+    "scope": "landing/return minimum only; payload/program/issuer physical roots remain OPEN"
+  },
+  "timing": "return pipeline remains7edges; compiler prefetch15=8native landing+7return. Actual root/source mapping and ordinary nearest-edge timing OPEN before gate",
+  "qualification": "MODEL/OUTLINE PROPOSAL ONLY; source macro inventory measured, synthesis area/face placement/reach/fanout/clock evidence missing; NO gate/submit"
+}
