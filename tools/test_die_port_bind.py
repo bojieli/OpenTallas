@@ -124,3 +124,54 @@ def test_ternary_packed_range_width():
            '2*(2*RU+RS0+RS1+RS2):1)-1:0]relay_ck, input wire [7:0] a); endmodule\n')
     m = P.parse_modules(src, 'x.sv')[0]
     assert m.width('relay_ck', m.env()) == 30 and m.width('a', m.env()) == 8
+
+
+# ---- S81-LBGAP G6 (10-18): generate-label children, elaboration traps, duplicated child definitions
+G6_P = """
+module p #(parameter integer K = 1) (input wire ck, input wire [7:0] i, output wire [7:0] o);
+  generate if (K == 1) begin : g_one
+    c #(.RNE(1)) u_c (.ck(ck), .i(i), .o(o));
+  end else begin : g_bad
+    p_K_must_be_1 u_trap ();
+  end endgenerate
+endmodule
+"""
+G6_C_BASE = "module c (input wire ck, input wire [7:0] i, output reg [7:0] o); always @(posedge ck) o <= i; endmodule\n"
+G6_C_RNE = ("module c #(parameter integer RNE = 0) (input wire ck, input wire [7:0] i, output reg [7:0] o);\n"
+            "  always @(posedge ck) o <= RNE ? ~i : i; endmodule\n")
+G6_DIE = "module die (ck);\n  input ck;\n  wire [7:0] n;\n  p u_p (.ck(ck), .i(n), .o(n));\nendmodule\n"
+
+
+def run_g6(extra_fn=lambda d: []):
+    with tempfile.TemporaryDirectory() as d:
+        d = Path(d)
+        (d / 'rtl').mkdir()
+        (d / 'rtl' / 'p.sv').write_text(G6_P)
+        (d / 'rtl' / 'c.sv').write_text(G6_C_BASE)
+        (d / 'rtl' / 'c_rne.sv').write_text(G6_C_RNE)
+        (d / 'bench.f').write_text(f"+define+X\n{d / 'rtl' / 'c_rne.sv'}\n")
+        (d / 'd.v').write_text(G6_DIE)
+        out = d / 'o.json'
+        p = subprocess.run([sys.executable, str(TOOL), str(d / 'd.v'), '--top', 'die', '--rtl-root', str(d / 'rtl'),
+                            '--no-macro-dirs', '--out', str(out)] + list(extra_fn(d)), capture_output=True, text=True)
+        return p.returncode, json.loads(out.read_text()), p.stdout
+
+
+class G6(unittest.TestCase):
+    def test_label_child_trap_and_ambiguous_child(self):
+        rc, rec, so = run_g6()
+        cc = rec['child_closure']
+        self.assertEqual(rc, 1)
+        self.assertIn('ambiguous_children', rec['failing'])
+        self.assertIn('c', cc['ambiguous_children'])                 # the child after `begin : g_one` is seen
+        self.assertEqual(cc['unresolved_children'], {})              # the port-less trap is not an unresolved child
+        self.assertIn('p_K_must_be_1', cc['elab_traps'])
+
+    def test_prefer_list_resolves(self):
+        rc, rec, so = run_g6(lambda d: ['--prefer-list', str(d / 'bench.f')])
+        cc = rec['child_closure']
+        self.assertEqual(rc, 0, so)
+        self.assertEqual(cc['ambiguous_children'], {})
+        self.assertTrue(cc['variant_children']['c']['chosen'].endswith('c_rne.sv'))
+        self.assertEqual(cc['variant_children']['c']['by'], 'prefer')
+

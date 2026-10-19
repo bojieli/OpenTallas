@@ -1,0 +1,6 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job s81dv_land_682-l1-1da4d6aae bench bench_naive_retime_mutant host ot-epyc4 run /srv/opentallas-scratch2/claude/closure-loop/s81dv_land_682-l1-1da4d6aae log cl/bench_naive_retime_mutant.a1b1.log captured 2026-10-18T07:01:22-07:00
+# fail_regex 'LAND_BENCH FAIL dsfd_dvland_682 mut_naive'
+mut_naive FAIL sweep 0/36 slip-fault 4 {'dL0_wrap/w682': [0, 1], 'dL_halfT/w682': [4], 'dL_T_wrap_age1/w682': [7, 8], 'dL_2T_wrap_16hop/w682': [17, 18]}
+BENCH PASS /srv/opentallas-scratch2/claude/closure-loop/s81dv_land_682-l1-1da4d6aae/bench_naive/bench.json
+LAND_BENCH FAIL dsfd_dvland_682 mut_naive D=4 KW=3 sweep 0/36 slip-fault 4/4 latency {'dL0_wrap/w682': [0, 1], 'dL_halfT/w682': [4], 'dL_T_wrap_age1/w682': [7, 8], 'dL_2T_wrap_16hop/w682': [17, 18]}

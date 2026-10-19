@@ -15,7 +15,25 @@
     "runs/lane_debug: ld_xrW_3S_l0 (K5): wc = rc+1 from rs release, fault at warm; a word at the source register edge 100 leaves the landing at 105 (plan age 10); r_f_3L01 (K2) is clean",
     "runs/replay_L0_s3S: the CTL beats reach u_s_3S and are forwarded exactly (payload, hops 4->3) but land at u_s_2S 10 edges early (130 vs plan 140: two K>=4 landings x ~5 edges)"
    ],
-   "note": "zero-delay RTL and silicon behave alike here: without the gate the integer flight time never reaches the epoch. Not worked around in the bench."
+   "note": "zero-delay RTL and silicon behave alike here: without the gate the integer flight time never reaches the epoch. Not worked around in the bench.",
+   "status": "FIXED in the generator (S81-LBGAP/G1, branch claude/s81-lbgap-g1-1018); lane bench PASS, cut_3S re-run pending",
+   "resolution": {
+    "side_wrong": "die netlist (dv_bind.py), not the compiler: the compiler age ceil(N/2) + E + 1 per landed lane is what the fixed RTL delivers (lane bench PASS at TT and FF flight); the 10-edge offset was two K>=D landings aliasing their 4-slot ring (word read from a slot already overwritten), plus no flight time in zero-delay RTL",
+    "generator": "every LANDED lane gets a hop-0 clock gate ICGx4_ASAP7_75t_R fwd_<lane> (CLK = source root or the slice ck_line, ENA = released reset); gate calendar R0 = G + (N mod 2) per lane (G = first gated source edge, R0 = first landing read edge, N relay stations), realised with dsfd_rly_1 calendar stations on whichever side would release early (619 stations, 224 gates on p4l); K = E unchanged, no tile changes; SE strap",
+    "bench": "dv_slice_cut --land-plan now models lane flight as whole cycles on the gated lane clock (dv_flight_sim: data and first clock edge both F cycles late, F = ceil(-S1/T) clipped to [E-D+1, E-1]); Verilator 5.050 drops transport-delayed clock pulses. dv_slice_tb asserts rst_n at 0.1 ns (an edge) so async clears reach stopped gated clocks",
+    "evidence": {
+     "pass": [
+      "runs/g1_lane_tt (F 4/1)",
+      "runs/g1_lane_ff (F 3/1): identical stream, on the compiler schedule, land_fault 0"
+     ],
+     "fail_witnesses": [
+      "runs/g1_lane_mut_nogate (bind9 die.v, no gate, same flight model): r_f_3L01 1 late + land_fault from cycle 38",
+      "runs/g1_lane_mut_flight_shift4 (flight outside the window): all 3 lanes 4 late + land_fault"
+     ]
+    },
+    "die_netlist": "results/arch/s81_dv_1016/bind9_g1 (bind9 inputs + G1; strict DIE_PORT_BIND PASS 41 masters / 8,224 inst)",
+    "die_sta_owed": "die lane: ICG enable setup/hold on the source root, landing rs -> wc recovery against ck_f (rs releases >= T/2 before the first lane edge reaches the ring), case-analysis SE=0"
+   }
   },
   {
    "id": "G2",
