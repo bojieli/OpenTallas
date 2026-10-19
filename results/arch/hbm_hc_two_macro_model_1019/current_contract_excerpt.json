@@ -1,0 +1,472 @@
+{
+  "path": "/home/ubuntu/artifacts/hdie-d4/d4g_gen2c/net/contract_l10.json",
+  "sha256": "1e46f68cfdd7271f3e22714d0b205714bbe69259a3a4497be47c2a4aa0442ec4",
+  "basis": {
+    "commit": "b89bbc7b6",
+    "v15_contract": "results/arch/hbm_die_v15/source_contract/contract.json",
+    "v15_contract_sha256": "eac5bff7d49473de7a7d8f0b993e427d4d004991e56670c8552f35e2b9a6b6cd",
+    "grants": "results/arch/hier_contract_1015/hbm_v15.json",
+    "grants_version": 8,
+    "plan": "results/arch/hbm_die_v15/compact660_v5/compact.P.json",
+    "plan_slots": 195,
+    "specs": {
+      "engine": {
+        "file": "engine (in tool)",
+        "author": null,
+        "basis_commit": null
+      },
+      "attn": {
+        "file": "tools/hbm_die_v15/v16_specs/attn_0030.json",
+        "author": "H-NETLIST/attn (Claude) 2026-10-16",
+        "basis_commit": "d8c4aa677"
+      },
+      "coll_0030": {
+        "file": "tools/hbm_die_v15/v16_specs/coll_0030.json",
+        "author": "Claude H-NETLIST/coll sub-agent (round 0030)",
+        "basis_commit": "origin/main"
+      },
+      "coll_idx_link": {
+        "file": "tools/hbm_die_v15/v16_specs/coll_idx_link.json",
+        "author": "Claude region agent coll_idx_link (H-NETLIST v16)",
+        "basis_commit": "d96381d6e"
+      },
+      "cp1": {
+        "file": "tools/hbm_die_v15/v16_specs/cp1.json",
+        "author": "Claude H-NETLIST sub-agent cp1 (die control plane: programme/command targets)",
+        "basis_commit": "4b43cd77c"
+      },
+      "cp2": {
+        "file": "tools/hbm_die_v15/v16_specs/cp2.json",
+        "author": "Claude H-NETLIST sub-agent cp2 (host face + programme targets + status)",
+        "basis_commit": "4b43cd77c"
+      },
+      "dmawb": {
+        "file": "tools/hbm_die_v15/v16_specs/dmawb_0030.json",
+        "author": "H-NETLIST/dmawb 2026-10-16",
+        "basis_commit": "origin/main d8c4aa677"
+      },
+      "hc": {
+        "file": "tools/hbm_die_v15/v16_specs/hc.json",
+        "author": "Claude H-NETLIST sub-agent hc (2026-10-15)",
+        "basis_commit": "aa54435c7"
+      },
+      "hceng": {
+        "file": "tools/hbm_die_v15/v16_specs/hceng_0030.json",
+        "author": "Claude H-NETLIST sub-agent hceng (2026-10-16)",
+        "basis_commit": "aa54435c7"
+      },
+      "host_completion": {
+        "file": "tools/hbm_die_v15/v16_specs/host_completion.json",
+        "author": null,
+        "basis_commit": null
+      },
+      "host_misc": {
+        "file": "tools/hbm_die_v15/v16_specs/host_misc.json",
+        "author": "Claude region agent host_misc (H-NETLIST v16)",
+        "basis_commit": "d96381d6e"
+      },
+      "idxcoll": {
+        "file": "tools/hbm_die_v15/v16_specs/idxcoll.json",
+        "author": "Claude H-NETLIST sub-agent idxcoll (2026-10-15 22:30)",
+        "basis_commit": "4b43cd77c"
+      },
+      "sm_vm": {
+        "file": "tools/hbm_die_v15/v16_specs/sm_vm.json",
+        "author": "Claude region agent sm_vm (H-NETLIST v16)",
+        "basis_commit": "d96381d6e"
+      },
+      "smvm_0030": {
+        "file": "tools/hbm_die_v15/v16_specs/smvm_0030.json",
+        "author": "Claude H-NETLIST/smvm (round 0030)",
+        "basis_commit": null
+      },
+      "su": {
+        "file": "tools/hbm_die_v15/v16_specs/su.json",
+        "author": "Claude H-NETLIST sub-agent su (2026-10-15)",
+        "basis_commit": "4b43cd77c"
+      },
+      "su_collport_0253": {
+        "file": "tools/hbm_die_v15/v16_specs/su_collport_0253.json",
+        "author": "Codex recovered SU/COLL source",
+        "basis_commit": null
+      },
+      "su_sfu": {
+        "file": "tools/hbm_die_v15/v16_specs/su_sfu.json",
+        "author": "Claude region agent su_sfu (H-NETLIST v16)",
+        "basis_commit": "d96381d6e"
+      },
+      "vm_compact_0253": {
+        "file": "tools/hbm_die_v15/v16_specs/vm_compact_0253.json",
+        "author": "Codex typed ABI integration",
+        "basis_commit": null
+      },
+      "vm_retire_0600": {
+        "file": "tools/hbm_die_v15/v16_specs/vm_retire_0600.json",
+        "author": "Claude H-NETLIST 0600",
+        "basis_commit": null
+      },
+      "vmsm": {
+        "file": "tools/hbm_die_v15/v16_specs/vmsm.json",
+        "author": "H-NETLIST/vmsm (Claude) 2026-10-15",
+        "basis_commit": "4b43cd77c"
+      },
+      "xql_d4c": {
+        "file": "tools/hbm_die_v15/v16_layers/xql_d4f_bfqg.json",
+        "author": "Claude H-NETLIST 1815",
+        "basis_commit": "H-SM XQL 8d98d5225 + pegress x3 325202058"
+      },
+      "sfu_split3_d4f": {
+        "file": "tools/hbm_die_v15/v16_layers/sfu_split3_d4f.json",
+        "author": "Claude H-NETLIST 10-17",
+        "basis_commit": "H-SU/SFUCORE claude/hsu-corekit-0700 c3aeb5ce8 ot_hgi_sfu_core_split3 (pure port re-slice of split2: 4-lane face groups w/n/e/s = lanes 0-3/4-7/8-11/12-15); H-DIE d4f r5 19e540eda slot 1598.4x1771.2"
+      },
+      "vm_q2merge_d4f": {
+        "file": "tools/hbm_die_v15/v16_layers/vm_q2merge_d4f.json",
+        "author": "Claude H-NETLIST 2130",
+        "basis_commit": "H-SM claude/hsm-faces-mclk-1016 aef736948 (hfd_vms_wq2_merge)"
+      },
+      "vm_hoist_d4f": {
+        "file": "tools/hbm_die_v15/v16_layers/vm_hoist_d4f.json",
+        "author": "Claude H-NETLIST 2200",
+        "basis_commit": "H-DIE d4f vmb_<Q>b plan blocks"
+      },
+      "coll_hardv7_d4f": {
+        "file": "tools/hbm_die_v15/v16_layers/coll_hardv7_d4f.json",
+        "author": "Claude H-NETLIST/COLL 1815",
+        "basis_commit": "claude/hnl-coll-d4f-2130 528c716f9 (hard_v7: ctl V7, compact slices, NLINK/TP)"
+      },
+      "su_rflocal_d4f": {
+        "file": "tools/hbm_die_v15/v16_layers/su_rflocal_d4f.json",
+        "author": "Claude H-NETLIST 2330",
+        "basis_commit": "H-SU RF_LOCAL 68885c3bf (receipt 815151a6a)"
+      },
+      "vm_kshare_krl1_d4f": {
+        "file": "tools/hbm_die_v15/v16_layers/vm_kshare_krl1_d4f.json",
+        "author": "Claude H-NETLIST",
+        "basis_commit": "H-SU 70905a93e (PC H9b + vmks KRL1)"
+      },
+      "wrq_lanes_d4f": {
+        "file": "tools/hbm_die_v15/v16_layers/wrq_lanes_d4f.json",
+        "author": "Claude H-NETLIST 10-17",
+        "basis_commit": "H-WRQ claude/hwrq-1017 5bb0eb2c5 (final gate; 1b7313d89 + shift-register row FIFO, no port change) (ot_hbm_sm_vm_wr_q_t_lanes, kit physical/ref_tile/hsm_smvm_wrq_t_r5): one clock root per SM lane; logically identical to ot_hbm_sm_vm_wr_q_t"
+      },
+      "slots_r6_d4f": {
+        "file": "tools/hbm_die_v15/v16_layers/slots_r6_d4f.json",
+        "author": "Claude H-NETLIST 10-17",
+        "basis_commit": "H-DIE claude/hdie-d4c-g2 20d48a725 grants (wbk 520 sq beside DMA back; sfup 447.12x1023.84 r6/r7c outline beside sfus/sfucore)"
+      },
+      "xq_pegress_x6_clocks_d4f": {
+        "file": "tools/hbm_die_v15/v16_layers/xq_pegress_x6_clocks_d4f.json",
+        "author": "Claude H-DIE-R7b 10-17",
+        "basis_commit": "XQL pegress x6 cba17bc1b + x6b bb20e4cee (main): four face-register clock entries clk_w/clk_s/clk_e + select-cluster root clk_c, all the stream clock (one net in RTL simulation)"
+      },
+      "sfu_r14_d4f": {
+        "file": "tools/hbm_die_v15/v16_layers/sfu_r14_d4f.json",
+        "author": "Claude H-DIE-R8 10-17",
+        "basis_commit": "coordinator 0dg (1): SFU core centred among its 4 leaves, chains R11 -> R14, priced"
+      },
+      "su_prog_part_d4f": {
+        "file": "tools/hbm_die_v15/v16_layers/su_prog_part_d4f.json",
+        "author": "Claude H-DIE-R8 10-17",
+        "basis_commit": "HBM-SU claude/hbm-su-lane-1017: root ot_hbm_su_programme_root_h CLOSED (hbm_su_pgroot_1017-g2-5c926051a, 86.4^2); slices ot_hbm_su_programme_pslice_q4 r4 RTL 6e885ce21 (bench 7e3a00424 PASS lockstep vs monolithic, gate pending)"
+      },
+      "r8b_d4f": {
+        "file": "tools/hbm_die_v15/v16_layers/r8b_d4f.json",
+        "author": "Claude H-DIE-R8b 10-17",
+        "basis_commit": "see docstring of tools/hbm_die_v16/r8b_layer_d4f.py"
+      },
+      "target_id_straps": {
+        "file": "engine (in tool)",
+        "author": null,
+        "basis_commit": null
+      },
+      "fill_calendar_universal": {
+        "file": "engine (in tool)",
+        "author": null,
+        "basis_commit": null
+      }
+    }
+  },
+  "relays_physical": {
+    "note": "registered stations the die relay planner inserts on long edges are physical (latency counted in the compiler stage counts); logical relays that the RTL semantics require (SU RF_RELAY) are instances of their region spec",
+    "templates": [
+      {
+        "cell": "hfd_stn_v15_cc2224",
+        "outline": {
+          "w": 43.2,
+          "h": 356.4
+        },
+        "pins": {
+          "input": "W",
+          "output": "E",
+          "layer": "M4",
+          "span_um": 213.504
+        },
+        "clock_entry": {
+          "pin": "clk",
+          "face": "N",
+          "layer": "M5"
+        },
+        "homes": "relay rows / 0.6 mm channels / 40 um feedthrough columns per results/arch/hbm_die_v15/compact660_v5/lanes2.json (die relay planner instances them)",
+        "latency_cycles": 1,
+        "version": 5
+      },
+      {
+        "cell": "hfd_stn_v15_cc2248",
+        "outline": {
+          "w": 43.2,
+          "h": 360.72
+        },
+        "pins": {
+          "input": "W",
+          "output": "E",
+          "layer": "M4",
+          "span_um": 215.808
+        },
+        "clock_entry": {
+          "pin": "clk",
+          "face": "N",
+          "layer": "M5"
+        },
+        "homes": "relay rows / 0.6 mm channels / 40 um feedthrough columns per results/arch/hbm_die_v15/compact660_v5/lanes2.json (die relay planner instances them)",
+        "latency_cycles": 1,
+        "version": 5
+      }
+    ],
+    "su_rf": 36
+  },
+  "root": {
+    "master": "ot_hbm_hc_root_static",
+    "source": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_root_static.sv",
+    "params": {
+      "QDRLY": 2,
+      "QCHX": 11
+    },
+    "slot": "hc_eng",
+    "owner": "HC owner (H-NETLIST hceng)",
+    "region": "d4g_gen1_l3",
+    "note": "Static full-form HC engine (HC.HC_MIX: 2,048 FP32 MAC lanes W256 in 8 bank tiles, 4 weight slots in 256 x 1024x256 macros, 2 exact tail units, event programme, bases/scales table). Pin-registered (every input a pin flop, every output a flop). Area estimate ~9.5 mm2 (results/uarch/hbm_hc_eng_0030/model.json). Bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json) | d4g_gen1_l3: ot_hbm_hc_eng_static -> ot_hbm_hc_root_static; centre HC root: programme/table/core TPRE 6/mix/tails; XRD=XRU=0 (set to the root<->hub relay stage counts when the relay layer stations those links); QDRLY 2 = the U-ring b7->b0 die relay (HBM-RTL5, coordinator 0fi) | L10 HH-9 chain pin registers {'QCHX': 11} (DIE-HBM-LEAD 10-19)",
+    "replaces_v15": null,
+    "rtl_deps": [
+      "rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_hdc_prefix.sv",
+      "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_eng_seq_static.sv",
+      "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_tail_unit_static.sv",
+      "rtl/hbm_accel/generic/peers/static_hc/ot_hdc_v41x_hcp_sys1_static.sv",
+      "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_tail_static.sv",
+      "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
+      "rtl/hbm_accel/su/div64_candidate/ot_hdc_v41x_sfu_c12.sv",
+      "rtl/hdc/ot_hdc_delay.sv",
+      "rtl/hdc/ot_hdc_fastfp.sv",
+      "rtl/hdc/ot_hdc_fastfp_lat.sv",
+      "rtl/hdc/ot_hdc_sfu.sv",
+      "rtl/hdc/v41/ot_hdc_fdiv.sv",
+      "rtl/hdc/v41/ot_hdc_sinkhorn.sv",
+      "rtl/hdc/v41/ot_hdc_sk_arith.sv",
+      "rtl/hdc/v41/ot_hdc_sk_recip_rom.sv",
+      "rtl/hdc/v41x/ot_hdc_v41x_hcp.sv",
+      "rtl/lib/ot_rst_relay.sv"
+    ],
+    "ports": {
+      "clk": {
+        "direction": "input",
+        "bits": 1
+      },
+      "rst_n": {
+        "direction": "input",
+        "bits": 1
+      },
+      "tgt": {
+        "direction": "input",
+        "bits": 8
+      },
+      "cfg_v": {
+        "direction": "input",
+        "bits": 1
+      },
+      "cfg_target": {
+        "direction": "input",
+        "bits": 8
+      },
+      "cfg_addr": {
+        "direction": "input",
+        "bits": 12
+      },
+      "cfg_data": {
+        "direction": "input",
+        "bits": 256
+      },
+      "desc_v": {
+        "direction": "input",
+        "bits": 1
+      },
+      "desc_base": {
+        "direction": "input",
+        "bits": 12
+      },
+      "desc_limit": {
+        "direction": "input",
+        "bits": 13
+      },
+      "desc_loops": {
+        "direction": "input",
+        "bits": 16
+      },
+      "launch_v": {
+        "direction": "input",
+        "bits": 1
+      },
+      "configured": {
+        "direction": "output",
+        "bits": 1
+      },
+      "qd_v": {
+        "direction": "output",
+        "bits": 4
+      },
+      "qd_ss": {
+        "direction": "output",
+        "bits": 4
+      },
+      "qd_nv": {
+        "direction": "output",
+        "bits": 28
+      },
+      "qd_wa": {
+        "direction": "output",
+        "bits": 40
+      },
+      "qd_xa": {
+        "direction": "output",
+        "bits": 40
+      },
+      "qi_v": {
+        "direction": "output",
+        "bits": 4
+      },
+      "qi_kind": {
+        "direction": "output",
+        "bits": 4
+      },
+      "qi_slot": {
+        "direction": "output",
+        "bits": 8
+      },
+      "qi_lo": {
+        "direction": "output",
+        "bits": 20
+      },
+      "qi_w": {
+        "direction": "output",
+        "bits": 20
+      },
+      "qi_cnt": {
+        "direction": "output",
+        "bits": 48
+      },
+      "qi_word": {
+        "direction": "output",
+        "bits": 40
+      },
+      "qps_v": {
+        "direction": "input",
+        "bits": 4
+      },
+      "qps": {
+        "direction": "input",
+        "bits": 128
+      },
+      "qps_f": {
+        "direction": "input",
+        "bits": 4
+      },
+      "q_fault": {
+        "direction": "input",
+        "bits": 4
+      },
+      "gathered_mix_v": {
+        "direction": "input",
+        "bits": 4
+      },
+      "gathered_mix_row": {
+        "direction": "input",
+        "bits": 20
+      },
+      "gathered_mix_pos": {
+        "direction": "input",
+        "bits": 12
+      },
+      "gathered_mix_data": {
+        "direction": "input",
+        "bits": 128
+      },
+      "result_v": {
+        "direction": "output",
+        "bits": 4
+      },
+      "result_position": {
+        "direction": "output",
+        "bits": 12
+      },
+      "result": {
+        "direction": "output",
+        "bits": 3072
+      },
+      "program_active": {
+        "direction": "output",
+        "bits": 1
+      },
+      "program_done": {
+        "direction": "output",
+        "bits": 1
+      },
+      "fault": {
+        "direction": "output",
+        "bits": 1
+      }
+    }
+  },
+  "hc_edges_sample": [
+    {
+      "name": "rf0185__drv_rf0185_s000_l0_0",
+      "bits": 7,
+      "source": [
+        "hc_eng",
+        "qd_nv",
+        21,
+        28
+      ],
+      "sink": [
+        "rf0185_s000_l0",
+        "a",
+        0,
+        7
+      ],
+      "clock": "stream",
+      "ready_or_credit": false,
+      "allowed_exception": null,
+      "basis": "d4f F1 relay tree rf0185 (p2p, hc_eng) -- relay_layer_d4f.py",
+      "region": "relays_d4f"
+    },
+    {
+      "name": "rf0185__drv_rf0185_s000_l0_7",
+      "bits": 1,
+      "source": [
+        "hc_eng",
+        "qd_ss",
+        3,
+        4
+      ],
+      "sink": [
+        "rf0185_s000_l0",
+        "a",
+        7,
+        8
+      ],
+      "clock": "stream",
+      "ready_or_credit": false,
+      "allowed_exception": null,
+      "basis": "d4f F1 relay tree rf0185 (p2p, hc_eng) -- relay_layer_d4f.py",
+      "region": "relays_d4f"
+    }
+  ]
+}
