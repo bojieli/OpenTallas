@@ -17,10 +17,26 @@ def point(c,p):
  if c is None:return center(ports[p]['shapes'])
  q=center(contacts[c,p]['shapes']);oc=cells[byname[c]];nc=plan[byname[c]];ob=oc['bbox'];nb=nc['bbox_dbu'];dx=(nb[0]-ob[0])/u
  return (q[0]+dx,q[1]+(nb[1]-ob[1])/u) if oc['orient']==nc['orient'] else (q[0]+dx,(nb[1]+nb[3])/2/u-(q[1]-(ob[1]+ob[3])/2/u))
-libraries={};libfacts={};maxcaps={};used={c['master'] for c in plan.values()}|{'BUFx24_ASAP7_75t_R'}
+libraries={};libfacts={};maxcaps={};native_domains={};used={c['master'] for c in plan.values()}|{'BUFx24_ASAP7_75t_R'}
+def blocks(text,kind):
+ for z in re.finditer(r'\b'+kind+r'\s*\(\s*([^)]*)\)\s*\{',text):
+  a=text.index('{',z.start());i=a+1;depth=1
+  while depth:depth+=(text[i]=='{')-(text[i]=='}');i+=1
+  yield z[1].strip('" '),text[a+1:i-1]
 for corner in ['TT','FF']:
  files=[Path(line.split()[1]) for line in (P/'kit/lib_SHA256SUMS').read_text().splitlines() if '_RVT_'+corner+'_' in line];assert len(files)==5
  libraries[corner]=S.native_cells(files,used_masters=used);assert set(libraries[corner])==used
+ seq=[f for f in files if '_SEQ_' in f.name];assert len(seq)==1;text=S._read_text(seq[0]);templates=dict(blocks(text,'lu_table_template'))
+ cell=dict(blocks(text,'cell'))['DFFHQNx1_ASAP7_75t_R'];pin=dict(blocks(cell,'pin'))['QN'];drows=[]
+ for _,timing in blocks(pin,'timing'):
+  for typ in ['cell_rise','cell_fall']:
+   for template,table in blocks(timing,typ):
+    body=templates[template];roles={str(i):re.search(r'variable_'+str(i)+r'\s*:\s*([^;]+)',body)[1].strip('" ') for i in [1,2]}
+    axes={str(i):list(map(float,re.findall(r'[-+]?(?:\d*\.\d+|\d+)(?:[eE][-+]?\d+)?',re.search(r'index_'+str(i)+r'\s*\((.*?)\)\s*;',table,re.S)[1]))) for i in [1,2]}
+    assert roles=={'1':'input_net_transition','2':'total_output_net_capacitance'}
+    drows.append(dict(type=typ,template=template,axis_roles=roles,axes=axes,native_source=str(seq[0]),native_sha256=hashlib.sha256(seq[0].read_bytes()).hexdigest(),template_body_sha256=hashlib.sha256(body.encode()).hexdigest()))
+ assert len(drows)==2;native_domains[corner]=drows
+
  libfacts[corner]=[dict(path=str(f),sha256=hashlib.sha256(f.read_bytes()).hexdigest()) for f in files]
  maxcaps[corner]={}
  for f in files:
@@ -61,7 +77,7 @@ for ni,net in enumerate(caps['all_driver_nets']):
  if (drv['master'] or '').startswith('DFF'):
   limits={}
   for corner in ['TT','FF']:
-   tables=[t for arc in domains['corners'][corner]['arcs'] if arc['master']==drv['master'] and arc['pin']==drv['pin'] for t in arc['tables'] if t['type'] in ['cell_rise','cell_fall']]
+   assert drv['master']=='DFFHQNx1_ASAP7_75t_R' and drv['pin']=='QN';tables=native_domains[corner]
    ranges=[]
    for t in tables:
     axis=[k for k,role in t['axis_roles'].items() if role=='total_output_net_capacitance'];assert len(axis)==1;ranges.append([min(t['axes'][axis[0]]),max(t['axes'][axis[0]])])
@@ -107,7 +123,7 @@ def peak(segments,band=False):
 def itertools_group(events):
  import itertools
  return itertools.groupby(sorted(events),key=lambda z:z[0])
-summary=dict(scope='READONLY refinement of frozen SOURCE MODEL; same coordinates/source/load/edge counts, no physical engine',site_plan_sha256=before,nets=len(ledger),topology='Native-pin rectilinear MST plus explicit unobstructed M3V/M4H doglegs; shared collinear same-net segments unioned. Real track assignment, PG avoidance, pin access, vias and extracted timing remain OPEN.',corners={},FF_CQ_domain=dict(total=len(ffrows),TT_outside=[r for r in ffrows if not r['corners']['TT']['in_table']],FF_outside=[r for r in ffrows if not r['corners']['FF']['in_table']],scope='All2904 FF native load-axis checks with actual corner pin caps and nominal wire model. No early-CQ or hold guarantee.'),clock={},cuts=dict(M4_full=peak(hsegments),M4_inside_band=peak(hsegments,True),M3_full=peak(vsegments),gross_M4_tracks_full_face=2925,gross_M4_tracks_core=2835,gross_M4_tracks_inside_band=585,gross_M3_tracks_full_face=2925,gross_M3_tracks_core=2835,scope='Gross pitch-only capacities before real PG/cell blockage/spacing/access, not a routability PASS'),native_libraries=libfacts)
+summary=dict(scope='READONLY refinement of frozen SOURCE MODEL; same coordinates/source/load/edge counts, no physical engine',site_plan_sha256=before,nets=len(ledger),topology='Native-pin rectilinear MST plus explicit unobstructed M3V/M4H doglegs; shared collinear same-net segments unioned. Real track assignment, PG avoidance, pin access, vias and extracted timing remain OPEN.',corners={},FF_CQ_domain=dict(total=len(ffrows),TT_outside=[r for r in ffrows if not r['corners']['TT']['in_table']],FF_outside=[r for r in ffrows if not r['corners']['FF']['in_table']],scope='All2904 FF native load-axis checks with actual corner pin caps and nominal wire model. No early-CQ or hold guarantee.'),clock={},cuts=dict(M4_full=peak(hsegments),M4_inside_band=peak(hsegments,True),M3_full=peak(vsegments),gross_M4_tracks_full_face=2925,gross_M4_tracks_core=2835,gross_M4_tracks_inside_band=585,gross_M3_tracks_full_face=2925,gross_M3_tracks_core=2835,scope='Gross pitch-only capacities before real PG/cell blockage/spacing/access, not a routability PASS'),native_libraries=libfacts,actual_native_CQ_domains=native_domains,original_merged_TT_unbound_axis_receipt_tables=sum(t['axis_roles'] is None for a in domains['corners']['TT']['arcs'] if a['master']=='DFFHQNx1_ASAP7_75t_R' and a['pin']=='QN' for t in a['tables'] if t['type'] in ['cell_rise','cell_fall']))
 for corner in ['TT','FF']:
  summary['corners'][corner]=dict(total_RMST_length_um=sum(r['RMST_length_um'] for r in ledger),max_tree_root_path_um=max(r['max_tree_root_path_um'] for r in ledger),cap_over_limit=[r for r in ledger if r['native_max_cap_fF'][corner] and r['corner_cap'][corner]['total_model_fF']>r['native_max_cap_fF'][corner]])
  sink=sum(cap('DFFHQNx1_ASAP7_75t_R','CLK',corner) for _ in range(2904));extra=265*cap('BUFx24_ASAP7_75t_R','A',corner);summary['clock'][corner]=dict(real_sink_input_cap_fF=sink,budget265_BUFx24_input_cap_fF=extra,total_model_input_cap_before_wire_fF=sink+extra,clock_wire='UNIMPLEMENTED; no actual tree/clock slew/spread')
