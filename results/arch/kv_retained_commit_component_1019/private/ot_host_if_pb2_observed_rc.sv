@@ -715,11 +715,13 @@ module ot_host_if_pb2_observed_rc #(
                     // entry visible: advance the tail, raise the interrupt
                     cq_tail <= (cq_tail + 16'd1) & cq_mask;
                     if (((cq_tail + 16'd1) & cq_mask) == 16'd0) cq_phase <= !cq_phase;
-                    if (eh_kind != EV_TOKEN) begin
+                    if ((!ENABLE_RETAINED_COMMIT && eh_kind != EV_TOKEN) ||
+                        (ENABLE_RETAINED_COMMIT && offered_success_q && offered_kind_q != EV_TOKEN && m_bresp == 0)) begin
                         c_reqs <= c_reqs + 1'b1;
                         if (sl_st[eh_slot] == SL_DRAIN && MODE == 0 && !ENABLE_RETAINED_COMMIT) sl_st[eh_slot] <= SL_FREE;
                     end
-                    if (eh_kind != EV_ERROR) c_tokens <= c_tokens + 1'b1;
+                    if ((!ENABLE_RETAINED_COMMIT && eh_kind != EV_ERROR) ||
+                        (ENABLE_RETAINED_COMMIT && offered_success_q && m_bresp == 0)) c_tokens <= c_tokens + 1'b1;
                     if (msi_en && irq_mask[0]) begin
                         m_awvalid <= 1'b1; m_awaddr <= {msi_addr[63:3], 3'b000};
                         m_wvalid <= 1'b1; m_wdata <= msi_addr[2] ? {msi_data, 32'd0} : {32'd0, msi_data};
