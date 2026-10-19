@@ -441,6 +441,40 @@ class HelperOverlay(unittest.TestCase):
             CL.ship_helpers('local', str(run), job)               # now verified against the refreshed plan
             self.assertFalse(job['helper_overlay_verification']['mutation'])
 
+    def test_publish_refresh_ignores_unrelated_route_helper_drift(self):
+        # TW5-BANKLATSU 10-19: main also moved a NON-publish route helper since the route froze; the installed run must
+        # still get the publish helper at main while every other helper keeps its frozen (executed) bytes
+        pub = 'tools/view_export_x.py'
+        (self.root / pub).write_bytes(b'# exporter v1\n'); self.git('add', pub); self.git('commit', '-m', 'exporter v1')
+        self.git('update-ref', 'refs/remotes/origin/main', self.git('rev-parse', 'HEAD'))
+        (self.daemon / pub).write_bytes(b'# exporter v1\n')
+        with patch.object(CL, 'HELPERS', ('../orfs_hold_mm.tcl', '../view_export_x.py')), \
+                patch.object(HO, 'HELPERS', ('../orfs_hold_mm.tcl', '../view_export_x.py')), \
+                patch.object(HO, 'PUBLISH_ONLY', (pub,)), patch.object(CL, 'event'):
+            plan, _ = HO.capture_plan(self.daemon, self.root)
+            job = {'freeze_helper_overlay': True, 'route_overlay_plan': plan}
+            run = Path(self.tmp.name) / 'resumed2'
+            CL.ship_helpers('local', str(run), job)
+            self.assertEqual((run / 'cl/orfs_hold_mm.tcl').read_bytes(), self.new)
+            route_later = b'# route helper changed on main later\n'
+            self.commit_helper(route_later); (self.daemon / self.rel).write_bytes(route_later)
+            fixed = b'# exporter fix on main\n'
+            (self.root / pub).write_bytes(fixed); self.git('add', pub); self.git('commit', '-m', 'exporter fix')
+            self.git('update-ref', 'refs/remotes/origin/main', self.git('rev-parse', 'HEAD'))
+            (self.daemon / pub).write_bytes(fixed)
+            CL.ship_helpers('local', str(run), job)
+            self.assertEqual((run / 'cl/view_export_x.py').read_bytes(), fixed)
+            self.assertEqual((run / 'cl/orfs_hold_mm.tcl').read_bytes(), self.new)      # frozen route helper kept
+            self.assertTrue(job['helper_overlay_verification']['mutation'])
+            self.assertEqual([r['path'] for r in job['helper_overlay_sanctioned']], [pub])
+            rows = {f['path']: f for f in job['route_overlay_plan']['files']}
+            self.assertEqual(rows[pub]['resolution'], 'publish_refresh')
+            self.assertEqual(rows[self.rel]['git_blob'], HO.blob_id(self.new))
+            CL.ship_helpers('local', str(run), job)                                     # verifies, no mutation
+            self.assertFalse(job['helper_overlay_verification']['mutation'])
+            payloads, _src = HO.recover_frozen_payloads(self.root, CL.HELPER_STORE, job['route_overlay_plan'])
+            self.assertEqual((payloads[pub], payloads[self.rel]), (fixed, self.new))     # reinstall = executed bytes
+
     def test_installed_run_non_publish_drift_keeps_frozen_bytes(self):
         _, binding = self.gate()
         job = {'freeze_helper_overlay': True, 'route_overlay_plan': binding['route_overlay_plan']}

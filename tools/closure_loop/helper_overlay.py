@@ -642,6 +642,9 @@ def stored_frozen_payloads(store, plan, only=None):
 
 
 UNCOMMITTED_RESOLUTIONS = ("daemon_only", "not_on_main", "no_git")
+# rows whose bytes come from the content store on a reinstall: uncommitted at freeze, or a PUBLISH_ONLY row refreshed
+# to a later origin/main blob on an installed run (closure_loop._publish_refresh; the plan keeps its original origin tree)
+STORE_RESOLUTIONS = UNCOMMITTED_RESOLUTIONS + ("publish_refresh",)
 
 
 def recover_frozen_payloads(repo, store, plan):
@@ -654,7 +657,7 @@ def recover_frozen_payloads(repo, store, plan):
     """
     rows = frozen_rows(plan)
     resolution = {f.get("path"): f.get("resolution") for f in plan.get("files", []) if isinstance(f, dict)}
-    loose = {r["path"] for r in rows if resolution.get(r["path"]) in UNCOMMITTED_RESOLUTIONS}
+    loose = {r["path"] for r in rows if resolution.get(r["path"]) in STORE_RESOLUTIONS}
     if not loose:
         return committed_frozen_payloads(repo, plan), "committed_origin"
     if store is None:

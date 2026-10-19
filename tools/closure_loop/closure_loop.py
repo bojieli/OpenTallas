@@ -2953,18 +2953,35 @@ def installed_helper_receipt(host, run, frozen):
 
 
 def _publish_refresh(frozen):
-    """(current plan, payloads, modes, sanctioned rows) when the effective helper set differs from the frozen plan ONLY
-    in PUBLISH_ONLY paths drifted to exactly origin/main (compare_plans_sanctioned rules); else None."""
+    """(refreshed plan, payloads, modes, sanctioned rows) when a PUBLISH_ONLY helper of the frozen plan drifted to exactly
+    origin/main (compare_plans_sanctioned rules); else None.
+
+    Only the publish rows are refreshed: every other helper keeps its frozen (already executed) bytes, whatever main did
+    to it since.  TW5-BANKLATSU 2026-10-19: the refresh used to compare the WHOLE current helper set, so any unrelated
+    route-helper drift on main (meas_resta.py, w18/corner_sta.py since the route froze) refused it silently and
+    resume-postroute of hbm_sfu_lg_pair_tap_leaf_rt24_1019-b1-72af5d8b1 re-ran the frozen exporter (6-pin OBS spacing
+    child_lint FAIL) although the exact-window exporter fix ff7aa2deb was on main.  Refreshed rows carry resolution
+    "publish_refresh": their bytes come from the content store on a later reinstall (not the plan's origin tree)."""
     try:
-        current, payloads = HO.capture_plan(HERE.parents[1], REPO, head=_ovl_head(), cache=_OVL["hist"])
+        current, cur_payloads = HO.capture_plan(HERE.parents[1], REPO, head=_ovl_head(), cache=_OVL["hist"])
         if HO.compare_plans(frozen, current)[0]:
             return None
-        ok, _why, sanctioned = HO.compare_plans_sanctioned(frozen, current, REPO, head=current.get("origin_main"))
+        frows = {f["path"]: f for f in frozen["files"]}
+        crows = {f["path"]: f for f in current["files"]}
+        pub = [p for p in HO.PUBLISH_ONLY if p in frows and p in crows
+               and HO.content_rows([frows[p]]) != HO.content_rows([crows[p]])]
+        if not pub:
+            return None
+        files = [dict(crows[f["path"]], resolution="publish_refresh") if f["path"] in pub else f for f in frozen["files"]]
+        refreshed = dict(frozen, files=files, content_sha256=HO.digest(files))
+        ok, _why, sanctioned = HO.compare_plans_sanctioned(frozen, refreshed, REPO, head=current.get("origin_main"))
+        if not ok or not sanctioned or any(r.get("kind") != "publish" for r in sanctioned):
+            return None
+        payloads, _src = HO.recover_frozen_payloads(REPO, HELPER_STORE, frozen)
+        payloads.update({p: cur_payloads[p] for p in pub})
     except (ValueError, OSError, subprocess.SubprocessError, KeyError, TypeError):
         return None
-    if not ok or not sanctioned or any(r.get("kind") != "publish" for r in sanctioned):
-        return None
-    return current, payloads, {f["path"]: f["mode"] for f in current["files"]}, sanctioned
+    return refreshed, payloads, {f["path"]: f["mode"] for f in files}, sanctioned
 
 
 def ship_helpers(host, run, job=None):
