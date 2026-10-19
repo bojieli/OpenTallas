@@ -1,0 +1,10 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job hbm_su_pg_lgtap_rt18_1019-b1-72af5d8b1 bench bench_split_mutant1 host ot-epyc7 run /srv/opentallas-scratch/claude/closure-loop/hbm_su_pg_lgtap_rt18_1019-b1-72af5d8b1 log cl/bench_split_mutant1.a1b1.log captured 2026-10-19T02:38:26-07:00
+# fail_regex 'PG_LG_TAP_RSYNC FAIL errors=[1-9]'
+LOCKSTEP MISMATCH t=25801
+LOCKSTEP MISMATCH t=28501
+LOCKSTEP MISMATCH t=30301
+LOCKSTEP MISMATCH t=30601
+LOCKSTEP MISMATCH t=32101
+PG_LG_TAP_RSYNC FAIL errors=21844 checks=36024 reset_edges=15 fault_edges=35988
+rtl/test/hbm_accel/generic/tb_hbm_su_pg_lg_tap_rsync.sv:65: $finish called at 21694800 (1ps)
