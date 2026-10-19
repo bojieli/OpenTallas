@@ -1,0 +1,15 @@
+ot-run: ot-epyc4       admits   952 GB (avail 780, growth 113, headroom 0, waiters 0/0 GB) load 93/128 running 38 disk 315 GB 
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-safe-qw-land-1019/calendar_gated3
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-safe-qw-land-1019/calendar_gated3
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-safe-qw-land-1019/calendar_gated3
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/codex-safe-qw-land-1019/calendar_gated3
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-safe-qw-land-1019/calendar_gated3
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-safe-qw-land-1019/calendar_gated3
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-3788724-1792426468 after 0 s
+.......
+----------------------------------------------------------------------
+Ran 7 tests in 0.015s
+
+OK
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-3788724-1792426468): exit 0

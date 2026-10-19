@@ -36,5 +36,33 @@
   "total_state": 1746,
   "timing_qualified": false,
   "note": "Root-only synthesis prototype; GRT cancelled, no timing qualification. Rawresetfanout violation structurally corrected in ff0368257; latest synthesis pending."
- }
+ },
+ "latest_synthesis": {
+  "source": "e9121f8ba",
+  "rtl": "ff0368257",
+  "host": "ot-epyc8",
+  "run": "/srv/opentallas-scratch/claude/codex-safe-qw-land-1019/gated180_r2_synth",
+  "area_um2": 616.2237,
+  "flops": 1737,
+  "icgs": 9,
+  "total_state": 1746,
+  "outline_um": [
+   39.096,
+   39.096
+  ],
+  "core_utilization": 0.514,
+  "raw_rs_flops": 2,
+  "nonclock_max_loads_upper_bound": 31,
+  "synthesis_floorplan_status": "PASS",
+  "timing_qualified": false
+ },
+ "behavioral_certificate": "gated_phase_joined_r2_384.json",
+ "checks": 199008,
+ "physical_blockers": [
+  "ROOT-reviewed structural generatedclock declarations in native CE schema (multiple_cts_roots forbids custom clock hooks).",
+  "Actual compiled rootphase relationship joined to every generatedbank write/read/nextoverwrite edge; no E_case rootphase substitution.",
+  "Native clock-family census/actual activeedge phase normalization and cross-family150/210setup+100hold projection.",
+  "Actual CTS/routed TTsetup>=0,FFhold>=0,gatingenable checks,nativeTT/FFspread<=80ps,sourcecomp phi-R; SSsensitivity only.",
+  "Bind fixed4write/landed-ready boot prologue into compiler firstusable calendar."
+ ]
 }
