@@ -1,0 +1,7 @@
+SIM Verilator 5.050 2026-07-01 rev v5.050
+MISMATCH t=3 child u_rowtx.fill_token
+MISMATCH t=3 child u_rowtx.word_token
+MISMATCH t=4 child u_rowtx.fill_token
+MISMATCH t=4 child u_rowtx.word_token
+MISMATCH t=5 out rowtx__emb_tx_payload
+KVS_TILE FAIL tile=emb edges=4000 checks=103922 errors=9989 mut=2 (swapped .fill_token(d2d__svc[109:92]) <-> .word_token(w_join__word_token[17:0]))

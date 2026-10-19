@@ -45,6 +45,9 @@ def gen(t, ck1):
     return json.loads(subprocess.check_output([sys.executable, '-c', code], env=env, cwd=ROOT))
 
 
+M3_INERT = {'qkd_static_kv_boot_dispatch'}
+
+
 def mutate(txt, mut):
     """returns (mutated text, removed child loc or None, description)"""
     lines = txt.split('\n')
@@ -82,10 +85,29 @@ def mutate(txt, mut):
                         new = new.replace('\x00A', f'.{pa}({eb})', 1)
                         lines[i] = new
                         return '\n'.join(lines), None, f'swapped .{pa}({ea}) <-> .{pb}({eb})'
+        # KV-KITS/PARENTS 10-18: no two equal-width slice connections on any child (hroot / pc: whole-wire inputs of
+        # different widths) -> the same wiring fault class as a 1-bit rotation of the first multi-bit child INPUT
+        # connection (bit i of the source lands on pin bit i+1); declared widths read from the tile text
+        decl = {n: int(h) - int(l) + 1 for h, l, n in re.findall(r'(?:input|output|wire)\s+(?:wire\s+)?\[(\d+):(\d+)\]\s+(\w+)', txt)}
+        drv = set(re.findall(r'(?m)^\s*assign\s+(\w+)', txt)) | {n for n in decl if n.startswith('w_')}
+        for i, ln in enumerate(lines):
+            m = re.match(r'(\s*\w+(?: #\(.*?\))? u_\w+ \()(.*)(\);)$', ln)
+            if not m:
+                continue
+            for pa, ea in re.findall(r'\.(\w+)\(([^()]*)\)', m.group(2)):
+                e = ea.strip()
+                w = decl.get(e)
+                if w and w > 1 and e not in drv and not e.startswith('w_') and pa not in ('ck', 'rst_n'):
+                    lines[i] = ln.replace(f'.{pa}({ea})', f'.{pa}({{{e}[{w - 2}:0], {e}[{w - 1}]}})', 1)
+                    return '\n'.join(lines), None, f'rotated .{pa}({e}) by one bit'
     if mut == 3:
         assigns = '\n'.join(ln for ln in lines if ln.strip().startswith('assign '))
         for i, ln in enumerate(lines):
-            m = re.match(r'\s*\w+(?: #\(.*?\))? u_(\w+) \(', ln)
+            m = re.match(r'\s*(\w+)(?: #\(.*?\))? u_(\w+) \(', ln)
+            # KV-KITS/PARENTS 10-18: skip M3_INERT children (outputs constant 0 under random stimulus on 2-state Verilator,
+            # so their removal is invisible: ctl u_boot = qkd_static_kv_boot_dispatch, idle without an authenticated image)
+            m = m if m and m.group(1) not in M3_INERT else None
+            m = re.match(r'\s*\w+(?: #\(.*?\))? u_(\w+) \(', ln) if m else None
             if m and f'w_{m.group(1)}__' in assigns:
                 del lines[i]
                 return '\n'.join(lines), m.group(1), f'removed child u_{m.group(1)}'
@@ -98,6 +120,8 @@ def main():
     ap.add_argument('--mut', type=int, default=0)
     ap.add_argument('--edges', type=int, default=2000)
     ap.add_argument('--out', required=True)
+    ap.add_argument('--sim', default=os.environ.get('KVS_SIM', 'iverilog'), choices=('iverilog', 'verilator'))
+    ap.add_argument('--threads', type=int, default=4)
     a = ap.parse_args()
     t = a.tile
     out = Path(a.out)
@@ -181,14 +205,24 @@ def main():
     cl = json.loads(subprocess.check_output([sys.executable, '-c', code], cwd=ROOT,
                                             env=dict(os.environ, OT_KV_STATIC_DIE='1', OT_KV_TILE_KITS='1')))
     srcs = sorted((set(old['src']) | set(new['src']) | set(cl)) - {old['rtl'], new['rtl']})
-    cmd = ['iverilog', '-g2012', '-o', str(out / 'sim'), '-s', 'tb_kvs_tile', str(out / 'tb.sv'), str(out / 'tiles.sv')] + \
-        [s for s in srcs] + ['-Y', '.sv'] + [x for d in sorted({str(Path(s).parent) for s in srcs}) for x in ('-y', d)]
+    dirs = sorted({str(Path(s).parent) for s in srcs})
+    if a.sim == 'verilator':
+        # KV-KITS-ATTN 10-18: the closure daemon's pinned Verilator (5.050, PATH set by the loop / kvs_tile_bench.sh)
+        cmd = ['verilator', '--binary', '--timing', '-j', str(a.threads), '-Wno-fatal', '-Wno-lint', '-Wno-style',
+               '-Wno-TIMESCALEMOD', '--top-module', 'tb_kvs_tile', '-Mdir', str(out / 'obj'), '-o', 'sim',
+               str(out / 'tb.sv'), str(out / 'tiles.sv')] + list(srcs) + ['+libext+.sv+.v'] + [x for d in dirs for x in ('-y', d)]   # '-y DIR' (5.050 refuses -yDIR)
+        run = [str(out / 'obj' / 'sim')]
+        print('SIM ' + subprocess.run(['verilator', '--version'], capture_output=True, text=True).stdout.strip())
+    else:
+        cmd = ['iverilog', '-g2012', '-o', str(out / 'sim'), '-s', 'tb_kvs_tile', str(out / 'tb.sv'),
+               str(out / 'tiles.sv')] + list(srcs) + ['-Y', '.sv'] + [x for d in dirs for x in ('-y', d)]
+        run = ['vvp', '-n', str(out / 'sim')]
     r = subprocess.run(cmd, capture_output=True, text=True, cwd=ROOT)
     if r.returncode:
         print(r.stdout[-3000:], r.stderr[-3000:])
         print(f'KVS_TILE FAIL tile={t} build mut={a.mut} ')
         return 2
-    r = subprocess.run(['vvp', '-n', str(out / 'sim')], capture_output=True, text=True, cwd=ROOT)
+    r = subprocess.run(run, capture_output=True, text=True, cwd=ROOT)
     print(r.stdout[-4000:])
     line = [ln for ln in r.stdout.splitlines() if ln.startswith('KVS_TILE ')]
     if not line:

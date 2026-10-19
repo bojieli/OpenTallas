@@ -53,6 +53,9 @@ UTIL = 0.50
 LAT = 43.2                   # hard-child lattice; outlines snapped to it
 # gate-measured standard-cell area (um2) per tile, filled after the first remote gate (None: first gate measures it)
 STD_AREA = {'ctl': None, 'attn': None, 'emb': None}
+PIN_REG_TILES = {'emb': (
+    'NS-KVEMB 10-18: every pin registered at its face incl. rst_n (registered reset); +1 cycle per input and per output '
+    '(px_tok / px_tep feedthroughs +2), priced by KV-PLAN5 in the die static schedule')}
 SEED_OUTLINE = {'ctl': (475.2, 475.2), 'attn': (302.4, 302.4), 'emb': (388.8, 302.4)}
 
 
@@ -213,6 +216,15 @@ def build(tiles_sel, tag, write_rtl=True):
                                   'results/arch/qwen_kv_pvfin_1017', res] + [c['view'] for c in children] +
                                  bench_dirs(t),
                      views_to=f'physical/ref_tile/{name}/views', record_to=f'results/rtl/ref_tile/{name}'))
+        if t in PIN_REG_TILES:
+            # NATIVE-SWEEP/NS-KVEMB 10-18: the closed i2 view failed the native audit (capture 465.2 on 95 pins: rst_n
+            # tree, d2d__svc / emb_tx_slot straight into the hard u_rowtx; 34 comb px_tok / px_tep feedthroughs; spread
+            # TT 341.9 / FF 240.7 with u_rowtx/ck a boundary sink; receipt results/arch/ns_kvemb_1018/) -> every pin
+            # registered, rst_n included (no reset role: OT_PIN_REGS_RESET '^$'); +1 cycle per input / per output for
+            # the die static schedule (KV-PLAN5)
+            spec.update(reset_ports=[], pin_regs=dict(enable=True, reset='^$', reason=PIN_REG_TILES[t]))
+            spec['route']['io_hold_margin_ns'] = 0.03
+            spec['job']['cycles_added'] = 2
         if STD_AREA[t] is not None:
             spec['std_area_um2'] = STD_AREA[t]
         p = ROOT / 'tools/ref_tile/specs' / f'{name}.json'
