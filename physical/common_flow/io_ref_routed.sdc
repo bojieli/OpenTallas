@@ -234,6 +234,7 @@ proc ot_cf_wire {pin clock {scene {}}} {
 }
 # END shared clock_family.tcl
 ot_cf_refresh
+if {[llength [info commands ot_ir_legacy_arr]]} {rename ot_ir_legacy_arr {}}
 rename ot_ir_arr ot_ir_legacy_arr
 proc ot_ir_arr {p {cn ""}} {
   if {![dict size $::ot_cf_master]} {return [ot_ir_legacy_arr $p $cn]}
