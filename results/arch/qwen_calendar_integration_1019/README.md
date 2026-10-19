@@ -1,3 +1,16 @@
+Current source tip includes default-off finite calendar playback, actual native
+table installation, a source-certified multi-user ME/XPF address join, typed SU
+observation and held-user address publication components. Production F16/FIRST,
+all-copy authentication, real ME/XPF retirement and physical timing remain open.
+ROOT selected the typed16/PW400..438 contract; native SRAM versus finite FF
+storage remains a model choice. No SYSFACE/CTLM wrapper or runtime ABI is enabled.
+
+The current review entry points are:
+
+- ROOT_PROGRAMME_REVIEW.md: actual406 command provenance, namespace and store options.
+- ROOT_HELD_USER_REVIEW.md: source publication/retirement requirements and native address-publication vehicle.
+- ROOT_STORAGE_REVIEW.md: exact native32x64 port calibration, packing/prefetch costs and fresh updated calendar-copy installation.
+
 Finite calendar integration is opt-in CALENDAR_ROM=0 by default. The actual
 cal_mu now reads two native266-bit ROMs, accounts for one additional capture
 edge through in-flight FIFO state, accepts CALR10 counts, and retains exact
@@ -24,7 +37,7 @@ actual production receiver/body installation remain open.
 
 All four users play all four segments on exact edges; count1024 and invalid explicit ranges reject. Legacy NU1 lockstep/NU4 regression passes with zero mismatches and1536 landed words.
 
-The next source step adds TABLE_ROM=0 by default and a registered LOCALkind4
+The implemented table source adds TABLE_ROM=0 by default and a registered LOCALkind4
 load event carrying explicit stage1..36/user. The emitted image has36 aligned
 one-entry ranges (first868 through1008),1009 total entries. Callers select a
 range explicitly; ordinary stage starts do not infer a table installation.
@@ -43,8 +56,9 @@ Native loader wrong-userMUT2 fails a PROG read; actual overlapping loads fault;
 reading the last CROM row before the fixed window completes fails against the
 same target SRAM. No credits, dynamic ready or waiting for done is added.
 This proves the minimum source-bound table transport/retention mechanism.
-Numerical consumers, full cap1 host metadata/receiver acceptance, whole-frame
-admission and provider/clock binding remain separate obligations.
+Numerical consumers, all physical cap1 receiver copies, whole-frame admission
+and provider/clock binding remain separate obligations. Actual cap1 metadata
+and calendar-copy receiver acceptance are now covered below.
 
 The shared timing source is tools/qwen_layerbench/table_load_contract.py;
 both finite-calendar emitter and table-window validator import it.
@@ -67,8 +81,10 @@ source-generated ME/XPF control rows and the cap1 footer. Only the obsolete
 SRAM-calendar interval [400,976) is cleared; the full calendar is in two ROMs.
 The input compiler checks native capability against the sole PC11 native59
 template. Source programme, complete PW metadata, ROMs, descriptor and digest
-are pinned. This does not complete the ME/XPF versus relocated SU-X namespace
-join, head/finalnorm payloads, or all physical receiver copies.
+are pinned. The later source certificate joins actual per-user ME/XPF affine addresses to
+all36 relocated SU-X table payloads:576 cases, with23040 varied BF16 native
+stream-to-tap publications. Numerical ME execution, predecessor timing,
+head/finalnorm payloads and all physical receiver copies remain open.
 
 The actual calendar-copy receiver passes epoch7/digestb8de77b060896115/cap1,
 observing actual calendar SRAM PW write interfaces and registered DW receipt.
@@ -90,3 +106,27 @@ they exceed capacity. Source phase, all ME/XPF receiver copies, actual head,
 global programme/stream allocation, full F16 admission and physical closure
 are open. production_bound remainsfalse. INIT FIRST800/CNT67 is still only
 this capsule's exported range; public F16 timing and CTLM defaults are unchanged.
+
+The selected typed observer and held-user components are isolated, default-off
+source vehicles. Typed observation passes16416 actual source command vectors
+with exact default legacy encoding and one register stage; wrong-user-wire and
+unsupported-slice guards reject. Held-user canonical bit insertion passes the
+576 source address cases and23040 BF16 publications, with ten mutants rejected.
+Its23 declared FF include a16-bit held context epoch; production publication,
+profile/all-copy authentication and final ME-read inputs remain unbound.
+The test proves address/payload publication and diagnostic lifecycle guards,
+not actual ME read retirement or a complete numerical layer/token.
+
+An optional WTN1 expected-witness packet occupies39 previously zero PW words
+400..438; programme0..399 and ME/XPF footers976..1023 are unchanged. The earlier
+400-useful-PW installation already sent all1024 PW words, so this changes zero
+transfer edges. The fresh actual calcopy receiver accepts the new digest
+198f7708b478a667 at1044, then BOOT SETID at1050. The sidecar's native seal and
+other physical copies remain unbound; their MODEL times are not startup proof.
+The original byte-sealed programme and public/cold production images are intact.
+
+The183 static context-role descriptors include source-pinned old-profile LP
+component offsets from20bcf3ba4. They preserve the explicit user0 INIT predicate
+and classify filler-header versus user0 restore ordinals. Absolute production
+samples remain null, and the old LP component is not automatically bound to
+this CALR10/typed assembly.
