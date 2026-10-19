@@ -7,7 +7,7 @@
 #   local driver:  nohup bash hnx_p4_chain.sh > $A/chain.log 2>&1 &
 set -o pipefail
 TAG=${TAG:-f4c_t5}; B=/srv/opentallas-scratch/claude/hnx/die_p4; S=$B/src; CA=$B/case_$TAG; PRE=$B/views/contract.json
-A=${A:-/home/ubuntu/artifacts/hnx/die_p4}; W=$(cd "$(dirname "${BASH_SOURCE[0]}")/../../../.." && pwd); OTRUN=/home/ubuntu/bin/ot-run; H=ot-epyc4
+A=${A:-/home/ubuntu/artifacts/hnx/die_p4}; W=$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd); OTRUN=/home/ubuntu/bin/ot-run; H=ot-epyc4
 export A W OT_RUN_PRIO_ENV="" # HBM-NEXT always normal priority, including auto-detected die commands
 RM=physical/hbm_next/die/$TAG/region_map_hnx_$TAG.json; LP=results/arch/hbm_die_d4g/landing/land_plan_d4g.json
 G2V=/srv/opentallas-scratch/claude/hd4g/gen2/views/synth      # GEN2 synth views (incl. hbfd_lh0_* / hbfd_land0_* masters)
