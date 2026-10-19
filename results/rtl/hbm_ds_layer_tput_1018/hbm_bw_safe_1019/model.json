@@ -27,6 +27,7 @@
   "latency": {
     "pins_added_vs_mr": 0,
     "ACT_lookahead_pipeline_edges": 2,
+    "refresh_argmin_extra_edges": 1,
     "static_go_budget_edges_per_64_lines": 88
   },
   "routing": {
@@ -39,5 +40,21 @@
     "track_check": "await synthesized pin inventory; full faces <=6 pins/um"
   },
   "schedule": "No service-go stall allowed; upstream prefetch lead must absorb the two-stage ACT selection. Production bench must pass exact go slots.",
-  "capacity": "Expert three-copy footprint is being checked against real 32GiB/stack allocation; no adoption until proven."
+  "capacity": "Expert three-copy footprint is being checked against real 32GiB/stack allocation; no adoption until proven.",
+  "synthesis_total_area_um2": 54299.62512,
+  "synthesis_macro_area_um2": 50620.0864,
+  "synthesis_std_area_um2": 3679.538719999997,
+  "proposed_outline_um": [
+    432,
+    475.2
+  ],
+  "measured_logic_util_fraction": 0.26450668490460155,
+  "macro_channel_waiver": "Coordinator 10-19: lowfill accepted from stockmacro43.2lattice20umchannel minimum; final physical evidence still required.",
+  "controller_steady_B_per_stream_edge": [
+    91.99,
+    93.12,
+    93.32
+  ],
+  "controller_source": "0f8aacb5b",
+  "replicas_note": "REPRICE3 capacity config2stacks/die,16SM/die=>64PC/die; confirm physical GEN inventory."
 }
