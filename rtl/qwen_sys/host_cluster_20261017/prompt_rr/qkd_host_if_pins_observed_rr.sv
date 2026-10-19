@@ -4,6 +4,7 @@
 // gate p3 host_rst_n drove 4,924 async-reset pins tile-wide).  The pin drives only ot_rst_relay (2 sync flops + 1 kept
 // relay flop) placed with this member; the relay output is the member's reset.  Assert asynchronous and immediate,
 // RELEASE 3 clk edges after the pin, as every other host_rst_n consumer of the child.  rtl/qwen_sys/host_integrated_20261014/qkd_host_if_pins_observed.sv is unchanged.
+// HKV-PROMPT6: inner member qkd_host_if_pins_observed_pd (tools/qwen_kv_die/host_cluster/gen_prompt_pd.py, same function).
 // QKD_HR_PR_RR_MUTANT (bench only): relay bypassed.
 module qkd_host_if_pins_observed_rr #(
   parameter integer PB_READ_PIPE = 2,
@@ -121,7 +122,7 @@ module qkd_host_if_pins_observed_rr #(
 `else
  ot_rst_relay #(.REGIONS(1),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst_relay(.clk(clk),.rst_n_in(rst_n),.rst_n(rst_q));
 `endif
- qkd_host_if_pins_observed #(.PB_READ_PIPE(PB_READ_PIPE),.MUT_DONE_GUARD(MUT_DONE_GUARD),.PB_VALID_ONLY(PB_VALID_ONLY),.NSLOT(NSLOT),.MODE(MODE),.ENG_CTX(ENG_CTX),.NW(NW),.PLB(PLB),.CTX_MAX(CTX_MAX),.AW(AW),.KVW(KVW),.EVQ(EVQ),.FMT(FMT)) u_m(
+ qkd_host_if_pins_observed_pd #(.PB_READ_PIPE(PB_READ_PIPE),.MUT_DONE_GUARD(MUT_DONE_GUARD),.PB_VALID_ONLY(PB_VALID_ONLY),.NSLOT(NSLOT),.MODE(MODE),.ENG_CTX(ENG_CTX),.NW(NW),.PLB(PLB),.CTX_MAX(CTX_MAX),.AW(AW),.KVW(KVW),.EVQ(EVQ),.FMT(FMT)) u_m(
   .clk(clk),
   .rst_n(rst_q),
   .die_id(die_id),
