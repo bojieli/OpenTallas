@@ -33,7 +33,15 @@
 // AMMUT (bench only): 1..4 forwarded to the share ARGMAX tree (see ot_hbm_idx_vm_share_static_amr.sv); 5 TOPK engine
 // RT_EXTRA 0 (capture one edge early against the registered vm_rr); 6 ingest_v predicted one edge early; 7 share leaf
 // owner tap own[6] (INDEX/TOPK/ARGMAX steering one edge short).
-module ot_hbm_idx_rootctl_static_am #(parameter integer AMMUT = 0, parameter integer SEL_LAT = 4)(
+// VM_RT / CR_RT (VEH-TOPKFIX2 2026-10-19, defect veh_cuts_1019/topk_finding.json): the d4g die binds
+// hfd_vms_bank_native_q0_faces in all 32 VM banks (literal input pin flop on rq/rslot/wq/wslot/pq: +1 edge on every bank
+// answer and on the hub echo) and may add relay / landing stages on the rq4/rr4 (VM_RT) and cq/cr (CR_RT) lanes. This r3
+// was timed on the 7-edge non-face VM model (bench RD 7, ACKD 11). VM_RT = fixed extra VM round-trip edges outside the
+// tile: TOPK RT_EXTRA 1+VM_RT, share owner tap own[7+VM_RT]; INDEX / ARGMAX responses leave VM_RT edges later (operand
+// reader VM_RT_EXTRA 4+VM_RT, argmax r2 VMX 5+VM_RT). CR_RT = fixed extra hub echo edges: TOPK ACK 13+CR_RT. Die master
+// for the faces banks with no relay on those lanes: ot_hbm_idx_rootctl_static_am_pin (VM_RT 1, CR_RT 1). Default 0 = r3.
+module ot_hbm_idx_rootctl_static_am #(parameter integer AMMUT = 0, parameter integer SEL_LAT = 4,
+ parameter integer VM_RT = 0, parameter integer CR_RT = 0)(
  input wire clk,input wire rst_n,
  input wire program_we,input wire[7:0]program_addr,input wire[255:0]program_data,
  input wire start,input wire[11:0]length,
@@ -101,7 +109,7 @@ module ot_hbm_idx_rootctl_static_am #(parameter integer AMMUT = 0, parameter int
   tk_rb_r<=topk_r_base;tk_rs_r<=topk_r_str;
  end
  wire[135:0]topk_rq;wire[2055:0]topk_rr;wire[337:0]tk_cq;wire[1:0]tk_cqs;wire tk_busy,tk_done,tk_fault;
- ot_hbm_idx_topk_static #(.ACK(13),.RT_EXTRA((AMMUT == 5) ? 0 : 1)) topk(.clk(clk),.rst_n(rst_c[1]),.sid(SID),.go(tk_go_r),
+ ot_hbm_idx_topk_static #(.ACK(13 + CR_RT),.RT_EXTRA(((AMMUT == 5) ? 0 : 1) + VM_RT)) topk(.clk(clk),.rst_n(rst_c[1]),.sid(SID),.go(tk_go_r),
   .k(tk_k_r),.order(tk_ord_r),.n(tk_n_r),.m(tk_m_r),.a_mirror(tk_am_r),.a_base(tk_ab_r),.a_str(tk_as_r),.o_mirror(tk_om_r),
   .o_base(tk_ob_r),.o_str(tk_os_r),.has_r(tk_hr_r),.r_base(tk_rb_r),.r_str(tk_rs_r),
   .vm_rq(topk_rq),.vm_rr(topk_rr),.cq(tk_cq),.cq_seq(tk_cqs),.cr(cr),.busy(tk_busy),.done(tk_done),.fault(tk_fault));
@@ -114,7 +122,7 @@ module ot_hbm_idx_rootctl_static_am #(parameter integer AMMUT = 0, parameter int
  (* keep *) reg[135:0]irq_r,arq_r;
  always @(posedge clk)begin irq_r<=index_rq;arq_r<=argmax_rq;end
  wire share_f;
- ot_hbm_idx_vm_share_static_amr #(.MUT((AMMUT == 7) ? 1 : 0),.AMMUT((AMMUT >= 1 && AMMUT <= 4) ? AMMUT : 0)) share(.clk(clk),
+ ot_hbm_idx_vm_share_static_amr #(.MUT((AMMUT == 7) ? 1 : 0),.AMMUT((AMMUT >= 1 && AMMUT <= 4) ? AMMUT : 0),.VM_RT(VM_RT)) share(.clk(clk),
   .rst_n(rst_c[2]),.index_rq(irq_r),.topk_rq(topk_rq),.argmax_rq(arq_r),.vm_rq(vm_rq),.vm_rr(vm_rr),.index_rr(index_rr),
   .topk_rr(topk_rr),.argmax_m(argmax_m),.fault(share_f));
  always @(posedge clk or negedge rst_c[2]) if(!rst_c[2]) share_fault<=0; else share_fault<=share_f;

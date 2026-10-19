@@ -11,14 +11,24 @@
 //   legal record +4+(m-1) = m+3, fault of an illegal descriptor +2 (go pin + fault pin register).
 // Garbled records (a bank valid dropped / an ack dropped) must give the same fault outcome. AMMUT forwarded to the DUT
 // (5 = engine RT_EXTRA 0 must FAIL).
+// VMX (VEH-TOPKFIX2 10-19): 1 = the d4g pin-registered VM banks (hfd_vms_bank_native_q0_faces: answer and hub echo +1):
+// VM model RD 7+VMX, client echo ACKD 11+VMX on BOTH sides; REF = rootctl #(.PIN_IN(VMX)), DUT = rootctl_am #(.VM_RT(DUT_RT),
+// .CR_RT(DUT_RT)) with DUT_RT default VMX (= die master ot_hbm_idx_rootctl_static_am_pin at 1). DUT_RT 0 under VMX 1 = the
+// r3 master on the faces banks (the GEN2c defect) must FAIL.
 module tb_idx_rootctl_am_topk;
+`ifndef VMX
+`define VMX 0
+`endif
+`ifndef DUT_RT
+`define DUT_RT `VMX
+`endif
 `ifndef AMMUT
 `define AMMUT 0
 `endif
 `ifndef NREC
 `define NREC 240
 `endif
-    localparam integer RD = 7, ACKD = 11;
+    localparam integer RD = 7 + `VMX, ACKD = 11 + `VMX;
     reg clk = 0, rst_n = 0; always #1 clk = ~clk;
     reg go = 0, order = 0, a_mirror = 0, o_mirror = 0, has_r = 0; reg [3:0] k = 0; reg [19:0] n = 0, m = 0;
     reg [17:0] a_base = 0, a_str = 0, o_base = 0, o_str = 0, r_base = 0, r_str = 0;
@@ -31,10 +41,10 @@ module tb_idx_rootctl_am_topk;
         .topk_r_str(r_str), .index_rq(136'd0), .index_rr(), .argmax_rq(136'd0)
     reg [2055:0] rr0 = 0, rr1 = 0; reg [273:0] cr0 = 0, cr1 = 0;
     wire [135:0] q0, q1; wire [337:0] cq0, cq1; wire [1:0] s0, s1; wire b0, b1, d0, d1, f0, f1, sf0, sf1;
-    ot_hbm_idx_rootctl_static rc0(.clk_program(clk), .clk_program_mem(clk), .clk_sel(clk), .clk_topk(clk), .clk_pair({4{clk}}),
+    ot_hbm_idx_rootctl_static #(.PIN_IN(`VMX)) rc0(.clk_program(clk), .clk_program_mem(clk), .clk_sel(clk), .clk_topk(clk), .clk_pair({4{clk}}),
         .rst_n(rst_n), `RC_TK, .argmax_rr(), .vm_rq(q0), .vm_rr(rr0), .cq(cq0), .cq_seq(s0), .cr(cr0),
         .topk_busy(b0), .topk_done(d0), .topk_fault(f0), .share_fault(sf0));
-    ot_hbm_idx_rootctl_static_am #(.AMMUT(`AMMUT)) rc1(.clk(clk), .rst_n(rst_n), `RC_TK, .argmax_m(), .vm_rq(q1), .vm_rr(rr1),
+    ot_hbm_idx_rootctl_static_am #(.AMMUT(`AMMUT), .VM_RT(`DUT_RT), .CR_RT(`DUT_RT)) rc1(.clk(clk), .rst_n(rst_n), `RC_TK, .argmax_m(), .vm_rq(q1), .vm_rr(rr1),
         .cq(cq1), .cq_seq(s1), .cr(cr1), .topk_busy(b1), .topk_done(d1), .topk_fault(f1), .share_fault(sf1));
     // ---------------- VM + client models (same function for both sides)
     function automatic [255:0] sdat(input [15:0] q, input integer l);
@@ -108,8 +118,8 @@ module tb_idx_rootctl_am_topk;
             if (te1[i] - te0[i] != xe0[i]) begin errs = errs + 1; if (errs < 6) $display("EVENT %0d offset %0d expected %0d", i, te1[i] - te0[i], xe0[i]); end
             if (le0[i][1]) ndone = ndone + 1; else if (xe0[i] == 2) nill = nill + 1; else nflt = nflt + 1;
         end
-        $display("TOPK AMMUT=%0d requests %0d writes %0d events %0d (done %0d fault %0d illegal %0d) max_row %0d share_fault %b/%b errors %0d",
-                 `AMMUT, nq0, nw0, ne0, ndone, nflt, nill, maxrow, sf0, sf1, errs);
+        $display("TOPK VMX=%0d DUT_RT=%0d AMMUT=%0d requests %0d writes %0d events %0d (done %0d fault %0d illegal %0d) max_row %0d share_fault %b/%b errors %0d",
+                 `VMX, `DUT_RT, `AMMUT, nq0, nw0, ne0, ndone, nflt, nill, maxrow, sf0, sf1, errs);
         if (errs == 0 && ndone > `NREC / 2 && nflt > 0 && nill > 0 && maxrow >= 3 && !sf0 && !sf1) $display("IDX_AM_TOPK PASS");
         else $display("IDX_AM_TOPK FAIL");
         $finish;
