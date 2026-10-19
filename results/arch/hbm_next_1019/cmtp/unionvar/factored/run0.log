@@ -1,0 +1,30 @@
+END_EDGE 49  done
+END_EDGE 280  done
+END_EDGE 530  done
+END_EDGE 942  done
+END_EDGE 1377  done
+END_EDGE 1947  done
+END_EDGE 2554  done
+END_EDGE 3135  done
+END_EDGE 3946  done
+END_EDGE 4809  done
+END_EDGE 6099  done
+END_EDGE 6671  done
+END_EDGE 7593  done
+END_EDGE 8723  done
+END_EDGE 9100  done
+END_EDGE 9552  done
+END_EDGE 10808  done
+END_EDGE 11299  done
+END_EDGE 11650 fault
+END_EDGE 11719 fault
+END_EDGE 11722 fault
+END_EDGE 11863  done
+END_EDGE 12672  done
+IDX_UNION MUT0 records23 dones20 faults3 sectors_checked860 errors0 schedule_edges12680
+UNION_FACTORED unions20 launches748 prep_ready_before_union_done_edges min9 max9
+UNION_FACTORED PASS real_IDX_UNION_to_factored_dispatch PMUT0
+- rtl/hbm_next/control/tb_hnx_union_factored.sv:202: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 191us; walltime 0.206 s; speed 925.471 us/s
+- Verilator: cpu 0.206 s on 1 threads; allocated 11 MB

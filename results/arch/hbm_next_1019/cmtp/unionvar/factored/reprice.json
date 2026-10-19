@@ -1,0 +1,76 @@
+{
+ "schema": "hnx.unionvar.factored.reprice.v1",
+ "die": "f4c_t9p3",
+ "die_mm2": 767.41,
+ "base": "key_profile_tight.json (factored exact-cardinality work; measured v2+frames/FUSED tree/SM3 IIs)",
+ "base_mtp": 3380.3,
+ "base_mtp_step_cycles": 1476415.4,
+ "base_mu_agg": 4158.4,
+ "base_mu_step_cycles": 1154299.3,
+ "replaced_assumption": "108 cycles/layer prep (unmeasured) -> measured/derived terms below",
+ "bench_prep_slack_edges": {
+  "min": 9,
+  "max": 9
+ },
+ "geometry": {
+  "dispatcher_at": "idx_sel centre 8899,15785 um",
+  "to_quadrant_um": {
+   "SW": 3693.0159999999996,
+   "SE": 8374.296,
+   "NW": 4242.935999999996,
+   "NE": 8924.215999999997
+  },
+  "farthest_um": 8924.215999999997,
+  "hops_405": 23
+ },
+ "per_layer_terms": {
+  "prep": 0,
+  "dispatch": 5,
+  "wire_full_cycle_hops": 23,
+  "landed_crossing": 4,
+  "kstore": 2,
+  "port": 0,
+  "load": 0
+ },
+ "per_layer_cycles": 34,
+ "union_layers": 40,
+ "per_step_cycles": 1360,
+ "conservative_full_cycle_hops": {
+  "added_cycles_per_step": 1360,
+  "mtp_tok_s": 3377.19,
+  "mtp_margin_pct": 0.392,
+  "mu_agg_tok_s": 4153.5,
+  "per_user_tok_s": 1038.38,
+  "per_user_margin_pct": 3.84
+ },
+ "half_cycle_hops": {
+  "added_cycles_per_step": 920,
+  "mtp_tok_s": 3378.19,
+  "mtp_margin_pct": 0.422,
+  "mu_agg_tok_s": 4155.1,
+  "per_user_tok_s": 1038.77,
+  "per_user_margin_pct": 3.88
+ },
+ "old_108_assumption": {
+  "added_cycles_per_step": 4320,
+  "mtp_tok_s": 3370.44,
+  "mtp_margin_pct": 0.191,
+  "mu_agg_tok_s": 4142.9,
+  "per_user_tok_s": 1035.72,
+  "per_user_margin_pct": 3.57
+ },
+ "area": {
+  "kernel_store": "4 quadrant replicas x 7 macros (kref broadcast, no 1408-b descriptor wires)",
+  "macro_mm2": 0.3571,
+  "slot_mm2_estimate": 0.659,
+  "die_mm2_after": 768.07,
+  "status": "estimate from macro abstracts; no gate yet"
+ },
+ "verdict": "MTP 3377.19 (+0.392% vs 3,364) / 1038.38 per user (+3.84% vs 1,000) with all exposed per-layer terms charged unoverlapped; area +0.66 mm2 (est.) -> 768.07 mm2",
+ "still_owed": [
+  "TT/FF physical gate of the dispatcher + kernel-store tile (no gate yet)",
+  "native HGI-1R -> unit programme lowering of the per-c kernels (descriptor fetch at the SM quadrant is modelled as a 2-edge kernel-store read)",
+  "exact bank-by-bank model proof (pooled S2/histogram expectation remains the work price)",
+  "captured routing for rejected verify lanes (decorrelated estimator)"
+ ]
+}
