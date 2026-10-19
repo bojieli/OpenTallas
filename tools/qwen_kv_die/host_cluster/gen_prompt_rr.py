@@ -59,6 +59,12 @@ RR_LOADS = {
     'qkd_host_csr_service_pins': 1369,     # u_control.u_csr
     'qkd_host_record_port': 1929,          # u_records
     'qkd_host_if_pins_observed': 690,      # u_control.u_host
+    # KV-HOST/PROMPT p8 (10-19, gate p7 textbook item 3: one relay copy drove 547 / 363 flops in the FINAL netlist).
+    # These members had one copy, so no OT_RST_COPIES pre-optimisation count exists: provisioned at the worst measured
+    # pre/final ratio of gate p7 (records 1,929 / 671 = 2.87x): 547 x 2.87 = 1,570 -> 1,600; 363 x 2.87 = 1,042 -> 1,100.
+    # The p8 gate's OT_RST_COPIES lines are the measured check (<= 256 a copy).
+    'qkd_host_axi_packet': 1600,           # u_rank__u_control__u_packet__u_axi -> 7 copies
+    'qkd_host_program_loader_target': 1100,  # u_rank__u_program -> 5 copies
 }
 
 

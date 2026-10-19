@@ -9,6 +9,11 @@ Both are fixed bit- and cycle-exactly (no latency change):
  (a) ot_qfd_prompt_sram_capture_pd: the eight 24-bit slots of rd_capture are decoded in parallel and the lane selects the
      decoded {ue, data}; decode(sel(x)) == sel(decode(x)) for every x and lane.
  (b) ot_host_if_pb2_observed_pd: c_cycles / c_busy are ot_hkv_cnt_la (64-bit, low 32 with a registered all-ones flag).
+KV-HOST/PROMPT p8 (10-19, gate p7 CTS wns -13.6 ps: u_host.u_m.u_core.cq_tail[0] -> 16-bit increment -> & cq_mask ->
+!= cq_head (cq_room) -> 32-bit c_cqfull increment -> c_cqfull[31]), fixed bit- and cycle-exactly as well:
+ (c) cq_t1 == (cq_tail + 1) & cq_mask is a REGISTER (next value from the next-state cq_tail / cq_log, exactly as the main
+     block writes them), so cq_room = (cq_t1 != cq_head) is one 16-bit compare; c_cqfull is ot_hkv_cnt_la (32-bit, LO 16).
+     OT_HKV_CQ_MUTANT (bench only): the cq_t1 next value ignores a CQ_LOG write (stale mask).
 Renamed copies whose ONLY edits are listed above / the instance types; the original files are untouched (other closed
 tiles bind them).  The rr wrappers of gen_prompt_rr.py instantiate the _pd members (INNER map there).
 
@@ -76,13 +81,40 @@ def pb2():
     t = sub1(t, '            c_cycles <= 0; c_busy <= 0; c_tokens <= 0;', '            c_tokens <= 0;', 'reset')
     t = sub1(t, '            if (enable) c_cycles <= c_cycles + 1\'b1;\n'
                 '            if (inflight || b_st == B_RUN) c_busy <= c_busy + 1\'b1;\n', '', 'incr')
+    # KV-HOST/PROMPT p8 (c): registered (cq_tail + 1) & cq_mask; c_cqfull through the lookahead counter
+    t = sub1(t, '    reg [31:0]   c_tokens, c_steps, c_reqs, c_msis, c_rd, c_wr, c_cqfull;\n',
+             '    reg [31:0]   c_tokens, c_steps, c_reqs, c_msis, c_rd, c_wr;\n'
+             '    wire [31:0]  c_cqfull;   // KV-HOST/PROMPT p8: ot_hkv_cnt_la below\n', 'cqfull decl')
+    t = sub1(t, '            c_rd <= 0; c_wr <= 0; c_cqfull <= 0;', '            c_rd <= 0; c_wr <= 0;', 'cqfull reset')
+    t = sub1(t, '            if (ev_n != 0 && !cq_room) c_cqfull <= c_cqfull + 1\'b1;\n', '', 'cqfull incr')
+    t = sub1(t, "    wire          cq_room  = ((cq_tail + 16'd1) & cq_mask) != cq_head;\n",
+             "    // KV-HOST/PROMPT p8: cq_t1 == (cq_tail + 1) & cq_mask held as a register.  Its next value is computed from the\n"
+             "    // next-state cq_tail (advanced only at ev_pop, to cq_t1) and cq_log (written only by CQ_LOG 0x00B), exactly as\n"
+             "    // the main block writes them; reset: cq_tail 0, cq_log 0 (mask 0) -> 0.  cq_room is then one 16-bit compare.\n"
+             "    reg  [15:0]   cq_t1;\n"
+             "`ifdef OT_HKV_CQ_MUTANT\n"
+             "    wire [3:0]    cq_log_nx = cq_log;\n"
+             "`else\n"
+             "    wire [3:0]    cq_log_nx = (wr_go && s_awaddr[11:2] == 10'h00B) ? s_wdata[3:0] : cq_log;\n"
+             "`endif\n"
+             "    wire [15:0]   cq_tail_nx = ((d_st == D_CQ0_B) && m_bvalid) ? cq_t1 : cq_tail;\n"
+             "    always @(posedge clk or negedge rst_n)\n"
+             "        if (!rst_n) cq_t1 <= 16'd0;\n"
+             "        else cq_t1 <= (cq_tail_nx + 16'd1) & ((16'd1 << cq_log_nx) - 16'd1);\n"
+             "    wire          cq_room  = cq_t1 != cq_head;\n"
+             "`ifdef OT_HKV_CQ_CHECK\n"
+             "    always @(posedge clk) if (rst_n && cq_t1 !== ((cq_tail + 16'd1) & cq_mask))\n"
+             "        $display(\"OT_HKV_CQ_CHECK MISMATCH t=%0t cq_t1=%h tail=%h mask=%h\", $time, cq_t1, cq_tail, cq_mask);\n"
+             "`endif\n", 'cq_room')
     t = sub1(t, '    integer j;\n    always @(posedge clk or negedge rst_n) begin\n',
              '    // HKV-PROMPT6: the two 64-bit counters with a registered low-half carry lookahead (same values every edge)\n'
              '    ot_hkv_cnt_la #(.W(64),.LO(32)) u_c_cycles(.clk(clk),.rst_n(rst_n),.en(enable),.q(c_cycles));\n'
              '    ot_hkv_cnt_la #(.W(64),.LO(32)) u_c_busy(.clk(clk),.rst_n(rst_n),.en(inflight || b_st == B_RUN),.q(c_busy));\n'
+             '    ot_hkv_cnt_la #(.W(32),.LO(16)) u_c_cqfull(.clk(clk),.rst_n(rst_n),.en(ev_n != 0 && !cq_room),.q(c_cqfull));\n'
              '    integer j;\n    always @(posedge clk or negedge rst_n) begin\n', 'inst')
-    return HDR + f'// {src} renamed _pd; only edits: c_cycles / c_busy are ot_hkv_cnt_la instances (were 64-bit ripple\n' \
-                 '// increments in the main always block); reset/increment lines moved into the counter.\n' + t
+    return HDR + f'// {src} renamed _pd; only edits: c_cycles / c_busy / c_cqfull are ot_hkv_cnt_la instances (were ripple\n' \
+                 '// increments in the main always block; reset/increment lines moved into the counter) and cq_room compares the\n' \
+                 '// registered cq_t1 == (cq_tail + 1) & cq_mask (KV-HOST/PROMPT p8).\n' + t
 
 
 def main():
