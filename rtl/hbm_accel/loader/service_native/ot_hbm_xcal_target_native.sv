@@ -18,6 +18,7 @@ module ot_hbm_xcal_target_native #(
     parameter integer NA = 1, NF = 1, MUT = 0, TGT_PIN = 1, RSYNC = 0
 )(
     input  wire clk, rst_n,
+    input  wire rst_raw_n, reset_phase0,
     input  wire [7:0] tgt,
     input  wire cfg_v,
     input  wire [7:0] cfg_target,
@@ -43,18 +44,42 @@ module ot_hbm_xcal_target_native #(
     output reg  configured, fault, active
 );
     initial if (AWA < 1 || AWA > 11 || AWB < 1 || AWB > 10 || RBW > 12 || RCW > 13) $fatal(1, "ot_static_run_target widths");
-    wire rst_q_n;
-    generate if (RSYNC == 1) begin : g_rs
-        reg [1:0] rsync;
-        always @(posedge clk) rsync <= {rsync[0], rst_n};
-        assign rst_q_n = rsync[1];
-    end else begin : g_rs_raw
-        assign rst_q_n = rst_n;
-    end endgenerate
+    // Reset-branch model, before implementation: the host supplies raw assertion
+    // and phase0 of its two-stage landing. Each kept branch captures phase0 on
+    // the SAME edge as the host's second stage: zero extra calendar edges.
+    // Four state branches reset 13, 13, 8 and 7 bits; pin-control branches reset
+    // at most 24 bits each. Cost = 4 + ceil((3+NA+NF)/24) reset flops (5 at
+    // NA=NF=1); no reset branch drives more than 24 sequential reset loads.
+    // rst_n/RSYNC remain interface-compatible parameters; reset_phase0 is the
+    // authoritative landing phase supplied by the native host, not resynced here.
+    localparam integer PIN_CTRL_BITS = 3 + NA + NF;
+    localparam integer PIN_RESET_BRANCHES = (PIN_CTRL_BITS + 23) / 24;
+    wire rst_base_n, rst_limit_n, rst_arg_n, rst_control_n;
+    (* keep_hierarchy = 1 *) ot_hbm_xcal_reset_branch u_reset_base
+        (.clk(clk), .rst_n(rst_raw_n), .phase0(reset_phase0), .q(rst_base_n));
+    (* keep_hierarchy = 1 *) ot_hbm_xcal_reset_branch u_reset_limit
+        (.clk(clk), .rst_n(rst_raw_n), .phase0(reset_phase0), .q(rst_limit_n));
+    (* keep_hierarchy = 1 *) ot_hbm_xcal_reset_branch u_reset_arg
+        (.clk(clk), .rst_n(rst_raw_n), .phase0(reset_phase0), .q(rst_arg_n));
+    (* keep_hierarchy = 1 *) ot_hbm_xcal_reset_branch u_reset_control
+        (.clk(clk), .rst_n(rst_raw_n), .phase0(reset_phase0), .q(rst_control_n));
     // ---------------- pin flops ----------------
-    reg cv, dv, lv;
-    reg [NA-1:0] act_q;
-    reg [NF-1:0] flt_q;
+    wire cv, dv, lv;
+    wire [NA-1:0] act_q;
+    wire [NF-1:0] flt_q;
+    reg [PIN_CTRL_BITS-1:0] pin_ctrl_q;
+    wire [PIN_CTRL_BITS-1:0] pin_ctrl_d = {cfg_v, desc_v, launch_v, tgt_active, tgt_fault};
+    assign {cv, dv, lv, act_q, flt_q} = pin_ctrl_q;
+    generate for (genvar p = 0; p < PIN_RESET_BRANCHES; p = p + 1) begin : g_pin_reset
+        localparam integer LO = p * 24;
+        localparam integer WIDTH = (PIN_CTRL_BITS - LO > 24) ? 24 : PIN_CTRL_BITS - LO;
+        wire rst_pin_n;
+        (* keep_hierarchy = 1 *) ot_hbm_xcal_reset_branch u_reset_pin
+            (.clk(clk), .rst_n(rst_raw_n), .phase0(reset_phase0), .q(rst_pin_n));
+        always @(posedge clk or negedge rst_pin_n)
+            if (!rst_pin_n) pin_ctrl_q[LO +: WIDTH] <= 0;
+            else pin_ctrl_q[LO +: WIDTH] <= pin_ctrl_d[LO +: WIDTH];
+    end endgenerate
     reg [7:0] target_q, tgt_q;
     reg [11:0] addr_q, base_q;
     reg [12:0] limit_q;
@@ -67,9 +92,6 @@ module ot_hbm_xcal_target_native #(
         b_addr <= row[AWB-1:0]; b_data <= data_q;
         run_base <= RBW'(s_base);run_count <= RCW'(s_limit-s_base);run_arg <= s_arg;
     end
-    always @(posedge clk or negedge rst_q_n)
-        if (!rst_q_n) begin cv <= 0; dv <= 0; lv <= 0; act_q <= 0; flt_q <= 0; end
-        else begin cv <= cfg_v; dv <= desc_v; lv <= launch_v; act_q <= tgt_active; flt_q <= tgt_fault; end
     wire [7:0] tid = (TGT_PIN != 0) ? tgt_q : TARGET;
     wire hit = (MUT == 2) ? 1'b1 : (target_q == tid);
     wire [1:0] win = addr_q[11:10];
@@ -79,10 +101,28 @@ module ot_hbm_xcal_target_native #(
     wire a_hit = (win == 2'd0 || (win == 2'd2 && AWA == 11)) && {1'b0, prow} < (12'd1 << AWA);
     reg [12:0] s_base, s_limit; reg [7:0] s_arg; reg fault_r;
     wire busy_any = |act_q;
-    always @(posedge clk or negedge rst_q_n) begin
-        if (!rst_q_n) begin
+    // Descriptor state keeps the original admission condition and hold behavior.
+    // Kept predicate copies bound their state-enable loads to 21 and 13;
+    // duplicating only source text could otherwise merge a 34-load enable.
+    wire desc_admit_base_arg, desc_admit_limit;
+    (* keep_hierarchy = 1 *) ot_hbm_xcal_target_desc_accept #(.RBW(RBW), .RCW(RCW)) u_accept_base_arg
+        (.dv(dv), .hit(hit), .lv(lv), .cv(cv), .loops_q(loops_q),
+         .limit_q(limit_q), .base_q(base_q), .admit(desc_admit_base_arg));
+    (* keep_hierarchy = 1 *) ot_hbm_xcal_target_desc_accept #(.RBW(RBW), .RCW(RCW)) u_accept_limit
+        (.dv(dv), .hit(hit), .lv(lv), .cv(cv), .loops_q(loops_q),
+         .limit_q(limit_q), .base_q(base_q), .admit(desc_admit_limit));
+    always @(posedge clk or negedge rst_base_n)
+        if (!rst_base_n) s_base <= 0;
+        else if (desc_admit_base_arg) s_base <= {1'b0, base_q};
+    always @(posedge clk or negedge rst_limit_n)
+        if (!rst_limit_n) s_limit <= 0;
+        else if (desc_admit_limit) s_limit <= limit_q;
+    always @(posedge clk or negedge rst_arg_n)
+        if (!rst_arg_n) s_arg <= 0;
+        else if (desc_admit_base_arg) s_arg <= (MUT == 1) ? loops_q[7:0] : 8'(loops_q - 16'd1);
+    always @(posedge clk or negedge rst_control_n) begin
+        if (!rst_control_n) begin
             a_we <= 0; b_we <= 0; run_v <= 0; configured <= 0; fault_r <= 0; fault <= 0; active <= 0;
-            s_base <= 0; s_limit <= 0; s_arg <= 0; 
         end else begin
             a_we <= 0; b_we <= 0; run_v <= 0;
             if (cv && hit) begin
@@ -98,8 +138,7 @@ module ot_hbm_xcal_target_native #(
                 else if (loops_q == 16'd0 || loops_q > 16'd256 || limit_q <= {1'b0, base_q} || limit_q > (13'd1 << RBW) ||
                          (limit_q - {1'b0, base_q}) >= (14'd1 << RCW)) fault_r <= 1;
                 else begin
-                    s_base <= {1'b0, base_q}; s_limit <= limit_q; configured <= 1;
-                    s_arg <= (MUT == 1) ? loops_q[7:0] : 8'(loops_q - 16'd1);
+                    configured <= 1;
                 end
             end
             if (lv && configured) begin
@@ -111,5 +150,22 @@ module ot_hbm_xcal_target_native #(
             active <= |act_q;
         end
     end
+endmodule
+
+// Physical enable replication only: each instance is combinational and uses
+// exactly the original descriptor acceptance predicate (no added state).
+(* keep_hierarchy = 1 *)
+module ot_hbm_xcal_target_desc_accept #(
+    parameter integer RBW = 7, RCW = 8
+)(
+    input wire dv, hit, lv, cv,
+    input wire [15:0] loops_q,
+    input wire [12:0] limit_q,
+    input wire [11:0] base_q,
+    output wire admit
+);
+    assign admit = dv && hit && !(lv || cv) &&
+        !(loops_q == 16'd0 || loops_q > 16'd256 || limit_q <= {1'b0, base_q} ||
+          limit_q > (13'd1 << RBW) || (limit_q - {1'b0, base_q}) >= (14'd1 << RCW));
 endmodule
 `default_nettype wire
