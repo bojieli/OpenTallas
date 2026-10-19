@@ -1,18 +1,35 @@
 `timescale 1ns/1ps
 module tb_hbm_kr_ready_bridge;
- parameter integer MUT=0;
+ parameter integer MUT=0,PRODUCER=0,VALID_MUT=0;
  reg clk=0;always #0.512 clk=~clk;
  reg rst_n=0;integer epoch=0,cyc=0,sent=0,received=0,last_rx=-1,max_occ=0,first_push=-1;
  reg grant_prev=0;wire ir,ov,fault;wire[2:0]occupancy;wire[276:0]od;
- wire iv=sent<256;wire ready=(epoch==0)?(cyc<100):((cyc<100)||(cyc%19>=7));
- function automatic[276:0]payload(input integer n);payload={21'(n),256'(n*32'h01020305)};endfunction
- ot_hbm_svc_kr_ready_bridge #(.MUT(MUT))dut(.clk(clk),.rst_n(rst_n),.in_v(iv),.in_rdy(ir),
-  .in_data(payload(epoch*10000+sent)),.out_v(ov),.out_rdy(ready),.out_data(od),.fault(fault),.occupancy(occupancy));
+ wire fixture_iv=sent<256;
+ wire ready=(epoch==0)?((cyc<100)||(PRODUCER!=0&&cyc>=150&&cyc<180)):((cyc<100)||(cyc%19>=7));
+ wire iv,source_ready;wire[276:0]bridge_data;wire[17:0]native_valid;
+ integer bridge_sent=0;
+ function automatic[276:0]payload(input integer n);payload={21'(n),{8{32'(n*32'h01020305)}}};endfunction
+ generate if(PRODUCER!=0)begin:g_producer
+  reg ready_q;
+  wire[17:0]vregions;
+  always @(posedge clk)if(!rst_n)ready_q<=0;else ready_q<=ir;
+  ot_hbm_svc_pin_skid2_bw_safe #(.WIDTH(277),.REGIONAL(1))producer(
+   .clk(clk),.rst_n(rst_n),.in_v(fixture_iv),.in_r(source_ready),
+   .in_data(payload(epoch*10000+sent)),.out_v(iv),.out_r_regions({18{ready_q}}),
+   .out_data(bridge_data),.in_v_regions({18{fixture_iv}}),.out_v_regions(vregions));
+  assign native_valid=(VALID_MUT!=0)?(vregions&~18'd128):vregions;
+ end else begin:g_fixture
+  assign iv=fixture_iv;assign source_ready=grant_prev;
+  assign bridge_data=payload(epoch*10000+sent);assign native_valid={18{iv}};
+ end endgenerate
+ ot_hbm_svc_kr_ready_bridge #(.MUT(MUT),.REGIONAL_VALID(PRODUCER))dut(.clk(clk),.rst_n(rst_n),.in_v(iv),.in_rdy(ir),
+  .in_data(bridge_data),.out_v(ov),.out_rdy(ready),.out_data(od),.fault(fault),.occupancy(occupancy),.in_v_regions(native_valid));
  always @(posedge clk)begin
-  if(!rst_n)begin cyc<=0;sent<=0;received<=0;grant_prev<=0;last_rx<=-1;first_push<=-1;end
+  if(!rst_n)begin cyc<=0;sent<=0;received<=0;grant_prev<=0;last_rx<=-1;first_push<=-1;bridge_sent<=0;end
   else begin
    cyc<=cyc+1;grant_prev<=ir;
-   if(iv&&grant_prev)begin sent<=sent+1;if(sent==0)first_push<=cyc;end
+   if(fixture_iv&&source_ready)sent<=sent+1;
+   if(iv&&grant_prev)begin bridge_sent<=bridge_sent+1;if(bridge_sent==0)first_push<=cyc;end
    if(occupancy>max_occ)max_occ<=occupancy;
    if(fault||occupancy>3)$fatal(1,"KR_BRIDGE_OCCUPANCY_FAULT");
    if(ov&&ready)begin
@@ -26,7 +43,7 @@ module tb_hbm_kr_ready_bridge;
  end
  initial begin
   repeat(4)@(negedge clk);rst_n=1;
-  wait(cyc==130);@(negedge clk);
+  wait(cyc==((PRODUCER!=0)?210:130));@(negedge clk);
   if(occupancy!=3)$fatal(1,"KR_BRIDGE_NO_OCCUPIED_RESET");
   rst_n=0;repeat(3)@(negedge clk);
   if(ov||occupancy!=0||dut.ready_prev||ir)$fatal(1,"KR_BRIDGE_RESET_FAIL");

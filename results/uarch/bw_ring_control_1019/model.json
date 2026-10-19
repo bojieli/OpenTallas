@@ -34,6 +34,14 @@
     "data_latency_hbm_edges": 1,
     "extra_data_edges": 0,
     "raw_valid_ready_gates": 18,
-    "state": "18 prior-ready captures and18 canonical-cnt_next occupancy captures; independent local push/pop per16bit region. Reset fanout belongs to parent landing integration."
+    "state": "18 prior-ready captures and18 canonical-cnt_next occupancy captures; independent local push/pop per16bit region. Reset fanout belongs to parent landing integration. Native path requires18 independent existing-edge producer skid hv signals; scalar legacy mode remains diagnostic and has a118load mapped shared rawvalid cone. Native combined wrapper must bind REGIONAL_VALID=1; wires remain inside PC master.",
+    "regional_producer_valid_wires": 18,
+    "extra_local_valid_wires": 17,
+    "mapped_original_state_bits": 1046,
+    "mapped_native_state_bits": 1114,
+    "mapped_added_state_bits": 68,
+    "mapped_max_nonreset_fanout": 26,
+    "mapped_reset_loads_pending_parent_balance": 165,
+    "cost_scope": "Matched standalone ASAP7 mapping with identical keep-reg hook; measured delta68 FF replaces premap71 FF increment estimate. Full PC wrapper placement/native timing not yet priced."
   }
 }

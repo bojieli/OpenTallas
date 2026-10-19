@@ -6,7 +6,8 @@ module ot_hbm_svc_pin_skid2_bw_safe #(parameter integer WIDTH=1,REGIONAL=0)(
  input wire clk,rst_n,input wire in_v,output wire in_r,
  input wire [WIDTH-1:0]in_data,output wire out_v,input wire [(WIDTH+15)/16-1:0]out_r_regions,
  output wire [WIDTH-1:0]out_data,
- input wire [(WIDTH+15)/16-1:0]in_v_regions
+ input wire [(WIDTH+15)/16-1:0]in_v_regions,
+ output wire [(WIDTH+15)/16-1:0]out_v_regions
 );
  localparam N=(WIDTH+7)/8;
  (* keep="true",dont_touch="true" *) reg [N-1:0] hv,tv;
@@ -16,6 +17,7 @@ module ot_hbm_svc_pin_skid2_bw_safe #(parameter integer WIDTH=1,REGIONAL=0)(
    reg[B-1:0] h,t;
    wire push=((REGIONAL!=0)?in_v_regions[s/2]:in_v)&&!tv[s],pop=hv[s]&&out_r_regions[s/2];
    assign out_data[s*8+:B]=h;
+   if(s%2==0)assign out_v_regions[s/2]=hv[s];
    always @(posedge clk)begin
      if(!rst_n)begin hv[s]<=0;tv[s]<=0;end
      else case({push,pop})

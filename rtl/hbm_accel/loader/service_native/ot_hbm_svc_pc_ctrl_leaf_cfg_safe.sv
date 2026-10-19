@@ -40,6 +40,7 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
     input wire[255:0]k_wdata,input wire[31:0]k_wstrb,
     output wire kr_v,input wire kr_rdy,
     output wire[16:0]kr_tag,output wire[3:0]kr_beat,output wire[255:0]kr_data,
+    output wire[17:0]kr_v_regions,
     output reg k_wr_done,
     output wire row_v,output wire[2:0]row_op,output wire[4:0]row_bank,output wire[18:0]row_row,
     output wire col_v,col_we,output wire[4:0]col_bank,col_col,
@@ -170,9 +171,9 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
         ot_hbm_svc_pin_skid2_bw_safe #(.WIDTH(277),.REGIONAL(1)) u_skid(
             .clk(clk),.rst_n(region_rst_n[3]),.in_v(j_v),.in_r(j_rdy),
             .in_data({head_identity[20:4],head_identity[3:0],response_data}),
-            .out_v(kr_v),.out_r_regions(ready_q),.out_data({kr_tag,kr_beat,kr_data}),.in_v_regions(admission_regions));
+            .out_v(kr_v),.out_r_regions(ready_q),.out_data({kr_tag,kr_beat,kr_data}),.in_v_regions(admission_regions),.out_v_regions(kr_v_regions));
     end else begin:g_raw_kr
-        assign kr_v=j_v;assign j_rdy=kr_rdy;
+        assign kr_v=j_v;assign j_rdy=kr_rdy;assign kr_v_regions={18{j_v}};
         assign kr_tag=head_identity[20:4];assign kr_beat=head_identity[3:0];assign kr_data=response_data;
     end endgenerate
     wire r_v;wire[2:0]r_op;wire[4:0]r_bank;wire[18:0]r_row;
