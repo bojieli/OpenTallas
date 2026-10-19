@@ -49,23 +49,32 @@ module ot_s81_kp4_dec #(parameter integer MUT = 0) (
     wire [4:0]   k_L, o_ne;
     wire         k_any, o_unc, fs;
     wire [7:0]   apply;
+    // RESET LANDING (S81-KP4DEC 10-19): rst_n is landed on two parent registers before it fans out to the four children.
+    // Route s81lk_kp4_dec-p1-e86bf8cae: the unregistered rst_n crossed 622 um (11 buffers, 648 ps) from the S pin to
+    // u_dly / u_out / u_syn rst_n inside one 0.8 T IO budget (TT -70.4).  rst_l0 lands the pin (capture next to the S
+    // pin); rst_l1 drives all four children at EQUAL depth (each child then runs its own ot_s81_kp4_rst), so every child
+    // leaves reset on the same cycle, 2 cycles after rst_n.  Data latency (p_d -> q_d) is unchanged; the decoder re-hunts
+    // alignment after reset, so the 2-cycle-later release only shifts the first AM hunt.
+    (* keep *) reg rst_l0, rst_l1;
+    always @(posedge clk) begin rst_l0 <= rst_n; rst_l1 <= rst_l0; end
+    wire rst_c = rst_l1;
 `ifndef OT_KP4_DEC_HARD
-    ot_s81_kp4_dsyn #(.MUT(MUT)) u_syn (.clk(clk), .rst_n(rst_n), .p_v(p_v), .p_d(p_d), .x_q(x_q), .k_v(k_v), .k_lo(k_lo),
+    ot_s81_kp4_dsyn #(.MUT(MUT)) u_syn (.clk(clk), .rst_n(rst_c), .p_v(p_v), .p_d(p_d), .x_q(x_q), .k_v(k_v), .k_lo(k_lo),
         .k_L(k_L), .k_any(k_any), .lock(lock), .n_relock(n_relock));
 `else
     // hardened 2x2 parent (s81lk_kp4_dec): the closed child views carry MUT = 0
-    ot_s81_kp4_dsyn u_syn (.clk(clk), .rst_n(rst_n), .p_v(p_v), .p_d(p_d), .x_q(x_q), .k_v(k_v), .k_lo(k_lo),
+    ot_s81_kp4_dsyn u_syn (.clk(clk), .rst_n(rst_c), .p_v(p_v), .p_d(p_d), .x_q(x_q), .k_v(k_v), .k_lo(k_lo),
         .k_L(k_L), .k_any(k_any), .lock(lock), .n_relock(n_relock));
 `endif
-    ot_s81_kp4_ddly u_dly (.clk(clk), .rst_n(rst_n), .w_d(x_q), .r_d(d_q));
+    ot_s81_kp4_ddly u_dly (.clk(clk), .rst_n(rst_c), .w_d(x_q), .r_d(d_q));
 `ifndef OT_KP4_DEC_HARD
-    ot_s81_kp4_dchn #(.MUT(MUT)) u_chn (.clk(clk), .rst_n(rst_n), .k_v(k_v), .k_lo(k_lo), .k_L(k_L), .k_any(k_any),
+    ot_s81_kp4_dchn #(.MUT(MUT)) u_chn (.clk(clk), .rst_n(rst_c), .k_v(k_v), .k_lo(k_lo), .k_L(k_L), .k_any(k_any),
         .cw_q(cw), .apply(apply), .o_unc(o_unc), .o_ne(o_ne), .fs(fs), .n_corr(n_corr), .n_unc(n_unc));
 `else
     // hardened 2x2 parent (s81lk_kp4_dec): the closed child views carry MUT = 0
-    ot_s81_kp4_dchn u_chn (.clk(clk), .rst_n(rst_n), .k_v(k_v), .k_lo(k_lo), .k_L(k_L), .k_any(k_any),
+    ot_s81_kp4_dchn u_chn (.clk(clk), .rst_n(rst_c), .k_v(k_v), .k_lo(k_lo), .k_L(k_L), .k_any(k_any),
         .cw_q(cw), .apply(apply), .o_unc(o_unc), .o_ne(o_ne), .fs(fs), .n_corr(n_corr), .n_unc(n_unc));
 `endif
-    ot_s81_kp4_dout u_out (.clk(clk), .rst_n(rst_n), .d_q(d_q), .cw(cw), .apply(apply), .o_unc(o_unc), .o_ne(o_ne), .fs(fs),
+    ot_s81_kp4_dout u_out (.clk(clk), .rst_n(rst_c), .d_q(d_q), .cw(cw), .apply(apply), .o_unc(o_unc), .o_ne(o_ne), .fs(fs),
         .q_v(q_v), .q_d(q_d), .q_first(q_first), .q_unc(q_unc), .q_nerr(q_nerr), .q_seq(q_seq));
 endmodule
