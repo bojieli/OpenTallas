@@ -44,6 +44,7 @@ sys.path.insert(0, str(HERE.parent / "hier_contract"))
 import check_macro_track_alignment as cmta  # noqa: E402
 import child_lint  # noqa: E402
 import pin_fit  # noqa: E402
+import cdc_fsm_guard  # noqa: E402
 import clock_entry_constraints  # noqa: E402
 import raw_macro_clocks  # noqa: E402
 
@@ -261,6 +262,11 @@ def pin_regs_plan(s: dict) -> dict | None:
             "reset": pr.get("reset", ""), "reason": pr.get("reason", ""),
             "latency_cycles": {"input": 1, "output": 1}, "rule": PIN_REGS_RULE,
             "per_port_table": "$RESULTS_DIR/ot_pin_regs.tsv (route synthesis: port dir width cycles why)"}
+
+
+def ce_generate(s: dict) -> str:
+    """clock_entry_constraints.generate with the CDC fsm_extract guard (cdc_fsm_guard.py) after the CDC bindings."""
+    return cdc_fsm_guard.splice(clock_entry_constraints.generate(s, ROOT), s)
 
 
 def pin_regs_vars(s: dict) -> list:
@@ -1505,7 +1511,7 @@ def gen_sdc(s: dict, period_ps: float) -> str:
             # Extra SDC may declare secondary clocks. Data slew must exclude
             # their sources; explicit source-clock transitions in extra SDC stand.
             + "set_input_transition 150 [all_inputs -no_clocks]\n"
-            + clock_entry_constraints.generate(s, ROOT) + clock_entry_constraints.landed_sdc(s, ROOT))
+            + ce_generate(s) + clock_entry_constraints.landed_sdc(s, ROOT))
 
 
 def sdc_extra(s: dict) -> str:
@@ -1537,7 +1543,7 @@ def gen_signoff(s: dict, refglob: str, inter: str) -> str:
             + f"set ::env(OT_REF_GLOB) {{{refglob}}}\nset ::env(OT_IO_INTER) {{{inter}}}\nset ::env(OT_IO_SKEW_INTER) 150\n"
             + io + sdc_extra(s)
             + ("set ::ot_ce_require_wire 1\n" if s.get("clock") in ("entries", "hybrid_entries", "multiple_cts_roots") else "")
-            + clock_entry_constraints.generate(s, ROOT) + clock_entry_constraints.landed_sdc(s, ROOT)
+            + ce_generate(s) + clock_entry_constraints.landed_sdc(s, ROOT)
             + "\nset_propagated_clock [all_clocks]\n")
 
 
@@ -1713,7 +1719,7 @@ def gen_hooks(s: dict, kd: str) -> dict:
     btcl = [f"source /src/{f}" for f in s.get("boundary_tcl", [])
             if not (s.get("clock") in ("entries", "hybrid_entries", "multiple_cts_roots") and "set ::ot_wc_entry_mode 1" in (ROOT / f).read_text())]
     if s.get("clock") in ("entries", "hybrid_entries", "multiple_cts_roots"):
-        files["clock_entry.sdc"] = "set ::ot_ce_require_wire 1\n" + clock_entry_constraints.generate(s, ROOT)
+        files["clock_entry.sdc"] = "set ::ot_ce_require_wire 1\n" + ce_generate(s)
         btcl.append(f"source /src/{kd}/clock_entry.sdc")
     if btcl:
         # pre_cts_skew installs a CTS wrapper that re-reads the single-domain IO
@@ -1932,6 +1938,8 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
     extra += hold_pad_vars(s)
     extra += hold_budget_vars(s)
     extra += pin_regs_vars(s)
+    # reviewed CDC kits: the lint-tagged registers keep their RTL names through yosys fsm (cdc_fsm_guard.py)
+    extra += cdc_fsm_guard.orfs_vars(s, ROOT)
     if s.get("keep_pin_regs"):
         extra.append("--orfs-var OT_KEEP_PIN_REGS=1")
     if s.get("pin_reg_split") and not wrap:
