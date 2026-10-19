@@ -182,7 +182,7 @@
             pg_idx = pg_idx + 1;
         end
         if (o_n_dvw_cmd_wi__r25 != 116'd0) $fdisplay(pg_lg, "%0d CMD %h", cyc, o_n_dvw_cmd_wi__r25);
-        if (o_n_dvw_hr_wi__r25[73]) $fdisplay(pg_lg, "%0d HRROM %h", cyc, o_n_dvw_hr_wi__r25[452:73]);
+        if (o_n_dvw_hr_wi__r25[452]) $fdisplay(pg_lg, "%0d HRROM %h", cyc, o_n_dvw_hr_wi__r25[452:73]);   // slice go bit (QW-DIEFIX)
         if (o_n_dvw_hr_wi__r25[1]) $fdisplay(pg_lg, "%0d HRXPF %h", cyc, o_n_dvw_hr_wi__r25[72:1]);
         if (o_n_ng_tt_native_cmd_0[0]) $fdisplay(pg_lg, "%0d NAT %h", cyc, o_n_ng_tt_native_cmd_0);
         if (dut.tt_ctlm.u_head.fixed_issue | dut.tt_ctlm.u_head.fixed_end)
@@ -190,7 +190,7 @@
         if (dut.tt_ctlm.c_seg) $fdisplay(pg_lg, "%0d LOC SEG %0d", cyc, dut.tt_ctlm.c_base);
         // the same events at the tt_ctlm pins (die lane ages = slice-pin edge - tt_ctlm edge, checked against the image)
         if (dut.tt_ctlm.cmd != 116'd0) $fdisplay(pg_lg, "%0d CMDI %h", cyc, dut.tt_ctlm.cmd);
-        if (dut.tt_ctlm.hr[73]) $fdisplay(pg_lg, "%0d HRI", cyc);
+        if (dut.tt_ctlm.hr[452]) $fdisplay(pg_lg, "%0d HRI", cyc);   // slice go bit (QW-DIEFIX)
         if (dut.tt_ctlm.c_emb) $fdisplay(pg_lg, "%0d LOC EMB 0", cyc);
         if (dut.tt_ctlm.cf === 1'b1 && !pg_cf_l)
             $fdisplay(pg_lg, "%0d CF head %b reloc %b cp %b start %b xpf_ld %b xpf_sch %b cal %b", cyc, dut.tt_ctlm.head_fault,

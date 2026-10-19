@@ -12,7 +12,7 @@
 // am0..5, sel, mx, mee, mer0..5, rsi_me_*, rsi_tag_*, ld, meok, rf0..5, uf, xflt, b2_status_fault, ovf), the seq_su faces
 // (st, xs, xm, su_image_ready, su_observe) and the CP copy engine faces (cp, cp_active).
 // NEW:
-//   hr[452:0]  -> W5 hr_wi   {ib 380, xpf 72, v}: one register (+1 edge on ib and xpf vs b2; the compiler's ib / XPF
+//   hr[452:0]  -> W5 hr_wi   {go, ib 379 (me_array order: qfd_dv_hr_pack), xpf 72, v}: one register (+1 edge on ib and xpf vs b2; the compiler's ib / XPF
 //                             calendars count it, XPF_TRANSPORT_EDGES included)
 //   cmd[115:0] -> W5 cmd_wi  the static command calendar qfd_dv_cmd_cal (SETID at boot, every slice / XC command)
 //   tl[1087:0] -> W5 st_wi   (QLB-C4b 10-18) the slice stream TABLE words (kinds 1..3: PROG / CROM / BTAB) played by
@@ -111,7 +111,8 @@ module qfd_tt_ctlm_dv #(
     parameter integer UTAG_LSB = 6,
     parameter integer OPSEG = 0,
     parameter string  OPSEG_VIAMAP = "",
-    parameter string  OPSEG_INST = "qfd_tt_ctlm_opseg"
+    parameter string  OPSEG_INST = "qfd_tt_ctlm_opseg",
+    parameter integer HR_ASBUILT = 0
 ) (
     input  wire          ck,
     input  wire          rst_n,
@@ -407,7 +408,13 @@ module qfd_tt_ctlm_dv #(
             hv <= 1'b1;
             hr_lo <= {xpf, hv};
         end
-    assign hr = {ib_q, hr_lo};
+    // QW-DIEFIX 10-19 (509af6b5e, carried onto the HARD_HR block by MU-DIE-QW): hr[452:73] carries the ROM command in the
+    // SLICE's layout {go, ib 379 in ot_qwen_me_array_w12 order} (qfd_dv_slice2 gi decode), not the raw cmd380: as built go
+    // sat on hr[73] and the ib fields were reversed.  qfd_dv_hr_pack = zero-logic permutation of the registered ib_q
+    // (tools/qwen_split/hr_contract.py gen/check).  HR_ASBUILT = 1: bench mutant (the as-built layout).
+    wire [379:0] ib_hr;
+    qfd_dv_hr_pack #(.ASBUILT(HR_ASBUILT)) u_hr_pack (.cmd(ib_q), .hr(ib_hr));
+    assign hr = {ib_hr, hr_lo};
 
     // ------------------------------------------------------------------ dc (was seq_su's dc) and faults
     wire core_fault = hr_fault | cp_fault | start_fault | xpf_loader_fault | xpf_schedule_fault | op_fault;

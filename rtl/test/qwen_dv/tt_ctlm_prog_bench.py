@@ -31,6 +31,17 @@ ROOT = HERE.parents[2]
 LOAD0 = 10
 
 
+def slice_fields(gi_hr):
+    """hr[452:73] as qfd_dv_slice2 / the tiles decode it (tools/qwen_split/hr_contract.py FIELDS)"""
+    sys.path.insert(0, str(ROOT / 'tools' / 'qwen_split'))
+    import hr_contract as HC
+    out, pos = {'go': gi_hr >> HC.IBW}, HC.IBW
+    for n, w in HC.FIELDS:
+        pos -= w
+        out[n] = (gi_hr >> pos) & ((1 << w) - 1)
+    return out
+
+
 def events_and_expect(img: dict, words: list, n_decode: int, bmut: int):
     C = img['constants']
     ev, exp = [], []
@@ -120,7 +131,7 @@ def run(a):
     ev, exp, ncyc, stages = events_and_expect(img, words, a.decode, a.bmut)
     work = Path(a.work)
     work.mkdir(parents=True, exist_ok=True)
-    tag = f'm{a.mut}_b{a.bmut}'
+    tag = f'm{a.mut}_b{a.bmut}' + (f'_hra{a.hra}' if a.hra else '')
     evf, lgf = work / f'ev_{tag}.txt', work / f'log_{tag}.txt'
     # stable sort: the image words first, then levels, in edge order
     with open(evf, 'w') as f:
@@ -146,7 +157,7 @@ def run(a):
     subprocess.run([str(obj / 'Vtb'), f'+EV={evf}', f'+LOG={lgf}', f'+NCYC={ncyc}'], cwd=work, check=True,
                    capture_output=True)
     got, errs, info = [], [], {}
-    issues, roms, nats = [], [], []
+    issues, roms, nats, rom_words = [], [], [], []
     for line in open(lgf):
         p = line.split()
         cy, k = int(p[0]), p[1]
@@ -164,6 +175,9 @@ def run(a):
         elif k == 'ROM':
             roms.append(cy)
             got.append((cy, 'ROM', None))
+            rom_words.append((cy, slice_fields(int(p[2], 16))))
+        elif k == 'ROMRAW':
+            errs.append(f'ROM command at {cy} with go on hr[73] (the as-built cmd380 layout): the slice reads go = hr[452]')
         elif k == 'NAT':
             nats.append(cy)
             got.append((cy, 'NAT', None))
@@ -194,6 +208,17 @@ def run(a):
     d_rom = sorted({r - i for r, i in zip(roms, rom_iss)}) if len(roms) == len(rom_iss) else None
     d_nat = sorted({r - i for r, i in zip(nats, nat_iss)}) if len(nats) == len(nat_iss) else None
     info['rom_go_minus_issue'] = d_rom
+    # QW-DIEFIX 10-19: every ROM word decoded as the slice / tiles read it (hr_contract field table): a matvec op
+    # (k, tiles, nout > 0, wsrc 0, split <= 9); stage-1 qkv / o / gu / down = the QW-XHEAD XT1 ops (bit-exact there)
+    info['rom_fields'] = [dict(edge=cy, **{k: f[k] for k in ('nout', 'tiles', 'k', 'split', 'wbase', 'xbase')})
+                          for cy, f in rom_words[:8]]
+    for cy, f in rom_words:
+        if not (f['k'] and f['tiles'] and f['nout'] and f['wsrc'] == 0 and f['split'] <= 9):
+            errs.append(f'ROM word at {cy} does not decode as a matvec in the slice layout: {f}')
+            break
+    xt1 = [dict(nout=768, tiles=1, k=8, wbase=0, xbase=4096), dict(nout=4096, tiles=3, k=2, wbase=64, xbase=50672),
+           dict(nout=3072, tiles=1, k=32, wbase=112, xbase=4096), dict(nout=4096, tiles=3, k=6, wbase=368, xbase=55280)]
+    info['stage1_matches_xt1_ops'] = [all(f[k] == o[k] for k in o) for (_, f), o in zip(rom_words[:4], xt1)]
     info['nat_go_minus_issue'] = d_nat
     if d_rom is None or len(d_rom) != 1:
         errs.append(f'ROM command go count {len(roms)} vs ROM issues {len(rom_iss)} (offsets {d_rom})')
@@ -210,6 +235,7 @@ def main():
     ap.add_argument('--img', required=True)
     ap.add_argument('--mut', type=int, default=0)
     ap.add_argument('--bmut', type=int, default=0)
+    ap.add_argument('--hra', type=int, default=0, help='qfd_tt_ctlm_dv HR_ASBUILT (mutant: the as-built hr layout)')
     ap.add_argument('--decode', type=int, default=2)
     # Q-H16C 10-18: 1 = the hard head leaf ot_qfd_tt_ctlm_static_hr (h16c h17, running-stage port), 0 = inline head
     ap.add_argument('--hard', type=int, default=0)

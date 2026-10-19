@@ -265,6 +265,67 @@ def bench_c2(work, mut, seed=3):
     return ok, n, errs
 
 
+def bench_k2(work, mut, seed=11):
+    """(k) redstn2 LAST-K selection (QW-DIEFIX 10-19): every pair streams JB = 8 words per (round, k) -- the tiles' running
+    accumulator -- and only the k = kc - 1 block is the level-6 result.  L8 scaled kc 3, L7 gate/up kc 2 (two rounds of
+    the lower pair would be a second op), L8 unscaled kc 1 (regression).  The k < kc - 1 blocks carry different
+    (partial-sum-sized) words; MUT 14 (kcm1 ignored) must FAIL (wrong sums, more result words than nwords)."""
+    rng = np.random.default_rng(seed)
+    ev = B.Ev()
+    kcl = 2
+
+    def mat(S):
+        w = rng.integers(-127, 128, size=(128, S * kcl)).astype(F)
+        x = (rng.standard_normal(S * kcl) * 2.0).astype(F)
+        s = G.to_bf16((rng.random(128) * 0.02 + 1e-3).astype(F))
+        return w, x, s
+
+    def junk(n):
+        return [(rng.standard_normal(128) * 300.0).astype(F) for _ in range(n)]
+
+    tests = []
+    w8, x8, s8 = mat(256)
+    wg, xg, sg = mat(128)
+    wu, xu, su_ = mat(128)
+    B.load_btab(ev, 0, 0, np.concatenate([sg, su_]))
+    B.load_btab(ev, 0, 16, s8)
+    ev.step(4)
+    l8 = B.l6_parts(w8, x8, 256)
+    for kc, wsrc, base in ((3, 0, 0x2400), (1, 1, 0x2800)):
+        ev.at(B.P_CMD, B.cmd_stn(1, wsrc, 8, 16, 3, base, kcm1=kc - 1)); ev.step(4 + SK)
+        for kk in range(kc):
+            src = l8 if kk == kc - 1 else junk(4)
+            for k in range(8):
+                sl_ = slice(16 * k, 16 * k + 16)
+                pair2(ev, 0, src[0][sl_], src[1][sl_], src[3][sl_], src[2][sl_], ev.t); ev.step()
+        ev.step(50)
+        y = G.matvec(w8, x8, 256)
+        tests.append((f"L8 kc{kc} {'unscaled' if wsrc else 'scaled'}", base,
+                      G.mul(y, F(1.0)) if wsrc else G.mul(y, s8)))
+    lg, lu = B.l6_parts(wg, xg, 128), B.l6_parts(wu, xu, 128)
+    ev.at(B.P_CMD, B.cmd_stn(0, 0, 16, 0, 2, 0x2000, kcm1=1)); ev.step(4 + SK)
+    for kk in range(2):
+        g_, u_ = (lg, lu) if kk == 1 else (junk(2), junk(2))
+        for k in range(8):
+            sl_ = slice(16 * k, 16 * k + 16)
+            pair2(ev, 0, g_[0][sl_], g_[1][sl_], u_[1][sl_], u_[0][sl_], ev.t); ev.step()
+    ev.step(60)
+    tests.append(("L7 gate/up kc2", 0x2000, np.concatenate([G.mul(G.matvec(wg, xg, 128), sg),
+                                                           G.mul(G.matvec(wu, xu, 128), su_)])))
+    log = run_sim2("k", ev, work, mut, ev.t + 20)
+    errs = status_ok2(log)
+    got = {}
+    for _, w in log.get("S0AR", []):
+        tag = (w >> 514) & 0xFFFFFFFF
+        for l in range(16):
+            got[tag + l] = (w >> (32 * l)) & 0xFFFFFFFF
+    ok = n = 0
+    for name, base, y in tests:
+        ok += B.cmp(name, {i: got.get(base + i) for i in range(len(y))}, B.fbits(y), errs)
+        n += len(y)
+    return ok, n, errs
+
+
 def bench_f2(work, mut, seed=6):
     rng = np.random.default_rng(seed)
     ev = B.Ev()
@@ -660,7 +721,7 @@ def install():
     B.status_ok = status_ok2
 
 
-BENCHES = {"a": bench_a2, "b": B.bench_b, "c": bench_c2, "d": B.bench_d, "e": B.bench_e, "f": bench_f2,
+BENCHES = {"k": bench_k2, "a": bench_a2, "b": B.bench_b, "c": bench_c2, "d": B.bench_d, "e": B.bench_e, "f": bench_f2,
            "g": B.bench_g, "h": bench_h, "i": bench_i, "j": bench_j, "m": bench_m, "o": bench_o, "n": bench_n}
 
 
