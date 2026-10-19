@@ -34,7 +34,7 @@ module ot_hbm_xcal_desc_native #(parameter integer MUT=0, PAW=11, DD=256, DAW=8)
     // ---------------- go table (copy of the svg issuer's descriptor table)
     reg running, rd_q, ent_v;
     reg [DAW-1:0] rp, rp_q;
-    reg [DAW:0] n_rd, n_go;
+    reg [DAW:0] n_rd, n_go, n_done;
     reg [23:0] rc;
     reg [23:0] e_at; reg [PAW-1:0] e_base; reg [PAW:0] e_limit; reg [15:0] e_loops; reg [4:0] e_ctx;   // {mode3, mrel, fl}
     wire [255:0] rd;
@@ -69,7 +69,7 @@ module ot_hbm_xcal_desc_native #(parameter integer MUT=0, PAW=11, DD=256, DAW=8)
       else begin cfg_we_o<=cfg_we;start_v_o<=go;end
     always @(posedge clk or negedge rst_q) begin
         if (!rst_q) begin
-            running <= 1'b0; rd_q <= 1'b0; ent_v <= 1'b0; rp <= 0; rp_q <= 0; n_rd <= 0; n_go <= 0;
+            running <= 1'b0; rd_q <= 1'b0; ent_v <= 1'b0; rp <= 0; rp_q <= 0; n_rd <= 0; n_go <= 0; n_done <= 0;
             rc <= 24'd0; e_at <= 24'd0; e_base <= 0; e_limit <= 0; e_loops <= 16'd0; e_ctx <= 5'd0;
             active <= 1'b0; done <= 1'b0; fault <= 1'b0; outstanding <= 1'b0;
         end else begin
@@ -78,7 +78,7 @@ module ot_hbm_xcal_desc_native #(parameter integer MUT=0, PAW=11, DD=256, DAW=8)
             if (run_q) begin
                 if (running || outstanding || run_count_q == 0 || {1'b0, run_base_q} + run_count_q > DD) fault <= 1'b1;
                 else begin
-                    running <= 1'b1; outstanding <= 1'b1; rp <= run_base_q; n_rd <= run_count_q; n_go <= run_count_q;
+                    running <= 1'b1; outstanding <= 1'b1; rp <= run_base_q; n_rd <= run_count_q; n_go <= run_count_q; n_done <= run_count_q;
                     rc <= (MUT == 1) ? 24'd0 : 24'd1;
                 end
             end else if (running) rc <= rc + 24'd1;
@@ -96,7 +96,10 @@ module ot_hbm_xcal_desc_native #(parameter integer MUT=0, PAW=11, DD=256, DAW=8)
             end
             if (ent_v && (e_at < 2 || rc > e_at-2)) fault <= 1'b1;            // missed compiler slot: never a late start
             if (prog_fault_q) fault <= 1'b1;
-            if (prog_done_q && !running) begin done <= 1'b1; outstanding <= 1'b0; end          // the run's last programme has issued its last word
+            if (prog_done_q && outstanding) begin
+                n_done <= n_done - 1'b1;
+                if(n_done == 1)begin done <= 1'b1; outstanding <= 1'b0; end
+            end          // the run's last programme has issued its last word
         end
     end
 endmodule

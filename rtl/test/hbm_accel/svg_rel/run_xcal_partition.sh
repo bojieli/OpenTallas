@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 set -eu
-out=$1;mut=${2:-0};early=${3:-0};multi=${4:-0};mkdir -p "$out"
+out=$1;mut=${2:-0};early=${3:-0};multi=${4:-0};gap=${5:-12};mkdir -p "$out"
 vlt="$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator"
 "$vlt" --version
-"$vlt" --binary --timing -j 2 -Wno-fatal -Wno-TIMESCALEMOD --top-module tb_xcal_partition -GMUT="$mut" -GEARLY="$early" -GMULTI="$multi" --Mdir "$out/obj" -o sim \
+"$vlt" --binary --timing -j 2 -Wno-fatal -Wno-TIMESCALEMOD --top-module tb_xcal_partition -GMUT="$mut" -GEARLY="$early" -GMULTI="$multi" -GGAP="$gap" --Mdir "$out/obj" -o sim \
  rtl/hbm_accel/loader/service_native/ot_hbm_xcal_partition_t.sv \
  rtl/hbm_accel/loader/service_native/ot_hbm_xcal_desc_host_native.sv \
  rtl/hbm_accel/loader/service_native/ot_hbm_xcal_desc_native.sv \
