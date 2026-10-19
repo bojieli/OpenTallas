@@ -37,6 +37,26 @@ endmodule
 
 
 class NetlistWalk(unittest.TestCase):
+    def test_native_trunk_inject_has_independent_v_and_token_ages(self):
+        trunk = ROOT / 'rtl/qwen_sys/split_20261014/qkd_pv_rtrunk.sv'
+        die = '''module die();
+wire n_clk_core_c, n_d, q0, q1; wire [257:0] bo;
+src s (.ck(n_clk_core_c), .v(n_d));
+qkd_rlys_1 p0 (.ck(n_clk_core_c), .a(n_d), .b(q0));
+qkd_rlys_1 p1 (.ck(n_clk_core_c), .a(q0), .b(q1));
+qkd_rlyi_258s inject (.ck(n_clk_core_c), .s(n_d), .a(258'd0), .y({q1,q0,256'd0}), .b(bo));
+endmodule'''
+        with tempfile.TemporaryDirectory() as t:
+            Path(t, 'm.sv').write_text(RTL)
+            Path(t, trunk.name).write_text(trunk.read_text())
+            Path(t, 'die.v').write_text(die)
+            pb = dict(masters={m: dict(rtl=f'{t}/m.sv', kind='real') for m in ('src', 'qkd_rlys_1')}, defines=[])
+            pb['masters']['qkd_rlyi_258s'] = dict(rtl=f'{t}/{trunk.name}', kind='real')
+            doc = N.export(f'{t}/die.v', pb, 'qwen_kv', 'HEAD', [], [t], 'roles')
+        roles = {b['dst']['port']: b['age_edges'] for b in doc['buses'] if b['dst']['port'].startswith('y__')}
+        self.assertEqual(roles, {'y__256_256': 1, 'y__257_257': 2})
+        self.assertEqual(doc['problem_count'], 0, doc['problems'])
+
     def test_packed_relay_bits_are_distinct_pipeline_flops(self):
         rtl = RTL + 'module qkd_rlys_4(input wire ck, input wire [3:0] a, output wire [3:0] b); endmodule'
         die = '''module die();

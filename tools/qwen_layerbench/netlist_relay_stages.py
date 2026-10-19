@@ -18,7 +18,7 @@ reset-repeater tree masters (qfd_rst_rep*, qkd_rst_region).
 Domain: the clock net on the source instance's first clock port mapped by --domain-map (default: n_clk_coll* ->
 serial_0p9, everything else on the die core -> stream_1p2, n_clk_hbm* -> hbm_cdc).
 """
-import argparse, json, re, subprocess, sys
+import argparse, hashlib, json, re, subprocess, sys
 from collections import defaultdict
 from pathlib import Path
 
@@ -32,6 +32,9 @@ from qwen_split import lane_groups as LG  # noqa: E402
 # qkd_landsh0?_<S>: same instance per relay station, a -> b, one stage each as the generator counts them)
 RELAY_RE = re.compile(r'^(qkd_rlys_\d+|qkd_rlysh0?_\d+|qkd_landsh0?_\d+|qfd_rly_|qfd_rlyh0?_|qfd_landh?0?_)')
 FORWARDED_RE = re.compile(r'^(qkd_rlysh0?_\d+|qkd_landsh0?_\d+|qfd_rlyh0?_|qfd_landh?0?_)')
+# The inject port has three independently scheduled roles: held data, V
+# (delayed inject select), and T (passing trunk token). It is not one record.
+PV_TRUNK_ROLE_SHA = '1a40cdf372693347a66fce51f0cbe77b856af0cc7f4519eea97c2b0ac4916669'
 RESET_MASTER_RE = re.compile(r'^(qfd_rst_rep|qkd_rst_region)')
 CLOCK_PORT_RE = re.compile(r'^(ck|clk|ck_\w+|clk_\w+|\w+_ck|\w+_clk|gclk|ck\d+|refclk|face_ck|fdi_ck|hck)$')
 RELAY_CTRL = {'ea', 'eb', 'en', 'k0', 'k1', 'k2', 'tie_hi', 'tie_lo', 'ck_o', 'ckf', 'ck_s', 'fault', 'ck', 'rs'}
@@ -81,6 +84,7 @@ def load_ports(pb, commit, src_prefixes, local_dirs):
     for f in sorted(files):
         txt, how = rtl_text(f, commit, src_prefixes, local_dirs)
         for mod in P.parse_modules(P.preprocess(P.strip_comments(txt), dict(defines)), f):
+            mod.source_sha256 = hashlib.sha256(txt.encode()).hexdigest()
             mods.setdefault(mod.name, mod)
         srcs[f] = how
     missing = sorted(m for m in pb['masters'] if m not in mods)
@@ -278,7 +282,11 @@ def export(die_v, pb, design, commit, src_prefixes, local_dirs, plan_id, reach=N
                     forwarded = frozenset(q[0] for q in seen if FORWARDED_RE.match(inst_master[q[0]]))
                     path_kinds[seen] = (forwarded, len(seen) - len(forwarded))
                 forwarded, plain = path_kinds[seen]
-                r = pairs.setdefault((si, sp, li, lp), dict(st=set(), bits=set(), sm=sm, lm=lm, lands=set(),
+                logical_port = lp
+                if (lm in ('qkd_rlyi_258', 'qkd_rlyi_258s') and lp == 'y'
+                        and getattr(mods[lm], 'source_sha256', None) == PV_TRUNK_ROLE_SHA):
+                    logical_port = f'y__{lpos}_{lpos}' if lpos >= 256 else 'y__255_0'
+                r = pairs.setdefault((si, sp, li, logical_port), dict(st=set(), bits=set(), sm=sm, lm=lm, lands=set(),
                                                            forwarded_paths=set(), plain_counts=set()))
                 r['st'].add(n); r['bits'].add(lpos); r['lands'].add(lands)
                 r['forwarded_paths'].add(forwarded); r['plain_counts'].add(plain)
