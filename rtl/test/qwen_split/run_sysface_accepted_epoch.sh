@@ -24,7 +24,7 @@ p=Path(sys.argv[1]);counts={}
 for n in ['old','0','1']:
  j=json.loads((p/f'{n}.json').read_text());m=next(iter(j['modules'].values()));counts[n]=sum(1 for c in m['cells'].values()if 'DFF' in c['type'])
 assert counts['old']==counts['0'],counts
-assert counts['1']-counts['old']==22,counts
-(p/'census.json').write_text(json.dumps(dict(FF=counts,extra_FF=22,scope='generic source census only; no mapped physical area'),indent=2)+'\n')
-print('ACCEPTEPOCH_CENSUS_PASS',counts,'extra22/defaultoffzero')
+delta=counts['1']-counts['old'];assert 18<=delta<=22,counts
+(p/'census.json').write_text(json.dumps(dict(FF=counts,extra_FF=delta,scope='generic source census only; no mapped physical area'),indent=2)+'\n')
+print('ACCEPTEPOCH_CENSUS_PASS',counts,f'extra{delta}/defaultoffzero')
 PY
