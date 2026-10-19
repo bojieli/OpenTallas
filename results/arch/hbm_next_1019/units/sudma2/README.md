@@ -177,3 +177,33 @@ Branch `claude/hbm-next-units-sudma3-1019`. All on the fleet with Verilator 5.05
 | SU.VOP with a per-row reduction (norm-style) | add max(m + 15, the VOP II) a row on reducer 0 (m = lane partials a quarter) | measured 266 at m 128 |
 | SFU chain rows | P (IO words a row), P >= Pc + 3 | unchanged |
 | FUSED.QDQ_* | n / 32 (= price) | 59 (die form 64), price 24 |
+
+### Area and physical integration (synth `synth_step2/area.txt`, yosys 0.68 + ASAP7 RVT TT, `tools/hbm_next/hnx_sudma3_synth.sh`)
+
+| Block | um² | cells | Count a die | Where it goes |
+|---|---:|---:|---:|---|
+| `ot_hnx_su_rowx` (REG 1: the whole 2,422-b line registered) | 1,517 | 8,608 | 4 (one a quarter) | the SU programme parent between the 10 column leaves and the slices (critical parent: report only) |
+| `ot_hnx_su_rowr` | 123 | 1,044 | 4 | same place as rowx (red / rf fields, column 0) |
+| `ot_hnx_sfu_rowstep` (REG 1: io_word + compiler_control registered) | 928 | 4,016 | 4 (one an SFU core) | the SFU core cluster's input pin stage (`io_r` / `ctl_r` of split2 absorb the register: then only the adders remain) |
+| `ot_hnx_su_wsplit` + write mux | 18 | 87 | 512 | folded into the bank tile: `ot_hnx_su_bank6_ws` (kit `hnx_su_bank6_ws_1019`, gate below) |
+
+Total < 0.02 mm² a die. None of the row stages is worth a standalone hard tile (pin-dominated, util < 30 %): they fold
+into the neighbour that already registers the same bus.
+
+### Gate (running at hand-off)
+
+`hnx_su_bank6_ws_1019` (kit spec `physical/hbm_next/kits/hnx_su_bank6_ws_1019.json`; the gate tool hard-codes
+`physical/ref_tile/`, so the generated kit sits at `physical/ref_tile/hnx_su_bank6_ws_1019/`): the d4g closed bank tile
+outline 369.36 x 151.2 um and its 6 SRAM macros, W face +45 pins. `pre_route_gate --remote auto --cts` running on
+ot-epyc7 (`ref_gate/hnx_su_bank6_ws_1019-20261019-040018`). Not on a critical prefix, but NOT submitted: a tile-level
+wsplit bench (fork of `tools/hbm_static/su_bank_run.sh` with the wrapper + WMUT witnesses) is still to write; the
+SU slice parent that instantiates it (`su_<Q><g>`, 1,797 x 2,825 um) is a critical parent: report only.
+
+## Next (SUDMA2)
+
+1. Collect the bank gate; report PNG + checklist to COORD-REVIEW-QUEUE [HBM-NEXT]; tile bench + witnesses, then submit.
+2. DMA.LOAD position-addressed rows: the load path is the off-die HBM service (elastic boundary: `ot_hbm_svc_async_fifo`,
+   loader service); a row record is a descriptor with a per-row HBM address (position x row bytes), no on-die row engine
+   change. Measuring needs the HBM service bench (VEH / HBM lane), PRICED stays.
+3. Fold rowx + rowr into the SU programme parent and rowstep into the SFU core pin stage (critical parents: report).
+4. Optional: rotate the cross-quarter reduction over the 4 reducers by row (compiler only, II m + 15 -> m + 11.25).

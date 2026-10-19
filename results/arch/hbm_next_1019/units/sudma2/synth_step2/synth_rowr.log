@@ -1,0 +1,868 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)
+
+-- Running command `; read_liberty -lib /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib; read_liberty -lib /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib; read_liberty -lib /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib; read_liberty -lib /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib; read_liberty -lib /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib; read_verilog -sv -DSYNTHESIS rtl/hbm_next/su/ot_hnx_su_rowr.sv;  hierarchy -check -top ot_hnx_su_rowr; synth -flatten -top ot_hnx_su_rowr; dfflibmap  -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib; abc  -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib; opt_clean; stat  -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib' --
+
+1. Executing Liberty frontend: /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib
+Imported 42 cell types from liberty file.
+
+2. Executing Liberty frontend: /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib
+Imported 37 cell types from liberty file.
+
+3. Executing Liberty frontend: /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib
+Imported 34 cell types from liberty file.
+
+4. Executing Liberty frontend: /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+Imported 33 cell types from liberty file.
+
+5. Executing Liberty frontend: /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib
+Imported 56 cell types from liberty file.
+
+6. Executing Verilog-2005 frontend: rtl/hbm_next/su/ot_hnx_su_rowr.sv
+Parsing SystemVerilog input from `rtl/hbm_next/su/ot_hnx_su_rowr.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hnx_su_rowr'.
+Successfully finished Verilog frontend.
+
+7. Executing HIERARCHY pass (managing design hierarchy).
+
+7.1. Analyzing design hierarchy..
+Top module:  \ot_hnx_su_rowr
+
+7.2. Analyzing design hierarchy..
+Top module:  \ot_hnx_su_rowr
+Removed 0 unused modules.
+
+8. Executing SYNTH pass.
+
+8.1. Executing HIERARCHY pass (managing design hierarchy).
+
+8.1.1. Analyzing design hierarchy..
+Top module:  \ot_hnx_su_rowr
+
+8.1.2. Analyzing design hierarchy..
+Top module:  \ot_hnx_su_rowr
+Removed 0 unused modules.
+
+8.2. Executing PROC pass (convert processes to netlists).
+
+8.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+8.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 1 switch rules as full_case in process $proc$rtl/hbm_next/su/ot_hnx_su_rowr.sv:68$92 in module ot_hnx_su_rowr.
+Marked 19 switch rules as full_case in process $proc$rtl/hbm_next/su/ot_hnx_su_rowr.sv:54$44 in module ot_hnx_su_rowr.
+Removed a total of 0 dead cases.
+
+8.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 1 redundant assignment.
+Promoted 14 assignments to connections.
+
+8.2.4. Executing PROC_INIT pass (extract init attributes).
+
+8.2.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_n in `\ot_hnx_su_rowr.$proc$rtl/hbm_next/su/ot_hnx_su_rowr.sv:68$92'.
+
+8.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~20 debug messages>
+
+8.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\ot_hnx_su_rowr.$proc$rtl/hbm_next/su/ot_hnx_su_rowr.sv:68$92'.
+     1/2: $0\line_out[127:0]
+     2/2: $0\fault[0:0]
+Creating decoders for process `\ot_hnx_su_rowr.$proc$rtl/hbm_next/su/ot_hnx_su_rowr.sv:54$44'.
+     1/19: $19\bad[0:0]
+     2/19: $18\bad[0:0]
+     3/19: $17\bad[0:0]
+     4/19: $16\bad[0:0]
+     5/19: $15\bad[0:0]
+     6/19: $14\bad[0:0]
+     7/19: $13\bad[0:0]
+     8/19: $12\bad[0:0]
+     9/19: $11\bad[0:0]
+    10/19: $10\bad[0:0]
+    11/19: $9\bad[0:0]
+    12/19: $8\bad[0:0]
+    13/19: $7\bad[0:0]
+    14/19: $6\bad[0:0]
+    15/19: $5\bad[0:0]
+    16/19: $4\bad[0:0]
+    17/19: $3\bad[0:0]
+    18/19: $2\bad[0:0]
+    19/19: $1\bad[0:0]
+
+8.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `\ot_hnx_su_rowr.\c' from process `\ot_hnx_su_rowr.$proc$rtl/hbm_next/su/ot_hnx_su_rowr.sv:54$44'.
+No latch inferred for signal `\ot_hnx_su_rowr.\y' from process `\ot_hnx_su_rowr.$proc$rtl/hbm_next/su/ot_hnx_su_rowr.sv:54$44'.
+No latch inferred for signal `\ot_hnx_su_rowr.\bad' from process `\ot_hnx_su_rowr.$proc$rtl/hbm_next/su/ot_hnx_su_rowr.sv:54$44'.
+No latch inferred for signal `\ot_hnx_su_rowr.\ra' from process `\ot_hnx_su_rowr.$proc$rtl/hbm_next/su/ot_hnx_su_rowr.sv:54$44'.
+
+8.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\ot_hnx_su_rowr.\line_out' using process `\ot_hnx_su_rowr.$proc$rtl/hbm_next/su/ot_hnx_su_rowr.sv:68$92'.
+  created $adff cell `$procdff$193' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hnx_su_rowr.\fault' using process `\ot_hnx_su_rowr.$proc$rtl/hbm_next/su/ot_hnx_su_rowr.sv:68$92'.
+  created $adff cell `$procdff$198' with positive edge clock and positive level reset.
+
+8.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+8.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 1 empty switch in `\ot_hnx_su_rowr.$proc$rtl/hbm_next/su/ot_hnx_su_rowr.sv:68$92'.
+Removing empty process `ot_hnx_su_rowr.$proc$rtl/hbm_next/su/ot_hnx_su_rowr.sv:68$92'.
+Found and cleaned up 19 empty switches in `\ot_hnx_su_rowr.$proc$rtl/hbm_next/su/ot_hnx_su_rowr.sv:54$44'.
+Removing empty process `ot_hnx_su_rowr.$proc$rtl/hbm_next/su/ot_hnx_su_rowr.sv:54$44'.
+Cleaned up 20 empty switches.
+
+8.2.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hnx_su_rowr.
+<suppressed ~42 debug messages>
+
+8.3. Executing CHECK pass (checking for obvious problems).
+Checking module ot_hnx_su_rowr...
+Found and reported 0 problems.
+
+8.4. Executing FLATTEN pass (flatten design).
+
+8.5. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hnx_su_rowr.
+
+8.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hnx_su_rowr..
+Removed 8 unused cells and 101 unused wires.
+<suppressed ~9 debug messages>
+
+8.7. Executing CHECK pass (checking for obvious problems).
+Checking module ot_hnx_su_rowr...
+Found and reported 0 problems.
+
+8.8. Executing OPT pass (performing simple optimizations).
+
+8.8.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hnx_su_rowr.
+
+8.8.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hnx_su_rowr'.
+Computing hashes of 97 cells of `\ot_hnx_su_rowr'.
+Finding duplicate cells in `\ot_hnx_su_rowr'.
+Computing hashes of 90 cells of `\ot_hnx_su_rowr'.
+Finding duplicate cells in `\ot_hnx_su_rowr'.
+<suppressed ~21 debug messages>
+Removed a total of 7 cells.
+
+8.8.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_hnx_su_rowr..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+    dead port 2/2 on $mux $procmux$115.
+    dead port 2/2 on $mux $procmux$160.
+    dead port 2/2 on $mux $procmux$166.
+    dead port 2/2 on $mux $procmux$121.
+    dead port 2/2 on $mux $procmux$151.
+    dead port 2/2 on $mux $procmux$175.
+    dead port 2/2 on $mux $procmux$145.
+    dead port 2/2 on $mux $procmux$181.
+    dead port 2/2 on $mux $procmux$130.
+    dead port 2/2 on $mux $procmux$136.
+    dead port 2/2 on $mux $procmux$106.
+    dead port 2/2 on $mux $procmux$100.
+Removed 12 multiplexer ports.
+<suppressed ~244 debug messages>
+
+8.8.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_hnx_su_rowr.
+Performed a total of 0 changes.
+
+8.8.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hnx_su_rowr'.
+Computing hashes of 78 cells of `\ot_hnx_su_rowr'.
+Finding duplicate cells in `\ot_hnx_su_rowr'.
+Removed a total of 0 cells.
+
+8.8.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+8.8.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hnx_su_rowr..
+Removed 0 unused cells and 19 unused wires.
+<suppressed ~1 debug messages>
+
+8.8.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hnx_su_rowr.
+
+8.8.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+8.8.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_hnx_su_rowr..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~130 debug messages>
+
+8.8.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_hnx_su_rowr.
+Performed a total of 0 changes.
+
+8.8.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hnx_su_rowr'.
+Computing hashes of 78 cells of `\ot_hnx_su_rowr'.
+Finding duplicate cells in `\ot_hnx_su_rowr'.
+Removed a total of 0 cells.
+
+8.8.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+8.8.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hnx_su_rowr..
+
+8.8.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hnx_su_rowr.
+
+8.8.16. Finished fast OPT passes. (There is nothing left to do.)
+
+8.9. Executing FSM pass (extract and optimize FSM).
+
+8.9.1. Executing FSM_DETECT pass (finding FSMs in design).
+
+8.9.2. Executing FSM_EXTRACT pass (extracting FSM from design).
+
+8.9.3. Executing FSM_OPT pass (simple optimizations of FSMs).
+
+8.9.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hnx_su_rowr..
+
+8.9.5. Executing FSM_OPT pass (simple optimizations of FSMs).
+
+8.9.6. Executing FSM_RECODE pass (re-assigning FSM state encoding).
+
+8.9.7. Executing FSM_INFO pass (dumping all available information on FSM cells).
+
+8.9.8. Executing FSM_MAP pass (mapping FSMs to basic logic).
+
+8.10. Executing OPT pass (performing simple optimizations).
+
+8.10.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hnx_su_rowr.
+
+8.10.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hnx_su_rowr'.
+Computing hashes of 78 cells of `\ot_hnx_su_rowr'.
+Finding duplicate cells in `\ot_hnx_su_rowr'.
+Removed a total of 0 cells.
+
+8.10.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_hnx_su_rowr..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~130 debug messages>
+
+8.10.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_hnx_su_rowr.
+Performed a total of 0 changes.
+
+8.10.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hnx_su_rowr'.
+Computing hashes of 78 cells of `\ot_hnx_su_rowr'.
+Finding duplicate cells in `\ot_hnx_su_rowr'.
+Removed a total of 0 cells.
+
+8.10.6. Executing OPT_DFF pass (perform DFF optimizations).
+Adding EN signal on $procdff$198 ($adff) from module ot_hnx_su_rowr (D = 1'1, Q = \fault).
+
+8.10.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hnx_su_rowr..
+Removed 1 unused cells and 1 unused wires.
+<suppressed ~2 debug messages>
+
+8.10.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hnx_su_rowr.
+
+8.10.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+8.10.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_hnx_su_rowr..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~128 debug messages>
+
+8.10.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_hnx_su_rowr.
+Performed a total of 0 changes.
+
+8.10.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hnx_su_rowr'.
+Computing hashes of 77 cells of `\ot_hnx_su_rowr'.
+Finding duplicate cells in `\ot_hnx_su_rowr'.
+Removed a total of 0 cells.
+
+8.10.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+8.10.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hnx_su_rowr..
+
+8.10.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hnx_su_rowr.
+
+8.10.16. Finished fast OPT passes. (There is nothing left to do.)
+
+8.11. Executing WREDUCE pass (reducing word size of cells).
+Removed top 2 bits (of 3) from port B of cell ot_hnx_su_rowr.$eq$rtl/hbm_next/su/ot_hnx_su_rowr.sv:47$20 ($eq).
+Removed top 1 bits (of 3) from port B of cell ot_hnx_su_rowr.$eq$rtl/hbm_next/su/ot_hnx_su_rowr.sv:47$22 ($eq).
+Removed top 1 bits (of 3) from port B of cell ot_hnx_su_rowr.$eq$rtl/hbm_next/su/ot_hnx_su_rowr.sv:47$24 ($eq).
+Removed top 4 bits (of 14) from port A of cell ot_hnx_su_rowr.$add$rtl/hbm_next/su/ot_hnx_su_rowr.sv:49$34 ($add).
+Removed top 4 bits (of 14) from port A of cell ot_hnx_su_rowr.$add$rtl/hbm_next/su/ot_hnx_su_rowr.sv:50$37 ($add).
+Removed top 4 bits (of 14) from port A of cell ot_hnx_su_rowr.$add$rtl/hbm_next/su/ot_hnx_su_rowr.sv:51$40 ($add).
+Removed top 4 bits (of 12) from port A of cell ot_hnx_su_rowr.$add$rtl/hbm_next/su/ot_hnx_su_rowr.sv:52$43 ($add).
+Removed top 4 bits (of 12) from port A of cell ot_hnx_su_rowr.$add$rtl/hbm_next/su/ot_hnx_su_rowr.sv:59$58 ($add).
+Removed top 4 bits (of 12) from port A of cell ot_hnx_su_rowr.$add$rtl/hbm_next/su/ot_hnx_su_rowr.sv:59$64 ($add).
+Removed top 4 bits (of 12) from port A of cell ot_hnx_su_rowr.$add$rtl/hbm_next/su/ot_hnx_su_rowr.sv:59$70 ($add).
+Removed top 4 bits (of 12) from port A of cell ot_hnx_su_rowr.$add$rtl/hbm_next/su/ot_hnx_su_rowr.sv:59$76 ($add).
+Removed top 4 bits (of 12) from port A of cell ot_hnx_su_rowr.$add$rtl/hbm_next/su/ot_hnx_su_rowr.sv:59$82 ($add).
+Removed top 4 bits (of 12) from port A of cell ot_hnx_su_rowr.$add$rtl/hbm_next/su/ot_hnx_su_rowr.sv:59$88 ($add).
+
+8.12. Executing PEEPOPT pass (run peephole optimizers).
+
+8.13. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hnx_su_rowr..
+
+8.14. Executing ALUMACC pass (create $alu and $macc cells).
+Extracting $alu and $macc cells in module ot_hnx_su_rowr:
+  creating $macc model for $add$rtl/hbm_next/su/ot_hnx_su_rowr.sv:59$76 ($add).
+  creating $macc model for $add$rtl/hbm_next/su/ot_hnx_su_rowr.sv:59$88 ($add).
+  creating $macc model for $add$rtl/hbm_next/su/ot_hnx_su_rowr.sv:59$70 ($add).
+  creating $macc model for $add$rtl/hbm_next/su/ot_hnx_su_rowr.sv:59$64 ($add).
+  creating $macc model for $add$rtl/hbm_next/su/ot_hnx_su_rowr.sv:59$58 ($add).
+  creating $macc model for $add$rtl/hbm_next/su/ot_hnx_su_rowr.sv:52$43 ($add).
+  creating $macc model for $add$rtl/hbm_next/su/ot_hnx_su_rowr.sv:51$40 ($add).
+  creating $macc model for $add$rtl/hbm_next/su/ot_hnx_su_rowr.sv:50$37 ($add).
+  creating $macc model for $add$rtl/hbm_next/su/ot_hnx_su_rowr.sv:49$34 ($add).
+  creating $macc model for $add$rtl/hbm_next/su/ot_hnx_su_rowr.sv:59$82 ($add).
+  creating $macc model for $mul$rtl/hbm_next/su/ot_hnx_su_rowr.sv:42$4 ($mul).
+  creating $macc model for $mul$rtl/hbm_next/su/ot_hnx_su_rowr.sv:41$3 ($mul).
+  creating $macc model for $mul$rtl/hbm_next/su/ot_hnx_su_rowr.sv:40$2 ($mul).
+  creating $alu model for $macc $add$rtl/hbm_next/su/ot_hnx_su_rowr.sv:59$82.
+  creating $alu model for $macc $add$rtl/hbm_next/su/ot_hnx_su_rowr.sv:49$34.
+  creating $alu model for $macc $add$rtl/hbm_next/su/ot_hnx_su_rowr.sv:50$37.
+  creating $alu model for $macc $add$rtl/hbm_next/su/ot_hnx_su_rowr.sv:51$40.
+  creating $alu model for $macc $add$rtl/hbm_next/su/ot_hnx_su_rowr.sv:52$43.
+  creating $alu model for $macc $add$rtl/hbm_next/su/ot_hnx_su_rowr.sv:59$58.
+  creating $alu model for $macc $add$rtl/hbm_next/su/ot_hnx_su_rowr.sv:59$64.
+  creating $alu model for $macc $add$rtl/hbm_next/su/ot_hnx_su_rowr.sv:59$70.
+  creating $alu model for $macc $add$rtl/hbm_next/su/ot_hnx_su_rowr.sv:59$88.
+  creating $alu model for $macc $add$rtl/hbm_next/su/ot_hnx_su_rowr.sv:59$76.
+  creating $macc cell for $mul$rtl/hbm_next/su/ot_hnx_su_rowr.sv:42$4: $auto$alumacc.cc:399:replace_macc$200
+  creating $macc cell for $mul$rtl/hbm_next/su/ot_hnx_su_rowr.sv:41$3: $auto$alumacc.cc:399:replace_macc$201
+  creating $macc cell for $mul$rtl/hbm_next/su/ot_hnx_su_rowr.sv:40$2: $auto$alumacc.cc:399:replace_macc$202
+  creating $alu cell for $add$rtl/hbm_next/su/ot_hnx_su_rowr.sv:59$76: $auto$alumacc.cc:548:replace_alu$203
+  creating $alu cell for $add$rtl/hbm_next/su/ot_hnx_su_rowr.sv:59$88: $auto$alumacc.cc:548:replace_alu$206
+  creating $alu cell for $add$rtl/hbm_next/su/ot_hnx_su_rowr.sv:59$70: $auto$alumacc.cc:548:replace_alu$209
+  creating $alu cell for $add$rtl/hbm_next/su/ot_hnx_su_rowr.sv:59$64: $auto$alumacc.cc:548:replace_alu$212
+  creating $alu cell for $add$rtl/hbm_next/su/ot_hnx_su_rowr.sv:59$58: $auto$alumacc.cc:548:replace_alu$215
+  creating $alu cell for $add$rtl/hbm_next/su/ot_hnx_su_rowr.sv:52$43: $auto$alumacc.cc:548:replace_alu$218
+  creating $alu cell for $add$rtl/hbm_next/su/ot_hnx_su_rowr.sv:51$40: $auto$alumacc.cc:548:replace_alu$221
+  creating $alu cell for $add$rtl/hbm_next/su/ot_hnx_su_rowr.sv:50$37: $auto$alumacc.cc:548:replace_alu$224
+  creating $alu cell for $add$rtl/hbm_next/su/ot_hnx_su_rowr.sv:49$34: $auto$alumacc.cc:548:replace_alu$227
+  creating $alu cell for $add$rtl/hbm_next/su/ot_hnx_su_rowr.sv:59$82: $auto$alumacc.cc:548:replace_alu$230
+  created 10 $alu and 3 $macc cells.
+
+8.15. Executing SHARE pass (SAT-based resource sharing).
+
+8.16. Executing OPT pass (performing simple optimizations).
+
+8.16.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hnx_su_rowr.
+
+8.16.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hnx_su_rowr'.
+Computing hashes of 77 cells of `\ot_hnx_su_rowr'.
+Finding duplicate cells in `\ot_hnx_su_rowr'.
+Removed a total of 0 cells.
+
+8.16.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_hnx_su_rowr..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~128 debug messages>
+
+8.16.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_hnx_su_rowr.
+Performed a total of 0 changes.
+
+8.16.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hnx_su_rowr'.
+Computing hashes of 77 cells of `\ot_hnx_su_rowr'.
+Finding duplicate cells in `\ot_hnx_su_rowr'.
+Removed a total of 0 cells.
+
+8.16.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+8.16.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hnx_su_rowr..
+
+8.16.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hnx_su_rowr.
+
+8.16.9. Finished fast OPT passes. (There is nothing left to do.)
+
+8.17. Executing MEMORY pass.
+
+8.17.1. Executing OPT_MEM pass (optimize memories).
+Performed a total of 0 transformations.
+
+8.17.2. Executing OPT_MEM_PRIORITY pass (removing unnecessary memory write priority relations).
+Performed a total of 0 transformations.
+
+8.17.3. Executing OPT_MEM_FEEDBACK pass (finding memory read-to-write feedback paths).
+
+8.17.4. Executing MEMORY_BMUX2ROM pass (converting muxes to ROMs).
+
+8.17.5. Executing MEMORY_DFF pass (merging $dff cells to $memrd).
+
+8.17.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hnx_su_rowr..
+
+8.17.7. Executing MEMORY_SHARE pass (consolidating $memrd/$memwr cells).
+
+8.17.8. Executing OPT_MEM_WIDEN pass (optimize memories where all ports are wide).
+Performed a total of 0 transformations.
+
+8.17.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hnx_su_rowr..
+
+8.17.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+8.18. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hnx_su_rowr..
+
+8.19. Executing OPT pass (performing simple optimizations).
+
+8.19.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hnx_su_rowr.
+<suppressed ~8 debug messages>
+
+8.19.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hnx_su_rowr'.
+Computing hashes of 76 cells of `\ot_hnx_su_rowr'.
+Finding duplicate cells in `\ot_hnx_su_rowr'.
+Removed a total of 0 cells.
+
+8.19.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+8.19.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hnx_su_rowr..
+Removed 0 unused cells and 1 unused wires.
+<suppressed ~1 debug messages>
+
+8.19.5. Finished fast OPT passes.
+
+8.20. Executing MEMORY_MAP pass (converting memories to logic and flip-flops).
+
+8.21. Executing OPT pass (performing simple optimizations).
+
+8.21.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hnx_su_rowr.
+
+8.21.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hnx_su_rowr'.
+Computing hashes of 76 cells of `\ot_hnx_su_rowr'.
+Finding duplicate cells in `\ot_hnx_su_rowr'.
+Removed a total of 0 cells.
+
+8.21.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_hnx_su_rowr..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~32 debug messages>
+
+8.21.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_hnx_su_rowr.
+Performed a total of 0 changes.
+
+8.21.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hnx_su_rowr'.
+Computing hashes of 76 cells of `\ot_hnx_su_rowr'.
+Finding duplicate cells in `\ot_hnx_su_rowr'.
+Removed a total of 0 cells.
+
+8.21.6. Executing OPT_SHARE pass.
+
+8.21.7. Executing OPT_DFF pass (perform DFF optimizations).
+
+8.21.8. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hnx_su_rowr..
+
+8.21.9. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hnx_su_rowr.
+
+8.21.10. Finished fast OPT passes. (There is nothing left to do.)
+
+8.22. Executing TECHMAP pass (map to technology primitives).
+
+8.22.1. Executing Verilog-2005 frontend: /home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/../share/yosys/techmap.v
+Parsing Verilog input from `/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/../share/yosys/techmap.v' to AST representation.
+Generating RTLIL representation for module `\_90_simplemap_bool_ops'.
+Generating RTLIL representation for module `\_90_simplemap_reduce_ops'.
+Generating RTLIL representation for module `\_90_simplemap_logic_ops'.
+Generating RTLIL representation for module `\_90_simplemap_compare_ops'.
+Generating RTLIL representation for module `\_90_simplemap_various'.
+Generating RTLIL representation for module `\_90_simplemap_registers'.
+Generating RTLIL representation for module `\_90_shift_ops_shr_shl_sshl_sshr'.
+Generating RTLIL representation for module `\_90_shift_shiftx'.
+Generating RTLIL representation for module `\_90_fa'.
+Generating RTLIL representation for module `\_90_lcu_brent_kung'.
+Generating RTLIL representation for module `\_90_alu'.
+Generating RTLIL representation for module `\_90_macc'.
+Generating RTLIL representation for module `\_90_alumacc'.
+Generating RTLIL representation for module `$__div_mod_u'.
+Generating RTLIL representation for module `$__div_mod_trunc'.
+Generating RTLIL representation for module `\_90_div'.
+Generating RTLIL representation for module `\_90_mod'.
+Generating RTLIL representation for module `$__div_mod_floor'.
+Generating RTLIL representation for module `\_90_divfloor'.
+Generating RTLIL representation for module `\_90_modfloor'.
+Generating RTLIL representation for module `\_90_pow'.
+Generating RTLIL representation for module `\_90_demux'.
+Generating RTLIL representation for module `\_90_lut'.
+Generating RTLIL representation for module `$connect'.
+Generating RTLIL representation for module `$input_port'.
+Successfully finished Verilog frontend.
+
+8.22.2. Continuing TECHMAP pass.
+Using template $paramod$faa58573f9d1592ccf4bfc12206a71a8d2733e33\_90_alu for cells of type $alu.
+Using template $paramod$bf2e0d75ecaff62813f871a5142c7021af38bf5c\_90_alu for cells of type $alu.
+Using extmapper maccmap for cells of type $macc_v2.
+  add \st2 [9:0] * \rc2 [3:0] (10x4 bits, unsigned)
+  add \st2 [17:10] * \rc2 [3:0] (8x4 bits, unsigned)
+  add \st2 [17:10] * \rc2 [7:4] (8x4 bits, unsigned)
+Using extmapper simplemap for cells of type $adffe.
+Using extmapper simplemap for cells of type $logic_or.
+Using extmapper simplemap for cells of type $logic_and.
+Using extmapper simplemap for cells of type $logic_not.
+Using extmapper simplemap for cells of type $eq.
+Using extmapper simplemap for cells of type $mux.
+Using extmapper simplemap for cells of type $reduce_bool.
+Using extmapper simplemap for cells of type $or.
+Using extmapper simplemap for cells of type $adff.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000001100 for cells of type $fa.
+Using template $paramod$ee3d784672cdb1cb32d9a801a3af776716f16b74\_90_alu for cells of type $alu.
+Using extmapper simplemap for cells of type $and.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000001110 for cells of type $fa.
+Using template $paramod$091610cd349a68bd5539cffd7126f0d76e9bca00\_90_alu for cells of type $alu.
+Using extmapper simplemap for cells of type $xor.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000001100 for cells of type $lcu.
+Using extmapper simplemap for cells of type $pos.
+Using extmapper simplemap for cells of type $not.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000001110 for cells of type $lcu.
+No more expansions possible.
+<suppressed ~1311 debug messages>
+
+8.23. Executing OPT pass (performing simple optimizations).
+
+8.23.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hnx_su_rowr.
+<suppressed ~1149 debug messages>
+
+8.23.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hnx_su_rowr'.
+Computing hashes of 1682 cells of `\ot_hnx_su_rowr'.
+Finding duplicate cells in `\ot_hnx_su_rowr'.
+Computing hashes of 1677 cells of `\ot_hnx_su_rowr'.
+Finding duplicate cells in `\ot_hnx_su_rowr'.
+Computing hashes of 1676 cells of `\ot_hnx_su_rowr'.
+Finding duplicate cells in `\ot_hnx_su_rowr'.
+<suppressed ~18 debug messages>
+Removed a total of 6 cells.
+
+8.23.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+8.23.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hnx_su_rowr..
+Removed 206 unused cells and 741 unused wires.
+<suppressed ~207 debug messages>
+
+8.23.5. Finished fast OPT passes.
+
+8.24. Executing ABC pass (technology mapping using ABC).
+
+8.24.1. Extracting gate netlist of module `\ot_hnx_su_rowr' to `<abc-temp-dir>/input.blif'..
+
+8.24.1.1. Executed ABC.
+Extracted 1341 gates and 1465 wires to a netlist network with 123 inputs and 87 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled Aug 27 2026 23:31:10)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_library <abc-temp-dir>/stdcells.genlib 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &fraig -x 
+ABC: + &put 
+ABC: + scorr 
+ABC: Warning: The network is combinational (run "fraig" or "fraig_sweep").
+ABC: + dc2 
+ABC: + dretime 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &dch -f 
+ABC: + &nf 
+ABC: + &put 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+ABC: YOSYS_ABC_DONE 
+
+8.24.1.2. Re-integrating ABC results.
+ABC RESULTS:               AND cells:      272
+ABC RESULTS:            ANDNOT cells:       13
+ABC RESULTS:               MUX cells:        1
+ABC RESULTS:              NAND cells:      269
+ABC RESULTS:               NOR cells:        9
+ABC RESULTS:                OR cells:       82
+ABC RESULTS:              XNOR cells:      110
+ABC RESULTS:               XOR cells:      159
+ABC RESULTS:        internal signals:     1255
+ABC RESULTS:           input signals:      123
+ABC RESULTS:          output signals:       87
+Removing temp directory.
+Removing global temp directory.
+
+8.25. Executing OPT pass (performing simple optimizations).
+
+8.25.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hnx_su_rowr.
+
+8.25.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hnx_su_rowr'.
+Computing hashes of 1044 cells of `\ot_hnx_su_rowr'.
+Finding duplicate cells in `\ot_hnx_su_rowr'.
+Removed a total of 0 cells.
+
+8.25.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+8.25.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hnx_su_rowr..
+Removed 0 unused cells and 675 unused wires.
+<suppressed ~8 debug messages>
+
+8.25.5. Finished fast OPT passes.
+
+8.26. Executing HIERARCHY pass (managing design hierarchy).
+Attribute `top' found on module `ot_hnx_su_rowr'. Setting top module to ot_hnx_su_rowr.
+
+8.26.1. Analyzing design hierarchy..
+Top module:  \ot_hnx_su_rowr
+
+8.26.2. Analyzing design hierarchy..
+Top module:  \ot_hnx_su_rowr
+Removed 0 unused modules.
+
+8.27. Printing statistics.
+
+=== ot_hnx_su_rowr ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      850 wires
+     1444 wire bits
+       22 public wires
+      616 public wire bits
+        7 ports
+      285 port bits
+     1044 cells
+       13   $_ANDNOT_
+      272   $_AND_
+        1   $_DFFE_PN0P_
+      128   $_DFF_PN0_
+        1   $_MUX_
+      269   $_NAND_
+        9   $_NOR_
+       82   $_OR_
+      110   $_XNOR_
+      159   $_XOR_
+
+8.28. Executing CHECK pass (checking for obvious problems).
+Checking module ot_hnx_su_rowr...
+Found and reported 0 problems.
+
+9. Executing DFFLIBMAP pass (mapping DFF cells to sequential cells from liberty file).
+  cell DFFLQNx1_ASAP7_75t_R (inv, pins=3, area=0.29) is a direct match for cell type $_DFF_N_.
+  cell DFFHQNx1_ASAP7_75t_R (inv, pins=3, area=0.29) is a direct match for cell type $_DFF_P_.
+  cell DFFASRHQNx1_ASAP7_75t_R (inv, pins=5, area=0.38) is a direct match for cell type $_DFFSR_PNN_.
+  final dff cell mappings:
+    \DFFLQNx1_ASAP7_75t_R _DFF_N_ (.CLK( C), .D( D), .QN(~Q));
+    \DFFHQNx1_ASAP7_75t_R _DFF_P_ (.CLK( C), .D( D), .QN(~Q));
+    unmapped dff cell: $_DFF_NN0_
+    unmapped dff cell: $_DFF_NN1_
+    unmapped dff cell: $_DFF_NP0_
+    unmapped dff cell: $_DFF_NP1_
+    unmapped dff cell: $_DFF_PN0_
+    unmapped dff cell: $_DFF_PN1_
+    unmapped dff cell: $_DFF_PP0_
+    unmapped dff cell: $_DFF_PP1_
+    unmapped dff cell: $_DFFE_NN_
+    unmapped dff cell: $_DFFE_NP_
+    unmapped dff cell: $_DFFE_PN_
+    unmapped dff cell: $_DFFE_PP_
+    unmapped dff cell: $_DFFSR_NNN_
+    unmapped dff cell: $_DFFSR_NNP_
+    unmapped dff cell: $_DFFSR_NPN_
+    unmapped dff cell: $_DFFSR_NPP_
+    \DFFASRHQNx1_ASAP7_75t_R _DFFSR_PNN_ (.CLK( C), .D( D), .QN(~Q), .RESETN( R), .SETN( S));
+    unmapped dff cell: $_DFFSR_PNP_
+    unmapped dff cell: $_DFFSR_PPN_
+    unmapped dff cell: $_DFFSR_PPP_
+
+9.1. Executing DFFLEGALIZE pass (convert FFs to types supported by the target).
+<suppressed ~8 debug messages>
+Mapping DFF cells in module `\ot_hnx_su_rowr':
+  mapped 129 $_DFFSR_PNN_ cells to \DFFASRHQNx1_ASAP7_75t_R cells.
+
+10. Executing ABC pass (technology mapping using ABC).
+
+10.1. Extracting gate netlist of module `\ot_hnx_su_rowr' to `<abc-temp-dir>/input.blif'..
+
+10.1.1. Executed ABC.
+Extracted 1045 gates and 1298 wires to a netlist network with 252 inputs and 216 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled Aug 27 2026 23:31:10)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_scl /tmp/yosys-liberty-scl-cache/yosys_merged_3cc8c9fd.scl 
+ABC: Warning: Detected 2 multi-output cells (for example, "FAx1_ASAP7_75t_R").
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &fraig -x 
+ABC: + &put 
+ABC: + scorr 
+ABC: Warning: The network is combinational (run "fraig" or "fraig_sweep").
+ABC: + dc2 
+ABC: + dretime 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &dch -f 
+ABC: + &nf 
+ABC: + &put 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+ABC: YOSYS_ABC_DONE 
+
+10.1.2. Re-integrating ABC results.
+ABC RESULTS:   A2O1A1Ixp33_ASAP7_75t_R cells:        5
+ABC RESULTS:   A2O1A1O1Ixp25_ASAP7_75t_R cells:        5
+ABC RESULTS:   AND2x2_ASAP7_75t_R cells:       28
+ABC RESULTS:   AND3x1_ASAP7_75t_R cells:       18
+ABC RESULTS:   AND4x1_ASAP7_75t_R cells:        7
+ABC RESULTS:   AND5x1_ASAP7_75t_R cells:        2
+ABC RESULTS:   AO21x1_ASAP7_75t_R cells:       14
+ABC RESULTS:   AO22x1_ASAP7_75t_R cells:        7
+ABC RESULTS:   AOI211xp5_ASAP7_75t_R cells:        5
+ABC RESULTS:   AOI21xp33_ASAP7_75t_R cells:       28
+ABC RESULTS:   AOI221xp5_ASAP7_75t_R cells:        1
+ABC RESULTS:   AOI22xp33_ASAP7_75t_R cells:       10
+ABC RESULTS:   AOI31xp33_ASAP7_75t_R cells:        3
+ABC RESULTS:   AOI32xp33_ASAP7_75t_R cells:        1
+ABC RESULTS:   INVx1_ASAP7_75t_R cells:      186
+ABC RESULTS:   MAJIxp5_ASAP7_75t_R cells:       65
+ABC RESULTS:   MAJx2_ASAP7_75t_R cells:        4
+ABC RESULTS:   NAND2xp33_ASAP7_75t_R cells:       84
+ABC RESULTS:   NAND3xp33_ASAP7_75t_R cells:       27
+ABC RESULTS:   NAND4xp25_ASAP7_75t_R cells:       14
+ABC RESULTS:   NAND5xp2_ASAP7_75t_R cells:        1
+ABC RESULTS:   NOR2xp33_ASAP7_75t_R cells:       38
+ABC RESULTS:   NOR3xp33_ASAP7_75t_R cells:       27
+ABC RESULTS:   NOR4xp25_ASAP7_75t_R cells:        1
+ABC RESULTS:   NOR5xp2_ASAP7_75t_R cells:        1
+ABC RESULTS:   O2A1O1Ixp33_ASAP7_75t_R cells:        8
+ABC RESULTS:   OA211x2_ASAP7_75t_R cells:        6
+ABC RESULTS:   OA21x2_ASAP7_75t_R cells:       12
+ABC RESULTS:   OAI21xp33_ASAP7_75t_R cells:       17
+ABC RESULTS:   OAI221xp5_ASAP7_75t_R cells:        2
+ABC RESULTS:   OAI22xp33_ASAP7_75t_R cells:        2
+ABC RESULTS:   OAI31xp33_ASAP7_75t_R cells:        3
+ABC RESULTS:   OR2x2_ASAP7_75t_R cells:        9
+ABC RESULTS:   OR3x1_ASAP7_75t_R cells:        8
+ABC RESULTS:   OR4x1_ASAP7_75t_R cells:        1
+ABC RESULTS:   XNOR2xp5_ASAP7_75t_R cells:      173
+ABC RESULTS:   XOR2xp5_ASAP7_75t_R cells:       39
+ABC RESULTS:        internal signals:      830
+ABC RESULTS:           input signals:      252
+ABC RESULTS:          output signals:      216
+Removing temp directory.
+Removing global temp directory.
+
+11. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hnx_su_rowr..
+Removed 0 unused cells and 1297 unused wires.
+<suppressed ~2 debug messages>
+
+12. Printing statistics.
+
+=== ot_hnx_su_rowr ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+      797        - wires
+     1391        - wire bits
+       21        - public wires
+      615        - public wire bits
+        7        - ports
+      285        - port bits
+      991  122.705 cells
+        5    0.437   A2O1A1Ixp33_ASAP7_75t_R
+        5    0.656   A2O1A1O1Ixp25_ASAP7_75t_R
+       28    2.449   AND2x2_ASAP7_75t_R
+       18    1.575   AND3x1_ASAP7_75t_R
+        7    0.714   AND4x1_ASAP7_75t_R
+        2    0.233   AND5x1_ASAP7_75t_R
+       14    1.225   AO21x1_ASAP7_75t_R
+        7    0.919   AO22x1_ASAP7_75t_R
+        5    0.437   AOI211xp5_ASAP7_75t_R
+       28    2.041   AOI21xp33_ASAP7_75t_R
+        1    0.102   AOI221xp5_ASAP7_75t_R
+       10    0.875   AOI22xp33_ASAP7_75t_R
+        3    0.262   AOI31xp33_ASAP7_75t_R
+        1    0.102   AOI32xp33_ASAP7_75t_R
+      129   48.901   DFFASRHQNx1_ASAP7_75t_R
+      186    8.136   INVx1_ASAP7_75t_R
+       65    6.634   MAJIxp5_ASAP7_75t_R
+        4    0.525   MAJx2_ASAP7_75t_R
+       84    4.899   NAND2xp33_ASAP7_75t_R
+       27    1.968   NAND3xp33_ASAP7_75t_R
+       14    1.225   NAND4xp25_ASAP7_75t_R
+        1    0.102   NAND5xp2_ASAP7_75t_R
+       38    2.216   NOR2xp33_ASAP7_75t_R
+       27    1.968   NOR3xp33_ASAP7_75t_R
+        1    0.087   NOR4xp25_ASAP7_75t_R
+        1    0.102   NOR5xp2_ASAP7_75t_R
+        8      0.7   O2A1O1Ixp33_ASAP7_75t_R
+        6      0.7   OA211x2_ASAP7_75t_R
+       12    1.225   OA21x2_ASAP7_75t_R
+       17    1.239   OAI21xp33_ASAP7_75t_R
+        2    0.204   OAI221xp5_ASAP7_75t_R
+        2    0.175   OAI22xp33_ASAP7_75t_R
+        3    0.262   OAI31xp33_ASAP7_75t_R
+        9    0.787   OR2x2_ASAP7_75t_R
+        8      0.7   OR3x1_ASAP7_75t_R
+        1    0.102   OR4x1_ASAP7_75t_R
+      173   22.701   XNOR2xp5_ASAP7_75t_R
+       39    5.118   XOR2xp5_ASAP7_75t_R
+
+   Chip area for module '\ot_hnx_su_rowr': 122.705280
+     of which used for sequential elements: 48.901320 (39.85%)
+
+End of script. Logfile hash: 2f64ac773a, time: 1.08s, user: 0.40s, system: 0.14s, MEM: 141.64 MB peak
+Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)
+Time spent: 51% 2x abc (0 sec), 12% 1x dfflibmap (0 sec), ...
