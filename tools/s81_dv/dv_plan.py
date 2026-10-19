@@ -707,7 +707,9 @@ def build():
     ys, yn = streets[0] + STREET / 2, streets[1] + STREET / 2
     for side, xl in (('W', 0.0), ('E', DIE_W - 260)):
         for t, yc in (('S', ys), ('N', yn)):
-            P.block(f'lk_{side}{t}0', 'ot_pdie_ucie' if t == 'S' else 'ot_pdie_serdes', 'link', 'edge', xl, yc - 2300, 260, 2250)
+            # S81-LINKTO 10-18 (coordinator 0hn decision 2): UCIe cannot cross the switch and every end-slice port crosses
+            # it (one-tier switched array) -> all S-tier lanes are SerDes (was ot_pdie_ucie on lane 0 of the S tier)
+            P.block(f'lk_{side}{t}0', 'ot_pdie_serdes', 'link', 'edge', xl, yc - 2300, 260, 2250)
             P.block(f'lk_{side}{t}1', 'ot_pdie_serdes', 'link', 'edge', xl, yc + 50, 260, 2250)
 
     # ---------------------------------------------------------------- links

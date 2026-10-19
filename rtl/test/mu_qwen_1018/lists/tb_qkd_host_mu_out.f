@@ -1,0 +1,13 @@
+rtl/test/mu_qwen_1018/tb_qkd_host_mu_out.sv
+rtl/qwen_sys/host_integrated_20261014/qkd_host_fullcontrol_observed.sv
+rtl/qwen_sys/host_20261013/qkd_host_rst_role_pins.sv
+rtl/qwen_sys/ot_qwen_sys_rst_seq.sv
+rtl/lib/ot_reset_sync.sv
+rtl/qwen_sys/host_integrated_20261014/qkd_host_if_pins_observed.sv
+rtl/qwen_sys/host_20261013/qkd_host_pin_channel.sv
+rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv
+rtl/qwen_sys/host_20261013/qkd_host_ctl_service_pins.sv
+rtl/physical/ot_qwen_host_ctl.sv
+rtl/qwen_sys/system_20261008/ot_qfd_pkgctl.sv
+rtl/qwen_sys/host_20261013/qkd_host_csr_service_pins.sv
+rtl/qwen_sys/host_20261013/qkd_host_sys_csr_service.sv

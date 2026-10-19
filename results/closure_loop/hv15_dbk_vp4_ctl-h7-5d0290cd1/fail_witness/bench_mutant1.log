@@ -1,0 +1,5 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job hv15_dbk_vp4_ctl-h7-5d0290cd1 bench bench_mutant1 host ot-agidock128 run /srv/opentallas-scratch/claude/closure-loop/hv15_dbk_vp4_ctl-h7-5d0290cd1 log cl/bench_mutant1.a1b1.log captured 2026-10-19T00:40:17-07:00
+# fail_regex 'write beat mismatch'
+FATAL: rtl/hbm_accel/generic/peers/static/tb_dma_back_vp4_banks_equiv.sv:46: write beat mismatch cycle690 bank0
+       Time: 6900000  Scope: tb_dma_back_vp4_banks_equiv.$ivl_for_loop27

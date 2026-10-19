@@ -1,0 +1,11 @@
+MAIN users 4 steps 400 retired 400 max_outstanding 4 errors 0
+FAULT mode 1 cause bit 87 (first fault bits 1000); 40 steps started, all retired (32 flushed with fault)
+FAULT mode 2 cause bit 84 (first fault bits 0001); 40 steps started, all retired (36 flushed with fault)
+FAULT mode 3 cause bit 86 (first fault bits 0100); 40 steps started, all retired (32 flushed with fault)
+FAULT mode 4 cause bit 85 (first fault bits 0010); 40 steps started, all retired (28 flushed with fault)
+FAULT mode 5 cause bit 87 (first fault bits 1000); 40 steps started, all retired (36 flushed with fault)
+PASS qkd_host_ctl MU users4 steps400 in-order one-edge retire after all 8 dies, hc user=pos[17:16], max outstanding 4; faults die-skip/disagree/overflow/watchdog/unknown-gen fail closed and flush
+- rtl/test/mu_qwen_1018/tb_qkd_host_ctl_mu.sv:149: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 5us; walltime 0.001 s; speed 3.239 ms/s
+- Verilator: cpu 0.001 s on 1 threads; allocated 7 MB

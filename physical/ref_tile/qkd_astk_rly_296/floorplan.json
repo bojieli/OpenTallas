@@ -1,7 +1,7 @@
 {
  "schema": "opentallas.ref_tile.floorplan.v1",
  "name": "qkd_astk_rly_296",
- "top": "qkd_astk_rly_296",
+ "top": "qkd_astk_rly_296_fl",
  "kind": "tile",
  "die": [
   0,
@@ -45,6 +45,9 @@
  "findings": [],
  "referenced": [
   "rtl/qwen_sys/split_20261014/qkd_astk_phys.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/lib/ot_pin_land.sv",
+  "rtl/lib/face_land/qkd_astk_rly_296_fl.sv",
   "physical/ref_tile/qkd_astk_rly_296/kit.env",
   "physical/ref_tile/qkd_astk_rly_296/clock.sdc",
   "physical/ref_tile/qkd_astk_rly_296/signoff.sdc",

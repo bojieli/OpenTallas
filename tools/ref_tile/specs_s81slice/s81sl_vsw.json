@@ -29,7 +29,25 @@
   "macros": [
     {
       "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
-      "count": 2
+      "count": 1,
+      "inst": "*u_la*u_m",
+      "at": [
+        107.568,
+        71.28
+      ],
+      "at_exact": true,
+      "orient": "R0"
+    },
+    {
+      "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+      "count": 1,
+      "inst": "*u_lb*u_m",
+      "at": [
+        107.568,
+        112.368
+      ],
+      "at_exact": true,
+      "orient": "R0"
     }
   ],
   "pins": {
@@ -64,12 +82,12 @@
       "v": "M3 M5"
     }
   },
-  "structural_change": "S81-SLICE (stream 0cm, owner-approved DV p4): new beat sub-leaf of the distributed-vector slice (SU lane engine, helper S81-SLICE-SU); flop-first pins, die hold budget.",
+  "structural_change": "S81-SLICE (stream 0cm, owner-approved DV p4): new beat sub-leaf of the distributed-vector slice (SU lane engine, helper S81-SLICE-SU); flop-first pins, die hold budget. OWNERS-S81/VSW 10-18: kit carried from the uncommitted s81sl-su-1017 worktree onto claude/rtl-build-s81-1018 (vsw RTL byte-identical to dd0d065b8; pins already flop-first in/out + ot_rst_relay, no cycle change); benches through vs/vp ports re-run on this RTL (MUT 0 L0/L2 PASS, MUT 1-6 FAIL, witnesses committed).",
   "job": {
-    "owner": "Claude:S81-SLICE-SU",
-    "branch": "claude/s81sl-su-1017",
+    "owner": "Claude:OWNERS-S81/VSW",
+    "branch": "claude/owners-s81-vsw-1018",
     "tag": "s81sl_vsw",
-    "purpose": "S81-SLICE-SU: beat-leaf SW lane (one hub ot_s81_su_swl) to closure (TT setup / FF hold / DRC 0 + native audit).",
+    "purpose": "OWNERS-S81/VSW: slice hub SW lane (one hub ot_s81_su_swl, child of ot_s81sl_leaf in ot_s81sl_slice) to closure (TT setup / FF hold / DRC 0 + native audit).",
     "extra_paths": [
       "rtl/dsrom_sys/s81_dv/slice",
       "rtl/dsrom_sys/s81_suhc",
@@ -84,7 +102,8 @@
       "tools/hdc_golden.py",
       "tools/hdc_golden_v41.py",
       "tools/rtl_hdc_v41_blockdot_campaign.py",
-      "tools/dsrom_su_swiglu.py"
+      "tools/dsrom_su_swiglu.py",
+      "results/rtl/owners_s81_vsw_1018"
     ],
     "benches": [
       {
@@ -96,10 +115,70 @@
         "peak_ram_gb": 6
       },
       {
-        "name": "slvs_mut1",
-        "cmd": "bash tools/s81_slice/vs_bench.sh {RUN}/slvs_mut1 1 L0",
+        "name": "slvs_exact_L2",
+        "cmd": "bash tools/s81_slice/vs_bench.sh {RUN}/slvs_exact_L2 0 L2",
         "expect": "pass",
-        "pass_regex": "^NEGATIVE_CONTROL_FAILED_AS_EXPECTED MUT=1 L0$",
+        "pass_regex": "^PASS vs MUT=0 L2$",
+        "threads": 4,
+        "peak_ram_gb": 6
+      },
+      {
+        "name": "slvs_mut1",
+        "note": "mutant 1: SW weight",
+        "cmd": "bash tools/s81_slice/vs_bench.sh {RUN}/slvs_mut1 1 L0",
+        "expect": "fail",
+        "fail_regex": "^NEGATIVE_CONTROL_FAILED_AS_EXPECTED MUT=1 L0$",
+        "fail_witness": "results/rtl/owners_s81_vsw_1018/witness_m1_L0.log",
+        "threads": 4,
+        "peak_ram_gb": 6
+      },
+      {
+        "name": "slvs_mut2",
+        "note": "mutant 2: RB bias",
+        "cmd": "bash tools/s81_slice/vs_bench.sh {RUN}/slvs_mut2 2 L0",
+        "expect": "fail",
+        "fail_regex": "^NEGATIVE_CONTROL_FAILED_AS_EXPECTED MUT=2 L0$",
+        "fail_witness": "results/rtl/owners_s81_vsw_1018/witness_m2_L0.log",
+        "threads": 4,
+        "peak_ram_gb": 6
+      },
+      {
+        "name": "slvs_mut3",
+        "note": "mutant 3: QR inverse",
+        "cmd": "bash tools/s81_slice/vs_bench.sh {RUN}/slvs_mut3 3 L0",
+        "expect": "fail",
+        "fail_regex": "^NEGATIVE_CONTROL_FAILED_AS_EXPECTED MUT=3 L0$",
+        "fail_witness": "results/rtl/owners_s81_vsw_1018/witness_m3_L0.log",
+        "threads": 4,
+        "peak_ram_gb": 6
+      },
+      {
+        "name": "slvs_mut4",
+        "note": "mutant 4: MOE early BF16 partials",
+        "cmd": "bash tools/s81_slice/vs_bench.sh {RUN}/slvs_mut4 4 L0",
+        "expect": "fail",
+        "fail_regex": "^NEGATIVE_CONTROL_FAILED_AS_EXPECTED MUT=4 L0$",
+        "fail_witness": "results/rtl/owners_s81_vsw_1018/witness_m4_L0.log",
+        "threads": 4,
+        "peak_ram_gb": 6
+      },
+      {
+        "name": "slvs_mut5",
+        "note": "mutant 5: QB halves",
+        "cmd": "bash tools/s81_slice/vs_bench.sh {RUN}/slvs_mut5 5 L0",
+        "expect": "fail",
+        "fail_regex": "^NEGATIVE_CONTROL_FAILED_AS_EXPECTED MUT=5 L0$",
+        "fail_witness": "results/rtl/owners_s81_vsw_1018/witness_m5_L0.log",
+        "threads": 4,
+        "peak_ram_gb": 6
+      },
+      {
+        "name": "slvs_mut6",
+        "note": "mutant 6: RA row shift",
+        "cmd": "bash tools/s81_slice/vs_bench.sh {RUN}/slvs_mut6 6 L0",
+        "expect": "fail",
+        "fail_regex": "^NEGATIVE_CONTROL_FAILED_AS_EXPECTED MUT=6 L0$",
+        "fail_witness": "results/rtl/owners_s81_vsw_1018/witness_m6_L0.log",
         "threads": 4,
         "peak_ram_gb": 6
       }
@@ -112,35 +191,36 @@
     "reason": "Source-registered (S81-SLICE-SU): every data input lands in a flop at the pin (the *_c / *_q capture flops) and every output is a flop; recipe-3 pin_regs would add a second unpriced stage on every slice seam."
   },
   "util": 0.52,
-  "std_area_um2": 12000,
+  "std_area_um2": 14200,
   "pin_ranges": {
     "i_v": [
       6.48,
-      9.246
+      9.273
     ],
     "i_d": [
-      9.246,
-      166.441
+      9.273,
+      173.359
     ],
     "i_w": [
-      166.441,
-      187.981
+      173.359,
+      195.759
     ],
     "i_lim": [
-      187.981,
-      209.52
+      195.759,
+      218.16
     ],
     "o_v": [
       6.48,
-      11.618
+      11.749
     ],
     "o_d": [
-      11.618,
-      204.382
+      11.749,
+      212.891
     ],
     "o_f": [
-      204.382,
-      209.52
+      212.891,
+      218.16
     ]
-  }
+  },
+  "macro_note": "the two SRAM wait lines abutted N-S against the pin-free E face, their W-face pins toward the lane logic (gate 1: centred macros split the core, TT clock spread 121 ps)"
 }

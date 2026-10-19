@@ -1,0 +1,17 @@
+{
+ "schema": "opentallas.tile_visual_review.v1",
+ "tile": "qfd_sys_face_mu_dhuser",
+ "reviewer": "coordinator (2026-10-19 ~08:10)",
+ "verdict": "APPROVED",
+ "time": "2026-10-19T08:10:00-07:00",
+ "gate_commit": "dc1f3496e",
+ "checklist": {
+  "lattice": "PASS: one ROM 4096x72, now with full-width cell rows above it",
+  "std_cell_band": "PASS: std-cell columns W/E of the ROM joined by the rows above it (no power island; check_power_grid VDD+VSS PASS)",
+  "pin_spread": "PASS: 115 pins on the W face (abuts the sys face)",
+  "clock_entry": "PASS: W face; pin-flop spread TT 9.0 / FF 8.2",
+  "shape": "PASS: 84.24x71.28 (+2.16 um height vs the approved k2 for the PDN island fix), GRT ovf 0, setup +177 / hold +52"
+ },
+ "notes": "Re-review after PSM-0069 VDD connectivity fail on k2; outline height only.",
+ "geometry_sha256": "9e0d1df1537ae6a4769740bcf7d486cb0ef9bffa65702b72587bf86f3b489e7a"
+}

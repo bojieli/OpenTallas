@@ -1911,6 +1911,87 @@
   },
   {
    "design": "r25gq",
+   "unit": "ATT.D4G.PV_MERGE: on-die cross-SM ATT.PV merge (SU lane-store pairwise tree + COLL ring all-gather + top levels in attend.norm; previously unpriced)",
+   "group": "ATT.D4G.PV_MERGE",
+   "measured": 400.8,
+   "price": 0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": null,
+   "e2e_loss_pct": 2.463,
+   "binding_workload": "ds_ar",
+   "per_workload": {
+    "ds_ar": {
+     "model": "SU edge model from the RTL constants of the merge bench (start 5, fill +13, lane LAT 30, store read +3, drain +7, 3:4 serial) + d4g ring all-gather (ag_cycles)",
+     "base_cycles": 629775.1,
+     "cycles": 645676.5,
+     "added_cycles": 15901.4,
+     "e2e_loss_pct": 2.463
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/rtl/hbm_ds_layer_tput_1018/hbm_attgap_1019",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-19",
+   "status": "proposed",
+   "note": "exactness benched on the real N512 SU arithmetic with the RTL PV nodes (golden pairwise tree incl. +0 pads, final == fixture PV): RTL bench RUNNING (tb_su_static_arithmetic build >120 GB, ot-epyc6; pending_results HBM-ATTGAP); python golden tree of the RTL nodes == fixture PV; cycles MODELLED (not a die run). HBM-ATTGAP 10-19.",
+   "share_basis": "modelled"
+  },
+  {
+   "design": "r25gq",
+   "unit": "ATT.D4G.SPAN: ATT.QK + ATT.PV on the d4g die SM master (GEN2b ot_hbm_accel_smh_attn, real DS L2 rows, busiest SM KV8), per T640 layer",
+   "group": "ATT.D4G.SPAN",
+   "measured": 1523,
+   "price": 1355,
+   "unit_of_measure": "cycles",
+   "unit_ratio": 1.124,
+   "e2e_loss_pct": 1.004,
+   "binding_workload": "ds_ar",
+   "per_workload": {
+    "ds_ar": {
+     "model": "d4g price5 priced_layers: attend.qk/pv serial on every T640 layer's critical path; the record at its measured span (first command word -> last result)",
+     "base_cycles": 629775.1,
+     "cycles": 636159.1,
+     "added_cycles": 6384,
+     "e2e_loss_pct": 1.004
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/rtl/hbm_ds_layer_tput_1018/veh_att_1019/unit/L2_pos.json",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-19",
+   "status": "proposed",
+   "note": "VEH-ATT 07a99bc0a: 20/20 ops bit-exact; QK 684 (KV8) / 660 (KV4), PV 839 / 815 vs base 547 / 808; 38 T640 layers (T128 not measured, kept at price). HBM-ATTGAP 10-19.",
+   "share_basis": "modelled"
+  },
+  {
+   "design": "r25gq",
+   "unit": "ATT.D4G.SUBRUN32: QK / PV as two 32-row sub-runs a SM (programme residency: one resident QK + PV copy, 1,019 / 971 of 1,024 words; no RTL)",
+   "group": "ATT.D4G.SUBRUN32",
+   "measured": 509.0,
+   "price": 0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": null,
+   "e2e_loss_pct": 2.98,
+   "binding_workload": "ds_ar",
+   "per_workload": {
+    "ds_ar": {
+     "model": "sub-run spans summed + issuer go bubble 5, minus the one-op spans, per T640 layer",
+     "base_cycles": 629775.1,
+     "cycles": 649117.1,
+     "added_cycles": 19342,
+     "e2e_loss_pct": 2.98
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/rtl/hbm_ds_layer_tput_1018/hbm_attgap_1019",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-19",
+   "status": "proposed",
+   "note": "replaces a 1,531-word one-op programme that cannot be resident (1,024-word svg/xc programme SRAM; reinstall ~61k ingress edges a SM op). Alternative BIGPROG (2,048-word programme stores, SM-service tile re-close) would save this row; not taken (closure first, owner: HBM accepts AR loss without numerics change). Window staging refresh (DMA, 0 critical cycles) removes per-token descriptor/programme changes. HBM-ATTGAP 10-19.",
+   "share_basis": "modelled"
+  },
+  {
+   "design": "r25gq",
    "unit": "ATT.QK + ATT.PV on the SM engines (owner option B; DS-V4.1 T640/T128 records, canonical KV8 528 B / KV4 288 B rows)",
    "group": "ATT",
    "measured": 53472.0,
@@ -1937,46 +2018,52 @@
    "evidence": "results/hbm_sm_attention_1015/b_measured_model.json",
    "evidence_grade": "committed_bench",
    "date": "2026-10-15",
-   "status": "proposed",
+   "status": "superseded",
    "note": "per-token attention cycles at measured spans (QK 547/411, PV 808/580 per T640/T128 record, exposed) vs A price 339.144/147.144 a record (38 T640 + 2 T128 layers); exposed -4.57 % e2e (2,024.7 vs 2,121.8 tok/s), KV-prefetched -3.22 % (2,053.5). Structural: dedicated ATT tiles retired (111.1 mm2 / ~161 W freed). Spans are component-shape (r6 bench_r6_canonical, 12/12 gates); SM-element bench r2 in progress; first access, publish, cross-SM merge MODEL. qwen_ar row pending the r2 Qwen measurement (standard 128-B rows + in-SM fold). NOTE r25gq proposed total is already far over 15 % from SM.MATVEC/IDX rows (owner decision needed independent of this row).",
-   "share_basis": "modelled"
+   "share_basis": "modelled",
+   "superseded": {
+    "from_status": "proposed",
+    "by": "d4g price5 (547/808 are the d4g base_cost) + ATT.D4G.* rows",
+    "reason": "HBM-ATTGAP 10-19: the A-price composition of this row is retired by the d4g price; the d4g die measurements are the ATT.D4G rows",
+    "date": "2026-10-19"
+   }
   },
   {
    "design": "r25gq",
-   "unit": "COLL quadrant hard_v5 V6 issue timing (host launch -> first uop effect 5 -> 9 edges; V5 +3 plus the V6 ctl product/combine stage +1)",
+   "unit": "COLL quadrant hard_v5 V6 + COLLPIN issue timing (host launch -> first uop effect 5 -> 10 edges; V5 +3, V6 ctl product/combine +1, COLLPIN issuer input pin registers +1)",
    "group": "COLL.HARD_V5_ISSUE",
-   "measured": 9.0,
+   "measured": 10.0,
    "price": 5.0,
    "unit_of_measure": "cycles",
-   "unit_ratio": 1.8,
-   "e2e_loss_pct": 0.331,
+   "unit_ratio": 2.0,
+   "e2e_loss_pct": 0.414,
    "binding_workload": "ds_ar",
    "per_workload": {
     "ds_ar": {
      "model": "S2 schedule, fixed cycles added to every record of the op",
      "base_cycles": 576702.4,
-     "cycles": 578611.6,
-     "added_cycles": 1909.2,
+     "cycles": 579088.9,
+     "added_cycles": 2386.5,
      "program_records": 642,
-     "added_cycles_per_record": 4.0,
-     "e2e_loss_pct": 0.248
+     "added_cycles_per_record": 5.0,
+     "e2e_loss_pct": 0.31
     },
     "qwen_ar": {
      "model": "S2 schedule, fixed cycles added to every record of the op",
      "base_cycles": 1269120.1,
-     "cycles": 1269412.1,
-     "added_cycles": 292.0,
+     "cycles": 1269509.4,
+     "added_cycles": 389.3,
      "program_records": 3,
-     "added_cycles_per_record": 3.0,
-     "e2e_loss_pct": 0.023
+     "added_cycles_per_record": 4.0,
+     "e2e_loss_pct": 0.031
     }
    },
    "within_unit_limit": true,
    "evidence": "results/arch/hbm_coll_hard_v5_1045/bench_q2_v6 (claude/hnl-coll-ctl-1045; V5 receipt bench_q2_5bb671b57)",
    "evidence_grade": "committed_bench",
-   "date": "2026-10-16",
+   "date": "2026-10-18",
    "status": "proposed",
-   "note": "H-NETLIST/COLL 1045 V5 issue timing of the hard-hierarchy COLL quadrant (ot_hfd_coll_q{2,3}_hard_v5): HOST frame capture +1 at the fj pin registers, uop stream +2 for the pipelined iteration products (ctl gate in->reg -959 ps on the one-cycle 32x16 multiply), so every issue-path output is +3 edges vs host_v4 (lockstep bench tb_hgi_coll_q_hard_v5 SH=3/SHP=1, q2 gate PASS 5bb671b57). V6 (H-ELEM 14:20 accepted +1: ctl3 gate combine/field adders -322 ps, 16x8 stage ~845 ps). Charged conservatively as 4 fixed cycles on EVERY COLL record of the S2 schedule (every record treated as its own programme launch on the critical path; one launch a programme would cost ~3 cycles a token). Programme frames are +1 but frame gaps are relative (unchanged); child faults +1 are exceptional. Compiler constants: tools/hbm_coll_static/parent_timing.py (hard_v5 selectable; host_v4 unchanged; V4 constants on hard_v5 FAIL the lockstep check)."
+   "note": "H-NETLIST/COLL 1045 V5 issue timing of the hard-hierarchy COLL quadrant (ot_hfd_coll_q{2,3}_hard_v5): HOST frame capture +1 at the fj pin registers, uop stream +2 for the pipelined iteration products (ctl gate in->reg -959 ps on the one-cycle 32x16 multiply), so every issue-path output is +3 edges vs host_v4 (lockstep bench tb_hgi_coll_q_hard_v5 SH=3/SHP=1, q2 gate PASS 5bb671b57). V6 (H-ELEM 14:20 accepted +1: ctl3 gate combine/field adders -322 ps, 16x8 stage ~845 ps). Charged conservatively as 4 fixed cycles on EVERY COLL record of the S2 schedule (every record treated as its own programme launch on the critical path; one launch a programme would cost ~3 cycles a token). Programme frames are +1 but frame gaps are relative (unchanged); child faults +1 are exceptional. Compiler constants: tools/hbm_coll_static/parent_timing.py (hard_v5 selectable; host_v4 unchanged; V4 constants on hard_v5 FAIL the lockstep check). COLLPIN 10-18 (coordinator HANDOFF 0gd: issuer input pin registers, +1 issue edge, latency accepted): lockstep SH 4 -> 5 (tb_hgi_coll_q_hard_v5 + scen8 occupancy edge; branch claude/hd4g5-collpin); parent_timing.py hard_v5 = SH 5. Cycles per record 4 -> 5 (qwen 3 -> 4); added cycles and e2e scaled LINEARLY from the +4 S2 run (fixed cycles a record), not re-priced."
   },
   {
    "design": "r25gq",
@@ -2682,16 +2769,16 @@
   },
   "r25gq": {
    "accepted_pct": 7.485,
-   "proposed_pct": 115.647,
-   "accepted_plus_proposed_pct": 123.132,
+   "proposed_pct": 117.52,
+   "accepted_plus_proposed_pct": 125.005,
    "limit_pct": 15.0,
    "accepted_rows": 2,
-   "proposed_rows": 23,
+   "proposed_rows": 25,
    "headroom_pct": 7.515,
    "owner_exception_rows": 1,
    "over_limit_by_owner_exception": false,
-   "superseded_rows": 0,
-   "superseded_pct_not_counted": 0
+   "superseded_rows": 1,
+   "superseded_pct_not_counted": 4.574
   }
  }
 }

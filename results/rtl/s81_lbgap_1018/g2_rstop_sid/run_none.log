@@ -1,0 +1,21 @@
+RSTOP_SID 0 col 0 tier S own_E 7 own_W -
+RSTOP_SID 1 col 0 tier N own_E 7 own_W -
+RSTOP_SID 2 col 1 tier S own_E 6 own_W 1
+RSTOP_SID 3 col 1 tier N own_E 6 own_W 1
+RSTOP_SID 4 col 2 tier S own_E 5 own_W 2
+RSTOP_SID 5 col 2 tier N own_E 5 own_W 2
+RSTOP_SID 6 col 3 tier S own_E 4 own_W 3
+RSTOP_SID 7 col 3 tier N own_E 4 own_W 3
+RSTOP_SID 8 col 4 tier S own_E 3 own_W 4
+RSTOP_SID 9 col 4 tier N own_E 3 own_W 4
+RSTOP_SID 10 col 5 tier S own_E 2 own_W 5
+RSTOP_SID 11 col 5 tier N own_E 2 own_W 5
+RSTOP_SID 12 col 6 tier S own_E 1 own_W 6
+RSTOP_SID 13 col 6 tier N own_E 1 own_W 6
+RSTOP_SID 14 col 7 tier S own_E - own_W 7
+RSTOP_SID 15 col 7 tier N own_E - own_W 7
+PASS rstop_sid 16 stops 144 checks
+- rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_rstop_sid.sv:125: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 63ns; walltime 0.001 s; speed 116.700 us/s
+- Verilator: cpu 0.001 s on 1 threads; allocated 8 MB

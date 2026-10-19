@@ -21,6 +21,13 @@ dv_<inst> stand-ins of the diagnostic case, then runs the STRICT tools/die_port_
                  their region root; link hop 0 forwarded clock = the source master's real forwarded-clock output where
                  its RTL has one (slice ck_line / ck_v / ck_xc), else a clock-forward cell (BUFx8) on the source
                  region's root at the source pin.  Station k+1 ck = station k ck_o (F1).
+  * hop-0 gate   S81-LBGAP/G1 (10-18, LANDING-CONTRACT L3): on every LANDED lane the hop-0 forward cell is a clock gate
+                 (ICGx4, CLK = the source root / the source master's forwarded clock) opened by a released reset, so the
+                 landing's ck_f edge 0 is a calendar source edge G for any flight time dL and wc is cleared while ck_f is
+                 stopped.  Calendar R0 = G + (N mod 2) per lane (R0 = first read edge of the landing, N stations):
+                 the gate enable is the source block's reset leaf, delayed at the source by gate-calendar reset stations
+                 when the source would open early; otherwise the LANDING rs is its leaf delayed at the receiver.  K = E
+                 for every lane (no strap offset); rs releases before the lane's first clock edge reaches the ring.
 """
 from __future__ import annotations
 
@@ -35,13 +42,26 @@ ROOT = Path(__file__).resolve().parents[2]
 GRID = 400.0                      # reset station grid (<= measured reach 405 um per hop)
 FWD = 'BUFx8_ASAP7_75t_R'          # clock-forward cell (hop 0 source)
 INV = 'INVx2_ASAP7_75t_R'
+ICG = 'ICGx4_ASAP7_75t_R'         # S81-LBGAP/G1: hop-0 clock gate of a landed lane (LANDING-CONTRACT L3)
 LAND_W = (70, 276, 512, 562, 682)  # dsfd_dvland_<W> tiles (rtl/dsrom_sys/s81_dv/land/dsfd_dvland.sv)          # reset polarity (active-high block reset pins)
 RST_RLY = {'EW': 'dsfd_rly_1_EW', 'WE': 'dsfd_rly_1_WE', 'NS': 'dsfd_rly_1_NS', 'SN': 'dsfd_rly_1_NS'}   # SN = NS mirrored (MX)
 ORIENT = {'WE': 'R0', 'EW': 'MY', 'NS': 'R90', 'SN': 'R270'}     # dsfd_rly_1_WN (in W, out N) turned to the tree edge
 CELL_MODELS = f'''// ASAP7 standard cells used by the S81-DV bound die top (functional models of library cells, not stand-ins)
 module {FWD} (input A, output Y); assign Y = A; endmodule
 module {INV} (input A, output Y); assign Y = ~A; endmodule
+module {ICG} (input CLK, input ENA, input SE, output GCLK);   // latch transparent while CLK is low, ANDed with CLK
+    reg en_l;
+    /* verilator lint_off COMBDLY */
+    always_latch if (!CLK) en_l = ENA | SE;
+    /* verilator lint_on COMBDLY */
+    assign GCLK = CLK & en_l;
+endmodule
 '''
+
+
+def block_clock(table, master, region):
+    """Use the physical master's declared domain, including peer-clock ports."""
+    return table['masters'][master].get('clock_port', f'ck_{region}')
 
 
 def region_of(bl, pitch):
@@ -58,6 +78,19 @@ def rly_master(b, d, prefix='dsfd_dvrly'):
 
 def git_show(ref, path):
     return subprocess.run(['git', '-C', os.environ.get('OT_GIT_DIR', str(ROOT)), 'show', f'{ref}:{path}'], capture_output=True, check=True).stdout
+
+
+def bundle_age_unequal(land_rows):
+    """S81-LBGAP/G8: multi-lane bundles (<stem>_l<i> into one receiver) whose lanes land at different ages
+    ceil(N/2) + K + 1 -- the receiver consumes the bundle beat in one cycle, so these tear it"""
+    import re as _re
+    g = collections.defaultdict(list)
+    for r in land_rows:
+        m = _re.fullmatch(r'(.+)_l(\d+)', r['link'])
+        if m:
+            g[(m.group(1), r['inst'])].append(r)
+    return [dict(bundle=k[0], dst=k[1], lanes={r['link']: dict(N=r['stages'], E=r['E'], K=r['K'], age=r['age']) for r in v})
+            for k, v in sorted(g.items()) if len({r['age'] for r in v}) > 1]
 
 
 def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, extra_rtl=(), land_plan=None):
@@ -235,6 +268,10 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
         pp = dict(m.get('params', {}))
         if 'hb_param' in m:
             pp[m['hb_param']] = hb
+        if m.get('instance_param'):
+            # S81-LBGAP/G4: string identity parameter = the die instance name (frames: each loads its own ROM image
+            # <OT_ROM_DIR>/<INSTANCE>_cX_Y.viamap.hex), the naming dv_slice_cut --rom-instance uses
+            pp[m['instance_param']] = f'"u_{n}"'
         params[n] = pp
         for s in m.get('straps', []):
             straps.append([mod, s])
@@ -245,7 +282,7 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
     # ------------------------------------------------------------------ netlist
     v = ['// S81-DV REAL-VIEW bound die top (tools/s81_dv/dv_bind.py) -- strict die_port_bind gates it',
          'module dv_die (']
-    io = [f'  input wire ck_{r}' for r in regions] + ['  input wire rst_n']
+    io = [f'  input wire ck_{r}' for r in regions] + [f'  input wire {p}' for p in sorted(T.get('clock_domains', {}))] + ['  input wire rst_n']
     for bl in blocks:
         m = M[bl['master']]
         for tp in m.get('top_ports', []):
@@ -305,10 +342,11 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
             v.append(f'  {bl["master"]} u_{n} ({", ".join(cs)});')
             continue
         mod = m.get('inst_module', {}).get(n, m['module'])
-        cs = [f'.{m["clk"]}(ck_{r})'] + [f'.{x}(ck_{r})' for x in m.get('clk_extra', [])]
+        bc_ = block_clock(T, bl['master'], r)
+        cs = [f'.{m["clk"]}({bc_})'] + [f'.{x}({bc_})' for x in m.get('clk_extra', [])]
         for cp in m.get('clk_peer', []):     # a port clocked by a peer block's root (e.g. ckh = the PHY clock)
             pb_ = [b for b in blocks if b['master'] == cp['master']]
-            cs.append(f".{cp['port']}(ck_{reg[pb_[0]['name']]})")
+            cs.append(f".{cp['port']}({block_clock(T, cp['master'], reg[pb_[0]['name']])})")
         cs += abut_conn.get(n, []) + peer_conn.get(n, [])
         for cport, lanes in ckin.get(n, {}).items():
             wd_ = rtl_widths.get(mod, {}).get(cport, max(lanes) + 1)
@@ -414,34 +452,92 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
         v.append(f'  {mod}{ps} u_{n} ({", ".join(cs)});')
     # landings (S81-LAND2): K = E of the link's die STA window (land plan), assuming the hop-0 gate opens at the
     # receiver's reset release (G = R0); E > 7 needs G - R0 = E - 7 in the reset calendar (recorded per row)
+    # S81-LBGAP/G1 (LANDING-CONTRACT L3): hop-0 gate calendar.  G = first gated edge at the source, R0 = first read
+    # edge of the landing (rc).  The lane clock reaches the ring at G + (N mod 2)/2 + dL (the N half-cycle stations
+    # invert it; dL is the forwarded-clock lag the land-plan E absorbs) while the word captured by station 0 at edge s
+    # is written at epoch s - G + floor(N/2); the compiler's age ceil(N/2) + E + 1 then needs R0 = G + (N mod 2) with
+    # K = E (verified by the lane bench at TT and FF flight).  G_leaf / R_leaf = release edges of the source / receiver
+    # reset leaves; the side that would release early is delayed by gate-calendar stations (dsfd_rly_1, one edge
+    # each) beside its own block (source pin / landing), clocked by that block's root, tapped from one chain per leaf.
+    # The landing rs releases at least T/2 before the first lane clock edge reaches the ring.
+    # PO-SUBMIT (10-19, COORD HANDOFF 0jz): a landing VIEW hardened with the kit reset landing (ref_tile reset_landing
+    # {"enable": true, "stages": RL}: rs -> RL plain ck flops -> core) releases its core RL edges after its rs leaf, so the
+    # receiver's release edge is R_leaf + RL.  Bind table "landing_reset_stages": {master: RL} names it for the views
+    # actually bound (absent = 0 = the pre-po2 views without a kit landing).  The calendar below then opens the hop-0
+    # gate RL edges later too (more source-side gate-calendar stations, or fewer receiver-side ones): K = E and every
+    # data latency are unchanged; only the reset release / first gated edge move RL edges, uniformly.
+    land_rl_tab = T.get('landing_reset_stages', {})
+    lsrc = {l['i'].replace('-', '_'): l for l in plan['links']}
+    rdep = rst['depth']
+    gcal, gate_en, land_rs, cal_place = {}, {}, {}, []
+    rmst = T.get('reset_master') or RST_RLY['EW']
+
+    def cal_tap(leaf, ckr, nd, xy, why):
+        ch = gcal.setdefault((leaf, ckr), [])
+        while len(ch) < nd:
+            up = ch[-1] if ch else leaf
+            wn = f'rsg_{leaf}_{ckr}_{len(ch)}'
+            v.append(f'  wire {wn};')
+            v.append(f'  {rmst} st_{wn} (.ck(ck_{ckr}), .rs({up}), .i({up}), .o({wn}));   // gate calendar ({why})')
+            cal_place.append(dict(inst=f'st_{wn}', master=rmst, orient='R0', xy=[round(xy[0], 3), round(xy[1], 3)], kind='gate_calendar'))
+            ch.append(wn)
+        return ch[nd - 1]
     land_rows = []
     for j, (n, nm, b, *ad) in enumerate(landings):
+        l_ = lsrc[nm]
+        a_ = blocks[l_['e'][0][0]]['name']
+        sleaf, rleaf = rst['block_leaf'].get(a_, 'rst_sync1'), rst['block_leaf'][n]
+        pr = land_rows_plan.get(nm, {})
+        long_ = (not ad) and pr.get('master') == f'dsfd_dvland_{b}l'
+        lm_ = ad[0] if ad else (f'dsfd_dvland_{b}l' if long_ else f'dsfd_dvland_{b}')
+        rl_ = int(land_rl_tab.get(lm_, 0))
+        ds_, dr_ = rdep[sleaf], rdep[rleaf] + rl_
+        h_ = len(chains_pts[nm]) % 2            # R0 - G = N mod 2: an odd half-cycle chain lands on the inverted phase
+        if dr_ - ds_ > h_:
+            gate_en[nm] = cal_tap(sleaf, reg[a_], dr_ - ds_ - h_, l_['e'][0][2:4], f'gate opens {h_} edges before the {n} landing rs')
+            land_rs[nm] = rleaf
+        elif dr_ - ds_ < h_:
+            gate_en[nm] = sleaf
+            land_rs[nm] = cal_tap(rleaf, reg[n], ds_ + h_ - dr_, l_['e'][1][2:4], f'landing rs {h_} edges after the {a_} gate')
+        else:
+            gate_en[nm], land_rs[nm] = sleaf, rleaf
         st = len(chains_pts[nm])
         e_ = land_e.get(nm)
-        pr = land_rows_plan.get(nm, {})
         # LANDFIX-SQ (10-18): the land plan names the tile per link (D 4 dsfd_dvland_<W>, 3-bit K <= 7; or the long tile
         # dsfd_dvland_<W>l, D 8, 6-bit K <= 63 for E > 7 or a TT/FF spread > 2 ns).  K = E (G = R0: the hop-0 gate opens on
         # the receiver's calendar release edge), so no reset-calendar offset is needed for any E.
-        long_ = (not ad) and pr.get('master') == f'dsfd_dvland_{b}l'
         kw_ = 6 if long_ else 3
         if e_ is not None and e_ > (2 ** kw_ - 1):
             raise SystemExit(f'dv_bind: landing {nm} E {e_} > K range {2 ** kw_ - 1} of its tile (land plan {lp})')
-        k_ = max(e_ or 1, 1)
+        # S81-LBGAP/G8 (10-18): the land plan's K, not E -- lanes <stem>_l<i> of one bundle (one receiver beat, e.g. the
+        # rstop 4 x 276 line) read at K = E + (bundle age - lane age) so every lane lands at ONE age ceil(N/2) + K + 1
+        # (dv_land_pilot.py agebundle re-checks the window at K); K = E outside the equalised bundles
+        k_ = max(int(pr['K']) if pr.get('K') is not None else (e_ or 1), 1)
+        if e_ is not None and k_ < e_:
+            raise SystemExit(f'dv_bind: landing {nm} K {k_} < E {e_} (land plan {lp})')
+        if k_ > (2 ** kw_ - 1):
+            raise SystemExit(f'dv_bind: landing {nm} K {k_} > K range {2 ** kw_ - 1} of its tile (land plan {lp})')
         lm, ow, ast = (ad[0], ad[1], ad[2]) if ad else ((f'dsfd_dvland_{b}l' if long_ else f'dsfd_dvland_{b}'), b, {})
         v.append(f'  wire [{ow - 1}:0] w_{nm}_lnd;')
         xs_ = ''.join(f', .{sp}({sv})' for sp, sv in ast.items())
-        v.append(f'  {lm} ld_{nm} (.ck_f(n{nm}_fck[{st}]), .i(w_{nm}_dst), .ck(ck_{reg[n]}), .rs({rst["block_leaf"][n]}), '
+        v.append(f'  {lm} ld_{nm} (.ck_f(n{nm}_fck[{st}]), .i(w_{nm}_dst), .ck(ck_{reg[n]}), .rs({land_rs[nm]}), '
                  f".k({kw_}'d{k_}){xs_}, .o(w_{nm}_lnd), .fault(land_fault[{j}]));")
         for sp in ast:
             if [lm, sp] not in straps:
                 straps.append([lm, sp])
         land_rows.append(dict(link=nm, inst=n, master=lm, bits=b, stages=st, E=e_, K=k_, D=8 if long_ else 4,
-                              K_source='land_plan E (G = R0)' if e_ else 'NO die STA E: K 1 placeholder (re-derive)',
-                              calendar_G_minus_R0=0, fault_bit=j))
+                              age=math.ceil(st / 2) + k_ + 1, bundle=pr.get('bundle'),
+                              K_source=(pr.get('K_source') or 'land_plan E (gate calendar R0 = G + N mod 2)') if e_ else 'NO die STA E: K 1 placeholder (re-derive)',
+                              calendar_G_minus_R0=-h_, fault_bit=j, src=a_, hop0_gate=f'fwd_{nm}', gate_en=gate_en[nm],
+                              land_rs=land_rs[nm], release_src=ds_, release_dst=dr_, land_reset_stages=rl_,
+                              calendar_stations=dict(side='source' if dr_ - ds_ > h_ else ('receiver' if dr_ - ds_ < h_ else None),
+                                                     n=abs(dr_ - ds_ - h_))))
     for lm in sorted({r['master'] for r in land_rows}):
         straps.append([lm, 'k'])
+    if land_rows:
+        straps.append([ICG, 'SE'])      # S81-LBGAP/G1: the hop-0 gate's scan enable is a test strap (no scan chain on the die)
     # relay chains (F1)
-    nst = collections.Counter(); fwd_cells = 0
+    nst = collections.Counter(); fwd_cells = 0; gate_cells = 0
     for l in plan['links']:
         nm = l['i'].replace('-', '_'); b = l['b']
         a = blocks[l['e'][0][0]]['name']
@@ -482,7 +578,14 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
                 parts_.append(f"{b - cov_}'d0")
             src = '{' + ', '.join(reversed(parts_)) + '}'
         st = len(pts)
-        if ck:
+        gen = gate_en.get(nm)
+        if gen:
+            # S81-LBGAP/G1: landed lane -> hop-0 clock gate opened by the released reset on the calendar edge G = R0 - (N mod 2)
+            v.append(f'  {ICG} fwd_{nm} (.CLK({ck or "ck_" + reg[a]}), .ENA({gen}), .SE(1\'b0), .GCLK(n{nm}_fck[0]));   '
+                     f'// hop 0: clock gate (LANDING-CONTRACT L3) on {"the source master forwarded clock" if ck else "the source region root"}')
+            gate_cells += 1
+            ck = None
+        elif ck:
             v.append(f'  // hop 0: the source master forwards its root (F1): {ck}')
         else:
             v.append(f'  {FWD} fwd_{nm} (.A(ck_{reg[a]}), .Y(n{nm}_fck[0]));   // hop 0: clock-forward cell on the source region root')
@@ -526,16 +629,25 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
             extra.append(str(dst))
     rec = dict(schema='opentallas.s81_dv.bind_case.v1', regions=regions, open_bindings=open_bind,
                plan_port_not_in_rtl=plan_not_in_rtl, relay_masters=dict(nst), clock_forward_cells=fwd_cells,
+               hop0_clock_gates=gate_cells, gate_calendar_stations=len(cal_place),
                abutted_plan_lanes=abut_rows, reset=rst['summary'], straps=straps, mode_unused_pads=pad_rows, views=dict(views),
                frame_contract=dict(verdict=frame_rec['verdict'], members=len(frame_rec['members']), problems=frame_rec['problems']), rtl_extra=extra, top_offchip_ports=top_ports,
                landings=dict(count=len(land_rows), land_plan=str(lp) if lp else None,
                              by_master=dict(collections.Counter(r['master'] for r in land_rows)),
                              by_inst_kind=dict(collections.Counter(r['inst'].split('_')[0] for r in land_rows)),
                              no_E=[r['link'] for r in land_rows if r['E'] is None],
-                             calendar_needs=[r for r in land_rows if r['calendar_G_minus_R0']], rows=land_rows))
+                             calendar_needs=[r for r in land_rows if r['calendar_stations']['n']],
+                             bundle_age_unequal=bundle_age_unequal(land_rows), rows=land_rows))
     if run_bind:
         cmd = ['python3', str(ROOT / 'tools/die_port_bind.py'), str(out / 'die.v'), '--top', 'dv_die', '--rtl-root', str(ROOT / 'rtl'),
                '--rtl-file', str(out / 'cells_used.v'), '--strap-file', str(out / 'straps.json'), '--pad-file', str(out / 'pads.json'), '--out', str(out / 'port_bind.json')]
+        # S81-LBGAP G6 (10-18): duplicated module names resolve by rule, not by sort order -- the frames' bench list (the
+        # _rne_* variants), the svc_rs bench list, then each hardened tile's spec sources (RTL of record of its view);
+        # die_port_bind FAILS a first-pick among definitions with different ports / parameters (ambiguous_children)
+        for L in ('tools/s81_dv/frame_bench.f', 'tools/s81_dv/svc_rs/rs_files.sh'):
+            if (ROOT / L).is_file():
+                cmd += ['--prefer-list', str(ROOT / L)]
+        cmd += ['--ref-tile-prefer']
         for f in list(extra) + list(extra_rtl) + [str(ROOT / x) for x in T.get('rtl_files', [])]:
             cmd += ['--rtl-file', str(f)]
         for f in T.get('prefer', []):
@@ -553,7 +665,7 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
     # reset tree (street cells + lane companions at the station points), the root synchroniser point and the block reset
     # pin points (top-down pin assignment); landings / relays / forward cells are placed from the plan by dv_rvcase
     (out / 'place_hints.json').write_text(json.dumps(dict(
-        schema='opentallas.s81_dv.place_hints.v1', reset_place=rst['place'], reset_root_xy=rst['summary']['root_xy'],
+        schema='opentallas.s81_dv.place_hints.v1', reset_place=rst['place'] + cal_place, reset_root_xy=rst['summary']['root_xy'],
         block_rst_pin={b: [round(x, 3), round(y, 3)] for b, (x, y) in rst['block_pin'].items()},
         landings=[dict(inst=f'ld_{r["link"]}', link=r['link'], dst=r['inst'], master=r['master'], bits=r['bits'], D=r['D'])
                   for r in land_rows]), indent=1))
@@ -882,7 +994,9 @@ def reset_tree(plan, reg, chains_pts, sdir, master=None, reach=RESET_REACH_UM):
                    unreachable_cells=sum(1 for c in free if ('c',) + c not in par), components=len(set(comp.values())),
                    reach_gate=gate)
     nm_ = lambda s: name.get(s, 'rst_sync1') if s is not None else 'rst_sync1'
-    return dict(verilog=v, station_leaf={k: nm_(s) for k, s in station_srv.items()},
+    rdepth = {name[c]: dep(c) + 2 for c in tree}
+    rdepth['rst_sync1'] = 1
+    return dict(verilog=v, depth=rdepth, station_leaf={k: nm_(s) for k, s in station_srv.items()},
                 block_leaf={b: nm_(s) for b, s in block_srv.items()},
                 block_parent={b: (name[par[s]] if s is not None and par[s] is not None else 'rst_sync1') for b, s in block_srv.items()},
                 block_pin=block_pin, summary=summary, place=place)

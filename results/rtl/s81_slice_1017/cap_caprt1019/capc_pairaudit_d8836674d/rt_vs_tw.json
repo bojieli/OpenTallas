@@ -1,0 +1,45 @@
+{
+ "cell": "ot_s81sl_cap_rt",
+ "view": "physical/ref_tile/s81sl_cap_rt/views/ot_s81sl_cap_rt",
+ "lib_cell": "ot_s81sl_cap_rt",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json child_flop boundary mean -> relative C 246.2"
+ ],
+ "R_ps": 258.7,
+ "spread_ps": 63.7,
+ "relative_to": "given tt=246.2,ff=186.8",
+ "outputs": 451,
+ "inputs": 210,
+ "launch_ps": 135.1,
+ "launch_pin": "cw_s_d[71]",
+ "capture_ps": 79.6,
+ "capture_pin": "e_v",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "ff_spread_ps": 60.5,
+ "ff_launch_min_ps": 59.0,
+ "ff_hold_need_ps": -7.2,
+ "relative": {
+  "tt": {
+   "clock_pin": "clk",
+   "rel_min_ps": -11.9,
+   "rel_max_ps": 51.8,
+   "mismatch_ps": 51.8,
+   "offset_ps": 12.5,
+   "comp_ps": 246.2
+  },
+  "ff": {
+   "clock_pin": "clk",
+   "rel_min_ps": 0.7,
+   "rel_max_ps": 61.2,
+   "mismatch_ps": 61.2,
+   "offset_ps": 23.5,
+   "comp_ps": 186.8
+  }
+ },
+ "pass": true,
+ "fail_why": ""
+}

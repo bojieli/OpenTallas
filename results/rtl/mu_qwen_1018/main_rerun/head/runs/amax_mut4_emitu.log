@@ -1,0 +1,22 @@
+# case amax_mut4_emitu top tb_amax_mu MUT=4 plusargs '+seed=1' host regular-crane 2026-10-19T00:07:54-07:00
+# sources: rtl/qwen_dv/mu/qfd_dv_amax_mu.sv results/rtl/mu_qwen_1018/head/amax_today_ref.sv results/rtl/mu_qwen_1018/head/tb_amax_mu.sv
+895e775532cb4edc95b810d2f71c3b72a11b795c54fba5cf7a1810cd706f6b33  rtl/qwen_dv/mu/qfd_dv_amax_mu.sv
+d4ecd5db465376782cf9365e306e3a189af78585e1c2d2e62ceea84e195dfddf  results/rtl/mu_qwen_1018/head/amax_today_ref.sv
+2a8c5cda00431731cfcf7608d2c5c4a9bf0f7256a3466ff87cfd0c9aae50a5c1  results/rtl/mu_qwen_1018/head/tb_amax_mu.sv
+phase A: 60000 edges compared, 0 mismatches
+MISMATCH user 3 head 0 mode 0: got v 1 idx 010434 val 3f7fa710, single-shot idx 0303b8 val 7f8392e8
+MISMATCH user 0 head 0 mode 1: got v 1 idx 020312 val 40000000, single-shot idx 000160 val 40000000
+MISMATCH user 2 head 0 mode 1: got v 0 idx 000000 val 00000000, single-shot idx 020312 val 40000000
+MISMATCH user 3 head 1 mode 0: got v 1 idx 01051f val 3f800001, single-shot idx 030356 val 7f769b32
+MISMATCH user 0 head 1 mode 1: got v 1 idx 030342 val 40000000, single-shot idx 000156 val 40000000
+MISMATCH user 3 head 2 mode 1: got v 1 idx 020200 val 41200000, single-shot idx 030342 val 40000000
+MISMATCH user 2 head 2 mode 3: got v 1 idx 0103b0 val 41200000, single-shot idx 020180 val 41200000
+MISMATCH user 3 head 3 mode 0: got v 1 idx 020394 val 40000000, single-shot idx 03011d val 7e58e9c6
+phase B: users 4 heads/user 120 chunks/head 8 rows/head 512 emits 480 mismatches 388
+phase B: cross-chunk-tie heads 362, chunk-boundary-tie heads 124, permuted-order heads 223, back-to-back other-op 1934, mu_fault 1, emit_empty 16
+TB_AMAX_MU FAIL MUT=4 NEG=0 seed=1 (eq 0, mismatches 388, mu_fault 1, emit_empty 16)
+- results/rtl/mu_qwen_1018/head/tb_amax_mu.sv:188: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 191us; walltime 0.051 s; speed 3.730 ms/s
+- Verilator: cpu 0.050 s on 1 threads; allocated 7 MB
+# exit 0

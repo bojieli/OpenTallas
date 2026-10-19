@@ -118,17 +118,36 @@ endmodule
 // True hardenable macro leaf: one actual catalog SRAM, registered face data.
 // Request/address and write command originate at control registers. Each leaf
 // clock must have the same logical edge, with physical insertion compensated.
-module ot_hgi_coll_static_program_bank #(parameter integer MUT_DATA=0)(
+// XDIE-HBM4 (10-19): ROWS 128 = two 64-row macros (row[6] selects; the read half is registered with the macro read so
+// the output select is a flop -> 2:1 mux -> face flop). ROWS 64 (default): the original single macro, unchanged.
+// TW2-COLLAR (10-19): the low macro is ALWAYS u_sram, outside any generate block, so ROWS 64 elaborates to the pre-XDIE
+// instance path (u_bank.u_sram: closed hcoll_v5_issuer / q2-q3 LP kits place it by that exact name); only the upper
+// macro and the hi_q select flop live in g128 (u_bank.g128.u_sram_hi). The row-6 gate is a constant 0 at ROWS 64.
+module ot_hgi_coll_static_program_bank #(parameter integer MUT_DATA=0, parameter integer ROWS=64,
+    parameter integer PW=(ROWS>64)?7:6)(   // PW derived; never override
     input wire clk,read_v,write_v,
-    input wire [5:0] read_row,write_row,
+    input wire [PW-1:0] read_row,write_row,
     input wire [511:0] write_data,
     output reg [511:0] data
 );
-    wire [511:0] rq;
+    wire [511:0] rq,rq_lo;
+    wire [7:0] rrow=read_row,wrow=write_row;          // zero-extended: bit 6 exists only for ROWS 128
+    wire r_hi=(ROWS>64)&&rrow[6],w_hi=(ROWS>64)&&wrow[6];
     ot_sram_1r1w_64x512_m1_r2c2 u_sram(
-        .clk(clk),.r_ce_in(read_v),.r_addr_in(read_row),.rd_out(rq),
-        .w_ce_in(write_v),.w_addr_in(write_row),.wd_in(write_data),.w_mask_in({512{1'b1}}),
+        .clk(clk),.r_ce_in(read_v && !r_hi),.r_addr_in(rrow[5:0]),.rd_out(rq_lo),
+        .w_ce_in(write_v && !w_hi),.w_addr_in(wrow[5:0]),.wd_in(write_data),.w_mask_in({512{1'b1}}),
         .rr_en(2'b0),.rr_addr(12'b0),.cr_en(2'b0),.cr_sel(18'b0));
+    generate if(ROWS>64)begin:g128
+    wire [511:0] rq_hi;reg hi_q;
+    always @(posedge clk)if(read_v)hi_q<=r_hi;
+    ot_sram_1r1w_64x512_m1_r2c2 u_sram_hi(
+        .clk(clk),.r_ce_in(read_v && r_hi),.r_addr_in(rrow[5:0]),.rd_out(rq_hi),
+        .w_ce_in(write_v && w_hi),.w_addr_in(wrow[5:0]),.wd_in(write_data),.w_mask_in({512{1'b1}}),
+        .rr_en(2'b0),.rr_addr(12'b0),.cr_en(2'b0),.cr_sel(18'b0));
+    assign rq=hi_q?rq_hi:rq_lo;
+    end else begin:g64
+    assign rq=rq_lo;
+    end endgenerate
     always @(posedge clk)data<=rq^(MUT_DATA?512'b1:512'b0);
 endmodule
 `default_nettype wire

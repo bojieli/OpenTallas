@@ -1,0 +1,5 @@
+CHAIN PASS PIN=1 SU 18/15 SFU 24/21 HC 32/29 lanes bank 4/3 sfu 1/1 hc 2/2 SRD=18 SWD=16 | su r80 w64 sfu r40 w32 hc r40 w32 | faults bridge=00 leaf=00 su=0 sfu=0 hc=0 errors=0 checks=288
+- rtl/hbm_accel/generic/adapters/static_su/top/tb_hbm_su_lg_chain_banklat.sv:168: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 5us; walltime 0.001 s; speed 3.563 ms/s
+- Verilator: cpu 0.001 s on 1 threads; allocated 7 MB

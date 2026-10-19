@@ -2,9 +2,10 @@
  "schema": "opentallas.hbm_layer_images.v1",
  "design": "ds",
  "layer": "2",
- "priced": "results/rtl/hbm_ds_layer_tput_1018/priced_layers.json",
- "programme": "results/arch/hgi_programs_20261010/inputs/ds_rank0_program.json",
- "programme_sha256": "e888a21dddef6881120d1c232174a67a0c2c53a205873f33000d989577376bef",
+ "priced": "/home/ubuntu/wt/lb2-hbm2-rpl-cds/results/rtl/hbm_ds_layer_tput_1018/priced_layers.json",
+ "programme": "results/rtl/hbm_ds_layer_tput_1018/fixtures/L02/images/ds_v41_1M_L02_per_die.json",
+ "programme_sha256": "08f39c9845a798b928b513ceab406b19c7e7170a3735da40b5687090d1691f63",
+ "fixtures": "results/rtl/hbm_ds_layer_tput_1018/fixtures/L02",
  "boundary": "results/rtl/hbm_ds_layer_tput_1018/slice_sw/boundary.json",
  "records": [
   {
@@ -29,8 +30,20 @@
    "target_ports": [],
    "status": "blocked:format_open",
    "reasons": [
-    "FUSED programme image format not emitted by v1"
-   ]
+    "FUSED programme image format not emitted by v1",
+    "payload_open: hc_SW rows + col_sfu_SW collar (2 striped spaces, tools/hbm_static/su_arith_sfu_compile.py lanes)"
+   ],
+   "cp_targets": [
+    {
+     "instance": "hc_SW",
+     "tgt": 108
+    },
+    {
+     "instance": "col_sfu_SW",
+     "tgt": 116
+    }
+   ],
+   "cp_transport": "host_cp_ingress F20 frames -> hleaf_SW (cp_frames)"
   },
   {
    "i": 1,
@@ -53,8 +66,20 @@
    "target_ports": [],
    "status": "blocked:format_open",
    "reasons": [
-    "DMA programme image format not emitted by v1"
-   ]
+    "DMA programme image format not emitted by v1",
+    "payload_open: hb_dbk_SW (ot_hgi_dma_back_static_vp4_banks_cp) row ABI + tools/hbm_vm_static_calendar.py"
+   ],
+   "cp_targets": [
+    {
+     "instance": "hb_dbk_SW",
+     "tgt": 104
+    },
+    {
+     "instance": "calendar_SW",
+     "tgt": 96
+    }
+   ],
+   "cp_transport": "host_cp_ingress F20 frames -> hleaf_SW (cp_frames)"
   },
   {
    "i": 3,
@@ -86,8 +111,24 @@
    ],
    "status": "blocked:format_open",
    "reasons": [
-    "COLL programme image format not emitted by v1"
-   ]
+    "COLL programme image format not emitted by v1",
+    "payload_open: tools/hbm_coll_static_calendar.py (transport reservations) + hb_coll_SW programme ABI"
+   ],
+   "cp_targets": [
+    {
+     "instance": "hb_coll_SW",
+     "tgt": null
+    },
+    {
+     "instance": "vmfc_SW",
+     "tgt": 56
+    },
+    {
+     "instance": "epcal_SW",
+     "tgt": 132
+    }
+   ],
+   "cp_transport": "host_cp_ingress F20 frames -> hleaf_SW (cp_frames)"
   },
   {
    "i": 9,
@@ -110,8 +151,20 @@
    "target_ports": [],
    "status": "blocked:format_open",
    "reasons": [
-    "DMA programme image format not emitted by v1"
-   ]
+    "DMA programme image format not emitted by v1",
+    "payload_open: hb_dbk_SW (ot_hgi_dma_back_static_vp4_banks_cp) row ABI + tools/hbm_vm_static_calendar.py"
+   ],
+   "cp_targets": [
+    {
+     "instance": "hb_dbk_SW",
+     "tgt": 104
+    },
+    {
+     "instance": "calendar_SW",
+     "tgt": 96
+    }
+   ],
+   "cp_transport": "host_cp_ingress F20 frames -> hleaf_SW (cp_frames)"
   },
   {
    "i": 10,
@@ -134,8 +187,20 @@
    "target_ports": [],
    "status": "blocked:format_open",
    "reasons": [
-    "DMA programme image format not emitted by v1"
-   ]
+    "DMA programme image format not emitted by v1",
+    "payload_open: hb_dbk_SW (ot_hgi_dma_back_static_vp4_banks_cp) row ABI + tools/hbm_vm_static_calendar.py"
+   ],
+   "cp_targets": [
+    {
+     "instance": "hb_dbk_SW",
+     "tgt": 104
+    },
+    {
+     "instance": "calendar_SW",
+     "tgt": 96
+    }
+   ],
+   "cp_transport": "host_cp_ingress F20 frames -> hleaf_SW (cp_frames)"
   },
   {
    "i": 11,
@@ -178,7 +243,14 @@
      "production_timing_price"
     ]
    },
-   "inputs_placeholder": true,
+   "inputs_placeholder": false,
+   "fixture": {
+    "matched": true,
+    "k_layer": 6,
+    "checked_words": 32,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   },
    "edges": 42,
    "fill_sectors": 4,
    "drain_sectors": 4,
@@ -211,8 +283,56 @@
    "target_ports": [],
    "status": "blocked:format_open",
    "reasons": [
-    "SM programme image format not emitted by v1"
-   ]
+    "SM programme image format not emitted by v1",
+    "payload_open: ot_static_cmd_target rows (cp_svg) + tools/hbm_vm_static_calendar.py (calendar_SW) -- MATVEC shape lowering open"
+   ],
+   "cp_targets": [
+    {
+     "instance": "cp_svg_SW0",
+     "tgt": 64
+    },
+    {
+     "instance": "cp_svg_SW1",
+     "tgt": 65
+    },
+    {
+     "instance": "cp_svg_SW2",
+     "tgt": 66
+    },
+    {
+     "instance": "cp_svg_SW3",
+     "tgt": 67
+    },
+    {
+     "instance": "xl_SW_ctl",
+     "tgt": 100
+    },
+    {
+     "instance": "smw_SW",
+     "tgt": 160
+    },
+    {
+     "instance": "xc_SW0",
+     "tgt": 192
+    },
+    {
+     "instance": "xc_SW1",
+     "tgt": 193
+    },
+    {
+     "instance": "xc_SW2",
+     "tgt": 194
+    },
+    {
+     "instance": "xc_SW3",
+     "tgt": 195
+    },
+    {
+     "instance": "calendar_SW",
+     "tgt": 96
+    }
+   ],
+   "cp_transport": "host_cp_ingress F20 frames -> hleaf_SW (cp_frames)"
   },
   {
    "i": 13,
@@ -244,8 +364,24 @@
    ],
    "status": "blocked:format_open",
    "reasons": [
-    "COLL programme image format not emitted by v1"
-   ]
+    "COLL programme image format not emitted by v1",
+    "payload_open: tools/hbm_coll_static_calendar.py (transport reservations) + hb_coll_SW programme ABI"
+   ],
+   "cp_targets": [
+    {
+     "instance": "hb_coll_SW",
+     "tgt": null
+    },
+    {
+     "instance": "vmfc_SW",
+     "tgt": 56
+    },
+    {
+     "instance": "epcal_SW",
+     "tgt": 132
+    }
+   ],
+   "cp_transport": "host_cp_ingress F20 frames -> hleaf_SW (cp_frames)"
   },
   {
    "i": 14,
@@ -270,8 +406,56 @@
    "target_ports": [],
    "status": "blocked:format_open",
    "reasons": [
-    "SM programme image format not emitted by v1"
-   ]
+    "SM programme image format not emitted by v1",
+    "payload_open: ot_static_cmd_target rows (cp_svg) + tools/hbm_vm_static_calendar.py (calendar_SW) -- MATVEC shape lowering open"
+   ],
+   "cp_targets": [
+    {
+     "instance": "cp_svg_SW0",
+     "tgt": 64
+    },
+    {
+     "instance": "cp_svg_SW1",
+     "tgt": 65
+    },
+    {
+     "instance": "cp_svg_SW2",
+     "tgt": 66
+    },
+    {
+     "instance": "cp_svg_SW3",
+     "tgt": 67
+    },
+    {
+     "instance": "xl_SW_ctl",
+     "tgt": 100
+    },
+    {
+     "instance": "smw_SW",
+     "tgt": 160
+    },
+    {
+     "instance": "xc_SW0",
+     "tgt": 192
+    },
+    {
+     "instance": "xc_SW1",
+     "tgt": 193
+    },
+    {
+     "instance": "xc_SW2",
+     "tgt": 194
+    },
+    {
+     "instance": "xc_SW3",
+     "tgt": 195
+    },
+    {
+     "instance": "calendar_SW",
+     "tgt": 96
+    }
+   ],
+   "cp_transport": "host_cp_ingress F20 frames -> hleaf_SW (cp_frames)"
   },
   {
    "i": 15,
@@ -296,8 +480,56 @@
    "target_ports": [],
    "status": "blocked:format_open",
    "reasons": [
-    "SM programme image format not emitted by v1"
-   ]
+    "SM programme image format not emitted by v1",
+    "payload_open: ot_static_cmd_target rows (cp_svg) + tools/hbm_vm_static_calendar.py (calendar_SW) -- MATVEC shape lowering open"
+   ],
+   "cp_targets": [
+    {
+     "instance": "cp_svg_SW0",
+     "tgt": 64
+    },
+    {
+     "instance": "cp_svg_SW1",
+     "tgt": 65
+    },
+    {
+     "instance": "cp_svg_SW2",
+     "tgt": 66
+    },
+    {
+     "instance": "cp_svg_SW3",
+     "tgt": 67
+    },
+    {
+     "instance": "xl_SW_ctl",
+     "tgt": 100
+    },
+    {
+     "instance": "smw_SW",
+     "tgt": 160
+    },
+    {
+     "instance": "xc_SW0",
+     "tgt": 192
+    },
+    {
+     "instance": "xc_SW1",
+     "tgt": 193
+    },
+    {
+     "instance": "xc_SW2",
+     "tgt": 194
+    },
+    {
+     "instance": "xc_SW3",
+     "tgt": 195
+    },
+    {
+     "instance": "calendar_SW",
+     "tgt": 96
+    }
+   ],
+   "cp_transport": "host_cp_ingress F20 frames -> hleaf_SW (cp_frames)"
   },
   {
    "i": 16,
@@ -342,7 +574,24 @@
      "production_timing_price"
     ]
    },
-   "inputs_placeholder": true
+   "inputs_placeholder": false,
+   "fixture": {
+    "matched": true,
+    "k_layer": 10,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   },
+   "reducer_bound": {
+    "words": 1280,
+    "ingress_edges": 320,
+    "chunks_per_quarter": 40,
+    "tail_edges": 108,
+    "min_serial_edges": 428,
+    "rule": "1 reducer operand/edge/quarter (pgslice.sv:355-361, lane.sv:119); DEP 10, LAT 9 (reduce_static.sv)",
+    "priced_serial_edges": 136,
+    "bound_over_price": 3.15
+   }
   },
   {
    "i": 17,
@@ -380,7 +629,14 @@
      "native_SFU_or_scalar_side_control_calendar"
     ]
    },
-   "inputs_placeholder": null
+   "inputs_placeholder": null,
+   "fixture": {
+    "matched": true,
+    "k_layer": 13,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   }
   },
   {
    "i": 18,
@@ -412,8 +668,24 @@
    ],
    "status": "blocked:format_open",
    "reasons": [
-    "COLL programme image format not emitted by v1"
-   ]
+    "COLL programme image format not emitted by v1",
+    "payload_open: tools/hbm_coll_static_calendar.py (transport reservations) + hb_coll_SW programme ABI"
+   ],
+   "cp_targets": [
+    {
+     "instance": "hb_coll_SW",
+     "tgt": null
+    },
+    {
+     "instance": "vmfc_SW",
+     "tgt": 56
+    },
+    {
+     "instance": "epcal_SW",
+     "tgt": 132
+    }
+   ],
+   "cp_transport": "host_cp_ingress F20 frames -> hleaf_SW (cp_frames)"
   },
   {
    "i": 19,
@@ -445,8 +717,24 @@
    ],
    "status": "blocked:format_open",
    "reasons": [
-    "COLL programme image format not emitted by v1"
-   ]
+    "COLL programme image format not emitted by v1",
+    "payload_open: tools/hbm_coll_static_calendar.py (transport reservations) + hb_coll_SW programme ABI"
+   ],
+   "cp_targets": [
+    {
+     "instance": "hb_coll_SW",
+     "tgt": null
+    },
+    {
+     "instance": "vmfc_SW",
+     "tgt": 56
+    },
+    {
+     "instance": "epcal_SW",
+     "tgt": 132
+    }
+   ],
+   "cp_transport": "host_cp_ingress F20 frames -> hleaf_SW (cp_frames)"
   },
   {
    "i": 20,
@@ -539,7 +827,14 @@
      "production_timing_price"
     ]
    },
-   "inputs_placeholder": true
+   "inputs_placeholder": false,
+   "fixture": {
+    "matched": true,
+    "k_layer": 14,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   }
   },
   {
    "i": 21,
@@ -564,8 +859,56 @@
    "target_ports": [],
    "status": "blocked:format_open",
    "reasons": [
-    "SM programme image format not emitted by v1"
-   ]
+    "SM programme image format not emitted by v1",
+    "payload_open: ot_static_cmd_target rows (cp_svg) + tools/hbm_vm_static_calendar.py (calendar_SW) -- MATVEC shape lowering open"
+   ],
+   "cp_targets": [
+    {
+     "instance": "cp_svg_SW0",
+     "tgt": 64
+    },
+    {
+     "instance": "cp_svg_SW1",
+     "tgt": 65
+    },
+    {
+     "instance": "cp_svg_SW2",
+     "tgt": 66
+    },
+    {
+     "instance": "cp_svg_SW3",
+     "tgt": 67
+    },
+    {
+     "instance": "xl_SW_ctl",
+     "tgt": 100
+    },
+    {
+     "instance": "smw_SW",
+     "tgt": 160
+    },
+    {
+     "instance": "xc_SW0",
+     "tgt": 192
+    },
+    {
+     "instance": "xc_SW1",
+     "tgt": 193
+    },
+    {
+     "instance": "xc_SW2",
+     "tgt": 194
+    },
+    {
+     "instance": "xc_SW3",
+     "tgt": 195
+    },
+    {
+     "instance": "calendar_SW",
+     "tgt": 96
+    }
+   ],
+   "cp_transport": "host_cp_ingress F20 frames -> hleaf_SW (cp_frames)"
   },
   {
    "i": 22,
@@ -610,7 +953,24 @@
      "production_timing_price"
     ]
    },
-   "inputs_placeholder": true
+   "inputs_placeholder": false,
+   "fixture": {
+    "matched": true,
+    "k_layer": 17,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   },
+   "reducer_bound": {
+    "words": 512,
+    "ingress_edges": 128,
+    "chunks_per_quarter": 16,
+    "tail_edges": 88,
+    "min_serial_edges": 216,
+    "rule": "1 reducer operand/edge/quarter (pgslice.sv:355-361, lane.sv:119); DEP 10, LAT 9 (reduce_static.sv)",
+    "priced_serial_edges": 126,
+    "bound_over_price": 1.71
+   }
   },
   {
    "i": 23,
@@ -642,8 +1002,24 @@
    ],
    "status": "blocked:format_open",
    "reasons": [
-    "COLL programme image format not emitted by v1"
-   ]
+    "COLL programme image format not emitted by v1",
+    "payload_open: tools/hbm_coll_static_calendar.py (transport reservations) + hb_coll_SW programme ABI"
+   ],
+   "cp_targets": [
+    {
+     "instance": "hb_coll_SW",
+     "tgt": null
+    },
+    {
+     "instance": "vmfc_SW",
+     "tgt": 56
+    },
+    {
+     "instance": "epcal_SW",
+     "tgt": 132
+    }
+   ],
+   "cp_transport": "host_cp_ingress F20 frames -> hleaf_SW (cp_frames)"
   },
   {
    "i": 24,
@@ -681,7 +1057,14 @@
      "native_SFU_or_scalar_side_control_calendar"
     ]
    },
-   "inputs_placeholder": null
+   "inputs_placeholder": null,
+   "fixture": {
+    "matched": true,
+    "k_layer": 18,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   }
   },
   {
    "i": 25,
@@ -742,7 +1125,14 @@
      "production_timing_price"
     ]
    },
-   "inputs_placeholder": true
+   "inputs_placeholder": false,
+   "fixture": {
+    "matched": true,
+    "k_layer": 19,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   }
   },
   {
    "i": 49,
@@ -767,8 +1157,56 @@
    "target_ports": [],
    "status": "blocked:format_open",
    "reasons": [
-    "SM programme image format not emitted by v1"
-   ]
+    "SM programme image format not emitted by v1",
+    "payload_open: ot_static_cmd_target rows (cp_svg) + tools/hbm_vm_static_calendar.py (calendar_SW) -- MATVEC shape lowering open"
+   ],
+   "cp_targets": [
+    {
+     "instance": "cp_svg_SW0",
+     "tgt": 64
+    },
+    {
+     "instance": "cp_svg_SW1",
+     "tgt": 65
+    },
+    {
+     "instance": "cp_svg_SW2",
+     "tgt": 66
+    },
+    {
+     "instance": "cp_svg_SW3",
+     "tgt": 67
+    },
+    {
+     "instance": "xl_SW_ctl",
+     "tgt": 100
+    },
+    {
+     "instance": "smw_SW",
+     "tgt": 160
+    },
+    {
+     "instance": "xc_SW0",
+     "tgt": 192
+    },
+    {
+     "instance": "xc_SW1",
+     "tgt": 193
+    },
+    {
+     "instance": "xc_SW2",
+     "tgt": 194
+    },
+    {
+     "instance": "xc_SW3",
+     "tgt": 195
+    },
+    {
+     "instance": "calendar_SW",
+     "tgt": 96
+    }
+   ],
+   "cp_transport": "host_cp_ingress F20 frames -> hleaf_SW (cp_frames)"
   },
   {
    "i": 50,
@@ -940,7 +1378,14 @@
      "production_timing_price"
     ]
    },
-   "inputs_placeholder": true
+   "inputs_placeholder": false,
+   "fixture": {
+    "matched": true,
+    "k_layer": 22,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   }
   },
   {
    "i": 51,
@@ -998,8 +1443,24 @@
    ],
    "status": "blocked:format_open",
    "reasons": [
-    "COLL programme image format not emitted by v1"
-   ]
+    "COLL programme image format not emitted by v1",
+    "payload_open: tools/hbm_coll_static_calendar.py (transport reservations) + hb_coll_SW programme ABI"
+   ],
+   "cp_targets": [
+    {
+     "instance": "hb_coll_SW",
+     "tgt": null
+    },
+    {
+     "instance": "vmfc_SW",
+     "tgt": 56
+    },
+    {
+     "instance": "epcal_SW",
+     "tgt": 132
+    }
+   ],
+   "cp_transport": "host_cp_ingress F20 frames -> hleaf_SW (cp_frames)"
   },
   {
    "i": 53,
@@ -1059,7 +1520,14 @@
      "production_timing_price"
     ]
    },
-   "inputs_placeholder": true
+   "inputs_placeholder": false,
+   "fixture": {
+    "matched": true,
+    "k_layer": 20,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   }
   },
   {
    "i": 54,
@@ -1119,7 +1587,14 @@
      "production_timing_price"
     ]
    },
-   "inputs_placeholder": true
+   "inputs_placeholder": false,
+   "fixture": {
+    "matched": true,
+    "k_layer": 28,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   }
   },
   {
    "i": 55,
@@ -1141,8 +1616,20 @@
    "target_ports": [],
    "status": "blocked:format_open",
    "reasons": [
-    "FUSED programme image format not emitted by v1"
-   ]
+    "FUSED programme image format not emitted by v1",
+    "payload_open: hc_SW rows + col_sfu_SW collar (2 striped spaces, tools/hbm_static/su_arith_sfu_compile.py lanes)"
+   ],
+   "cp_targets": [
+    {
+     "instance": "hc_SW",
+     "tgt": 108
+    },
+    {
+     "instance": "col_sfu_SW",
+     "tgt": 116
+    }
+   ],
+   "cp_transport": "host_cp_ingress F20 frames -> hleaf_SW (cp_frames)"
   },
   {
    "i": 56,
@@ -1166,8 +1653,20 @@
    "target_ports": [],
    "status": "blocked:format_open",
    "reasons": [
-    "DMA programme image format not emitted by v1"
-   ]
+    "DMA programme image format not emitted by v1",
+    "payload_open: hb_dbk_SW (ot_hgi_dma_back_static_vp4_banks_cp) row ABI + tools/hbm_vm_static_calendar.py"
+   ],
+   "cp_targets": [
+    {
+     "instance": "hb_dbk_SW",
+     "tgt": 104
+    },
+    {
+     "instance": "calendar_SW",
+     "tgt": 96
+    }
+   ],
+   "cp_transport": "host_cp_ingress F20 frames -> hleaf_SW (cp_frames)"
   },
   {
    "i": 57,
@@ -1190,8 +1689,20 @@
    "target_ports": [],
    "status": "blocked:format_open",
    "reasons": [
-    "DMA programme image format not emitted by v1"
-   ]
+    "DMA programme image format not emitted by v1",
+    "payload_open: hb_dbk_SW (ot_hgi_dma_back_static_vp4_banks_cp) row ABI + tools/hbm_vm_static_calendar.py"
+   ],
+   "cp_targets": [
+    {
+     "instance": "hb_dbk_SW",
+     "tgt": 104
+    },
+    {
+     "instance": "calendar_SW",
+     "tgt": 96
+    }
+   ],
+   "cp_transport": "host_cp_ingress F20 frames -> hleaf_SW (cp_frames)"
   },
   {
    "i": 58,
@@ -1220,8 +1731,16 @@
    ],
    "status": "blocked:format_open",
    "reasons": [
-    "HC programme image format not emitted by v1"
-   ]
+    "HC programme image format not emitted by v1",
+    "payload_open: hc_SW (ot_hbm_hc_qhub_static) row ABI"
+   ],
+   "cp_targets": [
+    {
+     "instance": "hc_SW",
+     "tgt": 108
+    }
+   ],
+   "cp_transport": "host_cp_ingress F20 frames -> hleaf_SW (cp_frames)"
   },
   {
    "i": 59,
@@ -1264,7 +1783,14 @@
      "production_timing_price"
     ]
    },
-   "inputs_placeholder": true,
+   "inputs_placeholder": false,
+   "fixture": {
+    "matched": true,
+    "k_layer": 0,
+    "checked_words": 5120,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   },
    "edges": 122,
    "fill_sectors": 640,
    "drain_sectors": 640,
@@ -1295,8 +1821,20 @@
    "target_ports": [],
    "status": "blocked:format_open",
    "reasons": [
-    "DMA programme image format not emitted by v1"
-   ]
+    "DMA programme image format not emitted by v1",
+    "payload_open: hb_dbk_SW (ot_hgi_dma_back_static_vp4_banks_cp) row ABI + tools/hbm_vm_static_calendar.py"
+   ],
+   "cp_targets": [
+    {
+     "instance": "hb_dbk_SW",
+     "tgt": 104
+    },
+    {
+     "instance": "calendar_SW",
+     "tgt": 96
+    }
+   ],
+   "cp_transport": "host_cp_ingress F20 frames -> hleaf_SW (cp_frames)"
   },
   {
    "i": 61,
@@ -1319,8 +1857,20 @@
    "target_ports": [],
    "status": "blocked:format_open",
    "reasons": [
-    "DMA programme image format not emitted by v1"
-   ]
+    "DMA programme image format not emitted by v1",
+    "payload_open: hb_dbk_SW (ot_hgi_dma_back_static_vp4_banks_cp) row ABI + tools/hbm_vm_static_calendar.py"
+   ],
+   "cp_targets": [
+    {
+     "instance": "hb_dbk_SW",
+     "tgt": 104
+    },
+    {
+     "instance": "calendar_SW",
+     "tgt": 96
+    }
+   ],
+   "cp_transport": "host_cp_ingress F20 frames -> hleaf_SW (cp_frames)"
   },
   {
    "i": 62,
@@ -1350,8 +1900,24 @@
    ],
    "status": "blocked:format_open",
    "reasons": [
-    "COLL programme image format not emitted by v1"
-   ]
+    "COLL programme image format not emitted by v1",
+    "payload_open: tools/hbm_coll_static_calendar.py (transport reservations) + hb_coll_SW programme ABI"
+   ],
+   "cp_targets": [
+    {
+     "instance": "hb_coll_SW",
+     "tgt": null
+    },
+    {
+     "instance": "vmfc_SW",
+     "tgt": 56
+    },
+    {
+     "instance": "epcal_SW",
+     "tgt": 132
+    }
+   ],
+   "cp_transport": "host_cp_ingress F20 frames -> hleaf_SW (cp_frames)"
   },
   {
    "i": 63,
@@ -1375,8 +1941,11 @@
    "target_ports": [],
    "status": "blocked:format_open",
    "reasons": [
-    "ATT programme image format not emitted by v1"
-   ]
+    "ATT programme image format not emitted by v1",
+    "payload_open: no ATT engine in the SW slice (tools/hbm_attention_static_calendar.py is the engine calendar)"
+   ],
+   "cp_targets": [],
+   "cp_transport": "host_cp_ingress F20 frames -> hleaf_SW (cp_frames)"
   },
   {
    "i": 64,
@@ -1434,7 +2003,24 @@
      "production_timing_price"
     ]
    },
-   "inputs_placeholder": true
+   "inputs_placeholder": false,
+   "fixture": {
+    "matched": true,
+    "k_layer": 35,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   },
+   "reducer_bound": {
+    "words": 640,
+    "ingress_edges": 160,
+    "chunks_per_quarter": 20,
+    "tail_edges": 98,
+    "min_serial_edges": 258,
+    "rule": "1 reducer operand/edge/quarter (pgslice.sv:355-361, lane.sv:119); DEP 10, LAT 9 (reduce_static.sv)",
+    "priced_serial_edges": 131,
+    "bound_over_price": 1.97
+   }
   },
   {
    "i": 65,
@@ -1483,7 +2069,14 @@
      "native_SFU_or_scalar_side_control_calendar"
     ]
    },
-   "inputs_placeholder": null
+   "inputs_placeholder": null,
+   "fixture": {
+    "matched": true,
+    "k_layer": 36,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   }
   },
   {
    "i": 66,
@@ -1526,7 +2119,14 @@
      "production_timing_price"
     ]
    },
-   "inputs_placeholder": true,
+   "inputs_placeholder": false,
+   "fixture": {
+    "matched": true,
+    "k_layer": 38,
+    "checked_words": 256,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   },
    "edges": 46,
    "fill_sectors": 32,
    "drain_sectors": 32,
@@ -1558,8 +2158,11 @@
    "target_ports": [],
    "status": "blocked:format_open",
    "reasons": [
-    "ATT programme image format not emitted by v1"
-   ]
+    "ATT programme image format not emitted by v1",
+    "payload_open: no ATT engine in the SW slice (tools/hbm_attention_static_calendar.py is the engine calendar)"
+   ],
+   "cp_targets": [],
+   "cp_transport": "host_cp_ingress F20 frames -> hleaf_SW (cp_frames)"
   },
   {
    "i": 68,
@@ -1595,7 +2198,14 @@
      "native_SFU_or_scalar_side_control_calendar"
     ]
    },
-   "inputs_placeholder": null
+   "inputs_placeholder": null,
+   "fixture": {
+    "matched": true,
+    "k_layer": 41,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   }
   },
   {
    "i": 69,
@@ -1631,7 +2241,14 @@
      "native_M128_divider_lane_selection_calendar"
     ]
    },
-   "inputs_placeholder": null
+   "inputs_placeholder": null,
+   "fixture": {
+    "matched": true,
+    "k_layer": 43,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   }
   },
   {
    "i": 70,
@@ -1691,7 +2308,14 @@
      "production_timing_price"
     ]
    },
-   "inputs_placeholder": true
+   "inputs_placeholder": false,
+   "fixture": {
+    "matched": true,
+    "k_layer": 44,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   }
   },
   {
    "i": 71,
@@ -1716,8 +2340,56 @@
    "target_ports": [],
    "status": "blocked:format_open",
    "reasons": [
-    "SM programme image format not emitted by v1"
-   ]
+    "SM programme image format not emitted by v1",
+    "payload_open: ot_static_cmd_target rows (cp_svg) + tools/hbm_vm_static_calendar.py (calendar_SW) -- MATVEC shape lowering open"
+   ],
+   "cp_targets": [
+    {
+     "instance": "cp_svg_SW0",
+     "tgt": 64
+    },
+    {
+     "instance": "cp_svg_SW1",
+     "tgt": 65
+    },
+    {
+     "instance": "cp_svg_SW2",
+     "tgt": 66
+    },
+    {
+     "instance": "cp_svg_SW3",
+     "tgt": 67
+    },
+    {
+     "instance": "xl_SW_ctl",
+     "tgt": 100
+    },
+    {
+     "instance": "smw_SW",
+     "tgt": 160
+    },
+    {
+     "instance": "xc_SW0",
+     "tgt": 192
+    },
+    {
+     "instance": "xc_SW1",
+     "tgt": 193
+    },
+    {
+     "instance": "xc_SW2",
+     "tgt": 194
+    },
+    {
+     "instance": "xc_SW3",
+     "tgt": 195
+    },
+    {
+     "instance": "calendar_SW",
+     "tgt": 96
+    }
+   ],
+   "cp_transport": "host_cp_ingress F20 frames -> hleaf_SW (cp_frames)"
   },
   {
    "i": 72,
@@ -1751,8 +2423,24 @@
    ],
    "status": "blocked:format_open",
    "reasons": [
-    "COLL programme image format not emitted by v1"
-   ]
+    "COLL programme image format not emitted by v1",
+    "payload_open: tools/hbm_coll_static_calendar.py (transport reservations) + hb_coll_SW programme ABI"
+   ],
+   "cp_targets": [
+    {
+     "instance": "hb_coll_SW",
+     "tgt": null
+    },
+    {
+     "instance": "vmfc_SW",
+     "tgt": 56
+    },
+    {
+     "instance": "epcal_SW",
+     "tgt": 132
+    }
+   ],
+   "cp_transport": "host_cp_ingress F20 frames -> hleaf_SW (cp_frames)"
   },
   {
    "i": 73,
@@ -1777,8 +2465,56 @@
    "target_ports": [],
    "status": "blocked:format_open",
    "reasons": [
-    "SM programme image format not emitted by v1"
-   ]
+    "SM programme image format not emitted by v1",
+    "payload_open: ot_static_cmd_target rows (cp_svg) + tools/hbm_vm_static_calendar.py (calendar_SW) -- MATVEC shape lowering open"
+   ],
+   "cp_targets": [
+    {
+     "instance": "cp_svg_SW0",
+     "tgt": 64
+    },
+    {
+     "instance": "cp_svg_SW1",
+     "tgt": 65
+    },
+    {
+     "instance": "cp_svg_SW2",
+     "tgt": 66
+    },
+    {
+     "instance": "cp_svg_SW3",
+     "tgt": 67
+    },
+    {
+     "instance": "xl_SW_ctl",
+     "tgt": 100
+    },
+    {
+     "instance": "smw_SW",
+     "tgt": 160
+    },
+    {
+     "instance": "xc_SW0",
+     "tgt": 192
+    },
+    {
+     "instance": "xc_SW1",
+     "tgt": 193
+    },
+    {
+     "instance": "xc_SW2",
+     "tgt": 194
+    },
+    {
+     "instance": "xc_SW3",
+     "tgt": 195
+    },
+    {
+     "instance": "calendar_SW",
+     "tgt": 96
+    }
+   ],
+   "cp_transport": "host_cp_ingress F20 frames -> hleaf_SW (cp_frames)"
   },
   {
    "i": 74,
@@ -1810,8 +2546,24 @@
    ],
    "status": "blocked:format_open",
    "reasons": [
-    "COLL programme image format not emitted by v1"
-   ]
+    "COLL programme image format not emitted by v1",
+    "payload_open: tools/hbm_coll_static_calendar.py (transport reservations) + hb_coll_SW programme ABI"
+   ],
+   "cp_targets": [
+    {
+     "instance": "hb_coll_SW",
+     "tgt": null
+    },
+    {
+     "instance": "vmfc_SW",
+     "tgt": 56
+    },
+    {
+     "instance": "epcal_SW",
+     "tgt": 132
+    }
+   ],
+   "cp_transport": "host_cp_ingress F20 frames -> hleaf_SW (cp_frames)"
   },
   {
    "i": 75,
@@ -1835,8 +2587,20 @@
    "target_ports": [],
    "status": "blocked:format_open",
    "reasons": [
-    "FUSED programme image format not emitted by v1"
-   ]
+    "FUSED programme image format not emitted by v1",
+    "payload_open: hc_SW rows + col_sfu_SW collar (2 striped spaces, tools/hbm_static/su_arith_sfu_compile.py lanes)"
+   ],
+   "cp_targets": [
+    {
+     "instance": "hc_SW",
+     "tgt": 108
+    },
+    {
+     "instance": "col_sfu_SW",
+     "tgt": 116
+    }
+   ],
+   "cp_transport": "host_cp_ingress F20 frames -> hleaf_SW (cp_frames)"
   },
   {
    "i": 76,
@@ -1860,8 +2624,20 @@
    "target_ports": [],
    "status": "blocked:format_open",
    "reasons": [
-    "FUSED programme image format not emitted by v1"
-   ]
+    "FUSED programme image format not emitted by v1",
+    "payload_open: hc_SW rows + col_sfu_SW collar (2 striped spaces, tools/hbm_static/su_arith_sfu_compile.py lanes)"
+   ],
+   "cp_targets": [
+    {
+     "instance": "hc_SW",
+     "tgt": 108
+    },
+    {
+     "instance": "col_sfu_SW",
+     "tgt": 116
+    }
+   ],
+   "cp_transport": "host_cp_ingress F20 frames -> hleaf_SW (cp_frames)"
   },
   {
    "i": 77,
@@ -1886,8 +2662,56 @@
    "target_ports": [],
    "status": "blocked:format_open",
    "reasons": [
-    "SM programme image format not emitted by v1"
-   ]
+    "SM programme image format not emitted by v1",
+    "payload_open: ot_static_cmd_target rows (cp_svg) + tools/hbm_vm_static_calendar.py (calendar_SW) -- MATVEC shape lowering open"
+   ],
+   "cp_targets": [
+    {
+     "instance": "cp_svg_SW0",
+     "tgt": 64
+    },
+    {
+     "instance": "cp_svg_SW1",
+     "tgt": 65
+    },
+    {
+     "instance": "cp_svg_SW2",
+     "tgt": 66
+    },
+    {
+     "instance": "cp_svg_SW3",
+     "tgt": 67
+    },
+    {
+     "instance": "xl_SW_ctl",
+     "tgt": 100
+    },
+    {
+     "instance": "smw_SW",
+     "tgt": 160
+    },
+    {
+     "instance": "xc_SW0",
+     "tgt": 192
+    },
+    {
+     "instance": "xc_SW1",
+     "tgt": 193
+    },
+    {
+     "instance": "xc_SW2",
+     "tgt": 194
+    },
+    {
+     "instance": "xc_SW3",
+     "tgt": 195
+    },
+    {
+     "instance": "calendar_SW",
+     "tgt": 96
+    }
+   ],
+   "cp_transport": "host_cp_ingress F20 frames -> hleaf_SW (cp_frames)"
   },
   {
    "i": 78,
@@ -1916,8 +2740,16 @@
    ],
    "status": "blocked:format_open",
    "reasons": [
-    "HC programme image format not emitted by v1"
-   ]
+    "HC programme image format not emitted by v1",
+    "payload_open: hc_SW (ot_hbm_hc_qhub_static) row ABI"
+   ],
+   "cp_targets": [
+    {
+     "instance": "hc_SW",
+     "tgt": 108
+    }
+   ],
+   "cp_transport": "host_cp_ingress F20 frames -> hleaf_SW (cp_frames)"
   },
   {
    "i": 79,
@@ -1966,7 +2798,14 @@
      "native_SFU_or_scalar_side_control_calendar"
     ]
    },
-   "inputs_placeholder": null
+   "inputs_placeholder": null,
+   "fixture": {
+    "matched": true,
+    "k_layer": 55,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   }
   },
   {
    "i": 80,
@@ -1991,8 +2830,56 @@
    "target_ports": [],
    "status": "blocked:format_open",
    "reasons": [
-    "SM programme image format not emitted by v1"
-   ]
+    "SM programme image format not emitted by v1",
+    "payload_open: ot_static_cmd_target rows (cp_svg) + tools/hbm_vm_static_calendar.py (calendar_SW) -- MATVEC shape lowering open"
+   ],
+   "cp_targets": [
+    {
+     "instance": "cp_svg_SW0",
+     "tgt": 64
+    },
+    {
+     "instance": "cp_svg_SW1",
+     "tgt": 65
+    },
+    {
+     "instance": "cp_svg_SW2",
+     "tgt": 66
+    },
+    {
+     "instance": "cp_svg_SW3",
+     "tgt": 67
+    },
+    {
+     "instance": "xl_SW_ctl",
+     "tgt": 100
+    },
+    {
+     "instance": "smw_SW",
+     "tgt": 160
+    },
+    {
+     "instance": "xc_SW0",
+     "tgt": 192
+    },
+    {
+     "instance": "xc_SW1",
+     "tgt": 193
+    },
+    {
+     "instance": "xc_SW2",
+     "tgt": 194
+    },
+    {
+     "instance": "xc_SW3",
+     "tgt": 195
+    },
+    {
+     "instance": "calendar_SW",
+     "tgt": 96
+    }
+   ],
+   "cp_transport": "host_cp_ingress F20 frames -> hleaf_SW (cp_frames)"
   },
   {
    "i": 81,
@@ -2017,8 +2904,56 @@
    "target_ports": [],
    "status": "blocked:format_open",
    "reasons": [
-    "SM programme image format not emitted by v1"
-   ]
+    "SM programme image format not emitted by v1",
+    "payload_open: ot_static_cmd_target rows (cp_svg) + tools/hbm_vm_static_calendar.py (calendar_SW) -- MATVEC shape lowering open"
+   ],
+   "cp_targets": [
+    {
+     "instance": "cp_svg_SW0",
+     "tgt": 64
+    },
+    {
+     "instance": "cp_svg_SW1",
+     "tgt": 65
+    },
+    {
+     "instance": "cp_svg_SW2",
+     "tgt": 66
+    },
+    {
+     "instance": "cp_svg_SW3",
+     "tgt": 67
+    },
+    {
+     "instance": "xl_SW_ctl",
+     "tgt": 100
+    },
+    {
+     "instance": "smw_SW",
+     "tgt": 160
+    },
+    {
+     "instance": "xc_SW0",
+     "tgt": 192
+    },
+    {
+     "instance": "xc_SW1",
+     "tgt": 193
+    },
+    {
+     "instance": "xc_SW2",
+     "tgt": 194
+    },
+    {
+     "instance": "xc_SW3",
+     "tgt": 195
+    },
+    {
+     "instance": "calendar_SW",
+     "tgt": 96
+    }
+   ],
+   "cp_transport": "host_cp_ingress F20 frames -> hleaf_SW (cp_frames)"
   },
   {
    "i": 82,
@@ -2050,8 +2985,24 @@
    ],
    "status": "blocked:format_open",
    "reasons": [
-    "COLL programme image format not emitted by v1"
-   ]
+    "COLL programme image format not emitted by v1",
+    "payload_open: tools/hbm_coll_static_calendar.py (transport reservations) + hb_coll_SW programme ABI"
+   ],
+   "cp_targets": [
+    {
+     "instance": "hb_coll_SW",
+     "tgt": null
+    },
+    {
+     "instance": "vmfc_SW",
+     "tgt": 56
+    },
+    {
+     "instance": "epcal_SW",
+     "tgt": 132
+    }
+   ],
+   "cp_transport": "host_cp_ingress F20 frames -> hleaf_SW (cp_frames)"
   },
   {
    "i": 83,
@@ -2097,7 +3048,14 @@
      "production_timing_price"
     ]
    },
-   "inputs_placeholder": false
+   "inputs_placeholder": false,
+   "fixture": {
+    "matched": true,
+    "k_layer": 58,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   }
   },
   {
    "i": 84,
@@ -2141,6 +3099,13 @@
     ]
    },
    "inputs_placeholder": false,
+   "fixture": {
+    "matched": true,
+    "k_layer": 54,
+    "checked_words": 5120,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   },
    "edges": 122,
    "fill_sectors": 640,
    "drain_sectors": 640,
@@ -2191,7 +3156,14 @@
      "production_timing_price"
     ]
    },
-   "inputs_placeholder": true,
+   "inputs_placeholder": false,
+   "fixture": {
+    "matched": true,
+    "k_layer": 59,
+    "checked_words": 128,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   },
    "edges": 46,
    "fill_sectors": 32,
    "drain_sectors": 16,
@@ -2263,7 +3235,14 @@
      "MDESC_indexed_scalar_runtime_address_calendar"
     ]
    },
-   "inputs_placeholder": null
+   "inputs_placeholder": null,
+   "fixture": {
+    "matched": true,
+    "k_layer": 62,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   }
   },
   {
    "i": 88,
@@ -2299,7 +3278,14 @@
      "MDESC_indexed_scalar_runtime_address_calendar"
     ]
    },
-   "inputs_placeholder": null
+   "inputs_placeholder": null,
+   "fixture": {
+    "matched": true,
+    "k_layer": 63,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   }
   },
   {
    "i": 89,
@@ -2324,8 +3310,56 @@
    "target_ports": [],
    "status": "blocked:format_open",
    "reasons": [
-    "SM programme image format not emitted by v1"
-   ]
+    "SM programme image format not emitted by v1",
+    "payload_open: ot_static_cmd_target rows (cp_svg) + tools/hbm_vm_static_calendar.py (calendar_SW) -- MATVEC shape lowering open"
+   ],
+   "cp_targets": [
+    {
+     "instance": "cp_svg_SW0",
+     "tgt": 64
+    },
+    {
+     "instance": "cp_svg_SW1",
+     "tgt": 65
+    },
+    {
+     "instance": "cp_svg_SW2",
+     "tgt": 66
+    },
+    {
+     "instance": "cp_svg_SW3",
+     "tgt": 67
+    },
+    {
+     "instance": "xl_SW_ctl",
+     "tgt": 100
+    },
+    {
+     "instance": "smw_SW",
+     "tgt": 160
+    },
+    {
+     "instance": "xc_SW0",
+     "tgt": 192
+    },
+    {
+     "instance": "xc_SW1",
+     "tgt": 193
+    },
+    {
+     "instance": "xc_SW2",
+     "tgt": 194
+    },
+    {
+     "instance": "xc_SW3",
+     "tgt": 195
+    },
+    {
+     "instance": "calendar_SW",
+     "tgt": 96
+    }
+   ],
+   "cp_transport": "host_cp_ingress F20 frames -> hleaf_SW (cp_frames)"
   },
   {
    "i": 90,
@@ -2361,7 +3395,14 @@
      "MDESC_indexed_scalar_runtime_address_calendar"
     ]
    },
-   "inputs_placeholder": null
+   "inputs_placeholder": null,
+   "fixture": {
+    "matched": true,
+    "k_layer": 65,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   }
   },
   {
    "i": 91,
@@ -2397,7 +3438,14 @@
      "MDESC_indexed_scalar_runtime_address_calendar"
     ]
    },
-   "inputs_placeholder": null
+   "inputs_placeholder": null,
+   "fixture": {
+    "matched": true,
+    "k_layer": 66,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   }
   },
   {
    "i": 92,
@@ -2422,8 +3470,56 @@
    "target_ports": [],
    "status": "blocked:format_open",
    "reasons": [
-    "SM programme image format not emitted by v1"
-   ]
+    "SM programme image format not emitted by v1",
+    "payload_open: ot_static_cmd_target rows (cp_svg) + tools/hbm_vm_static_calendar.py (calendar_SW) -- MATVEC shape lowering open"
+   ],
+   "cp_targets": [
+    {
+     "instance": "cp_svg_SW0",
+     "tgt": 64
+    },
+    {
+     "instance": "cp_svg_SW1",
+     "tgt": 65
+    },
+    {
+     "instance": "cp_svg_SW2",
+     "tgt": 66
+    },
+    {
+     "instance": "cp_svg_SW3",
+     "tgt": 67
+    },
+    {
+     "instance": "xl_SW_ctl",
+     "tgt": 100
+    },
+    {
+     "instance": "smw_SW",
+     "tgt": 160
+    },
+    {
+     "instance": "xc_SW0",
+     "tgt": 192
+    },
+    {
+     "instance": "xc_SW1",
+     "tgt": 193
+    },
+    {
+     "instance": "xc_SW2",
+     "tgt": 194
+    },
+    {
+     "instance": "xc_SW3",
+     "tgt": 195
+    },
+    {
+     "instance": "calendar_SW",
+     "tgt": 96
+    }
+   ],
+   "cp_transport": "host_cp_ingress F20 frames -> hleaf_SW (cp_frames)"
   },
   {
    "i": 93,
@@ -2459,7 +3555,14 @@
      "MDESC_indexed_scalar_runtime_address_calendar"
     ]
    },
-   "inputs_placeholder": null
+   "inputs_placeholder": null,
+   "fixture": {
+    "matched": true,
+    "k_layer": 67,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   }
   },
   {
    "i": 94,
@@ -2484,8 +3587,56 @@
    "target_ports": [],
    "status": "blocked:format_open",
    "reasons": [
-    "SM programme image format not emitted by v1"
-   ]
+    "SM programme image format not emitted by v1",
+    "payload_open: ot_static_cmd_target rows (cp_svg) + tools/hbm_vm_static_calendar.py (calendar_SW) -- MATVEC shape lowering open"
+   ],
+   "cp_targets": [
+    {
+     "instance": "cp_svg_SW0",
+     "tgt": 64
+    },
+    {
+     "instance": "cp_svg_SW1",
+     "tgt": 65
+    },
+    {
+     "instance": "cp_svg_SW2",
+     "tgt": 66
+    },
+    {
+     "instance": "cp_svg_SW3",
+     "tgt": 67
+    },
+    {
+     "instance": "xl_SW_ctl",
+     "tgt": 100
+    },
+    {
+     "instance": "smw_SW",
+     "tgt": 160
+    },
+    {
+     "instance": "xc_SW0",
+     "tgt": 192
+    },
+    {
+     "instance": "xc_SW1",
+     "tgt": 193
+    },
+    {
+     "instance": "xc_SW2",
+     "tgt": 194
+    },
+    {
+     "instance": "xc_SW3",
+     "tgt": 195
+    },
+    {
+     "instance": "calendar_SW",
+     "tgt": 96
+    }
+   ],
+   "cp_transport": "host_cp_ingress F20 frames -> hleaf_SW (cp_frames)"
   },
   {
    "i": 95,
@@ -2510,8 +3661,56 @@
    "target_ports": [],
    "status": "blocked:format_open",
    "reasons": [
-    "SM programme image format not emitted by v1"
-   ]
+    "SM programme image format not emitted by v1",
+    "payload_open: ot_static_cmd_target rows (cp_svg) + tools/hbm_vm_static_calendar.py (calendar_SW) -- MATVEC shape lowering open"
+   ],
+   "cp_targets": [
+    {
+     "instance": "cp_svg_SW0",
+     "tgt": 64
+    },
+    {
+     "instance": "cp_svg_SW1",
+     "tgt": 65
+    },
+    {
+     "instance": "cp_svg_SW2",
+     "tgt": 66
+    },
+    {
+     "instance": "cp_svg_SW3",
+     "tgt": 67
+    },
+    {
+     "instance": "xl_SW_ctl",
+     "tgt": 100
+    },
+    {
+     "instance": "smw_SW",
+     "tgt": 160
+    },
+    {
+     "instance": "xc_SW0",
+     "tgt": 192
+    },
+    {
+     "instance": "xc_SW1",
+     "tgt": 193
+    },
+    {
+     "instance": "xc_SW2",
+     "tgt": 194
+    },
+    {
+     "instance": "xc_SW3",
+     "tgt": 195
+    },
+    {
+     "instance": "calendar_SW",
+     "tgt": 96
+    }
+   ],
+   "cp_transport": "host_cp_ingress F20 frames -> hleaf_SW (cp_frames)"
   },
   {
    "i": 96,
@@ -2536,8 +3735,56 @@
    "target_ports": [],
    "status": "blocked:format_open",
    "reasons": [
-    "SM programme image format not emitted by v1"
-   ]
+    "SM programme image format not emitted by v1",
+    "payload_open: ot_static_cmd_target rows (cp_svg) + tools/hbm_vm_static_calendar.py (calendar_SW) -- MATVEC shape lowering open"
+   ],
+   "cp_targets": [
+    {
+     "instance": "cp_svg_SW0",
+     "tgt": 64
+    },
+    {
+     "instance": "cp_svg_SW1",
+     "tgt": 65
+    },
+    {
+     "instance": "cp_svg_SW2",
+     "tgt": 66
+    },
+    {
+     "instance": "cp_svg_SW3",
+     "tgt": 67
+    },
+    {
+     "instance": "xl_SW_ctl",
+     "tgt": 100
+    },
+    {
+     "instance": "smw_SW",
+     "tgt": 160
+    },
+    {
+     "instance": "xc_SW0",
+     "tgt": 192
+    },
+    {
+     "instance": "xc_SW1",
+     "tgt": 193
+    },
+    {
+     "instance": "xc_SW2",
+     "tgt": 194
+    },
+    {
+     "instance": "xc_SW3",
+     "tgt": 195
+    },
+    {
+     "instance": "calendar_SW",
+     "tgt": 96
+    }
+   ],
+   "cp_transport": "host_cp_ingress F20 frames -> hleaf_SW (cp_frames)"
   },
   {
    "i": 97,
@@ -2573,7 +3820,14 @@
      "MDESC_indexed_scalar_runtime_address_calendar"
     ]
    },
-   "inputs_placeholder": null
+   "inputs_placeholder": null,
+   "fixture": {
+    "matched": true,
+    "k_layer": 68,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   }
   },
   {
    "i": 98,
@@ -2598,8 +3852,56 @@
    "target_ports": [],
    "status": "blocked:format_open",
    "reasons": [
-    "SM programme image format not emitted by v1"
-   ]
+    "SM programme image format not emitted by v1",
+    "payload_open: ot_static_cmd_target rows (cp_svg) + tools/hbm_vm_static_calendar.py (calendar_SW) -- MATVEC shape lowering open"
+   ],
+   "cp_targets": [
+    {
+     "instance": "cp_svg_SW0",
+     "tgt": 64
+    },
+    {
+     "instance": "cp_svg_SW1",
+     "tgt": 65
+    },
+    {
+     "instance": "cp_svg_SW2",
+     "tgt": 66
+    },
+    {
+     "instance": "cp_svg_SW3",
+     "tgt": 67
+    },
+    {
+     "instance": "xl_SW_ctl",
+     "tgt": 100
+    },
+    {
+     "instance": "smw_SW",
+     "tgt": 160
+    },
+    {
+     "instance": "xc_SW0",
+     "tgt": 192
+    },
+    {
+     "instance": "xc_SW1",
+     "tgt": 193
+    },
+    {
+     "instance": "xc_SW2",
+     "tgt": 194
+    },
+    {
+     "instance": "xc_SW3",
+     "tgt": 195
+    },
+    {
+     "instance": "calendar_SW",
+     "tgt": 96
+    }
+   ],
+   "cp_transport": "host_cp_ingress F20 frames -> hleaf_SW (cp_frames)"
   },
   {
    "i": 99,
@@ -2624,8 +3926,56 @@
    "target_ports": [],
    "status": "blocked:format_open",
    "reasons": [
-    "SM programme image format not emitted by v1"
-   ]
+    "SM programme image format not emitted by v1",
+    "payload_open: ot_static_cmd_target rows (cp_svg) + tools/hbm_vm_static_calendar.py (calendar_SW) -- MATVEC shape lowering open"
+   ],
+   "cp_targets": [
+    {
+     "instance": "cp_svg_SW0",
+     "tgt": 64
+    },
+    {
+     "instance": "cp_svg_SW1",
+     "tgt": 65
+    },
+    {
+     "instance": "cp_svg_SW2",
+     "tgt": 66
+    },
+    {
+     "instance": "cp_svg_SW3",
+     "tgt": 67
+    },
+    {
+     "instance": "xl_SW_ctl",
+     "tgt": 100
+    },
+    {
+     "instance": "smw_SW",
+     "tgt": 160
+    },
+    {
+     "instance": "xc_SW0",
+     "tgt": 192
+    },
+    {
+     "instance": "xc_SW1",
+     "tgt": 193
+    },
+    {
+     "instance": "xc_SW2",
+     "tgt": 194
+    },
+    {
+     "instance": "xc_SW3",
+     "tgt": 195
+    },
+    {
+     "instance": "calendar_SW",
+     "tgt": 96
+    }
+   ],
+   "cp_transport": "host_cp_ingress F20 frames -> hleaf_SW (cp_frames)"
   },
   {
    "i": 100,
@@ -2650,8 +4000,56 @@
    "target_ports": [],
    "status": "blocked:format_open",
    "reasons": [
-    "SM programme image format not emitted by v1"
-   ]
+    "SM programme image format not emitted by v1",
+    "payload_open: ot_static_cmd_target rows (cp_svg) + tools/hbm_vm_static_calendar.py (calendar_SW) -- MATVEC shape lowering open"
+   ],
+   "cp_targets": [
+    {
+     "instance": "cp_svg_SW0",
+     "tgt": 64
+    },
+    {
+     "instance": "cp_svg_SW1",
+     "tgt": 65
+    },
+    {
+     "instance": "cp_svg_SW2",
+     "tgt": 66
+    },
+    {
+     "instance": "cp_svg_SW3",
+     "tgt": 67
+    },
+    {
+     "instance": "xl_SW_ctl",
+     "tgt": 100
+    },
+    {
+     "instance": "smw_SW",
+     "tgt": 160
+    },
+    {
+     "instance": "xc_SW0",
+     "tgt": 192
+    },
+    {
+     "instance": "xc_SW1",
+     "tgt": 193
+    },
+    {
+     "instance": "xc_SW2",
+     "tgt": 194
+    },
+    {
+     "instance": "xc_SW3",
+     "tgt": 195
+    },
+    {
+     "instance": "calendar_SW",
+     "tgt": 96
+    }
+   ],
+   "cp_transport": "host_cp_ingress F20 frames -> hleaf_SW (cp_frames)"
   },
   {
    "i": 101,
@@ -2696,7 +4094,24 @@
      "production_timing_price"
     ]
    },
-   "inputs_placeholder": true
+   "inputs_placeholder": false,
+   "fixture": {
+    "matched": true,
+    "k_layer": 70,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 2
+   },
+   "reducer_bound": {
+    "words": 6,
+    "ingress_edges": 2,
+    "chunks_per_quarter": 1,
+    "tail_edges": 48,
+    "min_serial_edges": 50,
+    "rule": "1 reducer operand/edge/quarter (pgslice.sv:355-361, lane.sv:119); DEP 10, LAT 9 (reduce_static.sv)",
+    "priced_serial_edges": 99,
+    "bound_over_price": 0.51
+   }
   },
   {
    "i": 102,
@@ -2721,8 +4136,56 @@
    "target_ports": [],
    "status": "blocked:format_open",
    "reasons": [
-    "SM programme image format not emitted by v1"
-   ]
+    "SM programme image format not emitted by v1",
+    "payload_open: ot_static_cmd_target rows (cp_svg) + tools/hbm_vm_static_calendar.py (calendar_SW) -- MATVEC shape lowering open"
+   ],
+   "cp_targets": [
+    {
+     "instance": "cp_svg_SW0",
+     "tgt": 64
+    },
+    {
+     "instance": "cp_svg_SW1",
+     "tgt": 65
+    },
+    {
+     "instance": "cp_svg_SW2",
+     "tgt": 66
+    },
+    {
+     "instance": "cp_svg_SW3",
+     "tgt": 67
+    },
+    {
+     "instance": "xl_SW_ctl",
+     "tgt": 100
+    },
+    {
+     "instance": "smw_SW",
+     "tgt": 160
+    },
+    {
+     "instance": "xc_SW0",
+     "tgt": 192
+    },
+    {
+     "instance": "xc_SW1",
+     "tgt": 193
+    },
+    {
+     "instance": "xc_SW2",
+     "tgt": 194
+    },
+    {
+     "instance": "xc_SW3",
+     "tgt": 195
+    },
+    {
+     "instance": "calendar_SW",
+     "tgt": 96
+    }
+   ],
+   "cp_transport": "host_cp_ingress F20 frames -> hleaf_SW (cp_frames)"
   },
   {
    "i": 103,
@@ -2747,8 +4210,56 @@
    "target_ports": [],
    "status": "blocked:format_open",
    "reasons": [
-    "SM programme image format not emitted by v1"
-   ]
+    "SM programme image format not emitted by v1",
+    "payload_open: ot_static_cmd_target rows (cp_svg) + tools/hbm_vm_static_calendar.py (calendar_SW) -- MATVEC shape lowering open"
+   ],
+   "cp_targets": [
+    {
+     "instance": "cp_svg_SW0",
+     "tgt": 64
+    },
+    {
+     "instance": "cp_svg_SW1",
+     "tgt": 65
+    },
+    {
+     "instance": "cp_svg_SW2",
+     "tgt": 66
+    },
+    {
+     "instance": "cp_svg_SW3",
+     "tgt": 67
+    },
+    {
+     "instance": "xl_SW_ctl",
+     "tgt": 100
+    },
+    {
+     "instance": "smw_SW",
+     "tgt": 160
+    },
+    {
+     "instance": "xc_SW0",
+     "tgt": 192
+    },
+    {
+     "instance": "xc_SW1",
+     "tgt": 193
+    },
+    {
+     "instance": "xc_SW2",
+     "tgt": 194
+    },
+    {
+     "instance": "xc_SW3",
+     "tgt": 195
+    },
+    {
+     "instance": "calendar_SW",
+     "tgt": 96
+    }
+   ],
+   "cp_transport": "host_cp_ingress F20 frames -> hleaf_SW (cp_frames)"
   },
   {
    "i": 104,
@@ -2773,8 +4284,56 @@
    "target_ports": [],
    "status": "blocked:format_open",
    "reasons": [
-    "SM programme image format not emitted by v1"
-   ]
+    "SM programme image format not emitted by v1",
+    "payload_open: ot_static_cmd_target rows (cp_svg) + tools/hbm_vm_static_calendar.py (calendar_SW) -- MATVEC shape lowering open"
+   ],
+   "cp_targets": [
+    {
+     "instance": "cp_svg_SW0",
+     "tgt": 64
+    },
+    {
+     "instance": "cp_svg_SW1",
+     "tgt": 65
+    },
+    {
+     "instance": "cp_svg_SW2",
+     "tgt": 66
+    },
+    {
+     "instance": "cp_svg_SW3",
+     "tgt": 67
+    },
+    {
+     "instance": "xl_SW_ctl",
+     "tgt": 100
+    },
+    {
+     "instance": "smw_SW",
+     "tgt": 160
+    },
+    {
+     "instance": "xc_SW0",
+     "tgt": 192
+    },
+    {
+     "instance": "xc_SW1",
+     "tgt": 193
+    },
+    {
+     "instance": "xc_SW2",
+     "tgt": 194
+    },
+    {
+     "instance": "xc_SW3",
+     "tgt": 195
+    },
+    {
+     "instance": "calendar_SW",
+     "tgt": 96
+    }
+   ],
+   "cp_transport": "host_cp_ingress F20 frames -> hleaf_SW (cp_frames)"
   },
   {
    "i": 105,
@@ -2799,8 +4358,56 @@
    "target_ports": [],
    "status": "blocked:format_open",
    "reasons": [
-    "SM programme image format not emitted by v1"
-   ]
+    "SM programme image format not emitted by v1",
+    "payload_open: ot_static_cmd_target rows (cp_svg) + tools/hbm_vm_static_calendar.py (calendar_SW) -- MATVEC shape lowering open"
+   ],
+   "cp_targets": [
+    {
+     "instance": "cp_svg_SW0",
+     "tgt": 64
+    },
+    {
+     "instance": "cp_svg_SW1",
+     "tgt": 65
+    },
+    {
+     "instance": "cp_svg_SW2",
+     "tgt": 66
+    },
+    {
+     "instance": "cp_svg_SW3",
+     "tgt": 67
+    },
+    {
+     "instance": "xl_SW_ctl",
+     "tgt": 100
+    },
+    {
+     "instance": "smw_SW",
+     "tgt": 160
+    },
+    {
+     "instance": "xc_SW0",
+     "tgt": 192
+    },
+    {
+     "instance": "xc_SW1",
+     "tgt": 193
+    },
+    {
+     "instance": "xc_SW2",
+     "tgt": 194
+    },
+    {
+     "instance": "xc_SW3",
+     "tgt": 195
+    },
+    {
+     "instance": "calendar_SW",
+     "tgt": 96
+    }
+   ],
+   "cp_transport": "host_cp_ingress F20 frames -> hleaf_SW (cp_frames)"
   },
   {
    "i": 106,
@@ -2846,7 +4453,14 @@
      "production_timing_price"
     ]
    },
-   "inputs_placeholder": false
+   "inputs_placeholder": false,
+   "fixture": {
+    "matched": true,
+    "k_layer": 72,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   }
   },
   {
    "i": 107,
@@ -2882,7 +4496,14 @@
      "native_M128_divider_lane_selection_calendar"
     ]
    },
-   "inputs_placeholder": null
+   "inputs_placeholder": null,
+   "fixture": {
+    "matched": true,
+    "k_layer": 74,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   }
   },
   {
    "i": 108,
@@ -2931,7 +4552,14 @@
      "native_SFU_or_scalar_side_control_calendar"
     ]
    },
-   "inputs_placeholder": null
+   "inputs_placeholder": null,
+   "fixture": {
+    "matched": true,
+    "k_layer": 77,
+    "checked_words": 0,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+   }
   },
   {
    "i": 109,
@@ -2963,8 +4591,24 @@
    ],
    "status": "blocked:format_open",
    "reasons": [
-    "COLL programme image format not emitted by v1"
-   ]
+    "COLL programme image format not emitted by v1",
+    "payload_open: tools/hbm_coll_static_calendar.py (transport reservations) + hb_coll_SW programme ABI"
+   ],
+   "cp_targets": [
+    {
+     "instance": "hb_coll_SW",
+     "tgt": null
+    },
+    {
+     "instance": "vmfc_SW",
+     "tgt": 56
+    },
+    {
+     "instance": "epcal_SW",
+     "tgt": 132
+    }
+   ],
+   "cp_transport": "host_cp_ingress F20 frames -> hleaf_SW (cp_frames)"
   },
   {
    "i": 110,
@@ -2996,8 +4640,24 @@
    ],
    "status": "blocked:format_open",
    "reasons": [
-    "COLL programme image format not emitted by v1"
-   ]
+    "COLL programme image format not emitted by v1",
+    "payload_open: tools/hbm_coll_static_calendar.py (transport reservations) + hb_coll_SW programme ABI"
+   ],
+   "cp_targets": [
+    {
+     "instance": "hb_coll_SW",
+     "tgt": null
+    },
+    {
+     "instance": "vmfc_SW",
+     "tgt": 56
+    },
+    {
+     "instance": "epcal_SW",
+     "tgt": 132
+    }
+   ],
+   "cp_transport": "host_cp_ingress F20 frames -> hleaf_SW (cp_frames)"
   },
   {
    "i": 111,
@@ -3022,8 +4682,56 @@
    "target_ports": [],
    "status": "blocked:format_open",
    "reasons": [
-    "SM programme image format not emitted by v1"
-   ]
+    "SM programme image format not emitted by v1",
+    "payload_open: ot_static_cmd_target rows (cp_svg) + tools/hbm_vm_static_calendar.py (calendar_SW) -- MATVEC shape lowering open"
+   ],
+   "cp_targets": [
+    {
+     "instance": "cp_svg_SW0",
+     "tgt": 64
+    },
+    {
+     "instance": "cp_svg_SW1",
+     "tgt": 65
+    },
+    {
+     "instance": "cp_svg_SW2",
+     "tgt": 66
+    },
+    {
+     "instance": "cp_svg_SW3",
+     "tgt": 67
+    },
+    {
+     "instance": "xl_SW_ctl",
+     "tgt": 100
+    },
+    {
+     "instance": "smw_SW",
+     "tgt": 160
+    },
+    {
+     "instance": "xc_SW0",
+     "tgt": 192
+    },
+    {
+     "instance": "xc_SW1",
+     "tgt": 193
+    },
+    {
+     "instance": "xc_SW2",
+     "tgt": 194
+    },
+    {
+     "instance": "xc_SW3",
+     "tgt": 195
+    },
+    {
+     "instance": "calendar_SW",
+     "tgt": 96
+    }
+   ],
+   "cp_transport": "host_cp_ingress F20 frames -> hleaf_SW (cp_frames)"
   },
   {
    "i": 112,
@@ -3055,8 +4763,24 @@
    ],
    "status": "blocked:format_open",
    "reasons": [
-    "COLL programme image format not emitted by v1"
-   ]
+    "COLL programme image format not emitted by v1",
+    "payload_open: tools/hbm_coll_static_calendar.py (transport reservations) + hb_coll_SW programme ABI"
+   ],
+   "cp_targets": [
+    {
+     "instance": "hb_coll_SW",
+     "tgt": null
+    },
+    {
+     "instance": "vmfc_SW",
+     "tgt": 56
+    },
+    {
+     "instance": "epcal_SW",
+     "tgt": 132
+    }
+   ],
+   "cp_transport": "host_cp_ingress F20 frames -> hleaf_SW (cp_frames)"
   },
   {
    "i": 113,
@@ -3088,8 +4812,24 @@
    ],
    "status": "blocked:format_open",
    "reasons": [
-    "COLL programme image format not emitted by v1"
-   ]
+    "COLL programme image format not emitted by v1",
+    "payload_open: tools/hbm_coll_static_calendar.py (transport reservations) + hb_coll_SW programme ABI"
+   ],
+   "cp_targets": [
+    {
+     "instance": "hb_coll_SW",
+     "tgt": null
+    },
+    {
+     "instance": "vmfc_SW",
+     "tgt": 56
+    },
+    {
+     "instance": "epcal_SW",
+     "tgt": 132
+    }
+   ],
+   "cp_transport": "host_cp_ingress F20 frames -> hleaf_SW (cp_frames)"
   },
   {
    "i": 114,
@@ -3114,8 +4854,56 @@
    "target_ports": [],
    "status": "blocked:format_open",
    "reasons": [
-    "SM programme image format not emitted by v1"
-   ]
+    "SM programme image format not emitted by v1",
+    "payload_open: ot_static_cmd_target rows (cp_svg) + tools/hbm_vm_static_calendar.py (calendar_SW) -- MATVEC shape lowering open"
+   ],
+   "cp_targets": [
+    {
+     "instance": "cp_svg_SW0",
+     "tgt": 64
+    },
+    {
+     "instance": "cp_svg_SW1",
+     "tgt": 65
+    },
+    {
+     "instance": "cp_svg_SW2",
+     "tgt": 66
+    },
+    {
+     "instance": "cp_svg_SW3",
+     "tgt": 67
+    },
+    {
+     "instance": "xl_SW_ctl",
+     "tgt": 100
+    },
+    {
+     "instance": "smw_SW",
+     "tgt": 160
+    },
+    {
+     "instance": "xc_SW0",
+     "tgt": 192
+    },
+    {
+     "instance": "xc_SW1",
+     "tgt": 193
+    },
+    {
+     "instance": "xc_SW2",
+     "tgt": 194
+    },
+    {
+     "instance": "xc_SW3",
+     "tgt": 195
+    },
+    {
+     "instance": "calendar_SW",
+     "tgt": 96
+    }
+   ],
+   "cp_transport": "host_cp_ingress F20 frames -> hleaf_SW (cp_frames)"
   },
   {
    "i": 115,
@@ -3147,8 +4935,24 @@
    ],
    "status": "blocked:format_open",
    "reasons": [
-    "COLL programme image format not emitted by v1"
-   ]
+    "COLL programme image format not emitted by v1",
+    "payload_open: tools/hbm_coll_static_calendar.py (transport reservations) + hb_coll_SW programme ABI"
+   ],
+   "cp_targets": [
+    {
+     "instance": "hb_coll_SW",
+     "tgt": null
+    },
+    {
+     "instance": "vmfc_SW",
+     "tgt": 56
+    },
+    {
+     "instance": "epcal_SW",
+     "tgt": 132
+    }
+   ],
+   "cp_transport": "host_cp_ingress F20 frames -> hleaf_SW (cp_frames)"
   },
   {
    "i": 116,
@@ -3173,8 +4977,56 @@
    "target_ports": [],
    "status": "blocked:format_open",
    "reasons": [
-    "SM programme image format not emitted by v1"
-   ]
+    "SM programme image format not emitted by v1",
+    "payload_open: ot_static_cmd_target rows (cp_svg) + tools/hbm_vm_static_calendar.py (calendar_SW) -- MATVEC shape lowering open"
+   ],
+   "cp_targets": [
+    {
+     "instance": "cp_svg_SW0",
+     "tgt": 64
+    },
+    {
+     "instance": "cp_svg_SW1",
+     "tgt": 65
+    },
+    {
+     "instance": "cp_svg_SW2",
+     "tgt": 66
+    },
+    {
+     "instance": "cp_svg_SW3",
+     "tgt": 67
+    },
+    {
+     "instance": "xl_SW_ctl",
+     "tgt": 100
+    },
+    {
+     "instance": "smw_SW",
+     "tgt": 160
+    },
+    {
+     "instance": "xc_SW0",
+     "tgt": 192
+    },
+    {
+     "instance": "xc_SW1",
+     "tgt": 193
+    },
+    {
+     "instance": "xc_SW2",
+     "tgt": 194
+    },
+    {
+     "instance": "xc_SW3",
+     "tgt": 195
+    },
+    {
+     "instance": "calendar_SW",
+     "tgt": 96
+    }
+   ],
+   "cp_transport": "host_cp_ingress F20 frames -> hleaf_SW (cp_frames)"
   },
   {
    "i": 117,
@@ -3206,8 +5058,24 @@
    ],
    "status": "blocked:format_open",
    "reasons": [
-    "COLL programme image format not emitted by v1"
-   ]
+    "COLL programme image format not emitted by v1",
+    "payload_open: tools/hbm_coll_static_calendar.py (transport reservations) + hb_coll_SW programme ABI"
+   ],
+   "cp_targets": [
+    {
+     "instance": "hb_coll_SW",
+     "tgt": null
+    },
+    {
+     "instance": "vmfc_SW",
+     "tgt": 56
+    },
+    {
+     "instance": "epcal_SW",
+     "tgt": 132
+    }
+   ],
+   "cp_transport": "host_cp_ingress F20 frames -> hleaf_SW (cp_frames)"
   },
   {
    "i": 118,
@@ -3229,8 +5097,20 @@
    "target_ports": [],
    "status": "blocked:format_open",
    "reasons": [
-    "DMA programme image format not emitted by v1"
-   ]
+    "DMA programme image format not emitted by v1",
+    "payload_open: hb_dbk_SW (ot_hgi_dma_back_static_vp4_banks_cp) row ABI + tools/hbm_vm_static_calendar.py"
+   ],
+   "cp_targets": [
+    {
+     "instance": "hb_dbk_SW",
+     "tgt": 104
+    },
+    {
+     "instance": "calendar_SW",
+     "tgt": 96
+    }
+   ],
+   "cp_transport": "host_cp_ingress F20 frames -> hleaf_SW (cp_frames)"
   },
   {
    "i": 119,
@@ -3255,8 +5135,56 @@
    "target_ports": [],
    "status": "blocked:format_open",
    "reasons": [
-    "SM programme image format not emitted by v1"
-   ]
+    "SM programme image format not emitted by v1",
+    "payload_open: ot_static_cmd_target rows (cp_svg) + tools/hbm_vm_static_calendar.py (calendar_SW) -- MATVEC shape lowering open"
+   ],
+   "cp_targets": [
+    {
+     "instance": "cp_svg_SW0",
+     "tgt": 64
+    },
+    {
+     "instance": "cp_svg_SW1",
+     "tgt": 65
+    },
+    {
+     "instance": "cp_svg_SW2",
+     "tgt": 66
+    },
+    {
+     "instance": "cp_svg_SW3",
+     "tgt": 67
+    },
+    {
+     "instance": "xl_SW_ctl",
+     "tgt": 100
+    },
+    {
+     "instance": "smw_SW",
+     "tgt": 160
+    },
+    {
+     "instance": "xc_SW0",
+     "tgt": 192
+    },
+    {
+     "instance": "xc_SW1",
+     "tgt": 193
+    },
+    {
+     "instance": "xc_SW2",
+     "tgt": 194
+    },
+    {
+     "instance": "xc_SW3",
+     "tgt": 195
+    },
+    {
+     "instance": "calendar_SW",
+     "tgt": 96
+    }
+   ],
+   "cp_transport": "host_cp_ingress F20 frames -> hleaf_SW (cp_frames)"
   },
   {
    "i": 120,
@@ -3281,8 +5209,56 @@
    "target_ports": [],
    "status": "blocked:format_open",
    "reasons": [
-    "SM programme image format not emitted by v1"
-   ]
+    "SM programme image format not emitted by v1",
+    "payload_open: ot_static_cmd_target rows (cp_svg) + tools/hbm_vm_static_calendar.py (calendar_SW) -- MATVEC shape lowering open"
+   ],
+   "cp_targets": [
+    {
+     "instance": "cp_svg_SW0",
+     "tgt": 64
+    },
+    {
+     "instance": "cp_svg_SW1",
+     "tgt": 65
+    },
+    {
+     "instance": "cp_svg_SW2",
+     "tgt": 66
+    },
+    {
+     "instance": "cp_svg_SW3",
+     "tgt": 67
+    },
+    {
+     "instance": "xl_SW_ctl",
+     "tgt": 100
+    },
+    {
+     "instance": "smw_SW",
+     "tgt": 160
+    },
+    {
+     "instance": "xc_SW0",
+     "tgt": 192
+    },
+    {
+     "instance": "xc_SW1",
+     "tgt": 193
+    },
+    {
+     "instance": "xc_SW2",
+     "tgt": 194
+    },
+    {
+     "instance": "xc_SW3",
+     "tgt": 195
+    },
+    {
+     "instance": "calendar_SW",
+     "tgt": 96
+    }
+   ],
+   "cp_transport": "host_cp_ingress F20 frames -> hleaf_SW (cp_frames)"
   },
   {
    "i": 121,
@@ -3325,7 +5301,14 @@
      "production_timing_price"
     ]
    },
-   "inputs_placeholder": true,
+   "inputs_placeholder": false,
+   "fixture": {
+    "matched": true,
+    "k_layer": 91,
+    "checked_words": 53,
+    "mismatched_words": 0,
+    "pad_words_zero": 6
+   },
    "edges": 43,
    "fill_sectors": 14,
    "drain_sectors": 7,
@@ -3358,8 +5341,56 @@
    "target_ports": [],
    "status": "blocked:format_open",
    "reasons": [
-    "SM programme image format not emitted by v1"
-   ]
+    "SM programme image format not emitted by v1",
+    "payload_open: ot_static_cmd_target rows (cp_svg) + tools/hbm_vm_static_calendar.py (calendar_SW) -- MATVEC shape lowering open"
+   ],
+   "cp_targets": [
+    {
+     "instance": "cp_svg_SW0",
+     "tgt": 64
+    },
+    {
+     "instance": "cp_svg_SW1",
+     "tgt": 65
+    },
+    {
+     "instance": "cp_svg_SW2",
+     "tgt": 66
+    },
+    {
+     "instance": "cp_svg_SW3",
+     "tgt": 67
+    },
+    {
+     "instance": "xl_SW_ctl",
+     "tgt": 100
+    },
+    {
+     "instance": "smw_SW",
+     "tgt": 160
+    },
+    {
+     "instance": "xc_SW0",
+     "tgt": 192
+    },
+    {
+     "instance": "xc_SW1",
+     "tgt": 193
+    },
+    {
+     "instance": "xc_SW2",
+     "tgt": 194
+    },
+    {
+     "instance": "xc_SW3",
+     "tgt": 195
+    },
+    {
+     "instance": "calendar_SW",
+     "tgt": 96
+    }
+   ],
+   "cp_transport": "host_cp_ingress F20 frames -> hleaf_SW (cp_frames)"
   },
   {
    "i": 123,
@@ -3391,8 +5422,24 @@
    ],
    "status": "blocked:format_open",
    "reasons": [
-    "COLL programme image format not emitted by v1"
-   ]
+    "COLL programme image format not emitted by v1",
+    "payload_open: tools/hbm_coll_static_calendar.py (transport reservations) + hb_coll_SW programme ABI"
+   ],
+   "cp_targets": [
+    {
+     "instance": "hb_coll_SW",
+     "tgt": null
+    },
+    {
+     "instance": "vmfc_SW",
+     "tgt": 56
+    },
+    {
+     "instance": "epcal_SW",
+     "tgt": 132
+    }
+   ],
+   "cp_transport": "host_cp_ingress F20 frames -> hleaf_SW (cp_frames)"
   },
   {
    "i": 124,
@@ -3420,13 +5467,13 @@
    ],
    "status": "emitted",
    "reasons": [
-    "raw_hazard: sector 13120 filled at 15211 < commit 15213",
-    "raw_hazard: sector 13121 filled at 15211 < commit 15213",
-    "raw_hazard: sector 13122 filled at 15211 < commit 15213",
-    "raw_hazard: sector 13123 filled at 15211 < commit 15213",
-    "raw_hazard: sector 13124 filled at 15211 < commit 15213",
-    "raw_hazard: sector 13125 filled at 15211 < commit 15213",
-    "raw_hazard: sector 13126 filled at 15211 < commit 15213"
+    "raw_hazard: sector 11136 filled at 15211 < commit 15213",
+    "raw_hazard: sector 11137 filled at 15211 < commit 15213",
+    "raw_hazard: sector 11138 filled at 15211 < commit 15213",
+    "raw_hazard: sector 11139 filled at 15211 < commit 15213",
+    "raw_hazard: sector 11140 filled at 15211 < commit 15213",
+    "raw_hazard: sector 11141 filled at 15211 < commit 15213",
+    "raw_hazard: sector 11142 filled at 15211 < commit 15213"
    ],
    "lowering": {
     "supported": true,
@@ -3443,7 +5490,14 @@
      "production_timing_price"
     ]
    },
-   "inputs_placeholder": true,
+   "inputs_placeholder": false,
+   "fixture": {
+    "matched": true,
+    "k_layer": 92,
+    "checked_words": 53,
+    "mismatched_words": 0,
+    "pad_words_zero": 6
+   },
    "edges": 44,
    "fill_sectors": 14,
    "drain_sectors": 7,
@@ -3476,8 +5530,56 @@
    "target_ports": [],
    "status": "blocked:format_open",
    "reasons": [
-    "SM programme image format not emitted by v1"
-   ]
+    "SM programme image format not emitted by v1",
+    "payload_open: ot_static_cmd_target rows (cp_svg) + tools/hbm_vm_static_calendar.py (calendar_SW) -- MATVEC shape lowering open"
+   ],
+   "cp_targets": [
+    {
+     "instance": "cp_svg_SW0",
+     "tgt": 64
+    },
+    {
+     "instance": "cp_svg_SW1",
+     "tgt": 65
+    },
+    {
+     "instance": "cp_svg_SW2",
+     "tgt": 66
+    },
+    {
+     "instance": "cp_svg_SW3",
+     "tgt": 67
+    },
+    {
+     "instance": "xl_SW_ctl",
+     "tgt": 100
+    },
+    {
+     "instance": "smw_SW",
+     "tgt": 160
+    },
+    {
+     "instance": "xc_SW0",
+     "tgt": 192
+    },
+    {
+     "instance": "xc_SW1",
+     "tgt": 193
+    },
+    {
+     "instance": "xc_SW2",
+     "tgt": 194
+    },
+    {
+     "instance": "xc_SW3",
+     "tgt": 195
+    },
+    {
+     "instance": "calendar_SW",
+     "tgt": 96
+    }
+   ],
+   "cp_transport": "host_cp_ingress F20 frames -> hleaf_SW (cp_frames)"
   },
   {
    "i": 126,
@@ -3520,7 +5622,14 @@
      "production_timing_price"
     ]
    },
-   "inputs_placeholder": true,
+   "inputs_placeholder": false,
+   "fixture": {
+    "matched": true,
+    "k_layer": 94,
+    "checked_words": 53,
+    "mismatched_words": 0,
+    "pad_words_zero": 6
+   },
    "edges": 44,
    "fill_sectors": 14,
    "drain_sectors": 7,
@@ -3571,7 +5680,14 @@
      "production_timing_price"
     ]
    },
-   "inputs_placeholder": true,
+   "inputs_placeholder": false,
+   "fixture": {
+    "matched": true,
+    "k_layer": 95,
+    "checked_words": 53,
+    "mismatched_words": 0,
+    "pad_words_zero": 3
+   },
    "edges": 43,
    "fill_sectors": 7,
    "drain_sectors": 7,
@@ -3611,8 +5727,24 @@
    ],
    "status": "blocked:format_open",
    "reasons": [
-    "COLL programme image format not emitted by v1"
-   ]
+    "COLL programme image format not emitted by v1",
+    "payload_open: tools/hbm_coll_static_calendar.py (transport reservations) + hb_coll_SW programme ABI"
+   ],
+   "cp_targets": [
+    {
+     "instance": "hb_coll_SW",
+     "tgt": null
+    },
+    {
+     "instance": "vmfc_SW",
+     "tgt": 56
+    },
+    {
+     "instance": "epcal_SW",
+     "tgt": 132
+    }
+   ],
+   "cp_transport": "host_cp_ingress F20 frames -> hleaf_SW (cp_frames)"
   },
   {
    "i": 129,
@@ -3636,8 +5768,20 @@
    "target_ports": [],
    "status": "blocked:format_open",
    "reasons": [
-    "FUSED programme image format not emitted by v1"
-   ]
+    "FUSED programme image format not emitted by v1",
+    "payload_open: hc_SW rows + col_sfu_SW collar (2 striped spaces, tools/hbm_static/su_arith_sfu_compile.py lanes)"
+   ],
+   "cp_targets": [
+    {
+     "instance": "hc_SW",
+     "tgt": 108
+    },
+    {
+     "instance": "col_sfu_SW",
+     "tgt": 116
+    }
+   ],
+   "cp_transport": "host_cp_ingress F20 frames -> hleaf_SW (cp_frames)"
   }
  ],
  "placement_conflicts": [],
@@ -4182,6 +6326,5 @@
   "emitted_unparameterised": 2,
   "unsupported_lowering": 11,
   "v1_unsupported": 11
- },
- "regenerate": "PYTHONPATH=tools python3 -m hbm_layer_vehicle.layer_images --design ds --layer L --boundary results/rtl/hbm_ds_layer_tput_1018/slice_sw/boundary.json --out DIR"
+ }
 }

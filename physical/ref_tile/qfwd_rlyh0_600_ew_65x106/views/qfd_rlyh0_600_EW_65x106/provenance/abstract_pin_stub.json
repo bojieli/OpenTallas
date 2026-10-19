@@ -4,24 +4,24 @@
   "status": "PASS",
   "input": {
     "path": "provenance/raw/qfd_rlyh0_600_EW_65x106.lef",
-    "sha256": "04b42f51f511a7857626f2d635dc01df8e3e2aa54858c31f6f0d72948cf8c557"
+    "sha256": "73d4d01dc1bb83140d680c52acbb5cdcb1129aac2c0c1d1edd0fd03aee482de9"
   },
   "environment": {
     "OT_OBS_CLOSE": null,
     "OT_OBS_CLOSE_UM": null
   },
   "helper": {
-    "path": "/srv/opentallas-scratch2/claude/closure-loop/qfwd_rlyh0_600_ew_65x106-c1-614c9774b/src/tools/hier_contract/abstract_pin_stub.py",
-    "sha256": "c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05"
+    "path": "/srv/opentallas-scratch/claude/closure-loop/qfwd_rlyh0_600_ew_65x106-f1-fc2236d82/src/tools/hier_contract/abstract_pin_stub.py",
+    "sha256": "b8face3a1a84574baea067ee96d597695a051a30254422c9c432c3769c38509a"
   },
   "command": [
     "/usr/bin/python3",
-    "/srv/opentallas-scratch2/claude/closure-loop/qfwd_rlyh0_600_ew_65x106-c1-614c9774b/src/tools/hier_contract/abstract_pin_stub.py",
-    "/srv/opentallas-scratch2/claude/closure-loop/qfwd_rlyh0_600_ew_65x106-c1-614c9774b/record/views/qfd_rlyh0_600_EW_65x106/provenance/raw/qfd_rlyh0_600_EW_65x106.lef",
-    "/srv/opentallas-scratch2/claude/closure-loop/qfwd_rlyh0_600_ew_65x106-c1-614c9774b/record/views/qfd_rlyh0_600_EW_65x106/provenance/qfd_rlyh0_600_EW_65x106.candidate.lef"
+    "/srv/opentallas-scratch/claude/closure-loop/qfwd_rlyh0_600_ew_65x106-f1-fc2236d82/src/tools/hier_contract/abstract_pin_stub.py",
+    "/srv/opentallas-scratch/claude/closure-loop/qfwd_rlyh0_600_ew_65x106-f1-fc2236d82/record/views/qfd_rlyh0_600_EW_65x106/provenance/raw/qfd_rlyh0_600_EW_65x106.lef",
+    "/srv/opentallas-scratch/claude/closure-loop/qfwd_rlyh0_600_ew_65x106-f1-fc2236d82/record/views/qfd_rlyh0_600_EW_65x106/provenance/qfd_rlyh0_600_EW_65x106.candidate.lef"
   ],
   "returncode": 0,
-  "stdout": "pinstub: 0 OBS rects moved into 0 pins: ; pockets: 129 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
+  "stdout": "pinstub: 0 OBS rects moved into 0 pins: ; pockets: 113 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
   "stderr": "",
   "invariants": {
     "macro_outline": "PASS",
@@ -30,11 +30,11 @@
   },
   "child_lint": {
     "schema": "opentallas.hier_contract.child_lint.v1",
-    "lef": "/srv/opentallas-scratch2/claude/closure-loop/qfwd_rlyh0_600_ew_65x106-c1-614c9774b/record/views/qfd_rlyh0_600_EW_65x106/provenance/qfd_rlyh0_600_EW_65x106.candidate.lef",
+    "lef": "/srv/opentallas-scratch/claude/closure-loop/qfwd_rlyh0_600_ew_65x106-f1-fc2236d82/record/views/qfd_rlyh0_600_EW_65x106/provenance/qfd_rlyh0_600_EW_65x106.candidate.lef",
     "verdict": "PASS",
     "fails": [],
     "warns": [],
-    "summary": "qfd_rlyh0_600_EW_65x106 64.776 x 105.816: PG M5 VDD 23 stripes (92% spread, 100% cov) / VSS 23 stripes (92% spread, 100% cov); strap M6; face pins 1204 blocked-above 0 blocked-same 0; clock ck insertion 171 ps; pockets M5 0 (closed)",
+    "summary": "qfd_rlyh0_600_EW_65x106 64.776 x 105.816: PG M5 VDD 23 stripes (92% spread, 100% cov) / VSS 23 stripes (92% spread, 100% cov); strap M6; face pins 1204 blocked-above 0 blocked-same 0; clock ck insertion 203 ps; pockets M5 0 (closed)",
     "info": {
       "cell": "qfd_rlyh0_600_EW_65x106",
       "W": 64.776,
@@ -68,7 +68,7 @@
       "face": {
         "face_pins": 1204,
         "blocked_above": 0,
-        "covered_below": 523,
+        "covered_below": 236,
         "examples": [],
         "blocked_same": 0,
         "same_examples": [],
@@ -77,8 +77,8 @@
       },
       "clock_insertion": {
         "ck": {
-          "max_ps": 171.25,
-          "min_ps": 133.03
+          "max_ps": 203.25,
+          "min_ps": 160.58
         }
       },
       "pockets": {
@@ -87,16 +87,17 @@
         "marker": {
           "layer": "M5",
           "d_um": 1.536,
-          "added": 129
+          "added": 113
         },
         "count": 0,
         "area_um2": 0,
         "examples": []
-      }
+      },
+      "pin_access_violations": 0
     }
   },
   "output": {
     "path": "qfd_rlyh0_600_EW_65x106.lef",
-    "sha256": "52e0e2d0e1fcf7d92d4c01305747df0c3143e3b9342553a60db915e5815d6529"
+    "sha256": "73901d907a615dd4dbf9e738b8fd9e5dffee6017fef494e5e7055a2bf1520398"
   }
 }

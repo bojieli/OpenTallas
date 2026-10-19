@@ -4,24 +4,24 @@
   "status": "PASS",
   "input": {
     "path": "provenance/raw/qfd_landh0_128_EW_65x30.lef",
-    "sha256": "62b0cc24cfef6f2a11385f1d0fb63c426c05e20f53a7af8a73c021945a2494bc"
+    "sha256": "710fb96dc519f8c181c3e69fae9cfebcf010b47dce8b3af796f6a34b03272e0b"
   },
   "environment": {
     "OT_OBS_CLOSE": null,
     "OT_OBS_CLOSE_UM": null
   },
   "helper": {
-    "path": "/srv/opentallas-scratch/claude/closure-loop/qfwd_landh0_128_ew_65x30-c1-adb31b45f/src/tools/hier_contract/abstract_pin_stub.py",
+    "path": "/srv/opentallas-scratch/claude/closure-loop/qfwd_landh0_128_ew_65x30-h1-2317a052a/src/tools/hier_contract/abstract_pin_stub.py",
     "sha256": "c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05"
   },
   "command": [
     "/usr/bin/python3",
-    "/srv/opentallas-scratch/claude/closure-loop/qfwd_landh0_128_ew_65x30-c1-adb31b45f/src/tools/hier_contract/abstract_pin_stub.py",
-    "/srv/opentallas-scratch/claude/closure-loop/qfwd_landh0_128_ew_65x30-c1-adb31b45f/record/views/qfd_landh0_128_EW_65x30/provenance/raw/qfd_landh0_128_EW_65x30.lef",
-    "/srv/opentallas-scratch/claude/closure-loop/qfwd_landh0_128_ew_65x30-c1-adb31b45f/record/views/qfd_landh0_128_EW_65x30/provenance/qfd_landh0_128_EW_65x30.candidate.lef"
+    "/srv/opentallas-scratch/claude/closure-loop/qfwd_landh0_128_ew_65x30-h1-2317a052a/src/tools/hier_contract/abstract_pin_stub.py",
+    "/srv/opentallas-scratch/claude/closure-loop/qfwd_landh0_128_ew_65x30-h1-2317a052a/record/views/qfd_landh0_128_EW_65x30/provenance/raw/qfd_landh0_128_EW_65x30.lef",
+    "/srv/opentallas-scratch/claude/closure-loop/qfwd_landh0_128_ew_65x30-h1-2317a052a/record/views/qfd_landh0_128_EW_65x30/provenance/qfd_landh0_128_EW_65x30.candidate.lef"
   ],
   "returncode": 0,
-  "stdout": "pinstub: 0 OBS rects moved into 0 pins: ; pockets: 141 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
+  "stdout": "pinstub: 0 OBS rects moved into 0 pins: ; pockets: 109 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
   "stderr": "",
   "invariants": {
     "macro_outline": "PASS",
@@ -30,11 +30,11 @@
   },
   "child_lint": {
     "schema": "opentallas.hier_contract.child_lint.v1",
-    "lef": "/srv/opentallas-scratch/claude/closure-loop/qfwd_landh0_128_ew_65x30-c1-adb31b45f/record/views/qfd_landh0_128_EW_65x30/provenance/qfd_landh0_128_EW_65x30.candidate.lef",
+    "lef": "/srv/opentallas-scratch/claude/closure-loop/qfwd_landh0_128_ew_65x30-h1-2317a052a/record/views/qfd_landh0_128_EW_65x30/provenance/qfd_landh0_128_EW_65x30.candidate.lef",
     "verdict": "PASS",
     "fails": [],
     "warns": [],
-    "summary": "qfd_landh0_128_EW_65x30 64.776 x 30.216: PG M5 VDD 23 stripes (92% spread, 100% cov) / VSS 23 stripes (92% spread, 100% cov); strap M6; face pins 266 blocked-above 0 blocked-same 0; clock ck insertion 76 ps; clock ck_s insertion 124 ps; pockets M5 0 (closed)",
+    "summary": "qfd_landh0_128_EW_65x30 64.776 x 30.216: PG M5 VDD 23 stripes (92% spread, 100% cov) / VSS 23 stripes (92% spread, 100% cov); strap M6; face pins 266 blocked-above 0 blocked-same 0; clock ck insertion 77 ps; clock ck_s insertion 124 ps; pockets M5 0 (closed)",
     "info": {
       "cell": "qfd_landh0_128_EW_65x30",
       "W": 64.776,
@@ -68,7 +68,7 @@
       "face": {
         "face_pins": 266,
         "blocked_above": 0,
-        "covered_below": 23,
+        "covered_below": 9,
         "examples": [],
         "blocked_same": 0,
         "same_examples": [],
@@ -77,12 +77,12 @@
       },
       "clock_insertion": {
         "ck": {
-          "max_ps": 76.01,
-          "min_ps": 60.55
+          "max_ps": 76.61,
+          "min_ps": 59.81
         },
         "ck_s": {
-          "max_ps": 123.99,
-          "min_ps": 104.83
+          "max_ps": 124.06,
+          "min_ps": 105.83
         }
       },
       "pockets": {
@@ -91,7 +91,7 @@
         "marker": {
           "layer": "M5",
           "d_um": 1.536,
-          "added": 141
+          "added": 109
         },
         "count": 0,
         "area_um2": 0,
@@ -101,6 +101,6 @@
   },
   "output": {
     "path": "qfd_landh0_128_EW_65x30.lef",
-    "sha256": "ff8af086f958fa2cebc05a37ecd7ce15f36b3c5359058a6aa03a17f2a8e9e61a"
+    "sha256": "b8f4cbf68bf65de14b62222eaa997323e2209a185eee2f903ce77fa2085c26a1"
   }
 }

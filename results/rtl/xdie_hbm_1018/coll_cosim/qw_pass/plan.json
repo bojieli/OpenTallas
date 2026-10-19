@@ -1,0 +1,139 @@
+{
+ "plan": {
+  "0": {
+   "C": {
+    "K1": 11,
+    "K2": 7,
+    "gcL": 116
+   },
+   "ready_assumed": 152,
+   "release_word": 153,
+   "guard": 8,
+   "order": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "rows": 38,
+   "unrolled": 199,
+   "cal_words": 166,
+   "wr": [
+    17,
+    18
+   ],
+   "rd": [
+    26,
+    27
+   ],
+   "rx_expect": [
+    166,
+    176
+   ],
+   "drain_slots": [
+    154,
+    164
+   ],
+   "ops": [
+    [
+     0,
+     17
+    ],
+    [
+     1,
+     18
+    ],
+    [
+     2,
+     172
+    ],
+    [
+     3,
+     182
+    ]
+   ],
+   "publication_row": 195
+  },
+  "1": {
+   "C": {
+    "K1": 11,
+    "K2": 7,
+    "gcL": 116
+   },
+   "ready_assumed": 146,
+   "release_word": 147,
+   "guard": 8,
+   "order": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "rows": 44,
+   "unrolled": 204,
+   "cal_words": 151,
+   "wr": [
+    17,
+    18
+   ],
+   "rd": [
+    26,
+    27
+   ],
+   "rx_expect": [
+    160,
+    161
+   ],
+   "drain_slots": [
+    148,
+    149
+   ],
+   "ops": [
+    [
+     0,
+     166
+    ],
+    [
+     1,
+     167
+    ],
+    [
+     2,
+     177
+    ],
+    [
+     3,
+     187
+    ]
+   ],
+   "publication_row": 200
+  }
+ },
+ "mut": "",
+ "release_early": 0,
+ "golden_order": [
+  0,
+  1,
+  2,
+  3
+ ],
+ "order_sensitive_lanes": 6,
+ "golden_hex": [
+  "c130282f",
+  "4319aa11",
+  "442aef96",
+  "c22e82fc",
+  "be031448",
+  "418dc579",
+  "c2be5b7c",
+  "442cae24",
+  "c2afb42d",
+  "c4660990",
+  "c33d307e",
+  "40a1e18c",
+  "3d037b3a",
+  "42aa0282",
+  "43f2d4b4",
+  "c2aae722"
+ ]
+}

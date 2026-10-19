@@ -22,7 +22,7 @@ module qkd_pvw_die_t #(
  localparam integer TRUNK_D=54, FLAG_D=58;
  localparam [255:0] COL_D={8'd12, 8'd18, 8'd24, 8'd30, 8'd36, 8'd42, 8'd48, 8'd54, 8'd12, 8'd18, 8'd24, 8'd30, 8'd36, 8'd42, 8'd48, 8'd54, 8'd12, 8'd18, 8'd24, 8'd30, 8'd36, 8'd42, 8'd48, 8'd54, 8'd12, 8'd18, 8'd24, 8'd30, 8'd36, 8'd42, 8'd48, 8'd54};   // column s: COL_D[8s+:8]
  localparam [63:0] DELTA={8'd3, 8'd9, 8'd15, 8'd21, 8'd27, 8'd33, 8'd39, 8'd45};   // group g: DELTA[8g+:8]
- localparam integer RS_D=49;   // result trunk: beat b leaves rs_* at pair age out_age + RS_D + b
+ localparam integer RS_D=50;   // result trunk: beat b leaves rs_* at pair age out_age + RS_D + b
  wire[7:0] in_valid,req_valid; wire[111:0] in_t,req_t; wire[127:0] in_epoch; wire[59:0] cmd_w;
  wire[31:0] yv_w,jf_w,cv_w,cf_w;
  assign in_valid[0]=vh0[0]; assign in_t[13:0]=vh0[14:1]; assign in_epoch[15:0]=vh0[30:15]; assign vrq0={req_t[13:0],req_valid[0]};
@@ -4637,5 +4637,5 @@ module qkd_pvw_die_t #(
  qkd_rlys_296 u_T1Q1_48_r0 (.ck(col_clk[32]), .a({{38{1'b0}}, w_T1Q1_47[257:0]}), .b(w_T1Q1_48));
  qkd_rlys_296 u_T1Q0_49_r0 (.ck(col_clk[32]), .a({{38{1'b0}}, w_T1Q0_48[257:0]}), .b(w_T1Q0_49));
  qkd_rlys_296 u_T1Q1_49_r0 (.ck(col_clk[32]), .a({{38{1'b0}}, w_T1Q1_48[257:0]}), .b(w_T1Q1_49));
- qkd_pv_rs_hd_r #(.KV(32)) u_RH_r0 (.ck(col_clk[32]), .a0(w_T0Q0_47[257:0]), .a1(w_T0Q1_47[257:0]), .b0(w_T1Q0_49[257:0]), .b1(w_T1Q1_49[257:0]), .a0v(w_T0Q0_47[288:258]), .a0t(w_T0Q0_47[289]), .a1v(w_T0Q1_47[288:258]), .a1t(w_T0Q1_47[289]), .ep(out_epoch), .o_valid(rs_valid), .o_beat(rs_beat), .o_epoch(rs_epoch), .o_data(rs_data));
+ qkd_pv_rs_hd_f #(.KV(32)) u_RH_r0 (.ck(col_clk[32]), .a0(w_T0Q0_47[257:0]), .a1(w_T0Q1_47[257:0]), .b0(w_T1Q0_49[257:0]), .b1(w_T1Q1_49[257:0]), .a0v(w_T0Q0_47[288:258]), .a0t(w_T0Q0_47[289]), .a1v(w_T0Q1_47[288:258]), .a1t(w_T0Q1_47[289]), .ep(out_epoch), .o_valid(rs_valid), .o_beat(rs_beat), .o_epoch(rs_epoch), .o_data(rs_data));
 endmodule
