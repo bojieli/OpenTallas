@@ -8,7 +8,6 @@ estimate_parasitics -placement
 source /src/physical/common_flow/native_pg_binding.tcl
 ot_pg_audit_snapshot [ord::get_db_block] $::env(COUPON_PG_JSON)
 report_units
-report_clocks
 report_clock_latency -clock [get_clocks core_clk]
 report_clock_skew -setup
 report_clock_skew -hold
