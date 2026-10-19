@@ -1,0 +1,3992 @@
+[
+  {
+    "driver": "land1\\[3\\]$_DFF_P_/QN",
+    "driver_role": "FF_output",
+    "net": "_0060_",
+    "transparent_driver": false,
+    "logical_pin_count": 23,
+    "role_counts": {
+      "reset_or_preset": 23
+    },
+    "endpoints": [
+      {
+        "pin": "b_rx_copy2$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0060_",
+          "land1\\[3\\]"
+        ]
+      },
+      {
+        "pin": "b_rx_copy3$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0060_",
+          "land1\\[3\\]"
+        ]
+      },
+      {
+        "pin": "b_tx_copy3$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0060_",
+          "land1\\[3\\]"
+        ]
+      },
+      {
+        "pin": "rel0$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0060_",
+          "land1\\[3\\]"
+        ]
+      },
+      {
+        "pin": "rel1\\[0\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0060_",
+          "land1\\[3\\]"
+        ]
+      },
+      {
+        "pin": "rel1\\[10\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0060_",
+          "land1\\[3\\]"
+        ]
+      },
+      {
+        "pin": "rel1\\[11\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0060_",
+          "land1\\[3\\]"
+        ]
+      },
+      {
+        "pin": "rel1\\[12\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0060_",
+          "land1\\[3\\]"
+        ]
+      },
+      {
+        "pin": "rel1\\[13\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0060_",
+          "land1\\[3\\]"
+        ]
+      },
+      {
+        "pin": "rel1\\[14\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0060_",
+          "land1\\[3\\]"
+        ]
+      },
+      {
+        "pin": "rel1\\[15\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0060_",
+          "land1\\[3\\]"
+        ]
+      },
+      {
+        "pin": "rel1\\[16\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0060_",
+          "land1\\[3\\]"
+        ]
+      },
+      {
+        "pin": "rel1\\[17\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0060_",
+          "land1\\[3\\]"
+        ]
+      },
+      {
+        "pin": "rel1\\[18\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0060_",
+          "land1\\[3\\]"
+        ]
+      },
+      {
+        "pin": "rel1\\[1\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0060_",
+          "land1\\[3\\]"
+        ]
+      },
+      {
+        "pin": "rel1\\[2\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0060_",
+          "land1\\[3\\]"
+        ]
+      },
+      {
+        "pin": "rel1\\[3\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0060_",
+          "land1\\[3\\]"
+        ]
+      },
+      {
+        "pin": "rel1\\[4\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0060_",
+          "land1\\[3\\]"
+        ]
+      },
+      {
+        "pin": "rel1\\[5\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0060_",
+          "land1\\[3\\]"
+        ]
+      },
+      {
+        "pin": "rel1\\[6\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0060_",
+          "land1\\[3\\]"
+        ]
+      },
+      {
+        "pin": "rel1\\[7\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0060_",
+          "land1\\[3\\]"
+        ]
+      },
+      {
+        "pin": "rel1\\[8\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0060_",
+          "land1\\[3\\]"
+        ]
+      },
+      {
+        "pin": "rel1\\[9\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0060_",
+          "land1\\[3\\]"
+        ]
+      }
+    ]
+  },
+  {
+    "driver": "rel0$_DFF_PN0_/QN",
+    "driver_role": "FF_output",
+    "net": "_0200_",
+    "transparent_driver": false,
+    "logical_pin_count": 19,
+    "role_counts": {
+      "FF_data": 19
+    },
+    "endpoints": [
+      {
+        "pin": "rel1\\[0\\]$_DFF_PN0_/D",
+        "role": "FF_data",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0200_",
+          "rel0"
+        ]
+      },
+      {
+        "pin": "rel1\\[10\\]$_DFF_PN0_/D",
+        "role": "FF_data",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0200_",
+          "rel0"
+        ]
+      },
+      {
+        "pin": "rel1\\[11\\]$_DFF_PN0_/D",
+        "role": "FF_data",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0200_",
+          "rel0"
+        ]
+      },
+      {
+        "pin": "rel1\\[12\\]$_DFF_PN0_/D",
+        "role": "FF_data",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0200_",
+          "rel0"
+        ]
+      },
+      {
+        "pin": "rel1\\[13\\]$_DFF_PN0_/D",
+        "role": "FF_data",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0200_",
+          "rel0"
+        ]
+      },
+      {
+        "pin": "rel1\\[14\\]$_DFF_PN0_/D",
+        "role": "FF_data",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0200_",
+          "rel0"
+        ]
+      },
+      {
+        "pin": "rel1\\[15\\]$_DFF_PN0_/D",
+        "role": "FF_data",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0200_",
+          "rel0"
+        ]
+      },
+      {
+        "pin": "rel1\\[16\\]$_DFF_PN0_/D",
+        "role": "FF_data",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0200_",
+          "rel0"
+        ]
+      },
+      {
+        "pin": "rel1\\[17\\]$_DFF_PN0_/D",
+        "role": "FF_data",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0200_",
+          "rel0"
+        ]
+      },
+      {
+        "pin": "rel1\\[18\\]$_DFF_PN0_/D",
+        "role": "FF_data",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0200_",
+          "rel0"
+        ]
+      },
+      {
+        "pin": "rel1\\[1\\]$_DFF_PN0_/D",
+        "role": "FF_data",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0200_",
+          "rel0"
+        ]
+      },
+      {
+        "pin": "rel1\\[2\\]$_DFF_PN0_/D",
+        "role": "FF_data",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0200_",
+          "rel0"
+        ]
+      },
+      {
+        "pin": "rel1\\[3\\]$_DFF_PN0_/D",
+        "role": "FF_data",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0200_",
+          "rel0"
+        ]
+      },
+      {
+        "pin": "rel1\\[4\\]$_DFF_PN0_/D",
+        "role": "FF_data",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0200_",
+          "rel0"
+        ]
+      },
+      {
+        "pin": "rel1\\[5\\]$_DFF_PN0_/D",
+        "role": "FF_data",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0200_",
+          "rel0"
+        ]
+      },
+      {
+        "pin": "rel1\\[6\\]$_DFF_PN0_/D",
+        "role": "FF_data",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0200_",
+          "rel0"
+        ]
+      },
+      {
+        "pin": "rel1\\[7\\]$_DFF_PN0_/D",
+        "role": "FF_data",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0200_",
+          "rel0"
+        ]
+      },
+      {
+        "pin": "rel1\\[8\\]$_DFF_PN0_/D",
+        "role": "FF_data",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0200_",
+          "rel0"
+        ]
+      },
+      {
+        "pin": "rel1\\[9\\]$_DFF_PN0_/D",
+        "role": "FF_data",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0200_",
+          "rel0"
+        ]
+      }
+    ]
+  },
+  {
+    "driver": "land0$_DFF_P_/QN",
+    "driver_role": "FF_output",
+    "net": "_0201_",
+    "transparent_driver": false,
+    "logical_pin_count": 4,
+    "role_counts": {
+      "FF_data": 4
+    },
+    "endpoints": [
+      {
+        "pin": "land1\\[0\\]$_DFF_P_/D",
+        "role": "FF_data",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0201_",
+          "land0"
+        ]
+      },
+      {
+        "pin": "land1\\[1\\]$_DFF_P_/D",
+        "role": "FF_data",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0201_",
+          "land0"
+        ]
+      },
+      {
+        "pin": "land1\\[2\\]$_DFF_P_/D",
+        "role": "FF_data",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0201_",
+          "land0"
+        ]
+      },
+      {
+        "pin": "land1\\[3\\]$_DFF_P_/D",
+        "role": "FF_data",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0201_",
+          "land0"
+        ]
+      }
+    ]
+  },
+  {
+    "driver": "land1\\[0\\]$_DFF_P_/QN",
+    "driver_role": "FF_output",
+    "net": "_0202_",
+    "transparent_driver": false,
+    "logical_pin_count": 16,
+    "role_counts": {
+      "reset_or_preset": 16
+    },
+    "endpoints": [
+      {
+        "pin": "b_addr_q\\[0\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0202_",
+          "land1\\[0\\]"
+        ]
+      },
+      {
+        "pin": "b_addr_q\\[1\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0202_",
+          "land1\\[0\\]"
+        ]
+      },
+      {
+        "pin": "b_addr_q\\[2\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0202_",
+          "land1\\[0\\]"
+        ]
+      },
+      {
+        "pin": "b_addr_q\\[3\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0202_",
+          "land1\\[0\\]"
+        ]
+      },
+      {
+        "pin": "b_addr_q\\[4\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0202_",
+          "land1\\[0\\]"
+        ]
+      },
+      {
+        "pin": "b_addr_q\\[5\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0202_",
+          "land1\\[0\\]"
+        ]
+      },
+      {
+        "pin": "b_data_q\\[0\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0202_",
+          "land1\\[0\\]"
+        ]
+      },
+      {
+        "pin": "b_data_q\\[1\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0202_",
+          "land1\\[0\\]"
+        ]
+      },
+      {
+        "pin": "b_data_q\\[2\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0202_",
+          "land1\\[0\\]"
+        ]
+      },
+      {
+        "pin": "b_data_q\\[3\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0202_",
+          "land1\\[0\\]"
+        ]
+      },
+      {
+        "pin": "b_data_q\\[4\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0202_",
+          "land1\\[0\\]"
+        ]
+      },
+      {
+        "pin": "b_rx_q$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0202_",
+          "land1\\[0\\]"
+        ]
+      },
+      {
+        "pin": "b_tx_q$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0202_",
+          "land1\\[0\\]"
+        ]
+      },
+      {
+        "pin": "epoch_go_q$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0202_",
+          "land1\\[0\\]"
+        ]
+      },
+      {
+        "pin": "halt_q$_DFF_PN1_/SETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0202_",
+          "land1\\[0\\]"
+        ]
+      },
+      {
+        "pin": "reload_q$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0202_",
+          "land1\\[0\\]"
+        ]
+      }
+    ]
+  },
+  {
+    "driver": "land1\\[1\\]$_DFF_P_/QN",
+    "driver_role": "FF_output",
+    "net": "_0203_",
+    "transparent_driver": false,
+    "logical_pin_count": 16,
+    "role_counts": {
+      "reset_or_preset": 16
+    },
+    "endpoints": [
+      {
+        "pin": "b_data_q\\[10\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0203_",
+          "land1\\[1\\]"
+        ]
+      },
+      {
+        "pin": "b_data_q\\[11\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0203_",
+          "land1\\[1\\]"
+        ]
+      },
+      {
+        "pin": "b_data_q\\[12\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0203_",
+          "land1\\[1\\]"
+        ]
+      },
+      {
+        "pin": "b_data_q\\[13\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0203_",
+          "land1\\[1\\]"
+        ]
+      },
+      {
+        "pin": "b_data_q\\[14\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0203_",
+          "land1\\[1\\]"
+        ]
+      },
+      {
+        "pin": "b_data_q\\[15\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0203_",
+          "land1\\[1\\]"
+        ]
+      },
+      {
+        "pin": "b_data_q\\[16\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0203_",
+          "land1\\[1\\]"
+        ]
+      },
+      {
+        "pin": "b_data_q\\[17\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0203_",
+          "land1\\[1\\]"
+        ]
+      },
+      {
+        "pin": "b_data_q\\[18\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0203_",
+          "land1\\[1\\]"
+        ]
+      },
+      {
+        "pin": "b_data_q\\[19\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0203_",
+          "land1\\[1\\]"
+        ]
+      },
+      {
+        "pin": "b_data_q\\[20\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0203_",
+          "land1\\[1\\]"
+        ]
+      },
+      {
+        "pin": "b_data_q\\[5\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0203_",
+          "land1\\[1\\]"
+        ]
+      },
+      {
+        "pin": "b_data_q\\[6\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0203_",
+          "land1\\[1\\]"
+        ]
+      },
+      {
+        "pin": "b_data_q\\[7\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0203_",
+          "land1\\[1\\]"
+        ]
+      },
+      {
+        "pin": "b_data_q\\[8\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0203_",
+          "land1\\[1\\]"
+        ]
+      },
+      {
+        "pin": "b_data_q\\[9\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0203_",
+          "land1\\[1\\]"
+        ]
+      }
+    ]
+  },
+  {
+    "driver": "land1\\[2\\]$_DFF_P_/QN",
+    "driver_role": "FF_output",
+    "net": "_0204_",
+    "transparent_driver": false,
+    "logical_pin_count": 16,
+    "role_counts": {
+      "reset_or_preset": 16
+    },
+    "endpoints": [
+      {
+        "pin": "b_data_q\\[21\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0204_",
+          "land1\\[2\\]"
+        ]
+      },
+      {
+        "pin": "b_data_q\\[22\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0204_",
+          "land1\\[2\\]"
+        ]
+      },
+      {
+        "pin": "b_data_q\\[23\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0204_",
+          "land1\\[2\\]"
+        ]
+      },
+      {
+        "pin": "b_data_q\\[24\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0204_",
+          "land1\\[2\\]"
+        ]
+      },
+      {
+        "pin": "b_data_q\\[25\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0204_",
+          "land1\\[2\\]"
+        ]
+      },
+      {
+        "pin": "b_data_q\\[26\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0204_",
+          "land1\\[2\\]"
+        ]
+      },
+      {
+        "pin": "b_data_q\\[27\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0204_",
+          "land1\\[2\\]"
+        ]
+      },
+      {
+        "pin": "b_data_q\\[28\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0204_",
+          "land1\\[2\\]"
+        ]
+      },
+      {
+        "pin": "b_data_q\\[29\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0204_",
+          "land1\\[2\\]"
+        ]
+      },
+      {
+        "pin": "b_data_q\\[30\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0204_",
+          "land1\\[2\\]"
+        ]
+      },
+      {
+        "pin": "b_data_q\\[31\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0204_",
+          "land1\\[2\\]"
+        ]
+      },
+      {
+        "pin": "b_rx_copy0$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0204_",
+          "land1\\[2\\]"
+        ]
+      },
+      {
+        "pin": "b_rx_copy1$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0204_",
+          "land1\\[2\\]"
+        ]
+      },
+      {
+        "pin": "b_tx_copy0$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0204_",
+          "land1\\[2\\]"
+        ]
+      },
+      {
+        "pin": "b_tx_copy1$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0204_",
+          "land1\\[2\\]"
+        ]
+      },
+      {
+        "pin": "b_tx_copy2$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0204_",
+          "land1\\[2\\]"
+        ]
+      }
+    ]
+  },
+  {
+    "driver": "rel1\\[13\\]$_DFF_PN0_/QN",
+    "driver_role": "FF_output",
+    "net": "_0271_",
+    "transparent_driver": false,
+    "logical_pin_count": 14,
+    "role_counts": {
+      "reset_or_preset": 14
+    },
+    "endpoints": [
+      {
+        "pin": "u_seq.init_copy0$_DFF_PN1_/SETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0271_",
+          "rel1\\[13\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.ip_img2\\[2\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0271_",
+          "rel1\\[13\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.ip_img2\\[3\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0271_",
+          "rel1\\[13\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.ip_img2\\[4\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0271_",
+          "rel1\\[13\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.ip_img2\\[5\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0271_",
+          "rel1\\[13\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.ip_img3\\[0\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0271_",
+          "rel1\\[13\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.ip_img3\\[1\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0271_",
+          "rel1\\[13\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.ip_img3\\[2\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0271_",
+          "rel1\\[13\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.ip_img3\\[3\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0271_",
+          "rel1\\[13\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.ip_img3\\[4\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0271_",
+          "rel1\\[13\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.ip_img3\\[5\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0271_",
+          "rel1\\[13\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.running_copy0$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0271_",
+          "rel1\\[13\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.running_copy1$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0271_",
+          "rel1\\[13\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.running_copy2$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0271_",
+          "rel1\\[13\\]"
+        ]
+      }
+    ]
+  },
+  {
+    "driver": "rel1\\[12\\]$_DFF_PN0_/QN",
+    "driver_role": "FF_output",
+    "net": "_0272_",
+    "transparent_driver": false,
+    "logical_pin_count": 14,
+    "role_counts": {
+      "reset_or_preset": 14
+    },
+    "endpoints": [
+      {
+        "pin": "u_seq.ip_img0\\[0\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0272_",
+          "rel1\\[12\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.ip_img0\\[1\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0272_",
+          "rel1\\[12\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.ip_img0\\[2\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0272_",
+          "rel1\\[12\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.ip_img0\\[3\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0272_",
+          "rel1\\[12\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.ip_img0\\[4\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0272_",
+          "rel1\\[12\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.ip_img0\\[5\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0272_",
+          "rel1\\[12\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.ip_img1\\[0\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0272_",
+          "rel1\\[12\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.ip_img1\\[1\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0272_",
+          "rel1\\[12\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.ip_img1\\[2\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0272_",
+          "rel1\\[12\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.ip_img1\\[3\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0272_",
+          "rel1\\[12\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.ip_img1\\[4\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0272_",
+          "rel1\\[12\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.ip_img1\\[5\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0272_",
+          "rel1\\[12\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.ip_img2\\[0\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0272_",
+          "rel1\\[12\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.ip_img2\\[1\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0272_",
+          "rel1\\[12\\]"
+        ]
+      }
+    ]
+  },
+  {
+    "driver": "rel1\\[14\\]$_DFF_PN0_/QN",
+    "driver_role": "FF_output",
+    "net": "_0273_",
+    "transparent_driver": false,
+    "logical_pin_count": 2,
+    "role_counts": {
+      "reset_or_preset": 2
+    },
+    "endpoints": [
+      {
+        "pin": "u_seq.init_copy1$_DFF_PN1_/SETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0273_",
+          "rel1\\[14\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.init_copy2$_DFF_PN1_/SETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0273_",
+          "rel1\\[14\\]"
+        ]
+      }
+    ]
+  },
+  {
+    "driver": "rel1\\[9\\]$_DFF_PN0_/QN",
+    "driver_role": "FF_output",
+    "net": "_0290_",
+    "transparent_driver": false,
+    "logical_pin_count": 16,
+    "role_counts": {
+      "reset_or_preset": 16
+    },
+    "endpoints": [
+      {
+        "pin": "u_seq.pcnt\\[18\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0290_",
+          "rel1\\[9\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.pcnt\\[19\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0290_",
+          "rel1\\[9\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.pcnt\\[20\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0290_",
+          "rel1\\[9\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.pcnt\\[21\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0290_",
+          "rel1\\[9\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.pcnt\\[22\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0290_",
+          "rel1\\[9\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.pcnt\\[23\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0290_",
+          "rel1\\[9\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.pcnt\\[24\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0290_",
+          "rel1\\[9\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.pcnt\\[25\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0290_",
+          "rel1\\[9\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.pcnt\\[26\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0290_",
+          "rel1\\[9\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.pcnt\\[27\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0290_",
+          "rel1\\[9\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.pcnt\\[28\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0290_",
+          "rel1\\[9\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.pcnt\\[29\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0290_",
+          "rel1\\[9\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.pcnt\\[30\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0290_",
+          "rel1\\[9\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.pcnt\\[31\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0290_",
+          "rel1\\[9\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.prun$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0290_",
+          "rel1\\[9\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.tok_start$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0290_",
+          "rel1\\[9\\]"
+        ]
+      }
+    ]
+  },
+  {
+    "driver": "rel1\\[8\\]$_DFF_PN0_/QN",
+    "driver_role": "FF_output",
+    "net": "_0291_",
+    "transparent_driver": false,
+    "logical_pin_count": 16,
+    "role_counts": {
+      "reset_or_preset": 16
+    },
+    "endpoints": [
+      {
+        "pin": "u_seq.pcnt\\[10\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0291_",
+          "rel1\\[8\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.pcnt\\[11\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0291_",
+          "rel1\\[8\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.pcnt\\[12\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0291_",
+          "rel1\\[8\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.pcnt\\[13\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0291_",
+          "rel1\\[8\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.pcnt\\[14\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0291_",
+          "rel1\\[8\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.pcnt\\[15\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0291_",
+          "rel1\\[8\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.pcnt\\[16\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0291_",
+          "rel1\\[8\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.pcnt\\[17\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0291_",
+          "rel1\\[8\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.pcnt\\[2\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0291_",
+          "rel1\\[8\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.pcnt\\[3\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0291_",
+          "rel1\\[8\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.pcnt\\[4\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0291_",
+          "rel1\\[8\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.pcnt\\[5\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0291_",
+          "rel1\\[8\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.pcnt\\[6\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0291_",
+          "rel1\\[8\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.pcnt\\[7\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0291_",
+          "rel1\\[8\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.pcnt\\[8\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0291_",
+          "rel1\\[8\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.pcnt\\[9\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0291_",
+          "rel1\\[8\\]"
+        ]
+      }
+    ]
+  },
+  {
+    "driver": "rel1\\[7\\]$_DFF_PN0_/QN",
+    "driver_role": "FF_output",
+    "net": "_0292_",
+    "transparent_driver": false,
+    "logical_pin_count": 16,
+    "role_counts": {
+      "reset_or_preset": 16
+    },
+    "endpoints": [
+      {
+        "pin": "u_seq.adm_done$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0292_",
+          "rel1\\[7\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.adm_pend$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0292_",
+          "rel1\\[7\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.adm_run$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0292_",
+          "rel1\\[7\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.auto_go$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0292_",
+          "rel1\\[7\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.e\\[23\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0292_",
+          "rel1\\[7\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.e\\[24\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0292_",
+          "rel1\\[7\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.e\\[25\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0292_",
+          "rel1\\[7\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.e\\[26\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0292_",
+          "rel1\\[7\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.e\\[27\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0292_",
+          "rel1\\[7\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.e\\[28\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0292_",
+          "rel1\\[7\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.e\\[29\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0292_",
+          "rel1\\[7\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.e\\[30\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0292_",
+          "rel1\\[7\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.e\\[31\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0292_",
+          "rel1\\[7\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.pcnt\\[0\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0292_",
+          "rel1\\[7\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.pcnt\\[1\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0292_",
+          "rel1\\[7\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.tokbase$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0292_",
+          "rel1\\[7\\]"
+        ]
+      }
+    ]
+  },
+  {
+    "driver": "rel1\\[6\\]$_DFF_PN0_/QN",
+    "driver_role": "FF_output",
+    "net": "_0293_",
+    "transparent_driver": false,
+    "logical_pin_count": 16,
+    "role_counts": {
+      "reset_or_preset": 16
+    },
+    "endpoints": [
+      {
+        "pin": "_2954_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0293_",
+          "rel1\\[6\\]"
+        ]
+      },
+      {
+        "pin": "_2967_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0293_",
+          "rel1\\[6\\]"
+        ]
+      },
+      {
+        "pin": "_2968_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0293_",
+          "rel1\\[6\\]"
+        ]
+      },
+      {
+        "pin": "_2969_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0293_",
+          "rel1\\[6\\]"
+        ]
+      },
+      {
+        "pin": "_2970_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0293_",
+          "rel1\\[6\\]"
+        ]
+      },
+      {
+        "pin": "_2971_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0293_",
+          "rel1\\[6\\]"
+        ]
+      },
+      {
+        "pin": "_2972_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0293_",
+          "rel1\\[6\\]"
+        ]
+      },
+      {
+        "pin": "_2973_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0293_",
+          "rel1\\[6\\]"
+        ]
+      },
+      {
+        "pin": "_2974_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0293_",
+          "rel1\\[6\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.e\\[16\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0293_",
+          "rel1\\[6\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.e\\[17\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0293_",
+          "rel1\\[6\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.e\\[18\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0293_",
+          "rel1\\[6\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.e\\[19\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0293_",
+          "rel1\\[6\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.e\\[20\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0293_",
+          "rel1\\[6\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.e\\[21\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0293_",
+          "rel1\\[6\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.e\\[22\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0293_",
+          "rel1\\[6\\]"
+        ]
+      }
+    ]
+  },
+  {
+    "driver": "rel1\\[4\\]$_DFF_PN0_/QN",
+    "driver_role": "FF_output",
+    "net": "_0294_",
+    "transparent_driver": false,
+    "logical_pin_count": 16,
+    "role_counts": {
+      "reset_or_preset": 16
+    },
+    "endpoints": [
+      {
+        "pin": "_2955_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0294_",
+          "rel1\\[4\\]"
+        ]
+      },
+      {
+        "pin": "_2975_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0294_",
+          "rel1\\[4\\]"
+        ]
+      },
+      {
+        "pin": "_2976_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0294_",
+          "rel1\\[4\\]"
+        ]
+      },
+      {
+        "pin": "_2977_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0294_",
+          "rel1\\[4\\]"
+        ]
+      },
+      {
+        "pin": "_2978_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0294_",
+          "rel1\\[4\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.layer\\[0\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0294_",
+          "rel1\\[4\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.li\\[0\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0294_",
+          "rel1\\[4\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.li\\[1\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0294_",
+          "rel1\\[4\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.li\\[2\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0294_",
+          "rel1\\[4\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.li\\[3\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0294_",
+          "rel1\\[4\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.li\\[4\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0294_",
+          "rel1\\[4\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.li\\[5\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0294_",
+          "rel1\\[4\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.t\\[16\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0294_",
+          "rel1\\[4\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.t\\[17\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0294_",
+          "rel1\\[4\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.t\\[18\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0294_",
+          "rel1\\[4\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.t\\[19\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0294_",
+          "rel1\\[4\\]"
+        ]
+      }
+    ]
+  },
+  {
+    "driver": "rel1\\[3\\]$_DFF_PN0_/QN",
+    "driver_role": "FF_output",
+    "net": "_0295_",
+    "transparent_driver": false,
+    "logical_pin_count": 15,
+    "role_counts": {
+      "reset_or_preset": 15
+    },
+    "endpoints": [
+      {
+        "pin": "_2956_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0295_",
+          "rel1\\[3\\]"
+        ]
+      },
+      {
+        "pin": "_2979_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0295_",
+          "rel1\\[3\\]"
+        ]
+      },
+      {
+        "pin": "_2980_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0295_",
+          "rel1\\[3\\]"
+        ]
+      },
+      {
+        "pin": "_2981_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0295_",
+          "rel1\\[3\\]"
+        ]
+      },
+      {
+        "pin": "_2982_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0295_",
+          "rel1\\[3\\]"
+        ]
+      },
+      {
+        "pin": "_2983_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0295_",
+          "rel1\\[3\\]"
+        ]
+      },
+      {
+        "pin": "_2984_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0295_",
+          "rel1\\[3\\]"
+        ]
+      },
+      {
+        "pin": "_2985_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0295_",
+          "rel1\\[3\\]"
+        ]
+      },
+      {
+        "pin": "_2986_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0295_",
+          "rel1\\[3\\]"
+        ]
+      },
+      {
+        "pin": "_2987_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0295_",
+          "rel1\\[3\\]"
+        ]
+      },
+      {
+        "pin": "_2988_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0295_",
+          "rel1\\[3\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.cal_seg$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0295_",
+          "rel1\\[3\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.cal_start$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0295_",
+          "rel1\\[3\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.cfg_data\\[29\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0295_",
+          "rel1\\[3\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.cfg_data\\[30\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0295_",
+          "rel1\\[3\\]"
+        ]
+      }
+    ]
+  },
+  {
+    "driver": "rel1\\[2\\]$_DFF_PN0_/QN",
+    "driver_role": "FF_output",
+    "net": "_0296_",
+    "transparent_driver": false,
+    "logical_pin_count": 16,
+    "role_counts": {
+      "reset_or_preset": 16
+    },
+    "endpoints": [
+      {
+        "pin": "_2953_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0296_",
+          "rel1\\[2\\]"
+        ]
+      },
+      {
+        "pin": "_2965_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0296_",
+          "rel1\\[2\\]"
+        ]
+      },
+      {
+        "pin": "_2966_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0296_",
+          "rel1\\[2\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.cfg_data\\[16\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0296_",
+          "rel1\\[2\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.cfg_data\\[17\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0296_",
+          "rel1\\[2\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.cfg_data\\[18\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0296_",
+          "rel1\\[2\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.cfg_data\\[19\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0296_",
+          "rel1\\[2\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.cfg_data\\[20\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0296_",
+          "rel1\\[2\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.cfg_data\\[21\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0296_",
+          "rel1\\[2\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.cfg_data\\[22\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0296_",
+          "rel1\\[2\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.cfg_data\\[23\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0296_",
+          "rel1\\[2\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.cfg_data\\[24\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0296_",
+          "rel1\\[2\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.cfg_data\\[25\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0296_",
+          "rel1\\[2\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.cfg_data\\[26\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0296_",
+          "rel1\\[2\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.cfg_data\\[27\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0296_",
+          "rel1\\[2\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.cfg_data\\[28\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0296_",
+          "rel1\\[2\\]"
+        ]
+      }
+    ]
+  },
+  {
+    "driver": "rel1\\[1\\]$_DFF_PN0_/QN",
+    "driver_role": "FF_output",
+    "net": "_0297_",
+    "transparent_driver": false,
+    "logical_pin_count": 13,
+    "role_counts": {
+      "reset_or_preset": 13
+    },
+    "endpoints": [
+      {
+        "pin": "_2951_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0297_",
+          "rel1\\[1\\]"
+        ]
+      },
+      {
+        "pin": "_2995_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0297_",
+          "rel1\\[1\\]"
+        ]
+      },
+      {
+        "pin": "_2996_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0297_",
+          "rel1\\[1\\]"
+        ]
+      },
+      {
+        "pin": "_2997_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0297_",
+          "rel1\\[1\\]"
+        ]
+      },
+      {
+        "pin": "_2998_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0297_",
+          "rel1\\[1\\]"
+        ]
+      },
+      {
+        "pin": "_2999_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0297_",
+          "rel1\\[1\\]"
+        ]
+      },
+      {
+        "pin": "_3000_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0297_",
+          "rel1\\[1\\]"
+        ]
+      },
+      {
+        "pin": "_3001_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0297_",
+          "rel1\\[1\\]"
+        ]
+      },
+      {
+        "pin": "_3002_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0297_",
+          "rel1\\[1\\]"
+        ]
+      },
+      {
+        "pin": "_3003_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0297_",
+          "rel1\\[1\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.cfg_addr\\[3\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0297_",
+          "rel1\\[1\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.cfg_addr\\[4\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0297_",
+          "rel1\\[1\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.cfg_addr\\[5\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0297_",
+          "rel1\\[1\\]"
+        ]
+      }
+    ]
+  },
+  {
+    "driver": "rel1\\[0\\]$_DFF_PN0_/QN",
+    "driver_role": "FF_output",
+    "net": "_0298_",
+    "transparent_driver": false,
+    "logical_pin_count": 16,
+    "role_counts": {
+      "reset_or_preset": 16
+    },
+    "endpoints": [
+      {
+        "pin": "u_seq.cal_ready$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0298_",
+          "rel1\\[0\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.cfg_addr\\[0\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0298_",
+          "rel1\\[0\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.cfg_addr\\[1\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0298_",
+          "rel1\\[0\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.cfg_addr\\[2\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0298_",
+          "rel1\\[0\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.cfg_rx_we$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0298_",
+          "rel1\\[0\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.cfg_tx_we$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0298_",
+          "rel1\\[0\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.fault$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0298_",
+          "rel1\\[0\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.init$_DFF_PN1_/SETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0298_",
+          "rel1\\[0\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.ip\\[0\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0298_",
+          "rel1\\[0\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.ip\\[1\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0298_",
+          "rel1\\[0\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.ip\\[2\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0298_",
+          "rel1\\[0\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.ip\\[3\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0298_",
+          "rel1\\[0\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.ip\\[4\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0298_",
+          "rel1\\[0\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.ip\\[5\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0298_",
+          "rel1\\[0\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.ip\\[6\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0298_",
+          "rel1\\[0\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.running$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0298_",
+          "rel1\\[0\\]"
+        ]
+      }
+    ]
+  },
+  {
+    "driver": "rel1\\[11\\]$_DFF_PN0_/QN",
+    "driver_role": "FF_output",
+    "net": "_0299_",
+    "transparent_driver": false,
+    "logical_pin_count": 16,
+    "role_counts": {
+      "reset_or_preset": 16
+    },
+    "endpoints": [
+      {
+        "pin": "u_seq.li_mux2\\[2\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0299_",
+          "rel1\\[11\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.li_mux2\\[3\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0299_",
+          "rel1\\[11\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.li_mux2\\[4\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0299_",
+          "rel1\\[11\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.li_mux2\\[5\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0299_",
+          "rel1\\[11\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.li_mux3\\[0\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0299_",
+          "rel1\\[11\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.li_mux3\\[1\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0299_",
+          "rel1\\[11\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.li_mux3\\[2\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0299_",
+          "rel1\\[11\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.li_mux3\\[3\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0299_",
+          "rel1\\[11\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.li_mux3\\[4\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0299_",
+          "rel1\\[11\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.li_mux3\\[5\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0299_",
+          "rel1\\[11\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.li_mux4\\[0\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0299_",
+          "rel1\\[11\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.li_mux4\\[1\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0299_",
+          "rel1\\[11\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.li_mux4\\[2\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0299_",
+          "rel1\\[11\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.li_mux4\\[3\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0299_",
+          "rel1\\[11\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.li_mux4\\[4\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0299_",
+          "rel1\\[11\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.li_mux4\\[5\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0299_",
+          "rel1\\[11\\]"
+        ]
+      }
+    ]
+  },
+  {
+    "driver": "rel1\\[5\\]$_DFF_PN0_/QN",
+    "driver_role": "FF_output",
+    "net": "_0300_",
+    "transparent_driver": false,
+    "logical_pin_count": 14,
+    "role_counts": {
+      "reset_or_preset": 14
+    },
+    "endpoints": [
+      {
+        "pin": "_2952_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0300_",
+          "rel1\\[5\\]"
+        ]
+      },
+      {
+        "pin": "_2989_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0300_",
+          "rel1\\[5\\]"
+        ]
+      },
+      {
+        "pin": "_2990_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0300_",
+          "rel1\\[5\\]"
+        ]
+      },
+      {
+        "pin": "_2991_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0300_",
+          "rel1\\[5\\]"
+        ]
+      },
+      {
+        "pin": "_2992_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0300_",
+          "rel1\\[5\\]"
+        ]
+      },
+      {
+        "pin": "_2993_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0300_",
+          "rel1\\[5\\]"
+        ]
+      },
+      {
+        "pin": "_2994_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0300_",
+          "rel1\\[5\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.eact$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0300_",
+          "rel1\\[5\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.ep_q$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0300_",
+          "rel1\\[5\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.layer\\[1\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0300_",
+          "rel1\\[5\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.layer\\[2\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0300_",
+          "rel1\\[5\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.layer\\[3\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0300_",
+          "rel1\\[5\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.layer\\[4\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0300_",
+          "rel1\\[5\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.layer\\[5\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0300_",
+          "rel1\\[5\\]"
+        ]
+      }
+    ]
+  },
+  {
+    "driver": "rel1\\[10\\]$_DFF_PN0_/QN",
+    "driver_role": "FF_output",
+    "net": "_0301_",
+    "transparent_driver": false,
+    "logical_pin_count": 16,
+    "role_counts": {
+      "reset_or_preset": 16
+    },
+    "endpoints": [
+      {
+        "pin": "u_seq.ep_q_copy0$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0301_",
+          "rel1\\[10\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.ep_q_copy1$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0301_",
+          "rel1\\[10\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.li_mux0\\[0\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0301_",
+          "rel1\\[10\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.li_mux0\\[1\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0301_",
+          "rel1\\[10\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.li_mux0\\[2\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0301_",
+          "rel1\\[10\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.li_mux0\\[3\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0301_",
+          "rel1\\[10\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.li_mux0\\[4\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0301_",
+          "rel1\\[10\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.li_mux0\\[5\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0301_",
+          "rel1\\[10\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.li_mux1\\[0\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0301_",
+          "rel1\\[10\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.li_mux1\\[1\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0301_",
+          "rel1\\[10\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.li_mux1\\[2\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0301_",
+          "rel1\\[10\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.li_mux1\\[3\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0301_",
+          "rel1\\[10\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.li_mux1\\[4\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0301_",
+          "rel1\\[10\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.li_mux1\\[5\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0301_",
+          "rel1\\[10\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.li_mux2\\[0\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0301_",
+          "rel1\\[10\\]"
+        ]
+      },
+      {
+        "pin": "u_seq.li_mux2\\[1\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0301_",
+          "rel1\\[10\\]"
+        ]
+      }
+    ]
+  },
+  {
+    "driver": "rel1\\[18\\]$_DFF_PN0_/QN",
+    "driver_role": "FF_output",
+    "net": "_0302_",
+    "transparent_driver": false,
+    "logical_pin_count": 11,
+    "role_counts": {
+      "reset_or_preset": 11
+    },
+    "endpoints": [
+      {
+        "pin": "adm_act$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0302_",
+          "rel1\\[18\\]"
+        ]
+      },
+      {
+        "pin": "adm_done$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0302_",
+          "rel1\\[18\\]"
+        ]
+      },
+      {
+        "pin": "brx_seen$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0302_",
+          "rel1\\[18\\]"
+        ]
+      },
+      {
+        "pin": "btx_seen$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0302_",
+          "rel1\\[18\\]"
+        ]
+      },
+      {
+        "pin": "fault$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0302_",
+          "rel1\\[18\\]"
+        ]
+      },
+      {
+        "pin": "layer\\[4\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0302_",
+          "rel1\\[18\\]"
+        ]
+      },
+      {
+        "pin": "layer\\[5\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0302_",
+          "rel1\\[18\\]"
+        ]
+      },
+      {
+        "pin": "rdy_copy0$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0302_",
+          "rel1\\[18\\]"
+        ]
+      },
+      {
+        "pin": "rdy_copy1$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0302_",
+          "rel1\\[18\\]"
+        ]
+      },
+      {
+        "pin": "rdy_copy2$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0302_",
+          "rel1\\[18\\]"
+        ]
+      },
+      {
+        "pin": "tok_start$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0302_",
+          "rel1\\[18\\]"
+        ]
+      }
+    ]
+  },
+  {
+    "driver": "rel1\\[17\\]$_DFF_PN0_/QN",
+    "driver_role": "FF_output",
+    "net": "_0303_",
+    "transparent_driver": false,
+    "logical_pin_count": 16,
+    "role_counts": {
+      "reset_or_preset": 16
+    },
+    "endpoints": [
+      {
+        "pin": "cal_ready$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0303_",
+          "rel1\\[17\\]"
+        ]
+      },
+      {
+        "pin": "cal_seg$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0303_",
+          "rel1\\[17\\]"
+        ]
+      },
+      {
+        "pin": "cal_start$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0303_",
+          "rel1\\[17\\]"
+        ]
+      },
+      {
+        "pin": "cfg_data\\[24\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0303_",
+          "rel1\\[17\\]"
+        ]
+      },
+      {
+        "pin": "cfg_data\\[25\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0303_",
+          "rel1\\[17\\]"
+        ]
+      },
+      {
+        "pin": "cfg_data\\[26\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0303_",
+          "rel1\\[17\\]"
+        ]
+      },
+      {
+        "pin": "cfg_data\\[27\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0303_",
+          "rel1\\[17\\]"
+        ]
+      },
+      {
+        "pin": "cfg_data\\[28\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0303_",
+          "rel1\\[17\\]"
+        ]
+      },
+      {
+        "pin": "cfg_data\\[29\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0303_",
+          "rel1\\[17\\]"
+        ]
+      },
+      {
+        "pin": "cfg_data\\[30\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0303_",
+          "rel1\\[17\\]"
+        ]
+      },
+      {
+        "pin": "cfg_data\\[31\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0303_",
+          "rel1\\[17\\]"
+        ]
+      },
+      {
+        "pin": "layer\\[0\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0303_",
+          "rel1\\[17\\]"
+        ]
+      },
+      {
+        "pin": "layer\\[1\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0303_",
+          "rel1\\[17\\]"
+        ]
+      },
+      {
+        "pin": "layer\\[2\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0303_",
+          "rel1\\[17\\]"
+        ]
+      },
+      {
+        "pin": "layer\\[3\\]$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0303_",
+          "rel1\\[17\\]"
+        ]
+      },
+      {
+        "pin": "running$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0303_",
+          "rel1\\[17\\]"
+        ]
+      }
+    ]
+  },
+  {
+    "driver": "rel1\\[16\\]$_DFF_PN0_/QN",
+    "driver_role": "FF_output",
+    "net": "_0304_",
+    "transparent_driver": false,
+    "logical_pin_count": 16,
+    "role_counts": {
+      "reset_or_preset": 16
+    },
+    "endpoints": [
+      {
+        "pin": "cfg_data\\[10\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0304_",
+          "rel1\\[16\\]"
+        ]
+      },
+      {
+        "pin": "cfg_data\\[11\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0304_",
+          "rel1\\[16\\]"
+        ]
+      },
+      {
+        "pin": "cfg_data\\[12\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0304_",
+          "rel1\\[16\\]"
+        ]
+      },
+      {
+        "pin": "cfg_data\\[13\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0304_",
+          "rel1\\[16\\]"
+        ]
+      },
+      {
+        "pin": "cfg_data\\[14\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0304_",
+          "rel1\\[16\\]"
+        ]
+      },
+      {
+        "pin": "cfg_data\\[15\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0304_",
+          "rel1\\[16\\]"
+        ]
+      },
+      {
+        "pin": "cfg_data\\[16\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0304_",
+          "rel1\\[16\\]"
+        ]
+      },
+      {
+        "pin": "cfg_data\\[17\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0304_",
+          "rel1\\[16\\]"
+        ]
+      },
+      {
+        "pin": "cfg_data\\[18\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0304_",
+          "rel1\\[16\\]"
+        ]
+      },
+      {
+        "pin": "cfg_data\\[19\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0304_",
+          "rel1\\[16\\]"
+        ]
+      },
+      {
+        "pin": "cfg_data\\[20\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0304_",
+          "rel1\\[16\\]"
+        ]
+      },
+      {
+        "pin": "cfg_data\\[21\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0304_",
+          "rel1\\[16\\]"
+        ]
+      },
+      {
+        "pin": "cfg_data\\[22\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0304_",
+          "rel1\\[16\\]"
+        ]
+      },
+      {
+        "pin": "cfg_data\\[23\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0304_",
+          "rel1\\[16\\]"
+        ]
+      },
+      {
+        "pin": "cfg_data\\[8\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0304_",
+          "rel1\\[16\\]"
+        ]
+      },
+      {
+        "pin": "cfg_data\\[9\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0304_",
+          "rel1\\[16\\]"
+        ]
+      }
+    ]
+  },
+  {
+    "driver": "rel1\\[15\\]$_DFF_PN0_/QN",
+    "driver_role": "FF_output",
+    "net": "_0305_",
+    "transparent_driver": false,
+    "logical_pin_count": 16,
+    "role_counts": {
+      "reset_or_preset": 16
+    },
+    "endpoints": [
+      {
+        "pin": "_2957_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0305_",
+          "rel1\\[15\\]"
+        ]
+      },
+      {
+        "pin": "_2958_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0305_",
+          "rel1\\[15\\]"
+        ]
+      },
+      {
+        "pin": "_2959_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0305_",
+          "rel1\\[15\\]"
+        ]
+      },
+      {
+        "pin": "_2960_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0305_",
+          "rel1\\[15\\]"
+        ]
+      },
+      {
+        "pin": "_2961_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0305_",
+          "rel1\\[15\\]"
+        ]
+      },
+      {
+        "pin": "_2962_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0305_",
+          "rel1\\[15\\]"
+        ]
+      },
+      {
+        "pin": "_2963_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0305_",
+          "rel1\\[15\\]"
+        ]
+      },
+      {
+        "pin": "_2964_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0305_",
+          "rel1\\[15\\]"
+        ]
+      },
+      {
+        "pin": "cfg_addr\\[0\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0305_",
+          "rel1\\[15\\]"
+        ]
+      },
+      {
+        "pin": "cfg_addr\\[1\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0305_",
+          "rel1\\[15\\]"
+        ]
+      },
+      {
+        "pin": "cfg_addr\\[2\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0305_",
+          "rel1\\[15\\]"
+        ]
+      },
+      {
+        "pin": "cfg_addr\\[3\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0305_",
+          "rel1\\[15\\]"
+        ]
+      },
+      {
+        "pin": "cfg_addr\\[4\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0305_",
+          "rel1\\[15\\]"
+        ]
+      },
+      {
+        "pin": "cfg_addr\\[5\\]$_DFFE_PN0P_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0305_",
+          "rel1\\[15\\]"
+        ]
+      },
+      {
+        "pin": "cfg_rx_we$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0305_",
+          "rel1\\[15\\]"
+        ]
+      },
+      {
+        "pin": "cfg_tx_we$_DFF_PN0_/RESETN",
+        "role": "reset_or_preset",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "transparent_inversion_parity": 1,
+        "net_path": [
+          "_0305_",
+          "rel1\\[15\\]"
+        ]
+      }
+    ]
+  }
+]

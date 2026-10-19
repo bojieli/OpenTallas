@@ -1,0 +1,4544 @@
+{
+  "input_boundary": [
+    {
+      "driver": "PORT/bcfg_addr[0]",
+      "driver_role": "top_input",
+      "net": "bcfg_addr[0]",
+      "transparent_driver": false,
+      "logical_pin_count": 1,
+      "role_counts": {
+        "FF_data": 1
+      },
+      "endpoints": [
+        {
+          "pin": "b_addr_q\\[0\\]$_DFF_PN0_/D",
+          "role": "FF_data",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "bcfg_addr[0]"
+          ]
+        }
+      ]
+    },
+    {
+      "driver": "PORT/bcfg_addr[1]",
+      "driver_role": "top_input",
+      "net": "bcfg_addr[1]",
+      "transparent_driver": false,
+      "logical_pin_count": 1,
+      "role_counts": {
+        "FF_data": 1
+      },
+      "endpoints": [
+        {
+          "pin": "b_addr_q\\[1\\]$_DFF_PN0_/D",
+          "role": "FF_data",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "bcfg_addr[1]"
+          ]
+        }
+      ]
+    },
+    {
+      "driver": "PORT/bcfg_addr[2]",
+      "driver_role": "top_input",
+      "net": "bcfg_addr[2]",
+      "transparent_driver": false,
+      "logical_pin_count": 1,
+      "role_counts": {
+        "FF_data": 1
+      },
+      "endpoints": [
+        {
+          "pin": "b_addr_q\\[2\\]$_DFF_PN0_/D",
+          "role": "FF_data",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "bcfg_addr[2]"
+          ]
+        }
+      ]
+    },
+    {
+      "driver": "PORT/bcfg_addr[3]",
+      "driver_role": "top_input",
+      "net": "bcfg_addr[3]",
+      "transparent_driver": false,
+      "logical_pin_count": 1,
+      "role_counts": {
+        "FF_data": 1
+      },
+      "endpoints": [
+        {
+          "pin": "b_addr_q\\[3\\]$_DFF_PN0_/D",
+          "role": "FF_data",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "bcfg_addr[3]"
+          ]
+        }
+      ]
+    },
+    {
+      "driver": "PORT/bcfg_addr[4]",
+      "driver_role": "top_input",
+      "net": "bcfg_addr[4]",
+      "transparent_driver": false,
+      "logical_pin_count": 1,
+      "role_counts": {
+        "FF_data": 1
+      },
+      "endpoints": [
+        {
+          "pin": "b_addr_q\\[4\\]$_DFF_PN0_/D",
+          "role": "FF_data",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "bcfg_addr[4]"
+          ]
+        }
+      ]
+    },
+    {
+      "driver": "PORT/bcfg_addr[5]",
+      "driver_role": "top_input",
+      "net": "bcfg_addr[5]",
+      "transparent_driver": false,
+      "logical_pin_count": 1,
+      "role_counts": {
+        "FF_data": 1
+      },
+      "endpoints": [
+        {
+          "pin": "b_addr_q\\[5\\]$_DFF_PN0_/D",
+          "role": "FF_data",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "bcfg_addr[5]"
+          ]
+        }
+      ]
+    },
+    {
+      "driver": "PORT/bcfg_data[0]",
+      "driver_role": "top_input",
+      "net": "bcfg_data[0]",
+      "transparent_driver": false,
+      "logical_pin_count": 1,
+      "role_counts": {
+        "FF_data": 1
+      },
+      "endpoints": [
+        {
+          "pin": "b_data_q\\[0\\]$_DFF_PN0_/D",
+          "role": "FF_data",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "bcfg_data[0]"
+          ]
+        }
+      ]
+    },
+    {
+      "driver": "PORT/bcfg_data[10]",
+      "driver_role": "top_input",
+      "net": "bcfg_data[10]",
+      "transparent_driver": false,
+      "logical_pin_count": 1,
+      "role_counts": {
+        "FF_data": 1
+      },
+      "endpoints": [
+        {
+          "pin": "b_data_q\\[10\\]$_DFF_PN0_/D",
+          "role": "FF_data",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "bcfg_data[10]"
+          ]
+        }
+      ]
+    },
+    {
+      "driver": "PORT/bcfg_data[11]",
+      "driver_role": "top_input",
+      "net": "bcfg_data[11]",
+      "transparent_driver": false,
+      "logical_pin_count": 1,
+      "role_counts": {
+        "FF_data": 1
+      },
+      "endpoints": [
+        {
+          "pin": "b_data_q\\[11\\]$_DFF_PN0_/D",
+          "role": "FF_data",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "bcfg_data[11]"
+          ]
+        }
+      ]
+    },
+    {
+      "driver": "PORT/bcfg_data[12]",
+      "driver_role": "top_input",
+      "net": "bcfg_data[12]",
+      "transparent_driver": false,
+      "logical_pin_count": 1,
+      "role_counts": {
+        "FF_data": 1
+      },
+      "endpoints": [
+        {
+          "pin": "b_data_q\\[12\\]$_DFF_PN0_/D",
+          "role": "FF_data",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "bcfg_data[12]"
+          ]
+        }
+      ]
+    },
+    {
+      "driver": "PORT/bcfg_data[13]",
+      "driver_role": "top_input",
+      "net": "bcfg_data[13]",
+      "transparent_driver": false,
+      "logical_pin_count": 1,
+      "role_counts": {
+        "FF_data": 1
+      },
+      "endpoints": [
+        {
+          "pin": "b_data_q\\[13\\]$_DFF_PN0_/D",
+          "role": "FF_data",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "bcfg_data[13]"
+          ]
+        }
+      ]
+    },
+    {
+      "driver": "PORT/bcfg_data[14]",
+      "driver_role": "top_input",
+      "net": "bcfg_data[14]",
+      "transparent_driver": false,
+      "logical_pin_count": 1,
+      "role_counts": {
+        "FF_data": 1
+      },
+      "endpoints": [
+        {
+          "pin": "b_data_q\\[14\\]$_DFF_PN0_/D",
+          "role": "FF_data",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "bcfg_data[14]"
+          ]
+        }
+      ]
+    },
+    {
+      "driver": "PORT/bcfg_data[15]",
+      "driver_role": "top_input",
+      "net": "bcfg_data[15]",
+      "transparent_driver": false,
+      "logical_pin_count": 1,
+      "role_counts": {
+        "FF_data": 1
+      },
+      "endpoints": [
+        {
+          "pin": "b_data_q\\[15\\]$_DFF_PN0_/D",
+          "role": "FF_data",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "bcfg_data[15]"
+          ]
+        }
+      ]
+    },
+    {
+      "driver": "PORT/bcfg_data[16]",
+      "driver_role": "top_input",
+      "net": "bcfg_data[16]",
+      "transparent_driver": false,
+      "logical_pin_count": 1,
+      "role_counts": {
+        "FF_data": 1
+      },
+      "endpoints": [
+        {
+          "pin": "b_data_q\\[16\\]$_DFF_PN0_/D",
+          "role": "FF_data",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "bcfg_data[16]"
+          ]
+        }
+      ]
+    },
+    {
+      "driver": "PORT/bcfg_data[17]",
+      "driver_role": "top_input",
+      "net": "bcfg_data[17]",
+      "transparent_driver": false,
+      "logical_pin_count": 1,
+      "role_counts": {
+        "FF_data": 1
+      },
+      "endpoints": [
+        {
+          "pin": "b_data_q\\[17\\]$_DFF_PN0_/D",
+          "role": "FF_data",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "bcfg_data[17]"
+          ]
+        }
+      ]
+    },
+    {
+      "driver": "PORT/bcfg_data[18]",
+      "driver_role": "top_input",
+      "net": "bcfg_data[18]",
+      "transparent_driver": false,
+      "logical_pin_count": 1,
+      "role_counts": {
+        "FF_data": 1
+      },
+      "endpoints": [
+        {
+          "pin": "b_data_q\\[18\\]$_DFF_PN0_/D",
+          "role": "FF_data",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "bcfg_data[18]"
+          ]
+        }
+      ]
+    },
+    {
+      "driver": "PORT/bcfg_data[19]",
+      "driver_role": "top_input",
+      "net": "bcfg_data[19]",
+      "transparent_driver": false,
+      "logical_pin_count": 1,
+      "role_counts": {
+        "FF_data": 1
+      },
+      "endpoints": [
+        {
+          "pin": "b_data_q\\[19\\]$_DFF_PN0_/D",
+          "role": "FF_data",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "bcfg_data[19]"
+          ]
+        }
+      ]
+    },
+    {
+      "driver": "PORT/bcfg_data[1]",
+      "driver_role": "top_input",
+      "net": "bcfg_data[1]",
+      "transparent_driver": false,
+      "logical_pin_count": 1,
+      "role_counts": {
+        "FF_data": 1
+      },
+      "endpoints": [
+        {
+          "pin": "b_data_q\\[1\\]$_DFF_PN0_/D",
+          "role": "FF_data",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "bcfg_data[1]"
+          ]
+        }
+      ]
+    },
+    {
+      "driver": "PORT/bcfg_data[20]",
+      "driver_role": "top_input",
+      "net": "bcfg_data[20]",
+      "transparent_driver": false,
+      "logical_pin_count": 1,
+      "role_counts": {
+        "FF_data": 1
+      },
+      "endpoints": [
+        {
+          "pin": "b_data_q\\[20\\]$_DFF_PN0_/D",
+          "role": "FF_data",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "bcfg_data[20]"
+          ]
+        }
+      ]
+    },
+    {
+      "driver": "PORT/bcfg_data[21]",
+      "driver_role": "top_input",
+      "net": "bcfg_data[21]",
+      "transparent_driver": false,
+      "logical_pin_count": 1,
+      "role_counts": {
+        "FF_data": 1
+      },
+      "endpoints": [
+        {
+          "pin": "b_data_q\\[21\\]$_DFF_PN0_/D",
+          "role": "FF_data",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "bcfg_data[21]"
+          ]
+        }
+      ]
+    },
+    {
+      "driver": "PORT/bcfg_data[22]",
+      "driver_role": "top_input",
+      "net": "bcfg_data[22]",
+      "transparent_driver": false,
+      "logical_pin_count": 1,
+      "role_counts": {
+        "FF_data": 1
+      },
+      "endpoints": [
+        {
+          "pin": "b_data_q\\[22\\]$_DFF_PN0_/D",
+          "role": "FF_data",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "bcfg_data[22]"
+          ]
+        }
+      ]
+    },
+    {
+      "driver": "PORT/bcfg_data[23]",
+      "driver_role": "top_input",
+      "net": "bcfg_data[23]",
+      "transparent_driver": false,
+      "logical_pin_count": 1,
+      "role_counts": {
+        "FF_data": 1
+      },
+      "endpoints": [
+        {
+          "pin": "b_data_q\\[23\\]$_DFF_PN0_/D",
+          "role": "FF_data",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "bcfg_data[23]"
+          ]
+        }
+      ]
+    },
+    {
+      "driver": "PORT/bcfg_data[24]",
+      "driver_role": "top_input",
+      "net": "bcfg_data[24]",
+      "transparent_driver": false,
+      "logical_pin_count": 1,
+      "role_counts": {
+        "FF_data": 1
+      },
+      "endpoints": [
+        {
+          "pin": "b_data_q\\[24\\]$_DFF_PN0_/D",
+          "role": "FF_data",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "bcfg_data[24]"
+          ]
+        }
+      ]
+    },
+    {
+      "driver": "PORT/bcfg_data[25]",
+      "driver_role": "top_input",
+      "net": "bcfg_data[25]",
+      "transparent_driver": false,
+      "logical_pin_count": 1,
+      "role_counts": {
+        "FF_data": 1
+      },
+      "endpoints": [
+        {
+          "pin": "b_data_q\\[25\\]$_DFF_PN0_/D",
+          "role": "FF_data",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "bcfg_data[25]"
+          ]
+        }
+      ]
+    },
+    {
+      "driver": "PORT/bcfg_data[26]",
+      "driver_role": "top_input",
+      "net": "bcfg_data[26]",
+      "transparent_driver": false,
+      "logical_pin_count": 1,
+      "role_counts": {
+        "FF_data": 1
+      },
+      "endpoints": [
+        {
+          "pin": "b_data_q\\[26\\]$_DFF_PN0_/D",
+          "role": "FF_data",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "bcfg_data[26]"
+          ]
+        }
+      ]
+    },
+    {
+      "driver": "PORT/bcfg_data[27]",
+      "driver_role": "top_input",
+      "net": "bcfg_data[27]",
+      "transparent_driver": false,
+      "logical_pin_count": 1,
+      "role_counts": {
+        "FF_data": 1
+      },
+      "endpoints": [
+        {
+          "pin": "b_data_q\\[27\\]$_DFF_PN0_/D",
+          "role": "FF_data",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "bcfg_data[27]"
+          ]
+        }
+      ]
+    },
+    {
+      "driver": "PORT/bcfg_data[28]",
+      "driver_role": "top_input",
+      "net": "bcfg_data[28]",
+      "transparent_driver": false,
+      "logical_pin_count": 1,
+      "role_counts": {
+        "FF_data": 1
+      },
+      "endpoints": [
+        {
+          "pin": "b_data_q\\[28\\]$_DFF_PN0_/D",
+          "role": "FF_data",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "bcfg_data[28]"
+          ]
+        }
+      ]
+    },
+    {
+      "driver": "PORT/bcfg_data[29]",
+      "driver_role": "top_input",
+      "net": "bcfg_data[29]",
+      "transparent_driver": false,
+      "logical_pin_count": 1,
+      "role_counts": {
+        "FF_data": 1
+      },
+      "endpoints": [
+        {
+          "pin": "b_data_q\\[29\\]$_DFF_PN0_/D",
+          "role": "FF_data",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "bcfg_data[29]"
+          ]
+        }
+      ]
+    },
+    {
+      "driver": "PORT/bcfg_data[2]",
+      "driver_role": "top_input",
+      "net": "bcfg_data[2]",
+      "transparent_driver": false,
+      "logical_pin_count": 1,
+      "role_counts": {
+        "FF_data": 1
+      },
+      "endpoints": [
+        {
+          "pin": "b_data_q\\[2\\]$_DFF_PN0_/D",
+          "role": "FF_data",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "bcfg_data[2]"
+          ]
+        }
+      ]
+    },
+    {
+      "driver": "PORT/bcfg_data[30]",
+      "driver_role": "top_input",
+      "net": "bcfg_data[30]",
+      "transparent_driver": false,
+      "logical_pin_count": 1,
+      "role_counts": {
+        "FF_data": 1
+      },
+      "endpoints": [
+        {
+          "pin": "b_data_q\\[30\\]$_DFF_PN0_/D",
+          "role": "FF_data",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "bcfg_data[30]"
+          ]
+        }
+      ]
+    },
+    {
+      "driver": "PORT/bcfg_data[31]",
+      "driver_role": "top_input",
+      "net": "bcfg_data[31]",
+      "transparent_driver": false,
+      "logical_pin_count": 1,
+      "role_counts": {
+        "FF_data": 1
+      },
+      "endpoints": [
+        {
+          "pin": "b_data_q\\[31\\]$_DFF_PN0_/D",
+          "role": "FF_data",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "bcfg_data[31]"
+          ]
+        }
+      ]
+    },
+    {
+      "driver": "PORT/bcfg_data[3]",
+      "driver_role": "top_input",
+      "net": "bcfg_data[3]",
+      "transparent_driver": false,
+      "logical_pin_count": 1,
+      "role_counts": {
+        "FF_data": 1
+      },
+      "endpoints": [
+        {
+          "pin": "b_data_q\\[3\\]$_DFF_PN0_/D",
+          "role": "FF_data",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "bcfg_data[3]"
+          ]
+        }
+      ]
+    },
+    {
+      "driver": "PORT/bcfg_data[4]",
+      "driver_role": "top_input",
+      "net": "bcfg_data[4]",
+      "transparent_driver": false,
+      "logical_pin_count": 1,
+      "role_counts": {
+        "FF_data": 1
+      },
+      "endpoints": [
+        {
+          "pin": "b_data_q\\[4\\]$_DFF_PN0_/D",
+          "role": "FF_data",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "bcfg_data[4]"
+          ]
+        }
+      ]
+    },
+    {
+      "driver": "PORT/bcfg_data[5]",
+      "driver_role": "top_input",
+      "net": "bcfg_data[5]",
+      "transparent_driver": false,
+      "logical_pin_count": 1,
+      "role_counts": {
+        "FF_data": 1
+      },
+      "endpoints": [
+        {
+          "pin": "b_data_q\\[5\\]$_DFF_PN0_/D",
+          "role": "FF_data",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "bcfg_data[5]"
+          ]
+        }
+      ]
+    },
+    {
+      "driver": "PORT/bcfg_data[6]",
+      "driver_role": "top_input",
+      "net": "bcfg_data[6]",
+      "transparent_driver": false,
+      "logical_pin_count": 1,
+      "role_counts": {
+        "FF_data": 1
+      },
+      "endpoints": [
+        {
+          "pin": "b_data_q\\[6\\]$_DFF_PN0_/D",
+          "role": "FF_data",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "bcfg_data[6]"
+          ]
+        }
+      ]
+    },
+    {
+      "driver": "PORT/bcfg_data[7]",
+      "driver_role": "top_input",
+      "net": "bcfg_data[7]",
+      "transparent_driver": false,
+      "logical_pin_count": 1,
+      "role_counts": {
+        "FF_data": 1
+      },
+      "endpoints": [
+        {
+          "pin": "b_data_q\\[7\\]$_DFF_PN0_/D",
+          "role": "FF_data",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "bcfg_data[7]"
+          ]
+        }
+      ]
+    },
+    {
+      "driver": "PORT/bcfg_data[8]",
+      "driver_role": "top_input",
+      "net": "bcfg_data[8]",
+      "transparent_driver": false,
+      "logical_pin_count": 1,
+      "role_counts": {
+        "FF_data": 1
+      },
+      "endpoints": [
+        {
+          "pin": "b_data_q\\[8\\]$_DFF_PN0_/D",
+          "role": "FF_data",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "bcfg_data[8]"
+          ]
+        }
+      ]
+    },
+    {
+      "driver": "PORT/bcfg_data[9]",
+      "driver_role": "top_input",
+      "net": "bcfg_data[9]",
+      "transparent_driver": false,
+      "logical_pin_count": 1,
+      "role_counts": {
+        "FF_data": 1
+      },
+      "endpoints": [
+        {
+          "pin": "b_data_q\\[9\\]$_DFF_PN0_/D",
+          "role": "FF_data",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "bcfg_data[9]"
+          ]
+        }
+      ]
+    },
+    {
+      "driver": "PORT/bcfg_rx_we",
+      "driver_role": "top_input",
+      "net": "bcfg_rx_we",
+      "transparent_driver": false,
+      "logical_pin_count": 5,
+      "role_counts": {
+        "FF_data": 5
+      },
+      "endpoints": [
+        {
+          "pin": "b_rx_copy0$_DFF_PN0_/D",
+          "role": "FF_data",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "bcfg_rx_we"
+          ]
+        },
+        {
+          "pin": "b_rx_copy1$_DFF_PN0_/D",
+          "role": "FF_data",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "bcfg_rx_we"
+          ]
+        },
+        {
+          "pin": "b_rx_copy2$_DFF_PN0_/D",
+          "role": "FF_data",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "bcfg_rx_we"
+          ]
+        },
+        {
+          "pin": "b_rx_copy3$_DFF_PN0_/D",
+          "role": "FF_data",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "bcfg_rx_we"
+          ]
+        },
+        {
+          "pin": "b_rx_q$_DFF_PN0_/D",
+          "role": "FF_data",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "bcfg_rx_we"
+          ]
+        }
+      ]
+    },
+    {
+      "driver": "PORT/bcfg_tx_we",
+      "driver_role": "top_input",
+      "net": "bcfg_tx_we",
+      "transparent_driver": false,
+      "logical_pin_count": 5,
+      "role_counts": {
+        "FF_data": 5
+      },
+      "endpoints": [
+        {
+          "pin": "b_tx_copy0$_DFF_PN0_/D",
+          "role": "FF_data",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "bcfg_tx_we"
+          ]
+        },
+        {
+          "pin": "b_tx_copy1$_DFF_PN0_/D",
+          "role": "FF_data",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "bcfg_tx_we"
+          ]
+        },
+        {
+          "pin": "b_tx_copy2$_DFF_PN0_/D",
+          "role": "FF_data",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "bcfg_tx_we"
+          ]
+        },
+        {
+          "pin": "b_tx_copy3$_DFF_PN0_/D",
+          "role": "FF_data",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "bcfg_tx_we"
+          ]
+        },
+        {
+          "pin": "b_tx_q$_DFF_PN0_/D",
+          "role": "FF_data",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "bcfg_tx_we"
+          ]
+        }
+      ]
+    },
+    {
+      "driver": "PORT/ck",
+      "driver_role": "top_input",
+      "net": "ck",
+      "transparent_driver": false,
+      "logical_pin_count": 351,
+      "role_counts": {
+        "clock": 351
+      },
+      "endpoints": [
+        {
+          "pin": "_2951_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "_2952_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "_2953_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "_2954_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "_2955_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "_2956_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "_2957_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "_2958_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "_2959_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "_2960_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "_2961_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "_2962_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "_2963_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "_2964_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "_2965_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "_2966_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "_2967_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "_2968_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "_2969_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "_2970_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "_2971_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "_2972_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "_2973_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "_2974_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "_2975_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "_2976_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "_2977_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "_2978_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "_2979_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "_2980_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "_2981_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "_2982_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "_2983_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "_2984_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "_2985_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "_2986_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "_2987_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "_2988_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "_2989_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "_2990_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "_2991_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "_2992_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "_2993_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "_2994_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "_2995_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "_2996_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "_2997_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "_2998_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "_2999_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "_3000_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "_3001_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "_3002_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "_3003_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "adm_act$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "adm_done$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "b_addr_q\\[0\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "b_addr_q\\[1\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "b_addr_q\\[2\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "b_addr_q\\[3\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "b_addr_q\\[4\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "b_addr_q\\[5\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "b_data_q\\[0\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "b_data_q\\[10\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "b_data_q\\[11\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "b_data_q\\[12\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "b_data_q\\[13\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "b_data_q\\[14\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "b_data_q\\[15\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "b_data_q\\[16\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "b_data_q\\[17\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "b_data_q\\[18\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "b_data_q\\[19\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "b_data_q\\[1\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "b_data_q\\[20\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "b_data_q\\[21\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "b_data_q\\[22\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "b_data_q\\[23\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "b_data_q\\[24\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "b_data_q\\[25\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "b_data_q\\[26\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "b_data_q\\[27\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "b_data_q\\[28\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "b_data_q\\[29\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "b_data_q\\[2\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "b_data_q\\[30\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "b_data_q\\[31\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "b_data_q\\[3\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "b_data_q\\[4\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "b_data_q\\[5\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "b_data_q\\[6\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "b_data_q\\[7\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "b_data_q\\[8\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "b_data_q\\[9\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "b_rx_copy0$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "b_rx_copy1$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "b_rx_copy2$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "b_rx_copy3$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "b_rx_q$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "b_tx_copy0$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "b_tx_copy1$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "b_tx_copy2$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "b_tx_copy3$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "b_tx_q$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "brx_seen$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "btx_seen$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "cal_ready$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "cal_seg$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "cal_start$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "cfg_addr\\[0\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "cfg_addr\\[1\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "cfg_addr\\[2\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "cfg_addr\\[3\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "cfg_addr\\[4\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "cfg_addr\\[5\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "cfg_data\\[10\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "cfg_data\\[11\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "cfg_data\\[12\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "cfg_data\\[13\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "cfg_data\\[14\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "cfg_data\\[15\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "cfg_data\\[16\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "cfg_data\\[17\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "cfg_data\\[18\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "cfg_data\\[19\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "cfg_data\\[20\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "cfg_data\\[21\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "cfg_data\\[22\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "cfg_data\\[23\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "cfg_data\\[24\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "cfg_data\\[25\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "cfg_data\\[26\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "cfg_data\\[27\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "cfg_data\\[28\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "cfg_data\\[29\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "cfg_data\\[30\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "cfg_data\\[31\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "cfg_data\\[8\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "cfg_data\\[9\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "cfg_rx_we$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "cfg_tx_we$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "epoch_go_q$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "fault$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "halt_q$_DFF_PN1_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "land0$_DFF_P_/CLK",
+          "role": "clock",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "land1\\[0\\]$_DFF_P_/CLK",
+          "role": "clock",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "land1\\[1\\]$_DFF_P_/CLK",
+          "role": "clock",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "land1\\[2\\]$_DFF_P_/CLK",
+          "role": "clock",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "land1\\[3\\]$_DFF_P_/CLK",
+          "role": "clock",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "layer\\[0\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "layer\\[1\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "layer\\[2\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "layer\\[3\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "layer\\[4\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "layer\\[5\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "rdy_copy0$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "rdy_copy1$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "rdy_copy2$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "rel0$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "rel1\\[0\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "rel1\\[10\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "rel1\\[11\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "rel1\\[12\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "rel1\\[13\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "rel1\\[14\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "rel1\\[15\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "rel1\\[16\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "rel1\\[17\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "rel1\\[18\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "rel1\\[1\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "rel1\\[2\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "rel1\\[3\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "rel1\\[4\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "rel1\\[5\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "rel1\\[6\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "rel1\\[7\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "rel1\\[8\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "rel1\\[9\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "reload_q$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "running$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "tok_start$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.adm_done$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.adm_pend$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.adm_run$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.auto_go$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.cal_ready$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.cal_seg$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.cal_start$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.cfg_addr\\[0\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.cfg_addr\\[1\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.cfg_addr\\[2\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.cfg_addr\\[3\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.cfg_addr\\[4\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.cfg_addr\\[5\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.cfg_data\\[16\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.cfg_data\\[17\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.cfg_data\\[18\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.cfg_data\\[19\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.cfg_data\\[20\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.cfg_data\\[21\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.cfg_data\\[22\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.cfg_data\\[23\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.cfg_data\\[24\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.cfg_data\\[25\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.cfg_data\\[26\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.cfg_data\\[27\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.cfg_data\\[28\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.cfg_data\\[29\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.cfg_data\\[30\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.cfg_rx_we$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.cfg_tx_we$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.e\\[16\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.e\\[17\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.e\\[18\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.e\\[19\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.e\\[20\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.e\\[21\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.e\\[22\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.e\\[23\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.e\\[24\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.e\\[25\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.e\\[26\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.e\\[27\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.e\\[28\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.e\\[29\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.e\\[30\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.e\\[31\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.eact$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.ep_q$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.ep_q_copy0$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.ep_q_copy1$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.fault$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.init$_DFF_PN1_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.init_copy0$_DFF_PN1_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.init_copy1$_DFF_PN1_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.init_copy2$_DFF_PN1_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.ip\\[0\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.ip\\[1\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.ip\\[2\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.ip\\[3\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.ip\\[4\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.ip\\[5\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.ip\\[6\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.ip_img0\\[0\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.ip_img0\\[1\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.ip_img0\\[2\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.ip_img0\\[3\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.ip_img0\\[4\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.ip_img0\\[5\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.ip_img1\\[0\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.ip_img1\\[1\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.ip_img1\\[2\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.ip_img1\\[3\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.ip_img1\\[4\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.ip_img1\\[5\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.ip_img2\\[0\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.ip_img2\\[1\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.ip_img2\\[2\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.ip_img2\\[3\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.ip_img2\\[4\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.ip_img2\\[5\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.ip_img3\\[0\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.ip_img3\\[1\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.ip_img3\\[2\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.ip_img3\\[3\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.ip_img3\\[4\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.ip_img3\\[5\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.layer\\[0\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.layer\\[1\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.layer\\[2\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.layer\\[3\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.layer\\[4\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.layer\\[5\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.li\\[0\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.li\\[1\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.li\\[2\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.li\\[3\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.li\\[4\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.li\\[5\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.li_mux0\\[0\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.li_mux0\\[1\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.li_mux0\\[2\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.li_mux0\\[3\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.li_mux0\\[4\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.li_mux0\\[5\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.li_mux1\\[0\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.li_mux1\\[1\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.li_mux1\\[2\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.li_mux1\\[3\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.li_mux1\\[4\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.li_mux1\\[5\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.li_mux2\\[0\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.li_mux2\\[1\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.li_mux2\\[2\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.li_mux2\\[3\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.li_mux2\\[4\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.li_mux2\\[5\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.li_mux3\\[0\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.li_mux3\\[1\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.li_mux3\\[2\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.li_mux3\\[3\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.li_mux3\\[4\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.li_mux3\\[5\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.li_mux4\\[0\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.li_mux4\\[1\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.li_mux4\\[2\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.li_mux4\\[3\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.li_mux4\\[4\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.li_mux4\\[5\\]$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.pcnt\\[0\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.pcnt\\[10\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.pcnt\\[11\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.pcnt\\[12\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.pcnt\\[13\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.pcnt\\[14\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.pcnt\\[15\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.pcnt\\[16\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.pcnt\\[17\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.pcnt\\[18\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.pcnt\\[19\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.pcnt\\[1\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.pcnt\\[20\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.pcnt\\[21\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.pcnt\\[22\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.pcnt\\[23\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.pcnt\\[24\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.pcnt\\[25\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.pcnt\\[26\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.pcnt\\[27\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.pcnt\\[28\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.pcnt\\[29\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.pcnt\\[2\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.pcnt\\[30\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.pcnt\\[31\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.pcnt\\[3\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.pcnt\\[4\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.pcnt\\[5\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.pcnt\\[6\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.pcnt\\[7\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.pcnt\\[8\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.pcnt\\[9\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.prun$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.running$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.running_copy0$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.running_copy1$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.running_copy2$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.t\\[16\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.t\\[17\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.t\\[18\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.t\\[19\\]$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.tok_start$_DFF_PN0_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        },
+        {
+          "pin": "u_seq.tokbase$_DFFE_PN0P_/CLK",
+          "role": "clock",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "ck"
+          ]
+        }
+      ]
+    },
+    {
+      "driver": "PORT/epoch_go",
+      "driver_role": "top_input",
+      "net": "epoch_go",
+      "transparent_driver": false,
+      "logical_pin_count": 1,
+      "role_counts": {
+        "FF_data": 1
+      },
+      "endpoints": [
+        {
+          "pin": "epoch_go_q$_DFF_PN0_/D",
+          "role": "FF_data",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "epoch_go"
+          ]
+        }
+      ]
+    },
+    {
+      "driver": "PORT/halt",
+      "driver_role": "top_input",
+      "net": "halt",
+      "transparent_driver": false,
+      "logical_pin_count": 1,
+      "role_counts": {
+        "FF_data": 1
+      },
+      "endpoints": [
+        {
+          "pin": "halt_q$_DFF_PN1_/D",
+          "role": "FF_data",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "halt"
+          ]
+        }
+      ]
+    },
+    {
+      "driver": "PORT/reload",
+      "driver_role": "top_input",
+      "net": "reload",
+      "transparent_driver": false,
+      "logical_pin_count": 1,
+      "role_counts": {
+        "FF_data": 1
+      },
+      "endpoints": [
+        {
+          "pin": "reload_q$_DFF_PN0_/D",
+          "role": "FF_data",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "reload"
+          ]
+        }
+      ]
+    },
+    {
+      "driver": "PORT/rst_n",
+      "driver_role": "top_input",
+      "net": "rst_n",
+      "transparent_driver": false,
+      "logical_pin_count": 1,
+      "role_counts": {
+        "FF_data": 1
+      },
+      "endpoints": [
+        {
+          "pin": "land0$_DFF_P_/D",
+          "role": "FF_data",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "transparent_inversion_parity": 0,
+          "net_path": [
+            "rst_n"
+          ]
+        }
+      ]
+    }
+  ],
+  "output_boundary": [
+    {
+      "port": "PORT/fault",
+      "source": "fault$_DFF_PN0_/QN",
+      "source_role": "FF_output",
+      "source_net": "_0006_",
+      "inversion_parity": 1
+    },
+    {
+      "port": "PORT/cfg_data[30]",
+      "source": "cfg_data\\[30\\]$_DFFE_PN0P_/QN",
+      "source_role": "FF_output",
+      "source_net": "_0014_",
+      "inversion_parity": 1
+    },
+    {
+      "port": "PORT/cfg_data[29]",
+      "source": "cfg_data\\[29\\]$_DFFE_PN0P_/QN",
+      "source_role": "FF_output",
+      "source_net": "_0015_",
+      "inversion_parity": 1
+    },
+    {
+      "port": "PORT/cfg_data[28]",
+      "source": "cfg_data\\[28\\]$_DFFE_PN0P_/QN",
+      "source_role": "FF_output",
+      "source_net": "_0016_",
+      "inversion_parity": 1
+    },
+    {
+      "port": "PORT/cfg_data[27]",
+      "source": "cfg_data\\[27\\]$_DFFE_PN0P_/QN",
+      "source_role": "FF_output",
+      "source_net": "_0017_",
+      "inversion_parity": 1
+    },
+    {
+      "port": "PORT/cfg_data[26]",
+      "source": "cfg_data\\[26\\]$_DFFE_PN0P_/QN",
+      "source_role": "FF_output",
+      "source_net": "_0018_",
+      "inversion_parity": 1
+    },
+    {
+      "port": "PORT/cfg_data[25]",
+      "source": "cfg_data\\[25\\]$_DFFE_PN0P_/QN",
+      "source_role": "FF_output",
+      "source_net": "_0019_",
+      "inversion_parity": 1
+    },
+    {
+      "port": "PORT/cfg_data[24]",
+      "source": "cfg_data\\[24\\]$_DFFE_PN0P_/QN",
+      "source_role": "FF_output",
+      "source_net": "_0020_",
+      "inversion_parity": 1
+    },
+    {
+      "port": "PORT/cfg_data[31]",
+      "source": "cfg_data\\[31\\]$_DFFE_PN0P_/QN",
+      "source_role": "FF_output",
+      "source_net": "_0021_",
+      "inversion_parity": 1
+    },
+    {
+      "port": "PORT/cfg_addr[4]",
+      "source": "cfg_addr\\[4\\]$_DFFE_PN0P_/QN",
+      "source_role": "FF_output",
+      "source_net": "_0034_",
+      "inversion_parity": 1
+    },
+    {
+      "port": "PORT/cfg_addr[3]",
+      "source": "cfg_addr\\[3\\]$_DFFE_PN0P_/QN",
+      "source_role": "FF_output",
+      "source_net": "_0035_",
+      "inversion_parity": 1
+    },
+    {
+      "port": "PORT/cfg_addr[2]",
+      "source": "cfg_addr\\[2\\]$_DFFE_PN0P_/QN",
+      "source_role": "FF_output",
+      "source_net": "_0036_",
+      "inversion_parity": 1
+    },
+    {
+      "port": "PORT/cfg_addr[1]",
+      "source": "cfg_addr\\[1\\]$_DFFE_PN0P_/QN",
+      "source_role": "FF_output",
+      "source_net": "_0037_",
+      "inversion_parity": 1
+    },
+    {
+      "port": "PORT/cfg_addr[0]",
+      "source": "cfg_addr\\[0\\]$_DFFE_PN0P_/QN",
+      "source_role": "FF_output",
+      "source_net": "_0038_",
+      "inversion_parity": 1
+    },
+    {
+      "port": "PORT/cfg_data[22]",
+      "source": "cfg_data\\[22\\]$_DFFE_PN0P_/QN",
+      "source_role": "FF_output",
+      "source_net": "_0039_",
+      "inversion_parity": 1
+    },
+    {
+      "port": "PORT/cfg_data[21]",
+      "source": "cfg_data\\[21\\]$_DFFE_PN0P_/QN",
+      "source_role": "FF_output",
+      "source_net": "_0040_",
+      "inversion_parity": 1
+    },
+    {
+      "port": "PORT/cfg_data[20]",
+      "source": "cfg_data\\[20\\]$_DFFE_PN0P_/QN",
+      "source_role": "FF_output",
+      "source_net": "_0041_",
+      "inversion_parity": 1
+    },
+    {
+      "port": "PORT/cfg_data[19]",
+      "source": "cfg_data\\[19\\]$_DFFE_PN0P_/QN",
+      "source_role": "FF_output",
+      "source_net": "_0042_",
+      "inversion_parity": 1
+    },
+    {
+      "port": "PORT/cfg_data[18]",
+      "source": "cfg_data\\[18\\]$_DFFE_PN0P_/QN",
+      "source_role": "FF_output",
+      "source_net": "_0043_",
+      "inversion_parity": 1
+    },
+    {
+      "port": "PORT/cfg_data[17]",
+      "source": "cfg_data\\[17\\]$_DFFE_PN0P_/QN",
+      "source_role": "FF_output",
+      "source_net": "_0044_",
+      "inversion_parity": 1
+    },
+    {
+      "port": "PORT/cfg_data[16]",
+      "source": "cfg_data\\[16\\]$_DFFE_PN0P_/QN",
+      "source_role": "FF_output",
+      "source_net": "_0045_",
+      "inversion_parity": 1
+    },
+    {
+      "port": "PORT/cfg_data[15]",
+      "source": "cfg_data\\[15\\]$_DFFE_PN0P_/QN",
+      "source_role": "FF_output",
+      "source_net": "_0046_",
+      "inversion_parity": 1
+    },
+    {
+      "port": "PORT/cfg_data[14]",
+      "source": "cfg_data\\[14\\]$_DFFE_PN0P_/QN",
+      "source_role": "FF_output",
+      "source_net": "_0047_",
+      "inversion_parity": 1
+    },
+    {
+      "port": "PORT/cfg_data[13]",
+      "source": "cfg_data\\[13\\]$_DFFE_PN0P_/QN",
+      "source_role": "FF_output",
+      "source_net": "_0048_",
+      "inversion_parity": 1
+    },
+    {
+      "port": "PORT/cfg_data[12]",
+      "source": "cfg_data\\[12\\]$_DFFE_PN0P_/QN",
+      "source_role": "FF_output",
+      "source_net": "_0049_",
+      "inversion_parity": 1
+    },
+    {
+      "port": "PORT/cfg_data[11]",
+      "source": "cfg_data\\[11\\]$_DFFE_PN0P_/QN",
+      "source_role": "FF_output",
+      "source_net": "_0050_",
+      "inversion_parity": 1
+    },
+    {
+      "port": "PORT/cfg_data[10]",
+      "source": "cfg_data\\[10\\]$_DFFE_PN0P_/QN",
+      "source_role": "FF_output",
+      "source_net": "_0051_",
+      "inversion_parity": 1
+    },
+    {
+      "port": "PORT/cfg_data[9]",
+      "source": "cfg_data\\[9\\]$_DFFE_PN0P_/QN",
+      "source_role": "FF_output",
+      "source_net": "_0052_",
+      "inversion_parity": 1
+    },
+    {
+      "port": "PORT/cfg_data[8]",
+      "source": "cfg_data\\[8\\]$_DFFE_PN0P_/QN",
+      "source_role": "FF_output",
+      "source_net": "_0053_",
+      "inversion_parity": 1
+    },
+    {
+      "port": "PORT/cfg_data[23]",
+      "source": "cfg_data\\[23\\]$_DFFE_PN0P_/QN",
+      "source_role": "FF_output",
+      "source_net": "_0055_",
+      "inversion_parity": 1
+    },
+    {
+      "port": "PORT/cfg_addr[5]",
+      "source": "cfg_addr\\[5\\]$_DFFE_PN0P_/QN",
+      "source_role": "FF_output",
+      "source_net": "_0058_",
+      "inversion_parity": 1
+    },
+    {
+      "port": "PORT/cfg_data[6]",
+      "source": "_2958_/QN",
+      "source_role": "FF_output",
+      "source_net": "_0061_",
+      "inversion_parity": 1
+    },
+    {
+      "port": "PORT/cfg_data[5]",
+      "source": "_2959_/QN",
+      "source_role": "FF_output",
+      "source_net": "_0062_",
+      "inversion_parity": 1
+    },
+    {
+      "port": "PORT/cfg_data[4]",
+      "source": "_2960_/QN",
+      "source_role": "FF_output",
+      "source_net": "_0063_",
+      "inversion_parity": 1
+    },
+    {
+      "port": "PORT/cfg_data[3]",
+      "source": "_2961_/QN",
+      "source_role": "FF_output",
+      "source_net": "_0064_",
+      "inversion_parity": 1
+    },
+    {
+      "port": "PORT/cfg_data[2]",
+      "source": "_2962_/QN",
+      "source_role": "FF_output",
+      "source_net": "_0065_",
+      "inversion_parity": 1
+    },
+    {
+      "port": "PORT/cfg_data[1]",
+      "source": "_2963_/QN",
+      "source_role": "FF_output",
+      "source_net": "_0066_",
+      "inversion_parity": 1
+    },
+    {
+      "port": "PORT/cfg_data[0]",
+      "source": "_2964_/QN",
+      "source_role": "FF_output",
+      "source_net": "_0067_",
+      "inversion_parity": 1
+    },
+    {
+      "port": "PORT/cal_start",
+      "source": "cal_start$_DFF_PN0_/QN",
+      "source_role": "FF_output",
+      "source_net": "_0068_",
+      "inversion_parity": 1
+    },
+    {
+      "port": "PORT/layer[0]",
+      "source": "layer\\[0\\]$_DFF_PN0_/QN",
+      "source_role": "FF_output",
+      "source_net": "_0182_",
+      "inversion_parity": 1
+    },
+    {
+      "port": "PORT/layer[1]",
+      "source": "layer\\[1\\]$_DFF_PN0_/QN",
+      "source_role": "FF_output",
+      "source_net": "_0183_",
+      "inversion_parity": 1
+    },
+    {
+      "port": "PORT/layer[2]",
+      "source": "layer\\[2\\]$_DFF_PN0_/QN",
+      "source_role": "FF_output",
+      "source_net": "_0184_",
+      "inversion_parity": 1
+    },
+    {
+      "port": "PORT/layer[3]",
+      "source": "layer\\[3\\]$_DFF_PN0_/QN",
+      "source_role": "FF_output",
+      "source_net": "_0185_",
+      "inversion_parity": 1
+    },
+    {
+      "port": "PORT/running",
+      "source": "running$_DFF_PN0_/QN",
+      "source_role": "FF_output",
+      "source_net": "_0186_",
+      "inversion_parity": 1
+    },
+    {
+      "port": "PORT/cal_ready",
+      "source": "cal_ready$_DFF_PN0_/QN",
+      "source_role": "FF_output",
+      "source_net": "_0187_",
+      "inversion_parity": 1
+    },
+    {
+      "port": "PORT/cal_seg",
+      "source": "cal_seg$_DFF_PN0_/QN",
+      "source_role": "FF_output",
+      "source_net": "_0188_",
+      "inversion_parity": 1
+    },
+    {
+      "port": "PORT/cfg_data[7]",
+      "source": "_2957_/QN",
+      "source_role": "FF_output",
+      "source_net": "_0189_",
+      "inversion_parity": 1
+    },
+    {
+      "port": "PORT/cfg_rx_we",
+      "source": "cfg_rx_we$_DFF_PN0_/QN",
+      "source_role": "FF_output",
+      "source_net": "_0190_",
+      "inversion_parity": 1
+    },
+    {
+      "port": "PORT/cfg_tx_we",
+      "source": "cfg_tx_we$_DFF_PN0_/QN",
+      "source_role": "FF_output",
+      "source_net": "_0191_",
+      "inversion_parity": 1
+    },
+    {
+      "port": "PORT/layer[5]",
+      "source": "layer\\[5\\]$_DFF_PN0_/QN",
+      "source_role": "FF_output",
+      "source_net": "_0289_",
+      "inversion_parity": 1
+    },
+    {
+      "port": "PORT/layer[4]",
+      "source": "layer\\[4\\]$_DFF_PN0_/QN",
+      "source_role": "FF_output",
+      "source_net": "_0347_",
+      "inversion_parity": 1
+    },
+    {
+      "port": "PORT/adm_done",
+      "source": "adm_done$_DFF_PN0_/QN",
+      "source_role": "FF_output",
+      "source_net": "_0348_",
+      "inversion_parity": 1
+    },
+    {
+      "port": "PORT/tok_start",
+      "source": "tok_start$_DFF_PN0_/QN",
+      "source_role": "FF_output",
+      "source_net": "_0350_",
+      "inversion_parity": 1
+    }
+  ]
+}

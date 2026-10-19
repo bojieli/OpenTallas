@@ -1,0 +1,55 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/dcal-bc3safe-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/dcal-bc3safe-1019
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/dcal-bc3safe-1019
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/dcal-bc3safe-1019
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/dcal-bc3safe-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/dcal-bc3safe-1019
+ot-run: ot-agidock128  admits   108 GB (avail 88, growth 13, headroom 0, waiters 0/0 GB) load 11/64 running 6 disk 264 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-1563906-1792433494 after 0 s
+OPENROAD: /OpenROAD-flow-scripts/tools/OpenROAD
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING ORD-0039] .openroad ignored with -python
+{
+  "odb_sha256": "c6a86fb5628cdb9cc1c84c8b89f2b8408507f43ef7cd0fe947b1bbe47571ad04",
+  "source_commit": "190b12e9f",
+  "ff_count": 351,
+  "stdcell_area_um2": 259.17408,
+  "all_driver_count": 1771,
+  "root_driver_count": 1413,
+  "physical_pin_count": 6688,
+  "unconnected_signal_pins": [],
+  "unknown_pin_roles": [],
+  "macro_count": 0,
+  "all_driver_over32": [
+    {
+      "driver": "_3004_/H",
+      "driver_role": "constant_1",
+      "net": "_1554_",
+      "logical_pin_count": 347,
+      "role_counts": {
+        "reset_or_preset": 346,
+        "FF_data": 1
+      }
+    },
+    {
+      "driver": "PORT/ck",
+      "driver_role": "top_input",
+      "net": "ck",
+      "logical_pin_count": 351,
+      "role_counts": {
+        "clock": 351
+      }
+    }
+  ],
+  "functional_max": 28,
+  "net_driver_issues": [],
+  "walk_errors": [],
+  "uniform_all_signal_roots_le32": false,
+  "qualified_for_parent": false,
+  "physical_gate_run": false
+}
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-1563906-1792433494): exit 0
