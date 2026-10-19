@@ -274,8 +274,45 @@ module qfd_dv_cmd_cal_mu #(
             .clk(ck), .r_ce_in(1'b1), .r_addr_in({5'd0, fq_ra[g]}), .rd_out(fq_rd[g]),
             .w_ce_in(fq_we[g]), .w_addr_in({5'd0, fq_wa[g]}), .wd_in(fq_wd[g]), .w_mask_in({512{1'b1}}),
             .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(18'd0));
-        assign fq_word[g] = (fq_we[g] && fq_wa[g] == fq_next[g][2]) ? fq_wd[g][128*fq_next[g][1:0] +: 128] :
-                            fq_bypass[g] ? fq_bd[g] : fq_rd[g][128*fq_next[g][1:0] +: 128];
+        // Distinct hierarchy-kept selector flops per32-bit data chunk and
+        // per source; no selector register drives a full128/512-bit mux.
+        wire do_pop = fire_q[g] && !frz_u[g] && !go_u[g];
+        wire do_clear = go_u[g] && !start_bad && g_cnt != 16'd0;
+        genvar q;
+        for (q = 0; q < 4; q = q + 1) begin : g_sel
+            wire [3:0] ws, rs, bs;
+            wire pend, bp;
+            wire [31:0] wword, rword, bword;
+            qfd_calpipe_selector #(.COPY_ID(12*g+3*q), .MUT(MUT)) u_ws (
+                .ck(ck), .rst_n(rst_n), .pop(do_pop), .clear(do_clear),
+                .pending_in(rd_v[g] && !frz_u[g] && !go_u[g]),
+                .bypass_in(fq_we[g] && fq_wa[g] == fq_ra[g]), .sel(ws), .pending(), .bypass());
+            qfd_calpipe_selector #(.COPY_ID(12*g+3*q+1), .MUT(MUT)) u_rs (
+                .ck(ck), .rst_n(rst_n), .pop(do_pop), .clear(do_clear),
+                .pending_in(rd_v[g] && !frz_u[g] && !go_u[g]),
+                .bypass_in(fq_we[g] && fq_wa[g] == fq_ra[g]), .sel(rs), .pending(pend), .bypass(bp));
+            qfd_calpipe_selector #(.COPY_ID(12*g+3*q+2), .MUT(MUT)) u_bs (
+                .ck(ck), .rst_n(rst_n), .pop(do_pop), .clear(do_clear),
+                .pending_in(rd_v[g] && !frz_u[g] && !go_u[g]),
+                .bypass_in(fq_we[g] && fq_wa[g] == fq_ra[g]), .sel(bs), .pending(), .bypass());
+            wire [3:0] ba = do_pop ? {bs[2:0],bs[3]} : bs;
+            assign wword = ({32{ws[0]}} & fq_wd[g][q*32 +: 32]) |
+                           ({32{ws[1]}} & fq_wd[g][128+q*32 +: 32]) |
+                           ({32{ws[2]}} & fq_wd[g][256+q*32 +: 32]) |
+                           ({32{ws[3]}} & fq_wd[g][384+q*32 +: 32]);
+            assign rword = ({32{rs[0]}} & fq_rd[g][q*32 +: 32]) |
+                           ({32{rs[1]}} & fq_rd[g][128+q*32 +: 32]) |
+                           ({32{rs[2]}} & fq_rd[g][256+q*32 +: 32]) |
+                           ({32{rs[3]}} & fq_rd[g][384+q*32 +: 32]);
+            assign bword = ({32{ba[0]}} & fq_wd[g][q*32 +: 32]) |
+                           ({32{ba[1]}} & fq_wd[g][128+q*32 +: 32]) |
+                           ({32{ba[2]}} & fq_wd[g][256+q*32 +: 32]) |
+                           ({32{ba[3]}} & fq_wd[g][384+q*32 +: 32]);
+            assign fq_word[g][32*q +: 32] = (pend && fq_wa[g] == fq_next[g][2]) ? wword :
+                                            bp ? fq_bd[g][32*q +: 32] : rword;
+            always @(posedge ck)
+                if (fq_we[g] && fq_wa[g] == fq_ra[g]) fq_bd[g][32*q +: 32] <= bword;
+        end
         always @(posedge ck or negedge rst_n)
             if (!rst_n) begin fq_we[g] <= 1'b0; fq_bypass[g] <= 1'b0; end
             else begin
@@ -287,7 +324,6 @@ module qfd_dv_cmd_cal_mu #(
                 fq_wd[g] <= rds;
                 fq_wa[g] <= wh[g];
             end
-            if (fq_we[g] && fq_wa[g] == fq_ra[g]) fq_bd[g] <= fq_wd[g][128*fq_ahead[g][1:0] +: 128];
         end
     end endgenerate
 
@@ -563,4 +599,20 @@ module qfd_dv_cmd_cal_mu #(
         end
     end
     assign image_ready = sealed && !fault;
+endmodule
+
+// Parameter identity and keep_hierarchy retain physically distinct selector
+// flops through Yosys flatten/opt_merge. Each output select bit feeds32data bits.
+(* keep_hierarchy = 1 *)
+module qfd_calpipe_selector #(parameter integer COPY_ID = 0, parameter integer MUT = 0) (
+    input wire ck, rst_n, pop, clear, pending_in, bypass_in,
+    output reg [3:0] sel, output reg pending, bypass
+);
+    always @(posedge ck or negedge rst_n)
+        if (!rst_n) begin sel <= (MUT == 33) ? 4'b0001 : 4'b0010; pending <= 1'b0; bypass <= 1'b0; end
+        else begin
+            pending <= pending_in; bypass <= bypass_in;
+            if (clear) sel <= (MUT == 33) ? 4'b0001 : 4'b0010;
+            else if (pop) sel <= {sel[2:0], sel[3]};
+        end
 endmodule
