@@ -18,14 +18,15 @@ Fix (flow only; RTL, outline, macros, pin faces, SDC unchanged; 0 cycles):
 - `bnd_branch.tcl` `ot_sv_all 1`: TritonCTS is not run; every load of the clock port net (15,345 registers + 4 SRAM clk
   pins) goes onto ONE balanced geometric tree from the stem beside the clk pin (8 levels = 256 leaves of ~60 sinks,
   BUFx24, repeaters > 80 um, equal buffer count per path). Every hop (delay line, boundary, macro) is intra-tree.
+- kit `reset_landing` {enable, 2 stages} (ROOT-RST gate rule; hf5bt rst_a reached 4 sinks without a landing).
 - route `hold_margin_ns` 0.01 -> 0.03 and `io_hold_margin_ns` 0.03 (KITS rule >= 0.025; SAFE-DESIGN 7 >= 0.03).
 
 ## SAFE-DESIGN checklist (owner 10-19)
 
 1. Pins: PASS. The RTL registers every pin (input landing u_rl2 / u_bkv2 / u_bkd2 / u_ohl2 behind ot_hdly; outputs are the
    leaf's operand-stage registers; E-face control copy u_ctle). Flow pin registers stay off (they would add a cycle per link).
-   Reset: WAIVED (coordinator to confirm): rst_a drives only the 4 async-reset pins of the RTL 2-stage reset relay
-   (OT_SMH_RSTRELAY, u_rr / u_leaf.u_rr), removal slack +15.2 / +18.1; textbook_lint flags it because the relay is the landing.
+   Reset: FIXED: kit reset_landing on (rst_a -> 2 registered landing stages at the face -> the RTL relay u_rr /
+   u_leaf.u_rr); reset assert/release +2 cycles (scheduled constant), data latency unchanged. hf5bt lint: rst_a reached 4 sinks unlanded.
 2. Reach: PASS (textbook_lint reach 0.0 um; tile 302.4 x 157.68 um).
 3. Fanout: PASS (set_max_fanout 32; E-face control is its own kept register; no >32-load critical cone in path_summary).
 4. Depth: PASS (textbook_lint depth 283.4 ps; TT setup +60.74 routed).
