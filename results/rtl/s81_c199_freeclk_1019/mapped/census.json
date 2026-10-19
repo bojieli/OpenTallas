@@ -1,0 +1,185 @@
+{
+  "status": "DIAGNOSTIC_SYNTH_ONLY_NOT_SAFE_OR_PHYSICAL_QUALIFIED",
+  "source_commit": "e51975a97",
+  "functional_receipt": "55812b482",
+  "remote_host": "ot-epyc7",
+  "remote_root": "/srv/opentallas-scratch/claude/codex-s81-c199-freeclk-synth",
+  "synthesis_unit": "oth-ubuntu-3181843-1792430502",
+  "synthesis_exit": 0,
+  "mapped_instances": 246622,
+  "mapped_area_um2": 48767.7967559799,
+  "flops": 51965,
+  "roms": 2,
+  "clock_input_loads": 51967,
+  "masters": {
+    "AND2x2_ASAP7_75t_R": 17521,
+    "AND2x4_ASAP7_75t_R": 144,
+    "AND3x1_ASAP7_75t_R": 5501,
+    "AND3x2_ASAP7_75t_R": 17,
+    "AND3x4_ASAP7_75t_R": 4,
+    "AND4x1_ASAP7_75t_R": 1856,
+    "AND4x2_ASAP7_75t_R": 2,
+    "AND5x1_ASAP7_75t_R": 739,
+    "AND5x2_ASAP7_75t_R": 3,
+    "AO211x2_ASAP7_75t_R": 25,
+    "AO21x1_ASAP7_75t_R": 22412,
+    "AO21x2_ASAP7_75t_R": 4,
+    "AO221x1_ASAP7_75t_R": 655,
+    "AO222x2_ASAP7_75t_R": 95,
+    "AO22x1_ASAP7_75t_R": 898,
+    "AO22x2_ASAP7_75t_R": 2,
+    "AO31x2_ASAP7_75t_R": 24,
+    "AO32x1_ASAP7_75t_R": 1237,
+    "AO33x2_ASAP7_75t_R": 37,
+    "AOI211x1_ASAP7_75t_R": 272,
+    "AOI21x1_ASAP7_75t_R": 3326,
+    "AOI221x1_ASAP7_75t_R": 60,
+    "AOI22x1_ASAP7_75t_R": 424,
+    "BUFx2_ASAP7_75t_R": 15189,
+    "BUFx3_ASAP7_75t_R": 310,
+    "BUFx4f_ASAP7_75t_R": 22,
+    "BUFx6f_ASAP7_75t_R": 8,
+    "DFFASRHQNx1_ASAP7_75t_R": 2707,
+    "DFFHQNx1_ASAP7_75t_R": 49258,
+    "INVx1_ASAP7_75t_R": 38226,
+    "INVx2_ASAP7_75t_R": 19,
+    "INVx3_ASAP7_75t_R": 1131,
+    "INVx4_ASAP7_75t_R": 2,
+    "INVx5_ASAP7_75t_R": 1,
+    "MAJx2_ASAP7_75t_R": 6228,
+    "NAND2x1_ASAP7_75t_R": 15484,
+    "NAND3x1_ASAP7_75t_R": 110,
+    "NOR2x1_ASAP7_75t_R": 9691,
+    "NOR2x2_ASAP7_75t_R": 9,
+    "NOR3x1_ASAP7_75t_R": 49,
+    "OA211x2_ASAP7_75t_R": 7458,
+    "OA21x2_ASAP7_75t_R": 14175,
+    "OA221x2_ASAP7_75t_R": 7,
+    "OA222x2_ASAP7_75t_R": 82,
+    "OA22x2_ASAP7_75t_R": 738,
+    "OA31x2_ASAP7_75t_R": 28,
+    "OA33x2_ASAP7_75t_R": 12,
+    "OAI21x1_ASAP7_75t_R": 2212,
+    "OAI22x1_ASAP7_75t_R": 3069,
+    "OR2x2_ASAP7_75t_R": 4566,
+    "OR3x1_ASAP7_75t_R": 3561,
+    "OR4x1_ASAP7_75t_R": 1484,
+    "OR4x2_ASAP7_75t_R": 1,
+    "OR5x1_ASAP7_75t_R": 208,
+    "TIEHIx1_ASAP7_75t_R": 101,
+    "TIELOx1_ASAP7_75t_R": 1,
+    "XNOR2x1_ASAP7_75t_R": 10,
+    "XNOR2x2_ASAP7_75t_R": 11691,
+    "XOR2x1_ASAP7_75t_R": 6,
+    "XOR2x2_ASAP7_75t_R": 3508,
+    "ot_rom_4096x274_m8": 2
+  },
+  "fanout_over32": [
+    {
+      "loads": 2553,
+      "net_and_driver": "_187075_ DRIVERS=_403433_/H:TIEHIx1_ASAP7_75t_R INPUTS="
+    },
+    {
+      "loads": 51967,
+      "net_and_driver": "clk DRIVERS= INPUTS=clk"
+    },
+    {
+      "loads": 102,
+      "net_and_driver": "g_bf.g_fqt.u_bf.g_l\\[0\\].genblk1.g_c4.u_c.rst_n DRIVERS={g_bf.g_fqt.u_bf.g_l\\[0\\].u_tl.u_rs/_2_/Y:INVx3_ASAP7_75t_R} INPUTS="
+    },
+    {
+      "loads": 102,
+      "net_and_driver": "g_bf.g_fqt.u_bf.g_l\\[10\\].genblk1.g_c4.u_c.rst_n DRIVERS={g_bf.g_fqt.u_bf.g_l\\[10\\].u_tl.u_rs/_2_/Y:INVx3_ASAP7_75t_R} INPUTS="
+    },
+    {
+      "loads": 102,
+      "net_and_driver": "g_bf.g_fqt.u_bf.g_l\\[11\\].genblk1.g_c4.u_c.rst_n DRIVERS={g_bf.g_fqt.u_bf.g_l\\[11\\].u_tl.u_rs/_2_/Y:INVx3_ASAP7_75t_R} INPUTS="
+    },
+    {
+      "loads": 102,
+      "net_and_driver": "g_bf.g_fqt.u_bf.g_l\\[12\\].genblk1.g_c4.u_c.rst_n DRIVERS={g_bf.g_fqt.u_bf.g_l\\[12\\].u_tl.u_rs/_2_/Y:INVx3_ASAP7_75t_R} INPUTS="
+    },
+    {
+      "loads": 102,
+      "net_and_driver": "g_bf.g_fqt.u_bf.g_l\\[13\\].genblk1.g_c4.u_c.rst_n DRIVERS={g_bf.g_fqt.u_bf.g_l\\[13\\].u_tl.u_rs/_2_/Y:INVx3_ASAP7_75t_R} INPUTS="
+    },
+    {
+      "loads": 102,
+      "net_and_driver": "g_bf.g_fqt.u_bf.g_l\\[14\\].genblk1.g_c4.u_c.rst_n DRIVERS={g_bf.g_fqt.u_bf.g_l\\[14\\].u_tl.u_rs/_2_/Y:INVx3_ASAP7_75t_R} INPUTS="
+    },
+    {
+      "loads": 102,
+      "net_and_driver": "g_bf.g_fqt.u_bf.g_l\\[15\\].genblk1.g_c4.u_c.rst_n DRIVERS={g_bf.g_fqt.u_bf.g_l\\[15\\].u_tl.u_rs/_2_/Y:INVx3_ASAP7_75t_R} INPUTS="
+    },
+    {
+      "loads": 102,
+      "net_and_driver": "g_bf.g_fqt.u_bf.g_l\\[1\\].genblk1.g_c4.u_c.rst_n DRIVERS={g_bf.g_fqt.u_bf.g_l\\[1\\].u_tl.u_rs/_2_/Y:INVx3_ASAP7_75t_R} INPUTS="
+    },
+    {
+      "loads": 102,
+      "net_and_driver": "g_bf.g_fqt.u_bf.g_l\\[2\\].genblk1.g_c4.u_c.rst_n DRIVERS={g_bf.g_fqt.u_bf.g_l\\[2\\].u_tl.u_rs/_2_/Y:INVx3_ASAP7_75t_R} INPUTS="
+    },
+    {
+      "loads": 102,
+      "net_and_driver": "g_bf.g_fqt.u_bf.g_l\\[3\\].genblk1.g_c4.u_c.rst_n DRIVERS={g_bf.g_fqt.u_bf.g_l\\[3\\].u_tl.u_rs/_2_/Y:INVx3_ASAP7_75t_R} INPUTS="
+    },
+    {
+      "loads": 102,
+      "net_and_driver": "g_bf.g_fqt.u_bf.g_l\\[4\\].genblk1.g_c4.u_c.rst_n DRIVERS={g_bf.g_fqt.u_bf.g_l\\[4\\].u_tl.u_rs/_2_/Y:INVx3_ASAP7_75t_R} INPUTS="
+    },
+    {
+      "loads": 102,
+      "net_and_driver": "g_bf.g_fqt.u_bf.g_l\\[5\\].genblk1.g_c4.u_c.rst_n DRIVERS={g_bf.g_fqt.u_bf.g_l\\[5\\].u_tl.u_rs/_2_/Y:INVx3_ASAP7_75t_R} INPUTS="
+    },
+    {
+      "loads": 102,
+      "net_and_driver": "g_bf.g_fqt.u_bf.g_l\\[6\\].genblk1.g_c4.u_c.rst_n DRIVERS={g_bf.g_fqt.u_bf.g_l\\[6\\].u_tl.u_rs/_2_/Y:INVx3_ASAP7_75t_R} INPUTS="
+    },
+    {
+      "loads": 102,
+      "net_and_driver": "g_bf.g_fqt.u_bf.g_l\\[7\\].genblk1.g_c4.u_c.rst_n DRIVERS={g_bf.g_fqt.u_bf.g_l\\[7\\].u_tl.u_rs/_2_/Y:INVx3_ASAP7_75t_R} INPUTS="
+    },
+    {
+      "loads": 102,
+      "net_and_driver": "g_bf.g_fqt.u_bf.g_l\\[8\\].genblk1.g_c4.u_c.rst_n DRIVERS={g_bf.g_fqt.u_bf.g_l\\[8\\].u_tl.u_rs/_2_/Y:INVx3_ASAP7_75t_R} INPUTS="
+    },
+    {
+      "loads": 102,
+      "net_and_driver": "g_bf.g_fqt.u_bf.g_l\\[9\\].genblk1.g_c4.u_c.rst_n DRIVERS={g_bf.g_fqt.u_bf.g_l\\[9\\].u_tl.u_rs/_2_/Y:INVx3_ASAP7_75t_R} INPUTS="
+    },
+    {
+      "loads": 552,
+      "net_and_driver": "g_bf.g_fqt.u_bf.g_lv\\[0\\].g_n\\[0\\].u_a.rst_n DRIVERS=g_bf.g_fqt.u_bf.u_tt.u_rs/_2_/Y:INVx3_ASAP7_75t_R INPUTS="
+    },
+    {
+      "loads": 136,
+      "net_and_driver": "g_ch3.u_c0.rst_n DRIVERS=g_mz.u_rsc/_2_/Y:INVx3_ASAP7_75t_R INPUTS="
+    },
+    {
+      "loads": 38,
+      "net_and_driver": "g_l3.u_l0.rst_n DRIVERS=g_mz.u_rs/_2_/Y:INVx3_ASAP7_75t_R INPUTS="
+    },
+    {
+      "loads": 42,
+      "net_and_driver": "g_pa2.u_pair.rst_n DRIVERS=g_mz.u_rsp/_2_/Y:INVx3_ASAP7_75t_R INPUTS="
+    },
+    {
+      "loads": 285,
+      "net_and_driver": "g_tr5.u_tree.rst_n DRIVERS=g_mz.u_rst/_2_/Y:INVx3_ASAP7_75t_R INPUTS="
+    }
+  ],
+  "data_control_over32": 0,
+  "blockers": [
+    "Reset-output loads16x102,552,136,38,42,285 exceed32 and need real partition/proof",
+    "No physical placement/CTS/native/GRT/PG/pin-access proof on new source",
+    "Extra idle clock activity power cost unmeasured",
+    "Actual floorplan fill/band/clock and source-pinned native boundary obligations open"
+  ],
+  "artifact_sha256": {
+    "config.mk": "2a2d6b5ae483fff3e31f4a36568de762107aad5b88b90c9e488ca4fe3cd260d0",
+    "census.tcl": "6944096d21434655a564d930b4159909460e81f99fd1d5ec284923269b34ddc9",
+    "census.log": "b0f1e169f79c5135c1545831ddfae0f0e0da6ce271585143ad13f52c39f3f5dc",
+    "synth_stat.txt": "fe27876acb3f6009a87a1acc4819c27424ee6a7e1952f3e58b4f96c4143d6866",
+    "run.sh": "abda29c79bd89081ae9cc2c99e6b35f9428e9fb514b3d55a1371532ed5a7f066"
+  }
+}
