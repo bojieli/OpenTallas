@@ -1,0 +1,5 @@
+PASS MU_HROOT_COLLIDE: user 1 on user 0's frame slot -> KV programme collision fault code 10
+- rtl/test/mu_qwen_1018/tb_mu_hroot_e2e.sv:167: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 779ns; walltime 0.001 s; speed 901.188 us/s
+- Verilator: cpu 0.001 s on 1 threads; allocated 7 MB

@@ -1,0 +1,33 @@
+%Warning-MULTIDRIVEN: rtl/qwen_sys/static_embedding_20261014/qkd_static_kv_pc_path_fan_nc.sv:98:18: Signal has multiple driving blocks with different clocking: 'qkd_static_kv_pc_path_fan_nc.u_pce.es_merged'
+                      rtl/qwen_sys/static_embedding_20261014/qkd_static_kv_pc_es_merge.sv:136:26: ... Location of first driving block
+  136 |     always @(posedge ck) es[287:1] <= w_first ? wes[287:1] : ees[287:1];
+      |                          ^~
+                      rtl/qwen_sys/static_embedding_20261014/qkd_static_kv_pc_es_merge.sv:140:13: ... Location of other driving block
+  140 |             es[0] <= wes[0] | ees[0];
+      |             ^~
+                      ... For warning description see https://verilator.org/warn/MULTIDRIVEN?v=5.050
+                      ... Use "/* verilator lint_off MULTIDRIVEN */" and lint_on around source to disable this message.
+%Warning-MULTIDRIVEN: rtl/qwen_sys/static_embedding_20261014/qkd_static_kv_pc_es_merge.sv:125:18: Signal has multiple driving blocks with different clocking: 'qkd_static_kv_pc_path_fan_nc.u_pce.u_esm.ees'
+                      rtl/qwen_sys/static_embedding_20261014/qkd_static_kv_pc_es_merge.sv:61:9: ... Location of first driving block
+   61 |         es[287:1] <= {1'b0,1'b0,bank,col,row,256'd0};
+      |         ^~
+                      rtl/qwen_sys/static_embedding_20261014/qkd_static_kv_pc_es_merge.sv:70:13: ... Location of other driving block
+   70 |             es[0]<=issue_v;
+      |             ^~
+%Warning-MULTIDRIVEN: rtl/qwen_sys/static_embedding_20261014/qkd_kv_pc_chain_station.sv:63:17: Signal has multiple driving blocks with different clocking: 'qkd_static_kv_pc_path_fan_nc.u_chain.c'
+                      rtl/qwen_sys/static_embedding_20261014/qkd_kv_pc_chain_station.sv:64:26: ... Location of first driving block
+   64 |     always @(posedge ck) c[W-1:F_V+2] <= di[W-1:F_V+2];
+      |                          ^
+                      rtl/qwen_sys/static_embedding_20261014/qkd_kv_pc_chain_station.sv:66:46: ... Location of other driving block
+   66 |         if (!rs_q) c[F_V +: 2] <= 2'd0; else c[F_V +: 2] <= di[F_V +: 2];
+      |                                              ^
+%Warning-MULTIDRIVEN: rtl/qwen_sys/static_embedding_20261014/qkd_static_kv_pc_path_fan_nc.sv:267:18: Signal has multiple driving blocks with different clocking: 'qkd_static_kv_pc_path_fan_nc.s_wes'
+                      rtl/qwen_sys/static_embedding_20261014/qkd_kv_pc_chain_station.sv:84:22: ... Location of first driving block
+   84 |         if (h0 | h1) wes[287:1] <= {c[F_SV], c[F_SV], c[F_AD +: 29], h0 ? c[F_D0 +: 256] : c[F_D1 +: 256]};
+      |                      ^~~
+                      rtl/qwen_sys/static_embedding_20261014/qkd_kv_pc_chain_station.sv:91:20: ... Location of other driving block
+   91 |         else begin wes[0] <= h0 | h1; hit_a <= h0 | h1; x_a <= x0 | x1; end
+      |                    ^~~
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 3.428 MB sources in 42 modules, into 2.840 MB in 5 C++ files needing 0.000 MB
+- Verilator: Walltime 0.707 s (elab=0.044, cvt=0.586, bld=0.000); cpu 0.707 s on 1 threads; allocated 61.387 MB

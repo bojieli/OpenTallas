@@ -1,0 +1,24 @@
+pass vport 0 D=0 R=8
+pass vport 0 D=0 R=16
+pass vport 0 D=3 R=17
+pass vport 0 D=15 R=31
+fail vport 6 D=0 R=16
+fail vport 7 D=3 R=17
+fail vport 8 D=0 R=16
+pass pvctl 0 A=95
+pass pvctl 0 A=108
+fail pvctl 1 A=108
+fail pvctl 2 A=108
+pass attn 0 PL=0 FD=1 FMUT=0
+pass attn 0 PL=37 FD=49 FMUT=0
+fail attn 4 PL=37 FD=49 FMUT=0
+fail attn 5 PL=37 FD=49 FMUT=0
+fail attn 0 PL=37 FD=49 FMUT=6
+fail attn 0 PL=37 FD=49 FMUT=7
+pass calgen 0 Q=28 R=76 F=1
+pass calgen 0 Q=57 R=87 F=49
+fail calgen 6 Q=57 R=87 F=49
+fail calgen 7 Q=57 R=87 F=49
+pass dcfg 0
+fail dcfg 6
+fail dcfg 7
