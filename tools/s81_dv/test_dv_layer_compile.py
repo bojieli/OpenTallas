@@ -151,9 +151,9 @@ def test_events_g8():
         for r in j['rows']:
             rows.append(dict(r, issue=r['issue'] + j['layer_issue0'], ti=tm[r['arg'] & 0x7F] if r['engine'] in (0, 1, 2) else None))
     ev = sch['events']
-    # gunit CTL row outputs (lower_gu: payload 'row N', the coefficient / router rows on vo_n / vo_s) are not calendar CTL
-    tev = [e for e in ev if e['kind'] == 'CTL' and str(e['payload']).startswith('template')]
-    ctl = {(e['inst'], int(e['payload'].split()[1].rstrip(';')), e['cycle']) for e in tev}
+    # slice-bound CTL beats only (the G-unit's own CTL row beats out of vo_n / vo_s are dir out, payload 'row R ...')
+    ev_ctl = [e for e in ev if e['kind'] == 'CTL' and e['dir'] == 'in']
+    ctl = {(e['inst'], int(e['payload'].split()[1].rstrip(';')), e['cycle']) for e in ev_ctl}
     sid_of = {v['sid']: k for k, v in die.slices().items()}
     n = 0
     for r in rows:
@@ -166,9 +166,9 @@ def test_events_g8():
             if (m >> sid) & 1 and sl and sl.endswith('N' if r['engine'] == 0 else 'S'):
                 assert (sl, ti, r['issue'] + C.ctl_path(die, sl)['edges']) in ctl, (r, sl)
                 n += 1
-    assert n == len(tev) and sch['row_ctl_events'] > 0
+    assert n == len(ev_ctl) and sch['row_ctl_events'] > 0
     for e in ev:
-        if e in tev:
+        if e['kind'] == 'CTL' and e['dir'] == 'in':
             tn = T[int(e['payload'].split()[1].rstrip(';'))]['name']
             assert tn.endswith(e['tag']), (e, tn)
         if e['kind'] == 'VS':
