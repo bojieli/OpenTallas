@@ -1,0 +1,16 @@
+Verilator 5.050 2026-07-01 rev v5.050
+CTLM_PROG MUT=28 BMUT=0 HARD_HR=1 HRA=0 DECODE=2: FAIL 84/96  rom_go-issue [2] nat_go-issue [1] csr@1042 tl got/exp (12, 12) stage1_xt1 [True, True, True, True]
+    ROM fields (slice layout): [{"edge": 1224, "nout": 768, "tiles": 1, "k": 8, "split": 9, "wbase": 0, "xbase": 4096}, {"edge": 3415, "nout": 4096, "tiles": 3, "k": 2, "split": 8, "wbase": 64, "xbase": 50672}, {"edge": 5062, "nout": 3072, "tiles": 1, "k": 32, "split": 7, "wbase": 112, "xbase": 4096}, {"edge": 5746, "nout": 4096, "tiles": 3, "k": 6, "split": 8, "wbase": 368, "xbase": 55280}]
+    missing TL at 1053 0xb0e00000000000000000000000000000000000
+    missing TL at 1055 0xb1e00000000000000000000000000000000000
+    missing TL at 1057 0xb2e00000000000000000000000000000000000
+    missing TL at 1059 0xb3e00000000000000000000000000000000000
+    missing TL at 1061 0xb4e00000000000000000000000000000000000
+    missing TL at 1063 0xb5e00000000000000000000000000000000000
+    missing TL at 1065 0xb6e00000000000000000000000000000000000
+    missing TL at 1067 0xb7e00000000000000000000000000000000000
+    unexpected TL at 1054 0xb0e00000000000000000000000000000000000
+    unexpected TL at 1056 0xb1e00000000000000000000000000000000000
+    unexpected TL at 1058 0xb2e00000000000000000000000000000000000
+    unexpected TL at 1060 0xb3e00000000000000000000000000000000000
+exit 1

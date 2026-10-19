@@ -1,0 +1,43 @@
+{
+ "mut": 4,
+ "verdict": "FAIL",
+ "fails": [
+  "C1 lockstep mismatches lock 7 solo1 4",
+  "C8 solo1 TL words != compiled: got 4 at [1042, 2402, 9288, 16174] want 4 at [1042, 2402, 9288, 16174]; value diffs 4",
+  "C8 solo4 TL words != compiled: got 4 at [1042, 2402, 9288, 16174] want 4 at [1042, 2402, 9288, 16174]; value diffs 4",
+  "C8 mu4 TL words != compiled: got 13 at [1042, 2402, 4124, 5845, 7567, 9288] want 13 at [1042, 2402, 4124, 5845, 7567, 9288]; value diffs 13",
+  "C8 tlc4 TL words != compiled: got 3 at [1042, 2402, 3701] want 3 at [1042, 2402, 3701]; value diffs 3"
+ ],
+ "C_issue_offset": 0,
+ "lock": {
+  "mismatches": 7,
+  "faults": [
+   [
+    22388,
+    "000001"
+   ]
+  ]
+ },
+ "solo1_events": 72,
+ "mu4_events": 288,
+ "mu4_done_per_user": {
+  "0": 3,
+  "1": 3,
+  "2": 3,
+  "3": 3
+ },
+ "landed_words": 1536,
+ "busy4_fault_code": "000001",
+ "coll4_fault_code": "000010",
+ "mu4_fault_code": "000000",
+ "tl_words": {
+  "lock": 7,
+  "solo1": 4,
+  "solo4": 4,
+  "mu4": 13,
+  "tlc4": 3
+ },
+ "tlc4_fault_code": "000000",
+ "tlc4_user1_start": 2399,
+ "tlc4_tload_issue": 2400
+}
