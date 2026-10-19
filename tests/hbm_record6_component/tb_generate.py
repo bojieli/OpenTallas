@@ -23,7 +23,7 @@ def emit(out,receipt,binding):
   (out/f'calendar{q}.mem').write_text(''.join(f'{v:064x}\n'for v in words))
   (out/f'calendar{q}.json').write_text(json.dumps(events,indent=2)+'\n')
  s=['''`timescale 1ns/1ps
-module tb;
+module tb #(parameter integer STATION_MUT=0);
 reg refclk=0;always #5 refclk=~refclk;
 reg por_n=0;wire clk,stream,rs,rq;wire br,brfault;
 hfd_ckgen cg(.refclk(refclk),.por_n(por_n),.pll_stream(stream),.pll_serial(clk),.por_serial(rq),.por_stream(rs));
@@ -42,7 +42,7 @@ wire station_start=valid[0] && edgeidx[0]==0;
 wire[15:0] edgeidx[0:3];
 wire[3:0] capmask=(cycle==64||cycle==176||cycle==288||cycle==400)?4'hf:4'h0;
 wire[1:0] capgroup=(cycle-64)/112;
-ot_hbm_r6_station41 #(.ENABLE(1)) station(.clk(clk),.rst_n(runrq),.start(station_start),.episode_epoch(8'(episode+1)),.lane_x(lanes_x),.lane_v(lanes_v),.capture(capmask),.capture_group(capgroup),.root_v(root_v),.root_x(root_x),.fault(station_fault),.cycle(cycle),.capture_count(capture_count),.add_count(add_count));
+ot_hbm_r6_station41 #(.ENABLE(1),.MUT(STATION_MUT)) station(.clk(clk),.rst_n(runrq),.start(station_start),.episode_epoch(8'(episode+1)),.lane_x(lanes_x),.lane_v(lanes_v),.capture(capmask),.capture_group(capgroup),.root_v(root_v),.root_x(root_x),.fault(station_fault),.cycle(cycle),.capture_count(capture_count),.add_count(add_count));
 reg[31:0] squares[0:2559],inputs[0:2559];
 initial begin $readmemh("input0.mem",inputs,0,1279);$readmemh("input1.mem",inputs,1280,2559);$readmemh("square0.mem",squares,0,1279);$readmemh("square1.mem",squares,1280,2559);end
 wire[31:0] gold[0:1];reg[31:0] goldmem[0:1];assign gold[0]=goldmem[0];assign gold[1]=goldmem[1];
@@ -60,7 +60,7 @@ ot_hbm_su_stree_root treeroot(.clk(clk),.rst_n(runrq),.up0_i(up[14]),.up1_i(41'b
   bm=binding['instances'][f'std_SW_{i:02d}b']['master']
   s.append(f'''wire[47:0] upwide{i};{upmaster} ur{i}(.ck(clk),.rs(runrq),.i({{7'b0,up[{i}]}}),.o(upwide{i}));assign up[{i+1}]=upwide{i}[40:0];
 wire[135:0] da{i};wire[47:0] db{i};{am} dra{i}(.ck(clk),.rs(runrq),.i(down[{i}][135:0]),.o(da{i}));{bm} drb{i}(.ck(clk),.rs(runrq),.i({{20'b0,down[{i}][163:136]}}),.o(db{i}));assign down[{i+1}]={{db{i}[27:0],da{i}}};\n''')
- s.append('''integer roots=0,scalars=0,checked=0,fillcount=0;integer startqt=0;integer abortfills=0;reg root_seen=0;
+ s.append('''integer roots=0,scalars=0,checked=0,fillcount=0,retired=0;integer startqt=0;integer abortfills=0;reg root_seen=0;
 always @(posedge clk)begin
  if(station_start)begin startqt=qt;root_seen=0;end
  #0.001;
@@ -74,6 +74,32 @@ always @(posedge clk)begin
   if(qt-startqt!=613)$fatal(1,"SCALAR_AGE");
   if(rx!==gold[episode]||rtag!=32'h100)$fatal(1,"SCALAR_IDENTITY");scalars++;
  end
+end
+''')
+ s.append('''always @(posedge clk)if(runrq)begin
+ if(|wv)begin
+  $display("RF_PIN episode=%0d age=%0d v=%h addr=%h data=%h",episode,qt-startqt,wv,wa,wd);
+  if(qt-startqt!=646||wv!=1||wa[7:0]!=0||wd[31:0]!==gold[episode])$fatal(1,"RF_WRITE_PIN_ID_AGE");
+ end
+ if(cmd[0][127])begin
+  if(qt-startqt!=648||cmd[0][126:119]!=0)$fatal(1,"RF_CLASS5_ID_AGE");
+  $display("RF_CLASS5 episode=%0d age=%0d",episode,qt-startqt);
+ end
+ if(cmd[0][166])begin
+  if(qt-startqt!=650||cmd[0][165]!=1||cmd[0][151:136]!=4096||cmd[0][135:128]!=1)$fatal(1,"DRAIN_ID_AGE_MASK");
+  $display("RF_DRAIN episode=%0d age=%0d",episode,qt-startqt);
+ end
+ #0.001;
+ if(qt-startqt==651&&core.rf_dsec[31:0]!==gold[episode])$fatal(1,"RF_DSEC_CAPTURE");
+ if(s0_0.u_slice.su_w_done[0])begin
+  $display("SERIAL_RETIRE episode=%0d age=%0d",episode,qt-startqt);
+  if(qt-startqt!=670)$fatal(1,"SERIAL_NATIVE_DONE_AGE");retired++;
+ end
+end
+''')
+ for replica in range(6):
+  s.append(f'''always @(posedge clk)begin #0.001;
+ if(runrq&&qt-startqt==647&&core.u_rf.g_bank[0].u_bank.g_replica[{replica}].v0!==gold[episode])$fatal(1,"RF_COHERENT_COMMIT replica={replica}");
 end
 ''')
  for q in range(4):
@@ -184,8 +210,27 @@ wire[17:0] {name}status;always @(posedge stream)if(runrs&&(|{name}status))$fatal
 reg[280:0] {name}hostw=0;reg[16:0] {name}hostr=0;wire[256:0] {name}hostrr;
 wire {name}hosttime=(st%12000<7900)||(st%12000>=8900);
 hfd_vms_bank_native_q0_faces {name}(.rq0({name}rq),.rr0({name}rr),.rq1({name}hostr),.rr1({name}hostrr),.rq2(17'b0),.rq3(17'b0),.rq4(17'b0),.wq0({name}wq),.wq_done0({name}dn),.wq1({name}hostw),.wq_done1(),.bid(3'd{p}),.sid(2'd{q}),.clk(stream),.clk_n(stream),.clk_s(stream),.clk_e(stream),.clk_w(stream),.clk_macro0(stream),.clk_macro1(stream),.clk_macro2(stream),.rst_n(runrs),.rslot_v({name}hosttime?{name}hostr[16]:rv{q}[{p}]),.rslot({name}hosttime?3'd1:rslot{q}[{3*p}+:3]),.wslot_v({name}hosttime?{name}hostw[280]:wv{q}[{p}]),.wslot({name}hosttime?3'd1:wslot{q}[{3*p}+:3]),.dq(281'b0),.kq(281'b0),.xq(276'b0),.xq2(276'b0),.pq(285'b0),.status({name}status));
-initial begin wait(runrs);
 ''')
+    events=[e for e in json.loads((out/f'calendar{q}.json').read_text()) if e['port']==p]
+    for kind,bit in [('read',16),('write',280)]:
+     matches=[e for e in events if e['kind']==kind]
+     if matches:
+      cases=[]
+      for ev in matches:
+       w=int((out/f'q{q}/quarter.mem').read_text().split()[ev['command']],16)
+       sector=(w>>(440+30*p+13 if kind=='read'else 128+39*p+8))&65535
+       cases.append(f"{ev['vm']} : if({name}{'rq'if kind=='read'else'wq'}[{15 if kind=='read'else 279}-:16]!=16'd{sector})$fatal(1,\"NATIVE_{kind.upper()}_SECTOR q={q} bank={p}\");")
+      bus=f"{name}{'rq'if kind=='read'else'wq'}"
+      s.append(f'''always @(posedge stream)if(runrs&&{bus}[{bit}])begin
+ $display("NATIVE_PIN {kind} q={q} bank={p} st=%0d serial=%0d sector=%h",st,qt,{bus}[{15 if kind=='read'else 279}-:16]);
+ case(st%12000)
+ {chr(10).join(cases)}
+ default:$fatal(1,"NATIVE_{kind.upper()}_PIN_AGE q={q} bank={p}");endcase
+end
+''')
+    s.append(f'''always @(posedge stream)begin #0.001;if(runrs&&{name}dn)$display("NATIVE_BANK_DONE q={q} bank={p} st=%0d qt=%0d",st,qt);end
+''')
+    s.append('initial begin wait(runrs);\n')
     for ep in range(3):
      dataep=max(0,ep-1)
      packs=json.loads((out/f'preload{dataep}.json').read_text());packs=[r for r in packs if r['q']==q and r['bank']==p]
@@ -218,7 +263,7 @@ initial begin wait(runrs);
  while(qt<15001+9000*abort_mode)@(negedge clk);launch=1;@(negedge clk);launch=0;
  while(st<21300+12000*abort_mode)@(negedge stream);
  if(fillcount-abortfills!=320)$fatal(1,"NATIVE_FILL_COUNT");
- if(roots!=2||scalars!=2||checked!=2||station_fault||qfault||brfault||(|pfault))$fatal(1,"COMPONENT_FINAL");
+ if(roots!=2||scalars!=2||checked!=2||retired!=2||station_fault||qfault||brfault||(|pfault))$fatal(1,"COMPONENT_FINAL");
 ''')
  for q in range(4):s.append(f'if((|sfault[{q}])||cf{q}||tf{q}||n{q}!=1344)$fatal(1,"Q{q}_FAULT");\n')
  s.append('''$display("R6_COMPONENT_PASS two_distinct_episodes native_full_sector");$finish;
