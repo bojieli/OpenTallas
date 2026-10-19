@@ -55,6 +55,7 @@ module ot_hbm_r14_aq_pc_safe #(
   wire [255:0] qm;
   wire [WQW-1:0] qwp = WQW'(q_rp + q_n);
   wire qpush=wr_v&&wr_r;
+  wire[31:0]bank_col;
   // Keep the current head in flops and prefetch its successor. On a pop,
   // request the following successor while capturing the SRAM's old output.
   // SRAM clk->q therefore ends at the head flops, outside column eligibility.
@@ -94,7 +95,7 @@ module ot_hbm_r14_aq_pc_safe #(
   // 27 timer flops and seven count bits rather than a thousand-sink reset net.
   for(genvar b=0;b<32;b=b+1)begin:BCOUNT
     always @(posedge clk or negedge reset_regions[b])if(!reset_regions[b])bank_n[b]<=0;
-    else case({qpush&&wr_bank==b,wr_ok&&hb==b})
+    else case({qpush&&wr_bank==b,bank_col[b]})
       2'b10:bank_n[b]<=bank_n[b]+1'b1;
       2'b01:bank_n[b]<=bank_n[b]-1'b1;
       default:bank_n[b]<=bank_n[b];
@@ -205,8 +206,8 @@ module ot_hbm_r14_aq_pc_safe #(
     wire act_e = row_local[b/16][21] && c_oh[b];
     wire pre_e = row_local[b/16][20] && c_oh[b];
     wire rfp_e = row_local[b/16][19] && c_oh[b];
-    wire rd_e = hit_rd && hb_oh[b];
-    wire wr_e = hit_wr && hb_oh[b];
+    wire rd_e = bank_col[b] && head_local[b/8][0];
+    wire wr_e = bank_col[b] && !head_local[b/8][0];
     always @(posedge clk or negedge reset_regions[b])
       if (!reset_regions[b]) begin rcd <= 0; ras <= 0; aok <= 0; rtp <= 0; wrr <= 0; end
       else begin
@@ -270,8 +271,8 @@ module ot_hbm_r14_aq_pc_safe #(
   end
   assign bkey=rk[5][0];assign bsel=rs[5][0];
   // Separate retained final selector captures for each live 32-bank lookup.
-  (* keep="true",dont_touch="true" *) reg [4:0] refresh_sel_local[0:3];
-  for(genvar k=0;k<4;k=k+1)begin:REFRESH_LOCAL
+  (* keep="true",dont_touch="true" *) reg [4:0] refresh_sel_local[0:15];
+  for(genvar k=0;k<16;k=k+1)begin:REFRESH_LOCAL
     always @(posedge clk or negedge reset_regions[62])
       if(!reset_regions[62])refresh_sel_local[k]<=0;
       else refresh_sel_local[k]<=(rk[4][0]<=rk[4][1]?rs[4][0]:rs[4][1])
@@ -281,7 +282,14 @@ module ot_hbm_r14_aq_pc_safe #(
         ;
   end
   // ---- column: the head entry, strictly in order --------------------------------------------------------------------
-  wire [31:0] pre_fl = (c_v && c_op == PRE) ? c_oh : 32'b0;
+  wire [31:0] pre_fl;
+  for(genvar b=0;b<32;b=b+1)begin:OPEN_LOCAL
+    assign pre_fl[b]=row_local[b/16][20]&&c_oh[b];
+    always @(posedge clk or negedge reset_regions[b])
+      if(!reset_regions[b])open[b]<=0;
+      else if(row_local[b/16][21]&&c_oh[b])open[b]<=1;
+      else if(row_local[b/16][20]&&c_oh[b])open[b]<=0;
+  end
   // Compare rows locally in parallel instead of selecting a 19-bit word
   // through a 32:1 mux before comparing it. Each head-row bit has 32 loads.
   wire [31:0] head_row_match;
@@ -291,6 +299,11 @@ module ot_hbm_r14_aq_pc_safe #(
   wire [31:0] head_timer_ready;
   for(genvar b=0;b<32;b=b+1)begin:HEAD_TIMER
     assign head_timer_ready[b]=head_local[b/8][0]?rcd_z[b]:rcdw_z[b];
+    // The one-hot bank owns its eligibility; the global column result no
+    // longer broadcasts into all32 local timer/count update cones.
+    assign bank_col[b]=q_ne&&hb_oh[b]&&open[b]&&head_timer_ready[b]&&
+      !blk[b]&&!pre_fl[b]&&head_row_match[b]&&ccdl_z[b%4]&&
+      (head_local[b/8][0]?(wtr_c==0):(rtw_c==0));
   end
   wire head_bank_rdy = q_ne && |(hb_oh & open & head_timer_ready & ~blk & ~pre_fl & head_row_match);
   wire wr_ok = head_bank_rdy && ccdl_z[hb[1:0]] && (hr ? (wtr_c == 0) : (rtw_c == 0));
@@ -316,8 +329,19 @@ module ot_hbm_r14_aq_pc_safe #(
   // Current bank state must be fresh. A stronger live cyclic-distance guard
   // was measured separately: it did not fix the full L02 static miss and
   // starved the legal mixed transaction trace. Keep the proven state check.
-  wire ref_choice_fresh=!refreshed[refresh_sel_local[0]]&&!need[refresh_sel_local[1]]&&!open[refresh_sel_local[2]]&&!aok_busy[refresh_sel_local[3]];
-  wire ref_choice_protected=refreshed[refresh_sel_local[0]]||need[refresh_sel_local[1]]||open[refresh_sel_local[2]]||aok_busy[refresh_sel_local[3]];
+  wire[3:0] refresh_live_lookup;
+  for(genvar f=0;f<4;f=f+1)begin:REFRESH_FIELD
+    wire[3:0] selected;
+    wire[31:0] states=(f==0)?refreshed:(f==1)?need:(f==2)?open:aok_busy;
+    for(genvar g=0;g<4;g=g+1)begin:GROUP
+      wire[4:0]sel=refresh_sel_local[f*4+g];
+      wire[7:0]local_states=states[g*8+:8];
+      assign selected[g]=(sel[4:3]==2'(g))&&local_states[sel[2:0]];
+    end
+    assign refresh_live_lookup[f]=|selected;
+  end
+  wire ref_choice_fresh=!(|refresh_live_lookup);
+  wire ref_choice_protected=|refresh_live_lookup;
 `endif
   wire ep_start = ref_choice_fresh && (PULLIN > 0) && !ep && !ref_pend && 32'(pin) < PULLIN && ref_c > RW'(LEAD + 12) && bkey < 7'd16 &&
                   sact >= 4'd6;
@@ -338,7 +362,7 @@ module ot_hbm_r14_aq_pc_safe #(
   always @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
       q_n <= 0; q_rp <= 0;q_rp_plus1<=1;q_rp_plus2<=2; tail_set <= 0;
-      open <= 0; refreshed <= 0; blk <= 0; rrds_c <= 0; noact_c <= 0; ref_pend <= 0; rb <= 0; fault_r <= 0;
+      refreshed <= 0; blk <= 0; rrds_c <= 0; noact_c <= 0; ref_pend <= 0; rb <= 0; fault_r <= 0;
       rtw_c <= 0; wtr_c <= 0; phase <= 0; rkey <= 127; pin <= 0; ep <= 0; skip <= 0; sact <= 0; c_v <= 0; c_op <= PRE; c_bank <= 0; c_oh <= 0; c_row <= 0;
       for (integer f = 0; f < 4; f = f + 1) fawq[f] <= 0;
 
@@ -367,13 +391,13 @@ module ot_hbm_r14_aq_pc_safe #(
       if (ref_due && !skip && (!row_fire || c_op != REFPB || |(blk & open) || |(blk & ~aok_z))) fault_r <= 1;
       if (row_fire) case (c_op)
         ACT: begin
-          open <= open | c_oh; rrds_c <= 2'(T_RRDS - 1);
+          rrds_c <= 2'(T_RRDS - 1);
           begin : fawt
             reg tk; tk = 0;
             for (integer f = 0; f < 4; f = f + 1) if (!tk && fawq[f] == 0) begin fawq[f] <= 4'(T_FAW - 1); tk = 1; end
           end
         end
-        PRE: open <= open & ~c_oh;
+        PRE: begin end
         REFPB: begin
           noact_c <= 4'(T_RREFD - 1); ref_pend <= 0; blk <= 0;
           if (ep && !ref_pend) begin ep <= 0; pin <= pin + 1'b1; end
