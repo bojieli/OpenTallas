@@ -9,17 +9,24 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import single_clock_contract as S
 import clock_entry_constraints as C
 import ref_tile as R
 ROOT = Path(__file__).resolve().parents[3]
 SAVED = ROOT/'results/rtl/single_clock_contract_1019/saved_bw_safe4_spec.json'
+SNAPSHOT = SAVED.parent/'source_snapshot'
 
 def spec():
     return json.loads(SAVED.read_text())
 
 class Schema(unittest.TestCase):
+    def setUp(self):
+        fixture_root = patch.object(S, 'ROOT', SNAPSHOT)
+        fixture_root.start()
+        self.addCleanup(fixture_root.stop)
+
     def test_actual_saved_bw64_source_positive(self):
         s=spec()
         self.assertEqual(len(s['single_clock_contract']['instances']),64)
@@ -62,6 +69,11 @@ class Schema(unittest.TestCase):
         with self.assertRaises(ValueError):C.signoff_period(dict(clock='spine',route=dict(signoff_period_ps=1024)))
 
 class OpenSTA(unittest.TestCase):
+    def setUp(self):
+        fixture_root = patch.object(S, 'ROOT', SNAPSHOT)
+        fixture_root.start()
+        self.addCleanup(fixture_root.stop)
+
     def test_actual_and_virtual_period_replays(self):
         s=spec();guard=S.guard(s)
         for case in ('positive','wrong_real_period','wrong_virtual_period','extra_real_root','unknown_virtual','ff_mm_positive','ff_mm_wrong_virtual'):
